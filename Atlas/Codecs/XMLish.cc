@@ -58,7 +58,12 @@ XMLish::XMLish(const Codec<iostream>::Parameters& p)
 
 void XMLish::Poll()
 {
-    // FIXME add polling
+    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    {
+	char next = socket.get();
+
+	// FIXME handle incoming characters
+    }
 }
 
 void XMLish::StreamBegin()

@@ -57,7 +57,12 @@ XML::XML(const Codec<iostream>::Parameters& p)
 
 void XML::Poll()
 {
-    // FIXME add polling
+    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    {
+	char next = socket.get();
+
+	// FIXME handle incoming characters
+    }
 }
 
 void XML::MessageBegin()
