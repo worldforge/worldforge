@@ -1,15 +1,15 @@
-// This file may be redistributed and modified under the terms of
+// This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_ENCODER_H
-#define ATLAS_STREAM_ENCODER_H
+#ifndef ATLAS_STREAM_BRIDGE_H
+#define ATLAS_STREAM_BRIDGE_H
 
 #include "../Object/Object.h"
 
 namespace Atlas { namespace Stream {
 
-/** Atlas stream encoder
+/** Atlas stream bridge
 
 This class presents an interface for sending Atlas messages. Starting a new
 message with MessageBegin() puts the encoder into a message context. A valid
@@ -27,7 +27,7 @@ stream and subsequent transmission.
 
 */
 
-class Encoder
+class Bridge
 {
     public:
 
