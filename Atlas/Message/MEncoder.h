@@ -11,12 +11,6 @@ namespace Atlas { namespace Message {
 
 class Object;
 
-/*%TODO(Jesse,Atlas,Encoder)
-* There are two Encoder.h files and two Encoder.cpp files.
-* This seems like a poor idea and, in fact, causes problems
-* when building with CodeWarrior.
-*/
-
 /** Encoder that transmits Atlas::Message::Object.
  *
  * This encoder can be used to send Atlas::Message::Object objects representing
@@ -29,7 +23,6 @@ class Object;
  */
 class Encoder : public Atlas::EncoderBase
 {
-    typedef Atlas::EncoderBase Inherited;
 public:
     Encoder(Atlas::Bridge*);
 
@@ -42,25 +35,38 @@ public:
     /// Send an object as a list item.
     virtual void listItem(const Object&);
 
-    /// Inherited methods (so we don't hide them).
-    virtual void streamMessage(const Map& m) {Inherited::streamMessage(m);}
+    /// Atlas::EncoderBase methods (so we don't hide them).
+    virtual void streamMessage(const Map& m) {
+        Atlas::EncoderBase::streamMessage(m);
+    }
 
-    virtual void mapItem(const std::string& name, const Bridge::Map& m)
-    {Inherited::mapItem(name, m);}
-    virtual void mapItem(const std::string& name, const Bridge::List& l)
-    {Inherited::mapItem(name, l);}
-    virtual void mapItem(const std::string& name, long i)
-    {Inherited::mapItem(name, i);}
-    virtual void mapItem(const std::string& name, double d)
-    {Inherited::mapItem(name, d);}
-    virtual void mapItem(const std::string& name, const std::string& s)
-    {Inherited::mapItem(name, s);}
+    virtual void mapItem(const std::string& name, const Bridge::Map& m) {
+        Atlas::EncoderBase::mapItem(name, m);
+    }
+    virtual void mapItem(const std::string& name, const Bridge::List& l) {
+        Atlas::EncoderBase::mapItem(name, l);
+    }
+    virtual void mapItem(const std::string& name, long i) {
+        Atlas::EncoderBase::mapItem(name, i);
+    }
+    virtual void mapItem(const std::string& name, double d) {
+        Atlas::EncoderBase::mapItem(name, d);
+    }
+    virtual void mapItem(const std::string& name, const std::string& s) {
+        Atlas::EncoderBase::mapItem(name, s);
+    }
     
-    virtual void listItem(const Bridge::Map& m) {Inherited::listItem(m);}
-    virtual void listItem(const Bridge::List& l) {Inherited::listItem(l);}
-    virtual void listItem(long i) {Inherited::listItem(i);}
-    virtual void listItem(double d) {Inherited::listItem(d);}
-    virtual void listItem(const std::string& s) {Inherited::listItem(s);}
+    virtual void listItem(const Bridge::Map& m) {
+        Atlas::EncoderBase::listItem(m);
+    }
+    virtual void listItem(const Bridge::List& l) {
+        Atlas::EncoderBase::listItem(l);
+    }
+    virtual void listItem(long i) { Atlas::EncoderBase::listItem(i); }
+    virtual void listItem(double d) { Atlas::EncoderBase::listItem(d); }
+    virtual void listItem(const std::string& s) {
+        Atlas::EncoderBase::listItem(s);
+    }
 };
 
 } } // namespace Atlas::Message

@@ -4,11 +4,74 @@
 
 #include "Filter.h"
 
-Atlas::Filter::Filter(Atlas::Filter* next) : next(next)
+namespace Atlas {
+
+Filter::Filter(Filter* next) : next(next)
 {
 }
 
-Atlas::Filter::~Filter()
+Filter::~Filter()
 {
     delete next;
 }
+
+filterbuf::~filterbuf()
+{
+    sync();
+}
+  
+int_type filterbuf::overflow(int_type c)
+{
+    if (c != EOF) {
+        *pptr() = (char) c;
+        pbump(1);
+    }
+    if (flushOutBuffer() == EOF) {
+        return EOF;
+    }
+    return c;
+}
+
+int_type filterbuf::underflow()
+{
+    if (gptr() < egptr()) return *gptr();
+    
+    int numPutback = gptr() - eback();
+
+    if (numPutback > m_inPutback) numPutback = m_inPutback;
+
+    std::memcpy(m_outBuffer + (m_inPutback - numPutback),
+                gptr() - numPutback,
+                (unsigned long) numPutback);
+
+    int num;
+
+    //     FIXME
+    // Here we need to actually
+    //  * get data from m_streamBuffer
+    //  * encode it with m_filter
+    //  * put _that_ into the buffer
+    //
+    // Currently it just fetches it and places it straight in the
+    // buffer.
+    // The problem is the limited size of the buffer with the
+    // Filter::decode operation not having any kind of size
+    // limitation.
+    num = m_streamBuffer.sgetn(m_inBuffer + m_inPutback,
+                               m_inBufferSize - m_inPutback);
+    if (num <= 0) return EOF;
+
+    setg(m_inBuffer + (m_inPutback - numPutback),
+         m_inBuffer + m_inPutback,
+         m_inBuffer + m_inPutback + num);
+
+    return *gptr();
+}
+  
+int filterbuf::sync()
+{
+    if (flushOutBuffer() == EOF) return -1;
+    return 0;
+}
+
+} // namespace Atlas

@@ -77,10 +77,7 @@ public:
          m_inBuffer + m_inPutback);
   }
   
-  virtual ~filterbuf()
-  {
-    sync();
-  }
+  virtual ~filterbuf();
   
 protected:
   static const int m_outBufferSize = 10;
@@ -99,67 +96,9 @@ protected:
     return num;
   }  
   
-  virtual int_type overflow(int_type c)
-  {
-    if (c != EOF) {
-      *pptr() = (char) c;
-      pbump(1);
-    }
-    if (flushOutBuffer() == EOF) return EOF;
-    return c;
-  }
-
-   /*%TODO(Jesse,Atlas,filterbuf)
-   * It's bad style to put non-trivial amounts of code inside class declarations. It:
-   * 1) Clutters up the declaration. This is bad because the declaration is the place
-   * people go to to find out how to use your class.
-   * 2) The compiler won't actually inline virtual methods or methods that it decides
-   * are too complex. This means that every compilation unit that includes the header
-   * will have its own copy of the generated code which slows the compilation and linking
-   * down (the linker will strip out the duplicates so it shouldn't affect the exe).
-   */
-  virtual int_type underflow()
-  {
-    using namespace std;
-    if (gptr() < egptr()) return *gptr();
-    
-    int numPutback = gptr() - eback();
-
-    if (numPutback > m_inPutback) numPutback = m_inPutback;
-
-    memcpy(m_outBuffer + (m_inPutback - numPutback),
-                gptr() - numPutback,
-                (unsigned long) numPutback);
-
-    int num;
-
-    //     FIXME
-    // Here we need to actually
-    //  * get data from m_streamBuffer
-    //  * encode it with m_filter
-    //  * put _that_ into the buffer
-    //
-    // Currently it just fetches it and places it straight in the
-    // buffer.
-    // The problem is the limited size of the buffer with the
-    // Filter::decode operation not having any kind of size
-    // limitation.
-    num = m_streamBuffer.sgetn(m_inBuffer + m_inPutback,
-                               m_inBufferSize - m_inPutback);
-    if (num <= 0) return EOF;
-
-    setg(m_inBuffer + (m_inPutback - numPutback),
-         m_inBuffer + m_inPutback,
-         m_inBuffer + m_inPutback + num);
-
-    return *gptr();
-  }
-  
-  virtual int sync()
-  {
-    if (flushOutBuffer() == EOF) return -1;
-    return 0;
-  }
+  virtual int_type overflow(int_type c);
+  virtual int_type underflow();
+  virtual int sync();
   
 private:
 

@@ -29,8 +29,8 @@ class Bridge
     class Map { };
     class List { };
     
-     static Map mapBegin;
-     static List listBegin;
+    static Map mapBegin;
+    static List listBegin;
       
     // Interface for stream context
 

@@ -9,10 +9,6 @@
 #include "../Codecs/XML.h"
 #include "../Codecs/Packed.h"
 
-/*%TODO(Jesse,Atlas,Stream)
-* It's bad style to test for a negative with std::string::find.
-* Compare the return value with std::string::npos instead.
-*/
 static std::string get_line(std::string &s, char ch)
 {
   std::string out;

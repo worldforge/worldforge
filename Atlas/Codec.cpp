@@ -5,6 +5,7 @@
 #include "Codec.h"
 
 #include <iostream>
+
 #include "Codec_impl.h"
 
 namespace Atlas {

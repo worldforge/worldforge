@@ -1,3 +1,53 @@
+2001-10-07  Al Riddoch  <alriddoch@zepler.org>
+
+This entry covers the changes made by Jesse Jones for which no ChangeLog
+entries were commited. It also includes further changes made by myself.
+
+	* src/Objects/BaseObject.cpp: Re-ordered includes.
+
+	* src/Objects/BaseObject.h: Added include to ensure header is stand
+	  alone. Make accessor method const.  Make sure non-callable
+	  function returns something when asserts are not compiled in.
+
+	* src/Bridge.h: Fixed malformed declarations for mapBegin and
+	  listBegin.
+
+	* src/Codec.cpp, src/Objects/loadDefaults.cpp: Re-ordered includes to
+	  ensure that respective headers are stand alone.
+
+	* src/Net/Stream.cpp: Re-ordered includes to ensure that header is
+	  stand alone. Made some functions static. Removed invalid default
+	  arguements as these belong in the headers. Removed stage style
+	  TODO as these are not used in the Atlas-C++ code. Added some
+	  casts.
+
+	* src/Codecs/XML.cpp: Added some casts.
+
+	* src/Message/Encoder.h: Added a bunch of inherited methods to
+	  prevent them from being hidden by the new overloaded methods.
+	  Removed confusing "Inherited" typedef. Re-styled inherited
+	  methods.
+
+	* src/Exception.h: Fixed misspelled "UNKNOW". Made getDescription a
+	  const method.
+
+	* src/Filter.h: Removed an extra comma from the Type declaration.
+	  Added some casts. Moved inline virtual methods to cpp file.
+
+	* src/Filter.cpp: Added virtual filterbuf methods from header file.
+
+	* src/Negotiate.h: Removed an extra comma from the declaration.
+
+	* src/Message/Layer.h: Removed duplicate constructor.
+
+	* src/Codecs/Packed.cpp, src/Codecs/Utility.h: Added a cast.
+
+	* src/Codecs/Packed.h: Removed a comma from the declaration.
+
+	* src/Codecs/XML.h: Removed commas from declarations.
+
+	* src/Net/Stream.h: Forward references Bridge so header stands alone.
+
 2001-10-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Cleaned up some unnecessary includes.

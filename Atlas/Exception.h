@@ -9,9 +9,6 @@
 
 namespace Atlas {
 
-/*%TODO(Jesse,Atlas,Exception)
-* Exception should descend from std::exception.
-*/
 class Exception
 {
   protected:
