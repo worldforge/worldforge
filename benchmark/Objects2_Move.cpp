@@ -1,14 +1,9 @@
-/*
-TODO:
-s/RootEntity/GameEntity/
-*/
-
 #include <iostream>
 #include <cassert>
 #include "../src/Message/Object.h"
 #include "../src/Objects/Root.h"
-#include "../src/Objects/Operation/RootOperation.h"
-#include "../src/Objects/Entity/RootEntity.h"
+#include "../src/Objects/Operation/Operation.h"
+#include "../src/Objects/Entity/Entity.h"
 
 #include "timer.h"
 
@@ -31,7 +26,7 @@ class NPC
 {
 public:
   NPC() : id("123") {x=y=z = vx=vy=vz = 0.0;}
-  Operation::RootOperationInstance move(Operation::RootOperationInstance &op);
+  Operation::SightInstance move(Operation::MoveInstance &op);
   string GetId() {return id;}
 private:
   string id;
@@ -39,10 +34,10 @@ private:
   double vx,vy,vz;
 };
 
-Operation::RootOperationInstance NPC::move(Operation::RootOperationInstance &op)
+Operation::SightInstance NPC::move(Operation::MoveInstance &op)
 {
     Object::ListType::const_iterator new_vel_i =
-        ((Entity::RootEntityInstance&)op->GetArgs()[0])->
+        ((Entity::GameEntityInstance&)op->GetArgs()[0])->
         GetVelocity().begin();
     vx = (*new_vel_i).AsFloat();
     new_vel_i++; vy = (*new_vel_i).AsFloat();
@@ -53,7 +48,7 @@ Operation::RootOperationInstance NPC::move(Operation::RootOperationInstance &op)
     z += vz;
     
     //human:
-    Entity::RootEntityInstance human;
+    Entity::GameEntityInstance human;
     //Entity::GameEntity human = Entity::GameEntity::Instantiate();
     human->SetId(GetId());
     Object::ListType pos;
@@ -68,14 +63,14 @@ Operation::RootOperationInstance NPC::move(Operation::RootOperationInstance &op)
     human->SetVelocity(vel);
     
     //move:
-    Operation::RootOperationInstance move;
+    Operation::MoveInstance move;
     //Operation::Move move = Operation::Move::Instantiate();
     vector<Root> move_args(1);
     move_args[0] = (Root&)human;
     move->SetArgs(move_args);
 
     //sight:
-    Operation::RootOperationInstance sight;
+    Operation::SightInstance sight;
     //Operation::Sight sight = Operation::Sight::Instantiate();
     sight->SetFrom(GetId());
     vector<Root> sight_args(1);
@@ -91,8 +86,7 @@ int main(int argc, char** argv)
     TIME_ON;
     for(i=0; i<MAX_ITER; i+=1.0) {
         //human:
-        Entity::RootEntity human;
-        //Entity::GameEntity human = Entity::GameEntity::Instantiate();
+        Entity::GameEntityInstance human;
         Object::ListType pos;
         pos.push_back(i);
         pos.push_back(i-1.0);
@@ -108,8 +102,7 @@ int main(int argc, char** argv)
 //        cout<<foo.size()<<":"<<foo.front().AsFloat()<<","<<foo.back().AsFloat()<<endl;
 
         //move:
-        Operation::RootOperationInstance move;
-        //Operation::Move move = Operation::Move::Instantiate();
+        Operation::MoveInstance move;
         vector<Root> move_args(1);
         move_args[0] = (Root&)human;
         move->SetArgs(move_args);
@@ -117,8 +110,7 @@ int main(int argc, char** argv)
 //        cout<<"vel0:"<<ent["velocity"].AsList().front().AsFloat()<<endl;
 
         //sight:
-        Operation::RootOperationInstance sight;
-        //Operation::Sight sight = Operation::Sight::Instantiate();
+        Operation::SightInstance sight;
         sight->SetFrom("123");
         vector<Root> sight_args(1);
         sight_args[0] = (Root&)move;
@@ -133,8 +125,7 @@ int main(int argc, char** argv)
     TIME_ON;
     for(i=0; i<MAX_ITER; i+=1.0) {
         //human:
-        Entity::RootEntityInstance human;
-        //Entity::GameEntity human = Entity::GameEntity::Instantiate();
+        Entity::GameEntityInstance human;
         human->SetId(npc1.GetId());
         Object::ListType vel;
         vel.push_back(i);
@@ -143,19 +134,15 @@ int main(int argc, char** argv)
         human->SetVelocity(vel);
         
         //move:
-        Operation::RootOperationInstance move;
-        //Operation::Move move = Operation::Move::Instantiate();
+        Operation::MoveInstance move;
         vector<Root> move_args(1);
         move_args[0] = (Root&)human;
         move->SetArgs(move_args);
 
-        Operation::RootOperationInstance res_sight = npc1.move(move);
-        //Operation::Sight res_sight = npc1.move(move);
-//        Operation::RootOperationInstance res_move =
-//            ;
+        Operation::SightInstance res_sight = npc1.move(move);
         Object::ListType::const_iterator new_pos_i =
-            ((Entity::RootEntityInstance&)
-               ((Operation::RootOperationInstance&)res_sight->GetArgs()[0])
+            ((Entity::GameEntityInstance&)
+               ((Operation::MoveInstance&)res_sight->GetArgs()[0])
              ->GetArgs()[0])->
             GetVelocity().begin();
         x = (*new_pos_i).AsFloat();
