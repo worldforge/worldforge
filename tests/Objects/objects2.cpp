@@ -19,19 +19,29 @@ using namespace Atlas::Objects;
 using namespace Atlas::Message;
 using namespace std;
 
+#define USE_XML 0
+#if USE_XML
 #include "../../src/Codecs/XML.cc"
-//#include "../../src/Codecs/Packed.cc"
+#else
+#include "../../src/Codecs/Packed.cc"
+#endif
 
 void testXML()
 {
     Entity::RootEntityInstance human;
     human->SetId("foo");
 
-    Operation::RootOperationInstance move_op;
+    Operation::MoveInstance move_op;
     move_op->SetFrom(string("bar"));
     vector<Root> move_args(1);
     move_args[0] = (Root&)human;
     move_op->SetArgs(move_args);
+
+    Object::ListType velocity;
+    velocity.push_back(2.0);
+    velocity.push_back(1.0);
+    velocity.push_back(0.0);
+    human->SetVelocity(velocity);
 
     DebugBridge bridge;
     strstream stream;
@@ -49,8 +59,11 @@ void testXML()
 //     assert(codec);
 
     Atlas::Codec<iostream> *codec;
+#if USE_XML
     codec = new XML(Codec<iostream>::Parameters(stream, &bridge));
-    //codec = new Packed(Codec<iostream>::Parameters(stream, &bridge));
+#else
+    codec = new Packed(Codec<iostream>::Parameters(stream, &bridge));
+#endif
     assert(codec);
 
     codec->StreamBegin();
@@ -58,8 +71,8 @@ void testXML()
     Objects::Encoder eno(codec);
     eno.StreamMessage((Root&)move_op);
 
-    Atlas::Message::Encoder en(codec);
-    en.StreamMessage(human->AsObject());
+//    Atlas::Message::Encoder en(codec);
+//    en.StreamMessage(human->AsObject());
 
     codec->StreamEnd();
     cout<<stream.str()<<endl;
