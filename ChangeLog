@@ -1,5 +1,11 @@
 2003-08-09  Damien McGinnes
 
+	* Mercator/Segment.cpp, Mercator/MersenneTwister.h, configure,in: 
+	  put MersenneTwister in Mercator until clients are ready to move
+ 	  across to wfmath-0.3 	
+
+2003-08-09  Damien McGinnes
+
 	* Mercator/Segment.cpp: use a local random number generator to
 	  ensure the rng state cant be affected by other use of rand() in
 	  an app. Change the RNG code to utilise the MersenneTwister.

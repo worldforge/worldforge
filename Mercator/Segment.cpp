@@ -7,7 +7,8 @@
 #include <Mercator/TerrainMod.h>
 #include <Mercator/Surface.h>
 #include <Mercator/BasePoint.h>
-#include <wfmath/MersenneTwister.h>
+//#include <wfmath/MersenneTwister.h>
+#include <Mercator/MersenneTwister.h>
 
 #include <iostream>
 #include <cmath>
@@ -154,7 +155,8 @@ void Segment::populateSurfaces()
 }
 
 // the random number generator
-static WFMath::MTRand rng;
+//static WFMath::MTRand rng;
+static MTRand rng;
 
 // generate a rand num between -0.5...0.5
 inline float randHalf()
@@ -192,7 +194,8 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
     // two endpoints -because they are the common parameters for two adjoining
     // tiles
     //srand((l.seed() * 1000 + h.seed()));
-    WFMath::MTRand::uint32 seed[2]={ l.seed(), h.seed() };
+    //WFMath::MTRand::uint32 seed[2]={ l.seed(), h.seed() };
+    MTRand::uint32 seed[2]={ l.seed(), h.seed() };
     rng.seed(seed, 2);
 
     // stride is used to step across the array in a deterministic fashion
@@ -274,7 +277,8 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
     // seed the RNG - this is the 5th and last seeding for the tile.
     // it was seeded once for each edge, now once for the tile.
     //srand(p1.seed()*20 + p2.seed()*15 + p3.seed()*10 + p4.seed()*5);
-    WFMath::MTRand::uint32 seed[4]={ p1.seed(), p2.seed(), p3.seed(), p4.seed() };
+    //WFMath::MTRand::uint32 seed[4]={ p1.seed(), p2.seed(), p3.seed(), p4.seed() };
+    MTRand::uint32 seed[4]={ p1.seed(), p2.seed(), p3.seed(), p4.seed() };
     rng.seed(seed, 4);
 
     QuadInterp qi(m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
