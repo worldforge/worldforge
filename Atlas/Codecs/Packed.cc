@@ -269,6 +269,8 @@ void PackedAscii::ParseInt(char next)
 	case '7':
 	case '8':
 	case '9':
+    case '-':
+    case '+':
 	    data += next;
 	break;
 
@@ -317,6 +319,10 @@ void PackedAscii::ParseFloat(char next)
 	case '8':
 	case '9':
 	case '.':
+    case '-':
+    case '+':
+    case 'e':
+    case 'E':
 	    data += next;
 	break;
 
