@@ -1,3 +1,8 @@
+2004-12-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath.spec.in: Update spec with License URL Package Vendor
+	  and Distribution tags.
+
 Sunday, October 10th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Changed CXXFLAGS to AM_CXXFLAGS in the atlas
