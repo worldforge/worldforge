@@ -45,7 +45,7 @@ while test $# -gt 0; do
       prefix=`echo ${prefix} | sed 's,^//\([A-Z]\),\1:,'`
 
       includes=-I@includedir@/wfmath-0.2
-      echo $includes $WFMATH_CFLAGS
+      echo $includes @WFMATH_CFLAGS@
       ;;
     --libs)
       libdirs="-L@libdir@"

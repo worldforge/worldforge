@@ -1,60 +1,60 @@
-%define name       @PACKAGE@
-%define version	   @VERSION@
-%define release    1
-%define serial     1
-%define prefix     /usr
+%define name @PACKAGE@
+%define version @VERSION@
+%define release 1
+%define serial 1
+%define libsuffix @WFMATH_LIB_SUFFIX@
 
-Summary:           A math library.
-Name:              %{name} 
-Version:           %{version} 
-Release:           %{release}
-Serial:            %{serial}
-Copyright:         GPL
-Group:             System Environment/Libraries
-Source:            %{name}-%{version}.tar.gz
-BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
-Requires:          libstdc++
-BuildRequires:     libstdc++-devel >= 2.95.2
+Summary: A math library.
+Name: %{name}
+Version: %{version}
+Release: %{release}
+Serial: %{serial}
+Copyright: GPL
+Group: System Environment/Libraries
+Source: %{name}-%{version}.tar.gz
+Requires: libstdc++
+BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
+BuildRequires: libstdc++-devel >= 2.95.2
 
 %description
-This is the WorldForge math library. The primary focus of @PACKAGE@ is
+This is the WorldForge math library. The primary focus of %{name} is
 geometric objects.
 
 %package devel
-Summary:           A math library headers and static libs.
-Group:             Development/Libraries
-Requires:          %{name} = %{version}
+Summary: A math library headers and static libs.
+Group: Development/Libraries
+Requires: %{name} = %{version}
 
 %description devel
-This is the WorldForge math library. The primary of @PACKAGE@ is
+This is the WorldForge math library. The primary of %{name} is
 geometric objects.
 
 %prep
-%setup
+%setup -q
 
 %build
-CXXFLAGS=$RPM_OPT_FLAGS ./configure --prefix=%{prefix} --enable-static=yes
+%configure --enable-static
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make prefix=$RPM_BUILD_ROOT%{prefix} install
+%makeinstall
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{prefix}/lib/libwfmath-0.2.so.*
+%{_libdir}/lib*.so.*
 %doc AUTHORS COPYING NEWS README
 
 %files devel
 %defattr(-,root,root)
-%{prefix}/bin/wfmath-config
-%{prefix}/man/man1/wfmath-config.1*
-%{prefix}/include/wfmath-0.2
-%{prefix}/lib/libwfmath-0.2.a
-%{prefix}/lib/libwfmath-0.2.la
-%{prefix}/lib/libwfmath-0.2.so
-%{prefix}/lib/pkgconfig/wfmath-0.2.pc
-%{prefix}/share/aclocal/wfmath.m4
+%{_bindir}/*
+%{_mandir}/man1/*
+%{_libdir}/lib*.so
+%{_libdir}/lib*.la
+%{_libdir}/lib*.a
+%{_libdir}/pkgconfig/*
+%{_datadir}/aclocal/*
+%{_includedir}/%{name}%{libsuffix}

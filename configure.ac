@@ -32,9 +32,10 @@ AM_PROG_LIBTOOL
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
+SYSTEM_LIBS="-lm"
 WFMATH_CFLAGS=""
-WFMATH_LIBS="-lwfmath-0.2 -lm"
-
+WFMATH_LIB_SUFFIX="-0.2"
+WFMATH_LIBS="-lwfmath$WFMATH_LIB_SUFFIX"
 
 PKG_CHECK_MODULES(ATLAS, atlascpp-0.4 >= 0.4.5, 
 	[ found_atlas=yes
@@ -67,7 +68,9 @@ dnl AC_C_CONST
 
 dnl Checks for library functions.
 
+AC_SUBST(SYSTEM_LIBS)
 AC_SUBST(WFMATH_CFLAGS)
+AC_SUBST(WFMATH_LIB_SUFFIX)
 AC_SUBST(WFMATH_LIBS)
 
 AC_OUTPUT([Makefile 

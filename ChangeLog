@@ -1,3 +1,8 @@
+Thursday, July 3rd, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Update rpm spec to be cleaner, and make the technical sections
+	  more generic.
+
 Friday, June 27th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Did a Quaternion-specific implementation of rotation(from, to)
