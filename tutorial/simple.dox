@@ -13,6 +13,18 @@ message and then closes the connection.
 
 @verbinclude simple_client.cc
 
+@section debug_bridge DebugBridge
+
+In the above client + server a class called DebugBridge is used. This class is
+not part of Atlas-C++, but rather one that we made ourselves. It is passed to
+the negotiation classes (StreamConnect and StreamAccept) which then pass it on
+to the codec returned by GetCodec().
+
+DebugBridge simply prints out everything it receives onto cout. The source
+code should be quite easily understandable.
+
+@verbinclude DebugBridge.h
+
 @ref tutorial_index
 
 @author Stefanus Du Toit <sdt@gmx.net>

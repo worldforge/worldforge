@@ -1,5 +1,6 @@
-#include <Atlas/Bridge.h>
 #include <iostream>
+#include <string>
+#include <Atlas/Bridge.h>
 
 class DebugBridge : public Atlas::Bridge
 {
