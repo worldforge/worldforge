@@ -1,3 +1,14 @@
+2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/BaseObject.h, src/Objects/gen_cpp.py: Make class numbers
+	  static.
+
+	* src/Objects/objectFactory.h, tests/Objects/objects2.cpp: Change
+	  function name to match new type names.
+
+	* tests/Objects/objects2.cpp: Switch to using ISO C++ compliant
+	  stringstream.
+
 2001-11-29  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Objects/GenerateDecoder.py, src/Objects/SmartPtr.h: Modify

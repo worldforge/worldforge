@@ -1,14 +1,13 @@
 
 CPPFLAGS = -I$(top_srcdir)/src -Wall
 
-LDADD  = -L$(top_builddir)/src/ -L$(top_builddir)/src/Codecs/ -L$(top_builddir)/src/Filters/ \
+LDADD  = -L$(top_builddir)/src/ -L$(top_builddir)/src/Codecs/ \
+         -L$(top_builddir)/src/Filters/ \
          -L$(top_builddir)/src/Message/ -L$(top_builddir)/src/Net/ \
          -L$(top_builddir)/src/Objects/
 
 LIBS = -lAtlasObjects -lAtlasNet -lAtlas -lAtlasCodecs -lAtlasFilters \
        -lAtlasMessage -lAtlas $(OTHER_LIBS)
-
-LDFLAGS = -all-static
 
 check_PROGRAMS = objects1 objects2 encoder1 decoder1
 

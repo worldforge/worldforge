@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <strstream>
+#include <sstream>
 #include <cassert>
 #include <vector>
 
@@ -44,7 +44,7 @@ using Atlas::Objects::Entity::Anonymous;
 std::string object2String(const Root& obj)
 {
     DebugBridge bridge;
-    std::strstream stream;
+    std::stringstream stream;
     Atlas::Codec<std::iostream> *codec;
     codec = new Atlas::Codecs::XML(stream, &bridge);
     assert(codec);
@@ -124,7 +124,7 @@ void testXML()
     stream.open("../../../../protocols/atlas/spec/atlas.xml");
     assert(!!stream);
 #else
-    std::strstream stream;
+    std::stringstream stream;
 #endif
 //     typedef std::list<Atlas::Factory<Atlas::Codec >*> FactoryCodecs;
 //     FactoryCodecs *myCodecs = &Factory<Codec >::factories();
@@ -223,7 +223,7 @@ void testValues()
     mobj["parents"] = parents;
     mobj["name"] = std::string("foo");
     mobj["objtype"] = std::string("op");
-    Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
+    Root obj = Atlas::Objects::messageElement2ClassObject(mobj);
     assert(obj->getClassNo() == Atlas::Objects::Entity::ACCOUNT_NO);
     assert(obj->getId() == "");
     assert(obj->isDefaultId() == true);
@@ -256,7 +256,7 @@ void testValues()
 
     {
     Atlas::Message::Element::MapType mobj;
-    Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
+    Root obj = Atlas::Objects::messageElement2ClassObject(mobj);
     assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "");
     assert(obj->getName() == "");
@@ -272,7 +272,7 @@ void testValues()
     Atlas::Message::Element::ListType parents;
     parents.push_back(std::string("account"));
     mobj["parents"] = parents;
-    Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
+    Root obj = Atlas::Objects::messageElement2ClassObject(mobj);
     assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "bar");
     assert(obj->getName() == "foo");
@@ -300,7 +300,7 @@ void testValues()
     mcreate["args"] = args;
     mcreate["objtype"] = "op";
 
-    Create op = (Create&)Atlas::Objects::messageObject2ClassObject(mcreate);
+    Create op = (Create&)Atlas::Objects::messageElement2ClassObject(mcreate);
     assert(op->getClassNo() == Atlas::Objects::Operation::CREATE_NO);
     assert(op->instanceOf(Atlas::Objects::Operation::CREATE_NO));
     assert(op->instanceOf(Atlas::Objects::Operation::ACTION_NO));

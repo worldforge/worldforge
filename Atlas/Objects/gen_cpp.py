@@ -315,7 +315,7 @@ void %(classname)s::free()
         self.write("*/\n")
         self.smart_ptr_if()
         global class_serial_no
-        self.write("const int %s_NO = %i;\n\n" % (
+        self.write("static const int %s_NO = %i;\n\n" % (
             string.upper(obj.id), class_serial_no))
         class_serial_no = class_serial_no + 1
         self.write("class " + self.classname)

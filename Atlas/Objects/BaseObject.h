@@ -32,7 +32,7 @@ class NoSuchAttrException : public Atlas::Exception
     }
 };
 
-const int BASE_OBJECT_NO = 0;
+static const int BASE_OBJECT_NO = 0;
 
 class BaseObjectData
 {
