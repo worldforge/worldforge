@@ -1,3 +1,9 @@
+Saturday, March 9, 2002		Dan Tomalesky <grim@xynesis.com>
+
+    * Added acinclude.m4 for atlas so people without atlas can still
+      autogen.sh and configure will give warning instead of getting
+      bizarre macro missing error for atlas when atlas is not installed
+
 Thursday, March 7, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed error in configure check for sstream vs. strstream
