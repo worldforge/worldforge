@@ -1,3 +1,7 @@
+2003-08-14  Damien McGinnes
+
+	* Mercator/Segment.cpp: use MersenneTwister from wfmath
+
 2003-08-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Update to use wfmath 0.3 for compatability with eris 1.2.
