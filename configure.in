@@ -1,4 +1,4 @@
-AC_INIT(src/Entity.cpp)
+AC_INIT(Eris/Entity.cpp)
 
 dnl Information
 
@@ -140,12 +140,18 @@ dnl perl and sucks in its CFLAGS and LIBS
 ])
 AM_CONDITIONAL(PERL_BINDINGS, test "x$enable_perl" = "xyes")
 
+ERIS_POLL_PKGCONFIGS=
+ERIS_POLL_GLIB_REQUIRES=
+
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     [
+	ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.0.pc"
+	ERIS_POLL_GLIB_REQUIRES=glib-2.0
 	have_glib='yes'
     ],
     [
         AM_PATH_GLIB(1.2.0,[
+		ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib.pc"
 		have_glib='yes'
 	        ],[
 		AC_MSG_WARN(Couldn't find glib, not building glib poll)
@@ -180,10 +186,12 @@ AC_SUBST(SYSTEM_LIBS)
 AC_SUBST(ERIS_LIBS)
 AC_SUBST(ERIS_CFLAGS)
 AC_SUBST(ERIS_REQUIRES)
+AC_SUBST(ERIS_POLL_PKGCONFIGS)
+AC_SUBST(ERIS_POLL_GLIB_REQUIRES)
 
 AC_OUTPUT([
 Makefile
-src/Makefile
+Eris/Makefile
 bindings/Makefile
 bindings/polls/Makefile
 bindings/polls/glib/Makefile
@@ -192,4 +200,5 @@ eris.dox
 eris-config
 eris.spec
 eris-1.0.pc
+eris-poll-glib-1.0.pc
 ])

@@ -1,9 +1,9 @@
 #ifndef ERIS_META_QUERY_H
 #define ERIS_META_QUERY_H
 
-#include "BaseConnection.h"
-#include "Timestamp.h"
-#include "Poll.h"
+#include <Eris/BaseConnection.h>
+#include <Eris/Timestamp.h>
+#include <Eris/Poll.h>
 
 namespace Eris {
 

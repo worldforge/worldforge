@@ -1,14 +1,14 @@
 #ifndef ERIS_POLL_GLIB_H
 #define ERIS_POLL_GLIB_H
 
-#include "PollGlibVersion.h"
-#include "PollGlibFD.h"
-#include "PollGlibSource.h"
+#include <Eris/PollGlibVersion.h>
+#include <Eris/PollGlibFD.h>
+#include <Eris/PollGlibSource.h>
 
 #include <map>
-#include "Poll.h"
-#include "Types.h"
-#include "Timeout.h"
+#include <Eris/Poll.h>
+#include <Eris/Types.h>
+#include <Eris/Timeout.h>
 
 namespace Eris {
 

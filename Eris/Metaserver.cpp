@@ -13,14 +13,14 @@
 #include <sigc++/signal.h>
 #endif
 
-#include "Metaserver.h"
-#include "MetaQuery.h"
-#include "Utils.h"
-#include "ServerInfo.h"
-#include "Timeout.h"
-#include "Poll.h"
-#include "Connection.h"
-#include "Log.h"
+#include <Eris/Metaserver.h>
+#include <Eris/MetaQuery.h>
+#include <Eris/Utils.h>
+#include <Eris/ServerInfo.h>
+#include <Eris/Timeout.h>
+#include <Eris/Poll.h>
+#include <Eris/Connection.h>
+#include <Eris/Log.h>
 
 namespace Eris {
 

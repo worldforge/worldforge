@@ -7,7 +7,7 @@
 
 #include <Atlas/Message/Object.h>
 
-#include "Types.h"
+#include <Eris/Types.h>
 
 namespace Eris {
 

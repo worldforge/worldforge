@@ -12,13 +12,13 @@
 #endif
 #include <Atlas/Objects/Root.h>
 
-#include "atlas_utils.h"
-#include "Utils.h"
+#include <Eris/atlas_utils.h>
+#include <Eris/Utils.h>
 
-#include "Wait.h"
-#include "Connection.h"
-#include "Dispatcher.h"
-#include "SignalDispatcher.h"
+#include <Eris/Wait.h>
+#include <Eris/Connection.h>
+#include <Eris/Dispatcher.h>
+#include <Eris/SignalDispatcher.h>
 
 namespace Eris {
 

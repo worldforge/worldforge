@@ -11,7 +11,7 @@
 #include <sigc++/signal.h>
 #endif
 
-#include "Utils.h"
+#include <Eris/Utils.h>
 #include "testLobby.h"
 
 

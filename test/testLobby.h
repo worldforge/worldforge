@@ -4,7 +4,7 @@
 #include <cppunit/TestCase.h>
 #include <cppunit/extensions/HelperMacros.h>
 
-#include "Lobby.h"
+#include <Eris/Lobby.h>
 #include "stubConnection.h"
 
 class TestLobby : public CppUnit::TestCase

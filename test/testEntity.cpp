@@ -3,7 +3,7 @@
 #endif
 
 #include "testEntity.h"
-#include "Entity.h"
+#include <Eris/Entity.h>
 
 #include <Atlas/Message/Object.h>
 #include <Atlas/Objects/Entity/GameEntity.h>

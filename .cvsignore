@@ -10,6 +10,7 @@ config.status
 config.sub
 configure
 eris-1.0.pc
+eris-poll-glib-1.0.pc
 eris-config
 eris.dox
 eris.spec

@@ -9,7 +9,7 @@
 #include <Atlas/Objects/Operation/Info.h>
 
 class StubServer;
-#include "Connection.h"
+#include <Eris/Connection.h>
 
 class TestConnection : 
     public CppUnit::TestCase,

@@ -2,9 +2,9 @@
 	#include "config.h"
 #endif
 
-#include "ServerInfo.h"
-#include "Utils.h"
-#include "Log.h"
+#include <Eris/ServerInfo.h>
+#include <Eris/Utils.h>
+#include <Eris/Log.h>
 
 namespace Eris
 {

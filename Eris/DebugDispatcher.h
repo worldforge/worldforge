@@ -5,7 +5,7 @@
 #include <fstream>
 
 #include <Atlas/Codec.h>
-#include "Dispatcher.h"
+#include <Eris/Dispatcher.h>
 
 namespace Atlas { namespace Message { class Encoder; }}
 

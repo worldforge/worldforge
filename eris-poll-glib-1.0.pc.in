@@ -1,0 +1,4 @@
+Name: Eris
+Description: A WorldForge client library, poll headers for glib.
+Requires: eris-1.0 @ERIS_POLL_GLIB_REQUIRES@
+Version: @VERSION@

@@ -2,9 +2,9 @@
 	#include "config.h"
 #endif
 
-#include "Person.h"
-#include "Lobby.h"
-#include "Utils.h"
+#include <Eris/Person.h>
+#include <Eris/Lobby.h>
+#include <Eris/Utils.h>
 
 namespace Eris
 {

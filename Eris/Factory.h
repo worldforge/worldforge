@@ -2,7 +2,7 @@
 #define ERIS_FACTORY_H
 
 #include <Atlas/Objects/Entity/GameEntity.h>
-#include "Types.h"
+#include <Eris/Types.h>
 
 namespace Eris {
 

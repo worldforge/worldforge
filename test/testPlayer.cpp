@@ -20,7 +20,7 @@
 #endif
 
 #include "testUtils.h"
-#include "Utils.h"
+#include <Eris/Utils.h>
 
 using namespace Atlas::Message;
 using namespace Atlas::Objects;

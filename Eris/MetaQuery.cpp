@@ -15,11 +15,11 @@
 #include <Atlas/Objects/Operation/Get.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include "Metaserver.h"
-#include "MetaQuery.h"
-#include "Utils.h"
-#include "Timeout.h"
-#include "Log.h"
+#include <Eris/Metaserver.h>
+#include <Eris/MetaQuery.h>
+#include <Eris/Utils.h>
+#include <Eris/Timeout.h>
+#include <Eris/Log.h>
 
 namespace Eris
 {

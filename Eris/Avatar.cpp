@@ -1,4 +1,4 @@
-#include "Avatar.h"
+#include <Eris/Avatar.h>
 
 #include <sigc++/object_slot.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
@@ -6,12 +6,12 @@
 #include <Atlas/Objects/Operation/Move.h>
 #include <wfmath/atlasconv.h>
 
-#include "World.h"
-#include "Entity.h"
-#include "OpDispatcher.h"
-#include "Connection.h"
-#include "ClassDispatcher.h"
-#include "Log.h"
+#include <Eris/World.h>
+#include <Eris/Entity.h>
+#include <Eris/OpDispatcher.h>
+#include <Eris/Connection.h>
+#include <Eris/ClassDispatcher.h>
+#include <Eris/Log.h>
 
 using namespace Eris;
 

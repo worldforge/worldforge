@@ -1,8 +1,8 @@
 #ifndef ERIS_TIMEOUT_H
 #define ERIS_TIMEOUT_H
 
-#include "Types.h"
-#include "Timestamp.h"
+#include <Eris/Types.h>
+#include <Eris/Timestamp.h>
 
 namespace Eris {
 

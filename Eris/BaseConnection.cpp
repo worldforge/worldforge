@@ -11,11 +11,11 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/Encoder.h>
 
-#include "BaseConnection.h"
+#include <Eris/BaseConnection.h>
 //#include "Connection.h"
-#include "Timeout.h"
-#include "Poll.h"
-#include "Log.h"
+#include <Eris/Timeout.h>
+#include <Eris/Poll.h>
+#include <Eris/Log.h>
 
 namespace Eris {
 	

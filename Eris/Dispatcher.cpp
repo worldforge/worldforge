@@ -6,15 +6,15 @@
 #include <assert.h>
 #include <Atlas/Message/Object.h>
 
-#include "Dispatcher.h"
-#include "Utils.h"
-#include "ClassDispatcher.h"
-#include "TypeDispatcher.h"
-#include "OpDispatcher.h"
-#include "EncapDispatcher.h"
-#include "IdDispatcher.h"
-#include "Connection.h"
-#include "Log.h"
+#include <Eris/Dispatcher.h>
+#include <Eris/Utils.h>
+#include <Eris/ClassDispatcher.h>
+#include <Eris/TypeDispatcher.h>
+#include <Eris/OpDispatcher.h>
+#include <Eris/EncapDispatcher.h>
+#include <Eris/IdDispatcher.h>
+#include <Eris/Connection.h>
+#include <Eris/Log.h>
 
 using namespace Atlas::Message;
 

@@ -1,7 +1,7 @@
 #ifndef ERIS_POLL_GLIB_FD_H
 #define ERIS_POLL_GLIB_FD_H
 
-#include "PollGlibVersion.h"
+#include <Eris/PollGlibVersion.h>
 #include <skstream/skstream.h>
 
 namespace Eris {

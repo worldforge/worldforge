@@ -2,7 +2,7 @@
 #define STUB_CONNECTION_H
 
 #include <list>
-#include "Connection.h"
+#include <Eris/Connection.h>
  
 class StubConnection : public Eris::Connection
 {

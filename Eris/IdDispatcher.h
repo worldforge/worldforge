@@ -1,7 +1,7 @@
 #ifndef ERIS_ID_DISPATCH_H
 #define ERIS_ID_DISPATCH_H
 
-#include "Dispatcher.h"
+#include <Eris/Dispatcher.h>
 
 namespace Eris
 {

@@ -5,9 +5,9 @@
 #include <deque>
 #include <set>
 
-#include "Timestamp.h"
-#include "Log.h"
-#include "Entity.h"
+#include <Eris/Timestamp.h>
+#include <Eris/Log.h>
+#include <Eris/Entity.h>
 
 namespace Eris {
 

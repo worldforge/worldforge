@@ -2,11 +2,11 @@
 	#include "config.h"
 #endif
 
-#include "Types.h"
-#include "InvisibleEntityCache.h"
-#include "World.h"
-#include "Connection.h"
-#include "Log.h"
+#include <Eris/Types.h>
+#include <Eris/InvisibleEntityCache.h>
+#include <Eris/World.h>
+#include <Eris/Connection.h>
+#include <Eris/Log.h>
 
 using namespace Time;
 

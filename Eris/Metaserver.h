@@ -39,8 +39,8 @@ typedef unsigned int uint32_t;
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Entity/RootEntity.h>
 
-#include "Types.h"
-#include "ServerInfo.h"
+#include <Eris/Types.h>
+#include <Eris/ServerInfo.h>
 
 // Forward decls
 class udp_socket_stream;

@@ -1,4 +1,4 @@
-SUBDIRS = src bindings test
+SUBDIRS = Eris bindings test
 
 EXTRA_DIST = eris.m4 eris-config.1
 
@@ -11,7 +11,7 @@ manpagedir = $(mandir)/man1
 manpage_DATA = eris-config.1
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = eris-1.0.pc
+pkgconfig_DATA = eris-1.0.pc @ERIS_POLL_PKGCONFIGS@
 
 doc:
 	doxygen eris.dox

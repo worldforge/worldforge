@@ -20,17 +20,17 @@
 #include <Atlas/Objects/Operation/Error.h>
 #include <Atlas/Objects/Entity/RootEntity.h>
 
-#include "TypeInfo.h"
-#include "Utils.h"
-#include "Connection.h"
-#include "atlas_utils.h"
-#include "Log.h"
+#include <Eris/TypeInfo.h>
+#include <Eris/Utils.h>
+#include <Eris/Connection.h>
+#include <Eris/atlas_utils.h>
+#include <Eris/Log.h>
 
-#include "TypeDispatcher.h"
-#include "EncapDispatcher.h"
-#include "SignalDispatcher.h"
-#include "OpDispatcher.h"
-#include "ClassDispatcher.h"
+#include <Eris/TypeDispatcher.h>
+#include <Eris/EncapDispatcher.h>
+#include <Eris/SignalDispatcher.h>
+#include <Eris/OpDispatcher.h>
+#include <Eris/ClassDispatcher.h>
 
 using namespace Atlas;
 

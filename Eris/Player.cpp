@@ -24,14 +24,14 @@
 #include <Atlas/Objects/Operation/Logout.h>
 #include <Atlas/Objects/Operation/Look.h>
 
-#include "Player.h"
-#include "Lobby.h"
-#include "World.h"
-#include "Connection.h"
-#include "SignalDispatcher.h"
-#include "ClassDispatcher.h"
-#include "Utils.h"
-#include "Log.h"
+#include <Eris/Player.h>
+#include <Eris/Lobby.h>
+#include <Eris/World.h>
+#include <Eris/Connection.h>
+#include <Eris/SignalDispatcher.h>
+#include <Eris/ClassDispatcher.h>
+#include <Eris/Utils.h>
+#include <Eris/Log.h>
 
 typedef Atlas::Message::Object::ListType AtlasListType;
 typedef Atlas::Message::Object::MapType AtlasMapType;

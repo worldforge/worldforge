@@ -14,19 +14,19 @@
 #include <Atlas/Objects/Operation/Move.h>
 #include <Atlas/Objects/Operation/Imaginary.h>
 
-#include "Room.h"
-#include "Lobby.h"
-#include "Connection.h"
-#include "Utils.h"
-#include "Person.h"
-#include "Log.h"
+#include <Eris/Room.h>
+#include <Eris/Lobby.h>
+#include <Eris/Connection.h>
+#include <Eris/Utils.h>
+#include <Eris/Person.h>
+#include <Eris/Log.h>
 
-#include "OpDispatcher.h"
-#include "SignalDispatcher.h"
-#include "ClassDispatcher.h"
-#include "EncapDispatcher.h"
-#include "IdDispatcher.h"
-#include "ArgumentDispatcher.h"
+#include <Eris/OpDispatcher.h>
+#include <Eris/SignalDispatcher.h>
+#include <Eris/ClassDispatcher.h>
+#include <Eris/EncapDispatcher.h>
+#include <Eris/IdDispatcher.h>
+#include <Eris/ArgumentDispatcher.h>
 
 using namespace Atlas;
 

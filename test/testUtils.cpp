@@ -3,7 +3,7 @@
 #endif
 
 #include <stdexcept>
-#include "Utils.h"
+#include <Eris/Utils.h>
 
 using namespace Atlas::Message;
 

@@ -13,8 +13,8 @@
 #include <Atlas/Objects/Operation/Logout.h>
 #include <Atlas/Objects/Entity/Player.h>
 
-#include "Types.h"
-#include "Timeout.h"
+#include <Eris/Types.h>
+#include <Eris/Timeout.h>
 
 namespace Eris
 {

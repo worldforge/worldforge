@@ -12,12 +12,12 @@
 
 #include <assert.h>
 
-#include "ClassDispatcher.h"
-#include "TypeInfo.h"
-#include "Wait.h"
-#include "Utils.h"
-#include "Connection.h"
-#include "Log.h"
+#include <Eris/ClassDispatcher.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/Wait.h>
+#include <Eris/Utils.h>
+#include <Eris/Connection.h>
+#include <Eris/Log.h>
 
 namespace Eris
 {

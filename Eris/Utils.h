@@ -4,7 +4,7 @@
 #include <Atlas/Message/Object.h>
 #include <Atlas/Objects/Operation/RootOperation.h>
 
-#include "Types.h"
+#include <Eris/Types.h>
 
 namespace Eris
 {

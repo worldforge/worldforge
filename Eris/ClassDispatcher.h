@@ -2,7 +2,7 @@
 #define ERIS_CLASS_DISPATCH_H
 
 #include <sigc++/object.h>
-#include "Dispatcher.h"
+#include <Eris/Dispatcher.h>
 
 namespace Eris
 {

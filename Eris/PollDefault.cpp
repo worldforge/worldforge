@@ -2,11 +2,11 @@
 
 #include <sigc++/object_slot.h>
 
-#include "Types.h"
+#include <Eris/Types.h>
 
-#include "PollDefault.h"
-#include "Timeout.h"
-#include "Log.h"
+#include <Eris/PollDefault.h>
+#include <Eris/Timeout.h>
+#include <Eris/Log.h>
 
 Eris::Poll& Eris::Poll::instance()
 {

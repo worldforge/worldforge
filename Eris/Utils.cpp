@@ -5,10 +5,10 @@
 #include <assert.h>
 #include <Atlas/Objects/Entity/RootEntity.h>
 
-#include "Utils.h"
-#include "atlas_utils.h"
-#include "Connection.h"
-#include "Log.h"
+#include <Eris/Utils.h>
+#include <Eris/atlas_utils.h>
+#include <Eris/Connection.h>
+#include <Eris/Log.h>
 
 using namespace Atlas::Message;
 

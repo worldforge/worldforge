@@ -5,8 +5,8 @@
 #include <Atlas/Message/DecoderBase.h>
 #include <Atlas/Objects/Operation/RootOperation.h>
 
-#include "BaseConnection.h"
-#include "Types.h"
+#include <Eris/BaseConnection.h>
+#include <Eris/Types.h>
 
 /** Every Eris class and type lives inside the Eris namespace; certain utility functions live in the
 Util namespace, since they may be moved to a generic WorldForge foundation library in the future.*/

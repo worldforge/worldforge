@@ -34,22 +34,22 @@
 #include <Atlas/Objects/Operation/Sound.h>
 #include <Atlas/Objects/Operation/Move.h>
 
-#include "World.h"
-#include "Entity.h"
-#include "Connection.h"
-#include "Log.h"
-#include "Factory.h"
-#include "Utils.h"
-#include "Wait.h"
-#include "InvisibleEntityCache.h"
-#include "Player.h"
-#include "Avatar.h"
+#include <Eris/World.h>
+#include <Eris/Entity.h>
+#include <Eris/Connection.h>
+#include <Eris/Log.h>
+#include <Eris/Factory.h>
+#include <Eris/Utils.h>
+#include <Eris/Wait.h>
+#include <Eris/InvisibleEntityCache.h>
+#include <Eris/Player.h>
+#include <Eris/Avatar.h>
 
-#include "ClassDispatcher.h"
-#include "EncapDispatcher.h"
-#include "OpDispatcher.h"
-#include "TypeDispatcher.h"
-#include "IdDispatcher.h"
+#include <Eris/ClassDispatcher.h>
+#include <Eris/EncapDispatcher.h>
+#include <Eris/OpDispatcher.h>
+#include <Eris/TypeDispatcher.h>
+#include <Eris/IdDispatcher.h>
 
 //using namespace Atlas::Objects;
 typedef Atlas::Message::Object::ListType AtlasListType;

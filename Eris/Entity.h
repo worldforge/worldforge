@@ -33,8 +33,8 @@ namespace Atlas {
 #include <wfmath/quaternion.h>
 
 // local headers
-#include "Types.h"
-#include "SignalDispatcher.h"
+#include <Eris/Types.h>
+#include <Eris/SignalDispatcher.h>
 
 
 namespace Eris {

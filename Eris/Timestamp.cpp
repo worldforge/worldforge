@@ -2,7 +2,7 @@
 	#include "config.h"
 #endif
 
-#include "Timestamp.h"
+#include <Eris/Timestamp.h>
 
 #ifndef _MSC_VER
 #include <unistd.h>	

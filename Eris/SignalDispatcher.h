@@ -8,7 +8,7 @@
 #include <sigc++/signal.h>
 #endif
 
-#include "Dispatcher.h"
+#include <Eris/Dispatcher.h>
 
 namespace Eris {
 

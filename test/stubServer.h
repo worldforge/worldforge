@@ -6,7 +6,7 @@
 
 #include <queue>
 
-#include "Atlas/Message/DecoderBase.h"
+#include <Atlas/Message/DecoderBase.h>
 #include <Atlas/Message/Encoder.h>
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Codec.h>

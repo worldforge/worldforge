@@ -2,12 +2,12 @@
 	#include "config.h"
 #endif
 
-#include "Types.h"
-#include "Timeout.h"
+#include <Eris/Types.h>
+#include <Eris/Timeout.h>
 
 #include <limits.h>
 
-#include "Poll.h"
+#include <Eris/Poll.h>
 
 using namespace Time;
 

@@ -20,24 +20,24 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/Encoder.h>
 
-#include "atlas_utils.h"
+#include <Eris/atlas_utils.h>
 
-#include "Connection.h"
-#include "Dispatcher.h"
-#include "Wait.h"
-#include "Timeout.h"
-#include "Utils.h"
-#include "TypeInfo.h"
-#include "Poll.h"
-#include "Log.h"
+#include <Eris/Connection.h>
+#include <Eris/Dispatcher.h>
+#include <Eris/Wait.h>
+#include <Eris/Timeout.h>
+#include <Eris/Utils.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/Poll.h>
+#include <Eris/Log.h>
 
-#include "TypeDispatcher.h"
-#include "ClassDispatcher.h"
-#include "DebugDispatcher.h"
-#include "SignalDispatcher.h"
-#include "EncapDispatcher.h"
+#include <Eris/TypeDispatcher.h>
+#include <Eris/ClassDispatcher.h>
+#include <Eris/DebugDispatcher.h>
+#include <Eris/SignalDispatcher.h>
+#include <Eris/EncapDispatcher.h>
 
-#include "Lobby.h"
+#include <Eris/Lobby.h>
 
 namespace Eris {
 

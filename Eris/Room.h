@@ -22,7 +22,7 @@ namespace Atlas { namespace Objects {
 	
 }}
 
-#include "Types.h"
+#include <Eris/Types.h>
 
 namespace Eris
 {

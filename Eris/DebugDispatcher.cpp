@@ -7,7 +7,7 @@
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Message/Encoder.h>
 
-#include "DebugDispatcher.h"
+#include <Eris/DebugDispatcher.h>
 
 namespace Eris
 {

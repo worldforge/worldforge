@@ -2,8 +2,8 @@
 	#include "config.h"
 #endif
 
-#include "ArgumentDispatcher.h"
-#include "Utils.h"
+#include <Eris/ArgumentDispatcher.h>
+#include <Eris/Utils.h>
 
 namespace Eris {
 

@@ -17,16 +17,16 @@
 
 #include <wfmath/atlasconv.h>
 
-#include "Entity.h"
-#include "World.h"
-#include "Connection.h"
-#include "Utils.h"
-#include "Wait.h"
-#include "Property.h"
-#include "TypeInfo.h"
-#include "OpDispatcher.h"
-#include "IdDispatcher.h"
-#include "Log.h"
+#include <Eris/Entity.h>
+#include <Eris/World.h>
+#include <Eris/Connection.h>
+#include <Eris/Utils.h>
+#include <Eris/Wait.h>
+#include <Eris/Property.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/OpDispatcher.h>
+#include <Eris/IdDispatcher.h>
+#include <Eris/Log.h>
 
 using namespace Atlas::Message;
 

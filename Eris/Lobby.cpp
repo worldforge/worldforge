@@ -22,21 +22,21 @@
 #include <Atlas/Objects/Entity/Player.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
 
-#include "Lobby.h"
-#include "Connection.h"
-#include "SignalDispatcher.h"
-#include "ClassDispatcher.h"
-#include "OpDispatcher.h"
-#include "TypeDispatcher.h"
-#include "EncapDispatcher.h"
-#include "ArgumentDispatcher.h"
+#include <Eris/Lobby.h>
+#include <Eris/Connection.h>
+#include <Eris/SignalDispatcher.h>
+#include <Eris/ClassDispatcher.h>
+#include <Eris/OpDispatcher.h>
+#include <Eris/TypeDispatcher.h>
+#include <Eris/EncapDispatcher.h>
+#include <Eris/ArgumentDispatcher.h>
 
-#include "Utils.h"
-#include "Log.h"
-#include "Player.h"
-#include "Room.h"
-#include "Person.h"
-#include "atlas_utils.h"
+#include <Eris/Utils.h>
+#include <Eris/Log.h>
+#include <Eris/Player.h>
+#include <Eris/Room.h>
+#include <Eris/Person.h>
+#include <Eris/atlas_utils.h>
 
 using namespace Atlas::Objects;
 using namespace Atlas;

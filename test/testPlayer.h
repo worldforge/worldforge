@@ -5,7 +5,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 class StubConnection;
-#include "Player.h"
+#include <Eris/Player.h>
 
 class TestPlayer : public CppUnit::TestCase
 {

@@ -1,7 +1,7 @@
 #ifndef ERIS_POLL_GLIB_SOURCE_H
 #define ERIS_POLL_GLIB_SOURCE_H
 
-#include "PollGlibVersion.h"
+#include <Eris/PollGlibVersion.h>
 
 namespace Eris {
 

@@ -23,10 +23,10 @@
 #include <sigc++/object_slot.h>
 
 #include "testUtils.h"
-#include "Utils.h"
-#include "Timestamp.h"
-#include "PollDefault.h"
-#include "SignalDispatcher.h"
+#include <Eris/Utils.h>
+#include <Eris/Timestamp.h>
+#include <Eris/PollDefault.h>
+#include <Eris/SignalDispatcher.h>
 
 using namespace Atlas::Message;
 using namespace Atlas::Objects;

@@ -12,7 +12,7 @@
 #include <sigc++/signal.h>
 #endif
 
-#include "Types.h"
+#include <Eris/Types.h>
 
 // Forward declarations
 namespace Atlas {

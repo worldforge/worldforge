@@ -3,7 +3,7 @@
 
 #include <map>
 
-#include "Poll.h"
+#include <Eris/Poll.h>
 
 namespace Eris {
 

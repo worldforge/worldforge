@@ -38,7 +38,7 @@ namespace Atlas {
 	}
 }
 
-#include "Types.h"
+#include <Eris/Types.h>
 
 namespace Eris {
 

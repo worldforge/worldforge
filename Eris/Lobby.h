@@ -11,9 +11,9 @@
 #include <Atlas/Objects/Entity/Player.h>
 #include <Atlas/Objects/Operation/Info.h>
 
-#include "Types.h"
-#include "Connection.h"
-#include "Room.h"
+#include <Eris/Types.h>
+#include <Eris/Connection.h>
+#include <Eris/Room.h>
 
 // forward decleration of test cases
 class TestLobby;

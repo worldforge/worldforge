@@ -16,7 +16,7 @@
 
 #endif // __WIN32__
 
-#include "Log.h"
+#include <Eris/Log.h>
 
 namespace Eris
 {

@@ -3,7 +3,7 @@
 
 #include <set>
 #include <sigc++/object.h>
-#include "Types.h"
+#include <Eris/Types.h>
 
 namespace Atlas { namespace Objects {
 	class Root;

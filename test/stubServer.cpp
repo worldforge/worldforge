@@ -3,8 +3,8 @@
 #endif
 
 #include "stubServer.h"
-#include "Timestamp.h"
-#include "PollDefault.h"
+#include <Eris/Timestamp.h>
+#include <Eris/PollDefault.h>
 
 #include <cppunit/TestAssert.h>
 #include <cppunit/extensions/HelperMacros.h>
