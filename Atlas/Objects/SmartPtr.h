@@ -15,57 +15,21 @@ class SmartPtr
 public:
     SmartPtr() { 
         ptr = (T*)T::alloc(); 
-#if DEBUG
-        cout << "SmartPtr(): this: " << this << " ptr: " << ptr << endl;
-#endif
     }
     SmartPtr(const SmartPtr<T>& a) {
-#if DEBUG
-        cout << "SmartPtr(): this: " << this << " ptr: " << ptr << " a: " << &a << " a.ptr: " << a.ptr << endl;
-#endif
         ptr = a.get();
         incRef();
     }
-    // FreeList<ObjectData>* -> SmartPtr<EntityData>
     SmartPtr(const BaseObjectData *a_ptr)
-//        throw (IncompatibleDataTypeException) {
     {
-#if DEBUG
-        cout << "SmartPtr(const FreeList<ObjectData>*a_ptr): this: " << this
-             << "a_ptr: " << a_ptr 
-             << " T::data_type: " << T::data_type
-             << " a_ptr->data.type: " << a_ptr->data.type << endl;
-#endif
-//        int type = T::data_type;
-//        if(type != a_ptr->data.type)
-//            throw IncompatibleDataTypeException(type, a_ptr->data.type);
         ptr = (T*)a_ptr;
         incRef();
     }
     ~SmartPtr() { 
-#if DEBUG
-        cout << "~SmartPtr(): this: " << this << " ptr: " << ptr << endl;
-#endif
         decRef();
     }
-#if 0
-    // SmartPtr<EntityData> -> FreeList<ObjectData>*
-    FreeList<ObjectData>* asObjectPtr() {
-#if DEBUG
-        cout << "asObjectPtr(): this: " << this << " ptr: " << ptr << endl;
-#endif
-        //recipient should takes care of this: incRef();
-        return (FreeList<ObjectData>*)get();
-    }
-#endif
     SmartPtr& operator=(const SmartPtr<T>& a) {
-#if DEBUG
-        cout << "SmartPtr.=: " << this << " ptr: " << ptr << " a:" << &a << " a.ptr: " << a.ptr << endl;
-#endif
         if (a.get() != this->get()) {
-#if DEBUG
-            cout << "SmartPtr.=: yup, different" << endl;
-#endif
             decRef();
             ptr = a.get();
             incRef();

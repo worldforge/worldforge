@@ -11,9 +11,6 @@
 
 #include "wrapperObject.h"
 
-//#define DEBUG(a) a
-#define DEBUG(a)
-
 static PyObject *ErrorObject;
 
 Atlas::Codec* printCodec;
@@ -114,7 +111,7 @@ AtlasWrapper_getattr(AtlasWrapperObject *self,
 {
   //printf("%p",testObj);
   //return testObj;
-  DEBUG(printf("DEBUG:%s:%s\n",__FUNCTION__,name));
+  ATLAS_DEBUG(printf("ATLAS_DEBUG:%s:%s\n",__FUNCTION__,name));
   //>>> t("for i in range(100000): a=op.abstract_type")
   //Time: 0.78
   //return PyInt_FromLong(1); 
@@ -159,7 +156,7 @@ AtlasWrapper_setattr(AtlasWrapperObject *self,
                      char *name,
                      PyObject *v)
 {
-  DEBUG(printf("DEBUG:%s:%s\n",__FUNCTION__,name));
+  ATLAS_DEBUG(printf("ATLAS_DEBUG:%s:%s\n",__FUNCTION__,name));
   if(!self->obj->isMap()) {
     PyErr_SetString(PyExc_TypeError,
                     "can set attribute only for Atlas maps");
@@ -220,14 +217,14 @@ AtlasWrapper_setattr(AtlasWrapperObject *self,
 static int
 wrapper_length(AtlasWrapperObject *list)
 {
-  DEBUG(printf("DEBUG:%s\n",__FUNCTION__));
+  ATLAS_DEBUG(printf("ATLAS_DEBUG:%s\n",__FUNCTION__));
 	return list->obj->length();
 }
 
 static PyObject *
 wrapper_item(AtlasWrapperObject *list, int i)
 {
-  DEBUG(printf("DEBUG:%s:%i\n",__FUNCTION__,i));
+  ATLAS_DEBUG(printf("ATLAS_DEBUG:%s:%i\n",__FUNCTION__,i));
 	if (i < 0 || i >= list->obj->length()) {
 		PyErr_SetString(PyExc_IndexError, "Atlas list index out of range");
 		return NULL;

@@ -1,3 +1,4 @@
+
 dnl Initialise autoconf
 
 AC_INIT()
@@ -22,7 +23,20 @@ dnl Test for C++ compiler
 
 AC_PROG_CXX
 
-CXXFLAGS='-Wall -g'
+dnl Test for debugging symbols
+
+AC_ARG_ENABLE(debug,
+    [  --enable-debug     enable debug information [default=no]],
+    [
+        if test "$enableval" = "yes"; then
+            CXXFLAGS="-Wall -g -O2 -DDEBUG"
+	else
+            CXXFLAGS="-O2 -DNDEBUG"
+        fi
+    ],[
+        CXXFLAGS="-O2 -DNDEBUG"
+    ]
+)
 
 dnl Test for ANSI standard language features
 
