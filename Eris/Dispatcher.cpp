@@ -90,29 +90,12 @@ LeafDispatcher::LeafDispatcher(const std::string &nm) :
 
 bool LeafDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	Object::MapType &o = dq.front().AsMap();
+	Object::MapType &o = dq.back().AsMap();
 	o["__DISPATCHED__"] = "1";
 	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-ClassDispatcher::ClassDispatcher(const std::string &nm, const std::string &cl) :
-	Dispatcher(nm),
-	_class(cl)
-{
-	;
-}
-
-bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
-{
-	const Object::ListType& prs = getMember(dq.front(), "parents").AsList();
-	if (prs.front().AsString() != _class)
-		return false;
-	return Dispatcher::subdispatch(dq);
-}
-*/
 
 bool IdDispatcher::dispatch(DispatchContextDeque &dq)
 {
@@ -123,15 +106,8 @@ bool IdDispatcher::dispatch(DispatchContextDeque &dq)
 
 bool TypeDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	
 	if (!hasMember(dq.front(), "objtype"))
 		return false;
-	
-	// FIXME
-	// work around for tiny cyphesis bug; this is the only place it can
-	// be dealt with, sigh...
-//		dq.front().AsMap()["objtype"] = "object";
-	// end of hack
 	
 	if (getMember(dq.front(), "objtype").AsString() != _type)
 		return false;
@@ -167,7 +143,7 @@ bool EncapDispatcher::dispatch(DispatchContextDeque &dq)
 		dq.push_front(args[_position]);
 		bool ret = Dispatcher::subdispatch(dq);	
 		
-		// we need to restore the context stack, otherwise the next dispathcer along gets very confused
+		// we need to restore the context stack, otherwise the next dispatcher along gets very confused
 		dq.pop_front();
 		return ret;
 	} else

@@ -28,7 +28,7 @@ void WaitForBase::fire()
 	_pending = true;
 	
 	std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(_msg) ));
-	Log("firing WaitFor %p, content is %s", this, summary.c_str());
+	//Log("firing WaitFor %p, content is %s", this, summary.c_str());
 	Connection::Instance()->postForDispatch(_msg);
 }
 	
@@ -70,7 +70,7 @@ WaitForDispatch::~WaitForDispatch()
 WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Object &msg) :
 	WaitForBase(msg)
 {
-	Eris::Log("Created WaitForSignal %p", this);
+	//Eris::Log("Created WaitForSignal %p", this);
 	sig.connect(SigC::slot(this, &WaitForBase::fire));
 }
 

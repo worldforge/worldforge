@@ -1,3 +1,29 @@
+Sunday, November 18 2001, James Turner
+
+	* Changed objectSummary to special case handling of the Root/meta
+	  object (don't report it as <invalid>, it isn't!)
+	* Made atlas_cast return const, as a matter of policy against
+	  accidental evil
+	* Login failures now clear the current action / serial in Player
+	  after reporting; thus repeated login attempts now actually work!
+	  (it's really true this time, I promise : I've actually tried it
+	  and it works)
+	* Move the serialno validator around so it A) only operates on
+	  messages recieved from Atlas (don't worry about redisaptches /
+	  internal crap) and B) correctly handles encapsulation on the
+	  dispatch stack (LeafDispatcher sets and ObjectArrived checks
+	  the back (top) of the stack, not the front)
+	* Re-wrote 'Connection::clearSignalledWaits' to use a manual iteration,
+	  since I am clearly doing something stupid with STL remove_if; it was
+	  leaving some objects in the queue. My reading for tonight is
+	  Scott Meyer's 'Effective STL', <sigh>
+
+Thursday, November 15 2001, James Turner
+
+	* Connection::reconnect() now generates a 'Failure' signals instead of
+	  throwing InvalidOperation; I was being a tad aggressive here for no
+	  good reason.
+
 Saturday, November 10 2001, James Turner
 
 	* Made TypeInfo::init safe (doesn't assert) during reconnections

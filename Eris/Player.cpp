@@ -303,6 +303,10 @@ void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 		_username="";
 		LoginFailure.emit(LOGIN_INVALID, serverMsg);
 	}
+	
+	// clear these out
+	_currentAction = "";
+	_currentSerial = 0;
 }
 
 void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)

@@ -117,14 +117,17 @@ std::string objectSummary(const Atlas::Objects::Root &obj)
 	if (obj.GetParents().empty()) {
 		// this can happen if built the Object::Root out of something silly, like a string; we
 		// don't want to crash here, so bail
-		return "<invalid>";
+		if (obj.GetObjtype() == "meta")
+			return "root";
+		else // probably passsed something that wasn't an Object
+			return "<invalid>";
 	}
+	
 try {	
 	std::string type = obj.GetParents()[0].AsString(),
 		label(obj.GetName());
 	std::string ret = type;
 	
-
 	if (obj.GetObjtype() == "op") {
 		Atlas::Objects::Operation::RootOperation op =
 			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj);
@@ -138,9 +141,7 @@ try {
 		// list the values being set
 	
 		if (type == "set") {
-			const Atlas::Message::Object::ListType &arglist = 
-				obj.GetAttr("args").AsList();
-			
+			const Atlas::Message::Object::ListType &arglist = op.GetArgs();
 			ret.push_back('(');
 			
 			if (!arglist.empty() && arglist[0].IsMap()) {			
@@ -181,10 +182,10 @@ try {
 	
 	} else if (obj.GetObjtype() == "entity") {
 		if (obj.HasAttr("id"))
-			label = obj.GetAttr("id").AsString();
+			label = obj.GetId();
 	} else {
 		if (obj.HasAttr("id"))
-			label = obj.GetAttr("id").AsString();
+			label = obj.GetId();
 	}
 	
 	if (!label.empty())

@@ -36,7 +36,10 @@ TypeInfo instance. This could be a hash_map in the future, if efficeny consdiera
 indicate it would be worthwhile */
 TypeInfoMap globalTypeMap;
 
-typedef std::multimap<std::string, TypeInfoPtr>	TypeDepMap;
+	
+typedef std::map<std::string, TypeInfoSet> TypeDepMap;
+	
+//typedef std::multimap<std::string, TypeInfoPtr>	TypeDepMap;
 /** This is a dynamic structure indicating which Types are blocked awaiting INFOs
 from other ops. For each blocked INFO, the first item is the <i>blocking</i> type
 (e.g. 'tradesman') and the second item the blocked TypeInfo, (e.g. 'blacksmith')*/
@@ -113,27 +116,31 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 		}
 	}
 
-	//if (isBound())
-	//	Eris::Log("Bound type %s", id.c_str());
+	if (isBound()) {
+		Eris::Log("Bound type %s", id.c_str());
+		Bound.emit();
+	}
 	
 // do dependancy checking
-	TypeDepMap::iterator D = globalDependancyMap.find(id);
-	if (D == globalDependancyMap.end())
+	TypeDepMap::iterator Dset = globalDependancyMap.find(id);
+	if (Dset == globalDependancyMap.end())
 		return; // nothing to do
 	
-	// once we have processed them all, we can erase the whole range 
-	TypeDepMap::iterator Dbegin = D;
+	TypeInfoSet::iterator D = Dset->second.begin();
 	
-	while (D->first == id) {
-		if (D->second->isBound()) {
+	while (D != Dset->second.end()) {
+		bool wasBound = (*D)->_bound;
+		
+		if ((*D)->isBound()) {
+			assert(!wasBound);
 			// emit the signal, will probably trigger all manner of crap
-			D->second->Bound.emit();
-			//Eris::Log("Bound type %s", id.c_str());
+			(*D)->Bound.emit();
+			Eris::Log("Bound type %s", (*D)->getName().c_str());
 		}
 		++D;
 	}
 	
-	globalDependancyMap.erase(Dbegin, D);
+	globalDependancyMap.erase(Dset);
 }
 
 bool TypeInfo::operator==(const TypeInfo &x) const
@@ -238,13 +245,19 @@ Signal& TypeInfo::getBoundSignal()
 {
 	if (isBound())
 		throw InvalidOperation("Type node is already bound, what are you playing at?");
-	
-	TypeDepMap::iterator D=globalDependancyMap.end();
+		
 	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P) {
-		if (!(*P)->isBound()) 
-			D = globalDependancyMap.insert(D, 
-				TypeDepMap::value_type((*P)->getName(), this)
-			);
+		if (!(*P)->isBound()) {
+			TypeDepMap::iterator Ddep = globalDependancyMap.find((*P)->getName());
+			if (Ddep == globalDependancyMap.end()) {
+				Ddep = globalDependancyMap.insert(Ddep, 
+					TypeDepMap::value_type((*P)->getName(), TypeInfoSet())
+				);
+			}
+			
+			// becuase we're doing a set<> insert, there is no problem with duplicates!
+			Ddep->second.insert(this);
+		}
 	}
 	
 	return Bound;
@@ -272,7 +285,7 @@ void TypeInfo::init()
 	);
 	
 	// note, we just turned our tree into a graph. time to refcount dispatchers!
-	d = info->addSubdispatch(new TypeDispatcher("op-def", "op_defintion"));
+	d = info->addSubdispatch(new TypeDispatcher("op-def", "op_definition"));
 	d->addSubdispatch(ti);
 	
 	d = info->addSubdispatch(new TypeDispatcher("class-def", "class"));
@@ -395,6 +408,10 @@ try {
 		throw IllegalObject(atype, "type object's ID is unknown");
 	}
 	
+	// handle duplicates : this can be caused by waitFors pilling up, for example
+	if (T->second->isBound())
+		return;
+	
 	T->second->processTypeData(atype);
 } catch (Atlas::Message::WrongTypeException &wte) {
 	Eris::Log("caught WTE in TypeInfo::recvOp");
@@ -447,6 +464,9 @@ void TypeInfo::recvTypeError(const Atlas::Objects::Operation::Error &error,
 	// XXX - at this point, we could kill the type; instead we just mark it as bound
 	Eris::Log("ERROR: got error from server looking up type %s",
 		typenm.c_str());
+	
+	// parent to root?
+	T->second->_bound = true;
 }
 
 }; // of namespace

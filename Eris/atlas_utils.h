@@ -1,3 +1,6 @@
+#ifndef ATLAS_CAST_H
+#define ATLAS_CAST_H
+
 #include <stdexcept>
 
 #include <Atlas/Message/Object.h>
@@ -6,7 +9,7 @@
 namespace Atlas {
 
 template <class T>
-T atlas_cast(const Message::Object &data)
+const T atlas_cast(const Message::Object &data)
 {
 	T obj = T::Instantiate();
 	if (!data.IsMap()) {
@@ -26,7 +29,7 @@ T atlas_cast(const Message::Object &data)
 }
 
 template <class T>
-T atlas_cast(const Objects::Root &data)
+const T atlas_cast(const Objects::Root &data)
 {
 	T obj = T::Instantiate();
 	Message::Object::MapType mp = data.AsMap();
@@ -41,3 +44,5 @@ T atlas_cast(const Objects::Root &data)
 }
 
 }
+
+#endif

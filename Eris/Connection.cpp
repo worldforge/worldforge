@@ -58,12 +58,6 @@ Connection::Connection(const string &cnm) :
 		
 	Dispatcher *opd = new TypeDispatcher("op", "op");
 	_rootDispatch->addSubdispatch(opd);
-
-	if (_debug) {
-		opd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::RootOperation>(
-			"serial-validator", SigC::slot(this, &Connection::validateSerial)
-		));
-	}
 				
 	opd->addSubdispatch(new EncapDispatcher("info", "info"));
 	opd->addSubdispatch(new ClassDispatcher("error", "error"));
@@ -116,8 +110,13 @@ void Connection::disconnect()
 
 void Connection::reconnect()
 {
-	if (_host.empty())
-		throw InvalidOperation("Called Reconnect() without prior completion of connection");
+	if (_host.empty()) {
+		Eris::Log("Called Connection::reconnect() without prior sucessful connection");
+		handleFailure("Previous connection attempt failed, ignorning reconnect()");
+		return;
+		//throw InvalidOperation("Called Reconnect() without prior completion of connection");
+	}
+		
 	
 	BaseConnection::connect(_host, _port);
 }
@@ -260,6 +259,12 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 	Eris::Log("-");
 	postForDispatch(obj);
 
+	if (_debug) {
+		Atlas::Objects::Operation::RootOperation op = 
+			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj);
+		validateSerial(op);
+	}
+	
 	while (!_repostQueue.empty()) {
 		DispatchContextDeque dq(1, _repostQueue.front());
 		_repostQueue.pop_front();
@@ -276,7 +281,7 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 			_rootDispatch->dispatch(dq);
 			
 			if (_debug) {
-				const Atlas::Message::Object::MapType &m(dq.front().AsMap());
+				const Atlas::Message::Object::MapType &m(dq.back().AsMap());
 				if (m.find("__DISPATCHED__") == m.end()) {
 					std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
 					Eris::Log("WARNING : op %s never hit a leaf node", summary.c_str());	
@@ -306,22 +311,16 @@ void Connection::addWait(WaitForBase *w)
 	_waitList.push_front(w);
 }
 
-void deleteFiredWait(WaitForBase *w)
-{
-	assert(w);
-	if (w->isPending())
-		delete w;
-}
-
 void Connection::clearSignalledWaits()
 {
 	int ccount = _waitList.size();
 	
-	std::for_each(_waitList.begin(), _waitList.end(), deleteFiredWait); 
-	
-	_waitList.erase(
-		std::remove_if(_waitList.begin(), _waitList.end(), WaitForBase::hasFired), 
-		_waitList.end());
+	for (WaitForList::iterator Wnext = _waitList.begin(); Wnext != _waitList.end(); ) {
+		WaitForList::iterator W = Wnext++;
+		if ((*W)->isPending()) {
+			delete *W;
+			_waitList.erase(W);		}
+	}
 	
 	ccount -= _waitList.size();
 	if (ccount)
@@ -382,7 +381,6 @@ void Connection::validateSerial(const Atlas::Objects::Operation::RootOperation &
 	
 	SerialFromSet::iterator S = seen.find(sfm);
 	if (S != seen.end()) {
-		assert(false);
 		std::string summary(objectSummary(op));
 		Eris::Log("ERROR: duplicate process of op [%s] from %s with serial# %i",
 			summary.c_str(), sfm.first.c_str(), sfm.second);
