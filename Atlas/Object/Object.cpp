@@ -1,6 +1,6 @@
-
-
 #include "Object.h"
+
+using std::string;
 
 namespace Atlas
 {
