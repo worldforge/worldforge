@@ -1,4 +1,10 @@
 2005-03-25  James Turner  <james@worldforge.org>
+	
+	* Mercator/Area.cpp, Mercator/Area.h, Mercator/AreaShader.cpp, 
+	  Mercator/AreaShader.h: adding missing copyright statements on the
+	  new files.
+
+2005-03-25  James Turner  <james@worldforge.org>
 
 	* Mercator/Area.cpp, Mercator/Area.h: initial work on supporting
 	  polygonal areas in Mercator.
