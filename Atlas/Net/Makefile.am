@@ -12,7 +12,7 @@ libAtlasNetincludedir = $(includedir)/Atlas/Net
 
 libAtlasNetinclude_HEADERS = \
 	Client.h Codec.h Filter.h \
-	Net.h PackedDecoder.h PackedEncoder.h \
+	PackedDecoder.h PackedEncoder.h \
 	PackedProtocol.h Protocol.h Decoder.h \
 	Encoder.h Server.h Socket.h TCPSocket.h \
 	XMLDecoder.h XMLEncoder.h XMLProtocol.h
