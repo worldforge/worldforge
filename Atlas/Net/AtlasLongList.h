@@ -42,6 +42,9 @@ extern DL_IMPORT(PyObject *)	LongList_AsTuple	Py_PROTO((PyObject *));
 #define LongList_SET_ITEM(op, i, v)	(((LongListObject *)(op))->ob_item[i] = (v))
 #define LongList_GET_SIZE(op)		(((LongListObject *)(op))->ob_size)
 
+DL_EXPORT(void) initLongList();
+
+
 #ifdef __cplusplus
 }
 #endif

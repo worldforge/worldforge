@@ -43,6 +43,8 @@ extern DL_IMPORT(PyObject *)	URIList_AsTuple		Py_PROTO((PyObject *));
 #define URIList_SET_ITEM(op, i, v)	(((URIListObject *)(op))->ob_item[i] = (v))
 #define URIList_GET_SIZE(op)		(((URIListObject *)(op))->ob_size)
 
+DL_EXPORT(void) initURIList();
+
 #ifdef __cplusplus
 }
 #endif

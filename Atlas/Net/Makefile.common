@@ -9,6 +9,7 @@ TARGETS = $(OUTDIR)/libAtlas.a \
 	$(OUTDIR)/CopyTest$(EXE_EXT) \
 
 LIBOBJS = \
+	$(OUTDIR)/AtlasTransport.o \
 	$(OUTDIR)/AtlasURI.o \
 	$(OUTDIR)/AtlasURIList.o \
 	$(OUTDIR)/AtlasIntList.o \
@@ -210,5 +211,7 @@ $(OUTDIR)/AtlasFloatList.o: AtlasFloatList.c AtlasFloatList.h
 $(OUTDIR)/AtlasStringList.o: AtlasStringList.c AtlasStringList.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
+$(OUTDIR)/AtlasTransport.o: AtlasTransport.c AtlasTransport.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 

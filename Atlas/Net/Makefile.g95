@@ -1,6 +1,3 @@
-<<<<<<< Makefile.g95
-
-=======
 
 # Standard defines:
 CC		=	g++
@@ -17,4 +14,4 @@ libDirs         =	$(STDLIBS)
 LIBS            =	-lAtlas -lpython15 -lwsock32 -lstdc++
 
 include Makefile.common
->>>>>>> 1.2
+

@@ -42,6 +42,9 @@ extern DL_IMPORT(PyObject *)	StringList_AsTuple	Py_PROTO((PyObject *));
 #define StringList_SET_ITEM(op, i, v)	(((StringListObject *)(op))->ob_item[i] = (v))
 #define StringList_GET_SIZE(op)		(((StringListObject *)(op))->ob_size)
 
+DL_EXPORT(void) initStringList();
+
+
 #ifdef __cplusplus
 }
 #endif

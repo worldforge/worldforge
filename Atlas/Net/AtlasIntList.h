@@ -42,6 +42,9 @@ extern DL_IMPORT(PyObject *)	IntList_AsTuple		Py_PROTO((PyObject *));
 #define IntList_SET_ITEM(op, i, v)	(((IntListObject *)(op))->ob_item[i] = (v))
 #define IntList_GET_SIZE(op)		(((IntListObject *)(op))->ob_size)
 
+DL_EXPORT(void) initIntList();
+
+
 #ifdef __cplusplus
 }
 #endif

@@ -42,6 +42,9 @@ extern DL_IMPORT(PyObject *)	FloatList_AsTuple	Py_PROTO((PyObject *));
 #define FloatList_SET_ITEM(op, i, v)	(((FloatListObject *)(op))->ob_item[i] = (v))
 #define FloatList_GET_SIZE(op)		(((FloatListObject *)(op))->ob_size)
 
+DL_EXPORT(void) initFloatList();
+
+
 #ifdef __cplusplus
 }
 #endif

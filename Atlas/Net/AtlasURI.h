@@ -38,6 +38,9 @@ extern DL_IMPORT(PyObject *)	URI_GetData		Py_PROTO((PyObject *));
 extern DL_IMPORT(int)		URI_SetData		Py_PROTO((PyObject *, PyObject *));
 extern DL_IMPORT(int)		URI_SetHandler		Py_PROTO((URIHandlerFunc *));
 
+DL_EXPORT(void) initURI();
+
+
 #ifdef __cplusplus
 }
 #endif
