@@ -4,6 +4,7 @@
 
 #include <sigc++/signal_system.h>
 #include <algorithm>
+#include <float.h>
 
 // various atlas headers we need
 #include <Atlas/Bridge.h>
@@ -41,9 +42,8 @@
 #include "IdDispatcher.h"
 
 //using namespace Atlas::Objects;
-
-
-
+typedef Atlas::Message::Object::ListType AtlasListType;
+typedef Atlas::Message::Object::MapType AtlasMapType;
 
 namespace Eris {
 	
@@ -335,11 +335,13 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 	
 		StringSet::iterator I = _pendingInitialSight.find(e->getID());
 		if (I != _pendingInitialSight.end()) {
-			// FIXME - this effectively generates synthetic appearance ops,
-			// which is necessry for clients, but should be the server's problem.
 			Appearance.emit(e);
+			e->setVisible(true);
 			_pendingInitialSight.erase(I);
-		}
+		} else
+			// if it wasn't pending, we are either aggressivley pulling or got a disappearance
+			// before the SIGHT came through .. hence this
+			e->setVisible(false);
 		
 	} else {
 		if (getParentsAsSet(ent) != ei->second->getInherits()) {
@@ -450,16 +452,24 @@ void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 
 void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 {
-	string id = getArg(ap, "id").AsString();
-	Entity *e = lookup(id);
+	const AtlasListType &args = ap.GetArgs();
+	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
+		const AtlasMapType &app = A->AsMap();
+		AtlasMapType::const_iterator V(app.find("id"));
+		std::string id(V->second.AsString());
+		Entity *e = lookup(id);
+		if (!e) continue;
 	
-	if (e) {
 		// wunderbar, we have it already
+		e->setVisible(true);
 		Appearance.emit(e);
 		
+		float stamp(FLT_MAX);
 		// but it might be out of data - check the stamp [NULL indicates no stamping]
-		float stamp = getArg(ap, "stamp").AsFloat();
-		if ((stamp == 0) || (stamp > e->getStamp()))
+		if ((V = app.find("stamp")) != app.end())
+			stamp = V->second.AsFloat();
+		
+		if (stamp > e->getStamp())
 			look(id);
 	}
 }
@@ -469,9 +479,10 @@ void World::recvDisappear(const Atlas::Objects::Operation::Disappearance &ds)
 	string id = getArg(ds, "id").AsString();
 	Entity *e = lookup(id);
 	
-	if (e)
+	if (e) {
 		Disappearance.emit(e);
-	else {
+		e->setVisible(false);
+	} else {
 		// suppress the Appearance signal
 		_pendingInitialSight.erase(id);
 	}

@@ -52,6 +52,11 @@ Lobby::Lobby(/*Player *p,*/ Connection *con) :
 	assert(_con);
 	_con->Failure.connect(SigC::slot(this, &Lobby::netFailure));
 	_con->Connected.connect(SigC::slot(this, &Lobby::netConnected));
+	
+	if (_con->getStatus() == BaseConnection::CONNECTED) {
+		// otherwise we never see the Connected signal for obvious reasons
+		netConnected();
+	}
 }
 	
 Lobby::~Lobby()

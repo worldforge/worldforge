@@ -28,6 +28,7 @@ Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
 	_id(ge.GetId()),
 	_stamp(-1.0),
 	_container(NULL),
+	_visible(true),
 	_bbox(0., 0., 0.),
 	_position(ge.GetPos())
 {	
@@ -134,6 +135,26 @@ Coord Entity::getPosition() const
 BBox Entity::getBBox() const
 {
 	return _bbox;
+}
+
+void Entity::setVisible(bool vis)
+{
+	bool wasVisible = _visible;
+	_visible = vis;
+	
+	// recurse on children
+	for (EntityArray::iterator E=_members.begin();E!=_members.end();++E)
+		setVisible(vis);
+	
+	if (!wasVisible && _visible) {
+		//move back to actice
+		// World::Instance()->mark
+	}
+	
+	if (wasVisible && !_visible) {
+		// move to the cache ... keep around for 'a while'
+		//World::Instance()->addInvisible(this);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

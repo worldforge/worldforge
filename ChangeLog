@@ -6,6 +6,14 @@ Thursday, November 22 2001, James Turner
 	  been fixed, notably thatn logging in with a current version of
 	  Cyphesis-C++ should work
 	* Added a 'listUnbound' debugging helper to TypeInfo
+	
+	* Add a check in Lobby's ctor if the connection is already active;
+	  if so, run the netConnected callback directly. This avoids
+	  incorrect behaviour in certain intialisations orders.
+	* Rewrote World::recvAppear to deal with every argument in the
+	  list, not just the first one. 
+	* Added isVisible and setVisible methods to Entity, which are
+	  driven off Appearance and Disappearance ops from the server
 
 Sunday, November 18 2001, James Turner
 

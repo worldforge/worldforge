@@ -89,6 +89,11 @@ public:
 	StringSet getInherits() const
 	{ return _parents; }
 	
+	/** Query the visiblity of this entity; this is controlled by Appearance/Disappearance ops
+	from the server */
+	bool isVisible() const
+	{ return _visible; }
+	
 // Signals
 	SigC::Signal1<void, Entity*> AddedMember;
 	SigC::Signal1<void, Entity*> RemovedMember;
@@ -151,6 +156,11 @@ protected:
 	that the container of e is <i>not<i/> reset */
 	virtual void rmvMember(Entity *e);
 	
+	/** called by World in response to Appearance/Disappearance messages : note that
+	after a disappearance (vis = false), the server will not send any futher messages to the
+	entity. At some point, invisible entities get flushed by Eris using an LRU scheme. */
+	virtual void setVisible(bool vis);
+	
 	void setContainerById(const std::string &id);
 	
 	const std::string _id;	///< the Atlas object ID
@@ -158,6 +168,7 @@ protected:
 	float _stamp;		///< last modification time (in seconds) 
 	std::string _description;// surely this should be retrieved dynamically from the server?
 	StringSet _parents;
+	bool _visible;
 	
 	// container-ship / entity heirarchy
 	Entity* _container;	///< The container entity, NULL for the root-entity, or if un-parented
