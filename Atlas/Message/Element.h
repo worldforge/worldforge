@@ -57,16 +57,6 @@ typedef std::vector<Element> ListType;
 class Element
 {
 public:
-    // These are now legacy typedefs. New code should use the
-    // Atlas::Message::*Type versions.
-#warning Atlas::Message::Element::FooType typedefs will become private before 0.6.0
-    typedef Atlas::Message::IntType IntType;
-    typedef Atlas::Message::FloatType FloatType;
-    typedef Atlas::Message::PtrType PtrType;
-    typedef Atlas::Message::StringType StringType;
-    typedef Atlas::Message::MapType MapType;
-    typedef Atlas::Message::ListType ListType;
-
     enum Type {
         TYPE_NONE,
         TYPE_INT,
@@ -76,6 +66,20 @@ public:
         TYPE_MAP,
         TYPE_LIST
     };
+
+#ifdef ATLAS_ELEMENT_TYPEDEF_PRIVATE
+private:
+#else
+#warning Atlas::Message::Element::FooType typedefs will become private before 0.6.0
+#endif
+    // These are now legacy typedefs. New code should use the
+    // Atlas::Message::*Type versions.
+    typedef Atlas::Message::IntType IntType;
+    typedef Atlas::Message::FloatType FloatType;
+    typedef Atlas::Message::PtrType PtrType;
+    typedef Atlas::Message::StringType StringType;
+    typedef Atlas::Message::MapType MapType;
+    typedef Atlas::Message::ListType ListType;
 
 private:
     /// Clear all values.

@@ -5,7 +5,7 @@
 #ifndef ATLAS_OBJECTS_SMARTPTR_H
 #define ATLAS_OBJECTS_SMARTPTR_H
 
-#include <Atlas/Objects/BaseObject.h>
+#include <Atlas/Exception.h>
 
 namespace Atlas { namespace Objects {
 
@@ -21,6 +21,9 @@ class SmartPtr
 {
   public:
     typedef T DataT;
+
+    typedef typename T::iterator iterator;
+    typedef typename T::const_iterator const_iterator;
 
     SmartPtr() : ptr(T::alloc()) { 
     }
@@ -53,8 +56,8 @@ class SmartPtr
     operator SmartPtr<const newType>() const {
         return SmartPtr<const newType>(ptr);
     }
-    bool operator!() const {
-        return ptr == 0;
+    bool isValid() const {
+        return ptr != 0;
     }
     T& operator*() const { 
         if (ptr == 0) {

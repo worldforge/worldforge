@@ -89,7 +89,7 @@ int main(int argc, char** argv)
     for(i=0; i<MAX_ITER; i+=1.0) {
         //human:
         GameEntity human;
-        Atlas::Message::Element::ListType pos;
+        Atlas::Message::ListType pos;
         human->modifyPos()[0] = i;
         human->modifyPos()[1] = i-1.0;
         human->modifyPos()[2] = i+1.0;

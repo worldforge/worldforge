@@ -1,5 +1,23 @@
 2004-02-23  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/AttributeInfo.py: Add some debugging output to
+	  the default initialiser generation code.
+
+	* Atlas/Message/Element.h: Add a flag allowing us to make typedefs
+	  private already for apps that want it already.
+
+	* Atlas/Objects/BaseObject.h: Fix a comment.
+
+	* Atlas/Objects/SmartPtr.h: Add typedefs for iterator and
+	  const_iterator, and replace operator! with a explicit
+	  isValid() method for testing for a null pointer.
+
+	* benchmark/Message_Move.cpp, benchmark/Objects3_Move.cpp,
+	  tests/Objects/encoder1.cpp, tests/Objects/objects2.cpp:
+	  Fix up tests to use the right Message typedefs.
+
+2004-02-23  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py:
 	  Work in progress to set default values for objects at build
 	  time.

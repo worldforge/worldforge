@@ -91,7 +91,7 @@ void testXML()
     move_args[0] = (Root&)human;
     move_op->setArgs(move_args);
 
-    Atlas::Message::Element::ListType velocity;
+    Atlas::Message::ListType velocity;
     velocity.push_back(2.0);
     velocity.push_back(1.0);
     velocity.push_back(0.0);
@@ -187,11 +187,11 @@ void testXML()
 }
 
 
-void check_float_list3(const Atlas::Message::Element::ListType &list,
+void check_float_list3(const Atlas::Message::ListType &list,
                        double el1, double el2, double el3)
 {
     assert( list.size() == 3 );
-    Atlas::Message::Element::ListType::const_iterator i = list.begin();
+    Atlas::Message::ListType::const_iterator i = list.begin();
     assert( (*i++) == el1 );
     assert( (*i++) == el2 );
     assert( (*i++) == el3 );
@@ -215,8 +215,8 @@ void testValues()
         // <<l->getArgs()[0]->getLongDescription()<<std::cout;
     
     {
-    Atlas::Message::Element::MapType mobj;
-    Atlas::Message::Element::ListType parents;
+    Atlas::Message::MapType mobj;
+    Atlas::Message::ListType parents;
     parents.push_back(std::string("account"));
     mobj["parents"] = parents;
     mobj["name"] = std::string("foo");
@@ -237,7 +237,7 @@ void testValues()
     }
     
     {
-    Atlas::Message::Element::MapType mobj;
+    Atlas::Message::MapType mobj;
     Root obj = Atlas::Objects::objectDefinitions.find(std::string("account"))->second;
     assert(obj->getClassNo() == Atlas::Objects::Entity::ACCOUNT_NO);
     assert(obj->getId() == "account");
@@ -253,7 +253,7 @@ void testValues()
     }
 
     {
-    Atlas::Message::Element::MapType mobj;
+    Atlas::Message::MapType mobj;
     Root obj = Atlas::Objects::messageElement2ClassObject(mobj);
     assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "");
@@ -264,10 +264,10 @@ void testValues()
     }
 
     {
-    Atlas::Message::Element::MapType mobj;
+    Atlas::Message::MapType mobj;
     mobj["id"] = std::string("bar");
     mobj["name"] = std::string("foo");
-    Atlas::Message::Element::ListType parents;
+    Atlas::Message::ListType parents;
     parents.push_back(std::string("account"));
     mobj["parents"] = parents;
     Root obj = Atlas::Objects::messageElement2ClassObject(mobj);
@@ -280,20 +280,20 @@ void testValues()
     }
 
     {
-    Atlas::Message::Element::MapType maccount;
+    Atlas::Message::MapType maccount;
     maccount["id"] = std::string("bar");
     maccount["name"] = std::string("foo");
-    Atlas::Message::Element::ListType parents;
+    Atlas::Message::ListType parents;
     parents.push_back(std::string("player"));
     maccount["parents"] = parents;
     maccount["objtype"] = "obj";
 
-    Atlas::Message::Element::MapType mcreate;
+    Atlas::Message::MapType mcreate;
     mcreate["from"] = std::string("bar");
-    Atlas::Message::Element::ListType parents2;
+    Atlas::Message::ListType parents2;
     parents2.push_back(std::string("create"));
     mcreate["parents"] = parents2;
-    Atlas::Message::Element::ListType args;
+    Atlas::Message::ListType args;
     args.push_back(maccount);
     mcreate["args"] = args;
     mcreate["objtype"] = "op";
@@ -357,19 +357,19 @@ void test()
 
         //check for empty default:
         DEBUG_PRINT(std::cout<<"empty ok?"<<std::cout);
-        Atlas::Message::Element::ListType empty = human->getVelocityAsList();
+        Atlas::Message::ListType empty = human->getVelocityAsList();
         if(i==0) check_float_list3(empty, 0.0, 0.0, 0.0);
         else check_float_list3(empty, 0.0, y2, 0.0);
         
         //check after setting it
         DEBUG_PRINT(std::cout<<"setting ok?"<<std::cout);
-        Atlas::Message::Element::ListType velocity;
+        Atlas::Message::ListType velocity;
         velocity.push_back(x1);
         velocity.push_back(y1);
         velocity.push_back(z1);
         check_float_list3(velocity, x1, y1, z1);
         human->setVelocityAsList(velocity);
-        Atlas::Message::Element::ListType foo = human->getVelocityAsList();
+        Atlas::Message::ListType foo = human->getVelocityAsList();
         check_float_list3(foo, x1, y1, z1);
 
         DEBUG_PRINT(std::cout<<"changing it?"<<std::cout);
@@ -382,7 +382,7 @@ void test()
         check_float_list3(foo, x2, y1, z1);
         
         DEBUG_PRINT(std::cout<<"std::vector of entities?"<<std::cout);
-        const Atlas::Message::Element::ListType &ent_velocity = ent_vec[i]->getVelocityAsList();
+        const Atlas::Message::ListType &ent_velocity = ent_vec[i]->getVelocityAsList();
         if(i==0) check_float_list3(ent_velocity, 0.0, 0.0, 0.0);
         else check_float_list3(ent_velocity, 0.0, y2, 0.0);
 
@@ -415,7 +415,7 @@ void test()
         assert(test_args2.size() == 1);
         RootEntity test_ent =
             (RootEntity&)test_args2[0];
-        Atlas::Message::Element::ListType foo3 = test_ent->getVelocityAsList();
+        Atlas::Message::ListType foo3 = test_ent->getVelocityAsList();
         check_float_list3(foo3, x2, y1, z1);
 
         std::vector<double> coords(3, 0.0);

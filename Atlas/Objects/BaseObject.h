@@ -70,8 +70,8 @@ public:
     /// Remove the attribute "name". This will not work for static attributes.
     virtual void removeAttr(const std::string& name);
 
-    /// Convert this object to a Object. This is now legacy, and implemented using
-    /// addToMessage
+    /// Convert this object to a Object. This is now legacy, and implemented
+    /// using addToMessage.
     const Atlas::Message::MapType asMessage() const;
 
     /// Write this object to an existing Element

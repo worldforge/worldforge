@@ -195,9 +195,11 @@ class AttributeInfo:
         elif self.type == "string_list_length" or self.type == "string_list":
             if len(self.value) == 0:
                 return ''
-            if len(self.value) == 1:
+            elif len(self.value) == 1:
                 return '        %s = %s(1, "%s");\n' \
                        % (var, cpp_type[self.type], self.value[0])
+            else:
+                print 'length of list ', len(self.value)
         else:
             return '        // %s\n' % (var)
 
