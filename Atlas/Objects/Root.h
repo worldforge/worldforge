@@ -28,6 +28,10 @@ public:
     virtual bool Has(const std::string&);
     
     virtual void Transmit(Atlas::Bridge* b);
+
+    virtual std::string GetId();
+    virtual void SetId(const std::string&);
+    virtual bool HasId();
     
 protected:
     
@@ -35,6 +39,8 @@ protected:
               std::pair<bool, Atlas::Message::Object> > attrmap;
 
     attrmap attributes;
+    
+    string id;
 };
 
 } }
