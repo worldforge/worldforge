@@ -33,11 +33,18 @@ public:
 	static int atlasATREND;  // attribute end
 	static int atlasMSGEND;  // message ends
 
-	static int atlasINT;  // message ends
-	static int atlasFLT;  // message ends
-	static int atlasSTR;  // message ends
-	static int atlasLST;  // message ends
-	static int atlasMAP;  // message ends
+	static int atlasINT;
+	static int atlasLNG;
+	static int atlasFLT;
+	static int atlasSTR;
+	static int atlasURI;
+	static int atlasLSTINT;
+	static int atlasLSTLNG;
+	static int atlasLSTFLT;
+	static int atlasLSTSTR;
+	static int atlasLSTURI;
+	static int atlasLST;
+	static int atlasMAP;
 };
 
 #endif

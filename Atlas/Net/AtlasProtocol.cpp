@@ -17,9 +17,16 @@ int AProtocol::atlasATRVAL = 3;   // attribute value
 int AProtocol::atlasATREND = 4;   // attribute end
 int AProtocol::atlasMSGEND = 5;   // message ends
 
-int AProtocol::atlasINT = 1;  // message ends
-int AProtocol::atlasFLT = 2;   // message ends
-int AProtocol::atlasSTR = 3;   // message ends
-int AProtocol::atlasLST = 4;   // message ends
-int AProtocol::atlasMAP = 5;   // message ends
+int AProtocol::atlasINT		= 1;
+int AProtocol::atlasLNG		= 2;
+int AProtocol::atlasFLT		= 3;
+int AProtocol::atlasSTR		= 4;
+int AProtocol::atlasURI		= 5;
+int AProtocol::atlasLSTINT	= 6;
+int AProtocol::atlasLSTLNG	= 7;
+int AProtocol::atlasLSTFLT	= 8;
+int AProtocol::atlasLSTSTR	= 9;
+int AProtocol::atlasLSTURI	= 10;
+int AProtocol::atlasLST		= 11;
+int AProtocol::atlasMAP		= 12;
 

@@ -84,6 +84,14 @@ int APackedAsciiDecoder::hasTokens()
 				state = 2;
 				break;
 			}
+			if (typ == ">") {
+				// end of typed list
+				buffer = buffer.substr(1);
+				token = AProtocol::atlasATREND;
+				type = AProtocol::atlasLST;
+				state = 2;
+				break;
+			}
 			if (typ == "]") {
 				// end of map
 				buffer = buffer.substr(1);
@@ -105,9 +113,18 @@ int APackedAsciiDecoder::hasTokens()
 			name = buffer.substr(1,pos-1);
 			buffer = buffer.substr(pos+1);
 			// got an attribute name
+			if (typ == "<") {
+				typ = buffer.substr(0,1);
+				if (typ == "!") type = AProtocol::atlasLSTURI;
+				if (typ == "@") type = AProtocol::atlasLSTINT;
+				if (typ == "#") type = AProtocol::atlasLSTFLT;
+				if (typ == "$") type = AProtocol::atlasLSTSTR;
+				if (typ == "%") type = AProtocol::atlasLSTLNG;
+			}
 			if (typ == "(") type = AProtocol::atlasLST;
 			if (typ == "[") type = AProtocol::atlasMAP;
-			if (typ == "%") type = AProtocol::atlasINT;
+			if (typ == "@") type = AProtocol::atlasINT;
+			if (typ == "%") type = AProtocol::atlasLNG;
 			if (typ == "#") type = AProtocol::atlasFLT;
 			if (typ == "$") type = AProtocol::atlasSTR;
 			// change states, wait for value

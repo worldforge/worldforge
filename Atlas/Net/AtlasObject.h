@@ -264,10 +264,14 @@ static	AObject	mkString(const string& val);
 	int		isFloatList() const;
 
 /** true if this AObject is a String */
-	int		isStringList
-() const;
+	int		isStringList() const;
 
 
+/** (URI) return path to reference */
+	AObject		AObject::getURIPath() const;
+
+/** (URI) return data object */
+	AObject		AObject::getURIData() const;
 
 /** (Map) return a List of all keys for a Map */
 	AObject		keys() const;

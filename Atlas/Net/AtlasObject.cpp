@@ -115,7 +115,6 @@ AObject::AObject(int len, long src, ...)
 	obj = LongList_New(len);
 
 	LongList_SetItem(obj, 0, PyLong_FromLong(src));
-	len--;
 	va_list	va;
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
@@ -130,7 +129,6 @@ AObject::AObject(int len, int src, ...)
 	obj = IntList_New(len);
 
 	IntList_SetItem(obj, 0, PyInt_FromLong((long)src));
-	len--;
 	va_list	va;
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
@@ -145,7 +143,6 @@ AObject::AObject(int len, double src, ...)
 	obj = FloatList_New(len);
 
 	FloatList_SetItem(obj, 0, PyFloat_FromDouble(src));
-	len--;
 	va_list	va;
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
@@ -162,7 +159,6 @@ AObject::AObject(int len, string* src, ...)
 	char* tmp = strdup(src->c_str());
 	StringList_SetItem(obj, 0, PyString_FromString(tmp));
 	free(tmp);
-	len--;
 	va_list	va;
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
@@ -672,6 +668,9 @@ long	AObject::asLong() const	        { return PyLong_AsLong(obj); }
 double	AObject::asFloat() const	{ return PyFloat_AsDouble(obj); }
 string	AObject::asString() const	{ return PyString_AsString(obj); }
 
+AObject	AObject::getURIPath() const	{ return AObject(URI_GetPath(obj)); }
+AObject	AObject::getURIData() const	{ return AObject(URI_GetData(obj)); }
+ 
 int	AObject::isMap() const	        { return PyMapping_Check(obj); }
 int	AObject::isList() const	        { return PyList_Check(obj); }
 

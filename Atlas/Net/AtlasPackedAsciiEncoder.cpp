@@ -31,6 +31,51 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name,
 		}
 		printf(")");
 	} 
+	if (list.isURIList()) {
+		printf("<!%s=", name);
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i,tmp);
+			walkTree(0, "", tmp);
+		}
+		printf(">");
+	} 
+	if (list.isIntList()) {
+		printf("{@%s=", name);
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i,tmp);
+			walkTree(0, "", tmp);
+		}
+		printf("}");
+	} 
+	if (list.isLongList()) {
+		printf("{%%%s=", name);
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i,tmp);
+			walkTree(0, "", tmp);
+		}
+		printf("}");
+	} 
+	if (list.isFloatList()) {
+		printf("{#%s=", name);
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i,tmp);
+			walkTree(0, "", tmp);
+		}
+		printf("}");
+	} 
+	if (list.isStringList()) {
+		printf("{$%s=", name);
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i,tmp);
+			walkTree(0, "", tmp);
+		}
+		printf("}");
+	} 
 	if (list.isMap()) {
 		AObject keys = list.keys();
 		printf("[%s=", name);
@@ -46,6 +91,12 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name,
 
 	if (list.isString()) {
 		printf("$%s=%s", name, list.asString().c_str());
+	}
+	if (list.isURI()) {
+		printf("!%s=%li", name, list.getURIPath().asString());
+	}
+	if (list.isInt()) {
+		printf("@%s=%li", name, list.asInt());
 	}
 	if (list.isLong()) {
 		printf("%%%s=%li", name, list.asLong());
