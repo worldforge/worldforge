@@ -1,5 +1,10 @@
 Wednesday, February 4th, 2004   Ron Steinke <rsteinke@w-link.net>
 
+	* Added wfmath.spec to EXTRA_DIST to ease rpm building.
+	* 0.3.2 release! (no, really! this time I mean it!)
+
+Wednesday, February 4th, 2004   Ron Steinke <rsteinke@w-link.net>
+
 	* Added a missing word to some descriptive text in wfmath.spec.
 	* 0.3.2 release!
 
