@@ -29,7 +29,6 @@ class Terrain {
 
     void remove(int x, int y);
     void invalidate(int x, int y);
-    void getAvgBasePoint(int x, int y, float & z);
   public:
     static const float defaultLevel = 8;
     explicit Terrain(int res = 64);

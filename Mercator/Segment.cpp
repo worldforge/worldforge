@@ -14,24 +14,37 @@ static float FALLOFF = 0.15;
 static float ROUGHNESS = 1.5;
 
 Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
-                            m_max(0.f), m_min(0.0f)
+                            m_normals(0), m_max(0.f), m_min(0.0f)
 {
 }
 
 Segment::~Segment()
 {
     delete m_points;
+    if (m_normals != 0) {
+        delete m_normals;
+    }
     clearMods();
 }
 
-void Segment::populate(const Matrix<4, 4> & base)
+void Segment::populate(const Matrix<2, 2> & base)
 {
-    fill2d(m_res, FALLOFF, ROUGHNESS, base(1, 1), base(2, 1),
-                                    base(2, 2), base(1, 2));
+    fill2d(m_res, FALLOFF, ROUGHNESS, base(0, 0), base(1, 0),
+                                    base(1, 1), base(0, 1));
 
     for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
-	applyMod(*I);
+        applyMod(*I);
     }
+}
+
+void Segment::populateNormals()
+{
+    if (m_normals == 0) {
+        m_normals = new float[(m_res + 1) * (m_res + 1) * 3];
+    }
+    
+    // Fill in the damn normals
+
 }
 
 //rand num between -0.5...0.5
@@ -95,9 +108,9 @@ void Segment::fill1d(int size, float falloff, float roughness, float l, float h,
 //size must be a power of 2
 //array is size+1  * size+1 with the corners the control points.
 void Segment::fill2d(int size, float falloff, float roughness, 
-		   float p1, float p2, float p3, float p4) {
+                   float p1, float p2, float p3, float p4) {
     assert(falloff!=-1.0);
-    assert(m_points!=NULL);
+    assert(m_points!=0);
     
     int line = size+1;
     
@@ -154,9 +167,9 @@ void Segment::fill2d(int size, float falloff, float roughness,
                                         m_points[size/2*line + 0],
                                         m_points[size/2*line + size],
                                         m_points[size*line + size/2],
-					roughness,
-					f, depth);
-		    
+                                        roughness,
+                                        f, depth);
+                    
 
     checkMaxMin(m_points[stride*line + stride]);
     stride >>= 1;
@@ -177,7 +190,7 @@ void Segment::fill2d(int size, float falloff, float roughness,
                                        m_points[(i-stride) + (j-stride) * (line)],
                                        roughness, f, depth);
               checkMaxMin(m_points[j*line + i]);
-	  }
+          }
       }
  
       depth++;
@@ -193,9 +206,9 @@ void Segment::fill2d(int size, float falloff, float roughness,
                                        m_points[(i) + (j-stride) * (line)], 
                                        roughness, f , depth);
               checkMaxMin(m_points[j*line + i]);
-	  }
+          }
       }
-	       
+               
       for (int i=stride;i<size;i+=stride*2) {
           for (int j=stride*2;j<size;j+=stride*2) {
               m_points[j*line + i] = qRMD(m_points[(i-stride) + (j) * (line)],

@@ -1,11 +1,23 @@
+2003-06-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h, Mercator/Terrain.cpp: Get rid of the passing
+	  over extra surrounding basepoints into Segment::populate.
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: No longer require
+	  surrounding basepoints when doing qRMD. Add API and stubs for
+	  storing an entire array of normals. Segment::populateNormals()
+	  currently just allocates the array of normals. It does nothing
+	  else.
+
 2003-06-06 Damien McGinnes
-        * TerrainMod.h: fixed where I called Center() instead of getCenter()
+
+	* TerrainMod.h: fixed where I called Center() instead of getCenter()
 
 2003-06-06 Damien McGinnes
 
 	* TerrainMod.h : added. Defines modifiers for the terrain.
-	* Segment.h/Segment.cpp : modified to use TerrainMod objects, stored in a list,
-	  applied in order during populate
+	* Segment.h/Segment.cpp : modified to use TerrainMod objects, stored
+	  in a list, applied in order during populate
 	* removed Segment_impl.h refactored out.
 
 2003-06-03  Al Riddoch  <alriddoch@zepler.org>

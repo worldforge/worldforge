@@ -75,75 +75,19 @@ bool Terrain::getBasePoint(int x, int y, float & z)
     return true;
 }
 
-void Terrain::getAvgBasePoint(int x, int y, float & z)
-{
-    float total = 0.f;
-    int num = 0;
-    for(int i = (x - 1); i < (x + 2); i++) {
-        for(int j = (y - 1); j < (y + 2); j++) {
-            float val;
-            if (getBasePoint(i, j, val)) {
-                total += val;
-                ++num;
-            }
-        }
-    }
-    if (num == 0) {
-        z = Terrain::defaultLevel; 
-    } else {
-        z = total / num;
-    }
-}
-
 Segment * Terrain::getSegmentSafe(int x, int y, bool force)
 {
     Segment * s = getSegmentQuik(x, y);
     if (s != 0) {
         return s;
     }
-    Matrix<4, 4> base;
+    Matrix<2, 2> base;
     // float base[16];
-    for(int i = 0; i < 16; ++i) { base[i] = Terrain::defaultLevel; }
-    bool complete = getBasePoint(x,     y,     base(1, 1)) &&
-                    getBasePoint(x + 1, y,     base(2, 1)) &&
-                    getBasePoint(x,     y + 1, base(1, 2)) &&
-                    getBasePoint(x + 1, y + 1, base(2, 2));
-    if (!getBasePoint(x - 1, y - 1, base(0, 0))) {
-        getAvgBasePoint(x - 1, y - 1, base(0, 0));
-    }
-    if (!getBasePoint(x - 1, y + 0, base(0, 1))) {
-        getAvgBasePoint(x - 1, y + 0, base(0, 1));
-    }
-    if (!getBasePoint(x - 1, y + 1, base(0, 2))) {
-        getAvgBasePoint(x - 1, y + 1, base(0, 2));
-    }
-    if (!getBasePoint(x - 1, y + 2, base(0, 3))) {
-        getAvgBasePoint(x - 1, y + 2, base(0, 3));
-    }
-    if (!getBasePoint(x + 0, y - 1, base(1, 0))) {
-        getAvgBasePoint(x + 0, y - 1, base(1, 0));
-    }
-    if (!getBasePoint(x + 0, y + 2, base(1, 3))) {
-        getAvgBasePoint(x + 0, y + 2, base(1, 3));
-    }
-    if (!getBasePoint(x + 1, y - 1, base(2, 0))) {
-        getAvgBasePoint(x + 1, y - 1, base(2, 0));
-    }
-    if (!getBasePoint(x + 1, y + 2, base(2, 3))) {
-        getAvgBasePoint(x + 1, y + 2, base(2, 3));
-    }
-    if (!getBasePoint(x + 2, y - 1, base(3, 0))) {
-        getAvgBasePoint(x + 2, y - 1, base(3, 0));
-    }
-    if (!getBasePoint(x + 2, y + 0, base(3, 1))) {
-        getAvgBasePoint(x + 2, y + 0, base(3, 1));
-    }
-    if (!getBasePoint(x + 2, y + 1, base(3, 2))) {
-        getAvgBasePoint(x + 2, y + 1, base(3, 2));
-    }
-    if (!getBasePoint(x + 2, y + 2, base(3, 3))) {
-        getAvgBasePoint(x + 2, y + 2, base(3, 3));
-    }
+    for(int i = 0; i < 4; ++i) { base[i] = Terrain::defaultLevel; }
+    bool complete = getBasePoint(x,     y,     base(0, 0)) &&
+                    getBasePoint(x + 1, y,     base(1, 0)) &&
+                    getBasePoint(x,     y + 1, base(0, 1)) &&
+                    getBasePoint(x + 1, y + 1, base(1, 1));
     if (force || complete) {
         s = new Segment(m_res);
         s->populate(base); // , fn, ff, nf);
