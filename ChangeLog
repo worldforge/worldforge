@@ -1,3 +1,7 @@
+Wednesday, 12th December, Al Riddoch
+
+	* src/Avatar.cpp: Fix initialisation of val.
+
 Wednesday, 11th December, Al Riddoch
 
 	* test/testPlayer.cpp: std:: namespace fixes.

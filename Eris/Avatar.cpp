@@ -23,7 +23,7 @@ static std::string refno_to_string(long refno)
   // deal with any character set weirdness
   const char digits[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-  unsigned long val = (refno >= 0) ? val : -val;
+  unsigned long val = (refno >= 0) ? refno : -refno;
 
   std::string result;
 
