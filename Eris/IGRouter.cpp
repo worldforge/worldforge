@@ -145,6 +145,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
                 continue; // we don't have it, ignore
             }
             
+            debug() << "entity " << ent->getId() << " got set: " << setOp;
             ent->setFromRoot(args[A]);
         }
         return HANDLED;

@@ -15,6 +15,11 @@ using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;
 using namespace Eris;
 
+
+
+
+#pragma mark -
+
 Commander::Commander(StubServer* stub, int fd) :
     m_server(stub),
     m_channel(fd)
@@ -63,7 +68,7 @@ void Commander::negotiate()
         break;
 
     case Atlas::Net::StreamAccept::FAILED:
-        error() << "ClientConnection got Atlas negotiation failure";
+        error() << "Commander got Atlas negotiation failure";
         m_channel.close();
         break;
 
@@ -77,7 +82,7 @@ void Commander::negotiate()
         break;
 
     default:
-        throw InvalidOperation("unknown state from Atlas StreamAccept in ClientConnection::negotiate");
+        throw InvalidOperation("unknown state from Atlas StreamAccept in Commander::negotiate");
     }             
 }
 
@@ -85,7 +90,8 @@ void Commander::negotiate()
 
 void Commander::dispatch(const RootOperation& op)
 {
+    // stub server control commands, TO = "stub_server"
     // shutdown command
     
-    
+    // admin / world modify commands, apply to world state
 }

@@ -29,7 +29,7 @@ ClientConnection::ClientConnection(StubServer* ss, int socket) :
     m_codec(NULL),
     m_encoder(NULL)
 {
-    m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", m_stream, this);
+    m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", m_stream, *this);
     m_acceptor->poll(false);
 }
 

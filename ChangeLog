@@ -1,3 +1,10 @@
+2004-09-29  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp: typographic cleans ups
+	* Eris/Log.cpp: add the ability to send Message::Elements over log streams
+	* test/commander.cpp, test/stubServer.cpp, test/controller.cpp: work to
+	  support out-of-band control of the stub server from test cases
+	  
 2004-08-10  James Turner  <james@worldforge.org>
 
     * Eris/View.cpp: Make entities that are being deleted invisible first, so 

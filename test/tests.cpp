@@ -27,7 +27,7 @@ using std::endl;
 using std::cout;
 
 typedef std::auto_ptr<Eris::Connection> AutoConnection;
-typedef std::auto_ptr<Eris::Player> AutoPlayer;
+typedef std::auto_ptr<Eris::Account> AutoAccount;
 
 class SignalCounter0 : public SigC::Object
 {
@@ -90,9 +90,9 @@ AutoConnection stdConnect()
     return con;
 }
 
-AutoPlayer stdLogin(const std::string& uname, const std::string& pwd, Eris::Connection* con)
+AutoAccount stdLogin(const std::string& uname, const std::string& pwd, Eris::Connection* con)
 {
-    AutoPlayer player(new Eris::Player(con));
+    AutoAccount player(new Eris::Account(con));
     
     SignalCounter0 loginCount;
     player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
@@ -116,7 +116,7 @@ AutoPlayer stdLogin(const std::string& uname, const std::string& pwd, Eris::Conn
 void testLogin()
 {
     AutoConnection con = stdConnect();
-    AutoPlayer player(new Eris::Player(con.get()));
+    AutoAccount player(new Eris::Account(con.get()));
     
     SignalCounter0 loginCount;
     player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
@@ -141,7 +141,7 @@ void testLogin()
 void testBadLogin()
 {
     AutoConnection con = stdConnect();
-    AutoPlayer player(new Eris::Player(con.get()));
+    AutoAccount player(new Eris::Account(con.get()));
     
     SignalCounter0 loginCount;
     player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
@@ -164,7 +164,7 @@ void testBadLogin()
 void testAccCreate()
 {
     AutoConnection con = stdConnect();
-    AutoPlayer player(new Eris::Player(con.get()));
+    AutoAccount player(new Eris::Account(con.get()));
     
     SignalCounter0 loginCount;
     player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
@@ -189,7 +189,7 @@ void testAccCreate()
 void testAccountCharacters()
 {
     AutoConnection con = stdConnect();
-    AutoPlayer player = stdLogin("account_B", "sweede", con.get());
+    AutoAccount player = stdLogin("account_B", "sweede", con.get());
 
     SignalCounter0 gotChars;
     player->GotAllCharacters.connect(SigC::slot(gotChars, &SignalCounter0::fired));
@@ -210,7 +210,7 @@ void testAccountCharacters()
 void testLogout()
 {
     AutoConnection con = stdConnect();
-    AutoPlayer player = stdLogin("account_C", "lemon", con.get());
+    AutoAccount player = stdLogin("account_C", "lemon", con.get());
     
     SignalCounter1<bool> gotLogout;
     player->LogoutComplete.connect(SigC::slot(gotLogout, &SignalCounter1<bool>::fired));
@@ -227,7 +227,7 @@ void testLogout()
 void testCharActivate()
 {
     AutoConnection con = stdConnect();
-    AutoPlayer player = stdLogin("account_B", "sweede", con.get());
+    AutoAccount player = stdLogin("account_B", "sweede", con.get());
 
     Avatar* av = player->takeCharacter("acc_b_character");
     
@@ -238,6 +238,15 @@ void testCharActivate()
     {
         Eris::PollDefault::poll();
     }
+    
+    assert(av->getEntity() == NULL); // shouldn't have the entity yet
+    assert(av->getId() == "acc_b_character"); // but should have it's ID
+    cout << "in-game" << endl;
+    
+    SignalCounter1<Entity*> gotChar;
+    av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Entity*>::fired));
+    
+    while (gotChar.fireCount() == 0) Eris::PollDefault::poll();
     
     assert(av->getEntity());
     assert(av->getEntity()->getId() == "acc_b_character");

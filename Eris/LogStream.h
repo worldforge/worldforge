@@ -55,6 +55,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& s, const Atlas::Objects::Root& obj);
+std::ostream& operator<<(std::ostream& s, const Atlas::Message::Element& msg);
 
 } // of namespace Eris
 

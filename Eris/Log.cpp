@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include <Atlas/Codecs/Bach.h>
+#include <Atlas/Message/MEncoder.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Encoder.h>
@@ -43,6 +44,15 @@ std::ostream& operator<<(std::ostream& os, const Atlas::Objects::Root& obj)
     Atlas::Codecs::Bach debugCodec(s, *(Atlas::Bridge*)0);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
+    return os << s.str();
+}
+
+std::ostream& operator<<(std::ostream& os, const Atlas::Message::Element& msg)
+{
+    std::stringstream s;
+    Atlas::Codecs::Bach debugCodec(s, *(Atlas::Bridge*)0);
+    Atlas::Message::Encoder debugEncoder(debugCodec);
+    debugEncoder.streamMessageElement(msg.asMap());
     return os << s.str();
 }
 

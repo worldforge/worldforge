@@ -102,6 +102,7 @@
 				C43A91470604E066004FFDC2,
 				C4ADF7D006457A3500D3CCAC,
 				C4ADF6AD064ED5320074F881,
+				C44CB71B070A240C000DCC7E,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -115,7 +116,6 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build /Users/jmt/Library/Frameworks";
 				GCC_PREPROCESSOR_DEFINITIONS = ATLAS_ELEMENT_TYPEDEF_PRIVATE;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -584,6 +584,20 @@
 			name = Frameworks;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		C44CB71A070A240C000DCC7E = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = controller.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C44CB71B070A240C000DCC7E = {
+			fileRef = C44CB71A070A240C000DCC7E;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C45D3199063C4795001112F7 = {
 			fileEncoding = 30;
@@ -1390,6 +1404,7 @@
 		};
 		C4AD291A05FA259900AFB402 = {
 			children = (
+				C44CB71A070A240C000DCC7E,
 				C4ADF6AC064ED5320074F881,
 				C4ADF7CF06457A3500D3CCAC,
 				C4ADF7D206457B6D00D3CCAC,

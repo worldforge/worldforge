@@ -125,8 +125,7 @@ void Entity::setFromRoot(const Root& obj)
         
         // see if the value in the sight matches the exsiting value
         AttrMap::iterator I = m_attrs.find(A->first);
-        if ((I != m_attrs.end()) && (I->second == A->second))
-            continue;
+        if ((I != m_attrs.end()) && (I->second == A->second)) continue;
 
         setAttr(A->first, A->second);
     }
@@ -168,6 +167,8 @@ void Entity::imaginary(const Atlas::Objects::Root& arg)
 void Entity::setAttr(const std::string &attr, const Element &val)
 {
     beginUpdate();
+
+    debug() << "setting attr " << attr << " of " << m_id << " to " << val;
 
     if (!nativeAttrChanged(attr, val))
     {
@@ -218,7 +219,7 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
     }
     else if (attr == "bbox")
     {
-	m_bbox.fromAtlas(v);
+        m_bbox.fromAtlas(v);
         m_hasBBox = true;
         return true;
     }

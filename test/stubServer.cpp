@@ -46,7 +46,7 @@ StubServer::StubServer(short port) :
     std::string path = VAR_DIR + "/testeris.sock";
     unlink(path.c_str());
     
-    m_commandListener.open(VAR_DIR + "/testeris.sock");
+    m_commandListener.open(path);
     assert(m_commandListener.is_open());
     
     setupTestAccounts();
