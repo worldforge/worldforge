@@ -79,7 +79,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 	if (retval < 0)
 		// FIXME - is an error from select fatal or not? At present I think yes,
 		// but I'm sort of open to persuasion on this matter.
-		throw InvalidOperation("Error at Meta::Poll() doing select()");
+		throw InvalidOperation("Error at PollDefault::Poll() doing select()");
 
 	got_data = (retval != 0);
 }
