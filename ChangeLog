@@ -1,3 +1,8 @@
+Sunday, February 15th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed the Atlas forward declaration workaround to return
+	  a reference to Atlas::Message::Element instead of a copy.
+
 Thursday, February 5th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Got the fooCorner() fix right.

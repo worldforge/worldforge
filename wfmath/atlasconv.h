@@ -88,7 +88,8 @@ class AtlasOutType
 {
  public:
   AtlasOutType(const _AtlasMessageType::ListType& l) : m_val(l) {}
-  operator _AtlasMessageType() {return m_val;}
+  operator _AtlasMessageType&() {return m_val;}
+  operator const _AtlasMessageType&() const {return m_val;}
  private:
   _AtlasMessageType m_val;
 };
