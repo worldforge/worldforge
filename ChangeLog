@@ -1,3 +1,13 @@
+2001-03-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Codecs/Makefile.am: Install Codec header files, so codecs can
+	  be used directly.
+
+	* src/Codecs/*.cpp: Removed default value for can_read parameter from
+	  definition as it is only required in declaration.
+
+	* Added some std:: prefixes as required.
+
 2001-03-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Updated ROADMAP and NEWS to latest versions from stable branch.
