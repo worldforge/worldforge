@@ -2,14 +2,15 @@ machine: 400Mhz AMD-K6(tm) 3D processor
 
 note that Static_Move is 'mock' test, hopefully achievable
 
-                   creation   movement
-C++/Message_Move : 2.9K/s     1.9K/s
-C++/Objects_Move : 860/s      500/s
-C++/Static_Move  : 7.6M/s     1.7M/s
-C++/Call_Move    :            1.9M/s
-Python/OldMove   : 1.5K/s     900/s
-Python/Move      : 1.3K/s     840/s
-Python/Call_Move :            26K/s
+                    creation   movement
+C++/Message_Move  : 2.9K/s     1.9K/s
+C++/Objects_Move  : 860/s      500/s
+C++/Static_Move   : 7.6M/s     1.7M/s
+C++/SmartPtr_Move : 970K/s     500K/s
+C++/Call_Move     :            1.9M/s
+Python/OldMove    : 1.5K/s     900/s
+Python/Move       : 1.3K/s     840/s
+Python/Call_Move  :            26K/s
 
 
 forge-2000.08.11-17:29:05/scratchpad/Object_modified.h
@@ -45,6 +46,13 @@ Static_Move:
         NPC movements: 
                 iterations=1e+07 CPU Time=5.61 iter/s=1.78253e+06
         6.88user 0.00system 0:07.69elapsed 89%CPU
+
+SmartPtr_Move:
+        Plain creating of sight operation: 
+                iterations=1e+07 CPU Time=10.06 iter/s=994036
+        NPC movements: 
+                iterations=1e+07 CPU Time=19.45 iter/s=514139
+        29.50user 0.02system 0:31.84elapsed 92%CPU
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

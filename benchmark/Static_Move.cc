@@ -109,9 +109,9 @@ int main(int argc, char** argv)
     //sight:
     Operation sight_op;
     sight_op.objtype=OP;
-    move_op.parent=&sight;
-    move_op.from=&ent;
-    move_op.arg=&move_op;
+    sight_op.parent=&sight;
+    sight_op.from=&ent;
+    sight_op.arg=&move_op;
   }
   TIME_OFF("Plain creating of sight operation");
 

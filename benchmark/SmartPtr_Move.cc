@@ -14,7 +14,12 @@ public:
     int data_type1, data_type2;
 };
 
-#define DEBUG 1
+#define DEBUG 0
+#if DEBUG
+#define MAX_ITER 3.0
+#else
+#define MAX_ITER 10000000.0
+#endif
 
 template <class T>
 class FreeList
@@ -22,7 +27,7 @@ class FreeList
 public:
   FreeList() : count(1) { 
 #if DEBUG
-    cout << "FreeList(): this: " << this << endl; 
+    cout << "FreeList(): this: " << this << " data_type: " << data_type << endl; 
 #endif
   }
   ~FreeList() {
@@ -31,40 +36,45 @@ public:
 #endif
     assert( count==0 );
   }
-  unsigned GetRef() {
-#if DEBUG
-    cout << "FreeList.GetRef(): this: " << this << " count: " << count << " -> " << count+1 << endl;
-#endif
-    return ++count;
-  }
-  unsigned FreeRef() {
-#if DEBUG
-    cout << "FreeList.FreeRef(): this: " << this << " count: " << count << " -> " << count-1 << endl;
-#endif
-    assert( count > 0 );
-    return --count;
-  }
-  void *operator new(size_t size) {
+  static FreeList<T> *alloc() {
     if(begin) {
 #if DEBUG
-      cout << "FreeList.new: get from list: " << begin << endl;
+      cout << "FreeList.alloc(): get from list: " << begin << endl;
 #endif
       FreeList *res = begin;
+      assert( res->count == 0 );
+      res->IncRef();
       begin = begin->next;
       return res;
     }
 #if DEBUG
-    cout << "FreeList.new: malloc" << endl;
+    cout << "FreeList.alloc(): new" << endl;
 #endif
-    return malloc(size);
+    return new FreeList<T>;
   }
-  void operator delete(void *_ptr) {
+  
+  void free() {
 #if DEBUG
-    cout << "FreeList.delete: _ptr: " << _ptr << " data_type: " << data_type << endl;
+    cout << "FreeList.free(): this: " << this << " data_type: " << data_type << endl;
 #endif
-    FreeList *ptr = (FreeList*)_ptr;
-    ptr->next = begin;
-    begin = ptr;
+    data.FreeObjectPtr();
+    next = begin;
+    begin = this;
+  }
+
+  void IncRef() {
+#if DEBUG
+    cout << "FreeList.IncRef(): this: " << this << " count: " << count << " -> " << count+1 << endl;
+#endif
+    count++;
+  }
+  void DecRef() {
+#if DEBUG
+    cout << "FreeList.DecRef(): this: " << this << " count: " << count << " -> " << count-1 << endl;
+#endif
+    assert( count > 0 );
+    count--;
+    if(!count) free();
   }
 //private:
   static int data_type;
@@ -73,6 +83,9 @@ public:
   FreeList *next;
   T data;
 };
+
+class ObjectData;
+void DecRef(FreeList<ObjectData> *ptr);
 
 enum {
   OBJECT_DATA,
@@ -83,8 +96,22 @@ enum {
 class ObjectData {
 public:
   ObjectData() : parent(NULL) { type = OBJECT_DATA; }
+#define FreeFoo(a) if(a) { DecRef(a); a = NULL; }
+  ~ObjectData() { FreeObjectPtr(); }
+  void FreeObjectPtr() {
+    FreeFoo(parent);
+  }
   int type;
   int id;
+#define SetFoo(a)                         \
+  void Set_##a(FreeList<ObjectData> *p) { \
+    if(a!=p) {                            \
+      if(a) ::DecRef(a);                  \
+      if(p) p->IncRef();                  \
+      a = p;                              \
+    }                                     \
+  }
+  SetFoo(parent);
   FreeList<ObjectData> *parent;
   int objtype;
 };
@@ -95,7 +122,12 @@ int FreeList<ObjectData>::data_type = OBJECT_DATA;
 class EntityData : public ObjectData {
 public:
   EntityData() : loc(NULL) { type = ENTITY_DATA; }
-  FreeList<EntityData> *loc;
+  void FreeObjectPtr() {
+    ObjectData::FreeObjectPtr();
+    FreeFoo(loc);
+  }
+  SetFoo(loc);
+  FreeList<ObjectData> *loc;
   double pos[3];
   double velocity[3];
 };
@@ -106,12 +138,38 @@ int FreeList<EntityData>::data_type = ENTITY_DATA;
 class OperationData : public ObjectData {
 public:
   OperationData() : from(NULL), to(NULL), arg(NULL) { type = OPERATION_DATA; }
+  void FreeObjectPtr() {
+    ObjectData::FreeObjectPtr();
+    FreeFoo(from);
+    FreeFoo(to);
+    FreeFoo(arg);
+  }
+  SetFoo(from);
+  SetFoo(to);
+  SetFoo(arg);
   FreeList<ObjectData> *from, *to;
-  FreeList<ObjectData>* arg;
+  FreeList<ObjectData> *arg;
 };
 
 FreeList<OperationData> *FreeList<OperationData>::begin = NULL;
 int FreeList<OperationData>::data_type = OPERATION_DATA;
+
+void DecRef(FreeList<ObjectData> *ptr)
+{
+  switch(ptr->data.type) {
+  case OBJECT_DATA:
+    ptr->DecRef();
+    break;
+  case ENTITY_DATA:
+    ((FreeList<EntityData> *)ptr)->DecRef();
+    break;
+  case OPERATION_DATA:
+    ((FreeList<OperationData> *)ptr)->DecRef();
+    break;
+  default:
+    cout << "Unknown object class: " << ptr->data.type;
+  }
+}
 
 template <class T> 
 class SmartPtr
@@ -119,7 +177,7 @@ class SmartPtr
 public:
   FreeList<T> *ptr;
   SmartPtr() { 
-    ptr = new FreeList<T>; 
+    ptr = FreeList<T>::alloc(); 
 #if DEBUG
     cout << "SmartPtr(): this: " << this << " ptr: " << ptr << endl;
 #endif
@@ -153,10 +211,10 @@ public:
     DecRef();
   }
   void DecRef() {
-    if( ! ptr->FreeRef() ) delete ptr;
+    ptr->DecRef();
   }
   void IncRef() {
-    ptr->GetRef();
+    ptr->IncRef();
   }
   // SmartPtr<EntityData> -> FreeList<ObjectData>*
   FreeList<ObjectData>* AsObjectPtr() {
@@ -251,7 +309,14 @@ Entity test4(Entity &in)
   return bar;
 }
 
-#if DEBUG
+FreeList<ObjectData> *test_obj_ptr()
+{
+  Operation ent;
+  ent.IncRef();
+  return ent.AsObjectPtr();
+}
+
+#if DEBUG==2
 int main()
 {
   cout << endl << "Entity foo;" << endl;
@@ -286,12 +351,10 @@ int main()
     cout << "IncompatibleDataTypeException: " 
          << e.data_type1 << "!=" << e.data_type2 << endl;
   }
-  cout << endl << "FreeList<ObjectData> *obj_ptr = human.AsObjectPtr();" << endl;
-  FreeList<ObjectData> *obj_ptr = human.AsObjectPtr();
-  cout << endl << "obj_ptr->GetRef();" << endl;
-  obj_ptr->GetRef();
-//  cout << endl << "delete obj_ptr;" << endl;
-//  delete obj_ptr;
+  cout << endl << "FreeList<ObjectData> *obj_ptr = test_obj_ptr();" << endl;
+  FreeList<ObjectData> *obj_ptr = test_obj_ptr();
+  cout << endl << "DecRef(obj_ptr);" << endl;
+  DecRef(obj_ptr);
   cout << endl << "...DONE" << endl;
   return 0;
 }
@@ -312,6 +375,9 @@ private:
 
 Operation NPC::move(Operation &op)
 {
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  Entity op_arg = op->arg;" << endl;
+#endif
   Entity op_arg = op->arg;
   double *new_vel = op_arg->velocity;
   vx = new_vel[0];
@@ -323,8 +389,14 @@ Operation NPC::move(Operation &op)
   z += vz;
 
   //human:
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  Entity human_ent;" << endl;
+#endif
   Entity human_ent;
-  human_ent->parent = human.AsObjectPtr();
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  human_ent->Set_parent(human.AsObjectPtr());" << endl;
+#endif
+  human_ent->Set_parent(human.AsObjectPtr());
   human_ent->id = GetId();
   human_ent->pos[0] = x;
   human_ent->pos[1] = y;
@@ -334,17 +406,38 @@ Operation NPC::move(Operation &op)
   human_ent->velocity[2] = vz;
   
   //move:
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  Operation move_op;" << endl;
+#endif
   Operation move_op;
   move_op->objtype = OP;
-  move_op->parent = ::move.AsObjectPtr();
-  move_op->arg = human_ent.AsObjectPtr();
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  move_op->Set_parent(::move.AsObjectPtr());" << endl;
+#endif
+  move_op->Set_parent(::move.AsObjectPtr());
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  move_op->Set_arg(human_ent.AsObjectPtr());" << endl;
+#endif
+  move_op->Set_arg(human_ent.AsObjectPtr());
   
   //sight:
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  Operation sight_op;" << endl;
+#endif
   Operation sight_op;
   sight_op->objtype = OP;
-  sight_op->parent = sight.AsObjectPtr();
-  sight_op->from = human_ent.AsObjectPtr();
-  sight_op->arg = move_op.AsObjectPtr();
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  sight_op->Set_parent(sight.AsObjectPtr());" << endl;
+#endif
+  sight_op->Set_parent(sight.AsObjectPtr());
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  sight_op->Set_from(human_ent.AsObjectPtr());" << endl;
+#endif
+  sight_op->Set_from(human_ent.AsObjectPtr());
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  sight_op->Set_arg(move_op.AsObjectPtr());" << endl;
+#endif
+  sight_op->Set_arg(move_op.AsObjectPtr());
 
   return sight_op;
 }
@@ -353,11 +446,17 @@ int main(int argc, char** argv)
 {
   double i;
   TIME_ON;
-  for(i=0; i<10000000.0; i+=1.0) {
+  for(i=0; i<MAX_ITER; i+=1.0) {
     //human:
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    Entity ent;" << endl;
+#endif
     Entity ent;
     ent->objtype=OBJECT;
-    ent->parent=human.AsObjectPtr();
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    ent->Set_parent(human.AsObjectPtr());" << endl;
+#endif
+    ent->Set_parent(human.AsObjectPtr());
     ent->pos[0] = i;
     ent->pos[1] = i-1.0;
     ent->pos[2] = i+1.0;
@@ -366,46 +465,100 @@ int main(int argc, char** argv)
     ent->velocity[2] = i+1.0;
 
     //move:
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    Operation move_op;" << endl;
+#endif
     Operation move_op;
     move_op->objtype=OP;
-    move_op->parent=move.AsObjectPtr();
-    move_op->arg=ent.AsObjectPtr();
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_parent(move.AsObjectPtr());" << endl;
+#endif
+    move_op->Set_parent(move.AsObjectPtr());
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_arg(ent.AsObjectPtr());" << endl;
+#endif
+    move_op->Set_arg(ent.AsObjectPtr());
     
     //sight:
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    Operation sight_op;" << endl;
+#endif
     Operation sight_op;
     sight_op->objtype=OP;
-    move_op->parent=sight.AsObjectPtr();
-    move_op->from=ent.AsObjectPtr();
-    move_op->arg=move_op.AsObjectPtr();
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_parent(sight.AsObjectPtr());" << endl;
+#endif
+    sight_op->Set_parent(sight.AsObjectPtr());
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_from(ent.AsObjectPtr());" << endl;
+#endif
+    sight_op->Set_from(ent.AsObjectPtr());
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_arg(move_op.AsObjectPtr());" << endl;
+#endif
+    sight_op->Set_arg(move_op.AsObjectPtr());
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    DONE iter" << endl;
+#endif
   }
   TIME_OFF("Plain creating of sight operation");
 
 
+#if DEBUG
+  cout << endl << "DEBUG: " << __LINE__ << ":  NPC npc1;" << endl;
+#endif
   NPC npc1;
   double x,y,z;
   TIME_ON;
-  for(i=0; i<10000000.0; i+=1.0) {
+  for(i=0; i<MAX_ITER; i+=1.0) {
     //human:
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    Entity human_ent;" << endl;
+#endif
     Entity human_ent;
-    human_ent->parent = human.AsObjectPtr();
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    human_ent->Set_parent(human.AsObjectPtr());" << endl;
+#endif
+    human_ent->Set_parent(human.AsObjectPtr());
     human_ent->id = npc1.GetId();
     human_ent->velocity[0] = i;
     human_ent->velocity[1] = i-1.0;
     human_ent->velocity[2] = i+1.0;
 
     //move:
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    Operation move_op;" << endl;
+#endif
     Operation move_op;
     move_op->objtype = OP;
-    move_op->parent = move.AsObjectPtr();
-    move_op->arg = human_ent.AsObjectPtr();
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_parent(move.AsObjectPtr());" << endl;
+#endif
+    move_op->Set_parent(move.AsObjectPtr());
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_arg(human_ent.AsObjectPtr());" << endl;
+#endif
+    move_op->Set_arg(human_ent.AsObjectPtr());
 
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    Operation res_sight = npc1.move(move_op);" << endl;
+#endif
     Operation res_sight = npc1.move(move_op);
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    Operation res_move = res_sight->arg;" << endl;
+#endif
     Operation res_move = res_sight->arg;
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    Entity res_ent = res_move->arg;" << endl;
+#endif
     Entity res_ent = res_move->arg;
     double *new_pos = res_ent->pos;
     x = new_pos[0];
     y = new_pos[1];
     z = new_pos[2];
+#if DEBUG
+    cout << endl << "DEBUG: " << __LINE__ << ":    DONE iter" << endl;
+#endif
   }
   TIME_OFF("NPC movements");
   cout<<"Resulting position: ("<<x<<","<<y<<","<<z<<")"<<endl;
