@@ -22,6 +22,14 @@
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
 
+#ifdef __WIN32__
+
+#ifndef snprintf
+#define snprintf _snprintf
+#endif
+
+#endif // __WIN32__
+
 namespace Eris {
 
 char* pack_uint32(uint32_t data, char* buffer, unsigned int &size);

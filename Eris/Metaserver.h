@@ -17,15 +17,6 @@ typedef unsigned int uint32_t;
 
 #endif  // _STDINT_H_
 
-#ifndef __MINGW32__
-#ifndef vsnprintf
-#define vsnprintf _vsnprintf
-#endif
-#ifndef snprintf
-#define snprintf _snprintf
-#endif
-#endif // __MINGW32__
-
 #endif // __WIN32__
 
 

@@ -1,5 +1,12 @@
 Sunday, 11th January, Ron Steinke <rsteinke@w-link.net>
 
+	* Eris/Metaserver.*: On second thought, just move
+	  the snprintf stuff into Metaserver.cpp. That way
+	  Eris should continue to build fine, but dependent
+	  software won't get hit with it.
+
+Sunday, 11th January, Ron Steinke <rsteinke@w-link.net>
+
 	* Eris/Metaserver.h: Put an #ifndef __MINGW32__ around
 	  the snprintf and vsnprintf #defines.
 
