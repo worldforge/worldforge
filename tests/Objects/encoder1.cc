@@ -1,7 +1,7 @@
 #include <string>
-#include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Encoder.h>
-#include <Atlas/Message/DecoderBase.h>
+#include "../../src/Objects/Root.h"
+#include "../../src/Objects/Encoder.h"
+#include "../../src/Message/DecoderBase.h"
 
 using namespace std;
 using namespace Atlas;

@@ -1,4 +1,4 @@
-#include <Atlas/Objects/Decoder.h>
+#include "../../src/Objects/Decoder.h"
 
 using namespace Atlas;
 

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <cassert>
-#include <Atlas/Message/Object.h>
-#include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Operation/Look.h>
-#include <Atlas/Objects/Entity/Account.h>
+#include "../../src/Message/Object.h"
+#include "../../src/Objects/Root.h"
+#include "../../src/Objects/Operation/Look.h"
+#include "../../src/Objects/Entity/Account.h"
 
 using namespace Atlas;
 using namespace Atlas::Objects;
