@@ -10,7 +10,7 @@ endif
 ## Can't do this while Types.cpp needs the conversion stuff in Types.h
 ##AM_CXXFLAGS = -DWFMATH_CONVERSION
 
-INCLUDES += $(PYBIND_CFLAGS)
+INCLUDES = $(PYBIND_CFLAGS)
 liberis_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
 	
 liberis_la_SOURCES = \

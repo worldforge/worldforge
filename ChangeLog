@@ -1,3 +1,11 @@
+Thursday, 30th January, Al Riddoch
+
+	* src/Lobby.h: Make destructor virtual.
+
+	* src/Room.cpp, src/Room.h: Simplify to one constructor.
+
+	* src/World.cpp: Ensure talk dispatcher names are unique.
+
 Monday, 16th December, Ron Steinke
 
 	* src/Avatar.h, src/BaseConnection.h, src/ClassDispatcher.h,

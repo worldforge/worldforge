@@ -30,7 +30,7 @@ class Lobby : public Room
 {
 public:	
 	Lobby(Connection *c); 
-	~Lobby();
+	virtual ~Lobby();
 
 	/// Join the specified room; throws if not allowed or not found
 	Room* join(const std::string &roomID);

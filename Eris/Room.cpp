@@ -41,14 +41,9 @@ Room::Room(Lobby *l, const std::string &id) :
     _lobby(l),
     _parted(false)
 {
+    if (_id.empty()) return;
     assert(l);
     setup();
-}
-
-Room::Room(Lobby *l) :
-	_id(""), _lobby(l), _parted(false)
-{
-	;
 }
 
 Room::~Room()

@@ -102,11 +102,8 @@ protected:
 	friend class Lobby;	// so Lobby can call the constructor
 		
 	/** standard constructor. Issues a LOOK against the specified ID, and sets up
-	the necessary signals to drive the Room */
-	Room(Lobby *l, const std::string &id);
-
-	/// base-constructor for derived classes (lobby)
-	explicit Room(Lobby *l);	
+	the necessary signals to drive the Room if id arg is provided */
+	explicit Room(Lobby *l, const std::string &id = "");
 
 	/**  delayable initialization - allows the Lobby to defer signal binding and so on until
 	the account INFO has been recieved. */

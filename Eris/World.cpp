@@ -487,7 +487,12 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 		if ( isPendingInitialSight(snd.GetFrom()) ) {
 			
 			// FIXME - ensure name uniqueness
-			std::string nm = "talk_" /* + snd.GetSerialno() */ ;
+			std::string nm = "talk_";
+			int sno = snd.GetSerialno();
+			for(; sno != 0; sno >>= 4) {
+			    nm += ('a' + (sno & 0xf));
+			}
+			std::cout << "TALK: " << snd.GetSerialno() << " " << nm << std::endl << std::flush;
 			new WaitForDispatch(snd, 
 				"op:" + _igID + ":sight:entity", 
 				new IdDispatcher(nm, snd.GetFrom()),
