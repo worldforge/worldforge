@@ -3,10 +3,6 @@ AC_INIT(src)
 AM_INIT_AUTOMAKE("Atlas", "0.1.0")
 AM_CONFIG_HEADER(src/config.h)
 
-dnl Test for c:
-
-AC_PROG_CC
-
 dnl Test for c++:
 
 AC_PROG_CXX
@@ -17,16 +13,14 @@ AM_PROG_LIBTOOL
 
 dnl Test for python:
 
-AC_CHECK_HEADERS(python1.5/Python.h)
+CXXFLAGS='-g -D_ADebug_ -Wall -O2'
+AC_SUBST(CXXFLAGS)
 
 AC_OUTPUT([
 	Makefile
 	src/Makefile
-	src/Bus/Makefile
-	src/Net/Makefile
-	src/NetTest/Makefile
-	src/BusTest/Makefile
-	src/BusAdmin/Makefile
-	src/Content/Makefile
+	src/Debug/Makefile
 	src/Object/Makefile
+	src/Net/Makefile
+	src/Content/Makefile
 ])

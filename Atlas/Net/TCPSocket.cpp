@@ -7,7 +7,7 @@
 #include <cassert>
 #include <cstdlib>
 
-#include "../Object/Debug.h"
+#include "../Debug/Debug.h"
 #include "TCPSocket.h"
 
 namespace Atlas
@@ -28,12 +28,12 @@ TCPSocket::TCPSocket()
 	if (!didWSAInit) {
 		WSAStartup(0x0101, &wsadata);
 		didWSAInit = 1;
-		DebugMsg1(4, "TCPSocket :: Did WSAStartup\n\n");
+		Debug::Msg(4, "TCPSocket :: Did WSAStartup\n\n");
 	}
 #endif
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
-	DebugMsg1(4, "TCPSocket :: Created Socket=%li", (long)sock);
+	Debug::Msg(4, "TCPSocket :: Created Socket=%li", (long)sock);
 }
 
 TCPSocket::~TCPSocket()
@@ -60,16 +60,16 @@ int	TCPSocket::connect(const string& addr, int port)
 	{
         //convert string to IP address
         hostaddr = inet_addr(addr.c_str());
-        DebugMsg1(4, "TCPSocket :: Converted IP Address = %li \n", hostaddr);
+        Debug::Msg(4, "TCPSocket :: Converted IP Address = %li \n", hostaddr);
         if ( hostaddr == ADDRESS_ERROR )
             return -1;
     } else {
         // name lookup worked, get address
-        DebugMsg1(4, "TCPSocket :: Reading host entry\n","");
+        Debug::Msg(4, "TCPSocket :: Reading host entry\n");
         hostaddr = *((u_long *)host->h_addr);
     }
 
-    DebugMsg3(4, "TCPSocket :: Opening connection to %li:%i on socket = %i\n", hostaddr,port,sock);
+    Debug::Msg(4, "TCPSocket :: Opening connection to %li:%i on socket = %i\n", hostaddr,port,sock);
 
     memset(&sin, 0, sizeof(sin)); // make sure everything zero
     sin.sin_family = AF_INET;
@@ -116,7 +116,7 @@ Socket*	TCPSocket::accept()
 
 int	TCPSocket::send(const string& data)
 {
-	DebugMsg2(4, "Sending Data on Socket=%li Data=%s", (long)sock, data.c_str());
+	Debug::Msg(4, "Sending Data on Socket=%li Data=%s", (long)sock, data.c_str());
 	return ::send(sock, data.c_str(), data.length(), 0);
 }
 

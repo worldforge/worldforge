@@ -9,10 +9,11 @@ changes:
 */
 
 #include <string>
-using std::string;
 #include <cassert>
 
-#include "../Object/Debug.h"
+using std::string;
+
+#include "../Debug/Debug.h"
 
 #include "Client.h"
 #include "Codec.h"
@@ -24,11 +25,13 @@ namespace Atlas
 
 Client::Client(Socket* aSocket, Codec* aCodec, Filter* aFilter)
     : csock( aSocket ), codec( aCodec ), filter ( aFilter )
-{ DebugMsg1( 5, "client :: Client() ", "" ); }
+{
+    Debug::Msg( 5, "client :: Client() ");
+}
 
 Client::~Client()
 {
-    DebugMsg1( 5, "client :: ~Client() ", "" );
+    Debug::Msg( 5, "client :: ~Client() ");
 
     delete csock;
     delete codec;
@@ -37,14 +40,14 @@ Client::~Client()
 
 SOCKET Client::getSock()
 {
-    DebugMsg1( 5, "client :: getSock()", "" );
+    Debug::Msg( 5, "client :: getSock()");
     assert( csock != 0 );
 	return csock->getSock();
 }
 
 bool Client::canRead()
 {
-    DebugMsg1( 5, "client :: canRead()", "" );
+    Debug::Msg( 5, "client :: canRead()");
 	int	len;
 	string	buf;
 	
@@ -60,7 +63,7 @@ bool Client::canRead()
 	if (filter)
 	    buf = filter->decode(buf);
 	
-	DebugMsg1(5,"client :: ISTREAM = %s\n", buf.c_str());
+	Debug::Msg(5,"client :: ISTREAM = %s\n", buf.c_str());
 	
 	//parse through codec
 	assert( codec != 0 );
@@ -72,7 +75,7 @@ bool Client::canRead()
 void	Client::chkMsgs()
 {
 	while ( codec->hasMessage() ) {
-		DebugMsg1(4,"client :: processing codec message","");
+		Debug::Msg(4,"client :: processing codec message");
 		gotMsg( codec->getMessage() );
 		codec->freeMessage();
 	}
@@ -81,10 +84,10 @@ void	Client::chkMsgs()
 
 bool Client::gotErrs()
 {
-    DebugMsg1( 5, "client :: gotErrs()", "" );
+    Debug::Msg( 5, "client :: gotErrs()");
     // errors are assumed to be a disconnect, propogate to subclasses
     assert( csock != 0 );
-    DebugMsg1( 0, "client :: SOCKET ERRORS ON %li", (long)csock->getSock());
+    Debug::Msg( 0, "client :: SOCKET ERRORS ON %li", (long)csock->getSock());
     csock->close();
     gotDisconnect();
     return true;
@@ -92,7 +95,7 @@ bool Client::gotErrs()
 
 void Client::doPoll()
 {
-    DebugMsg1( 5, "client :: doPoll()", "" );
+    Debug::Msg( 5, "client :: doPoll()");
     assert ( csock != 0 );
 
     fd_set		fdread;
@@ -126,7 +129,7 @@ void Client::doPoll()
 
 void Client::readMsg(Object& msg)
 {
-    DebugMsg1( 5, "client :: readMsg()", "" );
+    Debug::Msg( 5, "client :: readMsg()");
     assert ( csock != 0 );
 
 	// read and return a message
@@ -148,28 +151,28 @@ void Client::readMsg(Object& msg)
 
 void Client::sendMsg(const Object& msg)
 {
-    DebugMsg1( 5, "client :: sendMsg()", "" );
+    Debug::Msg( 5, "client :: sendMsg()");
     assert ( codec != 0 );
 
     string data = codec->encodeMessage(msg);
     if (filter)
 	    data = filter->encode(data);
 	
-    DebugMsg2(5,"client :: Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
+    Debug::Msg(5,"client :: Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
     int res = csock->send(data);
-    DebugMsg1(5,"client :: Client Message Sent = %i", res);
+    Debug::Msg(5,"client :: Client Message Sent = %i", res);
 	// do something about buffer full conditions here
 }
 
 void Client::gotMsg(const Object& msg)
 {
-    DebugMsg1(0,"client :: gotMsg() was not implemented in subclass","");
+    Debug::Msg(0,"client :: gotMsg() was not implemented in subclass");
     assert( false );
 }
 
 void Client::gotDisconnect()
 {
-    DebugMsg1(0,"client :: gotDisconnect() was not implemented in subclass","");
+    Debug::Msg(0,"client :: gotDisconnect() was not implemented in subclass");
     assert( false );
 }
 

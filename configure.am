@@ -1,1 +1,0 @@
-<package src="src" config="src/config.h"><name>Atlas</name><version>0.1.0</version><desc></desc><depend tag="c" version=""/><depend tag="c++" version=""/><depend tag="libtool" version=""/><depend tag="python" version=""/></package>

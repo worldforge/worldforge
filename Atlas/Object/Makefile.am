@@ -1,10 +1,8 @@
 
 lib_LTLIBRARIES = libAtlasObject.la
 
-libAtlasObject_la_SOURCES = Object.cpp Variant.cpp Debug.cpp 
+libAtlasObject_la_SOURCES = Object.cpp Variant.cpp
 
 libAtlasObjectincludedir = $(includedir)/Atlas/Object
 
-libAtlasObjectinclude_HEADERS = Object.h Variant.h Debug.h
-
-CXXFLAGS = -g -D_ADebug_ -Wall
+libAtlasObjectinclude_HEADERS = Object.h Variant.h

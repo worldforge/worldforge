@@ -13,7 +13,7 @@ changes:
 
 #include <cassert>
 
-#include "../Object/Debug.h"
+#include "../Debug/Debug.h"
 
 #include "Codec.h"
 #include "Protocol.h"
@@ -26,7 +26,7 @@ namespace Atlas
 
 Codec::Codec(Protocol* aproto) : proto( aproto ), nestd( 0 )
 {
-    DebugMsg1( 5, "codec :: Codec()", "" );
+    Debug::Msg( 5, "codec :: Codec()");
     assert( proto != 0 );
     assert( proto->getDecoder() != 0 );
     proto->getDecoder()->newStream();
@@ -35,31 +35,31 @@ Codec::Codec(Protocol* aproto) : proto( aproto ), nestd( 0 )
 
 string Codec::encodeMessage(const Object& amsg)
 {
-    DebugMsg1( 5, "acodec :: encodeMessage()", "" );
+    Debug::Msg( 5, "acodec :: encodeMessage()");
 	return proto->getEncoder()->encodeMessage(amsg);
 }
 
 int Codec::encodedLength()
 {
-    DebugMsg1( 5, "acodec :: encodedLength()", "" );
+    Debug::Msg( 5, "acodec :: encodedLength()");
 	return proto->getEncoder()->encodedLength();
 }
 
 void Codec::feedStream( const string& data)
 {
-    DebugMsg1( 5, "acodec :: feedStream()", "" );
+    Debug::Msg( 5, "acodec :: feedStream()");
 	proto->getDecoder()->feedStream(data);
 }
 
 Object& Codec::getMessage()
 {
-    DebugMsg1( 5, "acodec :: getMessage()", "" );
+    Debug::Msg( 5, "acodec :: getMessage()");
 	return msg;
 }
 
 void Codec::freeMessage()
 {
-	DebugMsg1( 5,"codec :: freeMessage()","");
+	Debug::Msg( 5,"codec :: freeMessage()");
 	//delete msg;
 	//msg->clear();
 }
@@ -67,7 +67,7 @@ void Codec::freeMessage()
 
 bool Codec::hasMessage()
 {
-	DebugMsg1( 5,"codec :: hasMessage()","");
+	Debug::Msg( 5,"codec :: hasMessage()");
 	// cant have a message until we have recieved tokens
     if ( !proto->getDecoder()->hasTokens() ) {
         return false;
@@ -75,7 +75,7 @@ bool Codec::hasMessage()
 	// got a token, we must be busy processing a message !!
 	myState = Codec::BUSY;
 	// process tokens until we run out or we complete a msg
-    DebugMsg1(1,"codec :: Scanning Tokens","");
+    Debug::Msg(1,"codec :: Scanning Tokens");
     Decoder* adec = proto->getDecoder();
 
     do {
@@ -84,27 +84,27 @@ bool Codec::hasMessage()
         string name = proto->getDecoder()->getName();
         if (name.length() == 0)
 		    name = string("(null)");
-		DebugMsg3(1,"codec :: tok=%i name=%s type=%i", tok, name.c_str(), type);
+		Debug::Msg(1,"codec :: tok=%i name=%s type=%i", tok, name.c_str(), type);
 		if (tok == Protocol::atlasATRVAL) {
 			// got a value for an attribute
 			if (type == Protocol::atlasSTR) stack[nestd] = Object::mkString(adec->getString());
 			if (type == Protocol::atlasINT) stack[nestd] = Object::mkInt(adec->getInt());
 			if (type == Protocol::atlasFLT) stack[nestd] = Object::mkFloat(adec->getFloat());
-			DebugMsg2(1,"codec :: ADDATTR nestd=%i name=%s", nestd, name.c_str());
+			Debug::Msg(1,"codec :: ADDATTR nestd=%i name=%s", nestd, name.c_str());
 		}
 		if (tok == Protocol::atlasATRBEG) {
 			// got an attribute header
 			names[nestd] = name;
 			if (type == Protocol::atlasMAP) {
 				// start a nested list
-				DebugMsg1(1,"codec :: MAKE_MAP","");
+				Debug::Msg(1,"codec :: MAKE_MAP");
 				stack[nestd] = Object::mkMap();
-				DebugMsg2(1,"codec :: ADD_MAP nestd=%i name=%s", nestd, names[nestd].c_str());
+				Debug::Msg(1,"codec :: ADD_MAP nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
 			} else if (type == Protocol::atlasLST) {
 				// start a nested list
 				stack[nestd] = Object::mkList(0);
-				DebugMsg2(1,"codec :: ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
+				Debug::Msg(1,"codec :: ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
 			}
 		}
@@ -115,14 +115,14 @@ bool Codec::hasMessage()
                                 type==Protocol::atlasMAP
                         ) { 
 				nestd--;
-				DebugMsg1(1,"codec :: ENDLIST nest=%i", nestd);
+				Debug::Msg(1,"codec :: ENDLIST nest=%i", nestd);
 			}
 			if (nestd > 0) {
 				if (stack[nestd-1].isList()) {
-					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
+					Debug::Msg(1,"codec :: UNSTACK nest=%i LIST", nestd);
 					stack[nestd-1].append(stack[nestd]);
 				} else {
-					DebugMsg2(1,"codec :: UNSTACK nest=%i MAP name=%s", nestd, names[nestd].c_str());
+					Debug::Msg(1,"codec :: UNSTACK nest=%i MAP name=%s", nestd, names[nestd].c_str());
 					stack[nestd-1].set(names[nestd], stack[nestd]);
 				}
 			}
@@ -137,7 +137,7 @@ bool Codec::hasMessage()
 			// got a message trailer
 			//assert(nestd == 1);
 			// should have unraveled all nesting by now
-			DebugMsg1(1,"codec :: message complete","");
+			Debug::Msg(1,"codec :: message complete");
 			msg = stack[0];
 			// get outa the loop !!
 			myState = Codec::IDLE;

@@ -11,14 +11,12 @@ changes:
 */
 
 
-#ifdef _MSC_VER
 #include <cassert>
-#endif
 
+#include "../Debug/Debug.h"
 #include "Server.h"
 #include "Client.h"
 #include "Socket.h"
-#include "../Object/Debug.h"
 
 namespace Atlas
 {
@@ -79,7 +77,7 @@ int Server::poll(long usec)
 			}
 		}
 		if (FD_ISSET(i,&xerrs)) {
-			DebugMsg1(0,"[Server] SOCKET ERRORS ON %li", (long)i);
+			Debug::Msg(0,"[Server] SOCKET ERRORS ON %li", (long)i);
 			delClient(csock[i]);
 			csock[i]->gotErrs();
 			csock[i] = NULL;

@@ -11,13 +11,13 @@ changes:
 
 */
 
-#include "../Object/Debug.h"
+#include <cstdlib>
+
+#include "../Debug/Debug.h"
 #include "../Object/Object.h"
 
 #include "Protocol.h"
 #include "XMLDecoder.h"
-
-#include <cstdlib>
 
 //constants
 const char OPEN_TAG=        '<';
@@ -67,8 +67,8 @@ int XMLDecoder::hasTokens()
     do {
         stateOK = false;
 
-        DebugMsg1(1, "xmldecoder :: tokenise loop in state  -> %i", state);
-        DebugMsg1(6, "xmldecoder :: current buffer contents -> [%s%s", buffer.c_str()), "]";
+        Debug::Msg(1, "xmldecoder :: tokenise loop in state  -> %i", state);
+        Debug::Msg(6, "xmldecoder :: current buffer contents -> [%s%s", buffer.c_str()), "]";
 
         // this is where we are gonna put the state machine
         switch (state) {
@@ -107,7 +107,7 @@ int XMLDecoder::hasTokens()
 			
 			// got a complete tag.. lets tear it up !!
 			buf = buffer.substr( 0, pos+1 );
-			DebugMsg1(1,"xmldecoder :: PARSING TAG = %s", buf.c_str());
+			Debug::Msg(1,"xmldecoder :: PARSING TAG = %s", buf.c_str());
 			buffer = buffer.substr( pos+1 );
 			
 			// grab the tag name
@@ -115,18 +115,18 @@ int XMLDecoder::hasTokens()
 			tag = buf.substr( 1, pos-1 );
 			buf = buf.substr( pos+1 );
 			
-			DebugMsg2(1,"xmldecoder :: PARSING TAG='%s' BUF='%s'", tag.c_str(), buf.c_str());
+			Debug::Msg(1,"xmldecoder :: PARSING TAG='%s' BUF='%s'", tag.c_str(), buf.c_str());
 			
 			//if not anonymous, get the name
 			if ( buf.substr(0,5) == NAME_OPEN ) {
 				name = buf.substr(5,buf.length()-6);
-				DebugMsg1(1,"xmldecoder :: PARSING NAME=%s", name.c_str());
+				Debug::Msg(1,"xmldecoder :: PARSING NAME=%s", name.c_str());
 				
 				//strip quotes if quoted
 				if ( name[0] == QUOTES ) {
 					name = name.substr(1,name.length()-2);
 				}
-				DebugMsg1(1,"xmldecoder :: PARSING NAME=%s", name.c_str());
+				Debug::Msg(1,"xmldecoder :: PARSING NAME=%s", name.c_str());
 			}
 			else
 			    name = DEFAULT_NAME;
@@ -146,7 +146,7 @@ int XMLDecoder::hasTokens()
 					// bad tag !! push token back
 					buffer.insert(0,buf);
 					token = Protocol::atlasERRTOK;
-					DebugMsg1(1,"xmldecoder :: BAD TAG=%s", tag.c_str());
+					Debug::Msg(1,"xmldecoder :: BAD TAG=%s", tag.c_str());
 				}
 				break;
 			}
@@ -158,7 +158,7 @@ int XMLDecoder::hasTokens()
 			else if (tag == "list")		type = Protocol::atlasLST;
 			else {
 				// bad tag type !!
-				DebugMsg1(1,"xmldecoder :: BAD TYPE=%s", tag.c_str());
+				Debug::Msg(1,"xmldecoder :: BAD TYPE=%s", tag.c_str());
 				token = Protocol::atlasERRTOK;
 				break;
 			}
@@ -202,9 +202,9 @@ int XMLDecoder::hasTokens()
 	} while ( stateOK && token == 0);
 
 	// see if we have a token to return
-	DebugMsg1(1, "xmldecoder :: END TOKEN=%i", token);
-	DebugMsg1(1, "xmldecoder :: finished in state -> %i", state);
-    DebugMsg1(6, "xmldecoder :: current buffer contents -> [%s%s", buffer.c_str()), "]";
+	Debug::Msg(1, "xmldecoder :: END TOKEN=%i", token);
+	Debug::Msg(1, "xmldecoder :: finished in state -> %i", state);
+    Debug::Msg(6, "xmldecoder :: current buffer contents -> [%s%s", buffer.c_str()), "]";
 	
 	if (token != 0)
 	    return 1;

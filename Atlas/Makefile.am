@@ -1,2 +1,1 @@
-SUBDIRS = Object Net Content Bus NetTest BusTest BusAdmin
-
+SUBDIRS = Debug Object Net Content
