@@ -431,29 +431,28 @@ void Config::getCmdline(int argc, char** argv)
 
 void Config::getEnv(const string& prefix)
 {
-  /*
-  string name, value, section="";
+  string name = "", value = "", section = "", env = "";
+  size_t eq_pos = 0;
 
-  int j, a = 0;
-  for ( int i = 0; environ[i] != NULL; i++)
-    if ((environ[i][0]=='W')&&(environ[i][1]=='F')&&(environ[i][2]=='_')) {
-      string env( environ[i]); 
-      name = value = "";
-     
-      size_t eq_pos = env.find( '='); 
-      if ( eq_pos != string::npos) {
+  for ( int i = 0; environ[i] != NULL; i++) {
+    env = environ[i];
+
+    if ( env.substr( 0, prefix.size()) == prefix) {
+      section = name = value = "";
+      eq_pos = env.find( '='); 
+
+      if ( eq_pos != string::npos)
         value = env.substr( ( eq_pos + 1), ( env.size() - ( eq_pos + 1)));
-      }
-      else {
+      else
         value = ""; // no value if '=' not found
-      }
-      name = env.substr( 3, eq_pos - 3);
-
-      if ( name.size() )
+      
+      name = env.substr( prefix.size(), ( eq_pos - prefix.size()));
+      if ( !name.empty() )
         setItem( section, name, value);
       else
         throw "Invalid environment setting!";
-    }*/
+    }
+  }
 }
 
 void Config::setParameterLookup(char shortForm,

@@ -48,6 +48,10 @@ public:
   void parseStream(std::istream& ios) throw (ParseError);
 
   void getEnv(const std::string& prefix);
+  // reads-in all environment variables with the specified prefix 
+  // and stores them in the 'unspecified' section (this prefix is currently
+  // case-sensitive)
+
   void getCmdline(int argc, char** argv);
 
   void setParameterLookup(char shortForm, const std::string& longForm, bool needsValue);

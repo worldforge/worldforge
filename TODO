@@ -7,7 +7,8 @@ Minor Tasks:
  * Make VALUE and EXPECT_VALUE behave nicer (loosen up on the unquoted value
    format)
  * Use a better way to do Variable::is_bool()
+ * Comments aplenty
 
 Major Tasks:
- * Bugtest Config::getEnv until gauranteed stable.
- * Rewrite Config::getEnv and Config::getCmdline to handle sections.
+ * Add section support to getEnv() and getCmdline().
+

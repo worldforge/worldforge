@@ -1,11 +1,15 @@
 ChangeLog for varconf
 
+Wed Oct 18 18:35:15 EST 2000 -- jaz <jaz147@psu.edu>
+ * Config.cc: Cleaned env variable code; added support for prefixes 
+
 Tue Oct 17 22:05:22 EST 2000 -- jaz <jaz147@psu.edu>
- * Config.ccL Implemented handling of environment variables.
+ * Config.cc: Implemented handling of environment variables.
 
 Tue Oct 17 11:42:32 EST 2000 -- jaz <jaz147@psu.edu>
  * AUTHORS: Added myself to list 
  * README: Added some general info. 
+
 
 ChangeLog for conftest
 

@@ -1,6 +1,13 @@
-A prototype configuration system for STAGE.
+varconf
 
-Some quick notes:
-  - getEnv is still considered unstable - uncomment the code if you want it compiled and use at your own risk.
-  - the library has no internal preference handling.  It will gladly overwrite config settings from any source with config settings from any other source.
+Varconf is configuration library.  It handles storing of configuration information, as well as parsing of config files, command-line input and environment variables. 
+
+PREREQUISITES
+
+To compile varconf, you must first compile and install the Atlas library.  See the Atlas README file for details.
+
+NOTES
+
+Varconf is a work in progress.  Expect features to be added, changed or removed.  Also, while this author will do his best to avoid serious bugs and errors, I provide no warranty in the event of an international disaster or other such problems caused from the use of this library.
+
 
