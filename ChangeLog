@@ -1,4 +1,7 @@
 ChangeLog for varconf
+Monday, 2nd September, 2002, Al Riddoch <alriddoch@zepler.org>
+	* Increment version to 0.5.4
+	* Release 0.5.4
 
 Sunday, 11th August, 2002, Ron Steinke <rsteinke@w-link.net>
 	* Fixed Variable's copy constructor to work properly
