@@ -95,6 +95,9 @@ int main()
     }
 
 
+    float xxx;
+    return Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, 20.0), 
+                               WFMath::Vector<3>(-3.0,4.0,-18.0), xxx);
 
     return 0;
 }

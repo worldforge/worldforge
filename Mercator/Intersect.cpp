@@ -90,6 +90,68 @@ float HOT(const Terrain &t, const WFMath::Point<3> &pt)
     return (pt[2] - terrHeight);
 }
 
+//Intersection of segment with terrain
+bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vector<3>& dir,
+                float &par)
+{
+    float paraX, paraY, pX, pY, crossX, crossY;
+    float h1,h2,h3,h4,height;
+
+    WFMath::Point<3> last(sPt), next(sPt);
+    
+    if (dir[0] != 0.0f) {
+        paraX = 1.0f/dir[0];
+        crossX = (dir[0] > 0.0f) ? gridceil(last[0]) : gridfloor(last[0]);
+        pX = (crossX - last[0]) * paraX;
+        pX = std::min(pX, 1.0f);
+    }
+    else
+        pX = 1.0f;
+
+    if (dir[1] != 0.0f) {
+        paraY = 1.0f/dir[1];
+        crossY = (dir[1] > 0.0f) ? gridceil(last[1]) : gridfloor(last[1]);
+        pY = (crossY - sPt[1]) * paraY;
+        pY = std::min(pY, 1.0f);
+    }
+    else
+        pY = 1.0f;
+
+    paraX = std::abs(paraX);
+    paraY = std::abs(paraY);
+
+    while (1) {
+        last = next;
+        if (pX < pY) { // cross x grid line first
+            next = sPt + (pX * dir);
+            pX += paraX;
+            crossX = (dir[0] > 0.0f) ? gridceil(last[0]) : gridfloor(last[0]);
+        }
+        else { //cross y grid line first
+            next = sPt + (pY * dir);
+            if (pX==pY) pX += paraX; //unusual case where ray crosses corner
+            pY += paraY;
+            crossY = (dir[1] > 0.0f) ? gridceil(last[1]) : gridfloor(last[1]);
+        }
+
+        //FIXME these gets could be optimized a bit
+        h1 = t.get(crossX, crossY);
+        h2 = t.get(crossX, crossY+1);
+        h3 = t.get(crossX+1, crossY+1);
+        h4 = t.get(crossX, crossY+1);
+        height = std::max(std::max(h1,h2), std::max(h3,h4)); 
+        if ( (last[2] < height) || (next[2] < height) ) {
+            // intersect with this tile
+        std::cerr << " INTERSECT" << std::endl;
+        //FIXME insert detailed intersection tests here
+            return false;
+        }
+
+        if ((pX >= 1.0f) && (pY >= 1.0f)) break;
+    }
+
+    return true;
+}
 
 
 } // namespace Mercator

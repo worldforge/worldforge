@@ -2,6 +2,8 @@
 #define MERCATOR_INTERSECT
 
 #include <wfmath/axisbox.h>
+#include <wfmath/vector.h>
+#include <wfmath/point.h>
 #include <Mercator/Terrain.h>
 
 namespace Mercator {
@@ -12,6 +14,8 @@ namespace Mercator {
     //height over terrain
     float HOT(const Terrain &t, const WFMath::Point<3> &pt);
 
+    bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vector<3>& dir,
+                float &par);
 } // namespace Mercator
 
 #endif

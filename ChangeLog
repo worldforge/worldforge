@@ -1,3 +1,9 @@
+2003-09-11 Damien McGinnes 
+
+	* Mercator/Intersect.cpp,h: added ray intersection with terrain
+	  not complete yet, ray/triangle tests not added
+	* tests/testIntersect.cpp: added ray intersection test -  not finished
+
 2003-09-10 Damien McGinnes 
 
 	* Mercator/Intersect.cpp,h: added point intersection with terrain
