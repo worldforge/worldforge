@@ -1,3 +1,13 @@
+Friday, January 18 2002, James Turner
+
+	* Move lots of extraneous public stuff in TypeInfo
+	  private as it should have been all along. If this
+	  breaks your client code, talk to me, since you
+	  were maybe doing something unwise.
+	* Added global BoundType signal on TypeInfo, to
+	  inform clients about new types as they become
+	  available. Suggested by Al Riddoch for Equator work.
+
 Thursday, January 17 2002, James Turner
 
 	* Further property tweaks suggested by Karsten.

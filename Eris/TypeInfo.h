@@ -58,11 +58,6 @@ public:
 	/// efficent ordering of type (uses type ids if possible)
 	bool operator<(const TypeInfo &x) const;
 
-// signals
-	/** Emitted when the type is bound, i.e there is an unbroken graph of
-	TypeInfo instances through every ancestor to the root object. */
-	SigC::Signal0<void> Bound;
-
 // accessors
 	/// the unique type name (matches the Atlas type)
 	std::string getName() const;
@@ -99,11 +94,10 @@ public:
 	exception as explained in the class description. */
 	static TypeInfoPtr find(const std::string &tynm);
 	
-	static void recvTypeError(const Atlas::Objects::Operation::Error &error,
-		const Atlas::Objects::Operation::Get &get);
+	/** emitted when a new type is available and bound to it's parents */
+	static SigC::Signal1<void, TypeInfo*> BoundType;
 	
 	static void listUnbound();
-	
 protected:
 	/// forward constructor, when data is not available
 	TypeInfo(const std::string &id);
@@ -126,6 +120,9 @@ protected:
 	static void sendInfoRequest(const std::string &id);
 	static void recvInfoOp(const Atlas::Objects::Root &atype);
 	
+	static void recvTypeError(const Atlas::Objects::Operation::Error &error,
+		const Atlas::Objects::Operation::Get &get);
+	
 	// NOTE - I don't especially like the relations analogy, but it *is* very
 	// clear what is meant, so I'm sticking with it.
 
@@ -144,6 +141,10 @@ protected:
 	/** set one the type-system has been intialised; this is to provide correct handling of TypeInfo instances
 	created before TypeInfo::init() has been called (which is neccesary and inevitable) */
 	static bool _inited;	
+	
+	/** Emitted when the type is bound, i.e there is an unbroken graph of
+	TypeInfo instances through every ancestor to the root object. */
+	SigC::Signal0<void> Bound;
 };
 
 /** Note - highly likely to throw OperationBlocked exceptions! */

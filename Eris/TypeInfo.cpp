@@ -49,7 +49,10 @@ typedef std::map<std::string, TypeInfoSet> TypeDepMap;
 from other ops. For each blocked INFO, the first item is the <i>blocking</i> type
 (e.g. 'tradesman') and the second item the blocked TypeInfo, (e.g. 'blacksmith')*/
 TypeDepMap globalDependancyMap;
-	
+
+// declare static instances
+SigC::Signal1<void, TypeInfo*> TypeInfo::BoundType;    
+    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 TypeInfo::TypeInfo(const std::string &id) :
@@ -210,6 +213,9 @@ void TypeInfo::validateBind()
 	Eris::Log(LOG_VERBOSE, "Bound type %s", _name.c_str());
 	_bound = true;
 	Bound.emit();
+		
+	// emit the global signal too
+	TypeInfo::BoundType.emit(this);
 		
 	// do dependancy checking
 	TypeDepMap::iterator Dset = globalDependancyMap.find(_name);
