@@ -58,7 +58,7 @@ void BaseConnection::connect(const std::string &host, short port)
     _port = port;
     
     // start timeout
-    _timeout = new Timeout("connect_" + _id, 5000);
+    _timeout = new Timeout("connect_" + _id, this, 5000);
     bindTimeout(*_timeout, CONNECTING);
 	
     setStatus(CONNECTING);
@@ -158,7 +158,7 @@ void BaseConnection::nonblockingConnect()
 
     // negotiation timeout
     delete _timeout;
-    _timeout = new Timeout("negotiate_" + _id, 5000);
+    _timeout = new Timeout("negotiate_" + _id, this, 5000);
     bindTimeout(*_timeout, NEGOTIATE);
 
     _sc = new Atlas::Net::StreamConnect(_clientName,

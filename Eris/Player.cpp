@@ -161,7 +161,7 @@ void Player::logout()
     _currentAction = "logout";
     _currentSerial = l.getSerialno();
 	
-    _logoutTimeout = new Timeout("logout", 5000);
+    _logoutTimeout = new Timeout("logout", this, 5000);
     _logoutTimeout->Expired.connect(SigC::slot(*this, &Player::handleLogoutTimeout));
 }
 

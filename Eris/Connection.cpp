@@ -136,7 +136,7 @@ void Connection::disconnect()
 	
 	// fell through, so someone has locked =>
 	// start a disconnect timeout
-	_timeout = new Eris::Timeout("disconnect_" + _host, 5000);
+	_timeout = new Eris::Timeout("disconnect_" + _host, this, 5000);
 	bindTimeout(*_timeout, DISCONNECTING);
 }
 

@@ -73,7 +73,7 @@ void MetaQuery::onConnect()
 	
 	if (_timeout)
 		throw InvalidOperation("MetaQuery timeout not cleared");
-	_timeout = new Timeout("metaquery_get_" + _host, 10000);
+	_timeout = new Timeout("metaquery_get_" + _host, this, 10000);
 	bindTimeout(*_timeout,  QUERY_GET);
 }
 

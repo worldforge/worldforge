@@ -1,3 +1,10 @@
+Sunday, 26th October, Ron Steinke <rsteinke@w-link.net>
+
+	* Added the capacity to have multiple timeouts with
+	  the same name, as long as they are owned by different
+	  object instances. This fixes a problem with the code
+	  that allows multiple simultaneous Connection instances.
+
 Thursday, 23rd October, Simon Goodall <simon@simongoodall.co.uk>
 	* Fixed configure.ac to use eris-poll-glib-1.2.pc in second glib test
 

@@ -89,7 +89,7 @@ void Meta::connect()
     
     // check for meta-server timeouts; this is going to be
     // fairly common as long as the protocol is UDP, I think
-    _timeout = new Timeout("meta_ckeepalive_"+_metaHost, 8000);
+    _timeout = new Timeout("meta_ckeepalive_"+_metaHost, this, 8000);
     _timeout->Expired.connect(SigC::slot(*this, &Meta::metaTimeout));
 }
 
@@ -355,7 +355,7 @@ void Meta::listReq(int base)
 	if (_timeout)
 		_timeout->reset(5000);
 	else {
-		_timeout = new Timeout("meta_list_req", 8000);
+		_timeout = new Timeout("meta_list_req", this, 8000);
 		_timeout->Expired.connect(SigC::slot(*this, &Meta::metaTimeout));
 	}
 }

@@ -22,20 +22,36 @@ static const unsigned long max_wait = ULONG_MAX;
 namespace Eris
 {
 
-std::map<std::string, Timeout*> Timeout::_allTimeouts;
+std::map<Timeout::Label, Timeout*> Timeout::_allTimeouts;
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////#	
-	
+
 Timeout::Timeout(const std::string &label, unsigned long milli) :
 	_label(label),
 	_fired(false)
 {
-	TimeoutMap::iterator T = _allTimeouts.find(label);
+	TimeoutMap::iterator T = _allTimeouts.find(_label);
 	if (T != _allTimeouts.end())
 	    throw InvalidOperation("Duplicate label '" + label + "' for timeout");
-	
+       
 	_allTimeouts.insert(_allTimeouts.begin(),
-	    TimeoutMap::value_type(label, this));
+	    TimeoutMap::value_type(_label, this));
+	
+	_due = Time::Stamp::now() + milli;
+
+	Poll::newTimeout();
+}
+
+Timeout::Timeout(const std::string &label, void* inst, unsigned long milli) :
+	_label(label, inst),
+	_fired(false)
+{
+	TimeoutMap::iterator T = _allTimeouts.find(_label);
+	if (T != _allTimeouts.end())
+	    throw InvalidOperation("Duplicate label '" + label + "' for timeout attached to instace");
+       
+	_allTimeouts.insert(_allTimeouts.begin(),
+	    TimeoutMap::value_type(_label, this));
 	
 	_due = Time::Stamp::now() + milli;
 
@@ -44,11 +60,8 @@ Timeout::Timeout(const std::string &label, unsigned long milli) :
 
 Timeout::~Timeout()
 {
-	TimeoutMap::iterator T = _allTimeouts.find(_label);
-	if (T == _allTimeouts.end())
+	if(!_allTimeouts.erase(_label))
 		throw InvalidOperation("Corrupted timeout map - very bad!");
-	
-	_allTimeouts.erase(T);
 }
 
 /*
@@ -89,9 +102,9 @@ void Timeout::extend(unsigned long milli)
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-const Timeout* Timeout::findByName(const std::string &nm)
+const Timeout* Timeout::findByName(const std::string &nm, void* inst)
 {
-	TimeoutMap::iterator T = _allTimeouts.find(nm);
+	TimeoutMap::iterator T = _allTimeouts.find(Label(nm, inst));
 	if (T == _allTimeouts.end())
 		return NULL;
 	return T->second;
