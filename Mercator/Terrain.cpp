@@ -9,58 +9,29 @@
 
 namespace Mercator {
 
-void Terrain::invalidateSegment(int x, int y)
-{
-    Segmentstore::iterator I = m_segments.find(x);
-    if (I == m_segments.end()) {
-        return;
-    }
-    Segmentcolumn & column = I->second;
-    Segmentcolumn::iterator J = column.find(y);
-    if (J != column.end()) {
-        J->second->invalidate();
-        //column.erase(J);
-    }
-}
-
-void Terrain::invalidatePoint(int x, int y)
-{
-    for(int i = x - 1; i < x + 1; ++i) {
-        for(int j = y - 1; j < y + 1; ++j) {
-            invalidateSegment(i, j);
-        }
-    }
-}
-
-void Terrain::refresh(int x, int y)
-{
-    for(int i = x - 1; i < x + 1; ++i) {
-        for(int j = y - 1; j < y + 1; ++j) {
-            getSegmentSafe(i, j, false);
-        }
-    }
-}
-
 Terrain::Terrain(int res) : m_res(res)
 {
 
 }
 
-// FIXME need a ~Terrain
+Terrain::~Terrain()
+{
+    // FIXME CLean up everything. Eliminate the leaks.
+}
 
 float Terrain::get(float x, float y) const
 {
     int ix = (int)floor(x / m_res);
     int iy = (int)floor(y / m_res);
 
-    Segment * s = getSegmentQuik(ix, iy);
-    if (s == 0) {
+    Segment * s = getSegment(ix, iy);
+    if ((s == 0) || (!s->isValid())) {
         return Terrain::defaultLevel;
     }
     return s->get((int)(x - (ix * m_res)), (int)(y - (iy * m_res)));
 }
 
-bool Terrain::getBasePoint(int x, int y, BasePoint& z)
+bool Terrain::getBasePoint(int x, int y, BasePoint& z) const
 {
     Pointstore::const_iterator I = m_basePoints.find(x);
     if (I == m_basePoints.end()) {
@@ -84,13 +55,14 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
             pointIsSet[ri][rj] = getBasePoint(i, j, existingPoint[ri][rj]);
         }
     }
-    // invalidatePoint(x,y);
     for(int i = x - 1, ri = 0; i < x + 1; ++i, ++ri) {
         for(int j = y - 1, rj = 0; j < y + 1; ++j, ++rj) {
-            Segment * s = getSegmentQuik(i, j);
+            Segment * s = getSegment(i, j);
             if (s == 0) { 
-                bool complete = pointIsSet[ri][rj] && pointIsSet[ri + 1][rj + 1] &&
-                                pointIsSet[ri + 1][rj] && pointIsSet[ri][rj + 1];
+                bool complete = pointIsSet[ri][rj] &&
+                                pointIsSet[ri + 1][rj + 1] &&
+                                pointIsSet[ri + 1][rj] &&
+                                pointIsSet[ri][rj + 1];
                 if (!complete) {
                     continue;
                 }
@@ -101,38 +73,15 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                         cp(k, l) = existingPoint[ri + k][rj + l];
                     }
                 }
+                m_segments[i][j] = s;
+                continue;
             }
-            s->setCornerPoint(ri, rj, z);
+            s->setCornerPoint(ri ? 0 : 1, rj ? 0 : 1, z);
         }
     }
 }
 
-Segment * Terrain::getSegmentSafe(int x, int y, bool force)
-{
-    Segment * s = getSegmentQuik(x, y);
-    if ((s != 0) && s->isValid()) {
-        return s;
-    }
-    
-#if 0
-    Matrix<2, 2, BasePoint> base;
-    bool complete = getBasePoint(x,     y,     base(0, 0)) &&
-                    getBasePoint(x + 1, y,     base(1, 0)) &&
-                    getBasePoint(x,     y + 1, base(0, 1)) &&
-                    getBasePoint(x + 1, y + 1, base(1, 1));
-    if (force || complete) {
-        if (!s) {
-            s = new Segment(m_res);
-        }
-        s->populate(base);
-        m_segments[x][y] = s;
-        return s;
-    }
-#endif // 0
-    return 0;
-}
-
-Segment * Terrain::getSegmentQuik(int x, int y) const
+Segment * Terrain::getSegment(int x, int y) const
 {
     Segmentstore::const_iterator I = m_segments.find(x);
     if (I == m_segments.end()) {

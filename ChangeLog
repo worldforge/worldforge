@@ -1,3 +1,11 @@
+2003-06-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h: Make invalidate() private.
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Fix bugs in revised
+	  setBasePoint. Remove obsolete methods, and simply to one
+	  getSegment call, as two are no longer required. Add destructor.
+
 2003-06-21  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.cpp, Mercator/Segment.h: Store control

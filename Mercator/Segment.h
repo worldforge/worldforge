@@ -32,6 +32,11 @@ class Segment {
     float m_min;
     bool m_validPt;
     bool m_validNorm;
+
+    void invalidate() {
+        m_validPt = false;
+        m_validNorm = false;
+    }
   public:
     explicit Segment(int res = 64);
     ~Segment();
@@ -44,11 +49,6 @@ class Segment {
         return m_validPt;
     }
 
-    void invalidate() {
-        m_validPt = false;
-        m_validNorm = false;
-    }
-    
     void setCornerPoint(unsigned int x, unsigned int y, const BasePoint & bp) {
         m_controlPoints(x, y) = bp;
         invalidate();

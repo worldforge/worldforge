@@ -27,40 +27,30 @@ class Terrain {
 
     Pointstore m_basePoints;
     Segmentstore m_segments;
-
-    void invalidateSegment(int x, int y);
-    void invalidatePoint(int x, int y);
   public:
     static const float defaultLevel = 8;
     explicit Terrain(int res = 64);
+    ~Terrain();
 
     float get(float x, float y) const;
 
-    bool getBasePoint(int x, int y, BasePoint& z);
-    
-    void setBasePoint(int x, int y, const BasePoint& z); // {
-        // m_basePoints[x][y] = z;
-        // invalidatePoint(x,y);
-    // }
+    bool getBasePoint(int x, int y, BasePoint& z) const;
+    void setBasePoint(int x, int y, const BasePoint& z);
 
     void setBasePoint(int x, int y, float z) {
         BasePoint bp(z);
         setBasePoint(x, y, bp);
     }
 
-    Segment * getSegmentSafe(float x, float y) {
+    Segment * getSegment(float x, float y) const {
         int ix = (int)floor(x / m_res);
         int iy = (int)floor(y / m_res);
-        return getSegmentSafe(ix, iy);
+        return getSegment(ix, iy);
     }
 
-    Segment * getSegmentQuik(float x, float y) const {
-        int ix = (int)floor(x / m_res);
-        int iy = (int)floor(y / m_res);
-        return getSegmentQuik(ix, iy);
-    }
+    Segment * getSegment(int x, int y) const;
 
-    const int getRes() const {
+    const int getResolution() const {
         return m_res;
     }
 
@@ -71,12 +61,6 @@ class Terrain {
     const Pointstore & getPoints() const {
         return m_basePoints;
     }
-
-    Segment * getSegmentSafe(int x, int y, bool force = true);
-    Segment * getSegmentQuik(int x, int y) const;
-
-    void refresh(int x, int y);
-
 };
 
 } // namespace Mercator
