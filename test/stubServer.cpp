@@ -148,6 +148,7 @@ void StubServer::disconnect()
     
     m_stream->close();	// all go bye-bye!
     delete m_stream;
+    m_stream = NULL;
     
     m_state = LISTEN;
 }
