@@ -6,7 +6,7 @@
 #define ATLAS_OBJECTS_BASEOBJECT_H
 
 #include <Atlas/Message/MEncoder.h>
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 #include <Atlas/Bridge.h>
 #include <Atlas/Exception.h>
 

@@ -1,3 +1,14 @@
+2003-05-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Element.h, Atlas/Message/Element.cpp: Move over to
+	  calling Atlas::Message::Object Atlas::Message::Element instead.
+
+	* Atlas/Bindings/Python/wrapperObject.cpp, Atlas/Message/DecoderBase.h,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
+	  Atlas/Message/QueuedDecoder.h, Atlas/Objects/BaseObject.h:
+	  Update everything to make use of the newly re-named Element
+	  class.
+
 2003-04-15  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/BaseObject.cpp: Re-implement asMessage() in terms of

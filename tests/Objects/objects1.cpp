@@ -1,5 +1,3 @@
-#include <Atlas/Message/Object.h>
-#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/objectFactory.h>

@@ -4,8 +4,6 @@
 
 #include <Atlas/Message/MEncoder.h>
 
-#include <Atlas/Message/Object.h>
-
 namespace Atlas { namespace Message {
 
 Encoder::Encoder(Atlas::Bridge & b)

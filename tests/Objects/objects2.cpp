@@ -1,10 +1,7 @@
-#include <Atlas/Message/Object.h>
-#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Dispatcher.h>
-#include <Atlas/EncoderBase.h>
 #include <Atlas/Objects/loadDefaults.h>
 //#include "../../src/Net/Stream.h"
 #include "../../tutorial/DebugBridge.h"

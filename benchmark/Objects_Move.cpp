@@ -1,7 +1,5 @@
 #include "timer.h"
 
-#include <Atlas/Message/Object.h>
-#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Operation/Move.h>
 #include <Atlas/Objects/Operation/Sight.h>
 #include <Atlas/Objects/Entity/GameEntity.h>

@@ -5,7 +5,7 @@
 #ifndef ATLAS_MESSAGE_QUEUEDDECODER_H
 #define ATLAS_MESSAGE_QUEUEDDECODER_H
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 #include <Atlas/Message/DecoderBase.h>
 
 #include <queue>

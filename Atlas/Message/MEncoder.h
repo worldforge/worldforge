@@ -5,7 +5,7 @@
 #ifndef ATLAS_MESSAGE_ENCODER_H
 #define ATLAS_MESSAGE_ENCODER_H
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 
 #include <Atlas/EncoderBase.h>
 

@@ -1,9 +1,7 @@
 #include "timer.h"
 
-#include <Atlas/src/Message/Object.h>
-#include <Atlas/src/Objects/Root.h>
-#include <Atlas/src/Objects/Operation/Operation.h>
-#include <Atlas/src/Objects/Entity/Entity.h>
+#include <Atlas/Objects/Operation/Operation.h>
+#include <Atlas/Objects/Entity/Entity.h>
 
 #include <iostream>
 #include <cassert>

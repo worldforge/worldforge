@@ -1,6 +1,6 @@
 #include "timer.h"
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 
 #include <iostream>
 #include <cassert>

@@ -5,7 +5,7 @@
 #ifndef ATLAS_MESSAGE_DECODERBASE_H
 #define ATLAS_MESSAGE_DECODERBASE_H
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 
 #include <Atlas/Bridge.h>
 

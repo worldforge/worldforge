@@ -2,8 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2001 Stefanus Du Toit, Karsten-O. Laux and Al Riddoch
 
-#ifndef ATLAS_MESSAGE_OBJECT_H
-#define ATLAS_MESSAGE_OBJECT_H
+#ifndef ATLAS_MESSAGE_ELEMENT_H
+#define ATLAS_MESSAGE_ELEMENT_H
 
 #include <Atlas/Exception.h>
 
@@ -463,4 +463,4 @@ protected:
 } } // namespace Atlas::Message
 
 
-#endif
+#endif // ATLAS_MESSAGE_ELEMENT_H
