@@ -1,3 +1,9 @@
+Sunday, June 2, James Turner
+
+	* Safety tweaks in Connection::recv() and Metaserver::recv()
+	  to handle bad sockets without segfaulting. Should
+	  improve reliability of the Dime meta-server code.
+
 Wednesday, May 22, James Turner
 
 	* Modified Meta::got_data to be safe even when _stream is

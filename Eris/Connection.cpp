@@ -76,8 +76,8 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 		dd = new DebugDispatcher(_clientName + ".atlas-recvlog");
 		sdd = new DebugDispatcher(_clientName + ".atlas-sendlog");
 	}
-
-	Poll::instance().connect(SigC::slot(*this, &Connection::gotData));
+	
+    Poll::instance().connect(SigC::slot(*this, &Connection::gotData));
 }
 	
 Connection::~Connection()
@@ -91,11 +91,11 @@ Connection::~Connection()
 
 void Connection::connect(const std::string &host, short port)
 {
-	// save for reconnection later
-	_host = host;
-	_port = port;
-	
-	BaseConnection::connect(host, port);
+    // save for reconnection later
+    _host = host;
+    _port = port;
+    
+    BaseConnection::connect(host, port);
 }
 
 void Connection::disconnect()
@@ -133,8 +133,9 @@ void Connection::reconnect()
    
 void Connection::gotData(PollData &data)
 {
-	if(!data.isReady(_stream))
-		return;
+    if(!_stream->is_open() || !data.isReady(_stream))
+	return;
+	
 	else if (_status == DISCONNECTED)
 		Eris::log(LOG_ERROR, "Got data on a disconnected stream");
 	else

@@ -225,8 +225,8 @@ void Meta::recv()
 		}
 		
 		// try and read more
-		if (_stream->rdbuf()->in_avail() && _bytesToRecv)
-			recv();
+		if (_bytesToRecv && _stream->rdbuf()->in_avail())
+		    recv();
 	}
 }
 
@@ -249,6 +249,8 @@ void Meta::cancel()
 
 void Meta::recvCmd(uint32_t op)
 {
+    Eris::log(LOG_DEBUG, "recvd meta-server CMD %i", op);
+    
 	switch (op) {
 	case HANDSHAKE:
 		setupRecvData(1, HANDSHAKE);
@@ -270,7 +272,7 @@ void Meta::recvCmd(uint32_t op)
 void Meta::processCmd()
 {
 	switch (_gotCmd) {
-	case HANDSHAKE: {		
+	case HANDSHAKE: {	
 		uint32_t stamp;
 		unpack_uint32(stamp, _data);
 			
@@ -284,6 +286,7 @@ void Meta::processCmd()
 		delete _timeout;
 		_timeout = NULL;
 		
+	    Eris::log(LOG_DEBUG, "processed HANDSHAKE, sending list request");
 		// send the initial list request
 		listReq(0);
 		} break;
@@ -294,6 +297,7 @@ void Meta::processCmd()
 		unpack_uint32(_packed, _dataPtr);
 		setupRecvData(_packed, LIST_RESP2);
 		
+	    Eris::log(LOG_DEBUG, "processed LIST_RESP");
 		// allow progress bars to setup, etc, etc
 		GotServerCount.emit(_totalServers);
 		
@@ -321,20 +325,23 @@ void Meta::processCmd()
 					ServerInfoMap::value_type(buf, ServerInfo(buf))
 				);
 			
-			// is alwasy querying a good idea?
+			Eris::log(LOG_DEBUG, "queueing game server %s for query", buf);
+			// is always querying a good idea?
 			queryServer(buf);
 		}
 			
-		if (_gameServers.size() < _totalServers)
+		if (_gameServers.size() < _totalServers) {
 			// request some more
+			Eris::log(LOG_DEBUG, "in LIST_RESP2, issuing request for next block");
 			listReq(_gameServers.size());
-		else {
+		} else {
 		    // all done, clean everything up
 		    delete _timeout;
 		    _timeout = NULL;
 		    _status = VALID;
 	
 		    if(_stream) {	    
+			Eris::log(LOG_DEBUG, "deleting meta-server stream");
 			Poll::instance().removeStream(_stream);
 			delete _stream;
 			_stream = NULL;
@@ -496,4 +503,5 @@ char* unpack_uint32(uint32_t &dest, char* buffer)
 	return buffer+sizeof(uint32_t);
 } 
 
-}
+} // of Eris namespace
+
