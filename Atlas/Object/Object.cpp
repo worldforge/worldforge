@@ -7,7 +7,9 @@
 */
 
 #include "Object.h"
-
+#ifdef _MSC_VER
+#include <assert.h>
+#endif
 char*	AObject::typeString()
 {
 	if (PyString_Check(obj))	return "string";

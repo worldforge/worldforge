@@ -7,6 +7,9 @@
 */
 
 #include "Socket.h"
+#ifdef _MSC_VER
+#include <assert.h>
+#endif
 
 ASocket::ASocket()
 {

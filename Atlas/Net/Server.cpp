@@ -7,6 +7,9 @@
 */
 
 #include "Server.h"
+#ifdef _MSC_VER
+#include <assert.h>
+#endif
 
 // start listening for connections on an established socket
 AServer::AServer(ASocket* listener)

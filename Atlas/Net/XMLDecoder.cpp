@@ -15,6 +15,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
+#ifdef _MSC_VER
+#include <assert.h>
+#endif
 
 void AXMLDecoder::newStream()
 {

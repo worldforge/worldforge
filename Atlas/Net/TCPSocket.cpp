@@ -13,6 +13,9 @@ int ATCPSocket::didWSAInit = 0;
 #else
 #include <fcntl.h>
 #endif
+#ifdef _MSC_VER
+#include <assert.h>
+#endif
 
 ATCPSocket::ATCPSocket()
 {
