@@ -9,7 +9,10 @@
 #include "../Object/Object.h"
 
 // $Log$
-// Revision 1.6  2000-02-21 05:22:11  mike
+// Revision 1.7  2000-02-21 05:23:10  mike
+// Hmm but will it handle a *second* commit nicely?
+//
+// Revision 1.6  2000/02/21 05:22:11  mike
 // Checking how this funky tag works
 //
 
@@ -30,7 +33,7 @@ class Atlas::Stream::Encoder
     enum Container
     {
 	LIST,
-	MAP
+	MAP,
     };
     
     virtual void Begin(Container) = 0;
