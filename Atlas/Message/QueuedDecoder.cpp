@@ -4,6 +4,8 @@
 
 #include "QueuedDecoder.h"
 
+using namespace std;
+
 namespace Atlas { namespace Message {
 
 QueuedDecoder::QueuedDecoder()
@@ -22,10 +24,14 @@ Object QueuedDecoder::Front()
 
 Object QueuedDecoder::Pop()
 {
-    return objectQueue.pop();
+    Object r = objectQueue.front();
+    objectQueue.pop();
+    return r;
 }
 
 void QueuedDecoder::ObjectArrived(const Object& obj)
 {
     objectQueue.push(obj);
 }
+
+} } // namespace Atlas::Message

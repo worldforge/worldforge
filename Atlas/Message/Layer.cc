@@ -6,7 +6,7 @@
 
 namespace Atlas { namespace Message {
     
-Layer::Layer(Atlas::Bridge* bridge) : Encoder(bridge), Decoder()
+Layer::Layer(Atlas::Bridge* bridge) : Encoder(bridge), DecoderBase()
 {
 }
 
