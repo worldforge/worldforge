@@ -1,5 +1,10 @@
 Thursday, 8th May 2003, Al Riddoch <alriddoch@zepler.org>
 
+	* Use $(top_buildir) to refer to the top of the build structure,
+	  and remove reference to old src dir from test Makefile.
+
+Thursday, 8th May 2003, Al Riddoch <alriddoch@zepler.org>
+
 	* Re-order configure.in so the version variable works.
 
 	* Sort out perl bindings dist-hook rule so it works if the

@@ -11,7 +11,6 @@ testEris_SOURCES = tests.cpp \
     testEntity.cpp testEntity.h \
     testLobby.cpp testLobby.h
 
-INCLUDES = @CPPUNIT_CFLAGS@ -I$(top_srcdir)/src
+INCLUDES = @CPPUNIT_CFLAGS@
 
-testEris_LDADD = @CPPUNIT_LIBS@ ../Eris/liberis-1.0.la
-    
+testEris_LDADD = @CPPUNIT_LIBS@ $(top_builddir)/Eris/liberis-1.0.la

@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = liberis-1.0.la
 
 liberis_1_0_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
-	
+
 liberis_1_0_la_SOURCES = \
 	Entity.cpp \
 	World.cpp \
@@ -29,7 +29,7 @@ liberis_1_0_la_SOURCES = \
 	PollDefault.cpp \
 	Log.cpp \
 	Avatar.cpp
-	
+
 liberisdir = $(includedir)/Eris-1.0/Eris
 
 liberis_HEADERS = \
@@ -65,5 +65,5 @@ liberis_HEADERS = \
 	atlas_utils.h \
 	Log.h \
 	Avatar.h
-	
-	
+
+
