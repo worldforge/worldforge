@@ -1,8 +1,8 @@
 bin_PROGRAMS = simple_client simple_server
 
-CPPFLAGS = -I/usr/local/include
+CPPFLAGS = -I$(prefix)/include
 
-LDADD  = -L/usr/local/lib -lsocket++
+LDADD  = -L$(prefix)/lib -lsocket++
 LDADD += -lAtlas -lAtlasCodecs -lAtlasFilters -lAtlasNet
 
 simple_client_SOURCES = simple_client.cc
