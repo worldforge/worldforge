@@ -1,3 +1,5 @@
+SUBDIRS = .
+
 lib_LTLIBRARIES = libAtlasObjects.la
 
 libAtlasObjectsincludedir = $(includedir)/Atlas/Objects
