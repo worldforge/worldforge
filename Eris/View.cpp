@@ -5,8 +5,17 @@
 #include <Eris/view.h>
 #include <Eris/avatar.h>
 #include <Eris/redispatch.h>
+#include <Eris/Entity.h>
+#include <Eris/logStream.h>
+#include <Eris/Factory.h>
+#include <Eris/Connection.h>
+
+#include <Atlas/Objects/Entity.h>
 
 using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Root;
+using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris
 {
@@ -21,8 +30,7 @@ public:
     
     void onSightEntity(Entity* ent)
     {
-        if (ent->getID() == m_id)
-            post(); // KA-ching!
+        if (ent->getId() == m_id) post(); // KA-ching!
     }
     
 private:
@@ -31,11 +39,35 @@ private:
 
 #pragma mark -
 
-View::View(Avatar* av) :
-    m_avatar(av)
+View::View(Avatar* av, const GameEntity& gent) :
+    m_owner(av)
 {
-
+    assert(gent->getId() == av->getId());
+    
 }
+
+View::~View()
+{
+    // delete them all!
+    for (IdEntityMap::iterator E = m_visible.begin(); E != m_visible.end(); ++E)
+        delete E->second;
+        
+    for (IdEntityMap::iterator E = m_invisible.begin(); E != m_invisible.end(); ++E)
+        delete E->second;
+}
+
+Entity* View::getTopLevel() const
+{
+    if (!m_topLevel)
+    {
+        // issue an anonymous LOOK
+        getEntityFromServer("");
+    }
+    
+    return m_topLevel;
+}
+
+#pragma mark -
 
 void View::appear(const std::string& eid, float stamp)
 {
@@ -85,7 +117,7 @@ void View::initialSight(const GameEntity& gent)
     m_pendingEntitySet.erase(gent->getId());
     
     // run the factory method ...
-    Entity* ent = Factory::builtEntity(gent);
+    Entity* ent = Factory::createEntity(gent);
     
     if (m_cancelledSightSet.count(gent->getId()))
     {
@@ -97,10 +129,10 @@ void View::initialSight(const GameEntity& gent)
     if (location)
         ent->setLocation(location); // will set visibility and fire appearances
         
-    if (gent->isDefaultLoc())
-        m_topLevel = ent;
+    if (gent->isDefaultLoc()) // new top level entity
+        setTopLevelEntity(ent);
     
-    InitalSightEntity.emit(ent);
+    InitialSightEntity.emit(ent);
 }
 
 void View::create(const GameEntity& gent)
@@ -118,12 +150,12 @@ void View::create(const GameEntity& gent)
     }
     
     // build it
-    Entity* ent = Factory::builtEntity(gent);
+    Entity* ent = Factory::createEntity(gent);
     if (location)
         ent->setLocation(location);
 
     ent->setVisible(true);
-    EntityCreated.emit(eny);
+    EntityCreated.emit(ent);
 }
 
 void View::deleteEntity(const std::string& eid)
@@ -131,8 +163,13 @@ void View::deleteEntity(const std::string& eid)
     Entity* ent = getExistingEntity(eid);
     if (ent)
     {
-        EntityDeleted.emit(E->second);
-        delete E->second; // actually kill it off
+        EntityDeleted.emit(ent);
+        #warning entity deletion in view is suspect
+        if (ent->isVisible())
+            m_visible.erase(ent->getId());
+        else
+            m_invisible.erase(ent->getId());
+        delete ent; // actually kill it off
     } else {
         if (isPending(eid))
         {
@@ -184,7 +221,7 @@ void View::setEntityVisible(Entity* ent, bool vis)
 
 Connection* View::getConnection() const
 {
-    return m_avatar->getConnection();
+    return m_owner->getConnection();
 }
 
 void View::getEntityFromServer(const std::string& eid)
@@ -206,7 +243,7 @@ void View::getEntityFromServer(const std::string& eid)
     }
 	
     look->setSerialno(getNewSerialno());
-    look->setFrom(m_avatar->getId());
+    look->setFrom(m_owner->getId());
     getConnection()->send(look);
 }
 
@@ -221,6 +258,23 @@ void View::cancelPendingSight(const std::string& eid)
     m_cancelledSightSet.insert(eid);
     m_pendingEntitySet.erase(eid);
     // cancel outstanding redispatches ...
+}
+
+void View::setTopLevelEntity(Entity* newTopLevel)
+{
+    debug() << "setting new top-level entity";
+    
+    if (m_topLevel)
+    {
+        if (m_topLevel->isVisible() && (m_topLevel->getLocation() == NULL))
+            error() << "old top-level entity is visible, but has no location";
+    }
+    
+    assert(newTopLevel->isVisible());
+    assert(newTopLevel->getLocation() == NULL);
+    
+    m_topLevel = newTopLevel;
+    TopLevelEntityChanged.emit(); // fire the signal
 }
 
 } // of namespace Eris

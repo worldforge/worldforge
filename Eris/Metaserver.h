@@ -70,108 +70,125 @@ class Meta : virtual public SigC::Object,
 		public Atlas::Objects::ObjectsDecoder
 {
 public:
-	Meta(const std::string &cnm, 
-		const std::string &msv, 
-		unsigned int maxQueries);
-	virtual ~Meta();
+    /** Create a Metaserver object, which manages all interaction with the
+    metaserver itself, and querying active game servers. Clients might create
+    this object when showing a 'server list' dialog, and use the signals
+    and accessors to pouplate the list. Signals and methods are provided to
+    support common things like displaying query progress, and canceling
+    queries.
+    @param msv The metaserver to query, specified as a hostname. Usually
+    metaserver.worldforge.org, but that's up to you.
+    @param maxQueries The maximum number of game server queries to have
+    active at any one time. 10 is a sensible value, too low and querying will
+    take a long time, too high and .... I'm not sure.
+    */
+    Meta(const std::string &msv, unsigned int maxQueries);
+    virtual ~Meta();
 
-	/// Return the list of game servers
-	ServerList getGameServerList();
+    /** Return the curent list of game servers. 
+    Note if the status is INVALID, this will return an empty list, an if status
+    is IN_PROGRESS, this will be a partial list.
+    */
+    ServerList getGameServerList() const;
 	
-	/// Return the current size of the server list
-	int getGameServerCount();
+    /** Return the total number of game servers the meta server knows about.
+    Note this is not the same as getGameServerList.size(); This is the total
+    number, which can be be used to range a progress bar or percentage. */
+    unsigned int getGameServerCount() const;
 
-	/// Query a specific game server; emits a signal when complete
-	void queryServer(const std::string &host);
+    /// Query a specific game server; emits a signal when complete
+    void queryServer(const std::string &host);
 
-	/** Refresh the entire server list. This will clear the current list,
-	ask the meta-server for each game server, and then issue a query
-	against every returned server. This process can take a large amount
-	of real-time as the number of game servers increases. Completion
-	of the entire refresh is indicated by the 'CompletedServerList' signal.
-	*/
-	void refresh();
+    /** Refresh the entire server list. This will clear the current list,
+    ask the meta-server for each game server, and then issue a query
+    against every returned server. This process can take a large amount
+    of real-time as the number of game servers increases. Completion
+    of the entire refresh is indicated by the 'CompletedServerList' signal.
+    */
+    void refresh();
 
-	/** Cancel outstanding refresh / queries. This is primarily intended for
-	use with 'Refresh', which might takes several minutes to complete. Note
-	that 'CompletedServerList' is not emitted following cancellation. */
-	void cancel();
+    /** Cancel outstanding refresh / queries. This is primarily intended for
+    use with 'Refresh', which might takes several minutes to complete. Note
+    that 'CompletedServerList' is not emitted following cancellation. 
+    */
+    void cancel();
 
-	/// Access the client name
-	const std::string& getClientName() const
-	{ return _clientName; }
+    /// Get the current status of the Meta server list
+    MetaStatus getStatus() const
+    {
+        return m_status;
+    }
 
-	/// Get the current status of the Meta server list
-	MetaStatus getStatus() const
-	{ return _status; }
-
-	// signals
+// signals
 	
-	/// Emitted when information about a server is received
-	SigC::Signal1<void, const ServerInfo&> ReceivedServerInfo;
+    /// Emitted when information about a server is received
+    SigC::Signal1<void, const ServerInfo&> ReceivedServerInfo;
 
-	/// Emitted once the size of the server list is known
-	SigC::Signal1<void, int> GotServerCount;
-	
-	/// Emitted when the entire server list has been refreshed
-	SigC::Signal0<void> CompletedServerList;
+    /// Emitted once the size of the server list is known
+    SigC::Signal1<void, int> GotServerCount;
+    
+    /// Emitted when the entire server list has been refreshed
+    SigC::Signal0<void> CompletedServerList;
 
-	/** Indicates a failure (usually network related) has occurred.
-	The server list will be cleared, and the status set to INVALID. */
-	SigC::Signal1<void, const std::string&> Failure;
+    /** Indicates a failure (usually network related) has occurred.
+    The server list will be cleared, and the status set to INVALID. */
+    SigC::Signal1<void, const std::string&> Failure;
 	
 protected:
-	friend class MetaQuery;
+    friend class MetaQuery;
 		
-	virtual void objectArrived(const Atlas::Objects::Root& obj);
+    virtual void objectArrived(const Atlas::Objects::Root& obj);
 
-	/// process raw UDP packets from the meta-server
-	void recv();
+    void doFailure(const std::string &msg);
+    void queryFailure(MetaQuery *q, const std::string& msg);
+
+    void queryTimeout(MetaQuery *q);
+    void metaTimeout();
+    
+    /** initiate a connection to the meta-server : this will issue a keep-alive followed
+    by a list request. */
+    void connect();
+    
+    /** tear down an existing connection to the server */
+    void disconnect();
 	
-	/// Invoked when _bytesToRecv = 0 and expecting a command (_recvCmd = true)
-	void recvCmd(uint32_t op);
+private:
+/// process raw UDP packets from the meta-server
+    void recv();
+    
+    /// Invoked when _bytesToRecv = 0 and expecting a command (_recvCmd = true)
+    void recvCmd(uint32_t op);
 
-	/// Invoked when _bytesToRecv = 0 and processing a command (_recvCmd = false)
-	void processCmd();
+    /// Invoked when _bytesToRecv = 0 and processing a command (_recvCmd = false)
+    void processCmd();
 
-	/// Request a portion of the server list from the meta-server
-	/// @param offset The first index to retrieve
-	void listReq(int offset = 0);
+    /// Request a portion of the server list from the meta-server
+    /// @param offset The first index to retrieve
+    void listReq(int offset = 0);
 
-	void setupRecvCmd();
-	void setupRecvData(int words, uint32_t got);
-
-	void doFailure(const std::string &msg);
-	void queryFailure(MetaQuery *q, const std::string& msg);
-
-	void queryTimeout(MetaQuery *q);
-	void metaTimeout();
+    void setupRecvCmd();
+    void setupRecvData(int words, uint32_t got);
+        
+    const std::string m_clientName;	///< the name to use when negotiating
+    MetaStatus m_status;
+    /// the metaserver query, eg metaserver.worldforge.org
+    const std::string m_metaHost;       
 	
-	/** initiate a connection to the meta-server : this will issue a keep-alive followed
-	by a list request. */
-	void connect();
-	
-	/** tear down an existing connection to the server */
-	void disconnect();
-	
-	std::string _clientName;	///< the name to use when negotiating
-	MetaStatus _status;
-	std::string _metaHost;
-	
-	typedef std::list<MetaQuery*> MetaQueryList;
-	
-	MetaQueryList _activeQueries,
-		_deleteQueries;
-	StringList _pendingQueries;
-	unsigned int _maxActiveQueries;
+    typedef std::list<MetaQuery*> MetaQueryList;
+    MetaQueryList m_activeQueries,
+		m_deleteQueries;
+                
+    /// queries we will execute when active slots become frree
+    StringList m_pendingQueries;
+    unsigned int m_maxActiveQueries;
 
+    typedef std::map<std::string, ServerInfo> ServerInfoMap;
+    ServerInfoMap m_gameServers,
+        m_lastValidList;
 
-	typedef std::map<std::string, ServerInfo> ServerInfoMap;
-	ServerInfoMap _gameServers,
-		_lastValidList;
-
-	// storage for the Metaserver protocol
-	udp_socket_stream* _stream;
+    // storage for the Metaserver protocol
+    udp_socket_stream* m_stream;
+    
 	char _data[DATA_BUFFER_SIZE];
 	char* _dataPtr;	///< The current insert/extract pointer in the buffer
 
@@ -182,9 +199,9 @@ protected:
 	bool _recvCmd; 		///< true if the next block is a new command
 	uint32_t _gotCmd;	///< the curent command being processed
 	
-	Timeout* _timeout;	///< Metaserver channel timeout
+    Timeout* m_timeout;	///< Metaserver channel timeout
 	
-	void gotData(PollData&);
+    void gotData(PollData&);
 };
 	
 } // of namespace Eris

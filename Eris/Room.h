@@ -78,7 +78,7 @@ public:
     
     /** The primary talk callback. The arguments are the source room, the person
     talking, and the message itself */
-    SigC::Signal3<void, Room*, Person*, const std::string&> Talk;
+    SigC::Signal3<void, Room*, Person*, const std::string&> Speech;
     
     /** Emote (/me) callback. The arguments are identical to those for Talk above */
     SigC::Signal3<void, Room*, Person*, const std::string&> Emote;
@@ -101,17 +101,20 @@ protected:
     the necessary signals to drive the Room if id arg is provided */
     explicit Room(Lobby *l, const std::string& id);
 	
-    RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
+    virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
 
     std::string m_roomId;
 private:
     /// helper to see if all the people in the room are valid, and if so, do entry
-    bool checkEntry();
+    void checkEntry();
 
     void sight(const Atlas::Objects::Entity::RootEntity &room);
     void handleSightImaginary(const Atlas::Objects::Operation::Imaginary &im);
     void handleSoundTalk(const Atlas::Objects::Operation::Talk &tk);
 
+    void appearance(const std::string& personId);
+    void disappearance(const std::string& personId);
+    
     // callback slot when Lobby recives SIGHT(person)
     void notifyPersonSight(Person *p);
         

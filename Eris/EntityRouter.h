@@ -12,9 +12,11 @@ public:
     virtual ~EntityRouter();
     
 protected:
-    virtual RouterResult handleOperation();
+    virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation&);
     
 private:
+    RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation&);
+    
     Entity* m_entity;
 };
 

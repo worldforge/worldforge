@@ -1,6 +1,13 @@
+Saturday 28th February 2004, James Turner <james@worldforge.org>
+
+* All code compiles, doesn't link
+* Much re-factoring, IG transition code is in place, Top-Level entity
+  handling scheme is also coming together
+* TODO updated with specific things to address for the next release
+
 2004-02-27  Al Riddoch  <alriddoch@zepler.org>
 
-	* Fix Atlas-C++ dependency to the 0.6 series.
+* Fix Atlas-C++ dependency to the 0.6 series.
 
 Thursday 26th February 2004, James Turner <james@worldforge.org>
 

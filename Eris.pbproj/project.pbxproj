@@ -122,42 +122,37 @@
 		};
 		C43FBCF2054315F2008FC2ED = {
 			children = (
-				C4D7703405EA7B1D00423FA7,
-				C492F63C05E97D8500AFF6AE,
-				C492F63005E97AAB00AFF6AE,
-				C4903CDC05E96B9D0014EFCA,
-				C4E59E5905C050D7003934C3,
 				C43FBD1C054315F3008FC2ED,
 				C43FBD20054315F3008FC2ED,
 				C43FBD28054315F3008FC2ED,
 				C43FBD35054315F3008FC2ED,
+				C492F63C05E97D8500AFF6AE,
+				C4E59E5905C050D7003934C3,
 				C43FBD38054315F3008FC2ED,
+				C4903CDC05E96B9D0014EFCA,
 				C43FBD40054315F4008FC2ED,
 				C43FBD44054315F4008FC2ED,
+				C49FB08005EE989300E25C44,
 				C43FBD4B054315F4008FC2ED,
 				C43FBD4F054315F4008FC2ED,
 				C43FBD54054315F4008FC2ED,
 				C43FBD58054315F4008FC2ED,
 				C43FBD5B054315F4008FC2ED,
 				C43FBD5D054315F4008FC2ED,
-				C43FBD60054315F4008FC2ED,
-				C43FBD62054315F4008FC2ED,
-				C43FBD66054315F4008FC2ED,
-				C43FBD6B054315F4008FC2ED,
-				C43FBD6F054315F4008FC2ED,
-				C43FBD74054315F4008FC2ED,
-				C43FBD78054315F4008FC2ED,
-				C43FBD80054315F4008FC2ED,
-				C43FBD82054315F4008FC2ED,
-				C43FBD8A054315F4008FC2ED,
-				C43FBD7C054315F4008FC2ED,
 				C437AF410562987C00ACFA1E,
 				C437AF420562987C00ACFA1E,
 				C437AF430562987C00ACFA1E,
 				C437AF440562987C00ACFA1E,
+				C492F63005E97AAB00AFF6AE,
+				C43FBD62054315F4008FC2ED,
 				C44E341C05D856FC005C5DF9,
-				C44E341E05D857DB005C5DF9,
-				C49FB08005EE989300E25C44,
+				C43FBD66054315F4008FC2ED,
+				C43FBD6B054315F4008FC2ED,
+				C43FBD74054315F4008FC2ED,
+				C43FBD78054315F4008FC2ED,
+				C43FBD7C054315F4008FC2ED,
+				C43FBD80054315F4008FC2ED,
+				C4D7703405EA7B1D00423FA7,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -368,14 +363,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		C43FBD60054315F4008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = Property.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		C43FBD61054315F4008FC2ED = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -424,14 +411,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = Timeout.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C43FBD6F054315F4008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = Timestamp.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -503,40 +482,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		C43FBD81054315F4008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			name = Utils.cpp;
-			path = Eris/Utils.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C43FBD82054315F4008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = Utils.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C43FBD89054315F4008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			name = World.cpp;
-			path = Eris/World.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C43FBD8A054315F4008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = World.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		C43FBE250543162E008FC2ED = {
 			children = (
 				C44E352E05D969F2005C5DF9,
@@ -547,6 +492,21 @@
 			name = Frameworks;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		C44784BD05F0E500004961A7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = factory.cpp;
+			path = Eris/factory.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C44784BE05F0E500004961A7 = {
+			fileRef = C44784BD05F0E500004961A7;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C44CB2F205D804C50075E2A1 = {
 			isa = PBXFileReference;
@@ -628,20 +588,6 @@
 			settings = {
 			};
 		};
-		C44E341E05D857DB005C5DF9 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = worldRouter.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C44E341F05D857DB005C5DF9 = {
-			fileRef = C44E341E05D857DB005C5DF9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		C44E352E05D969F2005C5DF9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -652,6 +598,21 @@
 		};
 		C44E352F05D969F2005C5DF9 = {
 			fileRef = C44E352E05D969F2005C5DF9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C45668FE05F0CD1A0047D9EB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = router.cpp;
+			path = Eris/router.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45668FF05F0CD1A0047D9EB = {
+			fileRef = C45668FE05F0CD1A0047D9EB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -669,6 +630,8 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Library/Frameworks /Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build";
 				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = ATLAS_ELEMENT_TYPEDEF_PRIVATE;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -712,23 +675,18 @@
 				C45DC3FB0562F83D00D8F8F4,
 				C45DC3FC0562F83D00D8F8F4,
 				C45DC3FD0562F83D00D8F8F4,
-				C45DC3FE0562F83D00D8F8F4,
 				C45DC3FF0562F83D00D8F8F4,
 				C45DC4000562F83D00D8F8F4,
 				C45DC4020562F83D00D8F8F4,
-				C45DC4030562F83D00D8F8F4,
 				C45DC4050562F83D00D8F8F4,
 				C45DC4060562F83D00D8F8F4,
 				C45DC4070562F83D00D8F8F4,
-				C45DC4080562F83D00D8F8F4,
-				C45DC40A0562F83D00D8F8F4,
 				C45DC40B0562F83D00D8F8F4,
 				C45DC40C0562F83D00D8F8F4,
 				C45DC40D0562F83D00D8F8F4,
 				C45DC40E0562F83D00D8F8F4,
 				C4E59E5B05C050D7003934C3,
 				C44E341D05D856FC005C5DF9,
-				C44E341F05D857DB005C5DF9,
 				C4903CDE05E96B9D0014EFCA,
 				C492F63105E97AAB00AFF6AE,
 				C492F63D05E97D8500AFF6AE,
@@ -855,12 +813,6 @@
 				);
 			};
 		};
-		C45DC3FE0562F83D00D8F8F4 = {
-			fileRef = C43FBD60054315F4008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		C45DC3FF0562F83D00D8F8F4 = {
 			fileRef = C43FBD62054315F4008FC2ED;
 			isa = PBXBuildFile;
@@ -888,15 +840,6 @@
 				);
 			};
 		};
-		C45DC4030562F83D00D8F8F4 = {
-			fileRef = C43FBD6F054315F4008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Private,
-				);
-			};
-		};
 		C45DC4050562F83D00D8F8F4 = {
 			fileRef = C43FBD74054315F4008FC2ED;
 			isa = PBXBuildFile;
@@ -917,24 +860,6 @@
 		};
 		C45DC4070562F83D00D8F8F4 = {
 			fileRef = C43FBD7C054315F4008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		C45DC4080562F83D00D8F8F4 = {
-			fileRef = C43FBD82054315F4008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		C45DC40A0562F83D00D8F8F4 = {
-			fileRef = C43FBD8A054315F4008FC2ED;
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
@@ -998,12 +923,13 @@
 				C45DC4230562F83D00D8F8F4,
 				C45DC4240562F83D00D8F8F4,
 				C45DC4250562F83D00D8F8F4,
-				C45DC4260562F83D00D8F8F4,
-				C45DC4280562F83D00D8F8F4,
 				C4E59E5A05C050D7003934C3,
 				C4903CDD05E96B9D0014EFCA,
 				C492F64005E97DFF00AFF6AE,
 				C4D7703A05EA7DB700423FA7,
+				C46AF04E05EFE491002A86DA,
+				C45668FF05F0CD1A0047D9EB,
+				C44784BE05F0E500004961A7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1106,18 +1032,6 @@
 		};
 		C45DC4250562F83D00D8F8F4 = {
 			fileRef = C43FBD7B054315F4008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C45DC4260562F83D00D8F8F4 = {
-			fileRef = C43FBD81054315F4008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C45DC4280562F83D00D8F8F4 = {
-			fileRef = C43FBD89054315F4008FC2ED;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1231,6 +1145,21 @@
 			proxyType = 2;
 			remoteGlobalIDString = C4C5688D055AEFDB00944C0F;
 			remoteInfo = Atlas;
+		};
+		C46AF04D05EFE491002A86DA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = redispatch.cpp;
+			path = Eris/redispatch.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C46AF04E05EFE491002A86DA = {
+			fileRef = C46AF04D05EFE491002A86DA;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C485B1FE05B60252002F2D80 = {
 			isa = PBXFileReference;
@@ -1466,13 +1395,16 @@
 		};
 		C4BB15920544A6C100A800CF = {
 			children = (
-				C4903CDB05E96B9D0014EFCA,
-				C4D7703905EA7DB700423FA7,
-				C4E59E5805C050D7003934C3,
+				C44784BD05F0E500004961A7,
+				C45668FE05F0CD1A0047D9EB,
+				C46AF04D05EFE491002A86DA,
 				C43FBD1B054315F3008FC2ED,
 				C43FBD1F054315F3008FC2ED,
 				C43FBD27054315F3008FC2ED,
 				C43FBD34054315F3008FC2ED,
+				C492F63F05E97DFF00AFF6AE,
+				C4E59E5805C050D7003934C3,
+				C4903CDB05E96B9D0014EFCA,
 				C43FBD3F054315F4008FC2ED,
 				C43FBD43054315F4008FC2ED,
 				C43FBD4A054315F4008FC2ED,
@@ -1485,11 +1417,9 @@
 				C43FBD6A054315F4008FC2ED,
 				C43FBD73054315F4008FC2ED,
 				C43FBD77054315F4008FC2ED,
-				C43FBD7F054315F4008FC2ED,
-				C43FBD81054315F4008FC2ED,
-				C492F63F05E97DFF00AFF6AE,
-				C43FBD89054315F4008FC2ED,
 				C43FBD7B054315F4008FC2ED,
+				C43FBD7F054315F4008FC2ED,
+				C4D7703905EA7DB700423FA7,
 			);
 			isa = PBXGroup;
 			name = Source;

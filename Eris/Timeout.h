@@ -1,7 +1,7 @@
 #ifndef ERIS_TIMEOUT_H
 #define ERIS_TIMEOUT_H
 
-#include <Eris/Timestamp.h>
+#include <WFMath/timestamp.h>
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
@@ -20,6 +20,8 @@ public:
 	@param label The unique timeout identification label
 	@param milli The initial timeout  value, in milliseconds */
 	Timeout(const std::string &label, unsigned long milli);
+        
+        
 	/** constructor for new timeouts which are owned by an instance of a class
 	@param label The unique timeout identification label
 	@param milli The initial timeout  value, in milliseconds
@@ -41,7 +43,11 @@ public:
 	
 	/// cancel the Timeout immediately
 	void cancel();
-	unsigned long poll(const Time::Stamp &t);
+        
+        /** Check if the Timeout has expired, and if so fire it's signal.
+        @return The time remaining until the timeout will expire.
+        */
+	WFMath::TimeDiff poll(const WFMath::TimeStamp &t);
 	
 	/// test whether or not the timeout has fired or not
 	bool isExpired() const;
@@ -103,7 +109,7 @@ protected:
 	};
 
 	const Label _label;	///< the unique label of the timeout
-	Time::Stamp _due;			///< interval at which the timeout is due
+	WFMath::TimeStamp _due;			///< interval at which the timeout is due
 	bool _fired;				///< flag if the timeout has expired
 
 	typedef std::map<Label, Timeout*> TimeoutMap;

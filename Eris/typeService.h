@@ -5,6 +5,7 @@
 #include <sigc++/signal.h>
 
 #include <Eris/router.h>
+#include <Eris/types.h>
 #include <Atlas/Objects/Decoder.h>
 
 #include <map>
@@ -20,10 +21,10 @@ typedef std::set<TypeInfoPtr> TypeInfoSet;
 	
 class TypeService : virtual public SigC::Object, public Router
 {
- public:
+public:
     TypeService(Connection *con);
 
-    static void init();
+    void init();
 
     /// load the core Atlas::Objects specification from the named file
     void readAtlasSpec(const std::string &specfile);
@@ -47,6 +48,8 @@ class TypeService : virtual public SigC::Object, public Router
     SigC::Signal1<void, TypeInfoPtr> BoundType;
     
     void listUnbound();
+
+    RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation&);
 	
  private:
     /** helper class to parse definitions out of the spec file */
@@ -86,6 +89,10 @@ class TypeService : virtual public SigC::Object, public Router
     the serialNo of each request we issue, to help decoding ops we get
     back from the server. */
     RefNoSet m_typeRequests;
+    
+    bool m_inited;
+    
+    StringSet m_badTypes;
 };
 
 } // of namespace Eris

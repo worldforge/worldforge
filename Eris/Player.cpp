@@ -7,6 +7,7 @@
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
+#include <Eris/Avatar.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -23,6 +24,9 @@ typedef Atlas::Objects::Entity::Account AtlasAccount;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
+
+typedef std::map<int, Avatar*> RefnoAvatarMap;
+static RefnoAvatarMap global_pendingInfoAvatars;
 
 class AccountRouter : public Router
 {
@@ -95,7 +99,7 @@ private:
         if (info->getRefno() == m_loginRefno)
         {
             AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
-            m_player->handleLogin(acc);
+            m_player->loginComplete(acc);
             return HANDLED;
         }
         
@@ -106,13 +110,20 @@ private:
             return HANDLED;
         }
            
-        if (m_player->isLoggedIn() && (op->getTo() == m_player->getID())
+        if (m_player->isLoggedIn() && (info->getTo() == m_player->getID()))
         {
             GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
             if (ent.isValid())
             {
                 // IG transition info, maybe
-                ....
+                RefnoAvatarMap::iterator A = global_pendingInfoAvatars.find(info->getRefno());
+                if (A != global_pendingInfoAvatars.end())
+                {
+                    A->second->setEntity(ent);
+                    global_pendingInfoAvatars.erase(A);
+                    return HANDLED;
+                } else
+                    debug() << "Player got info(game_entity), but not a IG transition";
             }
         }
           
@@ -168,8 +179,8 @@ void Player::createAccount(const std::string &uname,
     m_status = LOGGING_IN;
     
 // okay, build and send the create(account) op
-    Atlas::Objects::Entity::Player account;
-    account->setPassword(pwd);
+    AtlasAccount account;
+    account->setAttr("password", pwd);
     account->setName(fullName);
     account->setAttr("username", uname);
     
@@ -257,20 +268,18 @@ Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
     if (!m_con->isConnected() || (m_status != LOGGED_IN))
     {
         error() << "called createCharacter on unconnected Player, ignoring";
-        return;
+        return NULL;
     }    
 
-   Create c;    
-
+    Create c;    
     c->setArgs1(ent);
     c->setFrom(m_accountId);
     c->setSerialno(getNewSerialno());
-
-    
-
     m_con->send(c);
 
-    return avatar;
+    Avatar *av = new Avatar(this);
+    global_pendingInfoAvatars[c->getSerialno()] = av;
+    return av;
 }
 
 /*
@@ -302,7 +311,7 @@ Avatar* Player::takeCharacter(const std::string &id)
     if (C == m_characterIds.end())
     {
         error() << "Character '" << id << "' not owned by Player " << m_username;
-        return;
+        return NULL;
     }
 	
     Root what;
@@ -312,11 +321,11 @@ Avatar* Player::takeCharacter(const std::string &id)
     l->setFrom(id);  // should this be m_accountId?
     l->setArgs1(what);
     l->setSerialno(getNewSerialno());
-	
-    
-	
     m_con->send(l);
-    return avatar;
+    
+    Avatar *av = new Avatar(this);
+    global_pendingInfoAvatars[l->getSerialno()] = av;
+    return av;
 }
 
 #pragma mark -
@@ -326,9 +335,8 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
     assert(m_status == DISCONNECTED);
     m_username = uname; // store for posterity
 
-    Atlas::Objects::Entity::Account account;
-   // account.setId(uname); // shouldn't need this anymore
-    account->setPassword(pwd);
+    AtlasAccount account;
+    account->setAttr("password", pwd);
     account->setAttr("username", uname);
 
     Login l;
@@ -361,22 +369,22 @@ void Player::internalLogout(bool clean)
     LogoutComplete.emit(clean);
 }
 
-void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
+void Player::loginComplete(const AtlasAccount &p)
 {
     if (m_status != LOGGING_IN)
         error() << "got loginComplete, but not currently logging in!";
         
-    if (!p->hasAttr("username") || (p->getAttr("username").toString() != m_username))
+    if (!p->hasAttr("username") || (p->getAttr("username").asString() != m_username))
         error() << "missing or incorrect username on login INFO";
         
     m_status = LOGGED_IN;
-    m_accountId = p.getId();
+    m_accountId = p->getId();
     debug() << "login, account ID is " << m_accountId;
     
 // extract character IDs, and turn from a list into a set
     m_characterIds.clear();
-    const AtlasListType& cs = p.getCharacters();
-    for (AtlasListType::const_iterator I=cs.begin(); I != cs.end(); ++I)
+    const Atlas::Message::ListType& cs = p->getAttr("characters").asList();
+    for (Atlas::Message::ListType::const_iterator I=cs.begin(); I != cs.end(); ++I)
         m_characterIds.insert(I->asString());
     
     // notify an people watching us 
@@ -385,6 +393,7 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     m_con->Disconnecting.connect(SigC::slot(*this, &Player::netDisconnecting));
 }
 
+/*
 void Player::recvOpError(const Error &err)
 {
 	// skip errors if we're not doing anything
@@ -413,6 +422,7 @@ void Player::recvOpError(const Error &err)
 	_currentAction = "";
 	_currentSerial = 0;
 }
+*/
 
 void Player::sightCharacter(const GameEntity& ge)
 {
@@ -430,7 +440,7 @@ void Player::sightCharacter(const GameEntity& ge)
     }
     
     // okay, we can now add it to our map
-    _characters.insert(C, CharacterMap::value_type(ge.getId(), ge));
+    _characters.insert(C, CharacterMap::value_type(ge->getId(), ge));
     GotCharacterInfo.emit(ge);
     
 // check if we'redone
@@ -470,7 +480,7 @@ void Player::netFailure(const std::string& /*msg*/)
 
 void Player::handleLogoutTimeout()
 {
-    Eris::log(LOG_DEBUG, "LOGOUT timed out waiting for response");
+    error() << "LOGOUT timed out waiting for response";
     
     m_status = DISCONNECTED;
     delete _logoutTimeout;

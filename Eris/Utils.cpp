@@ -94,15 +94,6 @@ StringSet getParentsAsSet(const Atlas::Objects::Root &obj)
 	return ret;
 }
 
-long getNewSerialno()
-{
-	static long _nextSerial = 1001;
-	// note this will eventually loop (in theorey), but that's okay
-	// FIXME - using the same intial starting offset is problematic
-	// if the client dies, and quickly reconnects
-	return _nextSerial++;
-}
-
 const std::string objectSummary(const Atlas::Objects::Root &obj)
 {
 	if (obj.getParents().empty()) {

@@ -116,10 +116,22 @@ void Connection::registerRouterForTo(Router* router, const std::string toId)
 {
     m_toRouters[toId] = router;
 }
+
+void Connection::unregisterRouterForTo(Router* router, const std::string toId)
+{
+    assert(m_toRouters[toId] == router);
+    m_toRouters.erase(toId);
+}
         
 void Connection::registerRouterForFrom(Router* router, const std::string fromId)
 {
     m_fromRouters[fromId] = router;
+}
+
+void Connection::unregisterRouterForFrom(Router* router, const std::string fromId)
+{
+    assert(m_fromRouters[fromId] == router);
+    m_fromRouters.erase(fromId);
 }
         
 void Connection::setDefaultRouter(Router* router)
@@ -229,8 +241,8 @@ void Connection::handleFailure(const std::string &msg)
 
 void Connection::bindTimeout(Eris::Timeout &t, Status sc)
 {
-	// wire up all the stuff
-	t.Expired.connect( SigC::bind(Timeout.slot(),sc) );
+    // wire up all the stuff
+    t.Expired.connect( SigC::bind(Timeout.slot(),sc) );
 }
 
 void Connection::onConnect()
@@ -243,6 +255,17 @@ void Connection::postForDispatch(const Root& obj)
 {
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     m_opDeque.push_back(op);
+}
+
+#pragma mark -
+
+long getNewSerialno()
+{
+	static long _nextSerial = 1001;
+	// note this will eventually loop (in theorey), but that's okay
+	// FIXME - using the same intial starting offset is problematic
+	// if the client dies, and quickly reconnects
+	return _nextSerial++;
 }
 
 } // of namespace

@@ -46,9 +46,7 @@ protected:
     friend class OOGRouter;
     
     void look(const std::string &id);
-	
-    virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
-	
+		
     void sightPerson(const Atlas::Objects::Entity::Account &ac);
     Router::RouterResult privateTalk(const Atlas::Objects::Operation::Talk& tk);
     void recvInitialSight(const Atlas::Objects::Entity::RootEntity& ent);

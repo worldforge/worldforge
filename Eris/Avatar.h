@@ -44,6 +44,8 @@ public:
         return m_view;
     }
 
+    Connection* getConnection() const;
+
 	/// Drop an object in the Avatar's inventory at the given location
 	void drop(Entity*, const WFMath::Point<3>& pos, const std::string& loc);
 	/// Drop an object in the Avatar's inventory at the Avatar's feet
@@ -87,13 +89,13 @@ protected:
     
     /** Create a new Avatar object. 
     @param pl The player that owns the Avatar 
-    @param refno The refno of the activation INFO
-    @param charId The character entity ID, if known
     */
-    Avatar(Player* pl, long refno, const std::string& charId);
+    Avatar(Player* pl);
     
+    friend class AccountRouter;
+    
+    void setEntity(const Atlas::Objects::Entity::GameEntity& gent);
 private:
-    Connection* getConnection() const;
     
     Player* m_account;
     

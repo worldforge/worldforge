@@ -25,7 +25,7 @@ namespace Eris
 {
 	
 MetaQuery::MetaQuery(Meta *ms, const std::string &host) :
-	BaseConnection(ms->getClientName(), "mq_" + host + "-", ms),
+	BaseConnection("eris-metaquery", "mq_" + host + "-", ms),
 	_host(host),
 	_meta(ms),
 	_complete(false)

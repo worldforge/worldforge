@@ -2,16 +2,23 @@ Eris TODO
 
 1.2 TODO
 
-- Avatar creation, especially in the character creation case. Hook
-  into Player
+- room creation / binding
+  room creation seems okay, the only reason for the pending crap is so
+  we can hold the Room object around.
+  
+  map<serialno, Room*> m_pendingSightCreates on lobby makes this work.
+  yech.
+  
 - rename Player to Account
+
+- Error handling in Player
+
+- Go over the Poll api, see if work can be delegated to skstream or not
 
 - go over and clean up the metaquery code, it's horrible, especially the
   snprint stuff.
 
 Longer Term TODO
-
-
 
 - motion prediction, nicked from Sear
 - UI backend stuff

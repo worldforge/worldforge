@@ -167,6 +167,7 @@ public:
 protected:	
     friend class IGRouter;
     friend class View;
+    friend class EntityRouter;
     
     void sight(const Atlas::Objects::Entity::GameEntity& gent);
     void setFromRoot(const Atlas::Objects::Root& obj);

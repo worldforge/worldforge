@@ -103,8 +103,11 @@ public:
 	/////  returns true if the game has defined a character creation dialog
 	bool canCreateCharacter() {return false;}
 
-    /// returns the account ID if logged in, or throws and exception
-    const std::string& getID() const;
+    /// returns the account ID if logged in
+    const std::string& getID() const
+    {
+        return m_accountId;
+    }
 
     Connection* getConnection() const 
     {
@@ -135,7 +138,7 @@ protected:
     
     void recvOpError(const Atlas::Objects::Operation::Error &err);	
     void sightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
-    void loginComplete(const Atlas::Objects::Entity::Player &p);
+    void loginComplete(const Atlas::Objects::Entity::Account &p);
 
     void internalLogin(const std::string &unm, const std::string &pwd);
     void internalLogout(bool clean);
@@ -173,6 +176,7 @@ private:
     
     std::string m_accountId;	///< the account ID
     std::string m_username;	///< The player's username ( != account object's ID)
+    std::string m_pass;
     
     CharacterMap _characters;	///< charatcers belonging to this player
     StringSet m_characterIds;

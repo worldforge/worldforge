@@ -7,7 +7,6 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/Log.h>
 #include <Eris/Connection.h>
-#include <Eris/Utils.h>
 #include <Eris/redispatch.h>
 #include <Eris/Exceptions.h>
 
@@ -21,22 +20,27 @@
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
+using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris
 {
 
 TypeService::TypeService(Connection *con) : 
-    m_con(con)
+    m_con(con),
+    m_inited(false)
 {
     /* this block here provides the foundation objects locally, no matter what
     the server does. this reduces some initial traffic during login and
     startup. */
+    /*
     registerLocalType(Root::Class());
-    registerLocalType(Atlas::Objects::Entity::RootEntity::Class());
+    registerLocalType(RootEntity::Class());
     registerLocalType(RootOperation::Class());
     registerLocalType(Get::Class());
     registerLocalType(Info::Class());
     registerLocalType(Error::Class());
+*/
 
     // try to read atlas.xml to boot-strap stuff faster
     readAtlasSpec("atlas.xml");
@@ -44,6 +48,11 @@ TypeService::TypeService(Connection *con) :
 
 void TypeService::init()
 {
+    assert(!m_inited);
+    m_inited = true;
+    
+    debug() << "initializing type service";
+    
     // build the root node, install into the global map and kick off the GET
     getTypeByName("root");
 	
@@ -69,6 +78,12 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
     if (T != m_types.end())
         return T->second;
     
+    if (m_badTypes.count(id))
+    {
+        error() << "did getTypeByName for bad type " << id;
+        return NULL;
+    }
+    
 // not found, do some work
     debug() << "Requesting type data for " << id;
     
@@ -82,7 +97,7 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 
 TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 {
-    const std::list<std::string>& parents = obj->getParents();
+    const StringList& parents = obj->getParents();
     
     /* special case code to handle the root object which has no parents. */
     if (parents.empty()) {
@@ -108,7 +123,7 @@ public:
     }
 };
 
-RouterResult TypeService::redispatchWhenBound(TypeInfoPtr ty, const Root& obj)
+Router::RouterResult TypeService::redispatchWhenBound(TypeInfoPtr ty, const Root& obj)
 {
     if (ty->isBound())
     {
@@ -119,7 +134,7 @@ RouterResult TypeService::redispatchWhenBound(TypeInfoPtr ty, const Root& obj)
     }
 
     TypeBoundRedispatch* tbr = new TypeBoundRedispatch(m_con, obj);
-    ty->Bound.connect(SigC::slot(*tbr, TypeBoundRedispatch::onBound));
+    ty->Bound.connect(SigC::slot(*tbr, &TypeBoundRedispatch::onBound));
  
     // and stop processing the op for now   
     return WILL_REDISPATCH;
@@ -127,14 +142,14 @@ RouterResult TypeService::redispatchWhenBound(TypeInfoPtr ty, const Root& obj)
 
 #pragma mark -
 
-RouterResult TypeService::handleOperation(const RootOperation& op)
+Router::RouterResult TypeService::handleOperation(const RootOperation& op)
 {
     // skip any operation who's refno doesn't match the serial of a 
     // request we made
     if (m_typeRequests.find(op->getRefno()) == m_typeRequests.end())
         return IGNORED;
         
-    if (op->isA(INFO_NO))
+    if (op->instanceOf(INFO_NO))
     {
         const std::vector<Root>& args(op->getArgs());
         std::string objType = args.front()->getObjtype();
@@ -147,18 +162,18 @@ RouterResult TypeService::handleOperation(const RootOperation& op)
         }
     }
     
-    if (op->isA(ERROR_NO))
+    if (op->instanceOf(ERROR_NO))
     {
         const std::vector<Root>& args(op->getArgs());
         Get request = smart_dynamic_cast<Get>(args.front());
-        if (!request)
+        if (!request.isValid())
             throw InvalidOperation("TypeService got ERROR whose arg is not GET");
             
         assert(m_typeRequests.count(request->getSerialno()) == 1);
-        m_typeRequests.erase((request->getSerialno());
+        m_typeRequests.erase(request->getSerialno());
         
         recvError(request);
-        return Router::HANDLED;
+        return HANDLED;
     }
     
     error() << "type service got op that wasn't get or error";
@@ -167,15 +182,15 @@ RouterResult TypeService::handleOperation(const RootOperation& op)
 
 void TypeService::recvTypeInfo(const Root &atype)
 {
-    std::string id = atype.getId();
-    TypeInfoMap::iterator T = m_types.find(id);
+    TypeInfoMap::iterator T = m_types.find(atype->getId());
     if (T == m_types.end())
     {
-        throw IllegalObject(atype, "type object's ID (" + id + ") is unknown");
+        error() << "recived type object with unknown ID " << atype->getId();
+        return;
     }
 	
     // handle duplicates : this can be caused by waitFors pilling up, for example
-    if (T->second->isBound() && (id!="root"))
+    if (T->second->isBound() && (atype->getId() != "root"))
         return;
 	
     T->second->processTypeData(atype);
@@ -185,14 +200,13 @@ void TypeService::sendRequest(const std::string &id)
 {
     // stop premature requests (before the connection is available); when TypeInfo::init
     // is called, the requests will be re-issued manually
-    if (!_inited)
-        return;
+    if (!m_inited) return;
+    
+    Root what;
+    what->setId(id);
     
     Get get;
-    Atlas::Message::MapType args;
-    args["id"] = id;
-    get->setArgsAsList(Atlas::Message::ListType(1, args));
-    
+    get->setArgs1(what);
     get->setSerialno(getNewSerialno());
     m_typeRequests.insert(get->getSerialno());
     
@@ -201,21 +215,20 @@ void TypeService::sendRequest(const std::string &id)
 
 void TypeService::recvError(const Get& get)
 {
-    const Atlas::Message::MapType& args = get.getArgsAsList().front();
-    Atlas::Message::MapType::const_iterator A = args.find("id");
-    assert(A != args.end());
-        	
-    std::string typenm = A->second.asString();
-    TypeInfoMap::iterator T = m_types.find(typenm);
-    if (T == globalTypeMap.end())
+    const std::vector<Root>& args = get->getArgs();
+    Root request = args.front();
+
+    TypeInfoMap::iterator T = m_types.find(request->getId());
+    if (T == m_types.end())
     {
         // what the fuck? getting out of here...
-        throw InvalidOperation("got ERROR(GET()) with request for unknown type: " + typenm);
+        throw InvalidOperation("got ERROR(GET()) with request for unknown type: " + request->getId());
     }
     
-    error() << got error from server looking up type << typenm;
-    // parent to root?
-    T->second->_bound = true;
+    error() << " got error from server looking up type " << request->getId();
+    m_badTypes.insert(request->getId());
+    delete T->second;
+    m_types.erase(T);
 }
 
 #pragma mark -
@@ -235,7 +248,8 @@ void TypeService::readAtlasSpec(const std::string &specfile)
     std::fstream specStream(specfile.c_str(), std::ios::in);
     if(!specStream.is_open())
     {
-        eWarning("Unable to open Atlas spec file %s, will obtain all type data from the server", specfile.c_str());
+        warning() << "Unable to open Atlas spec file " << specfile
+            << ", will obtain all type data from the server";
         return;
     }
  

@@ -3,10 +3,16 @@
 #endif
 
 #include <Eris/entityRouter.h>
+#include <Eris/logStream.h>
+#include <Eris/Entity.h>
+
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
@@ -21,32 +27,32 @@ EntityRouter::~EntityRouter()
 
 }
 
-RouterResult EntityRouter::handleOperation(const RootOperation& op)
+Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 {
-    assert(op->getFrom() == m_entity->getID());
+    assert(op->getFrom() == m_entity->getId());
     const std::vector<Root>& args = op->getArgs();
     
     Sight sight = smart_dynamic_cast<Sight>(op);
-    if (sight)
+    if (sight.isValid())
     {
         assert(!args.empty());
         RootOperation sop = smart_dynamic_cast<RootOperation>(args.front());
-        if (sop)
+        if (sop.isValid())
             return handleSightOp(sop);
             
-        if (args.front()->getId() == m_entity->getID())
+        if (args.front()->getId() == m_entity->getId())
         {
-            m_entity->sight(smart_dynamic_cast<GameEntity>(args.front());
+            m_entity->sight(smart_dynamic_cast<GameEntity>(args.front()));
             return HANDLED;
         }
     }
     
     Sound snd = smart_dynamic_cast<Sound>(op);
-    if (snd)
+    if (snd.isValid())
     {
         assert(!args.empty());
         Talk talk = smart_dynamic_cast<Talk>(args.front());
-        if (talk)
+        if (talk.isValid())
         {
             const std::vector<Root>& args = talk->getArgs();
             if (args.empty())
@@ -65,12 +71,12 @@ RouterResult EntityRouter::handleOperation(const RootOperation& op)
     return IGNORED;
 }
 
-RouterResult EntityRouter::handleSightOp(const RootOperation& op)
+Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 {
     const std::vector<Root>& args = op->getArgs();
     
     Move mv = smart_dynamic_cast<Move>(op);
-    if (mv)
+    if (mv.isValid())
     {
         // sight of move, we can handle as a specialization of set.
         // note for the moment the actual behaviour is identical, so this

@@ -21,7 +21,7 @@ public:
     /// create whatever entity the client desires
     virtual Entity* instantiate(const Atlas::Objects::Entity::GameEntity &ge) = 0;
     
-    static Entity* createEntity(const Atlas::Objects::Entity::GameEntity &ge, Entity* loc);
+    static Entity* createEntity(const Atlas::Objects::Entity::GameEntity &ge);
     static void registerFactory(Factory* f);
 };
 

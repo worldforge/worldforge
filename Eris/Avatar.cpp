@@ -23,20 +23,31 @@ using Atlas::Objects::Entity::GameEntity;
 namespace Eris
 {
 
-Avatar::Avatar(Player* pl, long refno, const std::string& charId) : 
+Avatar::Avatar(Player* pl) : 
     m_account(pl),
-    m_entityId(charId),
-    m_entity(NULL)
+    m_entity(NULL),
+    m_router(NULL),
+    m_view(NULL)
 {
-    m_view = new View(this);
-    if (!charId.empty())
-        m_router = new IGRouter(this);
+    
 }
 
 Avatar::~Avatar()
 {
     delete m_router;
     delete m_view;
+}
+
+void Avatar::setEntity(const GameEntity& gent)
+{
+    m_entityId = gent->getId();
+    debug() << "setting Avatar entity ID to " << m_entityId;
+
+    m_router = new IGRouter(this);
+    m_view = new View(this, gent);
+    
+    m_view->getTopLevel();
+    m_view->getEntity(m_entityId);
 }
 
 #pragma mark -

@@ -5,17 +5,22 @@
 #include <Eris/Room.h>
 #include <Eris/Lobby.h>
 #include <Eris/Connection.h>
-#include <Eris/Utils.h>
 #include <Eris/Person.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
+#include <Eris/Player.h>
 
 #include <sigc++/object_slot.h>
+
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/RootEntity.h>
 
 #include <cassert>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
+using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris
 {
@@ -26,13 +31,13 @@ Room::Room(Lobby *l, const std::string& id) :
     m_lobby(l)
 {
     if (!id.empty())
-        m_lobby->getConnection()->registerRouterForFrom(id, this);
+        m_lobby->getConnection()->registerRouterForFrom(this, id);
 }
 
 Room::~Room()
 {
     if (!m_roomId.empty())
-        m_lobby->getConnection()->unregisterRouterForFrom(id, this);
+        m_lobby->getConnection()->unregisterRouterForFrom(this, m_roomId);
 }
 
 #pragma mark -
@@ -46,14 +51,14 @@ void Room::say(const std::string &tk)
         return;
     }
 	
-	Atlas::Message::Element::MapType speech;
-	speech["say"] = tk;
-	speech["loc"] = _id;
+    Root speech;
+    speech->setAttr("say", tk);
+    speech->setAttr("loc", m_roomId);
 	
     Talk t;
-	t.setArgs(Atlas::Message::Element::ListType(1, speech));
+    t->setArgs1(speech);
     t->setTo(m_roomId);
-    t->setFrom(m_lobby->getAccountID());
+    t->setFrom(m_lobby->getAccount()->getID());
     t->setSerialno(getNewSerialno());
 	
     m_lobby->getConnection()->send(t);
@@ -69,15 +74,15 @@ void Room::emote(const std::string &em)
 	
     Imaginary im;
 	
-	Atlas::Message::Element::MapType emote;
-	emote["id"] = "emote";
-	emote["description"] = em;
-	emote["loc"] = _id;
-	
-	im.setArgs(Atlas::Message::Element::ListType(1, emote));
-	im.setTo(_id);
-	im.setFrom(_lobby->getAccountID());
-	im.setSerialno(getNewSerialno());
+    Root emote;
+    emote->setId("emote");
+    emote->setAttr("loc", m_roomId);
+    emote->setAttr("description", em);
+    
+    im->setArgs1(emote);
+    im->setTo(m_roomId);
+    im->setFrom(m_lobby->getAccount()->getID());
+    im->setSerialno(getNewSerialno());
 	
     m_lobby->getConnection()->send(im);
 }
@@ -90,19 +95,16 @@ void Room::leave()
         return;
     }
 
+    Move part;
+    part->setFrom(m_lobby->getAccount()->getID());
+    part->setSerialno(getNewSerialno());
     
-	Atlas::Objects::Operation::Move part;
-	part.setFrom(_lobby->getAccountID());
-	part.setSerialno(getNewSerialno());
-	
-	Message::Element::MapType args;
-	args["loc"] = _id;
-	args["mode"] = "part";
-	part.setArgs(Message::Element::ListType(1, args));
-	
-	c->send(part);
-	// FIXME - confirm the part somehow?
-	_parted = true;
+    Root args;
+    args->setAttr("loc", m_roomId);
+    args->setAttr("mode", "part");
+    part->setArgs1(args);
+
+    m_lobby->getConnection()->send(part);
 }
 
 Room* Room::createRoom(const std::string &name)
@@ -110,29 +112,23 @@ Room* Room::createRoom(const std::string &name)
     if (!m_lobby->getConnection()->isConnected())
     {
         error() << "creating room in room  " << m_roomId << ", but connection is down";
-        return;
+        return NULL;
     }
 
     
-    Atlas::Objects::Operation::Create cr;
-    cr.setFrom(_lobby->getAccountID());
-    cr.setTo(_id);
-    int serial = getNewSerialno();
-    cr.setSerialno(serial);
+    Create cr;
+    cr->setFrom(m_lobby->getAccount()->getID());
+    cr->setTo(m_roomId);
+    cr->setSerialno(getNewSerialno());
     
-    Message::Element::MapType args;
-    args["parents"] = Message::Element::ListType(1, "room");
-    args["name"] = name;
+    RootEntity room;
+    room->setName(name);
+    room->setParents(StringList(1, "room"));
     
-    cr.setArgs(Message::Element::ListType(1, args));
-    c->send(cr);
+    cr->setArgs1(room);
+    m_lobby->getConnection()->send(cr);
     
-    Room *r = new Room(_lobby);
-    // this lets the lobby do stitch up as necessary
-    _lobby->addPendingCreate(r, serial);
-    r->_name = name;	// I'm setting this since we have it already, and it might
-    // help someone identify the room prior to the ID going valid.
-    return r;
+    
 }
 
 Person* Room::getPersonByUID(const std::string& uid)
@@ -155,30 +151,29 @@ std::vector<Person*> Room::getPeople() const
 
 #pragma mark -
 
-RouterResult Room::handleOperation(const RootOperation& op)
+Router::RouterResult Room::handleOperation(const RootOperation& op)
 {
-    if (op->getTo() != m_account->getAccountId())
+    if (op->getTo() != m_lobby->getAccount()->getID())
     {
         error() << "Room recived op TO account " << op->getTo() << ", not the account ID";
         return IGNORED;
     }
 
-    const std::vector<Root>& args = op.getArgs();
+    const std::vector<Root>& args = op->getArgs();
 
     if (op->instanceOf(SIGHT_NO))
     {
         assert(!args.empty());
-        Atlas::Objects::Entity::RootEntity ent = 
-            smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(args.front());
+        RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
             
-        if (ent && (ent->getId() == m_roomId))
+        if (ent.isValid() && (ent->getId() == m_roomId))
         {
             sight(ent);
             return HANDLED;
         }
         
         Imaginary img = smart_dynamic_cast<Imaginary>(args.front());
-        if (img)
+        if (img.isValid())
         {
             handleSightImaginary(img);
             return HANDLED;
@@ -188,7 +183,7 @@ RouterResult Room::handleOperation(const RootOperation& op)
     if (op->instanceOf(APPEARANCE_NO))
     {
         for (unsigned int A=0; A < args.size(); ++A)
-            apperance(args[A]->getId());
+            appearance(args[A]->getId());
 
         return HANDLED;
     }
@@ -204,7 +199,7 @@ RouterResult Room::handleOperation(const RootOperation& op)
     if (op->instanceOf(SOUND_NO))
     {
         Talk tk = smart_dynamic_cast<Talk>(args.front());
-        if (tk)
+        if (tk.isValid())
         {
             handleSoundTalk(tk);
             return HANDLED;
@@ -214,18 +209,18 @@ RouterResult Room::handleOperation(const RootOperation& op)
     return IGNORED;
 }
 
-void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
+void Room::sight(const RootEntity &room)
 {
     if (m_entered)
         warning() << "got SIGHT of entered room " << m_roomId;
         
     m_name = room->getName();
-    if (room->hasAttr("topic")
-        m_topic = room->getAttr("topic").toString();
+    if (room->hasAttr("topic"))
+        m_topic = room->getAttr("topic").asString();
 		
     if (room->hasAttr("people"))
     {
-        Atlas::Message::ListType people = room->getAttr("people").asList();
+        const Atlas::Message::ListType& people = room->getAttr("people").asList();
         for (Atlas::Message::ListType::const_iterator P=people.begin(); P!=people.end(); ++P)
             appearance(P->asString());
     }
@@ -234,10 +229,10 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
     
     if (room->hasAttr("rooms"))
     {
-        Atlas::Message::ListType rooms = room->getAttr("rooms").asList();
+        const Atlas::Message::ListType& rooms = room->getAttr("rooms").asList();
         for (Atlas::Message::ListType::const_iterator R=rooms.begin(); R!=rooms.end(); ++R)
         {
-            m_rooms.push_back(new Room(m_lobby, R->asString());
+            m_subrooms.push_back(new Room(m_lobby, R->asString()));
         }
     }
 }
@@ -254,7 +249,7 @@ void Room::handleSoundTalk(const Talk &tk)
     if (P->second == NULL)
         return; // consume but ignore till we have sight
         
-    const std::vector<Root>& args = tk.getArgs();
+    const std::vector<Root>& args = tk->getArgs();
     if (args.empty())
     {
         warning() << "room " << m_roomId << " recieved sound(talk) with no args";
@@ -265,7 +260,7 @@ void Room::handleSoundTalk(const Talk &tk)
         return;
     
     std::string description = args.front()->getAttr("say").asString();
-    Talk.emit(this, P->second, say);
+    Speech.emit(this, P->second, description);
 }
 
 void Room::handleSightImaginary(const Imaginary& im)
@@ -280,7 +275,7 @@ void Room::handleSightImaginary(const Imaginary& im)
      if (P->second == NULL)
         return; // consume but ignore till we have sight
 
-    const std::vector<Root>& args = im.getArgs();
+    const std::vector<Root>& args = im->getArgs();
     if (args.empty())
     {
         warning() << "room " << m_roomId << " recieved sight(imaginary) with no args";
@@ -311,7 +306,7 @@ void Room::appearance(const std::string& personId)
     {
         m_members[personId] = person;
         if (m_entered)
-            Apperance.emit(this, person);
+            Appearance.emit(this, person);
     } else {
         m_members[personId] = NULL; // we know the person is here, but that's all
         m_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
@@ -360,7 +355,7 @@ void Room::checkEntry()
     assert(m_entered == false);
     
     bool anyPending = false;
-    for (P = m_members.begin(); P != m_members.end(); ++P)
+    for (IdPersonMap::const_iterator P = m_members.begin(); P != m_members.end(); ++P)
         if (P->second == NULL) anyPending = true;
        
     if (!anyPending)

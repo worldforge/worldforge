@@ -5,11 +5,14 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
+
 #include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Operation.h>
 
 #include <cassert>
 
-using namespace Atlas;
+using Atlas::Objects::Root;
+using namespace Atlas::Objects::Operation;
 
 namespace Eris {
  
@@ -24,9 +27,9 @@ TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
         m_bound = true; // root node is always bound
 }
 
-TypeInfo::TypeInfo(const Atlas::Objects::Root &atype, TypeService *ts) :
+TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
     m_bound(false),
-    m_name(atype.getId()),
+    m_name(atype->getId()),
     m_typeService(ts)
 {
     if (m_name == "root")
@@ -46,11 +49,11 @@ bool TypeInfo::isA(TypeInfoPtr tp)
     return m_ancestors.count(tp); // non-authorative
 }
 
-void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
+void TypeInfo::processTypeData(const Root &atype)
 {
-    if (atype->getID() != m_name)
+    if (atype->getId() != m_name)
     {
-        error() << "mis-targeted INFO operation for " << atype->getID() << " arrived at " << m_name;
+        error() << "mis-targeted INFO operation for " << atype->getId() << " arrived at " << m_name;
         return;
     }
         
@@ -59,11 +62,15 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
         addParent(m_typeService->getTypeByName(*P));
 	
 // here we aggressively lookup child types. this tends to cane the server hard
-    const StringList& children(atype->getChildren());
-    for (StringList::const_iterator C = children.begin(); C != children.end(); ++C)
-        addChild(m_typeService->getTypeByName(*C));
-  
-    setupDepends();
+    if (atype->hasAttr("children"))
+    {
+        const Atlas::Message::ListType& children(atype->getAttr("children").asList());
+        
+        for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C)
+            addChild(m_typeService->getTypeByName(C->asString()));
+    }
+    
+      
     validateBind();
 }
 
