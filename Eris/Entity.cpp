@@ -266,6 +266,9 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 	_orientation = Quaternion(0.0, 0.0, atan2(face.y, face.x));	
     } else if (s == "description")
 	_description = val.AsString();
+    else if (s == "bbox") {
+	_bbox = BBox(val);
+    }
     
     PropertyMap::iterator P=_properties.find(mapped);
     if (P == _properties.end()) {
