@@ -41,6 +41,7 @@ class Codec : public Bridge
     virtual ~Codec() { }
 
     virtual void Poll() = 0;
+    virtual void Run() = 0;
 
     class Metrics
     {

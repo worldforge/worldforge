@@ -38,6 +38,7 @@ public:
     Packed(const Codec<iostream>::Parameters&);
 
     virtual void Poll();
+    virtual void Run();
 
     virtual void StreamBegin();
     virtual void StreamMessage(const Map&);
@@ -402,6 +403,27 @@ void Packed::ParseName(char next)
 void Packed::Poll()
 {
     while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    {
+	char next = socket.get();
+
+	switch (state.top())
+	{
+	    case PARSE_STREAM:	    ParseStream(next); break;
+	    case PARSE_MAP:	    ParseMap(next); break;
+	    case PARSE_LIST:	    ParseList(next); break;
+	    case PARSE_MAP_BEGIN:   ParseMapBegin(next); break;
+	    case PARSE_LIST_BEGIN:  ParseListBegin(next); break;
+	    case PARSE_INT:	    ParseInt(next); break;
+	    case PARSE_FLOAT:	    ParseFloat(next); break;
+	    case PARSE_STRING:	    ParseString(next); break;
+	    case PARSE_NAME:	    ParseName(next); break;
+	}
+    }
+}
+
+void Packed::Run()
+{
+    while (!socket.eof())
     {
 	char next = socket.get();
 

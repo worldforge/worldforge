@@ -33,6 +33,8 @@ class Negotiate
     };
 
     virtual State Poll() = 0;
+    virtual State Run() = 0;
+
     virtual Connection<Stream> GetConnection() = 0;
 };
 

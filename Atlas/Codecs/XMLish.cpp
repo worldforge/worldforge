@@ -21,6 +21,7 @@ class XMLish : public Codec<iostream>
     XMLish(const Codec<iostream>::Parameters&);
 
     virtual void Poll();
+    virtual void Run();
 
     virtual void StreamBegin();
     virtual void StreamMessage(const Map&);
@@ -62,6 +63,16 @@ XMLish::XMLish(const Codec<iostream>::Parameters& p)
 void XMLish::Poll()
 {
     while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    {
+	char next = socket.get();
+
+	// FIXME handle incoming characters
+    }
+}
+
+void XMLish::Run()
+{
+    while (!socket.eof())
     {
 	char next = socket.get();
 

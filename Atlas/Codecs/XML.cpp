@@ -39,6 +39,7 @@ class XML : public Codec<iostream>
     XML(const Codec<iostream>::Parameters&);
 
     virtual void Poll();
+    virtual void Run();
 
     virtual void StreamBegin();
     virtual void StreamMessage(const Map&);
@@ -425,6 +426,22 @@ void XML::ParseEndTag()
 void XML::Poll()
 {
     while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    {
+	char next = socket.get();
+
+	switch (token)
+	{
+	    case TOKEN_TAG:	    TokenTag(next); break;
+	    case TOKEN_START_TAG:   TokenStartTag(next); break;
+	    case TOKEN_END_TAG:	    TokenEndTag(next); break;
+	    case TOKEN_DATA:	    TokenData(next); break;
+	}
+    }
+}
+
+void XML::Run()
+{
+    while (!socket.eof())
     {
 	char next = socket.get();
 
