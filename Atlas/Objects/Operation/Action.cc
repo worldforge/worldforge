@@ -16,6 +16,7 @@ Action::Action()
 {
     SetAttr("id", string("action"));
     Object::ListType parent;
+    parent.push_back(string("root_operation"));
     SetAttr("parent", parent);
 }
 

@@ -16,6 +16,7 @@ Listen::Listen()
 {
     SetAttr("id", string("listen"));
     Object::ListType parent;
+    parent.push_back(string("perceive"));
     SetAttr("parent", parent);
 }
 

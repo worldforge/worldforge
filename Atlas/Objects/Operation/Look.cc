@@ -16,6 +16,7 @@ Look::Look()
 {
     SetAttr("id", string("look"));
     Object::ListType parent;
+    parent.push_back(string("perceive"));
     SetAttr("parent", parent);
 }
 

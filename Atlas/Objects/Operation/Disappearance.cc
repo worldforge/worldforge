@@ -16,6 +16,7 @@ Disappearance::Disappearance()
 {
     SetAttr("id", string("disappearance"));
     Object::ListType parent;
+    parent.push_back(string("sight"));
     SetAttr("parent", parent);
 }
 

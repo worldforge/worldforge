@@ -16,6 +16,7 @@ Delete::Delete()
 {
     SetAttr("id", string("delete"));
     Object::ListType parent;
+    parent.push_back(string("action"));
     SetAttr("parent", parent);
 }
 

@@ -16,6 +16,7 @@ Divide::Divide()
 {
     SetAttr("id", string("divide"));
     Object::ListType parent;
+    parent.push_back(string("create"));
     SetAttr("parent", parent);
     SetAttr("specification", string("atlas-game"));
 }

@@ -16,6 +16,7 @@ Perception::Perception()
 {
     SetAttr("id", string("perception"));
     Object::ListType parent;
+    parent.push_back(string("info"));
     SetAttr("parent", parent);
     SetAttr("specification", string("atlas-game"));
 }

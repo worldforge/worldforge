@@ -16,6 +16,7 @@ GameEntity::GameEntity()
 {
     SetAttr("id", string("game_entity"));
     Object::ListType parent;
+    parent.push_back(string("root_entity"));
     SetAttr("parent", parent);
     SetAttr("specification", string("atlas-game"));
     SetAttr("interface", string("game_interface"));

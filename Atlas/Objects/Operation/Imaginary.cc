@@ -16,6 +16,7 @@ Imaginary::Imaginary()
 {
     SetAttr("id", string("imaginary"));
     Object::ListType parent;
+    parent.push_back(string("perception"));
     SetAttr("parent", parent);
 }
 

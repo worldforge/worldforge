@@ -16,6 +16,7 @@ Logout::Logout()
 {
     SetAttr("id", string("logout"));
     Object::ListType parent;
+    parent.push_back(string("login"));
     SetAttr("parent", parent);
 }
 

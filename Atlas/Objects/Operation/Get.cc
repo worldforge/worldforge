@@ -16,6 +16,7 @@ Get::Get()
 {
     SetAttr("id", string("get"));
     Object::ListType parent;
+    parent.push_back(string("action"));
     SetAttr("parent", parent);
 }
 

@@ -16,12 +16,19 @@ RootEntity::RootEntity()
 {
     SetAttr("id", string("root_entity"));
     Object::ListType parent;
+    parent.push_back(string("root"));
     SetAttr("parent", parent);
     SetAttr("objtype", string("class"));
     SetAttr("loc", string(""));
     Object::ListType pos;
+    pos.push_back(0.0);
+    pos.push_back(0.0);
+    pos.push_back(0.0);
     SetAttr("pos", pos);
     Object::ListType velocity;
+    velocity.push_back(0.0);
+    velocity.push_back(0.0);
+    velocity.push_back(0.0);
     SetAttr("velocity", velocity);
     Object::ListType contains;
     SetAttr("contains", contains);

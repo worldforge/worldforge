@@ -16,6 +16,7 @@ Talk::Talk()
 {
     SetAttr("id", string("talk"));
     Object::ListType parent;
+    parent.push_back(string("communicate"));
     SetAttr("parent", parent);
 }
 

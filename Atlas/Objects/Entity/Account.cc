@@ -16,6 +16,7 @@ Account::Account()
 {
     SetAttr("id", string("account"));
     Object::ListType parent;
+    parent.push_back(string("admin_entity"));
     SetAttr("parent", parent);
     SetAttr("password", string(""));
 }

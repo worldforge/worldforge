@@ -16,6 +16,7 @@ Set::Set()
 {
     SetAttr("id", string("set"));
     Object::ListType parent;
+    parent.push_back(string("action"));
     SetAttr("parent", parent);
 }
 

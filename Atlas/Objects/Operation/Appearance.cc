@@ -16,6 +16,7 @@ Appearance::Appearance()
 {
     SetAttr("id", string("appearance"));
     Object::ListType parent;
+    parent.push_back(string("sight"));
     SetAttr("parent", parent);
 }
 

@@ -17,6 +17,10 @@ descr_attrs = ['instance', 'description', 'args_description', 'example', \
 def classize(id):
     return string.join(map(lambda part:string.capitalize(part), \
                        string.split(id, '_')), "")
+                       
+type2string={StringType:"string",
+             IntType:"int",
+             FloatType:"float"}
 
 class GenerateCC:
     def __init__(self, defs, outdir):
@@ -53,6 +57,38 @@ class GenerateCC:
         self.out.write("\n")
     def constructors_if(self, obj):
         self.out.write("    " + self.classname + "();\n")
+    def default_map(self, name, obj):
+        self.out.write("    Object::MapType " + name + ";\n")
+        for sub in obj.attr_list:
+            if sub.type == "list":
+                self.default_list("%s_%d" % (name, sub.name), sub)
+            if sub.type == "map":
+                self.default_map("%s_%d" % (name, sub.name), sub)
+            self.out.write("    %s.push_back(" % name)
+            if sub.type == "list" or sub_type == "map":
+                self.out.write("%s_%d" % (name, sub.name))
+            elif sub.type == "string":
+                self.out.write('string("%s")' % sub.value)
+            else:
+                self.out.write("%s" % sub.value)
+            self.out.write(");\n")
+    def default_list(self, name, obj):
+        i = 0
+        self.out.write("    Object::ListType " + name + ";\n")
+        for sub in obj.value:
+            sub_type = type2string[type(sub)]
+            if sub_type == "list":
+                self.default_list("%s_%d" % (name, ++i), sub)
+            elif sub_type == "map":
+                self.default_map("%s_%d" % (name, ++i), sub)
+            self.out.write("    %s.push_back(" % name)
+            if sub_type == "list" or sub_type == "map":
+                self.out.write("%s_%d" % (name, i))
+            elif sub_type == "string":
+                self.out.write('string("%s")' % sub)
+            else:
+                self.out.write('%s' % sub)
+            self.out.write(");\n")
     def constructors_im(self, obj):
         self.out.write(self.classname + "::" + self.classname + "()\n")
         self.out.write("     : ")
@@ -63,18 +99,13 @@ class GenerateCC:
             if sub_obj.attr_container_obj == obj and \
                sub_obj.name not in descr_attrs:
                 if sub_obj.type == "list":
-                    self.out.write('    Object::ListType ' + sub_obj.name + ';\n')
-#                    for sub_sub_obj in obj.attr_list:
-#                        self.out.write('    ' + sub_sub_obj.name + '.push_back(')
-#                        if sub_sub_obj.type == "string":
-#                            self.out.write('string(' + sub_sub_obj.value + ')')
-#                        else:
-#                            self.out.write(sub_sub_obj.value)
-#                        self.out.write(');\n')
+                    self.default_list(sub_obj.name, sub_obj)
+                if sub_obj.type == "map":
+                    self.default_map(sub_obj.name, sub_obj)
                 self.out.write('    SetAttr("' + sub_obj.name + '", ')
                 if sub_obj.type == "string":
                     self.out.write('string("' + sub_obj.value + '")')
-                elif sub_obj.type == "list":
+                elif sub_obj.type == "list" or sub_obj.type == "map":
                     self.out.write(sub_obj.name)
                 else:
                     self.out.write('%s' % sub_obj.value)

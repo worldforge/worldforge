@@ -16,6 +16,7 @@ Sniff::Sniff()
 {
     SetAttr("id", string("sniff"));
     Object::ListType parent;
+    parent.push_back(string("perceive"));
     SetAttr("parent", parent);
 }
 

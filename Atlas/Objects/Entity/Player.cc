@@ -16,6 +16,7 @@ Player::Player()
 {
     SetAttr("id", string("player"));
     Object::ListType parent;
+    parent.push_back(string("account"));
     SetAttr("parent", parent);
     Object::ListType characters;
     SetAttr("characters", characters);

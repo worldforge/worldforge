@@ -16,6 +16,7 @@ RootOperation::RootOperation()
 {
     SetAttr("id", string("root_operation"));
     Object::ListType parent;
+    parent.push_back(string("root"));
     SetAttr("parent", parent);
     SetAttr("objtype", string("op_definition"));
     SetAttr("serialno", 0);

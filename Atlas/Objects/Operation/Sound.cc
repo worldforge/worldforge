@@ -16,6 +16,7 @@ Sound::Sound()
 {
     SetAttr("id", string("sound"));
     Object::ListType parent;
+    parent.push_back(string("perception"));
     SetAttr("parent", parent);
 }
 

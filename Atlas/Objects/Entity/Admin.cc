@@ -16,6 +16,7 @@ Admin::Admin()
 {
     SetAttr("id", string("admin"));
     Object::ListType parent;
+    parent.push_back(string("account"));
     SetAttr("parent", parent);
 }
 

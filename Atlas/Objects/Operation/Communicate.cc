@@ -16,6 +16,7 @@ Communicate::Communicate()
 {
     SetAttr("id", string("communicate"));
     Object::ListType parent;
+    parent.push_back(string("create"));
     SetAttr("parent", parent);
     SetAttr("specification", string("atlas-game"));
 }

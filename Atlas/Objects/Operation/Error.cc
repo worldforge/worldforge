@@ -16,6 +16,7 @@ Error::Error()
 {
     SetAttr("id", string("error"));
     Object::ListType parent;
+    parent.push_back(string("info"));
     SetAttr("parent", parent);
 }
 

@@ -16,6 +16,7 @@ Create::Create()
 {
     SetAttr("id", string("create"));
     Object::ListType parent;
+    parent.push_back(string("action"));
     SetAttr("parent", parent);
 }
 

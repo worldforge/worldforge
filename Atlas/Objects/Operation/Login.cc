@@ -16,6 +16,7 @@ Login::Login()
 {
     SetAttr("id", string("login"));
     Object::ListType parent;
+    parent.push_back(string("get"));
     SetAttr("parent", parent);
 }
 

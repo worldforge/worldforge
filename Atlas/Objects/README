@@ -3,7 +3,6 @@ The .cc and .h files in here are automatically generated.
 The generation script is a _work in progress_, hence a few things aren't yet
 implemented:
 
- - default values for lists & maps in constructors
  - non-default constructors
  - Makefile.am generation
  - Decoder.cc generation
@@ -11,5 +10,10 @@ implemented:
 The following are optimisations that are yet to be done:
 
  - static values
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! NOTE: You'll have to modify #include "Root.h" to #include "../Root.h" in !!
+!! Entity/RootOperation.h and Entity/RootEntity.h after you run gen_cc.py.  !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Please do not touch anything in this directory yet. -- sdt@gmx.net

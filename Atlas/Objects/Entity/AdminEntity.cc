@@ -16,6 +16,7 @@ AdminEntity::AdminEntity()
 {
     SetAttr("id", string("admin_entity"));
     Object::ListType parent;
+    parent.push_back(string("root_entity"));
     SetAttr("parent", parent);
 }
 

@@ -16,6 +16,7 @@ Feel::Feel()
 {
     SetAttr("id", string("feel"));
     Object::ListType parent;
+    parent.push_back(string("perception"));
     SetAttr("parent", parent);
 }
 

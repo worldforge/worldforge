@@ -16,6 +16,7 @@ Move::Move()
 {
     SetAttr("id", string("move"));
     Object::ListType parent;
+    parent.push_back(string("set"));
     SetAttr("parent", parent);
     SetAttr("specification", string("atlas-game"));
 }

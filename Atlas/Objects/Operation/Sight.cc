@@ -16,6 +16,7 @@ Sight::Sight()
 {
     SetAttr("id", string("sight"));
     Object::ListType parent;
+    parent.push_back(string("perception"));
     SetAttr("parent", parent);
 }
 

@@ -16,6 +16,7 @@ Perceive::Perceive()
 {
     SetAttr("id", string("perceive"));
     Object::ListType parent;
+    parent.push_back(string("get"));
     SetAttr("parent", parent);
     SetAttr("specification", string("atlas-game"));
 }

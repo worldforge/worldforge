@@ -16,6 +16,7 @@ Game::Game()
 {
     SetAttr("id", string("game"));
     Object::ListType parent;
+    parent.push_back(string("admin_entity"));
     SetAttr("parent", parent);
 }
 

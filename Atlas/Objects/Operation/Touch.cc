@@ -16,6 +16,7 @@ Touch::Touch()
 {
     SetAttr("id", string("touch"));
     Object::ListType parent;
+    parent.push_back(string("perceive"));
     SetAttr("parent", parent);
 }
 
