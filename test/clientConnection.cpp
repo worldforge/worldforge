@@ -382,7 +382,7 @@ void ClientConnection::processAnonymousGet(const Get& get)
         debug() << "handle server queries";
     } else {
         std::string typeName = args.front()->getId();
-        debug() << "got a type query for '" << typeName << "', I think";
+
         if (m_server->m_types.count(typeName))
         {
             Info typeInfo;

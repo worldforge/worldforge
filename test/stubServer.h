@@ -36,6 +36,8 @@ public:
     
     Agent* findAgentForEntity(const std::string& eid);
     
+    Atlas::Objects::Entity::GameEntity getEntity(const std::string& eid) const;
+    
 private:
     void joinRoom(const std::string& acc, const std::string& room);
     void partRoom(const std::string& acc, const std::string& room);

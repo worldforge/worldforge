@@ -81,6 +81,7 @@ void erisLog(Eris::LogLevel level, const std::string& msg)
         
     default:
         cout << "ERIS: " << msg << endl;
+       return;
     }
 }
 
@@ -216,6 +217,34 @@ private:
     
     Eris::View* m_view;
     std::set<std::string> m_waiting;
+};
+    
+class AttributeTracker : public SigC::Object
+{
+public:
+    void waitForChangeOf(Eris::Entity* e, const std::string& attr)
+    {
+        assert(e);
+        m_changed = false;
+        
+        e->observe(attr, SigC::slot(*this, &AttributeTracker::attrChange));
+        while (!m_changed) Eris::PollDefault::poll();
+    }
+    
+    Atlas::Message::Element newValue() const 
+    { return m_value; }
+    
+private:
+    void attrChange(const std::string& attr, const Atlas::Message::Element& v)
+    {
+        m_name = attr;
+        m_value = v;
+        m_changed = true;
+    }
+    
+    bool m_changed;
+    std::string m_name;
+    Atlas::Message::Element m_value;
 };
     
 #pragma mark -
@@ -386,7 +415,6 @@ void testAppearance(Controller& ctl)
     df.waitFor("_pig_01");
     df.waitFor("_potato_2");
     
-    cout << "waiting for disappearances" << endl;
     df.run();
     
     ctl.setEntityVisibleToAvatar("_potato_1", av.get());
@@ -411,20 +439,30 @@ void testSet(Controller& ctl)
     
     AutoAvatar av = stdTake("acc_b_character", acc.get());
 
+    {
+        WaitForAppearance wf(av->getView(), "_table_1");
+        wf.waitFor("_vase_1");
+        wf.run();
+    }
+    
     Eris::Entity* table = av->getView()->getEntity("_table_1");
     assert(table);
-    
- //   table->observe("status", SigC::slot(attrObserver, ...... ));
-    
+        
     assert(table->getPosition() == WFMath::Point<3>(1.0, 2.0, 3.0));
     assert(table->numContained() == 1);
     
     ctl.setAttr("_table_1", "status", "funky");
     
-  //  while () Eris::PollDefault::poll();
-    
+    AttributeTracker at;
+    at.waitForChangeOf(table, "status");
+        
+    assert(at.newValue() == std::string("funky"));
     // check the value made it through
     assert(table->valueOfAttr("status") == std::string("funky"));
+    
+    // and that nothing else got bent
+    assert(table->getPosition() == WFMath::Point<3>(1.0, 2.0, 3.0));
+    assert(table->numContained() == 1);
 }
 
 
@@ -453,6 +491,7 @@ int main(int argc, char **argv)
             testAccountCharacters();
             testCharActivate(ctl);
             testAppearance(ctl);
+            testSet(ctl);
         }
         catch (TestFailure& tfexp)
         {

@@ -1,3 +1,15 @@
+2004-10-13  James Turner  <james@worldforge.org>
+
+	* tests/tests.cpp: Finish off the sight(set) test code, which seems to work
+	  as desired (which doesn't help Al with his bug, alas)
+	  
+	* tests/agent.cpp: Add support for broadcasting an op to all connected agents
+	  
+	* tests/controller.cpp, tests/commander.cpp: initial work on simulating
+	  entity movement on the stub server.
+
+	* Eris/Entity.cpp: lots of debug() clean ups all over the place
+
 2004-10-12  James Turner  <james@worldforge.org>
 
 	* Removing long-dead files from the time before pkg-config

@@ -75,7 +75,6 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     Appearance appear = smart_dynamic_cast<Appearance>(op);
     if (appear.isValid())
     {
-        debug() << "recieved appearance";
         for (unsigned int A=0; A < args.size(); ++A)
         {
             float stamp = -1;
@@ -146,7 +145,6 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
                 continue; // we don't have it, ignore
             }
             
-            debug() << "entity " << ent->getId() << " got set: " << setOp;
             ent->setFromRoot(args[A]);
         }
         return HANDLED;

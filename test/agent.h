@@ -21,6 +21,8 @@ public:
 
     static void setEntityVisibleForFutureAgent(const std::string& eid, const std::string& agentId);
 
+    static void broadcastSight(const Atlas::Objects::Operation::RootOperation& op);
+
 private:
     void processLook(const Atlas::Objects::Operation::Look& op);
 
@@ -36,6 +38,9 @@ private:
     
     typedef std::multimap<std::string, std::string> StringStringMmap;
     static StringStringMmap static_futureVisible;
+    
+    typedef std::set<Agent*> AgentSet;
+    static AgentSet static_allAgents;
 };
 
 #endif

@@ -26,12 +26,15 @@ using std::cout;
 using std::cerr;
 
 Agent::StringStringMmap Agent::static_futureVisible;
+Agent::AgentSet Agent::static_allAgents;
 
 Agent::Agent(ClientConnection* con, const std::string& charId) :
     m_character(charId),
     m_con(con),
     m_server(con->getServer())
 {
+    static_allAgents.insert(this);
+    
     m_visible.insert("_world");
     m_visible.insert(charId);
     
@@ -47,7 +50,7 @@ Agent::Agent(ClientConnection* con, const std::string& charId) :
 
 Agent::~Agent()
 {
-
+    static_allAgents.erase(this);
 }
 
 void Agent::processOp(const RootOperation& op)
@@ -97,9 +100,22 @@ void Agent::setEntityVisible(const std::string& eid, bool vis)
     }
 }
 
+#pragma mark -
+
 void Agent::setEntityVisibleForFutureAgent(const std::string& eid, const std::string& agentId)
 {
     static_futureVisible.insert(StringStringMmap::value_type(agentId, eid));
+}
+
+void Agent::broadcastSight(const RootOperation& op)
+{
+    Sight st;
+    st->setArgs1(op);
+    
+    for (AgentSet::iterator it=static_allAgents.begin(); it != static_allAgents.end(); ++it) {
+        st->setTo((*it)->m_character);
+        (*it)->m_con->send(st);
+    }
 }
 
 #pragma mark -
@@ -110,11 +126,11 @@ void Agent::processLook(const Look& look)
     std::string lookTarget;
         
     if (args.empty()) {
-        cout << "got anonymous IG look" << endl;
+        //cout << "got anonymous IG look" << endl;
         lookTarget = "_world";
     } else {
         lookTarget = args.front()->getId();
-        cout << "IG look at " << lookTarget << endl;
+        //cout << "IG look at " << lookTarget << endl;
     }
     
     if (m_server->m_world.count(lookTarget) == 0) {

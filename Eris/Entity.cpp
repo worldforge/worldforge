@@ -143,7 +143,10 @@ void Entity::setFromRoot(const Root& obj)
     beginUpdate();
     
     for (Atlas::Objects::RootData::const_iterator A = obj->begin(); A != obj->end(); ++A) {
-        if ((A->first == "id") || (A->first == "loc") || (A->first == "contains"))
+        if ((A->first == "id") || 
+            (A->first == "loc") || 
+            (A->first == "contains") ||
+            (A->first == "parents"))
         {
             continue; // never set these on a SET op
         }
@@ -160,8 +163,7 @@ void Entity::setFromRoot(const Root& obj)
 
 void Entity::talk(const Root& talkArgs)
 {
-    if (!talkArgs->hasAttr("say"))
-    {
+    if (!talkArgs->hasAttr("say")) {
         error() << "entity " << m_id << " got talk with no 'say' argument";
         return;
     }
@@ -203,17 +205,16 @@ void Entity::setMoving(bool inMotion)
 void Entity::setAttr(const std::string &attr, const Element &val)
 {
     beginUpdate();
+    //debug() << "setting attr " << attr << " of " << m_id;
 
-    //debug() << "setting attr " << attr << " of " << m_id << " to " << val;
-
-    if (!nativeAttrChanged(attr, val))
-    {
+    if (!nativeAttrChanged(attr, val)) {
         // add to map
         m_attrs[attr] = val;
 
         // fire observers
-        if (m_observers.count(attr))
+        if (m_observers.count(attr)) {
             m_observers[attr].emit(attr, val);
+        }
     }
 
     addToUpdate(attr);
@@ -223,45 +224,30 @@ void Entity::setAttr(const std::string &attr, const Element &val)
 
 bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
 {
-    if (attr == "name")
-    {
+    if (attr == "name") {
         m_name = v.asString();
         return true;
-    }
-    else if (attr == "stamp")
-    {
+    } else if (attr == "stamp") {
         m_stamp = v.asFloat();
         return true;
-    }
-    else if (attr == "pos")
-    {
+    } else if (attr == "pos") {
         m_position.fromAtlas(v);
         m_predictedPosition = m_position;
         return true;
-    }
-    else if (attr == "velocity")
-    {
+    } else if (attr == "velocity") {
         m_velocity.fromAtlas(v);
         return true;
-    }
-    else if (attr == "orientation")
-    {
+    } else if (attr == "orientation") {
         m_orientation.fromAtlas(v);
         return true;
-    }
-    else if (attr == "description")
-    {
+    } else if (attr == "description") {
         m_description = v.asString();
         return true;
-    }
-    else if (attr == "bbox")
-    {
+    } else if (attr == "bbox") {
         m_bbox.fromAtlas(v);
         m_hasBBox = true;
         return true;
-    }
-    else if ((attr == "loc") ||(attr == "contains"))
-    {
+    } else if ((attr == "loc") ||(attr == "contains")) {
         throw InvalidOperation("tried to set loc or contains via setProperty");
     }
 

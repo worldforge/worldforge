@@ -9,6 +9,7 @@
 #include <Atlas/Objects/Operation.h>
 #include <skstream/skpoll.h>
 #include "commander.h"
+#include <wfmath/point.h>
 
 #include <sys/wait.h>
 
@@ -83,6 +84,7 @@ StubServer::StubServer(short port, int cmdSocket) :
     subclassType("game_entity", "mammal");
     subclassType("game_entity", "building");
     subclassType("game_entity", "thing");
+    subclassType("thing", "decoration");
     subclassType("mammal", "pig");
     subclassType("game_entity", "seed");
     subclassType("seed", "potato");
@@ -133,7 +135,15 @@ void StubServer::setupTestAccounts()
 
     defineEntity("_hut_01", "building", "_world", "A hut");
     defineEntity("acc_b_character", "settler", "_hut_01", "Joe Blow");
-    defineEntity("_table", "thing", "_hut_01", "An old table");
+    
+    defineEntity("_table_1", "thing", "_hut_01", "An old table");
+    std::vector<double> posl;
+    // WFMath::Point<3>(1.0, 2.0, 3.0)
+    posl.push_back(1.0);
+    posl.push_back(2.0);
+    posl.push_back(3.0);
+    getEntity("_table_1")->setPos(posl);
+    defineEntity("_vase_1", "decoration", "_table_1", "A horrible vase");
 }
 
 int StubServer::run(pid_t child)
@@ -414,4 +424,12 @@ void StubServer::defineEntity(const std::string& id, const std::string& type,
         children.push_back(id);
         m_world[loc]->setContains(children);
     }
+}
+
+GameEntity StubServer::getEntity(const std::string& eid) const
+{
+    EntityMap::const_iterator I = m_world.find(eid);
+    if (I == m_world.end()) return GameEntity();
+    
+    return I->second;
 }

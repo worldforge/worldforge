@@ -15,7 +15,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;
 using namespace Eris;
-
+using namespace Atlas::Objects::Entity;
 
 
 
@@ -110,5 +110,50 @@ void Commander::dispatch(const RootOperation& op)
         assert(op->hasAttr("for"));
         Agent* ag = m_server->findAgentForEntity(op->getAttr("for").asString());
         if (ag) ag->setEntityVisible(op->getTo(), false);
+    }
+    
+    Move mv = smart_dynamic_cast<Move>(op);
+    if (mv.isValid()) {
+        GameEntity ent = m_server->getEntity(op->getTo());
+        
+        std::vector<Root> args(op->getArgs());
+        
+        if (args.front()->hasAttr("loc")) {
+            std::string newLocId = args.front()->getAttr("loc").asString();
+            
+            GameEntity oldLoc = m_server->getEntity(ent->getLoc()),
+                newLoc = m_server->getEntity(newLocId);
+            
+            ent->setLoc(newLocId); // the easy part!
+            
+            // update contents list of oldLoc and newloc
+        }
+        
+        if (args.front()->hasAttr("pos"))
+            ent->setPosAsList(args.front()->getAttr("pos").asList());
+            
+        // handle velocity changes
+        
+        Agent::broadcastSight(op);
+    }
+    
+    Set s = smart_dynamic_cast<Set>(op);
+    if (s.isValid()) {
+        
+        std::vector<Root> args(op->getArgs());
+        for (unsigned int A=0; A < args.size(); ++A) {
+            std::string eid = args[A]->getId();
+        
+            GameEntity entity = m_server->getEntity(eid);
+            Root::const_iterator I = args[A]->begin();
+            
+            for (; I != args[A]->end(); ++I) {
+                if (I->first == "id") continue;
+                assert(I->first != "loc");
+                entity->setAttr(I->first, I->second);
+            }
+        }
+
+        Agent::broadcastSight(s);
     }
 }
