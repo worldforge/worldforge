@@ -43,7 +43,7 @@ inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
 }
 
 template<const int dim>
-RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
+inline RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
@@ -56,7 +56,7 @@ RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
 }
 
 template<const int dim>
-bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) const
+inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) const
 {
   // Since the sum of the squares of the elements in any row or column add
   // up to 1, all the elements lie between -1 and 1, and each row has
@@ -80,7 +80,7 @@ bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) const
 }
 
 template<const int dim>
-bool RotMatrix<dim>::operator< (const RotMatrix<dim>& m) const
+inline bool RotMatrix<dim>::operator< (const RotMatrix<dim>& m) const
 {
   if(operator==(m))
     return false;
@@ -94,7 +94,7 @@ bool RotMatrix<dim>::operator< (const RotMatrix<dim>& m) const
 }
 
 template<const int dim> // m1 * m2
-RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
+inline RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   RotMatrix<dim> out;
 
@@ -114,7 +114,7 @@ RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 }
 
 template<const int dim> // m1 * m2^-1
-RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
+inline RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   RotMatrix<dim> out;
 
@@ -134,7 +134,7 @@ RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 }
 
 template<const int dim> // m1^-1 * m2
-RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
+inline RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   RotMatrix<dim> out;
 
@@ -154,7 +154,7 @@ RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 }
 
 template<const int dim> // m1^-1 * m2^-1
-RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
+inline RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   RotMatrix<dim> out;
 
@@ -174,7 +174,7 @@ RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 }
 
 template<const int dim> // m * v
-Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v)
+inline Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v)
 {
   Vector<dim> out;
 
@@ -191,7 +191,7 @@ Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v)
 }
 
 template<const int dim> // m^-1 * v
-Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v)
+inline Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v)
 {
   Vector<dim> out;
 
@@ -232,13 +232,13 @@ inline Vector<dim> operator*(const RotMatrix<dim>& m, const Vector<dim>& v)
 }
 
 template<const int dim>
-Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m)
+inline Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m)
 {
   return InvProd(m, v); // Since transpose() and inverse() are the same
 }
 
 template<const int dim>
-bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], double precision)
+inline bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], double precision)
 {
   // Scratch space for the backend
   CoordType scratch_vals[dim*dim];
@@ -251,7 +251,7 @@ bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], double precision)
 }
 
 template<const int dim>
-bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], double precision)
+inline bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], double precision)
 {
   // Scratch space for the backend
   CoordType scratch_vals[dim*dim];
@@ -266,7 +266,7 @@ bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 			CoordType* buf1, CoordType* buf2, double precision);
 
 template<const int dim>
-bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
+inline bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
 {
   // Cheaper to allocate space on the stack here than with
   // new in _MatrixSetValsImpl()
@@ -289,7 +289,7 @@ bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
 }
 
 template<const int dim>
-Vector<dim> RotMatrix<dim>::row(const int i) const
+inline Vector<dim> RotMatrix<dim>::row(const int i) const
 {
   Vector<dim> out;
 
@@ -302,7 +302,7 @@ Vector<dim> RotMatrix<dim>::row(const int i) const
 }
 
 template<const int dim>
-Vector<dim> RotMatrix<dim>::column(const int i) const
+inline Vector<dim> RotMatrix<dim>::column(const int i) const
 {
   Vector<dim> out;
 
@@ -315,7 +315,7 @@ Vector<dim> RotMatrix<dim>::column(const int i) const
 }
 
 template<const int dim>
-RotMatrix<dim> RotMatrix<dim>::inverse() const
+inline RotMatrix<dim> RotMatrix<dim>::inverse() const
 {
   RotMatrix<dim> m;
 
@@ -329,7 +329,7 @@ RotMatrix<dim> RotMatrix<dim>::inverse() const
 }
 
 template<const int dim>
-RotMatrix<dim>& RotMatrix<dim>::identity()
+inline RotMatrix<dim>& RotMatrix<dim>::identity()
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
@@ -342,7 +342,7 @@ RotMatrix<dim>& RotMatrix<dim>::identity()
 }
 
 template<const int dim>
-CoordType RotMatrix<dim>::trace() const
+inline CoordType RotMatrix<dim>::trace() const
 {
   CoordType out = dim ? m_elem[0][0] : 0;
 
@@ -436,9 +436,9 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
   // by the angle between the vectors
 
   CoordType fromSqrMag = from.sqrMag();
-  assert(("need nonzero length vector", fromSqrMag > 0));
+  assert("need nonzero length vector" && fromSqrMag > 0);
   CoordType toSqrMag = to.sqrMag();
-  assert(("need nonzero length vector", toSqrMag > 0));
+  assert("need nonzero length vector" && toSqrMag > 0);
   CoordType dot = Dot(from, to);
   CoordType sqrmagprod = fromSqrMag * toSqrMag;
   CoordType magprod = sqrt(sqrmagprod);
@@ -464,7 +464,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
         m_elem[i][i] = 1 - combined;
       }
       else {
-        diffterm = (jiprod - ijprod) / magprod;
+        CoordType diffterm = (jiprod - ijprod) / magprod;
 
         m_elem[i][j] = -diffterm - combined;
         m_elem[j][i] = diffterm - combined;
@@ -515,7 +515,7 @@ inline RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 #endif
 
 template<const int dim>
-RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
+inline RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
 {
   assert(i >= 0 && i < dim);
 
@@ -528,7 +528,7 @@ RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
 }
 
 template<const int dim>
-RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
+inline RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
 {
   // Get a flip by subtracting twice the projection operator in the
   // direction of the vector. A projection operator is idempotent (P*P == P),
@@ -556,7 +556,7 @@ RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
 }
 
 template<const int dim>
-RotMatrix<dim>& RotMatrix<dim>::mirror()
+inline RotMatrix<dim>& RotMatrix<dim>::mirror()
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)

@@ -33,14 +33,14 @@
 namespace WFMath {
 
 template<const int dim>
-bool Segment<dim>::isEqualTo(const Segment<dim>& s, double epsilon) const
+inline bool Segment<dim>::isEqualTo(const Segment<dim>& s, double epsilon) const
 {
   return Equal(m_p1, s.m_p1, epsilon)
       && Equal(m_p2, s.m_p2, epsilon);
 }
 
 template<const int dim>
-bool Segment<dim>::operator< (const Segment& s) const
+inline bool Segment<dim>::operator< (const Segment& s) const
 {
   if(!Equal(m_p1, s.m_p1))
     return m_p1 < s.m_p1;
@@ -49,7 +49,7 @@ bool Segment<dim>::operator< (const Segment& s) const
 }
 
 template<const int dim>
-Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
+inline Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
 {
   assert(corner == 0 || corner == 1);
 
@@ -68,7 +68,7 @@ Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
 }
 
 template<const int dim>
-Segment<dim>& Segment<dim>::rotateCorner(const RotMatrix<dim>& m, int corner)
+inline Segment<dim>& Segment<dim>::rotateCorner(const RotMatrix<dim>& m, int corner)
 {
   assert(corner == 0 || corner == 1);
 

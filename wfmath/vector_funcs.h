@@ -37,14 +37,14 @@
 namespace WFMath {
 
 template<const int dim>
-Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
+inline Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = v.m_elem[i];
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
+inline Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 {
   m_valid = v.m_valid;
 
@@ -55,7 +55,7 @@ Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 }
 
 template<const int dim>
-bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
+inline bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
 {
   double delta = _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);
 
@@ -67,7 +67,7 @@ bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
 }
 
 template<const int dim>
-bool Vector<dim>::operator< (const Vector<dim>& v) const
+inline bool Vector<dim>::operator< (const Vector<dim>& v) const
 {
   if(operator==(v))
     return false;
@@ -81,7 +81,7 @@ bool Vector<dim>::operator< (const Vector<dim>& v) const
 }
 
 template <const int dim>
-Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
+inline Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   Vector<dim> ans;
 
@@ -94,7 +94,7 @@ Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
+inline Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   Vector<dim> ans;
 
@@ -107,7 +107,7 @@ Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-Vector<dim> operator*(const Vector<dim>& v, CoordType d)
+inline Vector<dim> operator*(const Vector<dim>& v, CoordType d)
 {
   Vector<dim> ans;
 
@@ -120,7 +120,7 @@ Vector<dim> operator*(const Vector<dim>& v, CoordType d)
 }
 
 template<const int dim>
-Vector<dim> operator*(CoordType d, const Vector<dim>& v)
+inline Vector<dim> operator*(CoordType d, const Vector<dim>& v)
 {
   Vector<dim> ans;
 
@@ -133,7 +133,7 @@ Vector<dim> operator*(CoordType d, const Vector<dim>& v)
 }
 
 template <const int dim>
-Vector<dim> operator/(const Vector<dim>& v, CoordType d)
+inline Vector<dim> operator/(const Vector<dim>& v, CoordType d)
 {
   Vector<dim> ans;
 
@@ -146,7 +146,7 @@ Vector<dim> operator/(const Vector<dim>& v, CoordType d)
 }
 
 template <const int dim>
-Vector<dim> operator-(const Vector<dim>& v)
+inline Vector<dim> operator-(const Vector<dim>& v)
 {
   Vector<dim> ans;
 
@@ -159,7 +159,7 @@ Vector<dim> operator-(const Vector<dim>& v)
 }
 
 template <const int dim>
-Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
+inline Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   v1.m_valid = v1.m_valid && v2.m_valid;
 
@@ -170,7 +170,7 @@ Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
+inline Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   v1.m_valid = v1.m_valid && v2.m_valid;
 
@@ -181,7 +181,7 @@ Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
+inline Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
 {
   for(int i = 0; i < dim; ++i)
     v.m_elem[i] *= d;
@@ -190,7 +190,7 @@ Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
 }
 
 template <const int dim>
-Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
+inline Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
 {
   for(int i = 0; i < dim; ++i)
     v.m_elem[i] /= d;
@@ -199,7 +199,7 @@ Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
+inline Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 {
   CoordType mag = sloppyMag();
 
@@ -209,7 +209,7 @@ Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::zero()
+inline Vector<dim>& Vector<dim>::zero()
 {
   m_valid = true;
 
@@ -220,7 +220,7 @@ Vector<dim>& Vector<dim>::zero()
 }
 
 template<const int dim>
-CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
+inline CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
 {
   // Adding numbers with large magnitude differences can cause
   // a loss of precision, but Dot() checks for this now
@@ -234,7 +234,7 @@ CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
+inline Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
 {
   assert(axis1 >= 0 && axis2 >= 0 && axis1 < dim && axis2 < dim && axis1 != axis2);
 
@@ -248,7 +248,7 @@ Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
+inline Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
 				 CoordType theta)
 {
   RotMatrix<dim> m;
@@ -276,7 +276,7 @@ inline Vector<3>& Vector<3>::rotate(const Quaternion& q)
 #endif
 
 template<const int dim>
-CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
+inline CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   double delta = _ScaleEpsilon(v1.m_elem, v2.m_elem, dim);
 
@@ -289,7 +289,7 @@ CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template<const int dim>
-CoordType Vector<dim>::sqrMag() const
+inline CoordType Vector<dim>::sqrMag() const
 {
   CoordType ans = 0;
 
@@ -301,7 +301,7 @@ CoordType Vector<dim>::sqrMag() const
 }
 
 template<const int dim>
-bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir)
+inline bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir)
 {
   CoordType dot = Dot(v1, v2);
 
@@ -311,7 +311,7 @@ bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir)
 }
 
 template<const int dim>
-bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
+inline bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   bool same_dir;
 
@@ -319,7 +319,7 @@ bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template<const int dim>
-bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
+inline bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   double max1 = 0, max2 = 0;
 

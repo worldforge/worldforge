@@ -34,14 +34,14 @@
 namespace WFMath {
 
 template<const int dim>
-Point<dim>::Point(const Point<dim>& p) : m_valid(p.m_valid)
+inline Point<dim>::Point(const Point<dim>& p) : m_valid(p.m_valid)
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = p.m_elem[i];
 }
 
 template<const int dim>
-Point<dim>& Point<dim>::setToOrigin()
+inline Point<dim>& Point<dim>::setToOrigin()
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = 0;
@@ -52,7 +52,7 @@ Point<dim>& Point<dim>::setToOrigin()
 }
 
 template<const int dim>
-bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
+inline bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
 {
   CoordType delta = (CoordType) _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
 
@@ -64,7 +64,7 @@ bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
 }
 
 template<const int dim>
-Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
+inline Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
 {
   Vector<dim> out;
 
@@ -77,7 +77,7 @@ Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
 }
 
 template<const int dim>
-Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
+inline Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
 {
   Point<dim> out;
 
@@ -90,7 +90,7 @@ Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
 }
 
 template<const int dim>
-Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
+inline Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
 {
   Point<dim> out;
 
@@ -103,7 +103,7 @@ Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
 }
 
 template<const int dim>
-Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
+inline Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
 {
   Point<dim> out;
 
@@ -116,10 +116,9 @@ Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
 }
 
 template<const int dim>
-Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
+inline Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
 {
     // Compare pointer addresses
-    // FIXME does this work in general?
     if (this == &rhs)
 	return *this;
 
@@ -132,7 +131,7 @@ Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
 }
 
 template<const int dim>
-Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
+inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
 {
     for(int i = 0; i < dim; ++i)
       p.m_elem[i] += rhs.m_elem[i];
@@ -143,7 +142,7 @@ Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
 }
 
 template<const int dim>
-Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
+inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
 {
     for(int i = 0; i < dim; ++i)
       p.m_elem[i] -= rhs.m_elem[i];
@@ -162,7 +161,7 @@ Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
 // The implementation doesn't express any physical or geometrical
 // relationship (e.g., vector magnitude or distance from origin).
 template<const int dim>
-bool Point<dim>::operator< (const Point<dim>& rhs) const
+inline bool Point<dim>::operator< (const Point<dim>& rhs) const
 {
   if(operator==(rhs))
     return false;
@@ -176,7 +175,7 @@ bool Point<dim>::operator< (const Point<dim>& rhs) const
 }
 
 template<const int dim>
-CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
+inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
 {
   CoordType ans = 0;
 
@@ -265,7 +264,7 @@ Point<dim> Barycenter(const container<Point<dim> >& c)
 #endif
 
 template<const int dim>
-Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)
+inline Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)
 {
   Point<dim> out;
   CoordType conj_dist = 1 - dist;

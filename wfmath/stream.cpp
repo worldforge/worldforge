@@ -39,7 +39,7 @@ using namespace WFMath;
 #elif defined(HAVE_STRSTREAM)
 #include <strstream>
 #else
-#error "Neither sstream or strstring is present, configure should have failed"
+#error "Neither sstream or strstream is present, configure should have failed"
 #endif
 
 std::string WFMath::_IOWrapper::ToStringImpl(const _IOWrapper::BaseWrite& b,
@@ -75,6 +75,40 @@ void WFMath::_IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
  ist.precision(precision);
  b.read(ist);
 }
+
+// force a bunch of instantiations
+
+template std::ostream& operator<< <3>(std::ostream& os, const Vector<3>& r);
+template std::istream& operator>> <3>(std::istream& is, Vector<3>& r);
+template std::ostream& operator<< <2>(std::ostream& os, const Vector<2>& r);
+template std::istream& operator>> <2>(std::istream& is, Vector<2>& r);
+template std::ostream& operator<< <3>(std::ostream& os, const Point<3>& r);
+template std::istream& operator>> <3>(std::istream& is, Point<3>& r);
+template std::ostream& operator<< <2>(std::ostream& os, const Point<2>& r);
+template std::istream& operator>> <2>(std::istream& is, Point<2>& r);
+template std::ostream& operator<< <3>(std::ostream& os, const RotMatrix<3>& r);
+template std::istream& operator>> <3>(std::istream& is, RotMatrix<3>& r);
+template std::ostream& operator<< <2>(std::ostream& os, const RotMatrix<2>& r);
+template std::istream& operator>> <2>(std::istream& is, RotMatrix<2>& r);
+template std::ostream& operator<< <3>(std::ostream& os, const AxisBox<3>& r);
+template std::istream& operator>> <3>(std::istream& is, AxisBox<3>& r);
+template std::ostream& operator<< <2>(std::ostream& os, const AxisBox<2>& r);
+template std::istream& operator>> <2>(std::istream& is, AxisBox<2>& r);
+template std::ostream& operator<< <3>(std::ostream& os, const Ball<3>& r);
+template std::istream& operator>> <3>(std::istream& is, Ball<3>& r);
+template std::ostream& operator<< <2>(std::ostream& os, const Ball<2>& r);
+template std::istream& operator>> <2>(std::istream& is, Ball<2>& r);
+template std::ostream& operator<< <3>(std::ostream& os, const Segment<3>& r);
+template std::istream& operator>> <3>(std::istream& is, Segment<3>& r);
+template std::ostream& operator<< <2>(std::ostream& os, const Segment<2>& r);
+template std::istream& operator>> <2>(std::istream& is, Segment<2>& r);
+template std::ostream& operator<< <3>(std::ostream& os, const RotBox<3>& r);
+template std::istream& operator>> <3>(std::istream& is, RotBox<3>& r);
+template std::ostream& operator<< <2>(std::ostream& os, const RotBox<2>& r);
+template std::istream& operator>> <2>(std::istream& is, RotBox<2>& r);
+// don't need 2d for Polygon, since it's a specialization
+template std::ostream& operator<< <3>(std::ostream& os, const Polygon<3>& r);
+template std::istream& operator>> <3>(std::istream& is, Polygon<3>& r);
 
 void WFMath::_WriteCoordList(std::ostream& os, const CoordType* d, const int num)
 {

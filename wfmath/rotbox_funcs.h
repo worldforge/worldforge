@@ -36,7 +36,7 @@
 namespace WFMath {
 
 template<const int dim>
-RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
+inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
 {
   m_corner0 = a.m_corner0;
   m_size = a.m_size;
@@ -46,7 +46,7 @@ RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
 }
 
 template<const int dim>
-bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
+inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
 {
   return Equal(m_corner0, b.m_corner0, epsilon)
       && Equal(m_size, b.m_size, epsilon)
@@ -56,7 +56,7 @@ bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
 // WARNING! This operator is for sorting only. It does not
 // reflect any property of the box.
 template<const int dim>
-bool RotBox<dim>::operator< (const RotBox<dim>& a) const
+inline bool RotBox<dim>::operator< (const RotBox<dim>& a) const
 {
   if(!Equal(m_corner0, a.m_corner0))
     return m_corner0 < a.m_corner0;
@@ -66,7 +66,7 @@ bool RotBox<dim>::operator< (const RotBox<dim>& a) const
 }
 
 template<const int dim>
-Point<dim> RotBox<dim>::getCorner(int i) const
+inline Point<dim> RotBox<dim>::getCorner(int i) const
 {
   assert(i >= 0 && i < (1 << dim));
 

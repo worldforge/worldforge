@@ -96,7 +96,7 @@ namespace _IOWrapper {
  * This uses operator<<() in its backend.
  **/
 template<class C>
-std::string ToString(const C& c, unsigned int precision = 6)
+inline std::string ToString(const C& c, unsigned int precision = 6)
 {
   return _IOWrapper::ToStringImpl(_IOWrapper::ImplWrite<C>(c), 6);
 }
@@ -106,7 +106,7 @@ std::string ToString(const C& c, unsigned int precision = 6)
  * This uses operator>>() in its backend.
  **/
 template<class C>
-void FromString(C& c, const std::string& s, unsigned int precision = 6)
+inline void FromString(C& c, const std::string& s, unsigned int precision = 6)
 {
   _IOWrapper::ImplRead<C> i(c);
   _IOWrapper::FromStringImpl(i, s, 6);
@@ -117,14 +117,14 @@ void _WriteCoordList(std::ostream& os, const CoordType* d, const int num);
 CoordType _GetEpsilon(std::istream& is);
 
 template<const int dim>
-std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
+inline std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
 {
   _WriteCoordList(os, v.m_elem, dim);
   return os;
 }
 
 template<const int dim>
-std::istream& operator>>(std::istream& is, Vector<dim>& v)
+inline std::istream& operator>>(std::istream& is, Vector<dim>& v)
 {
   _ReadCoordList(is, v.m_elem, dim);
   v.m_valid = true;
@@ -132,7 +132,7 @@ std::istream& operator>>(std::istream& is, Vector<dim>& v)
 }
 
 template<const int dim>
-std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
+inline std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
 {
   os << '(';
 
@@ -145,7 +145,7 @@ std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
 }
 
 template<const int dim>
-std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
+inline std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
 {
   CoordType d[dim*dim];
   char next;
@@ -169,14 +169,14 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
 }
 
 template<const int dim>
-std::ostream& operator<<(std::ostream& os, const Point<dim>& p)
+inline std::ostream& operator<<(std::ostream& os, const Point<dim>& p)
 {
   _WriteCoordList(os, p.m_elem, dim);
   return os;
 }
 
 template<const int dim>
-std::istream& operator>>(std::istream& is, Point<dim>& p)
+inline std::istream& operator>>(std::istream& is, Point<dim>& p)
 {
   _ReadCoordList(is, p.m_elem, dim);
   p.m_valid = true;
@@ -184,13 +184,13 @@ std::istream& operator>>(std::istream& is, Point<dim>& p)
 }
 
 template<const int dim>
-std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& a)
+inline std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& a)
 {
   return os << "AxisBox: m_low = " << a.m_low << ", m_high = " << a.m_high;
 }
 
 template<const int dim>
-std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
+inline std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
 {
   char next;
 
@@ -210,14 +210,14 @@ std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
 }
 
 template<const int dim>
-std::ostream& operator<<(std::ostream& os, const Ball<dim>& b)
+inline std::ostream& operator<<(std::ostream& os, const Ball<dim>& b)
 {
   return os << "Ball: m_center = " << b.m_center <<
 	  + ", m_radius = " << b.m_radius;
 }
 
 template<const int dim>
-std::istream& operator>>(std::istream& is, Ball<dim>& b)
+inline std::istream& operator>>(std::istream& is, Ball<dim>& b)
 {
   char next;
 
@@ -237,13 +237,13 @@ std::istream& operator>>(std::istream& is, Ball<dim>& b)
 }
 
 template<const int dim>
-std::ostream& operator<<(std::ostream& os, const Segment<dim>& s)
+inline std::ostream& operator<<(std::ostream& os, const Segment<dim>& s)
 {
   return os << "Segment: m_p1 = " << s.m_p1 << ", m_p2 = " << s.m_p2;
 }
 
 template<const int dim>
-std::istream& operator>>(std::istream& is, Segment<dim>& s)
+inline std::istream& operator>>(std::istream& is, Segment<dim>& s)
 {
   char next;
 
@@ -263,7 +263,7 @@ std::istream& operator>>(std::istream& is, Segment<dim>& s)
 }
 
 template<const int dim>
-std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r)
+inline std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r)
 {
   return os << "RotBox: m_corner0 = " << r.m_corner0
 	 << ", m_size = " << r.m_size
@@ -271,7 +271,7 @@ std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r)
 }
 
 template<const int dim>
-std::istream& operator>>(std::istream& is, RotBox<dim>& r)
+inline std::istream& operator>>(std::istream& is, RotBox<dim>& r)
 {
   char next;
 
@@ -300,7 +300,7 @@ template<> std::ostream& operator<<(std::ostream& os, const Polygon<2>& r);
 template<> std::istream& operator>>(std::istream& is, Polygon<2>& r);
 
 template<const int dim>
-std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
+inline std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
 {
   int size = r.m_poly.numCorners();
 

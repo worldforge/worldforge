@@ -96,7 +96,7 @@ inline bool Contains(const Point<dim>& p1, const Point<dim>& p2, bool proper)
 // AxisBox<>
 
 template<const int dim>
-bool Intersect(const AxisBox<dim>& b, const Point<dim>& p, bool proper)
+inline bool Intersect(const AxisBox<dim>& b, const Point<dim>& p, bool proper)
 {
   for(int i = 0; i < dim; ++i)
     if(_Greater(b.m_low[i], p[i], proper) || _Less(b.m_high[i], p[i], proper))
@@ -112,7 +112,7 @@ inline bool Contains(const Point<dim>& p, const AxisBox<dim>& b, bool proper)
 }
 
 template<const int dim>
-bool Intersect(const AxisBox<dim>& b1, const AxisBox<dim>& b2, bool proper)
+inline bool Intersect(const AxisBox<dim>& b1, const AxisBox<dim>& b2, bool proper)
 {
   for(int i = 0; i < dim; ++i)
     if(_Greater(b1.m_low[i], b2.m_high[i], proper)
@@ -123,7 +123,7 @@ bool Intersect(const AxisBox<dim>& b1, const AxisBox<dim>& b2, bool proper)
 }
 
 template<const int dim>
-bool Contains(const AxisBox<dim>& outer, const AxisBox<dim>& inner, bool proper)
+inline bool Contains(const AxisBox<dim>& outer, const AxisBox<dim>& inner, bool proper)
 {
   for(int i = 0; i < dim; ++i)
     if(_Less(inner.m_low[i], outer.m_low[i], proper)
@@ -136,7 +136,7 @@ bool Contains(const AxisBox<dim>& outer, const AxisBox<dim>& inner, bool proper)
 // Ball<>
 
 template<const int dim>
-bool Intersect(const Ball<dim>& b, const Point<dim>& p, bool proper)
+inline bool Intersect(const Ball<dim>& b, const Point<dim>& p, bool proper)
 {
   return _LessEq(SquaredDistance(b.m_center, p), b.m_radius * b.m_radius
 					   * (1 + WFMATH_EPSILON), proper);
@@ -149,7 +149,7 @@ inline bool Contains(const Point<dim>& p, const Ball<dim>& b, bool proper)
 }
 
 template<const int dim>
-bool Intersect(const Ball<dim>& b, const AxisBox<dim>& a, bool proper)
+inline bool Intersect(const Ball<dim>& b, const AxisBox<dim>& a, bool proper)
 {
   CoordType dist = 0;
 
@@ -168,7 +168,7 @@ bool Intersect(const Ball<dim>& b, const AxisBox<dim>& a, bool proper)
 }
 
 template<const int dim>
-bool Contains(const Ball<dim>& b, const AxisBox<dim>& a, bool proper)
+inline bool Contains(const Ball<dim>& b, const AxisBox<dim>& a, bool proper)
 {
   CoordType sqr_dist = 0;
 
@@ -182,7 +182,7 @@ bool Contains(const Ball<dim>& b, const AxisBox<dim>& a, bool proper)
 }
 
 template<const int dim>
-bool Contains(const AxisBox<dim>& a, const Ball<dim>& b, bool proper)
+inline bool Contains(const AxisBox<dim>& a, const Ball<dim>& b, bool proper)
 {
   for(int i = 0; i < dim; ++i)
     if(_Less(b.m_center[i] - b.m_radius, a.lowerBound(i), proper)
@@ -193,7 +193,7 @@ bool Contains(const AxisBox<dim>& a, const Ball<dim>& b, bool proper)
 }
 
 template<const int dim>
-bool Intersect(const Ball<dim>& b1, const Ball<dim>& b2, bool proper)
+inline bool Intersect(const Ball<dim>& b1, const Ball<dim>& b2, bool proper)
 {
   CoordType sqr_dist = SquaredDistance(b1.m_center, b2.m_center);
   CoordType rad_sum = b1.m_radius + b2.m_radius;
@@ -202,7 +202,7 @@ bool Intersect(const Ball<dim>& b1, const Ball<dim>& b2, bool proper)
 }
 
 template<const int dim>
-bool Contains(const Ball<dim>& outer, const Ball<dim>& inner, bool proper)
+inline bool Contains(const Ball<dim>& outer, const Ball<dim>& inner, bool proper)
 {
   CoordType rad_diff = outer.m_radius - inner.m_radius;
 
@@ -217,7 +217,7 @@ bool Contains(const Ball<dim>& outer, const Ball<dim>& inner, bool proper)
 // Segment<>
 
 template<const int dim>
-bool Intersect(const Segment<dim>& s, const Point<dim>& p, bool proper)
+inline bool Intersect(const Segment<dim>& s, const Point<dim>& p, bool proper)
 {
   // This is only true if p lies on the line between m_p1 and m_p2
 
@@ -277,7 +277,7 @@ bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b, bool proper)
 }
 
 template<const int dim>
-bool Contains(const Segment<dim>& s, const AxisBox<dim>& b, bool proper)
+inline bool Contains(const Segment<dim>& s, const AxisBox<dim>& b, bool proper)
 {
   // This is only possible for zero width or zero height box,
   // in which case we check for containment of the endpoints.
@@ -392,7 +392,7 @@ inline bool Contains(const Segment<dim>& s1, const Segment<dim>& s2, bool proper
 // RotBox<>
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r, const Point<dim>& p, bool proper)
+inline bool Intersect(const RotBox<dim>& r, const Point<dim>& p, bool proper)
 {
   // Rotate the point into the internal coordinate system of the box
 
@@ -413,7 +413,7 @@ bool Intersect(const RotBox<dim>& r, const Point<dim>& p, bool proper)
 }
 
 template<const int dim>
-bool Contains(const Point<dim>& p, const RotBox<dim>& r, bool proper)
+inline bool Contains(const Point<dim>& p, const RotBox<dim>& r, bool proper)
 {
   if(proper)
     return false;
@@ -436,7 +436,7 @@ template<>
 bool Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper);
 
 template<const int dim>
-bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b, bool proper)
+inline bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b, bool proper)
 {
   RotMatrix<dim> m = r.m_orient.inverse();
 
@@ -446,13 +446,13 @@ bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b, bool proper)
 }
 
 template<const int dim>
-bool Contains(const AxisBox<dim>& b, const RotBox<dim>& r, bool proper)
+inline bool Contains(const AxisBox<dim>& b, const RotBox<dim>& r, bool proper)
 {
   return Contains(b, r.boundingBox(), proper);
 }
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r, const Ball<dim>& b, bool proper)
+inline bool Intersect(const RotBox<dim>& r, const Ball<dim>& b, bool proper)
 {
   return Intersect(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
 		  Ball<dim>(r.m_corner0 + ProdInv(b.m_center - r.m_corner0,
@@ -460,7 +460,7 @@ bool Intersect(const RotBox<dim>& r, const Ball<dim>& b, bool proper)
 }
 
 template<const int dim>
-bool Contains(const RotBox<dim>& r, const Ball<dim>& b, bool proper)
+inline bool Contains(const RotBox<dim>& r, const Ball<dim>& b, bool proper)
 {
   return Contains(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
 		  Ball<dim>(r.m_corner0 + ProdInv(b.m_center - r.m_corner0,
@@ -468,7 +468,7 @@ bool Contains(const RotBox<dim>& r, const Ball<dim>& b, bool proper)
 }
 
 template<const int dim>
-bool Contains(const Ball<dim>& b, const RotBox<dim>& r, bool proper)
+inline bool Contains(const Ball<dim>& b, const RotBox<dim>& r, bool proper)
 {
   return Contains(Ball<dim>(r.m_corner0 + ProdInv(b.m_center - r.m_corner0,
 			    r.m_orient), b.m_radius),
@@ -476,7 +476,7 @@ bool Contains(const Ball<dim>& b, const RotBox<dim>& r, bool proper)
 }
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r, const Segment<dim>& s, bool proper)
+inline bool Intersect(const RotBox<dim>& r, const Segment<dim>& s, bool proper)
 {
   Point<dim> p1 = r.m_corner0 + ProdInv(s.m_p1 - r.m_corner0, r.m_orient);
   Point<dim> p2 = r.m_corner0 + ProdInv(s.m_p2 - r.m_corner0, r.m_orient);
@@ -486,7 +486,7 @@ bool Intersect(const RotBox<dim>& r, const Segment<dim>& s, bool proper)
 }
 
 template<const int dim>
-bool Contains(const RotBox<dim>& r, const Segment<dim>& s, bool proper)
+inline bool Contains(const RotBox<dim>& r, const Segment<dim>& s, bool proper)
 {
   Point<dim> p1 = r.m_corner0 + ProdInv(s.m_p1 - r.m_corner0, r.m_orient);
   Point<dim> p2 = r.m_corner0 + ProdInv(s.m_p2 - r.m_corner0, r.m_orient);
@@ -496,7 +496,7 @@ bool Contains(const RotBox<dim>& r, const Segment<dim>& s, bool proper)
 }
 
 template<const int dim>
-bool Contains(const Segment<dim>& s, const RotBox<dim>& r, bool proper)
+inline bool Contains(const Segment<dim>& s, const RotBox<dim>& r, bool proper)
 {
   Point<dim> p1 = r.m_corner0 + ProdInv(s.m_p1 - r.m_corner0, r.m_orient);
   Point<dim> p2 = r.m_corner0 + ProdInv(s.m_p2 - r.m_corner0, r.m_orient);
@@ -506,7 +506,7 @@ bool Contains(const Segment<dim>& s, const RotBox<dim>& r, bool proper)
 }
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r1, const RotBox<dim>& r2, bool proper)
+inline bool Intersect(const RotBox<dim>& r1, const RotBox<dim>& r2, bool proper)
 {
   return Intersect(RotBox<dim>(r1).rotatePoint(r2.m_orient.inverse(),
 					       r2.m_corner0),
@@ -514,7 +514,7 @@ bool Intersect(const RotBox<dim>& r1, const RotBox<dim>& r2, bool proper)
 }
 
 template<const int dim>
-bool Contains(const RotBox<dim>& outer, const RotBox<dim>& inner, bool proper)
+inline bool Contains(const RotBox<dim>& outer, const RotBox<dim>& inner, bool proper)
 {
   return Contains(AxisBox<dim>(outer.m_corner0, outer.m_corner0 + outer.m_size),
 		  RotBox<dim>(inner).rotatePoint(outer.m_orient.inverse(),

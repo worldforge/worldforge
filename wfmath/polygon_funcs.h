@@ -36,7 +36,7 @@
 namespace WFMath {
 
 template<const int dim>
-_Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& a)
+inline _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& a)
 {
   m_origin = a.m_origin;
 
@@ -47,7 +47,7 @@ _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& a)
 }
 
 template<const int dim>
-bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
+inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
 {
   // The same polygon can be expressed in different ways in the interal
   // format, so we have to call getCorner();
@@ -66,7 +66,7 @@ bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
 // WARNING! This operator is for sorting only. It does not
 // reflect any property of the box.
 template<const int dim>
-bool Polygon<dim>::operator< (const Polygon<dim>& s) const
+inline bool Polygon<dim>::operator< (const Polygon<dim>& s) const
 {
   int size = m_poly.numCorners(), s_size = s.m_poly.numCorners();
 
@@ -83,7 +83,7 @@ bool Polygon<dim>::operator< (const Polygon<dim>& s) const
 }
 
 template<const int dim>
-Point<dim> _Poly2Orient<dim>::convert(const Point<2>& p) const
+inline Point<dim> _Poly2Orient<dim>::convert(const Point<2>& p) const
 {
   assert(m_origin.isValid());
 
@@ -269,7 +269,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
 }
 
 template<const int dim>
-void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>& p)
+inline void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>& p)
 {
   m_origin.rotate(m, p);
 
@@ -301,7 +301,7 @@ void _Poly2Orient<dim>::rotate2(const RotMatrix<dim>& m, const Point<2>& p)
 }
 
 template<const int dim>
-bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
+inline bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
 {
   Point<2> p2;
   bool succ = m_orient.expand(p, p2, epsilon);
@@ -311,7 +311,7 @@ bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
 }
 
 template<const int dim>
-void Polygon<dim>::removeCorner(int i)
+inline void Polygon<dim>::removeCorner(int i)
 {
   m_poly.removeCorner(i);
   _Poly2Reorient r = m_orient.reduce(m_poly);
@@ -319,7 +319,7 @@ void Polygon<dim>::removeCorner(int i)
 }
 
 template<const int dim>
-bool Polygon<dim>::moveCorner(int i, const Point<dim>& p, double epsilon)
+inline bool Polygon<dim>::moveCorner(int i, const Point<dim>& p, double epsilon)
 {
   _Poly2Orient<dim> try_orient = m_orient;
   _Poly2Reorient r = try_orient.reduce(m_poly, i);
@@ -361,7 +361,7 @@ AxisBox<dim> Polygon<dim>::boundingBox() const
 }
 
 template<const int dim>
-Ball<dim> Polygon<dim>::boundingSphere() const
+inline Ball<dim> Polygon<dim>::boundingSphere() const
 {
   Ball<2> b = m_poly.boundingSphere();
 
@@ -369,7 +369,7 @@ Ball<dim> Polygon<dim>::boundingSphere() const
 }
 
 template<const int dim>
-Ball<dim> Polygon<dim>::boundingSphereSloppy() const
+inline Ball<dim> Polygon<dim>::boundingSphereSloppy() const
 {
   Ball<2> b = m_poly.boundingSphereSloppy();
 

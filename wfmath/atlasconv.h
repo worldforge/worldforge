@@ -73,14 +73,14 @@ inline void _ArrayFromAtlas(CoordType* array, int len, const Atlas::Message::Obj
 }
 
 template<const int dim>
-void Vector<dim>::fromAtlas(const Atlas::Message::Object& a)
+inline void Vector<dim>::fromAtlas(const Atlas::Message::Object& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
   m_valid = true;
 }
 
 template<const int dim>
-Atlas::Message::Object Vector<dim>::toAtlas() const
+inline Atlas::Message::Object Vector<dim>::toAtlas() const
 {
   return _ArrayToAtlas(m_elem, dim);
 }
@@ -122,14 +122,14 @@ inline Atlas::Message::Object Quaternion::toAtlas() const
 }
 
 template<const int dim>
-void Point<dim>::fromAtlas(const Atlas::Message::Object& a)
+inline void Point<dim>::fromAtlas(const Atlas::Message::Object& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
   m_valid = true;
 }
 
 template<const int dim>
-Atlas::Message::Object Point<dim>::toAtlas() const
+inline Atlas::Message::Object Point<dim>::toAtlas() const
 {
   return _ArrayToAtlas(m_elem, dim);
 }

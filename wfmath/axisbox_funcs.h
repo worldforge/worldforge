@@ -38,7 +38,7 @@
 namespace WFMath {
 
 template<const int dim>
-bool AxisBox<dim>::isEqualTo(const AxisBox<dim>& b, double epsilon) const
+inline bool AxisBox<dim>::isEqualTo(const AxisBox<dim>& b, double epsilon) const
 {
   return Equal(m_low, b.m_low, epsilon)
        && Equal(m_high, b.m_high, epsilon);
@@ -124,13 +124,13 @@ Point<dim> AxisBox<dim>::getCorner(int i) const
 }
 
 template<const int dim>
-Ball<dim> AxisBox<dim>::boundingSphere() const
+inline Ball<dim> AxisBox<dim>::boundingSphere() const
 {
   return Ball<dim>(getCenter(), Distance(m_low, m_high) / 2);
 }
 
 template<const int dim>
-Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
+inline Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
 {
   return Ball<dim>(getCenter(), SloppyDistance(m_low, m_high) / 2);
 }

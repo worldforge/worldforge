@@ -38,6 +38,42 @@
 
 using namespace WFMath;
 
+// instantiations, only need 3d because 2d is a specialization,
+// except for the reverse-order intersect
+
+template bool Intersect<Point<2>,Polygon<2> >(const Point<2>&, const Polygon<2>&, bool);
+template bool Intersect<Point<3>,Polygon<3> >(const Point<3>&, const Polygon<3>&, bool);
+template bool Contains<3>(const Point<3>&, const Polygon<3>&, bool);
+template bool Intersect<3>(const Polygon<3>&, const Point<3>&, bool);
+template bool Contains<3>(const Polygon<3>&, const Point<3>&, bool);
+
+template bool Intersect<AxisBox<2>,Polygon<2> >(const AxisBox<2>&, const Polygon<2>&, bool);
+template bool Intersect<AxisBox<3>,Polygon<3> >(const AxisBox<3>&, const Polygon<3>&, bool);
+template bool Contains<3>(const AxisBox<3>&, const Polygon<3>&, bool);
+template bool Intersect<3>(const Polygon<3>&, const AxisBox<3>&, bool);
+template bool Contains<3>(const Polygon<3>&, const AxisBox<3>&, bool);
+
+template bool Intersect<Ball<2>,Polygon<2> >(const Ball<2>&, const Polygon<2>&, bool);
+template bool Intersect<Ball<3>,Polygon<3> >(const Ball<3>&, const Polygon<3>&, bool);
+template bool Contains<3>(const Ball<3>&, const Polygon<3>&, bool);
+template bool Intersect<3>(const Polygon<3>&, const Ball<3>&, bool);
+template bool Contains<3>(const Polygon<3>&, const Ball<3>&, bool);
+
+template bool Intersect<Segment<2>,Polygon<2> >(const Segment<2>&, const Polygon<2>&, bool);
+template bool Intersect<Segment<3>,Polygon<3> >(const Segment<3>&, const Polygon<3>&, bool);
+template bool Contains<3>(const Segment<3>&, const Polygon<3>&, bool);
+template bool Intersect<3>(const Polygon<3>&, const Segment<3>&, bool);
+template bool Contains<3>(const Polygon<3>&, const Segment<3>&, bool);
+
+template bool Intersect<RotBox<2>,Polygon<2> >(const RotBox<2>&, const Polygon<2>&, bool);
+template bool Intersect<RotBox<3>,Polygon<3> >(const RotBox<3>&, const Polygon<3>&, bool);
+template bool Contains<3>(const RotBox<3>&, const Polygon<3>&, bool);
+template bool Intersect<3>(const Polygon<3>&, const RotBox<3>&, bool);
+template bool Contains<3>(const Polygon<3>&, const RotBox<3>&, bool);
+
+template bool Intersect<3>(const Polygon<3>&, const Polygon<3>&, bool);
+template bool Contains<3>(const Polygon<3>&, const Polygon<3>&, bool);
+
 template<>
 bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
 					  bool proper) const

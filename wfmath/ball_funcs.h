@@ -35,14 +35,14 @@
 namespace WFMath {
 
 template<const int dim>
-bool Ball<dim>::isEqualTo(const Ball<dim>& b, double epsilon) const
+inline bool Ball<dim>::isEqualTo(const Ball<dim>& b, double epsilon) const
 {
   return Equal(m_center, b.m_center, epsilon)
       && Equal(m_radius, b.m_radius, epsilon);
 }
 
 template<const int dim>
-bool Ball<dim>::operator< (const Ball<dim>& b) const
+inline bool Ball<dim>::operator< (const Ball<dim>& b) const
 {
   if(!Equal(m_radius, b.m_radius))
     return m_radius < b.m_radius;

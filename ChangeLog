@@ -1,3 +1,11 @@
+Tuesday, June 3rd, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Instantiated Intersect(), Contains() functions
+	  and stream operators for dim=2,3 in .cpp files
+	* Made most template functions inline, bumped
+	  the interface number in case this broke
+	  compatibility
+
 Tuesday, May 27th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Added elements() const accessors to the underlying
