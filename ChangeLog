@@ -1,3 +1,8 @@
+Friday, 1st November, Al Riddoch
+
+	* src/World.cpp: ISO C++ does not allow default value for arg to be
+	  specified in function definition.
+
 Wednesday, 30th October, James Turner
 
 	* Commit Ron's Avatar patches : currently got a bug

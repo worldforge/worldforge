@@ -233,7 +233,7 @@ void World::unregisterFactory(Factory *f)
 }
 
 Avatar*
-World::createAvatar(long refno, const std::string& id = "")
+World::createAvatar(long refno, const std::string& id)
 {
     if(_avatar)
 	throw InvalidOperation("World already has an Avatar");
