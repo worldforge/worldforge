@@ -24,7 +24,6 @@
 
 namespace varconf {
 
-/// A caching typeless container
 class Variable {
 public:
   Variable();
@@ -67,6 +66,6 @@ private:
   std::string m_val;
 };
 
-}
+} // namespace varconf
 
 #endif

@@ -222,4 +222,4 @@ bool Variable::is_string()
   return m_have_string;
 }
 
-}
+} // namespace varconf

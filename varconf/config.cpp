@@ -17,9 +17,10 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <string>
 #include <iostream>
 #include <fstream>
+#include <string>
+
 #include "Config.h"
 
 extern char **environ;
@@ -89,6 +90,20 @@ Config* Config::inst()
   return m_instance;
 }
 
+void Config::clean( string& str)
+{
+  ctype_t c;
+
+  for ( size_t i = 0; i < str.size(); i++) {
+    c = ctype( str[i]);
+
+    if ( c != C_NUMERIC && c != C_ALPHA && c != C_DASH) 
+      str[i] = '_';
+    else 
+      str[i] = tolower( str[i]);
+  } 
+} // Config::clean()
+
 bool Config::erase( const string& section, const string& key = "")
 {
   if ( find( section)) {
@@ -103,32 +118,8 @@ bool Config::erase( const string& section, const string& key = "")
   }
  
   return false;
-} 
-
-Variable Config::getItem( const string& section, const string& key)
-{
-  return ( m_conf[section])[key];
-} // Config::getItem()
-
-void Config::setItem( const string& section, const string& key, const Variable item)
-{
-  if ( key.empty()) {
-    cerr << "WARNING: Blank configuration item key sent to varconf set() method.";
-  }
-  else {
-    string sec_clean = section; 
-    string key_clean = key; 
-
-    clean( sec_clean);
-    clean( key_clean);
-
-    ( m_conf[sec_clean])[key_clean] = item;
+}
  
-    sig.emit(); 
-    sigv.emit( sec_clean, key_clean);
-  }
-} // Config::setItem()
-
 bool Config::find( const string& section, const string& key = "")
 {
   if ( m_conf.count( section)) {
@@ -141,55 +132,99 @@ bool Config::find( const string& section, const string& key = "")
   return false;
 } // Config::find
 
-bool Config::readFromFile( const string& filename)
+// * This only cares if 'name.size()' >= 1; handling of bad characters
+//   is left to Config::setItem().
+void Config::getCmdline( int argc, char** argv)
 {
-  ifstream fin( filename.c_str());
-  
-  if ( fin.fail()) {
-    cerr << "Could not open " << filename << " for input!\n";
-    return false;
-  }
+  string section, name, value;
 
-  try {
-    parseStream( fin);
-  }
-  catch ( ParseError p) {
-    cerr << "While parsing " << filename << ":\n";
-    cerr << p;
-    return false;
-  }
-  
-  return true;
-}
+  for ( size_t i = 1; i < argc; i++) {
+    if ( argv[i][0] == '-' && argv[i][1] == '-' && argv[i][2] != '\0') {
+      string arg = argv[i];
+      bool fnd_sec = false, fnd_nam = false; 
+      size_t mark = 2;
 
-bool Config::writeToFile( const string& filename)
-{
-  ofstream fout( filename.c_str());
+      section = name = value = "";
+       
+      for ( size_t j = 2; j < arg.size(); j++) {
+        if ( arg[j] == ':' && arg[j+1] != '\0' && !fnd_sec && !fnd_nam) {
+          section = arg.substr( mark, ( j - mark));
+          fnd_sec = true;
+          mark = j + 1;
+        }
+        else if ( arg[j] == '=' && ( j - mark) > 1) {
+          name = arg.substr( mark, ( j - mark));
+          fnd_nam = true;
+          value = arg.substr( ( j + 1), ( arg.size() - ( j + 1)));
+          break;
+        }
+      }
 
-  if ( fout.fail()) {
-    cerr << "Could not open " << filename << " for output!\n";
-    return false;
-  }
+      if ( !fnd_nam && ( arg.size() - mark) > 0) {
+        name = arg.substr( mark, ( arg.size() - mark));
+      }
+    } // long argument 
+    else if( argv[i][0] == '-' && argv[i][1] != '-' && argv[i][1] != '\0') {
+      parameter_map::iterator I = m_par_lookup.find( argv[i][1]);
 
-  return writeToStream( fout);
-}
+      section = name = value = "";
 
-bool Config::writeToStream( ostream& out)
-{
-  conf_map::iterator I;
-  sec_map::iterator J;
- 
-  for ( I = m_conf.begin(); I != m_conf.end(); I++) {
-    out << endl 
-        << "[" << ( *I).first << "]\n\n";
-    
-    for ( J = ( *I).second.begin(); J != ( *I).second.end(); J++) {
-      out << ( *J).first << " = \"" << ( *J).second << "\"\n";
+      if ( I != m_par_lookup.end()) {
+        name = ( ( *I).second).first;
+        bool needs_value = ( ( *I).second).second;
+
+        if ( needs_value && argv[i+1] != NULL && argv[i+1][0] != '-') {
+          value = argv[++i];
+        }
+        else {
+          cerr << "WARNING: Short argument -" << argv[i][1] 
+               << " expects a value but none was given.";
+        }
+      }
+      else {
+        cerr << "WARNING: Short argument -" << argv[i][1]
+             << " in command-line is not in the lookup table.";
+      }
+    } // short argument
+
+    if ( !name.empty()) {
+      setItem( section, name, value);
     }
   }
-  
-  return true;
-}
+} // Config::getCmdline()
+
+// * This will send 'name.size() == 0' to setItem, unlike getCmd.  Reason:
+//   an env should never be nameless and if it is, something is seriously
+//   wrong; setItem's throw-catch routine will check this. 
+void Config::getEnv( const string& prefix)
+{
+  string name, value, section, env = "";
+  size_t eq_pos = 0;
+
+  for ( size_t i = 0; environ[i] != NULL; i++) {
+    env = environ[i];
+
+    if ( env.substr( 0, prefix.size()) == prefix) {
+      eq_pos = env.find( '='); 
+
+      if ( eq_pos != string::npos) {
+        name = env.substr( prefix.size(), ( eq_pos - prefix.size()));
+        value = env.substr( ( eq_pos + 1), ( env.size() - ( eq_pos + 1)));
+      }
+      else {
+        name = env.substr( prefix.size(), ( env.size() - prefix.size()));
+        value = "";
+      }   
+      
+      setItem( section, name, value);
+    }
+  }
+} // Config::getEnv()
+
+Variable Config::getItem( const string& section, const string& key)
+{
+  return ( m_conf[section])[key];
+} // Config::getItem()
 
 void Config::parseStream( istream& in) throw ( ParseError)
 {
@@ -370,116 +405,148 @@ void Config::parseStream( istream& in) throw ( ParseError)
   }
 } // Config::parseStream()
 
+bool Config::readFromFile( const string& filename)
+{
+  ifstream fin( filename.c_str());
+  
+  if ( fin.fail()) {
+    cerr << "Could not open " << filename << " for input!\n";
+    return false;
+  }
+
+  try {
+    parseStream( fin);
+  }
+  catch ( ParseError p) {
+    cerr << "While parsing " << filename << ":\n";
+    cerr << p;
+    return false;
+  }
+  
+  return true;
+} // Config::readFromFile()
+
+void Config::setItem( const string& section, const string& key, const Variable& item)
+{
+  if ( key.empty()) {
+    cerr << "WARNING: Blank configuration item key sent to varconf set() method.";
+  }
+  else {
+    string sec_clean = section; 
+    string key_clean = key; 
+
+    clean( sec_clean);
+    clean( key_clean);
+
+    ( m_conf[sec_clean])[key_clean] = item;
+ 
+    sig.emit(); 
+    sigv.emit( sec_clean, key_clean);
+  }
+} // Config::setItem()
+
 void Config::setParameterLookup( char s_name, const string& l_name, 
                                  bool value = false)
 {
     m_par_lookup[s_name] = pair<string, bool>( l_name, value);  
-}
+} // Config::setParameterLookup()
 
-// * This only cares if 'name.size()' >= 1; handling of bad characters
-//   is left to Config::setItem().
-void Config::getCmdline( int argc, char** argv)
+bool Config::writeToFile( const string& filename)
 {
-  string section, name, value;
+  ofstream fout( filename.c_str());
 
-  for ( size_t i = 1; i < argc; i++) {
-    if ( argv[i][0] == '-' && argv[i][1] == '-' && argv[i][2] != '\0') {
-      string arg = argv[i];
-      bool fnd_sec = false, fnd_nam = false; 
-      size_t mark = 2;
+  if ( fout.fail()) {
+    cerr << "Could not open " << filename << " for output!\n";
+    return false;
+  }
 
-      section = name = value = "";
-       
-      for ( size_t j = 2; j < arg.size(); j++) {
-        if ( arg[j] == ':' && arg[j+1] != '\0' && !fnd_sec && !fnd_nam) {
-          section = arg.substr( mark, ( j - mark));
-          fnd_sec = true;
-          mark = j + 1;
-        }
-        else if ( arg[j] == '=' && ( j - mark) > 1) {
-          name = arg.substr( mark, ( j - mark));
-          fnd_nam = true;
-          value = arg.substr( ( j + 1), ( arg.size() - ( j + 1)));
-          break;
-        }
-      }
+  return writeToStream( fout);
+} // Config::writeToFile()
 
-      if ( !fnd_nam && ( arg.size() - mark) > 0) {
-        name = arg.substr( mark, ( arg.size() - mark));
-      }
-    } // long argument 
-    else if( argv[i][0] == '-' && argv[i][1] != '-' && argv[i][1] != '\0') {
-      parameter_map::iterator I = m_par_lookup.find( argv[i][1]);
-
-      section = name = value = "";
-
-      if ( I != m_par_lookup.end()) {
-        name = ( ( *I).second).first;
-        bool needs_value = ( ( *I).second).second;
-
-        if ( needs_value && argv[i+1] != NULL && argv[i+1][0] != '-') {
-          value = argv[++i];
-        }
-        else {
-          cerr << "WARNING: Short argument -" << argv[i][1] 
-               << " expects a value but none was given.";
-        }
-      }
-      else {
-        cerr << "WARNING: Short argument -" << argv[i][1]
-             << " in command-line is not in the lookup table.";
-      }
-    } // short argument
-
-    if ( !name.empty()) {
-      setItem( section, name, value);
+bool Config::writeToStream( ostream& out)
+{
+  conf_map::iterator I;
+  sec_map::iterator J;
+ 
+  for ( I = m_conf.begin(); I != m_conf.end(); I++) {
+    out << endl << "[" << ( *I).first << "]\n\n";
+    
+    for ( J = ( *I).second.begin(); J != ( *I).second.end(); J++) {
+      out << ( *J).first << " = \"" << ( *J).second << "\"\n";
     }
   }
-} // Config::getCmdline()
+  
+  return true;
+} // Config::writeToStream
 
-// * This will send 'name.size() == 0' to setItem, unlike getCmd.  Reason:
-//   an env should never be nameless and if it is, something is seriously
-//   wrong; setItem's throw-catch routine will check this. 
-void Config::getEnv( const string& prefix)
-{
-  string name, value, section, env = "";
-  size_t eq_pos = 0;
 
-  for ( size_t i = 0; environ[i] != NULL; i++) {
-    env = environ[i];
 
-    if ( env.substr( 0, prefix.size()) == prefix) {
-      eq_pos = env.find( '='); 
-
-      if ( eq_pos != string::npos) {
-        name = env.substr( prefix.size(), ( eq_pos - prefix.size()));
-        value = env.substr( ( eq_pos + 1), ( env.size() - ( eq_pos + 1)));
-      }
-      else {
-        name = env.substr( prefix.size(), ( env.size() - prefix.size()));
-        value = "";
-      }   
-      
-      setItem( section, name, value);
-    }
-  }
-} // Config::getEnv()
-
-void Config::clean( string& str)
-{
-  ctype_t c;
-
-  for ( size_t i = 0; i < str.size(); i++) {
-    c = ctype( str[i]);
-
-    if ( c != C_NUMERIC && c != C_ALPHA && c != C_DASH) {
-      str[i] = '_';
-    }
-    else {
-      str[i] = tolower( str[i]);
-    }
-  } 
-} // Config::clean()
 
 
 } // namespace varconf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

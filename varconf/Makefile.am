@@ -9,4 +9,5 @@ libvarconfincludedir = $(includedir)/varconf
 libvarconfinclude_HEADERS = \
   Config.h \
   parse_error.h \
-  variable.h
+  variable.h \
+  varconf.h
