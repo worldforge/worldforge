@@ -1,3 +1,9 @@
+2003-06-27 Damien McGinnes
+        
+	* Mercator/Terrain.cpp, Terrain.h: made addMod take a const ref 
+	  to a terrain mod (bit cleaner)
+	* Mercator/TerrainMod.h: made clone methods const
+
 2003-06-26 Damien McGinnes
         
 	* Mercator/Segment.cpp, Segment.h: Added the location of the

@@ -17,7 +17,14 @@ Terrain::Terrain(unsigned int resolution) : m_res(resolution)
 
 Terrain::~Terrain()
 {
-    // FIXME CLean up everything. Eliminate the leaks.
+    for (Segmentstore::iterator I = m_segments.begin(); 
+         I!=m_segments.end(); ++I) {
+        for (Segmentcolumn::iterator J = I->second.begin(); 
+             J != I->second.end(); ++J) {
+            Segment *s=J->second;
+            if (s) delete s;
+        }
+    }
 }
 
 float Terrain::get(float x, float y) const
@@ -96,27 +103,23 @@ Segment * Terrain::getSegment(int x, int y) const
     return J->second;
 }
 
-void Terrain::addMod(TerrainMod *t) {
+void Terrain::addMod(const TerrainMod &t) {
 
     //work out which segments are overlapped by thus mod
     //note that the bbox is expanded by one grid unit because
     //segments share edges. this ensures a mod along an edge
     //will affect both segments.
-    int lx=(int)floor((t->bbox().lowCorner()[0] - 1) / m_res);
-    int ly=(int)floor((t->bbox().lowCorner()[1] - 1) / m_res);
-    int hx=(int)ceil((t->bbox().highCorner()[0] + 1) / m_res);
-    int hy=(int)ceil((t->bbox().highCorner()[1] + 1) / m_res);
+    int lx=(int)floor((t.bbox().lowCorner()[0] - 1) / m_res);
+    int ly=(int)floor((t.bbox().lowCorner()[1] - 1) / m_res);
+    int hx=(int)ceil((t.bbox().highCorner()[0] + 1) / m_res);
+    int hy=(int)ceil((t.bbox().highCorner()[1] + 1) / m_res);
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
-            if (s) s->addMod(t->clone());
+            if (s) s->addMod(t.clone());
         }
     }
-
-    //Mods are cloned for each Segment, this prevents a leak
-    //reference counting might be cleaner
-    delete t;
 }
 
 } // namespace Mercator

@@ -64,7 +64,7 @@ class Terrain {
         return m_basePoints;
     }
     
-    void addMod(TerrainMod *t);
+    void addMod(const TerrainMod &t);
 };
 
 } // namespace Mercator

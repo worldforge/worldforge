@@ -20,7 +20,7 @@ public:
     //get the boundingbox of the modifier
     virtual WFMath::AxisBox<2> bbox() const = 0;
 
-    virtual TerrainMod *clone() = 0;
+    virtual TerrainMod *clone() const = 0;
 };
 
 template <typename Shape>
@@ -54,7 +54,7 @@ public:
         }
     }
 
-    virtual TerrainMod *clone() {
+    virtual TerrainMod *clone() const {
         return new LevelTerrainMod<Shape>(m_level, m_shape);
     }
 
@@ -83,7 +83,7 @@ public:
         }
     }
     
-    virtual TerrainMod *clone() {
+    virtual TerrainMod *clone() const {
         return new AdjustTerrainMod<Shape>(m_dist, m_shape);
     }
 
@@ -113,7 +113,7 @@ public:
         }
     }
     
-    virtual TerrainMod *clone() {
+    virtual TerrainMod *clone() const {
         return new SlopeTerrainMod<Shape>(m_level, m_dx, m_dy, m_shape);
     }
 
