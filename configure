@@ -1844,6 +1844,7 @@ trap 'rm -fr `echo "
 	src/Net/Makefile
 	src/NetTest/Makefile
 	src/BusTest/Makefile
+	src/BusAdmin/Makefile
 	src/Content/Makefile
 	src/Object/Makefile
  src/config.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
@@ -1952,6 +1953,7 @@ CONFIG_FILES=\${CONFIG_FILES-"Makefile
 	src/Net/Makefile
 	src/NetTest/Makefile
 	src/BusTest/Makefile
+	src/BusAdmin/Makefile
 	src/Content/Makefile
 	src/Object/Makefile
 "}

@@ -72,7 +72,7 @@ PACKAGE = @PACKAGE@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 
-SUBDIRS = Object Net Content Bus NetTest BusTest
+SUBDIRS = Object Net Content Bus NetTest BusTest BusAdmin
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES = 
