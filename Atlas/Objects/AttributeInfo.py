@@ -173,6 +173,17 @@ class AttributeInfo:
             res = res + indent + '        b.listFloatItem(*I);\n'
             res = res + indent + '    }\n'
             res = res + indent + '    b.listEnd();\n'
+        elif self.type == "RootList":
+            res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
+            res = res + indent + '    const std::vector<Root> & v = get%s();\n' \
+                  % (self.cname)
+            res = res + indent + '    std::vector<Root>::const_iterator I = v.begin();\n'
+            res = res + indent + '    for (; I != v.end(); ++I) {\n'
+            res = res + indent + '       b.listMapItem();\n'
+            res = res + indent + '       (*I)->sendContents(b);\n'
+            res = res + indent + '       b.mapEnd();\n'
+            res = res + indent + '    }\n'
+            res = res + indent + '    b.listEnd();\n'
         else:
             res = res + indent + '    Atlas::Message::Encoder e(b);\n'
             res = res + indent + '    e.mapElementListItem("%s", get%s%s());\n' \
