@@ -2,10 +2,11 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
 
+// Much inspiration, the original idea and name suggestion by Mike Day.
+
 #ifndef ATLAS_FUNKY_ENCODER_H
 #define ATLAS_FUNKY_ENCODER_H
 
-#include <utility>
 #include <string>
 
 #include "../Bridge.h"
@@ -28,120 +29,133 @@ class Encoder;
 template<class T> class EncMessage;
 template<class T> class EncMap;
 template<class T> class EncList;
+template<class T> class EncMapValue;
+
+template<class T>
+class EncMapValue {
+public:
+    EncMapValue(Bridge& b, const string& name) : b(b), name(name) { }
+    
+    EncMap<T> operator<<(const BeginMap&)
+    {
+        b.MapItem(name, Bridge::MapBegin);
+        return EncMap<T>(b);
+    }
+
+    EncList<T> operator<<(const BeginList&)
+    {
+        b.MapItem(name, Bridge::ListBegin);
+        return EncList<T>(b);
+    }
+
+    T operator<<(int i)
+    {
+        b.MapItem(name, i);
+        return T(b);
+    }
+
+    T operator<<(double d)
+    {
+        b.MapItem(name, d);
+        return T(b);
+    }
+
+    T operator<<(const string& s)
+    {
+        b.MapItem(name, s);
+        return T(b);
+    }
+
+protected:
+    Bridge& b;
+    string name;
+};
 
 template<class T>
 class EncMap {
 public:
-    EncMap(Bridge& c) : c(c) { }
+    EncMap(Bridge& b) : b(b) { }
 
-    EncMap< EncMap<T> > operator<<(
-            const std::pair<std::string, BeginMap>& p)
+    EncMapValue< EncMap<T> > operator<<(const string& name)
     {
-        c.MapItem(p.first, Bridge::MapBegin);
-        return EncMap< EncMap<T> >(c);
+        return EncMapValue< EncMap<T> >(b, name);
     }
 
-    EncList< EncMap<T> > operator<<(
-            const std::pair<std::string, BeginList>& p)
-    {
-        c.MapItem(p.first, Bridge::ListBegin);
-        return EncList< EncMap<T> >(c);
-    }
-
-    EncMap<T> operator<<(const std::pair<std::string, int>& p)
-    {
-        c.MapItem(p.first, p.second);
-        return *this;
-    }
-
-    EncMap<T> operator<<(const std::pair<std::string, double>& p)
-    {
-        c.MapItem(p.first, p.second);
-        return *this;
-    }
-
-    EncMap<T> operator<<(
-            const std::pair<std::string, std::string>& p)
-    {
-        c.MapItem(p.first, p.second);
-        return *this;
-    }
-    
     T operator<<(EndMap)
     {
-        c.MapEnd();
-        return T(c);
+        b.MapEnd();
+        return T(b);
     }
     
 protected:
-    Bridge& c;
+    Bridge& b;
 };
 
 template<class T>
 class EncList {
 public:
-    EncList(Bridge& c) : c(c) { }
+    EncList(Bridge& b) : b(b) { }
 
     EncMap<EncList<T> > operator<<(const BeginMap&)
     {
-        c.ListItem(Bridge::MapBegin);
-        return EncMap<EncList<T> >(c);
+        b.ListItem(Bridge::MapBegin);
+        return EncMap<EncList<T> >(b);
     }
 
     EncList<EncList<T> > operator<<(const BeginList&)
     {
-        c.ListItem(Bridge::ListBegin);
-        return EncList<EncList<T> >(c);
+        b.ListItem(Bridge::ListBegin);
+        return EncList<EncList<T> >(b);
     }
 
     EncList<T> operator<<(int i)
     {
-        c.ListItem(i);
+        b.ListItem(i);
         return *this;
     }
 
     EncList<T> operator<<(double d)
     {
-        c.ListItem(d);
+        b.ListItem(d);
         return *this;
     }
 
     EncList<T> operator<<(const std::string& s)
     {
-        c.ListItem(s);
+        b.ListItem(s);
         return *this;
     }
     
     T operator<<(EndList)
     {
-        c.ListEnd();
-        return T(c);
+        b.ListEnd();
+        return T(b);
     }
     
 protected:
-    Bridge& c;
+    Bridge& b;
 };
 
 template<class T>
 class EncMessage
 {
 public:
-    EncMessage(Bridge& c) : c(c) { }
+    EncMessage(Bridge& b) : b(b) { }
 
     EncMap<EncMessage> operator<<(const BeginMap&)
     {
-        c.MessageItem(Bridge::MapBegin);
-        return EncMap<EncMessage>(c);
+        b.MessageItem(Bridge::MapBegin);
+        return EncMap<EncMessage>(b);
     }
         
     T operator<<(EndMessage)
     {
-        c.MessageBegin();
-        return T(&c);
+        b.MessageEnd();
+        return T(&b);
     }
     
 protected:
-    Bridge& c;
+    Bridge& b;
 };
 
 class Encoder

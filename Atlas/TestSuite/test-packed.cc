@@ -158,9 +158,9 @@ int main()
 
     enc << Funky::Encoder::begin_message
           << Funky::Encoder::begin_map
-              << make_pair((string)"id", 17)
-              << make_pair((string)"name", (string)"Fred (the + great)")
-              << make_pair((string)"weight", 1.5)
+              << "id" << 17
+              << "name" << "Fred (the + great)"
+              << "weight" << 1.5
           << Funky::Encoder::end_map
           << Funky::Encoder::end_message;
 
