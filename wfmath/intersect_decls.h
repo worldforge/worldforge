@@ -26,7 +26,31 @@
 #ifndef WFMATH_INTERSECT_DECLS_H
 #define WFMATH_INTERSECT_DECLS_H
 
+#include <wfmath/const.h>
+
 namespace WFMath {
+
+// Some Intersect and Contains helper functions
+
+inline bool _Less(CoordType x1, CoordType x2, bool proper)
+{
+  return !proper ? x1 < x2 : x1 <= x2;
+}
+
+inline bool _LessEq(CoordType x1, CoordType x2, bool proper)
+{
+  return !proper ? x1 <= x2 : x1 < x2;
+}
+
+inline bool _Greater(CoordType x1, CoordType x2, bool proper)
+{
+  return !proper ? x1 > x2 : x1 >= x2;
+}
+
+inline bool _GreaterEq(CoordType x1, CoordType x2, bool proper)
+{
+  return !proper ? x1 >= x2 : x1 > x2;
+}
 
 template<const int dim> class Point;
 template<const int dim> class AxisBox;
@@ -36,214 +60,124 @@ template<const int dim> class RotBox;
 template<const int dim> class Polygon;
 
 template<const int dim>
-bool Intersect(const AxisBox<dim>& b, const Point<dim>& p);
+bool Intersect(const AxisBox<dim>& b, const Point<dim>& p, bool proper = false);
 template<const int dim>
-bool IntersectProper(const AxisBox<dim>& b, const Point<dim>& p);
-template<const int dim>
-bool Contains(const Point<dim>& p, const AxisBox<dim>& b);
+bool Contains(const Point<dim>& p, const AxisBox<dim>& b, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Ball<dim>& b, const Point<dim>& p);
+bool Intersect(const Ball<dim>& b, const Point<dim>& p, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Ball<dim>& b, const Point<dim>& p);
-template<const int dim>
-bool Contains(const Point<dim>& p, const Ball<dim>& b);
+bool Contains(const Point<dim>& p, const Ball<dim>& b, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Segment<dim>& s, const Point<dim>& p);
+bool Intersect(const Segment<dim>& s, const Point<dim>& p, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Segment<dim>& s, const Point<dim>& p);
-template<const int dim>
-bool Contains(const Point<dim>& p, const Segment<dim>& s);
+bool Contains(const Point<dim>& p, const Segment<dim>& s, bool proper = false);
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r, const Point<dim>& p);
+bool Intersect(const RotBox<dim>& r, const Point<dim>& p, bool proper = false);
 template<const int dim>
-bool IntersectProper(const RotBox<dim>& r, const Point<dim>& p);
-template<const int dim>
-bool Contains(const Point<dim>& p, const RotBox<dim>& r);
+bool Contains(const Point<dim>& p, const RotBox<dim>& r, bool proper = false);
 
 template<const int dim>
-bool Intersect(const AxisBox<dim>& b1, const AxisBox<dim>& b2);
+bool Intersect(const AxisBox<dim>& b1, const AxisBox<dim>& b2, bool proper = false);
 template<const int dim>
-bool IntersectProper(const AxisBox<dim>& b1, const AxisBox<dim>& b2);
-template<const int dim>
-bool Contains(const AxisBox<dim>& outer, const AxisBox<dim>& inner);
-template<const int dim>
-bool ContainsProper(const AxisBox<dim>& outer, const AxisBox<dim>& inner);
+bool Contains(const AxisBox<dim>& outer, const AxisBox<dim>& inner, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Ball<dim>& b, const AxisBox<dim>& a);
+bool Intersect(const Ball<dim>& b, const AxisBox<dim>& a, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Ball<dim>& b, const AxisBox<dim>& a);
+bool Contains(const Ball<dim>& b, const AxisBox<dim>& a, bool proper = false);
 template<const int dim>
-bool Contains(const Ball<dim>& b, const AxisBox<dim>& a);
-template<const int dim>
-bool ContainsProper(const Ball<dim>& b, const AxisBox<dim>& a);
-template<const int dim>
-bool Contains(const AxisBox<dim>& a, const Ball<dim>& b);
-template<const int dim>
-bool ContainsProper(const AxisBox<dim>& a, const Ball<dim>& b);
+bool Contains(const AxisBox<dim>& a, const Ball<dim>& b, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b);
+bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Segment<dim>& s, const AxisBox<dim>& b);
+bool Contains(const Segment<dim>& s, const AxisBox<dim>& b, bool proper = false);
 template<const int dim>
-bool Contains(const Segment<dim>& s, const AxisBox<dim>& b);
-template<const int dim>
-bool ContainsProper(const Segment<dim>& s, const AxisBox<dim>& b);
-template<const int dim>
-bool Contains(const AxisBox<dim>& b, const Segment<dim>& s);
-template<const int dim>
-bool ContainsProper(const AxisBox<dim>& b, const Segment<dim>& s);
+bool Contains(const AxisBox<dim>& b, const Segment<dim>& s, bool proper = false);
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b);
+bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b, bool proper = false);
 template<const int dim>
-bool IntersectProper(const RotBox<dim>& r, const AxisBox<dim>& b);
+bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b, bool proper = false);
 template<const int dim>
-bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b);
-template<const int dim>
-bool ContainsProper(const RotBox<dim>& r, const AxisBox<dim>& b);
-template<const int dim>
-bool Contains(const AxisBox<dim>& b, const RotBox<dim>& r);
-template<const int dim>
-bool ContainsProper(const AxisBox<dim>& b, const RotBox<dim>& r);
+bool Contains(const AxisBox<dim>& b, const RotBox<dim>& r, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Ball<dim>& b1, const Ball<dim>& b2);
+bool Intersect(const Ball<dim>& b1, const Ball<dim>& b2, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Ball<dim>& b1, const Ball<dim>& b2);
-template<const int dim>
-bool Contains(const Ball<dim>& outer, const Ball<dim>& inner);
-template<const int dim>
-bool ContainsProper(const Ball<dim>& outer, const Ball<dim>& inner);
+bool Contains(const Ball<dim>& outer, const Ball<dim>& inner, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Segment<dim>& s, const Ball<dim>& b);
+bool Intersect(const Segment<dim>& s, const Ball<dim>& b, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Segment<dim>& s, const Ball<dim>& b);
+bool Contains(const Ball<dim>& b, const Segment<dim>& s, bool proper = false);
 template<const int dim>
-bool Contains(const Ball<dim>& b, const Segment<dim>& s);
-template<const int dim>
-bool ContainsProper(const Ball<dim>& b, const Segment<dim>& s);
-template<const int dim>
-bool Contains(const Segment<dim>& s, const Ball<dim>& b);
-template<const int dim>
-bool ContainsProper(const Segment<dim>& s, const Ball<dim>& b);
+bool Contains(const Segment<dim>& s, const Ball<dim>& b, bool proper = false);
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r, const Ball<dim>& b);
+bool Intersect(const RotBox<dim>& r, const Ball<dim>& b, bool proper = false);
 template<const int dim>
-bool IntersectProper(const RotBox<dim>& r, const Ball<dim>& b);
+bool Contains(const RotBox<dim>& r, const Ball<dim>& b, bool proper = false);
 template<const int dim>
-bool Contains(const RotBox<dim>& r, const Ball<dim>& b);
-template<const int dim>
-bool ContainsProper(const RotBox<dim>& r, const Ball<dim>& b);
-template<const int dim>
-bool Contains(const Ball<dim>& b, const RotBox<dim>& r);
-template<const int dim>
-bool ContainsProper(const Ball<dim>& b, const RotBox<dim>& r);
+bool Contains(const Ball<dim>& b, const RotBox<dim>& r, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Segment<dim>& s1, const Segment<dim>& s2);
+bool Intersect(const Segment<dim>& s1, const Segment<dim>& s2, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Segment<dim>& s1, const Segment<dim>& s2);
-template<const int dim>
-bool Contains(const Segment<dim>& s1, const Segment<dim>& s2);
-template<const int dim>
-bool ContainsProper(const Segment<dim>& s1, const Segment<dim>& s2);
+bool Contains(const Segment<dim>& s1, const Segment<dim>& s2, bool proper = false);
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r, const Segment<dim>& s);
+bool Intersect(const RotBox<dim>& r, const Segment<dim>& s, bool proper = false);
 template<const int dim>
-bool IntersectProper(const RotBox<dim>& r, const Segment<dim>& s);
+bool Contains(const RotBox<dim>& r, const Segment<dim>& s, bool proper = false);
 template<const int dim>
-bool Contains(const RotBox<dim>& r, const Segment<dim>& s);
-template<const int dim>
-bool ContainsProper(const RotBox<dim>& r, const Segment<dim>& s);
-template<const int dim>
-bool Contains(const Segment<dim>& s, const RotBox<dim>& r);
-template<const int dim>
-bool ContainsProper(const Segment<dim>& s, const RotBox<dim>& r);
+bool Contains(const Segment<dim>& s, const RotBox<dim>& r, bool proper = false);
 
 template<const int dim>
-bool Intersect(const RotBox<dim>& r1, const RotBox<dim>& r2);
+bool Intersect(const RotBox<dim>& r1, const RotBox<dim>& r2, bool proper = false);
 template<const int dim>
-bool IntersectProper(const RotBox<dim>& r1, const RotBox<dim>& r2);
-template<const int dim>
-bool Contains(const RotBox<dim>& outer, const RotBox<dim>& inner);
-template<const int dim>
-bool ContainsProper(const RotBox<dim>& outer, const RotBox<dim>& inner);
+bool Contains(const RotBox<dim>& outer, const RotBox<dim>& inner, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Polygon<dim>& r, const Point<dim>& p);
+bool Intersect(const Polygon<dim>& r, const Point<dim>& p, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Polygon<dim>& r, const Point<dim>& p);
-template<const int dim>
-bool Contains(const Point<dim>& p, const Polygon<dim>& r);
+bool Contains(const Point<dim>& p, const Polygon<dim>& r, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b);
+bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Polygon<dim>& p, const AxisBox<dim>& b);
+bool Contains(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper = false);
 template<const int dim>
-bool Contains(const Polygon<dim>& p, const AxisBox<dim>& b);
-template<const int dim>
-bool ContainsProper(const Polygon<dim>& p, const AxisBox<dim>& b);
-template<const int dim>
-bool Contains(const AxisBox<dim>& b, const Polygon<dim>& p);
-template<const int dim>
-bool ContainsProper(const AxisBox<dim>& b, const Polygon<dim>& p);
+bool Contains(const AxisBox<dim>& b, const Polygon<dim>& p, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Polygon<dim>& p, const Ball<dim>& b);
+bool Intersect(const Polygon<dim>& p, const Ball<dim>& b, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Polygon<dim>& p, const Ball<dim>& b);
+bool Contains(const Polygon<dim>& p, const Ball<dim>& b, bool proper = false);
 template<const int dim>
-bool Contains(const Polygon<dim>& p, const Ball<dim>& b);
-template<const int dim>
-bool ContainsProper(const Polygon<dim>& p, const Ball<dim>& b);
-template<const int dim>
-bool Contains(const Ball<dim>& b, const Polygon<dim>& p);
-template<const int dim>
-bool ContainsProper(const Ball<dim>& b, const Polygon<dim>& p);
+bool Contains(const Ball<dim>& b, const Polygon<dim>& p, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Polygon<dim>& r, const Segment<dim>& s);
+bool Intersect(const Polygon<dim>& r, const Segment<dim>& s, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Polygon<dim>& p, const Segment<dim>& s);
+bool Contains(const Polygon<dim>& p, const Segment<dim>& s, bool proper = false);
 template<const int dim>
-bool Contains(const Polygon<dim>& p, const Segment<dim>& s);
-template<const int dim>
-bool ContainsProper(const Polygon<dim>& p, const Segment<dim>& s);
-template<const int dim>
-bool Contains(const Segment<dim>& s, const Polygon<dim>& p);
-template<const int dim>
-bool ContainsProper(const Segment<dim>& s, const Polygon<dim>& p);
+bool Contains(const Segment<dim>& s, const Polygon<dim>& p, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r);
+bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Polygon<dim>& p, const RotBox<dim>& r);
+bool Contains(const Polygon<dim>& p, const RotBox<dim>& r, bool proper = false);
 template<const int dim>
-bool Contains(const Polygon<dim>& p, const RotBox<dim>& r);
-template<const int dim>
-bool ContainsProper(const Polygon<dim>& p, const RotBox<dim>& r);
-template<const int dim>
-bool Contains(const RotBox<dim>& r, const Polygon<dim>& p);
-template<const int dim>
-bool ContainsProper(const RotBox<dim>& r, const Polygon<dim>& p);
+bool Contains(const RotBox<dim>& r, const Polygon<dim>& p, bool proper = false);
 
 template<const int dim>
-bool Intersect(const Polygon<dim>& p1, const Polygon<dim>& p2);
+bool Intersect(const Polygon<dim>& p1, const Polygon<dim>& p2, bool proper = false);
 template<const int dim>
-bool IntersectProper(const Polygon<dim>& p1, const Polygon<dim>& p2);
-template<const int dim>
-bool Contains(const Polygon<dim>& outer, const Polygon<dim>& inner);
-template<const int dim>
-bool ContainsProper(const Polygon<dim>& outer, const Polygon<dim>& inner);
+bool Contains(const Polygon<dim>& outer, const Polygon<dim>& inner, bool proper = false);
 
 } // namespace WFMath
 

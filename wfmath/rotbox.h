@@ -107,42 +107,27 @@ class RotBox
   Ball<dim> boundingSphereSloppy() const
 	{return Ball<dim>(getCenter(), m_size.sqrMag() / 2);}
 
-  friend bool Intersect<dim>(const RotBox& r, const Point<dim>& p);
-  friend bool IntersectProper<dim>(const RotBox& r, const Point<dim>& p);
-  friend bool Contains<dim>(const Point<dim>& p, const RotBox& r);
+  friend bool Intersect<dim>(const RotBox& r, const Point<dim>& p, bool proper);
+  friend bool Contains<dim>(const Point<dim>& p, const RotBox& r, bool proper);
 
-  friend bool Intersect<dim>(const RotBox& r, const AxisBox<dim>& b);
-  friend bool IntersectProper<dim>(const RotBox& r, const AxisBox<dim>& b);
-  friend bool Contains<dim>(const RotBox& r, const AxisBox<dim>& b);
-  friend bool ContainsProper<dim>(const RotBox& r, const AxisBox<dim>& b);
-  friend bool Contains<dim>(const AxisBox<dim>& b, const RotBox& r);
-  friend bool ContainsProper<dim>(const AxisBox<dim>& b, const RotBox& r);
+  friend bool Intersect<dim>(const RotBox& r, const AxisBox<dim>& b, bool proper);
+  friend bool Contains<dim>(const RotBox& r, const AxisBox<dim>& b, bool proper);
+  friend bool Contains<dim>(const AxisBox<dim>& b, const RotBox& r, bool proper);
 
-  friend bool Intersect<dim>(const RotBox& r, const Ball<dim>& b);
-  friend bool IntersectProper<dim>(const RotBox& r, const Ball<dim>& b);
-  friend bool Contains<dim>(const RotBox& r, const Ball<dim>& b);
-  friend bool ContainsProper<dim>(const RotBox& r, const Ball<dim>& b);
-  friend bool Contains<dim>(const Ball<dim>& b, const RotBox& r);
-  friend bool ContainsProper<dim>(const Ball<dim>& b, const RotBox& r);
+  friend bool Intersect<dim>(const RotBox& r, const Ball<dim>& b, bool proper);
+  friend bool Contains<dim>(const RotBox& r, const Ball<dim>& b, bool proper);
+  friend bool Contains<dim>(const Ball<dim>& b, const RotBox& r, bool proper);
 
-  friend bool Intersect<dim>(const RotBox& r, const Segment<dim>& s);
-  friend bool IntersectProper<dim>(const RotBox& r, const Segment<dim>& s);
-  friend bool Contains<dim>(const RotBox& r, const Segment<dim>& s);
-  friend bool ContainsProper<dim>(const RotBox& r, const Segment<dim>& s);
-  friend bool Contains<dim>(const Segment<dim>& s, const RotBox& r);
-  friend bool ContainsProper<dim>(const Segment<dim>& s, const RotBox& r);
+  friend bool Intersect<dim>(const RotBox& r, const Segment<dim>& s, bool proper);
+  friend bool Contains<dim>(const RotBox& r, const Segment<dim>& s, bool proper);
+  friend bool Contains<dim>(const Segment<dim>& s, const RotBox& r, bool proper);
 
-  friend bool Intersect<dim>(const RotBox& r1, const RotBox& r2);
-  friend bool IntersectProper<dim>(const RotBox& r1, const RotBox& r2);
-  friend bool Contains<dim>(const RotBox& outer, const RotBox& inner);
-  friend bool ContainsProper<dim>(const RotBox& outer, const RotBox& inner);
+  friend bool Intersect<dim>(const RotBox& r1, const RotBox& r2, bool proper);
+  friend bool Contains<dim>(const RotBox& outer, const RotBox& inner, bool proper);
 
-  friend bool Intersect<dim>(const Polygon<dim>& p, const RotBox& r);
-  friend bool IntersectProper<dim>(const Polygon<dim>& p, const RotBox& r);
-  friend bool Contains<dim>(const Polygon<dim>& p, const RotBox& r);
-  friend bool ContainsProper<dim>(const Polygon<dim>& p, const RotBox& r);
-  friend bool Contains<dim>(const RotBox& r, const Polygon<dim>& p);
-  friend bool ContainsProper<dim>(const RotBox& r, const Polygon<dim>& p);
+  friend bool Intersect<dim>(const Polygon<dim>& p, const RotBox& r, bool proper);
+  friend bool Contains<dim>(const Polygon<dim>& p, const RotBox& r, bool proper);
+  friend bool Contains<dim>(const RotBox& r, const Polygon<dim>& p, bool proper);
 
  private:
 

@@ -30,7 +30,7 @@ AM_PROG_LIBTOOL
 dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
 WFMATH_CFLAGS=""
-WFMATH_LIBS="-lwfmath"
+WFMATH_LIBS="-lwfmath -lm"
 
 AM_PATH_ATLAS(0.4.3, [
                       found_atlas=yes

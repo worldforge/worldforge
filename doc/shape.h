@@ -108,22 +108,18 @@ class Shape
 
   // The following will be defined in intersect.h. The declarations
   // of the friend templates are placed in intersect_decls.h. The
-  // difference between Intersect() and IntersectProper() is that
-  // Intersect() returns true if only the boundaries of the shapes
-  // intersect while IntersectProper() returns false. The same is
-  // true of Contains() and ContainsProper(), e.g. an object
-  // contains itself (Contains(foo, foo) == true), but does
-  // not contain itself properly (ContainsProper(foo, foo) == false).
+  // "proper" argument, when set to true, rejects intersections which
+  // are only on the boundaries of the shapes, or containment which
+  // intersects the boundary of the outer shape. A shape
+  // contains itself (Contains(foo, foo, false) == true), but does
+  // not contain itself properly (Contains(foo, foo, true) == false).
   // The Intersect() functions are symmetric in their arguments,
   // while for the Contains() functions the first shape is the outer
   // one and the second is the inner one.
 
-  friend bool Intersect<dim>(Shape<dim>& s, Foo<dim>& f);
-  friend bool IntersectProper<dim>(Shape<dim>& s, Foo<dim>& f);
-  friend bool Contains<dim>(Shape<dim>& s, Foo<dim>& f);
-  friend bool ContainsProper<dim>(Shape<dim>& s, Foo<dim>& f);
-  friend bool Contains<dim>(Foo<dim& f, Shape<dim>& s);
-  friend bool ContainsProper<dim>(Foo<dim& f, Shape<dim>& s);
+  friend bool Intersect<dim>(Shape<dim>& s, Foo<dim>& f, bool proper);
+  friend bool Contains<dim>(Shape<dim>& s, Foo<dim>& f, bool proper);
+  friend bool Contains<dim>(Foo<dim& f, Shape<dim>& s, bool proper);
 
 };
 

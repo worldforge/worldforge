@@ -61,25 +61,14 @@ using namespace WFMath;
 // this line separates b from B(a), and they do not intersect. QED.
 
 template<>
-bool WFMath::Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b)
+bool WFMath::Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper)
 {
   RotMatrix<2> m = r.m_orient.inverse();
 
-  return Intersect(r.boundingBox(), b)
+  return Intersect(r.boundingBox(), b, proper)
       && Intersect(RotBox<2>(Point<2>(b.m_low).rotate(m, r.m_corner0),
 			     b.m_high - b.m_low, m).boundingBox(),
-		   AxisBox<2>(r.m_corner0, r.m_corner0 + r.m_size));
-}
-
-template<>
-bool WFMath::IntersectProper<2>(const RotBox<2>& r, const AxisBox<2>& b)
-{
-  RotMatrix<2> m = r.m_orient.inverse();
-
-  return IntersectProper(r.boundingBox(), b)
-      && IntersectProper(RotBox<2>(Point<2>(b.m_low).rotate(m, r.m_corner0),
-				   b.m_high - b.m_low, m).boundingBox(),
-			 AxisBox<2>(r.m_corner0, r.m_corner0 + r.m_size));
+		   AxisBox<2>(r.m_corner0, r.m_corner0 + r.m_size), proper);
 }
 
 // The 3d implementation is based on the following theorem:
@@ -112,80 +101,29 @@ bool WFMath::IntersectProper<2>(const RotBox<2>& r, const AxisBox<2>& b)
 // UNC Chapel Hill
 // 1996
 
-typedef struct {
-  CoordType b_low, b_high, r_low, r_high, dist;
-} CompareData3D;
-
-static bool IntersectSeparator(const CompareData3D *data);
-static bool IntersectSeparatorProper(const CompareData3D *data);
-static bool CheckAxesPlanes(const Vector<3>& r_size, const Vector<3>& b_size,
-			    const Vector<3>& sep, const RotMatrix<3>& m,
-			    bool (*got_separator)(const CompareData3D *data));
-
 template<>
-bool WFMath::Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b)
+bool WFMath::Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper)
 {
   // Checking intersection of each with the bounding box of
   // the other in the coordinate system of the first will take care
   // of the "plane parallel to face" case
 
-  if(!Intersect(r.boundingBox(), b))
+  if(!Intersect(r.boundingBox(), b, proper))
     return false;
 
-  RotMatrix<3> m = r.m_orient.inverse();
+  RotMatrix<3> minv = r.m_orient.inverse();
   Vector<3> b_size = b.m_high - b.m_low;
 
-  if(!Intersect(RotBox<3>(Point<3>(b.m_low).rotate(m, r.m_corner0),
-			  b_size, m).boundingBox(),
-		AxisBox<3>(r.m_corner0, r.m_corner0 + r.m_size)))
+  if(!Intersect(RotBox<3>(Point<3>(b.m_low).rotate(minv, r.m_corner0),
+			  b_size, minv).boundingBox(),
+		AxisBox<3>(r.m_corner0, r.m_corner0 + r.m_size), proper))
     return false;
 
   // Now for the "plane parallel to at least one edge of each" case
 
-  return CheckAxesPlanes(r.m_size, b_size, b.m_low - r.m_corner0,
-			 r.m_orient, IntersectSeparator);
-}
+  Vector<3> sep =  b.m_low - r.m_corner0;
+  const RotMatrix<3> &m = r.m_orient;
 
-static bool IntersectSeparator(const CompareData3D *data)
-{
-  return data->r_low - data->dist > data->b_high
-     || data->r_high - data->dist < data->b_low;
-}
-
-template<>
-bool WFMath::IntersectProper<3>(const RotBox<3>& r, const AxisBox<3>& b)
-{
-  // Checking intersection of each with the bounding box of
-  // the other in the coordinate system of the first will take care
-  // of the "plane parallel to face" case
-
-  if(!IntersectProper(r.boundingBox(), b))
-    return false;
-
-  RotMatrix<3> m = r.m_orient.inverse();
-  Vector<3> b_size = b.m_high - b.m_low;
-
-  if(!IntersectProper(RotBox<3>(Point<3>(b.m_low).rotate(m, r.m_corner0),
-				b_size, m).boundingBox(),
-		      AxisBox<3>(r.m_corner0, r.m_corner0 + r.m_size)))
-    return false;
-
-  // Now for the "plane parallel to at least one edge of each" case
-
-  return CheckAxesPlanes(r.m_size, b_size, b.m_low - r.m_corner0,
-			 r.m_orient, IntersectSeparatorProper);
-}
-
-static bool IntersectSeparatorProper(const CompareData3D *data)
-{
-  return data->r_low - data->dist >= data->b_high
-     || data->r_high - data->dist <= data->b_low;
-}
-
-static bool CheckAxesPlanes(const Vector<3>& r_size, const Vector<3>& b_size,
-			    const Vector<3>& sep, const RotMatrix<3>& m,
-			    bool (*got_separator)(const CompareData3D *data))
-{
   // Generate normals to the 9 possible separating planes
 
   for(int i = 0; i < 3; ++i) {
@@ -233,7 +171,7 @@ static bool CheckAxesPlanes(const Vector<3>& r_size, const Vector<3>& b_size,
 
       const int next[] = {1, 2, 0};
       CoordType val;
-      CompareData3D data;
+      CoordType b_low, b_high, r_low, r_high, dist;
       int k;
 
       // AxisBox projection
@@ -243,12 +181,12 @@ static bool CheckAxesPlanes(const Vector<3>& r_size, const Vector<3>& b_size,
       val = axis[k] * b_size[k];
 
       if(val > 0) {
-        data.b_high = val;
-        data.b_low = 0;
+        b_high = val;
+        b_low = 0;
       }
       else {
-        data.b_low = val;
-        data.b_high = 0;
+        b_low = val;
+        b_high = 0;
       }
 
       k = next[k];
@@ -256,39 +194,40 @@ static bool CheckAxesPlanes(const Vector<3>& r_size, const Vector<3>& b_size,
       val = axis[k] * b_size[k];
 
       if(val > 0)
-        data.b_high += val;
+        b_high += val;
       else
-        data.b_low += val;
+        b_low += val;
 
       // RotBox projection
 
       k = next[i];
 
-      val = Dot(m.row(k), axis) * r_size[k];
+      val = Dot(m.row(k), axis) * r.m_size[k];
 
       if(val > 0) {
-        data.r_high = val;
-        data.r_low = 0;
+        r_high = val;
+        r_low = 0;
       }
       else {
-        data.r_low = val;
-        data.r_high = 0;
+        r_low = val;
+        r_high = 0;
       }
 
       k = next[k];
 
-      val = Dot(m.row(k), axis) * r_size[k];
+      val = Dot(m.row(k), axis) * r.m_size[k];
 
       if(val > 0)
-        data.r_high += val;
+        r_high += val;
       else
-        data.r_low += val;
+        r_low += val;
 
       // Distance between basepoints for boxes along this axis
 
-      data.dist = Dot(sep, axis);
+      dist = Dot(sep, axis);
 
-      if(got_separator(&data))
+      if(_Greater(r_low - dist, b_high, proper)
+        || _Less(r_high - dist, b_low, proper))
         return false;
     }
   }

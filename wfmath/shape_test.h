@@ -62,11 +62,11 @@ void test_shape_no_rotate(const Shape<dim>& s)
   assert(s2 == s);
 
   AxisBox<dim> box = s.boundingBox();
-  assert(Contains(box, s));
+  assert(Contains(box, s, false));
   Ball<dim> ball1 = s.boundingSphere(), ball2 = s.boundingSphereSloppy();
 //  cout << ball1 << std::endl << ball2 << std::endl;
-  assert(Contains(ball1, s));
-  assert(Contains(ball2, ball1));
+  assert(Contains(ball1, s, false));
+  assert(Contains(ball2, ball1, false));
 }
 
 template<const int dim, template<const int> class Shape>

@@ -46,6 +46,19 @@ void test_polygon(const Polygon<dim>& p)
   test_shape(p);
 
   // FIXME more tests
+
+  // Just check that these compile
+  Point<dim> point;
+  point.setToOrigin();
+  AxisBox<dim> a(point, point, true);
+  Vector<dim> vec;
+  vec.zero();
+  RotMatrix<dim> mat;
+  mat.identity();
+  RotBox<dim> r(point, vec, mat);
+
+  Intersect(p, a);
+  Intersect(p, r);
 }
 
 int main()

@@ -1,22 +1,14 @@
 Intersect functions unimplemented:
         for dim != 2,
-	  Contains(Polygon<>, AxisBox<>)
-	  ContainsProper(Polygon<>, AxisBox<>)
-	  Contains(Polygon<>, RotBox<>)
-	  ContainsProper(Polygon<>, RotBox<>)
-	  Intersect(Polygon<>, Polygon<>)
-	  IntersectProper(Polygon<>, Polygon<>)
-	  Contains(Polygon<>, Polygon<>)
-	  ContainsProper(Polygon<>, Polygon<>)
+	  Contains(Polygon<>, AxisBox<>, bool)
+	  Contains(Polygon<>, RotBox<>, bool)
+	  Intersect(Polygon<>, Polygon<>, bool)
+	  Contains(Polygon<>, Polygon<>, bool)
         for dim != 2,3 (extremely low priority)
-	  Intersect(Polygon<>, AxisBox<>)
-	  IntersectProper(Polygon<>, AxisBox<>)
-	  Intersect(Polygon<>, RotBox<>)
-	  IntersectProper(Polygon<>, RotBox<>)
-	  Intersect(RotBox<>, AxisBox<>)
-	  IntersectProper(RotBox<>, AxisBox<>)
-	  Intersect(RotBox<>, RotBox<>)
-	  IntersectProper(RotBox<>, RotBox<>)
+	  Intersect(Polygon<>, AxisBox<>, bool)
+	  Intersect(Polygon<>, RotBox<>, bool)
+	  Intersect(RotBox<>, AxisBox<>, bool)
+	  Intersect(RotBox<>, RotBox<>, bool)
     These will be postponed until I can think of a way to write them,
     or someone needs them, whichever comes first
 Add shape tests from COAL

@@ -1,3 +1,14 @@
+Thursday, March 21, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed Polygon<> intersection functions with AxisBox<> and
+	  RotBox<> in polygon_intersect.h
+	* Replaced separate Intersect() and IntersectProper() functions
+	  with a "bool proper" argument to Intersect(), did the same
+	  for Contains(). For backwards compatibility, make the "proper"
+	  argument default to false, and wrote generic IntersectProper()
+	  and ContainsProper() templates to call Intersect() and Contains()
+	  with proper = true (keep them? deprecate them? which API is better?).
+
 Tuesday, March 12, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* Added a default value of 1.0 for the norm in Vector::normalize()

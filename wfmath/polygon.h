@@ -121,42 +121,27 @@ class Polygon<2>
   Ball<2> boundingSphere() const {return BoundingSphere(m_points);}
   Ball<2> boundingSphereSloppy() const {return BoundingSphereSloppy(m_points);}
 
-  friend bool Intersect<2>(const Polygon& r, const Point<2>& p);
-  friend bool IntersectProper<2>(const Polygon& r, const Point<2>& p);
-  friend bool Contains<2>(const Point<2>& p, const Polygon& r);
+  friend bool Intersect<2>(const Polygon& r, const Point<2>& p, bool proper);
+  friend bool Contains<2>(const Point<2>& p, const Polygon& r, bool proper);
 
-  friend bool Intersect<2>(const Polygon& p, const AxisBox<2>& b);
-  friend bool IntersectProper<2>(const Polygon& p, const AxisBox<2>& b);
-  friend bool Contains<2>(const Polygon& p, const AxisBox<2>& b);
-  friend bool ContainsProper<2>(const Polygon& p, const AxisBox<2>& b);
-  friend bool Contains<2>(const AxisBox<2>& b, const Polygon& p);
-  friend bool ContainsProper<2>(const AxisBox<2>& b, const Polygon& p);
+  friend bool Intersect<2>(const Polygon& p, const AxisBox<2>& b, bool proper);
+  friend bool Contains<2>(const Polygon& p, const AxisBox<2>& b, bool proper);
+  friend bool Contains<2>(const AxisBox<2>& b, const Polygon& p, bool proper);
 
-  friend bool Intersect<2>(const Polygon& p, const Ball<2>& b);
-  friend bool IntersectProper<2>(const Polygon& p, const Ball<2>& b);
-  friend bool Contains<2>(const Polygon& p, const Ball<2>& b);
-  friend bool ContainsProper<2>(const Polygon& p, const Ball<2>& b);
-  friend bool Contains<2>(const Ball<2>& b, const Polygon& p);
-  friend bool ContainsProper<2>(const Ball<2>& b, const Polygon& p);
+  friend bool Intersect<2>(const Polygon& p, const Ball<2>& b, bool proper);
+  friend bool Contains<2>(const Polygon& p, const Ball<2>& b, bool proper);
+  friend bool Contains<2>(const Ball<2>& b, const Polygon& p, bool proper);
 
-  friend bool Intersect<2>(const Polygon& r, const Segment<2>& s);
-  friend bool IntersectProper<2>(const Polygon& p, const Segment<2>& s);
-  friend bool Contains<2>(const Polygon& p, const Segment<2>& s);
-  friend bool ContainsProper<2>(const Polygon& p, const Segment<2>& s);
-  friend bool Contains<2>(const Segment<2>& s, const Polygon& p);
-  friend bool ContainsProper<2>(const Segment<2>& s, const Polygon& p);
+  friend bool Intersect<2>(const Polygon& r, const Segment<2>& s, bool proper);
+  friend bool Contains<2>(const Polygon& p, const Segment<2>& s, bool proper);
+  friend bool Contains<2>(const Segment<2>& s, const Polygon& p, bool proper);
 
-  friend bool Intersect<2>(const Polygon& p, const RotBox<2>& r);
-  friend bool IntersectProper<2>(const Polygon& p, const RotBox<2>& r);
-  friend bool Contains<2>(const Polygon& p, const RotBox<2>& r);
-  friend bool ContainsProper<2>(const Polygon& p, const RotBox<2>& r);
-  friend bool Contains<2>(const RotBox<2>& r, const Polygon& p);
-  friend bool ContainsProper<2>(const RotBox<2>& r, const Polygon& p);
+  friend bool Intersect<2>(const Polygon& p, const RotBox<2>& r, bool proper);
+  friend bool Contains<2>(const Polygon& p, const RotBox<2>& r, bool proper);
+  friend bool Contains<2>(const RotBox<2>& r, const Polygon& p, bool proper);
 
-  friend bool Intersect<2>(const Polygon& p1, const Polygon& p2);
-  friend bool IntersectProper<2>(const Polygon& p1, const Polygon& p2);
-  friend bool Contains<2>(const Polygon& outer, const Polygon& inner);
-  friend bool ContainsProper<2>(const Polygon& outer, const Polygon& inner);
+  friend bool Intersect<2>(const Polygon& p1, const Polygon& p2, bool proper);
+  friend bool Contains<2>(const Polygon& outer, const Polygon& inner, bool proper);
 
  private:
   std::vector<Point<2> > m_points;
@@ -229,8 +214,7 @@ class _Poly2Orient
 
   // Check if the AxisBox intersects the spanned space, and if so
   // return a point in the intersection.
-  bool checkIntersect(const AxisBox<dim>& b, Point<2>& p2) const;
-  bool checkIntersectProper(const AxisBox<dim>& b, Point<2>& p2) const;
+  bool checkIntersect(const AxisBox<dim>& b, Point<2>& p2, bool proper) const;
 
  private:
   // special case of the above when both axes are valid
@@ -315,42 +299,27 @@ class Polygon
   Ball<dim> boundingSphere() const;
   Ball<dim> boundingSphereSloppy() const;
 
-  friend bool Intersect<dim>(const Polygon& r, const Point<dim>& p);
-  friend bool IntersectProper<dim>(const Polygon& r, const Point<dim>& p);
-  friend bool Contains<dim>(const Point<dim>& p, const Polygon& r);
+  friend bool Intersect<dim>(const Polygon& r, const Point<dim>& p, bool proper);
+  friend bool Contains<dim>(const Point<dim>& p, const Polygon& r, bool proper);
 
-  friend bool Intersect<dim>(const Polygon& p, const AxisBox<dim>& b);
-  friend bool IntersectProper<dim>(const Polygon& p, const AxisBox<dim>& b);
-  friend bool Contains<dim>(const Polygon& p, const AxisBox<dim>& b);
-  friend bool ContainsProper<dim>(const Polygon& p, const AxisBox<dim>& b);
-  friend bool Contains<dim>(const AxisBox<dim>& b, const Polygon& p);
-  friend bool ContainsProper<dim>(const AxisBox<dim>& b, const Polygon& p);
+  friend bool Intersect<dim>(const Polygon& p, const AxisBox<dim>& b, bool proper);
+  friend bool Contains<dim>(const Polygon& p, const AxisBox<dim>& b, bool proper);
+  friend bool Contains<dim>(const AxisBox<dim>& b, const Polygon& p, bool proper);
 
-  friend bool Intersect<dim>(const Polygon& p, const Ball<dim>& b);
-  friend bool IntersectProper<dim>(const Polygon& p, const Ball<dim>& b);
-  friend bool Contains<dim>(const Polygon& p, const Ball<dim>& b);
-  friend bool ContainsProper<dim>(const Polygon& p, const Ball<dim>& b);
-  friend bool Contains<dim>(const Ball<dim>& b, const Polygon& p);
-  friend bool ContainsProper<dim>(const Ball<dim>& b, const Polygon& p);
+  friend bool Intersect<dim>(const Polygon& p, const Ball<dim>& b, bool proper);
+  friend bool Contains<dim>(const Polygon& p, const Ball<dim>& b, bool proper);
+  friend bool Contains<dim>(const Ball<dim>& b, const Polygon& p, bool proper);
 
-  friend bool Intersect<dim>(const Polygon& r, const Segment<dim>& s);
-  friend bool IntersectProper<dim>(const Polygon& p, const Segment<dim>& s);
-  friend bool Contains<dim>(const Polygon& p, const Segment<dim>& s);
-  friend bool ContainsProper<dim>(const Polygon& p, const Segment<dim>& s);
-  friend bool Contains<dim>(const Segment<dim>& s, const Polygon& p);
-  friend bool ContainsProper<dim>(const Segment<dim>& s, const Polygon& p);
+  friend bool Intersect<dim>(const Polygon& r, const Segment<dim>& s, bool proper);
+  friend bool Contains<dim>(const Polygon& p, const Segment<dim>& s, bool proper);
+  friend bool Contains<dim>(const Segment<dim>& s, const Polygon& p, bool proper);
 
-  friend bool Intersect<dim>(const Polygon& p, const RotBox<dim>& r);
-  friend bool IntersectProper<dim>(const Polygon& p, const RotBox<dim>& r);
-  friend bool Contains<dim>(const Polygon& p, const RotBox<dim>& r);
-  friend bool ContainsProper<dim>(const Polygon& p, const RotBox<dim>& r);
-  friend bool Contains<dim>(const RotBox<dim>& r, const Polygon& p);
-  friend bool ContainsProper<dim>(const RotBox<dim>& r, const Polygon& p);
+  friend bool Intersect<dim>(const Polygon& p, const RotBox<dim>& r, bool proper);
+  friend bool Contains<dim>(const Polygon& p, const RotBox<dim>& r, bool proper);
+  friend bool Contains<dim>(const RotBox<dim>& r, const Polygon& p, bool proper);
 
-  friend bool Intersect<dim>(const Polygon& p1, const Polygon& p2);
-  friend bool IntersectProper<dim>(const Polygon& p1, const Polygon& p2);
-  friend bool Contains<dim>(const Polygon& outer, const Polygon& inner);
-  friend bool ContainsProper<dim>(const Polygon& outer, const Polygon& inner);
+  friend bool Intersect<dim>(const Polygon& p1, const Polygon& p2, bool proper);
+  friend bool Contains<dim>(const Polygon& outer, const Polygon& inner, bool proper);
 
  private:
 

@@ -291,14 +291,15 @@ template<>
 bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) const;
 
 template<const int dim>
-bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2) const
+bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2,
+				       bool proper) const
 {
   assert(m_origin_valid);
 
   if(!m_axes_valid[0]) {
     // Single point
     p2[0] = p2[1] = 0;
-    return Intersect(b, convert(p2));
+    return Intersect(b, convert(p2), proper);
   }
 
   if(m_axes_valid[1]) {
@@ -307,7 +308,7 @@ bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2) cons
     // I only know how to do this in 3D, so write a function which will
     // specialize to different dimensions
 
-    return checkIntersectPlane(b, p2);
+    return checkIntersectPlane(b, p2) && (!proper || Contains(b, p2, true));
   }
 
   // A line
@@ -320,12 +321,13 @@ bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2) cons
   for(int i = 0; i < dim; ++i) {
     const CoordType dist = (m_axes[0])[i]; // const may optimize away better
     if(dist == 0) {
-      if(m_origin[i] < b.lowerBound[i] || m_origin[i] > b.upperBound[i])
+      if(_Less(m_origin[i], b.lowCorner()[i], proper)
+        || _Greater(m_origin[i], b.highCorner()[i], proper))
         return false;
     }
     else {
-      CoordType low = (b.lowerBound[i] - m_origin[i]) / dist;
-      CoordType high = (b.upperBound[i] - m_origin[i]) / dist;
+      CoordType low = (b.lowCorner()[i] - m_origin[i]) / dist;
+      CoordType high = (b.highCorner()[i] - m_origin[i]) / dist;
       if(low > high) {
         CoordType tmp = high;
         high = low;
@@ -347,73 +349,9 @@ bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2) cons
 
   assert(got_bounds); // We can't be parallel in _all_ dimensions
 
-  if(min <= max) {
-    p2 = m_origin + m_axes[0] * (max - min) / 2;
-    return true;
-  }
-  else
-    return false;
-}
-
-template<const int dim>
-bool _Poly2Orient<dim>::checkIntersectProper(const AxisBox<dim>& b, Point<2>& p2) const
-{
-  assert(m_origin_valid);
-
-  if(!m_axes_valid[0]) {
-    // Single point
-    p2[0] = p2[1] = 0;
-    return IntersectProper(b, convert(p2));
-  }
-
-  if(m_axes_valid[1]) {
-    // A plane
-
-    // I only know how to do this in 3D, so write a function which will
-    // specialize to different dimensions
-
-    return checkIntersectPlane(b, p2) && ContainsProper(b, p2);
-  }
-
-  // A line
-
-  // This is a modified version of AxisBox<>/Segment<> intersection
-
-  CoordType min = 0, max = 0; // Initialize to avoid compiler warnings
-  bool got_bounds = false;
-
-  for(int i = 0; i < dim; ++i) {
-    const CoordType dist = (m_axes[0])[i]; // const may optimize away better
-    if(dist == 0) {
-      if(m_origin[i] <= b.lowerBound[i] || m_origin[i] >= b.upperBound[i])
-        return false;
-    }
-    else {
-      CoordType low = (b.lowerBound[i] - m_origin[i]) / dist;
-      CoordType high = (b.upperBound[i] - m_origin[i]) / dist;
-      if(low > high) {
-        CoordType tmp = high;
-        high = low;
-        low = tmp;
-      }
-      if(got_bounds) {
-        if(low > min)
-          min = low;
-        if(high < max)
-          max = high;
-      }
-      else {
-        min = low;
-        max = high;
-        got_bounds = true;
-      }
-    }
-  }
-
-  assert(got_bounds); // We can't be parallel in _all_ dimensions
-
-  if(min < max) {
-    p2 = m_origin + m_axes[0] * (max - min) / 2;
+  if(_LessEq(min, max, proper)) {
+    p2[0] = (max - min) / 2;
+    p2[1] = 0;
     return true;
   }
   else
