@@ -15,12 +15,12 @@ typedef map< string, multimap<string, conf_callback*> > callback_map;
 
 /**
 This class contains the actual configuration.
-To access the Configuration, use Config::Instance()
+To access the Configuration, use Config::inst()
 **/
 class Config {
 public:
   /// Call this to retrieve the single global configuration instance
-  static Config* Instance();
+  static Config* inst();
 
   Variable getItem(const string& section, const string& name);
   void setItem(const string& section, const string& name, const Variable
@@ -47,6 +47,8 @@ public:
 
 protected:
   Config();
+  Config(const Config& config);
+  Config& operator=(const Config&);
   
 private:
   map< string, map<string, Variable> > m_conf;

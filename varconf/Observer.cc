@@ -6,15 +6,15 @@
 #include "Observer.h"
 
 Observer::Observer(const string& section, const string& name)
- : m_value(Config::Instance()->getItem(section, name)),
+ : m_value(Config::inst()->getItem(section, name)),
    m_section(section), m_name(name)
 {
-    Config::Instance()->registerObserver(this, section, name);
+    Config::inst()->registerObserver(this, section, name);
 }
 
 Observer::~Observer()
 {
-    Config::Instance()->unregisterObserver(this);
+    Config::inst()->unregisterObserver(this);
 }
 
 Variable Observer::getValue() const
@@ -24,5 +24,5 @@ Variable Observer::getValue() const
 
 void Observer::update()
 {
-    m_value = Config::Instance()->getItem(m_section, m_name);
+    m_value = Config::inst()->getItem(m_section, m_name);
 }

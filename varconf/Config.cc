@@ -55,7 +55,7 @@ Config::Config()
 {
 }
 
-Config* Config::Instance()
+Config* Config::inst()
 {
   if (m_instance == NULL) m_instance = new Config;
   return m_instance;
