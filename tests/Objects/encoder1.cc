@@ -25,8 +25,8 @@ int main(int argc, char** argv)
     Objects::Encoder re(&rd);
 
     rd.StreamBegin(); // important, otherwise we'll segfault!
-    Objects::Root root_inst = Objects::Root::Instantiate();
-    root_inst.SetAttr("id", string("root_instantiation"));
-    re.StreamMessage(&root_inst);
+    Objects::Root root_inst; // = Objects::Root::Instantiate();
+    root_inst->SetAttr("id", string("root_instantiation"));
+    re.StreamMessage(root_inst);
     rd.StreamEnd();
 }

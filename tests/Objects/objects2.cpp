@@ -1,4 +1,5 @@
 #include <iostream>
+#include <strstream>
 #include <cassert>
 #include <vector>
 
@@ -6,6 +7,10 @@
 #include "../../src/Objects/Root.h"
 #include "../../src/Objects/Entity/RootEntity.h"
 #include "../../src/Objects/Operation/RootOperation.h"
+#include "../../src/Objects/Encoder.h"
+#include "../../src/EncoderBase.h"
+//#include "../../src/Net/Stream.h"
+#include "../../tutorial/DebugBridge.h"
 
 #define DEBUG_PRINT(foo) foo;
 
@@ -13,6 +18,45 @@ using namespace Atlas;
 using namespace Atlas::Objects;
 using namespace Atlas::Message;
 using namespace std;
+
+#include "../../src/Codecs/XML.cc"
+
+void testXML()
+{
+    Entity::RootEntityInstance human;
+    human->SetId("foo");
+
+    DebugBridge bridge;
+    strstream stream;
+//     typedef std::list<Atlas::Factory<Atlas::Codec<iostream> >*> FactoryCodecs;
+//     FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
+//     FactoryCodecs::iterator codec_i;
+//     Atlas::Codec<iostream> *codec = NULL;
+//     for(codec_i = myCodecs->begin(); codec_i != myCodecs->end(); ++codec_i)
+//     {
+//         cout<<(*codec_i)->GetName()<<endl;
+//         if ((*codec_i)->GetName() == "XML") {
+//             codec = (*codec_i)->New(Codec<iostream>::Parameters(stream, &bridge));
+//         }
+//     }
+//     assert(codec);
+
+    Atlas::Codec<iostream> *codec;
+    codec = new XML(Codec<iostream>::Parameters(stream, &bridge));
+    assert(codec);
+
+    codec->StreamBegin();
+
+    Objects::Encoder eno(codec);
+    eno.StreamMessage((Root&)human);
+
+    Atlas::Message::Encoder en(codec);
+    en.StreamMessage(human->AsObject());
+
+    codec->StreamEnd();
+    cout<<stream.str()<<endl;
+}
+
 
 void check_float_list3(const Object::ListType &list,
                        double el1, double el2, double el3)
@@ -110,5 +154,6 @@ void test()
 int main()
 {
     test();
+    testXML();
     return 0;
 }
