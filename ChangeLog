@@ -1,3 +1,9 @@
+Wednesday, April 17, James Turner
+
+	* Added entity tests (incomplete, and not linking for some
+	  odd reason). Something to do with WFMath I suspect, it's
+	  all rsteinke's fault :)
+
 Wednesday, April 17 2002, Ron Steinke
 
 	* Added a test to PollDefault: if there are no file

@@ -6,9 +6,11 @@ testEris_SOURCES = tests.cpp \
     stubServer.h stubServer.cpp \
     testUtils.h testUtils.cpp \
     stubConnection.cpp stubConnection.h \
-    testConnection.cpp testConnection.h
+    testConnection.cpp testConnection.h \
+    testEntity.cpp testEntity.h
 
 INCLUDES = @CPPUNIT_CFLAGS@ -I$(top_srcdir)/src
 
 testEris_LDADD = @CPPUNIT_LIBS@ \
-    $(top_builddir)/src/liberis.la
+    $(top_builddir)/src/liberis.la \
+    -lwfmath
