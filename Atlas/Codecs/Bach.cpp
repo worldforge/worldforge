@@ -4,6 +4,9 @@
 
 #include "Bach.h"
 
+//#define DEBUG(a) a;
+#define DEBUG(a) ;
+
 namespace Atlas { namespace Codecs {
 
 Bach::Bach(std::iostream& s, Atlas::Bridge* b)
@@ -16,7 +19,7 @@ Bach::Bach(std::iostream& s, Atlas::Bridge* b)
 
 void Bach::parseInit(char next)
 {
-    cout << "parseInit" << endl;
+    DEBUG(cout << "parseInit" << endl;)
 
     if (next=='[')
     {
@@ -27,16 +30,18 @@ void Bach::parseInit(char next)
 
 void Bach::parseStream(char next)
 {
-    cout << "parseStream" << endl;
+    DEBUG(cout << "parseStream" << endl;)
 
     switch (next)
     {
     case '{':
         m_bridge->streamMessage(m_mapBegin);
         m_state.push(PARSE_MAP);
+        m_state.push(PARSE_MAP_BEGIN);
         break;
 
     case ',':
+    case EOF:
         break;
 
     case ']':
@@ -53,12 +58,12 @@ void Bach::parseStream(char next)
 
 void Bach::parseMap(char next)
 {
-    cout << "parseMap" << endl;
+    DEBUG(cout << "parseMap" << endl;)
 
     switch (next)
     {
     case '}':
-        m_bridge->mapEnd();
+        //SF2 m_bridge->mapEnd();
         m_state.pop();
         break;
 
@@ -85,7 +90,7 @@ void Bach::parseMap(char next)
 
 void Bach::parseList(char next)
 {
-    cout << "parseList" << endl;
+    DEBUG(cout << "parseList" << endl;)
 
     switch (next)
     {
@@ -97,11 +102,13 @@ void Bach::parseList(char next)
     case '{':
         m_bridge->listItem(m_mapBegin);
         m_state.push(PARSE_MAP);
+        m_state.push(PARSE_MAP_BEGIN);
         break;
 
     case '[':
         m_bridge->listItem(m_listBegin);
         m_state.push(PARSE_LIST);
+        m_state.push(PARSE_LIST_BEGIN);
         break;
 
     case ',':
@@ -118,7 +125,7 @@ void Bach::parseList(char next)
     case '9':
     case '0':
     case '-':
-        m_state.push(PARSE_FLOAT);
+        m_state.push(PARSE_INT);
         m_socket.putback(next);
         break;
 
@@ -136,7 +143,7 @@ void Bach::parseList(char next)
 
 void Bach::parseMapBegin(char next)
 {
-    cout << "parseMapBegin" << endl;
+    DEBUG(cout << "parseMapBegin" << endl;)
 
     m_bridge->mapItem(decodeString(m_name), m_mapBegin);
     m_socket.putback(next);
@@ -146,7 +153,7 @@ void Bach::parseMapBegin(char next)
 
 void Bach::parseListBegin(char next)
 {
-    cout << "parseListBegin" << endl;
+    DEBUG(cout << "parseListBegin" << endl;)
 
     m_bridge->mapItem(decodeString(m_name), m_listBegin);
     m_socket.putback(next);
@@ -156,12 +163,7 @@ void Bach::parseListBegin(char next)
 
 void Bach::parseInt(char next)
 {
-    cout << "parseInt" << endl;
-}
-
-void Bach::parseFloat(char next)
-{
-    cout << "parseFloat" << endl;
+    DEBUG(cout << "parseInt" << endl;)
 
     switch (next)
     {
@@ -174,13 +176,78 @@ void Bach::parseFloat(char next)
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
         {
-            cout << "Float: " << m_data << endl;
+            DEBUG(cout << "Float: " << m_name << ": " << m_data << endl;)
 
             m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
         }
         else if (m_state.top() == PARSE_LIST)
         {
-            cout << "Float: " << m_data << endl;
+            DEBUG(cout << "Float: " << m_data << endl;)
+
+            m_bridge->listItem(atof(m_data.c_str()));
+        }
+        else
+        {
+            cout << "Bach::parseFloat: Error: " << m_state.top() << endl;
+            // FIXME some kind of sanity checking assertion here
+        }
+        m_name.erase();
+        m_data.erase();
+	break;
+
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+    case '-':
+    case '+':
+    case 'e':
+    case 'E':
+        m_data += next;
+	break;
+
+    case '.':
+        m_state.pop();
+        m_state.push(PARSE_FLOAT);
+        m_data += next;
+        break;
+
+    default:
+        cout << "parseInt: unexpected character: " << next << endl;
+        // FIXME signal error here
+        // unexpected character
+	break;
+    }
+}
+
+void Bach::parseFloat(char next)
+{
+    DEBUG(cout << "parseFloat" << endl;)
+
+    switch (next)
+    {
+    case '[':
+    case ']':
+    case '(':
+    case ')':
+    case ',':
+        m_socket.putback(next);
+        m_state.pop();
+        if (m_state.top() == PARSE_MAP)
+        {
+            DEBUG(cout << "Float: " << m_name << ": " << m_data << endl;)
+
+            m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
+        }
+        else if (m_state.top() == PARSE_LIST)
+        {
+            DEBUG(cout << "Float: " << m_data << endl;)
 
             m_bridge->listItem(atof(m_data.c_str()));
         }
@@ -221,7 +288,7 @@ void Bach::parseFloat(char next)
 
 void Bach::parseString(char next)
 {
-    cout << "parseString" << endl;
+    DEBUG(cout << "parseString" << endl;)
 
     switch (next)
     {
@@ -229,19 +296,19 @@ void Bach::parseString(char next)
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
         {
-            cout << "String: " << m_data << endl;
+            DEBUG(cout << "String: " << m_name << ": " << m_data << endl;)
 
             m_bridge->mapItem(decodeString(m_name), decodeString(m_data));
         }
         else if (m_state.top() == PARSE_LIST)
         {
-            cout << "String: " << m_data << endl;
+            DEBUG(cout << "String: " << m_data << endl;)
 
             m_bridge->listItem(decodeString(m_data));
         }
         else
         {
-            cout << "Error" << endl;
+            cout << "parseString: Error" << endl;
 
             // FIXME some kind of sanity checking assertion here
         }
@@ -263,7 +330,7 @@ void Bach::parseString(char next)
 
 void Bach::parseData(char next)
 {
-    cout << "parseData" << endl;
+    DEBUG(cout << "parseData" << endl;)
 
     switch (next)
     {
@@ -280,17 +347,21 @@ void Bach::parseData(char next)
     case '0':
         m_socket.putback(next);
         m_state.pop();
-        m_state.push(PARSE_FLOAT);
+        m_state.push(PARSE_INT);
         break;
 
     case '{':
         m_state.pop();
+        m_bridge->listItem(m_mapBegin);
         m_state.push(PARSE_MAP);
+        m_state.push(PARSE_MAP_BEGIN);
         break;
 
     case '[':
         m_state.pop();
+        m_bridge->listItem(m_listBegin);
         m_state.push(PARSE_LIST);
+        m_state.push(PARSE_LIST_BEGIN);
         break;
 
     case '\"':
@@ -309,12 +380,13 @@ void Bach::parseData(char next)
 
 void Bach::parseName(char next)
 {
-    cout << "parseName" << endl;
+    DEBUG(cout << "parseName" << endl;)
 
     switch (next)
     {
     case ':':
-        cout << "Name: " << m_name << endl;
+        DEBUG(cout << "Name: " << m_name << endl;)
+
         m_state.pop();
 	break;
 
@@ -342,7 +414,17 @@ void Bach::poll(bool can_read)
     {
 	char next = (char) m_socket.get();
 
-        cout << "Character: " << next << "   ";
+        DEBUG(cout << "Character: " << next << "   ";)
+
+        switch(next)
+        {
+        case '\n':
+            continue;
+            break;
+
+        default:
+            break;
+        }
 
         switch (m_state.top())
 	{
