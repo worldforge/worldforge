@@ -74,7 +74,11 @@ protected:
                 m_lobby->recvInitialSight(ent);
                 return HANDLED;
             }
-        }
+            
+            Imaginary im = smart_dynamic_cast<Imaginary>(args.front());
+            if (im.isValid())
+                return m_lobby->recvImaginary(im);
+        } // of sight op
         
         Sound sound = smart_dynamic_cast<Sound>(op);
         if (sound.isValid())
@@ -313,6 +317,44 @@ void Lobby::recvAppearance(const Atlas::Objects::Root& obj)
     } else
         error() << "lobby got appearance with unknown loc: " << loc;
 }
+
+Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
+{
+    const std::vector<Root>& args = im->getArgs();
+    if (args.empty() || !args.front()->hasAttr("description")) {
+        warning() << "recieved sight(imaginary) with no/bad args: " << im;
+        return HANDLED;
+    }
+        
+    std::string description = args.front()->getAttr("description").asString();
+    
+    IdPersonMap::const_iterator P = m_people.find(im->getFrom());
+    if ((P == m_people.end()) || (P->second == NULL)) {
+        getPerson(im->getFrom()); // force a LOOK if necessary
+        debug() << "creating sight-person-redispatch for " << im->getFrom();
+        
+        Sight sight;
+        sight->setArgs1(im);
+        sight->setTo(getAccount()->getId());
+        
+        SightPersonRedispatch *spr = new SightPersonRedispatch(getConnection(), im->getFrom(), sight);
+        SightPerson.connect(SigC::slot(*spr, &SightPersonRedispatch::onSightPerson));
+        
+        return WILL_REDISPATCH;
+    }
+
+    if (args.front()->hasAttr("loc")) {
+        std::string loc = args.front()->getAttr("loc").asString();
+        if (m_rooms.count(loc)) {
+            m_rooms[loc]->handleEmote(P->second, description);
+        } else
+            error() << "lobby got sight(imaginary) with unknown loc: " << loc;
+    } else
+        warning() << "recieved imaginary with no loc set:" << im;
+        
+    return HANDLED;
+}
+
 
 void Lobby::recvDisappearance(const Atlas::Objects::Root& obj)
 {

@@ -90,9 +90,6 @@ public:
             if (character.isValid()) {
                 m_player->sightCharacter(character);
                 return HANDLED;
-            } else {
-                warning() << "Invalid character type from server";
-                return HANDLED;
             }
         }
         
@@ -131,7 +128,6 @@ private:
         if (m_player->isLoggedIn()) {
             GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
             if (ent.isValid()) {
-                debug() << "got candidate IG subscription";
                 // IG transition info, maybe
                 RefnoAvatarMap::iterator A = global_pendingInfoAvatars.find(info->getRefno());
                 if (A != global_pendingInfoAvatars.end())
@@ -140,7 +136,7 @@ private:
                     global_pendingInfoAvatars.erase(A);
                     return HANDLED;
                 } else
-                    debug() << "Player got info(game_entity) with serial "
+                    error() << "Player got info(game_entity) with serial "
                      << info->getRefno() << ", but not a IG subscription";
             }
         }
@@ -175,8 +171,13 @@ Player::~Player()
 
 void Player::login(const std::string &uname, const std::string &password)
 {
-    if (!m_con->isConnected() || (m_status != DISCONNECTED)) {
-        error() << "called login on unconnected Connection / already logged-in Player";
+    if (!m_con->isConnected()) {
+        error() << "called login on unconnected Connection";
+        return;
+    }
+    
+    if (m_status != DISCONNECTED) {
+        error() << "called login, but state is not currently disconnected";
         return;
     }
         	

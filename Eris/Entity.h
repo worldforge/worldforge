@@ -177,6 +177,19 @@ public:
     /** Emitted with this entity speaks. In the future langauge may be specified */
     SigC::Signal1<void, const std::string&> Say;
 	
+    /**
+    Emitted when this entity emits an imgainary operation (also known as
+    an emote. This is used for debugging, but not much else. 
+    */
+    SigC::Signal1<void, const std::string&> Emote;
+    
+    /**
+    Emitted when this entity performs an action. The argument to the
+    action is passed as the signal argument. For examples of action
+    arguments, see some documentation that probably isn't written yet.
+    */
+    SigC::Signal1<void, const Atlas::Objects::Root&> Acted;
+    
     SigC::Signal2<void, Entity*, bool> VisibilityChanged;
         
 protected:	        
@@ -205,6 +218,18 @@ protected:
     void beginUpdate();
     void addToUpdate(const std::string& attr);
     void endUpdate();
+
+    /**
+    Over-rideable hook when this entity is seen to perform an action.
+    Default implementation emits the Action signal.
+    */
+    virtual void action(const Atlas::Objects::Root& act);
+
+    /**
+    Over-rideable hook when this entity is seen to emit an imginary op.
+    Default implementation emits the Emote signal.
+    */
+    virtual void imaginary(const Atlas::Objects::Root& act);
 
 private:
     friend class IGRouter;

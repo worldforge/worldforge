@@ -177,7 +177,6 @@ void TypeService::sendRequest(const std::string &id)
     // is called, the requests will be re-issued manually
     if (!m_inited) return;
         
-    debug() << "requesting type " << id;
     Root what;
     what->setId(id);
     
@@ -268,14 +267,14 @@ bool TypeService::verifyObjectTypes(const Root& obj)
     innerVerifyType(obj, unbound);
     
     if (unbound.empty()) return true;
-    
+ /*   
     std::string types;
     for (TypeInfoSet::iterator it=unbound.begin(); it!=unbound.end();++it) {
         if (!types.empty()) types.append(", ");
         types.append((*it)->getName());
     }
     debug() << "type verify failed, need [" << types << "]";
-    
+ */   
     new TypeBoundRedispatch(m_con, obj, unbound);
     return false;
 }

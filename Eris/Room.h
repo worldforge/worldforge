@@ -103,15 +103,15 @@ protected:
 	
     virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
     void handleSoundTalk(Person* p, const std::string& speech);
-    
+    void handleEmote(Person* p, const std::string& desc);
+        
+        
     std::string m_roomId;
 private:
     /// helper to see if all the people in the room are valid, and if so, do entry
     void checkEntry();
 
     void sight(const Atlas::Objects::Entity::RootEntity &room);
-    void handleSightImaginary(const Atlas::Objects::Operation::Imaginary &im);
-    
 
     void appearance(const std::string& personId);
     void disappearance(const std::string& personId);

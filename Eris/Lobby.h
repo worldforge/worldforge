@@ -53,7 +53,9 @@ protected:
         
     void recvAppearance(const Atlas::Objects::Root& obj);
     void recvDisappearance(const Atlas::Objects::Root& obj);
-        
+    
+    Router::RouterResult recvImaginary(const Atlas::Objects::Operation::Imaginary& im);
+    
 private:
     void onLoggedIn();
     void onLogout(bool clean);

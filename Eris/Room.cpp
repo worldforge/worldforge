@@ -182,13 +182,6 @@ Router::RouterResult Room::handleOperation(const RootOperation& op)
             sight(ent);
             return HANDLED;
         }
-        
-        Imaginary img = smart_dynamic_cast<Imaginary>(args.front());
-        if (img.isValid())
-        {
-            handleSightImaginary(img);
-            return HANDLED;
-        }
     }
 
     return IGNORED;
@@ -234,30 +227,16 @@ void Room::handleSoundTalk(Person* p, const std::string& speech)
     Speech.emit(this, p, speech);
 }
 
-void Room::handleSightImaginary(const Imaginary& im)
+void Room::handleEmote(Person* p, const std::string& description)
 {
-    IdPersonMap::const_iterator P = m_members.find(im->getFrom());
-    if (P == m_members.end())
-    {
+    assert(p);
+    
+    if (m_members.count(p->getAccount()) == 0) {
         error() << "room " << m_roomId << " got sight(imaginary) from non-member account";
         return;
     }
-    
-     if (P->second == NULL)
-        return; // consume but ignore till we have sight
 
-    const std::vector<Root>& args = im->getArgs();
-    if (args.empty())
-    {
-        warning() << "room " << m_roomId << " recieved sight(imaginary) with no args";
-        return;
-    }
-    
-    if (!args.front()->hasAttr("description"))
-        return;
-    
-    std::string description = args.front()->getAttr("description").asString();
-    Emote.emit(this, P->second, description);
+    Emote.emit(this, p, description);
 }
 
 #pragma mark -

@@ -48,7 +48,6 @@ void View::setEntityVisible(Entity* ent, bool vis)
     if (vis)
         Appearance.emit(ent);
     else {
-        debug() << "emitting disappearance for " << ent->getId();
         Disappearance.emit(ent);
     }
 }
@@ -167,7 +166,6 @@ void View::deleteEntity(const std::string& eid)
     if (ent)
     {
         EntityDeleted.emit(ent);
-        #warning entity deletion in view is suspect
         m_contents.erase(eid);
         delete ent; // actually kill it off
     } else {
@@ -199,10 +197,7 @@ Connection* View::getConnection() const
 
 void View::getEntityFromServer(const std::string& eid)
 {
-    if (isPending(eid)) {
-        debug() << "duplicate getEntityFromServer for entity " << eid;
-        return;
-    }
+    if (isPending(eid)) return;
     
     Look look;
     if (!eid.empty()) {

@@ -68,8 +68,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
     const std::vector<Root>& args = op->getArgs();
     
     Move mv = smart_dynamic_cast<Move>(op);
-    if (mv.isValid())
-    {
+    if (mv.isValid()) {
         // sight of move, we handle as a specialization of set.
         assert(!args.empty());
         Root arg = args.front();
@@ -80,6 +79,24 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
         
         m_entity->setFromRoot(arg);
         return HANDLED;
+    }
+    
+    Action act = smart_dynamic_cast<Action>(op);
+    if (act.isValid()) {
+        if (args.empty())
+            error() << "entity " << m_entity->getId() << " sent action with no args: " << op;
+        else
+            m_entity->action(args.front());
+        return HANDLED;
+    }
+    
+    Imaginary imag = smart_dynamic_cast<Imaginary>(op);
+    if (imag.isValid()) {
+        if (args.empty())
+            error() << "entity " << m_entity->getId() << " sent imaginary with no args: " << op;
+        else
+            m_entity->imaginary(args.front());
+        return HANDLED;        
     }
     
     // explicitly do NOT handle set ops here, since they can

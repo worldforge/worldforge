@@ -41,8 +41,6 @@ Avatar::~Avatar()
 void Avatar::setEntity(const std::string& entId)
 {
     m_entityId = entId;
-    debug() << "setting Avatar entity ID to " << m_entityId;
-
     m_router = new IGRouter(this);
 
     m_view->getEntityFromServer("");

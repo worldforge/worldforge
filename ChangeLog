@@ -1,5 +1,21 @@
 2004-08-01  James Turner  <james@worldforge.org>
 
+	* Remove lots of debug output all over the place
+	
+	* Eris/Lobby.cpp, Eris/Room.cpp: get OOG imaginary ops (emotes)
+	  working.
+
+	* Eris/Player.cpp: made the error output when calling login() in
+	  a bad state more useful.
+
+	* Eris/Player.cpp: stop reporting unhandled sight(foo) as defunct
+	  character look, and just ignore it.
+
+	* Eris/Entity.cpp: add untested support for actions and imaginary
+	  ops from entities.
+
+2004-08-01  James Turner  <james@worldforge.org>
+
 	* Eris/Room.cpp, Eris/Room.h, Eris/Lobby.cpp, Eris/Lobby.h: change
 	  how OOG chat is handled, so in-room chats do the right thing.
 

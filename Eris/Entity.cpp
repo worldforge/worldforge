@@ -12,6 +12,7 @@
 
 #include <wfmath/atlasconv.h>
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/BaseObject.h>
 
 #include <algorithm>
@@ -116,8 +117,7 @@ void Entity::setFromRoot(const Root& obj)
 {	
     beginUpdate();
     
-    for (Atlas::Objects::RootData::const_iterator A = obj->begin(); A != obj->end(); ++A)
-    {
+    for (Atlas::Objects::RootData::const_iterator A = obj->begin(); A != obj->end(); ++A) {
         if ((A->first == "id") || (A->first == "loc") || (A->first == "contains"))
         {
             continue; // never set these on a SET op
@@ -150,6 +150,17 @@ void Entity::talk(const Root& talkArgs)
 void Entity::moved()
 {
     Moved.emit(this);
+}
+
+void Entity::action(const Atlas::Objects::Root& arg)
+{
+    Acted.emit(arg);
+}
+
+void Entity::imaginary(const Atlas::Objects::Root& arg)
+{
+    if (arg->hasAttr("description"))
+        Emote.emit(arg->getAttr("description").asString());
 }
 
 #pragma mark -
