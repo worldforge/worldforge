@@ -4,55 +4,60 @@
 
 #include "../Stream/Negotiate.h"
 
+#include <iostream>
+
+using namespace std;
 using namespace Atlas::Stream;
-using namespace Atlas::Net;
 
-class StringSocket  : public Socket {
-public:
-  
-  std::string &rbuf;
-  std::string &sbuf;
+class loopbuf : public streambuf
+{
+    public:
 
-  StringSocket(std::string &in, std::string &out) : 
-    rbuf(in), sbuf(out)
-  {
-  }
-  ~StringSocket(void) { }
-  
-  int Send(const std::string& data)
-  {
-    sbuf += data;
-    return 1;
-  }
-  
-  int Receive(std::string& buf)
-  {
-    if(rbuf.empty()) return 0;
+    loopbuf(string &write, string &read) : write(write), read(read) { }
 
-    int n = rbuf.size();
+    virtual int overflow(int c)
+    {
+	write += c;
+	return c;
+    }
     
-    buf = rbuf;
-    rbuf.erase();
+    virtual int uflow()
+    {
+	int c = read[0];
+	read.erase(read.begin());
+	return c;
+    }
+    
+    virtual int pbackfail(int c)
+    {
+	string temp;
+	temp += c;
+	temp += read;
+	read = temp;
+	return c;
+    }
 
-    return n;
-  }
-  
-  void Close() { } 
-  
+    virtual int showmanyc()
+    {
+	return read.size();
+    }
+    
+    private:
+
+    string& write;
+    string& read;
 };
 
-string server_buf, client_buf;
-
-Socket *server_sock = new StringSocket(server_buf, client_buf);
-Socket *client_sock = new StringSocket(client_buf, server_buf);
-
-string s_name("SERVER BOB");
-string c_name("CLIENT 1.0");
-
-int main(void)
+int main()
 {
-  Negotiate s(s_name, server_sock);
-  Negotiate c(c_name, client_sock);
+    string server_buffer, client_buffer;
+    loopbuf serverbuf(server_buffer, client_buffer);
+    loopbuf clientbuf(client_buffer, server_buffer);    
+    iostream client_stream(&clientbuf);
+    iostream server_stream(&serverbuf);
+
+    Negotiate s("SERVER BOB", server_stream);
+    Negotiate c("CLIENT 1.0", client_stream);
 
   //while(!s.Done() && !c.Done())
   for(int i=0; i < 10; i++)
@@ -67,5 +72,7 @@ int main(void)
 
   if(!s.done()) cout << "Server NOT done" << endl;
   if(!c.done()) cout << "Client NOT done" << endl;
+
+    return 0;
 }
 

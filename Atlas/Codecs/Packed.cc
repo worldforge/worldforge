@@ -390,7 +390,7 @@ void PackedAscii::ParseName(char next)
 
 void PackedAscii::Poll()
 {
-    while (socket.rdbuf()->in_avail())
+    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
     {
 	char next = socket.get(); // get character
 

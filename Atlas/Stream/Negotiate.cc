@@ -79,7 +79,7 @@ void NegotiateHelper<T>::put(string &buf, string header)
   buf += "\n";
 }
 
-Negotiate::Negotiate(string& name, iostream& s) :
+Negotiate::Negotiate(const string& name, iostream& s) :
   state(SERVER_GREETING), outName(name), socket(s),
   codecHelper(&inCodecs, &outCodecs),
   filterHelper(&inFilters, &outFilters)
@@ -95,11 +95,12 @@ void Negotiate::negotiateServer()
 {
     cout << "** Server(" << state << ") : " << endl;
 
-    string in;
     string out;
 
-    socket >> in;
-    buf += in;
+    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    {
+	buf += socket.get();
+    }
 
     if (state == SERVER_GREETING) 
     {
@@ -156,11 +157,12 @@ void Negotiate::negotiateClient()
 {
     cout << "** Client(" << state << ") : " << endl;
 
-    string in;
     string out;
 
-    socket >> in;
-    buf += in;
+    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    {
+	buf += socket.get();
+    }
 
     if(state == SERVER_GREETING)
     {

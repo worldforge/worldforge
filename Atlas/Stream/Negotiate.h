@@ -46,7 +46,7 @@ class Negotiate
 {
     public:
 
-    Negotiate(std::string& name, iostream&);
+    Negotiate(const std::string& name, iostream&);
 
     bool done();
 
