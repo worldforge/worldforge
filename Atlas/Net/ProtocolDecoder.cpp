@@ -19,9 +19,9 @@ AProtocolDecoder::AProtocolDecoder()
 }
 
 string	AProtocolDecoder::getName()                 { return name; }
-int		AProtocolDecoder::getType()                 { return type; }
+int	AProtocolDecoder::getType()                 { return type; }
 string	AProtocolDecoder::getString()               { return sval; }
-long		AProtocolDecoder::getInt()                  { return ival; }
+long	AProtocolDecoder::getInt()                  { return ival; }
 double	AProtocolDecoder::getFloat()                { return fval; }
 
 void	AProtocolDecoder::newStream()               	{}
@@ -29,7 +29,7 @@ void	AProtocolDecoder::feedStream(const string& data)	{}
 int	AProtocolDecoder::hasTokens()			{ return 0; }
 int	AProtocolDecoder::getToken()                	{ return 0; }
 
-string hexDecodeString(const string& input, char prefix)
+string AProtocolDecoder::hexDecodeString(const string& input, char prefix)
 {
 	string s;
 	int state = 0;

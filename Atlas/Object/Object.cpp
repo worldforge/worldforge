@@ -50,9 +50,6 @@ AObject &AObject::operator=(const AObject& src)
 AObject::AObject()
 {
 	obj = PyDict_New();
-	assert((unsigned long)obj != 1);
-	assert(obj->ob_refcnt == 1);
-	DebugMsg1(9,"OBJ RefCount=%li (default constructor)", obj->ob_refcnt);
 }
 
 AObject::AObject(AObject& src)
@@ -805,19 +802,17 @@ AObject AObject::mkMap()
 
 AObject AObject::mkList(int size)
 {
-	PyObject* tmp = PyList_New(size);
-	AObject res(tmp);
-	Py_XDECREF(tmp);
-	assert((unsigned long)res.obj != 1);
+	AObject res;
+	Py_XDECREF(res.obj);
+	res.obj = PyList_New(size);
 	return res;
 }
 
 AObject AObject::mkURIList(int size)
 {
-	PyObject* tmp = URIList_New(size);
-	AObject res(tmp);
-	Py_XDECREF(tmp);
-	assert((unsigned long)res.obj != 1);
+	AObject res;
+	Py_XDECREF(res.obj);
+	res.obj = URIList_New(size);
 	return res;
 }
 
@@ -878,10 +873,9 @@ AObject AObject::mkFloat(double val)
 
 AObject AObject::mkString(const string& val)
 {
-	PyObject* tmp = PyString_FromString(val.c_str());
-	AObject res(tmp);
-	Py_XDECREF(tmp);
-	assert((unsigned long)res.obj != 1);
+	AObject res;
+	Py_XDECREF(res.obj);
+	res.obj = PyString_FromString(val.c_str());
 	return res;
 }
 

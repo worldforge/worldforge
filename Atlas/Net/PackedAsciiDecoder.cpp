@@ -116,6 +116,7 @@ int APackedAsciiDecoder::hasTokens()
 			    break;
 			// get the name out before proc
 			name = buffer.substr(1,pos-1);
+			name = hexDecodeString(name, '+');
 			buffer = buffer.substr(pos+1);
 			// got an attribute name
 			if (typ == "(") type = AProtocol::atlasLST;
@@ -161,6 +162,13 @@ int APackedAsciiDecoder::hasTokens()
 			if (type == AProtocol::atlasINT) ival = atoi(sval.c_str());
 //			if (type == AProtocol::atlasLNG) ival = atol(sval.c_str());
 			if (type == AProtocol::atlasFLT) fval = atof(sval.c_str());
+			
+			if (type == AProtocol::atlasSTR) 
+				sval = hexDecodeString(sval, '+');
+				
+			if (type == AProtocol::atlasURI) 
+				sval = hexDecodeString(sval, '+');
+				
 			// strip up to token
 			buffer = buffer.substr(pos);
 			token = AProtocol::atlasATRVAL;

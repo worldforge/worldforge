@@ -16,12 +16,17 @@
 
 #include <string>
 
-void APackedAsciiEncoder::walkTree(int nest, const char* name,
+void APackedAsciiEncoder::walkTree(int nest, const char* xname,
                                    const AObject& list)
 {
 	int	i;
 	string	buf;
+	string  yname(xname);
+	char*	name;
 
+	yname = hexEncodeString(xname, '+', "{[(<#!@%>)]}");
+	name = const_cast<char*>(yname.c_str());
+	
 	if (list.isList()) {
 		printf("(%s=", name);
 		for (i=0; i<list.length(); i++) {
@@ -90,10 +95,14 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name,
 	} 
 
 	if (list.isString()) {
-		printf("$%s=%s", name, list.asString().c_str());
+		string tmp = hexEncodeString(list.asString(), 
+						'+', "{[(<#!@%>)]}");
+		printf("$%s=%s", name, tmp.c_str());
 	}
 	if (list.isURI()) {
-		printf("!%s=%li", name, list.getURIPath().asString().c_str());
+		string tmp = hexEncodeString(list.getURIPath().asString(), 
+						'+', "{[(<#!@%>)]}");
+		printf("!%s=%li", name, tmp.c_str());
 	}
 	if (list.isInt()) {
 		printf("@%s=%li", name, list.asInt());

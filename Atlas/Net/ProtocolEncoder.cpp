@@ -49,7 +49,8 @@ string AProtocolEncoder::hexEncodeString(const string& input, char prefix,
 		if (specialchars.find(input[i]) != string::npos) {
 			char t[3];
 			s += prefix;
-			sprintf(t, "%x", input[i]);
+			sprintf(t, "%02x", input[i]);
+			s += t;
 		} else {
 			s += input[i];
 			if (input[i] == prefix) s += prefix;
