@@ -1,3 +1,9 @@
+Sunday, 18th January, James Turner <james@worldforge.org>
+
+	* Patch from Ron Steinke : make Factory.h use forward declared Atlas
+	  types, to avoid dragging in huge chunks of Atlas::Objects and all the
+	  Atlas::Mesage stuff.
+
 Saturday, 17th January, Ron Steinke <rsteinke@w-link.net>
 
 	* Eris/Avatar.*: Added velocity-based move() methods.

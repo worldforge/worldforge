@@ -1,8 +1,10 @@
 #ifndef ERIS_FACTORY_H
 #define ERIS_FACTORY_H
 
-#include <Atlas/Objects/Entity/GameEntity.h>
-#include <Eris/Types.h>
+namespace Atlas {
+	namespace Objects {namespace Entity {class GameEntity;}}
+	namespace Message {class Element;}
+}
 
 namespace Eris {
 
@@ -22,15 +24,15 @@ public:
 	virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge, World *world) = 0;
 
 	/// create whatever entity the client desires
-	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge, World *world) = 0;
-	//virtual EntityPtr Instantiate(const Atlas::Message::Element &o) = 0;
+	virtual Entity* instantiate(const Atlas::Objects::Entity::GameEntity &ge, World *world) = 0;
+	//virtual Entity* Instantiate(const Atlas::Message::Element &o) = 0;
 };
 
 class StdFactory : public Factory
 {
 public:
 	virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge, World *world);
-	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge, World *world);
+	virtual Entity* instantiate(const Atlas::Objects::Entity::GameEntity &ge, World *world);
 };
 	
 

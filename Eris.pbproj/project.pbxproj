@@ -6,36 +6,36 @@
 	objectVersion = 39;
 	objects = {
 		C437AF410562987C00ACFA1E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			name = PollGlib.h;
 			path = bindings/polls/glib/PollGlib.h;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		C437AF420562987C00ACFA1E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			name = PollGlibFD.h;
 			path = bindings/polls/glib/PollGlibFD.h;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		C437AF430562987C00ACFA1E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			name = PollGlibSource.h;
 			path = bindings/polls/glib/PollGlibSource.h;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
 		C437AF440562987C00ACFA1E = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			name = PollGlibVersion.h;
 			path = bindings/polls/glib/PollGlibVersion.h;
 			refType = 2;
@@ -48,6 +48,7 @@
 				C43FBE250543162E008FC2ED,
 				C43FBCF2054315F2008FC2ED,
 				C43FBCF1054315C5008FC2ED,
+				C485B1FE05B60252002F2D80,
 			);
 			isa = PBXGroup;
 			refType = 4;
@@ -90,6 +91,12 @@
 			mainGroup = C43FBCE5054315B9008FC2ED;
 			productRefGroup = C43FBCF1054315C5008FC2ED;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C485B1FF05B60252002F2D80;
+					ProjectRef = C485B1FE05B60252002F2D80;
+				},
+			);
 			targets = (
 				C45DC3E60562F83D00D8F8F4,
 			);
@@ -153,523 +160,523 @@
 			sourceTree = "<group>";
 		};
 		C43FBD16054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = ArgumentDispatcher.cpp;
 			path = Eris/ArgumentDispatcher.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD17054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = ArgumentDispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD1A054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = atlas_utils.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD1B054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Avatar.cpp;
 			path = Eris/Avatar.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD1C054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Avatar.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD1F054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = BaseConnection.cpp;
 			path = Eris/BaseConnection.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD20054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = BaseConnection.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD23054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = ClassDispatcher.cpp;
 			path = Eris/ClassDispatcher.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD24054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = ClassDispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD27054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Connection.cpp;
 			path = Eris/Connection.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD28054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Connection.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD2B054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = DebugDispatcher.cpp;
 			path = Eris/DebugDispatcher.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD2C054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = DebugDispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD2F054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Dispatcher.cpp;
 			path = Eris/Dispatcher.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD30054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Dispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD33054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = EncapDispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD34054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Entity.cpp;
 			path = Eris/Entity.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD35054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Entity.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD38054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Factory.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD39054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = IdDispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD3A054315F3008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = InvisibleEntityCache.cpp;
 			path = Eris/InvisibleEntityCache.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD3B054315F3008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = InvisibleEntityCache.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD3F054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Lobby.cpp;
 			path = Eris/Lobby.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD40054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Lobby.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD43054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Log.cpp;
 			path = Eris/Log.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD44054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Log.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD4A054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = MetaQuery.cpp;
 			path = Eris/MetaQuery.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD4B054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = MetaQuery.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD4E054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Metaserver.cpp;
 			path = Eris/Metaserver.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD4F054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Metaserver.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD52054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = OpDispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD53054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Person.cpp;
 			path = Eris/Person.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD54054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Person.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD57054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Player.cpp;
 			path = Eris/Player.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD58054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Player.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD5B054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Poll.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD5C054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = PollDefault.cpp;
 			path = Eris/PollDefault.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD5D054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = PollDefault.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD60054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Property.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD61054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Room.cpp;
 			path = Eris/Room.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD62054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Room.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD65054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = ServerInfo.cpp;
 			path = Eris/ServerInfo.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD66054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = ServerInfo.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD69054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = SignalDispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD6A054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Timeout.cpp;
 			path = Eris/Timeout.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD6B054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Timeout.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD6F054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Timestamp.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD72054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = TypeDispatcher.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD73054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = TypeInfo.cpp;
 			path = Eris/TypeInfo.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD74054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = TypeInfo.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD77054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Types.cpp;
 			path = Eris/Types.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD78054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Types.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD7B054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = typeService.cpp;
 			path = Eris/typeService.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD7C054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = typeService.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD7F054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = UIFactory.cpp;
 			path = Eris/UIFactory.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD80054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = UIFactory.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD81054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Utils.cpp;
 			path = Eris/Utils.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD82054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Utils.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD85054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = Wait.cpp;
 			path = Eris/Wait.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD86054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = Wait.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD89054315F4008FC2ED = {
-			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
 			name = World.cpp;
 			path = Eris/World.cpp;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C43FBD8A054315F4008FC2ED = {
-			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
 			path = World.h;
 			refType = 4;
 			sourceTree = "<group>";
@@ -714,6 +721,7 @@
 			};
 			comments = "The WorldForge client-side session layer, which simplifies Atlas communication for many clients.";
 			dependencies = (
+				C485B20705B60261002F2D80,
 			);
 			isa = PBXNativeTarget;
 			name = eris;
@@ -946,6 +954,9 @@
 			fileRef = C43FBD5D054315F4008FC2ED;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		C45DC3FE0562F83D00D8F8F4 = {
@@ -1310,7 +1321,7 @@
 			};
 		};
 		C45DC4310562F83D00D8F8F4 = {
-			expectedFileType = wrapper.framework;
+			explicitFileType = wrapper.framework;
 			includeInIndex = 0;
 			isa = PBXFileReference;
 			path = Eris.framework;
@@ -1329,60 +1340,184 @@
 			sourceTree = "<group>";
 		};
 		C45DC7170564181900D8F8F4 = {
-			expectedFileType = text;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = text;
 			path = ChangeLog;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C45DC7180564181900D8F8F4 = {
-			expectedFileType = text;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = text;
 			path = README;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		C45DC7190564181900D8F8F4 = {
-			expectedFileType = text;
 			fileEncoding = 30;
 			isa = PBXFileReference;
+			lastKnownFileType = text;
 			path = TODO;
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		C485B1FE05B60252002F2D80 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "wrapper.pb-project";
+			name = wfmath.pbproj;
+			path = /Users/jmt/Worldforge/forge/libs/wfmath/wfmath.pbproj;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		C485B1FF05B60252002F2D80 = {
+			children = (
+				C485B20005B60252002F2D80,
+				C485B20105B60252002F2D80,
+				C485B20205B60252002F2D80,
+				C485B20305B60252002F2D80,
+				C485B20405B60252002F2D80,
+				C485B20505B60252002F2D80,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C485B20005B60252002F2D80 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = wfmath.framework;
+			refType = 3;
+			remoteRef = C485B20805B60277002F2D80;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C485B20105B60252002F2D80 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = testQuaternion;
+			refType = 3;
+			remoteRef = C485B20905B60277002F2D80;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C485B20205B60252002F2D80 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = polygonTest;
+			refType = 3;
+			remoteRef = C485B20A05B60277002F2D80;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C485B20305B60252002F2D80 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = shapeTest;
+			refType = 3;
+			remoteRef = C485B20B05B60277002F2D80;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C485B20405B60252002F2D80 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = vectorTest;
+			refType = 3;
+			remoteRef = C485B20C05B60277002F2D80;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C485B20505B60252002F2D80 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = atlasTest;
+			refType = 3;
+			remoteRef = C485B20D05B60277002F2D80;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C485B20605B60261002F2D80 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C4C5690D055AF2C400944C0F;
+			remoteInfo = wfmath;
+		};
+		C485B20705B60261002F2D80 = {
+			isa = PBXTargetDependency;
+			name = "wfmath (from wfmath.pbproj)";
+			targetProxy = C485B20605B60261002F2D80;
+		};
+		C485B20805B60277002F2D80 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56943055AF2C400944C0F;
+			remoteInfo = wfmath;
+		};
+		C485B20905B60277002F2D80 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C5694E055AF2CB00944C0F;
+			remoteInfo = testQuaternion;
+		};
+		C485B20A05B60277002F2D80 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56AFA055AF62200944C0F;
+			remoteInfo = polygonTest;
+		};
+		C485B20B05B60277002F2D80 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56B0A055AF62F00944C0F;
+			remoteInfo = shapeTest;
+		};
+		C485B20C05B60277002F2D80 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56B2C055AF69F00944C0F;
+			remoteInfo = vectorTest;
+		};
+		C485B20D05B60277002F2D80 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56B39055AF6AE00944C0F;
+			remoteInfo = atlasTest;
+		};
 		C4BB158A0544A61B00A800CF = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = Atlas.framework;
 			path = /Users/jmt/Library/Frameworks/Atlas.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		C4BB158B0544A61B00A800CF = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = "sigc++.framework";
 			path = "/Users/jmt/Library/Frameworks/sigc++.framework";
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		C4BB158C0544A61B00A800CF = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = skstream.framework;
 			path = /Users/jmt/Library/Frameworks/skstream.framework;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
 		C4BB158D0544A61B00A800CF = {
-			expectedFileType = wrapper.framework;
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
+			lastKnownFileType = wrapper.framework;
 			name = wfmath.framework;
 			path = /Users/jmt/Library/Frameworks/wfmath.framework;
 			refType = 0;
