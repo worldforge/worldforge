@@ -1,3 +1,8 @@
+Monday, 24th November, Al Riddoch <alriddoch@zepler.org>
+
+	* Eris/Avatar.cpp: Fix all uses of send() to pass a reference
+	  rather than a pointer. Why did this compile?
+
 Sunday, 23nd November, Ron Steinke <rsteinke@w-link.net>
 
 	* Added take(), touch(), say(), move(), and place()

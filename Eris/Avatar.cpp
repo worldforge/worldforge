@@ -127,7 +127,7 @@ void Avatar::take(Entity* e)
     moveOp.setFrom(getID());
     moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 
-  _world->getConnection()->send(&moveOp);
+  _world->getConnection()->send(moveOp);
 }
 
 void Avatar::touch(Entity* e)
@@ -135,12 +135,11 @@ void Avatar::touch(Entity* e)
     Atlas::Objects::Operation::Touch touchOp =
         Atlas::Objects::Operation::Touch::Instantiate();
     touchOp.setFrom(getID());
-    touchOp.setTo(e->getID());
     Atlas::Message::Element::MapType ent;
     ent["id"] = e->getID();
     touchOp.setArgs(Atlas::Message::Element::ListType(1, ent));
 
-    _world->getConnection()->send(&touchOp);
+    _world->getConnection()->send(touchOp);
 }
 
 void Avatar::say(const std::string& msg)
@@ -153,7 +152,7 @@ void Avatar::say(const std::string& msg)
 
     t.setArgs(args);
     t.setFrom(getID());
-    _world->getConnection()->send(&t);
+    _world->getConnection()->send(t);
 }
 
 void Avatar::move(const WFMath::Point<3>& pos)
@@ -172,7 +171,7 @@ void Avatar::move(const WFMath::Point<3>& pos)
     moveOp.setFrom(getID());
     moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 
-    _world->getConnection()->send(&moveOp);
+    _world->getConnection()->send(moveOp);
 }
 
 void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
@@ -188,7 +187,7 @@ void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
     moveOp.setFrom(getID());
     moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 
-    _world->getConnection()->send(&moveOp);
+    _world->getConnection()->send(moveOp);
 }
 
 Avatar* Avatar::find(Connection* con, const std::string& id)
