@@ -4,16 +4,27 @@
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
         email           : jbarrett@box100.com
+
+changes:
+
+23 Jan 2000 - fex
+    desctuctor added, server responsible for killing its ASocket
+    source deps removed
 */
 
-#include "Server.h"
+
 #ifdef _MSC_VER
-#include <assert.h>
+#include <cassert>
 #endif
+
+#include "Server.h"
+#include "Client.h"
+#include "Socket.h"
 
 // start listening for connections on an established socket
 AServer::AServer(ASocket* listener)
 {
+    assert( lsock != 0 );
 	lsock = listener;
 	slsock = lsock->getSock();
 
@@ -23,6 +34,10 @@ AServer::AServer(ASocket* listener)
 
 	FD_SET(slsock, &fdread);
 	FD_SET(slsock, &fderrs);
+}
+
+AServer::~AServer() {
+    delete lsock;
 }
 
 // poll returns true if connections to accept
