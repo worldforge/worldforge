@@ -29,11 +29,11 @@
 	#include "config.h"
 #endif
 
-#ifndef _MSC_VER
+#if defined _MSC_VER || defined __MINGW32__
+#include <sys/timeb.h>
+#else
 #include <unistd.h>	
 #include <sys/time.h>
-#else
-#include <sys/timeb.h>
 #endif
 
 static void regularize(long &sec, long &usec)
