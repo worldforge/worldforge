@@ -78,7 +78,7 @@ protected:
 	void registerCallbacks();
 
 	// should this try a shutdown, or simply wait and hope for resume?
-	void netFailure(std::string msg);
+	void netFailure(const std::string& msg);
 	void netConnected();
 	void netDisconnected();
 	

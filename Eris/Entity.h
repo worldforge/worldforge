@@ -110,14 +110,14 @@ public:
 	SigC::Signal2<void, Entity*, Entity*> Recontainered;
 
 	/** Emitted when a macro change occurs */
-	SigC::Signal1<void, Entity*> Changed;
+	SigC::Signal0<void> Changed;
 
 	/** Emitted when then entity's position or orientation have changed; i.e the
 	displayed model/sprite/etc needs to be updated. The argument is the new position */
-	SigC::Signal2<void, Entity*, Coord> Moved;
+	SigC::Signal1<void, const Coord&> Moved;
 
 	/** Emitted with this entity speaks. In the future langauge may be specified */
-	SigC::Signal2<void, Entity*, std::string> Say;
+	SigC::Signal1<void, const std::string&> Say;
 	
 	// signal accessors (dynamically created signals)
 	//void ConnectPropertySlot(const std::string &p, PropertySlot &slot);

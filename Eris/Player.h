@@ -109,7 +109,7 @@ protected:
 	
 	/// help! the plug is being pulled!
 	bool netDisconnecting();
-	void netFailure(std::string msg);
+	void netFailure(const std::string& msg);
 
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)

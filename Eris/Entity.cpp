@@ -259,17 +259,17 @@ void Entity::recvTalk(const Atlas::Objects::Operation::Talk &tk)
 
 void Entity::handleTalk(const std::string &msg)
 {
-	Say.emit(this, msg);
+	Say.emit(msg);
 }
 
 void Entity::handleChanged()
 {
-	Changed.emit(this);
+	Changed.emit();
 }
 
 void Entity::handleMove()
 {
-	Moved.emit(this, _position);
+	Moved.emit(_position);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////

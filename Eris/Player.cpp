@@ -331,7 +331,7 @@ bool Player::netDisconnecting()
 	return false;
 }
 
-void Player::netFailure(std::string msg)
+void Player::netFailure(const std::string& msg)
 {
 	; // do something useful here?
 }

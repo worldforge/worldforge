@@ -189,7 +189,7 @@ void Lobby::registerCallbacks()
 	);
 }
 
-void Lobby::netFailure(std::string msg)
+void Lobby::netFailure(const std::string& msg)
 {
 	// what needs to be done here?
 }

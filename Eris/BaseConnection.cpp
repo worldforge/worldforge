@@ -127,25 +127,25 @@ void BaseConnection::pollNegotiation()
 	
 	_sc->Poll();
 	if (_sc->GetState() != Atlas::Negotiate<std::iostream>::IN_PROGRESS) {
-		if (_sc->GetState() == Atlas::Negotiate<std::iostream>::SUCCEEDED) {
-			_codec = _sc->GetCodec();
-			_encode = new Atlas::Objects::Encoder(_codec);
-			_codec->StreamBegin();
-			_msgEncode = new Atlas::Message::Encoder(_codec);
-			// clean up
-			delete _sc;
-			_sc = NULL;
-			
-			delete _timeout;
-			_timeout = NULL;
-			
-			setStatus(CONNECTED);
-			onConnect();
-		} else {
-			// assume it all went wrong
-			handleFailure("Atlas negotiation failed");
-			hardDisconnect(false);
-		}
+	    if (_sc->GetState() == Atlas::Negotiate<std::iostream>::SUCCEEDED) {
+		_codec = _sc->GetCodec();
+		_encode = new Atlas::Objects::Encoder(_codec);
+		_codec->StreamBegin();
+		_msgEncode = new Atlas::Message::Encoder(_codec);
+		// clean up
+		delete _sc;
+		_sc = NULL;
+		
+		delete _timeout;
+		_timeout = NULL;
+		
+		setStatus(CONNECTED);
+		onConnect();
+	    } else {
+		// assume it all went wrong
+		handleFailure("Atlas negotiation failed");
+		hardDisconnect(false);
+	    }
 	}
 }
 

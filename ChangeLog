@@ -1,3 +1,14 @@
+Friday, December 21 2001, James Turner
+
+	* Standardised Entity signals to *not* include 'this' as
+	  an argument. If this behaviour is desired, using SigC::bind()
+	  to achieve the same affect when connection to the Signal.
+	  An example of doing this can be found in silence/src/game.cpp
+	* Changed a few signals to use pass-by-reference, since this
+	  is valid.
+	* Calling this version 0.9 in preperation for a beta release in
+	  a few weeks.
+
 Wednesday, December 12 2001, James Turner
 
 	* Added Quaternion class to Types.h and Types.cpp

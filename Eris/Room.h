@@ -69,17 +69,17 @@ public:
 	
 	/** The primary talk callback. The arguments are the source room, the person
 	talking, and the message itself */
-	SigC::Signal3<void, Room*, std::string, std::string> Talk;
+	SigC::Signal3<void, Room*, const std::string&, const std::string&> Talk;
 	
 	/** Emote (/me) callback. The arguments are identical to those for Talk above */
-	SigC::Signal3<void, Room*, std::string, std::string> Emote;
+	SigC::Signal3<void, Room*, const std::string&, const std::string&> Emote;
 	
 	/** Emitted when a person enters the room; argument is the account ID. Note that
 	Appearance is not generated for the local player when entering/leaving; use the
 	Entered signal instead. */
-	SigC::Signal2<void, Room*, std::string> Appearance;
+	SigC::Signal2<void, Room*, const std::string&> Appearance;
 	/// Similarly, emitted when the specifed person leaves the room
-	SigC::Signal2<void, Room*, std::string> Disappearance;
+	SigC::Signal2<void, Room*, const std::string&> Disappearance;
 	
 protected:
 	friend class Lobby;	// so Lobby can call the constructor

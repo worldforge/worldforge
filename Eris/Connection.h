@@ -123,7 +123,7 @@ public:
 	connection will be placed into the DISCONNECTED state after the signal
 	is emitted; thus the current state (when the failure occured) is still valid
 	during the callback */
-	SigC::Signal1<void, std::string> Failure;
+	SigC::Signal1<void, const std::string&> Failure;
 	
 	/** Emitted when a network-level timeout occurs; the status code indicates
 	in which stage of operation the timeout occurred. */
@@ -138,7 +138,7 @@ public:
 	/** Emitted with logging information; client may handle as it see fit.
 	There is room for considerable expansion of this feature; notably message
 	classes (warning / info / debug). Any feedback greatly appreciated */
-	SigC::Signal2<void, LogLevel, std::string> Log;
+	SigC::Signal2<void, LogLevel, const std::string&> Log;
 
 protected:
 	/// update the connection status (and emit the appropriate signal)
