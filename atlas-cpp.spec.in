@@ -12,7 +12,7 @@ Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz
 Requires: libstdc++
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-BuildRequires: gcc-c++ >= 2.95.2
+BuildRequires: libstdc++-devel
 
 %description
 This library implements the Atlas protocol, for use in client-server
@@ -23,7 +23,7 @@ clients or servers.
 %package devel
 Summary: The Atlas protocol C++ implementation library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version}
+Requires: %{name} = %{version} libstdc++-devel
 
 %description devel
 This library implements the Atlas protocol, for use in client-server
