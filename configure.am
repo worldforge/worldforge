@@ -4,6 +4,26 @@
     <desc></desc>
     <require tag="c++">
 	<require tag="compiler"/>
+	<require tag="ansi">
+	    <require tag="bool"/>
+	    <require tag="namespaces"/>
+	    <require tag="templates">
+		<require tag="typename"/>
+	    </require>
+	    <require tag="exceptions"/>
+	    <require tag="libstdc++">
+		<require tag="cassert"/>
+		<require tag="cstdarg"/>
+		<require tag="cstdio"/>
+		<require tag="iostream"/>
+		<require tag="list"/>
+		<require tag="map"/>
+		<require tag="cstdlib"/>
+		<require tag="cstring"/>
+		<require tag="string"/>
+		<require tag="vector"/>
+	    </require>
+	</require>
     </require>
     <require tag="libtool"/>
 </package>
