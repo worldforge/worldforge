@@ -46,7 +46,7 @@ public:
 	
 	/// Emitted when sight of a room is recieved
 	//SigC::Signal1<void Room*> SightRoom;
-	
+	SigC::Signal2<void, const std::string&, const std::string&> PrivateTalk;
 	/// Emitted when initial login completes
 	SigC::Signal1<void, const Atlas::Objects::Entity::Player&> LoggedIn;
 	
@@ -66,6 +66,8 @@ protected:
 	void recvSightRoom(const Atlas::Objects::Entity::RootEntity &room);
 	// FIXME - remove once cyphesis is updated
 	void recvSightLobby(const Atlas::Objects::Entity::RootEntity &lobby);
+	
+	void recvPrivateChat(const Atlas::Objects::Operation::Talk &tk);
 	
 	/// delayed registration of callbacks (until we have a valid account ID)
 	void registerCallbacks();

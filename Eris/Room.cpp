@@ -73,10 +73,7 @@ void Room::setup()
 	));
 	
 
-// visual stuff (sights)	
-	//Dispatcher *sight = con->getDispatcherByPath("op:oog:sight");
-	//sight = sight->addSubdispatch(new ArgumentDispatcher("room_" + _id, "loc", _id));
-
+// visual stuff (sights)
 	Dispatcher *img = con->getDispatcherByPath("op:oog:sight:op");
 	img = img->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
 	img = img->addSubdispatch(new EncapDispatcher("imaginary", "imaginary"));
@@ -120,6 +117,7 @@ void Room::say(const std::string &tk)
 	//Object::ListType args;
 	Atlas::Message::Object::MapType speech;
 	speech["say"] = tk;
+	speech["loc"] = _id;
 	
 	t.SetArgs(Atlas::Message::Object::ListType(1, speech));
 	t.SetTo(_id);
@@ -138,10 +136,10 @@ void Room::emote(const std::string &em)
 	Atlas::Objects::Operation::Imaginary im = 
 		Atlas::Objects::Operation::Imaginary::Instantiate();
 	
-	//Object::ListType args;
 	Atlas::Message::Object::MapType emote;
 	emote["id"] = "emote";
 	emote["description"] = em;
+	emote["loc"] = _id;
 	
 	im.SetArgs(Atlas::Message::Object::ListType(1, emote));
 	im.SetTo(_id);
@@ -179,6 +177,7 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 	if (!checkInherits(room, "room"))
 		throw IllegalObject(room, "room object doesn't claim to be a room");
 	
+	Log("Got sight of room %s", _id.c_str());
 	_initialGet = true;
 		
 	_name = room.GetName();
@@ -198,7 +197,10 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 				_pending.insert(account);
 			}
 		}
-	} else {
+	}
+	
+	if (_pending.empty()) {
+		Log("Doing immediate entry to room %s", _id.c_str());
 		// FIXME  - this code will cause OOG entry, even if the server
 		// doesn't really support it (just to an empty lobby). The option
 		// is not to emit the 'entered' signal at all. I don't know which

@@ -1,3 +1,17 @@
+Wednesday, October 17 2001, James Turner
+
+	* Fixed Lobby::join to handle re-joins and actually return
+	  the Room instance.
+	* Added PrivateTalk signal to Lobby and the necesary code
+	  to emit it.
+	* Adjusted the inital entry logic for rooms to ensure the
+	  Entered signal is always emitted correctly.
+
+Tuesday, October 16 2001, James Turner <jmtn@blueyonder.co.uk>
+
+	* Made Room::say/emote set the loc arg correctly; Eris now works with
+	  both cyphesis and stage, so no one can complain.
+
 Monday, October 15 2001
 
 	* Fixed up dispatcher tree some more (sights encap imags), seems

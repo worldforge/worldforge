@@ -93,7 +93,13 @@ Room* Lobby::join(const std::string &roomID)
 	
 	_con->send(join);
 	
-	return new Room(this, roomID);
+	RoomDict::iterator R = _roomDict.find(roomID);
+	if (R == _roomDict.end()) {
+		Room *nr = new Room(this, roomID);
+		_roomDict[roomID] = nr;
+		return nr;
+	} else
+		return R->second;
 }
 
 Person* Lobby::getPerson(const std::string &acc)
@@ -143,12 +149,18 @@ void Lobby::registerCallbacks()
 	Dispatcher *oogd = rop->addSubdispatch(new OpToDispatcher("oog", _account));
 	
 	// add in the basics so rooms can hook below
-	oogd->addSubdispatch(new EncapDispatcher("sound", "sound"));
+	Dispatcher *sndd = oogd->addSubdispatch(new EncapDispatcher("sound", "sound"));
+	Dispatcher *d = sndd->addSubdispatch(new OpToDispatcher("private", _account));
+	d = d->addSubdispatch(new ClassDispatcher("talk", "talk"));
+	d->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Talk>("lobby",
+		SigC::slot(this, &Lobby::recvPrivateChat)
+	));
+	
 	oogd->addSubdispatch(new ClassDispatcher("appearance", "appearance"));
 	oogd->addSubdispatch(new ClassDispatcher("disappearance", "disappearance"));
 	
 	Dispatcher *sight = oogd->addSubdispatch(new EncapDispatcher("sight", "sight"));
-	Dispatcher *d = sight->addSubdispatch(new TypeDispatcher("op", "op"));
+	d = sight->addSubdispatch(new TypeDispatcher("op", "op"));
 	
 	d = sight->addSubdispatch(new TypeDispatcher("entity", "object"));
 	// the room entity callback
@@ -317,6 +329,7 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 	// check if this is initial room (lobby), from the anonymous LOOK
 	if (_id.empty()) {
 		//cerr << "doing root-room (lobby) boot-strap" << endl;
+		Log("recieved sight of root room (lobby)");
 		_roomDict[room.GetId()] = this;
 		
 		_id = room.GetId();
@@ -329,6 +342,7 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 		if (i == _roomDict.end())
 			throw InvalidOperation("Got sight of unknown room!");
 		
+		Log("recived sight of room %s", i->first.c_str());
 		i->second->sight(room);
 	}
 	
@@ -341,6 +355,20 @@ void Lobby::recvSightLobby(const Atlas::Objects::Entity::RootEntity &lobby)
 	assert(_id.empty());
 	_id = lobby.GetId();
 	Room::setup();
+}
+
+void Lobby::recvPrivateChat(const Atlas::Objects::Operation::Talk &tk)
+{
+	const Atlas::Message::Object &obj = getArg(tk, 0);
+	Message::Object::MapType::const_iterator m = obj.AsMap().find("say");
+	if (m == obj.AsMap().end())
+		throw IllegalObject(tk, "No sound object in arg 0");
+	std::string say = m->second.AsString();
+	
+	// get the player name and emit the signal already
+	Person *p = getPerson(tk.GetFrom());
+	assert(p);
+	PrivateTalk.emit(p->getAccount(), say);
 }
 
 }; // of namespace
