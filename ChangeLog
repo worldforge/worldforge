@@ -1,5 +1,12 @@
 Thursday, 8th May 2003, Al Riddoch <alriddoch@zepler.org>
 
+	* Re-order configure.in so the version variable works.
+
+	* Sort out perl bindings dist-hook rule so it works if the
+	  perl directory already exists.
+
+Thursday, 8th May 2003, Al Riddoch <alriddoch@zepler.org>
+
 	* test/tests.cpp: Skip the incomplete Player and Lobby tests.
 
 Thursday, 8th May 2003, Al Riddoch <alriddoch@zepler.org>

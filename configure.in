@@ -1,13 +1,12 @@
-dnl Information
+# Autoconf setup
+AC_INIT
+AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 
+# Information
 ERIS_MAJOR=0
 ERIS_MINOR=9
 ERIS_MICRO=7
 ERIS_VERSION=$ERIS_MAJOR.$ERIS_MINOR.$ERIS_MICRO
-
-# Autoconf setup
-AC_INIT
-AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 
 # Automake setup
 AM_INIT_AUTOMAKE(eris, $ERIS_VERSION)

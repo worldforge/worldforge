@@ -20,7 +20,7 @@ if PERL_BINDINGS
 ## so that the module gets rebuilt, the dependence on the build lib
 ## ensures the rebuild happens
 perl-makefile.stamp: perl/Makefile.PL perl/*/Makefile.PL perl/compile_flags.pl \
-			../Eris/.libs/liberis-1.0.so
+			$(top_builddir)/Eris/.libs/liberis-1.0.so
 	cd perl && perl Makefile.PL PREFIX=$(prefix) LIB=$(libdir)/perl
 	touch perl-makefile.stamp
 
@@ -45,7 +45,7 @@ endif
 
 perl-dist-hook:
 	perl_dist_dir=`cd $(distdir) && pwd`/perl; \
-	mkdir $$perl_dist_dir || exit 1; \
+	mkdir -p $$perl_dist_dir || exit 1; \
 	perl_dist_files=`cat perl/MANIFEST`; \
 	for file in $$perl_dist_files; do \
 		test -e perl/$$file || exit 1; \
