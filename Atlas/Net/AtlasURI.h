@@ -20,7 +20,7 @@ typedef struct {
 	PyObject	*data;		/* the data after the lookup is performed */
 } URIObject;
 
-extern DL_IMPORT(PyTypeObject) URI_Type;
+extern PyTypeObject URI_Type;
 
 #define URI_Check(op) ((op)->ob_type == &URI_Type)
 #define PyURI_Check(op) ((op)->ob_type == &URI_Type)
@@ -30,16 +30,16 @@ extern DL_IMPORT(PyTypeObject) URI_Type;
 
 typedef int URIHandlerFunc(int op, URIObject *);
 
-extern DL_IMPORT(URIHandlerFunc*) URIGlobalHandler;	/* pointer to app defined function for handling URIs */
+extern URIHandlerFunc* URIGlobalHandler;	/* pointer to app defined function for handling URIs */
 
-extern DL_IMPORT(PyObject *)	URI_New 		Py_PROTO((char* path));
-extern DL_IMPORT(PyObject *)	URI_GetPath		Py_PROTO((PyObject *));
-extern DL_IMPORT(int)		URI_SetPath		Py_PROTO((PyObject *, char *));
-extern DL_IMPORT(PyObject *)	URI_GetData		Py_PROTO((PyObject *));
-extern DL_IMPORT(int)		URI_SetData		Py_PROTO((PyObject *, PyObject *));
-extern DL_IMPORT(int)		URI_SetHandler		Py_PROTO((URIHandlerFunc *));
+extern PyObject *	URI_New 		Py_PROTO((char* path));
+extern PyObject *	URI_GetPath		Py_PROTO((PyObject *));
+extern int		URI_SetPath		Py_PROTO((PyObject *, char *));
+extern PyObject *	URI_GetData		Py_PROTO((PyObject *));
+extern int		URI_SetData		Py_PROTO((PyObject *, PyObject *));
+extern int		URI_SetHandler		Py_PROTO((URIHandlerFunc *));
 
-DL_EXPORT(void) initURI();
+extern void initURI();
 
 
 #ifdef __cplusplus

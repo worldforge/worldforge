@@ -2,6 +2,8 @@
 
 static PyObject *ErrorObject;
 
+URIHandlerFunc* URIGlobalHandler;	/* pointer to app defined function for handling URIs */
+
 PyObject *
 URI_New(char *path)
 {
