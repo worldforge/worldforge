@@ -70,7 +70,7 @@ class XML : public Codec<std::iostream>
 	TOKEN_TAG,
 	TOKEN_START_TAG,
 	TOKEN_END_TAG,
-	TOKEN_DATA,
+	TOKEN_DATA
     };
     
     Token token;
@@ -83,7 +83,7 @@ class XML : public Codec<std::iostream>
         PARSE_LIST,
 	PARSE_INT,
 	PARSE_FLOAT,
-	PARSE_STRING,
+	PARSE_STRING
     };
     
     std::stack<State> state;
