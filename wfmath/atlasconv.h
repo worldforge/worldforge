@@ -40,7 +40,7 @@ namespace WF { namespace Math {
 template<class C>
 bool FromAtlas(C& c, const Atlas::Message::Object& a)
 {
-  return a.isString() && FromString(c, a.asString());
+  return a.IsString() && FromString(c, a.AsString());
 }
 
 template<class C>

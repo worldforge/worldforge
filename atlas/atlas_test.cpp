@@ -25,7 +25,24 @@
 // Created: 2001-12-12
 
 #include<Atlas/Message/Object.h>
-#include "atlas_funcs.h"
+#include "atlasconv.h"
 
 using namespace WF::Math;
 
+template<class C>
+void atlas_test(const C& c)
+{
+  Atlas::Message::Object a = ToAtlas(c);
+  C out;
+  assert(FromAtlas(out, a));
+  assert(c.isEqualTo(out, 1e-5)); // Only match to string precision
+}
+
+int main()
+{
+  Point<3> p(1, 0, WFMATH_CONST_SQRT2);
+
+  atlas_test(p);
+
+  return 0;
+}

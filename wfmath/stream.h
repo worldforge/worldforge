@@ -37,7 +37,6 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <algorithm>
 
 namespace WF { namespace Math {
 
@@ -115,7 +114,7 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
 
   int str_prec = is.precision();
   double str_eps = 1;
-  while(str_prec-- > 0)
+  while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
     str_eps /= 10;
 
   if(!m._setVals(d, FloatMax(WFMATH_EPSILON, str_eps)))
@@ -134,7 +133,7 @@ std::ostream& operator<<(std::ostream& os, const Point<dim>& p)
 template<const int dim>
 std::istream& operator>>(std::istream& is, Point<dim>& p)
 {
-  _ReadCoordList(is, m_elem, dim);
+  _ReadCoordList(is, p.m_elem, dim);
   return is;
 }
 
@@ -155,7 +154,7 @@ std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
     is >> next;
   } while(next != '=');
 
-  is >> m_low;
+  is >> a.m_low;
   if(!is)
     return is;
 
@@ -165,7 +164,7 @@ std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
     is >> next;
   } while(next != '=');
 
-  is >> m_high;
+  is >> a.m_high;
 
   return is;
 }
@@ -188,7 +187,7 @@ std::istream& operator>>(std::istream& is, Ball<dim>& b)
     is >> next;
   } while(next != '=');
 
-  is >> m_center;
+  is >> b.m_center;
   if(!is)
     return is;
 
@@ -198,7 +197,7 @@ std::istream& operator>>(std::istream& is, Ball<dim>& b)
     is >> next;
   } while(next != '=');
 
-  is >> m_radius;
+  is >> b.m_radius;
 
   return is;
 }
@@ -220,7 +219,7 @@ std::istream& operator>>(std::istream& is, Segment<dim>& s)
     is >> next;
   } while(next != '=');
 
-  is >> m_p1;
+  is >> s.m_p1;
   if(!is)
     return is;
 
@@ -230,7 +229,7 @@ std::istream& operator>>(std::istream& is, Segment<dim>& s)
     is >> next;
   } while(next != '=');
 
-  is >> m_p2;
+  is >> s.m_p2;
 
   return is;
 }
@@ -254,7 +253,7 @@ std::istream& operator>>(std::istream& is, RotBox<dim>& r)
     is >> next;
   } while(next != '=');
 
-  is >> m_corner0;
+  is >> r.m_corner0;
   if(!is)
     return is;
 
@@ -264,7 +263,7 @@ std::istream& operator>>(std::istream& is, RotBox<dim>& r)
     is >> next;
   } while(next != '=');
 
-  is >> m_size;
+  is >> r.m_size;
   if(!is)
     return is;
 
@@ -274,7 +273,7 @@ std::istream& operator>>(std::istream& is, RotBox<dim>& r)
     is >> next;
   } while(next != '=');
 
-  is >> m_orient;
+  is >> r.m_orient;
 
   return is;
 }

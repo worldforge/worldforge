@@ -1,6 +1,6 @@
 if HAVE_ATLAS
 
-AM_CPPFLAGS = -O2 -Wall -I.. @ATLAS_CFLAGS@
+AM_CPPFLAGS = -O2 -Wall -I.. -I../wfmath @ATLAS_CFLAGS@
 
 check_PROGRAMS = atlas_test
 TESTS = $(check_PROGRAMS)

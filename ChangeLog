@@ -1,3 +1,7 @@
+Friday, January 4, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Got atlas_test working
+
 Thursday, January 3, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Changed Barycenter() to take a container of Point<>

@@ -15,7 +15,7 @@ AM_PATH_ATLAS(0.4.3, found_atlas=yes, [
     AC_MSG_RESULT(*** Could not find libAtlas...skipping compile for libwfmath_atlas)
     found_atlas=no
 ]) 
-AM_CONDITIONAL(HAVE_ATLAS, test $found_atlas = yes)
+AM_CONDITIONAL(HAVE_ATLAS, test $found_atlas == yes)
 
 dnl Checks for header files.
 AC_HEADER_STDC
