@@ -43,11 +43,11 @@ AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 
 dnl Check for Atlas-C++ and wfmath library
-PKG_CHECK_MODULES(WF, wfmath-0.2 >= 0.2.10,
+PKG_CHECK_MODULES(WF, wfmath-0.3,
     [
         CPPFLAGS="$CPPFLAGS $WF_CFLAGS"
         LIBS="$LIBS $WF_LIBS"
-        MERCATOR_REQUIRES="$MERCATOR_REQUIRES wfmath-0.2"
+        MERCATOR_REQUIRES="$MERCATOR_REQUIRES wfmath-0.3"
     ],
     [
         AC_MSG_ERROR(Couldn't find Atlas or wfmath or version is insufficent)

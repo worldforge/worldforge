@@ -1,3 +1,8 @@
+2003-08-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Update to use wfmath 0.3 for compatability with eris 1.2.
+	  We are now clear to use Mersenne Twister from wfmath.
+
 2003-08-11  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Buffer.cpp, Mercator/Buffer.h, Mercator/Buffer_impl.h:
