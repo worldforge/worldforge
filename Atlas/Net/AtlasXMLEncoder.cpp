@@ -67,11 +67,11 @@ void AXMLEncoder::walkTree(int nest, string name, AObject& list)
 
 	if (list.isString()) {
 		if (name.length() > 0) {
-			printf("%s<string name=\"%s\">%s</str>\n",
+			printf("%s<string name=\"%s\">%s</string>\n",
 				pre.c_str(), name.c_str(),list.asString().c_str()
 			);
 		} else {
-			printf("%s<string>%s</str>\n",pre.c_str(), list.asString().c_str());
+			printf("%s<string>%s</string>\n",pre.c_str(), list.asString().c_str());
 		}
 	}
 	if (list.isLong()) {
