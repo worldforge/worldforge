@@ -25,13 +25,13 @@ Decoder::~Decoder()
 void Decoder::ObjectArrived(const Object& o)
 {
     if (!o.IsMap()) return;
-    if (o.AsMap().find("parent") == o.AsMap().end())
+    if (o.AsMap().find("parents") == o.AsMap().end())
         { UnknownObjectArrived(o); return; }
-    if ((*o.AsMap().find("parent")).second.AsList().size() != 1)
+    if ((*o.AsMap().find("parents")).second.AsList().size() != 1)
         { UnknownObjectArrived(o); return; }
     
     string
-        parent((*(*o.AsMap().find("parent")).second.AsList().begin()).AsString());
+        parent((*(*o.AsMap().find("parents")).second.AsList().begin()).AsString());
     
     ARR("root", Root)
     ARR("account", Entity::Account)

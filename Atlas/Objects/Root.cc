@@ -14,7 +14,7 @@ namespace Atlas { namespace Objects {
 Root::Root()
 {
     Object::ListType parent;
-    SetAttr("parent", parent);
+    SetAttr("parents", parent);
     SetAttr("id", string("root"));
 }
 
@@ -22,7 +22,7 @@ Root::Root(const string& id)
 {
     Object::ListType parent;
     parent.push_back(string("root"));
-    SetAttr("parent", parent);
+    SetAttr("parents", parent);
     SetAttr("id", id);
     SetAttr("objtype", string("class"));
 }
