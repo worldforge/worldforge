@@ -97,7 +97,7 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     ],
     [
         AM_PATH_GLIB(1.2.0,[
-		ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib.pc"
+		ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.2.pc"
 		have_glib='yes'
 	        ],[
 		AC_MSG_WARN(Couldn't find glib, not building glib poll)

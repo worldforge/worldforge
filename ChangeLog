@@ -1,3 +1,6 @@
+Thursday, 23rd October, Simon Goodall <simon@simongoodall.co.uk>
+	* Fixed configure.ac to use eris-poll-glib-1.2.pc in second glib test
+
 Monday, 20th October, James Turner <james@worldforge.org>
 
 	* Add ProjectBuilder project - currently requires a modified
