@@ -4,13 +4,13 @@
 namespace Mercator {
 //floor and ceil functions that return d-1 and d+1
 //respectively if d is integral
-static float gridceil(float d) 
+static inline float gridceil(float d) 
 {
     float c = ceil(d);
     return (c==d) ? c+1.0f : c;
 }
 
-static float gridfloor(float d) 
+static inline float gridfloor(float d) 
 {
     float c = floor(d);
     return (c==d) ? c-1.0f : c;
