@@ -5,7 +5,6 @@
 #include <AtlasCodec.h>
 #include <AtlasCompressor.h>
 #include <AtlasDebug.h>
-#include <AtlasFactory.h>
 #include <AtlasObject.h>
 #include <AtlasPackedAsciiDecoder.h>
 #include <AtlasPackedAsciiEncoder.h>

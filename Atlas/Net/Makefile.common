@@ -27,7 +27,6 @@ LIBOBJS = \
 	$(OUTDIR)/AtlasPython.o \
 	$(OUTDIR)/AtlasDebug.o \
 	$(OUTDIR)/AtlasCompressor.o \
-	$(OUTDIR)/AtlasFactory.o
 
 all:		$(TARGETS)
 
@@ -186,9 +185,4 @@ $(OUTDIR)/EchoTest.o: EchoTest.cpp EchoTest.h AtlasClient.h AtlasCodec.h \
 
 $(OUTDIR)/CopyTest.o: CopyTest.cpp CopyTest.h AtlasDebug.h AtlasObject.h 
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/AtlasFactory.o: AtlasFactory.cpp AtlasFactory.h AtlasObject.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-
 
