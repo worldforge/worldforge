@@ -85,6 +85,16 @@ protected:
     inline void ParseFloat(char);
     inline void ParseString(char);
     inline void ParseName(char);
+
+    inline const string HexEncode(const string& data)
+    {
+	return hexEncode("+", "+{}[]()@#$=", data);
+    }
+
+    inline const string HexDecode(const string& data)
+    {
+	return hexDecoder("+", data);
+    }
 };
 
 namespace
@@ -221,7 +231,7 @@ void Packed::ParseList(char next)
 
 void Packed::ParseMapBegin(char next)
 {
-    bridge->MapItem(hexDecode("+", name), MapBegin);
+    bridge->MapItem(HexDecode(name), MapBegin);
     socket.putback(next);
     state.pop();
     name.erase();
@@ -229,7 +239,7 @@ void Packed::ParseMapBegin(char next)
 
 void Packed::ParseListBegin(char next)
 {
-    bridge->MapItem(hexDecode("+", name), ListBegin);
+    bridge->MapItem(HexDecode(name), ListBegin);
     socket.putback(next);
     state.pop();
     name.erase();
@@ -250,7 +260,7 @@ void Packed::ParseInt(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(hexDecode("+", name), atoi(data.c_str()));
+		bridge->MapItem(HexDecode(name), atoi(data.c_str()));
 		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
@@ -301,7 +311,7 @@ void Packed::ParseFloat(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(hexDecode("+", name), atof(data.c_str()));
+		bridge->MapItem(HexDecode(name), atof(data.c_str()));
 		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
@@ -355,12 +365,12 @@ void Packed::ParseString(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(hexDecode("+", name), hexDecode("+", data));
+		bridge->MapItem(HexDecode(name), HexDecode(data));
 		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		bridge->ListItem(hexDecode("+", data));
+		bridge->ListItem(HexDecode(data));
 	    }
 	    else
 	    {
@@ -444,28 +454,27 @@ void Packed::MessageEnd()
 
 void Packed::MapItem(const std::string& name, const Map&)
 {
-    socket << "[" << hexEncode("+", "+{}[]()@#$=", name) << "=";
+    socket << "[" << HexEncode(name) << "=";
 }
 
 void Packed::MapItem(const std::string& name, const List&)
 {
-    socket << "(" << hexEncode("+", "+{}[]()@#$=", name) << "=";
+    socket << "(" << HexEncode(name) << "=";
 }
 
 void Packed::MapItem(const std::string& name, int data)
 {
-    socket << "@" << hexEncode("+", "+{}[]()@#$=", name) << "=" << data;
+    socket << "@" << HexEncode(name) << "=" << data;
 }
 
 void Packed::MapItem(const std::string& name, double data)
 {
-    socket << "#" << hexEncode("+", "+{}[]()@#$=", name) << "=" << data;
+    socket << "#" << HexEncode(name) << "=" << data;
 }
 
 void Packed::MapItem(const std::string& name, const std::string& data)
 {
-    socket << "$" << hexEncode("+", "+{}[]()@#$=", name) << "=" <<
-            hexEncode("+", "+{}[]()@#$=", data);
+    socket << "$" << HexEncode(name) << "=" << HexEncode(data);
 }
 
 void Packed::MapEnd()
@@ -495,10 +504,11 @@ void Packed::ListItem(double data)
 
 void Packed::ListItem(const std::string& data)
 {
-    socket << "$" << hexEncode("+", "+{}[]()@#$=", data);
+    socket << "$" << HexEncode(data);
 }
 
 void Packed::ListEnd()
 {
     socket << ")";
 }
+
