@@ -32,7 +32,6 @@ static double IncompleteGamma(double a, double z);
 static double IncompleteGammaNoPrefactor(double a, double z);
 static double IncompleteGammaComplement(double a, double z);
 static double IncompleteGammaComplementNoPrefactor(double a, double z);
-static double LogGamma(double z);
 // Making this an int makes LogFactorial faster
 static const unsigned int GammaCutoff = 10;
 
@@ -75,6 +74,9 @@ double WFMath::PoissonConditional(double mean, unsigned int step)
   if(mean == 0) // Funky limit, but allow it
     return (step == 0) ? 1 : 0;
 
+  if(step == 0)
+    return exp(-mean);
+
   if(mean > step + 1)
     return Poisson(mean, step) / IncompleteGamma(step, mean);
 
@@ -110,6 +112,21 @@ static double LogPoisson(double mean, unsigned int step)
   return ans;
 }
 
+double WFMath::Factorial(unsigned int n)
+{
+  if(n == 0 || n == 1)
+    return 1;
+
+  if(n < GammaCutoff) {
+    double ans = n;
+    while(--n > 1) // Don't need to multiply by 1
+      ans *= n;
+    return ans;
+  }
+  else
+    return exp(LogGamma(n + 1));
+}
+
 double WFMath::LogFactorial(unsigned int n)
 {
   if(n == 0 || n == 1)
@@ -125,8 +142,23 @@ double WFMath::LogFactorial(unsigned int n)
     return LogGamma(n + 1);
 }
 
-double LogGamma(double z)
+double WFMath::Gamma(double z)
 {
+  if(z >= 0.5)
+    return exp(LogGamma(z));
+  else
+    return Pi * exp(-LogGamma(1 - z)) / sin(Pi * z);
+}
+
+double WFMath::LogGamma(double z)
+{
+  /* This will return nan or something when z is a non-positive
+   * integer (from trying to take log(0)), but that's what
+   * should happen anyway.
+   */
+  if(z < 0.5)
+    return LogPi - LogGamma(1 - z) - log(fabs(sin(Pi * z)));
+
   if(z == 0.5) // special case for Gaussian
     return LogPi / 2;
 
@@ -135,17 +167,10 @@ double LogGamma(double z)
 
   double log_shift;
 
-  // FIXME make this O(1) for z < GammaCutoff
-  // this isn't too urgent, though, since we always use this
-  // with z >= 0.5 (as of 1/24/02)
-
   if(z < GammaCutoff) {
     double shift = 1;
-    while(z < GammaCutoff) {
-      if(z == 0) // Hit a pole
-        return log(-1); // Get nan in a system-independent way, set errno = EDOM
+    while(z < GammaCutoff)
       shift *= z++;
-    }
     log_shift = log(fabs(shift));
   }
   else
@@ -156,7 +181,7 @@ double LogGamma(double z)
 
   double ans = (z - 0.5) * log(z) - log_shift - z + (LogPi + Log2) / 2;
 
-  // coeffs[i] is the 2*(i+1)th Ber.. number, divided by (2i + 1)*(2i + 2)
+  // coeffs[i] is the 2*(i+1)th Bernoulli number, divided by (2i + 1)*(2i + 2)
   const double coeffs[] = 	{1.0/12.0,		-1.0/360.0,
 	 1.0/1260.0,		-1.0/1620.0,		 5.0/5940.0,
 	-691.0/360360.0,	 7.0/1092.0,		-3617.0/122400.0,
@@ -229,8 +254,6 @@ static double IncompleteGammaComplement(double a, double z)
 
   if(z < a + 1)
     return 1 - IncompleteGamma(a, z);
-
-  // Continued fraction
 
   double prefactor = exp(a * log(z) - z - LogGamma(a));
 

@@ -46,11 +46,11 @@ RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
 }
 
 template<const int dim>
-bool RotBox<dim>::isEqualTo(const RotBox<dim>& s, double tolerance) const
+bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
 {
-  return m_corner0.isEqualTo(s.m_corner0, tolerance)
-      && m_size.isEqualTo(s.m_size, tolerance)
-      && m_orient.isEqualTo(s.m_orient, tolerance);
+  return Equal(m_corner0, b.m_corner0, epsilon)
+      && Equal(m_size, b.m_size, epsilon)
+      && Equal(m_orient, b.m_orient, epsilon);
 }
 
 // WARNING! This operator is for sorting only. It does not
@@ -58,14 +58,10 @@ bool RotBox<dim>::isEqualTo(const RotBox<dim>& s, double tolerance) const
 template<const int dim>
 bool RotBox<dim>::operator< (const RotBox<dim>& a) const
 {
-  if(m_corner0 < a.m_corner0)
-    return true;
-  if(a.m_corner0 < m_corner0)
-    return false;
-  if(m_size < a.m_size)
-    return true;
-  if(a.m_size < m_size)
-    return false;
+  if(!Equal(m_corner0, a.m_corner0))
+    return m_corner0 < a.m_corner0;
+  if(!Equal(m_size, a.m_size))
+    return m_size < a.m_size;
   return m_orient < a.m_orient;
 }
 

@@ -36,13 +36,7 @@
 #ifndef WFMATH_MINIBALL_H
 #define WFMATH_MINIBALL_H
 
-#ifdef MINIBALL_NO_STD_NAMESPACE
-    #include <list.h>
-#else
-    #include <list>
-#endif
-
-#include <wfmath/miniball_config.h>
+#include <list>
 #include <wfmath/wrapped_array.h>
 
 namespace WFMath { namespace _miniball {

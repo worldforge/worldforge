@@ -1,4 +1,4 @@
-// const.cpp (imported from forge/servers/pangea/MapLaw/MapCoord.cc via libCoal)
+// const.cpp (basic comparison functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2000, 2001, 2002  The WorldForge Project
@@ -21,7 +21,7 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
 
-// Author: Ron Steinke (sort of, this is a straight steal from COAL)
+// Author: Ron Steinke
 
 #include <wfmath/const.h>
 
@@ -86,5 +86,5 @@ double WFMath::_ScaleEpsilon(const CoordType* x1, const CoordType* x2,
       max2 = val2;
   }
 
-  return _ScaleEpsilon(max1, max2, WFMATH_EPSILON);
+  return _ScaleEpsilon(max1, max2, epsilon);
 }

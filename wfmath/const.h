@@ -63,15 +63,22 @@ typedef float CoordType;
 
 double _ScaleEpsilon(double x1, double x2, double epsilon);
 double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
-		     int length, double epsilon);
+		     int length, double epsilon = WFMATH_EPSILON);
+
+template<class C>
+inline bool Equal(const C& c1, const C& c2, double epsilon = WFMATH_EPSILON)
+	{return c1.isEqualTo(c2, epsilon);}
 
 // Returns true if the difference between the numbers is less
 // than epsilon. Note that epsilon is multiplied by 2 raised
 // to the power of the exponent of the smaller number. So,
-// for example, Equal(0.00010000, 0.00010002) will not compare
-// equal, but Equal(0.00010000, 0.00010002, 1.0e-3) will.
+// for example, Equal(0.00010000, 0.00010002, 1.0e-4) will not
+// compare equal, but Equal(0.00010000, 0.00010002, 1.0e-3) will.
 
 bool Equal(double x1, double x2, double epsilon = WFMATH_EPSILON);
+// Avoid template, make sure floats are cast to doubles.
+inline bool Equal(float x1, float x2, double epsilon = WFMATH_EPSILON)
+	{return Equal((double) x1, (double) x2, epsilon);}
 
 // These let us avoid including <algorithm> for the sake of
 // std::max() and std::min().

@@ -60,11 +60,16 @@ Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v);
 template<const int dim> // m^-1 * v
 Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v);
 template<const int dim> // v * m
-inline Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m)
-	{return InvProd(m, v);} // Since transpose() and inverse() are the same
+Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m);
 template<const int dim> // v * m^-1
-inline Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m)
-	{return Prod(m, v);} // Since transpose() and inverse() are the same
+Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m);
+
+template<const int dim>
+RotMatrix<dim> operator*(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
+template<const int dim>
+Vector<dim> operator*(const RotMatrix<dim>& m, const Vector<dim>& v);
+template<const int dim>
+Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m);
@@ -84,7 +89,7 @@ class RotMatrix {
   // No operator=(CoordType d[dim][dim]), since it can fail.
   // Use setVals() instead.
 
-  bool isEqualTo(const RotMatrix& rhs, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const RotMatrix& m, double epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const RotMatrix& m) const {return isEqualTo(m);}
   bool operator!=(const RotMatrix& m) const {return !isEqualTo(m);}
@@ -97,7 +102,7 @@ class RotMatrix {
 
   static const int nParams = dim*(dim-1)/2;
 
-  const CoordType& elem(const int i, const int j) const 	{return m_elem[i][j];}
+  CoordType elem(const int i, const int j) const 	{return m_elem[i][j];}
 
   // Can't set one element at a time and keep it an O(N) matrix,
   // but can try to set all values at once, and see if they match.
@@ -130,10 +135,10 @@ class RotMatrix {
   // Set the value to a given rotation
 
   // Two axes and an angle
-  RotMatrix& rotation	(const int i, const int j, const CoordType& theta);
+  RotMatrix& rotation	(const int i, const int j, CoordType theta);
   // Two vectors in a plane and an angle
   RotMatrix& rotation	(const Vector<dim>& v1, const Vector<dim>& v2,
-			 const CoordType& theta);
+			 CoordType theta);
   // A rotation which will move "from" to lie parallel to "to"
   RotMatrix& rotation	(const Vector<dim>& from, const Vector<dim>& to);
 
@@ -147,22 +152,21 @@ class RotMatrix {
   // 2D/3D stuff
 
   // Euler angles, 3D only
-  RotMatrix(const CoordType& alpha, const CoordType& beta,
-	    const CoordType& gamma, bool not_flip = true)
+  RotMatrix(CoordType alpha, CoordType beta, CoordType gamma, bool not_flip = true)
 	{CoordType d[3] = {alpha, beta, gamma}; fromEuler(d, not_flip);}
   // Quaternion, 3D only
   RotMatrix(const Quaternion& q, const bool not_flip = true)
 	{fromQuaternion(q, not_flip);}
 
   // 2D only
-  RotMatrix<2>& rotation(const CoordType& theta)
+  RotMatrix<2>& rotation(CoordType theta)
 	{return rotation(0, 1, theta);}
 
   // 3D only
-  RotMatrix<3>& rotationX(const CoordType& theta) {return rotation(1, 2, theta);}
-  RotMatrix<3>& rotationY(const CoordType& theta) {return rotation(2, 0, theta);}
-  RotMatrix<3>& rotationZ(const CoordType& theta) {return rotation(0, 1, theta);}
-  RotMatrix<3>& rotation(const Vector<3>& axis, const CoordType& theta);
+  RotMatrix<3>& rotationX(CoordType theta) {return rotation(1, 2, theta);}
+  RotMatrix<3>& rotationY(CoordType theta) {return rotation(2, 0, theta);}
+  RotMatrix<3>& rotationZ(CoordType theta) {return rotation(0, 1, theta);}
+  RotMatrix<3>& rotation(const Vector<3>& axis, CoordType theta);
 
   RotMatrix<3>& fromQuaternion(const Quaternion& q, const bool not_flip = true);
 

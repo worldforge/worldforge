@@ -1,7 +1,7 @@
-// point_funcs.h (imported from forge/servers/pangea/MapLaw/MapPoint.cc via lib)
+// point_funcs.h (point class copied from libCoal, subsequently modified)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2000, 2001, 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -52,12 +52,12 @@ Point<dim>& Point<dim>::origin()
 }
 
 template<const int dim>
-bool Point<dim>::isEqualTo(const Point<dim> &rhs, double tolerance) const
+bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
 {
-  CoordType delta = scaleEpsilon(rhs, tolerance);
+  CoordType delta = _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
 
   for(int i = 0; i < dim; ++i)
-    if(fabs(m_elem[i] - rhs.m_elem[i]) > delta)
+    if(fabs(m_elem[i] - p.m_elem[i]) > delta)
       return false;
 
   return true;
@@ -117,15 +117,6 @@ Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
 
     for(int i = 0; i < dim; ++i)
       m_elem[i] = rhs.m_elem[i];
-
-    return *this;
-}
-
-template<const int dim>
-Point<dim>& Point<dim>::operator=(const CoordType d[dim])
-{
-    for(int i = 0; i < dim; ++i)
-      m_elem[i] = d[i];
 
     return *this;
 }
@@ -200,7 +191,7 @@ CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
     ans += diff * diff;
   }
 
-  return (fabs(ans) >= p1.scaleEpsilon(p2)) ? ans : 0;
+  return (fabs(ans) >= _ScaleEpsilon(p1.m_elem, p2.m_elem, dim)) ? ans : 0;
 }
 
 template<const int dim, template<class> class container,

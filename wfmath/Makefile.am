@@ -11,7 +11,7 @@ header_HEADERS = error.h const.h \
 	quaternion.h \
 	axisbox.h axisbox_funcs.h \
 	ball.h ball_funcs.h \
-	miniball_config.h wrapped_array.h miniball.h miniball_funcs.h \
+	wrapped_array.h miniball.h miniball_funcs.h \
 	segment.h segment_funcs.h \
 	rotbox.h rotbox_funcs.h \
 	polygon.h polygon_funcs.h \

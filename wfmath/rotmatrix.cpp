@@ -93,7 +93,7 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 
 template<>
 RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
-					      const CoordType& theta)
+					      CoordType theta)
 {
   CoordType max = 0;
   int main_comp = -1;

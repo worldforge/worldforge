@@ -32,7 +32,49 @@
 
 namespace WFMath {
 
-// FIXME purge this file?
+template<const int dim>
+bool Segment<dim>::isEqualTo(const Segment<dim>& s, double epsilon) const
+{
+  return Equal(m_p1, s.m_p1, epsilon)
+      && Equal(m_p2, s.m_p2, epsilon);
+}
+
+template<const int dim>
+bool Segment<dim>::operator< (const Segment& s) const
+{
+  if(!Equal(m_p1, s.m_p1))
+    return m_p1 < s.m_p1;
+  else
+    return m_p2 < s.m_p2;
+}
+
+template<const int dim>
+Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
+{
+  Vector<dim> diff = m_p2 - m_p1;
+
+  if(!corner) {
+    m_p1 = p;
+    m_p2 = p + diff;
+  }
+  else {
+    m_p2 = p;
+    m_p1 = p - diff;
+  }
+
+  return *this;
+}
+
+template<const int dim>
+Segment<dim>& Segment<dim>::rotateCorner(const RotMatrix<dim>& m, int corner)
+{
+  if(corner)
+    m_p1.rotate(m, m_p2);
+  else
+    m_p2.rotate(m, m_p1);
+
+  return *this;
+}
 
 } // namespace WFMath
 

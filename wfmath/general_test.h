@@ -39,7 +39,7 @@ void test_general(const C& c)
 
   c1 = c; // operator=()
 
-  assert(c1.isEqualTo(c2));
+  assert(Equal(c1, c2));
   assert(c1 == c2);
   assert(!(c1 != c2));
   assert(!(c1 < c2));
@@ -48,7 +48,7 @@ void test_general(const C& c)
   C c3;
   assert(FromString(c3, s)); // Uses operator>>() implicitly
   // We lose precision in string conversion
-  assert(c3.isEqualTo(c, FloatMax(WFMATH_EPSILON, 1e-5)));
+  assert(Equal(c3, c, FloatMax(WFMATH_EPSILON, 1e-5)));
 }
 
 } // namespace WFMath

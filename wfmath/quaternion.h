@@ -58,7 +58,7 @@ class Quaternion
   Quaternion& operator= (const Quaternion& rhs)
 	{m_w = rhs.m_w; m_vec = rhs.m_vec; return *this;}
 
-  bool isEqualTo(const Quaternion &rhs, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Quaternion &q, double epsilon = WFMATH_EPSILON) const;
 
   bool operator== (const Quaternion& rhs) const	{return isEqualTo(rhs);}
   bool operator!= (const Quaternion& rhs) const	{return !isEqualTo(rhs);}

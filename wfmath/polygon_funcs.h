@@ -52,7 +52,7 @@ _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& a)
 }
 
 template<const int dim>
-bool Polygon<dim>::isEqualTo(const Polygon& p, double tolerance) const
+bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
 {
   // The same polygon can be expressed in different ways in the interal
   // format, so we have to call getCorner();
@@ -62,7 +62,7 @@ bool Polygon<dim>::isEqualTo(const Polygon& p, double tolerance) const
     return false;
 
   for(int i = 0; i < size; ++i)
-    if(!getCorner(i).isEqualTo(p.getCorner(i), tolerance))
+    if(!Equal(getCorner(i), p.getCorner(i), epsilon))
       return false;
 
   return true;

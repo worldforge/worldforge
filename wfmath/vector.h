@@ -46,20 +46,20 @@ Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2);
 template<const int dim>
 Vector<dim> operator-(const Vector<dim>& v); // Unary minus
 template<const int dim>
-Vector<dim> operator*(const CoordType& d, const Vector<dim>& v);
+Vector<dim> operator*(CoordType d, const Vector<dim>& v);
 template<const int dim>
-Vector<dim> operator*(const Vector<dim>& v, const CoordType& d);
+Vector<dim> operator*(const Vector<dim>& v, CoordType d);
 template<const int dim>
-Vector<dim> operator/(const Vector<dim>& v, const CoordType& d);
+Vector<dim> operator/(const Vector<dim>& v, CoordType d);
 
 template<const int dim>
 Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2);
 template<const int dim>
 Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2);
 template<const int dim>
-Vector<dim>& operator*=(Vector<dim>& v, const CoordType& d);
+Vector<dim>& operator*=(Vector<dim>& v, CoordType d);
 template<const int dim>
-Vector<dim>& operator/=(Vector<dim>& v, const CoordType& d);
+Vector<dim>& operator/=(Vector<dim>& v, CoordType d);
 
 template<const int dim>
 CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2);
@@ -67,7 +67,7 @@ CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2);
 template<const int dim>
 CoordType Angle(const Vector<dim>& v, const Vector<dim>& u);
 
-// The following are defined in matrix_funcs.h
+// The following are defined in rotmatrix_funcs.h
 template<const int dim> // m * v
 Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v);
 template<const int dim> // m^-1 * v
@@ -76,6 +76,11 @@ template<const int dim> // v * m
 Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m);
 template<const int dim> // v * m^-1
 Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m);
+
+template<const int dim>
+Vector<dim> operator*(const RotMatrix<dim>& m, const Vector<dim>& v);
+template<const int dim>
+Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m);
 
 template<const int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
@@ -111,10 +116,9 @@ class Vector {
   Atlas::Message::Object toAtlas() const;
   void fromAtlas(const Atlas::Message::Object& a);
 
-  Vector& operator=(const CoordType d[dim]);
   Vector& operator=(const Vector& v);
 
-  bool isEqualTo(const Vector& rhs, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Vector& v, double epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const Vector& v) const {return isEqualTo(v);}
   bool operator!=(const Vector& v) const {return !isEqualTo(v);}
@@ -127,24 +131,17 @@ class Vector {
 
   // Math operators
 
-//  Vector operator+(const Vector& v) const;
-//  Vector operator-(const Vector& v) const;
-//  Vector operator*(const CoordType& d) const;
-//  Vector operator/(const CoordType& d) const;
-
-//  Vector operator-() const; // Unary minus
-
   friend Vector& operator+=<dim>(Vector& v1, const Vector& v2);
   friend Vector& operator-=<dim>(Vector& v1, const Vector& v2);
-  friend Vector& operator*=<dim>(Vector& v, const CoordType& d);
-  friend Vector& operator/=<dim>(Vector& v, const CoordType& d);
+  friend Vector& operator*=<dim>(Vector& v, CoordType d);
+  friend Vector& operator/=<dim>(Vector& v, CoordType d);
 
   friend Vector operator+<dim>(const Vector& v1, const Vector& v2);
   friend Vector operator-<dim>(const Vector& v1, const Vector& v2);
   friend Vector operator-<dim>(const Vector& v); // Unary minus
-  friend Vector operator*<dim>(const CoordType& d, const Vector& v);
-  friend Vector operator*<dim>(const Vector& v, const CoordType& d);
-  friend Vector operator/<dim>(const Vector& v, const CoordType& d);
+  friend Vector operator*<dim>(CoordType d, const Vector& v);
+  friend Vector operator*<dim>(const Vector& v, CoordType d);
+  friend Vector operator/<dim>(const Vector& v, CoordType d);
 
   friend Vector Prod<dim>	(const RotMatrix<dim>& m,
 				 const Vector& v);
@@ -153,7 +150,7 @@ class Vector {
 
   // Don't do range checking, it'll slow things down, and people
   // should be able to figure it out on their own
-  const CoordType& operator[](const int i) const {return m_elem[i];}
+  CoordType operator[](const int i) const {return m_elem[i];}
   CoordType& operator[](const int i)		 {return m_elem[i];}
 
   friend Vector operator-<dim>(const Point<dim>& c1, const Point<dim>& c2);
@@ -197,8 +194,7 @@ class Vector {
   // Same thing, but the axes are defined by two vectors. If the
   // vectors are parallel, this throws a ColinearVectors error.
 
-  Vector& rotate(const Vector& v1, const Vector& v2, CoordType theta)
-	{RotMatrix<dim> m; return operator=(Prod(m.rotation(v1, v2, theta), *this));}
+  Vector& rotate(const Vector& v1, const Vector& v2, CoordType theta);
 
   // mirror image functions
 
@@ -215,8 +211,8 @@ class Vector {
   // Attempting to call these on any other vector will
   // result in a linker error.
 
-  Vector(const CoordType& x, const CoordType& y);
-  Vector(const CoordType& x, const CoordType& y, const CoordType& z);
+  Vector(CoordType x, CoordType y);
+  Vector(CoordType x, CoordType y, CoordType z);
 
   Vector<2>& rotate(CoordType theta);
 
@@ -230,12 +226,12 @@ class Vector {
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
 
-  const CoordType& x() const	{return m_elem[0];}
-  CoordType& x()		{return m_elem[0];}
-  const CoordType& y() const	{return m_elem[1];}
-  CoordType& y()		{return m_elem[1];}
-  const CoordType& z() const	{return m_elem[2];}
-  CoordType& z()		{return m_elem[2];}
+  CoordType x() const	{return m_elem[0];}
+  CoordType& x()	{return m_elem[0];}
+  CoordType y() const	{return m_elem[1];}
+  CoordType& y()	{return m_elem[1];}
+  CoordType z() const	{return m_elem[2];}
+  CoordType& z()	{return m_elem[2];}
 
   Vector& mirrorX()	{return mirror(0);}
   Vector& mirrorY()	{return mirror(1);}
@@ -249,10 +245,11 @@ class Vector {
   Vector<3>& spherical(CoordType r, CoordType theta, CoordType phi);
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
- private:
-  double scaleEpsilon(const Vector& v, double epsilon = WFMATH_EPSILON) const
+  // FIXME make Cross() a friend function, and make this private
+  double _scaleEpsilon(const Vector& v, double epsilon = WFMATH_EPSILON) const
 	{return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
 
+ private:
   CoordType m_elem[dim];
 };
 

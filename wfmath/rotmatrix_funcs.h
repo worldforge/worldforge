@@ -54,24 +54,24 @@ RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
 }
 
 template<const int dim>
-bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& rhs, double tolerance) const
+bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) const
 {
   // Since the sum of the squares of the elements in any row or column add
   // up to 1, all the elements lie between -1 and 1, and each row has
   // at least one element whose magnitude is at least 1/sqrt(dim).
-  // Therefore, we don't need to scale the tolerance, as we did for
+  // Therefore, we don't need to scale epsilon, as we did for
   // Vector<> and Point<>.
 
-  assert(tolerance > 0);
+  assert(epsilon > 0);
 
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      if(fabs(m_elem[i][j] - rhs.m_elem[i][j]) > tolerance)
+      if(fabs(m_elem[i][j] - m.m_elem[i][j]) > epsilon)
         return false;
 
   // Don't need to test m_flip, it's determined by the values of m_elem.
 
-  assert(m_flip == rhs.m_flip);
+  assert(m_flip == m.m_flip);
 
   return true;
 }
@@ -194,6 +194,36 @@ Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v)
   }
 
   return out;
+}
+
+template<const int dim> // v * m
+inline Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m)
+{
+  return InvProd(m, v); // Since transpose() and inverse() are the same
+}
+
+template<const int dim> // v * m^-1
+inline Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m)
+{
+  return Prod(m, v); // Since transpose() and inverse() are the same
+}
+
+template<const int dim>
+inline RotMatrix<dim> operator*(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
+{
+  return Prod(m1, m2);
+}
+
+template<const int dim>
+inline Vector<dim> operator*(const RotMatrix<dim>& m, const Vector<dim>& v)
+{
+  return Prod(m, v);
+}
+
+template<const int dim>
+Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m)
+{
+  return InvProd(m, v); // Since transpose() and inverse() are the same
 }
 
 template<const int dim>
@@ -345,7 +375,7 @@ template<> bool RotMatrix<3>::toEuler(CoordType angles[3]) const;
 
 template<const int dim>
 RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
-					  const CoordType& theta)
+					  CoordType theta)
 {
   assert(i >= 0 && i < dim && j >= 0 && j < dim && i != j);
 
@@ -378,7 +408,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
 template<const int dim>
 RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 					  const Vector<dim>& v2,
-					  const CoordType& theta)
+					  CoordType theta)
 {
   CoordType v1_sqr_mag = v1.sqrMag();
 
@@ -465,7 +495,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
 }
 
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
-						 const CoordType& theta);
+						 CoordType theta);
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip);
 

@@ -1,6 +1,8 @@
 Intersect functions unimplemented:
 	Intersect(RotBox<>, AxisBox<>)
 	IntersectProper(RotBox<>, AxisBox<>)
+	Intersect(RotBox<>, RotBox<>)
+	IntersectProper(RotBox<>, RotBox<>)
         for dim != 2,
 	  Contains(Polygon<>, AxisBox<>)
 	  ContainsProper(Polygon<>, AxisBox<>)

@@ -44,18 +44,18 @@ Quaternion::Quaternion (const CoordType w_in, const CoordType x_in,
   m_vec[2] = z_in / norm;
 }
 
-bool Quaternion::isEqualTo(const Quaternion &rhs, double tolerance) const
+bool Quaternion::isEqualTo(const Quaternion &q, double epsilon) const
 {
   // Since the sum of squares is 1, the magnitude of the largest
   // element must be between 1 and 0.5, so we don't need to scale epsilon.
 
-  assert(tolerance > 0);
+  assert(epsilon > 0);
 
   for(int i = 0; i < 3; ++i)
-    if(fabs(m_vec[i] - rhs.m_vec[i]) > tolerance)
+    if(fabs(m_vec[i] - q.m_vec[i]) > epsilon)
       return false;
 
-  return fabs(m_w - rhs.m_w) <= tolerance;
+  return fabs(m_w - q.m_w) <= epsilon;
 }
 
 bool Quaternion::operator< (const Quaternion& rhs) const

@@ -69,9 +69,7 @@ class Ball
   Ball& operator=(const Ball& b)
 	{m_radius = b.m_radius; m_center = b.m_center; return *this;}
 
-  bool isEqualTo(const Ball& b, double tolerance = WFMATH_EPSILON) const
-	{return m_center.isEqualTo(b.m_center, tolerance)
-	     && Equal(m_radius, b.m_radius, tolerance);}
+  bool isEqualTo(const Ball& b, double epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const Ball& b) const	{return isEqualTo(b);}
   bool operator!=(const Ball& b) const	{return !isEqualTo(b);}
@@ -87,24 +85,21 @@ class Ball
   // that finds the number of corners with numCorners(), and does something
   // with each corner with getCorner(). No idea how useful that is, but
   // it's not a particularly complicated function to write.
-  Point<dim> getCorner(int i) const
-	{assert(false); return Point<dim>();}
+  Point<dim> getCorner(int i) const {assert(false);}
   Point<dim> getCenter() const {return m_center;}
 
   const Point<dim>& center() const {return m_center;}
   Point<dim>& center() {return m_center;}
-  const CoordType& radius() const {return m_radius;}
+  CoordType radius() const {return m_radius;}
   CoordType& radius() {return m_radius;}
 
   // Movement functions
 
   Ball& shift(const Vector<dim>& v) {m_center += v; return *this;}
-  Ball& moveCornerTo(const Point<dim>& p, int corner)
-	{assert(false); return *this;}
+  Ball& moveCornerTo(const Point<dim>& p, int corner) {assert(false);}
   Ball& moveCenterTo(const Point<dim>& p) {m_center = p; return *this;}
 
-  Ball& rotateCorner(const RotMatrix<dim>& m, int corner)
-	{assert(false); return *this;}
+  Ball& rotateCorner(const RotMatrix<dim>& m, int corner) {assert(false);}
   Ball& rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Ball& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_center.rotate(m, p); return *this;}

@@ -147,15 +147,16 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) con
 }
 
 //template<>
-bool Polygon<2>::isEqualTo(const Polygon& p, double tolerance) const
+bool Polygon<2>::isEqualTo(const Polygon<2>& p, double epsilon) const
 {
   if(m_points.size() != p.m_points.size())
     return false;
 
-  theConstIter i1 = m_points.begin(), i2 = p.m_points.begin(), end = m_points.end();
+  Polygon<2>::theConstIter i1 = m_points.begin(), i2 = p.m_points.begin(),
+			   end = m_points.end();
 
   while(i1 != end) {
-    if(!i1->isEqualTo(*i2, tolerance))
+    if(!Equal(*i1, *i2, epsilon))
       return false;
     ++i1;
     ++i2;

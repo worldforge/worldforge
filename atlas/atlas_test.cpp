@@ -36,7 +36,7 @@ void atlas_test(const C& c)
   C out(a);
 //  cout << out << std::endl;
   // Only match to string precision
-  assert(c.isEqualTo(out, FloatMax(WFMATH_EPSILON,1e-5)));
+  assert(Equal(c, out, FloatMax(WFMATH_EPSILON,1e-5)));
 }
 
 int main()

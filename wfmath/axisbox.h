@@ -76,9 +76,7 @@ class AxisBox
   AxisBox& operator=(const AxisBox& a)
 	{m_low = a.m_low; m_high = a.m_high; return *this;}
 
-  bool isEqualTo(const AxisBox& a, double tolerance = WFMATH_EPSILON) const
-	{return m_low.isEqualTo(a.m_low, tolerance)
-	     && m_high.isEqualTo(a.m_high, tolerance);}
+  bool isEqualTo(const AxisBox& b, double epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const AxisBox& a) const	{return isEqualTo(a);}
   bool operator!=(const AxisBox& a) const	{return !isEqualTo(a);}

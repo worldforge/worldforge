@@ -1,7 +1,7 @@
-// point.h (imported from forge/servers/pangea/MapLaw/MapPoint.h via libCoal)
+// point.h (point class copied from libCoal, subsequently modified)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2000, 2001, 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -94,14 +94,13 @@ class Point
   void fromAtlas(const Atlas::Message::Object& a);
 
   Point& operator= (const Point& rhs);
-  Point& operator= (const CoordType d[dim]);
 
-  bool isEqualTo(const Point &rhs, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Point &p, double epsilon = WFMATH_EPSILON) const;
 
   bool operator== (const Point& rhs) const	{return isEqualTo(rhs);}
   bool operator!= (const Point& rhs) const	{return !isEqualTo(rhs);}
 
-  Point& origin(); // Set point to (0,0,..,0)
+  Point& origin(); // Set point to (0,0,...,0)
 
   // Sort only, don't use otherwise
   bool operator< (const Point& rhs) const;
@@ -126,7 +125,7 @@ class Point
   Point<dim> getCorner(int i) const {return *this;}
   Point<dim> getCenter() const {return *this;}
 
-  Point shift(const Vector<dim>& v) {return operator+=(*this, v);}
+  Point shift(const Vector<dim>& v) {return *this += v;}
   Point moveCornerTo(const Point& p, int corner) {return operator=(p);}
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
@@ -140,12 +139,12 @@ class Point
 
   // Member access
 
-  const CoordType& operator[](const int i) const {return m_elem[i];}
-  CoordType& operator[](const int i)		 {return m_elem[i];}
+  CoordType operator[](const int i) const	{return m_elem[i];}
+  CoordType& operator[](const int i)		{return m_elem[i];}
 
   friend CoordType SquaredDistance<dim>(const Point& p1, const Point& p2);
 
-// FIXME instatiation problem
+// FIXME instatiation problem when declared as friend
 //  template<template<class> class container>
 //  friend Point Barycenter(const container<Point>& c);
 
@@ -159,12 +158,12 @@ class Point
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
 
-  const CoordType& x() const	{return m_elem[0];}
-  CoordType& x()		{return m_elem[0];}
-  const CoordType& y() const	{return m_elem[1];}
-  CoordType& y()		{return m_elem[1];}
-  const CoordType& z() const	{return m_elem[2];}
-  CoordType& z()		{return m_elem[2];}
+  CoordType x() const	{return m_elem[0];}
+  CoordType& x()	{return m_elem[0];}
+  CoordType y() const	{return m_elem[1];}
+  CoordType& y()	{return m_elem[1];}
+  CoordType z() const	{return m_elem[2];}
+  CoordType& z()	{return m_elem[2];}
 
   Point<2>& polar(CoordType r, CoordType theta);
   void asPolar(CoordType& r, CoordType& theta) const;
@@ -175,9 +174,6 @@ class Point
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
  private:
-  double scaleEpsilon(const Point& p, double epsilon = WFMATH_EPSILON) const
-	{return _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);}
-
   CoordType m_elem[dim];
 };
 

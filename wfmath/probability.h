@@ -34,9 +34,15 @@ namespace WFMath {
 
 double GaussianConditional(double mean, double stddev, double val);
 double Gaussian(double mean, double stddev, double val);
+
 double PoissonConditional(double mean, unsigned int step);
 double Poisson(double mean, unsigned int step);
+
 double LogFactorial(unsigned int n);
+double Factorial(unsigned int n);
+
+double LogGamma(double z);
+double Gamma(double z);
 
 } // namespace WFMath
 

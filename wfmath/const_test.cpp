@@ -37,8 +37,8 @@ static void TestEqual()
         assert( Equal(0.00010000, 0.00010002, 1.0e-3));
         assert(!Equal(0.00010000, 0.00010002, 1.0e-6));
 
-        assert( Equal(1000100, 1000000, 1.0e-3));
-        assert(!Equal(1000100, 1000000, 1.0e-6));
+        assert( Equal(1000100.0, 1000000.0, 1.0e-3));
+        assert(!Equal(1000100.0, 1000000.0, 1.0e-6));
 }
 
 int main()

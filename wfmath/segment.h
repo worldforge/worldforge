@@ -58,17 +58,14 @@ class Segment
   Segment& operator=(const Segment& s)
 	{m_p1 = s.m_p1; m_p2 = s.m_p2; return *this;}
 
-  bool isEqualTo(const Segment& s, double tolerance = WFMATH_EPSILON) const
-	{return m_p1.isEqualTo(s.m_p1, tolerance)
-	     && m_p2.isEqualTo(s.m_p2, tolerance);}
+  bool isEqualTo(const Segment& s, double epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const Segment& b) const	{return isEqualTo(b);}
   bool operator!=(const Segment& b) const	{return !isEqualTo(b);}
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the segment.
-  bool operator< (const Segment& s) const
-	{return m_p1 < s.m_p1 || (!(s.m_p1 < m_p1) && m_p2 < s.m_p2);}
+  bool operator< (const Segment& s) const;
 
   // Descriptive characteristics
 
@@ -84,13 +81,11 @@ class Segment
 
   Segment& shift(const Vector<dim>& v)
 	{m_p1 += v; m_p2 += v; return *this;}
-  Segment& moveCornerTo(const Point<dim>& p, int corner)
-	{return shift(p - getCorner(corner));}
+  Segment& moveCornerTo(const Point<dim>& p, int corner);
   Segment& moveCenterTo(const Point<dim>& p)
 	{return shift(p - getCenter());}
 
-  Segment& rotateCorner(const RotMatrix<dim>& m, int corner)
-	{rotatePoint(m, getCorner(corner)); return *this;}
+  Segment& rotateCorner(const RotMatrix<dim>& m, int corner);
   Segment& rotateCenter(const RotMatrix<dim>& m)
 	{rotatePoint(m, getCenter()); return *this;}
   Segment<dim>& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)

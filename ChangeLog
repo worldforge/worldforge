@@ -1,3 +1,18 @@
+Tuesday, February 12, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added Equal() template to call foo->isEqualTo().
+	* Replaced "const CoordType&" with CoordType everywhere it
+	  was used.
+	* Got rid of scaleEpsilon member function in Point<> in favor
+	  of calling _ScaleEpsilon directly, minimized use of
+	  _scaleEpsilon member function in Vector<>
+	* Improved efficiency of some member functions in Segment<>
+	* Got rid of <iostream> in wrapped_array.h, got rid of
+	  MINIBALL_NO_STD_NAMESPACE test on whether to include
+	  <list> or <list.h> and <cassert> or <assert.h> (since
+	  we're including them as <list> and <assert.h> elsewhere),
+	  got rid of miniball_config.h
+
 Friday, February 1, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Changed IsFloatEqual() to Equal(), removed FloatAdd()

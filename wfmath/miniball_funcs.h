@@ -36,11 +36,7 @@
 #ifndef WFMATH_MINIBALL_FUNCS_H
 #define WFMATH_MINIBALL_FUNCS_H
 
-#ifdef MINIBALL_NO_STD_NAMESPACE
-   #include<assert.h>
-#else
-   #include<cassert>
-#endif
+#include<assert.h>
 
 namespace WFMath { namespace _miniball {
 

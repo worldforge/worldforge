@@ -62,7 +62,7 @@ class Polygon<2>
   Polygon& operator=(const Polygon& p)
 	{m_points = p.m_points; return *this;}
 
-  bool isEqualTo(const Polygon& p, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Polygon& p, double epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const Polygon& p) const	{return isEqualTo(p);}
   bool operator!=(const Polygon& p) const	{return !isEqualTo(p);}
@@ -255,7 +255,7 @@ class Polygon
   Polygon& operator=(const Polygon& p)
 	{m_orient = p.m_orient; m_poly = p.m_poly; return *this;}
 
-  bool isEqualTo(const Polygon& p, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Polygon& p2, double epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const Polygon& p) const	{return isEqualTo(p);}
   bool operator!=(const Polygon& p) const	{return !isEqualTo(p);}

@@ -23,12 +23,13 @@
 // Author: Ron Steinke
 // Created: 2001-12-12
 
+#include <vector>
+#include <list>
+
 #include "const.h"
 #include "vector.h"
 #include "point.h"
 #include "stream.h"
-#include <vector>
-#include <list>
 
 #include "general_test.h"
 #include "shape_test.h"

@@ -44,15 +44,6 @@ Vector<dim>::Vector(const Vector<dim>& v)
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::operator=(const CoordType d[dim])
-{
-  for(int i = 0; i < dim; ++i)
-    m_elem[i] = d.m_elem[i];
-
-  return *this;
-}
-
-template<const int dim>
 Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 {
   for(int i = 0; i < dim; ++i)
@@ -62,12 +53,12 @@ Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 }
 
 template<const int dim>
-bool Vector<dim>::isEqualTo(const Vector<dim>& rhs, double tolerance) const
+bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
 {
-  double delta = scaleEpsilon(rhs, tolerance);
+  double delta = _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);
 
   for(int i = 0; i < dim; ++i)
-    if(fabs(m_elem[i] - rhs.m_elem[i]) > delta)
+    if(fabs(m_elem[i] - v.m_elem[i]) > delta)
       return false;
 
   return true;
@@ -109,7 +100,7 @@ Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-Vector<dim> operator*(const Vector<dim>& v, const CoordType& d)
+Vector<dim> operator*(const Vector<dim>& v, CoordType d)
 {
   Vector<dim> ans;
 
@@ -120,7 +111,7 @@ Vector<dim> operator*(const Vector<dim>& v, const CoordType& d)
 }
 
 template<const int dim>
-Vector<dim> operator*(const CoordType& d, const Vector<dim>& v)
+Vector<dim> operator*(CoordType d, const Vector<dim>& v)
 {
   Vector<dim> ans;
 
@@ -131,7 +122,7 @@ Vector<dim> operator*(const CoordType& d, const Vector<dim>& v)
 }
 
 template <const int dim>
-Vector<dim> operator/(const Vector<dim>& v, const CoordType& d)
+Vector<dim> operator/(const Vector<dim>& v, CoordType d)
 {
   Vector<dim> ans;
 
@@ -171,7 +162,7 @@ Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-Vector<dim>& operator*=(Vector<dim>& v, const CoordType& d)
+Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
 {
   for(int i = 0; i < dim; ++i)
     v.m_elem[i] *= d;
@@ -180,7 +171,7 @@ Vector<dim>& operator*=(Vector<dim>& v, const CoordType& d)
 }
 
 template <const int dim>
-Vector<dim>& operator/=(Vector<dim>& v, const CoordType& d)
+Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
 {
   for(int i = 0; i < dim; ++i)
     v.m_elem[i] /= d;
@@ -233,13 +224,21 @@ Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
   return *this;
 }
 
+template<const int dim>
+Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
+				 CoordType theta)
+{
+  RotMatrix<dim> m;
+  return operator=(Prod(m.rotation(v1, v2, theta), *this));
+}
+
 template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta);
 template<> Vector<3>& Vector<3>::rotate(const Quaternion& q);
 
 template<const int dim>
 CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 {
-  double delta = v1.scaleEpsilon(v2);
+  double delta = _ScaleEpsilon(v1.m_elem, v2.m_elem, dim);
 
   CoordType ans = 0;
 
@@ -326,10 +325,9 @@ template<> inline CoordType Vector<1>::sloppyMag() const {return fabs(m_elem[0])
 template<> CoordType Vector<2>::sloppyMag() const;
 template<> CoordType Vector<3>::sloppyMag() const;
 
-template<> inline Vector<2>::Vector(const CoordType& x, const CoordType& y)
+template<> inline Vector<2>::Vector(CoordType x, CoordType y)
 	{m_elem[0] = x; m_elem[1] = y;}
-template<> inline Vector<3>::Vector(const CoordType& x, const CoordType& y,
-				    const CoordType& z)
+template<> inline Vector<3>::Vector(CoordType x, CoordType y, CoordType z)
 	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
 
 template<> inline Vector<2>& Vector<2>::rotate(CoordType theta)

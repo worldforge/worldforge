@@ -32,14 +32,6 @@
 #ifndef WFMATH_WRAPPED_ARRAY_H
 #define WFMATH_WRAPPED_ARRAY_H
 
-#include <wfmath/miniball_config.h>
-
-#ifdef MINIBALL_NO_STD_NAMESPACE
-   #include <iostream.h>
-#else
-   #include <iostream>
-#endif
-
 namespace WFMath { namespace _miniball {
    
    template <int d>
@@ -92,30 +84,6 @@ namespace WFMath { namespace _miniball {
                return coord+d;
            }
    };
-   
-   // Output
-   
-   #ifndef MINIBALL_NO_STD_NAMESPACE
-       template <int d>
-       std::ostream& operator << (std::ostream& os, const Wrapped_array<d>& p)
-       {
-           os << "(";
-           for (int i=0; i<d-1; ++i)
-               os << p[i] << ", ";
-           os << p[d-1] << ")";
-           return os;
-       }
-   #else
-       template <int d>
-       ostream& operator << (ostream& os, const Wrapped_array<d>& p)
-       {
-           os << "(";
-           for (int i=0; i<d-1; ++i)
-               os << p[i] << ", ";
-           os << p[d-1] << ")";
-           return os;
-       }
-   #endif
    
 }} // namespace WFMath::_miniball   
 
