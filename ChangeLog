@@ -1,3 +1,9 @@
+Saturday, December 22 2001, James Turner
+
+	* Committed build improvement by Michael Kocg - Eris now as
+	  an eris-config script and M4 macro file, so much more
+	  reliable configure scripts can be setup by clients.
+
 Friday, December 21 2001, James Turner
 
 	* Standardised Entity signals to *not* include 'this' as

@@ -11,9 +11,8 @@ AC_PROG_CXX
 AC_STDC_HEADERS
 AM_PROG_LIBTOOL
 
-CFLAGS="-g -Wall -ansi"
-CXXFLAGS="-g -Wall -ansi"
-CPPFLAGS=
+CFLAGS="$CFLAGS -g -Wall -ansi"
+CPPFLAGS="$CLFAGS -g -Wall -ansi"
 
 dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 
@@ -23,6 +22,7 @@ AC_DEFINE(_ISOC99_SOURCE,1)
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 
+dnl Check for libsigc++
 AM_PATH_SIGC(1.0.0,[
 	CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
 	LDFLAGS="$LDFLAGS $SIGC_LIBS"
@@ -32,14 +32,16 @@ AM_PATH_SIGC(1.0.0,[
 
 
 dnl Check for libskstream library
-AC_CHECK_LIB(skstream, main, LIBS="$LIBS -lskstream",
-	AC_MSG_ERROR(Couldn't find skstream library; check you installed
-	from forge/libs/skstream)
+AM_PATH_SKSTREAM(0.2.1, [
+	CFLAGS="$CFLAGS $SKSTREAM_CFLAGS"
+	CPPFLAGS="$CPPFLAGS $SKSTREAM_CFLAGS"
+	LIBS="$LIBS $SKSTREAM_LIBS"],
+	AC_MSG_ERROR(Couldn't find skstream or version is insufficent)
 )
 
-AC_CHECK_HEADER(skstream.h, , AC_MSG_ERROR(Couldn't find skstream header file)) 
 
 
+dnl Check for Atlas-C++ library
 AM_PATH_ATLAS(0.4.4, [
 	CFLAGS="$CFLAGS $ATLAS_CFLAGS"
 	CXXFLAGS="$CXXFLAGS $ATLAS_CXXFLAGS"
@@ -60,8 +62,16 @@ AC_SUBST(CFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
+SYSTEM_LIBS=""
+ERIS_LIBS="-leris"
+ERIS_CFLAGS=""
+AC_SUBST(SYSTEM_LIBS)
+AC_SUBST(ERIS_LIBS)
+AC_SUBST(ERIS_CFLAGS)
+
 AC_OUTPUT([
 Makefile
 src/Makefile
 eris.dox
+eris-config
 ])
