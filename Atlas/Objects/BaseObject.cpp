@@ -46,7 +46,7 @@ Object BaseObjectData::asObject() const
 void BaseObjectData::sendContents(Bridge* b) const
 {
     Message::Encoder e(b);
-    typedef map<std::string, Object>::const_iterator Iter;
+    typedef std::map<std::string, Object>::const_iterator Iter;
     for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++)
         e.mapItem((*I).first, (*I).second);
 }

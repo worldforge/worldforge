@@ -29,7 +29,7 @@ std::string get_line(std::string &s1, char ch, std::string &s2)
 }
 
 
-Atlas::Net::NegotiateHelper::NegotiateHelper(list<std::string> *names) :
+Atlas::Net::NegotiateHelper::NegotiateHelper(std::list<std::string> *names) :
   names(names)
 { 
 }
@@ -54,10 +54,10 @@ bool Atlas::Net::NegotiateHelper::get(std::string &buf, const std::string & head
         {
           names->push_back(s);
             
-          cout << " got: " << s << endl;
+          std::cout << " got: " << s << std::endl;
         }
       else
-        cerr << "Unknown pattern " << h << endl;
+        std::cerr << "Unknown pattern " << h << std::endl;
     }
   return false;
 }
@@ -91,7 +91,7 @@ Bridge* bridge) :
 
 void Atlas::Net::StreamConnect::poll(bool can_read = true)
 {
-    cout << "** Client(" << state << ") : " << endl;
+    std::cout << "** Client(" << state << ") : " << std::endl;
 
     std::string out;
 
@@ -105,7 +105,7 @@ void Atlas::Net::StreamConnect::poll(bool can_read = true)
 
         if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
         {
-            cout << "server: " << inName << endl;
+            std::cout << "server: " << inName << std::endl;
             state++;
         }
     }
@@ -114,7 +114,7 @@ void Atlas::Net::StreamConnect::poll(bool can_read = true)
     {
         // send client greeting
         
-        socket << "ATLAS " << outName << endl;
+        socket << "ATLAS " << outName << std::endl;
         state++;
     }
     
@@ -122,7 +122,7 @@ void Atlas::Net::StreamConnect::poll(bool can_read = true)
     {
         //processClientCodecs();
         codecHelper.put(out, "ICAN");
-        socket << out << flush;
+        socket << out << std::flush;
         state++;
     }
 
@@ -139,7 +139,7 @@ void Atlas::Net::StreamConnect::poll(bool can_read = true)
     {
         //processClientFilters();
         filterHelper.put(out, "ICAN");
-        socket << out << flush;
+        socket << out << std::flush;
         state++;
     }
     
@@ -180,7 +180,7 @@ Atlas::Codec<std::iostream>* Atlas::Net::StreamConnect::getCodec()
 
 void Atlas::Net::StreamConnect::processServerCodecs()
 {
-    list<std::string>::iterator j;
+    std::list<std::string>::iterator j;
     
     for (j = inFilters.begin(); j != inFilters.end(); ++j)
     {
@@ -191,7 +191,7 @@ void Atlas::Net::StreamConnect::processServerCodecs()
   
 void Atlas::Net::StreamConnect::processServerFilters()
 {
-    list<std::string>::iterator j;
+    std::list<std::string>::iterator j;
     
     for (j = inFilters.begin(); j != inFilters.end(); ++j)
     {
@@ -232,7 +232,7 @@ Bridge* bridge) :
 
 void Atlas::Net::StreamAccept::poll(bool can_read = true)
 {
-    cout << "** Server(" << state << ") : " << endl;
+    std::cout << "** Server(" << state << ") : " << std::endl;
 
     std::string out;
 
@@ -240,7 +240,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read = true)
     {
         // send server greeting
 
-        socket << "ATLAS " << outName << endl;
+        socket << "ATLAS " << outName << std::endl;
         state++;
     }
 
@@ -253,7 +253,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read = true)
             // get client greeting
         
             if (buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
-            cout << "client: " << inName << endl;
+            std::cout << "client: " << inName << std::endl;
             state++;
         }
 
@@ -270,7 +270,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read = true)
         {
             if (m_canPacked) { socket << "IWILL Packed\n"; }
             else if (m_canXML) { socket << "IWILL XML\n"; }
-            socket << endl;
+            socket << std::endl;
             state++;
         }
 
@@ -288,7 +288,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read = true)
             //No Filters until they actually work.
             //if (m_canGzip) { socket << "IWILL Gzip\n"; }
             //else if (m_canBzip2) { socket << "IWILL Bzip2\n"; }
-            socket << endl;
+            socket << std::endl;
             state++;
         }
     }
@@ -319,7 +319,7 @@ Atlas::Codec<std::iostream>* Atlas::Net::StreamAccept::getCodec()
       // this poses the problem of the filter being passed by
       // reference, so we'd have to allocate on the heap, but then who
       // would deallocate? erk. -- sdt 2001-01-05
-        //return (*outCodecs.begin())-> \
+        //return (*outCodecs.begin())-> 
                 //New(Codec<std::iostream>::Parameters(socket,bridge));
     if (m_canPacked) { return new Atlas::Codecs::Packed(socket, bridge); }
     if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }

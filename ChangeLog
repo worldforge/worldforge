@@ -1,4 +1,10 @@
-2001-07-14  Al Riddoch  <alriddoch@zepler.org>
+2001-07-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Net/Stream.cpp, src/Objects/BaseObject.cpp,
+	  src/Objects/loadDefaults.cpp: Fixed code for strict ISO
+	  conformance; mainly strict use of std:: namespace.
+
+2001-07-15  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Message/Object.h, src/Message/Object.cpp: Removed buggy and
 	  largely unused memory pool code.
