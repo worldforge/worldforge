@@ -89,7 +89,7 @@ protected:
 
 namespace
 {
-    Codec::Factory<PackedAscii> factory("PackedAscii", Codec::Metrics(1, 2));
+    Codec::Factory<PackedAscii> factory("Packed", Codec::Metrics(1, 2));
 }
 
 PackedAscii::PackedAscii(const Codec::Parameters& p) :
@@ -269,8 +269,8 @@ void PackedAscii::ParseInt(char next)
 	case '7':
 	case '8':
 	case '9':
-    case '-':
-    case '+':
+	case '-':
+	case '+':
 	    data += next;
 	break;
 
@@ -319,10 +319,10 @@ void PackedAscii::ParseFloat(char next)
 	case '8':
 	case '9':
 	case '.':
-    case '-':
-    case '+':
-    case 'e':
-    case 'E':
+	case '-':
+	case '+':
+	case 'e':
+	case 'E':
 	    data += next;
 	break;
 
