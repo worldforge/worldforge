@@ -34,7 +34,7 @@ class Factory
     public:
 
     Factory(const std::string& name, const typename T::Metrics& metrics)
-     : name(name), metrics(metrics)
+     : m_name(name), m_metrics(metrics)
     {
 	factories()->push_back(this);
     }
@@ -51,12 +51,12 @@ class Factory
 
     std::string getName()
     {
-	return name;
+	return m_name;
     }
     
     typename T::Metrics getMetrics()
     {
-	return metrics;
+	return m_metrics;
     }
    
     static std::list<Factory*> * factories()
@@ -71,8 +71,8 @@ class Factory
 
     protected:
 
-    std::string name;
-    typename T::Metrics metrics;
+    std::string m_name;
+    typename T::Metrics m_metrics;
 
     private:
 

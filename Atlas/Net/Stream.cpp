@@ -31,7 +31,7 @@ static std::string get_line(std::string &s1, char ch, std::string &s2)
 
 
 Atlas::Net::NegotiateHelper::NegotiateHelper(std::list<std::string> *names) :
-  names(names)
+  m_names(names)
 { 
 }
 
@@ -53,7 +53,7 @@ bool Atlas::Net::NegotiateHelper::get(std::string &buf, const std::string & head
         
       if(get_line(s, ' ', h) == header)
         {
-          names->push_back(s);
+          m_names->push_back(s);
             
           std::cout << " got: " << s << std::endl;
         }
@@ -84,88 +84,88 @@ void Atlas::Net::NegotiateHelper::put(std::string &buf, const std::string & head
 
 Atlas::Net::StreamConnect::StreamConnect(const std::string& name, std::iostream& s,
 Bridge* bridge) :
-  state(SERVER_GREETING), outName(name), socket(s), bridge(bridge),
-  codecHelper(&inCodecs), filterHelper(&inFilters),
+  m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
+  m_codecHelper(&m_inCodecs), m_filterHelper(&m_inFilters),
   m_canPacked(true), m_canXML(true), m_canGzip(true), m_canBzip2(true)
 {
 }
 
 void Atlas::Net::StreamConnect::poll(bool can_read)
 {
-    std::cout << "** Client(" << state << ") : " << std::endl;
+    std::cout << "** Client(" << m_state << ") : " << std::endl;
 
     std::string out;
 
     do
     {
-        if (can_read || socket.rdbuf()->in_avail()) buf += (char) socket.get();
+        if (can_read || m_socket.rdbuf()->in_avail()) m_buf += (char) m_socket.get();
 
-    if(state == SERVER_GREETING)
+    if(m_state == SERVER_GREETING)
     {
         // get server greeting
 
-        if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
+        if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
         {
-            std::cout << "server: " << inName << std::endl;
-            state++;
+            std::cout << "server: " << m_inName << std::endl;
+            m_state++;
         }
     }
 
-    if(state == CLIENT_GREETING)
+    if(m_state == CLIENT_GREETING)
     {
         // send client greeting
         
-        socket << "ATLAS " << outName << std::endl;
-        state++;
+        m_socket << "ATLAS " << m_outName << std::endl;
+        m_state++;
     }
     
-    if (state == CLIENT_CODECS)
+    if (m_state == CLIENT_CODECS)
     {
         //processClientCodecs();
-        codecHelper.put(out, "ICAN");
-        socket << out << std::flush;
-        state++;
+        m_codecHelper.put(out, "ICAN");
+        m_socket << out << std::flush;
+        m_state++;
     }
 
-    if(state == SERVER_CODECS)
+    if(m_state == SERVER_CODECS)
     {
-        if (codecHelper.get(buf, "IWILL"))
+        if (m_codecHelper.get(m_buf, "IWILL"))
         {
             processServerCodecs();
-            state++;
+            m_state++;
         }
     }
     
-    if (state == CLIENT_FILTERS)
+    if (m_state == CLIENT_FILTERS)
     {
         //processClientFilters();
-        filterHelper.put(out, "ICAN");
-        socket << out << std::flush;
-        state++;
+        m_filterHelper.put(out, "ICAN");
+        m_socket << out << std::flush;
+        m_state++;
     }
     
-    if (state == SERVER_FILTERS)
+    if (m_state == SERVER_FILTERS)
     {
-        if (filterHelper.get(buf, "IWILL"))
+        if (m_filterHelper.get(m_buf, "IWILL"))
         {
             processServerFilters();
-            state++;
+            m_state++;
         }
     }
     }
-    while ((state != DONE) && (socket.rdbuf()->in_avail()));
+    while ((m_state != DONE) && (m_socket.rdbuf()->in_avail()));
 }
 
 Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamConnect::getState()
 {
-    if (state == DONE)
+    if (m_state == DONE)
     {
         if (m_canPacked || m_canXML)
         {
             return SUCCEEDED;
         }
     }
-    else if (socket)
+    else if (m_socket)
     {
         return IN_PROGRESS;
     }
@@ -174,8 +174,8 @@ Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamConnect::getState()
 
 Atlas::Codec<std::iostream>* Atlas::Net::StreamConnect::getCodec()
 {
-    if (m_canPacked) { return new Atlas::Codecs::Packed(socket, bridge); }
-    if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }
+    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_bridge); }
+    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_bridge); }
     return NULL; // throw exception?
 }
 
@@ -183,7 +183,7 @@ void Atlas::Net::StreamConnect::processServerCodecs()
 {
     std::list<std::string>::iterator j;
     
-    for (j = inFilters.begin(); j != inFilters.end(); ++j)
+    for (j = m_inFilters.begin(); j != m_inFilters.end(); ++j)
     {
         if (*j == "XML") { m_canXML = true; }
         if (*j == "Packed") { m_canPacked = true; }
@@ -194,7 +194,7 @@ void Atlas::Net::StreamConnect::processServerFilters()
 {
     std::list<std::string>::iterator j;
     
-    for (j = inFilters.begin(); j != inFilters.end(); ++j)
+    for (j = m_inFilters.begin(); j != m_inFilters.end(); ++j)
     {
         if (*j == "Gzip") { m_canGzip = true; }
         if (*j == "Bzip2") { m_canBzip2 = true; }
@@ -206,7 +206,7 @@ void Atlas::Net::StreamConnect::processClientCodecs()
 {
     std::list<std::string>::const_iterator j;
 
-    for (j = inCodecs.begin(); j != inCodecs.end(); j++)
+    for (j = m_inCodecs.begin(); j != m_inCodecs.end(); j++)
     {
         // Do what?
     }
@@ -216,7 +216,7 @@ void Atlas::Net::StreamConnect::processClientFilters()
 {
     std::list<std::string>::const_iterator j;
 
-    for (j = inFilters.begin(); j != inFilters.end(); j++)
+    for (j = m_inFilters.begin(); j != m_inFilters.end(); j++)
     {
         // Do what?
     }
@@ -225,89 +225,89 @@ void Atlas::Net::StreamConnect::processClientFilters()
 
 Atlas::Net::StreamAccept::StreamAccept(const std::string& name, std::iostream& s,
 Bridge* bridge) :
-  state(SERVER_GREETING), outName(name), socket(s), bridge(bridge),
-  codecHelper(&inCodecs), filterHelper(&inFilters),
+  m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
+  m_codecHelper(&m_inCodecs), m_filterHelper(&m_inFilters),
   m_canPacked(false), m_canXML(false), m_canGzip(false), m_canBzip2(false)
 {
 }
 
 void Atlas::Net::StreamAccept::poll(bool can_read)
 {
-    std::cout << "** Server(" << state << ") : " << std::endl;
+    std::cout << "** Server(" << m_state << ") : " << std::endl;
 
     std::string out;
 
-    if (state == SERVER_GREETING) 
+    if (m_state == SERVER_GREETING) 
     {
         // send server greeting
 
-        socket << "ATLAS " << outName << std::endl;
-        state++;
+        m_socket << "ATLAS " << m_outName << std::endl;
+        m_state++;
     }
 
     do
     {
-        if (can_read || socket.rdbuf()->in_avail()) buf += (char) socket.get();
+        if (can_read || m_socket.rdbuf()->in_avail()) m_buf += (char) m_socket.get();
 
-        if (state == CLIENT_GREETING)
+        if (m_state == CLIENT_GREETING)
         {
             // get client greeting
         
-            if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
+            if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
             {
-                std::cout << "client: " << inName << std::endl;
-                state++;
+                std::cout << "client: " << m_inName << std::endl;
+                m_state++;
             }
         }
 
-        if (state == CLIENT_CODECS)
+        if (m_state == CLIENT_CODECS)
         {
-            if (codecHelper.get(buf, "ICAN"))
+            if (m_codecHelper.get(m_buf, "ICAN"))
             {
-                state++;
+                m_state++;
             }
             processClientCodecs();
         }
 
-        if (state == SERVER_CODECS)
+        if (m_state == SERVER_CODECS)
         {
-            if (m_canPacked) { socket << "IWILL Packed\n"; }
-            else if (m_canXML) { socket << "IWILL XML\n"; }
-            socket << std::endl;
-            state++;
+            if (m_canPacked) { m_socket << "IWILL Packed\n"; }
+            else if (m_canXML) { m_socket << "IWILL XML\n"; }
+            m_socket << std::endl;
+            m_state++;
         }
 
-        if(state == CLIENT_FILTERS)
+        if(m_state == CLIENT_FILTERS)
         {
-            if (filterHelper.get(buf, "ICAN"))
+            if (m_filterHelper.get(m_buf, "ICAN"))
             {
-                state++;
+                m_state++;
             }
             processClientFilters();
         }
 
-        if (state == SERVER_FILTERS)
+        if (m_state == SERVER_FILTERS)
         {
             //No Filters until they actually work.
-            //if (m_canGzip) { socket << "IWILL Gzip\n"; }
-            //else if (m_canBzip2) { socket << "IWILL Bzip2\n"; }
-            socket << std::endl;
-            state++;
+            //if (m_canGzip) { m_socket << "IWILL Gzip\n"; }
+            //else if (m_canBzip2) { m_socket << "IWILL Bzip2\n"; }
+            m_socket << std::endl;
+            m_state++;
         }
     }
-    while ((state != DONE) && (socket.rdbuf()->in_avail()));
+    while ((m_state != DONE) && (m_socket.rdbuf()->in_avail()));
 }
 
 Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamAccept::getState()
 {
-    if (state == DONE)
+    if (m_state == DONE)
     {
         if (m_canPacked || m_canXML)
         {
             return SUCCEEDED;
         }
     }
-    else if (socket)
+    else if (m_socket)
     {
         return IN_PROGRESS;
     }
@@ -323,9 +323,9 @@ Atlas::Codec<std::iostream>* Atlas::Net::StreamAccept::getCodec()
       // reference, so we'd have to allocate on the heap, but then who
       // would deallocate? erk. -- sdt 2001-01-05
         //return (*outCodecs.begin())-> 
-                //New(Codec<std::iostream>::Parameters(socket,bridge));
-    if (m_canPacked) { return new Atlas::Codecs::Packed(socket, bridge); }
-    if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }
+                //New(Codec<std::iostream>::Parameters(m_socket,bridge));
+    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_bridge); }
+    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_bridge); }
     return NULL; // throw exception?
 }
 
@@ -339,7 +339,7 @@ void Atlas::Net::StreamAccept::processServerCodecs()
 
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
     {
-        for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
+        for (j = m_inCodecs.begin(); j != m_inCodecs.end(); ++j)
         {
             if ((*i)->getName() == *j)
             {
@@ -359,7 +359,7 @@ void Atlas::Net::StreamAccept::processServerFilters()
 
     for (i = myFilters->begin(); i != myFilters->end(); ++i)
     {
-        for (j = inFilters.begin(); j != inFilters.end(); ++j)
+        for (j = m_inFilters.begin(); j != m_inFilters.end(); ++j)
         {
             if ((*i)->getName() == *j)
             {
@@ -374,7 +374,7 @@ void Atlas::Net::StreamAccept::processClientCodecs()
 {
     std::list<std::string>::const_iterator j;
 
-    for (j = inCodecs.begin(); j != inCodecs.end(); j++)
+    for (j = m_inCodecs.begin(); j != m_inCodecs.end(); j++)
     {
         if (*j == "XML") { m_canXML = true; }
         if (*j == "Packed") { m_canPacked = true; }
@@ -385,7 +385,7 @@ void Atlas::Net::StreamAccept::processClientFilters()
 {
     std::list<std::string>::const_iterator j;
 
-    for (j = inFilters.begin(); j != inFilters.end(); j++)
+    for (j = m_inFilters.begin(); j != m_inFilters.end(); j++)
     {
         if (*j == "Gzip") { m_canGzip = true; }
         if (*j == "Bzip2") { m_canBzip2 = true; }

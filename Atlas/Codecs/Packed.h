@@ -62,8 +62,8 @@ public:
 
 protected:
     
-    std::iostream& socket;
-    Bridge* bridge;
+    std::iostream& m_socket;
+    Bridge* m_bridge;
 
     enum State
     {
@@ -78,10 +78,10 @@ protected:
         PARSE_NAME
     };
     
-    std::stack<State> state;
+    std::stack<State> m_state;
 
-    std::string name;
-    std::string data;
+    std::string m_name;
+    std::string m_data;
 
     inline void parseStream(char);
     inline void parseMap(char);

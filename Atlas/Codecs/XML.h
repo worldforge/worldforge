@@ -62,8 +62,8 @@ class XML : public Codec<std::iostream>
 
     protected:
 
-    std::iostream& socket;
-    Bridge* bridge;
+    std::iostream& m_socket;
+    Bridge* m_bridge;
     
     enum Token
     {
@@ -73,7 +73,7 @@ class XML : public Codec<std::iostream>
 	TOKEN_DATA
     };
     
-    Token token;
+    Token m_token;
     
     enum State
     {
@@ -86,11 +86,11 @@ class XML : public Codec<std::iostream>
 	PARSE_STRING
     };
     
-    std::stack<State> state;
-    std::stack<std::string> data;
+    std::stack<State> m_state;
+    std::stack<std::string> m_data;
 
-    std::string tag;
-    std::string name;
+    std::string m_tag;
+    std::string m_name;
 
     inline void tokenTag(char);
     inline void tokenStartTag(char);

@@ -12,64 +12,64 @@ DecoderBase::DecoderBase()
 
 void DecoderBase::streamBegin()
 {
-    state.push(STATE_STREAM);
+    m_state.push(STATE_STREAM);
 }
 
 void DecoderBase::streamMessage(const Map&)
 {
     Object::MapType m;
-    maps.push(m);
-    state.push(STATE_MAP);
+    m_maps.push(m);
+    m_state.push(STATE_MAP);
 }
 
 void DecoderBase::streamEnd()
 {
-    state.pop();
+    m_state.pop();
 }
 
 void DecoderBase::mapItem(const std::string& name, const Map&)
 {
     Object::MapType m;
-    names.push(name);
-    maps.push(m);
-    state.push(STATE_MAP);
+    m_names.push(name);
+    m_maps.push(m);
+    m_state.push(STATE_MAP);
 }
 
 void DecoderBase::mapItem(const std::string& name, const List&)
 {
     Object::ListType l;
-    names.push(name);
-    lists.push(l);
-    state.push(STATE_LIST);
+    m_names.push(name);
+    m_lists.push(l);
+    m_state.push(STATE_LIST);
 }
     
 void DecoderBase::mapItem(const std::string& name, long i)
 {
-    maps.top()[name] = i;
+    m_maps.top()[name] = i;
 }
     
 void DecoderBase::mapItem(const std::string& name, double d)
 {
-    maps.top()[name] = d;
+    m_maps.top()[name] = d;
 }
     
 void DecoderBase::mapItem(const std::string& name, const std::string& s)
 {
-    maps.top()[name] = s;
+    m_maps.top()[name] = s;
 }
 
 void DecoderBase::mapEnd()
 {
-    Object::MapType map = maps.top();
-    maps.pop();
-    state.pop();
-    switch (state.top()) {
+    Object::MapType map = m_maps.top();
+    m_maps.pop();
+    m_state.pop();
+    switch (m_state.top()) {
         case STATE_MAP:
-            maps.top()[names.top()] = map;
-            names.pop();
+            m_maps.top()[m_names.top()] = map;
+            m_names.pop();
             break;
         case STATE_LIST:
-            lists.top().insert(lists.top().end(), map);
+            m_lists.top().insert(m_lists.top().end(), map);
             break;
         case STATE_STREAM:
             objectArrived(map);
@@ -80,44 +80,44 @@ void DecoderBase::mapEnd()
 void DecoderBase::listItem(const Map&)
 {
     Object::MapType map;
-    maps.push(map);
-    state.push(STATE_MAP);
+    m_maps.push(map);
+    m_state.push(STATE_MAP);
 }
     
 void DecoderBase::listItem(const List&)
 {
     Object::ListType list;
-    lists.push(list);
-    state.push(STATE_LIST);
+    m_lists.push(list);
+    m_state.push(STATE_LIST);
 }
     
 void DecoderBase::listItem(long i)
 {
-    lists.top().push_back(i);
+    m_lists.top().push_back(i);
 }
 
 void DecoderBase::listItem(double d)
 {
-    lists.top().push_back(d);
+    m_lists.top().push_back(d);
 }
     
 void DecoderBase::listItem(const std::string& s)
 {
-    lists.top().push_back(s);
+    m_lists.top().push_back(s);
 }
     
 void DecoderBase::listEnd()
 {
-    Object::ListType list = lists.top();
-    lists.pop();
-    state.pop();
-    switch (state.top()) {
+    Object::ListType list = m_lists.top();
+    m_lists.pop();
+    m_state.pop();
+    switch (m_state.top()) {
         case STATE_MAP:
-            maps.top()[names.top()] = list;
-            names.pop();
+            m_maps.top()[m_names.top()] = list;
+            m_names.pop();
             break;
         case STATE_LIST:
-            lists.top().push_back(list);
+            m_lists.top().push_back(list);
             break;
         case STATE_STREAM:
             // XXX - report error?

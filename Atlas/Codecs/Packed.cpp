@@ -7,9 +7,9 @@
 namespace Atlas { namespace Codecs {
 
 Packed::Packed(std::iostream& s, Atlas::Bridge* b)
-  : socket(s), bridge(b)
+  : m_socket(s), m_bridge(b)
 {
-    state.push(PARSE_STREAM);
+    m_state.push(PARSE_STREAM);
 }
 
 void Packed::parseStream(char next)
@@ -17,10 +17,10 @@ void Packed::parseStream(char next)
     switch (next)
     {
 	case '[':
-	    bridge->streamMessage(mapBegin);
-	    state.push(PARSE_MAP);
+	    m_bridge->streamMessage(m_mapBegin);
+	    m_state.push(PARSE_MAP);
 	break;
-    
+
 	default:
 	    // FIXME signal error here
 	    // unexpected character
@@ -33,35 +33,35 @@ void Packed::parseMap(char next)
     switch (next)
     {
 	case ']':
-	    bridge->mapEnd();
-	    state.pop();
+	    m_bridge->mapEnd();
+	    m_state.pop();
 	break;
 
 	case '[':
-	    state.push(PARSE_MAP);
-	    state.push(PARSE_MAP_BEGIN);
-	    state.push(PARSE_NAME);
+	    m_state.push(PARSE_MAP);
+	    m_state.push(PARSE_MAP_BEGIN);
+	    m_state.push(PARSE_NAME);
 	break;
 
 	case '(':
-	    state.push(PARSE_LIST);
-	    state.push(PARSE_LIST_BEGIN);
-	    state.push(PARSE_NAME);
+	    m_state.push(PARSE_LIST);
+	    m_state.push(PARSE_LIST_BEGIN);
+	    m_state.push(PARSE_NAME);
 	break;
 
 	case '$':
-	    state.push(PARSE_STRING);
-	    state.push(PARSE_NAME);
+	    m_state.push(PARSE_STRING);
+	    m_state.push(PARSE_NAME);
 	break;
 
 	case '@':
-	    state.push(PARSE_INT);
-	    state.push(PARSE_NAME);
+	    m_state.push(PARSE_INT);
+	    m_state.push(PARSE_NAME);
 	break;
 
 	case '#':
-	    state.push(PARSE_FLOAT);
-	    state.push(PARSE_NAME);
+	    m_state.push(PARSE_FLOAT);
+	    m_state.push(PARSE_NAME);
 	break;
 
 	default:
@@ -76,30 +76,30 @@ void Packed::parseList(char next)
     switch (next)
     {
 	case ')':
-	    bridge->listEnd();
-	    state.pop();
+	    m_bridge->listEnd();
+	    m_state.pop();
 	break;
 
 	case '[':
-	    bridge->listItem(mapBegin);
-	    state.push(PARSE_MAP);
+	    m_bridge->listItem(m_mapBegin);
+	    m_state.push(PARSE_MAP);
 	break;
 
 	case '(':
-	    bridge->listItem(listBegin);
-	    state.push(PARSE_LIST);
+	    m_bridge->listItem(m_listBegin);
+	    m_state.push(PARSE_LIST);
 	break;
 
 	case '$':
-	    state.push(PARSE_STRING);
+	    m_state.push(PARSE_STRING);
 	break;
 
 	case '@':
-	    state.push(PARSE_INT);
+	    m_state.push(PARSE_INT);
 	break;
 
 	case '#':
-	    state.push(PARSE_FLOAT);
+	    m_state.push(PARSE_FLOAT);
 	break;
 
 	default:
@@ -111,18 +111,18 @@ void Packed::parseList(char next)
 
 void Packed::parseMapBegin(char next)
 {
-    bridge->mapItem(hexDecode(name), mapBegin);
-    socket.putback(next);
-    state.pop();
-    name.erase();
+    m_bridge->mapItem(hexDecode(m_name), m_mapBegin);
+    m_socket.putback(next);
+    m_state.pop();
+    m_name.erase();
 }
 
 void Packed::parseListBegin(char next)
 {
-    bridge->mapItem(hexDecode(name), listBegin);
-    socket.putback(next);
-    state.pop();
-    name.erase();
+    m_bridge->mapItem(hexDecode(m_name), m_listBegin);
+    m_socket.putback(next);
+    m_state.pop();
+    m_name.erase();
 }
 
 void Packed::parseInt(char next)
@@ -136,22 +136,22 @@ void Packed::parseInt(char next)
 	case '$':
 	case '@':
 	case '#':
-	    socket.putback(next);
-	    state.pop();
-	    if (state.top() == PARSE_MAP)
+	    m_socket.putback(next);
+	    m_state.pop();
+	    if (m_state.top() == PARSE_MAP)
 	    {
-		bridge->mapItem(hexDecode(name), atol(data.c_str()));
-		name.erase();
+		m_bridge->mapItem(hexDecode(m_name), atol(m_data.c_str()));
+		m_name.erase();
 	    }
-	    else if (state.top() == PARSE_LIST)
+	    else if (m_state.top() == PARSE_LIST)
 	    {
-		bridge->listItem(atol(data.c_str()));
+		m_bridge->listItem(atol(m_data.c_str()));
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    data.erase();
+	    m_data.erase();
 	break;
 
 	case '0':
@@ -166,7 +166,7 @@ void Packed::parseInt(char next)
 	case '9':
 	case '-':
 	case '+':
-	    data += next;
+	    m_data += next;
 	break;
 
 	default:
@@ -187,22 +187,22 @@ void Packed::parseFloat(char next)
 	case '$':
 	case '@':
 	case '#':
-	    socket.putback(next);
-	    state.pop();
-	    if (state.top() == PARSE_MAP)
+	    m_socket.putback(next);
+	    m_state.pop();
+	    if (m_state.top() == PARSE_MAP)
 	    {
-		bridge->mapItem(hexDecode(name), atof(data.c_str()));
-		name.erase();
+		m_bridge->mapItem(hexDecode(m_name), atof(m_data.c_str()));
+		m_name.erase();
 	    }
-	    else if (state.top() == PARSE_LIST)
+	    else if (m_state.top() == PARSE_LIST)
 	    {
-		bridge->listItem(atof(data.c_str()));
+		m_bridge->listItem(atof(m_data.c_str()));
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    data.erase();
+	    m_data.erase();
 	break;
 
 	case '0':
@@ -220,7 +220,7 @@ void Packed::parseFloat(char next)
 	case '+':
 	case 'e':
 	case 'E':
-	    data += next;
+	    m_data += next;
 	break;
 
 	default:
@@ -241,22 +241,22 @@ void Packed::parseString(char next)
 	case '$':
 	case '@':
 	case '#':
-	    socket.putback(next);
-	    state.pop();
-	    if (state.top() == PARSE_MAP)
+	    m_socket.putback(next);
+	    m_state.pop();
+	    if (m_state.top() == PARSE_MAP)
 	    {
-		bridge->mapItem(hexDecode(name), hexDecode(data));
-		name.erase();
+		m_bridge->mapItem(hexDecode(m_name), hexDecode(m_data));
+		m_name.erase();
 	    }
-	    else if (state.top() == PARSE_LIST)
+	    else if (m_state.top() == PARSE_LIST)
 	    {
-		bridge->listItem(hexDecode(data));
+		m_bridge->listItem(hexDecode(m_data));
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    data.erase();
+	    m_data.erase();
 	break;
 
 	case '=':
@@ -265,7 +265,7 @@ void Packed::parseString(char next)
 	break;
 
 	default:
-	    data += next;
+	    m_data += next;
 	break;
     }
 }
@@ -275,7 +275,7 @@ void Packed::parseName(char next)
     switch (next)
     {
 	case '=':
-	    state.pop();
+	    m_state.pop();
 	break;
 
 	case '[':
@@ -290,7 +290,7 @@ void Packed::parseName(char next)
 	break;
 
 	default:
-	    name += next;
+	    m_name += next;
 	break;
     }
 }
@@ -300,9 +300,9 @@ void Packed::poll(bool can_read)
     if (!can_read) return;
     do
     {
-	char next = (char) socket.get();
+	char next = (char) m_socket.get();
 
-	switch (state.top())
+	switch (m_state.top())
 	{
 	    case PARSE_STREAM:	    parseStream(next); break;
 	    case PARSE_MAP:	    parseMap(next); break;
@@ -315,82 +315,82 @@ void Packed::poll(bool can_read)
 	    case PARSE_NAME:	    parseName(next); break;
 	}
     }
-    while (socket.rdbuf()->in_avail());
+    while (m_socket.rdbuf()->in_avail());
 }
 
 void Packed::streamBegin()
 {
-    bridge->streamBegin();
+    m_bridge->streamBegin();
 }
 
 void Packed::streamMessage(const Map&)
 {
-    socket << '[';
+    m_socket << '[';
 }
 
 void Packed::streamEnd()
 {
-    bridge->streamEnd();
+    m_bridge->streamEnd();
 }
 
 void Packed::mapItem(const std::string& name, const Map&)
 {
-    socket << '[' << hexEncode(name) << '=';
+    m_socket << '[' << hexEncode(name) << '=';
 }
 
 void Packed::mapItem(const std::string& name, const List&)
 {
-    socket << '(' << hexEncode(name) << '=';
+    m_socket << '(' << hexEncode(name) << '=';
 }
 
 void Packed::mapItem(const std::string& name, long data)
 {
-    socket << '@' << hexEncode(name) << '=' << data;
+    m_socket << '@' << hexEncode(name) << '=' << data;
 }
 
 void Packed::mapItem(const std::string& name, double data)
 {
-    socket << '#' << hexEncode(name) << '=' << data;
+    m_socket << '#' << hexEncode(name) << '=' << data;
 }
 
 void Packed::mapItem(const std::string& name, const std::string& data)
 {
-    socket << '$' << hexEncode(name) << '=' << hexEncode(data);
+    m_socket << '$' << hexEncode(name) << '=' << hexEncode(data);
 }
 
 void Packed::mapEnd()
 {
-    socket << ']';
+    m_socket << ']';
 }
 
 void Packed::listItem(const Map&)
 {
-    socket << '[';
+    m_socket << '[';
 }
 
 void Packed::listItem(const List&)
 {
-    socket << '(';
+    m_socket << '(';
 }
 
 void Packed::listItem(long data)
 {
-    socket << '@' << data;
+    m_socket << '@' << data;
 }
 
 void Packed::listItem(double data)
 {
-    socket << '#' << data;
+    m_socket << '#' << data;
 }
 
 void Packed::listItem(const std::string& data)
 {
-    socket << '$' << hexEncode(data);
+    m_socket << '$' << hexEncode(data);
 }
 
 void Packed::listEnd()
 {
-    socket << ')';
+    m_socket << ')';
 }
 
 } } // namespace Atlas::Codecs

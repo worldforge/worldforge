@@ -29,36 +29,36 @@ class EncoderBase : public Atlas::Bridge {
 public:
 
     /// You will need to implement this in subclasses
-    EncoderBase(Atlas::Bridge* b) : b(b) { }
+    EncoderBase(Atlas::Bridge* b) : m_bridge(b) { }
 
     virtual ~EncoderBase() { }
     
-    virtual void streamBegin() { b->streamBegin(); }
-    virtual void streamMessage(const Map& m) { b->streamMessage(m); }
-    virtual void streamEnd() { b->streamEnd(); }
+    virtual void streamBegin() { m_bridge->streamBegin(); }
+    virtual void streamMessage(const Map& m) { m_bridge->streamMessage(m); }
+    virtual void streamEnd() { m_bridge->streamEnd(); }
     
     virtual void mapItem(const std::string& name, const Bridge::Map& m)
-    { b->mapItem(name, m); }
+    { m_bridge->mapItem(name, m); }
     virtual void mapItem(const std::string& name, const Bridge::List& l)
-    { b->mapItem(name, l); }
+    { m_bridge->mapItem(name, l); }
     virtual void mapItem(const std::string& name, long i)
-    { b->mapItem(name, i); }
+    { m_bridge->mapItem(name, i); }
     virtual void mapItem(const std::string& name, double d)
-    { b->mapItem(name, d); }
+    { m_bridge->mapItem(name, d); }
     virtual void mapItem(const std::string& name, const std::string& s)
-    { b->mapItem(name, s); }
-    virtual void mapEnd() { b->mapEnd(); }
+    { m_bridge->mapItem(name, s); }
+    virtual void mapEnd() { m_bridge->mapEnd(); }
     
-    virtual void listItem(const Bridge::Map& m) { b->listItem(m); }
-    virtual void listItem(const Bridge::List& l) { b->listItem(l); }
-    virtual void listItem(long i) { b->listItem(i); }
-    virtual void listItem(double d) { b->listItem(d); }
-    virtual void listItem(const std::string& s) { b->listItem(s); }
-    virtual void listEnd() { b->listEnd(); }
+    virtual void listItem(const Bridge::Map& m) { m_bridge->listItem(m); }
+    virtual void listItem(const Bridge::List& l) { m_bridge->listItem(l); }
+    virtual void listItem(long i) { m_bridge->listItem(i); }
+    virtual void listItem(double d) { m_bridge->listItem(d); }
+    virtual void listItem(const std::string& s) { m_bridge->listItem(s); }
+    virtual void listEnd() { m_bridge->listEnd(); }
 
 protected:
     /// The bridge that requests are forwarded to.
-    Atlas::Bridge* b;
+    Atlas::Bridge* m_bridge;
 };
 
 } // namespace Atlas 

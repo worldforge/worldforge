@@ -12,11 +12,12 @@ namespace Atlas {
 class Exception
 {
   protected:
-    std::string description;
+    std::string m_description;
+    
   public:
-    Exception(const std::string & d = "UNKNOWN ERROR") : description(d) { }
+    Exception(const std::string & d = "UNKNOWN ERROR") : m_description(d) { }
     const std::string & getDescription() const {
-        return description;
+        return m_description;
     }
 };
 

@@ -40,7 +40,7 @@ along with the name of sender and a Socket
 
   private:
 
-    std::list<std::string> *names;
+    std::list<std::string> *m_names;
 
   };
 
@@ -70,18 +70,18 @@ class StreamConnect : public Atlas::Negotiate<std::iostream>
 	DONE
     };
 
-    int state;
+    int m_state;
 
-    std::string outName;
-    std::string inName;
-    std::iostream& socket;
-    Atlas::Bridge* bridge;
-    std::list<std::string> inCodecs;
-    std::list<std::string> inFilters;
+    std::string m_outName;
+    std::string m_inName;
+    std::iostream& m_socket;
+    Atlas::Bridge* m_bridge;
+    std::list<std::string> m_inCodecs;
+    std::list<std::string> m_inFilters;
   
-    NegotiateHelper codecHelper;
-    NegotiateHelper filterHelper;
-    std::string buf;
+    NegotiateHelper m_codecHelper;
+    NegotiateHelper m_filterHelper;
+    std::string m_buf;
 
     void processServerCodecs();
     void processServerFilters();
@@ -122,18 +122,18 @@ class StreamAccept : public Atlas::Negotiate<std::iostream>
 	DONE
     };
 
-    int state;
+    int m_state;
 
-    std::string outName;
-    std::string inName;
-    std::iostream& socket;
-    Atlas::Bridge* bridge;
-    std::list<std::string> inCodecs;
-    std::list<std::string> inFilters;
+    std::string m_outName;
+    std::string m_inName;
+    std::iostream& m_socket;
+    Atlas::Bridge* m_bridge;
+    std::list<std::string> m_inCodecs;
+    std::list<std::string> m_inFilters;
   
-    NegotiateHelper codecHelper;
-    NegotiateHelper filterHelper;
-    std::string buf;
+    NegotiateHelper m_codecHelper;
+    NegotiateHelper m_filterHelper;
+    std::string m_buf;
 
     //void processServerCodecs();
     //void processServerFilters();

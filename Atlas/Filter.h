@@ -56,7 +56,7 @@ class Filter
 
     protected:
 
-    Filter* next;
+    Filter* m_next;
 };
 
 #ifdef HAVE_STREAMBUF

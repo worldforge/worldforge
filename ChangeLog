@@ -1,5 +1,9 @@
 2002-05-12  Michael Koch  <konqueror@gmx.de>
 
+	* adjusted all member variables to use the prefix m_
+
+2002-05-12  Michael Koch  <konqueror@gmx.de>
+
 	* src/Utititlies/*:
 	  Added new utility to convert ATLAS files using another codec.
 

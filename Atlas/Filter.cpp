@@ -6,13 +6,14 @@
 
 namespace Atlas {
 
-Filter::Filter(Filter* next) : next(next)
+Filter::Filter(Filter* next)
+	: m_next(next)
 {
 }
 
 Filter::~Filter()
 {
-    delete next;
+    delete m_next;
 }
 
 filterbuf::~filterbuf()

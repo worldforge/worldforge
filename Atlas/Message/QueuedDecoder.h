@@ -46,7 +46,7 @@ protected:
     
 private:
     
-    std::queue<Object> objectQueue;
+    std::queue<Object> m_objectQueue;
 };
 
 } } // namespace Atlas::Message

@@ -7,21 +7,21 @@
 namespace Atlas { namespace Codecs {
     
 XML::XML(std::iostream& s, Atlas::Bridge* b)
-    : socket(s), bridge(b)
+    : m_socket(s), m_bridge(b)
 {
-    token = TOKEN_DATA;
-    state.push(PARSE_NOTHING);
-    data.push("");
+    m_token = TOKEN_DATA;
+    m_state.push(PARSE_NOTHING);
+    m_data.push("");
 }
 
 void XML::tokenTag(char next)
 {
-    tag.erase();
+    m_tag.erase();
     
     switch (next)
     {
 	case '/':
-	    token = TOKEN_END_TAG;
+	    m_token = TOKEN_END_TAG;
 	break;
 	
 	case '>':
@@ -30,8 +30,8 @@ void XML::tokenTag(char next)
 	break;
 	
 	default:
-	    token = TOKEN_START_TAG;
-	    tag += next;
+	    m_token = TOKEN_START_TAG;
+	    m_tag += next;
 	break;
     }
 }
@@ -47,12 +47,12 @@ void XML::tokenStartTag(char next)
 
 	case '>':
 	    parseStartTag();
-	    token = TOKEN_DATA;
-	    data.push("");
+	    m_token = TOKEN_DATA;
+	    m_data.push("");
 	break;
 
 	default:
-	    tag += next;
+	    m_tag += next;
 	break;
     }
 }
@@ -68,12 +68,12 @@ void XML::tokenEndTag(char next)
 
 	case '>':
 	    parseEndTag();
-	    token = TOKEN_DATA;
-	    data.pop();
+	    m_token = TOKEN_DATA;
+	    m_data.pop();
 	break;
 
 	default:
-	    tag += next;
+	    m_tag += next;
 	break;
     }
 }
@@ -83,7 +83,7 @@ void XML::tokenData(char next)
     switch (next)
     {
 	case '<':
-	    token = TOKEN_TAG;
+	    m_token = TOKEN_TAG;
 	break;
 
 	case '>':
@@ -92,35 +92,35 @@ void XML::tokenData(char next)
 	break;
 
 	default:
-	    data.top() += next;
+	    m_data.top() += next;
 	break;
     }
 }
 
 void XML::parseStartTag()
 {
-    int tag_end = (int) tag.find(' ');
-    int name_start = (int) tag.find("name=\"") + 6;
-    int name_end = (int) tag.rfind("\"");
+    int tag_end = (int) m_tag.find(' ');
+    int name_start = (int) m_tag.find("name=\"") + 6;
+    int name_end = (int) m_tag.rfind("\"");
     
     if (name_start < name_end)
     {
-	name = std::string(tag, (unsigned long) name_start, (unsigned long) (name_end - name_start));
+	m_name = std::string(m_tag, (unsigned long) name_start, (unsigned long) (name_end - name_start));
     }
     else
     {
-	name.erase();
+	m_name.erase();
     }
     
-    tag = std::string(tag, 0, (unsigned long) tag_end);
+    m_tag = std::string(m_tag, 0, (unsigned long) tag_end);
 
-    switch (state.top())
+    switch (m_state.top())
     {
 	case PARSE_NOTHING:
-	    if (tag == "atlas")
+	    if (m_tag == "atlas")
 	    {
-		bridge->streamBegin();
-		state.push(PARSE_STREAM);
+		m_bridge->streamBegin();
+		m_state.push(PARSE_STREAM);
 	    }
 	    else
 	    {
@@ -130,10 +130,10 @@ void XML::parseStartTag()
 	break;
 	
 	case PARSE_STREAM:
-	    if (tag == "map")
+	    if (m_tag == "map")
 	    {
-		bridge->streamMessage(mapBegin);
-		state.push(PARSE_MAP);
+		m_bridge->streamMessage(m_mapBegin);
+		m_state.push(PARSE_MAP);
 	    }
 	    else
 	    {
@@ -143,27 +143,27 @@ void XML::parseStartTag()
 	break;
 	
         case PARSE_MAP:
-	    if (tag == "map")
+	    if (m_tag == "map")
 	    {
-		bridge->mapItem(name, mapBegin);
-		state.push(PARSE_MAP);
+		m_bridge->mapItem(m_name, m_mapBegin);
+		m_state.push(PARSE_MAP);
 	    }
-	    else if (tag == "list")
+	    else if (m_tag == "list")
 	    {
-		bridge->mapItem(name, listBegin);
-		state.push(PARSE_LIST);
+		m_bridge->mapItem(m_name, m_listBegin);
+		m_state.push(PARSE_LIST);
 	    }
-	    else if (tag == "int")
+	    else if (m_tag == "int")
 	    {
-		state.push(PARSE_INT);
+		m_state.push(PARSE_INT);
 	    }
-	    else if (tag == "float")
+	    else if (m_tag == "float")
 	    {
-		state.push(PARSE_FLOAT);
+		m_state.push(PARSE_FLOAT);
 	    }
-	    else if (tag == "string")
+	    else if (m_tag == "string")
 	    {
-		state.push(PARSE_STRING);
+		m_state.push(PARSE_STRING);
 	    }
 	    else
 	    {
@@ -173,27 +173,27 @@ void XML::parseStartTag()
 	break;
 	
         case PARSE_LIST:
-	    if (tag == "map")
+	    if (m_tag == "map")
 	    {
-		bridge->listItem(mapBegin);
-		state.push(PARSE_MAP);
+		m_bridge->listItem(m_mapBegin);
+		m_state.push(PARSE_MAP);
 	    }
-	    else if (tag == "list")
+	    else if (m_tag == "list")
 	    {
-		bridge->listItem(listBegin);
-		state.push(PARSE_LIST);
+		m_bridge->listItem(m_listBegin);
+		m_state.push(PARSE_LIST);
 	    }
-	    else if (tag == "int")
+	    else if (m_tag == "int")
 	    {
-		state.push(PARSE_INT);
+		m_state.push(PARSE_INT);
 	    }
-	    else if (tag == "float")
+	    else if (m_tag == "float")
 	    {
-		state.push(PARSE_FLOAT);
+		m_state.push(PARSE_FLOAT);
 	    }
-	    else if (tag == "string")
+	    else if (m_tag == "string")
 	    {
-		state.push(PARSE_STRING);
+		m_state.push(PARSE_STRING);
 	    }
 	    else
 	    {
@@ -213,7 +213,7 @@ void XML::parseStartTag()
 
 void XML::parseEndTag()
 {
-    switch (state.top())
+    switch (m_state.top())
     {
 	case PARSE_NOTHING:
 	    // FIXME signal error here
@@ -221,10 +221,10 @@ void XML::parseEndTag()
 	break;
 	
 	case PARSE_STREAM:
-	    if (tag == "atlas")
+	    if (m_tag == "atlas")
 	    {
-		bridge->streamEnd();
-		state.pop();
+		m_bridge->streamEnd();
+		m_state.pop();
 	    }
 	    else
 	    {
@@ -234,10 +234,10 @@ void XML::parseEndTag()
 	break;
 	
         case PARSE_MAP:
-	    if (tag == "map")
+	    if (m_tag == "map")
 	    {
-		bridge->mapEnd();
-		state.pop();
+		m_bridge->mapEnd();
+		m_state.pop();
 	    }
 	    else
 	    {
@@ -247,10 +247,10 @@ void XML::parseEndTag()
 	break;
 	
         case PARSE_LIST:
-	    if (tag == "list")
+	    if (m_tag == "list")
 	    {
-		bridge->listEnd();
-		state.pop();
+		m_bridge->listEnd();
+		m_state.pop();
 	    }
 	    else
 	    {
@@ -260,16 +260,16 @@ void XML::parseEndTag()
 	break;
 
 	case PARSE_INT:
-	    if (tag == "int")
+	    if (m_tag == "int")
 	    {
-		state.pop();
-		if (state.top() == PARSE_MAP)
+		m_state.pop();
+		if (m_state.top() == PARSE_MAP)
 		{
-		    bridge->mapItem(name, atol(data.top().c_str()));
+		    m_bridge->mapItem(m_name, atol(m_data.top().c_str()));
 		}
 		else
 		{
-		    bridge->listItem(atol(data.top().c_str()));
+		    m_bridge->listItem(atol(m_data.top().c_str()));
 		}
 	    }
 	    else
@@ -280,16 +280,16 @@ void XML::parseEndTag()
 	break;
 
 	case PARSE_FLOAT:
-	    if (tag == "float")
+	    if (m_tag == "float")
 	    {
-		state.pop();
-		if (state.top() == PARSE_MAP)
+		m_state.pop();
+		if (m_state.top() == PARSE_MAP)
 		{
-		    bridge->mapItem(name, atof(data.top().c_str()));
+		    m_bridge->mapItem(m_name, atof(m_data.top().c_str()));
 		}
 		else
 		{
-		    bridge->listItem(atof(data.top().c_str()));
+		    m_bridge->listItem(atof(m_data.top().c_str()));
 		}
 	    }
 	    else
@@ -300,16 +300,16 @@ void XML::parseEndTag()
 	break;
 
 	case PARSE_STRING:
-	    if (tag == "string")
+	    if (m_tag == "string")
 	    {
-		state.pop();
-		if (state.top() == PARSE_MAP)
+		m_state.pop();
+		if (m_state.top() == PARSE_MAP)
 		{
-		    bridge->mapItem(name, data.top());
+		    m_bridge->mapItem(m_name, m_data.top());
 		}
 		else
 		{
-		    bridge->listItem(data.top());
+		    m_bridge->listItem(m_data.top());
 		}
 	    }
 	    else
@@ -326,9 +326,9 @@ void XML::poll(bool can_read)
     if (!can_read) return;
     do
     {
-	char next = (char) socket.get();
+	char next = (char) m_socket.get();
 
-	switch (token)
+	switch (m_token)
 	{
 	    case TOKEN_TAG:	    tokenTag(next); break;
 	    case TOKEN_START_TAG:   tokenStartTag(next); break;
@@ -336,82 +336,82 @@ void XML::poll(bool can_read)
 	    case TOKEN_DATA:	    tokenData(next); break;
 	}
     }
-    while (socket.rdbuf()->in_avail());
+    while (m_socket.rdbuf()->in_avail());
 }
 
 void XML::streamBegin()
 {
-    socket << "<atlas>";
+    m_socket << "<atlas>";
 }
 
 void XML::streamEnd()
 {
-    socket << "</atlas>";
+    m_socket << "</atlas>";
 }
 
 void XML::streamMessage(const Map&)
 {
-    socket << "<map>";
+    m_socket << "<map>";
 }
 
 void XML::mapItem(const std::string& name, const Map&)
 {
-    socket << "<map name=\"" << name << "\">";
+    m_socket << "<map name=\"" << name << "\">";
 }
 
 void XML::mapItem(const std::string& name, const List&)
 {
-    socket << "<list name=\"" << name << "\">";
+    m_socket << "<list name=\"" << name << "\">";
 }
 
 void XML::mapItem(const std::string& name, long data)
 {
-    socket << "<int name=\"" << name << "\">" << data << "</int>";
+    m_socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
 
 void XML::mapItem(const std::string& name, double data)
 {
-    socket << "<float name=\"" << name << "\">" << data << "</float>";
+    m_socket << "<float name=\"" << name << "\">" << data << "</float>";
 }
 
 void XML::mapItem(const std::string& name, const std::string& data)
 {
-    socket << "<string name=\"" << name << "\">" << data << "</string>";
+    m_socket << "<string name=\"" << name << "\">" << data << "</string>";
 }
 
 void XML::mapEnd()
 {
-    socket << "</map>";
+    m_socket << "</map>";
 }
 
 void XML::listItem(const Map&)
 {
-    socket << "<map>";
+    m_socket << "<map>";
 }
 
 void XML::listItem(const List&)
 {
-    socket << "<list>";
+    m_socket << "<list>";
 }
 
 void XML::listItem(long data)
 {
-    socket << "<int>" << data << "</int>";
+    m_socket << "<int>" << data << "</int>";
 }
 
 void XML::listItem(double data)
 {
-    socket << "<float>" << data << "</float>";
+    m_socket << "<float>" << data << "</float>";
 }
 
 void XML::listItem(const std::string& data)
 {
-    socket << "<string>" << data << "</string>";
+    m_socket << "<string>" << data << "</string>";
 }
 
 void XML::listEnd()
 {
-    socket << "</list>";
+    m_socket << "</list>";
 }
 
 } } //namespace Atlas::Codecs

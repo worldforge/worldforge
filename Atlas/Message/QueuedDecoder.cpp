@@ -12,24 +12,24 @@ QueuedDecoder::QueuedDecoder()
 
 size_t QueuedDecoder::queueSize()
 {
-    return objectQueue.size();
+    return m_objectQueue.size();
 }
 
 Object QueuedDecoder::front()
 {
-    return objectQueue.front();
+    return m_objectQueue.front();
 }
 
 Object QueuedDecoder::pop()
 {
-    Object r = objectQueue.front();
-    objectQueue.pop();
+    Object r = m_objectQueue.front();
+    m_objectQueue.pop();
     return r;
 }
 
 void QueuedDecoder::objectArrived(const Object& obj)
 {
-    objectQueue.push(obj);
+    m_objectQueue.push(obj);
 }
 
 } } // namespace Atlas::Message
