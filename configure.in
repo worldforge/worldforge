@@ -192,7 +192,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
                 ],
                 AC_MSG_ERROR([libsigc++ >= 1.2 not found.  
 
-You can download it at http://unc.dl.sourceforge.net/sourceforge/libsigc/libsigc++-1.2.4.tar.gz
+You can download it at http://sourceforge.net/project/showfiles.php?group_id=1970
 ])
 		
         )
