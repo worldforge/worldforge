@@ -1,0 +1,72 @@
+I'm trying to come up with a general class layout that all
+(significant) classes will obey. Friend functions are included
+under the corresponding section. Currently it's this:
+
+1) Constructors and destructor
+
+The default constructor will not initialize the object. If the default
+constructor is used, the object must first be initialized with fromString(),
+fromAtlas(), operator=(), or one of the initializer functions given later
+in the class. There is no constructor from a string value, as such
+construction can fail. The destructor is not virtual, nor is any other
+function in the class, as this is a low-level library designed primarily
+for speed
+
+2) toString() and fromString() methods
+
+std::string C::toString() const;
+bool C::fromString(std::string& s);
+
+The fromString() method will return true if it successfully parsed the
+string, and false otherwise. A return value of false also indicates that
+the object is in an invalid state
+
+3) operator=()
+
+4) isEqualTo() method
+
+this function is of the form
+
+bool C::isEqualTo(const C& c, CoordType tolerance = WFMATH_EPSILON);
+
+5) operator==(), operator!=()
+
+these call isEqualTo()
+
+6) Class initializers
+
+e.g. zero() for Vector<>, origin() for Point<>, etc.
+
+7) operator<()
+
+sort only, if comparison makes sense stick others here too
+
+8) math operators
+
+9) other operators (e.g. operator[]())
+
+10) other functions
+
+11) dimension-specific constructors/operators/functions
+
+e.g. Vector(CoordType& x, CoordType& y, CoordType& z) for Vector<3>
+
+Every class is also required to define three non-member functions:
+
+a (non-friend) operator<<() in wfmath/stream.h:
+
+std::ostream& operator<<(std::ostream& os, const C& c)
+{
+  return os << c.toString();
+}
+
+ToAtlas() and FromAtlas() functions in atlas/atlasconv.h:
+
+bool FromAtlas(C& c, const Atlas::Message::Object& a)
+{
+  return a.isString() && c.fromString(a.asString());
+}
+Atlas::Message::Object ToAtlas(const C& c)
+{
+  return c.toString();
+}

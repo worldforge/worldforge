@@ -1,0 +1,1 @@
+EXTRA_DIST = CLASS_LAYOUT shape.h

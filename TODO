@@ -7,3 +7,8 @@ Check stage/math and libCoal for any leftover math bits which haven't
 Improve efficiency of toString()/fromString() backend
 Rearrange the functions in foo_funcs.h to match the order in the class
 	in foo.h
+
+Does putting operator<<() in stream.h to avoid including <iostream> really
+	help when <string> is being included everywhere? Is there some way
+	to work around this, but still preserve the toString()/fromString()
+	member functions in every class?

@@ -1,5 +1,10 @@
 Saturday, December 29, 2001	Ron Steinke <rsteinke@w-link.net>
 
+	* Wrote some documentation, cleaned up the little that was
+	  already there.
+
+Saturday, December 29, 2001	Ron Steinke <rsteinke@w-link.net>
+
 	* Removed some unnecessary template specifications, changed
 	  Vector<len> to Vector<dim> and RotMatrix<size> to RotMatrix<dim>
 	  for cross class consistency in the name of the template parameter

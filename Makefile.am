@@ -1,2 +1,2 @@
-EXTRA_DIST = TODO CLASS_LAYOUT
-SUBDIRS = wfmath atlas
+EXTRA_DIST = TODO
+SUBDIRS = wfmath atlas doc

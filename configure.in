@@ -25,4 +25,4 @@ dnl AC_C_CONST
 
 dnl Checks for library functions.
 
-AC_OUTPUT(Makefile wfmath/Makefile atlas/Makefile)
+AC_OUTPUT(Makefile wfmath/Makefile atlas/Makefile doc/Makefile)
