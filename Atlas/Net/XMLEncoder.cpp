@@ -15,9 +15,12 @@
 #include <stdio.h>
 
 #include <string>
+#include <stdio.h>
 
+namespace Atlas
+{
 
-void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
+void XMLEncoder::walkTree(int nest, string name, const Object& list)
 {
         /* note that printf if member method, not normal printf function */
 	int	i;
@@ -38,66 +41,21 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 	if (list.isList()) {
 		printf("%s<list%s>\n", pre.c_str(), nam.c_str());
 		for (i=0; i<list.length(); i++) {
-			AObject tmp;
+			Object tmp;
 			list.get(i, tmp);
 			walkTree(nest+1, "", tmp);
 		}
 		printf("%s</list>\n",pre.c_str());
 	} 
 
-	if (list.isURIList()) {
-		printf("%s<uri_list%s>\n", pre.c_str(), nam.c_str());
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i, tmp);
-			walkTree(nest+1, "", tmp);
-		}
-		printf("%s</uri_list>\n",pre.c_str());
-	} 
-	if (list.isIntList()) {
-		printf("%s<int_list%s>\n", pre.c_str(), nam.c_str());
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i, tmp);
-			walkTree(nest+1, "", tmp);
-		}
-		printf("%s</int_list>\n",pre.c_str());
-	} 
-/*	if (list.isLongList()) {
-		printf("%s<long_list%s>\n", pre.c_str(), nam.c_str());
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i, tmp);
-			walkTree(nest+1, "", tmp);
-		}
-		printf("%s</long_list>\n",pre.c_str());
-	} 
-*/	if (list.isFloatList()) {
-		printf("%s<float_list%s>\n", pre.c_str(), nam.c_str());
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i, tmp);
-			walkTree(nest+1, "", tmp);
-		}
-		printf("%s</float_list>\n",pre.c_str());
-	} 
-	if (list.isStringList()) {
-		printf("%s<string_list%s>\n", pre.c_str(), nam.c_str());
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i, tmp);
-			walkTree(nest+1, "", tmp);
-		}
-		printf("%s</string_list>\n",pre.c_str());
-	} 
 
 	if (list.isMap()) {
-		AObject keys = list.keys();
+		Object keys = list.keys();
 		printf("%s<map%s>\n", pre.c_str(), nam.c_str());
 		for (i=0; i<keys.length(); i++) {
-			AObject key;
+			Object key;
 			keys.get(i, key);
-			AObject tmp;
+			Object tmp;
 			list.get(key.asString(), tmp);
 			walkTree(nest+1, key.asString(), tmp);
 		}
@@ -109,22 +67,12 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 			pre.c_str(), nam.c_str(),list.asString().c_str()
 		);
 	}
-	if (list.isURI()) {
-		printf("%s<uri%s>%s</uri>\n",
-			pre.c_str(), nam.c_str(),list.getURIPath().asString().c_str()
-		);
-	}
 	if (list.isInt()) {
 		printf("%s<int%s>%li</int>\n",
 			pre.c_str(), nam.c_str(),list.asInt()
 		);
 	}
-/*	if (list.isLong()) {
-		printf("%s<long%s>%li</long>\n",
-			pre.c_str(), nam.c_str(),list.asLong()
-		);
-	}
-*/	if (list.isFloat()) {
+	if (list.isFloat()) {
 		printf("%s<float%s>%.2f</float>\n",
 			pre.c_str(), nam.c_str(),list.asFloat()
 		);
@@ -132,7 +80,7 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 }
 
 
-string AXMLEncoder::encodeMessage(const AObject& msg)
+string XMLEncoder::encodeMessage(const Object& msg)
 {
 	//int	i;
 
@@ -148,6 +96,6 @@ string AXMLEncoder::encodeMessage(const AObject& msg)
 }
 
 
-
+} // namespace Atlas
 
 

@@ -16,7 +16,10 @@
 #include <string.h>
 #include <string>
 
-void APackedAsciiDecoder::newStream()
+namespace Atlas
+{
+
+void PackedAsciiDecoder::newStream()
 {
 	// reset decoder
 	state = 1;
@@ -24,19 +27,19 @@ void APackedAsciiDecoder::newStream()
 	token = 0;
 }
 
-void APackedAsciiDecoder::feedStream(const string& data)
+void PackedAsciiDecoder::feedStream(const string& data)
 {
 	buffer.append(data);
 }
 
-int APackedAsciiDecoder::getToken()
+int PackedAsciiDecoder::getToken()
 {
 	int tmp = token;
 	token = 0;
 	return tmp;
 }
 
-int APackedAsciiDecoder::hasTokens()
+int PackedAsciiDecoder::hasTokens()
 {
     //check for buffer overflow
     if (token == -1)
@@ -63,7 +66,7 @@ int APackedAsciiDecoder::hasTokens()
 			    break;
 			buffer = buffer.substr(pos+1);
 			// change states
-			token = AProtocol::atlasMSGBEG;
+			token = Protocol::atlasMSGBEG;
 			state = 2;
 			chk = 1;
 			break;
@@ -75,7 +78,7 @@ int APackedAsciiDecoder::hasTokens()
 			if (pos != 0)
 			{
 				// bad protcol character
-				token = AProtocol::atlasERRTOK;
+				token = Protocol::atlasERRTOK;
 				state = 1;
 				break;
 			}
@@ -83,31 +86,23 @@ int APackedAsciiDecoder::hasTokens()
 			if (typ == ")") {
 				// end of list
 				buffer = buffer.substr(1);
-				token = AProtocol::atlasATREND;
-				type = AProtocol::atlasLST;
-				state = 2;
-				break;
-			}
-			if (typ == ">") {
-				// end of typed list
-				buffer = buffer.substr(1);
-				token = AProtocol::atlasATREND;
-				type = AProtocol::atlasLST;
+				token = Protocol::atlasATREND;
+				type = Protocol::atlasLST;
 				state = 2;
 				break;
 			}
 			if (typ == "]") {
 				// end of map
 				buffer = buffer.substr(1);
-				token = AProtocol::atlasATREND;
-				type = AProtocol::atlasMAP;
+				token = Protocol::atlasATREND;
+				type = Protocol::atlasMAP;
 				state = 2;
 				break;
 			}
 			if (typ == "}") {
 				// end of message
 				buffer = buffer.substr(1);
-				token = AProtocol::atlasMSGEND;
+				token = Protocol::atlasMSGEND;
 				state = 1;
 				break;
 			}
@@ -119,32 +114,16 @@ int APackedAsciiDecoder::hasTokens()
 			name = hexDecodeString(name, '+');
 			buffer = buffer.substr(pos+1);
 			// got an attribute name
-			if (typ == "(") type = AProtocol::atlasLST;
-			if (typ == "[") type = AProtocol::atlasMAP;
-			if (typ == "!") type = AProtocol::atlasURI;
-			if (typ == "@") type = AProtocol::atlasINT;
-//			if (typ == "%") type = AProtocol::atlasLNG;
-			if (typ == "#") type = AProtocol::atlasFLT;
-			if (typ == "$") type = AProtocol::atlasSTR;
-			if (typ == "<") {
-				typ = name.substr(0,1);
-				name = name.substr(1);
-				if (typ == "!") type = AProtocol::atlasLSTURI;
-				if (typ == "@") type = AProtocol::atlasLSTINT;
-				if (typ == "#") type = AProtocol::atlasLSTFLT;
-				if (typ == "$") type = AProtocol::atlasLSTSTR;
-//				if (typ == "%") type = AProtocol::atlasLSTLNG;
-			}
+			if (typ == "(") type = Protocol::atlasLST;
+			if (typ == "[") type = Protocol::atlasMAP;
+			if (typ == "@") type = Protocol::atlasINT;
+			if (typ == "#") type = Protocol::atlasFLT;
+			if (typ == "$") type = Protocol::atlasSTR;
 			// change states, wait for value
-			token = AProtocol::atlasATRBEG;
+			token = Protocol::atlasATRBEG;
 			if (
-				type==AProtocol::atlasLST || 
-				type==AProtocol::atlasLSTURI || 
-				type==AProtocol::atlasLSTINT || 
-				type==AProtocol::atlasLSTFLT || 
-				type==AProtocol::atlasLSTSTR || 
-//				type==AProtocol::atlasLSTLNG ||
-				type==AProtocol::atlasMAP
+				type==Protocol::atlasLST || 
+				type==Protocol::atlasMAP
 			) {
 				state = 2;
 			} else {
@@ -159,25 +138,21 @@ int APackedAsciiDecoder::hasTokens()
 
 			// got an end marker, pull the data
 			sval = buffer.substr(0,pos);
-			if (type == AProtocol::atlasINT) ival = atoi(sval.c_str());
-//			if (type == AProtocol::atlasLNG) ival = atol(sval.c_str());
-			if (type == AProtocol::atlasFLT) fval = atof(sval.c_str());
+			if (type == Protocol::atlasINT) ival = atoi(sval.c_str());
+			if (type == Protocol::atlasFLT) fval = atof(sval.c_str());
 			
-			if (type == AProtocol::atlasSTR) 
-				sval = hexDecodeString(sval, '+');
-				
-			if (type == AProtocol::atlasURI) 
+			if (type == Protocol::atlasSTR) 
 				sval = hexDecodeString(sval, '+');
 				
 			// strip up to token
 			buffer = buffer.substr(pos);
-			token = AProtocol::atlasATRVAL;
+			token = Protocol::atlasATRVAL;
 			state = 4;
 			chk = 1;
 			break;
 
 		case 4:	// special state to end attributes
-			token = AProtocol::atlasATREND;
+			token = Protocol::atlasATREND;
 			state = 2;
 			chk = 1;
 			break;
@@ -203,4 +178,4 @@ int APackedAsciiDecoder::hasTokens()
 
 
 
-
+} // namespace Atlas

@@ -19,13 +19,16 @@ using std::string;
 #include "Socket.h"
 #include "Compressor.h"
 
-AClient::AClient(ASocket* aSocket, ACodec* aCodec, ACompressor* aCompressor)
-    : csock( aSocket ), codec( aCodec ), cmprs ( aCompressor )
-{ DebugMsg1( 5, "aclient :: Aclient() ", "" ); }
-
-AClient::~AClient()
+namespace Atlas
 {
-    DebugMsg1( 5, "aclient :: ~Aclient() ", "" );
+
+Client::Client(Socket* aSocket, Codec* aCodec, Compressor* aCompressor)
+    : csock( aSocket ), codec( aCodec ), cmprs ( aCompressor )
+{ DebugMsg1( 5, "client :: Client() ", "" ); }
+
+Client::~Client()
+{
+    DebugMsg1( 5, "client :: ~Client() ", "" );
 	if (csock)
 	    delete csock;
 	if (codec)
@@ -34,16 +37,16 @@ AClient::~AClient()
 	    delete cmprs;
 }
 
-SOCKET AClient::getSock()
+SOCKET Client::getSock()
 {
-    DebugMsg1( 5, "aclient :: getSock()", "" );
+    DebugMsg1( 5, "client :: getSock()", "" );
     assert( csock != 0 );
 	return csock->getSock();
 }
 
-bool AClient::canRead()
+bool Client::canRead()
 {
-    DebugMsg1( 5, "aclient :: canRead()", "" );
+    DebugMsg1( 5, "client :: canRead()", "" );
 	int	len;
 	string	buf;
 	
@@ -59,35 +62,39 @@ bool AClient::canRead()
 	if (cmprs)
 	    buf = cmprs->decode(buf);
 	
-	DebugMsg1(5,"aclient :: ISTREAM = %s\n", buf.c_str());
+	DebugMsg1(5,"client :: ISTREAM = %s\n", buf.c_str());
 	
 	//parse through codec
 	assert( codec != 0 );
 	codec->feedStream(buf);
-	
-	while ( codec->hasMessage() ) {
-		DebugMsg1(4,"aclient :: processing codec message","");
-		gotMsg( codec->getMessage() );
-		codec->freeMessage();
-	}
+	chkMsgs();
 	return true;
 }
 
-
-bool AClient::gotErrs()
+void	Client::chkMsgs()
 {
-    DebugMsg1( 5, "aclient :: gotErrs()", "" );
+	while ( codec->hasMessage() ) {
+		DebugMsg1(4,"client :: processing codec message","");
+		gotMsg( codec->getMessage() );
+		codec->freeMessage();
+	}
+}
+
+
+bool Client::gotErrs()
+{
+    DebugMsg1( 5, "client :: gotErrs()", "" );
     // errors are assumed to be a disconnect, propogate to subclasses
     assert( csock != 0 );
-    DebugMsg1( 0, "aclient :: SOCKET ERRORS ON %li", (long)csock->getSock());
+    DebugMsg1( 0, "client :: SOCKET ERRORS ON %li", (long)csock->getSock());
     csock->close();
     gotDisconnect();
     return true;
 }
 
-void AClient::doPoll()
+void Client::doPoll()
 {
-    DebugMsg1( 5, "aclient :: doPoll()", "" );
+    DebugMsg1( 5, "client :: doPoll()", "" );
     assert ( csock != 0 );
 
     fd_set		fdread;
@@ -115,11 +122,13 @@ void AClient::doPoll()
 
     if ( FD_ISSET( csock->getSock(), &fdsend) )
         canSend();
+        
+	chkMsgs();
 }
 
-void AClient::readMsg(AObject& msg)
+void Client::readMsg(Object& msg)
 {
-    DebugMsg1( 5, "aclient :: readMsg()", "" );
+    DebugMsg1( 5, "client :: readMsg()", "" );
     assert ( csock != 0 );
 
 	// read and return a message
@@ -139,31 +148,32 @@ void AClient::readMsg(AObject& msg)
 	codec->freeMessage();
 }
 
-void AClient::sendMsg(const AObject& msg)
+void Client::sendMsg(const Object& msg)
 {
-    DebugMsg1( 5, "aclient :: sendMsg()", "" );
+    DebugMsg1( 5, "client :: sendMsg()", "" );
     assert ( codec != 0 );
 
     string data = codec->encodeMessage(msg);
     if (cmprs)
 	    data = cmprs->encode(data);
 	
-    DebugMsg2(5,"aclient :: Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
+    DebugMsg2(5,"client :: Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
     int res = csock->send(data);
-    DebugMsg1(5,"aclient :: Client Message Sent = %i", res);
+    DebugMsg1(5,"client :: Client Message Sent = %i", res);
 	// do something about buffer full conditions here
 }
 
-void AClient::gotMsg(const AObject& msg)
+void Client::gotMsg(const Object& msg)
 {
-    DebugMsg1(0,"aclient :: gotMsg() was not implemented in subclass","");
+    DebugMsg1(0,"client :: gotMsg() was not implemented in subclass","");
     assert( false );
 }
 
-void AClient::gotDisconnect()
+void Client::gotDisconnect()
 {
-    DebugMsg1(0,"aclient :: gotDisconnect() was not implemented in subclass","");
+    DebugMsg1(0,"client :: gotDisconnect() was not implemented in subclass","");
     assert( false );
 }
 
 
+} // namespace Atlas::Net

@@ -12,30 +12,33 @@
 #include "../Object/Debug.h"
 #include "TCPSocket.h"
 
+namespace Atlas
+{
+
 #if defined(_WIN32) || defined(__WINDOWS__)
-int ATCPSocket::didWSAInit = 0;
+int TCPSocket::didWSAInit = 0;
 #else
 #include <fcntl.h>
 #endif
 
 const u_long ADDRESS_ERROR = 0xFFFFFFFF;
 
-ATCPSocket::ATCPSocket()
+TCPSocket::TCPSocket()
 {
 
 #if defined(_WIN32) || defined(__WINDOWS__)
 	if (!didWSAInit) {
 		WSAStartup(0x0101, &wsadata);
 		didWSAInit = 1;
-		DebugMsg1(4, "ATCPSocket :: Did WSAStartup\n\n");
+		DebugMsg1(4, "TCPSocket :: Did WSAStartup\n\n");
 	}
 #endif
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
-	DebugMsg1(4, "ATCPSocket :: Created Socket=%li", (long)sock);
+	DebugMsg1(4, "TCPSocket :: Created Socket=%li", (long)sock);
 }
 
-ATCPSocket::~ATCPSocket()
+TCPSocket::~TCPSocket()
 {
 #ifndef _WIN32
 	::close(sock);
@@ -43,11 +46,11 @@ ATCPSocket::~ATCPSocket()
 #endif
 }
 
-ATCPSocket::ATCPSocket(SOCKET asock): ASocket(asock)
+TCPSocket::TCPSocket(SOCKET asock): Socket(asock)
 {
 }
 
-int	ATCPSocket::connect(const string& addr, int port)
+int	TCPSocket::connect(const string& addr, int port)
 {
     struct hostent      *host;
     u_long              hostaddr;
@@ -59,16 +62,16 @@ int	ATCPSocket::connect(const string& addr, int port)
 	{
         //convert string to IP address
         hostaddr = inet_addr(addr.c_str());
-        DebugMsg1(4, "ATCPSocket :: Converted IP Address = %li \n", hostaddr);
+        DebugMsg1(4, "TCPSocket :: Converted IP Address = %li \n", hostaddr);
         if ( hostaddr == ADDRESS_ERROR )
             return -1;
     } else {
         // name lookup worked, get address
-        DebugMsg1(4, "ATCPSocket :: Reading host entry\n","");
+        DebugMsg1(4, "TCPSocket :: Reading host entry\n","");
         hostaddr = *((u_long *)host->h_addr);
     }
 
-    DebugMsg3(4, "ATCPSocket :: Opening connection to %li:%i on socket = %i\n", hostaddr,port,sock);
+    DebugMsg3(4, "TCPSocket :: Opening connection to %li:%i on socket = %i\n", hostaddr,port,sock);
 
     memset(&sin, 0, sizeof(sin)); // make sure everything zero
     sin.sin_family = AF_INET;
@@ -80,7 +83,7 @@ int	ATCPSocket::connect(const string& addr, int port)
     return res;
 }
 
-int	ATCPSocket::listen(const string& addr, int port, int backlog)
+int	TCPSocket::listen(const string& addr, int port, int backlog)
 {
 	u_long              myaddr;
 	struct sockaddr_in  sin;
@@ -102,7 +105,7 @@ int	ATCPSocket::listen(const string& addr, int port, int backlog)
 	return ::listen(sock, backlog);
 }
 
-ASocket*	ATCPSocket::accept()
+Socket*	TCPSocket::accept()
 {
 	int			newsock;
 	struct sockaddr_in	sin;
@@ -110,16 +113,16 @@ ASocket*	ATCPSocket::accept()
 
 	sinlen = sizeof(sin);
 	newsock = ::accept(sock, (struct sockaddr*)&sin, &sinlen);
-	return new ATCPSocket(newsock);
+	return new TCPSocket(newsock);
 }
 
-int	ATCPSocket::send(const string& data)
+int	TCPSocket::send(const string& data)
 {
 	DebugMsg2(4, "Sending Data on Socket=%li Data=%s", (long)sock, data.c_str());
 	return ::send(sock, data.c_str(), data.length(), 0);
 }
 
-int		ATCPSocket::recv(string& data)
+int		TCPSocket::recv(string& data)
 {
 	char	buf[2048];
 
@@ -132,3 +135,4 @@ int		ATCPSocket::recv(string& data)
 	return res;
 }
 
+} // namespace Atlas

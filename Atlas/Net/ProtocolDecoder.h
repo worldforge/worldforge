@@ -11,7 +11,10 @@
 
 #include "../Object/Object.h"
 
-class AProtocolDecoder
+namespace Atlas
+{
+
+class ProtocolDecoder
 {
 protected:
 	string	buffer;
@@ -25,8 +28,8 @@ protected:
 
 
 public:
-	AProtocolDecoder();
-	virtual ~AProtocolDecoder() {}
+	ProtocolDecoder();
+	virtual ~ProtocolDecoder() {}
 
 	string	getName();
 	int	getType();
@@ -42,6 +45,9 @@ public:
 
 
 };
+
+} // namespace Atlas
+
 
 #endif
 

@@ -16,15 +16,19 @@ changes:
 #include "XMLEncoder.h"
 #include "XMLDecoder.h"
 
-AProtocol* AXMLProtocol::makenew()
+namespace Atlas
 {
-	return new AXMLProtocol();
+
+Protocol* XMLProtocol::makenew()
+{
+	return new XMLProtocol();
 }
 
-AXMLProtocol::AXMLProtocol()
- : AProtocol( new AXMLEncoder, new AXMLDecoder, "<atlas>" )
+XMLProtocol::XMLProtocol()
+ : Protocol( new XMLEncoder, new XMLDecoder, "<atlas>" )
 { /*empty*/ }
 
-AXMLProtocol::~AXMLProtocol() {}
+XMLProtocol::~XMLProtocol() {}
 
 
+} // namespace Atlas

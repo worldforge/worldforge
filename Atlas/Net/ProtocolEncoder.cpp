@@ -8,11 +8,16 @@
 
 #include "ProtocolEncoder.h"
 
-AProtocolEncoder::AProtocolEncoder()
+#include <stdio.h>
+
+namespace Atlas
+{
+
+ProtocolEncoder::ProtocolEncoder()
 {
 }
 
-void AProtocolEncoder::printf(char* fmt, ...)
+void ProtocolEncoder::printf(char* fmt, ...)
 {
 	int	siz;
 	char	str[2048];
@@ -25,23 +30,23 @@ void AProtocolEncoder::printf(char* fmt, ...)
 	buffer.append(str,siz);
 }
 		
-void AProtocolEncoder::append(string& data)
+void ProtocolEncoder::append(string& data)
 {
 	buffer.append(data);
 }
 		
-string AProtocolEncoder::encodeMessage(const AObject& msg)
+string ProtocolEncoder::encodeMessage(const Object& msg)
 {
 	string	res("");
 	return	res;
 }
 
-int AProtocolEncoder::encodedLength()
+int ProtocolEncoder::encodedLength()
 {
 	return buffer.length();
 }
 
-string AProtocolEncoder::hexEncodeString(const string& input, char prefix,
+string ProtocolEncoder::hexEncodeString(const string& input, char prefix,
 					 const string& specialchars)
 {
 	string s;
@@ -58,3 +63,5 @@ string AProtocolEncoder::hexEncodeString(const string& input, char prefix,
 	}
 	return s;
 }
+
+} // namespace Atlas

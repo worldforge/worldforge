@@ -20,34 +20,41 @@ using std::string;
 #include "../Object/Debug.h"
 #include "../Object/Object.h"
 
-class AProtocol;
 
-class ACodec
+namespace Atlas
+{
+
+class Protocol;
+
+class Codec
 {
 public:
-    ACodec( AProtocol* );
+    Codec( Protocol* );
 
-    string      encodeMessage( const AObject& );
+    string      encodeMessage( const Object& );
     int         encodedLength();
     void        feedStream( const string& );
-    AObject&    getMessage();
+    Object&     getMessage();
 
     bool        hasMessage();
     void        freeMessage();
 
 private:
-    ACodec( const ACodec& );
+    Codec( const Codec& );
 
     //IDLE = waiting for message, BUSY = waiting for end of message
     enum State { IDLE, BUSY };
 
-    AObject     msg;        // message currently being constructed
-    AProtocol*  proto;      // current stream format module
+    Object     msg;        // message currently being constructed
+    Protocol*  proto;      // current stream format module
     State       myState;    // current decoder state
 
-    AObject     stack[50];  // nested list/map handling
+    Object     stack[50];  // nested list/map handling
     string      names[50];  // name that nested item will have in parent
     int         nestd;      // count of nesting levels
 };
+
+} // Atlas Namespace
+
 #endif
 

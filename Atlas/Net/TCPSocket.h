@@ -1,9 +1,15 @@
-/*
-        AtlasTCPSocket.h
-        ----------------
-        begin           : 1999.11.29
-        copyright       : (C) 1999 by John Barrett (ZW)
-        email           : jbarrett@box100.com
+/** AtlasTCPSocket -- TCP Implementation of the ASocket Class.
+
+Atlas TCP Socket implements basic client and server
+socket capabilities required by the Atlas Socket
+specification for Linux and Windows platforms.
+
+@author John Barrett (ZW) <jbarrett@box100.com
+
+@see ASocket
+@see AClient
+@see AServer
+
 */
 
 #ifndef __AtlasTCPSocket_h_
@@ -22,24 +28,39 @@ using std::string;
 #include <unistd.h>
 #endif
 
+namespace Atlas
+{
 
-class ATCPSocket: public ASocket
+class TCPSocket: public Socket
 {
 public:
-    ATCPSocket();
-    ATCPSocket(SOCKET asock);
-    ~ATCPSocket();
+		/// constructor
+		TCPSocket();
+		/// constructor given an open socket
+		TCPSocket(SOCKET asock);
+		/// destructor
+		~TCPSocket();
 
-    ASocket*    accept();
+		/// establish a server socket
+int		listen  (const string& addr, int port, int blog);
+		/// accept new connections from a server socket
+Socket*		accept();
 
-    int connect (const string& addr, int port);
-    int listen  (const string& addr, int port, int blog);
-    int send    (const string& data);
-    int recv    (string& data);
+		/// connect to a remote host
+int		connect (const string& addr, int port);
+		/// send data over the socket
+int		send    (const string& data);
+		/// recieve data from the socket
+int		recv    (string& data);
 private:
 #if defined(_WIN32) || defined(__WINDOWS__)
-    static  int didWSAInit;
-    struct WSAData  wsadata;
+		/// global flag, true if winsock has been initialized
+static int	didWSAInit;
+		/// information about installed winsock implementation
+struct WSAData	wsadata;
 #endif
 };
+
+} // namespace Atlas
+
 #endif

@@ -11,13 +11,18 @@
 #include "Protocol.h"
 #include "PackedAsciiProtocol.h"
 
-AProtocol* APackedAsciiProtocol::makenew()
+namespace Atlas
 {
-	return new APackedAsciiProtocol();
+
+Protocol* PackedAsciiProtocol::makenew()
+{
+	return new PackedAsciiProtocol();
 }
-APackedAsciiProtocol::APackedAsciiProtocol()
- : AProtocol( new APackedAsciiEncoder(), new APackedAsciiDecoder() )
+
+PackedAsciiProtocol::PackedAsciiProtocol()
+ : Protocol( new PackedAsciiEncoder(), new PackedAsciiDecoder() )
 { /*empty*/ }
 
 
 
+} // namespace Atlas

@@ -14,47 +14,50 @@
 #include "../Object/Debug.h"
 #include <sys/types.h>
 
-int ASocket::connect(const string& addr, int port)		
+namespace Atlas
 {
-	DebugMsg1(0, "ASocket :: connect() not overidden in subclass", "");
+
+int Socket::connect(const string& addr, int port)		
+{
+	DebugMsg1(0, "Socket :: connect() not overidden in subclass", "");
 	return -1;
 }
 
-int ASocket::listen(const string& addr, int port, int blog)
+int Socket::listen(const string& addr, int port, int blog)
 {
-	DebugMsg1(0, "ASocket :: listen() not overidden in subclass", "");
+	DebugMsg1(0, "Socket :: listen() not overidden in subclass", "");
 	return -1;
 }
 
-int ASocket::send(const string& data)
+int Socket::send(const string& data)
 {
-	DebugMsg1(0, "ASocket :: send() not overidden in subclass", "");
+	DebugMsg1(0, "Socket :: send() not overidden in subclass", "");
 	return -1;
 }
 
-int ASocket::sendTo(const string& data, const sockaddr_in& addr)
+int Socket::sendTo(const string& data, const sockaddr_in& addr)
 {
-	DebugMsg1(0, "ASocket :: sendTo() not overidden in subclass", "");
+	DebugMsg1(0, "Socket :: sendTo() not overidden in subclass", "");
 	return -1;
 }
 
-int ASocket::recv(string& buf)
+int Socket::recv(string& buf)
 {
-	DebugMsg1(0, "ASocket :: recv() not overidden in subclass", "");
+	DebugMsg1(0, "Socket :: recv() not overidden in subclass", "");
 	return -1;
 }
 
-int ASocket::recvFrom(string& buf, const sockaddr_in& addr)
+int Socket::recvFrom(string& buf, const sockaddr_in& addr)
 {
-	DebugMsg1(0, "ASocket :: recvFrom() not overidden in subclass", "");
+	DebugMsg1(0, "Socket :: recvFrom() not overidden in subclass", "");
 	return -1;
 }
 
-void ASocket::close()
+void Socket::close()
 {
 	sock = (SOCKET)-1;
 }
 
-SOCKET ASocket::getSock()				{return sock;}
+SOCKET Socket::getSock()				{return sock;}
 
-
+} // namespace Atlas

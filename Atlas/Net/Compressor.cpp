@@ -8,16 +8,20 @@
 
 #include "Compressor.h"
 
-string  ACompressor::encode( const string& data)
+namespace Atlas
+{
+
+string  Compressor::encode( const string& data)
 {
     return data;
 }
 
-string  ACompressor::decode( const string& data)
+string  Compressor::decode( const string& data)
 {
     return data;
 }
 
-void		ACompressor::resetEncoder() {}
-void		ACompressor::resetDecoder() {}
+void		Compressor::resetEncoder() {}
+void		Compressor::resetDecoder() {}
 
+} // namespace Atlas

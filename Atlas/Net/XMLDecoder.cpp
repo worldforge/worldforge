@@ -28,8 +28,10 @@ const char* MSG_TOP_NAME=   "obj";
 const char* NAME_OPEN=      "name=";
 const char* DEFAULT_NAME=   "";
 
+namespace Atlas
+{
 
-void AXMLDecoder::newStream()
+void XMLDecoder::newStream()
 {
 	// reset decoder
 	state = 1;
@@ -37,12 +39,12 @@ void AXMLDecoder::newStream()
 	token = 0;
 }
 
-void AXMLDecoder::feedStream(const string& data)
+void XMLDecoder::feedStream(const string& data)
 {
 	buffer.append(data);
 }
 
-int AXMLDecoder::getToken()
+int XMLDecoder::getToken()
 {
 	int tmp = token;
 	token = 0;
@@ -50,7 +52,7 @@ int AXMLDecoder::getToken()
 }
 
 
-int AXMLDecoder::hasTokens()
+int XMLDecoder::hasTokens()
 {
     //check for buffer overflow
     if (token == -1)
@@ -87,10 +89,10 @@ int AXMLDecoder::hasTokens()
             stateOK = true;
 
             if ( tag == MSG_TOP_NAME ) {
-                token = AProtocol::atlasMSGBEG;
+                token = Protocol::atlasMSGBEG;
                 state = 2;
             } else
-                token = AProtocol::atlasERRTOK;
+                token = Protocol::atlasERRTOK;
 
             break;
             }
@@ -138,47 +140,35 @@ int AXMLDecoder::hasTokens()
 						
 			if ( tag == MSG_TOP_NAME ) {
 				if ( endTag ) {
-					token = AProtocol::atlasMSGEND;
+					token = Protocol::atlasMSGEND;
 					state = 1;
 				} else {
 					// bad tag !! push token back
 					buffer.insert(0,buf);
-					token = AProtocol::atlasERRTOK;
+					token = Protocol::atlasERRTOK;
 					DebugMsg1(1,"xmldecoder :: BAD TAG=%s", tag.c_str());
 				}
 				break;
 			}
-			else if (tag == "int")		type = AProtocol::atlasINT;
-//			else if (tag == "long")		type = AProtocol::atlasLNG;
-			else if (tag == "str")		type = AProtocol::atlasSTR;
-			else if (tag == "string")	type = AProtocol::atlasSTR;
-			else if (tag == "float")	type = AProtocol::atlasFLT;
-			else if (tag == "uri")		type = AProtocol::atlasURI;
-			else if (tag == "map")		type = AProtocol::atlasMAP;
-			else if (tag == "int_list")	type = AProtocol::atlasLSTINT;
-//			else if (tag == "long_list")	type = AProtocol::atlasLSTLNG;
-			else if (tag == "float_list")	type = AProtocol::atlasLSTFLT;
-			else if (tag == "string_list")	type = AProtocol::atlasLSTSTR;
-			else if (tag == "uri_list")	type = AProtocol::atlasLSTURI;
-			else if (tag == "list")		type = AProtocol::atlasLST;
+			else if (tag == "int")		type = Protocol::atlasINT;
+			else if (tag == "str")		type = Protocol::atlasSTR;
+			else if (tag == "string")	type = Protocol::atlasSTR;
+			else if (tag == "float")	type = Protocol::atlasFLT;
+			else if (tag == "map")		type = Protocol::atlasMAP;
+			else if (tag == "list")		type = Protocol::atlasLST;
 			else {
 				// bad tag type !!
 				DebugMsg1(1,"xmldecoder :: BAD TYPE=%s", tag.c_str());
-				token = AProtocol::atlasERRTOK;
+				token = Protocol::atlasERRTOK;
 				break;
 			}
 			if ( !endTag ) {
-				token = AProtocol::atlasATRBEG;
+				token = Protocol::atlasATRBEG;
 				state = 3;
-				if (type == AProtocol::atlasMAP) state = 2;
-				if (type == AProtocol::atlasLST) state = 2;
-				if (type == AProtocol::atlasLSTINT) state = 2;
-//				if (type == AProtocol::atlasLSTLNG) state = 2;
-				if (type == AProtocol::atlasLSTFLT) state = 2;
-				if (type == AProtocol::atlasLSTSTR) state = 2;
-				if (type == AProtocol::atlasLSTURI) state = 2;
+				if (type == Protocol::atlasMAP) state = 2;
+				if (type == Protocol::atlasLST) state = 2;
 			} else {
-				token = AProtocol::atlasATREND;
+				token = Protocol::atlasATREND;
 				state = 2;
 			}
 			stateOK = true;
@@ -191,16 +181,13 @@ int AXMLDecoder::hasTokens()
 			sval = buffer.substr( 0, pos );
 			buffer = buffer.substr(pos);
 			
-			if (type == AProtocol::atlasINT)
+			if (type == Protocol::atlasINT)
 			    ival = atoi(sval.c_str());
 			
-/*			if (type == AProtocol::atlasLNG)
-			    ival = atol(sval.c_str());
-*/			
-			if (type == AProtocol::atlasFLT)
+			if (type == Protocol::atlasFLT)
 			    fval = atof(sval.c_str());
 			
-			token = AProtocol::atlasATRVAL;
+			token = Protocol::atlasATRVAL;
 			state = 2;
 			stateOK = true;
 			break;
@@ -225,5 +212,5 @@ int AXMLDecoder::hasTokens()
 }
 
 
-
+} // namespace Atlas
 

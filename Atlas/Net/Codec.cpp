@@ -20,40 +20,44 @@ changes:
 #include "ProtocolEncoder.h"
 #include "ProtocolDecoder.h"
 
-ACodec::ACodec(AProtocol* aproto) : proto( aproto ), nestd( 0 )
+
+namespace Atlas
 {
-    DebugMsg1( 5, "acodec :: ACodec()", "" );
+
+Codec::Codec(Protocol* aproto) : proto( aproto ), nestd( 0 )
+{
+    DebugMsg1( 5, "codec :: Codec()", "" );
     assert( proto != 0 );
     assert( proto->getDecoder() != 0 );
     proto->getDecoder()->newStream();
-    myState = ACodec::IDLE;
+    myState = Codec::IDLE;
 }
 
-string ACodec::encodeMessage(const AObject& amsg)
+string Codec::encodeMessage(const Object& amsg)
 {
     DebugMsg1( 5, "acodec :: encodeMessage()", "" );
 	return proto->getEncoder()->encodeMessage(amsg);
 }
 
-int ACodec::encodedLength()
+int Codec::encodedLength()
 {
     DebugMsg1( 5, "acodec :: encodedLength()", "" );
 	return proto->getEncoder()->encodedLength();
 }
 
-void ACodec::feedStream( const string& data)
+void Codec::feedStream( const string& data)
 {
     DebugMsg1( 5, "acodec :: feedStream()", "" );
 	proto->getDecoder()->feedStream(data);
 }
 
-AObject& ACodec::getMessage()
+Object& Codec::getMessage()
 {
     DebugMsg1( 5, "acodec :: getMessage()", "" );
 	return msg;
 }
 
-void ACodec::freeMessage()
+void Codec::freeMessage()
 {
 	DebugMsg1( 5,"codec :: freeMessage()","");
 	//delete msg;
@@ -61,7 +65,7 @@ void ACodec::freeMessage()
 }
 
 
-bool ACodec::hasMessage()
+bool Codec::hasMessage()
 {
 	DebugMsg1( 5,"codec :: hasMessage()","");
 	// cant have a message until we have recieved tokens
@@ -69,10 +73,10 @@ bool ACodec::hasMessage()
         return false;
     }
 	// got a token, we must be busy processing a message !!
-	myState = ACodec::BUSY;
+	myState = Codec::BUSY;
 	// process tokens until we run out or we complete a msg
     DebugMsg1(1,"codec :: Scanning Tokens","");
-    AProtocolDecoder* adec = proto->getDecoder();
+    ProtocolDecoder* adec = proto->getDecoder();
 
     do {
         int tok = proto->getDecoder()->getToken();
@@ -81,66 +85,34 @@ bool ACodec::hasMessage()
         if (name.length() == 0)
 		    name = string("(null)");
 		DebugMsg3(1,"codec :: tok=%i name=%s type=%i", tok, name.c_str(), type);
-		if (tok == AProtocol::atlasATRVAL) {
+		if (tok == Protocol::atlasATRVAL) {
 			// got a value for an attribute
-			if (type == AProtocol::atlasSTR) stack[nestd] = AObject::mkString(adec->getString());
-			if (type == AProtocol::atlasINT) stack[nestd] = AObject::mkInt(adec->getInt());
-// 			if (type == AProtocol::atlasLNG) stack[nestd] = AObject::mkLong(adec->getInt());
-			if (type == AProtocol::atlasURI) stack[nestd] = AObject::mkURI(adec->getString());
-			if (type == AProtocol::atlasFLT) stack[nestd] = AObject::mkFloat(adec->getFloat());
+			if (type == Protocol::atlasSTR) stack[nestd] = Object::mkString(adec->getString());
+			if (type == Protocol::atlasINT) stack[nestd] = Object::mkInt(adec->getInt());
+			if (type == Protocol::atlasFLT) stack[nestd] = Object::mkFloat(adec->getFloat());
 			DebugMsg2(1,"codec :: ADDATTR nestd=%i name=%s", nestd, name.c_str());
 		}
-		if (tok == AProtocol::atlasATRBEG) {
+		if (tok == Protocol::atlasATRBEG) {
 			// got an attribute header
 			names[nestd] = name;
-			if (type == AProtocol::atlasMAP) {
+			if (type == Protocol::atlasMAP) {
 				// start a nested list
 				DebugMsg1(1,"codec :: MAKE_MAP","");
-				stack[nestd] = AObject::mkMap();
+				stack[nestd] = Object::mkMap();
 				DebugMsg2(1,"codec :: ADD_MAP nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
-			} else if (type == AProtocol::atlasLST) {
+			} else if (type == Protocol::atlasLST) {
 				// start a nested list
-				stack[nestd] = AObject::mkList(0);
-				DebugMsg2(1,"codec :: ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
-				nestd++;
-			} else if (type == AProtocol::atlasLSTURI) {
-				// start a nested list
-				stack[nestd] = AObject::mkURIList(0);
-				DebugMsg2(1,"codec :: ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
-				nestd++;
-			} else if (type == AProtocol::atlasLSTINT) {
-				// start a nested list
-				stack[nestd] = AObject::mkIntList(0);
-				DebugMsg2(1,"codec :: ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
-				nestd++;
-// 			} else if (type == AProtocol::atlasLSTLNG) {
-// 				// start a nested list
-// 				stack[nestd] = AObject::mkLongList(0);
-// 				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
-// 				nestd++;
-			} else if (type == AProtocol::atlasLSTFLT) {
-				// start a nested list
-				stack[nestd] = AObject::mkFloatList(0);
-				DebugMsg2(1,"codec :: ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
-				nestd++;
-			} else if (type == AProtocol::atlasLSTSTR) {
-				// start a nested list
-				stack[nestd] = AObject::mkStringList(0);
+				stack[nestd] = Object::mkList(0);
 				DebugMsg2(1,"codec :: ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
 			}
 		}
-		if (tok == AProtocol::atlasATREND) {
+		if (tok == Protocol::atlasATREND) {
 			// end of attribute detected.. un-nest
                         if (    
-                                type==AProtocol::atlasLST ||
-                                type==AProtocol::atlasLSTURI ||
-                                type==AProtocol::atlasLSTINT ||
-                                type==AProtocol::atlasLSTFLT ||
-                                type==AProtocol::atlasLSTSTR ||
-                                type==AProtocol::atlasLSTLNG ||
-                                type==AProtocol::atlasMAP
+                                type==Protocol::atlasLST ||
+                                type==Protocol::atlasMAP
                         ) { 
 				nestd--;
 				DebugMsg1(1,"codec :: ENDLIST nest=%i", nestd);
@@ -149,46 +121,33 @@ bool ACodec::hasMessage()
 				if (stack[nestd-1].isList()) {
 					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
 					stack[nestd-1].append(stack[nestd]);
-				} else if (stack[nestd-1].isURIList()) {
-					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
-					stack[nestd-1].append(stack[nestd]);
-				} else if (stack[nestd-1].isIntList()) {
-					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
-					stack[nestd-1].append(stack[nestd]);
-/*				} else if (stack[nestd-1].isLongList()) {
-					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
-					stack[nestd-1].append(stack[nestd]);
-*/				} else if (stack[nestd-1].isFloatList()) {
-					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
-					stack[nestd-1].append(stack[nestd]);
-				} else if (stack[nestd-1].isStringList()) {
-					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
-					stack[nestd-1].append(stack[nestd]);
 				} else {
 					DebugMsg2(1,"codec :: UNSTACK nest=%i MAP name=%s", nestd, names[nestd].c_str());
 					stack[nestd-1].set(names[nestd], stack[nestd]);
 				}
 			}
 		}
-		if (tok == AProtocol::atlasMSGBEG) {
+		if (tok == Protocol::atlasMSGBEG) {
 			// got a message header
 			// start constructing a message on the stack
-			// stack[0] = AObject::mkMap();
+			// stack[0] = Object::mkMap();
 			nestd = 0;
 		}
-		if (tok == AProtocol::atlasMSGEND) {
+		if (tok == Protocol::atlasMSGEND) {
 			// got a message trailer
 			//assert(nestd == 1);
 			// should have unraveled all nesting by now
 			DebugMsg1(1,"codec :: message complete","");
 			msg = stack[0];
 			// get outa the loop !!
-			myState = ACodec::IDLE;
+			myState = Codec::IDLE;
 		}
-	} while (proto->getDecoder()->hasTokens() && myState == ACodec::BUSY);
+	} while (proto->getDecoder()->hasTokens() && myState == Codec::BUSY);
 	
 	//If finished a whole message return true, else false
-    return ( myState == ACodec::IDLE );
+    return ( myState == Codec::IDLE );
 }
+
+} // namespace Atlas
 
 

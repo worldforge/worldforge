@@ -15,72 +15,10 @@
 #include <stdlib.h>
 #include <memory.h>
 
-/*
-    The Packed ASCII protocol produces messages that look like:
+namespace Atlas
+{
 
-{pos=$alt=49000(coord=#X=4865.5#Y=1376.4)}
-
-	The decoding method is a state machine.
-
-	States:
-	1. waiting for start of message
-		if "{" and "=" found
-			pull out message name
-			goto state 2
-
-		2. waiting for the "["
-        if "[" found
-            extract name
-            store token atlasBEGMSG
-            nestd++
-            goto state 3
-
-    3. waiting for "a" or "]"
-        if "a" found
-            goto state 5
-        if "]" found
-            nestd--
-            goto state 4
-        if anything else found
-            goto state ERROR
-
-    4. waiting for ">"
-        if ">" found
-            if nestd = 0 
-                store token atlasENDMSG
-                goto state 1
-            else
-                store token atlasENDATR
-                goto state 3
-
-    5. waiting for "="
-        if "=" found
-            extract name and type
-            store token atlasBEGATR
-            if type = list goto state 7
-            if type != list goto state 6
-
-    6. waiting for ">"
-        if ">" found
-            extract value
-            store token atlasATRVAL
-            goto state 7
-
-    7. waiting for nothing
-        store token atlasENDATR
-        goto state 3
-
-    8. waiting for "["
-        if "[" found
-            nestd++
-            goto state 3
-        if anything else found
-            goto state ERROR
-
-*/
-
-
-class APackedAsciiDecoder: public AProtocolDecoder
+class PackedAsciiDecoder: public ProtocolDecoder
 {
 
 private:
@@ -91,14 +29,14 @@ private:
 
 public:
 
-    APackedAsciiDecoder()
+    PackedAsciiDecoder()
     {
         state = 1;
         nestd = 0;
         token = 0;
     }
 
-    ~APackedAsciiDecoder()
+    ~PackedAsciiDecoder()
     {
     }
 
@@ -108,6 +46,8 @@ public:
     int hasTokens();
 
 };
+
+} // amespace Atlas
 
 #endif
 

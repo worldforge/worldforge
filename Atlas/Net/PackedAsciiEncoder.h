@@ -15,15 +15,18 @@
 
 #include <memory.h>
 
-class APackedAsciiEncoder: public AProtocolEncoder
+namespace Atlas
+{
+
+class PackedAsciiEncoder: public ProtocolEncoder
 {
 private:
-    void walkTree(int nest, const char* name, const AObject& list);
+    void walkTree(int nest, const char* name, const Object& list);
 
 public:
-    string encodeMessage(const AObject& msg);
+    string encodeMessage(const Object& msg);
 };
 
-
+} // namespace Atlas
 #endif
 

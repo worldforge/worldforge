@@ -1,9 +1,15 @@
-/*
-        AtlasSocket.h
-        ----------------
-        begin           : 1999.11.29
-        copyright       : (C) 1999 by John Barrett (ZW)
-        email           : jbarrett@box100.com
+/** AtlasSocket -- ASocket Base Class.
+
+Atlas Socket defines the basic client and server
+socket interfaces by the Atlas Client and Atlas
+Server classes.
+
+@author John Barrett (ZW) <jbarrett@box100.com
+
+@see ATCPSocket
+@see AClient
+@see AServer
+
 */
 
 #ifndef __AtlasSocket_h_
@@ -30,31 +36,51 @@ using namespace std;
 	#define sinlen_t int
 #endif
 
-class ASocket
+namespace Atlas
+{
+
+class Socket
 {
 public:
-    ASocket() { sock = (SOCKET)-1; }
-    ASocket( SOCKET asock ) { sock = asock; }
+			/// construct a disconnected socket
+			Socket() { sock = (SOCKET)-1; }
+			/// construct from an open socket handle
+			Socket( SOCKET asock ) { sock = asock; }
+			/// destructor
+virtual			~Socket() {}
 
-    virtual ~ASocket() {}
+			/// server socket startup
+virtual int		listen(const string& addr, int port, int backlog);
+			/// accept a new connection from a server socket
+virtual Socket*		accept() { return 0; }
 
-    // these 2 calls are mutually exclusive
-    // you can either connect or listen/accept !!
-    virtual int connect(const string& addr, int port);
-    virtual int listen(const string& addr, int port, int backlog);
+			/// connect to a remote host
+virtual int		connect(const string& addr, int port);
 
-    virtual ASocket* accept() { return 0; }
+			/// send data over socket
+virtual int		send    (const string& data);
+			/// send data to a spcific destination (UDP Support)
+virtual int		sendTo  (const string& data, const struct sockaddr_in& addr);
 
-    virtual int send    (const string& data);
-    virtual int sendTo  (const string& data, const struct sockaddr_in& addr);
+			/// recieve data from socket
+virtual int		recv    (string& buf);
+			/// recieve data with source information (UDP Support)
+virtual int		recvFrom(string& buf, const struct sockaddr_in& addr);	
 
-    virtual int recv    (string& buf);
-    virtual int recvFrom(string& buf, const struct sockaddr_in& addr);	
+			/// shut down the connection
+virtual void		close();
 
-    virtual void close();
-    virtual SOCKET getSock();
+			/// get operating system socket handle
+virtual SOCKET		getSock();
+
 protected:
-    SOCKET	sock;
-    string	rbuf;
+
+			/// system socket handle
+SOCKET			sock;
+			/// recieve data buffer
+string			rbuf;
+
 };
+
+} // namespace Atlas
 #endif

@@ -20,9 +20,13 @@ changes:
 #include "Server.h"
 #include "Client.h"
 #include "Socket.h"
+#include "../Object/Debug.h"
+
+namespace Atlas
+{
 
 // start listening for connections on an established socket
-AServer::AServer(ASocket* listener)
+Server::Server(Socket* listener)
 {
     assert( listener != 0 );
 	lsock = listener;
@@ -36,18 +40,18 @@ AServer::AServer(ASocket* listener)
 	FD_SET(slsock, &fderrs);
 }
 
-AServer::~AServer() {
+Server::~Server() {
     delete lsock;
 }
 
 // poll returns true if connections to accept
 // processes all inbound data and sends to client objects
-int AServer::poll()
+int Server::poll()
 {
 	return poll(100);
 }
 
-int AServer::poll(long usec)
+int Server::poll(long usec)
 {
 	int 		i;
 	struct timeval	tm;
@@ -77,7 +81,7 @@ int AServer::poll(long usec)
 			}
 		}
 		if (FD_ISSET(i,&xerrs)) {
-			DebugMsg1(0,"[AServer] SOCKET ERRORS ON %li", (long)i);
+			DebugMsg1(0,"[Server] SOCKET ERRORS ON %li", (long)i);
 			delClient(csock[i]);
 			csock[i]->gotErrs();
 			csock[i] = NULL;
@@ -88,13 +92,13 @@ int AServer::poll(long usec)
 }
 
 // retrieve a new socket connection
-ASocket* AServer::accept()
+Socket* Server::accept()
 {
 	return lsock->accept();
 }
 
 // register a client for read data events
-int AServer::addClient(AClient* client)
+int Server::addClient(Client* client)
 {
 	SOCKET sock = client->getSock();
 
@@ -105,7 +109,7 @@ int AServer::addClient(AClient* client)
 }
 
 // remove a client from the read event list
-int AServer::delClient(AClient* client)
+int Server::delClient(Client* client)
 {
 	SOCKET sock = client->getSock();
 
@@ -117,7 +121,7 @@ int AServer::delClient(AClient* client)
 }
 
 // add a client to the send event list
-int AServer::addClientSend(AClient* client)
+int Server::addClientSend(Client* client)
 {
 	SOCKET sock = client->getSock();
 
@@ -127,7 +131,7 @@ int AServer::addClientSend(AClient* client)
 }
 
 // remove a client from the send event list
-int AServer::delClientSend(AClient* client)
+int Server::delClientSend(Client* client)
 {
 	SOCKET sock = client->getSock();
 
@@ -136,6 +140,6 @@ int AServer::delClientSend(AClient* client)
 	return 1;
 }
 
-	
+} // namespace Atlas	
 
 	

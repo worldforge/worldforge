@@ -11,7 +11,10 @@
 
 #include "../Object/Object.h"
 
-class AProtocolEncoder
+namespace Atlas
+{
+
+class ProtocolEncoder
 {
 
 protected:
@@ -20,13 +23,15 @@ protected:
 			       const string& specialchars);
 	
 public:
-	AProtocolEncoder();
-	virtual ~AProtocolEncoder() {};
+	ProtocolEncoder();
+	virtual ~ProtocolEncoder() {};
 	void printf(char* fmt, ...);
 	void append(string& data);
-	virtual string encodeMessage(const AObject& msg);
+	virtual string encodeMessage(const Object& msg);
 	virtual int encodedLength();	
 };
+
+} // namespace Atlas
 
 #endif
 

@@ -24,20 +24,23 @@ changes
 using std::string;
 #include <cassert>
 
-class AProtocolEncoder;
-class AProtocolDecoder;
+namespace Atlas
+{
 
-class AProtocol
+class ProtocolEncoder;
+class ProtocolDecoder;
+
+class Protocol
 {
 public:
-    virtual ~AProtocol();
+    virtual ~Protocol();
 	
-	AProtocolEncoder*   getEncoder();
-	AProtocolDecoder*   getDecoder();
+	ProtocolEncoder*   getEncoder();
+	ProtocolDecoder*   getDecoder();
 	const string&       getPrefix() const { return prefix; }
 	void                setPrefix(  const string& s)	{ prefix = s; }
 	
-    virtual	AProtocol*	makenew()=0; // { assert( false ); return 0; /*should not be called on base class! - fex*/ }
+    virtual	Protocol*	makenew()=0; // { assert( false ); return 0; /*should not be called on base class! - fex*/ }
 
 	static int atlasERRTOK;  // error token
 	static int atlasMSGBEG;  // message begins
@@ -49,27 +52,24 @@ public:
 	enum AtlasTypes {   atlasINT=1,
 	                    atlasFLT,
 	                    atlasSTR,
-	                    atlasURI,
-	                    atlasLSTINT,
-	                    atlasLSTLNG,
-	                    atlasLSTFLT,
-	                    atlasLSTSTR,
-	                    atlasLSTURI,
 	                    atlasLST,
 	                    atlasMAP
 	                    };
 protected:
-    AProtocol( AProtocolEncoder* anEncoder, AProtocolDecoder* aDecoder, const string& aPrefix = "" )
+    Protocol( ProtocolEncoder* anEncoder, ProtocolDecoder* aDecoder, const string& aPrefix = "" )
      : encoder( anEncoder ), decoder( aDecoder ), prefix( aPrefix ) {
     	assert( encoder != 0 );
 	    assert( decoder != 0 );
 	}
 	
-	AProtocolEncoder*   encoder;
-	AProtocolDecoder*   decoder;
+	ProtocolEncoder*   encoder;
+	ProtocolDecoder*   decoder;
     string              prefix;
 private:
-    AProtocol( const AProtocol& );
+    Protocol( const Protocol& );
 };
+
+} // namespace Atlas
+
 
 #endif

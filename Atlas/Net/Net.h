@@ -2,7 +2,6 @@
 #define __AtlasNet_h__
 
 #include "../Object/Debug.h"
-#include "../Object/Types.h"
 #include "../Object/Object.h"
 
 #include "Protocol.h"
@@ -25,12 +24,11 @@
 #include "Client.h"
 #include "Server.h"
 
-#ifdef _MSC_VER
-#include "Python.h"
-#else
-#include <python1.5/Python.h>
-#endif
+namespace Atlas
+{
 
 void initAtlasNet();
+
+}
 
 #endif

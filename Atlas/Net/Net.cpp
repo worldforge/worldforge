@@ -8,7 +8,12 @@
 
 #include "Net.h"
 
+namespace Atlas
+{
+
 void initAtlasNet()
 {
-	initAtlasTypes();
+	// initAtlasTypes();
 }
+
+} // namespace Atlas

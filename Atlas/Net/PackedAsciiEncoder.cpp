@@ -16,8 +16,11 @@
 
 #include <string>
 
-void APackedAsciiEncoder::walkTree(int nest, const char* xname,
-                                   const AObject& list)
+namespace Atlas
+{
+
+void PackedAsciiEncoder::walkTree(int nest, const char* xname,
+                                   const Object& list)
 {
 	int	i;
 	string	buf;
@@ -30,63 +33,18 @@ void APackedAsciiEncoder::walkTree(int nest, const char* xname,
 	if (list.isList()) {
 		printf("(%s=", name);
 		for (i=0; i<list.length(); i++) {
-			AObject tmp;
+			Object tmp;
 			list.get(i,tmp);
 			walkTree(0, "", tmp);
 		}
 		printf(")");
 	} 
-	if (list.isURIList()) {
-		printf("<!%s=", name);
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i,tmp);
-			walkTree(0, "", tmp);
-		}
-		printf(">");
-	} 
-	if (list.isIntList()) {
-		printf("<@%s=", name);
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i,tmp);
-			walkTree(0, "", tmp);
-		}
-		printf(">");
-	} 
-/*	if (list.isLongList()) {
-		printf("<%%%s=", name);
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i,tmp);
-			walkTree(0, "", tmp);
-		}
-		printf(">");
-	} 
-*/	if (list.isFloatList()) {
-		printf("<#%s=", name);
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i,tmp);
-			walkTree(0, "", tmp);
-		}
-		printf(">");
-	} 
-	if (list.isStringList()) {
-		printf("<$%s=", name);
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			list.get(i,tmp);
-			walkTree(0, "", tmp);
-		}
-		printf(">");
-	} 
 	if (list.isMap()) {
-		AObject keys = list.keys();
+		Object keys = list.keys();
 		printf("[%s=", name);
 		for (i=0; i<keys.length(); i++) {
-			AObject key;
-			AObject	tmp;
+			Object key;
+			Object	tmp;
 			keys.get(i, key);
 			list.get(key.asString(), tmp);
 			walkTree(0, key.asString().c_str(), tmp);
@@ -99,24 +57,16 @@ void APackedAsciiEncoder::walkTree(int nest, const char* xname,
 						'+', "{[(<#!@%>)]}");
 		printf("$%s=%s", name, tmp.c_str());
 	}
-	if (list.isURI()) {
-		string tmp = hexEncodeString(list.getURIPath().asString(), 
-						'+', "{[(<#!@%>)]}");
-		printf("!%s=%li", name, tmp.c_str());
-	}
 	if (list.isInt()) {
 		printf("@%s=%li", name, list.asInt());
 	}
-/*	if (list.isLong()) {
-		printf("%%%s=%li", name, list.asLong());
-	}
-*/	if (list.isFloat()) {
+	if (list.isFloat()) {
 		printf("#%s=%.2f", name, list.asFloat());
 	}
 
 }
 
-string APackedAsciiEncoder::encodeMessage(const AObject& msg)
+string PackedAsciiEncoder::encodeMessage(const Object& msg)
 {
 	//int	i;
 
@@ -133,6 +83,6 @@ string APackedAsciiEncoder::encodeMessage(const AObject& msg)
 }
 
 
-
+} // namespace Atlas
 
 

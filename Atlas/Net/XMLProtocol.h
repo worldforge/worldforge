@@ -1,9 +1,16 @@
-/*
-        AtlasXMLProtocol.h
-        ----------------
-        begin           : 1999.11.29
-        copyright       : (C) 1999 by John Barrett (ZW)
-        email           : jbarrett@box100.com
+/** AtlasXMLProtocol -- XML Implementation of the AProtocol Class.
+
+Atlas XML Protocol is a human readable text encoding an
+AObject instance, designed primarily for documentation
+and human editable data.
+
+@author John Barrett (ZW) <jbarrett@box100.com
+
+@see Object
+@see Protocol
+@see XMLEncoder
+@see XMLDecoder
+
 */
 
 #ifndef __AtlasXMLProtocol_h_
@@ -11,18 +18,24 @@
 
 #include "Protocol.h"
 
-/**
-    Basic class to specialise AProtocol using XML protocol for encoding
-*/
-class AXMLProtocol: public AProtocol
+namespace Atlas
+{
+
+class XMLProtocol: public Protocol
 {
 public:
-    AXMLProtocol();
-    virtual ~AXMLProtocol();
-
-    AProtocol*  makenew();
+	/// constructor
+	XMLProtocol();
+	/// destructor
+	virtual ~XMLProtocol();
+	/// create a new instance of XMLProtocol
+	Protocol*  makenew();
 
 private:
-    AXMLProtocol( const AXMLProtocol& );
+	/// copy constructor
+	XMLProtocol( const XMLProtocol& );
 };
+
+} // namespace Atlas
+
 #endif

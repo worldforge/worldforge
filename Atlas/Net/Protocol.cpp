@@ -12,25 +12,29 @@
 #include "ProtocolDecoder.h"
 #include "ProtocolEncoder.h"
 
-AProtocol::~AProtocol() {
+namespace Atlas
+{
+
+Protocol::~Protocol() {
     delete encoder;
     delete decoder;
 }
 
-AProtocolEncoder*	AProtocol::getEncoder() {
+ProtocolEncoder*	Protocol::getEncoder() {
     assert( encoder != 0 );
     return encoder;
 }
 
-AProtocolDecoder*	AProtocol::getDecoder() {
+ProtocolDecoder*	Protocol::getDecoder() {
     assert( decoder != 0 );
     return decoder;
 }
 
-int AProtocol::atlasERRTOK = -1;  // error token
-int AProtocol::atlasMSGBEG = 1;   // message begins
-int AProtocol::atlasATRBEG = 2;   // attribute begins
-int AProtocol::atlasATRVAL = 3;   // attribute value
-int AProtocol::atlasATREND = 4;   // attribute end
-int AProtocol::atlasMSGEND = 5;   // message ends
+int Protocol::atlasERRTOK = -1;  // error token
+int Protocol::atlasMSGBEG = 1;   // message begins
+int Protocol::atlasATRBEG = 2;   // attribute begins
+int Protocol::atlasATRVAL = 3;   // attribute value
+int Protocol::atlasATREND = 4;   // attribute end
+int Protocol::atlasMSGEND = 5;   // message ends
 
+} // namespace Atlas

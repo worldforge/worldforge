@@ -21,44 +21,49 @@ changes:
     Responsible for killing its listener own on destruction
 */
 
-class ASocket;
-class AClient;
+namespace Atlas
+{
 
-class AServer
+class Socket;
+class Client;
+
+class Server
 {
 public:
 
 	// start listening for connections on an established socket
-	AServer(ASocket* listener);
-    virtual ~AServer();
+	Server(Socket* listener);
+virtual ~Server();
 	// poll returns true if connections to accept
 	// processes all inbound data and sends to client objects
 	int poll();
 	int poll(long usec);
 
 	// retrieve a new socket connection
-	ASocket* accept();
+	Socket* accept();
 
 	// add/remove a client from the data ready event list
-	int addClient(AClient* client);
-	int delClient(AClient* client);
+	int addClient(Client* client);
+	int delClient(Client* client);
 
 	// add and remove a client from the ready to send list
-	int addClientSend(AClient* client);
-	int delClientSend(AClient* client);
+	int addClientSend(Client* client);
+	int delClientSend(Client* client);
 private:
-    AServer( const AServer& );
+    Server( const Server& );
     // listener socket
-    ASocket*    lsock;
+    Socket*    lsock;
     int         slsock;
     // current connection list
-    AClient*    csock[FD_SETSIZE];
+    Client*    csock[FD_SETSIZE];
     int         asock[FD_SETSIZE];
 
     fd_set  fdread;
     fd_set  fdsend;
     fd_set  fderrs;
 };
+
+} // namespace Atlas
 
 #endif
 

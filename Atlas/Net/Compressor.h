@@ -12,9 +12,12 @@
 #include <string>
 using std::string;
 
+namespace Atlas
+{
+
 /** Stub for inline atlas compressor
 */
-class ACompressor
+class Compressor
 {
 public:
     string  encode(const string& data);
@@ -23,5 +26,8 @@ public:
     void    resetEncoder();
     void    resetDecoder();
 };
+
+} // namespace Atlas
+
 #endif
 

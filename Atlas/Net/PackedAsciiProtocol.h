@@ -13,12 +13,17 @@
 #include "PackedAsciiEncoder.h"
 #include "PackedAsciiDecoder.h"
 
-class APackedAsciiProtocol: public AProtocol
+namespace Atlas
+{
+
+class PackedAsciiProtocol: public Protocol
 {
 public:
-		APackedAsciiProtocol();
+		PackedAsciiProtocol();
 
-AProtocol*	makenew();
+Protocol*	makenew();
 };
+
+} // namespace Atlas
 
 #endif

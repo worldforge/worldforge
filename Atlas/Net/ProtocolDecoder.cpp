@@ -8,28 +8,33 @@
 
 #include "ProtocolDecoder.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <memory.h>
 
 #include <string>
 
-AProtocolDecoder::AProtocolDecoder()
+namespace Atlas
+{
+
+
+ProtocolDecoder::ProtocolDecoder()
 {
 }
 
-string	AProtocolDecoder::getName()                 { return name; }
-int	AProtocolDecoder::getType()                 { return type; }
-string	AProtocolDecoder::getString()               { return sval; }
-long	AProtocolDecoder::getInt()                  { return ival; }
-double	AProtocolDecoder::getFloat()                { return fval; }
+string	ProtocolDecoder::getName()                 { return name; }
+int	ProtocolDecoder::getType()                 { return type; }
+string	ProtocolDecoder::getString()               { return sval; }
+long	ProtocolDecoder::getInt()                  { return ival; }
+double	ProtocolDecoder::getFloat()                { return fval; }
 
-void	AProtocolDecoder::newStream()               	{}
-void	AProtocolDecoder::feedStream(const string& data)	{}
-int	AProtocolDecoder::hasTokens()			{ return 0; }
-int	AProtocolDecoder::getToken()                	{ return 0; }
+void	ProtocolDecoder::newStream()               	{}
+void	ProtocolDecoder::feedStream(const string& data)	{}
+int	ProtocolDecoder::hasTokens()			{ return 0; }
+int	ProtocolDecoder::getToken()                	{ return 0; }
 
-string AProtocolDecoder::hexDecodeString(const string& input, char prefix)
+string ProtocolDecoder::hexDecodeString(const string& input, char prefix)
 {
 	string s;
 	int state = 0;
@@ -59,3 +64,5 @@ string AProtocolDecoder::hexDecodeString(const string& input, char prefix)
 	return s;
 }
 
+
+} // namespace Atlas
