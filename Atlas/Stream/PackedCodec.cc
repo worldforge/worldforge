@@ -3,7 +3,10 @@
 // Copyright (C) 2000 Michael Day
 
 // $Log$
-// Revision 1.3  2000-02-22 05:31:22  mike
+// Revision 1.1  2000-02-22 08:29:04  mike
+// Migrated all Encoder and Decoder files into unified Codec files.
+//
+// Revision 1.3  2000/02/22 05:31:22  mike
 // Fixed a quick namespace bug relating to use of unqualified Atlas::Object.
 //
 // Revision 1.2  2000/02/22 04:22:19  mike
