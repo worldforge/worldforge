@@ -1,3 +1,5 @@
+* Re-work code to use 2D arrays for 2D data - AJR
+
 * allow local terrain deformation:
    -subtraction eg of a sphere to make a crater
    -addition eg of a cylindroid to make a mesa
