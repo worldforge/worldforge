@@ -56,7 +56,7 @@ if test -z "$*"; then
 fi
 
 # this happens often enough that I'm sticking it in here...
-aclocalinclude="-I /usr/local/share/aclocal $ACLOCAL_FLAGS"
+aclocalinclude="$ACLOCAL_FLAGS"
 
 echo "Running libtoolize..."
 libtoolize --force --copy

@@ -1,3 +1,9 @@
+Thursday, November 29 2001, Al Riddoch
+	* src/atlas_utils.h: Avoid copying twice when casting.
+	* src/Utils.cpp, src/Utils.h: Return const objects.
+	* src/Types.cpp, src/Types.h, src/Entity.cpp: Remove support for
+	  bmedian attribute now deprecated.
+
 Thursday, November 29 2001, James Turner
 
 	* Changed to actually call World::mark[Inv|V]isible from

@@ -72,11 +72,4 @@ BBox::BBox(double ux,
 {
 }
 
-void BBox::offset(double x, double y, double z)
-{
-	u.x += x; v.x += x;
-	u.y += y; v.y += y;
-	u.z += z; v.z += z;
-}
-
 };

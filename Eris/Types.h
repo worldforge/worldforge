@@ -95,8 +95,6 @@ public:
 			double vx=1., double vy=1., double vz=1.);
 	BBox(const Atlas::Message::Object &obj);
 	
-	void offset(double x, double y, double z);
-
 	const Atlas::Message::Object asObject() const;
 
 	Coord u,v;

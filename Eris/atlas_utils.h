@@ -17,9 +17,9 @@ const T atlas_cast(const Message::Object &data)
 		throw std::invalid_argument("Input message object is not a map");
 	}
 	
-	Message::Object::MapType mp = data.AsMap();
+	const Message::Object::MapType & mp = data.AsMap();
 	
-	for (Message::Object::MapType::iterator A = mp.begin();
+	for (Message::Object::MapType::const_iterator A = mp.begin();
 		A != mp.end(); ++A)
 	{
 		obj.SetAttr(A->first, A->second);

@@ -17,7 +17,7 @@ const Atlas::Message::Object&
 getArg(const Atlas::Objects::Operation::RootOperation &op, unsigned int i)
 {
 	const Object::ListType &l = op.GetArgs();
-	
+ 
 	assert(i < l.size());
 	if (i >= l.size())
 		throw IllegalObject(op, "list index out of range");
@@ -112,7 +112,7 @@ long getNewSerialno()
 	return _nextSerial++;
 }
 
-std::string objectSummary(const Atlas::Objects::Root &obj)
+const std::string objectSummary(const Atlas::Objects::Root &obj)
 {
 	if (obj.GetParents().empty()) {
 		// this can happen if built the Object::Root out of something silly, like a string; we

@@ -175,12 +175,6 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 	if (ge.HasAttr("bbox"))
 		_bbox = BBox( ge.GetAttr("bbox") );
 	
-	if (ge.HasAttr("bmedian")) {
-		// convert acorn/cyphesis bbox to our kind
-		Coord med(ge.GetAttr("bmedian"));
-		_bbox.offset(med.x, med.y, med.z);
-	}
-	
 	// copy *every* attribute through
 	const Atlas::Message::Object::MapType &amp = ge.AsMap();
 	for (Atlas::Message::Object::MapType::const_iterator a = amp.begin(); a!=amp.end(); ++a)

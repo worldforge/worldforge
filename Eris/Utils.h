@@ -48,7 +48,7 @@ long getNewSerialno();
 /** Generate a compact, sensible summary of an Atlas objects, suitable  for logging or sending
 to a console. This should include the type/name, the ID of entities, and contained objects for
 common operations. */
-std::string objectSummary(const Atlas::Objects::Root &obj);
+const std::string objectSummary(const Atlas::Objects::Root &obj);
 
 }
 
