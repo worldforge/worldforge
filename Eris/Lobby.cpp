@@ -3,7 +3,8 @@
 #endif
 
 #include <sigc++/signal_system.h>
-#include <algorithm>
+#include <algorithm> 
+#include <assert.h>
 
 // various atlas headers we need
 #include <Atlas/Bridge.h>
@@ -189,7 +190,7 @@ void Lobby::registerCallbacks()
 	);
 }
 
-void Lobby::netFailure(const std::string& msg)
+void Lobby::netFailure(const std::string& /*msg*/)
 {
 	// what needs to be done here?
 }
@@ -335,4 +336,4 @@ void Lobby::recvPrivateChat(const Atlas::Objects::Operation::Talk &tk)
 	PrivateTalk.emit(p->getAccount(), say);
 }
 
-}; // of namespace
+} // of namespace

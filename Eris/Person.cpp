@@ -25,4 +25,4 @@ void Person::sight(const Atlas::Objects::Entity::Account &acc)
 		_name = _id;
 }
 
-}; // of namespace Eris
+} // of namespace Eris

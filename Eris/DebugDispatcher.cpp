@@ -35,4 +35,4 @@ bool DebugDispatcher::dispatch(DispatchContextDeque &dq)
 	return false;
 }
 
-};
+}

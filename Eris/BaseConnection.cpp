@@ -2,6 +2,7 @@
 	#include "config.h"
 #endif
 
+#include <assert.h>		
 #include <skstream.h>
 
 #include <Atlas/Net/Stream.h>
@@ -167,4 +168,4 @@ int BaseConnection::getFileDescriptor()
     return _stream->getSocket();
 }
 
-}; // of namespace
+} // of namespace

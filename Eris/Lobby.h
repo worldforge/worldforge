@@ -97,6 +97,6 @@ protected:
 	static Lobby* _theLobby;
 };
 	
-}; // of namespace Eris
+} // of namespace Eris
 
 #endif

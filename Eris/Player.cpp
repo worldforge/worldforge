@@ -4,6 +4,7 @@
 
 #include <sigc++/signal_system.h>
 #include <algorithm>
+#include <assert.h>
 
 // various atlas headers we need
 #include <Atlas/Bridge.h>
@@ -301,7 +302,7 @@ void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 	_currentSerial = 0;
 }
 
-void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
+void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &/*ge*/)
 {
 	
 }
@@ -331,9 +332,9 @@ bool Player::netDisconnecting()
 	return false;
 }
 
-void Player::netFailure(const std::string& msg)
+void Player::netFailure(const std::string& /*msg*/)
 {
 	; // do something useful here?
 }
 
-}; // of namespace Eris
+} // of namespace Eris

@@ -30,6 +30,6 @@ protected:
 	const unsigned int _position;
 };
 
-};
+}
 
 #endif

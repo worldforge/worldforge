@@ -442,7 +442,7 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 		e->recvTalk(tk);
 }
 
-void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
+void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &/*ifo*/,
 	const Atlas::Objects::Entity::GameEntity &character)
 {
 	_characterID = character.GetId();
@@ -572,4 +572,4 @@ void World::flush(Entity *e)
 	_lookup.erase(E);
 }
 
-}; // of namespace Eris
+} // of namespace Eris

@@ -39,6 +39,6 @@ protected:
 	ClassDispatcherList _subs;
 };
 
-};
+}	
 
 #endif

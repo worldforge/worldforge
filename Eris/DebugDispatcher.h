@@ -26,6 +26,6 @@ protected:
 	std::fstream _log;
 };
 	
-}; // of namespace Eris
+} // of namespace Eris
 
 #endif

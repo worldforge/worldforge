@@ -17,7 +17,7 @@ namespace Atlas {
 	namespace Objects { class Encoder; }
 	namespace Net { class StreamConnect; }
 	namespace Message { class Encoder; }
-};
+}	
 
 class client_socket_stream;
 
@@ -116,7 +116,7 @@ protected:
 	Timeout* _timeout;		///< network level timeouts		
 };
 		
-};
+}	
 
 #endif
 

@@ -20,6 +20,6 @@ protected:
 	const std::string _type;
 };
 
-};
+}
 
 #endif

@@ -35,6 +35,6 @@ protected:
 	const std::string _id;
 };
 
-};
+}
 
 #endif

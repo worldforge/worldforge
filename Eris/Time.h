@@ -34,6 +34,6 @@ void Init();
 	
 Stamp getCurrentStamp();
 	
-}; // of namespace Time
+} // of namespace Time	
 
 #endif

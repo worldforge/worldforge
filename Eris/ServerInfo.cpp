@@ -31,4 +31,4 @@ void ServerInfo::setPing(int p)
 	_ping = p;
 }
 
-};
+}
