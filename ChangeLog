@@ -1,3 +1,9 @@
+2001-03-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Updated ROADMAP and NEWS to latest versions from stable branch.
+
+	* Modified docs to indicate new maintainer.
+
 2001-03-10  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Codec.*, src/Codecs/*: Ported across simplified ISO compliant

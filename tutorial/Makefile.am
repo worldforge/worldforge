@@ -13,5 +13,5 @@
 #simple_server_SOURCES = simple_server.cpp sockbuf.h
 
 EXTRA_DIST = \
-	DebugBridge.h building.dox index.dox message.dox \
+	building.dox index.dox message.dox \
 	objects.dox preamble.dox simple.dox
