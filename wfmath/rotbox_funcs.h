@@ -106,28 +106,50 @@ Point<dim> RotBox<dim>::getCorner(int i) const
 template<const int dim>
 AxisBox<dim> RotBox<dim>::boundingBox() const
 {
-  Point<dim> min = m_corner0, max = m_corner0;
+  Point<dim> min, max;
 
-  for(int i = 0; i < dim; ++i) {
+//  min.zero();
+//  max.zero();
+//
+//  for(int i = 0; i < dim; ++i) {
 //    Vector<dim> edge;
 //    edge.zero();
 //    edge[i] = m_size[i];
 //    edge = Prod(m_orient, edge);
-    // Edge now represents the i'th edge
-    // pointing away from m_corner0
+//    // Edge now represents the i'th edge
+//    // pointing away from m_corner0
+//    for(int j = 0; j < dim; ++j) {
+//      // All coords of min <= 0, all coords of max >= 0, don't need FloatAdd()
+//      if(edge[j] < 0)
+//        min[j] += edge[j];
+//      else
+//        max[j] += edge[j];
+//    }
+//  }
+//
+//  for(int i = 0; i < dim; ++i) {
+//    min[i] = FloatAdd(min[i], m_corner0[i]);
+//    max[i] = FloatAdd(max[i], m_corner0[i]);
+//  }
+
+// The following is equivalent to the above. The above is easier to understand,
+// so leave it in as a comment.
+
+  for(int i = 0; i < dim; ++i) {
+    double minval = 0, maxval = 0;
     for(int j = 0; j < dim; ++j) {
-      // You can get the same value as edge[j] in
-      // the above result by the following:
-      CoordType value = m_orient.elem(j, i) * m_size[i];
-      // All coords of min <= 0, all coords of max >= 0, don't need _FloatAdd()
+      CoordType value = m_orient.elem(i, j) * m_size[j];
+      // All coords of min <= 0, all coords of max >= 0, don't need FloatAdd()
       if(value < 0)
-        min[j] += value;
+        minval += value;
       else
-        max[j] += value;
+        maxval += value;
     }
+    min[i] = FloatAdd(minval, m_corner0[i]);
+    max[i] = FloatAdd(maxval, m_corner0[i]);
   }
 
-  return AxisBox<dim>(min, max);
+  return AxisBox<dim>(min, max, true);
 }
 
 }} // namespace WF::Math

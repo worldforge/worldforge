@@ -15,7 +15,7 @@ header_HEADERS = error.h const.h stringconv.h \
 
 lib_LTLIBRARIES = libwfmath.la
 libwfmath_la_SOURCES = basis.h const.cpp stringconv.cpp \
-	matrix.cpp vector.cpp point.cpp
+	matrix.cpp vector.cpp point.cpp intersect.cpp
 libwfmath_la_LDFLAGS = -lm
 
 check_PROGRAMS = vector_test matrix_test point_test shape_test

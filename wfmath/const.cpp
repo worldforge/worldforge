@@ -42,7 +42,9 @@
 //
 //---------------------------------------------------------------
 
-bool IsFloatEqual(CoordType x1, CoordType x2, double epsilon)
+using namespace WF::Math;
+
+bool WF::Math::IsFloatEqual(CoordType x1, CoordType x2, double epsilon)
 {
     // Hack to get around nonstandard std:: namespacing in MSVC
     using namespace std;
@@ -65,4 +67,3 @@ bool IsFloatEqual(CoordType x1, CoordType x2, double epsilon)
 
     return equal;
 }
-

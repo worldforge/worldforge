@@ -97,6 +97,19 @@ template<const int dim>
 bool ContainsProper(const AxisBox<dim>& b, const Segment<dim>& s);
 
 template<const int dim>
+bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b);
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r, const AxisBox<dim>& b);
+template<const int dim>
+bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b);
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& r, const AxisBox<dim>& b);
+template<const int dim>
+bool Contains(const AxisBox<dim>& b, const RotBox<dim>& r);
+template<const int dim>
+bool ContainsProper(const AxisBox<dim>& b, const RotBox<dim>& r);
+
+template<const int dim>
 bool Intersect(const Ball<dim>& b1, const Ball<dim>& b2);
 template<const int dim>
 bool IntersectProper(const Ball<dim>& b1, const Ball<dim>& b2);
@@ -119,6 +132,19 @@ template<const int dim>
 bool ContainsProper(const Segment<dim>& s, const Ball<dim>& b);
 
 template<const int dim>
+bool Intersect(const RotBox<dim>& r, const Ball<dim>& b);
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r, const Ball<dim>& b);
+template<const int dim>
+bool Contains(const RotBox<dim>& r, const Ball<dim>& b);
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& r, const Ball<dim>& b);
+template<const int dim>
+bool Contains(const Ball<dim>& b, const RotBox<dim>& r);
+template<const int dim>
+bool ContainsProper(const Ball<dim>& b, const RotBox<dim>& r);
+
+template<const int dim>
 bool Intersect(const Segment<dim>& s1, const Segment<dim>& s2);
 template<const int dim>
 bool IntersectProper(const Segment<dim>& s1, const Segment<dim>& s2);
@@ -126,6 +152,28 @@ template<const int dim>
 bool Contains(const Segment<dim>& s1, const Segment<dim>& s2);
 template<const int dim>
 bool ContainsProper(const Segment<dim>& s1, const Segment<dim>& s2);
+
+template<const int dim>
+bool Intersect(const RotBox<dim>& r, const Segment<dim>& s);
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r, const Segment<dim>& s);
+template<const int dim>
+bool Contains(const RotBox<dim>& r, const Segment<dim>& s);
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& r, const Segment<dim>& s);
+template<const int dim>
+bool Contains(const Segment<dim>& s, const RotBox<dim>& r);
+template<const int dim>
+bool ContainsProper(const Segment<dim>& s, const RotBox<dim>& r);
+
+template<const int dim>
+bool Intersect(const RotBox<dim>& r1, const RotBox<dim>& r2);
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r1, const RotBox<dim>& r2);
+template<const int dim>
+bool Contains(const RotBox<dim>& outer, const RotBox<dim>& inner);
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& outer, const RotBox<dim>& inner);
 
 }} // namespace WF::Math
 

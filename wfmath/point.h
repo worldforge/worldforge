@@ -55,9 +55,11 @@ CoordType Distance(const Point<dim>& p1, const Point<dim>& p2);
 template<const int dim>
 CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2);
 
-template<const int dim> template<const int num_points>
-Point<dim> Barycenter(const Point<dim> points[num_points],
-		      const CoordType weights[num_points] = {1,});
+template<const int dim>
+Point<dim> Barycenter(const int num_points, const Point<dim> *points);
+template<const int dim>
+Point<dim> Barycenter(const int num_points, const Point<dim> *points,
+		      const CoordType *weights);
 
 template<const int dim>
 class Point
@@ -76,8 +78,8 @@ class Point
 
   bool isEqualTo(const Point &rhs, double tolerance = WFMATH_EPSILON) const;
 
-  bool operator== (const Point& rhs) const	{return IsEqualTo(rhs);}
-  bool operator!= (const Point& rhs) const	{return !IsEqualTo(rhs);}
+  bool operator== (const Point& rhs) const	{return isEqualTo(rhs);}
+  bool operator!= (const Point& rhs) const	{return !isEqualTo(rhs);}
 
   Point& origin(); // Set point to (0,0,..,0)
 
@@ -121,9 +123,9 @@ class Point
 
   friend CoordType SquaredDistance<dim>(const Point& p1, const Point& p2);
 
-  template<const int num_points>
-  friend Point Barycenter(const Point points[num_points],
-			  const CoordType weights[num_points]);
+  friend Point Barycenter<dim>(const int num_points, const Point *points);
+  friend Point Barycenter<dim>(const int num_points, const Point *points,
+			  const CoordType *weights);
 
   // 2D/3D stuff
 

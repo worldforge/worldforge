@@ -26,10 +26,10 @@
 #include "point.h"
 #include "point_funcs.h"
 
-namespace WF { namespace Math {
+using namespace WF::Math;
 
 template<>
-Point<2>& Point<2>::polar(double r, double theta)
+Point<2>& WF::Math::Point<2>::polar(double r, double theta)
 {
   double d[2] = {r, theta};
   _PolarToCart(d, m_elem);
@@ -37,7 +37,7 @@ Point<2>& Point<2>::polar(double r, double theta)
 }
 
 template<>
-void Point<2>::asPolar(double& r, double& theta) const
+void WF::Math::Point<2>::asPolar(double& r, double& theta) const
 {
   double d[2];
   _CartToPolar(m_elem, d);
@@ -46,7 +46,7 @@ void Point<2>::asPolar(double& r, double& theta) const
 }
 
 template<>
-Point<3>& Point<3>::polar(double r, double theta, double z)
+Point<3>& WF::Math::Point<3>::polar(double r, double theta, double z)
 {
   double d[2] = {r, theta};
   _PolarToCart(d, m_elem);
@@ -55,7 +55,7 @@ Point<3>& Point<3>::polar(double r, double theta, double z)
 }
 
 template<>
-void Point<3>::asPolar(double& r, double& theta, double& z) const
+void WF::Math::Point<3>::asPolar(double& r, double& theta, double& z) const
 {
   double d[2];
   _CartToPolar(m_elem, d);
@@ -65,7 +65,7 @@ void Point<3>::asPolar(double& r, double& theta, double& z) const
 }
 
 template<>
-Point<3>& Point<3>::spherical(double r, double theta, double phi)
+Point<3>& WF::Math::Point<3>::spherical(double r, double theta, double phi)
 {
   double d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
@@ -73,7 +73,7 @@ Point<3>& Point<3>::spherical(double r, double theta, double phi)
 }
 
 template<>
-void Point<3>::asSpherical(double& r, double& theta, double& phi) const
+void WF::Math::Point<3>::asSpherical(double& r, double& theta, double& phi) const
 {
   double d[3];
   _CartToSpherical(m_elem, d);
@@ -81,5 +81,3 @@ void Point<3>::asSpherical(double& r, double& theta, double& phi) const
   theta = d[1];
   phi = d[2];
 }
-
-}} // namespace WF::Math

@@ -29,6 +29,8 @@
 
 #include <float.h>
 
+namespace WF { namespace Math {
+
 #define WFMATH_CONST_PI		3.141592653589793238462643383279
 #define WFMATH_CONST_SQRT2	1.414213562373095048801688724210
 #define WFMATH_CONST_SQRT3	1.732050807568877293527446341506
@@ -60,5 +62,7 @@ const CoordType NanVal = NAN;
 #else
 const CoordType NanVal = sqrt (-4.0);
 #endif
+
+}} // namespace WF::Math
 
 #endif // WFMATH_CONST_H

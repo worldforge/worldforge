@@ -33,9 +33,9 @@
 #include "basis.h"
 #include <math.h>
 
-namespace WF { namespace Math {
+using namespace WF::Math;
 
-template<> double Vector<2>::sloppyMag() const
+template<> double WF::Math::Vector<2>::sloppyMag() const
 {
   CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]);
   const CoordType p = WFMATH_CONST_SQRT2 - 1;
@@ -50,7 +50,7 @@ template<> double Vector<2>::sloppyMag() const
     return 0;
 }
 
-template<> double Vector<3>::sloppyMag() const
+template<> double WF::Math::Vector<3>::sloppyMag() const
 {
   CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]), az = fabs(m_elem[2]);
   const CoordType p = WFMATH_CONST_SQRT2 - 1;
@@ -69,7 +69,7 @@ template<> double Vector<3>::sloppyMag() const
     return 0;
 }
 
-template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, double theta)
+template<> WF::Math::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, double theta)
 {
   double axis_sqr_mag = axis.sqrMag();
 
@@ -83,7 +83,7 @@ template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, double theta)
   return *this;
 }
 
-Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2)
+Vector<3> WF::Math::Cross(const Vector<3>& v1, const Vector<3>& v2)
 {
   Vector<3> ans;
 
@@ -95,7 +95,7 @@ Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2)
 }
 
 template<>
-Vector<2>& Vector<2>::polar(double r, double theta)
+Vector<2>& WF::Math::Vector<2>::polar(double r, double theta)
 {
   double d[2] = {r, theta};
   _PolarToCart(d, m_elem);
@@ -103,7 +103,7 @@ Vector<2>& Vector<2>::polar(double r, double theta)
 }
 
 template<>
-void Vector<2>::asPolar(double& r, double& theta) const
+void WF::Math::Vector<2>::asPolar(double& r, double& theta) const
 {
   double d[2];
   _CartToPolar(m_elem, d);
@@ -112,7 +112,7 @@ void Vector<2>::asPolar(double& r, double& theta) const
 }
 
 template<>
-Vector<3>& Vector<3>::polar(double r, double theta, double z)
+Vector<3>& WF::Math::Vector<3>::polar(double r, double theta, double z)
 {
   double d[2] = {r, theta};
   _PolarToCart(d, m_elem);
@@ -121,7 +121,7 @@ Vector<3>& Vector<3>::polar(double r, double theta, double z)
 }
 
 template<>
-void Vector<3>::asPolar(double& r, double& theta, double& z) const
+void WF::Math::Vector<3>::asPolar(double& r, double& theta, double& z) const
 {
   double d[2];
   _CartToPolar(m_elem, d);
@@ -131,7 +131,7 @@ void Vector<3>::asPolar(double& r, double& theta, double& z) const
 }
 
 template<>
-Vector<3>& Vector<3>::spherical(double r, double theta, double phi)
+Vector<3>& WF::Math::Vector<3>::spherical(double r, double theta, double phi)
 {
   double d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
@@ -139,7 +139,7 @@ Vector<3>& Vector<3>::spherical(double r, double theta, double phi)
 }
 
 template<>
-void Vector<3>::asSpherical(double& r, double& theta, double& phi) const
+void WF::Math::Vector<3>::asSpherical(double& r, double& theta, double& phi) const
 {
   double d[3];
   _CartToSpherical(m_elem, d);
@@ -147,5 +147,3 @@ void Vector<3>::asSpherical(double& r, double& theta, double& phi) const
   theta = d[1];
   phi = d[2];
 }
-
-}} // namespace WF::Math

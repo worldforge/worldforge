@@ -116,6 +116,13 @@ class Ball
   friend bool Contains<dim>(const Segment<dim>& s, const Ball& b);
   friend bool ContainsProper<dim>(const Segment<dim>& s, const Ball& b);
 
+  friend bool Intersect<dim>(const RotBox<dim>& r, const Ball& b);
+  friend bool IntersectProper<dim>(const RotBox<dim>& r, const Ball& b);
+  friend bool Contains<dim>(const RotBox<dim>& r, const Ball& b);
+  friend bool ContainsProper<dim>(const RotBox<dim>& r, const Ball& b);
+  friend bool Contains<dim>(const Ball& b, const RotBox<dim>& r);
+  friend bool ContainsProper<dim>(const Ball& b, const RotBox<dim>& r);
+
  private:
 
   Point<dim> m_center;

@@ -25,9 +25,7 @@
 // Created: 2001-12-12
 
 #include "vector.h"
-#include "vector_funcs.h"
 #include "point.h"
-#include "point_funcs.h"
 #include "const.h"
 #include <iostream>
 
@@ -37,6 +35,12 @@ template<const int dim>
 void test_point(const Point<dim>& p)
 {
   cout << "Testing point: " << p.toString() << std::endl;
+
+  assert(p == Barycenter(1, &p));
+  CoordType weight = 5;
+  assert(p == Barycenter(1, &p, &weight));
+
+  assert(p == p + (p - p));
 
   // FIXME
 }

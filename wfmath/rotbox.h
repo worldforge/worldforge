@@ -91,6 +91,32 @@ class RotBox
   friend bool IntersectProper<dim>(const RotBox& r, const Point<dim>& p);
   friend bool Contains<dim>(const Point<dim>& p, const RotBox& r);
 
+  friend bool Intersect<dim>(const RotBox& r, const AxisBox<dim>& b);
+  friend bool IntersectProper<dim>(const RotBox& r, const AxisBox<dim>& b);
+  friend bool Contains<dim>(const RotBox& r, const AxisBox<dim>& b);
+  friend bool ContainsProper<dim>(const RotBox& r, const AxisBox<dim>& b);
+  friend bool Contains<dim>(const AxisBox<dim>& b, const RotBox& r);
+  friend bool ContainsProper<dim>(const AxisBox<dim>& b, const RotBox& r);
+
+  friend bool Intersect<dim>(const RotBox& r, const Ball<dim>& b);
+  friend bool IntersectProper<dim>(const RotBox& r, const Ball<dim>& b);
+  friend bool Contains<dim>(const RotBox& r, const Ball<dim>& b);
+  friend bool ContainsProper<dim>(const RotBox& r, const Ball<dim>& b);
+  friend bool Contains<dim>(const Ball<dim>& b, const RotBox& r);
+  friend bool ContainsProper<dim>(const Ball<dim>& b, const RotBox& r);
+
+  friend bool Intersect<dim>(const RotBox& r, const Segment<dim>& s);
+  friend bool IntersectProper<dim>(const RotBox& r, const Segment<dim>& s);
+  friend bool Contains<dim>(const RotBox& r, const Segment<dim>& s);
+  friend bool ContainsProper<dim>(const RotBox& r, const Segment<dim>& s);
+  friend bool Contains<dim>(const Segment<dim>& s, const RotBox& r);
+  friend bool ContainsProper<dim>(const Segment<dim>& s, const RotBox& r);
+
+  friend bool Intersect<dim>(const RotBox& r1, const RotBox& r2);
+  friend bool IntersectProper<dim>(const RotBox& r1, const RotBox& r2);
+  friend bool Contains<dim>(const RotBox& outer, const RotBox& inner);
+  friend bool ContainsProper<dim>(const RotBox& outer, const RotBox& inner);
+
  private:
 
   Point<dim> m_corner0;

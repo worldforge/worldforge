@@ -106,6 +106,13 @@ class Segment
   friend bool Contains<dim>(const Segment& s1, const Segment& s2);
   friend bool ContainsProper<dim>(const Segment& s1, const Segment& s2);
 
+  friend bool Intersect<dim>(const RotBox<dim>& r, const Segment& s);
+  friend bool IntersectProper<dim>(const RotBox<dim>& r, const Segment& s);
+  friend bool Contains<dim>(const RotBox<dim>& r, const Segment& s);
+  friend bool ContainsProper<dim>(const RotBox<dim>& r, const Segment& s);
+  friend bool Contains<dim>(const Segment& s, const RotBox<dim>& r);
+  friend bool ContainsProper<dim>(const Segment& s, const RotBox<dim>& r);
+
  private:
 
   Point<dim> m_p1, m_p2;

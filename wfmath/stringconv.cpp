@@ -27,7 +27,7 @@
 #include <sstream>
 #include "stringconv.h"
 
-namespace WF { namespace Math {
+using namespace WF::Math;
 
 static void _ToString(std::ostream& os, const CoordType* d, const int num);
 static bool _FromString(std::istream& is, CoordType* d, const int num);
@@ -35,7 +35,7 @@ static bool _FromString(std::istream& is, CoordType* d, const int num);
 // FIXME the string/double conversion should be replaced
 // with something using pure C, not streams
 
-std::string _StringFromFloat(CoordType d)
+std::string WF::Math::_StringFromFloat(CoordType d)
 {
   ostringstream ost;
 
@@ -44,14 +44,14 @@ std::string _StringFromFloat(CoordType d)
   return ost.str();
 }
 
-bool _StringToCoordList(const std::string& s, CoordType* d, const int num)
+bool WF::Math::_StringToCoordList(const std::string& s, CoordType* d, const int num)
 {
   istringstream ist(s);
 
   return _FromString(ist, d, num);
 }
 
-std::string _StringFromCoordList(const CoordType* d, const int num)
+std::string WF::Math::_StringFromCoordList(const CoordType* d, const int num)
 {
   ostringstream ost;
 
@@ -60,8 +60,8 @@ std::string _StringFromCoordList(const CoordType* d, const int num)
   return ost.str();
 }
 
-bool _StringToCoordArray(const std::string& s, CoordType* d, const int rows,
-			 const int columns)
+bool WF::Math::_StringToCoordArray(const std::string& s, CoordType* d, const int rows,
+				   const int columns)
 {
   istringstream ist(s);
   char next;
@@ -82,8 +82,8 @@ bool _StringToCoordArray(const std::string& s, CoordType* d, const int rows,
   return true;
 }
 
-std::string _StringFromCoordArray(const CoordType* d, const int rows,
-				  const int columns)
+std::string WF::Math::_StringFromCoordArray(const CoordType* d, const int rows,
+					    const int columns)
 {
   ostringstream ost;
 
@@ -138,5 +138,3 @@ static bool _FromString(std::istream& is, CoordType* d, const int num)
 
   return true;
 }
-
-}} // namespace WF::Math

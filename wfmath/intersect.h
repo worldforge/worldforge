@@ -191,7 +191,7 @@ bool Intersect(const Ball<dim>& b, const AxisBox<dim>& a)
     double dist_i;
     if(b.m_center[i] < a.m_low[i])
       dist_i = b.m_center[i] - a.m_low[i];
-    else if(Shape<dim>::m_center[i] > a.m_high[i])
+    else if(b.m_center[i] > a.m_high[i])
       dist_i = b.m_center[i] - a.m_high[i];
     else
       continue;
@@ -212,7 +212,7 @@ bool IntersectProper(const Ball<dim>& b, const AxisBox<dim>& a)
     double dist_i;
     if(b.m_center[i] < a.m_low[i])
       dist_i = b.m_center[i] - a.m_low[i];
-    else if(Shape<dim>::m_center[i] > a.m_high[i])
+    else if(b.m_center[i] > a.m_high[i])
       dist_i = b.m_center[i] - a.m_high[i];
     else
       continue;
@@ -256,8 +256,8 @@ bool Contains(const AxisBox<dim>& a, const Ball<dim>& b)
   // Don't use FloatAdd(), only need values for comparison
 
   for(int i = 0; i < (1 << dim); ++i)
-    if(b.m_center[i] - m_radius < b.lowerBound(i)
-       || b.m_center[i] + m_radius > b.upperBound(i))
+    if(b.m_center[i] - b.m_radius < a.lowerBound(i)
+       || b.m_center[i] + b.m_radius > a.upperBound(i))
       return false;
 
   return true;
@@ -269,8 +269,8 @@ bool ContainsProper(const AxisBox<dim>& a, const Ball<dim>& b)
   // Don't use FloatAdd(), only need values for comparison
 
   for(int i = 0; i < (1 << dim); ++i)
-    if(b.m_center[i] - m_radius <= b.lowerBound(i)
-       || b.m_center[i] + m_radius >= b.upperBound(i))
+    if(b.m_center[i] - b.m_radius <= a.lowerBound(i)
+       || b.m_center[i] + b.m_radius >= a.upperBound(i))
       return false;
 
   return true;
@@ -373,7 +373,7 @@ bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b)
   // each i. Find the intersection of those segments and the
   // segment (0, 1), and check if it's nonzero.
 
-  double min = 0, max = 1, low, high;
+  double min = 0, max = 1, low, high, small, big;
 
   for(int i = 0; i < dim; ++i) {
     double dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
@@ -384,10 +384,18 @@ bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b)
     else {
       low = (b.m_low[i] - s.m_p1[i]) / dist;
       high = (b.m_high[i] - s.m_p1[i]) / dist;
-      if(low > min)
-        min = low;
-      if(high < max)
-        max = high;
+      if(low < high) {
+        small = low;
+        big = high;
+      }
+      else {
+        big = low;
+        small = high;
+      }
+      if(small > min)
+        min = small;
+      if(big < max)
+        max = big;
     }
   }
 
@@ -405,7 +413,7 @@ bool IntersectProper(const Segment<dim>& s, const AxisBox<dim>& b)
   // each i. Find the intersection of those segments and the
   // segment (0, 1), and check if it's nonzero.
 
-  double min = 0, max = 1, low, high;
+  double min = 0, max = 1, low, high, small, big;
 
   for(int i = 0; i < dim; ++i) {
     double dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
@@ -416,10 +424,18 @@ bool IntersectProper(const Segment<dim>& s, const AxisBox<dim>& b)
     else {
       low = (b.m_low[i] - s.m_p1[i]) / dist;
       high = (b.m_high[i] - s.m_p1[i]) / dist;
-      if(low > min)
-        min = low;
-      if(high < max)
-        max = high;
+      if(low < high) {
+        small = low;
+        big = high;
+      }
+      else {
+        big = low;
+        small = high;
+      }
+      if(small > min)
+        min = small;
+      if(big < max)
+        max = big;
     }
   }
 
@@ -617,7 +633,10 @@ bool IntersectProper(const Segment<dim>& s1, const Segment<dim>& s2)
   else {
     // Colinear segments, see if one contains an endpoint of the other
     return ContainsProper(s1, s2.m_p1) || ContainsProper(s1, s2.m_p2)
-	|| ContainsProper(s2, s1.m_p1) || ContainsProper(s2, s1.m_p2);
+	|| ContainsProper(s2, s1.m_p1) || ContainsProper(s2, s1.m_p2)
+	// Degenerate case, nonzero length
+	|| (s1.m_p1 != s1.m_p2) && ((s1.m_p1 == s2.m_p1 && s1.m_p2 == s2.m_p2)
+	|| (s1.m_p1 == s2.m_p2 && s1.m_p2 == s2.m_p1));
   }
 }
 
@@ -687,7 +706,127 @@ bool Contains(const Point<dim>& p, const RotBox<dim>& r)
   return p == r.m_corner0;
 }
 
-// FIXME Intersect, Contains functions for RotBox<> and AxisBox<>
+// This does row reduction to solve a system of linear equations
+// for the next two functions.
+void  _RotBoxAxisBoxIntersectImpl(int dim, int params, double* matrix,
+				  double* low, double* high);
+
+template<const int dim>
+bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b)
+{
+  // This simultaneously solves the equations
+  //
+  // b.m_low[i] <= r.m_corner0[i] + \sum_j r.m_orient.elem(i, j)
+  //               * r.m_size[j] * \lambda_j <= b.m_high[i]
+  //
+  // where the \lambda_j are the independent variables whose values
+  // are between zero and one (sorry for the mix of C and LaTeX).
+  // These equations give the condition for at least one point in r
+  // to lie inside b. The solution is found by inverting the matrix
+  // whose elements are r.m_orient.elem(i, j) * r.m_size[j]. Since this
+  // is _not_ a RotMatrix<>, we have to do things the hard way.
+
+  int params = 0; // The number of non-degenerate equations
+
+  for(int i = 0; i < dim; ++i)
+    if(r.m_size[i] != 0)
+      ++params;
+
+  CoordType matrix[dim*dim], low[dim], high[dim];
+
+  for(int i = 0, num_param = 0; i < dim; ++i) {
+    low[i] = FloatSubtract(b.m_low[i], r.m_corner0[i]);
+    high[i] = FloatSubtract(b.m_high[i], r.m_corner0[i]);
+    if(r.m_size[i] == 0)
+      continue;
+    for(int j = 0; j < dim; ++j)
+      matrix[j*params+num_param] = r.m_orient.elem(j, i) * r.m_size[i];
+    ++num_param;
+  }
+
+  _RotBoxAxisBoxIntersectImpl(dim, params, matrix, low, high);
+
+  for(int i = 0; i < dim; ++i) {
+    if(low[i] > high[i])
+      return false;
+    // If i < params, \lambda_i can vary between 0 and 1,
+    // otherwise you have a straight constraint where the
+    // number in the middle is 0.
+    if(low[i] > ((i < params) ? 1 : 0))
+      return false;
+    if(high[i] < 0)
+      return false;
+  }
+
+  return true;
+}
+
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r, const AxisBox<dim>& b)
+{
+  // This simultaneously solves the equations
+  //
+  // b.m_low[i] < r.m_corner0[i] + \sum_j r.m_orient.elem(i, j)
+  //              * r.m_size[j] * \lambda_j < b.m_high[i]
+  //
+  // where the \lambda_j are the independent variables whose values
+  // are between zero and one (sorry for the mix of C and LaTeX).
+  // These equations give the condition for at least one point in r
+  // to lie inside b. The solution is found by inverting the matrix
+  // whose elements are r.m_orient.elem(i, j) * r.m_size[j]. Since this
+  // is _not_ a RotMatrix<>, we have to do things the hard way.
+
+  int params = 0; // The number of non-degenerate equations
+
+  for(int i = 0; i < dim; ++i)
+    if(r.m_size[i] != 0)
+      ++params;
+
+  CoordType matrix[dim*dim], low[dim], high[dim];
+  int num_param = 0;
+
+  for(int i = 0; i < dim; ++i) {
+    low[i] = FloatSubtract(b.m_low[i], r.m_corner0[i]);
+    high[i] = FloatSubtract(b.m_high[i], r.m_corner0[i]);
+    if(r.m_size[i] == 0)
+      continue;
+    for(int j = 0; j < dim; ++j)
+      matrix[j*params+num_param] = r.m_orient.elem(j, i) * r.m_size[i];
+    ++num_param;
+  }
+
+  _RotBoxAxisBoxIntersectImpl(dim, params, matrix, low, high);
+
+  for(int i = 0; i < dim; ++i) {
+    if(low[i] >= high[i])
+      return false;
+    // If i < params, \lambda_i can vary between 0 and 1,
+    // otherwise you have a straight constraint where the
+    // number in the middle is 0.
+    if(low[i] >= ((i < params) ? 1 : 0))
+      return false;
+    if(high[i] <= 0)
+      return false;
+  }
+
+  return true;
+}
+
+template<const int dim>
+bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b)
+{
+  return Contains(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+		  RotBox<dim>(b.m_low, b.m_high - b.m_low,
+		  r.m_orient.inverse()));
+}
+
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& r, const AxisBox<dim>& b)
+{
+  return ContainsProper(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+			RotBox<dim>(b.m_low, b.m_high - b.m_low,
+			r.m_orient.inverse()));
+}
 
 template<const int dim>
 bool Contains(const AxisBox<dim>& b, const RotBox<dim>& r)
@@ -701,7 +840,145 @@ bool ContainsProper(const AxisBox<dim>& b, const RotBox<dim>& r)
   return ContainsProper(b, r.boundingBox());
 }
 
-// FIXME RotBox intersect functions with Ball, Segment, itself
+template<const int dim>
+bool Intersect(const RotBox<dim>& r, const Ball<dim>& b)
+{
+  return Intersect(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+		  Ball<dim>(r.m_corner0 + InvProd(r.m_orient, b.m_center
+		       - r.m_corner0), b.m_radius));
+}
+
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r, const Ball<dim>& b)
+{
+  return IntersectProper(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+			Ball<dim>(r.m_corner0 + InvProd(r.m_orient, b.m_center
+			     - r.m_corner0), b.m_radius));
+}
+
+template<const int dim>
+bool Contains(const RotBox<dim>& r, const Ball<dim>& b)
+{
+  return Contains(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+		  Ball<dim>(r.m_corner0 + InvProd(r.m_orient, b.m_center
+		       - r.m_corner0), b.m_radius));
+}
+
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& r, const Ball<dim>& b)
+{
+  return ContainsProper(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+			Ball<dim>(r.m_corner0 + InvProd(r.m_orient, b.m_center
+			     - r.m_corner0), b.m_radius));
+}
+
+template<const int dim>
+bool Contains(const Ball<dim>& b, const RotBox<dim>& r)
+{
+  return Contains(Ball<dim>(r.m_corner0 + InvProd(r.m_orient, b.m_center
+		       - r.m_corner0), b.m_radius),
+		  AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size));
+}
+
+template<const int dim>
+bool ContainsProper(const Ball<dim>& b, const RotBox<dim>& r)
+{
+  return ContainsProper(Ball<dim>(r.m_corner0 + InvProd(r.m_orient, b.m_center
+			     - r.m_corner0), b.m_radius),
+			AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size));
+}
+
+template<const int dim>
+bool Intersect(const RotBox<dim>& r, const Segment<dim>& s)
+{
+  Point<dim> p1 = r.m_corner0 + InvProd(r.m_orient, s.m_p1 - r.m_corner0);
+  Point<dim> p2 = r.m_corner0 + InvProd(r.m_orient, s.m_p2 - r.m_corner0);
+
+  return Intersect(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+		   Segment<dim>(p1, p2));
+}
+
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r, const Segment<dim>& s)
+{
+  Point<dim> p1 = r.m_corner0 + InvProd(r.m_orient, s.m_p1 - r.m_corner0);
+  Point<dim> p2 = r.m_corner0 + InvProd(r.m_orient, s.m_p2 - r.m_corner0);
+
+  return IntersectProper(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+			 Segment<dim>(p1, p2));
+}
+
+template<const int dim>
+bool Contains(const RotBox<dim>& r, const Segment<dim>& s)
+{
+  Point<dim> p1 = r.m_corner0 + InvProd(r.m_orient, s.m_p1 - r.m_corner0);
+  Point<dim> p2 = r.m_corner0 + InvProd(r.m_orient, s.m_p2 - r.m_corner0);
+
+  return Contains(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+		  Segment<dim>(p1, p2));
+}
+
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& r, const Segment<dim>& s)
+{
+  Point<dim> p1 = r.m_corner0 + InvProd(r.m_orient, s.m_p1 - r.m_corner0);
+  Point<dim> p2 = r.m_corner0 + InvProd(r.m_orient, s.m_p2 - r.m_corner0);
+
+  return ContainsProper(AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size),
+			Segment<dim>(p1, p2));
+}
+
+template<const int dim>
+bool Contains(const Segment<dim>& s, const RotBox<dim>& r)
+{
+  Point<dim> p1 = r.m_corner0 + InvProd(r.m_orient, s.m_p1 - r.m_corner0);
+  Point<dim> p2 = r.m_corner0 + InvProd(r.m_orient, s.m_p2 - r.m_corner0);
+
+  return Contains(Segment<dim>(p1, p2),
+		  AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size));
+}
+
+template<const int dim>
+bool ContainsProper(const Segment<dim>& s, const RotBox<dim>& r)
+{
+  Point<dim> p1 = r.m_corner0 + InvProd(r.m_orient, s.m_p1 - r.m_corner0);
+  Point<dim> p2 = r.m_corner0 + InvProd(r.m_orient, s.m_p2 - r.m_corner0);
+
+  return ContainsProper(Segment<dim>(p1, p2),
+			AxisBox<dim>(r.m_corner0, r.m_corner0 + r.m_size));
+}
+
+template<const int dim>
+bool Intersect(const RotBox<dim>& r1, const RotBox<dim>& r2)
+{
+  return Intersect(RotBox<dim>(r1.m_corner0, r1.m_size,
+			       InvProd(r2.m_orient, r1.m_orient)),
+		   AxisBox<dim>(r2.m_corner0, r2.m_corner0 + r2.m_size));
+}
+
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r1, const RotBox<dim>& r2)
+{
+  return IntersectProper(RotBox<dim>(r1.m_corner0, r1.m_size,
+				     InvProd(r2.m_orient, r1.m_orient)),
+			 AxisBox<dim>(r2.m_corner0, r2.m_corner0 + r2.m_size));
+}
+
+template<const int dim>
+bool Contains(const RotBox<dim>& outer, const RotBox<dim>& inner)
+{
+  return Contains(AxisBox<dim>(outer.m_corner0, outer.m_corner0 + outer.m_size),
+		  RotBox<dim>(inner.m_corner0, inner.m_size,
+			      InvProd(outer.m_orient, inner.m_orient)));
+}
+
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& outer, const RotBox<dim>& inner)
+{
+  return ContainsProper(AxisBox<dim>(outer.m_corner0, outer.m_corner0 + outer.m_size),
+			RotBox<dim>(inner.m_corner0, inner.m_size,
+				    InvProd(outer.m_orient, inner.m_orient)));
+}
 
 }} // namespace WF::Math
 

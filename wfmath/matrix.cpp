@@ -31,12 +31,12 @@
 #include <sstream>
 #include <algorithm>
 
-namespace WF { namespace Math {
+using namespace WF::Math;
 
 static double _MatrixDeterminantImpl(const int size, CoordType* m);
 static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
 
-template<> void RotMatrix<3>::toEuler(CoordType angles[3]) const
+template<> void WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
 {
   // There's a 2:1 map from Euler angles to matrices. Flipping the
   // sign of the middle angle and adding pi to each of the others produces
@@ -59,7 +59,8 @@ template<> void RotMatrix<3>::toEuler(CoordType angles[3]) const
 }
 
 template<>
-const RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, const double& theta)
+const RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,
+						      const double& theta)
 {
   CoordType max = 0;
   int main_comp = -1;
@@ -85,8 +86,8 @@ const RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, const double&
   return rotation(v1, v2, theta);
 }
 
-bool _MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
-			CoordType* buf2, double precision)
+bool WF::Math::_MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
+				  CoordType* buf2, double precision)
 {
   precision = fabs(precision);
 
@@ -246,7 +247,7 @@ static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
       if(j == size) // degenerate matrix
         return false;
       for(int k = 0; k < size; ++k) {
-        out[i*size+k] = FloatAdd(out[i*size+k], in[j*size+k]);
+        out[i*size+k] = FloatAdd(out[i*size+k], out[j*size+k]);
         in[i*size+k] = FloatAdd(in[i*size+k], in[j*size+k]);
       }
     }
@@ -289,5 +290,3 @@ static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
 
   return true;
 }
-
-}} // namespace WF::Math

@@ -35,6 +35,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/segment.h>
+#include <wfmath/rotbox.h>
 #include <wfmath/intersect.h>
 
 // Do not include stream.h, as it includes iostream.

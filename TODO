@@ -12,3 +12,5 @@ Does putting operator<<() in stream.h to avoid including <iostream> really
 	help when <string> is being included everywhere? Is there some way
 	to work around this, but still preserve the toString()/fromString()
 	member functions in every class?
+
+Write an API reference for the library. Find some inline documentation tool?

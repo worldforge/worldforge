@@ -116,6 +116,8 @@ AxisBox<dim>& AxisBox<dim>::operator=(const AxisBox<dim>& a)
 {
   m_low = a.m_low;
   m_high = a.m_high;
+
+  return *this;
 }
 
 // WARNING! This operator is for sorting only. It does not

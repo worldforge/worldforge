@@ -34,13 +34,13 @@
 
 namespace WF { namespace Math {
 
-template<> Point<2>::Point(CoordType x, CoordType y)
+template<> inline Point<2>::Point(CoordType x, CoordType y)
 {
   m_elem[0] = x;
   m_elem[1] = y;
 }
 
-template<> Point<3>::Point(CoordType x, CoordType y, CoordType z)
+template<> inline Point<3>::Point(CoordType x, CoordType y, CoordType z)
 {
   m_elem[0] = x;
   m_elem[1] = y;
@@ -216,9 +216,29 @@ CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
   return ans;
 }
 
-template<const int dim> template<const int num_points>
-Point<dim> Barycenter(const Point<dim> points[num_points],
-		      const CoordType weights[num_points])
+template<const int dim>
+Point<dim> Barycenter(const int num_points, const Point<dim> *points)
+{
+  Point<dim> out;
+
+  for(int i = 0; i < dim; ++i) {
+    double sum = 0, max_val = 0;
+    for(int j = 0; j < num_points; ++j) {
+      sum += points[j].m_elem[i];
+      max_val = std::max(max_val, fabs(points[j].m_elem[i]));
+    }
+    if(fabs(sum) < max_val * WFMATH_EPSILON)
+      out.m_elem[i] = 0;
+    else
+      out.m_elem[i] = sum / num_points;
+  }
+
+  return out;
+}
+
+template<const int dim>
+Point<dim> Barycenter(const int num_points, const Point<dim> *points,
+		      const CoordType *weights)
 {
   double tot_weight = 0, max_weight = 0;
 
@@ -235,7 +255,7 @@ Point<dim> Barycenter(const Point<dim> points[num_points],
     out.m_elem[i] = 0;
     double max_val = 0;
     for(int j = 0; j < num_points; ++j) {
-      val = point[j].m_elem[i] * weight[j];
+      double val = points[j].m_elem[i] * weights[j];
       out.m_elem[i] += val;
       max_val = std::max(max_val, fabs(val));
     }
