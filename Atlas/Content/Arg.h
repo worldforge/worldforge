@@ -14,8 +14,7 @@ using namespace std;
 
 #include "../Object/Object.h"
 
-namespace Atlas
-{
+namespace Atlas {
 
 /// Container for an attribute argument
 class Arg 

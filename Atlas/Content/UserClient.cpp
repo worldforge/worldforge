@@ -6,14 +6,17 @@
         email           : sdt@gmx.net
 */
 
-#include "UserClient.h"
-
-using namespace Atlas;
-
-#ifdef _MSC_VER
 #include <iostream>
-#endif
-void AUserClient::gotMsg(const Object& msg)
+#include "UserClient.h"
+using namespace std;
+
+namespace Atlas {
+  
+UserClient::~UserClient()
+{
+}
+
+void UserClient::gotMsg(const Object& msg)
 {
     long refno;
     msg.get("refno", refno, 0);
@@ -43,11 +46,13 @@ void AUserClient::gotMsg(const Object& msg)
             found = true;
         }
     }
-    if (!found) cerr << "Warning, could not find handler for message of type "+msgOp+"!\n";
+    if (!found)
+        cerr << "Warning, could not find handler for message of type "
+             << msgOp << "!\n";
 }
 
 
-Object AUserClient::call(const Object& msg)
+Object UserClient::call(const Object& msg)
 {
     msg.get("serialno", m_serialno);
     sendMsg(msg);
@@ -56,27 +61,8 @@ Object AUserClient::call(const Object& msg)
     }
     return m_reply;
 }
-/*
-void AUserClient::addMsgHandler(const string& type, void(*hdl)(const Object&))
-{
-    m_msghandlers_simp.insert(m_msghandlers_simp.end(),
-            pair<string, void(*)(const AObject&)>(type, hdl));
-}
 
-void AUserClient::remMsgHandler(const string& type, void(*hdl)(const Object&))
-{
-    list< pair<string, void(*)(const Object&)> >::iterator I;
-    bool quit = false;
-    for (I = m_msghandlers_simp.begin(); I != m_msghandlers_simp.end()
-                                         && !quit; I++) {
-        if (((*I).first == type) && ((*I).second == hdl)) {
-            m_msghandlers_simp.erase(I);
-            quit = true;
-        }
-    }
-}
-*/
-Object AUserClient::createOperation(const string& id, Arg* args ...)
+Object UserClient::createOperation(const string& id, Arg* args ...)
 {
   //example result:
   // <obj>
@@ -120,7 +106,7 @@ Object AUserClient::createOperation(const string& id, Arg* args ...)
     return op;
 }
 
-Object AUserClient::createEntity(Arg* args ...)
+Object UserClient::createEntity(Arg* args ...)
 {
     Object ent;
     
@@ -142,7 +128,7 @@ Object AUserClient::createEntity(Arg* args ...)
     return ent;
 }
 
-Object AUserClient::setCharacterArgs(const string& id, Arg* args ...)
+Object UserClient::setCharacterArgs(const string& id, Arg* args ...)
 {
     Object ent = createEntity(A("id",id), AEND);
     
@@ -165,30 +151,33 @@ Object AUserClient::setCharacterArgs(const string& id, Arg* args ...)
     return call(op);
 }
 
-int AUserClient::parseOperation1Argument(const Object &op, string method, Object &arg0)
+int UserClient::parseOp1Arg(const Object &op, string method, Object &arg0)
 {
-  Object parent, args;
-  string abstract_type, emptyString="";
-  op.get("abstract_type",abstract_type,emptyString);
-  if(abstract_type!="operation") return 0;
-  op.get("parent",parent);
-  Object opMethodObj;
-  string opMethod;
-  parent.get(0,opMethod);
-  if(method!=opMethod) return 0;
-  op.get("args",args);
-  args.get(0,arg0);
-  return 1;
+    Object parent, args;
+    string abstract_type, emptyString="";
+    if (!op.get("abstract_type",abstract_type,emptyString)) return 0;
+    if (abstract_type != "operation") return 0;
+    if (!op.get("parent",parent)) return 0;
+    Object opMethodObj;
+    string opMethod;
+    if (!parent.get(0,opMethod)) return 0;
+    if (method != opMethod) return 0;
+    if (!op.get("args",args)) return 0;
+    if (args.length() != 1) return 0;
+    if (!args.get(0,arg0)) return 0;
+    return 1;
 }
 
-void AUserClient::displayError(ostream& out, const Object &op, string ourMsg)
+void UserClient::displayError(ostream& out, const Object &op, string ourMsg)
 {
-  Object args, arg0;
-  out<<ourMsg;
-  op.get("args",args);
-  args.get(0,arg0);
-  string message,defMessage="Unknown Error";
-  arg0.get("message",message,defMessage);
-  out<<message<<endl;
+    Object args, arg0;
+    out << ourMsg;
+    op.get("args",args);
+    args.get(0,arg0);
+    string message, defMessage="Unknown Error";
+    arg0.get("message", message, defMessage);
+    out<<message<<endl;
+}
+
 }
 
