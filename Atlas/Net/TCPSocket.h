@@ -38,10 +38,10 @@ public:
 
 ASocket*	accept();
 
-int		connect(string& addr, int port);
-int		listen(string& addr, int port, int blog);
+int		connect(const string& addr, int port);
+int		listen(const string& addr, int port, int blog);
 
-int		send(string& data);
+int		send(const string& data);
 int		recv(string& data);
 
 };

@@ -53,16 +53,16 @@ public:
 
 	// these 2 calls are mutually exclusive
 	// you can either connect or listen/accept !!
-	virtual int connect(string& addr, int port);
-	virtual int listen(string& addr, int port, int backlog);
+	virtual int connect(const string& addr, int port);
+	virtual int listen(const string& addr, int port, int backlog);
 
 	virtual ASocket* accept();
 
-	virtual int send(string& data);
-	virtual int sendTo(string& data, struct sockaddr_in& addr);
+	virtual int send(const string& data);
+	virtual int sendTo(const string& data, const struct sockaddr_in& addr);
 
 	virtual int recv(string& buf);
-	virtual int recvFrom(string& buf, struct sockaddr_in& addr);	
+	virtual int recvFrom(string& buf, const struct sockaddr_in& addr);	
 
 	virtual void close();
 	virtual SOCKET getSock();

@@ -41,7 +41,7 @@ ATCPSocket::ATCPSocket(SOCKET asock): ASocket(asock)
 {
 }
 
-int	ATCPSocket::connect(string& addr, int port)
+int	ATCPSocket::connect(const string& addr, int port)
 {
 	struct hostent		*host;
 	u_long			hostaddr;
@@ -81,7 +81,7 @@ int	ATCPSocket::connect(string& addr, int port)
         return res;
 }
 
-int	ATCPSocket::listen(string& addr, int port, int backlog)
+int	ATCPSocket::listen(const string& addr, int port, int backlog)
 {
 	u_long			myaddr;
 	struct sockaddr_in	sin;
@@ -112,7 +112,7 @@ ASocket*	ATCPSocket::accept()
 	return new ATCPSocket(newsock);
 }
 
-int	ATCPSocket::send(string& data)
+int	ATCPSocket::send(const string& data)
 {
 	DebugMsg2(4, "Sending Data on Socket=%li Data=%s", (long)sock, data.c_str());
 	return ::send(sock, data.c_str(), data.length(), 0);

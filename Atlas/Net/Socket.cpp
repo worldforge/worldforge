@@ -22,25 +22,25 @@ ASocket::ASocket(SOCKET asock)
 ASocket* ASocket::accept()				{return NULL;}
 
 
-int ASocket::connect(string& addr, int port)		
+int ASocket::connect(const string& addr, int port)		
 {
 	DebugMsg1(0, "ASocket::connect BAD VIRTUAL CALL !!!", "");
 	return -1;
 }
 
-int ASocket::listen(string& addr, int port, int blog)
+int ASocket::listen(const string& addr, int port, int blog)
 {
 	DebugMsg1(0, "ASocket::listen BAD VIRTUAL CALL !!!", "");
 	return -1;
 }
 
-int ASocket::send(string& data)
+int ASocket::send(const string& data)
 {
 	DebugMsg1(0, "ASocket::send BAD VIRTUAL CALL !!!", "");
 	return -1;
 }
 
-int ASocket::sendTo(string& data, sockaddr_in& addr)
+int ASocket::sendTo(const string& data, const sockaddr_in& addr)
 {
 	DebugMsg1(0, "ASocket::sendTo BAD VIRTUAL CALL !!!", "");
 	return -1;
@@ -52,7 +52,7 @@ int ASocket::recv(string& buf)
 	return -1;
 }
 
-int ASocket::recvFrom(string& buf, sockaddr_in& addr)
+int ASocket::recvFrom(string& buf, const sockaddr_in& addr)
 {
 	DebugMsg1(0, "ASocket::recvFrom BAD VIRTUAL CALL !!!", "");
 	return -1;
