@@ -51,7 +51,7 @@ class Filter
     {
 	CHECKSUM,
 	COMPRESSION,
-	ENCRYPTION,
+	ENCRYPTION
     };
 
     protected:
@@ -94,7 +94,7 @@ protected:
   {
     int num = pptr() - pbase();
     std::string encoded = m_filter.encode(std::string(pbase(), pptr()));
-    m_streamBuffer.sputn(encoded.c_str(), encoded.size());
+    m_streamBuffer.sputn(encoded.c_str(), (long) encoded.size());
     pbump(-num);
     return num;
   }  
@@ -102,24 +102,34 @@ protected:
   virtual int_type overflow(int_type c)
   {
     if (c != EOF) {
-      *pptr() = c;
+      *pptr() = (char) c;
       pbump(1);
     }
     if (flushOutBuffer() == EOF) return EOF;
     return c;
   }
 
+   /*%TODO(Jesse,Atlas,filterbuf)
+   * It's bad style to put non-trivial amounts of code inside class declarations. It:
+   * 1) Clutters up the declaration. This is bad because the declaration is the place
+   * people go to to find out how to use your class.
+   * 2) The compiler won't actually inline virtual methods or methods that it decides
+   * are too complex. This means that every compilation unit that includes the header
+   * will have its own copy of the generated code which slows the compilation and linking
+   * down (the linker will strip out the duplicates so it shouldn't affect the exe).
+   */
   virtual int_type underflow()
   {
+    using namespace std;
     if (gptr() < egptr()) return *gptr();
     
     int numPutback = gptr() - eback();
 
     if (numPutback > m_inPutback) numPutback = m_inPutback;
 
-    std::memcpy(m_outBuffer + (m_inPutback - numPutback),
+    memcpy(m_outBuffer + (m_inPutback - numPutback),
                 gptr() - numPutback,
-                numPutback);
+                (unsigned long) numPutback);
 
     int num;
 
