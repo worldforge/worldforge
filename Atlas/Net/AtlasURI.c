@@ -168,6 +168,8 @@ initURI()
 	 * is required for portability to Windows without requiring C++. */
 	URI_Type.ob_type = &PyType_Type;
 
+	URIGlobalHandler = NULL;
+
 	/* Create the module and add the functions */
 	m = Py_InitModule("URI", URI_methods);
 

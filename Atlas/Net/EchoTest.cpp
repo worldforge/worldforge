@@ -10,6 +10,8 @@
 
 int main(int argc, char** argv)
 {
+	initAtlasTransport();
+
 	EchoTest* app = new EchoTest();
 
         //ADebug::setDebug(2);
@@ -35,8 +37,6 @@ int WINAPI WinMain(
 void EchoTest::execute()
 {
 	long res, i;
-
-	Py_Initialize();
 
         ASocket* sock = new ATCPSocket();
 

@@ -29,7 +29,7 @@ extern DL_IMPORT(PyTypeObject) URI_Type;
 
 typedef int URIHandlerFunc(int op, URIObject *);
 
-URIHandlerFunc*	URIGlobalHandler = NULL;	/* pointer to app defined function for handling URIs */
+extern DL_IMPORT(URIHandlerFunc*) URIGlobalHandler;	/* pointer to app defined function for handling URIs */
 
 extern DL_IMPORT(PyObject *)	URI_New 		Py_PROTO((char* path));
 extern DL_IMPORT(PyObject *)	URI_GetPath		Py_PROTO((PyObject *));

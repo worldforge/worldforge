@@ -9,14 +9,7 @@
 #ifndef __EchoTest_h_
 #define __EchoTest_h_
 
-#include "AtlasDebug.h"
-#include "AtlasClient.h"
-#include "AtlasCodec.h"
-#include "AtlasObject.h"
-#include "AtlasProtocol.h"
-#include "AtlasPackedAsciiProtocol.h"
-#include "AtlasSocket.h"
-#include "AtlasTCPSocket.h"
+#include "AtlasTransport.h"
 
 #include <string.h>
 #include <stdio.h>
