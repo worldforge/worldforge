@@ -24,6 +24,7 @@ protected:
 
 public:
 	AProtocolDecoder();
+	virtual ~AProtocolDecoder() {}
 
 	string	getName();
 	int	getType();

@@ -9,13 +9,13 @@ C_FLAGS	=	-g -D_ADebug_
 # C_FLAGS	=	-O3
 MK_DEP  =	$(CC) $(C_FLAGS) $(incDirs) -MM
 
-OUTDIR	=	linux
-EXE_EXT =
-LIBS	=	-lstdc++ -lpython1.5 -lAtlas -ldl
+#OUTDIR	=	linux
+#EXE_EXT =
+#LIBS	=	-lstdc++ -lpython1.5 -lAtlas -ldl
 
-#OUTDIR  =       win32
-#EXE_EXT =	.exe
-#LIBS	=	-lAtlas -lpython15 -lwsock32 -lstdc++
+OUTDIR  =       win32
+EXE_EXT =	.exe
+LIBS	=	-lAtlas -lpython15 -lwsock32 -lstdc++
 
 # Targets follow ---------------------------------
 

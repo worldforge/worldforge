@@ -19,6 +19,7 @@ protected:
 	
 public:
 	AProtocolEncoder();
+	virtual ~AProtocolEncoder() {};
 	void printf(char* fmt, ...);
 	void append(string& data);
 	virtual string encodeMessage(AObject& msg);

@@ -18,9 +18,7 @@ ASocket::ASocket(SOCKET asock)
 	sock = asock;
 }
 
-ASocket::~ASocket()
-{
-}
+
 ASocket* ASocket::accept()				{return NULL;}
 
 

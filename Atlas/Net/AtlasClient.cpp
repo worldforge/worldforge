@@ -42,13 +42,12 @@ void AClient::canRead()
 	int	len;
 	string	buf;
 
-	fflush(stdout);
 	len = csock->recv(buf);
 	if (cmprs) buf = cmprs->decode(buf);
-	DebugMsg1(1,"ISTREAM = %s\n", buf.c_str());
+	DebugMsg1(5,"ISTREAM = %s\n", buf.c_str());
 	codec->feedStream(buf);
 	while (codec->hasMessage()>0) {
-		DebugMsg1(1,"PROCESSING MESSAGE !!\n\n","");
+		DebugMsg1(4,"PROCESSING MESSAGE !!\n\n","");
 		gotMsg(codec->getMessage());
 		codec->freeMessage();
 	}
@@ -69,7 +68,7 @@ void AClient::doPoll()
 	struct timeval	tm;
 
 	tm.tv_sec = 0;
-	tm.tv_usec = 10000;
+	tm.tv_usec = 1000;
 
 	FD_SET(csock->getSock(), &fdread);
 	FD_SET(csock->getSock(), &fdsend);
@@ -92,3 +91,5 @@ void AClient::gotMsg(AObject& msg)
 {
 	DebugMsg1(1,"BAD VIRTUAL CALL !!!\n\n","");
 }
+
+

@@ -15,13 +15,20 @@
 
 class AClient
 {
-private:
+protected:
 
 	ASocket*	csock;
 	ACodec*		codec;
 	ACompressor*	cmprs;
 
 public:
+
+	AClient() 
+	{ 
+		csock = NULL;
+		codec = NULL;
+		cmprs = NULL; 
+	}
 
 	AClient(ASocket* asock, ACodec* acodec);
 	AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs);

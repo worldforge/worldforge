@@ -46,7 +46,7 @@ public:
 	ASocket();
 	ASocket(SOCKET asock);
 
-	~ASocket();
+	virtual ~ASocket() {}
 
 	// these 2 calls are mutually exclusive
 	// you can either connect or listen/accept !!
