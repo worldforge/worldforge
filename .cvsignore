@@ -14,8 +14,9 @@ ltmain.sh
 Makefile
 Makefile.in
 mercator-config
+mercator-*.tar.gz
 mercator.spec
 mercator*.pc
 missing
 mkinstalldirs
-stamp-h1
+stamp-h*
