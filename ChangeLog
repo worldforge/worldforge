@@ -1,3 +1,9 @@
+2003-09-10 Damien McGinnes 
+
+	* Mercator/Intersect.cpp,h: added files for axisbox intersection
+	  with terrain
+	* tests/testIntersect.cpp: added files for intersection unit tests
+
 2003-09-06 Damien McGinnes 
 
 	* Mercator/Surface.cpp: fixed a segfault in invalidate; slight

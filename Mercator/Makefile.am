@@ -16,6 +16,7 @@ libmercator_0_2_la_SOURCES = \
 	ThresholdShader.cpp \
 	DepthShader.cpp \
 	GrassShader.cpp \
+	Intersect.cpp \
 	Surface.cpp
 
 libmercatordir = $(includedir)/Mercator-0.2/Mercator
@@ -34,4 +35,5 @@ libmercator_HEADERS = \
 	ThresholdShader.h \
 	DepthShader.h \
 	GrassShader.h \
+	Intersect.h \
 	Surface.h
