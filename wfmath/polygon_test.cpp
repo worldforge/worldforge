@@ -57,8 +57,8 @@ void test_polygon(const Polygon<dim>& p)
   mat.identity();
   RotBox<dim> r(point, vec, mat);
 
-  Intersect(p, a);
-  Intersect(p, r);
+  Intersect(p, a, false);
+  Intersect(p, r, false);
 }
 
 int main()

@@ -1,5 +1,11 @@
 Friday, April 26, 2002		Ron Steinke <rsteinke@w-link.net>
 
+	* Added WFMATH_DEPRECATE_OLD_INTERSECT flag to build
+	  without the old intersect API. Fixed wfmath to build
+	  with the old API removed.
+
+Friday, April 26, 2002		Ron Steinke <rsteinke@w-link.net>
+
 	* Bumped version number for 0.2.7 release
 
 Sunday, April 21, 2002		Ron Steinke <rsteinke@w-link.net>

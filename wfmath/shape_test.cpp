@@ -60,12 +60,12 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   boxvec.push_back(box);
   assert(box == BoundingBox(boxvec));
 
-  assert(Intersect(box, p1));
+  assert(Intersect(box, p1, false));
   assert(!Intersect(box, p1, true));
 
-  assert(Intersect(box, box));
+  assert(Intersect(box, box, false));
   assert(Intersect(box, box, true));
-  assert(Contains(box, box));
+  assert(Contains(box, box, false));
   assert(!Contains(box, box, true));
 
   Ball<dim> ball(p1, 1);
@@ -75,19 +75,19 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   test_general(ball);
   test_shape(ball);
 
-  assert(Intersect(ball, p1));
+  assert(Intersect(ball, p1, false));
   assert(Intersect(ball, p1, true));
 
-  assert(Intersect(ball, box));
+  assert(Intersect(ball, box, false));
   assert(Intersect(ball, box, true));
-  assert(Contains(ball, box) == (sqr_dist <= 1));
+  assert(Contains(ball, box, false) == (sqr_dist <= 1));
   assert(Contains(ball, box, true) == (sqr_dist < 1));
-  assert(!Contains(box, ball));
+  assert(!Contains(box, ball, false));
   assert(!Contains(box, ball, true));
 
-  assert(Intersect(ball, ball));
+  assert(Intersect(ball, ball, false));
   assert(Intersect(ball, ball, true));
-  assert(Contains(ball, ball));
+  assert(Contains(ball, ball, false));
   assert(!Contains(ball, ball, true));
 
   Segment<dim> seg(p1, p2);
@@ -97,26 +97,26 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   test_general(seg);
   test_shape(seg);
 
-  assert(Intersect(seg, p1));
+  assert(Intersect(seg, p1, false));
   assert(!Intersect(seg, p1, true));
 
-  assert(Intersect(seg, box));
+  assert(Intersect(seg, box, false));
   assert(Intersect(seg, box, true));
-  assert(!Contains(seg, box));
+  assert(!Contains(seg, box, false));
   assert(!Contains(seg, box, true));
-  assert(Contains(box, seg));
+  assert(Contains(box, seg, false));
   assert(!Contains(box, seg, true));
 
-  assert(Intersect(seg, ball));
+  assert(Intersect(seg, ball, false));
   assert(Intersect(seg, ball, true));
-  assert(!Contains(seg, ball));
+  assert(!Contains(seg, ball, false));
   assert(!Contains(seg, ball, true));
-  assert(Contains(ball, seg) == (sqr_dist <= 1));
+  assert(Contains(ball, seg, false) == (sqr_dist <= 1));
   assert(Contains(ball, seg, true) == (sqr_dist < 1));
 
-  assert(Intersect(seg, seg));
+  assert(Intersect(seg, seg, false));
   assert(Intersect(seg, seg, true));
-  assert(Contains(seg, seg));
+  assert(Contains(seg, seg, false));
   assert(!Contains(seg, seg, true));
 
   RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, Pi / 6));

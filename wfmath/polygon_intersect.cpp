@@ -823,7 +823,7 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const Segment<2>& s, bool proper)
       continue;
 
     // Check for crossing at an endpoint
-    if(Contains(s, *i) && (*i != s.m_p2)) {
+    if(Contains(s, *i, false) && (*i != s.m_p2)) {
       Vector<2> segment = s.m_p2 - s.m_p1;
       Vector<2> edge1 = *i - s2.endpoint(next_point); // Gives prev point in this case
       Vector<2> edge2 = *i - *(i + 1);
@@ -883,7 +883,7 @@ template<>
 bool WFMath::Contains<2>(const Segment<2>& s, const Polygon<2>& p, bool proper)
 {
   for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
-    if(!Contains(s, *i), proper)
+    if(!Contains(s, *i, proper))
       return false;
 
   return true;

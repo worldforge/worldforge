@@ -35,7 +35,21 @@
 
 namespace WFMath {
 
-// Should these be deprecated?
+// Deprecated, to be removed in 0.3
+
+#ifndef WFMATH_DEPRECATE_OLD_INTERSECT
+
+template<class S1, class S2>
+inline bool Intersect(const S1& s1, const S2& s2)
+{
+  return Intersect(s1, s2, false);
+}
+
+template<class S1, class S2>
+inline bool Contains(const S1& s1, const S2& s2)
+{
+  return Contains(s1, s2, false);
+}
 
 template<class S1, class S2>
 inline bool IntersectProper(const S1& s1, const S2& s2)
@@ -49,10 +63,12 @@ inline bool ContainsProper(const S1& s1, const S2& s2)
   return Contains(s1, s2, true);
 }
 
+#endif
+
 // Get the reversed order intersect functions (is this safe? FIXME)
 
 template<class S1, class S2>
-inline bool Intersect(const S1& s1, const S2& s2, bool proper = false)
+inline bool Intersect(const S1& s1, const S2& s2, bool proper)
 {
   return Intersect(s2, s1, proper);
 }
@@ -60,19 +76,19 @@ inline bool Intersect(const S1& s1, const S2& s2, bool proper = false)
 // Point<>
 
 template<const int dim>
-inline bool Intersect(const Point<dim>& p1, const Point<dim>& p2, bool proper = false)
+inline bool Intersect(const Point<dim>& p1, const Point<dim>& p2, bool proper)
 {
   return !proper && p1 == p2;
 }
 
 template<const int dim, class S>
-inline bool Contains(const S& s, const Point<dim>& p, bool proper = false)
+inline bool Contains(const S& s, const Point<dim>& p, bool proper)
 {
   return Intersect(p, s, proper);
 }
 
 template<const int dim>
-inline bool Contains(const Point<dim>& p1, const Point<dim>& p2, bool proper = false)
+inline bool Contains(const Point<dim>& p1, const Point<dim>& p2, bool proper)
 {
   return !proper && p1 == p2;
 }
