@@ -1,3 +1,8 @@
+2004-07-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Exception.h: Implement what() from base exception class, to
+	  allow description to be queried.
+
 2004-07-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/BaseObject.h: Don't use friend on class definitions

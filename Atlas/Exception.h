@@ -21,6 +21,7 @@ class Exception : public std::exception
     const std::string & getDescription() const {
         return m_description;
     }
+    virtual const char * what() const throw() { return m_description.c_str(); }
 };
 
 } // namespace Atlas
