@@ -36,7 +36,7 @@ class AttributeInfo:
         if self.as_object:
             res = res + doc(4, 'Set the "%s" attribute %s.' % \
                             (self.name, self.as_object)) + \
-               "    inline void set%(cname)s%(as_object)s(%(cpp_param_type_as_object)s val);\n" % self.__dict__
+               "    inline void set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val);\n" % self.__dict__
         return res
 
     def get_if(self):
@@ -262,6 +262,7 @@ class ArgsRootList(AttributeInfo):
         AttributeInfo.__init__(self, name, value, "RootList")
         self.as_object = "AsList"
         self.cpp_param_type_as_object = cpp_param_type["list"][:-1]
+        self.cpp_param_type_as_object_ref = cpp_param_type["list"]
         self.ctype_as_object = "List"
 
     def set_if(self):
@@ -271,7 +272,7 @@ class ArgsRootList(AttributeInfo):
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \
-               """void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object)s val)
+               """void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val)
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
@@ -326,6 +327,7 @@ class TypedList(AttributeInfo):
         AttributeInfo.__init__(self, name, value, type)
         self.as_object = "AsList"
         self.cpp_param_type_as_object = cpp_param_type["list"][:-1]
+        self.cpp_param_type_as_object_ref = cpp_param_type["list"]
         self.ctype_as_object = "List"
         element_type = string.split(type,"_")[0]
         self.cpp_element_type = cpp_type[element_type]
@@ -339,7 +341,7 @@ class TypedList(AttributeInfo):
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \
-               """void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object)s val)
+               """void %(classname)s::set%(cname)s%(as_object)s(%(cpp_param_type_as_object_ref)s val)
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);

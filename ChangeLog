@@ -1,5 +1,10 @@
 2004-02-16  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/AttributeInfo.py: Make sure setFooAsList() methods
+	  takes arguments as const & rather than by value.
+
+2004-02-16  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Codecs/Utility.h: Eliminate using ..; directives from
 	  headers.
 
