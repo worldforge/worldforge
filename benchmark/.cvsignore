@@ -4,6 +4,8 @@ Makefile
 .deps
 .libs
 Objects_Move
+Objects2_Move
+Objects3_Move
 Message_Move
 Call_Move
 Static_Move

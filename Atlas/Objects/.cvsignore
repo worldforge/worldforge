@@ -19,8 +19,8 @@ RootOperationChildren2.cpp
 RootOperationChildren3.cpp
 RootOperationChildren4.cpp
 RootOperationChildren5.cpp
-Empty.h
-Empty.cpp
+Anonymous.h
+Anonymous.cpp
 flag.cpp
 objectFactory.cpp
 Decoder.h

@@ -7,7 +7,7 @@ REAL_GENERATED_CPP = Root.cpp Decoder.cpp \
         RootOperation.cpp RootOperationChildren1.cpp \
 	RootOperationChildren2.cpp RootOperationChildren3.cpp \
 	RootOperationChildren4.cpp RootOperationChildren5.cpp \
-	Empty.cpp
+	Anonymous.cpp
 
 GENERATED_CPP = flag.cpp $(REAL_GENERATED_CPP)
 
@@ -15,7 +15,7 @@ GENERATED_H = Root.h Decoder.h \
 	loadDefaults.h objectFactory.h \
 	RootEntity.h Entity.h \
         RootOperation.h Operation.h \
-	Empty.h
+	Anonymous.h
 
 libAtlasObjects_la_SOURCES = \
 	gen_cpp.py BaseObject.cpp loadDefaults.cpp objectFactory.cpp \

@@ -56,8 +56,8 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const string& filename)
   }
   delete codec;
   
-  Atlas::Message::Object::MapType empty_obj;
-  m_objects["empty"] = empty_obj;
+  Atlas::Message::Object::MapType anonymous_obj;
+  m_objects["anonymous"] = anonymous_obj;
   fillDefaults();
 }
 
@@ -153,7 +153,7 @@ void LoadDefaultsDecoder::fillDefaults()
 void loadDefaults(const string& filename)
 {
    LoadDefaultsDecoder load_defaults(filename);
-   Entity::Empty e;
+   Entity::Anonymous e;
    e = e->getDefaultObject();
    vector<double> coords(3, 0.0);
    e->setPos(coords);

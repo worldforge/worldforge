@@ -169,7 +169,7 @@ void testXML()
 //    eno.streamMessage((Root&)move_op);
     eno.streamMessage((Root&)l);
 
-    Entity::Empty e;
+    Entity::Anonymous e;
     eno.streamMessage((Root&)e);
     e->setId("foo");
     eno.streamMessage((Root&)e);
@@ -207,7 +207,8 @@ void testValues()
     assert(l->getId()=="");
     assert(l->getParents().front()=="login");
     assert(l->getObjtype()=="op");
-    cout<<endl<<"acount.long_description: "<<l->getArgs()[0]->getLongDescription()<<endl;
+    cout<<endl<<"account.long_description: "
+        <<l->getArgs()[0]->getLongDescription()<<endl;
     
     {
     Atlas::Message::Object::MapType mobj;
@@ -250,7 +251,7 @@ void testValues()
     {
     Atlas::Message::Object::MapType mobj;
     Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
-    assert(obj->getClassNo() == Entity::EMPTY_NO);
+    assert(obj->getClassNo() == Entity::ANONYMOUS_NO);
     assert(obj->getId() == "");
     assert(obj->getName() == "");
     assert(obj->getParents().size() == 0);
@@ -266,7 +267,7 @@ void testValues()
     parents.push_back(string("account"));
     mobj["parents"] = parents;
     Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
-    assert(obj->getClassNo() == Entity::EMPTY_NO);
+    assert(obj->getClassNo() == Entity::ANONYMOUS_NO);
     assert(obj->getId() == "bar");
     assert(obj->getName() == "foo");
     assert(obj->getParents().front() == "account");

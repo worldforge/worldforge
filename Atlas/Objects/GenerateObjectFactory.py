@@ -104,13 +104,13 @@ Root messageObject2ClassObject(const Atlas::Message::Object& mobj_arg)
                     if(objtype == "op") {
                         obj = objectFactory.createObject("root_operation");
                     } else {
-                        obj = objectFactory.createObject("empty");
+                        obj = objectFactory.createObject("anonymous");
                     }
                 } // parent was not ok
             } // is instance
         } // has objtype attr
         if(!is_instance) {
-            obj = objectFactory.createObject("empty");
+            obj = objectFactory.createObject("anonymous");
         } // not instance
         for (I = mobj.begin();
              I != mobj.end(); I++)

@@ -55,10 +55,6 @@ protected:
     /// An unknown object has arrived.
     virtual void unknownObjectArrived(const Root&) { }
 
-    /// An unknown object has arrived: this is usually used, 
-    /// not above Root& version
-    virtual void unknownObjectArrived(const Entity::Empty&) { }
-
     /// call right objectArrived method
     virtual void dispatchObject(const Root& obj);
 
@@ -99,18 +95,14 @@ void Decoder::dispatchObject(const Root& obj)
     switch(obj->getClassNo()) {
 """) #"for xemacs syntax highlighting
         for (obj, namespace) in objects:
-            if obj.id!="empty":
-                idc = classize(obj.id)
-                serialno_name = string.upper(obj.id) + "_NO"
-                self.write("""    case %(namespace)s%(serialno_name)s:
+            idc = classize(obj.id)
+            serialno_name = string.upper(obj.id) + "_NO"
+            self.write("""    case %(namespace)s%(serialno_name)s:
         objectArrived((%(namespace)s%(idc)s&)obj);
         break;
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""    default:
-        if(obj->getClassNo() == Entity::EMPTY_NO)
-            unknownObjectArrived((Entity::Empty&)obj);
-        else
-            unknownObjectArrived(obj);
+        unknownObjectArrived(obj);
     }
 }
 """) #"for xemacs syntax highlighting

@@ -1,5 +1,10 @@
 2000-12-08  Aloril  <aloril@iki.fi>
 
+	* Decoder::unknownObjectArrived(const Entity::Empty&); ->
+	Decoder::objectArrived(const Entity::Anonymous&);
+
+	* s/Empty/Anonymous/
+
 	* added Atlas::Objects::Entity::Empty class which is used when
  	unknown object has arrived (usually unknown objects have pos
  	attribute, which is dynamic in Root):

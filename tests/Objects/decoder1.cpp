@@ -6,7 +6,7 @@ using namespace Atlas;
 bool root_arrived = false;
 bool look_arrived = false;
 bool acct_arrived = false;
-bool empty_unknown_arrived = false;
+bool anonymous_arrived = false;
 bool unknown_arrived = false;
 
 class TestDecoder : public Objects::Decoder
@@ -29,8 +29,8 @@ protected:
         acct_arrived = true;
     }
 
-    virtual void unknownObjectArrived(const Objects::Entity::Empty&) {
-        empty_unknown_arrived = true;
+    virtual void objectArrived(const Objects::Entity::Anonymous&) {
+        anonymous_arrived = true;
     }
 
     virtual void unknownObjectArrived(const Atlas::Message::Object&) {
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     t.mapEnd();
     t.streamEnd();
     assert(!root_arrived);
-    assert(empty_unknown_arrived);
+    assert(anonymous_arrived);
     assert(look_arrived);
     assert(!acct_arrived);
     assert(!unknown_arrived);

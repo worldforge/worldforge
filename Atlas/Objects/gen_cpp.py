@@ -473,7 +473,7 @@ public:
         self.header(self.base_list + [self.generic_class_name, "H"])
         self.write('#include "%s.h"\n' % self.classname_pointer)
         if obj.id == "root_entity":
-            self.write('#include "Empty.h"\n')
+            self.write('#include "Anonymous.h"\n')
         self.write("\n\n")
         self.ns_open(self.base_list)
         self.for_progeny(self.progeny, self.interface)
@@ -532,7 +532,7 @@ if __name__=="__main__":
     for obj in parseXML(spec_xml_string):
         objects[obj.id] = obj
     find_parents_children_objects(objects)
-    objects["empty"] = Object(id="empty", parents=[objects["root_entity"]])
+    objects["anonymous"] = Object(id="anonymous", parents=[objects["root_entity"]])
 
     print "Loaded atlas.xml"
 
@@ -546,7 +546,7 @@ if __name__=="__main__":
                 ("root", ".", []),
                 ("root_entity", "Entity", ["entity.def"]),
                 ("root_operation", "Operation", ["operation.def"]),
-                ("empty", "Entity", [])):
+                ("anonymous", "Entity", [])):
         object_enum = object_enum + 1
         gen_code = GenerateCC(objects, outdir) #, object_enum)
         all_objects = all_objects + gen_code(objects[name], class_only_files)
