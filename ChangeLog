@@ -1,3 +1,8 @@
+Monday, August 4th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Added IntToString() utility function, because I'm tired of
+	  writing the same code in a dozen different applications.
+
 Tuesday, July 22nd, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* More poly-atlas tweaks. Forgot to inline some wrapper

@@ -3,7 +3,7 @@ INCLUDES = -I$(top_srcdir)
 EXTRA_DIST = bc_sloppy_mag_3
 
 headerdir = $(includedir)/wfmath-0.2/wfmath
-header_HEADERS = error.h const.h \
+header_HEADERS = error.h const.h int_to_string.h \
 	probability.h timestamp.h randgen.h shuffle.h \
 	vector.h vector_funcs.h \
 	rotmatrix.h rotmatrix_funcs.h \
@@ -19,9 +19,9 @@ header_HEADERS = error.h const.h \
 	wfmath.h stream.h atlasconv.h
 
 lib_LTLIBRARIES = libwfmath-0.2.la
-libwfmath_0_2_la_SOURCES = basis.h const.cpp stream.cpp probability.cpp \
-	timestamp.cpp randgen.cpp rotmatrix.cpp vector.cpp point.cpp \
-	quaternion.cpp polygon.cpp intersect.cpp polygon_intersect.cpp
+libwfmath_0_2_la_SOURCES = basis.h const.cpp stream.cpp int_to_string.cpp \
+	probability.cpp timestamp.cpp randgen.cpp rotmatrix.cpp vector.cpp \
+	point.cpp quaternion.cpp polygon.cpp intersect.cpp polygon_intersect.cpp
 libwfmath_0_2_la_LDFLAGS = -lm -version-info @WFMATH_VERSION_INFO@
 
 check_PROGRAMS = vector_test rotmatrix_test point_test \
