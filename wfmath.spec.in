@@ -21,7 +21,7 @@ geometric objects.
 %package devel
 Summary: A math library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version}
+Requires: %{name} = %{version} libstdc++-devel >= 2.95.2
 
 %description devel
 This is the WorldForge math library. The primary focus of %{name} is
