@@ -8,6 +8,7 @@ libAtlasCodecsincludedir = $(includedir)/Atlas/Codecs
 libAtlasCodecs_la_SOURCES = \
 	Utility.h \
 	Packed.cpp Packed.h \
-	XML.cpp XML.h
+	XML.cpp XML.h \
+	Bach.cpp Bach.h
 
-libAtlasCodecsinclude_HEADERS = XML.h Packed.h Utility.h
+libAtlasCodecsinclude_HEADERS = XML.h Packed.h Utility.h Bach.h
