@@ -153,15 +153,16 @@ void Meta::gotData(PollData &data)
 {
     bool got_one = false;
     
-    if (!_stream->is_open()) {
-	doFailure("Connection to the meta-server failed");
-	return;
-    }
-    
-    if (data.isReady(_stream)) {
-	    recv();	
-	    got_one = true;
-    }
+    if (_stream) {
+	if (!_stream->is_open()) {
+	    // it died, delete it
+	    doFailure("Connection to the meta-server failed");
+	} else
+	    if (data.isReady(_stream)) {
+		recv();
+		got_one = true;
+	    }
+    } // of _stream being valid
 
     for (MetaQueryList::iterator Q=_activeQueries.begin();
 	    Q != _activeQueries.end(); ++Q)
@@ -310,7 +311,6 @@ void Meta::processCmd()
 				(ip & 0xFF000000) >> 24
 			);
 			
-			//_gameServers.insert(buf);
 			// FIXME  - decide whther a reverse name lookup is necessary here or not
 	
 			// create as required

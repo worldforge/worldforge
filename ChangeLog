@@ -1,3 +1,11 @@
+Wednesday, May 22, James Turner
+
+	* Modified Meta::got_data to be safe even when _stream is
+	  NULL. This is legal when the meta-server has finished
+	  sending us the server list, but there are still
+	  active queries (which is quite commmon, when you think
+	  about it)
+
 Tuesday, May 21, James Turner
 
 	* Protected against MOVE ops with no ID argument set: fail
