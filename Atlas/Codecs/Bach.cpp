@@ -318,17 +318,6 @@ void Bach::parseName(char next)
         m_state.pop();
 	break;
 
-/*
-    case '[':
-    case ']':
-    case '(':
-    case ')':
-    case ',':
-        // FIXME signal error here
-        // unexpected character
-	break;
-*/
-
     default:
         if (((next>='a')&&(next<='z'))||
             ((next>='A')&&(next<='Z'))||
@@ -375,13 +364,13 @@ void Bach::poll(bool can_read)
 
 const std::string Bach::decodeString(std::string toDecode)
 {
-    unsigned int pos;
+    int pos;
 
-//    while((pos = toDecode.find( "\\\"" )) >= 0)
-//          toDecode.replace(pos, 2, "\"");
+    while((pos = toDecode.find( "\\\"" )) >= 0)
+          toDecode.replace(pos, 2, '\"');
 
-//    while((pos = toDecode.find( "\\\\")) >= 0)
-//          toDecode.replace(pos, 2, "\\");
+    while((pos = toDecode.find( "\\\\")) >= 0)
+          toDecode.replace(pos, 2, '\\');
 
     return toDecode;
 }
