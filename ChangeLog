@@ -1,4 +1,7 @@
 ChangeLog for varconf
+Saturday, 20th September, 2003, Ron Steinke <rsteinke@w-link.net>
+	* Workaround for buggy win32 atof().
+
 Thursday, 3rd July, 2003, Al Riddoch <alriddoch@zepler.org>
 	* Update rpm spec to be cleaner, and make the technical sections
 	  more generic.

@@ -31,6 +31,15 @@
 #ifdef __WIN32__
 #include <tchar.h>
 #define snprintf _snprintf
+// apparently, win32 atof() is somewhat broken
+static double
+win32_atof_substitute(const char* in)
+{
+  double out;
+  sscanf(in, "%lf", &out);
+  return out;
+}
+#define atof win32_atof_substitute
 #endif  
 
 namespace varconf {
