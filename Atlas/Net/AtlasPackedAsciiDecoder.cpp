@@ -120,7 +120,7 @@ int APackedAsciiDecoder::hasTokens()
 			break;
 
 		case 3:
-			pos = buffer.find_first_of("(%#$])}");
+			pos = buffer.find_first_of("[(%$#])}");
 			if (pos == -1) break;
 			// got an end marker, pull the data
 			sval = buffer.substr(0,pos);

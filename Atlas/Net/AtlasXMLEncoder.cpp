@@ -43,10 +43,7 @@ void AXMLEncoder::walkTree(int nest, string name, AObject& list)
 		}
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
-			//printf("******* get node %i\n", i);
-			//fflush(stdout);
 			list.get(i, tmp);
-			//printf("******* walk node %i\n", i);
 			walkTree(nest+1, "", tmp);
 		}
 		printf("%s</list>\n",pre.c_str());
@@ -60,11 +57,7 @@ void AXMLEncoder::walkTree(int nest, string name, AObject& list)
 		}
 		for (i=0; i<keys.length(); i++) {
 			AObject key;
-			//printf("******* get node %i\n", i);
-			//fflush(stdout);
 			keys.get(i, key);
-			//printf("******* get key %s\n", key.asString().c_str());
-			//fflush(stdout);
 			AObject tmp;
 			list.get(key.asString(), tmp);
 			walkTree(nest+1, key.asString(), tmp);
@@ -74,11 +67,11 @@ void AXMLEncoder::walkTree(int nest, string name, AObject& list)
 
 	if (list.isString()) {
 		if (name.length() > 0) {
-			printf("%s<str name=\"%s\">%s</str>\n",
+			printf("%s<string name=\"%s\">%s</str>\n",
 				pre.c_str(), name.c_str(),list.asString().c_str()
 			);
 		} else {
-			printf("%s<str>%s</str>\n",pre.c_str(), list.asString().c_str());
+			printf("%s<string>%s</str>\n",pre.c_str(), list.asString().c_str());
 		}
 	}
 	if (list.isLong()) {

@@ -68,7 +68,13 @@ protected:
 /** Python Object to hold the data */
 	PyObject*	obj;
 
+/** support routine for dump */
+static void walkTree(int nest, string name, AObject& list);
+
 public:
+
+/** output object stucture to debug streams */
+static void dump(AObject& msg);
 
 /** Default "typ" value, not a typed list */
 static	int AScalar;
@@ -169,6 +175,19 @@ static	int AObjList;
 
 /** (Map) get a String attribute */
 	int		get(const string& name, string& val);
+
+
+/** (Map) get an AObject attribute */
+	int		get(const string& name, AObject& val, AObject& def);
+
+/** (Map) get an Int attribute */
+	int		get(const string& name, long& val, long def);
+
+/** (Map) get a Float attribute */
+	int		get(const string& name, double& val, double def);
+
+/** (Map) get a String attribute */
+	int		get(const string& name, string& val, string& def);
 
 
 
@@ -291,6 +310,15 @@ static	AObject	mkString(const string& val);
 	int		get(int ndx, double& val);
 /** (List) get a String from this index */
 	int		get(int ndx, string& val);
+
+/** (List) get an AObject from this index with default */
+	int		get(int ndx, AObject& src, AObject& def);
+/** (List) get an Int from this index */
+	int		get(int ndx, long& val, long def);
+/** (List) get a Float from this index */
+	int		get(int ndx, double& val, double def);
+/** (List) get a String from this index */
+	int		get(int ndx, string& val, string& def);
 
 	// typed returns
 /** get an Int value from this AObject */

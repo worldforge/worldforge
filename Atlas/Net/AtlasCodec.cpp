@@ -55,7 +55,7 @@ int ACodec::hasMessage()
 	// got a token, we must be busy processing a message !!
 	state = codecBUSY;
 	// process tokens until we run out or we complete a msg
-	DebugMsg1(1,"Scanning Tokens\n\n","");
+	DebugMsg1(1,"Scanning Tokens","");
 	AProtocolDecoder* adec = proto->getDecoder();
 	do {
 		int tok = proto->getDecoder()->getToken();
@@ -68,7 +68,7 @@ int ACodec::hasMessage()
 			if (type == AProtocol::atlasSTR) stack[nestd] = AObject::mkString(adec->getString());
 			if (type == AProtocol::atlasINT) stack[nestd] = AObject::mkLong(adec->getInt());
 			if (type == AProtocol::atlasFLT) stack[nestd] = AObject::mkFloat(adec->getFloat());
-			DebugMsg2(1,"ADDATTR nestd=%i name=%s\n", nestd, name.c_str());
+			DebugMsg2(1,"ADDATTR nestd=%i name=%s", nestd, name.c_str());
 		}
 		if (tok == AProtocol::atlasATRBEG) {
 			// got an attribute header
@@ -115,17 +115,17 @@ int ACodec::hasMessage()
 		}
 		if (tok == AProtocol::atlasMSGEND) {
 			// got a message trailer
-			//assert(nestd == 0);
+			//assert(nestd == 1);
 			// should have unraveled all nesting by now
-			DebugMsg1(1,"MESSAGE COMPLETE\n\n","");
+			DebugMsg1(1,"MESSAGE COMPLETE","");
 			msg = stack[0];
 			state = codecIDLE; // get outa the loop !!
 		}
-		DebugMsg1(1,"\n\n","");
 	} while (proto->getDecoder()->hasTokens() && state == codecBUSY);
 	// check if we have a complete message
 	if (state == codecIDLE) {
-		DebugMsg1(1,"Returning HAS MESSAGE !!\n\n","");
+		AObject::dump(msg);
+		DebugMsg1(1,"Returning HAS MESSAGE !!","");
 		return 1;
 	}
 	// still more message to process

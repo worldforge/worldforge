@@ -9,8 +9,6 @@ class PackedAsciiTest
 
 public:
 
-void walkTree(int nest, string name, AObject& list);
-void DisplayMessage(AObject& msg);
 void execute();
 
 };

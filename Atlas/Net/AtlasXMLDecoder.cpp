@@ -120,6 +120,7 @@ int AXMLDecoder::hasTokens()
 			} 
 			else if (tag == "int")		type = AProtocol::atlasINT;
 			else if (tag == "str")		type = AProtocol::atlasSTR;
+			else if (tag == "string")	type = AProtocol::atlasSTR;
 			else if (tag == "float")	type = AProtocol::atlasFLT;
 			else if (tag == "map")		type = AProtocol::atlasMAP;
 			else if (tag.find("list") > -1)	type = AProtocol::atlasLST;

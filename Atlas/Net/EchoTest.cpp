@@ -115,7 +115,6 @@ void DisplayMessage(AObject& msg)
 {
 	int	i;
 
-	AObject keys = msg.keys();
 	printf("<obj>\n");
 	walkTree(1, "", msg);
 	printf("</obj>\n");

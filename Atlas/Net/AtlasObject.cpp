@@ -236,6 +236,60 @@ int	AObject::get(const string& name, string& val)
 	return 1;
 }
 
+int	AObject::get(const string& name, AObject& val, AObject& def)
+{
+	assert((unsigned long)obj != 1);
+	assert((unsigned long)val.obj != 1);
+
+	char* tmp = strdup(name.c_str());
+	if (has(name))
+		val = AObject(PyDict_GetItemString(obj,tmp));
+	else
+		val = def;
+	free(tmp);
+	assert(val.obj->ob_refcnt > 1);
+	return 1;
+}
+
+int	AObject::get(const string& name, long& val, long def)
+{
+	assert((unsigned long)obj != 1);
+	if (!this->isLong()) return 0;
+	char* tmp = strdup(name.c_str());
+	if (has(name))
+		val = PyLong_AsLong(PyDict_GetItemString(obj,tmp));
+	else
+		val = def;
+	free(tmp);
+	return 1;
+}
+
+int	AObject::get(const string& name, double& val, double def)
+{
+	assert((unsigned long)obj != 1);
+	if (!this->isFloat()) return 0;
+	char* tmp = strdup(name.c_str());
+	if (has(name))
+		val = PyFloat_AsDouble(PyDict_GetItemString(obj,tmp));
+	else
+		val = def;
+	free(tmp);
+	return 1;
+}
+
+int	AObject::get(const string& name, string& val, string& def)
+{
+	assert((unsigned long)obj != 1);
+	if (!this->isString()) return 0;
+	char* tmp = strdup(val.c_str());
+	if (has(name))
+		val = PyString_AsString(PyDict_GetItemString(obj,tmp));
+	else
+		val = def;
+	free(tmp);
+	return 1;
+}
+
 int	AObject::get(int ndx, AObject& val)
 {
 	assert((unsigned long)obj != 1);
@@ -269,6 +323,68 @@ int	AObject::get(int ndx, string& val)
 	assert((unsigned long)obj != 1);
 	if (!this->isString()) return 0;
 	val = PyString_AsString(PyList_GetItem(obj,ndx));
+	return 1;
+}
+
+int	AObject::get(int ndx, AObject& val, AObject& def)
+{
+	assert((unsigned long)obj != 1);
+	assert((unsigned long)val.obj != 1);
+
+	if (ndx > PyObject_Length(obj)) {
+		val = def;
+		return 0;
+	}
+	val = AObject(PyList_GetItem(obj,ndx));
+	assert(val.obj->ob_refcnt > 1);
+	return 1;
+}
+
+int	AObject::get(int ndx, long& val, long def)
+{
+	assert((unsigned long)obj != 1);
+	if (ndx > PyObject_Length(obj)) {
+		val = def;
+		return 0;
+	}
+	PyObject* tmp = PyList_GetItem(obj,ndx);
+	if (!PyLong_Check(obj)) {
+		val = def;
+		return 0;
+	}
+	val = PyLong_AsLong(tmp);
+	return 1;
+}
+
+int	AObject::get(int ndx, double& val, double def)
+{
+	assert((unsigned long)obj != 1);
+	if (ndx > PyObject_Length(obj)) {
+		val = def;
+		return 0;
+	}
+	PyObject* tmp = PyList_GetItem(obj,ndx);
+	if (!PyFloat_Check(obj)) {
+		val = def;
+		return 0;
+	}
+	val = PyFloat_AsDouble(tmp);
+	return 1;
+}
+
+int	AObject::get(int ndx, string& val, string& def)
+{
+	assert((unsigned long)obj != 1);
+	if (ndx > PyObject_Length(obj)) {
+		val = def;
+		return 0;
+	}
+	PyObject* tmp = PyList_GetItem(obj,ndx);
+	if (!PyString_Check(obj)) {
+		val = def;
+		return 0;
+	}
+	val = PyString_AsString(tmp);
 	return 1;
 }
 
@@ -535,6 +651,96 @@ AObject AObject::mkString(const string& val)
 	Py_XDECREF(tmp);
 	assert((unsigned long)res.obj != 1);
 	return res;
+}
+
+void AObject::walkTree(int nest, string name, AObject& list)
+{
+	int	i;
+	string	buf;
+	string	pre;
+
+	for (int j=0; j<nest; j++) {
+		pre.append("    ");
+	}
+
+
+	if (list.isList()) {
+		// precheck types here
+		string pfix("");
+
+		if	(list.getListType() == AObject::AIntList)	pfix.append("int_");
+		else if (list.getListType() == AObject::AFloatList)	pfix.append("float_");
+		else if (list.getListType() == AObject::AStringList)	pfix.append("string_");
+
+		if (name.length() > 0) {
+			DebugMsg3(0,"%s<%slist name=\"%s\">", pre.c_str(), pfix.c_str(), name.c_str());
+		} else {
+			DebugMsg2(0,"%s<%slist>", pre.c_str(), pfix.c_str());
+		}
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i, tmp);
+			walkTree(nest+1, "", tmp);
+		}
+		DebugMsg1(0,"%s</list>",pre.c_str());
+	} 
+	if (list.isMap()) {
+		AObject keys = list.keys();
+		if (name.length() > 0) {
+			DebugMsg2(0,"%s<map name=\"%s\">",pre.c_str(), name.c_str());
+		} else {
+			DebugMsg1(0,"%s<map>", pre.c_str());
+		}
+		for (i=0; i<keys.length(); i++) {
+			AObject key;
+			keys.get(i, key);
+			AObject tmp;
+			list.get(key.asString(), tmp);
+			walkTree(nest+1, key.asString(), tmp);
+		}
+		DebugMsg1(0,"%s</map>",pre.c_str());
+	} 
+
+	if (list.isString()) {
+		if (name.length() > 0) {
+			DebugMsg3(0,"%s<str name=\"%s\">%s</str>",
+				pre.c_str(), name.c_str(),list.asString().c_str()
+			);
+		} else {
+			DebugMsg2(0,"%s<str>%s</str>",pre.c_str(), list.asString().c_str());
+		}
+	}
+	if (list.isLong()) {
+		if (name.length() > 0) {
+			DebugMsg3(0,"%s<int name=\"%s\">%li</int>",
+				pre.c_str(), name.c_str(),list.asLong()
+			);
+		} else {
+			DebugMsg2(0,"%s<int>%li</int>", pre.c_str(), list.asLong());
+		}
+	}
+	if (list.isFloat()) {
+		if (name.length() > 0) {
+			DebugMsg3(0,"%s<float name=\"%s\">%.2f</float>",
+				pre.c_str(), name.c_str(),list.asFloat()
+			);
+		} else {
+			DebugMsg2(0,"%s<float>%.2f</float>",pre.c_str(), list.asFloat());
+		}
+	}
+
+}
+
+
+void AObject::dump(AObject& msg)
+{
+	int	i;
+
+	// format the message header
+	DebugMsg1(0,"<obj>", "");
+	walkTree(1, "", msg);
+	// and close off the message
+	DebugMsg1(0,"</obj>", "");
 }
 
 
