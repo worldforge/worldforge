@@ -1,4 +1,9 @@
 2003-06-21  Damien McGinnes
+        * Mercator/Terrain.cpp: changed invalidate and getSegmentSafe to use
+          the validity flags
+        * tests/main.cpp: did a 30 second test of the above code
+        
+2003-06-21  Damien McGinnes
 
 	* Mercator/Segment.cpp: added validity flags for points and normals,
           and fixed up a few code alignment probs

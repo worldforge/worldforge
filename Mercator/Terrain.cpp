@@ -30,16 +30,17 @@ void Terrain::invalidate(int x, int y)
 {
     for(int i = x - 1; i < x + 1; ++i) {
         for(int j = y - 1; j < y + 1; ++j) {
-            remove(i, j);
-            //m_segments[i][j]->invalidate();
+            //remove(i, j);
+            Segment *s=m_segments[i][j];
+            if (s) s->invalidate();
         }
     }
 }
 
 void Terrain::refresh(int x, int y)
 {
-    for(int i = x - 2; i < x + 2; ++i) {
-        for(int j = y - 2; j < y + 2; ++j) {
+    for(int i = x - 1; i < x + 1; ++i) {
+        for(int j = y - 1; j < y + 2; ++j) {
             getSegmentSafe(i, j, false);
         }
     }
@@ -79,17 +80,20 @@ bool Terrain::getBasePoint(int x, int y, BasePoint& z)
 Segment * Terrain::getSegmentSafe(int x, int y, bool force)
 {
     Segment * s = getSegmentQuik(x, y);
-    if (s != 0) {
+    if ((s != 0) && s->isValid()) {
         return s;
     }
+    
     Matrix<2, 2, BasePoint> base;
     bool complete = getBasePoint(x,     y,     base(0, 0)) &&
                     getBasePoint(x + 1, y,     base(1, 0)) &&
                     getBasePoint(x,     y + 1, base(0, 1)) &&
                     getBasePoint(x + 1, y + 1, base(1, 1));
     if (force || complete) {
-        s = new Segment(m_res);
-        s->populate(base); // , fn, ff, nf);
+        if (!s) {
+            s = new Segment(m_res);
+        }
+        s->populate(base);
         m_segments[x][y] = s;
         return s;
     }
