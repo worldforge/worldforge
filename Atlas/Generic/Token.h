@@ -6,7 +6,12 @@
 #define ATLAS_GENERIC_TOKEN_H
 
 namespace Atlas { namespace Generic {
-    
+
+/** A simple class that can be used in template class members to identify a
+ * particular type.
+ *
+ * @author Stefanus Du Toit <sdt@gmx.net>
+ */
 template<typename T> class Token { };
 
 } } // namespace Atlas::Generic
