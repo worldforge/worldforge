@@ -1334,8 +1334,7 @@ PyTypeObject X(List_Type) = {
 
 /* Initialization function for the module (*must* be called initxx) */
 
-DL_EXPORT(void)
-X2(init,List)()
+void X2(init,List)()
 {
 	PyObject *m, *d;
 

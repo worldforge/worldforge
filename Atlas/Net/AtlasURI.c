@@ -161,8 +161,7 @@ PyTypeObject URI_Type = {
 
 /* Initialization function for the module (*must* be called initxx) */
 
-DL_EXPORT(void)
-initURI()
+void initURI()
 {
 	PyObject *m, *d;
 
