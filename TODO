@@ -1,5 +1,9 @@
 New TODO by Al Riddoch
 
+Make dedaults_FooData a pointer initialised to NULL, and only ever access
+it through a singleton style instance static function. This way it can
+be initialised at runtime.
+
 Add forward declararion headers for Objects
 
 Why is setArgsAsList taking args by value?
