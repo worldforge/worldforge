@@ -1,4 +1,8 @@
 ChangeLog for varconf
+Saturday, August 4, 2001 -- Joseph A. Zupko <jaz147@psu.edu>
+  * fixed outdated information, formatting and wording in README.
+  * minor fixes to config.cpp
+
 Sunday, May 27, 2001 -- Joseph A. Zupko <jaz147@psu.edu>
   + added varconf.spec.in
   * fixed some problems with varconf.spec

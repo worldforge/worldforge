@@ -19,7 +19,8 @@ The libsigc++ callback library needs to be compiled and installed before compili
 3.1 Basic Installation
 ----------------------
 cd forge/libs/varconf
-sh autogen.sh (will automatically execute ./configure)
+sh autogen.sh 
+./configure
 make
 make install
 
@@ -28,7 +29,7 @@ This will place the libraries in /usr/local/lib/varconf and the header files in 
 
 4. Definitions
 --------------
-Configuration data refers to varconf's internal handling of section names, item names and item values.  Each of these components has the same meaning as they would in any standard configuration file.  Each of these components comes from either a configuration file, environment variables or command-line arguments.
+Configuration data refers to varconf's internal handling of section names, item names and item values.  Each of these components has the same meaning as they would in any standard configuration file.  Each of these components comes from configuration files, environment variables or command-line arguments.
 
 
 4.1 Configuration Data 
@@ -155,11 +156,18 @@ Global Instance:
 Note that the method Config::inst() will automatically initialize the global data if not already created.
 
 
-5.2 Callbacks
+5.2 libsigc++ 
 -------------
-Varconf uses libsigc++ for its callback routines.  Please see the libsigc++ documentation for specific details on interacting with these callback methods.
+Varconf uses libsigc++ for its callback routines and error reporting.  Please see the libsigc++ documentation for specific details on interacting with libsigc++ signals. 
 
-Two callback signals are available, .sig and .sigv .  .sig is a non-verbose callback - it returns no value and simply informs the application that a change has been made.  .sigv is verbose and returns both the section and name (in that order) of the configuration item that has been changed.  
+Four libsigc++ signals are provided by varconf.
+  .sig - callback method with no details.  Indicates that configuration data has been changed but does not specify what has been changed.
+  .sigv - callback method that reports section and item name that has been changed.  Only useful when working with a single configuration
+          instance.A
+  .sigsv - callback method that reports section, item name and the address of the configuration object under which the change was made.  
+           Useful when using multiple configuration instances.
+ 
+  .sige - reports error messages in a single string. 
 
 
 5.3 Configuration Files
