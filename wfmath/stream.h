@@ -45,43 +45,63 @@ namespace WFMath {
 
 // sstream vs. strstream compatibility wrapper
 
-// wraps ostringstream/ostrstream, could do this more simply if
-// both inherit virtually from ostream, not sure they do
-class _StreamToString {
- public:
-  virtual ~_StreamToString() {}
-  virtual std::ostream& stream() = 0;
-  // Note that for strstream this freezes the buffer.
-  virtual std::string string() const = 0;
-};
-// same thing for istringstream/istrstream
-class _StreamFromString {
- public:
-  virtual ~_StreamFromString() {}
-  virtual std::istream& stream() = 0;
-};
+namespace _IOWrapper {
 
-_StreamToString* _GetStreamToString();
-_StreamFromString* _GetStreamFromString(const std::string& s);
+  // Need separate read/write classes, since one is const C& and the other is C&
+
+  class BaseRead {
+   public:
+    virtual ~BaseRead() {}
+
+    virtual void read(std::istream& is) = 0;
+  };
+
+  class BaseWrite {
+   public:
+    virtual ~BaseWrite() {}
+
+    virtual void write(std::ostream& os) const = 0;
+  };
+
+  template<class C>
+  class ImplRead : public BaseRead {
+   public:
+    ImplRead(C& c) : m_data(c) {}
+    virtual ~ImplRead() {}
+
+    virtual void read(std::istream& is) {is >> m_data;}
+
+   private:
+    C &m_data;
+  };
+
+  template<class C>
+  class ImplWrite : public BaseWrite {
+   public:
+    ImplWrite(const C& c) : m_data(c) {}
+    virtual ~ImplWrite() {}
+
+    virtual void write(std::ostream& os) const {os << m_data;}
+
+   private:
+    const C &m_data;
+  };
+
+  std::string ToStringImpl(const BaseWrite& b, int precision);
+  void FromStringImpl(BaseRead& b, const std::string& s, int precision);
+}
 
 template<class C>
 std::string ToString(const C& c, unsigned int precision = 6)
 {
-  _StreamToString *ost = _GetStreamToString();
-  ost->stream().precision(precision);
-  ost->stream() << c;
-  std::string s = ost->string();
-  delete ost;
-  return s;
+  return _IOWrapper::ToStringImpl(_IOWrapper::ImplWrite<C>(c), 6);
 }
 
 template<class C>
 void FromString(C& c, const std::string& s, unsigned int precision = 6)
 {
-  _StreamFromString *ist = _GetStreamFromString(s);
-  ist->stream().precision(precision);
-  ist->stream() >> c;
-  delete ist;
+  _IOWrapper::ImplRead<C> i(c);
+  _IOWrapper::FromStringImpl(i, s, 6);
 }
 
 void _ReadCoordList(std::istream& is, CoordType* d, const int num);

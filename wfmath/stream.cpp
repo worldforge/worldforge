@@ -31,66 +31,45 @@
 using namespace WFMath;
 
 #ifdef HAVE_SSTREAM
-
 #include <sstream>
-
-class _StreamToStringImpl : public _StreamToString {
- public:
-  virtual ~_StreamToStringImpl() {}
-  virtual std::ostream& stream() {return m_ost;}
-  virtual std::string string() const {return m_ost.str();}
-
- private:
-  std::ostringstream m_ost;
-};
-
-class _StreamFromStringImpl : public _StreamFromString {
- public:
-  _StreamFromStringImpl(const std::string& s) : m_ist(s) {}
-  virtual ~_StreamFromStringImpl() {}
-  virtual std::istream& stream() {return m_ist;}
-
- private:
-  std::istringstream m_ist;
-};
-
 #elif defined(HAVE_STRSTREAM)
-
 #include <strstream>
-
-class _StreamToStringImpl : public _StreamToString {
- public:
-  virtual ~_StreamToStringImpl() {m_ost.freeze(false);}
-  virtual std::ostream& stream() {return m_ost;}
-  virtual std::string string() const {return m_ost.str();}
-
- private:
-  std::ostrstream m_ost;
-};
-
-class _StreamFromStringImpl : public _StreamFromString {
- public:
-  _StreamFromStringImpl(const std::string& s) : m_ist(s.c_str()) {}
-  virtual ~_StreamFromStringImpl() {}
-  virtual std::istream& stream() {return m_ist;}
-
- private:
-  std::istrstream m_ist;
-};
-
-
 #else
 #error "Neither sstream or strstring is present, configure should have failed"
 #endif
 
-_StreamToString* WFMath::_GetStreamToString()
+std::string WFMath::_IOWrapper::ToStringImpl(const _IOWrapper::BaseWrite& b,
+					     int precision)
 {
-  return new _StreamToStringImpl();
+#ifdef HAVE_SSTREAM
+  std::ostringstream ost;
+#else
+  std::ostrstream ost;
+#endif
+
+ ost.precision(precision);
+ b.write(ost);
+
+#ifdef HAVE_SSTREAM
+ return ost.str();
+#else
+ std::string s = ost.str();
+ ost.freeze(false);
+ return s;
+#endif
 }
 
-_StreamFromString* WFMath::_GetStreamFromString(const std::string& s)
+void WFMath::_IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
+					const std::string& s, int precision)
 {
-  return new _StreamFromStringImpl(s);
+#ifdef HAVE_SSTREAM
+  std::istringstream ist(s);
+#else
+  std::istrstream ist(s);
+#endif
+
+ ist.precision(precision);
+ b.read(ist);
 }
 
 void WFMath::_WriteCoordList(std::ostream& os, const CoordType* d, const int num)

@@ -1,5 +1,9 @@
 Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>
 
+	* Redid sstream vs. strstream compatibility code
+
+Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>
+
 	* Got rid of stupid "set fail bit" on parse errors for
 	  operator>>(), it now throws instead
 	* Added configure check for sstream vs. strstream,
