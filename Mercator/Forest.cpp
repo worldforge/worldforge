@@ -25,7 +25,8 @@
 
 namespace Mercator {
 
-Forest::Forest(unsigned long seed) : m_seed(seed)
+Forest::Forest(unsigned long seed) : m_seed(seed), 
+    m_randCache(seed, new ZeroSpiralOrdering())
 {
 }
 
@@ -84,12 +85,12 @@ void Forest::populate()
 
     for(int j = ly; j < hy; ++j) {
         for(int i = lx; i < hx; ++i) {
-            WFMath::MTRand::uint32 seed[] = {i, j, m_seed};
-            rng.seed(seed, 3);
+            double prob=m_randCache(i,j);
 
-            if (rng() < plant_chance) {
-                std::cout << "Plant at [" << i << ", " << j << "]"
-                          << std::endl << std::flush;
+            if (prob < plant_chance) {
+//                std::cout << "Plant at [" << i << ", " << j << "]"
+//                          << std::endl << std::flush;
+                rng.seed((int)(prob / plant_chance * 123456)); //this is a bit of a hack
                 Plant & plant = m_plants[i][j];
                 plant.setHeight(rng() * plant_height_range + plant_min_height);
                 plant.setDisplacement(WFMath::Point<2>(rng() - 0.5f,

@@ -6,6 +6,7 @@
 #define MERCATOR_FOREST_H
 
 #include <wfmath/axisbox.h>
+#include <Mercator/RandCache.h>
 
 #include <map>
 
@@ -22,6 +23,7 @@ class Forest {
     WFMath::AxisBox<2> m_area;
     PlantStore m_plants;
     unsigned long m_seed;
+    RandCache m_randCache;
   public:
     explicit Forest(unsigned long seed = 0);
     ~Forest();
