@@ -48,7 +48,7 @@ int	ATCPSocket::connect(string& addr, int port)
 		hostaddr = inet_addr(addr.c_str());
 		printf("converting IP Address = %li \n", hostaddr);
 		fflush(stdout);
-		if (hostaddr == -1) return -1;
+		if (hostaddr == 0xFFFFFFFF) return -1;
 	} else {
 		// name lookup worked, get address
 		printf("reading host entry\n");
@@ -78,7 +78,7 @@ int	ATCPSocket::listen(string& addr, int port, int backlog)
 	int			res;
 
 	myaddr = inet_addr(addr.c_str());
-	if (myaddr == -1) return -1;
+	if (myaddr == 0xFFFFFFFF) return -1;
 
 	memset(&sin, 0, sizeof(sin)); // make sure everything zero
 	sin.sin_family = AF_INET;

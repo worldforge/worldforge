@@ -107,7 +107,7 @@ AObject::AObject(int len, long src, ...)
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
 		long tmp = va_arg(va,long);
-		PyList_SetItem(obj, i, PyLong_FromLong(src));
+		PyList_SetItem(obj, i, PyLong_FromLong(tmp));
 	}
 	va_end(va);
 }
@@ -123,7 +123,7 @@ AObject::AObject(int len, double src, ...)
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
 		double tmp = va_arg(va,double);
-		PyList_SetItem(obj, i, PyFloat_FromDouble(src));
+		PyList_SetItem(obj, i, PyFloat_FromDouble(tmp));
 	}
 	va_end(va);
 }
@@ -738,8 +738,6 @@ void AObject::walkTree(int nest, string name, AObject& list)
 
 void AObject::dump(AObject& msg)
 {
-	int	i;
-
 	// format the message header
 	DebugMsg1(0,"<obj>", "");
 	walkTree(1, "", msg);

@@ -86,7 +86,8 @@ void AClient::sendMsg(AObject& msg)
 {
 	string data = codec->encodeMessage(msg);
 	if (cmprs) data = cmprs->encode(data);
-	int res = csock->send(data);
+	//int res = csock->send(data);
+	csock->send(data);
 	// do something about buffer full conditions here
 }
 

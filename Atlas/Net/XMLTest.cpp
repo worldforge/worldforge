@@ -31,6 +31,7 @@ int WINAPI WinMain(
 	int nCmdShow		  // show state of window 
 ) {
 	main(0,NULL);
+	return 0;
 }
 #endif
 
@@ -60,7 +61,7 @@ void XMLTest::walkTree(int nest, string name, AObject& list)
 			walkTree(nest+1, "", tmp);
 		}
 		printf("%s</list>\n",pre.c_str());
-	} 
+	}
 	if (list.isMap()) {
 		AObject keys = list.keys();
 		if (name.length() > 0) {
@@ -80,7 +81,7 @@ void XMLTest::walkTree(int nest, string name, AObject& list)
 			walkTree(nest+1, key.asString(), tmp);
 		}
 		printf("%s</map>\n",pre.c_str());
-	} 
+	}
 
 	if (list.isString()) {
 		if (name.length() > 0) {
@@ -114,8 +115,6 @@ void XMLTest::walkTree(int nest, string name, AObject& list)
 
 void XMLTest::DisplayMessage(AObject& msg)
 {
-	int	i;
-
 	AObject keys = msg.keys();
 	printf("<obj>\n");
 	walkTree(1, "", msg);

@@ -29,6 +29,7 @@ int WINAPI WinMain(
 	int nCmdShow		  // show state of window 
 ) {
 	main(0,NULL);
+   return 0;
 }
 #endif
  

@@ -10,7 +10,7 @@
 
 ASocket::ASocket()
 {
-	sock = -1;
+	sock = (SOCKET)-1;
 }
 
 ASocket::ASocket(SOCKET asock)
@@ -34,9 +34,9 @@ int ASocket::recv(string& buf)				{return -1;}
 
 int ASocket::recvFrom(string& buf, sockaddr_in& addr)	{return -1;}
 
-void ASocket::close()					
+void ASocket::close()
 {
-	sock = -1;
+	sock = (SOCKET)-1;
 }
 
 SOCKET ASocket::getSock()				{return sock;}

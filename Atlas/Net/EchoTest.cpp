@@ -28,6 +28,7 @@ int WINAPI WinMain(
 	int nCmdShow		  // show state of window 
 ) {
 	main(0,NULL);
+   return 0;
 }
 #endif
 
@@ -59,7 +60,7 @@ void walkTree(int nest, string name, AObject& list)
 			walkTree(nest+1, "", tmp);
 		}
 		printf("%s</list>\n",pre.c_str());
-	} 
+	}
 	if (list.isMap()) {
 		AObject keys = list.keys();
 		if (name.length() > 0) {
@@ -79,7 +80,7 @@ void walkTree(int nest, string name, AObject& list)
 			walkTree(nest+1, key.asString(), tmp);
 		}
 		printf("%s</map>\n",pre.c_str());
-	} 
+	}
 
 	if (list.isString()) {
 		if (name.length() > 0) {
@@ -113,8 +114,6 @@ void walkTree(int nest, string name, AObject& list)
 
 void DisplayMessage(AObject& msg)
 {
-	int	i;
-
 	printf("<obj>\n");
 	walkTree(1, "", msg);
 	printf("</obj>\n");
@@ -125,10 +124,10 @@ void DisplayMessage(AObject& msg)
 
 
 
- 
+
 void EchoTest::execute()
 {
-	long res, i, j;
+	long res, i;
 
 	Py_Initialize();
 
@@ -141,7 +140,7 @@ void EchoTest::execute()
         string servname("127.0.0.1");
 
 	res = sock->connect(servname, 7);
-	printf("Connect = %i\n", res);
+	printf("Connect = %li\n", res);
 	fflush(stdout);
 	if (res == -1) exit(0);
 
@@ -190,7 +189,7 @@ static	long	cnt = 0;
 			val = tmp.asLong();
 			printf("%li = %li\n", cnt, val);
 		} else {
-			printf("%li = NO COUNT !!\n", cnt, val);
+			printf("%li = NO COUNT !!\n", cnt);
 		}
 		fflush(stdout);
 	//}

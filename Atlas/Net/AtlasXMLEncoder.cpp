@@ -98,7 +98,7 @@ void AXMLEncoder::walkTree(int nest, string name, AObject& list)
 
 string AXMLEncoder::encodeMessage(AObject& msg)
 {
-	int	i;
+	//int	i;
 
 	// start a new message
 	buffer = "";

@@ -21,6 +21,8 @@ protected:
 	long	ival;
 	double	fval;
 
+	string hexDecodeString(const string& input, char prefix);
+
 
 public:
 	AProtocolDecoder();

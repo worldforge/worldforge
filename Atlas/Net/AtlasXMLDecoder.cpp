@@ -38,8 +38,9 @@ int AXMLDecoder::getToken()
 
 int AXMLDecoder::hasTokens()
 {
-	int	pos, pos1;
-	int	ndx;
+	int	pos;
+   //int	pos1;
+	//int	ndx;
 	int	chk;
 	string	typ;
 	string	tag;
@@ -117,13 +118,13 @@ int AXMLDecoder::hasTokens()
 					DebugMsg1(1,"BAD TAG=%s", tag.c_str());
 				}
 				break;
-			} 
+			}
 			else if (tag == "int")		type = AProtocol::atlasINT;
 			else if (tag == "str")		type = AProtocol::atlasSTR;
 			else if (tag == "string")	type = AProtocol::atlasSTR;
 			else if (tag == "float")	type = AProtocol::atlasFLT;
 			else if (tag == "map")		type = AProtocol::atlasMAP;
-			else if (tag.find("list") > -1)	type = AProtocol::atlasLST;
+			else if (tag.find("list") > string::npos)	type = AProtocol::atlasLST;
 			else if (tag == "list")		type = AProtocol::atlasLST;
 			else {
 				// bad tag type !!

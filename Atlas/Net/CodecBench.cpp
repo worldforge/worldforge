@@ -40,6 +40,7 @@ int WINAPI WinMain(
 	int nCmdShow		  // show state of window 
 ) {
 	main(0,NULL);
+	return 0;
 }
 #endif
 
@@ -90,8 +91,8 @@ void CodecBench::execute()
 	stim = time(NULL);
 
 	for (i=0; i<50000; i++) {
-	        codec->feedStream(msg);
-	        int res = codec->hasMessage();
+	   codec->feedStream(msg);
+		codec->hasMessage();
 		codec->freeMessage();
 	}
 
@@ -124,8 +125,8 @@ void CodecBench::execute()
 	stim = time(NULL);
 
 	for (i=0; i<50000; i++) {
-	        codec->feedStream(msg);
-	        int res = codec->hasMessage();
+   	codec->feedStream(msg);
+   	codec->hasMessage();
 		codec->freeMessage();
 	}
 

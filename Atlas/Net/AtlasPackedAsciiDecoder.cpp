@@ -38,8 +38,9 @@ int APackedAsciiDecoder::getToken()
 
 int APackedAsciiDecoder::hasTokens()
 {
-	int	pos, pos1;
-	int	ndx;
+	int	pos;
+   //int	pos1;
+	//int	ndx;
 	int	chk;
 	string	typ;
 

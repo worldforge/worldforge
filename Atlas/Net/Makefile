@@ -2,22 +2,26 @@
 # Standard defines:
 CC     	=	g++
 AR     	=	ar
-RANLIB  =	ranlib
-libDirs	=	-L$(OUTDIR)
-incDirs	=	-I. -I/usr/include/python1.5
+RANLIB	=	ranlib
+STDLIBS	=	-L$(OUTDIR)
+STDINCS	=	-I.
 #C_FLAGS	=	-g -D_ADebug_ -Wall
 C_FLAGS	=	-g -Wall
 #C_FLAGS	=	-O3 -Wall
-MK_DEP  =	$(CC) $(C_FLAGS) $(incDirs) -MM
+MK_DEP	=	$(CC) $(C_FLAGS) $(incDirs) -MM
 
-OUTDIR	=	linux
-EXE_EXT =
-#LIBS	=	-lstdc++ -lpython1.5 -lAtlas -ldl
-LIBS	=	-lstdc++ -lpython1.5 -lAtlas -ldl -lz -ltk -ltcl -L/usr/X11R6/lib -lX11 -lreadline -lpthread
+#OUTDIR	=	linux
+#EXE_EXT	=
+#incDirs	=	-I/usr/include/python1.5 $(STDINCS)
+#libDirs	=	$(STDLIBS)
+#LIBS		=	-lstdc++ -lpython1.5 -lAtlas -ldl
+#LIBS		=	-lstdc++ -lpython1.5 -lAtlas -ldl -lz -ltk -ltcl -L/usr/X11R6/lib -lX11 -lreadline -lpthread
 
-#OUTDIR  =       win32
-#EXE_EXT =	.exe
-#LIBS	=	-lAtlas -lpython15 -lwsock32 -lstdc++
+OUTDIR	=	win32
+EXE_EXT	=	.exe
+incDirs	=	-Ic:/gcc-2.95.2/include/Python $(STDINCS)
+libDirs	=	$(STDLIBS)
+LIBS		=	-lAtlas -lpython15 -lwsock32 -lstdc++
 
 # Targets follow ---------------------------------
 

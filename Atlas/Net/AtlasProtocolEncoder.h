@@ -16,6 +16,8 @@ class AProtocolEncoder
 
 protected:
 	string          buffer;
+	string hexEncodeString(const string& input, char prefix,
+			       const string& specialchars);
 	
 public:
 	AProtocolEncoder();

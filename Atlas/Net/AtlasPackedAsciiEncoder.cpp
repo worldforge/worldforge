@@ -57,7 +57,7 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name, AObject& list)
 
 string APackedAsciiEncoder::encodeMessage(AObject& msg)
 {
-	int	i;
+	//int	i;
 
 	// start a new message
 	buffer = "";

@@ -41,3 +41,19 @@ int AProtocolEncoder::encodedLength()
 	return buffer.length();
 }
 
+string AProtocolEncoder::hexEncodeString(const string& input, char prefix,
+					 const string& specialchars)
+{
+	string s;
+	for (unsigned int i = 0; i < input.size(); i++) {
+		if (specialchars.find(input[i]) != string::npos) {
+			char t[3];
+			s += prefix;
+			sprintf(t, "%x", input[i]);
+		} else {
+			s += input[i];
+			if (input[i] == prefix) s += prefix;
+		}
+	}
+	return s;
+}
