@@ -29,7 +29,6 @@
 #include "Utils.h"
 #include "TypeInfo.h"
 #include "Poll.h"
-#include "PollDefault.h"
 #include "Log.h"
 
 #include "TypeDispatcher.h"

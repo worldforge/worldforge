@@ -19,7 +19,6 @@
 #include "ServerInfo.h"
 #include "Timeout.h"
 #include "Poll.h"
-#include "PollDefault.h"
 #include "Connection.h"
 #include "Log.h"
 
