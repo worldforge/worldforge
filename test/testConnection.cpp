@@ -4,6 +4,7 @@
 
 #include "testConnection.h"
 #include "stubServer.h"
+#include "testHarness.h"
 
 #include <unistd.h>	// for usleep()
 #include <Atlas/Message/Object.h>
@@ -14,12 +15,7 @@
 #include <Atlas/Objects/Entity/Account.h>
 
 #include <sigc++/bind.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
 #include <sigc++/signal.h>
-#endif
-
 #include <sigc++/object_slot.h>
 
 #include "testUtils.h"
@@ -35,8 +31,7 @@ using namespace Time;
 
 const short TEST_SERVER_PORT = 21588;
 
-TestConnection::TestConnection(): 
-    CppUnit::TestCase("connection")
+TestConnection::TestConnection()
 {
     ;
 }
@@ -52,8 +47,10 @@ void TestConnection::setUp()
     m_con->Timeout.connect(SigC::slot(*this, &TestConnection::onTimeout));
     m_con->Failure.connect(SigC::slot(*this, &TestConnection::onFailure));
     m_con->Connected.connect(SigC::slot(*this, &TestConnection::onConnect));
-    
+    m_con->Disconnected.connect(SigC::slot(*this, &TestConnection::onDisconnect));
+	
     m_gotFailure = m_gotConnect = m_gotTimeout = false;
+	m_gotDisconnect = false;
 }
 
 void TestConnection::tearDown()
@@ -68,26 +65,26 @@ void TestConnection::waitFor(int timeoutSeconds, bool &watch1, bool &watch2)
     ts = ts + (timeoutSeconds * 1000);
     
     while (!watch1 && !watch2) {
-	if (ts < Time::Stamp::now()) {
-	    CPPUNIT_ASSERT_MESSAGE("timed out in waitFor", false);
-	    return;
-	}
-	m_server->run();
-	Eris::PollDefault::poll();
-	usleep(10000); // 10 msec = 1/100 of a second
+		if (ts < Time::Stamp::now()) {
+			ERIS_MESSAGE("timed out in waitFor");
+			return;
+		}
+		m_server->run();
+		Eris::PollDefault::poll();
+		usleep(10000); // 10 msec = 1/100 of a second
     }
 }
 
 void TestConnection::testConnect()
 {    
     m_con->connect("127.0.0.1", TEST_SERVER_PORT);
-    CPPUNIT_ASSERT(!m_gotFailure);
+    ERIS_ASSERT(!m_gotFailure);
     
     waitFor(10, m_gotConnect, m_gotFailure);
     
-    CPPUNIT_ASSERT(!m_gotFailure);
-    CPPUNIT_ASSERT(m_gotConnect);
-    CPPUNIT_ASSERT(m_con->isConnected());
+    ERIS_ASSERT(!m_gotFailure);
+    ERIS_ASSERT(m_gotConnect);
+    ERIS_ASSERT(m_con->isConnected());
 }
 
 void TestConnection::testDisconnect()
@@ -97,16 +94,14 @@ void TestConnection::testDisconnect()
     SigC::Connection ref = m_con->Disconnecting.connect(
 		SigC::slot(*this, &TestConnection::onDisconnecting));
     m_gotDisconnecting = false;
-    m_con->Disconnected.connect(SigC::slot(*this, &TestConnection::onDisconnect));
-    m_gotDisconnect = false;
     
     m_con->disconnect();
     
     waitFor(30, m_gotDisconnect, m_gotFailure);
     
-    CPPUNIT_ASSERT(!m_gotFailure);
-    CPPUNIT_ASSERT(m_gotDisconnect);
-    CPPUNIT_ASSERT(m_gotDisconnecting);
+    ERIS_ASSERT(!m_gotFailure);
+    ERIS_ASSERT(m_gotDisconnect);
+    ERIS_ASSERT(m_gotDisconnecting);
     
     ref.disconnect();
 }
@@ -120,7 +115,7 @@ void TestConnection::testComplexDisconnect()
 
 bool TestConnection::onDisconnecting()
 {
-    CPPUNIT_ASSERT(m_con->getStatus() == Eris::BaseConnection::DISCONNECTING);
+    ERIS_ASSERT(m_con->getStatus() == Eris::BaseConnection::DISCONNECTING);
     m_gotDisconnecting = true;
     return false;
 }
@@ -147,16 +142,18 @@ void TestConnection::testReconnect()
     
     // tell the server to pull the plug (mimic network loss / crash)
     m_server->disconnect();
+	
+	ERIS_ASSERT(m_gotDisconnect);
 try {
     
     m_con->reconnect();
     waitFor(30, m_gotConnect, m_gotFailure);
     
-    CPPUNIT_ASSERT(m_gotConnect);
-    CPPUNIT_ASSERT(!m_gotFailure);
+    ERIS_ASSERT(m_gotConnect);
+    ERIS_ASSERT(!m_gotFailure);
 }
     catch (...) {
-	CPPUNIT_ASSERT_MESSAGE("got exception testing Connection::reconnect()", false);
+		ERIS_MESSAGE("got exception testing Connection::reconnect()");
     }
 }
 
@@ -167,9 +164,7 @@ void TestConnection::testTimeout()
     m_con->connect("127.0.0.1", TEST_SERVER_PORT);
     
     waitFor(60, m_gotFailure, m_gotTimeout);
-    CPPUNIT_ASSERT(m_gotTimeout);
-    
-    m_server->setNegotiation(true);
+    ERIS_ASSERT(m_gotTimeout);
 }
 
 void TestConnection::testDispatch()
@@ -178,7 +173,7 @@ void TestConnection::testDispatch()
     
     // add a sample dispatcher (assumes dispatcher works of course)
     Eris::Dispatcher *rd = m_con->getDispatcher();
-    CPPUNIT_ASSERT(rd);
+    ERIS_ASSERT(rd);
     
     Eris::Dispatcher *sigD = rd->addSubdispatch(new Eris::SignalDispatcher<Operation::Info>(
 	"dummy", 
@@ -186,7 +181,7 @@ void TestConnection::testDispatch()
     ));
     
     Eris::Dispatcher *sigD2 = m_con->getDispatcherByPath("dummy");
-    CPPUNIT_ASSERT(sigD == sigD2);
+    ERIS_ASSERT(sigD == sigD2);
     
     m_gotArbitraryDispatch = false;
     
@@ -198,8 +193,8 @@ void TestConnection::testDispatch()
     
     waitFor(10, m_gotFailure, m_gotArbitraryDispatch);
     
-    CPPUNIT_ASSERT(!m_gotFailure);
-    CPPUNIT_ASSERT_MESSAGE("dispatch failed", m_gotArbitraryDispatch);}
+    ERIS_ASSERT(!m_gotFailure);
+    ERIS_ASSERT_MESSAGE(m_gotArbitraryDispatch, "dispatch failed");}
 
 void TestConnection::onAnyDispatch(const Operation::Info &)
 {
@@ -216,9 +211,9 @@ void TestConnection::testSend()
     m_server->waitForMessage(10);
     
     Atlas::Message::Object received;
-    CPPUNIT_ASSERT(m_server->get(received));
+    ERIS_ASSERT(m_server->get(received));
     
-    CPPUNIT_ASSERT(getType(received) == "get");
+    ERIS_ASSERT(getType(received) == "get");
 }
 
 void TestConnection::onConnect()

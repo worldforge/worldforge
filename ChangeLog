@@ -8,6 +8,10 @@ Sunday, 25th May 2004, James Turner <james@worldforge.org>
 	* Start adding TypeInfo support to the stub server
 	  (using hard coded data, no dependancy on an
 	  external source), so it be a bit more realistic.
+	* Rewrote testPlayer to test more things, not use CppUnit,
+	  and generally be smarter. Oh, and it uses StubServer,
+	  since StubConnection is a bad idea and will be
+	  going away shortly.
 
 Tuesday, 13th May 2003, Ron Steinke <rsteinke@w-link.net>
 

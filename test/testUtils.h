@@ -12,5 +12,10 @@ getArg(const Atlas::Message::Object &op, const std::string &nm);
 
 bool hasArg(const Atlas::Message::Object &op, const std::string &nm);	
 
+const Atlas::Message::Object&
+getMember(const Atlas::Message::Object &obj, unsigned int i);	
+
+const Atlas::Message::Object&
+getMember(const Atlas::Message::Object &obj, const std::string &nm);
 
 #endif

@@ -16,7 +16,7 @@ namespace Atlas { namespace Objects {
 	class Root;
 		
 	namespace Operation {
-		class Get;
+		class RootOperation;
 	}
 	
 	namespace Entity {
@@ -53,7 +53,7 @@ public:
     void disconnect();
     
 protected:
-    void sendInfoForType(const std::string &type, const Atlas::Objects::Operation::Get &get);
+    void sendInfoForType(const std::string &type, const Atlas::Objects::Operation::RootOperation &get);
 
 	State m_state;
     std::queue<Atlas::Message::Object> m_queue;	// all the atlas messages we've received
@@ -76,6 +76,11 @@ protected:
     Atlas::Objects::Encoder* m_objectEncoder;
 	
     bool m_doNegotiate;
+	
+	/** this flag is set if the stub server should automatically process and respond to
+	type queries, without them ever entering the queue. This behaviour can be disabled
+	to test the type info logic in eris reliably. */
+	bool m_handleTypeQueries;
 };
 
 #endif

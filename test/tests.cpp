@@ -1,20 +1,29 @@
 
-#include <cppunit/TextTestRunner.h>
-
-#include "testPlayer.h"
 #include "testConnection.h"
-#include "testLobby.h"
-
-CPPUNIT_TEST_SUITE_REGISTRATION(TestConnection);
-// FIXME these tests aren't ready yet.
-#if 0
-CPPUNIT_TEST_SUITE_REGISTRATION(TestPlayer);
-CPPUNIT_TEST_SUITE_REGISTRATION(TestLobby);
-#endif
+#include "testPlayer.h"
 
 int main(int argc, char **argv)
 {
-    CppUnit::TextTestRunner runner;
+	
+	TestConnection tc;
+	
+	tc.setUp();
+	tc.testConnect();
+	tc.tearDown();
+	
+	
+	TestPlayer tp;
+	
+	tp.setUp();
+	tp.testLogin();
+	tp.tearDown();
+	
+	tp.setUp();
+	tp.testAccountCreate();
+	tp.tearDown();
+	
+	/*    
+	CppUnit::TextTestRunner runner;
 
     CppUnit::Test* tp =
         CppUnit::TestFactoryRegistry::getRegistry().makeTest();
@@ -25,8 +34,8 @@ int main(int argc, char **argv)
     if (!passed) {
         return 1;
     }
-    
-    return 0;
+  */  
+    return 0; // tests passed okay
 }
 
 

@@ -43,3 +43,28 @@ bool hasArg(const Object &op, const std::string &nm)
     Object::MapType::const_iterator I=mt.find(nm);
     return (I != mt.end());
 }
+
+const Atlas::Message::Object&
+getMember(const Atlas::Message::Object &obj, unsigned int i)
+{
+	assert(obj.IsList());
+	const Object::ListType &l = obj.AsList();
+	
+	assert(i < l.size());
+	if (i >= l.size())
+		throw std::invalid_argument("list index out of range");
+	return l[i];
+}
+
+const Atlas::Message::Object&
+getMember(const Atlas::Message::Object &obj, const std::string &nm)
+{
+	assert(obj.IsMap());
+	const Object::MapType &m = obj.AsMap();
+	Object::MapType::const_iterator i = m.find(nm);
+	
+	assert(i != m.end());
+	if (i == m.end())
+		throw std::invalid_argument("unknown member");
+	return i->second;
+}

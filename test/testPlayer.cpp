@@ -1,127 +1,228 @@
 #ifdef HAVE_CONFIG_H
-    #include "config.h"
+	#include "config.h"
 #endif
 
 #include "testPlayer.h"
-#include "stubConnection.h"
+#include "stubServer.h"
+#include "testHarness.h"
+#include "testUtils.h"
 
-#include <Atlas/Message/Object.h>
+#include <Eris/Player.h>
+#include <Eris/Connection.h>
+#include <Eris/Utils.h>
+#include <Eris/PollDefault.h>
 
-#include <Atlas/Objects/Operation/Login.h>
+#include <sigc++/signal.h>
+#include <sigc++/object_slot.h>
+
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Sight.h>
-#include <Atlas/Objects/Entity/Account.h>
 
-#include <sigc++/bind.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
-
-#include "testUtils.h"
-#include <Eris/Utils.h>
-
-using namespace Atlas::Message;
+using namespace Atlas;
 using namespace Atlas::Objects;
-using namespace std;
+ 
+const short TEST_SERVER_PORT = 21588;
 
-void onLoginComplete(bool *f) { *f=true; }
-
-TestPlayer::TestPlayer(): 
-    CppUnit::TestCase("player")
+TestPlayer::TestPlayer()
 {
-    ;
+	
 }
 
 void TestPlayer::setUp()
 {
-    m_stub = new StubConnection();
-    m_player = new Eris::Player(m_stub);
+	m_gotLoginComplete = false;
+	m_logoutValue = -1;
+	
+	m_server = new StubServer(TEST_SERVER_PORT);
+	
+	m_connection = new Eris::Connection("127.0.0.1", TEST_SERVER_PORT);
+	m_player = new Eris::Player(m_connection);
 }
 
 void TestPlayer::tearDown()
 {
-    delete m_stub;
-    delete m_player;
+	delete m_server;
+	delete m_player;
+	delete m_connection;
 }
 
 void TestPlayer::testLogin()
 {
-    const char* ac1 = "test_account",
-	*lobbyId = "stub_lobby";
-    
-    m_stub->clear();
-    m_player->login(ac1, "tinky-winky");
-    
-    // trip a flag when the signal is emitted
-    bool gotLoginComplete = false;
-    m_player->LoginSuccess.connect(
-	SigC::bind(
-	    SigC::slot(&onLoginComplete),
-	    &gotLoginComplete
-	)
-    );
-    
-    Object op;
-    CPPUNIT_ASSERT_MESSAGE("login failed to send anything", m_stub->get(op));
-    
-try {
-    CPPUNIT_ASSERT("login" == getType(op));  
-    CPPUNIT_ASSERT(ac1 == getArg(op, "id").AsString());
-    CPPUNIT_ASSERT("tinky-winky" == getArg(op, "password").AsString());
+	doStandardLogin();
+}
 
-    // build a response
-    Operation::Info ifo = Operation::Info::Instantiate();
-    ifo.SetTo(ac1);
+
+void TestPlayer::testAccountCreate()
+{
+	m_player->LoginSuccess.connect(SigC::slot(*this, &TestPlayer::onLoginComplete));
+	
+	m_player->createAccount("dip", "Dipsy", "again!again!");
+	
+	// validate the object the stub server recieved	
+	Message::Object op;
+	ERIS_ASSERT_MESSAGE(m_server->get(op), "account create failed to send anything");
     
-    Object::MapType acmap;
-    acmap["id"] = ac1;
-    acmap["password"] = "tinky-winky";
-    acmap["parents"] = Object::ListType(1,"account");
+    ERIS_ASSERT("create" == getType(op));  
+	ERIS_ASSERT("dip" == getArg(op, "username").AsString());
+    ERIS_ASSERT("again!again!" == getArg(op, "password").AsString());
+	ERIS_ASSERT("Dipsy" == getArg(op, "name").AsString());
+	
+// send a response, and check that eris does the right thing
+	Operation::Info ifo = Operation::Info::Instantiate();
+    ifo.SetTo("502");
+    
+    Message::Object::MapType acmap(getArg(op, 0).AsMap());
+    acmap["id"] = "502";
+    acmap["characters"] = Message::Object::ListType();
+	
+    ifo.SetArgs(Message::Object::ListType(1, acmap));
+	ifo.SetRefno(getMember(op, "serialno").AsInt());
+
+
+	m_server->push(ifo.AsObject());
+	Eris::PollDefault::poll();
+    ERIS_ASSERT(m_gotLoginComplete);
+}
+
+void TestPlayer::doStandardLogin()
+{
+	ERIS_ASSERT(!m_gotLoginComplete);
+	
+	m_player->LoginSuccess.connect(SigC::slot(*this, &TestPlayer::onLoginComplete));
+	m_player->login("twink", "foo");
+	
+// validate the object the stub server recieved	
+	Message::Object op;
+	ERIS_ASSERT_MESSAGE(m_server->get(op), "login failed to send anything");
+    
+    ERIS_ASSERT("login" == getType(op));  
+	ERIS_ASSERT("twink" == getArg(op, "username").AsString());
+    ERIS_ASSERT("foo" == getArg(op, "password").AsString());
+	
+// send a response, and check that eris does the right thing
+	Operation::Info ifo = Operation::Info::Instantiate();
+    ifo.SetTo("501");
+    
+    Message::Object::MapType acmap;
+    acmap["id"] = "501";
+    acmap["username"] = "twink";
+	acmap["name"] = "Tinky Winky";
+    acmap["parents"] = Message::Object::ListType(1,"account");
     acmap["objtype"] = "object";
-    
-    ifo.SetArgs(Object::ListType(1, acmap));
-    // give it to Eris
-    m_stub->push(ifo.AsObject());
-    CPPUNIT_ASSERT(gotLoginComplete);
-    
-    std::cerr << "mk0" << std::endl;
-    
-    // eris should go for lobby entry now
-    CPPUNIT_ASSERT(m_stub->get(op));
-    
-    std::cerr << "mk1/2" << std::endl;
-    
-    CPPUNIT_ASSERT("look" == getType(op));
+	
+	// should this be optional?
+    acmap["characters"] = Message::Object::ListType();
+	
+    ifo.SetArgs(Message::Object::ListType(1, acmap));
+	ifo.SetRefno(getMember(op, "serialno").AsInt());
 
-    std::cerr << "mk1" << std::endl;
+// give it to Eris
+	m_server->push(ifo);
+	Eris::PollDefault::poll();
+    ERIS_ASSERT(m_gotLoginComplete);
+}
 
-    CPPUNIT_ASSERT(ac1 == Eris::getMember(op, "from").AsString());
-    
-    std::cerr << "mk2" << std::endl;
-    
-    CPPUNIT_ASSERT(!hasArg(op, "id"));	// should be anonymous
-    
-    // build the lobby response
-    Operation::Sight sight = Operation::Sight::Instantiate();
-    sight.SetTo(ac1);
-    sight.SetFrom(lobbyId);
-    
-    Object::MapType lobbyObj;
-    lobbyObj["id"] = lobbyId;
-    lobbyObj["objtype"] = "object";
-    lobbyObj["parents"] = Object::ListType(1, "room");
-    
-    std::cerr << "tp3" << std::endl;
-    sight.SetArgs(Object::ListType(1, lobbyObj));
-    m_stub->push(sight.AsObject());
-    
-} catch (std::exception &except)
-    {
-	// probably means we got some malformed atlas
-	std::string msg(except.what());
-	CPPUNIT_ASSERT_MESSAGE("caught an exception testing Player::Login: " + msg,false);
-    }
 
+
+void TestPlayer::testClientLogout()
+{
+	m_player->LogoutComplete.connect(SigC::slot(*this, &TestPlayer::onLogout));
+	
+	doStandardLogin();
+	
+	m_player->logout();
+	
+	m_server->run();
+	Message::Object op;
+	ERIS_ASSERT_MESSAGE(m_server->get(op), "logout failed to send anything");
+	
+	ERIS_ASSERT("logout" == getType(op));
+	
+	Operation::Logout logout(Operation::Logout::Instantiate());
+	logout.SetRefno(getMember(op, "serialno").AsInt());
+	
+	m_server->push(logout);
+	Eris::PollDefault::poll();
+    ERIS_ASSERT(m_logoutValue == 1);
+	
+	//ERIS_ASSERT(m_connection->getStatus() == Eris::BaseConnection::Disconnected);
+}
+
+void TestPlayer::gotCharacterInfo(const Entity::GameEntity &character)
+{
+	
+}
+
+
+void TestPlayer::testCharacterLook()
+{
+	m_player->GotCharacterInfo.connect(SigC::slot(*this, &TestPlayer::gotCharacterInfo));
+	m_player->GotAllCharacters.connect(SigC::slot(*this, &TestPlayer::onGotAllChars));
+	
+	m_player->login("la", "bicycle");
+	
+	Message::Object op;
+	ERIS_ASSERT_MESSAGE(m_server->get(op), "login failed to send anything");
+	
+	Operation::Info ifo = Operation::Info::Instantiate();
+    ifo.SetTo("503");
+    
+    Message::Object::MapType acmap;
+    acmap["id"] = "503";
+    acmap["username"] = "la";
+	acmap["name"] = "La La";
+    acmap["parents"] = Message::Object::ListType(1,"account");
+    acmap["objtype"] = "object";
+	
+	Message::Object::ListType charList;
+	charList.push_back("testchar1");
+	charList.push_back("testchar2");
+    acmap["characters"] = charList;
+	
+	ifo.SetArgs(Message::Object::ListType(1, acmap));
+	ifo.SetRefno(getMember(op, "serialno").AsInt());
+	m_server->push(ifo.AsObject());
+	
+	Eris::PollDefault::poll();
+	ERIS_ASSERT(!m_gotAllChars);
+	
+	m_player->refreshCharacterInfo();
+	/* eris should now issue LOOKs */
+	
+	while (!m_gotAllChars) {
+		m_server->run();
+		Eris::PollDefault::poll();
+		
+		Message::Object op;
+		
+		while (m_server->get(op)) {
+			if ("look" != getType(op)) continue;
+			ERIS_ASSERT(getMember(op, "from").AsString() == "503");
+			
+			std::string cid(getArg(op, "id").AsString());
+			if ((cid != "testchar1") && (cid != "testchar2")) {
+				ERIS_MESSAGE("got LOOK for a strange ID");
+				continue;
+			}
+			
+			// build the response 
+			Operation::Sight st;
+			
+			Entity::GameEntity character;
+			character.SetId(cid);
+			
+			if (cid == "testchar1") {
+				character.SetName("John Doe");
+			} else if (cid == "testchar2") {
+				character.SetName("Bob the Builder");
+				
+			}
+			
+			st.SetTo("503");
+			st.SetRefno(getMember(op, "serialno").AsInt());
+			st.SetArgs(Message::Object::ListType(1, character.AsObject()));
+			
+			m_server->push(st);
+		}
+	}
 }

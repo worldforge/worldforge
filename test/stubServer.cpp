@@ -9,9 +9,18 @@
 #include <Eris/PollDefault.h>
 
 #include <Atlas/Objects/Encoder.h>
+
+#include "Eris/atlas_utils.h"
+
+#include <Atlas/Objects/Operation/RootOperation.h>
 #include <Atlas/Objects/Operation/Error.h>
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Get.h>
+#include <Atlas/Objects/Operation/Set.h>
+#include <Atlas/Objects/Operation/Create.h>
+#include <Atlas/Objects/Operation/Move.h>
+#include <Atlas/Objects/Operation/Appearance.h>
+
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Entity/RootEntity.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
@@ -27,7 +36,8 @@ StubServer::StubServer(short port) :
     m_stream(NULL),
     m_msgEncoder(NULL),
     m_acceptor(NULL),
-    m_doNegotiate(true)
+    m_doNegotiate(true),
+	m_handleTypeQueries(true)
 {
      // create socket
     m_listenSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -200,6 +210,25 @@ void StubServer::push(const Atlas::Objects::Root &obj)
 
 void StubServer::ObjectArrived(const Atlas::Message::Object& obj)
 {
+	if (m_handleTypeQueries) {
+		Operation::RootOperation op(Atlas::atlas_cast<Operation::RootOperation>(obj));
+		
+		if ((op.GetParents() == Object::ListType(1, "get")) &&
+			(op.GetFrom() == "") && 
+			(op.GetTo() == "")) 
+		{
+			/* okay, we have an anonymous GET, now we just need to discard server object
+			lookups, be ensuring we have an argument value. */
+			
+			Object::ListType &args(op.GetArgs());
+			if ((args.size() == 1) && (args[0].IsString())) {
+				/* yay, we're good to go */
+				sendInfoForType(args[0].AsString(), op);
+				return;
+			}
+		}
+	}
+	
     m_queue.push(obj);
 }
 
@@ -236,7 +265,7 @@ void StubServer::waitForMessage(int timeout)
 
 #pragma mark -
 
-void StubServer::sendInfoForType(const std::string &type, const Operation::Get &get)
+void StubServer::sendInfoForType(const std::string &type, const Operation::RootOperation &get)
 {
 	Operation::Info info(Operation::Info::Instantiate());
 	Object::ListType &args(info.GetArgs());
@@ -247,6 +276,22 @@ void StubServer::sendInfoForType(const std::string &type, const Operation::Get &
 		args.push_back(Entity::RootEntity().AsObject());
 	} else if (type == "game_entity") {
 		args.push_back(Entity::GameEntity().AsObject());
+	} else if (type == "root_operation") {
+		args.push_back(Operation::RootOperation().AsObject());
+	} else if (type == "info") {
+		args.push_back(Operation::Info().AsObject());
+	} else if (type == "get") {
+		args.push_back(Operation::Get().AsObject());
+	} else if (type == "set") {
+		args.push_back(Operation::Set().AsObject());
+	} else if (type == "error") {
+		args.push_back(Operation::Error().AsObject());
+	} else if (type == "create") {
+		args.push_back(Operation::Create().AsObject());
+	} else if (type == "move") {
+		args.push_back(Operation::Move().AsObject());
+	} else if (type == "appearance") {
+		args.push_back(Operation::Appearance().AsObject());
 	} else {
 		ERIS_MESSAGE("unknown type in sendInfoForType, responing with ERROR instead");
 	

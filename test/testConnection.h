@@ -1,8 +1,6 @@
 #ifndef TEST_CONNECTION_H
 #define TEST_CONNECTION_H
 
-#include <cppunit/TestCase.h>
-#include <cppunit/extensions/HelperMacros.h>
 
 #include <sigc++/object.h>
 
@@ -12,22 +10,22 @@ class StubServer;
 #include <Eris/Connection.h>
 
 class TestConnection : 
-    public CppUnit::TestCase,
     public SigC::Object
 {
-    CPPUNIT_TEST_SUITE(TestConnection);
-    CPPUNIT_TEST(testConnect);
+	/*
+   ERIS_TEST_SUITE(TestConnection);
+    ERIS_TEST(testConnect);
     CPPUNIT_TEST(testReconnect);
     CPPUNIT_TEST(testTimeout);
     CPPUNIT_TEST(testDisconnect);
     CPPUNIT_TEST(testDispatch);
     CPPUNIT_TEST(testSend);
     CPPUNIT_TEST_SUITE_END();
-    
+    */
 public:
     TestConnection();
 
-    // setup / tear-down tests
+    
     void testConnect();
     void testReconnect();
     void testTimeout();
@@ -39,8 +37,8 @@ public:
     void testDispatch();
     void testSend();
 
-    virtual void setUp();
-    virtual void tearDown();
+	void setUp();
+	void tearDown();
 protected:
     StubServer* m_server;
     Eris::Connection* m_con;
