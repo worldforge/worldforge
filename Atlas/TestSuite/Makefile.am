@@ -3,7 +3,8 @@ noinst_PROGRAMS = \
 	test-object-map \
 	test-object-list \
 	test-negotiate \
-	test-packed
+	test-packed \
+	test-xml
 
 CXXFLAGS = -Wall -D_ADebug_
 
@@ -21,6 +22,9 @@ test_negotiate_LDADD		= ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a 
 
 test_packed_SOURCES		= test-packed.cc
 test_packed_LDADD		= ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a ../Codecs/.libs/libAtlasCodecs.so ../Filters/.libs/libAtlasFilters.a ../Funky/.libs/libAtlasFunky.so
+
+test_xml_SOURCES	    = test-xml.cc
+test_xml_LDADD		    = ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a ../Codecs/.libs/libAtlasCodecs.so ../Filters/.libs/libAtlasFilters.a ../Funky/.libs/libAtlasFunky.so
 
 TESTS = test-object-map test-object-list test-negotiate
 

@@ -35,6 +35,7 @@ class Bridge
 
     // Interface for stream context
 
+    virtual void StreamBegin() = 0;
     virtual void StreamEnd() = 0;
 
     // Interface for message context

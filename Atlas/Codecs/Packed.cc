@@ -31,7 +31,8 @@ public:
 
     virtual void Poll();
 
-    virtual void StreamEnd() { }
+    virtual void StreamBegin();
+    virtual void StreamEnd();
 
     virtual void MessageBegin();
     virtual void MessageItem(const Map&);
@@ -109,7 +110,6 @@ namespace
 Packed::Packed(const Codec<iostream>::Parameters& p) :
     socket(p.stream), bridge(p.bridge)
 {
-    state.push(PARSE_STREAM);
 }
 
 void Packed::ParseStream(char next)
@@ -436,6 +436,14 @@ void Packed::Poll()
 	    case PARSE_NAME:	    ParseName(next); break;
 	}
     }
+}
+
+void Packed::StreamBegin()
+{
+}
+
+void Packed::StreamEnd()
+{
 }
 
 void Packed::MessageBegin()

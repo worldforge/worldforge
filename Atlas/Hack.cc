@@ -12,10 +12,24 @@ Codec<iostream>* Atlas::UngodlyHack::GetPacked(iostream& stream, Bridge* bridge)
     list<Factory<Codec<iostream> >*>::iterator i;
 
     for (i = Factory<Codec<iostream> >::Factories().begin();
-	 i != Factory<Codec<iostream> >::Factories().end();
-	 ++i)
+	 i != Factory<Codec<iostream> >::Factories().end(); ++i)
     {
 	if ((*i)->GetName() == "Packed") break;
+    }
+
+    if (i == Factory<Codec<iostream> >::Factories().end()) abort();
+
+    return (*i)->New(Codec<iostream>::Parameters(stream, bridge));
+}
+
+Codec<iostream>* Atlas::UngodlyHack::GetXML(iostream& stream, Bridge* bridge)
+{
+    list<Factory<Codec<iostream> >*>::iterator i;
+
+    for (i = Factory<Codec<iostream> >::Factories().begin();
+	 i != Factory<Codec<iostream> >::Factories().end(); ++i)
+    {
+	if ((*i)->GetName() == "XML") break;
     }
 
     if (i == Factory<Codec<iostream> >::Factories().end()) abort();
