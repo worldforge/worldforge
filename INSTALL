@@ -24,31 +24,29 @@ appropriate minimum versions : at the time of writing, Atlas-C++
 compile the libraries from CVS. This requires more work, see the
 notes at the bottom of this document.
 
-libSigC++ is included in all common distributions; if you have
-Gnome 1.2 or higher installed, you certainly have it. Verify that
-you also have the development packages installed, not just the
-runtime. Otherwise get the library in your preferred format from:
+libSigC++ is included with some distributions, but most
+people will need to install from a tarball or package. As a
+convenience, we provide source and binary rpms from various
+current distributions in the 'third-party' directory on
+ftp.worldforge.org. Otherwise get the library in your preferred
+format from:
 
 	 http://libsigc.sourceforge.net/
 
 Due to variations in the C++ ABI, do NOT use a binary version
 compiled for a distribution other than your own; you may be able
-to compile code but it with fail at link-time or run-time with
+to compile code but then fail at link-time or run-time with
 very unpleasant errors. This includes differences in the C library
-version, the compiler itself, and the standard C++ library.  If you
-have at least SuSE 6.3, RedHat 6.2, Debian 2.2 or Mandrake 7, then
-there pre-compiled binaries available, usually in the same place as
-Gnome. RPMFind can help here (www.rpmfind.net), but again please
-note that packages for (say) SuSE 7.1 will not work SuSE 7.3 :
-you must find an exact match. You can test your installation by
-running the following command from a shell:
+version, the compiler itself, and the standard C++ library.  You 
+can test your installation by running the following command from a shell:
 
 	pkg-config --modversion sigc++-1.2
 
 This should print out the libSigC++ version number; if pkg-config
 reports that the sigc package is unknown, you are probably missing
 the development package, or if you installed from source, installed
-to some strange location not in your shell's PATH.
+to some location that pkg-config doesn't know about (you may need
+to set the PKGCONFIG_PATH environment variable)
 
 Optionally, you can install CppUnit (available at cppunit.sf.net),
 and 'make check' will then run a suite of unit tests which cover
@@ -83,37 +81,20 @@ the documentation; at present only HTML is built. Edit eris.dox to
 change the output formats / styles. If you find errors or omissions
 in the documentation, please let me (James) know.
 
-Cygwin
-
-You will need to have libtool setup. (get it from XXXX)
-Otherwise should be the same as Linux.
-
 MSVC
 
-There's a known problem with MSVC 6 not exporting template-based
-methods / functions unless they are specifically named in an exports
-/ .exp file. Since no one has got around to building such a thing
-for Eris yet, I would recommend statically linking to both libSigC++
-and Eris itself in your client code. Neither library is large and you
-will make distribution and debugging much, much simpler. Technically
-their is no reason why a DLL based approach won't work (once you've
-taken care of the export problem, which may get fixed), so feel
-free to attempt such a thing.
+This might work, though you'll need to link libSigc++ statically. Using
+VC .NET may help, since the C++ compiler is greatly improved. If you
+try to compile using MSVC, please let me know, whatever the outcome,
+so I can update this section
 
-Compiling from CVS
+OS-X / ProjectBuilder
 
-The first step is to ensure you have the correct version of
-Atlas-C++. The HEAD revision is the 0.5 development branch (at
-the time of writing). To pull the stable branch, move / delete
-your existing Atlas-C++ directory in forge/libs (I rename it to
-HEAD-Atlas-C++). Then, in forge/libs, do the following:
+A autoconf based build will work fine, assuming you have pkg-config and
+the like available (for example, from Fink). Fink may also provide a
+libSigc++ package in the future, though right now you need to install
+that from a tarball.
 
-	cvs -z3 co -r atlas-cpp-0_3_10 Atlas-C++
-
-This should check out the correct version. Note the branch tag is
-rather odd, you will get the stable head (0.4.4 at time of writing),
-not 0.3.10!
-
-Also note that WorldForge CVS contains both skstream and skstream2;
-it's the latter version you need. Other than these points, building
-from CVS should be the same as above.
+However, the good news is that I will be adding a .pbroj file for
+Eris in the near future, just as soon as I get libSigc++ packaged as
+a framework.

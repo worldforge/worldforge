@@ -1,5 +1,15 @@
-Original Author is James Turner (jmtn@blueyonder.co.uk)
-Eris would not have been possible without Uclient by Karsten Olaf-Laux
+Original author and current maintainer is James Turner 
+(james@worldforge.org)
+
+Numerous contributions by Ron Steinke including the Perl
+bindings, WFmath conversion
+
+Eris would not have been possible without Uclient 
+by Karsten Olaf-Laux
+
+Al Riddoch has contributed so many build / packaging
+fixes, bug reports and clarified the Atlas protocol for
+me so many times, it's not even funny.
 
 Contributors :
 	Alistair Riddoch
@@ -7,3 +17,4 @@ Contributors :
 	Anders Petersen
 	Ron Steinke
 	Michael Koch
+	Simon Goodall
