@@ -1,6 +1,6 @@
 <package>
     <name>varconf</name>
-    <version>0.1.2</version>
+    <version>0.3.0</version>
     <desc>A configuration parser and writer that supports callbacks on changes
           and multiple types.</desc>
     <generate id="config" name="config.h"/>

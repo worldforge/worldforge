@@ -3,7 +3,7 @@ Varconf - STAGE Configuration System (c)1999-2000
 
 1. Overview
 -----------
-Varconf is a configuration system designed for the STAGE server.  Varconf can parse configuration files, command-line arguments and environment variables.  It supports callbacks to inform an application of settings changes and can store its configuration information in separate Config objects or in one global configuration instance.
+Varconf is a configuration system designed for the STAGE server.  Varconf can parse configuration files, command-line arguments and environment variables.  It supports callbacks and can store its configuration information in separate Config objects or in one global configuration instance.
 
 
 2. Disclaimer
@@ -14,6 +14,8 @@ None of the authors of this package nor anyone involved with the World Forge pro
 3. Installation
 ---------------
 The Atlas library needs to be compiled and installed before compiling varconf.  See the Atlas README for further information.
+
+The libsigc++ callback library needs to be compiled and installed before compiling varconf.  The library can be aquired at http://sourceforge.net/projects/libsigc/.
 
 
 3.1 Basic Installation
@@ -119,7 +121,7 @@ Syntax for long-form argument:
 
 4.4 - Environment Variables
 ---------------------------
-To allow varconf to input an environmental variable as configuration data, precede its name with a prefix and then specify that prefix when calling the function to retrieve environment variables.  ie:
+To allow varconf to input an environmental variable as configuration data, precede its name with a prefix and then specify that prefix when calling the function. ie:
 
 Variables:
   WF_ONE=Oh
@@ -133,4 +135,7 @@ Use prefix 'WF_' to retrieve the three variables as configuration data.  They wi
 ----------------
 Varconf has four major components: a command-line parser, an environment variable parser, a configuration file parser and input-output-processing routines for interacting with configuration data.
 
+
+5.1 Configuration Instance
+--------------------------
 

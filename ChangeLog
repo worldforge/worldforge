@@ -1,18 +1,23 @@
 ChangeLog for varconf
 
+Mon Oct 23 16:10:38 EST 2000 -- jaz <jaz147@psu.edu>
+ * Config.cc: Removed Observer code.
+ * Config.cc: Converted callbacks to libsigc++.
+ * Config.h: Added declarations for libsigc++ callbacks.
+ * Config.h: Removed old callback methods. 
+ - deleted Observer.cc
+ - deleted Observer.h
+ - deleted varconf.h
+ - deleted conf_format
+
 Fri Oct 20 23:38:12 EST 2000 -- jaz <jaz147@psu.edu>
  * Config.cc: Added section support to command-line arguments.
- * config_format: Added new format information about command-line arguments.
 
 Wed Oct 18 18:35:15 EST 2000 -- jaz <jaz147@psu.edu>
  * Config.cc: Cleaned env variable code; added support for prefixes 
 
 Tue Oct 17 22:05:22 EST 2000 -- jaz <jaz147@psu.edu>
  * Config.cc: Implemented handling of environment variables.
-
-Tue Oct 17 11:42:32 EST 2000 -- jaz <jaz147@psu.edu>
- * AUTHORS: Added myself to list 
- * README: Added some general info. 
 
 
 ChangeLog for conftest

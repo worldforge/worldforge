@@ -1,3 +1,9 @@
+/*
+ * ParseError.h - parse error handling class
+ *
+ * Copyright (C) 2000, The WorldForge Project
+ */
+
 #ifndef VARCONF_PARSEERROR_H
 #define VARCONF_PARSEERROR_H
 
@@ -10,12 +16,12 @@ namespace varconf {
 class ParseError {
 public:
   ParseError();
-  ParseError(const ParseError& p);
-  ParseError(const std::string& exp, int line, int col);
+  ParseError( const ParseError& p);
+  ParseError( const std::string& exp, int line, int col);
   
   virtual ~ParseError();
 
-  friend std::ostream& operator<<(std::ostream& os, const ParseError& p);
+  friend std::ostream& operator<<( std::ostream& os, const ParseError& p);
 
 private:
   std::string m_exp;

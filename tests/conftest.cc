@@ -1,8 +1,9 @@
 #include <iostream.h>
 #include <unistd.h>
-#include <varconf/Config.h>
+#include <../varconf/Config.h>
 
 using namespace varconf;
+using namespace SigC;
 
 void callback(const string& section, const string& name)
 {
@@ -29,10 +30,10 @@ int main(int argc, char** argv)
   } else {
     Config::inst()->getCmdline(argc, argv);
   }
+  Config::inst()->readFromFile( "conf.cfg");
   Config::inst()->writeToStream(cout);
   cout << "---" << endl;
-  Config::inst()->registerCallback(&callback, "tcp", "port");
-  Config::inst()->registerCallback(&callback, "console", "colours");
+  Config::inst()->sigv.connect( slot( callback));
   Config::inst()->setItem("tcp", "port", 6700);
   Config::inst()->setItem("console", "colours", "plenty");
 }

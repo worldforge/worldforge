@@ -1,4 +1,5 @@
 SUBDIRS = varconf tests
 
-EXTRA_DIST = COPYING TODO THANKS config_format
+EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL NEWS README THANKS TODO \
+             autogen.sh
 

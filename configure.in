@@ -4,7 +4,7 @@ AC_INIT()
 
 dnl Initialise automake
 
-AM_INIT_AUTOMAKE("varconf", "0.1.2")
+AM_INIT_AUTOMAKE("varconf", "0.3.0")
 AM_CONFIG_HEADER(config.h)
 
 dnl Test for GNU libtool

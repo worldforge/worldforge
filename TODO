@@ -1,14 +1,18 @@
 TODO for varconf
 
-Minor Tasks:
- * Make VALUE and EXPECT_VALUE behave nicer (loosen up on the unquoted value
-   format)
- * Use a better way to do Variable::is_bool()
- * Optimize Config::getCmdline()
-
 Major Tasks:
- * Convert call_back routines to libsigc++.
- * Add section support to environment variables.
- * Check short-form command-line arguments in Config::getCmdline() so the
-   single character is either a letter or a number.
- * Complete section 5 of README and clean-up other sections.
+  * Redo Config::getCmdline() and Config::getEnv() codex.
+    * Handle '--' arguments better
+    * Check validity of '-' arguments
+  * Unify configuration methods (ie: add section support to Config::getEnv())
+  + Add delItem() and delSection() methods
+  * Unify error handling methods
+  * Convert file parser to lex/yacc 
+  * Design and implement new Observer class
+
+Minor Tasks:
+  * Make VALUE and EXPECT_VALUE behave nicer (loosen up on the unquoted value
+    format)
+  * Use a better way to do Variable::is_bool()
+
+

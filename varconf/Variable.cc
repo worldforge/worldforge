@@ -1,3 +1,9 @@
+/*
+ *  Variable.cc - implementation of the typeless value container.
+ *
+ *  Copyright (C) 2000, The WorldForge Project
+ */
+
 #include <string>
 #include <cstdio>
 #include "Variable.h"
@@ -64,7 +70,7 @@ Variable::~Variable()
 {
 }
 
-ostream& operator<<(ostream& out, const Variable& v)
+ostream& operator<<( ostream& out, const Variable& v)
 {
     for (size_t i = 0; i < v.m_val.size(); i++) {
       if (v.m_val[i] == '"') out << '\\';
@@ -73,7 +79,7 @@ ostream& operator<<(ostream& out, const Variable& v)
     return out;
 }
 
-Variable& Variable::operator=(const Variable& c)
+Variable& Variable::operator=( const Variable& c)
 {
   if (&c == this) return (*this);
   m_have_bool = c.m_have_bool; m_have_int = c.m_have_int;

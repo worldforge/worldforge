@@ -1,3 +1,9 @@
+/*
+ *  Config.cc - implementation of main configuration class
+ *
+ *  Copyright (C) 2000, The WorldForge Project
+ */
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -6,6 +12,7 @@
 extern char **environ;
 
 using namespace std;
+using namespace SigC;
 
 namespace {
   enum state_t {
@@ -50,7 +57,6 @@ namespace {
     if (c == '\\') return C_ESCAPE;
     return C_OTHER;
   }
-
 }
 
 namespace varconf {
@@ -63,13 +69,15 @@ Config::Config()
 
 Config* Config::inst()
 {
-  if ( m_instance == NULL) m_instance = new Config;
+  if ( m_instance == NULL) 
+    m_instance = new Config;
+  
   return m_instance;
 }
 
 Variable Config::getItem( const string& section, const string& name)
 {
-  return (m_conf[section])[name];
+  return ( m_conf[section])[name];
 }
 
 
@@ -77,6 +85,11 @@ void Config::setItem( const string& section, const string& name,
                       const Variable item)
 {
   string sec = section, nam = name;
+
+  if ( nam.empty()) {
+    throw "Invalid configuration item!";
+  }
+  
   for ( size_t i = 0; i < sec.size(); i++) {
     ctype_t c = ctype( sec[i]);
     sec[i] = tolower( sec[i]);
@@ -85,6 +98,7 @@ void Config::setItem( const string& section, const string& name,
       sec[i] = '_';
     }
   }
+
   for ( size_t i = 0; i < nam.size(); i++) {
     ctype_t c = ctype( nam[i]);
     nam[i] = tolower( nam[i]);
@@ -93,119 +107,81 @@ void Config::setItem( const string& section, const string& name,
       nam[i] = '_';
     }
   }
-  (m_conf[sec])[nam] = item;
+ 
+  ( m_conf[sec])[nam] = item;
+ 
+  sig.emit(); 
+  sigv.emit( section, name);
 
-  observer_map::iterator I;
-  if ( ( I = m_observers.find( section)) != m_observers.end()) {
-    for ( multimap<string, Observer*>::iterator J = ( *I).second.begin();
-                                             J != ( *I).second.end(); J++) {
-      if ( ( *J).first == name) ( *J).second->update();
-    }
-  }
+} // Config::setItem()
 
-  callback_map::iterator C;
-  if ( ( C = m_callbacks.find( section)) != m_callbacks.end()) {
-    for ( multimap<string, conf_callback*>::iterator J = ( *C).second.begin();
-                                              J != ( *C).second.end(); J++) {
-      if ( ( *J).first == name) ( *( *J).second)(section, name);
-    }
-  }
-}
 
 bool Config::findItem( const string& section, const string& name)
 {
   return ( (m_conf.count( section)) && ( m_conf[section].count( name)));
 }
 
-void Config::registerObserver( Observer* observer, const string& section,
-                               const string& name)
-{
-  m_observers[section].insert( pair<string, Observer*>( name, observer));
-}
-
-void Config::unregisterObserver( Observer* observer)
-{
-  for ( map< string, multimap<string, Observer*> >::iterator I =
-                         m_observers.begin(); I != m_observers.end(); I++) {
-    for ( multimap<string, Observer*>::iterator J = ( *I).second.begin();
-                                             J != ( *I).second.end(); J++) {
-      if ( ( *J).second == observer) {
-        m_observers.erase( I);
-        break;
-      }
-    }
-  }
-}
-
-void Config::registerCallback( conf_callback* callback, const string& section,
-                               const string& name)
-{
-  m_callbacks[section].insert( pair<string, conf_callback*>( name, callback));
-}
-
-void Config::unregisterCallback( conf_callback* callback, const string& section,
-                                 const string& name)
-{
-  for ( callback_map::iterator I = m_callbacks.begin();
-                           I != m_callbacks.end(); I++) {
-    for ( multimap<string, conf_callback*>::iterator J = ( *I).second.begin();
-                                                  J != (*I).second.end(); J++) {
-      if ( ( *J).second == callback) {
-        m_callbacks.erase(I);
-        break;
-      }
-    }
-  }
-}
 
 bool Config::readFromFile( const string& filename)
 {
-  ifstream in( filename.c_str());
-  if ( in.fail()) {
+  ifstream fin( filename.c_str());
+  
+  if ( fin.fail()) {
     cerr << "Could not open " << filename << " for input!\n";
     return false;
   }
   try {
-    parseStream( in);
+    parseStream( fin);
   }
   catch ( ParseError p) {
     cerr << "While parsing " << filename << ":\n";
     cerr << p;
   }
+  
   return true;
 }
+
 
 bool Config::writeToFile( const string& filename)
 {
-    ofstream out( filename.c_str());
-    if ( out.fail()) {
-      cerr << "Could not open " << filename << " for output!\n";
-      return false;
-    }
-    return writeToStream( out);
+  ofstream fout( filename.c_str());
+
+  if ( fout.fail()) {
+    cerr << "Could not open " << filename << " for output!\n";
+    return false;
+  }
+
+  return writeToStream( fout);
 }
 
-bool Config::writeToStream( ostream& ios)
+
+bool Config::writeToStream( ostream& out)
 {
-  map< string, map<string, Variable> >::iterator I;
-  map<string, Variable>::iterator J;
+  conf_map::iterator I;
+  sec_map::iterator J;
+ 
   for ( I = m_conf.begin(); I != m_conf.end(); I++) {
-    ios << endl << "[" << ( *I).first << "]\n\n";
+    out << endl 
+        << "[" << ( *I).first << "]\n\n";
+    
     for ( J = ( *I).second.begin(); J != ( *I).second.end(); J++) {
-      ios << ( *J).first << " = \"" << ( *J).second
-          << "\"\n";
+      out << ( *J).first << " = \"" << ( *J).second << "\"\n";
     }
   }
+  
   return true;
 }
 
-void Config::parseStream( istream& ios) throw ( ParseError)
+
+void Config::parseStream( istream& in) throw ( ParseError)
 {
-  char c; bool escaped = false;
+  char c; 
+  bool escaped = false;
   size_t line = 1, col = 0;
   string name = "", value = "", section = "";
   state_t state = S_EXPECT_NAME;
-  while ( ios.get( c)) {
+
+  while ( in.get( c)) {
     col++;
     switch ( state) {
       case S_EXPECT_NAME : 
@@ -365,10 +341,16 @@ void Config::parseStream( istream& ios) throw ( ParseError)
       line++;
       col = 0;
     }
+  } // while ( in.get( c))
+
+  if ( state == S_QUOTED_VALUE) {
+    throw ParseError( "\"", line, col);
   }
-  if ( state == S_QUOTED_VALUE) throw ParseError( "\"", line, col);
-  if ( state == S_VALUE) setItem( section, name, value);
-}
+
+  if ( state == S_VALUE) {
+    setItem( section, name, value);
+  }
+} // Config::parseStream()
 
 
 void Config::setParameterLookup( char short_form, const string& long_form,
@@ -381,10 +363,9 @@ void Config::setParameterLookup( char short_form, const string& long_form,
 void Config::getCmdline( int argc, char** argv)
 {
   string name = "", value = "", section = "";
-  bool value_next = false;
  
   for ( int i = 1; i < argc; i++) {
-    if ( argv[i][0] == '-' && argv[i][1] == '-') {
+    if ( argv[i][1] == '-' && argv[i][0] == '-') {
       string arg( argv[i]);
       size_t eq_pos = arg.find('=');
       size_t col_pos = arg.find(':');
@@ -416,40 +397,26 @@ void Config::getCmdline( int argc, char** argv)
         name = arg.substr( 2, ( arg.size() - 2));
         value = "";
       } 
-    } // argv[i][0] == '-' && argv[i][1] == '-'
-    else if ( argv[i][0] == '-')  {
-      char short_name = argv[i][1];
-      parameter_map::iterator I;
+
+      setItem( section, name, value);
+
+    } // argv[i][1] == '-' && argv[i][0] == '-'
+    else if ( argv[i][1] != '-' && argv[i][0] == '-')  {
+      parameter_map::iterator I = m_par_lookup.find( argv[i][1]);
         
-      if ( ( I = m_par_lookup.find( short_name)) != m_par_lookup.end()) {
+      if ( I != m_par_lookup.end()) {
         section = ""; 
         name = ( ( *I).second).first;
-        value_next = ( ( *I).second).second;
- 
-        if ( !value_next) {
-          value = "";
+
+        if ( ( ( *I).second).second) {
+          if ( argv[i+1] != NULL && argv[i+1][0] != '-') {
+            value = argv[++i];
+
+            setItem( section, name, value); 
+          }         
         }
       }
-      else {
-        // *** NOTE *** This gets executed if no match is found for the 
-        // shortname in the lookup table.  Might want to add a warning
-        // of some sort here. 
-        value_next = false;
-      }
     } // argv[i][0] == '-'
-    else if ( ( value_next) && ( argv[i][0] != '\0')) {
-      value = argv[i];
-      value_next = false;
-    }    
-    
-    if ( !value_next) {
-      if ( !name.empty()) {
-        setItem( section, name, value);
-      }
-      else {
-        throw "Invalid Commandline Argument!";  
-      }
-    }
   }
 } // Config::getCmdline()
  
