@@ -1,60 +1,119 @@
-<?xml version="1.0"?>
-<!DOCTYPE abiword PUBLIC "-//ABISOURCE//DTD AWML 1.0 Strict//EN" "http://www.abisource.com/awml.dtd">
-<abiword xmlns="http://www.abisource.com/awml.dtd" xmlns:awml="http://www.abisource.com/awml.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:dc="http://purl.org/dc/elements/1.1/" version="0.99.3" fileformat="1.0" styles="unlocked">
-<!-- =====================================================================  -->
-<!-- This file is an AbiWord document.                                      -->
-<!-- AbiWord is a free, Open Source word processor.                         -->
-<!-- You may obtain more information about AbiWord at www.abisource.com     -->
-<!-- You should not edit this file by hand.                                 -->
-<!-- =====================================================================  -->
+These are instructions to help build Eris, the WorldForge client-side
+entity framework. For a more complete discussion of the functions
+and goals of Eris, please see the README file, which should be in
+the same directory as this document.
 
-<pagesize pagetype="A4" orientation="portrait" width="210.000000" height="297.000000" units="mm" page-scale="1.000000"/>
-<section>
-<p><c props="lang:en-GB"></c>These are instructions to help build Eris, the WorldForge client-side entity framework. For a more complete discussion of the functions and goals of Eris, please see the README file, which should be in the same directory as this document.</p>
-<p></p>
-<p>The AUTHORS file lists people who can help you if you run into problems; otherwise you can try the WorldForge mailing lists (note you must be subscribed to post) or IRC at irc.worldforge.org, in channels #coders and #eris.</p>
-<p></p>
-<p>Linux / *inx</p>
-<p></p>
-<p>You need to have Atlas-C++, skstream2 and libsigc++ to build Eris. In addition it is assumed you have an up-to-date C++ compiler and STL implementation (GCC 2.95 is the lowest tested version, GG 2.91 will probably not work). If you find other compilers that work or fail, please let me (James) know.</p>
-<p></p>
-<p>Atlas-C++ and skstream are both available as tarballs (and possibly compiled packages, depending on your system) from victor.worldforge.org. The Eris configure script will test for the appropriate minimum versions : at the time of writing, Atlas-C++ 0.4.4 and skstream2 0.2.2 are required. Alternatively, you can compile Atlas-C++ and skstream2 from CVS. This requires more work, see the notes at the bottom of this document.</p>
-<p></p>
-<p>libSigC++ is included in all common distributions; if you have Gnome 1.2 or higher installed, you certainly have it. Verify that you also have the development packages installed, not just the runtime. Otherwise get the library in your preferred format from:</p>
-<p>	</p>
-<p>	 http://libsigc.sourceforge.net/</p>
-<p></p>
-<p>Due to variations in the C++ ABI, do NOT use a binary version compiled for a distribution other than your own; you may be able to compile code but it with fail at link-time or run-time with very unpleasant errors. This includes differences in the C library version, the compiler itself, and the standard C++ library.  If you have at least SuSE 6.3, RedHat 6.2, Debian 2.2 or Mandrake 7, then there pre-compiled binaries available, usually in the same place as Gnome. RPMFind can help here (www.rpmfind.net), but again please note that packages for (say) SuSE 7.1 will not work SuSE 7.3 : you must find an exact match. You can test your installation by running the following command from a shell:</p>
-<p></p>
-<p>	sigc-config -version</p>
-<p></p>
-<p>This should print out the libSigC++ version number; if sigc-config is not found, you are probably missing the development package, or if you installed from source, installed to some strange location not in your shell's PATH. </p>
-<p></p>
-<p>Optionally, you can install CppUnit (available at cppunit.sf.net), and 'make check' will then run a suite of unit tests which cover a small but growing set of the code. This is especially useful if you are porting or extending Eris. You can compile and install Eris  perfectly without this library, however.</p>
-<p></p>
-<p>Once these pre-requisites are satisfied, you can proceed with compiling Eris.  This should be a standard 'configure; make; make install' process. At present there are no special arguments, but verify everything goes okay. If you get errors about libraries not being found, and you believe they are installed, do NOT hack around the problem in configure. Verify that you have the correct development packages installed and that the relevant -config programs (atlas-config, skstream-config and sigc-config) are in your path. Also make sure you've run ldconfig if you just installed the libraries form source, otherwise the test programs configure tries to compile won't work.</p>
-<p></p>
-<p>Assuming configure is successful, simply 'make' and 'make install'. That's it. If you get compilation errors, please get in touch with the maintainers. In order to test that everything worked, try compiling one of the clients that uses Eris (listed in the README)</p>
-<p></p>
-<p>If you have Doxygen installed, executing 'make doc' will build the documentation; at present only HTML is built. Edit eris.dox to change the output formats / styles. If you find errors or omissions in the documentation, please let me (James) know.</p>
-<p></p>
-<p>Cygwin</p>
-<p></p>
-<p>You will need to have libtool setup. (get it from XXXX)</p>
-<p>Otherwise should be the same as Linux.</p>
-<p></p>
-<p>MSVC</p>
-<p></p>
-<p>There's a known problem with MSVC 6 not exporting template-based methods / functions unless they are specifically named in an exports / .exp file. Since no one has got around to building such a thing for Eris yet, I would recommend statically linking to both libSigC++ and Eris itself in your client code. Neither library is large and you will make distribution and debugging much, much simpler. Technically their is no reason why a DLL based approach won't work (once you've taken care of the export problem, which may get fixed), so feel free to attempt such a thing.</p>
-<p></p>
-<p>Compiling from CVS</p>
-<p></p>
-<p>The first step is to ensure you have the correct version of Atlas-C++. The HEAD revision is the 0.5 development branch (at the time of writing). To pull the stable branch, move / delete your existing Atlas-C++ directory in forge/libs (I rename it to HEAD-Atlas-C++). Then, in forge/libs, do the following:</p>
-<p></p>
-<p>	cvs -z3 co -r atlas-cpp-0_3_10 Atlas-C++</p>
-<p></p>
-<p>This should check out the correct version. Note the branch tag is rather odd, you will get the stable head (0.4.4 at time of writing), not 0.3.10! </p>
-<p></p>
-<p>Also note that WorldForge CVS contains both skstream and skstream2; it's the latter version you need. Other than these points, building from CVS should be the same as above.</p>
-</section>
-</abiword>
+The AUTHORS file lists people who can help you if you run into
+problems; otherwise you can try the WorldForge mailing lists (note
+you must be subscribed to post) or IRC at irc.worldforge.org,
+in channels #coders and #eris.
+
+Linux / *inx
+
+You need to have Atlas-C++, skstream2, WFMath  and libsigc++ to build
+Eris. In addition it is assumed you have an up-to-date C++ compiler
+and STL implementation (GCC 2.95 is the lowest tested version,
+GG 2.91 will probably not work). If you find other compilers that
+work or fail, please let me (James) know.
+
+Atlas-C++, skstream and WFMath are available as tarballs (and
+possibly compiled packages, depending on your system) from
+ftp.worldforge.org. The Eris configure script will test for the
+appropriate minimum versions : at the time of writing, Atlas-C++
+0.4.4 and skstream2 0.2.2 are required. Alternatively, you can
+compile the libraries from CVS. This requires more work, see the
+notes at the bottom of this document.
+
+libSigC++ is included in all common distributions; if you have
+Gnome 1.2 or higher installed, you certainly have it. Verify that
+you also have the development packages installed, not just the
+runtime. Otherwise get the library in your preferred format from:
+
+	 http://libsigc.sourceforge.net/
+
+Due to variations in the C++ ABI, do NOT use a binary version
+compiled for a distribution other than your own; you may be able
+to compile code but it with fail at link-time or run-time with
+very unpleasant errors. This includes differences in the C library
+version, the compiler itself, and the standard C++ library.  If you
+have at least SuSE 6.3, RedHat 6.2, Debian 2.2 or Mandrake 7, then
+there pre-compiled binaries available, usually in the same place as
+Gnome. RPMFind can help here (www.rpmfind.net), but again please
+note that packages for (say) SuSE 7.1 will not work SuSE 7.3 :
+you must find an exact match. You can test your installation by
+running the following command from a shell:
+
+	pkg-config --modversion sigc++-1.2
+
+This should print out the libSigC++ version number; if pkg-config
+reports that the sigc package is unknown, you are probably missing
+the development package, or if you installed from source, installed
+to some strange location not in your shell's PATH.
+
+Optionally, you can install CppUnit (available at cppunit.sf.net),
+and 'make check' will then run a suite of unit tests which cover
+a small but growing set of the code. This is especially useful if
+you are porting or extending Eris. You can compile and install Eris
+perfectly without this library, however.
+
+If Gtk-2.0 is detected, Eris will build a Poll implementation that
+integrated directly with the Gtk mainloop, so if you are planning
+to work on a Gtk-2 based client, make sure Gtk-2 is installed before
+you build Eris.
+
+Once these pre-requisites are satisfied, you can proceed with
+compiling Eris.  This should be a standard 'configure; make;
+make install' process. At present there are no special arguments,
+but verify everything goes okay. If you get errors about libraries
+not being found, and you believe they are installed, do NOT hack
+around the problem in configure. Verify that you have the correct
+development packages installed and that pkg-config has located
+the configuration files for each library. Also make sure you've
+run ldconfig if you just installed the libraries form source,
+otherwise the test programs configure tries to compile won't work.
+
+Assuming configure is successful, simply 'make' and 'make
+install'. That's it. If you get compilation errors, please get
+in touch with the maintainers. In order to test that everything
+worked, try compiling one of the clients that uses Eris (listed in
+the README)
+
+If you have Doxygen installed, executing 'make doc' will build
+the documentation; at present only HTML is built. Edit eris.dox to
+change the output formats / styles. If you find errors or omissions
+in the documentation, please let me (James) know.
+
+Cygwin
+
+You will need to have libtool setup. (get it from XXXX)
+Otherwise should be the same as Linux.
+
+MSVC
+
+There's a known problem with MSVC 6 not exporting template-based
+methods / functions unless they are specifically named in an exports
+/ .exp file. Since no one has got around to building such a thing
+for Eris yet, I would recommend statically linking to both libSigC++
+and Eris itself in your client code. Neither library is large and you
+will make distribution and debugging much, much simpler. Technically
+their is no reason why a DLL based approach won't work (once you've
+taken care of the export problem, which may get fixed), so feel
+free to attempt such a thing.
+
+Compiling from CVS
+
+The first step is to ensure you have the correct version of
+Atlas-C++. The HEAD revision is the 0.5 development branch (at
+the time of writing). To pull the stable branch, move / delete
+your existing Atlas-C++ directory in forge/libs (I rename it to
+HEAD-Atlas-C++). Then, in forge/libs, do the following:
+
+	cvs -z3 co -r atlas-cpp-0_3_10 Atlas-C++
+
+This should check out the correct version. Note the branch tag is
+rather odd, you will get the stable head (0.4.4 at time of writing),
+not 0.3.10!
+
+Also note that WorldForge CVS contains both skstream and skstream2;
+it's the latter version you need. Other than these points, building
+from CVS should be the same as above.

@@ -1,3 +1,8 @@
+Tuesday, 22nd April 2003, James Turner
+
+    * updated README / INSTALL to be up-to-date for the next
+	  release, and converted to plain text (from Abiword)
+
 Monday, 24th March 2003, Al Riddoch
 
 	* src/Dispatcher.cpp: Handle missing TO on operations.
