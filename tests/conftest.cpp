@@ -5,15 +5,15 @@
 using namespace varconf;
 using namespace SigC;
 
-void callback( const string& section, const string& key, Config& conf)
+void callback( const std::string& section, const std::string& key, Config& conf)
 {
-  cout << "\nConfig Change: item " << key << " under section " << section
+  std::cout << "\nConfig Change: item " << key << " under section " << section
        << " has changed to " << conf.getItem( section, key) << ".\n"; 
 }
  
 void error( const char* message)
 {
-  cerr << message;
+  std::cerr << message;
 }
 
 int main( int argc, char** argv)
@@ -32,21 +32,21 @@ int main( int argc, char** argv)
   config.setItem( "tcp", "port", 6700);
   config.setItem( "console", "colours", "plenty");
 
-  cout << "\nEnter sample configuration data to test parseStream() method.\n";
+  std::cout << "\nEnter sample configuration data to test parseStream() method.\n";
 
   try {
-    config.parseStream( cin);
+    config.parseStream( std::cin);
   }
   catch ( ParseError p) {
-    cout << "\nError while parsing from standard input stream.\n";
-    cout << p;
+    std::cout << "\nError while parsing from standard input stream.\n";
+    std::cout << p;
   }
 
   config.writeToFile( "conf2.cfg");
   
-  cout << "\nFile configuration data:\n"
-       << "--------------------------\n"
-       << config;
+  std::cout << "\nFile configuration data:\n"
+            << "--------------------------\n"
+            << config;
 
   return 0;
 }

@@ -37,7 +37,7 @@
 namespace varconf {
 
 typedef std::map< std::string, std::map< std::string, Variable > > conf_map;
-typedef std::map< char, pair<std::string, bool> > parameter_map;
+typedef std::map< char, std::pair<std::string, bool> > parameter_map;
 typedef std::map< std::string, Variable > sec_map;
 
 class Config {
@@ -49,8 +49,8 @@ public:
 
   virtual ~Config() { }
 
-  friend ostream& operator <<( ostream& out, Config& conf);
-  friend istream& operator >>( istream& in, Config& conf);
+  friend std::ostream& operator <<( std::ostream& out, Config& conf);
+  friend std::istream& operator >>( std::istream& in, Config& conf);
   friend bool operator ==( const Config& one, const Config& two);
 
   void clean( std::string& str);

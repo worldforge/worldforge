@@ -27,6 +27,7 @@
 #define VARCONF_VARIABLE_H
 
 #include <string>
+#include <iostream>
 
 namespace varconf {
 
@@ -42,7 +43,7 @@ public:
 
   virtual ~Variable() {}
 
-  friend ostream& operator<<( ostream& out, const Variable& v);
+  friend std::ostream& operator<<( std::ostream& out, const Variable& v);
   friend bool operator ==( const Variable& one, const Variable& two);
 
   Variable& operator=( const Variable& c);

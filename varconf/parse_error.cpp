@@ -27,8 +27,6 @@
 #include <iostream>
 #include <varconf/parse_error.h>
 
-using namespace std;
-
 #ifdef __WIN32__
 #include <tchar.h>
 #define snprintf _snprintf
@@ -43,25 +41,25 @@ ParseError::ParseError( const ParseError& p)
   m_col  = p.m_col;
 }
 
-ParseError::ParseError( const string& exp, int line, int col)
+ParseError::ParseError( const std::string& exp, int line, int col)
 {
   m_exp  = exp;
   m_line = line;
   m_col  = col;
 }
 
-ostream& operator<<( ostream& os, const ParseError& p)
+std::ostream& operator<<( std::ostream& os, const ParseError& p)
 {
   return ( os << "ParseError: Expected " << p.m_exp << " at line " << p.m_line
-              << ", column " << p.m_col << "." << endl);
+              << ", column " << p.m_col << "." << std::endl);
 }
 
-ParseError::operator string() 
+ParseError::operator std::string() 
 {
   char buf[1024];
   snprintf( buf, 1024, "ParseError: Expected %s at line %d, column %d.",
             m_exp.c_str(), m_line, m_col);
-  return string( buf);
+  return std::string( buf);
 }
  
 } // namespace varconf

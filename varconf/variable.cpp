@@ -32,8 +32,6 @@
 #define snprintf _snprintf
 #endif  
 
-using namespace std;
-
 namespace varconf {
 
 Variable::Variable()
@@ -76,7 +74,7 @@ Variable::Variable(const double d)
   m_val = buf;
 }
 
-Variable::Variable(const string& s)
+Variable::Variable(const std::string& s)
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
    m_val(s)
@@ -90,7 +88,7 @@ Variable::Variable(const char* s)
 {
 }
 
-ostream& operator<<( ostream& out, const Variable& v)
+std::ostream& operator<<( std::ostream& out, const Variable& v)
 {
     for (size_t i = 0; i < v.m_val.size(); i++) {
       if (v.m_val[i] == '"') out << '\\';
@@ -155,7 +153,7 @@ Variable& Variable::operator=(const double d)
   return (*this);
 }
 
-Variable& Variable::operator=(const string& s)
+Variable& Variable::operator=(const std::string& s)
 {
   m_have_bool = false; m_have_int = false;
   m_have_double = false; m_have_string = true;
@@ -192,7 +190,7 @@ Variable::operator double()
   return m_val_double;
 }
 
-Variable::operator string()
+Variable::operator std::string()
 {
   return m_val;
 }

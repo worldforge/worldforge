@@ -37,7 +37,6 @@
 
 extern char **environ;
 
-using namespace std;
 using namespace SigC;
 
 namespace {
@@ -104,7 +103,7 @@ Config::Config( const Config& conf)
   m_par_lookup = conf.m_par_lookup;
 }
 
-ostream& operator <<( ostream& out, Config& conf)
+std::ostream& operator <<( std::ostream& out, Config& conf)
 {
   if ( !conf.writeToStream( out))
     conf.sige.emit( "\nVarconf Error: error while trying to write "
@@ -113,14 +112,14 @@ ostream& operator <<( ostream& out, Config& conf)
   return out;
 }
 
-istream& operator >>( istream& in, Config& conf)
+std::istream& operator >>( std::istream& in, Config& conf)
 {
   try {
     conf.parseStream( in);
   }
   catch ( ParseError p) {
     char buf[1024];
-    string p_str = p;
+    std::string p_str = p;
     snprintf( buf, 1024, "\nVarconf Error: parser exception throw while "
                          "parsing input stream.\n%s", p_str.c_str());   
     conf.sige.emit( buf);
@@ -137,7 +136,7 @@ bool operator ==( const Config& one, const Config& two)
     return false;
 }
 
-void Config::clean( string& str)
+void Config::clean( std::string& str)
 {
   ctype_t c;
 
@@ -151,7 +150,7 @@ void Config::clean( string& str)
   } 
 }
 
-bool Config::erase( const string& section, const string& key = "")
+bool Config::erase( const std::string& section, const std::string& key = "")
 {
   if ( find( section)) {
     if ( key == "") {
@@ -167,7 +166,7 @@ bool Config::erase( const string& section, const string& key = "")
   return false;
 }
 
-bool Config::find( const string& section, const string& key = "")
+bool Config::find( const std::string& section, const std::string& key = "")
 {
   if ( m_conf.count( section)) {
     if ( key == "") 
@@ -186,7 +185,7 @@ bool Config::findItem( const std::string& section, const std::string& key)
 
 void Config::getCmdline( int argc, char** argv)
 {
-  string section = "", name = "", value = "", arg;
+  std::string section = "", name = "", value = "", arg;
   bool fnd_sec = false, fnd_nam = false;
   size_t mark = 2;
 
@@ -250,9 +249,9 @@ void Config::getCmdline( int argc, char** argv)
   }
 }
 
-void Config::getEnv( const string& prefix)
+void Config::getEnv( const std::string& prefix)
 {
-  string name = "", value = "", section = "", env = "";
+  std::string name = "", value = "", section = "", env = "";
   size_t eq_pos = 0;
 
   for ( size_t i = 0; environ[i] != NULL; i++) {
@@ -261,7 +260,7 @@ void Config::getEnv( const string& prefix)
     if ( env.substr( 0, prefix.size()) == prefix) {
       eq_pos = env.find( '='); 
 
-      if ( eq_pos != string::npos) {
+      if ( eq_pos != std::string::npos) {
         name = env.substr( prefix.size(), ( eq_pos - prefix.size()));
         value = env.substr( ( eq_pos + 1), ( env.size() - ( eq_pos + 1)));
       }
@@ -275,17 +274,17 @@ void Config::getEnv( const string& prefix)
   }
 }
 
-Variable Config::getItem( const string& section, const string& key)
+Variable Config::getItem( const std::string& section, const std::string& key)
 {
   return ( m_conf[section])[key];
 }
 
-void Config::parseStream( istream& in) throw ( ParseError)
+void Config::parseStream( std::istream& in) throw ( ParseError)
 {
   char c; 
   bool escaped = false;
   size_t line = 1, col = 0;
-  string name = "", value = "", section = "";
+  std::string name = "", value = "", section = "";
   state_t state = S_EXPECT_NAME;
 
   while ( in.get( c)) {
@@ -459,9 +458,9 @@ void Config::parseStream( istream& in) throw ( ParseError)
   }
 }
 
-bool Config::readFromFile( const string& filename)
+bool Config::readFromFile( const std::string& filename)
 {
-  ifstream fin( filename.c_str());
+  std::ifstream fin( filename.c_str());
   
   if ( fin.fail()) {
     char buf[1024];
@@ -477,7 +476,7 @@ bool Config::readFromFile( const string& filename)
   }
   catch ( ParseError p) {
     char buf[1024];
-    string p_str = p;
+    std::string p_str = p;
     snprintf( buf, 1024, "\nVarconf Error: parsing exception thrown while "
                        "parsing \"%s\".\n%s", filename.c_str(), p_str.c_str());
     sige.emit( buf);
@@ -487,7 +486,7 @@ bool Config::readFromFile( const string& filename)
   return true;
 }
 
-void Config::setItem( const string& section, const string& key, const Variable& item)
+void Config::setItem( const std::string& section, const std::string& key, const Variable& item)
 {
   if ( key.empty()) {
     char buf[1024];
@@ -496,8 +495,8 @@ void Config::setItem( const string& section, const string& key, const Variable& 
     sige.emit( buf);
   }
   else {
-    string sec_clean = section; 
-    string key_clean = key; 
+    std::string sec_clean = section; 
+    std::string key_clean = key; 
 
     clean( sec_clean);
     clean( key_clean);
@@ -510,14 +509,14 @@ void Config::setItem( const string& section, const string& key, const Variable& 
   }
 }
 
-void Config::setParameterLookup( char s_name, const string& l_name, bool value = false)
+void Config::setParameterLookup( char s_name, const std::string& l_name, bool value = false)
 {
-    m_par_lookup[s_name] = pair<string, bool>( l_name, value);  
+    m_par_lookup[s_name] = std::pair<std::string, bool>( l_name, value);  
 }
 
-bool Config::writeToFile( const string& filename)
+bool Config::writeToFile( const std::string& filename)
 {
-  ofstream fout( filename.c_str());
+  std::ofstream fout( filename.c_str());
 
   if ( fout.fail()) {
     char buf[1024];
@@ -531,13 +530,13 @@ bool Config::writeToFile( const string& filename)
   return writeToStream( fout);
 }
 
-bool Config::writeToStream( ostream& out)
+bool Config::writeToStream( std::ostream& out)
 {
   conf_map::iterator I;
   sec_map::iterator J;
  
   for ( I = m_conf.begin(); I != m_conf.end(); I++) {
-    out << endl << "[" << ( *I).first << "]\n\n";
+    out << std::endl << "[" << ( *I).first << "]\n\n";
     
     for ( J = ( *I).second.begin(); J != ( *I).second.end(); J++) 
       out << ( *J).first << " = \"" << ( *J).second << "\"\n";
