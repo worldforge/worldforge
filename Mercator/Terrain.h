@@ -28,8 +28,8 @@ class Terrain {
     Pointstore m_basePoints;
     Segmentstore m_segments;
 
-    void remove(int x, int y);
-    void invalidate(int x, int y);
+    void invalidateSegment(int x, int y);
+    void invalidatePoint(int x, int y);
   public:
     static const float defaultLevel = 8;
     explicit Terrain(int res = 64);
@@ -40,12 +40,12 @@ class Terrain {
     
     void setBasePoint(int x, int y, const BasePoint& z) {
         m_basePoints[x][y] = z;
-        invalidate(x,y);
+        invalidatePoint(x,y);
     }
 
     void setBasePoint(int x, int y, float z) {
         m_basePoints[x][y] = BasePoint(z);
-        invalidate(x,y);
+        invalidatePoint(x,y);
     }
 
     Segment * getSegmentSafe(float x, float y) {

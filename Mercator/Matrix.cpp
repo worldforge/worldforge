@@ -4,5 +4,9 @@
 
 #include <Mercator/Matrix.h>
 
-Mercator::Matrix<4, 4> foo4;
-Mercator::Matrix<2, 2> foo2;
+namespace Mercator {
+
+  template class Matrix<2, 2>;
+  template class Matrix<4, 4>;
+
+} // namespace Mercator

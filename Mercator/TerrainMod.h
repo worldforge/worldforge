@@ -100,14 +100,14 @@ public:
     void apply(float &point, int x, int y) const {
         if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
             point = m_level + (m_shape.getCenter()[0] - x) * m_dx 
-		            + (m_shape.getCenter()[1] - y) * m_dy;
-	}
+                            + (m_shape.getCenter()[1] - y) * m_dy;
+        }
     }
 
 protected:
     float m_level, m_dx, m_dy;
 };
-	    
+            
 } //namespace Mercator
 
 #endif // MERCATOR_TERRAIN_MOD_H

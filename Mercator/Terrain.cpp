@@ -9,7 +9,7 @@
 
 namespace Mercator {
 
-void Terrain::remove(int x, int y)
+void Terrain::invalidateSegment(int x, int y)
 {
     Segmentstore::iterator I = m_segments.find(x);
     if (I == m_segments.end()) {
@@ -18,21 +18,16 @@ void Terrain::remove(int x, int y)
     Segmentcolumn & column = I->second;
     Segmentcolumn::iterator J = column.find(y);
     if (J != column.end()) {
-        delete J->second;
+        J->second->invalidate();
         column.erase(J);
-    }
-    if (column.empty()) {
-        m_segments.erase(I);
     }
 }
 
-void Terrain::invalidate(int x, int y)
+void Terrain::invalidatePoint(int x, int y)
 {
     for(int i = x - 1; i < x + 1; ++i) {
         for(int j = y - 1; j < y + 1; ++j) {
-            //remove(i, j);
-            Segment *s=m_segments[i][j];
-            if (s) s->invalidate();
+            invalidateSegment(x, y);
         }
     }
 }

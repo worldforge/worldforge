@@ -11,8 +11,8 @@
 
 namespace Mercator {
 
-//a couple of helper classes
-//these interpolate between points or across a quad
+// A couple of helper classes
+// These interpolate between points or across a quad
 class LinInterp {
   private:
     int m_size;
@@ -30,12 +30,12 @@ class QuadInterp {
   public:
     float ep1, ep2, ep3, ep4;
     float calc(int locX, int locY) {
-	return (( ep1*(m_size-locX) + ep2 * locX) * (m_size-locY) +
-	        ( ep4*(m_size-locX) + ep3 * locX) * (locY) ) / m_size;
+        return (( ep1*(m_size-locX) + ep2 * locX) * (m_size-locY) +
+                ( ep4*(m_size-locX) + ep3 * locX) * (locY) ) / m_size;
     }
     QuadInterp(int size,float e1, float e2, float e3, float e4)
         : m_size(size), ep1(e1/size), ep2(e2/size), ep3(e3/size), ep4(e4/size) {} 
-};	
+};      
 
 Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
                             m_normals(0), m_max(0.f), m_min(0.0f), m_validPt(false),
@@ -80,7 +80,7 @@ void Segment::populateNormals()
            h2 = get(i, j + 1);
            h3 = get(i + 1, j);
            h4 = get(i, j - 1);
-	   
+           
            // Caclulate the normal vector.
            np[j * (m_res+1) * 3 + i * 3]     = h1 - h3;
            np[j * (m_res+1) * 3 + i * 3 + 1] = h2 - h4;
@@ -94,7 +94,7 @@ void Segment::populateNormals()
         h2 = get(i, 1);
         h3 = get(i + 1, 1);
         h4 = get(i + 1, 0);
-	
+        
         np[i * 3]     = (h2-h3 + h1-h4) / 2.0;
         np[i * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
         np[i * 3 + 2] = 1.0;
@@ -103,7 +103,7 @@ void Segment::populateNormals()
         h2 = get(i, m_res);
         h3 = get(i + 1, m_res);
         h4 = get(i + 1, m_res -1);
-	
+        
         np[m_res * (m_res+1) * 3 + i * 3]     = (h2-h3 + h1-h4) / 2.0;
         np[m_res * (m_res+1) * 3 + i * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
         np[m_res * (m_res+1) * 3 + i * 3 + 2] = 1.0;
@@ -115,7 +115,7 @@ void Segment::populateNormals()
         h2 = get(0, j - 1);
         h3 = get(1, j - 1);
         h4 = get(1, j);
-	
+        
         np[j * (m_res + 1) * 3]     = (h2-h3 + h1-h4) / 2.0;
         np[j * (m_res + 1) * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
         np[j * (m_res + 1) * 3 + 2] = 1.0;
@@ -156,7 +156,7 @@ float Segment::qRMD(float nn, float fn, float ff, float nf,
 // array is size+1 long. array[0] and array[size] are filled
 //      with the control points for the fractal
 void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h, 
-		     float *array) const
+                     float *array) const
 {
     array[0] = l.height();
     array[size] = h.height();
@@ -183,14 +183,14 @@ void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h,
         for (int i=stride;i<size;i+=stride*2) {
             float hh = array[i-stride];
             float lh = array[i+stride];
-	    float hd = fabs(hh-lh);
+            float hd = fabs(hh-lh);
             float roughness = li.calc(i);
 
-	    //eliminate the problem where hd is nearly zero, leaving a flat section.
-	    if ((hd*100.f) < roughness) {
-	        hd+=0.05 * roughness;	    
-	    }
-	  
+            //eliminate the problem where hd is nearly zero, leaving a flat section.
+            if ((hd*100.f) < roughness) {
+                hd+=0.05 * roughness;       
+            }
+          
             array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1+::pow(depth,BasePoint::FALLOFF));
         }
         stride >>= 1;
@@ -202,7 +202,7 @@ void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h,
 // edges are to be filled by 1d fractals.// size must be a power of 2
 // array is size+1  * size+1 with the corners the control points.
 void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2, 
-		               const BasePoint& p3, const BasePoint& p4)
+                               const BasePoint& p3, const BasePoint& p4)
 {
     assert(m_points!=0);
     
@@ -280,7 +280,7 @@ void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2,
       //+ . +
       for (int i=stride;i<size;i+=stride*2) {
           for (int j=stride;j<size;j+=stride*2) {
-	      roughness=qi.calc(i,j);
+              roughness=qi.calc(i,j);
               m_points[j*line + i] = qRMD(m_points[(i-stride) + (j+stride) * (line)],
                                        m_points[(i+stride) + (j-stride) * (line)],
                                        m_points[(i+stride) + (j+stride) * (line)],
@@ -297,7 +297,7 @@ void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2,
       //. + .
       for (int i=stride*2;i<size;i+=stride*2) {
           for (int j=stride;j<size;j+=stride*2) {
-	      roughness=qi.calc(i,j);
+              roughness=qi.calc(i,j);
               m_points[j*line + i] = qRMD(m_points[(i-stride) + (j) * (line)],
                                        m_points[(i+stride) + (j) * (line)],
                                        m_points[(i) + (j+stride) * (line)],
@@ -309,7 +309,7 @@ void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2,
                
       for (int i=stride;i<size;i+=stride*2) {
           for (int j=stride*2;j<size;j+=stride*2) {
-	      roughness=qi.calc(i,j);
+              roughness=qi.calc(i,j);
               m_points[j*line + i] = qRMD(m_points[(i-stride) + (j) * (line)],
                                        m_points[(i+stride) + (j) * (line)],
                                        m_points[(i) + (j+stride) * (line)],

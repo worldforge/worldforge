@@ -89,10 +89,10 @@ class Segment {
     } 
 
     void fill1d(int size, const BasePoint& l, const BasePoint &h, 
-		     float *array) const;
+                     float *array) const;
 
     void fill2d(int size, const BasePoint& p1, const BasePoint& p2, 
-		               const BasePoint& p3, const BasePoint& p4);
+                               const BasePoint& p3, const BasePoint& p4);
 
     float qRMD(float nn, float fn, float ff, float nf, 
                float roughness, float falloff, int depth) const;

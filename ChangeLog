@@ -1,16 +1,29 @@
+2003-06-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Matrix.cpp: Add template instantiations, which I assume
+	  was the effect intended by the previous code.
+
+	* Mercator/Terrain.h, Mercator/Terrain.cpp:
+	  Re-work segment invalidation code. operator[] should never
+	  be used to test for a key in an STL map.
+
+	* Mercator/Segment.cpp, Mercator/Segment.h, Mercator/TerrainMod.h:
+	  Fix comment and code formatting.
+
 2003-06-21  Damien McGinnes
-        * Mercator/Terrain.cpp: changed invalidate and getSegmentSafe to use
-          the validity flags
-        * tests/main.cpp: did a 30 second test of the above code
+
+	* Mercator/Terrain.cpp: changed invalidate and getSegmentSafe to use
+	  the validity flags
+	* tests/main.cpp: did a 30 second test of the above code
         
 2003-06-21  Damien McGinnes
 
 	* Mercator/Segment.cpp: added validity flags for points and normals,
-          and fixed up a few code alignment probs
+	  and fixed up a few code alignment probs
 	* Mercator/Terrain.h: started to change invalidate. (commented out
-          right now)
-          Need to modify getSegmentSafe to use the validity flags and only
-          create a new segment when one is not already there.
+	  right now)
+	  Need to modify getSegmentSafe to use the validity flags and only
+	  create a new segment when one is not already there.
 
 2003-06-19  Al Riddoch  <alriddoch@zepler.org>
 
@@ -28,7 +41,7 @@
 
 2003-06-15 Damien McGinnes
 
-        * new BasePoint.h replaces floats for basepoints
+	* new BasePoint.h replaces floats for basepoints
 	* Mercator/Segment.cpp : variable roughness implemented
 	* added a basic test file - doesnt do much
 
@@ -41,7 +54,7 @@
 
 	* Mercator/Segment.cpp : modified the normal array to be same size as
 	  the heights array. bottom and right boundaries are a bit of a hack
-	
+
 2003-06-09 Damien McGinnes
 
 	* Mercator/Segment.cpp : added in an attempt at values for the normal
