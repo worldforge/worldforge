@@ -260,6 +260,16 @@ dnl Test for GNU libtool
 
 AM_PROG_LIBTOOL
 
+dnl Test for gzip compression library
+
+AC_CHECK_LIB(z, inflateInit_)
+AC_CHECK_HEADERS(zlib.h)
+
+dnl Test for bzip2 compression library
+
+AC_CHECK_LIB(bz2, bzCompressInit)
+AC_CHECK_HEADERS(bzlib.h)
+
 dnl Generate files
 
 AC_OUTPUT([

@@ -26,4 +26,6 @@
 	</require>
     </require>
     <require tag="libtool"/>
+    <require tag="zlib"/>
+    <require tag="bzlib"/>
 </package>
