@@ -76,24 +76,25 @@ public:
     {
     }
 
-    /// Check for inequality with another Object.
-    bool operator!=(const Object& o) const
+    /// Check for equality with another Object.
+    bool operator==(const Object& o) const
     {
-        if (t != o.t) return true;
+        if (t != o.t) return false;
         switch(t) {
-            case TYPE_NONE: return false;
-            case TYPE_INT: return i != o.i;
-            case TYPE_FLOAT: return f != o.f;
-            case TYPE_STRING: return s != o.s;
-            case TYPE_MAP: return m != o.m;
-            case TYPE_LIST: return l != o.l;
+            case TYPE_NONE: return true;
+            case TYPE_INT: return i == o.i;
+            case TYPE_FLOAT: return f == o.f;
+            case TYPE_STRING: return s == o.s;
+            case TYPE_MAP: return m == o.m;
+            case TYPE_LIST: return l == o.l;
         }
+        return false;
     }
 
-    /// Check for equality with another Object.
-    bool operator==(const Object m) const
+    /// Check for inequality with another Object.
+    bool operator!=(const Object m) const
     {
-        return !(*this != m);
+        return !(*this == m);
     }
 
     /// Check for equality with a int.

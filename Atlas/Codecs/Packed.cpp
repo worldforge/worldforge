@@ -73,7 +73,6 @@ protected:
         PARSE_FLOAT,
         PARSE_STRING,
         PARSE_NAME,
-        PARSE_VALUE,
     };
     
     stack<State> state;

@@ -78,7 +78,7 @@ inline const string hexDecode(const string& prefix, const string& message)
     string newMessage;
     string curFragment;
     
-    for (int i = 0; i < message.size(); i++) {
+    for (size_t i = 0; i < message.size(); i++) {
         if (equal(prefix.begin(), prefix.begin() + curFragment.length() + 1, 
                     (curFragment + message[i]).begin())) {
             curFragment += message[i];
