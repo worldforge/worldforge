@@ -1,5 +1,8 @@
 ChangeLog for varconf
 
+Sat May 19 13:03:00 EST 2001 -- jaz <jaz147@psu.edu>
+  * Changed license of varconf to LGPL.
+
 Tue Dec 12 14:30:00 EST 2000 -- jaz <jaz147@psu.edu>
   * Config.h: Added "super-verbose" callback.
   * Config.h: Added << operator.
