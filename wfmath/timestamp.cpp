@@ -23,10 +23,6 @@
 // Author: Ron Steinke
 // Created: 2002-5-23
 
-#ifdef HAVE_CONFIG_H
-	#include "config.h"
-#endif
-
 #if defined _MSC_VER || defined __MINGW32__
 #include <sys/timeb.h>
 #else
@@ -35,6 +31,10 @@
 #endif
 
 #include "timestamp.h"
+
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
 
 const long Million = 1000000;
 

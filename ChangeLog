@@ -1,3 +1,9 @@
+Sunday, August 17th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Moved config.h include after timestamp.h include
+	  in timestamp.cpp, since it's only the unistd.h include
+	  that's causing the FreeBSD problem.
+
 Sunday, August 17th, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* wfmath/timestamp.cpp: Moved include of timestamp.h
