@@ -1,3 +1,6 @@
+* Why are we using round() rather than rint() or indeed any other function
+  in Segment::clipToSegment()
+
 * SHould probably make segment etc. less involved in memory, and provide
   a way for the memory to be special
 
