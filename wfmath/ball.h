@@ -42,10 +42,12 @@ namespace WFMath {
 
 template<const int dim> class Ball;
 
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 template<const int dim, template<class> class container>
 Ball<dim> BoundingSphere(const container<Point<dim> >& c);
 template<const int dim, template<class> class container>
 Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c);
+#endif
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Ball<dim>& m);

@@ -124,6 +124,8 @@ Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
   return Ball<dim>(getCenter(), SloppyDistance(m_low, m_high) / 2);
 }
 
+
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 template<const int dim, template<class> class container>
 AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c)
 {
@@ -164,6 +166,7 @@ AxisBox<dim> BoundingBox(const container<Point<dim> >& c)
 
   return AxisBox<dim>(low, high, true);
 }
+#endif
 
 // This is here, instead of defined in the class, to
 // avoid include order problems
