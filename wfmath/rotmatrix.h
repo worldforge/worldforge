@@ -33,25 +33,18 @@ namespace WFMath {
 template<const int dim> class Vector;
 class Quaternion;
 
-// Elements of this class represent rotation matrices. The NxN dimensional
-// rotation matrices form a group called O(N), the orthogonal
-// matrices. They satisfy the following condition:
-//
-//  They are orthogonal. That is, their transpose is equal to their inverse.
-//  Hence, this class does not implement a transpose() method, only an
-//  inverse().
-//
-// A general N dimensional matrix of this type has N(N-1)/2 degrees of freedom.
-// This gives one rotation angle in 2D, the three Euler angles in 3D, etc.
-
 template<const int dim> class RotMatrix;
 
+/// returns m1 * m2
 template<const int dim> // m1 * m2
 RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
+/// returns m1 * m2^-1
 template<const int dim> // m1 * m2^-1
 RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
+/// returns m1^-1 * m2
 template<const int dim> // m1^-1 * m2
 RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
+/// returns m1^-1 * m2^-1
 template<const int dim> // m1^-1 * m2^-1
 RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
 
@@ -64,6 +57,7 @@ Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m);
 template<const int dim> // v * m^-1
 Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m);
 
+/// returns m1 * m2
 template<const int dim>
 RotMatrix<dim> operator*(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
 template<const int dim>
@@ -76,12 +70,28 @@ std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m);
 template<const int dim>
 std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
 
-/// A dim dimensional rotation matrix. Technically, a
-/// member of the group O(dim).
+/// A dim dimensional rotation matrix. Technically, a member of the group O(dim).
+/**
+ * Elements of this class represent rotation matrices. The NxN dimensional
+ * rotation matrices form a group called O(N), the orthogonal
+ * matrices. They satisfy the following condition:
+ *
+ *  They are orthogonal. That is, their transpose is equal to their inverse.
+ *  Hence, this class does not implement a transpose() method, only an
+ *  inverse().
+ *
+ * A general N dimensional matrix of this type has N(N-1)/2 degrees of freedom.
+ * This gives one rotation angle in 2D, the three Euler angles in 3D, etc.
+ *
+ * This class implements the 'generic' subset of the interface in
+ * the fake class Shape.
+ **/
 template<const int dim>
 class RotMatrix {
  public:
+  ///
   RotMatrix() : m_valid(false) {}
+  ///
   RotMatrix(const RotMatrix& m);
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotMatrix& m);
@@ -98,27 +108,53 @@ class RotMatrix {
 
   bool isValid() const {return m_valid;}
 
+  /// set the matrix to the identity matrix
   RotMatrix& identity();
 
-  // WARNING! This operator is for sorting only. It does not
-  // reflect any property of the matrix.
   bool operator< (const RotMatrix& m) const;
 
+  /// get the (i, j) element of the matrix
   CoordType elem(const int i, const int j) const
 	{assert(i >= 0 && j >= 0 && i < dim && j < dim); return m_elem[i][j];}
 
-  // Can't set one element at a time and keep it an O(N) matrix,
-  // but can try to set all values at once, and see if they match.
-  // The first one is vals[row][column], the second is vals[row*dim+column].
+  /// Set the values of the elements of the matrix
+  /**
+   * Can't set one element at a time and keep it an O(N) matrix,
+   * but can try to set all values at once, and see if they match.
+   * This fails if the passed matrix is not orthogonal within the
+   * passed precision, and orthogonalizes the matrix to within
+   * precision WFMATH_EPSILON.
+   **/
   bool setVals(const CoordType vals[dim][dim], double precision = WFMATH_EPSILON);
+  /// Set the values of the elements of the matrix
+  /**
+   * Can't set one element at a time and keep it an O(N) matrix,
+   * but can try to set all values at once, and see if they match.
+   * This fails if the passed matrix is not orthogonal within the
+   * passed precision, and orthogonalizes the matrix to within
+   * precision WFMATH_EPSILON.
+   **/
   bool setVals(const CoordType vals[dim*dim], double precision = WFMATH_EPSILON);
 
+  /// Get a copy of the i'th row as a Vector
   Vector<dim> row(const int i) const;
+  /// Get a copy of the i'th column as a Vector
   Vector<dim> column(const int i) const;
 
+  /// Get the trace of the matrix
   CoordType trace() const;
+  /// Get the determinant of the matrix
+  /**
+   * Since the matrix is orthogonal, the determinant is always either 1 or -1.
+   **/
   CoordType determinant() const {return (CoordType) (m_flip ? -1 : 1);}
+  /// Get the inverse of the matrix
+  /**
+   * Since the matrix is orthogonal, the inverse is equal to the transpose.
+   **/
   RotMatrix inverse() const;
+
+  // documented outside the class
 
   friend RotMatrix Prod<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
   friend RotMatrix ProdInv<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
@@ -129,41 +165,78 @@ class RotMatrix {
 
   // Set the value to a given rotation
 
-  // Two axes and an angle
+  /// set the matrix to a rotation by the angle theta in the (i, j) plane
   RotMatrix& rotation	(const int i, const int j, CoordType theta);
-  // Two vectors in a plane and an angle
+  /// set the matrix to a rotation by the angle theta in the v1, v2 plane
+  /**
+   * Throws CollinearVectors if v1 and v2 are parallel
+   **/
   RotMatrix& rotation	(const Vector<dim>& v1, const Vector<dim>& v2,
 			 CoordType theta);
-  // A rotation which will move "from" to lie parallel to "to"
+  /// set the matrix to a rotation which will move "from" to lie parallel to "to"
+  /**
+   * Throws CollinearVectors if v1 and v2 are antiparallel (parallel but
+   * pointing in opposite directions). If v1 and v2 point in the
+   * same direction, the matrix is set to the identity.
+   **/
   RotMatrix& rotation	(const Vector<dim>& from, const Vector<dim>& to);
 
   // Set the value to mirror image about a certain axis
 
+  /// set the matrix to a mirror perpendicular to the i'th axis
   RotMatrix& mirror(const int i);
+  /// set the matrix to a mirror perpendicular to the Vector v
   RotMatrix& mirror(const Vector<dim>& v);
-  RotMatrix& mirror(); // Flip all axes, only changes the parity if dim is odd
+  /// set the matrix to mirror all axes
+  /**
+   * This is a good parity operator if dim is odd.
+   **/
+  RotMatrix& mirror();
 
   // 2D/3D stuff
 
-  // Quaternion, 3D only
+  /// 3D only: Construct a RotMatrix from a Quaternion
+  /**
+   * since Quaternions can only specify parity-even
+   * rotations, you can pass the return value of
+   * Quaternion::fromRotMatrix() as not_flip to
+   * recover the full RotMatrix
+   **/
   RotMatrix(const Quaternion& q, const bool not_flip = true)
 	{fromQuaternion(q, not_flip);}
 
-  // 2D only
+  /// 2D only: Construct a RotMatrix from an angle theta
   RotMatrix<2>& rotation(CoordType theta)
 	{return rotation(0, 1, theta);}
 
-  // 3D only
+  /// 3D only: set a RotMatrix to a rotation about the x axis by angle theta
   RotMatrix<3>& rotationX(CoordType theta) {return rotation(1, 2, theta);}
+  /// 3D only: set a RotMatrix to a rotation about the y axis by angle theta
   RotMatrix<3>& rotationY(CoordType theta) {return rotation(2, 0, theta);}
+  /// 3D only: set a RotMatrix to a rotation about the z axis by angle theta
   RotMatrix<3>& rotationZ(CoordType theta) {return rotation(0, 1, theta);}
+  /// 3D only: set a RotMatrix to a rotation about the axis given by the Vector
   RotMatrix<3>& rotation(const Vector<3>& axis, CoordType theta);
+  /// 3D only: set a RotMatrix to a rotation about the axis given by the Vector
+  /**
+   * the rotation angle is taken from the Vector's magnitude
+   **/
   RotMatrix<3>& rotation(const Vector<3>& axis); // angle taken from magnitude of axis
 
+  /// 3D only: set a RotMatrix from a Quaternion
+  /**
+   * since Quaternions can only specify parity-even
+   * rotations, you can pass the return value of
+   * Quaternion::fromRotMatrix() as not_flip to
+   * recover the full RotMatrix
+   **/
   RotMatrix<3>& fromQuaternion(const Quaternion& q, const bool not_flip = true);
 
+  /// set a RotMatrix to a mirror perpendicular to the x axis
   RotMatrix& mirrorX()	{return mirror(0);}
+  /// set a RotMatrix to a mirror perpendicular to the y axis
   RotMatrix& mirrorY()	{return mirror(1);}
+  /// set a RotMatrix to a mirror perpendicular to the z axis
   RotMatrix& mirrorZ()	{return mirror(2);}
 
  private:

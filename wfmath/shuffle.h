@@ -33,6 +33,10 @@
 
 namespace WFMath {
 
+/// Randomly reorder the contents of a std::vector
+/**
+ * For things like shuffling a deck of cards, etc.
+ **/
 template<class C>
 void Shuffle(std::vector<C>& v) // need vector for random access
 {

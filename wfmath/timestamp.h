@@ -56,29 +56,49 @@ class TimeDiff
 {
   TimeDiff(long sec, long usec, bool is_valid);
  public:
+  /// construct an uninitialized TimeDiff
   TimeDiff() : m_isvalid(false) {}
+  /// construct a TimeDiff of a given number of milliseconds
   TimeDiff(long msec);
   // default copy constructor is fine
 
-  long milliseconds() const; // Doesn't check overflow
+  /// Get the value of a TimeDiff in milliseconds
+  /**
+   * WARNING! This function does not check for overflow, if the
+   * number of milliseconds is large
+   **/
+  long milliseconds() const;
+  /// Get the value of a TimeDiff in (seconds, microseconds)
   std::pair<long,long> full_time() const {return std::make_pair(m_sec,m_usec);}
 
+  ///
   friend TimeDiff& operator+=(TimeDiff&, const TimeDiff&);
+  ///
   friend TimeDiff& operator-=(TimeDiff&, const TimeDiff&);
+  ///
   TimeDiff operator-() const {return TimeDiff(-m_sec, -m_usec, m_isvalid);}
 
+  ///
   friend TimeDiff operator+(const TimeDiff &a, const TimeDiff &b);
+  ///
   friend TimeDiff operator-(const TimeDiff &a, const TimeDiff &b);
 
+  ///
   friend TimeStamp& operator+=(TimeStamp&, const TimeDiff&);
+  ///
   friend TimeStamp& operator-=(TimeStamp&, const TimeDiff&);
 
+  ///
   friend TimeStamp operator+(const TimeStamp &a, const TimeDiff &msec);
+  ///
   friend TimeStamp operator-(const TimeStamp &a, const TimeDiff &msec);
 
+  ///
   friend TimeDiff operator-(const TimeStamp &a, const TimeStamp &b);
 
+  ///
   friend bool operator<(const TimeDiff&, const TimeDiff&);
+  ///
   friend bool operator==(const TimeDiff&, const TimeDiff&);
 
  private:
@@ -86,9 +106,13 @@ class TimeDiff
   long m_sec, m_usec;
 };
 
+///
 inline bool operator>(const TimeDiff &a, const TimeDiff &b) {return b < a;}
+///
 inline bool operator<=(const TimeDiff &a, const TimeDiff &b) {return !(b < a);}
+///
 inline bool operator>=(const TimeDiff &a, const TimeDiff &b) {return !(a < b);}
+///
 inline bool operator!=(const TimeDiff &a, const TimeDiff &b) {return !(b == a);}
 
 /// A time stamp
@@ -109,29 +133,44 @@ class TimeStamp {
   bool _isvalid;
   TimeStamp(long sec, long usec, bool isvalid);
  public:
+  /// Construct an uninitialized TimeStamp
   TimeStamp() : _isvalid(false) {}
   // default copy constructor is fine
 
+  ///
   friend bool operator<(const TimeStamp &a, const TimeStamp &b);
+  ///
   friend bool operator==(const TimeStamp &a, const TimeStamp &b);
 
+  ///
   friend TimeStamp& operator+=(TimeStamp&, const TimeDiff&);
+  ///
   friend TimeStamp& operator-=(TimeStamp&, const TimeDiff&);
 
+  ///
   friend TimeStamp operator+(const TimeStamp &a, const TimeDiff &msec);
+  ///
   friend TimeStamp operator-(const TimeStamp &a, const TimeDiff &msec);
 
+  ///
   friend TimeDiff operator-(const TimeStamp &a, const TimeStamp &b);	
 
+  /// set a TimeStamp to the current time
   static TimeStamp now();
-  static TimeStamp epochStart(); // Jan 1, 1970
+  /// set a TimeStamp to Jan 1, 1970
+  static TimeStamp epochStart();
 };
 
+///
 inline TimeStamp operator+(TimeDiff msec, const TimeStamp &a) {return a + msec;}
 
+///
 inline bool operator>(const TimeStamp &a, const TimeStamp &b) {return b < a;}
+///
 inline bool operator<=(const TimeStamp &a, const TimeStamp &b) {return !(b < a);}
+///
 inline bool operator>=(const TimeStamp &a, const TimeStamp &b) {return !(a < b);}
+///
 inline bool operator!=(const TimeStamp &a, const TimeStamp &b) {return !(b == a);}
 
 } // namespace WFMath

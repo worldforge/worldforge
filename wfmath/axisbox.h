@@ -50,14 +50,20 @@ template<const int dim>
 std::istream& operator>>(std::istream& is, AxisBox<dim>& m);
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
+/// Get the axis-aligned bounding box for a set of boxes
 template<const int dim, template<class> class container>
 AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c);
 
+/// Get the axis-aligned bounding box for a set of points
 template<const int dim, template<class> class container>
 AxisBox<dim> BoundingBox(const container<Point<dim> >& c);
 #endif
 
 /// A dim dimensional axis-aligned box
+/**
+ * This class implements the full shape interface, as described in
+ * the fake class Shape, with the exception of the rotation functions.
+ **/
 template<const int dim>
 class AxisBox
 {
@@ -72,9 +78,7 @@ class AxisBox
   /// Construct a box from an object passed by Atlas
   explicit AxisBox(const Atlas::Message::Object& a) {fromAtlas(a);}
 
-  /// Print a box to a stream
   friend std::ostream& operator<< <dim>(std::ostream& os, const AxisBox& a);
-  /// Parse a box from a stream
   friend std::istream& operator>> <dim>(std::istream& is, AxisBox& a);
 
   /// Create an Atlas object from the box
@@ -82,31 +86,22 @@ class AxisBox
   /// Set the box's value to that given by an Atlas object
   void fromAtlas(const Atlas::Message::Object& a);
 
-  /// Assign one box to another
   AxisBox& operator=(const AxisBox& a)
 	{m_low = a.m_low; m_high = a.m_high; return *this;}
 
-  /// Test two boxes for equality, up to a given precision
   bool isEqualTo(const AxisBox& b, double epsilon = WFMATH_EPSILON) const;
-
-  /// Check if two boxes are equal.
   bool operator==(const AxisBox& a) const	{return isEqualTo(a);}
-  /// Check if two boxes are not equal.
   bool operator!=(const AxisBox& a) const	{return !isEqualTo(a);}
 
   bool isValid() const {return m_low.isValid() && m_high.isValid();}
 
-  /// WARNING! This operator is for sorting only.
   bool operator< (const AxisBox& a) const
 	{return m_low < a.m_low || (m_low != a.m_low && m_high < a.m_high);}
 
   // Descriptive characteristics
 
-  /// Shape:
   int numCorners() const {return 1 << dim;}
-  /// Shape:
   Point<dim> getCorner(int i) const;
-  /// Shape:
   Point<dim> getCenter() const {return Midpoint(m_low, m_high);}
 
   /// Get a reference to corner 0
@@ -120,17 +115,20 @@ class AxisBox
   CoordType upperBound(const int axis) const	{return m_high[axis];}
 
   /// Set the box to have opposite corners p1 and p2
-  AxisBox& setCorners(const Point<dim>& p1, const Point<dim>& p2, bool ordered = false);
+  /**
+   * The 'ordered' variable may be set to true if p1[i] <= p2[i] for all
+   * i. It is always safe to leave 'ordered' as false, it is a speed
+   * optimization primarily intended for use inside the library.
+   **/
+  AxisBox& setCorners(const Point<dim>& p1, const Point<dim>& p2,
+	bool ordered = false);
 
   // Movement functions
 
-  /// Shape:
   AxisBox& shift(const Vector<dim>& v)
 	{m_low += v; m_high += v; return *this;}
-  /// Shape:
   AxisBox& moveCornerTo(const Point<dim>& p, int corner)
 	{return shift(p - getCorner(corner));}
-  /// Shape:
   AxisBox& moveCenterTo(const Point<dim>& p)
 	{return shift(p - getCenter());}
 
@@ -138,11 +136,8 @@ class AxisBox
 
   // Intersection functions
 
-  /// Shape:
   AxisBox boundingBox() const {return *this;}
-  /// Shape:
   Ball<dim> boundingSphere() const;
-  /// Shape:
   Ball<dim> boundingSphereSloppy() const;
 
   /// Return true if the boxes intersect, and set 'out' to their intersection

@@ -30,10 +30,16 @@
 
 namespace WFMath {
 
-// These use rand(), seeded by the clock if SeedRand() isn't called
+/// Seed WFMath's random number generators.
+/**
+ * The random number generators use rand(). They are seeded by the
+ * clock if SeedRand() isn't called.
+ **/
 void SeedRand(unsigned int);
-double DRand(); // returns between 0 and 1
-unsigned int IRand(unsigned int); // returns from 0 to arg-1
+/// Get a random number between 0 and 1
+double DRand();
+/// Get a random integer ranging from 0 to (val passed) - 1
+unsigned int IRand(unsigned int);
 
 } // namespace WFMath
 

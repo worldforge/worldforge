@@ -91,12 +91,20 @@ namespace _IOWrapper {
   void FromStringImpl(BaseRead& b, const std::string& s, int precision);
 }
 
+/// Output a WFMath type as a string
+/**
+ * This uses operator<<() in its backend.
+ **/
 template<class C>
 std::string ToString(const C& c, unsigned int precision = 6)
 {
   return _IOWrapper::ToStringImpl(_IOWrapper::ImplWrite<C>(c), 6);
 }
 
+/// Parse a WFMath type from a string
+/**
+ * This uses operator>>() in its backend.
+ **/
 template<class C>
 void FromString(C& c, const std::string& s, unsigned int precision = 6)
 {

@@ -87,6 +87,10 @@ template<const int dim>
 std::istream& operator>>(std::istream& is, Point<dim>& m);
 
 /// A dim dimensional point
+/**
+ * This class implements the full shape interface, as described in
+ * the fake class Shape.
+ **/
 template<const int dim>
 class Point
 {
@@ -98,9 +102,7 @@ class Point
   /// Construct a point from an object passed by Atlas
   explicit Point (const Atlas::Message::Object& a) {fromAtlas(a);}
 
-  /// Print a point to a stream
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
-  /// Parse a point from a stream
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);
 
   /// Create an Atlas object from the point
@@ -108,24 +110,19 @@ class Point
   /// Set the point's value to that given by an Atlas object
   void fromAtlas(const Atlas::Message::Object& a);
 
-  /// Copy the value of one point to another
   Point& operator= (const Point& rhs);
 
-  /// Test two points for equality, up to a given precision
   bool isEqualTo(const Point &p, double epsilon = WFMATH_EPSILON) const;
-
-  /// Check if two points are equal
   bool operator== (const Point& rhs) const	{return isEqualTo(rhs);}
-  /// Check if two points are not equal
   bool operator!= (const Point& rhs) const	{return !isEqualTo(rhs);}
 
   bool isValid() const {return m_valid;}
+  /// make isValid() return true if you've initialized the point by hand
   void setValid(bool valid = true) {m_valid = valid;}
 
   /// Set point to (0,0,...,0)
   Point& setToOrigin();
 
-  /// Sort only, don't use otherwise
   bool operator< (const Point& rhs) const;
 
   // Operators
@@ -145,36 +142,24 @@ class Point
 
   // Functions so that Point<> has the generic shape interface
 
-  /// Shape: a point has one "corner"
   int numCorners() const {return 1;}
-  /// Shape: corner 0 is the point
   Point<dim> getCorner(int i) const {assert(i == 0); return *this;}
-  /// Shape: the center is equal to the point
   Point<dim> getCenter() const {return *this;}
 
-  /// Shape:
   Point shift(const Vector<dim>& v) {return *this += v;}
-  /// Shape:
   Point moveCornerTo(const Point& p, int corner)
 	{assert(corner == 0); return operator=(p);}
-  /// Shape:
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
-  /// Shape:
   Point rotateCorner(const RotMatrix<dim>& m, int corner)
 	{assert(corner == 0); return *this;}
-  /// Shape:
   Point rotateCenter(const RotMatrix<dim>& m) {return *this;}
-  /// Shape:
   Point rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   // The implementations of these lie in axisbox_funcs.h and
   // ball_funcs.h, to reduce include dependencies
-  /// Shape: a zero volume box whose corners lie on the point
   AxisBox<dim> boundingBox() const;
-  /// Shape: a zero radius sphere whose center is the point
   Ball<dim> boundingSphere() const;
-  /// Shape: a zero radius sphere whose center is the point
   Ball<dim> boundingSphereSloppy() const;
 
   // Member access

@@ -1,5 +1,7 @@
 Add throw(ColinearVectors) to the appropriate vector and matrix
 	rotation functions
+Get rid of templates as template args, use ValueType for standard
+	containers instead
 
 Intersect functions unimplemented for dim != 2,3 (extremely low priority):
 	Intersect(Polygon<>, AxisBox<>, bool)
@@ -23,4 +25,5 @@ Schedule:
 0.3.0 will come out once I get around to testing the Polygon intersect functions
       and make sure they work. At that point the old Intersect()/IntersectProper()
       interface will be removed, as will support for deprecated network
-      formats in atlas_conv.h
+      formats in atlas_conv.h. This is also an appropriate time to make changes
+      that break binary compatibility.

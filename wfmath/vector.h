@@ -68,17 +68,26 @@ template<const int dim>
 CoordType Angle(const Vector<dim>& v, const Vector<dim>& u);
 
 // The following are defined in rotmatrix_funcs.h
+/// returns m * v
 template<const int dim> // m * v
 Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v);
+/// returns m^-1 * v
 template<const int dim> // m^-1 * v
 Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v);
+/// returns v * m
+/**
+ * This is the function to use to rotate a Vector v using a Matrix m
+ **/
 template<const int dim> // v * m
 Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m);
+/// return v * m^-1
 template<const int dim> // v * m^-1
 Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m);
 
+///
 template<const int dim>
 Vector<dim> operator*(const RotMatrix<dim>& m, const Vector<dim>& v);
+///
 template<const int dim>
 Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m);
 
@@ -102,6 +111,10 @@ template<const int dim>
 std::istream& operator>>(std::istream& is, Vector<dim>& v);
 
 /// A dim dimensional vector
+/**
+ * This class implements the 'generic' subset of the interface in
+ * the fake class Shape.
+ **/
 template<const int dim>
 class Vector {
  public:
@@ -112,9 +125,7 @@ class Vector {
   /// Construct a vector from an object passed by Atlas
   explicit Vector(const Atlas::Message::Object& a) {fromAtlas(a);}
 
-  /// Print a vector to a stream
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
-  /// Parse a vector from a stream
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
 
   /// Create an Atlas object from the vector
@@ -122,26 +133,19 @@ class Vector {
   /// Set the vector's value to that given by an Atlas object
   void fromAtlas(const Atlas::Message::Object& a);
 
-  /// Assign one vector to another
   Vector& operator=(const Vector& v);
 
-  /// Test two vectors for equality, up to a given precision
   bool isEqualTo(const Vector& v, double epsilon = WFMATH_EPSILON) const;
-
-  /// Check if two vectors are equal
   bool operator==(const Vector& v) const {return isEqualTo(v);}
-  /// Check if two vectors are not equal
   bool operator!=(const Vector& v) const {return !isEqualTo(v);}
 
-  ///
   bool isValid() const {return m_valid;}
-  ///
+  /// make isValid() return true if you've initialized the vector by hand
   void setValid(bool valid = true) {m_valid = valid;}
 
   /// Zero the components of a vector
   Vector& zero();
 
-  // WARNING! This operator is for sorting only.
   bool operator< (const Vector& v) const;
 
   // Math operators
@@ -168,10 +172,9 @@ class Vector {
   /// Divide a vector by a scalar
   friend Vector operator/<dim>(const Vector& v, CoordType d);
 
-  ///
+  // documented outside the class definition
   friend Vector Prod<dim>	(const RotMatrix<dim>& m,
 				 const Vector& v);
-  ///
   friend Vector InvProd<dim>	(const RotMatrix<dim>& m,
 				 const Vector& v);
 
@@ -245,6 +248,9 @@ class Vector {
   Vector& rotate(int axis1, int axis2, CoordType theta);
 
   /// Rotate the vector in the (v1, v2) plane by the angle theta
+  /**
+   * This throws CollinearVectors if v1 and v2 are parallel.
+   **/
   Vector& rotate(const Vector& v1, const Vector& v2, CoordType theta);
 
   // mirror image functions
@@ -255,6 +261,9 @@ class Vector {
   Vector& mirror(const Vector& v)
 	{return operator-=(2 * v * Dot(v, *this) / v.sqrMag());}
   /// Reflect a vector in all directions simultaneously.
+  /**
+   * This is a nice way to implement the parity operation if dim is odd.
+   **/
   Vector& mirror()		{return operator*=(-1);}
 
   // Specialized 2D/3D stuff starts here
@@ -337,15 +346,19 @@ CoordType Cross(const Vector<2>& v1, const Vector<2>& v2);
 /// 3D only: get the cross product of two vectors
 Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
 
-// Returns true if the vectors are parallel. For parallel
-// vectors, same_dir is set to true if they point the same
-// direction, and false if they point opposite directions
 /// Check if two vectors are parallel
+/**
+ * Returns true if the vectors are parallel. For parallel
+ * vectors, same_dir is set to true if they point the same
+ * direction, and false if they point opposite directions
+ **/
 template<const int dim>
 bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir);
 
-// Convienience wrapper if you don't care about same_dir
 /// Check if two vectors are parallel
+/**
+ * Convienience wrapper if you don't care about same_dir
+ **/
 template<const int dim>
 bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2);
 

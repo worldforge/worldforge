@@ -1,3 +1,8 @@
+Saturday, November 2, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added documentation. With the exception of those associated
+	  with Polygon, all API functions should now be documented.
+
 Saturday, November 2, 2002	Al Riddoch <alriddoch@zepler.org>
 
 	* Add rpm spec.

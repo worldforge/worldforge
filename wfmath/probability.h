@@ -32,16 +32,34 @@
 
 namespace WFMath {
 
+/// Gives the conditional probability of the Gaussian distribution at position val
+/**
+ * The probability that a Gaussian random variable will fall between
+ * val and val + delta, given that it is already known to be not
+ * less than val, is given by this function multiplied by delta
+ * (for small delta).
+ **/
 double GaussianConditional(double mean, double stddev, double val);
+/// Gives the value of the Gaussian distribution at position val
 double Gaussian(double mean, double stddev, double val);
 
+/// Gives the conditional probability of the Poisson distribution at position step
+/**
+ * Returns the probability that a Poisson random variable will have value
+ * step, given that it is already known not to be less than step.
+ **/
 double PoissonConditional(double mean, unsigned int step);
+/// Gives the value of the Poisson distribution at position step
 double Poisson(double mean, unsigned int step);
 
+/// Gives the natural log of n!
 double LogFactorial(unsigned int n);
+/// Gives n!
 double Factorial(unsigned int n);
 
+/// The natural log of Euler's Gamma function
 double LogGamma(double z);
+/// Euler's Gamma function
 double Gamma(double z);
 
 } // namespace WFMath

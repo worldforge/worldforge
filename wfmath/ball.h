@@ -23,12 +23,6 @@
 
 // Author: Ron Steinke
 
-// This class is called Ball<> instead of Sphere to be more in tune
-// with the usual mathematical naming conventions, where a ball is
-// a filled object, while a sphere is just the outer shell. It also
-// helps that a Ball<n> corresponds to an n-ball, while a Shpere<n>
-// would correspond to an (n-1)-sphere.
-
 #ifndef WFMATH_BALL_H
 #define WFMATH_BALL_H
 
@@ -43,8 +37,10 @@ namespace WFMath {
 template<const int dim> class Ball;
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
+/// get the minimal bounding sphere for a set of points
 template<const int dim, template<class> class container>
 Ball<dim> BoundingSphere(const container<Point<dim> >& c);
+/// get a bounding sphere for a set of points
 template<const int dim, template<class> class container>
 Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c);
 #endif
@@ -55,13 +51,26 @@ template<const int dim>
 std::istream& operator>>(std::istream& is, Ball<dim>& m);
 
 /// A dim dimensional ball
+/**
+ * This class implements the full shape interface, as described in
+ * the fake class Shape.
+ *
+ * This class is called Ball<> instead of Sphere to be more in tune
+ * with the usual mathematical naming conventions, where a ball is
+ * a filled object, while a sphere is just the outer shell. It also
+ * helps that a Ball<n> corresponds to an n-ball, while a Sphere<n>
+ * would correspond to an (n-1)-sphere.
+ **/
 template<const int dim>
 class Ball
 {
  public:
+  /// construct an uninitialized ball
   Ball() {}
+  /// construct a ball with the given center and radius
   Ball(const Point<dim>& center, CoordType radius)
 	: m_center(center), m_radius(radius) {assert(radius >= 0);}
+  /// construct a copy of a ball
   Ball(const Ball& b) : m_center(b.m_center), m_radius(b.m_radius) {}
 
   ~Ball() {}
@@ -79,8 +88,6 @@ class Ball
 
   bool isValid() const {return m_center.isValid();}
 
-  // WARNING! This operator is for sorting only. It does not
-  // reflect any property of the ball.
   bool operator< (const Ball& b) const;
 
   // Descriptive characteristics
@@ -93,9 +100,13 @@ class Ball
   Point<dim> getCorner(int i) const {assert(false);}
   Point<dim> getCenter() const {return m_center;}
 
+  /// get the center of the ball
   const Point<dim>& center() const {return m_center;}
+  /// get the center of the ball
   Point<dim>& center() {return m_center;}
+  /// get the radius of the ball
   CoordType radius() const {return m_radius;}
+  /// get the radius of the ball
   CoordType& radius() {return m_radius;}
 
   // Movement functions

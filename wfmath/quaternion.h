@@ -33,16 +33,33 @@
 namespace WFMath {
 
 /// A normalized quaterion
+/**
+ * This class implements the 'generic' subset of the interface in
+ * the fake class Shape.
+ **/
 class Quaternion
 {
  public:
+  /// Construct a Quatertion
   Quaternion () : m_valid(false) {}
+  /// Construct a Quaternion from (w, x, y, z) components
+  /**
+   * This normalizes the components so the sum of their squares is one.
+   **/
   Quaternion (const CoordType w_in, const CoordType x_in, const CoordType y_in,
 	      const CoordType z_in);
+  /// Construct a Quaternion giving a rotation around axis by angle
   Quaternion (int axis, const CoordType angle) {rotation(axis, angle);}
+  /// Construct a Quaternion giving a rotation around the Vector axis by angle
   Quaternion (const Vector<3>& axis, const CoordType angle) {rotation(axis, angle);}
+  /// Construct a Quaternion giving a rotation around the Vector axis
+  /**
+   * The angle of rotating is equal to the magnitude of the Vector
+   **/
   Quaternion (const Vector<3>& axis) {rotation(axis);} // angle == axis.mag()
+  /// Construct a copy of a Quaternion
   Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec), m_valid(p.m_valid) {}
+  /// Construct a Quaternion from an Atlas::Message::Object
   explicit Quaternion (const Atlas::Message::Object& a) {fromAtlas(a);}
 
   ~Quaternion() {}
@@ -50,7 +67,9 @@ class Quaternion
   friend std::ostream& operator<<(std::ostream& os, const Quaternion& p);
   friend std::istream& operator>>(std::istream& is, Quaternion& p);
 
+  /// Create an Atlas object from the Quaternion
   Atlas::Message::Object toAtlas() const;
+  /// Set the Quaternion's value to that given by an Atlas object
   void fromAtlas(const Atlas::Message::Object& a);
 
   Quaternion& operator= (const Quaternion& rhs)
@@ -65,38 +84,62 @@ class Quaternion
 
   bool isValid() const {return m_valid;}
 
+  /// Set the Quaternion to the identity rotation
   Quaternion& identity() {m_w = 1; m_vec.zero(); return *this;} // Set to null rotation
 
-  // Sort only, don't use otherwise
   bool operator< (const Quaternion& rhs) const;
 
   // Operators
 
+  ///
   Quaternion operator* (const Quaternion& rhs) const;
+  ///
   Quaternion operator/ (const Quaternion& rhs) const;
+  ///
   Quaternion& operator*= (const Quaternion& rhs)
 	{return *this = operator*(rhs);}
+  ///
   Quaternion& operator/= (const Quaternion& rhs)
 	{return *this = operator/(rhs);}
 
   // Functions
 
   // Returns "not_flip", similar to RotMatrix<>.toEuler()
+  /// set a Quaternion's value from a RotMatrix
+  /**
+   * Since a Quaternion can only represent an even-parity
+   * RotMatrix, this function returns false if the parity of
+   * m is odd. In this case, the quaternion is set to the value
+   * of m multiplied by a fixed parity-odd RotMatrix, so
+   * the full RotMatrix can be recovered by passing
+   * the Quaternion and the value of 'not_flip' returned
+   * by this function to RotMatrix::fromQuaternion().
+   **/
   bool fromRotMatrix(const RotMatrix<3>& m);
 
+  /// returns the inverse of the Quaternion
   Quaternion inverse() const;
 
+  /// sets the Quaternion to a rotation by angle around axis
   Quaternion& rotation(int axis, const CoordType angle);
+  /// sets the Quaternion to a rotation by angle around the Vector axis
   Quaternion& rotation(const Vector<3>& axis, const CoordType angle);
+  /// sets the Quaternion to a rotation around the Vector axis
+  /**
+   * The rotation angle is given by the magnitude of the Vector
+   **/
   Quaternion& rotation(const Vector<3>& axis); // angle == axis.mag()
 
+  // documented elsewhere
   template<const int dim>
   friend Vector<3>& Vector<dim>::rotate(const Quaternion& q);
   template<const int dim>
   friend RotMatrix<3>& RotMatrix<dim>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip);
 
+  /// returns the scalar (w) part of the Quaternion
   CoordType scalar() const		{return m_w;}
+  /// returns the Vector (x, y, z) part of the quaternion
   const Vector<3>& vector() const	{return m_vec;}
 
  private:

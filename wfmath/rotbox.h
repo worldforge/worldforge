@@ -44,14 +44,26 @@ template<const int dim>
 std::istream& operator>>(std::istream& is, RotBox<dim>& r);
 
 /// A dim dimensional box, lying at an arbitrary angle
+/**
+ * This class implements the full shape interface, as described in
+ * the fake class Shape.
+ **/
 template<const int dim>
 class RotBox
 {
  public:
+  /// construct an uninitialized box
   RotBox() {}
+  /// construct a box from the given parameters
+  /**
+   * p gives corner 0 of the box, size gives the offset from corner
+   * 0 to the opposite corner (corner 2^dim - 1), orientation gives
+   * the rotation of the box relative to the coordinate axes
+   **/
   RotBox(const Point<dim>& p, const Vector<dim>& size,
 	 const RotMatrix<dim>& orientation) : m_corner0(p), m_size(size),
 		m_orient(orientation) {}
+  /// construct a copy of the box
   RotBox(const RotBox& b) : m_corner0(b.m_corner0), m_size(b.m_size),
 		m_orient(b.m_orient) {}
 
@@ -70,8 +82,6 @@ class RotBox
   bool isValid() const {return m_corner0.isValid() && m_size.isValid()
 	&& m_orient.isValid();}
 
-  // WARNING! This operator is for sorting only. It does not
-  // reflect any property of the box.
   bool operator< (const RotBox& b) const;
 
   // Descriptive characteristics
@@ -80,11 +90,17 @@ class RotBox
   Point<dim> getCorner(int i) const;
   Point<dim> getCenter() const {return m_corner0 + Prod(m_size / 2, m_orient);}
 
+  /// returns the base corner of the box
   const Point<dim>& corner0() const		{return m_corner0;}
+  /// returns the base corner of the box
   Point<dim>& corner0()				{return m_corner0;}
+  /// returns the size of the box
   const Vector<dim>& size() const		{return m_size;}
+  /// returns the size of the box
   Vector<dim>& size()				{return m_size;}
+  /// returns the orientation of the box
   const RotMatrix<dim>& orientation() const	{return m_orient;}
+  /// returns the orientation of the box
   RotMatrix<dim>& orientation()			{return m_orient;}
 
   // Movement functions

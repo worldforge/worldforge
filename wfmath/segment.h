@@ -43,12 +43,19 @@ template<const int dim>
 std::istream& operator>>(std::istream& is, Segment<dim>& s);
 
 /// A line segment embedded in dim dimensions
+/**
+ * This class implements the full shape interface, as described in
+ * the fake class Shape.
+ **/
 template<const int dim>
 class Segment
 {
  public:
+  /// construct an uninitialized segment
   Segment() {}
+  /// construct a segment with endpoints p1 and p2
   Segment(const Point<dim>& p1, const Point<dim>& p2) : m_p1(p1), m_p2(p2) {}
+  /// construct a copy of a segment
   Segment(const Segment& s) : m_p1(s.m_p1), m_p2(s.m_p2) {}
 
   ~Segment() {}
@@ -66,18 +73,17 @@ class Segment
 
   bool isValid() const {return m_p1.isValid() && m_p2.isValid();}
 
-  // WARNING! This operator is for sorting only. It does not
-  // reflect any property of the segment.
   bool operator< (const Segment& s) const;
 
   // Descriptive characteristics
 
   int numCorners() const {return 2;}
-  // No checks on i in any of the other shapes, why should this be different?
   Point<dim> getCorner(int i) const {assert(i == 0 || i == 1); return i ? m_p2 : m_p1;}
   Point<dim> getCenter() const {return Midpoint(m_p1, m_p2);}
 
+  /// get one end of the segment
   const Point<dim>& endpoint(const int i) const	{return i ? m_p2 : m_p1;}
+  /// get one end of the segment
   Point<dim>& endpoint(const int i)		{return i ? m_p2 : m_p1;}
 
   // Movement functions
