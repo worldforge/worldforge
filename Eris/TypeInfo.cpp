@@ -39,16 +39,10 @@ TypeInfoMap globalTypeMap;
 	
 typedef std::map<std::string, TypeInfoSet> TypeDepMap;
 	
-//typedef std::multimap<std::string, TypeInfoPtr>	TypeDepMap;
 /** This is a dynamic structure indicating which Types are blocked awaiting INFOs
 from other ops. For each blocked INFO, the first item is the <i>blocking</i> type
 (e.g. 'tradesman') and the second item the blocked TypeInfo, (e.g. 'blacksmith')*/
 TypeDepMap globalDependancyMap;
-	
-//void recvInfoOp(const Atlas::Objects::Operation::Info &info);
-//TypeInfoPtr getTypeInfoSafe(const std::string &id);	
-//void sendInfoRequest(const std::string &id);
-//TypeBoundSignal& signalWhenBound(TypeInfoPtr tp);
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -86,7 +80,8 @@ bool TypeInfo::isA(TypeInfoPtr tp)
 		// can't give a reply, need to get those parents bound. we assume it's in
 		// progress. Need to pick a sensible repost condition here
 	
-		//Signal & sig = signalWhenBound(this);	
+		//Signal & sig = signalWhenBound(this);
+		Eris::Log(LOG_DEBUG, "throwing OperationBlocked doing isA on %s", _name.c_str());
 		throw OperationBlocked(getBoundSignal());
 	}
 }
@@ -169,8 +164,11 @@ void TypeInfo::addParent(TypeInfoPtr tp)
 		return;
 	}
 	
-	if (_ancestors.count(tp))
+	if (_ancestors.count(tp)) {
+		Eris::Log(LOG_WARNING, "Adding %s as parent of %s, but already markes as ancestor",
+			tp->_name.c_str(), _name.c_str());
 		throw InvalidOperation("Bad inheritance graph : new parent is ancestor");
+	}
 	
 	// update the gear
 	_parents.insert(tp);
@@ -189,11 +187,6 @@ void TypeInfo::addChild(TypeInfoPtr tp)
 	}
 	
 	_children.insert(tp);
-	
-	//addDescendant(tp);
-	//TypeInfoSet& childDescendants = tp->_descendants;
-	//_descendants.insert(childDescendants.begin(), childDescendants.end());
-	
 	// again this will not recurse due to the termination code
 	tp->addParent(this);
 }
@@ -210,17 +203,6 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
 	for (TypeInfoSet::iterator C=_children.begin(); C!=_children.end();++C)
 		(*C)->addAncestor(tp);
 }
-
-/*
-void TypeInfo::addDescendant(TypeInfoPtr tp)
-{
-	assert(tp);
-	_descendants.insert(tp);
-	
-	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P)
-		(*P)->addDescendant(tp);
-}
-*/
 
 bool TypeInfo::isBound()
 {
@@ -409,9 +391,10 @@ try {
 	}
 	
 	// handle duplicates : this can be caused by waitFors pilling up, for example
-	if (T->second->isBound())
+	if (T->second->isBound() && (id!="root"))
 		return;
 	
+	Eris::Log(LOG_DEBUG, "processing type data for %s", id.c_str());
 	T->second->processTypeData(atype);
 } catch (Atlas::Message::WrongTypeException &wte) {
 	Eris::Log(LOG_ERROR, "caught WTE in TypeInfo::recvOp");
