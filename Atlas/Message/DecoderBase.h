@@ -71,7 +71,7 @@ protected:
     std::stack<std::string> m_names;
 
     /// Override this - called when an object was received.
-    virtual void objectArrived(const Element& obj) = 0;
+    virtual void objectArrived(const Element::MapType& obj) = 0;
 };
 
 } } // namespace Atlas::Message

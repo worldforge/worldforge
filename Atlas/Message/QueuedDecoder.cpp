@@ -15,19 +15,19 @@ size_t QueuedDecoder::queueSize()
     return m_objectQueue.size();
 }
 
-Element QueuedDecoder::front()
+Element::MapType QueuedDecoder::front()
 {
     return m_objectQueue.front();
 }
 
-Element QueuedDecoder::pop()
+Element::MapType QueuedDecoder::pop()
 {
-    Element r = m_objectQueue.front();
+    Element::MapType r = m_objectQueue.front();
     m_objectQueue.pop();
     return r;
 }
 
-void QueuedDecoder::objectArrived(const Element& obj)
+void QueuedDecoder::objectArrived(const Element::MapType& obj)
 {
     m_objectQueue.push(obj);
 }

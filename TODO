@@ -3,6 +3,8 @@ New TODO by Al Riddoch
 Items below are probably still valid, but this is where i reconsider the
 order and priority of tasks, and make my own notes.
 
+Make the code for adding new decoder methods templaty so we can ovoid nasty casting.
+
 Generally speaking it seems having virtual methods with the same names
 is not all that good a trick. It causes methods to get hidden when only
 some are overridden in a subclass.
@@ -34,6 +36,10 @@ TODO in the 0.5 devel series
 
  - ensure that the Objects code uses member construction efficiently, as
      was done in 0.4.2
+
+ - Make sure exceptions inherit from std::exception
+
+ - Stop passing Objects when Object::MapType is the only option
 
 TODO items for anybody who wants to do them:
 

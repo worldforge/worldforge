@@ -8,7 +8,7 @@
 from common import *
 
 class GenerateObjectFactory:
-    def generate_object_factory(self, objects):
+    def generate_object_factory(self, objects, max_class_no):
         #print "Output of implementation for:",
         outfile = self.outdir + '/objectFactory.cpp'
         #print outfile
@@ -18,6 +18,9 @@ class GenerateObjectFactory:
         self.write('#include "Entity.h"\n')
         self.write('#include "Operation.h"\n\n')
         self.ns_open(self.base_list)
+        self.write('\nint enumMax = ')
+        self.write(str(max_class_no))
+        self.write(';\n')
         self.write("""
 using Atlas::Message::Element;
 
@@ -67,9 +70,10 @@ std::list<std::string> Factories::getKeys()
     return keys;
 }
     
-void Factories::addFactory(const std::string& name, FactoryMethod method)
+int Factories::addFactory(const std::string& name, FactoryMethod method)
 {
     m_factories[name] = method;
+    return ++enumMax;
 }
 
 Root messageObject2ClassObject(const Element& mobj_arg)

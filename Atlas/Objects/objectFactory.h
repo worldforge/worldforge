@@ -13,11 +13,17 @@
 
 namespace Atlas { namespace Objects {
 
-class NoSuchFactoryException
+class NoSuchFactoryException : public Atlas::Exception
 {
-public:
-    NoSuchFactoryException(const std::string& name) : name(name) {}
+  protected:
     std::string name;
+  public:
+    NoSuchFactoryException(const std::string& name) :
+               Atlas::Exception("No factory for Objects type"), name(name) { }
+    virtual ~NoSuchFactoryException() throw () { }
+    const std::string & getName() {
+        return name;
+    }
 };
 
 typedef Root (*FactoryMethod)();
@@ -29,7 +35,7 @@ public:
     bool hasFactory(const std::string& name);
     Root createObject(const std::string& name);
     std::list<std::string> getKeys();
-    void addFactory(const std::string& name, FactoryMethod method);
+    int addFactory(const std::string& name, FactoryMethod method);
 private:
     FactoryMap m_factories;
 };

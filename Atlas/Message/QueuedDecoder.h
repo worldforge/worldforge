@@ -33,20 +33,20 @@ public:
     /// Retrieve the current size of the message queue.    
     size_t queueSize();
     /// Pop an object from the front of the message queue.
-    Element pop();
+    Element::MapType pop();
     /// Peek at the object at the front of the queue.
-    Element front();
+    Element::MapType front();
     /// Clear the message queue.
     void clear();
     
 protected:
 
     /// This adds a message to the queue.
-    void objectArrived(const Element& obj);
+    void objectArrived(const Element::MapType& obj);
     
 private:
     
-    std::queue<Element> m_objectQueue;
+    std::queue<Element::MapType> m_objectQueue;
 };
 
 } } // namespace Atlas::Message

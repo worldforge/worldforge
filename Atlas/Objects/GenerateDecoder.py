@@ -41,13 +41,20 @@ class GenerateDecoder:
  */
 class ObjectsDecoder : public Atlas::Message::DecoderBase
 {
+    typedef void (ObjectsDecoder::*objectArrivedPtr)(const Root&);
+    typedef std::map<int, objectArrivedPtr> methodMap_t;
 public:
     /// Default destructor.
     virtual ~ObjectsDecoder();
 
+    /// Add a new method for Objects class defined by application
+    void addMethod(int, objectArrivedPtr method);
 protected:
+    /// Store extension methods for Objects classes defined by application
+    methodMap_t m_methods;
+
     /// Overridden by Objects::Decoder to retrieve the object.
-    virtual void objectArrived(const Atlas::Message::Element&);
+    virtual void objectArrived(const Atlas::Message::Element::MapType&);
 
     /// An unknown object has arrived.
     virtual void unknownObjectArrived(const Atlas::Message::Element&) { }
@@ -84,7 +91,12 @@ ObjectsDecoder::~ObjectsDecoder()
 {
 }
 
-void ObjectsDecoder::objectArrived(const Atlas::Message::Element& o)
+void ObjectsDecoder::addMethod(int num, objectArrivedPtr method)
+{
+    m_methods[num] = method;
+}
+
+void ObjectsDecoder::objectArrived(const Atlas::Message::Element::MapType& o)
 {
     Root obj =  messageObject2ClassObject(o);
     dispatchObject(obj);
@@ -102,7 +114,12 @@ void ObjectsDecoder::dispatchObject(const Root& obj)
         break;
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""    default:
-        unknownObjectArrived(obj);
+        methodMap_t::const_iterator I = m_methods.find(obj->getClassNo());
+        if (I != m_methods.end()) {
+            (this->*I->second)(obj);
+        } else {
+            unknownObjectArrived(obj);
+        }
     }
 }
 """) #"for xemacs syntax highlighting

@@ -570,5 +570,5 @@ if __name__=="__main__":
         all_objects = all_objects + gen_code(objects[name], class_only_files)
     #generate code common to all objects
     gen_code = GenerateCC(objects, ".") #, object_enum)
-    gen_code.generate_object_factory(all_objects)
+    gen_code.generate_object_factory(all_objects,class_serial_no)
     gen_code.generate_decoder(all_objects)

@@ -25,7 +25,7 @@ class LoadDefaultsDecoder : public ObjectsDecoder
     LoadDefaultsDecoder(const std::string& filename);
     Element getMessageObject(const std::string& id);
   protected:
-    virtual void objectArrived(const Element&);
+    virtual void objectArrived(const Element::MapType&);
   private:
     void setAttributes(Root &obj, //Root &obj_inst, 
                        const Element& mobj, 
@@ -80,10 +80,10 @@ Element LoadDefaultsDecoder::getMessageObject(const std::string& id)
     }
 }
 
-void LoadDefaultsDecoder::objectArrived(const Element& o)
+void LoadDefaultsDecoder::objectArrived(const Element::MapType& o)
 {
-    MessageObjectMap::const_iterator I = o.asMap().find("id");
-    if (I == o.asMap().end()) {
+    MessageObjectMap::const_iterator I = o.find("id");
+    if (I == o.end()) {
         unknownObjectArrived(o);
         return;
     }

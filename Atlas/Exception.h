@@ -6,16 +6,18 @@
 #define ATLAS_EXCEPTION_H
 
 #include <string>
+#include <exception>
 
 namespace Atlas {
 
-class Exception
+class Exception : public std::exception
 {
   protected:
     std::string m_description;
     
   public:
     Exception(const std::string & d = "UNKNOWN ERROR") : m_description(d) { }
+    virtual ~Exception() throw () { }
     const std::string & getDescription() const {
         return m_description;
     }

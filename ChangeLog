@@ -1,3 +1,30 @@
+2001-11-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Exception.h, src/Objects/BaseObject.h,
+	  src/Objects/GenerateDecoder.py, src/Objects/objectFactory.h:
+	  Have the base Atlas-C++ exception class inherit from
+	  std::exception. Fix destructor throw specifier.
+
+	* src/Message/DecoderBase.h, src/Message/QueuedDecoder.cpp,
+	  src/Message/QueuedDecoder.h, src/Objects/loadDefaults.cpp:
+	  Pass Element::MapType to the objectArrived() method as atlas
+	  requires the top level element to be a map.
+
+	* src/Objects/objectFactory.h: Modified NoSuchFactoryException
+	  so that it inherits from Atlas::Exception.
+
+	* src/Objects/objectFactory.h, src/Objects/objectFactory.cpp,
+	  src/Objects/GenerateObjectFactory.py:
+	  addFactory now returns an integer which is the type value
+	  which will be used to identify objects of the class
+	  produced by this factory.
+
+	* src/Objects/Decoder.h, src/Objects/Decoder.cpp,
+	  src/Objects/GenerateDecoder.py:
+	  Added addMethod() function to Decoder class, which allows the
+	  application to register methods for custom classes using
+	  the integer value returned by Factories::addFactory().
+
 2002-11-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Message/DecoderBase.cpp, src/Message/DecoderBase.h,
