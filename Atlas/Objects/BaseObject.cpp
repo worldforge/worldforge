@@ -4,7 +4,10 @@
 
 #include <Atlas/Objects/BaseObject.h>
 
+#include <Atlas/Message/Element.h>
+
 using Atlas::Message::Element;
+using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects {
 
@@ -30,7 +33,7 @@ bool BaseObjectData::hasAttr(const std::string& name) const
 const Element BaseObjectData::getAttr(const std::string& name) const
     throw (NoSuchAttrException) 
 {
-    Element::MapType::const_iterator I = m_attributes.find(name);
+    MapType::const_iterator I = m_attributes.find(name);
     if (I == m_attributes.end()) {
         throw NoSuchAttrException(name);
     }
@@ -47,16 +50,16 @@ void BaseObjectData::removeAttr(const std::string& name)
     m_attributes.erase(name);
 }
 
-const Element::MapType BaseObjectData::asMessage() const
+const MapType BaseObjectData::asMessage() const
 {
-    Element::MapType m;
+    MapType m;
     addToMessage(m);
     return m;
 }
 
-void BaseObjectData::addToMessage(Element::MapType & m) const
+void BaseObjectData::addToMessage(MapType & m) const
 {
-    typedef Element::MapType::const_iterator Iter;
+    typedef MapType::const_iterator Iter;
     for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++) {
         m[I->first] = I->second;
     }
@@ -65,7 +68,7 @@ void BaseObjectData::addToMessage(Element::MapType & m) const
 void BaseObjectData::sendContents(Bridge & b) const
 {
     Message::Encoder e(b);
-    typedef Element::MapType::const_iterator Iter;
+    typedef MapType::const_iterator Iter;
     for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++) {
         e.mapElementItem((*I).first, (*I).second);
     }

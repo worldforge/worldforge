@@ -1,3 +1,30 @@
+2004-02-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Utility.h: Eliminate using ..; directives from
+	  headers.
+
+	* Atlas/Message/Element.h: Deprecate typedefs inside
+	  Element class in favour if similar typedefs in Message
+	  namespace. Makes forward declarations easier.
+
+	* Turn off -Werror to allow the deprecation warning.
+
+	* Atlas/Message/DecoderBase.cpp, Atlas/Message/DecoderBase.h,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
+	  Atlas/Message/QueuedDecoder.cpp, Atlas/Message/QueuedDecoder.h:
+	  Adjust Message layer to use the new typedefs.
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/GenerateDecoder.py,
+	  Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/common.py,
+	  Atlas/Objects/gen_cpp.py, 
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/SmartPtr.cpp, Atlas/Objects/loadDefaults.cpp,
+	  Atlas/Objects/objectFactory.h: Adjust the objects layer
+	  to use the new typdefs.
+
+	* Atlas/Utilities/atlas_convert.cpp: Fix the convert utility
+	  to use the new typedefs.
+
 2004-02-15  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/Encoder.h, Atlas/Objects/AttributeInfo.py:

@@ -1,5 +1,12 @@
 New TODO by Al Riddoch
 
+Fix all use of if (..) .. to always use { } in Root.h etc.
+
+If we move get|set(...)AsList() methods from Root.h and other headers,
+into body, we will remove the need for Element.h from any header.
+This and the should take args by reference. Why is it explicitly sabotaged?
+Ask aloril.
+
 Make dedaults_FooData a pointer initialised to NULL, and only ever access
 it through a singleton style instance static function. This way it can
 be initialised at runtime.

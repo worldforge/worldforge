@@ -4,6 +4,8 @@
 
 #include <Atlas/Objects/SmartPtr.h>
 
+#include <Atlas/Message/Element.h>
+
 namespace Atlas { namespace Objects {
 
 NullSmartPtrDereference::~NullSmartPtrDereference() throw ()

@@ -8,6 +8,7 @@
 //#include <Atlas/Codecs/Binary.h>
 #include <Atlas/Message/QueuedDecoder.h>
 #include <Atlas/Message/MEncoder.h>
+#include <Atlas/Message/Element.h>
 
 #include <fstream>
 #include <iostream>
@@ -57,7 +58,7 @@ void convert(std::string file_in, std::string codec_in, std::string file_out, st
     Atlas::Message::Encoder encoder(*outCodec);
     encoder.streamBegin();
     while (decoder.queueSize() > 0 ) {
-        Atlas::Message::Element::MapType msg(decoder.popMessage());
+        Atlas::Message::MapType msg(decoder.popMessage());
         encoder.streamMessageElement(msg);
     }
     encoder.streamEnd();

@@ -4,6 +4,8 @@
 
 #include <Atlas/Message/MEncoder.h>
 
+#include <Atlas/Message/Element.h>
+
 namespace Atlas { namespace Message {
 
 Encoder::Encoder(Atlas::Bridge & b)
@@ -23,19 +25,19 @@ void Encoder::listElementItem(const Element& obj)
         case Element::TYPE_STRING: m_b.listStringItem(obj.asString()); break;
         case Element::TYPE_MAP: {
             m_b.listMapItem();
-            Element::MapType::const_iterator I;
+            MapType::const_iterator I;
             for (I = obj.asMap().begin(); I != obj.asMap().end(); I++) {
                 mapElementItem((*I).first, (*I).second);
-	    }
+            }
             m_b.mapEnd();
             }
             break;
         case Element::TYPE_LIST: {
             m_b.listListItem();
-            Element::ListType::const_iterator I;
+            ListType::const_iterator I;
             for (I = obj.asList().begin(); I != obj.asList().end(); I++) {
                 listElementItem(*I);
-	    }
+            }
             m_b.listEnd();
             }
             break;
@@ -43,20 +45,20 @@ void Encoder::listElementItem(const Element& obj)
     }
 }
 
-void Encoder::listElementMapItem(const Element::MapType& obj)
+void Encoder::listElementMapItem(const MapType& obj)
 {
     m_b.listMapItem();
-    Element::MapType::const_iterator I;
+    MapType::const_iterator I;
     for (I = obj.begin(); I != obj.end(); I++) {
         mapElementItem(I->first, I->second);
     }
     m_b.mapEnd();
 }
 
-void Encoder::listElementListItem(const Element::ListType& obj)
+void Encoder::listElementListItem(const ListType& obj)
 {
     m_b.listListItem();
-    Element::ListType::const_iterator I;
+    ListType::const_iterator I;
     for (I = obj.begin(); I != obj.end(); I++) {
         listElementItem(*I);
     }
@@ -71,19 +73,19 @@ void Encoder::mapElementItem(const std::string& name, const Element& obj)
         case Element::TYPE_STRING: m_b.mapStringItem(name, obj.asString()); break;
         case Element::TYPE_MAP: {
             m_b.mapMapItem(name);
-            Element::MapType::const_iterator I;
+            MapType::const_iterator I;
             for (I = obj.asMap().begin(); I != obj.asMap().end(); I++) {
                 mapElementItem((*I).first, (*I).second);
-	    }
+            }
             m_b.mapEnd();
             }
             break;
         case Element::TYPE_LIST: {
             m_b.mapListItem(name);
-            Element::ListType::const_iterator I;
+            ListType::const_iterator I;
             for (I = obj.asList().begin(); I != obj.asList().end(); I++) {
                 listElementItem(*I);
-	    }
+            }
             m_b.listEnd();
             }
             break;
@@ -92,30 +94,30 @@ void Encoder::mapElementItem(const std::string& name, const Element& obj)
     }                          
 }
 
-void Encoder::mapElementMapItem(const std::string& name, const Element::MapType& obj)
+void Encoder::mapElementMapItem(const std::string& name, const MapType& obj)
 {
     m_b.mapMapItem(name);
-    Element::MapType::const_iterator I;
+    MapType::const_iterator I;
     for (I = obj.begin(); I != obj.end(); I++) {
         mapElementItem((*I).first, (*I).second);
     }
     m_b.mapEnd();
 }
 
-void Encoder::mapElementListItem(const std::string& name, const Element::ListType& obj)
+void Encoder::mapElementListItem(const std::string& name, const ListType& obj)
 {
     m_b.mapListItem(name);
-    Element::ListType::const_iterator I;
+    ListType::const_iterator I;
     for (I = obj.begin(); I != obj.end(); I++) {
         listElementItem(*I);
     }
     m_b.listEnd();
 }
 
-void Encoder::streamMessageElement(const Element::MapType& obj)
+void Encoder::streamMessageElement(const MapType& obj)
 {
     m_b.streamMessage();
-    Element::MapType::const_iterator I;
+    MapType::const_iterator I;
     for (I = obj.begin(); I != obj.end(); I++) {
         mapElementItem((*I).first, (*I).second);
     }

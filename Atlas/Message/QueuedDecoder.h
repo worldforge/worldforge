@@ -5,12 +5,15 @@
 #ifndef ATLAS_MESSAGE_QUEUEDDECODER_H
 #define ATLAS_MESSAGE_QUEUEDDECODER_H
 
-#include <Atlas/Message/Element.h>
 #include <Atlas/Message/DecoderBase.h>
 
 #include <queue>
 
 namespace Atlas { namespace Message {
+
+class Element;
+
+typedef std::map<std::string, Element> MapType;
 
 /** Decoder that presents a queue of Atlas::Message::Element.
  *
@@ -36,13 +39,13 @@ public:
 	return m_objectQueue.size();
     }
     /// Pop an object from the front of the message queue.
-    const Element::MapType popMessage() {
-        Element::MapType r = m_objectQueue.front();
+    const MapType popMessage() {
+        MapType r = m_objectQueue.front();
         m_objectQueue.pop();
         return r;
     }
     /// Peek at the object at the front of the queue.
-    const Element::MapType frontMessage() {
+    const MapType frontMessage() {
 	return m_objectQueue.front();
     }
     /// Clear the message queue.
@@ -51,11 +54,11 @@ public:
 protected:
 
     /// This adds a message to the queue.
-    void messageArrived(const Element::MapType& obj);
+    void messageArrived(const MapType& obj);
     
 private:
     
-    std::queue<Element::MapType> m_objectQueue;
+    std::queue<MapType> m_objectQueue;
 };
 
 } } // namespace Atlas::Message

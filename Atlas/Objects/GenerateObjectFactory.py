@@ -23,6 +23,8 @@ class GenerateObjectFactory:
         self.write(';\n')
         self.write("""
 using Atlas::Message::Element;
+using Atlas::Message::ListType;
+using Atlas::Message::MapType;
 
 NoSuchFactoryException::~NoSuchFactoryException() throw ()
 {
@@ -80,12 +82,12 @@ int Factories::addFactory(const std::string& name, FactoryMethod method)
     return ++enumMax;
 }
 
-Root messageElement2ClassObject(const Element::MapType & mobj)
+Root messageElement2ClassObject(const MapType & mobj)
 {
     Root obj;
 
     // is this instance of entity or operation?
-    Element::MapType::const_iterator I = mobj.find("objtype");
+    MapType::const_iterator I = mobj.find("objtype");
     bool is_instance = false;
     if(I != mobj.end() && (*I).second.isString()) {
         const std::string & objtype = (*I).second.asString();
@@ -95,7 +97,7 @@ Root messageElement2ClassObject(const Element::MapType & mobj)
             // get parent
             I = mobj.find("parents");
             if(I != mobj.end()) {
-                Element::ListType parents_lst = I->second.asList();
+                ListType parents_lst = I->second.asList();
                 if(parents_lst.size()>=1 && parents_lst.front().isString()) {
                     std::string parent = parents_lst.front().asString();
                     // objtype and parent ok, try to create it:

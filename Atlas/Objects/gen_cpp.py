@@ -211,10 +211,10 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
 
     def asobject_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("const Element::MapType %s::asMessage() const\n" % classname)
+        self.write("const MapType %s::asMessage() const\n" % classname)
         self.write("{\n")
         parent = self.get_cpp_parent(obj)
-        self.write("    Element::MapType m = %s::asMessage();\n" % parent)
+        self.write("    MapType m = %s::asMessage();\n" % parent)
         for attr in statics:
             self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
             self.write('        m["%s"] = Element(get%s%s());\n' % \
@@ -224,7 +224,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
 
     def addtoobject_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("void %s::addToMessage(Element::MapType & m) const\n" % classname)
+        self.write("void %s::addToMessage(MapType & m) const\n" % classname)
         self.write("{\n")
         parent = self.get_cpp_parent(obj)
         self.write("    %s::addToMessage(m);\n" % parent)
@@ -371,6 +371,7 @@ void %(classname)s::free()
         if not obj.parents:
             self.write('#include <Atlas/Objects/BaseObject.h>\n')
             self.write('#include <Atlas/Objects/SmartPtr.h>\n\n')
+            self.write('#include <Atlas/Message/Element.h>\n\n')
             self.write('#include <vector>\n')
         if obj.id=="root_operation":
             #self.write('#include "../objectFactory.h"\n')
@@ -437,10 +438,10 @@ void %(classname)s::free()
             self.write("    virtual void sendContents(Atlas::Bridge & b) const;\n")
             self.write("\n")
             # self.doc(4, 'Convert this object to a Element.')
-            # self.write("    virtual const Atlas::Message::Element::MapType asMessage() const;\n")
+            # self.write("    virtual const Atlas::Message::MapType asMessage() const;\n")
             # self.write("\n")
             self.doc(4, 'Write this object to an existing Element.')
-            self.write("    virtual void addToMessage(Atlas::Message::Element::MapType &) const;\n")
+            self.write("    virtual void addToMessage(Atlas::Message::MapType &) const;\n")
             self.write("\n")
             for attr in static_attrs:
                 self.write(attr.set_if())
@@ -498,6 +499,7 @@ void %(classname)s::free()
         #self.write("using namespace Atlas;\n")
         #self.write("using namespace Atlas::Message;\n")
         self.write("using Atlas::Message::Element;\n")
+        self.write("using Atlas::Message::MapType;\n")
         self.write("\n")
         self.ns_open(self.base_list)
         self.write("\n")

@@ -56,10 +56,9 @@ inline const std::string hexEncodeWithPrefix(const std::string&
                                              const std::string& special,
                                              const std::string& message)
 {
-    using std::string;
-    string encoded;
+    std::string encoded;
 
-    for (string::const_iterator i = message.begin(); i != message.end(); ++i)
+    for (std::string::const_iterator i = message.begin(); i != message.end(); ++i)
     {
 	if (std::find(special.begin(), special.end(), *i) != special.end())
 	{
@@ -90,9 +89,8 @@ inline const std::string hexDecodeWithPrefix(const std::string&
                                              prefix,
                                              const std::string& message)
 {
-    using std::string;
-    string newMessage;
-    string curFragment;
+    std::string newMessage;
+    std::string curFragment;
     
     for (size_t i = 0; i < message.size(); i++) {
         if (std::equal(prefix.begin(),prefix.begin() + curFragment.length() + 1,
@@ -103,7 +101,7 @@ inline const std::string hexDecodeWithPrefix(const std::string&
             curFragment = "";
         }
         if (curFragment == prefix) {
-            string hex;
+            std::string hex;
             hex += message[++i];
             hex += message[++i];
             newMessage += hexToChar(hex);

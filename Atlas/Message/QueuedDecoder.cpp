@@ -4,13 +4,15 @@
 
 #include <Atlas/Message/QueuedDecoder.h>
 
+#include <Atlas/Message/Element.h>
+
 namespace Atlas { namespace Message {
 
 QueuedDecoder::QueuedDecoder()
 {
 }
 
-void QueuedDecoder::messageArrived(const Element::MapType& obj)
+void QueuedDecoder::messageArrived(const MapType& obj)
 {
     m_objectQueue.push(obj);
 }

@@ -5,13 +5,20 @@
 #ifndef ATLAS_MESSAGE_DECODERBASE_H
 #define ATLAS_MESSAGE_DECODERBASE_H
 
-#include <Atlas/Message/Element.h>
-
 #include <Atlas/Bridge.h>
 
+#include <map>
+#include <string>
+#include <vector>
 #include <stack>
 
 namespace Atlas { namespace Message {
+
+class Element;
+
+typedef std::map<std::string, Element> MapType;
+typedef std::vector<Element> ListType;
+
 
 /** Base class for decoders that take Atlas::Message::Object.
  *
@@ -66,14 +73,14 @@ protected:
     /// The state stack.
     std::stack<State> m_state;
     /// The map stack.
-    std::stack<Element::MapType> m_maps;
+    std::stack<MapType> m_maps;
     /// The list stack.
-    std::stack<Element::ListType> m_lists;
+    std::stack<ListType> m_lists;
     /// Names for maps and lists.
     std::stack<std::string> m_names;
 
     /// Override this - called when an object was received.
-    virtual void messageArrived(const Element::MapType& obj) = 0;
+    virtual void messageArrived(const MapType& obj) = 0;
 };
 
 } } // namespace Atlas::Message

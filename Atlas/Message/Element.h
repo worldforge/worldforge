@@ -20,6 +20,15 @@ class WrongTypeException : public Atlas::Exception
     WrongTypeException() : Atlas::Exception("Wrong Message::Element type") { }
 };
 
+class Element;
+
+typedef long IntType;
+typedef double FloatType;
+typedef void * PtrType;
+typedef std::string StringType;
+typedef std::map<std::string, Element> MapType;
+typedef std::vector<Element> ListType;
+
 /** Multi-type container
  *
  * FIXME: Document this
@@ -48,12 +57,15 @@ class WrongTypeException : public Atlas::Exception
 class Element
 {
 public:
-    typedef long IntType;
-    typedef double FloatType;
-    typedef void * PtrType;
-    typedef std::string StringType;
-    typedef std::map<std::string, Element> MapType;
-    typedef std::vector<Element> ListType;
+    // These are now legacy typedefs. New code should use the
+    // Atlas::Message::*Type versions.
+#warning Atlas::Message::Element::FooType typedefs will become private before 0.6.0
+    typedef Atlas::Message::IntType IntType;
+    typedef Atlas::Message::FloatType FloatType;
+    typedef Atlas::Message::PtrType PtrType;
+    typedef Atlas::Message::StringType StringType;
+    typedef Atlas::Message::MapType MapType;
+    typedef Atlas::Message::ListType ListType;
 
     enum Type {
         TYPE_NONE,

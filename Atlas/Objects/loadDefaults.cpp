@@ -14,6 +14,8 @@
 #include <set>
 
 using Atlas::Message::Element;
+using Atlas::Message::ListType;
+using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects {
 
@@ -25,7 +27,7 @@ class LoadDefaultsDecoder : public Atlas::Message::DecoderBase
     LoadDefaultsDecoder(const std::string& filename);
     const Element & getMessageElement(const std::string& id) const;
   protected:
-    virtual void messageArrived(const Element::MapType&);
+    virtual void messageArrived(const MapType&);
   private:
     void setAttributes(Root &obj, //Root &obj_inst, 
                        const Element& mobj, 
@@ -65,7 +67,7 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
 
     delete codec;
   
-    Element::MapType anonymous_obj;
+    MapType anonymous_obj;
     m_objects["anonymous"] = anonymous_obj;
     fillDefaults();
 }
@@ -80,7 +82,7 @@ const Element & LoadDefaultsDecoder::getMessageElement(const std::string& id) co
     }
 }
 
-void LoadDefaultsDecoder::messageArrived(const Element::MapType& o)
+void LoadDefaultsDecoder::messageArrived(const MapType& o)
 {
     MessageElementMap::const_iterator I = o.find("id");
     if (I == o.end()) {
@@ -95,7 +97,7 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
                                         const Element& mobj, 
                                         std::set<std::string> used_attributes)
 {
-    Element::MapType::const_iterator I;
+    MapType::const_iterator I;
     for (I = mobj.asMap().begin(); I != mobj.asMap().end(); I++) {
         std::set<std::string>::const_iterator attr_found = 
                                used_attributes.find(I->first);
@@ -108,7 +110,7 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
     }
     I = mobj.asMap().find("parents");
     if (I != mobj.asMap().end()) {
-        for (Element::ListType::const_iterator J = I->second.asList().begin();
+        for (ListType::const_iterator J = I->second.asList().begin();
              J != I->second.asList().end(); J++) {
             //cout<<"  >"<<J->asString()<<endl;
             const Element & parent_mobj = getMessageElement(J->asString());
@@ -136,7 +138,7 @@ void LoadDefaultsDecoder::fillDefaults()
         //add object definition
         Root obj_def = objectFactory.createObject(*I);
         obj_def->setObjtype(obj->getObjtype());
-        Element::MapType::const_iterator J;
+        MapType::const_iterator J;
         for (J = mobj.asMap().begin(); J != mobj.asMap().end(); J++) {
             obj_def->setAttr(J->first, J->second);
         }

@@ -6,7 +6,6 @@
 #define ATLAS_OBJECTS_BASEOBJECT_H
 
 #include <Atlas/Message/MEncoder.h>
-#include <Atlas/Message/Element.h>
 #include <Atlas/Bridge.h>
 #include <Atlas/Exception.h>
 
@@ -72,10 +71,10 @@ public:
 
     /// Convert this object to a Object. This is now legacy, and implemented using
     /// addToMessage
-    const Atlas::Message::Element::MapType asMessage() const;
+    const Atlas::Message::MapType asMessage() const;
 
     /// Write this object to an existing Element
-    virtual void addToMessage(Atlas::Message::Element::MapType &) const;
+    virtual void addToMessage(Atlas::Message::MapType &) const;
 
     /// Send the contents of this object to a Bridge.
     virtual void sendContents(Atlas::Bridge & b) const;
@@ -154,7 +153,7 @@ public:
     private:
         BaseObjectData *m_obj; // pointer to object whose args we're iterating
         int m_current_class; // m_class_no for current class in the iteration
-        Message::Element::MapType::iterator m_I; // iterator in m_obj->m_attributes
+        Message::MapType::iterator m_I; // iterator in m_obj->m_attributes
         value_type m_val;
     };
 
@@ -205,7 +204,7 @@ public:
     private:
         const BaseObjectData *m_obj; // pointer to object whose args we're iterating
         int m_current_class; // m_class_no for current class in the iteration
-        Message::Element::MapType::const_iterator m_I; // const_iterator in m_obj->m_attributes
+        Message::MapType::const_iterator m_I; // const_iterator in m_obj->m_attributes
         value_type m_val;
     };
 
