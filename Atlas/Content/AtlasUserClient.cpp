@@ -29,6 +29,13 @@ void AUserClient::gotMsg(const AObject& msg)
             found = true;
         }
     }
+    multimap<string, void(*)(const AObject&)>::iterator J;
+    for (J = m_msghandlers_simp.begin(); J != m_msghandlers_simp.end(); J++) {
+        if ((*J).first == msgOp) {
+            (*(*J).second)(msg);
+            found = true;
+        }
+    }
     if (!found) cerr << "Warning, could not find handler for message!\n";
 }
 
@@ -43,6 +50,24 @@ AObject AUserClient::call(const AObject& msg)
     return m_reply;
 }
 
+void AUserClient::addMsgHandler(const string& type, void(*hdl)(const AObject&))
+{
+    m_msghandlers_simp.insert(m_msghandlers_simp.end(),
+            pair<string, void(*)(const AObject&)>(type, hdl));
+}
+
+void AUserClient::remMsgHandler(const string& type, void(*hdl)(const AObject&))
+{
+    multimap<string, void(*)(const AObject&)>::iterator I;
+    bool quit = false;
+    for (I = m_msghandlers_simp.begin(); I != m_msghandlers_simp.end()
+                                         && !quit; I++) {
+        if (((*I).first == type) && ((*I).second == hdl)) {
+            m_msghandlers_simp.erase(I);
+            quit = true;
+        }
+    }
+}
 
 AObject AUserClient::createOperation(const string& id, Arg* args ...)
 {

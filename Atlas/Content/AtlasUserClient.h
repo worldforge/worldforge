@@ -52,6 +52,10 @@ public:
     virtual void gotMsg(const AObject& msg);
     
     virtual AObject call(const AObject& msg);
+
+    void addMsgHandler(const string& type, void(*hdl)(const AObject&));
+    void remMsgHandler(const string& type, void(*hdl)(const AObject&));
+    
     template<class T> void addMsgHandler(const string& type, T& obj,
                                          void(T::*handler)(const AObject&));
     template<class T> void remMsgHandler(const string& type, T& obj,
@@ -69,6 +73,7 @@ private:
 
     AObject m_reply;
     multimap<string, fptr_abstract*> m_msghandlers;
+    multimap<string, void(*)(const AObject&)> m_msghandlers_simp;
 };
 
 // need to put these here so all instantiations get compiled properly
