@@ -403,9 +403,9 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
 void Segment::addMod(TerrainMod *t) 
 {
     m_modList.push_back(t);
-    applyMod(t);
-    // currently mods dont fix the normals
-    m_validNorm = false;
+    if (m_validPt) {
+        applyMod(t);
+    }
 }
 
 void Segment::clearMods() 
