@@ -1,5 +1,5 @@
 
-bin_PROGRAMS = test-object-map test-object-list
+bin_PROGRAMS = test-object-map test-object-list test-negotiate
 
 CXXFLAGS = -Wall -D_ADebug_
 
@@ -11,4 +11,9 @@ test_object_list_SOURCES	= test-object-list.cpp
 test_object_listincludedir	= $(includedir)/Atlas/src/TestSuite
 test_object_list_LDADD		= ../Object/.libs/libAtlasObject.a -ldl
 
-TESTS = test-object-map test-object-list
+test_negotiate_SOURCES		= test-negotiate.cc
+test_negotiateincludedir	= $(includedir)/Atlas/src/TestSuite
+test_negotiate_LDADD		= ../Stream/.libs/libAtlasStream.a ../Object/.libs/libAtlasObject.a ../Codecs/.libs/libAtlasCodecs.a  ../Filters/.libs/libAtlasFilters.a
+
+TESTS = test-object-map test-object-list test-negotiate
+
