@@ -447,7 +447,7 @@ void Account::loginError(const Error& err)
         
     const std::vector<Root>& args = err->getArgs();
     std::string msg = args[0]->getAttr("message").asString();
-    warning() << "got login error: " << msg;
+    debug() << "got login error: " << msg;
     LoginFailure.emit(msg);
     
     m_status = DISCONNECTED;

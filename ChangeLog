@@ -1,5 +1,12 @@
 2005-02-02  James Turner  <james@worldforge.org>
 
+	* Eris/Connection.cpp: make the dispatch test for server info tighter,
+	  to avoid erroneously stealing other ops which inherit INFO.
+	  
+	* Eris/Account.cpp: reduce severity of log messages
+
+2005-02-02  James Turner  <james@worldforge.org>
+
 	* Eris/Connection.cpp, Eris/Connection.h: add support for querying the
 	  information data for the connected server. Results are returned using
 	  the same format as meta-server queries.

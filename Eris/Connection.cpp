@@ -256,7 +256,7 @@ void Connection::dispatchOp(const RootOperation& op)
     rr = m_typeService->handleOperation(op);
     if (rr == Router::HANDLED) return;
     
-    if (anonymous && op->instanceOf(INFO_NO) && op->getFrom().empty()) {
+    if (anonymous && (op->getClassNo() == INFO_NO) && op->getFrom().empty()) {
         handleServerInfo(op);
         return;
     }
