@@ -13,7 +13,6 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
 
 #include <cassert>
@@ -28,28 +27,17 @@ MetaQuery::MetaQuery(Meta *ms, const std::string &host, unsigned int sindex) :
     BaseConnection("eris-metaquery", "mq_" + host + "-", ms),
     _host(host),
     _meta(ms),
-    _complete(false),
-    m_serverIndex(sindex)
+    m_serverIndex(sindex),
+    m_complete(false)
 {
     assert(ms);
     
     connect(host, 6767);
-    if (_status != CONNECTING) {
-	// failed! - the metaserver code (in queryServer) will pick this up and clean up
-	_complete = true;
-    }
 }
 	
 MetaQuery::~MetaQuery()
 {
     // clean up is all done by the Base Connection
-}
-	
-SOCKET_TYPE MetaQuery::getSocket()
-{
-    if (!_stream)
-        throw InvalidOperation("Not connected, hence no FD");
-    return _stream->getSocket();	
 }
 
 void MetaQuery::onConnect()
@@ -76,7 +64,7 @@ void MetaQuery::onConnect()
     }
     
     _timeout = new Timeout("metaquery_get_" + _host, this, 10000);
-    bindTimeout(*_timeout,  QUERY_GET);
+    _timeout->Expired.connect(SigC::slot(*this, &MetaQuery::onQueryTimeout));
 }
 
 long MetaQuery::getElapsed()
@@ -84,23 +72,25 @@ long MetaQuery::getElapsed()
     return  (TimeStamp::now() - _stamp).milliseconds();
 }
 
-void MetaQuery::setComplete()
-{
-    _complete = true;	
-}
-
 void MetaQuery::handleFailure(const std::string &msg)
 {
     _meta->queryFailure(this, msg);
 }
 
-void MetaQuery::bindTimeout(Timeout &t, Status /*sc*/)
+void MetaQuery::handleTimeout(const std::string&)
 {
-    t.Expired.connect(SigC::bind(SigC::slot(*_meta, &Meta::queryTimeout), this));
+    _meta->queryTimeout(this);
+}
+
+void MetaQuery::onQueryTimeout()
+{
+    _meta->queryTimeout(this);
+}
+
+void MetaQuery::setComplete()
+{
+    assert(m_complete == false);
+    m_complete = true;
 }
 
 } // of namsespace
-
-
-
-

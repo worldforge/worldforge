@@ -9,6 +9,7 @@
 #include <Eris/Timeout.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
+#include <Eris/DeleteLater.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -228,25 +229,24 @@ void Meta::gotData(PollData &data)
             }
         }
     } // of _stream being valid
-
-    QuerySet complete;
+    
+    std::vector<MetaQuery*> complete;
     
     for (QuerySet::iterator Q=m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
     {
-        (*Q)->recv();
-        if ((*Q)->isComplete()) complete.insert(*Q);
+        if ((*Q)->isReady(data)) (*Q)->recv();
+        if ((*Q)->isComplete()) complete.push_back(*Q);
     }
 
-// clean up old queries
-    for (QuerySet::const_iterator Q = complete.begin(); Q != complete.end(); ++Q)
-        deleteQuery(*Q);
+    for (unsigned int i=0; i < complete.size(); ++i)
+        deleteQuery(complete[i]);
 }
 
 void Meta::deleteQuery(MetaQuery* query)
 {
     assert(m_activeQueries.count(query));
     m_activeQueries.erase(query);
-    delete query;
+    deleteLater(query);
     
     // start a new query if there's more to go
     if (!m_pendingQueries.empty())
@@ -461,7 +461,7 @@ void Meta::internalQuery(unsigned int index)
     
     ServerInfo& sv = m_gameServers[index];
     MetaQuery *q =  new MetaQuery(this, sv.getHostname(), index);
-    if (q->isComplete()) {
+    if (q->getStatus() != BaseConnection::CONNECTING) {
         // indicates a failure occurred, so we'll kill it now and say no more
         delete q;
         sv.m_status = ServerInfo::INVALID;
@@ -492,7 +492,7 @@ void Meta::objectArrived(const Root& obj)
         return;
     }
     
-    (*Q)->setComplete(); // so it gets cleaned up
+    (*Q)->setComplete();
     
     RootEntity svr = smart_dynamic_cast<RootEntity>(info->getArgs().front());	
     if (!svr.isValid()) {
@@ -528,8 +528,8 @@ void Meta::queryFailure(MetaQuery *q, const std::string &msg)
     // host app to pop up a dialog or something) since query failures are likely to
     // be very frequent.
     debug() << "meta-query failure: " << msg;
-    q->setComplete();
     m_gameServers[q->getServerIndex()].m_status = ServerInfo::INVALID;
+    q->setComplete();
 }
 
 void Meta::queryTimeout(MetaQuery *q)

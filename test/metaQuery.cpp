@@ -112,7 +112,7 @@ void dumpToHTML(const Eris::Meta& meta)
 
 int main(int argc, char* argv[])
 {
-    Eris::setLogLevel(Eris::LOG_WARNING);
+    Eris::setLogLevel(Eris::LOG_DEBUG);
     Eris::Logged.connect(SigC::slot(&erisLog));
 
     bool htmlDump = false;

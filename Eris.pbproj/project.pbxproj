@@ -239,6 +239,7 @@
 		};
 		C43FBCF2054315F2008FC2ED = {
 			children = (
+				C4C5505207A6D43B00F59ED4,
 				C438300D06BEFECA0092C3C7,
 				C4E5CD43064CFF4B00EF7326,
 				C43FBD1C054315F3008FC2ED,
@@ -883,6 +884,7 @@
 				C45D31B8063C48D3001112F7,
 				C4E5CD44064CFF4B00EF7326,
 				C438300F06BEFECA0092C3C7,
+				C4C5505407A6D43B00F59ED4,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1104,6 +1106,7 @@
 				C45D31B1063C4795001112F7,
 				C4E5CD47064CFFAF00EF7326,
 				C438300E06BEFECA0092C3C7,
+				C4C5505307A6D43B00F59ED4,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1301,8 +1304,8 @@
 		};
 		C4AD291A05FA259900AFB402 = {
 			children = (
-				C44CB71A070A240C000DCC7E,
 				C4ADF6AC064ED5320074F881,
+				C44CB71A070A240C000DCC7E,
 				C4ADF7CF06457A3500D3CCAC,
 				C4ADF7D206457B6D00D3CCAC,
 				C47BF18C0600F42E00CC2146,
@@ -1496,6 +1499,7 @@
 		};
 		C4BB15920544A6C100A800CF = {
 			children = (
+				C4C5505107A6D43B00F59ED4,
 				C438300C06BEFECA0092C3C7,
 				C43FBD1B054315F3008FC2ED,
 				C43FBD1F054315F3008FC2ED,
@@ -1582,6 +1586,38 @@
 			fileRef = C4BD5A0606AAA15D0039CF5E;
 			isa = PBXBuildFile;
 			settings = {
+			};
+		};
+		C4C5505107A6D43B00F59ED4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = DeleteLater.cpp;
+			path = Eris/DeleteLater.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4C5505207A6D43B00F59ED4 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = DeleteLater.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4C5505307A6D43B00F59ED4 = {
+			fileRef = C4C5505107A6D43B00F59ED4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4C5505407A6D43B00F59ED4 = {
+			fileRef = C4C5505207A6D43B00F59ED4;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		C4E59E5805C050D7003934C3 = {

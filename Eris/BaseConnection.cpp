@@ -14,7 +14,9 @@
 #include <Atlas/Objects/Encoder.h>
 
 #include <skstream/skstream.h>
+#include <sigc++/object_slot.h>
 
+#include <sstream>
 #include <cassert>
 
 namespace Eris {
@@ -58,7 +60,7 @@ void BaseConnection::connect(const std::string &host, short port)
     
     // start timeout
     _timeout = new Timeout("connect_" + _id, this, 5000);
-    bindTimeout(*_timeout, CONNECTING);
+    _timeout->Expired.connect(SigC::slot(*this, &BaseConnection::onConnectTimeout));
 	
     setStatus(CONNECTING);
 
@@ -153,7 +155,7 @@ void BaseConnection::nonblockingConnect()
     // negotiation timeout
     delete _timeout;
     _timeout = new Timeout("negotiate_" + _id, this, 5000);
-    bindTimeout(*_timeout, NEGOTIATE);
+    _timeout->Expired.connect(SigC::slot(*this, &BaseConnection::onNegotiateTimeout));
 
     _sc = new Atlas::Net::StreamConnect(_clientName, *_stream, *_bridge);
     setStatus(NEGOTIATE);
@@ -196,6 +198,20 @@ void BaseConnection::onConnect()
 {
     // tell anyone who cares with a signal
     Connected.emit();	
+}
+
+void BaseConnection::onConnectTimeout()
+{
+    std::ostringstream os;
+    os << "Connect to " << _host << ':' << _port << " timed out";
+    handleTimeout(os.str());
+    hardDisconnect(false);
+}
+
+void BaseConnection::onNegotiateTimeout()
+{
+    handleTimeout("Atlas negotiation timed out");
+    hardDisconnect(false);
 }
 
 void BaseConnection::setStatus(Status sc)

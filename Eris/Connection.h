@@ -98,16 +98,13 @@ public:
     */
     SigC::Signal0<bool> Disconnecting;
     
-    /** Emitted when a non-fatal error occurs; these are nearly always network
+    /**
+    Emitted when a non-fatal error occurs. Tthese are nearly always network
     related, such as connections being lost, or host names not found. The
     connection will be placed into the DISCONNECTED state after the signal
     is emitted; thus the current state (when the failure occured) is still valid
     during the callback */
     SigC::Signal1<void, const std::string&> Failure;
-    
-    /** Emitted when a network-level timeout occurs; the status code indicates
-    in which stage of operation the timeout occurred. */
-    SigC::Signal1<void, Status> Timeout;
     
     /// indicates a status change on the connection
     /** emitted when the connection status changes; This will often
@@ -123,14 +120,12 @@ protected:
 	/// Process failures (to track when reconnection should be permitted)
 	virtual void handleFailure(const std::string &msg);
 
-	virtual void bindTimeout(Eris::Timeout &t, Status sc);
+    virtual void handleTimeout(const std::string& msg);
 
 	virtual void onConnect();
 
-	
     void objectArrived(const Atlas::Objects::Root& obj);
 
-	
 	/// hostname of the server (for reconnection)
 	/** This is cleared if connection fails during establishment (i.e CONNECTING
 	and NEGOTIATE states), to indicate that re-connection is not possible. */
@@ -150,6 +145,8 @@ private:
     void gotData(PollData&);
 
     void dispatchOp(const Atlas::Objects::Operation::RootOperation& op);
+
+    void onDisconnectTimeout();
 
     typedef std::deque<Atlas::Objects::Operation::RootOperation> OpDeque;
     OpDeque m_opDeque; ///< store of all the recived ops waiting to be dispatched

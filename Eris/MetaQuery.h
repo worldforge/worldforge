@@ -24,8 +24,6 @@ class MetaQuery : public BaseConnection
 public:	
 	MetaQuery(Meta *svr, const std::string &host, unsigned int index);
 	virtual ~MetaQuery();
-
-	SOCKET_TYPE getSocket();
 	
 	/// return the serial-number of the query GET operation [for identification of replies]
 	long getQueryNo() const
@@ -35,37 +33,36 @@ public:
 	const std::string& getHost() const
 	{ return _host; }
 	
-        unsigned int getServerIndex() const
-        { return m_serverIndex; }
+    unsigned int getServerIndex() const
+    { return m_serverIndex; }
         
 	/// Access the elapsed time (in millseconds) since the query was issued
 	long getElapsed();
-	
-	/// Determine whether the query has been handled
-	bool isComplete() const
-	{ return _complete; }
 
 	bool isReady(PollData &data) const
 	{return data.isReady(_stream);}
 		
+    bool isComplete() const
+    { return m_complete; }
+        
 	friend class Meta;
 protected:
+    void setComplete();
+    
 	/// Over-ride the default connection behaviour to issue the query
 	virtual void onConnect();
 	virtual void handleFailure(const std::string &msg);
-
-	virtual void bindTimeout(Timeout &t, Status sc);
-	
-	/// Called by the Meta system once the reply has been recieved and processed
-	void setComplete();
+    virtual void handleTimeout(const std::string& msg);
+    
+    void onQueryTimeout();
 
 	const std::string _host;	///< The host being querried
 	Meta* _meta;			///< The Meta-server object which owns the query
-
+    
 	long _queryNo;		///< The serial number of the query GET
     WFMath::TimeStamp _stamp;	///< Time stamp of the request, to estimate ping to server
-	bool _complete;		///< Flag to indicate when the query is complete
     unsigned int m_serverIndex;
+    bool m_complete;
 };
 
 

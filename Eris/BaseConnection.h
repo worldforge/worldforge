@@ -84,9 +84,11 @@ protected:
     /// derived-class notification when a failure occurs
     virtual void handleFailure(const std::string &msg) = 0;
 
-    /// hook for derived classes to install a signal handler onto the timeout
-    virtual void bindTimeout(Timeout &t, Status sc) = 0;
+    virtual void handleTimeout(const std::string& msg) = 0;
 
+    void onConnectTimeout();
+    void onNegotiateTimeout();
+    
     /// performs and instant disconnection from the server
     /// @emit specified whether the change of state should be signalled
     void hardDisconnect(bool emit);

@@ -83,7 +83,7 @@ void Connection::disconnect()
     // fell through, so someone has locked =>
     // start a disconnect timeout
     _timeout = new Eris::Timeout("disconnect_" + _host, this, 5000);
-    bindTimeout(*_timeout, DISCONNECTING);
+    _timeout->Expired.connect(SigC::slot(*this, &Connection::onDisconnectTimeout));
 }
 
 void Connection::reconnect()
@@ -101,7 +101,7 @@ void Connection::gotData(PollData &data)
 	
     if (_status == DISCONNECTED) {
         error() << "Got data on a disconnected stream";
-	return;
+        return;
     }
    
     BaseConnection::recv();
@@ -198,7 +198,7 @@ void Connection::unlock()
             break;
 
         default:
-            warning() << "Connection unlocked in spurious state : this may case a failure later";
+            warning() << "Connection unlocked in spurious state : this may cause a failure later";
         }
     }
 }
@@ -278,19 +278,24 @@ void Connection::handleFailure(const std::string &msg)
 	}
 	
 	// FIXME - reset I think, but ensure this is safe
-        m_lock= 0;
+    m_lock= 0;
 }
 
-void Connection::bindTimeout(Eris::Timeout &t, Status sc)
+void Connection::handleTimeout(const std::string& msg)
 {
-    // wire up all the stuff
-    t.Expired.connect( SigC::bind(Timeout.slot(),sc) );
+    handleFailure(msg); // all the same in the end
 }
 
 void Connection::onConnect()
 {
     BaseConnection::onConnect();
     m_typeService->init();
+}
+
+void Connection::onDisconnectTimeout()
+{
+    handleTimeout("timed out waiting for disconnection");
+    hardDisconnect(true);
 }
 
 void Connection::postForDispatch(const Root& obj)

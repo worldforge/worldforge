@@ -1,3 +1,21 @@
+2005-01-25  James Turner  <james@worldforge.org>
+
+    * Eris/BaseConnection.cpp, Eris/Connection.cpp: clean up how timeouts
+      are handled - they are now reported via the Failure signal on Connection,
+      and the Connection state should be reset correctly.
+
+    * Eris/Metaserver.cpp, Eris/MetaQuery.cpp: update for the new Timeout
+      handling system, and avoid segfaults when deleting Timed-out queries.
+      
+    * Eris/DeleteLater.cpp, Eris/DeleteLater.h: add a scheme for delaying the
+      delete of arbitrary objects until the flow-of-control returns to the
+      Poller. This idea is borrowed from Qt, and similar to autorelease pools
+      in Cocoa - it enables slots connected to signals such as Failure to
+      request that an object be deleted, without breaking the stack.
+      
+    * Eris/PollDefault.cpp: poke the deleteLater system, once timeouts have
+      been processed.
+
 2005-01-12  James Turner  <james@worldforge.org>
 
     * Eris/Poll.h, Eris/PollDefault.cpp: change Eris::Poll to have a signal

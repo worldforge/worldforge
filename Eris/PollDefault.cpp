@@ -3,6 +3,7 @@
 #include <Eris/PollDefault.h>
 #include <Eris/Timeout.h>
 #include <Eris/Exceptions.h>
+#include <Eris/DeleteLater.h>
 
 #include <skstream/skstream.h>
 
@@ -133,6 +134,8 @@ void PollDefault::poll(unsigned long timeout)
 
     inst.doPoll(timeout);
     Timeout::pollAll();
+
+    execDeleteLaters();
 
     // We're done, turn off the reentrancy prevention flag
     assert(already_polling);
