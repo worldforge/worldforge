@@ -1,3 +1,10 @@
+Monday, 2nd December, Ron Steinke
+
+	* Fixed check for Perl bindings so it can detect SigCPerl >= 0.2.0,
+	  which uses pkg-config
+	* Fixed errors in Perl binding build, made some changes necessary
+	  to accomodate libsigc++-1.2
+
 Friday, 29th November, Ron Steinke
 
 	* Added PollGlib, with code taken from silence. This is the poll

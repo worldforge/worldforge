@@ -17,7 +17,7 @@ if PERL_BINDINGS
 ## rebuild the perl module makefile if we touch the headers,
 ## so that the module gets rebuilt
 perl-makefile.stamp: perl/Makefile.PL
-	cd perl && perl Makefile.PL PREFIX=$prefix LIB=$libdir/perl
+	cd perl && perl Makefile.PL PREFIX=$(prefix) LIB=$(libdir)/perl
 	touch perl-makefile.stamp
 
 perl-all: perl-makefile.stamp
