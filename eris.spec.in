@@ -11,8 +11,8 @@ Copyright: GPL
 Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-Requires: Atlas-C++ >= 0.4.4 wfmath >= 0.2.10 skstream > 0.2 libstdc++
-BuildRequires: Atlas-C++-devel >= 0.4.4 wfmath-devel >= 0.2.10 skstream-devel > 0.2 libstdc++-devel >= 2.95.2
+Requires: Atlas-C++ >= 0.4.93 wfmath >= 0.2.2 skstream > 0.3
+BuildRequires: Atlas-C++-devel >= 0.4.93 wfmath-devel >= 0.3.2 skstream-devel > 0.3 libstdc++-devel
 
 %description
 Eris is designed to simplify client development (and avoid repeating the same
@@ -75,6 +75,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/Eris%{libsuffix}/Eris/Dispatcher.h
 %{_includedir}/Eris%{libsuffix}/Eris/EncapDispatcher.h
 %{_includedir}/Eris%{libsuffix}/Eris/Entity.h
+%{_includedir}/Eris%{libsuffix}/Eris/Exceptions.h
 %{_includedir}/Eris%{libsuffix}/Eris/Factory.h
 %{_includedir}/Eris%{libsuffix}/Eris/IdDispatcher.h
 %{_includedir}/Eris%{libsuffix}/Eris/Lobby.h
@@ -92,6 +93,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/Eris%{libsuffix}/Eris/Timeout.h
 %{_includedir}/Eris%{libsuffix}/Eris/Timestamp.h
 %{_includedir}/Eris%{libsuffix}/Eris/TypeDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/typeService.h
 %{_includedir}/Eris%{libsuffix}/Eris/TypeInfo.h
 %{_includedir}/Eris%{libsuffix}/Eris/Types.h
 %{_includedir}/Eris%{libsuffix}/Eris/Utils.h
