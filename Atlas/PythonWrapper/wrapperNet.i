@@ -6,7 +6,9 @@
 #include <Atlas/Net/Client.h>
 #include <Atlas/Net/Codec.h>
 #include <Atlas/Net/XMLProtocol.h>
+#include <Atlas/Net/PackedProtocol.h>
 #include "wrapperObject.h"
+#include "wrapperClient.h"
 using namespace Atlas;
 %}
 
@@ -29,15 +31,16 @@ using namespace Atlas;
 }
 
 %typemap(python,out) Object& {
-  $target = (PyObject*)newAtlasWrapperObject(*$source);
+  $target = AtlasWrapperObject_FromAtlasObject(*$source);
 }
 
 %include Socket.i
 %include TCPSocket.i
 
-%include Client.i
+%include wrapperClient.h
 
 %include Codec.i
 
 %include Protocol.i
 %include XMLProtocol.i
+%include PackedProtocol.i

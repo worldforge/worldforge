@@ -1,30 +1,18 @@
 /* template copied from Python-1.5.2/Modules/xxmodule.c */
 
-/* Use this file as a template to start implementing a module that
-   also declares objects types. All occurrences of 'Xxo' should be changed
-   to something reasonable for your objects. After that, all other
-   occurrences of 'xx' should be changed to something reasonable for your
-   module. If your module is named foo your sourcefile should be named
-   foomodule.c.
-   
-   You will probably want to delete all references to 'x_attr' and add
-   your own types of attributes instead.  Maybe you want to name your
-   local variables other than 'self'.  If your object type is needed in
-   other files, you'll have to create a file "foobarobject.h"; see
-   intobject.h for an example. */
-
 /* AtlasWrapper objects */
 
-#include "Python.h"
+#include <Python.h>
 #include <Atlas/Object/Object.h>
 #include <Atlas/Net/Codec.h>
 #include <Atlas/Net/XMLProtocol.h>
+#include <Atlas/Net/PackedProtocol.h>
 #include <string>
 
 #include "wrapperObject.h"
 
-#define DEBUG(a) a
-//#define DEBUG(a)
+//#define DEBUG(a) a
+#define DEBUG(a)
 
 static PyObject *ErrorObject;
 
@@ -357,7 +345,8 @@ initccAtlasObject()
 	PyObject *m, *d;
 
         //initialize only once
-        printCodec = new Atlas::Codec(new Atlas::XMLProtocol());
+        //printCodec = new Atlas::Codec(new Atlas::XMLProtocol());
+        printCodec = new Atlas::Codec(new Atlas::PackedProtocol());
 
 	/* Initialize the type of the new type object here; doing it here
 	 * is required for portability to Windows without requiring C++. */

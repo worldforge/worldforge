@@ -7,10 +7,72 @@ namespace Atlas
 
 void	Object::walkTree(int nest, string name, const Object& list)
 {
+#if 0
+	int	i;
+	string	buf;
+	string	pre;
+	string	nam;
+
+	for (int j=0; j<nest; j++) {
+		pre.append("    ");
+	}
+	if (name.length() > 0) {
+		nam = nam + string(" name=") + name;
+		//char buf[80];
+		//sprintf(buf, " name=\"%s\"", name.c_str());
+		//nam.append(buf);
+	}
+
+	if (list.isList()) {
+		DebugMsg2(0,"%s<list%s>", pre.c_str(), nam.c_str());
+		for (i=0; i<list.length(); i++) {
+			Object tmp;
+			list.get(i, tmp);
+			walkTree(nest+1, "", tmp);
+		}
+		DebugMsg1(0,"%s</list>",pre.c_str());
+	} 
+
+	if (list.isMap()) {
+		AObject keys = list.keys();
+		DebugMsg2(0,"%s<map%s>", pre.c_str(), nam.c_str());
+		for (i=0; i<keys.length(); i++) {
+			AObject key;
+			keys.get(i, key);
+			AObject tmp;
+			list.get(key.asString(), tmp);
+			walkTree(nest+1, key.asString(), tmp);
+		}
+		DebugMsg1(0,"%s</map>",pre.c_str());
+	} 
+
+	if (list.isString()) {
+		DebugMsg3(0,"%s<str%s>%s</str>",
+			pre.c_str(), nam.c_str(),list.asString().c_str()
+		);
+	}
+	if (list.isInt()) {
+		DebugMsg3(0,"%s<int%s>%li</int>",
+			pre.c_str(), nam.c_str(),list.asInt()
+		);
+	}
+	if (list.isFloat()) {
+		DebugMsg3(0,"%s<float%s>%.2f</float>",
+			pre.c_str(), nam.c_str(),list.asFloat()
+		);
+	}
+#endif
 }
 
 void	Object::dump(const Object& msg)
 {
+#if 0
+	// format the message header
+	DebugMsg1(0,"<obj>", "");
+	walkTree(1, "", msg);
+	// and close off the message
+	DebugMsg1(0,"</obj>", "");
+#endif
 }
 
 
