@@ -23,8 +23,6 @@
 // Author: Ron Steinke
 // Created: 2002-5-23
 
-#include "timestamp.h"
-
 #ifdef HAVE_CONFIG_H
 	#include "config.h"
 #endif
@@ -35,6 +33,8 @@
 #include <unistd.h>	
 #include <sys/time.h>
 #endif
+
+#include "timestamp.h"
 
 const long Million = 1000000;
 

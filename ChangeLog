@@ -1,3 +1,10 @@
+Sunday, August 17th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/timestamp.cpp: Moved include of timestamp.h
+	  to workaround problem on FreeBSD.
+
+	* Makefile.am: Remove obsolete .pbxproj from DIST list.
+
 Saturday, August 16th, 2003   James Turner <james@worldforge.org>
 
 	* Update ProjectBuilder files. Move along, nothing to see
