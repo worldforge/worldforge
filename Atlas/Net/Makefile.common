@@ -1,40 +1,30 @@
 # Targets follow ---------------------------------
 
-TARGETS = $(OUTDIR)/libAtlasNet.a 
+TARGETS = libAtlasNet.a 
 
 LIBOBJS = \
-	$(OUTDIR)/Types.o \
-	$(OUTDIR)/Net.o \
-	$(OUTDIR)/URI.o \
-	$(OUTDIR)/URIList.o \
-	$(OUTDIR)/IntList.o \
-	$(OUTDIR)/LongList.o \
-	$(OUTDIR)/FloatList.o \
-	$(OUTDIR)/StringList.o \
-	$(OUTDIR)/Codec.o \
-	$(OUTDIR)/PackedAsciiDecoder.o \
-	$(OUTDIR)/PackedAsciiEncoder.o \
-	$(OUTDIR)/PackedAsciiProtocol.o \
-	$(OUTDIR)/XMLDecoder.o \
-	$(OUTDIR)/XMLEncoder.o \
-	$(OUTDIR)/XMLProtocol.o \
-	$(OUTDIR)/Protocol.o \
-	$(OUTDIR)/ProtocolDecoder.o \
-	$(OUTDIR)/ProtocolEncoder.o \
-	$(OUTDIR)/TCPSocket.o \
-	$(OUTDIR)/Socket.o \
-	$(OUTDIR)/Server.o \
-	$(OUTDIR)/Client.o \
-	$(OUTDIR)/Object.o \
-	$(OUTDIR)/Debug.o \
-	$(OUTDIR)/Compressor.o \
+	Codec.o \
+	PackedAsciiDecoder.o \
+	PackedAsciiEncoder.o \
+	PackedAsciiProtocol.o \
+	XMLDecoder.o \
+	XMLEncoder.o \
+	XMLProtocol.o \
+	Protocol.o \
+	ProtocolDecoder.o \
+	ProtocolEncoder.o \
+	TCPSocket.o \
+	Socket.o \
+	Server.o \
+	Client.o \
+	Compressor.o \
 
 
 
 all:		$(TARGETS)
 
 cleanobjs:
-		rm -f $(OUTDIR)/*.o $(OUTDIR)/*.a
+		rm -f *.o *.a
 
 cleanbin:
 		rm -f $(TARGETS)
@@ -50,106 +40,79 @@ cleanall:	cleanobjs cleanbin
 
 # Target rules follow -----------------------------
 
-$(OUTDIR)/libAtlasNet.a: $(LIBOBJS)
-	$(AR) -r $(OUTDIR)/libAtlasNet.a $(LIBOBJS) 
+libAtlasNet.a: $(LIBOBJS)
+	$(AR) -r libAtlasNet.a $(LIBOBJS) 
 
 # Dependency rules follow -----------------------------
 
-$(OUTDIR)/Object.o: Object.cpp Object.h Debug.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Codec.o: Codec.cpp Codec.h Debug.h Object.h \
+Codec.o: Codec.cpp Codec.h Debug.h Object.h \
 	Protocol.h ProtocolEncoder.h ProtocolDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Client.o: Client.cpp Client.h Codec.h Debug.h \
+Client.o: Client.cpp Client.h Codec.h Debug.h \
 	Object.h Protocol.h ProtocolEncoder.h \
 	ProtocolDecoder.h Socket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Debug.o: Debug.cpp Debug.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/PackedAsciiDecoder.o: PackedAsciiDecoder.cpp Object.h \
+PackedAsciiDecoder.o: PackedAsciiDecoder.cpp Object.h \
 	Debug.h Protocol.h ProtocolEncoder.h \
 	ProtocolDecoder.h PackedAsciiDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/PackedAsciiEncoder.o: PackedAsciiEncoder.cpp \
+PackedAsciiEncoder.o: PackedAsciiEncoder.cpp \
 	PackedAsciiEncoder.h Object.h Debug.h \
 	ProtocolEncoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/PackedAsciiProtocol.o: PackedAsciiProtocol.cpp \
+PackedAsciiProtocol.o: PackedAsciiProtocol.cpp \
 	Protocol.h ProtocolEncoder.h Object.h Debug.h \
 	ProtocolDecoder.h PackedAsciiProtocol.h \
 	PackedAsciiEncoder.h PackedAsciiDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Protocol.o: Protocol.cpp Protocol.h \
+Protocol.o: Protocol.cpp Protocol.h \
 	ProtocolEncoder.h Object.h Debug.h \
 	ProtocolDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/ProtocolDecoder.o: ProtocolDecoder.cpp \
+ProtocolDecoder.o: ProtocolDecoder.cpp \
 	ProtocolDecoder.h Object.h Debug.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/ProtocolEncoder.o: ProtocolEncoder.cpp \
+ProtocolEncoder.o: ProtocolEncoder.cpp \
 	ProtocolEncoder.h Object.h Debug.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Server.o: Server.cpp Server.h Socket.h \
+Server.o: Server.cpp Server.h Socket.h \
 	Client.h Codec.h Debug.h Object.h Protocol.h \
 	ProtocolEncoder.h ProtocolDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Socket.o: Socket.cpp Socket.h
+Socket.o: Socket.cpp Socket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/TCPSocket.o: TCPSocket.cpp TCPSocket.h Socket.h
+TCPSocket.o: TCPSocket.cpp TCPSocket.h Socket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/XMLDecoder.o: XMLDecoder.cpp Object.h Debug.h \
+XMLDecoder.o: XMLDecoder.cpp Object.h Debug.h \
 	Protocol.h ProtocolEncoder.h ProtocolDecoder.h \
 	XMLDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/XMLEncoder.o: XMLEncoder.cpp XMLEncoder.h Object.h \
+XMLEncoder.o: XMLEncoder.cpp XMLEncoder.h Object.h \
 	Debug.h ProtocolEncoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/XMLProtocol.o: XMLProtocol.cpp Protocol.h \
+XMLProtocol.o: XMLProtocol.cpp Protocol.h \
 	ProtocolEncoder.h Object.h Debug.h \
 	ProtocolDecoder.h XMLProtocol.h XMLEncoder.h \
 	XMLDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Compressor.o: Compressor.cpp Compressor.h
+Compressor.o: Compressor.cpp Compressor.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/URI.o: URI.c URI.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/URIList.o: URIList.c URIList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/IntList.o: IntList.c IntList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/LongList.o: LongList.c LongList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/FloatList.o: FloatList.c FloatList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/StringList.o: StringList.c StringList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Net.o: Net.cpp Net.h
+Net.o: Net.cpp Net.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Types.o: Types.c Net.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 

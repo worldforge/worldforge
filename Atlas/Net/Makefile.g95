@@ -8,7 +8,6 @@ STDLIBS		=	-L$(OUTDIR)
 STDINCS		=	-I.
 C_FLAGS		=	-g -D_ADebug_ -Wall -fvtable-thunks
 
-OUTDIR          =	win32
 EXE_EXT         =	.exe
 incDirs         =	-Ic:/mingw32/include/Python $(STDINCS)
 libDirs         =	$(STDLIBS)
