@@ -10,6 +10,7 @@
 				C453016003CE4CA500CB8B1B,
 				F5C994A4044D586D01A800CD,
 				C4337F7B03CE491D000063C9,
+				F5733846044D991C01A800CD,
 			);
 			isa = PBXGroup;
 			refType = 4;
@@ -47,6 +48,7 @@
 				F5C994B5044D591E01A800CD,
 				F5C994BE044D594C01A800CD,
 				F5C994C8044D5A6101A800CD,
+				F5733840044D98C501A800CD,
 			);
 		};
 		C4337F7403CE491D000063C9 = {
@@ -205,6 +207,7 @@
 				F5C994B6044D591E01A800CD,
 				F5C994BF044D594C01A800CD,
 				F5C994C9044D5A6101A800CD,
+				F5733841044D98C501A800CD,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -981,6 +984,99 @@
 //F52
 //F53
 //F54
+		F573383C044D98C501A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F573383D044D98C501A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5733845044D98E301A800CD,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F573383E044D98C501A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5733843044D98D301A800CD,
+				F573388F044D991C01A800CD,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F573383F044D98C501A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5733840044D98C501A800CD = {
+			buildPhases = (
+				F573383C044D98C501A800CD,
+				F573383D044D98C501A800CD,
+				F573383E044D98C501A800CD,
+				F573383F044D98C501A800CD,
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "\"/Users/jmt/Code/forge/libs/stable-Atlas-C++/build\"";
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = atlasTest;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = atlasTest;
+			productInstallPath = /usr/local/bin;
+			productName = atlasTest;
+			productReference = F5733841044D98C501A800CD;
+			shouldUseHeadermap = 0;
+		};
+		F5733841044D98C501A800CD = {
+			isa = PBXExecutableFileReference;
+			path = atlasTest;
+			refType = 3;
+		};
+		F5733843044D98D301A800CD = {
+			fileRef = C4337F7A03CE491D000063C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5733844044D98E301A800CD = {
+			isa = PBXFileReference;
+			name = atlas_test.cpp;
+			path = atlas/atlas_test.cpp;
+			refType = 4;
+		};
+		F5733845044D98E301A800CD = {
+			fileRef = F5733844044D98E301A800CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5733846044D991C01A800CD = {
+			isa = PBXFrameworkReference;
+			name = Atlas.framework;
+			path = "/Users/jmt/Code/forge/libs/stable-Atlas-C++/build/Atlas.framework";
+			refType = 0;
+		};
+		F573388F044D991C01A800CD = {
+			fileRef = F5733846044D991C01A800CD;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		F5C994A4044D586D01A800CD = {
 			children = (
 				C453018803CE4CA500CB8B1B,
@@ -993,6 +1089,7 @@
 				C45301BE03CE4CA600CB8B1B,
 				C45301BF03CE4CA600CB8B1B,
 				C45301D403CE4CA600CB8B1B,
+				F5733844044D98E301A800CD,
 			);
 			isa = PBXGroup;
 			name = Tests;
@@ -1036,7 +1133,6 @@
 				F5C994AB044D58CB01A800CD,
 			);
 			buildSettings = {
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1109,7 +1205,6 @@
 				F5C994B4044D591E01A800CD,
 			);
 			buildSettings = {
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1183,7 +1278,6 @@
 				F5C994BD044D594C01A800CD,
 			);
 			buildSettings = {
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1262,7 +1356,6 @@
 				F5C994C7044D5A6101A800CD,
 			);
 			buildSettings = {
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
