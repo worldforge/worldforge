@@ -45,6 +45,7 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
     m_moving(false)
 {
     assert(m_id.size() > 0);
+    m_orientation.identity();
     
     m_router = new EntityRouter(this);
     m_view->getConnection()->registerRouterForFrom(m_router, m_id);

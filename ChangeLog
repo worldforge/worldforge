@@ -1,3 +1,9 @@
+2004-10-30  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp: initialise orientation to the identity quaternion,
+	  instead of an invalid one. Should fix strange orientations Erik is
+	  seeing in Ember.
+
 2004-10-27  James Turner  <james@worldforge.org>
 
 	* tests/metaQuery.cpp: detect failures of the server object, for example
