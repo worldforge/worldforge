@@ -2,6 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
 
+#include "../Message/Encoder.h"
 #include "Root.h"
 
 using namespace Atlas;
@@ -12,11 +13,13 @@ namespace Atlas { namespace Objects {
 
 Root::Root()
 {
+    SetAttr("parent", string("root"));
     SetAttr("id", 0);
 }
 
 Root::Root(int id)
 {
+    SetAttr("parent", string("root"));
     SetAttr("id", id);
 }
 
@@ -29,12 +32,14 @@ bool Root::HasAttr(const string& name) const
     return (attributes.find(name) == attributes.end());
 }
 
-const Object& Root::GetAttr(const string& name) const
+const Object& Root::GetAttr(const string& name) const 
 {
-    return (*attributes.find(name))
+    if (attributes.find(name) == attributes.end())
+        throw NoSuchAttrException(name);
+    return ((*attributes.find(name)).second);
 }
 
-void Root::SetAttr(const string& name, const Atlas::Message::Object& attr)
+void Root::SetAttr(const string& name, const Object& attr)
 {
     attributes[name] = attr;
 }
@@ -53,7 +58,8 @@ void Root::SendContents(Bridge* b) const
 {
     Message::Encoder e(b);
     typedef map<string, Object>::const_iterator Iter;
-    for (Iter I = attributes.begin(); I != attributes.end(); I++) e.MapItem(*I);
+    for (Iter I = attributes.begin(); I != attributes.end(); I++)
+        e.MapItem((*I).first, (*I).second);
 }
 
 } } // namespace Atlas::Objects

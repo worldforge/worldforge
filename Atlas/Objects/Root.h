@@ -11,6 +11,13 @@
 #include "../Bridge.h"
 
 namespace Atlas { namespace Objects {
+
+class NoSuchAttrException
+{
+public:
+    NoSuchAttrException(const std::string& name) : name(name) {}
+    std::string name;
+};
     
 class Root {
 public:
