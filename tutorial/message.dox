@@ -1,6 +1,84 @@
-/** @page tutorial_message Using Message::Object
+/** @page tutorial_message Using Message::Object and higher layers
 
-Not here yet.
+@section higher_concepts Higher Concepts
+
+@subsection intro Introduction
+
+By now you should know about Codecs, Bridges and such. You might have noticed
+that these are quite low-level. After all, it would be a great hassle if a
+server would have to parse messages itself by overriding Bridge member
+functions.
+
+This is where Atlas-C++'s higher layers come in. These include Encoders,
+Decoders and Layers.
+
+@subsection encoders Encoders
+
+Encoders accept data in a certain way and construct Atlas messages from these,
+which they pass on to Codecs. For instance, you might have an encoder that
+takes STL maps and can send each of the items in the map as an Atlas map item.
+
+@subsection decoders Decoders
+
+Decoders are on the other side of Encoders. They inherit from Bridge, which
+means you can pass them to a codec. They then parse incoming messages and pass
+them on to the application in some way. For instance, the corresponding example
+to the above case would be a Decoder that parses messages into STL maps and
+passes these on to the application, for instance with callback functions.
+
+@subsection layers Layers
+
+Layers are simply the combination of an Encoder and a Decoder. They are usually
+formed by publicly inheriting from an Encoder and a Decoder.
+
+@subsection message The Message Layer
+
+Now that you are aware of what Encoders, Decoders and Layers are, I will
+introduce you to one of the higher levels that Atlas-C++ provides: Message.
+
+@subsection object Message::Object
+
+This namespace includes a class called Object. As previously mentioned,
+Atlas values can consists of one of 5 types: integers, floats, strings, maps
+and lists. However, C++ is a typed language, and does not support variables
+that can change type. This is where the Morph class comes in. It is in the
+Generic namespace and actually consists of several class, Morph2 through to
+Morph9. MorphN (where N is a number greater than 2) takes N template parameters
+and basically can represent at any time a value in one of those types (and only
+one!).
+
+Now, Message::Object is inherited from Morph5, which is specialised with the
+types int, double, std::string, std::map<Message::Object> and
+std::list<Message::Object>. This means that a Message::Object can represent any
+of the Atlas types! Your application can use the As() and Is() member functions
+to check whether a Message::Object is of a certain type and to retrieve it as
+a value of that type, respectively.
+
+@subsection message_enc Message::Encoder
+
+Now, wouldn't it be useful if you could create your message as a
+Message::Object, and then simply send it off through a Codec, without having to
+call all those stream methods? Well, that's exactly what Message::Encoder lets
+you do. You can call StreamMessage(const Message::Object&) and it will send
+the object through a Codec (which you specified at construction time).
+
+@subsection message_dec Message::Decoder
+
+Message::Object truely comes in handy when you're receiving messages. Instead
+of having to keep a parse stack and implement your own Bridge, you can use
+the Message::DecoderBase class. This class is inherited publicly from Bridge
+and will do all the parsing for you. Hence, when a new message arrives, it
+gets put together into an easy-to-digest Message::Object. A protected method,
+ObjectArrived(const Message::Object&) then gets called, which you can override
+in a derived class to do something with the newly arrived message.
+
+@subsection message_queued Message::QueuedDecoder
+
+Message::QueuedDecoder, as annoying as it might be to spell, inherits from
+Message::DecoderBase and allows you to retrieve incoming Message::Objects in a
+queued fashion, rather than by overriding ObjectArrived(). It lets you check
+how many messages are currently queued, peek at the top of the message queue
+and pop the top message off the queue.
 
 @ref tutorial_simple "Previous"
 @ref tutorial_index "Index"
