@@ -83,27 +83,28 @@ void PackedAscii::MessageEnd()
 
 void PackedAscii::MapItem(const std::string& name, const Map&)
 {
-    socket << "[" << name << "=";
+    socket << "[" << hexEncode("+", "", "+{}[]()@#$=", name) << "=";
 }
 
 void PackedAscii::MapItem(const std::string& name, const List&)
 {
-    socket << "(" << name << "=";
+    socket << "(" << hexEncode("+", "", "+{}[]()@#$=", name) << "=";
 }
 
 void PackedAscii::MapItem(const std::string& name, int data)
 {
-    socket << "@" << name << "=" << data;
+    socket << "@" << hexEncode("+", "", "+{}[]()@#$=", name) << "=" << data;
 }
 
 void PackedAscii::MapItem(const std::string& name, float data)
 {
-    socket << "#" << name << "=" << data;
+    socket << "#" << hexEncode("+", "", "+{}[]()@#$=", name) << "=" << data;
 }
 
 void PackedAscii::MapItem(const std::string& name, const std::string& data)
 {
-    socket << "$" << name << "=" << data;
+    socket << "$" << hexEncode("+", "", "+{}[]()@#$=", name) << "=" <<
+            hexEncode("+", "+{}[]()@#$=", "", data);
 }
 
 void PackedAscii::MapItem(const std::string& name, const Atlas::Object& data)
@@ -138,7 +139,7 @@ void PackedAscii::ListItem(float data)
 
 void PackedAscii::ListItem(const std::string& data)
 {
-    socket << "$=" << data;
+    socket << "$=" << hexEncode("+", "", "+{}[]()@#$=", data);
 }
 
 void PackedAscii::ListItem(const Atlas::Object& data)
