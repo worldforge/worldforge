@@ -17,7 +17,7 @@ namespace Atlas { namespace Message {
 class WrongTypeException : public Atlas::Exception
 {
   public:
-    WrongTypeException() : Atlas::Exception("Wrong Message::Object type") { }
+    WrongTypeException() : Atlas::Exception("Wrong Message::Element type") { }
 };
 
 /** Multi-type container
@@ -28,6 +28,9 @@ class WrongTypeException : public Atlas::Exception
  *
  * Changes:
  *
+ *   2002/11/07   Al Riddcoh <alriddoch@zepler.org>
+ *                Changed the name to Element as Object is a stupid name
+ *                for a class.
  *   2000/08/05   Karsten-O. Laux <klaux@rhrk.uni-kl.de>
  *                Changed the members to pointers which only get created when
  *                really needed. This is a major speedup for passing
@@ -40,15 +43,15 @@ class WrongTypeException : public Atlas::Exception
 
 
  */
-class Object
+class Element
 {
 public:
     typedef long IntType;
     typedef double FloatType;
     typedef void * PtrType;
     typedef std::string StringType;
-    typedef std::map<std::string, Object> MapType;
-    typedef std::vector<Object> ListType;
+    typedef std::map<std::string, Element> MapType;
+    typedef std::vector<Element> ListType;
 
     enum Type {
         TYPE_NONE,
@@ -61,7 +64,7 @@ public:
     };
 
     /// Construct an empty object.
-    Object()
+    Element()
       : t(TYPE_NONE)
     {
     }
@@ -91,13 +94,13 @@ public:
     }
 
     ///
-    virtual ~Object()
+    virtual ~Element()
       {
 	clear();
       }
 
     /// Copy an existing object.
-    Object(const Object& obj)
+    Element(const Element& obj)
       : t(obj.t)
     {
       switch(t) 
@@ -127,43 +130,43 @@ public:
     }
 
     /// Set type to int, and value to v.
-    Object(int v)
+    Element(int v)
       : t(TYPE_INT), i(v)
     {
     }
 
     /// Set type to int, and value to v.
-    Object(bool v)
+    Element(bool v)
       : t(TYPE_INT), i(v)
     {
     }
 
     /// Set type to int, and value to v.
-    Object(IntType v)
+    Element(IntType v)
       : t(TYPE_INT), i(v)
     {
     }
 
     /// Set type to double, and value to v.
-    Object(float v)
+    Element(float v)
       : t(TYPE_FLOAT), f(v)
     {
     }   
 
     /// Set type to double, and value to v.
-    Object(FloatType v)
+    Element(FloatType v)
       : t(TYPE_FLOAT), f(v)
     {
     }
 
     /// Set type to PtrType, and value to v.
-    Object(const PtrType& v)
+    Element(const PtrType& v)
       : t(TYPE_PTR), p(v)
     {
     }
 
     /// Set type to std::string, and value to v.
-    Object(const char* v)
+    Element(const char* v)
       : t(TYPE_STRING)
     {
       if(v)
@@ -173,26 +176,26 @@ public:
     }
 
     /// Set type to std::string, and value to v.
-    Object(const StringType& v)
+    Element(const StringType& v)
       : t(TYPE_STRING)
     {
       s = new StringType(v);
     }
     /// Set type to MapType, and value to v.
-    Object(const MapType& v)
+    Element(const MapType& v)
       : t(TYPE_MAP)
     {
       m = new MapType(v);
     }
     /// Set type to ListType, and value to v.
-    Object(const ListType& v)
+    Element(const ListType& v)
       : t(TYPE_LIST)
     {
       l = new ListType(v);
     }
 
     /// overload assignment operator !
-    Object& operator=(const Object& obj) 
+    Element& operator=(const Element& obj) 
     {
       //check for self assignment
       if(&obj == this)
@@ -231,8 +234,8 @@ public:
       return *this;
     }
 
-    /// Check for equality with another Object.
-    bool operator==(const Object& o) const
+    /// Check for equality with another Element.
+    bool operator==(const Element& o) const
     {
         if (t != o.t) return false;
         switch(t) {
@@ -247,8 +250,8 @@ public:
         return false;
     }
 
-    /// Check for inequality with another Object.
-    bool operator!=(const Object& m) const
+    /// Check for inequality with another Element.
+    bool operator!=(const Element& m) const
     {
         return !(*this == m);
     }
@@ -338,17 +341,29 @@ public:
         if (t == TYPE_INT) return i;
         throw WrongTypeException();
     }
+    IntType Int() const
+    {
+	return i;
+    }
     /// Retrieve the current value as a double.
     FloatType asFloat() const throw (WrongTypeException)
     {
         if (t == TYPE_FLOAT) return f;
         throw WrongTypeException();
     }
+    FloatType Float() const
+    {
+	return f;
+    }
     /// Retrieve the current value as a pointer.
     PtrType asPtr() const throw (WrongTypeException)
     {
         if (t == TYPE_PTR) return p;
         throw WrongTypeException();
+    }
+    PtrType Ptr() const
+    {
+	return p;
     }
     /// Retrieve the current value as a number.
     FloatType asNum() const throw (WrongTypeException)
@@ -369,6 +384,14 @@ public:
         if (t == TYPE_STRING) return *s;
         throw WrongTypeException();
     }
+    const StringType& String() const
+    {
+	return *s;
+    }
+    StringType& String()
+    {
+	return *s;
+    }
     /// Retrieve the current value as a const MapType reference.
     const MapType& asMap() const throw (WrongTypeException)
     {
@@ -381,6 +404,14 @@ public:
         if (t == TYPE_MAP) return *m;
         throw WrongTypeException();
     }
+    const MapType& Map() const
+    {
+	return *m;
+    }
+    MapType& Map()
+    {
+	return *m;
+    }
     /// Retrieve the current value as a const ListType reference.
     const ListType& asList() const throw (WrongTypeException)
     {
@@ -392,6 +423,14 @@ public:
     {
         if (t == TYPE_LIST) return *l;
         throw WrongTypeException();
+    }
+    const ListType& List() const
+    {
+	return *l;
+    }
+    ListType& List()
+    {
+	return *l;
     }
 
 protected:

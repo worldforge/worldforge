@@ -15,19 +15,19 @@ size_t QueuedDecoder::queueSize()
     return m_objectQueue.size();
 }
 
-Object QueuedDecoder::front()
+Element QueuedDecoder::front()
 {
     return m_objectQueue.front();
 }
 
-Object QueuedDecoder::pop()
+Element QueuedDecoder::pop()
 {
-    Object r = m_objectQueue.front();
+    Element r = m_objectQueue.front();
     m_objectQueue.pop();
     return r;
 }
 
-void QueuedDecoder::objectArrived(const Object& obj)
+void QueuedDecoder::objectArrived(const Element& obj)
 {
     m_objectQueue.push(obj);
 }

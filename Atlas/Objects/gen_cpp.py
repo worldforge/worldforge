@@ -162,7 +162,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
 
     def getattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("Object %s::getAttr" % classname)
+        self.write("Element %s::getAttr" % classname)
         self.write("(const std::string& name) const\n")
         self.write("    throw (NoSuchAttrException)\n")
         self.write("{\n")
@@ -175,7 +175,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
     def setattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
         self.write("void %s::setAttr" % classname)
-        self.write("(const std::string& name, const Object& attr)\n")
+        self.write("(const std::string& name, const Element& attr)\n")
         self.write("{\n")
         for attr in statics:
             self.write(attr.setattr_im())
@@ -207,15 +207,15 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
 
     def asobject_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("Object %s::asObject() const\n" % classname)
+        self.write("Element %s::asObject() const\n" % classname)
         self.write("{\n")
         parent = self.get_cpp_parent(obj)
-        self.write("    Object::MapType m = %s::asObject().asMap();\n" % parent)
+        self.write("    Element::MapType m = %s::asObject().asMap();\n" % parent)
         for attr in statics:
             self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
-            self.write('        m["%s"] = Object(get%s%s());\n' % \
+            self.write('        m["%s"] = Element(get%s%s());\n' % \
                     (attr.name, attr.cname, attr.as_object))
-        self.write('    return Object(m);\n')
+        self.write('    return Element(m);\n')
         self.write("}\n\n")
 
     def smart_ptr_if(self, name_addition=""):
@@ -345,14 +345,14 @@ BaseObjectData *%(classname)s::getDefaultObject()
             self.doc(4, 'Retrieve the attribute "name". Throws ' \
                        +'NoSuchAttrException if it does')
             self.doc(4, 'not exist.')
-            self.write("    virtual Atlas::Message::Object getAttr(")
+            self.write("    virtual Atlas::Message::Element getAttr(")
             self.write("const std::string& name)\n")
             self.write("            const throw (NoSuchAttrException);\n")
             self.doc(4, 'Set the attribute "name" to the value given by' \
                       + '"attr"')
             self.write("    virtual void setAttr(const std::string& name,\n")
             self.write("                         ")
-            self.write("const Atlas::Message::Object& attr);\n")
+            self.write("const Atlas::Message::Element& attr);\n")
             self.doc(4, 'Remove the attribute "name". This will not work for '\
                       + 'static attributes.')
             self.write("    virtual void removeAttr(")
@@ -361,8 +361,8 @@ BaseObjectData *%(classname)s::getDefaultObject()
             self.doc(4, 'Send the contents of this object to a Bridge.')
             self.write("    virtual void sendContents(Atlas::Bridge* b) const;\n")
             self.write("\n")
-            self.doc(4, 'Convert this object to a Object.')
-            self.write("    virtual Atlas::Message::Object asObject() const;\n")
+            self.doc(4, 'Convert this object to a Element.')
+            self.write("    virtual Atlas::Message::Element asObject() const;\n")
             self.write("\n")
             for attr in static_attrs:
                 self.write(attr.set_if())
@@ -408,7 +408,7 @@ BaseObjectData *%(classname)s::getDefaultObject()
         #self.write("using namespace std;\n")
         #self.write("using namespace Atlas;\n")
         #self.write("using namespace Atlas::Message;\n")
-        self.write("using Atlas::Message::Object;\n")
+        self.write("using Atlas::Message::Element;\n")
         self.write("\n")
         self.ns_open(self.base_list)
         self.write("\n")
@@ -520,7 +520,7 @@ public:
         #self.write("using namespace std;\n")
         #self.write("using namespace Atlas;\n")
         #self.write("using namespace Atlas::Message;\n")
-        self.write("using Atlas::Message::Object;\n")
+        self.write("using Atlas::Message::Element;\n")
         self.write("\n")
         self.ns_open(self.base_list)
         self.write("\n")

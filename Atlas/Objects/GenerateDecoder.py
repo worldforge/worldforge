@@ -47,10 +47,10 @@ public:
 
 protected:
     /// Overridden by Objects::Decoder to retrieve the object.
-    virtual void objectArrived(const Atlas::Message::Object&);
+    virtual void objectArrived(const Atlas::Message::Element&);
 
     /// An unknown object has arrived.
-    virtual void unknownObjectArrived(const Atlas::Message::Object&) { }
+    virtual void unknownObjectArrived(const Atlas::Message::Element&) { }
 
     /// An unknown object has arrived.
     virtual void unknownObjectArrived(const Root&) { }
@@ -84,7 +84,7 @@ ObjectsDecoder::~ObjectsDecoder()
 {
 }
 
-void ObjectsDecoder::objectArrived(const Atlas::Message::Object& o)
+void ObjectsDecoder::objectArrived(const Atlas::Message::Element& o)
 {
     Root obj =  messageObject2ClassObject(o);
     dispatchObject(obj);

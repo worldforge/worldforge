@@ -12,24 +12,24 @@ Encoder::Encoder(Atlas::Bridge* b)
 {
 }
 
-void Encoder::listItem(const Object& obj)
+void Encoder::listItem(const Element& obj)
 {
     switch (obj.getType()) {
-        case Object::TYPE_INT: m_bridge->listItem(obj.asInt()); break;
-        case Object::TYPE_FLOAT: m_bridge->listItem(obj.asFloat()); break;
-        case Object::TYPE_STRING: m_bridge->listItem(obj.asString()); break;
-        case Object::TYPE_MAP: {
+        case Element::TYPE_INT: m_bridge->listItem(obj.asInt()); break;
+        case Element::TYPE_FLOAT: m_bridge->listItem(obj.asFloat()); break;
+        case Element::TYPE_STRING: m_bridge->listItem(obj.asString()); break;
+        case Element::TYPE_MAP: {
             m_bridge->listItem(Atlas::Bridge::m_mapBegin);
-            Object::MapType::const_iterator I;
+            Element::MapType::const_iterator I;
             for (I = obj.asMap().begin(); I != obj.asMap().end();
                     I++)
                 mapItem((*I).first, (*I).second);
             m_bridge->mapEnd();
             }
             break;
-        case Object::TYPE_LIST: {
+        case Element::TYPE_LIST: {
             m_bridge->listItem(Atlas::Bridge::m_listBegin);
-            Object::ListType::const_iterator I;
+            Element::ListType::const_iterator I;
             for (I = obj.asList().begin(); I != obj.asList().end();
                     I++)
                 listItem(*I);
@@ -40,24 +40,24 @@ void Encoder::listItem(const Object& obj)
     }
 }
 
-void Encoder::mapItem(const std::string& name, const Object& obj)
+void Encoder::mapItem(const std::string& name, const Element& obj)
 {
     switch (obj.getType()) {
-        case Object::TYPE_INT: m_bridge->mapItem(name, obj.asInt()); break;
-        case Object::TYPE_FLOAT: m_bridge->mapItem(name, obj.asFloat()); break;
-        case Object::TYPE_STRING: m_bridge->mapItem(name, obj.asString()); break;
-        case Object::TYPE_MAP: {
+        case Element::TYPE_INT: m_bridge->mapItem(name, obj.asInt()); break;
+        case Element::TYPE_FLOAT: m_bridge->mapItem(name, obj.asFloat()); break;
+        case Element::TYPE_STRING: m_bridge->mapItem(name, obj.asString()); break;
+        case Element::TYPE_MAP: {
             m_bridge->mapItem(name, Atlas::Bridge::m_mapBegin);
-            Object::MapType::const_iterator I;
+            Element::MapType::const_iterator I;
             for (I = obj.asMap().begin(); I != obj.asMap().end();
                     I++)
                 mapItem((*I).first, (*I).second);
             m_bridge->mapEnd();
             }
             break;
-        case Object::TYPE_LIST: {
+        case Element::TYPE_LIST: {
             m_bridge->mapItem(name, Atlas::Bridge::m_listBegin);
-            Object::ListType::const_iterator I;
+            Element::ListType::const_iterator I;
             for (I = obj.asList().begin(); I != obj.asList().end();
                     I++)
                 listItem(*I);
@@ -69,11 +69,11 @@ void Encoder::mapItem(const std::string& name, const Object& obj)
     }                          
 }
 
-void Encoder::streamMessage(const Object& obj)
+void Encoder::streamMessage(const Element& obj)
 {
     if (obj.isMap()) {
         m_bridge->streamMessage(Atlas::Bridge::m_mapBegin);
-        Object::MapType::const_iterator I;
+        Element::MapType::const_iterator I;
         for (I = obj.asMap().begin();
              I != obj.asMap().end(); I++)
             mapItem((*I).first, (*I).second);

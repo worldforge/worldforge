@@ -4,7 +4,7 @@
 
 #include "BaseObject.h"
 
-using Atlas::Message::Object;
+using Atlas::Message::Element;
 
 namespace Atlas { namespace Objects {
 
@@ -18,17 +18,17 @@ bool BaseObjectData::hasAttr(const std::string& name) const
     return (m_attributes.find(name) != m_attributes.end());
 }
 
-Object BaseObjectData::getAttr(const std::string& name) const
+Element BaseObjectData::getAttr(const std::string& name) const
     throw (NoSuchAttrException) 
 {
-    Object::MapType::const_iterator I = m_attributes.find(name);
+    Element::MapType::const_iterator I = m_attributes.find(name);
     if (I == m_attributes.end()) {
         throw NoSuchAttrException(name);
     }
     return (I->second);
 }
 
-void BaseObjectData::setAttr(const std::string& name, const Object& attr)
+void BaseObjectData::setAttr(const std::string& name, const Element& attr)
 {
     m_attributes[name] = attr;
 }
@@ -38,16 +38,16 @@ void BaseObjectData::removeAttr(const std::string& name)
     m_attributes.erase(name);
 }
 
-Object BaseObjectData::asObject() const
+Element BaseObjectData::asObject() const
 {
-    Object::MapType allattrs = m_attributes;
-    return Object(allattrs);
+    Element::MapType allattrs = m_attributes;
+    return Element(allattrs);
 }
 
 void BaseObjectData::sendContents(Bridge* b) const
 {
     Message::Encoder e(b);
-    typedef Object::MapType::const_iterator Iter;
+    typedef Element::MapType::const_iterator Iter;
     for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++) {
         e.mapItem((*I).first, (*I).second);
     }

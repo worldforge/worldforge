@@ -17,9 +17,6 @@
 
 #define DEBUG_PRINT(foo) //foo;
 
-using namespace Atlas;
-using namespace std;
-
 #define USE_XML 1
 #if USE_XML
 #include "../../src/Codecs/XML.h"
@@ -33,45 +30,56 @@ using namespace std;
 #define USE_FILE 0
 #endif
 
-string object2String(const Root& obj)
+using Atlas::Message::Element;
+using Atlas::Objects::Root;
+using Atlas::Objects::Operation::RootOperation;
+using Atlas::Objects::Operation::Create;
+using Atlas::Objects::Operation::Login;
+using Atlas::Objects::Operation::Look;
+using Atlas::Objects::Operation::Move;
+using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Entity::Account;
+using Atlas::Objects::Entity::Anonymous;
+
+std::string object2String(const Root& obj)
 {
     DebugBridge bridge;
-    strstream stream;
-    Atlas::Codec *codec;
-    codec = new XML(Codec::Parameters((iostream&)stream, &bridge));
+    std::strstream stream;
+    Atlas::Codec<std::iostream> *codec;
+    codec = new Atlas::Codecs::XML(stream, &bridge);
     assert(codec);
     codec->streamBegin();
-    ObjectsEncoder eno(codec);
+    Atlas::Objects::ObjectsEncoder eno(codec);
     eno.streamMessage(obj);
     codec->streamEnd();
     delete codec;
     return stream.str();
 }
 
-class TestDecoder : public ObjectsDecoder
+class TestDecoder : public Atlas::Objects::ObjectsDecoder
 {
 protected:
     virtual void objectArrived(const Root& r)
     {
 //        assert(r->getAttr("id").asString() == "root_instance");
-      cout << "got Root! " << object2String(r) << endl;
+      std::cout << "got Root! " << object2String(r) << std::cout;
     }
 
     virtual void objectArrived(const Login& r)
     {
-        cout << "got Account!" << endl;
+        std::cout << "got Account!" << std::cout;
 //        assert(r->getAttr("id").asString() == "root_instance");
     }
 
     virtual void objectArrived(const Look& l)
     {
 //        assert(l->getAttr("id").asString() == "look_instance");
-        cout << "got Look!" << endl;
+        std::cout << "got Look!" << std::cout;
     }
 
     virtual void objectArrived(const Account &a)
     {
-        cout << "got Account!" << endl;
+        std::cout << "got Account!" << std::cout;
     }
 };
 
@@ -81,12 +89,12 @@ void testXML()
     human->setId("foo");
 
     Move move_op;
-    move_op->setFrom(string("bar"));
-    vector<Root> move_args(1);
+    move_op->setFrom(std::string("bar"));
+    std::vector<Root> move_args(1);
     move_args[0] = (Root&)human;
     move_op->setArgs(move_args);
 
-    Object::ListType velocity;
+    Atlas::Message::Element::ListType velocity;
     velocity.push_back(2.0);
     velocity.push_back(1.0);
     velocity.push_back(0.0);
@@ -97,16 +105,16 @@ void testXML()
 //    BaseObjectData *bod = alloc_entity();
     //Root human2(bod);
     Root human2 = (Root&)RootEntity::factory();
-    cout<<"human.id="<<human->getId()<<endl;
-    cout<<"human2.id="<<human2->getId()<<endl;
+    std::cout<<"human.id="<<human->getId()<<std::cout;
+    std::cout<<"human2.id="<<human2->getId()<<std::cout;
 #if 0
     typedef std::list<Atlas::Factory<Atlas::Codec >*> FactoryCodecs;
     FactoryCodecs *myCodecs = &Factory<Codec >::factories();
     FactoryCodecs::iterator i;
-    cout<<"myCodecs: "<<myCodecs->size();
+    std::cout<<"myCodecs: "<<myCodecs->size();
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
-        cout<<":"<<(*i)->getName();
-    cout<<endl;
+        std::cout<<":"<<(*i)->getName();
+    std::cout<<std::cout;
 #endif
 
     //DebugBridge bridge;
@@ -116,7 +124,7 @@ void testXML()
     stream.open("../../../../protocols/atlas/spec/atlas.xml");
     assert(!!stream);
 #else
-    strstream stream;
+    std::strstream stream;
 #endif
 //     typedef std::list<Atlas::Factory<Atlas::Codec >*> FactoryCodecs;
 //     FactoryCodecs *myCodecs = &Factory<Codec >::factories();
@@ -124,7 +132,7 @@ void testXML()
 //     Atlas::Codec *codec = NULL;
 //     for(codec_i = myCodecs->begin(); codec_i != myCodecs->end(); ++codec_i)
 //     {
-//         cout<<(*codec_i)->getName()<<endl;
+//         std::cout<<(*codec_i)->getName()<<std::cout;
 //         if ((*codec_i)->getName() == "XML") {
 //             codec = (*codec_i)->New(Codec::Parameters(stream, &bridge));
 //         }
@@ -134,36 +142,36 @@ void testXML()
     
     Account account;
     Login l;
-    account->setAttr("id", string("al"));
-    account->setAttr("password", string("ping"));
+    account->setAttr("id", std::string("al"));
+    account->setAttr("password", std::string("ping"));
     //list<Message::Object> args(1,account->asObject());
     //l->setArgsAsList(args);
-    vector<Root> args(1);
+    std::vector<Root> args(1);
     args[0] = (Root&)account;
     l->setArgs(args);
     //coder->streamMessage((Root&)l);
-//<map><list name="args"><map><string name="id">al</strin
-//g></map></list><list name="parents"><string>root</string></list><string name="ob
-//jtype">op_definition</string></map>
+//<map><list name="args"><map><std::string name="id">al</strin
+//g></map></list><list name="parents"><std::string>root</std::string></list><std::string name="ob
+//jtype">op_definition</std::string></map>
 
 
-    Atlas::Codec *codec;
+    Atlas::Codec<std::iostream> *codec;
 #if USE_XML
-    codec = new XML(Codec::Parameters((iostream&)stream, &bridge));
+    codec = new Atlas::Codecs::XML((std::iostream&)stream, &bridge);
 #else
-    codec = new Packed(Codec::Parameters(stream, &bridge));
+    codec = new Atlas::Codecs::Packed(stream, &bridge);
 #endif
     assert(codec);
 
 #if USE_FILE
     while(stream) {
       codec->poll();
-      //cout<<"--------"<<endl;
+      //std::cout<<"--------"<<std::cout;
     }
 #else
     codec->streamBegin();
 
-    ObjectsEncoder eno(codec);
+    Atlas::Objects::ObjectsEncoder eno(codec);
 //    eno.streamMessage((Root&)move_op);
     eno.streamMessage((Root&)l);
 
@@ -175,18 +183,18 @@ void testXML()
 //    en.streamMessage(human->asObject());
 
     codec->streamEnd();
-    cout<<endl<<stream.str()<<endl;
+    std::cout<<std::cout<<stream.str()<<std::cout;
     //[$from=bar(args=[$id=foo])][$id=foo]
-    //<atlas><map><string name="from">bar</string><list name="args"><map><string name="id">foo</string></map></list></map><map><string name="id">foo</string></map></atlas>
+    //<atlas><map><std::string name="from">bar</std::string><list name="args"><map><std::string name="id">foo</std::string></map></list></map><map><std::string name="id">foo</std::string></map></atlas>
 #endif
 }
 
 
-void check_float_list3(const Object::ListType &list,
+void check_float_list3(const Atlas::Message::Element::ListType &list,
                        double el1, double el2, double el3)
 {
     assert( list.size() == 3 );
-    Object::ListType::const_iterator i = list.begin();
+    Atlas::Message::Element::ListType::const_iterator i = list.begin();
     assert( (*i++) == el1 );
     assert( (*i++) == el2 );
     assert( (*i++) == el3 );
@@ -197,7 +205,7 @@ void testValues()
     Account account;
     Login l;
     account->setId("al");
-    account->setAttr("password", string("ping"));
+    account->setAttr("password", std::string("ping"));
     l->setArgs1((Root&)account);
 
     assert(l->getArgs()[0]->getLongDescription()=="Later in hierarchy tree objtype changes to 'object' when actual game objects are made.");
@@ -205,17 +213,17 @@ void testValues()
     assert(l->getId()=="");
     assert(l->getParents().front()=="login");
     assert(l->getObjtype()=="op");
-    cout<<endl<<"account.long_description: "
-        <<l->getArgs()[0]->getLongDescription()<<endl;
+    std::cout<<std::cout<<"account.long_description: "
+        <<l->getArgs()[0]->getLongDescription()<<std::cout;
     
     {
-    Atlas::Object::MapType mobj;
-    Atlas::Object::ListType parents;
-    parents.push_back(string("account"));
+    Atlas::Message::Element::MapType mobj;
+    Atlas::Message::Element::ListType parents;
+    parents.push_back(std::string("account"));
     mobj["parents"] = parents;
-    mobj["name"] = string("foo");
-    mobj["objtype"] = string("op");
-    Root obj = Atlas::messageObject2ClassObject(mobj);
+    mobj["name"] = std::string("foo");
+    mobj["objtype"] = std::string("op");
+    Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
     assert(obj->getClassNo() == ACCOUNT_NO);
     assert(obj->getId() == "");
     assert(obj->isDefaultId() == true);
@@ -231,8 +239,8 @@ void testValues()
     }
     
     {
-    Atlas::Object::MapType mobj;
-    Root obj = Atlas::objectDefinitions.find(string("account"))->second;
+    Atlas::Message::Element::MapType mobj;
+    Root obj = Atlas::Objects::objectDefinitions.find(std::string("account"))->second;
     assert(obj->getClassNo() == ACCOUNT_NO);
     assert(obj->getId() == "account");
     assert(obj->isDefaultId() == false);
@@ -247,8 +255,8 @@ void testValues()
     }
 
     {
-    Atlas::Object::MapType mobj;
-    Root obj = Atlas::messageObject2ClassObject(mobj);
+    Atlas::Message::Element::MapType mobj;
+    Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
     assert(obj->getClassNo() == ANONYMOUS_NO);
     assert(obj->getId() == "");
     assert(obj->getName() == "");
@@ -258,13 +266,13 @@ void testValues()
     }
 
     {
-    Atlas::Object::MapType mobj;
-    mobj["id"] = string("bar");
-    mobj["name"] = string("foo");
-    Atlas::Object::ListType parents;
-    parents.push_back(string("account"));
+    Atlas::Message::Element::MapType mobj;
+    mobj["id"] = std::string("bar");
+    mobj["name"] = std::string("foo");
+    Atlas::Message::Element::ListType parents;
+    parents.push_back(std::string("account"));
     mobj["parents"] = parents;
-    Root obj = Atlas::messageObject2ClassObject(mobj);
+    Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
     assert(obj->getClassNo() == ANONYMOUS_NO);
     assert(obj->getId() == "bar");
     assert(obj->getName() == "foo");
@@ -274,25 +282,25 @@ void testValues()
     }
 
     {
-    Atlas::Object::MapType maccount;
-    maccount["id"] = string("bar");
-    maccount["name"] = string("foo");
-    Atlas::Object::ListType parents;
-    parents.push_back(string("player"));
+    Atlas::Message::Element::MapType maccount;
+    maccount["id"] = std::string("bar");
+    maccount["name"] = std::string("foo");
+    Atlas::Message::Element::ListType parents;
+    parents.push_back(std::string("player"));
     maccount["parents"] = parents;
     maccount["objtype"] = "obj";
 
-    Atlas::Object::MapType mcreate;
-    mcreate["from"] = string("bar");
-    Atlas::Object::ListType parents2;
-    parents2.push_back(string("create"));
+    Atlas::Message::Element::MapType mcreate;
+    mcreate["from"] = std::string("bar");
+    Atlas::Message::Element::ListType parents2;
+    parents2.push_back(std::string("create"));
     mcreate["parents"] = parents2;
-    Atlas::Object::ListType args;
+    Atlas::Message::Element::ListType args;
     args.push_back(maccount);
     mcreate["args"] = args;
     mcreate["objtype"] = "op";
 
-    Create op = (Create&)Atlas::messageObject2ClassObject(mcreate);
+    Create op = (Create&)Atlas::Objects::messageObject2ClassObject(mcreate);
     assert(op->getClassNo() == CREATE_NO);
     assert(op->instanceOf(CREATE_NO));
     assert(op->instanceOf(ACTION_NO));
@@ -343,76 +351,76 @@ void test()
     const double x2 = 42.0;
     const double y2 = 7.0;
 
-    vector<RootEntity> ent_vec(10);
+    std::vector<RootEntity> ent_vec(10);
 
     for(int i=0; i<10; i++) {
-        DEBUG_PRINT(cout<<endl<<"round:"<<i<<endl);
+        DEBUG_PRINT(std::cout<<std::cout<<"round:"<<i<<std::cout);
         RootEntity human;
 
         //check for empty default:
-        DEBUG_PRINT(cout<<"empty ok?"<<endl);
-        Object::ListType empty = human->getVelocityAsList();
+        DEBUG_PRINT(std::cout<<"empty ok?"<<std::cout);
+        Atlas::Message::Element::ListType empty = human->getVelocityAsList();
         if(i==0) check_float_list3(empty, 0.0, 0.0, 0.0);
         else check_float_list3(empty, 0.0, y2, 0.0);
         
         //check after setting it
-        DEBUG_PRINT(cout<<"setting ok?"<<endl);
-        Object::ListType velocity;
+        DEBUG_PRINT(std::cout<<"setting ok?"<<std::cout);
+        Atlas::Message::Element::ListType velocity;
         velocity.push_back(x1);
         velocity.push_back(y1);
         velocity.push_back(z1);
         check_float_list3(velocity, x1, y1, z1);
         human->setVelocityAsList(velocity);
-        Object::ListType foo = human->getVelocityAsList();
+        Atlas::Message::Element::ListType foo = human->getVelocityAsList();
         check_float_list3(foo, x1, y1, z1);
 
-        DEBUG_PRINT(cout<<"changing it?"<<endl);
-        vector<double> &foo2 = human->modifyVelocity();
+        DEBUG_PRINT(std::cout<<"changing it?"<<std::cout);
+        std::vector<double> &foo2 = human->modifyVelocity();
         *foo2.begin() = x2;
         check_float_list3(human->getVelocityAsList(), x2, y1, z1);
 
-        DEBUG_PRINT(cout<<"check change result?"<<endl);
+        DEBUG_PRINT(std::cout<<"check change result?"<<std::cout);
         foo = human->getVelocityAsList();
         check_float_list3(foo, x2, y1, z1);
         
-        DEBUG_PRINT(cout<<"vector of entities?"<<endl);
-        const Object::ListType &ent_velocity = ent_vec[i]->getVelocityAsList();
+        DEBUG_PRINT(std::cout<<"std::vector of entities?"<<std::cout);
+        const Atlas::Message::Element::ListType &ent_velocity = ent_vec[i]->getVelocityAsList();
         if(i==0) check_float_list3(ent_velocity, 0.0, 0.0, 0.0);
         else check_float_list3(ent_velocity, 0.0, y2, 0.0);
 
-        DEBUG_PRINT(cout<<"base?"<<endl);
+        DEBUG_PRINT(std::cout<<"base?"<<std::cout);
         RootEntity base_entity = human.getDefaultObject();
-        vector<double> &base = base_entity->modifyVelocity();
+        std::vector<double> &base = base_entity->modifyVelocity();
         base[1] = y2;
         check_float_list3(base_entity->getVelocityAsList(), 0.0, y2, 0.0);
 
         RootOperation move_op;
-        vector<Root> move_args(1);
+        std::vector<Root> move_args(1);
         move_args[0] = (Root&)human;
         move_op->setArgs(move_args);
 
         RootOperation sight_op;
         //sight_op->setFrom(humanent.asObjectPtr());
-        vector<Root> sight_args(1);
+        std::vector<Root> sight_args(1);
         sight_args[0] = (Root&)move_op;
         sight_op->setArgs(sight_args);
         
         //test 
-        DEBUG_PRINT(cout<<"get move_op?"<<endl);
-        const vector<Root>& test_args = sight_op->getArgs();
+        DEBUG_PRINT(std::cout<<"get move_op?"<<std::cout);
+        const std::vector<Root>& test_args = sight_op->getArgs();
         assert(test_args.size() == 1);
         RootOperation test_op = 
             (RootOperation&)test_args[0];
         
-        DEBUG_PRINT(cout<<"get human_ent?"<<endl);
-        const vector<Root>& test_args2 = test_op->getArgs();
+        DEBUG_PRINT(std::cout<<"get human_ent?"<<std::cout);
+        const std::vector<Root>& test_args2 = test_op->getArgs();
         assert(test_args2.size() == 1);
         RootEntity test_ent =
             (RootEntity&)test_args2[0];
-        Object::ListType foo3 = test_ent->getVelocityAsList();
+        Atlas::Message::Element::ListType foo3 = test_ent->getVelocityAsList();
         check_float_list3(foo3, x2, y1, z1);
 
-        vector<double> coords(3, 0.0);
+        std::vector<double> coords(3, 0.0);
         human->setPos(coords);
         human->setVelocity(coords);
         human->modifyVelocity()[0] = 1.0;
@@ -424,10 +432,10 @@ void test()
 int main()
 {
     try {
-        loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
-    } catch(DefaultLoadingException e) {
-        cout << "DefaultLoadingException: "
-             << e.msg << endl;
+	Atlas::Objects::loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
+    } catch(Atlas::Objects::DefaultLoadingException e) {
+        std::cout << "DefaultLoadingException: "
+             << e.getDescription() << std::cout;
         return 1;
     }
     testXML();

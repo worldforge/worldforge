@@ -9,14 +9,14 @@
 
 namespace Atlas { namespace Message {
 
-class Object;
+class Element;
 
-/** Encoder that transmits Atlas::Message::Object.
+/** Encoder that transmits Atlas::Message::Element.
  *
- * This encoder can be used to send Atlas::Message::Object objects representing
+ * This encoder can be used to send Atlas::Message::Element objects representing
  * full atlas messages.
  *
- * @see Object
+ * @see Element
  * @see Atlas::Bridge
  * @see Atlas::EncoderBase
  * @author Stefanus Du Toit <sdt@gmx.net>
@@ -29,11 +29,11 @@ public:
     virtual ~Encoder() { }
 
     /// Send a message (must be a map!) in stream state.
-    virtual void streamMessage(const Object& obj);
+    virtual void streamMessage(const Element& obj);
     /// Send an object as a map item.
-    virtual void mapItem(const std::string&, const Object&);
+    virtual void mapItem(const std::string&, const Element&);
     /// Send an object as a list item.
-    virtual void listItem(const Object&);
+    virtual void listItem(const Element&);
 
     /// Atlas::EncoderBase methods (so we don't hide them).
     virtual void streamMessage(const Map& m) {

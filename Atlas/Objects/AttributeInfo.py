@@ -123,7 +123,7 @@ class AttributeInfo:
 
     def default_map(self, name, obj):
         obj = self.check_obj(name, obj)
-        res = "        Object::MapType " + name + ";\n"
+        res = "        Element::MapType " + name + ";\n"
         for (sub_name, sub_value) in obj.value.items():
             sub = AttributeInfo(sub_name, sub_value)
             if sub.type == "list":
@@ -143,7 +143,7 @@ class AttributeInfo:
     def default_list(self, name, obj):
         obj = self.check_obj(name, obj)
         i = 0
-        res = "        Object::ListType " + name + ";\n"
+        res = "        Element::ListType " + name + ";\n"
         for sub in obj.value:
             sub_type = type2str[type(sub)]
             if sub_type == "list":
@@ -185,9 +185,9 @@ class AttributeInfo:
 
 
 
-#Object::ListType vs vector<BaseObject>
-#vector<BaseObject> -> Object::ListType: use asObject to convert
-#Object::ListType -> vector<BaseObject>: use BaseObjectData and make all dynamic?
+#Element::ListType vs vector<BaseObject>
+#vector<BaseObject> -> Element::ListType: use asObject to convert
+#Element::ListType -> vector<BaseObject>: use BaseObjectData and make all dynamic?
 
 class ArgsRootList(AttributeInfo):
     def __init__(self, name, value, type):
@@ -206,7 +206,7 @@ class ArgsRootList(AttributeInfo):
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
-    for(Atlas::Message::Object::ListType::const_iterator I = val.begin();
+    for(Atlas::Message::Element::ListType::const_iterator I = val.begin();
         I != val.end();
         I++)
     {
@@ -228,7 +228,7 @@ void %(classname)s::set%(cname)s1(Root& val)
                """%(cpp_param_type_as_object)s %(classname)s::get%(cname)s%(as_object)s() const
 {
     %(cpp_param_type)s args_in = get%(cname)s();
-    Atlas::Message::Object::ListType args_out;
+    Atlas::Message::Element::ListType args_out;
     for(%(cpp_type)s::const_iterator I = args_in.begin();
         I != args_in.end();
         I++)
@@ -244,9 +244,9 @@ void %(classname)s::set%(cname)s1(Root& val)
         return ""
 
 #typed list: string_list, int_list, float_list
-#Object::ListType vs list<foo>
-#list<foo> -> Object::ListType: just add
-#Object::ListType -> list<foo>: check type and ignore not matching types
+#Element::ListType vs list<foo>
+#list<foo> -> Element::ListType: just add
+#Element::ListType -> list<foo>: check type and ignore not matching types
 
 class TypedList(AttributeInfo):
     def __init__(self, name, value, type):
@@ -270,7 +270,7 @@ class TypedList(AttributeInfo):
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
-    for(Atlas::Message::Object::ListType::const_iterator I = val.begin();
+    for(Atlas::Message::Element::ListType::const_iterator I = val.begin();
         I != val.end();
         I++)
     {
@@ -286,7 +286,7 @@ class TypedList(AttributeInfo):
                """%(cpp_param_type_as_object)s %(classname)s::get%(cname)s%(as_object)s() const
 {
     %(cpp_param_type)s lst_in = get%(cname)s();
-    Atlas::Message::Object::ListType lst_out;
+    Atlas::Message::Element::ListType lst_out;
     for(%(cpp_type)s::const_iterator I = lst_in.begin();
         I != lst_in.end();
         I++)
@@ -303,9 +303,9 @@ class TypedList(AttributeInfo):
 
 #typed list with fixed length: 
 #string_list_length, int_list_length, float_list_length
-#Object::ListType vs vector<foo>
-#vector<foo> -> Object::ListType: just add
-#Object::ListType -> vector<foo>: check type and ignore not matching types
+#Element::ListType vs vector<foo>
+#vector<foo> -> Element::ListType: just add
+#Element::ListType -> vector<foo>: check type and ignore not matching types
 #                    also check length and ignore all extra elements and 
 #                    fill missing elements with defaults
 

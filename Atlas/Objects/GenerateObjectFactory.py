@@ -19,7 +19,7 @@ class GenerateObjectFactory:
         self.write('#include "Operation.h"\n\n')
         self.ns_open(self.base_list)
         self.write("""
-using Atlas::Message::Object;
+using Atlas::Message::Element;
 
 std::map<const std::string, Root> objectDefinitions;
 Factories objectFactory;
@@ -72,14 +72,14 @@ void Factories::addFactory(const std::string& name, FactoryMethod method)
     m_factories[name] = method;
 }
 
-Root messageObject2ClassObject(const Object& mobj_arg)
+Root messageObject2ClassObject(const Element& mobj_arg)
 {
     Root obj;
     if(mobj_arg.isMap()) { // should we throw exeception if this is not true?
-        const Object::MapType& mobj = mobj_arg.asMap();
+        const Element::MapType& mobj = mobj_arg.asMap();
 
         // is this instance of entity or operation?
-        Object::MapType::const_iterator I = mobj.find("objtype");
+        Element::MapType::const_iterator I = mobj.find("objtype");
         bool is_instance = false;
         if(I != mobj.end() && (*I).second.isString()) {
             std::string objtype = (*I).second.asString();
@@ -89,7 +89,7 @@ Root messageObject2ClassObject(const Object& mobj_arg)
                 // get parent
                 I = mobj.find("parents");
                 if(I != mobj.end()) {
-                    Object::ListType parents_lst = I->second.asList();
+                    Element::ListType parents_lst = I->second.asList();
                     if(parents_lst.size()>=1 && parents_lst.front().isString()) {
                         std::string parent = parents_lst.front().asString();
                         // objtype and parent ok, try to create it:

@@ -1,5 +1,5 @@
 
-SUBDIRS = . Objects Message Codecs Filters Net Utilities Funky
+SUBDIRS = . Message Codecs Filters Net Utilities Objects Funky
 
 lib_LTLIBRARIES = libAtlas.la
 

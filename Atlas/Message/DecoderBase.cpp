@@ -23,7 +23,7 @@ void DecoderBase::streamBegin()
 void DecoderBase::streamMessage(const Map&)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::streamMessage" << std::endl)
-    Object::MapType m;
+    Element::MapType m;
     m_maps.push(m);
     m_state.push(STATE_MAP);
 }
@@ -38,7 +38,7 @@ void DecoderBase::streamEnd()
 void DecoderBase::mapItem(const std::string& name, const Map&)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapItem Map" << std::endl)
-    Object::MapType m;
+    Element::MapType m;
     m_names.push(name);
     m_maps.push(m);
     m_state.push(STATE_MAP);
@@ -47,7 +47,7 @@ void DecoderBase::mapItem(const std::string& name, const Map&)
 void DecoderBase::mapItem(const std::string& name, const List&)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapItem List" << std::endl)
-    Object::ListType l;
+    Element::ListType l;
     m_names.push(name);
     m_lists.push(l);
     m_state.push(STATE_LIST);
@@ -79,7 +79,7 @@ void DecoderBase::mapEnd()
     ATLAS_DEBUG(std::cout << "DecoderBase::mapEnd" << std::endl)
     assert(!m_maps.empty());
     assert(!m_state.empty());
-    Object::MapType map = m_maps.top();
+    Element::MapType map = m_maps.top();
     m_maps.pop();
     m_state.pop();
     switch (m_state.top()) {
@@ -102,7 +102,7 @@ void DecoderBase::mapEnd()
 void DecoderBase::listItem(const Map&)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::listItem Map" << std::endl)
-    Object::MapType map;
+    Element::MapType map;
     m_maps.push(map);
     m_state.push(STATE_MAP);
 }
@@ -110,7 +110,7 @@ void DecoderBase::listItem(const Map&)
 void DecoderBase::listItem(const List&)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::listItem List" << std::endl)
-    Object::ListType list;
+    Element::ListType list;
     m_lists.push(list);
     m_state.push(STATE_LIST);
 }
@@ -140,7 +140,7 @@ void DecoderBase::listEnd()
     ATLAS_DEBUG(std::cout << "DecoderBase::listEnd" << std::endl)
     assert(!m_lists.empty());
     assert(!m_state.empty());
-    Object::ListType list = m_lists.top();
+    Element::ListType list = m_lists.top();
     m_lists.pop();
     m_state.pop();
     switch (m_state.top()) {

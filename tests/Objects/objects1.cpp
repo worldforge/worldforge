@@ -7,21 +7,22 @@
 #include "Objects/objectFactory.h"
 #include "Objects/loadDefaults.h"
 
-using namespace Atlas;
-using namespace std;
+using Atlas::Objects::Root;
+using Atlas::Objects::Operation::Look;
+using Atlas::Objects::Entity::Account;
 
 int main(int argc, char** argv)
 {
     try {
-        loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
-    } catch(DefaultLoadingException e) {
-        cout << "DefaultLoadingException: "
-             << e.msg << endl;
+	Atlas::Objects::loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
+    } catch(Atlas::Objects::DefaultLoadingException e) {
+	std::cout << "DefaultLoadingException: "
+             << e.getDescription() << std::endl;
         return 1;
     }
-    Root root = objectDefinitions.find("root")->second;
+    Root root = Atlas::Objects::objectDefinitions.find("root")->second;
     Root root_inst;
-    root_inst->setAttr("id", string("root_instantiation"));
+    root_inst->setAttr("id", std::string("root_instantiation"));
     assert(root->getAttr("id").asString() == "root");
     assert(root_inst->getAttr("id").asString() == "root_instantiation");
     assert(root->getAttr("parents").asList().size() == 0);
@@ -29,9 +30,9 @@ int main(int argc, char** argv)
     assert((*root_inst->getAttr("parents").asList().begin()).asString() ==
             "root");
 
-    Look look = (Look&)objectDefinitions.find("look")->second;
+    Look look = (Look&)Atlas::Objects::objectDefinitions.find("look")->second;
     Look look_inst;
-    look_inst->setAttr("id", string("look_instantiation"));
+    look_inst->setAttr("id", std::string("look_instantiation"));
     assert(look->getAttr("id").asString() == "look");
     assert(look_inst->getAttr("id").asString() == "look_instantiation");
     assert(look->getAttr("parents").asList().size() == 1);
@@ -41,9 +42,9 @@ int main(int argc, char** argv)
     assert((*look_inst->getAttr("parents").asList().begin()).asString() ==
             "look");
 
-    Account acct = (Account&)objectDefinitions.find("account")->second;
+    Account acct = (Account&)Atlas::Objects::objectDefinitions.find("account")->second;
     Account acct_inst;
-    acct_inst->setAttr("id", string("account_instantiation"));
+    acct_inst->setAttr("id", std::string("account_instantiation"));
     assert(acct->getAttr("id").asString() == "account");
     assert(acct_inst->getAttr("id").asString() == "account_instantiation");
     assert(acct->getAttr("parents").asList().size() == 1);

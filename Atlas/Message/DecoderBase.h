@@ -64,14 +64,14 @@ protected:
     /// The state stack.
     std::stack<State> m_state;
     /// The map stack.
-    std::stack<Object::MapType> m_maps;
+    std::stack<Element::MapType> m_maps;
     /// The list stack.
-    std::stack<Object::ListType> m_lists;
+    std::stack<Element::ListType> m_lists;
     /// Names for maps and lists.
     std::stack<std::string> m_names;
 
     /// Override this - called when an object was received.
-    virtual void objectArrived(const Object& obj) = 0;
+    virtual void objectArrived(const Element& obj) = 0;
 };
 
 } } // namespace Atlas::Message

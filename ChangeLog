@@ -1,3 +1,27 @@
+2002-11-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/DecoderBase.cpp, src/Message/DecoderBase.h,
+	  src/Message/MEncoder.cpp, src/Message/MEncoder.h,
+	  src/Message/Object.h, src/Message/QueuedDecoder.cpp:
+	  Rename Atlas::Message::Object to Atlas::Message::Element to
+	  avoid confusion, and namespace clashes.
+	  
+	* src/Objects/AttributeInfo.py, src/Objects/GenerateDecoder.py,
+	  src/Objects/GenerateObjectFactory.py, src/Objects/common.py,
+	  src/Objects/gen_cpp.py, 
+	  src/Objects/BaseObject.cpp, src/Objects/BaseObject.h,
+	  src/Objects/Encoder.h, src/Objects/loadDefaults.cpp,
+	  src/Objects/objectFactory.h, src/Utilities/atlas_convert.cpp:
+	  Update the Objects API to use the new Message class.
+
+	* configure.in, tests/Objects/Makefile.am:
+	  Fix handling of compression libs by filters.
+
+	* tests/Objects/decoder1.cpp, tests/Objects/encoder1.cpp,
+	  tests/Objects/objects1.cpp, tests/Objects/objects2.cpp,
+	  tutorial/DebugBridge.h:
+	  Update tests so they build again.
+
 2002-06-20  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Codecs/Bach.cpp, src/Message/DecoderBase.cpp,
@@ -9,7 +33,8 @@
 
 2002-06-01  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
 
-	* src/Objects/common.py, gen_cpp.py: both Python 1.5.* and Python 2.* supported
+	* src/Objects/common.py, gen_cpp.py: both Python 1.5.* and Python 2.*
+	  supported
 
 2002-05-21  Michael Koch  <konqueror@gmx.de>
 

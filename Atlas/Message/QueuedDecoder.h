@@ -11,7 +11,7 @@
 
 namespace Atlas { namespace Message {
 
-/** Decoder that presents a queue of Atlas::Message::Object.
+/** Decoder that presents a queue of Atlas::Message::Element.
  *
  * This message decoder puts arrived objects into a queue and allows the
  * application to pop them off the front of the queue, peek at the front of 
@@ -19,7 +19,7 @@ namespace Atlas { namespace Message {
  * queue.
  *
  * @see DecoderBase
- * @see Object
+ * @see Element
  * @author Stefanus Du Toit <sdt@gmx.net>
  *
  */
@@ -33,20 +33,20 @@ public:
     /// Retrieve the current size of the message queue.    
     size_t queueSize();
     /// Pop an object from the front of the message queue.
-    Object pop();
+    Element pop();
     /// Peek at the object at the front of the queue.
-    Object front();
+    Element front();
     /// Clear the message queue.
     void clear();
     
 protected:
 
     /// This adds a message to the queue.
-    void objectArrived(const Object& obj);
+    void objectArrived(const Element& obj);
     
 private:
     
-    std::queue<Object> m_objectQueue;
+    std::queue<Element> m_objectQueue;
 };
 
 } } // namespace Atlas::Message

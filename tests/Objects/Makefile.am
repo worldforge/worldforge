@@ -1,12 +1,12 @@
 
 CPPFLAGS = -I$(top_srcdir)/src -Wall
 
-LDADD  = -L$(top_builddir)/src/.libs -L$(top_builddir)/src/Codecs/.libs -L$(top_builddir)/src/Filters/.libs \
-         -L$(top_builddir)/src/Message/.libs -L$(top_builddir)/src/Net/.libs \
-         -L$(top_builddir)/src/Objects/.libs
+LDADD  = -L$(top_builddir)/src/ -L$(top_builddir)/src/Codecs/ -L$(top_builddir)/src/Filters/ \
+         -L$(top_builddir)/src/Message/ -L$(top_builddir)/src/Net/ \
+         -L$(top_builddir)/src/Objects/
 
 LIBS = -lAtlasObjects -lAtlasNet -lAtlas -lAtlasCodecs -lAtlasFilters \
-       -lAtlasMessage -lAtlas -lbz2 -lz
+       -lAtlasMessage -lAtlas $(OTHER_LIBS)
 
 LDFLAGS = -all-static
 

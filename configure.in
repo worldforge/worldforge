@@ -309,6 +309,8 @@ AC_CHECK_HEADERS(streambuf)
 
 AC_LANG_RESTORE
 
+OTHER_LIBS=
+
 dnl Test for gzip compression library
 
 AC_ARG_WITH(zlib,
@@ -321,7 +323,10 @@ ac_save_LIBS="$LIBS"
 CFLAGS="$CFLAGS -I$with_zlib/include"
 LIBS="$LIBS -L$with_zlib/lib"
 
-AC_CHECK_LIB(z, inflate)
+AC_CHECK_LIB(z, inflate,
+    [
+        OTHER_LIBS="$OTHER_LIBS -lz"
+    ])
 
 AC_CHECK_HEADERS(zlib.h)
 
@@ -340,7 +345,10 @@ ac_save_LIBS="$LIBS"
 CFLAGS="$CFLAGS -I$with_bzlib/include"
 LIBS="$LIBS -L$with_bzlib/lib"
 
-AC_CHECK_LIB(bz2, bzCompressInit)
+AC_CHECK_LIB(bz2, BZ2_bzDecompressInit,
+    [
+        OTHER_LIBS="$OTHER_LIBS -lbz2"
+    ])
 
 AC_CHECK_HEADERS(bzlib.h)
 
@@ -354,6 +362,7 @@ ATLAS_LIBS="-lAtlasObjects -lAtlasNet -lAtlas -lAtlasCodecs -lAtlasMessage -lAtl
 AC_SUBST(ATLAS_CFLAGS)
 AC_SUBST(ATLAS_LIBS)
 AC_SUBST(SYSTEM_LIBS)
+AC_SUBST(OTHER_LIBS)
 
 dnl Generate files
 
