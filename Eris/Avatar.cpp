@@ -23,7 +23,7 @@ using Atlas::Objects::Entity::GameEntity;
 namespace Eris
 {
 
-Avatar::Avatar(Player* pl) : 
+Avatar::Avatar(Account* pl) : 
     m_account(pl),
     m_entity(NULL),
     m_router(NULL)

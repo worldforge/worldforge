@@ -33,15 +33,15 @@ static RefnoAvatarMap global_pendingInfoAvatars;
 class AccountRouter : public Router
 {
 public:
-    AccountRouter(Player* pl) :
-        m_player(pl)
+    AccountRouter(Account* pl) :
+        m_account(pl)
     {
-        m_player->getConnection()->setDefaultRouter(this);
+        m_account->getConnection()->setDefaultRouter(this);
     }
 
     virtual ~AccountRouter()
     {
-        //m_player->getConnection()->
+        //m_account->getConnection()->
     }
 
     /** specify the serialNo of the operation used to connect the
@@ -57,14 +57,14 @@ public:
         if (op->instanceOf(ERROR_NO))
         {
             Error err = smart_dynamic_cast<Error>(op);
-            if (m_player->isLoggedIn())
+            if (m_account->isLoggedIn())
             {
                 const std::vector<Root>& args = err->getArgs();
                 std::string msg = args[0]->getAttr("message").asString();
-                warning() << "Player got error op while logged in:" << msg;
+                warning() << "Account got error op while logged in:" << msg;
                 debug() << "op that caused the error was: " << args[1];
             } else {
-                m_player->loginError(err);
+                m_account->loginError(err);
             }
             
             return HANDLED;
@@ -72,14 +72,14 @@ public:
 
         // logout
         if (op->instanceOf(LOGOUT_NO)) {
-            debug() << "player reciev forced logout from server";
-            m_player->internalLogout(false);
+            debug() << "Account reciev forced logout from server";
+            m_account->internalLogout(false);
             return HANDLED;
         }
            
-        if (m_player->isLoggedIn() && op->instanceOf(SIGHT_NO))
+        if (m_account->isLoggedIn() && op->instanceOf(SIGHT_NO))
         {
-            if (op->getTo() != m_player->getId()) {
+            if (op->getTo() != m_account->getId()) {
                 warning() << "accountRouter got weird sight of " << op;
                 return IGNORED;
             }
@@ -88,7 +88,7 @@ public:
             assert(!args.empty());
             GameEntity character = smart_dynamic_cast<GameEntity>(args.front());
             if (character.isValid()) {
-                m_player->sightCharacter(character);
+                m_account->sightCharacter(character);
                 return HANDLED;
             }
         }
@@ -114,18 +114,18 @@ private:
             if (!acc.isValid()) 
                 throw InvalidOperation("Account got INFO() whose's arg is not an account");
             
-            m_player->loginComplete(acc);
+            m_account->loginComplete(acc);
             return HANDLED;
         }
         
         Logout logout = smart_dynamic_cast<Logout>(args.front());
         if (logout.isValid()) {
-            debug() << "player recived logout acknowledgement";
-            m_player->internalLogout(true);
+            debug() << "Account recived logout acknowledgement";
+            m_account->internalLogout(true);
             return HANDLED;
         }
            
-        if (m_player->isLoggedIn()) {
+        if (m_account->isLoggedIn()) {
             GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
             if (ent.isValid()) {
                 // IG transition info, maybe
@@ -136,7 +136,7 @@ private:
                     global_pendingInfoAvatars.erase(A);
                     return HANDLED;
                 } else
-                    error() << "Player got info(game_entity) with serial "
+                    error() << "Account got info(game_entity) with serial "
                      << info->getRefno() << ", but not a IG subscription";
             }
         }
@@ -144,32 +144,32 @@ private:
         return IGNORED;
     }
 
-    Player* m_player;
+    Account* m_account;
     int m_loginRefno;
 };
 
 #pragma mark -
 
-Player::Player(Connection *con) :
+Account::Account(Connection *con) :
     m_con(con),
     m_status(DISCONNECTED),
     m_doingCharacterRefresh(false)
 {
     if (!m_con)
-        throw InvalidOperation("invalid Connection passed to Player");
+        throw InvalidOperation("invalid Connection passed to Account");
 
     m_router = new AccountRouter(this);
 
-    m_con->Connected.connect(SigC::slot(*this, &Player::netConnected));
-    m_con->Failure.connect(SigC::slot(*this, &Player::netFailure));
+    m_con->Connected.connect(SigC::slot(*this, &Account::netConnected));
+    m_con->Failure.connect(SigC::slot(*this, &Account::netFailure));
 }	
 
-Player::~Player()
+Account::~Account()
 {
     delete m_router;
 }
 
-void Player::login(const std::string &uname, const std::string &password)
+void Account::login(const std::string &uname, const std::string &password)
 {
     if (!m_con->isConnected()) {
         error() << "called login on unconnected Connection";
@@ -184,13 +184,13 @@ void Player::login(const std::string &uname, const std::string &password)
     internalLogin(uname, password);
 }
 
-void Player::createAccount(const std::string &uname, 
+void Account::createAccount(const std::string &uname, 
 	const std::string &fullName,
 	const std::string &pwd)
 {
     if (!m_con->isConnected() || (m_status != DISCONNECTED))
     {
-        error() << "called createAccount on unconnected Connection / already logged-in Player";
+        error() << "called createAccount on unconnected Connection / already logged-in Account";
         return;
     }
 
@@ -214,10 +214,10 @@ void Player::createAccount(const std::string &uname,
     m_pass = pwd;
 }
 
-void Player::logout()
+void Account::logout()
 {
     if (!m_con->isConnected() || (m_status != LOGGED_IN)) {
-        error() << "called logout on bad connection / unconnected Player, ignoring";
+        error() << "called logout on bad connection / unconnected Account, ignoring";
         return;
     }
     
@@ -231,10 +231,10 @@ void Player::logout()
     m_con->send(l);
 	
     _logoutTimeout = new Timeout("logout", this, 5000);
-    _logoutTimeout->Expired.connect(SigC::slot(*this, &Player::handleLogoutTimeout));
+    _logoutTimeout->Expired.connect(SigC::slot(*this, &Account::handleLogoutTimeout));
 }
 
-const CharacterMap& Player::getCharacters()
+const CharacterMap& Account::getCharacters()
 {
     if (m_status != LOGGED_IN)
         error() << "Not logged into an account : getCharacter returning empty dictionary";
@@ -245,11 +245,11 @@ const CharacterMap& Player::getCharacters()
     return _characters;
 }
 
-void Player::refreshCharacterInfo()
+void Account::refreshCharacterInfo()
 {
     if (!m_con->isConnected() || (m_status != LOGGED_IN))
     {
-        error() << "called refreshCharacterInfo on unconnected Player, ignoring";
+        error() << "called refreshCharacterInfo on unconnected Account, ignoring";
         return;
     }    
     
@@ -280,11 +280,11 @@ void Player::refreshCharacterInfo()
     }
 }
 
-Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
+Avatar* Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 {
     if (!m_con->isConnected() || (m_status != LOGGED_IN))
     {
-        error() << "called createCharacter on unconnected Player, ignoring";
+        error() << "called createCharacter on unconnected Account, ignoring";
         return NULL;
     }    
 
@@ -300,7 +300,7 @@ Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 }
 
 /*
-void Player::createCharacter()
+void Account::createCharacter()
 {
 	if (!_lobby || _lobby->getAccountID().empty())
 		throw InvalidOperation("no account exists!");
@@ -315,17 +315,17 @@ void Player::createCharacter()
 	// the dialog passes back to createCharacterHandler()
 }
 
-void Player::createCharacterHandler(long serialno)
+void Account::createCharacterHandler(long serialno)
 {
     if (serialno)
         NewCharacter((new World(this, _con))->createAvatar(serialno));
 }
 */
 
-Avatar* Player::takeCharacter(const std::string &id)
+Avatar* Account::takeCharacter(const std::string &id)
 {
     if (m_characterIds.count(id) == 0) {
-        error() << "Character '" << id << "' not owned by Player " << m_username;
+        error() << "Character '" << id << "' not owned by Account " << m_username;
         return NULL;
     }
 	
@@ -348,7 +348,7 @@ Avatar* Player::takeCharacter(const std::string &id)
 
 #pragma mark -
 
-void Player::internalLogin(const std::string &uname, const std::string &pwd)
+void Account::internalLogin(const std::string &uname, const std::string &pwd)
 {
     assert(m_status == DISCONNECTED);
         
@@ -367,7 +367,7 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
     m_con->send(l);
 }
 
-void Player::internalLogout(bool clean)
+void Account::internalLogout(bool clean)
 {
     if (clean) {
         if (m_status != LOGGING_OUT)
@@ -391,7 +391,7 @@ void Player::internalLogout(bool clean)
     }
 }
 
-void Player::loginComplete(const AtlasAccount &p)
+void Account::loginComplete(const AtlasAccount &p)
 {
     if (m_status != LOGGING_IN)
         error() << "got loginComplete, but not currently logging in!";
@@ -406,10 +406,10 @@ void Player::loginComplete(const AtlasAccount &p)
     // notify an people watching us 
     LoginSuccess.emit();
       
-    m_con->Disconnecting.connect(SigC::slot(*this, &Player::netDisconnecting));
+    m_con->Disconnecting.connect(SigC::slot(*this, &Account::netDisconnecting));
 }
 
-void Player::loginError(const Error& err)
+void Account::loginError(const Error& err)
 {
     if (m_status != LOGGING_IN)
         error() << "got loginError while not logging in";
@@ -422,7 +422,7 @@ void Player::loginError(const Error& err)
     m_status = DISCONNECTED;
 }
 
-void Player::sightCharacter(const GameEntity& ge)
+void Account::sightCharacter(const GameEntity& ge)
 {
     if (!m_doingCharacterRefresh) {
         error() << "got sight of character " << ge->getId() << " while outside a refresh, ignoring";
@@ -451,16 +451,16 @@ thus we use it to trigger a reconnection. Note that some actions by
 Lobby and World are also required to get everything back into the correct
 state */
 
-void Player::netConnected()
+void Account::netConnected()
 {
     // re-connection
     if (!m_username.empty() && !m_pass.empty() && (m_status == DISCONNECTED)) {
-        debug() << "Player " << m_username << " got netConnected, doing reconnect";
+        debug() << "Account " << m_username << " got netConnected, doing reconnect";
         internalLogin(m_username, m_pass);
     }
 }
 
-bool Player::netDisconnecting()
+bool Account::netDisconnecting()
 {
     if (m_status == LOGGED_IN) {
         m_con->lock();
@@ -470,12 +470,12 @@ bool Player::netDisconnecting()
         return true;
 }
 
-void Player::netFailure(const std::string& /*msg*/)
+void Account::netFailure(const std::string& /*msg*/)
 {
   
 }
 
-void Player::handleLogoutTimeout()
+void Account::handleLogoutTimeout()
 {
     error() << "LOGOUT timed out waiting for response";
     

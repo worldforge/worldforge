@@ -1,3 +1,7 @@
+2004-08-03  James Turner  <james@worldforge.org>
+
+	* Rename the actual class Player to Account, and all the uses thereof.
+
 2004-08-03  Hagen Moebius  <hagen.moebius@starschiffchen.de>
 
 	* docs/.cvsignore: Added to ignore doxygen html and latex output.

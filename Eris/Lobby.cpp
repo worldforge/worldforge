@@ -106,12 +106,12 @@ private:
 
 #pragma mark -
 
-Lobby::Lobby(Player* pl) :
+Lobby::Lobby(Account* a) :
     Room(this, std::string()),
-    m_account(pl)
+    m_account(a)
 {
     m_router = new OOGRouter(this);
-    assert(pl);
+    assert(a);
     
     if (m_account->isLoggedIn())
         onLoggedIn();

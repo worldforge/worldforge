@@ -6,7 +6,7 @@
 namespace Eris
 {
 	
-class Player;
+class Account;
 class Person;
 class Connection;
 
@@ -15,7 +15,7 @@ class Connection;
 class Lobby : public Room
 {
 public:	
-    Lobby(Player *pl); 
+    Lobby(Account *acc); 
     virtual ~Lobby();
 
     /// Join the specified room; throws if not allowed or not found
@@ -27,7 +27,7 @@ public:
     /// obtain a Room object, given the id; may return NULL
     Room* getRoom(const std::string &id);
 
-    Player* getAccount() const
+    Account* getAccount() const
     {
         return m_account;
     }
@@ -60,7 +60,7 @@ private:
     void onLoggedIn();
     void onLogout(bool clean);
     
-    Player* m_account;    
+    Account* m_account;    
     IdPersonMap m_people;
 	
     typedef std::map<std::string, Room*> IdRoomMap;

@@ -15,22 +15,22 @@ class Avatar;
 /** Type used to return available characters */
 typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> CharacterMap;
 
-/// Per-player instance, for entire lifetime; abstracted to permit (in theorey) multiple players per client
+/// Per-account instance, for entire lifetime; abstracted to permit (in theorey) multiple accounts per client
 
-/** A Player object represents the encapsulation of a server account, and it's binding to a character in the
-game world. Future versions of Eris will support mutliple Player objects per Connection, allowing various
+/** A Account object represents the encapsulation of a server account, and it's binding to a character in the
+game world. Future versions of Eris will support multiple Account objects per Connection, allowing various
 configurations of interface, proxies and so forth.
 <br>
-Player is also the mechanism by which Lobby and World objects are made available to the client,
+Account is also the mechanism by which Lobby and Avatars objects are made available to the client,
 in response to login / create operations */
 
-class Player : virtual public SigC::Object
+class Account : virtual public SigC::Object
 {
 public:
-    /** create a new Player object : currently only one is assumed, but multiple
+    /** create a new Account object : currently only one is assumed, but multiple
     might be supported in the future */
-    Player(Connection *con);
-    ~Player();
+    Account(Connection *con);
+    ~Account();
 
     /// Login to the server using the existing account specified
     /// @param uname The username of the account

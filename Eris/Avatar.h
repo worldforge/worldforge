@@ -20,7 +20,7 @@ namespace Eris
 {
 	
 // Forward Declerations
-class Player;
+class Account;
 class IGRouter;
 class View;
 class Connection;
@@ -96,12 +96,12 @@ public:
     the sound, and the operation that was heard, for example a Talk. */
     SigC::Signal2<void, Entity*, const Atlas::Objects::Operation::RootOperation&> Hear;
 protected:
-    friend class Player;
+    friend class Account;
     
     /** Create a new Avatar object. 
     @param pl The player that owns the Avatar 
     */
-    Avatar(Player* pl);
+    Avatar(Account* pl);
     
     friend class AccountRouter;
     friend class IGRouter;
@@ -116,7 +116,7 @@ protected:
 private:
     void onEntityAppear(Entity* ent);
     
-    Player* m_account;
+    Account* m_account;
     
     std::string m_entityId;
     EntityPtr m_entity;
