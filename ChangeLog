@@ -1,3 +1,13 @@
+Friday, June 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Did a Quaternion-specific implementation of rotation(from, to)
+	  instead of just calling the RotMatrix version and
+	  converting. Also changed RotMatrix<2>::rotation(from, to)
+	  not to throw ColinearVectors in the case where the
+	  inputs are antiparallel, since in 2d there's only
+	  one possible plane of rotation and we can give
+	  a canonical answer.
+
 Tuesday, June 24th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed a bug in RotMatrix::rotation(from, to),

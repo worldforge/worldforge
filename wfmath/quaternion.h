@@ -131,12 +131,7 @@ class Quaternion
   Quaternion& rotation(const Vector<3>& axis); // angle == axis.mag()
 
   /// sets the Quaternion to rotate 'from' to be parallel to 'to'
-  Quaternion& rotation(const Vector<3>& from, const Vector<3>& to)
-  {
-    bool result = fromRotMatrix(RotMatrix<3>().rotation(from, to));
-    assert(result);
-    return *this;
-  }
+  Quaternion& rotation(const Vector<3>& from, const Vector<3>& to);
 
   // documented elsewhere
   template<const int dim>

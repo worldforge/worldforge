@@ -446,6 +446,11 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
 
   if(ctheta_plus_1 < WFMATH_EPSILON) {
     // 180 degree rotation, rotation plane indeterminate
+    if(dim == 2) { // special case, only one rotation plane possible
+      m_elem[0][0] = m_elem[1][1] = -1;
+      m_elem[0][1] = m_elem[1][0] = 0;
+      return *this;
+    }
     throw ColinearVectors<dim>(from, to);
   }
 
