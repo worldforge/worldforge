@@ -6,7 +6,6 @@
 #define ATLAS_CODECS_PACKED_H
 
 #include <iostream>
-#include <string>
 #include <stack>
 
 #include "Utility.h"

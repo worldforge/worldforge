@@ -5,7 +5,6 @@
 #ifndef ATLAS_MESSAGE_DECODERBASE_H
 #define ATLAS_MESSAGE_DECODERBASE_H
 
-#include <string>
 #include <stack>
 #include "../Bridge.h"
 #include "Object.h"

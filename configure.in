@@ -4,16 +4,7 @@ AC_INIT()
 
 dnl Initialise automake
 
-ATLAS_VERSION=0.5.0.1
-AC_SUBST(ATLAS_VERSION)
-
-# libtool versioning
-# LT_RELEASE=$MAJOR_VERSION.$MINOR_VERSION
-LT_CURRENT=1
-LT_REVISION=0
-LT_AGE=0
-
-INTERFACE_VERSION='-version-info 0:0:0 -release $(ATLAS_VERSION)'
+INTERFACE_VERSION='-release 0.5 -version-info 0:0:0'
 
 AC_SUBST(INTERFACE_VERSION)
 

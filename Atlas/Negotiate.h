@@ -5,11 +5,14 @@
 #ifndef ATLAS_NEGOTIATE_H
 #define ATLAS_NEGOTIATE_H
 
-#include "Codec.h"
+#include "Task.h"
 
 #define Debug(prg) { if (debug_flag) { prg } }
 
 namespace Atlas {
+
+template <class Stream>
+class Codec;
 
 /** Negotiation of codecs and filters for an Atlas connection
 

@@ -6,10 +6,8 @@
 #define ATLAS_CODECS_XML_H
 
 #include <iostream>
-#include <string>
 #include <stack>
 
-#include "Utility.h"
 #include "../Codec.h"
 
 namespace Atlas { namespace Codecs {

@@ -252,9 +252,11 @@ void Atlas::Net::StreamAccept::poll(bool can_read = true)
         {
             // get client greeting
         
-            if (buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
-            std::cout << "client: " << inName << std::endl;
-            state++;
+            if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
+            {
+                std::cout << "client: " << inName << std::endl;
+                state++;
+            }
         }
 
         if (state == CLIENT_CODECS)

@@ -7,7 +7,6 @@
 
 #include <string>
 #include <map>
-#include <list>
 #include <vector>
 
 #include "../Exception.h"

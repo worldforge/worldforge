@@ -6,6 +6,7 @@
 #define ATLAS_OBJECTS_BASEOBJECT_H
 
 #include <map>
+#include <list>
 #include <string>
 #include "../Message/Encoder.h"
 #include "../Message/Object.h"

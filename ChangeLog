@@ -1,3 +1,10 @@
+2001-10-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Cleaned up some unnecessary includes.
+
+	* src/Net/Stream.cpp: Re-wrote client greeting code so it is more
+          efficient, as described by Damien McGinnes.
+
 2001-07-17  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Exception.h: Added exception base class, with string

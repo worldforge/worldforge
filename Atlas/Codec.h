@@ -5,8 +5,6 @@
 #ifndef ATLAS_CODEC_H
 #define ATLAS_CODEC_H
 
-#include <string>
-
 #include "Bridge.h"
 #include "Task.h"
 
