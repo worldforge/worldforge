@@ -72,11 +72,7 @@ protected:
     };
     
     stack<State> state;
-
-    string nameFragment;
-    string stringFragment;
-    int intFragment;
-    float floatFragment;
+    stack<string> fragment;
 
     inline void ParseStream(char);
     inline void ParseMessage(char);
@@ -100,10 +96,6 @@ PackedAscii::PackedAscii(const Codec::Parameters& p) :
     socket(p.stream), filter(p.filter), bridge(p.bridge)
 {
     state.push(PARSE_STREAM);
-
-    stringFragment = "";
-    intFragment = 0;
-    floatFragment = 0.0;
 }
 
 void PackedAscii::ParseStream(char next)
@@ -156,27 +148,35 @@ void PackedAscii::ParseMap(char next)
 	    state.push(PARSE_MAP);
 	    state.push(PARSE_MAP_BEGIN);
 	    state.push(PARSE_NAME);
+	    fragment.push("");
 	break;
 
 	case '(':
 	    state.push(PARSE_LIST);
 	    state.push(PARSE_LIST_BEGIN);
 	    state.push(PARSE_NAME);
+	    fragment.push("");
 	break;
 
 	case '$':
 	    state.push(PARSE_STRING);
 	    state.push(PARSE_NAME);
+	    fragment.push("");
+	    fragment.push("");
 	break;
 
 	case '@':
 	    state.push(PARSE_INT);
 	    state.push(PARSE_NAME);
+	    fragment.push("");
+	    fragment.push("");
 	break;
 
 	case '#':
 	    state.push(PARSE_FLOAT);
 	    state.push(PARSE_NAME);
+	    fragment.push("");
+	    fragment.push("");
 	break;
 
 	default:
@@ -207,14 +207,17 @@ void PackedAscii::ParseList(char next)
 
 	case '$':
 	    state.push(PARSE_STRING);
+	    fragment.push("");
 	break;
 
 	case '@':
 	    state.push(PARSE_INT);
+	    fragment.push("");
 	break;
 
 	case '#':
 	    state.push(PARSE_FLOAT);
+	    fragment.push("");
 	break;
 
 	default:
@@ -226,14 +229,20 @@ void PackedAscii::ParseList(char next)
 
 void PackedAscii::ParseMapBegin(char next)
 {
-    bridge->MapItem(nameFragment, MapBegin);
+    string name = fragment.top();
+    fragment.pop();
+    
+    bridge->MapItem(name, MapBegin);
     socket.putback(next);
     state.pop();
 }
 
 void PackedAscii::ParseListBegin(char next)
 {
-    bridge->MapItem(nameFragment, ListBegin);
+    string name = fragment.top();
+    fragment.pop();
+    
+    bridge->MapItem(name, ListBegin);
     socket.putback(next);
     state.pop();
 }
@@ -251,24 +260,43 @@ void PackedAscii::ParseInt(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(nameFragment, intFragment);
-		nameFragment = "";
+		string data = fragment.top();
+		fragment.pop();
+
+		string name = fragment.top();
+		fragment.pop();
+		
+		bridge->MapItem(name, atoi(data.c_str()));
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		bridge->ListItem(intFragment);
+		string data = fragment.top();
+		fragment.pop();
+		
+		bridge->ListItem(atoi(data.c_str()));
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    intFragment = 0;
 	break;
 
-	case '0': case '1': case '2': case '3': case '4':
-	case '5': case '6': case '7': case '8': case '9':
-	    intFragment *= 10;
-	    intFragment += next - '0';
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	    fragment.top() += next;
+	break;
+
+	default:
+	    // FIXME signal error here
+	    // unexpected character
 	break;
     }
 }
@@ -286,24 +314,44 @@ void PackedAscii::ParseFloat(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(nameFragment, floatFragment);
-		nameFragment = "";
+		string data = fragment.top();
+		fragment.pop();
+
+		string name = fragment.top();
+		fragment.pop();
+		
+		bridge->MapItem(name, atof(data.c_str()));
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		bridge->ListItem(floatFragment);
+		string data = fragment.top();
+		fragment.pop();
+		
+		bridge->ListItem(atof(data.c_str()));
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    floatFragment = 0.0;
 	break;
 
-	case '0': case '1': case '2': case '3': case '4':
-	case '5': case '6': case '7': case '8': case '9':
-	    floatFragment *= 10;
-	    floatFragment += next - '0';
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	case '.':
+	    fragment.top() += next;
+	break;
+
+	default:
+	    // FIXME signal error here
+	    // unexpected character
 	break;
     }
 }
@@ -321,22 +369,30 @@ void PackedAscii::ParseString(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(nameFragment, stringFragment);
-		nameFragment = "";
+		string data = fragment.top();
+		fragment.pop();
+		
+		string name = fragment.top();
+		fragment.pop();
+
+		bridge->MapItem(name, data);
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		bridge->ListItem(stringFragment);
+		string data = fragment.top();
+		fragment.pop();
+		
+		bridge->ListItem(data);
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	    stringFragment = "";
 	break;
 
 	case '+':
 	   state.push(PARSE_ENCODED);
+	   fragment.push("");
 	break;
 
 	case '=':
@@ -345,7 +401,7 @@ void PackedAscii::ParseString(char next)
 	break;
 
 	default:
-	    stringFragment += next;
+	    fragment.top() += next;
 	break;
     }
 }
@@ -360,6 +416,7 @@ void PackedAscii::ParseName(char next)
 
 	case '+':
 	    state.push(PARSE_ENCODED);
+	    fragment.push("");
 	break;
 	
 	case '[':
@@ -372,7 +429,7 @@ void PackedAscii::ParseName(char next)
 	break;
 
 	default:
-	    nameFragment += next;
+	    fragment.top() += next;
 	break;
     }
 }
