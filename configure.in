@@ -378,5 +378,6 @@ AC_OUTPUT([
 	tests/Makefile
 	tests/Objects/Makefile
 	tutorial/Makefile
+	atlas-cpp.spec
 	atlascpp-0.6.pc
 ])
