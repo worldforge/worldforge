@@ -10,6 +10,9 @@
 
 #include <Eris/Connection.h>
 #include <Eris/Player.h>
+#include <Eris/Avatar.h>
+#include <Eris/Entity.h>
+#include <Eris/View.h>
 #include <Eris/PollDefault.h>
 #include <sigc++/object_slot.h>
 #include <sigc++/object.h>
@@ -155,7 +158,6 @@ void testBadLogin(StubServer& stub)
     
     assert(loginErrorCounter.fireCount() == 1);
     assert(loginCount.fireCount() == 0);
-    
     assert(!player->isLoggedIn());
 }
 
@@ -225,6 +227,33 @@ void testLogout(StubServer& stub)
     assert(!player->isLoggedIn());
 }
 
+void testCharActivate(StubServer& stub)
+{
+    AutoConnection con = stdConnect(stub);
+    AutoPlayer player = stdLogin("account_B", "sweede", stub, con.get());
+
+    Avatar* av = player->takeCharacter("acc_b_character");
+    
+    SignalCounter1<Avatar*> wentInGame;
+    av->InGame.connect(SigC::slot(wentInGame, &SignalCounter1<Avatar*>::fired));
+    
+    while (wentInGame.fireCount() == 0)
+    {
+        stub.run();
+        Eris::PollDefault::poll();
+    }
+    
+    assert(av->getEntity());
+    assert(av->getEntity()->getId() == "acc_b_character");
+    
+    Eris::View* v = av->getView();
+    assert(v->getTopLevel()->getId() == "_world");
+    
+    assert(v->getTopLevel()->hasChild("_field_01"));
+    
+    delete av;
+}
+
 int main(int argc, char **argv)
 {
     Eris::setLogLevel(LOG_DEBUG);
@@ -237,6 +266,7 @@ int main(int argc, char **argv)
         testAccCreate(stub);
         testLogout(stub);
         testAccountCharacters(stub);
+        testCharActivate(stub);
     }
     catch (TestFailure& tfexp)
     {

@@ -82,11 +82,38 @@ void StubServer::setupTestAccounts()
 
     m_accounts[accB->getId()] = accB;
 
+    StringList contents;
+    
+    GameEntity world;
+    world->setName("The world");
+    world->setId("_world");
+    world->setObjtype("obj");
+    world->setParents(StringList(1, "game_entity"));
+    
+    contents.push_back("_field_01");
+    world->setContains(contents);
+    
+    m_world[world->getId()] = world;
+    
+    GameEntity field;
+    field->setName("A field");
+    field->setId("_field_01");
+    field->setObjtype("obj");
+    field->setLoc(world->getId());
+    field->setParents(StringList(1, "game_entity"));
+    
+    contents.clear();
+    contents.push_back("acc_b_character");
+    field->setContains(contents);
+    
+    m_world[field->getId()] = field;
+    
     GameEntity avatarB0;
     avatarB0->setName("Joe Blow");
     avatarB0->setId("acc_b_character");
     avatarB0->setObjtype("obj");
     avatarB0->setParents(StringList(1, "game_entity"));
+    avatarB0->setLoc(field->getId());
     m_world[avatarB0->getId()] = avatarB0;
 }
 
@@ -105,7 +132,7 @@ void StubServer::run()
     basic_socket_poll poller;
     poller.poll(clientSockets);
 
-    for (ConArray::iterator C=m_clients.begin(); C != m_clients.end(); ++C)
+    for (ConArray::iterator C=m_clients.begin(); C != m_clients.end(); )
     {
         if (poller.isReady((*C)->getStream()))
             (*C)->poll();
@@ -115,13 +142,16 @@ void StubServer::run()
             std::string accId = (*C)->getAccount();
             if (!accId.empty()) {
                 for (RoomMap::iterator R=m_rooms.begin(); R != m_rooms.end(); ++R)
-                    partRoom(accId, R->first);
+                {
+                    if (peopleInRoom(R->first).count(accId))
+                        partRoom(accId, R->first);
+                }
             }
         
             delete *C;
             C = m_clients.erase(C);
-            continue;
-        }
+        } else
+            ++C;
     }
 }
 
@@ -212,7 +242,9 @@ void StubServer::joinRoom(const std::string& acc, const std::string& room)
     StringSet members = peopleInRoom(room);
     if (members.count(acc))
         throw InvalidOperation("duplicate join of room " + room + " by " + acc);
-
+    
+    debug() << "account " << acc << " joining room " << room;
+    
     Appearance app;
     app->setFrom(room);
 

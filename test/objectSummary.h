@@ -22,17 +22,6 @@ private:
     Atlas::Objects::Root m_obj;
 };
 
-std::ostream& operator<<(std::ostream& io, const objectSummary& summary)
-{
-    const StringList& parents = summary.m_obj->getParents();
-    if (parents.size() == 0)
-    {
-        io << "un-typed object";
-    } else {
-        io << parents.front();
-    }
-    
-    return io;
-}
+std::ostream& operator<<(std::ostream& io, const objectSummary& summary);
 
-#endif ERIS_TEST_OBJECT_SUMMARY_H
+#endif // ERIS_TEST_OBJECT_SUMMARY_H

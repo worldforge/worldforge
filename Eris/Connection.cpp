@@ -111,7 +111,15 @@ void Connection::send(const Atlas::Objects::Root &obj)
         error() << "called send on closed connection";
         return;
     }
-	
+/*	
+    std::stringstream debugStream;
+    Atlas::Codecs::Bach debugCodec(debugStream, NULL);
+    Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
+    debugEncoder.streamObjectsMessage(obj);
+    debugStream << std::flush;
+
+    std::cout << "sending:" << debugStream.str() << std::endl;
+ */       
     _encode->streamObjectsMessage(obj);
     (*_stream) << std::flush;
 }

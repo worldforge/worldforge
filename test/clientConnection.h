@@ -12,6 +12,7 @@
 #include <deque>
 
 class StubServer;
+class Agent;
 
 class ClientConnection : public Atlas::Objects::ObjectsDecoder
 {
@@ -24,9 +25,10 @@ public:
     bool isDisconnected();
 
     basic_socket* getStream()
-    {
-        return &m_stream;
-    }
+    { return &m_stream; }
+
+    StubServer* getServer()
+    { return m_server; }
 
     const std::string& getAccount() const
     { return m_account; }
@@ -38,6 +40,7 @@ public:
 // critical override from ObjectsDecoder
     virtual void objectArrived(const Atlas::Objects::Root& obj);
 
+    void sendError(const std::string& msg, const Atlas::Objects::Operation::RootOperation& op);
 private:
     void negotiate();
     void fail();
@@ -50,8 +53,11 @@ private:
     void processOOGLook(const Atlas::Objects::Operation::Look& lk);
     void processAnonymousGet(const Atlas::Objects::Operation::Get& get);
 
-    void sendError(const std::string& msg, const Atlas::Objects::Operation::RootOperation& op);
-
+    void activateCharacter(const std::string& charId, const Atlas::Objects::Operation::RootOperation& op);
+    
+    void processIG(const Atlas::Objects::Operation::RootOperation& op);
+    void igLook(const Atlas::Objects::Operation::Look& look);
+    
     bool entityIsCharacter(const std::string& id);
 
     tcp_socket_stream m_stream;
@@ -65,6 +71,9 @@ private:
     Atlas::Codec* m_codec;
     Atlas::Net::StreamAccept* m_acceptor;
     Atlas::Objects::ObjectsEncoder* m_encoder;
+    
+    typedef std::map<std::string, Agent*> AgentMap;
+    AgentMap m_agents;
 };
 
 #endif

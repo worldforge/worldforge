@@ -113,31 +113,36 @@ void View::disappear(const std::string& eid)
 
 void View::sight(const GameEntity& gent)
 {
-    bool visible;
-
+    bool visible = true;
+    
+    std::string eid = gent->getId();
+    debug() << "got sight of " << eid;
+    
 // examine the pending map, to see what we should do with this entity
-    switch (m_pending[gent->getId()])
-    {
-    case SACTION_APPEAR:
-        visible = true;
-        break;
+    if (m_pending.count(eid)) {
+        switch (m_pending[eid])
+        {
+        case SACTION_APPEAR:
+            visible = true;
+            break;
 
-    case SACTION_DISCARD:
-        m_pending.erase(gent->getId());
-        return;
+        case SACTION_DISCARD:
+            m_pending.erase(eid);
+            return;
 
-    case SACTION_HIDE:
-        visible = false;
-        break;
+        case SACTION_HIDE:
+            visible = false;
+            break;
 
-    default:
-        throw InvalidOperation("got bad pending action for entity");
+        default:
+            throw InvalidOperation("got bad pending action for entity");
+        }
+    
+         m_pending.erase(eid);
     }
-
-    m_pending.erase(gent->getId());
-
+    
 // if we got this far, go ahead and build / update it
-    Entity *ent = getEntity(gent->getId());
+    Entity *ent = getEntity(eid);
     if (ent)
     {
         // existing entity, update in place
@@ -145,10 +150,10 @@ void View::sight(const GameEntity& gent)
     } else
         ent = initialSight(gent);
 
+    ent->setVisible(visible);
+    
     if (gent->isDefaultLoc()) // new top level entity
         setTopLevelEntity(ent);
-
-    ent->setVisible(visible);
 }
 
 Entity* View::initialSight(const GameEntity& gent)
@@ -210,27 +215,29 @@ void View::getEntityFromServer(const std::string& eid)
         // we force the action back to SACTION_APPEAR in a minute
         debug() << "duplicate getEntityFromServer for entity " << eid;
     }
-
-    m_pending[eid] = SACTION_APPEAR;
-
+    
     Look look;
     if (!eid.empty())
     {
+        m_pending[eid] = SACTION_APPEAR;
 	Root what;
         what->setId(eid);
+        look->setArgs1(what);
     }
-
+    
     look->setSerialno(getNewSerialno());
     look->setFrom(m_owner->getId());
+    
     getConnection()->send(look);
 }
 
 void View::setTopLevelEntity(Entity* newTopLevel)
 {
-    debug() << "setting new top-level entity";
+    debug() << "setting new top-level entity to " << newTopLevel->getId();
 
-    if (m_topLevel)
-    {
+    if (m_topLevel) {
+        if (newTopLevel == m_topLevel) return; // no change!
+        
         if (m_topLevel->isVisible() && (m_topLevel->getLocation() == NULL))
             error() << "old top-level entity is visible, but has no location";
     }

@@ -133,7 +133,8 @@ private:
                     global_pendingInfoAvatars.erase(A);
                     return HANDLED;
                 } else
-                    debug() << "Player got info(game_entity), but not a IG transition";
+                    debug() << "Player got info(game_entity) with serial "
+                     << info->getRefno() << ", but not a IG transition";
             }
         }
           
@@ -337,6 +338,9 @@ Avatar* Player::takeCharacter(const std::string &id)
     m_con->send(l);
     
     Avatar *av = new Avatar(this);
+    debug() << "setting pendingInfoAvatars entry " << l->getSerialno() 
+        << " to " << av;
+        
     global_pendingInfoAvatars[l->getSerialno()] = av;
     return av;
 }
@@ -363,17 +367,18 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
 
 void Player::internalLogout(bool clean)
 {
-    if (clean)
+    if (clean) {
         if (m_status != LOGGING_OUT)
         {
             error() << "got clean logout, but not logging out already";
         }
-    else
+    } else {
         if (m_status != LOGGED_IN)
         {
             error() << "got forced logout, but not currently logged in";
         }
-        
+    }
+    
     m_status = DISCONNECTED;
     
     if (_logoutTimeout)
@@ -454,12 +459,15 @@ void Player::netConnected()
 
 bool Player::netDisconnecting()
 {
-    m_con->lock();
-    logout();
-    // FIXME  -  decide what reponse logout should have, install a handler
-    // for it (in logout() itself), and then attach a signal to the handler
-    // that calls m_con->unlock();
-    return false;
+    if (m_status == LOGGED_IN) {
+        m_con->lock();
+        logout();
+        // FIXME  -  decide what reponse logout should have, install a handler
+        // for it (in logout() itself), and then attach a signal to the handler
+        // that calls m_con->unlock();
+        return false;
+    } else
+        return true;
 }
 
 void Player::netFailure(const std::string& /*msg*/)

@@ -42,6 +42,7 @@ private:
     tcp_socket_server m_serverSocket;
 
     friend class ClientConnection;
+    friend class Agent;
     
     typedef std::vector<ClientConnection*> ConArray;
     ConArray m_clients;

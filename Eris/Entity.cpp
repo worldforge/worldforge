@@ -34,6 +34,7 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
     m_id(ge->getId()),
     m_stamp(-1.0),
     m_visible(false),
+    m_limbo(false),
     m_updateLevel(0),
     m_view(vw),
     m_hasBBox(false)
@@ -45,6 +46,13 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
 
 Entity::~Entity()
 {
+    debug() << "deleting entity " << m_id;
+    
+    for (unsigned int C=0; C < m_contents.size(); ++C) {
+        m_contents[C]->setLocation(NULL);
+        m_contents[C]->m_limbo = true;
+    }
+    
     setLocation(NULL);
     m_view->getConnection()->unregisterRouterForFrom(m_router, m_id);
     delete m_router;
@@ -78,7 +86,9 @@ SigC::Connection Entity::observe(const std::string& attr, const AttrChangedSlot&
 
 void Entity::sight(const GameEntity &ge)
 {    
-    setLocationFromAtlas(ge->getLoc());
+    if (!ge->isDefaultLoc())
+        setLocationFromAtlas(ge->getLoc());
+    
     setContentsFromAtlas(ge->getContains());
     
     setFromRoot(smart_static_cast<Root>(ge));
@@ -236,6 +246,7 @@ void Entity::setLocationFromAtlas(const std::string& locId)
         debug() << "placing entity " << this << " in limbo till we get " << locId;
         m_view->getEntityFromServer(locId);
         
+        m_limbo = true;
         setVisible(false); // fire disappearanc, VisChanged if necessary
         
         if (m_location)
@@ -259,6 +270,10 @@ void Entity::setLocation(Entity* newLocation)
     
     Entity* oldLocation = m_location;
     m_location = newLocation;
+    
+    if (m_limbo) debug() << "removing entity " << m_id << " from limbo";
+    m_limbo = false;
+    
     LocationChanged.emit(this, oldLocation);
     
 // fire VisChanged and Appearance/Disappearance signals
@@ -270,6 +285,7 @@ void Entity::setLocation(Entity* newLocation)
 
 void Entity::addToLocation()
 {
+    debug() << "entity " << m_id << " adding to location " << m_location->m_id;
     assert(!m_location->hasChild(m_id));
     m_location->addChild(this);
 }
@@ -323,10 +339,9 @@ void Entity::setContentsFromAtlas(const StringList& contents)
                 continue;
             }
             
-            if (child->getLocation() == NULL)
+            if (child->m_limbo)
             {
                 debug() << "found child " << child << " in limbo";
-                assert(child->m_visible == false); // limbo entities must be invisible
             }
             else if (child->isVisible())
             {
@@ -353,9 +368,10 @@ void Entity::setContentsFromAtlas(const StringList& contents)
 
 bool Entity::hasChild(const std::string& eid) const
 {
-    for (EntityArray::const_iterator C=m_contents.end(); C != m_contents.end(); ++C)
+    for (EntityArray::const_iterator C=m_contents.begin(); C != m_contents.end(); ++C) {
         if ((*C)->getId() == eid) return true;
-        
+    }
+    
     return false;
 }
 
@@ -364,13 +380,14 @@ void Entity::addChild(Entity* e)
     m_contents.push_back(e);
     ChildAdded.emit(this, e);
     assert(e->getLocation() == this);
+    debug() << "entity " << m_id << " added new child " << e->m_id;
 }
 
 void Entity::removeChild(Entity* e)
 {
     assert(e->getLocation() == this);
     
-    for (EntityArray::iterator C=m_contents.end(); C != m_contents.end(); ++C)
+    for (EntityArray::iterator C=m_contents.begin(); C != m_contents.end(); ++C)
     {
         if (*C == e)
         {
@@ -398,6 +415,8 @@ void Entity::setVisible(bool vis)
 
 bool Entity::isVisible() const
 {
+    if (m_limbo) return false;
+    
     if (m_location)
         return m_visible && m_location->isVisible();
     else

@@ -1,5 +1,18 @@
 2004-05-02  James Turner <james@worldforge.org>
 
+* Fix autobuild warnings in tests
+
+* Fix logout behaviour, many dumb bugs lurking around. Much better now,
+  but still needs better testing.
+  
+* Added IG module to tests, including a simple character activation tests.
+  This entailed adding trivial agents to each client connection.
+  
+* Huge number of bug fixes in View, Entity and Avatar. A decent percentage
+  of View related functionality seems to be working.
+
+2004-05-02  James Turner <james@worldforge.org>
+
 * Fix Account creation (well, workaround the Atlas Objects bug)
 
 * Supress the 'no router for TO' warning if there are no TO routers

@@ -114,6 +114,8 @@ public:
         return m_hasBBox;
     }
     
+    bool hasChild(const std::string& eid) const;
+    
     /** determine if this entity is visible. */
     bool isVisible() const;
 
@@ -221,7 +223,6 @@ private:
     typedef std::map<std::string, Entity*> IdEntityMap;
     void buildEntityDictFromContents(IdEntityMap& dict);
     
-    bool hasChild(const std::string& eid) const;
     void addChild(Entity* e);
     void removeChild(Entity* e);
 
@@ -247,6 +248,7 @@ private:
     std::string m_description;
     EntityRouter* m_router;
     bool m_visible;
+    bool m_limbo;   ///< waiting for parent bind
     
     WFMath::AxisBox<3> m_bbox;
     WFMath::Point<3> m_position;

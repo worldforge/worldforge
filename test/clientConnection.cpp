@@ -6,12 +6,14 @@
 #include "stubServer.h"
 #include "objectSummary.h"
 #include "testUtils.h"
+#include "agent.h"
 
 #include <Eris/LogStream.h>
 #include <Eris/Exceptions.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/RootOperation.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Codecs/Bach.h>
 
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
@@ -33,6 +35,10 @@ ClientConnection::ClientConnection(StubServer* ss, int socket) :
 
 ClientConnection::~ClientConnection()
 {
+    for (AgentMap::iterator A=m_agents.begin(); A != m_agents.end(); ++A) {
+        delete A->second;
+    }
+
     delete m_encoder;
     delete m_acceptor;
     delete m_codec;
@@ -107,6 +113,15 @@ void ClientConnection::negotiate()
 
 void ClientConnection::objectArrived(const Root& obj)
 {
+/*
+    std::stringstream debugStream;
+    Atlas::Codecs::Bach debugCodec(debugStream, NULL);
+    Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
+    debugEncoder.streamObjectsMessage(obj);
+    debugStream << std::flush;
+
+    std::cout << "recieved:" << debugStream.str() << std::endl;
+  */
     m_objDeque.push_back(obj);
 }
 
@@ -122,72 +137,76 @@ void ClientConnection::dispatch(const RootOperation& op)
         if (m_account.empty())
         {
             // not logged in yet
-            Login login = smart_dynamic_cast<Login>(op);
-            if (login.isValid())
-            {
-                processLogin(login);
+            if (op->getClassNo() == LOGIN_NO) {
+                processLogin(smart_dynamic_cast<Login>(op));
                 return;
             }
        
-            Create cr = smart_dynamic_cast<Create>(op);
-            if (cr.isValid())
-            {
+            if (op->getClassNo() == CREATE_NO) {
                 assert(!args.empty());
-                processAccountCreate(cr);
+                processAccountCreate(smart_dynamic_cast<Create>(op));
                 return;
             }
         }
         
-        Get get = smart_dynamic_cast<Get>(op);
-        if (get.isValid())
-        {
-            processAnonymousGet(get);
+        if (op->getClassNo() == GET_NO) {
+            processAnonymousGet(smart_dynamic_cast<Get>(op));
             return;
         }
         
         throw TestFailure("got anonymous op I couldn't dispatch");
     }
     
-    if (op->getFrom() == m_account)
-    {
+    if (op->getFrom() == m_account) {
         dispatchOOG(op);
         return;
     }
     
+    if (m_agents.count(op->getFrom())) {
+        m_agents[op->getFrom()]->processOp(op);
+        return;
+    }
+
+
+    if (entityIsCharacter(op->getFrom())) {
+        // IG activation
+        activateCharacter(op->getFrom(), op);
+        return;
+    }
+    
+        
     debug() << "totally failed to handle operation " << objectSummary(op);
 }
 
 void ClientConnection::dispatchOOG(const RootOperation& op)
 {
-    Look lk = smart_dynamic_cast<Look>(op);
-    if (lk.isValid())
-    {
-        processOOGLook(lk);
+    switch (op->getClassNo()) {
+    case LOOK_NO:
+        processOOGLook(smart_dynamic_cast<Look>(op));
+        return;
+    
+    case MOVE_NO:
+        return;
+        
+    case TALK_NO: {
+        Talk tk = smart_dynamic_cast<Talk>(op);
+        return;
+    }
+   
+    case LOGOUT_NO: {
+        Logout logout = smart_dynamic_cast<Logout>(op);
+        
+        Info logoutInfo;
+        logoutInfo->setArgs1(logout);
+        logoutInfo->setTo(m_account);
+        logoutInfo->setRefno(logout->getSerialno());
+        send(logoutInfo);
         return;
     }
     
-    Move mv = smart_dynamic_cast<Move>(op);
-    if (mv.isValid())
-    {
-        // deocde part vs join
-        // issue command
-        return;
-    }
-
-    Talk tk = smart_dynamic_cast<Talk>(op);
-    if (tk.isValid())
-    {
-    
-    
-        return;
-    }
-    
-    Imaginary imag = smart_dynamic_cast<Imaginary>(op);
-    if (imag.isValid())
-    {
-    
-        return;
-    }
+    default:
+        error() << "clientConnection failed to handle OOG op";
+    } // of classNo switch
 }
 
 void ClientConnection::processLogin(const Login& login)
@@ -258,7 +277,7 @@ void ClientConnection::processAccountCreate(const Create& cr)
     createInfo->setRefno(cr->getSerialno());
     send(createInfo);
     
-    m_server->joinRoom(acc->getId(), "_lobby");
+    m_server->joinRoom(m_account, "_lobby");
 }
 
 void ClientConnection::processOOGLook(const Look& lk)
@@ -339,6 +358,29 @@ void ClientConnection::processAnonymousGet(const Get& get)
     }
 }
 
+void ClientConnection::activateCharacter(const std::string& charId, const RootOperation& op)
+{
+    assert(entityIsCharacter(charId));
+    debug() << "activation, inbound op's serial is " << op->getSerialno();
+    
+    if (m_agents.count(charId)) {
+        sendError("duplicate character action", op);
+        return;
+    }
+    
+    Agent* ag = new Agent(this, charId);
+    m_agents[charId] = ag;
+    
+    Info info;
+    info->setArgs1(m_server->m_world[charId]);
+    info->setFrom(charId);
+    info->setTo(m_account); // I *think* this is right
+    info->setRefno(op->getSerialno());
+    
+    send(info);
+    ag->processOp(op); // process as normal
+}
+
 #pragma mark -
 
 void ClientConnection::sendError(const std::string& msg, const RootOperation& op)
@@ -371,4 +413,17 @@ bool ClientConnection::entityIsCharacter(const std::string& id)
     StringSet characters(p->getCharacters().begin(),  p->getCharacters().end());
     
     return characters.count(id);
+}
+
+std::ostream& operator<<(std::ostream& io, const objectSummary& summary)
+{
+    const StringList& parents = summary.m_obj->getParents();
+    if (parents.size() == 0)
+    {
+        io << "un-typed object";
+    } else {
+        io << parents.front();
+    }
+    
+    return io;
 }
