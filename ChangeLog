@@ -1,5 +1,10 @@
 2004-10-30  James Turner  <james@worldforge.org>
 
+	* Eris/TypeObject.cpp: actually emit the BoundType signal from the
+	  TypeService, as well as the Bound signal on TypeObject. Ooops.
+
+2004-10-30  James Turner  <james@worldforge.org>
+
 	* Eris/Entity.cpp: initialise orientation to the identity quaternion,
 	  instead of an invalid one. Should fix strange orientations Erik is
 	  seeing in Ember.

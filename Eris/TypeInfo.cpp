@@ -188,7 +188,8 @@ void TypeInfo::validateBind()
     }
     
     Bound.emit(this);
-        
+    m_typeService->BoundType.emit(this);
+    
     for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C)
         (*C)->validateBind();
 }
