@@ -100,36 +100,11 @@ AObject AUserClient::createOperation(const string& id, Arg* args ...)
     for (bool quit = false, i = false; quit == false; ) {
         Arg* arg;
         if (!i) arg = args; else arg = va_arg(ap, Arg*);
-        if (arg->getName() == "") {
-            switch (arg->getType()) {
-                case AINT:    arglist.append(arg->getInt());
-                              break;
-                case AFLOAT:  arglist.append(arg->getFloat());
-                              break;
-                case ASTRING: arglist.append(arg->getString());
-                              break;
-                case AOBJECT: arglist.append(arg->getObject());
-                              break;
-                case AINVALID: quit = true;
-                               break;
-                default:      break;
-            }
-        } else {
-            switch (arg->getType()) {
-                case AINT:    op.set(arg->getName(), arg->getInt());
-                              break;
-                case AFLOAT:  op.set(arg->getName(), arg->getFloat());
-                              break;
-                case ASTRING: op.set(arg->getName(), arg->getString());
-                              break;
-                case AOBJECT: op.set(arg->getName(), arg->getObject());
-                              break;
-                case AINVALID: quit = true;
-                               break;
-                default:      break;
-            }
-        }
-        delete arg;
+        if (arg == AEND) quit = true;
+        else if (arg->getName() == "") arglist.append(arg->getVal());
+        else op.set(arg->getName(), arg->getVal());
+        
+        if (arg) delete arg;
         if (!i) i = !i;
     }
     
@@ -150,20 +125,10 @@ AObject AUserClient::createEntity(Arg* args ...)
     for (bool quit = false, i = false; quit == false;) {
         Arg* arg;
         if (!i) arg = args; else arg = va_arg(ap, Arg*);
-        switch (arg->getType()) {
-            case AINT:    ent.set(arg->getName(), arg->getInt());
-                          break;
-            case AFLOAT:  ent.set(arg->getName(), arg->getFloat());
-                          break;
-            case ASTRING: ent.set(arg->getName(), arg->getString());
-                          break;
-            case AOBJECT: ent.set(arg->getName(), arg->getObject());
-                          break;
-            case AINVALID: quit = true;
-                           break;
-            default:      break;
-        }
-        delete arg;
+        if (arg == AEND) quit = true;
+        else ent.set(arg->getName(), arg->getVal());
+        
+        if (arg) delete arg;
         if (!i) i = !i;
     }
 
@@ -182,20 +147,10 @@ AObject AUserClient::setCharacterArgs(const string& id, Arg* args ...)
     for (bool quit = false, i = false; quit == false;) {
         Arg* arg;
         if (!i) arg = args; else arg = va_arg(ap, Arg*);
-        switch (arg->getType()) {
-            case AINT:    ent.set(arg->getName(), arg->getInt());
-                          break;
-            case AFLOAT:  ent.set(arg->getName(), arg->getFloat());
-                          break;
-            case ASTRING: ent.set(arg->getName(), arg->getString());
-                          break;
-            case AOBJECT: ent.set(arg->getName(), arg->getObject());
-                          break;
-            case AINVALID: quit = true;
-                           break;
-            default:      break;
-        }
-        delete arg;
+        if (arg == AEND) quit = true;
+          else ent.set(arg->getName(), arg->getVal());
+        
+        if (arg) delete arg;
         if (!i) i = !i;
     }
 

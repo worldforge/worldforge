@@ -14,50 +14,27 @@ using namespace std;
 
 #include <AtlasObject.h>
 
-enum atype_t
-{
-    AINT,
-    AFLOAT,
-    ASTRING,
-    AOBJECT,
-    AINVALID
-};
-
 class Arg // Container for an attribute argument
 {
 public:
-    Arg();
-    Arg(const string& name, const string& value);
-    Arg(const string& name, long value);
-    Arg(const string& name, double value);
-    Arg(const string& name, const AObject& value);
+    Arg(const string& name, const AObject& val);
 
-    Arg(const string& value);
-    Arg(long value);
-    Arg(double value);
-    Arg(const AObject& value);
-
-    atype_t getType() const;
+    Arg(const AObject& val);
 
     const string& getName() const;
     
-    const string& getString() const;
-    long getInt() const;
-    double getFloat() const;
-    const AObject& getObject() const;
+    const AObject& getVal() const;
 
 protected:
-    atype_t m_type;
-
     string m_name;
     
-    string m_valString;
-    long m_valInt;
-    double m_valFloat;
-    AObject m_valObject;
+    AObject m_val;
+
+private:
+    Arg();
 };
 
-#define AEND (new Arg())
+#define AEND NULL
 
 Arg* A(const string& id, const string& value);
 Arg* A(const string& id, long value);
