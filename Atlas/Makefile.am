@@ -2,6 +2,8 @@ SUBDIRS = . Objects Message Codecs Filters Net Funky
 
 lib_LTLIBRARIES = libAtlas.la
 
+libAtlas_la_LDFLAGS = $(INTERFACE_VERSION)
+
 libAtlasincludedir = $(includedir)/Atlas
 
 libAtlas_la_SOURCES = \

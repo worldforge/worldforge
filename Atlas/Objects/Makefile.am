@@ -1,4 +1,7 @@
+
 lib_LTLIBRARIES = libAtlasObjects.la
+
+libAtlasObjects_la_LDFLAGS = $(INTERFACE_VERSION)
 
 libAtlasObjectsincludedir = $(includedir)/Atlas/Objects
 

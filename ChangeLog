@@ -1,5 +1,9 @@
 2001-07-15  Al Riddoch  <alriddoch@zepler.org>
 
+	* Added interface and library versioning.
+
+2001-07-15  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Net/Stream.cpp, src/Objects/BaseObject.cpp,
 	  src/Objects/loadDefaults.cpp: Fixed code for strict ISO
 	  conformance; mainly strict use of std:: namespace.
