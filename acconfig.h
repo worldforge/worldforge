@@ -1,2 +1,2 @@
-/* Define if you don't have the socklen_t type */
-#define socklen_t int
+/* Define to `int´ of <sys/types.h> doesn't have this */
+#undef socklen_t
