@@ -6,15 +6,20 @@ time measurement, not displaying a human readable time. */
 
 #include <sys/time.h>
 #if defined ( __WIN32__ )
-#include <winsock.h>
+#include <winsock.h> 
+extern "C" {
+	struct eris_timeval  {
+		long tv_sec;	/* seconds */
+		long tv_usec;	/* microseconds */
+	};
+}
 #endif
 
 namespace Time {
-
 #if defined( __WIN32__ )
 	
-	// mingw32 is nice to us.  (defined by winsock.h)
-  typedef struct timeval Stamp;
+	// We roll our own timeval... may only need to be done for mingw32.
+	typedef struct eris_timeval Stamp;
 
 #elif defined( macintosh )
 	typedef UnsignedWide Stamp;	// micro-seconds
