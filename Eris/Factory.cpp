@@ -6,7 +6,7 @@
 #include <Eris/Entity.h>
 #include <Eris/LogStream.h>
 #include <Eris/Connection.h>
-#include <Eris/typeService.h>
+#include <Eris/TypeService.h>
 #include <Eris/View.h>
 #include <Eris/Avatar.h>
 

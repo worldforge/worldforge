@@ -23,7 +23,7 @@ liberis_1_3_la_SOURCES = \
 	Room.cpp \
 	Person.cpp \
 	Metaserver.cpp \
-	MetaQuery.h MetaQuery.cpp \
+	MetaQuery.cpp \
 	ServerInfo.cpp \
 	Timeout.cpp \
 	TypeInfo.cpp \
@@ -44,11 +44,21 @@ liberisdir = $(includedir)/Eris-1.3/Eris
 
 liberis_HEADERS = \
 	Exceptions.h \
+	BaseConnection.h \
+	Connection.h \
+	DebugDispatcher.h \
 	Lobby.h \
 	Factory.h \
 	Entity.h \
+	EntityRouter.h \
 	Player.h \
 	Types.h \
+	IGRouter.h \
+	LogStream.h \
+	MetaQuery.h \
+	Redispatch.h \
+	Router.h \
+	UIFactory.h \
 	Room.h \
 	Person.h \
 	Metaserver.h \

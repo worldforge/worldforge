@@ -2,7 +2,7 @@
 #define ERIS_TYPE_INFO_H
 
 #include <Eris/Types.h>
-#include <Eris/typeService.h>
+#include <Eris/TypeService.h>
 
 #include <sigc++/object.h>
 

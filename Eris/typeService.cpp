@@ -2,7 +2,7 @@
     #include "config.h"
 #endif
 
-#include <Eris/typeService.h>
+#include <Eris/TypeService.h>
 
 #include <Eris/TypeInfo.h>
 #include <Eris/Log.h>
