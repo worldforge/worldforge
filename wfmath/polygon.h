@@ -118,8 +118,8 @@ class Polygon<2>
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Polygon& rotateCenter(const RotMatrix<2>& m)
 	{rotatePoint(m, getCenter()); return *this;}
-  Polygon& rotatePoint(const RotMatrix<2>& m, const Point<2>& p);
 #endif
+  Polygon& rotatePoint(const RotMatrix<2>& m, const Point<2>& p);
 
   // Intersection functions
 

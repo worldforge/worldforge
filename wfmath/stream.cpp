@@ -102,7 +102,7 @@ void WFMath::_ReadCoordList(std::istream& is, CoordType* d, const int num)
 CoordType WFMath::_GetEpsilon(std::istream& is)
 {
   int str_prec = is.precision();
-  double str_eps = 1;
+  CoordType str_eps = 1;
   while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
     str_eps /= 10;
 
@@ -185,7 +185,7 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
 
   CoordType norm = q.m_w * q.m_w + q.m_vec.sqrMag();
 
-  norm = sqrt(norm);
+  norm = (CoordType) sqrt(norm);
   q.m_w /= norm;
   q.m_vec /= norm;
 
