@@ -274,6 +274,67 @@ void testValues()
     assert(obj->getObjtype() == "obj");
     assert(obj->getDescription() == "");
     }
+
+    {
+    Atlas::Message::Object::MapType maccount;
+    maccount["id"] = string("bar");
+    maccount["name"] = string("foo");
+    Atlas::Message::Object::ListType parents;
+    parents.push_back(string("player"));
+    maccount["parents"] = parents;
+    maccount["objtype"] = "obj";
+
+    Atlas::Message::Object::MapType mcreate;
+    mcreate["from"] = string("bar");
+    Atlas::Message::Object::ListType parents2;
+    parents2.push_back(string("create"));
+    mcreate["parents"] = parents2;
+    Atlas::Message::Object::ListType args;
+    args.push_back(maccount);
+    mcreate["args"] = args;
+    mcreate["objtype"] = "op";
+
+    Operation::Create op = 
+      (Operation::Create&)Atlas::Objects::messageObject2ClassObject(mcreate);
+    assert(op->getClassNo() == Operation::CREATE_NO);
+    assert(op->instanceOf(Operation::CREATE_NO));
+    assert(op->instanceOf(Operation::ACTION_NO));
+    assert(op->instanceOf(ROOT_NO));
+    assert(!op->instanceOf(Operation::COMBINE_NO));
+    assert(!op->instanceOf(Entity::ACCOUNT_NO));
+    assert(op->getFrom() == "bar");
+    assert(op->getParents().size() == 1);
+    assert(op->getParents().front() == "create");
+    assert(op->getObjtype() == "op");
+    assert(op->getDescription() == 
+           "Create new things from nothing using this operator.");
+    assert(op->getArgs().size() == 1);
+
+    Entity::Account op_arg = (Entity::Account&)op->getArgs().front();
+    assert(op_arg->getClassNo() == Entity::PLAYER_NO);
+    assert(!op_arg->instanceOf(Operation::CREATE_NO));
+    assert(!op_arg->instanceOf(Operation::ACTION_NO));
+    assert(op_arg->instanceOf(ROOT_NO));
+    assert(!op_arg->instanceOf(Operation::COMBINE_NO));
+    assert(op_arg->instanceOf(Entity::ACCOUNT_NO));
+    assert(op_arg->instanceOf(Entity::PLAYER_NO));
+    assert(op_arg->getId() == "bar");
+    assert(op_arg->getParents().size() == 1);
+    assert(op_arg->getParents().front() == "player");
+    assert(op_arg->getObjtype() == "obj");
+    assert(op_arg->getDescription() == "Player accounts");
+    assert(op_arg->getName() == "foo");
+#if 0 //tmp
+    assert(op_arg->hasAttr("password"));
+    assert(op_arg->getAttr("password").isString());
+    assert(op_arg->getAttr("password").asString() == "");
+#endif
+    assert(op_arg->hasAttr("name"));
+    assert(!op_arg->hasAttr("foo"));
+    assert(op_arg->hasAttr("pos"));
+    assert(!op_arg->isDefaultName());
+    assert(op_arg->isDefaultPos());
+    }
 }
 
 void test()

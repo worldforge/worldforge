@@ -11,6 +11,11 @@ using namespace std;
 
 namespace Atlas { namespace Objects {
 
+bool BaseObjectData::instanceOf(int classNo) const
+{
+    return BASE_OBJECT_NO == classNo;
+}
+
 bool BaseObjectData::hasAttr(const string& name) const
 {
     return (m_attributes.find(name) != m_attributes.end());

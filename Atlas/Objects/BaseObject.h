@@ -46,6 +46,9 @@ public:
     {
         return m_class_no;
     }
+
+    /// Is this instance of some class?
+    virtual bool instanceOf(int classNo) const;
     
     /// Check whether the attribute "name" exists.
     virtual bool hasAttr(const std::string& name) const;

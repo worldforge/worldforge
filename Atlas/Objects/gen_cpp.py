@@ -269,6 +269,17 @@ BaseObjectData *%(classname)s::getDefaultObject()
 
 """ % vars()) #"for xemacs syntax highlighting
 
+    def instanceof_im(self, obj):
+        classname_base = self.get_cpp_parent(obj)
+        classname = self.classname
+        serialno_name = string.upper(obj.id) + "_NO"
+        self.write("""bool %(classname)s::instanceOf(int classNo) const
+{
+    if(%(serialno_name)s == classNo) return true;
+    return %(classname_base)s::instanceOf(classNo);
+}
+""" % vars()) #"for xemacs syntax highlighting
+
     def interface_file(self, obj):
         #print "Output of interface for:",
         outfile = self.outdir + '/' + self.classname_pointer + ".h"
@@ -321,6 +332,9 @@ BaseObjectData *%(classname)s::getDefaultObject()
         self.constructors_if(obj, static_attrs)
         self.doc(4, "Default destructor.")
         self.write("    virtual ~" + self.classname + "() { }\n")
+        self.write("\n")
+        self.doc(4, 'Is this instance of some class?')
+        self.write("    virtual bool instanceOf(int classNo) const;\n")
         self.write("\n")
 
         if len(static_attrs) > 0:
@@ -413,6 +427,7 @@ BaseObjectData *%(classname)s::getDefaultObject()
             self.remattr_im(obj, static_attrs)
             self.sendcontents_im(obj, static_attrs)
             self.asobject_im(obj, static_attrs)
+        self.instanceof_im(obj)
         self.freelist_im()
 
         #inst# self.instance_im()

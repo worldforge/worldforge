@@ -1,3 +1,7 @@
+2000-12-09  Aloril  <aloril@iki.fi>
+
+	* added bool instanceOf(int classNo) const; method
+
 2000-12-08  Aloril  <aloril@iki.fi>
 
 	* Decoder::unknownObjectArrived(const Entity::Empty&); ->
