@@ -65,7 +65,7 @@ void WFMath::_NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& 
   m_elem[2][1] = 2 * (yz - wvec[0]);
 
   m_flip = !not_flip;
-  normalize();
+  m_age = q.age();
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   if(!not_flip)
     *this = Prod(*this, RotMatrix<3>().mirror(0));
@@ -83,6 +83,7 @@ template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion& q)
   Vector<3> vec;
   vec.setValid();
   m_valid = m_valid && q.isValid();
+  m_age += q.age();
 
   // rotate both sides by q
 
@@ -93,6 +94,8 @@ template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion& q)
     for(int elem_num = 0; elem_num < 3; ++elem_num)
       m_elem[vec_num][elem_num] = vec[elem_num];
   }
+
+  checkNormalization();
 
   return *this;
 }

@@ -155,7 +155,7 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     m_vec[k] = -(m_ref.elem(i, k) + m_ref.elem(k, i)) * s;
   }
 
-  normalize();
+  m_age = m.age();
 
   return not_flip;
 }
@@ -173,7 +173,7 @@ Quaternion& Quaternion::rotate(const RotMatrix<3>& m)
 {
   // FIXME find a more efficient way to do this
   Quaternion tmp;
-  m_valid = m_valid && tmp.fromRotMatrix(m);
+  tmp.fromRotMatrix(m);
   *this *= tmp;
   return *this;
 }

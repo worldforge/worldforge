@@ -251,6 +251,9 @@ class Vector {
    **/
   Vector& rotate(const Vector& v1, const Vector& v2, CoordType theta);
 
+  /// Rotate the vector using a matrix
+  Vector& rotate(const RotMatrix<dim>&);
+
   // mirror image functions
 
   /// Reflect a vector in the direction of the i'th axis

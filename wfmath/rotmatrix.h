@@ -196,8 +196,13 @@ class RotMatrix {
    **/
   RotMatrix& mirror();
 
+  /// rotate the matrix using another matrix
+  RotMatrix& rotate(const RotMatrix& m) {return *this = Prod(*this, m);}
+
   /// normalize to remove accumulated round-off error
   void normalize();
+  /// current round-off age
+  unsigned age() const {return m_age;}
 
   // 2D/3D stuff
 

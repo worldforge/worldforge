@@ -241,6 +241,12 @@ inline Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>
   return operator=(Prod(*this, m.rotation(v1, v2, theta)));
 }
 
+template<const int dim>
+inline Vector<dim>& Vector<dim>::rotate(const RotMatrix<dim>& m)
+{
+  return *this = Prod(*this, m);
+}
+
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta);
 template<> Vector<3>& Vector<3>::rotate(const Quaternion& q);

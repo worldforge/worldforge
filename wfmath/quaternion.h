@@ -121,6 +121,9 @@ class Quaternion
   /// Rotate quaternion using the matrix.
   Quaternion& rotate(const RotMatrix<3>&);
 
+  /// rotate the quaternion using another quaternion
+  Quaternion& rotate(const Quaternion& q) {return operator*=(q);}
+
   /// sets the Quaternion to a rotation by angle around axis
   Quaternion& rotation(int axis, CoordType angle);
   /// sets the Quaternion to a rotation by angle around the Vector axis
@@ -148,6 +151,8 @@ class Quaternion
 
   /// normalize to remove accumulated round-off error
   void normalize();
+  /// current round-off age
+  unsigned age() const {return m_age;}
 
  private:
   Quaternion(bool valid) : m_valid(valid), m_age(1) {}

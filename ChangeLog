@@ -1,5 +1,13 @@
 Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
 
+	* Added round-off age checks to the functions where
+	  Quaternion and RotMatrix<3> rotate each other.
+	* Added rotate() convienience wrappers to RotMatrix,
+	  Quaternion and Vector for cases where rotation
+	  is just multiplication.
+
+Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
 	* wfmath/point.h, wfmath/axisbox.h, wfmath/axisbox_funcs.h,
 	  wfmath/segment.h, wfmath/segment_funcs.h, wfmath/ball.h,
 	  wfmath/rotbox.h, wfmath/rotbox_funcs.h, wfmath/polygon.h,
