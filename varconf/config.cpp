@@ -146,11 +146,11 @@ void Config::clean( std::string& str)
     if ( c != C_NUMERIC && c != C_ALPHA && c != C_DASH) 
       str[i] = '_';
     else 
-      str[i] = tolower( str[i]);
+      str[i] = (char) tolower( str[i]);
   } 
 }
 
-bool Config::erase( const std::string& section, const std::string& key = "")
+bool Config::erase( const std::string& section, const std::string& key)
 {
   if ( find( section)) {
     if ( key == "") {
@@ -166,7 +166,7 @@ bool Config::erase( const std::string& section, const std::string& key = "")
   return false;
 }
 
-bool Config::find( const std::string& section, const std::string& key = "")
+bool Config::find( const std::string& section, const std::string& key)
 {
   if ( m_conf.count( section)) {
     if ( key == "") 
@@ -309,7 +309,7 @@ void Config::parseStream( std::istream& in) throw ( ParseError)
 	    state = S_COMMENT;
 	    break;
 	  default:
-	    throw ParseError( "item name", line, col);
+	    throw ParseError( "item name", (int) line, (int) col);
 	    break;
 	}
 	break;
@@ -323,7 +323,7 @@ void Config::parseStream( std::istream& in) throw ( ParseError)
 	    state = S_EXPECT_EOL;
 	    break;
 	  default:
-	    throw ParseError( "']'", line, col);
+	    throw ParseError( "']'", (int) line, (int) col);
 	    break;
 	}
         break;
@@ -341,7 +341,7 @@ void Config::parseStream( std::istream& in) throw ( ParseError)
 	    state = S_EXPECT_EQ;
 	    break;
 	  default:
-	    throw ParseError( "'='", line, col);
+	    throw ParseError( "'='", (int) line, (int) col);
 	    break;
 	}
 	break;
@@ -362,7 +362,7 @@ void Config::parseStream( std::istream& in) throw ( ParseError)
 	    state = S_EXPECT_VALUE;
 	    break;
 	  default:
-	    throw ParseError( "'='", line, col);
+	    throw ParseError( "'='", (int) line, (int) col);
 	    break;
 	}
 	break;
@@ -381,14 +381,14 @@ void Config::parseStream( std::istream& in) throw ( ParseError)
 	  case C_SPACE:
 	    break;
 	  default:
-	    throw ParseError( "value", line, col);
+	    throw ParseError( "value", (int) line, (int) col);
 	    break;
 	}
 	break;
       case S_VALUE:
 	switch ( ctype( c)) {
 	  case C_QUOTE:
-	    throw ParseError( "value", line, col);
+	    throw ParseError( "value", (int) line, (int) col);
 	  case C_SPACE:
 	    state = S_EXPECT_EOL;
 	    setItem( section, name, value);
@@ -436,7 +436,7 @@ void Config::parseStream( std::istream& in) throw ( ParseError)
 	  case C_SPACE:
 	    break;
 	  default:
-	    throw ParseError( "end of line", line, col);
+	    throw ParseError( "end of line", (int) line, (int) col);
             break;
 	}
 	break;
@@ -450,7 +450,7 @@ void Config::parseStream( std::istream& in) throw ( ParseError)
   } // while ( in.get( c))
 
   if ( state == S_QUOTED_VALUE) {
-    throw ParseError( "\"", line, col);
+    throw ParseError( "\"", (int) line, (int) col);
   }
 
   if ( state == S_VALUE) {
@@ -509,7 +509,7 @@ void Config::setItem( const std::string& section, const std::string& key, const 
   }
 }
 
-void Config::setParameterLookup( char s_name, const std::string& l_name, bool value = false)
+void Config::setParameterLookup( char s_name, const std::string& l_name, bool value)
 {
     m_par_lookup[s_name] = std::pair<std::string, bool>( l_name, value);  
 }
