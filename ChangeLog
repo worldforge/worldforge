@@ -1,5 +1,9 @@
 Wednesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
 
+	* The eris-support-on-msvc changes now work
+
+Wednesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
 	* Hopefully have enough of wfmath working on msvc now to support eris
 
 Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>

@@ -33,7 +33,7 @@ using namespace WFMath;
 template<>
 Point<2>& WFMath::Point<2>::polar(CoordType r, CoordType theta)
 #else
-void WFMath::_NCFS_Point2_polar(CoordType m_elem[2], CoordType r, CoordType theta)
+void WFMath::_NCFS_Point2_polar(CoordType *m_elem, CoordType r, CoordType theta)
 #endif
 {
   CoordType d[2] = {r, theta};
@@ -47,7 +47,7 @@ void WFMath::_NCFS_Point2_polar(CoordType m_elem[2], CoordType r, CoordType thet
 template<>
 void WFMath::Point<2>::asPolar(CoordType& r, CoordType& theta) const
 #else
-void WFMath::_NCFS_Point2_asPolar(CoordType m_elem[2], CoordType& r, CoordType& theta)
+void WFMath::_NCFS_Point2_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta)
 #endif
 {
   CoordType d[2];
@@ -60,7 +60,7 @@ void WFMath::_NCFS_Point2_asPolar(CoordType m_elem[2], CoordType& r, CoordType& 
 template<>
 Point<3>& WFMath::Point<3>::polar(CoordType r, CoordType theta, CoordType z)
 #else
-void WFMath::_NCFS_Point3_polar(CoordType m_elem[3], CoordType r, CoordType theta,
+void WFMath::_NCFS_Point3_polar(CoordType *m_elem, CoordType r, CoordType theta,
 				CoordType z)
 #endif
 {
@@ -76,7 +76,7 @@ void WFMath::_NCFS_Point3_polar(CoordType m_elem[3], CoordType r, CoordType thet
 template<>
 void WFMath::Point<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
 #else
-void WFMath::_NCFS_Point3_asPolar(CoordType m_elem[3], CoordType& r, CoordType& theta,
+void WFMath::_NCFS_Point3_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta,
 				  CoordType& z)
 #endif
 {
@@ -91,7 +91,7 @@ void WFMath::_NCFS_Point3_asPolar(CoordType m_elem[3], CoordType& r, CoordType& 
 template<>
 Point<3>& WFMath::Point<3>::spherical(CoordType r, CoordType theta, CoordType phi)
 #else
-void WFMath::_NCFS_Point3_spherical(CoordType m_elem[3], CoordType r, CoordType theta,
+void WFMath::_NCFS_Point3_spherical(CoordType *m_elem, CoordType r, CoordType theta,
 				    CoordType phi)
 #endif
 {
@@ -107,7 +107,7 @@ template<>
 void WFMath::Point<3>::asSpherical(CoordType& r, CoordType& theta,
 				   CoordType& phi) const
 #else
-void WFMath::_NCFS_Point3_asSpherical(CoordType m_elem[3], CoordType& r,
+void WFMath::_NCFS_Point3_asSpherical(CoordType *m_elem, CoordType& r,
 				      CoordType& theta, CoordType& phi)
 #endif
 {

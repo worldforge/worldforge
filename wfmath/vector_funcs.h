@@ -384,70 +384,70 @@ template<> void Vector<3>::asSpherical(CoordType& r, CoordType& theta,
 template<> CoordType Vector<2>::sloppyMag() const;
 template<> CoordType Vector<3>::sloppyMag() const;
 #else
-void _NCFS_Vector2_polar(CoordType m_elem[2], CoordType r, CoordType theta);
-void _NCFS_Vector2_asPolar(CoordType m_elem[2], CoordType& r, CoordType& theta);
+void _NCFS_Vector2_polar(CoordType *m_elem, CoordType r, CoordType theta);
+void _NCFS_Vector2_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta);
 
-void _NCFS_Vector3_polar(CoordType m_elem[3], CoordType r, CoordType theta,
+void _NCFS_Vector3_polar(CoordType *m_elem, CoordType r, CoordType theta,
 			 CoordType z);
-void _NCFS_Vector3_asPolar(CoordType m_elem[3], CoordType& r, CoordType& theta,
+void _NCFS_Vector3_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta,
 			   CoordType& z);
-void _NCFS_Vector3_spherical(CoordType m_elem[3], CoordType r, CoordType theta,
+void _NCFS_Vector3_spherical(CoordType *m_elem, CoordType r, CoordType theta,
 			     CoordType phi);
-void _NCFS_Vector3_asSpherical(CoordType m_elem[3], CoordType& r, CoordType& theta,
+void _NCFS_Vector3_asSpherical(CoordType *m_elem, CoordType& r, CoordType& theta,
 			       CoordType& phi);
 
-CoordType _NCFS_Vector2_sloppyMag(CoordType m_elem[2]);
-CoordType _NCFS_Vector3_sloppyMag(CoordType m_elem[3]);
+CoordType _NCFS_Vector2_sloppyMag(CoordType *m_elem);
+CoordType _NCFS_Vector3_sloppyMag(CoordType *m_elem);
 
 template<>
 inline Vector<2>& Vector<2>::polar(CoordType r, CoordType theta)
 {
-  _NCFS_Vector2_polar(m_elem, r, theta);
+  _NCFS_Vector2_polar((CoordType*) m_elem, r, theta);
   return *this;
 }
 
 template<>
 inline void Vector<2>::asPolar(CoordType& r, CoordType& theta) const
 {
-  _NCFS_Vector2_asPolar(m_elem, r, theta);
+  _NCFS_Vector2_asPolar((CoordType*) m_elem, r, theta);
 }
 
 template<>
 inline Vector<3>& Vector<3>::polar(CoordType r, CoordType theta, CoordType z)
 {
-  _NCFS_Vector3_polar(m_elem, r, theta, z);
+  _NCFS_Vector3_polar((CoordType*) m_elem, r, theta, z);
   return *this;
 }
 
 template<>
 inline void Vector<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
 {
-  _NCFS_Vector3_asPolar(m_elem, r, theta, z);
+  _NCFS_Vector3_asPolar((CoordType*) m_elem, r, theta, z);
 }
 
 template<>
 inline Vector<3>& Vector<3>::spherical(CoordType r, CoordType theta, CoordType phi)
 {
-  _NCFS_Vector3_spherical(m_elem, r, theta, phi);
+  _NCFS_Vector3_spherical((CoordType*) m_elem, r, theta, phi);
   return *this;
 }
 
 template<>
 inline void Vector<3>::asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const
 {
-  _NCFS_Vector3_asSpherical(m_elem, r, theta, phi);
+  _NCFS_Vector3_asSpherical((CoordType*) m_elem, r, theta, phi);
 }
 
 template<>
 inline CoordType Vector<2>::sloppyMag() const
 {
-  return _NCFS_Vector2_sloppyMag(m_elem);
+  return _NCFS_Vector2_sloppyMag((CoordType*) m_elem);
 }
 
 template<>
 inline CoordType Vector<3>::sloppyMag() const
 {
-  return _NCFS_Vector3_sloppyMag(m_elem);
+  return _NCFS_Vector3_sloppyMag((CoordType*) m_elem);
 }
 #endif
 

@@ -119,15 +119,21 @@ void WFMath::_NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis,
 template<>
 RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
 #else
-void WFMath::_NCFS_Rotmatrix3_rotation(RotMatrix<3>& m, const Vector<3>& axis)
+void WFMath::_NCFS_RotMatrix3_rotation(RotMatrix<3>& m, const Vector<3>& axis)
 #endif
 {
   CoordType max = 0;
   int main_comp = -1;
   CoordType angle = axis.mag();
 
-  if(angle == 0)
+  if(angle == 0) {
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
     return identity();
+#else
+    m.identity();
+    return;
+#endif
+  }
 
   for(int i = 0; i < 3; ++i) {
     CoordType val = (CoordType) fabs(axis[i]);

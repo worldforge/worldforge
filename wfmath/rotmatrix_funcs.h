@@ -465,7 +465,7 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 void _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis, CoordType theta);
 void _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis);
 void _NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& q,
-				     const bool not_flip, CoordType m_elem[dim][dim],
+				     const bool not_flip, CoordType m_elem[3][3],
 				     bool& m_flip);
 
 template<>

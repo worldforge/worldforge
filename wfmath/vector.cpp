@@ -37,7 +37,7 @@ using namespace WFMath;
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> CoordType WFMath::Vector<2>::sloppyMag() const
 #else
-CoordType WFMath::_NCFS_Vector2_sloppyMag(CoordType m_elem[2])
+CoordType WFMath::_NCFS_Vector2_sloppyMag(CoordType *m_elem)
 #endif
 {
   CoordType ax = (CoordType) fabs(m_elem[0]), ay = (CoordType) fabs(m_elem[1]);
@@ -56,7 +56,7 @@ CoordType WFMath::_NCFS_Vector2_sloppyMag(CoordType m_elem[2])
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> CoordType WFMath::Vector<3>::sloppyMag() const
 #else
-CoordType WFMath::_NCFS_Vector3_sloppyMag(CoordType m_elem[3])
+CoordType WFMath::_NCFS_Vector3_sloppyMag(CoordType *m_elem)
 #endif
 {
   CoordType ax = (CoordType) fabs(m_elem[0]), ay = (CoordType) fabs(m_elem[1]),
@@ -91,7 +91,7 @@ Vector<3>& WFMath::_NCFS_Vector3_rotate(Vector<3>& v, const Vector<3>& axis,
   assert(axis_sqr_mag != 0);
 
   Vector<3> perp_part = v - axis * Dot(v, axis) / axis_sqr_mag;
-  Vector<3> rot90 = Cross(axis, perp_part) / sqrt(axis_sqr_mag);
+  Vector<3> rot90 = Cross(axis, perp_part) / (CoordType) sqrt(axis_sqr_mag);
 
   v += perp_part * ((CoordType) cos(theta) - 1) + rot90 * (CoordType) sin(theta);
 
@@ -144,7 +144,7 @@ Vector<3> WFMath::Cross(const Vector<3>& v1, const Vector<3>& v2)
 template<>
 Vector<2>& WFMath::Vector<2>::polar(CoordType r, CoordType theta)
 #else
-void WFMath::_NCFS_Vector2_polar(CoordType m_elem[2], CoordType r, CoordType theta)
+void WFMath::_NCFS_Vector2_polar(CoordType *m_elem, CoordType r, CoordType theta)
 #endif
 {
   CoordType d[2] = {r, theta};
@@ -158,7 +158,7 @@ void WFMath::_NCFS_Vector2_polar(CoordType m_elem[2], CoordType r, CoordType the
 template<>
 void WFMath::Vector<2>::asPolar(CoordType& r, CoordType& theta) const
 #else
-void WFMath::_NCFS_Vector2_asPolar(CoordType m_elem[2], CoordType& r, CoordType& theta)
+void WFMath::_NCFS_Vector2_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta)
 #endif
 {
   CoordType d[2];
@@ -171,7 +171,7 @@ void WFMath::_NCFS_Vector2_asPolar(CoordType m_elem[2], CoordType& r, CoordType&
 template<>
 Vector<3>& WFMath::Vector<3>::polar(CoordType r, CoordType theta, CoordType z)
 #else
-void WFMath::_NCFS_Vector3_polar(CoordType m_elem[3], CoordType r, CoordType theta,
+void WFMath::_NCFS_Vector3_polar(CoordType *m_elem, CoordType r, CoordType theta,
 				 CoordType z)
 #endif
 {
@@ -187,7 +187,7 @@ void WFMath::_NCFS_Vector3_polar(CoordType m_elem[3], CoordType r, CoordType the
 template<>
 void WFMath::Vector<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
 #else
-void WFMath::_NCFS_Vector3_asPolar(CoordType m_elem[3], CoordType& r, CoordType& theta,
+void WFMath::_NCFS_Vector3_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta,
 				 CoordType& z)
 #endif
 {
@@ -202,7 +202,7 @@ void WFMath::_NCFS_Vector3_asPolar(CoordType m_elem[3], CoordType& r, CoordType&
 template<>
 Vector<3>& WFMath::Vector<3>::spherical(CoordType r, CoordType theta, CoordType phi)
 #else
-void WFMath::_NCFS_Vector3_spherical(CoordType m_elem[3], CoordType r, CoordType theta,
+void WFMath::_NCFS_Vector3_spherical(CoordType *m_elem, CoordType r, CoordType theta,
 				     CoordType phi)
 #endif
 {
@@ -218,7 +218,7 @@ template<>
 void WFMath::Vector<3>::asSpherical(CoordType& r, CoordType& theta,
 				      CoordType& phi) const
 #else
-void WFMath::_NCFS_Vector3_asSpherical(CoordType m_elem[3], CoordType& r,
+void WFMath::_NCFS_Vector3_asSpherical(CoordType *m_elem, CoordType& r,
 				       CoordType& theta, CoordType& phi)
 #endif
 {
