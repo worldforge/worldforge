@@ -7,6 +7,8 @@
 #include <cassert>
 #include <cstdlib>
 
+#include "../../config.h"
+
 #include "../Debug/Debug.h"
 #include "TCPSocket.h"
 
@@ -109,7 +111,7 @@ Socket*	TCPSocket::accept()
 {
 	int			newsock;
 	struct sockaddr_in	sin;
-	int			sinlen;
+	socklen_t	sinlen;
 
 	sinlen = sizeof(sin);
 	newsock = ::accept(sock, (struct sockaddr*)&sin, &sinlen);

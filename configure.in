@@ -271,6 +271,10 @@ dnl Test for bzip2 compression library
 AC_CHECK_LIB(bz2, bzCompressInit)
 AC_CHECK_HEADERS(bzlib.h)
 
+dnl Test for socklen_t -- sdt
+
+AC_CHECK_TYPE(socklen_t, int)
+
 dnl Generate files
 
 AC_OUTPUT([
