@@ -5,6 +5,7 @@ MANIFEST
 README
 COPYING
 test.pl
+compile_flags.pl.in
 conversion.h
 Avatar/Avatar.xs
 Avatar/Avatar.pm

@@ -1,5 +1,12 @@
 Thursday, 8th May 2003, Ron Steinke
 
+	* Missed bindings/perl/compile_flags.in. Note that
+	  make distcheck will still not work when building
+	  the perl bindings, since makemaker can't handle
+	  having $(srcdir) and $(bindir) be different
+
+Thursday, 8th May 2003, Ron Steinke
+
 	* Added a dist-hook so the perl bindings make it into
 	  the automake tarball
 	* Fixed the way the perl bindings include the eris
