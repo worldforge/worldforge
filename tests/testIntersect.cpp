@@ -181,7 +181,10 @@ int main()
        // return 1;
     }
     
-    if (h != intPoint[2]) {
+    // We can't check for equality here is it just doesn't work with
+    // floats. Look it up in any programming book if you don't believe me.
+    //  - 20040721 <alriddoch@zepler.org>
+    if (fabs(h - intPoint[2]) > 0.00001) {
         std::cerr << "calculated height is different from getHeightAndNormal" << std::endl;
         std::cerr << h << "!=" << intPoint[2] << std::endl;
         return 1;

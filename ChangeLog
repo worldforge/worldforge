@@ -1,5 +1,13 @@
 2004-08-05  Al Riddoch  <alriddoch@zepler.org>
 
+	* tests/testIntersect.cpp: Fix equality test in the tests and
+	  add a commenting explaining why.
+
+	* Commit configure.ac changes for the 0.2.1 release.
+	  Actual 0.2.1 release date was 2004-07-21.
+
+2004-08-05  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Matrix.h,
 	  Mercator/Plant.h, Mercator/Segment.cpp, Mercator/Segment.h,
 	  Mercator/Shader.cpp, Mercator/Shader.h, Mercator/Terrain.cpp,
