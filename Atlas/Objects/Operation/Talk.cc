@@ -22,13 +22,13 @@ Talk::Talk()
 
 Talk Talk::Instantiate()
 {
-    Talk talk;
+    Talk value;
 
     Object::ListType parent;
     parent.push_back(string("talk"));
-    talk.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return talk;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

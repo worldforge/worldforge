@@ -22,13 +22,13 @@ Appearance::Appearance()
 
 Appearance Appearance::Instantiate()
 {
-    Appearance appearance;
+    Appearance value;
 
     Object::ListType parent;
     parent.push_back(string("appearance"));
-    appearance.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return appearance;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -8,6 +8,7 @@
 
 #include "RootEntity.h"
 
+
 namespace Atlas { namespace Objects { namespace Entity { 
 
 /** All In Game classes and objects

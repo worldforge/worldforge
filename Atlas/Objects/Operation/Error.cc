@@ -22,13 +22,13 @@ Error::Error()
 
 Error Error::Instantiate()
 {
-    Error error;
+    Error value;
 
     Object::ListType parent;
     parent.push_back(string("error"));
-    error.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return error;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

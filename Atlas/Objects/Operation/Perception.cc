@@ -23,13 +23,13 @@ Perception::Perception()
 
 Perception Perception::Instantiate()
 {
-    Perception perception;
+    Perception value;
 
     Object::ListType parent;
     parent.push_back(string("perception"));
-    perception.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return perception;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

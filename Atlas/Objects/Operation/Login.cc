@@ -22,13 +22,13 @@ Login::Login()
 
 Login Login::Instantiate()
 {
-    Login login;
+    Login value;
 
     Object::ListType parent;
     parent.push_back(string("login"));
-    login.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return login;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

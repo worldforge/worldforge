@@ -22,13 +22,13 @@ Feel::Feel()
 
 Feel Feel::Instantiate()
 {
-    Feel feel;
+    Feel value;
 
     Object::ListType parent;
     parent.push_back(string("feel"));
-    feel.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return feel;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

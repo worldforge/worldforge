@@ -8,6 +8,7 @@
 
 #include "RootEntity.h"
 
+
 namespace Atlas { namespace Objects { namespace Entity { 
 
 /** All classes and objects used for adminitrativive purposes

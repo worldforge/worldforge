@@ -22,13 +22,13 @@ Disappearance::Disappearance()
 
 Disappearance Disappearance::Instantiate()
 {
-    Disappearance disappearance;
+    Disappearance value;
 
     Object::ListType parent;
     parent.push_back(string("disappearance"));
-    disappearance.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return disappearance;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

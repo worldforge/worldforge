@@ -22,13 +22,13 @@ Smell::Smell()
 
 Smell Smell::Instantiate()
 {
-    Smell smell;
+    Smell value;
 
     Object::ListType parent;
     parent.push_back(string("smell"));
-    smell.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return smell;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

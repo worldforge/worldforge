@@ -22,13 +22,13 @@ Look::Look()
 
 Look Look::Instantiate()
 {
-    Look look;
+    Look value;
 
     Object::ListType parent;
     parent.push_back(string("look"));
-    look.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return look;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

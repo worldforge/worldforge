@@ -8,6 +8,7 @@
 
 #include "Action.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Delete something.

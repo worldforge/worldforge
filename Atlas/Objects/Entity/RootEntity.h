@@ -8,6 +8,7 @@
 
 #include "../Root.h"
 
+
 namespace Atlas { namespace Objects { namespace Entity { 
 
 /** Starting point for entity hierarchy

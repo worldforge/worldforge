@@ -24,13 +24,13 @@ Player::Player()
 
 Player Player::Instantiate()
 {
-    Player player;
+    Player value;
 
     Object::ListType parent;
     parent.push_back(string("player"));
-    player.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return player;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Entity

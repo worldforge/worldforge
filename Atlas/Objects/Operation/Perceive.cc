@@ -23,13 +23,13 @@ Perceive::Perceive()
 
 Perceive Perceive::Instantiate()
 {
-    Perceive perceive;
+    Perceive value;
 
     Object::ListType parent;
     parent.push_back(string("perceive"));
-    perceive.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return perceive;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

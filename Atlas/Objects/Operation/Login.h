@@ -8,6 +8,7 @@
 
 #include "Get.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Operation for logging into server

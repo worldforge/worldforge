@@ -22,13 +22,13 @@ Delete::Delete()
 
 Delete Delete::Instantiate()
 {
-    Delete delete;
+    Delete value;
 
     Object::ListType parent;
     parent.push_back(string("delete"));
-    delete.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return delete;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

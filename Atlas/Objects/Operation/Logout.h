@@ -8,6 +8,7 @@
 
 #include "Login.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Operation for logging out

@@ -22,13 +22,13 @@ Get::Get()
 
 Get Get::Instantiate()
 {
-    Get get;
+    Get value;
 
     Object::ListType parent;
     parent.push_back(string("get"));
-    get.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return get;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

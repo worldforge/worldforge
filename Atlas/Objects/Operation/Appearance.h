@@ -8,6 +8,7 @@
 
 #include "Sight.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Character sees something appearing: it literally appears or has it come in visible range

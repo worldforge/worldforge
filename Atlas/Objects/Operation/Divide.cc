@@ -23,13 +23,13 @@ Divide::Divide()
 
 Divide Divide::Instantiate()
 {
-    Divide divide;
+    Divide value;
 
     Object::ListType parent;
     parent.push_back(string("divide"));
-    divide.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return divide;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

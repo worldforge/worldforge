@@ -8,6 +8,7 @@
 
 #include "Communicate.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** used for talking

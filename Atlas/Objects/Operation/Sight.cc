@@ -22,13 +22,13 @@ Sight::Sight()
 
 Sight Sight::Instantiate()
 {
-    Sight sight;
+    Sight value;
 
     Object::ListType parent;
     parent.push_back(string("sight"));
-    sight.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return sight;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

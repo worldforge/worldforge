@@ -22,13 +22,13 @@ Admin::Admin()
 
 Admin Admin::Instantiate()
 {
-    Admin admin;
+    Admin value;
 
     Object::ListType parent;
     parent.push_back(string("admin"));
-    admin.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return admin;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Entity

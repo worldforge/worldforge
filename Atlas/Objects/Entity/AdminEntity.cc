@@ -22,13 +22,13 @@ AdminEntity::AdminEntity()
 
 AdminEntity AdminEntity::Instantiate()
 {
-    AdminEntity admin_entity;
+    AdminEntity value;
 
     Object::ListType parent;
     parent.push_back(string("admin_entity"));
-    admin_entity.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return admin_entity;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Entity

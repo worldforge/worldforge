@@ -22,13 +22,13 @@ Action::Action()
 
 Action Action::Instantiate()
 {
-    Action action;
+    Action value;
 
     Object::ListType parent;
     parent.push_back(string("action"));
-    action.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return action;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

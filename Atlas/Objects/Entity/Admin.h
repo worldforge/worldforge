@@ -8,6 +8,7 @@
 
 #include "Account.h"
 
+
 namespace Atlas { namespace Objects { namespace Entity { 
 
 /** Privileged accounts

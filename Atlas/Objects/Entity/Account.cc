@@ -23,13 +23,13 @@ Account::Account()
 
 Account Account::Instantiate()
 {
-    Account account;
+    Account value;
 
     Object::ListType parent;
     parent.push_back(string("account"));
-    account.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return account;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Entity

@@ -23,13 +23,13 @@ Combine::Combine()
 
 Combine Combine::Instantiate()
 {
-    Combine combine;
+    Combine value;
 
     Object::ListType parent;
     parent.push_back(string("combine"));
-    combine.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return combine;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -8,6 +8,7 @@
 
 #include "Action.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Create new things from nothing using this operator.

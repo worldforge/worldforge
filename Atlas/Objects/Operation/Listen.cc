@@ -22,13 +22,13 @@ Listen::Listen()
 
 Listen Listen::Instantiate()
 {
-    Listen listen;
+    Listen value;
 
     Object::ListType parent;
     parent.push_back(string("listen"));
-    listen.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return listen;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -8,6 +8,7 @@
 
 #include "Perceive.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Sniff something

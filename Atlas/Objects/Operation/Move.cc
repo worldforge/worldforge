@@ -23,13 +23,13 @@ Move::Move()
 
 Move Move::Instantiate()
 {
-    Move move;
+    Move value;
 
     Object::ListType parent;
     parent.push_back(string("move"));
-    move.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return move;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

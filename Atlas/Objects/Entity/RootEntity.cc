@@ -37,13 +37,13 @@ RootEntity::RootEntity()
 
 RootEntity RootEntity::Instantiate()
 {
-    RootEntity root_entity;
+    RootEntity value;
 
     Object::ListType parent;
     parent.push_back(string("root_entity"));
-    root_entity.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return root_entity;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Entity

@@ -8,6 +8,7 @@
 
 #include "AdminEntity.h"
 
+
 namespace Atlas { namespace Objects { namespace Entity { 
 
 /** Games this server hosts

@@ -8,6 +8,7 @@
 
 #include "Perception.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** When something is not yet implemented in server, then character can pretend to do something ;-)

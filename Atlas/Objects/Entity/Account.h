@@ -8,6 +8,7 @@
 
 #include "AdminEntity.h"
 
+
 namespace Atlas { namespace Objects { namespace Entity { 
 
 /** Base class for accounts

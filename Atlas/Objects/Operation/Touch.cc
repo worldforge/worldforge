@@ -22,13 +22,13 @@ Touch::Touch()
 
 Touch Touch::Instantiate()
 {
-    Touch touch;
+    Touch value;
 
     Object::ListType parent;
     parent.push_back(string("touch"));
-    touch.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return touch;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

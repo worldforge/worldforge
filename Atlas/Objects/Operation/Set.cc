@@ -22,13 +22,13 @@ Set::Set()
 
 Set Set::Instantiate()
 {
-    Set set;
+    Set value;
 
     Object::ListType parent;
     parent.push_back(string("set"));
-    set.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return set;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

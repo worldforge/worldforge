@@ -8,6 +8,7 @@
 
 #include "Info.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Something went wrong

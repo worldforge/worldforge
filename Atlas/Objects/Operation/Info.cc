@@ -22,13 +22,13 @@ Info::Info()
 
 Info Info::Instantiate()
 {
-    Info info;
+    Info value;
 
     Object::ListType parent;
     parent.push_back(string("info"));
-    info.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return info;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

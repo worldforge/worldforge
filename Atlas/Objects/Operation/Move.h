@@ -8,6 +8,7 @@
 
 #include "Set.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Change position

@@ -8,6 +8,7 @@
 
 #include "../Root.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Base operation for all operators

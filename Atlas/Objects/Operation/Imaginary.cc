@@ -22,13 +22,13 @@ Imaginary::Imaginary()
 
 Imaginary Imaginary::Instantiate()
 {
-    Imaginary imaginary;
+    Imaginary value;
 
     Object::ListType parent;
     parent.push_back(string("imaginary"));
-    imaginary.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return imaginary;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -8,6 +8,7 @@
 
 #include "Create.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Base operator for all kind of communication.

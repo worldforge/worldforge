@@ -32,13 +32,13 @@ RootOperation::RootOperation()
 
 RootOperation RootOperation::Instantiate()
 {
-    RootOperation root_operation;
+    RootOperation value;
 
     Object::ListType parent;
     parent.push_back(string("root_operation"));
-    root_operation.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return root_operation;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

@@ -8,6 +8,7 @@
 
 #include "Sight.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Character sees something disappearing: it literally disappears or has it gone too far to be visible

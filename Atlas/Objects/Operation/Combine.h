@@ -8,6 +8,7 @@
 
 #include "Create.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Combine existing objects into new objects.

@@ -8,6 +8,7 @@
 
 #include "Create.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Divide existing object into pieces.

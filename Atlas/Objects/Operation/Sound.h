@@ -8,6 +8,7 @@
 
 #include "Perception.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Character hears something

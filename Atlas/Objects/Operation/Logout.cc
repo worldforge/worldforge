@@ -22,13 +22,13 @@ Logout::Logout()
 
 Logout Logout::Instantiate()
 {
-    Logout logout;
+    Logout value;
 
     Object::ListType parent;
     parent.push_back(string("logout"));
-    logout.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return logout;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

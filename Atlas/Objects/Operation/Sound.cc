@@ -22,13 +22,13 @@ Sound::Sound()
 
 Sound Sound::Instantiate()
 {
-    Sound sound;
+    Sound value;
 
     Object::ListType parent;
     parent.push_back(string("sound"));
-    sound.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return sound;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

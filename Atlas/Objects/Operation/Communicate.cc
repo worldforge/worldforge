@@ -23,13 +23,13 @@ Communicate::Communicate()
 
 Communicate Communicate::Instantiate()
 {
-    Communicate communicate;
+    Communicate value;
 
     Object::ListType parent;
     parent.push_back(string("communicate"));
-    communicate.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return communicate;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

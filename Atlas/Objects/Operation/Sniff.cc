@@ -22,13 +22,13 @@ Sniff::Sniff()
 
 Sniff Sniff::Instantiate()
 {
-    Sniff sniff;
+    Sniff value;
 
     Object::ListType parent;
     parent.push_back(string("sniff"));
-    sniff.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return sniff;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

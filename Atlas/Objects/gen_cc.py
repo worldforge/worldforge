@@ -116,12 +116,12 @@ class GenerateCC:
         id = obj.attr['id'].value
         self.out.write("%s %s::Instantiate()\n{\n" \
                        % (self.classname, self.classname))
-        self.out.write("    " + self.classname + " " + id + ";\n\n")
+        self.out.write("    " + self.classname + " value;\n\n")
         self.out.write("    Object::ListType parent;\n")
         self.out.write('    parent.push_back(string("%s"));\n' % id)
-        self.out.write("    " + id + '.SetAttr("parent", parent);\n')
+        self.out.write('    value.SetAttr("parent", parent);\n')
         self.out.write("    \n")
-        self.out.write("    return " + id + ";\n")
+        self.out.write("    return value;\n")
         self.out.write("}\n\n")
     def interface(self, obj):
         print "Output of interface for:"
@@ -131,8 +131,10 @@ class GenerateCC:
             self.header(['Atlas', 'Objects', outdir, self.classname, "H"])
         else:
             self.header(['Atlas', 'Objects', self.classname, "H"])
-        self.out.write(string.join(map(lambda parent:'#include "' + \
-                       classize(parent)+'.h"', obj.attr['parent'].value), "\n"))
+        for parent in obj.attr['parent'].value:
+            self.out.write('#include "')
+            if parent == "root": self.out.write('../')
+            self.out.write(classize(parent) + '.h"\n')
         self.out.write("\n\n")
         if outdir != ".":
             self.ns_open(['Atlas', 'Objects', outdir])

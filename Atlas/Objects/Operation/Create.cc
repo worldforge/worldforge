@@ -22,13 +22,13 @@ Create::Create()
 
 Create Create::Instantiate()
 {
-    Create create;
+    Create value;
 
     Object::ListType parent;
     parent.push_back(string("create"));
-    create.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return create;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Operation

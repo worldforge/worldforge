@@ -24,13 +24,13 @@ GameEntity::GameEntity()
 
 GameEntity GameEntity::Instantiate()
 {
-    GameEntity game_entity;
+    GameEntity value;
 
     Object::ListType parent;
     parent.push_back(string("game_entity"));
-    game_entity.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return game_entity;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Entity

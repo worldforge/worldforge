@@ -8,6 +8,7 @@
 
 #include "Get.h"
 
+
 namespace Atlas { namespace Objects { namespace Operation { 
 
 /** Generic base operation for perceiving things by eyes, ears, etc...

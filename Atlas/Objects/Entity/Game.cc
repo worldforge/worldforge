@@ -22,13 +22,13 @@ Game::Game()
 
 Game Game::Instantiate()
 {
-    Game game;
+    Game value;
 
     Object::ListType parent;
     parent.push_back(string("game"));
-    game.SetAttr("parent", parent);
+    value.SetAttr("parent", parent);
     
-    return game;
+    return value;
 }
 
 } } } // namespace Atlas::Objects::Entity
