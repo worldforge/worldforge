@@ -75,7 +75,9 @@ public:
 	virtual Coord getPosition() const;
 	virtual Coord getVelocity() const;
 	
-	// virtual Vector GetOrientation() const; (heading or euler triple?)
+	/** retrieve the orientation as a quaternion */
+	virtual Quaternion getOrientation() const;
+	
 	virtual BBox getBBox() const;
 	
 	// accesors
@@ -179,7 +181,8 @@ protected:
 	BBox _bbox;
 	Coord _position,
 		_velocity;
-
+	Quaternion _orientation;
+	
 // attribute synchronisation
 	/// Mark the attribute set as needing a resync operation before any Get()s
 	/// @param attr The attribute which is no longer in sync

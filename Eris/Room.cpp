@@ -241,12 +241,13 @@ void Room::recvSoundTalk(const Atlas::Objects::Operation::Talk &tk)
 	std::string say = m->second.AsString();
 	
 	// quick sanity check
-	assert (_people.find(tk.GetFrom()) != _people.end());
 	if (_pending.find(tk.GetFrom()) != _pending.end()) {
 		// supress this talk until we have the name
 		// FIXME - buffer these and spool back?
 		return;
 	}
+	// hit this assert if get a talk from somone we know *nothing* about
+	assert (_people.find(tk.GetFrom()) != _people.end());
 	
 	// get the player name and emit the signal already
 	Person *p = _lobby->getPerson(tk.GetFrom());

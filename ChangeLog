@@ -1,5 +1,21 @@
 Wednesday, December 12 2001, James Turner
 
+	* Added Quaternion class to Types.h and Types.cpp
+	* Added _orientation member to Entity, an accessor and code in
+	  recvMode to process it.
+	* Added a temporary check for the Acorn 0.3/0.4 'face' attribute,
+	  and map it to a quaternion if the orientation attr is not found.
+	  This can be removed in a few weeks, but takes the pressure off
+	  alriddoch to update cyphesis-C++ 'right now'.
+	  
+	  All of the above is untested becuase I don't have a graphical client
+	  to test with; it compiles fine, and it's pretty simple, but
+	  beyond that I'm not sure.
+
+	* Moved an assert in Room.cpp (line 244) whcih was a bit premature
+	
+Wednesday, December 12 2001, James Turner
+
 	* Fixed OOG recvAppearance/Disappearance to handle multiple
 	  entities in ARGS. (RT ticket #165). I have verified that the current
 	  behaviour still works, can't test the actual multi-args becuase

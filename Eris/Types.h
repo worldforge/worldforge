@@ -105,6 +105,30 @@ public:
 	Coord u,v;
 };
 
+class Quaternion
+{
+public:
+    Quaternion();
+
+    /** construct from Atlas data */
+    Quaternion(const Atlas::Message::Object &obj);
+
+    /** construct from an Euler triple */
+    Quaternion(double rool, double pitch, double yaw);
+
+    const Atlas::Message::Object asObject() const;
+
+    /** convert to a 4x4 rotation matrix in column major format (i.e suitable for
+     plugging into OpenGL directly. */
+    void asMatrix(float m[4][4]) const;
+
+    /** convert to an euler triple, i.e rotation about X/Y/Z. Note the final result is dependant on applying the rotations
+    in the correct order. */
+    Coord asEuler() const;
+
+    double x,y,z,w;
+};
+
 // Forward Decls
 class Entity;
 typedef Entity* EntityPtr;

@@ -132,6 +132,11 @@ BBox Entity::getBBox() const
 	return _bbox;
 }
 
+Quaternion Entity::getOrientation() const
+{
+    return _orientation;
+}
+
 void Entity::setVisible(bool vis)
 {
 	bool wasVisible = _visible;
@@ -181,6 +186,13 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 	if (ge.HasAttr("bbox"))
 		_bbox = BBox( ge.GetAttr("bbox") );
 	
+	if (ge.HasAttr("orientation"))
+	    _orientation = Quaternion(ge.GetAttr("orientation"));
+	else if (ge.HasAttr("face")) {
+	    // FIXME - handle legacy Acorn face attribute
+	    _orientation = Quaternion(0.0, 0.0, ge.GetAttr("face").AsFloat());
+	}
+	
 	// copy *every* attribute through
 	const Atlas::Message::Object::MapType &amp = ge.AsMap();
 	for (Atlas::Message::Object::MapType::const_iterator a = amp.begin(); a!=amp.end(); ++a)
@@ -198,7 +210,16 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 	setProperty("loc", getArg(mv, "loc"));
 	setProperty("pos", getArg(mv, "pos"));
 	setProperty("velocity", getArg(mv, "velocity"));
-
+    
+    	if (hasArg(mv, "orientation"))
+	    setProperty("orientation", getArg(mv, "orientation"));
+	else if (hasArg(mv, "face")) {
+	    // FIXME - legacy stuff to handle the Acorn 'face' angle
+	    // build the quaternion from roll, pitch and yaw. Yaw is the fac, others are zero
+	    Quaternion quat(0.0, 0.0, getArg(mv, "face").AsFloat());
+	    setProperty("orientation", quat.asObject());
+	}
+	    
 	handleMove();
 }
 
@@ -270,6 +291,8 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 		_position = Coord(val);
 	} else if (s == "velocity") {
 		_velocity = Coord(val);
+	} else if (s == "orientation") {
+	    _orientation = Quaternion(val);
 	}
 	
 	// check for a signal bound to property 's'; emit if found
@@ -420,5 +443,30 @@ void Entity::resync(StringSet &attrs)
 		attrs.erase(a);
 	}
 }
+
+#ifdef HAVE_CPPUNIT
+class EntityTest : public TestCase
+{
+public:
+    
+    void runTest()
+    {
+	Entity testA("foo");	
+	
+	Atlas::Objects::Operation::Move mv;
+	mv.SetLocation("foo");
+	Coord v1(2.0, 3.0, -4.0);
+	mv.SetVelocity(v1.asObject());
+	mv.SetAttr("face", 120.0);
+	
+	testA.recvMove(mv);
+	
+	CPPUNIT_ASSERT("foo" == test.getContainer());
+	CPPUNIT_ASSERT(120.0 == test.getOrientation().asEuler().z);
+    }
+
+private:
+};
+#endif
 
 }; // of namespace 
