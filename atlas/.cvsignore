@@ -1,0 +1,7 @@
+*.lo
+*.la
+*.loT
+.deps
+.libs
+Makefile
+Mafefile.in

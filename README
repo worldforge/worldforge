@@ -1,0 +1,13 @@
+This is the Worldforge math library. It's licensed under the LGPL
+(see file COPYING), and basic compilation instructions are in
+the file INSTALL. The current maintainer is Ron Steinke
+<rsteinke@w-link.net>.
+
+The header wfmath/wfmath.h includes everything except for
+operator<<() for the various classes. These functions are defined
+in wfmath/stream_funcs.h.
+
+The Vector<> and Matrix<> classes (currently) have no virtual destructors.
+This makes computations faster, as there's one less function to call
+for each intermediate value. It does mean, however, that you have to be
+careful with derived classes.

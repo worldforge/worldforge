@@ -1,0 +1,12 @@
+Add license information to source files
+Finish Vector<> and Matrix<> classes
+Add a Point<> class
+Include orientation() operators for Vector<> once we have polar,
+	spherical points defined
+Stick Euler angle, orientation() stuff for Matrix<> into
+	a RotMatrix<> class, which is limited to rotation matrices?
+Add a Shape class, and child classes which include everything
+	in shape.h from libCoal, and axisalignedbox.h, math_volume.h,
+	and volume.h from stage/math
+Check stage/math and libCoal for any leftover math bits which haven't
+	gotten included yet

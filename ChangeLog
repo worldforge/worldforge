@@ -1,0 +1,45 @@
+Wednesday, December 12, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Created atlas_funcs.cpp, wrote GetAtlasDoubleList() and
+	  SetAtlasDoubleList() to handle most of the Atlas
+	  interface work
+	* Got a test for Atlas into configure.in
+
+Tuesday, December 11, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Got test functions working with RotMatrix<>
+	* Created atlas_funcs.h to hold Atlas interface code,
+	  wrote ToAtlas() and FromAtlas() for Vector<> and
+	  Matrix<>
+
+Monday, December 10, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* After coversation with Rakshasa about how matrices are actually
+	  being used in stage, replaced Matrix<> with RotMatrix<>
+
+
+Friday, December 7, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Created some tests in matrix_test
+	* Added GPL information to all the source files
+
+Thursday, December 6, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Added more tests to vector_test
+	* Implemented sloppyMag and associated functions
+	  for Vector<2>, Vector<3>
+	* Added a script, bc_sloppy_mag_3, to calculate some constants
+	  for the Vector<3> implementation of sloppyMag
+	* Got rid of RowVector<> and ColumnVector<> classes,
+	  added rowSet() and columnSet() to Matrix<>
+
+Wednesday, December 5, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* First ChangeLog entry
+	* Autoconf is working, and the Vector<> and Matrix<> class compile
+	* Got the README, AUTHORS, and TODO files written
+	* Changed #include "foo.h" to #include <wfmath/foo.h> in
+	  the header files
+	* Added const.h
+	* Created vector_test.cpp, matrix_test.cpp, started work on
+	  vector_test
