@@ -271,14 +271,26 @@ int	AObject::get(const string& name, double& val) const
 	return 1;
 }
 
+
+
+//would change these to bool return - fex
 int	AObject::get(const string& name, string& val) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	//if (!this->isString()) return 0;
 	char* tmp = strdup(name.c_str());
 	val = PyString_AsString(PyDict_GetItemString(obj,tmp));
 	free(tmp);
 	return 1;
+*/
+
+    PyObject* aObject = PyDict_GetItemString( obj, const_cast<char*>( val.c_str() ) );
+    if ( aObject = 0 )
+        return false;
+    char* aString = PyString_AsString( aObject );
+    assert( aString );
+    val = aString;
+    return true;
 }
 
 int	AObject::get(const string& name, AObject& val, AObject& def) const
