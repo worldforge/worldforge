@@ -15,9 +15,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <windows.h>
-
 #ifdef _WIN32
+#include <windows.h>
 #include <Python/python.h>
 #else
 #include <Python.h>

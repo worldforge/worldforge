@@ -32,7 +32,8 @@ void AProtocolEncoder::append(string& data)
 		
 string AProtocolEncoder::encodeMessage(AObject& msg)
 {
-	return NULL;
+	string	res("");
+	return	res;
 }
 
 int AProtocolEncoder::encodedLength()

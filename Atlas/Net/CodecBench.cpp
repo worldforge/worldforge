@@ -19,7 +19,9 @@
 #include <string.h>
 #include <stdio.h>
 
+#ifdef	_WIN32
 #include <windows.h>
+#endif
 
 #include <time.h>
 
@@ -30,6 +32,7 @@ int main(int argc, char** argv)
 	app->execute();
 }
 
+#ifdef _WIN32
 int WINAPI WinMain( 
 	HINSTANCE hInstance, 	  // handle to current instance 
 	HINSTANCE hPrevInstance,  // handle to previous instance 
@@ -38,7 +41,8 @@ int WINAPI WinMain(
 ) {
 	main(0,NULL);
 }
- 
+#endif
+
 void CodecBench::execute()
 {
 	int	i;
@@ -51,9 +55,9 @@ void CodecBench::execute()
 
 	Py_Initialize();
 
-        AObject test = AObject::mkMap("test1");
-        AObject list = AObject::mkList("list1",0);
-        AObject amap = AObject::mkMap("map1");
+        AObject test = AObject::mkMap();
+        AObject list = AObject::mkList(0);
+        AObject amap = AObject::mkMap();
 
         list.append("stringval");
         list.append((long)12345);
@@ -63,8 +67,8 @@ void CodecBench::execute()
         test.set("aint",	(long)12345);
         test.set("afloat",	9876.54);
 
-        test.set(list);
-        test.set(amap);
+        test.set("list1", list);
+        test.set("map1", amap);
 
 	// packed ascii codec tests !!
 
@@ -82,6 +86,8 @@ void CodecBench::execute()
 	encloop = 50000.0 / enctime;
 	printf("PAS Encode/Sec = %.2f\n", encloop);
 	fflush(stdout);
+
+	exit(0);
 
 	stim = time(NULL);
 
@@ -134,6 +140,7 @@ void CodecBench::execute()
 	delete codec;
 	delete proto;
 }
+
 
 
 

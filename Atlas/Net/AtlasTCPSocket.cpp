@@ -8,7 +8,9 @@
 
 #include "AtlasTCPSocket.h"
 
+#ifdef _WIN32
 int ATCPSocket::didWSAInit = 0;
+#endif
 
 ATCPSocket::ATCPSocket()
 {
@@ -87,7 +89,7 @@ ATCPSocket*	ATCPSocket::accept()
 {
 	int			newsock;
 	struct sockaddr_in	sin;
-	int			sinlen;
+	unsigned int		sinlen;
 
 	sinlen = sizeof(sin);
 	newsock = ::accept(sock, (struct sockaddr*)&sin, &sinlen);

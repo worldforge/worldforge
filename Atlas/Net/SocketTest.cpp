@@ -17,6 +17,7 @@ int main(int argc, char** argv)
 	return 0;	
 }
 
+#ifdef _WIN32
 int WINAPI WinMain( 
 	HINSTANCE hInstance, 	  // handle to current instance 
 	HINSTANCE hPrevInstance,  // handle to previous instance 
@@ -25,6 +26,7 @@ int WINAPI WinMain(
 ) {
 	main(0,NULL);
 }
+#endif
  
 void SocketTest::execute()
 {

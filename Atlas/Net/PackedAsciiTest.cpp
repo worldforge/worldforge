@@ -16,9 +16,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <windows.h>
-
-
 
 int main(int argc, char** argv)
 {
@@ -29,6 +26,8 @@ int main(int argc, char** argv)
 	app->execute();
 }
 
+#ifdef _WIN32
+#include <windows.h>
 int WINAPI WinMain( 
 	HINSTANCE hInstance, 	  // handle to current instance 
 	HINSTANCE hPrevInstance,  // handle to previous instance 
@@ -37,7 +36,7 @@ int WINAPI WinMain(
 ) {
 	main(0,NULL);
 }
- 
+#endif
 
 void PackedAsciiTest::walkTree(int nest, string name, AObject& list)
 {

@@ -17,10 +17,14 @@
 #include <string>
 
 #ifdef __linux__
+	#include <sys/time.h>
 	#include <time.h>
 	#include <sys/socket.h>
+	#include <sys/select.h>
 	#include <sys/ioctl.h>
 	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <netdb.h>
 	#define SOCKET int
 #elif _WIN32
 	#define Win32_Winsock
