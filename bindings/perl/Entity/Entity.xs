@@ -1,9 +1,13 @@
-#include "../conversion.h"
-
 #include <Eris/Entity.h>
 
 #include <sigcperl/signal_wrap.h>
 #include <sigcperl/signal_array.h>
+
+#include "../perlentity.h"
+#include "../atlas_convert.h"
+#include "../typeinfohandle.h"
+#include "../worldhandle.h"
+#include "../conversion.h"
 
 extern "C" {
 #include "EXTERN.h"
@@ -148,8 +152,6 @@ World*
 Entity::getWorld()
   PREINIT:
     const char* CLASS = "WorldForge::Eris::World";
-  CLEANUP:
-    playerRef(RETVAL->getPlayer());
 
 bool
 Entity::isVisible()

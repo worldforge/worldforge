@@ -6,7 +6,10 @@
 
 #include <sigcperl/signal_wrap.h>
 
-#include "../conversion.h"
+#include "../refcount.h"
+#include "../perlentity.h"
+#include "../worldhandle.h"
+#include "../atlas_convert.h"
 
 // This only gets used if someone emits one of player's signals
 // from outside. This should never happen.
@@ -166,7 +169,6 @@ Player::takeCharacter(string id)
   PREINIT:
     const char *CLASS = "WorldForge::Eris::Avatar";
   CLEANUP:
-    playerRef(THIS);
     RETVAL->getWorld()->registerFactory(new DefaultFactory(), 0);
 
 Avatar*
@@ -184,7 +186,6 @@ Player::_createCharacter(AtlasObject attrs)
 
     RETVAL = THIS->createCharacter(character);
 
-    playerRef(THIS);
     RETVAL->getWorld()->registerFactory(new DefaultFactory(), 0);
   OUTPUT:
     RETVAL

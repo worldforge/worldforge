@@ -2,7 +2,7 @@
 
 #include <sigcperl/signal_wrap.h>
 
-#include "../conversion.h"
+#include "../typeinfohandle.h"
 
 extern "C" {
 #include "EXTERN.h"

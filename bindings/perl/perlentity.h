@@ -3,6 +3,8 @@
 
 #include <Eris/Entity.h>
 
+#include "refcount.h"
+
 class PerlEntity : public Eris::Entity
 {
  public:

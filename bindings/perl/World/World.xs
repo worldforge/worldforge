@@ -1,10 +1,13 @@
-#include "../conversion.h"
-
 #include <Eris/World.h>
 #include <Eris/Factory.h>
 #include <Eris/Entity.h>
 
 #include <sigcperl/signal_wrap.h>
+
+#include "../worldhandle.h"
+#include "../perlentity.h"
+#include "../conversion.h"
+#include "../atlas_convert.h"
 
 extern "C" {
 #include "EXTERN.h"
@@ -121,9 +124,7 @@ using SigCPerl::SignalBase;
 MODULE = WorldForge::Eris::World		PACKAGE = WorldForge::Eris::World
 
 void
-World::DESTROY()
-  CODE:
-    playerUnref(THIS->getPlayer());
+WorldHandle::DESTROY()
 
 Entity*
 World::lookup(string s)
@@ -135,10 +136,13 @@ World::getRootEntity()
   PREINIT:
     const char* CLASS = "WorldForge::Eris::Entity";
 
-Connection*
+SV*
 World::getConnection()
-  PREINIT:
-    const char* CLASS = "WorldForge::Eris::Connection";
+  CODE:
+    RETVAL = sv_mortalcopy(getControlingSV(connection_hash_string,
+	THIS->getConnection()));
+  OUTPUT:
+    RETVAL
 
 void
 World::tick()
@@ -173,8 +177,6 @@ Avatar*
 World::getPrimaryAvatar()
   PREINIT:
     const char* CLASS = "WorldForge::Eris::Avatar";
-  CLEANUP:
-    playerRef(THIS->getPlayer());
 
 SignalBase*
 World::EntityCreate()

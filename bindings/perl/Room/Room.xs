@@ -1,9 +1,10 @@
-#include "../conversion.h"
-
 #include <Eris/Room.h>
 
 #include <sigcperl/signal_wrap.h>
 #include <sigcperl/signal_array.h>
+
+#include "../roomhandle.h"
+#include "../conversion.h"
 
 extern "C" {
 #include "EXTERN.h"

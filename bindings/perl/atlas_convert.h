@@ -3,6 +3,8 @@
 
 #include <Atlas/Message/Object.h>
 
+#include "refcount.h"
+
 SV* AtlasToSV(const Atlas::Message::Object &obj)
 {
   switch(obj.GetType()) {

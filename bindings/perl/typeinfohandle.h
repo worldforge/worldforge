@@ -3,10 +3,10 @@
 
 #include <string>
 
+#include "refcount.h"
+
 #include <Eris/Entity.h>
 #include <Eris/World.h>
-
-#include "refcount.h"
 
 namespace Eris {class TypeInfo;}
 
@@ -24,6 +24,12 @@ class TypeInfoHandle
  private:
   Eris::TypeInfo* info_;
   Eris::Connection* con_;
+};
+
+template<>
+struct HandleType<Eris::TypeInfo*>
+{
+  typedef TypeInfoHandle type;
 };
 
 #endif

@@ -3,10 +3,10 @@
 
 #include <string>
 
+#include "refcount.h"
+
 #include <Eris/Room.h>
 #include <Eris/Lobby.h>
-
-#include "refcount.h"
 
 // a class to pass to perl as Eris::Room
 class RoomHandle
@@ -29,6 +29,18 @@ class RoomHandle
   Eris::Lobby* lobby_;
   std::string id_;
   bool is_lobby_;
+};
+
+template<>
+struct HandleType<Eris::Room*>
+{
+  typedef RoomHandle type;
+};
+
+template<>
+struct HandleType<Eris::Lobby*>
+{
+  typedef RoomHandle type;
 };
 
 #endif

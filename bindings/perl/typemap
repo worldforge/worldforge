@@ -2,29 +2,28 @@ TYPEMAP
 
 SignalBase*	O_OBJECT
 Connection*	O_OBJECT
-Person*		O_PERSON
-Lobby*		O_ROOM
-Room*		O_ROOM
+Person*		O_HANDLE
+PersonHandle*	O_OBJECT
+Lobby*		O_HANDLE
+Room*		O_HANDLE
 RoomHandle*	O_OBJECT
 Player*		O_OBJECT
 Meta*		O_OBJECT
 Timeout*	O_OBJECT
 AtlasObject	T_ATLAS
 AtlasConstObject* T_ATLAS_CONST
-World*		O_OBJECT
-Avatar*		O_OBJECT
+World*		O_HANDLE
+Avatar*		O_HANDLE
+WorldHandle*	O_OBJECT
+AvatarHandle*	O_OBJECT
 Entity*		O_ENTITY
-TypeInfo*	O_TYPEINFO
+TypeInfo*	O_HANDLE
 TypeInfoHandle*	O_OBJECT
 
 OUTPUT
 
-O_ROOM
-	sv_setref_pv( $arg, CLASS, (void*) new RoomHandle($var) );
-
-O_PERSON
-	sv_setref_pv( $arg, CLASS, (void*) $var );
-	connectionRef($var->getLobby()->getConnection());
+O_HANDLE
+	sv_setref_pv( $arg, CLASS, (void*) new HandleType<Eris::$type>::type($var) );
 
 O_ENTITY
 	$arg = dynamic_cast<PerlEntity*>($var)->sv();
@@ -34,33 +33,18 @@ T_ATLAS_CONST
 
 INPUT
 
-O_ROOM
+O_HANDLE
 	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) ) {
-		RoomHandle* handle = (RoomHandle*)SvIV((SV*)SvRV( $arg ));
+		HandleType<Eris::$type>::type* handle =
+			(HandleType<Eris::$type>::type*) SvIV((SV*)SvRV( $arg ));
 		assert(handle);
 		$var = *handle;
 		if(!$var) {
-			warn( \"Stale reference for Room %s\", handle->id().c_str() );
+			warn( \"Stale reference for $type\" );
 			XSRETURN_UNDEF;
 		}
 	}
 	else {
-		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
-		XSRETURN_UNDEF;
-	}
-
-O_PERSON
-	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) )
-		$var = ($type)SvIV((SV*)SvRV( $arg ));
-	else{
-		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
-		XSRETURN_UNDEF;
-	}
-
-O_TYPEINFO
-	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) )
-		$var = *(TypeInfoHandle*)SvIV((SV*)SvRV( $arg ));
-	else{
 		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
 		XSRETURN_UNDEF;
 	}

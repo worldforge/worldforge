@@ -1,9 +1,10 @@
-#include "../conversion.h"
-
 #include <Eris/Connection.h>
 #include <Eris/PollDefault.h>
 
 #include <sigcperl/signal_wrap.h>
+
+#include "../refcount.h"
+#include "../roomhandle.h"
 
 extern "C" {
 #include "EXTERN.h"

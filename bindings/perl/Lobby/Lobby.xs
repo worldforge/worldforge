@@ -1,9 +1,10 @@
-#include "../conversion.h"
-
 #include <Eris/Lobby.h>
 #include <Eris/Person.h>
 
 #include <sigcperl/signal_wrap.h>
+
+#include "../roomhandle.h"
+#include "../conversion.h"
 
 extern "C" {
 #include "EXTERN.h"
@@ -56,9 +57,7 @@ Lobby::PrivateTalk()
 MODULE = WorldForge::Eris::Lobby		PACKAGE = WorldForge::Eris::Person		
 
 void
-Person::DESTROY()
-  CODE:
-    connectionUnref(THIS->getLobby()->getConnection());
+PersonHandle::DESTROY()
 
 void
 Person::msg(string msg)

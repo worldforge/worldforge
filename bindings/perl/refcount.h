@@ -1,6 +1,19 @@
 #ifndef ERIS_PERL_REFCOUNT_H
 #define ERIS_PERL_REFCOUNT_H
 
+#include <sigcperl/convert.h>
+
+extern "C" {
+#include "EXTERN.h"
+#include "perl.h"
+}
+#undef convert
+#undef list
+#undef ref
+#undef scalar
+
+template<class C> struct HandleType;
+
 namespace Eris {class Connection; class Player;}
 
 // find the SV that owns a particular instance

@@ -1,24 +1,29 @@
 #ifndef ERIS_PERL_CONVERSION_H
 #define ERIS_PERL_CONVERSION_H
 
-#include <sigcperl/convert.h>
-
-extern "C" {
-#include "EXTERN.h"
-#include "perl.h"
-}
-#undef convert
-#undef list
-#undef ref
-#undef scalar
-
-#include "roomhandle.h"
-#include "typeinfohandle.h"
 #include "refcount.h"
-#include "atlas_convert.h"
 #include "perlentity.h"
+#include "roomhandle.h"
 
 #include <Eris/Person.h>
+
+class PersonHandle
+{
+ public:
+  PersonHandle(Eris::Person *p) : _p(p) {connectionRef(p->getLobby()->getConnection());}
+  ~PersonHandle() {connectionUnref(_p->getLobby()->getConnection());}
+
+  operator Eris::Person*() const {return _p;}
+
+ private:
+  Eris::Person *_p;
+};
+
+template<>
+struct HandleType<Eris::Person*>
+{
+  typedef PersonHandle type;
+};
 
 using Eris::Room;
 using Eris::Person;

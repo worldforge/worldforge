@@ -1,8 +1,10 @@
-#include "../conversion.h"
-
 #include <Eris/Avatar.h>
 
 #include <sigcperl/signal_wrap.h>
+
+#include "../worldhandle.h"
+#include "../perlentity.h"
+#include "../conversion.h"
 
 extern "C" {
 #include "EXTERN.h"
@@ -27,16 +29,12 @@ using SigCPerl::SignalBase;
 MODULE = WorldForge::Eris::Avatar		PACKAGE = WorldForge::Eris::Avatar		
 
 void
-Avatar::DESTROY()
-  CODE:
-    playerUnref(THIS->getWorld()->getPlayer());
+AvatarHandle::DESTROY()
 
 World*
 Avatar::getWorld()
   PREINIT:
     const char* CLASS = "WorldForge::Eris::World";
-  CLEANUP:
-    playerRef(RETVAL->getPlayer());
 
 string
 Avatar::getID()
@@ -72,21 +70,17 @@ Avatar::drop(Entity* entity, ...)
     }
 
 Avatar*
-find(Connection* c, string s)
-  CODE:
+Avatar::find(Connection* c, string s)
+  PREINIT:
     const char* CLASS = "WorldForge::Eris::Avatar";
-    RETVAL = Avatar::find(c, s);
-    playerRef(RETVAL->getWorld()->getPlayer());
-  OUTPUT:
-    RETVAL
 
 void
-getAvatars(Connection* c)
+Avatar::getAvatars(Connection* c)
   PPCODE:
     std::vector<Avatar*> list = Avatar::getAvatars(c);
     std::vector<Avatar*>::iterator I;
     for(I = list.begin(); I != list.end(); ++I)
-      XPUSHs(sv_2mortal(SigCPerl::GetSV(*I)));
+      XPUSHs(sv_2mortal(SigCPerl::GetSV(new AvatarHandle(*I))));
 
 SignalBase*
 Avatar::InvAdded()
