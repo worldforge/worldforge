@@ -1,0 +1,4 @@
+*.pyc
+wrapperNet.cpp
+wrapperNet_wrap.doc
+ccAtlasNet.py

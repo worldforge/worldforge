@@ -13,26 +13,24 @@
    other files, you'll have to create a file "foobarobject.h"; see
    intobject.h for an example. */
 
-/* Xxo objects */
+/* AtlasWrapper objects */
 
 #include "Python.h"
 #include <Atlas/Object/Object.h>
+#include <Atlas/Net/Codec.h>
+#include <Atlas/Net/XMLProtocol.h>
 #include <string>
+
+#include "wrapperObject.h"
+
+#define DEBUG(a) a
+//#define DEBUG(a)
 
 static PyObject *ErrorObject;
 
-typedef struct {
-	PyObject_HEAD
-        Atlas::Object obj;
-} AtlasWrapperObject;
+Atlas::Codec* printCodec;
 
-//staticforward PyTypeObject AtlasWrapper_Type;
-extern PyTypeObject AtlasWrapper_Type;
-
-#define AtlasWrapperObject_Check(v)	((v)->ob_type == &AtlasWrapper_Type)
-
-static AtlasWrapperObject *
-newAtlasWrapperObject(Atlas::Object arg)
+AtlasWrapperObject *newAtlasWrapperObject(Atlas::Object arg)
 {
   AtlasWrapperObject *self;
   self = PyObject_NEW(AtlasWrapperObject, &AtlasWrapper_Type);
@@ -40,9 +38,13 @@ newAtlasWrapperObject(Atlas::Object arg)
     return NULL;
   //some playing here: need to get extra reference somehow and this should do the trick
   //(needed because malloc in above PyObject_NEW doesn initialize it properly)
-  Atlas::Object tmp=arg;
-  memcpy(&self->obj,&arg,sizeof(arg));
-  self->obj=arg;
+  self->obj = new Atlas::Object(arg);
+  if(self->obj == NULL) {
+    PyMem_DEL(self);
+    PyErr_SetString(PyExc_MemoryError,
+                    "can set attribute only for Atlas maps");
+    return NULL;
+  }
   return self;
 }
 
@@ -51,9 +53,8 @@ newAtlasWrapperObject(Atlas::Object arg)
 static void
 AtlasWrapper_dealloc(AtlasWrapperObject *self)
 {
-  //CHEAT!: need to delete because PyMem_DEL doesn't!
-	//delete self->obj;
-	PyMem_DEL(self);
+  delete self->obj;
+  PyMem_DEL(self);
 }
 
 static PyObject *
@@ -65,82 +66,177 @@ AtlasWrapper_get_atype(AtlasWrapperObject *self,
 	return PyString_FromString("object");
 }
 
+static PyObject *
+AtlasWrapper_keys(AtlasWrapperObject *self,
+                       PyObject *args)
+{
+  if(!self->obj->isMap()) {
+    PyErr_SetString(PyExc_TypeError,
+                    "currently keys() only legal for Atlas maps");
+    return NULL;
+  }
+  if (!PyArg_ParseTuple(args, ""))
+    return NULL;
+  return PyString_FromString("???");
+}
+
 static PyMethodDef AtlasWrapper_methods[] = {
 	{"get_atype",	(PyCFunction)AtlasWrapper_get_atype,	1},
+	{"keys",	(PyCFunction)AtlasWrapper_keys,	1},
 	{NULL,		NULL}		/* sentinel */
 };
+
+PyObject *AtlasObject2PythonObject(Atlas::Object obj)
+{
+  if(obj.isInt()) return PyInt_FromLong(obj.asInt());
+  if(obj.isFloat()) return PyFloat_FromDouble(obj.asFloat());
+  if(obj.isString()) {
+    string s=obj.asString();
+    return PyString_FromStringAndSize(s.c_str(),s.length());
+  }
+  return (PyObject*)newAtlasWrapperObject(obj);
+}
 
 static PyObject *
 AtlasWrapper_getattr(AtlasWrapperObject *self,
                      char *name)
 {
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
-  printf("DEBUG:name:%s\n",name);
+  DEBUG(printf("DEBUG:%s:%s\n",__FUNCTION__,name));
   Atlas::Object obj;
-  if(self->obj.get(name,obj)) {
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
-    if(obj.isInt()) return PyInt_FromLong(obj.asInt());
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
-    if(obj.isFloat()) return PyFloat_FromDouble(obj.asFloat());
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
-    if(obj.isString()) {
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
-      string s=obj.asString();
-      return PyString_FromStringAndSize(s.c_str(),s.length());
-    }
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
-    return (PyObject*)newAtlasWrapperObject(obj);
-  }
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
+  if(self->obj->get(name,obj))
+    return AtlasObject2PythonObject(obj);
   //CHEAT!: what if attribute overwrites method: should this be first?
   return Py_FindMethod(AtlasWrapper_methods, (PyObject *)self, name);
 }
 
 static int
 AtlasWrapper_setattr(AtlasWrapperObject *self,
-                     char *cName,
+                     char *name,
                      PyObject *v)
 {
-  string name(cName);
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
-  printf("DEBUG:name:%s, addr:%p\n",cName,&self->obj);
-  if(!self->obj.isMap()) {
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
+  DEBUG(printf("DEBUG:%s:%s\n",__FUNCTION__,name));
+  if(!self->obj->isMap()) {
     PyErr_SetString(PyExc_TypeError,
                     "can set attribute only for Atlas maps");
     return -1;
   }
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
   if(PyString_Check(v)) {
     //CHEAT!: use length too: wait for Atlas::Object to have 
     //        set(string &name, char *str, int length=-1)
-    self->obj.set(name,PyString_AsString(v));
+    self->obj->set(name,PyString_AsString(v));
     return 0;
   }
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
   if(PyInt_Check(v)) {
-    int i=PyInt_AsLong(v);
-    self->obj.set(name,i);
-    int res;
-    res=self->obj.get(name,i);
-    printf("DEBUG:res=%i, i=%i\n",res,i);
-    Atlas::Object o;
-    i=-42;
-    self->obj.set(name,i);
-    res=self->obj.get(name,i);
-    printf("DEBUG:res=%i, i=%i\n",res,i);
+    self->obj->set(name,PyInt_AsLong(v));
     return 0;
   }
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
   if(PyFloat_Check(v)) {
-    self->obj.set(name,PyFloat_AsDouble(v));
+    self->obj->set(name,PyFloat_AsDouble(v));
+    return 0;
+  }
+  //*((int*)0)=1;
+  if(AtlasWrapperObject_Check(v)) {
+    self->obj->set(name,*((AtlasWrapperObject*)v)->obj);
+    return 0;
+  }
+  if(PySequence_Check(v)) {
+    int len = PyObject_Length(v);
+    if(len<0) return len;
+    Atlas::Object list(Atlas::List);
+    int i;
+    for(i=0;i<len;i++) {
+      PyObject *v2 = PySequence_GetItem(v,i);
+      if(v2 == NULL) return -1;
+      if(PyString_Check(v2)) {
+        //CHEAT!: use length too: wait for Atlas::Object to have 
+        //        set(string &name, char *str, int length=-1)
+        list.append(string(PyString_AsString(v2)));
+      }
+      else if(PyInt_Check(v2)) list.append(PyInt_AsLong(v2));
+      else if(PyFloat_Check(v2)) list.append(PyFloat_AsDouble(v2));
+      else if(AtlasWrapperObject_Check(v2))
+        list.append(*((AtlasWrapperObject*)v2)->obj);
+      else {
+        PyErr_SetString(PyExc_TypeError,
+                        "type not yet supported by list Atlas::Object");
+        return -1;
+      }
+    }
+    self->obj->set(name,list);
     return 0;
   }
 
-  printf("DEBUG:%s:%i\n",__FUNCTION__,__LINE__);
   PyErr_SetString(PyExc_TypeError,
-                  "type not supported");
+                  "type not supported by map Atlas::Object");
   return -1;
+}
+
+/***************** SEQUENCE ***************************/
+static int
+wrapper_length(AtlasWrapperObject *list)
+{
+  DEBUG(printf("DEBUG:%s\n",__FUNCTION__));
+	return list->obj->length();
+}
+
+static PyObject *
+wrapper_item(AtlasWrapperObject *list, int i)
+{
+  DEBUG(printf("DEBUG:%s:%i\n",__FUNCTION__,i));
+	if (i < 0 || i >= list->obj->length()) {
+		PyErr_SetString(PyExc_IndexError, "Atlas list index out of range");
+		return NULL;
+	}
+        bool res;
+        Atlas::Object item;
+        res = list->obj->get(i,item);
+        if(res==false) {
+          PyErr_SetString(PyExc_TypeError,
+                          "unscriptable object");
+        }
+        return AtlasObject2PythonObject(item);
+}
+
+static PySequenceMethods wrapper_as_sequence = {
+	(inquiry)wrapper_length,	        /*sq_length*/
+	(binaryfunc)0 /*array_concat*/,               /*sq_concat*/
+	(intargfunc)0 /*array_repeat*/,		/*sq_repeat*/
+	(intargfunc)wrapper_item,	        /*sq_item*/
+	(intintargfunc)0 /*array_slice*/,		/*sq_slice*/
+	(intobjargproc)0 /*array_ass_item*/,		/*sq_ass_item*/
+	(intintobjargproc)0 /*array_ass_slice*/,	/*sq_ass_slice*/
+};
+
+/***************** MAPPING ***************************/
+// static PyObject *
+// instance_subscript(inst, key)
+//         PyInstanceObject *inst;
+//         PyObject *key;
+// {
+
+// static PyMappingMethods wrapper_as_mapping = {
+//         (inquiry)wrapper_length, /*mp_length*/
+//         (binaryfunc)wrapper_subscript, /*mp_subscript*/
+//         (objobjargproc)instance_ass_subscript, /*mp_ass_subscript*/
+// };
+
+#if 0
+static int
+AtlasWrapper_print(AtlasWrapperObject *obj,
+                   FILE *fp,
+                   int flags) /* Not used but required by interface */
+{
+  string data=printCodec->encodeMessage(*obj->obj);
+  fputs(data.c_str(), fp);
+  return 0;
+}
+#endif
+
+static PyObject *
+wrapper_as_str(AtlasWrapperObject *obj)
+{
+  string data=printCodec->encodeMessage(*obj->obj);
+  return PyString_FromString(data.c_str());
 }
 
 /*statichere*/ PyTypeObject AtlasWrapper_Type = {
@@ -148,27 +244,34 @@ AtlasWrapper_setattr(AtlasWrapperObject *self,
 	 * to be portable to Windows without using C++. */
 	PyObject_HEAD_INIT(NULL)
 	0,			/*ob_size*/
-	"Object",			/*tp_name*/
+	"ccAtlasObject",	/*tp_name*/
 	sizeof(AtlasWrapperObject),	/*tp_basicsize*/
 	0,			/*tp_itemsize*/
 	/* methods */
 	(destructor)AtlasWrapper_dealloc, /*tp_dealloc*/
-	0,			/*tp_print*/
+	0 /*(printfunc)AtlasWrapper_print*/, /*tp_print*/
 	(getattrfunc)AtlasWrapper_getattr, /*tp_getattr*/
 	(setattrfunc)AtlasWrapper_setattr, /*tp_setattr*/
 	0,			/*tp_compare*/
 	0,			/*tp_repr*/
 	0,			/*tp_as_number*/
-	0,			/*tp_as_sequence*/
-	0,			/*tp_as_mapping*/
+	&wrapper_as_sequence,	/*tp_as_sequence*/
+	0/*&wrapper_as_mapping*/,	/*tp_as_mapping*/
 	0,			/*tp_hash*/
+        0,              /*tp_call*/
+        (reprfunc)wrapper_as_str,              /*tp_str*/
+        0,              /*tp_getattro*/
+        0,              /*tp_setattro*/
+        0,      		/*tp_as_buffer*/
+        0,     			/*tp_flags*/
+        0,              /*tp_doc*/ 
 };
 /* --------------------------------------------------------------------- */
 
 /* Function of two integers returning integer */
 
 static PyObject *
-atlas_foo(PyObject *self, /* Not used */
+ccAtlasObject_foo(PyObject *self, /* Not used */
           PyObject *args)
 {
 	long i, j;
@@ -183,7 +286,7 @@ atlas_foo(PyObject *self, /* Not used */
 /* Function of no arguments returning new AtlasWrapper object */
 
 static PyObject *
-atlas_new(PyObject *self, /* Not used */
+ccAtlasObject_new(PyObject *self, /* Not used */
           PyObject *args)
 {
 	AtlasWrapperObject *rv;
@@ -200,7 +303,7 @@ atlas_new(PyObject *self, /* Not used */
 /* Example with subtle bug from extensions manual ("Thin Ice"). */
 
 static PyObject *
-atlas_bug(PyObject *self,
+ccAtlasObject_bug(PyObject *self,
           PyObject *args)
 {
 	PyObject *list, *item;
@@ -222,7 +325,7 @@ atlas_bug(PyObject *self,
 /* Test bad format character */
 
 static PyObject *
-atlas_roj(PyObject *self, /* Not used */
+ccAtlasObject_roj(PyObject *self, /* Not used */
           PyObject *args)
 {
 	PyObject *a;
@@ -236,11 +339,11 @@ atlas_roj(PyObject *self, /* Not used */
 
 /* List of functions defined in the module */
 
-static PyMethodDef atlas_methods[] = {
-	{"roj",		atlas_roj,		1},
-	{"foo",		atlas_foo,		1},
-	{"Object",	atlas_new,		1},
-	{"bug",		atlas_bug,		1},
+static PyMethodDef ccAtlasObject_methods[] = {
+	{"roj",		ccAtlasObject_roj,		1},
+	{"foo",		ccAtlasObject_foo,		1},
+	{"Object",	ccAtlasObject_new,		1},
+	{"bug",		ccAtlasObject_bug,		1},
 	{NULL,		NULL}		/* sentinel */
 };
 
@@ -249,19 +352,22 @@ static PyMethodDef atlas_methods[] = {
 
 extern "C"
 DL_EXPORT(void)
-initatlas()
+initccAtlasObject()
 {
 	PyObject *m, *d;
+
+        //initialize only once
+        printCodec = new Atlas::Codec(new Atlas::XMLProtocol());
 
 	/* Initialize the type of the new type object here; doing it here
 	 * is required for portability to Windows without requiring C++. */
 	AtlasWrapper_Type.ob_type = &PyType_Type;
 
 	/* Create the module and add the functions */
-	m = Py_InitModule("atlas", atlas_methods);
+	m = Py_InitModule("ccAtlasObject", ccAtlasObject_methods);
 
 	/* Add some symbolic constants to the module */
 	d = PyModule_GetDict(m);
-	ErrorObject = PyErr_NewException("atlas.error", NULL, NULL);
+	ErrorObject = PyErr_NewException("ccAtlasObject.error", NULL, NULL);
 	PyDict_SetItemString(d, "error", ErrorObject);
 }
