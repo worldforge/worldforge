@@ -45,27 +45,24 @@ template<> bool WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
   CoordType sin_sqr_beta = m_elem[0][2] * m_elem[0][2] + m_elem[1][2] * m_elem[1][2];
 
   if(sin_sqr_beta > WFMATH_EPSILON) {
-    angles[0] = atan2(-m_elem[2][1], (m_flip ? 1 : -1) * m_elem[2][0]);
-    angles[1] = acos(m_elem[2][2]);
-    angles[2] = atan2(m_elem[1][2], -m_elem[0][2]);
+    angles[0] = atan2(m_elem[2][0] * (m_flip ? -1 : 1), m_elem[2][1]);
+    angles[1] = -acos(m_elem[2][2]);
+    angles[2] = atan2(m_elem[0][2], m_elem[1][2]);
   }
   else {
-    angles[1] = atan2(m_elem[0][0] * (m_flip ? -1 : 1), -m_elem[0][1]);
-    angles[2] = (m_elem[2][2] > 0) ? 0 : WFMATH_CONST_PI;
-    angles[3] = 0;
+    angles[0] = atan2(m_elem[1][1], (m_flip ? -1 : 1) * m_elem[1][0]);
+    angles[1] = (m_elem[2][2] > 0) ? 0 : WFMATH_CONST_PI;
+    angles[2] = 0;
   }
 
   return !m_flip;
 }
 
-namespace WF { namespace Math {
-
-template<> RotMatrix<3>::RotMatrix(const Quaternion& q, const bool not_flip)
+template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
+						      const bool not_flip)
 {
   CoordType xx, yy, zz, xy, xz, yz;
   const Vector<3> &vref = q.vector();
-
-  // FIXME get friend stuff working
 
   xx = vref[0] * vref[0];
   xy = vref[0] * vref[1];
@@ -91,9 +88,9 @@ template<> RotMatrix<3>::RotMatrix(const Quaternion& q, const bool not_flip)
 
   if(!not_flip)
     *this = Prod(*this, RotMatrix<3>().mirror(0));
-}
 
-}} // namespace WF::Math
+  return *this;
+}
 
 template<>
 RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,

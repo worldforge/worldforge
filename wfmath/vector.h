@@ -41,7 +41,27 @@ template<const int dim> class Point;
 class Quaternion;
 
 template<const int dim>
+Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2);
+template<const int dim>
+Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2);
+template<const int dim>
+Vector<dim> operator-(const Vector<dim>& v); // Unary minus
+template<const int dim>
 Vector<dim> operator*(const CoordType& d, const Vector<dim>& v);
+template<const int dim>
+Vector<dim> operator*(const Vector<dim>& v, const CoordType& d);
+template<const int dim>
+Vector<dim> operator/(const Vector<dim>& v, const CoordType& d);
+
+template<const int dim>
+Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2);
+template<const int dim>
+Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2);
+template<const int dim>
+Vector<dim>& operator*=(Vector<dim>& v, const CoordType& d);
+template<const int dim>
+Vector<dim>& operator/=(Vector<dim>& v, const CoordType& d);
+
 template<const int dim>
 CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2);
 
@@ -66,6 +86,11 @@ template<const int dim>
 Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v);
 template<const int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
+
+template<const int dim>
+Point<dim>& operator+=(Point<dim>& p, const Vector<dim>& v);
+template<const int dim>
+Point<dim>& operator-=(Point<dim>& p, const Vector<dim>& v);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Vector<dim>& v);
@@ -138,20 +163,24 @@ class Vector {
 
   // Math operators
 
-  Vector operator+(const Vector& v) const;
-  Vector operator-(const Vector& v) const;
-  Vector operator*(const CoordType& d) const;
-  Vector operator/(const CoordType& d) const;
+//  Vector operator+(const Vector& v) const;
+//  Vector operator-(const Vector& v) const;
+//  Vector operator*(const CoordType& d) const;
+//  Vector operator/(const CoordType& d) const;
 
-  Vector operator-() const; // Unary minus
+//  Vector operator-() const; // Unary minus
 
-  Vector& operator+=(const Vector& v);
-  Vector& operator-=(const Vector& v);
-  Vector& operator*=(const CoordType& d);
-  Vector& operator/=(const CoordType& d);
+  friend Vector& operator+=<dim>(Vector& v1, const Vector& v2);
+  friend Vector& operator-=<dim>(Vector& v1, const Vector& v2);
+  friend Vector& operator*=<dim>(Vector& v, const CoordType& d);
+  friend Vector& operator/=<dim>(Vector& v, const CoordType& d);
 
-// FIXME this has problems
-//  friend Vector operator*<dim>(const CoordType& d, const Vector& v);
+  friend Vector operator+<dim>(const Vector& v1, const Vector& v2);
+  friend Vector operator-<dim>(const Vector& v1, const Vector& v2);
+  friend Vector operator-<dim>(const Vector& v); // Unary minus
+  friend Vector operator*<dim>(const CoordType& d, const Vector& v);
+  friend Vector operator*<dim>(const Vector& v, const CoordType& d);
+  friend Vector operator/<dim>(const Vector& v, const CoordType& d);
 
   friend Vector Prod<dim>	(const RotMatrix<dim>& m,
 				 const Vector& v);
@@ -163,18 +192,21 @@ class Vector {
   const CoordType& operator[](const int i) const {return m_elem[i];}
   CoordType& operator[](const int i)		 {return m_elem[i];}
 
-// FIXME same problem as operator*
-//  friend Vector operator-<dim> (const Point<dim>& c1, const Point<dim>& c2);
-//  friend Point<dim> operator+<dim> (const Point<dim>& c, const Vector& v);
-//  friend Point<dim> operator-<dim> (const Point<dim>& c, const Vector& v);
-//  friend Point<dim> operator+<dim> (const Vector& v, const Point<dim>& c);
+  friend Vector operator-<dim>(const Point<dim>& c1, const Point<dim>& c2);
+  friend Point<dim> operator+<dim>(const Point<dim>& c, const Vector& v);
+  friend Point<dim> operator-<dim>(const Point<dim>& c, const Vector& v);
+  friend Point<dim> operator+<dim>(const Vector& v, const Point<dim>& c);
+
+  friend Point<dim>& operator+=<dim>(Point<dim>& p, const Vector& rhs);
+  friend Point<dim>& operator-=<dim>(Point<dim>& p, const Vector& rhs);
 
   friend CoordType Dot<dim>(const Vector& v1, const Vector& v2);
   friend CoordType Angle<dim>(const Vector& v, const Vector& u);
 
   CoordType sqrMag() const;
   CoordType mag() const		{return sqrt(sqrMag());}
-  Vector& normalize(CoordType norm) {return (*this *= norm / mag());}
+  Vector& normalize(CoordType norm)
+	{CoordType themag = mag(); assert(themag > 0); return (*this *= norm / themag);}
 
   // The sloppyMag() function gives a value between
   // the true magnitude and sloppyMagMax multiplied by the
@@ -256,26 +288,6 @@ class Vector {
  private:
   CoordType m_elem[dim];
 };
-
-template<> inline CoordType Vector<1>::sloppyMag() const {return fabs(m_elem[0]);}
-template<> CoordType Vector<2>::sloppyMag() const;
-template<> CoordType Vector<3>::sloppyMag() const;
-
-template<> inline Vector<2>::Vector(const CoordType& x, const CoordType& y)
-	{m_elem[0] = x; m_elem[1] = y;}
-template<> inline Vector<3>::Vector(const CoordType& x, const CoordType& y,
-				    const CoordType& z)
-	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
-
-template<> inline Vector<2>& Vector<2>::rotate(CoordType theta)
-	{return rotate(0, 1, theta);}
-
-template<> inline Vector<3>& Vector<3>::rotateX(CoordType theta)
-	{return rotate(1, 2, theta);}
-template<> inline Vector<3>& Vector<3>::rotateY(CoordType theta)
-	{return rotate(2, 0, theta);}
-template<> inline Vector<3>& Vector<3>::rotateZ(CoordType theta)
-	{return rotate(0, 1, theta);}
 
 inline CoordType Cross(const Vector<2>& v1, const Vector<2>& v2)
 	{return v1[0] * v2[1] - v2[0] * v1[1];}

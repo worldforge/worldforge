@@ -22,6 +22,11 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
 
+// Some code here was taken from the quaternion implementation is
+// eris. Some of the other algorithms are based on information
+// found here <http://www.cs.ualberta.ca/~andreas/math/matrfaq_latest.html>
+// and here <http://www.cs.berkeley.edu/~laura/cs184/quat/quaternion.html>.
+
 #include "quaternion.h"
 #include "rotmatrix.h"
 
@@ -127,6 +132,17 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
   return not_flip;
 }
 
+Quaternion& Quaternion::rotation(int axis, const CoordType angle)
+{
+  CoordType half_angle = angle / 2;
+
+  m_w = cos(half_angle);
+  m_vec.zero();
+  m_vec[axis] = sin(half_angle);
+
+  return *this;
+}
+
 Quaternion& Quaternion::rotation(const Vector<3>& axis, const CoordType angle)
 {
   CoordType half_angle = angle / 2;
@@ -137,26 +153,31 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, const CoordType angle)
   return *this;
 }
 
-Quaternion& Quaternion::fromEuler(const CoordType pitch, const CoordType roll,
-				  const CoordType yaw)
+Quaternion& Quaternion::fromEuler(const CoordType alpha, const CoordType beta,
+				  const CoordType gamma)
 {
-  double cr, cp, cy, sr, sp, sy, cpcy, spsy;
-
-  cr = cos(roll/2);
-  cp = cos(pitch/2);
-  cy = cos(yaw/2);
-
-  sr = sin(roll/2);
-  sp = sin(pitch/2);
-  sy = sin(yaw/2);
-
-  cpcy = cp * cy;
-  spsy = sp * sy;
-
-  m_w = cr * cpcy + sr * spsy;
-  m_vec[0] = sr * cpcy - cr * spsy;
-  m_vec[1] = cr * sp * cy + sr * cp * sy;
-  m_vec[2] = cr * cp * sy - sr * sp * cy;
+  rotation(2, gamma); // Do the last rotation first, since we'll right multiplying
+  operator*=(Quaternion(1, beta));
+  operator*=(Quaternion(0, alpha));
 
   return *this;
+}
+
+void Quaternion::toEuler(CoordType& alpha, CoordType& beta, CoordType& gamma)
+{
+  // This is _really_ complicated, so just use the matrix version so we
+  // only have to do this once.
+
+  // FIXME reverse this so that the matrix version uses this one?
+  // Will that be simpler?
+
+  RotMatrix<3> m(*this);
+  CoordType d[3];
+
+  bool not_flip = m.toEuler(d);
+  assert(not_flip);
+
+  alpha = d[0];
+  beta = d[1];
+  gamma = d[2];
 }

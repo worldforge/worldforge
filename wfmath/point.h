@@ -50,6 +50,11 @@ template<const int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
 
 template<const int dim>
+Point<dim>& operator+=(Point<dim>& p, const Vector<dim>& v);
+template<const int dim>
+Point<dim>& operator-=(Point<dim>& p, const Vector<dim>& v);
+
+template<const int dim>
 CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2);
 template<const int dim>
 CoordType Distance(const Point<dim>& p1, const Point<dim>& p2)
@@ -60,9 +65,10 @@ CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
 
 template<const int dim, template<class> class container>
 Point<dim> Barycenter(const container<Point<dim> >& c);
-template<const int dim, template<class> class container>
+template<const int dim, template<class> class container,
+			template<class> class container2>
 Point<dim> Barycenter(const container<Point<dim> >& c,
-		      const container<CoordType>& weights);
+		      const container2<CoordType>& weights);
 
 // This is used a couple of places in the library
 template<const int dim>
@@ -100,13 +106,13 @@ class Point
 
   // Operators
 
-  friend Vector<dim> operator-<dim> (const Point& c1, const Point& c2);
-  friend Point operator+<dim> (const Point& c, const Vector<dim>& v);
-  friend Point operator-<dim> (const Point& c, const Vector<dim>& v);
-  friend Point operator+<dim> (const Vector<dim>& v, const Point& c);
+  friend Vector<dim> operator-<dim>(const Point& c1, const Point& c2);
+  friend Point operator+<dim>(const Point& c, const Vector<dim>& v);
+  friend Point operator-<dim>(const Point& c, const Vector<dim>& v);
+  friend Point operator+<dim>(const Vector<dim>& v, const Point& c);
 
-  Point& operator+= (const Vector<dim>& rhs);
-  Point& operator-= (const Vector<dim>& rhs);
+  friend Point& operator+=<dim>(Point& p, const Vector<dim>& rhs);
+  friend Point& operator-=<dim>(Point& p, const Vector<dim>& rhs);
 
   // Rotate about point p
   Point& rotate(const RotMatrix<dim>& m, const Point& p)
@@ -118,7 +124,7 @@ class Point
   Point<dim> getCorner(int i) const {return *this;}
   Point<dim> getCenter() const {return *this;}
 
-  Point shift(const Vector<dim>& v) {return operator+=(v);}
+  Point shift(const Vector<dim>& v) {return operator+=(*this, v);}
   Point moveCornerTo(const Point& p, int corner) {return operator=(p);}
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
@@ -139,7 +145,7 @@ class Point
 
 // FIXME instatiation problem
 //  template<template<class> class container>
-//  Point Barycenter(const container<Point>& c);
+//  friend Point Barycenter(const container<Point>& c);
 
   friend Point<dim> Midpoint<dim>(const Point& p1, const Point& p2);
 

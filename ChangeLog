@@ -1,3 +1,13 @@
+Tuesday, January 15, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Cleaned up Euler angle stuff in RotMatrix<> and Quaternion,
+	  changed everything to z-y-z convention
+	* Moved template specialization declarations from vector.h
+	  to vector_funcs.h
+	* Made Vector<> and Point<> mathematical operators all friends
+	  instead of members, to allow friendship for mathematical
+	  operators which take mixed types
+
 Friday, January 11, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Added Quaternion class, based on code from eris

@@ -340,16 +340,18 @@ RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams], bool 
 {
   int ang_num = 0;
 
-  m_flip = !flip;
+  m_flip = !not_flip;
 
   if(m_flip)
     mirror(0);
   else
     identity();
 
-  for(int i = dim - 1; i > 0; --i)
-    for(int j = 0; j < i; ++j)
-      *this = Prod(RotMatrix<dim>().rotation(j, j + 1, angles[ang_num++]), *this);
+  // This is a simple rotation in 2D, and follows the z-y-z convention in 3D
+  for(int i = dim; i > 1; --i)
+    for(int j = 1; j < i; ++j)
+      *this = Prod(RotMatrix<dim>().rotation(0, j,
+	      angles[ang_num++] * ((j%2) ? 1 : -1)), *this);
 
   assert(ang_num == nParams);
 
@@ -445,7 +447,8 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
 						 const CoordType& theta);
-template<> RotMatrix<3>::RotMatrix(const Quaternion& q, const bool not_flip);
+template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
+						      const bool not_flip);
 
 template<const int dim>
 RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)

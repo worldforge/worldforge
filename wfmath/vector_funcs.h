@@ -83,34 +83,34 @@ bool Vector<dim>::operator< (const Vector<dim>& v) const
 }
 
 template <const int dim>
-Vector<dim> Vector<dim>::operator+(const Vector<dim>& v) const
+Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   Vector<dim> ans;
 
   for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = FloatAdd(m_elem[i], v.m_elem[i]);
+    ans.m_elem[i] = FloatAdd(v1.m_elem[i], v2.m_elem[i]);
 
   return ans;
 }
 
 template <const int dim>
-Vector<dim> Vector<dim>::operator-(const Vector<dim>& v) const
+Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   Vector<dim> ans;
 
   for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = FloatSubtract(m_elem[i], v.m_elem[i]);
+    ans.m_elem[i] = FloatSubtract(v1.m_elem[i], v2.m_elem[i]);
 
   return ans;
 }
 
 template <const int dim>
-Vector<dim> Vector<dim>::operator*(const CoordType& d) const
+Vector<dim> operator*(const Vector<dim>& v, const CoordType& d)
 {
   Vector<dim> ans;
 
   for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = m_elem[i] * d;
+    ans.m_elem[i] = v.m_elem[i] * d;
 
   return ans;
 }
@@ -120,70 +120,68 @@ Vector<dim> operator*(const CoordType& d, const Vector<dim>& v)
 {
   Vector<dim> ans;
 
-  // FIXME don't use operator[] once this function is a friend of Vector<>
-
   for(int i = 0; i < dim; ++i)
-    ans[i] = v[i] * d;
+    ans.m_elem[i] = v.m_elem[i] * d;
 
   return ans;
 }
 
 template <const int dim>
-Vector<dim> Vector<dim>::operator/(const CoordType& d) const
+Vector<dim> operator/(const Vector<dim>& v, const CoordType& d)
 {
   Vector<dim> ans;
 
   for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = m_elem[i] / d;
+    ans.m_elem[i] = v.m_elem[i] / d;
 
   return ans;
 }
 
 template <const int dim>
-Vector<dim> Vector<dim>::operator-() const
+Vector<dim> operator-(const Vector<dim>& v)
 {
   Vector<dim> ans;
 
   for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = -m_elem[i];
+    ans.m_elem[i] = -v.m_elem[i];
 
   return ans;
 }
 
 template <const int dim>
-Vector<dim>& Vector<dim>::operator+=(const Vector<dim>& v)
+Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   for(int i = 0; i < dim; ++i)
-    m_elem[i] = FloatAdd(m_elem[i], v.m_elem[i]);
+    v1.m_elem[i] = FloatAdd(v1.m_elem[i], v2.m_elem[i]);
 
-  return *this;
+  return v1;
 }
 
 template <const int dim>
-Vector<dim>& Vector<dim>::operator-=(const Vector<dim>& v)
+Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   for(int i = 0; i < dim; ++i)
-    m_elem[i] = FloatSubtract(m_elem[i], v.m_elem[i]);
+    v1.m_elem[i] = FloatSubtract(v1.m_elem[i], v2.m_elem[i]);
 
-  return *this;
+  return v1;
 }
 
 template <const int dim>
-Vector<dim>& Vector<dim>::operator*=(const CoordType& d)
+Vector<dim>& operator*=(Vector<dim>& v, const CoordType& d)
 {
   for(int i = 0; i < dim; ++i)
-    m_elem[i] *= d;
+    v.m_elem[i] *= d;
 
-  return *this;
+  return v;
 }
 
 template <const int dim>
-Vector<dim>& Vector<dim>::operator/=(const CoordType& d)
+Vector<dim>& operator/=(Vector<dim>& v, const CoordType& d)
 {
   for(int i = 0; i < dim; ++i)
-    m_elem[i] /= d;
+    v.m_elem[i] /= d;
 
-  return *this;
+  return v;
 }
 
 template<const int dim>
@@ -191,7 +189,7 @@ Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 {
   CoordType mag = sloppyMag();
 
-  assert(mag > norm / DBL_MAX); // nonzero length vector
+  assert(mag > norm / WFMATH_MAX); // nonzero length vector
 
   return (*this *= norm / mag);
 }
@@ -295,6 +293,26 @@ template<> Vector<3>& Vector<3>::spherical(CoordType r, CoordType theta,
 					   CoordType phi);
 template<> void Vector<3>::asSpherical(CoordType& r, CoordType& theta,
 				       CoordType& phi) const;
+
+template<> inline CoordType Vector<1>::sloppyMag() const {return fabs(m_elem[0]);}
+template<> CoordType Vector<2>::sloppyMag() const;
+template<> CoordType Vector<3>::sloppyMag() const;
+
+template<> inline Vector<2>::Vector(const CoordType& x, const CoordType& y)
+	{m_elem[0] = x; m_elem[1] = y;}
+template<> inline Vector<3>::Vector(const CoordType& x, const CoordType& y,
+				    const CoordType& z)
+	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
+
+template<> inline Vector<2>& Vector<2>::rotate(CoordType theta)
+	{return rotate(0, 1, theta);}
+
+template<> inline Vector<3>& Vector<3>::rotateX(CoordType theta)
+	{return rotate(1, 2, theta);}
+template<> inline Vector<3>& Vector<3>::rotateY(CoordType theta)
+	{return rotate(2, 0, theta);}
+template<> inline Vector<3>& Vector<3>::rotateZ(CoordType theta)
+	{return rotate(0, 1, theta);}
 
 
 }} // namespace WF::Math

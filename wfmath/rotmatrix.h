@@ -75,7 +75,7 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
 template<const int dim>
 class RotMatrix {
  public:
-  RotMatrix() {identity();} // Need a valid RotMatrix for default
+  RotMatrix() {}
   RotMatrix(const RotMatrix& m);
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotMatrix& m);
@@ -145,9 +145,10 @@ class RotMatrix {
   // Euler angles, 3D only
   RotMatrix(const CoordType& alpha, const CoordType& beta,
 	    const CoordType& gamma, bool not_flip = true)
-	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d, not_flip);}
+	{CoordType d[3] = {alpha, beta, gamma}; fromEuler(d, not_flip);}
   // Quaternion, 3D only
-  RotMatrix(const Quaternion& q, const bool not_flip = true);
+  RotMatrix(const Quaternion& q, const bool not_flip = true)
+	{fromQuaternion(q, not_flip);}
 
   // 2D only
   RotMatrix<2>& rotation(const CoordType& theta)
@@ -158,6 +159,8 @@ class RotMatrix {
   RotMatrix<3>& rotationY(const CoordType& theta) {return rotation(2, 0, theta);}
   RotMatrix<3>& rotationZ(const CoordType& theta) {return rotation(0, 1, theta);}
   RotMatrix<3>& rotation(const Vector<3>& axis, const CoordType& theta);
+
+  RotMatrix<3>& fromQuaternion(const Quaternion& q, const bool not_flip = true);
 
   RotMatrix& mirrorX()	{return mirror(0);}
   RotMatrix& mirrorY()	{return mirror(1);}

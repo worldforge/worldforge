@@ -44,7 +44,9 @@ void test_rotmatrix(const RotMatrix<dim>& m)
 
 //  cout << "Inverse is: " << minv << std::endl;
 
-  RotMatrix<dim> ident; // Initialized to identity
+  RotMatrix<dim> ident;
+
+  ident.identity();
 
   RotMatrix<dim> try_ident;
 
