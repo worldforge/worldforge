@@ -1,3 +1,9 @@
+2003-10-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/loadDefaults.cpp: Modify LoadDefaultsDecoder
+	  so it no longer uses Dispatcher, which it didn't really require
+	  anyway. Tweak the API and its usage for efficiency.
+
 2003-10-26  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/GenerateDispatcher.py: Final attempt to get

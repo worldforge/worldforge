@@ -4,14 +4,13 @@
 
 #include <Atlas/Objects/loadDefaults.h>
 
-#include <Atlas/Objects/Dispatcher.h>
+#include <Atlas/Message/DecoderBase.h>
+#include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/objectFactory.h>
 
 #include <Atlas/Codecs/XML.h>
 
 #include <fstream>
-#include <string>
-#include <map>
 #include <set>
 
 using Atlas::Message::Element;
@@ -20,11 +19,11 @@ namespace Atlas { namespace Objects {
 
 typedef std::map<std::string, Element> MessageElementMap;
 
-class LoadDefaultsDecoder : public Dispatcher
+class LoadDefaultsDecoder : public Atlas::Message::DecoderBase
 {
   public:
     LoadDefaultsDecoder(const std::string& filename);
-    Element getMessageElement(const std::string& id);
+    const Element & getMessageElement(const std::string& id) const;
   protected:
     virtual void messageArrived(const Element::MapType&);
   private:
@@ -71,7 +70,7 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
     fillDefaults();
 }
 
-Element LoadDefaultsDecoder::getMessageElement(const std::string& id)
+const Element & LoadDefaultsDecoder::getMessageElement(const std::string& id) const
 {
     MessageElementMap::const_iterator I = m_objects.find(id);
     if (I == m_objects.end()) {
@@ -85,7 +84,6 @@ void LoadDefaultsDecoder::messageArrived(const Element::MapType& o)
 {
     MessageElementMap::const_iterator I = o.find("id");
     if (I == o.end()) {
-        unknownMessageArrived(o);
         return;
     }
     
@@ -113,7 +111,7 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
         for (Element::ListType::const_iterator J = I->second.asList().begin();
              J != I->second.asList().end(); J++) {
             //cout<<"  >"<<J->asString()<<endl;
-            Element parent_mobj = getMessageElement(J->asString());
+            const Element & parent_mobj = getMessageElement(J->asString());
             setAttributes(obj, /*obj_inst,*/ parent_mobj, used_attributes);
         }
     }
@@ -127,7 +125,7 @@ void LoadDefaultsDecoder::fillDefaults()
         I++) {
         //cout<<(*I)<<endl;
         //get atlas.xml object
-        Element mobj = getMessageElement(*I);
+        const Element & mobj = getMessageElement(*I);
         //get class instances
         Root obj = objectFactory.createObject(*I).getDefaultObject();
         //Root obj_inst = objectInstanceFactory.createObject(*I).getDefaultObject();
