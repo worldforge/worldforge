@@ -27,7 +27,6 @@
 	    </require>
 	</require>
     </require>
-    <require id="sigc++" generate="config"/>
     <require id="zlib" generate="config"/>
     <require id="bzlib" generate="config"/>
 </package>
