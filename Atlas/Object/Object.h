@@ -356,7 +356,7 @@ bool    isString() const	{ return (obj->rt == String); }
 /** (Map) return a List of all keys for a Map */
 Object	keys() const
 {
-	Object			keylst;
+	Object			keylst(Atlas::List);
 
 	if (obj->rt != Map) return keylst;
 
