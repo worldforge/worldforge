@@ -699,6 +699,69 @@ AObject AObject::mkList(int size)
 	return res;
 }
 
+AObject AObject::mkURIList(int size)
+{
+	PyObject* tmp = URIList_New(size);
+	AObject res(tmp);
+	Py_XDECREF(tmp);
+	assert((unsigned long)res.obj != 1);
+	return res;
+}
+
+AObject AObject::mkIntList(int size)
+{
+	PyObject* tmp = IntList_New(size);
+	AObject res(tmp);
+	Py_XDECREF(tmp);
+	assert((unsigned long)res.obj != 1);
+	return res;
+}
+
+AObject AObject::mkLongList(int size)
+{
+	PyObject* tmp = LongList_New(size);
+	AObject res(tmp);
+	Py_XDECREF(tmp);
+	assert((unsigned long)res.obj != 1);
+	return res;
+}
+
+AObject AObject::mkFloatList(int size)
+{
+	PyObject* tmp = FloatList_New(size);
+	AObject res(tmp);
+	Py_XDECREF(tmp);
+	assert((unsigned long)res.obj != 1);
+	return res;
+}
+
+AObject AObject::mkStringList(int size)
+{
+	PyObject* tmp = StringList_New(size);
+	AObject res(tmp);
+	Py_XDECREF(tmp);
+	assert((unsigned long)res.obj != 1);
+	return res;
+}
+
+AObject AObject::mkURI(const string& val)
+{
+	PyObject* tmp = URI_New(val.c_str());
+	AObject res(tmp);
+	Py_XDECREF(tmp);
+	assert((unsigned long)res.obj != 1);
+	return res;
+}
+
+AObject AObject::mkInt(long val)
+{
+	PyObject* tmp = PyInt_FromLong(val);
+	AObject res(tmp);
+	Py_XDECREF(tmp);
+	assert((unsigned long)res.obj != 1);
+	return res;
+}
+
 AObject AObject::mkLong(long val)
 {
 	PyObject* tmp = PyLong_FromLong(val);

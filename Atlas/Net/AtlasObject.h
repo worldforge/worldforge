@@ -216,7 +216,13 @@ static	AObject	mkList();
 /** return an empty list with (len) elements */
 static	AObject	mkList(int len);
 
+/** return an URI AObject */
+static	AObject	mkURI(const string& val);
+
 /** return an Int AObject */
+static	AObject	mkInt(long val);
+
+/** return an Long AObject */
 static	AObject	mkLong(long val);
 
 /** return a Float AObject */
@@ -224,6 +230,21 @@ static	AObject	mkFloat(double val);
 
 /** return a String AObject */
 static	AObject	mkString(const string& val);
+
+/** return an URIList AObject */
+static	AObject	mkURIList(int len);
+
+/** return an IntList AObject */
+static	AObject	mkIntList(int len);
+
+/** return an LongList AObject */
+static	AObject	mkLongList(int len);
+
+/** return a FloatList AObject */
+static	AObject	mkFloatList(int len);
+
+/** return a StringList AObject */
+static	AObject	mkStringList(int len);
 
 
 

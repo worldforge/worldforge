@@ -32,7 +32,7 @@ typedef int URIHandlerFunc(int op, URIObject *);
 
 extern URIHandlerFunc* URIGlobalHandler;	/* pointer to app defined function for handling URIs */
 
-extern PyObject *	URI_New 		Py_PROTO((char* path));
+extern PyObject *	URI_New 		Py_PROTO((const char* path));
 extern PyObject *	URI_GetPath		Py_PROTO((PyObject *));
 extern int		URI_SetPath		Py_PROTO((PyObject *, char *));
 extern PyObject *	URI_GetData		Py_PROTO((PyObject *));
