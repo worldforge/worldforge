@@ -1,6 +1,6 @@
 
-check_PROGRAMS = Objects3_Move Call_Move Message_Move \
-		  Static_Move SmartPtr_Move
+check_PROGRAMS = Objects3_Move Call_Move Message_Move Static_Move
+EXTRA_PROGRAMS = SmartPtr_Move
 
 TESTS = $(check_PROGRAMS)
 

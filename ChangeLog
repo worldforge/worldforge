@@ -1,3 +1,8 @@
+2004-12-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Makefile.am: Remove SmartPtr_Move benchmark from the
+	  tests, as its no longer relevant, and does not build.
+
 2004-11-19  Ron Steinke <rsteinke@w-link.net>
 
 	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h: Made
