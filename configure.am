@@ -2,30 +2,31 @@
     <name>Atlas</name>
     <version>0.2.0</version>
     <desc></desc>
-    <require tag="c++">
-	<require tag="compiler"/>
-	<require tag="ansi">
-	    <require tag="bool"/>
-	    <require tag="namespaces"/>
-	    <require tag="templates">
-		<require tag="typename"/>
+    <generate id="config" name="config.h"/>
+    <require id="c++">
+	<require id="compiler"/>
+	<require id="ansi">
+	    <require id="bool"/>
+	    <require id="namespaces"/>
+	    <require id="templates">
+		<require id="typename"/>
 	    </require>
-	    <require tag="exceptions"/>
-	    <require tag="libstdc++">
-		<require tag="cassert"/>
-		<require tag="cstdarg"/>
-		<require tag="cstdio"/>
-		<require tag="iostream"/>
-		<require tag="list"/>
-		<require tag="map"/>
-		<require tag="cstdlib"/>
-		<require tag="cstring"/>
-		<require tag="string"/>
-		<require tag="vector"/>
+	    <require id="exceptions"/>
+	    <require id="library">
+		<require id="cassert"/>
+		<require id="cstdarg"/>
+		<require id="cstdio"/>
+		<require id="iostream"/>
+		<require id="list"/>
+		<require id="map"/>
+		<require id="cstdlib"/>
+		<require id="cstring"/>
+		<require id="string"/>
+		<require id="vector"/>
 	    </require>
 	</require>
     </require>
-    <require tag="libtool"/>
-    <require tag="zlib"/>
-    <require tag="bzlib"/>
+    <require id="libtool"/>
+    <require id="zlib" generate="config"/>
+    <require id="bzlib" generate="config"/>
 </package>

@@ -7,6 +7,13 @@
 
 namespace Atlas { namespace Stream {
 
+class Negotiate
+{
+    public:
+
+    
+};
+
 } } // Atlas::Stream
 
 #endif

@@ -27,7 +27,7 @@ class Filter
 
     enum Type
     {
-	LOGGING,
+	CHECKSUM,
 	COMPRESSION,
 	ENCRYPTION,
     };
