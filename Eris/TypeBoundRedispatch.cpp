@@ -6,7 +6,7 @@
 #include <Eris/Connection.h>
 #include <Eris/TypeService.h>
 #include <Eris/TypeInfo.h>
-#include <Eris/Logstream.h>
+#include <Eris/LogStream.h>
 
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Objects/Operation.h>
