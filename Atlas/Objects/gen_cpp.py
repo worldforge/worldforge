@@ -230,9 +230,9 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
         self.write("""
     //freelist related things
 public:
-    static BaseObjectData *alloc();
+    static %(classname)s *alloc();
     virtual void free();
-    virtual BaseObjectData *getDefaultObject();
+    virtual %(classname)s *getDefaultObject();
 private:
     static %(classname)s defaults_%(classname)s;
     static %(classname)s *begin_%(classname)s;
@@ -244,16 +244,16 @@ private:
 %(classname)s %(classname)s::defaults_%(classname)s;
 %(classname)s *%(classname)s::begin_%(classname)s = NULL;
 
-BaseObjectData *%(classname)s::alloc()
+%(classname)s *%(classname)s::alloc()
 {
     if(begin_%(classname)s) {
       %(classname)s *res = begin_%(classname)s;
       assert( res->m_refCount == 0 );
       res->m_attrFlags = 0;
       begin_%(classname)s = (%(classname)s *)begin_%(classname)s->m_next;
-      return (BaseObjectData*)res;
+      return res;
     }
-    return (BaseObjectData*)new %(classname)s(&defaults_%(classname)s);
+    return new %(classname)s(&defaults_%(classname)s);
 }
 
 void %(classname)s::free()
@@ -262,9 +262,9 @@ void %(classname)s::free()
     begin_%(classname)s = this;
 }
 
-BaseObjectData *%(classname)s::getDefaultObject()
+%(classname)s *%(classname)s::getDefaultObject()
 {
-    return (BaseObjectData*)&defaults_%(classname)s;
+    return &defaults_%(classname)s;
 }
 
 """ % vars()) #"for xemacs syntax highlighting

@@ -1,5 +1,15 @@
 2001-11-29  Al Riddoch  <alriddoch@zepler.org>
 
+	* src/Objects/SmartPtr.h: Clean up constructors so member pointer is
+	  directly initialised. Add type conversion template for const
+	  objects. Make methods const as apropriate.
+
+	* gen_cpp.py: Make Objects classes allocation routines return pointers
+	  to their type rather than to the base class, to make writing type
+	  safe code easier.
+
+2001-11-29  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Objects/SmartPtr.h: Added member templates for type
 	  conversion up and down the tree.
 

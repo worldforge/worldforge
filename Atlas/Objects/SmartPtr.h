@@ -13,22 +13,19 @@ template <class T>
 class SmartPtr
 {
 public:
-    SmartPtr() { 
-        ptr = (T*)T::alloc(); 
+    SmartPtr() : ptr(T::alloc()) { 
     }
-    SmartPtr(const SmartPtr<T>& a) {
-        ptr = a.get();
+    SmartPtr(const SmartPtr<T>& a) : ptr(a.get()) {
         incRef();
     }
-    SmartPtr(const BaseObjectData *a_ptr)
+    SmartPtr(T *a_ptr) : ptr(a_ptr)
     {
-        ptr = (T*)a_ptr;
         incRef();
     }
     template<class oldType>
-    explicit SmartPtr(const SmartPtr<oldType>& a) {
-	ptr = dynamic_cast<T>(a.ptr);
-	if (ptr == NULL) {
+    explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(dynamic_cast<T*>(a.ptr)) {
+	if (ptr == 0) {
+	    ptr = *(void**)0;
 	    // FIXME throw something
 	}
     }
@@ -47,19 +44,20 @@ public:
     operator SmartPtr<newType>() const {
 	return SmartPtr<newType>(ptr);
     }
-    T& operator*() { 
+    template<class newType>
+    operator SmartPtr<const newType>() const {
+	return SmartPtr<const newType>(ptr);
+    }
+    T& operator*() const { 
         return *ptr;
     }
-    T* operator->() {
-        return ptr;
-    }
-    const T* operator->() const {
+    T* operator->() const {
         return ptr;
     }
     T* get() const {
         return ptr;
     }
-    SmartPtr<T> getDefaultObject() 
+    SmartPtr<T> getDefaultObject() const
     {
         return SmartPtr(ptr->getDefaultObject());
     }
@@ -69,15 +67,15 @@ public:
         return obj;
     }
 protected:
-    void decRef() {
+    void decRef() const {
         ptr->decRef();
     }
-    void incRef() {
+    void incRef() const {
         ptr->incRef();
     }
-    T *ptr;
+    T * ptr;
 };
 
 } } // namespace Atlas::Objects
 
-#endif
+#endif // ATLAS_OBJECTS_SMARTPTR_H
