@@ -54,6 +54,11 @@ class LoopBridge : public Bridge
 {
     public:
 
+    virtual void StreamBegin()
+    {
+	cout << "StreamBegin!\n";
+    }
+
     virtual void StreamEnd()
     {
         cout << "StreamEnd!\n";
@@ -143,7 +148,7 @@ class LoopBridge : public Bridge
 int main()
 {
     string client_buffer;
-    string server_buffer = "{[@id=17$name=Fred +28the +2b great+29#weight=1.5]}";
+    string server_buffer = "{[@id=17$name=Fred +28the +2b great+29#weight=1.5(args=@1@2@3)]}";
     loopbuf serverbuf(server_buffer, client_buffer);
     loopbuf clientbuf(client_buffer, server_buffer);    
     iostream client_stream(&clientbuf);
