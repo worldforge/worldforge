@@ -34,4 +34,29 @@ Player Player::Instantiate()
     return value;
 }
 
+bool Player::HasAttr(const string& name) const
+{
+    if (name == "characters") return true;
+    return Account::HasAttr(name);
+}
+
+Object Player::GetAttr(const string& name) const
+    throw (NoSuchAttrException)
+{
+    if (name == "characters") return attr_characters;
+    return Account::GetAttr(name);
+}
+
+void Player::SetAttr(const string& name, const Object& attr)
+{
+    if (name == "characters") { SetCharacters(attr.AsList()); return; }
+    Account::SetAttr(name, attr);
+}
+
+void Player::RemoveAttr(const string& name)
+{
+    if (name == "characters") return;
+    Account::RemoveAttr(name);
+}
+
 } } } // namespace Atlas::Objects::Entity

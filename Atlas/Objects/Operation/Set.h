@@ -28,10 +28,7 @@ public:
 
     static Set Instantiate();
 
-
-
 protected:
-
 
 };
 

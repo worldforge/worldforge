@@ -24,10 +24,7 @@ public:
 
     static Appearance Instantiate();
 
-
-
 protected:
-
 
 };
 

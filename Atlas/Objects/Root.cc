@@ -41,6 +41,10 @@ Root Root::Instantiate()
 
 bool Root::HasAttr(const string& name) const
 {
+    if (name == "parents") return true;
+    if (name == "id") return true;
+    if (name == "objtype") return true;
+    if (name == "name") return true;
     return (attributes.find(name) == attributes.end());
 }
 
@@ -49,8 +53,8 @@ Object Root::GetAttr(const string& name) const
 {
     if (name == "parents") return attr_parents;
     if (name == "id") return attr_id;
-    if (name == "attr_objtype") return attr_objtype;
-    if (name == "attr_name") return attr_name;
+    if (name == "objtype") return attr_objtype;
+    if (name == "name") return attr_name;
     if (attributes.find(name) == attributes.end())
         throw NoSuchAttrException(name);
     return ((*attributes.find(name)).second);
@@ -67,12 +71,21 @@ void Root::SetAttr(const string& name, const Object& attr)
 
 void Root::RemoveAttr(const string& name)
 {
+    if (name == "parents") return;
+    if (name == "id") return;
+    if (name == "objtype") return;
+    if (name == "name") return;
     attributes.erase(name);
 }
 
 Object Root::AsObject() const
 {
-    return Object(attributes);
+    Object::MapType allattrs = attributes;
+    allattrs["parents"] = Object(attr_parents);
+    allattrs["id"] = Object(attr_id);
+    allattrs["objtype"] = Object(attr_objtype);
+    allattrs["name"] = Object(attr_name);
+    return Object(allattrs);
 }
 
 void Root::SendContents(Bridge* b) const

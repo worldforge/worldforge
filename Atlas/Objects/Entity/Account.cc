@@ -33,4 +33,29 @@ Account Account::Instantiate()
     return value;
 }
 
+bool Account::HasAttr(const string& name) const
+{
+    if (name == "password") return true;
+    return AdminEntity::HasAttr(name);
+}
+
+Object Account::GetAttr(const string& name) const
+    throw (NoSuchAttrException)
+{
+    if (name == "password") return attr_password;
+    return AdminEntity::GetAttr(name);
+}
+
+void Account::SetAttr(const string& name, const Object& attr)
+{
+    if (name == "password") { SetPassword(attr.AsString()); return; }
+    AdminEntity::SetAttr(name, attr);
+}
+
+void Account::RemoveAttr(const string& name)
+{
+    if (name == "password") return;
+    AdminEntity::RemoveAttr(name);
+}
+
 } } } // namespace Atlas::Objects::Entity

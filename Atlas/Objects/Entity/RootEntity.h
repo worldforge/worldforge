@@ -24,6 +24,13 @@ public:
 
     static RootEntity Instantiate();
 
+    virtual bool HasAttr(const std::string& name)const;
+    virtual Atlas::Message::Object GetAttr(const std::string& name)
+            const throw (NoSuchAttrException);
+    virtual void SetAttr(const std::string& name,
+                         const Atlas::Message::Object& attr);
+    virtual void RemoveAttr(const std::string& name);
+
     inline void SetLoc(const std::string& val);
     inline void SetPos(const Atlas::Message::Object::ListType& val);
     inline void SetVelocity(const Atlas::Message::Object::ListType& val);

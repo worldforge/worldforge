@@ -28,10 +28,7 @@ public:
 
     static Delete Instantiate();
 
-
-
 protected:
-
 
 };
 

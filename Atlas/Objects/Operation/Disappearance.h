@@ -24,10 +24,7 @@ public:
 
     static Disappearance Instantiate();
 
-
-
 protected:
-
 
 };
 

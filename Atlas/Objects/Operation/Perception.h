@@ -24,10 +24,7 @@ public:
 
     static Perception Instantiate();
 
-
-
 protected:
-
 
 };
 

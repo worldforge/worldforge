@@ -24,10 +24,7 @@ public:
 
     static Divide Instantiate();
 
-
-
 protected:
-
 
 };
 

@@ -24,6 +24,13 @@ public:
 
     static Player Instantiate();
 
+    virtual bool HasAttr(const std::string& name)const;
+    virtual Atlas::Message::Object GetAttr(const std::string& name)
+            const throw (NoSuchAttrException);
+    virtual void SetAttr(const std::string& name,
+                         const Atlas::Message::Object& attr);
+    virtual void RemoveAttr(const std::string& name);
+
     inline void SetCharacters(const Atlas::Message::Object::ListType& val);
 
     inline const Atlas::Message::Object::ListType& GetCharacters() const;

@@ -24,10 +24,7 @@ public:
 
     static Sound Instantiate();
 
-
-
 protected:
-
 
 };
 

@@ -24,10 +24,7 @@ public:
 
     static Sight Instantiate();
 
-
-
 protected:
-
 
 };
 

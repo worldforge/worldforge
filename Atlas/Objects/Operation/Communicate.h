@@ -24,10 +24,7 @@ public:
 
     static Communicate Instantiate();
 
-
-
 protected:
-
 
 };
 

@@ -186,6 +186,51 @@ class GenerateCC:
                 self.out.write('    e.MapItem("%s", attr_%s);\n' \
                                % (attr.name, attr.name))
             self.out.write('}\n\n')
+    def hasattr_im(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        self.out.write("bool %s::HasAttr(const string& name) const\n"
+                        % classname)
+        self.out.write("{\n")
+        for attr in statics:
+            self.out.write('    if (name == "%s") return true;\n' % attr.name)
+        parent = obj.attr['parents'].value[0]
+        self.out.write("    return %s::HasAttr(name);\n" % classize(parent))
+        self.out.write("}\n\n")
+    def getattr_im(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        self.out.write("Object %s::GetAttr" % classname)
+        self.out.write("(const string& name) const\n")
+        self.out.write("    throw (NoSuchAttrException)\n")
+        self.out.write("{\n")
+        for attr in statics:
+            self.out.write('    if (name == "%s") return attr_%s;\n' \
+                            % (attr.name, attr.name))
+        parent = obj.attr['parents'].value[0]
+        self.out.write("    return %s::GetAttr(name);\n" % classize(parent))
+        self.out.write("}\n\n")
+    def setattr_im(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        self.out.write("void %s::SetAttr" % classname)
+        self.out.write("(const string& name, const Object& attr)\n")
+        self.out.write("{\n")
+        for attr in statics:
+            self.out.write('    if (name == "%s") {' % attr.name)
+            self.out.write(' Set%s(attr.As%s()); ' % \
+                           (classize(attr.name), classize(attr.type)))
+            self.out.write('return; }\n')
+        parent = obj.attr['parents'].value[0]
+        self.out.write("    %s::SetAttr(name, attr);\n" % classize(parent))
+        self.out.write("}\n\n")
+    def remattr_im(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        self.out.write("void %s::RemoveAttr(const string& name)\n"
+                        % classname)
+        self.out.write("{\n")
+        for attr in statics:
+            self.out.write('    if (name == "%s") return;\n' % attr.name)
+        parent = obj.attr['parents'].value[0]
+        self.out.write("    %s::RemoveAttr(name);\n" % classize(parent))
+        self.out.write("}\n\n")
     def interface(self, obj):
         print "Output of interface for:"
         outfile = self.outdir + '/' + self.classname + ".h"
@@ -225,23 +270,35 @@ class GenerateCC:
         static_attrs = filter(lambda attr,obj=obj:(not attr.name in descr_attrs) \
           and (not find_in_parents(obj.attr['parents'].value, attr.name)), \
           obj.attr_list)
-        for attr in static_attrs:
-            self.out.write("    inline void Set" + classize(attr.name))
-            self.out.write('(' + cpp_param_type[attr.type] + ' val);\n')
-        self.out.write('\n')
-        for attr in static_attrs:
-            self.out.write('    inline %s Get' % cpp_param_type[attr.type])
-            self.out.write(classize(attr.name) + '() const;\n')
-        self.out.write('\n')
+        if len(static_attrs) > 0:
+            self.out.write("    virtual bool HasAttr(const std::string& name)"\
+                           + "const;\n")
+            self.out.write("    virtual Atlas::Message::Object GetAttr(")
+            self.out.write("const std::string& name)\n")
+            self.out.write("            const throw (NoSuchAttrException);\n")
+            self.out.write("    virtual void SetAttr(const std::string& name,\n")
+            self.out.write("                         ")
+            self.out.write("const Atlas::Message::Object& attr);\n")
+            self.out.write("    virtual void RemoveAttr(")
+            self.out.write("const std::string& name);\n")
+            self.out.write("\n")
+            for attr in static_attrs:
+                self.out.write("    inline void Set" + classize(attr.name))
+                self.out.write('(' + cpp_param_type[attr.type] + ' val);\n')
+            self.out.write('\n')
+            for attr in static_attrs:
+                self.out.write('    inline %s Get' % cpp_param_type[attr.type])
+                self.out.write(classize(attr.name) + '() const;\n')
+            self.out.write('\n')
         self.out.write("protected:\n")
-        for attr in static_attrs:
-            self.out.write('    %s attr_%s;\n' % (cpp_type[attr.type], attr.name))
+        if len(static_attrs) > 0:
+            for attr in static_attrs:
+                self.out.write('    %s attr_%s;\n' % (cpp_type[attr.type], attr.name))
+            self.out.write('\n')
+            for attr in static_attrs:
+                self.out.write("    inline void Send" + classize(attr.name))
+                self.out.write('(Atlas::Bridge*) const;\n')
         self.out.write('\n')
-        for attr in static_attrs:
-            self.out.write("    inline void Send" + classize(attr.name))
-            self.out.write('(Atlas::Bridge*) const;\n')
-        self.out.write('\n')
-            
         self.out.write("};\n\n")
         if len(static_attrs) > 0:
             self.out.write('//\n// Inlined member functions follow.\n//\n\n')
@@ -285,6 +342,14 @@ class GenerateCC:
         self.out.write("\n")
         self.constructors_im(obj)
         self.instantiation(obj)
+        static_attrs = filter(lambda attr,obj=obj:(not attr.name in descr_attrs) \
+          and (not find_in_parents(obj.attr['parents'].value, attr.name)), \
+          obj.attr_list)
+        if len(static_attrs) > 0:
+            self.hasattr_im(obj, static_attrs)
+            self.getattr_im(obj, static_attrs)
+            self.setattr_im(obj, static_attrs)
+            self.remattr_im(obj, static_attrs)
         if outdir != ".":
             self.ns_close(['Atlas', 'Objects', outdir])
         else:

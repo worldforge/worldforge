@@ -24,10 +24,7 @@ public:
 
     static Talk Instantiate();
 
-
-
 protected:
-
 
 };
 

@@ -24,10 +24,7 @@ public:
 
     static Imaginary Instantiate();
 
-
-
 protected:
-
 
 };
 

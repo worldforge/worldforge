@@ -24,10 +24,7 @@ public:
 
     static Feel Instantiate();
 
-
-
 protected:
-
 
 };
 

@@ -42,4 +42,57 @@ RootOperation RootOperation::Instantiate()
     return value;
 }
 
+bool RootOperation::HasAttr(const string& name) const
+{
+    if (name == "serialno") return true;
+    if (name == "refno") return true;
+    if (name == "from") return true;
+    if (name == "to") return true;
+    if (name == "seconds") return true;
+    if (name == "future_seconds") return true;
+    if (name == "time_string") return true;
+    if (name == "args") return true;
+    return Root::HasAttr(name);
+}
+
+Object RootOperation::GetAttr(const string& name) const
+    throw (NoSuchAttrException)
+{
+    if (name == "serialno") return attr_serialno;
+    if (name == "refno") return attr_refno;
+    if (name == "from") return attr_from;
+    if (name == "to") return attr_to;
+    if (name == "seconds") return attr_seconds;
+    if (name == "future_seconds") return attr_future_seconds;
+    if (name == "time_string") return attr_time_string;
+    if (name == "args") return attr_args;
+    return Root::GetAttr(name);
+}
+
+void RootOperation::SetAttr(const string& name, const Object& attr)
+{
+    if (name == "serialno") { SetSerialno(attr.AsInt()); return; }
+    if (name == "refno") { SetRefno(attr.AsInt()); return; }
+    if (name == "from") { SetFrom(attr.AsString()); return; }
+    if (name == "to") { SetTo(attr.AsString()); return; }
+    if (name == "seconds") { SetSeconds(attr.AsFloat()); return; }
+    if (name == "future_seconds") { SetFutureSeconds(attr.AsFloat()); return; }
+    if (name == "time_string") { SetTimeString(attr.AsString()); return; }
+    if (name == "args") { SetArgs(attr.AsList()); return; }
+    Root::SetAttr(name, attr);
+}
+
+void RootOperation::RemoveAttr(const string& name)
+{
+    if (name == "serialno") return;
+    if (name == "refno") return;
+    if (name == "from") return;
+    if (name == "to") return;
+    if (name == "seconds") return;
+    if (name == "future_seconds") return;
+    if (name == "time_string") return;
+    if (name == "args") return;
+    Root::RemoveAttr(name);
+}
+
 } } } // namespace Atlas::Objects::Operation

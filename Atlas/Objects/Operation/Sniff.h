@@ -28,10 +28,7 @@ public:
 
     static Sniff Instantiate();
 
-
-
 protected:
-
 
 };
 

@@ -28,10 +28,7 @@ public:
 
     static Touch Instantiate();
 
-
-
 protected:
-
 
 };
 

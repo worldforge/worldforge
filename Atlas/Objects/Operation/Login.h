@@ -24,10 +24,7 @@ public:
 
     static Login Instantiate();
 
-
-
 protected:
-
 
 };
 

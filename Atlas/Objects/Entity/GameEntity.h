@@ -24,10 +24,7 @@ public:
 
     static GameEntity Instantiate();
 
-
-
 protected:
-
 
 };
 

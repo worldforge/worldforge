@@ -24,10 +24,7 @@ public:
 
     static Move Instantiate();
 
-
-
 protected:
-
 
 };
 

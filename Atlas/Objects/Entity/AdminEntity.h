@@ -24,10 +24,7 @@ public:
 
     static AdminEntity Instantiate();
 
-
-
 protected:
-
 
 };
 

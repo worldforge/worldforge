@@ -24,10 +24,7 @@ public:
 
     static Combine Instantiate();
 
-
-
 protected:
-
 
 };
 

@@ -28,10 +28,7 @@ public:
 
     static Action Instantiate();
 
-
-
 protected:
-
 
 };
 

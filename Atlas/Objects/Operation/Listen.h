@@ -28,10 +28,7 @@ public:
 
     static Listen Instantiate();
 
-
-
 protected:
-
 
 };
 

@@ -24,10 +24,7 @@ public:
 
     static Create Instantiate();
 
-
-
 protected:
-
 
 };
 

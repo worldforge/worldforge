@@ -24,10 +24,7 @@ public:
 
     static Game Instantiate();
 
-
-
 protected:
-
 
 };
 

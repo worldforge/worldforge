@@ -28,10 +28,7 @@ public:
 
     static Get Instantiate();
 
-
-
 protected:
-
 
 };
 

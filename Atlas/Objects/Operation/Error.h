@@ -28,10 +28,7 @@ public:
 
     static Error Instantiate();
 
-
-
 protected:
-
 
 };
 

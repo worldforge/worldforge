@@ -47,4 +47,45 @@ RootEntity RootEntity::Instantiate()
     return value;
 }
 
+bool RootEntity::HasAttr(const string& name) const
+{
+    if (name == "loc") return true;
+    if (name == "pos") return true;
+    if (name == "velocity") return true;
+    if (name == "contains") return true;
+    if (name == "stamp_contains") return true;
+    return Root::HasAttr(name);
+}
+
+Object RootEntity::GetAttr(const string& name) const
+    throw (NoSuchAttrException)
+{
+    if (name == "loc") return attr_loc;
+    if (name == "pos") return attr_pos;
+    if (name == "velocity") return attr_velocity;
+    if (name == "contains") return attr_contains;
+    if (name == "stamp_contains") return attr_stamp_contains;
+    return Root::GetAttr(name);
+}
+
+void RootEntity::SetAttr(const string& name, const Object& attr)
+{
+    if (name == "loc") { SetLoc(attr.AsString()); return; }
+    if (name == "pos") { SetPos(attr.AsList()); return; }
+    if (name == "velocity") { SetVelocity(attr.AsList()); return; }
+    if (name == "contains") { SetContains(attr.AsList()); return; }
+    if (name == "stamp_contains") { SetStampContains(attr.AsFloat()); return; }
+    Root::SetAttr(name, attr);
+}
+
+void RootEntity::RemoveAttr(const string& name)
+{
+    if (name == "loc") return;
+    if (name == "pos") return;
+    if (name == "velocity") return;
+    if (name == "contains") return;
+    if (name == "stamp_contains") return;
+    Root::RemoveAttr(name);
+}
+
 } } } // namespace Atlas::Objects::Entity

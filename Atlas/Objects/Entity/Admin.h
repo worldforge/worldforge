@@ -24,10 +24,7 @@ public:
 
     static Admin Instantiate();
 
-
-
 protected:
-
 
 };
 

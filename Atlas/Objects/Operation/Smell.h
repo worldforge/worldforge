@@ -24,10 +24,7 @@ public:
 
     static Smell Instantiate();
 
-
-
 protected:
-
 
 };
 

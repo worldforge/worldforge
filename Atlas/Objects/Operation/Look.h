@@ -28,10 +28,7 @@ public:
 
     static Look Instantiate();
 
-
-
 protected:
-
 
 };
 
