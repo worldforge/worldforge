@@ -105,7 +105,7 @@ void Atlas::Net::StreamConnect::Poll()
 
 	if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
 	{
-	    cout << "server: " << inName << endl << flush;
+	    cout << "server: " << inName << endl;
 	    state++;
 	}
     }
@@ -114,7 +114,7 @@ void Atlas::Net::StreamConnect::Poll()
     {
 	// send client greeting
 	
-	socket << outName << endl << flush;
+	socket << outName << endl;
 	state++;
     }
     
@@ -234,20 +234,20 @@ void Atlas::Net::StreamAccept::Poll()
 
     string out;
 
+    if (state == SERVER_GREETING) 
+    {
+	// send server greeting
+
+	socket << outName << endl;
+	state++;
+    }
+
     do
     {
 	buf += socket.get();
     }
     while (socket.rdbuf()->in_avail());
 
-    if (state == SERVER_GREETING) 
-    {
-	// send server greeting
-
-	socket << outName << endl << flush;
-	state++;
-    }
-    
     if (state == CLIENT_GREETING)
     {
 	// get client greeting
