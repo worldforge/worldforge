@@ -247,7 +247,7 @@ void Entity::setLocationFromAtlas(const std::string& locId)
         m_view->getEntityFromServer(locId);
         
         m_limbo = true;
-        setVisible(false); // fire disappearanc, VisChanged if necessary
+        setVisible(false); // fire disappearance, VisChanged if necessary
         
         if (m_location)
             removeFromLocation();
@@ -271,9 +271,6 @@ void Entity::setLocation(Entity* newLocation)
     Entity* oldLocation = m_location;
     m_location = newLocation;
     
-    if (m_limbo) debug() << "removing entity " << m_id << " from limbo";
-    m_limbo = false;
-    
     LocationChanged.emit(this, oldLocation);
     
 // fire VisChanged and Appearance/Disappearance signals
@@ -285,7 +282,6 @@ void Entity::setLocation(Entity* newLocation)
 
 void Entity::addToLocation()
 {
-    debug() << "entity " << m_id << " adding to location " << m_location->m_id;
     assert(!m_location->hasChild(m_id));
     m_location->addChild(this);
 }
@@ -342,6 +338,7 @@ void Entity::setContentsFromAtlas(const StringList& contents)
             if (child->m_limbo)
             {
                 debug() << "found child " << child << " in limbo";
+                child->m_limbo = false;
             }
             else if (child->isVisible())
             {
@@ -380,7 +377,6 @@ void Entity::addChild(Entity* e)
     m_contents.push_back(e);
     ChildAdded.emit(this, e);
     assert(e->getLocation() == this);
-    debug() << "entity " << m_id << " added new child " << e->m_id;
 }
 
 void Entity::removeChild(Entity* e)

@@ -126,8 +126,11 @@ void StubServer::run()
 
     basic_socket_poll::socket_map clientSockets;
 
+    static const basic_socket_poll::poll_type POLL_MASK
+        = (basic_socket_poll::poll_type)(basic_socket_poll::READ | basic_socket_poll::EXCEPT);
+
     for (unsigned int C=0; C < m_clients.size(); ++C)
-        clientSockets[m_clients[C]->getStream()] = basic_socket_poll::READ | basic_socket_poll::EXCEPT;
+        clientSockets[m_clients[C]->getStream()] = POLL_MASK;
 
     basic_socket_poll poller;
     poller.poll(clientSockets);

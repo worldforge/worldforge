@@ -41,8 +41,14 @@ public:
         return m_topLevel;
     }
 
+    /** emitted whenever the View creates a new Entity instance. This signal
+    is emitted once the entity has been fully bound into the View */
+    SigC::Signal1<void, Entity*> EntitySeen;
+
+    /** emitted when a SIGHT(CREATE) op is recieved for an entity */
     SigC::Signal1<void, Entity*> EntityCreated;
     SigC::Signal1<void, Entity*> EntityDeleted;
+    
     SigC::Signal1<void, Entity*> Apperance;
     SigC::Signal1<void, Entity*> Disappearance;
 
@@ -53,7 +59,8 @@ protected:
     // the router passes various relevant things to us directly
     friend class IGRouter;
     friend class Entity;
-
+    friend class Avatar;
+    
     void appear(const std::string& eid, float stamp);
     void disappear(const std::string& eid);
     void sight(const Atlas::Objects::Entity::GameEntity& ge);

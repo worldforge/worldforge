@@ -26,10 +26,10 @@ namespace Eris
 Avatar::Avatar(Player* pl) : 
     m_account(pl),
     m_entity(NULL),
-    m_router(NULL),
-    m_view(NULL)
+    m_router(NULL)
 {
-    
+    m_view = new View(this);
+    m_view->Apperance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
 }
 
 Avatar::~Avatar()
@@ -43,11 +43,9 @@ void Avatar::setEntity(const std::string& entId)
     m_entityId = entId;
     debug() << "setting Avatar entity ID to " << m_entityId;
 
-    m_view = new View(this);
     m_router = new IGRouter(this);
-    m_view->Apperance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
-    
-    m_view->getTopLevel();
+
+    m_view->getEntityFromServer("");
     m_view->getEntity(m_entityId);
 }
 

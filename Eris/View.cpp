@@ -41,9 +41,10 @@ private:
 #pragma mark -
 
 View::View(Avatar* av) :
-    m_owner(av)
+    m_owner(av),
+    m_topLevel(NULL)
 {
-    getEntityFromServer(""); // initial anonymous LOOK
+    
 }
 
 View::~View()
@@ -147,9 +148,11 @@ void View::sight(const GameEntity& gent)
     {
         // existing entity, update in place
         ent->sight(gent);
-    } else
+    } else {
         ent = initialSight(gent);
-
+        EntitySeen.emit(ent);
+    }
+    
     ent->setVisible(visible);
     
     if (gent->isDefaultLoc()) // new top level entity
