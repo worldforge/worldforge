@@ -7,7 +7,7 @@
 namespace Mercator { 
 
 const float BasePoint::HEIGHT = 8.0;
-const float BasePoint::ROUGHNESS = 1.15;
-const float BasePoint::FALLOFF = 0.15;
+const float BasePoint::ROUGHNESS = 1.25;
+const float BasePoint::FALLOFF = 0.25;
 
 } //namespace Mercator

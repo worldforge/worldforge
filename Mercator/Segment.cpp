@@ -216,8 +216,9 @@ inline float randHalf()
 float Segment::qRMD(float nn, float fn, float ff, float nf,
                     float roughness, float falloff, int depth) const
 {
-    float heightDifference = std::max(std::max(nn, fn), std::max(nf, ff)) -
-                             std::min(std::min(nn, fn), std::min(nf, ff));
+    float max = std::max(std::max(nn, fn), std::max(nf, ff)),
+          min = std::min(std::min(nn, fn), std::min(nf, ff)),
+          heightDifference = max - min;
  
     return ((nn+fn+ff+nf)/4.f) + randHalf() * roughness * heightDifference / (1.f+::pow(depth,falloff));
 }

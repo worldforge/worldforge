@@ -1,5 +1,12 @@
 2004-05-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/BasePoint.cpp: Tweak roughnes and falloff to give nicer
+	  looking terrain.
+
+	* Mercator/Segment.cpp: Clarify the qRMD implementation function.
+
+2004-05-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* Get canonical system for cross compiling.
 
 2004-05-17  Al Riddoch  <alriddoch@zepler.org>
