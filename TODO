@@ -1,3 +1,6 @@
+* Need to fix normals along edge and corner point. Currently they create
+  visible seems because they are not the same on adjacent segments.
+
 * SHould probably make segment etc. less involved in memory, and provide
   a way for the memory to be special
 

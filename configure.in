@@ -42,6 +42,13 @@ AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 
+AC_CHECK_FUNCS(lrintf rint)
+
+AC_LANG_RESTORE
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+
 dnl Check for Atlas-C++ and wfmath library
 PKG_CHECK_MODULES(WF, wfmath-0.3,
     [

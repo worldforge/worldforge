@@ -1,3 +1,8 @@
+2003-08-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp: Add test for lrintf() which is more
+	  suitable and faster than rint() on platforms which have it.
+
 2003-08-14  Damien McGinnes
 
 	* Mercator/Segment.cpp: use MersenneTwister from wfmath
@@ -25,7 +30,7 @@
 
 	* Mercator/Segment.cpp, Mercator/MersenneTwister.h, configure,in: 
 	  put MersenneTwister in Mercator until clients are ready to move
- 	  across to wfmath-0.3 	
+	  across to wfmath-0.3
 
 2003-08-09  Damien McGinnes
 
