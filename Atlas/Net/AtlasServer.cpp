@@ -48,7 +48,11 @@ int AServer::poll(long usec)
 	{
 		if (FD_ISSET(i,&xread)) csock[i]->canRead();
 		if (FD_ISSET(i,&xsend)) csock[i]->canSend();
-		if (FD_ISSET(i,&xerrs)) csock[i]->gotErrs();
+		if (FD_ISSET(i,&xerrs)) {
+			csock[i]->gotErrs();
+			delClientSend(csock[i]);
+			delClient(csock[i]);
+		}
 	}
 	if (FD_ISSET(slsock, &xread)) return 1;
 	return 0;

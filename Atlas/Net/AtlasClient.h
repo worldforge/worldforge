@@ -47,6 +47,7 @@ public:
 	void		sendMsg(const AObject& msg);
 
 	virtual	void	gotMsg(const AObject& msg);
+	virtual	void	gotDisconnect();
 };
 
 #endif

@@ -59,6 +59,9 @@ void AClient::canSend()
 
 void AClient::gotErrs()
 {
+	// errors are assumed to be a disconnect, propogate to subclasses
+	csock->close();
+	gotDisconnect();
 }
 
 void AClient::doPoll()
@@ -97,7 +100,12 @@ void AClient::sendMsg(const AObject& msg)
 
 void AClient::gotMsg(const AObject& msg)
 {
-	DebugMsg1(0,"BAD VIRTUAL CALL !!!","");
+	DebugMsg1(0,"AClient::gotMsg = BAD VIRTUAL CALL !!!","");
+}
+
+void AClient::gotDisconnect()
+{
+	DebugMsg1(0,"AClient::gotDisconnect = BAD VIRTUAL CALL !!!","");
 }
 
 
