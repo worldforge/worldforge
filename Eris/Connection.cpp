@@ -42,7 +42,7 @@
 
 namespace Eris {
 
-DebugDispatcher *dd, *sdd;	
+DebugDispatcher *dd = NULL, *sdd = NULL;	
 	
 StringList tokenize(const std::string &s, char t);
 
@@ -96,6 +96,10 @@ Connection::~Connection()
     delete _lobby;
     delete _ti_engine;
     delete _rootDispatch;
+    if (_debug) {
+      delete dd; dd = NULL;
+      delete sdd; sdd = NULL;
+    }
 }
 
 
