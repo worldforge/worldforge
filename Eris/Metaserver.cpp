@@ -76,8 +76,10 @@ Meta::Meta(const std::string &/*cnm*/,
 Meta::~Meta()
 {
     if(_stream)
+      {
 	Poll::instance().removeStream(_stream);
-    delete _stream;
+	delete _stream;
+      }
     
     for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
 	delete *Q;
