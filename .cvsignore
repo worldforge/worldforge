@@ -13,7 +13,6 @@ libtool
 ltmain.sh
 Makefile
 Makefile.in
-mercator-config
 mercator-*.tar.gz
 mercator.spec
 mercator*.pc

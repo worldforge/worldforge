@@ -1,3 +1,8 @@
+2003-07-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Remove legacy mercator-config script and m4 macro, as we
+	  don't want people using them.
+
 2003-06-27 Damien McGinnes
         
 	* Mercator/Terrain.cpp, Terrain.h: made addMod take a const ref 
