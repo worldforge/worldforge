@@ -10,6 +10,8 @@ public:
         padding = "";
     }
 
+    virtual ~DebugBridge() { }
+
     virtual void StreamBegin() {
         std::cout << padding << "StreamBegin" << endl;
         addPadding();
@@ -87,7 +89,7 @@ protected:
 
     virtual void removePadding()
     {
-        padding.end() = padding.end() - 2;
+        padding.erase(padding.end() - 2, padding.end());
     }
 
     std::string padding;
