@@ -1,4 +1,4 @@
-2004-02-17  Al Riddoch  <alriddoch@zepler.org>
+2004-02-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/Objects/encoder1.cpp: Add extra required include.
 
