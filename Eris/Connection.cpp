@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <algorithm>
 
-#include <skstream.h>
+#include <skstream/skstream.h>
 #include <sigc++/signal_system.h>
 #include <sigc++/bind.h>
 

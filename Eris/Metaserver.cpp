@@ -4,7 +4,7 @@
 
 #include <assert.h>
 #include <cstdio>
-#include <skstream.h>
+#include <skstream/skstream.h>
 #include <sigc++/signal_system.h>
 
 #include "Metaserver.h"

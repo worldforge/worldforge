@@ -1,4 +1,4 @@
-#include <skstream.h>
+#include <skstream/skstream.h>
 
 #include <sigc++/object_slot.h>
 

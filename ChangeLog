@@ -1,3 +1,7 @@
+Wednesday, June 26, Al Riddoch
+
+	* Switched to new location for skstream headers.
+
 Monday, June 21, Ron Steinke
 
 	* Added an optional timeout argument to PollDefault::poll()

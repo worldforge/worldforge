@@ -3,7 +3,7 @@
 #endif
 
 #include <assert.h>
-#include <skstream.h>
+#include <skstream/skstream.h>
 #include <sigc++/bind.h>
 #include <sigc++/signal_system.h>
 

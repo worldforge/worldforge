@@ -3,7 +3,7 @@
 #endif
 
 #include <assert.h>		
-#include <skstream.h>
+#include <skstream/skstream.h>
 
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Root.h>

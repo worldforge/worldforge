@@ -1,8 +1,8 @@
 #ifndef ERIS_STUB_SERVER_H
 #define ERIS_STUB_SERVER_H
 
-#include <skstream.h>
-#include <skserver.h>
+#include <skstream/skstream.h>
+#include <skstream/skserver.h>
 
 #include <queue>
 
