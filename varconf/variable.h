@@ -90,11 +90,11 @@ private:
 class VarBox
 {
  public:
-  VarBox(VarBase *vb) : m_var(vb), m_ref(1) {}
-  ~VarBox() {delete m_var;}
+  VarBox(VarBase *vb) : m_var(vb), m_ref(1) { std::cerr << "C"; }
+  ~VarBox() {delete m_var; std::cerr << "D"; }
 
-  void ref() {++m_ref;}
-  void unref() {if(--m_ref == 0) delete this;}
+  void ref() {++m_ref; std::cerr << "R"; }
+  void unref() {if(--m_ref == 0) delete this; std::cerr << "U"; }
 
   VarBase *elem() {return m_var;}
 
