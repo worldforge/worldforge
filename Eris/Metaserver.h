@@ -1,6 +1,9 @@
 #ifndef ERIS_METASERVER_H
 #define ERIS_METASERVER_H
 
+// pull in uint32_t on POSIX - is this generic?!
+#include <stdlib.h>
+
 #include <sigc++/object.h>
 #include <sigc++/basic_signal.h>
 
@@ -33,7 +36,6 @@ class BaseConnection;
 	// MacOS defines these anyway
 	typedef Uint32	uint32_t;
 	#endif
-	
 #endif
 
 const int DATA_BUFFER_SIZE = 4096;
