@@ -167,8 +167,26 @@ void PackedAscii::Poll() // muchas FIXME
 	    }
 	break;
 	
-        case '[': parseStack.push(PARSE_MAP);
-                  break; // FIXME
+        case '[':
+	    // FIXME ensure that this map is in the right context
+	    if (parseStack.top() == PARSE_MSG)
+	    {
+		bridge->MessageBeginMap();
+	    }
+	    else if (parseStack.top() == PARSE_MAP)
+	    {
+		// FIXME need the map name
+		// so this needs to be handled by fragments some how
+		bridge->MapItem("", MapBegin);
+	    }
+	    else if (parseStack.top() == PARSE_LIST)
+	    {
+		bridge->ListItem(MapBegin);
+	    }
+		
+	    parseStack.push(PARSE_MAP);
+        break;
+	
         case ']': popStack(parseStack, fragments, bridge);
                   parseStack.pop(); // PARSE_MAP
                   break; // FIXME
