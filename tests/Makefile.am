@@ -1,4 +1,3 @@
-LIBS = -lpthread -lsigc
 
 EXTRA_DIST = conf.cfg
 

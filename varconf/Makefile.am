@@ -1,5 +1,3 @@
-LIBS = -lpthread -lsigc
-
 lib_LTLIBRARIES = libvarconf.la
 
 libvarconf_la_SOURCES = \
