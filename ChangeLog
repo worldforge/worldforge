@@ -1,4 +1,7 @@
-2003-06-03 Damien McGinnes
+2003-06-06 Damien McGinnes
+        * TerrainMod.h: fixed where I called Center() instead of getCenter()
+
+2003-06-06 Damien McGinnes
 
 	* TerrainMod.h : added. Defines modifiers for the terrain.
 	* Segment.h/Segment.cpp : modified to use TerrainMod objects, stored in a list,
