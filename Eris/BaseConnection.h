@@ -55,7 +55,7 @@ public:
 	
 	/// Ascertain whether or not the connection is usable for transport
 	bool isConnected() const
-	{ return (_status == CONNECTED);}
+	{ return (_status == CONNECTED) || (_status == DISCONNECTING);}
 	
 	/// sent on successful negotiation of a game server connection
 	SigC::Signal0<void> Connected;

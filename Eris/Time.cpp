@@ -38,7 +38,7 @@ bool operator<(const Stamp &a, const Stamp &b)
 		return a.tv_sec < b.tv_sec;
 }
 
-Stamp& operator+(const Stamp &a, unsigned long msec)
+Stamp operator+(const Stamp &a, unsigned long msec)
 {
 	Stamp ret = a;
 	ret.tv_sec += msec / 1000;

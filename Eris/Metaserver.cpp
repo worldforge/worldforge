@@ -149,6 +149,9 @@ void Meta::poll()
 		// but I'm sort of open to persuasion on this matter.
 		throw InvalidOperation("Error at Meta::Poll() doing select()");
 	
+	
+	Timeout::pollAll();
+	
 	// get out if nothing to do
 	if (!retval) return;
 	

@@ -33,7 +33,8 @@ Connection* Connection::_theConnection = NULL;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
 Connection::Connection(const string &cnm) :
-	BaseConnection(cnm, this)
+	BaseConnection(cnm, this),
+	_statusLock(0)
 {
 	// setup the singleton instance variable
 	assert(_theConnection == NULL);
@@ -72,6 +73,9 @@ void Connection::connect(const string &host, short port)
 
 void Connection::disconnect()
 {
+	assert(_statusLock == 0);
+	_statusLock = 0;
+	
 	// this is a soft disconnect; it will give people a chance to do tear down and so on
 	// in response, people who need to hold the disconnect will lock() the
 	// connection, and unlock when their work is done. A timeout stops
@@ -79,6 +83,7 @@ void Connection::disconnect()
 	setStatus(DISCONNECTING);
 	
 	if (!_statusLock) {
+		cerr << "doing immmediate disconnect" << endl;
 		hardDisconnect(true);
 		return;
 	}
@@ -121,6 +126,8 @@ void Connection::poll()
      	int retval = select(fd+1, &pending, NULL, NULL, &tv);
       	if (retval && FD_ISSET(fd, &pending))
 		BaseConnection::recv();
+	
+	Timeout::pollAll();
 }		
 
 void Connection::send(const Atlas::Objects::Root &obj)

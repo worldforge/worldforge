@@ -61,7 +61,7 @@ void BaseConnection::connect(const std::string &host, short port)
 
 void BaseConnection::hardDisconnect(bool emit)
 {
-	if (_status == CONNECTED) {
+	if ((_status == CONNECTED) || (_status == DISCONNECTING)){
 		_codec->StreamEnd();
 		(*_stream) << flush;
 		
