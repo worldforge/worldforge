@@ -1,3 +1,8 @@
+Friday, August 22nd, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Forgot to make deprecated IRand(), Drand() (which
+	  now wrap Mersenne Twister) inline. Now fixed.
+
 Tuesday, August 19th, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* Remove obsolete file wfmath.m4.
@@ -6,6 +11,7 @@ Tuesday, August 19th, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* Updated spec.
 
+>>>>>>> 1.104
 Sunday, August 17th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Moved config.h include after timestamp.h include
