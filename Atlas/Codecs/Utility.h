@@ -24,7 +24,7 @@ inline char hexToChar(const string& hex)
 }
 
 inline const string hexEncode(const string& prefix, const string& special,
-        const string& postfix, const string& message)
+        const string& message)
 {
     string newMessage;
     
@@ -32,28 +32,32 @@ inline const string hexEncode(const string& prefix, const string& special,
         if (find(special.begin(), special.end(), message[i]) != special.end()) {
             newMessage += prefix;
             newMessage += charToHex(message[i]);
-            newMessage += postfix;
         } else newMessage += message[i];
     }
 
     return newMessage;
 }
 
-// FIXME - postfix is pretty idiotic since it isn't actually checked for :/
-
-inline const string hexDecode(const string& prefix, const string& postfix,
-        const string& message)
+inline const string hexDecode(const string& prefix, const string& message)
 {
     string newMessage;
+    string curFragment;
     
     for (int i = 0; i < message.size(); i++) {
-        if (message[i] == prefix[0]) {
+        if (equal(prefix.begin(), prefix.begin() + curFragment.length() + 1, 
+                    (curFragment + message[i]).begin())) {
+            curFragment += message[i];
+        } else {
+            newMessage += curFragment + message[i];
+            curFragment = "";
+        }
+        if (curFragment == prefix) {
             string hex;
             hex += message[++i];
             hex += message[++i];
             newMessage += hexToChar(hex);
-            i += postfix.size();
-        } else newMessage += message[i];
+            curFragment = "";
+        }
     }
 
     return newMessage;
