@@ -91,7 +91,7 @@ Root messageElement2ClassObject(const MapType & mobj)
     bool is_instance = false;
     if(I != mobj.end() && (*I).second.isString()) {
         const std::string & objtype = (*I).second.asString();
-        if(objtype == "op" || objtype == "obj") {
+        if(objtype == "op" || objtype == "obj" || objtype == "object") {
             is_instance = true;
             bool parent_ok = false;
             // get parent
