@@ -1,5 +1,12 @@
 Saturday 6th March 2004, James Turner <james@worldforge.org>
 
+* Remove all the obsolete files
+* Fix Entity to correctly register and unregister it's router
+* Remove inlude of Lobby.h in Player
+* Finish basic implementation of setContentsFromAtlas in Entity
+
+Saturday 6th March 2004, James Turner <james@worldforge.org>
+
 * Sorted out Entity visiblity code, following discussion with Al Riddoch
 * Similarly, cleaned up handling in view, to store a single map of all
   entitied.

@@ -5,9 +5,10 @@
 #include <Eris/Entity.h>
 #include <Eris/Connection.h>
 #include <Eris/TypeInfo.h>
-#include <Eris/Log.h>
+#include <Eris/logStream.h>
 #include <Eris/entityRouter.h>
 #include <Eris/view.h>
+#include <Eris/Exceptions.h>
 
 #include <wfmath/atlasconv.h>
 #include <Atlas/Objects/Entity.h>
@@ -38,12 +39,14 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
     m_hasBBox(false)
 {
     m_router = new EntityRouter(this);
+    m_view->getConnection()->registerRouterForFrom(m_router, m_id);
     sight(ge);
 }
 
 Entity::~Entity()
 {
     setLocation(NULL);
+    m_view->getConnection()->unregisterRouterForFrom(m_router, m_id);
     delete m_router;
 }
 
@@ -76,7 +79,7 @@ SigC::Connection Entity::observe(const std::string& attr, const AttrChangedSlot&
 void Entity::sight(const GameEntity &ge)
 {    
     setLocationFromAtlas(ge->getLoc());
-    setContentsFromAtlas(get->getContains());
+    setContentsFromAtlas(ge->getContains());
     
     setFromRoot(smart_static_cast<Root>(ge));
 }
@@ -230,9 +233,10 @@ void Entity::setLocationFromAtlas(const std::string& locId)
     Entity* newLocation = m_view->getEntity(locId);
     if (!newLocation)
     {
+        debug() << "placing entity " << this << " in limbo till we get " << locId;
         m_view->getEntityFromServer(locId);
         
-        setVisible(false);
+        setVisible(false); // fire disappearanc, VisChanged if necessary
         
         if (m_location)
             removeFromLocation();
@@ -252,9 +256,14 @@ void Entity::setLocation(Entity* newLocation)
         removeFromLocation();
     
 // do the actual member updating
+    bool wasVisible = isVisible();
+    
     Entity* oldLocation = m_location;
     m_location = newLocation;
     LocationChanged.emit(this, oldLocation);
+    
+// fire VisChanged and Appearance/Disappearance signals
+    updateCalculatedVisibility(wasVisible);
     
     if (m_location)
         addToLocation();
@@ -262,64 +271,90 @@ void Entity::setLocation(Entity* newLocation)
 
 void Entity::addToLocation()
 {
-    m_location->m_pendingContents.erase(m_id);
+    assert(!m_location->hasChild(m_id));
     m_location->addChild(this);
 }
 
 void Entity::removeFromLocation()
 {
-    if (m_location->hasChild(m_id))
-    {
-        m_location->removeChild(this);
-    }
-    else if (m_location->m_pendingContents.erase(m_id))
-    {
-        // nipped it in the bud, no problem
-    } else
-        error() << "location " << m_location->getId() << " denies all knowledge of child " << m_id;
+    assert(m_location->hasChild(m_id));
+    m_location->removeChild(this);
 }
 
 #pragma mark -
 
+void Entity::buildEntityDictFromContents(IdEntityMap& dict)
+{
+    for (unsigned int C=0; C < m_contents.size(); ++C)
+    {
+        Entity* child = m_contents[C];
+        dict[child->getId()] = child;
+    }
+}
+
 void Entity::setContentsFromAtlas(const StringList& contents)
 {
-    StringSet currentContents = .... ;
+// convert existing contents into a map, for fast membership tests
+    IdEntityMap oldContents;
+    buildEntityDictFromContents(oldContents);
+    m_contents.clear();
 
+// iterate over new contents
     for (StringList::const_iterator I=contents.begin(); I != contents.end(); ++I)
     {
-        currentContents.erase(*I);
-    
-        if (hasChild(*I))
-        {
-            // ensure it's visible
-            continue;
-        }
+        Entity* child = NULL;
         
-        Entity* child = m_view->getLimboEntity(*I);
-        if (child)
+        IdEntityMap::iterator J = oldContents.find(*I);
+        if (J != oldContents.end())
         {
-            child->setLocation(this);
-        }
-        else if (child = m_view->getEntity(*I))
-        {
-            /* this is bad; entity is in the main set, i.e has a valid LOC, but
-            the hasChild check above didn't find it */
-            error() << "got entity " *I << " specified in contents for entity " << m_id
-                << " but it is already defined elsewhere with LOC=" << child->getLocation()->getId();
+            child = J->second;
+            assert(child->getLocation() == this);
+            oldContents.erase(J);
         }
         else
-        {   
-            m_view->getEntityFromServer(*I);
-            m_pendingContents.insert(*I);
+        {
+            child = m_view->getEntity(*I);
+            if (!child)
+            {
+                // we don't have the entity at all, so request it and skip
+                // processing it here; everything will come right when it
+                // arrives.
+                m_view->getEntityFromServer(*I);
+                // m_pendingContents.insert(*I);
+                continue;
+            }
+            
+            if (child->getLocation() == NULL)
+            {
+                debug() << "found child " << child << " in limbo";
+                assert(child->m_visible == false); // limbo entities must be invisible
+            }
+            else if (child->isVisible())
+            {
+                // server has gone mad, it has a location, and it's visible
+                error() << "got set of contents, specifying child " << child
+                    << " which is currently visible in another location";
+                continue;
+            }
+            
+            /* we have found the child, update it's location */
+            child->setLocation(this);
         }
+    
+        child->setVisible(true);
     } // of contents list iteration
     
-    // for all children remaning in currentContents, mark invisible
+// mark previous contents which are not in new contents as invisible
+    for (IdEntityMap::const_iterator J = oldContents.begin(); J != oldContents.end(); ++J)
+    {
+        m_contents.push_back(J->second);
+        J->second->setVisible(false);
+    }
 }
 
 bool Entity::hasChild(const std::string& eid) const
 {
-    for (EntityArray::iterator C=m_contents.end(); C != m_contents.end(); ++C)
+    for (EntityArray::const_iterator C=m_contents.end(); C != m_contents.end(); ++C)
         if ((*C)->getId() == eid) return true;
         
     return false;
@@ -390,7 +425,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
         /* in case this isn't clear; if we were visible, then child visibility
         was simply it's locally set value; if we were invisible, that the
         child must also have been invisile too. */
-        bool childWasVisible = wasVisible ? m_contents[c]->m_visible : false;
+        bool childWasVisible = wasVisible ? m_contents[C]->m_visible : false;
         m_contents[C]->updateCalculatedVisibility(childWasVisible);
     }
     

@@ -172,7 +172,11 @@ protected:
     
     void sight(const Atlas::Objects::Entity::GameEntity& gent);
     void setFromRoot(const Atlas::Objects::Root& obj);
-
+    
+    /** update the entity's location based on Atlas data. This is used by
+    the MOVE handler to update the location information. */
+    void setLocationFromAtlas(const std::string& locId);
+    
     /** process TALK data - default implementation emits the Say signal.
     @param obj The TALK operation arguments
     */
@@ -206,8 +210,10 @@ private:
     
     /// wrapper for setLocation with additional code the retrive the
     /// location if it's not available right now
-    void setLocationFromAtlas(const std::string& locId);
     void setContentsFromAtlas(const StringList& contents);
+    
+    typedef std::map<std::string, Entity*> IdEntityMap;
+    void buildEntityDictFromContents(IdEntityMap& dict);
     
     bool hasChild(const std::string& eid) const;
     void addChild(Entity* e);
@@ -225,11 +231,9 @@ private:
     
     TypeInfo* m_type;
     
+// primary state, in native form
     Entity* m_location;	
     EntityArray m_contents;
-    /** record children we are waiting on sight of - they will attach
-    themselves as they come in */
-    StringSet m_pendingContents;
     
     const std::string m_id;	///< the Atlas object ID
     std::string m_name;		///< a human readable name
@@ -243,6 +247,7 @@ private:
     WFMath::Vector<3> m_velocity;
     WFMath::Quaternion m_orientation;    
 	
+// extra state and state tracking things
     /** If greater than zero, we are doing a batched update. This supresses emission
     of the Changed signal until endUpdate is called, so that a number of
     attributes may be updated en-masse, generating just one signal. */

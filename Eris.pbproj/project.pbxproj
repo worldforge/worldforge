@@ -43,6 +43,7 @@
 		};
 		C43FBCE5054315B9008FC2ED = {
 			children = (
+				C4AD291A05FA259900AFB402,
 				C45DC712056417FC00D8F8F4,
 				C4BB15920544A6C100A800CF,
 				C43FBE250543162E008FC2ED,
@@ -1072,6 +1073,7 @@
 				C45DC7170564181900D8F8F4,
 				C45DC7180564181900D8F8F4,
 				C45DC7190564181900D8F8F4,
+				C4AD293205FA32BD00AFB402,
 			);
 			isa = PBXGroup;
 			name = Documentation;
@@ -1374,6 +1376,167 @@
 					Private,
 				);
 			};
+		};
+		C4AD291A05FA259900AFB402 = {
+			children = (
+				C4AD291D05FA259900AFB402,
+				C4AD291E05FA259900AFB402,
+				C4AD291F05FA259900AFB402,
+				C4AD292005FA259900AFB402,
+				C4AD292105FA259900AFB402,
+				C4AD292205FA259900AFB402,
+				C4AD292305FA259900AFB402,
+				C4AD292405FA259900AFB402,
+				C4AD292505FA259900AFB402,
+				C4AD292605FA259900AFB402,
+				C4AD292705FA259900AFB402,
+				C4AD292805FA259900AFB402,
+				C4AD292905FA259A00AFB402,
+				C4AD292A05FA259A00AFB402,
+				C4AD292B05FA259A00AFB402,
+				C4AD292C05FA259A00AFB402,
+			);
+			isa = PBXGroup;
+			path = test;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD291D05FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = stubConnection.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD291E05FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = stubConnection.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD291F05FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = stubServer.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292005FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = stubServer.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292105FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testConnection.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292205FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = testConnection.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292305FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testEntity.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292405FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = testEntity.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292505FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = testHarness.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292605FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testLobby.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292705FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = testLobby.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292805FA259900AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testPlayer.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292905FA259A00AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = testPlayer.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292A05FA259A00AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = tests.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292B05FA259A00AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testUtils.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD292C05FA259A00AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = testUtils.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD293205FA32BD00AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			name = Testcases;
+			path = docs/Testcases;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
 		};
 		C4BB158B0544A61B00A800CF = {
 			fallbackIsa = PBXFileReference;

@@ -16,8 +16,6 @@ Eris TODO
 - go over and clean up the metaquery code, it's horrible, especially the
   snprint stuff.
 
-- all the visibility cases, once Al gets back to me
-
 Longer Term TODO
 
 - motion prediction, nicked from Sear

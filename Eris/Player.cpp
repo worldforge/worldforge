@@ -3,11 +3,11 @@
 #endif
 
 #include <Eris/Player.h>
-#include <Eris/Lobby.h>
 #include <Eris/Connection.h>
-#include <Eris/Log.h>
+#include <Eris/logStream.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
+#include <Eris/router.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
