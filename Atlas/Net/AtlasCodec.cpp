@@ -174,7 +174,7 @@ int ACodec::hasMessage()
 	} while (proto->getDecoder()->hasTokens() && state == codecBUSY);
 	// check if we have a complete message
 	if (state == codecIDLE) {
-		AObject::dump(msg);
+		//AObject::dump(msg);
 		DebugMsg1(1,"Returning HAS MESSAGE !!","");
 		return 1;
 	}

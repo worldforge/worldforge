@@ -120,6 +120,7 @@ int AXMLDecoder::hasTokens()
 				break;
 			}
 			else if (tag == "int")		type = AProtocol::atlasINT;
+			else if (tag == "long")		type = AProtocol::atlasLNG;
 			else if (tag == "str")		type = AProtocol::atlasSTR;
 			else if (tag == "string")	type = AProtocol::atlasSTR;
 			else if (tag == "float")	type = AProtocol::atlasFLT;
@@ -159,6 +160,7 @@ int AXMLDecoder::hasTokens()
 			sval = buffer.substr(0,pos);
 			buffer = buffer.substr(pos);
 			if (type == AProtocol::atlasINT) ival = atoi(sval.c_str());
+			if (type == AProtocol::atlasLNG) ival = atol(sval.c_str());
 			if (type == AProtocol::atlasFLT) fval = atof(sval.c_str());
 			token = AProtocol::atlasATRVAL;
 			state = 2;
