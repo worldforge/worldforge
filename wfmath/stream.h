@@ -45,7 +45,7 @@ namespace WFMath {
 template<class C>
 std::string ToString(const C& c, unsigned int precision = 6)
 {
-  ostringstream ost;
+  std::ostringstream ost;
   ost.precision(precision);
   ost << c;
   return ost.str();
@@ -54,7 +54,7 @@ std::string ToString(const C& c, unsigned int precision = 6)
 template<class C>
 bool FromString(C& c, const std::string& s, unsigned int precision = 6)
 {
-  istringstream ist(s);
+  std::istringstream ist(s);
   ist.precision(precision);
   ist >> c;
   return ist;
@@ -310,7 +310,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 {
   char next;
   _PolyReader<dim> read;
-  list<_PolyReader<dim> > read_list;
+  std::list<_PolyReader<dim> > read_list;
 
   // Read in the points
 
@@ -347,7 +347,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
   // round off error can skew the plane, and later points that are further
   // away may fail.
 
-  list<_PolyReader<dim> >::iterator i, end = read_list.end();
+  typename std::list<_PolyReader<dim> >::iterator i, end = read_list.end();
   bool succ;
 
   int str_prec = is.precision();
@@ -365,7 +365,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
     }
   }
   else { // Find the three furthest apart points
-    list<_PolyReader<dim> >::iterator p1 = end, p2 = end, p3 = end, j; // invalid values
+    typename std::list<_PolyReader<dim> >::iterator p1 = end, p2 = end, p3 = end, j; // invalid values
     CoordType dist = -1;
 
     for(i = read_list.begin(); i != end; ++i) {

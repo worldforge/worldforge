@@ -159,9 +159,9 @@ class Polygon<2>
   friend bool ContainsProper<2>(const Polygon& outer, const Polygon& inner);
 
  private:
-  vector<Point<2> > m_points;
-  typedef vector<Point<2> >::iterator theIter;
-  typedef vector<Point<2> >::const_iterator theConstIter;
+  std::vector<Point<2> > m_points;
+  typedef std::vector<Point<2> >::iterator theIter;
+  typedef std::vector<Point<2> >::const_iterator theConstIter;
 
 };
 
@@ -174,7 +174,7 @@ typedef enum {
   _WFMATH_POLY2REORIENT_CLEAR_AXIS2,
   _WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES,
   _WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1,
-  _WFMATH_POLY2REORIENT_SCALE1_CLEAR2, // Will be needed if we normalize the axes
+  _WFMATH_POLY2REORIENT_SCALE1_CLEAR2 // Will be needed if we normalize the axes
 } _Poly2ReorientType;
 
 // Reorient a 2D polygon to match a change in the basis

@@ -36,6 +36,7 @@ template<const int dim>
 struct ColinearVectors : virtual public std::exception {
   ColinearVectors(const Vector<dim>& v1_in, const Vector<dim>& v2_in)
     : v1(v1_in), v2(v2_in) {}
+  virtual ~ColinearVectors() throw () { }
 
   Vector<dim> v1, v2;
 };

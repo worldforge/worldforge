@@ -1,3 +1,12 @@
+Monday, March 04, 2002	Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/error.h: Added destructor with throw(); to exception class.
+
+	* wfmath/polygon.h: Removed trailing comma from enumeration.
+
+	* wfmath/polygon.h, wfmath/stream.h: Fixed std:: namespace issues,
+	  and made typenames explicit.
+
 Wednesday, February 27, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Commented out horribly broken intersection functions
