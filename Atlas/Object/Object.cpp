@@ -26,7 +26,7 @@ bool    Object::insert(size_t ndx, const Object& val)
 /** (List) insert an Int at this index */
 bool    Object::insert(size_t ndx, int val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv.insert(((VVec*)obj)->vv.begin()+ndx, new VNum(val));
 	return true;
 }
@@ -34,7 +34,7 @@ bool    Object::insert(size_t ndx, int val)
 /** (List) insert an Long at this index */
 bool    Object::insert(size_t ndx, long val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv.insert( ((VVec*)obj)->vv.begin()+ndx, new VNum(val) );
 	return true;
 }
@@ -42,7 +42,7 @@ bool    Object::insert(size_t ndx, long val)
 /** (List) insert a Float at this index */
 bool    Object::insert(size_t ndx, double val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv.insert(((VVec*)obj)->vv.begin()+ndx, new VNum(val));
 	return true;
 }
@@ -50,7 +50,7 @@ bool    Object::insert(size_t ndx, double val)
 /** (List) insert a String at this index */
 bool    Object::insert(size_t ndx, const string& val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv.insert(((VVec*)obj)->vv.begin()+ndx, new VStr(val));
 	return true;
 }
@@ -58,7 +58,7 @@ bool    Object::insert(size_t ndx, const string& val)
 /** (List) append an Object */
 bool    Object::append(const Object& val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv.push_back(val.obj);
 	val.obj->incref();
 	return true;
@@ -67,7 +67,7 @@ bool    Object::append(const Object& val)
 /** (List) append an Int */
 bool    Object::append(int val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv.push_back(new VNum(val));
 	return true;
 }
@@ -75,7 +75,7 @@ bool    Object::append(int val)
 /** (List) append an Long */
 bool    Object::append(long val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv.push_back(new VNum(val));
 	return true;
 }
@@ -83,7 +83,7 @@ bool    Object::append(long val)
 /** (List) append a Float */
 bool    Object::append(double val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv.push_back(new VNum(val));
 	return true;
 }
@@ -99,7 +99,7 @@ bool    Object::append(const string& val)
 /** (List) replace an Object at this index */
 bool    Object::set(size_t ndx, const Object& src)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv[ndx] = src.obj;
 	src.obj->incref();
 	return true;
@@ -108,7 +108,7 @@ bool    Object::set(size_t ndx, const Object& src)
 /** (List) replace an Int at this index */
 bool    Object::set(size_t ndx, int val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv[ndx] = new VNum(val);
 	return true;
 }
@@ -116,7 +116,7 @@ bool    Object::set(size_t ndx, int val)
 /** (List) replace an Long at this index */
 bool    Object::set(size_t ndx, long val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv[ndx] = new VNum(val);
 	return true;
 }
@@ -124,7 +124,7 @@ bool    Object::set(size_t ndx, long val)
 /** (List) replace a Float at this index */
 bool    Object::set(size_t ndx, double val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv[ndx] = new VNum(val);
 	return true;
 }
@@ -132,7 +132,7 @@ bool    Object::set(size_t ndx, double val)
 /** (List) replace a String at this index */
 bool    Object::set(size_t ndx, const string& val)
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	((VVec*)obj)->vv[ndx] = new VStr(val);
 	return true;
 }
@@ -140,9 +140,10 @@ bool    Object::set(size_t ndx, const string& val)
 /** (List) get an Object from this index */
 bool    Object::get(size_t ndx, Object& src) const
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	src.obj->decref();
 	src.obj = ((VVec*)obj)->vv[ndx];
+	if (tmp == NULL) return false;
 	src.obj->incref();
 	return true;
 }
@@ -150,8 +151,9 @@ bool    Object::get(size_t ndx, Object& src) const
 /** (List) get an Int from this index */
 bool    Object::get(size_t ndx, int& val) const
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	Variant* tmp = ((VVec*)obj)->vv[ndx];
+	if (tmp == NULL) return false;
 	if (tmp->rt !=Int) return false;
 	val = ((VNum*)tmp)->lv;
 	return true;
@@ -160,8 +162,9 @@ bool    Object::get(size_t ndx, int& val) const
 /** (List) get an Long from this index */
 bool    Object::get(size_t ndx, long& val) const
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	Variant* tmp = ((VVec*)obj)->vv[ndx];
+	if (tmp == NULL) return false;
 	if (tmp->rt !=Int) return false;
 	val = ((VNum*)tmp)->lv;
 	return true;
@@ -170,9 +173,10 @@ bool    Object::get(size_t ndx, long& val) const
 /** (List) get a Float from this index */
 bool    Object::get(size_t ndx, double& val) const
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	//if ((VVec*)obj->vv.size() <= ndx) return false;
 	Variant* tmp = ((VVec*)obj)->vv[ndx];
+	if (tmp == NULL) return false;
 	if (tmp->rt != Float) return false;
 	val = ((VNum*)tmp)->dv;
 	return true;
@@ -181,9 +185,10 @@ bool    Object::get(size_t ndx, double& val) const
 /** (List) get a String from this index */
 bool    Object::get(size_t ndx, string& val) const
 {
-	if (obj->rt !=List) return false;
+	if (obj->rt != List) return false;
 	//if ((VVec*)obj->vv.size() <= ndx) return false;
 	Variant* tmp = ((VVec*)obj)->vv[ndx];
+	if (tmp == NULL) return false;
 	if (tmp->rt !=String) return false;
 	val = ((VStr*)tmp)->st;
 	return true;
