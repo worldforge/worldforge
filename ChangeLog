@@ -1,5 +1,9 @@
 ChangeLog for varconf
 
+Monday, 10th June, 2002, Al Riddoch <alriddoch@zepler.org>
+	* Fixed rpm spec into two different packages, and corrected generation
+	  of interface version.
+
 Wednesday, May 21 2002, Michael Koch (man-di)
 	* tests/Makefile.am: make tests link
 	
