@@ -230,7 +230,7 @@ void TypeService::readAtlasSpec(const std::string &specfile)
     debug() << "Found Atlas type data in '" << specfile << "', using for initial type info";
     
     SpecDecoder decode(this);
-    Atlas::Codecs::XML specXMLCodec(specStream, &decode);
+    Atlas::Codecs::XML specXMLCodec(specStream, decode);
     while (!specStream.eof())
         specXMLCodec.poll(true);
 }

@@ -1,3 +1,8 @@
+2004-08-09  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/BaseConnection.cpp, Eris/Log.cpp, Eris/TypeService.cpp:
+	  Pass references to decoders rather than pointers to Atlas-C++.
+
 2004-08-07  James Turner  <james@worldforge.org>
 
     * Eris/Avatar.cpp, Eris/Avatar.h: Change the meaning of Avatar::InGame to

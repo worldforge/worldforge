@@ -156,7 +156,7 @@ void BaseConnection::nonblockingConnect()
     _timeout = new Timeout("negotiate_" + _id, this, 5000);
     bindTimeout(*_timeout, NEGOTIATE);
 
-    _sc = new Atlas::Net::StreamConnect(_clientName, *_stream, _bridge);
+    _sc = new Atlas::Net::StreamConnect(_clientName, *_stream, *_bridge);
     setStatus(NEGOTIATE);
 }
 
