@@ -25,7 +25,7 @@ public:
 
 	virtual void addStream(const basic_socket_stream*) = 0;
 	virtual void removeStream(const basic_socket_stream*) = 0;
-
+	    
 	static Poll& instance();
 	static void setInstance(Poll*);
 

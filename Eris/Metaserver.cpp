@@ -48,7 +48,8 @@ Meta::Meta(const std::string &/*cnm*/,
     _stream = new udp_socket_stream();  
     _stream->setTimeout(30);	
     
-	Poll::instance().connect(SigC::slot(*this, &Meta::gotData));
+    Poll::instance().connect(SigC::slot(*this, &Meta::gotData));
+    Poll::instance().addStream(_stream);
     
     // open connection to meta server
    
@@ -58,7 +59,6 @@ Meta::Meta(const std::string &/*cnm*/,
 	doFailure("Couldn't open connection to metaserver " + msv);
 	return;
     }
-    Poll::instance().addStream(_stream);
     
     // build the initial 'ping' and send
     unsigned int dsz = 0;
@@ -75,11 +75,12 @@ Meta::Meta(const std::string &/*cnm*/,
 
 Meta::~Meta()
 {
-	if(_stream->is_open())
-		Poll::instance().removeStream(_stream);
-	delete _stream;
-	for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
-		delete *Q;
+    if(_stream)
+	Poll::instance().removeStream(_stream);
+    delete _stream;
+    
+    for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
+	delete *Q;
 	
 	if (_timeout)
 		delete _timeout;
@@ -111,11 +112,14 @@ void Meta::refresh()
     _gameServers.clear();
 	
     // close the existing connection (rather brutal this...)
-    if (_stream->is_open()) {
+    if (_stream) {
 	Poll::instance().removeStream(_stream);
 	_stream->close();
+    } else {
+	_stream = new udp_socket_stream;
+	Poll::instance().addStream(_stream);
     }
-
+    
     // open connection to meta server
     remote_host metaserver_data(_metaHost, META_SERVER_PORT);
     (*_stream) << metaserver_data;
@@ -123,8 +127,6 @@ void Meta::refresh()
 	doFailure("Couldn't contact metaserver " + _metaHost);
 	return;
     }
-    
-    Poll::instance().addStream(_stream);
     
     listReq(0);
     _status = IN_PROGRESS;
@@ -178,7 +180,7 @@ void Meta::gotData(PollData &data)
     if(!got_one)
 	    return;
 
-	// clean up old quereis
+	// clean up old queries
 	while (!_deleteQueries.empty()) {
 	    MetaQuery *qr = _deleteQueries.front();
 	    _activeQueries.remove(qr);
@@ -192,7 +194,7 @@ void Meta::gotData(PollData &data)
 		_pendingQueries.pop_front();
 	}
 	
-	if (_activeQueries.empty()) {
+	if ((_status == VALID) && (_activeQueries.empty())) {
 	    // we're all done, emit the signal
 	    CompletedServerList.emit();
 	}
@@ -232,9 +234,10 @@ void Meta::cancel()
 		delete *Q;
 	_activeQueries.clear();
 	
-	if(_stream->is_open()) {
-		Poll::instance().removeStream(_stream);
-		_stream->close();
+	if(_stream) {
+	    Poll::instance().removeStream(_stream);
+	    delete _stream;
+	    _stream = NULL;
 	}
 	
 	// FIXME - revert to the last valid server list?
@@ -329,9 +332,10 @@ void Meta::processCmd()
 		    _timeout = NULL;
 		    _status = VALID;
 	
-		    if(_stream->is_open()) {	    
+		    if(_stream) {	    
 			Poll::instance().removeStream(_stream);
-			_stream->close();
+			delete _stream;
+			_stream = NULL;
 		    }
 		}
 		
@@ -412,9 +416,10 @@ void Meta::ObjectArrived(const Atlas::Message::Object &msg)
 void Meta::doFailure(const std::string &msg)
 {
     Failure.emit(msg);
-    if(_stream->is_open()) {
+    if(_stream) {
 	Poll::instance().removeStream(_stream);
-	_stream->close();
+	delete _stream;
+	_stream = NULL;
     }
     
     // try to revert back to the last good list

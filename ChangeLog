@@ -4,6 +4,11 @@ Wednesday, May 15, James Turner
 	* Fixed the Meta update code to emit CompletedServerList after
 	  the last active query is deleted. [Thanks to Xmp for catching
 	  both issues, which no one has touched before]
+	* Tweaked emission of CompletedServerList to do the right thing
+	* Hopefully fixed Meta::doFailure to remove _stream from the Poll
+	  object (should stop the stream of errors in Dime)
+	* Converted Meta::Failure to pass it's error by const reference, 
+ 	  like all the other signals do
 
 Tuesday, May 14, Al Riddoch
 

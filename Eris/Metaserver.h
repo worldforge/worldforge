@@ -129,7 +129,7 @@ public:
 
 	/** Indicates a failure (usually network related) has occurred.
 	The server list will be cleared, and the status set to INVALID. */
-	SigC::Signal1<void, std::string> Failure;
+	SigC::Signal1<void, const std::string&> Failure;
 	
 protected:
 	friend class MetaQuery;
@@ -187,7 +187,7 @@ protected:
 	uint32_t _gotCmd;	///< the curent command being processed
 	
 	Timeout* _timeout;	///< Metaserver channel timeout
-
+	
 	void gotData(PollData&);
 };
 	
