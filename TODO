@@ -1,3 +1,7 @@
+* Move TerrainMod implementation of virtual functions into an _impl.h header.
+
+* Look at using allocators to control memory allocation for buffers.
+
 * Make SnowShader, High, with thinner snow on steep areas, and more snow on the north,
 
 * Make GrassShader, banded, with thinner grass on steep areas,
