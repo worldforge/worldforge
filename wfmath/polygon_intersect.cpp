@@ -170,7 +170,7 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
   int next_cross = 0;
 
   // Stuff for when multiple sequential corners lie on the line
-  std::list<LinePointData> *line_point_data = 0;
+  std::list<LinePointData> line_point_data;
 
   for(int i = 0; i < poly.numCorners(); ++i) {
     Point<2> p_i =  poly.getCorner(i);
@@ -225,17 +225,14 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
 
       LinePointData data = {low_proj, high_proj, below != old_below};
 
-      if(!line_point_data)
-        line_point_data = new std::list<LinePointData>;
-
       std::list<LinePointData>::iterator I;
 
-      for(I = line_point_data->begin(); I != line_point_data->end(); ++I) {
+      for(I = line_point_data.begin(); I != line_point_data.end(); ++I) {
         if(data.low > I->high)
           continue;
 
         if(data.high < I->low) {
-          line_point_data->insert(I, data);
+          line_point_data.insert(I, data);
           break;
         }
 
@@ -252,12 +249,12 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
         if(J->low < I->high) {
           I->high = J->high;
           I->cross = (I->cross != J->cross);
-	  line_point_data->erase(J);
+	  line_point_data.erase(J);
         }
       }
 
-      if(I == line_point_data->end())
-        line_point_data->push_back(data);
+      if(I == line_point_data.end())
+        line_point_data.push_back(data);
 
       old_below = below;
       old_p = p_j;
@@ -289,12 +286,12 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
   cross.resize(next_cross);
   std::sort(cross.begin(), cross.end());
 
-  if(line_point_data) {
-    std::list<LinePointData>::iterator I = line_point_data->begin();
+  if(!line_point_data.empty()) {
+    std::list<LinePointData>::iterator I = line_point_data.begin();
     std::vector<CoordType>::iterator cross_num = cross.begin();
     bool hit = false;
 
-    while(cross_num != cross.end() && I != line_point_data->end()) {
+    while(cross_num != cross.end() && I != line_point_data.end()) {
       if(*cross_num < I->low) {
         ++cross_num;
 	hit = !hit;
@@ -331,7 +328,7 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
       ++I;
     }
 
-    while(I != line_point_data->end()) {
+    while(I != line_point_data.end()) {
       if(I->cross) {
         cross.push_back(proper == hit ? I->low : I->high);
         hit = !hit;
@@ -344,8 +341,6 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
     }
 
     assert(!hit); // end outside the polygon
-
-    delete line_point_data;
   }
 
   return cross.size() != 0;

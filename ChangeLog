@@ -1,5 +1,12 @@
 Saturday, December 6th, 2003   Ron Steinke <rsteinke@w-link.net>
 
+	* wfmath/polygon_intersect.cpp: Got rid of the only
+	  new/delete calls in the whole library, as the
+	  object in question could just as well be declared
+	  on the stack.
+
+Saturday, December 6th, 2003   Ron Steinke <rsteinke@w-link.net>
+
 	* wfmath/timestamp.cpp: Added James' patch to make
 	  valgrind happy.
 
