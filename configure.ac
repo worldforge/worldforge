@@ -3,6 +3,10 @@ dnl Initialise autoconf
 AC_INIT()
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 
+dnl Detect the canonical host and target environment
+
+AC_CANONICAL_SYSTEM
+
 dnl Initialise automake
 
 MERCATOR_MAJOR=0
