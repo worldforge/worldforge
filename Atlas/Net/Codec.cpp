@@ -58,9 +58,9 @@ void ACodec::freeMessage()
 bool ACodec::hasMessage()
 {
 	// cant have a message until we have recieved tokens
-    if (!proto->getDecoder()->hasTokens())
+    if ( !proto->getDecoder()->hasTokens() ) {
         return false;
-
+    }
 	// got a token, we must be busy processing a message !!
 	myState = ACodec::BUSY;
 	// process tokens until we run out or we complete a msg
@@ -171,7 +171,7 @@ bool ACodec::hasMessage()
 		}
 		if (tok == AProtocol::atlasMSGEND) {
 			// got a message trailer
-			assert(nestd == 1);
+			//assert(nestd == 1);
 			// should have unraveled all nesting by now
 			DebugMsg1(1,"codec :: message complete","");
 			msg = stack[0];
@@ -181,7 +181,7 @@ bool ACodec::hasMessage()
 	} while (proto->getDecoder()->hasTokens() && myState == ACodec::BUSY);
 	
 	//If finished a whole message return true, else false
-    return ( myState == ACodec::IDLE);
+    return ( myState == ACodec::IDLE );
 }
 
 

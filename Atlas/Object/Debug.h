@@ -6,12 +6,10 @@
         email           : jbarrett@box100.com
 */
 
+#include <cstdio>
+
 #ifndef __AtlasDebug_h_
 #define __AtlasDebug_h_
-
-#include <stdio.h>
-#include <stdarg.h>
-#include <assert.h>
 
 #ifdef _ADebug_
 #define DebugMsg1(v,f,w)	if (v <= ADebug::doDebug) ADebug::logmsg(f,w)

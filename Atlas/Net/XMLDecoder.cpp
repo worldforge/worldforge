@@ -24,7 +24,7 @@ void AXMLDecoder::newStream()
 	token = 0;
 }
 
-void AXMLDecoder::feedStream(string& data)
+void AXMLDecoder::feedStream(const string& data)
 {
 	buffer.append(data);
 }

@@ -6,6 +6,9 @@
         email           : jbarrett@box100.com
 */
 
+#include <cstdarg>
+#include <cassert>
+
 #include "Debug.h"
 
 int 	ADebug::doDebug = 0;
