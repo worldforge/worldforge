@@ -13,14 +13,12 @@
 char*	AObject::typeString()
 {
 	if (PyString_Check(obj))	return "string";
-	if (PyLong_Check(obj))		return "int";
 	if (PyFloat_Check(obj))		return "float";
 	if (PyMapping_Check(obj))	return "map";
 	if (PyList_Check(obj))		return "list";
-	if (URI_Check(obj))		return "uri";
+	if (URI_Check(obj))			return "uri";
 	if (URIList_Check(obj))		return "uri_list";
 	if (IntList_Check(obj))		return "int_list";
-	if (LongList_Check(obj))	return "long_list";
 	if (FloatList_Check(obj))	return "float_list";
 	if (StringList_Check(obj))	return "string_list";
 	return "unknown";
@@ -789,11 +787,11 @@ int	AObject::isStringList() const	{ return StringList_Check(obj); }
 AObject AObject::mkMap()
 {
 	DebugMsg1(1,"Make Map","");
-	PyObject* tmp = PyDict_New();
+	//PyObject* tmp = PyDict_New();
 	DebugMsg1(1,"Make AObj","");
-	AObject res(tmp);
+	AObject res;
 	DebugMsg1(1,"DeRef","");
-	Py_XDECREF(tmp);
+	//Py_XDECREF(tmp);
 	DebugMsg1(1,"return","");
 
 	assert((unsigned long)res.obj != 1);
