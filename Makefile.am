@@ -1,1 +1,1 @@
-SUBDIRS = Object Net Bus Content
+SUBDIRS = src 

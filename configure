@@ -461,7 +461,7 @@ echo > confdefs.h
 
 # A filename unique to this package, relative to the directory that
 # configure is in, which we can look for to find out if srcdir is correct.
-ac_unique_file=.
+ac_unique_file=src
 
 # Find the source files, if location was not specified.
 if test -z "$srcdir"; then
@@ -1838,11 +1838,12 @@ ac_given_INSTALL="$INSTALL"
 
 trap 'rm -fr `echo "
 	Makefile
-	Bus/Makefile
-	Content/Makefile
-	Net/Makefile
-	Object/Makefile
- config.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+	src/Makefile
+	src/Bus/Makefile
+	src/Content/Makefile
+	src/Net/Makefile
+	src/Object/Makefile
+ src/config.h" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -1943,10 +1944,11 @@ EOF
 cat >> $CONFIG_STATUS <<EOF
 
 CONFIG_FILES=\${CONFIG_FILES-"Makefile
-	Bus/Makefile
-	Content/Makefile
-	Net/Makefile
-	Object/Makefile
+	src/Makefile
+	src/Bus/Makefile
+	src/Content/Makefile
+	src/Net/Makefile
+	src/Object/Makefile
 "}
 EOF
 cat >> $CONFIG_STATUS <<\EOF
@@ -2028,7 +2030,7 @@ ac_eD='%g'
 if test "${CONFIG_HEADERS+set}" != set; then
 EOF
 cat >> $CONFIG_STATUS <<EOF
-  CONFIG_HEADERS="config.h"
+  CONFIG_HEADERS="src/config.h"
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 fi
@@ -2119,7 +2121,7 @@ cat >> $CONFIG_STATUS <<EOF
 
 EOF
 cat >> $CONFIG_STATUS <<\EOF
-test -z "$CONFIG_HEADERS" || echo timestamp > stamp-h
+test -z "$CONFIG_HEADERS" || echo timestamp > src/stamp-h
 
 exit 0
 EOF
