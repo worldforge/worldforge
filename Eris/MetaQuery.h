@@ -22,7 +22,7 @@ includes server latency. */
 class MetaQuery : public BaseConnection
 {
 public:	
-	MetaQuery(Meta *svr, const std::string &host);
+	MetaQuery(Meta *svr, const std::string &host, unsigned int index);
 	virtual ~MetaQuery();
 
 	SOCKET_TYPE getSocket();
@@ -35,6 +35,9 @@ public:
 	const std::string& getHost() const
 	{ return _host; }
 	
+        unsigned int getServerIndex() const
+        { return m_serverIndex; }
+        
 	/// Access the elapsed time (in millseconds) since the query was issued
 	long getElapsed();
 	
@@ -62,6 +65,7 @@ protected:
 	long _queryNo;		///< The serial number of the query GET
     WFMath::TimeStamp _stamp;	///< Time stamp of the request, to estimate ping to server
 	bool _complete;		///< Flag to indicate when the query is complete
+    unsigned int m_serverIndex;
 };
 
 

@@ -1,5 +1,16 @@
 2004-05-01  James Turner <james@worldforge.org>
 
+* Update the MetaServer API to support in-place inspection of server
+  info objects. Also rename various signals to be clearer, and give each
+  ServerInfo a status field, to aid in displaying nice UI in clients.
+  
+* Update the metaQuery tool to the new API
+
+* Add an InGame signal to Avatar, analagous to the old World::Entered signal;
+  various changes to View and Player to support this.
+
+2004-05-01  James Turner <james@worldforge.org>
+
 * Use Username accessors on Atlas::Objects::Entity::Account, thanks to
   spec updates
   

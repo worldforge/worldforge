@@ -24,7 +24,7 @@ class Connection;
 class View : public SigC::Object
 {
 public:
-    View(Avatar* av, const Atlas::Objects::Entity::GameEntity& gent);
+    View(Avatar* av);
     ~View();
 
     Entity* getEntity(const std::string& eid) const;

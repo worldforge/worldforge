@@ -15,6 +15,7 @@ namespace Eris
 {
 
 ServerInfo::ServerInfo(const std::string &host) :
+    m_status(INVALID),
     _host(host)
 {
     _ping = -1;
@@ -27,6 +28,7 @@ ServerInfo::ServerInfo(const std::string &host) :
 	
 void ServerInfo::processServer(const RootEntity &svr)
 {
+    m_status = VALID;
     _ruleset = svr->getAttr("ruleset").asString();
     _name = svr->getName();
     _clients = svr->getAttr("clients").asInt();

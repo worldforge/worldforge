@@ -40,10 +40,9 @@ private:
 
 #pragma mark -
 
-View::View(Avatar* av, const GameEntity& gent) :
+View::View(Avatar* av) :
     m_owner(av)
 {
-    assert(gent->getId() == av->getId());
     getEntityFromServer(""); // initial anonymous LOOK
 }
 

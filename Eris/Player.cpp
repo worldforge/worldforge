@@ -129,7 +129,7 @@ private:
                 RefnoAvatarMap::iterator A = global_pendingInfoAvatars.find(info->getRefno());
                 if (A != global_pendingInfoAvatars.end())
                 {
-                    A->second->setEntity(ent);
+                    A->second->setEntity(ent->getId());
                     global_pendingInfoAvatars.erase(A);
                     return HANDLED;
                 } else

@@ -38,13 +38,14 @@ Avatar::~Avatar()
     delete m_view;
 }
 
-void Avatar::setEntity(const GameEntity& gent)
+void Avatar::setEntity(const std::string& entId)
 {
-    m_entityId = gent->getId();
+    m_entityId = entId;
     debug() << "setting Avatar entity ID to " << m_entityId;
 
     m_router = new IGRouter(this);
-    m_view = new View(this, gent);
+    m_view = new View(this);
+    m_view->Apperance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
     
     m_view->getTopLevel();
     m_view->getEntity(m_entityId);
@@ -225,6 +226,17 @@ void Avatar::recvEntity(Entity* e)
   e->RemovedMember.connect(InvRemoved.slot());
 }
 */
+
+void Avatar::onEntityAppear(Entity* ent)
+{
+    if (ent->getId() == m_entityId) {
+        assert(m_entity == NULL);
+        m_entity = ent;
+        debug() << "Avatar got appearance for player entity, emiting InGame";
+    }
+    
+    InGame.emit(this);
+}
 
 Connection* Avatar::getConnection() const
 {

@@ -77,6 +77,10 @@ public:
 	void place(Entity*, Entity* container, const WFMath::Point<3>& pos
 		= WFMath::Point<3>(0, 0, 0));
 
+    /** emitted when the Avatar goes in game, i.e getEntity() will return
+    a valid object, which is visible in the view */
+    SigC::Signal1<void, Avatar*> InGame;
+
 // These two signals just transmit the Entity's
     // AddedMember and RemovedMember signals, but
     // you're allowed to connect to them as soon as
@@ -102,12 +106,15 @@ protected:
     friend class AccountRouter;
     friend class IGRouter;
     
-    void setEntity(const Atlas::Objects::Entity::GameEntity& gent);
+    void setEntity(const std::string& entId);
     
     /** called by the IG router for each op it sees with a valid 'seconds'
     attribute set. We use this to synchronize the local world time up. */
     void updateWorldTime(double t);
+    
+    
 private:
+    void onEntityAppear(Entity* ent);
     
     Player* m_account;
     

@@ -78,20 +78,17 @@ public:
     */
     Meta(const std::string &msv, unsigned int maxQueries);
     virtual ~Meta();
-
-    /** Return the curent list of game servers. 
-    Note if the status is INVALID, this will return an empty list, an if status
-    is IN_PROGRESS, this will be a partial list.
-    */
-    ServerList getGameServerList() const;
-	
-    /** Return the total number of game servers the meta server knows about.
-    Note this is not the same as getGameServerList.size(); This is the total
-    number, which can be be used to range a progress bar or percentage. */
+    
+    /** Return the total number of game servers the meta server knows about. */
     unsigned int getGameServerCount() const;
 
+    /** Retrive one of the servers. Note the ServerInfo object may be invalid
+    if the server has not yet been queried, or has timedout or otherwise
+    failed to answer the query. */
+    const ServerInfo& getInfoForServer(unsigned int index) const;
+
     /// Query a specific game server; emits a signal when complete
-    void queryServer(const std::string &host);
+    void queryServerByIndex(unsigned int index);
 
     /** Refresh the entire server list. This will clear the current list,
     ask the meta-server for each game server, and then issue a query
@@ -112,11 +109,12 @@ public:
     /// Emitted when information about a server is received
     SigC::Signal1<void, const ServerInfo&> ReceivedServerInfo;
 
-    /// Emitted once the size of the server list is known
-    SigC::Signal1<void, int> GotServerCount;
+    /** Emitted once the complete list of servers has been retrived from
+    the metaserver. */
+    SigC::Signal1<void, int> CompletedServerList;
     
     /// Emitted when the entire server list has been refreshed
-    SigC::Signal0<void> CompletedServerList;
+    SigC::Signal0<void> AllQueriesDone;
 
     /** Indicates a failure (usually network related) has occurred.
     The server list will be cleared, and the status set to INVALID. */
@@ -159,6 +157,8 @@ private:
         
     void deleteQuery(MetaQuery* query);
         
+    void internalQuery(unsigned int index);
+        
     const std::string m_clientName;	///< the name to use when negotiating
     
     typedef enum
@@ -176,12 +176,13 @@ private:
     typedef std::set<MetaQuery*> QuerySet;
     QuerySet m_activeQueries;
                 
-    /// queries we will execute when active slots become frree
-    StringList m_pendingQueries;
+    /// queries we will execute when active slots become free
+    typedef std::list<int> IntList;
+    IntList m_pendingQueries;
     unsigned int m_maxActiveQueries;
 
-    typedef std::map<std::string, ServerInfo> ServerInfoMap;
-    ServerInfoMap m_gameServers,
+    typedef std::vector<ServerInfo> ServerInfoArray;
+    ServerInfoArray m_gameServers,
         m_lastValidList;
 
     // storage for the Metaserver protocol

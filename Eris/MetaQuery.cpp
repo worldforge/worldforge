@@ -24,11 +24,12 @@ using WFMath::TimeStamp;
 namespace Eris
 {
 	
-MetaQuery::MetaQuery(Meta *ms, const std::string &host) :
+MetaQuery::MetaQuery(Meta *ms, const std::string &host, unsigned int sindex) :
     BaseConnection("eris-metaquery", "mq_" + host + "-", ms),
     _host(host),
     _meta(ms),
-    _complete(false)
+    _complete(false),
+    m_serverIndex(sindex)
 {
     assert(ms);
     
