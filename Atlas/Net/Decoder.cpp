@@ -1,12 +1,12 @@
 /*
-        AtlasProtocolDecoder.cpp
+        AtlasDecoder.cpp
         ----------------
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
         email           : jbarrett@box100.com
 */
 
-#include "ProtocolDecoder.h"
+#include "Decoder.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,22 +19,22 @@ namespace Atlas
 {
 
 
-ProtocolDecoder::ProtocolDecoder()
+Decoder::Decoder()
 {
 }
 
-string	ProtocolDecoder::getName()                 { return name; }
-int	ProtocolDecoder::getType()                 { return type; }
-string	ProtocolDecoder::getString()               { return sval; }
-long	ProtocolDecoder::getInt()                  { return ival; }
-double	ProtocolDecoder::getFloat()                { return fval; }
+string	Decoder::getName()                 { return name; }
+int	Decoder::getType()                 { return type; }
+string	Decoder::getString()               { return sval; }
+long	Decoder::getInt()                  { return ival; }
+double	Decoder::getFloat()                { return fval; }
 
-void	ProtocolDecoder::newStream()               	{}
-void	ProtocolDecoder::feedStream(const string& data)	{}
-int	ProtocolDecoder::hasTokens()			{ return 0; }
-int	ProtocolDecoder::getToken()                	{ return 0; }
+void	Decoder::newStream()               	{}
+void	Decoder::feedStream(const string& data)	{}
+int	Decoder::hasTokens()			{ return 0; }
+int	Decoder::getToken()                	{ return 0; }
 
-string ProtocolDecoder::hexDecodeString(const string& input, char prefix)
+string Decoder::hexDecodeString(const string& input, char prefix)
 {
 	string s;
 	int state = 0;

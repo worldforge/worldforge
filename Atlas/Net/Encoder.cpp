@@ -1,23 +1,23 @@
 /*
-        AtlasProtocolEncoder.cpp
+        AtlasEncoder.cpp
         ----------------
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
         email           : jbarrett@box100.com
 */
 
-#include "ProtocolEncoder.h"
+#include "Encoder.h"
 
 #include <stdio.h>
 
 namespace Atlas
 {
 
-ProtocolEncoder::ProtocolEncoder()
+Encoder::Encoder()
 {
 }
 
-void ProtocolEncoder::printf(char* fmt, ...)
+void Encoder::printf(char* fmt, ...)
 {
 	int	siz;
 	char	str[2048];
@@ -29,24 +29,24 @@ void ProtocolEncoder::printf(char* fmt, ...)
 
 	buffer.append(str,siz);
 }
-		
-void ProtocolEncoder::append(string& data)
+	
+void Encoder::append(string& data)
 {
 	buffer.append(data);
 }
 		
-string ProtocolEncoder::encodeMessage(const Object& msg)
+string Encoder::encodeMessage(const Object& msg)
 {
 	string	res("");
 	return	res;
 }
 
-int ProtocolEncoder::encodedLength()
+int Encoder::encodedLength()
 {
 	return buffer.length();
 }
 
-string ProtocolEncoder::hexEncodeString(const string& input, char prefix,
+string Encoder::hexEncodeString(const string& input, char prefix,
 					 const string& specialchars)
 {
 	string s;
