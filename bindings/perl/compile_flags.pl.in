@@ -1,0 +1,3 @@
+$CC = 'g++';
+$CFLAGS = '-I../../../src @WFMATH_CFLAGS@ @ATLAS_CFLAGS@ @SIGCPERL_CFLAGS@';
+$LIBS = '-L../../../src/.libs -leris @WFMATH_LIBS@ @ATLAS_LIBS@ @SIGCPERL_LIBS@';

@@ -1,3 +1,10 @@
+Monday, 16th December 2002, Ron Steinke
+
+	* Fixed a problem with the perl bindings not getting
+	  the atlas compile flags, generally cleaned up
+	  the passing of those flags from autoconf to
+	  the perl makemaker build system
+
 Friday, 2nd May 2003, Al Riddoch
 
 	* Move code from src subdir to Eris.
