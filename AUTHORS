@@ -1,6 +1,12 @@
 Maintainer:
 	Ron Steinke <rsteinke@w-link.net>
 
+Other contributors:
+	James Turner <james@worldforge.org>
+	Al Riddoch <alriddoch@zepler.org>
+	Michael Koch <konqueror@gmx.de>
+	Dan Tomalesky <grim@xynesis.com>
+
 The Miniball code of Bernd Gaertner
 <http://www.inf.ethz.ch/personal/gaertner>
 is used for finding bounding spheres for
