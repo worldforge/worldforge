@@ -1,1 +1,1 @@
-SUBDIRS = Debug Object Stream Codecs Filters Net
+SUBDIRS = Object Stream Codecs Filters Net
