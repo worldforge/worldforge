@@ -59,8 +59,7 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 	_statusLock(0),
 	_debug(dbg),
 	_ti_engine(new TypeInfoEngine(this)),
-	_lobby(new Lobby(this)),
-	_need_disconnect(false)
+	_lobby(new Lobby(this))
 {
 	// setup the singleton instance variable
 	if (_theConnection == NULL)
@@ -111,14 +110,6 @@ void Connection::connect(const std::string &host, short port)
 
 void Connection::disconnect()
 {
-	if(_statusLock == 0)
-		do_disconnect();
-	else if(_status != DISCONNECTING) // Disconnect when we're done receiving data
-		_need_disconnect = true;
-}
-
-void Connection::do_disconnect()
-{
 	assert(_statusLock == 0);
 	_statusLock = 0;
 	
@@ -128,7 +119,6 @@ void Connection::do_disconnect()
 	// locks from preventing disconnection
 	setStatus(DISCONNECTING);
 	Disconnecting.emit();
-	_need_disconnect = false;
     
 	if (!_statusLock) {
 		Eris::log(LOG_NOTICE, "no locks, doing immediate disconnection");
@@ -158,11 +148,8 @@ void Connection::gotData(PollData &data)
 	
 	else if (_status == DISCONNECTED)
 		Eris::log(LOG_ERROR, "Got data on a disconnected stream");
-	else {
-		lock();
+	else
 		BaseConnection::recv();
-		unlock();
-	}
 }		
 
 void Connection::send(const Atlas::Objects::Root &obj)
@@ -258,10 +245,7 @@ void Connection::unlock()
 			break;
 
 		default:
-			if(_need_disconnect)
-				do_disconnect();
-			else
-				Eris::log(LOG_WARNING, "Connection unlocked in spurious state : this may case a failure later");
+			Eris::log(LOG_WARNING, "Connection unlocked in spurious state : this may case a failure later");
 		}
 }
 
