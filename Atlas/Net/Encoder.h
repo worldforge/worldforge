@@ -21,13 +21,13 @@ class Encoder
 
 protected:
 	/// encoded message buffer
-	string          buffer;
+	std::string          buffer;
 	
 	/// text encoder for ascii encoders to protect protocol characters
-	string hexEncodeString(
-			const string& input, 
+	std::string hexEncodeString(
+			const std::string& input, 
 			char prefix,
-			const string& specialchars
+			const std::string& specialchars
 	);
 	
 public:
@@ -36,9 +36,9 @@ public:
 	/// printf to the encoded message buffer
 	void printf(char* fmt, ...);
 	/// append data to the message buffer
-	void append(string& data);
+	void append(std::string& data);
 	/// convert object to stream
-	virtual string encodeMessage(const Object& msg);
+	virtual std::string encodeMessage(const Object& msg);
 	/// return length of stream that might contain '\0' characters
 	virtual int encodedLength();	
 };

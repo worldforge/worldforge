@@ -38,16 +38,16 @@ public:
 		~TCPSocket();
 
 		/// establish a server socket
-int		listen  (const string& addr, int port, int blog);
+int		listen  (const std::string& addr, int port, int blog);
 		/// accept new connections from a server socket
 Socket*		accept();
 
 		/// connect to a remote host
-int		connect (const string& addr, int port);
+int		connect (const std::string& addr, int port);
 		/// send data over the socket
-int		send    (const string& data);
+int		send    (const std::string& data);
 		/// recieve data from the socket
-int		recv    (string& data);
+int		recv    (std::string& data);
 private:
 #if defined(_WIN32) || defined(__WINDOWS__)
 		/// global flag, true if winsock has been initialized

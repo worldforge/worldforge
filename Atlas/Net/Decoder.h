@@ -23,20 +23,20 @@ class Decoder
 {
 protected:
 	/// incoming stream buffer
-	string	buffer;
+	std::string	buffer;
 	/// attribute name buffer
-	string	name;
+	std::string	name;
 	/// integer attribute buffer
 	int	type;
 	/// string attribute buffer
-	string	sval;
+	std::string	sval;
 	/// long integer attribute buffer
 	long	ival;
 	/// floating point attribute buffer
 	double	fval;
 
 	/// decoder for protected protocol characters in ascii streams
-	string hexDecodeString(const string& input, char prefix);
+	std::string hexDecodeString(const std::string& input, char prefix);
 
 
 public:
@@ -44,11 +44,11 @@ public:
 	virtual ~Decoder() {}
 
 	/// get attribute name
-	string	getName();
+	std::string	getName();
 	/// get attribute type
 	int	getType();
 	/// get string attribute value
-	string	getString();
+	std::string	getString();
 	/// get integer attribute value
 	long	getInt();
 	/// get floating point attribute value
@@ -57,7 +57,7 @@ public:
 	/// reset decoder state
 	virtual void	newStream();
 	/// append data to internal stream buffer
-	virtual void	feedStream(const string& data);
+	virtual void	feedStream(const std::string& data);
 	/// test for a complete token in the stream buffer
 	virtual int		hasTokens();
 	/// get a token from the stream buffer

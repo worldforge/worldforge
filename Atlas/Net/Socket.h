@@ -3,7 +3,6 @@
 #define __AtlasSocket_h_
 
 #include <string>
-using std::string;
 
 #ifdef __linux__
 	#include <sys/time.h>
@@ -49,22 +48,22 @@ public:
 virtual			~Socket() {}
 
 			/// server socket startup
-virtual int		listen(const string& addr, int port, int backlog);
+virtual int		listen(const std::string& addr, int port, int backlog);
 			/// accept a new connection from a server socket
 virtual Socket*		accept() { return 0; }
 
 			/// connect to a remote host
-virtual int		connect(const string& addr, int port);
+virtual int		connect(const std::string& addr, int port);
 
 			/// send data over socket
-virtual int		send    (const string& data);
+virtual int		send    (const std::string& data);
 			/// send data to a spcific destination (UDP Support)
-virtual int		sendTo  (const string& data, const struct sockaddr_in& addr);
+virtual int		sendTo  (const std::string& data, const struct sockaddr_in& addr);
 
 			/// recieve data from socket
-virtual int		recv    (string& buf);
+virtual int		recv    (std::string& buf);
 			/// recieve data with source information (UDP Support)
-virtual int		recvFrom(string& buf, const struct sockaddr_in& addr);	
+virtual int		recvFrom(std::string& buf, const struct sockaddr_in& addr);	
 
 			/// shut down the connection
 virtual void		close();
@@ -77,7 +76,7 @@ protected:
 			/// system socket handle
 SOCKET			sock;
 			/// recieve data buffer
-string			rbuf;
+std::string			rbuf;
 
 };
 

@@ -9,10 +9,6 @@
 
 #include "Decoder.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <memory.h>
-
 namespace Atlas
 {
 /// Decoder Class Implementation for the Packed Ascii Protocol.
@@ -39,7 +35,7 @@ public:
     }
 
     void newStream();
-    void feedStream(const string& data);
+    void feedStream(const std::string& data);
     int getToken();
     int hasTokens();
 

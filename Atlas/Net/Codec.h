@@ -13,7 +13,6 @@ changes:
 #define __AtlasCodec_h_
 
 #include <string>
-using std::string;
 
 #include "../Object/Object.h"
 #include "Protocol.h"
@@ -41,11 +40,11 @@ public:
     Codec( Protocol* );
 
     /// Convert an Object to a Stram
-    string      encodeMessage( const Object& );
+    std::string      encodeMessage( const Object& );
     /// Return the length of a Stream that may contain \0 characters
     int         encodedLength();
     /// Push streaming data to a Protocol Decoder for parsing
-    void        feedStream( const string& );
+    void        feedStream( const std::string& );
     /// Fetch a reconstructed Object from the Protocol Decoder
     Object&     getMessage();
     /// Return TRUE if the Protocol Decoder has a complete Object
@@ -68,7 +67,7 @@ private:
     /// stack for handling nested lists and maps
     Object     stack[50];  
     /// names assigned to nested containers
-    string      names[50];
+    std::string      names[50];
     /// count of nesting levels
     int         nestd;
 };

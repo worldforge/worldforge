@@ -4,9 +4,9 @@
 #ifndef ATLAS_NET_GZIP_FILTER_H
 #define ATLAS_NET_GZIP_FILTER_H
 
-#include <zlib.h>
-
 #include "Filter.h"
+
+#include <zlib.h>
 
 namespace Atlas {
 
@@ -22,9 +22,9 @@ namespace Atlas {
         
     ~GzipFilter(void);
     
-    string encode(const string& data);
+    std::string encode(const std::string& data);
     
-    string decode(const string& data);
+    std::string decode(const std::string& data);
   };
 
 };

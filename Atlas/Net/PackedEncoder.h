@@ -11,8 +11,6 @@
 #include "../Object/Object.h"
 #include "Encoder.h"
 
-#include <memory.h>
-
 namespace Atlas
 {
 /// Encoder Class Implementation for the Packed Ascii Protocol.

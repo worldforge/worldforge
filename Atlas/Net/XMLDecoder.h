@@ -9,7 +9,6 @@ changes:
 #define __AtlasXMLDecoder__h_
 
 #include <string>
-using std::string;
 
 #include "Decoder.h"
 
@@ -45,7 +44,7 @@ public:
 	/// restart the decoder
 	void    newStream();
 	/// feed data to the decoder
-	void    feedStream(const string& data);
+	void    feedStream(const std::string& data);
 	/// test if a token has been detected in the stream
 	int     hasTokens();
 	/// retrieve a token from the stream

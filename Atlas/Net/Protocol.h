@@ -19,7 +19,6 @@ changes
 #define __AtlasProtocol_h_
 
 #include <string>
-using std::string;
 #include <cassert>
 
 #include "Decoder.h"
@@ -43,8 +42,8 @@ public:
 	
 	Encoder*   getEncoder();
 	Decoder*   getDecoder();
-	const string&       getPrefix() const { return prefix; }
-	void                setPrefix(  const string& s)	{ prefix = s; }
+	const std::string&       getPrefix() const { return prefix; }
+	void                setPrefix(  const std::string& s)	{ prefix = s; }
 	
     virtual	Protocol*	makenew() { 
     	assert( false ); return 0; 
@@ -65,7 +64,7 @@ public:
 	                    atlasMAP
 	                    };
 protected:
-    Protocol( Encoder* anEncoder, Decoder* aDecoder, const string& aPrefix = "" )
+    Protocol( Encoder* anEncoder, Decoder* aDecoder, const std::string& aPrefix = "" )
      : encoder( anEncoder ), decoder( aDecoder ), prefix( aPrefix ) {
     	assert( encoder != 0 );
 	    assert( decoder != 0 );
@@ -73,7 +72,7 @@ protected:
 	
 	Encoder*   encoder;
 	Decoder*   decoder;
-    string              prefix;
+    std::string              prefix;
 private:
     Protocol( const Protocol& );
 };

@@ -5,7 +5,6 @@
 #define ATLAS_NET_FILTER_H
 
 #include <string>
-using std::string;
 
 namespace Atlas
 {
@@ -23,8 +22,8 @@ class Filter
     
     virtual ~Filter() { }
     
-    virtual string encode(const string& data) = 0;
-    virtual string decode(const string& data) = 0;
+    virtual std::string encode(const std::string& data) = 0;
+    virtual std::string decode(const std::string& data) = 0;
 };
 
 } // end namespace Atlas

@@ -28,11 +28,11 @@ class XMLEncoder: public Encoder
 {
 private:
 	/// process nested Object elements to stream format
-	void walkTree(int nest, string name, const Object& list);
+	void walkTree(int nest, std::string name, const Object& list);
 
 public:
 	/// process complete Object to stream format
-	string encodeMessage(const Object& msg);
+	std::string encodeMessage(const Object& msg);
 };
 
 } // namespace Atlas
