@@ -1,20 +1,20 @@
-%define name       @PACKAGE@
-%define version	   @VERSION@
-%define release    1
-%define serial     1
-%define prefix     /usr
+%define name @PACKAGE@
+%define version @VERSION@
+%define release 1
+%define serial 1
+%define libsuffix @ERIS_LIB_SUFFIX@
 
-Summary:           A WorldForge client library.
-Name:              %{name} 
-Version:           %{version} 
-Release:           %{release}
-Serial:            %{serial}
-Copyright:         GPL
-Group:             System Environment/Libraries
-Source:            %{name}-%{version}.tar.gz
-BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
-Requires:          Atlas-C++ >= 0.4.4 wfmath >= 0.2.10 skstream > 0.2 libstdc++
-BuildRequires:     Atlas-C++-devel >= 0.4.4 wfmath-devel >= 0.2.10 skstream-devel > 0.2 libstdc++-devel >= 2.95.2
+Summary: A WorldForge client library.
+Name: %{name}
+Version: %{version}
+Release: %{release}
+Serial: %{serial}
+Copyright: GPL
+Group: System Environment/Libraries
+Source: %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
+Requires: Atlas-C++ >= 0.4.4 wfmath >= 0.2.10 skstream > 0.2 libstdc++
+BuildRequires: Atlas-C++-devel >= 0.4.4 wfmath-devel >= 0.2.10 skstream-devel > 0.2 libstdc++-devel >= 2.95.2
 
 %description
 Eris is designed to simplify client development (and avoid repeating the same
@@ -22,9 +22,9 @@ work several times), by providing a common system to deal with the back end
 tasks.
 
 %package devel
-Summary:           A WorldForge client library headers and static libs.
-Group:             Development/Libraries
-Requires:          %{name} = %{version}
+Summary: A WorldForge client library headers and static libs.
+Group: Development/Libraries
+Requires: %{name} = %{version}
 
 %description devel
 Eris is designed to simplify client development (and avoid repeating the same
@@ -32,9 +32,9 @@ work several times), by providing a common system to deal with the back end
 tasks.
 
 %package poll-glib
-Summary:           Headers to poll eris connections using glibs poll code.
-Group:             Development/Libraries
-Requires:          glib2
+Summary: Headers to poll eris connections using glibs poll code.
+Group: Development/Libraries
+Requires: glib2
 
 %description poll-glib
 Eris is designed to simplify client development (and avoid repeating the same
@@ -46,64 +46,64 @@ to be integrated into glib in a glib or gtk+ based application.
 %setup
 
 %build
-CXXFLAGS=$RPM_OPT_FLAGS ./configure --prefix=%{prefix} --enable-static=yes
+%configure --enable-static
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make prefix=$RPM_BUILD_ROOT%{prefix} install
+%makeinstall
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{prefix}/lib/liberis-1.0.so.*
+%{_libdir}/lib*.so.*
 %doc AUTHORS COPYING NEWS README
 
 %files devel
 %defattr(-,root,root)
-%{prefix}/include/Eris-1.0/Eris/ArgumentDispatcher.h
-%{prefix}/include/Eris-1.0/Eris/atlas_utils.h
-%{prefix}/include/Eris-1.0/Eris/Avatar.h
-%{prefix}/include/Eris-1.0/Eris/BaseConnection.h
-%{prefix}/include/Eris-1.0/Eris/ClassDispatcher.h
-%{prefix}/include/Eris-1.0/Eris/Connection.h
-%{prefix}/include/Eris-1.0/Eris/DebugDispatcher.h
-%{prefix}/include/Eris-1.0/Eris/Dispatcher.h
-%{prefix}/include/Eris-1.0/Eris/EncapDispatcher.h
-%{prefix}/include/Eris-1.0/Eris/Entity.h
-%{prefix}/include/Eris-1.0/Eris/Factory.h
-%{prefix}/include/Eris-1.0/Eris/IdDispatcher.h
-%{prefix}/include/Eris-1.0/Eris/Lobby.h
-%{prefix}/include/Eris-1.0/Eris/Log.h
-%{prefix}/include/Eris-1.0/Eris/Metaserver.h
-%{prefix}/include/Eris-1.0/Eris/OpDispatcher.h
-%{prefix}/include/Eris-1.0/Eris/Person.h
-%{prefix}/include/Eris-1.0/Eris/Player.h
-%{prefix}/include/Eris-1.0/Eris/PollDefault.h
-%{prefix}/include/Eris-1.0/Eris/Poll.h
-%{prefix}/include/Eris-1.0/Eris/Property.h
-%{prefix}/include/Eris-1.0/Eris/Room.h
-%{prefix}/include/Eris-1.0/Eris/ServerInfo.h
-%{prefix}/include/Eris-1.0/Eris/SignalDispatcher.h
-%{prefix}/include/Eris-1.0/Eris/Timeout.h
-%{prefix}/include/Eris-1.0/Eris/Timestamp.h
-%{prefix}/include/Eris-1.0/Eris/TypeDispatcher.h
-%{prefix}/include/Eris-1.0/Eris/TypeInfo.h
-%{prefix}/include/Eris-1.0/Eris/Types.h
-%{prefix}/include/Eris-1.0/Eris/Utils.h
-%{prefix}/include/Eris-1.0/Eris/Wait.h
-%{prefix}/include/Eris-1.0/Eris/World.h
-%{prefix}/lib/liberis-1.0.a
-%{prefix}/lib/liberis-1.0.la
-%{prefix}/lib/liberis-1.0.so
-%{prefix}/lib/pkgconfig/eris-1.0.pc
+%{_libdir}/lib*.so
+%{_libdir}/lib*.la
+%{_libdir}/lib*.a
+%{_libdir}/pkgconfig/eris%{libsuffix}.pc
+%{_includedir}/Eris%{libsuffix}/Eris/ArgumentDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/atlas_utils.h
+%{_includedir}/Eris%{libsuffix}/Eris/Avatar.h
+%{_includedir}/Eris%{libsuffix}/Eris/BaseConnection.h
+%{_includedir}/Eris%{libsuffix}/Eris/ClassDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/Connection.h
+%{_includedir}/Eris%{libsuffix}/Eris/DebugDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/Dispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/EncapDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/Entity.h
+%{_includedir}/Eris%{libsuffix}/Eris/Factory.h
+%{_includedir}/Eris%{libsuffix}/Eris/IdDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/Lobby.h
+%{_includedir}/Eris%{libsuffix}/Eris/Log.h
+%{_includedir}/Eris%{libsuffix}/Eris/Metaserver.h
+%{_includedir}/Eris%{libsuffix}/Eris/OpDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/Person.h
+%{_includedir}/Eris%{libsuffix}/Eris/Player.h
+%{_includedir}/Eris%{libsuffix}/Eris/PollDefault.h
+%{_includedir}/Eris%{libsuffix}/Eris/Poll.h
+%{_includedir}/Eris%{libsuffix}/Eris/Property.h
+%{_includedir}/Eris%{libsuffix}/Eris/Room.h
+%{_includedir}/Eris%{libsuffix}/Eris/ServerInfo.h
+%{_includedir}/Eris%{libsuffix}/Eris/SignalDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/Timeout.h
+%{_includedir}/Eris%{libsuffix}/Eris/Timestamp.h
+%{_includedir}/Eris%{libsuffix}/Eris/TypeDispatcher.h
+%{_includedir}/Eris%{libsuffix}/Eris/TypeInfo.h
+%{_includedir}/Eris%{libsuffix}/Eris/Types.h
+%{_includedir}/Eris%{libsuffix}/Eris/Utils.h
+%{_includedir}/Eris%{libsuffix}/Eris/Wait.h
+%{_includedir}/Eris%{libsuffix}/Eris/World.h
 
 %files poll-glib
 %defattr(-,root,root)
-%{prefix}/lib/pkgconfig/eris-poll-glib-1.0.pc
-%{prefix}/include/Eris-1.0/Eris/PollGlibFD.h
-%{prefix}/include/Eris-1.0/Eris/PollGlib.h
-%{prefix}/include/Eris-1.0/Eris/PollGlibSource.h
-%{prefix}/include/Eris-1.0/Eris/PollGlibVersion.h
+%{_libdir}/pkgconfig/eris-poll-glib%{libsuffix}.pc
+%{_includedir}/Eris%{libsuffix}/Eris/PollGlibFD.h
+%{_includedir}/Eris%{libsuffix}/Eris/PollGlib.h
+%{_includedir}/Eris%{libsuffix}/Eris/PollGlibSource.h
+%{_includedir}/Eris%{libsuffix}/Eris/PollGlibVersion.h

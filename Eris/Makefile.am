@@ -1,8 +1,8 @@
 INCLUDES = -I$(top_srcdir)
 
-lib_LTLIBRARIES = liberis-1.0.la
+lib_LTLIBRARIES = liberis-1.2.la
 
-liberis_1_0_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
+liberis_1_2_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
 
 if HAVE_ATLAS_JANUS
 ATLAS_JANUS_CPP = UIFactory.cpp
@@ -12,7 +12,7 @@ ATLAS_JANUS_CPP =
 ATLAS_JANUS_H =
 endif
 
-liberis_1_0_la_SOURCES = \
+liberis_1_2_la_SOURCES = \
 	Entity.cpp \
 	World.cpp \
 	Lobby.cpp \
@@ -42,7 +42,7 @@ liberis_1_0_la_SOURCES = \
 	typeService.cpp \
 	$(ATLAS_JANUS_CPP)
 
-liberisdir = $(includedir)/Eris-1.0/Eris
+liberisdir = $(includedir)/Eris-1.2/Eris
 
 liberis_HEADERS = \
 	Lobby.h \

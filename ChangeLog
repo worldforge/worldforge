@@ -1,3 +1,11 @@
+Saturday, 9th August, Al Riddoch <alriddoch@zepler.org>
+
+	* Switch all the build files over to using 1.2 API suffix.
+
+	* bindings/polls/glib/PollGlib.h, bindings/polls/glib/PollGlibFD.h,
+	  bindings/polls/glib/PollGlibSource.h: Fixed some incorrect
+	  mangling of Poll by the Atlas-C++ conversion script.
+
 Saturday, 9th August, James Turner <james@worldforge.org>
 
 	* Convert to Atlas-C++ transitional API. Do not use unless

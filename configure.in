@@ -90,7 +90,7 @@ ERIS_POLL_GLIB_REQUIRES=
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     [
-	ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.0.pc"
+	ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.2.pc"
 	ERIS_POLL_GLIB_REQUIRES=glib-2.0
 	have_glib='yes'
     ],
@@ -128,9 +128,11 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 SYSTEM_LIBS=""
-ERIS_LIBS="-leris-1.0 -lm"
+ERIS_LIB_SUFFIX="-1.2"
+ERIS_LIBS="-leris$ERIS_LIB_SUFFIX -lm"
 ERIS_CFLAGS=""
 AC_SUBST(SYSTEM_LIBS)
+AC_SUBST(ERIS_LIB_SUFFIX)
 AC_SUBST(ERIS_LIBS)
 AC_SUBST(ERIS_CFLAGS)
 AC_SUBST(ERIS_REQUIRES)
@@ -147,7 +149,7 @@ bindings/perl/compile_flags.pl
 test/Makefile
 eris.dox
 eris.spec
-eris-1.0.pc
-eris-poll-glib-1.0.pc
+eris-1.2.pc
+eris-poll-glib-1.2.pc
 ])
 AC_OUTPUT

@@ -1,18 +1,18 @@
 #ifndef ERIS_POLL_GLIB_FD_H
 #define ERIS_POLL_GLIB_FD_H
 
-#include <Eris/pollGlibVersion.h>
+#include <Eris/PollGlibVersion.h>
 #include <skstream/skstream.h>
 
 namespace Eris {
 
-class pollGlibFD {
+class PollGlibFD {
 public:
 #ifdef ERIS_POLL_GLIB_2_0
-  pollGlibFD(GSource *source, const basic_socket_stream *str, gushort events)
+  PollGlibFD(GSource *source, const basic_socket_stream *str, gushort events)
 	: _source(source)
 #else
-  pollGlibFD(const basic_socket_stream *str, gushort events)
+  PollGlibFD(const basic_socket_stream *str, gushort events)
 #endif
   {
     _fd.fd = str->getSocket();
@@ -24,7 +24,7 @@ public:
     g_main_add_poll(&_fd, G_PRIORITY_DEFAULT);
 #endif
   }
-  ~pollGlibFD()
+  ~PollGlibFD()
   {
 #ifdef ERIS_POLL_GLIB_2_0
     g_source_remove_poll(_source, &_fd);
@@ -37,7 +37,7 @@ public:
   void setEvents(gushort events) {_fd.events = events;}
   gushort getEvents(gushort events) {return _fd.events;}
 private:
-  GpollFD _fd;
+  GPollFD _fd;
 #ifdef ERIS_POLL_GLIB_2_0
   GSource *_source;
 #endif
