@@ -1,5 +1,13 @@
 2003-07-06  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Segment.h: Re-name getSize() to getResolution()
+
+	* Mercator/Surface.h, Mercator/Surface.cpp: Store a reference to the
+	  the segment this is a layer of, and add an enumeration for indicating
+	  the orientation of the texturing on this layer.
+
+2003-07-06  Al Riddoch  <alriddoch@zepler.org>
+
 	* Clean up configure.in a bit.
 
 2003-07-05 Damien McGinnes

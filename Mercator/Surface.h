@@ -9,14 +9,22 @@
 
 namespace Mercator {
 
+    class Segment;
+
     class Surface {
+      public:
+        typedef enum orient { SURFACE_XY, SURFACE_XZ, SURFACE_YZ } Orientation;
       private:
-        const int m_res;
+        Segment & m_segment;
         float * const m_colors;
 
       public:
-        explicit Surface(unsigned int resolution = defaultResolution);
+        explicit Surface(Segment & segment);
         ~Surface();
+
+        float * getColors() {
+            return m_colors;
+        }
 
     };
 

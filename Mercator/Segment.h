@@ -44,7 +44,7 @@ class Segment {
     explicit Segment(unsigned int resolution = defaultResolution);
     ~Segment();
 
-    const int getSize() const {
+    const int getResolution() const {
         return m_res;
     }
 

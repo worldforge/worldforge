@@ -4,10 +4,13 @@
 
 #include <Mercator/Surface.h>
 
+#include <Mercator/Segment.h>
+
 namespace Mercator {
 
-Surface::Surface(unsigned int resolution) : m_res(resolution),
-                 m_colors(new float[(m_res + 1) * (m_res + 1) * 4])
+Surface::Surface(Segment & segment) : m_segment(segment),
+                 m_colors(new float[(segment.getResolution() + 1) *
+                                    (segment.getResolution() + 1) * 4])
 {
 }
 
