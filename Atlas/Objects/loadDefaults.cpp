@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Aloril.
 
+#include "loadDefaults.h"
+
 #include <fstream>
 #include <string>
 #include <map>
@@ -9,7 +11,6 @@
 
 #include "../Codecs/XML.h"
 #include "Decoder.h"
-#include "loadDefaults.h"
 #include "objectFactory.h"
 
 using Atlas::Message::Object;
