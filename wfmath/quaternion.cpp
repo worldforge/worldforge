@@ -169,6 +169,15 @@ Quaternion Quaternion::inverse() const
   return q;
 }
 
+Quaternion& Quaternion::rotate(const RotMatrix<3>& m)
+{
+  // FIXME find a more efficient way to do this
+  Quaternion tmp;
+  m_valid = m_valid && tmp.fromRotMatrix(m);
+  *this *= tmp;
+  return *this;
+}
+
 Quaternion& Quaternion::rotation(int axis, CoordType angle)
 {
   CoordType half_angle = angle / 2;

@@ -529,6 +529,8 @@ inline RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 
 #endif
 
+template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion&);
+
 template<const int dim>
 inline RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
 {

@@ -238,6 +238,9 @@ class RotMatrix {
    **/
   RotMatrix<3>& fromQuaternion(const Quaternion& q, const bool not_flip = true);
 
+  /// rotate the matrix using the quaternion
+  RotMatrix<3>& rotate(const Quaternion&);
+
   /// set a RotMatrix to a mirror perpendicular to the x axis
   RotMatrix& mirrorX()	{return mirror(0);}
   /// set a RotMatrix to a mirror perpendicular to the y axis

@@ -30,6 +30,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/rotbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
@@ -98,6 +99,13 @@ class Segment
   Segment<dim>& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_p1.rotate(m, p); m_p2.rotate(m, p); return *this;}
 
+  // 3D rotation functions
+  Segment<3>& rotateCorner(const Quaternion& q, int corner);
+  Segment<3>& rotateCenter(const Quaternion& q)
+	{rotatePoint(q, getCenter()); return *this;}
+  Segment<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
+	{m_p1.rotate(q, p); m_p2.rotate(q, p); return *this;}
+
   // Intersection functions
 
   AxisBox<dim> boundingBox() const {return AxisBox<dim>(m_p1, m_p2);}
@@ -105,6 +113,36 @@ class Segment
 	{return Ball<dim>(getCenter(), Distance(m_p1, m_p2) / 2);}
   Ball<dim> boundingSphereSloppy() const
 	{return Ball<dim>(getCenter(), SloppyDistance(m_p1, m_p2) / 2);}
+
+  Segment toParentCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+        {return Segment(m_p1.toParentCoords(origin, rotation),
+		m_p2.toParentCoords(origin, rotation));}
+  Segment toParentCoords(const AxisBox<dim>& coords) const
+        {return Segment(m_p1.toParentCoords(coords), m_p2.toParentCoords(coords));}
+  Segment toParentCoords(const RotBox<dim>& coords) const
+        {return Segment(m_p1.toParentCoords(coords), m_p2.toParentCoords(coords));}
+
+  // toLocal is just like toParent, expect we reverse the order of
+  // translation and rotation and use the opposite sense of the rotation
+  // matrix
+
+  Segment toLocalCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+        {return Segment(m_p1.toLocalCoords(origin, rotation),
+		m_p2.toLocalCoords(origin, rotation));}
+  Segment toLocalCoords(const AxisBox<dim>& coords) const
+        {return Segment(m_p1.toLocalCoords(coords), m_p2.toLocalCoords(coords));}
+  Segment toLocalCoords(const RotBox<dim>& coords) const
+        {return Segment(m_p1.toLocalCoords(coords), m_p2.toLocalCoords(coords));}
+
+  // 3D only
+  Segment<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
+        {return Segment<3>(m_p1.toParentCoords(origin, rotation),
+		m_p2.toParentCoords(origin, rotation));}
+  Segment<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
+        {return Segment<3>(m_p1.toLocalCoords(origin, rotation),
+		m_p2.toLocalCoords(origin, rotation));}
 
   friend bool Intersect<dim>(const Segment& s, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const Segment& s, bool proper);

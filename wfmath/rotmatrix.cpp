@@ -78,6 +78,25 @@ void WFMath::_NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& 
 #endif
 }
 
+template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion& q)
+{
+  Vector<3> vec;
+  vec.setValid();
+  m_valid = m_valid && q.isValid();
+
+  // rotate both sides by q
+
+  for(int vec_num = 0; vec_num < 3; ++vec_num) {
+    for(int elem_num = 0; elem_num < 3; ++elem_num)
+      vec[elem_num] = m_elem[vec_num][elem_num];
+    vec.rotate(q);
+    for(int elem_num = 0; elem_num < 3; ++elem_num)
+      m_elem[vec_num][elem_num] = vec[elem_num];
+  }
+
+  return *this;
+}
+
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,

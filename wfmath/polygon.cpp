@@ -120,3 +120,65 @@ Polygon<2>& Polygon<2>::rotatePoint(const RotMatrix<2>& m, const Point<2>& p)
 
   return *this;
 }
+
+//template<>
+Polygon<2> Polygon<2>::toParentCoords(const Point<2>& origin,
+    const RotMatrix<2>& rotation) const
+{
+  Polygon out;
+  out.m_points.resize(m_points.size());
+  for(unsigned i = 0; i < m_points.size(); ++i)
+    out.m_points[i] = m_points[i].toParentCoords(origin, rotation);
+  return out;
+}
+
+//template<>
+Polygon<2> Polygon<2>::toParentCoords(const AxisBox<2>& coords) const
+{
+  Polygon out;
+  out.m_points.resize(m_points.size());
+  for(unsigned i = 0; i < m_points.size(); ++i)
+    out.m_points[i] = m_points[i].toParentCoords(coords);
+  return out;
+}
+
+//template<>
+Polygon<2> Polygon<2>::toParentCoords(const RotBox<2>& coords) const
+{
+  Polygon out;
+  out.m_points.resize(m_points.size());
+  for(unsigned i = 0; i < m_points.size(); ++i)
+    out.m_points[i] = m_points[i].toParentCoords(coords);
+  return out;
+}
+
+//template<>
+Polygon<2> Polygon<2>::toLocalCoords(const Point<2>& origin,
+    const RotMatrix<2>& rotation) const
+{
+  Polygon out;
+  out.m_points.resize(m_points.size());
+  for(unsigned i = 0; i < m_points.size(); ++i)
+    out.m_points[i] = m_points[i].toLocalCoords(origin, rotation);
+  return out;
+}
+
+//template<>
+Polygon<2> Polygon<2>::toLocalCoords(const AxisBox<2>& coords) const
+{
+  Polygon out;
+  out.m_points.resize(m_points.size());
+  for(unsigned i = 0; i < m_points.size(); ++i)
+    out.m_points[i] = m_points[i].toLocalCoords(coords);
+  return out;
+}
+
+//template<>
+Polygon<2> Polygon<2>::toLocalCoords(const RotBox<2>& coords) const
+{
+  Polygon out;
+  out.m_points.resize(m_points.size());
+  for(unsigned i = 0; i < m_points.size(); ++i)
+    out.m_points[i] = m_points[i].toLocalCoords(coords);
+  return out;
+}

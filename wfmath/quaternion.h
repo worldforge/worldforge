@@ -118,6 +118,9 @@ class Quaternion
   /// returns the inverse of the Quaternion
   Quaternion inverse() const;
 
+  /// Rotate quaternion using the matrix.
+  Quaternion& rotate(const RotMatrix<3>&);
+
   /// sets the Quaternion to a rotation by angle around axis
   Quaternion& rotation(int axis, CoordType angle);
   /// sets the Quaternion to a rotation by angle around the Vector axis

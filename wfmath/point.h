@@ -151,18 +151,18 @@ class Point
 	{assert(corner == 0); return operator=(p);}
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
-  Point rotateCorner(const RotMatrix<dim>& m, int corner)
+  Point& rotateCorner(const RotMatrix<dim>& m, int corner)
 	{assert(corner == 0); return *this;}
-  Point rotateCenter(const RotMatrix<dim>& m) {return *this;}
-  Point rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
+  Point& rotateCenter(const RotMatrix<dim>& m) {return *this;}
+  Point& rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   // 3D rotation functions
   Point<3>& rotate(const Quaternion& q, const Point<3>& p)
 	{return (*this = p + (*this - p).rotate(q));}
-  Point<3> rotateCorner(const Quaternion& q, int corner)
+  Point<3>& rotateCorner(const Quaternion& q, int corner)
 	{assert(corner == 0); return *this;}
-  Point<3> rotateCenter(const Quaternion& q) {return *this;}
-  Point<3> rotatePoint(const Quaternion& q, const Point<3>& p) {return rotate(q, p);}
+  Point<3>& rotateCenter(const Quaternion& q) {return *this;}
+  Point<3>& rotatePoint(const Quaternion& q, const Point<3>& p) {return rotate(q, p);}
 
   // The implementations of these lie in axisbox_funcs.h and
   // ball_funcs.h, to reduce include dependencies
@@ -172,11 +172,9 @@ class Point
 
   Point toParentCoords(const Point& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-	{return origin + (*this - Point(0, 0, 0)) * rotation;}
-  Point toParentCoords(const AxisBox<dim>& coords) const
-	{return coords.lowCorner() + (*this - Point(0, 0, 0));}
-  Point toParentCoords(const RotBox<dim>& coords) const
-	{return coords.corner0() + (*this - Point(0, 0, 0)) * coords.orientation();}
+	{return origin + (*this - Point().setToOrigin()) * rotation;}
+  Point toParentCoords(const AxisBox<dim>& coords) const;
+  Point toParentCoords(const RotBox<dim>& coords) const;
 
   // toLocal is just like toParent, expect we reverse the order of
   // translation and rotation and use the opposite sense of the rotation
@@ -184,17 +182,15 @@ class Point
 
   Point toLocalCoords(const Point& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-	{return Point(0, 0, 0) + rotation * (*this - origin);}
-  Point toLocalCoords(const AxisBox<dim>& coords) const
-	{return Point(0, 0, 0) + (*this - origin);}
-  Point toLocalCoords(const RotBox<dim>& coords) const
-	{return Point(0, 0, 0) + coords.orientation() * (*this - coords.corner0());}
+	{return Point().setToOrigin() + rotation * (*this - origin);}
+  Point toLocalCoords(const AxisBox<dim>& coords) const;
+  Point toLocalCoords(const RotBox<dim>& coords) const;
 
   // 3D only
   Point<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-	{return origin + (*this - Point(0, 0, 0)).rotate(rotation);}
+	{return origin + (*this - Point().setToOrigin()).rotate(rotation);}
   Point<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-	{return Point(0, 0, 0) + (*this - origin).rotate(rotation.inverse());}
+	{return Point().setToOrigin() + (*this - origin).rotate(rotation.inverse());}
 
   // Member access
 

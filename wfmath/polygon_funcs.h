@@ -281,6 +281,38 @@ void _Poly2Orient<dim>::rotate2(const RotMatrix<dim>& m, const Point<2>& p)
   m_origin += shift - Prod(shift, m);
 }
 
+template<>
+inline void _Poly2Orient<3>::rotate(const Quaternion& q, const Point<3>& p)
+{
+  m_origin.rotate(q, p);
+
+  for(int j = 0; j < 2; ++j)
+    m_axes[j].rotate(q);
+}
+
+template<>
+inline void _Poly2Orient<3>::rotate2(const Quaternion& q, const Point<2>& p)
+{
+  assert(m_origin.isValid());
+
+  if(!m_axes[0].isValid()) {
+    assert(p[0] == 0 && p[1] == 0);
+    return;
+  }
+
+  Vector<3> shift = m_axes[0] * p[0];
+  m_axes[0].rotate(q);
+
+  if(m_axes[1].isValid()) {
+    shift += m_axes[1] * p[1];
+    m_axes[1].rotate(q);
+  }
+  else
+    assert(p[1] == 0);
+
+  m_origin += shift - shift.rotate(q);
+}
+
 template<const int dim>
 inline bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
 {

@@ -30,6 +30,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/rotbox.h>
 #include <wfmath/intersect_decls.h>
 
 namespace WFMath {
@@ -118,11 +119,43 @@ class Ball
   Ball& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_center.rotate(m, p); return *this;}
 
+  // 3D rotation function
+  Ball<3>& rotateCorner(const Quaternion&, int corner) {assert(false);}
+  Ball<3>& rotateCenter(const Quaternion&) {return *this;}
+  Ball<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
+	{m_center.rotate(q, p); return *this;}
+
   // Intersection functions
 
   AxisBox<dim> boundingBox() const;
   Ball boundingSphere() const		{return *this;}
   Ball boundingSphereSloppy() const	{return *this;}
+
+  Ball toParentCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+        {return Ball(m_center.toParentCoords(origin, rotation), m_radius);}
+  Ball toParentCoords(const AxisBox<dim>& coords) const
+        {return Ball(m_center.toParentCoords(coords), m_radius);}
+  Ball toParentCoords(const RotBox<dim>& coords) const
+        {return Ball(m_center.toParentCoords(coords), m_radius);}
+
+  // toLocal is just like toParent, expect we reverse the order of
+  // translation and rotation and use the opposite sense of the rotation
+  // matrix
+
+  Ball toLocalCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+        {return Ball(m_center.toLocalCoords(origin, rotation), m_radius);}
+  Ball toLocalCoords(const AxisBox<dim>& coords) const
+        {return Ball(m_center.toLocalCoords(coords), m_radius);}
+  Ball toLocalCoords(const RotBox<dim>& coords) const
+        {return Ball(m_center.toLocalCoords(coords), m_radius);}
+
+  // 3D only
+  Ball<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
+        {return Ball<3>(m_center.toParentCoords(origin, rotation), m_radius);}
+  Ball<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
+        {return Ball<3>(m_center.toLocalCoords(origin, rotation), m_radius);}
 
   friend bool Intersect<dim>(const Ball& b, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const Ball& b, bool proper);

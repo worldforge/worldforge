@@ -71,6 +71,19 @@ inline Segment<dim>& Segment<dim>::rotateCorner(const RotMatrix<dim>& m, int cor
   return *this;
 }
 
+template<>
+inline Segment<3>& Segment<3>::rotateCorner(const Quaternion& q, int corner)
+{
+  assert(corner == 0 || corner == 1);
+
+  if(corner)
+    m_p1.rotate(q, m_p2);
+  else
+    m_p2.rotate(q, m_p1);
+
+  return *this;
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_SEGMENT_FUNCS_H

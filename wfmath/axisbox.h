@@ -137,6 +137,20 @@ class AxisBox
   Ball<dim> boundingSphere() const;
   Ball<dim> boundingSphereSloppy() const;
 
+  AxisBox toParentCoords(const Point<dim>& origin) const
+        {return AxisBox(m_low.toParentCoords(origin), m_high.toParentCoords(origin), true);}
+  AxisBox toParentCoords(const AxisBox<dim>& coords) const
+        {return AxisBox(m_low.toParentCoords(coords), m_high.toParentCoords(coords), true);}
+
+  // toLocal is just like toParent, expect we reverse the order of
+  // translation and rotation and use the opposite sense of the rotation
+  // matrix
+
+  AxisBox toLocalCoords(const Point<dim>& origin) const
+        {return AxisBox(m_low.toLocalCoords(origin), m_high.toLocalCoords(origin), true);}
+  AxisBox toLocalCoords(const AxisBox<dim>& coords) const
+        {return AxisBox(m_low.toLocalCoords(coords), m_high.toLocalCoords(coords), true);}
+
   /// Return true if the boxes intersect, and set 'out' to their intersection
   friend bool Intersection<dim>(const AxisBox& a1, const AxisBox& a2, AxisBox& out);
   /// Get the minimal box that contains a1 and a2

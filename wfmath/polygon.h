@@ -31,6 +31,7 @@
 #include <wfmath/point.h>
 #include <wfmath/rotmatrix.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/rotbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
@@ -125,6 +126,20 @@ class Polygon<2>
   Ball<2> boundingSphere() const {return BoundingSphere(m_points);}
   Ball<2> boundingSphereSloppy() const {return BoundingSphereSloppy(m_points);}
 #endif
+
+  Polygon toParentCoords(const Point<2>& origin,
+      const RotMatrix<2>& rotation = RotMatrix<2>().identity()) const;
+  Polygon toParentCoords(const AxisBox<2>& coords) const;
+  Polygon toParentCoords(const RotBox<2>& coords) const;
+
+  // toLocal is just like toParent, expect we reverse the order of
+  // translation and rotation and use the opposite sense of the rotation
+  // matrix
+
+  Polygon toLocalCoords(const Point<2>& origin,
+      const RotMatrix<2>& rotation = RotMatrix<2>().identity()) const;
+  Polygon toLocalCoords(const AxisBox<2>& coords) const;
+  Polygon toLocalCoords(const RotBox<2>& coords) const;
 
   friend bool Intersect<2>(const Polygon& r, const Point<2>& p, bool proper);
   friend bool Contains<2>(const Point<2>& p, const Polygon& r, bool proper);
@@ -228,6 +243,47 @@ class _Poly2Orient
   // Rotates about the point which corresponds to "p" in the oriented plane
   void rotate2(const RotMatrix<dim>& m, const Point<2>& p);
 
+//3D only
+  void rotate(const Quaternion& q, const Point<3>& p);
+  // Rotates about the point which corresponds to "p" in the oriented plane
+  void rotate2(const Quaternion& q, const Point<2>& p);
+
+  _Poly2Orient toParentCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
+		p.m_axes[0] *= rotation; p.m_axes[1] *= rotation; return p;}
+  _Poly2Orient toParentCoords(const AxisBox<dim>& coords) const
+	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords); return p;}
+  _Poly2Orient toParentCoords(const RotBox<dim>& coords) const
+	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords);
+		p.m_axes[0] *= coords.orientation();
+		p.m_axes[1] *= coords.orientation(); return p;}
+
+  // toLocal is just like toParent, expect we reverse the order of
+  // translation and rotation and use the opposite sense of the rotation
+  // matrix
+
+  _Poly2Orient toLocalCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
+		p.m_axes[0] = rotation * p.m_axes[0];
+		p.m_axes[1] = rotation * p.m_axes[1]; return p;}
+  _Poly2Orient toLocalCoords(const AxisBox<dim>& coords) const
+	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords); return p;}
+  _Poly2Orient toLocalCoords(const RotBox<dim>& coords) const
+	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords);
+		p.m_axes[0] = coords.orientation() * p.m_axes[0];
+		p.m_axes[1] = coords.orientation() * p.m_axes[1]; return p;}
+
+  // 3D only
+  _Poly2Orient<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
+	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
+		p.m_axes[0].rotate(rotation); p.m_axes[0].rotate(rotation); return q;}
+  _Poly2Orient<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
+	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
+		p.m_axes[0].rotate(rotation.inverse());
+		p.m_axes[0].rotate(rotation.inverse()); return q;}
+
   // Gives the offset from pd to the space spanned by
   // the basis, and puts the nearest point in p2.
   Vector<dim> offset(const Point<dim>& pd, Point<2>& p2) const;
@@ -317,11 +373,47 @@ class Polygon
   Polygon& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_orient.rotate(m, p); return *this;}
 
+  // 3D rotation functions
+  Polygon<3>& rotateCorner(const Quaternion& q, int corner)
+	{m_orient.rotate2(q, m_poly[corner]); return *this;}
+  Polygon<3>& rotateCenter(const Quaternion& q)
+	{if(m_poly.numCorners() > 0)
+		m_orient.rotate2(q, m_poly.getCenter());
+	 return *this;}
+  Polygon<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
+	{m_orient.rotate(q, p); return *this;}
+
   // Intersection functions
 
   AxisBox<dim> boundingBox() const;
   Ball<dim> boundingSphere() const;
   Ball<dim> boundingSphereSloppy() const;
+
+  Polygon toParentCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+        {Polygon p(*this); p.m_orient = m_orient.toParentCoords(origin, rotation); return p;}
+  Polygon toParentCoords(const AxisBox<dim>& coords) const
+        {Polygon p(*this); p.m_orient = m_orient.toParentCoords(coords); return p;}
+  Polygon toParentCoords(const RotBox<dim>& coords) const
+        {Polygon p(*this); p.m_orient = m_orient.toParentCoords(coords); return p;}
+
+  // toLocal is just like toParent, expect we reverse the order of
+  // translation and rotation and use the opposite sense of the rotation
+  // matrix
+
+  Polygon toLocalCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+        {Polygon p(*this); p.m_orient = m_orient.toLocalCoords(origin, rotation); return p;}
+  Polygon toLocalCoords(const AxisBox<dim>& coords) const
+        {Polygon p(*this); p.m_orient = m_orient.toLocalCoords(coords); return p;}
+  Polygon toLocalCoords(const RotBox<dim>& coords) const
+        {Polygon p(*this); p.m_orient = m_orient.toLocalCoords(coords); return p;}
+
+  // 3D only
+  Polygon<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
+        {Polygon<3> p(*this); p.m_orient = m_orient.toParentCoords(origin, rotation); return p;}
+  Polygon<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
+        {Polygon<3> p(*this); p.m_orient = m_orient.toLocalCoords(origin, rotation); return p;}
 
   friend bool Intersect<dim>(const Polygon& r, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const Polygon& r, bool proper);

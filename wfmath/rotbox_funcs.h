@@ -112,6 +112,21 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
   return AxisBox<dim>(min, max, true);
 }
 
+// This is here, instead of defined in the class, to
+// avoid include order problems
+
+template<const int dim>
+Point<dim> Point<dim>::toParentCoords(const RotBox<dim>& coords) const
+{
+  return coords.corner0() + (*this - Point().setToOrigin()) * coords.orientation();
+}
+
+template<const int dim>
+Point<dim> Point<dim>::toLocalCoords(const RotBox<dim>& coords) const
+{
+  return Point().setToOrigin() + coords.orientation() * (*this - coords.corner0());
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_ROT_BOX_FUNCS_H

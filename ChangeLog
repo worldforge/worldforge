@@ -1,5 +1,19 @@
 Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
 
+	* wfmath/point.h, wfmath/axisbox.h, wfmath/axisbox_funcs.h,
+	  wfmath/segment.h, wfmath/segment_funcs.h, wfmath/ball.h,
+	  wfmath/rotbox.h, wfmath/rotbox_funcs.h, wfmath/polygon.h,
+	  wfmath/polygon_funcs.h, wfmath/polygon.cpp: Added
+	  Quaternion-based rotation functions and toParentCoords(),
+	  toLocalCoords() to all shapes, in parallel to those
+	  functions previously added to Point.
+	* wfmath/rotmatrix*, wfmath/quaternion*: Added functions
+	  to let RotMatrix<3> and Quaternion rotate each other.
+	  RotMatrix<3>::rotate(Quaternion) was needed for
+	  Quaternion-based rotation of RotBox<3>.
+
+Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
 	* wfmath/MersenneTwister.h, wfmath/const.h, wfmath/miniball_funcs.h:
 	  Replace ANSI C headers #include <foo.h> with #include <cfoo>.
 	* wfmath/stream.h: Removed commented-out sstream #include.

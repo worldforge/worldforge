@@ -199,6 +199,18 @@ inline AxisBox<dim> Point<dim>::boundingBox() const
   return AxisBox<dim>(*this, *this, true);
 }
 
+template<const int dim>
+Point<dim> Point<dim>::toParentCoords(const AxisBox<dim>& coords) const
+{
+  return coords.lowCorner() + (*this - Point().setToOrigin());
+}
+
+template<const int dim>
+Point<dim> Point<dim>::toLocalCoords(const AxisBox<dim>& coords) const
+{
+  return Point().setToOrigin() + (*this - coords.lowCorner());
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_AXIS_BOX_FUNCS_H

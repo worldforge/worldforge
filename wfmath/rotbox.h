@@ -117,6 +117,14 @@ class RotBox
   RotBox& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_orient = Prod(m_orient, m); m_corner0.rotate(m, p); return *this;}
 
+  // 3D rotation functions
+  RotBox<3>& rotateCorner(const Quaternion& q, int corner)
+	{rotatePoint(q, getCorner(corner)); return *this;}
+  RotBox<3>& rotateCenter(const Quaternion& q)
+	{rotatePoint(q, getCenter()); return *this;}
+  RotBox<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
+	{m_orient = m_orient.rotate(q); m_corner0.rotate(m, p); return *this;}
+
   // Intersection functions
 
   AxisBox<dim> boundingBox() const;
@@ -124,6 +132,38 @@ class RotBox
 	{return Ball<dim>(getCenter(), m_size.mag() / 2);}
   Ball<dim> boundingSphereSloppy() const
 	{return Ball<dim>(getCenter(), m_size.sqrMag() / 2);}
+
+  RotBox toParentCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+        {return RotBox(m_corner0.toParentCoords(origin, rotation), m_size,
+		m_orient * rotation);}
+  RotBox toParentCoords(const AxisBox<dim>& coords) const
+        {return RotBox(m_corner0.toParentCoords(coords), m_size, m_orient);}
+  RotBox toParentCoords(const RotBox<dim>& coords) const
+        {return RotBox(m_corner0.toParentCoords(coords), m_size,
+		m_orient * coords.m_orient);}
+
+  // toLocal is just like toParent, expect we reverse the order of
+  // translation and rotation and use the opposite sense of the rotation
+  // matrix
+
+  RotBox toLocalCoords(const Point<dim>& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+        {return RotBox(m_corner0.toLocalCoords(origin, rotation), m_size,
+		rotation * m_orient);}
+  RotBox toLocalCoords(const AxisBox<dim>& coords) const
+        {return RotBox(m_corner0.toLocalCoords(coords), m_size, m_orient);}
+  RotBox toLocalCoords(const RotBox<dim>& coords) const
+        {return RotBox(m_corner0.toLocalCoords(coords), m_size,
+		coords.m_orient * m_orient);}
+
+  // 3D only
+  RotBox<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
+        {return RotBox<3>(m_corner0.toParentCoords(origin, rotation), m_size,
+		m_orient.rotate(rotation));}
+  RotBox<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
+        {return RotBox<3>(m_p1.toLocalCoords(origin, rotation), m_size,
+		m_orient.rotate(rotation.inverse()));}
 
   friend bool Intersect<dim>(const RotBox& r, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const RotBox& r, bool proper);
