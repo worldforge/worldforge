@@ -49,7 +49,7 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name,
 		}
 		printf(">");
 	} 
-	if (list.isLongList()) {
+/*	if (list.isLongList()) {
 		printf("<%%%s=", name);
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
@@ -58,7 +58,7 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name,
 		}
 		printf(">");
 	} 
-	if (list.isFloatList()) {
+*/	if (list.isFloatList()) {
 		printf("<#%s=", name);
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
@@ -98,10 +98,10 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name,
 	if (list.isInt()) {
 		printf("@%s=%li", name, list.asInt());
 	}
-	if (list.isLong()) {
+/*	if (list.isLong()) {
 		printf("%%%s=%li", name, list.asLong());
 	}
-	if (list.isFloat()) {
+*/	if (list.isFloat()) {
 		printf("#%s=%.2f", name, list.asFloat());
 	}
 

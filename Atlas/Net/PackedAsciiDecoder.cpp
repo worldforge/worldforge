@@ -38,15 +38,17 @@ int APackedAsciiDecoder::getToken()
 
 int APackedAsciiDecoder::hasTokens()
 {
-	int	pos;
-   //int	pos1;
-	//int	ndx;
+    //check for buffer overflow
+    if (token == -1)
+        return -1;
+	
+	
+	size_t	pos;
 	int	chk;
 	string	typ;
 
 	//printf("BEG TOKEN=%i\n", token);
 
-	if (token == -1) return-1; // buffer overflow !!!
 
 	do {
 		chk = 0;
@@ -57,7 +59,8 @@ int APackedAsciiDecoder::hasTokens()
 		// this is where we are gonna put the state machine
 		switch (state) {
 		case 1:// start of message
-			if((pos=buffer.find('{')) == -1) break;
+			if( (pos=buffer.find('{')) == string::npos )
+			    break;
 			buffer = buffer.substr(pos+1);
 			// change states
 			token = AProtocol::atlasMSGBEG;
@@ -108,7 +111,8 @@ int APackedAsciiDecoder::hasTokens()
 				break;
 			}
 			// must be an attribute == wait until we got the name
-			if ((pos=buffer.find('=')) == -1) break;
+            if ((pos=buffer.find('=')) == string::npos )
+			    break;
 			// get the name out before proc
 			name = buffer.substr(1,pos-1);
 			buffer = buffer.substr(pos+1);
@@ -117,7 +121,7 @@ int APackedAsciiDecoder::hasTokens()
 			if (typ == "[") type = AProtocol::atlasMAP;
 			if (typ == "!") type = AProtocol::atlasURI;
 			if (typ == "@") type = AProtocol::atlasINT;
-			if (typ == "%") type = AProtocol::atlasLNG;
+//			if (typ == "%") type = AProtocol::atlasLNG;
 			if (typ == "#") type = AProtocol::atlasFLT;
 			if (typ == "$") type = AProtocol::atlasSTR;
 			if (typ == "<") {
@@ -127,7 +131,7 @@ int APackedAsciiDecoder::hasTokens()
 				if (typ == "@") type = AProtocol::atlasLSTINT;
 				if (typ == "#") type = AProtocol::atlasLSTFLT;
 				if (typ == "$") type = AProtocol::atlasLSTSTR;
-				if (typ == "%") type = AProtocol::atlasLSTLNG;
+//				if (typ == "%") type = AProtocol::atlasLSTLNG;
 			}
 			// change states, wait for value
 			token = AProtocol::atlasATRBEG;
@@ -137,7 +141,7 @@ int APackedAsciiDecoder::hasTokens()
 				type==AProtocol::atlasLSTINT || 
 				type==AProtocol::atlasLSTFLT || 
 				type==AProtocol::atlasLSTSTR || 
-				type==AProtocol::atlasLSTLNG || 
+//				type==AProtocol::atlasLSTLNG ||
 				type==AProtocol::atlasMAP
 			) {
 				state = 2;
@@ -148,12 +152,13 @@ int APackedAsciiDecoder::hasTokens()
 			break;
 
 		case 3:
-			pos = buffer.find_first_of("[(<%@!$#]>)}");
-			if (pos == -1) break;
+			if ( (pos = buffer.find_first_of("[(<%@!$#]>)}")) == string::npos )
+			    break;
+
 			// got an end marker, pull the data
 			sval = buffer.substr(0,pos);
 			if (type == AProtocol::atlasINT) ival = atoi(sval.c_str());
-			if (type == AProtocol::atlasLNG) ival = atol(sval.c_str());
+//			if (type == AProtocol::atlasLNG) ival = atol(sval.c_str());
 			if (type == AProtocol::atlasFLT) fval = atof(sval.c_str());
 			// strip up to token
 			buffer = buffer.substr(pos);

@@ -44,18 +44,19 @@ virtual	AProtocol*		makenew()		{ return NULL; }
 	static int atlasATREND;  // attribute end
 	static int atlasMSGEND;  // message ends
 
-	static int atlasINT;
-	static int atlasLNG;
-	static int atlasFLT;
-	static int atlasSTR;
-	static int atlasURI;
-	static int atlasLSTINT;
-	static int atlasLSTLNG;
-	static int atlasLSTFLT;
-	static int atlasLSTSTR;
-	static int atlasLSTURI;
-	static int atlasLST;
-	static int atlasMAP;
+	enum AtlasTypes {   atlasINT=1,
+//	                    atlasLNG,
+	                    atlasFLT,
+	                    atlasSTR,
+	                    atlasURI,
+	                    atlasLSTINT,
+	                    atlasLSTLNG,
+	                    atlasLSTFLT,
+	                    atlasLSTSTR,
+	                    atlasLSTURI,
+	                    atlasLST,
+	                    atlasMAP
+	                    };
 };
 
 #endif

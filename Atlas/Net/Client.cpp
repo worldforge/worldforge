@@ -62,8 +62,8 @@ bool AClient::canRead()
 	assert( codec != 0 );
 	codec->feedStream(buf);
 	
-	while (codec->hasMessage()>0) {
-		DebugMsg1(4,"aclient :: PROCESSING MESSAGE !!","");
+	while ( codec->hasMessage() ) {
+		DebugMsg1(4,"aclient :: processing codec message","");
 		gotMsg(codec->getMessage());
 		codec->freeMessage();
 	}
@@ -89,7 +89,7 @@ void AClient::doPoll()
     fd_set		fdsend;
     struct timeval	tm;
 
-    DebugMsg1(4,"aclient :: POLLING CLIENT STREAM !!","");
+    DebugMsg1( 6, "aclient :: POLLING CLIENT STREAM !!", "" );
 
     tm.tv_sec = 0;
     tm.tv_usec = 1000;
