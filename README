@@ -1,0 +1,86 @@
+Mercator: a procedural terrain library
+======================================
+
+Mercator is primarily aimed at terrain for multiplayer online games and
+forms one of the WorldForge (http://www.worldforge.org) core libraries.
+It is intended to be used as a terrain library on the client, while a
+subset of features are useful on the server.
+
+Mercator is designed in such a way that individual tiles can be
+generated on-the-fly from a very small source data set.  Each tile uses
+a fast deterministic random number generation to ensure that identical
+results are produced "anytime, anywhere".  This enables transmission of
+terrain across low bandwidth links as part of the standard data stream,
+or server side collision detection with the same terrain that the
+player sees. 
+
+The use of tiles means that there is inherently a large degree of gross
+control of the shape of the terrain.  Finer control is implemented by
+allowing geometric modifications - for example, a polygonal area might
+be flattened, or a crater could be applied.
+
+Height generation
+-----------------
+* uses deterministic random number generation and seeds to
+  generate detailed terrain from sparse control points.
+* each tile is seeded using the four surrounding control points
+* shape of each tile is influenced by height, roughness and
+  falloff parameters
+
+Height Modifications
+--------------------
+* geometric modifications can be applied for small features
+* new modifications can be added quite easily
+
+Shading
+-------
+* generate shading information based on height and gradient
+* new shaders can be added quite easily
+* used on the client side
+
+Atlas Integration
+-----------------
+The aim is to pass all data between server and client using atlas.
+Cyphesis and Stage provide a parameter to the world entity that defines
+the global terrain (this is a bit of a hack). Shading and Modifiers are
+only implemented on the client right now.
+
+   TODO:
+   properly define atlas messages between client and server for
+   * terrain base points
+   * geometric modifiers
+   * shading controls
+
+Collision
+---------
+basic intersection/collision functions are implemented for
+* bbox
+* point
+* ray
+
+Current Limitations
+-------------------
+* multiple resolutions in the one terrain are unsupported
+
+Implementations
+---------------
+As of September 2003, Mercator is used in:
+Equator - allows editing of base points
+Apogee - implements shaders
+Stage
+Cyphesis
+
+Screenshots 
+-----------
+(bear in mind that some of these shots may have terrain with somewhat
+unrealistic parameters for more interesting demos)
+
+* Equator showing part of a terrain
+http://members.austarmetro.com.au/~mcginnes/snapshot8.png
+* Apogee showing shaders in action
+http://www.ecs.soton.ac.uk/~ajr/WF/apogee_terrain_shaders.png
+* Equator showing some modifiers applied
+http://members.austarmetro.com.au/~mcginnes/snapshot8.png
+http://members.austarmetro.com.au/~mcginnes/mercatorMesa.jpg
+
+                   

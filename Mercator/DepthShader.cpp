@@ -53,7 +53,8 @@ void DepthShader::shade(Surface & s) const
         } else if (depth < m_murkyDepth) {
             data[++j] = colorMax;
         } else {
-            data[++j] = colorMax - (colorMax * ((depth - m_murkyDepth) / (m_waterLevel - m_murkyDepth)));
+            data[++j] = colorMax - (unsigned char)(colorMax * ((depth - 
+                        m_murkyDepth) / (m_waterLevel - m_murkyDepth)));
         }
     }
 }
