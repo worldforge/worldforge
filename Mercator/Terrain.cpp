@@ -27,10 +27,11 @@ void Terrain::remove(int x, int y)
 
 void Terrain::invalidate(int x, int y)
 {
-    remove(x,   y);
-    remove(x-1, y);
-    remove(x,   y-1);
-    remove(x-1, y-1);
+    for(int i = x - 2; i < x + 2; ++i) {
+        for(int j = y - 2; j < y + 2; ++j) {
+            remove(i, j);
+        }
+    }
 }
 
 Terrain::Terrain(int res) : m_res(res)
@@ -70,8 +71,6 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
     if (s != 0) {
         return s;
     }
-    float nn = Terrain::defaultLevel, fn = Terrain::defaultLevel,
-           ff = Terrain::defaultLevel, nf = Terrain::defaultLevel;
     float base[16];
     for(int i = 0; i < 16; ++i) { base[i] = Terrain::defaultLevel; }
     bool complete = getBasePoint(x,     y,     base[1*4 + 1]) &&
