@@ -13,20 +13,20 @@ namespace Atlas { namespace Objects {
 
 Root::Root()
 {
-    Object::ListType parent;
-    SetAttr("parents", parent);
-    SetAttr("id", string("root"));
-    SetAttr("objtype", string("meta"));
-    SetAttr("name", string(""));
+    Object::ListType parents;
+    SetParents(parents);
+    SetId("root");
+    SetObjtype("meta");
+    SetName("");
 }
 
 Root::Root(const string& id)
 {
-    Object::ListType parent;
-    parent.push_back(string("root"));
-    SetAttr("parents", parent);
-    SetAttr("id", id);
-    SetAttr("objtype", string("instance"));
+    Object::ListType parents;
+    parents.push_back(string("root"));
+    SetParents(parents);
+    SetId(id);
+    SetObjtype("instance");
 }
 
 Root::~Root()
@@ -44,9 +44,13 @@ bool Root::HasAttr(const string& name) const
     return (attributes.find(name) == attributes.end());
 }
 
-const Object& Root::GetAttr(const string& name) const
+Object Root::GetAttr(const string& name) const
     throw (NoSuchAttrException) 
 {
+    if (name == "parents") return attr_parents;
+    if (name == "id") return attr_id;
+    if (name == "attr_objtype") return attr_objtype;
+    if (name == "attr_name") return attr_name;
     if (attributes.find(name) == attributes.end())
         throw NoSuchAttrException(name);
     return ((*attributes.find(name)).second);
@@ -54,6 +58,10 @@ const Object& Root::GetAttr(const string& name) const
 
 void Root::SetAttr(const string& name, const Object& attr)
 {
+    if (name == "parents") { SetParents(attr.AsList()); return; }
+    if (name == "id") { SetId(attr.AsString()); return; }
+    if (name == "objtype") { SetObjtype(attr.AsString()); return; }
+    if (name == "name") { SetName(attr.AsString()); return; }
     attributes[name] = attr;
 }
 
@@ -69,6 +77,11 @@ Object Root::AsObject() const
 
 void Root::SendContents(Bridge* b) const
 {
+    SendParents(b);
+    SendId(b);
+    SendObjtype(b);
+    SendName(b);
+
     Message::Encoder e(b);
     typedef map<string, Object>::const_iterator Iter;
     for (Iter I = attributes.begin(); I != attributes.end(); I++)

@@ -17,48 +17,59 @@ Encoder::Encoder(Atlas::Bridge* b)
 
 void Encoder::ListItem(const Object& obj)
 {
-    if (obj.IsInt()) b->ListItem(obj.AsInt());
-    else if (obj.IsFloat()) b->ListItem(obj.AsFloat());
-    else if (obj.IsString()) b->ListItem(obj.AsString());
-    else if (obj.IsMap()) {
-        b->ListItem(Bridge::MapBegin);
-        Object::MapType::const_iterator I;
-        for (I = obj.AsMap().begin(); I != obj.AsMap().end();
-                I++)
-            MapItem((*I).first, (*I).second);
-        b->MapEnd();
-    } else if (obj.IsList()) {
-        b->ListItem(Bridge::ListBegin);
-        Object::ListType::const_iterator I;
-        for (I = obj.AsList().begin(); I != obj.AsList().end();
-                I++)
-            ListItem(*I);
-        b->ListEnd();
+    switch (obj.GetType()) {
+        case Object::TYPE_INT: b->ListItem(obj.AsInt()); break;
+        case Object::TYPE_FLOAT: b->ListItem(obj.AsFloat()); break;
+        case Object::TYPE_STRING: b->ListItem(obj.AsString()); break;
+        case Object::TYPE_MAP: {
+            b->ListItem(Bridge::MapBegin);
+            Object::MapType::const_iterator I;
+            for (I = obj.AsMap().begin(); I != obj.AsMap().end();
+                    I++)
+                MapItem((*I).first, (*I).second);
+            b->MapEnd();
+            }
+            break;
+        case Object::TYPE_LIST: {
+            b->ListItem(Bridge::ListBegin);
+            Object::ListType::const_iterator I;
+            for (I = obj.AsList().begin(); I != obj.AsList().end();
+                    I++)
+                ListItem(*I);
+            b->ListEnd();
+            }
+            break;
+        default: break;
     }
 }
 
 void Encoder::MapItem(const string& name, const Object& obj)
 {
-    if (obj.IsInt()) b->MapItem(name, obj.AsInt());
-    else if (obj.IsFloat()) b->MapItem(name,
-            obj.AsFloat());
-    else if (obj.IsString()) b->MapItem(name,
-            obj.AsString());
-    else if (obj.IsMap()) {
-        b->MapItem(name, Bridge::MapBegin);
-        Object::MapType::const_iterator I;
-        for (I = obj.AsMap().begin(); I != obj.AsMap().end();
-                I++)
-            MapItem((*I).first, (*I).second);
-        b->MapEnd();
-    } else if (obj.IsList()) {
-        b->MapItem(name, Bridge::ListBegin);
-        Object::ListType::const_iterator I;
-        for (I = obj.AsList().begin(); I != obj.AsList().end();
-                I++)
-            ListItem(*I);
-        b->ListEnd();
-    }
+    switch (obj.GetType()) {
+        case Object::TYPE_INT: b->MapItem(name, obj.AsInt()); break;
+        case Object::TYPE_FLOAT: b->MapItem(name, obj.AsFloat()); break;
+        case Object::TYPE_STRING: b->MapItem(name, obj.AsString()); break;
+        case Object::TYPE_MAP: {
+            b->MapItem(name, Bridge::MapBegin);
+            Object::MapType::const_iterator I;
+            for (I = obj.AsMap().begin(); I != obj.AsMap().end();
+                    I++)
+                MapItem((*I).first, (*I).second);
+            b->MapEnd();
+            }
+            break;
+        case Object::TYPE_LIST: {
+            b->MapItem(name, Bridge::ListBegin);
+            Object::ListType::const_iterator I;
+            for (I = obj.AsList().begin(); I != obj.AsList().end();
+                    I++)
+                ListItem(*I);
+            b->ListEnd();
+            }
+            break;
+        default:
+            break;
+    }                          
 }
 
 void Encoder::StreamMessage(const Object& obj)
