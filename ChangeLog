@@ -1,3 +1,11 @@
+2003-07-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h: Fix some
+	  bugs.
+
+	* Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  Fix order of constructor argments.
+
 2003-07-27  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/DepthShader.cpp, Mercator/DepthShader.h:

@@ -40,11 +40,11 @@ void DepthShader::shade(Surface & s) const
         }
         float depth = height_data[i];
         if (depth > m_waterLevel) {
-            data[i] = 0.f;
+            data[++j] = 0.f;
         } else if (depth < m_murkyDepth) {
-            data[i] = 1.f;
+            data[++j] = 1.f;
         } else {
-            data[i] = (depth - m_murkyDepth) / (m_waterLevel - m_murkyDepth);
+            data[++j] = 1.f - (depth - m_murkyDepth) / (m_waterLevel - m_murkyDepth);
         }
     }
 }

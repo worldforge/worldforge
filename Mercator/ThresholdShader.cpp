@@ -75,8 +75,8 @@ void LowShader::shade(Surface & s) const
     }
 }
 
-BandShader::BandShader(float highThreshold, float lowThreshold) : Shader(true, true),
-    m_highThreshold(highThreshold), m_lowThreshold(lowThreshold)
+BandShader::BandShader(float lowThreshold, float highThreshold) : Shader(true, true),
+    m_lowThreshold(lowThreshold), m_highThreshold(highThreshold)
 {
 }
 

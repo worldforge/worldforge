@@ -31,8 +31,8 @@ class LowShader : public Shader {
 
 class BandShader : public Shader {
   private:
-    float m_highThreshold;
     float m_lowThreshold;
+    float m_highThreshold;
   public:
     explicit BandShader(float lowThreshold = -1.f, float highThreshold = 1.f);
     virtual ~BandShader();
