@@ -69,8 +69,9 @@ int APackedAsciiDecoder::hasTokens()
 			break;
 
 		case 2:
-			pos = buffer.find_first_of("[<(%@!$#])>}");
-			if (pos == -1) break;
+			if ( (pos = buffer.find_first_of("[<(%@!$#])>}")) == string::npos )
+			    break;
+			
 			if (pos != 0)
 			{
 				// bad protcol character

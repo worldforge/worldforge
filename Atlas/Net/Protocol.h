@@ -16,26 +16,20 @@ changes 13 Jan 2000 - fex
 #include <string>
 using std::string;
 
-//#include "ProtocolEncoder.h"
-//#include "ProtocolDecoder.h"
-
 class AProtocolEncoder;
 class AProtocolDecoder;
 
 class AProtocol
 {
-
-protected:
-	AProtocolEncoder*	encoder;
-	AProtocolDecoder*	decoder;
-static	string			prefix;
-
 public:
-	AProtocolEncoder*	getEncoder();
-	AProtocolDecoder*	getDecoder();
-	string			getPrefix()		{ return prefix; }
-	void			setPrefix(string s)	{ prefix = s; }
-virtual	AProtocol*		makenew()		{ return NULL; }
+    AProtocol() : encoder(0), decoder(0), prefix("") {}
+    virtual ~AProtocol() {};
+	AProtocolEncoder*   getEncoder();
+	AProtocolDecoder*   getDecoder();
+	const string&       getPrefix() const { return prefix; }
+	void                setPrefix( const string& s)	{ prefix = s; }
+	
+    virtual	AProtocol*		makenew()		{ return 0; }
 
 	static int atlasERRTOK;  // error token
 	static int atlasMSGBEG;  // message begins
@@ -45,7 +39,6 @@ virtual	AProtocol*		makenew()		{ return NULL; }
 	static int atlasMSGEND;  // message ends
 
 	enum AtlasTypes {   atlasINT=1,
-//	                    atlasLNG,
 	                    atlasFLT,
 	                    atlasSTR,
 	                    atlasURI,
@@ -57,6 +50,12 @@ virtual	AProtocol*		makenew()		{ return NULL; }
 	                    atlasLST,
 	                    atlasMAP
 	                    };
+protected:
+	AProtocolEncoder*   encoder;
+	AProtocolDecoder*   decoder;
+    string              prefix;
+private:
+    AProtocol( const AProtocol& );
 };
 
 #endif

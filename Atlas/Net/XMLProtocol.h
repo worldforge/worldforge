@@ -10,15 +10,19 @@
 #define __AtlasXMLProtocol_h_
 
 #include "Protocol.h"
-#include "XMLEncoder.h"
-#include "XMLDecoder.h"
 
+/**
+    Basic class to specialise AProtocol using XML protocol for encoding
+*/
 class AXMLProtocol: public AProtocol
 {
 public:
-		AXMLProtocol();
+    AXMLProtocol();
+    virtual ~AXMLProtocol();
 
-AProtocol*	makenew();
+    AProtocol*  makenew();
+
+private:
+    AXMLProtocol( const AXMLProtocol& );
 };
-
 #endif

@@ -10,8 +10,6 @@
 
 #include "Protocol.h"
 
-string	AProtocol::prefix("");
-
 AProtocolEncoder*	AProtocol::getEncoder() {
     assert( encoder != 0 );
     return encoder;
