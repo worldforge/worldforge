@@ -99,12 +99,12 @@ dnl testing for sigcperl should be sufficient, since that requires
 dnl perl and sucks in its CFLAGS and LIBS
     if test "x$old_sigc_1_0" = "xyes"; then
 	AM_PATH_SIGCPERL(0.1.3, [enable_perl='yes'],[
-		AC_MSG_WARN("libsigcperl not found, not building perl bindings")
+		AC_MSG_WARN(libsigcperl not found, not building perl bindings)
 		enable_perl='no'
 	])
     else
 	PKG_CHECK_MODULES(SIGCPERL, sigcperl >= 0.2, [enable_perl='yes'],[
-		AC_MSG_WARN("libsigcperl not found, not building perl bindings")
+		AC_MSG_WARN(libsigcperl not found, not building perl bindings)
 		enable_perl='no'
 	])
     fi;
@@ -119,7 +119,7 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
         AM_PATH_GLIB(1.2.0,[
 		have_glib='yes'
 	        ],[
-		AC_MSG_NOTICE(Couldn't find glib, not building glib poll)
+		AC_MSG_WARN(Couldn't find glib, not building glib poll)
 		have_glib='no'
 		]
         )
