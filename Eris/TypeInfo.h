@@ -45,6 +45,18 @@ public:
     bool isBound() const
     { return m_bound; }
 
+    /**
+    Test if there are child types of the type, which have not yet been retrieved
+    from the server.
+    */
+    bool hasUnresolvedChildren() const;
+    
+    /**
+    Retrive all child types from the server.
+    This will log an error and do nothing if no unresolved children exist.
+    */
+    void resolveChildren();
+    
 // operators
     /// efficent comparisom of types (uses type ids if possible)
     bool operator==(const TypeInfo &x) const;
@@ -101,6 +113,8 @@ private:
     bool m_bound;               ///< cache the 'bound-ness' of the node, see the isBound() implementation
     const std::string m_name;	///< the Atlas unique typename
     int m_atlasClassNo;         ///< if we registered an atlas factory, this is it's class
+    
+    StringSet m_unresolvedChildren;
     
     /** confidence-tracking - to facilitate clients displaying disappeared
     entities, we estimate a confidence that they have not changed since they

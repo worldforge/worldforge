@@ -53,6 +53,27 @@ bool TypeInfo::isA(TypeInfoPtr tp)
     return m_ancestors.count(tp); // non-authorative if not bound
 }
 
+bool TypeInfo::hasUnresolvedChildren() const
+{
+    return !m_unresolvedChildren.empty();
+}
+
+void TypeInfo::resolveChildren()
+{
+    if (m_unresolvedChildren.empty()) {
+        error() << "Type " << m_name << " has no unresolved children";
+        return;
+    }
+    
+    StringSet::const_iterator it;
+    for (it = m_unresolvedChildren.begin(); it != m_unresolvedChildren.end(); ++it)
+        addChild(m_typeService->getTypeByName(*it));
+        
+    m_unresolvedChildren.clear();
+}
+
+#pragma mark - 
+
 void TypeInfo::processTypeData(const Root &atype)
 {
     if (atype->getId() != m_name) {
@@ -64,14 +85,13 @@ void TypeInfo::processTypeData(const Root &atype)
     for (StringList::const_iterator P = parents.begin(); P != parents.end(); ++P)
         addParent(m_typeService->getTypeByName(*P));
 	
-// here we aggressively lookup child types. this tends to cane the server hard
     if (atype->hasAttr("children"))
     {
         const Atlas::Message::Element childElem(atype->getAttr("children"));
         const Atlas::Message::ListType & children(childElem.asList());
         
         for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C)
-            addChild(m_typeService->getTypeByName(C->asString()));
+            m_unresolvedChildren.insert(C->asString());
     }
       
     validateBind();
@@ -119,8 +139,9 @@ void TypeInfo::addChild(TypeInfoPtr tp)
         error() << "Attempt to add " << getName() << " as child to identical parent ";
         return;
     }
-    if (m_children.count(tp)) 
-        return; 	
+    
+    if (m_children.count(tp)) return; 	
+    m_unresolvedChildren.erase(tp->getName());
     
     m_children.insert(tp);
     // again this will not recurse due to the termination code

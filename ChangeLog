@@ -1,3 +1,11 @@
+2005-01-30  James Turner  <james@worldforge.org>
+
+	* Eris/TypeInfo.cpp, Eris/TypeInfo.h: switch from greedy to lazy expansion
+	  of child (derived) types. This greaty reduces the initial server traffic
+	  upon connection, but may also expose lingering bugs in the redispatch
+	  logic. Added a predicate on TypeInfo to test if un-resolved children
+	  exist for a type, and a method to trigger their lookup.
+    
 2005-01-27  James Turner  <james@worldforge.org>
 
 	* configure.ac: bump version to 1.3.3 for release
