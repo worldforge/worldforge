@@ -6,8 +6,11 @@
 #include "testLobby.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION(TestConnection);
+// FIXME these tests aren't ready yet.
+#if 0
 CPPUNIT_TEST_SUITE_REGISTRATION(TestPlayer);
 CPPUNIT_TEST_SUITE_REGISTRATION(TestLobby);
+#endif
 
 int main(int argc, char **argv)
 {

@@ -1,5 +1,9 @@
 Thursday, 8th May 2003, Al Riddoch <alriddoch@zepler.org>
 
+	* test/tests.cpp: Skip the incomplete Player and Lobby tests.
+
+Thursday, 8th May 2003, Al Riddoch <alriddoch@zepler.org>
+
 	* test/tests.cpp: Return with the correct exit status if the
 	  tests fail.
 
