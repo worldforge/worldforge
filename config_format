@@ -64,7 +64,37 @@ ignored.
 
 COMMAND-LINE OPTIONS
 
+Command-line options are formatted in the following manner:
+
+Long Form
+
+--section_name:config_item_name=value
+
+The only required part of the long form is the item name.  If the '=' is omitted, the value defaults to "" and if the ':' is omitted, the section defaults to "" (the "unspecified" section).
+
+
+Short Form
+
+-n value
+
+A short form (single letter) argument must be attached to a long name before it can be read.  This is accomplished by calling the setParameterLookup method in the following manner:
+
+setParameterLookup( short_form, long_form, needs_value)
+
+Where short_form is the single letter form the of argument, long_form is the full length name and needs_value is a boolean that is true if the short form is followed by a value and false it is not.  ie:
+
+-n 1    needs_value = true
+-n      needs_value = false
+
+Note that all short_form arguments are stored in the unspecified section.
+
+
 ---
 
 ENVIRONMENTAL OPTIONS
+
+
+All environment variables with a specified prefix are read into the configuration information.  To read the variables WF_ONE and WF_TWO for example, you would specifiy the prefix as WF_ . 
+
+All environment variables are stored in the unspecified section. 
 

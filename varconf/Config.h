@@ -22,7 +22,7 @@ To access the Configuration, use Config::inst()
 **/
 class Config {
 public:
-  /// Call this to retrieve the single global configuration instance
+  // Call this to retrieve the single global configuration instance
   static Config* inst();
 
   Variable getItem(const std::string& section, const std::string& name);
@@ -48,13 +48,18 @@ public:
   void parseStream(std::istream& ios) throw (ParseError);
 
   void getEnv(const std::string& prefix);
-  // reads-in all environment variables with the specified prefix 
-  // and stores them in the 'unspecified' section (this prefix is currently
-  // case-sensitive)
+  // reads-in all environment variables with the specified prefix
+  // (prefix is currently case-sensitive)
 
   void getCmdline(int argc, char** argv);
+  // reads-in all commandline arguments according to the format in
+  // config_format and stores them in the m_conf config variable.
 
-  void setParameterLookup(char shortForm, const std::string& longForm, bool needsValue);
+  void setParameterLookup( char short_form, const std::string& long_form, 
+                           bool needs_value);
+  // attachs a one letter commandline argument (ie: -a) to a longe_name
+  // version and specifies whether it is followed by a value or not
+  // (ie: "-a 45" vs. "-a")
   
 protected:
   Config();
@@ -67,7 +72,7 @@ private:
 
   observer_map m_observers;
   callback_map m_callbacks;
-  parameter_map m_parameter_lookup;
+  parameter_map m_par_lookup;
 };
 
 } // namespace varconf

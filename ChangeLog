@@ -1,5 +1,9 @@
 ChangeLog for varconf
 
+Fri Oct 20 23:38:12 EST 2000 -- jaz <jaz147@psu.edu>
+ * Config.cc: Added section support to command-line arguments.
+ * config_format: Added new format information about command-line arguments.
+
 Wed Oct 18 18:35:15 EST 2000 -- jaz <jaz147@psu.edu>
  * Config.cc: Cleaned env variable code; added support for prefixes 
 

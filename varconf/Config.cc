@@ -63,148 +63,153 @@ Config::Config()
 
 Config* Config::inst()
 {
-  if (m_instance == NULL) m_instance = new Config;
+  if ( m_instance == NULL) m_instance = new Config;
   return m_instance;
 }
 
-Variable Config::getItem(const string& section, const string& name)
+Variable Config::getItem( const string& section, const string& name)
 {
   return (m_conf[section])[name];
 }
 
-void Config::setItem(const string& section, const string& name,
-                     const Variable item)
+
+void Config::setItem( const string& section, const string& name,
+                      const Variable item)
 {
   string sec = section, nam = name;
-  for (size_t i = 0; i < sec.size(); i++) {
-    ctype_t c = ctype(sec[i]);
-    if ((c != C_NUMERIC) && (c != C_ALPHA) && (c != C_DASH)) sec[i] = '_';
-    sec[i] = tolower(sec[i]);
+  for ( size_t i = 0; i < sec.size(); i++) {
+    ctype_t c = ctype( sec[i]);
+    sec[i] = tolower( sec[i]);
+
+    if ( ( c != C_NUMERIC) && ( c != C_ALPHA) && ( c != C_DASH)) {
+      sec[i] = '_';
+    }
   }
-  for (size_t i = 0; i < nam.size(); i++) {
-    ctype_t c = ctype(nam[i]);
-    if ((c != C_NUMERIC) && (c != C_ALPHA) && (c != C_DASH)) nam[i] = '_';
-    nam[i] = tolower(nam[i]);
+  for ( size_t i = 0; i < nam.size(); i++) {
+    ctype_t c = ctype( nam[i]);
+    nam[i] = tolower( nam[i]);
+
+    if ( (c != C_NUMERIC) && ( c != C_ALPHA) && ( c != C_DASH)) {
+      nam[i] = '_';
+    }
   }
   (m_conf[sec])[nam] = item;
 
   observer_map::iterator I;
-
-  if ((I = m_observers.find(section)) != m_observers.end()) {
-    for (multimap<string, Observer*>::iterator J = (*I).second.begin();
-         J != (*I).second.end(); J++) {
-      if ((*J).first == name) (*J).second->update();
+  if ( ( I = m_observers.find( section)) != m_observers.end()) {
+    for ( multimap<string, Observer*>::iterator J = ( *I).second.begin();
+                                             J != ( *I).second.end(); J++) {
+      if ( ( *J).first == name) ( *J).second->update();
     }
   }
+
   callback_map::iterator C;
-
-  if ((C = m_callbacks.find(section)) != m_callbacks.end()) {
-    for (multimap<string, conf_callback*>::iterator J = (*C).second.begin();
-         J != (*C).second.end(); J++) {
-      if ((*J).first == name) (*(*J).second)(section, name);
+  if ( ( C = m_callbacks.find( section)) != m_callbacks.end()) {
+    for ( multimap<string, conf_callback*>::iterator J = ( *C).second.begin();
+                                              J != ( *C).second.end(); J++) {
+      if ( ( *J).first == name) ( *( *J).second)(section, name);
     }
   }
-
 }
 
-bool Config::findItem(const string& section, const string& name)
+bool Config::findItem( const string& section, const string& name)
 {
-  return ((m_conf.count(section)) && (m_conf[section].count(name)));
+  return ( (m_conf.count( section)) && ( m_conf[section].count( name)));
 }
 
-void Config::registerObserver(Observer* observer, const string& section,
-                              const string& name)
+void Config::registerObserver( Observer* observer, const string& section,
+                               const string& name)
 {
-    m_observers[section].insert(pair<string, Observer*>(name, observer));
+  m_observers[section].insert( pair<string, Observer*>( name, observer));
 }
 
-void Config::unregisterObserver(Observer* observer)
+void Config::unregisterObserver( Observer* observer)
 {
-    for (map< string, multimap<string, Observer*> >::iterator I =
-         m_observers.begin(); I != m_observers.end(); I++) {
-        for (multimap<string, Observer*>::iterator J = (*I).second.begin();
-             J != (*I).second.end(); J++) {
-                 if ((*J).second == observer) {
-                     m_observers.erase(I);
-                     break;
-                 }
-        }
+  for ( map< string, multimap<string, Observer*> >::iterator I =
+                         m_observers.begin(); I != m_observers.end(); I++) {
+    for ( multimap<string, Observer*>::iterator J = ( *I).second.begin();
+                                             J != ( *I).second.end(); J++) {
+      if ( ( *J).second == observer) {
+        m_observers.erase( I);
+        break;
+      }
     }
+  }
 }
 
-void Config::registerCallback(conf_callback* callback, const string& section,
-                              const string& name)
+void Config::registerCallback( conf_callback* callback, const string& section,
+                               const string& name)
 {
-    m_callbacks[section].insert(pair<string, conf_callback*>(name,callback));
+  m_callbacks[section].insert( pair<string, conf_callback*>( name, callback));
 }
 
-void Config::unregisterCallback(conf_callback* callback, const string& section,
-                                const string& name)
+void Config::unregisterCallback( conf_callback* callback, const string& section,
+                                 const string& name)
 {
-    for (callback_map::iterator I = m_callbacks.begin();
-         I != m_callbacks.end(); I++) {
-        for (multimap<string, conf_callback*>::iterator J = (*I).second.begin();
-             J != (*I).second.end(); J++) {
-                 if ((*J).second == callback) {
-                     m_callbacks.erase(I);
-                     break;
-                 }
-        }
+  for ( callback_map::iterator I = m_callbacks.begin();
+                           I != m_callbacks.end(); I++) {
+    for ( multimap<string, conf_callback*>::iterator J = ( *I).second.begin();
+                                                  J != (*I).second.end(); J++) {
+      if ( ( *J).second == callback) {
+        m_callbacks.erase(I);
+        break;
+      }
     }
+  }
 }
 
-bool Config::readFromFile(const string& filename)
+bool Config::readFromFile( const string& filename)
 {
-  ifstream in(filename.c_str());
-  if (!in) {
+  ifstream in( filename.c_str());
+  if ( in.fail()) {
     cerr << "Could not open " << filename << " for input!\n";
     return false;
   }
   try {
-    parseStream(in);
+    parseStream( in);
   }
-  catch (ParseError p) {
+  catch ( ParseError p) {
     cerr << "While parsing " << filename << ":\n";
     cerr << p;
   }
   return true;
 }
 
-bool Config::writeToFile(const string& filename)
+bool Config::writeToFile( const string& filename)
 {
-    ofstream out(filename.c_str());
-    if (!out) {
+    ofstream out( filename.c_str());
+    if ( out.fail()) {
       cerr << "Could not open " << filename << " for output!\n";
       return false;
     }
-    return writeToStream(out);
+    return writeToStream( out);
 }
 
-bool Config::writeToStream(ostream& ios)
+bool Config::writeToStream( ostream& ios)
 {
   map< string, map<string, Variable> >::iterator I;
   map<string, Variable>::iterator J;
-  for (I = m_conf.begin(); I != m_conf.end(); I++) {
-    ios << endl << "[" << (*I).first << "]\n\n";
-    for (J = (*I).second.begin(); J != (*I).second.end(); J++) {
-      ios << (*J).first << " = \"" << (*J).second
+  for ( I = m_conf.begin(); I != m_conf.end(); I++) {
+    ios << endl << "[" << ( *I).first << "]\n\n";
+    for ( J = ( *I).second.begin(); J != ( *I).second.end(); J++) {
+      ios << ( *J).first << " = \"" << ( *J).second
           << "\"\n";
     }
   }
   return true;
 }
 
-void Config::parseStream(istream& ios) throw (ParseError)
+void Config::parseStream( istream& ios) throw ( ParseError)
 {
   char c; bool escaped = false;
   size_t line = 1, col = 0;
   string name = "", value = "", section = "";
   state_t state = S_EXPECT_NAME;
-  while (ios.get(c)) {
+  while ( ios.get( c)) {
     col++;
-    switch (state) {
+    switch ( state) {
       case S_EXPECT_NAME : 
-	switch (ctype(c)) {
+	switch ( ctype( c)) {
 	  case C_ALPHA:
 	  case C_NUMERIC:
 	  case C_DASH:
@@ -222,12 +227,12 @@ void Config::parseStream(istream& ios) throw (ParseError)
 	    state = S_COMMENT;
 	    break;
 	  default:
-	    throw ParseError("item name", line, col);
+	    throw ParseError( "item name", line, col);
 	    break;
 	}
 	break;
       case S_SECTION :
-	switch (ctype(c)) {
+	switch ( ctype( c)) {
 	  case C_ALPHA:
 	  case C_NUMERIC:
 	    section += c;
@@ -236,12 +241,12 @@ void Config::parseStream(istream& ios) throw (ParseError)
 	    state = S_EXPECT_EOL;
 	    break;
 	  default:
-	    throw ParseError("']'", line, col);
+	    throw ParseError( "']'", line, col);
 	    break;
 	}
         break;
       case S_NAME :
-	switch (ctype(c)) {
+	switch (ctype( c)) {
 	  case C_ALPHA:
 	  case C_NUMERIC:
 	  case C_DASH:
@@ -254,12 +259,12 @@ void Config::parseStream(istream& ios) throw (ParseError)
 	    state = S_EXPECT_EQ;
 	    break;
 	  default:
-	    throw ParseError("'='", line, col);
+	    throw ParseError( "'='", line, col);
 	    break;
 	}
 	break;
       case S_COMMENT :
-	switch (ctype(c)) {
+	switch ( ctype( c)) {
 	  case C_EOL:
 	    state = S_EXPECT_NAME;
 	    break;
@@ -268,19 +273,19 @@ void Config::parseStream(istream& ios) throw (ParseError)
         }
 	break;
       case S_EXPECT_EQ:
-	switch (ctype(c)) {
+	switch ( ctype( c)) {
 	  case C_SPACE:
 	    break;
 	  case C_EQ:
 	    state = S_EXPECT_VALUE;
 	    break;
 	  default:
-	    throw ParseError("'='", line, col);
+	    throw ParseError( "'='", line, col);
 	    break;
 	}
 	break;
       case S_EXPECT_VALUE:
-	switch (ctype(c)) {
+	switch ( ctype( c)) {
 	  case C_ALPHA:
 	  case C_NUMERIC:
 	  case C_DASH:
@@ -294,25 +299,25 @@ void Config::parseStream(istream& ios) throw (ParseError)
 	  case C_SPACE:
 	    break;
 	  default:
-	    throw ParseError("value", line, col);
+	    throw ParseError( "value", line, col);
 	    break;
 	}
 	break;
       case S_VALUE:
-	switch (ctype(c)) {
+	switch ( ctype( c)) {
 	  case C_QUOTE:
-	    throw ParseError("value", line, col);
+	    throw ParseError( "value", line, col);
 	  case C_SPACE:
 	    state = S_EXPECT_EOL;
-	    setItem(section, name, value);
+	    setItem( section, name, value);
 	    break;
 	  case C_EOL:
 	    state = S_EXPECT_NAME;
-	    setItem(section, name, value);
+	    setItem( section, name, value);
 	    break;
 	  case C_HASH:
 	    state = S_COMMENT;
-	    setItem(section, name, value);
+	    setItem( section, name, value);
 	    break;
 	  default:
 	    value += c;
@@ -320,14 +325,14 @@ void Config::parseStream(istream& ios) throw (ParseError)
 	}
 	break;
       case S_QUOTED_VALUE:
-        if (escaped) {
+        if ( escaped) {
           value += c;
 	  escaped = false;
         } else {
-	  switch (ctype(c)) {
+	  switch ( ctype( c)) {
 	    case C_QUOTE:
 	      state = S_EXPECT_EOL;
-	      setItem(section, name, value);
+	      setItem( section, name, value);
 	      break;
 	    case C_ESCAPE:
 	      escaped = true;
@@ -339,7 +344,7 @@ void Config::parseStream(istream& ios) throw (ParseError)
 	}
 	break;
       case S_EXPECT_EOL:
-	switch (ctype(c)) {
+	switch ( ctype( c)) {
 	  case C_HASH:
 	    state = S_COMMENT;
 	    break;
@@ -349,85 +354,105 @@ void Config::parseStream(istream& ios) throw (ParseError)
 	  case C_SPACE:
 	    break;
 	  default:
-	    throw ParseError("end of line", line, col);
+	    throw ParseError( "end of line", line, col);
             break;
 	}
 	break;
       default:
         break;
     }
-    if (c == '\n') {
+    if ( c == '\n') {
       line++;
       col = 0;
     }
   }
-  if (state == S_QUOTED_VALUE) throw ParseError("\"", line, col);
-  if (state == S_VALUE) setItem(section, name, value);
+  if ( state == S_QUOTED_VALUE) throw ParseError( "\"", line, col);
+  if ( state == S_VALUE) setItem( section, name, value);
 }
 
-void Config::getCmdline(int argc, char** argv)
+
+void Config::setParameterLookup( char short_form, const string& long_form,
+                                 bool needs_value = true) 
 {
-  // this is stolen directly from the thor.cc in scratchpad
-  // We put commandline args into the 'nonspecified' section
-  // it is searched after the 'specified' sections 
-  string name, value, section="";
-  bool valueNext = false;
-  int i, j, a=0;
+    m_par_lookup[short_form] = pair<string, bool>( long_form, needs_value);  
+}
+
+
+void Config::getCmdline( int argc, char** argv)
+{
+  string name = "", value = "", section = "";
+  bool value_next = false;
  
-  // preprocess the args.  Switch short forms for long forms.  If we run
-  // across some short form that we don't know about, skip it and raise a
-  // warning
-  for (i = 1; i < argc; i++) {
-    string arg(argv[i]);
-    if (argv[i][0] == '-') {
-      if (argv[i][1] =='-') {
-        // arg begins with "--"
-        size_t eqPos = arg.find('=');
-        if (eqPos != string::npos) {
-          // we know where the = is
-          value = arg.substr(eqPos + 1, arg.size() - (eqPos + 1));    
+  for ( int i = 1; i < argc; i++) {
+    if ( argv[i][0] == '-' && argv[i][1] == '-') {
+      string arg( argv[i]);
+      size_t eq_pos = arg.find('=');
+      size_t col_pos = arg.find(':');
+ 
+      if ( col_pos != string::npos && eq_pos != string::npos) {
+        if ( ( eq_pos - col_pos) > 1) {
+          section = arg.substr( 2, ( col_pos - 2));
+          name = arg.substr( ( col_pos + 1), ( eq_pos - ( col_pos + 1)));
+          value = arg.substr( ( eq_pos + 1), ( arg.size() - ( eq_pos + 1)));
         }
         else {
-          // string with no =
+          section = "";
+          name = arg.substr( 2, ( eq_pos - 2));
+          value = arg.substr( ( eq_pos + 1), ( arg.size() - ( eq_pos + 1)));
+        }
+      } 
+      else if ( col_pos != string::npos && eq_pos == string::npos) {
+        section = arg.substr( 2, ( col_pos - 2));
+        name = arg.substr( ( col_pos + 1), ( arg.size() - ( col_pos + 1)));
+        value = "";
+      }
+      else if ( col_pos == string::npos && eq_pos != string::npos) {
+        section = "";
+        name = arg.substr( 2, ( eq_pos - 2));
+        value = arg.substr( ( eq_pos + 1), ( arg.size() - ( eq_pos + 1)));
+      }
+      else {
+        section = "";
+        name = arg.substr( 2, ( arg.size() - 2));
+        value = "";
+      } 
+    } // argv[i][0] == '-' && argv[i][1] == '-'
+    else if ( argv[i][0] == '-')  {
+      char short_name = argv[i][1];
+      parameter_map::iterator I;
+        
+      if ( ( I = m_par_lookup.find( short_name)) != m_par_lookup.end()) {
+        section = ""; 
+        name = ( ( *I).second).first;
+        value_next = ( ( *I).second).second;
+ 
+        if ( !value_next) {
           value = "";
         }
-        name = arg.substr(2, eqPos - 2);
       }
-      else /* if (argv[i][2] == '\n')*/ {
-        char shortName = argv[i][1];
-        // This is a single-char config.
-        parameter_map::iterator I;
-        
-        if((I = m_parameter_lookup.find(shortName)) != m_parameter_lookup.end()) {
-          // this parameter exists in our lookup table
-          name = ((*I).second).first;
-          valueNext = ((*I).second).second;
-          // clear the value string if valueNext is false
-          if (!valueNext) {
-            value = "";
-          }
-        }
-        else {
-          // This gets executed if we can't match a long name to a short one
-          // I think it's better to just keep going, and ignore the bad stuff
-          // for now- later on we should raise a warning
-          valueNext = false;
-        }
+      else {
+        // *** NOTE *** This gets executed if no match is found for the 
+        // shortname in the lookup table.  Might want to add a warning
+        // of some sort here. 
+        value_next = false;
       }
-    }
-    else if ((valueNext) && (argv[i][0] != '\0')) {
-      // If we're expecting a value and it is not null, grab it
+    } // argv[i][0] == '-'
+    else if ( ( value_next) && ( argv[i][0] != '\0')) {
       value = argv[i];
-      valueNext = false;
+      value_next = false;
     }    
     
-    if(!valueNext) {
-      // insert when we've got all the information
-      setItem(section, name, value);
+    if ( !value_next) {
+      if ( !name.empty()) {
+        setItem( section, name, value);
+      }
+      else {
+        throw "Invalid Commandline Argument!";  
+      }
     }
   }
-
-}
+} // Config::getCmdline()
+ 
 
 void Config::getEnv(const string& prefix)
 {
@@ -441,25 +466,23 @@ void Config::getEnv(const string& prefix)
       section = name = value = "";
       eq_pos = env.find( '='); 
 
-      if ( eq_pos != string::npos)
+      if ( eq_pos != string::npos) {
         value = env.substr( ( eq_pos + 1), ( env.size() - ( eq_pos + 1)));
-      else
-        value = ""; // no value if '=' not found
+      }
+      else {
+        value = "";
+      }
       
       name = env.substr( prefix.size(), ( eq_pos - prefix.size()));
-      if ( !name.empty() )
+      if ( !name.empty() ) {
         setItem( section, name, value);
-      else
+      }
+      else {
         throw "Invalid environment setting!";
+      }
     }
   }
-}
+} // Config::getEnv()
 
-void Config::setParameterLookup(char shortForm,
-                                const string& longForm,
-                                bool needsValue = true) {
-    m_parameter_lookup[shortForm] = pair<string, bool>(longForm, needsValue);  
-        
-}
 
 } // namespace varconf

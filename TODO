@@ -7,8 +7,9 @@ Minor Tasks:
  * Make VALUE and EXPECT_VALUE behave nicer (loosen up on the unquoted value
    format)
  * Use a better way to do Variable::is_bool()
- * Comments aplenty
+ * Add comments to all code and look into any optimizations. 
+ * Clean-up getCmdline(). 
 
 Major Tasks:
- * Add section support to getEnv() and getCmdline().
-
+ * Convert callbacks to libsigc++.
+ * Add section support to environment variables if needed.
