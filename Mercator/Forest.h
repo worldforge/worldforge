@@ -25,12 +25,16 @@ class Forest {
     Forest();
     ~Forest();
 
+    const WFMath::AxisBox<2> & getArea() const {
+        return m_area;
+    }
+
     const PlantStore & getPlants() const {
         return m_plants;
     }
 
-    void set_area(const WFMath::AxisBox<2> & area);
-    void set_volume(const WFMath::AxisBox<3> &);
+    void setArea(const WFMath::AxisBox<2> & area);
+    void setVolume(const WFMath::AxisBox<3> &);
 
     void populate();
 };

@@ -24,8 +24,24 @@ class Plant {
         return m_displacement;
     }
 
+    void setDisplacement(const WFMath::Point<2> & d) {
+        m_displacement = d;
+    }
+
     const WFMath::Quaternion & getOrientation() const {
         return m_orientation;
+    }
+
+    void setOrientation(const WFMath::Quaternion & o) {
+        m_orientation = o;
+    }
+
+    const float getHeight() const {
+        return m_height;
+    }
+
+    void setHeight(float h) {
+        m_height = h;
     }
 };
 

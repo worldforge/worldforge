@@ -1,5 +1,15 @@
 2004-01-13  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Plant.h:
+	  Add accessors for plant and forest properties. Implement
+	  populating the forest with plants.
+
+	* tests/testPlant.cpp: Add tests for new accessors.
+
+	* tests/testForest.cpp: Add test for populating code.
+
+2004-01-13  Al Riddoch  <alriddoch@zepler.org>
+
 	* tests/testQRNG.cpp: Unit test to verify predictability of quasi
 	  random number generator.
 
