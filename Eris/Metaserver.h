@@ -103,12 +103,6 @@ public:
 	*/
 	void refresh();
 
-	/// Poll the connection(s) and process the results
-	void poll();
-	
-	/// Alternative to Poll() for systems that perform non-blocking IO a different way
-	void recv();
-
 	/** Cancel outstanding refresh / queries. This is primarily intended for
 	use with 'Refresh', which might takes several minutes to complete. Note
 	that 'CompletedServerList' is not emitted following cancellation. */
@@ -142,6 +136,9 @@ protected:
 		
 	virtual void ObjectArrived(const Atlas::Message::Object &msg);
 
+	/// process raw UDP packets from the meta-server
+	void recv();
+	
 	/// Invoked when _bytesToRecv = 0 and expecting a command (_recvCmd = true)
 	void recvCmd(uint32_t op);
 
@@ -191,7 +188,6 @@ protected:
 	
 	Timeout* _timeout;	///< Metaserver channel timeout
 
-//	bool prePoll();
 	void gotData(PollData&);
 };
 	

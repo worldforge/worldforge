@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE abiword PUBLIC "-//ABISOURCE//DTD AWML 1.0 Strict//EN" "http://www.abisource.com/awml.dtd">
-<abiword xmlns:awml="http://www.abisource.com/awml.dtd" version="unnumbered" fileformat="1.0">
+<abiword xmlns="http://www.abisource.com/awml.dtd" xmlns:awml="http://www.abisource.com/awml.dtd" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:dc="http://purl.org/dc/elements/1.1/" version="0.99.3" fileformat="1.0" styles="unlocked">
 <!-- =====================================================================  -->
 <!-- This file is an AbiWord document.                                      -->
 <!-- AbiWord is a free, Open Source word processor.                         -->
@@ -16,9 +16,9 @@
 <p></p>
 <p>Linux / *inx</p>
 <p></p>
-<p>You need to have Atlas-C++, skstream and libsigc++ to build Eris. In addition it is assumed you have an up-to-date C++ compiler and STL implementation (GCC 2.95 is the lowest tested version, GG 2.91 will probably not work). If you find other compilers that work or fail, please let me (James) know.</p>
+<p>You need to have Atlas-C++, skstream2 and libsigc++ to build Eris. In addition it is assumed you have an up-to-date C++ compiler and STL implementation (GCC 2.95 is the lowest tested version, GG 2.91 will probably not work). If you find other compilers that work or fail, please let me (James) know.</p>
 <p></p>
-<p>Atlas-C++ and skstream are both available as tarballs (and possibly compiled packages, depending on your system) from victor.worldforge.org. The Eris configure script will test for the appropriayte minimum versions : at the time of writing, Atlas-C++ 0.4.4 and skstream2 0.2.1 are required. Alternatively, you can compile Atlas-C++ and skstream2 from CVS. This requries more work, see the notes at the bottom of this document.</p>
+<p>Atlas-C++ and skstream are both available as tarballs (and possibly compiled packages, depending on your system) from victor.worldforge.org. The Eris configure script will test for the appropriate minimum versions : at the time of writing, Atlas-C++ 0.4.4 and skstream2 0.2.2 are required. Alternatively, you can compile Atlas-C++ and skstream2 from CVS. This requires more work, see the notes at the bottom of this document.</p>
 <p></p>
 <p>libSigC++ is included in all common distributions; if you have Gnome 1.2 or higher installed, you certainly have it. Verify that you also have the development packages installed, not just the runtime. Otherwise get the library in your preferred format from:</p>
 <p>	</p>
@@ -30,11 +30,13 @@
 <p></p>
 <p>This should print out the libSigC++ version number; if sigc-config is not found, you are probably missing the development package, or if you installed from source, installed to some strange location not in your shell's PATH. </p>
 <p></p>
+<p>Optionally, you can install CppUnit (available at cppunit.sf.net), and 'make check' will then run a suite of unit tests which cover a small but growing set of the code. This is especially useful if you are porting or extending Eris. You can compile and install Eris  perfectly without this library, however.</p>
+<p></p>
 <p>Once these pre-requisites are satisfied, you can proceed with compiling Eris.  This should be a standard 'configure; make; make install' process. At present there are no special arguments, but verify everything goes okay. If you get errors about libraries not being found, and you believe they are installed, do NOT hack around the problem in configure. Verify that you have the correct development packages installed and that the relevant -config programs (atlas-config, skstream-config and sigc-config) are in your path. Also make sure you've run ldconfig if you just installed the libraries form source, otherwise the test programs configure tries to compile won't work.</p>
 <p></p>
-<p>Assuming configure is sucessful, simply 'make' and 'make install'. That's it. If you get compilation errors, please get in touch with the maintainers. In order to test that everything worked, try compiling one of the clients that uses Eris (listed in the README)</p>
+<p>Assuming configure is successful, simply 'make' and 'make install'. That's it. If you get compilation errors, please get in touch with the maintainers. In order to test that everything worked, try compiling one of the clients that uses Eris (listed in the README)</p>
 <p></p>
-<p>If you have Doxygen installed, executing 'make doc' will build the documentation; at present only HTML is built. Edit eris.dox to change the output formats / styles. If you find errors or ommissions in the documentation, please let me (James) know.</p>
+<p>If you have Doxygen installed, executing 'make doc' will build the documentation; at present only HTML is built. Edit eris.dox to change the output formats / styles. If you find errors or omissions in the documentation, please let me (James) know.</p>
 <p></p>
 <p>Cygwin</p>
 <p></p>
@@ -47,21 +49,12 @@
 <p></p>
 <p>Compiling from CVS</p>
 <p></p>
-<p>The first step is to ensure you have the correct verion of Atlas-C++. The HEAD revision is the 0.5 development branch (at the time of writing). To pull the stable branch, move / delete your existing Atlas-C++ directory in forge/libs (I rename it to HEAD-Atlas-C++). Then, in forge/libs, do the following:</p>
+<p>The first step is to ensure you have the correct version of Atlas-C++. The HEAD revision is the 0.5 development branch (at the time of writing). To pull the stable branch, move / delete your existing Atlas-C++ directory in forge/libs (I rename it to HEAD-Atlas-C++). Then, in forge/libs, do the following:</p>
 <p></p>
 <p>	cvs -z3 co -r atlas-cpp-0_3_10 Atlas-C++</p>
 <p></p>
 <p>This should check out the correct version. Note the branch tag is rather odd, you will get the stable head (0.4.4 at time of writing), not 0.3.10! </p>
 <p></p>
-<p><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:12pt; text-position:normal; font-weight:normal; font-style:normal; lang:en-US">Export ACLOCAL_FLAGS to point to your installation directory for Atlas and skstream before you run 'autogen.sh', so that aclocal can find the macro files (atlas.m4 and skstream.m4). Errors when running autogen.sh like 'undefined macro AM_PATH_ATLAS are indications this has gone wrong, and must be resolved before re-running autogen.sh.</c></p>
-<p props="margin-top:0.0000in; margin-left:0.0000in; text-indent:0.0000in; margin-bottom:0.0000in; line-height:1.000000; text-align:left; margin-right:0.0000in"><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:12pt; text-position:normal; font-weight:normal; font-style:normal; lang:en-US">The default installation directories for all the code is /usr/local, so you will almost certianly need to do: </c></p>
-<p props="margin-top:0.0000in; margin-left:0.0000in; text-indent:0.0000in; margin-bottom:0.0000in; line-height:1.000000; text-align:left; margin-right:0.0000in"></p>
-<p props="margin-top:0.0000in; margin-left:0.0000in; text-indent:0.0000in; margin-bottom:0.0000in; line-height:1.000000; text-align:left; margin-right:0.0000in"><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:12pt; text-position:normal; font-weight:normal; font-style:normal; lang:en-US">	&gt; export ACLOCAL_FLAGS="-I /usr/local/share/aclocal"</c></p>
-<p props="margin-top:0.0000in; margin-left:0.0000in; text-indent:0.0000in; margin-bottom:0.0000in; line-height:1.000000; text-align:left; margin-right:0.0000in"><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:12pt; text-position:normal; font-weight:normal; font-style:normal; lang:en-US">	[note the space between the -I and the path itself!]</c></p>
-<p props="margin-top:0.0000in; margin-left:0.0000in; text-indent:0.0000in; margin-bottom:0.0000in; line-height:1.000000; text-align:left; margin-right:0.0000in"><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:12pt; text-position:normal; font-weight:normal; font-style:normal; lang:en-US">	</c></p>
-<p props="margin-top:0.0000in; margin-left:0.0000in; text-indent:0.0000in; margin-bottom:0.0000in; line-height:1.000000; text-align:left; margin-right:0.0000in"><c props="font-family:Times New Roman; text-decoration:none; color:000000; font-size:12pt; text-position:normal; font-weight:normal; font-style:normal; lang:en-US">	&gt; autogen.sh</c></p>
-<p>If running this command produces errors about undefined macros (AM_PATH_ATLAS or AM_PATH_SIGC), then you need to play with ACLOCAL_FLAGS until 'aclocal' can find all the macro files. It's worth checking that /usr/local/share/aclocal (or where you installed Atlas-C++ / skstream too) does actually contain atlas.m4 and skstream/m4 : if not,  something more fundamental is broken (Did you set a --prefix when configuring the libraries? Did you remember to make install?)</p>
-<p></p>
-<p></p>
+<p>Also note that WorldForge CVS contains both skstream and skstream2; it's the latter version you need. Other than these points, building from CVS should be the same as above.</p>
 </section>
 </abiword>

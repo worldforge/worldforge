@@ -173,6 +173,12 @@ void Player::refreshCharacterInfo()
         return;
     }
 	
+    if (_charIds.empty()) {
+	// handle the case where there are no characters; we should still emit the signal
+	GotAllCharacters.emit();
+	return;
+    }
+    
     for (StringList::iterator I=_charIds.begin(); I!=_charIds.end(); ++I) {
 	// send the look
 	Atlas::Objects::Operation::Look lk =

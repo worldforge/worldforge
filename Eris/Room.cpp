@@ -32,12 +32,12 @@ namespace Eris
 {
 	
 Room::Room(Lobby *l, const std::string &id) :
-	_id(id), 
-	_lobby(l),
-	_parted(false)
+    _id(id), 
+    _lobby(l),
+    _parted(false)
 {
-	assert(l);
-	setup();
+    assert(l);
+    setup();
 }
 
 Room::Room(Lobby *l) :
@@ -193,6 +193,34 @@ void Room::leave()
 	_parted = true;
 }
 
+Room* Room::createRoom(const std::string &name)
+{
+    Connection *c = _lobby->getConnection();
+    if (!c->isConnected())
+	throw InvalidOperation("Not connected to server");
+    
+    Atlas::Objects::Operation::Create cr = 
+	Atlas::Objects::Operation::Create::Instantiate();
+    cr.SetFrom(_lobby->getAccountID());
+    cr.SetTo(_id);
+    int serial = getNewSerialno();
+    cr.SetSerialno(serial);
+    
+    Message::Object::MapType args;
+    args["parents"] = Message::Object::ListType(1, "room");
+    args["name"] = name;
+    
+    cr.SetArgs(Message::Object::ListType(1, args));
+    c->send(cr);
+    
+    Room *r = new Room(_lobby);
+    // this lets the lobby do stitch up as necessary
+    _lobby->addPendingCreate(r, serial);
+    r->_name = name;	// I'm setting this since we have it already, and it might
+    // help someone identify the room prior to the ID going valid.
+    return r;
+}
+
 void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 {
 	log(LOG_NOTICE, "Got sight of room %s", _id.c_str());
@@ -231,9 +259,10 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 	_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
 	
 	if (room.HasAttr("rooms")) {
-		Message::Object::ListType rooms = room.GetAttr("rooms").AsList();
-		// FIXME - handle sub-rooms
-		//cerr << "got the sub-room list " << endl;
+	    Message::Object::ListType rooms = room.GetAttr("rooms").AsList();
+	    // rattle through the list, jamming them into our set
+	    for (unsigned int R=0; R<rooms.size();R++)
+		_subrooms.insert(rooms[R].AsString());
 	}
 }
 
@@ -291,21 +320,6 @@ void Room::recvSightEmote(const Atlas::Objects::Operation::Imaginary &imag,
 
 void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 {
-/*	
-	std::string account = getArg(ap, "id").AsString();
-	_people.insert(account);
-	
-	if (_lobby->getPerson(account)) {
-		// player is already known, can emit right now
-		Appearance.emit(this, account);
-	} else {
-		// need to wait on the lookup
-		if (_pending.empty())
-			_lobby->SightPerson.connect(SigC::slot(this, &Room::notifyPersonSight));
-		
-		_pending.insert(account);
-	}*/
-	
 	const AtlasListType &args = ap.GetArgs();
 	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
 		const AtlasMapType &app = A->AsMap();
@@ -328,14 +342,7 @@ void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 
 void Room::recvDisappear(const Atlas::Objects::Operation::Disappearance &dis)
 {
-/*	
-	std::string account = getArg(dis, "id").AsString();
- 	if (_people.find(account) == _people.end())
-		throw IllegalObject(dis, "room disappearance for unknown person");
 	
-	_people.erase(account);
-	Disappearance.emit(this, account);
-*/	
 	const AtlasListType &args = dis.GetArgs();
 	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
 		const AtlasMapType &app = A->AsMap();
@@ -350,4 +357,14 @@ void Room::recvDisappear(const Atlas::Objects::Operation::Disappearance &dis)
 	}
 }
 
+std::string Room::getID() const
+{
+    if (_id.empty() || _id == "") {
+	throw InvalidOperation("called Room::getID() before the ID was available \
+	    (wait till Entered signal is emitted");
+    }
+    
+    return _id;
 }
+
+} // of Eris namespace

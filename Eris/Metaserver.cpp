@@ -140,11 +140,6 @@ ServerList Meta::getGameServerList()
 		ret.push_back(I->second);
 	return ret;
 }
-
-void Meta::poll()
-{
-	PollDefault::poll();
-}
 		
 void Meta::gotData(PollData &data)
 {

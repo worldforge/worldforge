@@ -11,6 +11,9 @@
 #include "Connection.h"
 #include "Room.h"
 
+// forward decleration of test cases
+class TestLobby;
+
 namespace Eris
 {
 	
@@ -62,6 +65,8 @@ protected:
 	friend class Room;
 	friend class Player; 
 	
+	friend class TestLobby;	///< allows tests to set things up
+	
 	Lobby(/*Player *p,*/ Connection *c);
 	
 	void look(const std::string &id);
@@ -78,8 +83,20 @@ protected:
 	
 	void recvPrivateChat(const Atlas::Objects::Operation::Talk &tk);
 	
-	/// delayed registration of callbacks (until we have a valid account ID)
-	void registerCallbacks();
+	void recvSightCreate(const Atlas::Objects::Operation::Create &cr,
+	    const Atlas::Objects::Entity::RootEntity &ent);
+
+    /// internal helper when a room creation is observed
+    void processRoomCreate(const Atlas::Objects::Operation::Create &cr,
+	const Atlas::Objects::Entity::RootEntity &ent);
+
+    /// delayed registration of callbacks (until we have a valid account ID)
+    void registerCallbacks();
+
+    /** register that the lobby should expect to observer the creation of a room with the
+    given refno, and it should pass the data on the the given Room object. This is an internal
+    helpfer for Room::createChild */
+    void addPendingCreate(Room *r, int serialno);
 
 	// should this try a shutdown, or simply wait and hope for resume?
 	void netFailure(const std::string& msg);
@@ -98,6 +115,10 @@ protected:
 	typedef std::map<std::string, Room*> RoomDict;
 	RoomDict _roomDict;
 	
+    typedef std::map<int, Room*> PendingCreateMap;
+    /// map from the serialno of a CREATE operation to the corresponding Room instance it applies to
+    PendingCreateMap _pendingCreate;
+    
 	static Lobby* _theLobby;
 };
 	

@@ -46,6 +46,12 @@ public:
 	(validity of Room pointer after this call?) */
 	void leave();
 
+    /** create a child room of this one, with the specified name. Note that most attributes,
+    <em>including the ID</em> will not be valid until the new room emits the 'Entered' signal.
+    If you need a unique, referenceable indentifier earlier than that point, use the pointer
+    value. */
+    Room* createRoom(const std::string &name);
+
 	/// Obtain the human-readable name  of this room
 	std::string getName() const
 	{ return _name; }
@@ -58,8 +64,10 @@ public:
 	StringList getRooms() const
 	{ return StringList(_subrooms.begin(), _subrooms.end()); }
 	
-	/// Get the Atlas object ID of the Room
-	std::string getID() const {return _id;}
+	/** Get the Atlas object ID of the Room; note this can fail prior to the Entered signal
+	 * being emitted; in that case it throws an exception to avoid returning an invalid
+	 * ID */
+	std::string getID() const;
 	
 	/// Called by the lobby when sight of us arrives	
 	void sight(const Atlas::Objects::Entity::RootEntity &room);	
@@ -81,6 +89,9 @@ public:
 	SigC::Signal2<void, Room*, const std::string&> Appearance;
 	/// Similarly, emitted when the specifed person leaves the room
 	SigC::Signal2<void, Room*, const std::string&> Disappearance;
+	
+	/** Emitted when a room change occurs, such as name, topic, or the list of subrooms */
+	SigC::Signal1<void, const StringSet&> Changed;
 	
 protected:
 	friend class Lobby;	// so Lobby can call the constructor

@@ -175,6 +175,13 @@ void Lobby::registerCallbacks()
 	
 	Dispatcher *sight = oogd->addSubdispatch(new EncapDispatcher("sight"), "sight");
 	d = sight->addSubdispatch(new TypeDispatcher("op", "op"));
+	// watch for creates
+	
+	Dispatcher *opsight = d->addSubdispatch(ClassDispatcher::newAnonymous());
+	Dispatcher *cr = opsight->addSubdispatch(new EncapDispatcher("create"), "create");
+	cr->addSubdispatch(new SignalDispatcher2<Atlas::Objects::Operation::Create,
+		Atlas::Objects::Entity::RootEntity>("lobby",
+	    SigC::slot(this, &Lobby::recvSightCreate)));
 	
 	d = sight->addSubdispatch(new TypeDispatcher("entity", "object"));
 	Dispatcher *esight = d->addSubdispatch(ClassDispatcher::newAnonymous());
@@ -335,6 +342,51 @@ void Lobby::recvPrivateChat(const Atlas::Objects::Operation::Talk &tk)
 	Person *p = getPerson(tk.GetFrom());
 	assert(p);
 	PrivateTalk.emit(p->getAccount(), say);
+}
+
+void Lobby::recvSightCreate(const Atlas::Objects::Operation::Create &cr,
+	const Atlas::Objects::Entity::RootEntity &ent)
+{	
+    std::string type = ent.GetParents()[0].AsString();
+    if (type == "room")
+	processRoomCreate(cr, ent);
+}
+
+void Lobby::processRoomCreate(const Atlas::Objects::Operation::Create &cr,
+	const Atlas::Objects::Entity::RootEntity &ent)
+{
+    log(LOG_DEBUG, "recieved sight of room creation");
+	
+    PendingCreateMap::iterator P = _pendingCreate.find(cr.GetSerialno());
+    if (P != _pendingCreate.end()) {
+	// it was requested locally, so we already have the Room object
+	P->second->_id = ent.GetId(); // set the ID
+	P->second->setup();		// now we can call setup safely
+	P->second->sight(ent);	// finally slam the data in
+	_pendingCreate.erase(P);	// get rid of the request
+    }
+    
+    // find the containing room and update it's subrooms
+    // note that we may not even know about it's containing room either!
+    std::string containingRoom = ent.GetAttr("loc").AsString();
+    if (_roomDict.find(containingRoom) == _roomDict.end())
+	return; // we can't see it,, so we don't care [we'll get the rooms anyway if we ever join the containing room]
+    
+    Room *container = _roomDict[containingRoom];
+    container->_subrooms.insert(ent.GetId());	// jam it in
+    
+    StringSet strset;
+    strset.insert("rooms");
+    container->Changed.emit(strset);
+}
+
+void Lobby::addPendingCreate(Room *r, int serialno)
+{
+    PendingCreateMap::iterator P = _pendingCreate.find(serialno);
+    if (P != _pendingCreate.end())
+	throw InvalidOperation("duplicate serialno in addPendingCreate");
+    
+    _pendingCreate.insert(P, PendingCreateMap::value_type(serialno, r));
 }
 
 } // of namespace

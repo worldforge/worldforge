@@ -7,7 +7,8 @@ testEris_SOURCES = tests.cpp \
     testUtils.h testUtils.cpp \
     stubConnection.cpp stubConnection.h \
     testConnection.cpp testConnection.h \
-    testEntity.cpp testEntity.h
+    testEntity.cpp testEntity.h \
+    testLobby.cpp testLobby.h
 
 INCLUDES = @CPPUNIT_CFLAGS@ -I$(top_srcdir)/src
 
