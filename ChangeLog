@@ -1,5 +1,9 @@
 2002-05-15  Michael Koch  <konqueror@gmx.de>
 
+        * atlas-config.in: dont output /usr/include when called with --cflags
+
+2002-05-15  Michael Koch  <konqueror@gmx.de>
+
 	* src/Bridge.h: added documentation.
 
 2002-05-14  Michael Koch  <konqueror@gmx.de>

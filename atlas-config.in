@@ -47,7 +47,7 @@ while test $# -gt 0; do
 
           includes=-I@includedir@
       fi
-      echo $includes -I@includedir@ @ATLAS_CFLAGS@
+      echo $includes @ATLAS_CFLAGS@
       ;;
     --libs)
       libdirs="-L@libdir@"
