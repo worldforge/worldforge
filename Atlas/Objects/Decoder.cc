@@ -67,6 +67,8 @@ void Decoder::ObjectArrived(const Object& o)
     ARR("sound", Operation::Sound)
     ARR("talk", Operation::Talk)
     ARR("touch", Operation::Touch)
+
+    UnknownObjectArrived(o);
 }
 
 } } // namespace Atlas::Objects
