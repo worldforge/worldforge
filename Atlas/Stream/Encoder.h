@@ -9,8 +9,14 @@
 #include "../Object/Object.h"
 
 // $Log$
-// Revision 1.4  2000-02-21 05:19:14  mike
-// Trying $Log$ tag again
+// Revision 1.5  2000-02-21 05:20:52  mike
+// Checking where the next commit message goes
+//
+// Revision 1.4  2000/02/21 05:19:14  mike
+// Trying $Log$
+// Trying Revision 1.5  2000-02-21 05:20:52  mike
+// Trying Checking where the next commit message goes
+// Trying tag again
 //
 
 namespace Atlas
@@ -30,7 +36,7 @@ class Atlas::Stream::Encoder
     enum Container
     {
 	LIST,
-	MAP,
+	MAP
     };
     
     virtual void Begin(Container) = 0;
