@@ -126,28 +126,28 @@ public:
       : t(TYPE_STRING)
     {
       if(v)
-        s = new StringType(v);
+        s = new DataType<StringType>(v);
       else
-        s = new StringType();
+        s = new DataType<StringType>();
     }
 
     /// Set type to std::string, and value to v.
     Element(const StringType& v)
       : t(TYPE_STRING)
     {
-      s = new StringType(v);
+      s = new DataType<StringType>(v);
     }
     /// Set type to MapType, and value to v.
     Element(const MapType& v)
       : t(TYPE_MAP)
     {
-      m = new MapType(v);
+      m = new DataType<MapType>(v);
     }
     /// Set type to ListType, and value to v.
     Element(const ListType& v)
       : t(TYPE_LIST)
     {
-      l = new ListType(v);
+      l = new DataType<ListType>(v);
     }
 
     /// overload assignment operator !
@@ -215,22 +215,22 @@ public:
 
     Element& operator=(const char * v) 
     {
-      if (TYPE_STRING != t)
+      if (TYPE_STRING != t || !s->unique())
       {
         clear(TYPE_STRING);
-        s = new StringType(v);
+        s = new DataType<StringType>(v);
       } else {
-        *s = v;
+        *s = StringType(v);
       }
       return *this;
     }
 
     Element& operator=(const StringType & v) 
     {
-      if (TYPE_STRING != t)
+      if (TYPE_STRING != t || !s->unique())
       {
         clear(TYPE_STRING);
-        s = new StringType(v);
+        s = new DataType<StringType>(v);
       } else {
         *s = v;
       }
@@ -239,10 +239,10 @@ public:
 
     Element& operator=(const MapType & v) 
     {
-      if (TYPE_MAP != t)
+      if (TYPE_MAP != t || !m->unique())
       {
         clear(TYPE_MAP);
-        m = new MapType(v);
+        m = new DataType<MapType>(v);
       } else {
         *m = v;
       }
@@ -251,10 +251,10 @@ public:
 
     Element& operator=(const ListType & v) 
     {
-      if (TYPE_LIST != t)
+      if (TYPE_LIST != t || !l->unique())
       {
         clear(TYPE_LIST);
-        l = new ListType(v);
+        l = new DataType<ListType>(v);
       } else {
         *l = v;
       }
@@ -264,10 +264,11 @@ public:
     /// Check for equality with another Element.
     bool operator==(const Element& o) const;
 
-    /// Check for inequality with another Element.
-    bool operator!=(const Element& m) const
+    /// Check for inequality with anything we can check equality with
+    template<class C>
+    bool operator!=(C c) const
     {
-        return !(*this == m);
+        return !(*this == c);
     }
 
     /// Check for equality with a int.
@@ -276,26 +277,17 @@ public:
       return (t == TYPE_INT && i == v);
     }
 
-    /// Check for inequality with a int.
-    bool operator!=(IntType v) const { return !(*this == v); }
-
     /// Check for equality with a double.
     bool operator==(FloatType v) const
     {
       return t == TYPE_FLOAT && f == v;
     }
 
-    /// Check for inequality with a double.
-    bool operator!=(FloatType v) const { return !(*this == v); }
-
     /// Check for equality with a pointer.
     bool operator==(PtrType v) const
     {
       return t == TYPE_PTR && p == v;
     }
-
-    /// Check for inequality with a pointer.
-    bool operator!=(PtrType v) const { return !(*this == v); }
 
     /// Check for equality with a std::string.
     bool operator==(const StringType& v) const
@@ -305,9 +297,6 @@ public:
       return false;
     }
 
-    /// Check for inequality with a std::string.
-    bool operator!=(const StringType& v) const { return !(*this == v); }
-
     /// Check for equality with a MapType.
     bool operator==(const MapType& v) const
     {
@@ -316,9 +305,6 @@ public:
       return false;
     }
 
-    /// Check for inequality with a MapType.
-    bool operator!=(const MapType& v) const { return !(*this == v); }
-
     /// Check for equality with a ListType.
     bool operator==(const ListType& v) const
     {
@@ -326,9 +312,6 @@ public:
         return (*l == v);
       return false;
     }
-
-    /// Check for inequality with a ListType.
-    bool operator!=(const ListType& v) const { return !(*this == v); }
 
     /// Get the current type.
     Type getType() const { return t; }
@@ -395,7 +378,7 @@ public:
     /// Retrieve the current value as a non-const std::string reference.
     std::string& asString() throw (WrongTypeException)
     {
-        if (t == TYPE_STRING) return *s;
+        if (t == TYPE_STRING) return *(s = s->makeUnique());
         throw WrongTypeException();
     }
     const StringType& String() const
@@ -404,7 +387,7 @@ public:
     }
     StringType& String()
     {
-        return *s;
+        return *(s = s->makeUnique());
     }
     /// Retrieve the current value as a const MapType reference.
     const MapType& asMap() const throw (WrongTypeException)
@@ -415,7 +398,7 @@ public:
     /// Retrieve the current value as a non-const MapType reference.
     MapType& asMap() throw (WrongTypeException)
     {
-        if (t == TYPE_MAP) return *m;
+        if (t == TYPE_MAP) return *(m = m->makeUnique());
         throw WrongTypeException();
     }
     const MapType& Map() const
@@ -424,7 +407,7 @@ public:
     }
     MapType& Map()
     {
-        return *m;
+        return *(m = m->makeUnique());
     }
     /// Retrieve the current value as a const ListType reference.
     const ListType& asList() const throw (WrongTypeException)
@@ -435,7 +418,7 @@ public:
     /// Retrieve the current value as a non-const ListType reference.
     ListType& asList() throw (WrongTypeException)
     {
-        if (t == TYPE_LIST) return *l;
+        if (t == TYPE_LIST) return *(l = l->makeUnique());
         throw WrongTypeException();
     }
     const ListType& List() const
@@ -444,19 +427,53 @@ public:
     }
     ListType& List()
     {
-        return *l;
+        return *(l = l->makeUnique());
     }
 
 protected:
+
+    template<class C>
+    class DataType
+    {
+    public:
+        DataType() : _refcount(1) {}
+        DataType(const C& c) : _refcount(1), _data(c) {}
+
+        DataType& operator=(const C& c) {_data = c; return *this;}
+
+        bool operator==(const C& c) const {return _data == c;}
+
+        void ref() {++_refcount;}
+        void unref() {if(--_refcount == 0) delete this;}
+
+        bool unique() const {return _refcount == 1;}
+        DataType* makeUnique()
+        {
+           if(unique())
+               return this;
+           unref(); // _refcount > 1, so this is fine
+           return new DataType(_data);
+        }
+
+        operator C&() {return _data;}
+//        operator const C&() const {return _data;}
+
+    private:
+        DataType(const DataType&); // unimplemented
+        DataType& operator=(const DataType&); // unimplemented
+
+        unsigned long _refcount;
+        C _data;
+    };
 
     Type t;
     union {
       IntType i;
       FloatType f;
       void* p;
-      StringType* s;
-      MapType* m;
-      ListType* l;
+      DataType<StringType>* s;
+      DataType<MapType>* m;
+      DataType<ListType>* l;
     };
 };
 

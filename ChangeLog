@@ -1,3 +1,11 @@
+2003-07-22  Ron Steinke <rsteinke@w-link.net>
+
+	* Added internal refcounting to Atlas::Message::Element,
+	  it should be user-transparent as long as you don't
+	  hold a non-const reference to Element internals
+	  across code that makes a copy of the same element.
+	* Added iterator and const_iterator classes to BaseObjectData.
+
 2003-07-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Tweaks to the updated rpm spec.

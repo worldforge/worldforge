@@ -302,6 +302,49 @@ void %(classname)s::free()
 }
 """ % vars()) #"for xemacs syntax highlighting
 
+    def iterate_im(self, obj, statics):
+        classname_base = self.get_cpp_parent(obj)
+        classname = self.classname
+        serialno_name = string.upper(obj.id) + "_NO"
+        self.write("""void %(classname)s::iterate(int& current_class, std::string& attr) const
+{
+    // If we've already finished this class, chain to the parent
+    if(current_class >= 0 && current_class != %(serialno_name)s) {
+        %(classname_base)s::iterate(current_class, attr);
+        return;
+    }
+
+    const char *attr_list[] = {""" % vars()) #"for xemacs syntax highlighting
+        for attr in statics:
+            self.write('"%s",' % attr.name)
+        self.write("""};
+    const unsigned n_attr = sizeof(attr_list) / sizeof(const char*);
+
+    unsigned next_attr = n_attr; // so we chain to the parent if we don't find attr
+
+    if(attr.empty()) // just staring on this class
+        next_attr = 0;
+    else {
+      for(unsigned i = 0; i < n_attr; ++i) {
+         if(attr == attr_list[i]) {
+             next_attr = i + 1;
+             break;
+         }
+      }
+    }
+
+    if(next_attr == n_attr) { // last one on the list
+        current_class = -1;
+        attr = "";
+        %(classname_base)s::iterate(current_class, attr); // chain to parent
+    }
+    else {
+        current_class = %(serialno_name)s;
+        attr = attr_list[next_attr];
+    }
+}
+""" % vars()) #"for xemacs syntax highlighting 
+
     def interface_file(self, obj):
         #print "Output of interface for:",
         outfile = self.outdir + '/' + self.classname_pointer + ".h"
@@ -408,6 +451,13 @@ void %(classname)s::free()
             for attr in static_attrs:
                 self.write("    void send" + attr.cname)
                 self.write('(Atlas::Bridge&) const;\n')
+
+        self.write("\n    virtual void iterate(int& current_class, std::string& attr) const")
+        if len(static_attrs) == 0:
+            self.write("\n        {if(current_class == " + string.upper(obj.id) + "_NO) current_class = -1; " + self.get_cpp_parent(obj) + "::iterate(current_class, attr);}\n")
+        else:
+            self.write(";\n")
+
         self.freelist_if()
         self.write("};\n\n")
 
@@ -455,6 +505,7 @@ void %(classname)s::free()
             self.sendcontents_im(obj, static_attrs)
             #self.asobject_im(obj, static_attrs)
             self.addtoobject_im(obj, static_attrs)
+            self.iterate_im(obj, static_attrs)
         self.destructor_im(obj)
         self.instanceof_im(obj)
         self.freelist_im()

@@ -85,7 +85,130 @@ public:
     inline void decRef();
     static BaseObjectData *alloc() {assert(0); return NULL;} //not callable
     virtual void free() = 0;
+
+    // The iterator first iterates over the contents of m_obj->m_attributes,
+    // holding an iterator to the attributes map in m_I. When m_I reaches
+    // the end, it iterates through the named attributes in each of the
+    // classes, starting with the terminal child and working its way
+    // up to the ultimate parent, BaseObjectData. It stores the
+    // class number in m_current_class and the name of the current
+    // attribute in m_val.first. Since BaseObjectData has no
+    // named attributes, an iterator with m_current_class == BASE_OBJECT_NO
+    // is considered to be the end of the map.
+
+    // The iterator constructor has an argument which lets you begin() at the
+    // first named attribute in some class, and only iterate through
+    // that class and its parents. The same iterator, treated as an
+    // end(), lets you iterate through all attributes which are either
+    // named in derived classes or in m_attributes.
+
+    // FIXME should this hold a reference to the object it's
+    // iterating over?
+    friend class iterator
+    {
+    public:
+        iterator() : m_obj(0), m_val("", *this) {}
+        iterator(const iterator& I) : m_obj(I.m_obj),
+            m_current_class(I.m_current_class),
+            m_I(I.m_I), m_val(I.m_val.first, *this) {}
+        iterator(BaseObjectData& obj, int current_class);
+
+        // default destructor is fine unless we hold a reference to m_obj
+
+        iterator& operator=(const iterator& I);
+
+        iterator& operator++(); // preincrement
+
+        inline iterator operator++(int); // postincrement
+
+        bool operator==(const iterator& I) const;
+
+        bool operator!=(const iterator& I) const {return !operator==(I);}
+
+        friend class PsuedoElement
+        {
+            public:
+                PsuedoElement(const iterator& I) : m_I(I) {}
+
+                operator Message::Element() const;
+                // this acts on const PsuedoElement instead of PsuedoElement
+                // so that we can assign to attributes refered to by
+                // a const iterator& (as opposed to a const_iterator, where
+                // we can't, but that's done later)
+                const PsuedoElement& operator=(const Message::Element& val) const;
+
+            private:
+                const iterator& m_I;
+        };
+
+        typedef std::pair<std::string,PsuedoElement> value_type;
+
+        const value_type& operator*() const {return m_val;}
+        const value_type* operator->() const {return &m_val;}
+
+    private:
+        BaseObjectData *m_obj; // pointer to object whose args we're iterating
+        int m_current_class; // m_class_no for current class in the iteration
+        Message::Element::MapType::iterator m_I; // iterator in m_obj->m_attributes
+        value_type m_val;
+    };
+
+    // FIXME should this hold a reference to the object it's
+    // iterating over?
+    friend class const_iterator
+    {
+    public:
+        const_iterator() : m_obj(0), m_val("", *this) {}
+        const_iterator(const const_iterator& I) : m_obj(I.m_obj),
+            m_current_class(I.m_current_class),
+            m_I(I.m_I), m_val(I.m_val.first, *this) {}
+        const_iterator(const BaseObjectData& obj, int current_class);
+
+        // default destructor is fine unless we hold a reference to m_obj
+
+        const_iterator& operator=(const const_iterator& I);
+
+        const_iterator& operator++(); // preincrement
+
+        inline const_iterator operator++(int); // postincrement
+
+        bool operator==(const const_iterator& I) const;
+
+        bool operator!=(const const_iterator& I) const {return !operator==(I);}
+
+        friend class PsuedoElement
+        {
+            public:
+                PsuedoElement(const const_iterator& I) : m_I(I) {}
+
+                operator Message::Element() const;
+
+            private:
+                const const_iterator& m_I;
+        };
+
+        typedef std::pair<std::string,PsuedoElement> value_type;
+
+        const value_type& operator*() const {return m_val;}
+        const value_type* operator->() const {return &m_val;}
+
+    private:
+        const BaseObjectData *m_obj; // pointer to object whose args we're iterating
+        int m_current_class; // m_class_no for current class in the iteration
+        Message::Element::MapType::const_iterator m_I; // const_iterator in m_obj->m_attributes
+        value_type m_val;
+    };
+
+    iterator begin() {return iterator(*this, -1);}
+    iterator end() {return iterator(*this, BASE_OBJECT_NO);}
+
+    const_iterator begin() const {return const_iterator(*this, -1);}
+    const_iterator end() const {return const_iterator(*this, BASE_OBJECT_NO);}
+
 protected:
+
+    inline virtual void iterate(int& current_class, std::string& attr) const;
+
     int m_class_no; //each class has different enum
     int m_refCount; //how many instances 
     BaseObjectData *m_defaults;
@@ -109,6 +232,29 @@ void BaseObjectData::decRef() {
         return;
     }
     m_refCount--;
+}
+
+void BaseObjectData::iterate(int& current_class, std::string& attr) const
+{
+    // m_attributes is handled separately, and we have no other attributes,
+    // so we set the iterator to be at the end of the attributes
+
+    current_class = BASE_OBJECT_NO;
+    attr = "";
+}
+
+BaseObjectData::iterator BaseObjectData::iterator::operator++(int) // postincrement
+{
+    iterator tmp = *this;
+    operator++();
+    return tmp;
+}
+
+BaseObjectData::const_iterator BaseObjectData::const_iterator::operator++(int) // postincrement
+{
+    const_iterator tmp = *this;
+    operator++();
+    return tmp;
 }
 
 

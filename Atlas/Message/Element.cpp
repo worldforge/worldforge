@@ -16,13 +16,13 @@ void Element::clear(Type new_type)
    case TYPE_PTR:
      break;
    case TYPE_STRING:
-     delete s;
+     s->unref();
      break;
    case TYPE_MAP:
-     delete m;
+     m->unref();
      break;
    case TYPE_LIST:
-     delete l;
+     l->unref();
      break;
    }
   
@@ -45,13 +45,16 @@ Element::Element(const Element& obj) : t(obj.t)
         p = obj.p;
         break;
       case TYPE_STRING:
-        s = new StringType(*obj.s);
+        s = obj.s;
+        s->ref();
         break;
       case TYPE_MAP:
-        m = new MapType(*obj.m);
+        m = obj.m;
+        m->ref();
         break;
       case TYPE_LIST:
-        l = new ListType(*obj.l);
+        l = obj.l;
+        l->ref();
         break;
     }
         
@@ -81,13 +84,16 @@ Element& Element::operator=(const Element& obj)
       p = obj.p;
       break;
     case TYPE_STRING:
-      s = new StringType(*obj.s);
+      s = obj.s;
+      s->ref();
       break;
     case TYPE_MAP:
-      m = new MapType(*obj.m);
+      m = obj.m;
+      m->ref();
       break;
     case TYPE_LIST:
-      l = new ListType(*obj.l);
+      l = obj.l;
+      l->ref();
       break;
     }
 
