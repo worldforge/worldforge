@@ -1,5 +1,8 @@
 New TODO by Al Riddoch
 
+Note that most people are not interested in the Objects::Decoder also
+handling dispatch. Just decode and pass to the application.
+
 Invstigate removing methods which only exist to prevent hiding methods in the
 base class. This should be possible now that the methods do not have the same
 name.
