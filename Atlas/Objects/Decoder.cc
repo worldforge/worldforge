@@ -27,9 +27,12 @@ void Decoder::ObjectArrived(const Object& o)
     if (!o.IsMap()) return;
     if (o.AsMap().find("parent") == o.AsMap().end())
         { UnknownObjectArrived(o); return; }
-    string parent =
-        (*o.AsMap().find("parent")).second.AsString();
-
+    if ((*o.AsMap().find("parent")).second.AsList().size() != 1)
+        { UnknownObjectArrived(o); return; }
+    
+    string
+        parent((*(*o.AsMap().find("parent")).second.AsList().begin()).AsString());
+    
     ARR("root", Root)
     ARR("account", Entity::Account)
     ARR("admin", Entity::Admin)
