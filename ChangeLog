@@ -1,3 +1,9 @@
+2002-05-17  Michael Koch  <konqueror@gmx.de>
+
+        * atlas-config.in:
+	  - dont output /usr/lib when called with --libs
+	  - return real version instean of the string @ATLAS_VERSION@
+
 2002-05-15  Michael Koch  <konqueror@gmx.de>
 
         * atlas-config.in: dont output /usr/include when called with --cflags
