@@ -1,0 +1,18 @@
+You need at least gcc 2.95.2, here is URL for RPMS:
+(not all are needed, like java, g77 and chil)
+ftp://rawhide.redhat.com/rawhide/i386/RedHat/RPMS/ 
+   14414259 Dec 12 15:03 gcc-2.95.2-3.src.rpm
+      94155 Dec 13 23:21 cpp-2.95.2-3.i386.rpm
+    1005779 Dec 13 23:21 gcc-java-2.95.2-3.i386.rpm
+    1485682 Dec 13 23:21 gcc-g77-2.95.2-3.i386.rpm
+    1040751 Dec 13 23:21 gcc-chill-2.95.2-3.i386.rpm
+    1392905 Dec 13 23:21 gcc-c++-2.95.2-3.i386.rpm
+    2251218 Dec 13 23:21 gcc-2.95.2-3.i386.rpm
+     319122 Dec 13 23:21 libstdc++-devel-2.95.2-3.i386.rpm
+     655469 Dec 13 23:21 libstdc++-compat-2.95.2-3.i386.rpm
+     134706 Dec 13 23:21 libstdc++-2.95.2-3.i386.rpm
+     891616 Dec 13 23:21 gcc-objc-2.95.2-3.i386.rpm
+    2251260 Dec 13 23:21 gcc-libgcj-2.95.2-3.i386.rpm
+    5157017 Feb 24 20:58 binutils-2.9.5.0.22-6.src.rpm
+    1476868 Feb 24 21:04 binutils-2.9.5.0.22-6.i386.rpm
+     165138 Feb 24 21:05 kernel-utils-2.2.14-5.0.i386.rpm
