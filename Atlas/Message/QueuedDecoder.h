@@ -31,13 +31,21 @@ public:
     QueuedDecoder();
 
     /// Retrieve the current size of the message queue.    
-    size_t queueSize();
+    size_t queueSize() {
+	return m_objectQueue.size();
+    }
     /// Pop an object from the front of the message queue.
-    Element::MapType pop();
+    const Element::MapType popMessage() {
+        Element::MapType r = m_objectQueue.front();
+        m_objectQueue.pop();
+        return r;
+    }
     /// Peek at the object at the front of the queue.
-    Element::MapType front();
+    const Element::MapType frontMessage() {
+	return m_objectQueue.front();
+    }
     /// Clear the message queue.
-    void clear();
+    void clearQueue();
     
 protected:
 

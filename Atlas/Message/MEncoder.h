@@ -7,9 +7,9 @@
 
 #include "../EncoderBase.h"
 
-namespace Atlas { namespace Message {
+#include "Object.h"
 
-class Element;
+namespace Atlas { namespace Message {
 
 /** Encoder that transmits Atlas::Message::Element.
  *
@@ -29,7 +29,7 @@ public:
     virtual ~Encoder() { }
 
     /// Send a message (must be a map!) in stream state.
-    virtual void streamMessage(const Element& obj);
+    virtual void streamMessage(const Element::MapType & obj);
     /// Send an object as a map item.
     virtual void mapItem(const std::string&, const Element&);
     /// Send an object as a list item.

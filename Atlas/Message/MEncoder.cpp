@@ -69,18 +69,14 @@ void Encoder::mapItem(const std::string& name, const Element& obj)
     }                          
 }
 
-void Encoder::streamMessage(const Element& obj)
+void Encoder::streamMessage(const Element::MapType& obj)
 {
-    if (obj.isMap()) {
-        m_bridge->streamMessage(Atlas::Bridge::m_mapBegin);
-        Element::MapType::const_iterator I;
-        for (I = obj.asMap().begin();
-             I != obj.asMap().end(); I++)
-            mapItem((*I).first, (*I).second);
-        m_bridge->mapEnd();
+    m_bridge->streamMessage(Atlas::Bridge::m_mapBegin);
+    Element::MapType::const_iterator I;
+    for (I = obj.begin(); I != obj.end(); I++) {
+        mapItem((*I).first, (*I).second);
     }
+    m_bridge->mapEnd();
 }
-
-
 
 } } // namespace Atlas::Message

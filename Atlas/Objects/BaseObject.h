@@ -62,7 +62,7 @@ public:
     virtual bool hasAttr(const std::string& name) const;
     /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
     /// not exist.
-    virtual Atlas::Message::Element getAttr(const std::string& name)
+    virtual const Atlas::Message::Element getAttr(const std::string& name)
         const throw (NoSuchAttrException);
     /// Set the attribute "name" to the value given by "attr".
     virtual void setAttr(const std::string& name,
@@ -71,7 +71,7 @@ public:
     virtual void removeAttr(const std::string& name);
 
     /// Convert this object to a Object.
-    virtual Atlas::Message::Element asObject() const;
+    virtual const Atlas::Message::Element::MapType asMessage() const;
 
     /// Send the contents of this object to a Bridge.
     virtual void sendContents(Atlas::Bridge* b) const;

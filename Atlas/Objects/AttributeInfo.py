@@ -186,7 +186,7 @@ class AttributeInfo:
 
 
 #Element::ListType vs vector<BaseObject>
-#vector<BaseObject> -> Element::ListType: use asObject to convert
+#vector<BaseObject> -> Element::ListType: use asElement to convert
 #Element::ListType -> vector<BaseObject>: use BaseObjectData and make all dynamic?
 
 class ArgsRootList(AttributeInfo):
@@ -206,11 +206,13 @@ class ArgsRootList(AttributeInfo):
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
-    for(Atlas::Message::Element::ListType::const_iterator I = val.begin();
+    for(Message::Element::ListType::const_iterator I = val.begin();
         I != val.end();
         I++)
     {
-        attr_%(name)s.push_back(Atlas::Objects::messageElement2ClassObject(*I));
+        if (I->isMap()) {
+            attr_%(name)s.push_back(messageElement2ClassObject(I->asMap()));
+        }
     }
 }
 
@@ -233,7 +235,7 @@ void %(classname)s::set%(cname)s1(Root& val)
         I != args_in.end();
         I++)
     {
-        args_out.push_back((*I)->asObject());
+        args_out.push_back((*I)->asMessage());
     }
     return args_out;
 }

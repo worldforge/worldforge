@@ -76,52 +76,49 @@ int Factories::addFactory(const std::string& name, FactoryMethod method)
     return ++enumMax;
 }
 
-Root messageElement2ClassObject(const Element& mobj_arg)
+Root messageElement2ClassObject(const Element::MapType & mobj)
 {
     Root obj;
-    if(mobj_arg.isMap()) { // should we throw exeception if this is not true?
-        const Element::MapType& mobj = mobj_arg.asMap();
 
-        // is this instance of entity or operation?
-        Element::MapType::const_iterator I = mobj.find("objtype");
-        bool is_instance = false;
-        if(I != mobj.end() && (*I).second.isString()) {
-            std::string objtype = (*I).second.asString();
-            if(objtype == "op" || objtype == "obj") {
-                is_instance = true;
-                bool parent_ok = false;
-                // get parent
-                I = mobj.find("parents");
-                if(I != mobj.end()) {
-                    Element::ListType parents_lst = I->second.asList();
-                    if(parents_lst.size()>=1 && parents_lst.front().isString()) {
-                        std::string parent = parents_lst.front().asString();
-                        // objtype and parent ok, try to create it:
-                        if(objectFactory.hasFactory(parent)) {
-                            obj = objectFactory.createObject(parent);
-                            parent_ok = true;
-                        } // got object
-                    } // parent list ok?
-                } // has parent attr?
-                if(!parent_ok) {
-                    //if no root_operation/entity factory found: 
-                    //NoSuchFactoryException is thrown
-                    if(objtype == "op") {
-                        obj = objectFactory.createObject("root_operation");
-                    } else {
-                        obj = objectFactory.createObject("anonymous");
-                    }
-                } // parent was not ok
-            } // is instance
-        } // has objtype attr
-        if (!is_instance) {
-            obj = objectFactory.createObject("anonymous");
-        } // not instance
-        for (I = mobj.begin(); I != mobj.end(); I++) {
-            obj->setAttr(I->first, I->second);
-        }
+    // is this instance of entity or operation?
+    Element::MapType::const_iterator I = mobj.find("objtype");
+    bool is_instance = false;
+    if(I != mobj.end() && (*I).second.isString()) {
+        const std::string & objtype = (*I).second.asString();
+        if(objtype == "op" || objtype == "obj") {
+            is_instance = true;
+            bool parent_ok = false;
+            // get parent
+            I = mobj.find("parents");
+            if(I != mobj.end()) {
+                Element::ListType parents_lst = I->second.asList();
+                if(parents_lst.size()>=1 && parents_lst.front().isString()) {
+                    std::string parent = parents_lst.front().asString();
+                    // objtype and parent ok, try to create it:
+                    if(objectFactory.hasFactory(parent)) {
+                        obj = objectFactory.createObject(parent);
+                        parent_ok = true;
+                    } // got object
+                } // parent list ok?
+            } // has parent attr?
+            if(!parent_ok) {
+                //if no root_operation/entity factory found: 
+                //NoSuchFactoryException is thrown
+                if(objtype == "op") {
+                    obj = objectFactory.createObject("root_operation");
+                } else {
+                    obj = objectFactory.createObject("anonymous");
+                }
+            } // parent was not ok
+        } // is instance
+    } // has objtype attr
+    if (!is_instance) {
+        obj = objectFactory.createObject("anonymous");
+    } // not instance
+    for (I = mobj.begin(); I != mobj.end(); I++) {
+        obj->setAttr(I->first, I->second);
     }
-    return (Root)obj;
+    return obj;
 }
 
 """) #"for xemacs syntax highlighting

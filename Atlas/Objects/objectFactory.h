@@ -44,8 +44,8 @@ extern std::map<const std::string, Root> objectDefinitions;
 extern Factories objectFactory;
 //extern Factories objectInstanceFactory;
 
-Root messageElement2ClassObject(const Atlas::Message::Element& mobj);
+Root messageElement2ClassObject(const Atlas::Message::Element::MapType & mobj);
 
 } } // namespace Atlas::Objects
 
-#endif
+#endif // ATLAS_OBJECTS_OBJECTFACTORY_H

@@ -162,7 +162,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
 
     def getattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("Element %s::getAttr" % classname)
+        self.write("const Element %s::getAttr" % classname)
         self.write("(const std::string& name) const\n")
         self.write("    throw (NoSuchAttrException)\n")
         self.write("{\n")
@@ -207,15 +207,15 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
 
     def asobject_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("Element %s::asObject() const\n" % classname)
+        self.write("const Element::MapType %s::asMessage() const\n" % classname)
         self.write("{\n")
         parent = self.get_cpp_parent(obj)
-        self.write("    Element::MapType m = %s::asObject().asMap();\n" % parent)
+        self.write("    Element::MapType m = %s::asMessage();\n" % parent)
         for attr in statics:
             self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
             self.write('        m["%s"] = Element(get%s%s());\n' % \
                     (attr.name, attr.cname, attr.as_object))
-        self.write('    return Element(m);\n')
+        self.write('    return m;\n')
         self.write("}\n\n")
 
     def smart_ptr_if(self, name_addition=""):
@@ -345,7 +345,7 @@ void %(classname)s::free()
             self.doc(4, 'Retrieve the attribute "name". Throws ' \
                        +'NoSuchAttrException if it does')
             self.doc(4, 'not exist.')
-            self.write("    virtual Atlas::Message::Element getAttr(")
+            self.write("    virtual const Atlas::Message::Element getAttr(")
             self.write("const std::string& name)\n")
             self.write("            const throw (NoSuchAttrException);\n")
             self.doc(4, 'Set the attribute "name" to the value given by' \
@@ -362,7 +362,7 @@ void %(classname)s::free()
             self.write("    virtual void sendContents(Atlas::Bridge* b) const;\n")
             self.write("\n")
             self.doc(4, 'Convert this object to a Element.')
-            self.write("    virtual Atlas::Message::Element asObject() const;\n")
+            self.write("    virtual const Atlas::Message::Element::MapType asMessage() const;\n")
             self.write("\n")
             for attr in static_attrs:
                 self.write(attr.set_if())

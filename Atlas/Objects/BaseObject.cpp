@@ -18,7 +18,7 @@ bool BaseObjectData::hasAttr(const std::string& name) const
     return (m_attributes.find(name) != m_attributes.end());
 }
 
-Element BaseObjectData::getAttr(const std::string& name) const
+const Element BaseObjectData::getAttr(const std::string& name) const
     throw (NoSuchAttrException) 
 {
     Element::MapType::const_iterator I = m_attributes.find(name);
@@ -38,10 +38,9 @@ void BaseObjectData::removeAttr(const std::string& name)
     m_attributes.erase(name);
 }
 
-Element BaseObjectData::asObject() const
+const Element::MapType BaseObjectData::asMessage() const
 {
-    Element::MapType allattrs = m_attributes;
-    return Element(allattrs);
+    return m_attributes;
 }
 
 void BaseObjectData::sendContents(Bridge* b) const

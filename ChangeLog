@@ -1,5 +1,22 @@
 2001-11-30  Al Riddoch  <alriddoch@zepler.org>
 
+	* src/Message/MEncoder.cpp, src/Message/MEncoder.h,
+	  src/Objects/BaseObject.cpp, src/Objects/BaseObject.h,
+	  src/Objects/GenerateObjectFactory.py, src/Objects/gen_cpp.py
+	  src/Objects/objectFactory.h, src/Utilities/atlas_convert.cpp:
+	  Change argument type from Element to Element::MapType for
+	  efficiency.
+
+	* src/Message/QueuedDecoder.cpp, src/Message/QueuedDecoder.h:
+	  Make method names a little more distinctive, and inline
+	  the short ones.
+
+	* src/Objects/AttributeInfo.py, src/Objects/BaseObject.cpp,
+	  src/Objects/BaseObject.h: Change asObject methods to
+	  asElement.
+
+2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Objects/GenerateObjectFactory.py,
 	  src/Objects/GenerateDecoder.py,
 	  src/Objects/AttributeInfo.py: Fix method name change in generated
