@@ -65,7 +65,7 @@ void WFMath::_IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
 #ifdef HAVE_SSTREAM
   std::istringstream ist(s);
 #else
-  std::istrstream ist(s);
+  std::istrstream ist(s.c_str());
 #endif
 
  ist.precision(precision);
