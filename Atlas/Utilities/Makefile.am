@@ -5,7 +5,6 @@ bin_PROGRAMS = atlas_convert
 
 atlas_convert_SOURCES = atlas_convert.cpp
 
-atlas_convert_LDFLAGS = \
-	-L$(top_builddir)/Atlas -L$(top_builddir)/Atlas/Codecs \
-	-L$(top_builddir)/Atlas/Message \
-	-lAtlas-0.6 -lAtlasCodecs-0.6 -lAtlasMessage-0.6
+atlas_convert_LDADD = $(top_builddir)/Atlas/libAtlas-0.6.la \
+                      $(top_builddir)/Atlas/Codecs/libAtlasCodecs-0.6.la \
+                      $(top_builddir)/Atlas/Message/libAtlasMessage-0.6.la

@@ -1,3 +1,8 @@
+2003-12-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Utilities/Makefile.am: Ensure atlas_convert builds
+	  correctly, especially important when using cross compiler.
+
 2003-11-11  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/gen_cpp.py: Re-work default object code so it is
