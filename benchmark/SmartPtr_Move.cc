@@ -6,13 +6,20 @@
 
 using namespace std;
 
+class IncompatibleDataTypeException
+{
+public:
+    IncompatibleDataTypeException(const int type1, const int type2) :
+      data_type1(type1), data_type2(type2) {}
+    int data_type1, data_type2;
+};
+
 #define DEBUG 1
 
 template <class T>
 class FreeList
 {
 public:
-  T data;
   FreeList() : count(1) { 
 #if DEBUG
     cout << "FreeList(): this: " << this << endl; 
@@ -53,43 +60,58 @@ public:
   }
   void operator delete(void *_ptr) {
 #if DEBUG
-    cout << "FreeList.delete: _ptr: " << _ptr << endl;
+    cout << "FreeList.delete: _ptr: " << _ptr << " data_type: " << data_type << endl;
 #endif
     FreeList *ptr = (FreeList*)_ptr;
     ptr->next = begin;
     begin = ptr;
   }
-private:
+//private:
+  static int data_type;
   int count;
   static FreeList *begin;
   FreeList *next;
+  T data;
+};
+
+enum {
+  OBJECT_DATA,
+  ENTITY_DATA,
+  OPERATION_DATA
 };
 
 class ObjectData {
 public:
+  ObjectData() : parent(NULL) { type = OBJECT_DATA; }
+  int type;
   int id;
   FreeList<ObjectData> *parent;
   int objtype;
 };
 
 FreeList<ObjectData> *FreeList<ObjectData>::begin = NULL;
+int FreeList<ObjectData>::data_type = OBJECT_DATA;
 
 class EntityData : public ObjectData {
 public:
+  EntityData() : loc(NULL) { type = ENTITY_DATA; }
   FreeList<EntityData> *loc;
   double pos[3];
   double velocity[3];
 };
 
 FreeList<EntityData> *FreeList<EntityData>::begin = NULL;
+int FreeList<EntityData>::data_type = ENTITY_DATA;
 
 class OperationData : public ObjectData {
 public:
+  OperationData() : from(NULL), to(NULL), arg(NULL) { type = OPERATION_DATA; }
   FreeList<ObjectData> *from, *to;
   FreeList<ObjectData>* arg;
 };
 
 FreeList<OperationData> *FreeList<OperationData>::begin = NULL;
+int FreeList<OperationData>::data_type = OPERATION_DATA;
 
 template <class T> 
 class SmartPtr
@@ -104,9 +126,24 @@ public:
   }
   SmartPtr(const SmartPtr<T>& a) {
 #if DEBUG
-    cout << "SmartPtr(): this: " << this << " ptr: " << ptr << " a:" << &a << " a.ptr: " << a.ptr << endl;
+    cout << "SmartPtr(): this: " << this << " ptr: " << ptr << " a: " << &a << " a.ptr: " << a.ptr << endl;
 #endif
     ptr = a.get();
+    IncRef();
+  }
+  // FreeList<ObjectData>* -> SmartPtr<EntityData>
+  SmartPtr(const FreeList<ObjectData>*a_ptr)
+    throw (IncompatibleDataTypeException) {
+#if DEBUG
+    cout << "SmartPtr(const FreeList<ObjectData>*a_ptr): this: " << this
+         << "a_ptr: " << a_ptr 
+         << " FreeList<T>::data_type: " << FreeList<T>::data_type
+         << " a_ptr->data.type: " << a_ptr->data.type << endl;
+#endif
+    int type = FreeList<T>::data_type;
+    if(type != a_ptr->data.type)
+      throw IncompatibleDataTypeException(type, a_ptr->data.type);
+    ptr = (FreeList<T>*)a_ptr;
     IncRef();
   }
   ~SmartPtr() { 
@@ -120,6 +157,14 @@ public:
   }
   void IncRef() {
     ptr->GetRef();
+  }
+  // SmartPtr<EntityData> -> FreeList<ObjectData>*
+  FreeList<ObjectData>* AsObjectPtr() {
+#if DEBUG
+    cout << "AsObjectPtr(): this: " << this << " ptr: " << ptr << endl;
+#endif
+    //recipient should takes care of this: IncRef();
+    return (FreeList<ObjectData>*)get();
   }
   SmartPtr& operator=(const SmartPtr<T>& a) {
 #if DEBUG
@@ -156,16 +201,34 @@ enum {
 };
 
 Entity human;
-//Operation move;
-//Operation sight;
+Operation move;
+Operation sight;
 
-Entity& test(Entity &in)
+Entity test_cc(Entity in)
 {
   cout << "test: " << &in << endl;
   return in;
 }
 
-Entity& test2(Entity &in)
+Entity test_cr(Entity &in)
+{
+  cout << "test: " << &in << endl;
+  return in;
+}
+
+Entity& test_rc(Entity in)
+{
+  cout << "test: " << &in << endl;
+  return in;
+}
+
+Entity& test_rr(Entity &in)
+{
+  cout << "test: " << &in << endl;
+  return in;
+}
+
+Entity test2(Entity &in)
 {
   cout << "test2: " << &in << endl;
   static Entity bar;
@@ -173,38 +236,73 @@ Entity& test2(Entity &in)
   return in;
 }
 
-Entity& test3(Entity &in)
+Entity test3(Entity &in)
 {
   cout << "test3: " << &in << endl;
   static Entity bar3(in);
   return in;
 }
 
+Entity test4(Entity &in)
+{
+  cout << "test4: " << &in << endl;
+  Entity bar;
+  bar = in;
+  return bar;
+}
+
 #if DEBUG
 int main()
 {
-  cout << "Entity foo;" << endl;
+  cout << endl << "Entity foo;" << endl;
   Entity foo;
-  cout << "foo = human;" << endl;
+  cout << endl << "foo = human;" << endl;
   foo = human;
-  cout << "foo = test(foo);" << endl;
-  foo = test(foo);
-  cout << "foo = test(human);" << endl;
-  foo = test(human);
-  cout << "foo = test2(foo);" << endl;
+  cout << endl << "foo = test_cc(foo);" << endl;
+  foo = test_cc(foo);
+  cout << endl << "foo = test_cr(foo);" << endl;
+  foo = test_cr(foo);
+  cout << endl << "foo = test_rc(foo);" << endl;
+  foo = test_rc(foo);
+  cout << endl << "foo = test_rr(foo);" << endl;
+  foo = test_rr(foo);
+  cout << endl << "foo = test(human);" << endl;
+  foo = test_rr(human);
+  cout << endl << "foo = test2(foo);" << endl;
   foo = test2(foo);
-  cout << "foo = test3(foo);" << endl;
+  cout << endl << "foo = test3(foo);" << endl;
   foo = test3(foo);
-  cout << "...DONE" << endl;
+  cout << endl << "Entity foo4;" << endl;
+  Entity foo4;
+  cout << endl << "foo4 = test4(foo4);" << endl;
+  foo4 = test4(foo4);
+  cout << endl << "Entity from_obj(human.AsObjectPtr());" << endl;
+  Entity from_obj(human.AsObjectPtr());
+  cout << endl << "try {Operation op_from_obj(human.AsObjectPtr());}..." << endl;
+  try {
+    Operation op_from_obj(human.AsObjectPtr());
+  }
+  catch (IncompatibleDataTypeException e) {
+    cout << "IncompatibleDataTypeException: " 
+         << e.data_type1 << "!=" << e.data_type2 << endl;
+  }
+  cout << endl << "FreeList<ObjectData> *obj_ptr = human.AsObjectPtr();" << endl;
+  FreeList<ObjectData> *obj_ptr = human.AsObjectPtr();
+  cout << endl << "obj_ptr->GetRef();" << endl;
+  obj_ptr->GetRef();
+//  cout << endl << "delete obj_ptr;" << endl;
+//  delete obj_ptr;
+  cout << endl << "...DONE" << endl;
   return 0;
 }
 
 #else
+
 class NPC
 {
 public:
   NPC() : id(123) {x=y=z = vx=vy=vz = 0.0;}
-  Operation move(const Operation op);
+  Operation move(Operation &op);
   int GetId() {return id;}
 private:
   int id;
@@ -212,9 +310,10 @@ private:
   double vx,vy,vz;
 };
 
-Operation *NPC::move(const Operation op)
+Operation NPC::move(Operation &op)
 {
-  double *new_vel = ((Entity)op->arg)->velocity;
+  Entity op_arg = op->arg;
+  double *new_vel = op_arg->velocity;
   vx = new_vel[0];
   vy = new_vel[1];
   vz = new_vel[2];
@@ -224,30 +323,30 @@ Operation *NPC::move(const Operation op)
   z += vz;
 
   //human:
-  static Entity human_ent;
-  human_ent.parent = &human;
-  human_ent.id = GetId();
-  human_ent.pos[0] = x;
-  human_ent.pos[1] = y;
-  human_ent.pos[2] = z;
-  human_ent.velocity[0] = vx;
-  human_ent.velocity[1] = vy;
-  human_ent.velocity[2] = vz;
+  Entity human_ent;
+  human_ent->parent = human.AsObjectPtr();
+  human_ent->id = GetId();
+  human_ent->pos[0] = x;
+  human_ent->pos[1] = y;
+  human_ent->pos[2] = z;
+  human_ent->velocity[0] = vx;
+  human_ent->velocity[1] = vy;
+  human_ent->velocity[2] = vz;
   
   //move:
-  static Operation move_op;
-  move_op.objtype = OP;
-  move_op.parent = &::move;
-  move_op.arg = &human_ent;
+  Operation move_op;
+  move_op->objtype = OP;
+  move_op->parent = ::move.AsObjectPtr();
+  move_op->arg = human_ent.AsObjectPtr();
   
   //sight:
-  static Operation sight_op;
-  sight_op.objtype = OP;
-  sight_op.parent = &sight;
-  sight_op.from = &human_ent;
-  sight_op.arg = &move_op;
+  Operation sight_op;
+  sight_op->objtype = OP;
+  sight_op->parent = sight.AsObjectPtr();
+  sight_op->from = human_ent.AsObjectPtr();
+  sight_op->arg = move_op.AsObjectPtr();
 
-  return &sight_op;
+  return sight_op;
 }
 
 int main(int argc, char** argv)
@@ -257,27 +356,27 @@ int main(int argc, char** argv)
   for(i=0; i<10000000.0; i+=1.0) {
     //human:
     Entity ent;
-    ent.objtype=OBJECT;
-    ent.parent=&human;
-    ent.pos[0] = i;
-    ent.pos[1] = i-1.0;
-    ent.pos[2] = i+1.0;
-    ent.velocity[0] = i;
-    ent.velocity[1] = i-1.0;
-    ent.velocity[2] = i+1.0;
+    ent->objtype=OBJECT;
+    ent->parent=human.AsObjectPtr();
+    ent->pos[0] = i;
+    ent->pos[1] = i-1.0;
+    ent->pos[2] = i+1.0;
+    ent->velocity[0] = i;
+    ent->velocity[1] = i-1.0;
+    ent->velocity[2] = i+1.0;
 
     //move:
     Operation move_op;
-    move_op.objtype=OP;
-    move_op.parent=&move;
-    move_op.arg=&ent;
+    move_op->objtype=OP;
+    move_op->parent=move.AsObjectPtr();
+    move_op->arg=ent.AsObjectPtr();
     
     //sight:
     Operation sight_op;
-    sight_op.objtype=OP;
-    move_op.parent=&sight;
-    move_op.from=&ent;
-    move_op.arg=&move_op;
+    sight_op->objtype=OP;
+    move_op->parent=sight.AsObjectPtr();
+    move_op->from=ent.AsObjectPtr();
+    move_op->arg=move_op.AsObjectPtr();
   }
   TIME_OFF("Plain creating of sight operation");
 
@@ -288,21 +387,21 @@ int main(int argc, char** argv)
   for(i=0; i<10000000.0; i+=1.0) {
     //human:
     Entity human_ent;
-    human_ent.parent = &human;
-    human_ent.id = npc1.GetId();
-    human_ent.velocity[0] = i;
-    human_ent.velocity[1] = i-1.0;
-    human_ent.velocity[2] = i+1.0;
+    human_ent->parent = human.AsObjectPtr();
+    human_ent->id = npc1.GetId();
+    human_ent->velocity[0] = i;
+    human_ent->velocity[1] = i-1.0;
+    human_ent->velocity[2] = i+1.0;
 
     //move:
     Operation move_op;
-    move_op.objtype = OP;
-    move_op.parent = &move;
-    move_op.arg = &human_ent;
+    move_op->objtype = OP;
+    move_op->parent = move.AsObjectPtr();
+    move_op->arg = human_ent.AsObjectPtr();
 
-    Operation *res_sight = npc1.move(&move_op);
-    Operation *res_move = (Operation*)(res_sight->arg);
-    Entity *res_ent = (Entity*)res_move->arg;
+    Operation res_sight = npc1.move(move_op);
+    Operation res_move = res_sight->arg;
+    Entity res_ent = res_move->arg;
     double *new_pos = res_ent->pos;
     x = new_pos[0];
     y = new_pos[1];
