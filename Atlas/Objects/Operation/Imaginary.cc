@@ -27,7 +27,7 @@ Imaginary Imaginary::Instantiate()
     Object::ListType parent;
     parent.push_back(string("imaginary"));
     value.SetAttr("parent", parent);
-    value.SetAttr("objtype", string("instance"));
+    value.SetAttr("objtype", string("op"));
     
     return value;
 }

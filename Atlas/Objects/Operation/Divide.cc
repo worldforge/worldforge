@@ -28,7 +28,7 @@ Divide Divide::Instantiate()
     Object::ListType parent;
     parent.push_back(string("divide"));
     value.SetAttr("parent", parent);
-    value.SetAttr("objtype", string("instance"));
+    value.SetAttr("objtype", string("op"));
     
     return value;
 }

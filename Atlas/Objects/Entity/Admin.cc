@@ -27,7 +27,7 @@ Admin Admin::Instantiate()
     Object::ListType parent;
     parent.push_back(string("admin"));
     value.SetAttr("parent", parent);
-    value.SetAttr("objtype", string("instance"));
+    value.SetAttr("objtype", string("object"));
     
     return value;
 }

@@ -42,7 +42,7 @@ RootEntity RootEntity::Instantiate()
     Object::ListType parent;
     parent.push_back(string("root_entity"));
     value.SetAttr("parent", parent);
-    value.SetAttr("objtype", string("instance"));
+    value.SetAttr("objtype", string("object"));
     
     return value;
 }

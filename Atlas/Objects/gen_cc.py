@@ -114,13 +114,19 @@ class GenerateCC:
         self.out.write("\n")
     def instantiation(self, obj):
         id = obj.attr['id'].value
+        objtype = obj.attr['objtype'].value
         self.out.write("%s %s::Instantiate()\n{\n" \
                        % (self.classname, self.classname))
         self.out.write("    " + self.classname + " value;\n\n")
         self.out.write("    Object::ListType parent;\n")
         self.out.write('    parent.push_back(string("%s"));\n' % id)
         self.out.write('    value.SetAttr("parent", parent);\n')
-        self.out.write('    value.SetAttr("objtype", string("instance"));\n')
+        if objtype == "op_definition":
+            self.out.write('    value.SetAttr("objtype", string("op"));\n')
+        elif objtype == "class":
+            self.out.write('    value.SetAttr("objtype", string("object"));\n')
+        else:
+            self.out.write('    value.SetAttr("objtype", string("instance"));\n')
         self.out.write("    \n")
         self.out.write("    return value;\n")
         self.out.write("}\n\n")
