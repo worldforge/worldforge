@@ -103,7 +103,7 @@ public:
     }
 
     void newStream();
-    void feedStream(string& data);
+    void feedStream(const string& data);
     int getToken();
     int hasTokens();
 

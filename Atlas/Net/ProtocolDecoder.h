@@ -36,7 +36,7 @@ public:
 
 
 	virtual void	newStream();
-	virtual void	feedStream(string& data);
+	virtual void	feedStream(const string& data);
 	virtual int	hasTokens();
 	virtual int	getToken();
 

@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 #include "Codec.h"
+#include "Protocol.h"
 
 ACodec::ACodec(AProtocol* aproto)
 {
@@ -30,7 +31,7 @@ int ACodec::encodedLength()
 	return proto->getEncoder()->encodedLength();
 }
 
-void ACodec::feedStream(string& data)
+void ACodec::feedStream( const string& data)
 {
 	proto->getDecoder()->feedStream(data);
 }

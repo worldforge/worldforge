@@ -12,6 +12,7 @@ changes:
 
 #include <string>
 using std::string;
+#include <cassert>
 
 #include "Client.h"
 #include "Codec.h"
@@ -34,6 +35,7 @@ AClient::~AClient()
 
 SOCKET AClient::getSock()
 {
+    assert( csock != 0 );
 	return csock->getSock();
 }
 
@@ -41,14 +43,25 @@ bool AClient::canRead()
 {
 	int	len;
 	string	buf;
-
+	
+	//fetch incomming stream
+	assert( csock != 0);
 	len = csock->recv(buf);
+	
+	//if problem return, use gotErrs() to check
 	if (len < 1)
-	    return false;	    // AServer will call gotErrs	
+	    return false;
 
-	if (cmprs) buf = cmprs->decode(buf);
+	//decompress
+	if (cmprs)
+	    buf = cmprs->decode(buf);
+	
 	DebugMsg1(5,"ISTREAM = %s\n", buf.c_str());
+	
+	//parse through codec
+	assert( codec != 0 );
 	codec->feedStream(buf);
+	
 	while (codec->hasMessage()>0) {
 		DebugMsg1(4,"PROCESSING MESSAGE !!","");
 		gotMsg(codec->getMessage());
@@ -60,40 +73,50 @@ bool AClient::canRead()
 
 bool AClient::gotErrs()
 {
-	// errors are assumed to be a disconnect, propogate to subclasses
-	DebugMsg1(0,"[AClient] SOCKET ERRORS ON %li", (long)csock->getSock());
-	csock->close();
-	gotDisconnect();
-	return true;
+    // errors are assumed to be a disconnect, propogate to subclasses
+    assert( csock != 0 );
+    DebugMsg1(0,"[AClient] SOCKET ERRORS ON %li", (long)csock->getSock());
+    csock->close();
+    gotDisconnect();
+    return true;
 }
 
 void AClient::doPoll()
 {
-	fd_set		fdread;
-	fd_set		fdsend;
-	struct timeval	tm;
+    assert ( csock != 0 );
 
-	DebugMsg1(4,"POLLING CLIENT STREAM !!","");
+    fd_set		fdread;
+    fd_set		fdsend;
+    struct timeval	tm;
 
-	tm.tv_sec = 0;
-	tm.tv_usec = 1000;
+    DebugMsg1(4,"POLLING CLIENT STREAM !!","");
 
-	FD_ZERO(&fdread);
-	FD_ZERO(&fdsend);
+    tm.tv_sec = 0;
+    tm.tv_usec = 1000;
 
-	FD_SET(csock->getSock(), &fdread);
-	FD_SET(csock->getSock(), &fdsend);
+    FD_ZERO(&fdread);
+    FD_ZERO(&fdsend);
 
-        // fixed the select call in unix - sdt
-	select(csock->getSock()+1,&fdread,&fdsend,NULL,&tm);
+    FD_SET(csock->getSock(), &fdread);
+    FD_SET(csock->getSock(), &fdsend);
 
-	if (FD_ISSET(csock->getSock(),&fdread))
- 		if (!canRead()) { gotDisconnect(); return; }
-	if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
+    // fixed the select call in unix - sdt
+    select(csock->getSock()+1,&fdread,&fdsend,NULL,&tm);
+
+    if (FD_ISSET(csock->getSock(),&fdread))
+
+    if (!canRead()) {
+        gotDisconnect();
+        return;
+    }
+
+    if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
 }
 
 void AClient::readMsg(AObject& msg)
 {
+    assert ( csock != 0 );
+
 	// read and return a message
 	int	len;
 	string	buf;
@@ -113,9 +136,12 @@ void AClient::readMsg(AObject& msg)
 
 void AClient::sendMsg(const AObject& msg)
 {
+    assert ( codec != 0 );
+
     string data = codec->encodeMessage(msg);
     if (cmprs)
 	    data = cmprs->encode(data);
+	
     DebugMsg2(5,"Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
     int res = csock->send(data);
     DebugMsg1(5,"Client Message Sent = %i", res);

@@ -24,7 +24,7 @@ void APackedAsciiDecoder::newStream()
 	token = 0;
 }
 
-void APackedAsciiDecoder::feedStream(string& data)
+void APackedAsciiDecoder::feedStream(const string& data)
 {
 	buffer.append(data);
 }

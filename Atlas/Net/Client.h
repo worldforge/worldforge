@@ -16,9 +16,7 @@ changes:
 #ifndef __AtlasClient_h_
 #define __AtlasClient_h_
 
-//#include "Codec.h"
 #include "Socket.h"
-//#include "Compressor.h"
 #include "../Object/Object.h"
 
 class ASocket;
@@ -57,5 +55,4 @@ protected:
 private:
     AClient( const AClient& );
 };
-
 #endif

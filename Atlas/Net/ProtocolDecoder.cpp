@@ -25,7 +25,7 @@ long		AProtocolDecoder::getInt()                  { return ival; }
 double	AProtocolDecoder::getFloat()                { return fval; }
 
 void	AProtocolDecoder::newStream()               	{}
-void	AProtocolDecoder::feedStream(string& data)	{}
+void	AProtocolDecoder::feedStream(const string& data)	{}
 int	AProtocolDecoder::hasTokens()			{ return 0; }
 int	AProtocolDecoder::getToken()                	{ return 0; }
 
