@@ -57,8 +57,8 @@ int main()
     iostream client_stream(&clientbuf);
     iostream server_stream(&serverbuf);
 
-    StreamAccept s("SERVER BOB", server_stream);
-    StreamConnect c("CLIENT 1.0", client_stream);
+    StreamAccept s("SERVER BOB", server_stream, 0);
+    StreamConnect c("CLIENT 1.0", client_stream, 0);
 
   //while(!s.Done() && !c.Done())
   for(int i=0; i < 10; i++)
