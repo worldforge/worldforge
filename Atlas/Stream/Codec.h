@@ -2,11 +2,6 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-// $Log$
-// Revision 1.4  2000-02-23 06:49:34  mike
-// Big changes. Descriptive, huh.
-//
-
 #ifndef ATLAS_STREAM_CODEC_H
 #define ATLAS_STREAM_CODEC_H
 
@@ -29,24 +24,31 @@ class Atlas::Stream::Codec
     virtual ~Codec() { }
 
     SigC::Signal1<void, std::string> output;
-
-    virtual void BeginMap() = 0;
-    virtual void BeginMap(const std::string& name) = 0;
-    virtual void EndMap() = 0;
     
-    virtual void BeginList() = 0;
-    virtual void BeginList(const std::string& name) = 0;
-    virtual void EndList() = 0;
+    // Interface for top level context
 
-    virtual void Send(int) = 0;
-    virtual void Send(float) = 0;
-    virtual void Send(const std::string&) = 0;
-    virtual void Send(const Atlas::Object&) = 0;
-	
-    virtual void Send(const std::string& name, int) = 0;
-    virtual void Send(const std::string& name, float) = 0;
-    virtual void Send(const std::string& name, const std::string&) = 0;
-    virtual void Send(const std::string& name, const Atlas::Object&) = 0;
+    virtual void MessageBegin() = 0;
+    virtual void MessageEnd() = 0;
+    
+    // Interface for map context
+    
+    virtual void ListBegin(const std::string& name) = 0;
+    virtual void MapBegin(const std::string& name) = 0;
+    virtual void Item(const std::string& name, int) = 0;
+    virtual void Item(const std::string& name, float) = 0;
+    virtual void Item(const std::string& name, const std::string&) = 0;
+    virtual void Item(const std::string& name, const Atlas::Object&) = 0;
+    virtual void ListEnd() = 0;
+    
+    // Interface for list context
+    
+    virtual void ListBegin() = 0;
+    virtual void MapBegin() = 0;
+    virtual void Item(int) = 0;
+    virtual void Item(float) = 0;
+    virtual void Item(const std::string&) = 0;
+    virtual void Item(const Atlas::Object&) = 0;
+    virtual void MapEnd() = 0;
 };
 
 #endif
