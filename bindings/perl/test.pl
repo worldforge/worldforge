@@ -82,6 +82,6 @@ $conn->connect($host);
 
 ok(1);
 
-WorldForge::Eris::Poll::poll() until $finished;
+WorldForge::Eris::Poll::poll(1) until $finished;
 
 ok(1);
