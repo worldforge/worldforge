@@ -1,6 +1,9 @@
-2001-03-14  Al Riddoch  <alriddoch@zepler.org>
+2001-03-22  Al Riddoch  <alriddoch@zepler.org>
 
-	* configure.in: Added atlas-config support back in.
+        * configure.in: Changed package name to Atlas-C++ to ensure it
+	  is distinguishable from the other versions.
+
+	* configure.in: Added rule to make atlas-config script.
 
 2001-03-14  Al Riddoch  <alriddoch@zepler.org>
 
