@@ -3,6 +3,7 @@ ChangeLog for varconf
 Saturday, 20th June, 2002, Al Riddoch <alriddoch@zepler.org>
 	* Add --enable-debug to configure.in
 	* Use rpm supplied compiler flags in spec.
+	* Increment version, and release
 
 Saturday, 20th June, 2002, Michael Koch <konquerorgmx.de>
 	* Depend on sigc++ >= 1.0.2
