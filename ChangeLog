@@ -1,3 +1,8 @@
+Friday, August 2, Michael Koch
+
+	* Patch to declare operators in header file and made method
+	  headers equal to their declaration in header file.
+
 Monday, July 29, Ron Steinke
 
 	* Patch to allow multiple Connection instances. Lobby and

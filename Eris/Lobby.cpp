@@ -246,8 +246,8 @@ void Lobby::look(const std::string &id)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Dispatcher callbacks
 
-void Lobby::recvInfoAccount(const Operation::Info &ifo, 
-	const AtlasEntity::Account &account)
+void Lobby::recvInfoAccount(const Atlas::Objects::Operation::Info &ifo, 
+	const Atlas::Objects::Entity::Account &account)
 {
 	Eris::log(LOG_VERBOSE, "in recvInfoAccount");
 	

@@ -128,7 +128,7 @@ const Atlas::Message::Object& Entity::getProperty(const std::string &p)
 }
 
 void Entity::observeProperty(const std::string &nm, 
-    SigC::Slot1<void, const Atlas::Message::Object&> slot)
+    const SigC::Slot1<void, const Atlas::Message::Object&> slot)
 {
     PropertyMap::iterator pi = _properties.find(nm);
     if (pi == _properties.end())

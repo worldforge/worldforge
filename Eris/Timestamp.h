@@ -58,9 +58,17 @@ class Stamp {
 };
 
 //inline Stamp getCurrentStamp() {return Stamp().getCurrent();}
-	
+
+bool operator<(const Stamp &a, const Stamp &b);
+
+Stamp operator+(const Stamp &a, long msec);
+
 inline Stamp operator+(unsigned long msec, const Stamp &a)
 {return a + msec;}
+
+Stamp operator-(const Stamp &a, long msec);
+
+long operator-(const Stamp &a, const Stamp &b);
 
 } // of namespace Time
 
