@@ -48,6 +48,8 @@ Stamp operator+(const Stamp &a, unsigned long msec)
 		ret.tv_sec++;
 		ret.tv_usec-=1000000;
 	}
+	
+	return ret;
 }
 
 long operator-(const Stamp &a, const Stamp &b)

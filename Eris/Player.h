@@ -92,6 +92,9 @@ protected:
 
 	/// Callback for network re-establishment
 	void netConnected();
+	
+	/// help! the plug is being pulled!
+	bool netDisconnecting();
 
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)

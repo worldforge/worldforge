@@ -40,7 +40,11 @@ Player::Player() :
 
 Player::~Player()
 {
-	;
+	if (_con) {
+		//_con->removeDispatcherByPath
+		
+		
+	}
 }
 
 Lobby* Player::login(Connection *con,
@@ -282,10 +286,16 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
 	Dispatcher *d = _con->getDispatcherByPath("op:oog:sight:entity");
 	assert(d);
 	
+	if (d->getSubdispatch("character"))
+		// second time around, don't try again
+		return;
+	
 	Dispatcher *ged = d->addSubdispatch(new ClassDispatcher("character", "game_entity"));
 	ged->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("player",
 		SigC::slot(this, &Player::recvSightCharacter)
 	));
+	
+	_con->Disconnecting.connect(SigC::slot(this, &Player::netDisconnecting));
 }
 
 void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
@@ -341,6 +351,17 @@ void Player::netConnected()
 		internalLogin(_username, _pass);
 	
 	// ditto for IG (world)
+}
+
+bool Player::netDisconnecting()
+{
+	_con->lock();
+	logout();
+	// FIXME  -  decide what reponse lgout should have, install a handler
+	// for it (in logout() itself), and then attach a signal to the handler
+	// that calls _con->unlock();
+	
+	return false;
 }
 
 /*

@@ -4,6 +4,11 @@ Tuesday, August 28 2001, James Turner <jmtn@blueyonder.co.uk>
 	  get hit with a huge raft of STL errors if they forget to include
 	  it themselves.
 	* Added timeouts to Metaserver and hooked up MetaQuery timeouts
+	* Fixed various disconnect / reconnect bugs
+	* Player now hooks Connection::Disconnecting to issue a logout
+	  operation. Currently the reply is undefined so this will always
+	  hit the disconnect timeout.
+	* Disconnect is still not working quite right.
 
 Monday, August 27 2001, Jmaes Turner <jmtn@blueyonder.co.uk>
 

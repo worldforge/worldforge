@@ -177,6 +177,11 @@ void Lobby::netFailure(std::string msg)
 	// what needs to be done here?
 }
 
+void Lobby::netDisconnected()
+{
+	// ditto
+}
+
 void Lobby::netConnected()
 {
 	// probably in response to a re-conection, so we need to log in again
@@ -245,7 +250,7 @@ void Lobby::recvOpInfo(const Operation::Info &ifo)
 	
 	_account = acc.GetId();
 	
-	if (!_reconnect) // obviosuly only register first time around
+	if (!_reconnect) // obviously only register first time around
 		registerCallbacks();
 	
 	// broadcast the login

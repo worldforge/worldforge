@@ -73,6 +73,7 @@ protected:
 	// should this try a shutdown, or simply wait and hope for resume?
 	void netFailure(std::string msg);
 	void netConnected();
+	void netDisconnected();
 	
 	std::string _account;
 	Connection* _con;

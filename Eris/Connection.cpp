@@ -83,7 +83,6 @@ void Connection::disconnect()
 	setStatus(DISCONNECTING);
 	
 	if (!_statusLock) {
-		cerr << "doing immmediate disconnect" << endl;
 		hardDisconnect(true);
 		return;
 	}
