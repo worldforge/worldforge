@@ -190,6 +190,7 @@ void ClientConnection::dispatchOOG(const RootOperation& op)
         
     case TALK_NO: {
         Talk tk = smart_dynamic_cast<Talk>(op);
+        processTalk(tk);
         return;
     }
    
@@ -336,6 +337,34 @@ void ClientConnection::processOOGLook(const Look& lk)
     st->setTo(lk->getFrom());
     st->setRefno(lk->getSerialno());
     send(st);
+}
+
+void ClientConnection::processTalk(const Atlas::Objects::Operation::Talk& tk)
+{
+    if (m_server->m_rooms.count(tk->getTo()))
+        return m_server->talkInRoom(tk, tk->getTo());
+    
+    if (m_server->m_accounts.count(tk->getTo())) {
+        ClientConnection* cc = m_server->getConnectionForAccount(tk->getTo());
+        if (!cc) {
+            sendError("oog chat: account is offline", tk);
+            return;
+        }
+        
+        Sound snd;
+        snd->setFrom(m_account); 
+        snd->setArgs1(tk);
+        snd->setTo(cc->m_account);
+        cc->send(snd);
+        return;
+    }
+    
+    if (tk->getTo().empty()) {
+        // lobby chat
+        return m_server->talkInRoom(tk, "_lobby");
+    }
+    
+    sendError("bad TO for OOG TALK op: " + tk->getTo(), tk);
 }
 
 void ClientConnection::processAnonymousGet(const Get& get)

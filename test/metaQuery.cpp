@@ -42,6 +42,7 @@ int main(int argc, char* argv[])
     if (argc > 1)
         metaServer = argv[1];
         
+    // maximum of 5 simultaneous queries
     Eris::Meta meta(metaServer, 5);
     meta.CompletedServerList.connect(SigC::slot(&gotServerList));
     meta.AllQueriesDone.connect(SigC::slot(&queriesDone));
@@ -68,6 +69,7 @@ int main(int argc, char* argv[])
             cout << "\truleset:" << sv.getRuleset() << endl;
             cout << "\tuptime:" << sv.getUptime() << endl;
             cout << "\tping:" << sv.getPing() << endl;
+            cout << "\tconnected clients:" << sv.getNumClients() << endl;
             break;
             
         case Eris::ServerInfo::TIMEOUT:

@@ -1,3 +1,11 @@
+2004-07-27  James Turner  <james@worldforge.org>
+
+	* test/metaquery.cpp: Update the query test program to include
+	  the connected client count of each server (for bear)
+	* test/clientConnection: add code to start testing OOG chat, still
+	  work in progress (need to have multiple test client processes
+	  first, i think)
+
 2004-07-18  James Turner  <james@worldforge.org>
 
 	* test/tests.cpp: send the stub server child process a SIGTERM, so it
