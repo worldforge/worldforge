@@ -1,14 +1,14 @@
 
 SUBDIRS = . Message Codecs Filters Net Utilities Objects Funky
 
-lib_LTLIBRARIES = libAtlas.la
+lib_LTLIBRARIES = libAtlas-0.6.la
 
-libAtlas_la_LDFLAGS = $(INTERFACE_VERSION)
+libAtlas_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
 
-libAtlas_la_SOURCES = \
+libAtlas_0_6_la_SOURCES = \
 	Bridge.cpp Codec.cpp Filter.cpp
 
-libAtlasincludedir = $(includedir)/Atlas
+libAtlasincludedir = $(includedir)/Atlas-C++-0.6/Atlas
 
 libAtlasinclude_HEADERS = \
 	Bridge.h Codec.h Filter.h Negotiate.h EncoderBase.h \

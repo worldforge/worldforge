@@ -1,4 +1,9 @@
-2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+2003-03-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Added pkgconfig macro, and put installed headers into a subdir.
+	  Use version suffix on library names.
+
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Objects/GenerateDecoder.py: Rename Objects::Decoder
 	  methods so no overloading.
@@ -6,7 +11,7 @@
 	* tests/Objects/decoder1.cpp, tests/Objects/objects2.cpp:
 	  Get the tests working again.
 
-2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Bridge.cpp, src/Bridge.h, src/EncoderBase.h,
 	  src/Codecs/Bach.cpp, src/Codecs/Bach.h,
@@ -24,7 +29,7 @@
 	  Rename methods so overloading is not being used, to prevent
 	  the problems that seems to cause with virtual functions.
 
-2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Message/MEncoder.cpp, src/Message/MEncoder.h,
 	  src/Objects/BaseObject.cpp, src/Objects/BaseObject.h,
@@ -41,7 +46,7 @@
 	  src/Objects/BaseObject.h: Change asObject methods to
 	  asElement.
 
-2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Objects/GenerateObjectFactory.py,
 	  src/Objects/GenerateDecoder.py,
@@ -52,7 +57,7 @@
 	  benchmark/Message_Move.cpp, benchmark/Call_Move.cpp:
 	  Get the benchmarks building again.
 
-2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+2002-11-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Objects/BaseObject.h, src/Objects/gen_cpp.py: Make class numbers
 	  static.
@@ -63,16 +68,16 @@
 	* tests/Objects/objects2.cpp: Switch to using ISO C++ compliant
 	  stringstream.
 
-2001-11-29  Al Riddoch  <alriddoch@zepler.org>
+2002-11-29  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Objects/GenerateDecoder.py, src/Objects/SmartPtr.h: Modify
 	  decoder to use type safe conversions.
 
-2001-11-29  Al Riddoch  <alriddoch@zepler.org>
+2002-11-29  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/Objects: Get the tests compiling again.
 
-2001-11-29  Al Riddoch  <alriddoch@zepler.org>
+2002-11-29  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Objects/SmartPtr.h: Clean up constructors so member pointer is
 	  directly initialised. Add type conversion template for const
@@ -82,12 +87,12 @@
 	  to their type rather than to the base class, to make writing type
 	  safe code easier.
 
-2001-11-29  Al Riddoch  <alriddoch@zepler.org>
+2002-11-29  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Objects/SmartPtr.h: Added member templates for type
 	  conversion up and down the tree.
 
-2001-11-19  Al Riddoch  <alriddoch@zepler.org>
+2002-11-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Exception.h, src/Objects/BaseObject.h,
 	  src/Objects/GenerateDecoder.py, src/Objects/objectFactory.h:

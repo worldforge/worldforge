@@ -5,15 +5,9 @@
 #ifndef ATLAS_FILTER_H
 #define ATLAS_FILTER_H
 
-#include "config.h"
-
 #include <string>
 
-#ifdef HAVE_STREAMBUF
 #include <streambuf>
-#else
-#include <streambuf.h>
-#endif
 
 #include <cstring>
 // for memcpy
@@ -49,9 +43,9 @@ class Filter
 
     enum Type
     {
-	CHECKSUM,
-	COMPRESSION,
-	ENCRYPTION
+        CHECKSUM,
+        COMPRESSION,
+        ENCRYPTION
     };
 
     protected:
@@ -59,15 +53,10 @@ class Filter
     Filter* m_next;
 };
 
-#ifdef HAVE_STREAMBUF
 typedef int int_type;
 
 class filterbuf : public std::streambuf {
-#else
-typedef int int_type;
 
-class filterbuf : public streambuf {
-#endif
 public:
 
   filterbuf(std::streambuf& buffer,

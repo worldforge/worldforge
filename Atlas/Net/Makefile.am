@@ -1,11 +1,11 @@
 
-lib_LTLIBRARIES = libAtlasNet.la
+lib_LTLIBRARIES = libAtlasNet-0.6.la
 
-libAtlasNet_la_LDFLAGS = $(INTERFACE_VERSION)
+libAtlasNet_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
 
-libAtlasNetincludedir = $(includedir)/Atlas/Net
+libAtlasNetincludedir = $(includedir)/Atlas-C++-0.6/Atlas/Net
 
-libAtlasNet_la_SOURCES = \
+libAtlasNet_0_6_la_SOURCES = \
 	Stream.cpp Loopback.cpp
 
 libAtlasNetinclude_HEADERS = \

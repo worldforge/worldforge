@@ -5,11 +5,11 @@ AC_INIT()
 
 dnl Initialise automake
 
-INTERFACE_VERSION='-release 0.5 -version-info 0:0:0'
+INTERFACE_VERSION='-version-info 0:0:0'
 
 AC_SUBST(INTERFACE_VERSION)
 
-AM_INIT_AUTOMAKE("Atlas-C++", "0.5.0.1")
+AM_INIT_AUTOMAKE("Atlas-C++", "0.5.1")
 AM_CONFIG_HEADER(config.h)
 
 dnl Test for GNU libtool
@@ -357,7 +357,7 @@ LIBS="$ac_save_LIBS"
 
 SYSTEM_LIBS="$SYSTEM_LIBS -lm"
 ATLAS_CFLAGS=""
-ATLAS_LIBS="-lAtlasObjects -lAtlasNet -lAtlas -lAtlasCodecs -lAtlasMessage -lAtlas"
+ATLAS_LIBS="-lAtlasObjects-0.6 -lAtlasNet-0.6 -lAtlas-0.6 -lAtlasCodecs-0.6 -lAtlasMessage-0.6 -lAtlas-0.6"
 
 AC_SUBST(ATLAS_CFLAGS)
 AC_SUBST(ATLAS_LIBS)
@@ -380,5 +380,5 @@ AC_OUTPUT([
 	tests/Makefile
 	tests/Objects/Makefile
 	tutorial/Makefile
-	atlas-config
-], [chmod +x atlas-config])
+	atlascpp-0.6.pc
+])

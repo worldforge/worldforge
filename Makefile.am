@@ -1,16 +1,10 @@
 
 SUBDIRS = src tests tutorial benchmark
 
-bin_SCRIPTS = atlas-config
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = atlascpp-0.6.pc
 
-EXTRA_DIST = ROADMAP Doxyfile footer.html index.dox atlas.m4
-
-m4datadir = $(datadir)/aclocal
-m4data_DATA = atlas.m4
-
-libAtlasincludedir = $(includedir)/Atlas
-
-libAtlasinclude_HEADERS = config.h
+EXTRA_DIST = ROADMAP Doxyfile footer.html index.dox
 
 docs:
 	@echo "running doxygen..."

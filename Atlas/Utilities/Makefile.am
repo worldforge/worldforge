@@ -7,4 +7,4 @@ atlas_convert_SOURCES = atlas_convert.cpp
 
 atlas_convert_LDFLAGS = \
 	-L$(top_builddir)/src -L$(top_builddir)/src/Codecs -L$(top_builddir)/src/Message \
-	-lAtlas -lAtlasCodecs -lAtlasMessage
+	-lAtlas-0.6 -lAtlasCodecs-0.6 -lAtlasMessage-0.6
