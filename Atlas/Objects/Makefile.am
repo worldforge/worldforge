@@ -15,7 +15,7 @@ libAtlasObjectsinclude_HEADERS = \
 	Operation/Communicate.h Operation/Create.h Operation/Delete.h \
 	Operation/Disappearance.h Operation/Divide.h Operation/Error.h \
 	Operation/Feel.h Operation/Get.h Operation/Imaginary.h \
-	Operation/Info.h Operation/List.h Operation/Login.h \
+	Operation/Info.h Operation/Listen.h Operation/Login.h \
 	Operation/Logout.h Operation/Look.h Operation/Move.h \
 	Operation/Perceive.h Operation/Perception.h \
 	Operation/RootOperation.h Operation/Set.h Operation/Sight.h \
