@@ -1,11 +1,9 @@
-prefix=@prefix@
-exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: mercator
+Name: @PACKAGE@
 Description: A config handling library.
 Requires: @MERCATOR_REQUIRES@
 Version: @VERSION@
-Libs: -L${libdir} -lmercator-0.2
-Cflags: -I${includedir}/Mercator-0.2
+Libs: -L${libdir} @MERCATOR_LIBS@
+Cflags: -I${includedir}/Mercator@MERCATOR_LIB_SUFFIX@

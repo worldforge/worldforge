@@ -1,4 +1,9 @@
-2003-07-02  Al Riddoch  <alriddoch@zepler.org>
+2003-07-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Update rpm spec to be cleaner, and make the technical sections
+	  more generic.
+
+2003-07-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Remove legacy mercator-config script and m4 macro, as we
 	  don't want people using them.
