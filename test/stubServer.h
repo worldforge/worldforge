@@ -11,6 +11,19 @@
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Codec.h>
 
+namespace Atlas { namespace Objects {
+	class Encoder;
+	class Root;
+		
+	namespace Operation {
+		class Get;
+	}
+	
+	namespace Entity {
+	
+	}
+}}
+
 class StubServer : public Atlas::Message::DecoderBase
 { 
 public:
@@ -32,14 +45,17 @@ public:
     // the test interface
     bool get(Atlas::Message::Object &obj);
     void push(const Atlas::Message::Object &obj);
-    
+    void push(const Atlas::Objects::Root &obj);
+	
     void waitForMessage(int timeout);
     
     void setNegotiation(bool enable) {m_doNegotiate=enable;}
     void disconnect();
     
 protected:
-    State m_state;
+    void sendInfoForType(const std::string &type, const Atlas::Objects::Operation::Get &get);
+
+	State m_state;
     std::queue<Atlas::Message::Object> m_queue;	// all the atlas messages we've received
 
     void accept();
@@ -57,7 +73,8 @@ protected:
     Atlas::Message::Encoder *m_msgEncoder;
     Atlas::Codec<std::iostream>* m_codec;   // Atlas codec.
     Atlas::Net::StreamAccept*m_acceptor;
-    
+    Atlas::Objects::Encoder* m_objectEncoder;
+	
     bool m_doNegotiate;
 };
 
