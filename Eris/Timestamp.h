@@ -47,6 +47,10 @@ class Stamp {
 	// have been called when the value we're copying from was
 	// constructed
 
+	/** return the number of seconds elapsed in the current epoch for this
+	stamp. */
+	double seconds();
+	
 	friend bool operator<(const Stamp &a, const Stamp &b);
 	friend bool operator>(const Stamp &a, const Stamp &b);
 	

@@ -89,3 +89,9 @@ long Time::operator-(const Time::Stamp &a, const Time::Stamp &b)
 	ret += (a._val.tv_usec - b._val.tv_usec) / 1000;
 	return ret;
 }
+
+double Time::Stamp::seconds()
+{
+	double rv = _val.tv_sec + (_val.tv_usec * 1e-6);
+	return rv;
+}

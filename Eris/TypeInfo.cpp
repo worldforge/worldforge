@@ -2,14 +2,6 @@
 	#include "config.h"
 #endif
 
-#if __MWERKS__
-   #include <map.h>
-#else
-#ifndef _MSC_VER
-  #include <multimap.h>
-#endif
-#endif
-
 #include <assert.h>
 #include <fstream>
 #include <Atlas/Codecs/XML.h>
