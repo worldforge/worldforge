@@ -1,3 +1,8 @@
+2004-02-27  Al Riddoch  <alriddoch@zepler.org>
+
+* Eris/Avatar.cpp, Eris/entityRouter.h, Eris/igRouter.cpp: Three files
+  still missing newlines at the end.
+
 Monday 8th March 2004, James Turner <james@worldforge.org>
 
 * Final Linux fixes for Eris, including building the metaquery tool,
