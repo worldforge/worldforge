@@ -1,3 +1,12 @@
+2003-06-26 Damien McGinnes
+        
+        * Mercator/Segment.cpp, Segment.h: Added the location of the
+          segment. Changed applyMod to work with mods in absolute coords
+        * Mercator/Terrain.cpp, Terrain.h: added addMod to apply mods to 
+          the terrain - this allows a mod to span several segments
+        * Mercator/TerrainMod.h: added a clone method, fixed the virtual
+          keyword on a few methods, disabled copy constructors
+
 2003-06-23  Al Riddoch  <alriddoch@zepler.org>
 
 	* Fix Makefile.ams so that distcheck works.

@@ -388,7 +388,7 @@ void Segment::addMod(TerrainMod *t)
 {
     m_modList.push_back(t);
     applyMod(t);
-    //currently mods dont fix the normals
+    // currently mods dont fix the normals
     m_validNorm = false;
 }
 
@@ -405,10 +405,12 @@ void Segment::clearMods()
 void Segment::applyMod(TerrainMod *t) 
 {
     int lx,hx,ly,hy;
-    if (clipToSegment(t->bbox(), lx, hx, ly, hy)) {
-        for (int i=ly;i<=hy;i++) {
-            for (int j=lx;j<=hx;j++) {
-                t->apply(m_points[i * (m_res + 1) + j], j, i);
+    WFMath::AxisBox<2> bbox=t->bbox();
+    bbox.shift(WFMath::Vector<2>(-m_xRef, -m_yRef));
+    if (clipToSegment(bbox, lx, hx, ly, hy)) {
+        for (int i=ly; i<=hy; i++) {
+            for (int j=lx; j<=hx; j++) {
+                t->apply(m_points[i * (m_res + 1) + j], j + m_xRef, i + m_yRef);
             }
         }
     }

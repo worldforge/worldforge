@@ -14,6 +14,7 @@
 namespace Mercator {
 
 class Segment;
+class TerrainMod;
 
 class Terrain {
   public:
@@ -62,6 +63,8 @@ class Terrain {
     const Pointstore & getPoints() const {
         return m_basePoints;
     }
+    
+    void addMod(TerrainMod *t);
 };
 
 } // namespace Mercator

@@ -17,11 +17,10 @@ public:
     //output is placed into point
     virtual void apply(float &point, int x, int y) const = 0;
 
-    //make this modifier relative to a segment located at x,y
-    virtual void relToSeg(float x, float y) = 0;
-
     //get the boundingbox of the modifier
     virtual WFMath::AxisBox<2> bbox() const = 0;
+
+    virtual TerrainMod *clone() = 0;
 };
 
 template <typename Shape>
@@ -31,10 +30,6 @@ public:
     ShapeTerrainMod(const Shape &s) : m_shape(s) {}
     virtual ~ShapeTerrainMod() {}
     
-    virtual void relToSeg(float x, float y) {
-        m_shape.shift(WFMath::Vector<2> (-x,-y));    
-    }
-
     virtual WFMath::AxisBox<2> bbox() const { return m_shape.boundingBox(); }
     
 protected:
@@ -53,12 +48,19 @@ public:
     
     virtual ~LevelTerrainMod() {}
     
-    void apply(float &point, int x, int y) const {
+    virtual void apply(float &point, int x, int y) const {
         if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
             point = m_level;
         }
     }
 
+    virtual TerrainMod *clone() {
+        return new LevelTerrainMod<Shape>(m_level, m_shape);
+    }
+
+private:
+    LevelTerrainMod(LevelTerrainMod&) {}
+    
 protected:
     float m_level;
 };
@@ -75,11 +77,18 @@ public:
     
     virtual ~AdjustTerrainMod() {}
     
-    void apply(float &point, int x, int y) const {
+    virtual void apply(float &point, int x, int y) const {
         if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
             point += m_dist;
         }
     }
+    
+    virtual TerrainMod *clone() {
+        return new AdjustTerrainMod<Shape>(m_dist, m_shape);
+    }
+
+private:
+    AdjustTerrainMod(AdjustTerrainMod&) {}
 
 protected:
     float m_dist;
@@ -97,12 +106,19 @@ public:
     
     virtual ~SlopeTerrainMod() {}
     
-    void apply(float &point, int x, int y) const {
+    virtual void apply(float &point, int x, int y) const {
         if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
             point = m_level + (m_shape.getCenter()[0] - x) * m_dx 
                             + (m_shape.getCenter()[1] - y) * m_dy;
         }
     }
+    
+    virtual TerrainMod *clone() {
+        return new SlopeTerrainMod<Shape>(m_level, m_dx, m_dy, m_shape);
+    }
+
+private:
+    SlopeTerrainMod(SlopeTerrainMod&) {}
 
 protected:
     float m_level, m_dx, m_dy;

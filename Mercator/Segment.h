@@ -26,6 +26,8 @@ typedef std::list<TerrainMod *> ModList;
 class Segment {
   private:
     const int m_res;
+    int m_xRef;
+    int m_yRef;
     Matrix<2, 2, BasePoint> m_controlPoints;
     float * const m_points;
     float * m_normals;
@@ -48,6 +50,11 @@ class Segment {
 
     const bool isValid() {
         return m_validPt;
+    }
+
+    void setRef(int x, int y) {
+        m_xRef=x*m_res;
+        m_yRef=y*m_res;
     }
 
     void setCornerPoint(unsigned int x, unsigned int y, const BasePoint & bp) {
