@@ -3,8 +3,8 @@
 
 #include "Debug.h"
 
-#include "Types.h"
-#include "Object.h"
+#include "Object/Types.h"
+#include "Object/Object.h"
 
 #include "Protocol.h"
 #include "ProtocolDecoder.h"
@@ -26,7 +26,7 @@
 #include "Client.h"
 #include "Server.h"
 
-#include <Python.h>
+#include <python1.5/Python.h>
 
 void initAtlasNet();
 

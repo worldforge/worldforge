@@ -10,7 +10,7 @@
 #define __AtlasXMLEncoder_h_
 
 
-#include "Object.h"
+#include "Object/Object.h"
 #include "ProtocolEncoder.h"
 
 #include <memory.h>

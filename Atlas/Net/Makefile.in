@@ -73,12 +73,12 @@ VERSION = @VERSION@
 
 lib_LTLIBRARIES = libAtlasNet.la
 
-libAtlasNet_la_SOURCES =  	Client.cpp Codec.cpp Compressor.cpp Debug.cpp 	Net.cpp PackedAsciiDecoder.cpp PackedAsciiEncoder.cpp 	PackedAsciiProtocol.cpp Protocol.cpp ProtocolDecoder.cpp 	ProtocolEncoder.cpp Server.cpp Socket.cpp TCPSocket.cpp 	XMLDecoder.cpp XMLEncoder.cpp XMLProtocol.cpp 	FloatList.c IntList.c LongList.c StringList.c Types.c URI.c URIList.c
+libAtlasNet_la_SOURCES =  	Client.cpp Codec.cpp Compressor.cpp 	Net.cpp PackedAsciiDecoder.cpp PackedAsciiEncoder.cpp 	PackedAsciiProtocol.cpp Protocol.cpp ProtocolDecoder.cpp 	ProtocolEncoder.cpp Server.cpp Socket.cpp TCPSocket.cpp 	XMLDecoder.cpp XMLEncoder.cpp XMLProtocol.cpp
 
 
 libAtlasNetincludedir = $(includedir)/Atlas/Net
 
-libAtlasNetinclude_HEADERS =  	Client.h Codec.h Compressor.h Debug.h FloatList.h IntList.h 	LongList.h Net.h PackedAsciiDecoder.h PackedAsciiEncoder.h 	PackedAsciiProtocol.h Protocol.h ProtocolDecoder.h 	ProtocolEncoder.h Server.h Socket.h StringList.h TCPSocket.h 	Types.h URI.h URIList.h XMLDecoder.h XMLEncoder.h XMLProtocol.h
+libAtlasNetinclude_HEADERS =  	Client.h Codec.h Compressor.h 	Net.h PackedAsciiDecoder.h PackedAsciiEncoder.h 	PackedAsciiProtocol.h Protocol.h ProtocolDecoder.h 	ProtocolEncoder.h Server.h Socket.h TCPSocket.h 	XMLDecoder.h XMLEncoder.h XMLProtocol.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../src/config.h
@@ -92,22 +92,15 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libAtlasNet_la_LDFLAGS = 
 libAtlasNet_la_LIBADD = 
-libAtlasNet_la_OBJECTS =  Client.lo Codec.lo Compressor.lo Debug.lo \
-Net.lo PackedAsciiDecoder.lo PackedAsciiEncoder.lo \
-PackedAsciiProtocol.lo Protocol.lo ProtocolDecoder.lo \
-ProtocolEncoder.lo Server.lo Socket.lo TCPSocket.lo XMLDecoder.lo \
-XMLEncoder.lo XMLProtocol.lo FloatList.lo IntList.lo LongList.lo \
-StringList.lo Types.lo URI.lo URIList.lo
+libAtlasNet_la_OBJECTS =  Client.lo Codec.lo Compressor.lo Net.lo \
+PackedAsciiDecoder.lo PackedAsciiEncoder.lo PackedAsciiProtocol.lo \
+Protocol.lo ProtocolDecoder.lo ProtocolEncoder.lo Server.lo Socket.lo \
+TCPSocket.lo XMLDecoder.lo XMLEncoder.lo XMLProtocol.lo
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
-CFLAGS = @CFLAGS@
-COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-CCLD = $(CC)
-LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
 HEADERS =  $(libAtlasNetinclude_HEADERS)
 
 DIST_COMMON =  README ChangeLog Makefile.am Makefile.in NEWS TODO
@@ -117,14 +110,11 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/Client.P .deps/Codec.P .deps/Compressor.P \
-.deps/Debug.P .deps/FloatList.P .deps/IntList.P .deps/LongList.P \
-.deps/Net.P .deps/PackedAsciiDecoder.P .deps/PackedAsciiEncoder.P \
+DEP_FILES =  .deps/Client.P .deps/Codec.P .deps/Compressor.P .deps/Net.P \
+.deps/PackedAsciiDecoder.P .deps/PackedAsciiEncoder.P \
 .deps/PackedAsciiProtocol.P .deps/Protocol.P .deps/ProtocolDecoder.P \
-.deps/ProtocolEncoder.P .deps/Server.P .deps/Socket.P \
-.deps/StringList.P .deps/TCPSocket.P .deps/Types.P .deps/URI.P \
-.deps/URIList.P .deps/XMLDecoder.P .deps/XMLEncoder.P \
-.deps/XMLProtocol.P
+.deps/ProtocolEncoder.P .deps/Server.P .deps/Socket.P .deps/TCPSocket.P \
+.deps/XMLDecoder.P .deps/XMLEncoder.P .deps/XMLProtocol.P
 SOURCES = $(libAtlasNet_la_SOURCES)
 OBJECTS = $(libAtlasNet_la_OBJECTS)
 
