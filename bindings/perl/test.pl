@@ -57,7 +57,7 @@ sub login_failure {
 
 sub login_success {
   print "Successful login\n";
-  $conn->get_lobby()->say("Testing...Testing...1...2...3...Testing");
+  $conn->getLobby()->say("Testing...Testing...1...2...3...Testing");
   logout $player;
 }
 
