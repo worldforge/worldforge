@@ -32,7 +32,7 @@ public:
     virtual void Poll();
 
     virtual void MessageBegin();
-    virtual void MessageMapBegin();
+    virtual void MessageItem(const Map&);
     virtual void MessageEnd();
     
     virtual void MapItem(const std::string& name, const Map&);
@@ -70,8 +70,11 @@ protected:
     };
     
     stack<State> state;
-    stack<string> fragments;
-    string currentFragment;
+
+    string nameFragment;
+    string stringFragment;
+    int intFragment;
+    float floatFragment;
 
     inline void ParseStream(char);
     inline void ParseMessage(char);
@@ -81,7 +84,7 @@ protected:
     inline void ParseFloat(char);
     inline void ParseString(char);
     inline void ParseName(char);
-    inline void ParseValue(char);
+    inline void ParseEncoded(char);
 };
 
 namespace
@@ -93,61 +96,10 @@ PackedAscii::PackedAscii(const Codec::Parameters& p) :
     socket(p.stream), filter(p.filter), bridge(p.bridge)
 {
     state.push(PARSE_STREAM);
-}
 
-void mapItem(Bridge* b, parsestate_t type, const string& name,
-        const string& value)
-{
-    switch (type) {
-        case PARSE_STRING : b->MapItem(name, value);
-                            break;
-        case PARSE_INT: b->MapItem(name, atoi(value.c_str()));
-                        break;
-        case PARSE_FLOAT: b->MapItem(name, atof(value.c_str()));
-                          break;
-    }
-}
-
-void listItem(Bridge* b, parsestate_t type, const string& value)
-{
-    switch (type) {
-        case PARSE_STRING : b->ListItem(value);
-                            break;
-        case PARSE_INT: b->ListItem(atoi(value.c_str()));
-                        break;
-        case PARSE_FLOAT: b->ListItem(atof(value.c_str()));
-                          break;
-    }
-}
-
-void popStack(stack<parsestate_t>& parseStack, stack<string>& fragments,
-        Bridge* b)
-{
-    // FIXME
-    // check for right stack entries (VALUE, ASSIGN, NAME)
-    // depending on what comes before that, add to the bridge, pop off nicely
-
-    string name, value;
-    parsestate_t type;
-    
-    if (parseStack.top() != PARSE_VALUE) return; // FIXME report error
-    parseStack.pop();
-    value = fragments.pop();
-    if (parseStack.top() != PARSE_ASSIGN) return; // FIXME report error
-    parseStack.pop();
-    if (parseStack.top() != PARSE_NAME) return; // FIXME report error
-    parseStack.pop();
-    name = fragments.pop();
-    
-    type = parseStack.pop();
-    
-    switch (parseStack.top()) {
-        case PARSE_MAP: mapItem(b, type, name, value);
-                        break;
-        case PARSE_LIST: listItem(b, type, value);
-                         break;
-        default: break; // FIXME report error
-    }
+    stringFragment = "";
+    intFragment = 0;
+    floatFragment = 0.0;
 }
 
 void PackedAscii::ParseStream(char next)
@@ -171,7 +123,7 @@ void PackedAscii::ParseMessage(char next)
     switch (next)
     {
 	case '[':
-	    bridge->MessageBeginMap();
+	    bridge->MessageItem(MapBegin);
 	    state.push(PARSE_MAP);
 	break;
     
@@ -238,28 +190,25 @@ void PackedAscii::ParseList(char next)
 	break;
 
 	case '[':
+	    bridge->ListItem(MapBegin);
 	    state.push(PARSE_MAP);
-	    state.push(PARSE_VALUE);
 	break;
 
 	case '(':
+	    bridge->ListItem(ListBegin);
 	    state.push(PARSE_LIST);
-	    state.push(PARSE_VALUE);
 	break;
 
 	case '$':
 	    state.push(PARSE_STRING);
-	    state.push(PARSE_VALUE);
 	break;
 
 	case '@':
 	    state.push(PARSE_INT);
-	    state.push(PARSE_VALUE);
 	break;
 
 	case '#':
 	    state.push(PARSE_FLOAT);
-	    state.push(PARSE_VALUE);
 	break;
 
 	default:
@@ -271,14 +220,114 @@ void PackedAscii::ParseList(char next)
 
 void PackedAscii::ParseInt(char next)
 {
+    switch (next)
+    {
+	case '[':
+	case '(':
+	case '$':
+	case '@':
+	case '#':
+	    socket.putback(next);
+	    state.pop();
+	    if (state.top() == PARSE_MAP)
+	    {
+		bridge->MapItem(nameFragment, intFragment);
+		nameFragment = "";
+	    }
+	    else if (state.top() == PARSE_LIST)
+	    {
+		bridge->ListItem(intFragment);
+	    }
+	    else
+	    {
+		// FIXME some kind of sanity checking assertion here
+	    }
+	    intFragment = 0;
+	break;
+
+	case '0': case '1': case '2': case '3': case '4':
+	case '5': case '6': case '7': case '8': case '9':
+	    intFragment *= 10;
+	    intFragment += next - '0';
+	break;
+    }
 }
 
 void PackedAscii::ParseFloat(char next)
 {
+    switch (next)
+    {
+	case '[':
+	case '(':
+	case '$':
+	case '@':
+	case '#':
+	    socket.putback(next);
+	    state.pop();
+	    if (state.top() == PARSE_MAP)
+	    {
+		bridge->MapItem(nameFragment, floatFragment);
+		nameFragment = "";
+	    }
+	    else if (state.top() == PARSE_LIST)
+	    {
+		bridge->ListItem(floatFragment);
+	    }
+	    else
+	    {
+		// FIXME some kind of sanity checking assertion here
+	    }
+	    floatFragment = 0.0;
+	break;
+
+	case '0': case '1': case '2': case '3': case '4':
+	case '5': case '6': case '7': case '8': case '9':
+	    floatFragment *= 10;
+	    floatFragment += next - '0';
+	break;
+    }
 }
 
 void PackedAscii::ParseString(char next)
 {
+    switch (next)
+    {
+	case '[':
+	case '(':
+	case '$':
+	case '@':
+	case '#':
+	    socket.putback(next);
+	    state.pop();
+	    if (state.top() == PARSE_MAP)
+	    {
+		bridge->MapItem(nameFragment, stringFragment);
+		nameFragment = "";
+	    }
+	    else if (state.top() == PARSE_LIST)
+	    {
+		bridge->ListItem(stringFragment);
+	    }
+	    else
+	    {
+		// FIXME some kind of sanity checking assertion here
+	    }
+	    stringFragment = "";
+	break;
+
+	case '+':
+	   state.push(PARSE_ENCODED);
+	break;
+
+	case '=':
+	    // FIXME signal error here
+	    // unexpected character
+	break;
+
+	default:
+	    stringFragment += next;
+	break;
+    }
 }
 
 void PackedAscii::ParseName(char next)
@@ -287,28 +336,46 @@ void PackedAscii::ParseName(char next)
     {
 	case '=':
 	    state.pop();
-	    state.push(PARSE_VALUE);
+	    if (state.top() == PARSE_MAP)
+	    {
+		bridge->MapItem(nameFragment, MapBegin);
+	    }
+	    else if (state.top() == PARSE_LIST)
+	    {
+		bridge->MapItem(nameFragment, ListBegin);
+	    }
 	break;
 
 	case '+':
 	    state.push(PARSE_ENCODED);
 	break;
+	
+	case '[':
+	case '(':
+	case '$':
+	case '@':
+	case '#':
+	    // FIXME signal error here
+	    // unexpected character
+	break;
+
+	default:
+	    nameFragment += next;
+	break;
     }
 }
 
-void PackedAscii::ParseValue(char next)
+void PackedAscii::ParseEncoded(char next)
 {
+    switch (next)
+    {
+    }
 }
 
-void PackedAscii::Poll() // muchas FIXME
+void PackedAscii::Poll()
 {
     while (socket.rdbuf()->in_avail())
     {
-	// FIXME what about dehexifying?
-	// basically, we should look at everything in the stream
-	// if we find '+' plus 2 chars, dehexify and put back?
-	// maybe...
-    
 	char next = socket.get(); // get character
 
 	switch (state.top())
@@ -321,91 +388,8 @@ void PackedAscii::Poll() // muchas FIXME
 	    case PARSE_FLOAT:	ParseFloat(next); break;
 	    case PARSE_STRING:	ParseString(next); break;
 	    case PARSE_NAME:	ParseName(next); break;
-	    case PARSE_VALUE:	ParseValue(next); break;
+	    case PARSE_ENCODED:	ParseEncoded(next); break;
 	}
-    
-	switch (next)
-	{
-	    case '{':
-		if (parseStack.empty())
-		{
-		    bridge->MessageBegin();
-		    parseStack.push(PARSE_MSG);
-		}
-		else
-		{
-		    // FIXME must signal error here
-		    // should never get naked { inside a message,
-		    // as they will be hex encoded
-		}
-	    break;
-	
-	    case '}':
-		if (parseStack.top() == PARSE_MSG)
-		{
-		    bridge->MessageEnd();
-		    parseStack.pop();
-		}
-		else
-		{
-		    // FIXME must signal error here
-		    // should never get a naked } until the end of a message
-		}
-	    break;
-	
-	    case '[':
-		switch (parseStack.top())
-		{
-		    case PARSE_MSG:
-			bridge->MessageBeginMap();
-		    break;
-
-		    case PARSE_MAP:
-			// FIXME need the map name
-			// so this needs to be handled by fragments some how
-			bridge->MapItem("", MapBegin);
-		    break;
-
-		    case PARSE_MAP:
-			bridge->ListItem(MapBegin);
-		    break;
-
-		    default:
-			// FIXME needs to signal error some how
-			// is this necessary?
-		    break;
-		}
-		
-		parseStack.push(PARSE_MAP);
-	    break;
-	
-	    case ']':
-		popStack(parseStack, fragments, bridge);
-		parseStack.pop(); // PARSE_MAP
-	    break; // FIXME
-	    
-	    case '(':
-		parseStack.push(PARSE_LIST);
-            break; // FIXME
-	    
-	    case ')':
-		popStack(parseStack, fragments, bridge);
-                parseStack.pop(); // PARSE_LIST
-            break; // FIXME
-	    
-	    case '$':
-	    break; // FIXME
-	    
-	    case '@':
-	    break; // FIXME
-	    
-	    case '#':
-	    break; // FIXME
-	}
-	
-    // FIXME - finish this
-    // do whatever with it depending on the stack
-    // possibly pop off the stack
     }
 }
 
@@ -414,9 +398,9 @@ void PackedAscii::MessageBegin()
     socket << "{";
 }
 
-void PackedAscii::MessageMapBegin()
+void PackedAscii::MessageItem(const Map&)
 {
-    socket << "[=";
+    socket << "[";
 }
 
 void PackedAscii::MessageEnd()
