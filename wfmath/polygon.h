@@ -55,10 +55,10 @@ class Polygon<2>
   Polygon(const Polygon& p) : m_points(p.m_points) {}
 
   ~Polygon() {}
-
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   friend std::ostream& operator<< <2>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <2>(std::istream& is, Polygon& p);
-
+#endif
   Polygon& operator=(const Polygon& p)
 	{m_points = p.m_points; return *this;}
 

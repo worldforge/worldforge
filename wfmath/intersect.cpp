@@ -63,12 +63,16 @@ using namespace WFMath;
 template<>
 bool WFMath::Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper)
 {
+  const AxisBox<2> b2 = r.boundingBox();
+  if(!Intersect(b2, b, proper))
+    return false;
+
   RotMatrix<2> m = r.m_orient.inverse();
 
-  return Intersect(r.boundingBox(), b, proper)
-      && Intersect(RotBox<2>(Point<2>(b.m_low).rotate(m, r.m_corner0),
-			     b.m_high - b.m_low, m).boundingBox(),
-		   AxisBox<2>(r.m_corner0, r.m_corner0 + r.m_size), proper);
+  const AxisBox<2> b3 = RotBox<2>(Point<2>(b.m_low).rotate(m, r.m_corner0),
+                             b.m_high - b.m_low, m).boundingBox();
+  const AxisBox<2> b4(r.m_corner0, r.m_corner0 + r.m_size);
+  return Intersect(b3, b4, proper);
 }
 
 // The 3d implementation is based on the following theorem:
@@ -108,15 +112,17 @@ bool WFMath::Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper)
   // the other in the coordinate system of the first will take care
   // of the "plane parallel to face" case
 
-  if(!Intersect(r.boundingBox(), b, proper))
+  const AxisBox<3> b2 = r.boundingBox();
+  if(!Intersect(b2, b, proper))
     return false;
 
   RotMatrix<3> minv = r.m_orient.inverse();
   Vector<3> b_size = b.m_high - b.m_low;
 
-  if(!Intersect(RotBox<3>(Point<3>(b.m_low).rotate(minv, r.m_corner0),
-			  b_size, minv).boundingBox(),
-		AxisBox<3>(r.m_corner0, r.m_corner0 + r.m_size), proper))
+  const AxisBox<3> b3 = RotBox<3>(Point<3>(b.m_low).rotate(minv, r.m_corner0),
+                             b_size, minv).boundingBox();
+  const AxisBox<3> b4(r.m_corner0, r.m_corner0 + r.m_size);
+  if(!Intersect(b3, b4, proper))
     return false;
 
   // Now for the "plane parallel to at least one edge of each" case
