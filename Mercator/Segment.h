@@ -30,7 +30,7 @@ class Segment {
     }
 
     float get(int x, int y) const {
-        return m_points[y * m_res + x];
+        return m_points[y * (m_res + 1) + x];
     }
 
     void populate(const float *);

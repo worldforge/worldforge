@@ -13,7 +13,7 @@ namespace Mercator {
 static float fallOff = 0.15;
 static float roughness = 1.5;
 
-Segment::Segment(int res) : m_res(res), m_points(new float[res * res])
+Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)])
 {
 }
 
@@ -90,9 +90,9 @@ void Segment::populate(const float * base)
             }
         }
     }
-    for(int i = 0; i < m_res; ++i) {
-        for(int j = 0; j < m_res; ++j) {
-            m_points[j * m_res + i] = tmp[m_res + j][m_res + i];
+    for(int i = 0; i < m_res + 1; ++i) {
+        for(int j = 0; j < m_res + 1; ++j) {
+            m_points[j * (m_res + 1) + i] = tmp[m_res + j][m_res + i];
         }
         // memcpy(&m_points[i * m_res], tmp[m_res + i], m_res * sizeof(float));
     }
