@@ -21,7 +21,7 @@
 #include "Utils.h"
 #include "Wait.h"
 #include "Property.h"
-
+#include "TypeInfo.h"
 #include "OpDispatcher.h"
 #include "IdDispatcher.h"
 
@@ -106,10 +106,17 @@ const Atlas::Message::Object& Entity::getProperty(const std::string &p)
     if (pi == _properties.end())
 	throw InvalidOperation("Unknown property " + p);
 
-    // invoke the getter if one is defined
-    if (!pi->second->get.empty())
-	pi->second->value = pi->second->get();
-    return pi->second->value;
+    return pi->second->getValue();
+}
+
+void Entity::observeProperty(const std::string &nm, 
+    SigC::Slot1<void, const Atlas::Message::Object&> slot)
+{
+    PropertyMap::iterator pi = _properties.find(nm);
+    if (pi == _properties.end())
+	throw InvalidOperation("Unknown property " + nm);
+    
+    pi->second->Set.connect(slot);
 }
 
 Coord Entity::getPosition() const
@@ -130,6 +137,12 @@ BBox Entity::getBBox() const
 Quaternion Entity::getOrientation() const
 {
     return _orientation;
+}
+
+TypeInfo* Entity::getType() const
+{
+    assert(!_parents.empty());
+    return Eris::TypeInfo::find(*_parents.begin());
 }
 
 void Entity::setVisible(bool vis)
@@ -261,8 +274,7 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 	);
     }
     
-    P->second->value = val;
-    P->second->set(val);
+    P->second->setValue(val);
     
     if (_inUpdate) {
 	// add to modified set

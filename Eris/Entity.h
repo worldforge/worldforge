@@ -35,6 +35,7 @@ class Entity;
 class World;	
 class Dispatcher;
 class Property;
+class TypeInfo;
     
 typedef std::vector<Entity*> EntityArray;
 
@@ -97,6 +98,8 @@ public:
 	StringSet getInherits() const
 	{ return _parents; }
 	
+	TypeInfo* Entity::getType() const;
+	
 	/** Query the visiblity of this entity; this is controlled by Appearance/Disappearance ops
 	from the server */
 	bool isVisible() const
@@ -126,14 +129,17 @@ public:
 	/** Emitted when this entity originates the specified class of operation;
 	note the derived operations will also invoke the signal */
 	template <class T>
-	void ConnectOpToSlot(const std::string &op, SigC::Slot1<void, T> &slot)
+	void connectOpToSlot(const std::string &op, const SigC::Slot1<void, const T&> &slot)
 	{ innerOpToSlot(new SignalDispatcher<T>(op, slot)); }
 	
 	/** Emitted when this entity receives a specified class of operations; again
 	derived operations will also trigger the signal to be invoked */
 	template <class T>
-	void ConnectOpFromSlot(const std::string &op, SigC::Slot1<void, T> &slot)
+	void connectOpFromSlot(const std::string &op, SigC::Slot1<void, const T&> &slot)
 	{  innerOpFromSlot(new SignalDispatcher<T>(op, slot)); }
+	
+	void observeProperty(const std::string &nm, 
+	    const SigC::Slot1<void, const Atlas::Message::Object&> slot);
 	
 protected:	
 	/// constructor for use by derived classes only!

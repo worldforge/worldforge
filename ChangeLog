@@ -1,6 +1,15 @@
+Thursday, January 17 2002, James Turner
+
+	* Further property tweaks suggested by Karsten.
+	* Added observeProperty accessor to Entity, which allows
+	  easy public monitoring of attribute values.
+	* Fixed connectOp[To/From]Slot on Entity
+	* Added getType() helper on Entity that returns the
+	  corresponding TypeInfo*
+
 Tuesday, January 15 2002, James Turner
 
-	* Rewrote proeprty handling completely : should be
+	* Rewrote property handling completely : should be
 	  much simpler (no unsync() / resync()) and much more
 	  flexible now. Properties now have get and set signals
 	  that can be observed for value changes.

@@ -196,24 +196,7 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
 
 bool TypeInfo::isBound()
 {
-/*	
-	// fast authorative suceed
-	if (_bound) return true;
-	
-	// fast authorative fail (waiting on INFO for this node); note this must
-	// be checked after the local flag, becuase the root entity will always
-	// have an empty parents, but has it's 'bound' flag manually set.
-	if (_parents.empty()) return false;
-	
-	// recursive check
-	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P)
-		if (!(*P)->isBound()) return false;
-		
-	// only reach this point if every parent node returned 'true' for isBound
-	_bound = true;	// cache for posterity (and to avoid lots of tree walking)
-	return true;
-*/
-	return _bound;
+    return _bound;
 }
 
 void TypeInfo::validateBind()
@@ -364,6 +347,15 @@ void TypeInfo::readAtlasSpec(const std::string &specfile)
 		else
 			globalTypeMap[def.GetId()] = new TypeInfo(def);
 	}
+}
+
+TypeInfoPtr TypeInfo::find(const std::string &id)
+{
+    TypeInfoPtr type = findSafe(id);
+    if (!type->isBound())
+	return NULL;	// FIXME - use operation blocked, etc here?
+    
+    return type;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
