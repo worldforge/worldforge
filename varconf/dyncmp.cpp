@@ -34,6 +34,7 @@ Compare& Compare::operator=( const Compare& c)
   VarBase::operator=(c);
   m_v1 = c.m_v1;
   m_v2 = c.m_v2;
+  return *this;
 }
 
 void Compare::set_val()
