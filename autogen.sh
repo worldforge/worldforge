@@ -76,7 +76,8 @@ echo "Running autoconf ..."
 autoconf
 
 
-conf_flags="--enable-maintainer-mode --enable-compile-warnings" #--enable-iso-c
-
-echo Running ./configure $conf_flags "$@" ...
-./configure $conf_flags "$@" && echo Now type \`make\' to compile WFMath
+if test "x$NOCONFIGURE" = "x" ; then
+    conf_flags="--enable-maintainer-mode --enable-compile-warnings" #--enable-iso-c
+    echo Running ./configure $conf_flags "$@" ...
+    ./configure $conf_flags "$@" && echo Now type \`make\' to compile WFMath
+fi
