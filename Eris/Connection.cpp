@@ -133,7 +133,7 @@ void Connection::reconnect()
    
 void Connection::gotData(PollData &data)
 {
-    if(!_stream->is_open() || !data.isReady(_stream))
+    if(!data.isReady(_stream))
 	return;
 	
 	else if (_status == DISCONNECTED)

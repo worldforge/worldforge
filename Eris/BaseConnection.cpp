@@ -99,7 +99,7 @@ void BaseConnection::recv()
 	int err = 0;
 	assert(_status != DISCONNECTED);
 	
-	if (_stream->peek() == -1 && _status != CONNECTING) {
+	if (_stream->getSocket() == -1) {
 		handleFailure("Connection stream closed unexpectedly");
 		hardDisconnect(false);
 	} else {
