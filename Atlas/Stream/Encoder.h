@@ -8,12 +8,10 @@
 #include "Filter.h"
 #include "../Object/Object.h"
 
-/* $Log$
-/* Revision 1.3  2000-02-21 05:17:13  mike
-/* Testing how $Log$ tag works
-/*
-
-*/
+// $Log$
+// Revision 1.4  2000-02-21 05:19:14  mike
+// Trying $Log$ tag again
+//
 
 namespace Atlas
 {
