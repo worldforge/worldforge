@@ -39,7 +39,8 @@ Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
 	_position(ge.GetPos()),
 	_velocity(ge.GetVelocity()),
 	_orientation(1.0, 0., 0., 0.),
-	_inUpdate(false)
+	_inUpdate(false),
+	_hasBBox(false)
 {	
 	_parents = getParentsAsSet(ge);
 	recvSight(ge);	
@@ -284,6 +285,7 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 	_description = val.AsString();
     else if (s == "bbox") {
 	_bbox.fromAtlas(val);
+        _hasBBox = true;
     } else if (s == "contains") {
 	setContents(val.AsList());
     }

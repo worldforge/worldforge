@@ -72,6 +72,9 @@ public:
 	unsigned int getNumMembers() const
 	{ return _members.size(); }
 
+        bool hasBBox() const
+        { return _hasBBox; }
+
 	Entity* getMember(unsigned int index);
 
 	// property query interface
@@ -207,6 +210,11 @@ protected:
 	of the Changed signal until endUpdate is called, so that a number of
 	attributes may be updated en-masse, generating just one signal. */
 	bool _inUpdate;
+
+        /** This flag should be set when the server notifies that this entity
+        has a bounding box. If this flag is not true, the contents of the
+        BBox attribute are undefined.  */
+        bool _hasBBox;
 	
 	/** When a batched property update is in progress, the set tracks the names
 	of each modified property. This set is passed as a parameter of the Changed

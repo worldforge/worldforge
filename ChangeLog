@@ -1,3 +1,8 @@
+Monday, April 08 2002, Al Riddoch
+
+	* src/Entity.h, src/Entity.cpp: Add a flag which indicates whether
+	  an entity has a bounding box.
+
 Thursday, April 04 2002, James Turner
 
 	* Comitted Ron Steinke's polling changes. These add a new
