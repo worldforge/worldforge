@@ -1,3 +1,11 @@
+dnl This file may be redistributed and modified only under the terms of
+dnl the GNU Lesser General Public License (See COPYING for details).
+dnl Copyright (C) 2000 Stefanus Du Toit
+dnl
+dnl MORPH(n) expands to a Morph`n' class with n possible types.
+dnl
+dnl I know the m4 is really ugly, it's my first try :P
+dnl
 define(`FORLOOP', `ifelse(eval($2 > $3), `1', , `pushdef(`$1', `$2')_FORLOOP(`$1', `$2', `$3', `$4')popdef(`$1')')')dnl
 define(`_FORLOOP', `$4`'ifelse($1, `$3', , `define(`$1', incr($1))_FORLOOP(`$1', `$2', `$3', `$4')')')dnl
 define(`TEMPLATE', `template<`'FORLOOP(`i', 1, eval($1 - 1), `typename T`'i, ')`'typename T`'$1`'>')dnl
@@ -69,9 +77,7 @@ define(`AS_T', `
     }')dnl
 define(`MEMBERS', `FORLOOP(`i', 1, $1, `
     T`'i`'* v`'i`';')')dnl
-define(`MORPH', `
-
-TEMPLATE($1)
+define(`MORPH', `TEMPLATE($1)
 class Morph$1
 {
 public:
@@ -91,3 +97,19 @@ MEMBERS($1)
 
 };
 ')dnl
+dnl
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2000 Stefanus Du Toit
+// Generated from __file__ - do not edit!
+
+namespace Atlas { namespace Generic {
+
+MORPH(2)
+MORPH(3)
+MORPH(4)
+MORPH(5)
+MORPH(6)
+MORPH(7)
+
+} } // namespace Atlas::Generic
