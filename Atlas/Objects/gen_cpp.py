@@ -74,6 +74,13 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         for name, value in obj.items():
             if not include_desc_attrs and name in descr_attrs:
                 continue
+            if name in ['id', 'parents']:
+                continue
+            if name == 'objtype':
+                if value == 'op_definition':
+                    value = 'op'
+                else:
+                    value = 'obj'
             otype, attr_class_lst = self.find_attr_class(self.objects[name])
             if name not in used_attributes:
                 lst.append(apply(attr_class_lst[0],
@@ -86,6 +93,11 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         lst = []
         used_attributes = []
         self.set_attributes(obj, include_desc_attrs, lst, used_attributes)
+        if obj.has_key('id'):
+            parent = obj['id']
+            otype,attr_class_lst = self.find_attr_class(self.objects['parents'])
+            lst.append(apply(attr_class_lst[0],
+                             ('parents', [parent], 'string_list')))
         return lst
 
     def get_cpp_parent(self, obj):
@@ -417,7 +429,7 @@ void %(classname)s::free()
         self.out.close()
         self.update_outfile(outfile)
 
-    def interface(self, obj, static_attrs=[]):
+    def interface(self, obj, static_attrs=[], default_attrs=[]):
         self.write("\n")
         self.write("/** " + obj.description + "\n")
         self.write("\n")
@@ -594,7 +606,11 @@ public:
             bak_classname_pointer = self.classname_pointer
             self.classname = classize(child.id, data=1)
             self.classname_pointer = classize(child.id)
-            func(child)
+            static_attrs = self.get_name_value_type(child, first_definition=1,
+                                                         real_attr_only=1)
+            default_attrs = self.get_default_name_value_type(child)
+
+            func(child, static_attrs, default_attrs)
             self.classname = bak_classname
             self.classname_pointer = bak_classname_pointer
 
@@ -650,6 +666,7 @@ public:
         #self.write("using namespace Atlas;\n")
         #self.write("using namespace Atlas::Message;\n")
         self.write("using Atlas::Message::Element;\n")
+        self.write("using Atlas::Message::MapType;\n")
         self.write("\n")
         self.ns_open(self.base_list)
         self.write("\n")

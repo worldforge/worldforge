@@ -199,9 +199,26 @@ class AttributeInfo:
                 return '        %s = %s(1, "%s");\n' \
                        % (var, cpp_type[self.type], self.value[0])
             else:
-                print 'length of list ', len(self.value)
+                res = '        %s.clear();\n' % (var)
+                for val in self.value:
+                    res = res + '        %s.push_back("%s");\n' \
+                          % (var, val)
+                return res
+        elif self.type == "int_list_length" or self.type == "int_list" or \
+             self.type == "float_list_length" or self.type == "float_list":
+            if len(self.value) == 0:
+                return ''
+            elif len(self.value) == 1:
+                return '        %s = %s(1, %s);\n' \
+                       % (var, cpp_type[self.type], self.value[0])
+            else:
+                res = '        %s.clear();\n' % (var)
+                for val in self.value:
+                    res = res + '        %s.push_back(%s);\n' \
+                          % (var, val)
+                return res
         else:
-            return '        // %s\n' % (var)
+            return ''
 
 #[gs]etattr_im: convert to use get/set'Attrname'
 

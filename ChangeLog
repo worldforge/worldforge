@@ -1,5 +1,12 @@
 2004-02-27  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py:
+	  Complete work to set default values for objects at build
+	  time. It is no longer necessary to load atlas.xml into
+	  applications.
+
+2004-02-27  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/gen_cpp.py:
 	  Work in progress to set default values for objects at build
 	  time.
