@@ -1,4 +1,19 @@
-2004-08-10  Ron Steinke <rsteinke@w-link.net>
+2004-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.h: Add pure virtual copy method to
+	  BaseObjectData to help solve the problems which occur
+	  when modifying objects using smart pointers.
+
+	* Atlas/Objects/gen_cpp.py: Implement the copy() method in all
+	  the generated classes.
+
+	* Atlas/Objects/SmartPtr.h: Add a copy() method to the SmartPtr
+	  to ensure everything happens in an efficient and type safe way.
+
+	* Atlas/Objects/common.py, Atlas/Objects/GenerateObjectFactory.py:
+	  Update the copyright statements in the generated code.
+
+2004-10-11  Ron Steinke <rsteinke@w-link.net>
 
 	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h: Fixed a possible
 	  blocking read of string escaped characters to check whether

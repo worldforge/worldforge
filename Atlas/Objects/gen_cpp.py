@@ -312,12 +312,12 @@ private:
 %(classname)s *%(classname)s::alloc()
 {
     if(begin_%(classname)s) {
-      %(classname)s *res = begin_%(classname)s;
-      assert( res->m_refCount == 0 );
-      res->m_attrFlags = 0;
-      res->m_attributes.clear();
-      begin_%(classname)s = (%(classname)s *)begin_%(classname)s->m_next;
-      return res;
+        %(classname)s *res = begin_%(classname)s;
+        assert( res->m_refCount == 0 );
+        res->m_attrFlags = 0;
+        res->m_attributes.clear();
+        begin_%(classname)s = (%(classname)s *)begin_%(classname)s->m_next;
+        return res;
     }
     return new %(classname)s(%(classname)s::getDefaultObjectInstance());
 }
@@ -358,6 +358,15 @@ void %(classname)s::free()
 
 """ % vars()) #"for xemacs syntax highlighting
 
+    def copy_im(self, obj):
+        self.write("""%s * %s::copy() const
+{
+    %s * copied = %s::alloc();
+    *copied = *this;
+    return copied;
+}
+
+""" % (self.classname, self.classname, self.classname, self.classname))
     def instanceof_im(self, obj):
         classname_base = self.get_cpp_parent(obj)
         classname = self.classname
@@ -410,6 +419,7 @@ void %(classname)s::free()
         attr = attr_list[next_attr];
     }
 }
+
 """ % vars()) #"for xemacs syntax highlighting 
 
     def interface_file(self, obj):
@@ -470,6 +480,9 @@ void %(classname)s::free()
         self.write("    virtual ~" + self.classname + "();\n")
         self.write("\n")
         self.write("public:\n")
+        self.doc(4, 'Copy this object.')
+        self.write("    virtual %s * copy() const;\n" % (self.classname))
+        self.write("\n")
         self.doc(4, 'Is this instance of some class?')
         self.write("    virtual bool instanceOf(int classNo) const;\n")
         self.write("\n")
@@ -588,6 +601,7 @@ void %(classname)s::free()
             self.addtoobject_im(obj, static_attrs)
             self.iterate_im(obj, static_attrs)
         self.destructor_im(obj)
+        self.copy_im(obj)
         self.instanceof_im(obj)
         self.freelist_im()
         self.default_object_im(obj, default_attrs)

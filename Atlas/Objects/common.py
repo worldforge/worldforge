@@ -19,10 +19,11 @@ copyright_template = \
 """// This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 %s.
+// Copyright 2001-2004 %s.
 // Automatically generated using gen_cpp.py.
 """
 
-copyright = copyright_template % "Stefanus Du Toit and Aloril"
+copyright = copyright_template % ("Stefanus Du Toit and Aloril", "Al Riddoch")
 
 #objects that will have static attributes
 static_objects = ["root", "root_entity", "root_operation"]

@@ -1,6 +1,7 @@
 #This file is distributed under the terms of 
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000-2001 Aloril
+#Copyright (C) 2001-2004 Al Riddoch
 
 #just used to partition gen_cpp.py into files, 
 #not usable without GenerateCC class
@@ -13,7 +14,7 @@ class GenerateObjectFactory:
         outfile = self.outdir + '/objectFactory.cpp'
         #print outfile
         self.out = open(outfile + ".tmp", "w")
-        self.write(copyright_template % "Aloril")
+        self.write(copyright_template % ("Aloril", "Al Riddoch"))
         self.write('\n#include <Atlas/Objects/objectFactory.h>\n')
         self.write('#include <Atlas/Objects/Entity.h>\n')
         self.write('#include <Atlas/Objects/Operation.h>\n\n')

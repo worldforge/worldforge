@@ -85,6 +85,8 @@ public:
         return m_class_no;
     }
 
+    virtual BaseObjectData * copy() const = 0;
+
     /// Is this instance of some class?
     virtual bool instanceOf(int classNo) const;
     
