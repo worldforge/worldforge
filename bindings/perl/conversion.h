@@ -1,7 +1,7 @@
 #ifndef ERIS_PERL_CONVERSION_H
 #define ERIS_PERL_CONVERSION_H
 
-#include "Lobby.h"
+#include <Eris/Lobby.h>
 namespace Eris {class Person; class Entity;}
 
 #include <sigcperl/convert.h>

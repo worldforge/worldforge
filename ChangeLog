@@ -1,3 +1,10 @@
+Thursday, 8th May 2003, Ron Steinke
+
+	* Added a dist-hook so the perl bindings make it into
+	  the automake tarball
+	* Fixed the way the perl bindings include the eris
+	  headers to match the new way of doing things
+
 Wednesday, 7th May 2003, James Turner <james@worldforge.org>
 
     * Updated README, INSTALL and AUTHORS in anticipation of

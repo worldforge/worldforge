@@ -1,8 +1,8 @@
 #include "../conversion.h"
 
-#include "World.h"
-#include "Factory.h"
-#include "Entity.h"
+#include <Eris/World.h>
+#include <Eris/Factory.h>
+#include <Eris/Entity.h>
 
 #include <sigcperl/signal_wrap.h>
 

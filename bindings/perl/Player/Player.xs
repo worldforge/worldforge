@@ -1,5 +1,5 @@
-#include "Player.h"
-#include "Connection.h"
+#include <Eris/Player.h>
+#include <Eris/Connection.h>
 
 #include <sigcperl/signal_wrap.h>
 

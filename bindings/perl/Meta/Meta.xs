@@ -1,4 +1,4 @@
-#include "Metaserver.h"
+#include <Eris/Metaserver.h>
 
 #include <sigcperl/signal_wrap.h>
 

@@ -1,6 +1,6 @@
 #include "../conversion.h"
 
-#include "Room.h"
+#include <Eris/Room.h>
 
 #include <sigcperl/signal_wrap.h>
 #include <sigcperl/signal_array.h>

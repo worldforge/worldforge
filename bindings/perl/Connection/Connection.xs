@@ -1,7 +1,7 @@
 #include "../conversion.h"
 
-#include "Connection.h"
-#include "PollDefault.h"
+#include <Eris/Connection.h>
+#include <Eris/PollDefault.h>
 
 #include <sigcperl/signal_wrap.h>
 
