@@ -1,5 +1,5 @@
 aclocal.m4
-autom4te-2.53.cache
+autom4te*.cache
 config.guess
 config.h
 config.h.in
