@@ -109,7 +109,7 @@ Socket*	TCPSocket::accept()
 {
 	int			newsock;
 	struct sockaddr_in	sin;
-	sinlen_t			sinlen;
+	int			sinlen;
 
 	sinlen = sizeof(sin);
 	newsock = ::accept(sock, (struct sockaddr*)&sin, &sinlen);

@@ -8,6 +8,12 @@ changes:
     Constructors use defaults, some funcs inlined.. few cosmetic changes
 */
 
+#ifndef _WIN32
+  #include <sys/types.h>
+  #include <sys/time.h>
+  #include <unistd.h>
+#endif
+
 #include <string>
 #include <cassert>
 

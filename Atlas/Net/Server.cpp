@@ -10,6 +10,11 @@ changes:
     source deps removed
 */
 
+#ifndef _WIN32
+  #include <sys/types.h>
+  #include <sys/time.h>
+  #include <unistd.h>
+#endif
 
 #include <cassert>
 
