@@ -1,5 +1,6 @@
 Makefile
 Makefile.in
+autom4te*.cache
 config.cache
 config.log
 config.status
@@ -12,8 +13,8 @@ ltmain.sh
 aclocal.m4
 autom4te.cache
 config.h
-stamp-h
-stamp-h.in
+stamp-h*
 wfmath-config
 wfmath.spec
 wfmath-0.2.pc
+wfmath-*.tar.gz
