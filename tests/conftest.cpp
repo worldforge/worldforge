@@ -1,6 +1,6 @@
 #include <iostream.h>
 #include <unistd.h>
-#include <../varconf/Config.h>
+#include <../varconf/varconf.h>
 
 using namespace varconf;
 using namespace SigC;

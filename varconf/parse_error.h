@@ -1,5 +1,5 @@
 /*
- *  parse_error.cpp - implementation of the parse error handling class
+ *  parse_error.h - interface for parse error handling class.
  *  Copyright (C) 2000, Stefanus Du Toit, Joseph Zupko
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -17,39 +17,30 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <iostream>
-#include "parse_error.h"
+#ifndef VARCONF_PARSEERROR_H
+#define VARCONF_PARSEERROR_H
 
-using namespace std;
+#include <string>
+#include <iostream>
 
 namespace varconf {
 
-ParseError::ParseError()
-{
-}
+/// May be thrown by parsing routines
+class ParseError {
+public:
+  ParseError();
+  ParseError( const ParseError& p);
+  ParseError( const std::string& exp, int line, int col);
+  
+  virtual ~ParseError();
 
-ParseError::ParseError( const ParseError& p)
-{
-  m_exp  = p.m_exp;
-  m_line = p.m_line;
-  m_col  = p.m_col;
-}
+  friend std::ostream& operator<<( std::ostream& os, const ParseError& p);
 
-ParseError::ParseError( const string& exp, int line, int col)
-{
-  m_exp  = exp;
-  m_line = line;
-  m_col  = col;
-}
-
-ParseError::~ParseError()
-{
-}
-
-ostream& operator<<( ostream& os, const ParseError& p)
-{
-  return ( os << "ParseError: Expected " << p.m_exp << " at line " << p.m_line
-              << ", column " << p.m_col << "." << endl);
-}
+private:
+  std::string m_exp;
+  int m_line, m_col;
+};
 
 } // namespace varconf
+
+#endif

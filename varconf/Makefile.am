@@ -8,5 +8,5 @@ libvarconf_la_SOURCES = \
 libvarconfincludedir = $(includedir)/varconf
 libvarconfinclude_HEADERS = \
   Config.h \
-  ParseError.h \
-  Variable.h
+  parse_error.h \
+  variable.h
