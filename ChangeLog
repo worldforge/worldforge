@@ -1,5 +1,10 @@
 2004-01-13  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Forest.cpp: Reduce probability of tree at given node
+	  by factor of 10.
+
+2004-01-13  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Plant.h:
 	  Add accessors for plant and forest properties. Implement
 	  populating the forest with plants.

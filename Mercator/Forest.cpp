@@ -47,7 +47,7 @@ void Forest::setVolume(const WFMath::AxisBox<3> & vol)
 
 }
 
-static const float plant_chance = 0.4;
+static const float plant_chance = 0.04;
 static const float plant_min_height = 5;
 static const float plant_height_range = 20;
 
