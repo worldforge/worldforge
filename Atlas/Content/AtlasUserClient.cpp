@@ -205,7 +205,7 @@ AObject AUserClient::setCharacterArgs(const string& id, Arg* args ...)
     return call(op);
 }
 
-int AUserClient::parseOperation1Argument(AObject &op, string method, AObject &arg0)
+int AUserClient::parseOperation1Argument(const AObject &op, string method, AObject &arg0)
 {
   AObject parent, args;
   op.get("parent",parent);
@@ -219,7 +219,7 @@ int AUserClient::parseOperation1Argument(AObject &op, string method, AObject &ar
   return 1;
 }
 
-void AUserClient::displayError(ostream& out, AObject &op, string ourMsg)
+void AUserClient::displayError(ostream& out, const AObject &op, string ourMsg)
 {
   AObject args, arg0;
   out<<ourMsg;

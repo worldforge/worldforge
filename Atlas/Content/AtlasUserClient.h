@@ -66,8 +66,8 @@ public:
 
     AObject setCharacterArgs(const string& id, Arg* args ...);
 
-    int parseOperation1Argument(AObject &op, string method, AObject &arg0);
-    void displayError(ostream& out, AObject &op, string ourMsg);
+    int parseOperation1Argument(const AObject &op, string method, AObject &arg0);
+    void displayError(ostream& out, const AObject &op, string ourMsg);
     
 private:
 
