@@ -1,3 +1,8 @@
+Tuesday, February 26, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Bump version number to 0.2.5, so we can have an official
+	  version needed by the stage patches.
+
 Monday, February 25, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Added rotation() functions to RotMatrix<3> and Quaternion
