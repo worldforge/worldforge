@@ -17,7 +17,11 @@ int main(int argc, char **argv)
         CppUnit::TestFactoryRegistry::getRegistry().makeTest();
 
     runner.addTest(tp);
-    runner.run();
+    bool passed = runner.run();
+
+    if (!passed) {
+        return 1;
+    }
     
     return 0;
 }
