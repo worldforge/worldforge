@@ -1,3 +1,5 @@
+- add dynamic casting checks
+
 - add Empty object: all values are empty (pos, velocity: [0.0, 0.0, 0.0])
 
 - check that Set{Pos,Velocity}AsList() doesn't changes size from
