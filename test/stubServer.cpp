@@ -3,7 +3,7 @@
 #endif
 
 #include "stubServer.h"
-#include "Time.h"
+#include "Timestamp.h"
 #include "PollDefault.h"
 
 #include <cppunit/TestAssert.h>
