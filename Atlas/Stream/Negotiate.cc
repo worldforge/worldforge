@@ -77,11 +77,8 @@ void NegotiateHelper<T>::put(string &buf, string header)
   buf += "\n";
 }
 
-
-
-Negotiate::Negotiate(string &name, Net::Socket *s, FactoryCodecs *fc, FactoryFilters *ff) :
-  state(0), outName(name), sock(s),
-  myCodecs(fc), myFilters(ff),
+Negotiate::Negotiate(string& name, Net::Socket* s) :
+  state(SERVER_GREETING), outName(name), sock(s),
   codecHelper(&inCodecs, &outCodecs),
   filterHelper(&inFilters, &outFilters)
 {
@@ -89,9 +86,8 @@ Negotiate::Negotiate(string &name, Net::Socket *s, FactoryCodecs *fc, FactoryFil
 
 bool Negotiate::done() 
 {
-  return state == 10; 
+    return (state == DONE);
 }
-
 
 void Negotiate::negotiateServer()
 {
@@ -103,7 +99,7 @@ void Negotiate::negotiateServer()
   sock->recv(in);
   buf += in;
 
-  if(state == 0) 
+  if(state == SERVER_GREETING) 
     {
       // send server greeting
 
@@ -113,7 +109,7 @@ void Negotiate::negotiateServer()
       state++;
       return;
     }
-  if(state == 1)
+  if(state == CLIENT_GREETING)
     {
       // get client greeting
 	
@@ -125,11 +121,11 @@ void Negotiate::negotiateServer()
 	
       state++;
     }
-  if(state == 2)
+  if(state == CLIENT_CODECS)
     {
       if(codecHelper.get(buf, "ICAN")) state++;
     }
-  if(state == 3)
+  if(state == SERVER_CODECS)
     {
       processServerCodecs();
       codecHelper.put(out, "IWILL");
@@ -137,11 +133,11 @@ void Negotiate::negotiateServer()
       state++;
       return;
     }
-  if(state == 4)
+  if(state == CLIENT_FILTERS)
     {
       if(filterHelper.get(buf, "ICAN")) state++;
     }
-  if(state == 5)
+  if(state == SERVER_FILTERS)
     {
       processServerFilters();
       filterHelper.put(out, "IWILL");
@@ -162,7 +158,7 @@ void Negotiate::negotiateClient()
   sock->recv(in);
   buf += in;
 
-  if(state == 0)
+  if(state == SERVER_GREETING)
     {
       // get server greeting
 
@@ -174,12 +170,17 @@ void Negotiate::negotiateClient()
 	
       state++;
     }
-  if(state == 1)
+  if(state == CLIENT_GREETING)
     {
       // send client greeting
 	
       sock->send(outName);
       sock->send(string("\n"));
+
+      state++;
+    }
+    if (state == CLIENT_CODECS)
+    {
 
       processClientCodecs();
 
@@ -189,11 +190,11 @@ void Negotiate::negotiateClient()
       state++;
       return;
     }
-  if(state == 2)
+  if(state == SERVER_CODECS)
     {
       if(codecHelper.get(buf, "IWILL")) state++;
     }
-  if(state == 3)
+  if(state == CLIENT_FILTERS)
     {
       processClientFilters();
       filterHelper.put(out, "ICAN");
@@ -201,50 +202,61 @@ void Negotiate::negotiateClient()
       state++;
       return;
     }
-  if(state == 4)
+  if(state == SERVER_FILTERS)
     {
       if(filterHelper.get(buf, "IWILL")) state++;
     }
-  if(state == 5)
-    state = 10;
 }
 
 
 
 void Negotiate::processServerCodecs()
 {
-  FactoryCodecs::iterator i;
-  FactoryNames::iterator j;
-    
-  for(i = myCodecs->begin(); i != myCodecs->end(); i++)
-    for(j = inCodecs.begin(); j != inCodecs.end(); j++)
-      if((*i)->GetName() == (*j).GetName())
+    FactoryCodecs::iterator i;
+    FactoryNames::iterator j;
+
+    FactoryCodecs *myCodecs = &Factory<Codec>::factories;
+
+    for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
+    {
+	for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
 	{
-	  outCodecs.push_back(*i);
-	  return;	      
+	    if ((*i)->GetName() == (*j).GetName())
+	    {
+		outCodecs.push_back(*i);
+		return;	      
+	    }
 	}
+    }
 }
   
 void Negotiate::processServerFilters()
 {
   FactoryFilters::iterator i;
-  FactoryNames::iterator j;
+    FactoryNames::iterator j;
+    
+    FactoryFilters *myFilters = &Factory<Filter>::factories;
 
-  for(i = myFilters->begin(); i != myFilters->end(); i++)
-    for(j = inFilters.begin(); j != inFilters.end(); j++)
-      if((*i)->GetName() == (*j).GetName())
+    for (i = myFilters->begin(); i != myFilters->end(); ++i)
+    {
+	for (j = inFilters.begin(); j != inFilters.end(); ++j)
 	{
-	  outFilters.push_back(*i);
+	    if ((*i)->GetName() == (*j).GetName())
+	    {
+		outFilters.push_back(*i);
+	    }
 	}
+    }
 }
-
 
 void Negotiate::processClientCodecs()
 {
-  outCodecs = *myCodecs;
+    FactoryCodecs *myCodecs = &Factory<Codec>::factories;
+    outCodecs = *myCodecs;
 }
   
 void Negotiate::processClientFilters()
 {
-  outFilters = *myFilters;
+    FactoryFilters *myFilters = &Factory<Filter>::factories;
+    outFilters = *myFilters;
 }

@@ -47,7 +47,9 @@ namespace Atlas { namespace Stream {
 
   };
 
-/** non blocking negotiation of Codecs and Filters
+/** Negotiation of codecs and filters for an Atlas connection
+
+non blocking negotiation of Codecs and Filters
 requires a list of avalable Codecs and Filters,
 along with the name of sender and a Socket
 
@@ -60,7 +62,7 @@ class Negotiate
 {
     public:
 
-    Negotiate(std::string &name, Net::Socket *s, FactoryCodecs *fc, FactoryFilters *ff);
+    Negotiate(std::string& name, Net::Socket*);
 
     bool done();
 
@@ -69,14 +71,24 @@ class Negotiate
 
     private:
 
+    enum
+    {
+	SERVER_GREETING,
+	CLIENT_GREETING,
+	CLIENT_CODECS,
+	SERVER_CODECS,
+	CLIENT_FILTERS,
+	SERVER_FILTERS,
+	DONE
+    };
+
     int state;
+
     std::string outName;
     std::string inName;
-    Net::Socket *sock;
-    FactoryCodecs *myCodecs;
+    Net::Socket* sock;
     FactoryNames inCodecs;
     FactoryCodecs outCodecs;
-    FactoryFilters *myFilters;
     FactoryNames inFilters;
     FactoryFilters outFilters;
     NegotiateHelper<Factory<Codec> > codecHelper;
