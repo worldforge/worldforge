@@ -46,7 +46,7 @@ class Bach : public Codec<std::iostream>
 
     std::iostream& m_socket;
     Bridge* m_bridge;
-    bool m_comma;
+    bool m_comma, m_stringmode;
 
     enum State
     {

@@ -12,7 +12,8 @@ namespace Atlas { namespace Codecs {
 Bach::Bach(std::iostream& s, Atlas::Bridge* b)
     : m_socket(s)
     , m_bridge(b)
-    , m_comma( false )
+    , m_comma(false)
+    , m_stringmode(false)
 {
     m_state.push(PARSE_INIT);
 }
@@ -37,7 +38,6 @@ void Bach::parseStream(char next)
     case '{':
         m_bridge->streamMessage(m_mapBegin);
         m_state.push(PARSE_MAP);
-        m_state.push(PARSE_MAP_BEGIN);
         break;
 
     case ']':
@@ -45,8 +45,6 @@ void Bach::parseStream(char next)
         break;
 
     default:
-        // FIXME signal error here
-        // unexpected character
         break;
     }
 }
@@ -58,12 +56,13 @@ void Bach::parseMap(char next)
     switch (next)
     {
     case '}':
-        //SF2 m_bridge->mapEnd();
+        m_bridge->mapEnd();
         m_state.pop();
         break;
 
     case ',':
     case ' ':
+    case '\t':
         break;
 
     default:
@@ -76,9 +75,7 @@ void Bach::parseMap(char next)
         }
         else
         {
-            cout << "parseMap: unexpected character: " << next << endl;
-            // FIXME signal error here
-            // unexpected character
+            cerr << "parseMap: unexpected character: " << next << endl;
         }
         break;
     }
@@ -98,17 +95,18 @@ void Bach::parseList(char next)
     case '{':
         m_bridge->listItem(m_mapBegin);
         m_state.push(PARSE_MAP);
-        m_state.push(PARSE_MAP_BEGIN);
         break;
 
     case '[':
+        cout << "BEGIN LIST 1" << endl;
+
         m_bridge->listItem(m_listBegin);
         m_state.push(PARSE_LIST);
-        m_state.push(PARSE_LIST_BEGIN);
         break;
 
     case ',':
     case ' ':
+    case '\t':
         break;
 
     case '1':
@@ -131,9 +129,7 @@ void Bach::parseList(char next)
         break;
 
     default:
-        cout << "parseMap: unexpected character: " << next << endl;
-        // FIXME signal error here
-        // unexpected character
+        cerr << "parseMap: unexpected character: " << next << endl;
         break;
     }
 }
@@ -141,6 +137,8 @@ void Bach::parseList(char next)
 void Bach::parseMapBegin(char next)
 {
     DEBUG(cout << "parseMapBegin" << endl;)
+
+    cout << "BEGIN MAP" << m_name << endl;
 
     m_bridge->mapItem(decodeString(m_name), m_mapBegin);
     m_socket.putback(next);
@@ -151,6 +149,8 @@ void Bach::parseMapBegin(char next)
 void Bach::parseListBegin(char next)
 {
     DEBUG(cout << "parseListBegin" << endl;)
+
+    cout << "BEGIN LIST 2" << m_name << endl;
 
     m_bridge->mapItem(decodeString(m_name), m_listBegin);
     m_socket.putback(next);
@@ -173,20 +173,19 @@ void Bach::parseInt(char next)
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
         {
-            DEBUG(cout << "Float: " << m_name << ": " << m_data << endl;)
+            DEBUG(cout << "Int: " << m_name << ": " << m_data << endl;)
 
             m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
         }
         else if (m_state.top() == PARSE_LIST)
         {
-            DEBUG(cout << "Float: " << m_data << endl;)
+            DEBUG(cout << "Int: " << m_data << endl;)
 
             m_bridge->listItem(atof(m_data.c_str()));
         }
         else
         {
-            cout << "Bach::parseFloat: Error: " << m_state.top() << endl;
-            // FIXME some kind of sanity checking assertion here
+            cout << "Bach::parseIntt: Error" << endl;
         }
         m_name.erase();
         m_data.erase();
@@ -217,8 +216,6 @@ void Bach::parseInt(char next)
 
     default:
         cout << "parseInt: unexpected character: " << next << endl;
-        // FIXME signal error here
-        // unexpected character
 	break;
     }
 }
@@ -250,8 +247,7 @@ void Bach::parseFloat(char next)
         }
         else
         {
-            cout << "Bach::parseFloat: Error: " << m_state.top() << endl;
-            // FIXME some kind of sanity checking assertion here
+            cout << "Bach::parseFloat: Error" << endl;
         }
         m_name.erase();
         m_data.erase();
@@ -277,8 +273,6 @@ void Bach::parseFloat(char next)
 
     default:
         cout << "parseFloat: unexpected character: " << next << endl;
-        // FIXME signal error here
-        // unexpected character
 	break;
     }
 }
@@ -306,18 +300,14 @@ void Bach::parseString(char next)
         else
         {
             cout << "parseString: Error" << endl;
-
-            // FIXME some kind of sanity checking assertion here
         }
         m_name.erase();
         m_data.erase();
         break;
 
-/*
     case '\\':
-        // FIXME escape signs
+        m_data += m_socket.get();
         break;
-*/
 
     default:
         m_data += next;
@@ -349,16 +339,46 @@ void Bach::parseData(char next)
 
     case '{':
         m_state.pop();
-        m_bridge->listItem(m_mapBegin);
+
+        switch (m_state.top())
+        {
+        case PARSE_MAP:
+            m_bridge->mapItem(decodeString(m_name),m_mapBegin);
+            m_name.erase();
+            break;
+
+        case PARSE_LIST:
+            m_bridge->listItem(m_mapBegin);
+            break;
+
+        default:
+            cout << "parseData: Error: " << (int)m_state.top() << endl;
+            break;
+        }
+
         m_state.push(PARSE_MAP);
-        m_state.push(PARSE_MAP_BEGIN);
         break;
 
     case '[':
         m_state.pop();
-        m_bridge->listItem(m_listBegin);
+
+        switch (m_state.top())
+        {
+        case PARSE_MAP:
+            m_bridge->mapItem(decodeString(m_name),m_listBegin);
+            m_name.erase();
+            break;
+
+        case PARSE_LIST:
+            m_bridge->listItem(m_mapBegin);
+            break;
+
+        default:
+            cout << "parseData: Error: " << (int)m_state.top() << endl;
+            break;
+        }
+
         m_state.push(PARSE_LIST);
-        m_state.push(PARSE_LIST_BEGIN);
         break;
 
     case '\"':
@@ -397,8 +417,6 @@ void Bach::parseName(char next)
         else
         {
             cout << "parseName: unexpected character: " << next << endl;
-            // FIXME signal error here
-            // unexpected character
         }
 	break;
     }
@@ -425,20 +443,22 @@ void Bach::poll(bool can_read)
         switch(next)
         {
         case '#':
-            comment = true;
-            continue;
+            if (!m_stringmode)
+            {
+                comment = true;
+                continue;
+            }
             break;
 
         case '\n':
         case '\r':
-            continue;
+            if (!m_stringmode)
+                continue;
             break;
 
         default:
             break;
         }
-
-        DEBUG(cout << "Character: " << next << " (" << (int)(unsigned char)next << ")   ";)
 
         switch (m_state.top())
 	{
