@@ -68,7 +68,7 @@ void Agent::setEntityVisible(const std::string& eid, bool vis)
     if (vis) {
         if (m_visible.count(eid) != 0) return;
         m_visible.insert(eid);
-        
+                
         if (isVisible(eid)) {
             Appearance app;
             app->setFrom(m_character);
@@ -77,10 +77,10 @@ void Agent::setEntityVisible(const std::string& eid, bool vis)
             obj->setId(eid);
             app->setArgs1(obj);
             m_con->send(app);
-            cout << "sending appearance of " << eid << endl;
         } // of Appearance op send
     } else {
         if (m_visible.count(eid) == 0) return;
+        
         bool wasVisible = isVisible(eid);
         m_visible.erase(eid);
         bool nowVis = isVisible(eid);
@@ -129,13 +129,12 @@ void Agent::processLook(const Look& look)
 
     typedef std::list<std::string> StringList;
 
-    GameEntity ge = m_server->m_world[lookTarget];
+    GameEntity ge = m_server->m_world[lookTarget].copy();
     StringList contents = ge->getContains();
     
     // prune based on visibility
     for (StringList::iterator it=contents.begin(); it != contents.end(); ) {
         if (m_visible.count(*it) == 0) {
-            std::cout << "pruning invisible child " << *it << std::endl;
             it = contents.erase(it);
         } else {
             ++it;

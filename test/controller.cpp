@@ -66,3 +66,28 @@ void Controller::setEntityVisibleToAvatar(const std::string& eid, const std::str
     
     send(app);
 }
+
+void Controller::setEntityInvisibleToAvatar(const std::string& eid, Eris::Avatar* av)
+{
+    setEntityInvisibleToAvatar(eid, av->getId());
+}
+
+void Controller::setEntityInvisibleToAvatar(const std::string& eid, const std::string& charId)
+{
+    Disappearance dap;
+    dap->setTo(eid);
+    dap->setAttr("for", charId);
+    send(dap);
+}
+
+void Controller::setAttr(const std::string& eid, const std::string& attr, const Atlas::Message::Element v)
+{
+    Set s;
+    
+    Atlas::Objects::Root obj;
+    obj->setId(eid);
+    obj->setAttr(attr, v);
+    s->setArgs1(obj);
+    
+    send(s);
+}

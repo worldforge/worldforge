@@ -377,12 +377,9 @@ void Entity::setContentsFromAtlas(const StringList& contents)
 // convert existing contents into a map, for fast membership tests
     IdEntityMap oldContents;
     buildEntityDictFromContents(oldContents);
-  //  m_contents.clear();
-   // debug() << "oldContents has size " << oldContents.size();
     
 // iterate over new contents
-    for (StringList::const_iterator I=contents.begin(); I != contents.end(); ++I)
-    {
+    for (StringList::const_iterator I=contents.begin(); I != contents.end(); ++I) {
         Entity* child = NULL;
         
         IdEntityMap::iterator J = oldContents.find(*I);
@@ -392,23 +389,17 @@ void Entity::setContentsFromAtlas(const StringList& contents)
             oldContents.erase(J);
         } else {
             child = m_view->getEntity(*I);
-            if (!child)
-            {
+            if (!child) {
                 // we don't have the entity at all, so request it and skip
                 // processing it here; everything will come right when it
                 // arrives.
                 m_view->getEntityFromServer(*I);
-                // m_pendingContents.insert(*I);
                 continue;
             }
             
-            if (child->m_limbo)
-            {
-                debug() << "found child " << child << " in limbo";
+            if (child->m_limbo) {
                 child->m_limbo = false;
-            }
-            else if (child->isVisible())
-            {
+            } else if (child->isVisible()) {
                 // server has gone mad, it has a location, and it's visible
                 error() << "got set of contents, specifying child " << child
                     << " which is currently visible in another location";
@@ -424,7 +415,6 @@ void Entity::setContentsFromAtlas(const StringList& contents)
     
 // mark previous contents which are not in new contents as invisible
     for (IdEntityMap::const_iterator J = oldContents.begin(); J != oldContents.end(); ++J) {
-        //m_contents.push_back(J->second);
         J->second->setVisible(false);
     }
 }

@@ -160,8 +160,9 @@ public:
     
     void waitFor(const std::string& eid)
     {
-        if (m_view->getEntity(eid)) {
-            cerr << "wait on already visible entity " << eid;
+        Eris::Entity* e = m_view->getEntity(eid);
+        if (e && e->isVisible()) {
+            cerr << "wait on already visible entity " << eid << endl;
             return;
         }
         
@@ -174,6 +175,41 @@ public:
     }
 private:
     void onAppear(Eris::Entity* e)
+    {
+        m_waiting.erase(e->getId());
+    }
+    
+    Eris::View* m_view;
+    std::set<std::string> m_waiting;
+};
+
+class WaitForDisappearance : public SigC::Object
+{
+public:
+    WaitForDisappearance(Eris::View* v, const std::string& eid) : 
+        m_view(v)
+    {
+        waitFor(eid);
+        v->Disappearance.connect(SigC::slot(*this, &WaitForDisappearance::onDisappear));
+    }
+    
+    void waitFor(const std::string& eid)
+    {
+        Eris::Entity* e = m_view->getEntity(eid);
+        if (!e || !e->isVisible()) {
+            cerr << "wait on invisible entity " << eid << endl;
+            return;
+        }
+        
+        m_waiting.insert(eid);
+    }
+    
+    void run()
+    {
+        while (!m_waiting.empty()) Eris::PollDefault::poll();
+    }
+private:
+    void onDisappear(Eris::Entity* e)
     {
         m_waiting.erase(e->getId());
     }
@@ -338,13 +374,59 @@ void testAppearance(Controller& ctl)
     ctl.setEntityVisibleToAvatar("_pig_01", av.get());
     ctl.setEntityVisibleToAvatar("_field_01", av.get());
         
-    WaitForAppearance wf(v, "_field_01");
-    wf.waitFor("_pig_01");
-    wf.waitFor("_potato_2");
-
-    wf.run();
-    cout << "appearance checks done" << endl;
+    {
+        WaitForAppearance wf(v, "_field_01");
+        wf.waitFor("_pig_01");
+        wf.waitFor("_potato_2");
+        wf.run();
+    }
+    
+    ctl.setEntityInvisibleToAvatar("_field_01", av.get());
+    WaitForDisappearance df(v, "_field_01");
+    df.waitFor("_pig_01");
+    df.waitFor("_potato_2");
+    
+    cout << "waiting for disappearances" << endl;
+    df.run();
+    
+    ctl.setEntityVisibleToAvatar("_potato_1", av.get());
+    //
+    ctl.setEntityVisibleToAvatar("_pig_02", av.get());
+    ctl.setEntityVisibleToAvatar("_field_01", av.get());
+    
+    {
+        WaitForAppearance af2(v, "_field_01");
+        af2.waitFor("_potato_1");
+        af2.run();
+    }
 }
+
+void testSet(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = stdTake("acc_b_character", acc.get());
+
+    Eris::Entity* table = av->getView()->getEntity("_table_1");
+    assert(table);
+    
+ //   table->observe("status", SigC::slot(attrObserver, ...... ));
+    
+    assert(table->getPosition() == WFMath::Point<3>(1.0, 2.0, 3.0));
+    assert(table->numContained() == 1);
+    
+    ctl.setAttr("_table_1", "status", "funky");
+    
+  //  while () Eris::PollDefault::poll();
+    
+    // check the value made it through
+    assert(table->valueOfAttr("status") == std::string("funky"));
+}
+
 
 int main(int argc, char **argv)
 {

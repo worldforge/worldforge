@@ -99,7 +99,7 @@ void View::appear(const std::string& eid, float stamp)
         return;
     }
 
-    if (stamp > ent->getStamp()) {
+    if ((stamp == 0) || (stamp > ent->getStamp())) {
         if (isPending(eid)) {
             m_pending[eid] = SACTION_APPEAR;
         } else {

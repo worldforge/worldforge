@@ -1,3 +1,15 @@
+2004-10-12  James Turner  <james@worldforge.org>
+
+	* tests/agent.cpp: Use new Atlas-C++ 0.6 'copy' functionality to make LOOK
+	  filtering correct.
+	  
+	* tests/tests.cpp: further improve the appearance and disappearance tests.
+	
+	* Eris/IGRouter.cpp: handle the case where the servers is not using STAMPs
+	  better.
+	  
+	* Eris/Entity.cpp: cleanup old code for dealing with contents changes
+
 2004-10-09  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp: refactor Entity destructor code to not be 

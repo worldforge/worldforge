@@ -104,4 +104,11 @@ void Commander::dispatch(const RootOperation& op)
             Agent::setEntityVisibleForFutureAgent(op->getTo(), op->getAttr("for").asString());
         }
     }
+    
+    Disappearance disap = smart_dynamic_cast<Disappearance>(op);
+    if (disap.isValid()) {
+        assert(op->hasAttr("for"));
+        Agent* ag = m_server->findAgentForEntity(op->getAttr("for").asString());
+        if (ag) ag->setEntityVisible(op->getTo(), false);
+    }
 }

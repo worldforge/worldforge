@@ -16,7 +16,12 @@ public:
     
     void setEntityVisibleToAvatar(const std::string& eid, Eris::Avatar* av);
     void setEntityVisibleToAvatar(const std::string& eid, const std::string& charId);
+
+    void setEntityInvisibleToAvatar(const std::string& eid, Eris::Avatar* av);
+    void setEntityInvisibleToAvatar(const std::string& eid, const std::string& charId);   
     
+    /** generalised attribute modification interface */
+    void setAttr(const std::string& eid, const std::string& attr, const Atlas::Message::Element v); 
 protected:
     virtual void objectArrived(const Atlas::Objects::Root& obj);
     

@@ -78,7 +78,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         debug() << "recieved appearance";
         for (unsigned int A=0; A < args.size(); ++A)
         {
-            float stamp = 0;
+            float stamp = -1;
             if (args[A]->hasAttr("stamp"))
                 stamp = args[A]->getAttr("stamp").asFloat();
                 

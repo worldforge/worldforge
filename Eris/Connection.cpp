@@ -128,7 +128,8 @@ void Connection::send(const Atlas::Objects::Root &obj)
 
 #ifdef ATLAS_LOG	
     std::stringstream debugStream;
-    Atlas::Codecs::Bach debugCodec(debugStream, NULL);
+    
+    Atlas::Codecs::Bach debugCodec(debugStream, *this /*dummy*/);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
@@ -202,7 +203,7 @@ void Connection::objectArrived(const Root& obj)
 {
 #ifdef ATLAS_LOG
     std::stringstream debugStream;
-    Atlas::Codecs::Bach debugCodec(debugStream, NULL);
+    Atlas::Codecs::Bach debugCodec(debugStream, *this /* dummy */);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
