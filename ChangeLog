@@ -1,3 +1,8 @@
+Sunday, March 10 2002, James Turner
+
+	* Set a default orientation on Entities, to avoid some
+	  nasty behaviour that Simon was seeing. Set w=1, x/y/z=0.
+
 Friday, March 08 2002, James Turner
 
 	* Fixed .so version information. Thanks to Damien for the

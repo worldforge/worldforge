@@ -37,6 +37,7 @@ Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
 	_container(NULL),
 	_position(ge.GetPos()),
 	_velocity(ge.GetVelocity()),
+	_orientation(1.0, 0., 0., 0.),
 	_inUpdate(false)
 {	
 	_parents = getParentsAsSet(ge);
@@ -49,6 +50,7 @@ Entity::Entity(const std::string &id) :
 	_container(NULL),
 	_position(0., 0., 0.),
 	_velocity(0., 0., 0.),
+	_orientation(1.0, 0., 0., 0.),
 	_inUpdate(false)
 {
 	;
