@@ -1,5 +1,9 @@
 2003-07-23  Al Riddoch  <alriddoch@zepler.org>
 
+	* Ensure configure.ac does the important tests in C++.
+
+2003-07-23  Al Riddoch  <alriddoch@zepler.org>
+
 	* Switch to a cleaned up configure.ac.
 
 2003-07-22  Ron Steinke <rsteinke@w-link.net>

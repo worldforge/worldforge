@@ -38,6 +38,8 @@ AC_ARG_ENABLE(debug,
 
 dnl Test for C++ Standard Library
 
+AC_LANG_PUSH(C++)
+
 dnl Test for <cassert> header file
 
 AC_CHECK_HEADERS(cassert)
@@ -111,6 +113,8 @@ AC_CHECK_HEADERS(bzlib.h)
 
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
+
+AC_LANG_POP(C++)
 
 SYSTEM_LIBS="$SYSTEM_LIBS -lm"
 ATLAS_CFLAGS=""
