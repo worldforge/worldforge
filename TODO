@@ -1,9 +1,5 @@
 New TODO by Al Riddoch
 
-Objects layer isn't setting parents or objtype when sending.
-
-Can we have a iterator find() method in Objects?
-
 Add forward declararion headers for Objects
 
 Why is setArgsAsList taking args by value?
