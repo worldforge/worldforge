@@ -28,17 +28,28 @@ int main(int argc, char** argv)
     iosockinet client(is->accept());
     cout << "accepted client connection!" << endl;
 
-    Net::StreamAccept accepter("simple_server", client, 0);
+    DebugBridge bridge;
+    Net::StreamAccept accepter("simple_server", client, &bridge);
 
     cout << "Negotiating.... " << flush;
     while (accepter.GetState() == Net::StreamAccept::IN_PROGRESS)
         accepter.Poll();
     cout << "done." << endl;
 
-    if (accepter.GetState() == Net::StreamAccept::FAILED) 
-        cout << "Negotiation failed." << endl;
-    else
-        cout << "Negotiation successfull." << endl;
+    if (accepter.GetState() == Net::StreamAccept::FAILED) {
+        cerr << "Negotiation failed." << endl;
+        return 2;
+    }
+
+    Codec<iostream>* codec = accepter.GetCodec();
+
+    cout << "Polling client..." << endl;
     
+    while (client) {
+        codec->Poll(); // this blocks!
+    }
+
+    cout << "Client exited." << endl;
+
     return 0;
 }

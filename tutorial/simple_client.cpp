@@ -19,22 +19,24 @@ using namespace std;
 
 void helloWorld(Codec<iostream>& c)
 {
+    cout << "Sending hello world message... " << flush;
     c.StreamMessage(Bridge::MapBegin);
     c.MapItem("hello", "world");
     c.MapEnd();
+    cout << "done." << endl;
 }
 
 int main(int argc, char** argv)
 {
     iosockinet stream(sockbuf::sock_stream);
 
+    cout << "Connecting..." << flush;
     stream->connect("127.0.0.1", 6767);
     
-    DebugBridge d;
-    Net::StreamConnect conn("simple_client", stream, &d);
+    DebugBridge bridge;
+    Net::StreamConnect conn("simple_client", stream, &bridge);
 
     cout << "Negotiating... " << flush;
-    
     while (conn.GetState() == Negotiate<iostream>::IN_PROGRESS) {
         conn.Poll();
     }
@@ -47,6 +49,18 @@ int main(int argc, char** argv)
     }
 
     Codec<iostream>* codec = conn.GetCodec();
+
+    codec->StreamBegin();
+    
+    helloWorld(*codec);
+
+    stream << flush;
+
+    cout << "Polling server..." << endl;
+    while (stream) {
+        codec->Poll();
+    }
+    cout << "Server exited." << endl;
 
     return 0;
 }
