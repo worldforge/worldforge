@@ -9,4 +9,5 @@ Minor Tasks:
  * Use a better way to do Variable::is_bool()
 
 Major Tasks:
- * Implement Config::getEnv()
+ * Bugtest Config::getEnv until gauranteed stable.
+ * Rewrite Config::getEnv and Config::getCmdline to handle sections.

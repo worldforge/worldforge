@@ -1,3 +1,6 @@
 A prototype configuration system for STAGE.
 
-NOTE: This library is in a period of flux.  Please let me know if anyone has varconf deeply embedded into their code and would have serious problems with any sort of interface change.  <jaz147@psu.edu>
+Some quick notes:
+  - getEnv is still considered unstable - uncomment the code if you want it compiled and use at your own risk.
+  - the library has no internal preference handling.  It will gladly overwrite config settings from any source with config settings from any other source.
+

@@ -1,5 +1,8 @@
 ChangeLog for varconf
 
+Tue Oct 17 22:05:22 EST 2000 -- jaz <jaz147@psu.edu>
+ * Config.ccL Implemented handling of environment variables.
+
 Tue Oct 17 11:42:32 EST 2000 -- jaz <jaz147@psu.edu>
  * AUTHORS: Added myself to list 
  * README: Added some general info. 

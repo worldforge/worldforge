@@ -3,6 +3,8 @@
 #include <fstream>
 #include "Config.h"
 
+extern char **environ;
+
 using namespace std;
 
 namespace {
@@ -429,24 +431,29 @@ void Config::getCmdline(int argc, char** argv)
 
 void Config::getEnv(const string& prefix)
 {
-	// As above
-    // TODO: make this work!
-  string name, value, section=" ";
- /*
- int j, a=0;
-  for (int i = 0; environ[i] != NULL; i++)
+  /*
+  string name, value, section="";
+
+  int j, a = 0;
+  for ( int i = 0; environ[i] != NULL; i++)
     if ((environ[i][0]=='W')&&(environ[i][1]=='F')&&(environ[i][2]=='_')) {
+      string env( environ[i]); 
       name = value = "";
-      for (j = 3; environ[i][j] != '='; j++) {
-        name += tolower(environ[i][j]);
+     
+      size_t eq_pos = env.find( '='); 
+      if ( eq_pos != string::npos) {
+        value = env.substr( ( eq_pos + 1), ( env.size() - ( eq_pos + 1)));
       }
-      for (++j; environ[i][j] != 0; j++) {
-        value += environ[i][j];
+      else {
+        value = ""; // no value if '=' not found
       }
-      if (name.size()) { values[name] = value; a++;} else
+      name = env.substr( 3, eq_pos - 3);
+
+      if ( name.size() )
+        setItem( section, name, value);
+      else
         throw "Invalid environment setting!";
-    }
-*/
+    }*/
 }
 
 void Config::setParameterLookup(char shortForm,
