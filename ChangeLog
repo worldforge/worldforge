@@ -1,3 +1,8 @@
+Tuesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Started adding workarounds to compile with MSVC++
+	* Started adding doxygen docs
+
 Friday, March 24, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* Tweaked the syntax of the new Parallel() function slightly

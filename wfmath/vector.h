@@ -101,46 +101,66 @@ std::ostream& operator<<(std::ostream& os, const Vector<dim>& v);
 template<const int dim>
 std::istream& operator>>(std::istream& is, Vector<dim>& v);
 
+/// A dim dimensional vector
 template<const int dim>
 class Vector {
  public:
+  /// Construct an uninitialized vector
   Vector() {}
+  /// Construct a copy of a vector
   Vector(const Vector& v);
+  /// Construct a vector from an object passed by Atlas
   explicit Vector(const Atlas::Message::Object& a) {fromAtlas(a);}
 
-  ~Vector() {}
-
+  /// Print a vector to a stream
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
+  /// Parse a vector from a stream
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
 
+  /// Create an Atlas object from the vector
   Atlas::Message::Object toAtlas() const;
+  /// Set the vector's value to that given by an Atlas object
   void fromAtlas(const Atlas::Message::Object& a);
 
+  /// Assign one vector to another
   Vector& operator=(const Vector& v);
 
+  /// Test two vectors for equality, up to a given precision
   bool isEqualTo(const Vector& v, double epsilon = WFMATH_EPSILON) const;
 
+  /// Check if two vectors are equal
   bool operator==(const Vector& v) const {return isEqualTo(v);}
+  /// Check if two vectors are not equal
   bool operator!=(const Vector& v) const {return !isEqualTo(v);}
 
+  /// Zero the components of a vector
   Vector& zero();
 
-  // WARNING! This operator is for sorting only. It does not
-  // reflect any property of the vector.
+  /// WARNING! This operator is for sorting only.
   bool operator< (const Vector& v) const;
 
   // Math operators
 
+  /// Add the second vector to the first
   friend Vector& operator+=<dim>(Vector& v1, const Vector& v2);
+  /// Subtract the second vector from the first
   friend Vector& operator-=<dim>(Vector& v1, const Vector& v2);
+  /// Multiply the magnitude of v by d
   friend Vector& operator*=<dim>(Vector& v, CoordType d);
+  /// Divide the magnitude of v by d
   friend Vector& operator/=<dim>(Vector& v, CoordType d);
 
+  /// Take the sum of two vectors
   friend Vector operator+<dim>(const Vector& v1, const Vector& v2);
+  /// Take the difference of two vectors
   friend Vector operator-<dim>(const Vector& v1, const Vector& v2);
+  /// Reverse the direction of a vector
   friend Vector operator-<dim>(const Vector& v); // Unary minus
+  /// Multiply a vector by a scalar
   friend Vector operator*<dim>(CoordType d, const Vector& v);
+  /// Multiply a vector by a scalar
   friend Vector operator*<dim>(const Vector& v, CoordType d);
+  /// Divide a vector by a scalar
   friend Vector operator/<dim>(const Vector& v, CoordType d);
 
   friend Vector Prod<dim>	(const RotMatrix<dim>& m,
@@ -148,59 +168,86 @@ class Vector {
   friend Vector InvProd<dim>	(const RotMatrix<dim>& m,
 				 const Vector& v);
 
-  // Don't do range checking, it'll slow things down, and people
-  // should be able to figure it out on their own
+  /// Get the i'th element of the vector
   CoordType operator[](const int i) const {assert(0 <= i && i < dim); return m_elem[i];}
+  /// Get the i'th element of the vector
   CoordType& operator[](const int i)	  {assert(0 <= i && i < dim); return m_elem[i];}
 
+  /// Find the vector which gives the offset between two points
   friend Vector operator-<dim>(const Point<dim>& c1, const Point<dim>& c2);
+  /// Find the point at the offset v from the point c
   friend Point<dim> operator+<dim>(const Point<dim>& c, const Vector& v);
+  /// Find the point at the offset -v from the point c
   friend Point<dim> operator-<dim>(const Point<dim>& c, const Vector& v);
+  /// Find the point at the offset v from the point c
   friend Point<dim> operator+<dim>(const Vector& v, const Point<dim>& c);
 
+  /// Shift a point by a vector
   friend Point<dim>& operator+=<dim>(Point<dim>& p, const Vector& rhs);
+  /// Shift a point by a vector, in the opposite direction
   friend Point<dim>& operator-=<dim>(Point<dim>& p, const Vector& rhs);
 
+  /// The dot product of two vectors
   friend CoordType Dot<dim>(const Vector& v1, const Vector& v2);
+  /// The angle between two vectors
   friend CoordType Angle<dim>(const Vector& v, const Vector& u);
 
+  /// The squared magnitude of a vector
   CoordType sqrMag() const;
+  /// The magnitude of a vector
   CoordType mag() const		{return sqrt(sqrMag());}
+  /// Normalize a vector
   Vector& normalize(CoordType norm = 1.0)
 	{CoordType themag = mag(); assert(themag > 0); return (*this *= norm / themag);}
 
-  // The sloppyMag() function gives a value between
-  // the true magnitude and sloppyMagMax multiplied by the
-  // true magnitude. sloppyNorm() uses sloppyMag() to normalize
-  // the vector. This is currently only implemented for
-  // dim = {1, 2, 3}. For all current implementations,
-  // sloppyMagMax is greater than or equal to one.
-  // The constant sloppyMagMaxSqrt is provided for those
-  // who want to most closely approximate the true magnitude,
-  // without caring whether it's too low or too high.
-
+  /// An approximation to the magnitude of a vector
+  /**
+  * The sloppyMag() function gives a value between
+  * the true magnitude and sloppyMagMax multiplied by the
+  * true magnitude. sloppyNorm() uses sloppyMag() to normalize
+  * the vector. This is currently only implemented for
+  * dim = {1, 2, 3}. For all current implementations,
+  * sloppyMagMax is greater than or equal to one.
+  * The constant sloppyMagMaxSqrt is provided for those
+  * who want to most closely approximate the true magnitude,
+  * without caring whether it's too low or too high.
+  **/
   CoordType sloppyMag() const;
-  Vector& sloppyNorm(CoordType norm);
+  /// Approximately normalize a vector
+  /**
+   * Normalize a vector using sloppyMag() instead of the true magnitude.
+   * The new length of the vector will be between norm/sloppyMagMax()
+   * and norm.
+   **/
+  Vector& sloppyNorm(CoordType norm = 1.0);
 
   // Can't seem to implement these as constants, implementing
   // inline lookup functions instead.
+  /// The maximum ratio of the return value of sloppyMag() to the true magnitude
   static const CoordType sloppyMagMax();
+  /// The square root of sloppyMagMax()
+  /**
+   * This is provided for people who want to obtain maximum accuracy from
+   * sloppyMag(), without caring whether the answer is high or low.
+   * The result sloppyMag()/sloppyMagMaxSqrt() will be within sloppyMagMaxSqrt()
+   * of the true magnitude.
+   **/
   static const CoordType sloppyMagMaxSqrt();
 
-  // Rotate the vector in the (axis1,axis2) plane by the angle theta
-
+  /// Rotate the vector in the (axis1, axis2) plane by the angle theta
   Vector& rotate(int axis1, int axis2, CoordType theta);
 
-  // Same thing, but the axes are defined by two vectors. If the
-  // vectors are parallel, this throws a ColinearVectors error.
-
+  /// Rotate the vector in the (v1, v2) plane by the angle theta
   Vector& rotate(const Vector& v1, const Vector& v2, CoordType theta);
 
   // mirror image functions
 
+  /// Reflect a vector in the direction of the i'th axis
   Vector& mirror(const int i) {assert(0 <= i && i < dim); m_elem[i] *= -1; return *this;}
+  /// Reflect a vector in the direction specified by v
   Vector& mirror(const Vector& v)
 	{return operator-=(2 * v * Dot(v, *this) / v.sqrMag());}
+  /// Reflect a vector in all directions simultaneously.
   Vector& mirror()		{return operator*=(-1);}
 
   // Specialized 2D/3D stuff starts here
@@ -211,39 +258,62 @@ class Vector {
   // Attempting to call these on any other vector will
   // result in a linker error.
 
+  /// 2D only: construct a vector from (x, y) coordinates
   Vector(CoordType x, CoordType y);
+  /// 3D only: construct a vector from (x, y, z) coordinates
   Vector(CoordType x, CoordType y, CoordType z);
 
+  /// 2D only: rotate a vector by an angle theta
   Vector<2>& rotate(CoordType theta);
 
+  /// 3D only: rotate a vector about the x axis by an angle theta
   Vector<3>& rotateX(CoordType theta);
+  /// 3D only: rotate a vector about the y axis by an angle theta
   Vector<3>& rotateY(CoordType theta);
+  /// 3D only: rotate a vector about the z axis by an angle theta
   Vector<3>& rotateZ(CoordType theta);
 
+  /// 3D only: rotate a vector about the i'th axis by an angle theta
   Vector<3>& rotate(const Vector<3>& axis, CoordType theta);
+  /// 3D only: rotate a vector using a Quaternion
   Vector<3>& rotate(const Quaternion& q);
 
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
 
+  /// Access the first component of a vector
   CoordType x() const	{assert(dim > 0); return m_elem[0];}
+  /// Access the first component of a vector
   CoordType& x()	{assert(dim > 0); return m_elem[0];}
+  /// Access the second component of a vector
   CoordType y() const	{assert(dim > 1); return m_elem[1];}
+  /// Access the second component of a vector
   CoordType& y()	{assert(dim > 1); return m_elem[1];}
+  /// Access the third component of a vector
   CoordType z() const	{assert(dim > 2); return m_elem[2];}
+  /// Access the third component of a vector
   CoordType& z()	{assert(dim > 2); return m_elem[2];}
 
   // Don't need asserts here, they're taken care of in the general function
+  /// Flip the x component of a vector
   Vector& mirrorX()	{return mirror(0);}
+  /// Flip the y component of a vector
   Vector& mirrorY()	{return mirror(1);}
+  /// Flip the z component of a vector
   Vector& mirrorZ()	{return mirror(2);}
 
+  /// 2D only: construct a vector from polar coordinates
   Vector<2>& polar(CoordType r, CoordType theta);
+  /// 2D only: convert a vector to polar coordinates
   void asPolar(CoordType& r, CoordType& theta) const;
 
+  /// 3D only: construct a vector from polar coordinates
   Vector<3>& polar(CoordType r, CoordType theta, CoordType z);
+  /// 3D only: convert a vector to polar coordinates
   void asPolar(CoordType& r, CoordType& theta, CoordType& z) const;
+  /// 3D only: construct a vector from shperical coordinates
   Vector<3>& spherical(CoordType r, CoordType theta, CoordType phi);
+  /// 3D only: convert a vector to shperical coordinates
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
   // FIXME make Cross() a friend function, and make this private
@@ -254,20 +324,24 @@ class Vector {
   CoordType m_elem[dim];
 };
 
+/// 2D only: get the z component of the cross product of two vectors
 CoordType Cross(const Vector<2>& v1, const Vector<2>& v2);
+/// 3D only: get the cross product of two vectors
 Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
 
 // Returns true if the vectors are parallel. For parallel
 // vectors, same_dir is set to true if they point the same
 // direction, and false if they point opposite directions
+/// Check if two vectors are parallel
 template<const int dim>
 bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir);
 
 // Convienience wrapper if you don't care about same_dir
+/// Check if two vectors are parallel
 template<const int dim>
 bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2);
 
-// Returns true if the vectors are perpendicular
+/// Check if two vectors are perpendicular
 template<const int dim>
 bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2);
 

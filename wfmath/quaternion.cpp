@@ -36,7 +36,7 @@ using namespace WFMath;
 Quaternion::Quaternion (const CoordType w_in, const CoordType x_in,
 			const CoordType y_in, const CoordType z_in)
 {
-  CoordType norm = sqrt(w_in*w_in + x_in*x_in + y_in*y_in + z_in*z_in);
+  CoordType norm = (CoordType) sqrt(w_in*w_in + x_in*x_in + y_in*y_in + z_in*z_in);
 
   m_w = w_in / norm;
   m_vec[0] = x_in / norm;
@@ -110,9 +110,9 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
 
   // check the diagonal
   if (tr > 0.0) {
-    s = sqrt (tr + 1.0);
-    m_w = s / 2.0;
-    s = 0.5 / s;
+    s = (CoordType) sqrt (tr + 1.0);
+    m_w = (CoordType) s / 2.0;
+    s = (CoordType) 0.5 / s;
 
     m_vec[0] = (m_ref.elem(2, 1) - m_ref.elem(1, 2)) * s;
     m_vec[1] = (m_ref.elem(0, 2) - m_ref.elem(2, 0)) * s;
@@ -126,11 +126,11 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
 
     int j = nxt[i], k = nxt[j];
 
-    s = sqrt (1.0 + m_ref.elem(i, i) - m_ref.elem(j, j) - m_ref.elem(k, k));
-    m_vec[i] = s * 0.5;
+    s = (CoordType) sqrt (1.0 + m_ref.elem(i, i) - m_ref.elem(j, j) - m_ref.elem(k, k));
+    m_vec[i] = (CoordType) s * 0.5;
 
     assert("sqrt() returns positive" && s > 0.0);
-    s = 0.5 / s;
+    s = 0.5 / (CoordType) s;
 
     m_w = (m_ref.elem(k, j) - m_ref.elem(j, k)) * s;
     m_vec[j] = (m_ref.elem(i, j) + m_ref.elem(j, i)) * s;
@@ -144,9 +144,10 @@ Quaternion& Quaternion::rotation(int axis, const CoordType angle)
 {
   CoordType half_angle = angle / 2;
 
-  m_w = cos(half_angle);
+  m_w = (CoordType) cos(half_angle);
   for(int i = 0; i < 3; ++i)
-    m_vec[i] = (i == axis) ? -sin(half_angle) : 0; // Note sin() only called once
+    // Note sin() only called once
+    m_vec[i] = (i == axis) ? (CoordType) -sin(half_angle) : 0;
 
   return *this;
 }
@@ -155,8 +156,8 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, const CoordType angle)
 {
   CoordType half_angle = angle / 2;
 
-  m_w = cos(half_angle);
-  m_vec = axis * (-sin(half_angle) / axis.mag());
+  m_w = (CoordType) cos(half_angle);
+  m_vec = axis * (CoordType) (-sin(half_angle) / axis.mag());
 
   return *this;
 }
@@ -166,8 +167,8 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis)
   CoordType mag = axis.mag();
   CoordType half_angle = mag / 2;
 
-  m_w = cos(half_angle);
-  m_vec = axis * (-sin(half_angle) / mag);
+  m_w = (CoordType) cos(half_angle);
+  m_vec = axis * (CoordType) (-sin(half_angle) / mag);
 
   return *this;
 }

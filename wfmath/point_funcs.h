@@ -171,6 +171,7 @@ CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
   return (fabs(ans) >= _ScaleEpsilon(p1.m_elem, p2.m_elem, dim)) ? ans : 0;
 }
 
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 template<const int dim, template<class> class container,
 			template<class> class container2>
 Point<dim> Barycenter(const container<Point<dim> >& c,
@@ -232,6 +233,7 @@ Point<dim> Barycenter(const container<Point<dim> >& c)
 
   return out;
 }
+#endif
 
 template<const int dim>
 Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)

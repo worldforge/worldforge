@@ -32,6 +32,17 @@
 #include <assert.h>
 #include <math.h>
 
+#ifdef _MSC_VER
+  #if _MSC_VER < 1300
+    #error "You are using an older version of MSVC++ with extremely poor"
+    #error "template support. Please use at least version 7.0, where the"
+    #error "template support is merely bad, or try a different compiler."
+  #else
+    #define WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION 1
+    #define WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS 1
+  #endif
+#endif
+
 // Forward declarations for all classes
 #include <iosfwd>
 namespace Atlas { namespace Message { class Object;}}

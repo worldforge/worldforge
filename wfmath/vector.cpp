@@ -34,10 +34,11 @@
 
 using namespace WFMath;
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> CoordType WFMath::Vector<2>::sloppyMag() const
 {
-  CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]);
-  const CoordType p = Sqrt2 - 1;
+  CoordType ax = (CoordType) fabs(m_elem[0]), ay = (CoordType) fabs(m_elem[1]);
+  const CoordType p = (CoordType) Sqrt2 - 1;
 
   // Don't need float add, all terms > 0
 
@@ -51,9 +52,10 @@ template<> CoordType WFMath::Vector<2>::sloppyMag() const
 
 template<> CoordType WFMath::Vector<3>::sloppyMag() const
 {
-  CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]), az = fabs(m_elem[2]);
-  const CoordType p = Sqrt2 - 1;
-  const CoordType q = Sqrt3 + 1 - 2 * Sqrt2;
+  CoordType ax = (CoordType) fabs(m_elem[0]), ay = (CoordType) fabs(m_elem[1]),
+	    az = (CoordType) fabs(m_elem[2]);
+  const CoordType p = (CoordType) Sqrt2 - 1;
+  const CoordType q = (CoordType) Sqrt3 + 1 - 2 * (CoordType) Sqrt2;
 
   // Don't need FloatAdd, only term < 0 is q, it's very small,
   // and amin1 * amin2 / amax < amax.
@@ -77,7 +79,7 @@ template<> WFMath::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType
   Vector<3> perp_part = *this - axis * Dot(*this, axis) / axis_sqr_mag;
   Vector<3> rot90 = Cross(axis, perp_part) / sqrt(axis_sqr_mag);
 
-  *this += perp_part * (cos(theta) - 1) + rot90 * sin(theta);
+  *this += perp_part * ((CoordType) cos(theta) - 1) + rot90 * (CoordType) sin(theta);
 
   return *this;
 }
@@ -95,6 +97,7 @@ template<> Vector<3>& Vector<3>::rotate(const Quaternion& q)
 
   return *this;
 }
+#endif
 
 CoordType WFMath::Cross(const Vector<2>& v1, const Vector<2>& v2)
 {
@@ -120,6 +123,7 @@ Vector<3> WFMath::Cross(const Vector<3>& v1, const Vector<3>& v2)
   return ans;
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Vector<2>& WFMath::Vector<2>::polar(CoordType r, CoordType theta)
 {
@@ -177,3 +181,4 @@ void WFMath::Vector<3>::asSpherical(CoordType& r, CoordType& theta,
   theta = d[1];
   phi = d[2];
 }
+#endif

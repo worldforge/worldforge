@@ -234,8 +234,10 @@ Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
   return operator=(Prod(*this, m.rotation(v1, v2, theta)));
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta);
 template<> Vector<3>& Vector<3>::rotate(const Quaternion& q);
+#endif
 
 template<const int dim>
 CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
@@ -304,37 +306,37 @@ bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 template<>
 inline const CoordType Vector<1>::sloppyMagMax()
 {
-  return 1;
+  return (CoordType) 1;
 }
 
 template<>
 inline const CoordType Vector<2>::sloppyMagMax()
 {
-  return 1.082392200292393968799446410733;
+  return (CoordType) 1.082392200292393968799446410733;
 }
 
 template<>
 inline const CoordType Vector<3>::sloppyMagMax()
 {
-  return 1.145934719303161490541433900265;
+  return (CoordType) 1.145934719303161490541433900265;
 }
 
 template<>
 inline const CoordType Vector<1>::sloppyMagMaxSqrt()
 {
-  return 1;
+  return (CoordType) 1;
 }
 
 template<>
 inline const CoordType Vector<2>::sloppyMagMaxSqrt()
 {
-  return 1.040380795811030899095785063701;
+  return (CoordType) 1.040380795811030899095785063701;
 }
 
 template<>
 inline const CoordType Vector<3>::sloppyMagMaxSqrt()
 {
-  return 1.070483404496847625250328653179;
+  return (CoordType) 1.070483404496847625250328653179;
 }
 
 // Note for people trying to compute the above numbers
@@ -350,6 +352,7 @@ inline const CoordType Vector<3>::sloppyMagMaxSqrt()
 // Running the script bc_sloppy_mag_3 provided with the WFMath source
 // will calculate the above number.
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> Vector<2>& Vector<2>::polar(CoordType r, CoordType theta);
 template<> void Vector<2>::asPolar(CoordType& r, CoordType& theta) const;
 
@@ -362,9 +365,11 @@ template<> Vector<3>& Vector<3>::spherical(CoordType r, CoordType theta,
 template<> void Vector<3>::asSpherical(CoordType& r, CoordType& theta,
 				       CoordType& phi) const;
 
-template<> inline CoordType Vector<1>::sloppyMag() const {return fabs(m_elem[0]);}
+template<> inline CoordType Vector<1>::sloppyMag() const
+	{return (CoordType) fabs(m_elem[0]);}
 template<> CoordType Vector<2>::sloppyMag() const;
 template<> CoordType Vector<3>::sloppyMag() const;
+#endif
 
 template<> inline Vector<2>::Vector(CoordType x, CoordType y)
 	{m_elem[0] = x; m_elem[1] = y;}

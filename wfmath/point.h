@@ -59,12 +59,22 @@ template<const int dim>
 CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
 	{return (p1 - p2).sloppyMag();}
 
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
+/// Find the center of a set of points, all weighted equally
 template<const int dim, template<class> class container>
 Point<dim> Barycenter(const container<Point<dim> >& c);
+/// Find the center of a set of points with the given weights
+/**
+ * If the number of points and the number of weights are not equal,
+ * the excess of either is ignored. The weights (or that subset
+ * which is used, if there are more weights than points), must not
+ * sum to zero.
+ **/
 template<const int dim, template<class> class container,
 			template<class> class container2>
 Point<dim> Barycenter(const container<Point<dim> >& c,
 		      const container2<CoordType>& weights);
+#endif
 
 // This is used a couple of places in the library
 template<const int dim>
@@ -76,37 +86,48 @@ std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
 template<const int dim>
 std::istream& operator>>(std::istream& is, Point<dim>& m);
 
+/// A dim dimensional point
 template<const int dim>
 class Point
 {
  public:
+  /// Construct an uninitialized point
   Point () {}
+  /// Construct a copy of a point
   Point (const Point& p);
+  /// Construct a point from an object passed by Atlas
   explicit Point (const Atlas::Message::Object& a) {fromAtlas(a);}
 
-
-  ~Point() {}
-
+  /// Print a point to a stream
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
+  /// Parse a point from a stream
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);
 
+  /// Create an Atlas object from the point
   Atlas::Message::Object toAtlas() const;
+  /// Set the point's value to that given by an Atlas object
   void fromAtlas(const Atlas::Message::Object& a);
 
+  /// Copy the value of one point to another
   Point& operator= (const Point& rhs);
 
+  /// Test two points for equality, up to a given precision
   bool isEqualTo(const Point &p, double epsilon = WFMATH_EPSILON) const;
 
+  /// Check if two points are equal
   bool operator== (const Point& rhs) const	{return isEqualTo(rhs);}
+  /// Check if two points are not equal
   bool operator!= (const Point& rhs) const	{return !isEqualTo(rhs);}
 
-  Point& setToOrigin(); // Set point to (0,0,...,0)
+  /// Set point to (0,0,...,0)
+  Point& setToOrigin();
 
-  // Sort only, don't use otherwise
+  /// Sort only, don't use otherwise
   bool operator< (const Point& rhs) const;
 
   // Operators
 
+  // Documented in vector.h
   friend Vector<dim> operator-<dim>(const Point& c1, const Point& c2);
   friend Point operator+<dim>(const Point& c, const Vector<dim>& v);
   friend Point operator-<dim>(const Point& c, const Vector<dim>& v);
@@ -115,66 +136,102 @@ class Point
   friend Point& operator+=<dim>(Point& p, const Vector<dim>& rhs);
   friend Point& operator-=<dim>(Point& p, const Vector<dim>& rhs);
 
-  // Rotate about point p
+  /// Rotate about point p
   Point& rotate(const RotMatrix<dim>& m, const Point& p)
 	{return (*this = p + Prod(*this - p, m));}
 
   // Functions so that Point<> has the generic shape interface
 
+  /// Shape: a point has one "corner"
   int numCorners() const {return 1;}
+  /// Shape: corner 0 is the point
   Point<dim> getCorner(int i) const {assert(i == 0); return *this;}
+  /// Shape: the center is equal to the point
   Point<dim> getCenter() const {return *this;}
 
+  /// Shape:
   Point shift(const Vector<dim>& v) {return *this += v;}
+  /// Shape:
   Point moveCornerTo(const Point& p, int corner)
 	{assert(corner == 0); return operator=(p);}
+  /// Shape:
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
+  /// Shape:
   Point rotateCorner(const RotMatrix<dim>& m, int corner)
 	{assert(corner == 0); return *this;}
+  /// Shape:
   Point rotateCenter(const RotMatrix<dim>& m) {return *this;}
+  /// Shape:
   Point rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   // The implementations of these lie in axisbox_funcs.h and
   // ball_funcs.h, to reduce include dependencies
+  /// Shape: a zero volume box whose corners lie on the point
   AxisBox<dim> boundingBox() const;
+  /// Shape: a zero radius sphere whose center is the point
   Ball<dim> boundingSphere() const;
+  /// Shape: a zero radius sphere whose center is the point
   Ball<dim> boundingSphereSloppy() const;
 
   // Member access
 
+  /// Access the i'th coordinate of the point
   CoordType operator[](const int i) const {assert(i >= 0 && i < dim); return m_elem[i];}
+  /// Access the i'th coordinate of the point
   CoordType& operator[](const int i)	  {assert(i >= 0 && i < dim); return m_elem[i];}
 
+  /// Get the square of the distance from p1 to p2
   friend CoordType SquaredDistance<dim>(const Point& p1, const Point& p2);
 
 // FIXME instatiation problem when declared as friend
 //  template<template<class> class container>
 //  friend Point Barycenter(const container<Point>& c);
 
+  /// Find a point on the line containing p1 and p2, by default the midpoint
+  /**
+   * The default value of 0.5 for dist gives the midpoint. A value of 0 gives
+   * p1, and 1 gives p2. Values of dist outside the [0, 1] range are allowed,
+   * and give points on the line which are not on the segment bounded by
+   * p1 and p2.
+   **/
   friend Point<dim> Midpoint<dim>(const Point& p1, const Point& p2, CoordType dist);
 
   // 2D/3D stuff
 
+  /// 2D only: construct a point from its (x, y) coordinates
   Point (CoordType x, CoordType y); // 2D only
+  /// 3D only: construct a point from its (x, y, z) coordinates
   Point (CoordType x, CoordType y, CoordType z); // 3D only
 
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
 
+  /// access the first component of a point
   CoordType x() const	{assert(dim > 0); return m_elem[0];}
+  /// access the first component of a point
   CoordType& x()	{assert(dim > 0); return m_elem[0];}
+  /// access the second component of a point
   CoordType y() const	{assert(dim > 1); return m_elem[1];}
+  /// access the second component of a point
   CoordType& y()	{assert(dim > 1); return m_elem[1];}
+  /// access the third component of a point
   CoordType z() const	{assert(dim > 2); return m_elem[2];}
+  /// access the third component of a point
   CoordType& z()	{assert(dim > 2); return m_elem[2];}
 
+  /// 2D only: construct a vector from polar coordinates
   Point<2>& polar(CoordType r, CoordType theta);
+  /// 2D only: convert a vector to polar coordinates
   void asPolar(CoordType& r, CoordType& theta) const;
 
+  /// 3D only: construct a vector from polar coordinates
   Point<3>& polar(CoordType r, CoordType theta, CoordType z);
+  /// 3D only: convert a vector to polar coordinates
   void asPolar(CoordType& r, CoordType& theta, CoordType& z) const;
+  /// 3D only: construct a vector from spherical coordinates
   Point<3>& spherical(CoordType r, CoordType theta, CoordType phi);
+  /// 3D only: convert a vector to spherical coordinates
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
  private:

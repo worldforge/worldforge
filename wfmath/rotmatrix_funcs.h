@@ -455,11 +455,27 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
   return *this;
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
 						 CoordType theta);
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis);
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip);
+#else
+RotMatrix<3>& _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis,
+					 CoordType theta);
+RotMatrix<3>& _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis);
+RotMatrix<3>& _NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& q,
+					      const bool not_flip);
+
+template<>
+RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, CoordType theta)
+{
+  assert(dim == 3);
+
+  return _NCFS_RotMatrix3_rotation(*this, axis, theta);
+}
+#endif
 
 template<const int dim>
 RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)

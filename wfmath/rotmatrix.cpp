@@ -33,6 +33,7 @@ using namespace WFMath;
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
 static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip)
 {
@@ -66,16 +67,22 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 
   return *this;
 }
+#endif
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
 					      CoordType theta)
+#else
+RotMatrix<3>& WFMath::_NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis,
+						 CoordType theta)
+#endif
 {
   CoordType max = 0;
   int main_comp = -1;
 
   for(int i = 0; i < 3; ++i) {
-    CoordType val = fabs(axis[i]);
+    CoordType val = (CoordType) fabs(axis[i]);
     if(val > max) {
       max = val;
       main_comp = i;
@@ -88,14 +95,19 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
 
   int new_comp = main_comp ? main_comp - 1 : 2; // Not parallel to axis
   for(int i = 0; i < 3; ++i)
-    tmp[i] = (i == new_comp) ? 1 : 0;
+    tmp[i] = (CoordType) ((i == new_comp) ? 1 : 0);
 
   v1 = Cross(axis, tmp); // 3D specific part
   v2 = Cross(axis, v1);
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   return rotation(v1, v2, theta);
+#else
+  return m.rotation(v1, v2, theta);
+#endif
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
 {
@@ -107,7 +119,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
     return identity();
 
   for(int i = 0; i < 3; ++i) {
-    CoordType val = fabs(axis[i]);
+    CoordType val = (CoordType) fabs(axis[i]);
     if(val > max) {
       max = val;
       main_comp = i;
@@ -120,13 +132,14 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
 
   int new_comp = main_comp ? main_comp - 1 : 2; // Not parallel to axis
   for(int i = 0; i < 3; ++i)
-    tmp[i] = (i == new_comp) ? 1 : 0;
+    tmp[i] = (CoordType) ((i == new_comp) ? 1 : 0);
 
   v1 = Cross(axis, tmp); // 3D specific part
   v2 = Cross(axis, v1);
 
   return rotation(v1, v2, angle);
 }
+#endif
 
 bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 				CoordType* buf1, CoordType* buf2, double precision)
@@ -151,7 +164,7 @@ bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 
         if(i == j) // Subtract identity matrix
           --ans;
-        ans = fabs(ans);
+        ans = (CoordType) fabs(ans);
         if(ans >= try_prec)
           try_prec = ans;
       }
@@ -191,7 +204,7 @@ bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
     for(int i = 0; i < size; ++i) {
       for(int j = 0; j < size; ++j) {
         buf1[i*size+j] = vals[j*size+i];
-        buf2[i*size+j] = (i == j) ? 1 : 0;
+        buf2[i*size+j] = (CoordType) ((i == j) ? 1 : 0);
       }
     }
 

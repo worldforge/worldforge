@@ -1,1 +1,1 @@
-EXTRA_DIST = CLASS_LAYOUT shape.h
+EXTRA_DIST = CLASS_LAYOUT shape.h Doxyfile
