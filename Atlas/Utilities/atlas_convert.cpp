@@ -8,7 +8,7 @@
 #include "../src/Message/QueuedDecoder.h"
 #include "../src/Message/MEncoder.h"
 
-Atlas::Codec<std::iostream>* getCodec(std::string type, iostream &stream, Atlas::Message::DecoderBase* decoder)
+Atlas::Codec<std::iostream>* getCodec(std::string type, std::iostream &stream, Atlas::Message::DecoderBase* decoder)
 {
     if (type == "XML")
         return new Atlas::Codecs::XML(stream, decoder);
@@ -22,32 +22,32 @@ Atlas::Codec<std::iostream>* getCodec(std::string type, iostream &stream, Atlas:
 */
     else
     {
-        cout << "Unknown CODEC required!" << endl;
+        std::cout << "Unknown CODEC required!" << std::endl;
         exit(0);
     }
 }
 
 void convert(std::string file_in, std::string codec_in, std::string file_out, std::string codec_out)
 {
-    cout << "CONVERT " << codec_in << " to " << codec_out << endl;
+    std::cout << "CONVERT " << codec_in << " to " << codec_out << std::endl;
 
-    filebuf fb_in, fb_out;
+    std::filebuf fb_in, fb_out;
 
-    fb_in.open( file_in.c_str(), ios::in );
-    fb_out.open( file_out.c_str(), ios::out );
+    fb_in.open( file_in.c_str(), std::ios::in );
+    fb_out.open( file_out.c_str(), std::ios::out );
 
     std::iostream in( &fb_in );
     std::iostream out( &fb_out );
 
-    cout << "Reading... ";
+    std::cout << "Reading... ";
 
     Atlas::Message::QueuedDecoder decoder;
     Atlas::Codec<std::iostream> *inCodec = getCodec(codec_in, in, &decoder);
     while (!in.eof())
         inCodec->poll(true);
 
-    cout << "done." << endl;
-    cout << "Writing... ";
+    std::cout << "done." << std::endl;
+    std::cout << "Writing... ";
 
     Atlas::Codec<std::iostream> *outCodec = getCodec(codec_out, out, NULL);
     Atlas::Message::Encoder encoder(outCodec);
@@ -58,7 +58,7 @@ void convert(std::string file_in, std::string codec_in, std::string file_out, st
     }
     encoder.streamEnd();
 
-    cout << "done." << endl;
+    std::cout << "done." << std::endl;
 
     fb_out.close();
     fb_in.close();
@@ -69,19 +69,19 @@ int main( int argc, char** argv )
     // parse command line here
     if (argc!=4)
     {
-        cout << "usage: atlas_convert <OPTION> <input file> <output file>" << endl << endl;
-        cout << "options: --xml2bach" << endl;
-        cout << "         --xml2packed" << endl;
-        cout << "         --xml2binary" << endl;
-        cout << "         --bach2xml" << endl;
-        cout << "         --bach2packed" << endl;
-        cout << "         --bach2binary" << endl;
-        cout << "         --packed2xml" << endl;
-        cout << "         --packed2bach" << endl;
-        cout << "         --packed2binary" << endl;
-        cout << "         --binary2xml" << endl;
-        cout << "         --binary2bach" << endl;
-        cout << "         --binary2packed" << endl;
+        std::cout << "usage: atlas_convert <OPTION> <input file> <output file>" << std::endl << std::endl;
+        std::cout << "options: --xml2bach" << std::endl;
+        std::cout << "         --xml2packed" << std::endl;
+        std::cout << "         --xml2binary" << std::endl;
+        std::cout << "         --bach2xml" << std::endl;
+        std::cout << "         --bach2packed" << std::endl;
+        std::cout << "         --bach2binary" << std::endl;
+        std::cout << "         --packed2xml" << std::endl;
+        std::cout << "         --packed2bach" << std::endl;
+        std::cout << "         --packed2binary" << std::endl;
+        std::cout << "         --binary2xml" << std::endl;
+        std::cout << "         --binary2bach" << std::endl;
+        std::cout << "         --binary2packed" << std::endl;
         return 0;
     }
 

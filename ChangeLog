@@ -1,3 +1,8 @@
+2002-06-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Codecs/Bach.cpp, src/Message/DecoderBase.cpp,
+	  src/Utilities/atlas_convert.cpp: Strict ISO C++ fixes.
+
 2002-06-05  Michael Koch  <konqueror@gmx.de>
 
 	* src/Codecs/Bach.*: fix allowed characters for names

@@ -6,6 +6,8 @@
 
 #include "DecoderBase.h"
 
+#include <iostream>
+
 namespace Atlas { namespace Message {
 
 DecoderBase::DecoderBase()
@@ -14,13 +16,13 @@ DecoderBase::DecoderBase()
 
 void DecoderBase::streamBegin()
 {
-    ATLAS_DEBUG(cout << "DecoderBase::streamBegin" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::streamBegin" << std::endl)
     m_state.push(STATE_STREAM);
 }
 
 void DecoderBase::streamMessage(const Map&)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::streamMessage" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::streamMessage" << std::endl)
     Object::MapType m;
     m_maps.push(m);
     m_state.push(STATE_MAP);
@@ -28,14 +30,14 @@ void DecoderBase::streamMessage(const Map&)
 
 void DecoderBase::streamEnd()
 {
-    ATLAS_DEBUG(cout << "DecoderBase::streamEnd" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::streamEnd" << std::endl)
     assert(!m_state.empty());
     m_state.pop();
 }
 
 void DecoderBase::mapItem(const std::string& name, const Map&)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::mapItem Map" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::mapItem Map" << std::endl)
     Object::MapType m;
     m_names.push(name);
     m_maps.push(m);
@@ -44,7 +46,7 @@ void DecoderBase::mapItem(const std::string& name, const Map&)
 
 void DecoderBase::mapItem(const std::string& name, const List&)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::mapItem List" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::mapItem List" << std::endl)
     Object::ListType l;
     m_names.push(name);
     m_lists.push(l);
@@ -53,28 +55,28 @@ void DecoderBase::mapItem(const std::string& name, const List&)
 
 void DecoderBase::mapItem(const std::string& name, long i)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::mapItem" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::mapItem" << std::endl)
     assert(!m_maps.empty());	    
     m_maps.top()[name] = i;
 }
 
 void DecoderBase::mapItem(const std::string& name, double d)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::mapItem" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::mapItem" << std::endl)
     assert(!m_maps.empty());	   
     m_maps.top()[name] = d;
 }
 
 void DecoderBase::mapItem(const std::string& name, const std::string& s)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::mapItem" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::mapItem" << std::endl)
     assert(!m_maps.empty());
     m_maps.top()[name] = s;
 }
 
 void DecoderBase::mapEnd()
 {
-    ATLAS_DEBUG(cout << "DecoderBase::mapEnd" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::mapEnd" << std::endl)
     assert(!m_maps.empty());
     assert(!m_state.empty());
     Object::MapType map = m_maps.top();
@@ -99,7 +101,7 @@ void DecoderBase::mapEnd()
 
 void DecoderBase::listItem(const Map&)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::listItem Map" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::listItem Map" << std::endl)
     Object::MapType map;
     m_maps.push(map);
     m_state.push(STATE_MAP);
@@ -107,7 +109,7 @@ void DecoderBase::listItem(const Map&)
 
 void DecoderBase::listItem(const List&)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::listItem List" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::listItem List" << std::endl)
     Object::ListType list;
     m_lists.push(list);
     m_state.push(STATE_LIST);
@@ -115,27 +117,27 @@ void DecoderBase::listItem(const List&)
 
 void DecoderBase::listItem(long i)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::listItem" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::listItem" << std::endl)
     assert(!m_lists.empty());	    
     m_lists.top().push_back(i);
 }
 
 void DecoderBase::listItem(double d)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::listItem" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::listItem" << std::endl)
     m_lists.top().push_back(d);
 }
 
 void DecoderBase::listItem(const std::string& s)
 {
-    ATLAS_DEBUG(cout << "DecoderBase::listItem" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::listItem" << std::endl)
     assert(!m_lists.empty());	    
     m_lists.top().push_back(s);
 }
 
 void DecoderBase::listEnd()
 {
-    ATLAS_DEBUG(cout << "DecoderBase::listEnd" << endl)
+    ATLAS_DEBUG(std::cout << "DecoderBase::listEnd" << std::endl)
     assert(!m_lists.empty());
     assert(!m_state.empty());
     Object::ListType list = m_lists.top();
@@ -153,7 +155,7 @@ void DecoderBase::listEnd()
             m_lists.top().push_back(list);
             break;
         case STATE_STREAM:
-            cerr << "DecoderBase::listEnd: Error" << endl;
+            std::cerr << "DecoderBase::listEnd: Error" << std::endl;
             // XXX - report error?
             break;
     }
