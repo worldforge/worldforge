@@ -1,1 +1,11 @@
-Based on work done by John Barrett <jbarrett@box100.com>
+Based partially on work done by John Barrett <jbarrett@box100.com>
+
+Thanks to Alistair Riddoch <ajr@ecs.soton.ac.uk> for his help wrangling with
+C++ socket libraries, giving constant feedback and generally being cool.
+
+Thanks to Aloril <aloril@iki.fi> for his constant support in answering never-
+ending Atlas questions. You're The Man.
+
+Thanks to all the others who have provided help and feedback during this
+library's development, including much thanks to our fearless leader Bryce
+<bryce@neptune.net>.

@@ -1,6 +1,12 @@
+Atlas-C++
+
+Welcome to Atlas-C++, the C++ reference implementation of the Atlas protocol.
+
 This library implements the Atlas protocol, for use in client-server
 game applications.  This library is suitable for linking to either
-clients or servers.  
+clients or servers.
+
+PREREQUISITES
 
 You need at least gcc 2.95.2, here is URL for RPMS:
 (not all are needed, like java, g77 and chil)
@@ -20,3 +26,43 @@ ftp://rawhide.redhat.com/rawhide/i386/RedHat/RPMS/
     5157017 Feb 24 20:58 binutils-2.9.5.0.22-6.src.rpm
     1476868 Feb 24 21:04 binutils-2.9.5.0.22-6.i386.rpm
      165138 Feb 24 21:05 kernel-utils-2.2.14-5.0.i386.rpm
+
+* Any versions of gcc older than 2.95.2 are not supported! *
+
+In order to generate the documentation, you will need doxygen.
+
+SOCKET LIBRARIES
+
+Atlas-C++ relies on iostreams being used as socket streams for network
+communications. This means you will need to either use an existing library
+or use your own.
+
+One such a library is libsocket++, which you can download at:
+
+ftp://ftp.umsicht.fhg.de/pub/unix/language/C++/class-libraries/socket++-1.10.tar.gz
+
+For a version that compiles in recent Linux versions:
+
+http://3.141593.org/source/socket++-1.10-wf1.tar.gz
+
+If you are using FreeBSD, please use the version in /usr/ports/net/.
+
+We have not had the chance to test this in windows yet.
+
+DOCUMENTATION
+
+To generate the documentation, simply configure the tree, then in Atlas-C++/
+type "gmake docs". This will use doxygen to generate the documentation, which
+will then reside in Atlas-C++/doc/.
+
+LICENSING
+
+Atlas-C++ is licensed under the GNU Lesser General Public License. Please see
+the file COPYING for details as to its distribution.
+
+Atlas-C++ is provided AS IS with ABSOLUTELY NO WARRANTY. Please see the file
+COPYING for details.
+
+CONTACT
+
+Please see the AUTHORS file for contact information.

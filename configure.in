@@ -4,7 +4,7 @@ AC_INIT()
 
 dnl Initialise automake
 
-AM_INIT_AUTOMAKE("Atlas", "0.3.7")
+AM_INIT_AUTOMAKE("Atlas", "0.3.8")
 AM_CONFIG_HEADER(config.h)
 
 dnl Test for GNU libtool
@@ -325,12 +325,12 @@ AC_OUTPUT([
 	src/Makefile
 	src/Codecs/Makefile
 	src/Generic/Makefile
+	src/Message/Makefile
 	src/Filters/Makefile
 	src/Net/Makefile
 	src/Objects/Makefile
 	src/Objects/Entity/Makefile
 	src/Objects/Operation/Makefile
 	src/TestSuite/Makefile
-	src/Message/Makefile
 	src/Funky/Makefile
 ])

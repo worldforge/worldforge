@@ -41,7 +41,7 @@ Atlas-C++ comes in: Bridges.
 
 Codec is in fact publicly derived from Bridge. Bridge is an abstract class
 which contains all those functions to send maps, lists and other values. The
-neat thing about Bridge is though that it is asymetric. That means it's not
+neat thing about Bridge is though that it is symmetric. That means it's not
 just used to send messages, but also to receive them.
 
 So, when you create a Codec you pass it a pointer to a Bridge as well. The
@@ -65,6 +65,9 @@ been established. You then repeatedly call the Poll() method of these classes
 until their state is not IN_PROGRESS any more. If negotiation was successful,
 you can retrieve the codec to be used with GetCodec(), and then go on sending
 and receiving messages happily with your peer.
+
+If negotation failed, GetState() will return FAILURE, and you may abort the
+connection and alert the user.
 
 @subsection filters Filters
 
