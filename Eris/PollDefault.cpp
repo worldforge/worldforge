@@ -2,7 +2,7 @@
 
 #include <sigc++/object_slot.h>
 
-#include "Eris/Types.h"
+#include "Types.h"
 
 #include "PollDefault.h"
 #include "Timeout.h"
