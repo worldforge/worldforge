@@ -1,30 +1,44 @@
-/*
-        begin           : 1999.11.29
-        copyright       : (C) 1999 by John Barrett (ZW)
-        email           : jbarrett@box100.com
-*/
+// This file may be redistributed and modified under the terms of the
+// GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2000 Michael Day
 
-#ifndef __AtlasPackedAsciiEncoder_h_
-#define __AtlasPackedAsciiEncoder_h_
+// $Log$
+// Revision 1.2  2000-02-22 04:19:11  mike
+// Rewrote PackedEncoder interface as per the new Encoder design.
+//
 
+#ifndef ATLAS_STREAM_PACKEDENCODER_H
+#define ATLAS_STREAM_PACKEDENCODER_H
 
-#include "../Object/Object.h"
 #include "Encoder.h"
-
-#include <memory.h>
 
 namespace Atlas
 {
-/// Encoder Class Implementation for the Packed Ascii Protocol.
-class PackedEncoder: public Encoder
-{
-private:
-    void walkTree(int nest, const char* name, const Object& list);
+    namespace Stream
+    {
+	class PackedEncoder;
+    }
+}
 
-public:
-    string encodeMessage(const Object& msg);
+class Atlas::Stream::PackedEncoder : public Atlas::Stream::Encoder
+{
+    public:
+    
+    virtual void Begin(Container);
+    virtual void Begin(const std::string& name, Container);
+    
+    virtual void Send(int);
+    virtual void Send(float);
+    virtual void Send(const std::string&);
+    virtual void Send(const Object&);
+	
+    virtual void Send(const std::string& name, int);
+    virtual void Send(const std::string& name, float);
+    virtual void Send(const std::string& name, const std::string&);
+    virtual void Send(const std::string& name, const Object&);
+    
+    virtual void End();
 };
 
-} // namespace Atlas
 #endif
 
