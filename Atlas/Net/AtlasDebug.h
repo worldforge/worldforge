@@ -14,10 +14,10 @@
 #include <assert.h>
 
 #ifdef _ADebug_
-#define DebugMsg1(v,f,w)	if (v > ADebug::doDebug) ADebug::logmsg(f,w)
-#define DebugMsg2(v,f,w,x)	if (v > ADebug::doDebug) ADebug::logmsg(f,w,x)
-#define DebugMsg3(v,f,w,x,y)	if (v > ADebug::doDebug) ADebug::logmsg(f,w,x,y)
-#define DebugMsg4(v,f,w,x,y,z)	if (v > ADebug::doDebug) ADebug::logmsg(f,w,x,y,z)
+#define DebugMsg1(v,f,w)	if (v < ADebug::doDebug) ADebug::logmsg(f,w)
+#define DebugMsg2(v,f,w,x)	if (v < ADebug::doDebug) ADebug::logmsg(f,w,x)
+#define DebugMsg3(v,f,w,x,y)	if (v < ADebug::doDebug) ADebug::logmsg(f,w,x,y)
+#define DebugMsg4(v,f,w,x,y,z)	if (v < ADebug::doDebug) ADebug::logmsg(f,w,x,y,z)
 #else
 #define DebugMsg1(v,f,w)	assert(true)
 #define DebugMsg2(v,f,w,x)	assert(true)

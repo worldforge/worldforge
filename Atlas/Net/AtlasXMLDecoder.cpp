@@ -42,17 +42,17 @@ int AXMLDecoder::hasTokens()
 	int	ndx;
 	int	chk;
 	string	typ;
+	string	tag;
+	string	buf;
 	int	endit;
-
-	DebugMsg1(1, "BEG TOKEN=%i\n", token);
 
 	if (token == -1) return -1; // buffer overflow !!!
 
 	do {
 		chk = 0;
 
-		DebugMsg1(1, "BEG STATE=%i\n", state);
-		DebugMsg1(1, "BEG BUFFR=%s\n", buffer.c_str());
+		DebugMsg1(1, "BEG STATE=%i", state);
+		DebugMsg1(6, "BEG BUFFR=%s", buffer.c_str());
 
 		// this is where we are gonna put the state machine
 		switch (state) {
@@ -69,76 +69,87 @@ int AXMLDecoder::hasTokens()
 				break;
 			}
 			// extract name
-			name = buffer.substr(11,pos-11);
-			buffer = buffer.substr(pos+1);
-			// change states
+			buffer = buffer.substr(5);
 			token = AProtocol::atlasMSGBEG;
 			state = 2;
 			chk = 1;
 			break;
 
 		case 2:
-			if (buffer.length() == 0) break;	// need more data
-			if (buffer.substr(0,1) == "<") {
-				// start of tag
-				pos = buffer.find(">");
-				if (pos == -1) break;	// need more data
-				// got a complete tag.. lets tear it up !!
-				string buf = buffer.substr(0,pos);
-				buffer = buffer.substr(pos+1);
-				// tag now in buf for easier processing
-				string tag = buf.substr(1,buf.find_first_of(" >")-1);
-				name = "";
-				if (buf.find("name=") > -1) {
-					name = buf.substr(buf.find("="));
-					name = name.substr(0,name.length()-1);
-					if (name.substr(0,1) == "\"") {
-						// strip quotes
-						name = name.substr(1,name.length()-2);
-					}
+			if ((pos = buffer.find("<")) == -1) break;	// need more data
+			buffer = buffer.substr(pos);
+			if ((pos = buffer.find(">")) == -1) break;	// need more data
+			// got a complete tag.. lets tear it up !!
+			buf = buffer.substr(0,pos+1);
+			DebugMsg1(1,"PARSING TAG = %s", buf.c_str());
+			buffer = buffer.substr(pos+1);
+			// tag now in buf for easier processing
+			// find end of tag name
+			pos = buf.find_first_of(" >");
+			tag = buf.substr(1,pos-1);
+			buf = buf.substr(pos+1);
+			DebugMsg2(1,"PARSING TAG='%s' BUF='%s'", tag.c_str(), buf.c_str());
+			name = "";
+			if (buf.substr(0,5) == "name=") {
+				name = buf.substr(5,buf.length()-6);
+				DebugMsg1(1,"PARSING NAME=%s", name.c_str());
+				if (name.substr(0,1) == "\"") {
+					// strip quotes
+					name = name.substr(1,name.length()-2);
 				}
-				// got name and type... interpret type
-				endit = 0;
-				if (tag.substr(0,1) == "/") {
-					endit = 1;
-					tag = tag.substr(1);
-				}
-				if (tag == "obj") {
-					if (endit) {
-						// end of msg
-						token = AProtocol::atlasMSGEND;
-						state = 1;
-					} else {
-						// bad tag !! push token back
-						buffer.insert(0,buf);
-						token = AProtocol::atlasERRTOK;
-					}
-					break;
-				} 
-				else if (tag == "int")		type = AProtocol::atlasINT;
-				else if (tag == "string")	type = AProtocol::atlasSTR;
-				else if (tag == "float")	type = AProtocol::atlasFLT;
-				else if (tag == "map")		type = AProtocol::atlasMAP;
-				else if (tag.find("list") > -1)	type = AProtocol::atlasLST;
-				else {
-					// bad tag type !!
-					token = AProtocol::atlasERRTOK;
-					break;
-				}
-				if (!endit) {
-					token = AProtocol::atlasATRBEG;
-				} else {
-					token = AProtocol::atlasATREND;
-				}
-			} else {
-				// start of attribute data
-				pos = buffer.find("<");
-				if (pos == -1) break;	// need more data
-				sval = buffer.substr(0,pos-1);
-				if (type == AProtocol::atlasINT) ival = atoi(sval.c_str());
-				if (type == AProtocol::atlasFLT) fval = atof(sval.c_str());
-				token = AProtocol::atlasATRVAL;
+				DebugMsg1(1,"PARSING NAME=%s", name.c_str());
 			}
+			// got name and type... interpret type
+			endit = 0;
+			if (tag.substr(0,1) == "/") {
+				endit = 1;
+				tag = tag.substr(1);
+			}
+			if (tag == "obj") {
+				if (endit) {
+					// end of msg
+					token = AProtocol::atlasMSGEND;
+					state = 1;
+				} else {
+					// bad tag !! push token back
+					buffer.insert(0,buf);
+					token = AProtocol::atlasERRTOK;
+					DebugMsg1(1,"BAD TAG=%s", tag.c_str());
+				}
+				break;
+			} 
+			else if (tag == "int")		type = AProtocol::atlasINT;
+			else if (tag == "str")		type = AProtocol::atlasSTR;
+			else if (tag == "float")	type = AProtocol::atlasFLT;
+			else if (tag == "map")		type = AProtocol::atlasMAP;
+			else if (tag.find("list") > -1)	type = AProtocol::atlasLST;
+			else if (tag == "list")		type = AProtocol::atlasLST;
+			else {
+				// bad tag type !!
+				DebugMsg1(1,"BAD TYPE=%s", tag.c_str());
+				token = AProtocol::atlasERRTOK;
+				break;
+			}
+			if (!endit) {
+				token = AProtocol::atlasATRBEG;
+				state = 3;
+				if (type == AProtocol::atlasMAP) state = 2;
+				if (type == AProtocol::atlasLST) state = 2;
+			} else {
+				token = AProtocol::atlasATREND;
+				state = 2;
+			}
+			chk = 1;
+			break;
+
+		case 3:
+			if ((pos = buffer.find("<")) == -1) break;	// need more data
+			sval = buffer.substr(0,pos);
+			buffer = buffer.substr(pos);
+			if (type == AProtocol::atlasINT) ival = atoi(sval.c_str());
+			if (type == AProtocol::atlasFLT) fval = atof(sval.c_str());
+			token = AProtocol::atlasATRVAL;
+			state = 2;
 			chk = 1;
 			break;
 
@@ -152,9 +163,9 @@ int AXMLDecoder::hasTokens()
 	} while (chk == 1 && token == 0);
 
 	// see if we have a token to return
-	DebugMsg1(1, "END TOKEN=%i\n", token);
-	DebugMsg1(1, "END STATE=%i\n", state);
-	DebugMsg1(1, "END BUFFR=%s\n\n\n", buffer.c_str());
+	DebugMsg1(1, "END TOKEN=%i", token);
+	DebugMsg1(1, "END STATE=%i", state);
+	DebugMsg1(6, "END BUFFR=%s\n", buffer.c_str());
 	if (token != 0) {
 		return 1;
 	}

@@ -36,10 +36,6 @@ private:
 	// comes in when waitn is not set then it must be the end of a list
 	// and the nesting level should be reduced by one level
 
-	void copySTR(AObject& amsg,AProtocolDecoder* adec); 
-	void copyINT(AObject& amsg,AProtocolDecoder* adec);
-	void copyFLT(AObject& amsg,AProtocolDecoder* adec);
-
 public:
 		ACodec(AProtocol* aproto);
 

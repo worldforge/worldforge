@@ -57,11 +57,6 @@ int APackedAsciiDecoder::hasTokens()
 		switch (state) {
 		case 1:// start of message
 			if((pos=buffer.find('{')) == -1) break;
-			buffer = buffer.substr(pos);
-			pos = buffer.find('=');
-			if (pos == -1) break;
-			// extract name
-			name = buffer.substr(1,pos-1);
 			buffer = buffer.substr(pos+1);
 			// change states
 			token = AProtocol::atlasMSGBEG;
@@ -84,6 +79,7 @@ int APackedAsciiDecoder::hasTokens()
 				// end of list
 				buffer = buffer.substr(1);
 				token = AProtocol::atlasATREND;
+				type = AProtocol::atlasLST;
 				state = 2;
 				break;
 			}
@@ -91,6 +87,7 @@ int APackedAsciiDecoder::hasTokens()
 				// end of map
 				buffer = buffer.substr(1);
 				token = AProtocol::atlasATREND;
+				type = AProtocol::atlasMAP;
 				state = 2;
 				break;
 			}
@@ -126,7 +123,7 @@ int APackedAsciiDecoder::hasTokens()
 			pos = buffer.find_first_of("(%#$])}");
 			if (pos == -1) break;
 			// got an end marker, pull the data
-			sval = buffer.substr(0,pos-1);
+			sval = buffer.substr(0,pos);
 			if (type == AProtocol::atlasINT) ival = atoi(sval.c_str());
 			if (type == AProtocol::atlasFLT) fval = atof(sval.c_str());
 			// strip up to token

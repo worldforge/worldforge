@@ -46,43 +46,6 @@ void ACodec::freeMessage()
 	//msg->clear();
 }
 
-void ACodec::copySTR(
-	AObject& amsg,
-	AProtocolDecoder* adec
-) {
-	string nm = adec->getName();
-	string vl = adec->getString();
-
-	if (amsg.isList()) {
-		amsg.append(vl);
-	} else {
-		amsg.set(nm,vl);
-	}
-}
-
-void ACodec::copyINT(
-	AObject& amsg,
-	AProtocolDecoder* adec
-) {
-	if (amsg.isList()) {
-		amsg.append(adec->getInt());
-	} else {
-		amsg.set(adec->getName(), adec->getInt());
-	}
-}
-
-void ACodec::copyFLT(
-	AObject& amsg,
-	AProtocolDecoder* adec
-) {
-	if (amsg.isList()) {
-		amsg.append(adec->getFloat());
-	} else {
-		amsg.set(adec->getName(), adec->getFloat());
-	}
-}
-
-
 
 int ACodec::hasMessage()
 {
@@ -91,10 +54,9 @@ int ACodec::hasMessage()
 	// got a token, we must be busy processing a message !!
 	state = codecBUSY;
 	// process tokens until we run out or we complete a msg
-	DebugMsg1(1,"Scanning Tokens","");
+	DebugMsg1(1,"Scanning Tokens\n\n","");
 	AProtocolDecoder* adec = proto->getDecoder();
 	do {
-		DebugMsg1(1,"fetching token !!!\n","");
 		int tok = proto->getDecoder()->getToken();
 		int type = proto->getDecoder()->getType();
 		string name = proto->getDecoder()->getName();
@@ -102,11 +64,10 @@ int ACodec::hasMessage()
 		DebugMsg3(1,"tok=%i name=%s type=%i", tok, name.c_str(), type);
 		if (tok == AProtocol::atlasATRVAL) {
 			// got a value for an attribute
-			if (type == AProtocol::atlasSTR) copySTR(stack[nestd],adec);
-			if (type == AProtocol::atlasINT) copyINT(stack[nestd],adec);
-			if (type == AProtocol::atlasFLT) copyFLT(stack[nestd],adec);
+			if (type == AProtocol::atlasSTR) stack[nestd] = AObject::mkString(adec->getString());
+			if (type == AProtocol::atlasINT) stack[nestd] = AObject::mkLong(adec->getInt());
+			if (type == AProtocol::atlasFLT) stack[nestd] = AObject::mkFloat(adec->getFloat());
 			DebugMsg2(1,"ADDATTR nestd=%i name=%s\n", nestd, name.c_str());
-			waitn = 1;	// wait for the end attribute message
 		}
 		if (tok == AProtocol::atlasATRBEG) {
 			// got an attribute header
@@ -114,26 +75,34 @@ int ACodec::hasMessage()
 			if (type == AProtocol::atlasMAP) {
 				// start a nested list
 				stack[nestd] = AObject::mkMap();
+				DebugMsg2(1,"ADD_MAP nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
-				DebugMsg2(1,"ADDLIST nestd=%i name=%s\n", nestd, name.c_str());
 			} else if (type == AProtocol::atlasLST) {
 				// start a nested list
 				stack[nestd] = AObject::mkList(0);
+				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
-				DebugMsg2(1,"ADDLIST nestd=%i name=%s\n", nestd, name.c_str());
 			} else {
 				// its a scalar, wait for the value
+				waitn = 1;
 			}
 		}
 		if (tok == AProtocol::atlasATREND) {
 			// end of attribute detected.. un-nest
-			DebugMsg1(1,"ENDLIST nest=%i\n", nestd);
-			if (stack[nestd-1].isList()) {
-				stack[nestd-1].append(stack[nestd]);
-			} else {
-				stack[nestd-1].set(names[nestd], stack[nestd]);
+			if (type == AProtocol::atlasLST || type == AProtocol::atlasMAP) {
+				nestd--;
+				DebugMsg1(1,"ENDLIST nest=%i", nestd);
 			}
-			nestd--;
+			if (nestd > 0) {
+				if (stack[nestd-1].isList()) {
+					DebugMsg1(1,"UNSTACK nest=%i LIST", nestd);
+					stack[nestd-1].append(stack[nestd]);
+				} else {
+					DebugMsg2(1,"UNSTACK nest=%i MAP name=%s", nestd, names[nestd].c_str());
+					stack[nestd-1].set(names[nestd], stack[nestd]);
+				}
+			}
+			waitn = 0;
 		}
 		if (tok == AProtocol::atlasMSGBEG) {
 			// got a message header
@@ -149,6 +118,7 @@ int ACodec::hasMessage()
 			msg = stack[0];
 			state = codecIDLE; // get outa the loop !!
 		}
+		DebugMsg1(1,"\n\n","");
 	} while (proto->getDecoder()->hasTokens() && state == codecBUSY);
 	// check if we have a complete message
 	if (state == codecIDLE) return 1;

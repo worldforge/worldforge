@@ -24,6 +24,8 @@ int main(int argc, char** argv)
 {
 	PackedAsciiTest* app = new PackedAsciiTest();
 
+	ADebug::setDebug(5);
+
 	app->execute();
 }
 
@@ -37,42 +39,40 @@ int WINAPI WinMain(
 }
  
 
-void PackedAsciiTest::walkTree(int nest, int names, AObject& list)
+void PackedAsciiTest::walkTree(int nest, string name, AObject& list)
 {
 	int	i;
-	char	buf[80];
-	char	pre[80];
+	string	buf;
+	string	pre;
 
-	//printf("*******\n");
-	fflush(stdout);
-
-	*pre = 0;
 	for (int j=0; j<nest; j++) {
-		strcat(pre,"\t");
+		pre.append("    ");
 	}
 
 	if (list.isList()) {
 		// precheck types here
-		if (names) printf("%s<list name=%s>\n",
-			pre, list.getName().c_str()
-		);
-		if (!names) printf("%s<list>\n", pre);
+		if (name.length() > 0) {
+			printf("%s<list name=\"%s\">\n", pre.c_str(), name.c_str());
+		} else {
+			printf("%s<list>\n", pre.c_str());
+		}
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
 			//printf("******* get node %i\n", i);
 			fflush(stdout);
 			list.get(i, tmp);
 			//printf("******* walk node %i\n", i);
-			walkTree(nest+1, 0, tmp);
+			walkTree(nest+1, "", tmp);
 		}
-		printf("%s</list>\n",pre);
+		printf("%s</list>\n",pre.c_str());
 	} 
 	if (list.isMap()) {
 		AObject keys = list.keys();
-		if (names) printf("%s<map name=%s>\n",
-			pre, list.getName().c_str()
-		);
-		if (!names) printf("%s<map>\n",	pre);
+		if (name.length() > 0) {
+			printf("%s<map name=\"%s\">\n",pre.c_str(), name.c_str());
+		} else {
+			printf("%s<map>\n", pre.c_str());
+		}
 		for (i=0; i<keys.length(); i++) {
 			AObject key;
 			//printf("******* get node %i\n", i);
@@ -82,39 +82,39 @@ void PackedAsciiTest::walkTree(int nest, int names, AObject& list)
 			fflush(stdout);
 			AObject tmp;
 			list.get(key.asString(), tmp);
-			walkTree(nest+1, 1, tmp);
+			walkTree(nest+1, key.asString(), tmp);
 		}
-		printf("%s</map>\n",pre);
+		printf("%s</map>\n",pre.c_str());
 	} 
 
 	if (list.isString()) {
-		if (names) printf("%s<str name=%s>%s</str>\n",
-			pre, list.getName().c_str(),
-			list.asString().c_str()
-		);
-		if (!names) printf("%s<str>%s</str>\n",
-			pre, list.asString().c_str()
-		);
+		if (name.length() > 0) {
+			printf("%s<str name=\"%s\">%s</str>\n",
+				pre.c_str(), name.c_str(),list.asString().c_str()
+			);
+		} else {
+			printf("%s<str>%s</str>\n",pre.c_str(), list.asString().c_str());
+		}
 	}
 	if (list.isLong()) {
-		if (names) printf("%s<int name=%s>%li</int>\n",
-			pre, list.getName().c_str(),
-			list.asLong()
-		);
-		if (!names) printf("%s<int>%li</int>\n",
-			pre, list.asLong()
-		);
+		if (name.length() > 0) {
+			printf("%s<int name=\"%s\">%li</int>\n",
+				pre.c_str(), name.c_str(),list.asLong()
+			);
+		} else {
+			printf("%s<int>%li</int>\n",pre.c_str(), list.asLong());
+		}
 	}
 	if (list.isFloat()) {
-		if (names) printf("%s<float name=%s>%.2f</float>\n",
-			pre, list.getName().c_str(), list.asFloat()
-		);
-		if (!names) printf("%s<float>%.2f</float>\n",
-			pre, list.asFloat()
-		);
+		if (name.length() > 0) {
+			printf("%s<float name=\"%s\">%.2f</float>\n",
+				pre.c_str(), name.c_str(),list.asFloat()
+			);
+		} else {
+			printf("%s<float>%.2f</float>\n",pre.c_str(), list.asFloat());
+		}
 	}
 
-	fflush(stdout);
 }
 
 void PackedAsciiTest::DisplayMessage(AObject& msg)
@@ -122,17 +122,12 @@ void PackedAsciiTest::DisplayMessage(AObject& msg)
 	int	i;
 
 	AObject keys = msg.keys();
-	printf("<msg name=%s>\n", msg.getName().c_str());
-	for (i=0; i<keys.length(); i++) {
-			AObject key;
-			keys.get(i, key);
-			AObject tmp;
-			msg.get(key.asString(), tmp);
-			walkTree(1, 1, tmp);
-	}
-	printf("</msg>\n");
+	printf("<obj>\n");
+	walkTree(1, "", msg);
+	printf("</obj>\n");
 	fflush(stdout);
 }
+
 
 
 
@@ -144,9 +139,9 @@ void PackedAsciiTest::execute()
 
         AProtocol* prot = new APackedAsciiProtocol();
 
-        AObject test = AObject::mkMap("test1");
-        AObject list = AObject::mkList("list1",0);
-        AObject amap = AObject::mkMap("map1");
+        AObject test = AObject::mkMap();
+        AObject list = AObject::mkList(0);
+        AObject amap = AObject::mkMap();
 
         list.append("stringval");
         list.append((long)12345);
@@ -156,8 +151,8 @@ void PackedAsciiTest::execute()
         test.set("aint",	(long)12345);
         test.set("afloat",	9876.54);
 
-        test.set(list);
-        test.set(amap);
+        test.set("list1", list);
+        test.set("map1", amap);
 
 	printf("TEST len=%i\n", test.length());
 	printf("LIST len=%i\n", list.length());

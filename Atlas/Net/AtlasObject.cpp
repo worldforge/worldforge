@@ -387,6 +387,12 @@ AObject AObject::mkList(int size)
 	return res;
 }
 
+AObject AObject::mkLong(long val)
+{
+	AObject res(PyLong_FromLong(val));
+	return res;
+}
+
 AObject AObject::mkFloat(double val)
 {
 	AObject res(PyFloat_FromDouble(val));

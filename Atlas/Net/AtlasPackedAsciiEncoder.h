@@ -18,7 +18,7 @@
 class APackedAsciiEncoder: public AProtocolEncoder
 {
 private:
-    void walkTree(int nest, int names,AObject& list);
+    void walkTree(int nest, const char* name,AObject& list);
 
 public:
     string encodeMessage(AObject& msg);
