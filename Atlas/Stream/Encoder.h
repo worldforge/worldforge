@@ -1,51 +1,47 @@
-/*
-        begin           : 1999.11.29
-        copyright       : (C) 1999 by John Barrett (ZW)
-        email           : jbarrett@box100.com
-*/
+// This file may be redistributed and modified under the terms of the
+// GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2000 Michael Day
 
-#ifndef __AtlasEncoder_h_
-#define __AtlasEncoder_h_
+#ifndef ATLAS_STREAM_ENCODER_H
+#define ATLAS_STREAM_ENCODER_H
 
+#include "Filter.h"
 #include "../Object/Object.h"
 
 namespace Atlas
 {
-/** Base Class for Object Stream Encoders.
-<p> The Encoder Class is the standard interface for Protocol Encoders
+    namespace Stream
+    {
+	class Encoder;
+    }
+}
 
-@see Protocol
-*/
-class Encoder
+class Atlas::Stream::Encoder
 {
+    public:
 
-protected:
-	/// encoded message buffer
-	string          buffer;
+    virtual ~Encoder() { }
+
+    enum Container
+    {
+	LIST,
+	MAP,
+    };
+    
+    virtual void Begin(Container) = 0;
+    virtual void Begin(const std::string& name, Container) = 0;
+    
+    virtual void End() = 0;
+    
+    virtual void Send(int) = 0;
+    virtual void Send(float) = 0;
+    virtual void Send(const std::string&) = 0;
+    virtual void Send(const Object&) = 0;
 	
-	/// text encoder for ascii encoders to protect protocol characters
-	string hexEncodeString(
-			const string& input, 
-			char prefix,
-			const string& specialchars
-	);
-	
-public:
-	Encoder();
-	virtual ~Encoder() {};
-	/// printf to the encoded message buffer
-	void printf(char* fmt, ...);
-	/// append data to the message buffer
-	void append(string& data);
-	/// convert object to stream
-	virtual string encodeMessage(const Object& msg);
-	/// return length of stream that might contain '\0' characters
-	virtual int encodedLength();	
+    virtual void Send(const std::string& name, int) = 0;
+    virtual void Send(const std::string& name, float) = 0;
+    virtual void Send(const std::string& name, const std::string&) = 0;
+    virtual void Send(const std::string& name, const Object&) = 0;
 };
 
-} // namespace Atlas
-
 #endif
-
-
-
