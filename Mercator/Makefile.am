@@ -17,10 +17,3 @@ libmercator_HEADERS = \
 	TerrainMod.h \
 	BasePoint.h \
 	Segment.h
-	
-bin_PROGRAMS = mercatortest
-
-mercatortest_SOURCES = \
-		 main.cpp
-
-mercatortest_LDFLAGS = -lmercator-0.2

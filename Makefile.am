@@ -1,4 +1,4 @@
-SUBDIRS = Mercator
+SUBDIRS = Mercator tests
 
 EXTRA_DIST = mercator.m4 mercator-config.1
 

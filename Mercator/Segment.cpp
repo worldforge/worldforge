@@ -151,9 +151,9 @@ float Segment::qRMD(float nn, float fn, float ff, float nf,
 void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h, 
 		     float *array) const
 {
-    array[0] = l.height;
-    array[size] = h.height;
-    LinInterp li(size, l.roughness, h.roughness);
+    array[0] = l.height();
+    array[size] = h.height();
+    LinInterp li(size, l.roughness(), h.roughness());
    
     // seed the RNG.
     // The RNG is seeded only once for the line and the seed is based on the
@@ -242,7 +242,7 @@ void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2,
     // it was seeded once for each edge, now once for the tile.
     srand(p1.seed()*20 + p2.seed()*15 + p3.seed()*10 + p4.seed()*5);
 
-    QuadInterp qi(size, p1.roughness, p2.roughness, p3.roughness, p4.roughness);
+    QuadInterp qi(size, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
 
     float f = BasePoint::FALLOFF;
     int depth=0;

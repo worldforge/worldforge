@@ -1,3 +1,13 @@
+2003-06-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/main.cpp: Move the test prog out of the main code.
+
+	* Mercator/BasePoint.h: Re-work BasePoint class to be more inline
+	  with the main style.
+
+	* Mercator/Segment.cpp: Fix up the code to use the new BasePoint
+	  style.
+
 2003-06-15 Damien McGinnes
 
         * new BasePoint.h replaces floats for basepoints
@@ -18,7 +28,7 @@
 
 	* Mercator/Segment.cpp : added in an attempt at values for the normal
 	  array. Array is one row and column smaller than the height array.
-	 
+ 
 2003-06-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.h, Mercator/Segment.cpp: Tidy up some code,

@@ -104,6 +104,7 @@ AC_SUBST(MERCATOR_REQUIRES)
 AC_OUTPUT([
 Makefile
 Mercator/Makefile
+tests/Makefile
 mercator-config
 mercator.spec
 mercator-0.2.pc
