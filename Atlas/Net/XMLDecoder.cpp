@@ -4,20 +4,27 @@
 	begin   : 1999.11.29
 	copyright   : (C) 1999 by John Barrett (ZW)
 	email   : jbarrett@box100.com
+
+changes:
+
+23 Jan 2000 - fex
+
+    Just simplifying for clarity and checking things over
+
 */
 
 #include "../Object/Object.h"
 #include "Protocol.h"
 #include "XMLDecoder.h"
 
-#include <memory.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <string>
-#ifdef _MSC_VER
-#include <assert.h>
-#endif
+using std::string;
+
+//constants
+const char* OPEN_TAG=       "<";
+const char* CLOSE_TAG=      ">";
+const char* MSG_TOP_NAME=   "obj";
 
 void AXMLDecoder::newStream()
 {
@@ -41,67 +48,78 @@ int AXMLDecoder::getToken()
 
 int AXMLDecoder::hasTokens()
 {
-	int	pos;
-   //int	pos1;
-	//int	ndx;
-	int	chk;
-	string	typ;
-	string	tag;
-	string	buf;
-	int	endit;
+    //check for buffer overflow
+    if (token == -1)
+        return -1;
+	
+    int	pos;
+    int	chk;
+    string	typ;
+    string	tag;
+    string	buf;
+    int	endit;
 
-	if (token == -1) return -1; // buffer overflow !!!
 
-	do {
-		chk = 0;
+    do {
+        chk = 0;
 
-		DebugMsg1(1, "BEG STATE=%i", state);
-		DebugMsg1(6, "BEG BUFFR=%s", buffer.c_str());
+        DebugMsg1(1, "xmldecoder :: tokenise loop in state  -> %i", state);
+        DebugMsg1(6, "xmldecoder :: current buffer contents -> [%s%s", buffer.c_str()), "]";
 
-		// this is where we are gonna put the state machine
-		switch (state) {
-		case 1:// start of message
-			if((pos=buffer.find('<')) == -1) break;
-			buffer = buffer.substr(pos);
-			pos = buffer.find('>');
-			if (pos == -1) break;
-			if (buffer.substr(1,3) != "obj") {
-				// bad token
-				buffer = buffer.substr(pos+1);
-				token = AProtocol::atlasERRTOK;
-				chk=1;
-				break;
-			}
-			// extract name
-			buffer = buffer.substr(5);
-			token = AProtocol::atlasMSGBEG;
-			state = 2;
-			chk = 1;
-			break;
+        // this is where we are gonna put the state machine
+        switch (state) {
 
+        case 1:
+            //start of message, find first tag
+            if ( (pos = buffer.find( OPEN_TAG )) == -1 )
+                break;
+
+            buffer = buffer.substr(pos);
+
+            if ( (pos = buffer.find( CLOSE_TAG )) == -1 )
+                break;
+
+            {
+            string tagName = buffer.substr( 1, 3);
+            buffer = buffer.substr( pos );
+            chk = 1;
+
+            if ( tagName == MSG_TOP_NAME ) {
+                token = AProtocol::atlasMSGBEG;
+                state = 2;
+            } else
+                token = AProtocol::atlasERRTOK;
+
+            break;
+            }
+		
 		case 2:
-			if ((pos = buffer.find("<")) == -1) break;	// need more data
+		    //check for complete tag
+			if ( (pos = buffer.find( OPEN_TAG )) == -1 )
+			    break;
 			buffer = buffer.substr(pos);
-			if ((pos = buffer.find(">")) == -1) break;	// need more data
+			if ( (pos = buffer.find( CLOSE_TAG )) == -1 )
+			    break;
+			
 			// got a complete tag.. lets tear it up !!
 			buf = buffer.substr(0,pos+1);
-			DebugMsg1(1,"PARSING TAG = %s", buf.c_str());
+			DebugMsg1(1,"xmldecoder :: PARSING TAG = %s", buf.c_str());
 			buffer = buffer.substr(pos+1);
 			// tag now in buf for easier processing
 			// find end of tag name
 			pos = buf.find_first_of(" >");
 			tag = buf.substr(1,pos-1);
 			buf = buf.substr(pos+1);
-			DebugMsg2(1,"PARSING TAG='%s' BUF='%s'", tag.c_str(), buf.c_str());
+			DebugMsg2(1,"xmldecoder :: PARSING TAG='%s' BUF='%s'", tag.c_str(), buf.c_str());
 			name = "";
 			if (buf.substr(0,5) == "name=") {
 				name = buf.substr(5,buf.length()-6);
-				DebugMsg1(1,"PARSING NAME=%s", name.c_str());
+				DebugMsg1(1,"xmldecoder :: PARSING NAME=%s", name.c_str());
 				if (name.substr(0,1) == "\"") {
 					// strip quotes
 					name = name.substr(1,name.length()-2);
 				}
-				DebugMsg1(1,"PARSING NAME=%s", name.c_str());
+				DebugMsg1(1,"xmldecoder :: PARSING NAME=%s", name.c_str());
 			}
 			// got name and type... interpret type
 			endit = 0;
@@ -118,7 +136,7 @@ int AXMLDecoder::hasTokens()
 					// bad tag !! push token back
 					buffer.insert(0,buf);
 					token = AProtocol::atlasERRTOK;
-					DebugMsg1(1,"BAD TAG=%s", tag.c_str());
+					DebugMsg1(1,"xmldecoder :: BAD TAG=%s", tag.c_str());
 				}
 				break;
 			}
@@ -137,7 +155,7 @@ int AXMLDecoder::hasTokens()
 			else if (tag == "list")		type = AProtocol::atlasLST;
 			else {
 				// bad tag type !!
-				DebugMsg1(1,"BAD TYPE=%s", tag.c_str());
+				DebugMsg1(1,"xmldecoder :: BAD TYPE=%s", tag.c_str());
 				token = AProtocol::atlasERRTOK;
 				break;
 			}
@@ -180,9 +198,9 @@ int AXMLDecoder::hasTokens()
 	} while (chk == 1 && token == 0);
 
 	// see if we have a token to return
-	DebugMsg1(1, "END TOKEN=%i", token);
-	DebugMsg1(1, "END STATE=%i", state);
-	DebugMsg1(6, "END BUFFR=%s\n", buffer.c_str());
+	DebugMsg1(1, "xmldecoder :: END TOKEN=%i", token);
+	DebugMsg1(1, "xmldecoder :: END STATE=%i", state);
+	DebugMsg1(6, "xmldecoder :: END BUFFR=%s\n", buffer.c_str());
 	if (token != 0) {
 		return 1;
 	}
