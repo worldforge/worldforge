@@ -25,7 +25,8 @@
 
 namespace Mercator {
 
-Forest::Forest()
+Forest::Forest(unsigned long seed) :
+    m_seed(seed)
 {
 }
 
@@ -59,7 +60,7 @@ void Forest::populate()
     }
     // Fill the plant store with plants.
     m_plants.clear();
-    WFMath::MTRand rng;
+    WFMath::MTRand rng(m_seed), plantrng;
 
     int lx = I_ROUND(m_area.lowCorner().x()),
         ly = I_ROUND(m_area.lowCorner().y()),
@@ -68,17 +69,16 @@ void Forest::populate()
 
     for(int j = ly; j < hy; ++j) {
         for(int i = lx; i < hx; ++i) {
-            WFMath::MTRand::uint32 seed[2]={ i, j};
-            rng.seed(seed, 2);
-
+            int nextseed=rng.randInt();
             if (rng() < plant_chance) {
-                std::cout << "Plant at [" << i << ", " << j << "]"
-                          << std::endl << std::flush;
+                plantrng.seed(nextseed);
+//                std::cout << "Plant at [" << i << ", " << j << "]"
+//                          << std::endl << std::flush;
                 Plant & plant = m_plants[i][j];
-                plant.setHeight(rng() * plant_height_range + plant_min_height);
-                plant.setDisplacement(WFMath::Point<2>(rng() - 0.5f,
-                                                       rng() - 0.5f));
-                plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * M_PI));
+                plant.setHeight(plantrng() * plant_height_range + plant_min_height);
+                plant.setDisplacement(WFMath::Point<2>(plantrng() - 0.5f,
+                                                       plantrng() - 0.5f));
+                plant.setOrientation(WFMath::Quaternion(2, plantrng() * 2 * M_PI));
             }
         }
     }

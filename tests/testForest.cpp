@@ -12,7 +12,7 @@
 int main()
 {
     {
-        Mercator::Forest forest;
+        Mercator::Forest forest(4249162ul);
 
         // Forest is not yet populated
         assert(forest.getPlants().empty());

@@ -21,8 +21,9 @@ class Forest {
   private:
     WFMath::AxisBox<2> m_area;
     PlantStore m_plants;
+    unsigned long m_seed;
   public:
-    Forest();
+    explicit Forest(unsigned long seed=0);
     ~Forest();
 
     const WFMath::AxisBox<2> & getArea() const {
