@@ -89,36 +89,27 @@ Root messageElement2ClassObject(const MapType & mobj)
     // is this instance of entity or operation?
     MapType::const_iterator I = mobj.find("objtype");
     bool is_instance = false;
-    if(I != mobj.end() && (*I).second.isString()) {
-        const std::string & objtype = (*I).second.asString();
+    if(I != mobj.end() && I->second.isString()) {
+        const std::string & objtype = I->second.asString();
         if(objtype == "op" || objtype == "obj" || objtype == "object") {
-            is_instance = true;
-            bool parent_ok = false;
             // get parent
             I = mobj.find("parents");
             if(I != mobj.end()) {
-                ListType parents_lst = I->second.asList();
+                const ListType & parents_lst = I->second.asList();
                 if(parents_lst.size()>=1 && parents_lst.front().isString()) {
-                    std::string parent = parents_lst.front().asString();
+                    const std::string & parent = parents_lst.front().asString();
                     // objtype and parent ok, try to create it:
                     if(objectFactory.hasFactory(parent)) {
                         obj = objectFactory.createObject(parent);
-                        parent_ok = true;
+                        is_instance = true;
                     } // got object
+                    // FIXME We might want to do something different here.
                 } // parent list ok?
             } // has parent attr?
-            if(!parent_ok) {
-                //if no root_operation/entity factory found: 
-                //NoSuchFactoryException is thrown
-                if(objtype == "op") {
-                    obj = objectFactory.createObject("root_operation");
-                } else {
-                    obj = objectFactory.createObject("anonymous");
-                }
-            } // parent was not ok
-        } // is instance
+        } // has known objtype
     } // has objtype attr
     if (!is_instance) {
+        // Should we really use factory? Why not just instantiate by hand?
         obj = objectFactory.createObject("anonymous");
     } // not instance
     for (I = mobj.begin(); I != mobj.end(); I++) {

@@ -7,8 +7,7 @@ AM_CONFIG_HEADER(config.h)
 
 dnl Detect the canonical host and target environment
 
-AC_CANONICAL_HOST
-AC_CANONICAL_TARGET
+AC_CANONICAL_SYSTEM
 
 dnl Initialise automake
 
