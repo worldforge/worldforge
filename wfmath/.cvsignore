@@ -4,4 +4,7 @@
 .deps
 .libs
 Makefile
-Mafefile.in
+Makefile.in
+vector_test
+matrix_test
+point_test

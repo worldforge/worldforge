@@ -47,10 +47,12 @@ template<> Point<3>::Point(CoordType x, CoordType y, CoordType z)
 }
 
 template<const int dim>
-void Point<dim>::origin()
+Point<dim>& Point<dim>::origin()
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = 0;
+
+  return *this;
 }
 
 template<const int dim>

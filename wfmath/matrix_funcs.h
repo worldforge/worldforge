@@ -57,26 +57,39 @@ std::string RotMatrix<size>::toString() const
 template<const int size>
 bool RotMatrix<size>::fromString(const std::string& s)
 {
-  CoordType d[size*size];
+  CoordType d[size*size], buf1[size*size], buf2[size*size];
 
   if(!StringToCoordArray(s, d, size, size))
     return false;
 
-  CoordType vals[size][size];
+  if(_MatrixSetValsImpl(size, d, buf1, buf2, 1e-6) == false)
+    return false; // Standard precision for string representation
+
+  // Do the assignment
 
   for(int i = 0; i < size; ++i)
     for(int j = 0; j < size; ++j)
-      vals[i][j] = d[i*size+j];
+      m_elem[i][j] = d[i*size+j];
 
-  return setVals(vals, 1e-6); // Standard precision for string representation
+  return true;
 }
 
 template<const int size>
-inline bool RotMatrix<size>::operator==(const RotMatrix<size>& m) const
+RotMatrix<size>& RotMatrix<size>::operator=(const RotMatrix<size>& m)
 {
   for(int i = 0; i < size; ++i)
     for(int j = 0; j < size; ++j)
-      if(!IsFloatEqual(m_elem[i][j], m.m_elem[i][j]))
+      m_elem[i][j] = m.m_elem[i][j];
+
+  return *this;
+}
+
+template<const int size>
+bool RotMatrix<size>::isEqualTo(const RotMatrix<size>& rhs, double tolerance) const
+{
+  for(int i = 0; i < size; ++i)
+    for(int j = 0; j < size; ++j)
+      if(!IsFloatEqual(m_elem[i][j], rhs.m_elem[i][j], tolerance))
         return false;
 
   return true;
@@ -249,6 +262,27 @@ bool RotMatrix<size>::setVals(const CoordType vals[size][size], double precision
   for(int i = 0; i < size; ++i)
     for(int j = 0; j < size; ++j)
       scratch_vals[i*size+j] = vals[i][j];
+
+  if(_MatrixSetValsImpl(size, scratch_vals, buf1, buf2, precision) == false)
+    return false;
+
+  // Do the assignment
+
+  for(int i = 0; i < size; ++i)
+    for(int j = 0; j < size; ++j)
+      m_elem[i][j] = scratch_vals[i*size+j];
+
+  return true;
+}
+
+template<const int size>
+bool RotMatrix<size>::setVals(const CoordType vals[size*size], double precision)
+{
+  // Scratch space for the backend
+  CoordType scratch_vals[size*size], buf1[size*size], buf2[size*size];
+
+  for(int i = 0; i < size*size; ++i)
+      scratch_vals[i] = vals[i];
 
   if(_MatrixSetValsImpl(size, scratch_vals, buf1, buf2, precision) == false)
     return false;

@@ -103,7 +103,7 @@ class Vector {
   Vector() {}
   Vector(const Vector<len>& v);
 
-  // Non-virtual destructor, does nothing, no need to write it
+  ~Vector() {}
 
   std::string toString() const		{return StringFromCoordList(m_elem, len);}
   bool fromString(const std::string& s) {return StringToCoordList(s, m_elem, len);}
@@ -111,12 +111,18 @@ class Vector {
   Vector<len>& operator=(const double d[len]);
   Vector<len>& operator=(const Vector<len>& v);
 
-  bool operator==(const Vector<len>& v) const;
-  bool operator!=(const Vector<len>& v) const {return !(*this == v);}
+  bool isEqualTo(const Vector<len>& rhs, double tolerance = WFMATH_EPSILON) const;
+
+  bool operator==(const Vector<len>& v) const {return isEqualTo(v);}
+  bool operator!=(const Vector<len>& v) const {return !isEqualTo(v);}
+
+  Vector<len>& zero();
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the vector.
   bool operator< (const Vector<len>& v) const;
+
+  // Math operators
 
   Vector<len> operator+(const Vector<len>& v) const;
   Vector<len> operator-(const Vector<len>& v) const;
@@ -138,6 +144,11 @@ class Vector {
   friend Vector<len> InvProd<len>	(const RotMatrix<len>& m,
 					 const Vector<len>& v);
 
+  // Don't do range checking, it'll slow things down, and people
+  // should be able to figure it out on their own
+  const CoordType& operator[](const int i) const	{return m_elem[i];}
+  CoordType& operator[](const int i)		{return m_elem[i];}
+
 // FIXME same problem as operator*
 //  friend Vector<len> operator-<len> (const Point<len>& c1, const Point<len>& c2);
 //  friend Point<len> operator+<len> (const Point<len>& c, const Vector<len>& v);
@@ -146,11 +157,6 @@ class Vector {
 
   friend double Dot<len>(const Vector<len>& v1, const Vector<len>& v2);
   friend double Angle<len>(const Vector<len>& v, const Vector<len>& u);
-
-  // Don't do range checking, it'll slow things down, and people
-  // should be able to figure it out on their own
-  const CoordType& operator[](const int i) const	{return m_elem[i];}
-  CoordType& operator[](const int i)		{return m_elem[i];}
 
   double sqrMag() const;
   double mag() const		{return sqrt(sqrMag());}
@@ -165,14 +171,14 @@ class Vector {
   // The constant sloppyMagMaxSqrt is provided for those
   // who want to most closely approximate the true magnitude,
   // without carring whether it's too low or too high.
+
   double sloppyMag() const;
   Vector<len>& sloppyNorm(double norm);
+
   // Can't seem to implement these as constants, implementing
   // inline lookup functions instead.
   static const double sloppyMagMax() {return SLOPPY_MAG_MAX(len);}
   static const double sloppyMagMaxSqrt() {return SLOPPY_MAG_MAX_SQRT(len);}
-
-  Vector<len>& zero();
 
   // Rotate the vector in the (axis1,axis2) plane by the angle theta
 
@@ -206,11 +212,11 @@ class Vector {
   // 2D/3D convienience
 
   const CoordType& x() const	{return m_elem[0];}
-  CoordType& x()			{return m_elem[0];}
+  CoordType& x()		{return m_elem[0];}
   const CoordType& y() const	{return m_elem[1];}
-  CoordType& y()			{return m_elem[1];}
+  CoordType& y()		{return m_elem[1];}
   const CoordType& z() const	{return m_elem[2];}
-  CoordType& z()			{return m_elem[2];}
+  CoordType& z()		{return m_elem[2];}
 
  private:
   CoordType m_elem[len];

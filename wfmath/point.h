@@ -54,8 +54,6 @@ class Point
 {
  public:
   Point () {}
-  Point (CoordType x, CoordType y); // 2D only
-  Point (CoordType x, CoordType y, CoordType z); // 3D only
   Point (const Point<dim>& c);
 
   ~Point() {}
@@ -63,13 +61,18 @@ class Point
   std::string toString() const		{return StringFromCoordList(m_elem, dim);}
   bool fromString(const std::string& s) {return StringToCoordList(s, m_elem, dim);}
 
-  void origin();
+  Point& operator= (const Point<dim>& rhs);
+  Point& operator= (const double d[dim]);
 
   bool isEqualTo(const Point<dim> &rhs, double tolerance = WFMATH_EPSILON) const;
-  CoordType getDistanceTo (const Point<dim> &otherPoint) const
-	{return (*this - otherPoint).mag();}
-  CoordType getSquaredDistanceTo (const Point<dim> &otherPoint) const
-	{return (*this - otherPoint).sqrMag();}
+
+  bool operator== (const Point<dim>& rhs) const	{return IsEqualTo(rhs);}
+  bool operator!= (const Point<dim>& rhs) const	{return !IsEqualTo(rhs);}
+
+  Point<dim>& origin(); // Set point to (0,0,..,0)
+
+  // Sort only, don't use otherwise
+  bool operator< (const Point<dim>& rhs) const;
 
   // Operators
 
@@ -78,18 +81,21 @@ class Point
   friend Point<dim> operator-<dim> (const Point<dim>& c, const Vector<dim>& v);
   friend Point<dim> operator+<dim> (const Vector<dim>& v, const Point<dim>& c);
 
-  Point& operator= (const Point<dim>& rhs);
-  Point& operator= (const double d[dim]);
   Point& operator+= (const Vector<dim>& rhs);
   Point& operator-= (const Vector<dim>& rhs);
-  bool operator== (const Point<dim>& rhs) const	{return IsEqualTo(rhs);}
-  bool operator!= (const Point<dim>& rhs) const	{return !IsEqualTo(rhs);}
-
-  // Sort only, don't use otherwise
-  bool operator< (const Point<dim>& rhs) const;
 
   const CoordType& operator[](const int i) const {return m_elem[i];}
   CoordType& operator[](const int i)		 {return m_elem[i];}
+
+  CoordType getDistanceTo (const Point<dim> &otherPoint) const
+	{return (*this - otherPoint).mag();}
+  CoordType getSquaredDistanceTo (const Point<dim> &otherPoint) const
+	{return (*this - otherPoint).sqrMag();}
+
+  // 2D/3D stuff
+
+  Point (CoordType x, CoordType y); // 2D only
+  Point (CoordType x, CoordType y, CoordType z); // 3D only
 
  private:
 

@@ -76,33 +76,39 @@ inline Vector<size> ProdInv(const Vector<size>& v, const RotMatrix<size>& m)
 template<const int size>
 class RotMatrix {
  public:
-  static const int nParams = size*(size-1)/2;
-
   RotMatrix() {identity();} // Need a valid RotMatrix for default
-  RotMatrix(const CoordType& alpha, const CoordType& beta, const CoordType& gamma)
-	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d);} // Euler angles, 3D only
   RotMatrix(const RotMatrix<size>& m);
 
   std::string toString() const;
   bool fromString(const std::string& s);
 
-  bool operator==(const RotMatrix<size>& m) const;
-  bool operator!=(const RotMatrix<size>& m) const {return !(*this == m);}
+  RotMatrix<size>& operator=(const RotMatrix<size>& m);
+  // No operator=(double d[size][size]), since it can fail.
+  // Use setVals() instead.
+
+  bool isEqualTo(const RotMatrix<size>& rhs, double tolerance = WFMATH_EPSILON) const;
+
+  bool operator==(const RotMatrix<size>& m) const {return isEqualTo(m);}
+  bool operator!=(const RotMatrix<size>& m) const {return !isEqualTo(m);}
+
+  RotMatrix<size>& identity();
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the matrix.
   bool operator< (const RotMatrix<size>& m) const;
 
+  static const int nParams = size*(size-1)/2;
+
   const CoordType& elem(const int i, const int j) const 	{return m_elem[i][j];}
 
   // Can't set one element at a time and keep it an SO(N) matrix,
-  // but can try to set all values at once, and see if they match
+  // but can try to set all values at once, and see if they match.
+  // The first one is vals[row][column], the second is vals[row*size+column].
   bool setVals(const CoordType vals[size][size], double precision = WFMATH_EPSILON);
+  bool setVals(const CoordType vals[size*size], double precision = WFMATH_EPSILON);
 
   Vector<size> row(const int i) const;
   Vector<size> column(const int i) const;
-
-  RotMatrix<size>& identity();
 
   double trace() const;
   double determinant() const {return 1;} // here in case we extend to O(N) later
@@ -131,6 +137,11 @@ class RotMatrix {
   const RotMatrix<size>& rotation		(const Vector<size>& v1,
 						 const Vector<size>& v2,
 						 const double& theta);
+
+  // 2D/3D stuff
+
+  RotMatrix(const CoordType& alpha, const CoordType& beta, const CoordType& gamma)
+	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d);} // Euler angles, 3D only
 
   // 2D only
   const RotMatrix<2>& rotation			(const double& theta)

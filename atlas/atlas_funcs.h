@@ -42,31 +42,17 @@ namespace WF { namespace Math {
 bool GetAtlasDoubleList(const Atlas::Message::Object& a, double* d, int num);
 Atlas::Message::Object SetAtlasDoubleList(double* d, int num);
 
-struct BadAtlasVector : public Atlas::Message::Object {
-  BadAtlasVector(const Atlas::Message::Object& a, int len_in)
-	: Atlas::Message::Object(a), len(len_in) {}
-
-  int len;
-}
-
-struct BadAtlasRotMatrix : public Atlas::Message::Object {
-  BadAtlasRotMatrix(const Atlas::Message::Object& a, int size_in)
-	: Atlas::Message::Object(a), size(size_in) {}
-
-  int size;
-}
-
 template<const int len>
-Vector<len>& FromAtlas(Vector<len>& v, const Atlas::Message::Object& a)
+bool FromAtlas(Vector<len>& v, const Atlas::Message::Object& a)
 {
   double d[len];
 
-  if(!GetAtlasDoubleList(a, d, len))
-    throw BadAtlasVector(a, len);
-
-  Vector<len> out;
-  out = d; // We have operator=, but no constructor for type safety reasons
-  return out;
+  if(GetAtlasDoubleList(a, d, len)) {
+    v = d;
+    return true;
+  }
+  else
+    return false;
 }
 
 template<const int len>
@@ -81,15 +67,17 @@ Atlas::Message::Object ToAtlas(const Vector<len>& v)
 }
 
 template<const int size>
-RotMatrix<size>& FromAtlas(RotMatrix<size>& m, const Atlas::Message::Object& a)
+bool FromAtlas(RotMatrix<size>& m, const Atlas::Message::Object& a)
 {
   const int nParams = RotMatrix<size>::nParams;
   double d[nParams];
 
-  if(!GetAtlasDoubleList(a, d, nParams))
-    throw BadAtlasRotMatrix(a, size);
-
-  return RotMatrix<size>().fromEuler(d);
+  if(GetAtlasDoubleList(a, d, nParams)) {
+    m.fromEuler(d);
+    return true;
+  }
+  else
+    return false;
 }
 
 template<const int size>
@@ -101,6 +89,30 @@ Atlas::Message::Object ToAtlas(const RotMatrix<size>& m)
   m.toEuler(d);
 
   return SetAtlasDoubleList(d, nParams);
+}
+
+template<const int dim>
+bool FromAtlas(Point<dim>& p, const Atlas::Message::Object& a)
+{
+  double d[len];
+
+  if(GetAtlasDoubleList(a, d, dim)) {
+    p = d;
+    return true;
+  }
+  else
+    return false;
+}
+
+template<const int dim>
+Atlas::Message::Object ToAtlas(const Point<dim>& p)
+{
+  double d[dim];
+
+  for(int i = 0; i < dim; ++i)
+    d[i] = p[i];
+
+  return SetAtlasDoubleList(d, dim);
 }
 
 }} // namespace WF:Math

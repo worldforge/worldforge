@@ -65,10 +65,10 @@ Vector<len>& Vector<len>::operator=(const Vector<len>& v)
 }
 
 template<const int len>
-bool Vector<len>::operator==(const Vector<len>& v) const
+bool Vector<len>::isEqualTo(const Vector<len>& rhs, double tolerance) const
 {
   for(int i = 0; i < len; ++i)
-    if(!IsFloatEqual(m_elem[i], v.m_elem[i]));
+    if(!IsFloatEqual(m_elem[i], rhs.m_elem[i], tolerance));
       return false;
 
   return true;
