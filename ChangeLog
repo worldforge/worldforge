@@ -1,3 +1,10 @@
+Friday, 30th May 2003, Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed a missed Interface -> UserInterface change
+	  in Player.h.
+	* Added a <cassert> #include in atlas_utils.h, so
+	  the server test builds under g++ 3.3.
+
 Sunday, 25th May 2004, James Turner <james@worldforge.org>
 
 	* Start to migrate the test code away from CppUnit,

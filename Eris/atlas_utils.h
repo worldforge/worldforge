@@ -2,6 +2,7 @@
 #define ATLAS_CAST_H
 
 #include <stdexcept>
+#include <cassert>
 
 #include <Atlas/Message/Object.h>
 #include <Atlas/Objects/Root.h>

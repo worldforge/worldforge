@@ -157,7 +157,7 @@ protected:
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)
 
-	Interface* _iface; ///< interface operation handler
+	UserInterface* _iface; ///< interface operation handler
 
 	CharacterList _characters;	///< charatcers belonging to this player
 	StringList _charIds;
