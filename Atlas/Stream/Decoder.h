@@ -2,20 +2,14 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_CODEC_H
-#define ATLAS_STREAM_CODEC_H
+#ifndef ATLAS_STREAM_DECODER_H
+#define ATLAS_STREAM_DECODER_H
 
-#include "Encoder.h"
-#include "Decoder.h"
-#include "Filter.h"
-#include "../Net/Socket.h"
-
-#include <list>
-#include <algorithm>
+#include "../Object/Object.h"
 
 namespace Atlas { namespace Stream {
 
-/** Atlas stream codec
+/** Atlas stream decoder
 
 This class presents an interface for sending and receiving Atlas messages.
 Each outgoing message is converted to a byte stream and piped through an
@@ -36,41 +30,11 @@ will use. FIXME talk about codec metrics FIXME
 
 */
 
-class Codec : public Encoder, public Decoder
+class Decoder
 {
     public:
 
-    virtual ~Codec();
-
-    virtual void Initialise(Net::Socket*, Filter*) = 0;
-
-    class Metrics
-    {
-	public:
-
-	Metrics(int speed, int bandwidth) { }
-    };
-	
-    template <typename T>
-    class Factory : public Atlas::Stream::Factory<Codec>
-    {
-	public:
-
-	Factory(const std::string& name, const Metrics& metrics)
-	 : Atlas::Stream::Factory<Codec>(name, metrics)
-	{
-	}
-
-	virtual Codec* New()
-	{
-	    return new T;
-	}
-
-	virtual void Delete(Codec* codec)
-	{
-	    delete codec;
-	}
-    };
+    virtual ~Decoder();
 };
 
 } } // Atlas::Stream

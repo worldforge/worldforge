@@ -2,20 +2,14 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_CODEC_H
-#define ATLAS_STREAM_CODEC_H
+#ifndef ATLAS_STREAM_ENCODER_H
+#define ATLAS_STREAM_ENCODER_H
 
-#include "Encoder.h"
-#include "Decoder.h"
-#include "Filter.h"
-#include "../Net/Socket.h"
-
-#include <list>
-#include <algorithm>
+#include "../Object/Object.h"
 
 namespace Atlas { namespace Stream {
 
-/** Atlas stream codec
+/** Atlas stream encoder
 
 This class presents an interface for sending and receiving Atlas messages.
 Each outgoing message is converted to a byte stream and piped through an
@@ -36,41 +30,36 @@ will use. FIXME talk about codec metrics FIXME
 
 */
 
-class Codec : public Encoder, public Decoder
+class Encoder
 {
     public:
 
-    virtual ~Codec();
+    virtual ~Encoder();
 
-    virtual void Initialise(Net::Socket*, Filter*) = 0;
+    // Interface for top level context
 
-    class Metrics
-    {
-	public:
-
-	Metrics(int speed, int bandwidth) { }
-    };
-	
-    template <typename T>
-    class Factory : public Atlas::Stream::Factory<Codec>
-    {
-	public:
-
-	Factory(const std::string& name, const Metrics& metrics)
-	 : Atlas::Stream::Factory<Codec>(name, metrics)
-	{
-	}
-
-	virtual Codec* New()
-	{
-	    return new T;
-	}
-
-	virtual void Delete(Codec* codec)
-	{
-	    delete codec;
-	}
-    };
+    virtual void MessageBegin() = 0;
+    virtual void MessageEnd() = 0;
+    
+    // Interface for map context
+    
+    virtual void ListBegin(const std::string& name) = 0;
+    virtual void MapBegin(const std::string& name) = 0;
+    virtual void Item(const std::string& name, int) = 0;
+    virtual void Item(const std::string& name, float) = 0;
+    virtual void Item(const std::string& name, const std::string&) = 0;
+    virtual void Item(const std::string& name, const Atlas::Object&) = 0;
+    virtual void ListEnd() = 0;
+    
+    // Interface for list context
+    
+    virtual void ListBegin() = 0;
+    virtual void MapBegin() = 0;
+    virtual void Item(int) = 0;
+    virtual void Item(float) = 0;
+    virtual void Item(const std::string&) = 0;
+    virtual void Item(const Atlas::Object&) = 0;
+    virtual void MapEnd() = 0;
 };
 
 } } // Atlas::Stream
