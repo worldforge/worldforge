@@ -34,9 +34,11 @@
 #include <wfmath/ball.h>
 #include <wfmath/segment.h>
 #include <wfmath/rotbox.h>
+#include <wfmath/polygon.h>
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <list> // For Polygon<>::operator>>()
 
 namespace WF { namespace Math {
 
@@ -71,7 +73,7 @@ std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
 template<const int dim>
 std::istream& operator>>(std::istream& is, Vector<dim>& v)
 {
-  _ReadCoordList(is, m_elem, dim);
+  _ReadCoordList(is, v.m_elem, dim);
   return is;
 }
 
@@ -274,6 +276,179 @@ std::istream& operator>>(std::istream& is, RotBox<dim>& r)
   } while(next != '=');
 
   is >> r.m_orient;
+
+  return is;
+}
+
+template<>
+std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
+{
+  os << "Polygon: (";
+
+  int size = r.m_points.size();
+
+  for(int i = 0; i < size; ++i) {
+    os << r.m_points[i] << (i < (size - 1) ? ',' : ')');
+  }
+
+  return os;
+}
+
+template<>
+std::istream& operator>>(std::istream& is, Polygon<2>& r)
+{
+  char next;
+  Point<2> p;
+
+  r.m_points.clear();
+
+  do {
+    if(!is)
+      return is;
+    is >> next;
+  } while(next != '(');
+
+  while(true) {
+    is >> p;
+    if(!is)
+      return is;
+    r.m_points.push_back(p);
+    is >> next;
+    if(next == ')')
+      return is;
+    if(next != ',') {
+      is.setstate(std::istream::failbit);
+      return is;
+    }
+  }
+}
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
+{
+  os << "Polygon: (";
+
+  for(int i = 0; i < r.m_poly.numCorners(); ++i) {
+    os << r.getCorner(i) << (i < (dim - 1) ? ',' : ')');
+  }
+
+  return os;
+}
+
+template<const int dim>
+std::istream& operator>>(std::istream& is, Polygon<dim>& r)
+{
+  char next;
+  typedef struct {
+    Point<dim> pd;
+    Point<2> p2;
+  } _PolyReader;
+  _PolyReader read;
+  list<_PolyReader> read_list;
+
+  // Read in the points
+
+  do {
+    if(!is)
+      return is;
+    is >> next;
+  } while(next != '(');
+
+  while(true) {
+    is >> read.pd;
+    if(!is)
+      return is;
+    read_list.push_back(read);
+    is >> next;
+    if(next == ')')
+      break;
+    if(next != ',') {
+      is.setstate(std::istream::failbit);
+      return is;
+    }
+  }
+
+  // Convert to internal format. Be careful about the order points are
+  // added to the orientation. If the first few points are too close together,
+  // round off error can skew the plane, and later points that are further
+  // away may fail.
+
+  list<_PolyReader>::iterator i, end = read_list.end();
+  bool succ;
+
+  int str_prec = is.precision();
+  double str_eps = 1;
+  while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
+    str_eps /= 10;
+  double epsilon = FloatMax(str_eps, WFMATH_EPSILON);
+
+  m_orient = _Poly2Orient<dim>();
+
+  if(read_list.size() < 3) { // This will always work
+    for(i = read_list.begin(); i != end; ++i) {
+      succ = m_orient.expand(i->pd, i->p2, epsilon);
+      assert(succ);
+    }
+  }
+  else { // Find the three furthest apart points
+    list<_PolyReader>::iterator p1, p2, p3, j; // invalid values
+    CoordType dist = -1;
+
+    for(i = read_list.begin(); i != end; ++i) {
+      for(j = i + 1; j != end; ++j) {
+        CoordType new_dist = SloppyDistance(i->pd, j->pd);
+        if(new_dist > dist) {
+          p1 = i;
+          p2 = j;
+          dist = new_dist;
+        }
+      }
+    }
+
+    dist = -1;
+
+    for(i = read_list.begin(); i != end; ++i) {
+      // Don't want to be near either p1 or p2
+      if(i == p1 || i == p2)
+        continue;
+      CoordType new_dist = FloatMin(SloppyDistance(i->pd, p1->pd),
+				    SloppyDistance(i->pd, p2->pd));
+      if(new_dist > dist) {
+        p3 = i;
+        dist = new_dist;
+      }
+    }
+
+    // Add p1, p2, p3 first
+
+    succ = m_orient.expand(p1->pd, p1->p2, epsilon);
+    assert(succ);
+    succ = m_orient.expand(p2->pd, p2->p2, epsilon);
+    assert(succ);
+    succ = m_orient.expand(p3->pd, p3->p2, epsilon);
+    assert(succ);
+
+    // Try to add the rest
+
+    for(i = read_list.begin(); i != end; ++i) {
+      if(i == p1 || i == p2 || i == p3) // Did these already
+        continue;
+      succ = m_orient.expand(i->pd, i->p2, epsilon);
+      if(!succ) {
+        is.setstate(std::istream::failbit);
+        clear();
+        return is;
+      }
+    }
+  }
+
+  // Got valid points, add them to m_poly
+
+  m_poly.resize(read_list.size());
+
+  int pnum;
+  for(i = read_list.begin, pnum = 0; i != end; ++i, ++pnum)
+    m_poly[pnum] = i->p2;
 
   return is;
 }

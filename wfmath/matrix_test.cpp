@@ -29,12 +29,16 @@
 #include "matrix.h"
 #include "stream.h"
 
+#include "general_test.h"
+
 using namespace WF::Math;
 
 template<const int dim>
 void test_matrix(const RotMatrix<dim>& m)
 {
   cout << "Testing matrix: " << m << std::endl;
+
+  test_general(m);
 
   RotMatrix<dim> minv = m.inverse();
 
@@ -91,6 +95,8 @@ void test_matrix(const RotMatrix<dim>& m)
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
       assert(IsFloatEqual(conv_ident.elem(i, j), (i == j) ? 1 : 0));
+
+  // FIXME much more
 }
 
 int main()
@@ -103,6 +109,8 @@ int main()
 
   test_matrix(m2);
   test_matrix(m3);
+
+  // FIXME toEuler(), fromEuler()
 
   return 0;
 }

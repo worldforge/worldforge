@@ -70,14 +70,10 @@ bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& rhs, double tolerance) cons
 template<const int dim>
 bool RotMatrix<dim>::operator< (const RotMatrix<dim>& m) const
 {
-  for(int i = 0; i < dim; ++i) {
-    for(int j = 0; j < dim; ++j) {
-      if(m_elem[i][j] < m.m_elem[i][j])
-        return true;
-      if(m_elem[i][j] > m.m_elem[i][j])
-        return false;
-    }
-  }
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
+      if(!IsFloatEqual(m_elem[i][j], m.m_elem[i][j]))
+        return m_elem[i][j] < m.m_elem[i][j];
 
   // Don't need to test m_flip, it's determined by the values of m_elem
 

@@ -64,6 +64,10 @@ template<const int dim, template<class> class container>
 Point<dim> Barycenter(const container<Point<dim> >& c,
 		      const container<CoordType>& weights);
 
+// This is used a couple of places in the library
+template<const int dim>
+Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2);
+
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
 template<const int dim>
@@ -136,6 +140,8 @@ class Point
 // FIXME instatiation problem
 //  template<template<class> class container>
 //  Point Barycenter(const container<Point>& c);
+
+  friend Point<dim> Midpoint<dim>(const Point& p1, const Point& p2);
 
   // 2D/3D stuff
 

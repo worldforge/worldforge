@@ -103,17 +103,6 @@ Point<dim> AxisBox<dim>::getCorner(int i) const
 }
 
 template<const int dim>
-Point<dim> AxisBox<dim>::getCenter() const
-{
-  Point<dim> out;
-
-  for(int i = 0; i < dim; ++i)
-    out[i] = FloatAdd(m_low[i], m_high[i]) / 2;
-
-  return out;
-}
-
-template<const int dim>
 Ball<dim> AxisBox<dim>::boundingSphere() const
 {
   return Ball<dim>(getCenter(), Distance(m_low, m_high) / 2);

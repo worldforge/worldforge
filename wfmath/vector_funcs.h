@@ -66,7 +66,7 @@ template<const int dim>
 bool Vector<dim>::isEqualTo(const Vector<dim>& rhs, double tolerance) const
 {
   for(int i = 0; i < dim; ++i)
-    if(!IsFloatEqual(m_elem[i], rhs.m_elem[i], tolerance));
+    if(!IsFloatEqual(m_elem[i], rhs.m_elem[i], tolerance))
       return false;
 
   return true;
@@ -75,12 +75,9 @@ bool Vector<dim>::isEqualTo(const Vector<dim>& rhs, double tolerance) const
 template<const int dim>
 bool Vector<dim>::operator< (const Vector<dim>& v) const
 {
-  for(int i = 0; i < dim; ++i) {
-    if(m_elem[i] < v.m_elem[i])
-      return true;
-    if(m_elem[i] > v.m_elem[i])
-      return false;
-  }
+  for(int i = 0; i < dim; ++i)
+    if(!IsFloatEqual(m_elem[i], v.m_elem[i]))
+      return m_elem[i] < v.m_elem[i];
 
   return false;
 }

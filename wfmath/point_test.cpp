@@ -31,12 +31,18 @@
 #include <vector>
 #include <list>
 
+#include "general_test.h"
+#include "shape_test.h"
+
 using namespace WF::Math;
 
 template<const int dim>
 void test_point(const Point<dim>& p)
 {
   cout << "Testing point: " << p << std::endl;
+
+  test_general(p);
+  test_shape(p);
 
   vector<Point<dim> > pvec;
   pvec.push_back(p);
@@ -47,7 +53,7 @@ void test_point(const Point<dim>& p)
 
   assert(p == p + (p - p));
 
-  // FIXME
+  // FIXME more tests
 }
 
 int main()

@@ -72,9 +72,7 @@ class Ball
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the ball.
-  bool operator< (const Ball<dim>& b) const
-	{return m_radius < b.m_radius || (!(b.m_radius < m_radius)
-	      && m_center < b.m_center);}
+  bool operator< (const Ball& b) const;
 
   // Descriptive characteristics
 

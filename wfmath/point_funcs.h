@@ -168,12 +168,9 @@ Point<dim>& Point<dim>::operator-=(const Vector<dim> &rhs)
 template<const int dim>
 bool Point<dim>::operator< (const Point<dim>& rhs) const
 {
-  for(int i = 0; i < dim; ++i) {
-    if(m_elem[i] < rhs.m_elem[i])
-      return true;
-    if(m_elem[i] > rhs.m_elem[i])
-      return false;
-  }
+  for(int i = 0; i < dim; ++i)
+    if(!IsFloatEqual(m_elem[i], rhs.m_elem[i]))
+      return m_elem[i] < rhs.m_elem[i];
 
   return false;
 }
@@ -267,6 +264,17 @@ Point<dim> Barycenter(const container<Point<dim> >& c)
 
   for(int j = 0; j < dim; ++j)
     out[j] /= num_points;
+
+  return out;
+}
+
+template<const int dim>
+Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2)
+{
+  Point<dim> out;
+
+  for(int i = 0; i < dim; ++i)
+    out[i] = FloatAdd(p1[i], p2[i]) / 2;
 
   return out;
 }

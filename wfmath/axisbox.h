@@ -78,13 +78,13 @@ class AxisBox
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the box.
   bool operator< (const AxisBox& a) const
-	{return m_low < a.m_low || (!(a.m_low < m_low) && m_high < a.m_high);}
+	{return m_low < a.m_low || (m_low != a.m_low && m_high < a.m_high);}
 
   // Descriptive characteristics
 
   int numCorners() const {return 1 << dim;}
   Point<dim> getCorner(int i) const;
-  Point<dim> getCenter() const;
+  Point<dim> getCenter() const {return Midpoint(m_low, m_high);}
 
   const Point<dim>& lowCorner() const	{return m_low;}
   const Point<dim>& highCorner() const	{return m_high;}

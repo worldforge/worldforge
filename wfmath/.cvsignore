@@ -9,3 +9,4 @@ vector_test
 matrix_test
 point_test
 shape_test
+intersect_test

@@ -39,6 +39,7 @@
 #include <wfmath/ball.h>
 #include <wfmath/segment.h>
 #include <wfmath/rotbox.h>
+#include <wfmath/polygon.h>
 // Shape intersection functions
 #include <wfmath/intersect.h>
 

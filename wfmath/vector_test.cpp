@@ -29,12 +29,16 @@
 #include "matrix.h"
 #include "stream.h"
 
+#include "general_test.h"
+
 using namespace WF::Math;
 
 template<const int dim>
 void test_vector(const Vector<dim>& v)
 {
   cout << "Testing vector: " << v << std::endl;
+
+  test_general(v);
 
   CoordType sqr_mag = v.sqrMag();
 
@@ -63,34 +67,57 @@ void test_vector(const Vector<dim>& v)
     for(int i = 0; i < dim; ++i)
       assert(IsFloatEqual(v[i], vcopy[i]));
 
-    v2 -= v1 / 2;
+    v2 -= v1 / 2; // operator-=(), operator/()
 
     int k = (j < dim - 1) ? j + 1 : 0;
     v1.rotate(j, k, WFMATH_CONST_PI / 2);
   }
 
-  v2 *= 2;
+  v2 *= 2; // operator*=()
 
   for(int i = 0; i < dim; ++i)
     assert(IsFloatEqual(v2[i], 1));
 
+  // operator+(), operator-(), operator*() (pre and post), operator/()
   CoordType check = Dot((v1 + v2) * 5 - v2 / 4, 2 * v2);
-
   assert(IsFloatEqual((10.0 + dim * 38.0 / 4.0), check));
+
+  Vector<dim> v3 = v;
+  v3 += v;
+  v3 *= 2;
+  v3 -= 2 * v;
+  v3 /= 2;
+  assert(v == v3);
+  for(int i = 0; i < dim; ++i)
+    assert(v[i] == v3[i]); // const and non-const operator[]()
 
   CoordType check_mag = v.sloppyMag() / v.mag();
 
   assert(1 - WFMATH_EPSILON < check_mag);
   assert(check_mag < Vector<dim>::sloppyMagMax() + WFMATH_EPSILON);
+
+  // Still need Dot(), Angle(), normalize(), mirror()
 }
 
 int main()
 {
-  test_vector(Vector<2>(1, -1));
-  test_vector(Vector<3>(1, -1, WFMATH_CONST_SQRT2));
+  Vector<2> v2(1, -1);
+  Vector<3> v3(1, -1, WFMATH_CONST_SQRT2);
+
+  test_vector(v2);
+  test_vector(v3);
+
+  assert(v2.sloppyMag() / v2.mag() < Vector<2>::sloppyMagMax());
+  assert(v3.sloppyMag() / v3.mag() < Vector<3>::sloppyMagMax());
+
+  v2.sloppyNorm(1);
+  v3.sloppyNorm(1);
 
   assert((Vector<3>(1, 0, 0).rotate(Cross(Vector<3>(1, 0, 0), Vector<3>(0, 1, 0)),
-	 WFMATH_CONST_PI / 2) - Vector<3>(0, 1, 0)).sqrMag() < WFMATH_EPSILON);
+	 WFMATH_CONST_PI / 2) - Vector<3>(0, 1, 0)).sqrMag()
+	 < WFMATH_EPSILON * WFMATH_EPSILON); 
+
+  // Need 2D+3D stuff
 
   return 0;
 }

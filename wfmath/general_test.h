@@ -1,8 +1,8 @@
 // -*-C++-*-
-// segment_funcs.h (line segment implementation)
+// general_test.h (generic class interface test functions)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2001  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,19 +20,38 @@
 //
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
-//
 
-#ifndef WFMATH_SEGMENT_FUNCS_H
-#define WFMATH_SEGMENT_FUNCS_H
+// Author: Ron Steinke
+// Created: 2001-1-6
 
-#include <wfmath/const.h>
-#include <wfmath/point.h>
-#include <wfmath/segment.h>
+#ifndef WFMATH_GENERAL_TEST_H
+#define WFMATH_GENERAL_TEST_H
+
+#include "const.h"
+#include "stream.h"
+#include <string>
 
 namespace WF { namespace Math {
 
-// FIXME purge this file?
+template<class C>
+void test_general(const C& c)
+{
+  C c1, c2(c); // Generic and copy constructors
+
+  c1 = c; // operator=()
+
+  assert(c1.isEqualTo(c2));
+  assert(c1 == c2);
+  assert(!(c1 != c2));
+  assert(!(c1 < c2));
+
+  std::string s = ToString(c); // Uses operator<<() implicitly
+  C c3;
+  assert(FromString(c3, s)); // Uses operator>>() implicitly
+  // We lose precision in string conversion
+  assert(c3.isEqualTo(c, FloatMax(WFMATH_EPSILON, 1e-5)));
+}
 
 }} // namespace WF::Math
 
-#endif  // WFMATH_SEGMENT_FUNCS_H
+#endif // WFMATH_GENERAL_TEST_H
