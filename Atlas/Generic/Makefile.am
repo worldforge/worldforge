@@ -8,5 +8,5 @@ libAtlasGeneric_la_SOURCES =
 libAtlasGenericinclude_HEADERS = \
 	Morph.h
 
-libAtlasGenericEXTRA_DIST = \
+EXTRA_DIST = \
 	Morph.h.m4
