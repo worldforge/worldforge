@@ -1,4 +1,8 @@
-Monday, 16th December 2002, Ron Steinke
+Tuesday, 6th May 2003, Ron Steinke
+
+	* Further perl bindings build fixes
+
+Tuesday, 6th May 2003, Ron Steinke
 
 	* Fixed a problem with the perl bindings not getting
 	  the atlas compile flags, generally cleaned up
