@@ -1,21 +1,21 @@
-Monday, 24th March, Al Riddoch
+Monday, 24th March 2003, Al Riddoch
 
 	* src/Dispatcher.cpp: Handle missing TO on operations.
 
-Monday, 24th March, Al Riddoch
+Monday, 24th March 2003, Al Riddoch
 
 	* bindings/polls/glib/Makefile.am: Move bindings headers to the new
 	  pkgconfig compliant header directory.
 
-Saturday, 1st Febuary, Al Riddoch
+Saturday, 1st Febuary 2003, Al Riddoch
 
 	* Convert to pkgconfig.
 
-Friday, 31st January, Al Riddoch
+Friday, 31st January 2003, Al Riddoch
 
 	* Fix Atlas-C++ compiled flags.
 
-Thursday, 30th January, Al Riddoch
+Thursday, 30th January 2003, Al Riddoch
 
 	* src/Lobby.h: Make destructor virtual.
 
@@ -23,7 +23,7 @@ Thursday, 30th January, Al Riddoch
 
 	* src/World.cpp: Ensure talk dispatcher names are unique.
 
-Monday, 16th December, Ron Steinke
+Monday, 16th December 2002, Ron Steinke
 
 	* src/Avatar.h, src/BaseConnection.h, src/ClassDispatcher.h,
 	  src/Entity.h, src/Metaserver.h, src/Player.h, src/Property.h,
@@ -32,7 +32,7 @@ Monday, 16th December, Ron Steinke
 	  inheriting 'public SigC::Object' to inherit 'virtual public
 	  SigC::Object' instead, so multiple inheritance will work
 
-Wednesday, 14th December, Al Riddoch
+Wednesday, 14th December 2002, Al Riddoch
 
 	* src/Dispatcher.cpp: Take reference to StdBranchDispatcher before
 	  calling its subdispatchers so it doesn't get deleted before its
@@ -42,91 +42,91 @@ Wednesday, 14th December, Al Riddoch
 	  methods public, and make connection hold a reference to the
 	  root dispatcher so it doesn't get deleted.
 
-Wednesday, 12th December, Al Riddoch
+Wednesday, 12th December 2002, Al Riddoch
 
 	* src/Avatar.cpp: Fix initialisation of val.
 
-Wednesday, 11th December, Al Riddoch
+Wednesday, 11th December 2002, Al Riddoch
 
 	* test/testPlayer.cpp: std:: namespace fixes.
 
 	* configure.in: Handle interface version correctly.
 
-Monday, 2nd December, Ron Steinke
+Monday, 2nd December 2002, Ron Steinke
 
 	* Fixed check for Perl bindings so it can detect SigCPerl >= 0.2.0,
 	  which uses pkg-config
 	* Fixed errors in Perl binding build, made some changes necessary
 	  to accomodate libsigc++-1.2
 
-Friday, 29th November, Ron Steinke
+Friday, 29th November 2002, Ron Steinke
 
 	* Added PollGlib, with code taken from silence. This is the poll
 	  for use with gtk+, it's called PollGlib because it only depends
 	  on the lower level glib library.
 
-Tuesday, 27th November, Ron Steinke
+Tuesday, 27th November 2002, Ron Steinke
 
 	* Integrated Perl bindings into the build with --enable-perl.
 	  Rebuild dependencies still don't work properly, and make dist
 	  isn't integrated between the automake and makemaker parts.
 
-Tuesday, 26th November, Ron Steinke
+Tuesday, 26th November 2002, Ron Steinke
 
 	* Added a missing forward declaration of World to Factory.h
 
-Monday, 18th November, Ron Steinke
+Monday, 18th November 2002, Ron Steinke
 
 	* Changed a bunch of accessors that returned std::string
 	  to return const std::string& instead
 
-Thursday, 14th November, Ron Steinke
+Thursday, 14th November 2002, Ron Steinke
 
 	* Changed the second argument of Meta::ReceivedServerInfo
 	  from ServerInfo to const ServerInfo&, fixed a typo
 
-Tuesday, 12th November, Ron Steinke
+Tuesday, 12th November 2002, Ron Steinke
 
 	* Added an optional offset to Avatar::drop().
 	* Split Avatar::InvChanged into Avatar::InvAdded
 	  and Avatar::InvRemoved.
 
-Wednesday, 6th November, Ron Steinke
+Wednesday, 6th November 2002, Ron Steinke
 
 	* Added a signal handler to set Avatar's _entity member
 	* Added some inventory handling capabilities to Avatar
 
-Tuesday, 5th November, Ron Steinke
+Tuesday, 5th November 2002, Ron Steinke
 
 	* Got Avatar working properly with OpRefnoDispatcher,
 	  and changed existing references in the code to the
 	  op:ig:foo dispatcher to use the appropriate per-World
 	  dispatcher id. Taking/creating characters works again.
 
-Sunday, 3rd November, Al Riddoch
+Sunday, 3rd November 2002, Al Riddoch
 
 	* configure.in: Clean up, and disable static by default.
 
-Sunday, 3rd November, Al Riddoch
+Sunday, 3rd November 2002, Al Riddoch
 
 	* Add rpm spec.
 
-Friday, 1st November, Al Riddoch
+Friday, 1st November 2002, Al Riddoch
 
 	* src/World.cpp: Fix calls to SigC::slot so it is sigc++ 1.2
 	  compatable.
 
-Friday, 1st November, Ron Steinke
+Friday, 1st November 2002, Ron Steinke
 
 	* Change ArgumentDispatcher to (new) OpRefnoDispatcher in Avatar
 	* Change std::cerr to log(LOG_DEBUG,...) for debugging code
 
-Friday, 1st November, Al Riddoch
+Friday, 1st November 2002, Al Riddoch
 
 	* src/World.cpp: ISO C++ does not allow default value for arg to be
 	  specified in function definition.
 
-Wednesday, 30th October, James Turner
+Wednesday, 30th October 2002, James Turner
 
 	* Commit Ron's Avatar patches : currently got a bug
 	  with the IG-transition INFO op, so don't update unless
