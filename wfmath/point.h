@@ -196,7 +196,7 @@ class Point
 	{return origin + (*this - Point(0, 0, 0)).rotate(rotation);}
   Point<3> toLocalCoords(const Point<3>& origin,
        const Quaternion& rotation = Quaternion().identity()) const
-	{return Point(0, 0, 0) + (*this - origin).rotate(-rotation);}
+	{return Point(0, 0, 0) + (*this - origin).rotate(rotation.inverse());}
 
   // Member access
 

@@ -1,5 +1,9 @@
 Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
 
+	* The inverse of a Quaternion is q.inverse(), not -q.
+
+Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
 	* Added local/parent coordinate transformation functions
 	  and quaternion based 3D rotations to Point, still need to
 	  add these to the rest of the shape classes.
