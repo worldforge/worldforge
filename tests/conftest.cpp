@@ -1,12 +1,11 @@
 #include <varconf/varconf.h>
 
+#include <sigc++/slot.h>
+
 #include <iostream>
 #include <string>
 
-using namespace varconf;
-using namespace SigC;
-
-void callback( const std::string& section, const std::string& key, Config& conf)
+void callback( const std::string& section, const std::string& key, varconf::Config& conf)
 {
   std::cout << "\nConfig Change: item " << key << " under section " << section
        << " has changed to " << conf.getItem( section, key) << ".\n"; 
@@ -19,10 +18,10 @@ void error( const char* message)
 
 int main( int argc, char** argv)
 {
-  Config config;
+  varconf::Config config;
 
-  config.sige.connect( slot( error));
-  config.sigsv.connect( slot( callback));
+  config.sige.connect( SigC::slot( error));
+  config.sigsv.connect( SigC::slot( callback));
 
   config.setParameterLookup( 'f', "foo", true);
   config.setParameterLookup( 'b', "bar", false);
@@ -38,7 +37,7 @@ int main( int argc, char** argv)
   try {
     config.parseStream( std::cin);
   }
-  catch ( ParseError p) {
+  catch ( varconf::ParseError p) {
     std::cout << "\nError while parsing from standard input stream.\n";
     std::cout << p;
   }
