@@ -30,12 +30,12 @@ Height generation
 Height Modifications
 --------------------
 * geometric modifications can be applied for small features
-* new modifications can be added quite easily
+* new types of modifications can be added quite easily
 
 Shading
 -------
 * generate shading information based on height and gradient
-* new shaders can be added quite easily
+* new types of shaders can be added quite easily
 * used on the client side
 
 Atlas Integration
@@ -53,10 +53,17 @@ only implemented on the client right now.
 
 Collision
 ---------
-basic intersection/collision functions are implemented for
+basic terrain intersection/collision functions are implemented for
 * bbox
 * point
 * ray
+
+Vegetation
+----------
+Basic support for generation of forests in much the same way as terrain.
+Forest shape (polygonal) is supported
+Tree location, orientation and height are generated from a random seed.
+Currently incomplete and has hardcoded parameters
 
 Current Limitations
 -------------------

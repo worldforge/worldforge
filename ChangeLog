@@ -1,3 +1,7 @@
+2004-02-22  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* README: minor mods, added Vegetation section
+
 2004-02-07  Damien McGinnes <mcginnes at netspeed dot com.au>
 
 	* Mercator/Forest.cpp: fixed 'bbox to polygon' calc;
