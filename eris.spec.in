@@ -86,6 +86,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/Eris%{libsuffix}/Eris/TypeInfo.h
 %{_includedir}/Eris%{libsuffix}/Eris/Types.h
 %{_includedir}/Eris%{libsuffix}/Eris/View.h
+%{_includedir}/Eris%{libsuffix}/Eris/Router.h
+%{_includedir}/Eris%{libsuffix}/Eris/IGRouter.h
+%{_includedir}/Eris%{libsuffix}/Eris/EntityRouter.h
+%{_includedir}/Eris%{libsuffix}/Eris/Redispatch.h
+%{_includedir}/Eris%{libsuffix}/Eris/TypeBoundRedispatch.h
+%{_includedir}/Eris%{libsuffix}/Eris/UIFactory.h
+%{_includedir}/Eris%{libsuffix}/Eris/MetaQuery.h
 
 %files poll-glib
 %defattr(-,root,root)

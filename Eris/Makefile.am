@@ -47,7 +47,6 @@ liberis_HEADERS = \
 	Exceptions.h \
 	BaseConnection.h \
 	Connection.h \
-	DebugDispatcher.h \
 	Lobby.h \
 	Factory.h \
 	Entity.h \
