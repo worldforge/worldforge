@@ -2,11 +2,9 @@
 #define ERIS_EXCEPTIONS_H
 
 #include <Atlas/Objects/Root.h>
-
-#include <sigc++/signal.h>
+#include <Atlas/Objects/Operation.h>
 
 #include <string>
-
 #include <stdexcept>
 
 namespace Eris
@@ -32,6 +30,15 @@ public:
         virtual ~InvalidOperation() throw();
 };
 
+/// Exception used to indicated malformed or unexpected Atlas from the server
+class InvalidAtlas : public BaseException
+{
+public:
+    InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj);
+    virtual ~InvalidAtlas() throw();
+private:
+    Atlas::Objects::Root m_obj;
+};
 
 class NetworkFailure : public BaseException
 {

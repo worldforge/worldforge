@@ -52,9 +52,6 @@ TypeService::TypeService(Connection *con) :
     defineBuiltin("admin_entity", m_types["root_entity"]);
     defineBuiltin("account", m_types["admin_entity"]);
     defineBuiltin("game_entity", m_types["root_entity"]);
-    
-    // try to read atlas.xml to boot-strap stuff faster
-    //readAtlasSpec("atlas.xml");
 }
 
 void TypeService::init()
@@ -263,19 +260,26 @@ TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent
 
 bool TypeService::verifyObjectTypes(const Root& obj)
 {
-    TypeInfoSet unbound;
-    innerVerifyType(obj, unbound);
-    
-    if (unbound.empty()) return true;
- /*   
-    std::string types;
-    for (TypeInfoSet::iterator it=unbound.begin(); it!=unbound.end();++it) {
-        if (!types.empty()) types.append(", ");
-        types.append((*it)->getName());
+    try {
+        TypeInfoSet unbound;
+        innerVerifyType(obj, unbound);
+        
+        if (unbound.empty()) return true;
+     /*   
+        std::string types;
+        for (TypeInfoSet::iterator it=unbound.begin(); it!=unbound.end();++it) {
+            if (!types.empty()) types.append(", ");
+            types.append((*it)->getName());
+        }
+        debug() << "type verify failed, need [" << types << "]";
+     */   
+        new TypeBoundRedispatch(m_con, obj, unbound);
     }
-    debug() << "type verify failed, need [" << types << "]";
- */   
-    new TypeBoundRedispatch(m_con, obj, unbound);
+    catch (InvalidAtlas& inva) {
+        error() << "got malformed atlas: " << inva._msg;
+        error() << "bad obj: " << obj;
+    }
+    
     return false;
 }
 
@@ -295,11 +299,9 @@ void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
             warning() << "recieved anonymous object with objtype/parents set: " << obj;
             return;
         }
-        
-        if (type->isBound()) {
-            error() << "Type " << type->getName() << " is bound, but got anonymous Object for obj:" << obj;
-            return;
-        }
+                
+        if (type->isBound()) 
+            throw InvalidAtlas(type->getName() + " is bound, but got anonymous Object", obj);
 
         unbound.insert(type);
     }

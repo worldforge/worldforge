@@ -148,17 +148,10 @@ static Atlas::Objects::Root adminEntityFactory()
     return Atlas::Objects::Entity::AdminEntity();
 }
 
-/*
-Atlas::Objects::Root rootEntityFactory()
+static Atlas::Objects::Root actionFactory()
 {
-    return Atlas::Objects::Entity::RootEntity();
+    return Atlas::Objects::Operation::Action();
 }
-
-Atlas::Objects::Root rootOperationFactory()
-{
-    return Atlas::Objects::Operation::RootOperation();
-}
-*/
 
 void TypeInfo::validateBind()
 {
@@ -173,12 +166,15 @@ void TypeInfo::validateBind()
     if (!Atlas::Objects::objectFactory.hasFactory(m_name))
     {
         static TypeInfoPtr gameEntityType = m_typeService->getTypeByName("game_entity"),
-            adminEntityType = m_typeService->getTypeByName("admin_entity");
+            adminEntityType = m_typeService->getTypeByName("admin_entity"),
+            actionOpType = m_typeService->getTypeByName("action");
             
         if (isA(gameEntityType)) {
             m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
         } else if (isA(adminEntityType)) {
             m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &adminEntityFactory);
+        } else if (isA(actionOpType)) {
+            m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &actionFactory);
         } else {
             error() << "type " << m_name <<  " doesn't inherit game_entity or admin_entity";
             for (TypeInfoSet::iterator P=m_ancestors.begin(); P!=m_ancestors.end();++P)

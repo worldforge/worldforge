@@ -1,3 +1,14 @@
+2004-08-07  James Turner  <james@worldforge.org>
+
+    * Eris/TypeInfo.cpp: add another custom factory, for types derived from
+      action. This makes sight(burn) do the right thing, which we get for
+      the campfire.
+
+    * Eris/Account.cpp: remove some debug noise
+    
+    * Eris/Exceptions.cpp, Eris/Exceptions.h: add a new exception type for
+      dealing with malformed Atlas objects.
+
 2004-08-05  James Turner  <james@worldforge.org>
 
     * Eris/Connection.cpp: make dispatchOp less noisy in some situations, 

@@ -14,4 +14,14 @@ NetworkFailure::~NetworkFailure() throw()
 {
 }
 
+InvalidAtlas::InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj) :
+    BaseException(msg),
+    m_obj(obj)
+{
+}
+
+InvalidAtlas::~InvalidAtlas() throw()
+{
+}
+
 }

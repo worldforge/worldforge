@@ -339,9 +339,6 @@ Avatar* Account::takeCharacter(const std::string &id)
     m_con->send(l);
     
     Avatar *av = new Avatar(this);
-    debug() << "setting pendingInfoAvatars entry " << l->getSerialno() 
-        << " to " << av;
-        
     global_pendingInfoAvatars[l->getSerialno()] = av;
     return av;
 }
