@@ -1,3 +1,12 @@
+Friday, 22nd August, James Turner <james@worldforge.org>
+
+	* Rename configure.in to configure.ac, since we require the newer
+	  version. This stops some autoconf versions moaning about the name,
+	  and helps scripts which detect which autoconf to run by
+	  examining configure.in
+	* Also add an AC_PREREQ, just for paranoia's sake.
+	* Fix autogen.sh for the new name
+
 Sunday, 17th August, Ron Steinke <rsteinke@w-link.net>
 
 	* Eris/UIFactory.*: Fixes to UI code for change

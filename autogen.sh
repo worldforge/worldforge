@@ -14,7 +14,7 @@ DIE=0
   DIE=1
 }
 
-(grep "^AM_PROG_LIBTOOL" ./configure.in >/dev/null) && {
+(grep "^AM_PROG_LIBTOOL" ./configure.ac >/dev/null) && {
   (libtoolize --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`libtool' installed to compile Eris."
