@@ -2,7 +2,8 @@
 	#include "config.h"
 #endif
 
-#include <cstdio>
+#include <stdio.h>
+#include <assert.h>
 #include <Atlas/Message/Object.h>
 
 #include "Dispatcher.h"
@@ -42,7 +43,7 @@ Dispatcher::~Dispatcher()
 std::string Dispatcher::getAnonymousSuffix(Dispatcher *d)
 {
 	static char buf[32];
-	std::snprintf(buf, 32, "_%p", d);
+	snprintf(buf, 32, "_%p", d);
 	return buf;
 }
 
@@ -60,7 +61,7 @@ StdBranchDispatcher::~StdBranchDispatcher()
 		d->second->decRef();
 }
 
-Dispatcher* StdBranchDispatcher::addSubdispatch(Dispatcher *d, const std::string data)
+Dispatcher* StdBranchDispatcher::addSubdispatch(Dispatcher *d, const std::string /*data*/)
 {
 	if (!d)
 		throw InvalidOperation("NULL dispatcher passed to addSubdispatch");
@@ -202,4 +203,4 @@ Dispatcher* EncapDispatcher::newAnonymous()
 	return new EncapDispatcher("_encap");
 }
 
-};
+}
