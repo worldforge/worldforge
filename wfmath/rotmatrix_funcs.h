@@ -555,7 +555,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
 
   CoordType sqr_mag = v.sqrMag();
 
-  assert(("need nonzero length vector", sqr_mag > 0));
+  assert("need nonzero length vector" && sqr_mag > 0);
 
   // off diagonal
   for(int i = 0; i < dim - 1; ++i)

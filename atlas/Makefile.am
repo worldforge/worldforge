@@ -2,7 +2,7 @@ EXTRA_DIST = atlas_0_4_test.cpp atlas_0_6_test.cpp
 
 # have to include both here to get it to build, but we're including
 # distinct headers so we're okay
-CXXFLAGS = -O2 -Wall @ATLAS_0_4_CFLAGS@ @ATLAS_0_6_CFLAGS@
+AM_CXXFLAGS = -O2 -Wall @ATLAS_0_4_CFLAGS@ @ATLAS_0_6_CFLAGS@
 
 if HAVE_ATLAS_0_4
 

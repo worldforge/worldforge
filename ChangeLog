@@ -1,3 +1,10 @@
+Sunday, October 10th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed CXXFLAGS to AM_CXXFLAGS in the atlas
+	  Makefile.am to fix a configure warning.
+	* Change a comma operator in an assert() to && to
+	  fix a compile warning.
+
 Saturday, October 9th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Added missing 'inline' keywords in int_to_string.h.
