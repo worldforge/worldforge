@@ -1,3 +1,12 @@
+New TODO by Al Riddoch
+
+Items below are probably still valid, but this is where i reconsider the
+order and priority of tasks, and make my own notes.
+
+Generally speaking it seems having virtual methods with the same names
+is not all that good a trick. It causes methods to get hidden when only
+some are overridden in a subclass.
+
 TODO list for Atlas-C++:
 
 Items are written up by those who they are assigned to, unless otherwise noted

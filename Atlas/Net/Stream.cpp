@@ -23,7 +23,7 @@ static std::string get_line(std::string &s, char ch)
   return out;
 }
 
-static std::string get_line(std::string &s1, char ch, std::string &s2)
+static inline std::string get_line(std::string &s1, char ch, std::string &s2)
 {
   s2 = get_line(s1, ch);
 
@@ -102,7 +102,7 @@ void Atlas::Net::StreamConnect::poll(bool can_read)
 
     do
     {
-        if (can_read || m_socket.rdbuf()->in_avail()) m_buf += (char) m_socket.get();
+        if (can_read || (m_socket.rdbuf()->in_avail() > 0)) m_buf += (char) m_socket.get();
 
     if(m_state == SERVER_GREETING)
     {
@@ -157,7 +157,7 @@ void Atlas::Net::StreamConnect::poll(bool can_read)
         }
     }
     }
-    while ((m_state != DONE) && (m_socket.rdbuf()->in_avail()));
+    while ((m_state != DONE) && (m_socket.rdbuf()->in_avail() > 0));
 }
 
 Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamConnect::getState()
@@ -253,7 +253,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read)
 
     do
     {
-        if (can_read || m_socket.rdbuf()->in_avail()) m_buf += (char) m_socket.get();
+        if (can_read || (m_socket.rdbuf()->in_avail() > 0)) m_buf += (char) m_socket.get();
 
         if (m_state == CLIENT_GREETING)
         {
@@ -302,7 +302,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read)
             m_state++;
         }
     }
-    while ((m_state != DONE) && (m_socket.rdbuf()->in_avail()));
+    while ((m_state != DONE) && (m_socket.rdbuf()->in_avail() > 0));
 }
 
 Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamAccept::getState()

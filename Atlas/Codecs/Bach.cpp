@@ -446,7 +446,7 @@ void Bach::poll(bool can_read)
         case PARSE_NAME:       parseName(next); break;
 	}
     }
-    while (m_socket.rdbuf()->in_avail());
+    while (m_socket.rdbuf()->in_avail() > 0);
 }
 
 const std::string Bach::decodeString(std::string toDecode)

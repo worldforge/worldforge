@@ -2,7 +2,7 @@
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
 
-import sys, os, filecmp
+import sys, os, cmp
 sys.path.append("../../../Atlas-Python")
 from atlas import *
 from atlas.codecs import *
