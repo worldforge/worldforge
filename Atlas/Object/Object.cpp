@@ -106,7 +106,7 @@ AObject::AObject(const AObject& src)
     DBGMSG( "aobject :: copy constructor ok" );
 }
 
-AObject::AObject(PyObject* src)
+AObject::AObject( PyObject* src, bool doRefCount )
 {
 /*	assert((unsigned long)src != 1);
 	obj = src;
@@ -116,9 +116,10 @@ AObject::AObject(PyObject* src)
 */
 
     obj = src;
-	Py_XINCREF(obj);
-    DBGMSG( "aobject :: aobject( PyObject* ) ok");
-
+    assert( obj != 0 );
+	if ( doRefCount )
+	    Py_XINCREF(obj);
+    DBGMSG( "aobject :: aobject( PyObject*, bool ) ok");
 }
 
 AObject::AObject(const string& src)
@@ -923,48 +924,58 @@ AObject AObject::mkMap()
 
 AObject AObject::mkList(int size)
 {
-	AObject res;
+/*	AObject res;
 	Py_XDECREF(res.obj);
 	res.obj = PyList_New(size);
 	assert( res.obj != 0 );
 	return res;
+*/
+    return AObject( PyList_New( size ), false );
 }
 
 AObject AObject::mkURIList(int size)
 {
-	AObject res;
+/*	AObject res;
 	Py_XDECREF(res.obj);
 	res.obj = URIList_New(size);
 	assert( res.obj != 0 );
 	return res;
+*/
+    return AObject( URIList_New( size ), false );
 }
 
 AObject AObject::mkIntList(int size)
 {
-	PyObject* tmp = IntList_New(size);
+/*	PyObject* tmp = IntList_New(size);
 	AObject res(tmp);
 	Py_XDECREF(tmp);
 	assert((unsigned long)res.obj != 1);
 	return res;
+*/
+    return AObject( IntList_New( size ), false );
 }
 
 
 AObject AObject::mkFloatList(int size)
 {
-	PyObject* tmp = FloatList_New(size);
+/*	PyObject* tmp = FloatList_New(size);
 	AObject res(tmp);
 	Py_XDECREF(tmp);
 	assert((unsigned long)res.obj != 1);
 	return res;
+*/
+    return AObject( FloatList_New( size ), false );
 }
 
 AObject AObject::mkStringList(int size)
 {
-	PyObject* tmp = StringList_New(size);
+/*	PyObject* tmp = StringList_New(size);
 	AObject res(tmp);
 	Py_XDECREF(tmp);
 	assert((unsigned long)res.obj != 1);
 	return res;
+*/
+    return AObject( StringList_New( size ), false );
 }
 
 AObject AObject::mkURI(const string& val)

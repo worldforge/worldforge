@@ -91,8 +91,8 @@ static void dump(const AObject& msg);
 /** Construct a copy of an existing AObject */
 	AObject(const AObject& src);
 
-/** Construct an AObject from an existing PyObject */
-	AObject(PyObject* src);
+/** Construct an AObject from an existing PyObject. bool value set to true will not alter ref count (used internally)  */
+	AObject( PyObject* src, bool = true );
 
 /** Construct an AObject from an existing AObject, but with a new name */
 	AObject(AObject& src);
