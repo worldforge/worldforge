@@ -1,3 +1,7 @@
+Friday, April 26, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Bumped version number for 0.2.7 release
+
 Sunday, April 21, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* Changed format sent by AxisBox<>::toAtlas() for better

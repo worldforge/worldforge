@@ -16,3 +16,11 @@ Deal with difficulties in making certain functions friends of the
 	appropriate classes
 Rearrange the functions in foo_funcs.h to match the order in the class
 	in foo.h
+
+Schedule:
+0.2.7	- official tarball release, mostly so man-di can roll a .deb
+0.2.8	- add the _valid flag alriddoch requested, code review up
+	  through AxisBox and Ball
+0.2.9	- code review for everything but Polygon
+0.3.0	- finish Polygon, code review. Remove old Intersect()/IntersectProper()
+	  interface
