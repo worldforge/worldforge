@@ -11,7 +11,7 @@ LDADD  = -L$(top_builddir)/Atlas/ -L$(top_builddir)/Atlas/Codecs/ \
          -L$(top_builddir)/Atlas/Net/ -L$(top_builddir)/Atlas/Objects/
 
 LIBS = -lAtlasObjects-0.6 -lAtlasNet-0.6 -lAtlas-0.6 -lAtlasCodecs-0.6 \
-       -lAtlasFilters-0.6 -lAtlasMessage-0.6 -lAtlas-0.6 -lbz2 -lz
+       -lAtlasFilters-0.6 -lAtlasMessage-0.6 -lAtlas-0.6 $(OTHER_LIBS)
 
 Message_Move_SOURCES = Message_Move.cpp
 

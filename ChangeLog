@@ -1,5 +1,9 @@
 2003-05-04  Al Riddoch  <alriddoch@zepler.org>
 
+	* Fix linking tests with the right other libraries.
+
+2003-05-04  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Message/Element.h, Atlas/Message/Element.cpp: Move over to
 	  calling Atlas::Message::Object Atlas::Message::Element instead.
 
