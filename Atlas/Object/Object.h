@@ -39,6 +39,8 @@
 
 #include "Variant.h"
 
+#include <cassert>
+
 namespace Atlas
 {
 /** Standard Message Container Object.
