@@ -80,7 +80,12 @@ StubServer::StubServer(short port, int cmdSocket) :
     
     subclassType("root_entity", "game_entity");
     subclassType("game_entity", "settler");
-    subclassType("game_entity", "pig");
+    subclassType("game_entity", "mammal");
+    subclassType("game_entity", "building");
+    subclassType("game_entity", "thing");
+    subclassType("mammal", "pig");
+    subclassType("game_entity", "seed");
+    subclassType("seed", "potato");
 }
 
 StubServer::~StubServer()
@@ -113,61 +118,22 @@ void StubServer::setupTestAccounts()
 
     m_accounts[accB->getId()] = accB;
 
-    StringList contents;
-    
     GameEntity world;
-    world->setName("The world");
     world->setId("_world");
     world->setObjtype("obj");
     world->setParents(StringList(1, "game_entity"));
+    m_world["_world"] = world;
     
-    contents.push_back("_field_01");
-    contents.push_back("_hut_01");
-    world->setContains(contents);
-    
-    m_world[world->getId()] = world;
-    
-    GameEntity field;
-    field->setName("A field");
-    field->setId("_field_01");
-    field->setObjtype("obj");
-    field->setLoc(world->getId());
-    field->setParents(StringList(1, "game_entity"));
+    defineEntity("_field_01", "game_entity", "_world", "A field");
 
-    contents.clear();
-    contents.push_back("_pig_01");
-    field->setContains(contents);
+    defineEntity("_pig_01", "pig", "_field_01", "Piggy");
+    defineEntity("_pig_02", "pig", "_field_01", "Piggy");
+    defineEntity("_potato_1", "potato", "_field_01", "Po-tae-toes!");
+    defineEntity("_potato_2", "potato", "_field_01", "Po-tae-toes!");
 
-     m_world[field->getId()] = field;
-
-    GameEntity pig;
-    pig->setName("A piggy");
-    pig->setId("_pig_01");
-    pig->setObjtype("obj");
-    pig->setParents(StringList(1, "pig"));
-    pig->setLoc(field->getId());
-    m_world[pig->getId()] = pig;
-
-    GameEntity hut;
-    hut->setName("A hutt");
-    hut->setId("_hut_01");
-    hut->setObjtype("obj");
-    hut->setLoc(world->getId());
-    hut->setParents(StringList(1, "game_entity"));
-    
-    contents.clear();
-    contents.push_back("acc_b_character");
-    hut->setContains(contents);
-    
-    m_world[hut->getId()] = hut;
-    
-    GameEntity avatarB0;
-    avatarB0->setName("Joe Blow");
-    avatarB0->setId("acc_b_character");
-    avatarB0->setObjtype("obj");
-    avatarB0->setParents(StringList(1, "settler"));
-    avatarB0->setLoc(hut->getId());
-    m_world[avatarB0->getId()] = avatarB0;
+    defineEntity("_hut_01", "building", "_world", "A hut");
+    defineEntity("acc_b_character", "settler", "_hut_01", "Joe Blow");
+    defineEntity("_table", "thing", "_hut_01", "An old table");
 }
 
 int StubServer::run(pid_t child)
@@ -297,6 +263,17 @@ AccountMap::const_iterator StubServer::findAccountByUsername(const std::string &
     return m_accounts.end();
 }
 
+Agent* StubServer::findAgentForEntity(const std::string& eid)
+{
+    for (unsigned int C=0; C < m_clients.size(); ++C) {
+        Agent* ag = m_clients[C]->findAgentForEntity(eid);
+        if (ag) return ag;
+    }
+    
+    return NULL;
+
+}
+
 #pragma mark -
 // OOG functionality
 
@@ -418,4 +395,22 @@ void StubServer::subclassType(const std::string& base, const std::string& derive
     derived->setId(derivedName);
 
     m_types[derivedName] = derived;
+}
+
+void StubServer::defineEntity(const std::string& id, const std::string& type, 
+    const std::string& loc, const std::string& nm)
+{
+    GameEntity e;
+    e->setName(nm);
+    e->setId(id);
+    e->setObjtype("obj");
+    e->setParents(StringList(1, type));
+    e->setLoc(loc);
+    m_world[id] = e;
+    
+    if (m_world.count(loc)) {
+        StringList children(m_world[loc]->getContains());
+        children.push_back(id);
+        m_world[loc]->setContains(children);
+    }
 }

@@ -204,6 +204,8 @@ void Avatar::onEntityAppear(Entity* ent)
         ent->ChildRemoved.connect(SigC::slot(*this, &Avatar::onCharacterChildRemoved));
         
         GotCharacterEntity.emit(ent);
+        #warning avatar appearance disconnection
+        // m_view->Appearance.disconnect(SigC::slot(*this, &Avatar::onEntityAppear));
     }
 }
 

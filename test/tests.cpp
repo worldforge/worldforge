@@ -30,6 +30,7 @@ using std::cerr;
 
 typedef std::auto_ptr<Eris::Connection> AutoConnection;
 typedef std::auto_ptr<Eris::Account> AutoAccount;
+typedef std::auto_ptr<Eris::Avatar> AutoAvatar;
 
 class SignalCounter0 : public SigC::Object
 {
@@ -71,8 +72,17 @@ private:
 
 void erisLog(Eris::LogLevel level, const std::string& msg)
 {
-    if (level > LOG_WARNING) return; 
-    cout << "ERIS: " << msg << endl;
+    switch (level) {
+    case LOG_ERROR:
+        cerr << "ERIS_ERROR: " << msg << endl; break;
+        
+    case LOG_WARNING:
+        cout << "ERIS_WARN: " << msg << endl; break;
+        
+    default:
+        return;
+        // cout << "ERIS: " << msg << endl;
+    }
 }
 
 AutoConnection stdConnect()
@@ -116,6 +126,63 @@ AutoAccount stdLogin(const std::string& uname, const std::string& pwd, Eris::Con
     return player;
 }
 
+AutoAvatar stdTake(const std::string& charId, Eris::Account* acc)
+{
+    AutoAvatar av(acc->takeCharacter(charId));
+
+    SignalCounter1<Avatar*> wentInGame;
+    av->InGame.connect(SigC::slot(wentInGame, &SignalCounter1<Avatar*>::fired));
+    
+    while (wentInGame.fireCount() == 0) Eris::PollDefault::poll();
+    
+    assert(av->getEntity() == NULL); // shouldn't have the entity yet
+    assert(av->getId() == charId); // but should have it's ID
+    
+    SignalCounter1<Entity*> gotChar;
+    av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Entity*>::fired));
+    
+    while (gotChar.fireCount() == 0) Eris::PollDefault::poll();
+    
+    assert(av->getEntity());
+    assert(av->getEntity()->getId() == charId);
+
+    return av;
+}
+
+class WaitForAppearance : public SigC::Object
+{
+public:
+    WaitForAppearance(Eris::View* v, const std::string& eid) : 
+        m_view(v)
+    {
+        waitFor(eid);
+        v->Appearance.connect(SigC::slot(*this, &WaitForAppearance::onAppear));
+    }
+    
+    void waitFor(const std::string& eid)
+    {
+        if (m_view->getEntity(eid)) {
+            cerr << "wait on already visible entity " << eid;
+            return;
+        }
+        
+        m_waiting.insert(eid);
+    }
+    
+    void run()
+    {
+        while (!m_waiting.empty()) Eris::PollDefault::poll();
+    }
+private:
+    void onAppear(Eris::Entity* e)
+    {
+        m_waiting.erase(e->getId());
+    }
+    
+    Eris::View* m_view;
+    std::set<std::string> m_waiting;
+};
+    
 #pragma mark -
 
 void testLogin()
@@ -186,7 +253,6 @@ void testAccCreate()
     
     assert(loginErrorCounter.fireCount() == 0);
     
-    cout << "create account success, ID is " << player->getId() << endl;
     assert(player->getUsername() == "account_C");
     assert(player->isLoggedIn());
 }
@@ -221,38 +287,32 @@ void testLogout()
     player->LogoutComplete.connect(SigC::slot(gotLogout, &SignalCounter1<bool>::fired));
     player->logout();
     
-    while (gotLogout.fireCount() == 0)
-    {
-        Eris::PollDefault::poll();
-    }
+    while (gotLogout.fireCount() == 0) Eris::PollDefault::poll();
     
     assert(!player->isLoggedIn());
 }
 
-void testCharActivate()
+void testCharActivate(Controller& ctl)
 {
     AutoConnection con = stdConnect();
     AutoAccount player = stdLogin("account_B", "sweede", con.get());
 
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
     Avatar* av = player->takeCharacter("acc_b_character");
-    
+        
     SignalCounter1<Avatar*> wentInGame;
     av->InGame.connect(SigC::slot(wentInGame, &SignalCounter1<Avatar*>::fired));
     
-    while (wentInGame.fireCount() == 0)
-    {
-        Eris::PollDefault::poll();
-    }
+    while (wentInGame.fireCount() == 0) Eris::PollDefault::poll();
     
     assert(av->getEntity() == NULL); // shouldn't have the entity yet
     assert(av->getId() == "acc_b_character"); // but should have it's ID
-    cout << "in-game" << endl;
     
     SignalCounter1<Entity*> gotChar;
     av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Entity*>::fired));
-    
+        
     while (gotChar.fireCount() == 0) Eris::PollDefault::poll();
-    
+        
     assert(av->getEntity());
     assert(av->getEntity()->getId() == "acc_b_character");
     
@@ -260,9 +320,31 @@ void testCharActivate()
     assert(v->getTopLevel()->getId() == "_world");
     
     assert(v->getTopLevel()->hasChild("_hut_01"));
+    assert(!v->getTopLevel()->hasChild("_field_01")); // not yet
     
     delete av;
-    cout << "completed charatcer activation test" << endl;
+}
+
+void testAppearance(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    AutoAvatar av = stdTake("acc_b_character", acc.get());
+    
+    Eris::View* v = av->getView();
+    
+    ctl.setEntityVisibleToAvatar("_potato_2", av.get());
+    ctl.setEntityVisibleToAvatar("_pig_01", av.get());
+    ctl.setEntityVisibleToAvatar("_field_01", av.get());
+        
+    WaitForAppearance wf(v, "_field_01");
+    wf.waitFor("_pig_01");
+    wf.waitFor("_potato_2");
+
+    wf.run();
+    cout << "appearance checks done" << endl;
 }
 
 int main(int argc, char **argv)
@@ -278,7 +360,6 @@ int main(int argc, char **argv)
     if (childPid == 0)
     {
         Controller ctl(sockets[1]);
-        cout << "starting tests" << endl;
         
         Eris::setLogLevel(LOG_DEBUG);
         Eris::Logged.connect(SigC::slot(&erisLog));
@@ -289,7 +370,8 @@ int main(int argc, char **argv)
             testAccCreate();
             testLogout();
             testAccountCharacters();
-            testCharActivate();
+            testCharActivate(ctl);
+            testAppearance(ctl);
         }
         catch (TestFailure& tfexp)
         {
@@ -306,6 +388,10 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     } else {
         sleep(1);
+        
+        Eris::setLogLevel(LOG_DEBUG);
+        Eris::Logged.connect(SigC::slot(&erisLog));
+        
         StubServer stub(7450, sockets[0]);
         return stub.run(childPid);
     }

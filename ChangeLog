@@ -1,3 +1,20 @@
+2004-10-09  James Turner  <james@worldforge.org>
+
+	* tests/tests.cpp : add initial tests of entity appearance
+	
+	* tests/agent.cpp: track per-client entity visiblity, and hence do contents
+	  pruning when sending SIGHTs. Generate appearance and disappearance ops
+	  whent entity visibility changes.
+	
+	* tests/stubServer.cpp: refactor the entity definition code, and
+	  expand the test world.
+	  
+	* Eris/TypeInfo.cpp: fix a nasty bug revealled by the Appearance tests:
+	  use of statics to store TypeInfoPtrs is inherently unsafe when
+	  multiple Connections (and hence type trees) exist.
+
+	* Eris/LogStream.h: fix log-levels of the warning and error streams
+
 2004-10-03  James Turner  <james@worldforge.org>
 
 	* tests/* : change the parent/child relationship of the stub server

@@ -75,6 +75,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     Appearance appear = smart_dynamic_cast<Appearance>(op);
     if (appear.isValid())
     {
+        debug() << "recieved appearance";
         for (unsigned int A=0; A < args.size(); ++A)
         {
             float stamp = 0;

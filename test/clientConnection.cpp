@@ -76,6 +76,13 @@ bool ClientConnection::isDisconnected()
     return !m_stream.is_open();
 }
 
+Agent* ClientConnection::findAgentForEntity(const std::string& eid) const
+{
+    AgentMap::const_iterator it = m_agents.find(eid);
+    if (it != m_agents.end()) return it->second;
+    return NULL;
+}
+
 #pragma mark -
 // basic Atlas connection / stream stuff
 

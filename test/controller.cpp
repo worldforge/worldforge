@@ -9,11 +9,14 @@
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Codec.h>
 #include <Atlas/Objects/Encoder.h>
-
+#include <Atlas/Objects/Operation.h>
 #include <Eris/Exceptions.h>
+#include <Eris/Avatar.h>
 
 using std::endl;
 using std::cout;
+
+using namespace Atlas::Objects::Operation;
 
 Controller::Controller(int fd) :
     m_stream(fd)
@@ -40,4 +43,26 @@ Controller::Controller(int fd) :
 void Controller::objectArrived(const Atlas::Objects::Root&)
 {
     cout << "controller recieved op!" << endl;
+}
+
+void Controller::send(const Atlas::Objects::Root &obj)
+{
+    m_encode->streamObjectsMessage(obj);
+    m_stream << std::flush;
+}
+
+#pragma mark -
+
+void Controller::setEntityVisibleToAvatar(const std::string& eid, Eris::Avatar* av)
+{
+    setEntityVisibleToAvatar(eid, av->getId());
+}
+
+void Controller::setEntityVisibleToAvatar(const std::string& eid, const std::string& charId)
+{
+    Appearance app;
+    app->setTo(eid);
+    app->setAttr("for", charId);
+    
+    send(app);
 }

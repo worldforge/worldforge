@@ -7,15 +7,22 @@
 
 namespace Atlas { class Codec; }
 
+namespace Eris { class Avatar; }
+
 class Controller : public Atlas::Objects::ObjectsDecoder
 {
 public:
     Controller(int fd);
     
+    void setEntityVisibleToAvatar(const std::string& eid, Eris::Avatar* av);
+    void setEntityVisibleToAvatar(const std::string& eid, const std::string& charId);
+    
 protected:
     virtual void objectArrived(const Atlas::Objects::Root& obj);
     
 private:
+    void send(const Atlas::Objects::Root &obj);
+    
     tcp_socket_stream m_stream;
 
     Atlas::Objects::ObjectsEncoder* m_encode;

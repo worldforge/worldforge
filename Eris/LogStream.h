@@ -40,7 +40,7 @@ public:
     ~warning()
     {
         m_stream << std::flush;
-        doLog(LOG_DEBUG, m_stream.str());
+        doLog(LOG_WARNING, m_stream.str());
     }
 };
 
@@ -50,7 +50,7 @@ public:
     ~error()
     {
         m_stream << std::flush;
-        doLog(LOG_DEBUG, m_stream.str());
+        doLog(LOG_ERROR, m_stream.str());
     }
 };
 

@@ -14,8 +14,8 @@ importantly, in-game (IG) operations such as entity creation,
 movement and attribute updates.
 
 Eris provides a generic 'Entity' class, which you are free to
-sub-class and provide to the system (by registering a factory
-with the World); thus you are free to create different classes to
+sub-class and provide to the system (by registering a factory); 
+thus you are free to create different classes to
 handle characters, walls, vehicles, etc as your client dictates. An
 alternative approach is to create peer classes, and connect them to
 Eris via callbacks. Eris makes extensive use of libSigc++, which must
@@ -33,7 +33,7 @@ easier. Eris does permit you to ignore lower-level Atlas issues
 such as Codecs and connections.
 
 For examples of using Eris, see 'silence' in forge/clients/silence;
-this is a simple NCurses / Gtk based text client that demonstrates
+this is a simple Gtk based text client that demonstrates
 how to use Eris. For larger, graphical examples see Sear, Apogee or
 Dime, all found in forge/clients/.
 

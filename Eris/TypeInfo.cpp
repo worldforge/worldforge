@@ -45,11 +45,10 @@ TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
 
 bool TypeInfo::isA(TypeInfoPtr tp)
 {
-    if (!m_bound)
-        warning() << "calling isA on unbound type " << m_name;
-        
-    if (tp == this) // uber fast short-circuit for type equality
-        return true;
+    if (!m_bound) warning() << "calling isA on unbound type " << m_name;
+    
+    // uber fast short-circuit for type equality
+    if (tp == this) return true;
 	
     return m_ancestors.count(tp); // non-authorative if not bound
 }
@@ -170,23 +169,21 @@ void TypeInfo::validateBind()
         if (!(*P)->isBound()) return;
 	
     m_bound = true;
-    
+     
     if (!Atlas::Objects::objectFactory.hasFactory(m_name))
     {
-        static TypeInfoPtr gameEntityType = m_typeService->getTypeByName("game_entity"),
-            adminEntityType = m_typeService->getTypeByName("admin_entity"),
-            actionOpType = m_typeService->getTypeByName("action");
-            
-        if (isA(gameEntityType)) {
+        // identify the most accurate C++ base type and use as the factory
+        if (isA(m_typeService->getTypeByName("game_entity"))) {
             m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
-        } else if (isA(adminEntityType)) {
+        } else if (isA(m_typeService->getTypeByName("admin_entity"))) {
             m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &adminEntityFactory);
-        } else if (isA(actionOpType)) {
+        } else if (isA(m_typeService->getTypeByName("action"))) {
             m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &actionFactory);
         } else {
+            // screwed
             error() << "type " << m_name <<  " doesn't inherit game_entity or admin_entity";
             for (TypeInfoSet::iterator P=m_ancestors.begin(); P!=m_ancestors.end();++P)
-                debug() << m_name << " has ancestor " << (*P)->getName();
+                debug() << m_name << " has ancestor " << (*P)->getName() << " @ " << *P;
         }
     }
     

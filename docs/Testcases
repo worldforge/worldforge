@@ -1,0 +1,54 @@
+test cases
+
+create an account
+ - ensure logged in signal fires
+ - ensure account data matches
+ 
+login to account
+ 
+login to bad account / bad password
+ - ensure error is fired, and 
+ 
+ 
+ check for an anonymous OOG look on login, send empty lobby
+ check for OOG entry
+ 
+ repeat, but with one other account, then two
+ 
+ check for sight person returning correct values
+ 
+ check that SightPerson signal fires when the new people log in,
+ and also when they go away
+ 
+ check chat is recived okay
+ ditto for emotes
+ 
+ private chat, check it's okay
+ 
+ check typeinfo lookup, and registration
+ check bad type response
+ 
+------------------------
+ 
+ 
+ 
+ ---- stamp refresh --------
+ - disappear visible with state
+ - set state on the server
+ - appear it
+ check new value comes through before it appears.
+ 
+ 
+ 
+ 
+ ----- batched appearance ------
+ 
+ 
+ 
+ ---- child changes of disappeared entities ----
+ 
+ 
+ ---- container deletes ------
+ 
+ 
+ 

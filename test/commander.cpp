@@ -4,6 +4,7 @@
 
 #include "commander.h"
 #include "stubServer.h"
+#include "agent.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Eris/Exceptions.h>
@@ -49,7 +50,7 @@ void Commander::recv()
             if (!op.isValid())
                 throw InvalidOperation("Commander recived something that isn't an op");
             
-            //
+            dispatch(op);
             
             m_objDeque.pop_front();
         }
@@ -92,8 +93,15 @@ void Commander::negotiate()
 
 void Commander::dispatch(const RootOperation& op)
 {
-    // stub server control commands, TO = "stub_server"
-    // shutdown command
-    
-    // admin / world modify commands, apply to world state
+    Appearance appear = smart_dynamic_cast<Appearance>(op);
+    if (appear.isValid()) {
+        assert(op->hasAttr("for"));
+        Agent* ag = m_server->findAgentForEntity(op->getAttr("for").asString());
+        if (ag) {
+            ag->setEntityVisible(op->getTo(), true);
+        } else {
+            // doesn't exist yet, mark as visible if / when the agent is created
+            Agent::setEntityVisibleForFutureAgent(op->getTo(), op->getAttr("for").asString());
+        }
+    }
 }

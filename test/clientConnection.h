@@ -33,6 +33,8 @@ public:
     const std::string& getAccount() const
     { return m_account; }
 
+    Agent* findAgentForEntity(const std::string& eid) const;
+
     //void handleOperation(const Atlas::Objects::Operation::RootOperation& op);
 
     void send(const Atlas::Objects::Root& obj);

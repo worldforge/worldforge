@@ -14,6 +14,7 @@
 
 class Commander;
 class ClientConnection;
+class Agent;
 
 typedef std::set<std::string> StringSet;
 
@@ -32,6 +33,9 @@ public:
     ClientConnection* getConnectionForAccount(const std::string& accId);
     
     AccountMap::const_iterator findAccountByUsername(const std::string &uname);
+    
+    Agent* findAgentForEntity(const std::string& eid);
+    
 private:
     void joinRoom(const std::string& acc, const std::string& room);
     void partRoom(const std::string& acc, const std::string& room);
@@ -40,6 +44,11 @@ private:
     StringSet peopleInRoom(const std::string& room);
     
     void subclassType(const std::string& base, const std::string& derivedName);
+    
+    void defineEntity(const std::string& id, 
+        const std::string& type,
+        const std::string& loc,
+        const std::string& nm);
     
     tcp_socket_server m_serverSocket;
     

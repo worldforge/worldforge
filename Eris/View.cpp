@@ -45,9 +45,9 @@ Entity* View::getEntity(const std::string& eid) const
 void View::setEntityVisible(Entity* ent, bool vis)
 {
     assert(ent);
-    if (vis)
+    if (vis) {
         Appearance.emit(ent);
-    else {
+    } else {
         Disappearance.emit(ent);
     }
 }

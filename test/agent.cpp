@@ -19,13 +19,30 @@ using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;
 using namespace Eris;
 using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Entity::GameEntity;
+
+using std::endl;
+using std::cout;
+using std::cerr;
+
+Agent::StringStringMmap Agent::static_futureVisible;
 
 Agent::Agent(ClientConnection* con, const std::string& charId) :
     m_character(charId),
     m_con(con),
     m_server(con->getServer())
 {
+    m_visible.insert("_world");
+    m_visible.insert(charId);
     
+    StringStringMmap::iterator lower = static_futureVisible.lower_bound(charId),
+        upper = static_futureVisible.upper_bound(charId);
+    
+    // load them all in
+    for (; lower != upper; ++lower) m_visible.insert(lower->second);
+    
+    // blow them all away.
+    static_futureVisible.erase(static_futureVisible.lower_bound(charId), upper);
 }
 
 Agent::~Agent()
@@ -46,28 +63,101 @@ void Agent::processOp(const RootOperation& op)
     }
 }
 
+void Agent::setEntityVisible(const std::string& eid, bool vis)
+{
+    if (vis) {
+        if (m_visible.count(eid) != 0) return;
+        m_visible.insert(eid);
+        
+        if (isVisible(eid)) {
+            Appearance app;
+            app->setFrom(m_character);
+            app->setTo(m_character);
+            Root obj;
+            obj->setId(eid);
+            app->setArgs1(obj);
+            m_con->send(app);
+            cout << "sending appearance of " << eid << endl;
+        } // of Appearance op send
+    } else {
+        if (m_visible.count(eid) == 0) return;
+        bool wasVisible = isVisible(eid);
+        m_visible.erase(eid);
+        bool nowVis = isVisible(eid);
+        
+        if (!nowVis && wasVisible) {
+            Disappearance dap;
+            dap->setFrom(m_character);
+            dap->setTo(m_character);
+            Root obj;
+            obj->setId(eid);
+            dap->setArgs1(obj);
+            m_con->send(dap);
+        } // of disapearance op send
+    }
+}
+
+void Agent::setEntityVisibleForFutureAgent(const std::string& eid, const std::string& agentId)
+{
+    static_futureVisible.insert(StringStringMmap::value_type(agentId, eid));
+}
+
+#pragma mark -
+
 void Agent::processLook(const Look& look)
 {
     const std::vector<Root>& args = look->getArgs();
     std::string lookTarget;
         
     if (args.empty()) {
-        debug() << "got anonymous IG look";
+        cout << "got anonymous IG look" << endl;
         lookTarget = "_world";
     } else {
         lookTarget = args.front()->getId();
-        debug() << "IG look at " << lookTarget;
+        cout << "IG look at " << lookTarget << endl;
     }
     
     if (m_server->m_world.count(lookTarget) == 0) {
         m_con->sendError("unknown object ID:" + lookTarget, look);
         return;
     }
+    
+    if (!isVisible(lookTarget)) {
+        std::cout << "agent got look at invsible entity ID: " << lookTarget << std::endl;
+        return;
+    }
 
+    typedef std::list<std::string> StringList;
+
+    GameEntity ge = m_server->m_world[lookTarget];
+    StringList contents = ge->getContains();
+    
+    // prune based on visibility
+    for (StringList::iterator it=contents.begin(); it != contents.end(); ) {
+        if (m_visible.count(*it) == 0) {
+            std::cout << "pruning invisible child " << *it << std::endl;
+            it = contents.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    
+    ge->setContains(contents);
+    
     Sight st;
-    st->setArgs1(m_server->m_world[lookTarget]);
+    st->setArgs1(ge);
     st->setFrom(lookTarget);
     st->setTo(look->getFrom());
     st->setRefno(look->getSerialno());
     m_con->send(st);
+}
+
+bool Agent::isVisible(const std::string& lookTarget) const
+{
+    if (lookTarget == "_world") return true; // base-case, should be TLVE
+    
+    if (m_visible.count(lookTarget) == 0) return false;
+    
+    std::string locId = m_server->m_world[lookTarget]->getLoc();
+    return isVisible(locId); // recurse up
 }
