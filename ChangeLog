@@ -1,3 +1,9 @@
+Sunday, February 03 2002, James Turner
+
+	* Fixed logout (set FROM)
+	* Changed character API, let me know what you think.
+	* Implemented TypeInfo::getParentsAsSet
+
 Tuesday, January 29 2002, James Turner
 
 	* Support for sending private chat messages (using a new

@@ -135,40 +135,41 @@ void Player::logout()
 		Atlas::Objects::Operation::Logout::Instantiate();
      	l.SetId(_account);
 	l.SetSerialno(getNewSerialno());
+	l.SetFrom(_account);
 	
 	_con->send(l);
 	_currentAction = "logout";
 	_currentSerial = l.GetSerialno();
 }
 
-StringList Player::getCharacters()
+CharacterList Player::getCharacters()
 {
-	if (_account.empty())
-		Eris::Log(LOG_ERROR, "Not logged into an account : getCharacter returning empty list");
-	return _characters;
+    if (_account.empty())
+	    Eris::Log(LOG_ERROR, "Not logged into an account : getCharacter returning empty list");
+    return _characters;
 }
 
-void Player::requestCharacter(const std::string &id)
+void Player::refreshCharacterInfo()
 {
-	StringList::iterator i = std::find(_characters.begin(), _characters.end(), id);
-	if (i == _characters.end())
-		throw InvalidOperation("Character " + id + " not owned by player");
+    if (!_con->isConnected())
+	throw InvalidOperation("Not connected to server");
 	
-	if (!_con->isConnected())
-		throw InvalidOperation("Not connected to server");
+    _characters.clear();
 	
+    for (StringList::iterator I=_charIds.begin(); I!=_charIds.end(); ++I) {
 	// send the look
 	Atlas::Objects::Operation::Look lk =
 		Atlas::Objects::Operation::Look::Instantiate();
 	
 	AtlasMapType args;
-	args["id"] = id;
+	args["id"] = *I;
 	lk.SetArgs(AtlasListType(1, args));
 	lk.SetFrom(_lobby->getAccountID());
-	lk.SetTo(id);
+	lk.SetTo(*I);
 	lk.SetSerialno(getNewSerialno());
 	
 	_con->send(lk);
+    }
 }
 
 World* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
@@ -198,8 +199,8 @@ World* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 
 World* Player::takeCharacter(const std::string &id)
 {
-	StringList::iterator i = std::find(_characters.begin(), _characters.end(), id);
-	if (i == _characters.end())
+	StringList::iterator i = std::find(_charIds.begin(), _charIds.end(), id);
+	if (i == _charIds.end())
 		throw InvalidOperation("Character " + id + " not owned by player");
 	
 	if (!_con->isConnected())
@@ -247,30 +248,33 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
 
 void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
 {
-	// FIXME - user p.GetUsername() to verify this is the correct player object
-	
-	_currentAction = "";
-	_account = p.GetId();
-	
-	// extract character IDs
-	Atlas::Message::Object::ListType cs = p.GetCharacters();
-	for (Atlas::Message::Object::ListType::iterator C=cs.begin(); C!=cs.end(); ++C)
-		_characters.push_back(C->AsString());
-	
-	// setup dispatcher for sight of character ops
-	Dispatcher *d = _con->getDispatcherByPath("op:oog:sight:entity");
-	assert(d);
-	
-	if (d->getSubdispatch("character"))
-		// second time around, don't try again
-		return;
-	
-	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("player",
-		SigC::slot(this, &Player::recvSightCharacter)),
-		"character"
-	);
-	
-	_con->Disconnecting.connect(SigC::slot(this, &Player::netDisconnecting));
+    // FIXME - user p.GetUsername() to verify this is the correct player object
+    
+    _currentAction = "";
+    _account = p.GetId();
+    
+    _charIds.clear();
+    // extract character IDs
+    Atlas::Message::Object::ListType cs = p.GetCharacters();
+    for (Atlas::Message::Object::ListType::iterator C=cs.begin(); C!=cs.end(); ++C)
+	_charIds.push_back(C->AsString());
+    
+    // setup dispatcher for sight of character ops
+    Dispatcher *d = _con->getDispatcherByPath("op:oog:sight:entity");
+    assert(d);
+    
+    if (d->getSubdispatch("character"))
+	// second time around, don't try again
+	return;
+    
+    d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("game_entity",
+	SigC::slot(this, &Player::recvSightCharacter)),
+	"character"
+    );
+    
+    // notify an people watching us (as opposed to watching the lobby directly)
+    LoginSuccess.emit();
+    _con->Disconnecting.connect(SigC::slot(this, &Player::netDisconnecting));
 }
 
 void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
@@ -302,9 +306,16 @@ void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 	_currentSerial = 0;
 }
 
-void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &/*ge*/)
+void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
 {
-	
+    Eris::Log(LOG_DEBUG, "got sight of character %s", ge.GetName().c_str());
+    
+    _characters.push_back(ge);
+    GotCharacterInfo.emit(ge);
+    
+    // check if we're all done
+    if (_characters.size() == _charIds.size())
+	GotAllCharacters.emit();
 }
 
 /* this will only ever get encountered after the connection is initally up;

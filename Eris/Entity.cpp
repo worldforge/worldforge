@@ -168,11 +168,11 @@ void Entity::setVisible(bool vis)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
-{
+{    
     beginUpdate();
     
-    const Atlas::Message::Object::MapType &amp = ge.AsMap();
-    for (Atlas::Message::Object::MapType::const_iterator A = amp.begin(); A!=amp.end(); ++A) {
+    Atlas::Message::Object::MapType amp = ge.AsObject().AsMap();
+    for (Atlas::Message::Object::MapType::iterator A = amp.begin(); A!=amp.end(); ++A) {
 	if (A->first == "id") continue;
 	setProperty(A->first, A->second);
     }
@@ -245,7 +245,7 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
     /* we allow mapping of attributes to different internal values; use this with
     caution */
     std::string mapped(s);
-    
+	
     if (s == "name")
 	_name = val.AsString();
     else if (s == "stamp")

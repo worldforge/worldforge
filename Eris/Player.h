@@ -29,6 +29,9 @@ typedef enum {
 	LOGIN_DUPLICATE_CONNECT	///< The account is already active (not always an error)
 } LoginFailureType;
 
+/** List type used to return character info to the client. */
+typedef std::list<Atlas::Objects::Entity::GameEntity> CharacterList;
+
 /// Per-player instance, for entire lifetime; abstracted to permit (in theorey) multiple players per client
 
 /** A Player object represents the encapsulation of a server account, and it's binding to a character in the
@@ -52,7 +55,8 @@ public:
 	
 	/** Server-side failures during the login process, such as the account being unknown
 	or an incorrect password being supplied, will result in the 'LoginFailure' signal being
-	emitted with some vaugely helpful error message, and an error code.*/
+	emitted with some vaugely helpful error message, and an error code. The LoginSuccess
+	signal will be emitted upon sucessful completion of the login process. */
 
 	void login(const std::string &uname,
 		const std::string &pwd);
@@ -60,7 +64,7 @@ public:
 	/** Attempt to create a new account on the server and log into it.
 	Server-side failures, such as an account already existing with the specified
 	username, will cause the 'LoginFailure' signal to be emitted with an error message
-	and a code*/
+	and a code. As for 'login', LoginSuccess wil be emitted if everything goes as planne. */
 
 	/// @param uname The desired username of the account (eg 'bryceh')
 	/// @param name The real name of the user (e.g 'Bryce Harrington')
@@ -73,14 +77,17 @@ public:
 	/// Initiate a clean disconnection from the server
 	void logout();
 
-	/// access the characters currently owned by the player
-	StringList getCharacters();
+	/** access the characters currently owned by the player  : note you should call
+	refreshCharacterInfo, and wait for 'GotCharacters' signal, prior to the
+	initial call : otherwise, it may return an empty or incomplete list. */
+	CharacterList getCharacters();
 
-	/// request the entity corresponding to a character
-	/** Used to request the entity corresponding to a character owned by the player; the response will be 
-	a BrowseCharatcer signal containing the entity data. This allows clients to display a character browser
-	with the name, race, location and so on of characters, prior to entering the game. */
-	void requestCharacter(const std::string &id);
+	/** update the charcter list (based on changes to play). The intention here is
+	that clients will call this method when the user invokes the 'choose character' command,
+	and wait for the 'GotCharacters signal before displaying. Alternatively, you can
+	display the UI immediatley, and add character entries based on the 'GotCharacterInfo'
+	signal, which will be emitted once for each character. */
+	void refreshCharacterInfo();
 
 	/// enter the game using an existing character
 	/// @param id The Atlas-ID of the game entity to take-over; this must be owned by the player's account
@@ -93,10 +100,15 @@ public:
 	std::string getAccountID() const;
 // signals
 	/// emitted when a character has been retrived from the server
-	SigC::Signal1<void, const Atlas::Objects::Entity::GameEntity&> BrowseCharacter;
+	SigC::Signal1<void, const Atlas::Objects::Entity::GameEntity&> GotCharacterInfo;
+	
+	/// emitted when the entire character list had been updated
+	SigC::Signal0<void> GotAllCharacters;
 	
 	/// emitted when a server-side error occurs during account creation / login
 	SigC::Signal2<void, LoginFailureType, const std::string &> LoginFailure;
+	
+	SigC::Signal0<void> LoginSuccess;
 protected:
 	void recvOpError(const Atlas::Objects::Operation::Error &err);	
 	void recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
@@ -114,7 +126,8 @@ protected:
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)
 
-	StringList _characters;	///< entity IDs of charatcers belonging to this player
+	CharacterList _characters;	///< charatcers belonging to this player
+	StringList _charIds;
 
 	std::string _username,	///< The player's username ( != account object's ID)
 		_pass;		///< The password; FIXME - clear text.

@@ -269,6 +269,17 @@ std::string TypeInfo::getName() const
 	return _name;
 }
 
+StringSet TypeInfo::getParentsAsSet()
+{
+    StringSet ret;
+    
+    for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P) {
+	ret.insert((*P)->getName());
+    }
+    
+    return ret;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void TypeInfo::init()
