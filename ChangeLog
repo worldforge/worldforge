@@ -1,5 +1,10 @@
 Saturday, 20th December, Ron Steinke <rsteinke@w-link.net>
 
+	* Don't need Avatar::GotEntity, World::Entered does
+	  the same thing.
+
+Saturday, 20th December, Ron Steinke <rsteinke@w-link.net>
+
 	* Added a GotEntity signal to Avatar, so we can connect
 	  callbacks to the character's entity when it arrives.
 
