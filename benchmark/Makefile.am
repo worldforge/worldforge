@@ -1,6 +1,6 @@
-noinst_PROGRAMS = Objects_Move Message_Move Call_Move Static_Move
+noinst_PROGRAMS = Objects_Move Message_Move Call_Move Static_Move SmartPtr_Move
 
-CPPFLAGS = -I$(prefix)/include
+CPPFLAGS = -I$(prefix)/include -Wall
 
 LDADD  = -L$(prefix)/lib -lsocket++
 LDADD += \
@@ -20,6 +20,7 @@ Message_Move_SOURCES = Message_Move.cc
 Objects_Move_SOURCES = Objects_Move.cc
 Call_Move_SOURCES = Call_Move.cc
 Static_Move_SOURCES = Static_Move.cc
+SmartPtr_Move_SOURCES = SmartPtr_Move.cc
 
 #EXTRA_DIST = \
 #	benchmark.txt
