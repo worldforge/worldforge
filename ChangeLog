@@ -1,3 +1,9 @@
+2003-05-24 Damien McGinnes
+	* Mercator/Segment.h Mercator/Segment.cpp: Cleaned up Segment, removed
+	  tile.cpp and tile.h and moved them into Segment
+	* TODO: added some ideas
+	* AUTHORS: added some authors
+
 2003-05-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.h, Mercator/Segment.cpp: Add a destructor so
@@ -6,12 +12,12 @@
 2003-04-25  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.cpp, Mercator/Segment.h:
-	  Initialise min and max properlly, and make their accessors const.
+	  Initialise min and max properly, and make their accessors const.
 
 2003-04-25  Damien McGinnes
 
-	* Mercator/tile.cpp,h Added min and max calcs
-	* Mercator/Segment.cpp,h added accessors for min and max
+	* Mercator/tile.cpp,h: Added min and max calcs
+	* Mercator/Segment.cpp,h: added accessors for min and max
 
 2003-04-19  Al Riddoch  <alriddoch@zepler.org>
 

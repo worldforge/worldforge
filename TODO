@@ -1,2 +1,27 @@
-Modify the segment model so it stores segSize + 1 heightpoints, to make rendering
-the segments easier.
+* allow local terrain deformation:
+   -subtraction eg of a sphere to make a crater
+   -addition eg of a cylindroid to make a mesa
+   -set all heights within a polygon to one value (level ground on which to build)
+
+* move some of the stage terrain code into mercator
+   - normal/height calcs
+
+* a sea level? multiple sea levels?
+
+* include Munins texture blending model
+
+* a cache that dynamically creates Segments when they are requested and
+  deallocates based on a rule such as LRU
+
+* investigate interpolation of height points to eliminate gradient discontinuities at tile edges
+  this is low priority because gradients differences are only a problem occasionally
+
+* variable roughness. this was trialled in forge/scratchpad/damien but might have some bugs
+
+* allow for non fractal tiles (hand drawn ones inserted into the landscape) ??
+
+* variable detail? (32, 64 and 128 side tiles on the same terrain?) unsure how this fits in with the RNG scheme,
+  so this might be difficult. a tile of side 2^n must butt up against tile of size 2^n-1, 2^n or 2^n+1.
+  ie 32 cant interact with a 128
+
+* transparent patches? allowing caves, or tunnels?

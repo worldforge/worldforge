@@ -30,6 +30,7 @@ class Segment {
     const float * getPoints() const {
         return m_points;
     }
+
     float * getPoints() {
         return m_points;
     }
@@ -39,12 +40,24 @@ class Segment {
     }
 
     void populate(const Matrix<4,4> &);
-    void populate(const float *);
-    float qRMD(float, float, float, float, int depth) const;
 
     float getMax() const { return m_max; }
-    float getMin() const { return m_max; }
+    float getMin() const { return m_min; }
+
+private:
+    inline void checkMaxMin(float h) { 
+	    if (h<m_min) m_min=h;
+            if (h>m_max) m_max=h;
+    } 
+
+    void fill1d(int size, float falloff, float roughness, 
+		float l, float h, float *array) const;
+
+    void fill2d(int size, float falloff, float roughness,
+	      float p1, float p2, float p3, float p4);
 	
+    float qRMD(float nn, float fn, float ff, float nf, 
+	       float roughness, float falloff, int depth) const;
 };
 
 } // namespace Mercator
