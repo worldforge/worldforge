@@ -1,4 +1,9 @@
-Tuesday, January 29th, 2004   Ron Steinke <rsteinke@w-link.net>
+Thursday, January 29th, James Turner <james@worldforge.org>
+
+        * Add a test for the timestamp/timediff code (not exhaustive
+          by any means)
+
+Thursday, January 29th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed the TimeDiff constructor from milliseconds to
 	  set the is_valid flag (thanks James!).
