@@ -13,7 +13,7 @@
 #include "AtlasPython.h"
 
 #include <string>
-
+using namespace std;
 
 /**
  * Atlas Base Object Structure

@@ -15,6 +15,7 @@
 #include <memory.h>
 
 #include <string>
+using namespace std;
 
 #ifdef __linux__
 	#include <sys/time.h>

@@ -22,7 +22,7 @@ AServer::AServer(ASocket* listener)
 // processes all inbound data and sends to client objects
 int AServer::poll()
 {
-	poll(100);
+	return poll(100);
 }
 
 int AServer::poll(long usec)

@@ -10,6 +10,7 @@
 #define __AtlasCompressor_h_
 
 #include <string>
+using namespace std;
 
 class ACompressor
 {

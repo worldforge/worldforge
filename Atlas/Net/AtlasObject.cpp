@@ -109,7 +109,7 @@ AObject::AObject(int len, long src, ...)
 		long tmp = va_arg(va,long);
 		PyList_SetItem(obj, i, PyLong_FromLong(src));
 	}
-	va_end(ap);
+	va_end(va);
 }
 
 AObject::AObject(int len, double src, ...)
@@ -125,7 +125,7 @@ AObject::AObject(int len, double src, ...)
 		double tmp = va_arg(va,double);
 		PyList_SetItem(obj, i, PyFloat_FromDouble(src));
 	}
-	va_end(ap);
+	va_end(va);
 }
 
 AObject::AObject(int len, string* src, ...)
@@ -145,7 +145,7 @@ AObject::AObject(int len, string* src, ...)
 		PyList_SetItem(obj, i, PyString_FromString(tmp));
 		free(tmp);
 	}
-	va_end(ap);
+	va_end(va);
 }
 
 AObject::AObject(int len, double* src)
@@ -524,6 +524,7 @@ int	AObject::append(long src)
 	PyObject* ptmp = PyLong_FromLong(src);
 	bool res = PyList_Append(obj, ptmp);
 	Py_XDECREF(ptmp);
+        return res;
 }
 
 int	AObject::append(double src)
@@ -531,6 +532,7 @@ int	AObject::append(double src)
 	PyObject* ptmp = PyFloat_FromDouble(src);
 	bool res = PyList_Append(obj, ptmp);
 	Py_XDECREF(ptmp);
+        return res;
 }
 
 int	AObject::append(const string& src)
