@@ -71,16 +71,21 @@ class Segment {
         return m_size;
     }
 
-    const bool isValid() {
+    const bool isValid() const {
         return (m_points != 0);
     }
 
-    const bool isVertexCacheValid() {
+    const bool isVertexCacheValid() const {
         return m_validVert;
     }
 
     void setVertexCacheValid(bool f = true) {
         m_validVert = true;
+    }
+
+    void setMinMax(float min, float max) {
+        m_min = min;
+        m_max = max;
     }
 
     void invalidate(bool points = true);

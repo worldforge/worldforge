@@ -1,3 +1,10 @@
+2004-06-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.h: Add method to set min and max at creation time.
+
+	* Mercator/Terrain.cpp: When creating a new segment, set its
+	  min and max to the min and max height of the BasePoints.
+
 2004-06-03  James Turner  <james@worldforge.org>
 
 	* XCode project updates

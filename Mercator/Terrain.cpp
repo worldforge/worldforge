@@ -122,11 +122,16 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 s = new Segment(m_res);
                 s->setRef(i,j);
                 Matrix<2, 2, BasePoint> & cp = s->getControlPoints();
+                float min = existingPoint[ri][rj].height();
+                float max = existingPoint[ri][rj].height();
                 for(unsigned int k = 0; k < 2; ++k) {
                     for(unsigned int l = 0; l < 2; ++l) {
                         cp(k, l) = existingPoint[ri + k][rj + l];
+                        min = std::min(cp(k, l).height(), min);
+                        max = std::max(cp(k, l).height(), max);
                     }
                 }
+                s->setMinMax(min, max);
                 if (isShaded()) {
                     addSurfaces(*s);
                 }
