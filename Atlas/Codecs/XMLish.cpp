@@ -24,7 +24,7 @@ class XMLish : public Codec<std::iostream>
     virtual void poll(bool can_read = true);
 
     virtual void streamBegin();
-    virtual void streamMessage(const Map&);
+    virtual void streamMessage();
     virtual void streamEnd();
 
     virtual void mapItem(const std::string& name, const Map&);
@@ -82,7 +82,7 @@ void XMLish::streamBegin()
     socket << "<atlas>";
 }
 
-void XMLish::streamMessage(const Map&)
+void XMLish::streamMessage()
 {
     socket << "<map>";
 }

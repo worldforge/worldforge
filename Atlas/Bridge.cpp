@@ -3,6 +3,3 @@
 // Copyright (C) 2000 Michael Day
 
 #include "Bridge.h"
-
-Atlas::Bridge::Map Atlas::Bridge::m_mapBegin;
-Atlas::Bridge::List Atlas::Bridge::m_listBegin;

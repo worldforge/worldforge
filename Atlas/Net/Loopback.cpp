@@ -17,9 +17,9 @@ class LoopBridge : public Bridge
 	m_bridge->streamBegin();
     }
     
-    virtual void streamMessage(const Map&)
+    virtual void streamMessage()
     {
-	m_bridge->streamMessage(m_mapBegin);
+	m_bridge->streamMessage();
     }
     
     virtual void streamEnd()
@@ -27,29 +27,29 @@ class LoopBridge : public Bridge
 	m_bridge->streamEnd();
     }
 
-    virtual void mapItem(const std::string& name, const Map&)
+    virtual void mapMapItem(const std::string& name)
     {
-	m_bridge->mapItem(name, m_mapBegin);
+	m_bridge->mapMapItem(name);
     }
     
-    virtual void mapItem(const std::string& name, const List&)
+    virtual void mapListItem(const std::string& name)
     {
-	m_bridge->mapItem(name, m_listBegin);
+	m_bridge->mapListItem(name);
     }
     
-    virtual void mapItem(const std::string& name, long data)
+    virtual void mapIntItem(const std::string& name, long data)
     {
-	m_bridge->mapItem(name, data);
+	m_bridge->mapIntItem(name, data);
     }
     
-    virtual void mapItem(const std::string& name, double data)
+    virtual void mapFloatItem(const std::string& name, double data)
     {
-	m_bridge->mapItem(name, data);
+	m_bridge->mapFloatItem(name, data);
     }
 
-    virtual void mapItem(const std::string& name, const std::string& data)
+    virtual void mapStringItem(const std::string& name, const std::string& data)
     {
-	m_bridge->mapItem(name, data);
+	m_bridge->mapStringItem(name, data);
     }
     
     virtual void mapEnd()
@@ -57,29 +57,29 @@ class LoopBridge : public Bridge
 	m_bridge->mapEnd();
     }
     
-    virtual void listItem(const Map&)
+    virtual void listMapItem()
     {
-	m_bridge->listItem(m_mapBegin);
+	m_bridge->listMapItem();
     }
     
-    virtual void listItem(const List&)
+    virtual void listListItem()
     {
-	m_bridge->listItem(m_listBegin);
+	m_bridge->listListItem();
     }
     
-    virtual void listItem(long data)
+    virtual void listIntItem(long data)
     {
-	m_bridge->listItem(data);
+	m_bridge->listIntItem(data);
     }
     
-    virtual void listItem(double data)
+    virtual void listFloatItem(double data)
     {
-	m_bridge->listItem(data);
+	m_bridge->listFloatItem(data);
     }
     
-    virtual void listItem(const std::string& data)
+    virtual void listStringItem(const std::string& data)
     {
-	m_bridge->listItem(data);
+	m_bridge->listStringItem(data);
     }
     
     virtual void listEnd()

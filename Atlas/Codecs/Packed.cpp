@@ -17,7 +17,7 @@ void Packed::parseStream(char next)
     switch (next)
     {
 	case '[':
-	    m_bridge->streamMessage(m_mapBegin);
+	    m_bridge->streamMessage();
 	    m_state.push(PARSE_MAP);
 	break;
 
@@ -81,12 +81,12 @@ void Packed::parseList(char next)
 	break;
 
 	case '[':
-	    m_bridge->listItem(m_mapBegin);
+	    m_bridge->listMapItem();
 	    m_state.push(PARSE_MAP);
 	break;
 
 	case '(':
-	    m_bridge->listItem(m_listBegin);
+	    m_bridge->listListItem();
 	    m_state.push(PARSE_LIST);
 	break;
 
@@ -111,7 +111,7 @@ void Packed::parseList(char next)
 
 void Packed::parseMapBegin(char next)
 {
-    m_bridge->mapItem(hexDecode(m_name), m_mapBegin);
+    m_bridge->mapMapItem(hexDecode(m_name));
     m_socket.putback(next);
     m_state.pop();
     m_name.erase();
@@ -119,7 +119,7 @@ void Packed::parseMapBegin(char next)
 
 void Packed::parseListBegin(char next)
 {
-    m_bridge->mapItem(hexDecode(m_name), m_listBegin);
+    m_bridge->mapListItem(hexDecode(m_name));
     m_socket.putback(next);
     m_state.pop();
     m_name.erase();
@@ -140,12 +140,12 @@ void Packed::parseInt(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge->mapItem(hexDecode(m_name), atol(m_data.c_str()));
+		m_bridge->mapIntItem(hexDecode(m_name), atol(m_data.c_str()));
 		m_name.erase();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge->listItem(atol(m_data.c_str()));
+		m_bridge->listIntItem(atol(m_data.c_str()));
 	    }
 	    else
 	    {
@@ -191,12 +191,12 @@ void Packed::parseFloat(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge->mapItem(hexDecode(m_name), atof(m_data.c_str()));
+		m_bridge->mapFloatItem(hexDecode(m_name), atof(m_data.c_str()));
 		m_name.erase();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge->listItem(atof(m_data.c_str()));
+		m_bridge->listFloatItem(atof(m_data.c_str()));
 	    }
 	    else
 	    {
@@ -245,12 +245,12 @@ void Packed::parseString(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge->mapItem(hexDecode(m_name), hexDecode(m_data));
+		m_bridge->mapStringItem(hexDecode(m_name), hexDecode(m_data));
 		m_name.erase();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge->listItem(hexDecode(m_data));
+		m_bridge->listStringItem(hexDecode(m_data));
 	    }
 	    else
 	    {
@@ -323,7 +323,7 @@ void Packed::streamBegin()
     m_bridge->streamBegin();
 }
 
-void Packed::streamMessage(const Map&)
+void Packed::streamMessage()
 {
     m_socket << '[';
 }
@@ -333,27 +333,27 @@ void Packed::streamEnd()
     m_bridge->streamEnd();
 }
 
-void Packed::mapItem(const std::string& name, const Map&)
+void Packed::mapMapItem(const std::string& name)
 {
     m_socket << '[' << hexEncode(name) << '=';
 }
 
-void Packed::mapItem(const std::string& name, const List&)
+void Packed::mapListItem(const std::string& name)
 {
     m_socket << '(' << hexEncode(name) << '=';
 }
 
-void Packed::mapItem(const std::string& name, long data)
+void Packed::mapIntItem(const std::string& name, long data)
 {
     m_socket << '@' << hexEncode(name) << '=' << data;
 }
 
-void Packed::mapItem(const std::string& name, double data)
+void Packed::mapFloatItem(const std::string& name, double data)
 {
     m_socket << '#' << hexEncode(name) << '=' << data;
 }
 
-void Packed::mapItem(const std::string& name, const std::string& data)
+void Packed::mapStringItem(const std::string& name, const std::string& data)
 {
     m_socket << '$' << hexEncode(name) << '=' << hexEncode(data);
 }
@@ -363,27 +363,27 @@ void Packed::mapEnd()
     m_socket << ']';
 }
 
-void Packed::listItem(const Map&)
+void Packed::listMapItem()
 {
     m_socket << '[';
 }
 
-void Packed::listItem(const List&)
+void Packed::listListItem()
 {
     m_socket << '(';
 }
 
-void Packed::listItem(long data)
+void Packed::listIntItem(long data)
 {
     m_socket << '@' << data;
 }
 
-void Packed::listItem(double data)
+void Packed::listFloatItem(double data)
 {
     m_socket << '#' << data;
 }
 
-void Packed::listItem(const std::string& data)
+void Packed::listStringItem(const std::string& data)
 {
     m_socket << '$' << hexEncode(data);
 }

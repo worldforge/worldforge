@@ -102,12 +102,26 @@ class AttributeInfo:
         else:
             indent = ""
 
-        if self.type in ('int', 'float', 'string'):
-            res = res + indent + '    b->mapItem("%s", get%s%s());\n' \
+        if self.type == "int":
+            res = res + indent + '    b->mapIntItem("%s", get%s%s());\n' \
+                  % (self.name, self.cname, self.as_object)
+        elif self.type == "float":
+            res = res + indent + '    b->mapFloatItem("%s", get%s%s());\n' \
+                  % (self.name, self.cname, self.as_object)
+        elif self.type == "string":
+            res = res + indent + '    b->mapStringItem("%s", get%s%s());\n' \
+                  % (self.name, self.cname, self.as_object)
+        elif self.type == "list":
+            res = res + indent + '    Atlas::Message::Encoder e(b);\n'
+            res = res + indent + '    e.mapElementListItem("%s", get%s%s());\n' \
+                  % (self.name, self.cname, self.as_object)
+        elif self.type == "map":
+            res = res + indent + '    Atlas::Message::Encoder e(b);\n'
+            res = res + indent + '    e.mapElementMapItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
         else:
             res = res + indent + '    Atlas::Message::Encoder e(b);\n'
-            res = res + indent + '    e.mapItem("%s", get%s%s());\n' \
+            res = res + indent + '    e.mapElementListItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
         if self.name not in ["parents", "objtype"]:
             res = res + '    }\n'

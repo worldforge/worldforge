@@ -31,9 +31,9 @@ public:
 
     /// Send an object to the bridge.
     /// @param o The object that is to be sent.
-    virtual void streamMessage(const Atlas::Objects::Root& o)
+    virtual void streamObjectsMessage(const Atlas::Objects::Root& o)
     {
-        m_bridge->streamMessage(Bridge::m_mapBegin);
+        m_bridge->streamMessage();
         o->sendContents(m_bridge);
         m_bridge->mapEnd();
     }

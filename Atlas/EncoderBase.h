@@ -34,26 +34,27 @@ public:
     virtual ~EncoderBase() { }
     
     virtual void streamBegin() { m_bridge->streamBegin(); }
-    virtual void streamMessage(const Map& m) { m_bridge->streamMessage(m); }
+    virtual void streamMessage() { m_bridge->streamMessage(); }
     virtual void streamEnd() { m_bridge->streamEnd(); }
     
-    virtual void mapItem(const std::string& name, const Bridge::Map& m)
-    { m_bridge->mapItem(name, m); }
-    virtual void mapItem(const std::string& name, const Bridge::List& l)
-    { m_bridge->mapItem(name, l); }
-    virtual void mapItem(const std::string& name, long i)
-    { m_bridge->mapItem(name, i); }
-    virtual void mapItem(const std::string& name, double d)
-    { m_bridge->mapItem(name, d); }
-    virtual void mapItem(const std::string& name, const std::string& s)
-    { m_bridge->mapItem(name, s); }
+    virtual void mapMapItem(const std::string& name)
+    { m_bridge->mapMapItem(name); }
+    virtual void mapListItem(const std::string& name)
+    { m_bridge->mapListItem(name); }
+    virtual void mapIntItem(const std::string& name, long i)
+    { m_bridge->mapIntItem(name, i); }
+    virtual void mapFloatItem(const std::string& name, double d)
+    { m_bridge->mapFloatItem(name, d); }
+    virtual void mapStringItem(const std::string& name, const std::string& s)
+    { m_bridge->mapStringItem(name, s); }
     virtual void mapEnd() { m_bridge->mapEnd(); }
     
-    virtual void listItem(const Bridge::Map& m) { m_bridge->listItem(m); }
-    virtual void listItem(const Bridge::List& l) { m_bridge->listItem(l); }
-    virtual void listItem(long i) { m_bridge->listItem(i); }
-    virtual void listItem(double d) { m_bridge->listItem(d); }
-    virtual void listItem(const std::string& s) { m_bridge->listItem(s); }
+    virtual void listMapItem() { m_bridge->listMapItem(); }
+    virtual void listListItem() { m_bridge->listListItem(); }
+    virtual void listIntItem(long i) { m_bridge->listIntItem(i); }
+    virtual void listFloatItem(double d) { m_bridge->listFloatItem(d); }
+    virtual void listStringItem(const std::string& s)
+    { m_bridge->listStringItem(s); }
     virtual void listEnd() { m_bridge->listEnd(); }
 
 protected:
@@ -63,4 +64,4 @@ protected:
 
 } // namespace Atlas 
 
-#endif
+#endif // ATLAS_ENCODERBASE_H

@@ -25,21 +25,21 @@ class Bach : public Codec<std::iostream>
     virtual void poll(bool can_read = true);
 
     virtual void streamBegin();
-    virtual void streamMessage(const Map&);
+    virtual void streamMessage();
     virtual void streamEnd();
 
-    virtual void mapItem(const std::string& name, const Map&);
-    virtual void mapItem(const std::string& name, const List&);
-    virtual void mapItem(const std::string& name, long);
-    virtual void mapItem(const std::string& name, double);
-    virtual void mapItem(const std::string& name, const std::string&);
+    virtual void mapMapItem(const std::string& name);
+    virtual void mapListItem(const std::string& name);
+    virtual void mapIntItem(const std::string& name, long);
+    virtual void mapFloatItem(const std::string& name, double);
+    virtual void mapStringItem(const std::string& name, const std::string&);
     virtual void mapEnd();
 
-    virtual void listItem(const Map&);
-    virtual void listItem(const List&);
-    virtual void listItem(double);
-    virtual void listItem(long);
-    virtual void listItem(const std::string&);
+    virtual void listMapItem();
+    virtual void listListItem();
+    virtual void listIntItem(long);
+    virtual void listFloatItem(double);
+    virtual void listStringItem(const std::string&);
     virtual void listEnd();
 
   protected:
@@ -78,9 +78,9 @@ class Bach : public Codec<std::iostream>
     inline const std::string encodeString(std::string);
     inline const std::string decodeString(std::string);
 
-    void writeItem(std::string,long);
-    void writeItem(std::string,double);
-    void writeItem(std::string,std::string);
+    void writeIntItem(std::string,long);
+    void writeFloatItem(std::string,double);
+    void writeStringItem(std::string,std::string);
     void writeLine(std::string,bool=true,bool=false);
 };
 

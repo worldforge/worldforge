@@ -1,5 +1,23 @@
 2001-11-30  Al Riddoch  <alriddoch@zepler.org>
 
+	* src/Bridge.cpp, src/Bridge.h, src/EncoderBase.h,
+	  src/Codecs/Bach.cpp, src/Codecs/Bach.h,
+	  src/Codecs/Packed.cpp, src/Codecs/Packed.h,
+	  src/Codecs/XML.cpp, src/Codecs/XML.h,
+	  src/Codecs/XMLish.cpp, src/Funky/FEncoder.h,
+	  src/Message/DecoderBase.cpp, src/Message/DecoderBase.h,
+	  src/Message/MEncoder.cpp, src/Message/MEncoder.h,
+	  src/Net/Loopback.cpp, src/Objects/AttributeInfo.py,
+	  src/Objects/BaseObject.cpp, src/Objects/Encoder.h,
+	  src/Utilities/atlas_convert.cpp, tests/Objects/decoder1.cpp,
+	  tests/Objects/encoder1.cpp, tests/Objects/objects2.cpp,
+	  tutorial/DebugBridge.h, tutorial/simple_client.cpp,
+	  tutorial/example/DebugBridge.h, tutorial/example/simple_client.cpp:
+	  Rename methods so overloading is not being used, to prevent
+	  the problems that seems to cause with virtual functions.
+
+2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Message/MEncoder.cpp, src/Message/MEncoder.h,
 	  src/Objects/BaseObject.cpp, src/Objects/BaseObject.h,
 	  src/Objects/GenerateObjectFactory.py, src/Objects/gen_cpp.py

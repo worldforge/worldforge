@@ -54,7 +54,7 @@ void convert(std::string file_in, std::string codec_in, std::string file_out, st
     encoder.streamBegin();
     while (decoder.queueSize() > 0 ) {
         Atlas::Message::Element::MapType msg(decoder.popMessage());
-        encoder.streamMessage(msg);
+        encoder.streamMessageElement(msg);
     }
     encoder.streamEnd();
 

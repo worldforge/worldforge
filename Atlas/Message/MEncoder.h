@@ -29,43 +29,45 @@ public:
     virtual ~Encoder() { }
 
     /// Send a message (must be a map!) in stream state.
-    virtual void streamMessage(const Element::MapType & obj);
+    virtual void streamMessageElement(const Element::MapType & obj);
     /// Send an object as a map item.
-    virtual void mapItem(const std::string&, const Element&);
+    virtual void mapElementItem(const std::string&, const Element&);
+    virtual void mapElementMapItem(const std::string&, const Element::MapType&);
+    virtual void mapElementListItem(const std::string&, const Element::ListType&);
     /// Send an object as a list item.
-    virtual void listItem(const Element&);
+    virtual void listElementItem(const Element&);
+    virtual void listElementMapItem(const Element::MapType&);
+    virtual void listElementListItem(const Element::ListType&);
 
     /// Atlas::EncoderBase methods (so we don't hide them).
-    virtual void streamMessage(const Map& m) {
-        Atlas::EncoderBase::streamMessage(m);
+    virtual void streamMessage() {
+        Atlas::EncoderBase::streamMessage();
     }
 
-    virtual void mapItem(const std::string& name, const Bridge::Map& m) {
-        Atlas::EncoderBase::mapItem(name, m);
+    virtual void mapMapItem(const std::string& name) {
+        Atlas::EncoderBase::mapMapItem(name);
     }
-    virtual void mapItem(const std::string& name, const Bridge::List& l) {
-        Atlas::EncoderBase::mapItem(name, l);
+    virtual void mapListItem(const std::string& name) {
+        Atlas::EncoderBase::mapListItem(name);
     }
-    virtual void mapItem(const std::string& name, long i) {
-        Atlas::EncoderBase::mapItem(name, i);
+    virtual void mapIntItem(const std::string& name, long i) {
+        Atlas::EncoderBase::mapIntItem(name, i);
     }
-    virtual void mapItem(const std::string& name, double d) {
-        Atlas::EncoderBase::mapItem(name, d);
+    virtual void mapFloatItem(const std::string& name, double d) {
+        Atlas::EncoderBase::mapFloatItem(name, d);
     }
-    virtual void mapItem(const std::string& name, const std::string& s) {
-        Atlas::EncoderBase::mapItem(name, s);
+    virtual void mapStringItem(const std::string& name, const std::string& s) {
+        Atlas::EncoderBase::mapStringItem(name, s);
     }
     
-    virtual void listItem(const Bridge::Map& m) {
-        Atlas::EncoderBase::listItem(m);
+    virtual void listMapItem() { Atlas::EncoderBase::listMapItem(); }
+    virtual void listListItem() { Atlas::EncoderBase::listListItem(); }
+    virtual void listIntItem(long i) { Atlas::EncoderBase::listIntItem(i); }
+    virtual void listFloatItem(double d) {
+        Atlas::EncoderBase::listFloatItem(d);
     }
-    virtual void listItem(const Bridge::List& l) {
-        Atlas::EncoderBase::listItem(l);
-    }
-    virtual void listItem(long i) { Atlas::EncoderBase::listItem(i); }
-    virtual void listItem(double d) { Atlas::EncoderBase::listItem(d); }
-    virtual void listItem(const std::string& s) {
-        Atlas::EncoderBase::listItem(s);
+    virtual void listStringItem(const std::string& s) {
+        Atlas::EncoderBase::listStringItem(s);
     }
 };
 

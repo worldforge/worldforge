@@ -38,7 +38,7 @@ void helloWorld(Codec<std::iostream> & c)
 {
     cout << "Sending hello world message... " << flush;
     c.streamMessage(Bridge::mapBegin);
-    c.mapItem("hello", "world");
+    c.mapStringItem("hello", "world");
     c.mapEnd();
     cout << "done." << endl;
 }

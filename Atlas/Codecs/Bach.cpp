@@ -36,7 +36,7 @@ void Bach::parseStream(char next)
     switch (next)
     {
     case '{':
-        m_bridge->streamMessage(m_mapBegin);
+        m_bridge->streamMessage();
         m_state.push(PARSE_MAP);
         break;
 
@@ -98,12 +98,12 @@ void Bach::parseList(char next)
         break;
 
     case '{':
-        m_bridge->listItem(m_mapBegin);
+        m_bridge->listMapItem();
         m_state.push(PARSE_MAP);
         break;
 
     case '[':
-        m_bridge->listItem(m_listBegin);
+        m_bridge->listListItem();
         m_state.push(PARSE_LIST);
         break;
 
@@ -154,13 +154,13 @@ void Bach::parseInt(char next)
         {
             ATLAS_DEBUG(std::cout << "Int: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
+            m_bridge->mapIntItem(decodeString(m_name), atol(m_data.c_str()));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "Int: " << m_data << std::endl;)
 
-            m_bridge->listItem(atof(m_data.c_str()));
+            m_bridge->listIntItem(atol(m_data.c_str()));
         }
         else
         {
@@ -216,13 +216,13 @@ void Bach::parseFloat(char next)
         {
             ATLAS_DEBUG(std::cout << "Float: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
+            m_bridge->mapFloatItem(decodeString(m_name), atof(m_data.c_str()));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "Float: " << m_data << std::endl;)
 
-            m_bridge->listItem(atof(m_data.c_str()));
+            m_bridge->listFloatItem(atof(m_data.c_str()));
         }
         else
         {
@@ -268,13 +268,13 @@ void Bach::parseString(char next)
         {
             ATLAS_DEBUG(std::cout << "String: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge->mapItem(decodeString(m_name), decodeString(m_data));
+            m_bridge->mapStringItem(decodeString(m_name), decodeString(m_data));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "String: " << m_data << std::endl;)
 
-            m_bridge->listItem(decodeString(m_data));
+            m_bridge->listStringItem(decodeString(m_data));
         }
         else
         {
@@ -322,12 +322,12 @@ void Bach::parseData(char next)
         switch (m_state.top())
         {
         case PARSE_MAP:
-            m_bridge->mapItem(decodeString(m_name),m_mapBegin);
+            m_bridge->mapMapItem(decodeString(m_name));
             m_name.erase();
             break;
 
         case PARSE_LIST:
-            m_bridge->listItem(m_mapBegin);
+            m_bridge->listMapItem();
             break;
 
         default:
@@ -344,12 +344,12 @@ void Bach::parseData(char next)
         switch (m_state.top())
         {
         case PARSE_MAP:
-            m_bridge->mapItem(decodeString(m_name),m_listBegin);
+            m_bridge->mapListItem(decodeString(m_name));
             m_name.erase();
             break;
 
         case PARSE_LIST:
-            m_bridge->listItem(m_mapBegin);
+            m_bridge->listListItem();
             break;
 
         default:
@@ -492,7 +492,7 @@ const std::string Bach::encodeString(std::string toEncode)
     return encoded;
 }
 
-void Bach::writeItem(std::string name, long data)
+void Bach::writeIntItem(std::string name, long data)
 {
     if( m_comma )
 	m_socket << ",";
@@ -503,7 +503,7 @@ void Bach::writeItem(std::string name, long data)
     m_socket << data;
 }
 
-void Bach::writeItem(std::string name, double data)
+void Bach::writeFloatItem(std::string name, double data)
 {
     if( m_comma )
 	m_socket << ",";
@@ -514,7 +514,7 @@ void Bach::writeItem(std::string name, double data)
     m_socket << data;
 }
 
-void Bach::writeItem(std::string name, std::string data)
+void Bach::writeStringItem(std::string name, std::string data)
 {
     if( m_comma )
 	m_socket << ",";
@@ -544,39 +544,39 @@ void Bach::streamEnd()
     writeLine( "]", true, true );
 }
 
-void Bach::streamMessage(const Map&)
+void Bach::streamMessage()
 {
     writeLine( "{" );
     m_comma = false;
 }
 
-void Bach::mapItem(const std::string& name, const Map&)
+void Bach::mapMapItem(const std::string& name)
 {
     writeLine( name + ":{" );
     m_comma = false;
 }
 
-void Bach::mapItem(const std::string& name, const List&)
+void Bach::mapListItem(const std::string& name)
 {
     writeLine( name + ":[" );
     m_comma = false;
 }
 
-void Bach::mapItem(const std::string& name, long data)
+void Bach::mapIntItem(const std::string& name, long data)
 {
-    writeItem( name, data );
+    writeIntItem( name, data );
     m_comma = true;
 }
 
-void Bach::mapItem(const std::string& name, double data)
+void Bach::mapFloatItem(const std::string& name, double data)
 {
-    writeItem( name, data );
+    writeFloatItem( name, data );
     m_comma = true;
 }
 
-void Bach::mapItem(const std::string& name, const std::string& data)
+void Bach::mapStringItem(const std::string& name, const std::string& data)
 {
-    writeItem( name, data );
+    writeStringItem( name, data );
     m_comma = true;
 }
 
@@ -586,33 +586,33 @@ void Bach::mapEnd()
     m_comma = true;
 }
 
-void Bach::listItem(const Map&)
+void Bach::listMapItem()
 {
     writeLine( "{" );
     m_comma = false;
 }
 
-void Bach::listItem(const List&)
+void Bach::listListItem()
 {
     writeLine( "[" );
     m_comma = false;
 }
 
-void Bach::listItem(long data)
+void Bach::listIntItem(long data)
 {
-    writeItem( "", data );
+    writeIntItem( "", data );
     m_comma = true;
 }
 
-void Bach::listItem(double data)
+void Bach::listFloatItem(double data)
 {
-    writeItem( "", data );
+    writeFloatItem( "", data );
     m_comma = true;
 }
 
-void Bach::listItem(const std::string& data)
+void Bach::listStringItem(const std::string& data)
 {
-    writeItem( "", data );
+    writeStringItem( "", data );
     m_comma = true;
 }
 

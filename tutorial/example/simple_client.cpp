@@ -26,7 +26,7 @@ void helloWorld(Atlas::Codec<std::iostream>& c)
 {
     std::cout << "Sending hello world message... " << flush;
     c.streamMessage(Atlas::Bridge::mapBegin);
-    c.mapItem("hello", "world");
+    c.mapStringItem("hello", "world");
     c.mapEnd();
     std::cout << "done." << endl;
 }

@@ -48,7 +48,7 @@ void BaseObjectData::sendContents(Bridge* b) const
     Message::Encoder e(b);
     typedef Element::MapType::const_iterator Iter;
     for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++) {
-        e.mapItem((*I).first, (*I).second);
+        e.mapElementItem((*I).first, (*I).second);
     }
 }
 

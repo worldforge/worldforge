@@ -33,6 +33,6 @@ int main(int argc, char** argv)
     rd.streamBegin(); // important, otherwise we'll segfault!
     Atlas::Objects::Root root_inst;
     root_inst->setAttr("id", std::string("root_instantiation"));
-    re.streamMessage((Atlas::Objects::Root&)root_inst);
+    re.streamObjectsMessage(root_inst);
     rd.streamEnd();
 }

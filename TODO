@@ -1,5 +1,9 @@
 New TODO by Al Riddoch
 
+Invstigate removing methods which only exist to prevent hiding methods in the
+base class. This should be possible now that the methods do not have the same
+name.
+
 Ensure that the Decoder method registration code is type safe. Probably good
 to use templates.
 

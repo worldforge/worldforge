@@ -49,19 +49,19 @@ int main(int argc, char** argv)
     }
     TestDecoder t;
     t.streamBegin();
-    t.streamMessage(Atlas::Bridge::m_mapBegin);
-        t.mapItem("parents", Atlas::Bridge::m_listBegin);
+    t.streamMessage();
+        t.mapListItem("parents");
 //            t.listItem("root");
         t.listEnd();
 //        t.mapItem("id", "root_instance");
-        t.mapItem("id", "foo");
+        t.mapStringItem("id", "foo");
     t.mapEnd();
-    t.streamMessage(Atlas::Bridge::m_mapBegin);
-        t.mapItem("objtype", "op");
-        t.mapItem("parents", Atlas::Bridge::m_listBegin);
-            t.listItem("look");
+    t.streamMessage();
+        t.mapStringItem("objtype", "op");
+        t.mapListItem("parents");
+            t.listStringItem("look");
         t.listEnd();
-        t.mapItem("id", "look_instance");
+        t.mapStringItem("id", "look_instance");
     t.mapEnd();
     t.streamEnd();
     assert(!root_arrived);

@@ -20,7 +20,7 @@ public:
         std::cout << padding << "streamBegin" << endl;
         addPadding();
     }
-    virtual void streamMessage(const Map&) {
+    virtual void streamMessage() {
         std::cout << padding << "New Map" << endl;
         addPadding();
     }
@@ -29,25 +29,25 @@ public:
         std::cout << padding << "streamEnd" << endl;
     }
     
-    virtual void mapItem(const std::string& name, const Map&)
+    virtual void mapMapItem(const std::string& name)
     {
         std::cout << padding << name << " -> New Map" << endl;
         addPadding();
     }
-    virtual void mapItem(const std::string& name, const List&)
+    virtual void mapListItem(const std::string& name)
     {
         std::cout << padding << name << " -> New List" << endl;
         addPadding();
     }
-    virtual void mapItem(const std::string& name, long i)
+    virtual void mapIntItem(const std::string& name, long i)
     {
         std::cout << padding << name << " -> Int: " << i << endl;
     }
-    virtual void mapItem(const std::string& name, double d)
+    virtual void mapFloatItem(const std::string& name, double d)
     {
         std::cout << padding << name << " -> Float: " << d << endl;
     }
-    virtual void mapItem(const std::string& name, const std::string& s)
+    virtual void mapStringItem(const std::string& name, const std::string& s)
     {
         std::cout << padding << name << " -> String: " << s << endl;
     }
@@ -57,25 +57,25 @@ public:
         std::cout << padding << "mapEnd" << endl;
     }
     
-    virtual void listItem(const Map&)
+    virtual void listMapItem()
     {
         std::cout << padding << "New Map" << endl;
         addPadding();
     }
-    virtual void listItem(const List&)
+    virtual void listListItem()
     {
         std::cout << padding << "New List" << endl;
         addPadding();
     }
-    virtual void listItem(long i)
+    virtual void listIntItem(long i)
     {
         std::cout << padding << "Int: " << i << endl;
     }
-    virtual void listItem(double d)
+    virtual void listFloatItem(double d)
     {
         std::cout << padding << "Float: " << d << endl;
     }
-    virtual void listItem(const std::string& s)
+    virtual void listStringItem(const std::string& s)
     {
         std::cout << padding << "String: " << s << endl;
     }

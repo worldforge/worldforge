@@ -50,7 +50,7 @@ std::string object2String(const Root& obj)
     assert(codec);
     codec->streamBegin();
     Atlas::Objects::ObjectsEncoder eno(codec);
-    eno.streamMessage(obj);
+    eno.streamObjectsMessage(obj);
     codec->streamEnd();
     delete codec;
     return stream.str();
@@ -149,7 +149,7 @@ void testXML()
     std::vector<Root> args(1);
     args[0] = (Root&)account;
     l->setArgs(args);
-    //coder->streamMessage((Root&)l);
+    //coder->streamObjectsMessage((Root&)l);
 //<map><list name="args"><map><std::string name="id">al</strin
 //g></map></list><list name="parents"><std::string>root</std::string></list><std::string name="ob
 //jtype">op_definition</std::string></map>
@@ -172,15 +172,15 @@ void testXML()
     codec->streamBegin();
 
     Atlas::Objects::ObjectsEncoder eno(codec);
-//    eno.streamMessage((Root&)move_op);
-    eno.streamMessage((Root&)l);
+//    eno.streamObjectsMessage(move_op);
+    eno.streamObjectsMessage(l);
 
     Anonymous e;
-    eno.streamMessage((Root&)e);
+    eno.streamObjectsMessage(e);
     e->setId("foo");
-    eno.streamMessage((Root&)e);
+    eno.streamObjectsMessage(e);
 //    Atlas::Message::Encoder en(codec);
-//    en.streamMessage(human->asObject());
+//    en.streamObjectsMessage(human->asObject());
 
     codec->streamEnd();
     std::cout<<std::cout<<stream.str()<<std::cout;
@@ -198,6 +198,7 @@ void check_float_list3(const Atlas::Message::Element::ListType &list,
     assert( (*i++) == el1 );
     assert( (*i++) == el2 );
     assert( (*i++) == el3 );
+    i++;
 }
 
 void testValues()

@@ -98,35 +98,35 @@ public:
     /// Begin a map.
     EncMap<B, T> operator<<(const BeginMap&)
     {
-        b.mapItem(name, B::mapBegin);
+        b.mapMapItem(name);
         return EncMap<B, T>(b);
     }
 
     /// Begin a list.
     EncList<B, T> operator<<(const BeginList&)
     {
-        b.mapItem(name, B::listBegin);
+        b.mapListItem(name);
         return EncList<B, T>(b);
     }
 
     /// Send an integer value.
     T operator<<(long i)
     {
-        b.mapItem(name, i);
+        b.mapIntItem(name, i);
         return T(b);
     }
 
     /// Send a double value.
     T operator<<(double d)
     {
-        b.mapItem(name, d);
+        b.mapFloatItem(name, d);
         return T(b);
     }
 
     /// Send a string value.
     T operator<<(const std::string& s)
     {
-        b.mapItem(name, s);
+        b.mapStringItem(name, s);
         return T(b);
     }
 
@@ -186,35 +186,35 @@ public:
     /// Start a map.
     EncMap<B, EncList<B, T> > operator<<(const BeginMap&)
     {
-        b.listItem(B::mapBegin);
+        b.listMapItem();
         return EncMap<B, EncList<B, T> >(b);
     }
 
     /// Start a list.
     EncList<B, EncList<B, T> > operator<<(const BeginList&)
     {
-        b.listItem(B::listBegin);
+        b.listListItem();
         return EncList<B, EncList<B, T> >(b);
     }
 
     /// Send an integer value.
     EncList<B, T> operator<<(long i)
     {
-        b.listItem(i);
+        b.listIntItem(i);
         return *this;
     }
 
     /// Send a double value.
     EncList<B, T> operator<<(double d)
     {
-        b.listItem(d);
+        b.listFloatItem(d);
         return *this;
     }
 
     /// Send a string value.
     EncList<B, T> operator<<(const std::string& s)
     {
-        b.listItem(s);
+        b.listStringItem(s);
         return *this;
     }
 
@@ -251,7 +251,7 @@ public:
     
     /// Start a message (as a map).
     EncMap<B, FunkyEncoder> operator<<(const BeginMap&) {
-        b.streamMessage(B::mapBegin);
+        b.streamMessage();
         return EncMap<B, FunkyEncoder>(b);
     }
 
@@ -259,7 +259,7 @@ public:
     template<typename Arg>
     FunkyEncoder<B> operator<<(const Arg& a)
     {
-        b.streamMessage(a);
+        b.streamObjectsMessage(a);
         return *this;
     }
 

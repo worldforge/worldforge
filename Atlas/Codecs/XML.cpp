@@ -132,7 +132,7 @@ void XML::parseStartTag()
 	case PARSE_STREAM:
 	    if (m_tag == "map")
 	    {
-		m_bridge->streamMessage(m_mapBegin);
+		m_bridge->streamMessage();
 		m_state.push(PARSE_MAP);
 	    }
 	    else
@@ -145,12 +145,12 @@ void XML::parseStartTag()
         case PARSE_MAP:
 	    if (m_tag == "map")
 	    {
-		m_bridge->mapItem(m_name, m_mapBegin);
+		m_bridge->mapMapItem(m_name);
 		m_state.push(PARSE_MAP);
 	    }
 	    else if (m_tag == "list")
 	    {
-		m_bridge->mapItem(m_name, m_listBegin);
+		m_bridge->mapListItem(m_name);
 		m_state.push(PARSE_LIST);
 	    }
 	    else if (m_tag == "int")
@@ -175,12 +175,12 @@ void XML::parseStartTag()
         case PARSE_LIST:
 	    if (m_tag == "map")
 	    {
-		m_bridge->listItem(m_mapBegin);
+		m_bridge->listMapItem();
 		m_state.push(PARSE_MAP);
 	    }
 	    else if (m_tag == "list")
 	    {
-		m_bridge->listItem(m_listBegin);
+		m_bridge->listListItem();
 		m_state.push(PARSE_LIST);
 	    }
 	    else if (m_tag == "int")
@@ -265,11 +265,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge->mapItem(m_name, atol(m_data.top().c_str()));
+		    m_bridge->mapIntItem(m_name, atol(m_data.top().c_str()));
 		}
 		else
 		{
-		    m_bridge->listItem(atol(m_data.top().c_str()));
+		    m_bridge->listIntItem(atol(m_data.top().c_str()));
 		}
 	    }
 	    else
@@ -285,11 +285,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge->mapItem(m_name, atof(m_data.top().c_str()));
+		    m_bridge->mapFloatItem(m_name, atof(m_data.top().c_str()));
 		}
 		else
 		{
-		    m_bridge->listItem(atof(m_data.top().c_str()));
+		    m_bridge->listFloatItem(atof(m_data.top().c_str()));
 		}
 	    }
 	    else
@@ -305,11 +305,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge->mapItem(m_name, m_data.top());
+		    m_bridge->mapStringItem(m_name, m_data.top());
 		}
 		else
 		{
-		    m_bridge->listItem(m_data.top());
+		    m_bridge->listStringItem(m_data.top());
 		}
 	    }
 	    else
@@ -349,32 +349,32 @@ void XML::streamEnd()
     m_socket << "</atlas>";
 }
 
-void XML::streamMessage(const Map&)
+void XML::streamMessage()
 {
     m_socket << "<map>";
 }
 
-void XML::mapItem(const std::string& name, const Map&)
+void XML::mapMapItem(const std::string& name)
 {
     m_socket << "<map name=\"" << name << "\">";
 }
 
-void XML::mapItem(const std::string& name, const List&)
+void XML::mapListItem(const std::string& name)
 {
     m_socket << "<list name=\"" << name << "\">";
 }
 
-void XML::mapItem(const std::string& name, long data)
+void XML::mapIntItem(const std::string& name, long data)
 {
     m_socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
 
-void XML::mapItem(const std::string& name, double data)
+void XML::mapFloatItem(const std::string& name, double data)
 {
     m_socket << "<float name=\"" << name << "\">" << data << "</float>";
 }
 
-void XML::mapItem(const std::string& name, const std::string& data)
+void XML::mapStringItem(const std::string& name, const std::string& data)
 {
     m_socket << "<string name=\"" << name << "\">" << data << "</string>";
 }
@@ -384,27 +384,27 @@ void XML::mapEnd()
     m_socket << "</map>";
 }
 
-void XML::listItem(const Map&)
+void XML::listMapItem()
 {
     m_socket << "<map>";
 }
 
-void XML::listItem(const List&)
+void XML::listListItem()
 {
     m_socket << "<list>";
 }
 
-void XML::listItem(long data)
+void XML::listIntItem(long data)
 {
     m_socket << "<int>" << data << "</int>";
 }
 
-void XML::listItem(double data)
+void XML::listFloatItem(double data)
 {
     m_socket << "<float>" << data << "</float>";
 }
 
-void XML::listItem(const std::string& data)
+void XML::listStringItem(const std::string& data)
 {
     m_socket << "<string>" << data << "</string>";
 }
