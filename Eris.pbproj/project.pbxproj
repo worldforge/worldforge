@@ -112,6 +112,7 @@
 		};
 		C43FBCF2054315F2008FC2ED = {
 			children = (
+				C4E59E5905C050D7003934C3,
 				C43FBD17054315F3008FC2ED,
 				C43FBD1C054315F3008FC2ED,
 				C43FBD20054315F3008FC2ED,
@@ -772,6 +773,7 @@
 				C45DC40C0562F83D00D8F8F4,
 				C45DC40D0562F83D00D8F8F4,
 				C45DC40E0562F83D00D8F8F4,
+				C4E59E5B05C050D7003934C3,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1131,6 +1133,7 @@
 				C45DC4260562F83D00D8F8F4,
 				C45DC4270562F83D00D8F8F4,
 				C45DC4280562F83D00D8F8F4,
+				C4E59E5A05C050D7003934C3,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1379,6 +1382,7 @@
 				C485B20305B60252002F2D80,
 				C485B20405B60252002F2D80,
 				C485B20505B60252002F2D80,
+				C4ED222305D0FCD0006B876D,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1525,6 +1529,7 @@
 		};
 		C4BB15920544A6C100A800CF = {
 			children = (
+				C4E59E5805C050D7003934C3,
 				C43FBD16054315F3008FC2ED,
 				C43FBD1B054315F3008FC2ED,
 				C43FBD1F054315F3008FC2ED,
@@ -1556,6 +1561,53 @@
 			name = Source;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		C4E59E5805C050D7003934C3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = Exceptions.cpp;
+			path = Eris/Exceptions.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4E59E5905C050D7003934C3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = Exceptions.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4E59E5A05C050D7003934C3 = {
+			fileRef = C4E59E5805C050D7003934C3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E59E5B05C050D7003934C3 = {
+			fileRef = C4E59E5905C050D7003934C3;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		C4ED222305D0FCD0006B876D = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = timeTest;
+			refType = 3;
+			remoteRef = C4ED222405D0FCD2006B876D;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4ED222405D0FCD2006B876D = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C447BEF805C5D8AA00C5675E;
+			remoteInfo = timeTest;
 		};
 	};
 	rootObject = C43FBCE9054315B9008FC2ED;

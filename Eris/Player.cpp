@@ -38,6 +38,7 @@ namespace Eris {
 Player::Player(Connection *con) :
 	_con(con),
 	_account(""),
+    m_doingCharacterRefresh(false),
 	_username(""),
 	_lobby(con->getLobby())
 {
@@ -157,48 +158,49 @@ void Player::logout()
     _logoutTimeout->Expired.connect(SigC::slot(*this, &Player::handleLogoutTimeout));
 }
 
-CharacterList Player::getCharacters()
+const CharacterMap& Player::getCharacters()
 {
     if (_account.empty())
-	    Eris::log(LOG_ERROR, "Not logged into an account : getCharacter returning empty list");
+        Eris::log(LOG_ERROR, "Not logged into an account : getCharacter returning empty dictionary");
+    
+    if (m_doingCharacterRefresh)
+        Eris::log(LOG_WARNING, "client retrieving partial / incomplete character dictionary");
+    
     return _characters;
 }
 
 void Player::refreshCharacterInfo()
 {
     if (!_con->isConnected())
-		throw InvalidOperation("Not connected to server");
+        throw InvalidOperation("Not connected to server");
 	
     // we need to be logged in too
     if (_account.empty()) {
-		Eris::log(LOG_ERROR, "refreshCharacterInfo: Not logged into an account yet");
-		return;
+        Eris::log(LOG_ERROR, "refreshCharacterInfo: Not logged into an account yet");
+        return;
     }
     
+    if (m_doingCharacterRefresh)
+        return; // silently ignore overlapping refreshes
+        
     _characters.clear();
 
-    if (_charIds.empty()) {
-        GotAllCharacters.emit();
-        return;
-    }
-	
-    if (_charIds.empty()) {
-        // handle the case where there are no characters; we should still emit the signal
-        GotAllCharacters.emit();
+    if (m_characterIds.empty()) {
+        GotAllCharacters.emit(); // we must emit the done signal
         return;
     }
     
-    for (StringList::iterator I=_charIds.begin(); I!=_charIds.end(); ++I) {
-        // send the look
-        Atlas::Objects::Operation::Look lk;
+    m_doingCharacterRefresh = true;
+    
+    Operation::Look lk;
+    AtlasMapType args;
+    lk.setFrom(_account);
         
-        AtlasMapType args;
+    for (StringSet::iterator I=m_characterIds.begin(); I!=m_characterIds.end(); ++I) {
+        // modify and send the look
         args["id"] = *I;
         lk.setArgs(AtlasListType(1, args));
-        lk.setFrom(_lobby->getAccountID());
-        lk.setTo(*I);
         lk.setSerialno(getNewSerialno());
-        
         _con->send(lk);
     }
 }
@@ -214,11 +216,11 @@ Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
     if (ent.getName().empty())
             throw InvalidOperation("Character unnamed");
 
-    Atlas::Objects::Operation::Create c;
+    Operation::Create c;    
     Atlas::Message::Element::ListType args(1,ent.asObject());
 
     c.setArgs(args);
-    c.setFrom(_lobby->getAccountID());
+    c.setFrom(_account);
     c.setSerialno(getNewSerialno());
 
     World* world = new World(this, _con);
@@ -252,28 +254,26 @@ void Player::createCharacterHandler(long serialno)
 
 Avatar* Player::takeCharacter(const std::string &id)
 {
-	StringList::iterator i = std::find(_charIds.begin(), _charIds.end(), id);
-	if (i == _charIds.end())
-		throw InvalidOperation("Character " + id + " not owned by player");
+    StringSet::iterator C = m_characterIds.find(id);
+    if (C == m_characterIds.end())
+        throw InvalidOperation("Character " + id + " not owned by player");
 	
-	if (!_con->isConnected())
-		throw InvalidOperation("Not connected to server");
+    if (!_con->isConnected())
+        throw InvalidOperation("Not connected to server");
 	
-	Atlas::Objects::Operation::Look l;
- 
-	l.setFrom(id);  
-	Atlas::Message::Element::MapType what;
-	what["id"]=id;
-	Atlas::Message::Element::ListType args(1,what);
-	l.setArgs(args);
-  	l.setSerialno(getNewSerialno());
+    Operation::Look l;
+    l.setFrom(id);  
+    Atlas::Message::Element::MapType what;
+    what["id"]=id;
+    Atlas::Message::Element::ListType args(1,what);
+    l.setArgs(args);
+    l.setSerialno(getNewSerialno());
 	
-	World* world = new World(this, _con);
-	Avatar* avatar = world->createAvatar(l.getSerialno(), id);
+    World* world = new World(this, _con);
+    Avatar* avatar = world->createAvatar(l.getSerialno(), id);
 	
-	_con->send(l);
-
-	return avatar;
+    _con->send(l);
+    return avatar;
 }
 
 void Player::internalLogin(const std::string &uname, const std::string &pwd)
@@ -283,7 +283,7 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
     account.setPassword(pwd);
     account.setAttr("username", uname);
 
-    Atlas::Objects::Operation::Login l;
+    Operation::Login l;
     Atlas::Message::Element::ListType args(1,account.asObject());
     l.setArgs(args);
     l.setSerialno(getNewSerialno());
@@ -320,11 +320,11 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     _currentAction = "";
     _account = p.getId();
     
-    _charIds.clear();
-    // extract character IDs
-    Atlas::Message::Element::ListType cs = p.getCharacters();
-    for (Atlas::Message::Element::ListType::iterator C=cs.begin(); C!=cs.end(); ++C)
-		_charIds.push_back(C->asString());
+// extract character IDs, and turn from a list into a set
+    m_characterIds.clear();
+    const AtlasListType& cs = p.getCharacters();
+    for (AtlasListType::const_iterator I=cs.begin(); I != cs.end(); ++I)
+        m_characterIds.insert(I->asString());
     
     // setup dispatcher for sight of character ops
     Dispatcher *d = _con->getDispatcherByPath("op:oog:sight:entity");
@@ -334,8 +334,8 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     LoginSuccess.emit();
     
     if (d->getSubdispatch("character"))
-		// second time around, don't try again
-		return;
+        // second time around, don't try again
+        return;
     
     // there will be several anonymous children, I guess
     d = d->addSubdispatch(ClassDispatcher::newAnonymous(_con));
@@ -346,7 +346,7 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     
     d = _con->getDispatcherByPath("op:info:op");
     Dispatcher *infoLogout = d->addSubdispatch(ClassDispatcher::newAnonymous(_con));
-    infoLogout->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Logout>(
+    infoLogout->addSubdispatch( new SignalDispatcher<Operation::Logout>(
 	"player", SigC::slot(*this, &Player::recvLogoutInfo)),
 	"logout"
     );
@@ -387,12 +387,27 @@ void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
 {
     Eris::log(LOG_DEBUG, "got sight of character %s", ge.getName().c_str());
     
-    _characters.push_back(ge);
+    if (!m_doingCharacterRefresh) {
+        Eris::log(LOG_ERROR, "got sight of character %s while outside a refresh - ignoring", ge.getId().c_str());
+        return;
+    }
+    
+    CharacterMap::iterator C = _characters.find(ge.getId());
+    if (C != _characters.end()) {
+        Eris::log(LOG_ERROR, "got duplicate of character %s - ignoring", ge.getId().c_str());
+        return;
+    }
+    
+    // okay, we can now add it to our map
+    _characters.insert(C, CharacterMap::value_type(ge.getId(), ge));
     GotCharacterInfo.emit(ge);
     
-    // check if we're all done
-    if (_characters.size() == _charIds.size())
+// check if we'redone
+    if (_characters.size() == m_characterIds.size())
+    {
 	GotAllCharacters.emit();
+        m_doingCharacterRefresh = false;
+    }
 }
 
 void Player::recvLogoutInfo(const Atlas::Objects::Operation::Logout &lo)

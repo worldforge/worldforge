@@ -8,10 +8,10 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
 # Information
-ERIS_MAJOR=0
-ERIS_MINOR=9
-ERIS_MICRO=8
-ERIS_PATCH=1
+ERIS_MAJOR=1
+ERIS_MINOR=1
+ERIS_MICRO=1
+ERIS_PATCH=0
 ERIS_VERSION=$ERIS_MAJOR.$ERIS_MINOR.$ERIS_MICRO.$ERIS_PATCH
 
 # Automake setup
@@ -56,7 +56,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
 AC_MSG_ERROR(Couldn't find libsigc++ config [or config failed]))
 
 # check for all the WorldForge libs we use
-PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.5 >= 0.4.93 wfmath-0.3,
+PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.5 >= 0.4.93 wfmath-0.3 >= 0.3.2,
     [
         CXXFLAGS="$CXXFLAGS $WF_CFLAGS"
         LDFLAGS="$LDFLAGS $WF_LIBS"

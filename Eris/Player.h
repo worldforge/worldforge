@@ -39,8 +39,8 @@ typedef enum {
 	LOGIN_DUPLICATE_CONNECT	///< The account is already active (not always an error)
 } LoginFailureType;
 
-/** List type used to return character info to the client. */
-typedef std::list<Atlas::Objects::Entity::GameEntity> CharacterList;
+/** Type used to return available characters */
+typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> CharacterMap;
 
 /// Per-player instance, for entire lifetime; abstracted to permit (in theorey) multiple players per client
 
@@ -91,7 +91,7 @@ public:
 	/** access the characters currently owned by the player  : note you should call
 	refreshCharacterInfo, and wait for 'GotCharacters' signal, prior to the
 	initial call : otherwise, it may return an empty or incomplete list. */
-	CharacterList getCharacters();
+	const CharacterMap& getCharacters();
 
 	/** update the charcter list (based on changes to play). The intention here is
 	that clients will call this method when the user invokes the 'choose character' command,
@@ -161,9 +161,10 @@ protected:
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)
 
-	CharacterList _characters;	///< charatcers belonging to this player
-	StringList _charIds;
-
+	CharacterMap _characters;	///< charatcers belonging to this player
+    StringSet m_characterIds;
+    bool m_doingCharacterRefresh; ///< set if we're refreshing character data
+    
 	std::string _username,	///< The player's username ( != account object's ID)
 		_pass;		///< The password; FIXME - clear text.
 
