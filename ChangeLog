@@ -1,5 +1,10 @@
 ChangeLog for varconf
 
+Friday, March 19 2002, Martin Pollard
+
+	* Fixed one of variable.cpp's operator<<'s  doesn't
+	  seem to be in use right now anyway.
+	
 Friday, March 08 2002, James Turner
 
 	* Added varconf-config and varconf.m4, plus configure
