@@ -201,18 +201,21 @@ bool Config::findItem( const std::string& section, const std::string& key)
   return find( section, key);
 }
 
-void Config::getCmdline( int argc, char** argv)
+int Config::getCmdline( int argc, char** argv)
 {
-  std::string section = "", name = "", value = "", arg;
-  bool fnd_sec = false, fnd_nam = false;
-  size_t mark = 2;
+  int optind = 1;
 
   for ( size_t i = 1; i < (size_t)argc; i++) {
-    if ( argv[i][0] == '-' && argv[i][1] == '-' && argv[i][2] != '\0') {
+    if ( argv[i][0] != '-' ) {
+       continue;
+    }
+
+    std::string section, name, value, arg;
+    bool fnd_sec = false, fnd_nam = false;
+    size_t mark = 2;
+    if ( argv[i][1] == '-' && argv[i][2] != '\0') {
+      // long argument
       arg = argv[i];
-      fnd_sec = fnd_nam = false;
-      section = name = value = "";
-      mark = 2;
        
       for ( size_t j = 2; j < arg.size(); j++) {
         if ( arg[j] == ':' && arg[j+1] != '\0' && !fnd_sec && !fnd_nam) {
@@ -228,14 +231,13 @@ void Config::getCmdline( int argc, char** argv)
         }
       }
 
-      if ( !fnd_nam && ( arg.size() - mark) > 0) 
+      if ( !fnd_nam && ( arg.size() - mark) > 0)  {
         name = arg.substr( mark, ( arg.size() - mark));
+      }
 
-    } // long argument 
-    else if( argv[i][0] == '-' && argv[i][1] != '-' && argv[i][1] != '\0') {
+    } else if ( argv[i][1] != '-' && argv[i][1] != '\0') {
+      // short argument
       parameter_map::iterator I = m_par_lookup.find( argv[i][1]);
-
-      section = name = value = "";
 
       if ( I != m_par_lookup.end()) {
         name = ( ( *I).second).first;
@@ -260,11 +262,14 @@ void Config::getCmdline( int argc, char** argv)
                              " the lookup table.\n", argv[i]);
         sige.emit( buf);
       }
-    } // short argument
+    }
 
-    if ( !name.empty()) 
+    if ( !name.empty()) {
       setItem( section, name, value);
+      optind = i + 1;
+    }
   }
+  return optind;
 }
 
 void Config::getEnv( const std::string& prefix)

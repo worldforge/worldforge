@@ -1,4 +1,12 @@
 ChangeLog for varconf
+2004-09-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* Move to configure.ac, adding in checks for sigc++-2.0 if
+	  1.2 is not available.
+
+	* varconf/Config.h, varconf/config.cpp: Return the index
+	  of the first cmdline argument which is not an option.
+
 2004-06-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Fix invocation of configure in rpm spec.

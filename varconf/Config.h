@@ -78,7 +78,7 @@ public:
   // Writes to the specified output stream.
   // Why isn't this protected?
 
-  void getCmdline( int argc, char** argv);
+  int getCmdline( int argc, char** argv);
   // Gets, sets conf info based on options passed via command line.
 
   void getEnv( const std::string& prefix); 
