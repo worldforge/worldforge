@@ -28,6 +28,8 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
+#elif defined(_MSC_VER)
+#define HAVE_SSTREAM
 #endif
 
 using namespace WFMath;

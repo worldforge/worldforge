@@ -52,7 +52,7 @@ Point<dim>& Point<dim>::setToOrigin()
 template<const int dim>
 bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
 {
-  CoordType delta = _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
+  CoordType delta = (CoordType) _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
 
   for(int i = 0; i < dim; ++i)
     if(fabs(m_elem[i] - p.m_elem[i]) > delta)
@@ -156,6 +156,7 @@ bool Point<dim>::operator< (const Point<dim>& rhs) const
       return m_elem[i] < rhs.m_elem[i];
 
   assert(false);
+  return false; // keep compiler happy
 }
 
 template<const int dim>
@@ -272,6 +273,57 @@ template<> Point<3>& Point<3>::spherical(CoordType r, CoordType theta,
 					 CoordType phi);
 template<> void Point<3>::asSpherical(CoordType& r, CoordType& theta,
 				      CoordType& phi) const;
+#else
+void _NCFS_Point2_polar(CoordType m_elem[2], CoordType r, CoordType theta);
+void _NCFS_Point2_asPolar(CoordType m_elem[2], CoordType& r, CoordType& theta);
+
+void _NCFS_Point3_polar(CoordType m_elem[3], CoordType r, CoordType theta,
+			CoordType z);
+void _NCFS_Point3_asPolar(CoordType m_elem[3], CoordType& r, CoordType& theta,
+			  CoordType& z);
+void _NCFS_Point3_spherical(CoordType m_elem[3], CoordType r, CoordType theta,
+			    CoordType phi);
+void _NCFS_Point3_asSpherical(CoordType m_elem[3], CoordType& r, CoordType& theta,
+			      CoordType& phi);
+
+template<>
+inline Point<2>& Point<2>::polar(CoordType r, CoordType theta)
+{
+  _NCFS_Point2_polar(m_elem, r, theta);
+  return *this;
+}
+
+template<>
+inline void Point<2>::asPolar(CoordType& r, CoordType& theta) const
+{
+  _NCFS_Point2_asPolar(m_elem, r, theta);
+}
+
+template<>
+inline Point<3>& Point<3>::polar(CoordType r, CoordType theta, CoordType z)
+{
+  _NCFS_Point3_polar(m_elem, r, theta, z);
+  return *this;
+}
+
+template<>
+inline void Point<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
+{
+  _NCFS_Point3_asPolar(m_elem, r, theta, z);
+}
+
+template<>
+inline Point<3>& Point<3>::spherical(CoordType r, CoordType theta, CoordType phi)
+{
+  _NCFS_Point3_spherical(m_elem, r, theta, phi);
+  return *this;
+}
+
+template<>
+inline void Point<3>::asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const
+{
+  _NCFS_Point3_asSpherical(m_elem, r, theta, phi);
+}
 #endif
 
 } // namespace WFMath

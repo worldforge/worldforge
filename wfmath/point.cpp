@@ -32,14 +32,23 @@ using namespace WFMath;
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<2>& WFMath::Point<2>::polar(CoordType r, CoordType theta)
+#else
+void WFMath::_NCFS_Point2_polar(CoordType m_elem[2], CoordType r, CoordType theta)
+#endif
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   return *this;
+#endif
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 void WFMath::Point<2>::asPolar(CoordType& r, CoordType& theta) const
+#else
+void WFMath::_NCFS_Point2_asPolar(CoordType m_elem[2], CoordType& r, CoordType& theta)
+#endif
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -47,19 +56,29 @@ void WFMath::Point<2>::asPolar(CoordType& r, CoordType& theta) const
   theta = d[1];
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
-Point<3>& WFMath::Point<3>::polar(CoordType r, CoordType theta,
-				    CoordType z)
+Point<3>& WFMath::Point<3>::polar(CoordType r, CoordType theta, CoordType z)
+#else
+void WFMath::_NCFS_Point3_polar(CoordType m_elem[3], CoordType r, CoordType theta,
+				CoordType z)
+#endif
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
   m_elem[2] = z;
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   return *this;
+#endif
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
-void WFMath::Point<3>::asPolar(CoordType& r, CoordType& theta,
-				 CoordType& z) const
+void WFMath::Point<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
+#else
+void WFMath::_NCFS_Point3_asPolar(CoordType m_elem[3], CoordType& r, CoordType& theta,
+				  CoordType& z)
+#endif
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -68,18 +87,29 @@ void WFMath::Point<3>::asPolar(CoordType& r, CoordType& theta,
   z = m_elem[2];
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
-Point<3>& WFMath::Point<3>::spherical(CoordType r, CoordType theta,
-					CoordType phi)
+Point<3>& WFMath::Point<3>::spherical(CoordType r, CoordType theta, CoordType phi)
+#else
+void WFMath::_NCFS_Point3_spherical(CoordType m_elem[3], CoordType r, CoordType theta,
+				    CoordType phi)
+#endif
 {
   CoordType d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   return *this;
+#endif
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 void WFMath::Point<3>::asSpherical(CoordType& r, CoordType& theta,
-				     CoordType& phi) const
+				   CoordType& phi) const
+#else
+void WFMath::_NCFS_Point3_asSpherical(CoordType m_elem[3], CoordType& r,
+				      CoordType& theta, CoordType& phi)
+#endif
 {
   CoordType d[3];
   _CartToSpherical(m_elem, d);
@@ -87,4 +117,3 @@ void WFMath::Point<3>::asSpherical(CoordType& r, CoordType& theta,
   theta = d[1];
   phi = d[2];
 }
-#endif

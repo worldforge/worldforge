@@ -34,9 +34,12 @@
 #include <wfmath/ball.h>
 #include <wfmath/polygon.h>
 
-#ifndef WFMATH_USING_MSVC
+#ifndef _MSC_VER
 #warning "The Intersect() and Contains() functions involving WFMath::Polygon<>"
 #warning "are still under development, and probably shouldn't be used yet."
+#else
+#pragma warning "The Intersect() and Contains() functions involving WFMath::Polygon<>"
+#pragma warning "are still under development, and probably shouldn't be used yet."
 #endif
 
 namespace WFMath {

@@ -462,17 +462,34 @@ template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis);
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip);
 #else
-RotMatrix<3>& _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis,
-					 CoordType theta);
-RotMatrix<3>& _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis);
-RotMatrix<3>& _NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& q,
-					      const bool not_flip);
+void _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis, CoordType theta);
+void _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis);
+void _NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& q,
+				     const bool not_flip, CoordType m_elem[dim][dim],
+				     bool& m_flip);
 
 template<>
-RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, CoordType theta)
+inline RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, CoordType theta)
 {
-  return _NCFS_RotMatrix3_rotation(*this, axis, theta);
+  _NCFS_RotMatrix3_rotation(*this, axis, theta);
+  return *this;
 }
+
+template<>
+inline RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis)
+{
+  _NCFS_RotMatrix3_rotation(*this, axis);
+  return *this;
+}
+
+template<>
+inline RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
+						  const bool not_flip)
+{
+  _NCFS_RotMatrix3_fromQuaternion(*this, q, not_flip, m_elem, m_flip);
+  return *this;
+}
+
 #endif
 
 template<const int dim>

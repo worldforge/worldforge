@@ -38,12 +38,13 @@
     #error "template support. Please use at least version 7.0, where the"
     #error "template support is merely bad, or try a different compiler."
   #else
+    // The name of this one is somewhat misleading. The problem is,
+    // while you can _define_ specializations of template functions,
+    // you can't _declare_ them.
     #define WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION 1
+    // This one means exactly what it says
     #define WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS 1
   #endif
-  #define WFMATH_USING_MSVC 1
-  // need to define here, since this doesn't use config.h
-  #define HAVE_SSTREAM
 #endif
 
 // Forward declarations for all classes
