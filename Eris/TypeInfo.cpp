@@ -35,8 +35,8 @@ bool TypeInfo::checkInherits(TypeInfoPtr tp)
 		// can't give a reply, need to get those parents bound. we assume it's in
 		// progress. Need to pick a sensible repost condition here
 	
-		SigC::Signal0<void> & sig = signalWhenBound(this);	
-		throw NeedsRedispath(sig);
+		//Signal & sig = signalWhenBound(this);	
+		throw OperationBlocked(signalWhenBound(this));
 	}
 }
 

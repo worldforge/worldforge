@@ -38,6 +38,30 @@ protected:
 	
 };
 
+class SignalDispatcher0 :
+	public Dispatcher, 
+	public SigC::Object
+{
+public:
+	SignalDispatcher0(const std::string &nm, const SigC::Slot0<void> &slot) :
+		Dispatcher(nm)
+	{ Signal.connect(slot); }
+
+	virtual ~SignalDispatcher0() {;}
+
+	/// virtual interface for invoking the dispatcher; causes the signal to emit
+	virtual bool dispatch(DispatchContextDeque &dq)
+	{
+		Signal.emit();
+		return false;
+	}
+
+	/// invoked when the specified class is recieved
+	SigC::Signal0<void> Signal;
+protected:
+	
+};
+
 template <class T, class S>
 class SignalDispatcher2 :
 	public Dispatcher, 

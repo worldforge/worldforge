@@ -6,6 +6,7 @@
 
 #include <Atlas/Objects/Operation/Look.h>
 #include <Atlas/Objects/Operation/Move.h>
+#include <Atlas/Objects/Operation/Imaginary.h>
 
 #include "Room.h"
 #include "Lobby.h"
@@ -17,6 +18,7 @@
 #include "SignalDispatcher.h"
 #include "ClassDispatcher.h"
 #include "EncapDispatcher.h"
+#include "IdDispatcher.h"
 
 using namespace Atlas;
 
@@ -48,9 +50,8 @@ Room::~Room()
 	Connection *con = _lobby->getConnection();
 	std::string rid = "room_" + _id;
 	
-	con->removeDispatcherByPath("op:oog:sound", rid);
-	con->removeDispatcherByPath("op:oog:appear", rid);
-	con->removeDispatcherByPath("op:oog:disappear", rid);
+	// delete *everything* below our node
+	con->removeDispatcherByPath("op:oog", rid);
 }
 
 void Room::setup()
@@ -68,6 +69,19 @@ void Room::setup()
 	Dispatcher *sndd = room->addSubdispatch(new EncapDispatcher("sound", "sound"));
 	sndd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Talk>("foo",
 		SigC::slot(this, &Room::recvSoundTalk)
+	));
+	
+	// visual stuff (sights)
+	Dispatcher *sight = room->addSubdispatch(new EncapDispatcher("sight", "sight"));
+	
+	// imaginarys
+	Dispatcher *img = sight->addSubdispatch(new EncapDispatcher("imag", "imaginary"));
+	
+	// emotes
+	Dispatcher *em = img->addSubdispatch(new IdDispatcher("emote", "emote"));
+	em->addSubdispatch(new SignalDispatcher2<Atlas::Objects::Operation::Imaginary,
+		Atlas::Objects::Root>("emote",
+		SigC::slot(this, &Room::recvSightEmote)
 	));
 	
 	// appearance
@@ -115,6 +129,28 @@ void Room::say(const std::string &tk)
 	t.SetSerialno(getNewSerialno());
 	
 	_lobby->getConnection()->send(t);
+}
+
+void Room::emote(const std::string &em)
+{
+	if (!_lobby->getConnection()->isConnected())
+		// FIXME - provide some feed-back here
+		return;
+	
+	Atlas::Objects::Operation::Imaginary im = 
+		Atlas::Objects::Operation::Imaginary::Instantiate();
+	
+	//Object::ListType args;
+	Atlas::Message::Object::MapType emote;
+	emote["id"] = "emote";
+	emote["description"] = em;
+	
+	im.SetArgs(Atlas::Message::Object::ListType(1, emote));
+	im.SetTo(_id);
+	im.SetFrom(_lobby->getAccountID());
+	im.SetSerialno(getNewSerialno());
+	
+	_lobby->getConnection()->send(im);
 }
 
 void Room::leave()
@@ -219,6 +255,16 @@ void Room::recvSoundTalk(const Atlas::Objects::Operation::Talk &tk)
 	Person *p = _lobby->getPerson(tk.GetFrom());
 	assert(p);
 	Talk.emit(this, p->getName(), say);
+}
+
+void Room::recvSightEmote(const Atlas::Objects::Operation::Imaginary &imag,
+		const Atlas::Objects::Root &emote)
+{
+	std::string msg = emote.GetAttr("description").AsString();
+	
+	Person *p = _lobby->getPerson(imag.GetFrom());
+	assert(p);
+	Emote.emit(this, p->getName(), msg);
 }
 
 void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)

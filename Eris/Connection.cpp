@@ -12,10 +12,11 @@
 
 #include "Connection.h"
 #include "Dispatcher.h"
+#include "Wait.h"
+
 #include "TypeDispatcher.h"
 #include "ClassDispatcher.h"
 #include "DebugDispatcher.h"
-#include "RepostDispatcher.h"
 
 namespace Eris {
 
@@ -25,7 +26,8 @@ StringList tokenize(const string &s, char t);
 
 // declare the static member
 Connection* Connection::_theConnection = NULL;	
-	
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
 Connection::Connection(const string &cnm) :
@@ -178,46 +180,15 @@ Connection* Connection::Instance()
 		throw InvalidOperation("No Connection instance exists");
 }
 
-/*
-void Connection::Redispatch(const Atlas::Message::Object &msg, SigC::Signal0<bool> &trigger)
-{
-	// create a re-dispatch object
-	
-	_Pending p = new _Pending(msg);
-	trigger.connect(SigC::slot(p, &_Pending::Trigger));
-	_queued.push_back(p);
-}
-*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // protected / private gunk
-
+/*
 void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 {
-	DispatchContextDeque dq(1, obj);
 	
-	try {
-		// this invokes all manner of smoke and mirrors....
-		_rootDispatch->dispatch(dq);
-		dd->dispatch(dq);
-	} 
 	
-	catch (NeedsRedispatch &rd) {
-		cerr << "Got request for re-dispatch, setting up" << endl;
-		
-		Dispatcher *parent = getDispatcherByPath(rd._parentPath);
-		assert(parent);
-		
-		parent->addSubdispatch(rd._dispatch);
-	}
-	
-	catch (BaseException &be) {
-		cerr << "Dispatch: caught exception: " << be._msg << endl;
-		
-		//while (!dq.empty()) {
-		//	dd->dispatch(dq);
-		//	dq.pop_front();
-		//}
-	}
+	// stage 2 : having completed the primary dispatch, check for any dependants that
+	// are now pending.
 	
 	try {
 		// pick up an re-dispatches which have been intiated by the incoming message
@@ -237,6 +208,46 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 		dd->dispatch(pdq);
 	}
 
+}
+*/
+void Connection::ObjectArrived(const Atlas::Message::Object& obj)
+{
+	postForDispatch(obj);
+	
+	while (!_repostQueue.empty()) {
+		DispatchContextDeque dq(1, _repostQueue.front());
+		dd->dispatch(dq);
+		
+		try {
+			// this invokes all manner of smoke and mirrors....
+			_rootDispatch->dispatch(dq);
+		} 
+	
+		catch (OperationBlocked &block) {
+			new WaitForSignal(block._continue, _repostQueue.front());
+		}
+	
+		// catch actual failures, becuase they're bad.
+		catch (BaseException &be) {
+			cerr << "Dispatch: caught exception: " << be._msg << endl;
+			dd->dispatch(dq);
+		}
+		
+		_repostQueue.pop_front();
+	}
+	
+	clearSignalledWaits();
+}
+
+void Connection::clearSignalledWaits()
+{
+	for (WaitForList::iterator I=_waitList.begin(); I!=_waitList.end(); ) {
+		WaitForList::iterator cur = I++;
+		if ((*cur)->isPending()) {
+			delete (*cur);
+			_waitList.erase(cur);
+		}
+	}
 }
 
 void Connection::setStatus(Status ns)
@@ -258,9 +269,9 @@ void Connection::handleFailure(const string &msg)
 	}
 }
 
-void Connection::postForDispatch(RepostDispatcher *rp)
+void Connection::postForDispatch(const Atlas::Message::Object &msg)
 {
-	_postQueue.push_back(rp);
+	_repostQueue.push_back(msg);
 }
 
 StringList tokenize(const string &s, char t)

@@ -13,20 +13,8 @@ namespace Eris
 	
 // Foward declerations
 class Dispatcher;
-class RepostDispatcher;
+class WaitForBase;
 	
-class NeedsRedispatch : public std::exception
-{
-public:
-	NeedsRedispatch(const std::string &p, Dispatcher *d) :
-		_parentPath(p), _dispatch(d) {;}
-
-	std::string _parentPath;
-	Dispatcher* _dispatch;
-};
-
-typedef std::list<RepostDispatcher*> RepostList;
-
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
 a single TCP connection, if re-connections occur. */
@@ -91,7 +79,8 @@ public:
 	disconnect operation apply as above */
 	void send(const Atlas::Message::Object &msg);
 
-	void postForDispatch(RepostDispatcher *rp);
+	/// (should be protected?) pretend you never saw this ...
+	void postForDispatch(const Atlas::Message::Object &msg);
 	
 	/// Emitted when the disconnection process is initiated
 	SigC::Signal0<bool> Disconnecting;
@@ -124,9 +113,16 @@ protected:
 	virtual void handleFailure(const std::string &msg);
 
 	Dispatcher* _rootDispatch;	///< the root of the dispatch tree
+	
+	/** queue of messages that have been signalled (from the wait list)
+	and can now be re-posted */
+	MessageList _repostQueue;
+		
+	void clearSignalledWaits();
 
-	RepostList _postQueue;	
-
+	typedef std::list<WaitForBase*> WaitForList;
+	WaitForList _waitList;
+	
 	/// hostname of the server (for reconnection)
 	/** This is cleared if connection fails during establishment (i.e CONNECTING
 	and NEGOTIATE states), to indicate that re-connection is not possible. */

@@ -16,8 +16,9 @@
 #include "World.h"
 #include "Connection.h"
 #include "Utils.h"
+#include "Wait.h"
+
 #include "OpDispatcher.h"
-#include "RepostDispatcher.h"
 #include "IdDispatcher.h"
 
 namespace Eris {
@@ -272,10 +273,7 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 			} else {
 				// setup a redispatch once we have the container
 				string nm = "set_container_" /*+ set.GetSerialno() */ ;
-			
-				Dispatcher *pr = Connection::Instance()->getDispatcherByPath("op:ig:sight:entity");
-				pr = pr->addSubdispatch( new IdDispatcher(nm, loc) );
-			
+		
 				// sythesies a new set, with just the container.
 				Atlas::Objects::Operation::Set setc = 
 					Atlas::Objects::Operation::Set::Instantiate();
@@ -284,9 +282,7 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 				args["loc"] = loc;
 				setc.SetArgs(Atlas::Message::Object::ListType(1,args));
 				
-				pr->addSubdispatch(
-					new RepostDispatcher(nm, setc, "op:ig:sight:entity")
-				); 
+				new WaitForDispatch(setc, "op:ig:sight:entity", new IdDispatcher(nm, loc) );
 			}
 		}
 		

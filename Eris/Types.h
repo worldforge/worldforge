@@ -11,6 +11,8 @@
 #include <Atlas/Message/Object.h>
 #include <Atlas/Objects/Root.h>
 
+#include <sigc++/basic_signal.h>
+
 namespace Eris
 {
 
@@ -58,6 +60,10 @@ public:
 		BaseException(s) {;}
 };
 
+
+typedef std::list<Atlas::Message::Object> MessageList;
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Coord
@@ -91,6 +97,29 @@ typedef Entity* EntityPtr;
 // would prefer a set (for faster find() impl), but that assumed an ordering
 // operation on Sockets; this is fine for Unix, but less certain for Win32
 typedef std::list<Socket> SocketList;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// A Generic 'event' occurred signal, especially for use with Wait exceptions
+typedef SigC::Signal0<void> Signal;
+
+/** OperationBlocked exceptions are thrown by certain Eris functions when they cannot
+proceed (almost always becuase they are waiting on data from the server).  They
+are deliberately placed outside the standard exception heirarchy so people
+don't accidently catch them.
+
+The member signal is emitted when the original operation can be restarted
+(i.e the blocking condition no longer exists). The major complication is storing sufficent
+data to restart the request. */
+
+class OperationBlocked
+{
+public:
+	OperationBlocked(Signal &rsig);
+	Signal& _continue;
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 };
 

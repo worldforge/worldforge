@@ -9,6 +9,14 @@
 #include <Atlas/Objects/Operation/Appearance.h>
 #include <Atlas/Objects/Operation/Disappearance.h>
 
+namespace Atlas { namespace Objects {
+
+	namespace Operation {
+		class Imaginary;
+	}
+	
+}}
+
 #include "Types.h"
 
 namespace Eris
@@ -26,6 +34,10 @@ public:
 
 	/// Send a piece of text to this room
 	void say(const std::string &tk);
+
+	/** Send an emote ( /me ) to the room. This is transmitted as an IMAGINARY op
+	in Atlas, with args[0]["id"] = "emote". */
+	void emote(const std::string &em);
 
 	/// Leave the room
 	void leave();
@@ -49,7 +61,13 @@ public:
 	void sight(const Atlas::Objects::Entity::RootEntity &room);	
 // signals
 	SigC::Signal1<void, Room*> Entered;
+	
+	/** The primary talk callback. The arguments are the source room, the person
+	talking, and the message itself */
 	SigC::Signal3<void, Room*, std::string, std::string> Talk;
+	
+	/** Emote (/me) callback. The arguments are identical to those for Talk above */
+	SigC::Signal3<void, Room*, std::string, std::string> Emote;
 	
 	/// Emitted when a person enters the room; argument is the account ID
 	SigC::Signal2<void, Room*, std::string> Appearance;
@@ -68,7 +86,9 @@ protected:
 	void recvSoundTalk(const Atlas::Objects::Operation::Talk &tk);
 	void recvAppear(const Atlas::Objects::Operation::Appearance &ap);
 	void recvDisappear(const Atlas::Objects::Operation::Disappearance &dis);
-	
+	void recvSightEmote(const Atlas::Objects::Operation::Imaginary &imag,
+		const Atlas::Objects::Root &emote);	
+
 	std::string _id;	///< ID of the room entity
 	Lobby* _lobby;		///< the Lobby object
 	bool _parted;		///< Set if 'left'

@@ -20,7 +20,7 @@ liberis_la_SOURCES = \
 	MetaQuery.h MetaQuery.cpp \
 	Time.cpp Time.h \
 	ServerInfo.cpp \
-	RepostDispatcher.cpp
+	Wait.cpp
 	
 liberisdir = $(includedir)/Eris
 
@@ -45,5 +45,4 @@ liberis_HEADERS = \
 	Person.h \
 	Metaserver.h \
 	ServerInfo.h \
-	IdDispatcher.h \
-	RepostDispatcher.h
+	IdDispatcher.h

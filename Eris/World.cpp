@@ -31,13 +31,13 @@
 #include "Connection.h"
 #include "Factory.h"
 #include "Utils.h"
+#include "Wait.h"
 
 #include "ClassDispatcher.h"
 #include "EncapDispatcher.h"
 #include "OpDispatcher.h"
 #include "TypeDispatcher.h"
 #include "IdDispatcher.h"
-#include "RepostDispatcher.h"
 
 //using namespace Atlas::Objects;
 
@@ -379,16 +379,12 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 	Entity *e = lookup(snd.GetFrom());
 	if (!e) {
 		if ( isPendingInitialSight(snd.GetFrom()) ) {
-			// FIXME - queue the talk for re-dispatch after the SIGHT
 			
 			// FIXME - ensure name uniqueness
 			string nm = "talk_" /* + snd.GetSerialno() */ ;
-			
-			Dispatcher *pr = _con->getDispatcherByPath("op:ig:sight:entity");
-			pr = pr->addSubdispatch( new IdDispatcher(nm, snd.GetFrom()) );
-			
-			pr->addSubdispatch(
-				new RepostDispatcher(nm, snd, "op:ig:sight:entity")
+			new WaitForDispatch(snd, 
+				"op:ig:sight:entity", 
+				new IdDispatcher(nm, snd.GetFrom())
 			); 
 		} else
 			throw UnknownEntity("Unknown entity at sound", snd.GetFrom());

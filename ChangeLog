@@ -1,3 +1,11 @@
+Sunday, August 19 2001, James Turner <jmtn@blueyonder.co.uk>
+
+	* Added support for emotes to OOG session
+	* New TypeInfo system (not tested yet)
+	* Re-wrote the Connection dispatch model to handle 
+	  re-dispathces more flexibly.
+	* Added a zero-argument SignalDispatcher
+
 Friday, August 10 2001, James Turner <jmtn@blueyonder.co.uk>
 
 	* Updated README and INSTALL to contains something
