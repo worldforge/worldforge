@@ -2,8 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day, Dmitry Derevyanko
 
-#ifndef ATLAS_NET_NEGOTIATE_H
-#define ATLAS_NET_NEGOTIATE_H
+#ifndef ATLAS_NET_STREAM_H
+#define ATLAS_NET_STREAM_H
 
 #include "../Negotiate.h"
 #include "../Filter.h"
