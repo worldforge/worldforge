@@ -51,7 +51,7 @@ public:
 	{ return _ping; }
 
 	/// the server's uptime in seconds
-	int getUptime() const
+	double getUptime() const
 	{ return _uptime; }
 	
 protected:
@@ -74,7 +74,7 @@ protected:
 	int _clients;		///< Number of clients connected to the server
 	int _ping;			///< Estimated round-trip-time (ping) in milliseconds
 	
-	int _uptime;		///< Server uptime in seconds
+	double _uptime;		///< Server uptime in seconds
 };
 
 } // of namespace Eris

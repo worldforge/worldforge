@@ -17,6 +17,7 @@ ServerInfo::ServerInfo(const std::string &host) :
 	_ruleset = "-";
 	_server = "";
 	_clients = 0;
+	_uptime = 0;
 }
 	
 void ServerInfo::processServer(const Atlas::Objects::Entity::RootEntity &svr)
@@ -26,7 +27,7 @@ try {
 	_name = svr.GetName();
 	_clients = svr.GetAttr("clients").AsInt();
 	_server = svr.GetAttr("server").AsString();
-	_uptime = svr.GetAttr("uptime").AsInt();
+	_uptime = svr.GetAttr("uptime").AsFloat();
 } catch (...)
     {
 	std::string summary(objectSummary(svr));
