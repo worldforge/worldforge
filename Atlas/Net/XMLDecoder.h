@@ -27,12 +27,12 @@ changes:
 using std::string;
 
 #include "../Object/Debug.h"
-#include "ProtocolDecoder.h"
+#include "Decoder.h"
 
 namespace Atlas
 {
 
-class XMLDecoder: public ProtocolDecoder
+class XMLDecoder: public Decoder
 {
 public:
 

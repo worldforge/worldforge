@@ -4,7 +4,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "PackedAsciiEncoder.h"
+#include "PackedEncoder.h"
 
 //#include <map.h>
 #include <memory.h>
@@ -17,7 +17,7 @@
 namespace Atlas
 {
 
-void PackedAsciiEncoder::walkTree(int nest, const char* xname,
+void PackedEncoder::walkTree(int nest, const char* xname,
                                    const Object& list)
 {
 	int	i;
@@ -64,7 +64,7 @@ void PackedAsciiEncoder::walkTree(int nest, const char* xname,
 
 }
 
-string PackedAsciiEncoder::encodeMessage(const Object& msg)
+string PackedEncoder::encodeMessage(const Object& msg)
 {
 	//int	i;
 

@@ -7,18 +7,18 @@
 #include <cassert>
 
 #include "Protocol.h"
-#include "PackedAsciiProtocol.h"
+#include "PackedProtocol.h"
 
 namespace Atlas
 {
 
-Protocol* PackedAsciiProtocol::makenew()
+Protocol* PackedProtocol::makenew()
 {
-	return new PackedAsciiProtocol();
+	return new PackedProtocol();
 }
 
-PackedAsciiProtocol::PackedAsciiProtocol()
- : Protocol( new PackedAsciiEncoder(), new PackedAsciiDecoder() )
+PackedProtocol::PackedProtocol()
+ : Protocol( new PackedEncoder(), new PackedDecoder() )
 { /*empty*/ }
 
 

@@ -25,16 +25,16 @@ using std::string;
 namespace Atlas
 {
 
-class ProtocolEncoder;
-class ProtocolDecoder;
+class Encoder;
+class Decoder;
 
 class Protocol
 {
 public:
     virtual ~Protocol();
 	
-	ProtocolEncoder*   getEncoder();
-	ProtocolDecoder*   getDecoder();
+	Encoder*   getEncoder();
+	Decoder*   getDecoder();
 	const string&       getPrefix() const { return prefix; }
 	void                setPrefix(  const string& s)	{ prefix = s; }
 	
@@ -54,14 +54,14 @@ public:
 	                    atlasMAP
 	                    };
 protected:
-    Protocol( ProtocolEncoder* anEncoder, ProtocolDecoder* aDecoder, const string& aPrefix = "" )
+    Protocol( Encoder* anEncoder, Decoder* aDecoder, const string& aPrefix = "" )
      : encoder( anEncoder ), decoder( aDecoder ), prefix( aPrefix ) {
     	assert( encoder != 0 );
 	    assert( decoder != 0 );
 	}
 	
-	ProtocolEncoder*   encoder;
-	ProtocolDecoder*   decoder;
+	Encoder*   encoder;
+	Decoder*   decoder;
     string              prefix;
 private:
     Protocol( const Protocol& );

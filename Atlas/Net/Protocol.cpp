@@ -7,8 +7,8 @@
 #include <cassert>
 
 #include "Protocol.h"
-#include "ProtocolDecoder.h"
-#include "ProtocolEncoder.h"
+#include "Decoder.h"
+#include "Encoder.h"
 
 namespace Atlas
 {
@@ -18,12 +18,12 @@ Protocol::~Protocol() {
     delete decoder;
 }
 
-ProtocolEncoder*	Protocol::getEncoder() {
+Encoder*	Protocol::getEncoder() {
     assert( encoder != 0 );
     return encoder;
 }
 
-ProtocolDecoder*	Protocol::getDecoder() {
+Decoder*	Protocol::getDecoder() {
     assert( decoder != 0 );
     return decoder;
 }

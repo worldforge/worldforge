@@ -8,16 +8,16 @@
 #define __AtlasPackedAsciiProtocol_h_
 
 #include "Protocol.h"
-#include "PackedAsciiEncoder.h"
-#include "PackedAsciiDecoder.h"
+#include "PackedEncoder.h"
+#include "PackedDecoder.h"
 
 namespace Atlas
 {
 
-class PackedAsciiProtocol: public Protocol
+class PackedProtocol: public Protocol
 {
 public:
-		PackedAsciiProtocol();
+		PackedProtocol();
 
 Protocol*	makenew();
 };

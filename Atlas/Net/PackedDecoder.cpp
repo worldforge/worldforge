@@ -6,7 +6,7 @@
 
 #include "../Object/Object.h"
 #include "Protocol.h"
-#include "PackedAsciiDecoder.h"
+#include "PackedDecoder.h"
 
 #include <memory.h>
 #include <stdio.h>
@@ -17,7 +17,7 @@
 namespace Atlas
 {
 
-void PackedAsciiDecoder::newStream()
+void PackedDecoder::newStream()
 {
 	// reset decoder
 	state = 1;
@@ -25,19 +25,19 @@ void PackedAsciiDecoder::newStream()
 	token = 0;
 }
 
-void PackedAsciiDecoder::feedStream(const string& data)
+void PackedDecoder::feedStream(const string& data)
 {
 	buffer.append(data);
 }
 
-int PackedAsciiDecoder::getToken()
+int PackedDecoder::getToken()
 {
 	int tmp = token;
 	token = 0;
 	return tmp;
 }
 
-int PackedAsciiDecoder::hasTokens()
+int PackedDecoder::hasTokens()
 {
     //check for buffer overflow
     if (token == -1)

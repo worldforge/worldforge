@@ -9,14 +9,14 @@
 
 
 #include "../Object/Object.h"
-#include "ProtocolEncoder.h"
+#include "Encoder.h"
 
 #include <memory.h>
 
 namespace Atlas
 {
 
-class PackedAsciiEncoder: public ProtocolEncoder
+class PackedEncoder: public Encoder
 {
 private:
     void walkTree(int nest, const char* name, const Object& list);

@@ -17,14 +17,14 @@ conversion portion of the Atlas XML Protocol module
 
 
 #include "../Object/Object.h"
-#include "ProtocolEncoder.h"
+#include "Encoder.h"
 
 #include <memory.h>
 
 namespace Atlas
 {
 
-class XMLEncoder: public ProtocolEncoder
+class XMLEncoder: public Encoder
 {
 private:
 	/// process nested Object elements to stream format

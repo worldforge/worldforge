@@ -7,7 +7,7 @@
 #ifndef __AtlasProtocolDecoder__h_
 #define __AtlasProtocolDecoder__h_
 
-#include "ProtocolDecoder.h"
+#include "Decoder.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -16,7 +16,7 @@
 namespace Atlas
 {
 
-class PackedAsciiDecoder: public ProtocolDecoder
+class PackedDecoder: public Decoder
 {
 
 private:
@@ -27,14 +27,14 @@ private:
 
 public:
 
-    PackedAsciiDecoder()
+    PackedDecoder()
     {
         state = 1;
         nestd = 0;
         token = 0;
     }
 
-    ~PackedAsciiDecoder()
+    ~PackedDecoder()
     {
     }
 

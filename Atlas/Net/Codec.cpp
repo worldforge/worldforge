@@ -15,8 +15,8 @@ changes:
 
 #include "Codec.h"
 #include "Protocol.h"
-#include "ProtocolEncoder.h"
-#include "ProtocolDecoder.h"
+#include "Encoder.h"
+#include "Decoder.h"
 
 
 namespace Atlas
@@ -74,7 +74,7 @@ bool Codec::hasMessage()
 	myState = Codec::BUSY;
 	// process tokens until we run out or we complete a msg
     DebugMsg1(1,"codec :: Scanning Tokens","");
-    ProtocolDecoder* adec = proto->getDecoder();
+    Decoder* adec = proto->getDecoder();
 
     do {
         int tok = proto->getDecoder()->getToken();
