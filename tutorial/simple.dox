@@ -5,9 +5,28 @@ server was is wait for a connection, receive something from the client and
 wait for the connection to close. The client connects to the server, sends a
 message and then closes the connection.
 
+Both client and server use libsocket++ (see @ref tutorial_preamble) for socket
+communications.
+
 @section server The Server
 
+See under the code for more documentation.
+
 @verbinclude simple_server.cc
+
+As mentioned before, the server does the following:
+
+<ol>
+  <li>Wait for a connection</li>
+  <li>Accept a client connection</li>
+  <li>Negotiate with the connecting client</li>
+  <li>Receive messages from the client and wait for it to disconnect</li>
+</ol>
+
+Only steps 3 and 4 really involve Atlas-C++, the rest is handled by the socket
+library I'm using (libsocket++, see @ref tutorial_preamble).
+
+
 
 @section client The Client
 
@@ -25,7 +44,9 @@ code should be quite easily understandable.
 
 @verbinclude DebugBridge.h
 
-@ref tutorial_index
+@ref tutorial_preamble "Previous"
+@ref tutorial_index "Index"
+@ref tutorial_message "Next"
 
 @author Stefanus Du Toit <sdt@gmx.net>
 */

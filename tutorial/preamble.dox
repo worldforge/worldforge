@@ -1,5 +1,7 @@
 /** @page tutorial_preamble Preamble
 
+@section intro Introduction
+
 This tutorial was created in hope that it would make starting with Atlas-C++
 fairly straight forward. I hope that it will help you to become more confident
 with the library.
@@ -7,7 +9,24 @@ with the library.
 If you have any questions, suggestions or other constructive comments, feel
 free to e-mail me at sdt@gmx.net.
 
-@ref tutorial_index
+@section prereqs Prerequisites
+
+In order to use this tutorial, you will need:
+
+<ul>
+  <li>
+The latest version of Atlas-C++ - you probably have this already if you have
+this tutorial.
+<a href="http://www.worldforge.org/website/archives/downloads">Download</a>.
+  </li>
+  <li>
+libsocket++, a socket library that provides iostream-derived sockstreams.
+<a href="ftp://ftp.umsicht.fhg.de/pub/unix/language/C++/class-libraries/socket++-1.10.tar.gz">Download</a>.
+  </li>
+</ul>
+
+@ref tutorial_index "Index"
+@ref tutorial_simple "Next"
 
 @author Stefanus Du Toit <sdt@gmx.net>
 
