@@ -280,48 +280,8 @@ std::istream& operator>>(std::istream& is, RotBox<dim>& r)
   return is;
 }
 
-template<>
-std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
-{
-  os << "Polygon: (";
-
-  int size = r.m_points.size();
-
-  for(int i = 0; i < size; ++i) {
-    os << r.m_points[i] << (i < (size - 1) ? ',' : ')');
-  }
-
-  return os;
-}
-
-template<>
-std::istream& operator>>(std::istream& is, Polygon<2>& r)
-{
-  char next;
-  Point<2> p;
-
-  r.m_points.clear();
-
-  do {
-    if(!is)
-      return is;
-    is >> next;
-  } while(next != '(');
-
-  while(true) {
-    is >> p;
-    if(!is)
-      return is;
-    r.m_points.push_back(p);
-    is >> next;
-    if(next == ')')
-      return is;
-    if(next != ',') {
-      is.setstate(std::istream::failbit);
-      return is;
-    }
-  }
-}
+template<> std::ostream& operator<<(std::ostream& os, const Polygon<2>& r);
+template<> std::istream& operator>>(std::istream& is, Polygon<2>& r);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
@@ -391,7 +351,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
     }
   }
   else { // Find the three furthest apart points
-    list<_PolyReader>::iterator p1, p2, p3, j; // invalid values
+    list<_PolyReader>::iterator p1 = end, p2 = end, p3 = end, j; // invalid values
     CoordType dist = -1;
 
     for(i = read_list.begin(); i != end; ++i) {
@@ -404,6 +364,9 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
         }
       }
     }
+
+    assert(p1 != end);
+    assert(p2 != end);
 
     dist = -1;
 
@@ -418,6 +381,8 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
         dist = new_dist;
       }
     }
+
+    assert(p3 != end);
 
     // Add p1, p2, p3 first
 

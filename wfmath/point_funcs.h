@@ -274,7 +274,7 @@ Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2)
   Point<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out[i] = FloatAdd(p1[i], p2[i]) / 2;
+    out.m_elem[i] = FloatAdd(p1.m_elem[i], p2.m_elem[i]) / 2;
 
   return out;
 }

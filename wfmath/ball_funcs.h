@@ -29,6 +29,7 @@
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
+#include <wfmath/miniball.h>
 
 namespace WF { namespace Math {
 
@@ -52,6 +53,101 @@ AxisBox<dim> Ball<dim>::boundingBox() const
   }
 
   return AxisBox<dim>(p_low, p_high, true);
+}
+
+template<const int dim, template<class> class container>
+Ball<dim> BoundingSphere(const container<Point<dim> >& c)
+{
+  _miniball::Miniball<dim> m;
+  _miniball::Wrapped_array<dim> w;
+
+  typename container<Point<dim> >::const_iterator i, end = c.end();
+
+  for(i = c.begin(); i != end; ++i) {
+    for(int j = 0; j < dim; ++j)
+      w[j] = (*i)[j];
+    m.check_in(w);
+  }
+
+  m.build();
+
+  double dummy;
+  assert(m.accuracy(dummy) < WFMATH_EPSILON);
+
+  w = m.center();
+  Point<dim> center;
+
+  for(int j = 0; j < dim; ++j)
+    center[j] = w[j];
+
+  return Ball<dim>(center, sqrt(m.squared_radius()));
+}
+
+template<const int dim, template<class> class container>
+Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
+{
+  // This is based on the algorithm given by Jack Ritter
+  // in Volume 2, Number 4 of Ray Tracing News
+  // <http://www.acm.org/tog/resources/RTNews/html/rtnews7b.html>
+
+  typename container<Point<dim> >::const_iterator i = c.begin(),
+						end = c.end();
+  assert(i != end);
+
+  CoordType min[dim], max[dim];
+  typename container<Point<dim> >::const_iterator min_p[dim], max_p[dim];
+
+  for(int j = 0; j < dim; ++j) {
+    min[j] = max[j] = (*i)[j];
+    min_p[j] = max_p[j] = i;
+  }
+
+  while(++i != end) {
+    for(int j = 0; j < dim; ++j) {
+      if(min[j] > (*i)[j]) {
+        min[j] = (*i)[j];
+        min_p[j] = i;
+      }
+      if(max[j] < (*i)[j]) {
+        max[j] = (*i)[j];
+        max_p[j] = i;
+      }
+    }
+  }
+
+  CoordType span = -1;
+  int direction = -1;
+
+  for(int j = 0; j < dim; ++j) {
+    CoordType new_span = max[j] - min[j];
+    if(new_span > span) {
+      span = new_span;
+      direction = j;
+    }
+  }
+
+  assert(direction != -1);
+
+  Point<dim> center = Midpoint(*(min_p[direction]), *(max_p[direction]));
+  CoordType dist = SloppyDistance(*(min_p[direction]), center);
+
+  for(i = c.begin(); i != end; ++i) {
+    if(i == min_p[direction] || i == max_p[direction])
+      continue; // We already have these
+
+    CoordType new_dist = SloppyDistance(*i, center);
+
+    if(new_dist > dist) {
+      CoordType delta_dist = (new_dist - dist) / 2;
+      // Even though new_dist may be too large, delta_dist / new_dist
+      // always gives enough of a shift to include the new point.
+      center += (*i - center) * delta_dist / new_dist;
+      dist += delta_dist;
+      assert(SquaredDistance(*i, center) <= dist * dist);
+    }
+  }
+
+  return Ball<2>(center, dist);
 }
 
 }} // namespace WF::Math

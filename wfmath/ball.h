@@ -41,6 +41,11 @@ namespace WF { namespace Math {
 
 template<const int dim> class Ball;
 
+template<const int dim, template<class> class container>
+Ball<dim> BoundingSphere(const container<Point<dim> >& c);
+template<const int dim, template<class> class container>
+Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c);
+
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Ball<dim>& m);
 template<const int dim>

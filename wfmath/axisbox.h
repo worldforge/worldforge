@@ -51,6 +51,9 @@ std::istream& operator>>(std::istream& is, AxisBox<dim>& m);
 template<const int dim, template<class> class container>
 AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c);
 
+template<const int dim, template<class> class container>
+AxisBox<dim> BoundingBox(const container<Point<dim> >& c);
+
 template<const int dim>
 class AxisBox
 {

@@ -56,3 +56,52 @@ void WF::Math::_ReadCoordList(std::istream& is, CoordType* d, const int num)
     }
   }
 }
+
+// This is the only way I could get the operator<<() and operator>>()
+// templates to recognize the declarations in the headers
+namespace WF { namespace Math {
+
+template<>
+std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
+{
+  os << "Polygon: (";
+
+  int size = r.m_points.size();
+
+  for(int i = 0; i < size; ++i) {
+    os << r.m_points[i] << (i < (size - 1) ? ',' : ')');
+  }
+
+  return os;
+}
+
+template<>
+std::istream& operator>>(std::istream& is, Polygon<2>& r)
+{
+  char next;
+  Point<2> p;
+
+  r.m_points.clear();
+
+  do {
+    if(!is)
+      return is;
+    is >> next;
+  } while(next != '(');
+
+  while(true) {
+    is >> p;
+    if(!is)
+      return is;
+    r.m_points.push_back(p);
+    is >> next;
+    if(next == ')')
+      return is;
+    if(next != ',') {
+      is.setstate(std::istream::failbit);
+      return is;
+    }
+  }
+}
+
+}} // namespace WF::Math

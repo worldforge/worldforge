@@ -93,12 +93,12 @@ bool Polygon<2>::isEqualTo(const Polygon& p, double tolerance) const
 
   theConstIter i1 = m_points.begin(), i2 = p.m_points.begin(), end = m_points.end();
 
-  do {
+  while(i1 != end) {
     if(!i1->isEqualTo(*i2, tolerance))
       return false;
     ++i1;
     ++i2;
-  } while(i1 != end);
+  }
 
   return true;
 }
@@ -113,14 +113,14 @@ bool Polygon<2>::operator< (const Polygon& p) const
 
   theConstIter i1 = m_points.begin(), i2 = p.m_points.begin(), end = m_points.end();
 
-  do {
+  while(i1 != end) {
     if(*i1 < *i2)
       return true;
     if(*i2 < *i1)
       return false;
     ++i1;
     ++i2;
-  } while(i1 != end);
+  }
 
   return false;
 }
@@ -142,51 +142,3 @@ Polygon<2>& Polygon<2>::rotatePoint(const RotMatrix<2>& m, const Point<2>& p)
 
   return *this;
 }
-
-//template<>
-AxisBox<2> Polygon<2>::boundingBox() const
-{
-  theConstIter i = m_points.begin(), end = m_points.end();
-  assert(i != end);
-
-  Point<2> min = *i, max = *i;
-
-  while(++i != end) {
-    for(int j = 0; j < 2; ++j) {
-      CoordType val = (*i)[j];
-      min[j] = FloatMin(min[j], val);
-      max[j] = FloatMax(max[j], val);
-    }
-  }
-
-  return AxisBox<2>(min, max, true);
-}
-
-//template<>
-Ball<2> Polygon<2>::boundingSphere() const
-{
-  // FIXME (use miniball code?)
-  assert(false);
-}
-
-//template<>
-Ball<2> Polygon<2>::boundingSphereSloppy() const
-{
-  // Be simple minded but fast about this one
-
-  Point<2> center = getCenter();
-  theConstIter i = m_points.begin(), end = m_points.end(), far = i;
-  assert(i != end);
-  CoordType dist = SloppyDistance(center, *i);
-
-  while(++i != end) {
-    CoordType new_dist = SloppyDistance(center, *i);
-    if(new_dist <= dist)
-      continue;
-    far = i;
-    dist = new_dist;
-  }
-
-  return Ball<2>(center, dist);
-}
-

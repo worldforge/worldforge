@@ -136,6 +136,25 @@ AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c)
   return AxisBox<dim>(low, high, true);
 }
 
+template<const int dim, template<class> class container>
+AxisBox<dim> BoundingBox(const container<Point<dim> >& c)
+{
+  typename container<Point<dim> >::const_iterator i = c.begin(), end = c.end();
+
+  assert(i != end);
+
+  Point<dim> low = *i, high = *i;
+
+  while(++i != end) {
+    for(int j = 0; j < dim; ++j) {
+      low[j] = FloatMin(low[j], (*i)[j]);
+      high[j] = FloatMax(high[j], (*i)[j]);
+    }
+  }
+
+  return AxisBox<dim>(low, high, true);
+}
+
 
 }} // namespace WF::Math
 

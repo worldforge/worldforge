@@ -1,5 +1,15 @@
 Wednesday, January 9, 2002	Ron Steinke <rsteinke@w-link.net>
 
+	* Added BoundingBox(), BoundingSphere() functions for a
+	  container of points. The BoundingSphere() function
+	  uses the (GPL'd) miniball code of Bernd Gaertner
+	  <http://www.inf.ethz.ch/personal/gaertner>
+	* Moved the implementations of operator<<() and operator>>()
+	  for Polygon<2> out of stream.h and into stream.cpp, fixing
+	  a linker error for any file which included stream.h (oops).
+
+Wednesday, January 9, 2002	Ron Steinke <rsteinke@w-link.net>
+
 	* Started on Polygon<> class
 	* Wrote some test functions for the generic
 	  part of the class interface (operator=(), isEqualTo(), etc.)

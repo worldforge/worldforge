@@ -113,9 +113,9 @@ class Polygon<2>
 
   // Intersection functions
 
-  AxisBox<2> boundingBox() const;
-  Ball<2> boundingSphere() const;
-  Ball<2> boundingSphereSloppy() const;
+  AxisBox<2> boundingBox() const {return BoundingBox(m_points);}
+  Ball<2> boundingSphere() const {return BoundingSphere(m_points);}
+  Ball<2> boundingSphereSloppy() const {return BoundingSphereSloppy(m_points);}
 /*
   friend bool Intersect<2>(const Polygon& r, const Point<2>& p);
   friend bool IntersectProper<2>(const Polygon& r, const Point<2>& p);
