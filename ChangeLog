@@ -1,3 +1,9 @@
+Friday, 29th November, Ron Steinke
+
+	* Added PollGlib, with code taken from silence. This is the poll
+	  for use with gtk+, it's called PollGlib because it only depends
+	  on the lower level glib library.
+
 Tuesday, 27th November, Ron Steinke
 
 	* Integrated Perl bindings into the build with --enable-perl.

@@ -81,6 +81,8 @@ AM_PATH_WFMATH(0.2.6,[
 
 AC_LANG_RESTORE
 
+AC_MSG_NOTICE(Checking requirements for bindings)
+
 AC_ARG_ENABLE(python, 
 [  --enable-python         Enable building of Python bindings
 ],
@@ -100,6 +102,23 @@ dnl perl and sucks in its CFLAGS and LIBS
 	])
 ])
 AM_CONDITIONAL(PERL_BINDINGS, test "x$enable_perl" = "xyes")
+
+PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
+    [
+	have_glib='yes'
+    ],
+    [
+        AM_PATH_GLIB(1.2.0,[
+		have_glib='yes'
+	        ],[
+		AC_MSG_NOTICE(Couldn't find glib, not building glib poll)
+		have_glib='no'
+		]
+        )
+    ])
+AM_CONDITIONAL(HAVE_GLIB, test "x$have_glib" = "xyes")
+
+AC_MSG_NOTICE(Checking for test environment)
 
 AM_PATH_CPPUNIT(1.6.1,
     [
@@ -127,6 +146,8 @@ AC_OUTPUT([
 Makefile
 src/Makefile
 bindings/Makefile
+bindings/polls/Makefile
+bindings/polls/glib/Makefile
 test/Makefile
 eris.dox
 eris-config

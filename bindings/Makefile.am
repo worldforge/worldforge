@@ -1,3 +1,5 @@
+SUBDIRS = polls
+
 ## **************** Generic Stuff *****************
 
 .PHONY: perl-all perl-clean perl-check
