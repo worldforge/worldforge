@@ -30,35 +30,42 @@ TypeService::TypeService(Connection *con) :
     m_con(con),
     m_inited(false)
 {
-    /* this block here provides the foundation objects locally, no matter what
-    the server does. this reduces some initial traffic during login and
-    startup. */
-    /*
-    registerLocalType(Root::Class());
-    registerLocalType(RootEntity::Class());
-    registerLocalType(RootOperation::Class());
-    registerLocalType(Get::Class());
-    registerLocalType(Info::Class());
-    registerLocalType(Error::Class());
-*/
-
+    defineBuiltin("root", NULL);
+    defineBuiltin("root_operation", m_types["root"]);
+    defineBuiltin("action", m_types["root_operation"]);
+    defineBuiltin("get", m_types["action"]);
+    defineBuiltin("set", m_types["action"]);
+    defineBuiltin("perceive", m_types["get"]);
+    defineBuiltin("look", m_types["perceive"]);
+    defineBuiltin("login", m_types["get"]);
+    
+    defineBuiltin("info", m_types["root_operation"]);
+    defineBuiltin("create", m_types["action"]);
+    defineBuiltin("communicate", m_types["create"]);
+    defineBuiltin("talk", m_types["communicate"]);
+    
+    defineBuiltin("root_entity", m_types["root"]);
+    defineBuiltin("admin_entity", m_types["root_entity"]);
+    defineBuiltin("account", m_types["admin_entity"]);
+    defineBuiltin("game_entity", m_types["root_entity"]);
+    
     // try to read atlas.xml to boot-strap stuff faster
-    readAtlasSpec("atlas.xml");
+    //readAtlasSpec("atlas.xml");
 }
 
 void TypeService::init()
 {
     assert(!m_inited);
     m_inited = true;
-        
-    // build the root node, install into the global map and kick off the GET
-    getTypeByName("root");
 	
     // every type already in the map delayed it's sendInfoRequest becuase we weren't inited;
     // go through and fix them now. This allows static construction (or early construction) of
     // things like ClassDispatchers in a moderately controlled fashion.
     for (TypeInfoMap::iterator T=m_types.begin(); T!=m_types.end(); ++T)
-        sendRequest(T->second->getName());
+    {
+        if (!T->second->isBound()) 
+            sendRequest(T->second->getName());
+    }
 }
 
 TypeInfoPtr TypeService::findTypeByName(const std::string &id)
@@ -268,6 +275,19 @@ void TypeService::registerLocalType(const Root &def)
         T->second->processTypeData(def);
     else
         m_types[def->getId()] = new TypeInfo(def, this);
+}
+
+void TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
+{
+    assert(m_types.count(name) == 0);
+    
+    TypeInfo* type = new TypeInfo(name, this);
+    m_types[name] = type;
+    
+    if (parent) type->addParent(parent);
+    type->validateBind();
+    
+    assert(type->isBound());
 }
 
 } // of namespace Eris

@@ -1,5 +1,10 @@
 2004-05-01  James Turner <james@worldforge.org>
 
+* Bring builtin definition of core atlas types back from the dead,
+  helps to reduce initial server ganking.
+
+2004-05-01  James Turner <james@worldforge.org>
+
 * Update the MetaServer API to support in-place inspection of server
   info objects. Also rename various signals to be clearer, and give each
   ServerInfo a status field, to aid in displaying nice UI in clients.

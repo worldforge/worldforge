@@ -74,6 +74,8 @@ public:
     void recvTypeInfo(const Atlas::Objects::Root &atype);
     void recvError(const Atlas::Objects::Operation::Get& get);
 
+    void defineBuiltin(const std::string& name, TypeInfo* parent);
+
     typedef std::map<std::string, TypeInfoPtr> TypeInfoMap;
     /** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')
     to the corresponding TypeInfo instance. This could be a hash_map in the
