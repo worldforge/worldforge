@@ -1,4 +1,4 @@
-SUBDIRS = src tests tutorial
+SUBDIRS = src tests tutorial benchmark
 
 EXTRA_DIST = ROADMAP Doxyfile footer.html index.dox
 

@@ -334,4 +334,5 @@ AC_OUTPUT([
 	tests/Makefile
 	tests/Objects/Makefile
 	tutorial/Makefile
+	benchmark/Makefile
 ])

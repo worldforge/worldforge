@@ -1,0 +1,72 @@
+machine: 400Mhz AMD-K6(tm) 3D processor
+
+note that Static_Move is 'mock' test, hopefully achievable
+
+                   creation   movement
+C++/Message_Move : 2.9K/s     1.9K/s
+C++/Objects_Move : 860/s      500/s
+C++/Static_Move  : 7.6M/s     1.7M/s
+C++/Call_Move    :            1.9M/s
+Python/OldMove   : 1.5K/s     900/s
+Python/Move      : 1.3K/s     840/s
+Python/Call_Move :            26K/s
+
+
+forge-2000.08.11-17:29:05/scratchpad/Object_modified.h
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+C++:
+Message_Move:
+        Plain creating of sight operation: 
+                iterations=1e+06 CPU Time=333.22 iter/s=3001.02
+        NPC movements: 
+                iterations=100000 CPU Time=50.59 iter/s=1976.68
+        383.43user 0.39system 7:25.12elapsed 86%CPU
+
+Objects_Move:
+        Plain creating of sight operation:      
+                iterations=10000 CPU Time=11.57 iter/s=864.304
+        NPC movements: 
+                iterations=10000 CPU Time=20.19 iter/s=495.295
+        31.75user 0.02system 0:35.88elapsed 88%CPU
+
+Call_Move:
+        NPC movements: 
+                iterations=1e+07 CPU Time=4.94 iter/s=2.02429e+06
+        4.94user 0.01system 0:05.63elapsed 87%CPU
+        (no result velocity:
+        (NPC movements: 
+        (        iterations=1e+07 CPU Time=4.27 iter/s=2.34192e+06
+        (4.27user 0.02system 0:04.82elapsed 88%CPU
+
+Static_Move:
+        Plain creating of sight operation: 
+                iterations=1e+07 CPU Time=1.26 iter/s=7.93651e+06
+        NPC movements: 
+                iterations=1e+07 CPU Time=5.61 iter/s=1.78253e+06
+        6.88user 0.00system 0:07.69elapsed 89%CPU
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+Python:
+OldMove.py:
+        uses old libAtlasPy:
+        Plain creating of sight operation: 
+                iterations=10000  CPU Time=6.55402898788  iter/s=1525.77903126
+        NPC movements: 
+                iterations=10000  CPU Time=11.1361660957  iter/s=897.975112263
+        15.80user 0.02system 0:17.93elapsed 88%CPU
+
+Move.py:
+        Plain creating of sight operation: 
+                iterations=10000  CPU Time=7.57880795002  iter/s=1319.46871671
+        NPC movements: 
+                iterations=10000  CPU Time=11.8502351046  iter/s=843.865114216
+        17.38user 0.01system 0:19.66elapsed 88%CPU
+
+Call_Move.py:
+        NPC movements: 
+                iterations=100000  CPU Time=3.7076369524  iter/s=26971.3570352
+        3.38user 0.03system 0:03.84elapsed 88%CPU
+

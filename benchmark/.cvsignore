@@ -1,0 +1,9 @@
+*.pyc
+Makefile.in
+Makefile
+.deps
+.libs
+Objects_Move
+Message_Move
+Call_Move
+Static_Move
