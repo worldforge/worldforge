@@ -28,12 +28,12 @@
 #include <fstream>
 #include <string>
 
+#include <varconf/Config.h>
+
 #ifdef __WIN32__
 #include <tchar.h>
 #define snprintf _snprintf
 #endif
-
-#include "Config.h"
 
 extern char **environ;
 
@@ -506,6 +506,7 @@ void Config::setItem( const string& section, const string& key, const Variable& 
  
     sig.emit(); 
     sigv.emit( sec_clean, key_clean);
+    sigsv.emit( sec_clean, key_clean, *this);
   }
 }
 

@@ -1,5 +1,6 @@
-SUBDIRS = varconf tests
+## Process this file with automake to generate Makefile.in
 
-EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL NEWS README THANKS TODO \
-             autogen.sh
+SUBDIRS = varconf doc tests
+
+EXTRA_DIST = autogen.sh varconf.spec.in
 

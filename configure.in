@@ -1,28 +1,38 @@
-dnl Initialise autoconf
+dnl Process this file with autoconf to generate configure
 
+dnl Autoconf Initialization
 AC_INIT()
 
-dnl Initialise automake
+dnl Information
+VARCONF_CURRENT=0
+VARCONF_REVISION=5
+VARCONF_AGE=0
+VARCONF_VERSION=$VARCONF_CURRENT.$VARCONF_REVISION.$VARCONF_AGE
+VARCONF_PACKAGE=varconf
+MIN_SIGC_VERSION=1.0.0
 
-AM_INIT_AUTOMAKE("varconf", "0.3.0")
+dnl General Initialization
+AC_SUBST(VARCONF_CURRENT)
+AC_SUBST(VARCONF_REVISION)
+AC_SUBST(VARCONF_AGE)
+AC_SUBST(VARCONF_VERSION)
+AC_SUBST(VARCONF_PACKAGE)
+AC_SUBST(MIN_SIGC_VERSION)
+
+AM_INIT_AUTOMAKE($VARCONF_PACKAGE,$VARCONF_VERSION)
 AM_CONFIG_HEADER(config.h)
 
 dnl Test for GNU libtool
-
 AM_PROG_LIBTOOL
 
 dnl Test for C++ Language
 
-
-dnl Test for C++ compiler
-
+dnl Test for C++ Compiler
 AC_PROG_CXX
 
 dnl Test for ANSI standard language features
 
-
 dnl Test for C++ bool keyword
-
 AC_MSG_CHECKING([for C++ bool keyword])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
@@ -49,7 +59,6 @@ fi
 AC_LANG_RESTORE
 
 dnl Test for C++ namespaces
-
 AC_MSG_CHECKING([for C++ namespaces])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
@@ -86,7 +95,6 @@ fi
 AC_LANG_RESTORE
 
 dnl Test for C++ exception handling
-
 AC_MSG_CHECKING([for C++ exception handling])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
@@ -123,9 +131,7 @@ AC_LANG_RESTORE
 
 dnl Test for C++ Standard Library
 
-
 dnl Test for <cstdio> header file
-
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(cstdio)
@@ -133,7 +139,6 @@ AC_CHECK_HEADERS(cstdio)
 AC_LANG_RESTORE
 
 dnl Test for <iostream> header file
-
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(iostream)
@@ -141,7 +146,6 @@ AC_CHECK_HEADERS(iostream)
 AC_LANG_RESTORE
 
 dnl Test for <list> header file
-
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(list)
@@ -149,7 +153,6 @@ AC_CHECK_HEADERS(list)
 AC_LANG_RESTORE
 
 dnl Test for <map> header file
-
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(map)
@@ -157,7 +160,6 @@ AC_CHECK_HEADERS(map)
 AC_LANG_RESTORE
 
 dnl Test for <string> header file
-
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(string)
@@ -165,23 +167,28 @@ AC_CHECK_HEADERS(string)
 AC_LANG_RESTORE
 
 dnl Test for <vector> header file
-
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(vector)
 
 AC_LANG_RESTORE
 
-dnl Generate files
+dnl Test for libsigc++
+AM_PATH_SIGC($MIN_SIGC_VERSION,
+[
+  CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
+  LDFLAGS="$LDFLAGS $SIGC_LIBS"
+],
+[
+  AC_ERROR(libsigc++ not found or version < $MIN_SIGC_VERSION) 
+]) 
 
-SIGC_VERSION=1.0.0
-AM_PATH_SIGC($SIGC_VERSION)
-CFLAGS="$CFLAGS $SIGC_CFLAGS"
-CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
-LIBS="$LIBS $SIGC_LIBS"
-                         
+dnl Generate files                         
 AC_OUTPUT([
 	Makefile
+	varconf.spec
+        doc/Makefile
+        doc/old/Makefile
 	tests/Makefile
 	varconf/Makefile
 ])

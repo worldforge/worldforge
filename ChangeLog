@@ -1,9 +1,18 @@
 ChangeLog for varconf
+Sunday, May 27, 2001 -- Joseph A. Zupko <jaz147@psu.edu>
+  + added varconf.spec.in
+  * fixed some problems with varconf.spec
+  + added doc/Makefile.am
+  + added doc/old/Makefile.am
+  - configure.am
+  * updated AM_PATH_SIGC macro to latest version (sigc++ 1.0.3)
+  * overhauled configuration.in and all Makefile.am
+  * updated varconf version to 0.5.0
 
-Sat May 19 13:03:00 EST 2001 -- jaz <jaz147@psu.edu>
+Saturday, May 19, 2001 -- Joseph A. Zupko <jaz147@psu.edu>
   * Changed license of varconf to LGPL.
 
-Tue Dec 12 14:30:00 EST 2000 -- jaz <jaz147@psu.edu>
+Tuesday, December 12, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
   * Config.h: Added "super-verbose" callback.
   * Config.h: Added << operator.
   * Config.h: Added >> operator.
@@ -15,16 +24,16 @@ Tue Dec 12 14:30:00 EST 2000 -- jaz <jaz147@psu.edu>
   * variable.h: Added == operator.
   * conftest.cpp: Rewrote to take advantage of Config objects.
 
-Sun Dec 10 20:30:00 EST 2000 -- jaz <jaz147@psu.edu>
-  + added varconf.h (again)
+Sunday, December 10, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
+  + added varconf.h
 
-Thu Nov 02 18:00:00 EST 2000 -- jaz <jaz147@psu.edu>
+Thursday, November 2, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
   * Config.h: Added generalized accessor methods
   * Config.cc: Implemented generalized accessor methods
   * Config.cc: Finished getEnv clean-up.
   * Config.cc: Finished getCmdline clean-up.
 
-Mon Oct 23 16:10:38 EST 2000 -- jaz <jaz147@psu.edu>
+Monday, October 23, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
  * Config.cc: Removed Observer code.
  * Config.cc: Converted callbacks to libsigc++.
  * Config.h: Added declarations for libsigc++ callbacks.
@@ -34,13 +43,13 @@ Mon Oct 23 16:10:38 EST 2000 -- jaz <jaz147@psu.edu>
  - deleted varconf.h
  - deleted conf_format
 
-Fri Oct 20 23:38:12 EST 2000 -- jaz <jaz147@psu.edu>
+Friday, October 20, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
  * Config.cc: Added section support to command-line arguments.
 
-Wed Oct 18 18:35:15 EST 2000 -- jaz <jaz147@psu.edu>
+Wednesday, October 18, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
  * Config.cc: Cleaned env variable code; added support for prefixes 
 
-Tue Oct 17 22:05:22 EST 2000 -- jaz <jaz147@psu.edu>
+Tuesday, October 17, 2000 -- Joseph A. Zupko <jaz147@psu.edu>
  * Config.cc: Implemented handling of environment variables.
 
 

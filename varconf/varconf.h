@@ -1,8 +1,8 @@
 #ifndef VARCONF_H
 #define VARCONF_H
 
-#include "Config.h"
-#include "parse_error.h"
-#include "variable.h"
+#include <varconf/Config.h>
+#include <varconf/parse_error.h>
+#include <varconf/variable.h>
 
 #endif

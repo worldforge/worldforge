@@ -5,7 +5,6 @@ echo aclocal...
     echo aclocal not found
     exit 1
 }
-
 aclocal
 
 echo autoheader...
@@ -13,7 +12,6 @@ echo autoheader...
     echo autoheader not found
     exit 1
 }    
-
 autoheader
 
 echo libtoolize...
@@ -21,7 +19,6 @@ echo libtoolize...
     echo libtoolize not found
     exit 1
 }
-
 libtoolize --automake --copy --force
 
 echo automake...
@@ -29,7 +26,6 @@ echo automake...
     echo automake not found
     exit 1
 }
-
 automake --add-missing --copy --gnu
 
 echo autoconf...
@@ -37,9 +33,8 @@ echo autoconf...
     echo autoconf not found
     exit 1
 }
-
 autoconf
 
-echo ready to configure
+echo Ready to configure
 
 exit 0

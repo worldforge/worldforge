@@ -1,9 +1,10 @@
+## Process this file with automake to generate Makefile.in
 
-EXTRA_DIST = conf.cfg
+EXTRA_DIST = conf.cfg 
 
-INCLUDES = -I../varconf
+INCLUDES = -I$(top_builddir)
+LDADD = $(top_builddir)/varconf/libvarconf.la 
 
-bin_PROGRAMS = conftest
-
+noinst_PROGRAMS = conftest
 conftest_SOURCES = conftest.cpp
-conftest_LDADD = ../varconf/.libs/libvarconf.a
+

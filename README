@@ -1,4 +1,4 @@
-Varconf - STAGE Configuration System (c)1999-2000
+Varconf - STAGE Configuration System (c)1999-2001
 
 
 1. Overview
@@ -13,16 +13,13 @@ None of the authors of this package nor anyone involved with the World Forge pro
 
 3. Installation
 ---------------
-The Atlas library needs to be compiled and installed before compiling varconf.  See the Atlas README for further information.
-
-The libsigc++ callback library needs to be compiled and installed before compiling varconf.  The library can be aquired at http://sourceforge.net/projects/libsigc/.
+The libsigc++ callback library needs to be compiled and installed before compiling varconf.  The library can be aquired at http://sourceforge.net/projects/libsigc/.  Varconf requires version 1.0.0 or greater of libsigc++.
 
 
 3.1 Basic Installation
 ----------------------
 cd forge/libs/varconf
-sh autogen.sh
-./configure
+sh autogen.sh (will automatically execute ./configure)
 make
 make install
 

@@ -25,7 +25,7 @@
  
 #include <cstdio>
 #include <iostream>
-#include "parse_error.h"
+#include <varconf/parse_error.h>
 
 using namespace std;
 

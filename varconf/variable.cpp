@@ -25,7 +25,7 @@
  
 #include <string>
 #include <cstdio>
-#include "variable.h"
+#include <varconf/variable.h>
 
 #ifdef __WIN32__
 #include <tchar.h>

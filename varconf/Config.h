@@ -31,8 +31,8 @@
 #include <string>
 
 #include <sigc++/signal_system.h>
-#include "parse_error.h"
-#include "variable.h"
+#include <varconf/parse_error.h>
+#include <varconf/variable.h>
 
 namespace varconf {
 

@@ -1,5 +1,5 @@
-%define name       varconf
-%define version	   0.5.0
+%define name       @VARCONF_PACKAGE@
+%define version	   @VARCONF_VERSION@
 %define release    1
 %define serial     1
 %define prefix     /usr
@@ -14,10 +14,10 @@ Copyright:         LGPL
 Group:             Amusements/Games
 Source:            %{name}-%{version}.tar.gz
 BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
-Requires:          libsigc++ >= 1.0.0 
+Requires:          libsigc++ >= @MIN_SIGC_VERSION@ 
 
 %description
-varconf is a configuration system originally designed for the STAGE server.  varconf can parse configuration files, command-line arguments and environment variables.  It supports callbacks through libsigc++ 1.0.0 or greater and can store configuration data in configuration objects or one global configuration instance.
+@VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE server.  @VARCONF_PACKAGE@ can parse configuration files, command-line arguments and environment variables.  It supports callbacks through libsigc++ @MIN_SIGC_VERSION@ or greater and can store configuration data in configuration objects or one global configuration instance.
 
 %prep
 %setup
@@ -46,5 +46,5 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/lib/libvarconf.a
 %{prefix}/lib/libvarconf.la
 %{prefix}/lib/libvarconf.so
-%{prefix}/lib/libvarconf.so.0
-%{prefix}/lib/libvarconf.so.0.5.0
+%{prefix}/lib/libvarconf.so.@VARCONF_CURRENT@
+%{prefix}/lib/libvarconf.so.@VARCONF_VERSION@
