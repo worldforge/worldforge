@@ -166,9 +166,9 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamConnect::GetState()
     }
 }
 
-Atlas::Connection<iostream> Atlas::Net::StreamConnect::GetConnection()
+Atlas::Codec<iostream>* Atlas::Net::StreamConnect::GetCodec()
 {
-    return Connection<iostream>((*outCodecs.begin())->New(Codec<iostream>::Parameters(socket,bridge)), inName);
+    return (*outCodecs.begin())->New(Codec<iostream>::Parameters(socket,bridge));
 }
 
 
@@ -309,9 +309,9 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::GetState()
     }
 }
 
-Atlas::Connection<iostream> Atlas::Net::StreamAccept::GetConnection()
+Atlas::Codec<iostream>* Atlas::Net::StreamAccept::GetCodec()
 {
-    return Connection<iostream>((*outCodecs.begin())->New(Codec<iostream>::Parameters(socket,bridge)), inName);
+    return (*outCodecs.begin())->New(Codec<iostream>::Parameters(socket,bridge));
 }
 
 void Atlas::Net::StreamAccept::processServerCodecs()

@@ -50,7 +50,7 @@ class StreamConnect : public Atlas::Negotiate<iostream>
     virtual void Run();
 
     virtual State GetState();
-    virtual Atlas::Connection<iostream> GetConnection();
+    virtual Atlas::Codec<iostream>* GetCodec();
 
     private:
 
@@ -100,7 +100,7 @@ class StreamAccept : public Atlas::Negotiate<iostream>
     virtual void Run();
 
     virtual State GetState();
-    virtual Atlas::Connection<iostream> GetConnection();
+    virtual Atlas::Codec<iostream>* GetCodec();
 
     private:
 

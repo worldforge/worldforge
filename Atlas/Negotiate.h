@@ -5,7 +5,7 @@
 #ifndef ATLAS_NEGOTIATE_H
 #define ATLAS_NEGOTIATE_H
 
-#include "Connection.h"
+#include "Codec.h"
 
 namespace Atlas {
 
@@ -33,7 +33,7 @@ class Negotiate : public Task
     };
 
     virtual State GetState() = 0;
-    virtual Connection<Stream> GetConnection() = 0;
+    virtual Codec<Stream>* GetCodec() = 0;
 };
 
 } // Atlas namespace
