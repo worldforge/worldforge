@@ -335,8 +335,14 @@ void Entity::setContainerById(const std::string &id)
 				setc.SetArgs(Atlas::Message::Object::ListType(1,args));
 				setc.SetTo(_id);
 				
+				// if we received sets/creates/sights in rapid sucession, this can happen, and is
+				// very, very bad
+				std::string setid("set_container_" + _id);
+				Connection::Instance()->removeIfDispatcherByPath(
+					"op:ig:sight:entity", setid);
+				
 				new WaitForDispatch(setc, "op:ig:sight:entity", 
-					new IdDispatcher("set_container_" + _id, id) );
+					new IdDispatcher(setid, id) );
 			}
 		
 		}

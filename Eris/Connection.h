@@ -69,6 +69,9 @@ public:
 	Dispatcher* getDispatcherByPath(const std::string &path) const;
 	void removeDispatcherByPath(const std::string &stem, const std::string &n);
 	
+	/** Remove the dispatch node iff found, otherwise do nothing */
+	void removeIfDispatcherByPath(const std::string &stem, const std::string &n);
+	
 	/// Transmit an Atlas::Objects instance to the server
 	/** If the connection is not fully connected, an exception will
 	be thrown. To correctly handle disconnection, callers should
@@ -134,6 +137,8 @@ protected:
 
 	virtual void bindTimeout(Eris::Timeout &t, Status sc);
 
+	virtual void onConnect();
+
 	Dispatcher* _rootDispatch;	///< the root of the dispatch tree
 	unsigned int _statusLock;	///< locks connection to current state while > 0	
 
@@ -151,6 +156,7 @@ protected:
 	and NEGOTIATE states), to indicate that re-connection is not possible. */
 	std::string _host;
 	short _port;		///< port of the server
+	bool _debug;
 	
 	// static singleton instance
 	static Connection* _theConnection;

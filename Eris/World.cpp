@@ -156,6 +156,13 @@ EntityPtr World::create(const Atlas::Objects::Entity::GameEntity &ge)
 	Entity *e = NULL;
 	string id = ge.GetId();
 	
+	EntityIDMap::iterator I = _lookup.find(id);
+	if (I != _lookup.end()) {
+		// treat it as sight; might need to handle mutations in the future
+		I->second->recvSight(ge);
+		return I->second;	
+	}
+	
 	// test factories
 	// note that since the default comparisom (for ints) is less<>, we use a reverse
 	// iterator here and get the desired result (higher priorty values are tested first)
@@ -240,7 +247,7 @@ void  World::registerCallbacks()
 	));
 	
 	// sight of create operations; this is 2-level decoder; becuase we have SIGHT encapsulating
-	// the CREATE which encapsulats the entity.
+	// the CREATE which encapsulates the entity.
 	//Dispatcher *cr = od->addSubdispatch(new ClassDispatcher("create", "create"));
 	
 	Dispatcher *cr = od->addSubdispatch(new EncapDispatcher("create", "create"));

@@ -14,10 +14,13 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/Encoder.h>
 
+#include <atlas_utils.h>
+
 #include "Connection.h"
 #include "Dispatcher.h"
 #include "Wait.h"
 #include "Timeout.h"
+#include "Utils.h"
 
 #include "TypeDispatcher.h"
 #include "ClassDispatcher.h"
@@ -37,7 +40,8 @@ Connection* Connection::_theConnection = NULL;
 	
 Connection::Connection(const string &cnm) :
 	BaseConnection(cnm, "game_", this),
-	_statusLock(0)
+	_statusLock(0),
+	_debug(true)
 {
 	// setup the singleton instance variable
 	assert(_theConnection == NULL);
@@ -52,8 +56,8 @@ Connection::Connection(const string &cnm) :
 	opd->addSubdispatch(new ClassDispatcher("info", "info"));
 	opd->addSubdispatch(new ClassDispatcher("error", "error"));
 	
-	dd = new DebugDispatcher(_clientName + ".log");
-	sdd = new DebugDispatcher(_clientName + ".sendlog");
+	dd = new DebugDispatcher(_clientName + ".atlas-recvlog");
+	sdd = new DebugDispatcher(_clientName + ".atlas-sendlog");
 }
 	
 Connection::~Connection()
@@ -141,8 +145,10 @@ void Connection::send(const Atlas::Objects::Root &obj)
 	_encode->StreamMessage(&obj);
 	(*_stream) << std::flush;
 	
-	DispatchContextDeque dq(1, obj.AsObject());
-	sdd->dispatch(dq);
+	if (_debug) {
+		DispatchContextDeque dq(1, obj.AsObject());
+		sdd->dispatch(dq);
+	}
 }
 
 void Connection::send(const Atlas::Message::Object &msg)
@@ -153,8 +159,10 @@ void Connection::send(const Atlas::Message::Object &msg)
 	_msgEncode->StreamMessage(msg);
 	(*_stream) << std::flush;
 	
-	DispatchContextDeque dq(1, msg);
-	sdd->dispatch(dq);
+	if (_debug) {
+		DispatchContextDeque dq(1, msg);
+		sdd->dispatch(dq);
+	}
 }
 
 Dispatcher* Connection::getDispatcherByPath(const string &path) const
@@ -179,21 +187,25 @@ Dispatcher* Connection::getDispatcherByPath(const string &path) const
 invalid, or the the node is not found. */
 void Connection::removeDispatcherByPath(const string &stem, const string &n)
 {
-	StringList tokens = tokenize(stem, ':');
-	Dispatcher *d = _rootDispatch;
-	
-	while (!tokens.empty()) {
-		d = d->getSubdispatch(tokens.front());	
-		if (!d)
-			throw InvalidOperation("Unknown dispatcher " + tokens.front() 
-				+ " in path " + stem);
-		tokens.pop_front();
-	}
+	Dispatcher *d = getDispatcherByPath(stem);
+	if (!d)
+		throw InvalidOperation("Unknown dispatcher in path " + stem);
 	
 	Dispatcher *rm = d->getSubdispatch(n);
 	if (!rm)
 		throw InvalidOperation("Unknown dispatcher " + n + " at " + stem);
 	d->rmvSubdispatch(rm);
+}
+
+void Connection::removeIfDispatcherByPath(const string &stem, const string &n)
+{
+	Dispatcher *d = getDispatcherByPath(stem);
+	if (!d)
+		throw InvalidOperation("Unknown dispatcher in path " + stem);
+	
+	Dispatcher *rm = d->getSubdispatch(n);
+	if (rm)
+		d->rmvSubdispatch(rm);
 }
 
 void Connection::lock()
@@ -261,11 +273,14 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 {
 	postForDispatch(obj);
 
-	Eris::Log("ObjectArrived: dispatch queue size is %i", _repostQueue.size());
-	
 	while (!_repostQueue.empty()) {
 		DispatchContextDeque dq(1, _repostQueue.front());
-		dd->dispatch(dq);
+		if (_debug) {
+			dd->dispatch(dq);
+		
+			std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(obj) ));
+			Eris::Log("Dispatching %s", summary.c_str());
+		}
 		
 		try {
 			// this invokes all manner of smoke and mirrors....
@@ -290,13 +305,19 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 
 void Connection::clearSignalledWaits()
 {
+	int ccount = 0;
+	
 	for (WaitForList::iterator I=_waitList.begin(); I!=_waitList.end(); ) {
 		WaitForList::iterator cur = I++;
 		if ((*cur)->isPending()) {
 			delete (*cur);
 			_waitList.erase(cur);
+			ccount++;
 		}
 	}
+	
+	if (ccount)
+		Eris::Log("Cleared %i signalled waitFors", ccount);
 }
 
 void Connection::setStatus(Status ns)
@@ -325,6 +346,12 @@ void Connection::bindTimeout(Eris::Timeout &t, Status sc)
 {
 	// wire up all the stuff
 	t.Expired.connect( SigC::bind(Timeout.slot(),sc) );
+}
+
+void Connection::onConnect()
+{
+	BaseConnection::onConnect();
+	// kick of the type-tree transfer
 }
 
 void Connection::postForDispatch(const Atlas::Message::Object &msg)

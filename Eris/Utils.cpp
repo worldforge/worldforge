@@ -1,4 +1,11 @@
+#ifdef HAVE_CONFIG_H
+	#include "config.h"
+#endif
+
+#include <Atlas/Objects/Entity/RootEntity.h>
+
 #include "Utils.h"
+#include "atlas_utils.h"
 
 using namespace Atlas::Message;
 
@@ -77,6 +84,56 @@ long getNewSerialno()
 	// FIXME - using the same intial starting offset is problematic
 	// if the client dies, and quickly reconnects
 	return _nextSerial++;
+}
+
+std::string objectSummary(const Atlas::Objects::Root &obj)
+{
+	std::string type = obj.GetParents()[0].AsString(),
+		label(obj.GetName());
+	std::string ret = type;
+	
+	if (obj.GetObjtype() == "op") {
+		if ((type == "sight") || (type == "sound")) {
+			Atlas::Objects::Operation::RootOperation inner =
+			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj.GetAttr("args").AsList()[0]);
+			ret.append('(' + objectSummary(inner) + ')');
+		}
+		
+		// list the values being set
+		if (type == "set") {
+			const Atlas::Message::Object::MapType& values = 
+				obj.GetAttr("args").AsList().front().AsMap();
+			ret.push_back('(');
+			for (Atlas::Message::Object::MapType::const_iterator V = values.begin();
+					V != values.end(); ++V) {
+				ret.append(V->first);
+			}
+			ret.push_back(')');
+		}
+		
+		// show the error message and also summarise the deffective op
+		if (type == "error") {
+			std::string msg = obj.GetAttr("args").AsList()[0].AsString();
+			Atlas::Objects::Operation::RootOperation inner =
+			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj.GetAttr("args").AsList()[1]);
+			ret.append('(' + msg + ',' + objectSummary(inner) + ')');
+		}
+		
+		if ((type == "info") || (type == "create")) {
+			Atlas::Objects::Entity::RootEntity inner =
+			Atlas::atlas_cast<Atlas::Objects::Entity::RootEntity>(obj.GetAttr("args").AsList()[0]);
+			ret.append('(' + objectSummary(inner) + ')');
+		}
+		
+	} else {
+		if (obj.HasAttr("id"))
+			label = obj.GetAttr("id").AsString();
+	}
+	
+	if (!label.empty())
+		ret = label + ":" + ret;
+	
+	return ret;
 }
 
 } // of Eris

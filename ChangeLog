@@ -1,3 +1,16 @@
+Tuesday, October 23 2001, James Turner
+
+	* Added objectSummary function in Utils, which gives a compact
+	  string summary of Atlas operations and entities; the heuristics
+	  need some work but the output is usable (in Eris::Log calls for
+	  examples)
+	* Added a '_debug' option to Connection (always set to true at
+	  present) that controls some Logging output and Atlas send/recv
+	  logging
+	* Renamed the Atlas log files to make their function more obvious
+	* Bullet-proofing in World::RecvSight to deal with multiple sights
+	  and unrequested sights of entities.
+
 Wednesday, October 17 2001, James Turner
 
 	* Fixed Lobby::join to handle re-joins and actually return

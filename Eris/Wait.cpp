@@ -5,6 +5,9 @@
 #include <sigc++/signal_system.h>
 #include <Atlas/Objects/Root.h>
 
+#include "atlas_utils.h"
+#include "Utils.h"
+
 #include "Wait.h"
 #include "Connection.h"
 #include "Dispatcher.h"
@@ -16,6 +19,9 @@ void WaitForBase::fire()
 {
 	assert(!_pending);
 	_pending = true;
+	
+	std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(_msg) ));
+	Log("firing WaitFor %p, content is %s", this, summary.c_str());
 	Connection::Instance()->postForDispatch(_msg);
 }
 	
