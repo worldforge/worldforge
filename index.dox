@@ -1,0 +1,19 @@
+/** @page index
+
+<H1>Mercator</H1>
+
+Welcome to the Mercator documentation.
+
+<H2>Links</H2>
+
+<UL>
+<LI><a href="http://www.worldforge.org/">The WorldForge Project</a></LI>
+<LI><a hreF="http://www.worldforge.org/dev/eng/libs/mercator">Mercator</a></LI>
+</UL>
+
+<H2>Contact</H2>
+
+The current maintainer and main author for Mercator is Al Riddoch
+<alriddoch@zepler.org>.
+
+*/
