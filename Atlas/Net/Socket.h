@@ -22,13 +22,13 @@ class Socket
     virtual ~Socket() { }
 
     /// Send data through socket
-    virtual int	Send(const std::string&);
+    virtual int	Send(const std::string&) = 0;
 
     /// Receive data from socket
-    virtual int	Receive(std::string&);
+    virtual int	Receive(std::string&) = 0;
 
     /// Shut down the connection
-    virtual void Close();
+    virtual void Close() = 0;
 };
 
 } } // Atlas::Net
