@@ -1,4 +1,5 @@
 #include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/DecoderBase.h>
 #include <Atlas/Objects/loadDefaults.h>

@@ -1,5 +1,9 @@
 2004-02-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* tests/Objects/encoder1.cpp: Add extra required include.
+
+2004-02-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Message/QueuedDecoder.cpp, Atlas/Message/QueuedDecoder.h,
 	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h:
 	  Shuffle headers around a little to solve problems in recent
