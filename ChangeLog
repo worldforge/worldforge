@@ -1,4 +1,8 @@
 ChangeLog for varconf
+Saturday, 22nd November, 2003, Al Riddoch <alriddoch@zepler.org>
+	* varconf/variable.h, varconf/variable.cpp: Make operator std::string()
+	  const, so it can be used on a const object.
+
 Friday, 21st November, 2003, Al Riddoch <alriddoch@zepler.org>
 	* varconf/config.cpp, varconf/Config.h: Clean up accessing
 	  config to use std::map::find() when apropriate. Add functions

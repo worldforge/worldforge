@@ -67,7 +67,7 @@ public:
   virtual operator bool();
   virtual operator int();
   virtual operator double();
-  virtual operator std::string();
+  virtual operator std::string() const;
 
   virtual bool is_bool();
   virtual bool is_int();
@@ -170,7 +170,7 @@ public:
   operator bool()		{return bool(this->elem());}
   operator int()		{return int(this->elem());}
   operator double()		{return double(this->elem());}
-  operator std::string()	{return std::string(this->elem());}
+  operator std::string() const	{return std::string(this->elem());}
   VarList* array() const {return dynamic_cast<VarList*>(&this->elem());}
   Variable& operator[]( const int i);
 
@@ -203,7 +203,7 @@ public:
   virtual operator bool()		{return 0;}
   virtual operator int()		{return 0;}
   virtual operator double()		{return 0;}
-  virtual operator std::string()	{return "";}
+  virtual operator std::string() const	{return "";}
 
   virtual bool is_bool()		{return false;}
   virtual bool is_int()			{return false;}

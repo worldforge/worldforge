@@ -209,7 +209,7 @@ VarBase::operator double()
   return m_val_double;
 }
 
-VarBase::operator std::string()
+VarBase::operator std::string() const
 {
   return m_val;
 }
