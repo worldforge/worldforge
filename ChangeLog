@@ -1,3 +1,8 @@
+2003-06-21  Damien McGinnes
+
+        * Mercator/Segment.cpp: fixed an error in the clip code (x and y 
+          were switched)
+        
 2003-06-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.h: Make invalidate() private.
