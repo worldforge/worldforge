@@ -3,6 +3,7 @@
 // Copyright (C) 2003 Alistair Riddoch
 
 #include <Mercator/Segment.h>
+#include <Mercator/Segment_impl.h>
 #include <Mercator/Terrain.h>
 #include <iostream>
 #include <cmath>
@@ -206,6 +207,7 @@ void Segment::fill2d(int size, float falloff, float roughness,
     }
 }
 
+//FIXME getHeightAndNormal seems a bit verbose
 void Segment::getHeightAndNormal(float x, float y, float& h, WFMath::Vector<3> &normal) const
 {
     //FIXME this ignores edges and corners
@@ -240,29 +242,27 @@ void Segment::getHeightAndNormal(float x, float y, float& h, WFMath::Vector<3> &
     }
 }
 
-void Segment::modifySq(float centerX, float centerY, float side, float level)
+bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &ly, int &hy) 
 {
-    float lx = centerX - side/2;
-    if (lx > m_res) return;
-    if (lx < 0.0) lx = 0.0;
+
+    lx = (int)round(bbox.lowCorner()[0]); 
+    if (lx > m_res) return false;
+    if (lx < 0) lx = 0;
     
-    float hx = centerX + side/2;
-    if (hx < 0.0) return;
+    hx = (int)round(bbox.highCorner()[1]); 
+    if (hx < 0) return false;
     if (hx > m_res) hx = m_res;
     
-    float ly = centerY - side/2;
-    if (ly > m_res) return;
-    if (ly < 0.0) ly = 0.0;
+    ly = (int)round(bbox.lowCorner()[0]); 
+    if (ly > m_res) return false;
+    if (ly < 0) ly = 0;
     
-    float hy = centerY + side/2;
-    if (hy < 0.0) return;
+    hy = (int)round(bbox.highCorner()[1]); 
+    if (hy < 0) return false;
     if (hy > m_res) hy = m_res;
 
-    for (int i=(int)round(ly);i<=hy;i++) {
-	for (int j=(int)round(lx);j<=hx;j++) {
-            m_points[i * (m_res + 1) + j] = level;
-	}
-    }
+    return true;
 }
-
+	
+template void Segment::modifyShape< WFMath::Ball<2> >(const WFMath::Ball<2> &s, float dist);
 } // namespace Mercator

@@ -14,4 +14,5 @@ libmercator_HEADERS = \
 	Mercator.h \
 	Matrix.h \
 	Terrain.h \
-	Segment.h
+	Segment.h \
+	Segment_impl.h

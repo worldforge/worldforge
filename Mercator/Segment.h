@@ -7,6 +7,7 @@
 
 #include <Mercator/Matrix.h>
 #include <wfmath/vector.h>
+#include <wfmath/axisbox.h>
 
 namespace Mercator {
 
@@ -48,9 +49,10 @@ class Segment {
     float getMax() const { return m_max; }
     float getMin() const { return m_min; }
 
-    //temporary testing code for terrain mods
-    void modifySq(float centerX, float centerY, float side, float level);
-
+    template <typename Shape> void levelShape(const Shape &s, float level);
+    template <typename Shape> void modifyShape(const Shape &s, float dist);
+    template <typename Shape> void slopeShape(const Shape &s, float level, float dX, float dY);
+    
 private:
     inline void checkMaxMin(float h) { 
 	    if (h<m_min) m_min=h;
@@ -65,6 +67,8 @@ private:
 	
     float qRMD(float nn, float fn, float ff, float nf, 
                float roughness, float falloff, int depth) const;
+
+    bool clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &ly, int &hy);
 };
 
 } // namespace Mercator
