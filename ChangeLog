@@ -1,4 +1,8 @@
 ChangeLog for varconf
+2004-10-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.5.4. Interface version 2.0.0, or 3.0.0 with sigc++ 2.0.
+
 2004-10-05  Al Riddoch  <alriddoch@zepler.org>
 
 	* varconf/variable.h: Add an accessor function explicitly making
