@@ -8,7 +8,7 @@
 
 #include "AtlasTCPSocket.h"
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__WINDOWS__)
 int ATCPSocket::didWSAInit = 0;
 #else
 #include <fcntl.h>
@@ -17,7 +17,7 @@ int ATCPSocket::didWSAInit = 0;
 ATCPSocket::ATCPSocket()
 {
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__WINDOWS__)
 	if (!didWSAInit) {
 		WSAStartup(0x0101, &wsadata);
 		didWSAInit = 1;
@@ -65,7 +65,7 @@ int	ATCPSocket::connect(string& addr, int port)
 	sin.sin_addr.s_addr = hostaddr;
 
         res=::connect(sock, (struct sockaddr*)&sin, sizeof(sin));
-#ifndef _WIN32
+#if defined(_WIN32) || defined(__WINDOWS__)
 // Shouldn't need this using select() - sdt
 //        fcntl(sock,F_SETFL,O_NONBLOCK);
 #endif

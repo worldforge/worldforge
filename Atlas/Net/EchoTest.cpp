@@ -32,99 +32,6 @@ int WINAPI WinMain(
 }
 #endif
 
-
-
-void walkTree(int nest, string name, const AObject& list)
-{
-	int	i;
-	string	buf;
-	string	pre;
-
-	for (int j=0; j<nest; j++) {
-		pre.append("    ");
-	}
-
-	if (list.isList()) {
-		// precheck types here
-		if (name.length() > 0) {
-			printf("%s<list name=\"%s\">\n", pre.c_str(), name.c_str());
-		} else {
-			printf("%s<list>\n", pre.c_str());
-		}
-		for (i=0; i<list.length(); i++) {
-			AObject tmp;
-			//printf("******* get node %i\n", i);
-			fflush(stdout);
-			list.get(i, tmp);
-			//printf("******* walk node %i\n", i);
-			walkTree(nest+1, "", tmp);
-		}
-		printf("%s</list>\n",pre.c_str());
-	}
-	if (list.isMap()) {
-		AObject keys = list.keys();
-		if (name.length() > 0) {
-			printf("%s<map name=\"%s\">\n",pre.c_str(), name.c_str());
-		} else {
-			printf("%s<map>\n", pre.c_str());
-		}
-		for (i=0; i<keys.length(); i++) {
-			AObject key;
-			//printf("******* get node %i\n", i);
-			fflush(stdout);
-			keys.get(i, key);
-			//printf("******* get key %s\n", key.asString().c_str());
-			fflush(stdout);
-			AObject tmp;
-			list.get(key.asString(), tmp);
-			walkTree(nest+1, key.asString(), tmp);
-		}
-		printf("%s</map>\n",pre.c_str());
-	}
-
-	if (list.isString()) {
-		if (name.length() > 0) {
-			printf("%s<str name=\"%s\">%s</str>\n",
-				pre.c_str(), name.c_str(),list.asString().c_str()
-			);
-		} else {
-			printf("%s<str>%s</str>\n",pre.c_str(), list.asString().c_str());
-		}
-	}
-	if (list.isLong()) {
-		if (name.length() > 0) {
-			printf("%s<int name=\"%s\">%li</int>\n",
-				pre.c_str(), name.c_str(),list.asLong()
-			);
-		} else {
-			printf("%s<int>%li</int>\n",pre.c_str(), list.asLong());
-		}
-	}
-	if (list.isFloat()) {
-		if (name.length() > 0) {
-			printf("%s<float name=\"%s\">%.2f</float>\n",
-				pre.c_str(), name.c_str(),list.asFloat()
-			);
-		} else {
-			printf("%s<float>%.2f</float>\n",pre.c_str(), list.asFloat());
-		}
-	}
-
-}
-
-void DisplayMessage(const AObject& msg)
-{
-	printf("<obj>\n");
-	walkTree(1, "", msg);
-	printf("</obj>\n");
-	fflush(stdout);
-}
-
-
-
-
-
-
 void EchoTest::execute()
 {
 	long res, i;
@@ -181,7 +88,6 @@ static	long	cnt = 0;
 	long	val;
 
 	cnt++;
-        // DisplayMessage(msg);
         if ((cnt % 50) == 0) {
 		AObject tmp;
 		if (msg.has("count") == 1) {

@@ -14,7 +14,9 @@
 #include <sys/types.h>
 #include <memory.h>
 #include <string.h>
-#ifndef __WIN32
+#if defined(_WIN32) || defined(__WINDOWS__)
+/* no unistd.h on windows */
+#else
 #include <unistd.h>
 #endif
 #include <stdlib.h>
@@ -23,7 +25,7 @@ class ATCPSocket: public ASocket
 {
 private:
 
-#ifdef _WIN32
+#if defined(_WIN32) || defined(__WINDOWS__)
 static	int	didWSAInit;
 
 struct WSAData	wsadata;
