@@ -105,37 +105,14 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 	if (atype.HasAttr("children")) {
 		assert(atype.GetAttr("children").IsList());
 		Atlas::Message::Object::ListType children = atype.GetAttr("children").AsList();
-		for (unsigned int I=0; I<children.size(); I++) {
-			assert(children[I].IsString());
-			addChild(findSafe(children[I].AsString()));
+		for (Atlas::Message::Object::ListType::iterator I=children.begin(); I!=children.end(); ++I) {
+			assert(I->IsString());
+			addChild(findSafe(I->AsString()));
 		}
 	}
 
-	if (isBound()) {
-		Eris::Log(LOG_VERBOSE, "Bound type %s", id.c_str());
-		Bound.emit();
-	}
-	
-// do dependancy checking
-	TypeDepMap::iterator Dset = globalDependancyMap.find(id);
-	if (Dset == globalDependancyMap.end())
-		return; // nothing to do
-	
-	TypeInfoSet::iterator D = Dset->second.begin();
-	
-	while (D != Dset->second.end()) {
-		bool wasBound = (*D)->_bound;
-		
-		if ((*D)->isBound()) {
-			assert(!wasBound);
-			// emit the signal, will probably trigger all manner of crap
-			(*D)->Bound.emit();
-			Eris::Log(LOG_VERBOSE, "Bound type %s", (*D)->getName().c_str());
-		}
-		++D;
-	}
-	
-	globalDependancyMap.erase(Dset);
+	setupDepends();
+	validateBind();
 }
 
 bool TypeInfo::operator==(const TypeInfo &x) const
@@ -206,6 +183,7 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
 
 bool TypeInfo::isBound()
 {
+/*	
 	// fast authorative suceed
 	if (_bound) return true;
 	
@@ -220,7 +198,36 @@ bool TypeInfo::isBound()
 		
 	// only reach this point if every parent node returned 'true' for isBound
 	_bound = true;	// cache for posterity (and to avoid lots of tree walking)
-	return true;		
+	return true;
+*/
+	return _bound;
+}
+
+void TypeInfo::validateBind()
+{
+	if (_bound) return;
+	
+	// check all our parents
+	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P)
+		if (!(*P)->isBound()) return;
+	
+	Eris::Log(LOG_VERBOSE, "Bound type %s", _name.c_str());
+	Bound.emit();
+	_bound = true;
+		
+	// do dependancy checking
+	TypeDepMap::iterator Dset = globalDependancyMap.find(_name);
+	if (Dset == globalDependancyMap.end())
+		return; // nothing to do
+	
+	TypeInfoSet::iterator D = Dset->second.begin();
+	
+	while (D != Dset->second.end()) {
+		(*D)->validateBind();
+		++D;
+	}
+	
+	globalDependancyMap.erase(Dset);
 }
 
 Signal& TypeInfo::getBoundSignal()
@@ -228,6 +235,14 @@ Signal& TypeInfo::getBoundSignal()
 	if (isBound())
 		throw InvalidOperation("Type node is already bound, what are you playing at?");
 		
+	Eris::Log(LOG_DEBUG, "in TypeInfo::getBoundSignal() for %s", _name.c_str());
+	setupDepends();
+	
+	return Bound;
+}
+
+void TypeInfo::setupDepends()
+{
 	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P) {
 		if (!(*P)->isBound()) {
 			TypeDepMap::iterator Ddep = globalDependancyMap.find((*P)->getName());
@@ -237,12 +252,14 @@ Signal& TypeInfo::getBoundSignal()
 				);
 			}
 			
+			if (Ddep->second.count(this)) continue;
+			
+			Eris::Log(LOG_DEBUG, "adding dependancy on %s from %s", Ddep->first.c_str(),
+				_name.c_str());
 			// becuase we're doing a set<> insert, there is no problem with duplicates!
 			Ddep->second.insert(this);
 		}
 	}
-	
-	return Bound;
 }
 
 std::string TypeInfo::getName() const
@@ -258,6 +275,7 @@ void TypeInfo::init()
 		return;	// this can happend during re-connections, for example.
 	
 	Eris::Log(LOG_NOTICE, "Starting Eris TypeInfo system...");
+	Eris::Log(LOG_DEBUG, "hello?! is this thing on?!!!!!");
 	
 	Dispatcher *info = Connection::Instance()->getDispatcherByPath("op:info");
 	
@@ -450,6 +468,26 @@ void TypeInfo::recvTypeError(const Atlas::Objects::Operation::Error &error,
 	
 	// parent to root?
 	T->second->_bound = true;
+}
+
+void TypeInfo::listUnbound()
+{
+	Eris::Log(LOG_DEBUG, "%i pending types", globalDependancyMap.size());
+	
+	for (TypeDepMap::iterator T = globalDependancyMap.begin(); 
+			T !=globalDependancyMap.end(); ++T) {
+		// list all the depds
+		Eris::Log(LOG_DEBUG, "bind of %s is blocking:", T->first.c_str());
+		for (TypeInfoSet::iterator D=T->second.begin(); D!=T->second.end();++D) {
+			Eris::Log(LOG_DEBUG, "\t%s", (*D)->getName().c_str());
+		}
+	}
+	
+	for (TypeInfoMap::iterator T=globalTypeMap.begin(); T!=globalTypeMap.end(); ++T) {
+		if (!T->second->isBound())
+			Eris::Log(LOG_DEBUG, "type %s is unbound", T->second->getName().c_str());
+	}
+	
 }
 
 }; // of namespace

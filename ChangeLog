@@ -1,3 +1,12 @@
+Thursday, November 22 2001, James Turner
+
+	* Lots of TypeInfo changes, basically the whole dependancy system
+	  has been gone over to make it much more robust. There is one
+	  (known) issue remaining, but a large number of other issues have
+	  been fixed, notably thatn logging in with a current version of
+	  Cyphesis-C++ should work
+	* Added a 'listUnbound' debugging helper to TypeInfo
+
 Sunday, November 18 2001, James Turner
 
 	* Changed objectSummary to special case handling of the Root/meta

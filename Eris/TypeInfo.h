@@ -97,6 +97,8 @@ public:
 	static void recvTypeError(const Atlas::Objects::Operation::Error &error,
 		const Atlas::Objects::Operation::Get &get);
 	
+	static void listUnbound();
+	
 protected:
 	/// forward constructor, when data is not available
 	TypeInfo(const std::string &id);
@@ -110,11 +112,11 @@ protected:
 	/** Recursive add to this node and every descendant the specified ancestor */
 	void addAncestor(TypeInfoPtr tp);
 
-	/** Recursive add to this node and every ancestor the specified descendant */
-	//void addDescendant(TypeInfoPtr tp);
-
 	/// process the INFO data
 	void processTypeData(const Atlas::Objects::Root &atype);
+
+	void validateBind();
+	void setupDepends();
 
 	static void sendInfoRequest(const std::string &id);
 	static void recvInfoOp(const Atlas::Objects::Root &atype);
