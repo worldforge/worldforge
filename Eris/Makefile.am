@@ -30,7 +30,9 @@ liberis_la_SOURCES = \
 	Wait.cpp \
 	Timeout.cpp \
 	Time.cpp \
-	ArgumentDispatcher.cpp
+	ArgumentDispatcher.cpp \
+	TypeInfo.cpp \
+	ClassDispatcher.cpp
 	
 liberisdir = $(includedir)/Eris
 
@@ -58,4 +60,5 @@ liberis_HEADERS = \
 	IdDispatcher.h \
 	Timeout.h \
 	Time.h \
-	ArgumentDispatcher.h 
+	ArgumentDispatcher.h \
+	TypeInfo.h

@@ -18,7 +18,8 @@ namespace Eris
 {
 
 Dispatcher::Dispatcher(const std::string &nm) :
-	_name(nm)
+	_name(nm),
+	_refcount(0)
 {
 	;
 }
@@ -45,6 +46,7 @@ Dispatcher* Dispatcher::addSubdispatch(Dispatcher *d)
 	if (di != _subs.end())
 		throw InvalidOperation("Duplicate dispatcher <" + nm + "> added");
 	
+	d->addRef();
 	_subs.insert(di, DispatcherDict::value_type(nm, d));
 	return d;
 }
@@ -59,6 +61,7 @@ void Dispatcher::rmvSubdispatch(Dispatcher *d)
 		throw InvalidOperation("Unknown dispatcher " + nm);
 	
 	_subs.erase(di);
+	d->decRef();
 }
 
 Dispatcher* Dispatcher::getSubdispatch(const std::string &nm)
@@ -89,9 +92,18 @@ bool LeafDispatcher::dispatch(DispatchContextDeque &dq)
 {
 	Object::MapType &o = dq.front().AsMap();
 	o["__DISPATCHED__"] = "1";
+	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+ClassDispatcher::ClassDispatcher(const std::string &nm, const std::string &cl) :
+	Dispatcher(nm),
+	_class(cl)
+{
+	;
+}
 
 bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
 {
@@ -100,6 +112,7 @@ bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
 		return false;
 	return Dispatcher::subdispatch(dq);
 }
+*/
 
 bool IdDispatcher::dispatch(DispatchContextDeque &dq)
 {
@@ -138,20 +151,18 @@ bool OpToDispatcher::dispatch(DispatchContextDeque &dq)
 
 bool EncapDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	// same as class dispatcher
-	const Object::ListType& prs = getMember(dq.front(), "parents").AsList();
-	if (prs.front().AsString() != _class)
+	if (ClassDispatcher::accept(dq)) {
+		// note that de-encapsulation is simply getting the first arg out!
+		// this is the major change; we're no longer discarding the current msg
+		// when we de-encapsulate
+		dq.push_front(getMember(dq.front(), "args").AsList().front());
+		bool ret = Dispatcher::subdispatch(dq);	
+		
+		// we need to restore the context stack, otherwise the next dispathcer along gets very confused
+		dq.pop_front();
+		return ret;
+	} else
 		return false;
-	
-	// note that de-encapsulation is simply getting the first arg out!
-	// this is the major change; we're no longer discarding the current msg
-	// when we de-encapsulate
-	dq.push_front(getMember(dq.front(), "args").AsList().front());
-	bool ret = Dispatcher::subdispatch(dq);	
-	
-	// we need to restore the context stack, otherwise the next dispathcer along gets very confused
-	dq.pop_front();
-	return ret;
 }
 
 };

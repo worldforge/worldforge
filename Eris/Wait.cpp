@@ -70,6 +70,7 @@ WaitForDispatch::~WaitForDispatch()
 WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Object &msg) :
 	WaitForBase(msg)
 {
+	Eris::Log("Created WaitForSignal %p", this);
 	sig.connect(SigC::slot(this, &WaitForBase::fire));
 }
 
@@ -78,4 +79,4 @@ WaitForSignal::~WaitForSignal()
 	;
 }
 
-};
+}

@@ -44,6 +44,16 @@ protected:
 
 	DispatcherDict _subs;
 	const std::string _name;
+
+
+	void addRef()
+	{++_refcount;}
+	
+	void decRef()
+	{if (!(--_refcount)) delete this; }
+		
+private:	
+	unsigned int _refcount;
 };
 
 class LeafDispatcher : public Dispatcher

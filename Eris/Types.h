@@ -122,7 +122,10 @@ data to restart the request. */
 class OperationBlocked
 {
 public:
-	OperationBlocked(Signal &rsig);
+	OperationBlocked(Signal &rsig) : 
+		_continue(rsig)
+	{;}
+	
 	Signal& _continue;
 };
 

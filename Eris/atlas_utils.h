@@ -9,8 +9,10 @@ template <class T>
 T atlas_cast(const Message::Object &data)
 {
 	T obj = T::Instantiate();
-	if (!data.IsMap())
+	if (!data.IsMap()) {
+		assert(false);
 		throw std::invalid_argument("Input message object is not a map");
+	}
 	
 	Message::Object::MapType mp = data.AsMap();
 	

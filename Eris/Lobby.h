@@ -60,8 +60,9 @@ protected:
 	void expectInfoRefno(long ref);
 	
 	// callbacks	
-	void recvOpInfo(const Atlas::Objects::Operation::Info &ifo);
-
+	void recvInfoAccount(const Atlas::Objects::Operation::Info &ifo, 
+		const Atlas::Objects::Entity::Account &account);
+	
 	void recvSightPerson(const Atlas::Objects::Entity::Account &ac);
 	void recvSightRoom(const Atlas::Objects::Entity::RootEntity &room);
 	// FIXME - remove once cyphesis is updated

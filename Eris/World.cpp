@@ -70,11 +70,13 @@ World::World(Player *p, Connection *c) :
 */
 	
 // info operation
-	Dispatcher *d = _con->getDispatcherByPath("op:info");
+	Dispatcher *d = _con->getDispatcherByPath("op:info:entity");
 	assert(d);
-	
-	d->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Info>("world", 
-		SigC::slot(this, &World::recvInfoOp)
+
+	d = d->addSubdispatch(new ClassDispatcher("character", "game_entity"));
+	d->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Info, 
+		Atlas::Objects::Entity::GameEntity>(
+		"world", SigC::slot(this, &World::recvInfoCharacter)
 	));
 	       	
 	// setup network callbacks
@@ -238,16 +240,13 @@ void  World::registerCallbacks()
 	Dispatcher *d = _con->getDispatcherByPath("op");
 	Dispatcher *igd = d->addSubdispatch(new OpToDispatcher("ig", _characterID));
 	
-	// the sight dispatcher, which de-encapsulates the object within
+// the sight dispatcher, which de-encapsulates the object within
 	Dispatcher *sightd = igd->addSubdispatch(new EncapDispatcher("sight", "sight"));
 	
 	Dispatcher *ed = sightd->addSubdispatch(new TypeDispatcher("entity", "object"));
 	Dispatcher *od = sightd->addSubdispatch(new TypeDispatcher("op", "op"));
 	
 	// sight of game-entities (rather important this!)
-	
-	// FIXME  -  need to make inheritance work here
-
 	ed->addSubdispatch(new SignalDispatcher2<Atlas::Objects::Operation::Sight,
 		Atlas::Objects::Entity::GameEntity>("world", 
 		SigC::slot(this, &World::recvSightObject)
@@ -275,15 +274,7 @@ void  World::registerCallbacks()
 		SigC::slot(this, &World::recvSightSet)
 	));
 	
-	// set operations
-/*	
-	set = igd->addSubdispatch(new ClassDispatcher("set", "set"));
-	set->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Set>("world", 
-		SigC::slot(this, &World::recvSightSet)
-	));
-*/
-
-	// sight of move oprations
+	// sight of move operations
 	Dispatcher *mv = od->addSubdispatch(new ClassDispatcher("move", "move"));
 	mv->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Move>("world", 
 		SigC::slot(this, &World::recvSightMove)
@@ -295,6 +286,12 @@ void  World::registerCallbacks()
 	tkd->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Sound,
 		Atlas::Objects::Operation::Talk>("world",
 		SigC::slot(this, &World::recvSoundTalk)
+	));
+	
+// appearance . disappearance : note these inherit from sight so need to be careful
+	Dispatcher *dapd = igd->addSubdispatch(new ClassDispatcher("disappearance", "disapperance"));
+	dapd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Disappearance>("disappear",
+		SigC::slot(this, &World::recvDisappear)
 	));
 }
 
@@ -430,12 +427,10 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 		e->recvTalk(tk);
 }
 
-void World::recvInfoOp(const Atlas::Objects::Operation::Info &ifo)
+void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
+	const Atlas::Objects::Entity::GameEntity &character)
 {
-	Atlas::Message::Object::MapType character = 
-		ifo.GetArgs().front().AsMap();
-	       
-	_characterID = character["id"].AsString();
+	_characterID = character.GetId();
 	
 	// now the _characterID is valid, register all other callbacks (which are
 	// parented to an OpTo selector to we only get In-Game (IG) ops.
@@ -450,7 +445,7 @@ void World::recvInfoOp(const Atlas::Objects::Operation::Info &ifo)
 	look("");
 	
 	// this prevents us recieving any more info ops
-	_con->removeDispatcherByPath("op:info", "world");
+	_con->removeDispatcherByPath("op:info:entity", "character");
 }
 
 void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)

@@ -131,11 +131,14 @@ std::string objectSummary(const Atlas::Objects::Root &obj)
 		}
 		
 		if ((type == "info") || (type == "create")) {
-			Atlas::Objects::Entity::RootEntity inner =
-			Atlas::atlas_cast<Atlas::Objects::Entity::RootEntity>(obj.GetAttr("args").AsList()[0]);
+			Atlas::Objects::Root inner =
+			Atlas::atlas_cast<Atlas::Objects::Root>(obj.GetAttr("args").AsList()[0]);
 			ret.append('(' + objectSummary(inner) + ')');
 		}
 		
+	} else if (obj.GetObjtype() == "entity") {
+		if (obj.HasAttr("id"))
+			label = obj.GetAttr("id").AsString();
 	} else {
 		if (obj.HasAttr("id"))
 			label = obj.GetAttr("id").AsString();

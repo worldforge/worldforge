@@ -1,3 +1,34 @@
+Tuesday, November 06 2001, James Turner
+
+	* TypeInfo stuff basically works, parses the atlas.xml file
+	  if it's found in the same directory as the program.
+	* Changed the way INFOs are handled since we have proper
+	  inheritance now
+	* Various other fixes which needed type data to be working, 
+	  e.g. the dispatchers for OOG now bind (correctly) to 'account',
+	  not 'player', so admin accounts and so on will work.
+	* Probably lots of bugs lying in the grass, but it works okay
+	  and I want to get this commited.
+
+Sunday, October 28 2001, James Turner
+
+	* Made dispatchers ref-counted, just like Python and COM. This is
+	  becuase the dispatcher tree turned into a dispatcher graph, so
+	  ownership got more complex.
+	* Preliminary work on ClassDispatcher to support TypeInfo;
+	  added ClassDispatcher.cpp (not compiled at present) which uses
+	  the TypeInfo functions. The current behaviour is retained, since
+	  it's faster and common (at least for operations which make up the
+	  bulk of the decode traffic), and because it's necssary to
+	  boot-strap the type data transfer.
+	* Lots of changes to the TypeInfo code so it might actually work:
+	* Made all those dumb functions into static methods
+	* Added preliminary support for integer typeids which are coming
+	  with Atlas 0.5.x and will make the world a happier place
+	* Moved the 'Bound' signal into TypeInfo which is cleaner and gets
+	  rid of a global table
+	* Still much to do before it compiles or works
+	  
 Thursday, October 25 2001, James Turner
 
 	* Tweaked objectSummary to handle SET ops better, still needs more

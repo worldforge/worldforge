@@ -129,7 +129,8 @@ protected:
 	void setRootEntity(Entity* root);
 	
 // callbacks
-	void recvInfoOp(const Atlas::Objects::Operation::Info &ifo);
+	void recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
+		const Atlas::Objects::Entity::GameEntity &character);
 	void recvAppear(const Atlas::Objects::Operation::Appearance &ap);	
 	void recvDisappear(const Atlas::Objects::Operation::Disappearance &ds);
 

@@ -29,9 +29,12 @@
 #include "Player.h"
 #include "Room.h"
 #include "Person.h"
+#include "atlas_utils.h"
 
 using namespace Atlas::Objects;
 using namespace Atlas;
+
+namespace AtlasEntity = Atlas::Objects::Entity;
 
 namespace Eris {
 
@@ -51,8 +54,10 @@ Lobby::Lobby(Player *p, Connection *con) :
 	Dispatcher *d = _con->getDispatcherByPath("op:info");
 	assert(d);
 
-	d->addSubdispatch( new SignalDispatcher<Operation::Info>("lobby", 
-		SigC::slot(this, &Lobby::recvOpInfo)
+	d = d->addSubdispatch(new TypeDispatcher("entity","object"));
+	d = d->addSubdispatch(new ClassDispatcher("account", "account"));
+	d->addSubdispatch( new SignalDispatcher2<Operation::Info, AtlasEntity::Account>(
+		"lobby", SigC::slot(this, &Lobby::recvInfoAccount)
 	));
 }
 	
@@ -79,9 +84,7 @@ Room* Lobby::join(const std::string &roomID)
 	
 	if (!_con->isConnected())
 		throw InvalidOperation("Not connected to server");
-	
-	//cerr << "requesting join of room " << roomID << endl;
-	
+		
 	Operation::Move join = Operation::Move::Instantiate();
 	join.SetFrom(_account);
 	join.SetSerialno(getNewSerialno());
@@ -106,7 +109,6 @@ Person* Lobby::getPerson(const std::string &acc)
 {
 	PersonDict::iterator i = _peopleDict.find(acc);
 	if (i == _peopleDict.end()) {
-		//cerr << "looking up account " << acc << endl;
 		look(acc);
 		// create a NULL entry (indicates we are doing the look)
 		_peopleDict[acc] = NULL;
@@ -170,7 +172,7 @@ void Lobby::registerCallbacks()
 	));
 	
 	// the account / player object callback
-	Dispatcher *pl = d->addSubdispatch(new ClassDispatcher("player", "player"));
+	Dispatcher *pl = d->addSubdispatch(new ClassDispatcher("account", "account"));
 	pl->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::Account>("lobby", 
 		SigC::slot(this, &Lobby::recvSightPerson)
 	));
@@ -196,16 +198,12 @@ void Lobby::netConnected()
 {
 	// probably in response to a re-conection, so we need to log in again
 	_reconnect = true;
-	
-	// the info callback; note that in the reconnect case, this is parented
-	// to OOG, not directly to OP (becuase we know what the account ID
-	// is going to be)
-	Dispatcher *d = _con->getDispatcherByPath("op:oog");
+
+	Dispatcher *d = _con->getDispatcherByPath("op:info:entity:account");
 	assert(d);
 	
-	d = d->addSubdispatch(new ClassDispatcher("info", "info")); 
-	d->addSubdispatch( new SignalDispatcher<Operation::Info>("lobby", 
-		SigC::slot(this, &Lobby::recvOpInfo)
+	d->addSubdispatch( new SignalDispatcher2<Operation::Info, AtlasEntity::Account>(
+		"lobby", SigC::slot(this, &Lobby::recvInfoAccount)
 	));
 }
 
@@ -237,74 +235,34 @@ void Lobby::look(const std::string &id)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Dispatcher callbacks
 
-void Lobby::recvOpInfo(const Operation::Info &ifo)
+void Lobby::recvInfoAccount(const Operation::Info &ifo, 
+	const AtlasEntity::Account &account)
 {
-	// reject lots pof extraneous INFOs we don't care about
-	// FIXME  - enable the refno test once stage correclty processes it
-	if (!_account.empty() && (ifo.GetTo() != _account) /*|| (ifo.getRefno() != _infoRefno)*/) return;
+	Eris::Log("in recvInfoAccount");
+	
+	// reject lots of extraneous INFOs we don't care about
+	// FIXME  - enable the refno test once stage correctly processes it
+	if (!_account.empty() && (ifo.GetTo() != _account) /*|| (ifo.getRefno() != _infoRefnno)*/) return;
 	
 	_infoRefno = -1; // clear the expect value to reject further INFOs (unless we set them!);
 	
-	const Atlas::Message::Object &account = getArg(ifo, 0);
-	// build an Account object (isn't this what decoders are for?)
-	Atlas::Objects::Entity::Player acc = 
-		Atlas::Objects::Entity::Player::Instantiate();
-	
-	Atlas::Message::Object::MapType::const_iterator I;
-	for(I = account.AsMap().begin(); I != account.AsMap().end(); I++)
-		acc.SetAttr(I->first, I->second);
-	  
-	// verify things look okay [note we can't use inheritance querying yet, I suspect ..]
-	if (!checkInherits(acc, "account") && !checkInherits(acc, "player"))
-		throw IllegalObject(acc, "Lobby INFO argument 0 is not an account object");
-	
-	_account = acc.GetId();
-	
+	_account = account.GetId();
 	if (!_reconnect) // obviously only register first time around
 		registerCallbacks();
 	
 	// broadcast the login
-	LoggedIn.emit(acc);
+	LoggedIn.emit(Atlas::atlas_cast<AtlasEntity::Player>(account));
+	_con->removeDispatcherByPath("op:info:entity:account", "lobby");
 	
 	if (_reconnect) {
 		// don't issue an annonymous look; there is basically no need,
 		// and it would confuse the logic in RecvSightRoom (calls Setup twice, etc)
 		look(_id);
-		_con->removeDispatcherByPath("op:oog:info", "lobby");
 	} else {
 		look("");
-		_con->removeDispatcherByPath("op:info", "lobby");
+		
 	}
 }
-
-/*
-void Lobby::RecvOpInfoRecon(const Operation::Info &ifo)
-{
-	const Atlas::Message::Object &account = GetArg(ifo, 0);
-	// build an Account object (isn't this what decoders are for?)
-	Atlas::Objects::Entity::Player acc = 
-		Atlas::Objects::Entity::Player::Instantiate();
-	
-	Atlas::Message::Object::MapType::const_iterator I;
-	for(I = account.AsMap().begin(); I != account.AsMap().end(); I++)
-		acc.SetAttr(I->first, I->second);
-	  
-	// verify things look okay [note we can't use inheritance querying yet, I suspect ..]
-	if (!CheckInherits(acc, "account") && !CheckInherits(acc, "player"))
-		throw IllegalObject(acc, "Lobby INFO argument 0 is not an account object");
-	
-	if (_account != acc.GetId()) 
-		throw InvalidOperation("Mismatch beteen LOGIN INFO account and previous account ID");
-	
-	// broadcast the login
-	LoggedIn.emit(acc);
-	
-	// perform the initial look
-	Look("");
-	
-	_con->RemoveDispatcherByPath("op:oog:info", "lobby");
-}
-*/
 
 void Lobby::recvSightPerson(const Atlas::Objects::Entity::Account &ac)
 {

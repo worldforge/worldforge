@@ -1,7 +1,7 @@
 #ifndef ERIS_ENCAP_DISPATCH_H
 #define ERIS_ENCAP_DISPATCH_H
 
-#include "Dispatcher.h"
+#include "ClassDispatcher.h"
 
 namespace Eris
 {
@@ -10,21 +10,24 @@ namespace Eris
 /** This behaviour is used to process Atlas perception operations, notably 'sight'
 and 'sound', where an arbitrary entity or operation is encapsulated as an
 argument to the perception operation */
-class EncapDispatcher : public Dispatcher
+class EncapDispatcher : public ClassDispatcher
 {
 public:	
 	/// Standard constructor
 	/// @param nm The name to register the dispatcher under
-	/// @prama ty The object type to pre-select upon (eg 'sight' or 'sound')
+	/// @param ty The object type to pre-select upon (eg 'sight' or 'sound')
 	EncapDispatcher(const std::string &nm, const std::string &ty) :
-		Dispatcher(nm), _class(ty) 
-	{;}
+		ClassDispatcher(nm, ty)
+	{ ; }
 	
+	EncapDispatcher(const std::string &nm, TypeInfo *ty) :
+		ClassDispatcher(nm, ty)
+	{ ; }
+
 	virtual ~EncapDispatcher() {;}
 		
 	virtual bool dispatch(DispatchContextDeque &dq);
 protected:
-	const std::string _class;
 };
 
 };

@@ -22,11 +22,13 @@
 #include "Wait.h"
 #include "Timeout.h"
 #include "Utils.h"
+#include "TypeInfo.h"
 
 #include "TypeDispatcher.h"
 #include "ClassDispatcher.h"
 #include "DebugDispatcher.h"
 #include "SignalDispatcher.h"
+#include "EncapDispatcher.h"
 
 namespace Eris {
 
@@ -53,7 +55,7 @@ Connection::Connection(const string &cnm) :
 	
 	// build the initial dispatch hierarchy
 	_rootDispatch = new Dispatcher("root");
-	
+		
 	Dispatcher *opd = new TypeDispatcher("op", "op");
 	_rootDispatch->addSubdispatch(opd);
 
@@ -62,10 +64,10 @@ Connection::Connection(const string &cnm) :
 			"serial-validator", SigC::slot(this, &Connection::validateSerial)
 		));
 	}
-	
-	opd->addSubdispatch(new ClassDispatcher("info", "info"));
+				
+	opd->addSubdispatch(new EncapDispatcher("info", "info"));
 	opd->addSubdispatch(new ClassDispatcher("error", "error"));
-	
+		
 	dd = new DebugDispatcher(_clientName + ".atlas-recvlog");
 	sdd = new DebugDispatcher(_clientName + ".atlas-sendlog");
 }
@@ -305,6 +307,7 @@ void Connection::addWait(WaitForBase *w)
 
 void deleteFiredWait(WaitForBase *w)
 {
+	assert(w);
 	if (w->isPending())
 		delete w;
 }
@@ -355,7 +358,7 @@ void Connection::bindTimeout(Eris::Timeout &t, Status sc)
 void Connection::onConnect()
 {
 	BaseConnection::onConnect();
-	// kick of the type-tree transfer
+	TypeInfo::init();
 }
 
 void Connection::postForDispatch(const Atlas::Message::Object &msg)
@@ -378,6 +381,7 @@ void Connection::validateSerial(const Atlas::Objects::Operation::RootOperation &
 	
 	SerialFromSet::iterator S = seen.find(sfm);
 	if (S != seen.end()) {
+		assert(false);
 		std::string summary(objectSummary(op));
 		Eris::Log("ERROR: duplicate process of op [%s] from %s with serial# %i",
 			summary.c_str(), sfm.first.c_str(), sfm.second);
