@@ -1,7 +1,5 @@
 Rearrange the functions in foo_funcs.h to match the order in the class
 	in foo.h
-Include orientation() functionss for Vector<>, RotMatrix<> once we have polar,
-	spherical points defined
 Add a Shape class, and child classes which include everything
 	in shape.h from libCoal, and axisalignedbox.h, math_volume.h,
 	and volume.h from stage/math

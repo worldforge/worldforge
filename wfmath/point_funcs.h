@@ -171,6 +171,14 @@ bool Point<dim>::operator< (const Point<dim>& rhs) const
   return false;
 }
 
+template<> Point<2>& Point<2>::polar(double r, double theta);
+template<> void Point<2>::asPolar(double& r, double& theta) const;
+
+template<> Point<3>& Point<3>::polar(double r, double theta, double z);
+template<> void Point<3>::asPolar(double& r, double& theta, double& z) const;
+template<> Point<3>& Point<3>::spherical(double r, double theta, double phi);
+template<> void Point<3>::asSpherical(double& r, double& theta, double& phi) const;
+
 }} // namespace WF::Math
 
 #endif  // WFMATH_POINT_FUNCS_H

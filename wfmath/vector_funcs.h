@@ -303,6 +303,15 @@ double Vector<len>::sqrMag() const
   return ans;
 }
 
+template<> Vector<2>& Vector<2>::polar(double r, double theta);
+template<> void Vector<2>::asPolar(double& r, double& theta) const;
+
+template<> Vector<3>& Vector<3>::polar(double r, double theta, double z);
+template<> void Vector<3>::asPolar(double& r, double& theta, double& z) const;
+template<> Vector<3>& Vector<3>::spherical(double r, double theta, double phi);
+template<> void Vector<3>::asSpherical(double& r, double& theta, double& phi) const;
+
+
 }} // namespace WF::Math
 
 #endif // WFMATH_VECTOR_FUNCS_H

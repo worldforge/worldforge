@@ -51,7 +51,7 @@ std::string RotMatrix<size>::toString() const
     for(int j = 0; j < size; ++j)
       d[i*size+j] = m_elem[i][j];
 
-  return StringFromCoordArray(d, size, size);
+  return _StringFromCoordArray(d, size, size);
 }
 
 template<const int size>
@@ -59,7 +59,7 @@ bool RotMatrix<size>::fromString(const std::string& s)
 {
   CoordType d[size*size], buf1[size*size], buf2[size*size];
 
-  if(!StringToCoordArray(s, d, size, size))
+  if(!_StringToCoordArray(s, d, size, size))
     return false;
 
   if(_MatrixSetValsImpl(size, d, buf1, buf2, 1e-6) == false)

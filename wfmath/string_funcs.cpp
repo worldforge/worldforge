@@ -32,14 +32,14 @@ namespace WF { namespace Math {
 static void ToString(std::ostream& os, const CoordType* d, const int num);
 static bool FromString(std::istream& is, CoordType* d, const int num);
 
-bool StringToCoordList(const std::string& s, CoordType* d, const int num)
+bool _StringToCoordList(const std::string& s, CoordType* d, const int num)
 {
   istringstream ist(s);
 
   return FromString(ist, d, num);
 }
 
-std::string StringFromCoordList(const CoordType* d, const int num)
+std::string _StringFromCoordList(const CoordType* d, const int num)
 {
   ostringstream ost;
 
@@ -48,8 +48,8 @@ std::string StringFromCoordList(const CoordType* d, const int num)
   return ost.str();
 }
 
-bool StringToCoordArray(const std::string& s, CoordType* d, const int rows,
-			const int columns)
+bool _StringToCoordArray(const std::string& s, CoordType* d, const int rows,
+			 const int columns)
 {
   istringstream ist(s);
   char next;
@@ -70,8 +70,8 @@ bool StringToCoordArray(const std::string& s, CoordType* d, const int rows,
   return true;
 }
 
-std::string StringFromCoordArray(const CoordType* d, const int rows,
-				 const int columns)
+std::string _StringFromCoordArray(const CoordType* d, const int rows,
+				  const int columns)
 {
   ostringstream ost;
 

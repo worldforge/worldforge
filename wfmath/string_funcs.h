@@ -32,13 +32,13 @@
 
 namespace WF { namespace Math {
 
-bool StringToCoordList(const std::string& s, CoordType* d, const int num);
-std::string StringFromCoordList(const CoordType* d, const int num);
+bool _StringToCoordList(const std::string& s, CoordType* d, const int num);
+std::string _StringFromCoordList(const CoordType* d, const int num);
 
-bool StringToCoordArray(const std::string& s, CoordType* d, const int rows,
-			const int columns);
-std::string StringFromCoordArray(const CoordType* d, const int rows,
-				 const int columns);
+bool _StringToCoordArray(const std::string& s, CoordType* d, const int rows,
+			 const int columns);
+std::string _StringFromCoordArray(const CoordType* d, const int rows,
+				  const int columns);
 
 }} // namespace WF::Math
 

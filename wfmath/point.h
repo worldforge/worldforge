@@ -58,8 +58,8 @@ class Point
 
   ~Point() {}
 
-  std::string toString() const		{return StringFromCoordList(m_elem, dim);}
-  bool fromString(const std::string& s) {return StringToCoordList(s, m_elem, dim);}
+  std::string toString() const		{return _StringFromCoordList(m_elem, dim);}
+  bool fromString(const std::string& s) {return _StringToCoordList(s, m_elem, dim);}
 
   Point& operator= (const Point<dim>& rhs);
   Point& operator= (const double d[dim]);
@@ -96,6 +96,24 @@ class Point
 
   Point (CoordType x, CoordType y); // 2D only
   Point (CoordType x, CoordType y, CoordType z); // 3D only
+
+  // Label the first three components of the vector as (x,y,z) for
+  // 2D/3D convienience
+
+  const CoordType& x() const	{return m_elem[0];}
+  CoordType& x()		{return m_elem[0];}
+  const CoordType& y() const	{return m_elem[1];}
+  CoordType& y()		{return m_elem[1];}
+  const CoordType& z() const	{return m_elem[2];}
+  CoordType& z()		{return m_elem[2];}
+
+  Point<2>& polar(double r, double theta);
+  void asPolar(double& r, double& theta) const;
+
+  Point<3>& polar(double r, double theta, double z);
+  void asPolar(double& r, double& theta, double& z) const;
+  Point<3>& spherical(double r, double theta, double phi);
+  void asSpherical(double& r, double& theta, double& phi) const;
 
  private:
 

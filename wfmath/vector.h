@@ -34,6 +34,7 @@
 #include <math.h>
 #include <wfmath/const.h>
 #include <wfmath/string_funcs.h>
+#include <wfmath/basis.h>
 
 namespace WF { namespace Math {
 
@@ -105,8 +106,8 @@ class Vector {
 
   ~Vector() {}
 
-  std::string toString() const		{return StringFromCoordList(m_elem, len);}
-  bool fromString(const std::string& s) {return StringToCoordList(s, m_elem, len);}
+  std::string toString() const		{return _StringFromCoordList(m_elem, len);}
+  bool fromString(const std::string& s) {return _StringToCoordList(s, m_elem, len);}
 
   Vector<len>& operator=(const double d[len]);
   Vector<len>& operator=(const Vector<len>& v);
@@ -217,6 +218,14 @@ class Vector {
   CoordType& y()		{return m_elem[1];}
   const CoordType& z() const	{return m_elem[2];}
   CoordType& z()		{return m_elem[2];}
+
+  Vector<2>& polar(double r, double theta);
+  void asPolar(double& r, double& theta) const;
+
+  Vector<3>& polar(double r, double theta, double z);
+  void asPolar(double& r, double& theta, double& z) const;
+  Vector<3>& spherical(double r, double theta, double phi);
+  void asSpherical(double& r, double& theta, double& phi) const;
 
  private:
   CoordType m_elem[len];

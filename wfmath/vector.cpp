@@ -94,4 +94,58 @@ Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2)
   return ans;
 }
 
+template<>
+Vector<2>& Vector<2>::polar(double r, double theta)
+{
+  double d[2] = {r, theta};
+  _PolarToCart(d, m_elem);
+  return *this;
+}
+
+template<>
+void Vector<2>::asPolar(double& r, double& theta) const
+{
+  double d[2];
+  _CartToPolar(m_elem, d);
+  r = d[0];
+  theta = d[1];
+}
+
+template<>
+Vector<3>& Vector<3>::polar(double r, double theta, double z)
+{
+  double d[2] = {r, theta};
+  _PolarToCart(d, m_elem);
+  m_elem[2] = z;
+  return *this;
+}
+
+template<>
+void Vector<3>::asPolar(double& r, double& theta, double& z) const
+{
+  double d[2];
+  _CartToPolar(m_elem, d);
+  r = d[0];
+  theta = d[1];
+  z = m_elem[2];
+}
+
+template<>
+Vector<3>& Vector<3>::spherical(double r, double theta, double phi)
+{
+  double d[3] = {r, theta, phi};
+  _SphericalToCart(d, m_elem);
+  return *this;
+}
+
+template<>
+void Vector<3>::asSpherical(double& r, double& theta, double& phi) const
+{
+  double d[3];
+  _CartToSpherical(m_elem, d);
+  r = d[0];
+  theta = d[1];
+  phi = d[2];
+}
+
 }} // namespace WF::Math
