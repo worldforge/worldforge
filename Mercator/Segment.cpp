@@ -47,9 +47,11 @@ Segment::Segment(unsigned int resolution) :
 
 Segment::~Segment()
 {
-    delete m_points;
+    if (m_points != 0) {
+        delete [] m_points;
+    }
     if (m_normals != 0) {
-        delete m_normals;
+        delete [] m_normals;
     }
     clearMods();
 }

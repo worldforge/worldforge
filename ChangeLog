@@ -1,5 +1,10 @@
 2003-07-21  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Segment.cpp: Free the float buffers using the correct
+	  array delete operator.
+
+2003-07-21  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Segment.h, Mercator/Segment.cpp: Allocate point data on the
 	  fly.  Use m_res and m_size in the terrain population functions rather
 	  than recalculating, or passing values.
