@@ -79,7 +79,7 @@ bool Timeout::isExpired() const
 unsigned long Timeout::poll(const Time::Stamp &t)
 {
 	if (!_fired) {
-		long diff = _due - t;
+		long diff = (_due - t).milliseconds();
 		if(diff > 0) // not finished yet
 			return diff;
 		Expired();	// invoke the signal

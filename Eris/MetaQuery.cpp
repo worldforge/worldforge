@@ -82,7 +82,7 @@ using namespace Time;
 long MetaQuery::getElapsed()
 {
 	Time::Stamp t = Time::Stamp::now();
-	return  t - _stamp;
+	return  (t - _stamp).milliseconds();
 }
 
 void MetaQuery::setComplete()

@@ -30,7 +30,6 @@ liberis_1_2_la_SOURCES = \
 	ServerInfo.cpp \
 	Wait.cpp \
 	Timeout.cpp \
-	Timestamp.cpp \
 	ArgumentDispatcher.cpp \
 	TypeInfo.cpp \
 	ClassDispatcher.cpp \
