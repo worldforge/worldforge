@@ -21,6 +21,7 @@ AC_OUTPUT([
 	src/Makefile
 	src/Content/Makefile
 	src/Debug/Makefile
+	src/Stream/Makefile
 	src/Net/Makefile
 	src/Object/Makefile
 	src/TestSuite/Makefile
