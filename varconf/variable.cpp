@@ -346,6 +346,7 @@ std::ostream& operator<<( std::ostream& out, const VarArray& v)
   }
 
   out << ")";
+  return out;
 }
 
 bool operator ==( const VarArray& one, const VarArray& two)
