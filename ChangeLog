@@ -1,5 +1,10 @@
 Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
 
+	* Made the Quaternion costructor from a Vector<3> (for
+	  a rotation around that axis) 'explicit'.
+
+Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
 	* Added round-off age checks to the functions where
 	  Quaternion and RotMatrix<3> rotate each other.
 	* Added rotate() convienience wrappers to RotMatrix,

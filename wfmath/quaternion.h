@@ -55,7 +55,7 @@ class Quaternion
   /**
    * The angle of rotating is equal to the magnitude of the Vector
    **/
-  Quaternion (const Vector<3>& axis) {rotation(axis);} // angle == axis.mag()
+  explicit Quaternion (const Vector<3>& axis) {rotation(axis);} // angle == axis.mag()
   /// Construct a copy of a Quaternion
   Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec),
 				     m_valid(p.m_valid), m_age(p.m_age) {}
