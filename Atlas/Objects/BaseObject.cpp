@@ -72,6 +72,20 @@ void BaseObjectData::sendContents(Bridge & b) const
     }
 }
 
+int BaseObjectData::getAttrClass(const std::string& name) const
+{
+    return -1;
+}
+
+void BaseObjectData::iterate(int& current_class, std::string& attr) const
+{
+    // m_attributes is handled separately, and we have no other attributes,
+    // so we set the iterator to be at the end of the attributes
+
+    current_class = BASE_OBJECT_NO;
+    attr = "";
+}
+
 BaseObjectData::iterator::iterator(BaseObjectData& obj, int current_class)
     : m_obj(&obj), m_current_class(current_class), m_val("", *this)
 {

@@ -60,7 +60,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                     continue
             #basic type
             otype, attr_class_lst = self.find_attr_class(self.objects[name])
-            print 'Attr ', attr_class_lst, name, value, otype
+            # print 'Attr ', attr_class_lst, name, value, otype
             if real_attr_only:
                 lst.append(apply(attr_class_lst[0],
                                  (name, value, otype)))
@@ -286,7 +286,17 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
 public:
     static %(classname)s *alloc();
     virtual void free();
+
+    /// \\brief Get the reference object that contains the default values for
+    /// attributes of instances of the same class as this object.
+    ///
+    /// @return a pointer to the default object.
     virtual %(classname)s *getDefaultObject();
+
+    /// \\brief Get the reference object that contains the default values for
+    /// attributes of instances of this class.
+    ///
+    /// @return a pointer to the default object.
     static %(classname)s *getDefaultObjectInstance();
 private:
     static %(classname)s *defaults_%(classname)s;
@@ -441,6 +451,9 @@ void %(classname)s::free()
         self.write("static const int %s_NO = %i;\n\n" % (
             string.upper(obj.id), class_serial_no))
         class_serial_no = class_serial_no + 1
+        self.write("/// \\brief " + obj.description  + ".\n")
+        if hasattr(obj, 'long_description'):
+            self.write("///\n/** " + obj.long_description + "\n */\n")
         self.write("class " + self.classname)
         parentlist = obj.parents
         if not parentlist: parentlist = ["BaseObject"]
@@ -505,10 +518,16 @@ void %(classname)s::free()
                            + "const;\n")
 
             for attr in static_attrs:
+                if self.objects.has_key(attr.name):
+                    attr_object = self.objects[attr.name]
+                    if hasattr(attr_object, 'description'):
+                        self.doc(4, attr_object.description)
                 self.write('    %s attr_%s;\n' %
                                (cpp_type[attr.type], attr.name))
             self.write('\n')
             for attr in static_attrs:
+                self.doc(4, 'Send the "%s" attribute to an Atlas::Bridge.' %
+                            (attr.name))
                 self.write("    void send" + attr.cname)
                 self.write('(Atlas::Bridge&) const;\n')
 
@@ -707,6 +726,7 @@ if __name__=="__main__":
 ##         outdir = "."
     object_enum = 0
     all_objects = []
+    # print objects["pos"].description
     for name, outdir, class_only_files in (
                 ("root", ".", []),
                 ("root_entity", "Entity", ["entity.def"]),

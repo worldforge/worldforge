@@ -43,6 +43,7 @@ along with the name of sender and a Socket
 
   };
 
+/// \brief Negotiation of clients building a connection to a remote system.
 class StreamConnect : public Atlas::Negotiate
 {
     public:
@@ -96,6 +97,7 @@ class StreamConnect : public Atlas::Negotiate
     bool m_canBzip2;
 };
  
+/// \brief Negotiation of servers accepting a connection from a remote system.
 class StreamAccept : public Atlas::Negotiate
 {
     public:

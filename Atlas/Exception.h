@@ -10,6 +10,8 @@
 
 namespace Atlas {
 
+/// Base class for all exceptions thrown by Atlas-C++. All subclasses
+/// should pass in a description of the exceptional circumstance encountered.
 class Exception : public std::exception
 {
   protected:
@@ -21,7 +23,7 @@ class Exception : public std::exception
     const std::string & getDescription() const {
         return m_description;
     }
-    virtual const char * what() const throw() { return m_description.c_str(); }
+    virtual const char * what() const throw();
 };
 
 } // namespace Atlas

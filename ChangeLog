@@ -1,3 +1,23 @@
+2004-08-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Bridge.h, Atlas/Exception.cpp, Atlas/Exception.h:
+	  Move virtual method implementation into the body.
+
+	* Atlas/Task.h: Mark class as obsolete.
+
+	* Atlas/Net/Stream.h: Quick comment about the purpose of these
+	  classes.
+
+	* Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h:
+	  Move virtual functions into the body, and stop trying to
+	  inline them.
+
+	* Atlas/Objects/GenerateDispatcher.py: Clean up the generated
+	  dispatcher class.
+
+	* Atlas/Objects/gen_cpp.py: Remove some debugging output from the
+	  code generation process.
+
 2004-07-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* Update NEWS and README.

@@ -7,7 +7,7 @@
 
 namespace Atlas {
 
-/** Atlas task
+/* Atlas task
 
 A task can be polled. Currently, Codecs and Negotiates are both Tasks. This is
 a rather minimal interface and may perhaps fade away.

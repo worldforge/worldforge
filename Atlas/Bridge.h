@@ -7,6 +7,14 @@
 
 #include <string>
 
+/** The Atlas namespace.
+
+This namespace contains the whole of the Atlas-C++ library, and which is
+divided into a hierarchy of other namespaces. The main namespaces of
+interest to the application developers are the Atlas::Net namespace containing
+classes to handle establishing network connections, and the Atlas::Objects
+namespace containing classes used to handle high level Atlas data.
+ */
 namespace Atlas {
 
 /** Atlas stream bridge

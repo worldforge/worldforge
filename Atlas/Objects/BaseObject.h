@@ -1,6 +1,6 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000-2001 Stefanus Du Toit, Aloril and Al Riddoch
+// Copyright (C) 2000-2004 Stefanus Du Toit, Aloril and Al Riddoch
 
 #ifndef ATLAS_OBJECTS_BASEOBJECT_H
 #define ATLAS_OBJECTS_BASEOBJECT_H
@@ -16,7 +16,10 @@
 
 #include <assert.h>
 
-namespace Atlas { namespace Objects {
+namespace Atlas {
+
+/** The Atlas Objects namespace */
+namespace Objects {
 
 /** An exception indicating the requested attribute does not exist.
  *
@@ -24,21 +27,46 @@ namespace Atlas { namespace Objects {
  */
 class NoSuchAttrException : public Atlas::Exception
 {
-    std::string name;
+    /// The name of the attribute that does not exist.
+    std::string m_name;
   public:
     NoSuchAttrException(const std::string& name) :
-             Atlas::Exception("No such attribute"), name(name) {}
+             Atlas::Exception("No such attribute"), m_name(name) {}
     virtual ~NoSuchAttrException() throw ();
+    /// Get the name of the attribute which does not exist.
     const std::string & getName() const {
-        return name;
+        return m_name;
     }
 };
 
 static const int BASE_OBJECT_NO = 0;
 
+/** Atlas base object class.
+
+This is class is the base from which all classes used to represent high
+level objects are derived. In this release of Atlas-C++, all classes
+that inherit from BaseObjectData are designed to be used with SmartPtr
+and should have the suffix Data on the end of their name. All the
+subclasses of BaseObjectData included with Atlas-C++ are automatically
+generated from the Atlas spec at release time. For each subclass
+a typedef is created of a specialisation of SmartPtr aliasing it
+to the name of the class without the Data suffix. Thus RootOperationData
+has an associate type RootOperation which is a typedef for
+SmartPtr<RootOperationData>. Each class also has an associated integer 
+identifier used to identify classes of its type. The SmartPtr class
+is designed to store unused instances of the data objects in a memory
+pool, and reuse instances as they are required. In order to re-use
+instances without re-constructing all their members, a system of flags
+is used to mark which members are in use. When an instance is re-used
+these flags are cleared, indicating that none of the members are in use.
+ */
 class BaseObjectData
 {
 public:
+    /// Construct a new BaseObjectData from a subclass.
+    /// Initialises flags to zero, and stores a pointer to the reference
+    /// object that provides default values for all attributes. Subclasses
+    /// must pass in a pointer to their class specific reference object.
     BaseObjectData(BaseObjectData *defaults) : 
         m_class_no(BASE_OBJECT_NO), m_defaults(defaults)
     {
@@ -83,29 +111,38 @@ public:
     //move to protected once SmartPtr <-> BaseObject order established
     inline void incRef();
     inline void decRef();
+
+    /// \brief Allocate a new instance of this class, using an existing
+    /// instance if available.
+    ///
+    /// This is the key function for implementing the memory pool
+    /// for the Atlas::Objects API.
     static BaseObjectData *alloc() {assert(0); return NULL;} //not callable
+    /// \brief Free an instance of this class, returning it to the memory
+    /// pool.
+    ///
+    /// This function in combination with alloc() handle the memory pool.
     virtual void free() = 0;
-
-    // The iterator first iterates over the contents of m_obj->m_attributes,
-    // holding an iterator to the attributes map in m_I. When m_I reaches
-    // the end, it iterates through the named attributes in each of the
-    // classes, starting with the terminal child and working its way
-    // up to the ultimate parent, BaseObjectData. It stores the
-    // class number in m_current_class and the name of the current
-    // attribute in m_val.first. Since BaseObjectData has no
-    // named attributes, an iterator with m_current_class == BASE_OBJECT_NO
-    // is considered to be the end of the map.
-
-    // The iterator constructor has an argument which lets you begin() at the
-    // first named attribute in some class, and only iterate through
-    // that class and its parents. The same iterator, treated as an
-    // end(), lets you iterate through all attributes which are either
-    // named in derived classes or in m_attributes.
 
     class const_iterator;
 
     // FIXME should this hold a reference to the object it's
     // iterating over?
+
+    /// The iterator first iterates over the contents of m_obj->m_attributes,
+    /// holding an iterator to the attributes map in m_I. When m_I reaches
+    /// the end, it iterates through the named attributes in each of the
+    /// classes, starting with the terminal child and working its way
+    /// up to the ultimate parent, BaseObjectData. It stores the
+    /// class number in m_current_class and the name of the current
+    /// attribute in m_val.first. Since BaseObjectData has no
+    /// named attributes, an iterator with m_current_class == BASE_OBJECT_NO
+    /// is considered to be the end of the map.
+    /// The iterator constructor has an argument which lets you begin() at the
+    /// first named attribute in some class, and only iterate through
+    /// that class and its parents. The same iterator, treated as an
+    /// end(), lets you iterate through all attributes which are either
+    /// named in derived classes or in m_attributes.
     class iterator
     {
     public:
@@ -226,9 +263,11 @@ public:
 
 protected:
 
-    inline virtual int getAttrClass(const std::string& name) const {return -1;}
+    /// Find the class which contains the attribute "name".
+    virtual int getAttrClass(const std::string& name) const;
 
-    inline virtual void iterate(int& current_class, std::string& attr) const;
+    /// Iterate over the attributes of this instance.
+    virtual void iterate(int& current_class, std::string& attr) const;
 
     int m_class_no; //each class has different enum
     int m_refCount; //how many instances 
@@ -253,15 +292,6 @@ void BaseObjectData::decRef() {
         return;
     }
     m_refCount--;
-}
-
-void BaseObjectData::iterate(int& current_class, std::string& attr) const
-{
-    // m_attributes is handled separately, and we have no other attributes,
-    // so we set the iterator to be at the end of the attributes
-
-    current_class = BASE_OBJECT_NO;
-    attr = "";
 }
 
 BaseObjectData::iterator BaseObjectData::iterator::operator++(int) // postincrement

@@ -6,6 +6,11 @@
 
 namespace Atlas {
 
+const char * Exception::what() const throw()
+{
+    return m_description.c_str();
+}
+
 Exception::~Exception() throw ()
 {
 }

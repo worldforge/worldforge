@@ -66,6 +66,8 @@ protected:
         for (obj, namespace) in objects:
             id = obj.id
             idc = classize(id)
+            self.doc(4, "Override this to get called when a %s object arrives."
+                     % (classize(obj.id)))
             self.write("    virtual void object%sArrived(const %s%s&) { }\n" %
                        (classize(obj.id), namespace, classize(obj.id)))
         self.write("};\n\n")
