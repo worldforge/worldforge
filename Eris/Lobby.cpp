@@ -146,14 +146,13 @@ void Lobby::registerCallbacks()
 	oogd->addSubdispatch(new EncapDispatcher("sound", "sound"));
 	oogd->addSubdispatch(new ClassDispatcher("appearance", "appearance"));
 	oogd->addSubdispatch(new ClassDispatcher("disappearance", "disappearance"));
-	oogd->addSubdispatch(new EncapDispatcher("sight", "sight"));
-	oogd->addSubdispatch(new EncapDispatcher("imaginary", "imaginary"));
 	
+	Dispatcher *sight = oogd->addSubdispatch(new EncapDispatcher("sight", "sight"));
+	Dispatcher *d = sight->addSubdispatch(new TypeDispatcher("op", "op"));
+	
+	d = sight->addSubdispatch(new TypeDispatcher("entity", "object"));
 	// the room entity callback
-	Dispatcher *d = oogd->addSubdispatch(new EncapDispatcher("sight", "sight"));
-	d = d->addSubdispatch(new TypeDispatcher("entity", "object"));
 	Dispatcher *room = d->addSubdispatch(new ClassDispatcher("room", "room"));
-	
 	room->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::RootEntity>("lobby", 
 		SigC::slot(this, &Lobby::recvSightRoom)
 	));

@@ -1,3 +1,10 @@
+Monday, October 15 2001
+
+	* Fixed up dispatcher tree some more (sights encap imags), seems
+	  to work with Stage, and Stage works with Process. This is
+	  tenuous validation at best, but it will do. Testing with
+	  cyphesis appreciated.
+
 Sunday, October 14 2001, James Turner
 
 	* Added ArgumentDispatcher (map args only,  list args are easy too add too).

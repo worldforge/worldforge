@@ -72,9 +72,14 @@ void Room::setup()
 		SigC::slot(this, &Room::recvSoundTalk)
 	));
 	
-// imaginarys
-	Dispatcher *img = con->getDispatcherByPath("op:oog:imaginary");
+
+// visual stuff (sights)	
+	//Dispatcher *sight = con->getDispatcherByPath("op:oog:sight");
+	//sight = sight->addSubdispatch(new ArgumentDispatcher("room_" + _id, "loc", _id));
+
+	Dispatcher *img = con->getDispatcherByPath("op:oog:sight:op");
 	img = img->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
+	img = img->addSubdispatch(new EncapDispatcher("imaginary", "imaginary"));
 	
 	// emotes
 	Dispatcher *em = img->addSubdispatch(new IdDispatcher("emote", "emote"));
@@ -83,10 +88,7 @@ void Room::setup()
 		SigC::slot(this, &Room::recvSightEmote)
 	));
 
-	// visual stuff (sights)	
-	//Dispatcher *sight = con->getDispatcherByPath("op:oog:sight");
-	//sight = sight->addSubdispatch(new ArgumentDispatcher("room_" + _id, "loc", _id));
-
+	
 // appearance
 	Dispatcher *apd = con->getDispatcherByPath("op:oog:appearance");
 	apd = apd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
