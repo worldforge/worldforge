@@ -2,6 +2,12 @@ Atlas-C++
 
 Welcome to Atlas-C++, the C++ reference implementation of the Atlas protocol.
 
+NOTE!:
+Many current programs use older version of Atlas-C++:
+Make fresh checkout to clean directory:
+cvs -z3 checkout -r atlas-cpp-0_3_10 forge/libs/Atlas-C++
+
+
 This library implements the Atlas protocol, for use in client-server
 game applications.  This library is suitable for linking to either
 clients or servers.
