@@ -59,7 +59,7 @@ fi
 aclocalinclude="$ACLOCAL_FLAGS"
 
 echo "Running libtoolize..."
-libtoolize --force --copy
+libtoolize --automake --force --copy
 
 echo "Running aclocal $aclocalinclude ..."
 aclocal $aclocalinclude
