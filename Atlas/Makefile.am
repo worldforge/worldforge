@@ -1,1 +1,1 @@
-SUBDIRS = Debug Object Net Content
+SUBDIRS = Debug Object Stream Net Content
