@@ -40,7 +40,7 @@ void Segment::populate(const Matrix<2, 2> & base)
 void Segment::populateNormals()
 {
     if (m_normals == 0) {
-        m_normals = new float[(m_res + 1) * (m_res + 1) * 3];
+        m_normals = new float[(m_res) * (m_res) * 3];
     }
 
     float * np = m_normals;
@@ -54,9 +54,12 @@ void Segment::populateNormals()
            float h4 = get(i + 1, j);
             
            // Caclulate the normal vector.
+           np[j * (m_res) + i]     = (h2-h3 + h1-h4) / 2.0;
+           np[j * (m_res) + i + 1] = (h1-h2 + h4-h3) / 2.0;
+           np[j * (m_res) + i + 2] = 1.0;
         }
     }
-    // Calculate the boundary normals
+    // do we need to calculate the boundary normals
 }
 
 // rand num between -0.5...0.5

@@ -1,3 +1,8 @@
+2003-06-06 Damien McGinnes
+
+	* Mercator/Segment.cpp : added in an attempt at values for the normal
+	  array. Array is one row and column smaller than the height array.
+	 
 2003-06-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.h, Mercator/Segment.cpp: Tidy up some code,

@@ -4,4 +4,5 @@
 
 #include <Mercator/Matrix.h>
 
-Mercator::Matrix<4, 4> foo;
+Mercator::Matrix<4, 4> foo4;
+Mercator::Matrix<2, 2> foo2;
