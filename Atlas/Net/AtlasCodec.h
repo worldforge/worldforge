@@ -14,6 +14,7 @@
 
 #include <stdio.h>
 
+#include "AtlasDebug.h"
 #include "AtlasObject.h"
 #include "AtlasProtocol.h"
 
@@ -21,26 +22,26 @@ class ACodec
 {
 
 private:
-    AObject		msg;    	// message currently being constructed
-    AProtocol*		proto;		// current stream format module
-    int			state;		// current decoder state
+	AObject		msg;    	// message currently being constructed
+	AProtocol*	proto;		// current stream format module
+	int		state;		// current decoder state
 
-    AObject		stack[50];    	// nested list/map handling
-    string		names[50];	// name that nested item will have in parent
-    int			nestd;        	// count of nesting levels
-    int			waitn;        	// waiting for attrib trailer
+	AObject		stack[50];    	// nested list/map handling
+	string		names[50];	// name that nested item will have in parent
+	int		nestd;       	// count of nesting levels
+	int		waitn;        	// waiting for attrib trailer
 
-    // waitn is a flag.. when an attribute value is recieved waitn is
-    // set, and the next ATREND message is ignored, if an ATREND message
-    // comes in when waitn is not set then it must be the end of a list
-    // and the nesting level should be reduced by one level
+	// waitn is a flag.. when an attribute value is recieved waitn is
+	// set, and the next ATREND message is ignored, if an ATREND message
+	// comes in when waitn is not set then it must be the end of a list
+	// and the nesting level should be reduced by one level
 
-    void copySTR(AObject& amsg,AProtocolDecoder* adec); 
-    void copyINT(AObject& amsg,AProtocolDecoder* adec);
-    void copyFLT(AObject& amsg,AProtocolDecoder* adec);
+	void copySTR(AObject& amsg,AProtocolDecoder* adec); 
+	void copyINT(AObject& amsg,AProtocolDecoder* adec);
+	void copyFLT(AObject& amsg,AProtocolDecoder* adec);
 
 public:
-	ACodec(AProtocol* aproto);
+		ACodec(AProtocol* aproto);
 
 string		encodeMessage(AObject& amsg);
 int		encodedLength();

@@ -44,15 +44,15 @@ int AXMLDecoder::hasTokens()
 	string	typ;
 	int	endit;
 
-	//printf("BEG TOKEN=%i\n", token);
+	DebugMsg1(1, "BEG TOKEN=%i\n", token);
 
 	if (token == -1) return -1; // buffer overflow !!!
 
 	do {
 		chk = 0;
 
-		//printf("BEG STATE=%i\n", state);
-		//printf("BEG BUFFR=%s\n", buffer.c_str());
+		DebugMsg1(1, "BEG STATE=%i\n", state);
+		DebugMsg1(1, "BEG BUFFR=%s\n", buffer.c_str());
 
 		// this is where we are gonna put the state machine
 		switch (state) {
@@ -152,9 +152,9 @@ int AXMLDecoder::hasTokens()
 	} while (chk == 1 && token == 0);
 
 	// see if we have a token to return
-	//printf("END TOKEN=%i\n", token);
-	//printf("END STATE=%i\n", state);
-	//printf("END BUFFR=%s\n\n\n", buffer.c_str());
+	DebugMsg1(1, "END TOKEN=%i\n", token);
+	DebugMsg1(1, "END STATE=%i\n", state);
+	DebugMsg1(1, "END BUFFR=%s\n\n\n", buffer.c_str());
 	if (token != 0) {
 		return 1;
 	}

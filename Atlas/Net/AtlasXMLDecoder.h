@@ -9,6 +9,7 @@
 #ifndef __AtlasXMLDecoder__h_
 #define __AtlasXMLDecoder__h_
 
+#include "AtlasDebug.h"
 #include "AtlasProtocolDecoder.h"
 
 #include <string.h>

@@ -1,5 +1,5 @@
 /*
-        AtlasCodec.h
+        AtlasCodec.cpp
         ----------------
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
@@ -91,24 +91,21 @@ int ACodec::hasMessage()
 	// got a token, we must be busy processing a message !!
 	state = codecBUSY;
 	// process tokens until we run out or we complete a msg
-	//printf("Scanning Tokens\n");
+	DebugMsg1(1,"Scanning Tokens","");
 	AProtocolDecoder* adec = proto->getDecoder();
 	do {
-		//printf("fetching token !!!\n");
+		DebugMsg1(1,"fetching token !!!\n","");
 		int tok = proto->getDecoder()->getToken();
-		//printf("tok=%i\n", tok);
 		int type = proto->getDecoder()->getType();
 		string name = proto->getDecoder()->getName();
 		if (name.length() == 0) name = string("(null)");
-		//printf("tok=%i name=%s type=%i\n",
-		//	tok, name.c_str(), type
-		//);
+		DebugMsg3(1,"tok=%i name=%s type=%i", tok, name.c_str(), type);
 		if (tok == AProtocol::atlasATRVAL) {
 			// got a value for an attribute
 			if (type == AProtocol::atlasSTR) copySTR(stack[nestd],adec);
 			if (type == AProtocol::atlasINT) copyINT(stack[nestd],adec);
 			if (type == AProtocol::atlasFLT) copyFLT(stack[nestd],adec);
-			//printf("ADDATTR nest=%i name=%s\n", nestd, name.c_str());
+			DebugMsg2(1,"ADDATTR nestd=%i name=%s\n", nestd, name.c_str());
 			waitn = 1;	// wait for the end attribute message
 		}
 		if (tok == AProtocol::atlasATRBEG) {
@@ -118,19 +115,19 @@ int ACodec::hasMessage()
 				// start a nested list
 				stack[nestd] = AObject::mkMap();
 				nestd++;
-				//printf("ADDLIST nest=%i name=%s\n", nestd, name.c_str());
+				DebugMsg2(1,"ADDLIST nestd=%i name=%s\n", nestd, name.c_str());
 			} else if (type == AProtocol::atlasLST) {
 				// start a nested list
 				stack[nestd] = AObject::mkList(0);
 				nestd++;
-				//printf("ADDLIST nest=%i name=%s\n", nestd, name.c_str());
+				DebugMsg2(1,"ADDLIST nestd=%i name=%s\n", nestd, name.c_str());
 			} else {
 				// its a scalar, wait for the value
 			}
 		}
 		if (tok == AProtocol::atlasATREND) {
 			// end of attribute detected.. un-nest
-			//printf("ENDLIST nest=%i\n", nestd);
+			DebugMsg1(1,"ENDLIST nest=%i\n", nestd);
 			if (stack[nestd-1].isList()) {
 				stack[nestd-1].append(stack[nestd]);
 			} else {
