@@ -38,6 +38,7 @@
 				C4337F7103CE4905000063C9,
 				C4337F7203CE4905000063C9,
 			);
+			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = C4337F6F03CE4905000063C9;
 			productRefGroup = C4337F7B03CE491D000063C9;
@@ -87,6 +88,7 @@
 				C453024603CE4CA600CB8B1B,
 				C453024803CE4CA600CB8B1B,
 				C453024903CE4CA600CB8B1B,
+				C4816ED504EC4027008188AD,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,7 +195,6 @@
 </dict>
 </plist>
 ";
-			shouldUseHeadermap = 0;
 		};
 		C4337F7A03CE491D000063C9 = {
 			isa = PBXFrameworkReference;
@@ -260,6 +261,7 @@
 				C45301D303CE4CA600CB8B1B,
 				C45301D503CE4CA600CB8B1B,
 				C45301D603CE4CA600CB8B1B,
+				C4816ED404EC4027008188AD,
 			);
 			isa = PBXGroup;
 			path = wfmath;
@@ -974,6 +976,21 @@
 				);
 			};
 		};
+		C4816ED404EC4027008188AD = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = MersenneTwister.h;
+			refType = 4;
+		};
+		C4816ED504EC4027008188AD = {
+			fileRef = C4816ED404EC4027008188AD;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
 //C40
 //C41
 //C42
@@ -1024,7 +1041,6 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "\"/Users/jmt/Code/forge/libs/stable-Atlas-C++/build\"";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1040,7 +1056,6 @@
 			productInstallPath = /usr/local/bin;
 			productName = atlasTest;
 			productReference = F5733841044D98C501A800CD;
-			shouldUseHeadermap = 0;
 		};
 		F5733841044D98C501A800CD = {
 			isa = PBXExecutableFileReference;
@@ -1054,9 +1069,10 @@
 			};
 		};
 		F5733844044D98E301A800CD = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
-			name = atlas_test.cpp;
-			path = atlas/atlas_test.cpp;
+			name = atlas_0_4_test.cpp;
+			path = atlas/atlas_0_4_test.cpp;
 			refType = 4;
 		};
 		F5733845044D98E301A800CD = {
@@ -1067,9 +1083,8 @@
 		};
 		F5733846044D991C01A800CD = {
 			isa = PBXFrameworkReference;
-			name = Atlas.framework;
-			path = "/Users/jmt/Code/forge/libs/stable-Atlas-C++/build/Atlas.framework";
-			refType = 0;
+			path = Atlas.framework;
+			refType = 3;
 		};
 		F573388F044D991C01A800CD = {
 			fileRef = F5733846044D991C01A800CD;
@@ -1148,7 +1163,6 @@
 			productInstallPath = /usr/local/bin;
 			productName = testQuaternion;
 			productReference = F5C994AD044D58CB01A800CD;
-			shouldUseHeadermap = 0;
 		};
 		F5C994AD044D58CB01A800CD = {
 			isa = PBXExecutableFileReference;
@@ -1220,7 +1234,6 @@
 			productInstallPath = /usr/local/bin;
 			productName = polygonTest;
 			productReference = F5C994B6044D591E01A800CD;
-			shouldUseHeadermap = 0;
 		};
 		F5C994B6044D591E01A800CD = {
 			isa = PBXExecutableFileReference;
@@ -1293,7 +1306,6 @@
 			productInstallPath = /usr/local/bin;
 			productName = shapeTest;
 			productReference = F5C994BF044D594C01A800CD;
-			shouldUseHeadermap = 0;
 		};
 		F5C994BF044D594C01A800CD = {
 			isa = PBXExecutableFileReference;
@@ -1371,7 +1383,6 @@
 			productInstallPath = /usr/local/bin;
 			productName = vectorTest;
 			productReference = F5C994C9044D5A6101A800CD;
-			shouldUseHeadermap = 0;
 		};
 		F5C994C9044D5A6101A800CD = {
 			isa = PBXExecutableFileReference;
