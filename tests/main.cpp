@@ -1,3 +1,7 @@
+// This file may be redistributed and modified only under the terms of
+// the GNU General Public License (See COPYING for details).
+// Copyright (C) 2003 Damien McGinnes, Alistair Riddoch
+
 #include <Mercator/Segment.h>
 #include <Mercator/Terrain.h>
 #include <Mercator/Matrix.h>

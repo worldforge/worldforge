@@ -1,3 +1,14 @@
+2003-10-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp: Use apropriate rint() function to convert
+	  float to int.
+
+	* Mercator/Intersect.cpp, Mercator/Intersect.h, tests/main.cpp:
+	  Add copyright notice.
+
+	* Mercator/TerrainMod.h, Mercator/TerrainMod_impl.h: Fix copyright
+	  notice.
+
 2003-10-31 Damien McGinnes 
 
 	* Mercator/DepthShader.cpp: fixed type warning

@@ -1,6 +1,6 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU General Public License (See COPYING for details).
-// Copyright (C) 2003 Damien McGinnes
+// Copyright (C) 2003 Damien McGinnes, Alistair Riddoch
 
 #ifndef MERCATOR_TERRAIN_MOD_H
 #define MERCATOR_TERRAIN_MOD_H

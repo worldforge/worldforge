@@ -7,6 +7,14 @@
 #include <Mercator/Segment.h>
 #include <Mercator/Surface.h>
 
+#ifdef HAVE_LRINTF
+    #define I_ROUND(x) (::lrintf(x)) 
+#elif defined(HAVE_RINTF)
+    #define I_ROUND(x) ((int)::rintf(x)) 
+#else
+    #define I_ROUND(x) ((int)::rint(x)) 
+#endif
+
 namespace Mercator {
 
 DepthShader::DepthShader(float waterLevel, float murkyDepth) : 
@@ -53,8 +61,8 @@ void DepthShader::shade(Surface & s) const
         } else if (depth < m_murkyDepth) {
             data[++j] = colorMax;
         } else {
-            data[++j] = colorMax - (unsigned char)(colorMax * ((depth - 
-                        m_murkyDepth) / (m_waterLevel - m_murkyDepth)));
+            data[++j] = colorMax - I_ROUND(colorMax * ((depth - m_murkyDepth)
+                                              / (m_waterLevel - m_murkyDepth)));
         }
     }
 }
