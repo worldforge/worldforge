@@ -1,3 +1,9 @@
+Thursday, May 1st, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed configure.in to configure.ac, since
+	  it now contains code which is incompatible
+	  with autoconf 2.13
+
 Wednesday, April 23rd, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* Update spec file, and set the interface version ready for
