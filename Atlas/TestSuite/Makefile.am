@@ -1,5 +1,5 @@
 
-bin_PROGRAMS = test-object-map test-object-list test-negotiate
+noinst_PROGRAMS = test-object-map test-object-list test-negotiate
 
 CXXFLAGS = -Wall -D_ADebug_
 
