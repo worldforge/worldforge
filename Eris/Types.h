@@ -13,6 +13,16 @@
 #include <Atlas/Message/Object.h>
 #include <Atlas/Objects/Root.h>
 
+#ifndef WFMATH_CONVERSION
+#include <wfmath/vector.h>
+#include <wfmath/point.h>
+#include <wfmath/quaternion.h>
+#include <wfmath/axisbox.h>
+#include <wfmath/stream.h>
+#endif
+
+#define ERIS_HAVE_WFMATH
+
 #include <sigc++/basic_signal.h>
 
 namespace Eris
@@ -78,6 +88,7 @@ typedef std::list<Atlas::Message::Object> MessageList;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#ifndef WFMATH_CONVERSION
 class Coord
 {
 public:
@@ -85,10 +96,15 @@ public:
 	Coord(double a = 0., double b=0., double c=0.) :
 		x(a), y(b), z(c)
 	{;}
+	Coord(const WFMath::Point<3> &p) : x(p.x()), y(p.y()), z(p.z()) {}
+	Coord(const WFMath::Vector<3> &v) : x(v.x()), y(v.y()), z(v.z()) {}
 	
 	Coord& operator=(const Atlas::Message::Object &obj);
 		
 	const Atlas::Message::Object asObject() const;
+
+        WFMath::Point<3>  asPoint()  {return WFMath::Point<3>(x, y, z);}
+        WFMath::Vector<3> asVector() {return WFMath::Vector<3>(x, y, z);}
 		
 	double x,y,z;
 };
@@ -99,8 +115,12 @@ public:
 	BBox(double ux = 0., double uy = 0., double uz = 0.,
 			double vx=1., double vy=1., double vz=1.);
 	BBox(const Atlas::Message::Object &obj);
+	BBox(const WFMath::AxisBox<3>& a) : u(a.lowCorner()), v(a.highCorner()) {}
 	
 	const Atlas::Message::Object asObject() const;
+
+	WFMath::AxisBox<3> asAxisBox()
+		{return WFMath::AxisBox<3>(u.asPoint(), v.asPoint());}
 
 	Coord u,v;
 };
@@ -112,6 +132,8 @@ public:
 
     /** construct from Atlas data */
     Quaternion(const Atlas::Message::Object &obj);
+    Quaternion(const WFMath::Quaternion& q) : x(q.vector().x()), y(q.vector().y()),
+					      z(q.vector().z()), w(q.scalar()) {}
 
     /** construct from an Euler triple */
     Quaternion(double rool, double pitch, double yaw);
@@ -126,8 +148,11 @@ public:
     in the correct order. */
     Coord asEuler() const;
 
+    WFMath::Quaternion asQuaternion() {return WFMath::Quaternion(w, x, y, z);}
+
     double x,y,z,w;
 };
+#endif // WFMATH_CONVERSION
 
 // Forward Decls
 class Entity;

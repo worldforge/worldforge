@@ -23,6 +23,11 @@ namespace Atlas {
 	}
 }
 
+#include <wfmath/point.h>
+#include <wfmath/vector.h>
+#include <wfmath/axisbox.h>
+#include <wfmath/quaternion.h>
+
 // local headers
 #include "Types.h"
 #include "SignalDispatcher.h"
@@ -77,13 +82,13 @@ public:
 
 	// dynamics; these are virtual to allow derived class to implement motion
 	// prediction or other effects that can't be guessed here
-	virtual Coord getPosition() const;
-	virtual Coord getVelocity() const;
+	virtual WFMath::Point<3> getPosition() const;
+	virtual WFMath::Vector<3> getVelocity() const;
 	
 	/** retrieve the orientation as a quaternion */
-	virtual Quaternion getOrientation() const;
+	virtual WFMath::Quaternion getOrientation() const;
 	
-	virtual BBox getBBox() const;
+	virtual WFMath::AxisBox<3> getBBox() const;
 	
 	// accesors
 	/// retrieve the unique entity ID
@@ -121,7 +126,7 @@ public:
 
 	/** Emitted when then entity's position or orientation have changed; i.e the
 	displayed model/sprite/etc needs to be updated. The argument is the new position */
-	SigC::Signal1<void, const Coord&> Moved;
+	SigC::Signal1<void, const WFMath::Point<3>&> Moved;
 
 	/** Emitted with this entity speaks. In the future langauge may be specified */
 	SigC::Signal1<void, const std::string&> Say;
@@ -184,10 +189,10 @@ protected:
 	Entity* _container;	///< The container entity, NULL for the root-entity, or if un-parented
 	EntityArray _members;
 
-	BBox _bbox;
-	Coord _position,
-		_velocity;
-	Quaternion _orientation;
+	WFMath::AxisBox<3> _bbox;
+	WFMath::Point<3> _position;
+	WFMath::Vector<3> _velocity;
+	WFMath::Quaternion _orientation;
 	
 // properties
 	void beginUpdate();
@@ -235,11 +240,11 @@ public:
 	Moveable(const std::string &id);
 	virtual ~Moveable();
 
-	virtual Coord getPosition() const	{return Inherited::getPosition();} 
+	virtual WFMath::Point<3> getPosition() const	{return Inherited::getPosition();} 
 	void getPosition(bool predicted);
 
 protected:
-	Coord _velocity,
+	WFMath::Vector<3> _velocity,
 		_delta;
 };
 

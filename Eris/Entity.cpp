@@ -15,6 +15,8 @@
 #include <Atlas/Objects/Operation/Sound.h>
 #include <Atlas/Objects/Operation/Sight.h>
 
+#include <wfmath/atlasconv.h>
+
 #include "Entity.h"
 #include "World.h"
 #include "Connection.h"
@@ -119,22 +121,22 @@ void Entity::observeProperty(const std::string &nm,
     pi->second->Set.connect(slot);
 }
 
-Coord Entity::getPosition() const
+WFMath::Point<3> Entity::getPosition() const
 {
 	return _position;
 }
 
-Coord Entity::getVelocity() const
+WFMath::Vector<3> Entity::getVelocity() const
 {
 	return _velocity;
 }
 
-BBox Entity::getBBox() const
+WFMath::AxisBox<3> Entity::getBBox() const
 {
 	return _bbox;
 }
 
-Quaternion Entity::getOrientation() const
+WFMath::Quaternion Entity::getOrientation() const
 {
     return _orientation;
 }
@@ -255,20 +257,20 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 	std::string loc = val.AsString();
 	setContainerById(loc);
     } else if (s == "pos")
-	_position = Coord(val);
+	_position.fromAtlas(val);
     else if (s == "velocity")
-	_velocity = Coord(val);
+	_velocity.fromAtlas(val);
     else if (s == "orientation")
-	_orientation = Quaternion(val);
+	_orientation.fromAtlas(val);
     else if (s == "face") {
 	mapped = "orientation";
-	Coord face(val);
-	// build the quaternion from roll, pitch and yaw.
-	_orientation = Quaternion(0.0, 0.0, atan2(face.y, face.x));	
+	WFMath::Point<3> face(val); // Should this be Point<3> or Vector<3>?
+	// build the quaternion from rotation about z axis
+	_orientation.rotation(2, atan2(face[1], face[0]));	
     } else if (s == "description")
 	_description = val.AsString();
     else if (s == "bbox") {
-	_bbox = BBox(val);
+	_bbox.fromAtlas(val);
     }
     
     PropertyMap::iterator P=_properties.find(mapped);

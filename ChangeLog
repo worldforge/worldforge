@@ -1,3 +1,11 @@
+Saturday, March 02 2002, James Turner
+
+	* Applied Ron Steinke's patch for WFMath support
+	* Bumped version to 0.9.2 so people can test against the
+	  WFMath-enabled version
+	* Added README-wfmath-conversion, explaining how to
+	  migrate a client to the new API
+
 Monday, February 11 2002, James Turner
 
 	* Implemented Player::getAccountID();
