@@ -81,6 +81,11 @@ protected:
 
     void addToPrediction(Entity* ent);
     void removeFromPrediction(Entity* ent);
+    
+    /** this is a hook that Entity's destructor calls to remove itself from
+    the View's content map. The name is unfortantely similar to the public
+    'EntityDeleted' signal - alternative naming suggestions appreciated. */
+    void entityDeleted(Entity* ent);
 
 private:
     Entity* initialSight(const Atlas::Objects::Entity::GameEntity& ge);

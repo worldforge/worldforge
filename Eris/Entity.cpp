@@ -54,6 +54,7 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
 Entity::~Entity()
 {
     debug() << "deleting entity " << m_id;
+    m_view->entityDeleted(this); // remove ourselves from the View's content map
     
     for (unsigned int C=0; C < m_contents.size(); ++C) {
         m_contents[C]->setLocation(NULL);

@@ -1,5 +1,11 @@
 2004-10-09  James Turner  <james@worldforge.org>
 
+	* Eris/Entity.cpp, Eris/View.cpp: change how the View destructor works,
+	  to stop asserts on deleting it. Entailed adding a hook method on View
+	  so Entities have a way to remove themselves from the View's contents map.
+
+2004-10-09  James Turner  <james@worldforge.org>
+
 	* tests/tests.cpp : add initial tests of entity appearance
 	
 	* tests/agent.cpp: track per-client entity visiblity, and hence do contents

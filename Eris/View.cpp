@@ -30,8 +30,14 @@ View::View(Avatar* av) :
 
 View::~View()
 {
+    std::vector<Entity*> allEntities;
     for (IdEntityMap::iterator E = m_contents.begin(); E != m_contents.end(); ++E)
-        delete E->second;
+        allEntities.push_back(E->second);
+        
+    for (unsigned int I=0; I < allEntities.size(); ++I) 
+        delete allEntities[I];
+        
+    assert(m_contents.empty());
 }
 
 Entity* View::getEntity(const std::string& eid) const
@@ -189,9 +195,8 @@ void View::deleteEntity(const std::string& eid)
     Entity* ent = getEntity(eid);
     if (ent) {
          // force a disappear if one hasn't already happened
-        ent->setVisible(false);
+        ent->setVisible(false); // redundant?
         EntityDeleted.emit(ent);
-        m_contents.erase(eid);
         delete ent; // actually kill it off
     } else {
         if (isPending(eid))
@@ -254,6 +259,12 @@ void View::setTopLevelEntity(Entity* newTopLevel)
 
     m_topLevel = newTopLevel;
     TopLevelEntityChanged.emit(); // fire the signal
+}
+
+void View::entityDeleted(Entity* ent)
+{
+    assert(m_contents.count(ent->getId()));
+    m_contents.erase(ent->getId());
 }
 
 } // of namespace Eris
