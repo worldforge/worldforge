@@ -74,12 +74,15 @@ const double Sqrt3	= 1.73205080756887729352744634150587236694280525381037;
 /// The natural logarithm of 2
 const double Log2	= 0.69314718055994530941723212145817656807550013436025;
 
+/// Determines how close to machine precision the library tries to come.
+#define WFMATH_PRECISION_FUDGE_FACTOR 30
+/// How long we can let RotMatrix and Quaternion go before fixing normalization
+#define WFMATH_MAX_NORM_AGE ((WFMATH_PRECISION_FUDGE_FACTOR * 2) / 3)
+
 /// Basic floating point type
 typedef float CoordType;
-
-/// This is the attempted precision of the library. It's essentially
-/// the machine precision multiplied by a fudge factor.
-#define WFMATH_EPSILON		(30 * FLT_EPSILON)
+/// This is the attempted precision of the library.
+#define WFMATH_EPSILON		(WFMATH_PRECISION_FUDGE_FACTOR * FLT_EPSILON)
 
 /// Max value of CoordType
 #define WFMATH_MAX		FLT_MAX

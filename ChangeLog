@@ -1,3 +1,11 @@
+Sunday, September 21st, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Some cleanups to int_to_string.cpp
+	* Added some macros to const.h for future
+	  normalization-aging checks in RotMatrix
+	  and Quaterion.
+	* 0.3.1 release
+
 Monday, August 25nd, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Moved hash() function out of MersenneTwister.h to
@@ -17,7 +25,6 @@ Tuesday, August 19th, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* Updated spec.
 
->>>>>>> 1.104
 Sunday, August 17th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Moved config.h include after timestamp.h include
