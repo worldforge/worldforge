@@ -7,6 +7,7 @@
 
 #include "stubServer.h"
 #include "testUtils.h"
+#include "controller.h"
 
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
@@ -260,6 +261,14 @@ void testCharActivate()
     cout << "completed charatcer activation test" << endl;
 }
 
+void killAndWaitFor(pid_t childPid)
+{
+    kill(childPid, 9);
+    
+    int childStatus;
+    waitpid(childPid, &childStatus, 0);
+}
+
 int main(int argc, char **argv)
 {
     Eris::setLogLevel(LOG_DEBUG);
@@ -271,6 +280,9 @@ int main(int argc, char **argv)
         StubServer stub(7450);
         return stub.run();
     } else {
+        sleep(1);
+        Controller ctl;
+        
         try {    
             testLogin();
             testBadLogin();
@@ -282,20 +294,18 @@ int main(int argc, char **argv)
         catch (TestFailure& tfexp)
         {
             cout << "tests failed: " << tfexp.what() << endl;
+            killAndWaitFor(childPid);
             return EXIT_FAILURE;
         }
         catch (std::exception& except)
         {
             cout << "caught general exception: " << except.what() << endl;
+            killAndWaitFor(childPid);
             return EXIT_FAILURE;
         }
 
         cout << "all tests passed" << endl;
-        // tell the stub server to shutdown
-        kill(childPid, 9);
-        
-        int childStatus;
-        waitpid(childPid, &childStatus, 0);
+        killAndWaitFor(childPid);
         return EXIT_SUCCESS; // tests passed okay
     }
 }

@@ -19,7 +19,7 @@ namespace Eris {
 EntityRouter::EntityRouter(Entity* ent) :
     m_entity(ent)
 {
-
+    assert(ent);
 }
 
 EntityRouter::~EntityRouter()
@@ -29,7 +29,7 @@ EntityRouter::~EntityRouter()
 
 Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
 {
-    assert(op->getFrom() == m_entity->getId());
+    assert(op->getFrom() == m_entity->getId());    
     const std::vector<Root>& args = op->getArgs();
     
     // note it's important we match exactly on sight here, and not deried ops

@@ -10,6 +10,7 @@
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Router.h>
+#include <Eris/Redispatch.h>
 
 #include <skstream/skstream.h>
 #include <Atlas/Objects/Encoder.h>
@@ -109,6 +110,12 @@ void Connection::gotData(PollData &data)
         dispatchOp(m_opDeque.front());
         m_opDeque.pop_front();
     }
+    
+// finally, clean up any redispatches that fired (aka 'deleteLater')
+    for (unsigned int D=0; D < m_finishedRedispatches.size(); ++D)
+        delete m_finishedRedispatches[D];
+        
+    m_finishedRedispatches.clear();
 }		
 
 void Connection::send(const Atlas::Objects::Root &obj)
@@ -288,6 +295,11 @@ void Connection::postForDispatch(const Root& obj)
     
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     m_opDeque.push_back(op);
+}
+
+void Connection::cleanupRedispatch(Redispatch* r)
+{
+    m_finishedRedispatches.push_back(r);
 }
 
 #pragma mark -

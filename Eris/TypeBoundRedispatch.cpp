@@ -6,6 +6,7 @@
 #include <Eris/Connection.h>
 #include <Eris/TypeService.h>
 #include <Eris/TypeInfo.h>
+#include <Eris/Logstream.h>
 
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Objects/Operation.h>
@@ -22,7 +23,7 @@ namespace Eris
 /** recoder is a tempory Atlas bridge / decoder / factory stack we 
  create when the redispatch fires. By sending our original decoded data
  back over the bridge, we run the objects factory on the 'original' data
- sent over the wire, and hopefully new and better objects. */
+ sent over the wire, and hopefully build new and better objects. */
 class Recoder : public Atlas::Objects::ObjectsDecoder
 {
 public:
@@ -68,8 +69,10 @@ void TypeBoundRedispatch::onBound(TypeInfo* bound)
 
 void TypeBoundRedispatch::onBadType(TypeInfo* bad)
 {
-    assert(m_unbound.count(bad));
-    fail();
+    if (m_unbound.count(bad)) {
+        debug() << "TypeBoundRedispatch was waiting on bad type " << bad->getName(); 
+        fail();
+    }
 }
 
 } // of Eris namespace

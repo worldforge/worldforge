@@ -48,6 +48,7 @@ StubServer::StubServer(short port) :
     
     m_commandListener.open(path);
     assert(m_commandListener.is_open());
+    debug() << "stub server listenting on " << path;
     
     setupTestAccounts();
 
@@ -184,6 +185,7 @@ int StubServer::run()
 
         if (m_commandListener.can_accept())
         {
+            debug() << "stub server accepting command connection";
             m_command = std::auto_ptr<Commander>(new Commander(this, m_commandListener.accept()));
         }
         

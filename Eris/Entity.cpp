@@ -44,6 +44,8 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
     m_hasBBox(false),
     m_moving(false)
 {
+    assert(m_id.size() > 0);
+    
     m_router = new EntityRouter(this);
     m_view->getConnection()->registerRouterForFrom(m_router, m_id);
     sight(ge);
@@ -201,7 +203,7 @@ void Entity::setAttr(const std::string &attr, const Element &val)
 {
     beginUpdate();
 
-    debug() << "setting attr " << attr << " of " << m_id << " to " << val;
+    //debug() << "setting attr " << attr << " of " << m_id << " to " << val;
 
     if (!nativeAttrChanged(attr, val))
     {

@@ -24,6 +24,7 @@ class Timeout;
 class PollData;
 class TypeService;
 class Router;
+class Redispatch;
 
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
@@ -88,8 +89,6 @@ public:
 	information about status locking. */
 	void unlock();
     
-    void postForDispatch(const Atlas::Objects::Root& obj);
-    
 ///////////////////////
 	
     /** Emitted when the disconnection process is initiated. The argument
@@ -138,6 +137,14 @@ protected:
 	bool _debug;
         
 private:
+    friend class Redispatch;
+    
+    /** Inject a local operation into the dispatch queue. Used by the
+    redispatch mechansim. */
+    void postForDispatch(const Atlas::Objects::Root& obj);
+    
+    void cleanupRedispatch(Redispatch* r);
+    
     void gotData(PollData&);
 
     void dispatchOp(const Atlas::Objects::Operation::RootOperation& op);
@@ -155,6 +162,8 @@ private:
     int m_lock;
     
     Atlas::Objects::ObjectsEncoder* m_debugRecvEncoder;
+    
+    std::vector<Redispatch*> m_finishedRedispatches;
 };
 
 /// operation serial number sequencing

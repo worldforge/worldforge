@@ -1,3 +1,18 @@
+2004-10-02  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp: Fix the strange asserts and crashes I introduced by
+	  adding a debug line to setAttr, yuck. Eris should go in-game now
+	  
+	* Eris/Redispatch.cpp, Eris/Connection.cpp,.h : change how Redispatches
+	  get cleaned up, so they can fail safely. No longer use 'delete this' and
+	  instead get the Connection to clean up Redispatches at the end of the
+	  dispatch loop.
+
+	* Eris/TypeBoundRedispatch.cpp: fix a way-too-strong assert on the BadType
+	  path.
+	  
+	* Further test-harness tweakage
+
 2004-10-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Add configure checks for sigc++ 2.0.

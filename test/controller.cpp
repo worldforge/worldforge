@@ -1,7 +1,10 @@
+#ifdef HAVE_CONFIG_H
+    #include "config.h"
+#endif
 
+#include "controller.h"
 
 #include <cassert>
-#include <skstream/skstream_unix.h>
 
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Codec.h>
@@ -9,32 +12,26 @@
 
 const std::string VAR_DIR = "/tmp";
 
-class Controller
+using std::endl;
+using std::cout;
+
+Controller::Controller()
 {
-public:
-    Controller()
-    {
-        m_stream.open(VAR_DIR + "/testeris.sock");
-        assert(m_stream.is_open());
-        
-    // force synchrous negotation now
-        Atlas::Bridge* dummyBridge = NULL;
-        Atlas::Net::StreamConnect sc("eristest_oob", m_stream, *dummyBridge);
-        
-        // spin (and block) while we negotiate
-        do { sc.poll(); } while (sc.getState() == Atlas::Net::StreamConnect::IN_PROGRESS);
-        
-        assert(sc.getState() == Atlas::Net::StreamConnect::SUCCEEDED);
-        
-        m_codec = sc.getCodec();
-        m_encode = new Atlas::Objects::ObjectsEncoder(*m_codec);
-        m_codec->streamBegin();
-    }
-
-private:
-    unix_socket_stream m_stream;
-
-    Atlas::Objects::ObjectsEncoder* m_encode;
-    Atlas::Codec* m_codec;
-
-};
+    m_stream.open(VAR_DIR + "/testeris.sock");
+    while (!m_stream.isReady(100)) { cout << "waiting for stream to open" << endl; }
+    
+    assert(m_stream.is_open());
+    
+// force synchrous negotation now
+    Atlas::Bridge* dummyBridge = NULL;
+    Atlas::Net::StreamConnect sc("eristest_oob", m_stream, *dummyBridge);
+    
+    // spin (and block) while we negotiate
+    do { sc.poll(); } while (sc.getState() == Atlas::Net::StreamConnect::IN_PROGRESS);
+    
+    assert(sc.getState() == Atlas::Net::StreamConnect::SUCCEEDED);
+    
+    m_codec = sc.getCodec();
+    m_encode = new Atlas::Objects::ObjectsEncoder(*m_codec);
+    m_codec->streamBegin();
+}
