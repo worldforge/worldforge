@@ -174,6 +174,43 @@ void Avatar::move(const WFMath::Point<3>& pos)
     _world->getConnection()->send(moveOp);
 }
 
+void Avatar::move(const WFMath::Vector<3>& vel)
+{
+    if(!_entity)
+	throw InvalidOperation("Character Entity does not exist yet!");
+
+    Atlas::Message::Element::MapType what;
+    what["loc"] = _entity->getContainer()->getID();
+    what["velocity"] = vel.toAtlas();
+    what["id"] = getID();
+
+    Atlas::Objects::Operation::Move moveOp =
+        Atlas::Objects::Operation::Move::Instantiate();
+    moveOp.setFrom(getID());
+    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+
+    _world->getConnection()->send(moveOp);
+}
+
+void Avatar::move(const WFMath::Vector<3>& vel, const WFMath::Quaternion& orient)
+{
+    if(!_entity)
+	throw InvalidOperation("Character Entity does not exist yet!");
+
+    Atlas::Message::Element::MapType what;
+    what["loc"] = _entity->getContainer()->getID();
+    what["velocity"] = vel.toAtlas();
+    what["orientation"] = orient.toAtlas();
+    what["id"] = getID();
+
+    Atlas::Objects::Operation::Move moveOp =
+        Atlas::Objects::Operation::Move::Instantiate();
+    moveOp.setFrom(getID());
+    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+
+    _world->getConnection()->send(moveOp);
+}
+
 void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
 {
     Atlas::Message::Element::MapType what;

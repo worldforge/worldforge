@@ -73,6 +73,12 @@ public:
 	/// Have the character move towards a position
 	void move(const WFMath::Point<3>&);
 
+	/// Set the character's velocity
+	void move(const WFMath::Vector<3>&);
+
+	/// Set the character's velocity and orientation
+	void move(const WFMath::Vector<3>&, const WFMath::Quaternion&);
+
 	/// Place an entity inside another one
 	void place(Entity*, Entity* container, const WFMath::Point<3>& pos
 		= WFMath::Point<3>(0, 0, 0));

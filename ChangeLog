@@ -1,3 +1,7 @@
+Saturday, 17th January, Ron Steinke <rsteinke@w-link.net>
+
+	* Eris/Avatar.*: Added velocity-based move() methods.
+
 Sunday, 11th January, Ron Steinke <rsteinke@w-link.net>
 
 	* Eris/Metaserver.*: On second thought, just move
