@@ -1,6 +1,15 @@
-The Objects classes are bound to be replaced with files generated from .def
-files in protocols/atlas/spec. The interface will stay the same.
+The .cc and .h files in here are automatically generated.
 
-They will remain undocumented until then.
+The generation script is a _work in progress_, hence a few things aren't yet
+implemented:
 
- -- sdt@gmx.net
+ - default values for lists & maps in constructors
+ - non-default constructors
+ - Makefile.am generation
+ - Decoder.cc generation
+
+The following are optimisations that are yet to be done:
+
+ - static values
+
+Please do not touch anything in this directory yet. -- sdt@gmx.net
