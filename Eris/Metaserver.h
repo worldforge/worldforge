@@ -117,13 +117,13 @@ public:
 	{ return _clientName; }
 
 	/// Get the current status of the Meta server list
-	MetaStatus GgtStatus() const
+	MetaStatus getStatus() const
 	{ return _status; }
 
 	// signals
 	
 	/// Emitted when information about a server is received
-	SigC::Signal1<void, ServerInfo> ReceivedServerInfo;
+	SigC::Signal1<void, const ServerInfo&> ReceivedServerInfo;
 
 	/// Emitted once the size of the server list is known
 	SigC::Signal1<void, int> GotServerCount;

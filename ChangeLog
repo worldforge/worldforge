@@ -1,3 +1,8 @@
+Thursday, 14th November, Ron Steinke
+
+	* Changed the second argument of Meta::ReceivedServerInfo
+	  from ServerInfo to const ServerInfo&, fixed a typo
+
 Tuesday, 12th November, Ron Steinke
 
 	* Added an optional offset to Avatar::drop().
