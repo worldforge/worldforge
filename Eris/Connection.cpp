@@ -219,6 +219,7 @@ void Connection::removeDispatcherByPath(const std::string &stem, const std::stri
 	Dispatcher *rm = d->getSubdispatch(n);
 	if (!rm)
 		throw InvalidOperation("Unknown dispatcher " + n + " at " + stem);
+	
 	d->rmvSubdispatch(rm);
 }
 
@@ -230,7 +231,7 @@ void Connection::removeIfDispatcherByPath(const std::string &stem, const std::st
 	
 	Dispatcher *rm = d->getSubdispatch(n);
 	if (rm)
-		d->rmvSubdispatch(rm);
+	    d->rmvSubdispatch(rm);
 }
 
 void Connection::lock()
@@ -276,7 +277,7 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 {
 	Eris::Log(LOG_VERBOSE, "-");
 	postForDispatch(obj);
-
+    
 	if (_debug) {
 		Atlas::Objects::Operation::RootOperation op = 
 			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj);
@@ -296,7 +297,10 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 			Eris::Log(LOG_VERBOSE, "Dispatching %s", summary.c_str());
 		}
 		
+		Dispatcher::enter();
+		
 		try {
+		    
 			// this invokes all manner of smoke and mirrors....
 			_rootDispatch->dispatch(dq);
 			
@@ -319,6 +323,8 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 		catch (BaseException &be) {
 			Eris::Log(LOG_ERROR, "Dispatch: caught exception: %s", be._msg.c_str());
 		}
+		
+		Dispatcher::exit();
 	}
 	
 	clearSignalledWaits();
@@ -334,12 +340,12 @@ void Connection::clearSignalledWaits()
 {
 	int ccount = _waitList.size();
 	
-	for (WaitForList::iterator Wnext = _waitList.begin(); Wnext != _waitList.end(); ) {
-		WaitForList::iterator W = Wnext++;
-		if ((*W)->isPending()) {
-			delete *W;
-			_waitList.erase(W);
-		}
+	for (WaitForList::iterator W = _waitList.begin(); W != _waitList.end(); ) {
+	    if ((*W)->isPending()) {
+		    delete *W;
+		    W = _waitList.erase(W);
+	    } else
+		++W;
 	}
 	
 	ccount -= _waitList.size();
