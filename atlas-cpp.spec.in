@@ -1,14 +1,12 @@
 %define name @PACKAGE@
 %define version @VERSION@
 %define release 1
-%define serial 1
 %define libsuffix @ATLAS_LIB_SUFFIX@
 
 Summary: The Atlas protocol C++ implementation
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Serial: %{serial}
 Copyright: LGPL
 Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz
