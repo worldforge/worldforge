@@ -45,6 +45,7 @@ void AClient::canRead()
 	fflush(stdout);
 	len = csock->recv(buf);
 	if (cmprs) buf = cmprs->decode(buf);
+	DebugMsg1(1,"ISTREAM = %s\n", buf.c_str());
 	codec->feedStream(buf);
 	while (codec->hasMessage()>0) {
 		DebugMsg1(1,"PROCESSING MESSAGE !!\n\n","");

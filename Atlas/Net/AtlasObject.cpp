@@ -189,7 +189,7 @@ int	AObject::has(const string& name)
 {
 	assert((unsigned long)obj != 1);
 	char* tmp = strdup(name.c_str());
-	bool res = PyObject_HasAttrString(obj, tmp);
+	bool res = PyMapping_HasKeyString(obj, tmp);
 	free(tmp);
 	return res;
 }
