@@ -1,5 +1,10 @@
 2003-08-08  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/GenerateDispatcher.py: Use insert to
+	  add new dispatch methods.
+
+2003-08-08  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Net/Stream.cpp: Enclose debugging output with a macro.
 
 2003-08-06  Al Riddoch  <alriddoch@zepler.org>
