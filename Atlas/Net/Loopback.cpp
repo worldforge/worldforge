@@ -13,6 +13,11 @@ class LoopBridge : public Bridge
 
     LoopBridge(Bridge* bridge) : bridge(bridge) { }
     
+    virtual void StreamEnd()
+    {
+	bridge->StreamEnd();
+    }
+
     virtual void MessageBegin()
     {
 	bridge->MessageBegin();
@@ -93,7 +98,7 @@ class LoopBridge : public Bridge
     Bridge* bridge;
 };
 
-void Atlas::Loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
+void Atlas::Net::Loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
 {
     e1 = new LoopBridge(d1);
     e2 = new LoopBridge(d2);

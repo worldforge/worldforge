@@ -3,7 +3,7 @@
 using std::string;
 
 namespace Atlas
-{
+{ namespace Object {
 
 void	Object::walkTree(int nest, string name, const Object& list)
 {
@@ -352,4 +352,4 @@ bool    Object::get(size_t ndx, string& val, string& def) const
 	return get(ndx,val);
 }
 
-} // end namespace atlas
+} } // end namespace atlas

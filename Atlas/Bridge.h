@@ -33,6 +33,10 @@ class Bridge
     class Map { } static MapBegin;
     class List { } static ListBegin;
 
+    // Interface for stream context
+
+    virtual void StreamEnd() = 0;
+
     // Interface for message context
 
     virtual void MessageBegin() = 0;

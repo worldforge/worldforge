@@ -42,7 +42,7 @@
 #include <cassert>
 
 namespace Atlas
-{
+{ namespace Object {
 /** Standard Message Container Object.
 <p>Object is the standard class for all data and messages
 handled by the Atlas libraries.
@@ -685,7 +685,7 @@ bool    get(size_t ndx, std::string& val, std::string& def) const;
 
 };
 
-} // end namespace atlas
+} } // end namespace atlas
 
 #endif
 
