@@ -3,6 +3,8 @@ New TODO by Al Riddoch
 Items below are probably still valid, but this is where i reconsider the
 order and priority of tasks, and make my own notes.
 
+Write a very fast binary codec, with a name derived from our architecture.
+
 Make the code for adding new decoder methods templaty so we can ovoid nasty casting.
 
 Generally speaking it seems having virtual methods with the same names
