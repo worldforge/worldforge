@@ -23,6 +23,7 @@ AC_OUTPUT([
 	Makefile
 	src/Makefile
 	src/Bus/Makefile
+	src/BusTest/Makefile
 	src/Content/Makefile
 	src/Net/Makefile
 	src/Object/Makefile

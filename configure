@@ -1840,6 +1840,7 @@ trap 'rm -fr `echo "
 	Makefile
 	src/Makefile
 	src/Bus/Makefile
+	src/BusTest/Makefile
 	src/Content/Makefile
 	src/Net/Makefile
 	src/Object/Makefile
@@ -1946,6 +1947,7 @@ cat >> $CONFIG_STATUS <<EOF
 CONFIG_FILES=\${CONFIG_FILES-"Makefile
 	src/Makefile
 	src/Bus/Makefile
+	src/BusTest/Makefile
 	src/Content/Makefile
 	src/Net/Makefile
 	src/Object/Makefile
