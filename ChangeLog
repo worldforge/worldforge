@@ -1,3 +1,20 @@
+Sunday 7th March 2004, James Turner <james@worldforge.org>
+
+* More CVs file removal, and basic attempt to get autoconf builds working.
+  No doubt more work will be necessary
+
+Sunday 7th March 2004, James Turner <james@worldforge.org>
+
+* Added a simple command-line tool that uses Eris to query the meta server
+  and the game servers.
+* Fixed many bugs (especially to do with timeout handling) in the meta
+  server code.
+  
+New Eris works! (For some very basic stuff) Notably, Atlas-C++ 0.6 is 
+connecting fine, the basic object handling is behaving correctly, timeouts
+and polls are still ok, and the new logging code works fine. More test code
+to come, of course.
+
 Saturday 6th March 2004, James Turner <james@worldforge.org>
 
 * Remove all the obsolete files
