@@ -56,7 +56,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 	for(_iter I = str.begin(); I != str.end(); ++I) {
 #else
 //MSVC stupidity fix
-	std::set<const basic_socket_stream*> *str2 = const_cast<std::set<const basic_socket_stream*>* >(&str);
+	std::map<const basic_socket_stream*, Check> *str2 = const_cast<std::map<const basic_socket_stream*, Check>* >(&str);
 	for(_iter I = str2->begin(); I != str2->end(); ++I) {
 #endif
 		SOCKET_TYPE fd = I->first->getSocket();
