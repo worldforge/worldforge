@@ -158,7 +158,7 @@ void Connection::gotData(PollData &data)
 
 void Connection::send(const Atlas::Objects::Root &obj)
 {
-	if (_status != CONNECTED)
+	if ((_status != CONNECTED) && (_status != DISCONNECTING))
 		throw InvalidOperation("Connection is not open");
 	
 	_encode->StreamMessage(&obj);

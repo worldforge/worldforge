@@ -125,6 +125,7 @@ void BaseConnection::recv()
 			break;
 		
 		case CONNECTED:
+		case DISCONNECTING:
 			_codec->Poll();
 			break;
 		default:

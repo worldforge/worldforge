@@ -1,3 +1,7 @@
+Thursday, 24th October 2002, Al Riddoch
+	* Add checks so it is possible for a connection to send and
+	  receive when its status is DISCONNECTING.
+
 Thursday, 24th October 2002, Simon Goodall
 	* Clean up DebugDispatchers when deleting Connection object
 
