@@ -61,11 +61,11 @@ Lobby::Lobby(/*Player *p,*/ Connection *con) :
 	
 Lobby::~Lobby()
 {
-	_con->removeDispatcherByPath("op:oog:sight:entity:player", "lobby");
-	_con->removeDispatcherByPath("op:oog:sight:entity:room", "lobby");
+	_con->removeDispatcherByPath("op:oog:sight:entity", "account");
+	_con->removeDispatcherByPath("op:oog:sight:entity", "room");
 	
 	// FIXME - unecesary when Cyphesis updates to new OOG standards
-	_con->removeDispatcherByPath("op:oog:sight:entity:lobby", "lobby");
+	//_con->removeDispatcherByPath("op:oog:sight:entity:lobby", "lobby");
 }
 
 Lobby* Lobby::instance()
@@ -155,42 +155,41 @@ void Lobby::registerCallbacks()
 	if (_account.empty())
 		throw InvalidOperation("can't register lobby dispatchers yet (need account ID)");
 	
+	Eris::Log(LOG_DEBUG, "in Lobby::registerCallbacks");
+	
 	Dispatcher *rop = _con->getDispatcherByPath("op");
 	assert(rop);	
 	Dispatcher *oogd = rop->addSubdispatch(new OpToDispatcher("oog", _account));
+	oogd = oogd->addSubdispatch(ClassDispatcher::newAnonymous());
 	
 	// add in the basics so rooms can hook below
-	Dispatcher *sndd = oogd->addSubdispatch(new EncapDispatcher("sound", "sound"));
+	Dispatcher *sndd = oogd->addSubdispatch(new EncapDispatcher("sound"), "sound");
 	Dispatcher *d = sndd->addSubdispatch(new OpToDispatcher("private", _account));
-	d = d->addSubdispatch(new ClassDispatcher("talk", "talk"));
+	d = d->addSubdispatch(ClassDispatcher::newAnonymous());
 	d->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Talk>("lobby",
-		SigC::slot(this, &Lobby::recvPrivateChat)
-	));
+		SigC::slot(this, &Lobby::recvPrivateChat)),
+		"talk"
+	);
 	
-	oogd->addSubdispatch(new ClassDispatcher("appearance", "appearance"));
-	oogd->addSubdispatch(new ClassDispatcher("disappearance", "disappearance"));
+	oogd->addSubdispatch(new StdBranchDispatcher("appearance"), "appearance");
+	oogd->addSubdispatch(new StdBranchDispatcher("disappearance"), "disappearance");
 	
-	Dispatcher *sight = oogd->addSubdispatch(new EncapDispatcher("sight", "sight"));
+	Dispatcher *sight = oogd->addSubdispatch(new EncapDispatcher("sight"), "sight");
 	d = sight->addSubdispatch(new TypeDispatcher("op", "op"));
 	
 	d = sight->addSubdispatch(new TypeDispatcher("entity", "object"));
+	Dispatcher *esight = d->addSubdispatch(ClassDispatcher::newAnonymous());
 	// the room entity callback
-	Dispatcher *room = d->addSubdispatch(new ClassDispatcher("room", "room"));
-	room->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::RootEntity>("lobby", 
-		SigC::slot(this, &Lobby::recvSightRoom)
-	));
+	esight->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::RootEntity>("lobby", 
+		SigC::slot(this, &Lobby::recvSightRoom)),
+		"room"
+	);
 	
 	// the account / player object callback
-	Dispatcher *pl = d->addSubdispatch(new ClassDispatcher("account", "account"));
-	pl->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::Account>("lobby", 
-		SigC::slot(this, &Lobby::recvSightPerson)
-	));
-	
-	// FIXME - temporary support for Cyphesis's 'lobby' entity
-	Dispatcher *lobby = d->addSubdispatch(new ClassDispatcher("lobby", "lobby"));
-	lobby->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::RootEntity>
-		("lobby", SigC::slot(this, &Lobby::recvSightLobby)
-	));
+	esight->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::Account>("lobby", 
+		SigC::slot(this, &Lobby::recvSightPerson)),
+		"account"
+	);
 }
 
 void Lobby::netFailure(std::string msg)
@@ -208,18 +207,14 @@ void Lobby::netConnected()
 	// if the account is valid, we already connected at least one
 	_reconnect = !_account.empty();
 
-	Dispatcher *d = _con->getDispatcherByPath("op:info:entity:account");
-	if (!d) {
-		// the info callback	
-		Dispatcher *d = _con->getDispatcherByPath("op:info");
-		assert(d);
-
-		d = d->addSubdispatch(new TypeDispatcher("entity","object"));
-		d = d->addSubdispatch(new ClassDispatcher("account", "account"));
-		d->addSubdispatch( new SignalDispatcher2<Operation::Info, AtlasEntity::Account>(
-			"lobby", SigC::slot(this, &Lobby::recvInfoAccount)
-		));
-	}
+	Dispatcher *ied = _con->getDispatcherByPath("op:info:entity");
+	assert(ied);
+	Dispatcher *accd = ied->addSubdispatch(ClassDispatcher::newAnonymous());
+	
+	accd->addSubdispatch( new SignalDispatcher2<Operation::Info, AtlasEntity::Account>(
+		"lobby", SigC::slot(this, &Lobby::recvInfoAccount)),
+		"account"
+	);
 }
 
 void Lobby::look(const std::string &id)
@@ -267,7 +262,7 @@ void Lobby::recvInfoAccount(const Operation::Info &ifo,
 	
 	// broadcast the login
 	LoggedIn.emit(Atlas::atlas_cast<AtlasEntity::Player>(account));
-	_con->removeDispatcherByPath("op:info:entity:account", "lobby");
+	_con->removeDispatcherByPath("op:info:entity", "lobby");
 	
 	if (_reconnect) {
 		// don't issue an annonymous look; there is basically no need,

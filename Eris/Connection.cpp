@@ -55,14 +55,17 @@ Connection::Connection(const string &cnm, bool dbg) :
 	_theConnection = this;
 	
 	// build the initial dispatch hierarchy
-	_rootDispatch = new Dispatcher("root");
+	_rootDispatch = new StdBranchDispatcher("root");
 		
 	Dispatcher *opd = new TypeDispatcher("op", "op");
 	_rootDispatch->addSubdispatch(opd);
-				
-	opd->addSubdispatch(new EncapDispatcher("info", "info"));
-	opd->addSubdispatch(new ClassDispatcher("error", "error"));
-	opd->addSubdispatch(new EncapDispatcher("encap-error", "error", 1));
+	opd = opd->addSubdispatch(ClassDispatcher::newAnonymous());
+	
+	Dispatcher *ifod = opd->addSubdispatch(new EncapDispatcher("info"), "info");
+	ifod->addSubdispatch(new TypeDispatcher("entity", "object")); 
+	
+	Dispatcher *errd = opd->addSubdispatch(new StdBranchDispatcher("error"), "error");
+	errd->addSubdispatch(new EncapDispatcher("encap", 1));
 	
 	if (_debug) {
 		dd = new DebugDispatcher(_clientName + ".atlas-recvlog");

@@ -22,6 +22,7 @@ namespace Time {
 bool operator<(const Stamp &a, const Stamp &b);
 
 Stamp operator+(const Stamp &a, unsigned long msec);
+Stamp operator-(const Stamp &a, unsigned long msec);
 	
 long operator-(const Stamp &a, const Stamp &b);	
 	

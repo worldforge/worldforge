@@ -32,7 +32,9 @@ liberis_la_SOURCES = \
 	Time.cpp \
 	ArgumentDispatcher.cpp \
 	TypeInfo.cpp \
-	ClassDispatcher.cpp
+	ClassDispatcher.cpp \
+	InvisibleEntityCache.cpp \
+	InvisibleEntityCache.h
 	
 liberisdir = $(includedir)/Eris
 

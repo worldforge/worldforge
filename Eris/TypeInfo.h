@@ -40,8 +40,13 @@ instance for handling.
 class TypeInfo : public SigC::Object
 {
 public:	
-	/** Test whether this type inherits (directly or indirectly) from the specific class. */
+	/** Test whether this type inherits (directly or indirectly) from the specific class. If this
+	type is not bound, this will throw OperationBlocked with an appropriate wait. */
 	bool isA(TypeInfoPtr ti);
+
+	/** This version of isA will not throw, but may return false-negatives if this type
+	is unbound. */
+	bool safeIsA(TypeInfoPtr ti);
 
 	/** Check the bound flag for this node; if false then recursivley check parents
 	until an authorative is found */

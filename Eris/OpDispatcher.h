@@ -6,11 +6,11 @@
 namespace Eris
 {
 
-class OpFromDispatcher : public Dispatcher
+class OpFromDispatcher : public StdBranchDispatcher
 {
 public:	
 	OpFromDispatcher(const std::string &nm, const std::string &id) :
-		Dispatcher(nm), _id(id) 
+		StdBranchDispatcher(nm), _id(id) 
 	{;}
 	
 	virtual ~OpFromDispatcher() {;}
@@ -21,11 +21,11 @@ protected:
 };
 	
 
-class OpToDispatcher : public Dispatcher
+class OpToDispatcher : public StdBranchDispatcher
 {
 public:	
 	OpToDispatcher(const std::string &nm, const std::string &id) :
-		Dispatcher(nm), _id(id)
+		StdBranchDispatcher(nm), _id(id)
 	{;}
 	
 	virtual ~OpToDispatcher() {;}

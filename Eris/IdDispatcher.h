@@ -6,11 +6,11 @@
 namespace Eris
 {
 
-class IdDispatcher : public Dispatcher
+class IdDispatcher : public StdBranchDispatcher
 {
 public:	
 	IdDispatcher(const std::string &nm, const std::string &id) :
-		Dispatcher(nm), _id(id) 
+		StdBranchDispatcher(nm), _id(id) 
 	{;}
 	
 	virtual ~IdDispatcher() {;}

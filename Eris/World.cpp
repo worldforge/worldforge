@@ -34,6 +34,7 @@
 #include "Factory.h"
 #include "Utils.h"
 #include "Wait.h"
+#include "InvisibleEntityCache.h"
 
 #include "ClassDispatcher.h"
 #include "EncapDispatcher.h"
@@ -60,27 +61,24 @@ World::World(Player *p, Connection *c) :
 	
 	// store the instance pointer  ( "new Entity(..)" already needs this !)
 	_theWorld = this;
-/*	
-	// create the root entity
-	Atlas::Objects::Entity::GameEntity rootDef = 
-		Atlas::Objects::Entity::GameEntity::Instantiate();
-	
-	rootDef.SetId("__eris_root__");
-	_root = new Entity(rootDef);
-*/
-	
+	_ieCache = new InvisibleEntityCache(10000, 600000);	// 10 sec buckets, 10 minute lifetime
+
 // info operation
-	Dispatcher *d = _con->getDispatcherByPath("op:info:entity");
+	Dispatcher *d = _con->getDispatcherByPath("op:info");
 	assert(d);
 
-	d = d->addSubdispatch(new ClassDispatcher("character", "game_entity"));
+	d = d->addSubdispatch(ClassDispatcher::newAnonymous());
 	d->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Info, 
 		Atlas::Objects::Entity::GameEntity>(
-		"world", SigC::slot(this, &World::recvInfoCharacter)
-	));
+		"character", SigC::slot(this, &World::recvInfoCharacter)),
+		"game_entity"
+	);
 	       	
 	// setup network callbacks
 	_con->Connected.connect(SigC::slot(this, &World::netConnect));
+	// check for auto-firing, etc
+	//if (_con->getStatus() == BaseConnection::CONNECTED)
+	//	netConnect();
 }
 	
 World::~World()
@@ -88,6 +86,7 @@ World::~World()
 	// cascading delete
 	if (_root)
 		delete _root;
+	delete _ieCache;
 }
 
 Entity* World::lookup(const std::string &id)
@@ -113,11 +112,18 @@ Entity* World::lookup(const std::string &id)
 		return ei->second;
 }
 
+void World::tick()
+{
+	_ieCache->flush();
+}
 
 EntityPtr World::getRootEntity()
 {
-	if (!_root)
-		throw InvalidOperation("Called getRootEntity before World.Entered signal fired");
+	if (!_root) {
+		Eris::Log(LOG_WARNING, "called World::getRootEntity before initial world entry, returning NULL");
+		return NULL;
+	}
+	
 	return _root;
 }
 
@@ -240,59 +246,64 @@ void  World::registerCallbacks()
 	Dispatcher *d = _con->getDispatcherByPath("op");
 	Dispatcher *igd = d->addSubdispatch(new OpToDispatcher("ig", _characterID));
 	
-// the sight dispatcher, which de-encapsulates the object within
-	Dispatcher *sightd = igd->addSubdispatch(new EncapDispatcher("sight", "sight"));
+	Dispatcher *igclass = igd->addSubdispatch(ClassDispatcher::newAnonymous());
+	Dispatcher *sightd = igclass->addSubdispatch(new EncapDispatcher("sight"), "sight");
 	
 	Dispatcher *ed = sightd->addSubdispatch(new TypeDispatcher("entity", "object"));
-	Dispatcher *od = sightd->addSubdispatch(new TypeDispatcher("op", "op"));
-	
 	// sight of game-entities (rather important this!)
 	ed->addSubdispatch(new SignalDispatcher2<Atlas::Objects::Operation::Sight,
 		Atlas::Objects::Entity::GameEntity>("world", 
 		SigC::slot(this, &World::recvSightObject)
 	));
 	
+	Dispatcher *od = sightd->addSubdispatch(new TypeDispatcher("op", "op"));
+	Dispatcher *opclass = od->addSubdispatch(ClassDispatcher::newAnonymous());
+	
 	// sight of create operations; this is 2-level decoder; becuase we have SIGHT encapsulating
 	// the CREATE which encapsulates the entity.
 	//Dispatcher *cr = od->addSubdispatch(new ClassDispatcher("create", "create"));
-	
-	Dispatcher *cr = od->addSubdispatch(new EncapDispatcher("create", "create"));
+	Dispatcher *cr = opclass->addSubdispatch(new EncapDispatcher("create"), "create");
 	cr->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Create,
 		Atlas::Objects::Entity::GameEntity>("world", 
 		SigC::slot(this, &World::recvSightCreate)
 	));
 	
 	// sight of delete operations
-	Dispatcher *del = od->addSubdispatch(new ClassDispatcher("delete", "delete"));
-	del->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Delete>("world", 
-		SigC::slot(this, &World::recvSightDelete)
-	));
+	opclass->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Delete>("delete", 
+		SigC::slot(this, &World::recvSightDelete)),
+		"delete"
+	);
 	
 	// sight of set operations
-	Dispatcher *set = od->addSubdispatch(new ClassDispatcher("set", "set"));
-	set->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Set>("world", 
-		SigC::slot(this, &World::recvSightSet)
-	));
+	opclass->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Set>("set", 
+		SigC::slot(this, &World::recvSightSet)),
+		"set"
+	);
 	
 	// sight of move operations
-	Dispatcher *mv = od->addSubdispatch(new ClassDispatcher("move", "move"));
-	mv->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Move>("world", 
-		SigC::slot(this, &World::recvSightMove)
-	));
+	opclass->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Move>("move", 
+		SigC::slot(this, &World::recvSightMove)),
+		"move"
+	);
 	
-	Dispatcher *soundd = igd->addSubdispatch(new EncapDispatcher("sound", "sound"));
-	
-	Dispatcher *tkd = soundd->addSubdispatch(new ClassDispatcher("talk", "talk"));
-	tkd->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Sound,
+	Dispatcher *soundd = igclass->addSubdispatch(new EncapDispatcher("sound"), "sound");
+	soundd = soundd->addSubdispatch(ClassDispatcher::newAnonymous());
+	soundd->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Sound,
 		Atlas::Objects::Operation::Talk>("world",
-		SigC::slot(this, &World::recvSoundTalk)
-	));
+		SigC::slot(this, &World::recvSoundTalk)),
+		"talk"
+	);
 	
 // appearance . disappearance : note these inherit from sight so need to be careful
-	Dispatcher *dapd = igd->addSubdispatch(new ClassDispatcher("disappearance", "disapperance"));
-	dapd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Disappearance>("disappear",
-		SigC::slot(this, &World::recvDisappear)
-	));
+	igclass->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Disappearance>("disappear",
+		SigC::slot(this, &World::recvDisappear)),
+		"disappearance"
+	);
+	
+	igclass->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Appearance>("appear",
+		SigC::slot(this, &World::recvAppear)),
+		"appearance"
+	);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -447,7 +458,7 @@ void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 	look("");
 	
 	// this prevents us recieving any more info ops
-	_con->removeDispatcherByPath("op:info:entity", "character");
+	_con->removeDispatcherByPath("op:info", "character");
 }
 
 void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
@@ -476,15 +487,18 @@ void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 
 void World::recvDisappear(const Atlas::Objects::Operation::Disappearance &ds)
 {
-	string id = getArg(ds, "id").AsString();
-	Entity *e = lookup(id);
-	
-	if (e) {
-		Disappearance.emit(e);
-		e->setVisible(false);
-	} else {
-		// suppress the Appearance signal
-		_pendingInitialSight.erase(id);
+	const AtlasListType &args = ds.GetArgs();
+	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
+		const AtlasMapType &app = A->AsMap();
+		AtlasMapType::const_iterator V(app.find("id"));
+		std::string id(V->second.AsString());
+		Entity *e = lookup(id);
+		if (e) {
+			e->setVisible(false);
+			Disappearance.emit(e);
+		} else
+			// suppress the Appearance signal
+			_pendingInitialSight.erase(id);
 	}
 }
 
@@ -519,6 +533,9 @@ void World::setRootEntity(Entity* rt)
 	assert(rt);
 	assert(rt->getContainer() == NULL);
 	
+	// note the order here is important, so slots can call getRootEntity to get the
+	// previous value for rootEntity
+	RootEntityChanged.emit(rt);
 	_root = rt;
 	
 	if (_initialEntry) {
@@ -529,6 +546,25 @@ void World::setRootEntity(Entity* rt)
 			Eris::Log(LOG_VERBOSE, "did IG entry after setRootEntity");
 		} // else still waiting for the character
 	}
+}
+
+void World::markInvisible(Entity *e)
+{
+	_ieCache->add(e);
+	// remove from lookup? not for now
+}
+
+void World::markVisible(Entity *e)
+{
+	_ieCache->remove(e);
+}
+
+void World::flush(Entity *e)
+{
+	assert(e);
+	EntityIDMap::iterator E = _lookup.find(e->getID());
+	assert(E != _lookup.end());
+	_lookup.erase(E);
 }
 
 }; // of namespace Eris

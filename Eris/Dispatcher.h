@@ -10,6 +10,9 @@
 
 namespace Eris {
 
+class StdBranchDispatcher;	
+class ClassDispatcher;
+	
 // need a descriptive comment here	
 typedef std::deque<Atlas::Message::Object> DispatchContextDeque;		
 	
@@ -24,34 +27,35 @@ public:
 	explicit Dispatcher(const std::string &nm);
 	virtual ~Dispatcher();
 
-	string getName() const
-	{ return _name; }
-
-	virtual Dispatcher* addSubdispatch(Dispatcher *sub);
-	virtual void rmvSubdispatch(Dispatcher *sub);
+	virtual Dispatcher* addSubdispatch(Dispatcher *sub, const std::string data = string()) = 0;
+	virtual void rmvSubdispatch(Dispatcher *sub) = 0;
 	
 	/// locate a child dispatcher by name (NULL if not found)
-	virtual Dispatcher* getSubdispatch(const std::string &nm);
+	virtual Dispatcher* getSubdispatch(const std::string &nm) = 0;
 	
 	/// primary invocation method; called by the parent node when a message is received
-	virtual bool dispatch(DispatchContextDeque &dq);
+	virtual bool dispatch(DispatchContextDeque &dq) = 0;
 
+	virtual bool empty() = 0;
+
+	std::string getName() const
+	{ return _name; }
+
+	virtual std::string getData() const
+	{ return _name; }
+	
+	static std::string getAnonymousSuffix(Dispatcher *d);
 protected:
-	/// dispatch the message to every child node
-	bool subdispatch(DispatchContextDeque &dq);
-
-	typedef std::map<string, Dispatcher*> DispatcherDict;
-
-	DispatcherDict _subs;
+	friend class StdBranchDispatcher;
+	friend class ClassDispatcher;
+		
 	const std::string _name;
-
 
 	void addRef()
 	{++_refcount;}
 	
 	void decRef()
-	{if (!(--_refcount)) delete this; }
-		
+	{if (!(--_refcount)) delete this; }	
 private:	
 	unsigned int _refcount;
 };
@@ -65,8 +69,43 @@ public:
 	virtual ~LeafDispatcher() {;}
 		
 	virtual bool dispatch(DispatchContextDeque &dq);
+
+	virtual Dispatcher* addSubdispatch(Dispatcher*, const std::string)
+	{ throw InvalidOperation("called addSubdispatch on LeafDispatcher " + _name); }
+		
+	virtual void rmvSubdispatch(Dispatcher*)
+	{ throw InvalidOperation("called rmvSubdispatch on LeafDispatcher " + _name); }
+
+	virtual Dispatcher* getSubdispatch(const std::string &nm);
+	
+	virtual bool empty()
+	{ throw InvalidOperation("called empty() on LeafDispatcher " + _name); }
 };
 
+class StdBranchDispatcher:  public Dispatcher
+{
+public:	
+	explicit StdBranchDispatcher(const std::string nm = "__branch");
+	virtual ~StdBranchDispatcher();
+	
+	virtual bool dispatch(DispatchContextDeque &dq)
+	{ return subdispatch(dq); }
+
+	virtual Dispatcher* addSubdispatch(Dispatcher *sub, const std::string data);
+	virtual void rmvSubdispatch(Dispatcher *sub);
+	virtual Dispatcher* getSubdispatch(const std::string &nm);
+
+	virtual bool empty()
+	{ return _subs.empty(); }
+protected:
+	/// dispatch the message to every child node
+	bool subdispatch(DispatchContextDeque &dq);
+
+	typedef std::map<string, Dispatcher*> DispatcherDict;
+
+	DispatcherDict _subs;
 };
+
+}
 
 #endif

@@ -6,13 +6,13 @@
 namespace Eris
 {
 
-class ArgumentDispatcher : public Dispatcher
+class ArgumentDispatcher : public StdBranchDispatcher
 {
 public:	
 	ArgumentDispatcher(const std::string &nm, 
 		const std::string &arg,
 		const Atlas::Message::Object &v) :
-		Dispatcher(nm),
+		StdBranchDispatcher(nm),
 		_arg(arg),
 		_value(v)
 	{;}
@@ -25,6 +25,6 @@ protected:
 	const Atlas::Message::Object _value;
 };
 
-};
+}
 
 #endif

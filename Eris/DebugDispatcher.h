@@ -12,7 +12,7 @@ namespace Atlas { namespace Message { class Encoder; }}
 namespace Eris
 {
 
-class DebugDispatcher : public Dispatcher
+class DebugDispatcher : public LeafDispatcher
 {
 public:
 	DebugDispatcher(const std::string &logFile);	

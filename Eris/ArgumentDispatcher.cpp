@@ -19,7 +19,7 @@ bool ArgumentDispatcher::dispatch(DispatchContextDeque &dq)
 		return false;
 	
 	if (A->second == _value)
-		return Dispatcher::subdispatch(dq);
+		return StdBranchDispatcher::subdispatch(dq);
 	else
 		return false;
 }

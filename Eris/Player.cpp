@@ -26,6 +26,9 @@
 #include "ClassDispatcher.h"
 #include "Utils.h"
 
+typedef Atlas::Message::Object::ListType AtlasListType;
+typedef Atlas::Message::Object::MapType AtlasMapType;
+
 namespace Eris {
 
 Player::Player(Connection *con) :
@@ -42,6 +45,7 @@ Player::Player(Connection *con) :
 	_con->Failure.connect(SigC::slot(this, &Player::netFailure));
 	
 	Dispatcher *d = _con->getDispatcherByPath("op:error");
+	assert(d);
 	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Error>("player",
 		SigC::slot(this, &Player::recvOpError)
 	));
@@ -156,6 +160,9 @@ void Player::requestCharacter(const std::string &id)
 	Atlas::Objects::Operation::Look lk =
 		Atlas::Objects::Operation::Look::Instantiate();
 	
+	AtlasMapType args;
+	args["id"] = id;
+	lk.SetArgs(AtlasListType(1, args));
 	lk.SetFrom(_lobby->getAccountID());
 	lk.SetTo(id);
 	lk.SetSerialno(getNewSerialno());
@@ -257,10 +264,10 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
 		// second time around, don't try again
 		return;
 	
-	Dispatcher *ged = d->addSubdispatch(new ClassDispatcher("character", "game_entity"));
-	ged->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("player",
-		SigC::slot(this, &Player::recvSightCharacter)
-	));
+	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("player",
+		SigC::slot(this, &Player::recvSightCharacter)),
+		"character"
+	);
 	
 	_con->Disconnecting.connect(SigC::slot(this, &Player::netDisconnecting));
 }

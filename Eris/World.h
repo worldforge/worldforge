@@ -38,6 +38,7 @@ namespace Eris {
 class Connection;
 class Player;
 class Factory;
+class InvisibleEntityCache;
 	
 // the name is wrong, but I feel 'IDEntityMap' is worse
 typedef std::map<std::string, Entity*> EntityIDMap;
@@ -68,8 +69,8 @@ public:
 	Connection* getConnection() const
 	{ return _con; }
 	
-	/// access the encoder bridge for the underlying connection
-	//Atlas::Bridge* GetEncoder() const;
+	/** update the World state periodically */
+	void tick();
 	
 // focus / observation
 	/// specify the origin entity for the world; nearly always the player
@@ -113,10 +114,19 @@ public:
 	/// Disappearance indicates the client should hide the entity from the user
 	SigC::Signal1<void, Entity*> Disappearance;
 	
+	/** RootEntity change : emitted when the Top-Level Visible Entity (TLVE) change.
+	The TLVE is the entity returned by LOOK("") at any given point. The signals specifies
+	the new TLVE; you can obtain the current one by calling getRootEntity, i.e the
+	the internal value is updated <i>after</i> the signal is emitted. */
+	SigC::Signal1<void, Entity*> RootEntityChanged;
+	
 	// entity change  / move signals ? excessive duplicaton...
 	
 protected:
 	friend class Entity;
+	
+	// so the cache can call flush()
+	friend class InvisibleEntityCache;
 		
 	void look(const std::string &id);	
 	EntityPtr create(const Atlas::Objects::Entity::GameEntity &ge);
@@ -128,6 +138,18 @@ protected:
 	
 	void setRootEntity(Entity* root);
 	
+	/** interface for entities to get themselves cleaned up eventually;
+	this method will place the entity into an internal LRU cache maintained by
+	world (the InvisibleEntityCache) for some duration, before the Entity
+	is deleted.*/
+	void markInvisible(Entity *e);
+	
+	/** mark the entity as visible again : this will place the entity back into the
+	active list. Note that no other state changes occur. */
+	void markVisible(Entity *e);
+	
+	/** remove the specified entity from the world permanently*/
+	void flush(Entity *e);
 // callbacks
 	void recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 		const Atlas::Objects::Entity::GameEntity &character);
@@ -156,10 +178,11 @@ protected:
 	/// callback when Connection generates a 'Connected' signal (usually a reconnect)
 	void netConnect();
 	
+	/// ID of the playing character (usually the same as the focused entity's ID)
 	std::string _characterID;	
 	Connection* _con;	///< The underlying connection
 	Player* _player;	///< The Player object (future : list)
-	bool _initialEntry;
+	bool _initialEntry; ///< Set if World.Entered needs to be emitted
 
 	EntityIDMap _lookup;	///< this map tracks <i>all</i> entities we mirror
 	EntityPtr _root,		///< the root entity of the world (manged by us)
@@ -168,12 +191,16 @@ protected:
 	// factory storage : allows ordering
 	typedef std::multimap<unsigned int, Factory*> FactoryMap;
 
+	/// storage of every entity factory registered on the world
 	FactoryMap _efactories;
 	
 	/// Set of entities that are waiting for a SIGHT after a LOOK (caused by an appear / move / set / ...)
 	StringSet _pendingInitialSight;
 	
-	// static singleton instance
+	/// cache of invisble entities that might re-appear so we keep them around
+	InvisibleEntityCache* _ieCache;
+	
+	/// static singleton instance
 	static World* _theWorld;
 };
 	

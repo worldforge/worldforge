@@ -71,21 +71,20 @@ void Room::setup()
 	sound->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Talk>("foo",
 		SigC::slot(this, &Room::recvSoundTalk)
 	));
-	
 
 // visual stuff (sights)
 	Dispatcher *img = con->getDispatcherByPath("op:oog:sight:op");
+	assert(img);
 	img = img->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
-	img = img->addSubdispatch(new EncapDispatcher("imaginary", "imaginary"));
+	img = img->addSubdispatch(ClassDispatcher::newAnonymous());
 	
 	// emotes
-	Dispatcher *em = img->addSubdispatch(new IdDispatcher("emote", "emote"));
+	Dispatcher *em = img->addSubdispatch(new IdDispatcher("emote", "emote"), "imaginary");
 	em->addSubdispatch(new SignalDispatcher2<Atlas::Objects::Operation::Imaginary,
 		Atlas::Objects::Root>("emote",
 		SigC::slot(this, &Room::recvSightEmote)
 	));
 
-	
 // appearance
 	Dispatcher *apd = con->getDispatcherByPath("op:oog:appearance");
 	apd = apd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
@@ -154,9 +153,7 @@ void Room::leave()
 	Connection *c = _lobby->getConnection();
 	if (!c->isConnected())
 		throw InvalidOperation("Not connected to server");
-	
-	//cerr << "requesting join of room " << roomID << endl;
-	
+		
 	Atlas::Objects::Operation::Move part = 
 		Atlas::Objects::Operation::Move::Instantiate();
 	part.SetFrom(_lobby->getAccountID());

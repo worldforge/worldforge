@@ -23,6 +23,7 @@
 #include "EncapDispatcher.h"
 #include "SignalDispatcher.h"
 #include "OpDispatcher.h"
+#include "ClassDispatcher.h"
 
 using namespace Atlas;
 
@@ -69,21 +70,27 @@ TypeInfo::TypeInfo(const Atlas::Objects::Root &atype) :
 
 bool TypeInfo::isA(TypeInfoPtr tp)
 {
-	assert(tp);
+	// preliminary stuff
+	if (safeIsA(tp)) return true;
 	
-	if (_ancestors.count(tp))
-		return true;
-	
-	if (isBound())
-		return false;	// fully bound, and not in ancestors => doesn't inherit
-	else {
+	if (!isBound()) {
 		// can't give a reply, need to get those parents bound. we assume it's in
 		// progress. Need to pick a sensible repost condition here
 	
 		//Signal & sig = signalWhenBound(this);
 		Eris::Log(LOG_DEBUG, "throwing OperationBlocked doing isA on %s", _name.c_str());
 		throw OperationBlocked(getBoundSignal());
-	}
+	} else
+		return false;
+}
+
+bool TypeInfo::safeIsA(TypeInfoPtr tp)
+{
+	assert(tp);
+	if (tp == this) // uber fast short-circuit for type equality
+		return true;
+	
+	return _ancestors.count(tp); // non-authorative
 }
 
 void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
@@ -212,8 +219,8 @@ void TypeInfo::validateBind()
 		if (!(*P)->isBound()) return;
 	
 	Eris::Log(LOG_VERBOSE, "Bound type %s", _name.c_str());
-	Bound.emit();
 	_bound = true;
+	Bound.emit();
 		
 	// do dependancy checking
 	TypeDepMap::iterator Dset = globalDependancyMap.find(_name);
@@ -275,7 +282,6 @@ void TypeInfo::init()
 		return;	// this can happend during re-connections, for example.
 	
 	Eris::Log(LOG_NOTICE, "Starting Eris TypeInfo system...");
-	Eris::Log(LOG_DEBUG, "hello?! is this thing on?!!!!!");
 	
 	Dispatcher *info = Connection::Instance()->getDispatcherByPath("op:info");
 	
@@ -295,10 +301,10 @@ void TypeInfo::init()
 	d->addSubdispatch(ti);
 	
 // handle errors
-	Dispatcher *err = Connection::Instance()->getDispatcherByPath("op:encap-error");
-	err = err->addSubdispatch(new ClassDispatcher("get", "get"));
+	Dispatcher *err = Connection::Instance()->getDispatcherByPath("op:error:encap");
+	err = err->addSubdispatch(ClassDispatcher::newAnonymous());
 	// ensure we don't get spammed, anything IG/OOG would have set these
-	err = err->addSubdispatch(new OpFromDispatcher("anonymous", ""));
+	err = err->addSubdispatch(new OpFromDispatcher("anonymous", ""), "get");
 	
 	err->addSubdispatch(
 		new SignalDispatcher2<Atlas::Objects::Operation::Error,
@@ -325,10 +331,12 @@ void TypeInfo::readAtlasSpec(const std::string &specfile)
 {
     fstream specStream(specfile.c_str(), ios::in);
     if(!specStream.is_open()) {
-		Eris::Log(LOG_ERROR, "Unable to open Atlas spec file %s, hope the server boot-straps okay", specfile.c_str());
+		Eris::Log(LOG_NOTICE, "Unable to open Atlas spec file %s, will obtain all type data from the server", specfile.c_str());
 		return;
     }
  
+	Eris::Log(LOG_NOTICE, "Found Atlas type data in %s, using for initial type info", specfile.c_str());
+	
 	// build an XML codec, and bundle it all up; then Poll the codec for each byte to read the entire file into
 	// the QueuedDecoder : not exactly incremetnal but hey...
 	Atlas::Message::QueuedDecoder specDecoder;
@@ -383,6 +391,11 @@ TypeInfoPtr TypeInfo::getSafe(const Atlas::Message::Object &msg)
 
 	// fall back to checking parents
 	const Message::Object::ListType &prs = getMember(msg, "parents").AsList();
+	if (prs.empty()) { // should be very fast so no big hit
+		assert(getMember(msg, "id").AsString() == "root");
+		return findSafe("root");
+	}
+	
 	assert(prs.size() == 1);
 	return findSafe(prs[0].AsString());
 }
@@ -390,9 +403,14 @@ TypeInfoPtr TypeInfo::getSafe(const Atlas::Message::Object &msg)
 TypeInfoPtr TypeInfo::getSafe(const Atlas::Objects::Root &obj)
 {
 	// check for an integer type code first
-
+	
 	// fall back to checking parents
 	const Message::Object::ListType &prs = obj.GetParents();
+	if (prs.empty()) { // should be very fast so no big hit
+		assert(obj.GetId() == "root");
+		return findSafe("root");
+	}
+	
 	assert(prs.size() == 1);
 	return findSafe(prs[0].AsString());
 }

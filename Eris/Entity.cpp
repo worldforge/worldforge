@@ -27,14 +27,12 @@ namespace Eris {
 Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
 	_id(ge.GetId()),
 	_stamp(-1.0),
-	_container(NULL),
 	_visible(true),
+	_container(NULL),
 	_bbox(0., 0., 0.),
 	_position(ge.GetPos())
 {	
 	_parents = getParentsAsSet(ge);
-	//cerr << "created " << _id << " (" << *(_parents.begin()) << ")" << endl;
-	
 	recvSight(ge);	
 }
 
@@ -47,14 +45,6 @@ Entity::Entity(const std::string &id) :
 {
 	;
 }
-
-/*
-Entity::Entity(const Entity *e)
-{
-	
-	
-}
-*/
 
 Entity::~Entity()
 {
@@ -141,7 +131,7 @@ void Entity::setVisible(bool vis)
 {
 	bool wasVisible = _visible;
 	_visible = vis;
-	
+  
 	// recurse on children
 	for (EntityArray::iterator E=_members.begin();E!=_members.end();++E)
 		setVisible(vis);
@@ -190,7 +180,6 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 	
 	// emit the hook
 	handleChanged();
-	//Changed.emit();
 }
 
 void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
@@ -205,7 +194,6 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 	SetProperty("velocity", GetArg(mv, "velocity"));
 */	
 	handleMove();
-	//Moved.emit(_position);
 }
 
 void Entity::recvSet(const Atlas::Objects::Operation::Set &st)
@@ -217,7 +205,6 @@ void Entity::recvSet(const Atlas::Objects::Operation::Set &st)
 		setProperty(ai->first, ai->second);
 	
 	handleChanged();
-	//Changed.emit();
 }
 
 void Entity::recvSound(const Atlas::Objects::Operation::Sound &snd)

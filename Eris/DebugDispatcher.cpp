@@ -13,7 +13,7 @@ namespace Eris
 {
 	
 DebugDispatcher::DebugDispatcher(const std::string &logFile) :
-	Dispatcher("debug")
+	LeafDispatcher("debug")
 {
 	_log.open(logFile.c_str(), std::ios::out | std::ios::app);
 	_log << "=======================================" << endl;	

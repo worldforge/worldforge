@@ -1,9 +1,35 @@
+Monday, November 26 2001, James Turner
+	* Re-built dispatch system with various new features:
+	* Dispatcher is now abstract, since much logic has been factored
+	  out in the StdBranchDispatcher
+	* Split Encap dispatcher apart so it only performs de-encapsulation,
+	  no type/class selection
+	* Class dispatcher now selects the most specialised binding for
+	  a type; i.e if handlers for 'SIGHT' and 'INFO' exist, only the
+	  one for 'SIGHT' will be fired.
+	* Updated all the users of dispatchers to use the new structure
+	  and interfaces - tested and most things seem to work, including
+	  IG entry. OOG chat emotes are broken, will fix tomorrow.
+
+Saturday, November 24 2001, James Turner
+
+	* Cleaned up logging output for TypeInfo.cpp
+	* Extended World to provide a protected mark[Inv/V]isible interface to
+	  entities, so they can control their placement in the invisible entity
+	  cache.
+	* Added InvisibleEntityCache.[cpp/h] and hooked it into World.cpp
+	* Added World::tick() method to do periodic updates (eventually motion
+	  prediction and so on), initally just flusing the InvisibleEntityCache
+	  as necessary.
+	* Updated Time to include an operator- as well as operator+
+	* Logs in flawlessly with an up-to-date build of Cyphesis-C++!
+
 Thursday, November 22 2001, James Turner
 
 	* Lots of TypeInfo changes, basically the whole dependancy system
 	  has been gone over to make it much more robust. There is one
 	  (known) issue remaining, but a large number of other issues have
-	  been fixed, notably thatn logging in with a current version of
+	  been fixed, notably that logging in with a current version of
 	  Cyphesis-C++ should work
 	* Added a 'listUnbound' debugging helper to TypeInfo
 	
