@@ -1,5 +1,10 @@
 Thursday, February 14, 2002	Ron Steinke <rsteinke@w-link.net>
 
+	* Missed a change in rotation sense in Vector<3>::rotate(const Quaterion&),
+	  fixed now
+
+Thursday, February 14, 2002	Ron Steinke <rsteinke@w-link.net>
+
 	* Added comments to many assert()'s
 	* Switched the sense of rotation in RotMatrix<> and Quaternion
 	  to be compatible with OpenGL and the rest of Worldforge. Also

@@ -93,7 +93,7 @@ void test_quaternion(const Quaternion& q)
 //  cout << v << std::endl << v2 << std::endl;
 
   v.rotate(q);
-  v2 = Prod(m, v2);
+  v2 = Prod(v2, m);
 
 //  cout << v << std::endl << v2 << std::endl;
 

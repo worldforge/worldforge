@@ -91,7 +91,7 @@ template<> Vector<3>& Vector<3>::rotate(const Quaternion& q)
 
   *this = (2 * w * w - 1) * *this
 	  + 2 * vec * Dot(vec, *this)
-	  + 2 * w * Cross(vec, *this);
+	  - 2 * w * Cross(vec, *this);
 
   return *this;
 }
