@@ -1,5 +1,8 @@
 ChangeLog for varconf
 
+Sun Dec 10 20:30:00 EST 2000 -- jaz <jaz147@psu.edu>
+  + added varconf.h (again)
+
 Thu Nov 02 18:00:00 EST 2000 -- jaz <jaz147@psu.edu>
   * Config.h: Added generalized accessor methods
   * Config.cc: Implemented generalized accessor methods

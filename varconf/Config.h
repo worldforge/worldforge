@@ -68,19 +68,16 @@ public:
   void getCmdline( int argc, char** argv);
   // Precondition: an array of command-line arguments along with an int value of
   //               the number of arguments.
-  // Postcondition: command-line arguments are parsed and stored in memory; warnings 
-  //                may be sent to the error stream.
+  // Postcondition: command-line arguments are parsed and stored in memory;       // warnings may be sent to the error stream.
 
   void getEnv( const std::string& prefix);
   // Precondition: a valid string.
-  // Postcondition: all environment variables with the passed prefix are parsed and stored
-  //                in memory; this prefix is currently case-sensitive; environment 
-  //                variables do not currently support section names.
+  // Postcondition: all environment variables with the passed prefix are parsed   // and stored in memory; this prefix is currently case-sensitive; environment
+  // variables do not currently support section names.
 
   Variable getItem( const std::string& section, const std::string& key);
   // Precondition: a valid key.
-  // Postcondition: data stored in the passed key is returned in a Variable data type;
-  //                see variable.h and variable.cpp for more information.
+  // Postcondition: data stored in the passed key is returned in a Variable data  // type; see variable.h and variable.cpp for more information.
 
   void parseStream( std::istream& in) throw ( ParseError);
   // Precondition: valid input stream to read configuration data from.
@@ -96,16 +93,17 @@ public:
 
   void setItem( const std::string& section, const std::string& key, 
                 const Variable& item);
-  // Precondition: a section and key name and its contents stored in a Variable type.
-  // Postcondition: configuration item of specified properties is created in memory.
+  // Precondition: a section and key name and its contents stored in a Variable   //               type.
+  // Postcondition: configuration item of specified properties is created in      //                memory.
 
   void setParameterLookup( char s_name, const std::string& l_name, 
                            bool value = false);
-  // Precondition: a one-character command-line argument, its full-name equivalent and 
-  //               a bool indicating whether it is followed by a value or not.
-  // Postcondition: the one-character command-line argument is attached to its long-name;
-  //                this long-name is then stored in memory in place of the one-character
-  //                short-name.
+  // Precondition: a one-character command-line argument, its full-name 
+  //               equivalent and a bool indicating whether it is followed
+  //               by a value or not.
+  // Postcondition: the one-character command-line argument is attached to its
+  //                long-name; this long-name is then stored in memory in 
+  //                place of the one-character short-name.
   
   bool writeToFile( const std::string& filename);
   // Precondition: valid filename of an output file to write to.

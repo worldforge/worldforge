@@ -1,0 +1,106 @@
+Configuration design:
+
+[Original document provided by sdt as part of the (stage) Thor
+module. reformatted for cvs work -- fex]
+
+
+The server options can be loaded through several different ways:
+
+(in order of precedence, lowest to highest)
+
+    * Configuration files
+    * Environment options
+    * Command-line options
+
+Values will also be available to change during runtime. 
+
+[are there any we should restrict access to - fex?]
+
+[ I suspect changing some values will have little or no meaning. A better
+solution would be to export particular values which actually mean something.
+Or better, provide a higher level interface than mere bit-twiddling.
+    -- Michael
+]
+
+[hmm ok can take that as a no I think and work it out as part of the design
+for the bit that will use these files.. whole bunch of persistence stuff
+to be worked out regards this file anyway -- fex ]
+
+
+There will be no restriction on the number of values held within a
+configuration file.
+
+[from sdt`s doc -
+There is no restriction to the amount of values, their length, type or
+any other things. Thor does not know what values are required by the
+server modules, thus it will accept any values.
+
+can we get away with this? where will values be checked?
+
+- fex ]
+
+
+The server configuration type will be a simple text file to allow easy
+editing by the server operator.
+
+The format of these files is:
+
+    * Parameters can be set with the UNIX-style format name = value 
+
+    * The names are lowercase only (uppercase characters get
+      converted)
+
+    * Lines that start with "#" are ignored as comments as well as
+      anything after a "#" in a regular configuration line
+
+    * Whitespace before and after the name is ignored
+
+    * Whitespace before and after the value is ignored
+
+    * Whitespaces within the value are preserved
+
+[perhaps require "" for strings? - fex]
+
+[
+the following needs sorting out -- fex
+
+
+The value might enclose leading or trailing whitespaces as well as
+any "special" characters (= and #) by using double-quotes.
+
+\ may be used to "escape out" the next character, also within
+double-quotes. For this, the following rules apply:
+
+    * \n = newline
+    * \\ = \
+    * \" = "
+    * \# = #
+    * \(space) = space is conserved
+    * \(linebreak) = linebreak is ignored
+
+If a double-quote ending a started quote-block is missing, it is
+"automagically" added at the end of the line.
+
+
+
+Environment Options:
+--------------------
+
+
+Parameters can also be set using environment settings. Hereby, these
+should contain a certain prefix, i.e. to set "oink" to equal "moo",
+one should set the environment option "STAGE_oink" to "moo".
+
+Command-line options
+
+There are two types of command-line options: commands and
+parameters. Commands are prefixed with the UNIX-style "-" or "--" for
+long names, assuming the user has GNU getopts.h installed. Parameters
+are given in the format "name=value". If spaces are to be included in
+either the name or the value, the setting should be enclosed in
+double-quotes, thus a UNIX shell will interpret this as a single
+command-line parameter. Commands are of a given set, e.g. --version or
+--help, whereas Thor is not aware of the validity of parameters, this
+should be checked by the module to which the parameter corresponds to.
+
+]

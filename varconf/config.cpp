@@ -132,19 +132,18 @@ bool Config::find( const string& section, const string& key = "")
   return false;
 } // Config::find
 
-// * This only cares if 'name.size()' >= 1; handling of bad characters
-//   is left to Config::setItem().
 void Config::getCmdline( int argc, char** argv)
 {
-  string section, name, value;
+  string section = "", name = "", value = "", arg;
+  bool fnd_sec = false, fnd_nam = false;
+  size_t mark = 2;
 
   for ( size_t i = 1; i < argc; i++) {
     if ( argv[i][0] == '-' && argv[i][1] == '-' && argv[i][2] != '\0') {
-      string arg = argv[i];
-      bool fnd_sec = false, fnd_nam = false; 
-      size_t mark = 2;
-
+      arg = argv[i];
+      fnd_sec = fnd_nam = false;
       section = name = value = "";
+      mark = 2;
        
       for ( size_t j = 2; j < arg.size(); j++) {
         if ( arg[j] == ':' && arg[j+1] != '\0' && !fnd_sec && !fnd_nam) {
@@ -160,9 +159,9 @@ void Config::getCmdline( int argc, char** argv)
         }
       }
 
-      if ( !fnd_nam && ( arg.size() - mark) > 0) {
+      if ( !fnd_nam && ( arg.size() - mark) > 0) 
         name = arg.substr( mark, ( arg.size() - mark));
-      }
+
     } // long argument 
     else if( argv[i][0] == '-' && argv[i][1] != '-' && argv[i][1] != '\0') {
       parameter_map::iterator I = m_par_lookup.find( argv[i][1]);
@@ -173,13 +172,11 @@ void Config::getCmdline( int argc, char** argv)
         name = ( ( *I).second).first;
         bool needs_value = ( ( *I).second).second;
 
-        if ( needs_value && argv[i+1] != NULL && argv[i+1][0] != '-') {
+        if ( needs_value && argv[i+1] != NULL && argv[i+1][0] != '-') 
           value = argv[++i];
-        }
-        else {
+        else 
           cerr << "WARNING: Short argument -" << argv[i][1] 
                << " expects a value but none was given.";
-        }
       }
       else {
         cerr << "WARNING: Short argument -" << argv[i][1]
@@ -187,15 +184,11 @@ void Config::getCmdline( int argc, char** argv)
       }
     } // short argument
 
-    if ( !name.empty()) {
+    if ( !name.empty()) 
       setItem( section, name, value);
-    }
   }
 } // Config::getCmdline()
 
-// * This will send 'name.size() == 0' to setItem, unlike getCmd.  Reason:
-//   an env should never be nameless and if it is, something is seriously
-//   wrong; setItem's throw-catch routine will check this. 
 void Config::getEnv( const string& prefix)
 {
   string name, value, section, env = "";
@@ -479,74 +472,5 @@ bool Config::writeToStream( ostream& out)
   return true;
 } // Config::writeToStream
 
-
-
-
-
 } // namespace varconf
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
