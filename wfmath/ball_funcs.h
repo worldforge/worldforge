@@ -87,7 +87,9 @@ Ball<dim> BoundingSphere(const container<Point<dim> >& c)
 
   m.build();
 
+#ifndef NDEBUG
   double dummy;
+#endif
   assert("Check that bounding sphere is good to library accuracy" &&
          m.accuracy(dummy) < WFMATH_EPSILON);
 
