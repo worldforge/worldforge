@@ -1,5 +1,10 @@
 2004-05-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* tests/testIntersect.cpp: Provide more details when getHeightAndNormal
+	  test fails.
+
+2004-05-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/BasePoint.cpp: Tweak roughnes and falloff to give nicer
 	  looking terrain.
 

@@ -183,7 +183,7 @@ int main()
     
     if (h != intPoint[2]) {
         std::cerr << "calculated height is different from getHeightAndNormal" << std::endl;
-        std::cerr << h << std::endl;
+        std::cerr << h << "!=" << intPoint[2] << std::endl;
         return 1;
     }
         
