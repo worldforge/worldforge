@@ -1,3 +1,8 @@
+Friday, August 2, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed a bug involving the machine dependence of the
+	  behavior of % for negative numbers
+
 Monday, July 22, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* Wraped a declaration of a variable which is only used in

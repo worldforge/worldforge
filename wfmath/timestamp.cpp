@@ -36,10 +36,10 @@
 #include <sys/time.h>
 #endif
 
-static void regularize(long &sec, long &usec)
-{
 const long Million = 1000000;
 
+static void regularize(long &sec, long &usec)
+{
   if(usec >= Million) {
     usec -= Million;
     ++sec;
@@ -58,7 +58,11 @@ WFMath::TimeDiff::TimeDiff(long sec, long usec, bool is_valid) : m_isvalid(is_va
 
 WFMath::TimeDiff::TimeDiff(long msec) : m_sec(msec / 1000), m_usec(msec % 1000)
 {
-  regularize(m_sec, m_usec); // m_usec may be negative if msec was
+  if(msec < 0) {
+    --m_sec;
+    if(m_usec < 0) // behavior of % is machine dependent
+      m_usec += Million;
+  }
 }
 
 long WFMath::TimeDiff::milliseconds() const
