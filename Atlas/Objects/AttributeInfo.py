@@ -34,7 +34,7 @@ class AttributeInfo:
               "    inline void set%(cname)s(%(cpp_param_type)s val);\n" % \
               self.__dict__
         if self.as_object:
-            res = res + doc(4, 'Retrieve the "%s" attribute %s.' % \
+            res = res + doc(4, 'Set the "%s" attribute %s.' % \
                             (self.name, self.as_object)) + \
                "    inline void set%(cname)s%(as_object)s(%(cpp_param_type_as_object)s val);\n" % self.__dict__
         return res
@@ -266,7 +266,8 @@ class ArgsRootList(AttributeInfo):
 
     def set_if(self):
         return AttributeInfo.set_if(self) + \
-               "    inline void set%(cname)s1(Root& val);\n" % self.__dict__
+               doc(4, 'Set the first member of "%s"' % self.name) + \
+               "    template <class ObjectData>\n    inline void set%(cname)s1(const SmartPtr<ObjectData> & val);\n" % self.__dict__
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \
@@ -284,7 +285,8 @@ class ArgsRootList(AttributeInfo):
     }
 }
 
-void %(classname)s::set%(cname)s1(Root& val)
+template <class ObjectData>
+void %(classname)s::set%(cname)s1(const SmartPtr<ObjectData>& val)
 {
     m_attrFlags |= %(flag_name)s;
     if(attr_%(name)s.size()!=1) attr_%(name)s.resize(1);

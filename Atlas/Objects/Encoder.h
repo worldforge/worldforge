@@ -32,7 +32,8 @@ public:
 
     /// Send an object to the bridge.
     /// @param o The object that is to be sent.
-    void streamObjectsMessage(const Atlas::Objects::Root& o)
+    template <class ObjectData>
+    void streamObjectsMessage(const Atlas::Objects::SmartPtr<ObjectData> & o)
     {
         m_b.streamMessage();
         o->sendContents(m_b);

@@ -1,3 +1,9 @@
+2004-02-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Encoder.h, Atlas/Objects/AttributeInfo.py:
+	  Replace methods that take a const Root & with templates
+	  that can take any kind of SmartPtr.
+
 2004-01-01  Al Riddoch  <alriddoch@zepler.org>
 
 	* benchmark/Makefile.am: Use INCLUDES as CPPFLAGS is reserved.
