@@ -1,3 +1,8 @@
+Saturday, 10th May 2003, Al Riddoch <alriddoch@zepler.org>
+
+	* Incremented version to 0.9.8.1 for a patch release with
+	  working perl bindings.
+
 Saturday, 10th May 2003, Ron Steinke <rsteinke@w-link.net>
 
 	* Changed perl bindings build stuff to account
