@@ -208,6 +208,9 @@ AObject AUserClient::setCharacterArgs(const string& id, Arg* args ...)
 int AUserClient::parseOperation1Argument(const AObject &op, string method, AObject &arg0)
 {
   AObject parent, args;
+  string abstract_type, emptyString="";
+  op.get("abstract_type",abstract_type,emptyString);
+  if(abstract_type!="operation") return 0;
   op.get("parent",parent);
   AObject opMethodObj;
   parent.get(0,opMethodObj);
