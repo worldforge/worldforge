@@ -15,7 +15,9 @@
 #include <sys/types.h>
 #include <memory.h>
 #include <string.h>
+#ifndef _WIN32
 #include <unistd.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 

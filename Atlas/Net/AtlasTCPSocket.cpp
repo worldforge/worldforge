@@ -31,8 +31,10 @@ ATCPSocket::ATCPSocket()
 
 ATCPSocket::~ATCPSocket()
 {
-	::close(sock);
+#ifndef _WIN32
+	close(sock);
 	sock = (SOCKET)-1;
+#endif
 }
 
 ATCPSocket::ATCPSocket(SOCKET asock): ASocket(asock)
