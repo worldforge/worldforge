@@ -1,6 +1,10 @@
 ChangeLog for varconf
 
-Saturday, 20th June, 2002, Al Riddoch <alriddoch@zepler.org>
+Sunday, 11th August, 2002, Ron Steinke <rsteinke@w-link.net>
+	* Fixed Variable's copy constructor to work properly
+	  with the changes in the ref counting code
+
+Sunday, 11th August, 2002, Al Riddoch <alriddoch@zepler.org>
 	* Integrated patch by Ron Steinke to remove dependancy on
 	  sigc++ 1.0.x internals. Modified configure script and includes
 	  to be compatable with sigc++ 1.2.
