@@ -3,7 +3,9 @@
 
 #include <sigc++/object.h>
 #include <sigc++/basic_signal.h>
+
 #include <map>
+#include <multimap.h>
 
 namespace Atlas {
 	namespace Objects {
@@ -29,16 +31,19 @@ namespace Atlas {
 }
 
 #include "Types.h"
-#include "Factory.h"
 
 namespace Eris {
 
 // forward declerations	
 class Connection;
 class Player;
+class Factory;
 	
 // the name is wrong, but I feel 'IDEntityMap' is worse
 typedef std::map<std::string, Entity*> EntityIDMap;
+
+// factory storage : allows ordering
+typedef std::multimap<int, Factory*> FactoryMap;
 
 class UnknownEntity : public BaseException
 {
@@ -62,6 +67,7 @@ public:
 	/// obtain a pointer to the root entity (world_0)
 	EntityPtr getRootEntity();
 	
+	/// Retrieve the Connection object associated with the World
 	Connection* getConnection() const
 	{ return _con; }
 	
@@ -76,9 +82,14 @@ public:
 	{ return _focused; }
 
 // factories
-	/// register an entity factory with the world
-	void registerFactory(Factory *f);
-	// void UnregisterFactory(Factory *f);
+	/** Register an entity factory with the world. Any new entities that the
+	Factory accept()s will be passed to the Factory for instantiation. */
+	/// @param f The factory instance
+	/// @param priority Controls the search order; higher-valued factories are tried first
+	void registerFactory(Factory *f, int priority = 1);
+	
+	/// Remove an factory from the search set.
+	void unregisterFactory(Factory *f);
 
 	/// World is a singleton; this is the accessor
 	static World* Instance();
@@ -147,7 +158,7 @@ protected:
 	EntityPtr _root,		///< the root entity of the world (manged by us)
 		_focused;	///< origin entity for field-of-view and so on
 
-	FactoryList _efactories;
+	FactoryMap _efactories;
 	
 	/// Set of entities that are waiting for a SIGHT after a LOOK (caused by an appear / move / set / ...)
 	StringSet _pendingInitialSight;

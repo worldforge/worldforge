@@ -1,7 +1,6 @@
 #ifndef ERIS_FACTORY_H
 #define ERIS_FACTORY_H
 
-#include <list>
 #include <Atlas/Objects/Entity/GameEntity.h>
 #include "Types.h"
 
@@ -25,8 +24,6 @@ public:
 	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge) = 0;
 	//virtual EntityPtr Instantiate(const Atlas::Message::Object &o) = 0;
 };
-
-typedef std::list<Factory*> FactoryList;
 
 class StdFactory : public Factory
 {

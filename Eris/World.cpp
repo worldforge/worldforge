@@ -158,10 +158,13 @@ EntityPtr World::create(const Atlas::Objects::Entity::GameEntity &ge)
 	string id = ge.GetId();
 	
 	// test factories
-	for (FactoryList::iterator fi = _efactories.begin(); fi != _efactories.end(); ++fi) {
-		if ((*fi)->accept(ge)) {
+	// note that since the default comparisom (for ints) is less<>, we use a reverse
+	// iterator here and get the desired result (higher priorty values are tested first)
+	for (FactoryMap::reverse_iterator fi = _efactories.rbegin(); 
+		fi != _efactories.rend(); ++fi) {
+		if (fi->second->accept(ge)) {
 			// call the factory
-			e = (*fi)->instantiate(ge);
+			e = fi->second->instantiate(ge);
 			break;
 		}
 	}
@@ -174,10 +177,26 @@ EntityPtr World::create(const Atlas::Objects::Entity::GameEntity &ge)
 	// bind into the database
 	_lookup[e->getID()] = e;
 	
-	// and emit the signa;
+	// and emit the signal
 	EntityCreate.emit(e);
 	
 	return e;
+}
+
+void World::registerFactory(Factory *f, int priority)
+{
+	_efactories.insert(FactoryMap::value_type(priority, f));
+}
+
+void World::unregisterFactory(Factory *f)
+{
+	for (FactoryMap::iterator fi = _efactories.begin(); 
+		fi != _efactories.end(); ++fi)
+		if (fi->second == f) {
+			_efactories.erase(fi);
+			return;
+		}
+	// FIXME  - display a warning that we didn't remove the factory?
 }
 
 World* World::Instance()

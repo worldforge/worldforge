@@ -1,3 +1,13 @@
+Friday, August 10 2001, James Turner <jmtn@blueyonder.co.uk>
+
+	* Updated README and INSTALL to contains something
+	  vaugely informative.
+	* Initial work on TypeInfo.cpp/.h classes (not part)
+	  of build at present.
+	* Entity factories are sorted by a priority now. This
+	  meant using a multimap internally, though I've just
+	  realised a multi-set would be sufficent. D'oh.
+
 Saturday, August 04 2001, James Turner
 
 	* Handle sparse rooms without throwing an exceptions;

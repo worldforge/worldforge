@@ -8,13 +8,18 @@ Clean up the exception heriarchy
 		
 	- Atlas spec failure (Eris::Illegal)
 	
-Support admin accounts?	
+Support admin accounts? If requested, not especially difficult but extends beyond the current scope.
 
-Handle network disconnects and reconnects better
-Timeouts on all Atlas ops (and heart-beats)
+Handle network disconnects and reconnects better (the code is there, but hasn?t been extensively tested). In theory, re-connection to in-game worlds should function, but stamp validity and such things needs to be checked very carefully.
 
-Correctly allow externally driven socket notifications (e.g
-from Gtk+ socket callbacks); this is platform specific
-and must be #ifdef-ed of course
+Timeouts on all Atlas ops (and heart-beats). This is blocked until we pick a cross-platform runtime library (NSPR, yuck).
+
+Correctly allow externally driven socket notifications (e.g from Gtk+ socket callbacks); this is platform specific and must be #ifdef-ed of course. However it is essential to allow clean integration with main loop-stealing toolkits and libraries.
 
 Handle the 'uptime' attribute of 'Server' objects (the thing returned by anonymous GETs on game servers); need to find out format (string / int) and scale.
+
+Motion-prediction entity sub-class. Fairly simple initialy, assuming no collision detection is done. Again code can be stolen from UClient.
+
+Test compilation on MSVC, Cygwin, Mingw32, Metrowerks / Mac (with GUSI)
+
+Fully support inheritance queries, and correctly build and cache the inheritance graph.

@@ -1,28 +1,39 @@
-something useful
+These are instructions to help build Eris, the WorldForge client-side entity framework. For a more complete discussion of the functions and goals of Eris, please see the ?README? file, which should be in the same directory as this document.
 
+The AUTHORS file lists people who can help you if you run into problems; otherwise you can try the WorldForge mailing lists (note you must be subscribed to post) or IRC at irc.worldforge.org.
 
-Linux
+Linux / *inx
 
-You need to have Atlas-C++, skstream and libsigc++ to build Eris. In addition it is assumed you have an up-to-date C++ compiler and STL implementation (GCC 2.95 is the lowest tested version, 2.91 will probably not work).
+You need to have Atlas-C++, skstream and libsigc++ to build Eris. In addition it is assumed you have an up-to-date C++ compiler and STL implementation (GCC 2.95 is the lowest tested version, GG 2.91 will probably not work). If you find other compilers that work or fail, please let me (James) know.
 
-Atlas-C++ and skstream are both found in forge/libs/ from WorldForge CVS; compile and install them before you try to build Eris. Take note of where you install them too (/usr/local by default), since you may need to pass this prefix to 'aclocal'.
+Atlas-C++ and skstream are both found in forge/libs/ from WorldForge CVS; compile and install them before you try to build Eris. Take note of where you install them too (/usr/local by default), since you may need to pass this prefix to 'aclocal' (if you?re compiling from CVS or need to rebuild configure for some reason).
 
-libsigc++ is included in all common distributions; if you have Gnome 1.2 or higher installed, you certainly have it. Verify that you also have the development packages installed. Otherwise get the library in your preferred format from:
+libsigc++ is included in all common distributions; if you have Gnome 1.2 or higher installed, you certainly have it. Verify that you also have the development packages installed, not just the runtime. Otherwise get the library in your preferred format from:
 	
 	 http://libsigc.sourceforge.net/
 
-Once these pre-requisites are satisfied, you can proceed with compiling Eris. The supplied 'auotgen.sh' will setup 'configure' for you (in the case of CVS versions), but it is possible you will need to run 'aclocal' manually passing in '-I /prefix/to/atlas/share/aclocal'. So if you installed Atlas-C++ to '/opt/forge', you need to run aclocal like this:
+Due to variations in the C++ ABI, do NOT use a binary version compiled for a distribution other than your own; you may be able to compile code but it with fail at link-time or run-time with very unpleasant errors. This includes differences in the C library version, the compiler itself, and the standard C++ library. If in doubt, compile it yourself; however most distributions do supply the library so check your original CDs too. If you have at least SuSE 6.3, RedHat 6.2, Debian 2.2 or Mandrake 7, then there pre-compiled binaries available, usually in the same place as Gnome.
 
-forge/libs/eris: aclocal -I /opt/forge/share/aclocal
+Once these pre-requisites are satisfied, you can proceed with compiling Eris.  This should be a standard 'configure; make; make install? process. At present there are no special arguments, but verify everything goes okay. If you get errors about libraries not being found, and you believe they are installed, do NOT hack around the problem in configure. Verify that you have the correct development packages installed and that the relevant -config programs (atlas-config and sigc-config) are in your path. Also make sure you?ve run ?ldconfig? if you just installed the libraries, otherwise the test programs the configure tries to compile won?t work.
 
-If running this command produces errors about undefined macros (AM_PATH_ATLAS or AM_PATH_SIGC), then you need to add '-I' options until aclocal can find the .m4 files created by libSigc++ and Atlas-C++.
-
-Once this is done, run configure. At present there are no special arguments, but verify everything goes okay. If you get errors about libraries not being found, and you believe they are installed, do NOT hack around the problem in configure. Verify that you have the correct development packages installed, that the relevant -config programs (atlas-config and sigc-config) are in your path, and that aclocal found all the macros it needs. 
-
-Assuming configure is sucessful, simply 'make' and 'make install'. That's it.
+Assuming configure is sucessful, simply 'make' and 'make install'. That's it. If you get compilation errors, please get in touch with the maintainers.
 
 If you have Doxygen installed, executing 'make doc' will build the documentation; at present only HTML is built. Edit eris.dox to change the output formats / styles.
 
+Cygwin
+
+You will need to have libtool setup. (get it from XXXX)
+Otherwise should be the same as Linux.
+
 MSVC
 
- - staticlly link ! -
+There?s a known problem with MSVC 6 not exporting template-based methods / functions unless they are specifically named in an exports / .exp file. Since no one has got around to building such a thing for Eris yet, I would recommend statically linking to both libSigC++ and Eris itself in your client code. Neither library is large and you will make distribution and debugging that bit easier too. Technically their is no reason why a DLL based approach won?t work (once you?ve taken care of the export problem, which may get fixed), so feel free to attempt such a thing.
+
+Compiling from CVS
+
+The supplied ?auotgen.sh? will setup ?configure? for you (in the case of CVS versions), but it is possible you will need to run ?aclocal? manually passing in ?-I /prefix/to/atlas/share/aclocal?. So if you installed Atlas-C++ to ?/opt/forge?, you need to run aclocal like this:
+
+forge/libs/eris: aclocal -I /opt/forge/share/aclocal
+
+If running this command produces errors about undefined macros (AM_PATH_ATLAS or AM_PATH_SIGC), then you need to add ?-I? options until aclocal can find the .m4 files created by libSigc++ and Atlas-C++.
+
