@@ -1,5 +1,9 @@
 2002-05-14  Michael Koch  <konqueror@gmx.de>
 
+	* src/Codecs: fixed encodeString
+
+2002-05-14  Michael Koch  <konqueror@gmx.de>
+
 	* src/Makefile.am: added Atlas.h
 	* src/Objects/BaseObject.h: remove debugging code
 

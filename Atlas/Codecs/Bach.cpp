@@ -2,10 +2,9 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2002 Michael Koch <konqueror@gmx.de>
 
-#include "Bach.h"
+#include "../Atlas.h"
 
-//#define DEBUG(a) a;
-#define DEBUG(a) ;
+#include "Bach.h"
 
 namespace Atlas { namespace Codecs {
 
@@ -20,7 +19,7 @@ Bach::Bach(std::iostream& s, Atlas::Bridge* b)
 
 void Bach::parseInit(char next)
 {
-    DEBUG(cout << "parseInit" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseInit" << endl;)
 
     if (next=='[')
     {
@@ -31,7 +30,7 @@ void Bach::parseInit(char next)
 
 void Bach::parseStream(char next)
 {
-    DEBUG(cout << "parseStream" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseStream" << endl;)
 
     switch (next)
     {
@@ -51,7 +50,7 @@ void Bach::parseStream(char next)
 
 void Bach::parseMap(char next)
 {
-    DEBUG(cout << "parseMap" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseMap" << endl;)
 
     switch (next)
     {
@@ -75,7 +74,7 @@ void Bach::parseMap(char next)
         }
         else
         {
-            cerr << "parseMap: unexpected character: " << next << endl;
+            cerr << "Bach::parseMap: unexpected character: " << next << endl;
         }
         break;
     }
@@ -83,7 +82,7 @@ void Bach::parseMap(char next)
 
 void Bach::parseList(char next)
 {
-    DEBUG(cout << "parseList" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseList" << endl;)
 
     switch (next)
     {
@@ -98,8 +97,6 @@ void Bach::parseList(char next)
         break;
 
     case '[':
-        cout << "BEGIN LIST 1" << endl;
-
         m_bridge->listItem(m_listBegin);
         m_state.push(PARSE_LIST);
         break;
@@ -129,38 +126,14 @@ void Bach::parseList(char next)
         break;
 
     default:
-        cerr << "parseMap: unexpected character: " << next << endl;
+        cerr << "Bach::parseMap: unexpected character: " << next << endl;
         break;
     }
 }
 
-void Bach::parseMapBegin(char next)
-{
-    DEBUG(cout << "parseMapBegin" << endl;)
-
-    cout << "BEGIN MAP" << m_name << endl;
-
-    m_bridge->mapItem(decodeString(m_name), m_mapBegin);
-    m_socket.putback(next);
-    m_state.pop();
-    m_name.erase();
-}
-
-void Bach::parseListBegin(char next)
-{
-    DEBUG(cout << "parseListBegin" << endl;)
-
-    cout << "BEGIN LIST 2" << m_name << endl;
-
-    m_bridge->mapItem(decodeString(m_name), m_listBegin);
-    m_socket.putback(next);
-    m_state.pop();
-    m_name.erase();
-}
-
 void Bach::parseInt(char next)
 {
-    DEBUG(cout << "parseInt" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseInt" << endl;)
 
     switch (next)
     {
@@ -173,19 +146,19 @@ void Bach::parseInt(char next)
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
         {
-            DEBUG(cout << "Int: " << m_name << ": " << m_data << endl;)
+            ATLAS_DEBUG(cout << "Int: " << m_name << ": " << m_data << endl;)
 
             m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
         }
         else if (m_state.top() == PARSE_LIST)
         {
-            DEBUG(cout << "Int: " << m_data << endl;)
+            ATLAS_DEBUG(cout << "Int: " << m_data << endl;)
 
             m_bridge->listItem(atof(m_data.c_str()));
         }
         else
         {
-            cout << "Bach::parseIntt: Error" << endl;
+            cerr << "Bach::parseIntt: Error" << endl;
         }
         m_name.erase();
         m_data.erase();
@@ -215,14 +188,14 @@ void Bach::parseInt(char next)
         break;
 
     default:
-        cout << "parseInt: unexpected character: " << next << endl;
+        cerr << "Bach::parseInt: unexpected character: " << next << endl;
 	break;
     }
 }
 
 void Bach::parseFloat(char next)
 {
-    DEBUG(cout << "parseFloat" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseFloat" << endl;)
 
     switch (next)
     {
@@ -235,19 +208,19 @@ void Bach::parseFloat(char next)
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
         {
-            DEBUG(cout << "Float: " << m_name << ": " << m_data << endl;)
+            ATLAS_DEBUG(cout << "Float: " << m_name << ": " << m_data << endl;)
 
             m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
         }
         else if (m_state.top() == PARSE_LIST)
         {
-            DEBUG(cout << "Float: " << m_data << endl;)
+            ATLAS_DEBUG(cout << "Float: " << m_data << endl;)
 
             m_bridge->listItem(atof(m_data.c_str()));
         }
         else
         {
-            cout << "Bach::parseFloat: Error" << endl;
+            cerr << "Bach::parseFloat: Error" << endl;
         }
         m_name.erase();
         m_data.erase();
@@ -272,14 +245,14 @@ void Bach::parseFloat(char next)
 	break;
 
     default:
-        cout << "parseFloat: unexpected character: " << next << endl;
+        cerr << "Bach::parseFloat: unexpected character: " << next << endl;
 	break;
     }
 }
 
 void Bach::parseString(char next)
 {
-    DEBUG(cout << "parseString" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseString" << endl;)
 
     switch (next)
     {
@@ -287,19 +260,19 @@ void Bach::parseString(char next)
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
         {
-            DEBUG(cout << "String: " << m_name << ": " << m_data << endl;)
+            ATLAS_DEBUG(cout << "String: " << m_name << ": " << m_data << endl;)
 
             m_bridge->mapItem(decodeString(m_name), decodeString(m_data));
         }
         else if (m_state.top() == PARSE_LIST)
         {
-            DEBUG(cout << "String: " << m_data << endl;)
+            ATLAS_DEBUG(cout << "String: " << m_data << endl;)
 
             m_bridge->listItem(decodeString(m_data));
         }
         else
         {
-            cout << "parseString: Error" << endl;
+            cerr << "Bach::parseString: Error" << endl;
         }
         m_name.erase();
         m_data.erase();
@@ -317,7 +290,7 @@ void Bach::parseString(char next)
 
 void Bach::parseData(char next)
 {
-    DEBUG(cout << "parseData" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseData" << endl;)
 
     switch (next)
     {
@@ -352,7 +325,7 @@ void Bach::parseData(char next)
             break;
 
         default:
-            cout << "parseData: Error: " << (int)m_state.top() << endl;
+            cerr << "Bach::parseData: Error: " << (int)m_state.top() << endl;
             break;
         }
 
@@ -374,7 +347,7 @@ void Bach::parseData(char next)
             break;
 
         default:
-            cout << "parseData: Error: " << (int)m_state.top() << endl;
+            cerr << "Bach::parseData: Error: " << (int)m_state.top() << endl;
             break;
         }
 
@@ -390,19 +363,19 @@ void Bach::parseData(char next)
         break;
 
     default:
-        cout << "parseData: unexpected character: " << next << endl;
+        cerr << "Bach::parseData: unexpected character: " << next << endl;
         break;
     }
 }
 
 void Bach::parseName(char next)
 {
-    DEBUG(cout << "parseName" << endl;)
+    ATLAS_DEBUG(cout << "Bach::parseName" << endl;)
 
     switch (next)
     {
     case ':':
-        DEBUG(cout << "Name: " << m_name << endl;)
+        ATLAS_DEBUG(cout << "Name: " << m_name << endl;)
 
         m_state.pop();
 	break;
@@ -416,7 +389,7 @@ void Bach::parseName(char next)
         }
         else
         {
-            cout << "parseName: unexpected character: " << next << endl;
+            cerr << "Bach::parseName: unexpected character: " << next << endl;
         }
 	break;
     }
@@ -466,8 +439,6 @@ void Bach::poll(bool can_read)
         case PARSE_STREAM:     parseStream(next); break;
         case PARSE_MAP:        parseMap(next); break;
         case PARSE_LIST:       parseList(next); break;
-        case PARSE_MAP_BEGIN:  parseMapBegin(next); break;
-        case PARSE_LIST_BEGIN: parseListBegin(next); break;
         case PARSE_DATA:       parseData(next); break;
         case PARSE_INT:	       parseInt(next); break;
         case PARSE_FLOAT:      parseFloat(next); break;
@@ -480,12 +451,14 @@ void Bach::poll(bool can_read)
 
 const std::string Bach::decodeString(std::string toDecode)
 {
-    int pos;
+    std::string::size_type pos = 0;
 
-    while((pos = toDecode.find( "\\\"" )) >= 0)
+    while((pos = toDecode.find( "\\\"", pos )) != std::string::npos)
           toDecode.replace(pos, 2, '\"');
 
-    while((pos = toDecode.find( "\\\\")) >= 0)
+    pos = 0;
+
+    while((pos = toDecode.find( "\\\\", pos)) != std::string::npos)
           toDecode.replace(pos, 2, '\\');
 
     return toDecode;
@@ -493,15 +466,20 @@ const std::string Bach::decodeString(std::string toDecode)
 
 const std::string Bach::encodeString(std::string toEncode)
 {
-    int pos;
+    std::string encoded;
+    std::string::iterator it;
 
-    while ((pos = toEncode.find ( '\\' )) >= 0)
-	toEncode.replace( pos, 1, "\\\\" );
+    for (it = toEncode.begin(); it != toEncode.end(); it++)
+    {
+        if (*it=='\\')
+            encoded += "\\\\";
+        else if (*it=='\"')
+            encoded += "\\\"";
+        else
+            encoded += *it;
+    }
 
-    while ((pos = toEncode.find ( '\"' )) >= 0)
-	toEncode.replace( pos, 1, "\\\"" );
-
-    return toEncode;
+    return encoded;
 }
 
 void Bach::writeItem(std::string name, long data)
