@@ -175,6 +175,8 @@ class Point
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
  private:
+  double scaleEpsilon(const Point& p, double epsilon = WFMATH_EPSILON) const
+	{return _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);}
 
   CoordType m_elem[dim];
 };

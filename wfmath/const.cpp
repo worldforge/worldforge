@@ -44,7 +44,18 @@
 
 using namespace WFMath;
 
-bool WFMath::IsFloatEqual(double x1, double x2, double epsilon)
+bool WFMath::Equal(double x1, double x2, double epsilon)
+{
+    // Hack to get around nonstandard std:: namespacing in MSVC
+    using namespace std;
+
+    // If the difference between the numbers is smaller than the
+    // scaled epsilon we'll consider the numbers to be equal.
+
+    return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
+}
+
+double WFMath::_ScaleEpsilon(double x1, double x2, double epsilon)
 {
     // Hack to get around nonstandard std:: namespacing in MSVC
     using namespace std;
@@ -57,12 +68,23 @@ bool WFMath::IsFloatEqual(double x1, double x2, double epsilon)
     (void) frexp(fabs(x1) < fabs(x2) ? x1 : x2, &exponent);   
 
     // Scale epsilon by the exponent.
-    double delta = ldexp(epsilon, exponent);
+    return ldexp(epsilon, exponent);
+}
 
-    // If the difference between the numbers is smaller than the
-    // scaled epsilon we'll consider the numbers to be equal.
-    double difference = fabs(x1 - x2);
-    bool equal = difference <= delta;
+double WFMath::_ScaleEpsilon(const CoordType* x1, const CoordType* x2,
+			     int length, double epsilon)
+{
+  assert(length > 0);
 
-    return equal;
+  double max1 = 0, max2 = 0;
+
+  for(int i = 0; i < length; ++i) {
+    double val1 = fabs(x1[i]), val2 = fabs(x2[i]);
+    if(val1 > max1)
+      max1 = val1;
+    if(val2 > max2)
+      max2 = val2;
+  }
+
+  return _ScaleEpsilon(max1, max2, WFMATH_EPSILON);
 }

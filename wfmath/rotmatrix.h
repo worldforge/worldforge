@@ -37,7 +37,7 @@ class Quaternion;
 // rotation matrices form a group called O(N), the orthogonal
 // matrices. They satisfy the following condition:
 //
-//  They are ortohgonal. That is, their transpose is equal to their inverse.
+//  They are orthogonal. That is, their transpose is equal to their inverse.
 //  Hence, this class does not implement a transpose() method, only an
 //  inverse().
 //

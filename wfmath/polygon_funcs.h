@@ -185,7 +185,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
         got_ratio = true;
         continue;
       }
-      if(!IsFloatEqual(ratio, new_ratio)) // We span a 2D space
+      if(!Equal(ratio, new_ratio)) // We span a 2D space
         return _WFMATH_POLY2REORIENT_NONE;
     }
   }
@@ -348,7 +348,7 @@ bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2) cons
   assert(got_bounds); // We can't be parallel in _all_ dimensions
 
   if(min <= max) {
-    p2 = m_origin + m_axes[0] * FloatSubtract(max, min) / 2;
+    p2 = m_origin + m_axes[0] * (max - min) / 2;
     return true;
   }
   else
@@ -413,7 +413,7 @@ bool _Poly2Orient<dim>::checkIntersectProper(const AxisBox<dim>& b, Point<2>& p2
   assert(got_bounds); // We can't be parallel in _all_ dimensions
 
   if(min < max) {
-    p2 = m_origin + m_axes[0] * FloatSubtract(max, min) / 2;
+    p2 = m_origin + m_axes[0] * (max - min) / 2;
     return true;
   }
   else
@@ -684,7 +684,7 @@ bool Contains(const Ball<dim>& b, const Polygon<dim>& p)
 
   dist = p.m_orient.offset(b.m_center, c2).sqrMag();
 
-  dist = FloatSubtract(b.m_radius * b.m_radius, dist);
+  dist = b.m_radius * b.m_radius - dist;
 
   if(dist < 0)
     return false;

@@ -41,9 +41,9 @@ void test_vector(const Vector<dim>& v)
 
   CoordType sqr_mag = v.sqrMag();
 
-  assert(IsFloatEqual(sqrt(sqr_mag), v.mag()));
+  assert(Equal(sqrt(sqr_mag), v.mag()));
 
-  assert(IsFloatEqual(sqr_mag, Dot(v, v)));
+  assert(Equal(sqr_mag, Dot(v, v)));
 
   Vector<dim> v1, v2;
 
@@ -60,11 +60,11 @@ void test_vector(const Vector<dim>& v)
     for(int i = 0; i < steps; ++i) {
       vcopy.rotate(v1, v2, 2 * Pi / steps);
 //      cout << vcopy << std::endl;
-      assert(IsFloatEqual(sqr_mag, vcopy.sqrMag()));
+      assert(Equal(sqr_mag, vcopy.sqrMag()));
     }
 
     for(int i = 0; i < dim; ++i)
-      assert(IsFloatEqual(v[i], vcopy[i]));
+      assert(Equal(v[i], vcopy[i]));
 
     v2 -= v1 / 2; // operator-=(), operator/()
 
@@ -75,11 +75,11 @@ void test_vector(const Vector<dim>& v)
   v2 *= 2; // operator*=()
 
   for(int i = 0; i < dim; ++i)
-    assert(IsFloatEqual(v2[i], 1));
+    assert(Equal(v2[i], 1));
 
   // operator+(), operator-(), operator*() (pre and post), operator/()
   CoordType check = Dot((v1 + v2) * 5 - v2 / 4, 2 * v2);
-  assert(IsFloatEqual((10.0 + dim * 38.0 / 4.0), check));
+  assert(Equal((10.0 + dim * 38.0 / 4.0), check));
 
   Vector<dim> v3 = v;
   v3 += v;

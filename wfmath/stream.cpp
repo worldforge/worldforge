@@ -159,7 +159,7 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
 
   CoordType norm = q.m_w * q.m_w + q.m_vec.sqrMag();
 
-  if(!IsFloatEqual(norm, 1, _GetEpsilon(is))) {
+  if(!Equal(norm, 1, _GetEpsilon(is))) {
     is.setstate(std::istream::failbit);
     return is;
   }

@@ -71,7 +71,7 @@ class Ball
 
   bool isEqualTo(const Ball& b, double tolerance = WFMATH_EPSILON) const
 	{return m_center.isEqualTo(b.m_center, tolerance)
-	     && IsFloatEqual(m_radius, b.m_radius, tolerance);}
+	     && Equal(m_radius, b.m_radius, tolerance);}
 
   bool operator==(const Ball& b) const	{return isEqualTo(b);}
   bool operator!=(const Ball& b) const	{return !isEqualTo(b);}

@@ -40,9 +40,12 @@ namespace WFMath {
 
 // Constants
 
-const double Pi		= 3.141592653589793238462643383279;
-const double Sqrt2	= 1.414213562373095048801688724210;
-const double Sqrt3	= 1.732050807568877293527446341506;
+const double Pi		= 3.14159265358979323846264338327950288419716939937508;
+const double SqrtPi	= 1.77245385090551602729816748334114518279754945612237;
+const double LogPi	= 1.14472988584940017414342735135305871164729481291530;
+const double Sqrt2	= 1.41421356237309504880168872420969807856967187537693;
+const double Sqrt3	= 1.73205080756887729352744634150587236694280525381037;
+const double Log2	= 0.69314718055994530941723212145817656807550013436025;
 
 // Basic floating point type
 
@@ -58,14 +61,20 @@ typedef float CoordType;
 
 // Basic comparisons
 
-bool IsFloatEqual(double x, double y, double epsilon = WFMATH_EPSILON);
-inline double FloatAdd(double x, double y, double epsilon = WFMATH_EPSILON)
-	{return IsFloatEqual(x, -y, epsilon) ? 0 : x + y;}
-inline double FloatSubtract(double x, double y, double epsilon = WFMATH_EPSILON)
-	{return IsFloatEqual(x, y, epsilon) ? 0 : x - y;}
+double _ScaleEpsilon(double x1, double x2, double epsilon);
+double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
+		     int length, double epsilon);
+
+// Returns true if the difference between the numbers is less
+// than epsilon. Note that epsilon is multiplied by 2 raised
+// to the power of the exponent of the smaller number. So,
+// for example, Equal(0.00010000, 0.00010002) will not compare
+// equal, but Equal(0.00010000, 0.00010002, 1.0e-3) will.
+
+bool Equal(double x1, double x2, double epsilon = WFMATH_EPSILON);
 
 // These let us avoid including <algorithm> for the sake of
-// std::max() and std::min()
+// std::max() and std::min().
 
 inline CoordType FloatMax(CoordType a, CoordType b)
 	{return (a > b) ? a : b;}

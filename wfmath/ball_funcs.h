@@ -37,7 +37,7 @@ namespace WFMath {
 template<const int dim>
 bool Ball<dim>::operator< (const Ball<dim>& b) const
 {
-  if(!IsFloatEqual(m_radius, b.m_radius))
+  if(!Equal(m_radius, b.m_radius))
     return m_radius < b.m_radius;
 
   return m_center < b.m_center;
@@ -49,8 +49,8 @@ AxisBox<dim> Ball<dim>::boundingBox() const
   Point<dim> p_low, p_high;
 
   for(int i = 0; i < dim; ++i) {
-    p_low[i] = FloatSubtract(m_center[i], m_radius);
-    p_high[i] = FloatAdd(m_center[i], m_radius);
+    p_low[i] = m_center[i] - m_radius;
+    p_high[i] = m_center[i] + m_radius;
   }
 
   return AxisBox<dim>(p_low, p_high, true);

@@ -64,8 +64,10 @@ Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 template<const int dim>
 bool Vector<dim>::isEqualTo(const Vector<dim>& rhs, double tolerance) const
 {
+  double delta = scaleEpsilon(rhs, tolerance);
+
   for(int i = 0; i < dim; ++i)
-    if(!IsFloatEqual(m_elem[i], rhs.m_elem[i], tolerance))
+    if(fabs(m_elem[i] - rhs.m_elem[i]) > delta)
       return false;
 
   return true;
@@ -74,11 +76,14 @@ bool Vector<dim>::isEqualTo(const Vector<dim>& rhs, double tolerance) const
 template<const int dim>
 bool Vector<dim>::operator< (const Vector<dim>& v) const
 {
+  if(operator==(v))
+    return false;
+
   for(int i = 0; i < dim; ++i)
-    if(!IsFloatEqual(m_elem[i], v.m_elem[i]))
+    if(m_elem[i] != v.m_elem[i])
       return m_elem[i] < v.m_elem[i];
 
-  return false;
+  assert(false); // Checked for equality earlier
 }
 
 template <const int dim>
@@ -87,7 +92,7 @@ Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
   Vector<dim> ans;
 
   for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = FloatAdd(v1.m_elem[i], v2.m_elem[i]);
+    ans.m_elem[i] = v1.m_elem[i] + v2.m_elem[i];
 
   return ans;
 }
@@ -98,7 +103,7 @@ Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
   Vector<dim> ans;
 
   for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = FloatSubtract(v1.m_elem[i], v2.m_elem[i]);
+    ans.m_elem[i] = v1.m_elem[i] - v2.m_elem[i];
 
   return ans;
 }
@@ -151,7 +156,7 @@ template <const int dim>
 Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   for(int i = 0; i < dim; ++i)
-    v1.m_elem[i] = FloatAdd(v1.m_elem[i], v2.m_elem[i]);
+    v1.m_elem[i] += v2.m_elem[i];
 
   return v1;
 }
@@ -160,7 +165,7 @@ template <const int dim>
 Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   for(int i = 0; i < dim; ++i)
-    v1.m_elem[i] = FloatSubtract(v1.m_elem[i], v2.m_elem[i]);
+    v1.m_elem[i] -= v2.m_elem[i];
 
   return v1;
 }
@@ -206,29 +211,9 @@ template<const int dim>
 CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
 {
   // Adding numbers with large magnitude differences can cause
-  // a loss of precision so we'll normalize the vectors before
-  // taking the dot product.
+  // a loss of precision, but Dot() checks for this now
 
-  // We'll just divide out by the largest coordinate, so we
-  // only have to call sqrt() once.
-
-  CoordType umax, vmax = 0;
-
-  for(int i = 0; i < dim; ++i) {
-     CoordType uval = fabs(u.m_elem[i]);
-     if(uval > umax)
-        umax = uval;
-     CoordType vval = fabs(v.m_elem[i]);
-     if(vval > vmax)
-        vmax = vval;
-  }
-
-  assert(uval != 0 && vval != 0); // zero length vector
-
-  Vector<dim> nlhs = u / umax;
-  Vector<dim> nrhs = v / vmax;
-
-  CoordType dp = FloatClamp(Dot(nlhs, nrhs) / sqrt(u.sqrMag() * v.sqrMag()),
+  CoordType dp = FloatClamp(Dot(u, v) / sqrt(u.sqrMag() * v.sqrMag()),
 			 -1.0, 1.0);
 
   CoordType angle = acos(dp);
@@ -242,8 +227,8 @@ Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
   CoordType tmp1 = m_elem[axis1], tmp2 = m_elem[axis2];
   CoordType stheta = sin(theta), ctheta = cos(theta);
 
-  m_elem[axis1] = FloatSubtract(tmp1 * ctheta, tmp2 * stheta);
-  m_elem[axis2] = FloatAdd(tmp2 * ctheta, tmp1 * stheta);
+  m_elem[axis1] = tmp1 * ctheta - tmp2 * stheta;
+  m_elem[axis2] = tmp2 * ctheta + tmp1 * stheta;
 
   return *this;
 }
@@ -254,20 +239,14 @@ template<> Vector<3>& Vector<3>::rotate(const Quaternion& q);
 template<const int dim>
 CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 {
-  CoordType ans = 0, max_val = 0;
+  double delta = v1.scaleEpsilon(v2);
 
-  for(int i = 0; i < dim; ++i) {
-    CoordType val = v1.m_elem[i] * v2.m_elem[i];
-    ans += val;
-    CoordType aval = fabs(val);
-    if(aval > max_val)
-      max_val = aval;
-  }
+  CoordType ans = 0;
 
-  if(fabs(ans/max_val) < WFMATH_EPSILON)
-     return 0;
-  else
-    return ans;
+  for(int i = 0; i < dim; ++i)
+    ans += v1.m_elem[i] * v2.m_elem[i];
+
+  return (fabs(ans) >= delta) ? ans : 0;
 }
 
 template<const int dim>
@@ -276,10 +255,60 @@ CoordType Vector<dim>::sqrMag() const
   CoordType ans = 0;
 
   for(int i = 0; i < dim; ++i)
-    ans += m_elem[i] * m_elem[i]; // Don't need FloatAdd, all terms > 0
+    // all terms > 0, no loss of precision through cancelation
+    ans += m_elem[i] * m_elem[i];
 
   return ans;
 }
+
+template<>
+inline const CoordType Vector<1>::sloppyMagMax()
+{
+  return 1;
+}
+
+template<>
+inline const CoordType Vector<2>::sloppyMagMax()
+{
+  return 1.082392200292393968799446410733;
+}
+
+template<>
+inline const CoordType Vector<3>::sloppyMagMax()
+{
+  return 1.145934719303161490541433900265;
+}
+
+template<>
+inline const CoordType Vector<1>::sloppyMagMaxSqrt()
+{
+  return 1;
+}
+
+template<>
+inline const CoordType Vector<2>::sloppyMagMaxSqrt()
+{
+  return 1.040380795811030899095785063701;
+}
+
+template<>
+inline const CoordType Vector<3>::sloppyMagMaxSqrt()
+{
+  return 1.070483404496847625250328653179;
+}
+
+// Note for people trying to compute the above numbers
+// more accurately:
+
+// The worst value for dim == 2 occurs when the ratio of the components
+// of the vector is sqrt(2) - 1. The value above is equal to sqrt(4 - 2 * sqrt(2)).
+
+// The worst value for dim == 3 occurs when the two smaller components
+// are equal, and their ratio with the large component is the
+// (unique, real) solution to the equation q x^3 + (q-1) x + p == 0,
+// where p = sqrt(2) - 1, and q = sqrt(3) + 1 - 2 * sqrt(2).
+// Running the script bc_sloppy_mag_3 provided with the WFMath source
+// will calculate the above number.
 
 template<> Vector<2>& Vector<2>::polar(CoordType r, CoordType theta);
 template<> void Vector<2>::asPolar(CoordType& r, CoordType& theta) const;

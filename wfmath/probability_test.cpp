@@ -56,15 +56,15 @@ void test_probability(double mean, double std_dev, double step)
           double first_frac = val / cond, second_frac = val / cond_conj;
           double sum = first_frac + second_frac;
 //          cout << first_frac << ',' << second_frac << ',' << sum - 1 << std::endl;
-          assert(IsFloatEqual(sum, 1, use_epsilon));
-//          while(!IsFloatEqual(sum, 1, my_fudge * DBL_EPSILON))
+          assert(Equal(sum, 1, use_epsilon));
+//          while(!Equal(sum, 1, my_fudge * DBL_EPSILON))
 //            my_fudge *= 1.1;
         }
 
         if(num_step != 0) {
 //          cout << "one_minus_gauss_sum = " << one_minus_gauss_sum << std::endl;
-          assert(IsFloatEqual(val, one_minus_gauss_sum * cond, fudge * step / mean));
-          one_minus_gauss_sum = FloatSubtract(val / cond, val * step, use_epsilon);
+          assert(Equal(val, one_minus_gauss_sum * cond, fudge * step / mean));
+          one_minus_gauss_sum = val / cond - val * step;
           assert(one_minus_gauss_sum > -use_epsilon); // Avoid cumulative roundoff errors
         }
       }
@@ -80,7 +80,7 @@ void test_probability(double mean, double std_dev, double step)
 
       assert(val <= 1 + use_epsilon);
       assert(cond <= 1 + use_epsilon);
-      assert(IsFloatEqual(val + poisson_sum * cond, cond, use_epsilon));
+      assert(Equal(val + poisson_sum * cond, cond, use_epsilon));
 
       poisson_sum += val;
       assert(poisson_sum <= 1 + use_epsilon);

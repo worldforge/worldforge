@@ -56,12 +56,22 @@ RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
 template<const int dim>
 bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& rhs, double tolerance) const
 {
+  // Since the sum of the squares of the elements in any row or column add
+  // up to 1, all the elements lie between -1 and 1, and each row has
+  // at least one element whose magnitude is at least 1/sqrt(dim).
+  // Therefore, we don't need to scale the tolerance, as we did for
+  // Vector<> and Point<>.
+
+  assert(tolerance > 0);
+
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      if(!IsFloatEqual(m_elem[i][j], rhs.m_elem[i][j], tolerance))
+      if(fabs(m_elem[i][j] - rhs.m_elem[i][j]) > tolerance)
         return false;
 
-  // Don't need to test m_flip, it's determined by the values of m_elem
+  // Don't need to test m_flip, it's determined by the values of m_elem.
+
+  assert(m_flip == rhs.m_flip);
 
   return true;
 }
@@ -69,14 +79,15 @@ bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& rhs, double tolerance) cons
 template<const int dim>
 bool RotMatrix<dim>::operator< (const RotMatrix<dim>& m) const
 {
+  if(operator==(m))
+    return false;
+
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      if(!IsFloatEqual(m_elem[i][j], m.m_elem[i][j]))
+      if(m_elem[i][j] != m.m_elem[i][j])
         return m_elem[i][j] < m.m_elem[i][j];
 
-  // Don't need to test m_flip, it's determined by the values of m_elem
-
-  return false;
+  assert(false);
 }
 
 template<const int dim> // m1 * m2
@@ -87,16 +98,9 @@ RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   for(int i = 0; i < dim; ++i) {
     for(int j = 0; j < dim; ++j) {
       out.m_elem[i][j] = 0;
-      CoordType max_val = 0;
       for(int k = 0; k < dim; ++k) {
-        CoordType val = m1.m_elem[i][k] * m2.m_elem[k][j];
-        out.m_elem[i][j] += val;
-        CoordType aval = fabs(val);
-        if(aval > max_val)
-          max_val = aval;
+        out.m_elem[i][j] += m1.m_elem[i][k] * m2.m_elem[k][j];
       }
-      if(max_val > 0 && fabs(out.m_elem[i][j]/max_val) < WFMATH_EPSILON)
-        out.m_elem[i][j] = 0;
     }
   }
 
@@ -113,16 +117,9 @@ RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   for(int i = 0; i < dim; ++i) {
     for(int j = 0; j < dim; ++j) {
       out.m_elem[i][j] = 0;
-      CoordType max_val = 0;
       for(int k = 0; k < dim; ++k) {
-        CoordType val = m1.m_elem[i][k] * m2.m_elem[j][k];
-        out.m_elem[i][j] += val;
-        CoordType aval = fabs(val);
-        if(aval > max_val)
-          max_val = aval;
+        out.m_elem[i][j] += m1.m_elem[i][k] * m2.m_elem[j][k];
       }
-      if(max_val > 0 && fabs(out.m_elem[i][j]/max_val) < WFMATH_EPSILON)
-        out.m_elem[i][j] = 0;
     }
   }
 
@@ -139,16 +136,9 @@ RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   for(int i = 0; i < dim; ++i) {
     for(int j = 0; j < dim; ++j) {
       out.m_elem[i][j] = 0;
-      CoordType max_val = 0;
       for(int k = 0; k < dim; ++k) {
-        CoordType val = m1.m_elem[k][i] * m2.m_elem[k][j];
-        out.m_elem[i][j] += val;
-        CoordType aval = fabs(val);
-        if(aval > max_val)
-          max_val = aval;
+        out.m_elem[i][j] += m1.m_elem[k][i] * m2.m_elem[k][j];
       }
-      if(max_val > 0 && fabs(out.m_elem[i][j]/max_val) < WFMATH_EPSILON)
-        out.m_elem[i][j] = 0;
     }
   }
 
@@ -165,16 +155,9 @@ RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   for(int i = 0; i < dim; ++i) {
     for(int j = 0; j < dim; ++j) {
       out.m_elem[i][j] = 0;
-      CoordType max_val = 0;
       for(int k = 0; k < dim; ++k) {
-        CoordType val = m1.m_elem[k][i] * m2.m_elem[j][k];
-        out.m_elem[i][j] += val;
-        CoordType aval = fabs(val);
-        if(aval > max_val)
-          max_val = aval;
+        out.m_elem[i][j] += m1.m_elem[k][i] * m2.m_elem[j][k];
       }
-      if(max_val > 0 && fabs(out.m_elem[i][j]/max_val) < WFMATH_EPSILON)
-        out.m_elem[i][j] = 0;
     }
   }
 
@@ -190,16 +173,9 @@ Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v)
 
   for(int i = 0; i < dim; ++i) {
     out.m_elem[i] = 0;
-    CoordType max_val = 0;
     for(int j = 0; j < dim; ++j) {
-      CoordType val = m.m_elem[i][j] * v.m_elem[j];
-      out.m_elem[i] += val;
-      CoordType aval = fabs(val);
-      if(aval > max_val)
-        max_val = aval;
+      out.m_elem[i] += m.m_elem[i][j] * v.m_elem[j];
     }
-    if(max_val > 0 && fabs(out.m_elem[i]/max_val) < WFMATH_EPSILON)
-      out.m_elem[i] = 0;
   }
 
   return out;
@@ -212,16 +188,9 @@ Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v)
 
   for(int i = 0; i < dim; ++i) {
     out.m_elem[i] = 0;
-    CoordType max_val = 0;
     for(int j = 0; j < dim; ++j) {
-      CoordType val = m.m_elem[j][i] * v.m_elem[j];
-      out.m_elem[i] += val;
-      CoordType aval = fabs(val);
-      if(aval > max_val)
-        max_val = aval;
+      out.m_elem[i] += m.m_elem[j][i] * v.m_elem[j];
     }
-    if(max_val > 0 && fabs(out.m_elem[i]/max_val) < WFMATH_EPSILON)
-      out.m_elem[i] = 0;
   }
 
   return out;
@@ -329,7 +298,7 @@ inline CoordType RotMatrix<dim>::trace() const
   CoordType out = dim ? m_elem[0][0] : 0;
 
   for(int i = 1; i < dim; ++i)
-    out = FloatAdd(out, m_elem[i][i]);
+    out += m_elem[i][i];
 
   return out;
 }
@@ -367,7 +336,11 @@ RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams], bool 
 
 // Only have this for special cases
 template<> inline bool RotMatrix<2>::toEuler(CoordType angles[1]) const
-	{angles[0] = atan2(m_elem[1][1], m_elem[0][1]); return !m_flip;}
+{
+  angles[0] = atan2(m_elem[1][1], m_elem[0][1]);
+  return !m_flip;
+}
+
 template<> bool RotMatrix<3>::toEuler(CoordType angles[3]) const;
 
 template<const int dim>
@@ -435,9 +408,9 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      m_elem[i][j] += FloatAdd((ctheta - 1) * FloatAdd(v1[i] * v1[j] / v1_sqr_mag,
-		      vperp[i] * vperp[j] / vperp_sqr_mag), stheta
-		      * FloatSubtract(vperp[i] * v1[j], v1[i] * vperp[j]) / mag_prod);
+      m_elem[i][j] += ((ctheta - 1) * (v1[i] * v1[j] / v1_sqr_mag
+		      + vperp[i] * vperp[j] / vperp_sqr_mag)
+		      + stheta * (vperp[i] * v1[j] - v1[i] * vperp[j]) / mag_prod);
 
   m_flip = false;
 
@@ -458,7 +431,12 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
   CoordType dot = Dot(from, to);
   CoordType sqrmagprod = fromSqrMag * toSqrMag;
   CoordType magprod = sqrt(sqrmagprod);
-  CoordType ctheta_plus_1 = FloatAdd(dot / magprod, 1);
+  CoordType ctheta_plus_1 = dot / magprod + 1;
+
+  if(ctheta_plus_1 < WFMATH_EPSILON) {
+    // 180 degree rotation, rotation plane indeterminate
+    throw ColinearVectors<dim>(from, to);
+  }
 
   for(int i = 0; i < dim; ++i) {
     for(int j = i; j < dim; ++j) {
@@ -467,19 +445,18 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
 
       CoordType ijprod = from[i] * to[j], jiprod = to[i] * from[j];
 
-      CoordType termthree = FloatAdd(ijprod, jiprod) * dot / sqrmagprod;
+      CoordType termthree = (ijprod + jiprod) * dot / sqrmagprod;
 
-      CoordType combined = FloatSubtract(FloatAdd(projfrom, projto), termthree)
-			   / ctheta_plus_1;
+      CoordType combined = (projfrom + projto - termthree) / ctheta_plus_1;
 
       if(i == j) {
-        m_elem[i][i] = FloatSubtract(1, combined);
+        m_elem[i][i] = 1 - combined;
       }
       else {
-        diffterm = FloatSubtract(jiprod, ijprod) / magprod;
+        diffterm = (jiprod - ijprod) / magprod;
 
-        m_elem[i][j] = FloatSubtract(diffterm, combined);
-        m_elem[j][i] = -FloatAdd(diffterm, combined);
+        m_elem[i][j] = diffterm - combined;
+        m_elem[j][i] = -diffterm - combined;
       }
     }
   }
@@ -512,7 +489,7 @@ RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
 
   // diagonal
   for(int i = 0; i < dim; ++i)
-    m_elem[i][i] = FloatSubtract(1, 2 * v[i] * v[i] / sqr_mag);
+    m_elem[i][i] = 1 - 2 * v[i] * v[i] / sqr_mag;
 
   m_flip = true;
 

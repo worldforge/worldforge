@@ -40,18 +40,22 @@ double WFMath::GaussianConditional(double mean, double stddev, double val)
 {
   assert(stddev != 0);
 
-  double diff = FloatSubtract(val, mean, DBL_EPSILON) / stddev;
-  double diffsqr_over_two = diff * diff / 2;
+  double diff = val - mean;
+  double diffnorm = diff / stddev;
+  double diffsqr_over_two = diffnorm * diffnorm / 2;
 
-  if(diff < 0 || diffsqr_over_two < 1.5) {
+  /* Make sure round off error in Sqrt3 doesn't hit
+   * assert() in IncompleteGammaComplementNoPrefactor()
+   */
+  if(diffnorm < Sqrt3 + 10 * DBL_EPSILON) {
     double erfc_norm = IncompleteGammaComplement(0.5, diffsqr_over_two);
 
-    double normalization = (diff > 0) ? (erfc_norm / 2) : (1 - erfc_norm / 2);
+    double normalization = (diffnorm > 0) ? (erfc_norm / 2) : (1 - erfc_norm / 2);
 
     return Gaussian(mean, stddev, val) / normalization;
   }
 
-  return 2.0 / (fabs(stddev * diff)
+  return 2.0 / (fabs(diff)
 	 * IncompleteGammaComplementNoPrefactor(0.5, diffsqr_over_two));
 }
 
@@ -59,12 +63,9 @@ double WFMath::Gaussian(double mean, double stddev, double val)
 {
   assert(stddev != 0);
 
-  const double sqrt_pi = 1.77245385090551602729816748334114518279754945612237;
-  const double factor = sqrt_pi * Sqrt2;
+  double diff = (mean - val) / stddev;
 
-  double diff = FloatSubtract(mean, val, DBL_EPSILON) / stddev;
-
-  return exp(-(diff * diff) / 2) / (fabs(stddev) * factor);
+  return exp(-(diff * diff) / 2) / (fabs(stddev) * (SqrtPi * Sqrt2));
 }
 
 double WFMath::PoissonConditional(double mean, unsigned int step)
@@ -97,9 +98,14 @@ static double LogPoisson(double mean, unsigned int step)
   if(step == 0)
     return -mean;
 
-  double ans = FloatSubtract(FloatSubtract(step * log(mean), mean, DBL_EPSILON),
-			     LogFactorial(step), DBL_EPSILON);
-  assert(ans <= 0); // probability <= 1
+  double first = step * log(mean);
+  double second = mean +  LogFactorial(step);
+
+  assert(second > 0);
+
+  double ans = first - second;
+
+  assert(ans < 0); // probability < 1, can only get == 1 for step == mean == 0
 
   return ans;
 }
@@ -122,7 +128,7 @@ double WFMath::LogFactorial(unsigned int n)
 double LogGamma(double z)
 {
   if(z == 0.5) // special case for Gaussian
-    return 0.57236494292470008707171367567652935582364740645764; // log(sqrt(pi))
+    return LogPi / 2;
 
   if(z == 1 || z == 2) // 0! and 1!
     return 0;
@@ -148,9 +154,7 @@ double LogGamma(double z)
   // Stirling approximation (see Gradshteyn + Ryzhik, Table of Integrals,
   // Series, and Products, fifth edition, formula 8.344 for a specific formula)
 
-  const double LogSqrtTwoPi = 0.91893853320467274178032973640561763986139747363777;
-
-  double ans = (z - 0.5) * log(z) - log_shift - z + LogSqrtTwoPi;
+  double ans = (z - 0.5) * log(z) - log_shift - z + (LogPi + Log2) / 2;
 
   // coeffs[i] is the 2*(i+1)th Ber.. number, divided by (2i + 1)*(2i + 2)
   const double coeffs[] = 	{1.0/12.0,		-1.0/360.0,

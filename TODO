@@ -20,6 +20,7 @@ Intersect functions unimplemented:
 Add shape tests from COAL
 Write rotateInverse() functions
 Rip out and redo Euler angle stuff
+Requests from Jesse: NAN, INFINITY, RADIANS_TO_DEGREES, DEGREES_TO_RADIANS
 Write an API reference for the library. Find some inline documentation tool?
 Portability questions and miniball_config.h
 Deal with difficulties in making certain functions friends of the

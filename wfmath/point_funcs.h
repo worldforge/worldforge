@@ -54,8 +54,10 @@ Point<dim>& Point<dim>::origin()
 template<const int dim>
 bool Point<dim>::isEqualTo(const Point<dim> &rhs, double tolerance) const
 {
+  CoordType delta = scaleEpsilon(rhs, tolerance);
+
   for(int i = 0; i < dim; ++i)
-    if(!IsFloatEqual(m_elem[i], rhs.m_elem[i], tolerance))
+    if(fabs(m_elem[i] - rhs.m_elem[i]) > delta)
       return false;
 
   return true;
@@ -67,7 +69,7 @@ Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
   Vector<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatSubtract(c1.m_elem[i], c2.m_elem[i]);
+    out.m_elem[i] = c1.m_elem[i] - c2.m_elem[i];
 
   return out;
 }
@@ -78,7 +80,7 @@ Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
   Point<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatAdd(c.m_elem[i], v.m_elem[i]);
+    out.m_elem[i] = c.m_elem[i] + v.m_elem[i];
 
   return out;
 }
@@ -89,7 +91,7 @@ Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
   Point<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatSubtract(c.m_elem[i], v.m_elem[i]);
+    out.m_elem[i] = c.m_elem[i] - v.m_elem[i];
 
   return out;
 }
@@ -100,7 +102,7 @@ Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
   Point<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatAdd(c.m_elem[i], v.m_elem[i]);
+    out.m_elem[i] = c.m_elem[i] + v.m_elem[i];
 
   return out;
 }
@@ -132,7 +134,7 @@ template<const int dim>
 Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
 {
     for(int i = 0; i < dim; ++i)
-      p.m_elem[i] = FloatAdd(p.m_elem[i], rhs.m_elem[i]);
+      p.m_elem[i] += rhs.m_elem[i];
 
     return p;
 }
@@ -141,7 +143,7 @@ template<const int dim>
 Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
 {
     for(int i = 0; i < dim; ++i)
-      p.m_elem[i] = FloatSubtract(p.m_elem[i], rhs.m_elem[i]);
+      p.m_elem[i] -= rhs.m_elem[i];
 
     return p;
 }
@@ -157,11 +159,14 @@ Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
 template<const int dim>
 bool Point<dim>::operator< (const Point<dim>& rhs) const
 {
+  if(operator==(rhs))
+    return false;
+
   for(int i = 0; i < dim; ++i)
-    if(!IsFloatEqual(m_elem[i], rhs.m_elem[i]))
+    if(m_elem[i] != rhs.m_elem[i])
       return m_elem[i] < rhs.m_elem[i];
 
-  return false;
+  assert(false);
 }
 
 // These three are here, instead of defined in the class, to
@@ -191,11 +196,11 @@ CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
   CoordType ans = 0;
 
   for(int i = 0; i < dim; ++i) {
-    CoordType diff = FloatSubtract(p1.m_elem[i], p2.m_elem[i]);
-    ans += diff * diff; // Don't need FloatAdd, all terms > 0
+    CoordType diff = p1.m_elem[i] - p2.m_elem[i];
+    ans += diff * diff;
   }
 
-  return ans;
+  return (fabs(ans) >= p1.scaleEpsilon(p2)) ? ans : 0;
 }
 
 template<const int dim, template<class> class container,
@@ -219,9 +224,11 @@ Point<dim> Barycenter(const container<Point<dim> >& c,
 
   while(++c_i != c_end && ++w_i != w_end) {
     tot_weight += *w_i;
-    max_weight = FloatMax(max_weight, fabs(*w_i));
+    CoordType val = fabs(*w_i);
+    if(val > max_weight)
+      max_weight = val;
     for(int j = 0; j < dim; ++j)
-      out[j] = FloatAdd(out[j], (*c_i)[j] * *w_i);
+      out[j] += (*c_i)[j] * *w_i;
   }
 
   // Make sure the weights don't add up to zero
@@ -248,7 +255,7 @@ Point<dim> Barycenter(const container<Point<dim> >& c)
   while(++i != end) {
     ++num_points;
     for(int j = 0; j < dim; ++j)
-      out[j] = FloatAdd(out[j], (*i)[j]);
+      out[j] += (*i)[j];
   }
 
   for(int j = 0; j < dim; ++j)
@@ -261,10 +268,10 @@ template<const int dim>
 Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)
 {
   Point<dim> out;
-  CoordType conj_dist = FloatSubtract(1, dist);
+  CoordType conj_dist = 1 - dist;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatAdd(p1.m_elem[i] * conj_dist, p2.m_elem[i] * dist);
+    out.m_elem[i] = p1.m_elem[i] * conj_dist + p2.m_elem[i] * dist;
 
   return out;
 }

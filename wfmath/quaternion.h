@@ -99,7 +99,6 @@ class Quaternion
   const Vector<3>& vector() const	{return m_vec;}
 
  private:
-
   CoordType m_w;
   Vector<3> m_vec;
 };

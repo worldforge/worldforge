@@ -1,4 +1,4 @@
-// const_test.cpp (IsFloatEqual() test functions)
+// const_test.cpp (Equal() test functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2002  The WorldForge Project
@@ -31,14 +31,14 @@ using namespace WFMath;
 
 static void TestEqual()
 {
-        assert( IsFloatEqual(1.0001, 1.0, 1.0e-3));
-        assert(!IsFloatEqual(1.0001, 1.0, 1.0e-5));
+        assert( Equal(1.0001, 1.0, 1.0e-3));
+        assert(!Equal(1.0001, 1.0, 1.0e-5));
 
-        assert( IsFloatEqual(0.00010000, 0.00010002, 1.0e-3));
-        assert(!IsFloatEqual(0.00010000, 0.00010002, 1.0e-6));
+        assert( Equal(0.00010000, 0.00010002, 1.0e-3));
+        assert(!Equal(0.00010000, 0.00010002, 1.0e-6));
 
-        assert( IsFloatEqual(1000100, 1000000, 1.0e-3));
-        assert(!IsFloatEqual(1000100, 1000000, 1.0e-6));
+        assert( Equal(1000100, 1000000, 1.0e-3));
+        assert(!Equal(1000100, 1000000, 1.0e-6));
 }
 
 int main()

@@ -96,45 +96,6 @@ std::ostream& operator<<(std::ostream& os, const Vector<dim>& v);
 template<const int dim>
 std::istream& operator>>(std::istream& is, Vector<dim>& v);
 
-// These two functions are inline, since they're only ever called
-// with a defined constant as argument.
-
-inline const CoordType _SloppyMagMaxTable(int i)
-{
-  const CoordType d[] = {1, 1,
-  1.082392200292393968799446410733,
-  1.145934719303161490541433900265,
-  };
-  const int dsize = sizeof(d) / sizeof(CoordType);
-
-  return (i < dsize) ? d[i] : 0;
-}
-
-
-// Note for people trying to compute the above numbers
-// more accurately:
-
-// The worst value for dim == 2 occurs when the ratio of the components
-// of the vector is sqrt(2) - 1. The value above is equal to sqrt(4 - 2 * sqrt(2)).
-
-// The worst value for dim == 3 occurs when the two smaller components
-// are equal, and their ratio with the large component is the
-// (unique, real) solution to the equation q x^3 + (q-1) x + p == 0,
-// where p = sqrt(2) - 1, and q = sqrt(3) + 1 - 2 * sqrt(2).
-// Running the script bc_sloppy_mag_3 provided with the WFMath source
-// will calculate the above number.
-
-inline const CoordType _SloppyMagMaxSqrtTable(int i)
-{
-  const CoordType d[] = {1, 1,
-  1.040380795811030899095785063701,
-  1.070483404496847625250328653179,
-  };
-  const int dsize = sizeof(d) / sizeof(CoordType);
-
-  return (i < dsize) ? d[i] : 0;
-}
-
 template<const int dim>
 class Vector {
  public:
@@ -226,8 +187,8 @@ class Vector {
 
   // Can't seem to implement these as constants, implementing
   // inline lookup functions instead.
-  static const CoordType sloppyMagMax() {return _SloppyMagMaxTable(dim);}
-  static const CoordType sloppyMagMaxSqrt() {return _SloppyMagMaxSqrtTable(dim);}
+  static const CoordType sloppyMagMax();
+  static const CoordType sloppyMagMaxSqrt();
 
   // Rotate the vector in the (axis1,axis2) plane by the angle theta
 
@@ -289,11 +250,13 @@ class Vector {
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
  private:
+  double scaleEpsilon(const Vector& v, double epsilon = WFMATH_EPSILON) const
+	{return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
+
   CoordType m_elem[dim];
 };
 
-inline CoordType Cross(const Vector<2>& v1, const Vector<2>& v2)
-	{return v1[0] * v2[1] - v2[0] * v1[1];}
+CoordType Cross(const Vector<2>& v1, const Vector<2>& v2);
 Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
 
 } // namespace WFMath

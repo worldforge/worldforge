@@ -89,20 +89,51 @@ template<> Vector<3>& Vector<3>::rotate(const Quaternion& q)
   CoordType w = q.scalar();
   const Vector<3>& vec = q.vector();
 
-  *this = FloatSubtract(2 * w * w, 1) * *this
+  *this = (2 * w * w - 1) * *this
 	  + 2 * vec * Dot(vec, *this)
 	  + 2 * w * Cross(vec, *this);
 
   return *this;
 }
 
+// FIXME make the Cross() functions friends of Vector<3> somehow,
+// get rid of this
+template<const int dim>
+static double CopyOfScaleEpsilon(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  double max1 = 0, max2 = 0;
+
+  for(int i = 0; i < dim; ++i) {
+    double val1 = fabs(v1[i]), val2 = fabs(v2[i]);
+    if(val1 > max1)
+      max1 = val1;
+    if(val2 > max2)
+      max2 = val2;
+  }
+
+  return _ScaleEpsilon(max1, max2, WFMATH_EPSILON);
+}
+
+CoordType WFMath::Cross(const Vector<2>& v1, const Vector<2>& v2)
+{
+  CoordType ans = v1[0] * v2[1] - v2[0] * v1[1];
+
+  return (ans >= CopyOfScaleEpsilon(v1, v2)) ? ans : 0;
+}
+
 Vector<3> WFMath::Cross(const Vector<3>& v1, const Vector<3>& v2)
 {
   Vector<3> ans;
 
-  ans[0] = FloatSubtract(v1[1] * v2[2], v2[1] * v1[2]);
-  ans[1] = FloatSubtract(v1[2] * v2[0], v2[2] * v1[0]);
-  ans[2] = FloatSubtract(v1[0] * v2[1], v2[0] * v1[1]);
+  ans[0] = v1[1] * v2[2] - v2[1] * v1[2];
+  ans[1] = v1[2] * v2[0] - v2[2] * v1[0];
+  ans[2] = v1[0] * v2[1] - v2[0] * v1[1];
+
+  double delta = CopyOfScaleEpsilon(v1, v2);
+
+  for(int i = 0; i < 3; ++i)
+    if(fabs(ans[i]) < delta)
+      ans[i] = 0;
 
   return ans;
 }

@@ -72,16 +72,16 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 
   Vector<3> wvec = vref * q.scalar();
 
-  m_elem[0][0] = FloatSubtract(1, 2 * FloatAdd(yy, zz));
-  m_elem[1][1] = FloatSubtract(1, 2 * FloatAdd(xx, zz));
-  m_elem[2][2] = FloatSubtract(1, 2 * FloatAdd(xx, yy));
+  m_elem[0][0] = 1 - 2 * (yy + zz);
+  m_elem[1][1] = 1 - 2 * (xx + zz);
+  m_elem[2][2] = 1 - 2 * (xx + yy);
 
-  m_elem[0][1] = 2 * FloatSubtract(xy, wvec[2]);
-  m_elem[0][2] = 2 * FloatAdd(xz, wvec[1]);
-  m_elem[1][0] = 2 * FloatAdd(xy, wvec[2]);
-  m_elem[1][2] = 2 * FloatSubtract(yz, wvec[0]);
-  m_elem[2][0] = 2 * FloatSubtract(xz, wvec[1]);
-  m_elem[2][1] = 2 * FloatAdd(yz, wvec[0]);
+  m_elem[0][1] = 2 * (xy - wvec[2]);
+  m_elem[0][2] = 2 * (xz + wvec[1]);
+  m_elem[1][0] = 2 * (xy + wvec[2]);
+  m_elem[1][2] = 2 * (yz - wvec[0]);
+  m_elem[2][0] = 2 * (xz - wvec[1]);
+  m_elem[2][1] = 2 * (yz + wvec[0]);
 
   m_flip = !not_flip;
 
@@ -93,7 +93,7 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 
 template<>
 RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
-						const CoordType& theta)
+					      const CoordType& theta)
 {
   CoordType max = 0;
   int main_comp = -1;
@@ -110,8 +110,9 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
 
   Vector<3> tmp, v1, v2;
 
-  tmp.zero();
-  tmp[(main_comp + 1)%3] = 1; // Not parallel to axis
+  int new_comp = main_comp ? main_comp - 1 : 2; // Not parallel to axis
+  for(int i = 0; i < 3; ++i)
+    tmp[i] = (i == new_comp) ? 1 : 0;
 
   v1 = Cross(axis, tmp); // 3D specific part
   v2 = Cross(axis, v1);
@@ -120,7 +121,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
 }
 
 bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
-				  CoordType* buf1, CoordType* buf2, double precision)
+				CoordType* buf1, CoordType* buf2, double precision)
 {
   precision = fabs(precision);
 
@@ -136,17 +137,15 @@ bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
     for(int i = 0; i < size; ++i) {
       for(int j = 0; j < size; ++j) {
         CoordType ans = 0;
-        CoordType max_val = 0;
         for(int k = 0; k < size; ++k) {
-          CoordType val = vals[i*size+k] * vals[j*size+k];
-          ans += val;
-          CoordType aval = fabs(val);
-          if(aval > max_val)
-            max_val = aval;
+          ans += vals[i*size+k] * vals[j*size+k];
         }
-        if(max_val > 0 && fabs(ans/max_val) < try_prec)
-          ans = 0;
-        try_prec = FloatMax(fabs(ans - ((i == j) ? 1 : 0)), try_prec);
+
+        if(i == j) // Subtract identity matrix
+          --ans;
+        ans = fabs(ans);
+        if(ans >= try_prec)
+          try_prec = ans;
       }
     }
 
@@ -195,8 +194,8 @@ bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 
     for(int i = 0; i < size; ++i) {
       for(int j = 0; j < size; ++j) {
-        CoordType delta = FloatSubtract(vals[i*size+j], buf2[i*size+j]) / 2;
-        vals[i*size+j] -= delta; // delta is small, don't need FloatAdd()
+        CoordType delta = (vals[i*size+j] - buf2[i*size+j]) / 2;
+        vals[i*size+j] -= delta;
       }
     }
 
@@ -226,7 +225,7 @@ static CoordType _MatrixDeterminantImpl(const int size, CoordType* m)
   for(int i = 0; i < size - 1; ++i) {
     CoordType minval = 0;
     for(int j = 0; j < size; ++j)
-      minval += m[j*size+i] * m[j*size+i]; // Don't need FloatAdd()
+      minval += m[j*size+i] * m[j*size+i];
     minval /= WFMATH_MAX;
     if(minval < WFMATH_MIN)
       minval = WFMATH_MIN;
@@ -239,7 +238,7 @@ static CoordType _MatrixDeterminantImpl(const int size, CoordType* m)
         return 0;
       m[i*size+i] = m[j*size+i];
       for(int k = i + 1; k < size; ++k) // For k < i, m[j*size+k] == 0
-        m[i*size+k] = FloatAdd(m[i*size+k], m[j*size+k]);
+        m[i*size+k] += m[j*size+k];
     }
     for(int j = i + 1; j < size; ++j) {
       CoordType factor = m[j*size+i] / m[i*size+i];
@@ -248,7 +247,7 @@ static CoordType _MatrixDeterminantImpl(const int size, CoordType* m)
       m[j*size+i] = 0;
       if(factor != 0) {
         for(int k = i + 1; k < size; ++k) // For k < i, m[k*size+j] == 0
-	  m[j*size+k] = FloatSubtract(m[j*size+k], m[i*size+k] * factor);
+	  m[j*size+k] -= m[i*size+k] * factor;
       }
     }
   }
@@ -271,7 +270,7 @@ static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
     // Make sure in[i*size+i] is nonzero
     CoordType minval = 0;
     for(int j = 0; j < size; ++j)
-      minval += in[j*size+i] * in[j*size+i]; // Don't need FloatAdd()
+      minval += in[j*size+i] * in[j*size+i];
     minval /= WFMATH_MAX;
     if(minval < WFMATH_MIN)
       minval = WFMATH_MIN;
@@ -283,8 +282,8 @@ static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
       if(j == size) // degenerate matrix
         return false;
       for(int k = 0; k < size; ++k) {
-        out[i*size+k] = FloatAdd(out[i*size+k], out[j*size+k]);
-        in[i*size+k] = FloatAdd(in[i*size+k], in[j*size+k]);
+        out[i*size+k] += out[j*size+k];
+        in[i*size+k] += in[j*size+k];
       }
     }
     // We now know in[i*size+i] / in[j*size+i] >= sqrt(WFMATH_MIN) for any j
@@ -304,8 +303,8 @@ static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
       in[j*size+i] = 0;
       if(tmp != 0) {
         for(int k = 0; k < size; ++k) {
-          out[j*size+k] = FloatSubtract(out[j*size+k], out[i*size+k] * tmp);
-          in[j*size+k] = FloatSubtract(in[j*size+k], in[i*size+k] * tmp);
+          out[j*size+k] -= out[i*size+k] * tmp;
+          in[j*size+k] -= in[i*size+k] * tmp;
         }
       }
     }
@@ -319,7 +318,7 @@ static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
       CoordType tmp = in[j*size+i];
       if(tmp != 0)
         for(int k = 0; k < size; ++k)
-          out[j*size+k] = FloatSubtract(out[j*size+k], out[i*size+k] * tmp);
+          out[j*size+k] -= out[i*size+k] * tmp;
           // Don't bother modifying in[j*size+k], we never use it again.
     }
   }

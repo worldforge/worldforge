@@ -33,6 +33,8 @@
 #include <wfmath/segment.h>
 #include <wfmath/rotbox.h>
 
+// FIXME check all these for roundoff error
+
 namespace WFMath {
 
 // Get the reversed order intersect functions (is this safe? FIXME)
@@ -187,8 +189,6 @@ bool Intersect(const Ball<dim>& b, const AxisBox<dim>& a)
 {
   CoordType dist = 0;
 
-  // Don't use FloatAdd(), only need values for comparison
-
   for(int i = 0; i < dim; ++i) {
     CoordType dist_i;
     if(b.m_center[i] < a.m_low[i])
@@ -207,8 +207,6 @@ template<const int dim>
 bool IntersectProper(const Ball<dim>& b, const AxisBox<dim>& a)
 {
   CoordType dist = 0;
-
-  // Don't use FloatAdd(), only need values for comparison
 
   for(int i = 0; i < dim; ++i) {
     CoordType dist_i;
@@ -255,8 +253,6 @@ bool ContainsProper(const Ball<dim>& b, const AxisBox<dim>& a)
 template<const int dim>
 bool Contains(const AxisBox<dim>& a, const Ball<dim>& b)
 {
-  // Don't use FloatAdd(), only need values for comparison
-
   for(int i = 0; i < dim; ++i)
     if(b.m_center[i] - b.m_radius < a.lowerBound(i)
        || b.m_center[i] + b.m_radius > a.upperBound(i))
@@ -268,8 +264,6 @@ bool Contains(const AxisBox<dim>& a, const Ball<dim>& b)
 template<const int dim>
 bool ContainsProper(const AxisBox<dim>& a, const Ball<dim>& b)
 {
-  // Don't use FloatAdd(), only need values for comparison
-
   for(int i = 0; i < dim; ++i)
     if(b.m_center[i] - b.m_radius <= a.lowerBound(i)
        || b.m_center[i] + b.m_radius >= a.upperBound(i))
@@ -299,8 +293,7 @@ bool IntersectProper(const Ball<dim>& b1, const Ball<dim>& b2)
 template<const int dim>
 bool Contains(const Ball<dim>& outer, const Ball<dim>& inner)
 {
-  // Need FloatSubtract() so a ball will contain itself
-  CoordType rad_diff = FloatSubtract(outer.m_radius, inner.m_radius);
+  CoordType rad_diff = outer.m_radius - inner.m_radius;
 
   if(rad_diff < 0)
     return false;
@@ -313,8 +306,7 @@ bool Contains(const Ball<dim>& outer, const Ball<dim>& inner)
 template<const int dim>
 bool ContainsProper(const Ball<dim>& outer, const Ball<dim>& inner)
 {
-  // Need FloatSubtract() so a ball will not contain itself properly
-  CoordType rad_diff = FloatSubtract(outer.m_radius, inner.m_radius);
+  CoordType rad_diff = outer.m_radius - inner.m_radius;
 
   if(rad_diff <= 0)
     return false;
@@ -339,7 +331,7 @@ bool Intersect(const Segment<dim>& s, const Point<dim>& p)
     return false;
 
   // Check for colinearity
-  return IsFloatEqual(proj * proj, v1.sqrMag() * v2.sqrMag());
+  return Equal(proj * proj, v1.sqrMag() * v2.sqrMag());
 }
 
 template<const int dim>
@@ -355,7 +347,7 @@ bool IntersectProper(const Segment<dim>& s, const Point<dim>& p)
     return false;
 
   // Check for colinearity
-  return IsFloatEqual(proj * proj, v1.sqrMag() * v2.sqrMag());
+  return Equal(proj * proj, v1.sqrMag() * v2.sqrMag());
 }
 
 template<const int dim>
@@ -378,7 +370,7 @@ bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b)
   CoordType min = 0, max = 1;
 
   for(int i = 0; i < dim; ++i) {
-    CoordType dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
+    CoordType dist = s.m_p2[i] - s.m_p1[i];
     if(dist == 0) {
       if(s.m_p1[i] < b.m_low[i] || s.m_p1[i] > b.m_high[i])
         return false;
@@ -415,7 +407,7 @@ bool IntersectProper(const Segment<dim>& s, const AxisBox<dim>& b)
   CoordType min = 0, max = 1;
 
   for(int i = 0; i < dim; ++i) {
-    CoordType dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
+    CoordType dist = s.m_p2[i] - s.m_p1[i];
     if(dist == 0) {
       if(s.m_p1[i] <= b.m_low[i] || s.m_p1[i] >= b.m_high[i])
         return false;
@@ -572,20 +564,20 @@ bool Intersect(const Segment<dim>& s1, const Segment<dim>& s2)
   CoordType proj12 = Dot(v1, v2), proj1delta = Dot(v1, deltav),
 	    proj2delta = Dot(v2, deltav);
 
-  CoordType denom = FloatSubtract(v1sqr * v2sqr, proj12 * proj12);
+  CoordType denom = v1sqr * v2sqr - proj12 * proj12;
 
-  if(dim > 2 && !IsFloatEqual(FloatAdd(v2sqr * proj1delta * proj1delta,
-				       v1sqr * proj2delta * proj2delta),
-			      FloatAdd(2 * proj12 * proj1delta * proj2delta,
-				       deltav.sqrMag() * denom)))
+  if(dim > 2 && !Equal(v2sqr * proj1delta * proj1delta +
+		         v1sqr * proj2delta * proj2delta,
+		       2 * proj12 * proj1delta * proj2delta +
+		         deltav.sqrMag() * denom))
     return false; // Skew lines; don't intersect
 
   if(denom > 0) {
     // Find the location of the intersection point in parametric coordinates,
     // where one end of the segment is at zero and the other at one
 
-    CoordType coord1 = FloatSubtract(v2sqr * proj1delta, proj12 * proj2delta) / denom;
-    CoordType coord2 = -FloatSubtract(v1sqr * proj2delta, proj12 * proj1delta) / denom;
+    CoordType coord1 = (v2sqr * proj1delta - proj12 * proj2delta) / denom;
+    CoordType coord2 = -(v1sqr * proj2delta - proj12 * proj1delta) / denom;
 
     return coord1 >= 0 && coord1 <= 1 && coord2 >= 0 && coord2 <= 1;
   }
@@ -609,20 +601,20 @@ bool IntersectProper(const Segment<dim>& s1, const Segment<dim>& s2)
   CoordType proj12 = Dot(v1, v2), proj1delta = Dot(v1, deltav),
 	    proj2delta = Dot(v2, deltav);
 
-  CoordType denom = FloatSubtract(v1sqr * v2sqr, proj12 * proj12);
+  CoordType denom = v1sqr * v2sqr - proj12 * proj12;
 
-  if(dim > 2 && !IsFloatEqual(FloatAdd(v2sqr * proj1delta * proj1delta,
-				       v1sqr * proj2delta * proj2delta),
-			      FloatAdd(2 * proj12 * proj1delta * proj2delta,
-				       deltav.sqrMag() * denom)))
+  if(dim > 2 && !Equal(v2sqr * proj1delta * proj1delta +
+		         v1sqr * proj2delta * proj2delta,
+		       2 * proj12 * proj1delta * proj2delta +
+		         deltav.sqrMag() * denom))
     return false; // Skew lines; don't intersect
 
   if(denom > 0) {
     // Find the location of the intersection point in parametric coordinates,
     // where one end of the segment is at zero and the other at one
 
-    CoordType coord1 = FloatSubtract(v2sqr * proj1delta, proj12 * proj2delta) / denom;
-    CoordType coord2 = -FloatSubtract(v1sqr * proj2delta, proj12 * proj1delta) / denom;
+    CoordType coord1 = (v2sqr * proj1delta - proj12 * proj2delta) / denom;
+    CoordType coord2 = -(v1sqr * proj2delta - proj12 * proj1delta) / denom;
 
     return coord1 > 0 && coord1 < 1 && coord2 > 0 && coord2 < 1;
   }
@@ -737,8 +729,8 @@ bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b)
   CoordType matrix[dim*dim], low[dim], high[dim];
 
   for(int i = 0, num_param = 0; i < dim; ++i) {
-    low[i] = FloatSubtract(b.m_low[i], r.m_corner0[i]);
-    high[i] = FloatSubtract(b.m_high[i], r.m_corner0[i]);
+    low[i] = b.m_low[i] - r.m_corner0[i];
+    high[i] = b.m_high[i] - r.m_corner0[i];
     if(r.m_size[i] == 0)
       continue;
     for(int j = 0; j < dim; ++j)
@@ -787,8 +779,8 @@ bool IntersectProper(const RotBox<dim>& r, const AxisBox<dim>& b)
   CoordType matrix[dim*dim], low[dim], high[dim];
 
   for(int i = 0; i < dim; ++i) {
-    low[i] = FloatSubtract(b.m_low[i], r.m_corner0[i]);
-    high[i] = FloatSubtract(b.m_high[i], r.m_corner0[i]);
+    low[i] = b.m_low[i] - r.m_corner0[i];
+    high[i] = b.m_high[i] - r.m_corner0[i];
     for(int j = 0; j < dim; ++j)
       matrix[j*dim+i] = r.m_orient.elem(j, i) * r.m_size[i];
   }

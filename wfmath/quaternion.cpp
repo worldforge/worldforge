@@ -46,14 +46,26 @@ Quaternion::Quaternion (const CoordType w_in, const CoordType x_in,
 
 bool Quaternion::isEqualTo(const Quaternion &rhs, double tolerance) const
 {
-  return IsFloatEqual(m_w, rhs.m_w, tolerance)
-      && m_vec.isEqualTo(rhs.m_vec, tolerance);
+  // Since the sum of squares is 1, the magnitude of the largest
+  // element must be between 1 and 0.5, so we don't need to scale epsilon.
+
+  assert(tolerance > 0);
+
+  for(int i = 0; i < 3; ++i)
+    if(fabs(m_vec[i] - rhs.m_vec[i]) > tolerance)
+      return false;
+
+  return fabs(m_w - rhs.m_w) <= tolerance;
 }
 
 bool Quaternion::operator< (const Quaternion& rhs) const
 {
-  if(!IsFloatEqual(m_w, rhs.m_w))
+  if(operator==(rhs))
+    return false;
+
+  if(m_w != rhs.m_w)
     return m_w < rhs.m_w;
+
   return m_vec < rhs.m_vec;
 }
 
@@ -61,7 +73,7 @@ Quaternion Quaternion::operator* (const Quaternion& rhs) const
 {
   Quaternion out;
 
-  out.m_w = FloatSubtract(m_w * rhs.m_w, Dot(m_vec, rhs.m_vec));
+  out.m_w = m_w * rhs.m_w - Dot(m_vec, rhs.m_vec);
   out.m_vec = m_w * rhs.m_vec + rhs.m_w * m_vec + Cross(m_vec, rhs.m_vec);
 
   return out;
@@ -71,8 +83,7 @@ Quaternion Quaternion::operator/ (const Quaternion& rhs) const
 {
   Quaternion out;
 
-
-  out.m_w = FloatAdd(m_w * rhs.m_w, Dot(m_vec, rhs.m_vec));
+  out.m_w = m_w * rhs.m_w + Dot(m_vec, rhs.m_vec);
   out.m_vec = rhs.m_w * m_vec - m_w * rhs.m_vec - Cross(m_vec, rhs.m_vec);
 
   return out;
@@ -103,9 +114,9 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     m_w = s / 2.0;
     s = 0.5 / s;
 
-    m_vec[0] = FloatSubtract(m_ref.elem(2, 1), m_ref.elem(1, 2)) * s;
-    m_vec[1] = FloatSubtract(m_ref.elem(0, 2), m_ref.elem(2, 0)) * s;
-    m_vec[2] = FloatSubtract(m_ref.elem(1, 0), m_ref.elem(0, 1)) * s;
+    m_vec[0] = (m_ref.elem(2, 1) - m_ref.elem(1, 2)) * s;
+    m_vec[1] = (m_ref.elem(0, 2) - m_ref.elem(2, 0)) * s;
+    m_vec[2] = (m_ref.elem(1, 0) - m_ref.elem(0, 1)) * s;
   } else {
     // diagonal is negative
     int i = 0;
@@ -115,19 +126,15 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
 
     int j = nxt[i], k = nxt[j];
 
-    // We know the result of the subtraction is non-negative, so we
-    // don't need FloatAdd() to add the 1.0.
-    s = sqrt (1.0 + FloatSubtract(m_ref.elem(i, i),
-				  FloatAdd(m_ref.elem(j, j),
-					   m_ref.elem(k, k))));
+    s = sqrt (1.0 + m_ref.elem(i, i) - m_ref.elem(j, j) - m_ref.elem(k, k));
     m_vec[i] = s * 0.5;
 
     assert(s > 0.0);
     s = 0.5 / s;
 
-    m_w = FloatSubtract(m_ref.elem(k, j), m_ref.elem(j, k)) * s;
-    m_vec[j] = FloatAdd(m_ref.elem(i, j), m_ref.elem(j, i)) * s;
-    m_vec[k] = FloatAdd(m_ref.elem(i, k), m_ref.elem(k, i)) * s;
+    m_w = (m_ref.elem(k, j) - m_ref.elem(j, k)) * s;
+    m_vec[j] = (m_ref.elem(i, j) + m_ref.elem(j, i)) * s;
+    m_vec[k] = (m_ref.elem(i, k) + m_ref.elem(k, i)) * s;
   }
 
   return not_flip;
@@ -138,8 +145,8 @@ Quaternion& Quaternion::rotation(int axis, const CoordType angle)
   CoordType half_angle = angle / 2;
 
   m_w = cos(half_angle);
-  m_vec.zero();
-  m_vec[axis] = sin(half_angle);
+  for(int i = 0; i < 3; ++i)
+    m_vec[i] = (i == axis) ? sin(half_angle) : 0; // Note sin() only called once
 
   return *this;
 }
@@ -159,7 +166,7 @@ Quaternion& Quaternion::fromEuler(const CoordType alpha, const CoordType beta,
 {
   rotation(2, gamma); // Do the last rotation first, since we'll right multiplying
   operator*=(Quaternion(1, beta));
-  operator*=(Quaternion(0, alpha));
+  operator*=(Quaternion(2, alpha));
 
   return *this;
 }

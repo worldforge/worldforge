@@ -50,6 +50,9 @@ void test_quaternion(const Quaternion& q)
 
   q2 /= q;
 
+  cout << "q = " << q << std::endl;
+  cout << "q2 = " << q2 << std::endl;
+
   assert(q * q2 == Quaternion().identity());
 
   q2 *= q;
@@ -66,9 +69,9 @@ void test_quaternion(const Quaternion& q)
     for(int j = i; j < 3; ++j) {
       CoordType dot_sum = 0;
       for(int k = 0; k < 3; ++k)
-        dot_sum = FloatAdd(dot_sum, m.elem(i, k) * m.elem(j, k));
+        dot_sum += m.elem(i, k) * m.elem(j, k);
 //      cout << '(' << i << ',' << j << ") dot_sum == " << dot_sum << std::endl;
-      assert(IsFloatEqual(dot_sum, (i == j) ? 1 : 0));
+      assert(Equal(dot_sum, (i == j) ? 1 : 0));
     }
   }
 
@@ -98,7 +101,7 @@ void test_quaternion(const Quaternion& q)
 
   CoordType s(q.scalar());
 
-  assert(IsFloatEqual(s * s + q.vector().sqrMag(), 1));
+  assert(Equal(s * s + q.vector().sqrMag(), 1));
 
   // FIXME test Euler angle conversion
 }

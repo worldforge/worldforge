@@ -141,7 +141,7 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) con
   CoordType high_dist = offset(high_corner, p2_high).mag();
   CoordType low_dist = offset(low_corner, p2_low).mag();
 
-  p2 = Midpoint(p2_high, p2_low, high_dist / FloatAdd(high_dist, low_dist));
+  p2 = Midpoint(p2_high, p2_low, high_dist / (high_dist + low_dist));
 
   return true;
 }
@@ -204,6 +204,8 @@ Polygon<2>& Polygon<2>::rotatePoint(const RotMatrix<2>& m, const Point<2>& p)
   return *this;
 }
 
+// FIXME deal with round off error in _all_ these intersection functions
+
 // The Polygon<2>/Point<2> intersection function was stolen directly
 // from shape.cpp in libCoal
 
@@ -221,11 +223,10 @@ bool WFMath::Intersect<2>(const Polygon<2>& r, const Point<2>& p)
     if (!vertically_between)
       continue;
 
-    CoordType x_intersect = (*i)[0] + FloatSubtract((*j)[0], (*i)[0])
-			    * FloatSubtract(p[1], (*i)[1])
-			    / FloatSubtract((*j)[1], (*i)[1]);
+    CoordType x_intersect = (*i)[0] + ((*j)[0] - (*i)[0])
+			    * (p[1] - (*i)[1]) / ((*j)[1] - (*i)[1]);
 
-    if(IsFloatEqual(p[0], x_intersect))
+    if(Equal(p[0], x_intersect))
       return true;
 
     if(p[0] < x_intersect)
@@ -249,11 +250,11 @@ bool WFMath::IntersectProper<2>(const Polygon<2>& r, const Point<2>& p)
     if (!vertically_between)
       continue;
 
-    CoordType x_intersect = (*i)[0] + FloatSubtract((*j)[0], (*i)[0])
-			    * FloatSubtract(p[1], (*i)[1])
-			    / FloatSubtract((*j)[1], (*i)[1]);
+    CoordType x_intersect = (*i)[0] + ((*j)[0] - (*i)[0])
+			    * (p[1] - (*i)[1])
+			    / ((*j)[1] - (*i)[1]);
 
-    if(IsFloatEqual(p[0], x_intersect))
+    if(Equal(p[0], x_intersect))
       return false;
 
     if(p[0] < x_intersect)
@@ -293,14 +294,14 @@ bool WFMath::Intersect<2>(const Polygon<2>& p, const AxisBox<2>& b)
         (((*i)[0] <= b.m_high[0] && b.m_high[0] < (*j)[0]) ||
          ((*j)[0] <= b.m_high[0] && b.m_high[0] < (*i)[0]));
 
-    CoordType xdiff = FloatSubtract((*j)[0], (*i)[0]);
-    CoordType ydiff = FloatSubtract((*j)[0], (*i)[0]);
+    CoordType xdiff = ((*j)[0] - (*i)[0]);
+    CoordType ydiff = ((*j)[0] - (*i)[0]);
 
     if(low_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (*i)[0] + FloatSubtract(b.m_low[1], (*i)[1])
+      CoordType x_intersect = (*i)[0] + (b.m_low[1] - (*i)[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(b.m_low[0], x_intersect) || IsFloatEqual(b.m_high[0], x_intersect))
+      if(Equal(b.m_low[0], x_intersect) || Equal(b.m_high[0], x_intersect))
         return true;
       if(b.m_low[0] < x_intersect && b.m_high[0] > x_intersect)
         return true;
@@ -311,30 +312,30 @@ bool WFMath::Intersect<2>(const Polygon<2>& p, const AxisBox<2>& b)
     }
 
     if(low_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (*i)[1] + FloatSubtract(b.m_low[0], (*i)[0])
+      CoordType y_intersect = (*i)[1] + (b.m_low[0] - (*i)[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(b.m_low[1], y_intersect) || IsFloatEqual(b.m_high[1], y_intersect))
+      if(Equal(b.m_low[1], y_intersect) || Equal(b.m_high[1], y_intersect))
         return true;
       if(b.m_low[1] < y_intersect && b.m_high[1] > y_intersect)
         return true;
     }
 
     if(high_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (*i)[0] + FloatSubtract(b.m_high[1], (*i)[1])
+      CoordType x_intersect = (*i)[0] + (b.m_high[1] - (*i)[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(b.m_low[0], x_intersect) || IsFloatEqual(b.m_high[0], x_intersect))
+      if(Equal(b.m_low[0], x_intersect) || Equal(b.m_high[0], x_intersect))
         return true;
       if(b.m_low[0] < x_intersect && b.m_high[0] > x_intersect)
         return true;
     }
 
     if(high_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (*i)[1] + FloatSubtract(b.m_high[0], (*i)[0])
+      CoordType y_intersect = (*i)[1] + (b.m_high[0] - (*i)[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(b.m_low[1], y_intersect) || IsFloatEqual(b.m_high[1], y_intersect))
+      if(Equal(b.m_low[1], y_intersect) || Equal(b.m_high[1], y_intersect))
         return true;
       if(b.m_low[1] < y_intersect && b.m_high[1] > y_intersect)
         return true;
@@ -364,14 +365,14 @@ bool WFMath::IntersectProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
         (((*i)[0] <= b.m_high[0] && b.m_high[0] < (*j)[0]) ||
          ((*j)[0] <= b.m_high[0] && b.m_high[0] < (*i)[0]));
 
-    CoordType xdiff = FloatSubtract((*j)[0], (*i)[0]);
-    CoordType ydiff = FloatSubtract((*j)[0], (*i)[0]);
+    CoordType xdiff = ((*j)[0] - (*i)[0]);
+    CoordType ydiff = ((*j)[0] - (*i)[0]);
 
     if(low_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (*i)[0] + FloatSubtract(b.m_low[1], (*i)[1])
+      CoordType x_intersect = (*i)[0] + (b.m_low[1] - (*i)[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(b.m_low[0], x_intersect) || IsFloatEqual(b.m_high[0], x_intersect))
+      if(Equal(b.m_low[0], x_intersect) || Equal(b.m_high[0], x_intersect))
         return false;
       if(b.m_low[0] < x_intersect && b.m_high[0] > x_intersect)
         return true;
@@ -382,30 +383,30 @@ bool WFMath::IntersectProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
     }
 
     if(low_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (*i)[1] + FloatSubtract(b.m_low[0], (*i)[0])
+      CoordType y_intersect = (*i)[1] + (b.m_low[0] - (*i)[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(b.m_low[1], y_intersect) || IsFloatEqual(b.m_high[1], y_intersect))
+      if(Equal(b.m_low[1], y_intersect) || Equal(b.m_high[1], y_intersect))
         return false;
       if(b.m_low[1] < y_intersect && b.m_high[1] > y_intersect)
         return true;
     }
 
     if(high_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (*i)[0] + FloatSubtract(b.m_high[1], (*i)[1])
+      CoordType x_intersect = (*i)[0] + (b.m_high[1] - (*i)[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(b.m_low[0], x_intersect) || IsFloatEqual(b.m_high[0], x_intersect))
+      if(Equal(b.m_low[0], x_intersect) || Equal(b.m_high[0], x_intersect))
         return false;
       if(b.m_low[0] < x_intersect && b.m_high[0] > x_intersect)
         return true;
     }
 
     if(high_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (*i)[1] + FloatSubtract(b.m_high[0], (*i)[0])
+      CoordType y_intersect = (*i)[1] + (b.m_high[0] - (*i)[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(b.m_low[1], y_intersect) || IsFloatEqual(b.m_high[1], y_intersect))
+      if(Equal(b.m_low[1], y_intersect) || Equal(b.m_high[1], y_intersect))
         return false;
       if(b.m_low[1] < y_intersect && b.m_high[1] > y_intersect)
         return true;
@@ -435,18 +436,18 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const AxisBox<2>& b)
         (((*i)[0] <= b.m_high[0] && b.m_high[0] < (*j)[0]) ||
          ((*j)[0] <= b.m_high[0] && b.m_high[0] < (*i)[0]));
 
-    CoordType xdiff = FloatSubtract((*j)[0], (*i)[0]);
-    CoordType ydiff = FloatSubtract((*j)[0], (*i)[0]);
+    CoordType xdiff = ((*j)[0] - (*i)[0]);
+    CoordType ydiff = ((*j)[0] - (*i)[0]);
 
     if(low_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (*i)[0] + FloatSubtract(b.m_low[1], (*i)[1])
+      CoordType x_intersect = (*i)[0] + (b.m_low[1] - (*i)[1])
 			      * xdiff / ydiff;
 
       // Use this twice, use a temporary value
-      bool is_low = !IsFloatEqual(b.m_low[0], x_intersect)
+      bool is_low = !Equal(b.m_low[0], x_intersect)
 		    && b.m_low[0] < x_intersect;
 
-      if(is_low && !IsFloatEqual(b.m_high[0], x_intersect)
+      if(is_low && !Equal(b.m_high[0], x_intersect)
          && b.m_high[0] > x_intersect)
         return false;
 
@@ -456,31 +457,31 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const AxisBox<2>& b)
     }
 
     if(low_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (*i)[1] + FloatSubtract(b.m_low[0], (*i)[0])
+      CoordType y_intersect = (*i)[1] + (b.m_low[0] - (*i)[0])
 			      * ydiff / xdiff;
 
-      if(!IsFloatEqual(b.m_low[1], y_intersect)
-	 && !IsFloatEqual(b.m_high[1], y_intersect)
+      if(!Equal(b.m_low[1], y_intersect)
+	 && !Equal(b.m_high[1], y_intersect)
          && b.m_low[1] < y_intersect && b.m_high[1] > y_intersect)
         return false;
     }
 
     if(high_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (*i)[0] + FloatSubtract(b.m_high[1], (*i)[1])
+      CoordType x_intersect = (*i)[0] + (b.m_high[1] - (*i)[1])
 			      * xdiff / ydiff;
 
-      if(!IsFloatEqual(b.m_low[0], x_intersect)
-	 && !IsFloatEqual(b.m_high[0], x_intersect)
+      if(!Equal(b.m_low[0], x_intersect)
+	 && !Equal(b.m_high[0], x_intersect)
          && b.m_low[0] < x_intersect && b.m_high[0] > x_intersect)
         return false;
     }
 
     if(high_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (*i)[1] + FloatSubtract(b.m_high[0], (*i)[0])
+      CoordType y_intersect = (*i)[1] + (b.m_high[0] - (*i)[0])
 			      * ydiff / xdiff;
 
-      if(!IsFloatEqual(b.m_low[1], y_intersect)
-	 && !IsFloatEqual(b.m_high[1], y_intersect)
+      if(!Equal(b.m_low[1], y_intersect)
+	 && !Equal(b.m_high[1], y_intersect)
          && b.m_low[1] < y_intersect && b.m_high[1] > y_intersect)
         return false;
     }
@@ -509,14 +510,14 @@ bool WFMath::ContainsProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
         (((*i)[0] <= b.m_high[0] && b.m_high[0] < (*j)[0]) ||
          ((*j)[0] <= b.m_high[0] && b.m_high[0] < (*i)[0]));
 
-    CoordType xdiff = FloatSubtract((*j)[0], (*i)[0]);
-    CoordType ydiff = FloatSubtract((*j)[0], (*i)[0]);
+    CoordType xdiff = ((*j)[0] - (*i)[0]);
+    CoordType ydiff = ((*j)[0] - (*i)[0]);
 
     if(low_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (*i)[0] + FloatSubtract(b.m_low[1], (*i)[1])
+      CoordType x_intersect = (*i)[0] + (b.m_low[1] - (*i)[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(b.m_low[0], x_intersect) || IsFloatEqual(b.m_high[0], x_intersect))
+      if(Equal(b.m_low[0], x_intersect) || Equal(b.m_high[0], x_intersect))
         return false;
       if(b.m_low[0] < x_intersect && b.m_high[0] > x_intersect)
         return false;
@@ -527,30 +528,30 @@ bool WFMath::ContainsProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
     }
 
     if(low_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (*i)[1] + FloatSubtract(b.m_low[0], (*i)[0])
+      CoordType y_intersect = (*i)[1] + (b.m_low[0] - (*i)[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(b.m_low[1], y_intersect) || IsFloatEqual(b.m_high[1], y_intersect))
+      if(Equal(b.m_low[1], y_intersect) || Equal(b.m_high[1], y_intersect))
         return false;
       if(b.m_low[1] < y_intersect && b.m_high[1] > y_intersect)
         return false;
     }
 
     if(high_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (*i)[0] + FloatSubtract(b.m_high[1], (*i)[1])
+      CoordType x_intersect = (*i)[0] + (b.m_high[1] - (*i)[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(b.m_low[0], x_intersect) || IsFloatEqual(b.m_high[0], x_intersect))
+      if(Equal(b.m_low[0], x_intersect) || Equal(b.m_high[0], x_intersect))
         return false;
       if(b.m_low[0] < x_intersect && b.m_high[0] > x_intersect)
         return false;
     }
 
     if(high_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (*i)[1] + FloatSubtract(b.m_high[0], (*i)[0])
+      CoordType y_intersect = (*i)[1] + (b.m_high[0] - (*i)[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(b.m_low[1], y_intersect) || IsFloatEqual(b.m_high[1], y_intersect))
+      if(Equal(b.m_low[1], y_intersect) || Equal(b.m_high[1], y_intersect))
         return false;
       if(b.m_low[1] < y_intersect && b.m_high[1] > y_intersect)
         return false;
@@ -780,11 +781,11 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const Segment<2>& s)
     if (!vertically_between)
       continue;
 
-    CoordType x_intersect = s2.m_p1[0] + FloatSubtract(s2.m_p2[0], s2.m_p1[0])
-			    * FloatSubtract(s.m_p1[1], s2.m_p1[1])
-			    / FloatSubtract(s2.m_p2[1], s2.m_p1[1]);
+    CoordType x_intersect = s2.m_p1[0] + (s2.m_p2[0] - s2.m_p1[0])
+			    * (s.m_p1[1] - s2.m_p1[1])
+			    / (s2.m_p2[1] - s2.m_p1[1]);
 
-    if(IsFloatEqual(s.m_p1[0], x_intersect)) { // Figure out which side the segment's on
+    if(Equal(s.m_p1[0], x_intersect)) { // Figure out which side the segment's on
 
       // Equal points are handled in the crossing routine above
       if(s2.endpoint(next_point) == s.m_p1)
@@ -856,11 +857,11 @@ bool WFMath::Intersect<2>(const Polygon<2>& p, const RotBox<2>& r)
   for(int j = 0; j < 2; ++j) {
     if(r.m_size[j] > 0) {
       m_low[j] = r.m_corner0[j];
-      m_high[j] = FloatAdd(r.m_corner0[j], r.m_size[j]);
+      m_high[j] = r.m_corner0[j] + r.m_size[j];
     }
     else {
       m_high[j] = r.m_corner0[j];
-      m_low[j] = FloatAdd(r.m_corner0[j], r.m_size[j]);
+      m_low[j] = r.m_corner0[j] + r.m_size[j];
     }
   }
 
@@ -892,14 +893,14 @@ bool WFMath::Intersect<2>(const Polygon<2>& p, const RotBox<2>& r)
         (((ends[0])[0] <= m_high[0] && m_high[0] < (ends[1])[0]) ||
          ((ends[1])[0] <= m_high[0] && m_high[0] < (ends[0])[0]));
 
-    CoordType xdiff = FloatSubtract((ends[1])[0], (ends[0])[0]);
-    CoordType ydiff = FloatSubtract((ends[1])[0], (ends[0])[0]);
+    CoordType xdiff = (ends[1])[0] - (ends[0])[0];
+    CoordType ydiff = (ends[1])[0] - (ends[0])[0];
 
     if(low_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (ends[0])[0] + FloatSubtract(m_low[1], (ends[0])[1])
+      CoordType x_intersect = (ends[0])[0] + (m_low[1] - (ends[0])[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(m_low[0], x_intersect) || IsFloatEqual(m_high[0], x_intersect))
+      if(Equal(m_low[0], x_intersect) || Equal(m_high[0], x_intersect))
         return true;
       if(m_low[0] < x_intersect && m_high[0] > x_intersect)
         return true;
@@ -910,30 +911,30 @@ bool WFMath::Intersect<2>(const Polygon<2>& p, const RotBox<2>& r)
     }
 
     if(low_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (ends[0])[1] + FloatSubtract(m_low[0], (ends[0])[0])
+      CoordType y_intersect = (ends[0])[1] + (m_low[0] - (ends[0])[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(m_low[1], y_intersect) || IsFloatEqual(m_high[1], y_intersect))
+      if(Equal(m_low[1], y_intersect) || Equal(m_high[1], y_intersect))
         return true;
       if(m_low[1] < y_intersect && m_high[1] > y_intersect)
         return true;
     }
 
     if(high_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (ends[0])[0] + FloatSubtract(m_high[1], (ends[0])[1])
+      CoordType x_intersect = (ends[0])[0] + (m_high[1] - (ends[0])[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(m_low[0], x_intersect) || IsFloatEqual(m_high[0], x_intersect))
+      if(Equal(m_low[0], x_intersect) || Equal(m_high[0], x_intersect))
         return true;
       if(m_low[0] < x_intersect && m_high[0] > x_intersect)
         return true;
     }
 
     if(high_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (ends[0])[1] + FloatSubtract(m_high[0], (ends[0])[0])
+      CoordType y_intersect = (ends[0])[1] + (m_high[0] - (ends[0])[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(m_low[1], y_intersect) || IsFloatEqual(m_high[1], y_intersect))
+      if(Equal(m_low[1], y_intersect) || Equal(m_high[1], y_intersect))
         return true;
       if(m_low[1] < y_intersect && m_high[1] > y_intersect)
         return true;
@@ -951,11 +952,11 @@ bool WFMath::IntersectProper<2>(const Polygon<2>& p, const RotBox<2>& r)
   for(int j = 0; j < 2; ++j) {
     if(r.m_size[j] > 0) {
       m_low[j] = r.m_corner0[j];
-      m_high[j] = FloatAdd(r.m_corner0[j], r.m_size[j]);
+      m_high[j] = r.m_corner0[j] + r.m_size[j];
     }
     else {
       m_high[j] = r.m_corner0[j];
-      m_low[j] = FloatAdd(r.m_corner0[j], r.m_size[j]);
+      m_low[j] = r.m_corner0[j] + r.m_size[j];
     }
   }
 
@@ -987,14 +988,14 @@ bool WFMath::IntersectProper<2>(const Polygon<2>& p, const RotBox<2>& r)
         (((ends[0])[0] <= m_high[0] && m_high[0] < (ends[1])[0]) ||
          ((ends[1])[0] <= m_high[0] && m_high[0] < (ends[0])[0]));
 
-    CoordType xdiff = FloatSubtract((ends[1])[0], (ends[0])[0]);
-    CoordType ydiff = FloatSubtract((ends[1])[0], (ends[0])[0]);
+    CoordType xdiff = (ends[1])[0] - (ends[0])[0];
+    CoordType ydiff = (ends[1])[0] - (ends[0])[0];
 
     if(low_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (ends[0])[0] + FloatSubtract(m_low[1], (ends[0])[1])
+      CoordType x_intersect = (ends[0])[0] + (m_low[1] - (ends[0])[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(m_low[0], x_intersect) || IsFloatEqual(m_high[0], x_intersect))
+      if(Equal(m_low[0], x_intersect) || Equal(m_high[0], x_intersect))
         return false;
       if(m_low[0] < x_intersect && m_high[0] > x_intersect)
         return true;
@@ -1005,30 +1006,30 @@ bool WFMath::IntersectProper<2>(const Polygon<2>& p, const RotBox<2>& r)
     }
 
     if(low_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (ends[0])[1] + FloatSubtract(m_low[0], (ends[0])[0])
+      CoordType y_intersect = (ends[0])[1] + (m_low[0] - (ends[0])[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(m_low[1], y_intersect) || IsFloatEqual(m_high[1], y_intersect))
+      if(Equal(m_low[1], y_intersect) || Equal(m_high[1], y_intersect))
         return false;
       if(m_low[1] < y_intersect && m_high[1] > y_intersect)
         return true;
     }
 
     if(high_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (ends[0])[0] + FloatSubtract(m_high[1], (ends[0])[1])
+      CoordType x_intersect = (ends[0])[0] + (m_high[1] - (ends[0])[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(m_low[0], x_intersect) || IsFloatEqual(m_high[0], x_intersect))
+      if(Equal(m_low[0], x_intersect) || Equal(m_high[0], x_intersect))
         return false;
       if(m_low[0] < x_intersect && m_high[0] > x_intersect)
         return true;
     }
 
     if(high_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (ends[0])[1] + FloatSubtract(m_high[0], (ends[0])[0])
+      CoordType y_intersect = (ends[0])[1] + (m_high[0] - (ends[0])[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(m_low[1], y_intersect) || IsFloatEqual(m_high[1], y_intersect))
+      if(Equal(m_low[1], y_intersect) || Equal(m_high[1], y_intersect))
         return false;
       if(m_low[1] < y_intersect && m_high[1] > y_intersect)
         return true;
@@ -1046,11 +1047,11 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const RotBox<2>& r)
   for(int j = 0; j < 2; ++j) {
     if(r.m_size[j] > 0) {
       m_low[j] = r.m_corner0[j];
-      m_high[j] = FloatAdd(r.m_corner0[j], r.m_size[j]);
+      m_high[j] = r.m_corner0[j] + r.m_size[j];
     }
     else {
       m_high[j] = r.m_corner0[j];
-      m_low[j] = FloatAdd(r.m_corner0[j], r.m_size[j]);
+      m_low[j] = r.m_corner0[j] + r.m_size[j];
     }
   }
 
@@ -1082,18 +1083,18 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const RotBox<2>& r)
         (((ends[0])[0] <= m_high[0] && m_high[0] < (ends[1])[0]) ||
          ((ends[1])[0] <= m_high[0] && m_high[0] < (ends[0])[0]));
 
-    CoordType xdiff = FloatSubtract((ends[1])[0], (ends[0])[0]);
-    CoordType ydiff = FloatSubtract((ends[1])[0], (ends[0])[0]);
+    CoordType xdiff = (ends[1])[0] - (ends[0])[0];
+    CoordType ydiff = (ends[1])[0] - (ends[0])[0];
 
     if(low_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (ends[0])[0] + FloatSubtract(m_low[1], (ends[0])[1])
+      CoordType x_intersect = (ends[0])[0] + (m_low[1] - (ends[0])[1])
 			      * xdiff / ydiff;
 
       // Use this twice, use a temporary value
-      bool is_low = !IsFloatEqual(m_low[0], x_intersect)
+      bool is_low = !Equal(m_low[0], x_intersect)
 		    && m_low[0] < x_intersect;
 
-      if(is_low && !IsFloatEqual(m_high[0], x_intersect)
+      if(is_low && !Equal(m_high[0], x_intersect)
          && m_high[0] > x_intersect)
         return false;
 
@@ -1103,31 +1104,31 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const RotBox<2>& r)
     }
 
     if(low_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (ends[0])[1] + FloatSubtract(m_low[0], (ends[0])[0])
+      CoordType y_intersect = (ends[0])[1] + (m_low[0] - (ends[0])[0])
 			      * ydiff / xdiff;
 
-      if(!IsFloatEqual(m_low[1], y_intersect)
-	 && !IsFloatEqual(m_high[1], y_intersect)
+      if(!Equal(m_low[1], y_intersect)
+	 && !Equal(m_high[1], y_intersect)
          && m_low[1] < y_intersect && m_high[1] > y_intersect)
         return false;
     }
 
     if(high_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (ends[0])[0] + FloatSubtract(m_high[1], (ends[0])[1])
+      CoordType x_intersect = (ends[0])[0] + (m_high[1] - (ends[0])[1])
 			      * xdiff / ydiff;
 
-      if(!IsFloatEqual(m_low[0], x_intersect)
-	 && !IsFloatEqual(m_high[0], x_intersect)
+      if(!Equal(m_low[0], x_intersect)
+	 && !Equal(m_high[0], x_intersect)
          && m_low[0] < x_intersect && m_high[0] > x_intersect)
         return false;
     }
 
     if(high_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (ends[0])[1] + FloatSubtract(m_high[0], (ends[0])[0])
+      CoordType y_intersect = (ends[0])[1] + (m_high[0] - (ends[0])[0])
 			      * ydiff / xdiff;
 
-      if(!IsFloatEqual(m_low[1], y_intersect)
-	 && !IsFloatEqual(m_high[1], y_intersect)
+      if(!Equal(m_low[1], y_intersect)
+	 && !Equal(m_high[1], y_intersect)
          && m_low[1] < y_intersect && m_high[1] > y_intersect)
         return false;
     }
@@ -1144,11 +1145,11 @@ bool WFMath::ContainsProper<2>(const Polygon<2>& p, const RotBox<2>& r)
   for(int j = 0; j < 2; ++j) {
     if(r.m_size[j] > 0) {
       m_low[j] = r.m_corner0[j];
-      m_high[j] = FloatAdd(r.m_corner0[j], r.m_size[j]);
+      m_high[j] = r.m_corner0[j] + r.m_size[j];
     }
     else {
       m_high[j] = r.m_corner0[j];
-      m_low[j] = FloatAdd(r.m_corner0[j], r.m_size[j]);
+      m_low[j] = r.m_corner0[j] + r.m_size[j];
     }
   }
 
@@ -1180,14 +1181,14 @@ bool WFMath::ContainsProper<2>(const Polygon<2>& p, const RotBox<2>& r)
         (((ends[0])[0] <= m_high[0] && m_high[0] < (ends[1])[0]) ||
          ((ends[1])[0] <= m_high[0] && m_high[0] < (ends[0])[0]));
 
-    CoordType xdiff = FloatSubtract((ends[1])[0], (ends[0])[0]);
-    CoordType ydiff = FloatSubtract((ends[1])[0], (ends[0])[0]);
+    CoordType xdiff = (ends[1])[0] - (ends[0])[0];
+    CoordType ydiff = (ends[1])[0] - (ends[0])[0];
 
     if(low_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (ends[0])[0] + FloatSubtract(m_low[1], (ends[0])[1])
+      CoordType x_intersect = (ends[0])[0] + (m_low[1] - (ends[0])[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(m_low[0], x_intersect) || IsFloatEqual(m_high[0], x_intersect))
+      if(Equal(m_low[0], x_intersect) || Equal(m_high[0], x_intersect))
         return false;
       if(m_low[0] < x_intersect && m_high[0] > x_intersect)
         return false;
@@ -1198,30 +1199,30 @@ bool WFMath::ContainsProper<2>(const Polygon<2>& p, const RotBox<2>& r)
     }
 
     if(low_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (ends[0])[1] + FloatSubtract(m_low[0], (ends[0])[0])
+      CoordType y_intersect = (ends[0])[1] + (m_low[0] - (ends[0])[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(m_low[1], y_intersect) || IsFloatEqual(m_high[1], y_intersect))
+      if(Equal(m_low[1], y_intersect) || Equal(m_high[1], y_intersect))
         return false;
       if(m_low[1] < y_intersect && m_high[1] > y_intersect)
         return false;
     }
 
     if(high_vertically_between) { // Check for edge intersect
-      CoordType x_intersect = (ends[0])[0] + FloatSubtract(m_high[1], (ends[0])[1])
+      CoordType x_intersect = (ends[0])[0] + (m_high[1] - (ends[0])[1])
 			      * xdiff / ydiff;
 
-      if(IsFloatEqual(m_low[0], x_intersect) || IsFloatEqual(m_high[0], x_intersect))
+      if(Equal(m_low[0], x_intersect) || Equal(m_high[0], x_intersect))
         return false;
       if(m_low[0] < x_intersect && m_high[0] > x_intersect)
         return false;
     }
 
     if(high_horizontally_between) { // Check for edge intersect
-      CoordType y_intersect = (ends[0])[1] + FloatSubtract(m_high[0], (ends[0])[0])
+      CoordType y_intersect = (ends[0])[1] + (m_high[0] - (ends[0])[0])
 			      * ydiff / xdiff;
 
-      if(IsFloatEqual(m_low[1], y_intersect) || IsFloatEqual(m_high[1], y_intersect))
+      if(Equal(m_low[1], y_intersect) || Equal(m_high[1], y_intersect))
         return false;
       if(m_low[1] < y_intersect && m_high[1] > y_intersect)
         return false;

@@ -55,7 +55,7 @@ void test_rotmatrix(const RotMatrix<dim>& m)
 
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      assert(IsFloatEqual(ident.elem(i, j), try_ident.elem(i, j)));
+      assert(Equal(ident.elem(i, j), try_ident.elem(i, j)));
 
   try_ident = Prod(m, minv);
 
@@ -63,7 +63,7 @@ void test_rotmatrix(const RotMatrix<dim>& m)
 
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      assert(IsFloatEqual(ident.elem(i, j), try_ident.elem(i, j)));
+      assert(Equal(ident.elem(i, j), try_ident.elem(i, j)));
 
   std::string s_mat = ToString(m);
 
@@ -95,7 +95,7 @@ void test_rotmatrix(const RotMatrix<dim>& m)
 
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      assert(IsFloatEqual(conv_ident.elem(i, j), (i == j) ? 1 : 0));
+      assert(Equal(conv_ident.elem(i, j), (i == j) ? 1 : 0));
 
   // FIXME much more
 }

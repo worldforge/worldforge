@@ -99,7 +99,6 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
 //    // Edge now represents the i'th edge
 //    // pointing away from m_corner0
 //    for(int j = 0; j < dim; ++j) {
-//      // All coords of min <= 0, all coords of max >= 0, don't need FloatAdd()
 //      if(edge[j] < 0)
 //        min[j] += edge[j];
 //      else
@@ -108,8 +107,8 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
 //  }
 //
 //  for(int i = 0; i < dim; ++i) {
-//    min[i] = FloatAdd(min[i], m_corner0[i]);
-//    max[i] = FloatAdd(max[i], m_corner0[i]);
+//    min[i] = min[i] + m_corner0[i];
+//    max[i] = max[i] + m_corner0[i];
 //  }
 
 // The following is equivalent to the above. The above is easier to understand,
@@ -119,14 +118,13 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
     CoordType minval = 0, maxval = 0;
     for(int j = 0; j < dim; ++j) {
       CoordType value = m_orient.elem(i, j) * m_size[j];
-      // All coords of min <= 0, all coords of max >= 0, don't need FloatAdd()
       if(value < 0)
         minval += value;
       else
         maxval += value;
     }
-    min[i] = FloatAdd(minval, m_corner0[i]);
-    max[i] = FloatAdd(maxval, m_corner0[i]);
+    min[i] = minval + m_corner0[i];
+    max[i] = maxval + m_corner0[i];
   }
 
   return AxisBox<dim>(min, max, true);
