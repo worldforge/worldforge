@@ -1,5 +1,11 @@
 2004-10-19  James Turner  <james@worldforge.org>
 
+	* configure.ac: require Atlas-C++ >= 0.5.91	
+	* tests/Makefile.am: add missing files so make distcheck works
+	* NEWS: updates describing development release
+	
+2004-10-19  James Turner  <james@worldforge.org>
+
 	* Eris/Entity.cpp, Eris/Entity.h: rename the over-rideable hook
 	  methods to a consistent 'onXXXX' naming scheme, and add an additional
 	  one for LocationChanged.

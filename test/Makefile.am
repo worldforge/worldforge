@@ -9,7 +9,9 @@ testEris_SOURCES = tests.cpp \
     clientConnection.cpp clientConnection.h \
     agent.cpp agent.h \
     commander.cpp commander.h \
-    controller.cpp
+    controller.cpp controller.h \
+    testUtils.h \
+    objectSummary.h
 
 testEris_LDADD = $(top_builddir)/Eris/liberis-1.3.la
 

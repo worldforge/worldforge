@@ -1,1 +1,11 @@
- 
+2004-10-19
+
+This is a development release of what will become Eris 1.4, the next stable
+version of Eris. Changes include Atlas-C++ 0.6 support, a re-written
+internal message routing structure, and the re-factoring of the public API
+based on experiences with Eris 1.2. SigC++ 2.0 is now optionally supported;
+if it is available when Eris is configured, it will be picked over 1.2.
+
+Please note the API for this release is still evolving based on feedback
+(which is welcomed, see the AUTHORS file for contact info). The API WILL
+change prior to the 1.4 release.
