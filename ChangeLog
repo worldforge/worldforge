@@ -1,3 +1,7 @@
+2004-01-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Makefile.am: Use INCLUDES as CPPFLAGS is reserved.
+
 2003-12-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* Remove Serial from rpm spec as it is not required, and messes up
