@@ -8,7 +8,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
     Message::QueuedDecoder b;
-    
+    Message::Encoder e(&b);
 
     b.StreamBegin();
     b.StreamMessage(Bridge::MapBegin);
@@ -24,6 +24,14 @@ int main(int argc, char** argv)
     b.StreamMessage(Bridge::MapBegin);
         b.MapItem("second", "object");
     b.MapEnd();
+
+    Message::Object obj = Message::Object::mkMap();
+    obj.set("int", 1234);
+    obj.set("float", 12.34);
+    obj.set("string", "abcd");
+
+    e.SendMessage(obj);
+
     b.StreamEnd();
 
     while (b.QueueSize()) {
