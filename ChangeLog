@@ -1,3 +1,9 @@
+2004-05-13  Al Riddoch  <alriddoch@zepler.org>
+
+* Remove header files from the library source list, and remove a stray
+  space from after a \ which was causing object files to get left out
+  of the library.
+
 2004-05-12  James Turner  <james@worldforge.org>
 
 * Record the classNo alloctaed by the objectFactory when registering
