@@ -45,6 +45,9 @@ public:
 	{ return _name; }
 	
 	static std::string getAnonymousSuffix(Dispatcher *d);
+	
+	static void enter();
+	static void exit();
 protected:
 	friend class StdBranchDispatcher;
 	friend class ClassDispatcher;

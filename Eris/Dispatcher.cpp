@@ -47,6 +47,16 @@ std::string Dispatcher::getAnonymousSuffix(Dispatcher *d)
 	return buf;
 }
 
+void Dispatcher::enter()
+{
+    
+}
+
+void Dispatcher::exit()
+{
+    
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 
 StdBranchDispatcher::StdBranchDispatcher(const std::string nm) :
