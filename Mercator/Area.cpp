@@ -161,8 +161,6 @@ WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, Cli
     return outpoly;
 }
 
-#pragma mark -
-
 Area::Area(int l, bool hole) :
     m_layer(l),
     m_hole(hole)

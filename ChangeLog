@@ -1,3 +1,8 @@
+2005-04-05 James Turner <james@worldforge.org>
+
+	* Mercator/AreaShader.cpp, Mercator/Area.cpp: remove #pragmas I
+	  left in, which GCC moans about.
+
 2005-03-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/AreaShader.cpp: Fix iterator usage in shade().

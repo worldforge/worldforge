@@ -167,8 +167,6 @@ void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
     } // of active edges loop
 }
 
-#pragma mark -
-
 AreaShader::AreaShader(int layer) :
     Shader(false /* no color */, true),
     m_layer(layer)
