@@ -1,3 +1,9 @@
+Thursday, 8th May 2003, James Turner <james@worldforge.org>
+	
+	* Don't make or install eris-config, eris.m4 or 
+	  eris-config.1 (the man page). The actual files are still
+	  there, will be removed fairly sooon.
+
 Thursday, 8th May 2003, Al Riddoch <alriddoch@zepler.org>
 
 	* Use $(top_buildir) to refer to the top of the build structure,

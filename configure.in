@@ -136,7 +136,6 @@ bindings/polls/glib/Makefile
 bindings/perl/compile_flags.pl
 test/Makefile
 eris.dox
-eris-config
 eris.spec
 eris-1.0.pc
 eris-poll-glib-1.0.pc
