@@ -297,6 +297,9 @@ static	AObject	mkStringList(int len);
 /** (URI) return path to reference */
 	AObject		AObject::getURIPath() const;
 
+/** (URI) return path to reference */
+	int		AObject::getPath(string &val) const;
+
 /** (URI) return data object */
 	AObject		AObject::getURIData() const;
 

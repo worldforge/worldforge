@@ -760,6 +760,11 @@ double	AObject::asFloat() const	{ return PyFloat_AsDouble(obj); }
 string	AObject::asString() const	{ return PyString_AsString(obj); }
 
 AObject	AObject::getURIPath() const	{ return AObject(URI_GetPath(obj)); }
+int	AObject::getPath(string &val) const	
+{ 
+  val=AObject(URI_GetPath(obj)).asString(); 
+  return 1;
+}
 AObject	AObject::getURIData() const	{ return AObject(URI_GetData(obj)); }
  
 int	AObject::isMap() const	        { return PyMapping_Check(obj); }
