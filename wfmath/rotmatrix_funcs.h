@@ -457,6 +457,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
 
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
 						 CoordType theta);
+template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis);
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip);
 

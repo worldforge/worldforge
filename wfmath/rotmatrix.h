@@ -156,6 +156,7 @@ class RotMatrix {
   RotMatrix<3>& rotationY(CoordType theta) {return rotation(2, 0, theta);}
   RotMatrix<3>& rotationZ(CoordType theta) {return rotation(0, 1, theta);}
   RotMatrix<3>& rotation(const Vector<3>& axis, CoordType theta);
+  RotMatrix<3>& rotation(const Vector<3>& axis); // angle taken from magnitude of axis
 
   RotMatrix<3>& fromQuaternion(const Quaternion& q, const bool not_flip = true);
 

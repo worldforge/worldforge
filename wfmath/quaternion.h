@@ -40,6 +40,7 @@ class Quaternion
 	      const CoordType z_in);
   Quaternion (int axis, const CoordType angle) {rotation(axis, angle);}
   Quaternion (const Vector<3>& axis, const CoordType angle) {rotation(axis, angle);}
+  Quaternion (const Vector<3>& axis) {rotation(axis);} // angle == axis.mag()
   Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec) {}
   explicit Quaternion (const Atlas::Message::Object& a) {fromAtlas(a);}
 
@@ -80,6 +81,7 @@ class Quaternion
 
   Quaternion& rotation(int axis, const CoordType angle);
   Quaternion& rotation(const Vector<3>& axis, const CoordType angle);
+  Quaternion& rotation(const Vector<3>& axis); // angle == axis.mag()
 
   template<const int dim>
   friend Vector<3>& Vector<dim>::rotate(const Quaternion& q);

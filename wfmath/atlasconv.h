@@ -163,7 +163,7 @@ void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
 }
 
 template<>
-void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
+inline void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();
@@ -205,7 +205,7 @@ void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
 }
 
 template<>
-void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
+inline void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();

@@ -96,6 +96,38 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
   return rotation(v1, v2, theta);
 }
 
+template<>
+RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
+{
+  CoordType max = 0;
+  int main_comp = -1;
+  CoordType angle = axis.mag();
+
+  if(angle == 0)
+    return identity();
+
+  for(int i = 0; i < 3; ++i) {
+    CoordType val = fabs(axis[i]);
+    if(val > max) {
+      max = val;
+      main_comp = i;
+    }
+  }
+
+  assert("Can't happen with nonzero angle" && main_comp != -1);
+
+  Vector<3> tmp, v1, v2;
+
+  int new_comp = main_comp ? main_comp - 1 : 2; // Not parallel to axis
+  for(int i = 0; i < 3; ++i)
+    tmp[i] = (i == new_comp) ? 1 : 0;
+
+  v1 = Cross(axis, tmp); // 3D specific part
+  v2 = Cross(axis, v1);
+
+  return rotation(v1, v2, angle);
+}
+
 bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 				CoordType* buf1, CoordType* buf2, double precision)
 {

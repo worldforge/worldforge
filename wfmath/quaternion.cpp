@@ -160,3 +160,14 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, const CoordType angle)
 
   return *this;
 }
+
+Quaternion& Quaternion::rotation(const Vector<3>& axis)
+{
+  CoordType mag = axis.mag();
+  CoordType half_angle = mag / 2;
+
+  m_w = cos(half_angle);
+  m_vec = axis * (-sin(half_angle) / mag);
+
+  return *this;
+}
