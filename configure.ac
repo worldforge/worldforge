@@ -3,6 +3,10 @@ AC_INIT
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 
+# Detect the canonical host and target environment
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+
 # Information
 ERIS_MAJOR=0
 ERIS_MINOR=9
@@ -34,7 +38,7 @@ AC_HEADER_STDC([])
 AM_DISABLE_STATIC
 AM_PROG_LIBTOOL
 
-CXXFLAGS="$CXXFLAGS -Wall -ansi"
+CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi"
 
 dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 

@@ -1,3 +1,7 @@
+Monday, 24th November, Al Riddoch <alriddoch@zepler.org>
+
+	* Supress unknown pragme warnings, and add canonical macros.
+
 Thursday, 27th November, James Turner <james@worldforge.org>
 
     * Apply Ron's patch for transforming WFMath objects
