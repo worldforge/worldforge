@@ -32,6 +32,11 @@
 
 using namespace std;
 
+#ifdef __WIN32__
+#include <tchar.h>
+#define snprintf _snprintf
+#endif    
+
 namespace varconf {
 
 ParseError::ParseError( const ParseError& p)
