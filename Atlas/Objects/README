@@ -11,9 +11,4 @@ The following are optimisations that are yet to be done:
 
  - static values
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! NOTE: You'll have to modify #include "Root.h" to #include "../Root.h" in !!
-!! Entity/RootOperation.h and Entity/RootEntity.h after you run gen_cc.py.  !!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 Please do not touch anything in this directory yet. -- sdt@gmx.net
