@@ -15,18 +15,18 @@ Action::Action()
      : RootOperation()
 {
     SetAttr("id", string("action"));
-    Object::ListType parent;
-    parent.push_back(string("root_operation"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("root_operation"));
+    SetAttr("parents", parents);
 }
 
 Action Action::Instantiate()
 {
     Action value;
 
-    Object::ListType parent;
-    parent.push_back(string("action"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("action"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

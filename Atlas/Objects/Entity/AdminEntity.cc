@@ -15,18 +15,18 @@ AdminEntity::AdminEntity()
      : RootEntity()
 {
     SetAttr("id", string("admin_entity"));
-    Object::ListType parent;
-    parent.push_back(string("root_entity"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("root_entity"));
+    SetAttr("parents", parents);
 }
 
 AdminEntity AdminEntity::Instantiate()
 {
     AdminEntity value;
 
-    Object::ListType parent;
-    parent.push_back(string("admin_entity"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("admin_entity"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("object"));
     
     return value;

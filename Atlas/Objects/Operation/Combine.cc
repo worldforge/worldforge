@@ -15,9 +15,9 @@ Combine::Combine()
      : Create()
 {
     SetAttr("id", string("combine"));
-    Object::ListType parent;
-    parent.push_back(string("create"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("create"));
+    SetAttr("parents", parents);
     SetAttr("specification", string("atlas-game"));
 }
 
@@ -25,9 +25,9 @@ Combine Combine::Instantiate()
 {
     Combine value;
 
-    Object::ListType parent;
-    parent.push_back(string("combine"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("combine"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

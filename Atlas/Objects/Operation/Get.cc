@@ -15,18 +15,18 @@ Get::Get()
      : Action()
 {
     SetAttr("id", string("get"));
-    Object::ListType parent;
-    parent.push_back(string("action"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("action"));
+    SetAttr("parents", parents);
 }
 
 Get Get::Instantiate()
 {
     Get value;
 
-    Object::ListType parent;
-    parent.push_back(string("get"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("get"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

@@ -2,6 +2,7 @@
 
 import string
 import sys
+sys.path.append("../../../../protocols/atlas/spec")
 from types import *
 from ParseDef import read_all_defs
 
@@ -11,7 +12,7 @@ copyright = \
 // Copyright 2000 Stefanus Du Toit.\n\
 // Automatically generated using gen_cc.py.\n"
 
-descr_attrs = ['instance', 'description', 'args_description', 'example', \
+descr_attrs = ['children', 'description', 'args_description', 'example', \
                'long_description']
 
 def classize(id):
@@ -34,9 +35,9 @@ class GenerateCC:
             self.classname = classize(id)
             self.interface(obj)
             self.implementation(obj)
-            instances = obj.attr['instance'].value
-            if instances:
-                self(instances)
+            children = obj.attr['children'].value
+            if children:
+                self(children)
     def header(self, list):
         self.out.write(copyright)
         self.out.write("\n")
@@ -93,7 +94,7 @@ class GenerateCC:
         self.out.write(self.classname + "::" + self.classname + "()\n")
         self.out.write("     : ")
         self.out.write(string.join(map(lambda parent:classize(parent)+"()", \
-                       obj.attr['parent'].value), ", ") + "\n")
+                       obj.attr['parents'].value), ", ") + "\n")
         self.out.write("{\n")
         for sub_obj in obj.attr_list:
             if sub_obj.attr_container_obj == obj and \
@@ -118,9 +119,9 @@ class GenerateCC:
         self.out.write("%s %s::Instantiate()\n{\n" \
                        % (self.classname, self.classname))
         self.out.write("    " + self.classname + " value;\n\n")
-        self.out.write("    Object::ListType parent;\n")
-        self.out.write('    parent.push_back(string("%s"));\n' % id)
-        self.out.write('    value.SetAttr("parent", parent);\n')
+        self.out.write("    Object::ListType parents;\n")
+        self.out.write('    parents.push_back(string("%s"));\n' % id)
+        self.out.write('    value.SetAttr("parents", parents);\n')
         if objtype == "op_definition":
             self.out.write('    value.SetAttr("objtype", string("op"));\n')
         elif objtype == "class":
@@ -138,7 +139,7 @@ class GenerateCC:
             self.header(['Atlas', 'Objects', outdir, self.classname, "H"])
         else:
             self.header(['Atlas', 'Objects', self.classname, "H"])
-        for parent in obj.attr['parent'].value:
+        for parent in obj.attr['parents'].value:
             self.out.write('#include "')
             if parent == "root": self.out.write('../')
             self.out.write(classize(parent) + '.h"\n')
@@ -154,7 +155,7 @@ class GenerateCC:
         self.out.write("*/\n")
         self.out.write("class " + self.classname)
         parentlist = map(lambda parent:"public " + classize(parent), \
-                     obj.attr['parent'].value)
+                     obj.attr['parents'].value)
         if len(parentlist) > 0:
             self.out.write(" : ")
             self.out.write(string.join(parentlist, ", "))

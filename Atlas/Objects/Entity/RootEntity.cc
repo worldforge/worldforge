@@ -15,9 +15,9 @@ RootEntity::RootEntity()
      : Root()
 {
     SetAttr("id", string("root_entity"));
-    Object::ListType parent;
-    parent.push_back(string("root"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("root"));
+    SetAttr("parents", parents);
     SetAttr("objtype", string("class"));
     SetAttr("loc", string(""));
     Object::ListType pos;
@@ -39,9 +39,9 @@ RootEntity RootEntity::Instantiate()
 {
     RootEntity value;
 
-    Object::ListType parent;
-    parent.push_back(string("root_entity"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("root_entity"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("object"));
     
     return value;

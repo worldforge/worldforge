@@ -15,18 +15,18 @@ Imaginary::Imaginary()
      : Perception()
 {
     SetAttr("id", string("imaginary"));
-    Object::ListType parent;
-    parent.push_back(string("perception"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("perception"));
+    SetAttr("parents", parents);
 }
 
 Imaginary Imaginary::Instantiate()
 {
     Imaginary value;
 
-    Object::ListType parent;
-    parent.push_back(string("imaginary"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("imaginary"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

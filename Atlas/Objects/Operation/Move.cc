@@ -15,9 +15,9 @@ Move::Move()
      : Set()
 {
     SetAttr("id", string("move"));
-    Object::ListType parent;
-    parent.push_back(string("set"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("set"));
+    SetAttr("parents", parents);
     SetAttr("specification", string("atlas-game"));
 }
 
@@ -25,9 +25,9 @@ Move Move::Instantiate()
 {
     Move value;
 
-    Object::ListType parent;
-    parent.push_back(string("move"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("move"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

@@ -15,9 +15,9 @@ Perception::Perception()
      : Info()
 {
     SetAttr("id", string("perception"));
-    Object::ListType parent;
-    parent.push_back(string("info"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("info"));
+    SetAttr("parents", parents);
     SetAttr("specification", string("atlas-game"));
 }
 
@@ -25,9 +25,9 @@ Perception Perception::Instantiate()
 {
     Perception value;
 
-    Object::ListType parent;
-    parent.push_back(string("perception"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("perception"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

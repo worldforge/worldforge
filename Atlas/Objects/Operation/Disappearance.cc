@@ -15,18 +15,18 @@ Disappearance::Disappearance()
      : Sight()
 {
     SetAttr("id", string("disappearance"));
-    Object::ListType parent;
-    parent.push_back(string("sight"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("sight"));
+    SetAttr("parents", parents);
 }
 
 Disappearance Disappearance::Instantiate()
 {
     Disappearance value;
 
-    Object::ListType parent;
-    parent.push_back(string("disappearance"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("disappearance"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

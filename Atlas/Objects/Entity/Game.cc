@@ -15,18 +15,18 @@ Game::Game()
      : AdminEntity()
 {
     SetAttr("id", string("game"));
-    Object::ListType parent;
-    parent.push_back(string("admin_entity"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("admin_entity"));
+    SetAttr("parents", parents);
 }
 
 Game Game::Instantiate()
 {
     Game value;
 
-    Object::ListType parent;
-    parent.push_back(string("game"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("game"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("object"));
     
     return value;

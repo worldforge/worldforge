@@ -15,18 +15,18 @@ Info::Info()
      : RootOperation()
 {
     SetAttr("id", string("info"));
-    Object::ListType parent;
-    parent.push_back(string("root_operation"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("root_operation"));
+    SetAttr("parents", parents);
 }
 
 Info Info::Instantiate()
 {
     Info value;
 
-    Object::ListType parent;
-    parent.push_back(string("info"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("info"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

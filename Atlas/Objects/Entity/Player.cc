@@ -15,9 +15,9 @@ Player::Player()
      : Account()
 {
     SetAttr("id", string("player"));
-    Object::ListType parent;
-    parent.push_back(string("account"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("account"));
+    SetAttr("parents", parents);
     Object::ListType characters;
     SetAttr("characters", characters);
 }
@@ -26,9 +26,9 @@ Player Player::Instantiate()
 {
     Player value;
 
-    Object::ListType parent;
-    parent.push_back(string("player"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("player"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("object"));
     
     return value;

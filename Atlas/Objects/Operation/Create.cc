@@ -15,18 +15,18 @@ Create::Create()
      : Action()
 {
     SetAttr("id", string("create"));
-    Object::ListType parent;
-    parent.push_back(string("action"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("action"));
+    SetAttr("parents", parents);
 }
 
 Create Create::Instantiate()
 {
     Create value;
 
-    Object::ListType parent;
-    parent.push_back(string("create"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("create"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

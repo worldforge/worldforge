@@ -15,9 +15,9 @@ GameEntity::GameEntity()
      : RootEntity()
 {
     SetAttr("id", string("game_entity"));
-    Object::ListType parent;
-    parent.push_back(string("root_entity"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("root_entity"));
+    SetAttr("parents", parents);
     SetAttr("specification", string("atlas-game"));
     SetAttr("interface", string("game_interface"));
 }
@@ -26,9 +26,9 @@ GameEntity GameEntity::Instantiate()
 {
     GameEntity value;
 
-    Object::ListType parent;
-    parent.push_back(string("game_entity"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("game_entity"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("object"));
     
     return value;

@@ -15,18 +15,18 @@ Sniff::Sniff()
      : Perceive()
 {
     SetAttr("id", string("sniff"));
-    Object::ListType parent;
-    parent.push_back(string("perceive"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("perceive"));
+    SetAttr("parents", parents);
 }
 
 Sniff Sniff::Instantiate()
 {
     Sniff value;
 
-    Object::ListType parent;
-    parent.push_back(string("sniff"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("sniff"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

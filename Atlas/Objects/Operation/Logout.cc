@@ -15,18 +15,18 @@ Logout::Logout()
      : Login()
 {
     SetAttr("id", string("logout"));
-    Object::ListType parent;
-    parent.push_back(string("login"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("login"));
+    SetAttr("parents", parents);
 }
 
 Logout Logout::Instantiate()
 {
     Logout value;
 
-    Object::ListType parent;
-    parent.push_back(string("logout"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("logout"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

@@ -15,18 +15,18 @@ Listen::Listen()
      : Perceive()
 {
     SetAttr("id", string("listen"));
-    Object::ListType parent;
-    parent.push_back(string("perceive"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("perceive"));
+    SetAttr("parents", parents);
 }
 
 Listen Listen::Instantiate()
 {
     Listen value;
 
-    Object::ListType parent;
-    parent.push_back(string("listen"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("listen"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

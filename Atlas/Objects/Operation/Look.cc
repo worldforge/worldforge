@@ -15,18 +15,18 @@ Look::Look()
      : Perceive()
 {
     SetAttr("id", string("look"));
-    Object::ListType parent;
-    parent.push_back(string("perceive"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("perceive"));
+    SetAttr("parents", parents);
 }
 
 Look Look::Instantiate()
 {
     Look value;
 
-    Object::ListType parent;
-    parent.push_back(string("look"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("look"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

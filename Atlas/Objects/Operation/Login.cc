@@ -15,18 +15,18 @@ Login::Login()
      : Get()
 {
     SetAttr("id", string("login"));
-    Object::ListType parent;
-    parent.push_back(string("get"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("get"));
+    SetAttr("parents", parents);
 }
 
 Login Login::Instantiate()
 {
     Login value;
 
-    Object::ListType parent;
-    parent.push_back(string("login"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("login"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

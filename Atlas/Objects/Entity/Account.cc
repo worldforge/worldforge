@@ -15,9 +15,9 @@ Account::Account()
      : AdminEntity()
 {
     SetAttr("id", string("account"));
-    Object::ListType parent;
-    parent.push_back(string("admin_entity"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("admin_entity"));
+    SetAttr("parents", parents);
     SetAttr("password", string(""));
 }
 
@@ -25,9 +25,9 @@ Account Account::Instantiate()
 {
     Account value;
 
-    Object::ListType parent;
-    parent.push_back(string("account"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("account"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("object"));
     
     return value;

@@ -15,9 +15,9 @@ Communicate::Communicate()
      : Create()
 {
     SetAttr("id", string("communicate"));
-    Object::ListType parent;
-    parent.push_back(string("create"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("create"));
+    SetAttr("parents", parents);
     SetAttr("specification", string("atlas-game"));
 }
 
@@ -25,9 +25,9 @@ Communicate Communicate::Instantiate()
 {
     Communicate value;
 
-    Object::ListType parent;
-    parent.push_back(string("communicate"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("communicate"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

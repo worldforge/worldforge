@@ -15,18 +15,18 @@ Error::Error()
      : Info()
 {
     SetAttr("id", string("error"));
-    Object::ListType parent;
-    parent.push_back(string("info"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("info"));
+    SetAttr("parents", parents);
 }
 
 Error Error::Instantiate()
 {
     Error value;
 
-    Object::ListType parent;
-    parent.push_back(string("error"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("error"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

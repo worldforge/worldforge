@@ -15,18 +15,18 @@ Admin::Admin()
      : Account()
 {
     SetAttr("id", string("admin"));
-    Object::ListType parent;
-    parent.push_back(string("account"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("account"));
+    SetAttr("parents", parents);
 }
 
 Admin Admin::Instantiate()
 {
     Admin value;
 
-    Object::ListType parent;
-    parent.push_back(string("admin"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("admin"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("object"));
     
     return value;

@@ -15,9 +15,9 @@ Perceive::Perceive()
      : Get()
 {
     SetAttr("id", string("perceive"));
-    Object::ListType parent;
-    parent.push_back(string("get"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("get"));
+    SetAttr("parents", parents);
     SetAttr("specification", string("atlas-game"));
 }
 
@@ -25,9 +25,9 @@ Perceive Perceive::Instantiate()
 {
     Perceive value;
 
-    Object::ListType parent;
-    parent.push_back(string("perceive"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("perceive"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

@@ -15,18 +15,18 @@ Set::Set()
      : Action()
 {
     SetAttr("id", string("set"));
-    Object::ListType parent;
-    parent.push_back(string("action"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("action"));
+    SetAttr("parents", parents);
 }
 
 Set Set::Instantiate()
 {
     Set value;
 
-    Object::ListType parent;
-    parent.push_back(string("set"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("set"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

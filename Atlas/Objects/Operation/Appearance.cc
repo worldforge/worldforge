@@ -15,18 +15,18 @@ Appearance::Appearance()
      : Sight()
 {
     SetAttr("id", string("appearance"));
-    Object::ListType parent;
-    parent.push_back(string("sight"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("sight"));
+    SetAttr("parents", parents);
 }
 
 Appearance Appearance::Instantiate()
 {
     Appearance value;
 
-    Object::ListType parent;
-    parent.push_back(string("appearance"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("appearance"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

@@ -15,9 +15,9 @@ RootOperation::RootOperation()
      : Root()
 {
     SetAttr("id", string("root_operation"));
-    Object::ListType parent;
-    parent.push_back(string("root"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("root"));
+    SetAttr("parents", parents);
     SetAttr("objtype", string("op_definition"));
     SetAttr("serialno", 0);
     SetAttr("refno", 0);
@@ -34,9 +34,9 @@ RootOperation RootOperation::Instantiate()
 {
     RootOperation value;
 
-    Object::ListType parent;
-    parent.push_back(string("root_operation"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("root_operation"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

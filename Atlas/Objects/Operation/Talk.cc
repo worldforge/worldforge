@@ -15,18 +15,18 @@ Talk::Talk()
      : Communicate()
 {
     SetAttr("id", string("talk"));
-    Object::ListType parent;
-    parent.push_back(string("communicate"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("communicate"));
+    SetAttr("parents", parents);
 }
 
 Talk Talk::Instantiate()
 {
     Talk value;
 
-    Object::ListType parent;
-    parent.push_back(string("talk"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("talk"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

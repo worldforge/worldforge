@@ -15,9 +15,9 @@ Divide::Divide()
      : Create()
 {
     SetAttr("id", string("divide"));
-    Object::ListType parent;
-    parent.push_back(string("create"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("create"));
+    SetAttr("parents", parents);
     SetAttr("specification", string("atlas-game"));
 }
 
@@ -25,9 +25,9 @@ Divide Divide::Instantiate()
 {
     Divide value;
 
-    Object::ListType parent;
-    parent.push_back(string("divide"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("divide"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

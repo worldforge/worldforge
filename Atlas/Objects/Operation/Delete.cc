@@ -15,18 +15,18 @@ Delete::Delete()
      : Action()
 {
     SetAttr("id", string("delete"));
-    Object::ListType parent;
-    parent.push_back(string("action"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("action"));
+    SetAttr("parents", parents);
 }
 
 Delete Delete::Instantiate()
 {
     Delete value;
 
-    Object::ListType parent;
-    parent.push_back(string("delete"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("delete"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

@@ -15,18 +15,18 @@ Touch::Touch()
      : Perceive()
 {
     SetAttr("id", string("touch"));
-    Object::ListType parent;
-    parent.push_back(string("perceive"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("perceive"));
+    SetAttr("parents", parents);
 }
 
 Touch Touch::Instantiate()
 {
     Touch value;
 
-    Object::ListType parent;
-    parent.push_back(string("touch"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("touch"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;

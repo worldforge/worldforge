@@ -15,18 +15,18 @@ Sound::Sound()
      : Perception()
 {
     SetAttr("id", string("sound"));
-    Object::ListType parent;
-    parent.push_back(string("perception"));
-    SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("perception"));
+    SetAttr("parents", parents);
 }
 
 Sound Sound::Instantiate()
 {
     Sound value;
 
-    Object::ListType parent;
-    parent.push_back(string("sound"));
-    value.SetAttr("parent", parent);
+    Object::ListType parents;
+    parents.push_back(string("sound"));
+    value.SetAttr("parents", parents);
     value.SetAttr("objtype", string("op"));
     
     return value;
