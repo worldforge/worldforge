@@ -62,15 +62,15 @@ protected:
     /// An unknown object has arrived.
     virtual void unknownObjectArrived(const Root&) { }
 
-    /// call right objectArrived method
+    /// call right object*Arrived method
     virtual void dispatchObject(const Root& obj);
 
 """) #"for xemacs syntax highlighting
         for (obj, namespace) in objects:
             id = obj.id
             idc = classize(id)
-            self.write("    virtual void objectArrived(const %s%s&) { }\n" %
-                       (namespace, classize(obj.id)))
+            self.write("    virtual void object%sArrived(const %s%s&) { }\n" %
+                       (classize(obj.id), namespace, classize(obj.id)))
         self.write("};\n\n")
         self.ns_close(self.base_list)
         self.footer(header_list)
@@ -110,7 +110,7 @@ void ObjectsDecoder::dispatchObject(const Root& obj)
             idc = classize(obj.id)
             serialno_name = string.upper(obj.id) + "_NO"
             self.write("""    case %(namespace)s%(serialno_name)s:
-        objectArrived(%(namespace)s%(idc)s(obj));
+        object%(idc)sArrived(%(namespace)s%(idc)s(obj));
         break;
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""    default:

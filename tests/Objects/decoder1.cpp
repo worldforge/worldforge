@@ -12,24 +12,24 @@ bool unknown_arrived = false;
 class TestDecoder : public Atlas::Objects::ObjectsDecoder
 {
 protected:
-    virtual void objectArrived(const Atlas::Objects::Root& r)
+    virtual void objectRootArrived(const Atlas::Objects::Root& r)
     {
         assert(r->getAttr("id").asString() == "root_instance");
         root_arrived = true;
     }
 
-    virtual void objectArrived(const Atlas::Objects::Operation::Look& l)
+    virtual void objectLookArrived(const Atlas::Objects::Operation::Look& l)
     {
         assert(l->getAttr("id").asString() == "look_instance");
         look_arrived = true;
     }
 
-    virtual void objectArrived(const Atlas::Objects::Entity::Account &a)
+    virtual void objectAccountArrived(const Atlas::Objects::Entity::Account &a)
     {
         acct_arrived = true;
     }
 
-    virtual void objectArrived(const Atlas::Objects::Entity::Anonymous&) {
+    virtual void objectAnonymousArrived(const Atlas::Objects::Entity::Anonymous&) {
         anonymous_arrived = true;
     }
 

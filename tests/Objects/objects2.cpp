@@ -59,25 +59,25 @@ std::string object2String(const Root& obj)
 class TestDecoder : public Atlas::Objects::ObjectsDecoder
 {
 protected:
-    virtual void objectArrived(const Root& r)
+    virtual void objectRootArrived(const Root& r)
     {
 //        assert(r->getAttr("id").asString() == "root_instance");
       std::cout << "got Root! " << object2String(r) << std::cout;
     }
 
-    virtual void objectArrived(const Login& r)
+    virtual void objectLoginArrived(const Login& r)
     {
         std::cout << "got Account!" << std::cout;
 //        assert(r->getAttr("id").asString() == "root_instance");
     }
 
-    virtual void objectArrived(const Look& l)
+    virtual void objectLookArrived(const Look& l)
     {
 //        assert(l->getAttr("id").asString() == "look_instance");
         std::cout << "got Look!" << std::cout;
     }
 
-    virtual void objectArrived(const Account &a)
+    virtual void objectAccountArrived(const Account &a)
     {
         std::cout << "got Account!" << std::cout;
     }

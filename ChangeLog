@@ -1,5 +1,13 @@
 2001-11-30  Al Riddoch  <alriddoch@zepler.org>
 
+	* src/Objects/GenerateDecoder.py: Rename Objects::Decoder
+	  methods so no overloading.
+
+	* tests/Objects/decoder1.cpp, tests/Objects/objects2.cpp:
+	  Get the tests working again.
+
+2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Bridge.cpp, src/Bridge.h, src/EncoderBase.h,
 	  src/Codecs/Bach.cpp, src/Codecs/Bach.h,
 	  src/Codecs/Packed.cpp, src/Codecs/Packed.h,
