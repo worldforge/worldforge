@@ -2,17 +2,21 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Dmitry Derevyanko
 
+#if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
+
 #include "../Stream/Filter.h"
 
 #include <zlib.h>
 
 #ifndef ASSERT
-#include <assert.h>
+#include <cassert>
 #define ASSERT(exp) assert(exp)
 #endif
 
 using std::string;
 using namespace Atlas::Stream;
+
+const int DEFAULT_LEVEL = 6;
 
 class Gzip : public Filter
 {
@@ -22,16 +26,11 @@ class Gzip : public Filter
 
     public:
 
-    Gzip(int level=6);
-    ~Gzip();
+    virtual void Begin();
+    virtual void End();
     
-    string encode(const string& data);
-    string decode(const string& data);
-
-    void Process(const string &) 
-    {
-	cerr << "Atlas::Stream::Gzip::Process does nothing !" << endl;
-    };
+    virtual string Encode(const string&);
+    virtual string Decode(const string&);
 };
 
 namespace
@@ -39,7 +38,7 @@ namespace
     Filter::Factory<Gzip> factory("GZIP", Filter::Metrics(Filter::COMPRESSION));
 }
 
-Gzip::Gzip(int level)
+void Gzip::Begin()
 {
     incoming.next_in = Z_NULL;
     incoming.avail_in = 0;
@@ -50,16 +49,16 @@ Gzip::Gzip(int level)
     outgoing.zfree = Z_NULL;
   
     inflateInit(&incoming);
-    deflateInit(&outgoing, level);
+    deflateInit(&outgoing, DEFAULT_LEVEL);
 }
   
-Gzip::~Gzip()
+void Gzip::End()
 {
     inflateEnd(&incoming);
     deflateEnd(&outgoing);
 }
     
-string Gzip::encode(const string& data)
+string Gzip::Encode(const string& data)
 {
     string out_string;
     int status;
@@ -92,7 +91,7 @@ string Gzip::encode(const string& data)
     return out_string;
 }
     
-string Gzip::decode(const string& data)
+string Gzip::Decode(const string& data)
 {
     string out_string;
     int status;
@@ -123,5 +122,6 @@ string Gzip::decode(const string& data)
     //<< "] " << out_string.size() << endl;
 
     return out_string;
-  }
+}
 
+#endif // HAVE_ZLIB_H && HAVE_LIBZ

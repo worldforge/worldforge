@@ -11,8 +11,6 @@
 #include <list>
 #include <algorithm>
 
-//#include <sigc++/signal_system.h>
-
 namespace Atlas { namespace Stream {
 
 class Filter
@@ -21,12 +19,15 @@ class Filter
     
     virtual ~Filter() { };
 
-//    SigC::Signal1<void, std::string> output;
-    
-    virtual void Process(const std::string& data) = 0;
+    virtual void Begin() = 0;
+    virtual void End() = 0;
+
+    virtual std::string Encode(const std::string&) = 0;
+    virtual std::string Decode(const std::string&) = 0;
 
     enum Type
     {
+	LOGGING,
 	COMPRESSION,
 	ENCRYPTION,
     };
