@@ -1,3 +1,17 @@
+2003-07-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add new argment to to
+	  constructor for options, which amongst others will define whether the
+	  terrain has surfaces. Implement code for adding surfaces
+	  to a segment, and shading those surfaces.
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Add a typedef and
+	  accessors for the surface list. Add a method to call populate
+	  on all the segments surfaces.
+
+	* tests/testTerrain.cpp: Add tests to overall unit test to
+	  check the shader functionality of Terrain.
+
 2003-07-24  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/FillShader.h: Make FillShader inherit from Shader,

@@ -7,10 +7,14 @@
 #include <Mercator/Matrix.h>
 #include <Mercator/Segment.h>
 #include <Mercator/TerrainMod.h>
+#include <Mercator/Surface.h>
+
+#include <iostream>
 
 namespace Mercator {
 
-Terrain::Terrain(unsigned int resolution) : m_res(resolution)
+Terrain::Terrain(unsigned int options, unsigned int resolution) : m_options(options),
+                                                                  m_res(resolution)
 {
 
 }
@@ -29,10 +33,21 @@ Terrain::~Terrain()
 
 void Terrain::addSurfaces(Segment & seg)
 {
+    Segment::Surfacestore & sss = seg.getSurfaces();
+    if (!sss.empty()) {
+        std::cerr << "WARNING: Adding surfaces to a terrain segment which has surfaces"
+                  << std::endl << std::flush;
+        sss.clear();
+    }
+    Shaderstore::const_iterator I = m_shaders.begin();
+    for (; I != m_shaders.end(); ++I) {
+        sss.push_back(new Surface(seg, **I));
+    }
 }
 
 void Terrain::shadeSurfaces(Segment & seg)
 {
+    seg.populateSurfaces();
 }
 
 float Terrain::get(float x, float y) const
@@ -89,6 +104,9 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                     for(unsigned int l = 0; l < 2; ++l) {
                         cp(k, l) = existingPoint[ri + k][rj + l];
                     }
+                }
+                if (isShaded()) {
+                    addSurfaces(*s);
                 }
                 m_segments[i][j] = s;
                 continue;

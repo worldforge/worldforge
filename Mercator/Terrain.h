@@ -26,7 +26,13 @@ class Terrain {
     typedef std::map<int, Pointcolumn > Pointstore;
     typedef std::map<int, Segmentcolumn > Segmentstore;
     typedef std::list<Shader *> Shaderstore;
+
+    static const unsigned int DEFAULT = 0x0000;
+    static const unsigned int SHADED = 0x0001;
+    // More options go here as bit flags, and below should be a private
+    // test function
   private:
+    const unsigned int m_options;
     const int m_res;
 
     Pointstore m_basePoints;
@@ -35,9 +41,14 @@ class Terrain {
   
     void addSurfaces(Segment &);
     void shadeSurfaces(Segment &);
+
+    bool isShaded() const {
+        return ((m_options & SHADED) == SHADED);
+    }
   public:
     static const float defaultLevel = 8;
-    explicit Terrain(unsigned int resolution = defaultResolution);
+    explicit Terrain(unsigned int options = DEFAULT,
+                     unsigned int resolution = defaultResolution);
     ~Terrain();
 
     float get(float x, float y) const;

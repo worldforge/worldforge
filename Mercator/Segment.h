@@ -25,6 +25,8 @@ typedef std::list<TerrainMod *> ModList;
 // be able to hold onto it, as currently they get deleted internally
 // whenever height points are asserted.
 class Segment {
+  public:
+    typedef std::list<Surface *> Surfacestore;
   private:
     /// Distance between segments
     const int m_res;
@@ -52,7 +54,7 @@ class Segment {
     bool m_validSurfaces;
 
     /// Store of surfaces which can be rendered on this terrain
-    std::list<Surface *> m_surfaces;
+    Surfacestore m_surfaces;
 
     void invalidate() {
         m_validPt = false;
@@ -92,6 +94,14 @@ class Segment {
         return m_controlPoints;
     }
 
+    const Surfacestore & getSurfaces() const {
+        return m_surfaces;
+    }
+
+    Surfacestore & getSurfaces() {
+        return m_surfaces;
+    }
+
     const float * getPoints() const {
         return m_points;
     }
@@ -117,6 +127,7 @@ class Segment {
 
     void populate();
     void populateNormals();
+    void populateSurfaces();
 
     float getMax() const { return m_max; }
     float getMin() const { return m_min; }

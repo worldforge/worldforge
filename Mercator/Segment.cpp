@@ -5,7 +5,9 @@
 #include <Mercator/Segment.h>
 #include <Mercator/Terrain.h>
 #include <Mercator/TerrainMod.h>
+#include <Mercator/Surface.h>
 #include <Mercator/BasePoint.h>
+
 #include <iostream>
 #include <cmath>
 
@@ -138,6 +140,14 @@ void Segment::populateNormals()
     }
 
     m_validNorm = true;
+}
+
+void Segment::populateSurfaces()
+{
+    Surfacestore::const_iterator I = m_surfaces.begin();
+    for (; I != m_surfaces.end(); ++I) {
+        (*I)->populate();
+    }
 }
 
 // rand num between -0.5...0.5
