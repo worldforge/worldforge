@@ -14,3 +14,4 @@ config.h
 stamp-h
 stamp-h.in
 wfmath-config
+wfmath.spec
