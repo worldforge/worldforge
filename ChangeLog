@@ -1,3 +1,15 @@
+Sunday, 22nd February 2004, James Turner <james@worldforge.org>
+
+* First portion of work migrating to Atlas-C++ 0.6, and many other
+  clean ups of the API. This will not compile, don't even think about
+  trying to use it.
+* Removed all Dispatcher / WaitFor logic from the code
+* Made Player (soon to be Account) handle lots of gnarly ops itself
+* Simplified all the dispatch and routing in Lobby and Room. Room
+  creation needs to be re-added.
+* Many other things I've forgotten that will get summarized once the
+  code runs again.
+
 Thursday, 5th February 2004, Al Riddoch <alriddoch@zepler.org>
 
 	* Update dependencies and header list in the rpm spec.

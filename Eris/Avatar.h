@@ -2,6 +2,7 @@
 #define ERIS_AVATAR_H
 
 #include <Eris/Types.h>
+#include <Atlas/Objects/ObjectsFwd.h>
 
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
@@ -12,18 +13,6 @@
 #include <string>
 #include <map>
 #include <vector>
-
-namespace Atlas {
-	namespace Objects {
-		namespace Entity {
-			class GameEntity;
-		}
-		
-		namespace Operation {
-			class Info;
-		}
-	}
-}
 
 namespace WFMath {
   class Quaternion;
@@ -48,9 +37,12 @@ public:
 
 	/// Get the World instance this Avatar lives in
 	World* getWorld() const {return _world;}
-	/// Get the Entity id of this Avatar
-	const std::string& getID() const {return _id;}
-	/// Get the Entity this Avatar refers to
+	
+        /// Get the Entity id of this Avatar
+	const std::string& getID() const
+        { return m_entityId; }
+	
+        /// Get the Entity this Avatar refers to
 	EntityPtr getEntity() const {return _entity;}
 
 	// These two signals just transmit the Entity's
@@ -98,18 +90,19 @@ public:
 	void slotDisconnect() {delete this;}
 
 private:
-	void recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
-		const Atlas::Objects::Entity::GameEntity &character);
-	void recvEntity(Entity*);
+    void recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
+            const Atlas::Objects::Entity::GameEntity &character);
+    void recvEntity(Entity*);
 
-	World* _world;
-	std::string _id;
-	EntityPtr _entity;
-	std::string _dispatch_id;
-	/// Avatar id is only unique per-connection
-	typedef std::pair<Connection*,std::string> AvatarIndex;
-	typedef std::map<AvatarIndex,Avatar*> AvatarMap;
-	static AvatarMap _avatars;
+    World* _world;
+    std::string m_entityId;
+    EntityPtr _entity;
+    std::string _dispatch_id;
+    
+    /// Avatar id is only unique per-connection
+    typedef std::pair<Connection*,std::string> AvatarIndex;
+    typedef std::map<AvatarIndex,Avatar*> AvatarMap;
+    static AvatarMap _avatars;
 };
 	
 } // of namespace Eris

@@ -1,34 +1,34 @@
 Eris TODO
 
-Clean up the exception heriarchy
-	- really fatal stuff (Eris::Fatal)
-	- runtime failure (Eris::Runtime)
-	- network / connection failure 
-		? signals !?
-		
-	- Atlas spec failure (Eris::Illegal)
-	
-Support admin accounts? If requested, not especially difficult but extends beyond the current scope.
+1.2 TODO
 
-Handle network disconnects and reconnects better (the code is there, but hasn?t been extensively tested). In theory, re-connection to in-game worlds should function, but stamp validity and such things needs to be checked very carefully.
+- migrate to Atlas 0.6 API
+- make Avatar storage map on world, remove the bizzare global map. 
+- remove all the global accessors (Instance()) and friends, and properly
+  sort out the ownership relations
+  
+  Connection owns a type service
+  
+  World owns Avatars, Entities
+  Lobby owns Rooms and OOG person objects
+  
+  Player (maybe this shoukd be renamed to Account?)
+  
+  Account could potentially own a connection, lobby and world. Depends
+  how we assume re-use. At the moment, Lobby and World are both bound to a
+  single account.
+  
+- use routers generally. Connection is the routing base, with an anonymous
+  router (almost certainly the account), and various routers bound to
+  TO (one for oog account, going to the lobby, and one for each Avatar, all
+  forward to World, except for any avatar specific stuff)
+  
+- Anoymous router on Account hence handles all the activation INFO edge cases,
+  also needs to forward tpye service onwards. And logout, and maybe
+  INFO(LOGOUT)
 
-Timeouts on all Atlas ops (and heart-beats). This is blocked until we pick a cross-platform runtime library (NSPR, yuck).
+Longer Term TODO
 
-Correctly allow externally driven socket notifications (e.g from Gtk+ socket callbacks); this is platform specific and must be #ifdef-ed of course. However it is essential to allow clean integration with main loop-stealing toolkits and libraries.
-
-Handle the 'uptime' attribute of 'Server' objects (the thing returned by anonymous GETs on game servers); need to find out format (string / int) and scale.
-
-[It looks like uptime is of type float/double and measured in seconds. -ZA]
-
-
-Motion-prediction entity sub-class. Fairly simple initially, assuming no collision detection is done. Again code can be stolen from UClient.
-
-Test compilation on MSVC, Cygwin, Mingw32, Metrowerks / Mac (with GUSI)
-
-[Eris now compiles on MSVC 7, afaik. -ZA]
-
-
-Fully support inheritance queries, and correctly build and cache the inheritance graph.
-
-Don't crash on unexpected server disconnects
+- motion prediction, nicked from Sear
+- UI backend stuff
 

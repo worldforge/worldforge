@@ -1,40 +1,21 @@
 #ifndef ERIS_ENTITY_H
 #define ERIS_ENTITY_H
 
-// local headers
-#include <Eris/SignalDispatcher.h>
 #include <Eris/Types.h>
 
 #include <Atlas/Message/Element.h>
+#include <Atlas/Objects/ObjectsFwd.h>
 
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/quaternion.h>
 
-namespace Atlas {
-	namespace Objects {
-		namespace Entity {
-			class RootEntity;
-			class GameEntity;
-		}
-		
-		namespace Operation {
-			class Move;
-			class Set;
-			class Sound;
-			class Talk;
-		}
-	}
-}
-
-
 namespace Eris {
 
 // Forward Declerations	
 class Entity;
 class World;	
-class Dispatcher;
 class Property;
 class TypeInfo;
     
@@ -257,23 +238,6 @@ private:
 	StringList _localDispatchers;
 
 	World *_world; // the World that created the Entity
-};
-
-
-// motion predicted entity that moves a lot.
-class Moveable : public Entity
-{
-	typedef Entity Inherited;		
-public:
-	Moveable(const std::string &id);
-	virtual ~Moveable();
-
-	virtual WFMath::Point<3> getPosition() const	{return Inherited::getPosition();} 
-	void getPosition(bool predicted);
-
-protected:
-	WFMath::Vector<3> _velocity,
-		_delta;
 };
 
 } // of namespace

@@ -2,21 +2,10 @@
 #define ERIS_ROOM_H
 
 #include <Eris/Types.h>
+#include <Eris/router.h>
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
-
-namespace Atlas { namespace Objects {
-	namespace Operation {
-		class Imaginary;
-		class Talk;
-		class Appearance;
-		class Disappearance;
-	}
-	namespace Entity {
-		class RootEntity;
-	}
-}}
 
 namespace Eris
 {
@@ -29,21 +18,21 @@ class Lobby;
 Rooms. Generally rooms corespond to chanels in IRC, and the interface and commands should
 be clear if you are familiar with that medium. 
 */
-class Room : virtual public SigC::Object
+class Room : public SigC::Object, public Router
 {
 public:	
-	virtual ~Room();
+    virtual ~Room();
 
-	/// Send a piece of text to this room
-	void say(const std::string &tk);
+    /// Send a piece of text to this room
+    void say(const std::string &tk);
 
-	/** Send an emote ( /me ) to the room. This is transmitted as an IMAGINARY op
-	in Atlas, with args[0]["id"] = "emote". */
-	void emote(const std::string &em);
+    /** Send an emote ( /me ) to the room. This is transmitted as an IMAGINARY op
+    in Atlas, with args[0]["id"] = "emote". */
+    void emote(const std::string &em);
 
-	/** Leave the room - no more signals will be emitted for this room again
-	(validity of Room pointer after this call?) */
-	void leave();
+    /** Leave the room - no more signals will be emitted for this room again
+    (validity of Room pointer after this call?) */
+    void leave();
 
     /** create a child room of this one, with the specified name. Note that most attributes,
     <em>including the ID</em> will not be valid until the new room emits the 'Entered' signal.
@@ -51,83 +40,85 @@ public:
     value. */
     Room* createRoom(const std::string &name);
 
-	/// Obtain the human-readable name  of this room
-	const std::string& getName() const
-	{ return _name; }
+    /// Obtain the human-readable name  of this room
+    std::string getName() const
+    {
+        return m_name;
+    }
 	
-	/// Obtain a list of the account IDs of each person in this room
-	StringList getPeople() const
-	{ return StringList(_people.begin(), _people.end()); }
+    std::string getTopic() const
+    {
+        return m_topic;
+    }
+    
+    /// obtain an array of pointers to everyone in this room
+    std::vector<Person*> getPeople() const;
+    	
+    /// Obtain a list of rooms within this room
+    std::vector<Room*> getRooms() const
+    {
+        return m_subrooms;
+    }
 	
-	/// Obtain a list of rooms within this room
-	StringList getRooms() const
-	{ return StringList(_subrooms.begin(), _subrooms.end()); }
-	
-	/** Get the Atlas object ID of the Room; note this can fail prior to the Entered signal
-	 * being emitted; in that case it throws an exception to avoid returning an invalid
-	 * ID */
-	const std::string& getID() const;
-
-	///
-	Lobby* getLobby() const {return _lobby;}
+    /** Get the Atlas object ID of the Room; note that this may return an
+    empty value if called prior to entering the Lobby */
+    std::string getID() const
+    {
+        return m_roomId;
+    }
     
     Person* getPersonByUID(const std::string& uid);
-        
-	/// Called by the lobby when sight of us arrives	
-	void sight(const Atlas::Objects::Entity::RootEntity &room);	
+		
 // signals
-	/** Emitted when entry into the room (after a Join) is complete, i.e the user list has been
-	transferred and resolved. */
-	SigC::Signal1<void, Room*> Entered;
+    /** Emitted when entry into the room (after a Join) is complete, i.e the user list has been
+    transferred and resolved. */
+    SigC::Signal1<void, Room*> Entered;
+    
+    /** The primary talk callback. The arguments are the source room, the person
+    talking, and the message itself */
+    SigC::Signal3<void, Room*, Person*, const std::string&> Talk;
+    
+    /** Emote (/me) callback. The arguments are identical to those for Talk above */
+    SigC::Signal3<void, Room*, Person*, const std::string&> Emote;
 	
-	/** The primary talk callback. The arguments are the source room, the person
-	talking, and the message itself */
-	SigC::Signal3<void, Room*, const std::string&, const std::string&> Talk;
+    /** Emitted when a person enters the room; argument is the account ID. Note that
+    Appearance is not generated for the local player when entering/leaving; use the
+    Entered signal instead. */
+    SigC::Signal2<void, Room*, Person*> Appearance;
+    
+    /// Similarly, emitted when the specifed person leaves the room
+    SigC::Signal2<void, Room*, Person*> Disappearance;
 	
-	/** Emote (/me) callback. The arguments are identical to those for Talk above */
-	SigC::Signal3<void, Room*, const std::string&, const std::string&> Emote;
-	
-	/** Emitted when a person enters the room; argument is the account ID. Note that
-	Appearance is not generated for the local player when entering/leaving; use the
-	Entered signal instead. */
-	SigC::Signal2<void, Room*, const std::string&> Appearance;
-	/// Similarly, emitted when the specifed person leaves the room
-	SigC::Signal2<void, Room*, const std::string&> Disappearance;
-	
-	/** Emitted when a room change occurs, such as name, topic, or the list of subrooms */
-	SigC::Signal1<void, const StringSet&> Changed;
 	
 protected:
-	friend class Lobby;	// so Lobby can call the constructor
 		
-	/** standard constructor. Issues a LOOK against the specified ID, and sets up
-	the necessary signals to drive the Room if id arg is provided */
-	explicit Room(Lobby *l, const std::string &id = "");
+    /** standard constructor. Issues a LOOK against the specified ID, and sets up
+    the necessary signals to drive the Room if id arg is provided */
+    explicit Room(Lobby *l, const std::string& id);
+	
+    RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
 
-	/**  delayable initialization - allows the Lobby to defer signal binding and so on until
-	the account INFO has been recieved. */
-	void setup();
+    std::string m_roomId;
+private:
+    /// helper to see if all the people in the room are valid, and if so, do entry
+    bool checkEntry();
 
-	/// routed from the Lobby, which maintains the actual dispatcher
-	void notifyPersonSight(Person *p);
+    void sight(const Atlas::Objects::Entity::RootEntity &room);
+    void handleSightImaginary(const Atlas::Objects::Operation::Imaginary &im);
+    void handleSoundTalk(const Atlas::Objects::Operation::Talk &tk);
 
-	// Callbacks
-	void recvSoundTalk(const Atlas::Objects::Operation::Talk &tk);
-	void recvAppear(const Atlas::Objects::Operation::Appearance &ap);
-	void recvDisappear(const Atlas::Objects::Operation::Disappearance &dis);
-	void recvSightImaginary(const Atlas::Objects::Operation::Imaginary &im);
-
-	std::string _id;	///< ID of the room entity
-	Lobby* _lobby;		///< the Lobby object
-	bool _parted;		///< Set if 'left'
-
-	std::string _name,	///< displayed named of the room
-		_creator;	///< ID of the account that created the room
-	bool _initialGet;
-
-	StringSet _subrooms;	///< the IDs of any sub-rooms
-	StringSet _people,		///< the account IDs of each person in the room
-		_pending;	///< persons for which appear/disappear has been received, but not (yet) SIGHT 
+    // callback slot when Lobby recives SIGHT(person)
+    void notifyPersonSight(Person *p);
+        
+    std::string m_name;
+    std::string m_topic;
+    bool m_entered;     ///< set once we enter the room, i.e have info on all the members
+    Lobby* m_lobby;
+    
+    typedef std::map<std::string, Person*> IdPersonMap;
+    IdPersonMap m_members;
+    
+    std::vector<Room*> m_subrooms;
 };
 	
 }

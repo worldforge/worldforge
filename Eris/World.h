@@ -2,6 +2,7 @@
 #define ERIS_WORLD_H
 
 #include <Eris/Types.h>
+#include <Atlas/Objects/ObjectsFwd.h>
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
@@ -12,29 +13,6 @@
 #if defined(__GNUC__) && __GNUC__ < 3
 #	include <multimap.h>
 #endif
-
-namespace Atlas {
-	namespace Objects {
-		namespace Entity {
-			class RootEntity;
-			class GameEntity;
-		}
-		
-		namespace Operation {
-			class Move;
-			class Set;
-			class Sound;
-			class Talk;
-			class Look;
-			class Appearance;
-			class Disappearance;
-			class Info;
-			class Delete;
-			class Create;
-			class Sight;
-		}
-	}
-}
 
 namespace Eris {
 

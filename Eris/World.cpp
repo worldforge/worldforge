@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-	#include "config.h"
+    #include "config.h"
 #endif
 
 #include <Eris/World.h>
@@ -9,31 +9,10 @@
 #include <Eris/Log.h>
 #include <Eris/Factory.h>
 #include <Eris/Utils.h>
-#include <Eris/Wait.h>
 #include <Eris/InvisibleEntityCache.h>
 #include <Eris/Player.h>
 #include <Eris/Avatar.h>
-
-#include <Eris/ClassDispatcher.h>
-#include <Eris/EncapDispatcher.h>
-#include <Eris/OpDispatcher.h>
-#include <Eris/TypeDispatcher.h>
-#include <Eris/IdDispatcher.h>
 #include <Eris/Exceptions.h>
-
-// various atlas headers we need
-#include <Atlas/Objects/Encoder.h>
-
-#include <Atlas/Objects/Entity/GameEntity.h>
-
-#include <Atlas/Objects/Operation/Create.h>
-#include <Atlas/Objects/Operation/Look.h>
-#include <Atlas/Objects/Operation/Delete.h>
-#include <Atlas/Objects/Operation/Talk.h>
-#include <Atlas/Objects/Operation/Appearance.h>
-#include <Atlas/Objects/Operation/Disappearance.h>
-#include <Atlas/Objects/Operation/Sound.h>
-#include <Atlas/Objects/Operation/Move.h>
 
 #include <sigc++/object_slot.h>
 

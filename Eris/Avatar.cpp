@@ -1,5 +1,7 @@
 #include <Eris/Avatar.h>
 
+
+
 #include <Eris/World.h>
 #include <Eris/Entity.h>
 #include <Eris/OpDispatcher.h>
@@ -8,17 +10,15 @@
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
 
-#include <Atlas/Objects/Entity/GameEntity.h>
-#include <Atlas/Objects/Operation/Info.h>
-#include <Atlas/Objects/Operation/Move.h>
-#include <Atlas/Objects/Operation/Touch.h>
-#include <Atlas/Objects/Operation/Talk.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
 
+#include <Atlas/Message/Element.h>
 #include <wfmath/atlasconv.h>
-
 #include <sigc++/object_slot.h>
 
 using namespace Eris;
+using Atlas::Message::Element;
 
 Avatar::AvatarMap Avatar::_avatars;
 
@@ -45,8 +45,10 @@ static std::string refno_to_string(long refno)
 
 // We may not be able to set _entity yet, if we haven't gotten a
 // Sight op from the server
-Avatar::Avatar(World* world, long refno, const std::string& character_id)
-	: _world(world), _id(character_id), _entity(0)
+Avatar::Avatar(World* world, long refno, const std::string& character_id) : 
+    _world(world),
+    m_entityId(character_id),
+    _entity(0)
 {
     assert(world);
 
@@ -62,24 +64,24 @@ Avatar::Avatar(World* world, long refno, const std::string& character_id)
     	"character", SigC::slot(*this, &Avatar::recvInfoCharacter))
     );
 
-    if(!_id.empty()) {
+    if(!m_entityId.empty()) {
 	bool success = _avatars.insert(std::make_pair(
-	    AvatarIndex(_world->getConnection(), _id), this)).second;
+	    AvatarIndex(_world->getConnection(), m_entityId), this)).second;
 	if(!success) // We took a character that already had an Avatar
-	    throw InvalidOperation("Character " + _id + " already has an Avatar");
+	    throw InvalidOperation("Character " + m_entityId + " already has an Avatar");
     }
 
     _world->Entered.connect(SigC::slot(*this, &Avatar::recvEntity));
 
-    log(LOG_DEBUG, "Created new Avatar with id %s and refno %i", _id.c_str(), refno);
+    log(LOG_DEBUG, "Created new Avatar with id %s and refno %i", m_entityId.c_str(), refno);
 }
 
 Avatar::~Avatar()
 {
     if(!_dispatch_id.empty())
 	_world->getConnection()->removeDispatcherByPath("op:info", _dispatch_id);
-    if(!_id.empty()) {
-	AvatarMap::iterator I = _avatars.find(AvatarIndex(_world->getConnection(), _id));
+    if(!m_entityId.empty()) {
+	AvatarMap::iterator I = _avatars.find(AvatarIndex(_world->getConnection(), m_entityId));
 	assert(I != _avatars.end());
 	_avatars.erase(I);
     }
@@ -95,14 +97,13 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc
 			       " held by the character");
 
     Atlas::Objects::Operation::Move moveOp;
-    moveOp.setFrom(_entity->getID());
+    moveOp->setFrom(_entity->getID());
 
-    Atlas::Message::Element::MapType what;
-    what["loc"] = loc;
-    what["pos"] = pos.toAtlas();
-    what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
-    what["id"] = e->getID();
-    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+    Atlas::Objects::Entity::GameEntity what;
+    what->setLoc(loc);
+    what->setPosAsList(pos.toAtlas());
+    what->setId(e->getID());
+    moveOp->setArgs1(what);
 
     _world->getConnection()->send(moveOp);
 }
@@ -118,26 +119,25 @@ void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset)
 
 void Avatar::take(Entity* e)
 {
-    Atlas::Message::Element::MapType what;
-    what["loc"] = getID();
-    what["pos"] = WFMath::Point<3>(0, 0, 0).toAtlas();
-    what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
-    what["id"] = e->getID();
-
     Atlas::Objects::Operation::Move moveOp;
-    moveOp.setFrom(getID());
-    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+    moveOp->setFrom(_entity->getID());
 
-  _world->getConnection()->send(moveOp);
+    Atlas::Objects::Entity::GameEntity what;
+    what->setLoc(getID());
+    //what->setPosAsList(pos.toAtlas());
+    what->setId(e->getID());
+    moveOp->setArgs1(what);
+
+    _world->getConnection()->send(moveOp);
 }
 
 void Avatar::touch(Entity* e)
 {
     Atlas::Objects::Operation::Touch touchOp;
-    touchOp.setFrom(getID());
-    Atlas::Message::Element::MapType ent;
+    touchOp->setFrom(getID());
+    Element::MapType ent;
     ent["id"] = e->getID();
-    touchOp.setArgs(Atlas::Message::Element::ListType(1, ent));
+    touchOp->setArgsAsList(Atlas::Message::ListType(1, ent));
 
     _world->getConnection()->send(touchOp);
 }
@@ -146,12 +146,11 @@ void Avatar::say(const std::string& msg)
 {
     Atlas::Objects::Operation::Talk t;
 
-    Atlas::Message::Element::MapType what;
+    Element::MapType what;
     what["say"] = msg;
-    Atlas::Message::Element::ListType args(1, what);
-
-    t.setArgs(args);
-    t.setFrom(getID());
+    t->setArgsAsList(Atlas::Message::ListType(1, what));
+    t->setFrom(getID());
+    
     _world->getConnection()->send(t);
 }
 
@@ -160,15 +159,15 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos)
     if(!_entity)
 	throw InvalidOperation("Character Entity does not exist yet!");
 
-    Atlas::Message::Element::MapType what;
+    Element::MapType what;
     what["loc"] = _entity->getContainer()->getID();
     what["pos"] = pos.toAtlas();
     what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
     what["id"] = getID();
 
     Atlas::Objects::Operation::Move moveOp;
-    moveOp.setFrom(getID());
-    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+    moveOp->setFrom(getID());
+    moveOp->setArgsAsList(Element::ListType(1, what));
 
     _world->getConnection()->send(moveOp);
 }
@@ -180,7 +179,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
 
     const WFMath::CoordType min_val = WFMATH_MIN * 100000000;
 
-    Atlas::Message::Element::MapType what;
+    Element::MapType what;
     what["loc"] = _entity->getContainer()->getID();
     what["velocity"] = vel.toAtlas();
     WFMath::CoordType sqr_mag = vel.sqrMag();
@@ -203,8 +202,8 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
     what["id"] = getID();
 
     Atlas::Objects::Operation::Move moveOp;
-    moveOp.setFrom(getID());
-    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+    moveOp->setFrom(getID());
+    moveOp->setArgsAsList(Element::ListType(1, what));
 
     _world->getConnection()->send(moveOp);
 }
@@ -215,30 +214,30 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel,
     if(!_entity)
 	throw InvalidOperation("Character Entity does not exist yet!");
 
-    Atlas::Message::Element::MapType what;
+    Element::MapType what;
     what["loc"] = _entity->getContainer()->getID();
     what["velocity"] = vel.toAtlas();
     what["orientation"] = orient.toAtlas();
     what["id"] = getID();
 
     Atlas::Objects::Operation::Move moveOp;
-    moveOp.setFrom(getID());
-    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+    moveOp->setFrom(getID());
+    moveOp->setArgsAsList(Element::ListType(1, what));
 
     _world->getConnection()->send(moveOp);
 }
 
 void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
 {
-    Atlas::Message::Element::MapType what;
+    Element::MapType what;
     what["loc"] = container->getID();
     what["pos"] = pos.toAtlas();
     what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
     what["id"] = e->getID();
 
     Atlas::Objects::Operation::Move moveOp;
-    moveOp.setFrom(getID());
-    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+    moveOp->setFrom(getID());
+    moveOp->setArgsAsList(Element::ListType(1, what));
 
     _world->getConnection()->send(moveOp);
 }
@@ -263,17 +262,17 @@ std::vector<Avatar*> Avatar::getAvatars(Connection* con)
 void Avatar::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 		const Atlas::Objects::Entity::GameEntity &character)
 {
-    log(LOG_DEBUG, "Have id %s, got id %s", _id.c_str(), character.getId().c_str());
+    log(LOG_DEBUG, "Have id %s, got id %s", m_entityId.c_str(), character->getId().c_str());
 
-    assert(_id.empty() || _id == character.getId());
-    if(_id.empty()) {
-	_id = character.getId();
+    assert(m_entityId.empty() || m_entityId == character->getId());
+    if(m_entityId.empty()) {
+	m_entityId = character->getId();
 	bool success = _avatars.insert(std::make_pair(
-	    AvatarIndex(_world->getConnection(), _id), this)).second;
+	    AvatarIndex(_world->getConnection(), m_entityId), this)).second;
 	assert(success); // Newly created character should have unique id
     }
 
-    log(LOG_DEBUG, "Got character info with id %s", _id.c_str());
+    log(LOG_DEBUG, "Got character info with id %s", m_entityId.c_str());
 
     _world->recvInfoCharacter(ifo, character);
 

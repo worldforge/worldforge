@@ -8,135 +8,66 @@
 #include <Eris/Utils.h>
 #include <Eris/Person.h>
 #include <Eris/Log.h>
-
-#include <Eris/SignalDispatcher.h>
-#include <Eris/ClassDispatcher.h>
-#include <Eris/ArgumentDispatcher.h>
-
 #include <Eris/Exceptions.h>
-
-#include <Atlas/Objects/Entity/RootEntity.h>
-
-#include <Atlas/Objects/Operation/Appearance.h>
-#include <Atlas/Objects/Operation/Disappearance.h>
-#include <Atlas/Objects/Operation/Look.h>
-#include <Atlas/Objects/Operation/Move.h>
-#include <Atlas/Objects/Operation/Imaginary.h>
-#include <Atlas/Objects/Operation/Talk.h>
 
 #include <sigc++/object_slot.h>
 
 #include <cassert>
 
-using namespace Atlas;
-
-typedef Atlas::Message::Element::ListType AtlasListType;
-typedef Atlas::Message::Element::MapType AtlasMapType;
+using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Root;
 
 namespace Eris
 {
 	
-Room::Room(Lobby *l, const std::string &id) :
-    _id(id), 
-    _lobby(l),
-    _parted(false)
+Room::Room(Lobby *l, const std::string& id) :
+    m_roomId(id),
+    m_entered(false),
+    m_lobby(l)
 {
-    if (_id.empty()) return;
-    assert(l);
-    setup();
+    if (!id.empty())
+        m_lobby->getConnection()->registerRouterForFrom(id, this);
 }
 
 Room::~Room()
 {
-	/* avoid exceptions from further down if the Lobby never recieved the OOG entry. This
-	happens if a Lobby object is created but the connection never goes live, for example. */
-    if (_id.empty()) return;
-    
-	if (!_parted) // brutal tear down
-		leave();
-	
-	Connection *con = _lobby->getConnection();
-	std::string rid = "room_" + _id;
-	
-	// delete *everything* below our node
-	con->removeDispatcherByPath("op:oog:sound", rid);
-	con->removeDispatcherByPath("op:oog:sight:op", rid);
-	con->removeDispatcherByPath("op:oog:appearance", rid);
-	con->removeDispatcherByPath("op:oog:disappearance", rid);
+    if (!m_roomId.empty())
+        m_lobby->getConnection()->unregisterRouterForFrom(id, this);
 }
 
-void Room::setup()
-{
-	assert(!_id.empty());
-	std::string rid("room_" + _id);
-	// setup the dispatchers
-	Connection *con = _lobby->getConnection();
-	
-	Dispatcher *sound = con->getDispatcherByPath("op:oog:sound");
-	sound = sound->addSubdispatch(new ArgumentDispatcher("room_" + _id, "loc", _id));
-	
-// talk 
-	sound->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Talk>("foo",
-		SigC::slot(*this, &Room::recvSoundTalk)
-	));
-
-// visual stuff (sights)
-    
-    Dispatcher *sightOp = con->getDispatcherByPath("op:oog:sight:op");
-
-    Dispatcher *cd = sightOp->addSubdispatch(ClassDispatcher::newAnonymous(con));
-    Dispatcher *location = cd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id), "imaginary");
-    
-    location->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Imaginary>("imag",
-		SigC::slot(*this, &Room::recvSightImaginary)
-    ));
-
-// appearance
-	Dispatcher *apd = con->getDispatcherByPath("op:oog:appearance");
-	apd = apd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
-	apd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Appearance>("foo",
-		SigC::slot(*this, &Room::recvAppear)
-	));
-	
-// disappearance
-	Dispatcher *disd = con->getDispatcherByPath("op:oog:disappearance");
-	disd = disd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
-	disd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Disappearance>("foo",
-		SigC::slot(*this, &Room::recvDisappear)
-	));
-	
-// initial look	
-	if (_lobby != this) // not actually necessary, but avoids a duplicate initial look
-		_lobby->look(_id);
-}
+#pragma mark -
+// public command-issue wrappers
 
 void Room::say(const std::string &tk)
 {
-	if (!_lobby->getConnection()->isConnected())
-		// FIXME - provide some feed-back here
-		return;
-	
-	Atlas::Objects::Operation::Talk t;
+    if (!m_lobby->getConnection()->isConnected())
+    {
+        error() << "talking in room " << m_roomId << ", but connection is down";
+        return;
+    }
 	
 	Atlas::Message::Element::MapType speech;
 	speech["say"] = tk;
 	speech["loc"] = _id;
 	
+    Talk t;
 	t.setArgs(Atlas::Message::Element::ListType(1, speech));
-	t.setTo(_id);
-	t.setFrom(_lobby->getAccountID());
-	t.setSerialno(getNewSerialno());
+    t->setTo(m_roomId);
+    t->setFrom(m_lobby->getAccountID());
+    t->setSerialno(getNewSerialno());
 	
-	_lobby->getConnection()->send(t);
+    m_lobby->getConnection()->send(t);
 }
 
 void Room::emote(const std::string &em)
 {
-	if (!_lobby->getConnection()->isConnected())
-		// FIXME - provide some feed-back here
-		return;
+    if (!m_lobby->getConnection()->isConnected())
+    {
+        error() << "emoting in room " << m_roomId << ", but connection is down";
+        return;
+    }
 	
-	Atlas::Objects::Operation::Imaginary im;
+    Imaginary im;
 	
 	Atlas::Message::Element::MapType emote;
 	emote["id"] = "emote";
@@ -148,15 +79,18 @@ void Room::emote(const std::string &em)
 	im.setFrom(_lobby->getAccountID());
 	im.setSerialno(getNewSerialno());
 	
-	_lobby->getConnection()->send(im);
+    m_lobby->getConnection()->send(im);
 }
 
 void Room::leave()
 {
-	Connection *c = _lobby->getConnection();
-	if (!c->isConnected())
-		throw InvalidOperation("Not connected to server");
-		
+    if (!m_lobby->getConnection()->isConnected())
+    {
+        error() << "leaving room " << m_roomId << ", but connection is down";
+        return;
+    }
+
+    
 	Atlas::Objects::Operation::Move part;
 	part.setFrom(_lobby->getAccountID());
 	part.setSerialno(getNewSerialno());
@@ -173,9 +107,12 @@ void Room::leave()
 
 Room* Room::createRoom(const std::string &name)
 {
-    Connection *c = _lobby->getConnection();
-    if (!c->isConnected())
-		throw InvalidOperation("Not connected to server");
+    if (!m_lobby->getConnection()->isConnected())
+    {
+        error() << "creating room in room  " << m_roomId << ", but connection is down";
+        return;
+    }
+
     
     Atlas::Objects::Operation::Create cr;
     cr.setFrom(_lobby->getAccountID());
@@ -198,167 +135,239 @@ Room* Room::createRoom(const std::string &name)
     return r;
 }
 
+Person* Room::getPersonByUID(const std::string& uid)
+{
+    return m_lobby->getPerson(uid);
+}
+
+std::vector<Person*> Room::getPeople() const
+{
+    std::vector<Person*> people;
+    
+    for (IdPersonMap::const_iterator P=m_members.begin(); P != m_members.end(); ++P)
+    {    
+        if (P->second)
+            people.push_back(P->second);
+    }
+    
+    return people;
+}
+
+#pragma mark -
+
+RouterResult Room::handleOperation(const RootOperation& op)
+{
+    if (op->getTo() != m_account->getAccountId())
+    {
+        error() << "Room recived op TO account " << op->getTo() << ", not the account ID";
+        return IGNORED;
+    }
+
+    const std::vector<Root>& args = op.getArgs();
+
+    if (op->instanceOf(SIGHT_NO))
+    {
+        assert(!args.empty());
+        Atlas::Objects::Entity::RootEntity ent = 
+            smart_dynamic_cast<Atlas::Objects::Entity::RootEntity>(args.front());
+            
+        if (ent && (ent->getId() == m_roomId))
+        {
+            sight(ent);
+            return HANDLED;
+        }
+        
+        Imaginary img = smart_dynamic_cast<Imaginary>(args.front());
+        if (img)
+        {
+            handleSightImaginary(img);
+            return HANDLED;
+        }
+    }
+
+    if (op->instanceOf(APPEARANCE_NO))
+    {
+        for (unsigned int A=0; A < args.size(); ++A)
+            apperance(args[A]->getId());
+
+        return HANDLED;
+    }
+
+    if (op->instanceOf(DISAPPEARANCE_NO))
+    {
+        for (unsigned int A=0; A < args.size(); ++A)
+            disappearance(args[A]->getId());
+        
+        return HANDLED;
+    }
+
+    if (op->instanceOf(SOUND_NO))
+    {
+        Talk tk = smart_dynamic_cast<Talk>(args.front());
+        if (tk)
+        {
+            handleSoundTalk(tk);
+            return HANDLED;
+        }
+    }
+
+    return IGNORED;
+}
+
 void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 {
-	log(LOG_NOTICE, "Got sight of room %s", _id.c_str());
-	_initialGet = true;
+    if (m_entered)
+        warning() << "got SIGHT of entered room " << m_roomId;
+        
+    m_name = room->getName();
+    if (room->hasAttr("topic")
+        m_topic = room->getAttr("topic").toString();
 		
-	_name = room.getName();
-	//_creator = room.getAttr("creator").asString();
+    if (room->hasAttr("people"))
+    {
+        Atlas::Message::ListType people = room->getAttr("people").asList();
+        for (Atlas::Message::ListType::const_iterator P=people.begin(); P!=people.end(); ++P)
+            appearance(P->asString());
+    }
+    
+    checkEntry();
+    
+    if (room->hasAttr("rooms"))
+    {
+        Atlas::Message::ListType rooms = room->getAttr("rooms").asList();
+        for (Atlas::Message::ListType::const_iterator R=rooms.begin(); R!=rooms.end(); ++R)
+        {
+            m_rooms.push_back(new Room(m_lobby, R->asString());
+        }
+    }
+}
 
-	// extract the current people list
-	if (room.hasAttr("people")) {
-		Message::Element::ListType people = room.getAttr("people").asList();
-			
-		for (Message::Element::ListType::const_iterator i=people.begin(); i!=people.end(); ++i) {
-	
-			std::string account = i->asString();
-			_people.insert(account);
-		
-			if (_lobby->getPerson(account) == NULL) {
-				// mark as pending
-				_pending.insert(account);
-			}
-		}
-	}
-	
-	if (_pending.empty()) {
-		log(LOG_NOTICE, "Doing immediate entry to room %s", _id.c_str());
-		// FIXME  - this code will cause OOG entry, even if the server
-		// doesn't really support it (just to an empty lobby). The option
-		// is not to emit the 'entered' signal at all. I don't know which
-		// makes more sense.
-		Entered.emit(this);
-		_initialGet = false;
-	}
+void Room::handleSoundTalk(const Talk &tk)
+{
+    IdPersonMap::const_iterator P = m_members.find(tk->getFrom());
+    if (P == m_members.end())
+    {
+        error() << "room " << m_roomId << " got sound(talk) from non-member account";
+        return;
+    }
+    
+    if (P->second == NULL)
+        return; // consume but ignore till we have sight
+        
+    const std::vector<Root>& args = tk.getArgs();
+    if (args.empty())
+    {
+        warning() << "room " << m_roomId << " recieved sound(talk) with no args";
+        return;
+    }
+    
+    if (!args.front()->hasAttr("say"))
+        return;
+    
+    std::string description = args.front()->getAttr("say").asString();
+    Talk.emit(this, P->second, say);
+}
 
-	// wire up the signal for initial get
-	_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
-	
-	if (room.hasAttr("rooms")) {
-	    Message::Element::ListType rooms = room.getAttr("rooms").asList();
-	    // rattle through the list, jamming them into our set
-	    for (unsigned int R=0; R<rooms.size();R++)
-		_subrooms.insert(rooms[R].asString());
-	}
+void Room::handleSightImaginary(const Imaginary& im)
+{
+    IdPersonMap::const_iterator P = m_members.find(im->getFrom());
+    if (P == m_members.end())
+    {
+        error() << "room " << m_roomId << " got sight(imaginary) from non-member account";
+        return;
+    }
+    
+     if (P->second == NULL)
+        return; // consume but ignore till we have sight
+
+    const std::vector<Root>& args = im.getArgs();
+    if (args.empty())
+    {
+        warning() << "room " << m_roomId << " recieved sight(imaginary) with no args";
+        return;
+    }
+    
+    if (!args.front()->hasAttr("description"))
+        return;
+    
+    std::string description = args.front()->getAttr("description").asString();
+    Emote.emit(this, P->second, description);
+}
+
+#pragma mark -
+// room membership updates
+
+void Room::appearance(const std::string& personId)
+{
+    IdPersonMap::iterator P = m_members.find(personId);
+    if (P != m_members.end())
+    {
+        error() << "duplicate appearance of person " << personId << " in room " << m_roomId;
+        return;
+    }
+    
+    Person* person = m_lobby->getPerson(personId);
+    if (person)
+    {
+        m_members[personId] = person;
+        if (m_entered)
+            Apperance.emit(this, person);
+    } else {
+        m_members[personId] = NULL; // we know the person is here, but that's all
+        m_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
+    }
+}
+
+void Room::disappearance(const std::string& personId)
+{
+    IdPersonMap::iterator P = m_members.find(personId);
+    if (P == m_members.end())
+    {
+        error() << "during disappearance, person " << personId << " not found in room " << m_roomId;
+        return;
+    }
+    
+    if (P->second) // don't emit if never got sight
+        Disappearance.emit(this, P->second);
+    
+    m_members.erase(P);
 }
 
 void Room::notifyPersonSight(Person *p)
 {
-	assert(p);
-	_pending.erase(p->getAccount());
-	
-	if (_pending.empty()) {
-		if (_initialGet) {
-			Entered.emit(this);
-			_initialGet = false;
-		} else {
-			// we were waiting to show an appearance, we assume
-			Appearance.emit(this, p->getAccount());
-		}
-	}
-}
-
-void Room::recvSoundTalk(const Atlas::Objects::Operation::Talk &tk)
-{
-	const Atlas::Message::Element &obj = getArg(tk, 0);
-	Message::Element::MapType::const_iterator m = obj.asMap().find("say");
-	if (m == obj.asMap().end())
-		throw IllegalObject(tk, "No sound object in arg 0");
-	std::string say = m->second.asString();
-	
-	// quick sanity check
-	if (_pending.find(tk.getFrom()) != _pending.end()) {
-		// supress this talk until we have the name
-		// FIXME - buffer these and spool back?
-		return;
-	}
-	// hit this assert if get a talk from somone we know *nothing* about
-	if (_people.find(tk.getFrom()) == _people.end()) {
-	    log(LOG_DEBUG, "unknown FROM %s in TALK operation");
-	    assert(false);
-	}
-	
-	// get the player name and emit the signal already
-	Person *p = _lobby->getPerson(tk.getFrom());
-	assert(p);
-	Talk.emit(this, p->getAccount(), say);
-}
-
-void Room::recvSightImaginary(const Atlas::Objects::Operation::Imaginary &im)
-{
-    const Atlas::Message::Element &obj = getArg(im, 0);
-    Message::Element::MapType::const_iterator m = obj.asMap().find("description");
-    if (m == obj.asMap().end())
-	return;
-    const std::string & description = m->second.asString();
-    // quick sanity check
-    if (_pending.find(im.getFrom()) != _pending.end()) {
-    	// supress this talk until we have the name
-    	// FIXME - buffer these and spool back?
-    	return;
-    }
-    // hit this assert if get a talk from somone we know *nothing* about
-    if (_people.find(im.getFrom()) == _people.end()) {
-        log(LOG_DEBUG, "unknown FROM %s in TALK operation");
-        assert(false);
-    }
-    Person *p = _lobby->getPerson(im.getFrom());
-    Emote.emit(this, p->getAccount(), description);
-}
-
-void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
-{
-	const AtlasListType &args = ap.getArgs();
-	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
-		const AtlasMapType &app = A->asMap();
-		AtlasMapType::const_iterator V(app.find("id"));
-		std::string account(V->second.asString());
-		
-		_people.insert(account);
-		if (_lobby->getPerson(account)) {
-			// player is already known, can emit right now
-			Appearance.emit(this, account);
-		} else {
-			// need to wait on the lookup
-			if (_pending.empty())
-				_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
-			
-			_pending.insert(account);
-		}
-	}
-}
-
-void Room::recvDisappear(const Atlas::Objects::Operation::Disappearance &dis)
-{
-	
-	const AtlasListType &args = dis.getArgs();
-	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
-		const AtlasMapType &app = A->asMap();
-		AtlasMapType::const_iterator V(app.find("id"));
-		std::string account(V->second.asString());
-		
-		if (_people.find(account) == _people.end())
-			throw IllegalObject(dis, "room disappearance for unknown person");
-	
-		_people.erase(account);
-		Disappearance.emit(this, account);
-	}
-}
-
-const std::string& Room::getID() const
-{
-    if (_id.empty() || _id == "") {
-	throw InvalidOperation("called Room::getID() before the ID was available \
-	    (wait till Entered signal is emitted");
-    }
+    assert(p);
+    IdPersonMap::iterator P = m_members.find(p->getAccount());
+    if (P == m_members.end())
+        return; // this could happen if we got appear and disappear before the SIGHT
     
-    return _id;
+    if (P->second != NULL)
+    {
+        if (P->second != p)
+        {
+            error() << "duplicate Person objects exist for account " << P->first;
+            return;
+        }
+    }
+        
+    if (m_entered)
+        Appearance.emit(this, p);
+    else
+        checkEntry();
 }
 
-Person* Room::getPersonByUID(const std::string& uid)
+void Room::checkEntry()
 {
-    return _lobby->getPerson(uid);
+    assert(m_entered == false);
+    
+    bool anyPending = false;
+    for (P = m_members.begin(); P != m_members.end(); ++P)
+        if (P->second == NULL) anyPending = true;
+       
+    if (!anyPending)
+    {
+        Entered.emit(this);
+        m_entered = true;
+    }
 }
 
 } // of Eris namespace

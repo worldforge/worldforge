@@ -17,221 +17,125 @@ namespace Eris {
  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-TypeInfo::TypeInfo(const std::string &id, TypeService *engine) :
-	_bound(false),
-	_name(id),
-	_typeid(INVALID_TYPEID),
-	_engine(engine)
+TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
+	m_bound(false),
+	m_name(id),
+	m_typeService(ts)
 {
-	if (_name == "root") {
-		_bound = true;
-		// _typeid = 0; ?
-	}
+    if (m_name == "root")
+        m_bound = true; // root node is always bound
 }
 
-TypeInfo::TypeInfo(const Atlas::Objects::Root &atype, TypeService *engine) :
-	_bound(false),
-	_name(atype.getId()),
-	_typeid(INVALID_TYPEID),
-	_engine(engine)
+TypeInfo::TypeInfo(const Atlas::Objects::Root &atype, TypeService *ts) :
+    m_bound(false),
+    m_name(atype.getId()),
+    m_typeService(ts)
 {
-	if (_name == "root")
-		_bound = true;
-	processTypeData(atype);
+    if (m_name == "root")
+        m_bound = true; // root node is always bound
+
+    processTypeData(atype);
 }
 
 bool TypeInfo::isA(TypeInfoPtr tp)
 {
-	// preliminary stuff
-	if (safeIsA(tp)) return true;
+    if (!m_bound)
+        warning() << "calling isA on unbound type " << m_name;
+        
+    if (tp == this) // uber fast short-circuit for type equality
+        return true;
 	
-	if (!isBound()) {
-		// can't give a reply, need to get those parents bound. we assume it's in
-		// progress. Need to pick a sensible repost condition here
-	
-		//Signal & sig = signalWhenBound(this);
-		Eris::log(LOG_DEBUG, "throwing OperationBlocked doing isA on %s", _name.c_str());
-		throw OperationBlocked(getBoundSignal());
-	}
-		
-	return false;
-}
-
-bool TypeInfo::safeIsA(TypeInfoPtr tp)
-{
-	assert(tp);
-	if (tp == this) // uber fast short-circuit for type equality
-		return true;
-	
-	return _ancestors.count(tp); // non-authorative
+    return m_ancestors.count(tp); // non-authorative
 }
 
 void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 {
-	std::string id = atype.getId();
-	if (id != _name)
-		throw InvalidOperation("Mis-targeted INFO operation (for " + id + ')');
+    if (atype->getID() != m_name)
+    {
+        error() << "mis-targeted INFO operation for " << atype->getID() << " arrived at " << m_name;
+        return;
+    }
+        
+    const StringList& parents(atype->getParents());
+    for (StringList::const_iterator P = parents.begin(); P != parents.end(); ++P)
+        addParent(m_typeService->getTypeByName(*P));
 	
-	if (atype.hasAttr("IntegerType")) {
-		_typeid = atype.getAttr("IntegerType").asInt();
-	}
-	
-	Atlas::Message::Element::ListType parents = atype.getParents();
-	for (unsigned int I=0; I<parents.size(); ++I) {
-		addParent(_engine->getTypeByName(parents[I].asString()));
-	}
-	
-	// expand the children ?  why not ..
-	if (atype.hasAttr("children")) {
-		assert(atype.getAttr("children").isList());
-		Message::Element::ListType children = atype.getAttr("children").asList();
-		for (Atlas::Message::Element::ListType::iterator I=children.begin(); I!=children.end(); ++I) {
-			assert(I->isString());
-			addChild(_engine->getTypeByName(I->asString()));
-		}
-	}
-
-	setupDepends();
-	validateBind();
+// here we aggressively lookup child types. this tends to cane the server hard
+    const StringList& children(atype->getChildren());
+    for (StringList::const_iterator C = children.begin(); C != children.end(); ++C)
+        addChild(m_typeService->getTypeByName(*C));
+  
+    setupDepends();
+    validateBind();
 }
 
 bool TypeInfo::operator==(const TypeInfo &x) const
 {
-	if (_typeid == INVALID_TYPEID)
-		return _name == x._name;
-	else
-		return _typeid == x._typeid;
+    if (m_typeService != x.m_typeService)
+        warning() << "comparing TypeInfos from different type services, bad";
+        
+    return (m_name == x.m_name);
 }
 
 bool TypeInfo::operator<(const TypeInfo &x) const
 {
-	if (_typeid == INVALID_TYPEID)
-		return _name == x._name;
-	else
-		return _typeid == x._typeid;
+    return m_name < x.m_name;
 }
 
 void TypeInfo::addParent(TypeInfoPtr tp)
 {
-	// do lots of sanity checking, since a corrupt type heirarchy would really screw us over
-	assert(tp);
+    if (m_parents.count(tp))
+    {
+        // it's critcial we bail fast here to avoid infitite mutual recursion with addChild
+        return;
+    }
 	
-	if (_parents.count(tp)) {
-		// it's critcial we bail fast here to avoid infitite mutual recursion with addChild
-		return;
-	}
+    if (m_ancestors.count(tp))
+	error() << "Adding " << tp->m_name << " as parent of " << m_name << ", but already marked as ancestor";
+    
+    // update the gear
+    m_parents.insert(tp);
+    addAncestor(tp);
 	
-	if (_ancestors.count(tp)) {
-		Eris::log(LOG_WARNING, "Adding %s as parent of %s, but already marked as ancestor",
-			tp->_name.c_str(), _name.c_str());
-		throw InvalidOperation("Bad inheritance graph : new parent is ancestor");
-	}
-	
-	// update the gear
-	_parents.insert(tp);
-	addAncestor(tp);
-	
-	// note this will never recurse deep becuase of the fast exiting up top
-	tp->addChild(this);
+    // note this will never recurse deep becuase of the fast exiting up top
+    tp->addChild(this);
 }
 
 void TypeInfo::addChild(TypeInfoPtr tp)
 {
-	assert(tp);
-	
-	if (_children.count(tp)) {
-		return; // same need for early bail-out here
-	}
-	
-	_children.insert(tp);
-	// again this will not recurse due to the termination code
-	tp->addParent(this);
+    if (m_children.count(tp)) 
+        return; 	
+    
+    m_children.insert(tp);
+    // again this will not recurse due to the termination code
+    tp->addParent(this);
 }
 
 void TypeInfo::addAncestor(TypeInfoPtr tp)
 {
-	assert(tp);
-	_ancestors.insert(tp);
+    m_ancestors.insert(tp);
 	
-	TypeInfoSet& parentAncestors = tp->_ancestors;
-	_ancestors.insert(parentAncestors.begin(), parentAncestors.end());
+    const TypeInfoSet& parentAncestors = tp->m_ancestors;
+    m_ancestors.insert(parentAncestors.begin(), parentAncestors.end());
 	
-	// tell all our childen!
-	for (TypeInfoSet::iterator C=_children.begin(); C!=_children.end();++C)
-		(*C)->addAncestor(tp);
-}
-
-bool TypeInfo::isBound()
-{
-    return _bound;
+    // tell all our childen!
+    for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C)
+        (*C)->addAncestor(tp);
 }
 
 void TypeInfo::validateBind()
 {
-	if (_bound) return;
+    if (m_bound) return;
 	
-	// check all our parents
-	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P)
-		if (!(*P)->isBound()) return;
+    // check all our parents
+    for (TypeInfoSet::iterator P=m_parents.begin(); P!=m_parents.end();++P)
+        if (!(*P)->isBound()) return;
 	
-	Eris::log(LOG_VERBOSE, "Bound type %s", _name.c_str());
-	_bound = true;
-	Bound.emit();
+    m_bound = true;
+    Bound.emit();
 		
-	// emit the global signal too
-	_engine->BoundType.emit(this);
-		
-	TypeInfoSet dependants(_engine->extractDependantsForType(this));
-	if (dependants.empty())
-		return;
-	
-	/* okay, we have a bunch of types that we wdaiting on this on to be bound,
-	let's try and validate them too. Once we're done, we can remove the dependancy list
-	for this type. */
-	
-	for (TypeInfoSet::iterator D=dependants.begin(); D!=dependants.end(); ++D) {
-		(*D)->validateBind();
-	}
-}
-
-Signal& TypeInfo::getBoundSignal()
-{
-	if (isBound())
-		throw InvalidOperation("Type node is already bound, what are you playing at?");
-		
-	Eris::log(LOG_DEBUG, "in TypeInfo::getBoundSignal() for %s", _name.c_str());
-	setupDepends();
-	
-	return Bound;
-}
-
-/** Compute the dependancies of this type. Basically we add ourselves to the dependant set
- of every currenly unbound parent. We will have validateBind() called that many times, and
- on the final call (whichever parent is bound last), we ouirselves will become bound. */
-void TypeInfo::setupDepends()
-{
-	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P) {
-		if ((*P)->isBound())
-			continue;
-		
-		_engine->markTypeDependantOnType(this, *P);
-	}
-}
-
-const std::string& TypeInfo::getName() const
-{
-	return _name;
-}
-
-StringSet TypeInfo::getParentsAsSet()
-{
-    StringSet ret;
-    
-    for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P) {
-		ret.insert((*P)->getName());
-    }
-    
-    return ret;
+    for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C)
+        (*C)->validateBind();
 }
 
 } // of namespace Eris
