@@ -1,12 +1,11 @@
-// This file may be redistributed and modified under the terms of the
-// GNU Lesser General Public License (See COPYING for details).
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
-
-#include <stack>
-#include <string>
 
 #include "../Stream/Codec.h"
 #include "Utility.h"
+
+#include <stack>
 
 using namespace std;
 using namespace Atlas::Stream;
@@ -41,7 +40,6 @@ public:
     virtual void MapItem(const std::string& name, int);
     virtual void MapItem(const std::string& name, double);
     virtual void MapItem(const std::string& name, const std::string&);
-    virtual void MapItem(const std::string& name, const Atlas::Object&);
     virtual void MapEnd();
     
     virtual void ListItem(const Map&);
@@ -49,7 +47,6 @@ public:
     virtual void ListItem(int);
     virtual void ListItem(double);
     virtual void ListItem(const std::string&);
-    virtual void ListItem(const Atlas::Object&);
     virtual void ListEnd();
 
 protected:
@@ -106,11 +103,23 @@ void PackedAscii::Poll() // muchas FIXME
     char next = socket.get(); // get character
     
     switch (next) {
-        case '{': if (parseStack.length() > 0) return;
-                  bridge->MessageBegin();
-                  parseStack.push(PARSE_MSG);
-                  break;
-        case '}': break; // FIXME
+        case '{':
+	    if (parseStack.empty())
+	    {
+		bridge->MessageBegin();
+                parseStack.push(PARSE_MSG);
+	    }
+        break;
+	
+        case '}':
+	    // FIXME handle empty stack or incorrect nesting
+	    if (parseStack.top() == PARSE_MSG)
+	    {
+		bridge->MessageEnd();
+		parseStack.pop();
+	    }
+	break;
+	
         case '[': parseStack.push(PARSE_MAP);
                   break; // FIXME
         case ']': break; // FIXME
@@ -167,11 +176,6 @@ void PackedAscii::MapItem(const std::string& name, const std::string& data)
             hexEncode("+", "+{}[]()@#$=", data);
 }
 
-void PackedAscii::MapItem(const std::string& name, const Atlas::Object& data)
-{
-    recurseMapObject(data, this, name);
-}
-
 void PackedAscii::MapEnd()
 {
     socket << "]";
@@ -200,11 +204,6 @@ void PackedAscii::ListItem(double data)
 void PackedAscii::ListItem(const std::string& data)
 {
     socket << "$=" << hexEncode("+", "+{}[]()@#$=", data);
-}
-
-void PackedAscii::ListItem(const Atlas::Object& data)
-{
-    recurseListObject(data, this);
 }
 
 void PackedAscii::ListEnd()
