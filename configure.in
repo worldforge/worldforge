@@ -273,7 +273,10 @@ AC_CHECK_HEADERS(bzlib.h)
 
 dnl Test for socklen_t -- sdt
 
-AC_CHECK_TYPE(socklen_t, int)
+dnl AC_CHECK_TYPE(socklen_t, int)
+AC_TRY_COMPILE([#include <sys/types.h>], [
+  socklen_t t
+], ,AC_DEFINE(socklen_t, int))
 
 dnl Generate files
 
