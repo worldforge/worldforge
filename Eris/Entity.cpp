@@ -154,20 +154,8 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 	// FIXME - deal with multiple parents
 	std::string type = parents.front().AsString();
 	
-	std::string containerId = ge.GetAttr("loc").AsString();
-	if ( !_container || (containerId != _container->getID()) ) {
-		
-		if (_container)
-			_container->rmvMember(this);
-		
-		Entity *ncr = World::Instance()->lookup(containerId);
-		if (ncr) {
-			ncr->addMember(this);
-			Recontainered.emit(_container, ncr);
-			_container = ncr;
-		} else
-			throw InvalidOperation("FIXME - support delayed dispatch on parents");
-	}
+	std::string containerId = ge.GetLoc();
+	setContainerById(ge.GetLoc());
 
 	// bounding box
 	if (ge.HasAttr("bounding_box"))
@@ -223,7 +211,6 @@ void Entity::recvTalk(const Atlas::Objects::Operation::Talk &tk)
 		throw IllegalObject(tk, "No sound object in arg 0");
 	
 	handleTalk(m->second.AsString());
-	//Say.emit(m->second.AsString());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -263,31 +250,7 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 		_stamp = val.AsFloat();
 	} else if (s == "loc") {
 		string loc = val.AsString();
-		if (!_container || (_container->getID() != loc)) {
-			
-			if (_container)
-				_container->rmvMember(this);	
-			Entity *nc = World::Instance()->lookup(loc);
-			if (nc) {
-				nc->addMember(this);
-				Recontainered.emit(_container, nc);
-				_container = nc;
-			} else {
-				// setup a redispatch once we have the container
-				string nm = "set_container_" /*+ set.GetSerialno() */ ;
-		
-				// sythesies a new set, with just the container.
-				Atlas::Objects::Operation::Set setc = 
-					Atlas::Objects::Operation::Set::Instantiate();
-				
-				Atlas::Message::Object::MapType args;
-				args["loc"] = loc;
-				setc.SetArgs(Atlas::Message::Object::ListType(1,args));
-				
-				new WaitForDispatch(setc, "op:ig:sight:entity", new IdDispatcher(nm, loc) );
-			}
-		}
-		
+		setContainerById(loc);
 	} else if (s == "pos") {
 		_position = Coord(val);
 		// Moved.emit(_position);
@@ -299,6 +262,8 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 	if (psi != _propSignals.end())
 		psi->second->emit(val);
 	*/
+	
+	handleChanged();
 }
 
 void Entity::innerOpFromSlot(Dispatcher *s)
@@ -341,6 +306,45 @@ void Entity::innerOpToSlot(Dispatcher *s)
 	etd->addSubdispatch(s);
 }
 
+void Entity::setContainerById(const std::string &id)
+{
+	if ( !_container || (id != _container->getID()) ) {
+		
+		if (_container) {
+			_container->rmvMember(this);
+			_container = NULL;
+		}
+		
+		// have to check this, becuase changes in what the client can see
+		// may cause the client's root to change
+		if (!id.empty()) {
+		
+			Entity *ncr = World::Instance()->lookup(id);
+			if (ncr) {
+				ncr->addMember(this);
+				Recontainered.emit(_container, ncr);
+				_container = ncr;
+			} else {
+				// setup a redispatch once we have the container
+				// sythesies a set, with just the container.
+				Atlas::Objects::Operation::Set setc = 
+					Atlas::Objects::Operation::Set::Instantiate();
+					
+				Atlas::Message::Object::MapType args;
+				args["loc"] = id;
+				setc.SetArgs(Atlas::Message::Object::ListType(1,args));
+				setc.SetTo(_id);
+				
+				new WaitForDispatch(setc, "op:ig:sight:entity", 
+					new IdDispatcher("set_container_" + _id, id) );
+			}
+		
+		}
+	}	
+	
+	if (id.empty())	// id of "" implies local root
+		World::Instance()->setRootEntity(this);	
+}
 
 /*
 Note to madmen, hackers  and Irishmen : this code is not exactly elegant, and

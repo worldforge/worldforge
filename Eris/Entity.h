@@ -151,6 +151,8 @@ protected:
 	that the container of e is <i>not<i/> reset */
 	virtual void rmvMember(Entity *e);
 	
+	void setContainerById(const std::string &id);
+	
 	const std::string _id;	///< the Atlas object ID
 	std::string _name;		///< a human readable name
 	float _stamp;		///< last modification time (in seconds) 

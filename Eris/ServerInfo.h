@@ -31,6 +31,9 @@ public:
 	int getPing() const
 	{ return _ping; }
 
+	int getUptime() const
+	{ return _uptime; }
+	
 protected:
 	friend class Meta;
 
@@ -49,7 +52,9 @@ protected:
 		_server;	///< Server program (e.g. 'Cyphesis' or 'Stage')	
 	
 	int _clients;		///< Number of clients connected to the server
-	int _ping;		///< Estimated round-trip-time (ping) in milliseconds
+	int _ping;			///< Estimated round-trip-time (ping) in milliseconds
+	
+	int _uptime;		///< Server uptime in seconds
 };
 
 } // of namespace Eris

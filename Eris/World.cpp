@@ -58,14 +58,15 @@ World::World(Player *p, Connection *c) :
 	
 	// store the instance pointer  ( "new Entity(..)" already needs this !)
 	_theWorld = this;
-	
+/*	
 	// create the root entity
 	Atlas::Objects::Entity::GameEntity rootDef = 
 		Atlas::Objects::Entity::GameEntity::Instantiate();
 	
 	rootDef.SetId("__eris_root__");
 	_root = new Entity(rootDef);
-
+*/
+	
 // info operation
 	Dispatcher *d = _con->getDispatcherByPath("op:info");
 	assert(d);
@@ -81,7 +82,8 @@ World::World(Player *p, Connection *c) :
 World::~World()
 {
 	// cascading delete
-	delete _root;
+	if (_root)
+		delete _root;
 }
 
 Entity* World::lookup(const std::string &id)
@@ -112,15 +114,6 @@ EntityPtr World::getRootEntity()
 	return _root;
 }
 
-/*
-Atlas::Bridge* World::GetEncoder() const
-{
-	if (!_con || (_con->GetStatus() != Connection::CONNECTED))
-		throw InvalidOperation("Connection not ready to access encoder");
-	// fast path
-	return _con->GetEncoder();
-}
-*/
 void World::setFocusedEntity(EntityPtr f)
 {
 	assert(f);
@@ -133,9 +126,7 @@ void World::look(const std::string &id)
 	// if connection is down, do nothing
 	// FIXME - buffer these ? a somewhat risky strategy...
 	if (!_con->isConnected()) return;
-	
-	//cerr << "doing LOOK on " << id << endl;
-	
+		
 	Atlas::Objects::Operation::Look look =
 		Atlas::Objects::Operation::Look::Instantiate();
 
@@ -388,8 +379,6 @@ void World::recvSightMove(const Atlas::Objects::Operation::Move &mv)
 void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 	const Atlas::Objects::Operation::Talk &tk)
 {
-	cerr << "got sound talk" << endl;
-	
 	Entity *e = lookup(snd.GetFrom());
 	if (!e) {
 		if ( isPendingInitialSight(snd.GetFrom()) ) {
@@ -479,9 +468,16 @@ void World::recvErrorLook(const Atlas::Objects::Operation::Look &lk)
 
 void World::netConnect()
 {
-	cerr << "got (re)connection from network" << endl;
 	// update things
 	look("");
+}
+
+void World::setRootEntity(Entity* rt)
+{
+	assert(rt);
+	assert(rt->getContainer() == NULL);
+	
+	_root = rt;
 }
 
 }; // of namespace Eris

@@ -61,9 +61,9 @@ public:
 	/// convert an entity ID to an instance pointer
 	EntityPtr lookup(const std::string &id);
 
-	/// obtain a pointer to the root entity (world_0)
+	/// obtain a pointer to the root entity for this client (i.e look(""))
 	EntityPtr getRootEntity();
-	
+
 	/// Retrieve the Connection object associated with the World
 	Connection* getConnection() const
 	{ return _con; }
@@ -114,6 +114,8 @@ public:
 	// entity change  / move signals ? excessive duplicaton...
 	
 protected:
+	friend class Entity;
+		
 	void look(const std::string &id);	
 	EntityPtr create(const Atlas::Objects::Entity::GameEntity &ge);
 
@@ -121,6 +123,9 @@ protected:
 	{ return _pendingInitialSight.count(id); }
 
 	void registerCallbacks();
+	
+	void setRootEntity(Entity* root);
+	
 // callbacks
 	void recvInfoOp(const Atlas::Objects::Operation::Info &ifo);
 	void recvAppear(const Atlas::Objects::Operation::Appearance &ap);	

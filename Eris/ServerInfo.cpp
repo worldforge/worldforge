@@ -19,15 +19,11 @@ ServerInfo::ServerInfo(const std::string &host) :
 	
 void ServerInfo::processServer(const Atlas::Objects::Entity::RootEntity &svr)
 {
-	//cerr << "processing server info" << endl;
-	
 	_ruleset = svr.GetAttr("ruleset").AsString();
-	if (svr.HasAttr("name"))
-		_name = svr.GetAttr("name").AsString();
+	_name = svr.GetName();
 	_clients = svr.GetAttr("clients").AsInt();
 	_server = svr.GetAttr("server").AsString();
-	
-	// FIXME - handle uptime here once the format is known!
+	_uptime = svr.GetAttr("uptime").AsInt();
 }
 
 void ServerInfo::setPing(int p)
