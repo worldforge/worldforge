@@ -47,6 +47,7 @@ class Connection;
 class Player;
 class Factory;
 class InvisibleEntityCache;
+class Avatar;
 	
 // the name is wrong, but I feel 'IDEntityMap' is worse
 typedef std::map<std::string, Entity*> EntityIDMap;
@@ -106,8 +107,15 @@ public:
 	/// Remove an factory from the search set.
 	void unregisterFactory(Factory *f);
 
+	///
+	Avatar* createAvatar(long refno, const std::string& id = "");
+	/// gets the avatar, named this way in case we have multiple ones later
+	Avatar* getPrimaryAvatar() {return _avatar;}
+
 	/// World is a singleton; this is the accessor
-	static World* Instance();
+	static World* getPrimary() {return _theWorld;}
+	/// deprecated accessor
+	static World* Instance() {return _theWorld;}
 	
 // signals
 	/// Emitted when an entity is created
@@ -136,9 +144,14 @@ public:
 	SigC::Signal1<void, Entity*> RootEntityChanged;
 	
 	// entity change  / move signals ? excessive duplicaton...
+
+	/// The World and any Avatar were destroyed due to
+	/// logout/disconnect/deletion of the Avatar
+	SigC::Signal0<void> Destroyed;
 	
 protected:
 	friend class Entity;
+	friend class Avatar;
 	
 	// so the cache can call flush()
 	friend class InvisibleEntityCache;
@@ -214,6 +227,9 @@ protected:
 	
 	/// cache of invisble entities that might re-appear so we keep them around
 	InvisibleEntityCache* _ieCache;
+
+	/// the player character in this world
+	Avatar* _avatar;
 	
 	/// static singleton instance
 	static World* _theWorld;

@@ -42,6 +42,8 @@
 #include "Utils.h"
 #include "Wait.h"
 #include "InvisibleEntityCache.h"
+#include "Player.h"
+#include "Avatar.h"
 
 #include "ClassDispatcher.h"
 #include "EncapDispatcher.h"
@@ -61,27 +63,18 @@ World::World(Player *p, Connection *c) :
 	_con(c),
 	_player(p),
 	_root(NULL),
-	_focused(NULL)
+	_focused(NULL),
+	_avatar(0)
 {
 	assert(_con);
 	assert(_player);
 	
 	// store the instance pointer  ( "new Entity(..)" already needs this !)
-	if(!_theWorld)
-		_theWorld = this;
+	// To match the old singleton interface, this should be the most recently
+	// created instance.
+	_theWorld = this;
 	_ieCache = new InvisibleEntityCache(10000, 600000);	// 10 sec buckets, 10 minute lifetime
 
-// info operation
-	Dispatcher *d = _con->getDispatcherByPath("op:info");
-	assert(d);
-
-	d = d->addSubdispatch(ClassDispatcher::newAnonymous(_con));
-	d->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Info, 
-		Atlas::Objects::Entity::GameEntity>(
-		"character", SigC::slot(*this, &World::recvInfoCharacter)),
-		"game_entity"
-	);
-	       	
 	// setup network callbacks
 	_con->Connected.connect(SigC::slot(*this, &World::netConnect));
 	// check for auto-firing, etc
@@ -91,6 +84,8 @@ World::World(Player *p, Connection *c) :
 	
 World::~World()
 {
+	Destroyed.emit();
+
 	// cascading delete
 	if (_root)
 		delete _root;
@@ -237,12 +232,43 @@ void World::unregisterFactory(Factory *f)
 	throw InvalidOperation("Factory not registered in World::unregisterFactory");
 }
 
-World* World::Instance()
+Avatar*
+World::createAvatar(long refno, const std::string& id = "")
 {
-	return _theWorld;
+    if(_avatar)
+	throw InvalidOperation("World already has an Avatar");
+	
+    _avatar = new Avatar(this, refno, id);
+    _player->LogoutComplete.connect(SigC::slot(_avatar, &Avatar::slotLogout));
+    _con->Disconnected.connect(SigC::slot(_avatar, &Avatar::slotDisconnect));
+
+    return _avatar;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
+
+// Need to get an id without the ':' character
+static std::string get_ig_dispatch_id(const std::string &name)
+{
+  std::string id = "ig_";
+  std::string::const_iterator I;
+
+  for(I = name.begin(); I != name.end(); ++I) {
+    switch(*I) {
+      case ':':
+        id += "#!";
+        break;
+      case '#':
+        id += "##";
+        break;
+      default:
+        id += *I;
+        break;
+    }
+  }
+
+  return id;
+}
 
 void  World::registerCallbacks()
 {
@@ -251,7 +277,8 @@ void  World::registerCallbacks()
 	// child entity / operation selectors on those.
 	
 	Dispatcher *d = _con->getDispatcherByPath("op");
-	Dispatcher *igd = d->addSubdispatch(new OpToDispatcher("ig", _characterID));
+	Dispatcher *igd = d->addSubdispatch(new OpToDispatcher(
+		get_ig_dispatch_id(_characterID), _characterID));
 	
 	Dispatcher *igclass = igd->addSubdispatch(ClassDispatcher::newAnonymous(_con));
 	Dispatcher *sightd = igclass->addSubdispatch(new EncapDispatcher("sight"), "sight");
@@ -474,6 +501,9 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &/*ifo*/,
 	const Atlas::Objects::Entity::GameEntity &character)
 {
+	std::cerr << "Setting up World for character "
+		<< character.GetName() << std::endl;
+
 	_characterID = character.GetId();
 	
 	// now the _characterID is valid, register all other callbacks (which are
@@ -487,9 +517,6 @@ void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &/*ifo*/,
 	
 	// get the local root for us
 	look("");
-	
-	// this prevents us recieving any more info ops
-	_con->removeDispatcherByPath("op:info", "character");
 }
 
 void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)

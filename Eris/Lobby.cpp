@@ -68,11 +68,6 @@ Lobby::~Lobby()
 	_con->removeIfDispatcherByPath("op:oog:sight:entity", "room");
 }
 
-Lobby* Lobby::instance()
-{
-	return Connection::Instance()->getLobby();
-}
-
 std::string Lobby::getAccountID()
 {
 	if (_account.empty())

@@ -23,6 +23,7 @@ namespace Eris
 class Lobby;
 class Connection;
 class World;
+class Avatar;
 
 /** Enumeration of various server-side things that can go wrong when trying
 to create an account or login.*/
@@ -98,13 +99,14 @@ public:
 
 	/// enter the game using an existing character
 	/// @param id The Atlas-ID of the game entity to take-over; this must be owned by the player's account
-	World* takeCharacter(const std::string &id);
+	Avatar* takeCharacter(const std::string &id);
 
 	/// enter the game using a new character
-	World* createCharacter(const Atlas::Objects::Entity::GameEntity &character);
+	Avatar* createCharacter(const Atlas::Objects::Entity::GameEntity &character);
 
 	/// returns the account ID if logged in, or throws and exception
 	std::string getAccountID() const;
+
 // signals
 	/// emitted when a character has been retrived from the server
 	SigC::Signal1<void, const Atlas::Objects::Entity::GameEntity&> GotCharacterInfo;
@@ -154,7 +156,6 @@ protected:
 	Timeout* _logoutTimeout;
 
 	Lobby* _lobby;
-	World* _world;
 };
 	
 } // of namespace Eris

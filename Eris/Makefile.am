@@ -38,7 +38,8 @@ liberis_la_SOURCES = \
 	InvisibleEntityCache.cpp \
 	InvisibleEntityCache.h \
 	PollDefault.cpp \
-	Log.cpp
+	Log.cpp \
+	Avatar.cpp
 	
 liberisdir = $(includedir)/Eris
 
@@ -73,6 +74,7 @@ liberis_HEADERS = \
 	Poll.h \
 	PollDefault.h \
 	atlas_utils.h \
-	Log.h
+	Log.h \
+	Avatar.h
 	
 	

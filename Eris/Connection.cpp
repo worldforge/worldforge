@@ -253,7 +253,7 @@ void Connection::unlock()
 		}
 }
 
-Connection* Connection::Instance()
+Connection* Connection::getPrimary()
 {
 	if (_theConnection == NULL)
 		throw InvalidOperation("No Connection instance exists");

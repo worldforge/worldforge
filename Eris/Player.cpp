@@ -42,8 +42,7 @@ Player::Player(Connection *con) :
 	_con(con),
 	_account(""),
 	_username(""),
-	_lobby(con->getLobby()),
-	_world(NULL)
+	_lobby(con->getLobby())
 {
     _currentAction = "";
     _logoutTimeout = NULL;
@@ -58,14 +57,12 @@ Player::Player(Connection *con) :
 	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Error>("player",
 		SigC::slot(*this, &Player::recvOpError)
 	));
-	
+
 	_lobby->LoggedIn.connect(SigC::slot(*this, &Player::loginComplete));
 }	
 
 Player::~Player()
 {
-	delete _world;
-
 	if (_con) {
 		//_con->removeDispatcherByPath
 		
@@ -208,32 +205,34 @@ void Player::refreshCharacterInfo()
     }
 }
 
-World* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
+Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 {
 	if (!_lobby || _lobby->getAccountID().empty())
 		throw InvalidOperation("no account exists!");
 
 	if (!_con->isConnected())
-		throw InvalidOperation("Not connected to server");	
-	
+		throw InvalidOperation("Not connected to server");
+
+	if (ent.GetName().empty())
+		throw InvalidOperation("Character unnamed");
+
 	Atlas::Objects::Operation::Create c = 
 		Atlas::Objects::Operation::Create::Instantiate();
 	Atlas::Message::Object::ListType args(1,ent.AsObject());
-	
+
 	c.SetArgs(args);
 	c.SetFrom(_lobby->getAccountID());
-   	c.SetSerialno(getNewSerialno());
-	
-	if (!_world) {
-		_world = new World(this, _con);
-	}
-	
+ 	c.SetSerialno(getNewSerialno());
+
+	World* world = new World(this, _con);
+	Avatar* avatar = world->createAvatar(c.GetSerialno());
+
 	_con->send(c);
-	
-	return _world;
+
+	return avatar;
 }
 
-World* Player::takeCharacter(const std::string &id)
+Avatar* Player::takeCharacter(const std::string &id)
 {
 	StringList::iterator i = std::find(_charIds.begin(), _charIds.end(), id);
 	if (i == _charIds.end())
@@ -252,11 +251,12 @@ World* Player::takeCharacter(const std::string &id)
 	l.SetArgs(args);
   	l.SetSerialno(getNewSerialno());
 	
-	if (!_world)
-		_world = new World(this, _con);
-	_con->send(l);
+	World* world = new World(this, _con);
+	Avatar* avatar = world->createAvatar(l.GetSerialno(), id);
 	
-  	return _world;
+	_con->send(l);
+
+	return avatar;
 }
 
 void Player::internalLogin(const std::string &uname, const std::string &pwd)

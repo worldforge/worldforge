@@ -65,7 +65,9 @@ public:
 	/** Access the global Lobby instance. Do not call this prior to creating a Connection object, or
 	InvalidOperation will be thrown; the Lobby needs to be bound to a connection when it is
 	initalised, and this method creates the Lobby if an existing instance is not found. */
-	static Lobby* instance();
+	static Lobby* getPrimary() {return Connection::getPrimary()->getLobby();}
+	/// deprecated
+	static Lobby* instance() {return getPrimary();}
 protected:
 	friend class Room;
 	friend class Player; 

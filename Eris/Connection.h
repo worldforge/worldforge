@@ -42,7 +42,9 @@ public:
 
 	virtual ~Connection();
 
-	static Connection* Instance();
+	static Connection* getPrimary();
+	/// deprecated
+	static Connection* Instance() {return getPrimary();}
 
 	/// Open the connection to the specfied server
 	/// @param host The host (or dotted-decimal IP) to connect to

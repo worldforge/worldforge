@@ -1,3 +1,11 @@
+Wednesday, 30th October, James Turner
+
+	* Commit Ron's Avatar patches : currently got a bug
+	  with the IG-transition INFO op, so don't update unless
+	  you're doing dev work. Also bumped the version to 0.9.7
+	  since this is an API change (rsteinke has diffs for silence
+	  and sear, very minor).
+
 Monday, 28th October 2002, Al Riddoch
 	* Fix dispatcher removal for the imaginary emote ops fix made on the
 	  9th. October.
