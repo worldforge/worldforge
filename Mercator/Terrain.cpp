@@ -61,7 +61,7 @@ float Terrain::get(float x, float y) const
     return s->get((int)(x - (ix * m_res)), (int)(y - (iy * m_res)));
 }
 
-bool Terrain::getBasePoint(int x, int y, float & z)
+bool Terrain::getBasePoint(int x, int y, BasePoint& z)
 {
     Pointstore::const_iterator I = m_basePoints.find(x);
     if (I == m_basePoints.end()) {
@@ -81,9 +81,7 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
     if (s != 0) {
         return s;
     }
-    Matrix<2, 2> base;
-    // float base[16];
-    for(int i = 0; i < 4; ++i) { base[i] = Terrain::defaultLevel; }
+    Matrix<2, 2, BasePoint> base;
     bool complete = getBasePoint(x,     y,     base(0, 0)) &&
                     getBasePoint(x + 1, y,     base(1, 0)) &&
                     getBasePoint(x,     y + 1, base(0, 1)) &&

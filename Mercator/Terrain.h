@@ -6,8 +6,9 @@
 #define MERCATOR_TERRAIN_H
 
 #include <map>
-
 #include <cmath>
+
+#include <Mercator/BasePoint.h>
 
 namespace Mercator {
 
@@ -15,7 +16,7 @@ class Segment;
 
 class Terrain {
   public:
-    typedef std::map<int, float> Pointcolumn;
+    typedef std::map<int, BasePoint> Pointcolumn;
     typedef std::map<int, Segment *> Segmentcolumn;
 
     typedef std::map<int, Pointcolumn > Pointstore;
@@ -35,9 +36,9 @@ class Terrain {
 
     float get(float x, float y) const;
 
-    bool getBasePoint(int x, int y, float & z);
+    bool getBasePoint(int x, int y, BasePoint& z);
     
-    void setBasePoint(int x, int y, float z) {
+    void setBasePoint(int x, int y, const BasePoint& z) {
         m_basePoints[x][y] = z;
         invalidate(x,y);
     }

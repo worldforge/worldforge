@@ -6,6 +6,7 @@
 #define MERCATOR_SEGMENT_H
 
 #include <Mercator/Matrix.h>
+#include <Mercator/BasePoint.h>
 #include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
 #include <list>
@@ -56,7 +57,7 @@ class Segment {
     void getHeightAndNormal(float x, float y, float &h, 
                     WFMath::Vector<3> &normal) const;
 
-    void populate(const Matrix<2,2> &);
+    void populate(const Matrix<2,2, BasePoint> &);
     void populateNormals();
 
     float getMax() const { return m_max; }
@@ -75,12 +76,12 @@ class Segment {
         }
     } 
 
-    void fill1d(int size, float falloff, float roughness, 
-                float l, float h, float *array) const;
+    void fill1d(int size, const BasePoint& l, const BasePoint &h, 
+		     float *array) const;
 
-    void fill2d(int size, float falloff, float roughness,
-                float p1, float p2, float p3, float p4);
-        
+    void fill2d(int size, const BasePoint& p1, const BasePoint& p2, 
+		               const BasePoint& p3, const BasePoint& p4);
+
     float qRMD(float nn, float fn, float ff, float nf, 
                float roughness, float falloff, int depth) const;
 
@@ -89,6 +90,7 @@ class Segment {
     void applyMod(TerrainMod *t);
 
     ModList m_modList;
+
 };
 
 } // namespace Mercator

@@ -1,3 +1,9 @@
+2003-06-15 Damien McGinnes
+
+        * new BasePoint.h replaces floats for basepoints
+	* Mercator/Segment.cpp : variable roughness implemented
+	* added a basic test file - doesnt do much
+
 2003-06-09 Damien McGinnes
 
 	* Mercator/Segment.cpp : modified the normals, this time hopefully so

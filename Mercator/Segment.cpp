@@ -5,13 +5,35 @@
 #include <Mercator/Segment.h>
 #include <Mercator/Terrain.h>
 #include <Mercator/TerrainMod.h>
+#include <Mercator/BasePoint.h>
 #include <iostream>
 #include <cmath>
 
 namespace Mercator {
 
-static float FALLOFF = 0.15;
-static float ROUGHNESS = 1.5;
+class LinInterp {
+  private:
+    int m_size;
+  public:
+    float ep1, ep2;
+    float calc(int loc) {
+        return ((m_size-loc) * ep1 + loc * ep2);
+    }
+    LinInterp(int size,float l, float h) : m_size(size), ep1(l/size), ep2(h/size) {} 
+};
+
+class QuadInterp {
+  private:
+    int m_size;
+  public:
+    float ep1, ep2, ep3, ep4;
+    float calc(int locX, int locY) {
+	return (( ep1*(m_size-locX) + ep2 * locX) * (m_size-locY) +
+	        ( ep4*(m_size-locX) + ep3 * locX) * (locY) ) / m_size;
+    }
+    QuadInterp(int size,float e1, float e2, float e3, float e4)
+        : m_size(size), ep1(e1/size), ep2(e2/size), ep3(e3/size), ep4(e4/size) {} 
+};	
 
 Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
                             m_normals(0), m_max(0.f), m_min(0.0f)
@@ -27,11 +49,10 @@ Segment::~Segment()
     clearMods();
 }
 
-void Segment::populate(const Matrix<2, 2> & base)
+void Segment::populate(const Matrix<2, 2, BasePoint> & base)
 {
-    fill2d(m_res, FALLOFF, ROUGHNESS, base(0, 0), base(1, 0),
-                                    base(1, 1), base(0, 1));
-
+    fill2d(m_res, base(0, 0), base(1, 0),
+                  base(1, 1), base(0, 1));
     for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
         applyMod(*I);
     }
@@ -127,22 +148,18 @@ float Segment::qRMD(float nn, float fn, float ff, float nf,
 // falloff is the decay of displacement as the fractal is refined
 // array is size+1 long. array[0] and array[size] are filled
 //      with the control points for the fractal
-void Segment::fill1d(int size, float falloff, float roughness,
-                     float l, float h, float *array) const
+void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h, 
+		     float *array) const
 {
-    assert(falloff!=-1.0);
-
-    array[0] = l;
-    array[size] = h;
- 
+    array[0] = l.height;
+    array[size] = h.height;
+    LinInterp li(size, l.roughness, h.roughness);
    
     // seed the RNG.
     // The RNG is seeded only once for the line and the seed is based on the
     // two endpoints -because they are the common parameters for two adjoining
     // tiles
-    // if extra parameters are added to a tile, the edges need to be common
-    // FIXME work out a decent seed
-    srand((unsigned int)(l*h*10.232313));
+    srand((l.seed() * 1000 + h.seed()));
 
     // stride is used to step across the array in a deterministic fashion
     // effectively we do the 1/2  point, then the 1/4 points, then the 1/8th
@@ -159,23 +176,27 @@ void Segment::fill1d(int size, float falloff, float roughness,
         for (int i=stride;i<size;i+=stride*2) {
             float hh = array[i-stride];
             float lh = array[i+stride];
-            float hd = fabs(hh-lh); //fabs necessary?
- 
-            array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1+::pow(depth,falloff));
+	    float hd = fabs(hh-lh);
+            float roughness = li.calc(i);
+
+	    //eliminate the problem where hd is nearly zero, leaving a flat section.
+	    if ((hd*100.f) < roughness) {
+	        hd+=0.05 * roughness;	    
+	    }
+	  
+            array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1+::pow(depth,BasePoint::FALLOFF));
         }
         stride >>= 1;
-        depth+=2;
+        depth++;
     }
 }
 
 // 2 dimensional midpoint displacement fractal for a tile where
-// edges are to be filled by 1d fractals.
-// size must be a power of 2
+// edges are to be filled by 1d fractals.// size must be a power of 2
 // array is size+1  * size+1 with the corners the control points.
-void Segment::fill2d(int size, float falloff, float roughness, 
-                     float p1, float p2, float p3, float p4)
+void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2, 
+		               const BasePoint& p3, const BasePoint& p4)
 {
-    assert(falloff!=-1.0);
     assert(m_points!=0);
     
     int line = size+1;
@@ -190,28 +211,28 @@ void Segment::fill2d(int size, float falloff, float roughness,
     float edge[line];
     
     // calc top edge and copy into m_points
-    fill1d(size,falloff,roughness,p1,p2,edge);
+    fill1d(size,p1,p2,edge);
     for (int i=0;i<=size;i++) {
         m_points[0*line + i] = edge[i];
         checkMaxMin(edge[i]);
     }
 
     // calc left edge and copy into m_points
-    fill1d(size,falloff,roughness,p1,p4,edge);
+    fill1d(size,p1,p4,edge);
     for (int i=0;i<=size;i++) {
         m_points[i*line + 0] = edge[i];
         checkMaxMin(edge[i]);
     }
    
     // calc right edge and copy into m_points
-    fill1d(size,falloff,roughness,p2,p3,edge);
+    fill1d(size,p2,p3,edge);
     for (int i=0;i<=size;i++) {
         m_points[i*line + size] = edge[i];
         checkMaxMin(edge[i]);
     }
 
     // calc bottom edge and copy into m_points
-    fill1d(size,falloff,roughness,p4,p3,edge);
+    fill1d(size,p4,p3,edge);
     for (int i=0;i<=size;i++) {
         m_points[size*line + i] = edge[i];
         checkMaxMin(edge[i]);
@@ -219,17 +240,18 @@ void Segment::fill2d(int size, float falloff, float roughness,
     
     // seed the RNG - this is the 5th and last seeding for the tile.
     // it was seeded once for each edge, now once for the tile.
-    
-    // total up control points
-    float tot=p1+p2+p3+p4;
-    // FIXME work out decent seed
-    srand((unsigned int)(tot*10.22321));
+    srand(p1.seed()*20 + p2.seed()*15 + p3.seed()*10 + p4.seed()*5);
 
-    float f = falloff;
+    QuadInterp qi(size, p1.roughness, p2.roughness, p3.roughness, p4.roughness);
+
+    float f = BasePoint::FALLOFF;
     int depth=0;
     
     // center of m_points is done separately
     int stride = size/2;
+
+    //float roughness = (p1.roughness+p2.roughness+p3.roughness+p4.roughness)/(4.0f);
+    float roughness = qi.calc(stride, stride);
     m_points[stride*line + stride] = qRMD( m_points[0 * line + size/2],
                                         m_points[size/2*line + 0],
                                         m_points[size/2*line + size],
@@ -251,6 +273,7 @@ void Segment::fill2d(int size, float falloff, float roughness,
       //+ . +
       for (int i=stride;i<size;i+=stride*2) {
           for (int j=stride;j<size;j+=stride*2) {
+	      roughness=qi.calc(i,j);
               m_points[j*line + i] = qRMD(m_points[(i-stride) + (j+stride) * (line)],
                                        m_points[(i+stride) + (j-stride) * (line)],
                                        m_points[(i+stride) + (j+stride) * (line)],
@@ -267,6 +290,7 @@ void Segment::fill2d(int size, float falloff, float roughness,
       //. + .
       for (int i=stride*2;i<size;i+=stride*2) {
           for (int j=stride;j<size;j+=stride*2) {
+	      roughness=qi.calc(i,j);
               m_points[j*line + i] = qRMD(m_points[(i-stride) + (j) * (line)],
                                        m_points[(i+stride) + (j) * (line)],
                                        m_points[(i) + (j+stride) * (line)],
@@ -278,6 +302,7 @@ void Segment::fill2d(int size, float falloff, float roughness,
                
       for (int i=stride;i<size;i+=stride*2) {
           for (int j=stride*2;j<size;j+=stride*2) {
+	      roughness=qi.calc(i,j);
               m_points[j*line + i] = qRMD(m_points[(i-stride) + (j) * (line)],
                                        m_points[(i+stride) + (j) * (line)],
                                        m_points[(i) + (j+stride) * (line)],
