@@ -87,7 +87,7 @@ Bridge* bridge) :
 {
 }
 
-void Atlas::Net::StreamConnect::Poll()
+void Atlas::Net::StreamConnect::Poll(bool can_read = true)
 {
     cout << "** Client(" << state << ") : " << endl;
 
@@ -95,7 +95,7 @@ void Atlas::Net::StreamConnect::Poll()
 
     do
     {
-	buf += socket.get();
+	if (can_read || socket.rdbuf()->in_avail()) buf += socket.get();
 
     if(state == SERVER_GREETING)
     {
@@ -228,7 +228,7 @@ Bridge* bridge) :
 {
 }
 
-void Atlas::Net::StreamAccept::Poll()
+void Atlas::Net::StreamAccept::Poll(bool can_read = true)
 {
     cout << "** Server(" << state << ") : " << endl;
 
@@ -244,7 +244,7 @@ void Atlas::Net::StreamAccept::Poll()
 
     do
     {
-	buf += socket.get();
+	if (can_read || socket.rdbuf()->in_avail()) buf += socket.get();
 
     if (state == CLIENT_GREETING)
     {
