@@ -86,6 +86,10 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
                     getBasePoint(x + 1, y,     base[1*4 + 2]) &&
                     getBasePoint(x,     y + 1, base[2*4 + 1]) &&
                     getBasePoint(x + 1, y + 1, base[2*4 + 2]);
+    base[0*4 + 0] = base[1*4 + 0] = base[0*4 + 1] = base[1*4 + 1];
+    base[2*4 + 0] = base[3*4 + 0] = base[3*4 + 1] = base[2*4 + 1];
+    base[2*4 + 3] = base[3*4 + 3] = base[3*4 + 2] = base[2*4 + 2];
+    base[0*4 + 3] = base[1*4 + 3] = base[0*4 + 2] = base[1*4 + 2];
     getBasePoint(x - 1, y - 1, base[0*4 + 0]);
     getBasePoint(x - 1, y + 0, base[1*4 + 0]);
     getBasePoint(x - 1, y + 1, base[2*4 + 0]);
