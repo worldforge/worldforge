@@ -71,13 +71,13 @@ public:
 	void say(const std::string&);
 
 	/// Have the character move towards a position
-	void move(const WFMath::Point<3>&);
+	void moveToPoint(const WFMath::Point<3>&);
 
 	/// Set the character's velocity
-	void move(const WFMath::Vector<3>&);
+	void moveInDirection(const WFMath::Vector<3>&);
 
 	/// Set the character's velocity and orientation
-	void move(const WFMath::Vector<3>&, const WFMath::Quaternion&);
+	void moveInDirection(const WFMath::Vector<3>&, const WFMath::Quaternion&);
 
 	/// Place an entity inside another one
 	void place(Entity*, Entity* container, const WFMath::Point<3>& pos

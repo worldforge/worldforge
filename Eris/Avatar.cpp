@@ -155,7 +155,7 @@ void Avatar::say(const std::string& msg)
     _world->getConnection()->send(t);
 }
 
-void Avatar::move(const WFMath::Point<3>& pos)
+void Avatar::moveToPoint(const WFMath::Point<3>& pos)
 {
     if(!_entity)
 	throw InvalidOperation("Character Entity does not exist yet!");
@@ -174,14 +174,33 @@ void Avatar::move(const WFMath::Point<3>& pos)
     _world->getConnection()->send(moveOp);
 }
 
-void Avatar::move(const WFMath::Vector<3>& vel)
+void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
 {
     if(!_entity)
 	throw InvalidOperation("Character Entity does not exist yet!");
 
+    const WFMath::CoordType min_val = WFMATH_MIN * 100000000;
+
     Atlas::Message::Element::MapType what;
     what["loc"] = _entity->getContainer()->getID();
     what["velocity"] = vel.toAtlas();
+    WFMath::CoordType sqr_mag = vel.sqrMag();
+    if(sqr_mag > min_val) { // don't set orientation for zero velocity
+	WFMath::Quaternion q;
+        WFMath::CoordType z_squared = vel[2] * vel[2];
+        WFMath::CoordType plane_sqr_mag = sqr_mag - z_squared;
+	if(plane_sqr_mag < WFMATH_EPSILON * z_squared) {
+	    // it's on the z axis
+	    q.rotation(1, vel[2] > 0 ? -WFMath::Pi/2 : WFMath::Pi/2);
+	}
+        else {
+	    // rotate in the plane first
+	    q.rotation(2, atan2(vel[1], vel[0]));
+	    // then get the angle away from the plane
+	    q = WFMath::Quaternion(1, -asin(vel[2] / sqrt(plane_sqr_mag))) * q;
+	}
+	what["orientation"] = q.toAtlas();
+    }
     what["id"] = getID();
 
     Atlas::Objects::Operation::Move moveOp =
@@ -192,7 +211,8 @@ void Avatar::move(const WFMath::Vector<3>& vel)
     _world->getConnection()->send(moveOp);
 }
 
-void Avatar::move(const WFMath::Vector<3>& vel, const WFMath::Quaternion& orient)
+void Avatar::moveInDirection(const WFMath::Vector<3>& vel,
+			const WFMath::Quaternion& orient)
 {
     if(!_entity)
 	throw InvalidOperation("Character Entity does not exist yet!");

@@ -1,3 +1,9 @@
+Sunday, 18th January, Ron Steinke <rsteinke@w-link.net>
+
+	* Eris/Avatar.*: Renamed the move() functions to
+	  moveToPoint() and moveInDirection() to avoid
+	  the Point/Vector argument overload.
+
 Sunday, 18th January, James Turner <james@worldforge.org>
 
 	* Patch from Ron Steinke : make Factory.h use forward declared Atlas
