@@ -403,13 +403,20 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
 
     // square is broken into two triangles
     // top triangle |/
-    if ((off_x - off_y) < 0) {
+    if ((off_x - off_y) <= 0) {
         normal = WFMath::Vector<3>(h2-h3, h1-h2, 1.0);
+
+        //normal for intersection of both triangles
+        if (off_x == off_y) {
+            normal += WFMath::Vector<3>(h1-h4, h4-h3, 1.0);
+        }
+        normal.normalize();
         h = h1 + (h3-h2) * off_x + (h2-h1) * off_y;
     } 
     // bottom triangle /|
     else {
         normal = WFMath::Vector<3>(h1-h4, h4-h3, 1.0);
+        normal.normalize();
         h = h1 + (h4-h1) * off_x + (h3-h4) * off_y;
     }
 }
