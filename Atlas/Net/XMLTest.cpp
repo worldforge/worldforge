@@ -143,6 +143,7 @@ void XMLTest::execute()
         test.set("astring",	"stringval");
         test.set("aint",	(long)12345);
         test.set("afloat",	9876.54);
+        test.set("flst", AObject(2, 2.3, -0.2));
 
         test.set("list1", list);
         test.set("map1", amap);

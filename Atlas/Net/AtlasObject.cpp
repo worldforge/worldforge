@@ -16,11 +16,11 @@ char*	AObject::typeString()
 	if (PyMapping_Check(obj))	return "map";
 	if (PyList_Check(obj))		return "list";
 	if (URI_Check(obj))		return "uri";
-	if (URIList_Check(obj))		return "urilist";
-	if (IntList_Check(obj))		return "intlist";
-	if (LongList_Check(obj))	return "longlist";
-	if (FloatList_Check(obj))	return "floatlist";
-	if (StringList_Check(obj))	return "stringlist";
+	if (URIList_Check(obj))		return "uri_list";
+	if (IntList_Check(obj))		return "int_list";
+	if (LongList_Check(obj))	return "long_list";
+	if (FloatList_Check(obj))	return "float_list";
+	if (StringList_Check(obj))	return "string_list";
 	return "unknown";
 }
 
@@ -135,7 +135,7 @@ AObject::AObject(int len, int src, ...)
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
 		long tmp = (long)va_arg(va,int);
-		LongList_SetItem(obj, i, PyInt_FromLong(tmp));
+		IntList_SetItem(obj, i, PyInt_FromLong(tmp));
 	}
 	va_end(va);
 }
@@ -144,13 +144,13 @@ AObject::AObject(int len, double src, ...)
 {
 	obj = FloatList_New(len);
 
-	PyList_SetItem(obj, 0, PyFloat_FromDouble(src));
+	FloatList_SetItem(obj, 0, PyFloat_FromDouble(src));
 	len--;
 	va_list	va;
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
 		double tmp = va_arg(va,double);
-		PyList_SetItem(obj, i, PyFloat_FromDouble(tmp));
+		FloatList_SetItem(obj, i, PyFloat_FromDouble(tmp));
 	}
 	va_end(va);
 }
@@ -160,7 +160,7 @@ AObject::AObject(int len, string* src, ...)
 	obj = StringList_New(len);
 
 	char* tmp = strdup(src->c_str());
-	PyList_SetItem(obj, 0, PyString_FromString(tmp));
+	StringList_SetItem(obj, 0, PyString_FromString(tmp));
 	free(tmp);
 	len--;
 	va_list	va;
@@ -168,7 +168,7 @@ AObject::AObject(int len, string* src, ...)
 	for (int i=1; i<len; i++) {
 		string* val = va_arg(va,string*);
 		char* tmp = strdup(val->c_str());
-		PyList_SetItem(obj, i, PyString_FromString(tmp));
+		StringList_SetItem(obj, i, PyString_FromString(tmp));
 		free(tmp);
 	}
 	va_end(va);
@@ -338,7 +338,7 @@ int	AObject::get(int ndx, AObject& val) const
 
 	char buf[20];
 	sprintf(buf,"%i", ndx);
-	val = AObject(PyList_GetItem(obj,ndx));
+	val = AObject(PySequence_GetItem(obj,ndx));
 	assert(val.obj->ob_refcnt > 1);
 	return 1;
 }
@@ -347,7 +347,7 @@ int	AObject::get(int ndx, long& val) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isLong()) return 0;
-	val = PyLong_AsLong(PyList_GetItem(obj,ndx));
+	val = PyLong_AsLong(PySequence_GetItem(obj,ndx));
 	return 1;
 }
 
@@ -355,7 +355,7 @@ int	AObject::get(int ndx, double& val) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isFloat()) return 0;
-	val = PyFloat_AsDouble(PyList_GetItem(obj,ndx));
+	val = PyFloat_AsDouble(PySequence_GetItem(obj,ndx));
 	return 1;
 }
 
@@ -363,7 +363,7 @@ int	AObject::get(int ndx, string& val) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isString()) return 0;
-	val = PyString_AsString(PyList_GetItem(obj,ndx));
+	val = PyString_AsString(PySequence_GetItem(obj,ndx));
 	return 1;
 }
 
@@ -376,7 +376,7 @@ int	AObject::get(int ndx, AObject& val, AObject& def) const
 		val = def;
 		return 0;
 	}
-	val = AObject(PyList_GetItem(obj,ndx));
+	val = AObject(PySequence_GetItem(obj,ndx));
 	assert(val.obj->ob_refcnt > 1);
 	return 1;
 }
@@ -388,7 +388,7 @@ int	AObject::get(int ndx, long& val, long def) const
 		val = def;
 		return 0;
 	}
-	PyObject* tmp = PyList_GetItem(obj,ndx);
+	PyObject* tmp = PySequence_GetItem(obj,ndx);
 	if (!PyLong_Check(obj)) {
 		val = def;
 		return 0;
@@ -404,7 +404,7 @@ int	AObject::get(int ndx, double& val, double def) const
 		val = def;
 		return 0;
 	}
-	PyObject* tmp = PyList_GetItem(obj,ndx);
+	PyObject* tmp = PySequence_GetItem(obj,ndx);
 	if (!PyFloat_Check(obj)) {
 		val = def;
 		return 0;
@@ -420,7 +420,7 @@ int	AObject::get(int ndx, string& val, string& def) const
 		val = def;
 		return 0;
 	}
-	PyObject* tmp = PyList_GetItem(obj,ndx);
+	PyObject* tmp = PySequence_GetItem(obj,ndx);
 	if (!PyString_Check(obj)) {
 		val = def;
 		return 0;
@@ -515,7 +515,7 @@ int	AObject::set(int ndx, const string& src)
 
 	//if (!this->isString()) return 0;
 	char* tmp = strdup(src.c_str());
-	bool res = PyList_SetItem(obj, ndx, PyString_FromString(tmp));
+	bool res = PySequence_SetItem(obj, ndx, PyString_FromString(tmp));
 	free(tmp);
 	return res;
 }
