@@ -3,18 +3,18 @@ lib_LTLIBRARIES = libAtlasObjects-0.6.la
 
 libAtlasObjects_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
 
-REAL_GENERATED_CPP = Root.cpp Decoder.cpp \
+REAL_GENERATED_CPP = Root.cpp Decoder.cpp Dispatcher.cpp \
 	RootEntity.cpp RootEntityChildren.cpp \
-        RootOperation.cpp RootOperationChildren1.cpp \
+	RootOperation.cpp RootOperationChildren1.cpp \
 	RootOperationChildren2.cpp RootOperationChildren3.cpp \
 	RootOperationChildren4.cpp RootOperationChildren5.cpp \
 	Anonymous.cpp
 
 GENERATED_CPP = flag.cpp $(REAL_GENERATED_CPP)
 
-GENERATED_H = Root.h Decoder.h \
+GENERATED_H = Root.h Decoder.h Dispatcher.h \
 	RootEntity.h Entity.h \
-        RootOperation.h Operation.h \
+	RootOperation.h Operation.h \
 	Anonymous.h
 
 libAtlasObjects_0_6_la_SOURCES = \
@@ -24,7 +24,7 @@ libAtlasObjects_0_6_la_SOURCES = \
 BUILT_SOURCES = $(GENERATED_CPP) $(GENERATED_H)
 
 PY_SOURCES = gen_cpp.py common.py AttributeInfo.py GenerateObjectFactory.py \
-	GenerateDecoder.py
+	GenerateDecoder.py GenerateDispatcher.py
 
 $(REAL_GENERATED_CPP) $(GENERATED_H):
 	if [ ! -e $@ ]; \

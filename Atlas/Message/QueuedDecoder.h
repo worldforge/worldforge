@@ -50,7 +50,7 @@ public:
 protected:
 
     /// This adds a message to the queue.
-    void objectArrived(const Element::MapType& obj);
+    void messageArrived(const Element::MapType& obj);
     
 private:
     

@@ -7,10 +7,11 @@ from common import *
 from AttributeInfo import *
 from GenerateObjectFactory import GenerateObjectFactory
 from GenerateDecoder import GenerateDecoder
+from GenerateDispatcher import GenerateDispatcher
 
 class_serial_no = 1
 
-class GenerateCC(GenerateObjectFactory, GenerateDecoder):
+class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher):
     def __init__(self, objects, outdir):
         self.objects = objects
         #self.outdir = outdir
@@ -572,3 +573,4 @@ if __name__=="__main__":
     gen_code = GenerateCC(objects, ".") #, object_enum)
     gen_code.generate_object_factory(all_objects,class_serial_no)
     gen_code.generate_decoder(all_objects)
+    gen_code.generate_dispatcher(all_objects)

@@ -1,3 +1,15 @@
+2003-03-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/DecoderBase.cpp, src/Message/DecoderBase.h,
+	  src/Message/QueuedDecoder.cpp, src/Message/QueuedDecoder.h,
+	  src/Objects/loadDefaults.cpp, tests/Objects/encoder1.cpp:
+	  Rename objectArrived methods to avoid overloading.
+
+	* src/Objects/GenerateDecoder.py, src/Objects/gen_cpp.py,
+	  src/Objects/loadDefaults.cpp, tests/Objects/decoder1.cpp,
+	  tests/Objects/objects2.cpp: Remove dispatch functionality from
+	  decoder, and implement it in a new class.
+
 2003-03-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* Added pkgconfig macro, and put installed headers into a subdir.

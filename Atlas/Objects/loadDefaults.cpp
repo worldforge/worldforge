@@ -10,28 +10,28 @@
 #include <set>
 
 #include "../Codecs/XML.h"
-#include "Decoder.h"
+#include "Dispatcher.h"
 #include "objectFactory.h"
 
 using Atlas::Message::Element;
 
 namespace Atlas { namespace Objects {
 
-typedef std::map<std::string, Element> MessageObjectMap;
+typedef std::map<std::string, Element> MessageElementMap;
 
-class LoadDefaultsDecoder : public ObjectsDecoder
+class LoadDefaultsDecoder : public Dispatcher
 {
   public:
     LoadDefaultsDecoder(const std::string& filename);
-    Element getMessageObject(const std::string& id);
+    Element getMessageElement(const std::string& id);
   protected:
-    virtual void objectArrived(const Element::MapType&);
+    virtual void messageArrived(const Element::MapType&);
   private:
     void setAttributes(Root &obj, //Root &obj_inst, 
                        const Element& mobj, 
                        std::set<std::string> used_attributes);
     void fillDefaults();
-    MessageObjectMap m_objects;
+    MessageElementMap m_objects;
 };
 
 LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
@@ -70,9 +70,9 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
     fillDefaults();
 }
 
-Element LoadDefaultsDecoder::getMessageObject(const std::string& id)
+Element LoadDefaultsDecoder::getMessageElement(const std::string& id)
 {
-    MessageObjectMap::const_iterator I = m_objects.find(id);
+    MessageElementMap::const_iterator I = m_objects.find(id);
     if (I == m_objects.end()) {
         throw DefaultLoadingException(id + " not found in XML file");
     } else {
@@ -80,11 +80,11 @@ Element LoadDefaultsDecoder::getMessageObject(const std::string& id)
     }
 }
 
-void LoadDefaultsDecoder::objectArrived(const Element::MapType& o)
+void LoadDefaultsDecoder::messageArrived(const Element::MapType& o)
 {
-    MessageObjectMap::const_iterator I = o.find("id");
+    MessageElementMap::const_iterator I = o.find("id");
     if (I == o.end()) {
-        unknownObjectArrived(o);
+        unknownMessageArrived(o);
         return;
     }
     
@@ -112,7 +112,7 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
         for (Element::ListType::const_iterator J = I->second.asList().begin();
              J != I->second.asList().end(); J++) {
             //cout<<"  >"<<J->asString()<<endl;
-            Element parent_mobj = getMessageObject(J->asString());
+            Element parent_mobj = getMessageElement(J->asString());
             setAttributes(obj, /*obj_inst,*/ parent_mobj, used_attributes);
         }
     }
@@ -126,7 +126,7 @@ void LoadDefaultsDecoder::fillDefaults()
         I++) {
         //cout<<(*I)<<endl;
         //get atlas.xml object
-        Element mobj = getMessageObject(*I);
+        Element mobj = getMessageElement(*I);
         //get class instances
         Root obj = objectFactory.createObject(*I).getDefaultObject();
         //Root obj_inst = objectInstanceFactory.createObject(*I).getDefaultObject();

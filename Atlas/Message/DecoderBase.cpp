@@ -94,7 +94,7 @@ void DecoderBase::mapEnd()
             m_lists.top().insert(m_lists.top().end(), map);
             break;
         case STATE_STREAM:
-            objectArrived(map);
+            messageArrived(map);
             break;
     }
 }

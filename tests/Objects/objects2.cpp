@@ -9,7 +9,7 @@
 #include "Objects/Entity.h"
 #include "Objects/Operation.h"
 #include "Objects/Encoder.h"
-#include "Objects/Decoder.h"
+#include "Objects/Dispatcher.h"
 #include "EncoderBase.h"
 #include "Objects/loadDefaults.h"
 //#include "../../src/Net/Stream.h"
@@ -56,7 +56,7 @@ std::string object2String(const Root& obj)
     return stream.str();
 }
 
-class TestDecoder : public Atlas::Objects::ObjectsDecoder
+class TestDecoder : public Atlas::Objects::Dispatcher
 {
 protected:
     virtual void objectRootArrived(const Root& r)

@@ -1,4 +1,4 @@
-#include "Objects/Decoder.h"
+#include "Objects/Dispatcher.h"
 #include "Objects/loadDefaults.h"
 
 #include <iostream>
@@ -9,7 +9,7 @@ bool acct_arrived = false;
 bool anonymous_arrived = false;
 bool unknown_arrived = false;
 
-class TestDecoder : public Atlas::Objects::ObjectsDecoder
+class TestDecoder : public Atlas::Objects::Dispatcher
 {
 protected:
     virtual void objectRootArrived(const Atlas::Objects::Root& r)

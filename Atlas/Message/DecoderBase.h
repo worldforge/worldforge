@@ -15,7 +15,7 @@ namespace Atlas { namespace Message {
  *
  * This class is passed to a codec as receiver bridge. It decodes a stream
  * into Message::Object objects, and after completion calls the abstract
- * objectArrived() method. This is to be overridden by base classes, which
+ * messageArrived() method. This is to be overridden by base classes, which
  * might, for instance, provide an object queue or a callback method for
  * arrived messages.
  *
@@ -71,7 +71,7 @@ protected:
     std::stack<std::string> m_names;
 
     /// Override this - called when an object was received.
-    virtual void objectArrived(const Element::MapType& obj) = 0;
+    virtual void messageArrived(const Element::MapType& obj) = 0;
 };
 
 } } // namespace Atlas::Message

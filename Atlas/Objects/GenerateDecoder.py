@@ -23,8 +23,8 @@ class GenerateDecoder:
 #include "../Message/DecoderBase.h"
 
 #include "Root.h"
-#include "Entity.h"
-#include "Operation.h"
+// #include "Entity.h"
+// #include "Operation.h"
 
 """) #"for xemacs syntax highlighting
         self.ns_open(self.base_list)
@@ -41,36 +41,25 @@ class GenerateDecoder:
  */
 class ObjectsDecoder : public Atlas::Message::DecoderBase
 {
-    typedef void (ObjectsDecoder::*objectArrivedPtr)(const Root&);
-    typedef std::map<int, objectArrivedPtr> methodMap_t;
 public:
     /// Default destructor.
     virtual ~ObjectsDecoder();
-
-    /// Add a new method for Objects class defined by application
-    void addMethod(int, objectArrivedPtr method);
 protected:
-    /// Store extension methods for Objects classes defined by application
-    methodMap_t m_methods;
-
     /// Overridden by Objects::Decoder to retrieve the object.
-    virtual void objectArrived(const Atlas::Message::Element::MapType&);
+    virtual void messageArrived(const Atlas::Message::Element::MapType&);
 
     /// An unknown object has arrived.
-    virtual void unknownObjectArrived(const Atlas::Message::Element&) { }
-
-    /// An unknown object has arrived.
-    virtual void unknownObjectArrived(const Root&) { }
+    virtual void unknownMessageArrived(const Atlas::Message::Element&) { }
 
     /// call right object*Arrived method
-    virtual void dispatchObject(const Root& obj);
+    virtual void objectArrived(const Root& obj) = 0;
 
 """) #"for xemacs syntax highlighting
-        for (obj, namespace) in objects:
-            id = obj.id
-            idc = classize(id)
-            self.write("    virtual void object%sArrived(const %s%s&) { }\n" %
-                       (classize(obj.id), namespace, classize(obj.id)))
+        #for (obj, namespace) in objects:
+        #    id = obj.id
+        #    idc = classize(id)
+        #    self.write("    virtual void object%sArrived(const %s%s&) { }\n" %
+        #               (classize(obj.id), namespace, classize(obj.id)))
         self.write("};\n\n")
         self.ns_close(self.base_list)
         self.footer(header_list)
@@ -84,43 +73,18 @@ protected:
         #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
-        self.write('\n#include "Decoder.h"\n\n')
+        self.write('\n#include "Decoder.h"\n')
+        self.write('\n#include "objectFactory.h"\n\n')
         self.ns_open(self.base_list)
         self.write("""
 ObjectsDecoder::~ObjectsDecoder()
 {
 }
 
-void ObjectsDecoder::addMethod(int num, objectArrivedPtr method)
-{
-    m_methods[num] = method;
-}
-
-void ObjectsDecoder::objectArrived(const Atlas::Message::Element::MapType& o)
+void ObjectsDecoder::messageArrived(const Atlas::Message::Element::MapType& o)
 {
     Root obj =  messageElement2ClassObject(o);
-    dispatchObject(obj);
-}
-
-void ObjectsDecoder::dispatchObject(const Root& obj)
-{
-    switch(obj->getClassNo()) {
-""") #"for xemacs syntax highlighting
-        for (obj, namespace) in objects:
-            idc = classize(obj.id)
-            serialno_name = string.upper(obj.id) + "_NO"
-            self.write("""    case %(namespace)s%(serialno_name)s:
-        object%(idc)sArrived(%(namespace)s%(idc)s(obj));
-        break;
-""" % vars()) #"for xemacs syntax highlighting
-        self.write("""    default:
-        methodMap_t::const_iterator I = m_methods.find(obj->getClassNo());
-        if (I != m_methods.end()) {
-            (this->*I->second)(obj);
-        } else {
-            unknownObjectArrived(obj);
-        }
-    }
+    objectArrived(obj);
 }
 """) #"for xemacs syntax highlighting
         self.ns_close(self.base_list)

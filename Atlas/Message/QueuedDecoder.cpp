@@ -10,7 +10,7 @@ QueuedDecoder::QueuedDecoder()
 {
 }
 
-void QueuedDecoder::objectArrived(const Element::MapType& obj)
+void QueuedDecoder::messageArrived(const Element::MapType& obj)
 {
     m_objectQueue.push(obj);
 }
