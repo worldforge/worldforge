@@ -2,7 +2,7 @@
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
 
-import sys, os, cmp
+import sys, os, filecmp
 sys.path.append("../../../Atlas-Python")
 import parse_xml
 from atlas_types import *

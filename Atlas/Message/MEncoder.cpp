@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
 
-#include "Encoder.h"
+#include "MEncoder.h"
 #include "Object.h"
 
 namespace Atlas { namespace Message {

@@ -60,6 +60,8 @@ class Filter
 };
 
 #ifdef HAVE_STREAMBUF
+typedef int int_type;
+
 class filterbuf : public std::streambuf {
 #else
 typedef int int_type;

@@ -4,8 +4,6 @@
 
 #include "BaseObject.h"
 
-#include "../Message/Encoder.h"
-
 using Atlas::Message::Object;
 
 namespace Atlas { namespace Objects {

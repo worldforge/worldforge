@@ -9,7 +9,7 @@
 #include <map>
 #include <list>
 #include <string>
-#include "../Message/Encoder.h"
+#include "../Message/MEncoder.h"
 #include "../Message/Object.h"
 #include "../Bridge.h"
 #include "../Exception.h"

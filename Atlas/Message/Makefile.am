@@ -6,7 +6,7 @@ libAtlasMessage_la_LDFLAGS = $(INTERFACE_VERSION)
 libAtlasMessageincludedir = $(includedir)/Atlas/Message
 
 libAtlasMessage_la_SOURCES = \
-	Object.cpp Encoder.cpp DecoderBase.cpp QueuedDecoder.cpp
+	Object.cpp MEncoder.cpp DecoderBase.cpp QueuedDecoder.cpp
 
 libAtlasMessageinclude_HEADERS = \
-	Object.h Layer.h Encoder.h DecoderBase.h QueuedDecoder.h
+	Object.h Layer.h MEncoder.h DecoderBase.h QueuedDecoder.h

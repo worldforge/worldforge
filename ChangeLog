@@ -1,3 +1,14 @@
+2002-11-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Filter.h, src/Funky/FEncoder.cpp, src/Funky/FEncoder.h,
+	  src/Message/MEncoder.cpp, src/Message/MEncoder.h,
+	  src/Objects/BaseObject.cpp, src/Objects/BaseObject.h:
+	  Rename Encoder.* files so that IDE's don't get confused by
+	  the duplicate object file names.
+
+	* src/Objects/common.py: Default to recent python version.
+	  Users of older versions of python may have to hack this file.
+
 2001-10-07  Al Riddoch  <alriddoch@zepler.org>
 
 This entry covers the changes made by Jesse Jones for which no ChangeLog
