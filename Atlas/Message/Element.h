@@ -14,87 +14,80 @@ namespace Atlas { namespace Message {
 /// An exception class issued when the wrong type is requested in As().
 class WrongTypeException { };
 
+/** Multi-type container
+ *
+ * FIXME: Document this
+ *
+ * @author Stefanus Du Toit <sdt@gmx.net>
+ */
 class Object
 {
 public:
-
     typedef int IntType;
     typedef double FloatType;
     typedef std::string StringType;
     typedef std::map<std::string, Object> MapType;
     typedef std::list<Object> ListType;
 
+    enum Type {
+        TYPE_NONE,
+        TYPE_INT,
+        TYPE_FLOAT,
+        TYPE_STRING,
+        TYPE_MAP,
+        TYPE_LIST
+    };
+
     /// Construct an empty object.
     Object()
-      : i(NULL), f(NULL), s(NULL), m(NULL),  l(NULL)
+      : t(TYPE_NONE), i(0), f(0.0), s(), m(),  l()
     {
     }
 
     /// Copy an existing object.
     Object(const Object& m)
+      : t(m.t), i(m.i), f(m.f), s(m.s), m(m.m), l(m.l)
     {
-        if (m.i != NULL) *this = *m.i;
-        if (m.f != NULL) *this = *m.f;
-        if (m.s != NULL) *this = *m.s;
-        if (m.m != NULL) *this = *m.m;
-        if (m.l != NULL) *this = *m.l;
     }
 
     /// Set type to int, and value to v.
     Object(int v)
-      : i(new int(v)), f(NULL), s(NULL), m(NULL), l(NULL)
+      : t(TYPE_INT), i(v), f(0.0), s(), m(), l()
     {
     }
     /// Set type to double, and value to v.
     Object(double v)
-      : i(NULL), f(new double(v)), s(NULL), m(NULL), l(NULL)
+      : t(TYPE_FLOAT), i(0), f(v), s(), m(), l()
     {
     }
     /// Set type to std::string, and value to v.
     Object(const std::string& v)
-      : i(NULL), f(NULL), s(new std::string(v)), m(NULL), l(NULL)
+      : t(TYPE_STRING), i(0), f(0.0), s(v), m(), l()
     {
     }
     /// Set type to MapType, and value to v.
     Object(const MapType& v)
-      : i(NULL), f(NULL), s(NULL), m(new MapType(v)), l(NULL)
+      : t(TYPE_MAP), i(0), f(0.0), s(), m(v), l()
     {
     }
     /// Set type to ListType, and value to v.
     Object(const ListType& v)
-      : i(NULL), f(NULL), s(NULL), m(NULL), l(new ListType(v))
+      : t(TYPE_LIST), i(0), f(0.0), s(), m(), l(v)
     {
-    }
-
-    virtual ~Object()
-    {
-        delete i;
-        delete f;
-        delete s;
-        delete m;
-        delete l;
     }
 
     /// Check for inequality with another Object.
     bool operator!=(const Object& o) const
     {
-        if (i == NULL) {
-            if (o.i != NULL) return true;
-        } else if (*i != *o.i) return true;
-        if (f == NULL) {
-            if (o.f != NULL) return true;
-        } else if (*f != *o.f) return true;
-        if (s == NULL) {
-            if (o.s != NULL) return true;
-        } else if (*s != *o.s) return true;
-        if (m == NULL) {
-            if (o.m != NULL) return true;
-        } else if (*m != *o.m) return true;
-        if (l == NULL) {
-            if (o.l != NULL) return true;
-        } else if (*l != *o.l) return true;
-        
-        return false;
+        if (t != o.t) return true;
+        switch(t) {
+            case TYPE_NONE: return false;
+            case TYPE_INT: return i != o.i;
+            case TYPE_FLOAT: return f != o.f;
+            case TYPE_STRING: return s != o.s;
+            case TYPE_MAP: return m != o.m;
+            case TYPE_LIST: return l != o.l;
+        }
     }
 
     /// Check for equality with another Object.
@@ -103,114 +96,132 @@ public:
         return !(*this != m);
     }
 
-    /// Check for inequality with a int.
-    bool operator!=(int v) const
-    {
-        if (i == NULL || *i != v)  return true;
-        return false;
-    }
-
     /// Check for equality with a int.
-    bool operator==(int v) const { return !(*this != v); }
-
-    /// Check for inequality with a double.
-    bool operator!=(double v) const
+    bool operator==(int v) const
     {
-        if (f == NULL || *f != v)  return true;
-        return false;
+        return (t == TYPE_INT && i == v);
     }
+
+    /// Check for inequality with a int.
+    bool operator!=(int v) const { return !(*this == v); }
 
     /// Check for equality with a double.
-    bool operator==(double v) const { return !(*this != v); }
-
-    /// Check for inequality with a std::string.
-    bool operator!=(const std::string& v) const
+    bool operator==(double v) const
     {
-        if (s == NULL || *s != v)  return true;
-        return false;
+        return (t == TYPE_FLOAT && f == v);
     }
+
+    /// Check for inequality with a double.
+    bool operator!=(double v) const { return !(*this == v); }
 
     /// Check for equality with a std::string.
-    bool operator==(const std::string& v) const { return !(*this != v); }
-
-    /// Check for inequality with a MapType.
-    bool operator!=(const MapType& v) const
+    bool operator==(const std::string& v) const
     {
-        if (m == NULL || *m != v)  return true;
-        return false;
+        return (t == TYPE_STRING && s == v);
     }
+
+    /// Check for inequality with a std::string.
+    bool operator!=(const std::string& v) const { return !(*this == v); }
 
     /// Check for equality with a MapType.
-    bool operator==(const MapType& v) const { return !(*this != v); }
-
-    /// Check for inequality with a ListType.
-    bool operator!=(const ListType& v) const
+    bool operator==(const MapType& v) const
     {
-        if (l == NULL || *l != v)  return true;
-        return false;
+        return (t == TYPE_MAP && m == v);
     }
+
+    /// Check for inequality with a MapType.
+    bool operator!=(const MapType& v) const { return !(*this == v); }
 
     /// Check for equality with a ListType.
-    bool operator==(const ListType& v) const { return !(*this != v); }
-
-    void Clear()
+    bool operator==(const ListType& v) const
     {
-        if (i != NULL) { delete i; i = NULL; }
-        if (f != NULL) { delete f; f = NULL; }
-        if (s != NULL) { delete s; s = NULL; }
-        if (m != NULL) { delete m; m = NULL; }
-        if (l != NULL) { delete l; l = NULL; }
+        return (t == TYPE_LIST && l == v);
     }
 
+    /// Check for inequality with a ListType.
+    bool operator!=(const ListType& v) const { return !(*this == v); }
+
+    /// Clear all values.
+    void Clear()
+    {
+        t = TYPE_NONE;
+        s.erase();
+        m.clear();
+        l.clear();
+    }
+
+    /// Get the current type.
+    Type GetType() const { return t; }
+    /// Check whether the current type is nothing.
+    bool IsNone() const { return (t == TYPE_NONE); }
     /// Check whether the current type is int.
-    bool IsInt() const { return (i != NULL); }
+    bool IsInt() const { return (t == TYPE_INT); }
     /// Check whether the current type is double.
-    bool IsFloat() const { return (f != NULL); }
+    bool IsFloat() const { return (t == TYPE_FLOAT); }
     /// Check whether the current type is std::string.
-    bool IsString() const { return (s != NULL); }
+    bool IsString() const { return (t == TYPE_STRING); }
     /// Check whether the current type is MapType.
-    bool IsMap() const { return (m != NULL); }
+    bool IsMap() const { return (t == TYPE_MAP); }
     /// Check whether the current type is ListType.
-    bool IsList() const { return (l != NULL); }
+    bool IsList() const { return (t == TYPE_LIST); }
 
     /// Retrieve the current value as a int.
     int AsInt() const throw (WrongTypeException)
     {
-        if (i != NULL) return *i;
+        if (t == TYPE_INT) return i;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a double.
     double AsFloat() const throw (WrongTypeException)
     {
-        if (f != NULL) return *f;
+        if (t == TYPE_FLOAT) return f;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a std::string.
-    std::string& AsString() const throw (WrongTypeException)
+    /// Retrieve the current value as a const std::string reference.
+    const std::string& AsString() const throw (WrongTypeException)
     {
-        if (s != NULL) return *s;
+        if (t == TYPE_STRING) return s;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a MapType.
-    MapType& AsMap() const throw (WrongTypeException)
+    /// Retrieve the current value as a non-const std::string reference.
+    std::string& AsString() throw (WrongTypeException)
     {
-        if (m != NULL) return *m;
+        if (t == TYPE_STRING) return s;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a ListType.
-    ListType& AsList() const throw (WrongTypeException)
+    /// Retrieve the current value as a const MapType reference.
+    const MapType& AsMap() const throw (WrongTypeException)
     {
-        if (l != NULL) return *l;
+        if (t == TYPE_MAP) return m;
+        throw WrongTypeException();
+    }
+    /// Retrieve the current value as a non-const MapType reference.
+    MapType& AsMap() throw (WrongTypeException)
+    {
+        if (t == TYPE_MAP) return m;
+        throw WrongTypeException();
+    }
+    /// Retrieve the current value as a const ListType reference.
+    const ListType& AsList() const throw (WrongTypeException)
+    {
+        if (t == TYPE_LIST) return l;
+        throw WrongTypeException();
+    }
+    /// Retrieve the current value as a non-const ListType reference.
+    ListType& AsList() throw (WrongTypeException)
+    {
+        if (t == TYPE_LIST) return l;
         throw WrongTypeException();
     }
 
 protected:
 
-    int* i;
-    double* f;
-    StringType* s;
-    MapType* m;
-    ListType* l;
+    Type t;
+    int i;
+    double f;
+    StringType s;
+    MapType m;
+    ListType l;
 
 };
 
