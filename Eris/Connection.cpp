@@ -2,6 +2,7 @@
 	#include "config.h"
 #endif
 
+#include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <algorithm>
@@ -256,10 +257,10 @@ void Connection::unlock()
 
 Connection* Connection::Instance()
 {
-	if (_theConnection)
-		return _theConnection;
-	else
+	if (_theConnection == NULL)
 		throw InvalidOperation("No Connection instance exists");
+
+	return _theConnection;
 }
 
 void Connection::setLogLevel(LogLevel lvl)
@@ -336,7 +337,8 @@ void Connection::clearSignalledWaits()
 		WaitForList::iterator W = Wnext++;
 		if ((*W)->isPending()) {
 			delete *W;
-			_waitList.erase(W);		}
+			_waitList.erase(W);
+		}
 	}
 	
 	ccount -= _waitList.size();
@@ -442,4 +444,4 @@ void Log(LogLevel lvl, const char *str, ...)
 	va_end(args);
 }
 
-}; // of namespace
+} // of namespace
