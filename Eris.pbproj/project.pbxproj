@@ -3,22 +3,101 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 38;
+	objectVersion = 39;
 	objects = {
+		C437AF410562987C00ACFA1E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = PollGlib.h;
+			path = bindings/polls/glib/PollGlib.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		C437AF420562987C00ACFA1E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = PollGlibFD.h;
+			path = bindings/polls/glib/PollGlibFD.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		C437AF430562987C00ACFA1E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = PollGlibSource.h;
+			path = bindings/polls/glib/PollGlibSource.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		C437AF440562987C00ACFA1E = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = PollGlibVersion.h;
+			path = bindings/polls/glib/PollGlibVersion.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		C437AF450562987C00ACFA1E = {
+			fileRef = C437AF410562987C00ACFA1E;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		C437AF460562987C00ACFA1E = {
+			fileRef = C437AF420562987C00ACFA1E;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Private,
+				);
+			};
+		};
+		C437AF470562987C00ACFA1E = {
+			fileRef = C437AF430562987C00ACFA1E;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Private,
+				);
+			};
+		};
+		C437AF480562987C00ACFA1E = {
+			fileRef = C437AF440562987C00ACFA1E;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Private,
+				);
+			};
+		};
 		C43FBCE5054315B9008FC2ED = {
 			children = (
+				C4BB15920544A6C100A800CF,
 				C43FBE250543162E008FC2ED,
 				C43FBCF2054315F2008FC2ED,
 				C43FBCF1054315C5008FC2ED,
 			);
 			isa = PBXGroup;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBCE7054315B9008FC2ED = {
 			buildRules = (
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ZERO_LINK = YES;
 			};
 			isa = PBXBuildStyle;
 			name = Development;
@@ -28,11 +107,15 @@
 			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
 			name = Deployment;
 		};
 		C43FBCE9054315B9008FC2ED = {
+			buildSettings = {
+			};
 			buildStyles = (
 				C43FBCE7054315B9008FC2ED,
 				C43FBCE8054315B9008FC2ED,
@@ -84,6 +167,10 @@
 				C43FBE1A054315F4008FC2ED,
 				C43FBE1E054315F4008FC2ED,
 				C43FBE22054315F4008FC2ED,
+				C437AF450562987C00ACFA1E,
+				C437AF460562987C00ACFA1E,
+				C437AF470562987C00ACFA1E,
+				C437AF480562987C00ACFA1E,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -110,7 +197,6 @@
 				C43FBDF9054315F4008FC2ED,
 				C43FBDFD054315F4008FC2ED,
 				C43FBE02054315F4008FC2ED,
-				C43FBE06054315F4008FC2ED,
 				C43FBE0B054315F4008FC2ED,
 				C43FBE0F054315F4008FC2ED,
 				C43FBE13054315F4008FC2ED,
@@ -124,10 +210,10 @@
 		C43FBCED054315C5008FC2ED = {
 			buildActionMask = 2147483647;
 			files = (
-				C43FBE3D054317CF008FC2ED,
-				C43FBE3E054317CF008FC2ED,
-				C43FBE3F054317CF008FC2ED,
-				C43FBE41054317E2008FC2ED,
+				C4BB158E0544A61B00A800CF,
+				C4BB158F0544A61B00A800CF,
+				C4BB15900544A61B00A800CF,
+				C4BB15910544A61B00A800CF,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,11 +223,12 @@
 				C43FBCEA054315C5008FC2ED,
 				C43FBCEC054315C5008FC2ED,
 				C43FBCED054315C5008FC2ED,
+				C4BB15890544A5A200A800CF,
 			);
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge /Users/jmt/Desktop/libsigc++-1.2.5/build";
+				FRAMEWORK_SEARCH_PATHS = /Users/jmt/Library/Frameworks;
 				FRAMEWORK_VERSION = A;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
@@ -192,9 +279,12 @@
 ";
 		};
 		C43FBCF0054315C5008FC2ED = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
 			path = Eris.framework;
 			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C43FBCF1054315C5008FC2ED = {
 			children = (
@@ -203,454 +293,578 @@
 			isa = PBXGroup;
 			name = Products;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBCF2054315F2008FC2ED = {
 			children = (
-				C43FBD16054315F3008FC2ED,
 				C43FBD17054315F3008FC2ED,
-				C43FBD1A054315F3008FC2ED,
-				C43FBD1B054315F3008FC2ED,
 				C43FBD1C054315F3008FC2ED,
-				C43FBD1F054315F3008FC2ED,
 				C43FBD20054315F3008FC2ED,
-				C43FBD23054315F3008FC2ED,
 				C43FBD24054315F3008FC2ED,
-				C43FBD27054315F3008FC2ED,
 				C43FBD28054315F3008FC2ED,
-				C43FBD2B054315F3008FC2ED,
 				C43FBD2C054315F3008FC2ED,
-				C43FBD2F054315F3008FC2ED,
 				C43FBD30054315F3008FC2ED,
 				C43FBD33054315F3008FC2ED,
-				C43FBD34054315F3008FC2ED,
 				C43FBD35054315F3008FC2ED,
 				C43FBD38054315F3008FC2ED,
 				C43FBD39054315F3008FC2ED,
-				C43FBD3A054315F3008FC2ED,
 				C43FBD3B054315F3008FC2ED,
-				C43FBD3F054315F4008FC2ED,
 				C43FBD40054315F4008FC2ED,
-				C43FBD43054315F4008FC2ED,
 				C43FBD44054315F4008FC2ED,
-				C43FBD4A054315F4008FC2ED,
 				C43FBD4B054315F4008FC2ED,
-				C43FBD4E054315F4008FC2ED,
 				C43FBD4F054315F4008FC2ED,
 				C43FBD52054315F4008FC2ED,
-				C43FBD53054315F4008FC2ED,
 				C43FBD54054315F4008FC2ED,
-				C43FBD57054315F4008FC2ED,
 				C43FBD58054315F4008FC2ED,
 				C43FBD5B054315F4008FC2ED,
-				C43FBD5C054315F4008FC2ED,
 				C43FBD5D054315F4008FC2ED,
 				C43FBD60054315F4008FC2ED,
-				C43FBD61054315F4008FC2ED,
 				C43FBD62054315F4008FC2ED,
-				C43FBD65054315F4008FC2ED,
 				C43FBD66054315F4008FC2ED,
 				C43FBD69054315F4008FC2ED,
-				C43FBD6A054315F4008FC2ED,
 				C43FBD6B054315F4008FC2ED,
-				C43FBD6E054315F4008FC2ED,
 				C43FBD6F054315F4008FC2ED,
 				C43FBD72054315F4008FC2ED,
-				C43FBD73054315F4008FC2ED,
 				C43FBD74054315F4008FC2ED,
-				C43FBD77054315F4008FC2ED,
 				C43FBD78054315F4008FC2ED,
-				C43FBD7B054315F4008FC2ED,
-				C43FBD7C054315F4008FC2ED,
-				C43FBD7F054315F4008FC2ED,
 				C43FBD80054315F4008FC2ED,
-				C43FBD81054315F4008FC2ED,
 				C43FBD82054315F4008FC2ED,
-				C43FBD85054315F4008FC2ED,
 				C43FBD86054315F4008FC2ED,
-				C43FBD89054315F4008FC2ED,
 				C43FBD8A054315F4008FC2ED,
+				C43FBD1A054315F3008FC2ED,
+				C43FBD7C054315F4008FC2ED,
+				C437AF410562987C00ACFA1E,
+				C437AF420562987C00ACFA1E,
+				C437AF430562987C00ACFA1E,
+				C437AF440562987C00ACFA1E,
 			);
 			isa = PBXGroup;
+			name = Headers;
 			path = Eris;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD16054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = ArgumentDispatcher.cpp;
+			name = ArgumentDispatcher.cpp;
+			path = Eris/ArgumentDispatcher.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD17054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = ArgumentDispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD1A054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = atlas_utils.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD1B054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Avatar.cpp;
+			name = Avatar.cpp;
+			path = Eris/Avatar.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD1C054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Avatar.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD1F054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = BaseConnection.cpp;
+			name = BaseConnection.cpp;
+			path = Eris/BaseConnection.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD20054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = BaseConnection.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD23054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = ClassDispatcher.cpp;
+			name = ClassDispatcher.cpp;
+			path = Eris/ClassDispatcher.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD24054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = ClassDispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD27054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Connection.cpp;
+			name = Connection.cpp;
+			path = Eris/Connection.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD28054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Connection.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD2B054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = DebugDispatcher.cpp;
+			name = DebugDispatcher.cpp;
+			path = Eris/DebugDispatcher.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD2C054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = DebugDispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD2F054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Dispatcher.cpp;
+			name = Dispatcher.cpp;
+			path = Eris/Dispatcher.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD30054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Dispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD33054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = EncapDispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD34054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Entity.cpp;
+			name = Entity.cpp;
+			path = Eris/Entity.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD35054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Entity.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD38054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Factory.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD39054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = IdDispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD3A054315F3008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = InvisibleEntityCache.cpp;
+			name = InvisibleEntityCache.cpp;
+			path = Eris/InvisibleEntityCache.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD3B054315F3008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = InvisibleEntityCache.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD3F054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Lobby.cpp;
+			name = Lobby.cpp;
+			path = Eris/Lobby.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD40054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Lobby.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD43054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Log.cpp;
+			name = Log.cpp;
+			path = Eris/Log.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD44054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Log.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD4A054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = MetaQuery.cpp;
+			name = MetaQuery.cpp;
+			path = Eris/MetaQuery.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD4B054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = MetaQuery.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD4E054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Metaserver.cpp;
+			name = Metaserver.cpp;
+			path = Eris/Metaserver.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD4F054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Metaserver.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD52054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = OpDispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD53054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Person.cpp;
+			name = Person.cpp;
+			path = Eris/Person.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD54054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Person.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD57054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Player.cpp;
+			name = Player.cpp;
+			path = Eris/Player.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD58054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Player.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD5B054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Poll.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD5C054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = PollDefault.cpp;
+			name = PollDefault.cpp;
+			path = Eris/PollDefault.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD5D054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = PollDefault.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD60054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Property.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD61054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Room.cpp;
+			name = Room.cpp;
+			path = Eris/Room.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD62054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Room.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD65054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = ServerInfo.cpp;
+			name = ServerInfo.cpp;
+			path = Eris/ServerInfo.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD66054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = ServerInfo.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD69054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = SignalDispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD6A054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Timeout.cpp;
+			name = Timeout.cpp;
+			path = Eris/Timeout.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD6B054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Timeout.h;
 			refType = 4;
-		};
-		C43FBD6E054315F4008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			path = Timestamp.cpp;
-			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD6F054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Timestamp.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD72054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = TypeDispatcher.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD73054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = TypeInfo.cpp;
+			name = TypeInfo.cpp;
+			path = Eris/TypeInfo.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD74054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = TypeInfo.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD77054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Types.cpp;
+			name = Types.cpp;
+			path = Eris/Types.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD78054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Types.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD7B054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = typeService.cpp;
+			name = typeService.cpp;
+			path = Eris/typeService.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD7C054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = typeService.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD7F054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = UIFactory.cpp;
+			name = UIFactory.cpp;
+			path = Eris/UIFactory.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD80054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = UIFactory.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD81054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Utils.cpp;
+			name = Utils.cpp;
+			path = Eris/Utils.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD82054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Utils.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD85054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = Wait.cpp;
+			name = Wait.cpp;
+			path = Eris/Wait.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD86054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = Wait.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD89054315F4008FC2ED = {
+			expectedFileType = sourcecode.cpp.cpp;
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = World.cpp;
+			name = World.cpp;
+			path = Eris/World.cpp;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBD8A054315F4008FC2ED = {
+			expectedFileType = sourcecode.c.h;
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			path = World.h;
 			refType = 4;
+			sourceTree = "<group>";
 		};
 		C43FBDAE054315F4008FC2ED = {
 			fileRef = C43FBD16054315F3008FC2ED;
@@ -983,18 +1197,18 @@
 			fileRef = C43FBD6B054315F4008FC2ED;
 			isa = PBXBuildFile;
 			settings = {
-			};
-		};
-		C43FBE06054315F4008FC2ED = {
-			fileRef = C43FBD6E054315F4008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		C43FBE07054315F4008FC2ED = {
 			fileRef = C43FBD6F054315F4008FC2ED;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Private,
+				);
 			};
 		};
 		C43FBE0A054315F4008FC2ED = {
@@ -1029,7 +1243,7 @@
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
-					Private,
+					Public,
 				);
 			};
 		};
@@ -1043,6 +1257,9 @@
 			fileRef = C43FBD7C054315F4008FC2ED;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		C43FBE19054315F4008FC2ED = {
@@ -1055,6 +1272,9 @@
 			fileRef = C43FBD82054315F4008FC2ED;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		C43FBE1D054315F4008FC2ED = {
@@ -1086,62 +1306,118 @@
 		};
 		C43FBE250543162E008FC2ED = {
 			children = (
-				C43FBE3A054317CF008FC2ED,
-				C43FBE3B054317CF008FC2ED,
-				C43FBE3C054317CF008FC2ED,
-				C43FBE40054317E2008FC2ED,
+				C4BB158A0544A61B00A800CF,
+				C4BB158B0544A61B00A800CF,
+				C4BB158C0544A61B00A800CF,
+				C4BB158D0544A61B00A800CF,
 			);
 			isa = PBXGroup;
 			name = Frameworks;
 			refType = 4;
+			sourceTree = "<group>";
 		};
-		C43FBE3A054317CF008FC2ED = {
+		C4BB15890544A5A200A800CF = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# make frameworks directory if it doesn't already exist\nmkdir -p ~/Library/Frameworks\n# delete the old framework\nrm -rf ~/Library/Frameworks/Eris.framework\n# copy framework to its home\n/Developer/Tools/CpMac -r build/Eris.framework ~/Library/Frameworks/";
+		};
+		C4BB158A0544A61B00A800CF = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
 			name = Atlas.framework;
-			path = /Users/jmt/Worldforge/Atlas.framework;
+			path = /Users/jmt/Library/Frameworks/Atlas.framework;
 			refType = 0;
+			sourceTree = "<absolute>";
 		};
-		C43FBE3B054317CF008FC2ED = {
-			isa = PBXFrameworkReference;
-			name = skstream.framework;
-			path = /Users/jmt/Worldforge/skstream.framework;
-			refType = 0;
-		};
-		C43FBE3C054317CF008FC2ED = {
-			isa = PBXFrameworkReference;
-			name = wfmath.framework;
-			path = /Users/jmt/Worldforge/wfmath.framework;
-			refType = 0;
-		};
-		C43FBE3D054317CF008FC2ED = {
-			fileRef = C43FBE3A054317CF008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C43FBE3E054317CF008FC2ED = {
-			fileRef = C43FBE3B054317CF008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C43FBE3F054317CF008FC2ED = {
-			fileRef = C43FBE3C054317CF008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C43FBE40054317E2008FC2ED = {
+		C4BB158B0544A61B00A800CF = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
 			name = "sigc++.framework";
-			path = "/Users/jmt/Desktop/libsigc++-1.2.5/build/sigc++.framework";
+			path = "/Users/jmt/Library/Frameworks/sigc++.framework";
 			refType = 0;
+			sourceTree = "<absolute>";
 		};
-		C43FBE41054317E2008FC2ED = {
-			fileRef = C43FBE40054317E2008FC2ED;
+		C4BB158C0544A61B00A800CF = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = skstream.framework;
+			path = /Users/jmt/Library/Frameworks/skstream.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		C4BB158D0544A61B00A800CF = {
+			expectedFileType = wrapper.framework;
+			fallbackIsa = PBXFileReference;
+			isa = PBXFrameworkReference;
+			name = wfmath.framework;
+			path = /Users/jmt/Library/Frameworks/wfmath.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		C4BB158E0544A61B00A800CF = {
+			fileRef = C4BB158A0544A61B00A800CF;
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		C4BB158F0544A61B00A800CF = {
+			fileRef = C4BB158B0544A61B00A800CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4BB15900544A61B00A800CF = {
+			fileRef = C4BB158C0544A61B00A800CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4BB15910544A61B00A800CF = {
+			fileRef = C4BB158D0544A61B00A800CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4BB15920544A6C100A800CF = {
+			children = (
+				C43FBD16054315F3008FC2ED,
+				C43FBD1B054315F3008FC2ED,
+				C43FBD1F054315F3008FC2ED,
+				C43FBD23054315F3008FC2ED,
+				C43FBD27054315F3008FC2ED,
+				C43FBD2B054315F3008FC2ED,
+				C43FBD2F054315F3008FC2ED,
+				C43FBD34054315F3008FC2ED,
+				C43FBD3A054315F3008FC2ED,
+				C43FBD3F054315F4008FC2ED,
+				C43FBD43054315F4008FC2ED,
+				C43FBD4A054315F4008FC2ED,
+				C43FBD4E054315F4008FC2ED,
+				C43FBD53054315F4008FC2ED,
+				C43FBD57054315F4008FC2ED,
+				C43FBD5C054315F4008FC2ED,
+				C43FBD61054315F4008FC2ED,
+				C43FBD65054315F4008FC2ED,
+				C43FBD6A054315F4008FC2ED,
+				C43FBD73054315F4008FC2ED,
+				C43FBD77054315F4008FC2ED,
+				C43FBD7F054315F4008FC2ED,
+				C43FBD81054315F4008FC2ED,
+				C43FBD85054315F4008FC2ED,
+				C43FBD89054315F4008FC2ED,
+				C43FBD7B054315F4008FC2ED,
+			);
+			isa = PBXGroup;
+			name = Source;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 	};
 	rootObject = C43FBCE9054315B9008FC2ED;
