@@ -1,3 +1,10 @@
+2005-01-27  James Turner  <james@worldforge.org>
+
+	* configure.ac: bump version to 1.3.3 for release
+	
+	* Eris/MetaQuery.cpp: fix a possible un-initialised variable caught by
+	  valgrind.
+	
 2005-01-26  James Turner  <james@worldforge.org>
 
     * Eris/BaseConnection.cpp: delete the timeout late, since it's likely to

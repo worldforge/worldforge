@@ -27,6 +27,7 @@ MetaQuery::MetaQuery(Meta *ms, const std::string &host, unsigned int sindex) :
     BaseConnection("eris-metaquery", "mq_" + host + "-", ms),
     _host(host),
     _meta(ms),
+    _queryNo(0),
     m_serverIndex(sindex),
     m_complete(false)
 {
