@@ -3,7 +3,10 @@
 // Copyright (C) 2000 Michael Day
 
 // $Log$
-// Revision 1.3  2000-02-21 11:49:49  mike
+// Revision 1.4  2000-02-22 03:55:45  mike
+// Added output signal to Filter.
+//
+// Revision 1.3  2000/02/21 11:49:49  mike
 // Added change log
 //
 
@@ -11,6 +14,8 @@
 #define ATLAS_STREAM_FILTER_H
 
 #include <string>
+
+#include <sigc++/signal_system.h>
 
 namespace Atlas
 {
@@ -25,8 +30,10 @@ class Atlas::Stream::Filter
     public:
     
     virtual ~Filter() { };
+
+    SigC::Signal1<void, std::string> output;
     
-    virtual string Process(const std::string& data) = 0;
+    virtual void Process(const std::string& data) = 0;
 };
 
 #endif
