@@ -70,6 +70,9 @@ void AClient::doPoll()
 	tm.tv_sec = 0;
 	tm.tv_usec = 1000;
 
+	FD_ZERO(&fdread);
+	FD_ZERO(&fdsend);
+
 	FD_SET(csock->getSock(), &fdread);
 	FD_SET(csock->getSock(), &fdsend);
 
