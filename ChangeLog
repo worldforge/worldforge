@@ -1,3 +1,8 @@
+Tuesday, May 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Added elements() const accessors to the underlying
+	  arrays in Vector and Point.
+
 Sunday, May 4th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Toned down chuck's more explicit message for the

@@ -222,6 +222,8 @@ class Point
   /// 3D only: convert a vector to spherical coordinates
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
+  const CoordType* elements() const {return m_elem;}
+
  private:
   CoordType m_elem[dim];
   bool m_valid;

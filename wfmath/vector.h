@@ -336,6 +336,8 @@ class Vector {
   double _scaleEpsilon(const Vector& v, double epsilon = WFMATH_EPSILON) const
 	{return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
 
+  const CoordType* elements() const {return m_elem;}
+
  private:
   CoordType m_elem[dim];
   bool m_valid;
