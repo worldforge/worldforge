@@ -23,9 +23,16 @@ public:
 	Poll() {}
 	virtual ~Poll() {}
 
-	virtual void addStream(const basic_socket_stream*) = 0;
+	enum Check {
+		READ = 1,
+		WRITE = 2,
+		MASK = READ | WRITE
+	};
+
+	virtual void addStream(const basic_socket_stream*, Check = READ) = 0;
+	virtual void changeStream(const basic_socket_stream*, Check) = 0;
 	virtual void removeStream(const basic_socket_stream*) = 0;
-	    
+
 	static Poll& instance();
 	static void setInstance(Poll*);
 

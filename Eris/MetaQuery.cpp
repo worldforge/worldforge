@@ -27,7 +27,7 @@ MetaQuery::MetaQuery(Meta *ms, const std::string &host) :
     assert(ms);
     
     connect(host, 6767);
-    if (_status != NEGOTIATE) {
+    if (_status != CONNECTING) {
 	// failed! - the metaserver code (in queryServer) will pick this up and clean up
 	_complete = true;
     }

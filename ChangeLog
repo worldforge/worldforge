@@ -6,8 +6,11 @@ Monday, June 21, Ron Steinke
 
 	* Added an optional timeout argument to PollDefault::poll()
 
-Monday, April 29, Ron Steinke // The date's wrong here, but I don't
-				 remember the correct one
+Tuesday, June 18, James Turner
+
+	* Make dtor of Meta virtual, just to be safe
+
+Monday, April 29, Ron Steinke
 
 	* Added check for fd == INVALID_SOCKET in PollDefault
 

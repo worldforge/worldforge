@@ -1,7 +1,7 @@
 #ifndef ERIS_POLL_DEFAULT_H
 #define ERIS_POLL_DEFAULT_H 
 
-#include <set>
+#include <map>
 
 #include "Poll.h"
 
@@ -14,13 +14,16 @@ public:
 //	PollDefault(const SigC::Slot0<bool> &s) : _prePoll(s) {}
 	virtual ~PollDefault() {}
 
-	virtual void addStream(const basic_socket_stream*);
+	virtual void addStream(const basic_socket_stream*, Check);
+	virtual void changeStream(const basic_socket_stream*, Check);
 	virtual void removeStream(const basic_socket_stream*);
 
-	static void poll(unsigned long timeout = 0);
+	static void poll(unsigned long timeout);
+
+	typedef std::map<const basic_socket_stream*,Check> MapType;
 private:
-	std::set<const basic_socket_stream*> _streams;
-	typedef std::set<const basic_socket_stream*>::iterator _iter;
+	MapType _streams;
+	typedef MapType::iterator _iter;
 
 	void doPoll(unsigned long timeout);
 

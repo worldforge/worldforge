@@ -95,6 +95,9 @@ protected:
 	/// @emit specified whether the change of state should be signalled
 	void hardDisconnect(bool emit);
 
+    /// complete the connection state and start negotiation
+    void nonblockingConnect();
+
 	/// track negotation of the Atlas codecs / stream
 	void pollNegotiation();
 
@@ -112,7 +115,10 @@ protected:
 	/** the connection bridge (i.e something implementing ObjectArrived()) : this can be the derived
 	class itself, or any other object */
 	Atlas::Bridge* _bridge;	
-	Timeout* _timeout;		///< network level timeouts		
+	Timeout* _timeout;		///< network level timeouts	
+	
+    std::string _host;	///< the host name we're connected to
+    short _port;	///< the port we're connected to
 };
 		
 }	

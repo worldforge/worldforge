@@ -27,7 +27,9 @@ BaseConnection::BaseConnection(const std::string &cnm,
 	_id(id),
 	_clientName(cnm),
 	_bridge(br),
-	_timeout(NULL)
+	_timeout(NULL),
+	_host(""),
+	_port(0)
 {
 	assert(_bridge);
 	_stream = new tcp_socket_stream();
@@ -46,29 +48,19 @@ void BaseConnection::connect(const std::string &host, short port)
 {
     if (_stream->is_open())
 	hardDisconnect(true);
-	
+
+    _host = host;
+    _port = port;
+    
     // start timeout
     _timeout = new Timeout("connect_" + _id, 5000);
     bindTimeout(*_timeout, CONNECTING);
 	
     setStatus(CONNECTING);
 
-    _stream->open(host, port);    
-    if(!_stream->is_open()) {
-	handleFailure("Failed to connect to " + host);
-	hardDisconnect(false);
-	return;
-    }
+    _stream->open(host, port, true);
 
-    Poll::instance().addStream(_stream);
-
-    // negotiation timeout
-    delete _timeout;
-    _timeout = new Timeout("negotiate_" + _id, 5000);
-    bindTimeout(*_timeout, NEGOTIATE);
-    
-    _sc = new Atlas::Net::StreamConnect(_clientName, *_stream, _bridge);
-    setStatus(NEGOTIATE);
+    Poll::instance().addStream(_stream, Poll::WRITE);
 }
 
 void BaseConnection::hardDisconnect(bool emit)
@@ -93,9 +85,10 @@ void BaseConnection::hardDisconnect(bool emit)
     delete _timeout;
     _timeout = NULL;
     
+    Poll::instance().removeStream(_stream);
+    
     if (emit) {
 	    Disconnected.emit();
-	    Poll::instance().removeStream(_stream);
 	    setStatus(DISCONNECTED);
     } else
 	    _status = DISCONNECTED;
@@ -106,11 +99,15 @@ void BaseConnection::recv()
 	int err = 0;
 	assert(_status != DISCONNECTED);
 	
-	if (_stream->peek() == -1) {
+	if (_stream->peek() == -1 && _status != CONNECTING) {
 		handleFailure("Connection stream closed unexpectedly");
 		hardDisconnect(false);
 	} else {
 		switch (_status) {
+		case CONNECTING:
+		    nonblockingConnect();
+		    break;
+
 		case NEGOTIATE:
 			pollNegotiation();
 			break;
@@ -123,12 +120,35 @@ void BaseConnection::recv()
 		}	
 	}
 	
-	// another paranoid checl
+	// another paranoid check
 	if ((err = _stream->getLastError()) != 0) {
 		handleFailure("Got stream failure");
 		hardDisconnect(false);
 	}
 }		
+
+void BaseConnection::nonblockingConnect()
+{
+    if(!_stream->is_ready())
+	return;
+
+    if(!_stream->is_open()) {
+	handleFailure("Failed to connect to " + _host);
+	hardDisconnect(false);
+	return;
+    }
+
+    Poll::instance().changeStream(_stream, Poll::READ);
+
+    // negotiation timeout
+    delete _timeout;
+    _timeout = new Timeout("negotiate_" + _id, 5000);
+    bindTimeout(*_timeout, NEGOTIATE);
+
+    _sc = new Atlas::Net::StreamConnect(_clientName,
+	    *_stream, _bridge);
+    setStatus(NEGOTIATE);
+}
 
 void BaseConnection::pollNegotiation()
 {

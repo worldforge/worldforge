@@ -31,13 +31,13 @@ namespace Eris {
 class PollDataDefault : public PollData
 {
 public:
-	PollDataDefault(const std::set<const basic_socket_stream*>&,
+	PollDataDefault(const PollDefault::MapType&,
 		bool&, unsigned long);
 
 	virtual bool isReady(const basic_socket_stream*);
 private:
-	typedef std::set<const basic_socket_stream*>::iterator _iter;
-	fd_set pending;
+	typedef PollDefault::MapType::const_iterator _iter;
+	fd_set reading, writing;
 	SOCKET_TYPE maxfd;
 };
 
@@ -45,10 +45,11 @@ private:
 
 using namespace Eris;
 
-PollDataDefault::PollDataDefault(const std::set<const basic_socket_stream*>& str,
-				 bool &got_data, unsigned long timeout) : maxfd(0)
+PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
+    bool &got_data, unsigned long usec_timeout) : maxfd(0)
 {
-	FD_ZERO(&pending);
+	FD_ZERO(&reading);
+	FD_ZERO(&writing);
 
 #ifndef _MSC_VER
 	for(_iter I = str.begin(); I != str.end(); ++I) {
@@ -57,21 +58,24 @@ PollDataDefault::PollDataDefault(const std::set<const basic_socket_stream*>& str
 	std::set<const basic_socket_stream*> *str2 = const_cast<std::set<const basic_socket_stream*>* >(&str);
 	for(_iter I = str2->begin(); I != str2->end(); ++I) {
 #endif
-		SOCKET_TYPE fd = (*I)->getSocket();
+		SOCKET_TYPE fd = I->first->getSocket();
 		if(fd == INVALID_SOCKET)
-                  continue;
-		FD_SET(fd, &pending);
+                	continue;
+		if(I->second & Poll::READ)
+			FD_SET(fd, &reading);
+		if(I->second & Poll::WRITE)
+			FD_SET(fd, &writing);
 		if(fd > maxfd)
 			maxfd = fd;
 	}
 
-	if(maxfd == 0) {
+	if(maxfd == -1) {
 		got_data = false;
 		return;
 	}
 
-	struct timeval use_timeout = {timeout / 1000, timeout % 1000};
-	int retval = select(maxfd+1, &pending, NULL, NULL, &use_timeout);
+	struct timeval timeout = {0, usec_timeout};
+	int retval = select(maxfd+1, &reading, &writing, NULL, &timeout);
 	if (retval < 0)
 		// FIXME - is an error from select fatal or not? At present I think yes,
 		// but I'm sort of open to persuasion on this matter.
@@ -84,7 +88,8 @@ bool PollDataDefault::isReady(const basic_socket_stream* str)
 {
 	SOCKET_TYPE fd = str->getSocket();
 
-	return (fd != INVALID_SOCKET) && (fd <= maxfd) && FD_ISSET(fd, &pending);
+	return (fd != INVALID_SOCKET) && (fd <= maxfd)
+		&& (FD_ISSET(fd, &reading) || FD_ISSET(fd, &writing));
 }
 
 void PollDefault::doPoll(unsigned long timeout)
@@ -108,10 +113,24 @@ void PollDefault::poll(unsigned long timeout = 0)
   Timeout::pollAll();
 }
 
-void PollDefault::addStream(const basic_socket_stream* str)
+void PollDefault::addStream(const basic_socket_stream* str, Check c)
 {
-	if(!_streams.insert(str).second)
-		throw Eris::InvalidOperation("Duplicate streams in PollDefault"); 
+    assert(c && Poll::MASK);
+
+    if(!_streams.insert(std::make_pair(str, c)).second)
+	throw Eris::InvalidOperation("Duplicate streams in PollDefault"); 
+}
+
+void PollDefault::changeStream(const basic_socket_stream* str, Check c)
+{
+    assert(c && Poll::MASK);
+
+    _iter i = _streams.find(str);
+
+    if(i == _streams.end())
+	throw Eris::InvalidOperation("Can't find stream in PollDefault");
+
+    i->second = c;
 }
 
 void PollDefault::removeStream(const basic_socket_stream* str)
