@@ -22,8 +22,6 @@ using std::string;
 #include "../Debug/Debug.h"
 
 #include "Client.h"
-#include "Codec.h"
-#include "Socket.h"
 
 namespace Atlas
 {

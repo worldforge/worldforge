@@ -1,28 +1,14 @@
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2000 Michael Day
 
-/*
-        begin           : 1999.11.29
-        copyright       : (C) 1999 by John Barrett (ZW)
-        email           : jbarrett@box100.com
+#ifndef ATLAS_NET_CLIENT_H
+#define ATLAS_NET_CLIENT_H
 
-changes:
+#include "../Stream/Codec.h"
 
-23 Jan 2000 - fex
-    Constructor changes, removed some source dependencies
-    pseudo booleans now use bool
-    copy constructor disabled
-*/
+namespace Atlas { namespace Net {
 
-#ifndef __AtlasClient_h_
-#define __AtlasClient_h_
-
-
-#include "Socket.h"
-#include "Codec.h"
-#include "../Stream/Filter.h"
-#include "../Object/Object.h"
-
-namespace Atlas
-{
 /** Base Class for Client connection objects.
 	<p>Client objects are used to manage streaming data
 	for connections at both the client and server.
@@ -43,7 +29,7 @@ namespace Atlas
 class Client
 {
 public:
-    Client( Socket* = 0, Codec* = 0, Filter* = 0 );
+    Client( Socket* = 0, Stream::Codec* = 0, Stream::Filter* = 0 );
     virtual ~Client();
 
     ///poll client stream. Will read and write from socket stream if data available
@@ -53,9 +39,9 @@ public:
     ///get message  (socket->filter->codec->msg)
     void    readMsg( Object& msg );
     ///change Codec used by client
-    void    setCodec(Codec* acodec) { codec = acodec; }
+    void    setCodec(Stream::Codec* acodec) { codec = acodec; }
     //change Filter used by client
-    void    setFilter(Filter* aFilter ) { filter = aFilter; }
+    void    setFilter(Stream::Filter* aFilter ) { filter = aFilter; }
     ///to be overidden in subclasses. Called when doPoll() recieves a new object
     virtual void    gotMsg(const Object& msg);
     ///to be overidden in subclesses. Called on a socket error/disconnect
@@ -77,5 +63,6 @@ private:
     Client( const Client& );
 };
 
-} // namespace Atlas::Net
+} } // Atlas::Net
+
 #endif
