@@ -47,40 +47,62 @@ void Segment::populateNormals()
     
     // Fill in the damn normals
     float h1,h2,h3,h4;
-    for (unsigned int j = 0; j < m_res; ++j) {
-        for (unsigned int i = 0; i < m_res; ++i) {
-           h1 = get(i, j);
+    for (int j = 1; j < m_res; ++j) {
+        for (int i = 1; i < m_res; ++i) {
+           h1 = get(i - 1, j);
            h2 = get(i, j + 1);
-           h3 = get(i + 1, j + 1);
-           h4 = get(i + 1, j);
-            
+           h3 = get(i + 1, j);
+           h4 = get(i, j - 1);
+	   
            // Caclulate the normal vector.
-           np[j * (m_res+1) + i]     = (h2-h3 + h1-h4) / 2.0;
-           np[j * (m_res+1) + i + 1] = (h1-h2 + h4-h3) / 2.0;
-           np[j * (m_res+1) + i + 2] = 1.0;
+           np[j * (m_res+1) * 3 + i * 3]     = h1 - h3;
+           np[j * (m_res+1) * 3 + i * 3 + 1] = h2 - h4;
+           np[j * (m_res+1) * 3 + i * 3 + 2] = 1.0;
         }
-        //right edge boundary
-        np[j * (m_res+1) + m_res]     = (h1-h4);
-        np[j * (m_res+1) + m_res + 1] = (h4-h3);
-        np[j * (m_res+1) + m_res + 2] = 1.0;
-    }
-    //bottom edge boundary
-    for (int i = 0; i < m_res; i++) {
-        h1 = get(i, m_res);
-        h2 = get(i, m_res + 1);
-        h3 = get(i + 1, m_res + 1);
-        h4 = get(i + 1, m_res);
- 
-        np[m_res * (m_res+1) + i]     = (h1-h4);
-        np[m_res * (m_res+1) + i + 1] = (h4-h3);
-        np[m_res * (m_res+1) + i + 2] = 1.0;
     }
 
-    //bottom right corner
-    np[m_res * (m_res+1) + (m_res+1)]     = (h1-h4);
-    np[m_res * (m_res+1) + (m_res+1) + 1] = (h4-h3);
-    np[m_res * (m_res+1) + (m_res+1) + 2] = 1.0;
+    //top and bottom boundary
+    for (int i=0; i <= m_res; ++i) {
+        h1 = get(i, 0);
+        h2 = get(i, 1);
+        h3 = get(i + 1, 1);
+        h4 = get(i + 1, 0);
+	
+        np[i * 3]     = (h2-h3 + h1-h4) / 2.0;
+        np[i * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[i * 3 + 2] = 1.0;
  
+        h1 = get(i, m_res - 1);
+        h2 = get(i, m_res);
+        h3 = get(i + 1, m_res);
+        h4 = get(i + 1, m_res -1);
+	
+        np[m_res * (m_res+1) * 3 + i * 3]     = (h2-h3 + h1-h4) / 2.0;
+        np[m_res * (m_res+1) * 3 + i * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[m_res * (m_res+1) * 3 + i * 3 + 2] = 1.0;
+    }
+    
+    //left and right boundary
+    for (int j=1; j < m_res; ++j) {
+        h1 = get(0, j);
+        h2 = get(0, j - 1);
+        h3 = get(1, j - 1);
+        h4 = get(1, j);
+	
+        np[j * (m_res + 1) * 3]     = (h2-h3 + h1-h4) / 2.0;
+        np[j * (m_res + 1) * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[j * (m_res + 1) * 3 + 2] = 1.0;
+ 
+        h1 = get(m_res - 1, j);
+        h2 = get(m_res - 1, j - 1);
+        h3 = get(m_res, j - 1);
+        h4 = get(m_res, j);
+
+        np[j * (m_res+1) * 3 + m_res * 3]     = (h2-h3 + h1-h4) / 2.0;
+        np[j * (m_res+1) * 3 + m_res * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[j * (m_res+1) * 3 + m_res * 3 + 2] = 1.0;
+    }
+
 }
 
 // rand num between -0.5...0.5

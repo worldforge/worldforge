@@ -1,5 +1,10 @@
 2003-06-09 Damien McGinnes
 
+	* Mercator/Segment.cpp : modified the normals, this time hopefully so
+	  they will work
+
+2003-06-09 Damien McGinnes
+
 	* Mercator/Segment.cpp : modified the normal array to be same size as
 	  the heights array. bottom and right boundaries are a bit of a hack
 	
