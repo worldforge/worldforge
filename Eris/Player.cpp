@@ -36,13 +36,15 @@
 typedef Atlas::Message::Object::ListType AtlasListType;
 typedef Atlas::Message::Object::MapType AtlasMapType;
 
+using namespace Atlas::Objects;
+
 namespace Eris {
 
 Player::Player(Connection *con, UserInterface* iface) :
 	_con(con),
 	_account(""),
-	_iface(iface),
 	_username(""),
+	_uiHandler(NULL),
 	_lobby(con->getLobby())
 {
     _currentAction = "";
@@ -55,10 +57,14 @@ Player::Player(Connection *con, UserInterface* iface) :
 	
 	Dispatcher *d = _con->getDispatcherByPath("op:error");
 	assert(d);
-	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Error>("player",
+	d->addSubdispatch(new SignalDispatcher<Operation::Error>("player",
 		SigC::slot(*this, &Player::recvOpError)
 	));
 
+	d = _con->getDispatcherByPath("op");
+	d->addSubdispatch(new SignalDispatcher<Operation::Logout>("logout",
+		SigC::slot(*this, &Player::recvRemoteLogout)), "logout");
+	
 	_lobby->LoggedIn.connect(SigC::slot(*this, &Player::loginComplete));
 }	
 
@@ -169,12 +175,12 @@ CharacterList Player::getCharacters()
 void Player::refreshCharacterInfo()
 {
     if (!_con->isConnected())
-	throw InvalidOperation("Not connected to server");
+		throw InvalidOperation("Not connected to server");
 	
     // we need to be logged in too
     if (_account.empty()) {
-	Eris::log(LOG_ERROR, "refreshCharacterInfo: Not logged into an account yet");
-	return;
+		Eris::log(LOG_ERROR, "refreshCharacterInfo: Not logged into an account yet");
+		return;
     }
     
     _characters.clear();
@@ -185,24 +191,24 @@ void Player::refreshCharacterInfo()
     }
 	
     if (_charIds.empty()) {
-	// handle the case where there are no characters; we should still emit the signal
-	GotAllCharacters.emit();
-	return;
+		// handle the case where there are no characters; we should still emit the signal
+		GotAllCharacters.emit();
+		return;
     }
     
     for (StringList::iterator I=_charIds.begin(); I!=_charIds.end(); ++I) {
-	// send the look
-	Atlas::Objects::Operation::Look lk =
-		Atlas::Objects::Operation::Look::Instantiate();
-	
-	AtlasMapType args;
-	args["id"] = *I;
-	lk.SetArgs(AtlasListType(1, args));
-	lk.SetFrom(_lobby->getAccountID());
-	lk.SetTo(*I);
-	lk.SetSerialno(getNewSerialno());
-	
-	_con->send(lk);
+		// send the look
+		Atlas::Objects::Operation::Look lk =
+			Atlas::Objects::Operation::Look::Instantiate();
+		
+		AtlasMapType args;
+		args["id"] = *I;
+		lk.SetArgs(AtlasListType(1, args));
+		lk.SetFrom(_lobby->getAccountID());
+		lk.SetTo(*I);
+		lk.SetSerialno(getNewSerialno());
+		
+		_con->send(lk);
     }
 }
 
@@ -241,7 +247,7 @@ void Player::createCharacter()
 	if (!_con->isConnected())
 		throw InvalidOperation("Not connected to server");
 
-	if (!_iface)
+	if (!_uiHandler)
 		throw InvalidOperation("No UserInterface handler defined");
 
 	// FIXME look up the dialog, create the instance,
@@ -303,6 +309,17 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
 	_currentSerial = l.GetSerialno();
 }
 
+void Player::internalLogout(bool clean)
+{
+    _currentAction = "";
+    if (_logoutTimeout)
+		delete _logoutTimeout;
+	
+	_con->disconnect();
+	
+	LogoutComplete.emit(clean);
+}
+
 const std::string& Player::getAccountID() const
 {
     return _account;
@@ -322,7 +339,7 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     // extract character IDs
     Atlas::Message::Object::ListType cs = p.GetCharacters();
     for (Atlas::Message::Object::ListType::iterator C=cs.begin(); C!=cs.end(); ++C)
-	_charIds.push_back(C->AsString());
+		_charIds.push_back(C->AsString());
     
     // setup dispatcher for sight of character ops
     Dispatcher *d = _con->getDispatcherByPath("op:oog:sight:entity");
@@ -332,8 +349,8 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     LoginSuccess.emit();
     
     if (d->getSubdispatch("character"))
-	// second time around, don't try again
-	return;
+		// second time around, don't try again
+		return;
     
     // there will be several anonymous children, I guess
     d = d->addSubdispatch(ClassDispatcher::newAnonymous(_con));
@@ -396,12 +413,13 @@ void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
 void Player::recvLogoutInfo(const Atlas::Objects::Operation::Logout &lo)
 {
     Eris::log(LOG_DEBUG, "got INFO(logout)");
-    
-    // cancel that gear
-    _currentAction = "";
-    delete _logoutTimeout;
-    
-    LogoutComplete.emit(true);
+    internalLogout(true);
+}
+
+void Player::recvRemoteLogout(const Operation::Logout &op)
+{	
+	Eris::log(LOG_DEBUG, "got server-initated LOGOUT");
+	internalLogout(false);
 }
 
 /* this will only ever get encountered after the connection is initally up;

@@ -110,7 +110,7 @@ public:
 	StringSet getInherits() const
 	{ return _parents; }
 	
-	TypeInfo* Entity::getType() const;
+	TypeInfo* getType() const;
 
 	World* getWorld() const
 	{ return _world; }

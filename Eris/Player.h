@@ -141,6 +141,7 @@ protected:
 	void loginComplete(const Atlas::Objects::Entity::Player &p);
 
 	void internalLogin(const std::string &unm, const std::string &pwd);
+	void internalLogout(bool clean);
 
 	/// Callback for network re-establishment
 	void netConnected();
@@ -151,6 +152,7 @@ protected:
 
 	void recvLogoutInfo(const Atlas::Objects::Operation::Logout &lo);
 	void handleLogoutTimeout();
+	void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
 
 	void createCharacterHandler(long serialno);
 
@@ -164,6 +166,8 @@ protected:
 
 	std::string _username,	///< The player's username ( != account object's ID)
 		_pass;		///< The password; FIXME - clear text.
+
+	UserInterface* _uiHandler; ///< interface operation handler
 
 	/// current action tracking (for error processing)
 	std::string _currentAction;

@@ -35,7 +35,7 @@ ClassDispatcher::~ClassDispatcher()
 
 bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	TypeInfoPtr mty = _conn->getTypeInfoEngine()->getSafe(dq.front());
+	TypeInfoPtr mty = _conn->getTypeService()->getTypeForAtlas(dq.front());
 	if (!mty->isBound()) {
 	    Eris::log(LOG_VERBOSE, "waiting for bind of %s", mty->getName().c_str());
 	    new WaitForSignal(mty->getBoundSignal(), dq.back(), _conn);
@@ -56,7 +56,7 @@ bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
 Dispatcher* ClassDispatcher::addSubdispatch(Dispatcher *d, const std::string clnm)
 {
 	assert(d);
-	TypeInfo* ty = _conn->getTypeInfoEngine()->findSafe(clnm);
+	TypeInfo* ty = _conn->getTypeService()->getTypeByName(clnm);
 	_Class cl = {d,ty};
 	
 	d->addRef();

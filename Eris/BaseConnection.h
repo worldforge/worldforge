@@ -64,7 +64,7 @@ public:
 	{ return (_status == CONNECTED) || (_status == DISCONNECTING);}
 	
 	/** get the underlyinmg file descriptor (socket). This is so GUI / widget libraries which steal
-	the main-loop, but can monitos file-decriptors work. The obvious examples being Gtk+/-- and
+	the main-loop, but can monitor file-decriptors work. The obvious examples being Gtk+/-- and
 	Qt */
 	int getFileDescriptor();
 	

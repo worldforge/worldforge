@@ -57,7 +57,7 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 	BaseConnection(cnm, "game_", this),
 	_statusLock(0),
 	_debug(dbg),
-	_ti_engine(new TypeInfoEngine(this)),
+	_typeService(new TypeService(this)),
 	_lobby(new Lobby(this))
 {
 	// setup the singleton instance variable
@@ -91,10 +91,14 @@ Connection::~Connection()
 {
     // clear the singleton instance pointer back to NULL
     // (becuase dereferencing deleted memory costs lives!)
-    if(_theConnection == this)
-	_theConnection = NULL;
+    if( _theConnection == this)
+		_theConnection = NULL;
+	
     delete _lobby;
-    delete _ti_engine;
+	_lobby = NULL;
+	
+    delete _typeService;
+	
     _rootDispatch->decRef();
     if (_debug) {
       delete dd; dd = NULL;
@@ -375,7 +379,7 @@ void Connection::bindTimeout(Eris::Timeout &t, Status sc)
 void Connection::onConnect()
 {
 	BaseConnection::onConnect();
-	_ti_engine->init();
+	_typeService->init();
 }
 
 void Connection::postForDispatch(const Atlas::Message::Object &msg)

@@ -106,17 +106,6 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     ])
 AM_CONDITIONAL(HAVE_GLIB, test "x$have_glib" = "xyes")
 
-AM_PATH_CPPUNIT(1.6.1,
-    [
-	enable_cppunit=yes
-	AC_SUBST(CPPUNIT_CFLAGS)
-	AC_SUBST(CPPUNIT_LIBS)
-    ], [
-	AC_MSG_WARN(Couldn't Find CppUnit - make check will not work)
-	enable_cppunit=no
-    ]
-)
-
 AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)
 AC_SUBST(CPPFLAGS)

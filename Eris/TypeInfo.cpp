@@ -38,7 +38,7 @@ namespace Eris {
  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-TypeInfo::TypeInfo(const std::string &id, TypeInfoEngine *engine) :
+TypeInfo::TypeInfo(const std::string &id, TypeService *engine) :
 	_bound(false),
 	_name(id),
 	_typeid(INVALID_TYPEID),
@@ -50,7 +50,7 @@ TypeInfo::TypeInfo(const std::string &id, TypeInfoEngine *engine) :
 	}
 }
 
-TypeInfo::TypeInfo(const Atlas::Objects::Root &atype, TypeInfoEngine *engine) :
+TypeInfo::TypeInfo(const Atlas::Objects::Root &atype, TypeService *engine) :
 	_bound(false),
 	_name(atype.GetId()),
 	_typeid(INVALID_TYPEID),
@@ -98,8 +98,8 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 	}
 	
 	Atlas::Message::Object::ListType parents = atype.GetParents();
-	for (unsigned int I=0; I<parents.size(); I++) {
-		addParent(_engine->findSafe(parents[I].AsString()));
+	for (unsigned int I=0; I<parents.size(); ++I) {
+		addParent(_engine->getTypeByName(parents[I].AsString()));
 	}
 	
 	// expand the children ?  why not ..
@@ -108,7 +108,7 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 		Atlas::Message::Object::ListType children = atype.GetAttr("children").AsList();
 		for (Atlas::Message::Object::ListType::iterator I=children.begin(); I!=children.end(); ++I) {
 			assert(I->IsString());
-			addChild(_engine->findSafe(I->AsString()));
+			addChild(_engine->getTypeByName(I->AsString()));
 		}
 	}
 
@@ -143,7 +143,7 @@ void TypeInfo::addParent(TypeInfoPtr tp)
 	}
 	
 	if (_ancestors.count(tp)) {
-		Eris::log(LOG_WARNING, "Adding %s as parent of %s, but already markes as ancestor",
+		Eris::log(LOG_WARNING, "Adding %s as parent of %s, but already marked as ancestor",
 			tp->_name.c_str(), _name.c_str());
 		throw InvalidOperation("Bad inheritance graph : new parent is ancestor");
 	}
@@ -202,19 +202,17 @@ void TypeInfo::validateBind()
 	// emit the global signal too
 	_engine->BoundType.emit(this);
 		
-	// do dependancy checking
-	TypeInfoEngine::TypeDepMap::iterator Dset = _engine->globalDependancyMap.find(_name);
-	if (Dset == _engine->globalDependancyMap.end())
-		return; // nothing to do
+	TypeInfoSet dependants(_engine->extractDependantsForType(_name));
+	if (dependants.empty())
+		return;
 	
-	TypeInfoSet::iterator D = Dset->second.begin();
+	/* okay, we have a bunch of types that we wdaiting on this on to be bound,
+	let's try and validate them too. Once we're done, we can remove the dependancy list
+	for this type. */
 	
-	while (D != Dset->second.end()) {
+	for (TypeInfoSet::iterator D=dependants.begin(); D!=dependants.end(); ++D) {
 		(*D)->validateBind();
-		++D;
 	}
-	
-	_engine->globalDependancyMap.erase(Dset);
 }
 
 Signal& TypeInfo::getBoundSignal()
@@ -228,24 +226,16 @@ Signal& TypeInfo::getBoundSignal()
 	return Bound;
 }
 
+/** Compute the dependancies of this type. Basically we add ourselves to the dependant set
+ of every currenly unbound parent. We will have validateBind() called that many times, and
+ on the final call (whichever parent is bound last), we ouirselves will become bound. */
 void TypeInfo::setupDepends()
 {
 	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P) {
-		if (!(*P)->isBound()) {
-			TypeInfoEngine::TypeDepMap::iterator Ddep = _engine->globalDependancyMap.find((*P)->getName());
-			if (Ddep == _engine->globalDependancyMap.end()) {
-				Ddep = _engine->globalDependancyMap.insert(Ddep, 
-					TypeInfoEngine::TypeDepMap::value_type((*P)->getName(), TypeInfoSet())
-				);
-			}
-			
-			if (Ddep->second.count(this)) continue;
-			
-			Eris::log(LOG_DEBUG, "adding dependancy on %s from %s", Ddep->first.c_str(),
-				_name.c_str());
-			// becuase we're doing a set<> insert, there is no problem with duplicates!
-			Ddep->second.insert(this);
-		}
+		if ((*P)->isBound())
+			continue;
+		
+		_engine->markTypeDependantOnType(this, *P);
 	}
 }
 
@@ -259,7 +249,7 @@ StringSet TypeInfo::getParentsAsSet()
     StringSet ret;
     
     for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P) {
-	ret.insert((*P)->getName());
+		ret.insert((*P)->getName());
     }
     
     return ret;
@@ -267,11 +257,13 @@ StringSet TypeInfo::getParentsAsSet()
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-TypeInfoEngine::TypeInfoEngine(Connection *conn) : _conn(conn), _inited(false)
+TypeService::TypeService(Connection *conn) : 
+	_conn(conn), 
+	_inited(false)
 {
 }
 
-void TypeInfoEngine::init()
+void TypeService::init()
 {
 	if(_inited)
 		return;  // this can happend during re-connections, for example.
@@ -291,10 +283,12 @@ void TypeInfoEngine::init()
 	
 	Dispatcher *d = info->addSubdispatch(new TypeDispatcher("meta", "meta"));
 	Dispatcher *ti = d->addSubdispatch(
-		new SignalDispatcher<Atlas::Objects::Root>("typeinfo", SigC::slot(*this, &TypeInfoEngine::recvInfoOp))
+		new SignalDispatcher<Atlas::Objects::Root>("typeinfo", SigC::slot(*this, &TypeService::recvInfoOp))
 	);
 	
-	// note, we just turned our tree into a graph. time to refcount dispatchers!
+	// note that here we're turning our tree into a graph, which is why Dispatchers have
+	// to be reference counted. We add the same typeInfo signal dispatcher as a child of
+	// all four kinds of type
 	d = info->addSubdispatch(new TypeDispatcher("op-def", "op_definition"));
 	d->addSubdispatch(ti);
 	
@@ -313,7 +307,7 @@ void TypeInfoEngine::init()
 	err->addSubdispatch(
 		new SignalDispatcher2<Atlas::Objects::Operation::Error,
 			Atlas::Objects::Operation::Get>("typeerror",
-			SigC::slot(*this, &TypeInfoEngine::recvTypeError)
+			SigC::slot(*this, &TypeService::recvTypeError)
 		)
 	);
 	
@@ -322,16 +316,17 @@ void TypeInfoEngine::init()
 	_inited = true;
 	
 	// build the root node, install into the global map and kick off the GET
-	findSafe("root");
+	getTypeByName("root");
 	
 	// every type already in the map delayed it's sendInfoRequest becuase we weren't inited;
-	// go through and fix them now.
+	// go through and fix them now. This allows static construction (or early construction) of
+	// things like ClassDispatchers in a moderately controlled fashion.
 	for (TypeInfoMap::iterator T=globalTypeMap.begin(); T!=globalTypeMap.end(); ++T) {
 		sendInfoRequest(T->second->getName());
 	}
 }
 
-void TypeInfoEngine::readAtlasSpec(const std::string &specfile)
+void TypeService::readAtlasSpec(const std::string &specfile)
 {
     std::fstream specStream(specfile.c_str(), std::ios::in);
     if(!specStream.is_open()) {
@@ -350,16 +345,16 @@ void TypeInfoEngine::readAtlasSpec(const std::string &specfile)
 	
     // deal with each item in the spec file
     while (specDecoder.QueueSize() > 0 ) {
-	Atlas::Message::Object msg(specDecoder.Pop());
-	if (!msg.IsMap()) continue;
-				
-	Atlas::Objects::Root def = 
-	    Atlas::atlas_cast<Atlas::Objects::Root>(msg);
-	registerLocalType(def);
+		Atlas::Message::Object msg(specDecoder.Pop());
+		if (!msg.IsMap()) continue;
+					
+		Atlas::Objects::Root def = 
+			Atlas::atlas_cast<Atlas::Objects::Root>(msg);
+		registerLocalType(def);
     }
 }
 
-void TypeInfoEngine::registerLocalType(const Atlas::Objects::Root &def)
+void TypeService::registerLocalType(const Atlas::Objects::Root &def)
 {
     TypeInfoMap::iterator T = globalTypeMap.find(def.GetId());
     if (T != globalTypeMap.end())
@@ -368,71 +363,81 @@ void TypeInfoEngine::registerLocalType(const Atlas::Objects::Root &def)
 	globalTypeMap[def.GetId()] = new TypeInfo(def, this);
 }
 
-TypeInfoPtr TypeInfoEngine::find(const std::string &id)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TypeInfoPtr TypeService::findTypeByName(const std::string &id)
 {
+	TypeInfoMap::iterator T = globalTypeMap.find(id);
+	if (T != globalTypeMap.end())
+		return T->second;
+	
+	return NULL;
+	/*
     TypeInfoPtr type = findSafe(id);
     if (!type->isBound())
 	return NULL;	// FIXME - use operation blocked, etc here?
     
     return type;
+	*/
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /** This version of getTypeInfo does not throw an exception (but still issues a GET operation
 if necessary. Thus it can be used on group of type IDs without immediately halting at the
 first unknown node. */
 
-TypeInfoPtr TypeInfoEngine::findSafe(const std::string &id)
+TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 {
-	TypeInfoMap::iterator ti = globalTypeMap.find(id);
-	if (ti == globalTypeMap.end()) {
-		// not found, do some work
-		Eris::log(LOG_VERBOSE, "Requesting type data for %s", id.c_str());
-		
-		// FIXME  - verify the id is not in the authorative invalid ID list
-		TypeInfoPtr node = new TypeInfo(id, this);
-		globalTypeMap[id] = node;
-		
-		sendInfoRequest(id);
-		
-		return node;
-	} else
-		return ti->second;
+	TypeInfoMap::iterator T = globalTypeMap.find(id);
+	if (T != globalTypeMap.end())
+		return T->second;
+	
+	// not found, do some work
+	Eris::log(LOG_VERBOSE, "Requesting type data for %s", id.c_str());
+	
+	// FIXME  - verify the id is not in the authorative invalid ID list
+	TypeInfoPtr node = new TypeInfo(id, this);
+	globalTypeMap[id] = node;
+	
+	sendInfoRequest(id);
+	return node;
 }
 
-TypeInfoPtr TypeInfoEngine::getSafe(const Atlas::Message::Object &msg)
+TypeInfoPtr TypeService::getTypeForAtlas(const Atlas::Message::Object &msg)
 {
 	// check for an integer type code first
 
 	// fall back to checking parents
 	const Message::Object::ListType &prs = getMember(msg, "parents").AsList();
-	if (prs.empty()) { // should be very fast so no big hit
+	
+	/* special case code to handle the root object which has no parents. */
+	if (prs.empty()) {
 		assert(getMember(msg, "id").AsString() == "root");
-		return findSafe("root");
+		return getTypeByName("root");
 	}
 	
 	assert(prs.size() == 1);
-	return findSafe(prs[0].AsString());
+	return getTypeByName(prs[0].AsString());
 }
 
-TypeInfoPtr TypeInfoEngine::getSafe(const Atlas::Objects::Root &obj)
+TypeInfoPtr TypeService::getTypeForAtlas(const Atlas::Objects::Root &obj)
 {
 	// check for an integer type code first
 	
 	// fall back to checking parents
 	const Message::Object::ListType &prs = obj.GetParents();
-	if (prs.empty()) { // should be very fast so no big hit
+	
+	/* special case code to handle the root object which has no parents. */
+	if (prs.empty()) {
 		assert(obj.GetId() == "root");
-		return findSafe("root");
+		return getTypeByName("root");
 	}
 	
 	assert(prs.size() == 1);
-	return findSafe(prs[0].AsString());
+	return getTypeByName(prs[0].AsString());
 }
 
-void TypeInfoEngine::recvInfoOp(const Atlas::Objects::Root &atype)
+void TypeService::recvInfoOp(const Atlas::Objects::Root &atype)
 {
 try {	
 	std::string id = atype.GetId();
@@ -455,7 +460,7 @@ try {
 
 }
 
-void TypeInfoEngine::sendInfoRequest(const std::string &id)
+void TypeService::sendInfoRequest(const std::string &id)
 {
 	// stop premature requests (before the connection is available); when TypeInfo::init
 	// is called, the requests will be re-issued manually
@@ -473,7 +478,7 @@ void TypeInfoEngine::sendInfoRequest(const std::string &id)
 	_conn->send(get);
 }
 
-void TypeInfoEngine::recvTypeError(const Atlas::Objects::Operation::Error &/*error*/,
+void TypeService::recvTypeError(const Atlas::Objects::Operation::Error &/*error*/,
 	const Atlas::Objects::Operation::Get &get)
 {
 	const Atlas::Message::Object::ListType &largs = get.GetArgs();
@@ -505,12 +510,12 @@ void TypeInfoEngine::recvTypeError(const Atlas::Objects::Operation::Error &/*err
 	T->second->_bound = true;
 }
 
-void TypeInfoEngine::listUnbound()
+void TypeService::listUnbound()
 {
-	Eris::log(LOG_DEBUG, "%i pending types", globalDependancyMap.size());
+	Eris::log(LOG_DEBUG, "%i pending types", _dependancyMap.size());
 	
-	for (TypeDepMap::iterator T = globalDependancyMap.begin(); 
-			T !=globalDependancyMap.end(); ++T) {
+	for (TypeDepMap::iterator T = _dependancyMap.begin(); 
+			T !=_dependancyMap.end(); ++T) {
 		// list all the depds
 		Eris::log(LOG_DEBUG, "bind of %s is blocking:", T->first.c_str());
 		for (TypeInfoSet::iterator D=T->second.begin(); D!=T->second.end();++D) {
@@ -525,4 +530,4 @@ void TypeInfoEngine::listUnbound()
 	
 }
 
-} // of namespace
+} // of namespace Eris

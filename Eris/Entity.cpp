@@ -160,7 +160,8 @@ WFMath::Quaternion Entity::getOrientation() const
 TypeInfo* Entity::getType() const
 {
     assert(!_parents.empty());
-    return _world->getConnection()->getTypeInfoEngine()->find(*_parents.begin());
+	TypeService *ts = _world->getConnection()->getTypeService();
+    return ts->getTypeByName(*_parents.begin());
 }
 
 void Entity::setVisible(bool vis)

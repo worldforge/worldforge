@@ -4,26 +4,23 @@
 #include <set>
 #include <sigc++/object.h>
 #include <Eris/Types.h>
+#include <Eris/typeService.h>
 
 namespace Atlas { namespace Objects {
 	class Root;
-	namespace Operation { 
-		class Info;
-		class Error;
-		class Get;
-	}
+	
 } }
 
 namespace Eris {	
-	
-class TypeInfo;
-class TypeInfoEngine;
-typedef TypeInfo* TypeInfoPtr;
 
+// lots of forward decleratrions	
+class TypeInfo;
+class TypeService;
 class Connection;
 
 const int INVALID_TYPEID = -1;
 
+typedef TypeInfo* TypeInfoPtr;
 typedef std::set<TypeInfoPtr> TypeInfoSet;
 
 /** The representation of an Atlas type (i.e a class or operation definition). This class
@@ -59,6 +56,7 @@ public:
 // operators
 	/// efficent comparisom of types (uses type ids if possible)
 	bool operator==(const TypeInfo &x) const;
+
 	/// efficent ordering of type (uses type ids if possible)
 	bool operator<(const TypeInfo &x) const;
 
@@ -81,13 +79,13 @@ public:
 	StringSet getParentsAsSet();
 
 protected:
-	friend class TypeInfoEngine;
+	friend class TypeService;
 
 	/// forward constructor, when data is not available
-	TypeInfo(const std::string &id, TypeInfoEngine*);
+	TypeInfo(const std::string &id, TypeService*);
 
 	/// full constructor, if an INFO has been received
-	TypeInfo(const Atlas::Objects::Root &atype, TypeInfoEngine*);
+	TypeInfo(const Atlas::Objects::Root &atype, TypeService*);
 
 	void addParent(TypeInfoPtr tp);
 	void addChild(TypeInfoPtr tp);
@@ -122,74 +120,15 @@ protected:
 	TypeInfo instances through every ancestor to the root object. */
 	SigC::Signal0<void> Bound;
 
-	TypeInfoEngine* _engine;
+	TypeService* _engine;
 };
 
 /** Note - highly likely to throw OperationBlocked exceptions! */
-TypeInfoPtr getTypeInfo(const std::string &type);
+//TypeInfoPtr getTypeInfo(const std::string &type);
 
 /** Get the type data for an object; this is better than the above form because it can use
 numerical typeids (which are much faster) in Atlas 0.5.x */
-TypeInfoPtr getTypeInfo(const Atlas::Objects::Root &obj);
-
-class TypeInfoEngine : virtual public SigC::Object
-{
- public:
-	TypeInfoEngine(Connection *conn);
-
-	void init();
-
-	/// load the core Atlas::Objects specification from the named file
-	void readAtlasSpec(const std::string &specfile);
-	
-	/** find the TypeInfo for the named type; this may involve a search, or a map lookup. This
-	call is 'safe' in that it will not throw OperationBlocked. As a result, the returned TypeInfo
-	node may not be bound, and the caller should verify this before using the type. */
-	TypeInfoPtr findSafe(const std::string &tynm);
-	
-	/** find the TypeInfo for an object; this should be faster (hoepfully constant time) since it
-	can take advantage of integer typeids */
-	TypeInfoPtr getSafe(const Atlas::Message::Object &msg);
-	TypeInfoPtr getSafe(const Atlas::Objects::Root &obj);
-	
-	/** Get the typeInfo for the specified type; note this may throw an OperationBlocked
-	exception as explained in the class description. */
-	TypeInfoPtr find(const std::string &tynm);
-	
-	/** emitted when a new type is available and bound to it's parents */
-	SigC::Signal1<void, TypeInfo*> BoundType;
-	
-	void listUnbound();
-
- protected:
-	friend class TypeInfo;
-
-	void sendInfoRequest(const std::string &id);
-	void recvInfoOp(const Atlas::Objects::Root &atype);
-	
-	void recvTypeError(const Atlas::Objects::Operation::Error &error,
-		const Atlas::Objects::Operation::Get &get);
-	
-	/// build a TypeInfo object if necessary, and add it to the database
-	void registerLocalType(const Atlas::Objects::Root &def);
-	
-	typedef std::map<std::string, TypeInfoPtr> TypeInfoMap;
-	/** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')
-	to the corresponding TypeInfo instance. This could be a hash_map in the
-	future, if efficeny consdierations indicate it would be worthwhile */
-	TypeInfoMap globalTypeMap;
-
-	typedef std::map<std::string, TypeInfoSet> TypeDepMap;
-
-	/** This is a dynamic structure indicating which Types are blocked
-	awaiting INFOs from other ops. For each blocked INFO, the first item
-	is the <i>blocking</i> type (e.g. 'tradesman') and the second item
-	the blocked TypeInfo, (e.g. 'blacksmith')*/
-	TypeDepMap globalDependancyMap;
-
-	Connection* _conn;
-	bool _inited;
-};
+//TypeInfoPtr getTypeInfo(const Atlas::Objects::Root &obj)
 
 }
 

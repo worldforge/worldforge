@@ -1,3 +1,13 @@
+Monday, 9th June, James Turner <james@worldforge.org>
+
+	* Fix a waring in Entity.h spotted by rsteinke
+	* Rename TypeInfoEngine to TypeService, move
+	  to seperate files, and re-factor TypeInfo code
+	  to know much less about the TypeService's
+	  internal state (which is now private)
+	* Rename various Type system methods as suggested
+	  by Al Riddoch to be more descriptive and useful
+
 Friday, 30th May 2003, Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed a missed Interface -> UserInterface change

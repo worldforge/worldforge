@@ -22,7 +22,7 @@ class Dispatcher;
 class WaitForBase;
 class Timeout;
 class PollData;
-class TypeInfoEngine;
+class TypeService;
 class Lobby;
 
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
@@ -76,8 +76,8 @@ public:
 	Dispatcher* getDispatcher() const
 	{ return _rootDispatch; }
 
-	TypeInfoEngine* getTypeInfoEngine() const
-	{ return _ti_engine;}
+	TypeService* getTypeService() const
+	{ return _typeService;}
 
 	Lobby* getLobby() const
 	{ return _lobby; }
@@ -187,7 +187,7 @@ private:
 
 	void gotData(PollData&);
 
-	TypeInfoEngine *_ti_engine;
+	TypeService *_typeService;
 	Lobby *_lobby;
 };
 
