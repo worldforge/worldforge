@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Dmitry Derevyanko
 
-#include "../Net/Filter.h"
+#include "../Stream/Filter.h"
 
 #include <zlib.h>
 
@@ -12,9 +12,9 @@
 #endif
 
 using std::string;
-using namespace Atlas;
+using namespace Atlas::Stream;
 
-class GzipFilter : public Filter
+class Gzip : public Filter
 {
     z_stream incoming;
     z_stream outgoing;
@@ -22,16 +22,20 @@ class GzipFilter : public Filter
 
     public:
 
-    GzipFilter(int level=6);
-        
-    ~GzipFilter(void);
+    Gzip(int level=6);
+    ~Gzip();
     
     string encode(const string& data);
     string decode(const string& data);
 };
 
-  GzipFilter::GzipFilter(int level)
-  {
+namespace
+{
+    Filter::Factory<Gzip> factory("GZIP", "1.0");
+}
+
+Gzip::Gzip(int level)
+{
     incoming.next_in = Z_NULL;
     incoming.avail_in = 0;
     incoming.zalloc = Z_NULL;
@@ -42,17 +46,16 @@ class GzipFilter : public Filter
   
     inflateInit(&incoming);
     deflateInit(&outgoing, level);
-  }
+}
   
-  GzipFilter::~GzipFilter(void)
-  {
+Gzip::~Gzip()
+{
     inflateEnd(&incoming);
     deflateEnd(&outgoing);
-  }
-
+}
     
-  string GzipFilter::encode(const string& data)
-  {
+string Gzip::encode(const string& data)
+{
     string out_string;
     int status;
     
@@ -82,10 +85,10 @@ class GzipFilter : public Filter
     // << "] " << out_string.size() << endl;
       
     return out_string;
-  }
+}
     
-  string GzipFilter::decode(const string& data)
-  {
+string Gzip::decode(const string& data)
+{
     string out_string;
     int status;
 

@@ -5,9 +5,13 @@
 #ifndef ATLAS_STREAM_FILTER_H
 #define ATLAS_STREAM_FILTER_H
 
-#include <string>
+#include "Factory.h"
 
-#include <sigc++/signal_system.h>
+#include <string>
+#include <list>
+#include <algorithm>
+
+//#include <sigc++/signal_system.h>
 
 namespace Atlas { namespace Stream {
 
@@ -17,9 +21,54 @@ class Filter
     
     virtual ~Filter() { };
 
-    SigC::Signal1<void, std::string> output;
+//    SigC::Signal1<void, std::string> output;
     
     virtual void Process(const std::string& data) = 0;
+    
+    template <typename T>
+    class Factory : public Atlas::Stream::Factory<Filter>
+    {
+	public:
+
+	Factory(const std::string& name, const std::string& version)
+	    : name(name), version(version)
+	{
+	    factories.push_back(this);
+	}
+	    
+	virtual ~Factory()
+	{
+	    std::list<Atlas::Stream::Factory<Filter>*>::iterator i;
+	    i = std::find(factories.begin(), factories.end(), this);
+	    factories.erase(i);
+	}
+
+	virtual Filter* New()
+	{
+	    return new T;
+	}
+
+	virtual void Delete(Filter* filter)
+	{
+	    delete filter;
+	}
+
+	virtual std::string GetName()
+	{
+	    return name;
+	}
+
+	virtual std::string GetVersion()
+	{
+	    return version;
+	}
+
+	static std::list<Atlas::Stream::Factory<Filter>*> factories;
+
+	private:
+
+	std::string name, version;
+    };
 };
 
 } } // Atlas::Stream
