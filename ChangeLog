@@ -1,3 +1,9 @@
+2004-07-28  James Turner  <james@worldforge.org>
+
+	* test/metaquery.cpp: Applied Mike's changes to produce HTML output
+	  as an option, so we can run metaquery from a cron job to drive
+	  the website. (Go Eris! go atlas-c++ 0.6!)
+
 2004-07-27  James Turner  <james@worldforge.org>
 
 	* test/metaquery.cpp: Update the query test program to include

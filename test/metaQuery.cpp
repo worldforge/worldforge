@@ -33,31 +33,8 @@ void queriesDone()
     queryDone = true;
 }
 
-int main(int argc, char* argv[])
+void dumpToScreen(const Eris::Meta& meta)
 {
-    Eris::setLogLevel(Eris::LOG_WARNING);
-    Eris::Logged.connect(SigC::slot(&erisLog));
-    
-    std::string metaServer = "metaserver.worldforge.org";
-    if (argc > 1)
-        metaServer = argv[1];
-        
-    // maximum of 5 simultaneous queries
-    Eris::Meta meta(metaServer, 5);
-    meta.CompletedServerList.connect(SigC::slot(&gotServerList));
-    meta.AllQueriesDone.connect(SigC::slot(&queriesDone));
-    meta.ReceivedServerInfo.connect(SigC::slot(&gotServer));
-    
-    cout << "querying " << metaServer << endl;
-    meta.refresh();
-    
-    while (!queryDone)
-    {
-        Eris::PollDefault::poll(10);
-    }
-    
-    cout << "final list contains " << meta.getGameServerCount() << " servers." << endl;
-    
     for (unsigned int S=0; S < meta.getGameServerCount(); ++S)
     {
         const Eris::ServerInfo& sv = meta.getInfoForServer(S);
@@ -84,6 +61,88 @@ int main(int argc, char* argv[])
             cout << "Query failed" << endl;
         }
     } // of server iteration
+}
+
+void dumpToHTML(const Eris::Meta& meta)
+{
+    cout << "<div class=\"metaserver\">" << endl;
+    cout << "  <dl>" << endl;
+
+    for (unsigned int S=0; S < meta.getGameServerCount(); ++S)
+    {
+        const Eris::ServerInfo& sv = meta.getInfoForServer(S);
+
+        cout << "    <dt>" << sv.getHostname() << " :: " << sv.getServername() << "</dt>" << endl;
+        cout << "    <dd>" << endl;
+        
+        switch (sv.getStatus())
+        {
+        case Eris::ServerInfo::VALID:
+            cout << "Ruleset: " << sv.getRuleset() << "<br/>" << endl;
+            cout << "Up: " << sv.getUptime() << " ("  << sv.getPing() << " ping)<br/>" << endl;
+            cout << "Clients: " << sv.getNumClients() << endl;
+            break;
+            
+        case Eris::ServerInfo::TIMEOUT:
+            cout << "Timed out." << endl;
+            break;
+            
+        case Eris::ServerInfo::QUERYING:
+            cout << "Something is broken, all queries should be done" << endl;
+            break;
+            
+        default:
+            cout << "Query failed" << endl;
+        }
+
+        cout << "    </dd>" << endl;
+    } // of server iteration
+
+    cout << "  </dl>" << endl;
+    cout << "</div>"  << endl;
+}
+
+int main(int argc, char* argv[])
+{
+    Eris::setLogLevel(Eris::LOG_WARNING);
+    Eris::Logged.connect(SigC::slot(&erisLog));
+
+    bool htmlDump = false;
+    
+    std::string metaServer = "metaserver.worldforge.org";
+    if (argc > 1)
+    {
+       if (strcmp(argv[1], "--html") == 0)
+           htmlDump = true;
+       else
+       {
+         metaServer = argv[1];
+
+         if ((argc > 2) && (strcmp(argv[2], "--html") == 0))
+             htmlDump = true;
+       }
+    }
+    
+    // maximum of 5 simultaneous queries
+    Eris::Meta meta(metaServer, 5);
+    meta.CompletedServerList.connect(SigC::slot(&gotServerList));
+    meta.AllQueriesDone.connect(SigC::slot(&queriesDone));
+    meta.ReceivedServerInfo.connect(SigC::slot(&gotServer));
+    
+    cout << "querying " << metaServer << endl;
+    meta.refresh();
+    
+    while (!queryDone)
+    {
+        Eris::PollDefault::poll(10);
+    }
+    
+    cout << "final list contains " << meta.getGameServerCount() << " servers." << endl;
+  
+    if (htmlDump == true)
+        dumpToHTML(meta);
+    else
+        dumpToScreen(meta);
     
     return EXIT_SUCCESS;
 }
