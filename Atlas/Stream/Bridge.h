@@ -37,7 +37,7 @@ class Bridge
     // Interface for message context
 
     virtual void MessageBegin() = 0;
-    virtual void MessageMapBegin() = 0;
+    virtual void MessageItem(const Map&) = 0;
     virtual void MessageEnd() = 0;
     
     // Interface for map context

@@ -61,6 +61,8 @@ protected:
         PARSE_MESSAGE,
         PARSE_MAP,
         PARSE_LIST,
+	PARSE_MAP_BEGIN,
+	PARSE_LIST_BEGIN,
         PARSE_INT,
         PARSE_FLOAT,
         PARSE_STRING,
@@ -80,6 +82,8 @@ protected:
     inline void ParseMessage(char);
     inline void ParseMap(char);
     inline void ParseList(char);
+    inline void ParseMapBegin(char);
+    inline void ParseListBegin(char);
     inline void ParseInt(char);
     inline void ParseFloat(char);
     inline void ParseString(char);
@@ -150,11 +154,13 @@ void PackedAscii::ParseMap(char next)
 
 	case '[':
 	    state.push(PARSE_MAP);
+	    state.push(PARSE_MAP_BEGIN);
 	    state.push(PARSE_NAME);
 	break;
 
 	case '(':
 	    state.push(PARSE_LIST);
+	    state.push(PARSE_LIST_BEGIN);
 	    state.push(PARSE_NAME);
 	break;
 
@@ -216,6 +222,20 @@ void PackedAscii::ParseList(char next)
 	    // unexpected character
 	break;
     }
+}
+
+void PackedAscii::ParseMapBegin(char next)
+{
+    bridge->MapItem(nameFragment, MapBegin);
+    socket.putback(next);
+    state.pop();
+}
+
+void PackedAscii::ParseListBegin(char next)
+{
+    bridge->MapItem(nameFragment, ListBegin);
+    socket.putback(next);
+    state.pop();
 }
 
 void PackedAscii::ParseInt(char next)
@@ -336,14 +356,6 @@ void PackedAscii::ParseName(char next)
     {
 	case '=':
 	    state.pop();
-	    if (state.top() == PARSE_MAP)
-	    {
-		bridge->MapItem(nameFragment, MapBegin);
-	    }
-	    else if (state.top() == PARSE_LIST)
-	    {
-		bridge->MapItem(nameFragment, ListBegin);
-	    }
 	break;
 
 	case '+':
@@ -380,15 +392,17 @@ void PackedAscii::Poll()
 
 	switch (state.top())
 	{
-	    case PARSE_STREAM:	ParseStream(next); break;
-	    case PARSE_MESSAGE:	ParseMessage(next); break;
-	    case PARSE_MAP:	ParseMap(next); break;
-	    case PARSE_LIST:	ParseList(next); break;
-	    case PARSE_INT:	ParseInt(next); break;
-	    case PARSE_FLOAT:	ParseFloat(next); break;
-	    case PARSE_STRING:	ParseString(next); break;
-	    case PARSE_NAME:	ParseName(next); break;
-	    case PARSE_ENCODED:	ParseEncoded(next); break;
+	    case PARSE_STREAM:	    ParseStream(next); break;
+	    case PARSE_MESSAGE:	    ParseMessage(next); break;
+	    case PARSE_MAP:	    ParseMap(next); break;
+	    case PARSE_LIST:	    ParseList(next); break;
+	    case PARSE_MAP_BEGIN:   ParseMapBegin(next); break;
+	    case PARSE_LIST_BEGIN:  ParseListBegin(next); break;
+	    case PARSE_INT:	    ParseInt(next); break;
+	    case PARSE_FLOAT:	    ParseFloat(next); break;
+	    case PARSE_STRING:	    ParseString(next); break;
+	    case PARSE_NAME:	    ParseName(next); break;
+	    case PARSE_ENCODED:	    ParseEncoded(next); break;
 	}
     }
 }

@@ -17,7 +17,7 @@ class XML : public Codec
     virtual void Poll();
 
     virtual void MessageBegin();
-    virtual void MessageMapBegin();
+    virtual void MessageItem(const Map&);
     virtual void MessageEnd();
     
     virtual void MapItem(const std::string& name, const Map&);
@@ -63,7 +63,7 @@ void XML::MessageBegin()
     socket << "<obj>";
 }
 
-void XML::MessageMapBegin()
+void XML::MessageItem(const Map&)
 {
 }
 
