@@ -1,3 +1,12 @@
+Friday, September 13, Ron Steinke
+
+	* Added a check to Player::netConnected() that the current
+          action is null before calling internalLogin(). This
+          fixes a double login problem if someone else calls
+          Player::Login() in a BaseConnection::Connected
+          signal handler before the signal gets to
+          Player::netConnected().
+
 Sunday, September 1, Ron Steinke
 
 	* Enhanced locking in Connection to prevent a segfault when

@@ -389,7 +389,7 @@ state */
 void Player::netConnected()
 {
 	// re-connection
-	if (!_username.empty())
+	if (!_username.empty() && _currentAction.empty())
 		internalLogin(_username, _pass);
 	
 	// ditto for IG (world)
