@@ -150,6 +150,8 @@ protected:
 	// error ops
 	void recvErrorLook(const Atlas::Objects::Operation::Look &lk);
 	
+	void lookupTimeout(std::string id);
+	
 	/// callback when Connection generates a 'Connected' signal (usually a reconnect)
 	void netConnect();
 	

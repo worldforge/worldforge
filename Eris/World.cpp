@@ -103,6 +103,8 @@ Entity* World::lookup(const std::string &id)
 		
 		_pendingInitialSight.insert(id);
 		
+		
+		
 		//return Entity(id);
 		return NULL;
 	} else
