@@ -1,3 +1,7 @@
+2004-06-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix devel dependencies in rpm spec on glib2-devel.
+
 2004-06-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Fix devel dependencies in rpm spec.

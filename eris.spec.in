@@ -32,7 +32,7 @@ tasks.
 %package poll-glib
 Summary: Headers to poll eris connections using glibs poll code.
 Group: Development/Libraries
-Requires: glib2
+Requires: glib2-devel
 
 %description poll-glib
 Eris is designed to simplify client development (and avoid repeating the same
