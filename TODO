@@ -1,3 +1,7 @@
+* The semantics of Terrain::get() were not as I expected. I wanted an
+  interpolated value. Should another function be added to do what I
+  want, plus get the normal too, as it seems to be free?
+
 * Need to fix normals along edge and corner point. Currently they create
   visible seems because they are not the same on adjacent segments.
 
