@@ -61,7 +61,7 @@ int main() {
 
     int error = 0;
 
-    error += mapTest();
+    error += !mapTest();
 
 
     println("Test run finished");
@@ -245,20 +245,18 @@ bool mapTest() {
         check( foobar.length() == 4 );
 
 
-        /*
+        
         println( "Out of bounds ndx check on key list" );
         for ( int i = -10 ; i < 10; ++i) {
             if ( ( i < 0) || ( i > 3 ) ) {
-                cout << " check not there ";
                 check( !foobar.get( i, sval ) );
             }
             else {
-                cout << " check there ";
                 check( foobar.get( i, sval ) );
-                println( sval );
             }
         }
-        */
+        
+        /*
         // out of bound calls on list are broken,this shows it up
         // the code above is the proper check for correct behaviour
         println( "Out of bounds ndx check on key list" );
@@ -267,7 +265,7 @@ bool mapTest() {
             cout << foobar.get( i, sval);
             cout << "At map[" << i << "] is the string [" << sval << "]" << endl;
         }
-
+        */
 
 
 

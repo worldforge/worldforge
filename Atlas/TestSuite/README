@@ -2,5 +2,9 @@ TestSuite is for unit and regression tests
 
 Aiming to setup a framework to run some different things that are pretty stable and suitable for regression testing.
 
-Not really the place for quick and dirty tests, the code in here should be kept for working code that is being 
-put to use to ensure future changes don`t break anything.
+Not really the place for quick and dirty tests, the code in here should be kept for working code that is being put to use to ensure future changes don`t break anything.
+
+to run all tests, use :-
+
+
+make check
