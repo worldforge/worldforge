@@ -1,9 +1,14 @@
+* How about a class for handling building sections of arbitrary size.
+  Uses quasi random techniques to define the pattern of building elements,
+  with hopefully an efficient way to render.
+
 * SHould probably make segment etc. less involved in memory, and provide
   a way for the memory to be special
 
 * Look at using allocators to control memory allocation for buffers.
 
-* Make SnowShader, High, with thinner snow on steep areas, and more snow on the north,
+* Make SnowShader, High, with thinner snow on steep areas, and more snow on the
+  north,
 
 * Make GrassShader, banded, with thinner grass on steep areas,
 
@@ -31,9 +36,10 @@
 
 * allow for non fractal tiles (hand drawn ones inserted into the landscape) ??
 
-* variable detail? (32, 64 and 128 side tiles on the same terrain?) unsure how this fits in with the RNG scheme,
-  so this might be difficult. a tile of side 2^n must butt up against tile of size 2^n-1, 2^n or 2^n+1.
-  ie 32 cant interact with a 128
+* variable detail? (32, 64 and 128 side tiles on the same terrain?) unsure how
+  this fits in with the RNG scheme, so this might be difficult. a tile of side
+  2^n must butt up against tile of size 2^n-1, 2^n or 2^n+1.  ie 32 cant
+  interact with a 128
 
 * transparent patches? allowing caves, or tunnels?
 
