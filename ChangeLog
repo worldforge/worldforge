@@ -1,3 +1,10 @@
+2004-11-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/objects1.cpp: Fix a redundant include.
+
+	* tests/Objects/custom_ops.cpp: Add a test demonstrating the
+	  definition of a custom op class.
+
 2004-10-13  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.5.91.
