@@ -40,7 +40,7 @@ typedef std::map< std::string, std::map< std::string, Variable > > conf_map;
 typedef std::map< char, std::pair<std::string, bool> > parameter_map;
 typedef std::map< std::string, Variable > sec_map;
 
-class Config {
+class Config : virtual public SigC::Object {
 public:
   static Config* inst();
   // Allows use as a singleton, if desired.
@@ -51,7 +51,7 @@ public:
   // New Config object, but deep-copies the m_conf and m_par_lookup of existing,
   // passed Config object.
 
-  virtual ~Config() { }
+  virtual ~Config() {if(m_instance == this) m_instance = 0;}
 
   friend std::ostream& operator <<( std::ostream& out, Config& conf);
   friend std::istream& operator >>( std::istream& in, Config& conf);

@@ -228,17 +228,13 @@ bool VarBase::is_double()
   if (!is_string()) return false;
 
   char* p;
-  char* tmp = new char[m_val.size()+1];
-  size_t i;
-  for (i = 0; i < m_val.size(); i++) tmp[i] = m_val[i];
-  m_val[i] = 0;
-  strtod(tmp, &p);
-  if (tmp == p) {
-    delete [] tmp;
-    return false;
-  }
-  delete [] tmp;
-  return true;
+
+  // strtod() points p to the first character
+  // in the string that doesn't look like
+  // part of a double
+  strtod(m_val.c_str(), &p);
+
+  return p == m_val.c_str() + m_val.size();
 }
 
 bool VarBase::is_string()
