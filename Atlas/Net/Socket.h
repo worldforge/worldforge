@@ -22,10 +22,10 @@ class Socket
     virtual ~Socket() { }
 
     /// Send data through socket
-    virtual int	Send(const std::string& data);
+    virtual int	Send(const std::string&);
 
     /// Receive data from socket
-    virtual int	Receive(std::string& buf);
+    virtual int	Receive(std::string&);
 
     /// Shut down the connection
     virtual void Close();

@@ -5,7 +5,7 @@ libAtlasNet_la_SOURCES = \
 	Client.cpp Codec.cpp Filter.cpp \
 	PackedDecoder.cpp PackedEncoder.cpp \
 	PackedProtocol.cpp Protocol.cpp Decoder.cpp \
-	Encoder.cpp Server.cpp Socket.cpp TCPSocket.cpp \
+	Encoder.cpp Server.cpp Socket.cc TCPSocket.cpp \
 	XMLDecoder.cpp XMLEncoder.cpp XMLProtocol.cpp
 
 libAtlasNetincludedir = $(includedir)/Atlas/Net
