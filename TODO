@@ -1,5 +1,11 @@
 New TODO by Al Riddoch
 
+Can we have a iterator find() method in Objects?
+
+Add forward declararion headers for Objects
+
+Why is setArgsAsList taking args by value?
+
 There is some inefficient copying going on in the way args are encoded.
 
 Note that most people are not interested in the Objects::Decoder also

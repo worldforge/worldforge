@@ -9,10 +9,17 @@
 
 namespace Atlas { namespace Objects {
 
+class NullSmartPtrDereference : public Atlas::Exception
+{
+  public:
+    NullSmartPtrDereference() : Atlas::Exception("Null SmartPtr dereferenced") {}
+    virtual ~NullSmartPtrDereference() throw ();
+};
+
 template <class T> 
 class SmartPtr
 {
-public:
+  public:
     SmartPtr() : ptr(T::alloc()) { 
     }
     SmartPtr(const SmartPtr<T>& a) : ptr(a.get()) {
@@ -23,11 +30,7 @@ public:
         incRef();
     }
     template<class oldType>
-    explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(dynamic_cast<T*>(a.get())) {
-	if (ptr == 0) {
-	    ptr = *(T**)0;
-	    // FIXME throw something
-	}
+    explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(a.get()) {
     }
     ~SmartPtr() { 
         decRef();
@@ -42,16 +45,25 @@ public:
     }
     template<class newType>
     operator SmartPtr<newType>() const {
-	return SmartPtr<newType>(ptr);
+        return SmartPtr<newType>(ptr);
     }
     template<class newType>
     operator SmartPtr<const newType>() const {
-	return SmartPtr<const newType>(ptr);
+        return SmartPtr<const newType>(ptr);
+    }
+    bool operator!() const {
+        return ptr == 0;
     }
     T& operator*() const { 
+        if (ptr != 0) {
+            throw NullSmartPtrDereference();
+        }
         return *ptr;
     }
     T* operator->() const {
+        if (ptr != 0) {
+            throw NullSmartPtrDereference();
+        }
         return ptr;
     }
     T* get() const {
@@ -66,15 +78,34 @@ public:
         SmartPtr<T> obj;
         return obj;
     }
-protected:
+    // If you want to make these protected, please ensure that the
+    // detructor is made virtual to ensure your new class bahaves
+    // correctly.
+  private:
     void decRef() const {
-        ptr->decRef();
+        if (ptr != 0) {
+            ptr->decRef();
+        }
     }
     void incRef() const {
-        ptr->incRef();
+        if (ptr != 0) {
+            ptr->incRef();
+        }
     }
     T * ptr;
 };
+
+template<class returnType, class fromType>
+SmartPtr<returnType> smart_dynamic_cast(const SmartPtr<fromType> & o)
+{
+    return SmartPtr<returnType>(dynamic_cast<returnType *>(o.get()));
+}
+
+template<class returnType, class fromType>
+SmartPtr<returnType> smart_static_cast(const SmartPtr<fromType> & o)
+{
+    return SmartPtr<returnType>((returnType*)o.get());
+}
 
 } } // namespace Atlas::Objects
 

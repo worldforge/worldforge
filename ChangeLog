@@ -1,3 +1,9 @@
+2003-08-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/SmartPtr.h, Atlas/Objects/SmartPtr.cpp:
+	  Allow SmartPtr to be NULL, so we can use it for return values
+	  less clumsily.
+
 2003-07-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Negotiate.h: Removed unused Debug() macro. It was polluting
