@@ -9,7 +9,7 @@ Name:              %{name}
 Version:           %{version} 
 Release:           %{release}
 Serial:            %{serial}
-Copyright:         LGPL
+Copyright:         GPL
 Group:             System Environment/Libraries
 Source:            %{name}-%{version}.tar.gz
 BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
