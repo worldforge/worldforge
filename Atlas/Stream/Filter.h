@@ -24,14 +24,27 @@ class Filter
 //    SigC::Signal1<void, std::string> output;
     
     virtual void Process(const std::string& data) = 0;
-    
+
+    enum Type
+    {
+	COMPRESSION,
+	ENCRYPTION,
+    };
+
+    class Metrics
+    {
+	public:
+
+	Metrics(Type) { }
+    };
+
     template <typename T>
     class Factory : public Atlas::Stream::Factory<Filter>
     {
 	public:
 
-	Factory(const std::string& name, const std::string& version)
-	    : name(name), version(version)
+	Factory(const std::string& name, const Metrics &metrics)
+	    : name(name), metrics(metrics)
 	{
 	    factories.push_back(this);
 	}
@@ -58,16 +71,17 @@ class Filter
 	    return name;
 	}
 
-	virtual std::string GetVersion()
+	virtual Metrics GetMetrics()
 	{
-	    return version;
+	    return metrics;
 	}
 
 	static std::list<Atlas::Stream::Factory<Filter>*> factories;
 
 	private:
 
-	std::string name, version;
+	std::string name;
+	Metrics metrics;
     };
 };
 

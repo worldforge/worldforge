@@ -34,7 +34,7 @@ class XML : public Codec
 
 namespace
 {
-    Codec::Factory<XML> factory("XML", "1.0");
+    Codec::Factory<XML> factory("XML", Codec::Metrics(1, 2));
 }
 
 void XML::MessageBegin()

@@ -29,14 +29,14 @@ class Gzip : public Filter
     string decode(const string& data);
 
     void Process(const string &) 
-	{ cerr << "Atlas::Stream::Gzip::Process does nothing !"<<endl;
-};
-
+    {
+	cerr << "Atlas::Stream::Gzip::Process does nothing !" << endl;
+    };
 };
 
 namespace
 {
-    Filter::Factory<Gzip> factory("GZIP", "1.0");
+    Filter::Factory<Gzip> factory("GZIP", Filter::Metrics(Filter::COMPRESSION));
 }
 
 Gzip::Gzip(int level)

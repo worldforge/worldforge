@@ -46,14 +46,21 @@ class Codec
     virtual void Item(const std::string&) = 0;
     virtual void Item(const Atlas::Object&) = 0;
     virtual void MapEnd() = 0;
-    
+
+    class Metrics
+    {
+	public:
+
+	Metrics(int speed, int bandwidth) { }
+    };
+
     template <typename T>
     class Factory : public Atlas::Stream::Factory<Codec>
     {
 	public:
 
-	Factory(const std::string& name, const std::string& version)
-	    : name(name), version(version)
+	Factory(const std::string& name, const Metrics& metrics)
+	    : name(name), metrics(metrics)
 	{
 	    factories.push_back(this);
 	}
@@ -80,16 +87,17 @@ class Codec
 	    return name;
 	}
 
-	virtual std::string GetVersion()
+	virtual Metrics GetMetrics()
 	{
-	    return version;
+	    return metrics;
 	}
 
 	static std::list<Atlas::Stream::Factory<Codec>*> factories;
 
 	private:
 
-	std::string name, version;
+	std::string name;
+	Metrics metrics;
     };
 };
 
