@@ -1,3 +1,13 @@
+Monday, October 10, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed operator==() for quaternions to regard two
+	  quaternions as equal iff they produce the same
+	  3x3 rotation matrix. This means q == -q is true.
+        * Added a Shuffle() function which randomizes the order
+          of elements contained in a std::vector.
+	* Doc updates
+	* Bumped version number to 0.2.10
+
 Monday, September 2, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Bumped version number to 0.2.9

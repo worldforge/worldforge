@@ -46,6 +46,9 @@
 #include <wfmath/polygon_intersect.h>
 // Probability and statistics
 #include <wfmath/probability.h>
+#include <wfmath/timestamp.h>
+#include <wfmath/randgen.h>
+#include <wfmath/shuffle.h>
 // iostreams and strings
 #include <wfmath/stream.h>
 

@@ -19,5 +19,5 @@ Rearrange the functions in foo_funcs.h to match the order in the class
 Schedule:
 0.3.0 will come out once I get around to testing the Polygon intersect functions
       and make sure they work. At that point the old Intersect()/IntersectProper()
-      interface will be removed, as will supports for deprecated network
+      interface will be removed, as will support for deprecated network
       formats in atlas_conv.h

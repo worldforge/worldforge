@@ -4,7 +4,7 @@ EXTRA_DIST = bc_sloppy_mag_3
 
 headerdir = $(includedir)/wfmath
 header_HEADERS = error.h const.h \
-	probability.h timestamp.h randgen.h \
+	probability.h timestamp.h randgen.h shuffle.h \
 	vector.h vector_funcs.h \
 	rotmatrix.h rotmatrix_funcs.h \
 	point.h point_funcs.h \

@@ -55,6 +55,8 @@ class Quaternion
   Quaternion& operator= (const Quaternion& rhs)
 	{m_w = rhs.m_w; m_vec = rhs.m_vec; return *this;}
 
+  // This regards q and -1*q as equal, since they give the
+  // same RotMatrix<3>
   bool isEqualTo(const Quaternion &q, double epsilon = WFMATH_EPSILON) const;
 
   bool operator== (const Quaternion& rhs) const	{return isEqualTo(rhs);}

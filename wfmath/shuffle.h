@@ -23,18 +23,40 @@
 // Author: Ron Steinke
 // Created: 2002-5-23
 
-#ifndef WFMATH_RANDGEN_H
-#define WFMATH_RANDGEN_H
+#ifndef WFMATH_SHUFFLE_H
+#define WFMATH_SHUFFLE_H
+
+#include <vector>
 
 #include <wfmath/const.h>
+#include <wfmath/randgen.h>
 
 namespace WFMath {
 
-// These use rand(), seeded by the clock if SeedRand() isn't called
-void SeedRand(unsigned int);
-double DRand(); // returns between 0 and 1
-unsigned int IRand(unsigned int); // returns from 0 to arg-1
+template<class C>
+void Shuffle(std::vector<C>& v) // need vector for random access
+{
+  unsigned pos = v.size();
+
+  if(!pos) // handle size() == 0 nicely
+    return;
+
+  // This swaps each element with one of the ones before
+  // it, starting with the last element. Essentially,
+  // this generates an operation from the permutation
+  // group of size() elements, and applies it to the
+  // vector. Note that the loop only executes size() - 1
+  // times, as element 0 has nothing to swap with.
+  while(--pos) {
+    unsigned new_pos = IRand(pos + 1); // 0 <= new_pos <= pos
+    if(new_pos == pos)
+      continue;
+    C tmp = v[pos];
+    v[pos] = v[new_pos];
+    v[new_pos] = tmp;
+  }
+}
 
 } // namespace WFMath
 
-#endif  // WFMATH_RANDGEN_H
+#endif  // WFMATH_SHUFFLE_H

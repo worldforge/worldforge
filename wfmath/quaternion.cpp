@@ -44,6 +44,10 @@ Quaternion::Quaternion (const CoordType w_in, const CoordType x_in,
   m_vec[2] = z_in / norm;
 }
 
+// The equality functions regard q and -q as equal, since they
+// correspond to the same rotation matrix. We consider the form
+// of the quaternion with w > 0 canonical.
+
 bool Quaternion::isEqualTo(const Quaternion &q, double epsilon) const
 {
   // Since the sum of squares is 1, the magnitude of the largest
@@ -51,22 +55,98 @@ bool Quaternion::isEqualTo(const Quaternion &q, double epsilon) const
 
   assert(epsilon > 0);
 
-  for(int i = 0; i < 3; ++i)
-    if(fabs(m_vec[i] - q.m_vec[i]) > epsilon)
-      return false;
+  if(fabs(m_w - q.m_w) <= epsilon) {
+    int i;
+    for(i = 0; i < 3; ++i)
+      if(fabs(m_vec[i] - q.m_vec[i]) > epsilon)
+        break; // try again with swapped signs
+    if(i == 3) // got through the loop
+      return true;
+  }
 
-  return fabs(m_w - q.m_w) <= epsilon;
+  // This makes q == -q true
+  if(fabs(m_w + q.m_w) <= epsilon) {
+    for(int i = 0; i < 3; ++i)
+      if(fabs(m_vec[i] + q.m_vec[i]) > epsilon)
+        return false;
+    return true;
+  }
+
+  return false;
 }
 
 bool Quaternion::operator< (const Quaternion& rhs) const
 {
-  if(operator==(rhs))
-    return false;
+  double epsilon = WFMATH_EPSILON;
 
-  if(m_w != rhs.m_w)
-    return m_w < rhs.m_w;
+  bool direct_w_equal = (fabs(m_w - rhs.m_w) <= epsilon);
+  bool flip_w_equal = (fabs(m_w + rhs.m_w) <= epsilon);
 
-  return m_vec < rhs.m_vec;
+  enum {
+    EQUAL_PLUS_PLUS,
+    EQUAL_PLUS_MINUS,
+    EQUAL_MINUS_PLUS,
+    EQUAL_MINUS_MINUS,
+    ANY_EQUAL
+  } compare;
+
+  if(direct_w_equal && flip_w_equal) {
+    // m_w and w are both zero, to our accuracy,
+    // so we need to generate a canonical ordering
+    // based entirely on the vectors, allowing
+    // for v == -v
+
+    compare = ANY_EQUAL;
+  }
+  else if(direct_w_equal) 
+    compare = (m_w > 0) ? EQUAL_PLUS_PLUS : EQUAL_MINUS_MINUS;
+  else if(flip_w_equal)
+    compare = (m_w > 0) ? EQUAL_PLUS_MINUS : EQUAL_MINUS_PLUS;
+  else
+    return fabs(m_w) < fabs(rhs.m_w);
+
+  for(int i = 0; i < 3; ++i) {
+    switch(compare) {
+      case EQUAL_PLUS_PLUS:
+        if(fabs(m_vec[i] - rhs.m_vec[i]) > epsilon)
+          return m_vec[i] < rhs.m_vec[i];
+        break;
+      case EQUAL_PLUS_MINUS:
+        if(fabs(m_vec[i] + rhs.m_vec[i]) > epsilon)
+          return m_vec[i] < -rhs.m_vec[i];
+        break;
+      case EQUAL_MINUS_PLUS:
+        if(fabs(m_vec[i] + rhs.m_vec[i]) > epsilon)
+          return m_vec[i] > -rhs.m_vec[i];
+        break;
+      case EQUAL_MINUS_MINUS:
+        if(fabs(m_vec[i] - rhs.m_vec[i]) > epsilon)
+          return m_vec[i] > rhs.m_vec[i];
+        break;
+      case ANY_EQUAL:
+        bool direct_v_equal = fabs(m_vec[i] - rhs.m_vec[i]) <= epsilon;
+        bool flip_v_equal = fabs(m_vec[i] + rhs.m_vec[i]) <= epsilon;
+
+        if(direct_v_equal && flip_v_equal)
+          break; // still don't know canonical form
+
+        if(direct_v_equal) {
+          compare = (m_vec[i] > 0) ? EQUAL_PLUS_PLUS : EQUAL_MINUS_MINUS;
+          break;
+        }
+
+        if(flip_v_equal) {
+          compare = (m_vec[i] > 0) ? EQUAL_PLUS_MINUS : EQUAL_MINUS_PLUS;
+          break;
+        }
+
+        return fabs(m_vec[i]) < fabs(rhs.m_vec[i]);
+    }
+  }
+
+  assert(compare != ANY_EQUAL); // can't have all components zero
+
+  return false; // got equal q's
 }
 
 // order of multiplication vs sense of rotation
