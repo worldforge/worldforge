@@ -99,20 +99,20 @@ void XML::tokenData(char next)
 
 void XML::parseStartTag()
 {
-    int tag_end = tag.find(' ');
-    int name_start = tag.find("name=\"") + 6;
-    int name_end = tag.rfind("\"");
+    int tag_end = (int) tag.find(' ');
+    int name_start = (int) tag.find("name=\"") + 6;
+    int name_end = (int) tag.rfind("\"");
     
     if (name_start < name_end)
     {
-	name = std::string(tag, name_start, name_end - name_start);
+	name = std::string(tag, (unsigned long) name_start, (unsigned long) (name_end - name_start));
     }
     else
     {
 	name.erase();
     }
     
-    tag = std::string(tag, 0, tag_end);
+    tag = std::string(tag, 0, (unsigned long) tag_end);
 
     switch (state.top())
     {
@@ -326,7 +326,7 @@ void XML::poll(bool can_read)
     if (!can_read) return;
     do
     {
-	char next = socket.get();
+	char next = (char) socket.get();
 
 	switch (token)
 	{
