@@ -18,11 +18,11 @@ protected:
         m_con(con),
         m_obj(obj)
     {
-    
+
     }
-    
+
     void post();
-    
+
 private:
     Connection* m_con;
     Atlas::Objects::Root m_obj;

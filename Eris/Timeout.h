@@ -1,7 +1,7 @@
 #ifndef ERIS_TIMEOUT_H
 #define ERIS_TIMEOUT_H
 
-#include <WFMath/timestamp.h>
+#include <wfmath/timestamp.h>
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
@@ -11,7 +11,7 @@
 
 namespace Eris {
 
-/** Timeout  */	
+/** Timeout  */
 class Timeout : virtual public SigC::Object
 {
 public:
@@ -20,8 +20,8 @@ public:
 	@param label The unique timeout identification label
 	@param milli The initial timeout  value, in milliseconds */
 	Timeout(const std::string &label, unsigned long milli);
-        
-        
+
+
 	/** constructor for new timeouts which are owned by an instance of a class
 	@param label The unique timeout identification label
 	@param milli The initial timeout  value, in milliseconds
@@ -40,15 +40,15 @@ public:
 	/** reset the timeout to the specified time, and reset the 'expired' flag. This means invoking reset()
 	is equivalent to destroying the Timeout object and creating a new one with the same name. */
 	void reset(unsigned long msec);
-	
+
 	/// cancel the Timeout immediately
 	void cancel();
-        
+
         /** Check if the Timeout has expired, and if so fire it's signal.
         @return The time remaining until the timeout will expire.
         */
 	WFMath::TimeDiff poll(const WFMath::TimeStamp &t);
-	
+
 	/// test whether or not the timeout has fired or not
 	bool isExpired() const;
 
@@ -73,7 +73,7 @@ public:
 	static void extendByName(const std::string &lbl, unsigned long msec)
 		{extendByName(lbl, 0, msec);}
 	static void extendByName(const std::string &lbl, void* inst, unsigned long msec);
-	
+
 	/** helper function to lookup a timeout and call cancel(). As above, a missing timeout will
 	cause an InvalidOperation to be thrown. */
 	static void cancelByName(const std::string &lbl, void* inst = 0);

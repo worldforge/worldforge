@@ -1,3 +1,8 @@
+Monday 8th March 2004, James Turner <james@worldforge.org>
+
+* First round of Linux compilation fixes, many silly things
+  all over the place.
+
 Sunday 7th March 2004, James Turner <james@worldforge.org>
 
 * More CVs file removal, and basic attempt to get autoconf builds working.
@@ -9,8 +14,8 @@ Sunday 7th March 2004, James Turner <james@worldforge.org>
   and the game servers.
 * Fixed many bugs (especially to do with timeout handling) in the meta
   server code.
-  
-New Eris works! (For some very basic stuff) Notably, Atlas-C++ 0.6 is 
+
+New Eris works! (For some very basic stuff) Notably, Atlas-C++ 0.6 is
 connecting fine, the basic object handling is behaving correctly, timeouts
 and polls are still ok, and the new logging code works fine. More test code
 to come, of course.
@@ -31,11 +36,11 @@ Saturday 6th March 2004, James Turner <james@worldforge.org>
   which will handle edge cases correclty and with more obvious logic.
 * Ensured that LOC and CONTAINS of an Entity cannot be altered via a SET op,
   and that nativeAttrChanged treats them as errors.
-* Add code in EntityRouter to handle updating LOC during MOVE operations  
+* Add code in EntityRouter to handle updating LOC during MOVE operations
 * Route all SIGHT(entity) ops to the View, not just initial sights. Hence
   all updating based on sights is driven by the View.
 * Sorted error handling on Player (-> Account)
-  
+
 Saturday 28th February 2004, James Turner <james@worldforge.org>
 
 * All code compiles, doesn't link
@@ -63,7 +68,7 @@ Wednesday 25th February 2004, James Turner <james@worldforge.org>
   collapsing to a more useful set too.
 * Sorting out which ops are handled by the EntityRouter (decodes on FROM)
   vs the IGRouter (decodes on TO)
-  
+
 Monday 23rd February 2004, James Turner <james@worldforge.org>
 
 * Added View class, which handles all the icky appearance / disappearance
@@ -105,7 +110,7 @@ Thursday, 5th February 2004, James Turner
     * Various other whitespace changes in Player.cpp
     * Bump version to 1.1.1 in anticipation of release
     * Set required WFMath version to 0.3.3 for coordinate conversion helpers
-    
+
 Saturday, 24th January 2004, Al Riddoch <alriddoch@zepler.org>
 
 	* Eris/UIFactory.h, test/testUtils.cpp: Move cassert includes
@@ -225,7 +230,7 @@ Thursday, 27th November, James Turner <james@worldforge.org>
 
 Monday, 24th November, James Turner <james@worldforge.org>
     * Add accessor for Person objects directly on Room.
-    
+
 Monday, 24th November, Al Riddoch <alriddoch@zepler.org>
 
 	* Eris/Avatar.cpp: Fix all uses of send() to pass a reference
@@ -299,7 +304,7 @@ Monday, 11th August, James Turner <james@worldforge.org>
 	  recived. Solution is too create an anonymous ClassDispatcher
 	  ourselves, pending a re-think of anonymous dispatchers
 	  at some point in the future.
-	  
+
 	  Thanks to Al Riddoch for the catch.
 
 Monday, 11th August, Al Riddoch <alriddoch@zepler.org>
@@ -425,8 +430,8 @@ Thursday, 8th May 2003, Ron Steinke
 	  does it and it's sure to be portable.
 
 Thursday, 8th May 2003, James Turner <james@worldforge.org>
-	
-	* Don't make or install eris-config, eris.m4 or 
+
+	* Don't make or install eris-config, eris.m4 or
 	  eris-config.1 (the man page). The actual files are still
 	  there, will be removed fairly sooon.
 
@@ -455,7 +460,7 @@ Thursday, 8th May 2003, James Turner <james@worldforge.org>
 
 	* Updated configure.in to be Autoconf 2.5 happy, removed lots
 	  of deprecated macros
-	* We now rely on pkg-config versions of sigc++ and all the 
+	* We now rely on pkg-config versions of sigc++ and all the
 	  WorldForge libs, so configure is smaller and all the
 	  AM_PATH_xxx copies in acinclude.m4 go away and die.
 	* Made the WFmath handling sane too (we had extra -lwfmath
@@ -697,21 +702,21 @@ Wednesday, August 28th, James Turner
 	  If the meta-server is being used, and a connection object is created but
 	  not connected, then this bug (a segfault occurs), since the Connection
 	  is registered with the Poll instance and network activity can happen.
-	  
+
 	* Change the meta-server code to use the same life-time rationale for
 	  it's UDP stream that BaseConnection uses for the Atlas stream. Basically
 	  create the stream on refresh() and not before. This changes the default
 	  behaviour : creating a Meta instance will not trigger a list query. This allows
 	  the client to attach to the relevant signals before any failures can
 	  occurr (thanks Simon)
-	  
+
 	* Fixed game server list persistance (I hope). If a failure or cancel
 	  occurs while refreshing the list, Eris will revert back to the last
 	  'good' list it recieved (if one exists).
-	  
+
 	* Converted dispatcher clean up in Lobby dtor to use removeIfDispatcher instead
 	  of lame try { .. } catch {}  blocks.
-	  
+
 	* Added an explicit greater-than comparisom to Timestamp, so the tests compile.
 	  Did GCC 2.9.x implicitly use !(a > b) before? Certainly 3.1 seems not too.
 
@@ -807,7 +812,7 @@ Wednesday, May 15, James Turner
 	* Tweaked emission of CompletedServerList to do the right thing
 	* Hopefully fixed Meta::doFailure to remove _stream from the Poll
 	  object (should stop the stream of errors in Dime)
-	* Converted Meta::Failure to pass it's error by const reference, 
+	* Converted Meta::Failure to pass it's error by const reference,
  	  like all the other signals do
 
 Tuesday, May 14, Al Riddoch
@@ -850,7 +855,7 @@ Monday, April 29, James Turner
 	* Extended Lobby to deal with room creation internally,
 	  including a handler for SIGHT(CREATE) ops.
 	* Made Room::getID() more robust in the case where the ID
-	  is not available; now throws a meaningful exception, 
+	  is not available; now throws a meaningful exception,
 	  instead of returning an empty ID.
 	* Added initial lobby tests; as usual only partial coverage,
 	  but better than nothing.
@@ -892,7 +897,7 @@ Wednesday, April 23, James Turner
 	  all the clients now)
 	* Bumped the version up to 0.9.5 now the old
 	  Point / Orientation / BBox stuff is gone.
-	  
+
 Wednesday, April 17, James Turner
 
 	* Added entity tests (incomplete, and not linking for some
@@ -964,7 +969,7 @@ Tuesday, March 12 2002, James Turner
 	  ways to 'wedge' the connections, please let me know.
 	* Fix for #216 - logic in World::recvSightDelete to fix
 	  container ship of visible contents
-	* Preliminary work / re-factoring for #217 : added 
+	* Preliminary work / re-factoring for #217 : added
 	  setContents helper to Entity, and handle that case
 	  in setProperty.
 
@@ -1011,7 +1016,7 @@ Monday, February 11 2002, James Turner
 
 Sunday, February 10 2002, James Turner
 
-	* Added wait for INFO(LOGOUT) response from server, 
+	* Added wait for INFO(LOGOUT) response from server,
 	  and a timeout in case the server doesn't support that
 	* Added a signal on Player when a logout completes
 	* Added a comment in World.cpp about the TO field on
@@ -1039,8 +1044,8 @@ Tuesday, January 29 2002, James Turner
 
 Thursday, January 24 2002, James Turner
 
-	* Supports skstream2, thanks to Michael Koch for the 
-	  work. 
+	* Supports skstream2, thanks to Michael Koch for the
+	  work.
 
 Sunday, January 20 2002, Al Riddoch
 
@@ -1123,7 +1128,7 @@ Friday, December 14 2001, James Turner
 	* Correct processing of 'face' attr : it's a unit vector giving
 	  the direction, not a heading float. Thanks to Karsten for the
 	  info, hopefully this should work now.
-	  
+
 Wednesday, December 12 2001, James Turner
 
 	* Added Quaternion class to Types.h and Types.cpp
@@ -1133,13 +1138,13 @@ Wednesday, December 12 2001, James Turner
 	  and map it to a quaternion if the orientation attr is not found.
 	  This can be removed in a few weeks, but takes the pressure off
 	  alriddoch to update cyphesis-C++ 'right now'.
-	  
+
 	  All of the above is untested becuase I don't have a graphical client
 	  to test with; it compiles fine, and it's pretty simple, but
 	  beyond that I'm not sure.
 
 	* Moved an assert in Room.cpp (line 244) whcih was a bit premature
-	
+
 Wednesday, December 12 2001, James Turner
 
 	* Fixed OOG recvAppearance/Disappearance to handle multiple
@@ -1182,7 +1187,7 @@ Monday, November 26 2001, James Turner
 	* Handle Bounding boxes, the 'BMEDIAN' attribute and velocity/
 	  position better in Entity.
 	* Added BBox to Types
-	
+
 Saturday, November 24 2001, James Turner
 
 	* Cleaned up logging output for TypeInfo.cpp
@@ -1204,12 +1209,12 @@ Thursday, November 22 2001, James Turner
 	  been fixed, notably that logging in with a current version of
 	  Cyphesis-C++ should work
 	* Added a 'listUnbound' debugging helper to TypeInfo
-	
+
 	* Add a check in Lobby's ctor if the connection is already active;
 	  if so, run the netConnected callback directly. This avoids
 	  incorrect behaviour in certain intialisations orders.
 	* Rewrote World::recvAppear to deal with every argument in the
-	  list, not just the first one. 
+	  list, not just the first one.
 	* Added isVisible and setVisible methods to Entity, which are
 	  driven off Appearance and Disappearance ops from the server
 
@@ -1232,7 +1237,7 @@ Sunday, November 18 2001, James Turner
 	  since I am clearly doing something stupid with STL remove_if; it was
 	  leaving some objects in the queue. My reading for tonight is
 	  Scott Meyer's 'Effective STL', <sigh>
-	  
+
 	* Added a 'LogLevel' argument to Eris::Log, and changed all the callers to
 	  set it a sensible value; should reduce the amout of crap we have to
 	  wade through.
@@ -1279,7 +1284,7 @@ Tuesday, November 06 2001, James Turner
 	  if it's found in the same directory as the program.
 	* Changed the way INFOs are handled since we have proper
 	  inheritance now
-	* Various other fixes which needed type data to be working, 
+	* Various other fixes which needed type data to be working,
 	  e.g. the dispatchers for OOG now bind (correctly) to 'account',
 	  not 'player', so admin accounts and so on will work.
 	* Probably lots of bugs lying in the grass, but it works okay
@@ -1303,7 +1308,7 @@ Sunday, October 28 2001, James Turner
 	* Moved the 'Bound' signal into TypeInfo which is cleaner and gets
 	  rid of a global table
 	* Still much to do before it compiles or works
-	  
+
 Thursday, October 25 2001, James Turner
 
 	* Tweaked objectSummary to handle SET ops better, still needs more
@@ -1320,24 +1325,24 @@ Thursday, October 25 2001, James Turner
 	* Added WaitForBase as a friend of Connection so it can call the new method
 	  addWait which actually puts the WaitFors into the WaitList; this wasn't
 	  happending, hence the bug with WaitFors being fired multiple times.
-	  
+
 	* Added LeafDispatcher, a base class for (guess what?) leaf dispatchers,
 	  that sets a special attribute (__DISPATCHED__) when it's dispatch()
 	  method is invoked
-	* Connection::ObjectArrived tests (in debug mode) that all messages 
+	* Connection::ObjectArrived tests (in debug mode) that all messages
 	  have their __DISPATCHED__ attr set after being dispatched (unless an
 	  exception is thrown). This provides a warning in the log files if
 	  a message is completely ignored and 'drops out the bottom' of the
 	  disaptcher tree
 	* Updated SignalDisaptcher0/1/2 to inherit from LeafDispatcher and
 	  call it's dispatch implementation.
-	  
+
 	* Changed World::recvSightCreate to just call recvSightObject with
 	  a synthetic SIGHT op; the possiblity to do special CREATE only
 	  processing still exists, but this avoids problems where
 	  SIGHT(CREATE(entity)), LOOK(entity) and SIGHT(entity) get overlapped
 	  and so on.
-	  
+
 Tuesday, October 23 2001, James Turner
 
 	* Added objectSummary function in Utils, which gives a compact
@@ -1378,7 +1383,7 @@ Sunday, October 14 2001, James Turner
 	  This is required to route based upon args[loc=ID] in the new OOG
 	  format we are switching too.
 	* Rebuilt the Room and Lobby OOG routing code for sight / sound / imaginary
-	  apperance / disappearance. The code has been flipped; Lobby sets up 
+	  apperance / disappearance. The code has been flipped; Lobby sets up
 	  global class selectors for each op, and rooms insert ArgDispatch
 	  children below these to examine the 'loc' attribute.
 	* This needs some testing and verification, but I can't right now so
@@ -1405,7 +1410,7 @@ Thu, 27  Sep  2001 13:50:42 +0100, James Turner
 	* Changed inheritance of BaseException; now inherits from std::runtime_error,
 	  and correctly forwards the error string. As a result, exception.what() will
 	  return a sensible value. Thanks to Karsten Laux for the suggestion.
-	  
+
 	* Applied Karsten's re-ordering in World::World() (store the instance pointer
 	  before creating the default entity). I have no idea why this  went
 	  un-noticed in testing, very strange.
@@ -1458,12 +1463,12 @@ Monday, August 27 2001, Jmaes Turner <jmtn@blueyonder.co.uk>
 	  Connection in a state (currently only DISCONNECTING) while
 	  users of the connection perform tasks. Needs testing of
 	  course, but I think the principle is sound.
-	
+
 Sunday, August 19 2001, James Turner <jmtn@blueyonder.co.uk>
 
 	* Added support for emotes to OOG session
 	* New TypeInfo system (not tested yet)
-	* Re-wrote the Connection dispatch model to handle 
+	* Re-wrote the Connection dispatch model to handle
 	  re-dispathces more flexibly.
 	* Added a zero-argument SignalDispatcher
 	* Fixed Room Talk and Emote signals to send the
@@ -1523,7 +1528,7 @@ Wednesday, July 25 2001, James Turner
 	  SignalDispatcher3/4 etc could be provided, but this is
 	  unlikely to occurr much in practice.
 	* Bumped version to 0.1.3
-	* Handle Stage RIM Chat bug where ID of certain objects 
+	* Handle Stage RIM Chat bug where ID of certain objects
 	  is not set in SIGHTs (use TO attribute of SIGHT op)
 
 Sunday, July 22 2001, James Turner
@@ -1558,14 +1563,14 @@ Tuesday, July 03 2001, James Turner
 	* Correctly validate the entity stamp when processing
 		APPEARANCE ops.
 	* Added GetStamp() accessor to Entity
-	* Set serial number on most out-going ops	
+	* Set serial number on most out-going ops
 
 Monday, July 02 2001, James Turner
 
 	* Added meta-system; needs some work
 
 Wednesday, June 27 2001, James Turner
-	
+
 	* Re-factored connection into an underlying layer (BasicConnection)
 	and a public wrapper (Connection); this is to permit Meta-system
 	queries using a light-weight connection system.
@@ -1579,6 +1584,6 @@ Tuesday, June 26 2001, James Turner
 	* Appear / Disappear handled correctly
 	* Generates correct OOG Talk ops
 	* Preliminary support for IG operation
-	
+
 Friday, June 15 2001, James Turner
 Created initial change-log becuase automake requires it

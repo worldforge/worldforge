@@ -26,62 +26,62 @@ class View : public SigC::Object
 public:
     View(Avatar* av, const Atlas::Objects::Entity::GameEntity& gent);
     ~View();
-    
+
     Entity* getEntity(const std::string& eid) const;
-    
+
     Avatar* getAvatar() const
     {
         return m_owner;
     }
-    
+
     /** return the current top-level entity. This will return NULL
     until the first emission of the TopLevelEntityChanged signal. */
     Entity* getTopLevel() const
     {
         return m_topLevel;
     }
-        
+
     SigC::Signal1<void, Entity*> EntityCreated;
     SigC::Signal1<void, Entity*> EntityDeleted;
     SigC::Signal1<void, Entity*> Apperance;
     SigC::Signal1<void, Entity*> Disappearance;
-    
+
     /// emitted when the TLVE changes
     SigC::Signal0<void> TopLevelEntityChanged;
-    
-protected:    
+
+protected:
     // the router passes various relevant things to us directly
     friend class IGRouter;
     friend class Entity;
-    
+
     void appear(const std::string& eid, float stamp);
     void disappear(const std::string& eid);
     void sight(const Atlas::Objects::Entity::GameEntity& ge);
     void create(const Atlas::Objects::Entity::GameEntity& ge);
     void deleteEntity(const std::string& eid);
-    
+
     void setEntityVisible(Entity* ent, bool vis);
-    
+
     /// test if the specified entity ID is pending initial sight on the View
     bool isPending(const std::string& eid) const;
-            
+
 private:
     Entity* initialSight(const Atlas::Objects::Entity::GameEntity& ge);
-    
+
     Connection* getConnection() const;
     void getEntityFromServer(const std::string& eid);
-    
+
     /** helper to update the top-level entity, fire signals, etc */
     void setTopLevelEntity(Entity* newTopLevel);
-    
+
     typedef std::map<std::string, Entity*> IdEntityMap;
-    
+
     Avatar* m_owner;
     IdEntityMap m_contents;
     Entity* m_topLevel; ///< the top-level visible entity for this view
-    
+
     SigC::Signal1<void, Entity*> InitialSightEntity;
-    
+
     /** enum describing what action to take when sight of an entity
     arrives. This allows us to handle intervening disappears or
     deletes cleanly. */

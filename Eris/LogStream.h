@@ -7,15 +7,15 @@
 namespace Eris
 {
 
-class logStreamBase 
+class logStreamBase
 {
 public:
     std::ostream& operator<<(const std::string& s)
     {
         return m_stream << s;
     }
-    
-    
+
+
 protected:
 
     std::ostringstream m_stream;

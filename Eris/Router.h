@@ -17,7 +17,7 @@ public:
     } RouterResult;
 
     virtual RouterResult handleObject(const Atlas::Objects::Root& obj);
-    
+
     virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
     virtual RouterResult handleEntity(const Atlas::Objects::Entity::RootEntity& ent);
 };

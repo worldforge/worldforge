@@ -3,13 +3,13 @@
 #endif
 
 #include <Eris/view.h>
-#include <Eris/avatar.h>
 #include <Eris/redispatch.h>
 #include <Eris/Entity.h>
 #include <Eris/logStream.h>
 #include <Eris/Factory.h>
 #include <Eris/Connection.h>
 #include <Eris/Exceptions.h>
+#include <Eris/Avatar.h>
 
 #include <Atlas/Objects/Entity.h>
 
@@ -28,12 +28,12 @@ public:
         Redispatch(con, obj),
         m_id(eid)
     {;}
-    
+
     void onSightEntity(Entity* ent)
     {
         if (ent->getId() == m_id) post(); // KA-ching!
     }
-    
+
 private:
     std::string m_id;
 };
@@ -57,7 +57,7 @@ Entity* View::getEntity(const std::string& eid) const
 {
     IdEntityMap::const_iterator E = m_contents.find(eid);
     if (E == m_contents.end()) return NULL;
-    
+
     return E->second;
 }
 
@@ -81,20 +81,20 @@ void View::appear(const std::string& eid, float stamp)
         getEntityFromServer(eid);
         return; // everything else will be done once the SIGHT arrives
     }
-    
+
     if (ent->isVisible())
     {
         error() << "server sent an appearance for entity " << eid << " which thinks it is already visible.";
         return;
     }
-    
+
     if (stamp > ent->getStamp())
     {
         // local data is out of data, re-look
         getEntityFromServer(eid);
     } else
-        ent->setVisible(true); 
-   
+        ent->setVisible(true);
+
 }
 
 void View::disappear(const std::string& eid)
@@ -115,29 +115,29 @@ void View::disappear(const std::string& eid)
 void View::sight(const GameEntity& gent)
 {
     bool visible;
-    
-// examine the pending map, to see what we should do with this entity    
+
+// examine the pending map, to see what we should do with this entity
     switch (m_pending[gent->getId()])
     {
     case SACTION_APPEAR:
         visible = true;
         break;
-        
+
     case SACTION_DISCARD:
         m_pending.erase(gent->getId());
         return;
-    
+
     case SACTION_HIDE:
         visible = false;
         break;
-                
+
     default:
         throw InvalidOperation("got bad pending action for entity");
     }
-    
+
     m_pending.erase(gent->getId());
-    
-// if we got this far, go ahead and build / update it    
+
+// if we got this far, go ahead and build / update it
     Entity *ent = getEntity(gent->getId());
     if (ent)
     {
@@ -145,18 +145,18 @@ void View::sight(const GameEntity& gent)
         ent->sight(gent);
     } else
         ent = initialSight(gent);
-        
+
     if (gent->isDefaultLoc()) // new top level entity
         setTopLevelEntity(ent);
-    
+
     ent->setVisible(visible);
 }
 
 Entity* View::initialSight(const GameEntity& gent)
-{    
+{
     Entity* ent = Factory::createEntity(gent, this);
     m_contents[gent->getId()] = ent;
-     
+
     InitialSightEntity.emit(ent);
     return ent;
 }
@@ -165,7 +165,7 @@ void View::create(const GameEntity& gent)
 {
     Entity* ent = Factory::createEntity(gent, this);
     m_contents[gent->getId()] = ent;
-    
+
     if (gent->isDefaultLoc())
         setTopLevelEntity(ent);
 
@@ -211,16 +211,16 @@ void View::getEntityFromServer(const std::string& eid)
         // we force the action back to SACTION_APPEAR in a minute
         debug() << "duplicate getEntityFromServer for entity " << eid;
     }
-    
+
     m_pending[eid] = SACTION_APPEAR;
-    
+
     Look look;
     if (!eid.empty())
     {
 	Root what;
         what->setId(eid);
     }
-	
+
     look->setSerialno(getNewSerialno());
     look->setFrom(m_owner->getId());
     getConnection()->send(look);
@@ -229,16 +229,16 @@ void View::getEntityFromServer(const std::string& eid)
 void View::setTopLevelEntity(Entity* newTopLevel)
 {
     debug() << "setting new top-level entity";
-    
+
     if (m_topLevel)
     {
         if (m_topLevel->isVisible() && (m_topLevel->getLocation() == NULL))
             error() << "old top-level entity is visible, but has no location";
     }
-    
+
     assert(newTopLevel->isVisible());
     assert(newTopLevel->getLocation() == NULL);
-    
+
     m_topLevel = newTopLevel;
     TopLevelEntityChanged.emit(); // fire the signal
 }
