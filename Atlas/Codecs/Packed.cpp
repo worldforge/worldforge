@@ -4,6 +4,8 @@
 
 #include <Atlas/Codecs/Packed.h>
 
+#include <iostream>
+
 namespace Atlas { namespace Codecs {
 
 Packed::Packed(std::iostream& s, Atlas::Bridge* b)

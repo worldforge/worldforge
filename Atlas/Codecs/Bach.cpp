@@ -6,6 +6,8 @@
 
 #include <Atlas/Debug.h>
 
+#include <iostream>
+
 static const bool debug_flag = false;
 
 namespace Atlas { namespace Codecs {

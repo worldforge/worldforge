@@ -369,15 +369,15 @@ void %(classname)s::free()
             #if parent == "root": self.write('../')
             self.write(classize(parent) + '.h>\n')
         if not obj.parents:
-            self.write('#include <Atlas/Objects/BaseObject.h>\n')
-            self.write('#include <Atlas/Objects/SmartPtr.h>\n\n')
+            self.write('#include <Atlas/Objects/BaseObject.h>\n\n')
             self.write('#include <Atlas/Message/Element.h>\n\n')
-            self.write('#include <vector>\n')
+        else:
+            self.write('#include <Atlas/Objects/SmartPtr.h>\n')
         if obj.id=="root_operation":
-            #self.write('#include "../objectFactory.h"\n')
-            self.write('#include <Atlas/Objects/objectFactory.h>\n')
-        self.write("\n\n")
+            self.write('#include <Atlas/Objects/objectFactory.h>\n\n')
         self.ns_open(self.base_list)
+        if not obj.parents:
+            self.write('\ntemplate <class T> class SmartPtr;\n')
         static_attrs = self.get_name_value_type(obj, first_definition=1)
         self.interface(obj, static_attrs)
         self.ns_close(self.base_list)

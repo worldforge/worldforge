@@ -97,6 +97,7 @@ LIBS="$LIBS -L$with_zlib/lib"
 
 AC_CHECK_LIB(z, inflate,
     [
+        AC_DEFINE(HAVE_LIBZ, 1, ["True if zlib is available"])
         OTHER_LIBS="$OTHER_LIBS -lz"
     ])
 
@@ -119,6 +120,7 @@ LIBS="$LIBS -L$with_bzlib/lib"
 
 AC_CHECK_LIB(bz2, BZ2_bzDecompressInit,
     [
+        AC_DEFINE(HAVE_LIBBZ2, 1, ["True if libbz2 is available"])
         OTHER_LIBS="$OTHER_LIBS -lbz2"
     ])
 

@@ -7,7 +7,7 @@
 
 #include <Atlas/Codec.h>
 
-#include <iostream>
+#include <iosfwd>
 #include <stack>
 
 namespace Atlas { namespace Codecs {

@@ -8,7 +8,7 @@
 
 #if defined(HAVE_BZLIB_H) && defined(HAVE_LIBBZ2)
 
-#include <Atlas/Filers/Bzip2.h>
+#include <Atlas/Filters/Bzip2.h>
 
 #ifndef ASSERT
 #include <cassert>

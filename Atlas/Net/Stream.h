@@ -6,7 +6,6 @@
 #define ATLAS_NET_STREAM_H
 
 #include <Atlas/Negotiate.h>
-#include <Atlas/Filter.h>
 
 #include <iosfwd>
 #include <string>

@@ -5,11 +5,7 @@
 #ifndef ATLAS_FILTERS_BZIP2_H
 #define ATLAS_FILTERS_BZIP2_H
 
-#if defined(HAVE_BZLIB_H) && defined(HAVE_LIBBZ2)
-
 #include <Atlas/Filter.h>
-
-#include <cstdio>
 
 // my version of bzlib.h does not have extern "C" in the header file,
 // like it should
@@ -36,7 +32,5 @@ class Bzip2 : public Filter
 };
 
 } } // namespace Atlas::Filters
-
-#endif // HAVE_BZLIB_H && HAVE_LIBBZ2
 
 #endif // ATLAS_FILTERS_BZIP2_H

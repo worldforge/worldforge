@@ -4,6 +4,8 @@
 
 #include <Atlas/Codecs/XML.h>
 
+#include <iostream>
+
 namespace Atlas { namespace Codecs {
     
 XML::XML(std::iostream& s, Atlas::Bridge* b)

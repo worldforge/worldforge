@@ -22,11 +22,13 @@ class GenerateDecoder:
         self.write("""
 #include <Atlas/Message/DecoderBase.h>
 
-#include <Atlas/Objects/Root.h>
-
 """) #"for xemacs syntax highlighting
         self.ns_open(self.base_list)
         self.write("""
+template <class T> class SmartPtr;
+class RootData;
+typedef SmartPtr<RootData> Root;
+
 /** Objects hierarchy decoder
  *
  * This decoder can be bound to a codec, will assemble incoming messages,
@@ -72,7 +74,8 @@ protected:
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
         self.write('\n#include <Atlas/Objects/Decoder.h>\n')
-        self.write('\n#include <Atlas/Objects/objectFactory.h>\n\n')
+        self.write('\n#include <Atlas/Objects/objectFactory.h>\n')
+        self.write('\n#include <Atlas/Objects/SmartPtr.h>\n\n')
         self.ns_open(self.base_list)
         self.write("""
 ObjectsDecoder::~ObjectsDecoder()

@@ -1,3 +1,20 @@
+2004-02-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix detection and flagging for zlib and libbz2.
+
+	* Atlas/Filters/Bzip2.cpp, Atlas/Filters/Bzip2.h, Atlas/Filters/Gzip.h:
+	  Fix building of filters. Typos broke it.
+
+	* Atlas/Factory.cpp, Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h,
+	  Atlas/Codecs/Packed.cpp, Atlas/Codecs/Packed.h,
+	  Atlas/Codecs/XML.cpp, Atlas/Codecs/XML.h, Atlas/Net/Stream.h,
+	  Atlas/Objects/loadDefaults.cpp: Remove unnecessary includes
+	  and use forward declarations where apropriate.
+
+	* Atlas/Objects/GenerateDecoder.py, Atlas/Objects/gen_cpp.py:
+	  Use forward declarations to minimise use of includes in Objects
+	  headers.
+
 2004-02-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/AttributeInfo.py: Make sure setFooAsList() methods

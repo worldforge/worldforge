@@ -5,8 +5,6 @@
 #ifndef ATLAS_FILTERS_GZIP_H
 #define ATLAS_FILTERS_GZIP_H
 
-#if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
-
 #include <Atlas/Filter.h>
 
 #include <zlib.h>
@@ -29,7 +27,5 @@ class Gzip : public Filter
 };
 
 } } // namespace Atlas::Filters
-
-#endif // HAVE_ZLIB_H && HAVE_LIBZ
 
 #endif // ATLAS_FILTERS_GZIP_H

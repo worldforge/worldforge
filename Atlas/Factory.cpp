@@ -6,15 +6,13 @@
 #include "config.h"
 #endif
 
+#include <Atlas/Factory.h>
+
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Codecs/Packed.h>
 
 #include <Atlas/Filters/Gzip.h>
 #include <Atlas/Filters/Bzip2.h>
-
-#include <Atlas/Factory.h>
-#include <Atlas/Codec.h>
-#include <Atlas/Filter.h>
 
 namespace Atlas {
 

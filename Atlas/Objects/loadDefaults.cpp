@@ -4,9 +4,11 @@
 
 #include <Atlas/Objects/loadDefaults.h>
 
-#include <Atlas/Message/DecoderBase.h>
+#include <Atlas/Objects/SmartPtr.h>
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/objectFactory.h>
+
+#include <Atlas/Message/DecoderBase.h>
 
 #include <Atlas/Codecs/XML.h>
 
