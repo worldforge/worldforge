@@ -21,4 +21,15 @@ Perception::Perception()
     SetAttr("specification", string("atlas-game"));
 }
 
+Perception Perception::Instantiate()
+{
+    Perception perception;
+
+    Object::ListType parent;
+    parent.push_back(string("perception"));
+    perception.SetAttr("parent", parent);
+    
+    return perception;
+}
+
 } } } // namespace Atlas::Objects::Operation

@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Character hears something
+
+Base operator for all kind of perceptions
+
+*/
 class Sound : public Perception
 {
 public:
     Sound();
     virtual ~Sound() { }
+
+    static Sound Instantiate();
 
 protected:
 };

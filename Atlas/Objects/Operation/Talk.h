@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** used for talking
+
+need to relook at that 'Magic voice that steps on something crunchy and makes magic voice which...' -IRC log
+
+*/
 class Talk : public Communicate
 {
 public:
     Talk();
     virtual ~Talk() { }
+
+    static Talk Instantiate();
 
 protected:
 };

@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** When something is not yet implemented in server, then character can pretend to do something ;-)
+
+Base operator for all kind of perceptions
+
+*/
 class Imaginary : public Perception
 {
 public:
     Imaginary();
     virtual ~Imaginary() { }
+
+    static Imaginary Instantiate();
 
 protected:
 };

@@ -20,4 +20,15 @@ Sound::Sound()
     SetAttr("parent", parent);
 }
 
+Sound Sound::Instantiate()
+{
+    Sound sound;
+
+    Object::ListType parent;
+    parent.push_back(string("sound"));
+    sound.SetAttr("parent", parent);
+    
+    return sound;
+}
+
 } } } // namespace Atlas::Objects::Operation

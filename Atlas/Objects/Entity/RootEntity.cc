@@ -35,4 +35,15 @@ RootEntity::RootEntity()
     SetAttr("stamp_contains", 0.0);
 }
 
+RootEntity RootEntity::Instantiate()
+{
+    RootEntity root_entity;
+
+    Object::ListType parent;
+    parent.push_back(string("root_entity"));
+    root_entity.SetAttr("parent", parent);
+    
+    return root_entity;
+}
+
 } } } // namespace Atlas::Objects::Entity

@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Character feels something (with fingers usually)
+
+Base operator for all kind of perceptions
+
+*/
 class Feel : public Perception
 {
 public:
     Feel();
     virtual ~Feel() { }
+
+    static Feel Instantiate();
 
 protected:
 };

@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Entity { 
 
+/** All classes and objects used for adminitrativive purposes
+
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
+
+*/
 class AdminEntity : public RootEntity
 {
 public:
     AdminEntity();
     virtual ~AdminEntity() { }
+
+    static AdminEntity Instantiate();
 
 protected:
 };

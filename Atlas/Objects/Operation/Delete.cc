@@ -20,4 +20,15 @@ Delete::Delete()
     SetAttr("parent", parent);
 }
 
+Delete Delete::Instantiate()
+{
+    Delete delete;
+
+    Object::ListType parent;
+    parent.push_back(string("delete"));
+    delete.SetAttr("parent", parent);
+    
+    return delete;
+}
+
 } } } // namespace Atlas::Objects::Operation

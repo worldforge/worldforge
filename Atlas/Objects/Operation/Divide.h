@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Divide existing object into pieces.
+
+One of the pieces might be original object modified.
+
+*/
 class Divide : public Create
 {
 public:
     Divide();
     virtual ~Divide() { }
+
+    static Divide Instantiate();
 
 protected:
 };

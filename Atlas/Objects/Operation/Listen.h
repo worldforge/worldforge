@@ -10,11 +10,22 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Listen (something)
+
+This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.
+
+*/
 class Listen : public Perceive
 {
 public:
     Listen();
     virtual ~Listen() { }
+
+    static Listen Instantiate();
 
 protected:
 };

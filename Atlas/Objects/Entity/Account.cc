@@ -21,4 +21,15 @@ Account::Account()
     SetAttr("password", string(""));
 }
 
+Account Account::Instantiate()
+{
+    Account account;
+
+    Object::ListType parent;
+    parent.push_back(string("account"));
+    account.SetAttr("parent", parent);
+    
+    return account;
+}
+
 } } } // namespace Atlas::Objects::Entity

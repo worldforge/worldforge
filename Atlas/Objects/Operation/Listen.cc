@@ -20,4 +20,15 @@ Listen::Listen()
     SetAttr("parent", parent);
 }
 
+Listen Listen::Instantiate()
+{
+    Listen listen;
+
+    Object::ListType parent;
+    parent.push_back(string("listen"));
+    listen.SetAttr("parent", parent);
+    
+    return listen;
+}
+
 } } } // namespace Atlas::Objects::Operation

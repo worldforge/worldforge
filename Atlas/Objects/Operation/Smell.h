@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Character smells something
+
+Base operator for all kind of perceptions
+
+*/
 class Smell : public Perception
 {
 public:
     Smell();
     virtual ~Smell() { }
+
+    static Smell Instantiate();
 
 protected:
 };

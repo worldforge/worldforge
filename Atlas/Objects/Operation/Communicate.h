@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Base operator for all kind of communication.
+
+Map editor is main user for this in client side. Server uses this inside "info" operation to tell client about new things.
+
+*/
 class Communicate : public Create
 {
 public:
     Communicate();
     virtual ~Communicate() { }
+
+    static Communicate Instantiate();
 
 protected:
 };

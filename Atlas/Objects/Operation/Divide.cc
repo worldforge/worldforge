@@ -21,4 +21,15 @@ Divide::Divide()
     SetAttr("specification", string("atlas-game"));
 }
 
+Divide Divide::Instantiate()
+{
+    Divide divide;
+
+    Object::ListType parent;
+    parent.push_back(string("divide"));
+    divide.SetAttr("parent", parent);
+    
+    return divide;
+}
+
 } } } // namespace Atlas::Objects::Operation

@@ -20,4 +20,15 @@ Disappearance::Disappearance()
     SetAttr("parent", parent);
 }
 
+Disappearance Disappearance::Instantiate()
+{
+    Disappearance disappearance;
+
+    Object::ListType parent;
+    parent.push_back(string("disappearance"));
+    disappearance.SetAttr("parent", parent);
+    
+    return disappearance;
+}
+
 } } } // namespace Atlas::Objects::Operation

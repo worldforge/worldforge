@@ -21,4 +21,15 @@ Perceive::Perceive()
     SetAttr("specification", string("atlas-game"));
 }
 
+Perceive Perceive::Instantiate()
+{
+    Perceive perceive;
+
+    Object::ListType parent;
+    parent.push_back(string("perceive"));
+    perceive.SetAttr("parent", parent);
+    
+    return perceive;
+}
+
 } } } // namespace Atlas::Objects::Operation

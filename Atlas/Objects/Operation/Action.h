@@ -10,11 +10,22 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** This is base operator for operations that might have effects.
+
+This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'.
+
+*/
 class Action : public RootOperation
 {
 public:
     Action();
     virtual ~Action() { }
+
+    static Action Instantiate();
 
 protected:
 };

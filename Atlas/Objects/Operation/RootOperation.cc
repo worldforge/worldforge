@@ -30,4 +30,15 @@ RootOperation::RootOperation()
     SetAttr("args", args);
 }
 
+RootOperation RootOperation::Instantiate()
+{
+    RootOperation root_operation;
+
+    Object::ListType parent;
+    parent.push_back(string("root_operation"));
+    root_operation.SetAttr("parent", parent);
+    
+    return root_operation;
+}
+
 } } } // namespace Atlas::Objects::Operation

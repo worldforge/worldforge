@@ -22,4 +22,15 @@ GameEntity::GameEntity()
     SetAttr("interface", string("game_interface"));
 }
 
+GameEntity GameEntity::Instantiate()
+{
+    GameEntity game_entity;
+
+    Object::ListType parent;
+    parent.push_back(string("game_entity"));
+    game_entity.SetAttr("parent", parent);
+    
+    return game_entity;
+}
+
 } } } // namespace Atlas::Objects::Entity

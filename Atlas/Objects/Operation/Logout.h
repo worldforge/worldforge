@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Operation for logging out
+
+For more about <a href="login.html">out of game atlas here</a>
+
+*/
 class Logout : public Login
 {
 public:
     Logout();
     virtual ~Logout() { }
+
+    static Logout Instantiate();
 
 protected:
 };

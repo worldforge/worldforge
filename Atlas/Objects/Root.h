@@ -25,6 +25,8 @@ public:
     Root(const string& id);
     virtual ~Root();
 
+    static Root Instantiate();
+
     virtual bool HasAttr(const std::string& name) const;
     virtual const Atlas::Message::Object& GetAttr(const std::string& name)
         const throw (NoSuchAttrException);

@@ -20,4 +20,15 @@ Game::Game()
     SetAttr("parent", parent);
 }
 
+Game Game::Instantiate()
+{
+    Game game;
+
+    Object::ListType parent;
+    parent.push_back(string("game"));
+    game.SetAttr("parent", parent);
+    
+    return game;
+}
+
 } } } // namespace Atlas::Objects::Entity

@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Operation for logging into server
+
+For more about <a href="login.html">out of game atlas here</a>
+
+*/
 class Login : public Get
 {
 public:
     Login();
     virtual ~Login() { }
+
+    static Login Instantiate();
 
 protected:
 };

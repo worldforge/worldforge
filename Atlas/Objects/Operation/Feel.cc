@@ -20,4 +20,15 @@ Feel::Feel()
     SetAttr("parent", parent);
 }
 
+Feel Feel::Instantiate()
+{
+    Feel feel;
+
+    Object::ListType parent;
+    parent.push_back(string("feel"));
+    feel.SetAttr("parent", parent);
+    
+    return feel;
+}
+
 } } } // namespace Atlas::Objects::Operation

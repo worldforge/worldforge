@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Combine existing objects into new objects.
+
+This is how normal characters create objects.
+
+*/
 class Combine : public Create
 {
 public:
     Combine();
     virtual ~Combine() { }
+
+    static Combine Instantiate();
 
 protected:
 };

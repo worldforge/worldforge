@@ -20,4 +20,15 @@ AdminEntity::AdminEntity()
     SetAttr("parent", parent);
 }
 
+AdminEntity AdminEntity::Instantiate()
+{
+    AdminEntity admin_entity;
+
+    Object::ListType parent;
+    parent.push_back(string("admin_entity"));
+    admin_entity.SetAttr("parent", parent);
+    
+    return admin_entity;
+}
+
 } } } // namespace Atlas::Objects::Entity

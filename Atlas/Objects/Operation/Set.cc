@@ -20,4 +20,15 @@ Set::Set()
     SetAttr("parent", parent);
 }
 
+Set Set::Instantiate()
+{
+    Set set;
+
+    Object::ListType parent;
+    parent.push_back(string("set"));
+    set.SetAttr("parent", parent);
+    
+    return set;
+}
+
 } } } // namespace Atlas::Objects::Operation

@@ -20,4 +20,15 @@ Logout::Logout()
     SetAttr("parent", parent);
 }
 
+Logout Logout::Instantiate()
+{
+    Logout logout;
+
+    Object::ListType parent;
+    parent.push_back(string("logout"));
+    logout.SetAttr("parent", parent);
+    
+    return logout;
+}
+
 } } } // namespace Atlas::Objects::Operation

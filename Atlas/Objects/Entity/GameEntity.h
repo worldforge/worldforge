@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Entity { 
 
+/** All In Game classes and objects
+
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
+
+*/
 class GameEntity : public RootEntity
 {
 public:
     GameEntity();
     virtual ~GameEntity() { }
+
+    static GameEntity Instantiate();
 
 protected:
 };

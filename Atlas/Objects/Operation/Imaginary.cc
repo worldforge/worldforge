@@ -20,4 +20,15 @@ Imaginary::Imaginary()
     SetAttr("parent", parent);
 }
 
+Imaginary Imaginary::Instantiate()
+{
+    Imaginary imaginary;
+
+    Object::ListType parent;
+    parent.push_back(string("imaginary"));
+    imaginary.SetAttr("parent", parent);
+    
+    return imaginary;
+}
+
 } } } // namespace Atlas::Objects::Operation

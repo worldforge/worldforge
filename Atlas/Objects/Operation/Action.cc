@@ -20,4 +20,15 @@ Action::Action()
     SetAttr("parent", parent);
 }
 
+Action Action::Instantiate()
+{
+    Action action;
+
+    Object::ListType parent;
+    parent.push_back(string("action"));
+    action.SetAttr("parent", parent);
+    
+    return action;
+}
+
 } } } // namespace Atlas::Objects::Operation

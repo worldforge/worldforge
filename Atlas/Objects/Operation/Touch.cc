@@ -20,4 +20,15 @@ Touch::Touch()
     SetAttr("parent", parent);
 }
 
+Touch Touch::Instantiate()
+{
+    Touch touch;
+
+    Object::ListType parent;
+    parent.push_back(string("touch"));
+    touch.SetAttr("parent", parent);
+    
+    return touch;
+}
+
 } } } // namespace Atlas::Objects::Operation

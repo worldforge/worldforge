@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Character sees something disappearing: it literally disappears or has it gone too far to be visible
+
+Base operator for all kind of perceptions
+
+*/
 class Disappearance : public Sight
 {
 public:
     Disappearance();
     virtual ~Disappearance() { }
+
+    static Disappearance Instantiate();
 
 protected:
 };

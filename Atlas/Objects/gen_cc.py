@@ -112,6 +112,17 @@ class GenerateCC:
                 self.out.write(');\n')
         self.out.write("}\n")
         self.out.write("\n")
+    def instantiation(self, obj):
+        id = obj.attr['id'].value
+        self.out.write("%s %s::Instantiate()\n{\n" \
+                       % (self.classname, self.classname))
+        self.out.write("    " + self.classname + " " + id + ";\n\n")
+        self.out.write("    Object::ListType parent;\n")
+        self.out.write('    parent.push_back(string("%s"));\n' % id)
+        self.out.write("    " + id + '.SetAttr("parent", parent);\n')
+        self.out.write("    \n")
+        self.out.write("    return " + id + ";\n")
+        self.out.write("}\n\n")
     def interface(self, obj):
         print "Output of interface for:"
         print self.outdir + '/' + self.classname + ".h"
@@ -128,6 +139,10 @@ class GenerateCC:
         else:
             self.ns_open(['Atlas', 'Objects'])
         self.out.write("\n")
+        self.out.write("/** " + obj.attr['description'].value + "\n")
+        self.out.write("\n")
+        self.out.write(obj.attr['long_description'].value + "\n\n")
+        self.out.write("*/\n")
         self.out.write("class " + self.classname)
         parentlist = map(lambda parent:"public " + classize(parent), \
                      obj.attr['parent'].value)
@@ -138,6 +153,8 @@ class GenerateCC:
         self.out.write("public:\n")
         self.constructors_if(obj)
         self.out.write("    virtual ~" + self.classname + "() { }\n")
+        self.out.write("\n")
+        self.out.write("    static " + self.classname + " Instantiate();\n")
         self.out.write("\n")
         self.out.write("protected:\n")
         self.out.write("};\n\n")
@@ -166,6 +183,7 @@ class GenerateCC:
             self.ns_open(['Atlas', 'Objects'])
         self.out.write("\n")
         self.constructors_im(obj)
+        self.instantiation(obj)
         if outdir != ".":
             self.ns_close(['Atlas', 'Objects', outdir])
         else:

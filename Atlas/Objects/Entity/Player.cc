@@ -22,4 +22,15 @@ Player::Player()
     SetAttr("characters", characters);
 }
 
+Player Player::Instantiate()
+{
+    Player player;
+
+    Object::ListType parent;
+    parent.push_back(string("player"));
+    player.SetAttr("parent", parent);
+    
+    return player;
+}
+
 } } } // namespace Atlas::Objects::Entity

@@ -21,4 +21,15 @@ Move::Move()
     SetAttr("specification", string("atlas-game"));
 }
 
+Move Move::Instantiate()
+{
+    Move move;
+
+    Object::ListType parent;
+    parent.push_back(string("move"));
+    move.SetAttr("parent", parent);
+    
+    return move;
+}
+
 } } } // namespace Atlas::Objects::Operation

@@ -20,4 +20,15 @@ Info::Info()
     SetAttr("parent", parent);
 }
 
+Info Info::Instantiate()
+{
+    Info info;
+
+    Object::ListType parent;
+    parent.push_back(string("info"));
+    info.SetAttr("parent", parent);
+    
+    return info;
+}
+
 } } } // namespace Atlas::Objects::Operation

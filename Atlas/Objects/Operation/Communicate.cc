@@ -21,4 +21,15 @@ Communicate::Communicate()
     SetAttr("specification", string("atlas-game"));
 }
 
+Communicate Communicate::Instantiate()
+{
+    Communicate communicate;
+
+    Object::ListType parent;
+    parent.push_back(string("communicate"));
+    communicate.SetAttr("parent", parent);
+    
+    return communicate;
+}
+
 } } } // namespace Atlas::Objects::Operation

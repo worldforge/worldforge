@@ -20,4 +20,15 @@ Error::Error()
     SetAttr("parent", parent);
 }
 
+Error Error::Instantiate()
+{
+    Error error;
+
+    Object::ListType parent;
+    parent.push_back(string("error"));
+    error.SetAttr("parent", parent);
+    
+    return error;
+}
+
 } } } // namespace Atlas::Objects::Operation

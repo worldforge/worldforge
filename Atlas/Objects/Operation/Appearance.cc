@@ -20,4 +20,15 @@ Appearance::Appearance()
     SetAttr("parent", parent);
 }
 
+Appearance Appearance::Instantiate()
+{
+    Appearance appearance;
+
+    Object::ListType parent;
+    parent.push_back(string("appearance"));
+    appearance.SetAttr("parent", parent);
+    
+    return appearance;
+}
+
 } } } // namespace Atlas::Objects::Operation

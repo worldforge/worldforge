@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Character sees something
+
+Base operator for all kind of perceptions
+
+*/
 class Sight : public Perception
 {
 public:
     Sight();
     virtual ~Sight() { }
+
+    static Sight Instantiate();
 
 protected:
 };

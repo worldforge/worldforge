@@ -20,4 +20,15 @@ Sniff::Sniff()
     SetAttr("parent", parent);
 }
 
+Sniff Sniff::Instantiate()
+{
+    Sniff sniff;
+
+    Object::ListType parent;
+    parent.push_back(string("sniff"));
+    sniff.SetAttr("parent", parent);
+    
+    return sniff;
+}
+
 } } } // namespace Atlas::Objects::Operation

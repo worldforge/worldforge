@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+/** Change position
+
+More about <a href="move.html">movement here</a>
+
+*/
 class Move : public Set
 {
 public:
     Move();
     virtual ~Move() { }
+
+    static Move Instantiate();
 
 protected:
 };

@@ -20,4 +20,15 @@ Smell::Smell()
     SetAttr("parent", parent);
 }
 
+Smell Smell::Instantiate()
+{
+    Smell smell;
+
+    Object::ListType parent;
+    parent.push_back(string("smell"));
+    smell.SetAttr("parent", parent);
+    
+    return smell;
+}
+
 } } } // namespace Atlas::Objects::Operation

@@ -20,4 +20,15 @@ Get::Get()
     SetAttr("parent", parent);
 }
 
+Get Get::Instantiate()
+{
+    Get get;
+
+    Object::ListType parent;
+    parent.push_back(string("get"));
+    get.SetAttr("parent", parent);
+    
+    return get;
+}
+
 } } } // namespace Atlas::Objects::Operation

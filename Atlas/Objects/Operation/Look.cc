@@ -20,4 +20,15 @@ Look::Look()
     SetAttr("parent", parent);
 }
 
+Look Look::Instantiate()
+{
+    Look look;
+
+    Object::ListType parent;
+    parent.push_back(string("look"));
+    look.SetAttr("parent", parent);
+    
+    return look;
+}
+
 } } } // namespace Atlas::Objects::Operation

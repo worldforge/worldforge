@@ -21,4 +21,15 @@ Combine::Combine()
     SetAttr("specification", string("atlas-game"));
 }
 
+Combine Combine::Instantiate()
+{
+    Combine combine;
+
+    Object::ListType parent;
+    parent.push_back(string("combine"));
+    combine.SetAttr("parent", parent);
+    
+    return combine;
+}
+
 } } } // namespace Atlas::Objects::Operation

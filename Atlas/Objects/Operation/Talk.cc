@@ -20,4 +20,15 @@ Talk::Talk()
     SetAttr("parent", parent);
 }
 
+Talk Talk::Instantiate()
+{
+    Talk talk;
+
+    Object::ListType parent;
+    parent.push_back(string("talk"));
+    talk.SetAttr("parent", parent);
+    
+    return talk;
+}
+
 } } } // namespace Atlas::Objects::Operation

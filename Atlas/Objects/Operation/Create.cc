@@ -20,4 +20,15 @@ Create::Create()
     SetAttr("parent", parent);
 }
 
+Create Create::Instantiate()
+{
+    Create create;
+
+    Object::ListType parent;
+    parent.push_back(string("create"));
+    create.SetAttr("parent", parent);
+    
+    return create;
+}
+
 } } } // namespace Atlas::Objects::Operation

@@ -20,4 +20,15 @@ Sight::Sight()
     SetAttr("parent", parent);
 }
 
+Sight Sight::Instantiate()
+{
+    Sight sight;
+
+    Object::ListType parent;
+    parent.push_back(string("sight"));
+    sight.SetAttr("parent", parent);
+    
+    return sight;
+}
+
 } } } // namespace Atlas::Objects::Operation

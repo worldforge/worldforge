@@ -10,11 +10,18 @@
 
 namespace Atlas { namespace Objects { namespace Entity { 
 
+/** Base class for accounts
+
+Later in hierarchy tree objtype changes to 'object' when actual game objects are made.
+
+*/
 class Account : public AdminEntity
 {
 public:
     Account();
     virtual ~Account() { }
+
+    static Account Instantiate();
 
 protected:
 };

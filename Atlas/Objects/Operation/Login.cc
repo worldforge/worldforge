@@ -20,4 +20,15 @@ Login::Login()
     SetAttr("parent", parent);
 }
 
+Login Login::Instantiate()
+{
+    Login login;
+
+    Object::ListType parent;
+    parent.push_back(string("login"));
+    login.SetAttr("parent", parent);
+    
+    return login;
+}
+
 } } } // namespace Atlas::Objects::Operation

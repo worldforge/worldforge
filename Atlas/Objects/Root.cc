@@ -13,18 +13,27 @@ namespace Atlas { namespace Objects {
 
 Root::Root()
 {
-    SetAttr("parent", string("root"));
-    SetAttr("id", string(""));
+    Object::ListType parent;
+    SetAttr("parent", parent);
+    SetAttr("id", string("root"));
 }
 
 Root::Root(const string& id)
 {
-    SetAttr("parent", string("root"));
+    Object::ListType parent;
+    parent.push_back(string("root"));
+    SetAttr("parent", parent);
     SetAttr("id", id);
 }
 
 Root::~Root()
 {
+}
+
+Root Root::Instantiate()
+{
+    Root root("");
+    return root;
 }
 
 bool Root::HasAttr(const string& name) const
