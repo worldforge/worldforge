@@ -1,15 +1,14 @@
-TODO for conftest
-
-IMPORTANT:
- * automake/autoconf
+TODO for varconf
 
 Minor Tasks:
  * Make VALUE and EXPECT_VALUE behave nicer (loosen up on the unquoted value
    format)
  * Use a better way to do Variable::is_bool()
- * Add comments to all code and look into any optimizations. 
- * Clean-up getCmdline(). 
+ * Optimize Config::getCmdline()
 
 Major Tasks:
- * Convert callbacks to libsigc++.
- * Add section support to environment variables if needed.
+ * Convert call_back routines to libsigc++.
+ * Add section support to environment variables.
+ * Check short-form command-line arguments in Config::getCmdline() so the
+   single character is either a letter or a number.
+ * Complete section 5 of README and clean-up other sections.

@@ -1,5 +1,6 @@
+#include <iostream.h>
 #include <unistd.h>
-#include "Config.h"
+#include <varconf/Config.h>
 
 using namespace varconf;
 
