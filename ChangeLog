@@ -1,5 +1,12 @@
+2003-04-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Matrix.cpp, Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Terrain.cpp: Move source into Mercator subdir
+	  for portability.
+
 2003-03-31 Damien McGinnes
-        * src/tile.cpp: modified algorithm, cleaned up code slightly
+
+	* src/tile.cpp: modified algorithm, cleaned up code slightly
 	  algorithm now generates 1 tile very quickly, but has problems
 	  on steep tiles where one side is quite flat. (seams are more
 	  visible).

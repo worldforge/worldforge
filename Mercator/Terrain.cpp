@@ -2,10 +2,10 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#include "Terrain.h"
+#include <Mercator/Terrain.h>
 
-#include "Matrix.h"
-#include "Segment.h"
+#include <Mercator/Matrix.h>
+#include <Mercator/Segment.h>
 
 namespace Mercator {
 

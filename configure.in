@@ -1,4 +1,4 @@
-AC_INIT(src/Mercator.cpp)
+AC_INIT(Mercator/Mercator.cpp)
 
 dnl Information
 
@@ -103,7 +103,7 @@ AC_SUBST(MERCATOR_REQUIRES)
 
 AC_OUTPUT([
 Makefile
-src/Makefile
+Mercator/Makefile
 mercator-config
 mercator.spec
 mercator-0.2.pc

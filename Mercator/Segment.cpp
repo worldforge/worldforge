@@ -2,11 +2,11 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#include "Segment.h"
+#include <Mercator/Segment.h>
 
-#include "Terrain.h"
+#include <Mercator/Terrain.h>
 
-#include "tile.h"
+#include <Mercator/tile.h>
 
 #include <iostream>
 

@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = Mercator
 
 EXTRA_DIST = mercator.m4 mercator-config.1
 

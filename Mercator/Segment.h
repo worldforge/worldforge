@@ -5,7 +5,7 @@
 #ifndef MERCATOR_SEGMENT_H
 #define MERCATOR_SEGMENT_H
 
-#include "Matrix.h"
+#include <Mercator/Matrix.h>
 
 namespace Mercator {
 
