@@ -1,10 +1,16 @@
+Makefile
+Makefile.in
 aclocal.m4
+config.cache
 config.guess
+config.log
+config.status
 config.sub
 configure
 install-sh
+libtool
 ltconfig
 ltmain.sh
 missing
 mkinstalldirs
-Makefile
+
