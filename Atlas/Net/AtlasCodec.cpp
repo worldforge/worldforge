@@ -35,8 +35,9 @@ void ACodec::feedStream(string& data)
 	proto->getDecoder()->feedStream(data);
 }
 
-AObject ACodec::getMessage()
+AObject& ACodec::getMessage()
 {
+	DebugMsg1(5,"GETTING MESSAGE\n\n","");
 	return msg;
 }
 
@@ -74,6 +75,7 @@ int ACodec::hasMessage()
 			names[nestd] = name;
 			if (type == AProtocol::atlasMAP) {
 				// start a nested list
+				DebugMsg1(1,"MAKE_MAP","");
 				stack[nestd] = AObject::mkMap();
 				DebugMsg2(1,"ADD_MAP nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
@@ -115,13 +117,17 @@ int ACodec::hasMessage()
 			// got a message trailer
 			//assert(nestd == 0);
 			// should have unraveled all nesting by now
+			DebugMsg1(1,"MESSAGE COMPLETE\n\n","");
 			msg = stack[0];
 			state = codecIDLE; // get outa the loop !!
 		}
 		DebugMsg1(1,"\n\n","");
 	} while (proto->getDecoder()->hasTokens() && state == codecBUSY);
 	// check if we have a complete message
-	if (state == codecIDLE) return 1;
+	if (state == codecIDLE) {
+		DebugMsg1(1,"Returning HAS MESSAGE !!\n\n","");
+		return 1;
+	}
 	// still more message to process
 	return 0;
 }

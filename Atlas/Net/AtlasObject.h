@@ -10,12 +10,7 @@
 #define __AtlasObject_h_
 
 #include "AtlasDebug.h"
-
-#ifdef _WIN32
-#include <Python/python.h>
-#else
-#include <Python.h>
-#endif
+#include "AtlasPython.h"
 
 #include <string>
 

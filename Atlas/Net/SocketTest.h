@@ -9,6 +9,7 @@
 #ifndef __SocketTest_h_
 #define __SocketTest_h_
 
+#include "AtlasObject.h"
 #include "AtlasSocket.h"
 #include "AtlasTCPSocket.h"
 
@@ -17,9 +18,6 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#include <Python/python.h>
-#else
-#include <Python.h>
 #endif
 
 class SocketTest

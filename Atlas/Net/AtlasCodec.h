@@ -43,7 +43,7 @@ string		encodeMessage(AObject& amsg);
 int		encodedLength();
 
 void 		feedStream(string& data);
-AObject		getMessage();
+AObject&		getMessage();
 int		hasMessage();
 void		freeMessage();
 

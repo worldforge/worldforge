@@ -20,8 +20,6 @@ private:
 	ASocket*	csock;
 	ACodec*		codec;
 	ACompressor*	cmprs;
-	char*		buffr;
-	int		bufsz;
 
 public:
 
@@ -37,9 +35,11 @@ public:
 	void	canSend();
 	void	gotErrs();
 
+	void	doPoll();
+
 	void	sendMsg(AObject& msg);
 
-	virtual	void gotMsg(const AObject& msg);
+	virtual	void gotMsg(AObject& msg);
 };
 
 #endif

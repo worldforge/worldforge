@@ -42,10 +42,12 @@ void AClient::canRead()
 	int	len;
 	string	buf;
 
+	fflush(stdout);
 	len = csock->recv(buf);
 	if (cmprs) buf = cmprs->decode(buf);
 	codec->feedStream(buf);
-	while (codec->hasMessage()) {
+	while (codec->hasMessage()>0) {
+		DebugMsg1(1,"PROCESSING MESSAGE !!\n\n","");
 		gotMsg(codec->getMessage());
 		codec->freeMessage();
 	}
@@ -59,6 +61,24 @@ void AClient::gotErrs()
 {
 }
 
+void AClient::doPoll()
+{
+	fd_set		fdread;
+	fd_set		fdsend;
+	struct timeval	tm;
+
+	tm.tv_sec = 0;
+	tm.tv_usec = 10000;
+
+	FD_SET(csock->getSock(), &fdread);
+	FD_SET(csock->getSock(), &fdsend);
+
+	select(0,&fdread,&fdsend,NULL,&tm);
+
+	if (FD_ISSET(csock->getSock(),&fdread)) canRead();
+	if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
+}
+
 void AClient::sendMsg(AObject& msg)
 {
 	string data = codec->encodeMessage(msg);
@@ -67,6 +87,7 @@ void AClient::sendMsg(AObject& msg)
 	// do something about buffer full conditions here
 }
 
-void AClient::gotMsg(const AObject& msg)
+void AClient::gotMsg(AObject& msg)
 {
+	DebugMsg1(1,"BAD VIRTUAL CALL !!!\n\n","");
 }

@@ -38,8 +38,10 @@ void	ADebug::logmsg(char* fmt, ...)
 	vsprintf(buf, fmt, va);
 	va_end(va);
 
-	if (logfile != NULL)
+	if (logfile != NULL) {
 		fprintf(logfile, "%s\n", buf);
+		fflush(logfile);
+	}
 	fprintf(stdout, "%s\n", buf);
 	fflush(stdout);
 }
