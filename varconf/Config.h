@@ -1,5 +1,5 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef VARCONF_CONFIG_H
+#define VARCONF_CONFIG_H
 
 #include <string>
 #include <map>
@@ -9,9 +9,11 @@
 #include "Observer.h"
 #include "ParseError.h"
 
-typedef void (conf_callback)(const string&, const string&);
-typedef map< string, multimap<string, Observer*> > observer_map;
-typedef map< string, multimap<string, conf_callback*> > callback_map;
+namespace varconf {
+
+typedef void (conf_callback)(const std::string&, const std::string&);
+typedef map< std::string, multimap<std::string, Observer*> > observer_map;
+typedef map< std::string, multimap<std::string, conf_callback*> > callback_map;
 
 /**
 This class contains the actual configuration.
@@ -22,29 +24,29 @@ public:
   /// Call this to retrieve the single global configuration instance
   static Config* inst();
 
-  Variable getItem(const string& section, const string& name);
-  void setItem(const string& section, const string& name, const Variable
-	       item);
-  bool findItem(const string& section, const string& name);
+  Variable getItem(const std::string& section, const std::string& name);
+  void setItem(const std::string& section, const std::string& name,
+            const Variable item);
+  bool findItem(const std::string& section, const std::string& name);
 
-  void registerObserver(Observer* observer, const string& section,
-		        const string& name);
+  void registerObserver(Observer* observer, const std::string& section,
+		        const std::string& name);
   void unregisterObserver(Observer* observer);
 
-  void registerCallback(conf_callback* callback, const string& section,
-		        const string& name);
-  void unregisterCallback(conf_callback* callback, const string& section,
-		          const string& name);
+  void registerCallback(conf_callback* callback, const std::string& section,
+		        const std::string& name);
+  void unregisterCallback(conf_callback* callback, const std::string& section,
+		          const std::string& name);
 
-  bool readFromFile(const string& filename);
+  bool readFromFile(const std::string& filename);
 
-  bool writeToFile(const string& filename);
+  bool writeToFile(const std::string& filename);
 
-  bool writeToStream(ostream& ios);
+  bool writeToStream(std::ostream& ios);
   /// May throw a ParseError exception
-  void parseStream(istream& ios);
+  void parseStream(std::istream& ios) throw (ParseError);
 
-  void getEnv(const string& prefix);
+  void getEnv(const std::string& prefix);
   void getCmdline(int argc, char** argv);
 
 protected:
@@ -53,10 +55,12 @@ protected:
   Config& operator=(const Config&);
   
 private:
-  map< string, map<string, Variable> > m_conf;
+  std::map< std::string, std::map<std::string, Variable> > m_conf;
   static Config* m_instance;
 
   observer_map m_observers;
   callback_map m_callbacks;
 };
+
+} // namespace varconf
 #endif

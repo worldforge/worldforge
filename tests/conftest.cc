@@ -1,6 +1,8 @@
 #include <unistd.h>
 #include "Config.h"
 
+using namespace varconf;
+
 void callback(const string& section, const string& name)
 {
   cout << section << "->" << name << " has changed to "

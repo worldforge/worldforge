@@ -1,6 +1,10 @@
 #include <string>
-#include "ftos.h"
+#include <cstdio>
 #include "Variable.h"
+
+using namespace std;
+
+namespace varconf {
 
 Variable::Variable()
  : m_have_bool(false), m_have_int(false), m_have_double(false),
@@ -28,14 +32,18 @@ Variable::Variable(const int i)
  : m_have_bool(false), m_have_int(true), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0)
 {
-  m_val = itos(i);
+  char buf[1024];
+  snprintf(buf, 1024, "%d", i);
+  m_val = buf;
 }
 
 Variable::Variable(const double d)
  : m_have_bool(false), m_have_int(false), m_have_double(true),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d)
 {
-  m_val = ftos(d);
+  char buf[1024];
+  snprintf(buf, 1024, "%d", d);
+  m_val = buf;
 }
 
 Variable::Variable(const string& s)
@@ -89,7 +97,9 @@ Variable& Variable::operator=(const int i)
   m_have_bool = false; m_have_int = true;
   m_have_double = false; m_have_string = true;
   m_val_bool = false; m_val_int = i;
-  m_val_double = 0.0; m_val = itos(i);
+  m_val_double = 0.0;
+  char buf[1024]; snprintf(buf, 1024, "%d", i);
+  m_val = buf;
   return (*this);
 }
 
@@ -98,7 +108,9 @@ Variable& Variable::operator=(const double d)
   m_have_bool = false; m_have_int = false;
   m_have_double = true; m_have_string = true;
   m_val_bool = false; m_val_int = 0;
-  m_val_double = d; m_val = ftos(d);
+  m_val_double = d;
+  char buf[1024]; snprintf(buf, 1024, "%d", d);
+  m_val = buf;
   return (*this);
 }
 
@@ -184,4 +196,6 @@ bool Variable::is_double()
 bool Variable::is_string()
 {
   return m_have_string;
+}
+
 }

@@ -4,8 +4,7 @@ libvarconf_la_SOURCES = \
   Config.cc \
   Observer.cc \
   ParseError.cc \
-  Variable.cc \
-  ftos.cc
+  Variable.cc
 
 libvarconfincludedir = $(includedir)/varconf
 libvarconfinclude_HEADERS = \
@@ -13,7 +12,5 @@ libvarconfinclude_HEADERS = \
   Observer.h \
   ParseError.h \
   Variable.h \
-  dtags.h \
-  ftos.h \
   varconf.h
 

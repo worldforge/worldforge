@@ -5,6 +5,10 @@
 #include "Config.h"
 #include "Observer.h"
 
+using namespace std;
+
+namespace varconf {
+
 Observer::Observer(const string& section, const string& name)
  : m_value(Config::inst()->getItem(section, name)),
    m_section(section), m_name(name)
@@ -25,4 +29,6 @@ Variable Observer::getValue() const
 void Observer::update()
 {
     m_value = Config::inst()->getItem(m_section, m_name);
+}
+
 }

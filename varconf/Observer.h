@@ -2,15 +2,17 @@
 // For licensing details see the file COPYING
 // This file comes with ABSOLUTELY NO WARRANTY.
 
-#ifndef OBSERVER_H
-#define OBSERVER_H
+#ifndef VARCONF_OBSERVER_H
+#define VARCONF_OBSERVER_H
 
 #include <string>
 #include "Variable.h"
 
+namespace varconf {
+
 class Observer {
 public:
-    Observer(const string& section, const string& name);
+    Observer(const std::string& section, const std::string& name);
     virtual ~Observer();
 
     Variable getValue() const;
@@ -19,7 +21,9 @@ public:
 
 private:
     Variable m_value;
-    string m_section, m_name;
+    std::string m_section, m_name;
 };
+
+}
 
 #endif

@@ -1,13 +1,178 @@
-AC_INIT(varconf)
+dnl Initialise autoconf
 
-AM_INIT_AUTOMAKE("varconf", "0.1.1")
-AM_CONFIG_HEADER(varconf/config.h)
+AC_INIT()
 
-dnl Test for c++:
+dnl Initialise automake
+
+AM_INIT_AUTOMAKE("varconf", "0.1.2")
+AM_CONFIG_HEADER(config.h)
+
+dnl Test for GNU libtool
+
+AM_PROG_LIBTOOL
+
+dnl Test for C++ Language
+
+
+dnl Test for C++ compiler
 
 AC_PROG_CXX
 
-AC_PROG_LIBTOOL
+dnl Test for ANSI standard language features
+
+
+dnl Test for C++ bool keyword
+
+AC_MSG_CHECKING([for C++ bool keyword])
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CACHE_VAL(ac_cv_feature_bool,
+[
+    AC_TRY_COMPILE(,
+    [
+        bool t = true, f = false;
+    ],
+    [
+        ac_cv_feature_bool=yes
+    ],
+    [
+        ac_cv_feature_bool=no
+    ])
+])
+
+if test "$ac_cv_feature_bool" = yes ; then
+    AC_MSG_RESULT(yes)
+else
+    AC_MSG_RESULT(no)
+fi
+
+AC_LANG_RESTORE
+
+dnl Test for C++ namespaces
+
+AC_MSG_CHECKING([for C++ namespaces])
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CACHE_VAL(ac_cv_feature_namespaces,
+[
+    AC_TRY_COMPILE(
+    [
+        namespace foo { int i; }
+        namespace bar { int i; }
+        namespace baz { int i; }
+
+        using namespace foo;
+        using bar::i;
+    ],
+    [
+        foo::i = 1;
+        bar::i = 2;
+        baz::i = 3;
+    ],
+    [
+        ac_cv_feature_namespaces=yes
+    ],
+    [
+        ac_cv_feature_namespaces=no
+    ])
+])
+
+if test "$ac_cv_feature_namespaces" = yes ; then
+    AC_MSG_RESULT(yes)
+else
+    AC_MSG_RESULT(no)
+fi
+
+AC_LANG_RESTORE
+
+dnl Test for C++ exception handling
+
+AC_MSG_CHECKING([for C++ exception handling])
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CACHE_VAL(ac_cv_feature_exceptions,
+[
+    AC_TRY_COMPILE(,
+    [
+			try
+			{
+			    throw 17;
+			}
+			catch (int i)
+			{
+			}
+			catch (...)
+			{
+			}
+		        ],
+    [
+        ac_cv_feature_exceptions=yes
+    ],
+    [
+        ac_cv_feature_exceptions=no
+    ])
+])
+
+if test "$ac_cv_feature_exceptions" = yes ; then
+    AC_MSG_RESULT(yes)
+else
+    AC_MSG_RESULT(no)
+fi
+
+AC_LANG_RESTORE
+
+dnl Test for C++ Standard Library
+
+
+dnl Test for <cstdio> header file
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADERS(cstdio)
+
+AC_LANG_RESTORE
+
+dnl Test for <iostream> header file
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADERS(iostream)
+
+AC_LANG_RESTORE
+
+dnl Test for <list> header file
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADERS(list)
+
+AC_LANG_RESTORE
+
+dnl Test for <map> header file
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADERS(map)
+
+AC_LANG_RESTORE
+
+dnl Test for <string> header file
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADERS(string)
+
+AC_LANG_RESTORE
+
+dnl Test for <vector> header file
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADERS(vector)
+
+AC_LANG_RESTORE
+
+dnl Generate files
 
 AC_OUTPUT([
 	Makefile

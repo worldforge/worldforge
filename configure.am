@@ -1,2 +1,24 @@
-<package src="varconf" config="varconf/config.h"><name>varconf</name><version>0.1.1</version><desc>Varconf is a simple configuration system.
-</desc><depend tag="c++" version=""/></package>
+<package>
+    <name>varconf</name>
+    <version>0.1.2</version>
+    <desc>A configuration parser and writer that supports callbacks on changes
+          and multiple types.</desc>
+    <generate id="config" name="config.h"/>
+    <require id="libtool" />
+    <require id="c++">
+	<require id="compiler"/>
+	<require id="ansi">
+	    <require id="bool"/>
+	    <require id="namespaces"/>
+	    <require id="exceptions"/>
+	    <require id="library">
+		<require id="cstdio"/>
+		<require id="iostream"/>
+		<require id="list"/>
+		<require id="map"/>
+		<require id="string"/>
+		<require id="vector"/>
+	    </require>
+	</require>
+    </require>
+</package>

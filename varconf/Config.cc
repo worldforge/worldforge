@@ -3,6 +3,8 @@
 #include <fstream>
 #include "Config.h"
 
+using namespace std;
+
 namespace {
   enum state_t {
     S_EXPECT_NAME, // Expect the start of a name/section/comment
@@ -48,6 +50,8 @@ namespace {
   }
 
 }
+
+namespace varconf {
 
 Config* Config::m_instance;
 
@@ -188,7 +192,7 @@ bool Config::writeToStream(ostream& ios)
   return true;
 }
 
-void Config::parseStream(istream& ios)
+void Config::parseStream(istream& ios) throw (ParseError)
 {
   char c; bool escaped = false;
   size_t line = 1, col = 0;
@@ -366,3 +370,5 @@ void getEnv(const string& prefix)
 void getCmdline(int argc, char** argv)
 {
 }
+
+} // namespace varconf

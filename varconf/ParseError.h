@@ -1,23 +1,27 @@
-#ifndef PARSEERROR_H
-#define PARSEERROR_H
+#ifndef VARCONF_PARSEERROR_H
+#define VARCONF_PARSEERROR_H
 
 #include <string>
 #include <iostream>
+
+namespace varconf {
 
 /// May be thrown by parsing routines
 class ParseError {
 public:
   ParseError();
   ParseError(const ParseError& p);
-  ParseError(const string& exp, int line, int col);
+  ParseError(const std::string& exp, int line, int col);
   
   virtual ~ParseError();
 
-  friend ostream& operator<<(ostream& os, const ParseError& p);
+  friend std::ostream& operator<<(std::ostream& os, const ParseError& p);
 
 private:
-  string m_exp;
+  std::string m_exp;
   int m_line, m_col;
 };
+
+} // namespace varconf
 
 #endif

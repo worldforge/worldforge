@@ -1,6 +1,10 @@
 #include <iostream>
 #include "ParseError.h"
 
+using namespace std;
+
+namespace varconf {
+
 ParseError::ParseError()
 {
 }
@@ -23,4 +27,6 @@ ostream& operator<<(ostream& os, const ParseError& p)
 {
   return (os << "ParseError: Expected " << p.m_exp << " at line " << p.m_line
           << ", column " << p.m_col << "." << endl);
+}
+
 }

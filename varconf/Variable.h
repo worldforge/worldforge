@@ -1,7 +1,10 @@
-#ifndef VARIABLE_H
-#define VARIABLE_H
+#ifndef VARCONF_VARIABLE_H
+#define VARCONF_VARIABLE_H
 
 #include <string>
+
+namespace varconf {
+
 /// A caching typeless container
 class Variable {
 public:
@@ -10,7 +13,7 @@ public:
   Variable(const bool b);
   Variable(const int i);
   Variable(const double d);
-  Variable(const string& s);
+  Variable(const std::string& s);
   Variable(const char* s);
 
   virtual ~Variable();
@@ -21,12 +24,12 @@ public:
   Variable& operator=(const bool b);
   Variable& operator=(const int i);
   Variable& operator=(const double d);
-  Variable& operator=(const string& s);
+  Variable& operator=(const std::string& s);
 
   operator bool();
   operator int();
   operator double();
-  operator string();
+  operator std::string();
 
   bool is_bool();
   bool is_int();
@@ -42,7 +45,9 @@ private:
   bool m_val_bool;
   int m_val_int;
   double m_val_double;
-  string m_val;
+  std::string m_val;
 };
+
+}
 
 #endif
