@@ -7,6 +7,21 @@ Generally speaking it seems having virtual methods with the same names
 is not all that good a trick. It causes methods to get hidden when only
 some are overridden in a subclass.
 
+Write codecs, connectors and acceptors for datagram based communication,
+specialising Codec<> template using an abstract datagram class interface.
+
+Talk about a non-smartpointer based objects API, as I am not comfortable
+coding with the automatic one. The API should be somewhat similar to
+the 0.4 API, but should not require the dumb instantiate() arse, and
+should provide a virtual clone() method.
+
+Write acceptor/negotiator for file based atlas, to load from a file
+of unknown codec.
+
+Modify the objects API so we can track which attributes have been set, rather
+than relying on their value. Then we can get orientation, and perhaps even
+bbox into the spec, and support that well.
+
 Add cout operators for Message::Object at least. Its a pain having to mess about
 with them.
 
