@@ -184,7 +184,7 @@ void Connection::objectArrived(const Root& obj)
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    std::cout << "recieved:" << debugStream.str() << std::endl;
+  //  std::cout << "recieved:" << debugStream.str() << std::endl;
 
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     m_opDeque.push_back(op);
@@ -219,7 +219,7 @@ void Connection::dispatchOp(const RootOperation& op)
             return;
         else
             debug() << "TO router " << R->first << "didn't handle op";
-    } else if (!anonymous)
+    } else if (!anonymous && !m_toRouters.empty())
         warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
             
 // go to the default router

@@ -193,6 +193,9 @@ void Player::createAccount(const std::string &uname,
     account->setPassword(pwd);
     account->setName(fullName);
     account->setUsername(uname);
+    account->setObjtype("obj");
+    std::list<std::string> parents(1, "player");
+    account->setParents(parents);
     
     Create c;
     c->setSerialno(getNewSerialno());

@@ -15,7 +15,7 @@ class ClientConnection;
 
 typedef std::set<std::string> StringSet;
 
-typedef std::map<std::string, Atlas::Objects::Entity::Player> AccountMap;
+typedef std::map<std::string, Atlas::Objects::Entity::Account> AccountMap;
 
 class StubServer
 { 
@@ -43,7 +43,8 @@ private:
 
     friend class ClientConnection;
     
-    std::vector<ClientConnection*> m_clients;
+    typedef std::vector<ClientConnection*> ConArray;
+    ConArray m_clients;
     
     AccountMap m_accounts;
 

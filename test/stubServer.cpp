@@ -15,7 +15,7 @@ using namespace Atlas::Objects::Operation;
 using namespace Eris;
 using Atlas::Objects::Entity::RootEntity;
 typedef Atlas::Message::ListType AtlasListType;
-typedef Atlas::Objects::Entity::Player AtlasPlayer;
+typedef Atlas::Objects::Entity::Account AtlasAccount;
 
 typedef std::list<std::string> StringList;
 
@@ -61,18 +61,18 @@ StubServer::~StubServer()
 
 void StubServer::setupTestAccounts()
 {
-    AtlasPlayer accA;
+    AtlasAccount accA;
     accA->setId("_23_account_A");
-    accA->setAttr("username", "account_A");
+    accA->setUsername("account_A");
     accA->setPassword("pumpkin");
     accA->setObjtype("obj");
     std::list<std::string> parents(1, "player");
     accA->setParents(parents);
     m_accounts[accA->getId()] = accA;
 
-    AtlasPlayer accB;
+    AtlasAccount accB;
     accB->setId("_24_account_B");
-    accB->setAttr("username", "account_B");
+    accB->setUsername("account_B");
     accB->setPassword("sweede");
     accB->setObjtype("obj");
     accB->setParents(parents);
@@ -100,15 +100,28 @@ void StubServer::run()
     basic_socket_poll::socket_map clientSockets;
 
     for (unsigned int C=0; C < m_clients.size(); ++C)
-        clientSockets[m_clients[C]->getStream()] = basic_socket_poll::READ;
+        clientSockets[m_clients[C]->getStream()] = basic_socket_poll::READ | basic_socket_poll::EXCEPT;
 
     basic_socket_poll poller;
     poller.poll(clientSockets);
 
-    for (unsigned int C=0; C < m_clients.size(); ++C)
+    for (ConArray::iterator C=m_clients.begin(); C != m_clients.end(); ++C)
     {
-        if (poller.isReady(m_clients[C]->getStream()))
-            m_clients[C]->poll();
+        if (poller.isReady((*C)->getStream()))
+            (*C)->poll();
+    
+        if ((*C)->isDisconnected())
+        {
+            std::string accId = (*C)->getAccount();
+            if (!accId.empty()) {
+                for (RoomMap::iterator R=m_rooms.begin(); R != m_rooms.end(); ++R)
+                    partRoom(accId, R->first);
+            }
+        
+            delete *C;
+            C = m_clients.erase(C);
+            continue;
+        }
     }
 }
 

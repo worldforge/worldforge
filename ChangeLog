@@ -1,3 +1,13 @@
+2004-05-02  James Turner <james@worldforge.org>
+
+* Fix Account creation (well, workaround the Atlas Objects bug)
+
+* Supress the 'no router for TO' warning if there are no TO routers
+  registered in Connection::dispatchOp, avoids sily warnings on login
+
+* Add a bunch more test cases, and stub server code to support them. Notably
+  client disconnection is now handled and cleaned up.
+
 2004-05-01  James Turner <james@worldforge.org>
 
 * Bring builtin definition of core atlas types back from the dead,

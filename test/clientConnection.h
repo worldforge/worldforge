@@ -21,6 +21,8 @@ public:
 
     void poll();
 
+    bool isDisconnected();
+
     basic_socket* getStream()
     {
         return &m_stream;

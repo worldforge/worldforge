@@ -98,6 +98,9 @@ public:
         return m_accountId;
     }
 
+    const std::string& getUsername() const
+    { return m_username; }
+
     Connection* getConnection() const 
     {
         return m_con;

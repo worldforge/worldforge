@@ -19,7 +19,7 @@ using namespace Atlas::Objects::Operation;
 using namespace Eris;
 using Atlas::Objects::Entity::RootEntity;
 
-typedef Atlas::Objects::Entity::Player AtlasPlayer;
+typedef Atlas::Objects::Entity::Account AtlasAccount;
 
 ClientConnection::ClientConnection(StubServer* ss, int socket) :
     m_stream(socket),
@@ -40,6 +40,11 @@ ClientConnection::~ClientConnection()
 
 void ClientConnection::poll()
 {
+    if (m_stream.fail()) {
+        fail();
+        return;
+    }
+    
     if (m_acceptor)
     {
         negotiate();
@@ -60,13 +65,17 @@ void ClientConnection::poll()
     }
 }
 
+bool ClientConnection::isDisconnected()
+{
+    return !m_stream.is_open();
+}
+
 #pragma mark -
 // basic Atlas connection / stream stuff
 
 void ClientConnection::fail()
 {
     m_stream.close();
-    // tell the stub server to kill us off
 }
 
 void ClientConnection::negotiate()
@@ -216,13 +225,32 @@ void ClientConnection::processLogin(const Login& login)
 
 void ClientConnection::processAccountCreate(const Create& cr)
 {
-
+    const std::vector<Root>& args = cr->getArgs();
+    if (args.empty()) {
+        sendError("missing account in create", cr);
+        return;
+    }
+    
     // check for duplicate username
-
-    AtlasPlayer acc;
+    AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
+    if (!acc.isValid()) {
+        sendError("malformed account in create", cr);
+        return;
+    }
     
+    AccountMap::const_iterator A = m_server->findAccountByUsername(acc->getUsername());
+    if (A  != m_server->m_accounts.end()) {
+        sendError("duplicate account: " + acc->getUsername(), cr);
+        return;
+    }
     
-    m_server->m_accounts[acc->getId()] = acc;
+    m_account = std::string("_") + acc->getUsername() + "_123";
+    acc->setId(m_account);
+    debug() << "new account username=" << acc->getUsername()
+        << ", ID=" << m_account;
+        
+    acc->setId(m_account);
+    m_server->m_accounts[m_account] = acc;
     
     Info createInfo;
     createInfo->setArgs1(acc);
@@ -230,7 +258,7 @@ void ClientConnection::processAccountCreate(const Create& cr)
     createInfo->setRefno(cr->getSerialno());
     send(createInfo);
     
-    m_server->joinRoom(m_account, "_lobby");
+    m_server->joinRoom(acc->getId(), "_lobby");
 }
 
 void ClientConnection::processOOGLook(const Look& lk)
@@ -339,7 +367,7 @@ void ClientConnection::send(const Root& obj)
 bool ClientConnection::entityIsCharacter(const std::string& id)
 {
     assert(!m_account.empty());
-    AtlasPlayer p = m_server->m_accounts[m_account];
+    AtlasAccount p = m_server->m_accounts[m_account];
     StringSet characters(p->getCharacters().begin(),  p->getCharacters().end());
     
     return characters.count(id);
