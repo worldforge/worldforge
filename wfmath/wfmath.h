@@ -45,6 +45,11 @@
 // Do not include stream.h, as it includes <iostream> and <string>.
 // Let end users include it on their own.
 
+// Similarly, don't include atlasconv.h, which includes <Atlas/Message/Object.h>
+// There is, however, no linker dependency on atlas in the library,
+// so it is quite safe to use WFMath without atlas, as long as you
+// don't include this header
+
 // This file doesn't include basis.h, which only contains declarations
 // for some functions which are used in vector.cpp and point.cpp
 

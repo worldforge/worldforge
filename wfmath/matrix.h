@@ -34,23 +34,15 @@ namespace WF { namespace Math {
 template<const int dim> class Vector;
 
 // Elements of this class represent rotation matrices. The NxN dimensional
-// rotation matrices form a group called SO(N), the special orthogonal
-// matrices. They satisfy two conditions:
+// rotation matrices form a group called O(N), the orthogonal
+// matrices. They satisfy the following condition:
 //
-// 1) They are ortohgonal. That is, their transpose is equal to their inverse.
-//    Hence, this class does not implement a transpose() method, only an
-//    inverse().
-//
-// 2) Their determinant is equal to 1 (as opposed to -1, indicating a combination
-//    of a rotation and a mirror-image flip). This is the "special" part
-//    of "special orthogonal."
+//  They are ortohgonal. That is, their transpose is equal to their inverse.
+//  Hence, this class does not implement a transpose() method, only an
+//  inverse().
 //
 // A general N dimensional matrix of this type has N(N-1)/2 degrees of freedom.
 // This gives one rotation angle in 2D, the three Euler angles in 3D, etc.
-
-// TODO? Extend to general orthogonal matrices (include mirror-image flips)?
-// Probably want to add a boolean variable to keep track of the sign of the
-// determinant if we do this.
 
 template<const int dim> class RotMatrix;
 
@@ -117,11 +109,14 @@ class RotMatrix {
   Vector<dim> column(const int i) const;
 
   CoordType trace() const;
-  CoordType determinant() const {return 1;} // here in case we extend to O(N) later
+  CoordType determinant() const {return m_flip ? -1 : 1;}
   RotMatrix inverse() const;
 
-  RotMatrix& fromEuler(const CoordType angles[nParams]);
-  void toEuler(CoordType angles[nParams]) const;
+  // flip indicates the parity of the matrix. It's true for odd matrices
+  // and false for even ones. Odd parity is implemented by right-multiplying
+  // the Euler matrix by a flip in the first axis
+  RotMatrix& fromEuler(const CoordType angles[nParams], bool flip = false);
+  bool toEuler(CoordType angles[nParams]) const; // returns flip
 
   friend RotMatrix Prod<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
   friend RotMatrix ProdInv<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
@@ -131,33 +126,43 @@ class RotMatrix {
   friend Vector<dim> InvProd<dim>  (const RotMatrix& m, const Vector<dim>& v);
 
   // Set the value to a given rotation
-  const RotMatrix& rotation	(const int i, const int j, const CoordType& theta);
-  const RotMatrix& rotation	(const Vector<dim>& v1, const Vector<dim>& v2,
-				 const CoordType& theta);
+  RotMatrix& rotation	(const int i, const int j, const CoordType& theta);
+  RotMatrix& rotation	(const Vector<dim>& v1, const Vector<dim>& v2,
+			 const CoordType& theta);
+
+  // Set the value to mirror image about a certain axis
+
+  RotMatrix& mirror(const int i)
+	{identity(); m_elem[i][i] = -1; m_flip = true; return *this;}
+  RotMatrix& mirror(const Vector<dim>& v);
+  RotMatrix& mirror(); // Flip all axes, only changes the parity if dim is odd
 
   // 2D/3D stuff
 
-  RotMatrix(const CoordType& alpha, const CoordType& beta, const CoordType& gamma)
-	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d);} // Euler angles, 3D only
+  // Euler angles, 3D only
+  RotMatrix(const CoordType& alpha, const CoordType& beta,
+	    const CoordType& gamma, bool flip = false)
+	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d, flip);}
 
   // 2D only
-  const RotMatrix<2>& rotation			(const CoordType& theta)
+  RotMatrix<2>& rotation(const CoordType& theta)
 	{return rotation(0, 1, theta);}
 
   // 3D only
-  const RotMatrix<3>& rotationX			(const CoordType& theta)
-	{return rotation(1, 2, theta);}
-  const RotMatrix<3>& rotationY			(const CoordType& theta)
-	{return rotation(2, 0, theta);}
-  const RotMatrix<3>& rotationZ			(const CoordType& theta)
-	{return rotation(0, 1, theta);}
-  const RotMatrix<3>& rotation			(const Vector<3>& axis,
-						 const CoordType& theta);
+  RotMatrix<3>& rotationX(const CoordType& theta) {return rotation(1, 2, theta);}
+  RotMatrix<3>& rotationY(const CoordType& theta) {return rotation(2, 0, theta);}
+  RotMatrix<3>& rotationZ(const CoordType& theta) {return rotation(0, 1, theta);}
+  RotMatrix<3>& rotation(const Vector<3>& axis, const CoordType& theta);
+
+  RotMatrix& mirrorX()	{return mirror(0);}
+  RotMatrix& mirrorY()	{return mirror(1);}
+  RotMatrix& mirrorZ()	{return mirror(2);}
 
  private:
   CoordType m_elem[dim][dim];
+  bool m_flip; // True if the matrix is parity odd
 
-  // Backend to setVals() above, also used in fromString()
+  // Backend to setVals() above, also used in fromStream()
   bool _setVals(CoordType *vals, double precision = WFMATH_EPSILON);
 };
 

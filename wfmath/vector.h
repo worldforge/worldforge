@@ -200,7 +200,15 @@ class Vector {
   // Same thing, but the axes are defined by two vectors. If the
   // vectors are parallel, this throws a ColinearVectors error.
 
-  Vector& rotate(const Vector& v1, const Vector& v2, CoordType theta);
+  Vector& rotate(const Vector& v1, const Vector& v2, CoordType theta)
+	{RotMatrix<dim> m; return operator=(Prod(m.rotation(v1, v2, theta), *this));}
+
+  // mirror image functions
+
+  Vector& mirror(const int i)	{m_elem[i] *= -1; return *this;}
+  Vector& mirror(const Vector& v)
+	{operator-=(2 * v * Dot(v, *this) / v.sqrMag()); return *this;}
+  Vector& mirror()		{operator*=(-1); return *this;}
 
   // Specialized 2D/3D stuff starts here
 
@@ -230,6 +238,10 @@ class Vector {
   CoordType& y()		{return m_elem[1];}
   const CoordType& z() const	{return m_elem[2];}
   CoordType& z()		{return m_elem[2];}
+
+  Vector& mirrorX()	{return mirror(0);}
+  Vector& mirrorY()	{return mirror(1);}
+  Vector& mirrorZ()	{return mirror(2);}
 
   Vector<2>& polar(CoordType r, CoordType theta);
   void asPolar(CoordType& r, CoordType& theta) const;

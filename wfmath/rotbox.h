@@ -75,6 +75,13 @@ class RotBox
   Point<dim> getCorner(int i) const;
   Point<dim> getCenter() const {return m_corner0 + Prod(m_orient, m_size / 2);}
 
+  const Point<dim>& corner0() const		{return m_corner0;}
+  Point<dim>& corner0()				{return m_corner0;}
+  const Vector<dim>& size() const		{return m_size;}
+  Vector<dim>& size()				{return m_size;}
+  const RotMatrix<dim>& orientation() const	{return m_orient;}
+  RotMatrix<dim>& orientation()			{return m_orient;}
+
   // Movement functions
 
   RotBox& shift(const Vector<dim>& v)

@@ -35,7 +35,7 @@
 namespace WF { namespace Math {
 
 template<const int dim>
-inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
+inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m) : m_flip(m.m_flip)
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
@@ -49,6 +49,8 @@ RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
     for(int j = 0; j < dim; ++j)
       m_elem[i][j] = m.m_elem[i][j];
 
+  m_flip = m.m_flip;
+
   return *this;
 }
 
@@ -59,6 +61,8 @@ bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& rhs, double tolerance) cons
     for(int j = 0; j < dim; ++j)
       if(!IsFloatEqual(m_elem[i][j], rhs.m_elem[i][j], tolerance))
         return false;
+
+  // Don't need to test m_flip, it's determined by the values of m_elem
 
   return true;
 }
@@ -74,6 +78,8 @@ bool RotMatrix<dim>::operator< (const RotMatrix<dim>& m) const
         return false;
     }
   }
+
+  // Don't need to test m_flip, it's determined by the values of m_elem
 
   return false;
 }
@@ -99,6 +105,8 @@ RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
     }
   }
 
+  out.m_flip = (m1.m_flip != m2.m_flip); // XOR
+
   return out;
 }
 
@@ -122,6 +130,8 @@ RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
         out.m_elem[i][j] = 0;
     }
   }
+
+  out.m_flip = (m1.m_flip != m2.m_flip); // XOR
 
   return out;
 }
@@ -147,6 +157,8 @@ RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
     }
   }
 
+  out.m_flip = (m1.m_flip != m2.m_flip); // XOR
+
   return out;
 }
 
@@ -170,6 +182,8 @@ RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
         out.m_elem[i][j] = 0;
     }
   }
+
+  out.m_flip = (m1.m_flip != m2.m_flip); // XOR
 
   return out;
 }
@@ -243,8 +257,8 @@ bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], double precision)
   return _setVals(scratch_vals, precision);
 }
 
-bool _MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
-			CoordType* buf2, double precision);
+bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
+			CoordType* buf1, CoordType* buf2, double precision);
 
 template<const int dim>
 bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
@@ -252,8 +266,9 @@ bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
   // Cheaper to allocate space on the stack here than with
   // new in _MatrixSetValsImpl()
   CoordType buf1[dim*dim], buf2[dim*dim];
+  bool flip;
 
-  if(!_MatrixSetValsImpl(dim, vals, buf1, buf2, precision))
+  if(!_MatrixSetValsImpl(dim, vals, flip, buf1, buf2, precision))
     return false;
 
   // Do the assignment
@@ -261,6 +276,8 @@ bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
       m_elem[i][j] = vals[i*dim+j];
+
+  m_flip = flip;
 
   return true;
 }
@@ -306,6 +323,8 @@ inline RotMatrix<dim>& RotMatrix<dim>::identity()
     for(int j = 0; j < dim; ++j)
       m_elem[i][j] = (i == j) ? 1 : 0;
 
+  m_flip = false;
+
   return *this;
 }
 
@@ -321,11 +340,16 @@ inline CoordType RotMatrix<dim>::trace() const
 }
 
 template<const int dim>
-RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams])
+RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams], bool flip)
 {
   int ang_num = 0;
 
-  identity();
+  m_flip = flip;
+
+  if(flip)
+    mirror(0);
+  else
+    identity();
 
   for(int i = dim - 1; i > 0; --i)
     for(int j = 0; j < i; ++j)
@@ -339,19 +363,19 @@ RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams])
 // TODO generalize if possible at some point
 
 //template<const int dim>
-//void RotMatrix<dim>::toEuler(CoordType angles[nParams]) const
+//bool RotMatrix<dim>::toEuler(CoordType angles[nParams]) const
 //{
 //
 //}
 
 // Only have this for special cases
-template<> inline void RotMatrix<2>::toEuler(CoordType angles[1]) const
-	{angles[0] = atan2(m_elem[0][0], m_elem[1][0]);}
-template<> void RotMatrix<3>::toEuler(CoordType angles[3]) const;
+template<> inline bool RotMatrix<2>::toEuler(CoordType angles[1]) const
+	{angles[0] = atan2(m_elem[1][1], m_elem[0][1]); return m_flip;}
+template<> bool RotMatrix<3>::toEuler(CoordType angles[3]) const;
 
 template<const int dim>
-const RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
-						  const CoordType& theta)
+RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
+					  const CoordType& theta)
 {
   assert(i >= 0 && i < dim && j >= 0 && j < dim && i != j);
 
@@ -376,13 +400,15 @@ const RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
     }
   }
 
+  m_flip = false;
+
   return *this;
 }
 
 template<const int dim>
-const RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
-						  const Vector<dim>& v2,
-						  const CoordType& theta)
+RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
+					  const Vector<dim>& v2,
+					  const CoordType& theta)
 {
   CoordType v1_sqr_mag = v1.sqrMag();
 
@@ -416,11 +442,52 @@ const RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 		      vperp[i] * vperp[j] / vperp_sqr_mag), stheta
 		      * FloatSubtract(vperp[i] * v1[j], v1[i] * vperp[j]) / mag_prod);
 
+  m_flip = false;
+
   return *this;
 }
 
-template<> const RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
-						       const CoordType& theta);
+template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
+						 const CoordType& theta);
+
+template<const int dim>
+RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
+{
+  // Get a flip by subtracting twice the projection operator in the
+  // direction of the vector. A projection operator is idempotent (P*P == P),
+  // and symmetric, so I - 2P is an orthogonal matrix.
+  //
+  // (I - 2P) * (I - 2P)^T == (I - 2P)^2 == I - 4P + 4P^2 == I
+
+  CoordType sqr_mag = v.sqrMag();
+
+  assert(sqr_mag > 0);
+
+  // off diagonal
+  for(int i = 0; i < dim - 1; ++i)
+    for(int j = i + 1; j < dim; ++j)
+      m_elem[i][j] = m_elem[j][i] = -2 * v[i] * v[j] / sqr_mag;
+
+  // diagonal
+  for(int i = 0; i < dim; ++i)
+    m_elem[i][i] = FloatSubtract(1, 2 * v[i] * v[i] / sqr_mag);
+
+  m_flip = true;
+
+  return *this;
+}
+
+template<const int dim>
+RotMatrix<dim>& RotMatrix<dim>::mirror()
+{
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
+      m_elem[i][j] = (i == j) ? -1 : 0;
+
+  m_flip = dim%2;
+
+  return *this;
+}
 
 }} // namespace WF::Math
 

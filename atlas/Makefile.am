@@ -1,6 +1,3 @@
-headerdir = $(includedir)/wfmath
-header_HEADERS = atlasconv.h
-
 if HAVE_ATLAS
 
 AM_CPPFLAGS = -O2 -Wall -I.. @ATLAS_CFLAGS@

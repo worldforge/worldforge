@@ -1,3 +1,23 @@
+Thursday, January 3, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed Barycenter() to take a container of Point<>
+	  instead of an array, added BoundingBox() for a
+	  container of AxisBox<>
+	* Optimized special cases in AxisBox::getCorner() and
+	  RotBox::getCorner(), got rid of AxisBox::lowCorner()
+	  and AxisBox::highCorner()
+	* Extended RotMatrix<> to allow for mirror image flips
+	  in addition to rotations, added mirror() functions to
+	  both RotMatrix<> and Vector<>
+	* Removed foolish const from return value of
+	  RotMatrix<>::rotation()
+	* Wrote better member accessors for most shapes (there's
+	  no reason not to have direct access to the members in
+	  anything but AxisBox<>)
+	* Inlined some of the simpler class member functions
+	* Moved atlasconv.h from atlas/ into wfmath/, since we don't
+	  need Atlas to install it, just to build the test code
+
 Monday, December 31, 2001	Ron Steinke <rsteinke@w-link.net>
 
 	* Added boundingSphere(), boundingSphereSloppy() to all

@@ -58,11 +58,11 @@ template<const int dim>
 CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
 	{return (p1 - p2).sloppyMag();}
 
-template<const int dim>
-Point<dim> Barycenter(const int num_points, const Point<dim> *points);
-template<const int dim>
-Point<dim> Barycenter(const int num_points, const Point<dim> *points,
-		      const CoordType *weights);
+template<const int dim, template<class> class container>
+Point<dim> Barycenter(const container<Point<dim> >& c);
+template<const int dim, template<class> class container>
+Point<dim> Barycenter(const container<Point<dim> >& c,
+		      const container<CoordType>& weights);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
@@ -133,9 +133,9 @@ class Point
 
   friend CoordType SquaredDistance<dim>(const Point& p1, const Point& p2);
 
-  friend Point Barycenter<dim>(const int num_points, const Point *points);
-  friend Point Barycenter<dim>(const int num_points, const Point *points,
-			  const CoordType *weights);
+// FIXME instatiation problem
+//  template<template<class> class container>
+//  Point Barycenter(const container<Point>& c);
 
   // 2D/3D stuff
 

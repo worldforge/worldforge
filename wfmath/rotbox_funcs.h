@@ -71,6 +71,9 @@ Point<dim> RotBox<dim>::getCorner(int i) const
 {
   Vector<dim> dist;
 
+  if(i == 0)
+    return m_corner0;
+
   for(int j = 0; j < dim; ++j)
     dist[j] = (i & (1 << j)) ? m_size[j] : 0;
 

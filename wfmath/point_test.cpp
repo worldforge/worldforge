@@ -28,6 +28,8 @@
 #include "vector.h"
 #include "point.h"
 #include "stream.h"
+#include <vector>
+#include <list>
 
 using namespace WF::Math;
 
@@ -36,9 +38,12 @@ void test_point(const Point<dim>& p)
 {
   cout << "Testing point: " << p << std::endl;
 
-  assert(p == Barycenter(1, &p));
-  CoordType weight = 5;
-  assert(p == Barycenter(1, &p, &weight));
+  vector<Point<dim> > pvec;
+  pvec.push_back(p);
+  assert(p == Barycenter(pvec));
+  list<CoordType> clist;
+  clist.push_back(5);
+  assert(p == Barycenter(pvec, clist));
 
   assert(p == p + (p - p));
 

@@ -778,34 +778,26 @@ bool IntersectProper(const RotBox<dim>& r, const AxisBox<dim>& b)
   // whose elements are r.m_orient.elem(i, j) * r.m_size[j]. Since this
   // is _not_ a RotMatrix<>, we have to do things the hard way.
 
-  int params = 0; // The number of non-degenerate equations
-
   for(int i = 0; i < dim; ++i)
-    if(r.m_size[i] != 0)
-      ++params;
+    if(r.m_size[i] == 0)
+      return false; // Can't have proper intersection with a zero volume box
 
   CoordType matrix[dim*dim], low[dim], high[dim];
-  int num_param = 0;
 
   for(int i = 0; i < dim; ++i) {
     low[i] = FloatSubtract(b.m_low[i], r.m_corner0[i]);
     high[i] = FloatSubtract(b.m_high[i], r.m_corner0[i]);
-    if(r.m_size[i] == 0)
-      continue;
     for(int j = 0; j < dim; ++j)
-      matrix[j*params+num_param] = r.m_orient.elem(j, i) * r.m_size[i];
-    ++num_param;
+      matrix[j*dim+i] = r.m_orient.elem(j, i) * r.m_size[i];
   }
 
-  _RotBoxAxisBoxIntersectImpl(dim, params, matrix, low, high);
+  _RotBoxAxisBoxIntersectImpl(dim, dim, matrix, low, high);
 
   for(int i = 0; i < dim; ++i) {
     if(low[i] >= high[i])
       return false;
-    // If i < params, \lambda_i can vary between 0 and 1,
-    // otherwise you have a straight constraint where the
-    // number in the middle is 0.
-    if(low[i] >= ((i < params) ? 1 : 0))
+    // \lambda_i can vary between 0 and 1,
+    if(low[i] >= 1)
       return false;
     if(high[i] <= 0)
       return false;

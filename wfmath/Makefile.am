@@ -11,7 +11,7 @@ header_HEADERS = error.h const.h \
 	segment.h segment_funcs.h \
 	rotbox.h rotbox_funcs.h \
 	intersect_decls.h intersect.h \
-	wfmath.h stream.h
+	wfmath.h stream.h atlasconv.h
 
 lib_LTLIBRARIES = libwfmath.la
 libwfmath_la_SOURCES = basis.h const.cpp stream.cpp \

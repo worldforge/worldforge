@@ -33,7 +33,7 @@ using namespace WF::Math;
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
 static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
 
-template<> void WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
+template<> bool WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
 {
   // There's a 2:1 map from Euler angles to matrices. Flipping the
   // sign of the middle angle and adding pi to each of the others produces
@@ -44,20 +44,22 @@ template<> void WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
   CoordType sin_sqr_beta = m_elem[0][2] * m_elem[0][2] + m_elem[1][2] * m_elem[1][2];
 
   if(sin_sqr_beta > WFMATH_EPSILON) {
-    angles[0] = atan2(m_elem[2][1], m_elem[2][0]);
+    angles[0] = atan2(-m_elem[2][1], (m_flip ? 1 : -1) * m_elem[2][0]);
     angles[1] = acos(m_elem[2][2]);
-    angles[2] = -atan2(m_elem[1][2], m_elem[0][2]);
+    angles[2] = atan2(m_elem[1][2], -m_elem[0][2]);
   }
   else {
-    angles[1] = -atan2(m_elem[0][0], m_elem[0][1]);
+    angles[1] = atan2(m_elem[0][0] * (m_flip ? -1 : 1), -m_elem[0][1]);
     angles[2] = (m_elem[2][2] > 0) ? 0 : WFMATH_CONST_PI;
     angles[3] = 0;
   }
+
+  return m_flip;
 }
 
 template<>
-const RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,
-						      const CoordType& theta)
+RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,
+						const CoordType& theta)
 {
   CoordType max = 0;
   int main_comp = -1;
@@ -83,8 +85,8 @@ const RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,
   return rotation(v1, v2, theta);
 }
 
-bool WF::Math::_MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
-				  CoordType* buf2, double precision)
+bool WF::Math::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
+				  CoordType* buf1, CoordType* buf2, double precision)
 {
   precision = fabs(precision);
 
@@ -169,13 +171,16 @@ bool WF::Math::_MatrixSetValsImpl(const int size, CoordType* vals, CoordType* bu
     // in the next iteration.
   }
 
-  // Check that the determinant of vals is 1 (as opposed to -1)
+  // The determinant is either 1 or -1, depending on the parity.
+  // Use that to calculate flip.
 
   for(int i = 0; i < size; ++i)
     for(int j = 0; j < size; ++j)
       buf1[i*size+j] = vals[i*size+j];
 
-  return (_MatrixDeterminantImpl(size, buf1) > 0);
+  flip = _MatrixDeterminantImpl(size, buf1) < 0;
+
+  return true;
 }
 
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m)

@@ -34,19 +34,6 @@
 
 namespace WF { namespace Math {
 
-template<> inline Point<2>::Point(CoordType x, CoordType y)
-{
-  m_elem[0] = x;
-  m_elem[1] = y;
-}
-
-template<> inline Point<3>::Point(CoordType x, CoordType y, CoordType z)
-{
-  m_elem[0] = x;
-  m_elem[1] = y;
-  m_elem[2] = z;
-}
-
 template<const int dim>
 Point<dim>::Point(const Point<dim>& p)
 {
@@ -191,6 +178,9 @@ bool Point<dim>::operator< (const Point<dim>& rhs) const
   return false;
 }
 
+// These three are here, instead of defined in the class, to
+// avoid include order problems
+
 template<const int dim>
 inline AxisBox<dim> Point<dim>::boundingBox() const
 {
@@ -222,56 +212,76 @@ CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
   return ans;
 }
 
-template<const int dim>
-Point<dim> Barycenter(const int num_points, const Point<dim> *points)
+template<const int dim, template<class> class container,
+			template<class> class container2>
+Point<dim> Barycenter(const container<Point<dim> >& c,
+		      const container2<CoordType>& weights)
 {
-  Point<dim> out;
+  // FIXME become friend
 
-  for(int i = 0; i < dim; ++i) {
-    CoordType sum = 0, max_val = 0;
-    for(int j = 0; j < num_points; ++j) {
-      sum += points[j].m_elem[i];
-      max_val = FloatMax(max_val, fabs(points[j].m_elem[i]));
-    }
-    if(fabs(sum) < max_val * WFMATH_EPSILON)
-      out.m_elem[i] = 0;
-    else
-      out.m_elem[i] = sum / num_points;
+  typename container<Point<dim> >::const_iterator c_i = c.begin(), c_end = c.end();
+  typename container2<CoordType>::const_iterator w_i = weights.begin(),
+						 w_end = weights.end();
+
+  assert(c_i != c_end);
+  assert(w_i != w_end);
+
+  CoordType tot_weight = *w_i, max_weight = fabs(*w_i);
+  Point<dim> out;
+  for(int j = 0; j < dim; ++j)
+    out[j] = (*c_i)[j] * *w_i;
+
+  while(++c_i != c_end && ++w_i != w_end) {
+    tot_weight += *w_i;
+    max_weight = FloatMax(max_weight, fabs(*w_i));
+    for(int j = 0; j < dim; ++j)
+      out[j] = FloatAdd(out[j], (*c_i)[j] * *w_i);
   }
+
+  // Make sure the weights don't add up to zero
+  assert(max_weight > 0 && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
+
+  for(int j = 0; j < dim; ++j)
+    out[j] /= tot_weight;
 
   return out;
 }
 
-template<const int dim>
-Point<dim> Barycenter(const int num_points, const Point<dim> *points,
-		      const CoordType *weights)
+template<const int dim, template<class> class container>
+Point<dim> Barycenter(const container<Point<dim> >& c)
 {
-  CoordType tot_weight = 0, max_weight = 0;
+  // FIXME become friend
 
-  for(int i = 0; i < num_points; ++i) {
-    tot_weight += weights[i];
-    max_weight = FloatMax(max_weight, fabs(weights[i]));
+  typename container<Point<dim> >::const_iterator i = c.begin(), end = c.end();
+
+  assert(i != end);
+
+  Point<dim> out = *i;
+  int num_points = 1;
+
+  while(++i != end) {
+    ++num_points;
+    for(int j = 0; j < dim; ++j)
+      out[j] = FloatAdd(out[j], (*i)[j]);
   }
 
-  assert(max_weight > 0 && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
-
-  Point<dim> out;
-
-  for(int i = 0; i < dim; ++i) {
-    out.m_elem[i] = 0;
-    CoordType max_val = 0;
-    for(int j = 0; j < num_points; ++j) {
-      CoordType val = points[j].m_elem[i] * weights[j];
-      out.m_elem[i] += val;
-      max_val = FloatMax(max_val, fabs(val));
-    }
-    if(fabs(out.m_elem[i]) < max_val * WFMATH_EPSILON)
-      out.m_elem[i] = 0;
-    else
-      out.m_elem[i] /= tot_weight;
-  }
+  for(int j = 0; j < dim; ++j)
+    out[j] /= num_points;
 
   return out;
+}
+
+template<> inline Point<2>::Point(CoordType x, CoordType y)
+{
+  m_elem[0] = x;
+  m_elem[1] = y;
+}
+
+template<> inline Point<3>::Point(CoordType x, CoordType y, CoordType z)
+{
+  m_elem[0] = x;
+  m_elem[1] = y;
+  m_elem[2] = z;
 }
 
 template<> Point<2>& Point<2>::polar(CoordType r, CoordType theta);

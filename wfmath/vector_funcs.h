@@ -194,8 +194,7 @@ Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 {
   CoordType mag = sloppyMag();
 
-  if(mag <= norm / DBL_MAX) // FIXME div by zero error
-    return *this;
+  assert(mag > norm / DBL_MAX); // nonzero length vector
 
   return (*this *= norm / mag);
 }
@@ -230,8 +229,7 @@ CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
         vmax = vval;
   }
 
-  if(uval == 0 || vval == 0) // zero length vector
-    return 0; // FIXME error?
+  assert(uval != 0 && vval != 0); // zero length vector
 
   Vector<dim> nlhs = u / umax;
   Vector<dim> nrhs = v / vmax;
@@ -252,19 +250,6 @@ Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
 
   m_elem[axis1] = FloatSubtract(tmp1 * ctheta, tmp2 * stheta);
   m_elem[axis2] = FloatAdd(tmp2 * ctheta, tmp1 * stheta);
-
-  return *this;
-}
-
-template<const int dim>
-Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
-	CoordType theta)
-{
-  RotMatrix<dim> m;
-
-  m.rotation(v1, v2, theta);
-
-  *this = Prod(m, *this);
 
   return *this;
 }

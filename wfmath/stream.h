@@ -56,7 +56,7 @@ bool FromString(C& c, const std::string& s, unsigned int precision = 6)
   istringstream ist(s);
   ist.precision(precision);
   ist >> c;
-  return ist; // Check ist.fail()
+  return ist;
 }
 
 void _ReadCoordList(std::istream& is, CoordType* d, const int num);

@@ -26,46 +26,10 @@
 #define WFMATH_SEGMENT_FUNCS_H
 
 #include <wfmath/const.h>
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/ball.h>
 #include <wfmath/segment.h>
 
 namespace WF { namespace Math {
-
-template<const int dim>
-Segment<dim>& Segment<dim>::operator=(const Segment<dim>& a)
-{
-  m_p1 = a.m_p1;
-  m_p2 = a.m_p2;
-}
-
-// WARNING! This operator is for sorting only. It does not
-// reflect any property of the box.
-template<const int dim>
-bool Segment<dim>::operator< (const Segment<dim>& a) const
-{
-  if(m_p1 < a.m_p1)
-    return true;
-  if(a.m_p1 < m_p1)
-    return false;
-  return m_p2 < a.m_p2;
-}
-
-template<const int dim>
-Point<dim> Segment<dim>::getCorner(int i) const
-{
-  switch(i) {
-    case 0:
-      return m_p1;
-    case 1:
-      return m_p2;
-    default:
-      assert(false);
-      return Point<dim>();
-  }
-}
 
 template<const int dim>
 Point<dim> Segment<dim>::getCenter() const
@@ -76,21 +40,6 @@ Point<dim> Segment<dim>::getCenter() const
     out[i] = FloatAdd(m_p1[i], m_p2[i]) / 2;
 
   return out;
-}
-
-template<const int dim>
-Segment<dim>& Segment<dim>::setCorner(const Point<dim>& p, int i)
-{
-  switch(i) {
-    case 0:
-      m_p1 = p;
-    case 1:
-      m_p2 = p;
-    default:
-      assert(false);
-  }
-
-  return *this;
 }
 
 }} // namespace WF::Math

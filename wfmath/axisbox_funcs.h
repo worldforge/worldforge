@@ -87,30 +87,14 @@ AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p
 }
 
 template<const int dim>
-AxisBox<dim>& AxisBox<dim>::operator=(const AxisBox<dim>& a)
-{
-  m_low = a.m_low;
-  m_high = a.m_high;
-
-  return *this;
-}
-
-// WARNING! This operator is for sorting only. It does not
-// reflect any property of the box.
-template<const int dim>
-bool AxisBox<dim>::operator< (const AxisBox<dim>& a) const
-{
-  if(m_low < a.m_low)
-    return true;
-  if(a.m_low < m_low)
-    return false;
-  return m_high < a.m_high;
-}
-
-template<const int dim>
 Point<dim> AxisBox<dim>::getCorner(int i) const
 {
   Point<dim> out;
+
+  if(i == 0)
+    return m_low;
+  if(i == (1 << dim) - 1)
+    return m_high;
 
   for(int j = 0; j < dim; ++j)
     out[j] = (i & (1 << j)) ? m_high[j] : m_low[j];
@@ -130,15 +114,6 @@ Point<dim> AxisBox<dim>::getCenter() const
 }
 
 template<const int dim>
-AxisBox<dim>& AxisBox<dim>::shift(const Vector<dim>& v)
-{
-  m_low += v;
-  m_high += v;
-
-  return *this;
-}
-
-template<const int dim>
 Ball<dim> AxisBox<dim>::boundingSphere() const
 {
   return Ball<dim>(getCenter(), Distance(m_low, m_high) / 2);
@@ -149,6 +124,29 @@ Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
 {
   return Ball<dim>(getCenter(), SloppyDistance(m_low, m_high) / 2);
 }
+
+template<const int dim, template<class> class container>
+AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c)
+{
+  // FIXME become friend
+
+  typename container<AxisBox<dim> >::const_iterator i = c.begin(), end = c.end();
+
+  assert(i != end);
+
+  Point<dim> low = i->lowCorner(), high = i->highCorner();
+
+  while(++i != end) {
+    const Point<dim> &new_low = i->lowCorner(), &new_high = i->highCorner();
+    for(int j = 0; j < dim; ++j) {
+      low[j] = FloatMin(low[j], new_low[j]);
+      high[j] = FloatMax(high[j], new_high[j]);
+    }
+  }
+
+  return AxisBox<dim>(low, high, true);
+}
+
 
 }} // namespace WF::Math
 

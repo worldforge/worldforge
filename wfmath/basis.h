@@ -31,6 +31,10 @@
 
 namespace WF { namespace Math {
 
+// These are used internally in point.cpp and vector.cpp. This header
+// file is not included in any other, nor are these functions exported,
+// so we don't install this in $(includedir)/wfmath.
+
 // Expects (r, theta) for polar, (x, y) for cart
 inline void _CartToPolar(const CoordType *in, CoordType *out)
 {

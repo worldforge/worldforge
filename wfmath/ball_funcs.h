@@ -26,31 +26,11 @@
 #define WFMATH_BALL_FUNCS_H
 
 #include <wfmath/const.h>
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 
 namespace WF { namespace Math {
-
-template<const int dim>
-Ball<dim>& Ball<dim>::operator=(const Ball<dim>& a)
-{
-  m_radius = a.m_radius;
-  m_center = a.m_center;
-}
-
-// WARNING! This operator is for sorting only. It does not
-// reflect any property of the box.
-template<const int dim>
-bool Ball<dim>::operator< (const Ball<dim>& a) const
-{
-  if(m_radius < a.m_radius)
-    return true;
-  if(a.m_radius < m_radius)
-    return false;
-  return m_center < a.m_center;
-}
 
 template<const int dim>
 AxisBox<dim> Ball<dim>::boundingBox() const

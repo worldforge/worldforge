@@ -34,6 +34,7 @@
 #include "rotbox.h"
 #include "intersect.h"
 #include "stream.h"
+#include <vector>
 
 using namespace WF::Math;
 
@@ -50,6 +51,9 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   assert(tmp == box);
   assert(Intersection(box, box, tmp));
   assert(tmp == box);
+  vector<AxisBox<dim> > boxvec;
+  boxvec.push_back(box);
+  assert(box == BoundingBox(boxvec));
 
   assert(Intersect(box, p1));
   assert(!IntersectProper(box, p1));

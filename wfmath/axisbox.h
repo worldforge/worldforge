@@ -48,6 +48,9 @@ std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& m);
 template<const int dim>
 std::istream& operator>>(std::istream& is, AxisBox<dim>& m);
 
+template<const int dim, template<class> class container>
+AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c);
+
 template<const int dim>
 class AxisBox
 {
@@ -62,7 +65,8 @@ class AxisBox
   friend std::ostream& operator<< <dim>(std::ostream& os, const AxisBox& a);
   friend std::istream& operator>> <dim>(std::istream& is, AxisBox& a);
 
-  AxisBox& operator=(const AxisBox& a);
+  AxisBox& operator=(const AxisBox& a)
+	{m_low = a.m_low; m_high = a.m_high; return *this;}
 
   bool isEqualTo(const AxisBox& a, double tolerance = WFMATH_EPSILON) const
 	{return m_low.isEqualTo(a.m_low, tolerance)
@@ -73,15 +77,17 @@ class AxisBox
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the box.
-  bool operator< (const AxisBox& a) const;
+  bool operator< (const AxisBox& a) const
+	{return m_low < a.m_low || (!(a.m_low < m_low) && m_high < a.m_high);}
 
   // Descriptive characteristics
 
   int numCorners() const {return 1 << dim;}
   Point<dim> getCorner(int i) const;
-  Point<dim> lowCorner() const {return m_low;}
-  Point<dim> highCorner() const {return m_high;}
   Point<dim> getCenter() const;
+
+  const Point<dim>& lowCorner() const	{return m_low;}
+  const Point<dim>& highCorner() const	{return m_high;}
 
   CoordType lowerBound(const int axis) const	{return m_low[axis];}
   CoordType upperBound(const int axis) const	{return m_high[axis];}
@@ -90,7 +96,8 @@ class AxisBox
 
   // Movement functions
 
-  AxisBox& shift(const Vector<dim>& v);
+  AxisBox& shift(const Vector<dim>& v)
+	{m_low += v; m_high += v; return *this;}
   AxisBox& moveCornerTo(const Point<dim>& p, int corner)
 	{return shift(p - getCorner(corner));}
   AxisBox& moveCenterTo(const Point<dim>& p)

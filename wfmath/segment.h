@@ -54,7 +54,8 @@ class Segment
   friend std::ostream& operator<< <dim>(std::ostream& os, const Segment& s);
   friend std::istream& operator>> <dim>(std::istream& is, Segment& s);
 
-  Segment& operator=(const Segment& s);
+  Segment& operator=(const Segment& s)
+	{m_p1 = s.m_p1; m_p2 = s.m_p2; return *this;}
 
   bool isEqualTo(const Segment& s, double tolerance = WFMATH_EPSILON) const
 	{return m_p1.isEqualTo(s.m_p1, tolerance)
@@ -65,15 +66,18 @@ class Segment
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the segment.
-  bool operator< (const Segment& b) const;
+  bool operator< (const Segment& s) const
+	{return m_p1 < s.m_p1 || (!(s.m_p1 < m_p1) && m_p2 < s.m_p2);}
 
   // Descriptive characteristics
 
   int numCorners() const {return 2;}
-  Point<dim> getCorner(int i) const;
+  // No checks on i in any of the other shapes, why should this be different?
+  Point<dim> getCorner(int i) const {return i ? m_p2 : m_p1;}
   Point<dim> getCenter() const;
 
-  Segment& setCorner(const Point<dim>& p, int i);
+  const Point<dim>& endpoint(const int i) const	{return i ? m_p2 : m_p1;}
+  Point<dim>& endpoint(const int i)		{return i ? m_p2 : m_p1;}
 
   // Movement functions
 

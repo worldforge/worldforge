@@ -1,11 +1,9 @@
 Shapes left to do:
-	Polygon (2D only)
+	Triangle<> (in preparation for polygon, 2D triangle embedded in n-dim space)
+	Polygon<>
 	Simplex<> (triangle in 2D, tetrahedron in 3D, etc.)
-Check stage/math and libCoal for any leftover math bits which haven't
-	gotten included yet; the only things left appear to be
-	CoalPolygonShape and a possible union-of-spheres function
-	for Ball<> suggested by math_vector.h in stage/math
-Replace double with CoordType everywhere
 Write an API reference for the library. Find some inline documentation tool?
+Deal with difficulties in making certain functions friends of the
+	appropriate classes
 Rearrange the functions in foo_funcs.h to match the order in the class
 	in foo.h
