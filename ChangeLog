@@ -1,4 +1,9 @@
-2003-06-06 Damien McGinnes
+2003-06-09 Damien McGinnes
+
+	* Mercator/Segment.cpp : modified the normal array to be same size as
+	  the heights array. bottom and right boundaries are a bit of a hack
+	
+2003-06-09 Damien McGinnes
 
 	* Mercator/Segment.cpp : added in an attempt at values for the normal
 	  array. Array is one row and column smaller than the height array.

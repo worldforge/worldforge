@@ -40,26 +40,47 @@ void Segment::populate(const Matrix<2, 2> & base)
 void Segment::populateNormals()
 {
     if (m_normals == 0) {
-        m_normals = new float[(m_res) * (m_res) * 3];
+        m_normals = new float[(m_res+1) * (m_res+1) * 3];
     }
 
     float * np = m_normals;
     
     // Fill in the damn normals
+    float h1,h2,h3,h4;
     for (unsigned int j = 0; j < m_res; ++j) {
         for (unsigned int i = 0; i < m_res; ++i) {
-           float h1 = get(i, j);
-           float h2 = get(i, j + 1);
-           float h3 = get(i + 1, j + 1);
-           float h4 = get(i + 1, j);
+           h1 = get(i, j);
+           h2 = get(i, j + 1);
+           h3 = get(i + 1, j + 1);
+           h4 = get(i + 1, j);
             
            // Caclulate the normal vector.
-           np[j * (m_res) + i]     = (h2-h3 + h1-h4) / 2.0;
-           np[j * (m_res) + i + 1] = (h1-h2 + h4-h3) / 2.0;
-           np[j * (m_res) + i + 2] = 1.0;
+           np[j * (m_res+1) + i]     = (h2-h3 + h1-h4) / 2.0;
+           np[j * (m_res+1) + i + 1] = (h1-h2 + h4-h3) / 2.0;
+           np[j * (m_res+1) + i + 2] = 1.0;
         }
+        //right edge boundary
+        np[j * (m_res+1) + m_res]     = (h1-h4);
+        np[j * (m_res+1) + m_res + 1] = (h4-h3);
+        np[j * (m_res+1) + m_res + 2] = 1.0;
     }
-    // do we need to calculate the boundary normals
+    //bottom edge boundary
+    for (int i = 0; i < m_res; i++) {
+        h1 = get(i, m_res);
+        h2 = get(i, m_res + 1);
+        h3 = get(i + 1, m_res + 1);
+        h4 = get(i + 1, m_res);
+ 
+        np[m_res * (m_res+1) + i]     = (h1-h4);
+        np[m_res * (m_res+1) + i + 1] = (h4-h3);
+        np[m_res * (m_res+1) + i + 2] = 1.0;
+    }
+
+    //bottom right corner
+    np[m_res * (m_res+1) + (m_res+1)]     = (h1-h4);
+    np[m_res * (m_res+1) + (m_res+1) + 1] = (h4-h3);
+    np[m_res * (m_res+1) + (m_res+1) + 2] = 1.0;
+ 
 }
 
 // rand num between -0.5...0.5
