@@ -2,6 +2,8 @@ New TODO by Al Riddoch
 
 Fix all use of if (..) .. to always use { } in Root.h etc.
 
+Make sure parents and objtype are not sent if they are empty.
+
 If we move get|set(...)AsList() methods from Root.h and other headers,
 into body, we will remove the need for Element.h from any header.
 This is also the key to removing SmartPtr.h from Root*.h
