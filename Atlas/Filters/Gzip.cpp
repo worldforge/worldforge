@@ -27,6 +27,11 @@ class Gzip : public Filter
     
     string encode(const string& data);
     string decode(const string& data);
+
+    void Process(const string &) 
+	{ cerr << "Atlas::Stream::Gzip::Process does nothing !"<<endl;
+};
+
 };
 
 namespace
