@@ -49,10 +49,15 @@ class XMLish : public Codec<iostream>
 
 namespace
 {
+    /*
+        We're not going to enable this sucker until it actually works.
+    
     Codec<iostream>::Factory<XMLish> factory(
 	"XMLish",				    // name
 	Codec<iostream>::Metrics(1, 2)		    // metrics
     );
+
+    */
 }
     
 XMLish::XMLish(const Codec<iostream>::Parameters& p)
