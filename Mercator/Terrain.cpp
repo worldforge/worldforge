@@ -19,7 +19,7 @@ void Terrain::invalidateSegment(int x, int y)
     Segmentcolumn::iterator J = column.find(y);
     if (J != column.end()) {
         J->second->invalidate();
-        column.erase(J);
+        //column.erase(J);
     }
 }
 
@@ -27,7 +27,7 @@ void Terrain::invalidatePoint(int x, int y)
 {
     for(int i = x - 1; i < x + 1; ++i) {
         for(int j = y - 1; j < y + 1; ++j) {
-            invalidateSegment(x, y);
+            invalidateSegment(i, j);
         }
     }
 }
@@ -35,7 +35,7 @@ void Terrain::invalidatePoint(int x, int y)
 void Terrain::refresh(int x, int y)
 {
     for(int i = x - 1; i < x + 1; ++i) {
-        for(int j = y - 1; j < y + 2; ++j) {
+        for(int j = y - 1; j < y + 1; ++j) {
             getSegmentSafe(i, j, false);
         }
     }
@@ -45,6 +45,8 @@ Terrain::Terrain(int res) : m_res(res)
 {
 
 }
+
+// FIXME need a ~Terrain
 
 float Terrain::get(float x, float y) const
 {
