@@ -1,3 +1,8 @@
+2005-04-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Response.cpp: Re-order initialisation from an iterator to before
+	  the iterator is erased from the container.
+
 2005-04-05  James Turner  <james@worldforge.org>
 
 	* Eris/View.cpp, Eris/View.h, Eris/IGRouter.cpp: revert handling of SIGHT
