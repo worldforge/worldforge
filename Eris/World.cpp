@@ -157,9 +157,9 @@ void World::look(const std::string &id)
 		what["id"] = id;
      		Atlas::Message::Object::ListType args(1,what);
      		look.SetArgs(args);
-		
-		// unecessary according to spec, but Stage needs it <sigh>
-		// look.SetTo(id);
+	    /* note we don't set TO here, this is intentional; it's
+	    unecessary with a compliant server, and complicates routing in
+	    certain cases (editor-avatars)*/
 	}
 	
 	look.SetSerialno(getNewSerialno());

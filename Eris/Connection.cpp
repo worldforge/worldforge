@@ -73,7 +73,8 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 	
 	Dispatcher *ifod = opd->addSubdispatch(new EncapDispatcher("info"), "info");
 	ifod->addSubdispatch(new TypeDispatcher("entity", "object")); 
-	
+	ifod->addSubdispatch(new TypeDispatcher("op", "op"));
+    
 	Dispatcher *errd = opd->addSubdispatch(new StdBranchDispatcher("error"), "error");
 	errd->addSubdispatch(new EncapDispatcher("encap", 1));
 	

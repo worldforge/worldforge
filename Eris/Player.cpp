@@ -39,7 +39,9 @@ Player::Player(Connection *con) :
 	_lobby(Lobby::instance()),
 	_world(NULL)
 {
-	_currentAction = "";
+    _currentAction = "";
+    _logoutTimeout = NULL;
+    
 	assert(_con);
 
 	_con->Connected.connect(SigC::slot(this, &Player::netConnected));
@@ -122,24 +124,33 @@ void Player::createAccount(const std::string &uname,
 
 void Player::logout()
 {
-	if (!_con)
-		throw InvalidOperation("connection is invalid");
+    if (!_con)
+	    throw InvalidOperation("connection is invalid");
+    
+    if (!_con->isConnected()) {
+	    Eris::Log(LOG_WARNING, "connection not open, ignoring Player::logout");
+	    // FIXME - provide feedback here
+	    return;
+    }
 	
-	if (!_con->isConnected()) {
-		Eris::Log(LOG_WARNING, "connection not open, ignoring Player::logout");
-		// FIXME - provide feedback here
-		return;
-	}
+    if (!_currentAction.empty()) {
+	Eris::Log(LOG_WARNING, "got logout with action (%s) already in progress",
+	    _currentAction.c_str());
+	return;
+    }
+    
+    Atlas::Objects::Operation::Logout l = 
+	    Atlas::Objects::Operation::Logout::Instantiate();
+    l.SetId(_account);
+    l.SetSerialno(getNewSerialno());
+    l.SetFrom(_account);
+    
+    _con->send(l);
+    _currentAction = "logout";
+    _currentSerial = l.GetSerialno();
 	
-	Atlas::Objects::Operation::Logout l = 
-		Atlas::Objects::Operation::Logout::Instantiate();
-     	l.SetId(_account);
-	l.SetSerialno(getNewSerialno());
-	l.SetFrom(_account);
-	
-	_con->send(l);
-	_currentAction = "logout";
-	_currentSerial = l.GetSerialno();
+    _logoutTimeout = new Timeout("logout", 5000);
+    _logoutTimeout->Expired.connect(SigC::slot(this, &Player::handleLogoutTimeout));
 }
 
 CharacterList Player::getCharacters()
@@ -263,6 +274,9 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     Dispatcher *d = _con->getDispatcherByPath("op:oog:sight:entity");
     assert(d);
     
+    // notify an people watching us (as opposed to watching the lobby directly)
+    LoginSuccess.emit();
+    
     if (d->getSubdispatch("character"))
 	// second time around, don't try again
 	return;
@@ -272,8 +286,13 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
 	"character"
     );
     
-    // notify an people watching us (as opposed to watching the lobby directly)
-    LoginSuccess.emit();
+    d = _con->getDispatcherByPath("op:info:op");
+    Dispatcher *infoLogout = d->addSubdispatch(ClassDispatcher::newAnonymous());
+    infoLogout->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Logout>(
+	"player", SigC::slot(this, &Player::recvLogoutInfo)),
+	"logout"
+    );
+    
     _con->Disconnecting.connect(SigC::slot(this, &Player::netDisconnecting));
 }
 
@@ -318,6 +337,17 @@ void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
 	GotAllCharacters.emit();
 }
 
+void Player::recvLogoutInfo(const Atlas::Objects::Operation::Logout &lo)
+{
+    Eris::Log(LOG_DEBUG, "got INFO(logout)");
+    
+    // cancel that gear
+    _currentAction = "";
+    delete _logoutTimeout;
+    
+    LogoutComplete.emit(true);
+}
+
 /* this will only ever get encountered after the connection is initally up;
 thus we use it to trigger a reconnection. Note that some actions by
 Lobby and World are also required to get everything back into the correct
@@ -346,6 +376,16 @@ bool Player::netDisconnecting()
 void Player::netFailure(const std::string& /*msg*/)
 {
 	; // do something useful here?
+}
+
+void Player::handleLogoutTimeout()
+{
+    Eris::Log(LOG_DEBUG, "LOGOUT timed out waiting for response");
+    
+    _currentAction = "";
+    delete _logoutTimeout;
+    
+    LogoutComplete.emit(false);
 }
 
 } // of namespace Eris

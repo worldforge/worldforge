@@ -186,7 +186,8 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
     
     const Atlas::Message::Object::MapType &args = 
 	mv.GetArgs().front().AsMap();
-    for (Atlas::Message::Object::MapType::const_iterator A = args.begin(); A != args.end(); ++A) {
+    for (Atlas::Message::Object::MapType::const_iterator A = args.begin(); 
+	    A != args.end(); ++A) {
 	setProperty(A->first, A->second);
     }
 

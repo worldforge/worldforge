@@ -6,9 +6,11 @@
 
 #include <Atlas/Objects/Entity/GameEntity.h>
 #include <Atlas/Objects/Operation/Error.h>
+#include <Atlas/Objects/Operation/Logout.h>
 #include <Atlas/Objects/Entity/Player.h>
 
 #include "Types.h"
+#include "Timeout.h"
 
 namespace Eris
 {
@@ -74,7 +76,8 @@ public:
 		const std::string &name,
 		const std::string &pwd);
 	
-	/// Initiate a clean disconnection from the server
+	/** Initiate a clean disconnection from the server. The LogoutComplete
+	signal will be emitted when the process completes */
 	void logout();
 
 	/** access the characters currently owned by the player  : note you should call
@@ -109,6 +112,11 @@ public:
 	SigC::Signal2<void, LoginFailureType, const std::string &> LoginFailure;
 	
 	SigC::Signal0<void> LoginSuccess;
+	
+	/** emitted when a LOGOUT operation completes; either cleanly (argument = true),
+	indicating the LOGOUT was acknowledged by the server, or due to a timeout
+	or other error (argument = false) */
+	SigC::Signal1<void, bool> LogoutComplete;
 protected:
 	void recvOpError(const Atlas::Objects::Operation::Error &err);	
 	void recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
@@ -123,6 +131,9 @@ protected:
 	bool netDisconnecting();
 	void netFailure(const std::string& msg);
 
+	void recvLogoutInfo(const Atlas::Objects::Operation::Logout &lo);
+	void handleLogoutTimeout();
+
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)
 
@@ -135,6 +146,8 @@ protected:
 	/// current action tracking (for error processing)
 	std::string _currentAction;
 	long _currentSerial;	///< serial no of the Atlas operation
+
+	Timeout* _logoutTimeout;
 
 	Lobby* _lobby;
 	World* _world;

@@ -1,3 +1,13 @@
+Sunday, February 10 2002, James Turner
+
+	* Added wait for INFO(LOGOUT) response from server, 
+	  and a timeout in case the server doesn't support that
+	* Added a signal on Player when a logout completes
+	* Added a comment in World.cpp about the TO field on
+	  IG LOOK ops.
+	* Added another 'foundation' dispatcher to Connection
+	  (op:info:op)
+
 Friday, Febuary 08 2002, Al Riddoch
 
 	* Clear TO on IG Look ops.
