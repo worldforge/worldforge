@@ -1,0 +1,8 @@
+AC_INIT(.)
+
+AM_INIT_AUTOMAKE("Atlas", "0.1.0")
+AM_CONFIG_HEADER(config.h)
+
+AC_OUTPUT([
+	Makefile
+])
