@@ -61,7 +61,7 @@ PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 wfmath-0.3 >= 0.3.2,
     [
         CXXFLAGS="$CXXFLAGS $WF_CFLAGS"
         LDFLAGS="$LDFLAGS $WF_LIBS"
-        ERIS_REQUIRES="$ERIS_REQUIRES skstream-0.3 atlascpp-0.5 >= 0.4.93 wfmath-0.3"
+        ERIS_REQUIRES="$ERIS_REQUIRES skstream-0.3 atlascpp-0.6 wfmath-0.3"
     ],
     AC_MSG_ERROR(Couldn't find the required WorldForge libraries))
 
@@ -96,13 +96,13 @@ ERIS_POLL_GLIB_REQUIRES=
 
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     [
-	ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.2.pc"
+	ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.3.pc"
 	ERIS_POLL_GLIB_REQUIRES=glib-2.0
 	have_glib='yes'
     ],
     [
         AM_PATH_GLIB(1.2.0,[
-		ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.2.pc"
+		ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.3.pc"
 		have_glib='yes'
 	        ],[
 		AC_MSG_WARN(Couldn't find glib, not building glib poll)
@@ -139,7 +139,7 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 SYSTEM_LIBS=""
-ERIS_LIB_SUFFIX="-1.2"
+ERIS_LIB_SUFFIX="-1.3"
 ERIS_LIBS="-leris$ERIS_LIB_SUFFIX -lm"
 ERIS_CFLAGS=""
 AC_SUBST(SYSTEM_LIBS)
@@ -160,7 +160,7 @@ bindings/perl/compile_flags.pl
 test/Makefile
 eris.dox
 eris.spec
-eris-1.2.pc
-eris-poll-glib-1.2.pc
+eris-1.3.pc
+eris-poll-glib-1.3.pc
 ])
 AC_OUTPUT

@@ -10,9 +10,9 @@ testEris_SOURCES = tests.cpp testHarness.h \
     testConnection.cpp testConnection.h \
     testPlayer.h testPlayer.cpp
 
-testEris_LDADD = $(top_builddir)/Eris/liberis-1.2.la
+testEris_LDADD = $(top_builddir)/Eris/liberis-1.3.la
 
 noinst_PROGRAMS  = metaquery
 
 metaquery_SOURCES = metaQuery.cpp
-metaquery_LDADD = $(top_builddir)/Eris/liberis-1.2.la
+metaquery_LDADD = $(top_builddir)/Eris/liberis-1.3.la

@@ -3,4 +3,5 @@
 Makefile
 Makefile.in
 testEris
+metaquery
 *atlas-*log
