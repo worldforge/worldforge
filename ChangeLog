@@ -1,3 +1,7 @@
+Sunday, January 20 2002, Al Riddoch
+
+	* Add children accessor to TypeInfo node.
+
 Friday, January 18 2002, James Turner
 
 	* Move lots of extraneous public stuff in TypeInfo
