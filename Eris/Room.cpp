@@ -360,4 +360,9 @@ const std::string& Room::getID() const
     return _id;
 }
 
+Person* Room::getPersonByUID(const std::string& uid)
+{
+    return _lobby->getPerson(uid);
+}
+
 } // of Eris namespace

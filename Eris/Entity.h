@@ -119,6 +119,22 @@ public:
 	from the server */
 	bool isVisible() const
 	{ return _visible; }
+
+	// coordinate transformations
+	template<class C> C toParentCoords(const C& c) const
+		{return c.toParentCoords(_position, _orientation);}
+	template<class C> C fromParentCoords(const C& c) const
+		{return c.toLocalCoords(_position, _orientation);}
+	// A vector (e.g., the distance between two points, or
+	// a velocity) gets rotated by a coordinate transformation,
+	// but doesn't get shifted by the change in the position
+	// of the origin, so we handle it separately. We also
+	// need to copy the vector before rotating, because
+	// Vector::rotate() rotates it in place.
+	WFMath::Vector<3> toParentCoords(const WFMath::Vector<3>& v) const
+		{return WFMath::Vector<3>(v).rotate(_orientation);}
+	WFMath::Vector<3> fromParentCoords(const WFMath::Vector<3>& v) const
+		{return WFMath::Vector<3>(v).rotate(_orientation.inverse());}
 	
 // Signals
 	SigC::Signal1<void, Entity*> AddedMember;

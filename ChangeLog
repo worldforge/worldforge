@@ -1,3 +1,11 @@
+Thursday, 27th November, James Turner <james@worldforge.org>
+
+    * Apply Ron's patch for transforming WFMath objects
+      based on an entity's pos and orientation.
+
+Monday, 24th November, James Turner <james@worldforge.org>
+    * Add accessor for Person objects directly on Room.
+    
 Monday, 24th November, Al Riddoch <alriddoch@zepler.org>
 
 	* Eris/Avatar.cpp: Fix all uses of send() to pass a reference

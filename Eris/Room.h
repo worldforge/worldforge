@@ -76,7 +76,9 @@ public:
 
 	///
 	Lobby* getLobby() const {return _lobby;}
-	
+    
+    Person* getPersonByUID(const std::string& uid);
+        
 	/// Called by the lobby when sight of us arrives	
 	void sight(const Atlas::Objects::Entity::RootEntity &room);	
 // signals
