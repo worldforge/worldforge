@@ -30,6 +30,15 @@
 #include "SignalDispatcher.h"
 #include "EncapDispatcher.h"
 
+#ifdef __WIN32__
+
+// Provide missing / misaligned function names.  May only be for mingw32
+#ifndef vsnprintf
+#define vsnprintf _vsnprintf
+#endif
+
+#endif // __WIN32__
+
 namespace Eris {
 
 DebugDispatcher *dd, *sdd;	

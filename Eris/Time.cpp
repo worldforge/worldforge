@@ -7,15 +7,9 @@
 namespace Time
 {
 
-#if defined( WIN32)
-	
-	xxx
-	
-#else	
-
 #include <unistd.h>	
 #include <sys/time.h>
-
+ 
 	/*
 void Init()
 {
@@ -26,7 +20,23 @@ void Init()
 Stamp getCurrentStamp()
 {
 	Stamp n;
+#ifndef __WIN32__
 	gettimeofday(&n, NULL);
+#else
+  SYSTEMTIME sysTime;
+  FILETIME fileTime;  /* 100ns == 1 */
+  LARGE_INTEGER i;
+
+  GetSystemTime(&sysTime);
+  SystemTimeToFileTime(&sysTime, &fileTime);
+  /* Documented as the way to get a 64 bit from a
+   * FILETIME. */
+  memcpy(&i, &fileTime, sizeof(LARGE_INTEGER));
+
+  n.tv_sec = i.QuadPart / 10000000; /*10e7*/
+  n.tv_usec = (i.QuadPart / 10) % 1000000;  /*10e6*/
+                                  
+#endif
 	return n;
 }
 	
@@ -73,6 +83,5 @@ long operator-(const Stamp &a, const Stamp &b)
 	return ret;
 }
 
-#endif
 	
 }

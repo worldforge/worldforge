@@ -1,8 +1,32 @@
+// TODO: Copyright stuff
+
 #ifndef ERIS_METASERVER_H
 #define ERIS_METASERVER_H
 
+#ifndef __WIN32__
 // pull in uint32_t on POSIX - is this generic?!
 #include <stdint.h>
+#else
+// Apparently not. [MW]
+#ifndef _STDINT_H_
+#define _STDINT_H_
+
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef unsigned int uint32_t;
+
+#endif  // _STDINT_H_
+
+#ifndef vsnprintf
+#define vsnprintf _vsnprintf
+#endif
+#ifndef snprintf
+#define snprintf _snprintf
+#endif
+
+#endif // __WIN32__
+
+
 
 #include <sigc++/object.h>
 #include <sigc++/basic_signal.h>

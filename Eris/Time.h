@@ -5,12 +5,16 @@
 time measurement, not displaying a human readable time. */
 
 #include <sys/time.h>
+#if defined ( __WIN32__ )
+#include <winsock.h>
+#endif
 
 namespace Time {
 
-#if defined( WIN32 )
+#if defined( __WIN32__ )
 	
-	// ??
+	// mingw32 is nice to us.  (defined by winsock.h)
+  typedef struct timeval Stamp;
 
 #elif defined( macintosh )
 	typedef UnsignedWide Stamp;	// micro-seconds
