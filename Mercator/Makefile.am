@@ -41,4 +41,5 @@ libmercator_HEADERS = \
 	Intersect.h \
 	Surface.h \
 	Plant.h \
-	Forest.h
+	Forest.h \
+	RandCache.h

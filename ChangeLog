@@ -1,3 +1,8 @@
+2004-01-24  Damien McGinnes <mcginnes at netspeed dot com.au>
+	* Mercator/RandCache.h: add code to provide a pool of repeatable
+	  (2d indexed) random numbers for use by Forest etc.
+	  thanks to rsteinke.
+
 2004-01-20  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Forest.cpp: Use WFMath's value of PI, as windows
