@@ -1,3 +1,12 @@
+Saturday, August 3rd, James Turner
+
+	* Change BaseConnection to create a new tcp_socket_stream
+	  for every connect. (And, obviously, hardDisconnect deletes it)
+	  This should fix handling of stream errors, since there is no
+	  safe way to clear the error code apparently.
+	  This change is low impact code-wise (only changes in
+	  BaseConnection.cpp), but needs good testing.
+
 Friday, August 2, Michael Koch
 
 	* Patch to declare operators in header file and made method

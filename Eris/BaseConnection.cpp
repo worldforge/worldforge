@@ -4,6 +4,7 @@
 
 #include <assert.h>		
 #include <skstream/skstream.h>
+#include <stdio.h>
 
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Root.h>
@@ -26,6 +27,7 @@ BaseConnection::BaseConnection(const std::string &cnm,
 	_sc(NULL),
 	_status(DISCONNECTED),
 	_id(id),
+	_stream(NULL),
 	_clientName(cnm),
 	_bridge(br),
 	_timeout(NULL),
@@ -33,23 +35,25 @@ BaseConnection::BaseConnection(const std::string &cnm,
 	_port(0)
 {
 	assert(_bridge);
-	_stream = new tcp_socket_stream();
+	//_stream = new tcp_socket_stream();
 }
 	
 BaseConnection::~BaseConnection()
 {    
     if (_status != DISCONNECTED) {
-	hardDisconnect(true);
+		hardDisconnect(true);
     }
     
-    delete _stream;
+    //delete _stream;
 }
 	
 void BaseConnection::connect(const std::string &host, short port)
 {
-    if (_stream->is_open())
-	hardDisconnect(true);
-
+    if (_stream != NULL) {
+		log(LOG_WARNING, "in base connection :: connect, had existing stream, discarding it");
+		hardDisconnect(true);
+	}
+	
     _host = host;
     _port = port;
     
@@ -59,7 +63,7 @@ void BaseConnection::connect(const std::string &host, short port)
 	
     setStatus(CONNECTING);
 
-    _stream->open(host, port, true);
+    _stream = new tcp_socket_stream(host, port, true);
 
     Poll::instance().addStream(_stream, Poll::WRITE);
     log(LOG_DEBUG, "Stream added to poller");
@@ -67,28 +71,33 @@ void BaseConnection::connect(const std::string &host, short port)
 
 void BaseConnection::hardDisconnect(bool emit)
 {
-    if ((_status == CONNECTED) || (_status == DISCONNECTING)){
-	    _codec->StreamEnd();
-	    (*_stream) << std::flush;
-	    
-	    delete _codec;
-	    delete _encode;
-	    delete _msgEncode;
-    } else if (_status == NEGOTIATE) {
-	    delete _sc;
-	    _sc = NULL;
-    } else if (_status == CONNECTING){
-	// nothing to be done, but can happen
-    } else
-	throw InvalidOperation("Bad connection state for disconnection");
-    
-    _stream->close();
-    
-    delete _timeout;
-    _timeout = NULL;
-    
-    Poll::instance().removeStream(_stream);
-    
+	if (!_stream) {
+		log(LOG_WARNING, "in baseConnection::hardDisconnect with a NULL stream!");
+	} else {
+		// okay, tear it down
+		if ((_status == CONNECTED) || (_status == DISCONNECTING)){
+			_codec->StreamEnd();
+			(*_stream) << std::flush;
+			
+			delete _codec;
+			delete _encode;
+			delete _msgEncode;
+		} else if (_status == NEGOTIATE) {
+			delete _sc;
+			_sc = NULL;
+		} else if (_status == CONNECTING){
+			// nothing to be done, but can happen
+		} else
+			throw InvalidOperation("Bad connection state for disconnection");
+		
+		delete _timeout;
+		_timeout = NULL;
+		
+		Poll::instance().removeStream(_stream);
+		delete _stream;
+		_stream = NULL;
+	}
+
     if (emit) {
 	    Disconnected.emit();
 	    setStatus(DISCONNECTED);
@@ -100,6 +109,7 @@ void BaseConnection::recv()
 {
 	int err = 0;
 	assert(_status != DISCONNECTED);
+	assert(_stream);
 	
 	if (_stream->getSocket() == -1) {
 		handleFailure("Connection stream closed unexpectedly");
@@ -123,21 +133,24 @@ void BaseConnection::recv()
 	}
 	
 	// another paranoid check
-	if ((err = _stream->getLastError()) != 0) {
-		handleFailure("Got stream failure");
+	if (_stream && (err = _stream->getLastError()) != 0) {
+		char msgBuf[128];
+		::snprintf(msgBuf, 128, "recv() got stream failure, error %d", _stream->getLastError());
+		handleFailure(msgBuf);
 		hardDisconnect(false);
 	}
 }		
 
 void BaseConnection::nonblockingConnect()
 {
-    if(!_stream->is_ready())
-	return;
+	assert(_stream);
+    if (!_stream->is_ready())
+		return;
 
     if(!_stream->is_open()) {
-	handleFailure("Failed to connect to " + _host);
-	hardDisconnect(false);
-	return;
+		handleFailure("Failed to connect to " + _host);
+		hardDisconnect(false);
+		return;
     }
 
     Poll::instance().changeStream(_stream, Poll::READ);
@@ -154,18 +167,15 @@ void BaseConnection::nonblockingConnect()
 
 void BaseConnection::pollNegotiation()
 {
-	if (!_sc || (_status != NEGOTIATE))
-	  {
-	    log(LOG_DEBUG, "pollNegotiation: unexpected connection status");
-
+	if (!_sc || (_status != NEGOTIATE)) {
+		log(LOG_DEBUG, "pollNegotiation: unexpected connection status");
 		throw InvalidOperation("pollNegotiation: unexpected connection status");
-	  }
+	}
 	
 	_sc->Poll();
 	if (_sc->GetState() == Atlas::Negotiate<std::iostream>::IN_PROGRESS)
-	  {
+		// more negotiation to do once more netwrok data arrives
 	    return;
-	  }
 	
 	if (_sc->GetState() == Atlas::Negotiate<std::iostream>::SUCCEEDED) {
 	    log(LOG_DEBUG, "Negotiation Success");
@@ -203,7 +213,7 @@ void BaseConnection::setStatus(Status sc)
 int BaseConnection::getFileDescriptor()
 {
     if (!_stream)
-	throw InvalidOperation("Not connected, hence no FD");
+		throw InvalidOperation("Not connected, hence no FD");
     return _stream->getSocket();
 }
 
