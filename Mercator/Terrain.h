@@ -5,10 +5,11 @@
 #ifndef MERCATOR_TERRAIN_H
 #define MERCATOR_TERRAIN_H
 
+#include <Mercator/Mercator.h>
+#include <Mercator/BasePoint.h>
+
 #include <map>
 #include <cmath>
-
-#include <Mercator/BasePoint.h>
 
 namespace Mercator {
 
@@ -29,7 +30,7 @@ class Terrain {
     Segmentstore m_segments;
   public:
     static const float defaultLevel = 8;
-    explicit Terrain(int res = 64);
+    explicit Terrain(unsigned int resolution = defaultResolution);
     ~Terrain();
 
     float get(float x, float y) const;

@@ -2,13 +2,13 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#ifndef MERCATOR_MERCATOR_H
-#define MERCATOR_MERCATOR_H
+#include <Mercator/Surface.h>
 
 namespace Mercator {
 
-    static const unsigned int defaultResolution = 64;
+Surface::Surface(unsigned int resolution) : m_res(resolution),
+                 m_colors(new float[(m_res + 1) * (m_res + 1) * 4])
+{
+}
 
 } // namespace Mercator
-
-#endif // MERCATOR_MERCATOR_H

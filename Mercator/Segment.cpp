@@ -37,7 +37,8 @@ class QuadInterp {
         : m_size(size), ep1(e1/size), ep2(e2/size), ep3(e3/size), ep4(e4/size) {} 
 };      
 
-Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
+Segment::Segment(unsigned int resolution) : m_res(resolution),
+                            m_points(new float[(m_res+1) * (m_res+1)]),
                             m_normals(0), m_max(0.f), m_min(0.0f),
                             m_validPt(false), m_validNorm(false)
 {

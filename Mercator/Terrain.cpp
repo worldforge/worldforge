@@ -9,7 +9,7 @@
 
 namespace Mercator {
 
-Terrain::Terrain(int res) : m_res(res)
+Terrain::Terrain(unsigned int resolution) : m_res(resolution)
 {
 
 }

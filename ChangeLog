@@ -1,5 +1,14 @@
 2003-06-22  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Mercator.h, Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Terrain.cpp, Mercator/Terrain.h: Clean up the
+	  way the default segment resolution and size is handled.
+
+	* Mercator/Surface.cpp, Mercator/Surface.h: Framework for
+	  class representation texture layers on the terrain.
+
+2003-06-22  Al Riddoch  <alriddoch@zepler.org>
+
 	* Updated copyright statements to include Damien a bit more.
 
 2003-06-22  Damien McGinnes

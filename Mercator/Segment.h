@@ -5,6 +5,7 @@
 #ifndef MERCATOR_SEGMENT_H
 #define MERCATOR_SEGMENT_H
 
+#include <Mercator/Mercator.h>
 #include <Mercator/Matrix.h>
 #include <Mercator/BasePoint.h>
 
@@ -38,7 +39,7 @@ class Segment {
         m_validNorm = false;
     }
   public:
-    explicit Segment(int res = 64);
+    explicit Segment(unsigned int resolution = defaultResolution);
     ~Segment();
 
     const int getSize() const {
