@@ -171,7 +171,7 @@ if objtype=="op" or objtype=="obj":
     else:
         obj = createobject("root_entity")
 else:
-    obj = Root
+    obj = Empty
 return obj
 
 3.4.6

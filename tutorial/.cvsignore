@@ -1,0 +1,6 @@
+.libs
+Makefile
+simple_client
+simple_server
+Makefile.in
+.deps

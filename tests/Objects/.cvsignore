@@ -1,0 +1,8 @@
+Makefile
+Makefile.in
+.deps
+.libs
+encoder1
+decoder1
+objects2
+objects1

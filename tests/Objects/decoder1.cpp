@@ -46,9 +46,11 @@ int main(int argc, char** argv)
     t.streamBegin();
     t.streamMessage(Bridge::mapBegin);
         t.mapItem("parents", Bridge::listBegin);
-            t.listItem("root");
+//            t.listItem("root");
+            t.listItem("root_entity");
         t.listEnd();
-        t.mapItem("id", "root_instance");
+//        t.mapItem("id", "root_instance");
+        t.mapItem("id", "entity");
     t.mapEnd();
     t.streamMessage(Bridge::mapBegin);
         t.mapItem("parents", Bridge::listBegin);

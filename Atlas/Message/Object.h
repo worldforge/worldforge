@@ -19,11 +19,25 @@ class WrongTypeException { };
  * FIXME: Document this
  *
  * @author Stefanus Du Toit <sdt@gmx.net>
+ *
+ * Changes:
+ *
+ *   2000/08/05   Karsten-O. Laux <klaux@rhrk.uni-kl.de>
+ *                Changed the members to pointers which only get created when
+ *                really needed. This is a major speedup for passing
+ *                Object as parameter or when copying it.
+ *                Because copying of unused members is omitted.  
+ *                All pointers are stored as a union, so we save memory !
+ *                Changed IntType to long and added convinience Constructors
+ *                for float, int and bool
+ *                
+
+
  */
 class Object
 {
 public:
-    typedef int IntType;
+    typedef long IntType;
     typedef double FloatType;
     typedef std::string StringType;
     typedef std::map<std::string, Object> MapType;
@@ -40,40 +54,137 @@ public:
 
     /// Construct an empty object.
     Object()
-      : t(TYPE_NONE), i(0), f(0.0), s(), m(),  l()
+      : t(TYPE_NONE)
     {
     }
 
+    ///
+    virtual ~Object()
+      {
+	clear();
+      }
+
     /// Copy an existing object.
-    Object(const Object& m)
-      : t(m.t), i(m.i), f(m.f), s(m.s), m(m.m), l(m.l)
+    Object(const Object& obj)
+      : t(obj.t)
     {
+      switch(t) 
+	{
+      case TYPE_NONE:
+	break;
+      case TYPE_INT:
+	i = obj.i;
+	break;
+      case TYPE_FLOAT:
+	f = obj.f;
+	break;
+      case TYPE_STRING:
+	s = new StringType(*obj.s);
+	break;
+      case TYPE_MAP:
+	m = new MapType(*obj.m);
+	break;
+      case TYPE_LIST:
+	l = new ListType(*obj.l);
+	break;
+      }
+	
     }
 
     /// Set type to int, and value to v.
     Object(int v)
-      : t(TYPE_INT), i(v), f(0.0), s(), m(), l()
+      : t(TYPE_INT), i(v)
     {
     }
+
+    /// Set type to int, and value to v.
+    Object(bool v)
+      : t(TYPE_INT), i(v)
+    {
+    }
+
+    /// Set type to int, and value to v.
+    Object(IntType v)
+      : t(TYPE_INT), i(v)
+    {
+    }
+
     /// Set type to double, and value to v.
-    Object(double v)
-      : t(TYPE_FLOAT), i(0), f(v), s(), m(), l()
+    Object(float v)
+      : t(TYPE_FLOAT), f(v)
+    {
+    }   
+
+    /// Set type to double, and value to v.
+    Object(FloatType v)
+      : t(TYPE_FLOAT), f(v)
     {
     }
+
     /// Set type to std::string, and value to v.
-    Object(const std::string& v)
-      : t(TYPE_STRING), i(0), f(0.0), s(v), m(), l()
+    Object(const char* v)
+      : t(TYPE_STRING)
     {
+      if(v)
+	s = new StringType(v);
+      else
+	s = new StringType();
+    }
+
+    /// Set type to std::string, and value to v.
+    Object(const StringType& v)
+      : t(TYPE_STRING)
+    {
+      s = new StringType(v);
     }
     /// Set type to MapType, and value to v.
     Object(const MapType& v)
-      : t(TYPE_MAP), i(0), f(0.0), s(), m(v), l()
+      : t(TYPE_MAP)
     {
+      m = new MapType(v);
     }
     /// Set type to ListType, and value to v.
     Object(const ListType& v)
-      : t(TYPE_LIST), i(0), f(0.0), s(), m(), l(v)
+      : t(TYPE_LIST)
     {
+      l = new ListType(v);
+    }
+
+    /// overload assignment operator !
+    Object& operator=(const Object& obj) 
+    {
+      //check for self assignment
+      if(&obj == this)
+	return *this;
+
+      //first clear
+      clear();
+    
+      // then perform actual assignment of members
+      t =  obj.t;
+      
+      switch(t) 
+	{
+	case TYPE_NONE:
+	  break;
+	case TYPE_INT:
+	  i = obj.i;
+	  break;
+	case TYPE_FLOAT:
+	  f = obj.f;
+	break;
+	case TYPE_STRING:
+	  s = new StringType(*obj.s);
+	  break;
+	case TYPE_MAP:
+	  m = new MapType(*obj.m);
+	  break;
+	case TYPE_LIST:
+	  l = new ListType(*obj.l);
+	  break;
+	}
+
+      return *this;
     }
 
     /// Check for equality with another Object.
@@ -84,9 +195,9 @@ public:
             case TYPE_NONE: return true;
             case TYPE_INT: return i == o.i;
             case TYPE_FLOAT: return f == o.f;
-            case TYPE_STRING: return s == o.s;
-            case TYPE_MAP: return m == o.m;
-            case TYPE_LIST: return l == o.l;
+            case TYPE_STRING: return *s == *o.s;
+            case TYPE_MAP: return *m == *o.m;
+            case TYPE_LIST: return *l == *o.l;
         }
         return false;
     }
@@ -98,36 +209,40 @@ public:
     }
 
     /// Check for equality with a int.
-    bool operator==(int v) const
+    bool operator==(IntType v) const
     {
-        return (t == TYPE_INT && i == v);
+      return (t == TYPE_INT && i == v);
     }
 
     /// Check for inequality with a int.
-    bool operator!=(int v) const { return !(*this == v); }
+    bool operator!=(IntType v) const { return !(*this == v); }
 
     /// Check for equality with a double.
-    bool operator==(double v) const
+    bool operator==(FloatType v) const
     {
-        return (t == TYPE_FLOAT && f == v);
+      return t == TYPE_FLOAT && f == v;
     }
 
     /// Check for inequality with a double.
-    bool operator!=(double v) const { return !(*this == v); }
+    bool operator!=(FloatType v) const { return !(*this == v); }
 
     /// Check for equality with a std::string.
-    bool operator==(const std::string& v) const
+    bool operator==(const StringType& v) const
     {
-        return (t == TYPE_STRING && s == v);
+      if(t == TYPE_STRING)
+	return (*s == v);
+      return false;
     }
 
     /// Check for inequality with a std::string.
-    bool operator!=(const std::string& v) const { return !(*this == v); }
+    bool operator!=(const StringType& v) const { return !(*this == v); }
 
     /// Check for equality with a MapType.
     bool operator==(const MapType& v) const
     {
-        return (t == TYPE_MAP && m == v);
+      if(t == TYPE_MAP)
+	return (*m == v);
+      return false;
     }
 
     /// Check for inequality with a MapType.
@@ -136,7 +251,9 @@ public:
     /// Check for equality with a ListType.
     bool operator==(const ListType& v) const
     {
-        return (t == TYPE_LIST && l == v);
+      if (t == TYPE_LIST)
+	return (*l == v);
+      return false;
     }
 
     /// Check for inequality with a ListType.
@@ -145,10 +262,24 @@ public:
     /// Clear all values.
     void clear()
     {
-        t = TYPE_NONE;
-        s.erase();
-        m.clear();
-        l.clear();
+     switch(t) 
+	{
+      case TYPE_NONE:
+      case TYPE_INT:
+      case TYPE_FLOAT:
+	break;
+      case TYPE_STRING:
+	delete s;
+	break;
+      case TYPE_MAP:
+	delete m;
+	break;
+      case TYPE_LIST:
+	delete l;
+	break;
+      }
+     
+     t = TYPE_NONE;
     }
 
     /// Get the current type.
@@ -167,13 +298,13 @@ public:
     bool isList() const { return (t == TYPE_LIST); }
 
     /// Retrieve the current value as a int.
-    int asInt() const throw (WrongTypeException)
+    long asInt() const throw (WrongTypeException)
     {
         if (t == TYPE_INT) return i;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a double.
-    double asFloat() const throw (WrongTypeException)
+    FloatType asFloat() const throw (WrongTypeException)
     {
         if (t == TYPE_FLOAT) return f;
         throw WrongTypeException();
@@ -181,51 +312,53 @@ public:
     /// Retrieve the current value as a const std::string reference.
     const std::string& asString() const throw (WrongTypeException)
     {
-        if (t == TYPE_STRING) return s;
+        if (t == TYPE_STRING) return *s;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const std::string reference.
     std::string& asString() throw (WrongTypeException)
     {
-        if (t == TYPE_STRING) return s;
+        if (t == TYPE_STRING) return *s;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a const MapType reference.
     const MapType& asMap() const throw (WrongTypeException)
     {
-        if (t == TYPE_MAP) return m;
+        if (t == TYPE_MAP) return *m;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const MapType reference.
     MapType& asMap() throw (WrongTypeException)
     {
-        if (t == TYPE_MAP) return m;
+        if (t == TYPE_MAP) return *m;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a const ListType reference.
     const ListType& asList() const throw (WrongTypeException)
     {
-        if (t == TYPE_LIST) return l;
+        if (t == TYPE_LIST) return *l;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const ListType reference.
     ListType& asList() throw (WrongTypeException)
     {
-        if (t == TYPE_LIST) return l;
+        if (t == TYPE_LIST) return *l;
         throw WrongTypeException();
     }
 
 protected:
 
     Type t;
-    int i;
-    double f;
-    StringType s;
-    MapType m;
-    ListType l;
-
+    union {
+      IntType i;
+      FloatType f;
+      StringType* s;
+      MapType* m;
+      ListType* l;
+    };
 };
 
-} } // namespace Atlas::Message
+}}
+
 
 #endif
