@@ -1,3 +1,8 @@
+Saturday, 23rd August, Al Riddoch <alriddoch@zepler.org>
+
+	* Eris/BaseConnection.cpp: Switch to using skstream::isReady()
+	  instead of the deprecated is_ready().
+
 Friday, 22th August, Ron Steinke <rsteinke@w-link.net>
 
 	* Made Poll::new_timeout_ static to keep the Timeout

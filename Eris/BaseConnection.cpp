@@ -145,7 +145,7 @@ void BaseConnection::recv()
 void BaseConnection::nonblockingConnect()
 {
 	assert(_stream);
-    if (!_stream->is_ready())
+    if (!_stream->isReady())
 		return;
 
     if(!_stream->is_open()) {
