@@ -18,16 +18,23 @@
 // The DebugBridge
 #include "DebugBridge.h"
 
+#include <Atlas/Message/Encoder.h>
+#include <map>
+#include <list>
+
 using namespace Atlas;
+using Atlas::Message::Object;
 using namespace std;
 
 // This sends a very simple message to c
 void helloWorld(Codec<iostream>& c)
 {
     cout << "Sending hello world message... " << flush;
-    c.StreamMessage(Bridge::MapBegin);
-    c.MapItem("hello", "world");
-    c.MapEnd();
+    Message::Encoder e(&c);
+    Object::MapType m;
+    Object o(25.50);
+//    Object player = m;
+//    e.StreamMessage(player);
     cout << "done." << endl;
 }
 

@@ -30,7 +30,7 @@ define(`CONSTRUCTOR_T', `
 define(`DESTRUCTOR', `
     virtual ~Morph$1()
     {`'FORLOOP(`i', 1, $1, `
-        delete v`'i`';')
+        delete v`'i`'; v`'i`' = NULL;')
     }')dnl
 define(`OP_ASSIGN', `
     Morph$1& operator=(const Morph$1& m)

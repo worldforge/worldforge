@@ -70,8 +70,8 @@ public:
 
     virtual ~Morph2()
     {
-        delete v1;
-        delete v2;
+        delete v1; v1 = NULL;
+        delete v2; v2 = NULL;
     }
 
     /// Check for inequality with another Morph2.
@@ -198,9 +198,9 @@ public:
 
     virtual ~Morph3()
     {
-        delete v1;
-        delete v2;
-        delete v3;
+        delete v1; v1 = NULL;
+        delete v2; v2 = NULL;
+        delete v3; v3 = NULL;
     }
 
     /// Check for inequality with another Morph3.
@@ -358,10 +358,10 @@ public:
 
     virtual ~Morph4()
     {
-        delete v1;
-        delete v2;
-        delete v3;
-        delete v4;
+        delete v1; v1 = NULL;
+        delete v2; v2 = NULL;
+        delete v3; v3 = NULL;
+        delete v4; v4 = NULL;
     }
 
     /// Check for inequality with another Morph4.
@@ -550,11 +550,11 @@ public:
 
     virtual ~Morph5()
     {
-        delete v1;
-        delete v2;
-        delete v3;
-        delete v4;
-        delete v5;
+        delete v1; v1 = NULL;
+        delete v2; v2 = NULL;
+        delete v3; v3 = NULL;
+        delete v4; v4 = NULL;
+        delete v5; v5 = NULL;
     }
 
     /// Check for inequality with another Morph5.
@@ -774,12 +774,12 @@ public:
 
     virtual ~Morph6()
     {
-        delete v1;
-        delete v2;
-        delete v3;
-        delete v4;
-        delete v5;
-        delete v6;
+        delete v1; v1 = NULL;
+        delete v2; v2 = NULL;
+        delete v3; v3 = NULL;
+        delete v4; v4 = NULL;
+        delete v5; v5 = NULL;
+        delete v6; v6 = NULL;
     }
 
     /// Check for inequality with another Morph6.
@@ -1030,13 +1030,13 @@ public:
 
     virtual ~Morph7()
     {
-        delete v1;
-        delete v2;
-        delete v3;
-        delete v4;
-        delete v5;
-        delete v6;
-        delete v7;
+        delete v1; v1 = NULL;
+        delete v2; v2 = NULL;
+        delete v3; v3 = NULL;
+        delete v4; v4 = NULL;
+        delete v5; v5 = NULL;
+        delete v6; v6 = NULL;
+        delete v7; v7 = NULL;
     }
 
     /// Check for inequality with another Morph7.
@@ -1318,14 +1318,14 @@ public:
 
     virtual ~Morph8()
     {
-        delete v1;
-        delete v2;
-        delete v3;
-        delete v4;
-        delete v5;
-        delete v6;
-        delete v7;
-        delete v8;
+        delete v1; v1 = NULL;
+        delete v2; v2 = NULL;
+        delete v3; v3 = NULL;
+        delete v4; v4 = NULL;
+        delete v5; v5 = NULL;
+        delete v6; v6 = NULL;
+        delete v7; v7 = NULL;
+        delete v8; v8 = NULL;
     }
 
     /// Check for inequality with another Morph8.
