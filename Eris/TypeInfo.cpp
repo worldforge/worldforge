@@ -169,7 +169,7 @@ void TypeInfo::validateBind()
     
     if (!Atlas::Objects::objectFactory.hasFactory(m_name))
     {
-        debug() << "registering Atlas factory for newly bound type " << m_name;
+        //debug() << "registering Atlas factory for newly bound type " << m_name;
         static TypeInfo* gameEntityType = m_typeService->getTypeByName("game_entity");
         
         if (isA(gameEntityType))

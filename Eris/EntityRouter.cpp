@@ -32,24 +32,16 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
     assert(op->getFrom() == m_entity->getId());
     const std::vector<Root>& args = op->getArgs();
     
-    Sight sight = smart_dynamic_cast<Sight>(op);
-    if (sight.isValid())
-    {
+    // note it's important we match exactly on sight here, and not deried ops
+    // like appearance and disappearance
+    if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
         assert(!args.empty());
         RootOperation sop = smart_dynamic_cast<RootOperation>(args.front());
-        if (sop.isValid())
-            return handleSightOp(sop);
-            
-        if (args.front()->getId() == m_entity->getId())
-        {
-            m_entity->sight(smart_dynamic_cast<GameEntity>(args.front()));
-            return HANDLED;
-        }
+        if (sop.isValid()) return handleSightOp(sop);
     }
     
     Sound snd = smart_dynamic_cast<Sound>(op);
-    if (snd.isValid())
-    {
+    if (snd.isValid()) {
         assert(!args.empty());
         Talk talk = smart_dynamic_cast<Talk>(args.front());
         if (talk.isValid())

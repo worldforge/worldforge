@@ -33,6 +33,8 @@ TypeService::TypeService(Connection *con) :
     m_inited(false)
 {
     defineBuiltin("root", NULL);
+    m_anonymousType = defineBuiltin("anonymous", NULL);
+    
     defineBuiltin("root_operation", m_types["root"]);
     defineBuiltin("action", m_types["root_operation"]);
     defineBuiltin("get", m_types["action"]);
@@ -93,8 +95,6 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
     }
     
 // not found, do some work
-    debug() << "Requesting type data for " << id;
-    
     /// @todo Verify the id is not in the authorative invalid ID list
     TypeInfoPtr node = new TypeInfo(id, this);
     m_types[id] = node;
@@ -178,6 +178,7 @@ void TypeService::sendRequest(const std::string &id)
     // is called, the requests will be re-issued manually
     if (!m_inited) return;
         
+    debug() << "requesting type " << id;
     Root what;
     what->setId(id);
     
@@ -248,7 +249,7 @@ void TypeService::registerLocalType(const Root &def)
         m_types[def->getId()] = new TypeInfo(def, this);
 }
 
-void TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
+TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
 {
     assert(m_types.count(name) == 0);
     
@@ -259,6 +260,7 @@ void TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
     type->validateBind();
     
     assert(type->isBound());
+    return type;
 }
 
 bool TypeService::verifyObjectTypes(const Root& obj)
@@ -267,6 +269,13 @@ bool TypeService::verifyObjectTypes(const Root& obj)
     innerVerifyType(obj, unbound);
     
     if (unbound.empty()) return true;
+    
+    std::string types;
+    for (TypeInfoSet::iterator it=unbound.begin(); it!=unbound.end();++it) {
+        if (!types.empty()) types.append(", ");
+        types.append((*it)->getName());
+    }
+    debug() << "type verify failed, need [" << types << "]";
     
     new TypeBoundRedispatch(m_con, obj, unbound);
     return false;
@@ -284,9 +293,12 @@ void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
         if ((obj->getObjtype() == "class") || (obj->getObjtype() == "op_definition")) return;
         
         TypeInfo* type = getTypeForAtlas(obj);
-        StringList prs = obj->getParents();
-        assert(!type->isBound());
+        if (type == m_anonymousType) {
+            warning() << "recieved anonymous object with objtype/parents set: " << obj;
+            return;
+        }
         
+        assert(!type->isBound());
         unbound.insert(type);
     }
 

@@ -11,21 +11,19 @@ namespace Eris
 
 void Redispatch::post()
 {
-    debug() << "posting redispatch";
     m_con->postForDispatch(m_obj);
     delete this;
 }
 
 void Redispatch::postModified(const Atlas::Objects::Root& obj)
 {
-    debug() << "posting mutated redispatch";
     m_con->postForDispatch(obj);
     delete this;
 }
 
 void Redispatch::fail()
 {
-    debug() << "redispatch failed";
+    warning() << "redispatch failed for " << m_obj;
 }
 
-}
+} // of namespace

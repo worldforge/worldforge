@@ -47,8 +47,10 @@ void View::setEntityVisible(Entity* ent, bool vis)
     assert(ent);
     if (vis)
         Appearance.emit(ent);
-    else
+    else {
+        debug() << "emitting disappearance for " << ent->getId();
         Disappearance.emit(ent);
+    }
 }
 
 #pragma mark -
@@ -57,36 +59,36 @@ void View::setEntityVisible(Entity* ent, bool vis)
 void View::appear(const std::string& eid, float stamp)
 {
     Entity* ent = getEntity(eid);
-    if (!ent)
-    {
+    if (!ent) {
         getEntityFromServer(eid);
         return; // everything else will be done once the SIGHT arrives
     }
 
-    if (ent->isVisible())
-    {
+    if (ent->isVisible()) {
         error() << "server sent an appearance for entity " << eid << " which thinks it is already visible.";
         return;
     }
 
-    if (stamp > ent->getStamp())
-    {
-        // local data is out of data, re-look
-        getEntityFromServer(eid);
+    if (stamp > ent->getStamp()) {
+        if (isPending(eid)) {
+            m_pending[eid] = SACTION_APPEAR;
+        } else {
+            // local data is out of data, re-look
+            getEntityFromServer(eid);
+        }
     } else
         ent->setVisible(true);
 
 }
 
 void View::disappear(const std::string& eid)
-{
+{    
     Entity* ent = getEntity(eid);
-    if (ent)
-    {
+    if (ent) {
         ent->setVisible(false); // will ultimately cause disapeparances
     } else {
-        if (isPending(eid))
-        {
+        if (isPending(eid)) {
+            debug() << "got disappearance for pending " << eid;
             m_pending[eid] = SACTION_HIDE;
         } else
             error() << "got disappear for unknown entity " << eid;
@@ -96,9 +98,7 @@ void View::disappear(const std::string& eid)
 void View::sight(const GameEntity& gent)
 {
     bool visible = true;
-    
     std::string eid = gent->getId();
-    debug() << "got sight of " << eid;
     
 // examine the pending map, to see what we should do with this entity
     if (m_pending.count(eid)) {
@@ -125,8 +125,7 @@ void View::sight(const GameEntity& gent)
     
 // if we got this far, go ahead and build / update it
     Entity *ent = getEntity(eid);
-    if (ent)
-    {
+    if (ent) {
         // existing entity, update in place
         ent->sight(gent);
     } else {
@@ -163,6 +162,7 @@ void View::create(const GameEntity& gent)
 
 void View::deleteEntity(const std::string& eid)
 {
+    debug() << "view got delete for " << eid;
     Entity* ent = getEntity(eid);
     if (ent)
     {
@@ -207,7 +207,7 @@ void View::getEntityFromServer(const std::string& eid)
     Look look;
     if (!eid.empty()) {
         m_pending[eid] = SACTION_APPEAR;
-	Root what;
+        Root what;
         what->setId(eid);
         look->setArgs1(what);
     }

@@ -127,7 +127,7 @@ void Lobby::look(const std::string &id)
     }
     
     Root what;
-    if (!id.empty())
+    //if (!id.empty())
         what->setId(id);
         
     Look look;

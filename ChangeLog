@@ -1,3 +1,26 @@
+2004-07-31  James Turner  <james@worldforge.org>
+
+	* Eris/View.cpp, Eris/Entity.cpp: many fixes to Apperance / Visibility logic,
+	  correctly cascading now, and handling of STAMP updates seems to be working too.
+	  Still need to deal with STAMP_CONTAINS.
+	  
+	* Eris/Entity.cpp: fixed a logic bug in setContentFromAtlas, where previous
+	  contained entities got lost
+	  
+	* Eris/EntityRouter.cpp: stop trying to handle SIGHT(entity()) at all, and
+	  just let the View deal with them.
+	  
+	* Eris/EntityRouter.cpp: test for SIGHT ops by classNo, so we don't catch
+	  Appearances/Disappearances, and break everything.
+	  
+	* Remove lots of debug output, but added lots as well
+	
+	* Eris/Player.cpp: change the logic for dealing with SIGHT() ops, to
+	  avoid weird output when Lobby's router didn't handle things.
+	  
+	* Eris/TypeService.cpp: special case code in innerVerifyType, to deal with
+	  Anonymous objects that have objtype and/or parent set.
+	
 2004-07-30  James Turner  <james@worldforge.org>
 
 	* Changed all occurences of getID in the code to getId, to match Atlas-C++

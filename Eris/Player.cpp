@@ -76,22 +76,22 @@ public:
             return HANDLED;
         }
            
-    // only-when connected ops
-        if (m_player->isLoggedIn() && (op->getTo() == m_player->getId()))
+        if (m_player->isLoggedIn() && op->instanceOf(SIGHT_NO))
         {
-            // character looks
-            if (op->instanceOf(SIGHT_NO))
-            {            
-                const std::vector<Root>& args = op->getArgs();
-                assert(!args.empty());
-                GameEntity character = smart_dynamic_cast<GameEntity>(args.front());
-                if (character.isValid()) {
-                    m_player->sightCharacter(character);
-                    return HANDLED;
-                } else {
-                    warning() << "Invalid character type from server";
-                    return HANDLED;
-                }
+            if (op->getTo() != m_player->getId()) {
+                warning() << "accountRouter got weird sight of " << op;
+                return IGNORED;
+            }
+            
+            const std::vector<Root>& args = op->getArgs();
+            assert(!args.empty());
+            GameEntity character = smart_dynamic_cast<GameEntity>(args.front());
+            if (character.isValid()) {
+                m_player->sightCharacter(character);
+                return HANDLED;
+            } else {
+                warning() << "Invalid character type from server";
+                return HANDLED;
             }
         }
         

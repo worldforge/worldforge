@@ -77,7 +77,7 @@ public:
     void recvTypeInfo(const Atlas::Objects::Root &atype);
     void recvError(const Atlas::Objects::Operation::Get& get);
 
-    void defineBuiltin(const std::string& name, TypeInfo* parent);
+    TypeInfoPtr defineBuiltin(const std::string& name, TypeInfoPtr parent);
 
     void innerVerifyType(const Atlas::Objects::Root& obj, TypeInfoSet& unbound);
 
@@ -99,6 +99,7 @@ public:
     bool m_inited;
 
     StringSet m_badTypes;
+    TypeInfoPtr m_anonymousType;
 };
 
 } // of namespace Eris

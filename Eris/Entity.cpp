@@ -124,6 +124,7 @@ void Entity::talk(const Root& talkArgs)
         return;
     }
     
+    debug() << "entity " << m_id << " said " << talkArgs->getAttr("say").asString();
     // just emit the signal
     Say.emit(talkArgs->getAttr("say").asString());
 }
@@ -158,32 +159,32 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
 {
     if (attr == "name")
     {
-	m_name = v.asString();
+        m_name = v.asString();
         return true;
     }
     else if (attr == "stamp")
     {
-	m_stamp = v.asFloat();
+        m_stamp = v.asFloat();
         return true;
     }
     else if (attr == "pos")
     {
-	m_position.fromAtlas(v);
+        m_position.fromAtlas(v);
         return true;
     }
     else if (attr == "velocity")
     {
-	m_velocity.fromAtlas(v);
+        m_velocity.fromAtlas(v);
         return true;
     }
     else if (attr == "orientation")
     {
-	m_orientation.fromAtlas(v);
+        m_orientation.fromAtlas(v);
         return true;
     }
     else if (attr == "description")
     {
-	m_description = v.asString();
+        m_description = v.asString();
         return true;
     }
     else if (attr == "bbox")
@@ -194,7 +195,7 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
     }
     else if ((attr == "loc") ||(attr == "contains"))
     {
-	throw InvalidOperation("tried to set loc or contains via setProperty");
+        throw InvalidOperation("tried to set loc or contains via setProperty");
     }
 
     return false; // not a native property
@@ -296,8 +297,7 @@ void Entity::removeFromLocation()
 
 void Entity::buildEntityDictFromContents(IdEntityMap& dict)
 {
-    for (unsigned int C=0; C < m_contents.size(); ++C)
-    {
+    for (unsigned int C=0; C < m_contents.size(); ++C) {
         Entity* child = m_contents[C];
         dict[child->getId()] = child;
     }
@@ -308,22 +308,20 @@ void Entity::setContentsFromAtlas(const StringList& contents)
 // convert existing contents into a map, for fast membership tests
     IdEntityMap oldContents;
     buildEntityDictFromContents(oldContents);
-    m_contents.clear();
-
+  //  m_contents.clear();
+   // debug() << "oldContents has size " << oldContents.size();
+    
 // iterate over new contents
     for (StringList::const_iterator I=contents.begin(); I != contents.end(); ++I)
     {
         Entity* child = NULL;
         
         IdEntityMap::iterator J = oldContents.find(*I);
-        if (J != oldContents.end())
-        {
+        if (J != oldContents.end()) {
             child = J->second;
             assert(child->getLocation() == this);
             oldContents.erase(J);
-        }
-        else
-        {
+        } else {
             child = m_view->getEntity(*I);
             if (!child)
             {
@@ -356,9 +354,8 @@ void Entity::setContentsFromAtlas(const StringList& contents)
     } // of contents list iteration
     
 // mark previous contents which are not in new contents as invisible
-    for (IdEntityMap::const_iterator J = oldContents.begin(); J != oldContents.end(); ++J)
-    {
-        m_contents.push_back(J->second);
+    for (IdEntityMap::const_iterator J = oldContents.begin(); J != oldContents.end(); ++J) {
+        //m_contents.push_back(J->second);
         J->second->setVisible(false);
     }
 }
@@ -401,8 +398,6 @@ void Entity::removeChild(Entity* e)
 
 void Entity::setVisible(bool vis)
 {
-    if (m_visible == vis) return;
-    
     bool wasVisible = isVisible(); // store before we update m_visible
     m_visible = vis;
     
@@ -428,8 +423,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     wasVisible can ever be true. The structure is necesary so that we fire
     Appearances top-down, but Disappearances bottom-up. */
     
-    if (nowVisible)
-    {
+    if (nowVisible) {
         m_view->setEntityVisible(this, true);
         visibilityChanged(true);
     }
@@ -443,8 +437,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
         m_contents[C]->updateCalculatedVisibility(childWasVisible);
     }
     
-    if (wasVisible)
-    {
+    if (wasVisible) {
         m_view->setEntityVisible(this, false);
         visibilityChanged(false);
     }

@@ -197,10 +197,7 @@ void Connection::objectArrived(const Root& obj)
 
     std::cout << "recieved:" << debugStream.str() << std::endl;
 #endif
-    if (!m_typeService->verifyObjectTypes(obj)) {
-        debug() << "type verification failed for " << obj;
-        return;
-    }
+    if (!m_typeService->verifyObjectTypes(obj)) return;
     
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     if (op.isValid()) {
@@ -224,7 +221,7 @@ void Connection::dispatchOp(const RootOperation& op)
     IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
     if (R != m_fromRouters.end()) {
         rr = R->second->handleOperation(op);
-        if (rr == Router::HANDLED)
+        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH))
             return;
     }
     
