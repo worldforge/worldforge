@@ -1,3 +1,7 @@
+2004-10-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Avatar.h: Add sigc++/connection.h include for sigc++ 2.0.
+
 2004-10-24  James Turner  <james@worldforge.org>
 
     * Eris/Avatar.cpp: fix the implementation of the various pick / take /

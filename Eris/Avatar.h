@@ -11,6 +11,7 @@
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
+#include <sigc++/connection.h>
 
 #include <string>
 #include <map>
@@ -137,13 +138,13 @@ private:
     (currently, usually the server uptime). This is likely to change when
     we support more advanced horology. */
     WFMath::TimeDiff m_worldTimeOffset; 
-    
+
     IGRouter* m_router;
     View* m_view;
-    
+
     SigC::Connection m_entityAppearanceCon;
 };
-	
+
 } // of namespace Eris
 
 #endif
