@@ -1,3 +1,8 @@
+2003-07-05 Damien McGinnes
+        
+	* Mercator/TerrainMod.h: added a CraterTerrainMod that subtracts a 
+	  sphere from the terrain.
+
 2003-07-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Update rpm spec to be cleaner, and make the technical sections

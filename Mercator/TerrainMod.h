@@ -7,6 +7,7 @@
 
 #include <wfmath/intersect.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 
 namespace Mercator {
 
@@ -124,6 +125,47 @@ protected:
     float m_level, m_dx, m_dy;
 };
             
+class CraterTerrainMod : public TerrainMod
+{
+public:
+
+    CraterTerrainMod(const WFMath::Ball<3> &s) : m_shape(s) {
+        WFMath::AxisBox<3> bb=m_shape.boundingBox();
+        ab = WFMath::AxisBox<2> (
+                    WFMath::Point<2>(bb.lowerBound(0), bb.lowerBound(1)),
+                    WFMath::Point<2>(bb.upperBound(0), bb.upperBound(1))
+               );
+    }
+    
+    virtual ~CraterTerrainMod() {}
+    
+    virtual WFMath::AxisBox<2> bbox() const { 
+        return ab;
+    }
+
+    virtual void apply(float &point, int x, int y) const {
+        if (Contains(m_shape,WFMath::Point<3>(x,y,point),true)) {
+            float d = m_shape.radius() * m_shape.radius() -
+                      (m_shape.getCenter()[0] - x) * (m_shape.getCenter()[0] - x) -
+                      (m_shape.getCenter()[1] - y) * (m_shape.getCenter()[1] - y); 
+
+            if (d >= 0.0)
+                point = m_shape.getCenter()[2] - sqrt(d);
+        }
+    }
+    
+    virtual TerrainMod *clone() const {
+        return new CraterTerrainMod(m_shape);
+    }
+
+private:
+    CraterTerrainMod(CraterTerrainMod&) {}
+
+    WFMath::Ball<3> m_shape;
+    WFMath::AxisBox<2> ab;
+
+};
+ 
 } //namespace Mercator
 
 #endif // MERCATOR_TERRAIN_MOD_H
