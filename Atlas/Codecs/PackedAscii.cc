@@ -26,9 +26,7 @@ class PackedAscii : public Codec
 {
 public:
     
-    PackedAscii(iostream&, Filter*, Bridge*);
-
-    virtual void Initialise(iostream&, Filter*, Bridge*);
+    PackedAscii(const Codec::Parameters&);
 
     virtual void MessageBegin();
     virtual void MessageMapBegin();
@@ -58,11 +56,11 @@ protected:
 };
 
 namespace {
-    Codec::Factory<PackedAscii> factor("PackedAscii", Codec::Metrics(1, 2));
+    Codec::Factory<PackedAscii> factory("PackedAscii", Codec::Metrics(1, 2));
 }
 
-PackedAscii::PackedAscii(iostream& socket, Filter* f, Bridge* b) :
-    socket(socket), filter(f), bridge(b)
+PackedAscii::PackedAscii(const Codec::Parameters& p) :
+    socket(p.stream), filter(p.filter), bridge(p.bridge)
 {
 }
 

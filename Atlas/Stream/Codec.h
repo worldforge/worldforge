@@ -41,15 +41,21 @@ class Codec : public Bridge
 
     virtual ~Codec();
 
-    virtual void Initialise(iostream&, Filter*, Bridge*) = 0;
-
     class Metrics
     {
 	public:
 
 	Metrics(int speed, int bandwidth) { }
     };
-	
+
+    struct Parameters
+    {
+        iostream& stream; Filter* filter; Bridge* bridge;
+
+        Parameters(iostream& ios, Filter* f, Bridge* b) 
+           : stream(ios), filter(f), bridge(b) { }
+    };
+
     template <typename T>
     class Factory : public Atlas::Stream::Factory<Codec>
     {
@@ -60,9 +66,9 @@ class Codec : public Bridge
 	{
 	}
 
-	virtual Codec* New()
+	virtual Codec* New(const Parameters& p)
 	{
-	    return new T;
+	    return new T(p);
 	}
 
 	virtual void Delete(Codec* codec)

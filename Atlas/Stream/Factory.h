@@ -31,6 +31,7 @@ class Factory
     public:
 
     typedef typename T::Metrics Metrics;
+    typedef typename T::Parameters Parameters;
 
     Factory(const std::string& name, const Metrics& metrics)
      : name(name), metrics(metrics)
@@ -45,7 +46,7 @@ class Factory
 	factories.erase(i);
     }
     
-    virtual T* New() = 0;
+    virtual T* New(const Parameters&) = 0;
     virtual void Delete(T*) = 0;
 
     std::string GetName()

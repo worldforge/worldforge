@@ -61,6 +61,10 @@ class Filter
 	Metrics(Type) { }
     };
 
+    struct Parameters
+    {
+    };
+
     template <typename T>
     class Factory : public Atlas::Stream::Factory<Filter>
     {
@@ -71,7 +75,7 @@ class Filter
 	{
 	}
 	    
-	virtual Filter* New()
+	virtual Filter* New(const Parameters&)
 	{
 	    return new T;
 	}

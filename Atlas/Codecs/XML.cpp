@@ -11,9 +11,7 @@ class XML : public Codec
 {
     public:
 
-    XML(iostream&, Filter*, Bridge*);
-
-    virtual void Initialise(iostream&, Filter*, Bridge*);
+    XML(const Codec::Parameters&);
 
     virtual void MessageBegin();
     virtual void MessageMapBegin();
@@ -47,10 +45,9 @@ namespace
     Codec::Factory<XML> factory("XML", Codec::Metrics(1, 2));
 }
     
-XML::XML(iostream& socket, Filter* f, Bridge* b) : socket(socket)
+XML::XML(const Codec::Parameters& p)
+    : socket(p.stream), filter(p.filter), bridge(p.bridge)
 {
-    filter = f;
-    bridge = b;
 }
 
 void XML::MessageBegin()
