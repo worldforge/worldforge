@@ -65,8 +65,7 @@ Room::~Room()
 	
 	// delete *everything* below our node
 	con->removeDispatcherByPath("op:oog:sound", rid);
-	//con->removeDispatcherByPath("op:oog:sight", rid);
-	con->removeDispatcherByPath("op:oog:imaginary", rid);
+	con->removeDispatcherByPath("op:oog:sight:op", rid);
 	con->removeDispatcherByPath("op:oog:appearance", rid);
 	con->removeDispatcherByPath("op:oog:disappearance", rid);
 }

@@ -1,3 +1,7 @@
+Monday, 28th October 2002, Al Riddoch
+	* Fix dispatcher removal for the imaginary emote ops fix made on the
+	  9th. October.
+
 Thursday, 24th October 2002, Al Riddoch
 	* Add checks so it is possible for a connection to send and
 	  receive when its status is DISCONNECTING.
