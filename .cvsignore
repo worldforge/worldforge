@@ -9,8 +9,8 @@ config.log
 config.status
 config.sub
 configure
-eris-1.0.pc
-eris-poll-glib-1.0.pc
+eris-1.2.pc
+eris-poll-glib-1.2.pc
 eris-config
 eris.dox
 eris.spec

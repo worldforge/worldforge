@@ -107,21 +107,26 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     ])
 AM_CONDITIONAL(HAVE_GLIB, test "x$have_glib" = "xyes")
 
-AC_LANG_PUSH(C++)
-AC_MSG_CHECKING(for experimental Atlas UI extension)
-AC_TRY_COMPILE([#include <Atlas/Objects/Entity/UIEntity.h>],[],
-    [
+AC_ARG_ENABLE(janus, 
+[  --enable-janus         Enable building of experimental Atlas UI extension
+],
+[
+  AC_LANG_PUSH(C++)
+  AC_MSG_CHECKING(for experimental Atlas UI extension)
+  AC_TRY_COMPILE([#include <Atlas/Objects/Entity/UIEntity.h>],[],
+      [
 	have_atlas_janus=yes
 	AC_DEFINE(HAVE_ATLAS_JANUS,[],["Experimental janus extension"])
 	AC_MSG_RESULT(yes)
-    ],
-    [
+      ],
+      [
 	have_atlas_janus=no
 	AC_MSG_RESULT(no)
-    ]
-)
+      ]
+  )
+  AC_LANG_POP(C++)
+])
 AM_CONDITIONAL(HAVE_ATLAS_JANUS, test "x$have_atlas_janus" = "xyes")
-AC_LANG_POP(C++)
 
 AC_SUBST(CFLAGS)
 AC_SUBST(CXXFLAGS)

@@ -39,7 +39,7 @@ Timeout::Timeout(const std::string &label, unsigned long milli) :
 	
 	_due = Time::Stamp::now() + milli;
 
-	Poll::instance().newTimeout();
+	Poll::newTimeout();
 }
 
 Timeout::~Timeout()

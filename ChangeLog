@@ -1,3 +1,10 @@
+Friday, 22th August, Ron Steinke <rsteinke@w-link.net>
+
+	* Made Poll::new_timeout_ static to keep the Timeout
+	  constructor from instantiating the poll. Otherwise
+	  static timeouts instantiate PollDefault before
+	  we can set the poll instance.
+
 Friday, 22nd August, James Turner <james@worldforge.org>
 
 	* Rename configure.in to configure.ac, since we require the newer

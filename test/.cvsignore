@@ -3,3 +3,4 @@
 Makefile
 Makefile.in
 testEris
+*atlas-*log

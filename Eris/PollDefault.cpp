@@ -8,6 +8,8 @@
 #include <Eris/Timeout.h>
 #include <Eris/Log.h>
 
+bool Eris::Poll::new_timeout_ = false;
+
 Eris::Poll& Eris::Poll::instance()
 {
   if(!_inst)
