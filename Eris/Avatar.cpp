@@ -62,7 +62,8 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc
 
     GameEntity what;
     what->setLoc(loc);
-    //what->setPosAsList(pos.toAtlas());
+    Atlas::Message::Element apos(pos.toAtlas());
+    what->setPosAsList(apos.asList());
     what->setId(e->getId());
     moveOp->setArgs1(what);
 
@@ -81,7 +82,6 @@ void Avatar::take(Entity* e)
 
     GameEntity what;
     what->setLoc(m_entityId);
-    //what->setPosAsList(pos.toAtlas());
     what->setId(e->getId());
     moveOp->setArgs1(what);
 
@@ -116,8 +116,6 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos)
 {
     GameEntity what;
     what->setLoc(m_entity->getLocation()->getId());
-   // what->setPosAsList(pos.toAtlas());
-   // what->setVelocityAsList(pos.toAtlas());
     what->setId(m_entityId);
 
     Move moveOp;
@@ -129,50 +127,48 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos)
 
 void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
 {
-/*
-    const WFMath::CoordType min_val = WFMATH_MIN * 100000000;
+    const double MIN_VELOCITY = 1e-3;
+    
+    Root arg;
+    //arg->setAttr("location", m_entity->getLocation()->getId());
+    arg->setAttr("velocity", vel.toAtlas());
 
-    Element::MapType what;
-    what["loc"] = _entity->getContainer()->getId();
-    what["velocity"] = vel.toAtlas();
     WFMath::CoordType sqr_mag = vel.sqrMag();
-    if(sqr_mag > min_val) { // don't set orientation for zero velocity
-	WFMath::Quaternion q;
-        WFMath::CoordType z_squared = vel[2] * vel[2];
+    if(sqr_mag > MIN_VELOCITY) { // don't set orientation for zero velocity
+        WFMath::Quaternion q;
+        WFMath::CoordType z_squared = vel.z() * vel.z();
         WFMath::CoordType plane_sqr_mag = sqr_mag - z_squared;
-	if(plane_sqr_mag < WFMATH_EPSILON * z_squared) {
-	    // it's on the z axis
-	    q.rotation(1, vel[2] > 0 ? -WFMath::Pi/2 : WFMath::Pi/2);
-	}
-        else {
-	    // rotate in the plane first
-	    q.rotation(2, atan2(vel[1], vel[0]));
-	    // then get the angle away from the plane
-	    q = WFMath::Quaternion(1, -asin(vel[2] / sqrt(plane_sqr_mag))) * q;
-	}
-	what["orientation"] = q.toAtlas();
+        if(plane_sqr_mag < WFMATH_EPSILON * z_squared) {
+            // it's on the z axis
+            q.rotation(1, vel[2] > 0 ? -WFMath::Pi/2 : WFMath::Pi/2);
+        } else {
+            // rotate in the plane first
+            q.rotation(2, atan2(vel[1], vel[0]));
+            // then get the angle away from the plane
+            q = WFMath::Quaternion(1, -asin(vel[2] / sqrt(plane_sqr_mag))) * q;
+        }
+	
+        arg->setAttr("orientation", q.toAtlas());
     }
-    what["id"] = getId();
 
-    Atlas::Objects::Operation::Move moveOp;
-    moveOp->setFrom(getId());
-    moveOp->setArgsAsList(Element::ListType(1, what));
+    Move moveOp;
+    moveOp->setFrom(m_entityId);
+    moveOp->setArgs1(arg);
 
-    _world->getConnection()->send(moveOp);
-    */
+    getConnection()->send(moveOp);
 }
 
 void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quaternion& orient)
 {
-    GameEntity what;
-    what->setLoc(m_entity->getLocation()->getId());
-   // what->setVelocityAsList(pos.toAtlas());
-   // what->setOrientationAsList(orient.toAtlas());
-    what->setId(m_entityId);
+    Root arg;
+   // arg->setAttr("location", m_entity->getLocation()->getId());
+    arg->setAttr("velocity", vel.toAtlas());
+    arg->setAttr("orientation", orient.toAtlas());
+    arg->setId(m_entityId);
 
     Move moveOp;
     moveOp->setFrom(m_entityId);
-    moveOp->setArgs1(what);
+    moveOp->setArgs1(arg);
 
     getConnection()->send(moveOp);
 }

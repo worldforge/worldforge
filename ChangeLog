@@ -1,5 +1,10 @@
 2004-10-24  James Turner  <james@worldforge.org>
 
+    * Eris/Avatar.cpp: fix the implementation of the various pick / take /
+      drop / move methods. Testing required, also feedback on the API.
+
+2004-10-24  James Turner  <james@worldforge.org>
+
     * Eris/Entity.cpp: fix second argument to onLocationChanged in
       setLocation, thinko error.
       
