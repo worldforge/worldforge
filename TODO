@@ -1,18 +1,13 @@
 TODO for varconf
 
 Major Tasks:
-  * Redo Config::getCmdline() and Config::getEnv() codex.
-    * Handle '--' arguments better
-    * Check validity of '-' arguments
   * Unify configuration methods (ie: add section support to Config::getEnv())
-  + Add delItem() and delSection() methods
   * Unify error handling methods
   * Convert file parser to lex/yacc 
   * Design and implement new Observer class
   * Add overloaded operators for major functions
   * Finish changing functions to general form (getItem to get, etc.)
   * Document and arrange the source better.
-  * Submit the new interface to the mailing lists to recommend adoption.
   * Write a proper testing program to verify functionality of features.
 
 Minor Tasks:

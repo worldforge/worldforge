@@ -1,5 +1,11 @@
 ChangeLog for varconf
 
+Thu Nov 02 18:00:00 EST 2000 -- jaz <jaz147@psu.edu>
+  * Config.h: Added generalized accessor methods
+  * Config.cc: Implemented generalized accessor methods
+  * Config.cc: Finished getEnv clean-up.
+  * Config.cc: Finished getCmdline clean-up.
+
 Mon Oct 23 16:10:38 EST 2000 -- jaz <jaz147@psu.edu>
  * Config.cc: Removed Observer code.
  * Config.cc: Converted callbacks to libsigc++.

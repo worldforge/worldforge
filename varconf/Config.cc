@@ -92,19 +92,19 @@ bool Config::erase( const string& section, const string& key = "")
   return false;
 } 
 
-Variable Config::getItem( const string& section, const string& key)
+Variable Config::get( const string& section, const string& key)
 {
   return ( m_conf[section])[key];
 }
 
-void Config::setItem( const string& section, const string& name,
-                      const Variable item)
+void Config::set( const string& section, const string& key,
+                  const Variable item)
 {
-  if ( name.empty()) {
+  if ( key.empty()) {
     throw "Invalid configuration item!";
   }
   else {
-    string sec = section, nam = name;
+    string sec = section, nam = key;
 
     clean( sec);
     clean( nam);
@@ -112,14 +112,9 @@ void Config::setItem( const string& section, const string& name,
     ( m_conf[sec])[nam] = item;
  
     sig.emit(); 
-    sigv.emit( section, name);
+    sigv.emit( sec, nam);
   }
-} // Config::setItem()
-
-bool Config::findItem( const string& section, const string& name) 
-{
-  return find( section, name);
-}
+} // Config::set()
 
 bool Config::find( const string& section, const string& key = "")
 {

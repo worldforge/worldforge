@@ -26,16 +26,32 @@ public:
   static Config* inst();
   // returns a pointer to the global configuration instance and 
   // initializes it if it does not already exist.
-
-  Variable getItem( const std::string& section, const std::string& key);
+ 
+  Variable get( const std::string& section, const std::string& key);
+  void set( const std::string& section, const std::string& key,
+            const Variable item);
   bool erase( const std::string& section, const std::string& key = ""); 
   bool find( const std::string& section, const std::string& key = "");
-  void clean( std::string& str);
-  // turns 'str' into a section name or key name compatible string.
+  // Config data manipulators - get a config key, set a config key, delete 
+  // a config key or config section and find a config key or config section. 
 
-  void setItem( const std::string& section, const std::string& name,
-                const Variable item);
-  bool findItem( const std::string& section, const std::string& name);
+  void clean( std::string& str);
+ 
+  Variable getItem( const std::string& section, const std::string& key)
+  {
+    return get( section, key);
+  }
+
+  void setItem( const std::string& section, const std::string& key,
+                const Variable item)
+  {
+    set( section, key, item);
+  }
+ 
+  bool findItem( const std::string& section, const std::string& key)
+  {
+    return find( section, key);
+  } 
 
   bool readFromFile( const std::string& filename);
   // attempts to read a configuration file 'filename' and parse it.  Returns
