@@ -2,7 +2,7 @@
 #define ERIS_TIMEOUT_H
 
 #include "Types.h"
-#include "Time.h"
+#include "Timestamp.h"
 
 namespace Eris {
 

@@ -31,7 +31,7 @@ liberis_la_SOURCES = \
 	ServerInfo.cpp \
 	Wait.cpp \
 	Timeout.cpp \
-	Time.cpp \
+	Timestamp.cpp \
 	ArgumentDispatcher.cpp \
 	TypeInfo.cpp \
 	ClassDispatcher.cpp \
@@ -65,7 +65,7 @@ liberis_HEADERS = \
 	ServerInfo.h \
 	IdDispatcher.h \
 	Timeout.h \
-	Time.h \
+	Timestamp.h \
 	ArgumentDispatcher.h \
 	TypeInfo.h \
 	Wait.h \

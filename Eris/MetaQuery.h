@@ -2,7 +2,7 @@
 #define ERIS_META_QUERY_H
 
 #include "BaseConnection.h"
-#include "Time.h"
+#include "Timestamp.h"
 #include "Poll.h"
 
 namespace Eris {

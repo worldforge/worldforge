@@ -169,17 +169,8 @@ void Meta::gotData(PollData &data)
     for (MetaQueryList::iterator Q=_activeQueries.begin();
 	    Q != _activeQueries.end(); ++Q)
     {
-	if (!(*Q)->_stream->is_open()) {
-	  // Don't think this is correct for non-blocking connects
-	  //queryFailure(*Q, "Query connection closed unexpectedly!");
-	  //got_one=true;
-	  //continue;
-	}
-	
-	//if ((*Q)->isReady(data)) {
 	    (*Q)->recv();	
 	    got_one = true;
-	    //}
     }
 
     if(!got_one)

@@ -1,3 +1,11 @@
+Wednesday, July 3, James Turner
+
+	* Compile fixes for OS-X / GCC 3.1
+	* Renamed Time.h/cpp to Timestamp, since case insensitive file system
+	  means we look like 'time.h', which is really bad.
+	* Fix include of <multimap.h> to only occur under GCC 2.9.x; I think this
+	  is correct, let me know if not.
+
 Tuesday, July 2, Ron Steinke
 
 	* Fixes so the blocking poll handles timeouts

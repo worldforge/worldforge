@@ -5,10 +5,10 @@
 #include <sigc++/basic_signal.h>
 
 #include <map>
-#if !__MWERKS__
-#ifndef _MSC_VER
-#include <multimap.h>
-#endif
+
+// GCC 2.9.x need this manually included
+#if defined(__GNUC__) && __GNUC__ < 3
+#	include <multimap.h>
 #endif
 
 namespace Atlas {
