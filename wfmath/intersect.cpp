@@ -133,15 +133,16 @@ bool WFMath::Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b)
     return false;
 
   RotMatrix<3> m = r.m_orient.inverse();
+  Vector<3> b_size = b.m_high - b.m_low;
 
   if(!Intersect(RotBox<3>(Point<3>(b.m_low).rotate(m, r.m_corner0),
-			  b.m_high - b.m_low, m).boundingBox(),
+			  b_size, m).boundingBox(),
 		AxisBox<3>(r.m_corner0, r.m_corner0 + r.m_size)))
     return false;
 
   // Now for the "plane parallel to at least one edge of each" case
 
-  return CheckAxesPlanes(r.m_size, b.m_high - b.m_low, b.m_low - r.m_corner0,
+  return CheckAxesPlanes(r.m_size, b_size, b.m_low - r.m_corner0,
 			 r.m_orient, IntersectSeparator);
 }
 
@@ -162,15 +163,16 @@ bool WFMath::IntersectProper<3>(const RotBox<3>& r, const AxisBox<3>& b)
     return false;
 
   RotMatrix<3> m = r.m_orient.inverse();
+  Vector<3> b_size = b.m_high - b.m_low;
 
   if(!IntersectProper(RotBox<3>(Point<3>(b.m_low).rotate(m, r.m_corner0),
-				b.m_high - b.m_low, m).boundingBox(),
+				b_size, m).boundingBox(),
 		      AxisBox<3>(r.m_corner0, r.m_corner0 + r.m_size)))
     return false;
 
   // Now for the "plane parallel to at least one edge of each" case
 
-  return CheckAxesPlanes(r.m_size, b.m_high - b.m_low, b.m_low - r.m_corner0,
+  return CheckAxesPlanes(r.m_size, b_size, b.m_low - r.m_corner0,
 			 r.m_orient, IntersectSeparatorProper);
 }
 

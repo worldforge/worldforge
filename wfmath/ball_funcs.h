@@ -160,6 +160,21 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
   return Ball<2>(center, dist);
 }
 
+// These two are here, instead of defined in the class, to
+// avoid include order problems
+
+template<const int dim>
+inline Ball<dim> Point<dim>::boundingSphere() const
+{
+  return Ball<dim>(*this, 0);
+}
+
+template<const int dim>
+inline Ball<dim> Point<dim>::boundingSphereSloppy() const
+{
+  return Ball<dim>(*this, 0);
+}
+
 } // namespace WFMath
 
 #endif  // WFMATH_BALL_FUNCS_H

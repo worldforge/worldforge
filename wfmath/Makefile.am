@@ -14,13 +14,14 @@ header_HEADERS = error.h const.h \
 	wrapped_array.h miniball.h miniball_funcs.h \
 	segment.h segment_funcs.h \
 	rotbox.h rotbox_funcs.h \
-	polygon.h polygon_funcs.h \
+	polygon.h polygon_funcs.h polygon_intersect.h \
 	intersect_decls.h intersect.h \
 	wfmath.h stream.h atlasconv.h
 
 lib_LTLIBRARIES = libwfmath.la
 libwfmath_la_SOURCES = basis.h const.cpp stream.cpp probability.cpp \
-	rotmatrix.cpp vector.cpp point.cpp quaternion.cpp polygon.cpp intersect.cpp
+	rotmatrix.cpp vector.cpp point.cpp quaternion.cpp polygon.cpp \
+	intersect.cpp polygon_intersect.cpp
 libwfmath_la_LDFLAGS = -lm -version-info @WFMATH_VERSION_INFO@
 
 check_PROGRAMS = vector_test rotmatrix_test point_test \

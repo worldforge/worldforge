@@ -1,3 +1,16 @@
+Friday, February 22, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Broke the Polygon<> intersection functions out of
+	  polygon_funcs.h and polygon.cpp into the separate
+	  files polygon_intersect.h and polygon_intersect.cpp 
+	* Moved the implementations of the boundingBox() and
+	  boundingSphere() functions in Point out of point_funcs.h
+	  into axisbox_funcs.h and ball_funcs.h. This lets me
+	  remove the include dependence of Point on AxisBox and Ball.
+	* Fixed up list of files included in wfmath.h. It now
+	  includes everything but atlasconv.h, which is intentionally
+	  excluded.
+
 Wednesday, February 20, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed RotBox to match the new sense of RotMatrix<>

@@ -30,8 +30,6 @@
 #include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/ball.h>
 
 namespace WFMath {
 
@@ -158,27 +156,6 @@ bool Point<dim>::operator< (const Point<dim>& rhs) const
       return m_elem[i] < rhs.m_elem[i];
 
   assert(false);
-}
-
-// These three are here, instead of defined in the class, to
-// avoid include order problems
-
-template<const int dim>
-inline AxisBox<dim> Point<dim>::boundingBox() const
-{
-  return AxisBox<dim>(*this, *this, true);
-}
-
-template<const int dim>
-inline Ball<dim> Point<dim>::boundingSphere() const
-{
-  return Ball<dim>(*this, 0);
-}
-
-template<const int dim>
-inline Ball<dim> Point<dim>::boundingSphereSloppy() const
-{
-  return Ball<dim>(*this, 0);
 }
 
 template<const int dim>

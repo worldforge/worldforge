@@ -28,6 +28,7 @@
 #include "rotmatrix.h"
 #include "point.h"
 #include "polygon.h"
+#include "polygon_intersect.h"
 #include "stream.h"
 #include <vector>
 

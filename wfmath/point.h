@@ -135,6 +135,8 @@ class Point
   Point rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Point rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
+  // The implementations of these lie in axisbox_funcs.h and
+  // ball_funcs.h, to reduce include dependencies
   AxisBox<dim> boundingBox() const;
   Ball<dim> boundingSphere() const;
   Ball<dim> boundingSphereSloppy() const;

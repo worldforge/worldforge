@@ -36,9 +36,6 @@
 
 #include <vector>
 
-#warning "The Intersect() and Contains() functions involving WFMath:;Polygon<>"
-#warning "are still under development, and probably shouldn't be used yet."
-
 namespace WFMath {
 
 template<const int dim> class Polygon;

@@ -165,6 +165,14 @@ AxisBox<dim> BoundingBox(const container<Point<dim> >& c)
   return AxisBox<dim>(low, high, true);
 }
 
+// This is here, instead of defined in the class, to
+// avoid include order problems
+
+template<const int dim>
+inline AxisBox<dim> Point<dim>::boundingBox() const
+{
+  return AxisBox<dim>(*this, *this, true);
+}
 
 } // namespace WFMath
 

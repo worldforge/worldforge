@@ -29,6 +29,8 @@
 #include "const.h"
 #include "vector.h"
 #include "point.h"
+#include "axisbox.h"
+#include "ball.h"
 #include "stream.h"
 
 #include "general_test.h"

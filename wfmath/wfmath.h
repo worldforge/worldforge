@@ -43,13 +43,13 @@
 #include <wfmath/polygon.h>
 // Shape intersection functions
 #include <wfmath/intersect.h>
+#include <wfmath/polygon_intersect.h>
 // Probability and statistics
 #include <wfmath/probability.h>
+// iostreams and strings
+#include <wfmath/stream.h>
 
-// Do not include stream.h, as it includes <iostream> and <string>.
-// Let end users include it on their own.
-
-// Similarly, don't include atlasconv.h, which includes <Atlas/Message/Object.h>
+// Don't include atlasconv.h, which includes <Atlas/Message/Object.h>
 // There is, however, no linker dependency on atlas in the library,
 // so it is quite safe to use WFMath without atlas, as long as you
 // don't include this header
@@ -59,6 +59,6 @@
 
 // Any header file "foo_funcs.h" is automatically included in "foo.h",
 // so those files are not listed here. Similarly, "intersect_decls.h"
-// is included in "intersect.h"
+// is included in "intersect.h" (among other places).
 
 #endif // WFMATH_WFMATH_H
