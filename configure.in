@@ -15,6 +15,9 @@ ERIS_REVISION=0
 ERIS_AGE=0
 ERIS_VERSION_INFO=$ERIS_CURRENT:$ERIS_REVISION:$ERIS_AGE
 
+ERIS_REQUIRES=""
+WFMATH_LIB="-lwfmath"
+
 AC_SUBST(ERIS_VERSION_INFO)
 
 AM_INIT_AUTOMAKE(eris, $ERIS_VERSION)
@@ -43,6 +46,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
     [
         CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
+        ERIS_REQUIRES="$ERIS_REQUIRES sigc++-1.2"
     ],
     [
         AM_PATH_SIGC(1.0.3,[
@@ -56,28 +60,53 @@ PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
 
 
 dnl Check for libskstream library
-AM_PATH_SKSTREAM(0.2.1, [
-	CPPFLAGS="$CPPFLAGS $SKSTREAM_CFLAGS"
-	LIBS="$LIBS $SKSTREAM_LIBS"],
-	AC_MSG_ERROR(Couldn't find skstream or version is insufficent)
-)
+PKG_CHECK_MODULES(SKSTREAM, skstream-0.2 ,
+    [
+        CPPFLAGS="$CPPFLAGS $SKSTREAM_CFLAGS"
+        LDFLAGS="$LDFLAGS $SKSTREAM_LIBS"
+        ERIS_REQUIRES="$ERIS_REQUIRES skstream-0.2"
+    ],
+    [
+        AM_PATH_SKSTREAM(0.2.1, [
+	        CPPFLAGS="$CPPFLAGS $SKSTREAM_CFLAGS"
+	        LIBS="$LIBS $SKSTREAM_LIBS"],
+	        AC_MSG_ERROR(Couldn't find skstream or version is insufficent)
+        )
+    ])
 
 
 
 dnl Check for Atlas-C++ library
-AM_PATH_ATLAS(0.4.4, [
-	CPPFLAGS="$CPPFLAGS $ATLAS_CFLAGS"
-	LIBS="$LIBS $ATLAS_LIBS"],
-	AC_MSG_ERROR(Couldn't find Atlas or version is insufficent)
-)
+PKG_CHECK_MODULES(ATLAS, atlascpp-0.4 ,
+    [
+        CPPFLAGS="$CPPFLAGS $ATLAS_CFLAGS"
+        LDFLAGS="$LDFLAGS $ATLAS_LIBS"
+        ERIS_REQUIRES="$ERIS_REQUIRES atlascpp-0.4"
+    ],
+    [
+        AM_PATH_ATLAS(0.4.4, [
+	        CPPFLAGS="$CPPFLAGS $ATLAS_CFLAGS"
+	        LIBS="$LIBS $ATLAS_LIBS"],
+	        AC_MSG_ERROR(Couldn't find Atlas or version is insufficent)
+        )
+    ])
 
 dnl Check for WFMath library
-AM_PATH_WFMATH(0.2.6,[
-	CPPFLAGS="$CPPFLAGS $WFMATH_CFLAGS"
-	LDFLAGS="$LDFLAGS $WFMATH_LIBS"
-	],
-	AC_MSG_ERROR(Couldn't find wfmath config [or config failed])
-)
+PKG_CHECK_MODULES(WFMATH, wfmath-0.2 ,
+    [
+        CPPFLAGS="$CPPFLAGS $WFMATH_CFLAGS"
+        LDFLAGS="$LDFLAGS $WFMATH_LIBS"
+        WFMATH_LIB="-lwfmath-0.2"
+        ERIS_REQUIRES="$ERIS_REQUIRES wfmath-0.2"
+    ],
+    [
+        AM_PATH_WFMATH(0.2.6,[
+	        CPPFLAGS="$CPPFLAGS $WFMATH_CFLAGS"
+	        LDFLAGS="$LDFLAGS $WFMATH_LIBS"
+	        ],
+	        AC_MSG_ERROR(Couldn't find wfmath config [or config failed])
+        )
+    ])
 
 
 AC_LANG_RESTORE
@@ -145,11 +174,12 @@ AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
 SYSTEM_LIBS=""
-ERIS_LIBS="-leris -lwfmath -lm"
+ERIS_LIBS="-leris-1.0 $WFMATH_LIB -lm"
 ERIS_CFLAGS=""
 AC_SUBST(SYSTEM_LIBS)
 AC_SUBST(ERIS_LIBS)
 AC_SUBST(ERIS_CFLAGS)
+AC_SUBST(ERIS_REQUIRES)
 
 AC_OUTPUT([
 Makefile
@@ -161,4 +191,5 @@ test/Makefile
 eris.dox
 eris-config
 eris.spec
+eris-1.0.pc
 ])

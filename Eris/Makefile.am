@@ -1,4 +1,4 @@
-lib_LTLIBRARIES = liberis.la
+lib_LTLIBRARIES = liberis-1.0.la
 
 
 if PYTHON_BINDINGS
@@ -11,9 +11,9 @@ endif
 ##AM_CXXFLAGS = -DWFMATH_CONVERSION
 
 INCLUDES = $(PYBIND_CFLAGS)
-liberis_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
+liberis_1_0_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
 	
-liberis_la_SOURCES = \
+liberis_1_0_la_SOURCES = \
 	Entity.cpp \
 	World.cpp \
 	Lobby.cpp \
@@ -41,7 +41,7 @@ liberis_la_SOURCES = \
 	Log.cpp \
 	Avatar.cpp
 	
-liberisdir = $(includedir)/Eris
+liberisdir = $(includedir)/Eris-1.0/Eris
 
 liberis_HEADERS = \
 	Lobby.h \

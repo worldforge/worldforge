@@ -10,5 +10,8 @@ m4data_DATA = eris.m4
 manpagedir = $(mandir)/man1
 manpage_DATA = eris-config.1
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = eris-1.0.pc
+
 doc:
 	doxygen eris.dox
