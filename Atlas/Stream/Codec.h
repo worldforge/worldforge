@@ -7,10 +7,10 @@
 
 #include "Bridge.h"
 #include "Filter.h"
-#include "../Net/Socket.h"
 
 #include <list>
 #include <algorithm>
+#include <iostream>
 
 namespace Atlas { namespace Stream {
 
@@ -41,7 +41,7 @@ class Codec : public Bridge
 
     virtual ~Codec();
 
-    virtual void Initialise(Net::Socket*, Filter*, Bridge*) = 0;
+    virtual void Initialise(iostream&, Filter*, Bridge*) = 0;
 
     class Metrics
     {

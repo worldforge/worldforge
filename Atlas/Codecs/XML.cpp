@@ -4,32 +4,31 @@
 
 #include "../Stream/Codec.h"
 
-#include <strstream>
-
 using namespace std;
-using namespace Atlas::Net;
 using namespace Atlas::Stream;
 
 class XML : public Codec
 {
     public:
 
-    virtual void Initialise(Socket*, Filter*, Bridge*);
+    XML(iostream&, Filter*, Bridge*);
+
+    virtual void Initialise(iostream&, Filter*, Bridge*);
 
     virtual void MessageBegin();
     virtual void MessageMapBegin();
     virtual void MessageEnd();
     
-    virtual void MapListBegin(const std::string& name);
-    virtual void MapMapBegin(const std::string& name);
+    virtual void MapItem(const std::string& name, const Map&);
+    virtual void MapItem(const std::string& name, const List&);
     virtual void MapItem(const std::string& name, int);
     virtual void MapItem(const std::string& name, float);
     virtual void MapItem(const std::string& name, const std::string&);
     virtual void MapItem(const std::string& name, const Atlas::Object&);
     virtual void MapEnd();
     
-    virtual void ListListBegin();
-    virtual void ListMapBegin();
+    virtual void ListItem(const Map&);
+    virtual void ListItem(const List&);
     virtual void ListItem(int);
     virtual void ListItem(float);
     virtual void ListItem(const std::string&);
@@ -38,7 +37,7 @@ class XML : public Codec
 
     protected:
 
-    Socket* socket;
+    iostream& socket;
     Filter* filter;
     Bridge* bridge;
 };
@@ -48,16 +47,15 @@ namespace
     Codec::Factory<XML> factory("XML", Codec::Metrics(1, 2));
 }
     
-void XML::Initialise(Socket* s, Filter* f, Bridge* b)
+XML::XML(iostream& socket, Filter* f, Bridge* b) : socket(socket)
 {
-    socket = s;
     filter = f;
     bridge = b;
 }
 
 void XML::MessageBegin()
 {
-    socket->Send("<obj>");
+    socket << "<obj>";
 }
 
 void XML::MessageMapBegin()
@@ -66,48 +64,32 @@ void XML::MessageMapBegin()
 
 void XML::MessageEnd()
 {
-    socket->Send("</obj>");
+    socket << "</obj>";
 }
 
-void XML::MapListBegin(const std::string& name)
+void XML::MapItem(const std::string& name, const Map&)
 {
-    socket->Send("<list name=\"");
-    socket->Send(name);
-    socket->Send("\">");
+    socket << "<map name=\"" << name << "\">";
 }
 
-void XML::MapMapBegin(const std::string& name)
+void XML::MapItem(const std::string& name, const List&)
 {
-    socket->Send("<map name=\"");
-    socket->Send(name);
-    socket->Send("\">");
+    socket << "<list name=\"" << name << "\">";
 }
 
 void XML::MapItem(const std::string& name, int data)
 {
-    socket->Send("<int name=\"");
-    socket->Send(name);
-    socket->Send("\">");
-    // FIXME send the int here
-    socket->Send("</int>");
+    socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
 
 void XML::MapItem(const std::string& name, float data)
 {
-    socket->Send("<float name=\"");
-    socket->Send(name);
-    socket->Send("\">");
-    // FIXME send the float here
-    socket->Send("</float>");
+    socket << "<float name=\"" << name << "\">" << data << "</float>";
 }
 
 void XML::MapItem(const std::string& name, const std::string& data)
 {
-    socket->Send("<string name=\"");
-    socket->Send(name);
-    socket->Send("\">");
-    socket->Send(data);
-    socket->Send("</string>");
+    socket << "<string name=\"" << name << "\">" << data << "</string>";
 }
 
 void XML::MapItem(const std::string& name, const Atlas::Object& data)
@@ -117,38 +99,32 @@ void XML::MapItem(const std::string& name, const Atlas::Object& data)
 
 void XML::MapEnd()
 {
-    socket->Send("</map>");
+    socket << "</map>";
 }
 
-void XML::ListListBegin()
+void XML::ListItem(const Map&)
 {
-    socket->Send("<list>");
+    socket << "<map>";
 }
 
-void XML::ListMapBegin()
+void XML::ListItem(const List&)
 {
-    socket->Send("<map>");
+    socket << "<list>";
 }
 
 void XML::ListItem(int data)
 {
-    socket->Send("<int>");
-    // FIXME send data
-    socket->Send("</int>");
+    socket << "<int>" << data << "</int>";
 }
 
 void XML::ListItem(float data)
 {
-    socket->Send("<float>");
-    // FIXME send data
-    socket->Send("</float>");
+    socket << "<float>" << data << "</float>";
 }
 
 void XML::ListItem(const std::string& data)
 {
-    socket->Send("<string>");
-    socket->Send(data);
-    socket->Send("</string>");
+    socket << "<string>" << data << "</string>";
 }
 
 void XML::ListItem(const Atlas::Object& data)
@@ -158,6 +134,6 @@ void XML::ListItem(const Atlas::Object& data)
 
 void XML::ListEnd()
 {
-    socket->Send("</list>");
+    socket << "</list>";
 }
 

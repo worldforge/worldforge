@@ -79,8 +79,8 @@ void NegotiateHelper<T>::put(string &buf, string header)
   buf += "\n";
 }
 
-Negotiate::Negotiate(string& name, Net::Socket* s) :
-  state(SERVER_GREETING), outName(name), sock(s),
+Negotiate::Negotiate(string& name, iostream& s) :
+  state(SERVER_GREETING), outName(name), socket(s),
   codecHelper(&inCodecs, &outCodecs),
   filterHelper(&inFilters, &outFilters)
 {
@@ -98,16 +98,14 @@ void Negotiate::negotiateServer()
     string in;
     string out;
 
-    sock->Receive(in);
+    socket >> in;
     buf += in;
 
     if (state == SERVER_GREETING) 
     {
 	// send server greeting
 
-	sock->Send(outName);
-	sock->Send(string("\n"));
-	
+	socket << outName << '\n';
 	state++;
     }
     
@@ -133,7 +131,7 @@ void Negotiate::negotiateServer()
     {
 	processServerCodecs();
 	codecHelper.put(out, "IWILL");
-	sock->Send(out);
+	socket << out;
 	state++;
     }
     
@@ -149,7 +147,7 @@ void Negotiate::negotiateServer()
     {
 	processServerFilters();
 	filterHelper.put(out, "IWILL");
-	sock->Send(out);
+	socket << out;
 	state++;
     }
 }
@@ -161,7 +159,7 @@ void Negotiate::negotiateClient()
     string in;
     string out;
 
-    sock->Receive(in);
+    socket >> in;
     buf += in;
 
     if(state == SERVER_GREETING)
@@ -178,9 +176,7 @@ void Negotiate::negotiateClient()
     {
 	// send client greeting
 	
-	sock->Send(outName);
-	sock->Send(string("\n"));
-
+	socket << outName << '\n';
 	state++;
     }
     
@@ -188,8 +184,7 @@ void Negotiate::negotiateClient()
     {
 	processClientCodecs();
 	codecHelper.put(out, "ICAN");
-	sock->Send(out);
-
+	socket << out;
 	state++;
     }
 
@@ -205,7 +200,7 @@ void Negotiate::negotiateClient()
     {
 	processClientFilters();
 	filterHelper.put(out, "ICAN");
-	sock->Send(out);
+	socket << out;
 	state++;
     }
     

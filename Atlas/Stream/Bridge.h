@@ -38,9 +38,12 @@ class Bridge
     virtual void MessageEnd() = 0;
     
     // Interface for map context
+
+    class Map { } static MapBegin;
+    class List { } static ListBegin;
     
-    virtual void MapMapBegin(const std::string& name) = 0;
-    virtual void MapListBegin(const std::string& name) = 0;
+    virtual void MapItem(const std::string& name, const Map&) = 0;
+    virtual void MapItem(const std::string& name, const List&) = 0;
     virtual void MapItem(const std::string& name, int) = 0;
     virtual void MapItem(const std::string& name, float) = 0;
     virtual void MapItem(const std::string& name, const std::string&) = 0;
@@ -49,8 +52,8 @@ class Bridge
     
     // Interface for list context
     
-    virtual void ListMapBegin() = 0;
-    virtual void ListListBegin() = 0;
+    virtual void ListItem(const Map&) = 0;
+    virtual void ListItem(const List&) = 0;
     virtual void ListItem(int) = 0;
     virtual void ListItem(float) = 0;
     virtual void ListItem(const std::string&) = 0;

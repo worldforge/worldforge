@@ -46,7 +46,7 @@ class Negotiate
 {
     public:
 
-    Negotiate(std::string& name, Net::Socket*);
+    Negotiate(std::string& name, iostream&);
 
     bool done();
 
@@ -70,7 +70,7 @@ class Negotiate
 
     std::string outName;
     std::string inName;
-    Net::Socket* sock;
+    iostream& socket;
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
     FactoryCodecs outCodecs;
