@@ -105,7 +105,7 @@ void Atlas::Net::StreamConnect::Poll()
 
 	if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
 	{
-	    cout << "server: " << inName << endl;
+	    cout << "server: " << inName << endl << flush;
 	    state++;
 	}
     }
@@ -114,7 +114,7 @@ void Atlas::Net::StreamConnect::Poll()
     {
 	// send client greeting
 	
-	socket << outName << '\n';
+	socket << outName << endl << flush;
 	state++;
     }
     
@@ -122,7 +122,7 @@ void Atlas::Net::StreamConnect::Poll()
     {
 	processClientCodecs();
 	codecHelper.put(out, "ICAN");
-	socket << out;
+	socket << out << flush;
 	state++;
     }
 
@@ -138,7 +138,7 @@ void Atlas::Net::StreamConnect::Poll()
     {
 	processClientFilters();
 	filterHelper.put(out, "ICAN");
-	socket << out;
+	socket << out << flush;
 	state++;
     }
     
@@ -244,7 +244,7 @@ void Atlas::Net::StreamAccept::Poll()
     {
 	// send server greeting
 
-	socket << outName << '\n';
+	socket << outName << endl << flush;
 	state++;
     }
     
@@ -270,7 +270,7 @@ void Atlas::Net::StreamAccept::Poll()
     {
 	processServerCodecs();
 	codecHelper.put(out, "IWILL");
-	socket << out;
+	socket << out << flush;
 	state++;
     }
     
@@ -286,7 +286,7 @@ void Atlas::Net::StreamAccept::Poll()
     {
 	processServerFilters();
 	filterHelper.put(out, "IWILL");
-	socket << out;
+	socket << out << flush;
 	state++;
     }
 }
