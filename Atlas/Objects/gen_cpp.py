@@ -59,17 +59,34 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                 if find_in_parents(obj, name):
                     continue
             #basic type
-            type, attr_class_lst = self.find_attr_class(self.objects[name])
-            print 'Attr ', name, value, type
+            otype, attr_class_lst = self.find_attr_class(self.objects[name])
+            print 'Attr ', attr_class_lst, name, value, otype
             if real_attr_only:
                 lst.append(apply(attr_class_lst[0],
-                                 (name, value, type)))
+                                 (name, value, otype)))
             else:
                 for attr_class in attr_class_lst:
                     lst.append(apply(attr_class,
-                                     (name, value, type)))
+                                     (name, value, otype)))
         return lst
 
+    def set_attributes(self, obj, include_desc_attrs, lst, used_attributes):
+        for name, value in obj.items():
+            if not include_desc_attrs and name in descr_attrs:
+                continue
+            otype, attr_class_lst = self.find_attr_class(self.objects[name])
+            if name not in used_attributes:
+                lst.append(apply(attr_class_lst[0],
+                                 (name, value, otype)))
+                used_attributes.append(name)
+        for parent in obj.parents:
+            self.set_attributes(parent, include_desc_attrs, lst, used_attributes)
+
+    def get_default_name_value_type(self, obj, include_desc_attrs = 0):
+        lst = []
+        used_attributes = []
+        self.set_attributes(obj, include_desc_attrs, lst, used_attributes)
+        return lst
 
     def get_cpp_parent(self, obj):
         if len(obj.parents) == 0:
@@ -154,9 +171,9 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         for attr in statics:
             self.write(attr.inline_send(classname))
 
-    def static_default_assigns(self, obj, statics):
+    def static_default_assigns(self, obj, defaults):
         classname = classize(obj.id, data=1)
-        for attr in statics:
+        for attr in defaults:
             self.write(attr.default_assign(classname))
 
     def getattrclass_im(self, obj, statics):
@@ -290,7 +307,7 @@ void %(classname)s::free()
 
 """ % vars()) #"for xemacs syntax highlighting
 
-    def default_object_im(self, obj, static_attrs):
+    def default_object_im(self, obj, default_attrs):
         classname = self.classname
         self.write("""
 %(classname)s *%(classname)s::getDefaultObjectInstance()
@@ -298,7 +315,7 @@ void %(classname)s::free()
     if (defaults_%(classname)s == 0) {
         defaults_%(classname)s = new %(classname)s;
 """ % vars()) #"for xemacs syntax highlighting
-        self.static_default_assigns(obj, static_attrs)
+        self.static_default_assigns(obj, default_attrs)
         self.write("""    }
     return defaults_%(classname)s;
 }
@@ -520,12 +537,13 @@ void %(classname)s::free()
         self.write("\n")
         static_attrs = self.get_name_value_type(obj, first_definition=1,
                                                 real_attr_only=1)
-        self.implementation(obj, static_attrs)
+        default_attrs = self.get_default_name_value_type(obj)
+        self.implementation(obj, static_attrs, default_attrs)
         self.ns_close(self.base_list)
         self.out.close()
         self.update_outfile(outfile)
 
-    def implementation(self, obj, static_attrs=[]):
+    def implementation(self, obj, static_attrs=[], default_attrs=[]):
         if len(static_attrs) > 0:
             #self.constructors_im(obj)
             self.getattrclass_im(obj, static_attrs)
@@ -540,7 +558,7 @@ void %(classname)s::free()
         self.destructor_im(obj)
         self.instanceof_im(obj)
         self.freelist_im()
-        self.default_object_im(obj, static_attrs)
+        self.default_object_im(obj, default_attrs)
 
         #inst# self.instance_im()
         

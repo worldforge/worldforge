@@ -1,4 +1,10 @@
-2004-02-23  Al Riddoch  <alriddoch@zepler.org>
+2004-02-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py:
+	  Work in progress to set default values for objects at build
+	  time.
+
+2004-02-26  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/AttributeInfo.py: Add some debugging output to
 	  the default initialiser generation code.
@@ -16,7 +22,7 @@
 	  tests/Objects/encoder1.cpp, tests/Objects/objects2.cpp:
 	  Fix up tests to use the right Message typedefs.
 
-2004-02-23  Al Riddoch  <alriddoch@zepler.org>
+2004-02-24  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py:
 	  Work in progress to set default values for objects at build
