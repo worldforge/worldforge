@@ -31,12 +31,11 @@
 #ifndef WFMATH_BALL_H
 #define WFMATH_BALL_H
 
+#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/const.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/intersect_decls.h>
-#include <iosfwd>
 
 namespace WF { namespace Math {
 
@@ -44,20 +43,22 @@ template<const int dim> class Ball;
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Ball<dim>& m);
+template<const int dim>
+std::istream& operator>>(std::istream& is, Ball<dim>& m);
 
 template<const int dim>
 class Ball
 {
  public:
   Ball() {}
-  Ball(const Point<dim>& center, double radius)
+  Ball(const Point<dim>& center, CoordType radius)
 	: m_center(center), m_radius(radius) {}
   Ball(const Ball& b) : m_center(b.m_center), m_radius(b.m_radius) {}
 
   ~Ball() {}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Ball& b);
-  bool fromStream(std::istream& is);
+  friend std::istream& operator>> <dim>(std::istream& is, Ball& b);
 
   Ball& operator=(const Ball& b);
 
@@ -100,6 +101,8 @@ class Ball
   // Intersection functions
 
   AxisBox<dim> boundingBox() const;
+  Ball boundingSphere() const		{return *this;}
+  Ball boundingSphereSloppy() const	{return *this;}
 
   friend bool Intersect<dim>(const Ball& b, const Point<dim>& p);
   friend bool IntersectProper<dim>(const Ball& b, const Point<dim>& p);

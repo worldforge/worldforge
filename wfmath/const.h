@@ -28,6 +28,11 @@
 #define WFMATH_CONST_H
 
 #include <float.h>
+// The next three aren't used in this file, but are used
+// everywhere else in the library.
+#include <assert.h>
+#include <math.h>
+#include <iosfwd>
 
 namespace WF { namespace Math {
 
@@ -35,14 +40,15 @@ namespace WF { namespace Math {
 #define WFMATH_CONST_SQRT2	1.414213562373095048801688724210
 #define WFMATH_CONST_SQRT3	1.732050807568877293527446341506
 
+typedef float CoordType;
+
 // This is the attempted precision of the library. It's essentially
 // the machine precision multiplied by a fudge factor.
-#define WFMATH_EPSILON		(30 * DBL_EPSILON)
-// Typical precision for string representation of a double, used
-// in fromString() and FromAtlas().
-#define WFMATH_STRING_EPSILON	(1e-6)
+#define WFMATH_EPSILON		(30 * FLT_EPSILON)
 
-typedef double CoordType;
+// Max and min values of CoordType
+#define WFMATH_MAX		FLT_MAX
+#define WFMATH_MIN		FLT_MIN
 
 bool IsFloatEqual(CoordType x, CoordType y, double epsilon = WFMATH_EPSILON);
 inline CoordType FloatAdd(CoordType x, CoordType y,
@@ -51,6 +57,17 @@ inline CoordType FloatAdd(CoordType x, CoordType y,
 inline CoordType FloatSubtract(CoordType x, CoordType y,
 			       double epsilon = WFMATH_EPSILON)
 	{return IsFloatEqual(x, y, epsilon) ? 0 : x - y;}
+
+// These let us avoid including <algorithm> for the sake of
+// std::max() and std::min()
+inline CoordType FloatMax(CoordType a, CoordType b)
+	{return (a > b) ? a : b;}
+inline CoordType FloatMin(CoordType a, CoordType b)
+	{return (a < b) ? a : b;}
+inline CoordType FloatClamp(CoordType val, CoordType min, CoordType max)
+	{return (min >= val) ? min : (max <= val ? max : val);}
+
+// This stuff came from libCoal
 
 #ifdef WIN32
 #define isnan _isnan

@@ -22,42 +22,44 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
 
+#include "const.h"
 #include "basis.h"
 #include "point.h"
-#include "point_funcs.h"
 
 using namespace WF::Math;
 
 template<>
-Point<2>& WF::Math::Point<2>::polar(double r, double theta)
+Point<2>& WF::Math::Point<2>::polar(CoordType r, CoordType theta)
 {
-  double d[2] = {r, theta};
+  CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
   return *this;
 }
 
 template<>
-void WF::Math::Point<2>::asPolar(double& r, double& theta) const
+void WF::Math::Point<2>::asPolar(CoordType& r, CoordType& theta) const
 {
-  double d[2];
+  CoordType d[2];
   _CartToPolar(m_elem, d);
   r = d[0];
   theta = d[1];
 }
 
 template<>
-Point<3>& WF::Math::Point<3>::polar(double r, double theta, double z)
+Point<3>& WF::Math::Point<3>::polar(CoordType r, CoordType theta,
+				    CoordType z)
 {
-  double d[2] = {r, theta};
+  CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
   m_elem[2] = z;
   return *this;
 }
 
 template<>
-void WF::Math::Point<3>::asPolar(double& r, double& theta, double& z) const
+void WF::Math::Point<3>::asPolar(CoordType& r, CoordType& theta,
+				 CoordType& z) const
 {
-  double d[2];
+  CoordType d[2];
   _CartToPolar(m_elem, d);
   r = d[0];
   theta = d[1];
@@ -65,17 +67,19 @@ void WF::Math::Point<3>::asPolar(double& r, double& theta, double& z) const
 }
 
 template<>
-Point<3>& WF::Math::Point<3>::spherical(double r, double theta, double phi)
+Point<3>& WF::Math::Point<3>::spherical(CoordType r, CoordType theta,
+					CoordType phi)
 {
-  double d[3] = {r, theta, phi};
+  CoordType d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
   return *this;
 }
 
 template<>
-void WF::Math::Point<3>::asSpherical(double& r, double& theta, double& phi) const
+void WF::Math::Point<3>::asSpherical(CoordType& r, CoordType& theta,
+				     CoordType& phi) const
 {
-  double d[3];
+  CoordType d[3];
   _CartToSpherical(m_elem, d);
   r = d[0];
   theta = d[1];

@@ -28,7 +28,6 @@
 #define WFMATH_MATRIX_H
 
 #include <wfmath/const.h>
-#include <iosfwd>
 
 namespace WF { namespace Math {
 
@@ -77,6 +76,8 @@ inline Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m)
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m);
+template<const int dim>
+std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
 
 template<const int dim>
 class RotMatrix {
@@ -85,10 +86,10 @@ class RotMatrix {
   RotMatrix(const RotMatrix& m);
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotMatrix& m);
-  bool fromStream(std::istream& is);
+  friend std::istream& operator>> <dim>(std::istream& is, RotMatrix& m);
 
   RotMatrix& operator=(const RotMatrix& m);
-  // No operator=(double d[dim][dim]), since it can fail.
+  // No operator=(CoordType d[dim][dim]), since it can fail.
   // Use setVals() instead.
 
   bool isEqualTo(const RotMatrix& rhs, double tolerance = WFMATH_EPSILON) const;
@@ -115,8 +116,8 @@ class RotMatrix {
   Vector<dim> row(const int i) const;
   Vector<dim> column(const int i) const;
 
-  double trace() const;
-  double determinant() const {return 1;} // here in case we extend to O(N) later
+  CoordType trace() const;
+  CoordType determinant() const {return 1;} // here in case we extend to O(N) later
   RotMatrix inverse() const;
 
   RotMatrix& fromEuler(const CoordType angles[nParams]);
@@ -130,9 +131,9 @@ class RotMatrix {
   friend Vector<dim> InvProd<dim>  (const RotMatrix& m, const Vector<dim>& v);
 
   // Set the value to a given rotation
-  const RotMatrix& rotation	(const int i, const int j, const double& theta);
+  const RotMatrix& rotation	(const int i, const int j, const CoordType& theta);
   const RotMatrix& rotation	(const Vector<dim>& v1, const Vector<dim>& v2,
-				 const double& theta);
+				 const CoordType& theta);
 
   // 2D/3D stuff
 
@@ -140,18 +141,18 @@ class RotMatrix {
 	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d);} // Euler angles, 3D only
 
   // 2D only
-  const RotMatrix<2>& rotation			(const double& theta)
+  const RotMatrix<2>& rotation			(const CoordType& theta)
 	{return rotation(0, 1, theta);}
 
   // 3D only
-  const RotMatrix<3>& rotationX			(const double& theta)
+  const RotMatrix<3>& rotationX			(const CoordType& theta)
 	{return rotation(1, 2, theta);}
-  const RotMatrix<3>& rotationY			(const double& theta)
+  const RotMatrix<3>& rotationY			(const CoordType& theta)
 	{return rotation(2, 0, theta);}
-  const RotMatrix<3>& rotationZ			(const double& theta)
+  const RotMatrix<3>& rotationZ			(const CoordType& theta)
 	{return rotation(0, 1, theta);}
   const RotMatrix<3>& rotation			(const Vector<3>& axis,
-						 const double& theta);
+						 const CoordType& theta);
 
  private:
   CoordType m_elem[dim][dim];

@@ -28,11 +28,11 @@
 #ifndef WFMATH_AXIS_BOX_FUNCS_H
 #define WFMATH_AXIS_BOX_FUNCS_H
 
+#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/const.h>
 #include <wfmath/axisbox.h>
-#include <algorithm>
+#include <wfmath/ball.h>
 
 namespace WF { namespace Math {
 
@@ -40,8 +40,8 @@ template<const int dim>
 bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out)
 {
   for(int i = 0; i < dim; ++i) {
-    out.m_low[i] = std::max(a1.m_low[i], a2.m_low[i]);
-    out.m_high[i] = std::min(a1.m_high[i], a2.m_high[i]);
+    out.m_low[i] = FloatMax(a1.m_low[i], a2.m_low[i]);
+    out.m_high[i] = FloatMin(a1.m_high[i], a2.m_high[i]);
     if(out.m_low[i] > out.m_high[i])
       return false;
   }
@@ -55,8 +55,8 @@ AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2)
   AxisBox<dim> out;
 
   for(int i = 0; i < dim; ++i) {
-    out.m_low[i] = std::min(a1.m_low[i], a2.m_low[i]);
-    out.m_high[i] = std::max(a1.m_high[i], a2.m_high[i]);
+    out.m_low[i] = FloatMin(a1.m_low[i], a2.m_low[i]);
+    out.m_high[i] = FloatMax(a1.m_high[i], a2.m_high[i]);
   }
 
   return out;
@@ -136,6 +136,18 @@ AxisBox<dim>& AxisBox<dim>::shift(const Vector<dim>& v)
   m_high += v;
 
   return *this;
+}
+
+template<const int dim>
+Ball<dim> AxisBox<dim>::boundingSphere() const
+{
+  return Ball<dim>(getCenter(), Distance(m_low, m_high) / 2);
+}
+
+template<const int dim>
+Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
+{
+  return Ball<dim>(getCenter(), SloppyDistance(m_low, m_high) / 2);
 }
 
 }} // namespace WF::Math

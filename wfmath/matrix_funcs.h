@@ -31,8 +31,6 @@
 #include <wfmath/matrix.h>
 #include <wfmath/error.h>
 #include <wfmath/const.h>
-#include <math.h>
-#include <assert.h>
 
 namespace WF { namespace Math {
 
@@ -312,9 +310,9 @@ inline RotMatrix<dim>& RotMatrix<dim>::identity()
 }
 
 template<const int dim>
-inline double RotMatrix<dim>::trace() const
+inline CoordType RotMatrix<dim>::trace() const
 {
-  double out = 0;
+  CoordType out = 0;
 
   for(int i = 0; i < dim; ++i)
     out = FloatAdd(out, m_elem[i][i]);
@@ -353,11 +351,11 @@ template<> void RotMatrix<3>::toEuler(CoordType angles[3]) const;
 
 template<const int dim>
 const RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
-						  const double& theta)
+						  const CoordType& theta)
 {
   assert(i >= 0 && i < dim && j >= 0 && j < dim && i != j);
 
-  double ctheta = cos(theta), stheta = sin(theta);
+  CoordType ctheta = cos(theta), stheta = sin(theta);
 
   for(int k = 0; k < dim; ++k) {
     for(int l = 0; l < dim; ++l) {
@@ -384,16 +382,16 @@ const RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
 template<const int dim>
 const RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 						  const Vector<dim>& v2,
-						  const double& theta)
+						  const CoordType& theta)
 {
-  double v1_sqr_mag = v1.sqrMag();
+  CoordType v1_sqr_mag = v1.sqrMag();
 
   assert(v1_sqr_mag > 0);
 
   // Get an in-plane vector which is perpendicular to v1
 
   Vector<dim> vperp = v2 - v1 * Dot(v1, v2) / v1_sqr_mag;
-  double vperp_sqr_mag = vperp.sqrMag();
+  CoordType vperp_sqr_mag = vperp.sqrMag();
 
   if((vperp_sqr_mag / v1_sqr_mag) < (dim * WFMATH_EPSILON * WFMATH_EPSILON)) {
     assert(v2.sqrMag() > 0);
@@ -407,8 +405,8 @@ const RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
   // + Dot(vperp, vin) * (a similar term). From this, we find
   // the matrix components.
 
-  double mag_prod = sqrt(v1_sqr_mag * vperp_sqr_mag);
-  double ctheta = cos(theta), stheta = sin(theta);
+  CoordType mag_prod = sqrt(v1_sqr_mag * vperp_sqr_mag);
+  CoordType ctheta = cos(theta), stheta = sin(theta);
 
   identity(); // Initialize to identity matrix
 
@@ -422,7 +420,7 @@ const RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 }
 
 template<> const RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
-						       const double& theta);
+						       const CoordType& theta);
 
 }} // namespace WF::Math
 

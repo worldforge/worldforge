@@ -28,15 +28,15 @@
 #ifndef WFMATH_AXIS_BOX_H
 #define WFMATH_AXIS_BOX_H
 
+#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/const.h>
 #include <wfmath/intersect_decls.h>
-#include <iosfwd>
 
 namespace WF { namespace Math {
 
 template<const int dim> class AxisBox;
+template<const int dim> class Ball;
 
 template<const int dim>
 bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out);
@@ -45,6 +45,8 @@ AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& m);
+template<const int dim>
+std::istream& operator>>(std::istream& is, AxisBox<dim>& m);
 
 template<const int dim>
 class AxisBox
@@ -58,7 +60,7 @@ class AxisBox
   ~AxisBox() {}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const AxisBox& a);
-  bool fromStream(std::istream& is);
+  friend std::istream& operator>> <dim>(std::istream& is, AxisBox& a);
 
   AxisBox& operator=(const AxisBox& a);
 
@@ -99,6 +101,8 @@ class AxisBox
   // Intersection functions
 
   AxisBox boundingBox() const {return *this;}
+  Ball<dim> boundingSphere() const;
+  Ball<dim> boundingSphereSloppy() const;
 
   friend bool Intersection<dim>(const AxisBox& a1, const AxisBox& a2, AxisBox& out);
   friend AxisBox Union<dim>(const AxisBox& a1, const AxisBox& a2);

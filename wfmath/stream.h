@@ -27,29 +27,39 @@
 #ifndef WFMATH_STREAM_H
 #define WFMATH_STREAM_H
 
-#include <wfmath/wfmath.h>
+#include <wfmath/vector.h>
+#include <wfmath/matrix.h>
+#include <wfmath/point.h>
+#include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
+#include <wfmath/segment.h>
+#include <wfmath/rotbox.h>
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 
 namespace WF { namespace Math {
 
 template<class C>
-inline std::string ToString(const C& c)
+std::string ToString(const C& c, unsigned int precision = 6)
 {
   ostringstream ost;
+  ost.precision(precision);
   ost << c;
   return ost.str();
 }
 
 template<class C>
-inline bool FromString(C& c, const std::string& s)
+bool FromString(C& c, const std::string& s, unsigned int precision = 6)
 {
   istringstream ist(s);
-  return c.fromStream(ist);
+  ist.precision(precision);
+  ist >> c;
+  return ist; // Check ist.fail()
 }
 
-bool _ReadCoordList(std::istream& is, CoordType* d, const int num);
+void _ReadCoordList(std::istream& is, CoordType* d, const int num);
 void _WriteCoordList(std::ostream& os, const CoordType* d, const int num);
 
 template<const int dim>
@@ -60,9 +70,10 @@ std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
 }
 
 template<const int dim>
-inline bool Vector<dim>::fromStream(std::istream& is)
+std::istream& operator>>(std::istream& is, Vector<dim>& v)
 {
-  return _ReadCoordList(is, m_elem, dim);
+  _ReadCoordList(is, m_elem, dim);
+  return is;
 }
 
 template<const int dim>
@@ -79,25 +90,38 @@ std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
 }
 
 template<const int dim>
-bool RotMatrix<dim>::fromStream(std::istream& is)
+std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
 {
   CoordType d[dim*dim];
   char next;
 
   is >> next;
-  if(next != '(')
-    return false;
-
-  for(int i = 0; i < dim; ++i) {
-    if(!_ReadCoordList(is, d + i * dim, dim))
-      return false;
-    is >> next;
-    char want = (i == dim - 1) ? ')' : ',';
-    if(next != want)
-      return false;
+  if(next != '(') {
+    is.setstate(std::istream::failbit);
+    return is;
   }
 
-  return _setVals(d, WFMATH_STRING_EPSILON);
+  for(int i = 0; i < dim; ++i) {
+    _ReadCoordList(is, d + i * dim, dim);
+    if(!is)
+      return is;
+    is >> next;
+    char want = (i == dim - 1) ? ')' : ',';
+    if(next != want) {
+      is.setstate(std::istream::failbit);
+      return is;
+    }
+  }
+
+  int str_prec = is.precision();
+  double str_eps = 1;
+  while(str_prec-- > 0)
+    str_eps /= 10;
+
+  if(!m._setVals(d, FloatMax(WFMATH_EPSILON, str_eps)))
+    is.setstate(std::istream::failbit);
+
+  return is;
 }
 
 template<const int dim>
@@ -108,9 +132,10 @@ std::ostream& operator<<(std::ostream& os, const Point<dim>& p)
 }
 
 template<const int dim>
-inline bool Point<dim>::fromStream(std::istream& is)
+std::istream& operator>>(std::istream& is, Point<dim>& p)
 {
-  return _ReadCoordList(is, m_elem, dim);
+  _ReadCoordList(is, m_elem, dim);
+  return is;
 }
 
 template<const int dim>
@@ -120,22 +145,29 @@ std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& a)
 }
 
 template<const int dim>
-bool AxisBox<dim>::fromStream(std::istream& is)
+std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
 {
   char next;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
-  if(!m_low.fromStream(is))
-    return false;
+  is >> m_low;
+  if(!is)
+    return is;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
-  return m_high.fromStream(is);
+  is >> m_high;
+
+  return is;
 }
 
 template<const int dim>
@@ -146,24 +178,29 @@ std::ostream& operator<<(std::ostream& os, const Ball<dim>& b)
 }
 
 template<const int dim>
-inline bool Ball<dim>::fromStream(std::istream& is)
+std::istream& operator>>(std::istream& is, Ball<dim>& b)
 {
   char next;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
-  if(!m_center.fromStream(is))
-    return false;
+  is >> m_center;
+  if(!is)
+    return is;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
   is >> m_radius;
 
-  return true;
+  return is;
 }
 
 template<const int dim>
@@ -173,22 +210,29 @@ std::ostream& operator<<(std::ostream& os, const Segment<dim>& s)
 }
 
 template<const int dim>
-bool Segment<dim>::fromStream(std::istream& is)
+std::istream& operator>>(std::istream& is, Segment<dim>& s)
 {
   char next;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
-  if(!m_p1.fromStream(is))
-    return false;
+  is >> m_p1;
+  if(!is)
+    return is;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
-  return m_p2.fromStream(is);
+  is >> m_p2;
+
+  return is;
 }
 
 template<const int dim>
@@ -200,29 +244,39 @@ std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r)
 }
 
 template<const int dim>
-bool RotBox<dim>::fromStream(std::istream& is)
+std::istream& operator>>(std::istream& is, RotBox<dim>& r)
 {
   char next;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
-  if(!m_corner0.fromStream(is))
-    return false;
+  is >> m_corner0;
+  if(!is)
+    return is;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
-  if(!m_size.fromStream(is))
-    return false;
+  is >> m_size;
+  if(!is)
+    return is;
 
-  do
+  do {
+    if(!is)
+      return is;
     is >> next;
-  while(next != '=');
+  } while(next != '=');
 
-  return m_orient.fromStream(is);
+  is >> m_orient;
+
+  return is;
 }
 
 }} // namespace WF::Math

@@ -24,13 +24,10 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
+#include "const.h"
 #include "vector.h"
 #include "matrix.h"
-#include "const.h"
 #include "stream.h"
-#include <iostream>
-#include <sstream>
-#include <assert.h>
 
 using namespace WF::Math;
 
@@ -77,9 +74,9 @@ void test_matrix(const RotMatrix<dim>& m)
 //  cout << "Element differences after conversion are: ";
   for(int i = 0; i < dim; ++i) {
     for(int j = 0; j < dim; ++j) {
-      double diff = m.elem(i, j) - str_m.elem(i, j);
+      CoordType diff = m.elem(i, j) - str_m.elem(i, j);
 //      cout << diff;
-      assert(fabs(diff) < WFMATH_STRING_EPSILON);
+      assert(fabs(diff) < FloatMax(WFMATH_EPSILON, 1e-6));
 //      if(i < dim - 1 || j < dim - 1)
 //        cout << ", ";
     }

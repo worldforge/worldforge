@@ -30,6 +30,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 
 namespace WF { namespace Math {
 
@@ -139,7 +140,7 @@ Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
 }
 
 template<const int dim>
-Point<dim>& Point<dim>::operator=(const double d[dim])
+Point<dim>& Point<dim>::operator=(const CoordType d[dim])
 {
     for(int i = 0; i < dim; ++i)
       m_elem[i] = d[i];
@@ -197,12 +198,24 @@ inline AxisBox<dim> Point<dim>::boundingBox() const
 }
 
 template<const int dim>
+inline Ball<dim> Point<dim>::boundingSphere() const
+{
+  return Ball<dim>(*this, 0);
+}
+
+template<const int dim>
+inline Ball<dim> Point<dim>::boundingSphereSloppy() const
+{
+  return Ball<dim>(*this, 0);
+}
+
+template<const int dim>
 CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
 {
   CoordType ans = 0;
 
   for(int i = 0; i < dim; ++i) {
-    double diff = FloatSubtract(p1.m_elem[i], p2.m_elem[i]);
+    CoordType diff = FloatSubtract(p1.m_elem[i], p2.m_elem[i]);
     ans += diff * diff; // Don't need FloatAdd, all terms > 0
   }
 
@@ -215,10 +228,10 @@ Point<dim> Barycenter(const int num_points, const Point<dim> *points)
   Point<dim> out;
 
   for(int i = 0; i < dim; ++i) {
-    double sum = 0, max_val = 0;
+    CoordType sum = 0, max_val = 0;
     for(int j = 0; j < num_points; ++j) {
       sum += points[j].m_elem[i];
-      max_val = std::max(max_val, fabs(points[j].m_elem[i]));
+      max_val = FloatMax(max_val, fabs(points[j].m_elem[i]));
     }
     if(fabs(sum) < max_val * WFMATH_EPSILON)
       out.m_elem[i] = 0;
@@ -233,11 +246,11 @@ template<const int dim>
 Point<dim> Barycenter(const int num_points, const Point<dim> *points,
 		      const CoordType *weights)
 {
-  double tot_weight = 0, max_weight = 0;
+  CoordType tot_weight = 0, max_weight = 0;
 
   for(int i = 0; i < num_points; ++i) {
     tot_weight += weights[i];
-    max_weight = std::max(max_weight, fabs(weights[i]));
+    max_weight = FloatMax(max_weight, fabs(weights[i]));
   }
 
   assert(max_weight > 0 && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
@@ -246,11 +259,11 @@ Point<dim> Barycenter(const int num_points, const Point<dim> *points,
 
   for(int i = 0; i < dim; ++i) {
     out.m_elem[i] = 0;
-    double max_val = 0;
+    CoordType max_val = 0;
     for(int j = 0; j < num_points; ++j) {
-      double val = points[j].m_elem[i] * weights[j];
+      CoordType val = points[j].m_elem[i] * weights[j];
       out.m_elem[i] += val;
-      max_val = std::max(max_val, fabs(val));
+      max_val = FloatMax(max_val, fabs(val));
     }
     if(fabs(out.m_elem[i]) < max_val * WFMATH_EPSILON)
       out.m_elem[i] = 0;
@@ -261,13 +274,17 @@ Point<dim> Barycenter(const int num_points, const Point<dim> *points,
   return out;
 }
 
-template<> Point<2>& Point<2>::polar(double r, double theta);
-template<> void Point<2>::asPolar(double& r, double& theta) const;
+template<> Point<2>& Point<2>::polar(CoordType r, CoordType theta);
+template<> void Point<2>::asPolar(CoordType& r, CoordType& theta) const;
 
-template<> Point<3>& Point<3>::polar(double r, double theta, double z);
-template<> void Point<3>::asPolar(double& r, double& theta, double& z) const;
-template<> Point<3>& Point<3>::spherical(double r, double theta, double phi);
-template<> void Point<3>::asSpherical(double& r, double& theta, double& phi) const;
+template<> Point<3>& Point<3>::polar(CoordType r, CoordType theta,
+				     CoordType z);
+template<> void Point<3>::asPolar(CoordType& r, CoordType& theta,
+				  CoordType& z) const;
+template<> Point<3>& Point<3>::spherical(CoordType r, CoordType theta,
+					 CoordType phi);
+template<> void Point<3>::asSpherical(CoordType& r, CoordType& theta,
+				      CoordType& phi) const;
 
 }} // namespace WF::Math
 

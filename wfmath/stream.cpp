@@ -25,7 +25,6 @@
 // Created: 2001-12-13
 
 #include "stream.h"
-#include <iostream>
 
 using namespace WF::Math;
 
@@ -37,21 +36,23 @@ void WF::Math::_WriteCoordList(std::ostream& os, const CoordType* d, const int n
     os << d[i] << (i < (num - 1) ? ',' : ')');
 }
 
-bool WF::Math::_ReadCoordList(std::istream& is, CoordType* d, const int num)
+void WF::Math::_ReadCoordList(std::istream& is, CoordType* d, const int num)
 {
   char next;
 
   is >> next;
 
-  if(next != '(')
-    return false;
+  if(next != '(') {
+    is.setstate(std::istream::failbit);
+    return;
+  }
 
   for(int i = 0; i < num; ++i) {
     is >> d[i] >> next;
     char want = (i == num - 1) ? ')' : ',';
-    if(next != want)
-      return false;
+    if(next != want) {
+      is.setstate(std::istream::failbit);
+      return;
+    }
   }
-
-  return true;
 }

@@ -25,10 +25,11 @@
 #ifndef WFMATH_SEGMENT_FUNCS_H
 #define WFMATH_SEGMENT_FUNCS_H
 
+#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/const.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 #include <wfmath/segment.h>
 
 namespace WF { namespace Math {

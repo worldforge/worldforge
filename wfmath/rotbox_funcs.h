@@ -25,10 +25,11 @@
 #ifndef WFMATH_ROT_BOX_FUNCS_H
 #define WFMATH_ROT_BOX_FUNCS_H
 
+#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/const.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 #include <wfmath/rotbox.h>
 
 namespace WF { namespace Math {
@@ -109,7 +110,7 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
 // so leave it in as a comment.
 
   for(int i = 0; i < dim; ++i) {
-    double minval = 0, maxval = 0;
+    CoordType minval = 0, maxval = 0;
     for(int j = 0; j < dim; ++j) {
       CoordType value = m_orient.elem(i, j) * m_size[j];
       // All coords of min <= 0, all coords of max >= 0, don't need FloatAdd()

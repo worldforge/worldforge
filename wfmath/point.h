@@ -33,13 +33,12 @@
 #include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
-#include <iosfwd>
 
 namespace WF { namespace Math {
 
 template<const int dim> class Point;
-template<const int dim> class Vector;
 template<const int dim> class AxisBox;
+template<const int dim> class Ball;
 
 template<const int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
@@ -67,6 +66,8 @@ Point<dim> Barycenter(const int num_points, const Point<dim> *points,
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
+template<const int dim>
+std::istream& operator>>(std::istream& is, Point<dim>& m);
 
 template<const int dim>
 class Point
@@ -78,10 +79,10 @@ class Point
   ~Point() {}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
-  bool fromStream(std::istream& is);
+  friend std::istream& operator>> <dim>(std::istream& is, Point& p);
 
   Point& operator= (const Point& rhs);
-  Point& operator= (const double d[dim]);
+  Point& operator= (const CoordType d[dim]);
 
   bool isEqualTo(const Point &rhs, double tolerance = WFMATH_EPSILON) const;
 
@@ -122,6 +123,8 @@ class Point
   Point rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   AxisBox<dim> boundingBox() const;
+  Ball<dim> boundingSphere() const;
+  Ball<dim> boundingSphereSloppy() const;
 
   // Member access
 
@@ -149,13 +152,13 @@ class Point
   const CoordType& z() const	{return m_elem[2];}
   CoordType& z()		{return m_elem[2];}
 
-  Point<2>& polar(double r, double theta);
-  void asPolar(double& r, double& theta) const;
+  Point<2>& polar(CoordType r, CoordType theta);
+  void asPolar(CoordType& r, CoordType& theta) const;
 
-  Point<3>& polar(double r, double theta, double z);
-  void asPolar(double& r, double& theta, double& z) const;
-  Point<3>& spherical(double r, double theta, double phi);
-  void asSpherical(double& r, double& theta, double& phi) const;
+  Point<3>& polar(CoordType r, CoordType theta, CoordType z);
+  void asPolar(CoordType& r, CoordType& theta, CoordType& z) const;
+  Point<3>& spherical(CoordType r, CoordType theta, CoordType phi);
+  void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
  private:
 

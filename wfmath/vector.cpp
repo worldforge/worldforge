@@ -28,14 +28,13 @@
 // and Vector3D classes from stage/math, written by Bryce W.
 // Harrington, Kosh, and Jari Sundell (Rakshasa).
 
-#include "vector_funcs.h"
 #include "const.h"
 #include "basis.h"
-#include <math.h>
+#include "vector.h"
 
 using namespace WF::Math;
 
-template<> double WF::Math::Vector<2>::sloppyMag() const
+template<> CoordType WF::Math::Vector<2>::sloppyMag() const
 {
   CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]);
   const CoordType p = WFMATH_CONST_SQRT2 - 1;
@@ -50,7 +49,7 @@ template<> double WF::Math::Vector<2>::sloppyMag() const
     return 0;
 }
 
-template<> double WF::Math::Vector<3>::sloppyMag() const
+template<> CoordType WF::Math::Vector<3>::sloppyMag() const
 {
   CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]), az = fabs(m_elem[2]);
   const CoordType p = WFMATH_CONST_SQRT2 - 1;
@@ -69,9 +68,9 @@ template<> double WF::Math::Vector<3>::sloppyMag() const
     return 0;
 }
 
-template<> WF::Math::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, double theta)
+template<> WF::Math::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta)
 {
-  double axis_sqr_mag = axis.sqrMag();
+  CoordType axis_sqr_mag = axis.sqrMag();
 
   assert(axis_sqr_mag != 0);
 
@@ -95,35 +94,37 @@ Vector<3> WF::Math::Cross(const Vector<3>& v1, const Vector<3>& v2)
 }
 
 template<>
-Vector<2>& WF::Math::Vector<2>::polar(double r, double theta)
+Vector<2>& WF::Math::Vector<2>::polar(CoordType r, CoordType theta)
 {
-  double d[2] = {r, theta};
+  CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
   return *this;
 }
 
 template<>
-void WF::Math::Vector<2>::asPolar(double& r, double& theta) const
+void WF::Math::Vector<2>::asPolar(CoordType& r, CoordType& theta) const
 {
-  double d[2];
+  CoordType d[2];
   _CartToPolar(m_elem, d);
   r = d[0];
   theta = d[1];
 }
 
 template<>
-Vector<3>& WF::Math::Vector<3>::polar(double r, double theta, double z)
+Vector<3>& WF::Math::Vector<3>::polar(CoordType r, CoordType theta,
+				      CoordType z)
 {
-  double d[2] = {r, theta};
+  CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
   m_elem[2] = z;
   return *this;
 }
 
 template<>
-void WF::Math::Vector<3>::asPolar(double& r, double& theta, double& z) const
+void WF::Math::Vector<3>::asPolar(CoordType& r, CoordType& theta,
+				  CoordType& z) const
 {
-  double d[2];
+  CoordType d[2];
   _CartToPolar(m_elem, d);
   r = d[0];
   theta = d[1];
@@ -131,17 +132,19 @@ void WF::Math::Vector<3>::asPolar(double& r, double& theta, double& z) const
 }
 
 template<>
-Vector<3>& WF::Math::Vector<3>::spherical(double r, double theta, double phi)
+Vector<3>& WF::Math::Vector<3>::spherical(CoordType r, CoordType theta,
+					  CoordType phi)
 {
-  double d[3] = {r, theta, phi};
+  CoordType d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
   return *this;
 }
 
 template<>
-void WF::Math::Vector<3>::asSpherical(double& r, double& theta, double& phi) const
+void WF::Math::Vector<3>::asSpherical(CoordType& r, CoordType& theta,
+				      CoordType& phi) const
 {
-  double d[3];
+  CoordType d[3];
   _CartToSpherical(m_elem, d);
   r = d[0];
   theta = d[1];

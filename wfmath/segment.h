@@ -25,10 +25,11 @@
 #ifndef WFMATH_SEGMENT_H
 #define WFMATH_SEGMENT_H
 
+#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/const.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
 namespace WF { namespace Math {
@@ -37,6 +38,8 @@ template<const int dim> class Segment;
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Segment<dim>& s);
+template<const int dim>
+std::istream& operator>>(std::istream& is, Segment<dim>& s);
 
 template<const int dim>
 class Segment
@@ -49,7 +52,7 @@ class Segment
   ~Segment() {}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Segment& s);
-  bool fromStream(std::istream& is);
+  friend std::istream& operator>> <dim>(std::istream& is, Segment& s);
 
   Segment& operator=(const Segment& s);
 
@@ -91,6 +94,10 @@ class Segment
   // Intersection functions
 
   AxisBox<dim> boundingBox() const {return AxisBox<dim>(m_p1, m_p2);}
+  Ball<dim> boundingSphere() const
+	{return Ball<dim>(getCenter(), Distance(m_p1, m_p2) / 2);}
+  Ball<dim> boundingSphereSloppy() const
+	{return Ball<dim>(getCenter(), SloppyDistance(m_p1, m_p2) / 2);}
 
   friend bool Intersect<dim>(const Segment& s, const Point<dim>& p);
   friend bool IntersectProper<dim>(const Segment& s, const Point<dim>& p);

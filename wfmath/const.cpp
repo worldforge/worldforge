@@ -23,7 +23,6 @@
 //
 
 #include <wfmath/const.h>
-#include <math.h>
 
 // Implementation of IsFloatEqual() is borrowed from Jesse Jones (thanks!).
 // The comments also belong to him.  The names have been changed

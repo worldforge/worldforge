@@ -24,16 +24,13 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#include "matrix_funcs.h"
-#include "vector_funcs.h"
 #include "const.h"
-#include <float.h>
-#include <sstream>
-#include <algorithm>
+#include "matrix.h"
+#include "vector.h"
 
 using namespace WF::Math;
 
-static double _MatrixDeterminantImpl(const int size, CoordType* m);
+static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
 static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
 
 template<> void WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
@@ -60,7 +57,7 @@ template<> void WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
 
 template<>
 const RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,
-						      const double& theta)
+						      const CoordType& theta)
 {
   CoordType max = 0;
   int main_comp = -1;
@@ -113,7 +110,7 @@ bool WF::Math::_MatrixSetValsImpl(const int size, CoordType* vals, CoordType* bu
         }
         if(max_val > 0 && fabs(ans/max_val) < try_prec)
           ans = 0;
-        try_prec = std::max(fabs(ans - ((i == j) ? 1 : 0)), try_prec);
+        try_prec = FloatMax(fabs(ans - ((i == j) ? 1 : 0)), try_prec);
       }
     }
 
@@ -162,7 +159,7 @@ bool WF::Math::_MatrixSetValsImpl(const int size, CoordType* vals, CoordType* bu
 
     for(int i = 0; i < size; ++i) {
       for(int j = 0; j < size; ++j) {
-        double delta = FloatSubtract(vals[i*size+j], buf2[i*size+j]) / 2;
+        CoordType delta = FloatSubtract(vals[i*size+j], buf2[i*size+j]) / 2;
         vals[i*size+j] -= delta; // delta is small, don't need FloatAdd()
       }
     }
@@ -181,7 +178,7 @@ bool WF::Math::_MatrixSetValsImpl(const int size, CoordType* vals, CoordType* bu
   return (_MatrixDeterminantImpl(size, buf1) > 0);
 }
 
-static double _MatrixDeterminantImpl(const int size, CoordType* m)
+static CoordType _MatrixDeterminantImpl(const int size, CoordType* m)
 {
   // First, construct an upper triangular matrix with the
   // same determinant as the original matrix. Then just
@@ -191,9 +188,9 @@ static double _MatrixDeterminantImpl(const int size, CoordType* m)
     CoordType minval = 0;
     for(int j = 0; j < size; ++j)
       minval += m[j*size+i] * m[j*size+i]; // Don't need FloatAdd()
-    minval /= DBL_MAX;
-    if(minval < DBL_MIN)
-      minval = DBL_MIN;
+    minval /= WFMATH_MAX;
+    if(minval < WFMATH_MIN)
+      minval = WFMATH_MIN;
     if(m[i*size+i] * m[i*size+i] < minval) { // Find a row with nonzero element
       int j;
       for(j = i + 1; j < size; ++j)
@@ -207,7 +204,7 @@ static double _MatrixDeterminantImpl(const int size, CoordType* m)
     }
     for(int j = i + 1; j < size; ++j) {
       CoordType factor = m[j*size+i] / m[i*size+i];
-      // We know factor isn't bigger than about sqrt(DBL_MAX), due to
+      // We know factor isn't bigger than about sqrt(WFMATH_MAX), due to
       // the comparison with minval done above.
       m[j*size+i] = 0;
       if(factor != 0) {
@@ -217,7 +214,7 @@ static double _MatrixDeterminantImpl(const int size, CoordType* m)
     }
   }
 
-  double out = 1;
+  CoordType out = 1;
 
   for(int i = 0; i < size; ++i)
     out *= m[i*size+i];
@@ -236,9 +233,9 @@ static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
     CoordType minval = 0;
     for(int j = 0; j < size; ++j)
       minval += in[j*size+i] * in[j*size+i]; // Don't need FloatAdd()
-    minval /= DBL_MAX;
-    if(minval < DBL_MIN)
-      minval = DBL_MIN;
+    minval /= WFMATH_MAX;
+    if(minval < WFMATH_MIN)
+      minval = WFMATH_MIN;
     if(in[i*size+i] * in[i*size+i] < minval) { // Find a nonzero element
       int j;
       for(j = i + 1;  j < size; ++j)
@@ -251,7 +248,7 @@ static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
         in[i*size+k] = FloatAdd(in[i*size+k], in[j*size+k]);
       }
     }
-    // We now know in[i*size+i] / in[j*size+i] >= sqrt(DBL_MIN) for any j
+    // We now know in[i*size+i] / in[j*size+i] >= sqrt(WFMATH_MIN) for any j
 
     // Normalize the row, so in[i*size+i] == 1
     CoordType tmp = in[i*size+i];

@@ -24,11 +24,10 @@
 // Author: Ron Steinke
 // Created: 2001-12-12
 
+#include "const.h"
 #include "vector.h"
 #include "point.h"
-#include "const.h"
 #include "stream.h"
-#include <iostream>
 
 using namespace WF::Math;
 

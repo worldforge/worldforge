@@ -22,14 +22,13 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
 
-#include <wfmath/const.h>
-#include <math.h>
+#include "const.h"
 #include "intersect.h"
 
 using namespace WF::Math;
 
-void  WF::Math::_RotBoxAxisBoxIntersectImpl(int dim, int params, double* matrix,
-					    double* low, double* high)
+void  WF::Math::_RotBoxAxisBoxIntersectImpl(int dim, int params, CoordType* matrix,
+					    CoordType* low, CoordType* high)
 {
   // Invert using row operations. First, make m upper triangular,
   // with 1's on the diagonal
@@ -40,9 +39,9 @@ void  WF::Math::_RotBoxAxisBoxIntersectImpl(int dim, int params, double* matrix,
     CoordType minval = 0;
     for(int j = 0; j < dim; ++j)
       minval += matrix[j*params+i] * matrix[j*params+i]; // Don't need FloatAdd()
-    minval /= DBL_MAX;
-    if(minval < DBL_MIN)
-      minval = DBL_MIN;
+    minval /= WFMATH_MAX;
+    if(minval < WFMATH_MIN)
+      minval = WFMATH_MIN;
     if(matrix[i*params+i] * matrix[i*params+i] < minval) { // Find a nonzero element
       int j;
       for(j = i + 1;  j < dim; ++j)
@@ -54,7 +53,7 @@ void  WF::Math::_RotBoxAxisBoxIntersectImpl(int dim, int params, double* matrix,
       low[i] = FloatAdd(low[i], low[j]);
       high[i] = FloatAdd(high[i], high[j]);
     }
-    // We now know in[i*params+i] / in[j*params+i] >= sqrt(DBL_MIN) for any j
+    // We now know in[i*params+i] / in[j*params+i] >= sqrt(WFMATH_MIN) for any j
 
     // Normalize the row, so in[i*params+i] == 1
     CoordType tmp = matrix[i*params+i];

@@ -34,6 +34,7 @@
 #include <wfmath/const.h>
 #include <wfmath/matrix.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
 namespace WF { namespace Math {
@@ -96,6 +97,13 @@ class Shape
   // Intersection functions
 
   AxisBox<dim> boundingBox() const;
+  Ball<dim> boundingSphere() const;
+  Ball<dim> boundingSphereSloppy() const;
+
+  // Bounding objects, pretty obvious. boundingShpereSloppy() uses
+  // SloppyDistance() instead of Distance() to calculate it's
+  // radius, except in cases like Point<> and Ball<> where it
+  // would be silly.
 
   // The following will be defined in intersect.h. The declarations
   // of the friend templates are placed in intersect_decls.h. The
@@ -117,6 +125,8 @@ class Shape
   friend bool ContainsProper<dim>(Foo<dim& f, Shape<dim>& s);
 
 };
+
+#include<wfmath/shape_funcs.h>
 
 }} // namespace WF::Math
 

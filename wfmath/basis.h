@@ -27,7 +27,6 @@
 #ifndef WFMATH_BASIS_H
 #define WFMATH_BASIS_H
 
-#include <math.h>
 #include <wfmath/const.h>
 
 namespace WF { namespace Math {
@@ -57,7 +56,7 @@ inline void _CartToSpherical(const CoordType *in, CoordType *out)
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
 inline void _SphericalToCart(const CoordType *in, CoordType *out)
 {
-  double stheta = sin(in[1]);
+  CoordType stheta = sin(in[1]);
 
   out[0] = in[0] * stheta * cos(in[2]);
   out[1] = in[0] * stheta * sin(in[2]);

@@ -25,11 +25,12 @@
 #ifndef WFMATH_ROT_BOX_H
 #define WFMATH_ROT_BOX_H
 
+#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/matrix.h>
-#include <wfmath/const.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
 namespace WF { namespace Math {
@@ -38,6 +39,8 @@ template<const int dim> class RotBox;
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r);
+template<const int dim>
+std::istream& operator>>(std::istream& is, RotBox<dim>& r);
 
 template<const int dim>
 class RotBox
@@ -53,7 +56,7 @@ class RotBox
   ~RotBox() {}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotBox& r);
-  bool fromStream(std::istream& is);
+  friend std::istream& operator>> <dim>(std::istream& is, RotBox& r);
 
   RotBox& operator=(const RotBox& s);
 
@@ -91,6 +94,10 @@ class RotBox
   // Intersection functions
 
   AxisBox<dim> boundingBox() const;
+  Ball<dim> boundingSphere() const
+	{return Ball<dim>(getCenter(), m_size.mag() / 2);}
+  Ball<dim> boundingSphereSloppy() const
+	{return Ball<dim>(getCenter(), m_size.sqrMag() / 2);}
 
   friend bool Intersect<dim>(const RotBox& r, const Point<dim>& p);
   friend bool IntersectProper<dim>(const RotBox& r, const Point<dim>& p);

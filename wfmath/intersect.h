@@ -31,6 +31,8 @@
 #include <wfmath/intersect_decls.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
+#include <wfmath/segment.h>
+#include <wfmath/rotbox.h>
 
 namespace WF { namespace Math {
 
@@ -188,7 +190,7 @@ bool Intersect(const Ball<dim>& b, const AxisBox<dim>& a)
   // Don't use FloatAdd(), only need values for comparison
 
   for(int i = 0; i < dim; ++i) {
-    double dist_i;
+    CoordType dist_i;
     if(b.m_center[i] < a.m_low[i])
       dist_i = b.m_center[i] - a.m_low[i];
     else if(b.m_center[i] > a.m_high[i])
@@ -209,7 +211,7 @@ bool IntersectProper(const Ball<dim>& b, const AxisBox<dim>& a)
   // Don't use FloatAdd(), only need values for comparison
 
   for(int i = 0; i < dim; ++i) {
-    double dist_i;
+    CoordType dist_i;
     if(b.m_center[i] < a.m_low[i])
       dist_i = b.m_center[i] - a.m_low[i];
     else if(b.m_center[i] > a.m_high[i])
@@ -225,10 +227,10 @@ bool IntersectProper(const Ball<dim>& b, const AxisBox<dim>& a)
 template<const int dim>
 bool Contains(const Ball<dim>& b, const AxisBox<dim>& a)
 {
-  double sqr_dist = 0;
+  CoordType sqr_dist = 0;
 
   for(int i = 0; i < (1 << dim); ++i) {
-    double furthest = std::max(fabs(b.m_center[i] - a.m_low[i]),
+    CoordType furthest = FloatMax(fabs(b.m_center[i] - a.m_low[i]),
 			       fabs(b.m_center[i] - a.m_high[i]));
     sqr_dist += furthest * furthest;
   }
@@ -239,10 +241,10 @@ bool Contains(const Ball<dim>& b, const AxisBox<dim>& a)
 template<const int dim>
 bool ContainsProper(const Ball<dim>& b, const AxisBox<dim>& a)
 {
-  double sqr_dist = 0;
+  CoordType sqr_dist = 0;
 
   for(int i = 0; i < (1 << dim); ++i) {
-    double furthest = std::max(fabs(b.m_center[i] - a.m_low[i]),
+    CoordType furthest = FloatMax(fabs(b.m_center[i] - a.m_low[i]),
 			       fabs(b.m_center[i] - a.m_high[i]));
     sqr_dist += furthest * furthest;
   }
@@ -279,8 +281,8 @@ bool ContainsProper(const AxisBox<dim>& a, const Ball<dim>& b)
 template<const int dim>
 bool Intersect(const Ball<dim>& b1, const Ball<dim>& b2)
 {
-  double sqr_dist = SquaredDistance(b1.m_center, b2.m_center);
-  double rad_sum = b1.m_radius + b2.m_radius;
+  CoordType sqr_dist = SquaredDistance(b1.m_center, b2.m_center);
+  CoordType rad_sum = b1.m_radius + b2.m_radius;
 
   return sqr_dist <= rad_sum * rad_sum;
 }
@@ -288,8 +290,8 @@ bool Intersect(const Ball<dim>& b1, const Ball<dim>& b2)
 template<const int dim>
 bool IntersectProper(const Ball<dim>& b1, const Ball<dim>& b2)
 {
-  double sqr_dist = SquaredDistance(b1.m_center, b2.m_center);
-  double rad_sum = b1.m_radius + b2.m_radius;
+  CoordType sqr_dist = SquaredDistance(b1.m_center, b2.m_center);
+  CoordType rad_sum = b1.m_radius + b2.m_radius;
 
   return sqr_dist < rad_sum * rad_sum;
 }
@@ -298,12 +300,12 @@ template<const int dim>
 bool Contains(const Ball<dim>& outer, const Ball<dim>& inner)
 {
   // Need FloatSubtract() so a ball will contain itself
-  double rad_diff = FloatSubtract(outer.m_radius, inner.m_radius);
+  CoordType rad_diff = FloatSubtract(outer.m_radius, inner.m_radius);
 
   if(rad_diff < 0)
     return false;
 
-  double sqr_dist = SquaredDistance(outer.m_center, inner.m_center);
+  CoordType sqr_dist = SquaredDistance(outer.m_center, inner.m_center);
 
   return sqr_dist <= rad_diff * rad_diff;
 }
@@ -312,12 +314,12 @@ template<const int dim>
 bool ContainsProper(const Ball<dim>& outer, const Ball<dim>& inner)
 {
   // Need FloatSubtract() so a ball will not contain itself properly
-  double rad_diff = FloatSubtract(outer.m_radius, inner.m_radius);
+  CoordType rad_diff = FloatSubtract(outer.m_radius, inner.m_radius);
 
   if(rad_diff <= 0)
     return false;
 
-  double sqr_dist = SquaredDistance(outer.m_center, inner.m_center);
+  CoordType sqr_dist = SquaredDistance(outer.m_center, inner.m_center);
 
   return sqr_dist < rad_diff * rad_diff;
 }
@@ -331,7 +333,7 @@ bool Intersect(const Segment<dim>& s, const Point<dim>& p)
 
   Vector<dim> v1 = s.m_p1 - p, v2 = s.m_p2 - p;
 
-  double proj = Dot(v1, v2);
+  CoordType proj = Dot(v1, v2);
 
   if(proj > 0) // p is on the same side of both ends, not between them
     return false;
@@ -347,7 +349,7 @@ bool IntersectProper(const Segment<dim>& s, const Point<dim>& p)
 
   Vector<dim> v1 = s.m_p1 - p, v2 = s.m_p2 - p;
 
-  double proj = Dot(v1, v2);
+  CoordType proj = Dot(v1, v2);
 
   if(proj >= 0) // p is on the same side of both ends, not between them
     return false;
@@ -373,10 +375,10 @@ bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b)
   // each i. Find the intersection of those segments and the
   // segment (0, 1), and check if it's nonzero.
 
-  double min = 0, max = 1, low, high, small, big;
+  CoordType min = 0, max = 1, low, high, small, big;
 
   for(int i = 0; i < dim; ++i) {
-    double dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
+    CoordType dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
     if(dist == 0) {
       if(s.m_p1[i] < b.m_low[i] || s.m_p1[i] > b.m_high[i])
         return false;
@@ -413,10 +415,10 @@ bool IntersectProper(const Segment<dim>& s, const AxisBox<dim>& b)
   // each i. Find the intersection of those segments and the
   // segment (0, 1), and check if it's nonzero.
 
-  double min = 0, max = 1, low, high, small, big;
+  CoordType min = 0, max = 1, low, high, small, big;
 
   for(int i = 0; i < dim; ++i) {
-    double dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
+    CoordType dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
     if(dist == 0) {
       if(s.m_p1[i] <= b.m_low[i] || s.m_p1[i] >= b.m_high[i])
         return false;
@@ -708,8 +710,8 @@ bool Contains(const Point<dim>& p, const RotBox<dim>& r)
 
 // This does row reduction to solve a system of linear equations
 // for the next two functions.
-void  _RotBoxAxisBoxIntersectImpl(int dim, int params, double* matrix,
-				  double* low, double* high);
+void  _RotBoxAxisBoxIntersectImpl(int dim, int params, CoordType* matrix,
+				  CoordType* low, CoordType* high);
 
 template<const int dim>
 bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b)

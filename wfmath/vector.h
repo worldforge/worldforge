@@ -31,8 +31,6 @@
 #ifndef WFMATH_VECTOR_H
 #define WFMATH_VECTOR_H
 
-#include <math.h>
-#include <iosfwd>
 #include <wfmath/const.h>
 
 namespace WF { namespace Math {
@@ -42,12 +40,12 @@ template<const int dim> class Vector;
 template<const int dim> class Point;
 
 template<const int dim>
-Vector<dim> operator*(const double& d, const Vector<dim>& v);
+Vector<dim> operator*(const CoordType& d, const Vector<dim>& v);
 template<const int dim>
-double Dot(const Vector<dim>& v1, const Vector<dim>& v2);
+CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2);
 
 template<const int dim>
-double Angle(const Vector<dim>& v, const Vector<dim>& u);
+CoordType Angle(const Vector<dim>& v, const Vector<dim>& u);
 
 // The following are defined in matrix_funcs.h
 template<const int dim> // m * v
@@ -70,17 +68,19 @@ Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Vector<dim>& v);
+template<const int dim>
+std::istream& operator>>(std::istream& is, Vector<dim>& v);
 
 // These two functions are inline, since they're only ever called
 // with a defined constant as argument.
 
-inline const double _SloppyMagMaxTable(int i)
+inline const CoordType _SloppyMagMaxTable(int i)
 {
-  const double d[] = {1, 1,
+  const CoordType d[] = {1, 1,
   1.082392200292393968799446410733,
   1.145934719303161490541433900265,
   };
-  const int dsize = sizeof(d) / sizeof(double);
+  const int dsize = sizeof(d) / sizeof(CoordType);
 
   return (i < dsize) ? d[i] : 0;
 }
@@ -99,13 +99,13 @@ inline const double _SloppyMagMaxTable(int i)
 // Running the script bc_sloppy_mag_3 provided with the WFMath source
 // will calculate the above number.
 
-inline const double _SloppyMagMaxSqrtTable(int i)
+inline const CoordType _SloppyMagMaxSqrtTable(int i)
 {
-  const double d[] = {1, 1,
+  const CoordType d[] = {1, 1,
   1.040380795811030899095785063701,
   1.070483404496847625250328653179,
   };
-  const int dsize = sizeof(d) / sizeof(double);
+  const int dsize = sizeof(d) / sizeof(CoordType);
 
   return (i < dsize) ? d[i] : 0;
 }
@@ -119,9 +119,9 @@ class Vector {
   ~Vector() {}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
-  bool fromStream(std::istream& is);
+  friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
 
-  Vector& operator=(const double d[dim]);
+  Vector& operator=(const CoordType d[dim]);
   Vector& operator=(const Vector& v);
 
   bool isEqualTo(const Vector& rhs, double tolerance = WFMATH_EPSILON) const;
@@ -139,18 +139,18 @@ class Vector {
 
   Vector operator+(const Vector& v) const;
   Vector operator-(const Vector& v) const;
-  Vector operator*(const double& d) const;
-  Vector operator/(const double& d) const;
+  Vector operator*(const CoordType& d) const;
+  Vector operator/(const CoordType& d) const;
 
   Vector operator-() const; // Unary minus
 
   Vector& operator+=(const Vector& v);
   Vector& operator-=(const Vector& v);
-  Vector& operator*=(const double& d);
-  Vector& operator/=(const double& d);
+  Vector& operator*=(const CoordType& d);
+  Vector& operator/=(const CoordType& d);
 
 // FIXME this has problems
-//  friend Vector operator*<dim>(const double& d, const Vector& v);
+//  friend Vector operator*<dim>(const CoordType& d, const Vector& v);
 
   friend Vector Prod<dim>	(const RotMatrix<dim>& m,
 				 const Vector& v);
@@ -168,12 +168,12 @@ class Vector {
 //  friend Point<dim> operator-<dim> (const Point<dim>& c, const Vector& v);
 //  friend Point<dim> operator+<dim> (const Vector& v, const Point<dim>& c);
 
-  friend double Dot<dim>(const Vector& v1, const Vector& v2);
-  friend double Angle<dim>(const Vector& v, const Vector& u);
+  friend CoordType Dot<dim>(const Vector& v1, const Vector& v2);
+  friend CoordType Angle<dim>(const Vector& v, const Vector& u);
 
-  double sqrMag() const;
-  double mag() const		{return sqrt(sqrMag());}
-  Vector& normalize(double norm) {return (*this *= norm / mag());}
+  CoordType sqrMag() const;
+  CoordType mag() const		{return sqrt(sqrMag());}
+  Vector& normalize(CoordType norm) {return (*this *= norm / mag());}
 
   // The sloppyMag() function gives a value between
   // the true magnitude and sloppyMagMax multiplied by the
@@ -185,27 +185,27 @@ class Vector {
   // who want to most closely approximate the true magnitude,
   // without carring whether it's too low or too high.
 
-  double sloppyMag() const;
-  Vector& sloppyNorm(double norm);
+  CoordType sloppyMag() const;
+  Vector& sloppyNorm(CoordType norm);
 
   // Can't seem to implement these as constants, implementing
   // inline lookup functions instead.
-  static const double sloppyMagMax() {return _SloppyMagMaxTable(dim);}
-  static const double sloppyMagMaxSqrt() {return _SloppyMagMaxSqrtTable(dim);}
+  static const CoordType sloppyMagMax() {return _SloppyMagMaxTable(dim);}
+  static const CoordType sloppyMagMaxSqrt() {return _SloppyMagMaxSqrtTable(dim);}
 
   // Rotate the vector in the (axis1,axis2) plane by the angle theta
 
-  Vector& rotate(int axis1, int axis2, double theta);
+  Vector& rotate(int axis1, int axis2, CoordType theta);
 
   // Same thing, but the axes are defined by two vectors. If the
   // vectors are parallel, this throws a ColinearVectors error.
 
-  Vector& rotate(const Vector& v1, const Vector& v2, double theta);
+  Vector& rotate(const Vector& v1, const Vector& v2, CoordType theta);
 
   // Specialized 2D/3D stuff starts here
 
   // The following functions are defined only for
-  // two dimensional (rotate(double), Vector<>(double, double))
+  // two dimensional (rotate(CoordType), Vector<>(CoordType, CoordType))
   // and three dimensional (the rest of them) vectors.
   // Attempting to call these on any other vector will
   // result in a linker error.
@@ -213,13 +213,13 @@ class Vector {
   Vector(const CoordType& x, const CoordType& y);
   Vector(const CoordType& x, const CoordType& y, const CoordType& z);
 
-  Vector<2>& rotate(double theta);
+  Vector<2>& rotate(CoordType theta);
 
-  Vector<3>& rotateX(double theta);
-  Vector<3>& rotateY(double theta);
-  Vector<3>& rotateZ(double theta);
+  Vector<3>& rotateX(CoordType theta);
+  Vector<3>& rotateY(CoordType theta);
+  Vector<3>& rotateZ(CoordType theta);
 
-  Vector<3>& rotate(const Vector<3>& axis, double theta);
+  Vector<3>& rotate(const Vector<3>& axis, CoordType theta);
 
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
@@ -231,21 +231,21 @@ class Vector {
   const CoordType& z() const	{return m_elem[2];}
   CoordType& z()		{return m_elem[2];}
 
-  Vector<2>& polar(double r, double theta);
-  void asPolar(double& r, double& theta) const;
+  Vector<2>& polar(CoordType r, CoordType theta);
+  void asPolar(CoordType& r, CoordType& theta) const;
 
-  Vector<3>& polar(double r, double theta, double z);
-  void asPolar(double& r, double& theta, double& z) const;
-  Vector<3>& spherical(double r, double theta, double phi);
-  void asSpherical(double& r, double& theta, double& phi) const;
+  Vector<3>& polar(CoordType r, CoordType theta, CoordType z);
+  void asPolar(CoordType& r, CoordType& theta, CoordType& z) const;
+  Vector<3>& spherical(CoordType r, CoordType theta, CoordType phi);
+  void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
  private:
   CoordType m_elem[dim];
 };
 
-template<> inline double Vector<1>::sloppyMag() const	{return fabs(m_elem[0]);}
-template<> double Vector<2>::sloppyMag() const;
-template<> double Vector<3>::sloppyMag() const;
+template<> inline CoordType Vector<1>::sloppyMag() const {return fabs(m_elem[0]);}
+template<> CoordType Vector<2>::sloppyMag() const;
+template<> CoordType Vector<3>::sloppyMag() const;
 
 template<> inline Vector<2>::Vector(const CoordType& x, const CoordType& y)
 	{m_elem[0] = x; m_elem[1] = y;}
@@ -253,17 +253,17 @@ template<> inline Vector<3>::Vector(const CoordType& x, const CoordType& y,
 				    const CoordType& z)
 	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
 
-template<> inline Vector<2>& Vector<2>::rotate(double theta)
+template<> inline Vector<2>& Vector<2>::rotate(CoordType theta)
 	{return rotate(0, 1, theta);}
 
-template<> inline Vector<3>& Vector<3>::rotateX(double theta)
+template<> inline Vector<3>& Vector<3>::rotateX(CoordType theta)
 	{return rotate(1, 2, theta);}
-template<> inline Vector<3>& Vector<3>::rotateY(double theta)
+template<> inline Vector<3>& Vector<3>::rotateY(CoordType theta)
 	{return rotate(2, 0, theta);}
-template<> inline Vector<3>& Vector<3>::rotateZ(double theta)
+template<> inline Vector<3>& Vector<3>::rotateZ(CoordType theta)
 	{return rotate(0, 1, theta);}
 
-inline double Cross(const Vector<2>& v1, const Vector<2>& v2)
+inline CoordType Cross(const Vector<2>& v1, const Vector<2>& v2)
 	{return v1[0] * v2[1] - v2[0] * v1[1];}
 Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
 

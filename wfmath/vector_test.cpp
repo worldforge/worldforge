@@ -24,11 +24,10 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
+#include "const.h"
 #include "vector.h"
 #include "matrix.h"
-#include "const.h"
 #include "stream.h"
-#include <iostream>
 
 using namespace WF::Math;
 
@@ -37,7 +36,7 @@ void test_vector(const Vector<dim>& v)
 {
   cout << "Testing vector: " << v << std::endl;
 
-  double sqr_mag = v.sqrMag();
+  CoordType sqr_mag = v.sqrMag();
 
   assert(IsFloatEqual(sqrt(sqr_mag), v.mag()));
 
@@ -75,11 +74,11 @@ void test_vector(const Vector<dim>& v)
   for(int i = 0; i < dim; ++i)
     assert(IsFloatEqual(v2[i], 1));
 
-  double check = Dot((v1 + v2) * 5 - v2 / 4, 2 * v2);
+  CoordType check = Dot((v1 + v2) * 5 - v2 / 4, 2 * v2);
 
   assert(IsFloatEqual((10.0 + dim * 38.0 / 4.0), check));
 
-  double check_mag = v.sloppyMag() / v.mag();
+  CoordType check_mag = v.sloppyMag() / v.mag();
 
   assert(1 - WFMATH_EPSILON < check_mag);
   assert(check_mag < Vector<dim>::sloppyMagMax() + WFMATH_EPSILON);

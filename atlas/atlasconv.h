@@ -33,7 +33,6 @@
 #define WFMATH_ATLAS_CONV_H
 
 #include <Atlas/Message/Object.h>
-#include <wfmath/wfmath.h>
 #include <wfmath/stream.h>
 
 namespace WF { namespace Math {

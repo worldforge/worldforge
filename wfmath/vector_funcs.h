@@ -34,8 +34,6 @@
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
 #include <wfmath/const.h>
-#include <math.h>
-#include <algorithm>
 
 namespace WF { namespace Math {
 
@@ -47,7 +45,7 @@ Vector<dim>::Vector(const Vector<dim>& v)
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::operator=(const double d[dim])
+Vector<dim>& Vector<dim>::operator=(const CoordType d[dim])
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = d.m_elem[i];
@@ -110,7 +108,7 @@ Vector<dim> Vector<dim>::operator-(const Vector<dim>& v) const
 }
 
 template <const int dim>
-Vector<dim> Vector<dim>::operator*(const double& d) const
+Vector<dim> Vector<dim>::operator*(const CoordType& d) const
 {
   Vector<dim> ans;
 
@@ -121,7 +119,7 @@ Vector<dim> Vector<dim>::operator*(const double& d) const
 }
 
 template<const int dim>
-Vector<dim> operator*(const double& d, const Vector<dim>& v)
+Vector<dim> operator*(const CoordType& d, const Vector<dim>& v)
 {
   Vector<dim> ans;
 
@@ -134,7 +132,7 @@ Vector<dim> operator*(const double& d, const Vector<dim>& v)
 }
 
 template <const int dim>
-Vector<dim> Vector<dim>::operator/(const double& d) const
+Vector<dim> Vector<dim>::operator/(const CoordType& d) const
 {
   Vector<dim> ans;
 
@@ -174,7 +172,7 @@ Vector<dim>& Vector<dim>::operator-=(const Vector<dim>& v)
 }
 
 template <const int dim>
-Vector<dim>& Vector<dim>::operator*=(const double& d)
+Vector<dim>& Vector<dim>::operator*=(const CoordType& d)
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] *= d;
@@ -183,7 +181,7 @@ Vector<dim>& Vector<dim>::operator*=(const double& d)
 }
 
 template <const int dim>
-Vector<dim>& Vector<dim>::operator/=(const double& d)
+Vector<dim>& Vector<dim>::operator/=(const CoordType& d)
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] /= d;
@@ -192,9 +190,9 @@ Vector<dim>& Vector<dim>::operator/=(const double& d)
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::sloppyNorm(double norm)
+Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 {
-  double mag = sloppyMag();
+  CoordType mag = sloppyMag();
 
   if(mag <= norm / DBL_MAX) // FIXME div by zero error
     return *this;
@@ -212,7 +210,7 @@ Vector<dim>& Vector<dim>::zero()
 }
 
 template<const int dim>
-double Angle(const Vector<dim>& v, const Vector<dim>& u)
+CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
 {
   // Adding numbers with large magnitude differences can cause
   // a loss of precision so we'll normalize the vectors before
@@ -221,13 +219,13 @@ double Angle(const Vector<dim>& v, const Vector<dim>& u)
   // We'll just divide out by the largest coordinate, so we
   // only have to call sqrt() once.
 
-  double umax, vmax = 0;
+  CoordType umax, vmax = 0;
 
   for(int i = 0; i < dim; ++i) {
-     double uval = fabs(u.m_elem[i]);
+     CoordType uval = fabs(u.m_elem[i]);
      if(uval > umax)
         umax = uval;
-     double vval = fabs(v.m_elem[i]);
+     CoordType vval = fabs(v.m_elem[i]);
      if(vval > vmax)
         vmax = vval;
   }
@@ -238,19 +236,19 @@ double Angle(const Vector<dim>& v, const Vector<dim>& u)
   Vector<dim> nlhs = u / umax;
   Vector<dim> nrhs = v / vmax;
 
-  double dp = std::min(std::max(-1.0, Dot(nlhs, nrhs)
-		       / sqrt(u.sqrMag() * v.sqrMag())), 1.0);
+  CoordType dp = FloatClamp(Dot(nlhs, nrhs) / sqrt(u.sqrMag() * v.sqrMag()),
+			 -1.0, 1.0);
 
-  double angle = acos(dp);
+  CoordType angle = acos(dp);
  
   return angle;
 }
 
 template<const int dim>
-Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, double theta)
+Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
 {
-  double tmp1 = m_elem[axis1], tmp2 = m_elem[axis2];
-  double stheta = sin(theta), ctheta = cos(theta);
+  CoordType tmp1 = m_elem[axis1], tmp2 = m_elem[axis2];
+  CoordType stheta = sin(theta), ctheta = cos(theta);
 
   m_elem[axis1] = FloatSubtract(tmp1 * ctheta, tmp2 * stheta);
   m_elem[axis2] = FloatAdd(tmp2 * ctheta, tmp1 * stheta);
@@ -260,7 +258,7 @@ Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, double theta)
 
 template<const int dim>
 Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
-	double theta)
+	CoordType theta)
 {
   RotMatrix<dim> m;
 
@@ -271,10 +269,10 @@ Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
   return *this;
 }
 
-template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, double theta);
+template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta);
 
 template<const int dim>
-double Dot(const Vector<dim>& v1, const Vector<dim>& v2)
+CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   CoordType ans = 0, max_val = 0;
 
@@ -293,7 +291,7 @@ double Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template<const int dim>
-double Vector<dim>::sqrMag() const
+CoordType Vector<dim>::sqrMag() const
 {
   CoordType ans = 0;
 
@@ -303,13 +301,17 @@ double Vector<dim>::sqrMag() const
   return ans;
 }
 
-template<> Vector<2>& Vector<2>::polar(double r, double theta);
-template<> void Vector<2>::asPolar(double& r, double& theta) const;
+template<> Vector<2>& Vector<2>::polar(CoordType r, CoordType theta);
+template<> void Vector<2>::asPolar(CoordType& r, CoordType& theta) const;
 
-template<> Vector<3>& Vector<3>::polar(double r, double theta, double z);
-template<> void Vector<3>::asPolar(double& r, double& theta, double& z) const;
-template<> Vector<3>& Vector<3>::spherical(double r, double theta, double phi);
-template<> void Vector<3>::asSpherical(double& r, double& theta, double& phi) const;
+template<> Vector<3>& Vector<3>::polar(CoordType r, CoordType theta,
+				       CoordType z);
+template<> void Vector<3>::asPolar(CoordType& r, CoordType& theta,
+				   CoordType& z) const;
+template<> Vector<3>& Vector<3>::spherical(CoordType r, CoordType theta,
+					   CoordType phi);
+template<> void Vector<3>::asSpherical(CoordType& r, CoordType& theta,
+				       CoordType& phi) const;
 
 
 }} // namespace WF::Math
