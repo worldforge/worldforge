@@ -158,6 +158,33 @@ def encode_binaryX(msg, X):
 
 #see ftp://ftp.worldforge.org/users/aloril/atlas
 def all_encoding_stats(file_name="cyphesis_atlas_XML_2000-03-27.log"):
+    """output with default file_name:
+Msg count: 216
+XML:
+ Total length: 306086, Length/msg: 1417
+gzip -9 compressed file:
+ Total length:  12199, Length/msg:   56
+bzip2 -9 compressed file:
+ Total length:   7561, Length/msg:   35
+PASCII:
+ Total length:  85472, Length/msg:  396
+gzip -9 compressed file:
+ Total length:   8066, Length/msg:   37
+bzip2 -9 compressed file:
+ Total length:   6626, Length/msg:   31
+BINARY1:
+ Total length:  83980, Length/msg:  389
+gzip -9 compressed file:
+ Total length:   8373, Length/msg:   39
+bzip2 -9 compressed file:
+ Total length:   7204, Length/msg:   33
+BINARY2:
+ Total length:  57110, Length/msg:  264
+gzip -9 compressed file:
+ Total length:   7868, Length/msg:   36
+bzip2 -9 compressed file:
+ Total length:   6906, Length/msg:   32
+    """
     global all_msg
     all = open(file_name).read()
     msg_strings = re.split("<!-- .*?: -->",all)[1:]
