@@ -144,14 +144,14 @@ void Segment::populateNormals()
         h1 = get(i - 1, 0);
         h2 = get(i + 1, 0);
         
-        np[i * 3]     = h2-h1;
+        np[i * 3]     = h1-h2;
         np[i * 3 + 1] = 0.0;
         np[i * 3 + 2] = 1.0;
  
         h1 = get(i - 1, m_res);
         h2 = get(i + 1, m_res);
         
-        np[m_res * m_size * 3 + i * 3]     = h2-h1;
+        np[m_res * m_size * 3 + i * 3]     = h1-h2;
         np[m_res * m_size * 3 + i * 3 + 1] = 0.0;
         np[m_res * m_size * 3 + i * 3 + 2] = 1.0;
     }
@@ -288,7 +288,7 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
     // with sides.
     
     // temporary array used to hold each edge
-    float edge[m_size];
+    float * edge = new float[m_size];
     
     // calc top edge and copy into m_points
     fill1d(p1,p2,edge);
@@ -398,6 +398,7 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
       stride>>=1;
       depth++;
     }
+    delete [] edge;
 }
 
 void Segment::getHeightAndNormal(float x, float y, float& h,
@@ -446,8 +447,10 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
     #define I_ROUND(x) (::lrintf(x)) 
 #elif defined(HAVE_RINTF)
     #define I_ROUND(x) ((int)::rintf(x)) 
-#else
+#elif defined(HAVE_RINT)
     #define I_ROUND(x) ((int)::rint(x)) 
+#else
+    #define I_ROUND(x) ((int)(x)) 
 #endif
 
 bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,

@@ -17,6 +17,8 @@
 
 namespace Mercator {
 
+const float Terrain::defaultLevel = 8;
+
 Terrain::Terrain(unsigned int options, unsigned int resolution) : m_options(options),
                                                                   m_res(resolution)
 {
@@ -59,8 +61,10 @@ void Terrain::shadeSurfaces(Segment & seg)
     #define I_ROUND(x) (::lrintf(x)) 
 #elif defined(HAVE_RINTF)
     #define I_ROUND(x) ((int)::rintf(x)) 
-#else
+#elif defined(HAVE_RINT)
     #define I_ROUND(x) ((int)::rint(x)) 
+#else
+    #define I_ROUND(x) ((int)(x)) 
 #endif
 
 float Terrain::get(float x, float y) const

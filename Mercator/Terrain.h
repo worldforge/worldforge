@@ -48,7 +48,7 @@ class Terrain {
         return ((m_options & SHADED) == SHADED);
     }
   public:
-    static const float defaultLevel = 8;
+    static const float defaultLevel;
     explicit Terrain(unsigned int options = DEFAULT,
                      unsigned int resolution = defaultResolution);
     ~Terrain();
