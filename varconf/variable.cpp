@@ -23,9 +23,10 @@
  *            Old Forge, PA 18518
  */
  
+#include <varconf/variable.h>
+
 #include <string>
 #include <cstdio>
-#include <varconf/variable.h>
 
 #ifdef __WIN32__
 #include <tchar.h>

@@ -23,9 +23,10 @@
  *            Old Forge, PA 18518
  */
  
+#include <varconf/parse_error.h>
+
 #include <cstdio>
 #include <iostream>
-#include <varconf/parse_error.h>
 
 #ifdef __WIN32__
 #include <tchar.h>

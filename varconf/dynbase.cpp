@@ -23,9 +23,10 @@
  *            Old Forge, PA 18518
  */
  
+#include <varconf/dynbase.h>
+
 #include <string>
 #include <iostream>
-#include <varconf/dynbase.h>
 
 namespace varconf {
 namespace dynvar {

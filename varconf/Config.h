@@ -26,9 +26,8 @@
 #ifndef VARCONF_CONFIG_H
 #define VARCONF_CONFIG_H
 
-#include <iostream>
-#include <map>
-#include <string>
+#include <varconf/parse_error.h>
+#include <varconf/variable.h>
 
 #include <sigc++/object.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
@@ -36,8 +35,10 @@
 #else
 #include <sigc++/signal.h>
 #endif
-#include <varconf/parse_error.h>
-#include <varconf/variable.h>
+
+#include <iostream>
+#include <map>
+#include <string>
 
 namespace varconf {
 

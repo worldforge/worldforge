@@ -26,9 +26,10 @@
 #ifndef VARCONF_DYNTYPES_H
 #define VARCONF_DYNTYPES_H
 
-#include <string>
 #include <varconf/variable.h>
 #include <varconf/dynbase.h>
+
+#include <string>
 
 namespace varconf {
 namespace dynvar {

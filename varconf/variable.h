@@ -26,9 +26,6 @@
 #ifndef VARCONF_VARIABLE_H
 #define VARCONF_VARIABLE_H
 
-#include <string>
-#include <iostream>
-#include <vector>
 #include <sigc++/object.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/handle_system.h>
@@ -37,6 +34,9 @@
 #include <sigc++/signal.h>
 #endif
 
+#include <string>
+#include <iostream>
+#include <vector>
 
 namespace varconf {
 

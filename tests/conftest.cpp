@@ -1,7 +1,7 @@
+#include <varconf/varconf.h>
+
 #include <iostream>
 #include <string>
-
-#include "varconf/varconf.h"
 
 using namespace varconf;
 using namespace SigC;

@@ -1,4 +1,7 @@
 ChangeLog for varconf
+Friday, 17th April, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Fix up headers for clean handling, and portability.
+
 Friday, 30th January, 2003, Al Riddoch <alriddoch@zepler.org>
 	* Added mechanism to differentiate between varconf built
 	  against sigc++ 1.0 and 1.2, and use pkg-config to

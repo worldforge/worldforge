@@ -26,8 +26,9 @@
 #ifndef VARCONF_DYNBASE_H
 #define VARCONF_DYNBASE_H
 
-#include <string>
 #include <varconf/variable.h>
+
+#include <string>
 
 namespace varconf {
 namespace dynvar {
