@@ -5,26 +5,17 @@
 #ifndef MERCATOR_SURFACE_H
 #define MERCATOR_SURFACE_H
 
-#include <Mercator/Mercator.h>
+#include <Mercator/Buffer.h>
 
 namespace Mercator {
 
-    class Segment;
+class Surface : public Buffer {
+  public:
+    explicit Surface(Segment & segment);
+    virtual ~Surface();
 
-    class Surface {
-      private:
-        Segment & m_segment;
-        float * const m_colors;
-
-      public:
-        explicit Surface(Segment & segment, unsigned int channels = 4);
-        ~Surface();
-
-        float * getColors() {
-            return m_colors;
-        }
-
-    };
+    // Do we need an accessor presenting the array in colour form?
+};
 
 } // namespace Mercator
 

@@ -1,5 +1,18 @@
 2003-07-21  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Segment.h: Add accessor for the size member.
+
+	* Mercator/Buffer.h, Mercator/Buffer.cpp, Mercator/Surface.h,
+	  Mercator/Surface.cpp: Make a base class for handling
+	  float buffers for vertex, texture coord and colour data.
+	  Use it as the basis for Surface.
+
+	* Mercator/Shader.h, Mercator/Shader.cpp: Place holder for shaders
+	  which implement rules creating a surface from the segment height
+	  data according to a rule.
+
+2003-07-21  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Segment.cpp: Free the float buffers using the correct
 	  array delete operator.
 

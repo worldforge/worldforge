@@ -51,6 +51,10 @@ class Segment {
         return m_res;
     }
 
+    const int getSize() const {
+        return m_size;
+    }
+
     const bool isValid() {
         return m_validPt;
     }

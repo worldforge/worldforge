@@ -2,17 +2,17 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#include <Mercator/Surface.h>
+#include <Mercator/Shader.h>
 
 #include <Mercator/Segment.h>
 
 namespace Mercator {
 
-Surface::Surface(Segment & segment) : Buffer(segment, 4)
+Shader::Shader(Segment & segment, unsigned int channels) : m_segment(segment)
 {
 }
 
-Surface::~Surface()
+Shader::~Shader()
 {
 }
 

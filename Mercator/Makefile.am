@@ -9,6 +9,8 @@ libmercator_0_2_la_SOURCES = \
 	Matrix.cpp \
 	Terrain.cpp \
 	Segment.cpp \
+	Buffer.cpp \
+	Shader.cpp \
 	Surface.cpp
 
 libmercatordir = $(includedir)/Mercator-0.2/Mercator
@@ -20,4 +22,6 @@ libmercator_HEADERS = \
 	TerrainMod.h \
 	BasePoint.h \
 	Segment.h \
+	Buffer.h \
+	Shader.h \
 	Surface.h
