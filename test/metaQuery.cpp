@@ -8,8 +8,10 @@
 
 using std::endl;
 using std::cout;
+using std::cerr;
 
-bool queryDone = false;
+bool queryDone = false,
+    failure = false;
 
 void erisLog(Eris::LogLevel, const std::string& msg)
 {
@@ -31,6 +33,12 @@ void queriesDone()
 {
     cout << "query complete" << endl;
     queryDone = true;
+}
+
+void queryFailed(const std::string& msg)
+{
+    cerr << "got query failure: " << msg << endl;
+    failure = true;
 }
 
 void dumpToScreen(const Eris::Meta& meta)
@@ -128,13 +136,19 @@ int main(int argc, char* argv[])
     meta.CompletedServerList.connect(SigC::slot(&gotServerList));
     meta.AllQueriesDone.connect(SigC::slot(&queriesDone));
     meta.ReceivedServerInfo.connect(SigC::slot(&gotServer));
+    meta.Failure.connect(SigC::slot(&queryFailed));
     
     cout << "querying " << metaServer << endl;
     meta.refresh();
     
-    while (!queryDone)
+    while (!queryDone && !failure)
     {
         Eris::PollDefault::poll(10);
+    }
+    
+    if (failure) {
+        cerr << "querying meta server at " << metaServer << " failed" << endl;
+        return EXIT_FAILURE;
     }
     
     cout << "final list contains " << meta.getGameServerCount() << " servers." << endl;

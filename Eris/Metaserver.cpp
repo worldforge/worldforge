@@ -167,17 +167,21 @@ void Meta::connect()
 {
     disconnect();
 	
-    m_stream = new udp_socket_stream();  
-    m_stream->setTimeout(30);	
-    m_stream->setTarget(m_metaHost, META_SERVER_PORT);
+    // don't set m_stream valid till after it opens succesfully, otherwise the
+    // doFailure -> disconnect path gets knotted up
+    
+    udp_socket_stream* s = new udp_socket_stream();  
+    s->setTimeout(30);	
+    s->setTarget(m_metaHost, META_SERVER_PORT);
     
     // open connection to meta server
-    if (!m_stream->is_open())
-    {
+    if (!s->is_open()) {
         doFailure("Couldn't open connection to metaserver " + m_metaHost);
+        delete s;
         return;
     }
     
+    m_stream = s;
     Poll::instance().addStream(m_stream);
 	
     // build the initial 'ping' and send

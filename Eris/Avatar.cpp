@@ -177,7 +177,7 @@ void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
 {
     GameEntity what;
     what->setLoc(container->getId());
-   // what->setPosAsList(pos.toAtlas());
+    what->setAttr("pos", pos.toAtlas());
    // what->setVelocityAsList( .... zero ... );
     what->setId(e->getId());
 

@@ -1,3 +1,15 @@
+2004-10-27  James Turner  <james@worldforge.org>
+
+	* tests/metaQuery.cpp: detect failures of the server object, for example
+	  if the wrong hostname is provided. This should stop the tool blocking
+	  when the metaserver IP changes, for example.
+	  
+	* Eris/Metaserver.cpp: change how the udp stream is created, so that
+	  failed-to-open errors do not cause an assert in doFailure. Only set
+	  m_stream valid once the stream opens succesfully.
+
+	* Eris/Avatar.cpp: fix another commented out call to setPos
+
 2004-10-24  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Avatar.h: Add sigc++/connection.h include for sigc++ 2.0.
