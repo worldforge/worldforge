@@ -7,6 +7,7 @@
 */
 
 #include <iostream>
+#include <cstdarg>
 #include "UserClient.h"
 using namespace std;
 
