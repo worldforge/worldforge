@@ -1,0 +1,19 @@
+/** @page tutorial_simple A simple client/server
+
+Let's take a look at a really simple Atlas-C++ client and server. All that the
+server was is wait for a connection, receive something from the client and
+wait for the connection to close. The client connects to the server, sends a
+message and then closes the connection.
+
+@section server The Server
+
+@verbinclude simple_server.cc
+
+@section client The Client
+
+@verbinclude simple_client.cc
+
+@ref tutorial_index
+
+@author Stefanus Du Toit <sdt@gmx.net>
+*/
