@@ -16,14 +16,16 @@ class GenerateForward:
         self.out = open(outfile + ".tmp", "w")
         header_list = ['Atlas', 'Objects', 'Objects', 'Fwd', 'H']
         self.header(header_list)
-        self.write("#include <Atlas/Objects/SmartPtr.h>\n\n")
         self.ns_open(self.base_list)
         self.write("""
+template <class T> class SmartPtr;
+
 class ObjectsDecoder;
 
 class ObjectsEncoder;
 
 class Dispatcher;
+
 """)
         for (obj, namespace) in objects:
             if len(namespace) != 0:

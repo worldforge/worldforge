@@ -1,3 +1,9 @@
+2003-10-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateForward.py: Make forward header a true
+	  forward header by forward declaring SmartPtr instead of
+	  including SmartPtr.h.
+
 2003-08-10  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Message/Element.h: Add an explicit operator!= for gccs 
