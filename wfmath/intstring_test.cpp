@@ -34,12 +34,12 @@ using namespace WFMath;
 static void TestConvert()
 {
   for(unsigned i = 0; i < 100; ++i) {
-    unsigned int val = IRand(UINT_MAX);
+    unsigned long val = MTRand::instance.randInt();
     assert(strtoul(IntToString(val).c_str(), 0, 0) == val);
     // This assignment changes the value, but we just want a
     // random number, so we don't care. Large unsigned ints will
     // provide us negative numbers for testing.
-    int val2 = (int) val;
+    long val2 = (long) val;
     assert(atoi(IntToString(val2).c_str()) == val2);
   }
 }

@@ -27,19 +27,25 @@
 #define WFMATH_RANDGEN_H
 
 #include <wfmath/const.h>
+#include <wfmath/MersenneTwister.h>
 
 namespace WFMath {
 
+// backwards compatibility functions
+
+#ifdef WFMATH_USE_OLD_RAND
+
 /// Seed WFMath's random number generators.
 /**
- * The random number generators use rand(). They are seeded by the
- * clock if SeedRand() isn't called.
+ * The random number generators use a static instance of MTRand.
  **/
-void SeedRand(unsigned int);
+void SeedRand(unsigned int val) {MTRand::instance.seed(val);}
 /// Get a random number between 0 and 1
-double DRand();
+double DRand() {return MTRand::instance.rand();}
 /// Get a random integer ranging from 0 to (val passed) - 1
-unsigned int IRand(unsigned int);
+unsigned int IRand(unsigned int val) {assert(val); return MTRand::instance.randInt(val - 1);}
+
+#endif
 
 } // namespace WFMath
 

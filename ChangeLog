@@ -1,5 +1,14 @@
 Monday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
 
+	* Changed to using Mersenne Twister for random number
+	  generation. Anyone who wants the old interface
+	  should #define WFMATH_USE_OLD_RAND.
+	* Dropped old, deprecated intersect interface version.
+	  This version of the API was used briefly in stage
+	  at one point, and that was at least a year ago.
+
+Monday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
+
 	* Forgot to change to 0.3 in wfmath/Makefile.am, fixed that.
 	* Got rid of support for old 'list of lists' encoding
 	  for AxisBox in atlasconv.h. Also got rid of a bunch

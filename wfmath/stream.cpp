@@ -25,6 +25,7 @@
 
 #include "stream.h"
 #include "quaternion.h"
+#include "MersenneTwister.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -231,6 +232,25 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
     throw ParseError();
 
   return is;
+}
+
+std::ostream& operator<<( std::ostream& os, const MTRand& mtrand )
+{
+	register const MTRand::uint32 *s = mtrand.state;
+	register int i = mtrand.N;
+	for( ; i--; os << *s++ << "\t" ) {}
+	return os << mtrand.left;
+}
+
+
+std::istream& operator>>( std::istream& is, MTRand& mtrand )
+{
+	register MTRand::uint32 *s = mtrand.state;
+	register int i = mtrand.N;
+	for( ; i--; is >> *s++ ) {}
+	is >> mtrand.left;
+	mtrand.pNext = &mtrand.state[mtrand.N-mtrand.left];
+	return is;
 }
 
 } // namespace WFMath

@@ -25,74 +25,35 @@
 
 #include "randgen.h"
 #include "timestamp.h"
+#include <ctime>
+#include <cstdio>
 
 #ifdef HAVE_CONFIG_H
 	#include "config.h"
 #endif
 
-static bool seed()
+WFMath::MTRand WFMath::MTRand::instance;
+
+void WFMath::MTRand::seed()
 {
-  // seed with msecs in current time
-  unsigned int seed_val = (unsigned int) (WFMath::TimeStamp::now()
-	- WFMath::TimeStamp::epochStart()).milliseconds();
-
-  // swap low and high bits, so the most random bits are
-  // the most significant
-  const int var_bits = sizeof(unsigned int) * 8;
-  unsigned int swapped_seed_val = 0;
-  for(int i = 0; i < var_bits / 2; ++i) {
-    int shift = var_bits - (2 * i + 1);
-    swapped_seed_val |= ((seed_val & (1 << i)) << shift)
-                      | ((seed_val & (1 << (var_bits - (i + 1)))) >> shift);
-  }
-
-  srand(swapped_seed_val);
-
-  return true;
+	// Seed the generator with an array from /dev/urandom if available
+	// Otherwise use a hash of time() and clock() values
+	
+	// First try getting an array from /dev/urandom
+	FILE* urandom = fopen( "/dev/urandom", "rb" );
+	if( urandom )
+	{
+		uint32 bigSeed[N];
+		register uint32 *s = bigSeed;
+		register int i = N;
+		register bool success = true;
+		while( success && i-- )
+			success = fread( s++, sizeof(uint32), 1, urandom );
+		fclose(urandom);
+		if( success ) { seed( bigSeed, N );  return; }
+	}
+	
+	// Was not successful, so use time() and clock() instead
+	seed( hash( time(NULL), clock() ) );
 }
 
-// Force seeding at program start time
-static bool seeded = seed(); 
-
-// Use these to work around systems with
-// poor implementations of rand()
-static inline unsigned int MyRand() {return rand();}
-const unsigned int MyRandMax = RAND_MAX;
-
-void WFMath::SeedRand(unsigned int seed_val)
-{
-  srand(seed_val);
-}
-
-double WFMath::DRand() // returns between 0 and 1
-{
-  return ((double) MyRand()) / ((double) MyRandMax);
-}
-
-unsigned int WFMath::IRand(unsigned int max) // returns from 0 to arg-1
-{
-  assert("Need valid input" && max > 0);
-
-  unsigned rand_max = MyRandMax, rand_val = MyRand();
-  // The UINT_MAX check should make it easier for the
-  // compiler to optimize this away when it's not needed.
-  while(UINT_MAX > MyRandMax && max > rand_max) {
-    if(max == rand_max + 1)
-      return rand_val;
-    // deal with 16 bit rand with 32 bit ints
-    rand_val += MyRand() * (rand_max + 1);
-    rand_max += MyRandMax * (rand_max + 1);
-  }
-
-  unsigned int divisor = rand_max / max;
-  unsigned int ans = rand_val / divisor;
-
-  if(ans < max)
-    return ans;
-
-  // Rounding error, rare case
-
-  unsigned int leftover = rand_max - rand_val;
-  assert(leftover < max);
-  return leftover;
-}

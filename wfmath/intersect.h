@@ -35,36 +35,6 @@
 
 namespace WFMath {
 
-// Deprecated, to be removed in 0.3
-
-#ifndef WFMATH_DEPRECATE_OLD_INTERSECT
-
-template<class S1, class S2>
-inline bool Intersect(const S1& s1, const S2& s2)
-{
-  return Intersect(s1, s2, false);
-}
-
-template<class S1, class S2>
-inline bool Contains(const S1& s1, const S2& s2)
-{
-  return Contains(s1, s2, false);
-}
-
-template<class S1, class S2>
-inline bool IntersectProper(const S1& s1, const S2& s2)
-{
-  return Intersect(s1, s2, true);
-}
-
-template<class S1, class S2>
-inline bool ContainsProper(const S1& s1, const S2& s2)
-{
-  return Contains(s1, s2, true);
-}
-
-#endif
-
 // Get the reversed order intersect functions (is this safe? FIXME)
 
 template<class S1, class S2>

@@ -5,3 +5,8 @@ The Miniball code of Bernd Gaertner
 <http://www.inf.ethz.ch/personal/gaertner>
 is used for finding bounding spheres for
 collections of points.
+
+The Mersenne Twister code of Richard J. Wagner
+<rjwagner@writeme.com> is used for random
+number generation.
+

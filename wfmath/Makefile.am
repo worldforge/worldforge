@@ -1,10 +1,11 @@
-AM_CXXFLAGS = -O2 -Wall -DWFMATH_DEPRECATE_OLD_INTERSECT
+AM_CXXFLAGS = -O2 -Wall
 INCLUDES = -I$(top_srcdir)
 EXTRA_DIST = bc_sloppy_mag_3
 
 headerdir = $(includedir)/wfmath-0.3/wfmath
 header_HEADERS = error.h const.h int_to_string.h \
-	probability.h timestamp.h randgen.h shuffle.h \
+	probability.h timestamp.h \
+	MersenneTwister.h randgen.h shuffle.h \
 	vector.h vector_funcs.h \
 	rotmatrix.h rotmatrix_funcs.h \
 	point.h point_funcs.h \
