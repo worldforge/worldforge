@@ -5,11 +5,11 @@ inline float randHalf() {
 	return (float) rand() / RAND_MAX - 0.5f;
 }
 
-inline float qRMD(float nn, float fn, float ff, float nf, float roughness, float falloff) {
+inline float qRMD(float nn, float fn, float ff, float nf, float roughness, float falloff, int depth) {
     float heightDifference = std::max(std::max(nn, fn), std::max(nf, ff)) -
                              std::min(std::min(nn, fn), std::min(nf, ff));
  
-    return ((nn+fn+ff+nf)/4.f) + randHalf() * roughness * heightDifference / (1.f+falloff);
+    return ((nn+fn+ff+nf)/4.f) + randHalf() * roughness * heightDifference / (1.f+::pow(depth,falloff));
 }
 
 
@@ -22,11 +22,12 @@ void fill1d(int size, float falloff, float roughness, float l, float h, float *a
     assert(falloff!=-1.0);
 
     int stride = size/2;
-    float f = falloff*falloff;
+    //float f = falloff*falloff;
 
     array[0] = l;
     array[size] = h;
  
+    int depth=1;
     //seed the RNG
     srand((unsigned int)(l*h*10.232313));
     while (stride) {
@@ -35,10 +36,11 @@ void fill1d(int size, float falloff, float roughness, float l, float h, float *a
 	    float lh = array[i+stride];
             float hd = fabs(hh-lh);
  
-            array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1+f);
+            array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1+::pow(depth,falloff));//f);
 	}
         stride >>= 1;
-	f*=falloff*falloff;
+	depth+=2;
+	//f*=falloff*falloff;
     }
 }
 
@@ -89,6 +91,7 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
     srand((unsigned int)(tot*10.22321));
 
     float f = falloff;
+    int depth=0;
     
     //center of array is done separately
     array[stride*line + stride] = qRMD( array[0 * line + size/2],
@@ -96,7 +99,7 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
                                         array[size/2*line + size],
                                         array[size*line + size/2],
 					roughness,
-					f);
+					f, depth);
 		    
     stride >>= 1;
 
@@ -114,11 +117,12 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
                                        array[(i+stride) + (j-stride) * (line)],
                                        array[(i+stride) + (j+stride) * (line)],
                                        array[(i-stride) + (j-stride) * (line)],
-			               roughness, f);
+			               roughness, f, depth);
 	  }
       }
 
-      f *= falloff;
+      depth++;
+      //f *= falloff;
       //Plus shape - + contributes to value at X
       //. + .
       //+ X +
@@ -129,7 +133,7 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
                                        array[(i+stride) + (j) * (line)],
                                        array[(i) + (j+stride) * (line)],
                                        array[(i) + (j-stride) * (line)], 
-                                       roughness, f );
+                                       roughness, f , depth);
 	  }
       }
 	       
@@ -139,12 +143,13 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
                                        array[(i+stride) + (j) * (line)],
                                        array[(i) + (j+stride) * (line)],
                                        array[(i) + (j-stride) * (line)],
-                                       roughness, f);
+                                       roughness, f, depth);
           }
       }
 
       stride>>=1;
-      f *= falloff;
+      //f *= falloff;
+      depth++;
     }
 } 
 #if 0
