@@ -42,7 +42,11 @@ int main(int argc, char** argv)
     cout << "Connecting..." << flush;
     
     // Connect to the server
-    stream->connect("127.0.0.1", 6767);
+    if(argc>1) {
+      stream->connect(argv[1], 6767);
+    } else {
+      stream->connect("127.0.0.1", 6767);
+    }
     
     // The DebugBridge puts all that comes through the codec on cout
     DebugBridge bridge;
