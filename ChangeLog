@@ -1,3 +1,5 @@
+Monday, December 17, 2001	Ron Steinke <rsteinke@w-link.net>
+
 	* Wrote Shape<> base class
 	* Wrote AxisBox<> class
 	* Cleaned up header file naming convention, so foo_funcs.h is
