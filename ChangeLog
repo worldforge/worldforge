@@ -1,3 +1,7 @@
+2003-12-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/SmartPtr_Move.cpp: Sort out DEBUG definition clash.
+
 2003-12-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* Clean up and canonicalise configure.ac.

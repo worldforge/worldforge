@@ -16,6 +16,7 @@ public:
 
 //#undef assert
 //#define assert(expr)		((void) 0)
+#undef DEBUG
 #define DEBUG 0
 #if DEBUG
 #define MAX_ITER 10.0
