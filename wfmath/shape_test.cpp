@@ -1,5 +1,5 @@
 // -*-C++-*-
-// intersect_test.cpp (shape intersection test functions)
+// shape_test.cpp (basic shape test functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -36,6 +36,9 @@
 #include "stream.h"
 #include <vector>
 
+#include "general_test.h"
+#include "shape_test.h"
+
 using namespace WF::Math;
 
 template<const int dim>
@@ -46,6 +49,9 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   AxisBox<dim> box(p1, p2), tmp;
 
   cout << "Testing " << box << std::endl;
+
+  test_general(box);
+  test_shape_no_rotate(box);
 
   tmp = Union(box, box);
   assert(tmp == box);
@@ -67,6 +73,9 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   cout << "Testing " << ball << std::endl;
 
+  test_general(ball);
+  test_shape(ball);
+
   assert(Intersect(ball, p1));
   assert(IntersectProper(ball, p1));
 
@@ -85,6 +94,9 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   Segment<dim> seg(p1, p2);
 
   cout << "Testing " << seg << std::endl;
+
+  test_general(seg);
+  test_shape(seg);
 
   assert(Intersect(seg, p1));
   assert(!IntersectProper(seg, p1));
@@ -111,6 +123,9 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, WFMATH_CONST_PI / 6));
 
   cout << "Testing " << rbox << std::endl;
+
+  test_general(rbox);
+  test_shape(rbox);
 
   assert(Intersect(rbox, p1));
   assert(!IntersectProper(rbox, p1));

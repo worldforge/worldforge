@@ -51,12 +51,15 @@ class Polygon<2>
 {
  public:
   Polygon() {}
-  Polygon(const Polygon& p) : m_points(m_points) {}
+  Polygon(const Polygon& p) : m_points(p.m_points) {}
 
   ~Polygon() {}
 
   friend std::ostream& operator<< <2>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <2>(std::istream& is, Polygon& p);
+
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
 
   Polygon& operator=(const Polygon& p)
 	{m_points = p.m_points; return *this;}
@@ -97,6 +100,8 @@ class Polygon<2>
   const Point<2>& operator[](int i) const {return m_points[i];}
   Point<2>& operator[](int i)		  {return m_points[i];}
 
+  void resize(unsigned int size) {m_points.resize(size);}
+
   // Movement functions
 
   Polygon& shift(const Vector<2>& v);
@@ -116,7 +121,7 @@ class Polygon<2>
   AxisBox<2> boundingBox() const {return BoundingBox(m_points);}
   Ball<2> boundingSphere() const {return BoundingSphere(m_points);}
   Ball<2> boundingSphereSloppy() const {return BoundingSphereSloppy(m_points);}
-/*
+
   friend bool Intersect<2>(const Polygon& r, const Point<2>& p);
   friend bool IntersectProper<2>(const Polygon& r, const Point<2>& p);
   friend bool Contains<2>(const Point<2>& p, const Polygon& r);
@@ -153,7 +158,7 @@ class Polygon<2>
   friend bool IntersectProper<2>(const Polygon& p1, const Polygon& p2);
   friend bool Contains<2>(const Polygon& outer, const Polygon& inner);
   friend bool ContainsProper<2>(const Polygon& outer, const Polygon& inner);
-*/
+
  private:
   vector<Point<2> > m_points;
   typedef vector<Point<2> >::iterator theIter;
@@ -216,6 +221,12 @@ class _Poly2Orient
 
   void shift(const Vector<dim>& v) {if(m_origin_valid) m_origin += v;}
   void rotate(const RotMatrix<dim>& m, const Point<dim>& p);
+  // Rotates about the point which corresponds to "p" in the oriented plane
+  void rotate(const RotMatrix<dim>& m, const Point<2>& p);
+
+  // Gives the offset from pd to the space spanned by
+  // the basis, and puts the nearest point in p2.
+  Vector<dim> offset(const Point<dim>& pd, Point<2>& p2) const;
 
  private:
   Point<dim> m_origin;
@@ -234,6 +245,9 @@ class Polygon
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <dim>(std::istream& is, Polygon& p);
+
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
 
   Polygon& operator=(const Polygon& p)
 	{m_orient = p.m_orient; m_poly = p.m_poly; return *this;}
@@ -282,9 +296,11 @@ class Polygon
 	{return shift(p - getCenter());}
 
   Polygon& rotateCorner(const RotMatrix<dim>& m, int corner)
-	{rotatePoint(m, getCorner(corner)); return *this;}
+	{m_orient.rotate(m, m_poly[corner]); return *this;}
   Polygon& rotateCenter(const RotMatrix<dim>& m)
-	{rotatePoint(m, getCenter()); return *this;}
+	{if(m_poly.numCorners() > 0)
+		m_orient.rotate(m, m_poly.getCenter());
+	 return *this;}
   Polygon& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_orient.rotate(m, p); return *this;}
 
@@ -293,7 +309,7 @@ class Polygon
   AxisBox<dim> boundingBox() const;
   Ball<dim> boundingSphere() const;
   Ball<dim> boundingSphereSloppy() const;
-/*
+
   friend bool Intersect<dim>(const Polygon& r, const Point<dim>& p);
   friend bool IntersectProper<dim>(const Polygon& r, const Point<dim>& p);
   friend bool Contains<dim>(const Point<dim>& p, const Polygon& r);
@@ -330,7 +346,7 @@ class Polygon
   friend bool IntersectProper<dim>(const Polygon& p1, const Polygon& p2);
   friend bool Contains<dim>(const Polygon& outer, const Polygon& inner);
   friend bool ContainsProper<dim>(const Polygon& outer, const Polygon& inner);
-*/
+
  private:
 
   _Poly2Orient<dim> m_orient;

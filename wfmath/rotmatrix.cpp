@@ -73,16 +73,16 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 
   Vector<3> wvec = vref * q.scalar();
 
-  m_elem[0][0] = FloatSubtract(1, 2 * FloatAdd(xx, yy));
+  m_elem[0][0] = FloatSubtract(1, 2 * FloatAdd(yy, zz));
   m_elem[1][1] = FloatSubtract(1, 2 * FloatAdd(xx, zz));
-  m_elem[2][2] = FloatSubtract(1, 2 * FloatAdd(yy, zz));
+  m_elem[2][2] = FloatSubtract(1, 2 * FloatAdd(xx, yy));
 
-  m_elem[0][1] = 2 * FloatAdd(xy, wvec[2]);
-  m_elem[0][2] = 2 * FloatSubtract(xz, wvec[1]);
-  m_elem[1][0] = 2 * FloatSubtract(xy, wvec[2]);
-  m_elem[1][2] = 2 * FloatAdd(yz, wvec[0]);
-  m_elem[2][0] = 2 * FloatAdd(xz, wvec[1]);
-  m_elem[2][1] = 2 * FloatSubtract(xy, wvec[0]);
+  m_elem[0][1] = 2 * FloatSubtract(xy, wvec[2]);
+  m_elem[0][2] = 2 * FloatAdd(xz, wvec[1]);
+  m_elem[1][0] = 2 * FloatAdd(xy, wvec[2]);
+  m_elem[1][2] = 2 * FloatSubtract(yz, wvec[0]);
+  m_elem[2][0] = 2 * FloatSubtract(xz, wvec[1]);
+  m_elem[2][1] = 2 * FloatAdd(yz, wvec[0]);
 
   m_flip = !not_flip;
 

@@ -76,9 +76,14 @@ namespace WF { namespace Math {
 template<>
 std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
 {
-  os << "Polygon: (";
-
   int size = r.m_points.size();
+
+  if(size == 0) {
+    os << "<empty>";
+    return os;
+  }
+
+  os << "Polygon: (";
 
   for(int i = 0; i < size; ++i) {
     os << r.m_points[i] << (i < (size - 1) ? ',' : ')');
@@ -99,6 +104,14 @@ std::istream& operator>>(std::istream& is, Polygon<2>& r)
     if(!is)
       return is;
     is >> next;
+    if(next == '<') { // empty polygon
+       do {
+         if(!is)
+           return is;
+         is >> next;
+       } while(next != '>');
+       return is;
+    }
   } while(next != '(');
 
   while(true) {

@@ -68,6 +68,9 @@ class AxisBox
   friend std::ostream& operator<< <dim>(std::ostream& os, const AxisBox& a);
   friend std::istream& operator>> <dim>(std::istream& is, AxisBox& a);
 
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
+
   AxisBox& operator=(const AxisBox& a)
 	{m_low = a.m_low; m_high = a.m_high; return *this;}
 
@@ -144,6 +147,13 @@ class AxisBox
   friend bool ContainsProper<dim>(const RotBox<dim>& r, const AxisBox& b);
   friend bool Contains<dim>(const AxisBox& b, const RotBox<dim>& r);
   friend bool ContainsProper<dim>(const AxisBox& b, const RotBox<dim>& r);
+
+  friend bool Intersect<dim>(const Polygon<dim>& p, const AxisBox& b);
+  friend bool IntersectProper<dim>(const Polygon<dim>& p, const AxisBox& b);
+  friend bool Contains<dim>(const Polygon<dim>& p, const AxisBox& b);
+  friend bool ContainsProper<dim>(const Polygon<dim>& p, const AxisBox& b);
+  friend bool Contains<dim>(const AxisBox& b, const Polygon<dim>& p);
+  friend bool ContainsProper<dim>(const AxisBox& b, const Polygon<dim>& p);
 
  private:
 

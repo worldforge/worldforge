@@ -1,5 +1,5 @@
 // -*-C++-*-
-// atlas_tests.cpp (WFMath/Atlas Message conversion test code)
+// polygon_test.cpp (Polygon<> test functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -22,38 +22,57 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 
 // Author: Ron Steinke
-// Created: 2001-12-12
+// Created: 2002-1-20
 
-#include<Atlas/Message/Object.h>
-#include "atlasconv.h"
+#include "const.h"
+#include "vector.h"
+#include "rotmatrix.h"
+#include "point.h"
+#include "polygon.h"
+#include "stream.h"
+#include <vector>
+
+#include "general_test.h"
+#include "shape_test.h"
 
 using namespace WF::Math;
 
-template<class C>
-void atlas_test(const C& c)
+template<const int dim>
+void test_polygon(const Polygon<dim>& p)
 {
-//  cout << c << std::endl;
-  Atlas::Message::Object a = c.toAtlas();
-  C out;
-  assert(out.fromAtlas(a));
-//  cout << out << std::endl;
-  // Only match to string precision
-  assert(c.isEqualTo(out, FloatMax(WFMATH_EPSILON,1e-5)));
+  cout << "Testing " << p << std::endl;
+
+  test_general(p);
+  test_shape(p);
+
+  // FIXME more tests
 }
 
 int main()
 {
-  Point<3> p(1, 0, WFMATH_CONST_SQRT2);
-  atlas_test(p);
+  bool succ;
 
-  Vector<2> v(1, -1);
-  atlas_test(v);
+  Polygon<2> p2;
 
-  Polygon<2> pol2;
-  atlas_test(pol2);
+  succ = p2.addCorner(0, Point<2>(1, -1));
+  assert(succ);
+  succ = p2.addCorner(0, Point<2>(2, -1));
+  assert(succ);
+  succ = p2.addCorner(0, Point<2>(1, -3));
+  assert(succ);
 
-  Polygon<3> pol3;
-  atlas_test(pol3);
+  test_polygon(p2);
+
+  Polygon<3> p3;
+
+  succ = p3.addCorner(0, Point<3>(1, -1, 5));
+  assert(succ);
+  succ = p3.addCorner(0, Point<3>(2, -1, sqrt(3.0/2)));
+  assert(succ);
+  succ = p3.addCorner(0, Point<3>(1, -3, 2.0/3));
+  assert(succ);
+
+  test_polygon(p3);
 
   return 0;
 }

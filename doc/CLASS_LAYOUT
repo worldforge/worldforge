@@ -12,7 +12,7 @@ construction can fail. The destructor is not virtual, nor is any other
 function in the class, as this is a low-level library designed primarily
 for speed.
 
-2) operator<<() and operator>>()
+2) operator<<() and operator>>(), toAtlas() and fromAtlas()
 
 friend std::ostream& operator<<(std::ostream& os, const Foo& f);
 friend std::istream& operator>>(std::istream& is, Foo& f);
@@ -20,7 +20,11 @@ friend std::istream& operator>>(std::istream& is, Foo& f);
 operator>>() indicates a parse failure by setting the fail() flag on the stream.
 Failure also indicates that the object is in an invalid state. The definitions
 of these functions are placed in the file stream.h, so the class only needs to
-include <iosfwd>.
+include <iosfwd>. The toAtlas() and fromAtlas() functions need a forward
+declaration of Atlas::Message::Object, which is done in const.h. The
+implementations of these functions belong in atlasconv.h, and must be
+done inline or as templates, so that the library can be built and
+used without libAtlas.
 
 3) operator=()
 
@@ -52,8 +56,7 @@ sort only, if comparison makes sense stick others here too
 
 e.g. Vector(CoordType& x, CoordType& y, CoordType& z) for Vector<3>
 
-Every class is also defines four non-member functions:
-ToString() and FromString() in stream.h, and ToAtlas() and
-FromAtlas() in atlasconv.h. These functions are automatically
-generated using templates and operator<<() and operator>>()
-functions.
+Every class is also defines two non-member functions:
+ToString() and FromString(). These functions are
+automatically generated in stream.h using templates
+and the operator<<() and operator>>() functions.

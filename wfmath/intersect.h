@@ -167,7 +167,8 @@ bool ContainsProper(const AxisBox<dim>& outer, const AxisBox<dim>& inner)
 template<const int dim>
 bool Intersect(const Ball<dim>& b, const Point<dim>& p)
 {
-  return SquaredDistance(b.m_center, p) <= b.m_radius * b.m_radius;
+  return SquaredDistance(b.m_center, p) <= b.m_radius * b.m_radius
+					   * (1 + WFMATH_EPSILON);
 }
 
 template<const int dim>
@@ -229,13 +230,13 @@ bool Contains(const Ball<dim>& b, const AxisBox<dim>& a)
 {
   CoordType sqr_dist = 0;
 
-  for(int i = 0; i < (1 << dim); ++i) {
+  for(int i = 0; i < dim; ++i) {
     CoordType furthest = FloatMax(fabs(b.m_center[i] - a.m_low[i]),
 			       fabs(b.m_center[i] - a.m_high[i]));
     sqr_dist += furthest * furthest;
   }
 
-  return sqr_dist <= b.m_radius * b.m_radius;
+  return sqr_dist <= b.m_radius * b.m_radius * (1 + WFMATH_EPSILON);
 }
 
 template<const int dim>
@@ -243,7 +244,7 @@ bool ContainsProper(const Ball<dim>& b, const AxisBox<dim>& a)
 {
   CoordType sqr_dist = 0;
 
-  for(int i = 0; i < (1 << dim); ++i) {
+  for(int i = 0; i < dim; ++i) {
     CoordType furthest = FloatMax(fabs(b.m_center[i] - a.m_low[i]),
 			       fabs(b.m_center[i] - a.m_high[i]));
     sqr_dist += furthest * furthest;
@@ -257,7 +258,7 @@ bool Contains(const AxisBox<dim>& a, const Ball<dim>& b)
 {
   // Don't use FloatAdd(), only need values for comparison
 
-  for(int i = 0; i < (1 << dim); ++i)
+  for(int i = 0; i < dim; ++i)
     if(b.m_center[i] - b.m_radius < a.lowerBound(i)
        || b.m_center[i] + b.m_radius > a.upperBound(i))
       return false;
@@ -270,7 +271,7 @@ bool ContainsProper(const AxisBox<dim>& a, const Ball<dim>& b)
 {
   // Don't use FloatAdd(), only need values for comparison
 
-  for(int i = 0; i < (1 << dim); ++i)
+  for(int i = 0; i < dim; ++i)
     if(b.m_center[i] - b.m_radius <= a.lowerBound(i)
        || b.m_center[i] + b.m_radius >= a.upperBound(i))
       return false;
@@ -574,17 +575,17 @@ bool Intersect(const Segment<dim>& s1, const Segment<dim>& s2)
   Vector<dim> v1 = s1.m_p2 - s1.m_p1, v2 = s2.m_p2 - s2.m_p1,
 	      deltav = s2.m_p1 - s1.m_p1;
 
-  CoordType v1sqr = v1.sqrMag(), v2sqr = v2.sqrMag(), deltavsqr = deltav.sqrMag();
+  CoordType v1sqr = v1.sqrMag(), v2sqr = v2.sqrMag();
   CoordType proj12 = Dot(v1, v2), proj1delta = Dot(v1, deltav),
 	    proj2delta = Dot(v2, deltav);
 
   CoordType denom = FloatSubtract(v1sqr * v2sqr, proj12 * proj12);
 
-  if(!IsFloatEqual(FloatAdd(v2sqr * proj1delta * proj1delta,
-			    v1sqr * proj2delta * proj2delta),
-		   FloatAdd(2 * proj12 * proj1delta * proj2delta,
-			    deltavsqr * denom)))
-    return false; // Lines don't intersect
+  if(dim > 2 && !IsFloatEqual(FloatAdd(v2sqr * proj1delta * proj1delta,
+				       v1sqr * proj2delta * proj2delta),
+			      FloatAdd(2 * proj12 * proj1delta * proj2delta,
+				       deltav.sqrMag() * denom)))
+    return false; // Skew lines; don't intersect
 
   if(denom > 0) {
     // Find the location of the intersection point in parametric coordinates,
@@ -596,7 +597,7 @@ bool Intersect(const Segment<dim>& s1, const Segment<dim>& s2)
     return coord1 >= 0 && coord1 <= 1 && coord2 >= 0 && coord2 <= 1;
   }
   else {
-    // Colinear segments, see if one contains an endpoint of the other
+    // Parallel segments, see if one contains an endpoint of the other
     return Contains(s1, s2.m_p1) || Contains(s1, s2.m_p2)
 	|| Contains(s2, s1.m_p1) || Contains(s2, s1.m_p2);
   }
@@ -611,17 +612,17 @@ bool IntersectProper(const Segment<dim>& s1, const Segment<dim>& s2)
   Vector<dim> v1 = s1.m_p2 - s1.m_p1, v2 = s2.m_p2 - s2.m_p1,
 	      deltav = s2.m_p1 - s1.m_p1;
 
-  CoordType v1sqr = v1.sqrMag(), v2sqr = v2.sqrMag(), deltavsqr = deltav.sqrMag();
+  CoordType v1sqr = v1.sqrMag(), v2sqr = v2.sqrMag();
   CoordType proj12 = Dot(v1, v2), proj1delta = Dot(v1, deltav),
 	    proj2delta = Dot(v2, deltav);
 
   CoordType denom = FloatSubtract(v1sqr * v2sqr, proj12 * proj12);
 
-  if(!IsFloatEqual(FloatAdd(v2sqr * proj1delta * proj1delta,
-			    v1sqr * proj2delta * proj2delta),
-		   FloatAdd(2 * proj12 * proj1delta * proj2delta,
-			    deltavsqr * denom)))
-    return false; // Lines don't intersect
+  if(dim > 2 && !IsFloatEqual(FloatAdd(v2sqr * proj1delta * proj1delta,
+				       v1sqr * proj2delta * proj2delta),
+			      FloatAdd(2 * proj12 * proj1delta * proj2delta,
+				       deltav.sqrMag() * denom)))
+    return false; // Skew lines; don't intersect
 
   if(denom > 0) {
     // Find the location of the intersection point in parametric coordinates,
@@ -633,7 +634,7 @@ bool IntersectProper(const Segment<dim>& s1, const Segment<dim>& s2)
     return coord1 > 0 && coord1 < 1 && coord2 > 0 && coord2 < 1;
   }
   else {
-    // Colinear segments, see if one contains an endpoint of the other
+    // Parallel segments, see if one contains an endpoint of the other
     return ContainsProper(s1, s2.m_p1) || ContainsProper(s1, s2.m_p2)
 	|| ContainsProper(s2, s1.m_p1) || ContainsProper(s2, s1.m_p2)
 	// Degenerate case, nonzero length
@@ -973,6 +974,9 @@ bool ContainsProper(const RotBox<dim>& outer, const RotBox<dim>& inner)
 			RotBox<dim>(inner.m_corner0, inner.m_size,
 				    InvProd(outer.m_orient, inner.m_orient)));
 }
+
+// Polygon<> intersection functions are in polygon_funcs.h, to avoid
+// unnecessary inclusion of <vector>
 
 }} // namespace WF::Math
 

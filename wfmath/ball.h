@@ -65,6 +65,9 @@ class Ball
   friend std::ostream& operator<< <dim>(std::ostream& os, const Ball& b);
   friend std::istream& operator>> <dim>(std::istream& is, Ball& b);
 
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
+
   Ball& operator=(const Ball& b)
 	{m_radius = b.m_radius; m_center = b.m_center; return *this;}
 
@@ -141,6 +144,13 @@ class Ball
   friend bool ContainsProper<dim>(const RotBox<dim>& r, const Ball& b);
   friend bool Contains<dim>(const Ball& b, const RotBox<dim>& r);
   friend bool ContainsProper<dim>(const Ball& b, const RotBox<dim>& r);
+
+  friend bool Intersect<dim>(const Polygon<dim>& p, const Ball& b);
+  friend bool IntersectProper<dim>(const Polygon<dim>& p, const Ball& b);
+  friend bool Contains<dim>(const Polygon<dim>& p, const Ball& b);
+  friend bool ContainsProper<dim>(const Polygon<dim>& p, const Ball& b);
+  friend bool Contains<dim>(const Ball& b, const Polygon<dim>& p);
+  friend bool ContainsProper<dim>(const Ball& b, const Polygon<dim>& p);
 
  private:
 

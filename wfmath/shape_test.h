@@ -65,6 +65,7 @@ void test_shape_no_rotate(const Shape<dim>& s)
   AxisBox<dim> box = s.boundingBox();
   assert(Contains(box, s));
   Ball<dim> ball1 = s.boundingSphere(), ball2 = s.boundingSphereSloppy();
+//  cout << ball1 << std::endl << ball2 << std::endl;
   assert(Contains(ball1, s));
   assert(Contains(ball2, ball1));
 }

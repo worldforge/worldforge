@@ -29,6 +29,7 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
+#include <wfmath/quaternion.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
@@ -282,25 +283,35 @@ template<> std::istream& operator>>(std::istream& is, Polygon<2>& r);
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
 {
+  int size = r.m_poly.numCorners();
+
+  if(size == 0) {
+    os << "<empty>";
+    return os;
+  }
+
   os << "Polygon: (";
 
-  for(int i = 0; i < r.m_poly.numCorners(); ++i) {
+  for(int i = 0; i < size; ++i)
     os << r.getCorner(i) << (i < (dim - 1) ? ',' : ')');
-  }
 
   return os;
 }
+
+// Can't stick this in operator>>(std::istream&, Polygon<>&), because
+// we use it as a template argument for list<>. Why isn't that allowed?
+template<const int dim> struct _PolyReader
+{
+  Point<dim> pd;
+  Point<2> p2;
+};
 
 template<const int dim>
 std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 {
   char next;
-  typedef struct {
-    Point<dim> pd;
-    Point<2> p2;
-  } _PolyReader;
-  _PolyReader read;
-  list<_PolyReader> read_list;
+  _PolyReader<dim> read;
+  list<_PolyReader<dim> > read_list;
 
   // Read in the points
 
@@ -308,6 +319,14 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
     if(!is)
       return is;
     is >> next;
+    if(next == '<') { // empty polygon
+       do {
+         if(!is)
+           return is;
+         is >> next;
+       } while(next != '>');
+       return is;
+    }
   } while(next != '(');
 
   while(true) {
@@ -329,7 +348,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
   // round off error can skew the plane, and later points that are further
   // away may fail.
 
-  list<_PolyReader>::iterator i, end = read_list.end();
+  list<_PolyReader<dim> >::iterator i, end = read_list.end();
   bool succ;
 
   int str_prec = is.precision();
@@ -338,20 +357,20 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
     str_eps /= 10;
   double epsilon = FloatMax(str_eps, WFMATH_EPSILON);
 
-  m_orient = _Poly2Orient<dim>();
+  r.m_orient = _Poly2Orient<dim>();
 
   if(read_list.size() < 3) { // This will always work
     for(i = read_list.begin(); i != end; ++i) {
-      succ = m_orient.expand(i->pd, i->p2, epsilon);
+      succ = r.m_orient.expand(i->pd, i->p2, epsilon);
       assert(succ);
     }
   }
   else { // Find the three furthest apart points
-    list<_PolyReader>::iterator p1 = end, p2 = end, p3 = end, j; // invalid values
+    list<_PolyReader<dim> >::iterator p1 = end, p2 = end, p3 = end, j; // invalid values
     CoordType dist = -1;
 
     for(i = read_list.begin(); i != end; ++i) {
-      for(j = i + 1; j != end; ++j) {
+      for(j = i, ++j; j != end; ++j) {
         CoordType new_dist = SloppyDistance(i->pd, j->pd);
         if(new_dist > dist) {
           p1 = i;
@@ -382,11 +401,11 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 
     // Add p1, p2, p3 first
 
-    succ = m_orient.expand(p1->pd, p1->p2, epsilon);
+    succ = r.m_orient.expand(p1->pd, p1->p2, epsilon);
     assert(succ);
-    succ = m_orient.expand(p2->pd, p2->p2, epsilon);
+    succ = r.m_orient.expand(p2->pd, p2->p2, epsilon);
     assert(succ);
-    succ = m_orient.expand(p3->pd, p3->p2, epsilon);
+    succ = r.m_orient.expand(p3->pd, p3->p2, epsilon);
     assert(succ);
 
     // Try to add the rest
@@ -394,10 +413,10 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
     for(i = read_list.begin(); i != end; ++i) {
       if(i == p1 || i == p2 || i == p3) // Did these already
         continue;
-      succ = m_orient.expand(i->pd, i->p2, epsilon);
+      succ = r.m_orient.expand(i->pd, i->p2, epsilon);
       if(!succ) {
         is.setstate(std::istream::failbit);
-        clear();
+        r.clear();
         return is;
       }
     }
@@ -405,11 +424,11 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 
   // Got valid points, add them to m_poly
 
-  m_poly.resize(read_list.size());
+  r.m_poly.resize(read_list.size());
 
   int pnum;
-  for(i = read_list.begin, pnum = 0; i != end; ++i, ++pnum)
-    m_poly[pnum] = i->p2;
+  for(i = read_list.begin(), pnum = 0; i != end; ++i, ++pnum)
+    r.m_poly[pnum] = i->p2;
 
   return is;
 }

@@ -91,6 +91,9 @@ class Point
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);
 
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
+
   Point& operator= (const Point& rhs);
   Point& operator= (const CoordType d[dim]);
 

@@ -81,6 +81,9 @@ class RotMatrix {
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotMatrix& m);
   friend std::istream& operator>> <dim>(std::istream& is, RotMatrix& m);
 
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
+
   RotMatrix& operator=(const RotMatrix& m);
   // No operator=(CoordType d[dim][dim]), since it can fail.
   // Use setVals() instead.

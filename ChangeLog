@@ -1,3 +1,25 @@
+Sunday, January 20, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Wrote all the Polygon<2> intersection functions, and
+	  about half of the general Polygon<> intersection functions;
+	  a few of the 2d functions still need more work
+	* Changed intersect_test back to shape_test; decided one
+	  test program was sufficient for all of AxisBox<>, Ball<>,
+	  Segment<>, and RotBox<>
+	* Wrote test code for Polygon<> to call the generic tests;
+	  added the generic tests to shape_test; wrote fairly complete
+	  test code for Quaternion
+	* Changed from FromAtlas() and ToAtlas() functions to fromAtlas()
+	  and toAtlas() member functions; changed Vector<> and Point<>
+	  from sending string objects to atlas to sending lists, so
+	  we're more compatible with the getPos() and getVelocity()
+	  methods of Atlas::Objects::Entity::RootEntityData
+	* Upped version number to 0.1.9. The library now implements
+	  the functionality in stage/math, plus the mathematical
+	  parts of coal and eris. Will go to 0.2 when the polygon
+	  intersect functions are done, and the unit tests are
+	  more complete
+
 Tuesday, January 15, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Cleaned up Euler angle stuff in RotMatrix<> and Quaternion,

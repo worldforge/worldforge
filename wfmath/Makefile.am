@@ -21,7 +21,8 @@ libwfmath_la_SOURCES = basis.h const.cpp stream.cpp \
 	rotmatrix.cpp vector.cpp point.cpp quaternion.cpp polygon.cpp intersect.cpp
 libwfmath_la_LDFLAGS = -lm
 
-check_PROGRAMS = vector_test rotmatrix_test point_test intersect_test
+check_PROGRAMS = vector_test rotmatrix_test point_test \
+	quaternion_test shape_test polygon_test
 TESTS = $(check_PROGRAMS)
 
 vector_test_SOURCES = vector_test.cpp general_test.h
@@ -36,6 +37,14 @@ point_test_SOURCES = point_test.cpp general_test.h shape_test.h
 point_test_LDFLAGS = -lm
 point_test_LDADD = libwfmath.la
 
-intersect_test_SOURCES = intersect_test.cpp
-intersect_test_LDFLAGS = -lm
-intersect_test_LDADD = libwfmath.la
+quaternion_test_SOURCES = quaternion_test.cpp general_test.h
+quaternion_test_LDFLAGS = -lm
+quaternion_test_LDADD = libwfmath.la
+
+shape_test_SOURCES = shape_test.cpp general_test.h shape_test.h
+shape_test_LDFLAGS = -lm
+shape_test_LDADD = libwfmath.la
+
+polygon_test_SOURCES = polygon_test.cpp general_test.h shape_test.h
+polygon_test_LDFLAGS = -lm
+polygon_test_LDADD = libwfmath.la

@@ -7,6 +7,7 @@ Makefile
 Makefile.in
 vector_test
 rotmatrix_test
+quaternion_test
 point_test
 shape_test
-intersect_test
+polygon_test

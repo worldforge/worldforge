@@ -52,6 +52,9 @@ class Quaternion
   friend std::ostream& operator<<(std::ostream& os, const Quaternion& p);
   friend std::istream& operator>>(std::istream& is, Quaternion& p);
 
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
+
   Quaternion& operator= (const Quaternion& rhs)
 	{m_w = rhs.m_w; m_vec = rhs.m_vec; return *this;}
 

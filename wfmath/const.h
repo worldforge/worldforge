@@ -28,11 +28,14 @@
 #define WFMATH_CONST_H
 
 #include <float.h>
-// The next three aren't used in this file, but are used
+// The next two aren't used in this file, but are used
 // everywhere else in the library.
 #include <assert.h>
 #include <math.h>
+
+// Forward declarations for all classes
 #include <iosfwd>
+namespace Atlas { namespace Message { class Object;}}
 
 namespace WF { namespace Math {
 

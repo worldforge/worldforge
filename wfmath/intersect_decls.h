@@ -32,6 +32,7 @@ template<const int dim> class AxisBox;
 template<const int dim> class Ball;
 template<const int dim> class Segment;
 template<const int dim> class RotBox;
+template<const int dim> class Polygon;
 
 template<const int dim>
 bool Intersect(const AxisBox<dim>& b, const Point<dim>& p);
@@ -174,6 +175,74 @@ template<const int dim>
 bool Contains(const RotBox<dim>& outer, const RotBox<dim>& inner);
 template<const int dim>
 bool ContainsProper(const RotBox<dim>& outer, const RotBox<dim>& inner);
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& r, const Point<dim>& p);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& r, const Point<dim>& p);
+template<const int dim>
+bool Contains(const Point<dim>& p, const Polygon<dim>& r);
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p, const AxisBox<dim>& b);
+template<const int dim>
+bool Contains(const Polygon<dim>& p, const AxisBox<dim>& b);
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& p, const AxisBox<dim>& b);
+template<const int dim>
+bool Contains(const AxisBox<dim>& b, const Polygon<dim>& p);
+template<const int dim>
+bool ContainsProper(const AxisBox<dim>& b, const Polygon<dim>& p);
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p, const Ball<dim>& b);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p, const Ball<dim>& b);
+template<const int dim>
+bool Contains(const Polygon<dim>& p, const Ball<dim>& b);
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& p, const Ball<dim>& b);
+template<const int dim>
+bool Contains(const Ball<dim>& b, const Polygon<dim>& p);
+template<const int dim>
+bool ContainsProper(const Ball<dim>& b, const Polygon<dim>& p);
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& r, const Segment<dim>& s);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p, const Segment<dim>& s);
+template<const int dim>
+bool Contains(const Polygon<dim>& p, const Segment<dim>& s);
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& p, const Segment<dim>& s);
+template<const int dim>
+bool Contains(const Segment<dim>& s, const Polygon<dim>& p);
+template<const int dim>
+bool ContainsProper(const Segment<dim>& s, const Polygon<dim>& p);
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p, const RotBox<dim>& r);
+template<const int dim>
+bool Contains(const Polygon<dim>& p, const RotBox<dim>& r);
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& p, const RotBox<dim>& r);
+template<const int dim>
+bool Contains(const RotBox<dim>& r, const Polygon<dim>& p);
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& r, const Polygon<dim>& p);
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p1, const Polygon<dim>& p2);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p1, const Polygon<dim>& p2);
+template<const int dim>
+bool Contains(const Polygon<dim>& outer, const Polygon<dim>& inner);
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& outer, const Polygon<dim>& inner);
 
 }} // namespace WF::Math
 

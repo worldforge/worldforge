@@ -46,6 +46,8 @@ _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& a)
     if(m_axes_valid[i])
       m_axes[i] = a.m_axes[i];
   }
+
+  return *this;
 }
 
 template<const int dim>
@@ -55,11 +57,11 @@ bool Polygon<dim>::isEqualTo(const Polygon& p, double tolerance) const
   // format, so we have to call getCorner();
 
   int size = m_poly.numCorners();
-  if(size != s.m_poly.numCorners())
+  if(size != p.m_poly.numCorners())
     return false;
 
   for(int i = 0; i < size; ++i)
-    if(!m_poly.getCorner(i).isEqualTo(s.m_poly.getCorner(i), tolerance))
+    if(!getCorner(i).isEqualTo(p.getCorner(i), tolerance))
       return false;
 
   return true;
@@ -70,13 +72,13 @@ bool Polygon<dim>::isEqualTo(const Polygon& p, double tolerance) const
 template<const int dim>
 bool Polygon<dim>::operator< (const Polygon<dim>& s) const
 {
-  int size = m_poly.numCorners, s_size = s.m_poly.numCorners;
+  int size = m_poly.numCorners(), s_size = s.m_poly.numCorners();
 
   if(size != s_size)
     return size < s_size;
 
   for(int i = 0; i < size; ++i) {
-    Point<dim> p = getCorner(i), sp = s.getCorner();
+    Point<dim> p = getCorner(i), sp = s.getCorner(i);
     if(p != sp)
       return p < sp;
   }
@@ -110,16 +112,14 @@ bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, double epsilo
     return true;
   }
 
-  Vector<dim> shift = pd - m_origin;
+  Vector<dim> shift = pd - m_origin, start_shift = shift;
+
+  CoordType bound = shift.sqrMag() * epsilon;
 
   int j = 0;
 
   while(true) {
-    int i;
-    for(i = 0; i < dim; ++i)
-      if(fabs(shift[i] / m_origin[i]) > epsilon)
-        break;
-    if(i == dim) // shift is effectively zero
+    if(Dot(shift, start_shift) <= bound) // shift is effectively zero
       return true;
 
     if(j == 2) // Have two axes, shift doesn't lie in their plane
@@ -133,7 +133,7 @@ bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, double epsilo
    }
 
    p2[j] = Dot(shift, m_axes[j]);
-   shift -= m_axes[j] * input[j]; // shift is now perpendicular to m_axes[j]
+   shift -= m_axes[j] * p2[j]; // shift is now perpendicular to m_axes[j]
    ++j;
   }
 }
@@ -249,6 +249,44 @@ void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>& p)
 }
 
 template<const int dim>
+void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<2>& p)
+{
+  assert(m_origin_valid);
+
+  if(!m_axes_valid[0]) {
+    assert(p[0] == 0 && p[1] == 0);
+    return;
+  }
+
+  Vector<dim> shift = m_axes[0] * p[0];
+  m_axes[0] = Prod(m, m_axes[0]);
+
+  if(m_axes_valid[1]) {
+    shift += m_axes[1] * p[1];
+    m_axes[1] = Prod(m, m_axes[1]);
+  }
+  else
+    assert(p[1] == 0);
+
+  m_origin += shift - Prod(m, shift);
+}
+
+template<const int dim>
+Vector<dim> _Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2) const
+{
+  assert(m_origin_valid); // Check for empty polygon before calling this
+
+  Vector<dim> out = pd - m_origin;
+
+  for(int j = 0; j < 2; ++j) {
+    p2[j] = Dot(out, m_axes[j]);
+    out -= p2[j] * m_axes[j];
+  }
+
+  return out;
+}
+
+template<const int dim>
 bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
 {
   Point<2> p2;
@@ -286,24 +324,21 @@ bool Polygon<dim>::moveCorner(int i, const Point<dim>& p, double epsilon)
 template<const int dim>
 AxisBox<dim> Polygon<dim>::boundingBox() const
 {
-  assert(m_poly.numCorners() > 0 && m_origin_valid);
+  assert(m_poly.numCorners() > 0);
 
-  Vector<dim> min, max;
+  Point<dim> min = m_orient.convert(m_poly[0]), max = min;
 
-  min.zero();
-  max.zero();
-
-  for(int i = 0; i != m_poly.numCorners(); ++i) {
+  for(int i = 1; i != m_poly.numCorners(); ++i) {
     Point<dim> p = m_orient.convert(m_poly[i]);
     for(int j = 0; j < dim; ++j) {
-      if(p[j] < 0)
-        min[j] += p[j]; // Always negative
-      else
-        max[j] += p[j]; // Always positive
+      if(p[j] < min[j])
+        min[j] = p[j];
+      if(p[j] > max[j])
+        max[j] = p[j];
     }
   }
 
-  return AxisBox<dim>(m_origin + min, m_origin + max, true);
+  return AxisBox<dim>(min, max, true);
 }
 
 template<const int dim>
@@ -321,6 +356,465 @@ Ball<dim> Polygon<dim>::boundingSphereSloppy() const
 
   return Ball<dim>(m_orient.convert(b.center()), b.radius());
 }
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& r, const Point<dim>& p)
+{
+  Point<2> p2;
+
+  return m_poly.numCorners() > 0 && m_orient.offset(p, p2).sqrMag() == 0
+	 && Intersect(m_poly, p2);
+}
+
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& r, const Point<dim>& p)
+{
+  Point<2> p2;
+
+  return m_poly.numCorners() > 0 && m_orient.offset(p, p2).sqrMag() == 0
+	 && IntersectProper(m_poly, p2);
+}
+
+template<const int dim>
+bool Contains(const Point<dim>& p, const Polygon<dim>& r)
+{
+  if(m_poly.numCorners() == 0)
+    return true;
+
+  for(int i = 1; i < m_poly.numCorners(); ++i)
+    if(m_poly[i] != m_poly[0])
+      return false;
+
+  Point<2> p2;
+
+  return m_orient.offset(p, p2).sqrMag() == 0 && p2 = m_poly[0];
+}
+
+template<const int dim>
+bool ContainsProper(const Point<dim>& p, const Polygon<dim>& r)
+{
+  // Weird degenerate case, also works for dim == 2
+
+  return r.numCorners() == 0;
+}
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p, const AxisBox<dim>& b);
+template<const int dim>
+bool Contains(const Polygon<dim>& p, const AxisBox<dim>& b);
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& p, const AxisBox<dim>& b);
+
+template<const int dim>
+bool Contains(const AxisBox<dim>& b, const Polygon<dim>& p)
+{
+  for(int i = 0; i < p.m_poly.numCorners(); ++i)
+    if(!Contains(b, p.getCorner(i)))
+      return false;
+
+  return true;
+}
+
+template<const int dim>
+bool ContainsProper(const AxisBox<dim>& b, const Polygon<dim>& p)
+{
+  for(int i = 0; i < p.m_poly.numCorners(); ++i)
+    if(!ContainsProper(b, p.getCorner(i)))
+      return false;
+
+  return true;
+}
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p, const Ball<dim>& b)
+{
+  if(p.m_poly.numCorners() == 0)
+    return false;
+
+  Point<2> c2;
+  CoordType dist;
+
+  dist = p.m_orient.offset(b.m_center, c2).sqrMag();
+  dist -= b.m_radius * b.m_radius;
+
+  if(dist < 0)
+    return false;
+
+  // FIXME get rid of sqrt()?
+  return Intersect(p.m_poly, Ball<2>(c2, sqrt(dist)));
+}
+
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p, const Ball<dim>& b)
+{
+  if(p.m_poly.numCorners() == 0)
+    return false;
+
+  Point<2> c2;
+  CoordType dist;
+
+  dist = p.m_orient.offset(b.m_center, c2).sqrMag();
+  dist -= b.m_radius * b.m_radius;
+
+  if(dist <= 0)
+    return false;
+
+  // FIXME get rid of sqrt()?
+  return IntersectProper(p.m_poly, Ball<2>(c2, sqrt(dist)));
+}
+
+template<const int dim>
+bool Contains(const Polygon<dim>& p, const Ball<dim>& b)
+{
+  if(p.m_poly.numCorners() == 0)
+    return false;
+
+  Point<2> c2;
+
+  if(p.m_orient.offset(b.m_center, c2).sqrMag() != 0)
+    return false;
+
+  return Contains(p.m_poly, c2);
+}
+
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& p, const Ball<dim>& b)
+{
+  if(p.m_poly.numCorners() == 0)
+    return false;
+
+  Point<2> c2;
+
+  if(p.m_orient.offset(b.m_center, c2).sqrMag() != 0)
+    return false;
+
+  return ContainsProper(p.m_poly, c2);
+}
+
+template<const int dim>
+bool Contains(const Ball<dim>& b, const Polygon<dim>& p)
+{
+  if(p.m_poly.numCorners() == 0)
+    return true;
+
+  Point<2> c2;
+  CoordType dist;
+
+  dist = p.m_orient.offset(b.m_center, c2).sqrMag();
+
+  dist = FloatSubtract(b.m_radius * b.m_radius, dist);
+
+  if(dist < 0)
+    return false;
+
+
+  for(int i = 0; i != p.m_poly.numCorners(); ++i)
+    if(dist < SquaredDistance(c2, p.m_poly[i]))
+      return false;
+
+  return true;
+}
+
+template<const int dim>
+bool ContainsProper(const Ball<dim>& b, const Polygon<dim>& p)
+{
+  if(p.m_poly.numCorners() == 0)
+    return true;
+
+  Point<2> c2;
+  CoordType dist;
+
+  dist = p.m_orient.offset(b.m_center, c2).sqrMag();
+
+  dist -= b.m_radius * b.m_radius;
+
+  if(dist <= 0)
+    return false;
+
+  for(int i = 0; i != p.m_poly.numCorners(); ++i)
+    if(dist <= SquaredDistance(c2, m_poly[i]))
+      return false;
+
+  return true;
+}
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p, const Segment<dim>& s)
+{
+  if(p.m_poly.numCorners() == 0)
+    return false;
+
+  Point<2> p1, p2;
+  CoordType d1, d2;
+  Vector<dim> v1, v2;
+
+  v1 = p.m_orient.offset(s.m_p1, p1);
+  v2 = p.m_orient.offset(s.m_p2, p2);
+
+  d1 = v1.sqrMag();
+  d2 = v2.sqrMag();
+
+  if(d1 == 0) {
+    if(d2 == 0)
+      return Intersect(p.m_poly, Segment<2>(p1, p2));
+    else
+      return Intersect(p.m_poly, p1);
+  }
+  else if(d2 == 0)
+    return Intersect(p.m_poly, p2);
+
+  if(Dot(v1, v2) > 0) // Both points on same side of sheet
+    return false;
+
+  d1 = sqrt(d1);
+  d2 = sqrt(d2);
+  Point<2> p_intersect;
+
+  for(int i = 0; i < 2; ++i)
+    p_intersect[i] = (p1[i] * d2 + p2[i] * d1) / (d1 + d2);
+
+  return Intersect(p.m_poly, p_intersect);
+}
+
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p, const Segment<dim>& s)
+{
+  if(p.m_poly.numCorners() == 0)
+    return false;
+
+  Point<2> p1, p2;
+  CoordType d1, d2;
+  Vector<dim> v1, v2;
+
+  v1 = p.m_orient.offset(s.m_p1, p1);
+  v2 = p.m_orient.offset(s.m_p2, p2);
+
+  d1 = v1.sqrMag();
+  d2 = v2.sqrMag();
+
+  if(d1 == 0) {
+    if(d2 == 0)
+      return IntersectProper(p.m_poly, Segment<2>(p1, p2));
+    else
+      return IntersectProper(p.m_poly, p1);
+  }
+  else if(d2 == 0)
+    return IntersectProper(p.m_poly, p2);
+
+  if(Dot(v1, v2) > 0) // Both points on same side of sheet
+    return false;
+
+  d1 = sqrt(d1);
+  d2 = sqrt(d2);
+  Point<2> p_intersect;
+
+  for(int i = 0; i < 2; ++i)
+    p_intersect[i] = (p1[i] * d2 + p2[i] * d1) / (d1 + d2);
+
+  return IntersectProper(p.m_poly, p_intersect);
+}
+
+template<const int dim>
+bool Contains(const Polygon<dim>& p, const Segment<dim>& s)
+{
+  if(p.m_poly.numCorners() == 0)
+    return false;
+
+  Segment<2> s2;
+  Vector<dim> v1, v2, v_zero;
+  v_zero.zero;
+
+  v1 = p.m_orient.offset(s.m_p1, s2.endpoint(0));
+  if(v1 != v_zero)
+    return false;
+  v2 = p.m_orient.offset(s.m_p2, s2.endpoint(1));
+  if(v2 != v_zero)
+    return false;
+
+  return Contains(p.m_poly, Segment<2>(p1, p2));
+}
+
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& p, const Segment<dim>& s)
+{
+  if(p.m_poly.numCorners() == 0)
+    return false;
+
+  Segment<2> s2;
+  Vector<dim> v1, v2, v_zero;
+  v_zero.zero();
+
+  v1 = p.m_orient.offset(s.m_p1, s2.endpoint(0));
+  if(v1 != v_zero)
+    return false;
+  v2 = p.m_orient.offset(s.m_p2, s2.endpoint(1));
+  if(v2 != v_zero)
+    return false;
+
+  return ContainsProper(p.m_poly, s2);
+}
+
+template<const int dim>
+bool Contains(const Segment<dim>& s, const Polygon<dim>& p)
+{
+  if(p.m_poly.numCorners() == 0)
+    return true;
+
+  // Expand the basis to include the segment, this deals well with
+  // degenerate polygons
+
+  Segment<2> s2;
+  _Poly2Orient<dim> orient(p.m_orient);
+
+  for(int i = 0; i < 2; ++i)
+    if(!orient.expand(s.endpoint(i), s2.endpoint(i)))
+      return false;
+
+  return Contains(s2, p.m_poly);
+}
+
+template<const int dim>
+bool ContainsProper(const Segment<dim>& s, const Polygon<dim>& p)
+{
+  if(p.m_poly.numCorners() == 0)
+    return true;
+
+  // Expand the basis to include the segment, this deals well with
+  // degenerate polygons
+
+  Segment<2> s2;
+  _Poly2Orient<dim> orient(p.m_orient);
+
+  for(int i = 0; i < 2; ++i)
+    if(!orient.expand(s.endpoint(i), s2.endpoint(i)))
+      return false;
+
+  return ContainsProper(s2, p.m_poly);
+}
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p, const RotBox<dim>& r);
+template<const int dim>
+bool Contains(const Polygon<dim>& p, const RotBox<dim>& r);
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& p, const RotBox<dim>& r);
+
+template<const int dim>
+bool Contains(const RotBox<dim>& r, const Polygon<dim>& p)
+{
+  if(p.m_poly.numCorners() == 0)
+    return true;
+
+  AxisBox<dim> b(r.m_corner0, r.m_corner0 + r.m_size);
+
+  _Poly2Orient<dim> orient(p.m_orient);
+  orient.rotate(r.m_orient.inverse(), r.m_corner0);
+
+  for(int i = 0; i < p.m_poly.numCorners(); ++i)
+    if(!Contains(b, orient.convert(p.m_poly[i])))
+      return false;
+
+  return true;
+}
+
+template<const int dim>
+bool ContainsProper(const RotBox<dim>& r, const Polygon<dim>& p)
+{
+  if(p.m_poly.numCorners() == 0)
+    return true;
+
+  AxisBox<dim> b(r.m_corner0, r.m_corner0 + r.m_size);
+
+  _Poly2Orient<dim> orient(p.m_orient);
+  orient.rotate(r.m_orient.inverse(), r.m_corner0);
+
+  for(int i = 0; i < p.m_poly.numCorners(); ++i)
+    if(!ContainsProper(b, orient.convert(p.m_poly[i])))
+      return false;
+
+  return true;
+}
+
+template<const int dim>
+bool Intersect(const Polygon<dim>& p1, const Polygon<dim>& p2);
+template<const int dim>
+bool IntersectProper(const Polygon<dim>& p1, const Polygon<dim>& p2);
+template<const int dim>
+bool Contains(const Polygon<dim>& outer, const Polygon<dim>& inner);
+template<const int dim>
+bool ContainsProper(const Polygon<dim>& outer, const Polygon<dim>& inner);
+
+template<>
+bool Intersect(const Polygon<2>& r, const Point<2>& p);
+template<>
+bool IntersectProper(const Polygon<2>& r, const Point<2>& p);
+template<>
+bool Contains(const Point<2>& p, const Polygon<2>& r);
+
+template<>
+bool Intersect(const Polygon<2>& p, const AxisBox<2>& b);
+template<>
+bool IntersectProper(const Polygon<2>& p, const AxisBox<2>& b);
+template<>
+bool Contains(const Polygon<2>& p, const AxisBox<2>& b);
+template<>
+bool ContainsProper(const Polygon<2>& p, const AxisBox<2>& b);
+template<>
+bool Contains(const AxisBox<2>& b, const Polygon<2>& p);
+template<>
+bool ContainsProper(const AxisBox<2>& b, const Polygon<2>& p);
+
+template<>
+bool Intersect(const Polygon<2>& p, const Ball<2>& b);
+template<>
+bool IntersectProper(const Polygon<2>& p, const Ball<2>& b);
+template<>
+bool Contains(const Polygon<2>& p, const Ball<2>& b);
+template<>
+bool ContainsProper(const Polygon<2>& p, const Ball<2>& b);
+template<>
+bool Contains(const Ball<2>& b, const Polygon<2>& p);
+template<>
+bool ContainsProper(const Ball<2>& b, const Polygon<2>& p);
+
+template<>
+bool Intersect(const Polygon<2>& r, const Segment<2>& s);
+template<>
+bool IntersectProper(const Polygon<2>& p, const Segment<2>& s);
+template<>
+bool Contains(const Polygon<2>& p, const Segment<2>& s);
+template<>
+bool ContainsProper(const Polygon<2>& p, const Segment<2>& s);
+template<>
+bool Contains(const Segment<2>& s, const Polygon<2>& p);
+template<>
+bool ContainsProper(const Segment<2>& s, const Polygon<2>& p);
+
+template<>
+bool Intersect(const Polygon<2>& p, const RotBox<2>& r);
+template<>
+bool IntersectProper(const Polygon<2>& p, const RotBox<2>& r);
+template<>
+bool Contains(const Polygon<2>& p, const RotBox<2>& r);
+template<>
+bool ContainsProper(const Polygon<2>& p, const RotBox<2>& r);
+template<>
+bool Contains(const RotBox<2>& r, const Polygon<2>& p);
+template<>
+bool ContainsProper(const RotBox<2>& r, const Polygon<2>& p);
+
+template<>
+bool Intersect(const Polygon<2>& p1, const Polygon<2>& p2);
+template<>
+bool IntersectProper(const Polygon<2>& p1, const Polygon<2>& p2);
+template<>
+bool Contains(const Polygon<2>& outer, const Polygon<2>& inner);
+template<>
+bool ContainsProper(const Polygon<2>& outer, const Polygon<2>& inner);
 
 }} // namespace WF::Math
 

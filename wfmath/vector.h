@@ -147,6 +147,9 @@ class Vector {
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
 
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
+
   Vector& operator=(const CoordType d[dim]);
   Vector& operator=(const Vector& v);
 

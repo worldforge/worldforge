@@ -40,6 +40,8 @@ RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
   m_corner0 = a.m_corner0;
   m_size = a.m_size;
   m_orient = a.m_orient;
+
+  return *this;
 }
 
 template<const int dim>

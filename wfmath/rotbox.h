@@ -58,6 +58,9 @@ class RotBox
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotBox& r);
   friend std::istream& operator>> <dim>(std::istream& is, RotBox& r);
 
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
+
   RotBox& operator=(const RotBox& s);
 
   bool isEqualTo(const RotBox& s, double tolerance = WFMATH_EPSILON) const;
@@ -135,6 +138,13 @@ class RotBox
   friend bool IntersectProper<dim>(const RotBox& r1, const RotBox& r2);
   friend bool Contains<dim>(const RotBox& outer, const RotBox& inner);
   friend bool ContainsProper<dim>(const RotBox& outer, const RotBox& inner);
+
+  friend bool Intersect<dim>(const Polygon<dim>& p, const RotBox& r);
+  friend bool IntersectProper<dim>(const Polygon<dim>& p, const RotBox& r);
+  friend bool Contains<dim>(const Polygon<dim>& p, const RotBox& r);
+  friend bool ContainsProper<dim>(const Polygon<dim>& p, const RotBox& r);
+  friend bool Contains<dim>(const RotBox& r, const Polygon<dim>& p);
+  friend bool ContainsProper<dim>(const RotBox& r, const Polygon<dim>& p);
 
  private:
 

@@ -54,6 +54,9 @@ class Segment
   friend std::ostream& operator<< <dim>(std::ostream& os, const Segment& s);
   friend std::istream& operator>> <dim>(std::istream& is, Segment& s);
 
+  Atlas::Message::Object toAtlas() const;
+  bool fromAtlas(const Atlas::Message::Object& a);
+
   Segment& operator=(const Segment& s)
 	{m_p1 = s.m_p1; m_p2 = s.m_p2; return *this;}
 
@@ -128,6 +131,13 @@ class Segment
   friend bool ContainsProper<dim>(const RotBox<dim>& r, const Segment& s);
   friend bool Contains<dim>(const Segment& s, const RotBox<dim>& r);
   friend bool ContainsProper<dim>(const Segment& s, const RotBox<dim>& r);
+
+  friend bool Intersect<dim>(const Polygon<dim>& r, const Segment& s);
+  friend bool IntersectProper<dim>(const Polygon<dim>& p, const Segment& s);
+  friend bool Contains<dim>(const Polygon<dim>& p, const Segment& s);
+  friend bool ContainsProper<dim>(const Polygon<dim>& p, const Segment& s);
+  friend bool Contains<dim>(const Segment& s, const Polygon<dim>& p);
+  friend bool ContainsProper<dim>(const Segment& s, const Polygon<dim>& p);
 
  private:
 
