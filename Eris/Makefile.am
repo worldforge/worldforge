@@ -63,4 +63,9 @@ liberis_HEADERS = \
 	Timeout.h \
 	Time.h \
 	ArgumentDispatcher.h \
-	TypeInfo.h
+	TypeInfo.h \
+	Wait.h \
+	Property.h \
+	atlas_utils.h
+	
+	
