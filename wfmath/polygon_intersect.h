@@ -79,7 +79,7 @@ bool ContainsProper(const Point<dim>& p, const Polygon<dim>& r)
 
   return r.numCorners() == 0;
 }
-
+/*
 template<const int dim>
 bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b)
 {
@@ -129,7 +129,7 @@ bool IntersectProper(const Polygon<dim>& p, const AxisBox<dim>& b)
 
   return ContainsProper(p, p2);
 }
-
+*/
 template<const int dim>
 bool Contains(const Polygon<dim>& p, const AxisBox<dim>& b);
 template<const int dim>
@@ -421,7 +421,7 @@ bool ContainsProper(const Segment<dim>& s, const Polygon<dim>& p)
 
   return ContainsProper(s2, p.m_poly);
 }
-
+/*
 template<const int dim>
 bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r)
 {
@@ -483,7 +483,7 @@ bool IntersectProper(const Polygon<dim>& p, const RotBox<dim>& r)
 
   return ContainsProper(p, p2);
 }
-
+*/
 template<const int dim>
 bool Contains(const Polygon<dim>& p, const RotBox<dim>& r);
 template<const int dim>

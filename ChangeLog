@@ -1,5 +1,10 @@
 Wednesday, February 27, 2002	Ron Steinke <rsteinke@w-link.net>
 
+	* Commented out horribly broken intersection functions
+	  with AxisBox and RotBox in polygon_intersect.h
+
+Wednesday, February 27, 2002	Ron Steinke <rsteinke@w-link.net>
+
 	* Autogen.sh cleanups
 
 Tuesday, February 26, 2002	Ron Steinke <rsteinke@w-link.net>
