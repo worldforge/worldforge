@@ -42,6 +42,7 @@ Quaternion::Quaternion (CoordType w_in, CoordType x_in, CoordType y_in, CoordTyp
   m_vec[0] = x_in / norm;
   m_vec[1] = y_in / norm;
   m_vec[2] = z_in / norm;
+  m_vec.setValid();
 }
 
 // The equality functions regard q and -q as equal, since they

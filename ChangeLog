@@ -1,3 +1,8 @@
+Sunday, October 26th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/quaternion.cpp: Ensure vector component is valid when
+	  constructing a valid quaternion.
+
 Sunday, September 21st, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Some cleanups to int_to_string.cpp
