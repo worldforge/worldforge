@@ -1,0 +1,44 @@
+ChangeLog for conftest
+
+Fri Dec 24 09:30:32 UTC 1999
+ * Variable.h, Variable.cc: Added conversion constructor for char*
+ * Config.h: Added register and unregister functions for callbacks
+ * Config.cc: Implemented register and unregister functions for callbacks
+ * Config.cc: Implemented notification of changes via callbacks
+ * main.cc: Added demonstration of callbacks
+
+Fri Dec 24 04:13:37 UTC 1999 -- sdt <sdt@gmx.net>
+ + added AUTHORS
+ * Config.cc: Fixed some minor parser errors
+ * main.cc: Modified the configuration test again
+ * conf.cfg: Modified example file
+ * Observer.h, Observer.cc: Changed return value of getValue() to be non-const
+
+Fri Dec 24 02:58:24 UTC 1999 -- sdt <sdt@gmx.net>
+ + added Observer.h
+ + added Observer.cc
+ * Observer.h: Added class interface for configuration observer
+ * Observer.cc: Added class implementation for configuration observer
+ * Config.h: Added register and unregister functions for observer
+ * Config.cc: Implemented register and unregister functions
+ * Config.cc: Modified setItem() to use observers
+ * main.cc: Added Observer demonstration
+ * Variable.h: Added operator<<(ostream&, Variable&) as friend
+ * Variable.cc: Implemented output operator for Variables through ostreams
+ * Config.cc: Removed temporary output operator for Variables
+
+Fri Nov 26 12:55:38 UTC 1999 -- sdt <sdt@gmx.net>
+ * ChangeLog: Fixed up the entry below a bit (cough)
+ * Config.cc: Fixed unquoted value parsing a bit
+ * Config.cc: Fixed quoting in Config::writeToFile()
+
+Wed Nov 24 13:11:40 UTC 1999 -- sdt <sdt@gmx.net>
+ + added THANKS
+ + added README
+ + added TODO
+ + added ChangeLog
+ * Variable.cc: implemented Variable::is_double()
+ * Variable.h: Fixed a few warnings
+ * Variable.cc: added return statements to operator=()'s (oops)
+ * Config.cc: implemented Config::writeToFile()
+ * main.cc: uses Config::writeToFile() now

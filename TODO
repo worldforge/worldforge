@@ -1,0 +1,13 @@
+TODO for conftest
+
+IMPORTANT:
+ * automake/autoconf
+
+Minor Tasks:
+ * Make VALUE and EXPECT_VALUE behave nicer (loosen up on the unquoted value
+   format)
+ * Use a better way to do Variable::is_bool()
+
+Major Tasks:
+ * Implement Config::getEnv()
+ * Implement Config::getCmdline()

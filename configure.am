@@ -1,0 +1,2 @@
+<package src="varconf" config="varconf/config.h"><name>varconf</name><version>0.1.0</version><desc>Varconf is a simple configuration system.
+</desc><depend tag="c++" version=""/></package>

@@ -1,0 +1,4 @@
+SUBDIRS = varconf tests doc
+
+EXTRA_DIST = COPYING TODO THANKS
+

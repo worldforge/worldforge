@@ -1,0 +1,16 @@
+AC_INIT(varconf)
+
+AM_INIT_AUTOMAKE("varconf", "0.1.0")
+AM_CONFIG_HEADER(config.h)
+
+dnl Test for c++:
+
+AC_PROG_CXX
+
+AC_PROG_LIBTOOL
+
+AC_OUTPUT([
+  Makefile
+  varconf/Makefile
+  tests/Makefile
+])
