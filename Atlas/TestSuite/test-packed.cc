@@ -3,6 +3,7 @@
 // Copyright (C) 2000 Michael Day
 
 #include "../Stream/Codec.h"
+#include "../Stream/Hack.h"
 
 #include <iostream>
 
@@ -135,21 +136,6 @@ class LoopBridge : public Bridge
 
 int main()
 {
-    list<Factory<Codec<iostream> >*>::iterator i;
-
-    for (i = Factory<Codec<iostream> >::Factories().begin();
-	 i != Factory<Codec<iostream> >::Factories().end();
-	 ++i)
-    {
-	if ((*i)->GetName() == "Packed") break;
-    }
-
-    if (i == Factory<Codec<iostream> >::Factories().end())
-    {
-	cerr << "Could not find Packed codec\n";
-	return -1;
-    }
-
     string client_buffer;
     string server_buffer = "{[@id=17$name=Fred +28the +2b great+29#weight=1.5]}";
     loopbuf serverbuf(server_buffer, client_buffer);
@@ -159,7 +145,8 @@ int main()
 
     LoopBridge bridge;
     
-    Codec<iostream>* codec = (*i)->New(Codec<iostream>::Parameters(client_stream, 0, &bridge));
+    Codec<iostream>* codec = Atlas::UngodlyHack::GetPacked(client_stream,
+    &bridge);
 
     codec->MessageBegin();
     codec->MessageItem(Codec<iostream>::MapBegin);
