@@ -342,7 +342,6 @@ public:
     FloatType asFloat() const throw (WrongTypeException)
     {
         if (t == TYPE_FLOAT) return f;
-        if (t == TYPE_INT) return (FloatType)i;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a pointer.

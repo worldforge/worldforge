@@ -1,6 +1,6 @@
 2002-06-01  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
 
-	* Objects/common.py, gen_cpp.py: both Python 1.5.* and Python 2.* supported
+	* src/Objects/common.py, gen_cpp.py: both Python 1.5.* and Python 2.* supported
 
 2002-05-21  Michael Koch  <konqueror@gmx.de>
 
