@@ -84,7 +84,7 @@ public:
 	Meta(const std::string &cnm, 
 		const std::string &msv, 
 		unsigned int maxQueries);
-	~Meta();
+	virtual ~Meta();
 
 	/// Return the list of game servers
 	ServerList getGameServerList();
