@@ -7,25 +7,61 @@
 
 #include <map>
 
+#include <cmath>
+
 namespace Mercator {
 
 class Segment;
 
 class Terrain {
+  public:
+    typedef std::map<int, double> Pointcolumn;
+    typedef std::map<int, Segment *> Segmentcolumn;
+
+    typedef std::map<int, Pointcolumn > Pointstore;
+    typedef std::map<int, Segmentcolumn > Segmentstore;
+
   private:
     const int m_res;
 
-    std::map<int, std::map<int, double> > m_basePoints;
+    Pointstore m_basePoints;
+    Segmentstore m_segments;
+
+    void remove(int x, int y);
+    void invalidate(int x, int y);
   public:
     static const double defaultLevel = 8;
     explicit Terrain(int res = 64);
 
+    double get(double x, double y) const;
+
+    bool getBasePoint(int x, int y, double & z);
+    
     void setBasePoint(int x, int y, double z) {
         m_basePoints[x][y] = z;
+        invalidate(x,y);
     }
 
-    Segment * getSegmentSafe(int x, int y);
-    Segment * getSegmentQuik(int x, int y);
+    Segment * getSegmentSafe(double x, double y) {
+        int ix = (int)floor(x / m_res);
+        int iy = (int)floor(y / m_res);
+        return getSegmentSafe(ix, iy);
+    }
+
+    Segment * getSegmentQuik(double x, double y) const {
+        int ix = (int)floor(x / m_res);
+        int iy = (int)floor(y / m_res);
+        return getSegmentQuik(ix, iy);
+    }
+
+    const Segmentstore & getTerrain() const {
+        return m_segments;
+    }
+
+    Segment * getSegmentSafe(int x, int y, bool force = true);
+    Segment * getSegmentQuik(int x, int y) const;
+
+    void refresh(int x, int y);
 };
 
 } // namespace Mercator

@@ -1,0 +1,7 @@
+2003-01-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Segment.h, src/Segment.cpp: Add class for terrain segment, which
+	  currently contains an interpolated sloped area.
+
+	* src/Terrain.h, src/Terrain.cpp: Add functionality required to manage
+	  segments in the terrain.
