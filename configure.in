@@ -15,9 +15,14 @@ dnl Test for libtool:
 
 AM_PROG_LIBTOOL
 
+dnl Test for python:
+
+AC_CHECK_HEADERS(python1.5/Python.h)
+
 AC_OUTPUT([
 	Makefile
 	Bus/Makefile
 	Content/Makefile
 	Net/Makefile
+	Object/Makefile
 ])
