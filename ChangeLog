@@ -1,3 +1,12 @@
+2005-03-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Bridge.h, Atlas/Bridge.cpp,
+	  Atlas/Negotiate.h, Atlas/Negotiate.cpp: Add virtual destructors
+	  to Bridge and Negotiate.
+
+	* tests/Objects/objects2.cpp: Fix some messy casts, and replace
+	  with the correct casts or conversions.
+
 2005-01-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.5.92, Interface version 0.

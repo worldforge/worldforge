@@ -7,7 +7,8 @@ lib_LTLIBRARIES = libAtlas-0.6.la
 libAtlas_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
 
 libAtlas_0_6_la_SOURCES = \
-	Bridge.cpp Codec.cpp EncoderBase.cpp Exception.cpp Filter.cpp
+	Bridge.cpp Codec.cpp Negotiate.cpp EncoderBase.cpp Exception.cpp \
+	Filter.cpp
 
 libAtlasincludedir = $(includedir)/Atlas-C++-0.6/Atlas
 

@@ -101,7 +101,7 @@ void testXML()
 //    alloc_func alloc_entity = &Entity::RootEntityDataInstance::alloc;
 //    BaseObjectData *bod = alloc_entity();
     //Root human2(bod);
-    Root human2 = (Root&)RootEntity::factory();
+    Root human2 = RootEntity::factory();
     std::cout<<"human.id="<<human->getId()<<std::endl;
     std::cout<<"human2.id="<<human2->getId()<<std::endl;
 #if 0
@@ -298,7 +298,7 @@ void testValues()
     mcreate["args"] = args;
     mcreate["objtype"] = "op";
 
-    Create op = (Create&)Atlas::Objects::messageElement2ClassObject(mcreate);
+    Create op = Atlas::Objects::smart_dynamic_cast<Create>(Atlas::Objects::messageElement2ClassObject(mcreate));
     assert(op->getClassNo() == Atlas::Objects::Operation::CREATE_NO);
     assert(op->instanceOf(Atlas::Objects::Operation::CREATE_NO));
     assert(op->instanceOf(Atlas::Objects::Operation::ACTION_NO));

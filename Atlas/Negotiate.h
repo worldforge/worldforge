@@ -23,6 +23,7 @@ along with the name of sender and a Socket
 class Negotiate
 {
     public:
+    virtual ~Negotiate();
 
     enum State
     {
