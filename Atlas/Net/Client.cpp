@@ -98,7 +98,7 @@ void AClient::doPoll()
 	select(csock->getSock()+1,&fdread,&fdsend,NULL,&tm);
 
 	if (FD_ISSET(csock->getSock(),&fdread))
-            if (!canRead()) return gotDisconnect();
+ 		if (!canRead()) { gotDisconnect(); return; }
 	if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
 }
 
