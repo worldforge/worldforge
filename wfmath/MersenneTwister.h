@@ -137,7 +137,6 @@ protected:
 		{ return hiBit(u) | loBits(v); }
 	uint32 twist( const uint32& m, const uint32& s0, const uint32& s1 ) const
 		{ return m ^ (mixBits(s0,s1)>>1) ^ (-loBit(s1) & 0x9908b0dfUL); }
-	static uint32 hash( time_t t, clock_t c );
 };
 
 
@@ -296,31 +295,6 @@ inline void MTRand::reload()
 	left = N, pNext = state;
 }
 
-
-inline MTRand::uint32 MTRand::hash( time_t t, clock_t c )
-{
-	// Get a uint32 from t and c
-	// Better than uint32(x) in case x is floating point in [0,1]
-	// Based on code by Lawrence Kirby (fred@genesis.demon.co.uk)
-
-	static uint32 differ = 0;  // guarantee time-based seeds will change
-
-	uint32 h1 = 0;
-	unsigned char *p = (unsigned char *) &t;
-	for( size_t i = 0; i < sizeof(t); ++i )
-	{
-		h1 *= UCHAR_MAX + 2U;
-		h1 += p[i];
-	}
-	uint32 h2 = 0;
-	p = (unsigned char *) &c;
-	for( size_t j = 0; j < sizeof(c); ++j )
-	{
-		h2 *= UCHAR_MAX + 2U;
-		h2 += p[j];
-	}
-	return ( h1 + differ++ ) ^ h2;
-}
 
 
 inline void MTRand::save( uint32* saveArray ) const
