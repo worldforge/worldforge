@@ -1,22 +1,15 @@
-/*
-        begin           : 1999.11.29
-        copyright       : (C) 1999 by John Barrett (ZW)
-        email           : jbarrett@box100.com
-*/
+// This file may be redistributed and modified under the terms of the
+// GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2000 Michael Day
+
+// $Log$
+// Revision 1.2  2000-02-22 04:22:19  mike
+// Begun implementation of PackedEncoder based on new Encoder interface.
+//
 
 #include "PackedEncoder.h"
 
-//#include <map.h>
-#include <memory.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-#include <string>
-
-namespace Atlas
-{
-
+/*
 void PackedEncoder::walkTree(int nest, const char* xname,
                                    const Object& list)
 {
@@ -79,8 +72,5 @@ string PackedEncoder::encodeMessage(const Object& msg)
 	// return result
 	return buffer;
 }
-
-
-} // namespace Atlas
-
+*/
 
