@@ -254,6 +254,11 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
 	_currentSerial = l.GetSerialno();
 }
 
+std::string Player::getAccountID() const
+{
+    return _account;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // callbacks
 

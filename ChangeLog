@@ -1,3 +1,7 @@
+Monday, February 11 2002, James Turner
+
+	* Implemented Player::getAccountID();
+
 Sunday, February 10 2002, James Turner
 
 	* Added wait for INFO(LOGOUT) response from server, 
