@@ -12,11 +12,9 @@
 #include "Filter.h"
 
 #include <string>
-#include <vector>
 #include <list>
 
 using std::string;
-using std::vector;
 using std::list;
 
 
@@ -44,9 +42,10 @@ string get_line(string &s1, char ch, string &s2)
 namespace Atlas { namespace Stream {
 
 class FactoryName {
-public:
 
   string name;
+
+public:
 
   FactoryName(string n) : name(n) { }
 
@@ -65,12 +64,13 @@ typedef list<FactoryName> FactoryNames;
 
 template <class F>
 class FactoryHelper {
-public:
 
   typedef list<F*> Fs;
 
   FactoryNames *in_factories;
   Fs *out_factories;
+
+public:
 
   FactoryHelper(FactoryNames *i_f, Fs *o_f) :
     in_factories(i_f), out_factories(o_f)
@@ -124,7 +124,6 @@ public:
 
 
 class Negotiate {
-public:
 
   int state;
   string out_name;
@@ -139,6 +138,8 @@ public:
   FactoryHelper<FactoryCodec> codecHelper;
   FactoryHelper<FactoryFilter> filterHelper;
   string buf;
+
+public:
 
   Negotiate(string &name, Socket *s, FactoryCodecs *fc, FactoryFilters *ff) :
     state(0), out_name(name), sock(s),
@@ -210,33 +211,6 @@ public:
       state = 10;
   }
 
-  void processServerCodecs()
-  {
-    FactoryCodecs::iterator i;
-    FactoryNames::iterator j;
-    
-    for(i = my_codecs->begin(); i != my_codecs->end(); i++)
-      for(j = in_codecs.begin(); j != in_codecs.end(); j++)
-	if((*i)->GetName() == (*j).GetName())
-	  {
-	    out_codecs.push_back(*i);
-	    return;	      
-	  }
-  }
-  
-  void processServerFilters()
-  {
-    FactoryFilters::iterator i;
-    FactoryNames::iterator j;
-
-    for(i = my_filters->begin(); i != my_filters->end(); i++)
-      for(j = in_filters.begin(); j != in_filters.end(); j++)
-	if((*i)->GetName() == (*j).GetName())
-	  {
-	    out_filters.push_back(*i);
-	  }
-  }
-
   void NegotiateClient()
   {
     cout << "** Client(" << state << ") : " << endl;
@@ -292,6 +266,36 @@ public:
     if(state == 5)
       state = 10;
   }
+
+private:
+
+  void processServerCodecs()
+  {
+    FactoryCodecs::iterator i;
+    FactoryNames::iterator j;
+    
+    for(i = my_codecs->begin(); i != my_codecs->end(); i++)
+      for(j = in_codecs.begin(); j != in_codecs.end(); j++)
+	if((*i)->GetName() == (*j).GetName())
+	  {
+	    out_codecs.push_back(*i);
+	    return;	      
+	  }
+  }
+  
+  void processServerFilters()
+  {
+    FactoryFilters::iterator i;
+    FactoryNames::iterator j;
+
+    for(i = my_filters->begin(); i != my_filters->end(); i++)
+      for(j = in_filters.begin(); j != in_filters.end(); j++)
+	if((*i)->GetName() == (*j).GetName())
+	  {
+	    out_filters.push_back(*i);
+	  }
+  }
+
 
   void processClientCodecs()
   {
