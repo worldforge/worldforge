@@ -141,7 +141,7 @@ static PyMethodDef URI_methods[] = {
 
 
 PyTypeObject URI_Type = {
-	PyObject_HEAD_INIT(&PyType_Type)
+	PyObject_HEAD_INIT(0)
 	0,
 	"URI",
 	sizeof(URIObject),

@@ -1,6 +1,7 @@
 
 # Standard defines:
-CC		=	g++
+CCC		=	g++
+CC		=	gcc
 AR		=	ar
 RANLIB		=	ranlib
 STDLIBS		=	-L$(OUTDIR)

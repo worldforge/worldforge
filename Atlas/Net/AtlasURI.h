@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 typedef struct {
-	PyObject_HEAD
+	PyObject_VAR_HEAD
 	PyObject	*path;		/* PyString pointing to some other data */
 	PyObject	*data;		/* the data after the lookup is performed */
 } URIObject;
@@ -23,6 +23,7 @@ typedef struct {
 extern DL_IMPORT(PyTypeObject) URI_Type;
 
 #define URI_Check(op) ((op)->ob_type == &URI_Type)
+#define PyURI_Check(op) ((op)->ob_type == &URI_Type)
 
 #define URIHandlerGet 0
 #define URIHandlerPut 1

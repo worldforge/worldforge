@@ -4,14 +4,8 @@
 #include <AtlasDebug.h>
 
 #include <AtlasPython.h>
+#include <AtlasTypes.h>
 #include <AtlasObject.h>
-
-#include <AtlasURI.h>
-#include <AtlasURIList.h>
-#include <AtlasIntList.h>
-#include <AtlasLongList.h>
-#include <AtlasFloatList.h>
-#include <AtlasStringList.h>
 
 #include <AtlasProtocol.h>
 #include <AtlasProtocolDecoder.h>

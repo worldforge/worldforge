@@ -290,7 +290,7 @@ X(List_slice)(X(ListObject) *a, int ilow, int ihigh)
 }
 
 PyObject *
-X(List_GetSlice)(X(ListObject) *a, int ilow, int ihigh)
+X(List_GetSlice)(PyObject *a, int ilow, int ihigh)
 {
 	if (!X(List_Check)(a)) {
 		PyErr_BadInternalCall();
@@ -439,7 +439,7 @@ X(List_ass_slice)(X(ListObject) *a, int ilow, int ihigh, PyObject *v)
 }
 
 int
-X(List_SetSlice)(X(ListObject) *a, int ilow, int ihigh, PyObject *v)
+X(List_SetSlice)(PyObject *a, int ilow, int ihigh, PyObject *v)
 {
 	if (!X(List_Check)(a)) {
 		PyErr_BadInternalCall();
@@ -1316,7 +1316,7 @@ static PySequenceMethods X(List_as_sequence) = {
 };
 
 PyTypeObject X(List_Type) = {
-	PyObject_HEAD_INIT(&PyType_Type)
+	PyObject_HEAD_INIT(0)
 	0,
 	TYPE_STR,
 	sizeof(X(ListObject)),
