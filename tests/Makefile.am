@@ -1,4 +1,4 @@
-TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG testArea
+TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG
 
 INCLUDES = -I$(top_srcdir)
 

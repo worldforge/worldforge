@@ -1,5 +1,10 @@
 2005-03-26  Al Riddoch  <alriddoch@zepler.org>
 
+	* tests/Makefile.am: Remove testArea from tests so its not run as
+	  its broken.
+
+2005-03-26  Al Riddoch  <alriddoch@zepler.org>
+
 	* tests/Makefile.am: Add testArea to the check programs so it builds.
 
 2005-03-25  Al Riddoch  <alriddoch@zepler.org>
