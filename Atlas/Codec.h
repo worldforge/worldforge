@@ -13,7 +13,6 @@ namespace Atlas {
 
 /** Atlas stream codec
 
-FIXME update documentation to reflect reality
 This class presents an interface for sending and receiving Atlas messages.
 Each outgoing message is converted to a byte stream and piped through an
 optional chain of filters for compression or other transformations, then
