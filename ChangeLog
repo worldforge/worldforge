@@ -1,3 +1,7 @@
+2002-05-21  Michael Koch  <konqueror@gmx.de>
+
+	* configure.in: fixed --enable-debug
+
 2002-05-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Objects/common.py: Back off to supporting older more common
