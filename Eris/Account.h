@@ -73,11 +73,8 @@ public:
 
     /// Check if the account is logged in.
     /** Many operations will produce errors if the account is not logged in. */
-    bool isLoggedIn() const
-    {
-        return m_status == LOGGED_IN;
-    }
-
+    bool isLoggedIn() const;
+    
     /// Get the characters owned by this account.
     /**
     Note you should call
@@ -101,16 +98,18 @@ public:
     @result The Avatar that represents the character. Note ownership of this passes to
         the caller.
     */
-    Avatar* takeCharacter(const std::string &id);
+    void takeCharacter(const std::string &id);
 
     /// enter the game using a new character
-    Avatar* createCharacter(const Atlas::Objects::Entity::GameEntity &character);
+    void createCharacter(const Atlas::Objects::Entity::GameEntity &character);
 
 	/// pop up the game's character creation dialog, if present
 	//void createCharacter();
 
 	///  returns true if the game has defined a character creation dialog
 	bool canCreateCharacter() {return false;}
+
+    
 
     /// returns the account ID if logged in
     const std::string& getId() const
@@ -152,8 +151,14 @@ public:
     */
     SigC::Signal1<void, bool> LogoutComplete;
 
-    /// Emitted when a character is created by the zero-argument createCharacter()
-    SigC::Signal1<void, Avatar*> NewCharacter;
+    /**
+    Emitted when creating a character or taking an existing one
+    succeeds.
+    */
+    SigC::Signal1<void, Avatar*> AvatarSuccess;
+
+    SigC::Signal1<void, const std::string &> AvatarFailure;
+
 protected:
     friend class AccountRouter;
     
@@ -176,16 +181,17 @@ protected:
 	void handleLogoutTimeout();
 	void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
 
-	void createCharacterHandler(long serialno);
-
-	Timeout* _logoutTimeout;
+    void handleLoginTimeout();
     
     typedef enum
     {
         DISCONNECTED = 0,   ///< Default state, no server account active
         LOGGING_IN,         ///< Login sent, waiting for initial INFO response
         LOGGED_IN,          ///< Fully logged into a server-side account
-        LOGGING_OUT         ///< Sent a logout op, waiting for the INFO response
+        LOGGING_OUT,         ///< Sent a logout op, waiting for the INFO response
+        
+        TAKING_CHAR,        ///< sent a LOOK op for a character, awaiting INFO response
+        CREATING_CHAR       ///< send a character CREATE op, awaiting INFO response
     } Status;
         
 private:
@@ -200,6 +206,8 @@ private:
     CharacterMap _characters;	///< characters belonging to this player
     StringSet m_characterIds;
     bool m_doingCharacterRefresh; ///< set if we're refreshing character data
+    
+    std::auto_ptr<Timeout> m_timeout;
 };
 	
 } // of namespace Eris

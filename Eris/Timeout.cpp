@@ -6,6 +6,7 @@
 
 #include <Eris/Poll.h>
 #include <Eris/Exceptions.h>
+#include <Eris/LogStream.h>
 
 #include <limits.h>
 

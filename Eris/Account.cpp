@@ -27,21 +27,19 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-typedef std::map<int, Avatar*> RefnoAvatarMap;
-static RefnoAvatarMap global_pendingInfoAvatars;
-
 class AccountRouter : public Router
 {
 public:
     AccountRouter(Account* pl) :
-        m_account(pl)
+        m_account(pl),
+        m_avatarRefno(0)
     {
         m_account->getConnection()->setDefaultRouter(this);
     }
 
     virtual ~AccountRouter()
     {
-        //m_account->getConnection()->
+        m_account->getConnection()->clearDefaultRouter();
     }
 
     /** specify the serialNo of the operation used to connect the
@@ -49,6 +47,11 @@ public:
     void setLoginSerial(int serialNo)
     {
         m_loginRefno = serialNo;
+    }
+
+    void setAvatarRefno(int refno)
+    {
+        m_avatarRefno = refno;
     }
 
     virtual RouterResult handleOperation(const RootOperation& op)
@@ -61,8 +64,14 @@ public:
             {
                 const std::vector<Root>& args = err->getArgs();
                 std::string msg = args[0]->getAttr("message").asString();
-                warning() << "Account got error op while logged in:" << msg;
-                debug() << "op that caused the error was: " << args[1];
+                
+                if (err->getRefno() == m_avatarRefno) {
+                    // creating or taking a character failed for some reason
+                    m_account->AvatarFailure(msg);
+                    m_avatarRefno = 0;
+                    m_account->m_status = Account::LOGGED_IN;
+                } else
+                    warning() << "Account got error op while logged in:" << msg;
             } else {
                 m_account->loginError(err);
             }
@@ -125,18 +134,20 @@ private:
             return HANDLED;
         }
            
-        if (m_account->isLoggedIn()) {
+        if ((m_account->m_status == Account::TAKING_CHAR) || 
+            (m_account->m_status == Account::CREATING_CHAR)) {
             GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
             if (ent.isValid()) {
                 // IG transition info, maybe
-                RefnoAvatarMap::iterator A = global_pendingInfoAvatars.find(info->getRefno());
-                if (A != global_pendingInfoAvatars.end())
+                if (info->getRefno() == m_avatarRefno)
                 {
-                    A->second->setEntity(ent->getId());
-                    global_pendingInfoAvatars.erase(A);
+                    Avatar* av = new Avatar(m_account, ent->getId());
+                    m_account->AvatarSuccess.emit(av);
+                    m_account->m_status = Account::LOGGED_IN;
+                    m_avatarRefno = 0;
                     return HANDLED;
                 } else
-                    error() << "Account got info(game_entity) with serial "
+                    error() << "Account got info(game_entity) with refno "
                      << info->getRefno() << ", but not a IG subscription";
             }
         }
@@ -145,7 +156,8 @@ private:
     }
 
     Account* m_account;
-    int m_loginRefno;
+    int m_loginRefno,
+        m_avatarRefno;
 };
 
 #pragma mark -
@@ -212,6 +224,9 @@ void Account::createAccount(const std::string &uname,
 // store for re-logins
     m_username = uname;
     m_pass = pwd;
+    
+    m_timeout.reset(new Timeout("login", this, 5000));
+    m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLoginTimeout));
 }
 
 void Account::logout()
@@ -230,8 +245,8 @@ void Account::logout()
     
     m_con->send(l);
 	
-    _logoutTimeout = new Timeout("logout", this, 5000);
-    _logoutTimeout->Expired.connect(SigC::slot(*this, &Account::handleLogoutTimeout));
+    m_timeout.reset(new Timeout("logout", this, 5000));
+    m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLogoutTimeout));
 }
 
 const CharacterMap& Account::getCharacters()
@@ -280,12 +295,14 @@ void Account::refreshCharacterInfo()
     }
 }
 
-Avatar* Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
+void Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 {
-    if (!m_con->isConnected() || (m_status != LOGGED_IN))
-    {
-        error() << "called createCharacter on unconnected Account, ignoring";
-        return NULL;
+    if (!m_con->isConnected() || (m_status != LOGGED_IN)) {
+        if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR))
+            error() << "duplicate char creation / take";
+        else
+            error() << "called createCharacter on unconnected Account, ignoring";
+        return;
     }    
 
     Create c;    
@@ -293,10 +310,10 @@ Avatar* Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
     c->setFrom(m_accountId);
     c->setSerialno(getNewSerialno());
     m_con->send(c);
-
-    Avatar *av = new Avatar(this);
-    global_pendingInfoAvatars[c->getSerialno()] = av;
-    return av;
+    
+    // let the router know to expect the INFO op
+    m_router->setAvatarRefno(c->getSerialno());
+    m_status = CREATING_CHAR;
 }
 
 /*
@@ -322,13 +339,21 @@ void Account::createCharacterHandler(long serialno)
 }
 */
 
-Avatar* Account::takeCharacter(const std::string &id)
+void Account::takeCharacter(const std::string &id)
 {
     if (m_characterIds.count(id) == 0) {
         error() << "Character '" << id << "' not owned by Account " << m_username;
-        return NULL;
+        return;
     }
 	
+    if (!m_con->isConnected() || (m_status != LOGGED_IN)) {
+        if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR))
+            error() << "duplicate char creation / take";
+        else
+            error() << "called createCharacter on unconnected Account, ignoring";
+        return;
+    } 
+        
     Root what;
     what->setId(id);
     
@@ -338,11 +363,17 @@ Avatar* Account::takeCharacter(const std::string &id)
     l->setSerialno(getNewSerialno());
     m_con->send(l);
     
-    Avatar *av = new Avatar(this);
-    global_pendingInfoAvatars[l->getSerialno()] = av;
-    return av;
+    // let the router know to expect the INFO op
+    m_router->setAvatarRefno(l->getSerialno());
+    m_status = TAKING_CHAR;
 }
 
+bool Account::isLoggedIn() const
+{
+    return ((m_status == LOGGED_IN) || 
+        (m_status == TAKING_CHAR) || (m_status == CREATING_CHAR));
+}
+    
 #pragma mark -
 
 void Account::internalLogin(const std::string &uname, const std::string &pwd)
@@ -362,6 +393,9 @@ void Account::internalLogin(const std::string &uname, const std::string &pwd)
     
     m_router->setLoginSerial(l->getSerialno());
     m_con->send(l);
+    
+    m_timeout.reset(new Timeout("login", this, 5000));
+    m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLoginTimeout));
 }
 
 void Account::internalLogout(bool clean)
@@ -370,13 +404,12 @@ void Account::internalLogout(bool clean)
         if (m_status != LOGGING_OUT)
             error() << "got clean logout, but not logging out already";
     } else {
-        if (m_status != LOGGED_IN)
+        if ((m_status != LOGGED_IN) && (m_status != TAKING_CHAR) && (m_status != CREATING_CHAR))
             error() << "got forced logout, but not currently logged in";
     }
     
     m_status = DISCONNECTED;
-    delete _logoutTimeout;
-	_logoutTimeout = NULL;
+    m_timeout.reset();
     
     if (m_con->getStatus() == BaseConnection::DISCONNECTING) {
         m_con->unlock();
@@ -404,6 +437,7 @@ void Account::loginComplete(const AtlasAccount &p)
     LoginSuccess.emit();
       
     m_con->Disconnecting.connect(SigC::slot(*this, &Account::netDisconnecting));
+    m_timeout.reset();
 }
 
 void Account::loginError(const Error& err)
@@ -417,6 +451,17 @@ void Account::loginError(const Error& err)
     LoginFailure.emit(msg);
     
     m_status = DISCONNECTED;
+    m_timeout.reset();
+}
+
+void Account::handleLoginTimeout()
+{
+    warning() << "login / account creation timed out waiting for response";
+    
+    m_status = DISCONNECTED;
+    m_timeout.reset();
+    
+    LoginFailure.emit("timed out waiting for server response");
 }
 
 void Account::sightCharacter(const GameEntity& ge)
@@ -477,8 +522,7 @@ void Account::handleLogoutTimeout()
     error() << "LOGOUT timed out waiting for response";
     
     m_status = DISCONNECTED;
-    delete _logoutTimeout;
-    _logoutTimeout = NULL;
+    m_timeout.reset();
     
     LogoutComplete.emit(false);
 }

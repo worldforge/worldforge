@@ -126,28 +126,68 @@ AutoAccount stdLogin(const std::string& uname, const std::string& pwd, Eris::Con
     return player;
 }
 
-AutoAvatar stdTake(const std::string& charId, Eris::Account* acc)
+class AvatarGetter : public SigC::Object
 {
-    AutoAvatar av(acc->takeCharacter(charId));
+public:
+    AvatarGetter(Eris::Account* acc) : 
+        m_acc(acc),
+        m_expectFail(false),
+        m_failed(false)
+    {
+        m_acc->AvatarSuccess.connect(SigC::slot(*this, &AvatarGetter::success));
+        m_acc->AvatarFailure.connect(SigC::slot(*this, &AvatarGetter::failure));
+    }
+    
+    void expectFailure()
+    {
+        m_expectFail = true;
+    }
+    
+    AutoAvatar take(const std::string& charId)
+    {        
+        m_waiting = true;
+        m_failed = false;
+        
+        m_acc->takeCharacter(charId);
+        
+        while (m_waiting) Eris::PollDefault::poll();
+        
+        // we wanted to fail, bail out now
+        if (m_failed && m_expectFail) return AutoAvatar();
+        
+        assert(m_av->getEntity() == NULL); // shouldn't have the entity yet
+        assert(m_av->getId() == charId); // but should have it's ID
+    
+        SignalCounter1<Entity*> gotChar;
+        m_av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Entity*>::fired));
+    
+        while (gotChar.fireCount() == 0) Eris::PollDefault::poll();
+    
+        assert(m_av->getEntity());
+        assert(m_av->getEntity()->getId() == charId);
 
-    SignalCounter1<Avatar*> wentInGame;
-    av->InGame.connect(SigC::slot(wentInGame, &SignalCounter1<Avatar*>::fired));
+        return m_av;
+    }
     
-    while (wentInGame.fireCount() == 0) Eris::PollDefault::poll();
+private:
+    void success(Avatar* av)
+    {
+        m_av.reset(av);
+        m_waiting = false;
+    }
     
-    assert(av->getEntity() == NULL); // shouldn't have the entity yet
-    assert(av->getId() == charId); // but should have it's ID
-    
-    SignalCounter1<Entity*> gotChar;
-    av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Entity*>::fired));
-    
-    while (gotChar.fireCount() == 0) Eris::PollDefault::poll();
-    
-    assert(av->getEntity());
-    assert(av->getEntity()->getId() == charId);
+    void failure(const std::string& msg)
+    {
+        std::cerr << "failure getting an avatar: " << msg << endl;
+        m_waiting = false;
+        m_failed = true;
+    }
 
-    return av;
-}
+    bool m_waiting;
+    Eris::Account* m_acc;
+    AutoAvatar m_av;
+    bool m_expectFail, m_failed;
+};
 
 class WaitForAppearance : public SigC::Object
 {
@@ -297,6 +337,29 @@ void testBadLogin()
     assert(!player->isLoggedIn());
 }
 
+void testBadLogin2()
+{
+    AutoConnection con = stdConnect();
+    AutoAccount player(new Eris::Account(con.get()));
+    
+    SignalCounter0 loginCount;
+    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
+   
+    SignalCounter1<const std::string&> loginErrorCounter;
+    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+    
+    player->login("_timeout_", "foo");
+
+    while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
+    {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(loginErrorCounter.fireCount() == 1);
+    assert(loginCount.fireCount() == 0);
+    assert(!player->isLoggedIn());
+}
+
 void testAccCreate()
 {
     AutoConnection con = stdConnect();
@@ -336,7 +399,6 @@ void testAccountCharacters()
     }
     
     const CharacterMap& chars = player->getCharacters();
-    assert(chars.size() == 1);
     CharacterMap::const_iterator C = chars.find("acc_b_character");
     assert(C != chars.end());
     assert(C->second->getName() == "Joe Blow");
@@ -362,31 +424,24 @@ void testCharActivate(Controller& ctl)
     AutoAccount player = stdLogin("account_B", "sweede", con.get());
 
     ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
-    Avatar* av = player->takeCharacter("acc_b_character");
-        
-    SignalCounter1<Avatar*> wentInGame;
-    av->InGame.connect(SigC::slot(wentInGame, &SignalCounter1<Avatar*>::fired));
-    
-    while (wentInGame.fireCount() == 0) Eris::PollDefault::poll();
-    
-    assert(av->getEntity() == NULL); // shouldn't have the entity yet
-    assert(av->getId() == "acc_b_character"); // but should have it's ID
-    
-    SignalCounter1<Entity*> gotChar;
-    av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Entity*>::fired));
-        
-    while (gotChar.fireCount() == 0) Eris::PollDefault::poll();
-        
-    assert(av->getEntity());
-    assert(av->getEntity()->getId() == "acc_b_character");
+    AutoAvatar av = AvatarGetter(player.get()).take("acc_b_character");
     
     Eris::View* v = av->getView();
     assert(v->getTopLevel()->getId() == "_world");
     
     assert(v->getTopLevel()->hasChild("_hut_01"));
     assert(!v->getTopLevel()->hasChild("_field_01")); // not yet
+}
+
+void testBadTake()
+{
+    AutoConnection con = stdConnect();
+    AutoAccount player = stdLogin("account_B", "sweede", con.get());
     
-    delete av;
+    AvatarGetter g(player.get());
+    g.expectFailure();
+    AutoAvatar av2 = g.take("_fail_");
+    assert(av2.get() == NULL);
 }
 
 void testAppearance(Controller& ctl)
@@ -395,7 +450,7 @@ void testAppearance(Controller& ctl)
     AutoAccount acc = stdLogin("account_B", "sweede", con.get());
     
     ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
-    AutoAvatar av = stdTake("acc_b_character", acc.get());
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
     
     Eris::View* v = av->getView();
     
@@ -437,7 +492,7 @@ void testSet(Controller& ctl)
     ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
     ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
     
-    AutoAvatar av = stdTake("acc_b_character", acc.get());
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
 
     {
         WaitForAppearance wf(av->getView(), "_table_1");
@@ -486,12 +541,16 @@ int main(int argc, char **argv)
         try {    
             testLogin();
             testBadLogin();
+            testBadLogin2();
             testAccCreate();
             testLogout();
             testAccountCharacters();
             testCharActivate(ctl);
+            testBadTake();
+            
             testAppearance(ctl);
             testSet(ctl);
+            
         }
         catch (TestFailure& tfexp)
         {

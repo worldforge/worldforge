@@ -24,30 +24,24 @@ using WFMath::TimeStamp;
 namespace Eris
 {
 
-Avatar::Avatar(Account* pl) : 
+Avatar::Avatar(Account* pl, const std::string& entId) : 
     m_account(pl),
-    m_entity(NULL),
-    m_router(NULL)
+    m_entityId(entId),
+    m_entity(NULL)
 {
     m_view = new View(this);
     m_entityAppearanceCon = m_view->Appearance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
+    
+    m_router = new IGRouter(this);
+
+    m_view->getEntityFromServer("");
+    m_view->getEntity(m_entityId);
 }
 
 Avatar::~Avatar()
 {
     delete m_router;
     delete m_view;
-}
-
-void Avatar::setEntity(const std::string& entId)
-{
-    m_entityId = entId;
-    m_router = new IGRouter(this);
-
-    m_view->getEntityFromServer("");
-    m_view->getEntity(m_entityId);
-    
-    InGame.emit(this);
 }
 
 #pragma mark -

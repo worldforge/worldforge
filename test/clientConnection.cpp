@@ -224,6 +224,10 @@ void ClientConnection::processLogin(const Login& login)
         throw InvalidOperation("got bad LOGIN op");
     
     std::string username = args.front()->getAttr("username").asString();
+    if (username == "_timeout_") {
+        // deliberately send nothing
+        return;
+    }
     
     AccountMap::const_iterator A = m_server->findAccountByUsername(username);
     if (A  == m_server->m_accounts.end())
@@ -293,6 +297,8 @@ void ClientConnection::processOOGLook(const Look& lk)
     const std::vector<Root>& args = lk->getArgs();
     std::string lookTarget;
         
+    debug() << "client con processing OOG look";
+        
     if (args.empty())
     {
         debug() << "stub server got anonymous OOG look";
@@ -330,9 +336,7 @@ void ClientConnection::processOOGLook(const Look& lk)
     {
         // should check room view permissions?
         thing = m_server->m_rooms[lookTarget];
-    }
-    else
-    {
+    } else {
         // didn't find any entity with the id
         sendError("processed OOG look for unknown entity " + lookTarget, lk);
         return;
@@ -396,8 +400,14 @@ void ClientConnection::processAnonymousGet(const Get& get)
 
 void ClientConnection::activateCharacter(const std::string& charId, const RootOperation& op)
 {
+    // special magic testing IDs
+    if (charId == "_fail_") {
+        sendError("deliberately failed activation", op);
+        return;
+    }
+
     assert(entityIsCharacter(charId));
-    debug() << "activation, inbound op's serial is " << op->getSerialno();
+    //debug() << "activation, inbound op's serial is " << op->getSerialno();
     
     if (m_agents.count(charId)) {
         sendError("duplicate character action", op);

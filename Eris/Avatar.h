@@ -77,13 +77,6 @@ public:
 	/// Place an entity inside another one
 	void place(Entity*, Entity* container, const WFMath::Point<3>& pos
 		= WFMath::Point<3>(0, 0, 0));
-
-    /** Emitted when the in-game subscription (taking a character) is known
-    to have worked. After this point, entities will start appearing in the view,
-    so this is your last chance to register factories and connect to signals
-    on View.
-    */
-    SigC::Signal1<void, Avatar*> InGame;
     
     /**
     Emitted when the character entity of this Avatar is valid (and presumably,
@@ -113,13 +106,11 @@ protected:
     /** Create a new Avatar object. 
     @param pl The player that owns the Avatar 
     */
-    Avatar(Account* pl);
+    Avatar(Account* pl, const std::string& entId);
     
     friend class AccountRouter;
     friend class IGRouter;
-    
-    void setEntity(const std::string& entId);
-    
+        
     /** called by the IG router for each op it sees with a valid 'seconds'
     attribute set. We use this to synchronize the local world time up. */
     void updateWorldTime(double t);

@@ -73,6 +73,8 @@ public:
 	
     void setDefaultRouter(Router* router);
     
+    void clearDefaultRouter();
+    
     void registerRouterForTo(Router* router, const std::string toId);
     void unregisterRouterForTo(Router* router, const std::string toId);
                 

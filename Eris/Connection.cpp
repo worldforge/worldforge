@@ -172,6 +172,11 @@ void Connection::setDefaultRouter(Router* router)
     
     m_defaultRouter = router;
 }
+
+void Connection::clearDefaultRouter()
+{
+    m_defaultRouter = NULL;
+}
     
 void Connection::lock()
 {

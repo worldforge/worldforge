@@ -117,7 +117,8 @@ void StubServer::setupTestAccounts()
 
     StringList& characters = accB->modifyCharacters();
     characters.push_back("acc_b_character");
-
+    characters.push_back("_fail_");
+    
     m_accounts[accB->getId()] = accB;
 
     GameEntity world;
@@ -144,6 +145,8 @@ void StubServer::setupTestAccounts()
     posl.push_back(3.0);
     getEntity("_table_1")->setPos(posl);
     defineEntity("_vase_1", "decoration", "_table_1", "A horrible vase");
+    
+    defineEntity("_fail_", "settler", "_world", "Dummy");
 }
 
 int StubServer::run(pid_t child)
