@@ -1,3 +1,8 @@
+Thursday, February 5th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Got the fooCorner() fix right.
+	* 0.3.2 release! for the last time!
+
 Wednesday, February 4th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Added wfmath.spec to EXTRA_DIST to ease rpm building.
