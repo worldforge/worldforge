@@ -29,8 +29,6 @@
 #include <wfmath/const.h>
 #include <algorithm> // For std::pair
 
-namespace WFMath {
-
 /** Timing related primitives in a portable fashion - note this is for interval / elapsed
 time measurement, not displaying a human readable time. */
 
@@ -41,13 +39,15 @@ time measurement, not displaying a human readable time. */
 #endif
 #if defined ( __WIN32__ )
 #include <winsock2.h> 
-extern "C" {
+namespace WFMath { extern "C" {
   struct eris_timeval  {
     long tv_sec;	/* seconds */
     long tv_usec;	/* microseconds */
   };
-}
+}}
 #endif
+
+namespace WFMath {
 
 class TimeStamp;
 
