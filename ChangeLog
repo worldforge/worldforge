@@ -1,3 +1,12 @@
+Thursday, March 07 2002, James Turner
+
+	* Changed delay on select() to be 0,0 : previously it was
+	  10 milliseconds, which is a bit harsh on the clients.
+	* Changed World::recvSightMove to use the ID argument of
+	  the Move operation, instead of it's FROM. This should
+	  fix reporting of pick/drop ops. Both these fixes
+	  are suggested by Al Riddoch.
+
 Wednesday, March 06 2002, James Turner
 
 	* Fixed character looks to actually work (had name and type

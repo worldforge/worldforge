@@ -410,8 +410,10 @@ void World::recvSightDelete(const Atlas::Objects::Operation::Delete &del)
 
 void World::recvSightMove(const Atlas::Objects::Operation::Move &mv)
 {
-	Entity *e = lookup(mv.GetFrom());
-	if (!e) {
+    std::string id = getArg(mv, "id").AsString();
+    Entity *e = lookup(id);
+	
+    if (!e) {
 		if ( isPendingInitialSight(mv.GetFrom()) ) {
 			// this is 'safe'; we discard the move becuase we will
 			// get the position with the LOOK, and there is no useful

@@ -150,7 +150,7 @@ void Connection::poll()
 	
 	SOCKET_TYPE fd = _stream->getSocket();
 	fd_set pending;
-     	struct timeval tv = {0, 10};
+     	struct timeval tv = {0, 0};
       
      	FD_ZERO(&pending);
       	FD_SET(fd, &pending);
