@@ -13,3 +13,7 @@ missing
 mkinstalldirs
 stamp-h.in
 stamp-h
+config.status
+config.cache
+config.log
+libtool
