@@ -1,5 +1,9 @@
 2003-10-31 Damien McGinnes 
 
+	* fixed tests/util_timer compile and link
+
+2003-10-31 Damien McGinnes 
+
 	* Added timeSeg test
 
 2003-10-31  Al Riddoch  <alriddoch@zepler.org>

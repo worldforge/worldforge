@@ -5,7 +5,7 @@
 #include <Mercator/Terrain.h>
 #include <Mercator/Segment.h>
 #include <Mercator/Intersect.h>
-#include "util_timer.cpp"
+#include "util_timer.h"
 #include <iostream>
 
 int main()

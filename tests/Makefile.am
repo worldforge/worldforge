@@ -22,5 +22,5 @@ testIntersect_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 testPhys_SOURCES = testPhys.cpp
 testPhys_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-timeSeg_SOURCES = timeSeg.cpp
+timeSeg_SOURCES = timeSeg.cpp util_timer.h util_timer.cpp
 timeSeg_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
