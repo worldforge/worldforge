@@ -22,6 +22,7 @@ void Factory<Codec<std::iostream> >::getFactories()
 {
     new Codec<std::iostream>::Factory<Codecs::XML> ("XML", Codec<std::iostream>::Metrics(1,2));
     new Codec<std::iostream>::Factory<Codecs::Packed> ("Packed", Codec<std::iostream>::Metrics(1,2));
+    new Codec<std::iostream>::Factory<Codecs::Bach> ("Bach", Codec<std::iostream>::Metrics(1,2));
 }
 
 void Factory<Filter>::getFactories()

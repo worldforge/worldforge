@@ -1,3 +1,8 @@
+2002-05-13  Michael Koch  <konqueror@gmx.de>
+
+	* src/*, configure.in:
+	  added Bach Codec officially to Atlas-C++
+	
 2002-05-12  Michael Koch  <konqueror@gmx.de>
 
 	* adjusted all member variables to use the prefix m_

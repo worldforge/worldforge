@@ -352,6 +352,7 @@ AC_OUTPUT([
 	src/Message/Makefile
 	src/Net/Makefile
 	src/Objects/Makefile
+	src/Utilities/Makefile
 	tests/Makefile
 	tests/Objects/Makefile
 	tutorial/Makefile

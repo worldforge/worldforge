@@ -91,6 +91,7 @@ class StreamConnect : public Atlas::Negotiate<std::iostream>
 
     bool m_canPacked;
     bool m_canXML;
+    bool m_canBach;
 
     bool m_canGzip;
     bool m_canBzip2;
@@ -143,6 +144,7 @@ class StreamAccept : public Atlas::Negotiate<std::iostream>
 
     bool m_canPacked;
     bool m_canXML;
+    bool m_canBach;
 
     bool m_canGzip;
     bool m_canBzip2;

@@ -8,6 +8,7 @@
 
 #include "../Codecs/XML.h"
 #include "../Codecs/Packed.h"
+#include "../Codecs/Bach.h"
 
 static std::string get_line(std::string &s, char ch)
 {
@@ -74,6 +75,9 @@ void Atlas::Net::NegotiateHelper::put(std::string &buf, const std::string & head
   buf += " XML\n";
 
   buf += header;
+  buf += " Bach\n";
+
+  buf += header;
   buf += " Gzip\n";
 
   buf += header;
@@ -86,7 +90,7 @@ Atlas::Net::StreamConnect::StreamConnect(const std::string& name, std::iostream&
 Bridge* bridge) :
   m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
   m_codecHelper(&m_inCodecs), m_filterHelper(&m_inFilters),
-  m_canPacked(true), m_canXML(true), m_canGzip(true), m_canBzip2(true)
+  m_canPacked(true), m_canXML(true), m_canBach(true),m_canGzip(true), m_canBzip2(true)
 {
 }
 
@@ -160,7 +164,7 @@ Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamConnect::getState()
 {
     if (m_state == DONE)
     {
-        if (m_canPacked || m_canXML)
+        if (m_canPacked || m_canXML || m_canBach)
         {
             return SUCCEEDED;
         }
@@ -176,6 +180,7 @@ Atlas::Codec<std::iostream>* Atlas::Net::StreamConnect::getCodec()
 {
     if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_bridge); }
     if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_bridge); }
+    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, m_bridge); }
     return NULL; // throw exception?
 }
 
@@ -187,6 +192,7 @@ void Atlas::Net::StreamConnect::processServerCodecs()
     {
         if (*j == "XML") { m_canXML = true; }
         if (*j == "Packed") { m_canPacked = true; }
+	if (*j == "Bach") { m_canBach = true; }
     }
 }
   
@@ -273,6 +279,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read)
         {
             if (m_canPacked) { m_socket << "IWILL Packed\n"; }
             else if (m_canXML) { m_socket << "IWILL XML\n"; }
+	    else if (m_canBach) { m_socket << "IWILL Bach\n"; }
             m_socket << std::endl;
             m_state++;
         }
@@ -302,7 +309,7 @@ Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamAccept::getState()
 {
     if (m_state == DONE)
     {
-        if (m_canPacked || m_canXML)
+        if (m_canPacked || m_canXML || m_canBach)
         {
             return SUCCEEDED;
         }
@@ -326,6 +333,7 @@ Atlas::Codec<std::iostream>* Atlas::Net::StreamAccept::getCodec()
                 //New(Codec<std::iostream>::Parameters(m_socket,bridge));
     if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_bridge); }
     if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_bridge); }
+    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, m_bridge); }
     return NULL; // throw exception?
 }
 
@@ -378,6 +386,7 @@ void Atlas::Net::StreamAccept::processClientCodecs()
     {
         if (*j == "XML") { m_canXML = true; }
         if (*j == "Packed") { m_canPacked = true; }
+        if (*j == "Bach") { m_canBach = true; }
     }
 }
   
