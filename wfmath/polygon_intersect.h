@@ -33,6 +33,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/polygon.h>
+#include <wfmath/intersect.h>
 
 #ifndef _MSC_VER
 #warning "The Intersect() and Contains() functions involving WFMath::Polygon<>"

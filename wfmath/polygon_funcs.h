@@ -153,7 +153,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
     if(i = 0 || max < size)
       size = max;
   }
-  CoordType exponent;
+  int exponent;
   (void) frexp(size, exponent);
   epsilon = ldexp(WFMATH_EPSILON, exponent);
 
@@ -168,7 +168,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
     if(i == skip)
       continue;
 
-    Vector<2> diff = m_poly[i] - first_point;
+    Vector<2> diff = poly[i] - first_point;
     if(diff.sqrMag() < epsilon * epsilon) // No addition to span
       continue;
     if(!m_axes[1].isValid()) // We span 1D
@@ -207,7 +207,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
   }
 
   if(still_valid[1]) {
-    assert(m_axes_valid[1]);
+    assert(m_axes[1].isValid());
     assert(!got_ratio);
     // This is a little harder, m_axes[0] is invalid, must swap axes
     m_origin += m_axes[0] * first_point[0];
@@ -219,7 +219,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
   // The !m_axes[1].isValid() case reducing to a point falls into here
   if(!got_ratio) { // Nothing's valid, all points are equal
     m_origin += m_axes[0] * first_point[0];
-    if(m_axes_valid[1])
+    if(m_axes[1].isValid())
       m_origin += m_axes[1] * first_point[1];
     m_axes[0].setValid(false);
     m_axes[1].setValid(false);
