@@ -33,6 +33,8 @@ public:
 
     virtual void SendContents(Atlas::Bridge* b);
 
+    virtual Atlas::Message::Object AsObject() const;
+
     inline void SetPassword(const std::string& val);
 
     inline const std::string& GetPassword() const;

@@ -98,4 +98,15 @@ void RootEntity::SendContents(Bridge* b)
     Root::SendContents(b);
 }
 
+Object RootEntity::AsObject() const
+{
+    Object::MapType m = Root::AsObject().AsMap();
+    m["loc"] = Object(attr_loc);
+    m["pos"] = Object(attr_pos);
+    m["velocity"] = Object(attr_velocity);
+    m["contains"] = Object(attr_contains);
+    m["stamp_contains"] = Object(attr_stamp_contains);
+    return Object(m);
+}
+
 } } } // namespace Atlas::Objects::Entity

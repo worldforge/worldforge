@@ -64,4 +64,11 @@ void Account::SendContents(Bridge* b)
     AdminEntity::SendContents(b);
 }
 
+Object Account::AsObject() const
+{
+    Object::MapType m = AdminEntity::AsObject().AsMap();
+    m["password"] = Object(attr_password);
+    return Object(m);
+}
+
 } } } // namespace Atlas::Objects::Entity

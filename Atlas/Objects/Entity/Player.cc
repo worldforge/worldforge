@@ -65,4 +65,11 @@ void Player::SendContents(Bridge* b)
     Account::SendContents(b);
 }
 
+Object Player::AsObject() const
+{
+    Object::MapType m = Account::AsObject().AsMap();
+    m["characters"] = Object(attr_characters);
+    return Object(m);
+}
+
 } } } // namespace Atlas::Objects::Entity

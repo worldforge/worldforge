@@ -33,6 +33,8 @@ public:
 
     virtual void SendContents(Atlas::Bridge* b);
 
+    virtual Atlas::Message::Object AsObject() const;
+
     inline void SetCharacters(const Atlas::Message::Object::ListType& val);
 
     inline const Atlas::Message::Object::ListType& GetCharacters() const;

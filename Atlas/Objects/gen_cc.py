@@ -240,6 +240,17 @@ class GenerateCC:
         parent = obj.attr['parents'].value[0]
         self.out.write("    %s::SendContents(b);\n" % classize(parent))
         self.out.write("}\n\n")
+    def asobject_im(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        self.out.write("Object %s::AsObject() const\n" % classname)
+        self.out.write("{\n")
+        parent = obj.attr['parents'].value[0]
+        self.out.write("    Object::MapType m = %s::AsObject().AsMap();\n" % classize(parent))
+        for attr in statics:
+            self.out.write('    m["%s"] = Object(attr_%s);\n' % \
+                    (attr.name, attr.name))
+        self.out.write('    return Object(m);\n')
+        self.out.write("}\n\n")
     def interface(self, obj):
         print "Output of interface for:"
         outfile = self.outdir + '/' + self.classname + ".h"
@@ -292,6 +303,8 @@ class GenerateCC:
             self.out.write("const std::string& name);\n")
             self.out.write("\n")
             self.out.write("    virtual void SendContents(Atlas::Bridge* b);\n")
+            self.out.write("\n")
+            self.out.write("    virtual Atlas::Message::Object AsObject() const;\n")
             self.out.write("\n")
             for attr in static_attrs:
                 self.out.write("    inline void Set" + classize(attr.name))
@@ -362,6 +375,7 @@ class GenerateCC:
             self.setattr_im(obj, static_attrs)
             self.remattr_im(obj, static_attrs)
             self.sendcontents_im(obj, static_attrs)
+            self.asobject_im(obj, static_attrs)
         if outdir != ".":
             self.ns_close(['Atlas', 'Objects', outdir])
         else:

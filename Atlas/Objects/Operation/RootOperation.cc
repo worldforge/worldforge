@@ -108,4 +108,18 @@ void RootOperation::SendContents(Bridge* b)
     Root::SendContents(b);
 }
 
+Object RootOperation::AsObject() const
+{
+    Object::MapType m = Root::AsObject().AsMap();
+    m["serialno"] = Object(attr_serialno);
+    m["refno"] = Object(attr_refno);
+    m["from"] = Object(attr_from);
+    m["to"] = Object(attr_to);
+    m["seconds"] = Object(attr_seconds);
+    m["future_seconds"] = Object(attr_future_seconds);
+    m["time_string"] = Object(attr_time_string);
+    m["args"] = Object(attr_args);
+    return Object(m);
+}
+
 } } } // namespace Atlas::Objects::Operation
