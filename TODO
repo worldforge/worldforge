@@ -3,26 +3,20 @@ TODO list for Atlas-C++:
 Items are written up by those who they are assigned to, unless otherwise noted
 (using " -- ").
 
-TODO items for sdt <sdt@gmx.net>:
+TODO items for anybody who wants to do them:
 
- - finish tutorial/ [0.4.0]
-
-TODO items for mike <mikeday@corplink.com.au>:
+ - add input filtering to Atlas::filterbuf -- sdt
+ - make use of Atlas::filterbuf -- sdt
+ - finish tutorial -- sdt
  - rewrite negotiate [0.3.[9|10] / 0.4.0 ] -- sdt
- - add docs to: [0.x.x]
-    * Atlas::Bridge::[List|Map]
-    * Atlas::Codec::[Metrics|Parameters]
-    * Atlas::[Codec|Filter]::Factory
-    * Atlas::Filter::[Metrics|Parameters]
-   (obviously these don't require more than one-liners) -- sdt
  - add docs to: [0.4.0]
     * Atlas::Net::Stream[Accept|Connect]
      -- sdt
-
-TODO items for anybody who wants to do them:
-
  - write tests/ [0.4.0 / 0.3.10] -- sdt
  - make all tests succeed [0.4.0] -- sdt
- - write filterbuf, which uses Filter to filter data passed to and from a
-   streambuf -- sdt [0.4.0]
  - make use of metrics in negotiation and elsewhere -- sdt [0.4.x]
+
+Notes:
+
+Stefanus Du Toit is no longer participating largely.
+Michael Day is no longer participating largely.

@@ -24,6 +24,7 @@
 		<require id="cstring"/>
 		<require id="string"/>
 		<require id="vector"/>
+		<require id="streambuf" generate="config"/>
 	    </require>
 	</require>
     </require>

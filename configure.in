@@ -2,14 +2,9 @@ dnl Initialise autoconf
 
 AC_INIT()
 
-ATLAS_MAJOR_VERSION=0
-ATLAS_MINOR_VERSION=3
-ATLAS_MICRO_VERSION=10
-ATLAS_VERSION=$ATLAS_MAJOR_VERSION.$ATLAS_MINOR_VERSION.$ATLAS_MICRO_VERSION
-AC_SUBST(ATLAS_VERSION)
 dnl Initialise automake
 
-AM_INIT_AUTOMAKE("Atlas-C++", $ATLAS_VERSION)
+AM_INIT_AUTOMAKE("Atlas", "0.3.9")
 AM_CONFIG_HEADER(config.h)
 
 dnl Test for GNU libtool
@@ -285,9 +280,13 @@ AC_CHECK_HEADERS(vector)
 
 AC_LANG_RESTORE
 
-SYSTEM_LIBS="$SYSTEM_LIBS -lm"
-ATLAS_CFLAGS=""
-ATLAS_LIBS="-lAtlasObjects -lAtlasNet -lAtlas -lAtlasCodecs -lAtlasFilters -lAtlasMessage -lAtlas"
+dnl Test for <streambuf> header file
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+AC_CHECK_HEADERS(streambuf)
+
+AC_LANG_RESTORE
 
 dnl Test for gzip compression library
 
@@ -304,8 +303,6 @@ LIBS="$LIBS -L$with_zlib/lib"
 AC_CHECK_LIB(z, inflate)
 
 AC_CHECK_HEADERS(zlib.h)
-
-SYSTEM_LIBS="$SYSTEM_LIBS -lz"
 
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
@@ -326,19 +323,14 @@ AC_CHECK_LIB(bz2, bzCompressInit)
 
 AC_CHECK_HEADERS(bzlib.h)
 
-SYSTEM_LIBS="$SYSTEM_LIBS -lbz2"
-
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
-
-AC_SUBST(ATLAS_CFLAGS)
-AC_SUBST(ATLAS_LIBS)
-AC_SUBST(SYSTEM_LIBS)
 
 dnl Generate files
 
 AC_OUTPUT([
 	Makefile
+	benchmark/Makefile
 	src/Makefile
 	src/Codecs/Makefile
 	src/Filters/Makefile
@@ -349,6 +341,4 @@ AC_OUTPUT([
 	tests/Makefile
 	tests/Objects/Makefile
 	tutorial/Makefile
-	benchmark/Makefile
-	atlas-config
-], [chmod +x atlas-config])
+])

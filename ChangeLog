@@ -1,7 +1,16 @@
+2001-01-05  Stefanus Du Toit  <sjdutoit@uwaterloo.ca>
+
+	* src/Filter.h: added filterbuf. Input filtering is not
+	    implemented yet.
+	* configure.am: added check for <streambuf>. You will need an
+	    automike with a C++ check for this.
+	* configure.in: regenerated from new configure.am.
+	* TODO: updated todo list.
+
 2001-01-04  Stefanus Du Toit  <sjdutoit@uwaterloo.ca>
 
 	* src/*: made everything ISO C++ conforming, from what I can see
-	         (mainly a great number of std:: additions).
+	    (mainly a great number of std:: additions).
 
 2000-12-22  Al Riddoch  <ajr@ecs.soton.ac.uk>
 
