@@ -163,8 +163,9 @@ void View::deleteEntity(const std::string& eid)
 {
     debug() << "view got delete for " << eid;
     Entity* ent = getEntity(eid);
-    if (ent)
-    {
+    if (ent) {
+         // force a disappear if one hasn't already happened
+        ent->setVisible(false);
         EntityDeleted.emit(ent);
         m_contents.erase(eid);
         delete ent; // actually kill it off

@@ -134,8 +134,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
     Set setOp = smart_dynamic_cast<Set>(op);
     if (setOp.isValid())
     {
-        for (unsigned int A=0; A < args.size(); ++A)
-        {
+        for (unsigned int A=0; A < args.size(); ++A) {
             Entity* ent = m_view->getEntity(args[A]->getId());
             if (!ent)
             {
@@ -150,6 +149,25 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
         }
         return HANDLED;
     }
+    
+    // we have to handle generic 'actions' late, to avoid trapping interesting
+    // such as create or divide
+    Action act = smart_dynamic_cast<Action>(op);
+    if (act.isValid()) {
+        if (args.empty()) {
+            error() << "entity " << op->getFrom() << " sent action with no args: " << op;
+            return IGNORED;
+        }
+        
+        Entity* ent = m_view->getEntity(op->getFrom());
+        if (ent)
+            ent->action(args.front());
+        else
+            warning() << "ignoring action for pending entity " << op->getFrom();
+        
+        return HANDLED;
+    }
+
     
     return IGNORED;
 }

@@ -461,7 +461,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     {
         /* in case this isn't clear; if we were visible, then child visibility
         was simply it's locally set value; if we were invisible, that the
-        child must also have been invisile too. */
+        child must also have been invisible too. */
         bool childWasVisible = wasVisible ? m_contents[C]->m_visible : false;
         m_contents[C]->updateCalculatedVisibility(childWasVisible);
     }

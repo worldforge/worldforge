@@ -54,8 +54,8 @@ void Avatar::setEntity(const std::string& entId)
 
 void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc)
 {
-    if(e->getLocation() != m_entity)
-	throw InvalidOperation("Can't drop an Entity which is not held by the character");
+    if (e->getLocation() != m_entity)
+        throw InvalidOperation("Can't drop an Entity which is not held by the character");
 
     Move moveOp;
     moveOp->setFrom(m_entityId);
@@ -199,8 +199,22 @@ void Avatar::onEntityAppear(Entity* ent)
     if (ent->getId() == m_entityId) {
         assert(m_entity == NULL);
         m_entity = ent;
+        
+        ent->ChildAdded.connect(SigC::slot(*this, &Avatar::onCharacterChildAdded));
+        ent->ChildRemoved.connect(SigC::slot(*this, &Avatar::onCharacterChildRemoved));
+        
         GotCharacterEntity.emit(ent);
     }
+}
+
+void Avatar::onCharacterChildAdded(Entity*, Entity* child)
+{
+    InvAdded.emit(child);
+}
+
+void Avatar::onCharacterChildRemoved(Entity*, Entity* child)
+{
+    InvRemoved.emit(child);
 }
 
 Connection* Avatar::getConnection() const

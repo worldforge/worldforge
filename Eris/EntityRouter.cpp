@@ -82,15 +82,6 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
         return HANDLED;
     }
     
-    Action act = smart_dynamic_cast<Action>(op);
-    if (act.isValid()) {
-        if (args.empty())
-            error() << "entity " << m_entity->getId() << " sent action with no args: " << op;
-        else
-            m_entity->action(args.front());
-        return HANDLED;
-    }
-    
     Imaginary imag = smart_dynamic_cast<Imaginary>(op);
     if (imag.isValid()) {
         if (args.empty())

@@ -126,6 +126,8 @@ protected:
     
 private:
     void onEntityAppear(Entity* ent);
+    void onCharacterChildAdded(Entity*, Entity* child);
+    void onCharacterChildRemoved(Entity*, Entity* child);
     
     Account* m_account;
     
