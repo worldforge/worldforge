@@ -5,9 +5,9 @@ lib_LTLIBRARIES = libAtlasObjects.la
 libAtlasObjectsincludedir = $(includedir)/Atlas/Objects
 
 libAtlasObjects_la_SOURCES = \
-	Root.cc Decoder.cc
+	Root.cpp Decoder.cpp
 
 libAtlasObjectsinclude_HEADERS = \
 	Root.h Decoder.h Encoder.h
 
-EXTRA_DIST = gen_cc.py README DESIGN
+EXTRA_DIST = gen_cpp.py README DESIGN

@@ -5,8 +5,8 @@ lib_LTLIBRARIES = libAtlasObjectsEntity.la
 libAtlasObjectsEntityincludedir = $(includedir)/Atlas/Objects/Entity
 
 libAtlasObjectsEntity_la_SOURCES = \
-	Account.cc Admin.cc AdminEntity.cc Game.cc \
-	GameEntity.cc Player.cc RootEntity.cc
+	Account.cpp Admin.cpp AdminEntity.cpp Game.cpp \
+	GameEntity.cpp Player.cpp RootEntity.cpp
 
 libAtlasObjectsEntityinclude_HEADERS = \
 	Account.h Admin.h AdminEntity.h Game.h \

@@ -12,8 +12,8 @@ LDADD += \
 # In a real program the above lines should be:
 # LDADD +=-lAtlasCodecs -lAtlasFilters -lAtlasNet
 
-simple_client_SOURCES = simple_client.cc
-simple_server_SOURCES = simple_server.cc
+simple_client_SOURCES = simple_client.cpp
+simple_server_SOURCES = simple_server.cpp
 
 EXTRA_DIST = \
 	DebugBridge.h building.dox index.dox message.dox \
