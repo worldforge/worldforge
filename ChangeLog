@@ -1,4 +1,7 @@
 ChangeLog for varconf
+Friday, 25th June, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Make test program a check_PROGRAMS, so its not compiled by default.
+
 Monday, 2nd June, 2003, Al Riddoch <alriddoch@zepler.org>
 	* Move to requiring sigc++ 1.2.
 	* Move to pkgconfig completely.
