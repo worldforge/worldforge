@@ -4,7 +4,7 @@ lib_LTLIBRARIES = libAtlasNet.la
 libAtlasNetincludedir = $(includedir)/Atlas/Net
 
 libAtlasNet_la_SOURCES = \
-	Negotiate.cc
+	Negotiate.cc Loopback.cc
 
 libAtlasNetinclude_HEADERS = \
-	Negotiate.h
+	Negotiate.h Loopback.h
