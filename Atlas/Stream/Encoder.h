@@ -3,7 +3,10 @@
 // Copyright (C) 2000 Michael Day
 
 // $Log$
-// Revision 1.10  2000-02-22 03:52:38  mike
+// Revision 1.11  2000-02-22 05:31:22  mike
+// Fixed a quick namespace bug relating to use of unqualified Atlas::Object.
+//
+// Revision 1.10  2000/02/22 03:52:38  mike
 // Added output signal to Encoder, the first (but definitely not the last)
 // usage of libsigc++ within the library.
 //
@@ -47,12 +50,12 @@ class Atlas::Stream::Encoder
     virtual void Send(int) = 0;
     virtual void Send(float) = 0;
     virtual void Send(const std::string&) = 0;
-    virtual void Send(const Object&) = 0;
+    virtual void Send(const Atlas::Object&) = 0;
 	
     virtual void Send(const std::string& name, int) = 0;
     virtual void Send(const std::string& name, float) = 0;
     virtual void Send(const std::string& name, const std::string&) = 0;
-    virtual void Send(const std::string& name, const Object&) = 0;
+    virtual void Send(const std::string& name, const Atlas::Object&) = 0;
     
     virtual void End() = 0;
 };

@@ -3,7 +3,10 @@
 // Copyright (C) 2000 Michael Day
 
 // $Log$
-// Revision 1.2  2000-02-22 04:22:19  mike
+// Revision 1.3  2000-02-22 05:31:22  mike
+// Fixed a quick namespace bug relating to use of unqualified Atlas::Object.
+//
+// Revision 1.2  2000/02/22 04:22:19  mike
 // Begun implementation of PackedEncoder based on new Encoder interface.
 //
 
@@ -74,3 +77,17 @@ string PackedEncoder::encodeMessage(const Object& msg)
 }
 */
 
+void Begin(Container);
+void Begin(const std::string& name, Container);
+
+void Send(int);
+void Send(float);
+void Send(const std::string&);
+void Send(const Atlas::Object&);
+
+void Send(const std::string& name, int);
+void Send(const std::string& name, float);
+void Send(const std::string& name, const std::string&);
+void Send(const std::string& name, const Atlas::Object&);
+
+void End();

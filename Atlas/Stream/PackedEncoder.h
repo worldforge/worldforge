@@ -3,7 +3,10 @@
 // Copyright (C) 2000 Michael Day
 
 // $Log$
-// Revision 1.2  2000-02-22 04:19:11  mike
+// Revision 1.3  2000-02-22 05:31:22  mike
+// Fixed a quick namespace bug relating to use of unqualified Atlas::Object.
+//
+// Revision 1.2  2000/02/22 04:19:11  mike
 // Rewrote PackedEncoder interface as per the new Encoder design.
 //
 
@@ -30,12 +33,12 @@ class Atlas::Stream::PackedEncoder : public Atlas::Stream::Encoder
     virtual void Send(int);
     virtual void Send(float);
     virtual void Send(const std::string&);
-    virtual void Send(const Object&);
+    virtual void Send(const Atlas::Object&);
 	
     virtual void Send(const std::string& name, int);
     virtual void Send(const std::string& name, float);
     virtual void Send(const std::string& name, const std::string&);
-    virtual void Send(const std::string& name, const Object&);
+    virtual void Send(const std::string& name, const Atlas::Object&);
     
     virtual void End();
 };
