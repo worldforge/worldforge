@@ -7,8 +7,12 @@ Summary: A WorldForge client library.
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Copyright: GPL
+License: GPL
 Group: System Environment/Libraries
+URL: http://www.worldforge.org/dev/eng/libraries/eris
+Packager: Al Riddoch <alriddoch@zepler.org>
+Vendor: WorldForge
+Distribution: Mason
 Source: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 Requires: Atlas-C++ >= 0.5.91 wfmath >= 0.3.2 skstream > 0.3
