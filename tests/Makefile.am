@@ -3,7 +3,7 @@
 EXTRA_DIST = conf.cfg 
 
 INCLUDES = -I$(top_srcdir)
-LDADD = $(top_builddir)/varconf/libvarconf.la -lsigc
+LDADD = $(top_builddir)/varconf/libvarconf.la
 
 noinst_PROGRAMS = conftest
 conftest_SOURCES = conftest.cpp
