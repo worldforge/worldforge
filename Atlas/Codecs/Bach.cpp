@@ -18,10 +18,9 @@ void Bach::parseInit(char next)
 {
     cout << "parseInit" << endl;
 
-    if (next=='{')
+    if (next=='[')
     {
         m_bridge->streamBegin();
-        m_socket.putback(next);
         m_state.push(PARSE_STREAM);
     }
 }
