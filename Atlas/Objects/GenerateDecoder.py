@@ -13,9 +13,9 @@ class GenerateDecoder:
         self.generate_decoder_implementation(objects)
 
     def generate_decoder_interface(self, objects):
-        print "Output of implementation for:",
+        #print "Output of implementation for:",
         outfile = self.outdir + '/Decoder.h'
-        print outfile
+        #print outfile
         self.out = open(outfile + ".tmp", "w")
         header_list = ['Atlas', 'Objects', 'Decoder', 'H']
         self.header(header_list)
@@ -55,6 +55,10 @@ protected:
     /// An unknown object has arrived.
     virtual void unknownObjectArrived(const Root&) { }
 
+    /// An unknown object has arrived: this is usually used, 
+    /// not above Root& version
+    virtual void unknownObjectArrived(const Entity::Empty&) { }
+
     /// call right objectArrived method
     virtual void dispatchObject(const Root& obj);
 
@@ -72,9 +76,9 @@ protected:
 
 
     def generate_decoder_implementation(self, objects):
-        print "Output of implementation for:",
+        #print "Output of implementation for:",
         outfile = self.outdir + '/Decoder.cpp'
-        print outfile
+        #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
         self.write('\n#include "Decoder.h"\n\n')
@@ -95,7 +99,7 @@ void Decoder::dispatchObject(const Root& obj)
     switch(obj->getClassNo()) {
 """) #"for xemacs syntax highlighting
         for (obj, namespace) in objects:
-            if obj.id!="root":
+            if obj.id!="empty":
                 idc = classize(obj.id)
                 serialno_name = string.upper(obj.id) + "_NO"
                 self.write("""    case %(namespace)s%(serialno_name)s:
@@ -103,7 +107,10 @@ void Decoder::dispatchObject(const Root& obj)
         break;
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""    default:
-        unknownObjectArrived(obj);
+        if(obj->getClassNo() == Entity::EMPTY_NO)
+            unknownObjectArrived((Entity::Empty&)obj);
+        else
+            unknownObjectArrived(obj);
     }
 }
 """) #"for xemacs syntax highlighting

@@ -29,10 +29,6 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
         self.interface_file(obj)
         self.implementation_file(obj)
         if class_only_files:
-##             self.class_only_files = class_only_files
-##             self.basic_classname = capitalize_only(string.split(obj.id, "_")[1])
-##             self.for_all_children(obj, self.add_to_progeny)
-##             self.progeny = self.progeny[1:]
             self.find_progeny(obj, class_only_files)
             self.children_interface_file(obj)
             self.children_implementation_file(obj)
@@ -42,12 +38,6 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
             res = [obj]
         return map(lambda o,n=self.name_space:(o,n), res)
     
-##     def get_type(self, name):
-##         obj = self.objects[name]
-##         while obj.objtype!='data_type':
-##             obj = obj.parents[0]
-##         return obj.id
-
     def find_attr_class(self, obj):
         name = obj.id
         if attr_name2class.has_key(name):
@@ -117,11 +107,13 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
             if cmp.cmp(outfile + ".tmp", outfile) == 0:
                 os.remove(outfile)
                 os.rename(outfile + ".tmp", outfile)
+                print "Generated:", outfile
             else:
-                print "Output file same as existing one, not updating"
+                #print "Output file same as existing one, not updating"
                 os.remove(outfile + ".tmp")
         else:
             os.rename(outfile + ".tmp", outfile)
+            print "Generated:", outfile
 
     def constructors_if(self, obj, static_attrs):
         self.doc(4, "Construct a " + self.classname + " class definition.")
@@ -134,38 +126,6 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
         m_class_no = %(serialno_name)s;
     }
 """ % vars()) #"for xemacs syntax highlighting
-
-##     def constructors_if(self, obj, static_attrs):
-##         self.doc(4, "Construct a " + self.classname + " class definition.")
-##         self.write("    %s(%s *defaults = NULL)" %
-##                    (self.classname, self.classname))
-##         if static_attrs:
-##             self.write(";\n")
-##         else:
-##             if len(obj.parents)==1:
-##                 classname_base = classize(obj.parents[0], data=1)
-##                 self.write(" : \n        %s((%s*)defaults) {}\n" %
-##                            (classname_base, classname_base))
-##             else:
-##                 raise ValueError, "No code to handle this case"
-
-##     def constructors_im(self, obj):
-##         self.write("%s::%s(%s *defaults = NULL)\n" %
-##                    (self.classname, self.classname, self.classname))
-##         self.write("     : ")
-##         parentlist = obj.parents
-##         if not parentlist: parentlist = ["BaseObject"]
-##         def base_constructor(parent):
-##             bname = classize(parent, data=1)
-##             return "%s((%s*)defaults)" % (bname, bname)
-##         self.write(string.join(map(base_constructor, parentlist), ", ") + "\n")
-##         self.write("{\n")
-##         self.write("    if(!defaults) {\n")
-##         for attr in self.get_name_value_type(obj, real_attr_only=1):
-##             self.write(attr.constructors_im())
-##         self.write("    }\n")
-##         self.write("}\n")
-##         self.write("\n")
 
     def static_inline_sets(self, obj, statics):
         classname = classize(obj.id, data=1)
@@ -310,9 +270,9 @@ BaseObjectData *%(classname)s::getDefaultObject()
 """ % vars()) #"for xemacs syntax highlighting
 
     def interface_file(self, obj):
-        print "Output of interface for:",
+        #print "Output of interface for:",
         outfile = self.outdir + '/' + self.classname_pointer + ".h"
-        print outfile
+        #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.header(self.base_list + [self.classname_pointer, "H"])
         for parent in obj.parents:
@@ -423,9 +383,9 @@ BaseObjectData *%(classname)s::getDefaultObject()
             self.write('\n')
 
     def implementation_file (self, obj):
-        print "Output of implementation for:",
+        #print "Output of implementation for:",
         outfile = self.outdir + '/' + self.classname_pointer + ".cpp"
-        print outfile
+        #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
         self.write("\n")
@@ -483,134 +443,6 @@ public:
     def instance_im(self):
         self.freelist_im("Instance")
 
-##     one .h file:
-##         go trough all children
-##     one .cpp file:
-##         go trough all children
-##     def for_all_children(self, obj, func):
-##         if obj.specification_file.filename not in class_only_files:
-##             return
-##         bak_classname = self.classname
-##         bak_classname_pointer = self.classname_pointer
-##         self.classname = classize(obj.id, data=1)
-##         self.classname_pointer = classize(obj.id)
-##         func(obj, [])
-##         self.classname = bak_classname
-##         self.classname_pointer = bak_classname_pointer
-##         for child in obj.children:
-##             self.for_all_children(child, func)
-
-##     def template_interface(self, obj, tmp):
-##         ind = self.progeny.index(obj)*2
-##         name = classize(obj.id)
-##         if tmp: 
-##             ind = ind +1
-##             name = name + "Instance"
-##         self.write("typedef SmartPtr<%sData<%s> > %s;\n" % 
-##                    (self.basic_classname, ind, name))
-##         if not tmp: self.template_interface(obj, 1)
-
-##     def template_implementation(self, obj, tmp):
-##         ind = self.progeny.index(obj)*2
-##         if tmp: ind = ind +1
-##         basic_classname = self.basic_classname
-##         self.write("""
-## %(basic_classname)sData<%(ind)s> %(basic_classname)sData<%(ind)s>::defaults_%(basic_classname)sData;
-## %(basic_classname)sData<%(ind)s> *%(basic_classname)sData<%(ind)s>::begin_%(basic_classname)sData = NULL;
-## """ % vars()) #"for xemacs syntax highlighting
-##         if not tmp: self.template_implementation(obj, 1)
-
-##     def children_interface_file(self, obj):
-##         print "Output of interface for:",
-##         outfile = self.outdir + '/' + self.classname_pointer + "Children.h"
-##         print outfile
-##         self.out = open(outfile + ".tmp", "w")
-##         self.header(self.base_list + [self.classname_pointer+"Children", "H"])
-##         self.write('#include "%s.h"\n' % self.classname_pointer)
-##         self.write("\n\n")
-##         self.ns_open(self.base_list)
-        
-##         self.write("""
-## template <int No>
-## class %(basic_classname)sData : public Root%(basic_classname)sData
-## {
-## public:
-##     /// Construct a %(basic_classname)sData class definition.
-##     %(basic_classname)sData(%(basic_classname)sData *defaults = NULL) : 
-##         Root%(basic_classname)sData((Root%(basic_classname)sData*)defaults) {}
-##     /// Default destructor.
-##     virtual ~%(basic_classname)sData() { }
-
-
-##     //freelist related things
-## public:
-##     static BaseObjectData *alloc();
-##     virtual void free();
-##     virtual BaseObjectData *getDefaultObject();
-## private:
-##     static %(basic_classname)sData defaults_%(basic_classname)sData;
-##     static %(basic_classname)sData *begin_%(basic_classname)sData;
-## };
-## """ % self.__dict__) #"for xemacs syntax highlighting
-
-##         for child in obj.children:
-##             self.for_all_children(child, self.template_interface)
-
-##         self.ns_close(self.base_list)
-##         self.footer(self.base_list + [self.classname_pointer, "H"])
-##         self.out.close()
-##         self.update_outfile(outfile)
-
-##     def children_implementation_file (self, obj):
-##         print "Output of implementation for:",
-##         outfile = self.outdir + '/' + self.classname_pointer + "Children.cpp"
-##         print outfile
-##         self.out = open(outfile + ".tmp", "w")
-##         self.write(copyright)
-##         self.write("\n")
-##         self.write('#include "' + self.classname_pointer + 'Children.h"\n')
-##         self.write("\n")
-##         self.write("using namespace std;\n")
-##         self.write("using namespace Atlas;\n")
-##         self.write("using namespace Atlas::Message;\n")
-##         self.write("\n")
-##         self.ns_open(self.base_list)
-##         self.write("\n")
-
-##         self.write("""
-## template <int No> 
-## BaseObjectData *%(basic_classname)sData<No>::alloc()
-## {
-##     if(begin_%(basic_classname)sData) {
-##       %(basic_classname)sData *res = begin_%(basic_classname)sData;
-##       assert( res->m_refCount == 0 );
-##       res->m_attrFlags = 0;
-##       begin_%(basic_classname)sData = (%(basic_classname)sData *)begin_%(basic_classname)sData->m_next;
-##       return (BaseObjectData*)res;
-##     }
-##     return (BaseObjectData*)new %(basic_classname)sData(&defaults_%(basic_classname)sData);
-## }
-
-## template <int No> 
-## void %(basic_classname)sData<No>::free()
-## {
-##     m_next = begin_%(basic_classname)sData;
-##     begin_%(basic_classname)sData = this;
-## }
-
-## template <int No> 
-## BaseObjectData *%(basic_classname)sData<No>::getDefaultObject()
-## {
-##     return (BaseObjectData*)&defaults_%(basic_classname)sData;
-## }
-## """ % self.__dict__) #"for xemacs syntax highlighting
-##         for child in obj.children:
-##             self.for_all_children(child, self.template_implementation)
-
-##         self.ns_close(self.base_list)
-##         self.out.close()
-##         self.update_outfile(outfile)
-
     def for_progeny(self, progeny, func):
         for child in progeny:
             bak_classname = self.classname
@@ -634,12 +466,14 @@ public:
             self.find_progeny_recursive(child, class_only_files)
 
     def children_interface_file(self, obj):
-        print "Output of interface for:",
+        #print "Output of interface for:",
         outfile = self.outdir + '/' + self.generic_class_name + ".h"
-        print outfile
+        #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.header(self.base_list + [self.generic_class_name, "H"])
         self.write('#include "%s.h"\n' % self.classname_pointer)
+        if obj.id == "root_entity":
+            self.write('#include "Empty.h"\n')
         self.write("\n\n")
         self.ns_open(self.base_list)
         self.for_progeny(self.progeny, self.interface)
@@ -658,10 +492,10 @@ public:
                     obj, i/size_limit+1, self.progeny[i:i+size_limit])
 
     def children_implementation_one_file(self, obj, serial, progeny):
-        print "Output of implementation for:",
+        #print "Output of implementation for:",
         outfile = self.outdir + '/' + self.classname_pointer + \
                   "Children%s.cpp" % serial
-        print outfile
+        #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
         self.write("\n")
@@ -698,6 +532,7 @@ if __name__=="__main__":
     for obj in parseXML(spec_xml_string):
         objects[obj.id] = obj
     find_parents_children_objects(objects)
+    objects["empty"] = Object(id="empty", parents=[objects["root_entity"]])
 
     print "Loaded atlas.xml"
 
@@ -710,7 +545,8 @@ if __name__=="__main__":
     for name, outdir, class_only_files in (
                 ("root", ".", []),
                 ("root_entity", "Entity", ["entity.def"]),
-                ("root_operation", "Operation", ["operation.def"])):
+                ("root_operation", "Operation", ["operation.def"]),
+                ("empty", "Entity", [])):
         object_enum = object_enum + 1
         gen_code = GenerateCC(objects, outdir) #, object_enum)
         all_objects = all_objects + gen_code(objects[name], class_only_files)

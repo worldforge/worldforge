@@ -55,6 +55,15 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const string& filename)
       codec->poll();
     }
     delete codec;
+    
+    Atlas::Message::Object::MapType empty_obj;
+    Atlas::Message::Object::ListType coords;
+    coords.push_back(0.0);
+    coords.push_back(0.0);
+    coords.push_back(0.0);
+    empty_obj["pos"] = coords;
+    empty_obj["velocity"] = coords;
+    m_objects["empty"] = empty_obj;
     fillDefaults();
 }
 

@@ -337,7 +337,13 @@ void test()
             (Entity::RootEntity&)test_args2[0];
         Object::ListType foo3 = test_ent->getVelocityAsList();
         check_float_list3(foo3, x2, y1, z1);
-        
+
+        vector<double> coords(3, 0.0);
+        human->setPos(coords);
+        human->setVelocity(coords);
+        human->modifyVelocity()[0] = 1.0;
+        check_float_list3(human->getPosAsList(), 0.0, 0.0, 0.0);
+        check_float_list3(human->getVelocityAsList(), 1.0, 0.0, 0.0);
     }
 }
 

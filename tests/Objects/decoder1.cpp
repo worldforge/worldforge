@@ -6,6 +6,7 @@ using namespace Atlas;
 bool root_arrived = false;
 bool look_arrived = false;
 bool acct_arrived = false;
+bool empty_unknown_arrived = false;
 bool unknown_arrived = false;
 
 class TestDecoder : public Objects::Decoder
@@ -28,6 +29,10 @@ protected:
         acct_arrived = true;
     }
 
+    virtual void unknownObjectArrived(const Objects::Entity::Empty&) {
+        empty_unknown_arrived = true;
+    }
+
     virtual void unknownObjectArrived(const Atlas::Message::Object&) {
         unknown_arrived = true;
     }
@@ -47,19 +52,20 @@ int main(int argc, char** argv)
     t.streamMessage(Bridge::mapBegin);
         t.mapItem("parents", Bridge::listBegin);
 //            t.listItem("root");
-            t.listItem("root_entity");
         t.listEnd();
 //        t.mapItem("id", "root_instance");
-        t.mapItem("id", "entity");
+        t.mapItem("id", "foo");
     t.mapEnd();
     t.streamMessage(Bridge::mapBegin);
+        t.mapItem("objtype", "op");
         t.mapItem("parents", Bridge::listBegin);
             t.listItem("look");
         t.listEnd();
         t.mapItem("id", "look_instance");
     t.mapEnd();
     t.streamEnd();
-    assert(root_arrived);
+    assert(!root_arrived);
+    assert(empty_unknown_arrived);
     assert(look_arrived);
     assert(!acct_arrived);
     assert(!unknown_arrived);

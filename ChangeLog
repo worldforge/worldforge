@@ -1,3 +1,17 @@
+2000-12-08  Aloril  <aloril@iki.fi>
+
+	* added Atlas::Objects::Entity::Empty class which is used when
+ 	unknown object has arrived (usually unknown objects have pos
+ 	attribute, which is dynamic in Root):
+	Decoder::unknownObjectArrived(const Entity::Empty&);
+	and for args: if(op->getArgs()[0]->getClassNo() == Entity::EMPTY_NO) ...
+
+2000-12-02  Aloril  <aloril@iki.fi>
+
+	* changed method names: FooMethod -> fooMethod
+
+	* optimized src/Objects: now few hundred times faster than earlier
+
 2000-11-17  Al Riddoch  <ajr@ecs.soton.ac.uk>
 
 	* Removed .cc files

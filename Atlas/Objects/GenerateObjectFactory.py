@@ -9,9 +9,9 @@ from common import *
 
 class GenerateObjectFactory:
     def generate_object_factory(self, objects):
-        print "Output of implementation for:",
+        #print "Output of implementation for:",
         outfile = self.outdir + '/objectFactory.cpp'
-        print outfile
+        #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright_template % "Aloril")
         self.write('\n#include "objectFactory.h"\n')
@@ -21,7 +21,6 @@ class GenerateObjectFactory:
         self.write("""
 map<const std::string, Root> objectDefinitions;
 Factories objectFactory;
-//Factories objectInstanceFactory;
 
 class AddFactories {
 public:
@@ -37,8 +36,6 @@ AddFactories::AddFactories()
             self.write("""
     objectFactory.addFactory("%(id)s", 
         (FactoryMethod)&%(namespace)s%(idc)s::factory);
-//    objectInstanceFactory.addFactory("%(id)s", 
-//        (FactoryMethod)&%(namespace)s%(idc)sInstance::factory);
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""}
 
@@ -105,33 +102,21 @@ Root messageObject2ClassObject(const Atlas::Message::Object& mobj_arg)
                     //if no root_operation/entity factory found: 
                     //NoSuchFactoryException is thrown
                     if(objtype == "op") {
-                        obj = objectFactory.
-                            createObject("root_operation");
+                        obj = objectFactory.createObject("root_operation");
                     } else {
-                        obj = objectFactory.
-                            createObject("root_entity");
+                        obj = objectFactory.createObject("empty");
                     }
                 } // parent was not ok
             } // is instance
         } // has objtype attr
-//        if(!is_instance) {
-//            I = mobj.find("id");
-//            if(I != mobj.end() && (*I).second.isString()) {
-//                string id = (*I).second.asString();
-//                map<const std::string, Root>::const_iterator J =
-//                    objectDefinitions.find(id);
-//                if(J != objectDefinitions.end())
-//                    obj = J->second;
-//                //if(objectFactory.hasFactory(id))
-//                //    obj = objectFactory.createObject(id);
-//                // else it's already Root by default '
-//            } // has id attr
-//        } // not instance
+        if(!is_instance) {
+            obj = objectFactory.createObject("empty");
+        } // not instance
         for (I = mobj.begin();
              I != mobj.end(); I++)
             obj->setAttr(I->first, I->second);
     }
-    return obj;
+    return (Root)obj;
 }
 
 """) #"for xemacs syntax highlighting
