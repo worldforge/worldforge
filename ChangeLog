@@ -1,3 +1,8 @@
+Saturday, December 6th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/timestamp.cpp: Added James' patch to make
+	  valgrind happy.
+
 Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Only one of the Point/Quaterion and Point/Matrix coordinate

@@ -56,7 +56,8 @@ static void regularize(T1 &sec, T2 &usec)
 WFMath::TimeDiff::TimeDiff(long sec, long usec, bool is_valid) : m_isvalid(is_valid),
   m_sec(sec), m_usec(usec)
 {
-  regularize(m_sec, m_usec);
+    if (m_isvalid)
+        regularize(m_sec, m_usec);
 }
 
 WFMath::TimeDiff::TimeDiff(long msec) : m_sec(msec / 1000), m_usec(msec % 1000)
@@ -79,7 +80,8 @@ WFMath::TimeDiff& WFMath::operator+=(TimeDiff &val, const TimeDiff &d)
   val.m_usec += d.m_usec;
   val.m_isvalid = val.m_isvalid && d.m_isvalid;
 
-  regularize(val.m_sec, val.m_usec);
+    if (val.m_isvalid)
+        regularize(val.m_sec, val.m_usec);
 
   return val;
 }
@@ -89,8 +91,9 @@ WFMath::TimeDiff& WFMath::operator-=(TimeDiff &val, const TimeDiff &d)
   val.m_sec -= d.m_sec;
   val.m_usec -= d.m_usec;
   val.m_isvalid = val.m_isvalid && d.m_isvalid;
-
-  regularize(val.m_sec, val.m_usec);
+    
+    if (val.m_isvalid)
+        regularize(val.m_sec, val.m_usec);
 
   return val;
 }
@@ -155,7 +158,9 @@ WFMath::TimeStamp::TimeStamp(long sec, long usec, bool isvalid)
   _val.tv_sec = sec;
   _val.tv_usec = usec;
   _isvalid = isvalid;
-  regularize(_val.tv_sec, _val.tv_usec);
+  
+  if (_isvalid)
+    regularize(_val.tv_sec, _val.tv_usec);
 }
 
 bool WFMath::operator<(const TimeStamp &a, const TimeStamp &b)
@@ -178,7 +183,8 @@ WFMath::TimeStamp& WFMath::operator+=(TimeStamp &a, const TimeDiff &d)
   a._val.tv_usec += d.m_usec;
   a._isvalid = a._isvalid && d.m_isvalid;
 
-  regularize(a._val.tv_sec, a._val.tv_usec);
+    if (a._isvalid)
+        regularize(a._val.tv_sec, a._val.tv_usec);
   return a;
 }
 
@@ -188,7 +194,8 @@ WFMath::TimeStamp& WFMath::operator-=(TimeStamp &a, const TimeDiff &d)
   a._val.tv_usec -= d.m_usec;
   a._isvalid = a._isvalid && d.m_isvalid;
 
-  regularize(a._val.tv_sec, a._val.tv_usec);
+    if (a._isvalid)
+        regularize(a._val.tv_sec, a._val.tv_usec);
   return a;
 }
 
