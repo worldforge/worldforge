@@ -7,7 +7,6 @@
 #include "Utility.h"
 #include "../Codec.h"
 
-using namespace std;
 using namespace Atlas;
 
 /*

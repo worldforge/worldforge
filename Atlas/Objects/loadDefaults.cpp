@@ -12,7 +12,6 @@
 #include "loadDefaults.h"
 #include "objectFactory.h"
 
-using namespace std;
 namespace Atlas { namespace Objects {
 
 typedef map<std::string, Atlas::Message::Object> MessageObjectMap;

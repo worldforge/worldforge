@@ -10,7 +10,6 @@
 
 #include <stack>
 
-using namespace std;
 using namespace Atlas;
 
 namespace Atlas { namespace Codecs {

@@ -1,3 +1,8 @@
+2001-03-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/*: Removed "using namespace std;" throughout code, as all
+	  uses of symbols in this namespace are now fully qualified.
+
 2001-03-07  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/*: Backed off changes to namespaces and template classes with

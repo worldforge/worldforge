@@ -11,7 +11,6 @@
 
 #include "../Filter.h"
 
-using namespace std;
 using namespace Atlas;
 
 class Gzip : public Filter

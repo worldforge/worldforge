@@ -6,7 +6,6 @@
 
 #include "Stream.h"
 
-using namespace std;
 using namespace Atlas;
 
 std::string get_line(std::string &s, char ch)

@@ -15,7 +15,6 @@
 #define ASSERT(exp) assert(exp)
 #endif
 
-using namespace std;
 using namespace Atlas;
 
 const int BS100K = 6;

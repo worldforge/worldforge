@@ -7,7 +7,6 @@
 
 using namespace Atlas;
 using namespace Atlas::Message;
-using namespace std;
 
 namespace Atlas { namespace Objects {
 

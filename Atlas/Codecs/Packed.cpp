@@ -8,7 +8,6 @@
 #include <iostream>
 #include <stack>
 
-using namespace std;
 using namespace Atlas;
 
 /*

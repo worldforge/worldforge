@@ -6,7 +6,6 @@
 #include "Encoder.h"
 
 using namespace Atlas;
-using namespace std;
 
 namespace Atlas { namespace Message {
 

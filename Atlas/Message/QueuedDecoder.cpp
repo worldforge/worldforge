@@ -4,8 +4,6 @@
 
 #include "QueuedDecoder.h"
 
-using namespace std;
-
 namespace Atlas { namespace Message {
 
 QueuedDecoder::QueuedDecoder()

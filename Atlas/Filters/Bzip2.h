@@ -18,7 +18,6 @@ extern "C" {
 #include <bzlib.h>
 }
 
-using namespace std;
 using namespace Atlas;
 
 class Bzip2 : public Filter
