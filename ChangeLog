@@ -9,6 +9,10 @@ Monday, October 01 2001, James Turner
 	* Changed various instances of GetAttr("foo").AsXXX to GetFoo() where
 	  I'd forgotten / didn't know a Foo accessor existed; thanks to
 	  alriddoch for catching these.
+	* Fix emission of World.Entered signal until both the root entity and
+	  character entity are valid.
+	* throw an InvalidOperation exception if getRootEntity is called
+	  prior to World.Entered being emitted.
 
 Thu, 27  Sep  2001 13:50:42 +0100, James Turner
 

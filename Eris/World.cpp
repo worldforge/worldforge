@@ -51,7 +51,8 @@ World* World::_theWorld = NULL;
 	
 World::World(Player *p, Connection *c) :
 	_con(c),
-	_player(p)
+	_player(p),
+	_root(NULL)
 {
 	assert(_con);
 	assert(_player);
@@ -110,7 +111,8 @@ Entity* World::lookup(const std::string &id)
 
 EntityPtr World::getRootEntity()
 {
-	assert(_root);
+	if (!_root)
+		throw InvalidOperation("Called getRootEntity before World.Entered signal fired");
 	return _root;
 }
 
@@ -299,9 +301,9 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 		assert(e);
 		
 		// signal entry into the world; we delay this (from the INFO)
-		// until the character goes valid. Potentially, we could delay this
-		// even futher, waiting until the full inital set has been expanded
-		if (_initialEntry && (e->getID() == _characterID)) {
+		// until the character and the root entity are both valid
+		
+		if (_initialEntry && _root && (e->getID() == _characterID)) {
 			Entered.emit(e);
 			_initialEntry = false;	
 		}
@@ -478,6 +480,14 @@ void World::setRootEntity(Entity* rt)
 	assert(rt->getContainer() == NULL);
 	
 	_root = rt;
+	
+	if (_initialEntry) {
+		Entity *character = lookup(_characterID);
+		if (character) {
+			Entered.emit(character);
+			_initialEntry = false;
+		} // else still waiting for the character
+	}
 }
 
 }; // of namespace Eris

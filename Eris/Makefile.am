@@ -4,17 +4,12 @@ lib_LTLIBRARIES = liberis.la
 
 if PYTHON_BINDINGS
 PYBIND_CFLAGS = -I$(top_srcdir)/boost-python -I/usr/include/python 
-PYBIND_LDFLAGS = -lpython \
-	-L$(top_builddir)/boost-python/src \
-	-lBoostPy
 else
 PYBIND_CFLAGS =
-PYBIND_LDFLAGS =
 endif
 
 INCLUDES += $(PYBIND_CFLAGS)
-liberis_la_LDFLAGS = -version-info 0:0:0 $(RELEASE) $(PYBIND_LDFLAGS)
-	
+liberis_la_LDFLAGS = -version-info 0:0:0 $(RELEASE)
 	
 liberis_la_SOURCES = \
 	Entity.cpp \
@@ -22,7 +17,7 @@ liberis_la_SOURCES = \
 	Lobby.cpp \
 	Player.cpp \
 	Dispatcher.cpp \
-	BaseConnection.cpp \
+	BaseConnectioncpp \
 	Connection.cpp \
 	Utils.cpp \
 	Types.cpp \
