@@ -224,7 +224,7 @@ void testValues()
     mobj["name"] = std::string("foo");
     mobj["objtype"] = std::string("op");
     Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
-    assert(obj->getClassNo() == ACCOUNT_NO);
+    assert(obj->getClassNo() == Atlas::Objects::Entity::ACCOUNT_NO);
     assert(obj->getId() == "");
     assert(obj->isDefaultId() == true);
     assert(obj->getName() == "foo");
@@ -241,7 +241,7 @@ void testValues()
     {
     Atlas::Message::Element::MapType mobj;
     Root obj = Atlas::Objects::objectDefinitions.find(std::string("account"))->second;
-    assert(obj->getClassNo() == ACCOUNT_NO);
+    assert(obj->getClassNo() == Atlas::Objects::Entity::ACCOUNT_NO);
     assert(obj->getId() == "account");
     assert(obj->isDefaultId() == false);
     assert(obj->getName() == "");
@@ -257,7 +257,7 @@ void testValues()
     {
     Atlas::Message::Element::MapType mobj;
     Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
-    assert(obj->getClassNo() == ANONYMOUS_NO);
+    assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "");
     assert(obj->getName() == "");
     assert(obj->getParents().size() == 0);
@@ -273,7 +273,7 @@ void testValues()
     parents.push_back(std::string("account"));
     mobj["parents"] = parents;
     Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
-    assert(obj->getClassNo() == ANONYMOUS_NO);
+    assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "bar");
     assert(obj->getName() == "foo");
     assert(obj->getParents().front() == "account");
@@ -301,12 +301,12 @@ void testValues()
     mcreate["objtype"] = "op";
 
     Create op = (Create&)Atlas::Objects::messageObject2ClassObject(mcreate);
-    assert(op->getClassNo() == CREATE_NO);
-    assert(op->instanceOf(CREATE_NO));
-    assert(op->instanceOf(ACTION_NO));
-    assert(op->instanceOf(ROOT_NO));
-    assert(!op->instanceOf(COMBINE_NO));
-    assert(!op->instanceOf(ACCOUNT_NO));
+    assert(op->getClassNo() == Atlas::Objects::Operation::CREATE_NO);
+    assert(op->instanceOf(Atlas::Objects::Operation::CREATE_NO));
+    assert(op->instanceOf(Atlas::Objects::Operation::ACTION_NO));
+    assert(op->instanceOf(Atlas::Objects::ROOT_NO));
+    assert(!op->instanceOf(Atlas::Objects::Operation::COMBINE_NO));
+    assert(!op->instanceOf(Atlas::Objects::Entity::ACCOUNT_NO));
     assert(op->getFrom() == "bar");
     assert(op->getParents().size() == 1);
     assert(op->getParents().front() == "create");
@@ -316,13 +316,13 @@ void testValues()
     assert(op->getArgs().size() == 1);
 
     Account op_arg = (Account&)op->getArgs().front();
-    assert(op_arg->getClassNo() == PLAYER_NO);
-    assert(!op_arg->instanceOf(CREATE_NO));
-    assert(!op_arg->instanceOf(ACTION_NO));
-    assert(op_arg->instanceOf(ROOT_NO));
-    assert(!op_arg->instanceOf(COMBINE_NO));
-    assert(op_arg->instanceOf(ACCOUNT_NO));
-    assert(op_arg->instanceOf(PLAYER_NO));
+    assert(op_arg->getClassNo() == Atlas::Objects::Entity::PLAYER_NO);
+    assert(!op_arg->instanceOf(Atlas::Objects::Operation::CREATE_NO));
+    assert(!op_arg->instanceOf(Atlas::Objects::Operation::ACTION_NO));
+    assert(op_arg->instanceOf(Atlas::Objects::ROOT_NO));
+    assert(!op_arg->instanceOf(Atlas::Objects::Operation::COMBINE_NO));
+    assert(op_arg->instanceOf(Atlas::Objects::Entity::ACCOUNT_NO));
+    assert(op_arg->instanceOf(Atlas::Objects::Entity::PLAYER_NO));
     assert(op_arg->getId() == "bar");
     assert(op_arg->getParents().size() == 1);
     assert(op_arg->getParents().front() == "player");

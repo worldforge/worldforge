@@ -1,5 +1,9 @@
 2001-11-29  Al Riddoch  <alriddoch@zepler.org>
 
+	* tests/Objects: Get the tests compiling again.
+
+2001-11-29  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Objects/SmartPtr.h: Clean up constructors so member pointer is
 	  directly initialised. Add type conversion template for const
 	  objects. Make methods const as apropriate.

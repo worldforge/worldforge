@@ -9,13 +9,12 @@
 class RootDecoder : public Atlas::Message::DecoderBase
 {
 protected:
-    virtual void objectArrived(const Atlas::Message::Element& o)
+    virtual void objectArrived(const Atlas::Message::Element::MapType& o)
     {
-        assert(o.isMap());
-        assert(o.asMap().find(string("parents")) != o.asMap().end());
-        assert((*o.asMap().find("parents")).second.asList().size() == 1);
-        assert(*(*o.asMap().find("parents")).second.asList().begin() ==
-                string("root"));
+        assert(o.find(std::string("parents")) != o.end());
+        assert((*o.find("parents")).second.asList().size() == 1);
+        assert(*(*o.find("parents")).second.asList().begin() ==
+                std::string("root"));
     }
 };
 
