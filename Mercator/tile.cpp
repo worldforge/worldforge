@@ -1,60 +1,104 @@
 #include <iostream>
 #include <cmath>
 
+inline float randHalf() {
+	return (float) rand() / RAND_MAX - 0.5f;
+}
+
+inline float qRMD(float nn, float fn, float ff, float nf, float roughness, float falloff) {
+    float heightDifference = std::max(std::max(nn, fn), std::max(nf, ff)) -
+                             std::min(std::min(nn, fn), std::min(nf, ff));
+ 
+    return ((nn+fn+ff+nf)/4.f) + randHalf() * roughness * heightDifference / (1.f+falloff);
+}
+
+
 //1 dimensional midpoint displacement fractal
 //size must be a power of 2
-//roughness is the max displacement value
 //falloff is the decay of displacement as the fractal is refined
 //array is size+1 long. array[0] and array[size] are filled
 //      with the control points for the fractal
-void fill1d(int size, float falloff, float roughness, float *array) {
+void fill1d(int size, float falloff, float roughness, float l, float h, float *array) {
     assert(falloff!=-1.0);
 
-    int stride=size/2;
-    float f=falloff;
+    int stride = size/2;
+    float f = falloff*falloff;
 
+    array[0] = l;
+    array[size] = h;
+ 
     //seed the RNG
-    srand((unsigned int)(array[0]*array[size]));
+    srand((unsigned int)(l*h*10.232313));
     while (stride) {
         for (int i=stride;i<size;i+=stride*2) {
-	    float disp=( (float)rand() / RAND_MAX ) - 0.5f;
-	    float h=array[i-stride];
-	    float l=array[i+stride];
-	    float diff=h-l;
-            array[i]=((h+l)/2.f) + disp * roughness * 2.f/(1.f + f);
-        }
-        stride>>=1;
-	f*=falloff;
+	    float hh = array[i-stride];
+	    float lh = array[i+stride];
+            float hd = fabs(hh-lh);
+ 
+            array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1+f);
+	}
+        stride >>= 1;
+	f*=falloff*falloff;
     }
 }
 
 //2 dimensional midpoint displacement fractal for a tile where
 //edges are already filled by 1d fractals.
 //size must be a power of 2
-//roughness is the max displacement value
-//falloff is the decay of displacement as the fractal is refined
 //array is size+1  * size+1 with the corners the control points.
-void fill2d(int size, float falloff, float roughness, float *array) {
+void tile(int size, float falloff, float roughness, float p1, float p2, float p3, float p4, float *array) {
     assert(falloff!=-1.0);
     
-    int stride=size/2;
-    int line=size+1;
+    int line = size+1;
+    //zero array. not really necessary, but nice.	
+    for (int j=0;j<size*size;j++) array[j]=0;
 
-    //total up control cpoints
-    float tot=array[0 + size*0];
-    tot+=array[size + size*0];
-    tot+=array[size + size*line];
-    tot+=array[0 + size*line];
-    //FIXME work out decent seed
-    srand((unsigned int)tot);
+    float edge[line];
+    
+    //top edge
+    fill1d(size,falloff,roughness,p1,p2,edge);
+    for (int i=0;i<=size;i++) {
+        array[0*line + i] = edge[i];
+    }
+
+    //left edge
+    fill1d(size,falloff,roughness,p1,p4,edge);
+    for (int i=0;i<=size;i++) {
+        array[i*line + 0] = edge[i];
+    }
    
-    float disp=( (float)rand() / (float)RAND_MAX )- 0.5f;
+    //right edge
+    fill1d(size,falloff,roughness,p2,p3,edge);
+    for (int i=0;i<=size;i++) {
+        array[i*line + size] = edge[i];
+    }
 
+    //bottom edge
+    fill1d(size,falloff,roughness,p4,p3,edge);
+    for (int i=0;i<=size;i++) {
+        array[size*line + i] = edge[i];
+    }
+    
+    //fill in the centre
+
+    int stride = size/2;
+
+    //total up control points
+    float tot=p1+p2+p3+p4;
+    //FIXME work out decent seed
+    srand((unsigned int)(tot*10.22321));
+
+    float f = falloff;
+    
     //center of array is done separately
-    array[stride*line + stride] = (tot / 4.f) + disp * roughness 
-	                           * (2. / (1.f + falloff));
+    array[stride*line + stride] = qRMD( array[0 * line + size/2],
+                                        array[size/2*line + 0],
+                                        array[size/2*line + size],
+                                        array[size*line + size/2],
+					roughness,
+					f);
+		    
     stride >>= 1;
-    float fall=falloff;
 
     //skip across the array and fill in the points
     //alternate cross and plus shapes.
@@ -66,97 +110,43 @@ void fill2d(int size, float falloff, float roughness, float *array) {
       //+ . +
       for (int i=stride;i<size;i+=stride*2) {
           for (int j=stride;j<size;j+=stride*2) {
-	      disp=( (float)rand() / (float)RAND_MAX )- 0.5f;
-              array[j*line + i]=((array[(i-stride) + (j+stride) * (line)]+
-                                  array[(i+stride) + (j-stride) * (line)]+
-                                  array[(i+stride) + (j+stride) * (line)]+
-                                  array[(i-stride) + (j-stride) * (line)])
-			          /4.f) + disp * roughness * 2.f/(1.f+fall);
+              array[j*line + i] = qRMD(array[(i-stride) + (j+stride) * (line)],
+                                       array[(i+stride) + (j-stride) * (line)],
+                                       array[(i+stride) + (j+stride) * (line)],
+                                       array[(i-stride) + (j-stride) * (line)],
+			               roughness, f);
 	  }
       }
 
+      f *= falloff;
       //Plus shape - + contributes to value at X
       //. + .
       //+ X +
       //. + .
       for (int i=stride*2;i<size;i+=stride*2) {
           for (int j=stride;j<size;j+=stride*2) {
-	      disp=( (float)rand() / (float)RAND_MAX )- 0.5f;
-              array[j*line + i]= ((array[(i-stride) + (j) * (line)]+
-                                   array[(i+stride) + (j) * (line)]+
-                                   array[(i) + (j+stride) * (line)]+
-                                   array[(i) + (j-stride) * (line)]) / 4.f) 
-                                   + disp * roughness * 2.f/(1.f+fall);
+              array[j*line + i] = qRMD(array[(i-stride) + (j) * (line)],
+                                       array[(i+stride) + (j) * (line)],
+                                       array[(i) + (j+stride) * (line)],
+                                       array[(i) + (j-stride) * (line)], 
+                                       roughness, f );
 	  }
       }
 	       
       for (int i=stride;i<size;i+=stride*2) {
           for (int j=stride*2;j<size;j+=stride*2) {
-              disp=( (float)rand() / (float)RAND_MAX )- 0.5f;
-              array[j*line + i]= ((array[(i-stride) + (j) * (line)]+
-                                   array[(i+stride) + (j) * (line)]+
-                                   array[(i) + (j+stride) * (line)]+
-                                   array[(i) + (j-stride) * (line)]) / 4.f) 
-                                   + disp * roughness * 2.f/(1.f+fall);
+              array[j*line + i] = qRMD(array[(i-stride) + (j) * (line)],
+                                       array[(i+stride) + (j) * (line)],
+                                       array[(i) + (j+stride) * (line)],
+                                       array[(i) + (j-stride) * (line)],
+                                       roughness, f);
           }
       }
 
       stride>>=1;
-      fall*=falloff;
+      f *= falloff;
     }
-}
-
-//generate the tile 
-//size is number of points on each side of the tile 
-//must be power of 2 + 1
-//roughness is the max displacement value
-//falloff is the decay of displacement as the fractal is refined
-//array is of size+1 * size+1
-void tile(int size, float falloff, float roughness, 
-	  float p1, float p2, float p3, float p4, float *array) {
-	
-    //zero array. not really necessary, but nice.	
-    for (int j=0;j<size*size;j++) array[j]=0;
-
-
-    float edge[size + 1];
-    
-    //top edge
-    edge[0]=p1;
-    edge[size]=p2;
-    fill1d(size,falloff,roughness,edge);
-    for (int i=0;i<=size;i++) {
-        array[0*size + i] = edge[i];
-    }
-
-    //left edge
-    edge[0]=p1;
-    edge[size]=p4;
-    fill1d(size,falloff,roughness,edge);
-    for (int i=0;i<=size;i++) {
-        array[i*(size + 1) + 0] = edge[i];
-    }
-   
-    //right edge
-    edge[0]=p2;
-    edge[size]=p3;
-    fill1d(size,falloff,roughness,edge);
-    for (int i=0;i<=size;i++) {
-        array[i*(size + 1) + size] = edge[i];
-    }
-
-    //bottom edge
-    edge[0]=p4;
-    edge[size]=p3;
-    fill1d(size,falloff,roughness,edge);
-    for (int i=0;i<=size;i++) {
-        array[size*(size + 1) + i] = edge[i];
-    }
-    
-    //fill in the centre
-    fill2d(size,falloff,roughness,array);
-}
-
+} 
 #if 0
 //simple demo
 //read params from stdin and output a ppm to stdout
@@ -203,7 +193,6 @@ int main() {
         //dump points out to ppm file
         //need to ensure dont output bottom or right for tiles that
         //are not on the bottom or right edge (due to repeated row/column)
-    
         //calc for last row
         int lim;
         if (k==num-1) lim=size;
@@ -232,3 +221,7 @@ int main() {
     }
 }
 #endif
+
+
+   
+ 
