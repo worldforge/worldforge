@@ -11,7 +11,13 @@
 #include "../Filter.h"
 
 #include <cstdio>
+
+// my version of bzlib.h does not have extern "C" in the header file,
+// like it should
+// dmitryd 05/08/200
+extern "C" {
 #include <bzlib.h>
+}
 
 #ifndef ASSERT
 #include <cassert>
