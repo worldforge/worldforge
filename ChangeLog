@@ -1,4 +1,10 @@
 ChangeLog for varconf
+Monday, 2nd June, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Move to requiring sigc++ 1.2.
+	* Move to pkgconfig completely.
+	* varconf/config.cpp, varconf/variable.cpp: Fix a couple of warnings.
+	* Increment version to 0.6.0, interface version 1.0.0 and release.
+
 Friday, 17th April, 2003, Al Riddoch <alriddoch@zepler.org>
 	* Fix up headers for clean handling, and portability.
 

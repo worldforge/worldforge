@@ -32,7 +32,7 @@ Requires:          %{name} = %{version}
 %setup
 
 %build
-CXXFLAGS=$RPM_OPT_FLAGS ./configure --prefix=%{prefix}
+CXXFLAGS=$RPM_OPT_FLAGS ./configure --enable-static --prefix=%{prefix}
 make
 
 %install
@@ -44,14 +44,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{prefix}/lib/libvarconf@VARCONF_SUFFIX@.so.@VARCONF_CURRENT@
-%{prefix}/lib/libvarconf@VARCONF_SUFFIX@.so.@VARCONF_VERSION_NO@
+%{prefix}/lib/libvarconf-1.0.so.@VARCONF_CURRENT@
+%{prefix}/lib/libvarconf-1.0.so.@VARCONF_VERSION_NO@
 %doc README COPYING AUTHORS THANKS NEWS
 
 %files devel
 %defattr(-,root,root)
-%{prefix}/bin/varconf-config
-%{prefix}/include/varconf
-%{prefix}/lib/libvarconf@VARCONF_SUFFIX@.a
-%{prefix}/lib/libvarconf@VARCONF_SUFFIX@.so
-%{prefix}/share/aclocal/varconf.m4
+%{prefix}/include/varconf-1.0
+%{prefix}/lib/libvarconf-1.0.a
+%{prefix}/lib/libvarconf-1.0.la
+%{prefix}/lib/libvarconf-1.0.so
+%{prefix}/lib/pkgconfig/varconf-1.0.pc

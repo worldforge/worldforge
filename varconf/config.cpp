@@ -189,7 +189,7 @@ void Config::getCmdline( int argc, char** argv)
   bool fnd_sec = false, fnd_nam = false;
   size_t mark = 2;
 
-  for ( size_t i = 1; i < argc; i++) {
+  for ( size_t i = 1; i < (size_t)argc; i++) {
     if ( argv[i][0] == '-' && argv[i][1] == '-' && argv[i][2] != '\0') {
       arg = argv[i];
       fnd_sec = fnd_nam = false;

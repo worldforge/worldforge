@@ -323,7 +323,7 @@ Variable& Variable::operator[](const int i)
     VarPtr::operator=(new_array);
     the_array = new_array;
   }
-  else if (the_array->size() < i + 1)
+  else if ((int)the_array->size() < i + 1)
     the_array->resize(i + 1);
 
   return (*the_array)[i];

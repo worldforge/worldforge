@@ -1,4 +1,4 @@
-Varconf - STAGE Configuration System (c)1999-2002
+Varconf - STAGE Configuration System (c)1999-2003
 
 
 1. Overview
@@ -24,7 +24,9 @@ compiling varconf. The library can be aquired at
 
 http://sourceforge.net/projects/libsigc/.
 
-Varconf requires version 1.0.2 or greater of libsigc++.
+This version requires SigC++ 1.2 series and pkgconfig. If you want to use 
+SigC++ 1.0 series, or the legacy varconf-config script, please try a
+version of varconf from the 0.5 series.
 
 
 3.1 Basic Installation

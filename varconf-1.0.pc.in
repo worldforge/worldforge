@@ -7,5 +7,5 @@ Name: varconf
 Description: A config handling library.
 Requires: @VARCONF_REQUIRES@
 Version: @VERSION@
-Libs: -L${libdir} -lvarconf@VARCONF_SUFFIX@
-Cflags: -I${includedir}/varconf-0.5
+Libs: -L${libdir} @VARCONF_LIBS@
+Cflags: -I${includedir}/varconf-1.0
