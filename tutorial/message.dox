@@ -4,7 +4,7 @@
 
 @section higher_concepts Higher Concepts
 
-@subsection intro Introduction
+@subsection message_intro Introduction
 
 By now you should know about Codecs, Bridges and such. You might have noticed
 that these are quite low-level. After all, it would be a great hassle if a
