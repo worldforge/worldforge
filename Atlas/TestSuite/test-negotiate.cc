@@ -75,6 +75,12 @@ int main()
   if(s.GetState() != Negotiate<iostream>::SUCCEEDED) cout << "Server NOT done" << endl;
   if(c.GetState() != Negotiate<iostream>::SUCCEEDED) cout << "Client NOT done" << endl;
 
+  Connection<iostream> sc = s.GetConnection();
+  Connection<iostream> cc = c.GetConnection();
+
+    cout << "Server says that client is \"" << sc.peer << "\"\n";
+    cout << "Client says that server is \"" << cc.peer << "\"\n";
+
     return 0;
 }
 

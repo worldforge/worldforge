@@ -92,7 +92,7 @@ void Atlas::Net::StreamConnect::Poll()
 
     string out;
 
-    while (socket.rdbuf()->in_avail()/* || socket.rdbuf()->showmanyc()*/)
+    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
     {
 	buf += socket.get();
     }
@@ -167,7 +167,7 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamConnect::GetState()
 
 Atlas::Connection<iostream> Atlas::Net::StreamConnect::GetConnection()
 {
-    return Connection<iostream>(0, "foo");
+    return Connection<iostream>(0, inName);
 }
 
 
@@ -309,7 +309,7 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::GetState()
 
 Atlas::Connection<iostream> Atlas::Net::StreamAccept::GetConnection()
 {
-    return Connection<iostream>(0, "foo");
+    return Connection<iostream>(0, inName);
 }
 
 void Atlas::Net::StreamAccept::processServerCodecs()
