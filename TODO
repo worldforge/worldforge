@@ -9,6 +9,11 @@ Major Tasks:
   * Unify error handling methods
   * Convert file parser to lex/yacc 
   * Design and implement new Observer class
+  * Add overloaded operators for major functions
+  * Finish changing functions to general form (getItem to get, etc.)
+  * Document and arrange the source better.
+  * Submit the new interface to the mailing lists to recommend adoption.
+  * Write a proper testing program to verify functionality of features.
 
 Minor Tasks:
   * Make VALUE and EXPECT_VALUE behave nicer (loosen up on the unquoted value

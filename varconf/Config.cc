@@ -42,19 +42,20 @@ namespace {
     C_OTHER // Anything else
   };
 
-  ctype_t ctype(char c)
+  ctype_t ctype( char c)
   {
-    if (c=='\n') return C_EOL;
-    if (isspace(c)) return C_SPACE;
-    if (((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z'))) return C_ALPHA;
-    if (isdigit(c)) return C_NUMERIC;
-    if ((c == '-') || (c == '_')) return C_DASH;
-    if (c == '=') return C_EQ;
-    if (c == '"') return C_QUOTE;
-    if (c == '[') return C_SQUARE_OPEN;
-    if (c == ']') return C_SQUARE_CLOSE;
-    if (c == '#') return C_HASH;
-    if (c == '\\') return C_ESCAPE;
+    if ( c=='\n') return C_EOL;
+    if ( isspace(c)) return C_SPACE;
+    if ( ( (c >= 'a') && ( c <= 'z') || ( c >= 'A') && ( c <= 'Z'))) 
+      return C_ALPHA;
+    if ( isdigit( c)) return C_NUMERIC;
+    if ( ( c == '-') || ( c == '_')) return C_DASH;
+    if ( c == '=') return C_EQ;
+    if ( c == '"') return C_QUOTE;
+    if ( c == '[') return C_SQUARE_OPEN;
+    if ( c == ']') return C_SQUARE_CLOSE;
+    if ( c == '#') return C_HASH;
+    if ( c == '\\') return C_ESCAPE;
     return C_OTHER;
   }
 }
@@ -75,52 +76,62 @@ Config* Config::inst()
   return m_instance;
 }
 
-Variable Config::getItem( const string& section, const string& name)
+bool Config::erase( const string& section, const string& key = "")
 {
-  return ( m_conf[section])[name];
-}
+  if ( find( section)) {
+    if ( key == "") {
+      m_conf.erase( section);
+      return true;
+    }
+    else if ( find( section, key)) {
+      m_conf[section].erase( key);
+      return true;
+    }
+  }
+ 
+  return false;
+} 
 
+Variable Config::getItem( const string& section, const string& key)
+{
+  return ( m_conf[section])[key];
+}
 
 void Config::setItem( const string& section, const string& name,
                       const Variable item)
 {
-  string sec = section, nam = name;
-
-  if ( nam.empty()) {
+  if ( name.empty()) {
     throw "Invalid configuration item!";
   }
-  
-  for ( size_t i = 0; i < sec.size(); i++) {
-    ctype_t c = ctype( sec[i]);
-    sec[i] = tolower( sec[i]);
+  else {
+    string sec = section, nam = name;
 
-    if ( ( c != C_NUMERIC) && ( c != C_ALPHA) && ( c != C_DASH)) {
-      sec[i] = '_';
-    }
-  }
+    clean( sec);
+    clean( nam);
 
-  for ( size_t i = 0; i < nam.size(); i++) {
-    ctype_t c = ctype( nam[i]);
-    nam[i] = tolower( nam[i]);
-
-    if ( (c != C_NUMERIC) && ( c != C_ALPHA) && ( c != C_DASH)) {
-      nam[i] = '_';
-    }
-  }
+    ( m_conf[sec])[nam] = item;
  
-  ( m_conf[sec])[nam] = item;
- 
-  sig.emit(); 
-  sigv.emit( section, name);
-
+    sig.emit(); 
+    sigv.emit( section, name);
+  }
 } // Config::setItem()
 
-
-bool Config::findItem( const string& section, const string& name)
+bool Config::findItem( const string& section, const string& name) 
 {
-  return ( (m_conf.count( section)) && ( m_conf[section].count( name)));
+  return find( section, name);
 }
 
+bool Config::find( const string& section, const string& key = "")
+{
+  if ( m_conf.count( section)) {
+    if ( key == "") 
+      return true;
+    else if ( m_conf[section].count( key))
+      return true;
+  }
+
+  return false;
+} // Config::find
 
 bool Config::readFromFile( const string& filename)
 {
@@ -130,6 +141,7 @@ bool Config::readFromFile( const string& filename)
     cerr << "Could not open " << filename << " for input!\n";
     return false;
   }
+
   try {
     parseStream( fin);
   }
@@ -140,7 +152,6 @@ bool Config::readFromFile( const string& filename)
   
   return true;
 }
-
 
 bool Config::writeToFile( const string& filename)
 {
@@ -153,7 +164,6 @@ bool Config::writeToFile( const string& filename)
 
   return writeToStream( fout);
 }
-
 
 bool Config::writeToStream( ostream& out)
 {
@@ -171,7 +181,6 @@ bool Config::writeToStream( ostream& out)
   
   return true;
 }
-
 
 void Config::parseStream( istream& in) throw ( ParseError)
 {
@@ -222,7 +231,7 @@ void Config::parseStream( istream& in) throw ( ParseError)
 	}
         break;
       case S_NAME :
-	switch (ctype( c)) {
+	switch ( ctype( c)) {
 	  case C_ALPHA:
 	  case C_NUMERIC:
 	  case C_DASH:
@@ -352,104 +361,110 @@ void Config::parseStream( istream& in) throw ( ParseError)
   }
 } // Config::parseStream()
 
-
 void Config::setParameterLookup( char short_form, const string& long_form,
                                  bool needs_value = true) 
 {
     m_par_lookup[short_form] = pair<string, bool>( long_form, needs_value);  
 }
 
-
+// * No warning if a shortname ("-a") argument is found that lacks a  
+//   longname lookup in the table.  The argument is simply ignored.
+// * This only cares if 'name.size()' >= 1; handling of bad characters
+//   is left to Config::setItem().
 void Config::getCmdline( int argc, char** argv)
 {
-  string name = "", value = "", section = "";
- 
-  for ( int i = 1; i < argc; i++) {
-    if ( argv[i][1] == '-' && argv[i][0] == '-') {
-      string arg( argv[i]);
-      size_t eq_pos = arg.find('=');
-      size_t col_pos = arg.find(':');
- 
-      if ( col_pos != string::npos && eq_pos != string::npos) {
-        if ( ( eq_pos - col_pos) > 1) {
-          section = arg.substr( 2, ( col_pos - 2));
-          name = arg.substr( ( col_pos + 1), ( eq_pos - ( col_pos + 1)));
-          value = arg.substr( ( eq_pos + 1), ( arg.size() - ( eq_pos + 1)));
-        }
-        else {
-          section = "";
-          name = arg.substr( 2, ( eq_pos - 2));
-          value = arg.substr( ( eq_pos + 1), ( arg.size() - ( eq_pos + 1)));
-        }
-      } 
-      else if ( col_pos != string::npos && eq_pos == string::npos) {
-        section = arg.substr( 2, ( col_pos - 2));
-        name = arg.substr( ( col_pos + 1), ( arg.size() - ( col_pos + 1)));
-        value = "";
-      }
-      else if ( col_pos == string::npos && eq_pos != string::npos) {
-        section = "";
-        name = arg.substr( 2, ( eq_pos - 2));
-        value = arg.substr( ( eq_pos + 1), ( arg.size() - ( eq_pos + 1)));
-      }
-      else {
-        section = "";
-        name = arg.substr( 2, ( arg.size() - 2));
-        value = "";
-      } 
+  string section, name, value;
 
-      setItem( section, name, value);
+  for ( size_t i = 1; i < argc; i++) {
+    if ( argv[i][0] == '-' && argv[i][1] == '-' && argv[i][2] != '\0') {
+      string arg = argv[i];
+      bool fnd_sec = false, fnd_nam = false; 
+      size_t mark = 2;
 
-    } // argv[i][1] == '-' && argv[i][0] == '-'
-    else if ( argv[i][1] != '-' && argv[i][0] == '-')  {
+      section = name = value = "";
+       
+      for ( size_t j = 2; j < arg.size(); j++) {
+        if ( arg[j] == ':' && arg[j+1] != '\0' && !fnd_sec && !fnd_nam) {
+          section = arg.substr( mark, ( j - mark));
+          fnd_sec = true;
+          mark = j + 1;
+        }
+        else if ( arg[j] == '=' && ( j - mark) > 1) {
+          name = arg.substr( mark, ( j - mark));
+          fnd_nam = true;
+          value = arg.substr( ( j + 1), ( arg.size() - ( j + 1)));
+          break;
+        }
+      }
+
+      if ( !fnd_nam && ( arg.size() - mark) > 0) {
+        name = arg.substr( mark, ( arg.size() - mark));
+      }
+    } // long argument 
+    else if( argv[i][0] == '-' && argv[i][1] != '-' && argv[i][1] != '\0') {
       parameter_map::iterator I = m_par_lookup.find( argv[i][1]);
-        
+
+      section = name = value = "";
+
       if ( I != m_par_lookup.end()) {
-        section = ""; 
         name = ( ( *I).second).first;
+        bool needs_value = ( ( *I).second).second;
 
-        if ( ( ( *I).second).second) {
-          if ( argv[i+1] != NULL && argv[i+1][0] != '-') {
-            value = argv[++i];
-
-            setItem( section, name, value); 
-          }         
+        if ( needs_value && argv[i+1] != NULL && argv[i+1][0] != '-') {
+          value = argv[++i];
         }
       }
-    } // argv[i][0] == '-'
+    } // short argument
+
+    if ( !name.empty()) {
+      setItem( section, name, value);
+    }
   }
 } // Config::getCmdline()
- 
 
-void Config::getEnv(const string& prefix)
+// * This will send 'name.size() == 0' to setItem, unlike getCmd.  Reason:
+//   an env should never be nameless and if it is, something is seriously
+//   wrong; setItem's throw-catch routine will check this. 
+void Config::getEnv( const string& prefix)
 {
-  string name = "", value = "", section = "", env = "";
+  string name, value, section, env = "";
   size_t eq_pos = 0;
 
-  for ( int i = 0; environ[i] != NULL; i++) {
+  for ( size_t i = 0; environ[i] != NULL; i++) {
     env = environ[i];
 
     if ( env.substr( 0, prefix.size()) == prefix) {
-      section = name = value = "";
       eq_pos = env.find( '='); 
 
       if ( eq_pos != string::npos) {
+        name = env.substr( prefix.size(), ( eq_pos - prefix.size()));
         value = env.substr( ( eq_pos + 1), ( env.size() - ( eq_pos + 1)));
       }
       else {
+        name = env.substr( prefix.size(), ( env.size() - prefix.size()));
         value = "";
-      }
+      }   
       
-      name = env.substr( prefix.size(), ( eq_pos - prefix.size()));
-      if ( !name.empty() ) {
-        setItem( section, name, value);
-      }
-      else {
-        throw "Invalid environment setting!";
-      }
+      setItem( section, name, value);
     }
   }
 } // Config::getEnv()
+
+void Config::clean( std::string& str)
+{
+  ctype_t c;
+
+  for ( size_t i = 0; i < str.size(); i++) {
+    c = ctype( str[i]);
+
+    if ( c != C_NUMERIC && c != C_ALPHA && c != C_DASH) {
+      str[i] = '_';
+    }
+    else {
+      str[i] = tolower( str[i]);
+    }
+  } 
+} // Config::clean()
 
 
 } // namespace varconf

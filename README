@@ -133,9 +133,87 @@ Use prefix 'WF_' to retrieve the three variables as configuration data.  They wi
 
 5. Library Usage
 ----------------
-Varconf has four major components: a command-line parser, an environment variable parser, a configuration file parser and input-output-processing routines for interacting with configuration data.
+Varconf is not very verbose about errors.  Typically, malformed config data is either completely ignored or converted into a compatible form.  A typo won't crash the library but it might lead to some very odd configuration items.  ie:
+
+Command-line argument:
+  --section_name::    second colon treated as item name and converted to
+                      '_'; item '_' would be created without value under
+                      section "section_name"
+
+While this makes reporting typos to the user difficult, it makes parsing of configuration data more efficient in the library.  A future solution to this might be the addition of warnings when the configuration data set method receives erroneous data. 
 
 
 5.1 Configuration Instance
 --------------------------
+Configuration data can be stored in separate configuration objects or in a single global instance.  
+
+Separate Objects:
+ 
+  Config my_config;
+
+Global Instance:
+
+  *Config::inst()
+
+Note that the method Config::inst() will automatically initialize the global data if not already created.
+
+
+5.2 Callbacks
+-------------
+Varconf uses libsigc++ for its callback routines.  Please see the libsigc++ documentation for specific details on interacting with these callback methods.
+
+Two callback signals are available, .sig and .sigv .  .sig is a non-verbose callback - it returns no value and simply informs the application that a change has been made.  .sigv is verbose and returns both the section and name (in that order) of the configuration item that has been changed.  
+
+
+5.3 Configuration Files
+-----------------------
+Varconf can read file-formed config data either directly from a file or from any input stream.  It can also write configuration data directly to a file or to an output stream.
+
+To read from a file:
+ 
+  config_object.readFromFile( file_name);
+
+To read from an input stream:
+
+  config_object.parseStream( istream&);
+
+  Note that this method may throw an error of type ParseError.  See the ParseError.cc file or the ParseError.h file for more information.
+
+
+To write to a file:
+
+  config_object.writeToFile( file_name);
+
+To write to a stream:
+
+  config_object.writeToStream( ostream&);
+
+
+5.4 Command-line Arguments
+--------------------------
+To parse a set of command-line arguments call the following method with the number of arguments and multi-dimension array of command-line arguments.
+
+  config_object.getCmdline( int argc, char** argv);
+
+Note that before shortname arguments ('-a') can be used, each must be registered with a long name using the setParameterLookup method.  ie:
+
+  config_object.setParameterLookup( 'f', "foo", true);
+
+The last argument is a bool specifying whether the argument requires a value or not.  If true, varconf will look at the command-line argument directly following the shortform argument to see if there is a value there.  If false, varconf will store the argument with no value.
+
+Note that if a shortform argument is found but does not exist in the table, it will be ignored without warning.
+
+
+5.5 Environment Variables
+-------------------------
+To read in all environment variables with a specific prefix, call the following function with that prefix:
+
+  config_object.getEnv( prefix);
+
+  ie: config_object.getEnv( "WF_");    reads in all environment variables
+                                       starting with "WF_"
+
+
+
+
 

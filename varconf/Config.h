@@ -27,7 +27,12 @@ public:
   // returns a pointer to the global configuration instance and 
   // initializes it if it does not already exist.
 
-  Variable getItem( const std::string& section, const std::string& name);
+  Variable getItem( const std::string& section, const std::string& key);
+  bool erase( const std::string& section, const std::string& key = ""); 
+  bool find( const std::string& section, const std::string& key = "");
+  void clean( std::string& str);
+  // turns 'str' into a section name or key name compatible string.
+
   void setItem( const std::string& section, const std::string& name,
                 const Variable item);
   bool findItem( const std::string& section, const std::string& name);
@@ -41,11 +46,11 @@ public:
   // attempts to write the current configuration data to 'filename'.  Returns
   // false if file could not be opened.
 
-  bool writeToStream( std::ostream& ios);
+  bool writeToStream( std::ostream& out);
   // attempts to write the current configuration data to the out stream 
   // 'ostream'.  Currently returns true under all circumstances.
 
-  void parseStream( std::istream& ios) throw ( ParseError);
+  void parseStream( std::istream& in) throw ( ParseError);
   // attempts to parse the configuration data in the input stream 'iostream'.
   // Throws a ParseError Object containing error information upon parse
   // failure.
@@ -81,7 +86,6 @@ protected:
 private:
   conf_map m_conf;
   static Config* m_instance;
-
   parameter_map m_par_lookup;
 };
 
