@@ -1,3 +1,8 @@
+2003-03-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.cpp: Back off change to default height points to make
+	  terrain seamless again.
+
 2003-02-23  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Terrain.cpp: Make default height points work more sanely.
