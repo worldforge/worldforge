@@ -1,3 +1,8 @@
+Thursday, 22nd January 2004, Al Riddoch <alriddoch@zepler.org>
+
+	* Eris/typeService.cpp: Update type service to use Atlas-C++
+	  Class() method, as default constructor now creates an instance.
+
 Monday, 19th January 2004, Al Riddoch <alriddoch@zepler.org>
 
 	* Many more include fixups, mostly relating to sigc++.

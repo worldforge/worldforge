@@ -45,12 +45,12 @@ void TypeService::init()
 
     // this block here provides the foundation objects locally, no matter what the server
     // does. this reduces some initial traffic.
-    registerLocalType(Objects::Root());
-    registerLocalType(Objects::Entity::RootEntity());
-    registerLocalType(Objects::Operation::RootOperation());
-    registerLocalType(Objects::Operation::Get());
-    registerLocalType(Objects::Operation::Info());
-    registerLocalType(Objects::Operation::Error());
+    registerLocalType(Objects::Root::Class());
+    registerLocalType(Objects::Entity::RootEntity::Class());
+    registerLocalType(Objects::Operation::RootOperation::Class());
+    registerLocalType(Objects::Operation::Get::Class());
+    registerLocalType(Objects::Operation::Info::Class());
+    registerLocalType(Objects::Operation::Error::Class());
 	
 	Dispatcher *info = _conn->getDispatcherByPath("op:info");
 	
