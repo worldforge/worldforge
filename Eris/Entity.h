@@ -224,10 +224,12 @@ private:
 // motion predicted entity that moves a lot.
 class Moveable : public Entity
 {
+	typedef Entity Inherited;		
 public:
 	Moveable(const std::string &id);
 	virtual ~Moveable();
 
+	virtual Coord getPosition() const	{return Inherited::getPosition();} 
 	void getPosition(bool predicted);
 
 protected:
