@@ -43,7 +43,7 @@ protected:
 		void add(Entity *e)
 		{
 			if (contents.empty()) 
-				stamp = Time::getCurrentStamp();
+			    stamp = Time::Stamp::now();
 			contents.insert(e);
 		}
 		

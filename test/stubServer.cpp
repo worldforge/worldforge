@@ -3,6 +3,7 @@
 #endif
 
 #include <unistd.h>
+#include <sys/socket.h>
 
 #include "stubServer.h"
 #include "Time.h"
@@ -26,6 +27,9 @@ StubServer::StubServer(short port) :
 
     if (!m_listenSocket->is_open())
 	throw std::invalid_argument("unable to open server socket in stub server");
+    
+    const int optvalue = 1;
+    setsockopt(m_listenSocket->getSocket(), SOL_SOCKET, SO_REUSEADDR, &optvalue, sizeof(int));
     m_state = LISTEN;
 }
 
@@ -166,10 +170,10 @@ void StubServer::fail()
 
 void StubServer::waitForMessage(int timeout)
 {
-    Time::Stamp ts(Time::getCurrentStamp());
+    Time::Stamp ts(Time::Stamp::now());
     ts = ts + (timeout * 1000);
     
-    while (ts > Time::getCurrentStamp()) {
+    while (ts > Time::Stamp::now()) {
 	run();
 	Eris::PollDefault::poll();
 	usleep(10000); // 10 msec = 1/100 of a second

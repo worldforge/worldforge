@@ -18,7 +18,7 @@ void InvisibleEntityCache::add(Entity *e)
 	/* if the first addition to the bucket (it's stamp) was longer ago that this time, we create a new
 	bucket, instead of extending the current one. This keeps the buckets reasonably localised in
 	time. */
-	Time::Stamp lastUpdateBound = Time::getCurrentStamp() - _bucketWidthMsec;
+	Time::Stamp lastUpdateBound = Time::Stamp::now() - _bucketWidthMsec;
 	
 	if (_buckets.empty() || (_buckets.front().stamp < lastUpdateBound)) {
 		/* keep the width (times spanned by a single bucket under control : typical values would
@@ -34,7 +34,7 @@ void InvisibleEntityCache::add(Entity *e)
 	
 void InvisibleEntityCache::flush()
 {
-	Time::Stamp expiry(Time::getCurrentStamp() - _bucketLifetimeMsec);
+	Time::Stamp expiry(Time::Stamp::now() - _bucketLifetimeMsec);
 	while (!_buckets.empty() && (_buckets.back().stamp < expiry)) {
 		for (EntitySet::iterator E=_buckets.back().contents.begin(); 
 				E!=_buckets.back().contents.end();++E) {

@@ -25,7 +25,7 @@ Timeout::Timeout(const std::string &label, unsigned long milli) :
 	_allTimeouts.insert(_allTimeouts.begin(),
 	    TimeoutMap::value_type(label, this));
 	
-	_due = Time::getCurrentStamp() + milli;
+	_due = Time::Stamp::now() + milli;
 }
 
 Timeout::~Timeout()
@@ -46,7 +46,7 @@ Timeout& Timeout::operator=(const Timeout &t)
 
 bool Timeout::isExpired() const
 {
-	return (_due < Time::getCurrentStamp());
+	return (_due < Time::Stamp::now());
 }
 
 void Timeout::poll(const Time::Stamp &t)
@@ -60,7 +60,7 @@ void Timeout::poll(const Time::Stamp &t)
 void Timeout::reset(unsigned long milli)
 {
 	_fired = false;
-	_due = Time::getCurrentStamp() + milli;
+	_due = Time::Stamp::now() + milli;
 }
 
 void Timeout::extend(unsigned long milli)
@@ -80,7 +80,7 @@ const Timeout* Timeout::findByName(const std::string &nm)
 
 void Timeout::pollAll()
 {
-	Time::Stamp now = Time::getCurrentStamp();
+	Time::Stamp now = Time::Stamp::now();
 	for (TimeoutMap::iterator T=_allTimeouts.begin(); T != _allTimeouts.end(); ++T) {
 		T->second->poll(now);
 	}

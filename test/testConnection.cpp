@@ -59,11 +59,11 @@ void TestConnection::tearDown()
 
 void TestConnection::waitFor(int timeoutSeconds, bool &watch1, bool &watch2)
 {
-    Time::Stamp ts(Time::getCurrentStamp());
+    Time::Stamp ts(Time::Stamp::now());
     ts = ts + (timeoutSeconds * 1000);
     
     while (!watch1 && !watch2) {
-	if (ts < Time::getCurrentStamp()) {
+	if (ts < Time::Stamp::now()) {
 	    CPPUNIT_ASSERT_MESSAGE("timed out in waitFor", false);
 	    return;
 	}

@@ -1,3 +1,17 @@
+Thursday, May 2, James Turner
+
+    * Changed Time::Stamp::getCurrent() into a static
+      factory method now(). The previous syntax looked
+      really odd.
+    * Updated all the callers of above.
+    * Modified stubServer to set SO_REUSEADDR on it's
+      sockets, which should fix the odd test problems (well some
+      of them .. it still gets linker errors which is a pain).
+      Thanks to elefth for spotting this one.
+    * Added some boot-strapping code to TypeInfo, not sure
+      how well it will work, but it uses the same path as
+      loading from atlas.xml, so it should be safe.
+
 Monday, April 29, James Turner
 
 	* Add createRoom method to Room, to enable explicit creation

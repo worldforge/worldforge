@@ -13,10 +13,11 @@
 
 bool Time::Stamp::_did_init = false;
 	
-Time::Stamp& Time::Stamp::getCurrent()
+Time::Stamp Time::Stamp::now()
 {
+    Stamp ret;
 #ifndef __WIN32__
-	gettimeofday(&_val, NULL);
+    gettimeofday(&ret._val, NULL);
 #else
   SYSTEMTIME sysTime;
   FILETIME fileTime;  /* 100ns == 1 */
@@ -28,11 +29,11 @@ Time::Stamp& Time::Stamp::getCurrent()
    * FILETIME. */
   memcpy(&i, &fileTime, sizeof(LARGE_INTEGER));
 
-  _val.tv_sec = i.QuadPart / 10000000; /*10e7*/
-  _val.tv_usec = (i.QuadPart / 10) % 1000000;  /*10e6*/
+    ret._val.tv_sec = i.QuadPart / 10000000; /*10e7*/
+    ret._val.tv_usec = (i.QuadPart / 10) % 1000000;  /*10e6*/
                                   
 #endif
-	return *this;
+    return ret;
 }
 
 // The operator definitons need the Time:: prefix, since

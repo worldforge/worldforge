@@ -20,6 +20,7 @@
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Get.h>
 #include <Atlas/Objects/Operation/Error.h>
+#include <Atlas/Objects/Entity/RootEntity.h>
 
 #include "TypeInfo.h"
 #include "Utils.h"
@@ -291,6 +292,15 @@ void TypeInfo::init()
 		return;	// this can happend during re-connections, for example.
 	
 	Eris::log(LOG_NOTICE, "Starting Eris TypeInfo system...");
+
+    // this block here provides the foundation objects locally, no matter what the server
+    // does. this reduces some initial traffic.
+    registerLocalType(Atlas::Objects::Root());
+    registerLocalType(Atlas::Objects::Entity::RootEntity());
+    registerLocalType(Atlas::Objects::Operation::RootOperation());
+    registerLocalType(Atlas::Objects::Operation::Get());
+    registerLocalType(Atlas::Objects::Operation::Info());
+    registerLocalType(Atlas::Objects::Operation::Error());
 	
 	Dispatcher *info = Connection::Instance()->getDispatcherByPath("op:info");
 	
@@ -353,20 +363,24 @@ void TypeInfo::readAtlasSpec(const std::string &specfile)
     while (!specStream.eof())
       specXMLCodec.Poll(true);
 	
-	// deal with each item in the spec file
+    // deal with each item in the spec file
     while (specDecoder.QueueSize() > 0 ) {
-		Atlas::Message::Object msg(specDecoder.Pop());
-		if (!msg.IsMap()) continue;
+	Atlas::Message::Object msg(specDecoder.Pop());
+	if (!msg.IsMap()) continue;
 				
-		Atlas::Objects::Root def = 
-			Atlas::atlas_cast<Atlas::Objects::Root>(msg);
-				
-		TypeInfoMap::iterator T = globalTypeMap.find(def.GetId());
-		if (T != globalTypeMap.end())
-			T->second->processTypeData(def);
-		else
-			globalTypeMap[def.GetId()] = new TypeInfo(def);
-	}
+	Atlas::Objects::Root def = 
+	    Atlas::atlas_cast<Atlas::Objects::Root>(msg);
+	registerLocalType(def);
+    }
+}
+
+void TypeInfo::registerLocalType(const Atlas::Objects::Root &def)
+{
+    TypeInfoMap::iterator T = globalTypeMap.find(def.GetId());
+    if (T != globalTypeMap.end())
+	T->second->processTypeData(def);
+    else
+	globalTypeMap[def.GetId()] = new TypeInfo(def);
 }
 
 TypeInfoPtr TypeInfo::find(const std::string &id)
@@ -441,7 +455,7 @@ try {
 	if (T == globalTypeMap.end()) {
 		// alternatively, we could build a type-node now.
 		// but I'd rather be sure :-)
-		throw IllegalObject(atype, "type object's ID is unknown");
+		throw IllegalObject(atype, "type object's ID (" + id + ") is unknown");
 	}
 	
 	// handle duplicates : this can be caused by waitFors pilling up, for example

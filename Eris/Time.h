@@ -54,12 +54,13 @@ class Stamp {
 	
 	friend long operator-(const Stamp &a, const Stamp &b);	
 
-	Stamp& getCurrent();
+	static Stamp now();
 };
 
-inline Stamp getCurrentStamp() {return Stamp().getCurrent();}
+//inline Stamp getCurrentStamp() {return Stamp().getCurrent();}
 	
-inline Stamp operator+(unsigned long msec, const Stamp &a) {return a + msec;}
+inline Stamp operator+(unsigned long msec, const Stamp &a)
+{return a + msec;}
 
 } // of namespace Time
 

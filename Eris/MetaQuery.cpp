@@ -58,7 +58,7 @@ void MetaQuery::onConnect()
 	_encode->StreamMessage(&gt);
 	(*_stream) << std::flush;
 	
-	_stamp = Time::getCurrentStamp();
+	_stamp = Time::Stamp::now();
 	
 	// save our serial-no (so we can identify replies)
 	_queryNo = gt.GetSerialno();
@@ -73,7 +73,7 @@ using namespace Time;
 
 long MetaQuery::getElapsed()
 {
-	Time::Stamp t = Time::getCurrentStamp();
+	Time::Stamp t = Time::Stamp::now();
 	return  t - _stamp;
 }
 

@@ -1,4 +1,5 @@
 TESTS = testEris
+
 check_PROGRAMS = $(TESTS)
 
 testEris_SOURCES = tests.cpp \
@@ -13,5 +14,5 @@ testEris_SOURCES = tests.cpp \
 INCLUDES = @CPPUNIT_CFLAGS@ -I$(top_srcdir)/src
 
 testEris_LDADD = @CPPUNIT_LIBS@ \
-    $(top_builddir)/src/liberis.la \
+    -leris \
     -lwfmath

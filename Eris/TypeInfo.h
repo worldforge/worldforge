@@ -126,6 +126,9 @@ protected:
 	static void recvTypeError(const Atlas::Objects::Operation::Error &error,
 		const Atlas::Objects::Operation::Get &get);
 	
+	/// build a TypeInfo object if necessary, and add it to the database
+	static void registerLocalType(const Atlas::Objects::Root &def);
+	
 	// NOTE - I don't especially like the relations analogy, but it *is* very
 	// clear what is meant, so I'm sticking with it.
 
