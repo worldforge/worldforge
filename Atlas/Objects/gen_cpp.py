@@ -250,16 +250,17 @@ public:
     static %(classname)s *alloc();
     virtual void free();
     virtual %(classname)s *getDefaultObject();
+    static %(classname)s *getDefaultObjectInstance();
 private:
-    static %(classname)s defaults_%(classname)s;
+    static %(classname)s *defaults_%(classname)s;
     static %(classname)s *begin_%(classname)s;
 """ % vars()) #"for xemacs syntax highlighting
     def freelist_im(self, name_addition=""):
         classname = self.classname + name_addition
         self.write("""
 //freelist related methods specific to this class
-%(classname)s %(classname)s::defaults_%(classname)s;
-%(classname)s *%(classname)s::begin_%(classname)s = NULL;
+%(classname)s *%(classname)s::defaults_%(classname)s = 0;
+%(classname)s *%(classname)s::begin_%(classname)s = 0;
 
 %(classname)s *%(classname)s::alloc()
 {
@@ -270,7 +271,7 @@ private:
       begin_%(classname)s = (%(classname)s *)begin_%(classname)s->m_next;
       return res;
     }
-    return new %(classname)s(&defaults_%(classname)s);
+    return new %(classname)s(%(classname)s::getDefaultObjectInstance());
 }
 
 void %(classname)s::free()
@@ -279,9 +280,17 @@ void %(classname)s::free()
     begin_%(classname)s = this;
 }
 
+%(classname)s *%(classname)s::getDefaultObjectInstance()
+{
+    if (defaults_%(classname)s == 0) {
+        defaults_%(classname)s = new %(classname)s;
+    }
+    return defaults_%(classname)s;
+}
+
 %(classname)s *%(classname)s::getDefaultObject()
 {
-    return &defaults_%(classname)s;
+    return %(classname)s::getDefaultObjectInstance();
 }
 
 """ % vars()) #"for xemacs syntax highlighting
@@ -396,11 +405,12 @@ void %(classname)s::free()
             self.write(string.join(parentlist, ", "))
         self.write("\n{\n")
 
-        self.write("public:\n")
+        self.write("protected:\n")
         self.constructors_if(obj, static_attrs)
         self.doc(4, "Default destructor.")
         self.write("    virtual ~" + self.classname + "();\n")
         self.write("\n")
+        self.write("public:\n")
         self.doc(4, 'Is this instance of some class?')
         self.write("    virtual bool instanceOf(int classNo) const;\n")
         self.write("\n")

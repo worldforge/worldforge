@@ -1,3 +1,12 @@
+2003-11-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py: Re-work default object code so it is
+	  not a static instance, and is instead a kind of singleton.
+
+	* Atlas/Objects/gen_cpp.py: Make object constructors protected
+	  so it is clear that these objects should not be directly
+	  instanced.
+
 2003-10-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/SmartPtr.h: Modified explicit casts so they are
