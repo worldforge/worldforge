@@ -1,3 +1,13 @@
+Saturday, 10th May 2003, Ron Steinke <rsteinke@w-link.net>
+
+	* Changed perl bindings build stuff to account
+	  for the @WFMATH_CFLAGS@ @ATLAS_CFLAGS@ -> @WF_CFLAGS@
+	  change
+	* Added a check for the SigC module to the check for
+	  the sigcperl lib in configure.in
+	* Got rid of OLD_SIGC_1_0 stuff in bindings, since we're
+	  now requiring libsigc++ 1.2
+
 Friday, 9th May 2003, James Turner <james@worldforge.org>
 
 	* Incremented version to 0.9.8 for stable release.

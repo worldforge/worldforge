@@ -5,10 +5,6 @@
 
 #include "../conversion.h"
 
-#ifdef SIGCXX_SIGNAL_SYSTEM_H
-#define OLD_SIGC_1_0
-#endif
-
 // This only gets used if someone emits one of player's signals
 // from outside. This should never happen.
 namespace SigCPerl {
@@ -62,11 +58,7 @@ class CharacterSignalWrap : public SigCPerl::SignalBase
 
   static SlotType get_slot(const SigCPerl::Slot &slot) throw()
   {
-#ifdef OLD_SIGC_1_0
-    return SigCPerl::do_convert(slot.slot(), &conv_func);
-#else
     return new SigC::AdaptorSlotNode((SigC::FuncPtr) &conv_func, slot.slot());
-#endif
   }
 
   virtual SigCPerl::Data emit(const SigCPerl::Data &data, I32 flags)
@@ -74,13 +66,8 @@ class CharacterSignalWrap : public SigCPerl::SignalBase
       {assert(false);}
 
  private:
-#ifdef OLD_SIGC_1_0
-  static void conv_func(SigCPerl::Slot::Callback *s,
-    const Atlas::Objects::Entity::GameEntity& entity)
-#else
   static void conv_func(const Atlas::Objects::Entity::GameEntity& entity,
     SigC::AdaptorSlotNode* node)
-#endif
   {
     Atlas::Message::Object obj = entity.AsObject();
 
@@ -99,12 +86,8 @@ class CharacterSignalWrap : public SigCPerl::SignalBase
       data.push_back(I->second);
     }
 
-#if OLD_SIGC_1_0
-    s->call(data, G_VOID);
-#else
     SigC::SlotNode *slot = static_cast<SigC::SlotNode*>(node->slot_.impl());
     ((SigCPerl::Slot::Proxy)(slot->proxy_))(data, G_VOID, slot);
-#endif
 
     FREETMPS;
     LEAVE;
