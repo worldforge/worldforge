@@ -19,6 +19,7 @@ namespace Mercator {
 class Segment;
 class Shader;
 class TerrainMod;
+class Area;
 
 /// \brief Class storing centrally all data about an instance of some terrain.
 ///
@@ -123,11 +124,11 @@ class Terrain {
     }
 
     /// \brief Add a new Shader to the list for this terrain.
-    void addShader(Shader * t) {
-        m_shaders.push_back(t);
-    }
-
+    void addShader(Shader * t);
+    
     void addMod(const TerrainMod &t);
+    
+    void addArea(Area* a);
 };
 
 } // namespace Mercator

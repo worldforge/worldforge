@@ -13,6 +13,7 @@
 #include <wfmath/axisbox.h>
 
 #include <list>
+#include <map>
 
 namespace Mercator {
 
@@ -20,6 +21,7 @@ class Terrain;
 class Surface;
 class TerrainMod;
 typedef std::list<TerrainMod *> ModList;
+class Area;
 
 // This class will need to be reference counted if we want the code to
 // be able to hold onto it, as currently they get deleted internally
@@ -31,6 +33,8 @@ class Segment {
   public:
     /// STL list of pointers to Surface objects.
     typedef std::list<Surface *> Surfacestore;
+    
+    typedef std::multimap<int, Area *> Areastore;
   private:
     /// Distance between segments
     const int m_res;
@@ -53,6 +57,9 @@ class Segment {
 
     /// Store of surfaces which can be rendered on this terrain
     Surfacestore m_surfaces;
+    
+    /// Areas which intersect this segment
+    Areastore m_areas;
   public:
     explicit Segment(int x, int y, unsigned int resolution);
     ~Segment();
@@ -153,9 +160,17 @@ class Segment {
     /// \brief Accessor for the minimum height value in this Segment.
     float getMin() const { return m_min; }
 
+    /// \brief The 2d area covered by this segment
+    WFMath::AxisBox<2> getBox() const;
+
     void addMod(TerrainMod *t);
     void clearMods();
     
+    const Areastore& getAreas() const
+    { return m_areas; }
+    
+    void addArea(Area* a);
+    void clearAreas();
   private:
     /// \brief Check a value against m_min and m_max and set one of them
     /// if appropriate.

@@ -14,6 +14,7 @@
 #include <Mercator/Segment.h>
 #include <Mercator/TerrainMod.h>
 #include <Mercator/Shader.h>
+#include <Mercator/Area.h>
 
 #include <iostream>
 
@@ -49,6 +50,23 @@ Terrain::~Terrain()
     }
 }
 
+void Terrain::addShader(Shader * t)
+{
+    m_shaders.push_back(t);
+    
+    for (Segmentstore::iterator I = m_segments.begin(); 
+         I!=m_segments.end(); ++I) {
+        for (Segmentcolumn::iterator J = I->second.begin(); 
+             J != I->second.end(); ++J) {
+            Segment *seg=J->second;
+            //if (!t->checkIntersect(*seg)) continue;
+            
+            Segment::Surfacestore & sss = seg->getSurfaces();
+            sss.push_back(t->newSurface(*seg));
+        }
+    }
+}
+
 /// \brief Add the required Surface objects to a Segment.
 ///
 /// If shading is enabled, each Segment has a set of Surface objects
@@ -68,8 +86,10 @@ void Terrain::addSurfaces(Segment & seg)
     }
     Shaderstore::const_iterator I = m_shaders.begin();
     for (; I != m_shaders.end(); ++I) {
+        // shader doesn't touch this segment, skip
+       // if (!(*I)->checkIntersect(seg)) continue;
+        
         sss.push_back((*I)->newSurface(seg));
-        // sss.push_back(new Surface(seg, **I));
     }
 }
 
@@ -263,6 +283,25 @@ void Terrain::addMod(const TerrainMod &t) {
             if (s) s->addMod(t.clone());
         }
     }
+}
+
+void Terrain::addArea(Area* area)
+{
+    int lx=(int)floor((area->bbox().lowCorner()[0] - 1) / m_res);
+    int ly=(int)floor((area->bbox().lowCorner()[1] - 1) / m_res);
+    int hx=(int)ceil((area->bbox().highCorner()[0] + 1) / m_res);
+    int hy=(int)ceil((area->bbox().highCorner()[1] + 1) / m_res);
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (!s) continue;
+            
+            if (area->checkIntersects(*s))
+                s->addArea(area);
+        }
+    }
+
 }
 
 } // namespace Mercator

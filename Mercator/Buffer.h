@@ -40,6 +40,10 @@ class Buffer {
         return m_segment;
     }
 
+    unsigned int getSize() const {
+        return m_size;
+    }
+
     unsigned int getChannels() const {
         return m_channels;
     }

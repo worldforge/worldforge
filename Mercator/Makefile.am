@@ -21,7 +21,9 @@ libmercator_0_2_la_SOURCES = \
 	Intersect.cpp \
 	Surface.cpp \
 	Plant.cpp \
-	Forest.cpp
+	Forest.cpp \
+	Area.cpp \
+	AreaShader.cpp
 
 libmercatordir = $(includedir)/Mercator-0.2/Mercator
 
@@ -43,4 +45,7 @@ libmercator_HEADERS = \
 	Surface.h \
 	Plant.h \
 	Forest.h \
-	RandCache.h
+	RandCache.h \
+	Area.h \
+	AreaShader.h
+	

@@ -1,3 +1,13 @@
+2005-03-25  James Turner  <james@worldforge.org>
+
+	* Mercator/Area.cpp, Mercator/Area.h: initial work on supporting
+	  polygonal areas in Mercator.
+	  
+	* Mercator/AreaShader.cpp, Mercator/AreaShader.h: shader which scan-
+	  converts areas into a Surface, with basic anti-aliasing.
+	  
+	* test/testArea.cpp: basic tests of the Area API
+
 2005-03-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/TerrainMod.cpp, Mercator/TerrainMod.h: Add a virtual

@@ -1,4 +1,4 @@
-TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG
+TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG testArea
 
 INCLUDES = -I$(top_srcdir)
 
@@ -32,3 +32,6 @@ testForest_SOURCES = testForest.cpp
 testForest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testQRNG_SOURCES = testQRNG.cpp
+
+testArea_SOURCES = testArea.cpp
+testArea_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2

@@ -13,6 +13,7 @@
 #include <Mercator/TerrainMod.h>
 #include <Mercator/Surface.h>
 #include <Mercator/BasePoint.h>
+#include <Mercator/Area.h>
 
 #include <wfmath/MersenneTwister.h>
 
@@ -578,6 +579,18 @@ void Segment::applyMod(TerrainMod *t)
 
     //currently mods dont fix the normals
     invalidate(false);
+}
+
+void Segment::addArea(Area* ar)
+{
+    m_areas.insert(Areastore::value_type(ar->getLayer(), ar));
+}
+
+WFMath::AxisBox<2> Segment::getBox() const
+{
+    WFMath::Point<2> lp(m_xRef * m_res, m_yRef * m_res), 
+        hp(lp.x() + m_res, lp.y() + m_res);
+    return WFMath::AxisBox<2>(lp, hp);
 }
 
 } // namespace Mercator

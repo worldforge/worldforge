@@ -5,126 +5,6 @@
 	};
 	objectVersion = 39;
 	objects = {
-		C4480F980664DE3E00BF4BBF = {
-			children = (
-				C4480F990664DE3E00BF4BBF,
-				C4480F9A0664DE3E00BF4BBF,
-				C4480F9B0664DE3E00BF4BBF,
-				C4480F9C0664DE3E00BF4BBF,
-				C4480F9D0664DE3E00BF4BBF,
-				C4480F9E0664DE3E00BF4BBF,
-				C4480F9F0664DE3E00BF4BBF,
-			);
-			isa = PBXGroup;
-			name = Products;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C4480F990664DE3E00BF4BBF = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = wfmath.framework;
-			refType = 3;
-			remoteRef = C4480FA30664DE7D00BF4BBF;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C4480F9A0664DE3E00BF4BBF = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = testQuaternion;
-			refType = 3;
-			remoteRef = C4480FA40664DE7D00BF4BBF;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C4480F9B0664DE3E00BF4BBF = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = polygonTest;
-			refType = 3;
-			remoteRef = C4480FA50664DE7D00BF4BBF;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C4480F9C0664DE3E00BF4BBF = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = shapeTest;
-			refType = 3;
-			remoteRef = C4480FA60664DE7D00BF4BBF;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C4480F9D0664DE3E00BF4BBF = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = vectorTest;
-			refType = 3;
-			remoteRef = C4480FA70664DE7D00BF4BBF;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C4480F9E0664DE3E00BF4BBF = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = atlasTest;
-			refType = 3;
-			remoteRef = C4480FA80664DE7D00BF4BBF;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C4480F9F0664DE3E00BF4BBF = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = timeTest;
-			refType = 3;
-			remoteRef = C4480FA90664DE7D00BF4BBF;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C4480FA30664DE7D00BF4BBF = {
-			containerPortal = C48D3ACF0576CF62006979E1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56943055AF2C400944C0F;
-			remoteInfo = wfmath;
-		};
-		C4480FA40664DE7D00BF4BBF = {
-			containerPortal = C48D3ACF0576CF62006979E1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C5694E055AF2CB00944C0F;
-			remoteInfo = testQuaternion;
-		};
-		C4480FA50664DE7D00BF4BBF = {
-			containerPortal = C48D3ACF0576CF62006979E1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56AFA055AF62200944C0F;
-			remoteInfo = polygonTest;
-		};
-		C4480FA60664DE7D00BF4BBF = {
-			containerPortal = C48D3ACF0576CF62006979E1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56B0A055AF62F00944C0F;
-			remoteInfo = shapeTest;
-		};
-		C4480FA70664DE7D00BF4BBF = {
-			containerPortal = C48D3ACF0576CF62006979E1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56B2C055AF69F00944C0F;
-			remoteInfo = vectorTest;
-		};
-		C4480FA80664DE7D00BF4BBF = {
-			containerPortal = C48D3ACF0576CF62006979E1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56B39055AF6AE00944C0F;
-			remoteInfo = atlasTest;
-		};
-		C4480FA90664DE7D00BF4BBF = {
-			containerPortal = C48D3ACF0576CF62006979E1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C447BEF805C5D8AA00C5675E;
-			remoteInfo = timeTest;
-		};
 		C4480FF50664E0D100BF4BBF = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -170,13 +50,189 @@
 				);
 			};
 		};
+		C45EBD8E07D1E6B700BAC117 = {
+			fileEncoding = 30;
+			indentWidth = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Area.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+			tabWidth = 8;
+			usesTabs = 0;
+			wrapsLines = 0;
+		};
+		C45EBD8F07D1E6B700BAC117 = {
+			fileRef = C45EBD8E07D1E6B700BAC117;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C45EBDAC07D1F20300BAC117 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AreaShader.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45EBDAD07D1F20300BAC117 = {
+			fileRef = C45EBDAC07D1F20300BAC117;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		C45EBDB307D200D100BAC117 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = AreaShader.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45EBDB407D200D100BAC117 = {
+			fileRef = C45EBDB307D200D100BAC117;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C45FC33807CE554B008437E5 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = Area.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45FC33907CE554B008437E5 = {
+			fileRef = C45FC33807CE554B008437E5;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		C46BB72A07CF27A000156AFD = {
+			fileRef = C4480FF50664E0D100BF4BBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C47445FB07DFBB8400AD4413 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testArea.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C47445FF07DFBB8800AD4413 = {
+			buildPhases = (
+				C474460107DFBB8800AD4413,
+				C474460207DFBB8800AD4413,
+				C474460407DFBB8800AD4413,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/jmt/Worldforge/forge/libs/wfmath/build;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = testArea;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = YES;
+			};
+			dependencies = (
+				C474460007DFBB8800AD4413,
+			);
+			isa = PBXNativeTarget;
+			name = testArea;
+			productName = testTerrainMod;
+			productReference = C474460707DFBB8800AD4413;
+			productType = "com.apple.product-type.tool";
+		};
+		C474460007DFBB8800AD4413 = {
+			isa = PBXTargetDependency;
+			target = C496A1350576AD7D005225FB;
+			targetProxy = C48D3E150577797B006979E1;
+		};
+		C474460107DFBB8800AD4413 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C474460207DFBB8800AD4413 = {
+			buildActionMask = 2147483647;
+			files = (
+				C474460B07DFBBBF00AD4413,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C474460407DFBB8800AD4413 = {
+			buildActionMask = 2147483647;
+			files = (
+				C474460507DFBB8800AD4413,
+				C474460607DFBB8800AD4413,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C474460507DFBB8800AD4413 = {
+			fileRef = C4480FF50664E0D100BF4BBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C474460607DFBB8800AD4413 = {
+			fileRef = C496A1590576AD7E005225FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C474460707DFBB8800AD4413 = {
+			explicitFileType = "compiled.mach-o.executable";
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = testArea;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C474460907DFBBB700AD4413 = {
+			containerPortal = C48581B70552EE7C00A800CF;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C47445FF07DFBB8800AD4413;
+			remoteInfo = testArea;
+		};
+		C474460A07DFBBB700AD4413 = {
+			isa = PBXTargetDependency;
+			target = C47445FF07DFBB8800AD4413;
+			targetProxy = C474460907DFBBB700AD4413;
+		};
+		C474460B07DFBBBF00AD4413 = {
+			fileRef = C47445FB07DFBB8400AD4413;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C48581B30552EE7C00A800CF = {
 			children = (
 				C4480FF50664E0D100BF4BBF,
 				C48581C00552EE9A00A800CF,
 				C485B2C705B7481D002F2D80,
 				C496A1580576AD7D005225FB,
-				C48D3ACF0576CF62006979E1,
 				C48D3DB605774E19006979E1,
 				C48581BF0552EE8700A800CF,
 			);
@@ -185,8 +241,6 @@
 			sourceTree = "<group>";
 		};
 		C48581B50552EE7C00A800CF = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -199,8 +253,6 @@
 			name = Development;
 		};
 		C48581B60552EE7C00A800CF = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -221,12 +273,6 @@
 			mainGroup = C48581B30552EE7C00A800CF;
 			productRefGroup = C48581BF0552EE8700A800CF;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = C4480F980664DE3E00BF4BBF;
-					ProjectRef = C48D3ACF0576CF62006979E1;
-				},
-			);
 			targets = (
 				C496A1350576AD7D005225FB,
 				C48D3D7705774DD3006979E1,
@@ -236,6 +282,7 @@
 				C485B28105B745B1002F2D80,
 				C485B28C05B74647002F2D80,
 				C485B29605B74694002F2D80,
+				C47445FF07DFBB8800AD4413,
 				C485B2A205B746EF002F2D80,
 			);
 		};
@@ -249,6 +296,7 @@
 				C485B28805B745B1002F2D80,
 				C485B29305B74647002F2D80,
 				C485B29D05B74694002F2D80,
+				C474460707DFBB8800AD4413,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -257,6 +305,10 @@
 		};
 		C48581C00552EE9A00A800CF = {
 			children = (
+				C45EBDB307D200D100BAC117,
+				C45EBDAC07D1F20300BAC117,
+				C45EBD8E07D1E6B700BAC117,
+				C45FC33807CE554B008437E5,
 				C448D20D066FB44300E53100,
 				C44CB0DF05D417A40075E2A1,
 				C485B20E05B60385002F2D80,
@@ -948,6 +1000,7 @@
 			buildRules = (
 			);
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/jmt/Worldforge/forge/libs/wfmath/build;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = /usr/local/bin;
@@ -991,6 +1044,7 @@
 		C485B29B05B74694002F2D80 = {
 			buildActionMask = 2147483647;
 			files = (
+				C46BB72A07CF27A000156AFD,
 				C485B29C05B74694002F2D80,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -1035,6 +1089,7 @@
 				C485B2AD05B74704002F2D80,
 				C485B2AF05B74704002F2D80,
 				C485B2B105B74704002F2D80,
+				C474460A07DFBBB700AD4413,
 			);
 			isa = PBXAggregateTarget;
 			name = Tests;
@@ -1132,14 +1187,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		C48D3ACF0576CF62006979E1 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "wrapper.pb-project";
-			name = wfmath.pbproj;
-			path = ../wfmath/wfmath.pbproj;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
 		C48D3D7505774DD3006979E1 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -1194,6 +1241,7 @@
 		};
 		C48D3DB605774E19006979E1 = {
 			children = (
+				C47445FB07DFBB8400AD4413,
 				C485B26B05B74569002F2D80,
 				C485B26C05B74569002F2D80,
 				C485B26A05B74559002F2D80,
@@ -1413,7 +1461,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = ../wfmath/build;
 				FRAMEWORK_VERSION = A;
-				GCC_PREPROCESSOR_DEFINITIONS = PACKAGE;
+				GCC_PREPROCESSOR_DEFINITIONS = "PACKAGE HAVE_LRINTF";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Info-mercator__Upgraded_.plist";
@@ -1462,6 +1510,8 @@
 				C485B1DA05B60129002F2D80,
 				C44CB0E005D417A40075E2A1,
 				C448D20E066FB44300E53100,
+				C45FC33907CE554B008437E5,
+				C45EBDAD07D1F20300BAC117,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1623,6 +1673,8 @@
 				C485B1D705B60129002F2D80,
 				C485B1D905B60129002F2D80,
 				C485B20F05B60385002F2D80,
+				C45EBD8F07D1E6B700BAC117,
+				C45EBDB407D200D100BAC117,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
