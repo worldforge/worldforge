@@ -1,3 +1,7 @@
+2002-05-15  Michael Koch  <konqueror@gmx.de>
+
+	* src/Bridge.h: added documentation.
+
 2002-05-14  Michael Koch  <konqueror@gmx.de>
 
 	* src/Codecs: fixed encodeString
