@@ -44,7 +44,6 @@ Connection::~Connection()
     delete m_typeService;
 }
 
-
 void Connection::connect(const std::string &host, short port)
 {
     // save for reconnection later
@@ -56,6 +55,14 @@ void Connection::connect(const std::string &host, short port)
 
 void Connection::disconnect()
 {
+    if (_status == DISCONNECTING) {
+        warning() << "duplicate disconnect on Connection that's already disconnecting";
+        return;
+    }
+
+    if (_status == DISCONNECTED)
+        throw InvalidOperation("called disconnect on already disconnected Connection");
+
     assert(m_lock == 0);
 	
     // this is a soft disconnect; it will give people a chance to do tear down and so on

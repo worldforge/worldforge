@@ -1,4 +1,14 @@
-2004-07-32  James Turner  <james@worldforge.org>
+2004-08-01  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.h, Eris/Entity.cpp: implement getViewPosition, and add
+	  getViewOrientation.
+	 
+	* Eris/Entity.h: rename to/fromParentCoords to to/fromLocationCoords
+	
+	* Eris/Connection.cpp: make disconnect() check for and handle being
+	  in the DISCONNECTED or DISCONNECTING states already
+
+2004-08-01  James Turner  <james@worldforge.org>
 
 	* Eris/Player.cpp: change logic in ::netConnected, so cresting and logging-in
 	  a player inside Connection::Connected doesn't assert.

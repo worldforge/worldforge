@@ -49,8 +49,7 @@ BaseConnection::~BaseConnection()
 	
 void BaseConnection::connect(const std::string &host, short port)
 {
-    if (_stream != NULL)
-    {
+    if (_stream != NULL) {
         warning() << "in base connection :: connect, had existing stream, discarding it";
         hardDisconnect(true);
     }
@@ -71,8 +70,7 @@ void BaseConnection::connect(const std::string &host, short port)
 
 void BaseConnection::hardDisconnect(bool emit)
 {
-    if (!_stream)
-    {
+    if (!_stream) {
         warning() << "in baseConnection::hardDisconnect with a NULL stream!";
     } else {
 		// okay, tear it down

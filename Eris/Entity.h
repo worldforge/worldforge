@@ -97,6 +97,9 @@ public:
     
     /** retreive this Entity's position in view coordinates. */
     WFMath::Point<3> getViewPosition() const;
+
+    /** retreive this Entity's orientation in view coordinates. */
+    WFMath::Quaternion getViewOrientation() const;
     
     WFMath::Vector<3> getVelocity() const
     {
@@ -124,13 +127,13 @@ public:
 
 // coordinate transformations
     template<class C>
-    C toParentCoords(const C& c) const
+    C toLocationCoords(const C& c) const
     {
         return c.toParentCoords(m_position, m_orientation);
     }
     
     template<class C>
-    C fromParentCoords(const C& c) const
+    C fromLocationCoords(const C& c) const
     {
         return c.toLocalCoords(m_position, m_orientation);
     }
@@ -141,12 +144,12 @@ public:
     // of the origin, so we handle it separately. We also
     // need to copy the vector before rotating, because
     // Vector::rotate() rotates it in place.
-    WFMath::Vector<3> toParentCoords(const WFMath::Vector<3>& v) const
+    WFMath::Vector<3> toLocationCoords(const WFMath::Vector<3>& v) const
     {
         return WFMath::Vector<3>(v).rotate(m_orientation);
     }
     
-    WFMath::Vector<3> fromParentCoords(const WFMath::Vector<3>& v) const
+    WFMath::Vector<3> fromLocationCoords(const WFMath::Vector<3>& v) const
     {
         return WFMath::Vector<3>(v).rotate(m_orientation.inverse());
     }

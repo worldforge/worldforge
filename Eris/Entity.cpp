@@ -78,8 +78,26 @@ bool Entity::hasAttr(const std::string& attr) const
 
 SigC::Connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
 {
-    // sometimes, I realize how great SigC++
+    // sometimes, I realize how great SigC++ is
     return m_observers[attr].connect(slot);
+}
+
+WFMath::Point<3> Entity::getViewPosition() const
+{
+    WFMath::Point<3> vpos(0.0, 0.0, 0.0);
+    for (const Entity* e = this; e; e = e->getLocation())
+        vpos = e->toLocationCoords(vpos);
+        
+    return vpos;
+}
+
+WFMath::Quaternion Entity::getViewOrientation() const
+{
+    WFMath::Quaternion vor;
+    for (const Entity* e = this; e; e = e->getLocation())
+        vor *= e->getOrientation();
+        
+    return vor;
 }
 
 #pragma mark -
