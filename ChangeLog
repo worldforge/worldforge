@@ -1,3 +1,8 @@
+2003-08-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDispatcher.py: Fix generated dispatcher
+	  code for new SmartPtr casts.
+
 2003-08-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/SmartPtr.h, Atlas/Objects/SmartPtr.cpp:

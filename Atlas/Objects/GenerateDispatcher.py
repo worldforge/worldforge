@@ -106,7 +106,7 @@ void Dispatcher::dispatchObject(const Root& obj)
             idc = classize(obj.id)
             serialno_name = string.upper(obj.id) + "_NO"
             self.write("""    case %(namespace)s%(serialno_name)s:
-        object%(idc)sArrived(%(namespace)s%(idc)s(obj));
+        object%(idc)sArrived(smart_dynamic_cast<%(namespace)s%(idc)sData>(obj));
         break;
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""    default:
