@@ -15,6 +15,7 @@ Makefile
 Makefile.in
 mercator-config
 mercator.spec
+mercator*.pc
 missing
 mkinstalldirs
 stamp-h1

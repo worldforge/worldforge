@@ -1,0 +1,2 @@
+Modify the segment model so it stores segSize + 1 heightpoints, to make rendering
+the segments easier.

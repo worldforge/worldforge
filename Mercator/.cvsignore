@@ -1,5 +1,5 @@
 .deps
-libmercator.la
+lib*.la
 .libs
 Makefile
 Makefile.in
