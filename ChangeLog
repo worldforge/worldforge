@@ -1,5 +1,12 @@
 Thursday, 8th May 2003, Ron Steinke
 
+	* Added typemaps to perl MANIFEST
+	* Added a dependency on the build library to
+	  bindings/perl-makefile.stamp, so the modules
+	  get rebuilt if the lib does
+
+Thursday, 8th May 2003, Ron Steinke
+
 	* Missed bindings/perl/compile_flags.in. Note that
 	  make distcheck will still not work when building
 	  the perl bindings, since makemaker can't handle

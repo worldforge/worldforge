@@ -17,8 +17,10 @@ dist-hook: perl-dist-hook
 if PERL_BINDINGS
 
 ## rebuild the perl module makefile if we touch the headers,
-## so that the module gets rebuilt
-perl-makefile.stamp: perl/Makefile.PL perl/*/Makefile.PL perl/compile_flags.pl
+## so that the module gets rebuilt, the dependence on the build lib
+## ensures the rebuild happens
+perl-makefile.stamp: perl/Makefile.PL perl/*/Makefile.PL perl/compile_flags.pl \
+			../Eris/.libs/liberis-1.0.so
 	cd perl && perl Makefile.PL PREFIX=$(prefix) LIB=$(libdir)/perl
 	touch perl-makefile.stamp
 

@@ -6,6 +6,8 @@ README
 COPYING
 test.pl
 compile_flags.pl.in
+typemap
+perlobject.map
 conversion.h
 Avatar/Avatar.xs
 Avatar/Avatar.pm
