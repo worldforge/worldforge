@@ -58,7 +58,7 @@ void Account::RemoveAttr(const string& name)
     AdminEntity::RemoveAttr(name);
 }
 
-void Account::SendContents(Bridge* b)
+void Account::SendContents(Bridge* b) const
 {
     SendPassword(b);
     AdminEntity::SendContents(b);

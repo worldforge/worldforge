@@ -59,7 +59,7 @@ void Player::RemoveAttr(const string& name)
     Account::RemoveAttr(name);
 }
 
-void Player::SendContents(Bridge* b)
+void Player::SendContents(Bridge* b) const
 {
     SendCharacters(b);
     Account::SendContents(b);

@@ -88,7 +88,7 @@ void RootEntity::RemoveAttr(const string& name)
     Root::RemoveAttr(name);
 }
 
-void RootEntity::SendContents(Bridge* b)
+void RootEntity::SendContents(Bridge* b) const
 {
     SendLoc(b);
     SendPos(b);
