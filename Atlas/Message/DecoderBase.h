@@ -61,8 +61,9 @@ protected:
     };
 
     std::stack<State> state;
-    std::stack<Object> objects;
-    std::stack<string> names;
+    std::stack<Object::MapType> maps;
+    std::stack<Object::ListType> lists;
+    std::stack<std::string> names;
 
     // To be overridden by derived classes
     virtual void ObjectArrived(const Object& obj) = 0;

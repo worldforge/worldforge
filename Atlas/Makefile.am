@@ -1,4 +1,4 @@
-SUBDIRS = . Message Codecs Filters Net Funky TestSuite
+SUBDIRS = . Message Codecs Filters Net Funky TestSuite Generic
 
 lib_LTLIBRARIES = libAtlas.la
 

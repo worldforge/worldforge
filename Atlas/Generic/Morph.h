@@ -103,12 +103,12 @@ public:
     bool Is(Token<T1>) const { return (v1 != NULL); }
     bool Is(Token<T2>) const { return (v2 != NULL); }
 
-    T1 As(Token<T1>) const throw (WrongTypeException)
+    const T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    T2 As(Token<T2>) const throw (WrongTypeException)
+    const T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
@@ -238,17 +238,17 @@ public:
     bool Is(Token<T2>) const { return (v2 != NULL); }
     bool Is(Token<T3>) const { return (v3 != NULL); }
 
-    T1 As(Token<T1>) const throw (WrongTypeException)
+    const T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    T2 As(Token<T2>) const throw (WrongTypeException)
+    const T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    T3 As(Token<T3>) const throw (WrongTypeException)
+    const T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
@@ -405,22 +405,22 @@ public:
     bool Is(Token<T3>) const { return (v3 != NULL); }
     bool Is(Token<T4>) const { return (v4 != NULL); }
 
-    T1 As(Token<T1>) const throw (WrongTypeException)
+    const T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    T2 As(Token<T2>) const throw (WrongTypeException)
+    const T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    T3 As(Token<T3>) const throw (WrongTypeException)
+    const T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    T4 As(Token<T4>) const throw (WrongTypeException)
+    const T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
         throw WrongTypeException();
@@ -604,27 +604,27 @@ public:
     bool Is(Token<T4>) const { return (v4 != NULL); }
     bool Is(Token<T5>) const { return (v5 != NULL); }
 
-    T1 As(Token<T1>) const throw (WrongTypeException)
+    const T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    T2 As(Token<T2>) const throw (WrongTypeException)
+    const T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    T3 As(Token<T3>) const throw (WrongTypeException)
+    const T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    T4 As(Token<T4>) const throw (WrongTypeException)
+    const T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
         throw WrongTypeException();
     }
-    T5 As(Token<T5>) const throw (WrongTypeException)
+    const T5& As(Token<T5>) const throw (WrongTypeException)
     {
         if (v5 != NULL) return *v5;
         throw WrongTypeException();
@@ -835,32 +835,32 @@ public:
     bool Is(Token<T5>) const { return (v5 != NULL); }
     bool Is(Token<T6>) const { return (v6 != NULL); }
 
-    T1 As(Token<T1>) const throw (WrongTypeException)
+    const T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    T2 As(Token<T2>) const throw (WrongTypeException)
+    const T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    T3 As(Token<T3>) const throw (WrongTypeException)
+    const T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    T4 As(Token<T4>) const throw (WrongTypeException)
+    const T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
         throw WrongTypeException();
     }
-    T5 As(Token<T5>) const throw (WrongTypeException)
+    const T5& As(Token<T5>) const throw (WrongTypeException)
     {
         if (v5 != NULL) return *v5;
         throw WrongTypeException();
     }
-    T6 As(Token<T6>) const throw (WrongTypeException)
+    const T6& As(Token<T6>) const throw (WrongTypeException)
     {
         if (v6 != NULL) return *v6;
         throw WrongTypeException();
@@ -1098,37 +1098,37 @@ public:
     bool Is(Token<T6>) const { return (v6 != NULL); }
     bool Is(Token<T7>) const { return (v7 != NULL); }
 
-    T1 As(Token<T1>) const throw (WrongTypeException)
+    const T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    T2 As(Token<T2>) const throw (WrongTypeException)
+    const T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    T3 As(Token<T3>) const throw (WrongTypeException)
+    const T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    T4 As(Token<T4>) const throw (WrongTypeException)
+    const T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
         throw WrongTypeException();
     }
-    T5 As(Token<T5>) const throw (WrongTypeException)
+    const T5& As(Token<T5>) const throw (WrongTypeException)
     {
         if (v5 != NULL) return *v5;
         throw WrongTypeException();
     }
-    T6 As(Token<T6>) const throw (WrongTypeException)
+    const T6& As(Token<T6>) const throw (WrongTypeException)
     {
         if (v6 != NULL) return *v6;
         throw WrongTypeException();
     }
-    T7 As(Token<T7>) const throw (WrongTypeException)
+    const T7& As(Token<T7>) const throw (WrongTypeException)
     {
         if (v7 != NULL) return *v7;
         throw WrongTypeException();

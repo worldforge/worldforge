@@ -9,107 +9,67 @@ using namespace std;
 
 namespace Atlas { namespace Message {
 
-inline void recurseListObject(const Object& obj, Bridge* b);
-
-inline void recurseMapObject(const Object& obj, Bridge* b, const string&
-        name)
-{
-    if (obj.isMap()) {
-        b->MapItem(name, Bridge::MapBegin);
-        Object names = obj.keys();
-        Object values = obj.vals();
-        for (size_t i = 0; i < names.length(); i++) {
-            string itemName;
-            Object value;
-            names.get(i, itemName);
-            values.get(i, value);
-            recurseMapObject(value, b, itemName);
-        }
-        b->MapEnd();
-    }
-    if (obj.isList()) {
-        b->MapItem(name, Bridge::ListBegin);
-        for (size_t i = 0; i < obj.length(); i++) {
-            Object value;
-            obj.get(i, value);
-            recurseListObject(value, b);
-        }
-        b->ListEnd();
-    }
-    if (obj.isFloat()) {
-        b->MapItem(name, obj.asFloat());
-    }
-    if (obj.isInt()) {
-        b->MapItem(name, obj.asInt());
-    }
-    if (obj.isString()) {
-        b->MapItem(name, obj.asString());
-    }
-}
-
-inline void recurseListObject(const Object& obj, Bridge* b)
-{
-    if (obj.isMap()) {
-        b->ListItem(Bridge::MapBegin);
-        Object names = obj.keys();
-        Object values = obj.vals();
-        for (size_t i = 0; i < names.length(); i++) {
-            string itemName;
-            Object value;
-            names.get(i, itemName);
-            values.get(i, value);
-            recurseMapObject(value, b, itemName);
-        }
-        b->MapEnd();
-    }
-    if (obj.isList()) {
-        b->ListItem(Bridge::ListBegin);
-        for (size_t i = 0; i < obj.length(); i++) {
-            Object value;
-            obj.get(i, value);
-            recurseListObject(value, b);
-        }
-        b->ListEnd();
-    }
-    if (obj.isFloat()) {
-        b->ListItem(obj.asFloat());
-    }
-    if (obj.isInt()) {
-        b->ListItem(obj.asInt());
-    }
-    if (obj.isString()) {
-        b->ListItem(obj.asString());
-    }
-}
-
-inline void recurseStreamObject(const Object& obj, Bridge* b)
-{
-    if (obj.isMap()) {
-        b->StreamMessage(Bridge::MapBegin);
-        Object names = obj.keys();
-        Object values = obj.vals();
-        for (size_t i = 0; i < names.length(); i++) {
-            string itemName;
-            Object value;
-            names.get(i, itemName);
-            values.get(i, value);
-            recurseMapObject(value, b, itemName);
-        }
-        b->MapEnd();
-    } else {
-        // FIXME - report error
-    }
-}
-
-
 Encoder::Encoder(Atlas::Bridge* bridge)
     : bridge(bridge)
 {
 }
 
-void Encoder::SendMessage(const Object& obj)
+void Encoder::ListItem(const Object& obj)
 {
-    recurseStreamObject(obj, bridge);
+    if (obj.Is(Object::Int)) bridge->ListItem(obj.As(Object::Int));
+    else if (obj.Is(Object::Float)) bridge->ListItem(obj.As(Object::Float));
+    else if (obj.Is(Object::String)) bridge->ListItem(obj.As(Object::String));
+    else if (obj.Is(Object::Map)) {
+        bridge->ListItem(Bridge::MapBegin);
+        Object::MapType::const_iterator I;
+        for (I = obj.As(Object::Map).begin(); I != obj.As(Object::Map).end();
+                I++)
+            MapItem((*I).first, (*I).second);
+        bridge->MapEnd();
+    } else if (obj.Is(Object::List)) {
+        bridge->ListItem(Bridge::ListBegin);
+        Object::ListType::const_iterator I;
+        for (I = obj.As(Object::List).begin(); I != obj.As(Object::List).end();
+                I++)
+            ListItem(*I);
+        bridge->ListEnd();
+    }
+}
+
+void Encoder::MapItem(const string& name,  const Object& obj)
+{
+    if (obj.Is(Object::Int)) bridge->MapItem(name, obj.As(Object::Int));
+    else if (obj.Is(Object::Float)) bridge->MapItem(name,
+            obj.As(Object::Float));
+    else if (obj.Is(Object::String)) bridge->MapItem(name,
+            obj.As(Object::String));
+    else if (obj.Is(Object::Map)) {
+        bridge->MapItem(name, Bridge::MapBegin);
+        Object::MapType::const_iterator I;
+        for (I = obj.As(Object::Map).begin(); I != obj.As(Object::Map).end();
+                I++)
+            MapItem((*I).first, (*I).second);
+        bridge->MapEnd();
+    } else if (obj.Is(Object::List)) {
+        bridge->MapItem(name, Bridge::ListBegin);
+        Object::ListType::const_iterator I;
+        for (I = obj.As(Object::List).begin(); I != obj.As(Object::List).end();
+                I++)
+            ListItem(*I);
+        bridge->ListEnd();
+    }
+}
+
+void Encoder::StreamMessage(const Object& obj)
+{
+    if (obj.Is(Object::Map)) {
+        bridge->StreamMessage(Bridge::MapBegin);
+        Object::MapType::const_iterator I;
+        for (I = obj.As(Object::Map).begin();
+             I != obj.As(Object::Map).end(); I++)
+            MapItem((*I).first, (*I).second);
+        bridge->MapEnd();
+    }
 }
 
 

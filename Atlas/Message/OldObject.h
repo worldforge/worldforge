@@ -1,3 +1,4 @@
+/// XXX REMOVE ME SOON XXX
 //
 //  The Worldforge Project
 //  Copyright (C) 1998,1999,2000  The Worldforge Project

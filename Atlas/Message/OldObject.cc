@@ -1,3 +1,4 @@
+/// XXX REMOVE ME SOON XXX
 #include "Object.h"
 
 using std::string;

@@ -1,4 +1,4 @@
-
+// XXX REMOVE ME SOON
 #include "Variant.h"
 
 namespace Atlas

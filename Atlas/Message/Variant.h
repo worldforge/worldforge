@@ -1,3 +1,4 @@
+// XXX REMOVE ME SOON XXX 
 #ifndef __AtlasVariant_h_
 #define __AtlasVariant_h_
 
