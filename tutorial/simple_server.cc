@@ -9,7 +9,6 @@
 
 #include <iostream>
 #include <sockinet.h>
-#include <signal.h>
 #include <Atlas/Net/Stream.h>
 #include "DebugBridge.h"
 
@@ -18,15 +17,15 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    iosockinet ios(sockbuf::sock_stream);
+    isockinet is(sockbuf::sock_stream);
     
-    ios->bind("127.0.0.1", 6767);
-    cout << "Bound to localhost:6767" << endl;
+    is->bind("0.0.0.0", 6767);
+    cout << "Bound to " << is->localhost() << ":" << is->localport() << endl;
     
-    ios->listen();
+    is->listen();
     cout << "Listening... " << flush;
 
-    iosockinet client(ios->accept());
+    iosockinet client(is->accept());
     cout << "accepted client connection!" << endl;
 
     Net::StreamAccept accepter("simple_server", client, 0);
