@@ -49,7 +49,7 @@ public:
     SigC::Signal1<void, Entity*> EntityCreated;
     SigC::Signal1<void, Entity*> EntityDeleted;
     
-    SigC::Signal1<void, Entity*> Apperance;
+    SigC::Signal1<void, Entity*> Appearance;
     SigC::Signal1<void, Entity*> Disappearance;
 
     /// emitted when the TLVE changes

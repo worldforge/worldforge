@@ -121,8 +121,7 @@ Lobby::~Lobby()
 
 void Lobby::look(const std::string &id)
 {
-    if (!m_account->isLoggedIn())
-    {
+    if (!m_account->isLoggedIn()) {
         error() << "Lobby trying look while not logged in";
         return;
     }
@@ -132,12 +131,11 @@ void Lobby::look(const std::string &id)
         what->setId(id);
         
     Look look;
-    look->setFrom(m_account->getID());
+    look->setFrom(m_account->getId());
     look->setSerialno(getNewSerialno());
     look->setArgs1(what);
     
-    if (id.empty())
-    {
+    if (id.empty()) {
         m_router->setAnonymousLookSerialno(look->getSerialno());
         debug() << "anonymousLookSerialno=" << look->getSerialno();
     }
@@ -158,7 +156,7 @@ Room* Lobby::join(const std::string& roomId)
     what->setAttr("mode", "join");
 
     Move join;
-    join->setFrom(m_account->getID());
+    join->setFrom(m_account->getId());
     join->setSerialno(getNewSerialno());
     join->setArgs1(what);
     getConnection()->send(join);
@@ -319,13 +317,13 @@ void Lobby::processRoomCreate(const Atlas::Objects::Operation::Create &cr,
 void Lobby::onLoggedIn()
 {
     assert(m_account->isLoggedIn());
-    getConnection()->registerRouterForTo(m_router, m_account->getID());
+    getConnection()->registerRouterForTo(m_router, m_account->getId());
     look(""); // do initial anonymous look
 }
 
 void Lobby::onLogout(bool clean)
 {
-    getConnection()->unregisterRouterForTo(m_router, m_account->getID());
+    getConnection()->unregisterRouterForTo(m_router, m_account->getId());
 }
 
 } // of namespace

@@ -58,7 +58,7 @@ void Room::say(const std::string &tk)
     Talk t;
     t->setArgs1(speech);
     t->setTo(m_roomId);
-    t->setFrom(m_lobby->getAccount()->getID());
+    t->setFrom(m_lobby->getAccount()->getId());
     t->setSerialno(getNewSerialno());
 	
     m_lobby->getConnection()->send(t);
@@ -81,7 +81,7 @@ void Room::emote(const std::string &em)
     
     im->setArgs1(emote);
     im->setTo(m_roomId);
-    im->setFrom(m_lobby->getAccount()->getID());
+    im->setFrom(m_lobby->getAccount()->getId());
     im->setSerialno(getNewSerialno());
 	
     m_lobby->getConnection()->send(im);
@@ -96,7 +96,7 @@ void Room::leave()
     }
 
     Move part;
-    part->setFrom(m_lobby->getAccount()->getID());
+    part->setFrom(m_lobby->getAccount()->getId());
     part->setSerialno(getNewSerialno());
     
     Root args;
@@ -117,7 +117,7 @@ Room* Room::createRoom(const std::string &name)
 
     
     Create cr;
-    cr->setFrom(m_lobby->getAccount()->getID());
+    cr->setFrom(m_lobby->getAccount()->getId());
     cr->setTo(m_roomId);
     cr->setSerialno(getNewSerialno());
     
@@ -153,7 +153,7 @@ std::vector<Person*> Room::getPeople() const
 
 Router::RouterResult Room::handleOperation(const RootOperation& op)
 {
-    if (op->getTo() != m_lobby->getAccount()->getID())
+    if (op->getTo() != m_lobby->getAccount()->getId())
     {
         error() << "Room recived op TO account " << op->getTo() << ", not the account ID";
         return IGNORED;

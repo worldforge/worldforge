@@ -134,7 +134,7 @@ void testLogin()
     assert(loginErrorCounter.fireCount() == 0);
     
     cout << "login success" << endl;
-    assert(player->getID() == "_23_account_A");
+    assert(player->getId() == "_23_account_A");
     assert(player->isLoggedIn());
 }
 
@@ -181,7 +181,7 @@ void testAccCreate()
     
     assert(loginErrorCounter.fireCount() == 0);
     
-    cout << "create account success, ID is " << player->getID() << endl;
+    cout << "create account success, ID is " << player->getId() << endl;
     assert(player->getUsername() == "account_C");
     assert(player->isLoggedIn());
 }

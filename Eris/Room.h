@@ -64,7 +64,7 @@ public:
 	
     /** Get the Atlas object ID of the Room; note that this may return an
     empty value if called prior to entering the Lobby */
-    std::string getID() const
+    std::string getId() const
     {
         return m_roomId;
     }

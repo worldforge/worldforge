@@ -93,7 +93,7 @@ public:
 	bool canCreateCharacter() {return false;}
 
     /// returns the account ID if logged in
-    const std::string& getID() const
+    const std::string& getId() const
     {
         return m_accountId;
     }

@@ -1,3 +1,14 @@
+2004-07-30  James Turner  <james@worldforge.org>
+
+	* Changed all occurences of getID in the code to getId, to match Atlas-C++
+	* Lots of new debug output, which is temporary, and currently makes the log
+	  output at debug level very noisy.
+	* Fixed Player to deal with IG subscription notifications correctly, i.e
+	  not requiring FROM or TO to be set.
+	* Fixed a typo in the name of the View Appearance signal
+	* Fixed the logic for emitting GotAllCharacters, so that we don't get the
+	  'client accessing incomplete list' warning
+	  
 2004-07-28  James Turner  <james@worldforge.org>
 
 	* test/metaquery.cpp: Applied Mike's changes to produce HTML output
@@ -1087,7 +1098,7 @@ Monday, April 29, James Turner
 	  changes.
 	* Extended Lobby to deal with room creation internally,
 	  including a handler for SIGHT(CREATE) ops.
-	* Made Room::getID() more robust in the case where the ID
+	* Made Room::getId() more robust in the case where the ID
 	  is not available; now throws a meaningful exception,
 	  instead of returning an empty ID.
 	* Added initial lobby tests; as usual only partial coverage,

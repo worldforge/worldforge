@@ -56,14 +56,17 @@ public:
          // errors
         if (op->instanceOf(ERROR_NO))
         {
-            debug() << "player recived an error";
+            Error err = smart_dynamic_cast<Error>(op);
             if (m_player->isLoggedIn())
             {
-                warning() << "Player got error op while logged in";
+                const std::vector<Root>& args = err->getArgs();
+                std::string msg = args[0]->getAttr("message").asString();
+                warning() << "Player got error op while logged in:" << msg;
             } else {
-                m_player->loginError(smart_dynamic_cast<Error>(op));
-                return HANDLED;
+                m_player->loginError(err);
             }
+            
+            return HANDLED;
         }
 
         // logout
@@ -74,7 +77,7 @@ public:
         }
            
     // only-when connected ops
-        if (m_player->isLoggedIn() && (op->getTo() == m_player->getID()))
+        if (m_player->isLoggedIn() && (op->getTo() == m_player->getId()))
         {
             // character looks
             if (op->instanceOf(SIGHT_NO))
@@ -82,8 +85,7 @@ public:
                 const std::vector<Root>& args = op->getArgs();
                 assert(!args.empty());
                 GameEntity character = smart_dynamic_cast<GameEntity>(args.front());
-                if (character.isValid())
-                {
+                if (character.isValid()) {
                     m_player->sightCharacter(character);
                     return HANDLED;
                 } else {
@@ -125,11 +127,11 @@ private:
             return HANDLED;
         }
            
-        if (m_player->isLoggedIn() && (info->getTo() == m_player->getID()))
-        {
+        if (m_player->isLoggedIn()) {
             GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
             if (ent.isValid())
             {
+                debug() << "got candidate IG subscription";
                 // IG transition info, maybe
                 RefnoAvatarMap::iterator A = global_pendingInfoAvatars.find(info->getRefno());
                 if (A != global_pendingInfoAvatars.end())
@@ -139,7 +141,7 @@ private:
                     return HANDLED;
                 } else
                     debug() << "Player got info(game_entity) with serial "
-                     << info->getRefno() << ", but not a IG transition";
+                     << info->getRefno() << ", but not a IG subscription";
             }
         }
           
@@ -422,28 +424,27 @@ void Player::loginError(const Error& err)
 
 void Player::sightCharacter(const GameEntity& ge)
 {
-    if (!m_doingCharacterRefresh)
-    {
+    if (!m_doingCharacterRefresh) {
         error() << "got sight of character " << ge->getId() << " while outside a refresh, ignoring";
         return;
     }
     
     CharacterMap::iterator C = _characters.find(ge->getId());
-    if (C != _characters.end())
-    {
+    if (C != _characters.end()) {
         error() << "duplicate sight of character " << ge->getId();
         return;
     }
     
+    debug() << "got character info";
     // okay, we can now add it to our map
     _characters.insert(C, CharacterMap::value_type(ge->getId(), ge));
     GotCharacterInfo.emit(ge);
     
 // check if we'redone
-    if (_characters.size() == m_characterIds.size())
-    {
-	GotAllCharacters.emit();
+    if (_characters.size() == m_characterIds.size()) {
+        debug() << "got all characters";
         m_doingCharacterRefresh = false;
+        GotAllCharacters.emit();
     }
 }
 

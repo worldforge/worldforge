@@ -29,7 +29,7 @@ Avatar::Avatar(Player* pl) :
     m_router(NULL)
 {
     m_view = new View(this);
-    m_view->Apperance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
+    m_view->Appearance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
 }
 
 Avatar::~Avatar()
@@ -132,7 +132,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
     const WFMath::CoordType min_val = WFMATH_MIN * 100000000;
 
     Element::MapType what;
-    what["loc"] = _entity->getContainer()->getID();
+    what["loc"] = _entity->getContainer()->getId();
     what["velocity"] = vel.toAtlas();
     WFMath::CoordType sqr_mag = vel.sqrMag();
     if(sqr_mag > min_val) { // don't set orientation for zero velocity
@@ -151,10 +151,10 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
 	}
 	what["orientation"] = q.toAtlas();
     }
-    what["id"] = getID();
+    what["id"] = getId();
 
     Atlas::Objects::Operation::Move moveOp;
-    moveOp->setFrom(getID());
+    moveOp->setFrom(getId());
     moveOp->setArgsAsList(Element::ListType(1, what));
 
     _world->getConnection()->send(moveOp);

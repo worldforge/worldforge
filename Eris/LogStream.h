@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <Eris/Log.h>
+#include <Atlas/Objects/Root.h>
 
 namespace Eris
 {
@@ -52,6 +53,8 @@ public:
         doLog(LOG_DEBUG, m_stream.str());
     }
 };
+
+std::ostream& operator<<(std::ostream& s, const Atlas::Objects::Root& obj);
 
 } // of namespace Eris
 

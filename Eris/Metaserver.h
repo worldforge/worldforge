@@ -109,15 +109,19 @@ public:
     /// Emitted when information about a server is received
     SigC::Signal1<void, const ServerInfo&> ReceivedServerInfo;
 
-    /** Emitted once the complete list of servers has been retrived from
-    the metaserver. */
+    /**
+    Emitted once the complete list of servers has been retrived from
+    the metaserver. Argument is the total number of servers in the list
+    */
     SigC::Signal1<void, int> CompletedServerList;
     
     /// Emitted when the entire server list has been refreshed
     SigC::Signal0<void> AllQueriesDone;
 
-    /** Indicates a failure (usually network related) has occurred.
-    The server list will be cleared, and the status set to INVALID. */
+    /**
+    Indicates a failure (usually network related) has occurred.
+    The server list will be cleared, and the status set to INVALID. 
+    */
     SigC::Signal1<void, const std::string&> Failure;
 	
 protected:

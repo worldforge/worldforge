@@ -55,7 +55,7 @@ void Person::msg(const std::string &msg)
     Talk t;
     t->setArgs1(speech);
     t->setTo(m_id);
-    t->setFrom(m_lobby->getAccount()->getID());
+    t->setFrom(m_lobby->getAccount()->getId());
     t->setSerialno(getNewSerialno());
 	
     m_lobby->getConnection()->send(t);

@@ -46,7 +46,7 @@ void View::setEntityVisible(Entity* ent, bool vis)
 {
     assert(ent);
     if (vis)
-        Apperance.emit(ent);
+        Appearance.emit(ent);
     else
         Disappearance.emit(ent);
 }

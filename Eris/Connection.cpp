@@ -197,8 +197,11 @@ void Connection::objectArrived(const Root& obj)
 
     std::cout << "recieved:" << debugStream.str() << std::endl;
 #endif
-    if (!m_typeService->verifyObjectTypes(obj)) return;
-
+    if (!m_typeService->verifyObjectTypes(obj)) {
+        debug() << "type verification failed for " << obj;
+        return;
+    }
+    
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     if (op.isValid()) {
         m_opDeque.push_back(op);
@@ -219,8 +222,7 @@ void Connection::dispatchOp(const RootOperation& op)
     
 // locate a router based on from
     IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
-    if (R != m_fromRouters.end())
-    {
+    if (R != m_fromRouters.end()) {
         rr = R->second->handleOperation(op);
         if (rr == Router::HANDLED)
             return;
@@ -228,20 +230,19 @@ void Connection::dispatchOp(const RootOperation& op)
     
 // locate a router based on the op's TO value
     R = m_toRouters.find(op->getTo());
-    if (R != m_toRouters.end())
-    {
+    if (R != m_toRouters.end()) {
         rr = R->second->handleOperation(op);
-        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH))
+        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) {
             return;
-        else
-            debug() << "TO router " << R->first << " didn't handle op";
+        } else
+            debug() << "TO router " << R->first << " didn't handle op: " << op;
     } else if (!anonymous && !m_toRouters.empty())
         warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
             
 // go to the default router
     rr = m_defaultRouter->handleOperation(op);
     if (rr != Router::HANDLED)
-        warning() << "no-one handled op";
+        warning() << "no-one handled op:" << op;
 }
 
 

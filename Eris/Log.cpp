@@ -8,6 +8,12 @@
 #include <stdio.h>
 #include <algorithm>
 
+#include <Atlas/Codecs/Bach.h>
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Encoder.h>
+
+#include <iostream>
 
 namespace Eris
 {
@@ -29,6 +35,15 @@ void doLog(LogLevel lvl, const std::string& msg)
 {
     if (lvl <= _logLevel)
         Logged.emit(lvl, msg);
+}
+
+std::ostream& operator<<(std::ostream& os, const Atlas::Objects::Root& obj)
+{
+    std::stringstream s;
+    Atlas::Codecs::Bach debugCodec(s, NULL);
+    Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
+    debugEncoder.streamObjectsMessage(obj);
+    return os << s.str();
 }
 
 } // of namespace

@@ -111,6 +111,11 @@ void Meta::queryServerByIndex(unsigned int index)
 
 void Meta::refresh()
 {
+    if (!m_activeQueries.empty()) {
+        warning() << "called meta::refresh() while doing another query, ignoring";
+        return;
+    }
+
     if (m_status == VALID)
     {
     	// save the current list in case we fail
