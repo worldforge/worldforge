@@ -1,5 +1,7 @@
 Makefile
 Makefile.in
+config.def.in
+config.h.in
 aclocal.m4
 config.cache
 config.guess
