@@ -1,5 +1,4 @@
 *.log
-linux
 Makefile
 Makefile.in
 .deps
