@@ -25,7 +25,6 @@ class XML : public Codec
     virtual void MapItem(const std::string& name, int);
     virtual void MapItem(const std::string& name, double);
     virtual void MapItem(const std::string& name, const std::string&);
-    virtual void MapItem(const std::string& name, const Atlas::Object&);
     virtual void MapEnd();
     
     virtual void ListItem(const Map&);
@@ -33,7 +32,6 @@ class XML : public Codec
     virtual void ListItem(int);
     virtual void ListItem(double);
     virtual void ListItem(const std::string&);
-    virtual void ListItem(const Atlas::Object&);
     virtual void ListEnd();
 
     protected:
@@ -97,11 +95,6 @@ void XML::MapItem(const std::string& name, const std::string& data)
     socket << "<string name=\"" << name << "\">" << data << "</string>";
 }
 
-void XML::MapItem(const std::string& name, const Atlas::Object& data)
-{
-    recurseMapObject(data, this, name);
-}
-
 void XML::MapEnd()
 {
     socket << "</map>";
@@ -130,11 +123,6 @@ void XML::ListItem(double data)
 void XML::ListItem(const std::string& data)
 {
     socket << "<string>" << data << "</string>";
-}
-
-void XML::ListItem(const Atlas::Object& data)
-{
-    recurseListObject(data, this);
 }
 
 void XML::ListEnd()

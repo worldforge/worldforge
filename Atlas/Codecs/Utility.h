@@ -4,7 +4,6 @@
 
 #include <cstdio>
 #include "../Stream/Codec.h"
-#include "../Object/Object.h"
 
 using namespace std;
 using namespace Atlas::Stream;
@@ -18,8 +17,8 @@ inline const string charToHex(char c)
 
 inline char hexToChar(const string& hex)
 {
-    char c;
-    sscanf(hex.c_str(), "%x", c);
+    int c;
+    sscanf(hex.c_str(), "%x", &c);
     return c;
 }
 
@@ -62,7 +61,7 @@ inline const string hexDecode(const string& prefix, const string& message)
 
     return newMessage;
 }
-
+/*
 inline void recurseListObject(const Atlas::Object& obj, Bridge* b);
 
 inline void recurseMapObject(const Atlas::Object& obj, Bridge* b, const string&
@@ -135,3 +134,4 @@ inline void recurseListObject(const Atlas::Object& obj, Bridge* b)
         b->ListItem(obj.asString());
     }
 }
+*/

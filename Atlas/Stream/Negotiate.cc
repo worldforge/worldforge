@@ -220,7 +220,7 @@ void Negotiate::processServerCodecs()
     FactoryCodecs::iterator i;
     list<string>::iterator j;
 
-    FactoryCodecs *myCodecs = &Factory<Codec>::factories;
+    FactoryCodecs *myCodecs = &Factory<Codec>::Factories();
 
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
     {
@@ -240,7 +240,7 @@ void Negotiate::processServerFilters()
   FactoryFilters::iterator i;
     list<string>::iterator j;
     
-    FactoryFilters *myFilters = &Factory<Filter>::factories;
+    FactoryFilters *myFilters = &Factory<Filter>::Factories();
 
     for (i = myFilters->begin(); i != myFilters->end(); ++i)
     {
@@ -256,12 +256,12 @@ void Negotiate::processServerFilters()
 
 void Negotiate::processClientCodecs()
 {
-    FactoryCodecs *myCodecs = &Factory<Codec>::factories;
+    FactoryCodecs *myCodecs = &Factory<Codec>::Factories();
     outCodecs = *myCodecs;
 }
   
 void Negotiate::processClientFilters()
 {
-    FactoryFilters *myFilters = &Factory<Filter>::factories;
+    FactoryFilters *myFilters = &Factory<Filter>::Factories();
     outFilters = *myFilters;
 }

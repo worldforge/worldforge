@@ -7,8 +7,6 @@
 using namespace std;
 using namespace Atlas::Stream;
 
-list<Factory<Codec>*> Factory<Codec>::factories;
-
 Atlas::Stream::Codec::~Codec()
 {
     // should it delete filter, socket, or both?

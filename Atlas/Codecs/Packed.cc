@@ -237,7 +237,9 @@ void PackedAscii::ParseInt(char next)
     switch (next)
     {
 	case '[':
+	case ']':
 	case '(':
+	case ')':
 	case '$':
 	case '@':
 	case '#':
@@ -286,7 +288,9 @@ void PackedAscii::ParseFloat(char next)
     switch (next)
     {
 	case '[':
+	case ']':
 	case '(':
+	case ')':
 	case '$':
 	case '@':
 	case '#':
@@ -338,7 +342,9 @@ void PackedAscii::ParseString(char next)
     switch (next)
     {
 	case '[':
+	case ']':
 	case '(':
+	case ')':
 	case '$':
 	case '@':
 	case '#':
@@ -380,7 +386,9 @@ void PackedAscii::ParseName(char next)
 	break;
 
 	case '[':
+	case ']':
 	case '(':
+	case ')':
 	case '$':
 	case '@':
 	case '#':

@@ -39,14 +39,14 @@ class Factory
     Factory(const std::string& name, const Metrics& metrics)
      : name(name), metrics(metrics)
     {
-	factories.push_back(this);
+	Factories().push_back(this);
     }
     
     virtual ~Factory()
     {
 	std::list<Factory*>::iterator i;
-	i = std::find(factories.begin(), factories.end(), this);
-	factories.erase(i);
+	i = std::find(Factories().begin(), Factories().end(), this);
+	Factories().erase(i);
     }
     
     virtual T* New(const Parameters&) = 0;
@@ -61,8 +61,12 @@ class Factory
     {
 	return metrics;
     }
-    
-    static std::list<Factory*> factories;
+   
+    static std::list<Factory*>& Factories()
+    {
+	static std::list<Factory*> factories;
+	return factories;
+    }
 
     protected:
 

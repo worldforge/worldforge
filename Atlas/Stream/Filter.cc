@@ -7,8 +7,6 @@
 using namespace std;
 using namespace Atlas::Stream;
 
-list<Factory<Filter>*> Factory<Filter>::factories;
-
 Atlas::Stream::Filter::Filter(Filter* next) : next(next)
 {
 }

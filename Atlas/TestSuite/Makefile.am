@@ -1,5 +1,9 @@
 
-noinst_PROGRAMS = test-object-map test-object-list test-negotiate
+noinst_PROGRAMS = \
+	test-object-map \
+	test-object-list \
+	test-negotiate \
+	test-packed
 
 CXXFLAGS = -Wall -D_ADebug_
 
@@ -13,7 +17,10 @@ test_object_list_LDADD		= ../Object/.libs/libAtlasObject.a -ldl
 
 test_negotiate_SOURCES		= test-negotiate.cc
 test_negotiateincludedir	= $(includedir)/Atlas/src/TestSuite
-test_negotiate_LDADD		= ../Stream/.libs/libAtlasStream.a ../Object/.libs/libAtlasObject.a ../Codecs/.libs/libAtlasCodecs.a  ../Filters/.libs/libAtlasFilters.a
+test_negotiate_LDADD		= ../Stream/.libs/libAtlasStream.so ../Object/.libs/libAtlasObject.a ../Codecs/.libs/libAtlasCodecs.so ../Filters/.libs/libAtlasFilters.so -lz -lbz2
+
+test_packed_SOURCES		= test-packed.cc
+test_packed_LDADD		= ../Stream/.libs/libAtlasStream.so ../Object/.libs/libAtlasObject.a ../Codecs/.libs/libAtlasCodecs.so ../Filters/.libs/libAtlasFilters.a
 
 TESTS = test-object-map test-object-list test-negotiate
 
