@@ -1,0 +1,7 @@
+.deps
+libmercator.la
+.libs
+Makefile
+Makefile.am
+Makefile.in
+*.lo

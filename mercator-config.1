@@ -1,0 +1,36 @@
+.TH MERCATOR 1
+.SH NAME
+mercator-config - script to get information about the installed version of mercator
+.SH SYNOPSIS
+.B mercator-config
+[\-\-prefix] [\-\-exec\-prefix] [\-\-version] [\-\-libs] [\-\-cflags]
+.SH DESCRIPTION
+.PP
+\fImercator-config\fP is a tool that is used to configure to determine
+the compiler and linker flags that should be used to compile
+and link programs that use \fImercator\fP. It is also used internally
+to the .m4 macros for GNU autoconf that are included with \fImercator\fP.
+.
+.SH OPTIONS
+.l
+\fImercator-config\fP accepts the following options:
+.TP 8
+.B  \-\-version
+Print the currently installed version of \fImercator\fP on the standard output.
+.TP 8
+.B  \-\-libs
+Print the linker flags that are necessary to link a \fImercator\fP program.
+.TP 8
+.B  \-\-cflags
+Print the compiler flags that are necessary to compile a \fImercator\fP program.
+.TP 8
+.B  \-\-prefix
+Return the installation prefix that \fImercator\fP was built with when computing
+the output for the \-\-cflags and \-\-libs options. This option is also used for
+the exec prefix if \-\-exec\-prefix was not specified. This option must be specified
+before any \-\-libs or \-\-cflags options.
+.TP 8
+.B  \-\-exec\-prefix
+Return the installation exec prefix that \fImercator\fP was built with when
+computing the output for the \-\-cflags and \-\-libs options.  This option must
+be specified before any \-\-libs or \-\-cflags options.

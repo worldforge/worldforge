@@ -1,0 +1,89 @@
+AC_INIT(src/Mercator.cpp)
+
+dnl Information
+
+MERCATOR_MAJOR=0
+MERCATOR_MINOR=0
+MERCATOR_MICRO=0
+MERCATOR_VERSION=$MERCATOR_MAJOR.$MERCATOR_MINOR.$MERCATOR_MICRO
+
+AC_SUBST(MERCATOR_VERSION)
+
+dnl versioning info for libtool
+MERCATOR_CURRENT=0
+MERCATOR_REVISION=0
+MERCATOR_AGE=0
+MERCATOR_VERSION_INFO=$MERCATOR_CURRENT:$MERCATOR_REVISION:$MERCATOR_AGE
+
+AC_SUBST(MERCATOR_VERSION_INFO)
+
+AM_INIT_AUTOMAKE(mercator, $MERCATOR_VERSION)
+AM_MAINTAINER_MODE
+
+AM_CONFIG_HEADER(config.h)
+
+AC_ISC_POSIX
+AC_PROG_CC
+AC_PROG_CXX
+AC_STDC_HEADERS
+AM_DISABLE_STATIC
+AM_PROG_LIBTOOL
+
+CXXFLAGS="$CXXFLAGS -Wall -ansi"
+
+dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
+
+AC_DEFINE(_XOPEN_SOURCE, 500, [This is XOpen source])
+AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
+
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+
+dnl Check for Atlas-C++ library
+AM_PATH_ATLAS(0.4.4, [
+	CPPFLAGS="$CPPFLAGS $ATLAS_CPPFLAGS"
+	LIBS="$LIBS $ATLAS_LIBS"],
+	AC_MSG_ERROR(Couldn't find Atlas or version is insufficent)
+)
+
+dnl Check for WFMath library
+AM_PATH_WFMATH(0.2.6,[
+	CPPFLAGS="$CPPFLAGS $WFMATH_CFLAGS"
+	LDFLAGS="$LDFLAGS $WFMATH_LIBS"
+	],
+	AC_MSG_ERROR(Couldn't find wfmath config [or config failed])
+)
+
+
+AC_LANG_RESTORE
+
+dnl AC_MSG_NOTICE(Checking for test environment)
+
+AM_PATH_CPPUNIT(1.6.1,
+    [
+	enable_cppunit=yes
+	AC_SUBST(CPPUNIT_CFLAGS)
+	AC_SUBST(CPPUNIT_LIBS)
+    ], [
+	AC_MSG_WARN(Couldn't Find CppUnit - make check will not work)
+	enable_cppunit=no
+    ]
+)
+
+AC_SUBST(CFLAGS)
+AC_SUBST(CXXFLAGS)
+AC_SUBST(LDFLAGS)
+
+SYSTEM_LIBS=""
+MERCATOR_LIBS="-lwfmath -lm"
+MERCATOR_CFLAGS=""
+AC_SUBST(SYSTEM_LIBS)
+AC_SUBST(MERCATOR_LIBS)
+AC_SUBST(MERCATOR_CFLAGS)
+
+AC_OUTPUT([
+Makefile
+src/Makefile
+mercator-config
+mercator.spec
+])

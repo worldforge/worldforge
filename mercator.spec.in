@@ -1,0 +1,55 @@
+%define name       @PACKAGE@
+%define version	   @VERSION@
+%define release    1
+%define serial     1
+%define prefix     /usr
+
+Summary:           A WorldForge terrain library.
+Name:              %{name} 
+Version:           %{version} 
+Release:           %{release}
+Serial:            %{serial}
+Copyright:         GPL
+Group:             System Environment/Libraries
+Source:            %{name}-%{version}.tar.gz
+BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
+Requires:          Atlas-C++ >= 0.4.4 wfmath >= 0.2.10 libstdc++
+BuildRequires:     Atlas-C++-devel >= 0.4.4 wfmath-devel >= 0.2.10 libstdc++-devel >= 2.95.2
+
+%description
+Mercator is designed to handle terrain data.
+
+%package devel
+Summary:           A WorldForge terrain library headers and static libs.
+Group:             Development/Libraries
+Requires:          %{name} = %{version}
+
+%description devel
+Mercator is designed to handle terrain data.
+
+%prep
+%setup
+
+%build
+CXXFLAGS=$RPM_OPT_FLAGS ./configure --prefix=%{prefix} --enable-static=yes
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make prefix=$RPM_BUILD_ROOT%{prefix} install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{prefix}/lib/libmercator.so.*
+%doc AUTHORS COPYING NEWS README
+
+%files devel
+%defattr(-,root,root)
+%{prefix}/bin/mercator-config
+%{prefix}/include/Mercator
+%{prefix}/lib/libmercator.a
+%{prefix}/lib/libmercator.so
+%{prefix}/share/aclocal/mercator.m4
