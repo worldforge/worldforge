@@ -177,9 +177,12 @@ protected:
 	bool netDisconnecting();
 	void netFailure(const std::string& msg);
 
-	void recvLogoutInfo(const Atlas::Objects::Operation::Logout &lo);
+    void loginResponse(const Atlas::Objects::Operation::RootOperation& op);
+    void logoutResponse(const Atlas::Objects::Operation::RootOperation& op);
+    void avatarResponse(const Atlas::Objects::Operation::RootOperation& op);
+    
 	void handleLogoutTimeout();
-	void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
+//	void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
 
     void handleLoginTimeout();
     

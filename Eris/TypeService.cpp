@@ -9,6 +9,7 @@
 #include <Eris/Connection.h>
 #include <Eris/TypeBoundRedispatch.h>
 #include <Eris/Exceptions.h>
+#include <Eris/Response.h>
 
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Objects/Operation.h>
@@ -119,42 +120,27 @@ TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 
 #pragma mark -
 
-Router::RouterResult TypeService::handleOperation(const RootOperation& op)
+void TypeService::handleOperation(const RootOperation& op)
 {
-    // skip any operation who's refno doesn't match the serial of a 
-    // request we made
-    if (m_typeRequests.find(op->getRefno()) == m_typeRequests.end())
-        return IGNORED;
-        
-    if (op->instanceOf(INFO_NO))
-    {
+    if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args(op->getArgs());
         std::string objType = args.front()->getObjtype();
         
-        if ((objType == "meta") || (objType == "class") || (objType == "op_definition"))
+        if ((objType == "meta") || 
+            (objType == "class") ||
+            (objType == "op_definition")) 
         {
             recvTypeInfo(args.front());
-            m_typeRequests.erase(op->getRefno());
-            return HANDLED;
         }
-    }
-    
-    if (op->instanceOf(ERROR_NO))
-    {
+    } else if (op->instanceOf(ERROR_NO)) {
         const std::vector<Root>& args(op->getArgs());
         Get request = smart_dynamic_cast<Get>(args[1]);
         if (!request.isValid())
             throw InvalidOperation("TypeService got ERROR whose arg is not GET");
-            
-        assert(m_typeRequests.count(request->getSerialno()) == 1);
-        m_typeRequests.erase(request->getSerialno());
         
         recvError(request);
-        return HANDLED;
-    }
-    
-    error() << "type service got op that wasn't info or error";
-    return IGNORED;
+    } else
+        error() << "type service got op that wasn't info or error";
 }
 
 void TypeService::recvTypeInfo(const Root &atype)
@@ -184,8 +170,8 @@ void TypeService::sendRequest(const std::string &id)
     Get get;
     get->setArgs1(what);
     get->setSerialno(getNewSerialno());
-    m_typeRequests.insert(get->getSerialno());
     
+    m_con->getResponder()->await(get->getSerialno(), this, &TypeService::handleOperation);
     m_con->send(get);
 }
 

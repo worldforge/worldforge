@@ -4,9 +4,9 @@
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
 
-#include <Eris/Router.h>
 #include <Eris/Types.h>
 #include <Atlas/Objects/Decoder.h>
+#include <Atlas/Objects/ObjectsFwd.h>
 
 #include <map>
 #include <set>
@@ -19,7 +19,7 @@ class TypeInfo;
 typedef TypeInfo* TypeInfoPtr;
 typedef std::set<TypeInfoPtr> TypeInfoSet;
 
-class TypeService : virtual public SigC::Object, public Router
+class TypeService : virtual public SigC::Object
 {
 public:
     TypeService(Connection *con);
@@ -50,7 +50,7 @@ public:
 
     void listUnbound();
 
-    RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation&);
+    void handleOperation(const Atlas::Objects::Operation::RootOperation&);
 
     bool verifyObjectTypes(const Atlas::Objects::Root& obj);
 
@@ -90,14 +90,6 @@ public:
     TypeInfoMap m_types;
 
     Connection* m_con;
-
-    typedef std::set<int> RefNoSet;
-    /** until we specialize INFO to TYPEINFO, it's hard to be sure which
-    INFO or ERROR ops relate to type requests. We use this set to record
-    the serialNo of each request we issue, to help decoding ops we get
-    back from the server. */
-    RefNoSet m_typeRequests;
-
     bool m_inited;
 
     StringSet m_badTypes;

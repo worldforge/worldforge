@@ -8,6 +8,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
 #include <Eris/Router.h>
+#include <Eris/Response.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -31,8 +32,7 @@ class AccountRouter : public Router
 {
 public:
     AccountRouter(Account* pl) :
-        m_account(pl),
-        m_avatarRefno(0)
+        m_account(pl)
     {
         m_account->getConnection()->setDefaultRouter(this);
     }
@@ -42,43 +42,8 @@ public:
         m_account->getConnection()->clearDefaultRouter();
     }
 
-    /** specify the serialNo of the operation used to connect the
-    account to the server (either a create or a login). */
-    void setLoginSerial(int serialNo)
-    {
-        m_loginRefno = serialNo;
-    }
-
-    void setAvatarRefno(int refno)
-    {
-        m_avatarRefno = refno;
-    }
-
     virtual RouterResult handleOperation(const RootOperation& op)
     {
-         // errors
-        if (op->instanceOf(ERROR_NO))
-        {
-            Error err = smart_dynamic_cast<Error>(op);
-            if (m_account->isLoggedIn())
-            {
-                const std::vector<Root>& args = err->getArgs();
-                std::string msg = args[0]->getAttr("message").asString();
-                
-                if (err->getRefno() == m_avatarRefno) {
-                    // creating or taking a character failed for some reason
-                    m_account->AvatarFailure(msg);
-                    m_avatarRefno = 0;
-                    m_account->m_status = Account::LOGGED_IN;
-                } else
-                    warning() << "Account got error op while logged in:" << msg;
-            } else {
-                m_account->loginError(err);
-            }
-            
-            return HANDLED;
-        }
-
         // logout
         if (op->instanceOf(LOGOUT_NO)) {
             debug() << "Account reciev forced logout from server";
@@ -102,62 +67,11 @@ public:
             }
         }
         
-        if (op->instanceOf(INFO_NO))
-            return handleInfo(smart_dynamic_cast<Info>(op));
-            
         return IGNORED;
     }
 
 private:
-    /** INFO operations mean various things, so the decode is slightly complex
-    */
-    RouterResult handleInfo(const Info& info)
-    {
-        const std::vector<Root>& args = info->getArgs();
-        if (args.empty())
-            throw InvalidOperation("Account got INFO() with no arguments");
-            
-        if (info->getRefno() == m_loginRefno)
-        {            
-            AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
-            if (!acc.isValid()) 
-                throw InvalidOperation("Account got INFO() whose's arg is not an account");
-            
-            m_account->loginComplete(acc);
-            return HANDLED;
-        }
-        
-        Logout logout = smart_dynamic_cast<Logout>(args.front());
-        if (logout.isValid()) {
-            debug() << "Account recived logout acknowledgement";
-            m_account->internalLogout(true);
-            return HANDLED;
-        }
-           
-        if ((m_account->m_status == Account::TAKING_CHAR) || 
-            (m_account->m_status == Account::CREATING_CHAR)) {
-            GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
-            if (ent.isValid()) {
-                // IG transition info, maybe
-                if (info->getRefno() == m_avatarRefno)
-                {
-                    Avatar* av = new Avatar(m_account, ent->getId());
-                    m_account->AvatarSuccess.emit(av);
-                    m_account->m_status = Account::LOGGED_IN;
-                    m_avatarRefno = 0;
-                    return HANDLED;
-                } else
-                    error() << "Account got info(game_entity) with refno "
-                     << info->getRefno() << ", but not a IG subscription";
-            }
-        }
-          
-        return IGNORED;
-    }
-
     Account* m_account;
-    int m_loginRefno,
-        m_avatarRefno;
 };
 
 #pragma mark -
@@ -218,7 +132,7 @@ void Account::createAccount(const std::string &uname,
     c->setSerialno(getNewSerialno());
     c->setArgs1(account);
     
-    m_router->setLoginSerial(c->getSerialno());
+    m_con->getResponder()->await(c->getSerialno(), this, &Account::loginResponse);
     m_con->send(c);
 	
 // store for re-logins
@@ -243,6 +157,7 @@ void Account::logout()
     l->setSerialno(getNewSerialno());
     l->setFrom(m_accountId);
     
+    m_con->getResponder()->await(l->getSerialno(), this, &Account::logoutResponse);
     m_con->send(l);
 	
     m_timeout.reset(new Timeout("logout", this, 5000));
@@ -311,8 +226,7 @@ void Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
     c->setSerialno(getNewSerialno());
     m_con->send(c);
     
-    // let the router know to expect the INFO op
-    m_router->setAvatarRefno(c->getSerialno());
+    m_con->getResponder()->await(c->getSerialno(), this, &Account::avatarResponse);
     m_status = CREATING_CHAR;
 }
 
@@ -362,9 +276,8 @@ void Account::takeCharacter(const std::string &id)
     l->setArgs1(what);
     l->setSerialno(getNewSerialno());
     m_con->send(l);
-    
-    // let the router know to expect the INFO op
-    m_router->setAvatarRefno(l->getSerialno());
+
+    m_con->getResponder()->await(l->getSerialno(), this, &Account::avatarResponse);
     m_status = TAKING_CHAR;
 }
 
@@ -390,12 +303,19 @@ void Account::internalLogin(const std::string &uname, const std::string &pwd)
     Login l;
     l->setArgs1(account);
     l->setSerialno(getNewSerialno());
-    
-    m_router->setLoginSerial(l->getSerialno());
+    m_con->getResponder()->await(l->getSerialno(), this, &Account::loginResponse);
     m_con->send(l);
     
     m_timeout.reset(new Timeout("login", this, 5000));
     m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLoginTimeout));
+}
+
+void Account::logoutResponse(const RootOperation& op)
+{
+    if (!op->instanceOf(INFO_NO))
+        warning() << "received a logout response that is not an INFO";
+        
+    internalLogout(true);
 }
 
 void Account::internalLogout(bool clean)
@@ -419,6 +339,17 @@ void Account::internalLogout(bool clean)
         m_con->disconnect(); 
         LogoutComplete.emit(clean);
     }
+}
+
+void Account::loginResponse(const RootOperation& op)
+{
+    if (op->instanceOf(INFO_NO)) {
+        const std::vector<Root>& args = op->getArgs();
+        loginComplete(smart_dynamic_cast<AtlasAccount>(args.front()));
+    } else if (op->instanceOf(ERROR_NO)) {
+        loginError(smart_dynamic_cast<Error>(op));
+    } else
+        warning() << "received malformed login response";
 }
 
 void Account::loginComplete(const AtlasAccount &p)
@@ -462,6 +393,31 @@ void Account::handleLoginTimeout()
     m_timeout.reset();
     
     LoginFailure.emit("timed out waiting for server response");
+}
+
+void Account::avatarResponse(const RootOperation& op)
+{
+    if (op->instanceOf(INFO_NO)) {
+        const std::vector<Root>& args = op->getArgs();
+   
+        GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
+        if (!ent.isValid()) {
+            warning() << "malformed character create/take response";
+            return;
+        }
+
+        Avatar* av = new Avatar(this, ent->getId());
+        AvatarSuccess.emit(av);
+        m_status = Account::LOGGED_IN;
+    } else if (op->instanceOf(ERROR_NO)) {
+        const std::vector<Root>& args = op->getArgs();
+        std::string msg = args[0]->getAttr("message").asString();
+        
+        // creating or taking a character failed for some reason
+        AvatarFailure(msg);
+        m_status = Account::LOGGED_IN;
+    } else
+        warning() << "received malformed login response";
 }
 
 void Account::sightCharacter(const GameEntity& ge)

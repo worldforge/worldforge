@@ -239,6 +239,7 @@
 		};
 		C43FBCF2054315F2008FC2ED = {
 			children = (
+				C4E8F39607B6DDA500981FB2,
 				C4C5505207A6D43B00F59ED4,
 				C438300D06BEFECA0092C3C7,
 				C4E5CD43064CFF4B00EF7326,
@@ -885,6 +886,7 @@
 				C4E5CD44064CFF4B00EF7326,
 				C438300F06BEFECA0092C3C7,
 				C4C5505407A6D43B00F59ED4,
+				C4E8F39807B6DDA500981FB2,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1107,6 +1109,7 @@
 				C4E5CD47064CFFAF00EF7326,
 				C438300E06BEFECA0092C3C7,
 				C4C5505307A6D43B00F59ED4,
+				C4E8F39707B6DDA500981FB2,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1499,6 +1502,7 @@
 		};
 		C4BB15920544A6C100A800CF = {
 			children = (
+				C4E8F39507B6DDA500981FB2,
 				C4C5505107A6D43B00F59ED4,
 				C438300C06BEFECA0092C3C7,
 				C43FBD1B054315F3008FC2ED,
@@ -1706,6 +1710,35 @@
 			isa = PBXTargetDependency;
 			target = C45DC3E60562F83D00D8F8F4;
 			targetProxy = C4E7E0020606735400721E8D;
+		};
+		C4E8F39507B6DDA500981FB2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = Response.cpp;
+			path = Eris/Response.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4E8F39607B6DDA500981FB2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = Response.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4E8F39707B6DDA500981FB2 = {
+			fileRef = C4E8F39507B6DDA500981FB2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4E8F39807B6DDA500981FB2 = {
+			fileRef = C4E8F39607B6DDA500981FB2;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 	};
 	rootObject = C43FBCE9054315B9008FC2ED;

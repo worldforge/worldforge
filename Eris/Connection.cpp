@@ -11,6 +11,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/Router.h>
 #include <Eris/Redispatch.h>
+#include <Eris/Response.h>
 
 #include <skstream/skstream.h>
 #include <Atlas/Objects/Encoder.h>
@@ -38,7 +39,8 @@ Connection::Connection(const std::string &cnm, bool dbg) :
     m_typeService(new TypeService(this)),
     m_defaultRouter(NULL),
     m_lock(0),
-    m_info("")
+    m_info(""),
+    m_responder(new ResponseTracker)
 {	
     // SigC::slot(*this, &Account::handleLoginTimeout)
     Poll::instance().Ready.connect(SigC::slot(*this, &Connection::gotData));
@@ -46,7 +48,6 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 	
 Connection::~Connection()
 {
-    delete m_typeService;
 }
 
 void Connection::connect(const std::string &host, short port)
@@ -251,15 +252,7 @@ void Connection::dispatchOp(const RootOperation& op)
     Router::RouterResult rr;
     bool anonymous = op->getTo().empty();
     
-// give the type service a go   
-    /// @todo - wrap this in an anonymous=true guard?
-    rr = m_typeService->handleOperation(op);
-    if (rr == Router::HANDLED) return;
-    
-    if (anonymous && (op->getClassNo() == INFO_NO) && op->getFrom().empty()) {
-        handleServerInfo(op);
-        return;
-    }
+    if (m_responder->handleOp(op)) return;
     
 // locate a router based on from
     IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());

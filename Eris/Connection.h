@@ -26,6 +26,7 @@ class PollData;
 class TypeService;
 class Router;
 class Redispatch;
+class ResponseTracker;
 
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
@@ -64,8 +65,11 @@ public:
 	void disconnect();
 
     TypeService* getTypeService() const
-    { return m_typeService;}
+    { return m_typeService.get(); }
 	
+    ResponseTracker* getResponder() const
+    { return m_responder.get(); }
+    
     /// Transmit an Atlas::Objects instance to the server
     /** If the connection is not fully connected, an exception will
     be thrown. To correctly handle disconnection, callers should
@@ -170,7 +174,7 @@ private:
     typedef std::deque<Atlas::Objects::Operation::RootOperation> OpDeque;
     OpDeque m_opDeque; ///< store of all the recived ops waiting to be dispatched
     
-    TypeService* m_typeService;
+    std::auto_ptr<TypeService> m_typeService;
     Router* m_defaultRouter; // need several of these?
     
     typedef std::map<std::string, Router*> IdRouterMap;
@@ -183,6 +187,8 @@ private:
     
     std::vector<Redispatch*> m_finishedRedispatches;
     ServerInfo m_info;
+    
+    std::auto_ptr<ResponseTracker> m_responder;
 };
 
 /// operation serial number sequencing

@@ -1,3 +1,21 @@
+2005-02-09  James Turner  <james@worldforge.org>
+
+	* Eris/Response.h, Eris/Response.cpp: add in helper class to track request
+	  / response operation pairs, and dispatch them based on refno. This gives
+	  more consistent and reliable routing for such ops, and simplifes 
+	  several of the routers.
+	  
+	* Eris/Account.h, Eris/Account.cpp: changes to use the response system; as
+	  a result, the AccountRouter is now very light-weight and the nasty
+	  logic for recording refnos has gone.
+	  
+	* Eris/TypeService.cpp, Eris/TypeService.h: replace the private refno
+	  tracking system with the generic response system.
+	  
+	* Eris/Connection.cpp, Eris/Connection.h: make Connection own a 
+	  ResponseTracker instance, and give it a first-chance to handle all ops
+	  which have a refno set.
+
 2005-02-02  James Turner  <james@worldforge.org>
 
 	* Eris/Connection.cpp: make the dispatch test for server info tighter,
