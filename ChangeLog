@@ -1,3 +1,13 @@
+2002-05-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/common.py: Back off to supporting older more common
+	  versions of python.
+
+	* src/Codecs/Bach.cpp, src/Codecs/Packed.cpp, src/Codecs/XML.cpp,
+	  src/Net/Stream.cpp:
+	  Work around the problem that in_avail() sometimes returns < 0 on
+	  some systems.
+
 2002-05-18  Michael Koch  <konqueror@gmx.de>
 
 	* all Makefile.am: 
