@@ -18,7 +18,6 @@ Perceive::Perceive()
     Object::ListType parents;
     parents.push_back(string("get"));
     SetParents(parents);
-    SetSpecification(string("atlas-game"));
 }
 
 Perceive Perceive::Instantiate()

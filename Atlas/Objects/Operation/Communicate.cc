@@ -18,7 +18,6 @@ Communicate::Communicate()
     Object::ListType parents;
     parents.push_back(string("create"));
     SetParents(parents);
-    SetSpecification(string("atlas-game"));
 }
 
 Communicate Communicate::Instantiate()

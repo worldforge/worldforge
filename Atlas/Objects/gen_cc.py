@@ -15,7 +15,7 @@ copyright = \
 // Automatically generated using gen_cc.py.\n"
 
 descr_attrs = ['children', 'description', 'args_description', 'example', \
-               'long_description']
+               'long_description', 'specification', 'interface']
 cpp_type = {'map':'Atlas::Message::Object::MapType',
             'list':'Atlas::Message::Object::ListType',
             'string':'std::string',

@@ -18,8 +18,6 @@ GameEntity::GameEntity()
     Object::ListType parents;
     parents.push_back(string("root_entity"));
     SetParents(parents);
-    SetSpecification(string("atlas-game"));
-    SetInterface(string("game_interface"));
 }
 
 GameEntity GameEntity::Instantiate()

@@ -18,7 +18,6 @@ Move::Move()
     Object::ListType parents;
     parents.push_back(string("set"));
     SetParents(parents);
-    SetSpecification(string("atlas-game"));
 }
 
 Move Move::Instantiate()

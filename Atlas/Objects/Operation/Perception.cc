@@ -18,7 +18,6 @@ Perception::Perception()
     Object::ListType parents;
     parents.push_back(string("info"));
     SetParents(parents);
-    SetSpecification(string("atlas-game"));
 }
 
 Perception Perception::Instantiate()

@@ -18,7 +18,6 @@ Divide::Divide()
     Object::ListType parents;
     parents.push_back(string("create"));
     SetParents(parents);
-    SetSpecification(string("atlas-game"));
 }
 
 Divide Divide::Instantiate()
