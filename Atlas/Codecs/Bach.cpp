@@ -17,20 +17,19 @@ Bach::Bach(std::iostream& s, Atlas::Bridge* b)
 void Bach::parseStream(char next)
 {
     cout << "parseStream" << endl;
+
     switch (next)
     {
-    case '{':
+    case '[':
         m_bridge->streamMessage(m_mapBegin);
         m_state.push(PARSE_MAP);
-        m_state.push(PARSE_MAP_BEGIN);
         break;
-/*
+
     default:
-        cout << "unexpected character : " << next << endl;
+        cout << "parseStream: unexpected character : " << next << endl;
         // FIXME signal error here
         // unexpected character
         break;
-*/
     }
 }
 
@@ -45,14 +44,12 @@ void Bach::parseMap(char next)
         m_state.pop();
         break;
 
-/*
     case '{':
         m_state.push(PARSE_MAP);
         m_state.push(PARSE_MAP_BEGIN);
         m_state.push(PARSE_DATA);
         m_state.push(PARSE_NAME);
         break;
-*/
 
     case '[':
         m_state.push(PARSE_LIST);
@@ -61,38 +58,7 @@ void Bach::parseMap(char next)
         m_state.push(PARSE_NAME);
         break;
 
-/*
-    case '\"':
-        m_state.push(PARSE_STRING);
-        m_state.push(PARSE_NAME);
-        break;
-
-    case '#':
- 	m_state.push(PARSE_INT);
- 	m_state.push(PARSE_NAME);
-        break;
-
-    case '1':
-    case '2':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':
-    case '0':
-    case '-':
-    case '+':
-    case '.':
-        m_state.push(PARSE_FLOAT);
-        m_state.push(PARSE_NAME);
-        break;
-
-*/
     case ',':
-        m_state.push(PARSE_DATA);
-        m_state.push(PARSE_NAME);
         break;
 
     default:
@@ -127,24 +93,15 @@ void Bach::parseList(char next)
     case '{':
         m_bridge->listItem(m_mapBegin);
         m_state.push(PARSE_MAP);
-        m_state.push(PARSE_MAP_BEGIN);
         m_state.push(PARSE_NAME);
         m_state.push(PARSE_DATA);
         break;
 
-/*
-    case '\"':
-        m_state.push(PARSE_STRING);
+    case '[':
+        m_bridge->listItem(m_listBegin);
+        m_state.push(PARSE_LIST);
+        m_state.push(PARSE_DATA);
         break;
-
-    case ',':
-        m_state.pop();
-        break;
-
-    case '@':
-	m_state.push(PARSE_INT);
-        break;
-*/
 
     case '1':
     case '2':
@@ -161,12 +118,11 @@ void Bach::parseList(char next)
         m_socket.putback(next);
         break;
 
-/*
     default:
+        cout << "parseMap: unexpected character: " << next << endl;
         // FIXME signal error here
         // unexpected character
         break;
-*/
     }
 }
 
@@ -208,14 +164,14 @@ void Bach::parseFloat(char next)
     case ',':
         m_socket.putback(next);
         m_state.pop();
-        if (m_state.top() == PARSE_MAP)
+        if (m_state.top() == PARSE_MAP_BEGIN)
         {
             cout << "Float: " << m_data << endl;
 
             m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
             m_name.erase();
         }
-        else if (m_state.top() == PARSE_LIST)
+        else if (m_state.top() == PARSE_LIST_BEGIN)
         {
             cout << "Float: " << m_data << endl;
 
@@ -223,7 +179,7 @@ void Bach::parseFloat(char next)
         }
         else
         {
-            cout << "Bach::parseFloat: Error" << endl;
+            cout << "Bach::parseFloat: Error: " << m_state.top() << endl;
             // FIXME some kind of sanity checking assertion here
         }
         m_data.erase();
@@ -248,7 +204,7 @@ void Bach::parseFloat(char next)
 	break;
 
     default:
-        cout << "unexpected character: " << next << endl;
+        cout << "parseFloat: unexpected character: " << next << endl;
         // FIXME signal error here
         // unexpected character
 	break;
@@ -261,15 +217,6 @@ void Bach::parseString(char next)
 
     switch (next)
     {
-/*
-    case '[':
-    case ']':
-    case '(':
-    case ')':
-    case ',':
-        m_socket.putback(next);
-*/
-
     case '\"':
         m_state.pop();
         if (m_state.top() == PARSE_MAP)
@@ -293,11 +240,6 @@ void Bach::parseString(char next)
         break;
 
 /*
-    case '=':
-        // FIXME signal error here
-        // unexpected character
-        break;
-
     case '\\':
         // FIXME escape signs
         break;
@@ -349,10 +291,12 @@ void Bach::parseData(char next)
         m_state.push(PARSE_STRING);
         break;
 
-/*
-    default:
+    case ',':
         break;
-*/
+
+    default:
+        cout << "parseData: unexpected character: " << next << endl;
+        break;
     }
 }
 
@@ -379,7 +323,18 @@ void Bach::parseName(char next)
 */
 
     default:
-        m_name += next;
+        if (((next>='a')&&(next<='z'))||
+            ((next>='A')&&(next<='Z'))||
+            ((next>='0')&&(next<='9')))
+        {
+            m_name += next;
+        }
+        else
+        {
+            cout << "parseName: unexpected character: " << next << endl;
+            // FIXME signal error here
+            // unexpected character
+        }
 	break;
     }
 }
