@@ -5,8 +5,6 @@
 #ifndef ATLAS_NEGOTIATE_H
 #define ATLAS_NEGOTIATE_H
 
-#define Debug(prg) { if (debug_flag) { prg } }
-
 namespace Atlas {
 
 class Codec;
@@ -28,9 +26,9 @@ class Negotiate
 
     enum State
     {
-	IN_PROGRESS,
-	SUCCEEDED,
-	FAILED
+        IN_PROGRESS,
+        SUCCEEDED,
+        FAILED
     };
 
     virtual State getState() = 0;
