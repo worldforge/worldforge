@@ -20,7 +20,7 @@
 using Atlas::Objects::Root;
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Entity::GameEntity;
-typedef Atlas::Objects::Entity::Player AtlasPlayer;
+typedef Atlas::Objects::Entity::Account AtlasAccount;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
@@ -105,8 +105,12 @@ private:
             
         if (info->getRefno() == m_loginRefno)
         {            
-            AtlasPlayer acc = smart_dynamic_cast<AtlasPlayer>(args.front());
-            assert(acc.isValid());
+            
+            AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
+            if (!acc.isValid()) {
+                std::cout << "Got account like objtype = " << args.front()->getObjtype() << " and parents = " << args.front()->getParents().front() << " and classno = " << args.front()->getClassNo() << std::endl << std::flush;
+                return HANDLED;
+            }
             m_player->loginComplete(acc);
             return HANDLED;
         }
@@ -187,7 +191,7 @@ void Player::createAccount(const std::string &uname,
     m_status = LOGGING_IN;
 
 // okay, build and send the create(account) op
-    AtlasPlayer account;
+    AtlasAccount account;
     account->setPassword(pwd);
     account->setName(fullName);
     account->setAttr("username", uname);
@@ -344,7 +348,7 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
     m_status = LOGGING_IN;
     m_username = uname; // store for posterity
 
-    AtlasPlayer account;
+    AtlasAccount account;
     account->setPassword(pwd);
     account->setAttr("username", uname);
 
@@ -378,7 +382,7 @@ void Player::internalLogout(bool clean)
     LogoutComplete.emit(clean);
 }
 
-void Player::loginComplete(const AtlasPlayer &p)
+void Player::loginComplete(const AtlasAccount &p)
 {
     if (m_status != LOGGING_IN)
         error() << "got loginComplete, but not currently logging in!";

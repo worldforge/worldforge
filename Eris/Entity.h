@@ -44,8 +44,12 @@ public:
     virtual ~Entity();
 
 // heirarchy interface    
-    unsigned int numContained() const;
-    Entity* getContained(unsigned int index) const;
+    unsigned int numContained() const {
+        return m_contents.size();
+    }
+    Entity* getContained(unsigned int index) const {
+        return m_contents[index];
+    }
 
     Atlas::Message::Element valueOfAttr(const std::string& attr) const;
         
@@ -100,9 +104,11 @@ public:
     {
         return m_orientation;
     }
-	
-    WFMath::AxisBox<3> getBBox() const;
-	
+
+    WFMath::AxisBox<3> getBBox() const {
+        return m_bbox;
+    }
+
     bool hasBBox() const
     {
         return m_hasBBox;

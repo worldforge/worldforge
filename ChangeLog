@@ -1,3 +1,10 @@
+2004-04-29  Al Riddoch  <alriddoch@zepler.org>
+
+* Eris/Player.h, Eris/Player.cpp: Accept logins from any account type,
+  not just player.
+
+* Eris/Entity.h: Implement missing methods.
+
 2004-04-26  Al Riddoch  <alriddoch@zepler.org>
 
 * Final tweaks to the filename changes.

@@ -127,7 +127,7 @@ protected:
     
     void sightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
     
-    void loginComplete(const Atlas::Objects::Entity::Player &p);
+    void loginComplete(const Atlas::Objects::Entity::Account &p);
     void loginError(const Atlas::Objects::Operation::Error& err);
 
     void internalLogin(const std::string &unm, const std::string &pwd);
