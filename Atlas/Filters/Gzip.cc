@@ -8,7 +8,7 @@
 
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 
-#include "../Stream/Filter.h"
+#include "../Filter.h"
 
 #include <zlib.h>
 

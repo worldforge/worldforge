@@ -3,7 +3,7 @@
 // Copyright (C) 2000 Stefanus Du Toit
 
 #include <cstdio>
-#include "../Stream/Codec.h"
+#include "../Codec.h"
 
 using namespace std;
 using namespace Atlas::Stream;

@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit, Michael Day
 
-#include "../Stream/Codec.h"
+#include "../Codec.h"
 #include "Utility.h"
 
 #include <stack>

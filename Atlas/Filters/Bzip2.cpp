@@ -8,7 +8,7 @@
 
 #if defined(HAVE_BZLIB_H) && defined(HAVE_LIBBZ2)
 
-#include "../Stream/Filter.h"
+#include "../Filter.h"
 
 #include <cstdio>
 #include <bzlib.h>

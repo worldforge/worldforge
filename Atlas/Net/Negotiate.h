@@ -5,7 +5,8 @@
 #ifndef ATLAS_NET_NEGOTIATE_H
 #define ATLAS_NET_NEGOTIATE_H
 
-#include "../Stream/Negotiate.h"
+#include "../Negotiate.h"
+#include "../Filter.h"
 
 namespace Atlas { namespace Net {
 
