@@ -1,400 +1,447 @@
-/*
-        AtlasObject.h
-        ----------------
-        begin           : 1999.11.29
-        copyright       : (C) 1999 by John Barrett (ZW)
-        email           : jbarrett@box100.com
-
-changes
-
-25 Jan 1999 - fex
-
-    The great great bool conversion
-*/
-
 #ifndef __AtlasObject_h_
 #define __AtlasObject_h_
 
-#include "Debug.h"
-#include "Types.h"
+#include "Variant.h"
 
-#ifdef _MSC_VER
-#include "Python.h"
-#else
-#include <python1.5/Python.h>
-#endif
-
-#include <string>
-using namespace std;
-
-/**
- * Atlas Base Object Structure
- *
- * AObject is an implementation of the Atlas
- * Object structure based on the Python PyObject
- * type. By relating all Atlas Object Structures
- * to the Python Object type, no conversion is
- * needed when transfering messages and data from
- * the network transports, to C++, and thence to
- * Python, or from Python to C++ to the network.
- *
- * AObject implements 5 basic data types:
- *
- * <pre>
- *@@	AObject		C/C++ Type
- *@@	==========================
- *@@	Int         long
- *@@	Float       double
- *@@	String      char *
- *@@	List        list<AObject*>
- *@@	Map         map<AObject*>
- * </pre>
- *
- * Atlas Typed Lists are supported by means
- * of the standard AObject List type and a
- * special type flag which enables type
- * checking of any data stored to a typed
- * list. Additionally, the ACodec object 
- * stream handler classes can use this flag
- * to produce more efficiently compacted
- * data streams from a given AObject message.
- *
- * Use of the AObject type flag by any specific
- * ACodec module is optional, as the essential
- * structure of the AObject will still be sent
- * correctly to the remote system even if the
- * flag is not used during encoding.
- *
- * @see ACodec
- * @author John Barrett (ZW) <a href="mailto:jbarrett@box100.com">jbarrett@box100.com</a>
- * @source AtlasObject.h
- */ 
-
-class AObject
+namespace Atlas
 {
-protected:
 
-/** Python Object to hold the data */
-	PyObject*	obj;
+class Object
+{
+	Variant*	obj;
 
 /** support routine for dump */
-static void walkTree(int nest, string name, const AObject& list);
+static void walkTree(int nest, string name, const Object& list);
 
 public:
 
 /** output object stucture to debug streams */
-static void dump(const AObject& msg);
-
-/** return string representation of object type */
-	char* typeString();
+static void dump(const Object& msg);
 
 /** overload assignment so copying works right */
-	AObject &operator=(const AObject& src);
+Object &operator=(const Object& src)
+{
+	obj->decref();
+	obj = src.obj;
+	obj->incref();
+	return *this;
+}
 
-/** Construct an AObject */
-	AObject();
+/** Construct an Object */
+Object() 
+{
+	obj = new Variant(Map); 
+}
 
-/** Construct a copy of an existing AObject */
-	AObject(const AObject& src);
+/** Construct a copy of an existing Object */
+Object(const Object& src) 
+{
+	obj->decref();
+	obj = src.obj; 
+	obj->incref();
+}
 
-/** Construct an AObject from an existing PyObject. bool value set to true will not alter ref count (used internally)  */
-	AObject( PyObject* src, bool = true );
+/** Constuct an Int type Object */
+Object(int val)
+{
+	obj = new Variant(val);
+}
 
-/** Construct an AObject from an existing AObject, but with a new name */
-	AObject(AObject& src);
+/** Constuct an Long type Object */
+Object(long val)
+{
+	obj = new Variant(val);
+}
 
-/** Constuct an Int type AObject */
-	AObject(int val);
+/** Contruct a Float type Object */
+Object(double val)
+{
+	obj = new Variant(val);
+}
 
-/** Constuct an Long type AObject */
-	AObject(long val);
+/** Construct a String type Object */
+Object(const string& val)
+{
+	obj = new Variant(val);
+}
 
-/** Contruct a Float type AObject */
-	AObject(double val);
+/** Construct a List or Map Object */
+Object(Type val)
+{
+	obj = new Variant(val);
+}
 
- /** Construct a String type AObject */
-	AObject(string& val);
+/** Construct a List Object with initial size */
+Object(Type val, int size)
+{
+	obj = new Variant(val,size);
+}
 
-/** Construct a String type AObject */
-	AObject(const string& val);
+/** Destroy an Object */
+~Object()
+{
+	obj->decref();
+}
 
+/** Construct a Float typed list Object from an array */
+Object(int len, double *val)
+{
+	obj = new Variant(List);
+	for (int i=0;i<len;i++) obj->od.lp->push_back(new Variant(val[i]));
+}
 
-/** Construct a String typed list AObject */
-	AObject(int len, string* val, ...);
+/** Construct a Long typed list Object from an array */
+Object(int len, long *val)
+{
+	obj = new Variant(List);
+	for (int i=0;i<len;i++) obj->od.lp->push_back(new Variant(val[i]));
+}
 
-/** Construct a Float typed list AObject */
-	AObject(int len, double val, ...);
-
-/** Construct a Long typed list AObject */
-	AObject(int len, long val, ...);
-
-/** Construct a Int typed list AObject */
-	AObject(int len, int val, ...);
-
-
-/** Construct a Float typed list AObject from an array */
-	AObject(int len, double *val);
-
-/** Construct a Long typed list AObject from an array */
-	AObject(int len, long *val);
-
-/** Construct a Long typed list AObject from an array */
-	AObject(int len, int *val);
-
-
-
-/** Destroy an AObject */
-	~AObject();
-
-
-
-/** Get a pointer to this AObject's PyObject */
-	PyObject* pyObject();
-
-
+/** Construct a Long typed list Object from an array */
+Object(int len, int *val)
+{
+	obj = new Variant(List);
+	for (int i=0;i<len;i++) obj->od.lp->push_back(new Variant(val[i]));
+}
 
 /** (Map) test for named element of a map */
-    bool    has(const string& name) const;
+bool	has(const string& name) const
+{
+	if (obj->rt != Map) return false;
+	return (obj->od.mp->count(name) > 0);
+}
 
-/** (Map) get an AObject attribute */
-    bool    get(const string& name, AObject& val) const;
-
-/** (Map) get an Int attribute */
-    bool    get(const string& name, int& val) const;
-
-/** (Map) get an Long attribute */
-    bool    get(const string& name, long& val) const;
-
-/** (Map) get a Float attribute */
-    bool    get(const string& name, double& val) const;
-
-/** (Map) get a String attribute */
-    bool    get(const string& name, string& val) const;
-
-
-/** (Map) get an AObject attribute */
-    bool    get(const string& name, AObject& val, AObject& def) const;
+/** (Map) get an Object attribute */
+bool	get(const string& name, Object& val) const
+{
+	if (obj->rt !=Map) return false;
+	varmap::iterator i = obj->od.mp->find(name);
+	if (i == obj->od.mp->end()) return false;
+	val.obj->decref();
+	val.obj = (*i).second;
+	val.obj->incref();
+	return true;
+}
 
 /** (Map) get an Int attribute */
-    bool    get(const string& name, int& val, int def) const;
+bool	get(const string& name, int& val) const
+{
+	if (obj->rt !=Map) return false;
+	varmap::iterator i = obj->od.mp->find(name);
+	if (i == obj->od.mp->end()) return false;
+	if ((*i).second->rt != Int) return false;
+	val = (*i).second->od.lv;
+	return true;
+}
 
 /** (Map) get an Long attribute */
-    bool    get(const string& name, long& val, long def) const;
+bool	get(const string& name, long& val) const
+{
+	if (obj->rt !=Map) return false;
+	varmap::iterator i = obj->od.mp->find(name);
+	if (i == obj->od.mp->end()) return false;
+	if ((*i).second->rt != Int) return false;
+	val = (*i).second->od.lv;
+	return true;
+}
 
 /** (Map) get a Float attribute */
-    bool    get(const string& name, double& val, double def) const;
+bool    get(const string& name, double& val) const
+{
+	if (obj->rt !=Map) return false;
+	varmap::iterator i = obj->od.mp->find(name);
+	if (i == obj->od.mp->end()) return false;
+	if ((*i).second->rt != Float) return false;
+	val = (*i).second->od.dv;
+	return true;
+}
 
 /** (Map) get a String attribute */
-    bool    get(const string& name, string& val, string& def) const;
+bool    get(const string& name, string& val) const
+{
+	if (obj->rt !=Map) return false;
+	varmap::iterator i = obj->od.mp->find(name);
+	if (i == obj->od.mp->end()) return false;
+	if ((*i).second->rt != Float) return false;
+	val = *((*i).second->od.sp);
+	return true;
+}
 
+/** (Map) get an Object attribute */
+bool    get(const string& name, Object& val, Object& def) const
+{
+	val = def;
+	return get(name,val);
+}
 
+/** (Map) get an Int attribute */
+bool    get(const string& name, int& val, int def) const
+{
+	val = def;
+	return get(name,val);
+}
+
+/** (Map) get an Long attribute */
+bool    get(const string& name, long& val, long def) const
+{
+	val = def;
+	return get(name,val);
+}
+
+/** (Map) get a Float attribute */
+bool    get(const string& name, double& val, double def) const
+{
+	val = def;
+	return get(name,val);
+}
+
+/** (Map) get a String attribute */
+bool    get(const string& name, string& val, string& def) const
+{
+	val = def;
+	return get(name,val);
+}
 
 /** (Map) set an Object attribute */
-    bool    set(const string& name, const AObject& src);
+bool    set(const string& name, const Object& src)
+{
+	del(name);
+	if (obj->rt !=Map) return false;
+	(*(obj->od.mp))[name] = src.obj;
+	src.obj->incref();
+	return true;
+}
 
 /** (Map) set an Int attribute */
-    bool    set(const string& name, int src);
+bool    set(const string& name, int src)
+{
+	del(name);
+	if (obj->rt != Map) return false;
+	(*(obj->od.mp))[name] = new Variant(src);
+	return true;
+}
 
 /** (Map) set an Long attribute */
-    bool    set(const string& name, long src);
+bool    set(const string& name, long src)
+{
+	del(name);
+	if (obj->rt !=Map) return false;
+	(*(obj->od.mp))[name] = new Variant(src);
+	return true;
+}
 
 /** (Map) set a Float attribute */
-    bool    set(const string& name, double src);
+bool    set(const string& name, double src)
+{
+	del(name);
+	if (obj->rt !=Map) return false;
+	(*(obj->od.mp))[name] = new Variant(src);
+	return true;
+}
 
 /** (Map) set a String attribute */
-    bool    set(const string& name, const string& src);
-
-/** (Map) set an AObject attribute using its stored name */
-    bool    set(const AObject& src);
-
-
+bool    set(const string& name, const string& src)
+{
+	del(name);
+	if (obj->rt !=Map) return false;
+	(*(obj->od.mp))[name] = new Variant(src);
+	return true;
+}
 
 /** (Map) remove an attribute */
-    bool    del(const string& name);
-
-
-
-/** return a hash value for this AObject */
-	int     hash() const;
-
-/** return if this AObject evaluates to True or False */
-    bool    isTrue() const;
+bool    del(const string& name)
+{
+	if (obj->rt !=Map) return false;
+	varmap::iterator i = obj->od.mp->find(name);
+	if (i == obj->od.mp->end()) return false;
+	(*i).second->decref();
+	obj->od.mp->erase(name);
+	return true;
+}
 
 /** return the length of this object */
-	int		length() const;
-
-
+int     length() const
+{
+	if (obj->rt == List) return obj->od.lp->size();
+	if (obj->rt == Map) return obj->od.mp->size();
+	return 0;
+}
 
 /** return an empty map */
-static	AObject	mkMap();
+static	Object	mkMap()
+{
+	Object	tmp(Map);
+	return tmp;
+}
 
 /** return an empty list */
-static	AObject	mkList();
+static	Object	mkList()
+{
+	Object	tmp(List);
+	return tmp;
+}
 
 /** return an empty list with (len) elements */
-static	AObject	mkList(int len);
+static	Object	mkList(int len)
+{
+	Object	tmp(List);
+	return tmp;
+}
 
-/** return an URI AObject */
-static	AObject	mkURI(const string& val);
+/** return an Int Object */
+static	Object	mkInt(long val)
+{
+	Object	tmp(val);
+	return tmp;
+}
 
-/** return an Int AObject */
-static	AObject	mkInt(long val);
+/** return a Float Object */
+static	Object	mkFloat(double val)
+{
+	Object	tmp(val);
+	return tmp;
+}
 
-/** return an Long AObject */
-static	AObject	mkLong(long val);
-
-/** return a Float AObject */
-static	AObject	mkFloat(double val);
-
-/** return a String AObject */
-static	AObject	mkString(const string& val);
-
-/** return an URIList AObject */
-static	AObject	mkURIList(int len);
-
-/** return an IntList AObject */
-static	AObject	mkIntList(int len);
-
-/** return an LongList AObject */
-static	AObject	mkLongList(int len);
-
-/** return a FloatList AObject */
-static	AObject	mkFloatList(int len);
-
-/** return a StringList AObject */
-static	AObject	mkStringList(int len);
+/** return a String Object */
+static	Object	mkString(const string& val)
+{
+	Object	tmp(val);
+	return tmp;
+}
 
 
 
-/** true if this AObject is a Map */
-    bool    isMap() const;
+/** true if this Object is a Map */
+bool    isMap() const		{ return (obj->rt ==Map); }
 
-/** true if this AObject is a List */
-    bool    isList() const;
+/** true if this Object is a List */
+bool    isList() const		{ return (obj->rt ==List); }
 
-/** true if this AObject is a URI */
-    bool    isURI() const;
+/** true if this Object is a Int */
+bool    isInt() const		{ return (obj->rt ==Int); }
 
-/** true if this AObject is a Int */
-    bool    isInt() const;
+/** true if this Object is a Float */
+bool    isFloat() const		{ return (obj->rt ==Float); }
 
-/** true if this AObject is a Int */
-    bool    isLong() const;
+/** true if this Object is a String */
+bool    isString() const	{ return (obj->rt ==String); }
 
-/** true if this AObject is a Float */
-    bool    isFloat() const;
-
-/** true if this AObject is a String */
-    bool    isString() const;
-
-/** true if this AObject is a URI */
-    bool    isURIList() const;
-
-/** true if this AObject is a Int */
-    bool    isIntList() const;
-
-/** true if this AObject is a Int */
-    bool    isLongList() const;
-
-/** true if this AObject is a Float */
-    bool    isFloatList() const;
-
-/** true if this AObject is a String */
-    bool    isStringList() const;
-
-
-/** (URI) return path to reference */
-	AObject		AObject::getURIPath() const;
-
-/** (URI) return path to reference */
-	int		AObject::getPath(string &val) const;
-
-/** (URI) return data object */
-	AObject		AObject::getURIData() const;
 
 /** (Map) return a List of all keys for a Map */
-	AObject		keys() const;
+Atlas::strlst	keys() const
+{
+	Atlas::strlst			keylst;
+
+	if (obj->rt !=Map) return keylst;
+
+	varmap::iterator	i;
+
+	for (i = obj->od.mp->begin(); i != obj->od.mp->end(); i++)
+	{
+		keylst.push_back((*i).first);
+	}
+	return keylst;
+}
 
 /** (Map) return a List of all values for a Map */
-	AObject		vals() const;
+Object	vals() const
+{
+	if (obj->rt !=Map) return false;
 
-/** (Map) clear values for a Map */
-	void		clear();
+	Object			keylst = mkList();
+	varmap::iterator	i;
 
+	for (i = obj->od.mp->begin(); i != obj->od.mp->end(); i++)
+		keylst.obj->od.lp->push_back((*i).second);
+	return keylst;
+}
 
-/** (List) sort a List */
-	int		sort();
+/** (Map/List) clear values for a Map or List */
+bool	clear()
+{
+	if (obj->rt ==Map)	{ obj->dellst(); obj->od.mp->clear(); return true; }
+	if (obj->rt ==List)	{ obj->delmap(); obj->od.lp->clear(); return true; }
+	return false;
+}
 
+/** (List) insert an Object at this index */
+bool    insert(size_t ndx, const Object& val);
 
-/** (List) reverse the order of a list */
-    bool    reverse();
-
-/** (List) insert an AObject at this index */
-    bool    insert(int ndx, const AObject& val);
 /** (List) insert an Int at this index */
-    bool    insert(int ndx, int val);
+bool    insert(size_t ndx, int val);
+
 /** (List) insert an Long at this index */
-    bool    insert(int ndx, long val);
+bool    insert(size_t ndx, long val);
+
 /** (List) insert a Float at this index */
-    bool    insert(int ndx, double val);
+bool    insert(size_t ndx, double val);
+
 /** (List) insert a String at this index */
-    bool    insert(int ndx, const string& val);
+bool    insert(size_t ndx, const string& val);
 
-/** (List) append an AObject */
-    bool    append(const AObject& val);
+/** (List) append an Object */
+bool    append(const Object& val);
+
 /** (List) append an Int */
-    bool    append(int val);
+bool    append(int val);
+
 /** (List) append an Long */
-    bool    append(long val);
+bool    append(long val);
+
 /** (List) append a Float */
-    bool    append(double val);
+bool    append(double val);
+
 /** (List) append a String */
-    bool    append(const string& val);
+bool    append(const string& val);
 
-/** (List) replace an AObject at this index */
-    bool    set(int ndx, const AObject& src);
+/** (List) replace an Object at this index */
+bool    set(size_t ndx, const Object& src);
+
 /** (List) replace an Int at this index */
-    bool    set(int ndx, int val);
+bool    set(size_t ndx, int val);
+
 /** (List) replace an Long at this index */
-    bool    set(int ndx, long val);
+bool    set(size_t ndx, long val);
+
 /** (List) replace a Float at this index */
-    bool    set(int ndx, double val);
+bool    set(size_t ndx, double val);
+
 /** (List) replace a String at this index */
-    bool    set(int ndx, const string& val);
+bool    set(size_t ndx, const string& val);
 
-/** (List) get an AObject from this index */
-    bool    get(int ndx, AObject& src) const;
+/** (List) get an Object from this index */
+bool    get(size_t ndx, Object& src) const;
+
 /** (List) get an Int from this index */
-    bool    get(int ndx, int& val) const;
-/** (List) get an Long from this index */
-    bool    get(int ndx, long& val) const;
-/** (List) get a Float from this index */
-    bool    get(int ndx, double& val) const;
-/** (List) get a String from this index */
-    bool    get(int ndx, string& val) const;
+bool    get(size_t ndx, int& val) const;
 
-/** (List) get an AObject from this index with default */
-    bool    get(int ndx, AObject& src, AObject& def) const;
+/** (List) get an Long from this index */
+bool    get(size_t ndx, long& val) const;
+
+/** (List) get a Float from this index */
+bool    get(size_t ndx, double& val) const;
+
+/** (List) get a String from this index */
+bool    get(size_t ndx, string& val) const;
+
+/** (List) get an Object from this index with default */
+bool	get(size_t ndx, Object& src, Object& def) const;
+
 /** (List) get an Int from this index */
-    bool    get(int ndx, int& val, int def) const;
-/** (List) get an Long from this index */
-    bool    get(int ndx, long& val, long def) const;
-/** (List) get a Float from this index */
-    bool    get(int ndx, double& val, double def) const;
-/** (List) get a String from this index */
-    bool    get(int ndx, string& val, string& def) const;
+bool    get(size_t ndx, int& val, int def) const;
 
-// typed returns
-/** get an Int value from this AObject */
-	long		asInt() const;
-/** get an Int value from this AObject */
-	long		asLong() const;
-/** get a Float value from this AObject */
-	double		asFloat() const;
-/** get a String value from this AObject */
-	string		asString() const;
+/** (List) get an Long from this index */
+bool    get(size_t ndx, long& val, long def) const;
+
+/** (List) get a Float from this index */
+bool    get(size_t ndx, double& val, double def) const;
+
+/** (List) get a String from this index */
+bool    get(size_t ndx, string& val, string& def) const;
 
 };
+
+} // end namespace atlas
 
 #endif
 
