@@ -78,7 +78,7 @@ Point<dim> RotBox<dim>::getCorner(int i) const
   for(int j = 0; j < dim; ++j)
     dist[j] = (i & (1 << j)) ? m_size[j] : 0;
 
-  return m_corner0 + Prod(m_orient, dist);
+  return m_corner0 + Prod(dist, m_orient);
 }
 
 template<const int dim>
@@ -93,7 +93,7 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
 //    Vector<dim> edge;
 //    edge.zero();
 //    edge[i] = m_size[i];
-//    edge = Prod(m_orient, edge);
+//    edge = Prod(edge, m_orient);
 //    // Edge now represents the i'th edge
 //    // pointing away from m_corner0
 //    for(int j = 0; j < dim; ++j) {
@@ -115,7 +115,7 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
   for(int i = 0; i < dim; ++i) {
     CoordType minval = 0, maxval = 0;
     for(int j = 0; j < dim; ++j) {
-      CoordType value = m_orient.elem(i, j) * m_size[j];
+      CoordType value = m_orient.elem(j, i) * m_size[j];
       if(value < 0)
         minval += value;
       else

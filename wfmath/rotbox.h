@@ -74,7 +74,7 @@ class RotBox
 
   int numCorners() const {return 1 << dim;}
   Point<dim> getCorner(int i) const;
-  Point<dim> getCenter() const {return m_corner0 + Prod(m_orient, m_size / 2);}
+  Point<dim> getCenter() const {return m_corner0 + Prod(m_size / 2, m_orient);}
 
   const Point<dim>& corner0() const		{return m_corner0;}
   Point<dim>& corner0()				{return m_corner0;}

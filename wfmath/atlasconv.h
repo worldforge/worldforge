@@ -34,7 +34,10 @@
 #include <stdexcept>
 #include <Atlas/Message/Object.h>
 #include <wfmath/const.h>
-#include <wfmath/stream.h>
+#include <wfmath/point.h>
+#include <wfmath/vector.h>
+#include <wfmath/quaternion.h>
+#include <wfmath/axisbox.h>
 
 namespace WFMath {
 

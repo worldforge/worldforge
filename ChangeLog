@@ -1,3 +1,12 @@
+Wednesday, February 20, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed RotBox to match the new sense of RotMatrix<>
+	  rotation, still need to look at its interaction
+	  with Polygon<> to get that right
+	* Wrote Intersect(RotBox, AxisBox) for 2d, 3d
+	* Removed a needless <iostream> dependency from atlasconv.h
+	* Bump version number to 0.2.4
+
 Sunday, February 17, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Some doc fixes

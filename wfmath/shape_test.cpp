@@ -129,8 +129,8 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   assert(Intersect(rbox, p1));
   assert(!IntersectProper(rbox, p1));
 
-//  assert(Intersect(rbox, box));
-//  assert(IntersectProper(rbox, box));
+  assert(Intersect(rbox, box));
+  assert(IntersectProper(rbox, box));
   assert(!Contains(rbox, box));
   assert(!ContainsProper(rbox, box));
   assert(!Contains(box, rbox));
@@ -151,8 +151,8 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   assert(!Contains(seg, rbox));
   assert(!ContainsProper(seg, rbox));
 
-//  assert(Intersect(rbox, rbox));
-//  assert(IntersectProper(rbox, rbox));
+  assert(Intersect(rbox, rbox));
+  assert(IntersectProper(rbox, rbox));
   assert(Contains(rbox, rbox));
   assert(!ContainsProper(rbox, rbox));
 
