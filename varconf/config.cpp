@@ -174,7 +174,7 @@ bool Config::erase(const std::string& section, const std::string& key)
   return false;
 }
 
-bool Config::find(const std::string& section, const std::string& key)
+bool Config::find(const std::string& section, const std::string& key) const
 {
   conf_map::const_iterator I = m_conf.find(section);
   if (I != m_conf.end()) {
@@ -191,12 +191,12 @@ bool Config::find(const std::string& section, const std::string& key)
   return false;
 }
 
-bool Config::findSection(const std::string& section)
+bool Config::findSection(const std::string& section) const
 {
   return find(section);
 }
 
-bool Config::findItem(const std::string& section, const std::string& key)
+bool Config::findItem(const std::string& section, const std::string& key) const
 {
   return find(section, key);
 }

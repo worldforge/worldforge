@@ -1,3 +1,8 @@
+2005-01-10  Simon Goodall  <simon@simongoodall.co.uk>
+
+	* varconf/config.cpp, varconf/Config.h: Make findItem, findSection and 
+	  find const.
+
 2004-12-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* varconf.spec.in: Update spec with License URL Package Vendor

@@ -64,7 +64,7 @@ public:
   void clean(std::string& str);
 
   // Returns true if specified key exists under specified section.
-  bool find(const std::string& section, const std::string& key = "");
+  bool find(const std::string& section, const std::string& key = "") const;
 
   // Returns true if specified key exists under specified section and is
   // successfully deleted.
@@ -93,10 +93,10 @@ public:
   void parseStream(std::istream& in) throw (ParseError);
 
   // Wrapper for find(section)
-  bool findSection(const std::string& section);
+  bool findSection(const std::string& section) const;
 
   // Wrapper for find(section, key)
-  bool findItem(const std::string& section, const std::string& key);
+  bool findItem(const std::string& section, const std::string& key) const;
 
   // Returns value of specified section.
   const sec_map & getSection(const std::string& section);
