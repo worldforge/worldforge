@@ -1,4 +1,7 @@
 Maintainer:
 	Ron Steinke <rsteinke@w-link.net>
 
-more to come once this code gets into CVS
+The Miniball code of Bernd Gaertner
+<http://www.inf.ethz.ch/personal/gaertner>
+is used for finding bounding spheres for
+collections of points.

@@ -16,13 +16,8 @@ Deal with difficulties in making certain functions friends of the
 Rearrange the functions in foo_funcs.h to match the order in the class
 	in foo.h
 
-Replace the _valid flags in Poly2Orient with use of the internal
-m_valid flags in Point and Vector
-
 Schedule:
-0.2.7	- official tarball release, mostly so man-di can roll a .deb
-0.2.8	- add the _valid flag alriddoch requested, code review up
-	  through AxisBox and Ball
-0.2.9	- code review for everything but Polygon
-0.3.0	- finish Polygon, code review. Remove old Intersect()/IntersectProper()
-	  interface
+0.3.0 will come out once I get around to testing the Polygon intersect functions
+      and make sure they work. At that point the old Intersect()/IntersectProper()
+      interface will be removed, as will supports for deprecated network
+      formats in atlas_conv.h
