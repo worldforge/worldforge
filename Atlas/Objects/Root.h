@@ -5,41 +5,31 @@
 #ifndef ATLAS_OBJECTS_ROOT_H
 #define ATLAS_OBJECTS_ROOT_H
 
-#include <string>
 #include <map>
-#include <utility>
-#include "../Bridge.h"
+#include <string>
 #include "../Message/Object.h"
-#include "Macros.h"
+#include "../Bridge.h"
 
 namespace Atlas { namespace Objects {
-
-class Root
-{
+    
+class Root {
 public:
     Root();
-    
     virtual ~Root();
-    
-    virtual void Clear();
-    virtual void Reset();
-    
-    virtual Atlas::Message::Object GetAttr(const std::string&) const;
-    virtual void SetAttr(const std::string&, const Atlas::Message::Object&);
-    virtual bool HasAttr(const std::string&) const;
-    
-    virtual void Transmit(Atlas::Bridge* b);
 
-    METHODS(std::string, id)
+    virtual bool HasAttr(const std::string& name) const;
+    virtual const Atlas::Message::Object& GetAttr(const std::string& name)
+        const;
+    virtual void SetAttr(const std::string& name,
+                         const Atlas::Message::Object& attr);
+    virtual void RemoveAttr(const std::string& name);
+    
+    virtual Atlas::Message::Object AsObject() const;
+
+    virtual void SendContents(Atlas::Bridge* b) const;
 
 protected:
-    
-    typedef std::map< std::string,
-              std::pair<bool, Atlas::Message::Object> > attrmap;
-
-    attrmap attributes;
-
-    ATTRIBUTE(std::string, id)
+    std::map<std::string, Atlas::Message::Object> attributes;
 };
 
 } }

@@ -1,0 +1,42 @@
+Atlas-C++ - Objects
+
+1. GENERAL NOTES
+
+implement hierarchy as given in atlas spec.
+have attributes
+
+2.1 FIRST ITERATION
+
+attributes are message::objects
+attributes are stored in a map
+attributes can be checked for
+attributes can be retrieved
+attributes can be stored
+attributes can be removed
+objects have default attributes (set in constructors)
+
+somehow we should be able to conver Objects to Message::Objects
+
+2.1.1 INHERITANCE
+
+We use public inheritance
+We use virtual functions
+In constructors:
+  - First we call our parent
+  - Then we do our own thing
+In GetAttr:
+  - First check if we have it
+  - Then call parent
+  - At Root, we throw an exception (maybe)
+In SetAttr:
+  - No inheritance issues
+  - In fact, we can just rely on root's implementation
+In RemoveAttr:
+  - No inheritance issues
+  - In fact, we can just rely on root's implementation
+
+2.2 SECOND ITERATION
+
+attributes can be specific types
+attributes can be stored as members
+
