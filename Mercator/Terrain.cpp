@@ -51,23 +51,31 @@ void Terrain::shadeSurfaces(Segment & seg)
     seg.populateSurfaces();
 }
 
+#ifdef HAVE_LRINTF
+    #define I_ROUND(x) (::lrintf(x)) 
+#elif defined(HAVE_RINTF)
+    #define I_ROUND(x) ((int)::rintf(x)) 
+#else
+    #define I_ROUND(x) ((int)::rint(x)) 
+#endif
+
 float Terrain::get(float x, float y) const
 {
-    int ix = (int)floor(x / m_res);
-    int iy = (int)floor(y / m_res);
+    int ix = I_ROUND(floor(x / m_res));
+    int iy = I_ROUND(floor(y / m_res));
 
     Segment * s = getSegment(ix, iy);
     if ((s == 0) || (!s->isValid())) {
         return Terrain::defaultLevel;
     }
-    return s->get((int)(x - (ix * m_res)), (int)(y - (iy * m_res)));
+    return s->get(I_ROUND(x) - (ix * m_res), I_ROUND(y) - (iy * m_res));
 }
 
 void Terrain::getHeightAndNormal(float x, float y, float & h,
                                   WFMath::Vector<3> & n) const
 {
-    int ix = (int)floor(x / m_res);
-    int iy = (int)floor(y / m_res);
+    int ix = I_ROUND(floor(x / m_res));
+    int iy = I_ROUND(floor(y / m_res));
 
     Segment * s = getSegment(ix, iy);
     if ((s == 0) || (!s->isValid())) {
