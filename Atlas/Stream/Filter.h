@@ -67,7 +67,7 @@ class Filter
 	public:
 
 	Factory(const std::string& name, const Metrics &metrics)
-	    : Factory(name, metrics)
+	    : Atlas::Stream::Factory<Filter>(name, metrics)
 	{
 	}
 	    

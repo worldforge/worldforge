@@ -80,7 +80,7 @@ class Codec
 	public:
 
 	Factory(const std::string& name, const Metrics& metrics)
-	 : Factory(name, metrics)
+	 : Atlas::Stream::Factory<Codec>(name, metrics)
 	{
 	}
 

@@ -2,6 +2,10 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Dmitry Derevyanko
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 
 #include "../Stream/Filter.h"
