@@ -1,3 +1,4 @@
+#include "../Message/Encoder.h"
 #include "Root.h"
 
 using namespace Atlas;
@@ -24,16 +25,16 @@ void Root::Reset()
     attrmap::iterator I;
     
     for (I = attributes.begin(); I != attributes.end(); I++) {
-        (*I).value.first = false;
+        (*I).second.first = false;
     }
 }
 
-MorphObject Root::Get(const string& name)
+Object Root::Get(const string& name)
 {
     return attributes[name].second;
 }
 
-void Root::Set(const string& name, const MorphObject& object)
+void Root::Set(const string& name, const Object& object)
 {
     attributes[name] = make_pair(false, object);
 }
@@ -51,9 +52,9 @@ void Root::Transmit(Atlas::Bridge* b)
     b->StreamMessage(Bridge::MapBegin);
     
     for (I = attributes.begin(); I != attributes.end(); I++) {
-        if ((*I).value.first == false) {
-            e.MapItem((*I).key, (*I).value.second);
-            (*I).value.first = true;
+        if ((*I).second.first == false) {
+            e.MapItem((*I).first, (*I).second.second);
+            (*I).second.first = true;
         }
     }
     b->MapEnd();

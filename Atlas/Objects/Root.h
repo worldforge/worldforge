@@ -9,7 +9,7 @@
 #include <map>
 #include <utility>
 #include "../Bridge.h"
-#include "../Message/MorphObject.h"
+#include "../Message/Object.h"
 
 namespace Atlas { namespace Objects {
 
@@ -23,8 +23,8 @@ public:
     virtual void Clear();
     virtual void Reset();
     
-    virtual Atlas::Message::MorphObject Get(const std::string&);
-    virtual void Set(const std::string&, const Atlas::Message::MorphObject&);
+    virtual Atlas::Message::Object Get(const std::string&);
+    virtual void Set(const std::string&, const Atlas::Message::Object&);
     virtual bool Has(const std::string&);
     
     virtual void Transmit(Atlas::Bridge* b);
@@ -32,10 +32,10 @@ public:
 protected:
     
     typedef std::map< std::string,
-              std::pair<bool, Atlas::Message::MorphObject> > attrmap;
+              std::pair<bool, Atlas::Message::Object> > attrmap;
 
     attrmap attributes;
-}
+};
 
 } }
 
