@@ -1,3 +1,15 @@
+2005-04-06  James Turner  <james@worldforge.org>
+
+	* Eris/Connection.cpp, Eris/Connection.h: change Connection so hostname
+	  and port are passed as constructor argument, and make the members const.
+	  Remove the args to connect and deprecate reconnect(), to make the life-
+	  time of Connection obvious - i.e you can't re-use it for different
+	  servers.
+	  
+	 * Eris/Connection.cpp, Eris/Connection.h, Eris/BaseConnection.cpp,
+	   Eris/BaseConnection.h: change connect() and disconnect() to return an
+	   errno instead of throwing.
+
 2005-04-04  James Turner  <james@worldforge.org>
 
     * Eris/Entity.cpp: support the 'mode' attribute on MOVE ops

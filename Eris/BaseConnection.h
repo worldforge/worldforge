@@ -32,7 +32,7 @@ public:
 
     /** open a connection to the specified host/port; invokes the failure handler if
     the connection could not be opened. */
-    virtual void connect(const std::string &host, short port);
+    virtual int connect(const std::string &host, short port);
 
     /// possible states for the connection
     typedef enum {

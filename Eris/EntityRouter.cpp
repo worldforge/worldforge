@@ -55,6 +55,8 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
             
             m_entity->onTalk(args.front());
             return HANDLED;
+        } else if (args.front()->instanceOf(ACTION_NO)) {
+            // sound of action
         } else
             debug() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << snd;
         

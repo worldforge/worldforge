@@ -87,14 +87,14 @@ void erisLog(Eris::LogLevel level, const std::string& msg)
 
 AutoConnection stdConnect()
 {
-    AutoConnection con(new Eris::Connection("eris-test", false));
+    AutoConnection con(new Eris::Connection("eris-test", "localhost", 7450, false));
     SignalCounter0 connectCount;
     con->Connected.connect(SigC::slot(connectCount, &SignalCounter0::fired));
     
     SignalCounter1<const std::string&> fail;
     con->Failure.connect(SigC::slot(fail, &SignalCounter1<const std::string&>::fired));
     
-    con->connect("localhost", 7450);
+    con->connect();
     
     while (!connectCount.fireCount() && !fail.fireCount())
     {

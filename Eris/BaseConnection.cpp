@@ -49,7 +49,7 @@ BaseConnection::~BaseConnection()
     }
 }
 	
-void BaseConnection::connect(const std::string &host, short port)
+int BaseConnection::connect(const std::string &host, short port)
 {
     if (_stream != NULL) {
         warning() << "in base connection :: connect, had existing stream, discarding it";
@@ -68,6 +68,7 @@ void BaseConnection::connect(const std::string &host, short port)
     _stream = new tcp_socket_stream(host, port, true);
 
     Poll::instance().addStream(_stream, Poll::WRITE);
+    return 0;
 }
 
 void BaseConnection::hardDisconnect(bool emit)

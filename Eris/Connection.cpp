@@ -34,8 +34,10 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-Connection::Connection(const std::string &cnm, bool dbg) :
+Connection::Connection(const std::string &cnm, const std::string& host, short port, bool dbg) :
     BaseConnection(cnm, "game_", this),
+    _host(host),
+    _port(port),
     m_typeService(new TypeService(this)),
     m_defaultRouter(NULL),
     m_lock(0),
@@ -50,25 +52,23 @@ Connection::~Connection()
 {
 }
 
-void Connection::connect(const std::string &host, short port)
+int Connection::connect()
 {
-    // save for reconnection later
-    _host = host;
-    _port = port;
-    
-    BaseConnection::connect(host, port);
+    return BaseConnection::connect(_host, _port);
 }
 
-void Connection::disconnect()
+int Connection::disconnect()
 {
     if (_status == DISCONNECTING) {
         warning() << "duplicate disconnect on Connection that's already disconnecting";
-        return;
+        return -1;
     }
 
-    if (_status == DISCONNECTED)
-        throw InvalidOperation("called disconnect on already disconnected Connection");
-
+    if (_status == DISCONNECTED) {
+        warning() << "called disconnect on already disconnected Connection";
+        return -1;
+    }
+    
     assert(m_lock == 0);
 	
     // this is a soft disconnect; it will give people a chance to do tear down and so on
@@ -81,21 +81,14 @@ void Connection::disconnect()
     if (m_lock == 0) {
         debug() << "no locks, doing immediate disconnection";
         hardDisconnect(true);
-        return;
+        return 0;
     }
     
     // fell through, so someone has locked =>
     // start a disconnect timeout
     _timeout = new Eris::Timeout("disconnect_" + _host, this, 5000);
     _timeout->Expired.connect(SigC::slot(*this, &Connection::onDisconnectTimeout));
-}
-
-void Connection::reconnect()
-{
-    if (_host.empty()) {
-        handleFailure("Previous connection attempt failed, ignorning reconnect()");
-    } else
-        BaseConnection::connect(_host, _port);
+    return 0;
 }
    
 void Connection::gotData(PollData &data)
@@ -289,13 +282,6 @@ void Connection::setStatus(Status ns)
 void Connection::handleFailure(const std::string &msg)
 {
 	Failure.emit(msg);
-	
-	if ((_status == CONNECTING) || (_status == NEGOTIATE)) {
-		// got a failure during connection; therefore, clear
-		// the reconnect data
-		_host = "";
-	}
-	
 	// FIXME - reset I think, but ensure this is safe
     m_lock= 0;
 }

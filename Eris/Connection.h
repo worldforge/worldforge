@@ -42,27 +42,17 @@ public:
     is sent during Atlas negotiation of the connection. 
     @param debug Perform extra (slower) validation on the connection 
     */
-    Connection(const std::string &cnm, bool debug);	
+    Connection(const std::string &cnm, const std::string& host, short port, bool debug);	
 
     virtual ~Connection();
 
-	/// Open the connection to the specfied server
-	/// @param host The host (or dotted-decimal IP) to connect to
-	/// @param port The server port; defaults to 6767, the WorldForge standard
-	/** If the underlying socket cannot be opened,  Connect will throw an
-	exception immediately. Providing the basic connection is established,
+	/** If the underlying socket cannot be opened,  connect will return an 
+    error number immediately. Providing the basic connection is established,
 	other  failures will be reported via the Failure signal. */
-	virtual void connect(const std::string &host, short port = 6767);
-
-	/// Reconnect to the server after a connection is dropped or lost
-	/** This will attempt reconnection to the server, providing a connection
-	was completely established sucessfully before the error occurred. Otherwise,
-	an exception will be thrown. This is prevent Reconnect being called on
-	an invalid host, for example. */
-	void reconnect();
+    int connect();
 
 	/// Initiate disconnection from the server
-	void disconnect();
+	int disconnect();
 
     TypeService* getTypeService() const
     { return m_typeService.get(); }
@@ -148,11 +138,8 @@ protected:
 
     void objectArrived(const Atlas::Objects::Root& obj);
 
-	/// hostname of the server (for reconnection)
-	/** This is cleared if connection fails during establishment (i.e CONNECTING
-	and NEGOTIATE states), to indicate that re-connection is not possible. */
-	std::string _host;
-	short _port;		///< port of the server
+	const std::string _host;
+	const short _port;		///< port of the server
 	bool _debug;
         
 private:

@@ -336,7 +336,7 @@ void Entity::endUpdate()
 
 void Entity::setLocationFromAtlas(const std::string& locId)
 {
-    assert(!locId.empty());
+    if (locId.empty()) return;
     
     Entity* newLocation = m_view->getEntity(locId);
     if (!newLocation)
