@@ -120,7 +120,7 @@ void StreamConnect::poll(bool can_read)
         if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
         {
             Debug( std::cout << "server: " << m_inName << std::endl; );
-            m_state++;
+            m_state = CLIENT_GREETING;
         }
     }
 
@@ -129,7 +129,7 @@ void StreamConnect::poll(bool can_read)
         // send client greeting
         
         m_socket << "ATLAS " << m_outName << std::endl;
-        m_state++;
+        m_state = CLIENT_CODECS;
     }
     
     if (m_state == CLIENT_CODECS)
@@ -137,7 +137,7 @@ void StreamConnect::poll(bool can_read)
         //processClientCodecs();
         m_codecHelper.put(out, "ICAN");
         m_socket << out << std::flush;
-        m_state++;
+        m_state = SERVER_CODECS;
     }
 
     if(m_state == SERVER_CODECS)
@@ -145,7 +145,7 @@ void StreamConnect::poll(bool can_read)
         if (m_codecHelper.get(m_buf, "IWILL"))
         {
             processServerCodecs();
-            m_state++;
+            m_state = DONE;
         }
     }
     
@@ -263,7 +263,8 @@ void StreamAccept::poll(bool can_read)
         // send server greeting
 
         m_socket << "ATLAS " << m_outName << std::endl;
-        m_state++;
+        m_state = CLIENT_GREETING;
+        Debug( std::cout << "server now in state " << m_state << std::endl; );
     }
 
     do
@@ -272,31 +273,32 @@ void StreamAccept::poll(bool can_read)
 
         if (m_state == CLIENT_GREETING)
         {
-            // get client greeting
-        
+            // get client greeting            
             if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
             {
-                Debug( std::cout << "client: " << m_inName << std::endl; );
-                m_state++;
+                 Debug(std::cout << "client: " << m_inName << std::endl; );
+                m_state = CLIENT_CODECS;
             }
         }
 
         if (m_state == CLIENT_CODECS)
-        {
+        {            
             if (m_codecHelper.get(m_buf, "ICAN"))
             {
-                m_state++;
+                m_state = SERVER_CODECS;
+                Debug(std::cout << "server now in state " << m_state << std::endl;);
             }
             processClientCodecs();
         }
 
         if (m_state == SERVER_CODECS)
-        {
+        {        
             if (m_canPacked) { m_socket << "IWILL Packed\n"; }
             else if (m_canXML) { m_socket << "IWILL XML\n"; }
             else if (m_canBach) { m_socket << "IWILL Bach\n"; }
             m_socket << std::endl;
-            m_state++;
+            
+            m_state = DONE;
         }
 
 #if 0
@@ -325,11 +327,13 @@ void StreamAccept::poll(bool can_read)
 Atlas::Negotiate::State StreamAccept::getState()
 {
     if (m_state == DONE)
-    {
+    {    
         if (m_canPacked || m_canXML || m_canBach)
         {
             return SUCCEEDED;
         }
+        
+        std::cout << "done, but no codec" << std::endl;
     }
     else if (m_socket)
     {
@@ -398,9 +402,9 @@ void StreamAccept::processServerFilters()
 void StreamAccept::processClientCodecs()
 {
     std::list<std::string>::const_iterator j;
-
+    
     for (j = m_inCodecs.begin(); j != m_inCodecs.end(); j++)
-    {
+    {    
         if (*j == "XML") { m_canXML = true; }
         if (*j == "Packed") { m_canPacked = true; }
         if (*j == "Bach") { m_canBach = true; }

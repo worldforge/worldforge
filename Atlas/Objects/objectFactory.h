@@ -6,6 +6,7 @@
 #define ATLAS_OBJECTS_OBJECTFACTORY_H
 
 #include <Atlas/Objects/Root.h>
+#include <Atlas/Exception.h>
 
 #include <string>
 #include <list>
