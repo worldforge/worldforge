@@ -3,7 +3,6 @@
 TARGETS = $(OUTDIR)/libAtlasContent.a \
 
 LIBOBJS = \
-	$(OUTDIR)/Creation.o \
 	$(OUTDIR)/Arg.o \
 	$(OUTDIR)/AtlasUserClient.o
 

@@ -15,6 +15,8 @@ using namespace std;
 
 #include <Atlas.h>
 
+#include "Arg.h"
+
 class fptr_abstract {
 public:
     virtual void use(const AObject& msg) = 0;
@@ -46,7 +48,7 @@ class AUserClient : public AClient{
 public:
     
     AUserClient(ASocket* socket, ACodec* codec) : AClient(socket, codec),
-                                                  m_serialno(0) { }
+                                        m_serialno(0), m_nextserialno(1) { }
     virtual void gotMsg(const AObject& msg);
     
     virtual AObject call(const AObject& msg);
@@ -54,13 +56,22 @@ public:
                                          void(T::*handler)(const AObject&));
     template<class T> void remMsgHandler(const string& type, T& obj,
                                          void(T::*handler)(const AObject&));
+
+    AObject createOperation(const string& id, Arg* args ...);
+    AObject createEntity(Arg* args ...);
+
+    AObject setCharacterArgs(const string& id, Arg* args ...);
     
 private:
 
     long m_serialno;
+    long m_nextserialno;
+
     AObject m_reply;
     multimap<string, fptr_abstract*> m_msghandlers;
 };
+
+// need to put these here so all instantiations get compiled properly
 
 template<class T> void AUserClient::addMsgHandler(const string& type,
                               T& obj, void(T::*handler)(const AObject&))
