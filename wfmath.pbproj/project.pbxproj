@@ -7,8 +7,9 @@
 	objects = {
 		C4337F6F03CE4905000063C9 = {
 			children = (
-				C4337F7B03CE491D000063C9,
 				C453016003CE4CA500CB8B1B,
+				F5C994A4044D586D01A800CD,
+				C4337F7B03CE491D000063C9,
 			);
 			isa = PBXGroup;
 			refType = 4;
@@ -36,13 +37,16 @@
 				C4337F7103CE4905000063C9,
 				C4337F7203CE4905000063C9,
 			);
-			hasScannedForEncodings = 1;
 			isa = PBXProject;
 			mainGroup = C4337F6F03CE4905000063C9;
 			productRefGroup = C4337F7B03CE491D000063C9;
 			projectDirPath = "";
 			targets = (
 				C4337F7903CE491D000063C9,
+				F5C994AC044D58CB01A800CD,
+				F5C994B5044D591E01A800CD,
+				F5C994BE044D594C01A800CD,
+				F5C994C8044D5A6101A800CD,
 			);
 		};
 		C4337F7403CE491D000063C9 = {
@@ -187,6 +191,7 @@
 </dict>
 </plist>
 ";
+			shouldUseHeadermap = 0;
 		};
 		C4337F7A03CE491D000063C9 = {
 			isa = PBXFrameworkReference;
@@ -196,6 +201,10 @@
 		C4337F7B03CE491D000063C9 = {
 			children = (
 				C4337F7A03CE491D000063C9,
+				F5C994AD044D58CB01A800CD,
+				F5C994B6044D591E01A800CD,
+				F5C994BF044D594C01A800CD,
+				F5C994C9044D5A6101A800CD,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -211,9 +220,7 @@
 				C453018203CE4CA500CB8B1B,
 				C453018403CE4CA500CB8B1B,
 				C453018503CE4CA500CB8B1B,
-				C453018803CE4CA500CB8B1B,
 				C453018903CE4CA500CB8B1B,
-				C453018A03CE4CA500CB8B1B,
 				C453018B03CE4CA500CB8B1B,
 				C453018C03CE4CA600CB8B1B,
 				C453018F03CE4CA600CB8B1B,
@@ -222,19 +229,15 @@
 				C453019603CE4CA600CB8B1B,
 				C453019703CE4CA600CB8B1B,
 				C453019A03CE4CA600CB8B1B,
-				C453019B03CE4CA600CB8B1B,
 				C453019C03CE4CA600CB8B1B,
 				C453019D03CE4CA600CB8B1B,
 				C45301A003CE4CA600CB8B1B,
 				C45301A103CE4CA600CB8B1B,
 				C45301A203CE4CA600CB8B1B,
-				C45301A503CE4CA600CB8B1B,
 				C45301A603CE4CA600CB8B1B,
 				C45301A703CE4CA600CB8B1B,
-				C45301AA03CE4CA600CB8B1B,
 				C45301AB03CE4CA600CB8B1B,
 				C45301AC03CE4CA600CB8B1B,
-				C45301AF03CE4CA600CB8B1B,
 				C45301B003CE4CA600CB8B1B,
 				C45301B103CE4CA600CB8B1B,
 				C45301B403CE4CA600CB8B1B,
@@ -242,11 +245,8 @@
 				C45301B603CE4CA600CB8B1B,
 				C45301B703CE4CA600CB8B1B,
 				C45301BA03CE4CA600CB8B1B,
-				C45301BB03CE4CA600CB8B1B,
 				C45301BC03CE4CA600CB8B1B,
 				C45301BD03CE4CA600CB8B1B,
-				C45301BE03CE4CA600CB8B1B,
-				C45301BF03CE4CA600CB8B1B,
 				C45301C003CE4CA600CB8B1B,
 				C45301C103CE4CA600CB8B1B,
 				C45301C203CE4CA600CB8B1B,
@@ -255,7 +255,6 @@
 				C45301CF03CE4CA600CB8B1B,
 				C45301D003CE4CA600CB8B1B,
 				C45301D303CE4CA600CB8B1B,
-				C45301D403CE4CA600CB8B1B,
 				C45301D503CE4CA600CB8B1B,
 				C45301D603CE4CA600CB8B1B,
 			);
@@ -314,7 +313,8 @@
 		C453018803CE4CA500CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = const_test.cpp;
+			name = const_test.cpp;
+			path = wfmath/const_test.cpp;
 			refType = 4;
 		};
 		C453018903CE4CA500CB8B1B = {
@@ -326,7 +326,8 @@
 		C453018A03CE4CA500CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = general_test.h;
+			name = general_test.h;
+			path = wfmath/general_test.h;
 			refType = 4;
 		};
 		C453018B03CE4CA500CB8B1B = {
@@ -380,7 +381,8 @@
 		C453019B03CE4CA600CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = point_test.cpp;
+			name = point_test.cpp;
+			path = wfmath/point_test.cpp;
 			refType = 4;
 		};
 		C453019C03CE4CA600CB8B1B = {
@@ -416,7 +418,8 @@
 		C45301A503CE4CA600CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = polygon_test.cpp;
+			name = polygon_test.cpp;
+			path = wfmath/polygon_test.cpp;
 			refType = 4;
 		};
 		C45301A603CE4CA600CB8B1B = {
@@ -434,7 +437,8 @@
 		C45301AA03CE4CA600CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = probability_test.cpp;
+			name = probability_test.cpp;
+			path = wfmath/probability_test.cpp;
 			refType = 4;
 		};
 		C45301AB03CE4CA600CB8B1B = {
@@ -452,7 +456,8 @@
 		C45301AF03CE4CA600CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = quaternion_test.cpp;
+			name = quaternion_test.cpp;
+			path = wfmath/quaternion_test.cpp;
 			refType = 4;
 		};
 		C45301B003CE4CA600CB8B1B = {
@@ -500,7 +505,8 @@
 		C45301BB03CE4CA600CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = rotmatrix_test.cpp;
+			name = rotmatrix_test.cpp;
+			path = wfmath/rotmatrix_test.cpp;
 			refType = 4;
 		};
 		C45301BC03CE4CA600CB8B1B = {
@@ -518,13 +524,15 @@
 		C45301BE03CE4CA600CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = shape_test.cpp;
+			name = shape_test.cpp;
+			path = wfmath/shape_test.cpp;
 			refType = 4;
 		};
 		C45301BF03CE4CA600CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = shape_test.h;
+			name = shape_test.h;
+			path = wfmath/shape_test.h;
 			refType = 4;
 		};
 		C45301C003CE4CA600CB8B1B = {
@@ -578,7 +586,8 @@
 		C45301D403CE4CA600CB8B1B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			path = vector_test.cpp;
+			name = vector_test.cpp;
+			path = wfmath/vector_test.cpp;
 			refType = 4;
 		};
 		C45301D503CE4CA600CB8B1B = {
@@ -960,6 +969,332 @@
 				ATTRIBUTES = (
 					Private,
 				);
+			};
+		};
+//C40
+//C41
+//C42
+//C43
+//C44
+//F50
+//F51
+//F52
+//F53
+//F54
+		F5C994A4044D586D01A800CD = {
+			children = (
+				C453018803CE4CA500CB8B1B,
+				C453018A03CE4CA500CB8B1B,
+				C453019B03CE4CA600CB8B1B,
+				C45301A503CE4CA600CB8B1B,
+				C45301AA03CE4CA600CB8B1B,
+				C45301AF03CE4CA600CB8B1B,
+				C45301BB03CE4CA600CB8B1B,
+				C45301BE03CE4CA600CB8B1B,
+				C45301BF03CE4CA600CB8B1B,
+				C45301D403CE4CA600CB8B1B,
+			);
+			isa = PBXGroup;
+			name = Tests;
+			refType = 4;
+		};
+		F5C994A8044D58CB01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994A9044D58CB01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994AF044D58D701A800CD,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994AA044D58CB01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994B0044D58D901A800CD,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994AB044D58CB01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994AC044D58CB01A800CD = {
+			buildPhases = (
+				F5C994A8044D58CB01A800CD,
+				F5C994A9044D58CB01A800CD,
+				F5C994AA044D58CB01A800CD,
+				F5C994AB044D58CB01A800CD,
+			);
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = testQuaternion;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = testQuaternion;
+			productInstallPath = /usr/local/bin;
+			productName = testQuaternion;
+			productReference = F5C994AD044D58CB01A800CD;
+			shouldUseHeadermap = 0;
+		};
+		F5C994AD044D58CB01A800CD = {
+			isa = PBXExecutableFileReference;
+			path = testQuaternion;
+			refType = 3;
+		};
+		F5C994AF044D58D701A800CD = {
+			fileRef = C45301AF03CE4CA600CB8B1B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C994B0044D58D901A800CD = {
+			fileRef = C4337F7A03CE491D000063C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C994B1044D591E01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994B2044D591E01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994B8044D592401A800CD,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994B3044D591E01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994B9044D592701A800CD,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994B4044D591E01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994B5044D591E01A800CD = {
+			buildPhases = (
+				F5C994B1044D591E01A800CD,
+				F5C994B2044D591E01A800CD,
+				F5C994B3044D591E01A800CD,
+				F5C994B4044D591E01A800CD,
+			);
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = polygonTest;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = polygonTest;
+			productInstallPath = /usr/local/bin;
+			productName = polygonTest;
+			productReference = F5C994B6044D591E01A800CD;
+			shouldUseHeadermap = 0;
+		};
+		F5C994B6044D591E01A800CD = {
+			isa = PBXExecutableFileReference;
+			path = polygonTest;
+			refType = 3;
+		};
+		F5C994B8044D592401A800CD = {
+			fileRef = C45301A503CE4CA600CB8B1B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C994B9044D592701A800CD = {
+			fileRef = C4337F7A03CE491D000063C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C994BA044D594C01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994C1044D595201A800CD,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994BB044D594C01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994C2044D595201A800CD,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994BC044D594C01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994C3044D595401A800CD,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994BD044D594C01A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994BE044D594C01A800CD = {
+			buildPhases = (
+				F5C994BA044D594C01A800CD,
+				F5C994BB044D594C01A800CD,
+				F5C994BC044D594C01A800CD,
+				F5C994BD044D594C01A800CD,
+			);
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = shapeTest;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = shapeTest;
+			productInstallPath = /usr/local/bin;
+			productName = shapeTest;
+			productReference = F5C994BF044D594C01A800CD;
+			shouldUseHeadermap = 0;
+		};
+		F5C994BF044D594C01A800CD = {
+			isa = PBXExecutableFileReference;
+			path = shapeTest;
+			refType = 3;
+		};
+		F5C994C1044D595201A800CD = {
+			fileRef = C45301BF03CE4CA600CB8B1B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C994C2044D595201A800CD = {
+			fileRef = C45301BE03CE4CA600CB8B1B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C994C3044D595401A800CD = {
+			fileRef = C4337F7A03CE491D000063C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C994C4044D5A6101A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994C5044D5A6101A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994CB044D5A6801A800CD,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994C6044D5A6101A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+				F5C994CC044D5A6801A800CD,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994C7044D5A6101A800CD = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F5C994C8044D5A6101A800CD = {
+			buildPhases = (
+				F5C994C4044D5A6101A800CD,
+				F5C994C5044D5A6101A800CD,
+				F5C994C6044D5A6101A800CD,
+				F5C994C7044D5A6101A800CD,
+			);
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = vectorTest;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXToolTarget;
+			name = vectorTest;
+			productInstallPath = /usr/local/bin;
+			productName = vectorTest;
+			productReference = F5C994C9044D5A6101A800CD;
+			shouldUseHeadermap = 0;
+		};
+		F5C994C9044D5A6101A800CD = {
+			isa = PBXExecutableFileReference;
+			path = vectorTest;
+			refType = 3;
+		};
+		F5C994CB044D5A6801A800CD = {
+			fileRef = C45301D403CE4CA600CB8B1B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		F5C994CC044D5A6801A800CD = {
+			fileRef = C4337F7A03CE491D000063C9;
+			isa = PBXBuildFile;
+			settings = {
 			};
 		};
 	};

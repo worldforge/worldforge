@@ -1,3 +1,8 @@
+Wednesday, April 16th, 2003 	James Turner <james@worldforge.org>
+
+	* Updated the ProjectBuilder files, including targets for some of
+	  the test cases, which all pass with flying colours.
+
 Friday, January 31, 2003	Al Riddoch <alriddoch@zepler.org>
 
 	* Convert to using pkg-config
