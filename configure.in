@@ -28,8 +28,8 @@ AC_PROG_CXX
 AC_STDC_HEADERS
 AM_PROG_LIBTOOL
 
-CFLAGS="$CFLAGS -g -Wall -ansi"
-CXXFLAGS="$CXXFLAGS -g -Wall -ansi"
+CFLAGS="$CFLAGS -Wall -ansi"
+CXXFLAGS="$CXXFLAGS -Wall -ansi"
 
 dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 
