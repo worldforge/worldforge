@@ -45,6 +45,8 @@ public:
 	/// Get the Entity this Avatar refers to
 	EntityPtr getEntity() const {return _entity;}
 
+	SigC::Signal1<void,EntityPtr> GotEntity;
+
 	// These two signals just transmit the Entity's
 	// AddedMember and RemovedMember signals, but
 	// you're allowed to connect to them as soon as

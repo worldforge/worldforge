@@ -235,4 +235,6 @@ void Avatar::recvEntity(Entity* e)
 
   e->AddedMember.connect(InvAdded.slot());
   e->RemovedMember.connect(InvRemoved.slot());
+
+  GotEntity(e);
 }
