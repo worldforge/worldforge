@@ -1,3 +1,8 @@
+2004-04-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/DecoderBase.cpp: Eliminate a second deep copy
+	  before calling messageArrived() with a complete message.
+
 2004-03-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/Objects/objects2.cpp: Fix use of std namespace.

@@ -89,22 +89,38 @@ void DecoderBase::mapEnd()
     ATLAS_DEBUG(std::cout << "DecoderBase::mapEnd" << std::endl)
     assert(!m_maps.empty());
     assert(!m_state.empty());
-    MapType map = m_maps.top();
-    m_maps.pop();
     m_state.pop();
     switch (m_state.top()) {
         case STATE_MAP:
-            assert(!m_maps.empty());
-            assert(!m_names.empty());
-            m_maps.top()[m_names.top()] = map;
-            m_names.pop();
+            {
+                MapType map = m_maps.top();
+                m_maps.pop();
+                assert(!m_maps.empty());
+                assert(!m_names.empty());
+                m_maps.top()[m_names.top()] = map;
+                m_names.pop();
+            }
             break;
         case STATE_LIST:
-            assert(!m_lists.empty());
-            m_lists.top().insert(m_lists.top().end(), map);
+            {
+                MapType map = m_maps.top();
+                m_maps.pop();
+                assert(!m_lists.empty());
+                m_lists.top().insert(m_lists.top().end(), map);
+            }
             break;
         case STATE_STREAM:
-            messageArrived(map);
+            {
+                MapType & map = m_maps.top();
+                messageArrived(map);
+                m_maps.pop();
+            }
+            break;
+        default:
+            {
+                // MapType map = m_maps.top();
+                m_maps.pop();
+            }
             break;
     }
 }
