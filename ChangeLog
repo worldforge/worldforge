@@ -1,5 +1,12 @@
 Tuesday, July 22nd, 2003   Ron Steinke <rsteinke@w-link.net>
 
+	* More poly-atlas tweaks. Forgot to inline some wrapper
+	  functions, had to add a template AtlasInType constructor
+	  to take advantange of the fact that the Atlas::Message::Foo
+	  constructor is overloaded (needed that to build Eris).
+
+Tuesday, July 22nd, 2003   Ron Steinke <rsteinke@w-link.net>
+
 	* Changes to support both Atlas-C++ 0.4 and 0.6 with atlasconv.h
 	* Changed needless 'const CoordType' for pass-by-value
 	  in some Quaternion function calls to 'CoordType'
