@@ -28,7 +28,7 @@ libmercator_HEADERS = \
 	TerrainMod_impl.h \
 	BasePoint.h \
 	Segment.h \
-	Buffer.h \
+	Buffer_impl.h Buffer.h \
 	Shader.h \
 	FillShader.h \
 	ThresholdShader.h \

@@ -1,5 +1,13 @@
 2003-08-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* Buffer_impl.h: Add to distribution.
+
+	* Mercator/Segment.cpp: Make sure math functions are specified
+	  as being from the global namespace, and add support for rintf
+	  as its better than rint, and available under FreeBSD.
+
+2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Buffer.h: Make segment this buffer is bound to public.
 
 	* Mercator/Segment.cpp: Set m_min and m_max to values other

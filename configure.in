@@ -42,7 +42,7 @@ AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 
-AC_CHECK_FUNCS(lrintf rint)
+AC_CHECK_FUNCS(lrintf rintf rint)
 
 AC_LANG_RESTORE
 
