@@ -63,7 +63,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root)
-%{prefix}/bin/eris-config
 %{prefix}/include/Eris-1.0/Eris/ArgumentDispatcher.h
 %{prefix}/include/Eris-1.0/Eris/atlas_utils.h
 %{prefix}/include/Eris-1.0/Eris/Avatar.h
@@ -100,7 +99,6 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/lib/liberis-1.0.la
 %{prefix}/lib/liberis-1.0.so
 %{prefix}/lib/pkgconfig/eris-1.0.pc
-%{prefix}/share/aclocal/eris.m4
 
 %files poll-glib
 %defattr(-,root,root)
