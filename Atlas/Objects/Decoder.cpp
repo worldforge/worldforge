@@ -10,8 +10,8 @@ using namespace std;
 
 #define ARR(a, b) if (parent == a) { \
     b obj; \
-    for (Object::MapType::const_iterator I = o.As(Object::Map).begin(); \
-            I != o.As(Object::Map).end(); I++) \
+    for (Object::MapType::const_iterator I = o.AsMap().begin(); \
+            I != o.AsMap().end(); I++) \
         obj.SetAttr(I->first, I->second); \
     ObjectArrived(obj);\
 }
@@ -24,11 +24,11 @@ Decoder::~Decoder()
 
 void Decoder::ObjectArrived(const Object& o)
 {
-    if (!o.Is(Object::Map)) return;
-    if (o.As(Object::Map).find("parent") == o.As(Object::Map).end())
+    if (!o.IsMap()) return;
+    if (o.AsMap().find("parent") == o.AsMap().end())
         { UnknownObjectArrived(o); return; }
     string parent =
-        (*o.As(Object::Map).find("parent")).second.As(Object::String);
+        (*o.AsMap().find("parent")).second.AsString();
 
     ARR("root", Root)
     ARR("account", Entity::Account)
