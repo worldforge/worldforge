@@ -188,17 +188,6 @@ AObject::AObject(int len, long* src)
 	}
 }
 
-AObject::AObject(int len, string* src)
-{
-	obj = StringList_New(len);
-
-	for (int i=0; i<len; i++) {
-		char* tmp = strdup(src[i].c_str());
-		StringList_SetItem(obj, i, PyString_FromString(tmp));
-		free(tmp);
-	}
-}
-
 AObject::AObject(int len, double* src)
 {
 	obj = FloatList_New(len);

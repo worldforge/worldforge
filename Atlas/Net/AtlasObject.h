@@ -121,9 +121,6 @@ static void dump(const AObject& msg);
 	AObject(int len, int val, ...);
 
 
-/** Construct a String typed list AObject from an array */
-	AObject(int len, string* val);
-
 /** Construct a Float typed list AObject from an array */
 	AObject(int len, double *val);
 
