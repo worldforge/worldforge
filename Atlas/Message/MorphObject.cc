@@ -9,10 +9,10 @@ using namespace std;
 
 namespace Atlas { namespace Message {
 
-static Token<MorphObject::Int> MorphObject::IntToken;
-static Token<MorphObject::Float> MorphObject::FloatToken;
-static Token<MorphObject::String> MorphObject::StringToken;
-static Token<MorphObject::Map> MorphObject::MapToken;
-static Token<MorphObject::List> MorphObject::ListToken;
+Token<MorphObject::Int> MorphObject::IntToken;
+Token<MorphObject::Float> MorphObject::FloatToken;
+Token<MorphObject::String> MorphObject::StringToken;
+Token<MorphObject::Map> MorphObject::MapToken;
+Token<MorphObject::List> MorphObject::ListToken;
 
 } } // namespace Atlas::Message

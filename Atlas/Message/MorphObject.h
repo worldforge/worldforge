@@ -13,17 +13,68 @@
 
 namespace Atlas { namespace Message {
 
-class MorphObject : public Atlas::Generic::Morph< int, double, std::string,
+class MorphObject : public Atlas::Generic::Morph5< int, double, std::string,
                     std::map<std::string, MorphObject>, std::list<MorphObject> >
 {
 public:
 
-    MorphObject() : Morph() { }
-    MorphObject(int i) : Morph(i) { }
-    MorphObject(double d) : Morph(d) { }
-    MorphObject(std::string s) : Morph(s) { }
-    MorphObject(map<std::string, MorphObject> m) : Morph(m) { }
-    MorphObject(list<MorphObject> l) : Morph(l) { }
+    // XXX
+    // I know these constructors suck, I'll fix em later.
+    // -- sdt
+    
+    MorphObject()
+    {
+        v1 = NULL;
+        v2 = NULL;
+        v3 = NULL;
+        v4 = NULL;
+        v5 = NULL;
+    }
+    MorphObject(int i)
+    {
+        v1 = NULL;
+        v2 = NULL;
+        v3 = NULL;
+        v4 = NULL;
+        v5 = NULL;
+        *this = i;
+    }
+    MorphObject(double d) 
+    {
+        v1 = NULL;
+        v2 = NULL;
+        v3 = NULL;
+        v4 = NULL;
+        v5 = NULL;
+        *this = d;
+    }
+    MorphObject(std::string s)
+    {
+        v1 = NULL;
+        v2 = NULL;
+        v3 = NULL;
+        v4 = NULL;
+        v5 = NULL;
+        *this = s;
+    }
+    MorphObject(map<std::string, MorphObject> m)
+    {
+        v1 = NULL;
+        v2 = NULL;
+        v3 = NULL;
+        v4 = NULL;
+        v5 = NULL;
+        *this = m;
+    }
+    MorphObject(list<MorphObject> l) 
+    {
+        v1 = NULL;
+        v2 = NULL;
+        v3 = NULL;
+        v4 = NULL;
+        v5 = NULL;
+        *this = l;
+    }
     
     typedef int Int;
     static Atlas::Generic::Token<Int> IntToken;
