@@ -28,6 +28,7 @@ Combine Combine::Instantiate()
     Object::ListType parent;
     parent.push_back(string("combine"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

@@ -27,6 +27,7 @@ Listen Listen::Instantiate()
     Object::ListType parent;
     parent.push_back(string("listen"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

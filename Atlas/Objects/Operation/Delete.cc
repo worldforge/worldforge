@@ -27,6 +27,7 @@ Delete Delete::Instantiate()
     Object::ListType parent;
     parent.push_back(string("delete"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

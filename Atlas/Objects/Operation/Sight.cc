@@ -27,6 +27,7 @@ Sight Sight::Instantiate()
     Object::ListType parent;
     parent.push_back(string("sight"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

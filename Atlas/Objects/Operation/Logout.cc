@@ -27,6 +27,7 @@ Logout Logout::Instantiate()
     Object::ListType parent;
     parent.push_back(string("logout"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

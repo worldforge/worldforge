@@ -27,6 +27,7 @@ Error Error::Instantiate()
     Object::ListType parent;
     parent.push_back(string("error"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

@@ -120,6 +120,7 @@ class GenerateCC:
         self.out.write("    Object::ListType parent;\n")
         self.out.write('    parent.push_back(string("%s"));\n' % id)
         self.out.write('    value.SetAttr("parent", parent);\n')
+        self.out.write('    value.SetAttr("objtype", string("instance"));\n')
         self.out.write("    \n")
         self.out.write("    return value;\n")
         self.out.write("}\n\n")

@@ -27,6 +27,7 @@ Feel Feel::Instantiate()
     Object::ListType parent;
     parent.push_back(string("feel"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

@@ -27,6 +27,7 @@ Appearance Appearance::Instantiate()
     Object::ListType parent;
     parent.push_back(string("appearance"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

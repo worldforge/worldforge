@@ -27,6 +27,7 @@ Info Info::Instantiate()
     Object::ListType parent;
     parent.push_back(string("info"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

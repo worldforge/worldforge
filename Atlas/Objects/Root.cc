@@ -24,6 +24,7 @@ Root::Root(const string& id)
     parent.push_back(string("root"));
     SetAttr("parent", parent);
     SetAttr("id", id);
+    SetAttr("objtype", string("class"));
 }
 
 Root::~Root()

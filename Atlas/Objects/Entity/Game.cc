@@ -27,6 +27,7 @@ Game Game::Instantiate()
     Object::ListType parent;
     parent.push_back(string("game"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }

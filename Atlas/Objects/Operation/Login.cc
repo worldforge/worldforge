@@ -27,6 +27,7 @@ Login Login::Instantiate()
     Object::ListType parent;
     parent.push_back(string("login"));
     value.SetAttr("parent", parent);
+    value.SetAttr("objtype", string("instance"));
     
     return value;
 }
