@@ -181,17 +181,12 @@ Quaternion Quaternion::operator/ (const Quaternion& rhs) const
 bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
 {
   RotMatrix<3> m_tmp;
-  bool not_flip;
+  bool not_flip = !m.parity();
 
   m_valid = m.isValid();
 
-  if(m.determinant() > 0) { // This is cheap for a RotMatrix<>
-    not_flip = true;
-  }
-  else {
+  if(!not_flip)
     m_tmp = Prod(m, RotMatrix<3>().mirrorX());
-    not_flip = false;
-  }
 
   const RotMatrix<3> &m_ref = not_flip ? m : m_tmp;
 

@@ -472,7 +472,9 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
     }
   }
 
+  m_flip = false;
   m_valid = true;
+
   return *this;
 }
 

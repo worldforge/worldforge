@@ -1,3 +1,8 @@
+Tuesday, June 24th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed a bug in RotMatrix::rotation(from, to),
+	  added a Quaternion wrapper for the same function
+
 Tuesday, June 3rd, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Instantiated Intersect(), Contains() functions
