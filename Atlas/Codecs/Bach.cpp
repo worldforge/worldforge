@@ -13,6 +13,7 @@ Bach::Bach(std::iostream& s, Atlas::Bridge* b)
     , m_bridge(b)
     , m_comma(false)
     , m_stringmode(false)
+    , m_linenum(0)
 {
     m_state.push(PARSE_INIT);
 }
@@ -64,6 +65,11 @@ void Bach::parseMap(char next)
     case '\t':
         break;
 
+    case '\"':
+        m_state.push(PARSE_DATA);
+        m_state.push(PARSE_NAME);
+        break;	    
+	
     default:
         if (((next>='a')&&(next<='z'))||
             ((next>='A')&&(next<='Z')))
@@ -360,6 +366,7 @@ void Bach::parseData(char next)
         break;
 
     case ',':
+    case ':':
         break;
 
     default:
@@ -375,6 +382,7 @@ void Bach::parseName(char next)
     switch (next)
     {
     case ':':
+    case '\"':
         ATLAS_DEBUG(cout << "Name: " << m_name << endl;)
 
         m_state.pop();
@@ -383,7 +391,8 @@ void Bach::parseName(char next)
     default:
         if (((next>='a')&&(next<='z'))||
             ((next>='A')&&(next<='Z'))||
-            ((next>='0')&&(next<='9')))
+            ((next>='0')&&(next<='9'))||
+	    (next=='_'))
         {
             m_name += next;
         }
@@ -424,11 +433,12 @@ void Bach::poll(bool can_read)
             break;
 
         case '\n':
-        case '\r':
+	    m_linenum++;
             if (!m_stringmode)
                 continue;
             break;
 
+        case '\r':
         default:
             break;
         }

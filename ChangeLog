@@ -1,3 +1,7 @@
+2002-06-05  Michael Koch  <konqueror@gmx.de>
+
+	* src/Codecs/Bach.*: fix allowed characters for names
+
 2002-06-01  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
 
 	* src/Objects/common.py, gen_cpp.py: both Python 1.5.* and Python 2.* supported
