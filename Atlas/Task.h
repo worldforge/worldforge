@@ -18,7 +18,6 @@ class Task
     public:
 
     virtual void Poll() = 0;
-    virtual void Run() = 0;
 };
 
 } // Atlas namespace

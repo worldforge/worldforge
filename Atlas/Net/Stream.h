@@ -47,7 +47,6 @@ class StreamConnect : public Atlas::Negotiate<iostream>
     StreamConnect(const std::string& name, iostream&, Atlas::Bridge*);
 
     virtual void Poll();
-    virtual void Run();
 
     virtual State GetState();
     virtual Atlas::Codec<iostream>* GetCodec();
@@ -97,7 +96,6 @@ class StreamAccept : public Atlas::Negotiate<iostream>
     StreamAccept(const std::string& name, iostream&, Atlas::Bridge*);
 
     virtual void Poll();
-    virtual void Run();
 
     virtual State GetState();
     virtual Atlas::Codec<iostream>* GetCodec();
