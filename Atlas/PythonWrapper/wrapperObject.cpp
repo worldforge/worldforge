@@ -36,6 +36,17 @@ AtlasWrapperObject *newAtlasWrapperObject(Atlas::Object arg)
   return self;
 }
 
+PyObject *AtlasObject2PythonObject(Atlas::Object obj)
+{
+  if(obj.isInt()) return PyInt_FromLong(obj.asInt());
+  if(obj.isFloat()) return PyFloat_FromDouble(obj.asFloat());
+  if(obj.isString()) {
+    string s=obj.asString();
+    return PyString_FromStringAndSize(s.c_str(),s.length());
+  }
+  return (PyObject*)newAtlasWrapperObject(obj);
+}
+
 /* AtlasWrapper methods */
 
 static void
@@ -46,7 +57,7 @@ AtlasWrapper_dealloc(AtlasWrapperObject *self)
 }
 
 static PyObject *
-AtlasWrapper_get_atype(AtlasWrapperObject *self,
+AtlasWrapper_get_otype(AtlasWrapperObject *self,
                        PyObject *args)
 {
 	if (!PyArg_ParseTuple(args, ""))
@@ -65,31 +76,51 @@ AtlasWrapper_keys(AtlasWrapperObject *self,
   }
   if (!PyArg_ParseTuple(args, ""))
     return NULL;
-  return PyString_FromString("???");
+  
+  Atlas::Object keys = self->obj->keys();
+  return AtlasObject2PythonObject(keys);
+}
+
+static PyObject *
+AtlasWrapper_is_map(AtlasWrapperObject *self,
+                       PyObject *args)
+{
+  if (!PyArg_ParseTuple(args, ""))
+    return NULL;
+  return PyInt_FromLong(self->obj->isMap());
+}
+
+static PyObject *
+AtlasWrapper_is_list(AtlasWrapperObject *self,
+                       PyObject *args)
+{
+  if (!PyArg_ParseTuple(args, ""))
+    return NULL;
+  return PyInt_FromLong(self->obj->isList());
 }
 
 static PyMethodDef AtlasWrapper_methods[] = {
-	{"get_atype",	(PyCFunction)AtlasWrapper_get_atype,	1},
+	{"get_otype",	(PyCFunction)AtlasWrapper_get_otype,	1},
 	{"keys",	(PyCFunction)AtlasWrapper_keys,	1},
+        {"is_map",       (PyCFunction)AtlasWrapper_is_map,	1},
+        {"is_list",      (PyCFunction)AtlasWrapper_is_list,	1},
 	{NULL,		NULL}		/* sentinel */
 };
-
-PyObject *AtlasObject2PythonObject(Atlas::Object obj)
-{
-  if(obj.isInt()) return PyInt_FromLong(obj.asInt());
-  if(obj.isFloat()) return PyFloat_FromDouble(obj.asFloat());
-  if(obj.isString()) {
-    string s=obj.asString();
-    return PyString_FromStringAndSize(s.c_str(),s.length());
-  }
-  return (PyObject*)newAtlasWrapperObject(obj);
-}
 
 static PyObject *
 AtlasWrapper_getattr(AtlasWrapperObject *self,
                      char *name)
 {
+
   DEBUG(printf("DEBUG:%s:%s\n",__FUNCTION__,name));
+  //>>> t("for i in range(100000): a=op.abstract_type")
+  //Time: 0.78
+  //return PyInt_FromString(1); 
+  //>>> t("for i in range(100000): a=op.abstract_type")
+  //Time: 1.27
+  //return PyString_FromString("operation");
+  //>>> t("for i in range(100000): a=op.abstract_type")
+  //Time: 17.65
   Atlas::Object obj;
   if(self->obj->get(name,obj))
     return AtlasObject2PythonObject(obj);
@@ -223,7 +254,10 @@ AtlasWrapper_print(AtlasWrapperObject *obj,
 static PyObject *
 wrapper_as_str(AtlasWrapperObject *obj)
 {
-  string data=printCodec->encodeMessage(*obj->obj);
+  string data;
+//  for(int i=0;i<100;i++) {
+    data=printCodec->encodeMessage(*obj->obj);
+//  }
   return PyString_FromString(data.c_str());
 }
 
@@ -345,8 +379,8 @@ initccAtlasObject()
 	PyObject *m, *d;
 
         //initialize only once
-        //printCodec = new Atlas::Codec(new Atlas::XMLProtocol());
-        printCodec = new Atlas::Codec(new Atlas::PackedProtocol());
+        printCodec = new Atlas::Codec(new Atlas::XMLProtocol());
+        //printCodec = new Atlas::Codec(new Atlas::PackedProtocol());
 
 	/* Initialize the type of the new type object here; doing it here
 	 * is required for portability to Windows without requiring C++. */

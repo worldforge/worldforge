@@ -2,6 +2,10 @@ import ccAtlasObject
 Object=ccAtlasObject.Object
 from ccAtlasNet import *
 
+_tmp_obj = Object()
+ObjectType = type(_tmp_obj)
+del _tmp_obj
+
 def Operation(id, *args, **kw):
     op = Object()
     op.abstract_type="operation"
@@ -24,3 +28,10 @@ class Client(wrapperClient):
         """owerride this"""
         print "gotDisconnect got called at",self
         pass
+
+def XML2Object(str):
+    xml = XMLProtocol()
+    codec = Codec(xml)
+    codec.feedStream(str)
+    codec.hasMessage()
+    return codec.getMessage()

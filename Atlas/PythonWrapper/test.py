@@ -41,13 +41,16 @@ print str(op)
 ##         op = atlas.Operation("login",account)
 #17.42s with following added
 ##         s = str(op)
+#10.99s with 100kpl and 100 times data=printCodec->encodeMessage(*obj->obj);
 #16.28s using PackedProtocol instead of XMLProtocol
+#11.03s with 100kpl and 100 times data=printCodec->encodeMessage(*obj->obj);
 
 #4.83s libAtlasPy
 ##         account = Entity("foo",password="bar")
 ##         op = Operation("login",account)
 #36.92s with following added
 ##         s = str(op)
+#25.96s when indent just returns
 
 def test_speed(max):
     for i in range(max):

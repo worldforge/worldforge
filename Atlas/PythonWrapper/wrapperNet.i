@@ -21,6 +21,10 @@ using namespace Atlas;
   $target=&string_temp;
 }
 
+%typemap(python,out) const std::string {
+  $target = PyString_FromStringAndSize($source->c_str(),$source->length());
+}
+
 %typemap(python,in) const Object&(Atlas::Object obj_temp) {
   if(!AtlasWrapperObject_Check($source)) {
       PyErr_SetString(PyExc_TypeError, "Need a wrapper for Atlas::Object!");

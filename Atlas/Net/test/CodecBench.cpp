@@ -6,17 +6,18 @@
         email           : jbarrett@box100.com
 */
 
-#include "Codec.h"
-#include "Object.h"
-#include "Protocol.h"
+#include <Python.h>
+#include <Atlas/Net/Codec.h>
+#include <Atlas/Object/Object.h>
+//#include "Protocol.h"
 
-#include "XMLProtocol.h"
-#include "PackedAsciiProtocol.h"
+#include <Atlas/Net/XMLProtocol.h>
+#include <Atlas/Net/PackedProtocol.h>
 
 
 #include "CodecBench.h"
 
-#include <string.h>
+#include <string>
 #include <stdio.h>
 
 #ifdef	_WIN32
@@ -51,16 +52,31 @@ void CodecBench::execute()
 	time_t	stim,enctime,dectime;
 	double	encloop,decloop;
 
-	AProtocol*	proto;
-        ACodec* 	codec;
+	Atlas::Protocol*	proto;
+        Atlas::Codec* 	codec;
+/*
+PAS Encode/Sec = 769.23
+PAS Decode/Sec = 847.46
+XML Encode/Sec = 657.89
+XML Decode/Sec = 471.70
+281.79user 0.18system 5:05.91elapsed 92%CPU (0avgtext+0avgdata 0maxresident)k
+
+Old Python using one:
+PAS Encode/Sec = 925.93
+PAS Decode/Sec = 1000.00
+XML Encode/Sec = 980.39
+XML Decode/Sec = 609.76
+226.69user 0.64system 3:57.14elapsed 95%CPU (0avgtext+0avgdata 0maxresident)k
+*/
 
 	Py_Initialize();
 
-        AObject test = AObject::mkMap();
-        AObject list = AObject::mkList(0);
-        AObject amap = AObject::mkMap();
+        Atlas::Object test = Atlas::Object::mkMap();
+        Atlas::Object list = Atlas::Object::mkList(0);
+        Atlas::Object amap = Atlas::Object::mkMap();
 
-        list.append("stringval");
+        string strval("stringval");
+        list.append(strval);
         list.append((long)12345);
         list.append(9876.54);
 
@@ -73,8 +89,8 @@ void CodecBench::execute()
 
 	// packed ascii codec tests !!
 
-	proto = new APackedAsciiProtocol();
-	codec = new ACodec(proto);
+	proto = new Atlas::PackedProtocol();
+	codec = new Atlas::Codec(proto);
 
 	stim = time(NULL);
 
@@ -107,8 +123,8 @@ void CodecBench::execute()
 
 	// XML codec tests !!
 
-	proto = new AXMLProtocol();
-	codec = new ACodec(proto);
+	proto = new Atlas::XMLProtocol();
+	codec = new Atlas::Codec(proto);
 
 	stim = time(NULL);
 
@@ -119,7 +135,7 @@ void CodecBench::execute()
 	enctime = time(NULL) - stim;
 
 	encloop = 50000.0 / enctime;
-	printf("PAS Encode/Sec = %.2f\n", encloop);
+	printf("XML Encode/Sec = %.2f\n", encloop);
 	fflush(stdout);
 
 	stim = time(NULL);
@@ -133,7 +149,7 @@ void CodecBench::execute()
 	dectime = time(NULL) - stim;
 
 	decloop = 50000.0 / dectime;
-	printf("PAS Decode/Sec = %.2f\n", decloop);
+	printf("XML Decode/Sec = %.2f\n", decloop);
 	fflush(stdout);
 
 	delete codec;
