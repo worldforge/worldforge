@@ -14,6 +14,6 @@ class Move : public Set
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

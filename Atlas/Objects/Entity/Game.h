@@ -14,6 +14,6 @@ class Game : public AdminEntity
     
 };
 
-} } // namespace Atlas::Objects::Entity
+} } } // namespace Atlas::Objects::Entity
 
 #endif

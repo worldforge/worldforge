@@ -14,6 +14,6 @@ class Smell : public Perception
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

@@ -1,3 +1,7 @@
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2000 Stefanus Du Toit
+
 #include "../Message/Encoder.h"
 #include "Root.h"
 
@@ -9,7 +13,7 @@ namespace Atlas { namespace Objects {
 
 Root::Root()
 {
-    id = "";
+    INIT(id, "")
 }
 
 Root::~Root()
@@ -18,35 +22,41 @@ Root::~Root()
 
 void Root::Clear()
 {
+    INIT(id, "")
+
     attributes.clear();
 }
 
 void Root::Reset()
 {
+    RESET(id)
+
     attrmap::iterator I;
-    
     for (I = attributes.begin(); I != attributes.end(); I++) {
         (*I).second.first = false;
     }
 }
 
-Object Root::Get(const string& name)
+Object Root::GetAttr(const string& name) const
 {
-    if (name == "id") return GetId();
+    GETATTR(id)
     
-    return attributes[name].second;
+    attrmap::const_iterator I;
+    if ((I = attributes.find(name)) != attributes.end()) return
+        I->second.second;
+    return Object();
 }
 
-void Root::Set(const string& name, const Object& object)
+void Root::SetAttr(const string& name, const Object& object)
 {
-    if (name == "id") { SetId(object.As(Object::String)); return; }
+    SETATTR(id, String)
     
     attributes[name] = make_pair(false, object);
 }
 
-bool Root::Has(const string& name)
+bool Root::HasAttr(const string& name) const
 {
-    if (name == "id") return HasId();
+    HASATTR(id)
     if (attributes.find(name) != attributes.end()) return true;
     return false;
 }
@@ -57,6 +67,7 @@ void Root::Transmit(Atlas::Bridge* b)
     attrmap::iterator I;
     b->StreamMessage(Bridge::MapBegin);
 
+    TRANSMIT(id)
     for (I = attributes.begin(); I != attributes.end(); I++) {
         if ((*I).second.first == false) {
             e.MapItem((*I).first, (*I).second.second);
@@ -66,19 +77,6 @@ void Root::Transmit(Atlas::Bridge* b)
     b->MapEnd();
 }
 
-string Root::GetId()
-{
-    return id;
-}
-
-void Root::SetId(const string& s)
-{
-    id = s;
-}
-
-bool Root::HasId()
-{
-    return true;
-}
+IMPL_METHODS(Root, string, id)
 
 } }

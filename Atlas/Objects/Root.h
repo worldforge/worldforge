@@ -10,6 +10,7 @@
 #include <utility>
 #include "../Bridge.h"
 #include "../Message/Object.h"
+#include "Macros.h"
 
 namespace Atlas { namespace Objects {
 
@@ -23,24 +24,22 @@ public:
     virtual void Clear();
     virtual void Reset();
     
-    virtual Atlas::Message::Object Get(const std::string&);
-    virtual void Set(const std::string&, const Atlas::Message::Object&);
-    virtual bool Has(const std::string&);
+    virtual Atlas::Message::Object GetAttr(const std::string&) const;
+    virtual void SetAttr(const std::string&, const Atlas::Message::Object&);
+    virtual bool HasAttr(const std::string&) const;
     
     virtual void Transmit(Atlas::Bridge* b);
 
-    virtual std::string GetId();
-    virtual void SetId(const std::string&);
-    virtual bool HasId();
-    
+    METHODS(std::string, id)
+
 protected:
     
     typedef std::map< std::string,
               std::pair<bool, Atlas::Message::Object> > attrmap;
 
     attrmap attributes;
-    
-    string id;
+
+    ATTRIBUTE(std::string, id)
 };
 
 } }

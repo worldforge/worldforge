@@ -14,6 +14,6 @@ class Logout : public Login
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

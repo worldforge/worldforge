@@ -14,6 +14,6 @@ class RootOperation : public Atlas::Objects::Root
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

@@ -14,6 +14,6 @@ class Get : public Action
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

@@ -14,6 +14,6 @@ class Sniff : public Perceive
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

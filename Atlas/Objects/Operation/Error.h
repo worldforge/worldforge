@@ -14,6 +14,6 @@ class Error : public Info
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

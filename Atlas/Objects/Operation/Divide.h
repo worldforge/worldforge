@@ -14,6 +14,6 @@ class Divide : public Create
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

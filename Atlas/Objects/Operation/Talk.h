@@ -14,6 +14,6 @@ class Talk : public Communicate
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

@@ -6,34 +6,29 @@
 #define ATLAS_OBJECTS_ENTITY_ROOTENTITY_H
 
 #include "../Root.h"
+#include "../Macros.h"
 
 namespace Atlas { namespace Objects { namespace Entity {
 
 class RootEntity : public Atlas::Objects::Root
 {
 public:
-    virtual Atlas::Message::Object Get(const std::string& name);
-    virtual void Set(const std::string&, const Atlas::Message::Object&);
-    virtual bool Has(const std::string&);
+    virtual Atlas::Message::Object GetAttr(const std::string& name) const;
+    virtual void SetAttr(const std::string&, const Atlas::Message::Object&);
+    virtual bool HasAttr(const std::string&) const;
 
-    virtual std::string GetLoc();
-    virtual void SetLoc(const std::string&);
-    virtual bool HasLoc();
+    METHODS(std::string, loc)
 
-    virtual std::list<Atlas::Message::Object> GetPos();
-    virtual void SetPos(const list<Atlas::Message::Object>&);
-    virtual bool HasPos();
-
-    virtual std::list<Atlas::Message::Object> GetVelocity();
-    virtual void SetVelocity(const list<Atlas::Message::Object>&);
-    virtual bool HasVelocity();
+    METHODS(Object::ListType, pos)
+        
+    METHODS(Object::ListType, velocity)
     
 protected:
-    std::string loc;
-    std::list<Atlas::Message::Object> pos;
-    std::list<Atlas::Message::Object> velocity;
+    ATTRIBUTE(std::string, loc)
+    ATTRIBUTE(Object::ListType, pos)
+    ATTRIBUTE(Object::ListType, velocity)
 };
 
-} } // namespace Atlas::Objects::Entity
+} } } // namespace Atlas::Objects::Entity
 
 #endif

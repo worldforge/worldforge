@@ -14,6 +14,6 @@ class Disappearance : public Sight
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

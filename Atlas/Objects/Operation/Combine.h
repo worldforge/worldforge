@@ -14,6 +14,6 @@ class Combine : public Create
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

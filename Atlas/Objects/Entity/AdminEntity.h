@@ -14,6 +14,6 @@ class AdminEntity : public RootEntity
     
 };
 
-} } // namespace Atlas::Objects::Entity
+} } } // namespace Atlas::Objects::Entity
 
 #endif

@@ -13,6 +13,11 @@ define(`CONSTRUCTOR', `
     Morph`'$1`'()
       : `'FORLOOP(`i', 1, eval($1 - 1), `v`'i`'(NULL), ') v$1(NULL)
     {
+    }
+
+    Morph`'$1`'(const Morph`'$1`'& m)
+    {FORLOOP(`i', 1, $1, `
+        if (m.v`'i`' != NULL) *this = *m.v`'i`';')
     }')dnl
 define(`CONSTRUCTOR_T', `
     Morph`'$1`'(const T`'$2& v)
@@ -77,6 +82,11 @@ define(`AS_T', `
     }')dnl
 define(`MEMBERS', `FORLOOP(`i', 1, $1, `
     T`'i`'* v`'i`';')')dnl
+define(`STATIC_CONSTRUCT', `
+    static void construct(Morph$1* o) { *o = Morph$1(); }
+    static void construct(Morph$1* o, const Morph$1& m) { *o = Morph$1(m); }')
+define(`STATIC_CONSTRUCT_T', `
+    static void construct(Morph$1* o, const T$2& v) { *o = Morph$1(v); }')
 define(`MORPH', `TEMPLATE($1)
 class Morph$1
 {
@@ -84,8 +94,8 @@ public:
 CONSTRUCTOR($1)
 FORLOOP(`n', 1, $1, `CONSTRUCTOR_T($1, n)')
 DESTRUCTOR($1)
-OP_ASSIGN($1)
-FORLOOP(`n', 1, $1, `OP_ASSIGN_T($1, n)')
+dnl OP_ASSIGN($1) dnl we have a copy constructor.
+dnl FORLOOP(`n', 1, $1, `OP_ASSIGN_T($1, n)') dnl we have const& constructors
 OP_EQ($1)
 FORLOOP(`n', 1, $1, `OP_EQ_T(n)')
 CLEAR($1)
@@ -93,6 +103,8 @@ FORLOOP(`n', 1, $1, `IS_T(n)')
 FORLOOP(`n', 1, $1, `AS_T(n)')
 
 protected:
+STATIC_CONSTRUCT($1)
+FORLOOP(`n', 1, $1, `STATIC_CONSTRUCT_T($1, n)')
 MEMBERS($1)
 
 };
@@ -118,6 +130,7 @@ MORPH(4)
 MORPH(5)
 MORPH(6)
 MORPH(7)
+MORPH(8)
 
 } } // namespace Atlas::Generic
 

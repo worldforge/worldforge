@@ -18,68 +18,35 @@ class Object : public Atlas::Generic::Morph5< int, double, std::string,
 {
 public:
 
-    // XXX
-    // I know these constructors suck, I'll fix em later.
-    // -- sdt
-    
     Object()
     {
-        v1 = NULL;
-        v2 = NULL;
-        v3 = NULL;
-        v4 = NULL;
-        v5 = NULL;
+        construct(this);
     }
 
     Object(const Object& m)
     {
-        Clear();
-        if (m.v1 != NULL) *this = *m.v1;
-        if (m.v2 != NULL) *this = *m.v2;
-        if (m.v3 != NULL) *this = *m.v3;
-        if (m.v4 != NULL) *this = *m.v4;
-        if (m.v5 != NULL) *this = *m.v5;
+        construct(this, m);
     }
 
     Object(int i)
     {
-        v1 = new int(i);
-        v2 = NULL;
-        v3 = NULL;
-        v4 = NULL;
-        v5 = NULL;
+        construct(this, i);
     }
     Object(double d) 
     {
-        v1 = NULL;
-        v2 = new double(d);
-        v3 = NULL;
-        v4 = NULL;
-        v5 = NULL;
+        construct(this, d);
     }
     Object(std::string s)
     {
-        v1 = NULL;
-        v2 = NULL;
-        v3 = new std::string(s);
-        v4 = NULL;
-        v5 = NULL;
+        construct(this, s);
     }
-    Object(map<std::string, Object> m)
+    Object(std::map<std::string, Object> m)
     {
-        v1 = NULL;
-        v2 = NULL;
-        v3 = NULL;
-        v4 = new map<std::string, Object>(m);
-        v5 = NULL;
+        construct(this, m);
     }
-    Object(list<Object> l) 
+    Object(std::list<Object> l) 
     {
-        v1 = NULL;
-        v2 = NULL;
-        v3 = NULL;
-        v4 = NULL;
-        v5 = new list<Object>(l);
+        construct(this, l);
     }
    
     typedef int IntType;
@@ -88,11 +55,10 @@ public:
     static Atlas::Generic::Token<FloatType> Float;
     typedef std::string StringType;
     static Atlas::Generic::Token<StringType> String;
-    typedef map<std::string, Object> MapType;
+    typedef std::map<std::string, Object> MapType;
     static Atlas::Generic::Token<MapType> Map;
-    typedef list<Object> ListType;
+    typedef std::list<Object> ListType;
     static Atlas::Generic::Token<ListType> List;
-    
 };
 
 } } // namespace Atlas::Message

@@ -14,6 +14,6 @@ class Player : public Account
     
 };
 
-} } // namespace Atlas::Objects::Entity
+} } } // namespace Atlas::Objects::Entity
 
 #endif

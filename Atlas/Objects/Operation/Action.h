@@ -14,6 +14,6 @@ class Action : public RootOperation
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

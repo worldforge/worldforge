@@ -14,6 +14,6 @@ class Appearance : public Sight
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif

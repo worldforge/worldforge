@@ -14,6 +14,6 @@ class Login : public Get
     
 };
 
-} } // namespace Atlas::Objects::Operation
+} } } // namespace Atlas::Objects::Operation
 
 #endif
