@@ -7,7 +7,7 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/Log.h>
 #include <Eris/Connection.h>
-#include <Eris/redispatch.h>
+#include <Eris/Redispatch.h>
 #include <Eris/Exceptions.h>
 
 #include <Atlas/Codecs/XML.h>

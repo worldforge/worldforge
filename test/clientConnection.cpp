@@ -7,7 +7,7 @@
 #include "objectSummary.h"
 #include "testUtils.h"
 
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 #include <Eris/Exceptions.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/RootOperation.h>

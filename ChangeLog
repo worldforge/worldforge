@@ -1,3 +1,9 @@
+2004-04-24 James Turner <james@worldforge.org>
+
+* Pre-work for making source file naming capitalization
+  consistent (they will all be LikeThis.cpp) - change #includes, 
+  and the Makefile.am
+
 2004-04-14 James Turner <james@worldforge.org>
 
 * Sort autoXXX compilation of tests

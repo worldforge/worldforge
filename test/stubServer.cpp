@@ -5,7 +5,7 @@
 #include "stubServer.h"
 #include "clientConnection.h"
 #include <Eris/Exceptions.h>
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 #include <Atlas/Objects/Operation.h>
 #include <skstream/skpoll.h>
 

@@ -2,7 +2,7 @@
 #define ERIS_ROOM_H
 
 #include <Eris/Types.h>
-#include <Eris/router.h>
+#include <Eris/Router.h>
 #include <vector>
 #include <map>
 

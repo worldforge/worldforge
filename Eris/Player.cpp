@@ -4,10 +4,10 @@
 
 #include <Eris/Player.h>
 #include <Eris/Connection.h>
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
-#include <Eris/router.h>
+#include <Eris/Router.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>

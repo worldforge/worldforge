@@ -6,7 +6,7 @@
 
 #include <Eris/Exceptions.h>
 #include <Eris/Metaserver.h>
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 #include <Eris/Connection.h>
 #include <Eris/Timeout.h>
 

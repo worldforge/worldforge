@@ -2,7 +2,7 @@
 #define ERIS_ENTITY_H
 
 #include <Eris/Types.h>
-#include <Eris/router.h>
+#include <Eris/Router.h>
 
 #include <Atlas/Message/Element.h>
 #include <Atlas/Objects/ObjectsFwd.h>

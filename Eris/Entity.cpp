@@ -5,9 +5,9 @@
 #include <Eris/Entity.h>
 #include <Eris/Connection.h>
 #include <Eris/TypeInfo.h>
-#include <Eris/logStream.h>
-#include <Eris/entityRouter.h>
-#include <Eris/view.h>
+#include <Eris/LogStream.h>
+#include <Eris/EntityRouter.h>
+#include <Eris/View.h>
 #include <Eris/Exceptions.h>
 
 #include <wfmath/atlasconv.h>

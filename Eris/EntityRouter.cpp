@@ -2,8 +2,8 @@
     #include "config.h"
 #endif
 
-#include <Eris/entityRouter.h>
-#include <Eris/logStream.h>
+#include <Eris/EntityRouter.h>
+#include <Eris/LogStream.h>
 #include <Eris/Entity.h>
 
 #include <Atlas/Objects/Operation.h>

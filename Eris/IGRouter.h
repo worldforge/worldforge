@@ -1,7 +1,7 @@
 #ifndef ERIS_IG_ROUTER_H
 #define ERIS_IG_ROUTER_H
 
-#include <Eris/router.h>
+#include <Eris/Router.h>
 
 namespace Eris {
 

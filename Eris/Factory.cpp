@@ -4,10 +4,10 @@
 
 #include <Eris/Factory.h>
 #include <Eris/Entity.h>
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 #include <Eris/Connection.h>
 #include <Eris/typeService.h>
-#include <Eris/view.h>
+#include <Eris/View.h>
 #include <Eris/Avatar.h>
 
 #include <Atlas/Objects/Entity.h>

@@ -9,7 +9,7 @@
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
-#include <Eris/router.h>
+#include <Eris/Router.h>
 
 #include <skstream/skstream.h>
 #include <Atlas/Objects/Encoder.h>

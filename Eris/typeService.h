@@ -4,7 +4,7 @@
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
 
-#include <Eris/router.h>
+#include <Eris/Router.h>
 #include <Eris/Types.h>
 #include <Atlas/Objects/Decoder.h>
 

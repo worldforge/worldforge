@@ -2,10 +2,10 @@
     #include "config.h"
 #endif
 
-#include <Eris/view.h>
-#include <Eris/redispatch.h>
+#include <Eris/View.h>
+#include <Eris/Redispatch.h>
 #include <Eris/Entity.h>
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 #include <Eris/Factory.h>
 #include <Eris/Connection.h>
 #include <Eris/Exceptions.h>

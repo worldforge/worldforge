@@ -6,8 +6,8 @@
 #include <Eris/Entity.h>
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
-#include <Eris/view.h>
-#include <Eris/igRouter.h>
+#include <Eris/View.h>
+#include <Eris/IGRouter.h>
 #include <Eris/Player.h>
 #include <Eris/Exceptions.h>
 

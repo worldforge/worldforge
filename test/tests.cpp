@@ -8,7 +8,7 @@
 #include <Eris/PollDefault.h>
 #include <sigc++/object_slot.h>
 #include <sigc++/object.h>
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 #include <Eris/Log.h>
 
 using namespace Eris;

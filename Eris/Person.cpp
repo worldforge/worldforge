@@ -3,7 +3,7 @@
 #endif
 
 #include <Eris/Person.h>
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Lobby.h>
 #include <Eris/Connection.h>

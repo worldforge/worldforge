@@ -29,15 +29,15 @@ liberis_1_3_la_SOURCES = \
 	TypeInfo.cpp \
 	PollDefault.cpp \
 	Log.cpp \
-	logStream.h \
+	LogStream.h \
 	Avatar.cpp \
-	typeService.cpp \
-	view.cpp \
-	router.h router.cpp \
-	entityRouter.h entityRouter.cpp \
-	igRouter.h igRouter.cpp \
-	redispatch.h redispatch.cpp \
-	factory.cpp \
+	TypeService.cpp \
+	View.cpp \
+	Router.h Router.cpp \
+	EntityRouter.h EntityRouter.cpp \
+	IGRouter.h IGRouter.cpp \
+	Redispatch.h Redispatch.cpp \
+	Factory.cpp \
 	$(ATLAS_JANUS_CPP)
 
 liberisdir = $(includedir)/Eris-1.3/Eris
@@ -59,7 +59,7 @@ liberis_HEADERS = \
 	PollDefault.h \
 	Log.h \
 	Avatar.h \
-	typeService.h \
-	view.h \
+	TypeService.h \
+	View.h \
 	$(ATLAS_JANUS_H)
 

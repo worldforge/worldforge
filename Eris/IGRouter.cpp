@@ -2,12 +2,12 @@
     #include "config.h"
 #endif
 
-#include <Eris/igRouter.h>
+#include <Eris/IGRouter.h>
 #include <Eris/Avatar.h>
 #include <Eris/Connection.h>
-#include <Eris/view.h>
+#include <Eris/View.h>
 #include <Eris/Entity.h>
-#include <Eris/logStream.h>
+#include <Eris/LogStream.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
