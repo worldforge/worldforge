@@ -45,10 +45,8 @@ class QuadInterp {
 
 Segment::Segment(unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
-                            m_points(0), // new float[m_size * m_size]),
-                            m_normals(0), m_vertices(0),
+                            m_points(0), m_normals(0), m_vertices(0),
                             m_max(-1000000.f), m_min(1000000.0f),
-                            m_validPt(false), m_validNorm(false),
                             m_validVert(false), m_validSurf(false)
 {
 }
@@ -75,8 +73,24 @@ void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
     for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
         applyMod(*I);
     }
+}
 
-    m_validPt = true;
+void Segment::invalidate(bool points)
+{
+    if (points && m_points != 0) {
+        delete [] m_points;
+        m_points = 0;
+    }
+    if (m_normals != 0) {
+        delete [] m_normals;
+        m_normals = 0;
+    }
+    m_validVert = false;
+    Segment::Surfacestore::const_iterator I = m_surfaces.begin();
+    for(; I != m_surfaces.end(); ++I) {
+        (*I)->invalidate();
+    }
+    m_validSurf = false;
 }
 
 void Segment::populateNormals()
@@ -156,8 +170,6 @@ void Segment::populateNormals()
     np[m_res * m_size * 3 + m_res * 3]     = 0.0;
     np[m_res * m_size * 3 + m_res * 3 + 1] = 0.0;
     np[m_res * m_size * 3 + m_res * 3 + 2] = 1.0;
- 
-    m_validNorm = true;
 }
 
 void Segment::populateSurfaces()
@@ -451,7 +463,7 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
 void Segment::addMod(TerrainMod *t) 
 {
     m_modList.push_back(t);
-    if (m_validPt) {
+    if (isValid()) {
         applyMod(t);
     }
 }
@@ -462,8 +474,7 @@ void Segment::clearMods()
         delete(*I);
     }
     m_modList.clear();
-    m_validPt = false;
-    m_validNorm = false;
+    invalidate();
 }
 
 void Segment::applyMod(TerrainMod *t) 
@@ -480,7 +491,7 @@ void Segment::applyMod(TerrainMod *t)
     }
 
     //currently mods dont fix the normals
-    m_validNorm = false;
+    invalidate(false);
 }
 
 } // namespace Mercator

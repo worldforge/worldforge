@@ -19,6 +19,9 @@ Surface::~Surface()
 
 void Surface::populate()
 {
+    if (!isValid()) {
+        allocate();
+    }
     if (m_shader.checkIntersect(*this)) {
         m_shader.shade(*this);
     }

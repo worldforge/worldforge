@@ -7,13 +7,15 @@
 
 #include <Mercator/Buffer.h>
 
+#include <climits>
+
 namespace Mercator {
 
 class Shader;
 
 typedef unsigned char ColorT;
 
-static const ColorT colorMax = 255;
+static const ColorT colorMax = UCHAR_MAX;
 static const ColorT colorMin = 0;
 
 class Surface : public Buffer<ColorT> {

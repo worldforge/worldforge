@@ -1,5 +1,21 @@
 2003-08-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Surface.h: Use <climits> to get the max value of
+	  a char.
+
+	* Mercator/Surface.cpp, Mercator/Buffer.h, Mercator/Buffer_impl.h:
+	  Modify buffers and thus surfaces to handle their memory
+	  dynamically, providing facilities for allocating and
+	  deleting the buffer.
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Implement easier
+	  memory management, getting rid of the flags for points and
+	  normals, using the value of the pointer instead.
+	  Add a few to be called to cause the segment to free its
+	  data, with the option to keep hold of the height field.
+
+2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Terrain.h, Mercator/Terrain.cpp: Add new
 	  getHeightAndNormal() method which makes available the method
 	  of the same name from Segment on the whole terrain.

@@ -49,9 +49,9 @@ class Segment {
     /// Minimum height of any point in this segment
     float m_min;
     /// Flag indicating whether the contains of this segment is valid
-    bool m_validPt;
+    // bool m_validPt;
     /// Flag indicating whether the normals of this segment is valid
-    bool m_validNorm;
+    // bool m_validNorm;
     /// Flag indicating whether the vertices of this segment are valid
     bool m_validVert;
     /// Flag indicating whether the surfaces of this segment are valid
@@ -59,13 +59,6 @@ class Segment {
 
     /// Store of surfaces which can be rendered on this terrain
     Surfacestore m_surfaces;
-
-    void invalidate() {
-        m_validPt = false;
-        m_validNorm = false;
-        m_validVert = false;
-        m_validSurf = false;
-    }
   public:
     explicit Segment(unsigned int resolution = defaultResolution);
     ~Segment();
@@ -79,7 +72,7 @@ class Segment {
     }
 
     const bool isValid() {
-        return m_validPt;
+        return (m_points != 0);
     }
 
     const bool isVertexCacheValid() {
@@ -89,6 +82,8 @@ class Segment {
     void setVertexCacheValid(bool f = true) {
         m_validVert = true;
     }
+
+    void invalidate(bool points = true);
 
     void setRef(int x, int y) {
         m_xRef=x*m_res;
