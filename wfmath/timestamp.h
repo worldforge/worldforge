@@ -40,7 +40,7 @@ time measurement, not displaying a human readable time. */
 #include <sys/time.h>
 #endif
 #if defined ( __WIN32__ )
-#include <winsock.h> 
+#include <winsock2.h> 
 extern "C" {
   struct eris_timeval  {
     long tv_sec;	/* seconds */

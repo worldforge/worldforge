@@ -1,3 +1,8 @@
+Sunday, December 21st, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/timestamp.h: Pull in winsock2.h instead of winsock.h
+	  under win32.
+
 Friday, December 19th, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* Remove Serial from rpm spec as it is not required, and messes up
