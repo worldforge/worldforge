@@ -7,4 +7,4 @@ libAtlasContent_la_SOURCES = \
 libAtlasContentincludedir = $(includedir)/Atlas/Content
 
 libAtlasContentinclude_HEADERS = \
-	Arg.h  Content.h  UserClient.h
+	Arg.h  UserClient.h
