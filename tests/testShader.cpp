@@ -7,6 +7,7 @@
 #include <Mercator/FillShader.h>
 #include <Mercator/ThresholdShader.h>
 #include <Mercator/DepthShader.h>
+#include <Mercator/GrassShader.h>
 
 template <class ShaderType>
 int shadeTest(Mercator::Segment & segment)
@@ -35,6 +36,7 @@ int main()
     errorCount += shadeTest<Mercator::LowShader>(segment);
     errorCount += shadeTest<Mercator::BandShader>(segment);
     errorCount += shadeTest<Mercator::DepthShader>(segment);
+    errorCount += shadeTest<Mercator::GrassShader>(segment);
 
     return (errorCount ? 1 : 0);
 }

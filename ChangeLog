@@ -1,5 +1,17 @@
 2003-07-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Buffer.cpp, Mercator/Buffer.h: Add accessor operators so
+	  data can be accessed by coordinate and channel. Store size locally.
+
+	* Mercator/Matrix.h: Use unsigned int for indexs. Safer.
+
+	* Mercator/GrassShader.cpp Mercator/GrassShader.h: Add new shader
+	  for bands which also have a slope dependence.
+
+	* tests/testShader.cpp: Include GrassShader in tests.
+
+2003-07-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/DepthShader.cpp, Mercator/DepthShader.h: Fix some
 	  bugs.
 

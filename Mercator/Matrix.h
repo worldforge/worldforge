@@ -7,22 +7,22 @@
 
 namespace Mercator {
 
-template <int COLS, int ROWS, typename FloatType = float>
+template <unsigned int COLS, unsigned int ROWS, typename FloatType = float>
 class Matrix {
   private:
     FloatType m_data[COLS * ROWS];
   public:
     Matrix() { }
 
-    FloatType & operator()(int col, int row) {
+    FloatType & operator()(unsigned int col, unsigned int row) {
         return m_data[row * COLS + col];
     }
 
-    const FloatType & operator()(int col, int row) const {
+    const FloatType & operator()(unsigned int col, unsigned int row) const {
         return m_data[row * COLS + col];
     }
 
-    FloatType & operator[](int idx) {
+    FloatType & operator[](unsigned int idx) {
         return m_data[idx];
     }
 };
