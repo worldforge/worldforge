@@ -84,13 +84,13 @@ Room* Lobby::join(const std::string &roomID)
 		throw InvalidOperation("Not connected to server");
 		
 	Operation::Move join = Operation::Move::Instantiate();
-	join.SetFrom(_account);
-	join.SetSerialno(getNewSerialno());
+	join.setFrom(_account);
+	join.setSerialno(getNewSerialno());
 	
-	Message::Object::MapType args;
+	Message::Element::MapType args;
 	args["loc"] = roomID;
 	args["mode"] = "join";
-	join.SetArgs(Message::Object::ListType(1, args));
+	join.setArgs(Message::Element::ListType(1, args));
 	
 	_con->send(join);
 	
@@ -224,17 +224,17 @@ void Lobby::look(const std::string &id)
   		Operation::Look::Instantiate();
 
 	if(!id.empty()) {
-		Atlas::Message::Object::MapType what;
+		Atlas::Message::Element::MapType what;
 		what["id"]=id;
-		Atlas::Message::Object::ListType args(1,what);
-		look.SetArgs(args);
-		look.SetTo(id);
+		Atlas::Message::Element::ListType args(1,what);
+		look.setArgs(args);
+		look.setTo(id);
 	} else {
 		
 	}
 
-	look.SetFrom(_account);
-	look.SetSerialno(getNewSerialno());
+	look.setFrom(_account);
+	look.setSerialno(getNewSerialno());
 	
 	_con->send(look);
 }
@@ -249,12 +249,12 @@ void Lobby::recvInfoAccount(const Atlas::Objects::Operation::Info &ifo,
 	
 	// reject lots of extraneous INFOs we don't care about
 	// FIXME  - enable the refno test once stage correctly processes it
-	if (!_account.empty() && (ifo.GetTo() != _account))
+	if (!_account.empty() && (ifo.getTo() != _account))
 	    return;
 	
 	_infoRefno = -1; // clear the expect value to reject further INFOs (unless we set them!);
 	
-	_account = account.GetId();
+	_account = account.getId();
 	if (!_reconnect) // obviously only register first time around
 	    registerCallbacks();
 	
@@ -274,9 +274,9 @@ void Lobby::recvInfoAccount(const Atlas::Objects::Operation::Info &ifo,
 
 void Lobby::recvSightPerson(const Atlas::Objects::Entity::Account &ac)
 {
-	PersonDict::iterator i = _peopleDict.find(ac.GetId());
+	PersonDict::iterator i = _peopleDict.find(ac.getId());
 	if (i == _peopleDict.end()) {
-		Eris::log(LOG_WARNING, "got un-requested sight of person %s", ac.GetId().c_str());
+		Eris::log(LOG_WARNING, "got un-requested sight of person %s", ac.getId().c_str());
 		return;
 	}
 	
@@ -295,15 +295,15 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 	// check if this is initial room (lobby), from the anonymous LOOK
 	if (_id.empty()) {
 		log(LOG_NOTICE, "recieved sight of root room (lobby)");
-		_roomDict[room.GetId()] = this;
+		_roomDict[room.getId()] = this;
 		
-		_id = room.GetId();
+		_id = room.getId();
 		// now id is valid, can safely call Setup on the lobby
 		Room::setup();
 		
 		Room::sight(room);
 	} else {
-		RoomDict::iterator i = _roomDict.find(room.GetId());
+		RoomDict::iterator i = _roomDict.find(room.getId());
 		if (i == _roomDict.end())
 			throw InvalidOperation("Got sight of unknown room!");
 		
@@ -318,20 +318,20 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 void Lobby::recvSightLobby(const Atlas::Objects::Entity::RootEntity &lobby)
 {
 	assert(_id.empty());
-	_id = lobby.GetId();
+	_id = lobby.getId();
 	Room::setup();
 }
 
 void Lobby::recvPrivateChat(const Atlas::Objects::Operation::Talk &tk)
 {
-	const Atlas::Message::Object &obj = getArg(tk, 0);
-	Message::Object::MapType::const_iterator m = obj.AsMap().find("say");
-	if (m == obj.AsMap().end())
+	const Atlas::Message::Element &obj = getArg(tk, 0);
+	Message::Element::MapType::const_iterator m = obj.asMap().find("say");
+	if (m == obj.asMap().end())
 		throw IllegalObject(tk, "No sound object in arg 0");
-	std::string say = m->second.AsString();
+	std::string say = m->second.asString();
 	
 	// get the player name and emit the signal already
-	Person *p = getPerson(tk.GetFrom());
+	Person *p = getPerson(tk.getFrom());
 	assert(p);
 	PrivateTalk.emit(p->getAccount(), say);
 }
@@ -339,7 +339,7 @@ void Lobby::recvPrivateChat(const Atlas::Objects::Operation::Talk &tk)
 void Lobby::recvSightCreate(const Atlas::Objects::Operation::Create &cr,
 	const Atlas::Objects::Entity::RootEntity &ent)
 {	
-    std::string type = ent.GetParents()[0].AsString();
+    std::string type = ent.getParents()[0].asString();
     if (type == "room")
 	processRoomCreate(cr, ent);
 }
@@ -349,10 +349,10 @@ void Lobby::processRoomCreate(const Atlas::Objects::Operation::Create &cr,
 {
     log(LOG_DEBUG, "recieved sight of room creation");
 	
-    PendingCreateMap::iterator P = _pendingCreate.find(cr.GetSerialno());
+    PendingCreateMap::iterator P = _pendingCreate.find(cr.getSerialno());
     if (P != _pendingCreate.end()) {
 	// it was requested locally, so we already have the Room object
-	P->second->_id = ent.GetId(); // set the ID
+	P->second->_id = ent.getId(); // set the ID
 	P->second->setup();		// now we can call setup safely
 	P->second->sight(ent);	// finally slam the data in
 	_pendingCreate.erase(P);	// get rid of the request
@@ -360,12 +360,12 @@ void Lobby::processRoomCreate(const Atlas::Objects::Operation::Create &cr,
     
     // find the containing room and update it's subrooms
     // note that we may not even know about it's containing room either!
-    std::string containingRoom = ent.GetAttr("loc").AsString();
+    std::string containingRoom = ent.getAttr("loc").asString();
     if (_roomDict.find(containingRoom) == _roomDict.end())
 	return; // we can't see it,, so we don't care [we'll get the rooms anyway if we ever join the containing room]
     
     Room *container = _roomDict[containingRoom];
-    container->_subrooms.insert(ent.GetId());	// jam it in
+    container->_subrooms.insert(ent.getId());	// jam it in
     
     StringSet strset;
     strset.insert("rooms");

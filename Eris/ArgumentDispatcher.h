@@ -11,7 +11,7 @@ class ArgumentDispatcher : public StdBranchDispatcher
 public:	
 	ArgumentDispatcher(const std::string &nm, 
 		const std::string &arg,
-		const Atlas::Message::Object &v) :
+		const Atlas::Message::Element &v) :
 		StdBranchDispatcher(nm),
 		_arg(arg),
 		_value(v)
@@ -22,7 +22,7 @@ public:
 	virtual bool dispatch(DispatchContextDeque &dq);
 protected:
 	const std::string _arg;
-	const Atlas::Message::Object _value;
+	const Atlas::Message::Element _value;
 };
 
 }

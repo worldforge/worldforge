@@ -107,17 +107,17 @@ void TypeService::readAtlasSpec(const std::string &specfile)
  
 	Eris::log(LOG_NOTICE, "Found Atlas type data in %s, using for initial type info", specfile.c_str());
 	
-	// build an XML codec, and bundle it all up; then Poll the codec for each byte to read the entire file into
+	// build an XML codec, and bundle it all up; then poll the codec for each byte to read the entire file into
 	// the QueuedDecoder : not exactly incremetnal but hey...
 	Message::QueuedDecoder specDecoder;
     Codecs::XML specXMLCodec(specStream, &specDecoder);
     while (!specStream.eof())
-      specXMLCodec.Poll(true);
+      specXMLCodec.poll(true);
 	
     // deal with each item in the spec file
-    while (specDecoder.QueueSize() > 0 ) {
-		Message::Object msg(specDecoder.Pop());
-		if (!msg.IsMap()) continue;
+    while (specDecoder.queueSize() > 0 ) {
+		Message::Element msg(specDecoder.pop());
+		if (!msg.isMap()) continue;
 					
 		Objects::Root def = atlas_cast<Objects::Root>(msg);
 		registerLocalType(def);
@@ -126,11 +126,11 @@ void TypeService::readAtlasSpec(const std::string &specfile)
 
 void TypeService::registerLocalType(const Objects::Root &def)
 {
-    TypeInfoMap::iterator T = globalTypeMap.find(def.GetId());
+    TypeInfoMap::iterator T = globalTypeMap.find(def.getId());
     if (T != globalTypeMap.end())
 		T->second->processTypeData(def);
     else
-		globalTypeMap[def.GetId()] = new TypeInfo(def, this);
+		globalTypeMap[def.getId()] = new TypeInfo(def, this);
 }
 
 
@@ -173,21 +173,21 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 	return node;
 }
 
-TypeInfoPtr TypeService::getTypeForAtlas(const Message::Object &msg)
+TypeInfoPtr TypeService::getTypeForAtlas(const Message::Element &msg)
 {
 	// check for an integer type code first
 
 	// fall back to checking parents
-	const Message::Object::ListType &prs = getMember(msg, "parents").AsList();
+	const Message::Element::ListType &prs = getMember(msg, "parents").asList();
 	
 	/* special case code to handle the root object which has no parents. */
 	if (prs.empty()) {
-		assert(getMember(msg, "id").AsString() == "root");
+		assert(getMember(msg, "id").asString() == "root");
 		return getTypeByName("root");
 	}
 	
 	assert(prs.size() == 1);
-	return getTypeByName(prs[0].AsString());
+	return getTypeByName(prs[0].asString());
 }
 
 TypeInfoPtr TypeService::getTypeForAtlas(const Objects::Root &obj)
@@ -195,22 +195,22 @@ TypeInfoPtr TypeService::getTypeForAtlas(const Objects::Root &obj)
 	// check for an integer type code first
 	
 	// fall back to checking parents
-	const Message::Object::ListType &prs = obj.GetParents();
+	const Message::Element::ListType &prs = obj.getParents();
 	
 	/* special case code to handle the root object which has no parents. */
 	if (prs.empty()) {
-		assert(obj.GetId() == "root");
+		assert(obj.getId() == "root");
 		return getTypeByName("root");
 	}
 	
 	assert(prs.size() == 1);
-	return getTypeByName(prs[0].AsString());
+	return getTypeByName(prs[0].asString());
 }
 
 void TypeService::recvInfoOp(const Atlas::Objects::Root &atype)
 {
 try {	
-	std::string id = atype.GetId();
+	std::string id = atype.getId();
 	TypeInfoMap::iterator T = globalTypeMap.find(id);
 	if (T == globalTypeMap.end()) {
 		// alternatively, we could build a type-node now.
@@ -240,10 +240,10 @@ void TypeService::sendInfoRequest(const std::string &id)
 	Atlas::Objects::Operation::Get get = 
 			Atlas::Objects::Operation::Get::Instantiate();
 		
-	Atlas::Message::Object::MapType args;
+	Atlas::Message::Element::MapType args;
 	args["id"] = id;
-	get.SetArgs(Atlas::Message::Object::ListType(1, args));
-	get.SetSerialno(getNewSerialno());
+	get.setArgs(Atlas::Message::Element::ListType(1, args));
+	get.setSerialno(getNewSerialno());
 	
 	_conn->send(get);
 }
@@ -251,19 +251,19 @@ void TypeService::sendInfoRequest(const std::string &id)
 void TypeService::recvTypeError(const Atlas::Objects::Operation::Error &/*error*/,
 	const Atlas::Objects::Operation::Get &get)
 {
-	const Atlas::Message::Object::ListType &largs = get.GetArgs();
-	if (largs.empty() || !largs[0].IsMap())
+	const Atlas::Message::Element::ListType &largs = get.getArgs();
+	if (largs.empty() || !largs[0].isMap())
 		// something weird, certainly not a type request
 		return;
 	
-	const Atlas::Message::Object::MapType &args = largs[0].AsMap();
-	Atlas::Message::Object::MapType::const_iterator A = args.find("id");
+	const Atlas::Message::Element::MapType &args = largs[0].asMap();
+	Atlas::Message::Element::MapType::const_iterator A = args.find("id");
 	
 	if (A == args.end())
 		// still wierd, again not a type request
 		return;
 	
-	std::string typenm = A->second.AsString();
+	std::string typenm = A->second.asString();
 	TypeInfoMap::iterator T = globalTypeMap.find(typenm);
 	if (T == globalTypeMap.end()) {
 			// what the fuck? getting out of here...

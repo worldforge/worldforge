@@ -52,22 +52,22 @@ class Element
 
   // implementations of this function should emit PropertiesChanged for
   // valid properties
-  virtual void setProperties(const Atlas::Message::Object::MapType&) = 0;
+  virtual void setProperties(const Atlas::Message::Element::MapType&) = 0;
 
-  void setProperty(const std::string& name, const Atlas::Message::Object& arg)
+  void setProperty(const std::string& name, const Atlas::Message::Element& arg)
   {
-    Atlas::Message::Object::MapType map;
+    Atlas::Message::Element::MapType map;
     map[name] = arg;
     setProperties(map);
   }
 
-  SigC::Signal1<void,const Atlas::Message::Object::MapType&> PropertiesChanged;
+  SigC::Signal1<void,const Atlas::Message::Element::MapType&> PropertiesChanged;
 };
 
 class SlotElement : public Element, virtual public SigC::Object
 {
  public:
-  virtual void action(const Atlas::Message::Object::MapType&) = 0;
+  virtual void action(const Atlas::Message::Element::MapType&) = 0;
 };
 
 class FrameElement : virtual public Element
@@ -96,14 +96,14 @@ class Factory
   {
    public:
     virtual ~BaseGen() {}
-    virtual Element* create(const Atlas::Message::Object::MapType&) = 0;
+    virtual Element* create(const Atlas::Message::Element::MapType&) = 0;
   };
 
   template<class E>
   class Gen : public BaseGen
   {
    public:
-    virtual Element* create(const Atlas::Message::Object::MapType& attrs)
+    virtual Element* create(const Atlas::Message::Element::MapType& attrs)
 		{return E(attrs);}
   };
 
@@ -117,7 +117,7 @@ class Factory
   // create a dialog element
   virtual Element* create(IDMap&) const;
   // create a new factory
-  virtual Factory* parse(const Atlas::Message::Object::MapType&, const Bindings&) const;
+  virtual Factory* parse(const Atlas::Message::Element::MapType&, const Bindings&) const;
 
   void ref() {++_refcount;}
   void unref() {if(--_refcount == 0) delete this;}
@@ -129,9 +129,9 @@ class Factory
   typedef std::list<std::string> IDList;
 
   Factory(const Atlas::Objects::Entity::UIEntity&, const std::string&,
-          const IDList&, const Atlas::Message::Object::MapType&, BaseGen*);
+          const IDList&, const Atlas::Message::Element::MapType&, BaseGen*);
 
-  const Atlas::Message::Object::MapType& attrs() const {return _attrs;}
+  const Atlas::Message::Element::MapType& attrs() const {return _attrs;}
   const IDList& idlist() const {return _id_list;}
   BaseGen* gen() const {return _gen;}
 
@@ -144,7 +144,7 @@ class Factory
   BaseGen* _gen;
   bool _persistent; // factories not created by the server
   unsigned long _refcount;
-  Atlas::Message::Object::MapType _attrs;
+  Atlas::Message::Element::MapType _attrs;
 };
 
 // factory for children of Atlas::Objects::Entity::Frame
@@ -157,7 +157,7 @@ class FrameFactory : public Factory
     virtual ~BaseGen() {}
     virtual FrameElement* create(const std::string& valign,
 	const std::string& halign, const std::string& rel_pos,
-	const Atlas::Message::Object::MapType&) = 0;
+	const Atlas::Message::Element::MapType&) = 0;
   };
   template<class FE>
   class Gen : public BaseGen
@@ -165,7 +165,7 @@ class FrameFactory : public Factory
    public:
     virtual FrameElement* create(const std::string& valign,
 	const std::string& halign, const std::string& rel_pos,
-	const Atlas::Message::Object::MapType& attrs)
+	const Atlas::Message::Element::MapType& attrs)
 		{return new FE(valign, halign, rel_pos, attrs);}
   };
 
@@ -175,11 +175,11 @@ class FrameFactory : public Factory
   virtual ~FrameFactory();
 
   virtual Element* create(IDMap&) const;
-  virtual Factory* parse(const Atlas::Message::Object::MapType&, const Bindings&) const;
+  virtual Factory* parse(const Atlas::Message::Element::MapType&, const Bindings&) const;
 
  private:
   FrameFactory(const Atlas::Objects::Entity::Frame&, const IDList&,
-	       const Bindings&, const Atlas::Message::Object::MapType&, BaseGen*);
+	       const Bindings&, const Atlas::Message::Element::MapType&, BaseGen*);
 
   std::string _valign, _halign, _rel_pos;
   typedef std::list<Factory*> ChildList;
@@ -194,15 +194,15 @@ class SlotFactory : public Factory
   SlotFactory(const std::string& id, BaseGen* gen) : Factory(id, gen) {}
 
   virtual Element* create(IDMap&) const;
-  virtual Factory* parse(const Atlas::Message::Object::MapType&, const Bindings&) const;
+  virtual Factory* parse(const Atlas::Message::Element::MapType&, const Bindings&) const;
 
-  const Atlas::Message::Object::ListType& target() const {return _target;}
+  const Atlas::Message::Element::ListType& target() const {return _target;}
 
  private:
   SlotFactory(const Atlas::Objects::Entity::Slot&, const IDList&,
-	      const Atlas::Message::Object::MapType&, BaseGen*);
+	      const Atlas::Message::Element::MapType&, BaseGen*);
 
-  Atlas::Message::Object::ListType _target;
+  Atlas::Message::Element::ListType _target;
 };
 
 /// the dialog generator/handler
@@ -212,14 +212,14 @@ class Bindings
   Bindings();
   virtual ~Bindings();
 
-  void parse(const Atlas::Message::Object&);
+  void parse(const Atlas::Message::Element&);
 
   /// purge all server-generated classes
   void clear();
 
-  Factory* findFactory(const Atlas::Message::Object& id) const
+  Factory* findFactory(const Atlas::Message::Element& id) const
   {
-    return id.IsString() ? findFactory(id.AsString()) : 0;
+    return id.isString() ? findFactory(id.asString()) : 0;
   }
 
   Factory* findFactory(const std::string& id) const

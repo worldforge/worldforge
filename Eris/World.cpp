@@ -52,8 +52,8 @@
 #include <Eris/IdDispatcher.h>
 
 //using namespace Atlas::Objects;
-typedef Atlas::Message::Object::ListType AtlasListType;
-typedef Atlas::Message::Object::MapType AtlasMapType;
+typedef Atlas::Message::Element::ListType AtlasListType;
+typedef Atlas::Message::Element::MapType AtlasMapType;
 
 namespace Eris {
 	
@@ -155,17 +155,17 @@ void World::look(const std::string &id)
 		Atlas::Objects::Operation::Look::Instantiate();
 
 	if (!id.empty()) {
-		Atlas::Message::Object::MapType what;
+		Atlas::Message::Element::MapType what;
 		what["id"] = id;
-     		Atlas::Message::Object::ListType args(1,what);
-     		look.SetArgs(args);
+     		Atlas::Message::Element::ListType args(1,what);
+     		look.setArgs(args);
 	    /* note we don't set TO here, this is intentional; it's
 	    unecessary with a compliant server, and complicates routing in
 	    certain cases (editor-avatars)*/
 	}
 	
-	look.SetSerialno(getNewSerialno());
-	look.SetFrom(_characterID);
+	look.setSerialno(getNewSerialno());
+	look.setFrom(_characterID);
 	// transmit!
 	_con->send(look);
 }
@@ -174,7 +174,7 @@ void World::look(const std::string &id)
 EntityPtr World::create(const Atlas::Objects::Entity::GameEntity &ge)
 {
 	Entity *e = NULL;
-	std::string id = ge.GetId();
+	std::string id = ge.getId();
 	
 	EntityIDMap::iterator I = _lookup.find(id);
 	if (I != _lookup.end())
@@ -348,7 +348,7 @@ void  World::registerCallbacks()
 void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 	const Atlas::Objects::Entity::GameEntity &ent)
 {
-	std::string id = ent.GetId();
+	std::string id = ent.getId();
 	
 	// FIXME - work around a bug in Stage RIM Chat; the entity ID is not set, so
 	// Atlas-C++ defaults to 'game_entity'. The work around is to used to 'FROM'
@@ -357,8 +357,8 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 	
 	if (id == "game_entity") {
 		Eris::log(LOG_WARNING, "ID not set on entity");
-		id = sight.GetFrom();
-		(const_cast<Atlas::Objects::Entity::GameEntity&>(ent)).SetId(id);
+		id = sight.getFrom();
+		(const_cast<Atlas::Objects::Entity::GameEntity&>(ent)).setId(id);
 	}
 	
 	EntityIDMap::iterator ei = _lookup.find(id);
@@ -410,12 +410,12 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 	}
 	
 	// check for new contained entities
-	const Atlas::Message::Object::ListType& contained = ent.GetContains();
-	for (Atlas::Message::Object::ListType::const_iterator ci = contained.begin();
+	const Atlas::Message::Element::ListType& contained = ent.getContains();
+	for (Atlas::Message::Element::ListType::const_iterator ci = contained.begin();
 			ci != contained.end(); ++ci)
 	{
 		// just pull it in
-		lookup(ci->AsString());
+		lookup(ci->asString());
 	}
 }
 
@@ -425,15 +425,15 @@ void World::recvSightCreate(const Atlas::Objects::Operation::Create &cr,
 	Atlas::Objects::Operation::Sight st = 
 		Atlas::Objects::Operation::Sight::Instantiate();
 	
-	st.SetFrom(cr.GetFrom());
-	_pendingInitialSight.insert(ge.GetId());
+	st.setFrom(cr.getFrom());
+	_pendingInitialSight.insert(ge.getId());
     
 	recvSightObject(st, ge);
 }
 
 void World::recvSightDelete(const Atlas::Objects::Operation::Delete &del)
 {
-	std::string id = getArg(del, "id").AsString();	
+	std::string id = getArg(del, "id").asString();	
 	EntityIDMap::iterator ei = _lookup.find(id);	
 	
 	if (ei == _lookup.end()) {
@@ -465,16 +465,16 @@ void World::recvSightMove(const Atlas::Objects::Operation::Move &mv)
 	return;
     }
     
-    std::string id = getArg(mv, "id").AsString();
+    std::string id = getArg(mv, "id").asString();
     Entity *e = lookup(id);
 	
     if (!e) {
-		if ( isPendingInitialSight(mv.GetFrom()) ) {
+		if ( isPendingInitialSight(mv.getFrom()) ) {
 			// this is 'safe'; we discard the move becuase we will
 			// get the position with the LOOK, and there is no useful
 			// display before that point.
 		} else
-			throw UnknownEntity("Unknown entity at move", mv.GetFrom());
+			throw UnknownEntity("Unknown entity at move", mv.getFrom());
 	} else
 		e->recvMove(mv);
 }
@@ -482,24 +482,24 @@ void World::recvSightMove(const Atlas::Objects::Operation::Move &mv)
 void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 	const Atlas::Objects::Operation::Talk &tk)
 {
-	Entity *e = lookup(snd.GetFrom());
+	Entity *e = lookup(snd.getFrom());
 	if (!e) {
-		if ( isPendingInitialSight(snd.GetFrom()) ) {
+		if ( isPendingInitialSight(snd.getFrom()) ) {
 			
 			// FIXME - ensure name uniqueness
 			std::string nm = "talk_";
-			int sno = snd.GetSerialno();
+			int sno = snd.getSerialno();
 			for(; sno != 0; sno >>= 4) {
 			    nm += ('a' + (sno & 0xf));
 			}
-			std::cout << "TALK: " << snd.GetSerialno() << " " << nm << std::endl << std::flush;
+			std::cout << "TALK: " << snd.getSerialno() << " " << nm << std::endl << std::flush;
 			new WaitForDispatch(snd, 
 				"op:" + _igID + ":sight:entity", 
-				new IdDispatcher(nm, snd.GetFrom()),
+				new IdDispatcher(nm, snd.getFrom()),
 				_con
 			); 
 		} else
-			throw UnknownEntity("Unknown entity at sound", snd.GetFrom());
+			throw UnknownEntity("Unknown entity at sound", snd.getFrom());
 	
 	} else
 		e->recvTalk(tk);
@@ -508,9 +508,9 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &/*ifo*/,
 	const Atlas::Objects::Entity::GameEntity &character)
 {
-	log(LOG_DEBUG, "Setting up World for character %s", character.GetName().c_str());
+	log(LOG_DEBUG, "Setting up World for character %s", character.getName().c_str());
 
-	_characterID = character.GetId();
+	_characterID = character.getId();
 	
 	// now the _characterID is valid, register all other callbacks (which are
 	// parented to an OpTo selector to we only get In-Game (IG) ops.
@@ -527,11 +527,11 @@ void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &/*ifo*/,
 
 void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 {
-	const AtlasListType &args = ap.GetArgs();
+	const AtlasListType &args = ap.getArgs();
 	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
-		const AtlasMapType &app = A->AsMap();
+		const AtlasMapType &app = A->asMap();
 		AtlasMapType::const_iterator V(app.find("id"));
-		std::string id(V->second.AsString());
+		std::string id(V->second.asString());
 		Entity *e = lookup(id);
 		if (!e) continue;
 	
@@ -542,7 +542,7 @@ void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 		float stamp(FLT_MAX);
 		// but it might be out of data - check the stamp [NULL indicates no stamping]
 		if ((V = app.find("stamp")) != app.end())
-			stamp = V->second.AsFloat();
+			stamp = V->second.asFloat();
 		
 		if (stamp > e->getStamp()) {
 			Eris::log(LOG_DEBUG, "Issuing re-look for existing APPEARED entity %s with new stamp",
@@ -554,11 +554,11 @@ void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 
 void World::recvDisappear(const Atlas::Objects::Operation::Disappearance &ds)
 {
-	const AtlasListType &args = ds.GetArgs();
+	const AtlasListType &args = ds.getArgs();
 	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
-		const AtlasMapType &app = A->AsMap();
+		const AtlasMapType &app = A->asMap();
 		AtlasMapType::const_iterator V(app.find("id"));
-		std::string id(V->second.AsString());
+		std::string id(V->second.asString());
 		Entity *e = lookup(id);
 		if (e) {
 			e->setVisible(false);
@@ -573,7 +573,7 @@ void World::recvSightSet(const Atlas::Objects::Operation::Set &set)
 {
 	Eris::log(LOG_DEBUG, "processing IG sight(set)");
 	
-	Entity *e = lookup(set.GetTo());
+	Entity *e = lookup(set.getTo());
 	if (!e) {
 		// no need to re-dispatch; we'll get the set value anyway as part
 		// of the SIGHT
@@ -586,7 +586,7 @@ void World::recvSightSet(const Atlas::Objects::Operation::Set &set)
 void World::recvErrorLook(const Atlas::Objects::Operation::Look &lk)
 {
 	// probably, this means the entity ID is bollocks
-	std::string id = getArg(lk, "id").AsString();
+	std::string id = getArg(lk, "id").asString();
 }
 
 void World::netConnect()

@@ -7,7 +7,7 @@
 #include <float.h> // for FLT_EPSILON
 #include <Eris/Types.h>
 
-typedef Atlas::Message::Object::ListType AtlasListType;
+typedef Atlas::Message::Element::ListType AtlasListType;
 
 namespace Eris
 {

@@ -5,7 +5,7 @@
 #include <deque>
 #include <list>
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 
 #include <Eris/Types.h>
 
@@ -15,9 +15,9 @@ class StdBranchDispatcher;
 class ClassDispatcher;
 	
 // need a descriptive comment here	
-typedef std::deque<Atlas::Message::Object> DispatchContextDeque;		
+typedef std::deque<Atlas::Message::Element> DispatchContextDeque;		
 	
-/// base dispatcher class, encapsulating dynamic forwarding and decoding of Atlas::Message::Objects
+/// base dispatcher class, encapsulating dynamic forwarding and decoding of Atlas::Message::Elements
 /** Dispatchers form a tree, with the root being the connection object; each node has name which must be
 unique within it's parent context. Derived dispatchers accept or reject messages by exmaning various fields, 
 such as the type, class or destination. The leaves of the tree perform some useful action when a message

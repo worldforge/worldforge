@@ -10,7 +10,7 @@
 
 #include <stdexcept>
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 #include <Atlas/Objects/Root.h>
 
 #include <wfmath/vector.h>
@@ -58,11 +58,11 @@ public:
 class IllegalMessage : public BaseException
 {
 public:
-	IllegalMessage(const Atlas::Message::Object &m, const std::string &s) :
+	IllegalMessage(const Atlas::Message::Element &m, const std::string &s) :
 		BaseException(s), what(m) {;}
         virtual ~IllegalMessage() throw() { }
 			
-	Atlas::Message::Object what;
+	Atlas::Message::Element what;
 };
 
 /// Thrown when processing an Atlas::Object that isn't what we expected
@@ -85,7 +85,7 @@ public:
 };
 
 
-typedef std::list<Atlas::Message::Object> MessageList;
+typedef std::list<Atlas::Message::Element> MessageList;
 
 
 // Forward Decls

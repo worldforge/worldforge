@@ -22,22 +22,22 @@ void StubConnection::clear()
     m_queue.clear();
 }
 
-void StubConnection::push(const Atlas::Message::Object &obj)
+void StubConnection::push(const Atlas::Message::Element &obj)
 {
-    ObjectArrived(obj);
+    objectArrived(obj);
 }
 
-void StubConnection::send(const Atlas::Message::Object &obj)
+void StubConnection::send(const Atlas::Message::Element &obj)
 {
     m_queue.push_back(obj);
 }
 
 void StubConnection::send(const Atlas::Objects::Root &obj)
 {
-    send(obj.AsObject());
+    send(obj.asObject());
 }
 
-bool StubConnection::get(Atlas::Message::Object &obj)
+bool StubConnection::get(Atlas::Message::Element &obj)
 {
     if (m_queue.empty()) return false;
     obj = m_queue.front();

@@ -9,7 +9,7 @@
 #include <sigc++/signal.h>
 #endif
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 
 namespace Atlas {
 	namespace Objects {
@@ -83,7 +83,7 @@ public:
 
 	// property query interface
 	/// access a property; thows UnknownProperty if not found
-	virtual const Atlas::Message::Object& getProperty(const std::string &p);
+	virtual const Atlas::Message::Element& getProperty(const std::string &p);
 	/// test whether the named property exists on this entity
 	virtual bool hasProperty(const std::string &p) const;
 
@@ -154,7 +154,7 @@ public:
 	{  innerOpFromSlot(new SignalDispatcher<T>(op, slot)); }
 	
 	void observeProperty(const std::string &nm, 
-	    const SigC::Slot1<void, const Atlas::Message::Object&> slot);
+	    const SigC::Slot1<void, const Atlas::Message::Element&> slot);
 	
 protected:	
 	/// constructor for use by derived classes only!
@@ -168,13 +168,13 @@ protected:
 	virtual void handleTalk(const std::string &msg);
 	
 	/// set the property value; this protected so only Entity / World may use it
-	virtual void setProperty(const std::string &p, const Atlas::Message::Object &v);	
+	virtual void setProperty(const std::string &p, const Atlas::Message::Element &v);	
 
 	virtual void setPosition(const WFMath::Point<3>& pt);
 	/// update the container of this entity (may be NULL)
 	virtual void setContainer(Entity *pr);
 	
-	virtual void setContents(const Atlas::Message::Object::ListType &contents);
+	virtual void setContents(const Atlas::Message::Element::ListType &contents);
 	
 	/// add a contained entity to this object (sets container)
 	virtual void addMember(Entity *e);

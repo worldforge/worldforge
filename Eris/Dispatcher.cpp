@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <assert.h>
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 
 #include <Eris/Dispatcher.h>
 #include <Eris/Utils.h>
@@ -185,7 +185,7 @@ LeafDispatcher::LeafDispatcher(const std::string &nm) :
 
 bool LeafDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	Object::MapType &o = dq.back().AsMap();
+	Element::MapType &o = dq.back().asMap();
 	o["__DISPATCHED__"] = "1";
 	return false;
 }
@@ -201,7 +201,7 @@ Dispatcher* LeafDispatcher::getSubdispatch(const std::string &nm)
 
 bool IdDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	if (getMember(dq.front(), "id").AsString() != _id)
+	if (getMember(dq.front(), "id").asString() != _id)
 		return false;
 	return StdBranchDispatcher::subdispatch(dq);
 }
@@ -211,14 +211,14 @@ bool TypeDispatcher::dispatch(DispatchContextDeque &dq)
 	if (!hasMember(dq.front(), "objtype"))
 		return false;
 	
-	if (getMember(dq.front(), "objtype").AsString() != _type)
+	if (getMember(dq.front(), "objtype").asString() != _type)
 		return false;
 	return StdBranchDispatcher::subdispatch(dq);
 }
 
 bool OpFromDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	if (getMember(dq.front(), "from").AsString() != _id)
+	if (getMember(dq.front(), "from").asString() != _id)
 		return false;
 	return StdBranchDispatcher::subdispatch(dq);	
 }
@@ -226,7 +226,7 @@ bool OpFromDispatcher::dispatch(DispatchContextDeque &dq)
 bool OpToDispatcher::dispatch(DispatchContextDeque &dq)
 {
 	if (!hasMember(dq.front(), "to")) return false;
-	if (getMember(dq.front(), "to").AsString() != _id)
+	if (getMember(dq.front(), "to").asString() != _id)
 		return false;
 	return StdBranchDispatcher::subdispatch(dq);	
 }
@@ -238,9 +238,9 @@ bool OpRefnoDispatcher::dispatch(DispatchContextDeque &dq)
 		if(++item == dq.end())
 			return false;
 
-	assert((*item).IsMap());
-	const Atlas::Message::Object::MapType &map = (*item).AsMap();
-	Atlas::Message::Object::MapType::const_iterator I = map.find("refno");
+	assert((*item).isMap());
+	const Atlas::Message::Element::MapType &map = (*item).asMap();
+	Atlas::Message::Element::MapType::const_iterator I = map.find("refno");
 	if(I == map.end()) {
 		std::string warning = "Op without a refno, keys are:";
 		for(I = map.begin(); I != map.end(); ++I)
@@ -248,16 +248,16 @@ bool OpRefnoDispatcher::dispatch(DispatchContextDeque &dq)
 		log(LOG_DEBUG, warning.c_str());
 		return false;
 	}
-	assert(I->second.IsInt());
-	if (I->second.AsInt() != _refno)
+	assert(I->second.isInt());
+	if (I->second.asInt() != _refno)
 		return false;
 	return StdBranchDispatcher::subdispatch(dq);	
 }
 
 bool EncapDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	const Atlas::Message::Object::ListType &args = 
-		getMember(dq.front(), "args").AsList();
+	const Atlas::Message::Element::ListType &args = 
+		getMember(dq.front(), "args").asList();
 	if (args.size() < _position)
 		return false;
 	

@@ -26,7 +26,7 @@ typedef std::set<TypeInfoPtr> TypeInfoSet;
 /** The representation of an Atlas type (i.e a class or operation definition). This class
 supports efficent inheritance queries, and traversal of the type hierarchy. Atlas types
 have a unique ID, and types can be retrieved using this value. Where an Atlas::Objects instance,
-or an Atlas::Message::Object representing an Atlas object is being examine, it is much more
+or an Atlas::Message::Element representing an Atlas object is being examine, it is much more
 efficent to use the 'getSafe' methods rather than extracting PARENTS[0] and calling findSafe.
 This is because the getSafe methods may take advantage of integer type codes stored in the
 object, which avoids a map lookup to locate the type.

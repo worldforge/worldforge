@@ -33,8 +33,8 @@
 #include <Eris/Utils.h>
 #include <Eris/Log.h>
 
-typedef Atlas::Message::Object::ListType AtlasListType;
-typedef Atlas::Message::Object::MapType AtlasMapType;
+typedef Atlas::Message::Element::ListType AtlasListType;
+typedef Atlas::Message::Element::MapType AtlasMapType;
 
 using namespace Atlas::Objects;
 
@@ -109,21 +109,21 @@ void Player::createAccount(const std::string &uname,
 	// need option to create an admin object here
 	Atlas::Objects::Entity::Player account = 
    		Atlas::Objects::Entity::Player::Instantiate();
- 	account.SetId(uname);	// FIXME - I think this should be deprectaed in all of Atlas
- 	account.SetPassword(pwd);
-	account.SetName(name);
-	account.SetAttr("username", uname);
+ 	account.setId(uname);	// FIXME - I think this should be deprectaed in all of Atlas
+ 	account.setPassword(pwd);
+	account.setName(name);
+	account.setAttr("username", uname);
 	
- 	Atlas::Message::Object::ListType args(1,account.AsObject());
+ 	Atlas::Message::Element::ListType args(1,account.asObject());
 	Atlas::Objects::Operation::Create c = 
   		Atlas::Objects::Operation::Create::Instantiate();
   	
-	c.SetSerialno(getNewSerialno());
- 	c.SetArgs(args);
+	c.setSerialno(getNewSerialno());
+ 	c.setArgs(args);
 	_con->send(c);
 	
 	_currentAction = "create-account";
-	_currentSerial = c.GetSerialno();
+	_currentSerial = c.getSerialno();
 	
 	// let the lobby know what serial number to expect
 	_lobby->expectInfoRefno(_currentSerial);
@@ -152,13 +152,13 @@ void Player::logout()
     
     Atlas::Objects::Operation::Logout l = 
 	    Atlas::Objects::Operation::Logout::Instantiate();
-    l.SetId(_account);
-    l.SetSerialno(getNewSerialno());
-    l.SetFrom(_account);
+    l.setId(_account);
+    l.setSerialno(getNewSerialno());
+    l.setFrom(_account);
     
     _con->send(l);
     _currentAction = "logout";
-    _currentSerial = l.GetSerialno();
+    _currentSerial = l.getSerialno();
 	
     _logoutTimeout = new Timeout("logout", 5000);
     _logoutTimeout->Expired.connect(SigC::slot(*this, &Player::handleLogoutTimeout));
@@ -202,10 +202,10 @@ void Player::refreshCharacterInfo()
 		
 		AtlasMapType args;
 		args["id"] = *I;
-		lk.SetArgs(AtlasListType(1, args));
-		lk.SetFrom(_lobby->getAccountID());
-		lk.SetTo(*I);
-		lk.SetSerialno(getNewSerialno());
+		lk.setArgs(AtlasListType(1, args));
+		lk.setFrom(_lobby->getAccountID());
+		lk.setTo(*I);
+		lk.setSerialno(getNewSerialno());
 		
 		_con->send(lk);
     }
@@ -219,19 +219,19 @@ Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 	if (!_con->isConnected())
 		throw InvalidOperation("Not connected to server");
 
-	if (ent.GetName().empty())
+	if (ent.getName().empty())
 		throw InvalidOperation("Character unnamed");
 
 	Atlas::Objects::Operation::Create c = 
 		Atlas::Objects::Operation::Create::Instantiate();
-	Atlas::Message::Object::ListType args(1,ent.AsObject());
+	Atlas::Message::Element::ListType args(1,ent.asObject());
 
-	c.SetArgs(args);
-	c.SetFrom(_lobby->getAccountID());
- 	c.SetSerialno(getNewSerialno());
+	c.setArgs(args);
+	c.setFrom(_lobby->getAccountID());
+ 	c.setSerialno(getNewSerialno());
 
 	World* world = new World(this, _con);
-	Avatar* avatar = world->createAvatar(c.GetSerialno());
+	Avatar* avatar = world->createAvatar(c.getSerialno());
 
 	_con->send(c);
 
@@ -271,15 +271,15 @@ Avatar* Player::takeCharacter(const std::string &id)
 	Atlas::Objects::Operation::Look l = 
 		Atlas::Objects::Operation::Look::Instantiate();
  
-	l.SetFrom(id);  
-	Atlas::Message::Object::MapType what;
+	l.setFrom(id);  
+	Atlas::Message::Element::MapType what;
 	what["id"]=id;
-	Atlas::Message::Object::ListType args(1,what);
-	l.SetArgs(args);
-  	l.SetSerialno(getNewSerialno());
+	Atlas::Message::Element::ListType args(1,what);
+	l.setArgs(args);
+  	l.setSerialno(getNewSerialno());
 	
 	World* world = new World(this, _con);
-	Avatar* avatar = world->createAvatar(l.GetSerialno(), id);
+	Avatar* avatar = world->createAvatar(l.getSerialno(), id);
 	
 	_con->send(l);
 
@@ -290,21 +290,21 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
 {
 	Atlas::Objects::Entity::Account account = 
 		Atlas::Objects::Entity::Account::Instantiate();
-	account.SetId(uname);
- 	account.SetPassword(pwd);
-	account.SetAttr("username", uname);
+	account.setId(uname);
+ 	account.setPassword(pwd);
+	account.setAttr("username", uname);
 
  	Atlas::Objects::Operation::Login l = 
    		Atlas::Objects::Operation::Login::Instantiate();
- 	Atlas::Message::Object::ListType args(1,account.AsObject());
-  	l.SetArgs(args);
-	l.SetSerialno(getNewSerialno());
+ 	Atlas::Message::Element::ListType args(1,account.asObject());
+  	l.setArgs(args);
+	l.setSerialno(getNewSerialno());
 	
 	_con->send(l);
 	
 	// setup error tracking
 	_currentAction = "login";
-	_currentSerial = l.GetSerialno();
+	_currentSerial = l.getSerialno();
 }
 
 void Player::internalLogout(bool clean)
@@ -331,13 +331,13 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     // FIXME - user p.GetUsername() to verify this is the correct player object
     
     _currentAction = "";
-    _account = p.GetId();
+    _account = p.getId();
     
     _charIds.clear();
     // extract character IDs
-    Atlas::Message::Object::ListType cs = p.GetCharacters();
-    for (Atlas::Message::Object::ListType::iterator C=cs.begin(); C!=cs.end(); ++C)
-		_charIds.push_back(C->AsString());
+    Atlas::Message::Element::ListType cs = p.getCharacters();
+    for (Atlas::Message::Element::ListType::iterator C=cs.begin(); C!=cs.end(); ++C)
+		_charIds.push_back(C->asString());
     
     // setup dispatcher for sight of character ops
     Dispatcher *d = _con->getDispatcherByPath("op:oog:sight:entity");
@@ -370,14 +370,14 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
 void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 {
 	// skip errors if we're not doing anything
-	if (_currentAction.empty() || (err.GetRefno() != _currentSerial))
+	if (_currentAction.empty() || (err.getRefno() != _currentSerial))
 		return;
 	
-	std::string serverMsg = getMember(getArg(err, 0), "message").AsString();
+	std::string serverMsg = getMember(getArg(err, 0), "message").asString();
 	// can actually use error[2]->parents here to detrmine the current action
 	Eris::log(LOG_WARNING, "Received Atlas error %s", serverMsg.c_str());
 	
-	std::string pr = getMember(getArg(err, 1), "parents").AsList().front().AsString();
+	std::string pr = getMember(getArg(err, 1), "parents").asList().front().asString();
 	if (pr == "login") {
 		// prevent re-logins on the account
 		_username="";
@@ -398,7 +398,7 @@ void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 
 void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
 {
-    Eris::log(LOG_DEBUG, "got sight of character %s", ge.GetName().c_str());
+    Eris::log(LOG_DEBUG, "got sight of character %s", ge.getName().c_str());
     
     _characters.push_back(ge);
     GotCharacterInfo.emit(ge);

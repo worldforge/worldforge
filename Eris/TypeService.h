@@ -9,7 +9,7 @@
 
 // forward declare some Atlas things
 namespace Atlas {
-	namespace Message { class Object; }
+	namespace Message { class Element; }
 	namespace Objects { 
 		class Root; 
 		namespace Operation {
@@ -43,7 +43,7 @@ class TypeService : virtual public SigC::Object
 	
 	/** retrive the TypeInfo for an object; this should be faster (hoepfully constant time) since it
 	can take advantage of integer typeids */
-	TypeInfoPtr getTypeForAtlas(const Atlas::Message::Object &msg);
+	TypeInfoPtr getTypeForAtlas(const Atlas::Message::Element &msg);
 	TypeInfoPtr getTypeForAtlas(const Atlas::Objects::Root &obj);
 	
 	/** Lookup the requested type, by name, and return NULL if it's unknown. */

@@ -31,12 +31,12 @@ void TestEntity::testAccessors()
 {
     // create entity, init with data:
     
-    Atlas::Message::Object::MapType ent;
+    Atlas::Message::Element::MapType ent;
     
     ent["id"] = "test_id";
     ent["name"] = "John Doe";
     ent["description"] = "A highly boring person with smelly feet";
-    ent["parents"] = Atlas::Message::Object::ListType(1, "game_entity");
+    ent["parents"] = Atlas::Message::Element::ListType(1, "game_entity");
     ent["objtype"] = "object";
     ent["loc"] = "big_room_1";
     

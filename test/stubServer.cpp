@@ -6,7 +6,7 @@
 #include "testHarness.h"
 
 #include <Eris/Timestamp.h>
-#include <Eris/PollDefault.h>
+#include <Eris/pollDefault.h>
 
 #include <Atlas/Objects/Encoder.h>
 
@@ -98,7 +98,7 @@ void StubServer::run()
     if (!isStreamPending(m_stream)) 
 		return; // if there's no data on the Atlas connection, we're done
     
-    m_codec->Poll();	// read any data in
+    m_codec->poll();	// read any data in
 }
 
 bool StubServer::can_accept()
@@ -134,13 +134,13 @@ void StubServer::negotiate()
 {
     if (!m_doNegotiate) return;	// stall here forever
     
-    m_acceptor->Poll(false); // don't block
+    m_acceptor->poll(false); // don't block
     
     // get any more
     while (isStreamPending(m_stream))
-		m_acceptor->Poll();
+		m_acceptor->poll();
     
-    switch (m_acceptor->GetState()) {
+    switch (m_acceptor->getState()) {
     case Atlas::Net::StreamAccept::IN_PROGRESS:
 		break;
 
@@ -149,12 +149,12 @@ void StubServer::negotiate()
 		break;
 
     case Atlas::Net::StreamAccept::SUCCEEDED:
-		m_codec = m_acceptor->GetCodec();
+		m_codec = m_acceptor->getCodec();
 	
 		m_msgEncoder = new Atlas::Message::Encoder(m_codec);
 		m_objectEncoder = new Atlas::Objects::Encoder(m_codec);
 	
-		m_codec->StreamBegin();
+		m_codec->streamBegin();
 		m_state = CONNECTED;
 			
 		delete m_acceptor;
@@ -196,34 +196,34 @@ bool StubServer::isStreamPending(basic_socket_stream *stream)
     return FD_ISSET(fd, &fds);
 }
 
-void StubServer::push(const Atlas::Message::Object &obj)
+void StubServer::push(const Atlas::Message::Element &obj)
 {
-    m_msgEncoder->StreamMessage(obj);
+    m_msgEncoder->streamMessage(obj);
     (*m_stream) << std::flush;
 }
 
 void StubServer::push(const Atlas::Objects::Root &obj)
 {
-    m_objectEncoder->StreamMessage(&obj);
+    m_objectEncoder->streamMessage(&obj);
     (*m_stream) << std::flush;
 }
 
-void StubServer::ObjectArrived(const Atlas::Message::Object& obj)
+void StubServer::objectArrived(const Atlas::Message::Element& obj)
 {
 	if (m_handleTypeQueries) {
 		Operation::RootOperation op(Atlas::atlas_cast<Operation::RootOperation>(obj));
 		
-		if ((op.GetParents() == Object::ListType(1, "get")) &&
-			(op.GetFrom() == "") && 
-			(op.GetTo() == "")) 
+		if ((op.getParents() == Element::ListType(1, "get")) &&
+			(op.getFrom() == "") && 
+			(op.getTo() == "")) 
 		{
 			/* okay, we have an anonymous GET, now we just need to discard server object
 			lookups, be ensuring we have an argument value. */
 			
-			Object::ListType &args(op.GetArgs());
-			if ((args.size() == 1) && (args[0].IsString())) {
+			Element::ListType &args(op.getArgs());
+			if ((args.size() == 1) && (args[0].isString())) {
 				/* yay, we're good to go */
-				sendInfoForType(args[0].AsString(), op);
+				sendInfoForType(args[0].asString(), op);
 				return;
 			}
 		}
@@ -232,7 +232,7 @@ void StubServer::ObjectArrived(const Atlas::Message::Object& obj)
     m_queue.push(obj);
 }
 
-bool StubServer::get(Atlas::Message::Object &obj)
+bool StubServer::get(Atlas::Message::Element &obj)
 {
     if (m_queue.empty()) return false;
     obj = m_queue.front();
@@ -254,7 +254,7 @@ void StubServer::waitForMessage(int timeout)
     
     while (ts > Time::Stamp::now()) {
 		run();
-		Eris::PollDefault::poll();
+		Eris::pollDefault::poll();
 		usleep(10000); // 10 msec = 1/100 of a second
 		
 		if (!m_queue.empty()) return;	// all done
@@ -268,40 +268,40 @@ void StubServer::waitForMessage(int timeout)
 void StubServer::sendInfoForType(const std::string &type, const Operation::RootOperation &get)
 {
 	Operation::Info info(Operation::Info::Instantiate());
-	Object::ListType &args(info.GetArgs());
+	Element::ListType &args(info.getArgs());
 	
 	if (type == "root")
-		args.push_back(Atlas::Objects::Root().AsObject());
+		args.push_back(Atlas::Objects::Root().asObject());
 	else if (type == "root_entity") {
-		args.push_back(Entity::RootEntity().AsObject());
+		args.push_back(Entity::RootEntity().asObject());
 	} else if (type == "game_entity") {
-		args.push_back(Entity::GameEntity().AsObject());
+		args.push_back(Entity::GameEntity().asObject());
 	} else if (type == "root_operation") {
-		args.push_back(Operation::RootOperation().AsObject());
+		args.push_back(Operation::RootOperation().asObject());
 	} else if (type == "info") {
-		args.push_back(Operation::Info().AsObject());
+		args.push_back(Operation::Info().asObject());
 	} else if (type == "get") {
-		args.push_back(Operation::Get().AsObject());
+		args.push_back(Operation::Get().asObject());
 	} else if (type == "set") {
-		args.push_back(Operation::Set().AsObject());
+		args.push_back(Operation::Set().asObject());
 	} else if (type == "error") {
-		args.push_back(Operation::Error().AsObject());
+		args.push_back(Operation::Error().asObject());
 	} else if (type == "create") {
-		args.push_back(Operation::Create().AsObject());
+		args.push_back(Operation::Create().asObject());
 	} else if (type == "move") {
-		args.push_back(Operation::Move().AsObject());
+		args.push_back(Operation::Move().asObject());
 	} else if (type == "appearance") {
-		args.push_back(Operation::Appearance().AsObject());
+		args.push_back(Operation::Appearance().asObject());
 	} else {
 		ERIS_MESSAGE("unknown type in sendInfoForType, responing with ERROR instead");
 	
 		Operation::Error error(Operation::Error::Instantiate());
 	
-		Object::ListType& eargs(error.GetArgs());
+		Element::ListType& eargs(error.getArgs());
 		eargs.push_back("undefined type " + type);
-		eargs.push_back(get.AsObject());
+		eargs.push_back(get.asObject());
 	
-		error.SetRefno(get.GetSerialno());
+		error.setRefno(get.getSerialno());
 	
 		push(error);
 	}

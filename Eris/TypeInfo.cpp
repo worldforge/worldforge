@@ -41,7 +41,7 @@ TypeInfo::TypeInfo(const std::string &id, TypeService *engine) :
 
 TypeInfo::TypeInfo(const Atlas::Objects::Root &atype, TypeService *engine) :
 	_bound(false),
-	_name(atype.GetId()),
+	_name(atype.getId()),
 	_typeid(INVALID_TYPEID),
 	_engine(engine)
 {
@@ -78,26 +78,26 @@ bool TypeInfo::safeIsA(TypeInfoPtr tp)
 
 void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 {
-	std::string id = atype.GetId();
+	std::string id = atype.getId();
 	if (id != _name)
 		throw InvalidOperation("Mis-targeted INFO operation (for " + id + ')');
 	
-	if (atype.HasAttr("IntegerType")) {
-		_typeid = atype.GetAttr("IntegerType").AsInt();
+	if (atype.hasAttr("IntegerType")) {
+		_typeid = atype.getAttr("IntegerType").asInt();
 	}
 	
-	Atlas::Message::Object::ListType parents = atype.GetParents();
+	Atlas::Message::Element::ListType parents = atype.getParents();
 	for (unsigned int I=0; I<parents.size(); ++I) {
-		addParent(_engine->getTypeByName(parents[I].AsString()));
+		addParent(_engine->getTypeByName(parents[I].asString()));
 	}
 	
 	// expand the children ?  why not ..
-	if (atype.HasAttr("children")) {
-		assert(atype.GetAttr("children").IsList());
-		Message::Object::ListType children = atype.GetAttr("children").AsList();
-		for (Atlas::Message::Object::ListType::iterator I=children.begin(); I!=children.end(); ++I) {
-			assert(I->IsString());
-			addChild(_engine->getTypeByName(I->AsString()));
+	if (atype.hasAttr("children")) {
+		assert(atype.getAttr("children").isList());
+		Message::Element::ListType children = atype.getAttr("children").asList();
+		for (Atlas::Message::Element::ListType::iterator I=children.begin(); I!=children.end(); ++I) {
+			assert(I->isString());
+			addChild(_engine->getTypeByName(I->asString()));
 		}
 	}
 

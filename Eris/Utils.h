@@ -1,7 +1,7 @@
 #ifndef ERIS_UTILS_H
 #define ERIS_UTILS_H
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 #include <Atlas/Objects/Operation/RootOperation.h>
 
 #include <Eris/Types.h>
@@ -12,23 +12,23 @@ namespace Eris
 // operation un-packing helpers
 
 /// simply return the requested argument
-const Atlas::Message::Object&
+const Atlas::Message::Element&
 getArg(const Atlas::Objects::Operation::RootOperation &op, unsigned int i);	
 
 /// assume that args[0] is a map, and then lookup the named value
-const Atlas::Message::Object&
+const Atlas::Message::Element&
 getArg(const Atlas::Objects::Operation::RootOperation &op, const std::string &nm);
 
-/// verify that a named item exists in args[0].AsMap
+/// verify that a named item exists in args[0].asMap
 bool hasArg(const Atlas::Objects::Operation::RootOperation &op, const std::string &nm);	
 	
-const Atlas::Message::Object&
-getMember(const Atlas::Message::Object &obj, unsigned int i);	
+const Atlas::Message::Element&
+getMember(const Atlas::Message::Element &obj, unsigned int i);	
 
-const Atlas::Message::Object&
-getMember(const Atlas::Message::Object &obj, const std::string &nm);	
+const Atlas::Message::Element&
+getMember(const Atlas::Message::Element &obj, const std::string &nm);	
 	
-bool hasMember(const Atlas::Message::Object &obj, const std::string &nm);	
+bool hasMember(const Atlas::Message::Element &obj, const std::string &nm);	
 	
 // inheritance checks /////////////////////////
 
@@ -40,7 +40,7 @@ StringSet getParentsAsSet(const Atlas::Objects::Root &obj);
 for direct inheritance, simply get the parents set using getParentsAsSet
 and use set::find(). */
 //bool checkInherits(const Atlas::Objects::Root &obj, const std::string &cid);
-// bool CheckInherits(const Atlas::Message::Object &obj, const string &cid);
+// bool CheckInherits(const Atlas::Message::Element &obj, const string &cid);
 
 // operation serial number sequencing
 long getNewSerialno();

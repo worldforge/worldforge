@@ -40,11 +40,11 @@ public:
     } State;
 
     // critical override from DecoderBase
-    virtual void ObjectArrived(const Atlas::Message::Object& obj);
+    virtual void objectArrived(const Atlas::Message::Element& obj);
     
     // the test interface
-    bool get(Atlas::Message::Object &obj);
-    void push(const Atlas::Message::Object &obj);
+    bool get(Atlas::Message::Element &obj);
+    void push(const Atlas::Message::Element &obj);
     void push(const Atlas::Objects::Root &obj);
 	
     void waitForMessage(int timeout);
@@ -56,7 +56,7 @@ protected:
     void sendInfoForType(const std::string &type, const Atlas::Objects::Operation::RootOperation &get);
 
 	State m_state;
-    std::queue<Atlas::Message::Object> m_queue;	// all the atlas messages we've received
+    std::queue<Atlas::Message::Element> m_queue;	// all the atlas messages we've received
 
     void accept();
     bool can_accept();

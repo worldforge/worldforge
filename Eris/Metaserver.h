@@ -138,7 +138,7 @@ public:
 protected:
 	friend class MetaQuery;
 		
-	virtual void ObjectArrived(const Atlas::Message::Object &msg);
+	virtual void objectArrived(const Atlas::Message::Element &msg);
 
 	/// process raw UDP packets from the meta-server
 	void recv();

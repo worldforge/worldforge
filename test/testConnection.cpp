@@ -21,7 +21,7 @@
 #include "testUtils.h"
 #include <Eris/Utils.h>
 #include <Eris/Timestamp.h>
-#include <Eris/PollDefault.h>
+#include <Eris/pollDefault.h>
 #include <Eris/SignalDispatcher.h>
 
 using namespace Atlas::Message;
@@ -70,7 +70,7 @@ void TestConnection::waitFor(int timeoutSeconds, bool &watch1, bool &watch2)
 			return;
 		}
 		m_server->run();
-		Eris::PollDefault::poll();
+		Eris::pollDefault::poll();
 		usleep(10000); // 10 msec = 1/100 of a second
     }
 }
@@ -124,13 +124,13 @@ bool TestConnection::onDisconnecting_delay()
 {
     m_con->lock();
     
-    Atlas::Message::Object::MapType mt;
-    mt["parents"] = Atlas::Message::Object::ListType(1, "delay");
+    Atlas::Message::Element::MapType mt;
+    mt["parents"] = Atlas::Message::Element::ListType(1, "delay");
     mt["objtype"] = "op";
     
-    Atlas::Message::Object::MapType args;
+    Atlas::Message::Element::MapType args;
     args["time"] = 1.0;	 // wait a second
-    mt["args"] = Atlas::Message::Object::ListType(1, args);
+    mt["args"] = Atlas::Message::Element::ListType(1, args);
     
     m_con->send(mt);
     return true;
@@ -185,8 +185,8 @@ void TestConnection::testDispatch()
     
     m_gotArbitraryDispatch = false;
     
-    Atlas::Message::Object::MapType testOp;
-    testOp["parents"] = Atlas::Message::Object::ListType(1, "info");
+    Atlas::Message::Element::MapType testOp;
+    testOp["parents"] = Atlas::Message::Element::ListType(1, "info");
     testOp["from"] = "stub-server";
     testOp["to"] = "test-client";
     m_server->push(testOp);
@@ -210,7 +210,7 @@ void TestConnection::testSend()
     m_con->send(get);
     m_server->waitForMessage(10);
     
-    Atlas::Message::Object received;
+    Atlas::Message::Element received;
     ERIS_ASSERT(m_server->get(received));
     
     ERIS_ASSERT(getType(received) == "get");

@@ -15,7 +15,7 @@ using namespace Time;
 // This should be as long as possible, since the
 // only reason to limit the wait is due to
 // the addition of new timeouts. The timeout sets
-// a flag in the Poll class if that happens,
+// a flag in the poll class if that happens,
 // it's the responsibility of the poll to check.
 static const unsigned long max_wait = ULONG_MAX;
 

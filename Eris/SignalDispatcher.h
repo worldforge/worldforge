@@ -28,10 +28,10 @@ public:
 	virtual bool dispatch(DispatchContextDeque &dq)
 	{
 		T object = T::Instantiate();
-		Atlas::Message::Object::MapType::const_iterator I = dq.front().AsMap().begin();
+		Atlas::Message::Element::MapType::const_iterator I = dq.front().asMap().begin();
 		
-		for (; I != dq.front().AsMap().end(); ++I)
-        		object.SetAttr(I->first, I->second);
+		for (; I != dq.front().asMap().end(); ++I)
+        		object.setAttr(I->first, I->second);
 		Signal.emit(object);
 		
 		return LeafDispatcher::dispatch(dq);
@@ -86,15 +86,15 @@ public:
 		DispatchContextDeque::iterator Q = dq.begin();
 		
 		S object = S::Instantiate();
-		Atlas::Message::Object::MapType::const_iterator I = Q->AsMap().begin();
+		Atlas::Message::Element::MapType::const_iterator I = Q->asMap().begin();
 		
-		for (; I != Q->AsMap().end(); ++I)
-        		object.SetAttr(I->first, I->second);
+		for (; I != Q->asMap().end(); ++I)
+        		object.setAttr(I->first, I->second);
 		++Q;
 		T parent = T::Instantiate();
-		I = Q->AsMap().begin();
-		for (; I != Q->AsMap().end(); ++I)
-        		parent.SetAttr(I->first, I->second);
+		I = Q->asMap().begin();
+		for (; I != Q->asMap().end(); ++I)
+        		parent.setAttr(I->first, I->second);
 		
 		Signal.emit(parent, object);
 		return LeafDispatcher::dispatch(dq);
@@ -118,8 +118,8 @@ class MessageDispatcher :
 public:	
 	/** standard constructor
 	@param nm The dispatcher label
-	@param slot A SigC  slot that takes an Atlas::Message::Object */
-	MessageDispatcher(const std::string &nm, const SigC::Slot1<void, const Atlas::Message::Object&> &slot) :
+	@param slot A SigC  slot that takes an Atlas::Message::Element */
+	MessageDispatcher(const std::string &nm, const SigC::Slot1<void, const Atlas::Message::Element&> &slot) :
 		Dispatcher(nm)
 	{ Signal.connect(slot); }
 	
@@ -131,7 +131,7 @@ public:
 		return false;
 	}
 protected:	
-	SigC::Signal1<void, const Atlas::Message::Object&> Signal;
+	SigC::Signal1<void, const Atlas::Message::Element&> Signal;
 };
 
 

@@ -30,7 +30,7 @@ DebugDispatcher::~DebugDispatcher()
 
 bool DebugDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	_enc->StreamMessage(dq.front());
+	_enc->streamMessage(dq.front());
 	_log << std::endl;
 	return false;
 }

@@ -15,10 +15,10 @@ using namespace Atlas::Message;
 namespace Eris
 {
 	
-const Atlas::Message::Object&
+const Atlas::Message::Element&
 getArg(const Atlas::Objects::Operation::RootOperation &op, unsigned int i)
 {
-	const Object::ListType &l = op.GetArgs();
+	const Element::ListType &l = op.getArgs();
  
 	assert(i < l.size());
 	if (i >= l.size())
@@ -26,12 +26,12 @@ getArg(const Atlas::Objects::Operation::RootOperation &op, unsigned int i)
 	return l[i];
 }
 
-const Atlas::Message::Object&
+const Atlas::Message::Element&
 getArg(const Atlas::Objects::Operation::RootOperation &op, const std::string &nm)
 {
-	assert(op.GetArgs().front().IsMap());
-	const Object::MapType &m = op.GetArgs().front().AsMap();
-	Object::MapType::const_iterator i = m.find(nm);
+	assert(op.getArgs().front().isMap());
+	const Element::MapType &m = op.getArgs().front().asMap();
+	Element::MapType::const_iterator i = m.find(nm);
 	
 	assert(i != m.end());
 	if (i == m.end())
@@ -41,20 +41,20 @@ getArg(const Atlas::Objects::Operation::RootOperation &op, const std::string &nm
 
 bool hasArg(const Atlas::Objects::Operation::RootOperation &op, const std::string &nm)
 {
-	const Object::ListType &l = op.GetArgs();
-	if (l.empty() || !l[0].IsMap()) return false;
+	const Element::ListType &l = op.getArgs();
+	if (l.empty() || !l[0].isMap()) return false;
 	
-	const Object::MapType &m = l[0].AsMap();
-	Object::MapType::const_iterator i = m.find(nm);
+	const Element::MapType &m = l[0].asMap();
+	Element::MapType::const_iterator i = m.find(nm);
 	return (i != m.end());
 }
 
 
-const Atlas::Message::Object&
-getMember(const Atlas::Message::Object &obj, unsigned int i)
+const Atlas::Message::Element&
+getMember(const Atlas::Message::Element &obj, unsigned int i)
 {
-	assert(obj.IsList());
-	const Object::ListType &l = obj.AsList();
+	assert(obj.isList());
+	const Element::ListType &l = obj.asList();
 	
 	assert(i < l.size());
 	if (i >= l.size())
@@ -62,12 +62,12 @@ getMember(const Atlas::Message::Object &obj, unsigned int i)
 	return l[i];
 }
 
-const Atlas::Message::Object&
-getMember(const Atlas::Message::Object &obj, const std::string &nm)
+const Atlas::Message::Element&
+getMember(const Atlas::Message::Element &obj, const std::string &nm)
 {
-	assert(obj.IsMap());
-	const Object::MapType &m = obj.AsMap();
-	Object::MapType::const_iterator i = m.find(nm);
+	assert(obj.isMap());
+	const Element::MapType &m = obj.asMap();
+	Element::MapType::const_iterator i = m.find(nm);
 	
 	assert(i != m.end());
 	if (i == m.end())
@@ -75,20 +75,20 @@ getMember(const Atlas::Message::Object &obj, const std::string &nm)
 	return i->second;
 }
 
-bool hasMember(const Atlas::Message::Object &obj, const std::string &nm)
+bool hasMember(const Atlas::Message::Element &obj, const std::string &nm)
 {
-	assert(obj.IsMap());
-	const Object::MapType &m = obj.AsMap();
+	assert(obj.isMap());
+	const Element::MapType &m = obj.asMap();
 	return (m.find(nm) != m.end());
 }
 
 StringSet getParentsAsSet(const Atlas::Objects::Root &obj)
 {
-	const Object::ListType &parents = obj.GetParents();
+	const Element::ListType &parents = obj.getParents();
 	StringSet ret;
 	
-	for (Object::ListType::const_iterator I = parents.begin(); I!=parents.end(); ++I)
-		ret.insert(I->AsString());
+	for (Element::ListType::const_iterator I = parents.begin(); I!=parents.end(); ++I)
+		ret.insert(I->asString());
 	return ret;
 }
 
@@ -103,21 +103,21 @@ long getNewSerialno()
 
 const std::string objectSummary(const Atlas::Objects::Root &obj)
 {
-	if (obj.GetParents().empty()) {
+	if (obj.getParents().empty()) {
 		// this can happen if built the Object::Root out of something silly, like a string; we
 		// don't want to crash here, so bail
-		if (obj.GetObjtype() == "meta")
+		if (obj.getObjtype() == "meta")
 			return "root";
 		else // probably passsed something that wasn't an Object
 			return "<invalid>";
 	}
 	
 try {	
-	std::string type = obj.GetParents()[0].AsString(),
-		label(obj.GetName());
+	std::string type = obj.getParents()[0].asString(),
+		label(obj.getName());
 	std::string ret = type;
 	
-	if (obj.GetObjtype() == "op") {
+	if (obj.getObjtype() == "op") {
 		Atlas::Objects::Operation::RootOperation op =
 			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj);
 
@@ -130,15 +130,15 @@ try {
 		// list the values being set
 	
 		if (type == "set") {
-			const Atlas::Message::Object::ListType &arglist = op.GetArgs();
+			const Atlas::Message::Element::ListType &arglist = op.getArgs();
 			ret.append("(");
 			
-			if (!arglist.empty() && arglist[0].IsMap()) {			
-				const Atlas::Message::Object::MapType& values = 
-					arglist[0].AsMap();
+			if (!arglist.empty() && arglist[0].isMap()) {			
+				const Atlas::Message::Element::MapType& values = 
+					arglist[0].asMap();
 				
 				// blast through the list
-				for (Atlas::Message::Object::MapType::const_iterator V = values.begin();
+				for (Atlas::Message::Element::MapType::const_iterator V = values.begin();
 						V != values.end(); ++V) {
 					ret.append(V->first + ", ");
 				}
@@ -150,8 +150,8 @@ try {
 		
 		// show the error message and also summarise the deffective op
 		if (type == "error") {
-			if (!op.GetArgs().empty()) {
-				std::string msg = hasArg(op, "message") ? getArg(op, "message").AsString() : "-";
+			if (!op.getArgs().empty()) {
+				std::string msg = hasArg(op, "message") ? getArg(op, "message").asString() : "-";
 				Atlas::Objects::Operation::RootOperation inner =
 					Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(getArg(op, 1));
 				ret.append('(' + msg + ',' + objectSummary(inner) + ')');
@@ -166,15 +166,15 @@ try {
 		
 		if (type == "get") {
 			if (hasArg(op, "id"))
-				ret.append('(' + getArg(op, "id").AsString() + ')');
+				ret.append('(' + getArg(op, "id").asString() + ')');
 		}
 	
-	} else if (obj.GetObjtype() == "entity") {
-		if (obj.HasAttr("id"))
-			label = obj.GetId();
+	} else if (obj.getObjtype() == "entity") {
+		if (obj.hasAttr("id"))
+			label = obj.getId();
 	} else {
-		if (obj.HasAttr("id"))
-			label = obj.GetId();
+		if (obj.hasAttr("id"))
+			label = obj.getId();
 	}
 	
 	if (!label.empty())

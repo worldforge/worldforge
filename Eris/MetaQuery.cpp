@@ -60,16 +60,16 @@ void MetaQuery::onConnect()
 	Atlas::Objects::Operation::Get gt = 
 		Atlas::Objects::Operation::Get::Instantiate();
 	
-	gt.SetSerialno(getNewSerialno());
+	gt.setSerialno(getNewSerialno());
 	
 	// send code from Connection
-	_encode->StreamMessage(&gt);
+	_encode->streamMessage(&gt);
 	(*_stream) << std::flush;
 	
 	_stamp = Time::Stamp::now();
 	
 	// save our serial-no (so we can identify replies)
-	_queryNo = gt.GetSerialno();
+	_queryNo = gt.getSerialno();
 	
 	if (_timeout)
 		throw InvalidOperation("MetaQuery timeout not cleared");

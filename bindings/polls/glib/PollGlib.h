@@ -1,26 +1,26 @@
 #ifndef ERIS_POLL_GLIB_H
 #define ERIS_POLL_GLIB_H
 
-#include <Eris/PollGlibVersion.h>
-#include <Eris/PollGlibFD.h>
-#include <Eris/PollGlibSource.h>
+#include <Eris/pollGlibVersion.h>
+#include <Eris/pollGlibFD.h>
+#include <Eris/pollGlibSource.h>
 
 #include <map>
-#include <Eris/Poll.h>
+#include <Eris/poll.h>
 #include <Eris/Types.h>
 #include <Eris/Timeout.h>
 
 namespace Eris {
 
-class PollGlib : public Eris::Poll, public Eris::PollData, public PollGlibSource
+class pollGlib : public Eris::Poll, public Eris::PollData, public PollGlibSource
 {
 public:
 #ifdef ERIS_POLL_GLIB_2_0
-  PollGlib(GMainContext *con = 0) : PollGlibSource(con), _wait_time(0) {}
+  pollGlib(GMainContext *con = 0) : PollGlibSource(con), _wait_time(0) {}
 #else
-  PollGlib() : _wait_time(0) {}
+  pollGlib() : _wait_time(0) {}
 #endif
-  virtual ~PollGlib()
+  virtual ~pollGlib()
   {
     for(StreamMap::iterator I = _streams.begin(); I != _streams.end(); ++I)
       delete I->second;
@@ -29,31 +29,31 @@ public:
   virtual void addStream(const basic_socket_stream* str, Check check)
   {
     if(!(check & MASK))
-      throw Eris::InvalidOperation("Null check in PollGlib");
+      throw Eris::InvalidOperation("Null check in pollGlib");
 
     gushort events = getEvents(check);
 
 #ifdef ERIS_POLL_GLIB_2_0
-    PollGlibFD* fd = new PollGlibFD(source(), str, events);
+    pollGlibFD* fd = new PollGlibFD(source(), str, events);
 #else
-    PollGlibFD* fd = new PollGlibFD(str, events);
+    pollGlibFD* fd = new PollGlibFD(str, events);
 #endif
 
     if(!_streams.insert(StreamMap::value_type(str, fd)).second) {
       delete fd;
-      throw Eris::InvalidOperation("Duplicate streams in PollGlib");
+      throw Eris::InvalidOperation("Duplicate streams in pollGlib");
     }
   }
 
   virtual void changeStream(const basic_socket_stream* str, Check check)
   {
     if(!(check & MASK))
-      throw Eris::InvalidOperation("Null check in PollGlib");
+      throw Eris::InvalidOperation("Null check in pollGlib");
 
     StreamMap::iterator I = _streams.find(str);
 
     if(I == _streams.end())
-      throw Eris::InvalidOperation("Can't find stream in PollGlib");
+      throw Eris::InvalidOperation("Can't find stream in pollGlib");
 
     I->second->setEvents(getEvents(check));
   }
@@ -63,9 +63,9 @@ public:
     StreamMap::iterator I = _streams.find(str);
 
     if(I == _streams.end())
-      throw Eris::InvalidOperation("Can't find stream in PollGlib");
+      throw Eris::InvalidOperation("Can't find stream in pollGlib");
 
-    PollGlibFD *data = I->second;
+    pollGlibFD *data = I->second;
 
     _streams.erase(I);
 
@@ -113,15 +113,15 @@ protected:
   }
 
  private:
-  static gushort getEvents(Eris::Poll::Check check)
+  static gushort getEvents(Eris::poll::Check check)
   {
-    assert(check & Eris::Poll::MASK);
+    assert(check & Eris::poll::MASK);
 
     gushort events = 0;
 
-    if(check & Eris::Poll::READ)
+    if(check & Eris::poll::READ)
       events |= G_IO_IN;
-    if(check & Eris::Poll::WRITE)
+    if(check & Eris::poll::WRITE)
       events |= G_IO_OUT;
 
     assert(events);
@@ -129,7 +129,7 @@ protected:
     return events;
   }
 
-  typedef std::map<const basic_socket_stream*,PollGlibFD*> StreamMap;
+  typedef std::map<const basic_socket_stream*,pollGlibFD*> StreamMap;
   StreamMap _streams;
 
   gint _wait_time;

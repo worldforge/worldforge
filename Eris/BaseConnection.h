@@ -2,7 +2,7 @@
 #define ERIS_BASE_CONNECTION_H
 
 #include <iostream>
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 #include <Atlas/Codec.h>
 
 #include <sigc++/object.h>
@@ -116,7 +116,7 @@ protected:
 	tcp_socket_stream* _stream;		///< the underlying iostream channel
 	std::string _clientName;		///< the client identified used during connection
 	
-	/** the connection bridge (i.e something implementing ObjectArrived()) : this can be the derived
+	/** the connection bridge (i.e something implementing objectArrived()) : this can be the derived
 	class itself, or any other object */
 	Atlas::Bridge* _bridge;	
 	Timeout* _timeout;		///< network level timeouts	

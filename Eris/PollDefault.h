@@ -11,7 +11,7 @@ class PollDefault : public Poll, virtual public SigC::Object
 {
 public:
 	PollDefault() {}
-//	PollDefault(const SigC::Slot0<bool> &s) : _prePoll(s) {}
+//	pollDefault(const SigC::Slot0<bool> &s) : _prePoll(s) {}
 	virtual ~PollDefault() {}
 
 	virtual void addStream(const basic_socket_stream*, Check);
@@ -27,7 +27,7 @@ private:
 
 	void doPoll(unsigned long timeout);
 
-//	SigC::Slot0<bool> _prePoll;
+//	SigC::Slot0<bool> _prepoll;
 };
 
 } // namespace Eris

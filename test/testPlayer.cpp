@@ -10,7 +10,7 @@
 #include <Eris/Player.h>
 #include <Eris/Connection.h>
 #include <Eris/Utils.h>
-#include <Eris/PollDefault.h>
+#include <Eris/pollDefault.h>
 
 #include <sigc++/signal.h>
 #include <sigc++/object_slot.h>
@@ -59,28 +59,28 @@ void TestPlayer::testAccountCreate()
 	m_player->createAccount("dip", "Dipsy", "again!again!");
 	
 	// validate the object the stub server recieved	
-	Message::Object op;
+	Message::Element op;
 	ERIS_ASSERT_MESSAGE(m_server->get(op), "account create failed to send anything");
     
     ERIS_ASSERT("create" == getType(op));  
-	ERIS_ASSERT("dip" == getArg(op, "username").AsString());
-    ERIS_ASSERT("again!again!" == getArg(op, "password").AsString());
-	ERIS_ASSERT("Dipsy" == getArg(op, "name").AsString());
+	ERIS_ASSERT("dip" == getArg(op, "username").asString());
+    ERIS_ASSERT("again!again!" == getArg(op, "password").asString());
+	ERIS_ASSERT("Dipsy" == getArg(op, "name").asString());
 	
 // send a response, and check that eris does the right thing
 	Operation::Info ifo = Operation::Info::Instantiate();
-    ifo.SetTo("502");
+    ifo.setTo("502");
     
-    Message::Object::MapType acmap(getArg(op, 0).AsMap());
+    Message::Element::MapType acmap(getArg(op, 0).asMap());
     acmap["id"] = "502";
-    acmap["characters"] = Message::Object::ListType();
+    acmap["characters"] = Message::Element::ListType();
 	
-    ifo.SetArgs(Message::Object::ListType(1, acmap));
-	ifo.SetRefno(getMember(op, "serialno").AsInt());
+    ifo.setArgs(Message::Element::ListType(1, acmap));
+	ifo.setRefno(getMember(op, "serialno").asInt());
 
 
-	m_server->push(ifo.AsObject());
-	Eris::PollDefault::poll();
+	m_server->push(ifo.asObject());
+	Eris::pollDefault::poll();
     ERIS_ASSERT(m_gotLoginComplete);
 }
 
@@ -92,33 +92,33 @@ void TestPlayer::doStandardLogin()
 	m_player->login("twink", "foo");
 	
 // validate the object the stub server recieved	
-	Message::Object op;
+	Message::Element op;
 	ERIS_ASSERT_MESSAGE(m_server->get(op), "login failed to send anything");
     
     ERIS_ASSERT("login" == getType(op));  
-	ERIS_ASSERT("twink" == getArg(op, "username").AsString());
-    ERIS_ASSERT("foo" == getArg(op, "password").AsString());
+	ERIS_ASSERT("twink" == getArg(op, "username").asString());
+    ERIS_ASSERT("foo" == getArg(op, "password").asString());
 	
 // send a response, and check that eris does the right thing
 	Operation::Info ifo = Operation::Info::Instantiate();
-    ifo.SetTo("501");
+    ifo.setTo("501");
     
-    Message::Object::MapType acmap;
+    Message::Element::MapType acmap;
     acmap["id"] = "501";
     acmap["username"] = "twink";
 	acmap["name"] = "Tinky Winky";
-    acmap["parents"] = Message::Object::ListType(1,"account");
+    acmap["parents"] = Message::Element::ListType(1,"account");
     acmap["objtype"] = "object";
 	
 	// should this be optional?
-    acmap["characters"] = Message::Object::ListType();
+    acmap["characters"] = Message::Element::ListType();
 	
-    ifo.SetArgs(Message::Object::ListType(1, acmap));
-	ifo.SetRefno(getMember(op, "serialno").AsInt());
+    ifo.setArgs(Message::Element::ListType(1, acmap));
+	ifo.setRefno(getMember(op, "serialno").asInt());
 
 // give it to Eris
 	m_server->push(ifo);
-	Eris::PollDefault::poll();
+	Eris::pollDefault::poll();
     ERIS_ASSERT(m_gotLoginComplete);
 }
 
@@ -133,16 +133,16 @@ void TestPlayer::testClientLogout()
 	m_player->logout();
 	
 	m_server->run();
-	Message::Object op;
+	Message::Element op;
 	ERIS_ASSERT_MESSAGE(m_server->get(op), "logout failed to send anything");
 	
 	ERIS_ASSERT("logout" == getType(op));
 	
 	Operation::Logout logout(Operation::Logout::Instantiate());
-	logout.SetRefno(getMember(op, "serialno").AsInt());
+	logout.setRefno(getMember(op, "serialno").asInt());
 	
 	m_server->push(logout);
-	Eris::PollDefault::poll();
+	Eris::pollDefault::poll();
     ERIS_ASSERT(m_logoutValue == 1);
 	
 	//ERIS_ASSERT(m_connection->getStatus() == Eris::BaseConnection::Disconnected);
@@ -161,29 +161,29 @@ void TestPlayer::testCharacterLook()
 	
 	m_player->login("la", "bicycle");
 	
-	Message::Object op;
+	Message::Element op;
 	ERIS_ASSERT_MESSAGE(m_server->get(op), "login failed to send anything");
 	
 	Operation::Info ifo = Operation::Info::Instantiate();
-    ifo.SetTo("503");
+    ifo.setTo("503");
     
-    Message::Object::MapType acmap;
+    Message::Element::MapType acmap;
     acmap["id"] = "503";
     acmap["username"] = "la";
 	acmap["name"] = "La La";
-    acmap["parents"] = Message::Object::ListType(1,"account");
+    acmap["parents"] = Message::Element::ListType(1,"account");
     acmap["objtype"] = "object";
 	
-	Message::Object::ListType charList;
+	Message::Element::ListType charList;
 	charList.push_back("testchar1");
 	charList.push_back("testchar2");
     acmap["characters"] = charList;
 	
-	ifo.SetArgs(Message::Object::ListType(1, acmap));
-	ifo.SetRefno(getMember(op, "serialno").AsInt());
-	m_server->push(ifo.AsObject());
+	ifo.setArgs(Message::Element::ListType(1, acmap));
+	ifo.setRefno(getMember(op, "serialno").asInt());
+	m_server->push(ifo.asObject());
 	
-	Eris::PollDefault::poll();
+	Eris::pollDefault::poll();
 	ERIS_ASSERT(!m_gotAllChars);
 	
 	m_player->refreshCharacterInfo();
@@ -191,15 +191,15 @@ void TestPlayer::testCharacterLook()
 	
 	while (!m_gotAllChars) {
 		m_server->run();
-		Eris::PollDefault::poll();
+		Eris::pollDefault::poll();
 		
-		Message::Object op;
+		Message::Element op;
 		
 		while (m_server->get(op)) {
 			if ("look" != getType(op)) continue;
-			ERIS_ASSERT(getMember(op, "from").AsString() == "503");
+			ERIS_ASSERT(getMember(op, "from").asString() == "503");
 			
-			std::string cid(getArg(op, "id").AsString());
+			std::string cid(getArg(op, "id").asString());
 			if ((cid != "testchar1") && (cid != "testchar2")) {
 				ERIS_MESSAGE("got LOOK for a strange ID");
 				continue;
@@ -209,7 +209,7 @@ void TestPlayer::testCharacterLook()
 			Operation::Sight st;
 			
 			Entity::GameEntity character;
-			character.SetId(cid);
+			character.setId(cid);
 			
 			if (cid == "testchar1") {
 				character.SetName("John Doe");
@@ -218,9 +218,9 @@ void TestPlayer::testCharacterLook()
 				
 			}
 			
-			st.SetTo("503");
-			st.SetRefno(getMember(op, "serialno").AsInt());
-			st.SetArgs(Message::Object::ListType(1, character.AsObject()));
+			st.setTo("503");
+			st.setRefno(getMember(op, "serialno").asInt());
+			st.setArgs(Message::Element::ListType(1, character.asObject()));
 			
 			m_server->push(st);
 		}

@@ -1,15 +1,15 @@
 #ifndef ERIS_POLL_GLIB_SOURCE_H
 #define ERIS_POLL_GLIB_SOURCE_H
 
-#include <Eris/PollGlibVersion.h>
+#include <Eris/pollGlibVersion.h>
 
 namespace Eris {
 
-class PollGlibSource
+class pollGlibSource
 {
  public:
 #ifdef ERIS_POLL_GLIB_2_0
-  PollGlibSource(GMainContext *con = 0)
+  pollGlibSource(GMainContext *con = 0)
   {
     _source = g_source_new(&funcs_, sizeof(SourceStruct));
     ((SourceStruct*) _source)->poll = this;
@@ -17,7 +17,7 @@ class PollGlibSource
     g_source_set_priority(_source, G_PRIORITY_DEFAULT_IDLE);
     _tag = g_source_attach(_source, con);
 #else
-  PollGlibSource()
+  pollGlibSource()
   {
     _tag = g_source_add(G_PRIORITY_DEFAULT_IDLE, TRUE, &funcs_, this, 0, 0);
 #endif
@@ -30,7 +30,7 @@ class PollGlibSource
     funcs_.destroy = 0;
 #endif
   }
-  virtual ~PollGlibSource()
+  virtual ~pollGlibSource()
   {
     g_source_remove(_tag);
 
@@ -60,21 +60,21 @@ class PollGlibSource
 #ifdef ERIS_POLL_GLIB_2_0
   typedef struct {
     GSource source;
-    PollGlibSource *poll;
+    pollGlibSource *poll;
   } SourceStruct;
 #endif
 
   GSourceFuncs funcs_;
 
 #ifdef ERIS_POLL_GLIB_2_0
-  static PollGlibSource* sourceGetPoll(GSource *source)
+  static pollGlibSource* sourceGetPoll(GSource *source)
   {
     return ((SourceStruct *) source)->poll;
   }
 #else
-  static PollGlibSource* sourceGetPoll(gpointer data)
+  static pollGlibSource* sourceGetPoll(gpointer data)
   {
-    return (PollGlibSource *) data;
+    return (pollGlibSource *) data;
   }
 #endif
 
@@ -84,7 +84,7 @@ class PollGlibSource
   static gboolean prepareFunc(gpointer source, GTimeVal*, gint* timeout, gpointer)
 #endif
   {
-    return sourceGetPoll(source)->prepare(*timeout);
+    return sourceGetpoll(source)->prepare(*timeout);
   }
 
 #ifdef ERIS_POLL_GLIB_2_0
@@ -93,7 +93,7 @@ class PollGlibSource
   static gboolean checkFunc(gpointer source, GTimeVal*, gpointer)
 #endif
   {
-    return sourceGetPoll(source)->check();
+    return sourceGetpoll(source)->check();
   }
 
 #ifdef ERIS_POLL_GLIB_2_0
@@ -102,7 +102,7 @@ class PollGlibSource
   static gboolean dispatchFunc(gpointer source, GTimeVal*, gpointer)
 #endif
   {
-    return sourceGetPoll(source)->dispatch();
+    return sourceGetpoll(source)->dispatch();
   }
 };
 

@@ -165,21 +165,21 @@ void Connection::send(const Atlas::Objects::Root &obj)
 	if ((_status != CONNECTED) && (_status != DISCONNECTING))
 		throw InvalidOperation("Connection is not open");
 	
-	_encode->StreamMessage(&obj);
+	_encode->streamMessage(&obj);
 	(*_stream) << std::flush;
 	
 	if (_debug) {
-		DispatchContextDeque dq(1, obj.AsObject());
+		DispatchContextDeque dq(1, obj.asObject());
 		sdd->dispatch(dq);
 	}
 }
 
-void Connection::send(const Atlas::Message::Object &msg)
+void Connection::send(const Atlas::Message::Element &msg)
 {
 	if (_status != CONNECTED)
 		throw InvalidOperation("Connection is not open");
 	
-	_msgEncode->StreamMessage(msg);
+	_msgEncode->streamMessage(msg);
 	(*_stream) << std::flush;
 	
 	if (_debug) {
@@ -268,7 +268,7 @@ Connection* Connection::getPrimary()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // protected / private gunk
 
-void Connection::ObjectArrived(const Atlas::Message::Object& obj)
+void Connection::objectArrived(const Atlas::Message::Element& obj)
 {
 	Eris::log(LOG_VERBOSE, "-");
 	postForDispatch(obj);
@@ -300,7 +300,7 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 			_rootDispatch->dispatch(dq);
 			
 			if (_debug) {
-				const Atlas::Message::Object::MapType &m(dq.back().AsMap());
+				const Atlas::Message::Element::MapType &m(dq.back().asMap());
 				if (m.find("__DISPATCHED__") == m.end()) {
 					std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
 					Eris::log(LOG_WARNING, "op %s never hit a leaf node", summary.c_str());	
@@ -382,7 +382,7 @@ void Connection::onConnect()
 	_typeService->init();
 }
 
-void Connection::postForDispatch(const Atlas::Message::Object &msg)
+void Connection::postForDispatch(const Atlas::Message::Element &msg)
 {
 	_repostQueue.push_back(msg);
 }
@@ -390,7 +390,7 @@ void Connection::postForDispatch(const Atlas::Message::Object &msg)
 void Connection::validateSerial(const Atlas::Objects::Operation::RootOperation &op)
 {
 	static SerialFromSet seen;
-	SerialFrom sfm(op.GetFrom(), op.GetSerialno());
+	SerialFrom sfm(op.getFrom(), op.getSerialno());
 	
 	// don't bother to validate if the serial-no is 0
 	if (sfm.second == 0) {

@@ -1,3 +1,9 @@
+Saturday, 9th August, James Turner <james@worldforge.org>
+
+	* Convert to Atlas-C++ transitional API. Do not use unless
+	  you know what you're doing. Arrr!
+	* Also convert to skstream-0.3 and require wfmath 0.3
+
 Tuesday, 22nd July 2003, Ron Steinke <rsteinke@w-link.net>
 
 	* Added UI Factory code, based on the new experimental

@@ -13,9 +13,9 @@
 Eris::UI::Factory::Factory(const Atlas::Objects::Entity::UIEntity& entity,
 			   const std::string& base_type,
 			   const IDList& parents,
-		           const Atlas::Message::Object::MapType& attrs,
+		           const Atlas::Message::Element::MapType& attrs,
 			   BaseGen* gen) :
-	_id(entity.GetId()), _id_list(parents), _gen(gen),
+	_id(entity.getId()), _id_list(parents), _gen(gen),
 	_persistent(false), _refcount(1), _attrs(attrs)
 {
   _id_list.push_back(_id);
@@ -35,15 +35,15 @@ Eris::UI::Factory::create(IDMap& idmap) const
 }
 
 Eris::UI::Factory*
-Eris::UI::Factory::parse(const Atlas::Message::Object::MapType& map,
+Eris::UI::Factory::parse(const Atlas::Message::Element::MapType& map,
 			 const Bindings&) const
 {
   Atlas::Objects::Entity::UIEntity entity;
 
   // FIXME isn't there a better way to do this?
-  Atlas::Message::Object::MapType::const_iterator I = map.begin();
+  Atlas::Message::Element::MapType::const_iterator I = map.begin();
   while(I != map.end())
-    entity.SetAttr(I->first, I->second);
+    entity.setAttr(I->first, I->second);
 
   return new Factory(entity, "u_i_entity", idlist(), attrs(), _gen);
 }
@@ -85,15 +85,15 @@ Eris::UI::FrameFactory::create(IDMap& idmap) const
 }
 
 Eris::UI::Factory*
-Eris::UI::FrameFactory::parse(const Atlas::Message::Object::MapType& map,
+Eris::UI::FrameFactory::parse(const Atlas::Message::Element::MapType& map,
 			      const Bindings& factories) const
 {
   Atlas::Objects::Entity::Frame frame;
 
   // FIXME isn't there a better way to do this?
-  Atlas::Message::Object::MapType::const_iterator I = map.begin();
+  Atlas::Message::Element::MapType::const_iterator I = map.begin();
   while(I != map.end())
-    frame.SetAttr(I->first, I->second);
+    frame.setAttr(I->first, I->second);
 
   FrameFactory* factory = new FrameFactory(frame, idlist(), factories, attrs(), _gen);
 
@@ -115,15 +115,15 @@ Eris::UI::FrameFactory::parse(const Atlas::Message::Object::MapType& map,
 
 Eris::UI::FrameFactory::FrameFactory(const Atlas::Objects::Entity::Frame& frame,
 				     const IDList& parents, const Bindings& factories,
-			             const Atlas::Message::Object::MapType& attrs,
+			             const Atlas::Message::Element::MapType& attrs,
 				     BaseGen* gen)
 	: Factory(frame, "frame", parents, attrs, 0),
 	  _valign(frame.GetValign()), _halign(frame.GetHalign()),
 	  _rel_pos(frame.GetRelPos()), _gen(gen)
 {
-  const Atlas::Message::Object::ListType& contains = frame.GetContains();
+  const Atlas::Message::Element::ListType& contains = frame.GetContains();
 
-  Atlas::Message::Object::ListType::const_iterator I;
+  Atlas::Message::Element::ListType::const_iterator I;
 
   for(I = contains.begin(); I != contains.end(); ++I) {
     Factory* child = factories.findFactory(*I);
@@ -136,7 +136,7 @@ Eris::UI::FrameFactory::FrameFactory(const Atlas::Objects::Entity::Frame& frame,
 
 Eris::UI::SlotFactory::SlotFactory(const Atlas::Objects::Entity::Slot& slot,
 				   const IDList& parents,
-				   const Atlas::Message::Object::MapType& attrs,
+				   const Atlas::Message::Element::MapType& attrs,
 				   BaseGen* gen)
 	: Factory(slot, "slot", parents, attrs, gen), _target(slot.GetTarget())
 {
@@ -148,11 +148,11 @@ Eris::UI::SlotFactory::create(IDMap& idmap) const
 {
   SlotElement* slot = dynamic_cast<SlotElement*>(gen()->create(attrs()));
   assert(slot);
-  Atlas::Message::Object::ListType::const_iterator T;
+  Atlas::Message::Element::ListType::const_iterator T;
   for(T = _target.begin(); T != _target.end(); ++T) {
-    if(!T->IsString())
+    if(!T->isString())
       continue;
-    IDMap::iterator I = idmap.find(T->AsString());
+    IDMap::iterator I = idmap.find(T->asString());
     if(I != idmap.end())
       I->second->PropertiesChanged.connect(SigC::slot(*slot, &SlotElement::action));
   }
@@ -162,15 +162,15 @@ Eris::UI::SlotFactory::create(IDMap& idmap) const
 }
 
 Eris::UI::Factory*
-Eris::UI::SlotFactory::parse(const Atlas::Message::Object::MapType& map,
+Eris::UI::SlotFactory::parse(const Atlas::Message::Element::MapType& map,
 			     const Bindings&) const
 {
   Atlas::Objects::Entity::Slot slot;
 
   // FIXME isn't there a better way to do this?
-  Atlas::Message::Object::MapType::const_iterator I = map.begin();
+  Atlas::Message::Element::MapType::const_iterator I = map.begin();
   while(I != map.end())
-    slot.SetAttr(I->first, I->second);
+    slot.setAttr(I->first, I->second);
 
   if(slot.GetTarget().empty())
     return 0;
@@ -190,49 +190,49 @@ Eris::UI::Bindings::~Bindings()
 }
 
 void
-Eris::UI::Bindings::parse(const Atlas::Message::Object& obj)
+Eris::UI::Bindings::parse(const Atlas::Message::Element& obj)
 {
-  if(!obj.IsMap())
+  if(!obj.isMap())
     return;
 
-  const Atlas::Message::Object::MapType& map = obj.AsMap();
+  const Atlas::Message::Element::MapType& map = obj.asMap();
 
-  Atlas::Message::Object::MapType::const_iterator J = map.find("display_status");
+  Atlas::Message::Element::MapType::const_iterator J = map.find("display_status");
 
-  if(J != map.end() && J->second.IsString() && J->second.AsString() == "console") {
+  if(J != map.end() && J->second.isString() && J->second.asString() == "console") {
     Atlas::Objects::Entity::UIEntity entity;
 
     // FIXME isn't there a better way to do this?
-    Atlas::Message::Object::MapType::const_iterator I = map.begin();
+    Atlas::Message::Element::MapType::const_iterator I = map.begin();
     while(I != map.end())
-      entity.SetAttr(I->first, I->second);
+      entity.setAttr(I->first, I->second);
 
     createConsoleElement(entity);
     return;
   }
 
-  Atlas::Message::Object::MapType::const_iterator parents = map.find("parents");
+  Atlas::Message::Element::MapType::const_iterator parents = map.find("parents");
 
-  if(parents == map.end() || !parents->second.IsList())
+  if(parents == map.end() || !parents->second.isList())
     return;
 
   J = map.find("objtype");
 
-  if(J == map.end() || !J->second.IsString())
+  if(J == map.end() || !J->second.isString())
     return;
 
-  const std::string& objtype = J->second.AsString();
+  const std::string& objtype = J->second.asString();
 
   if(objtype != "class" && objtype != "object")
     return;
 
   Factory* factory = 0;
 
-  Atlas::Message::Object::ListType::const_iterator I;
-  for(I = parents->second.AsList().begin(); I != parents->second.AsList().end(); ++I) {
+  Atlas::Message::Element::ListType::const_iterator I;
+  for(I = parents->second.asList().begin(); I != parents->second.AsList().end(); ++I) {
     Factory* parent = findFactory(*I);
     if(parent) {
-      factory = parent->parse(obj.AsMap(), *this);
+      factory = parent->parse(obj.asMap(), *this);
       break;
     }
   }

@@ -23,11 +23,11 @@ ServerInfo::ServerInfo(const std::string &host) :
 void ServerInfo::processServer(const Atlas::Objects::Entity::RootEntity &svr)
 {
 try {
-	_ruleset = svr.GetAttr("ruleset").AsString();
-	_name = svr.GetName();
-	_clients = svr.GetAttr("clients").AsInt();
-	_server = svr.GetAttr("server").AsString();
-	_uptime = svr.GetAttr("uptime").AsFloat();
+	_ruleset = svr.getAttr("ruleset").asString();
+	_name = svr.getName();
+	_clients = svr.getAttr("clients").asInt();
+	_server = svr.getAttr("server").asString();
+	_uptime = svr.getAttr("uptime").asFloat();
 } catch (...)
     {
 	std::string summary(objectSummary(svr));

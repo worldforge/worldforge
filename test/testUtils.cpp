@@ -9,13 +9,13 @@ using namespace Atlas::Message;
 
 std::string getType(const Object &obj)
 {
-    Object::ListType lt(Eris::getMember(obj, "parents").AsList());
-    return lt[0].AsString();
+    Element::ListType lt(Eris::getMember(obj, "parents").asList());
+    return lt[0].asString();
 }
 
 const Object getArg(const Object &op, unsigned int i)
 {
-    const Object::ListType lt(Eris::getMember(op, "args").AsList());
+    const Element::ListType lt(Eris::getMember(op, "args").asList());
     if (i < 0 || i >= lt.size())
 	throw std::invalid_argument("in getArg, index is out of range");
     return lt[i];
@@ -24,11 +24,11 @@ const Object getArg(const Object &op, unsigned int i)
 /// assume that args[0] is a map, and then lookup the named value
 const Object getArg(const Object &op, const std::string &nm)
 {
-    const Object::ListType args(Eris::getMember(op, "args").AsList());
+    const Element::ListType args(Eris::getMember(op, "args").asList());
     assert(!args.empty());
     
-    const Object::MapType mt(args[0].AsMap());
-    Object::MapType::const_iterator I=mt.find(nm);
+    const Element::MapType mt(args[0].asMap());
+    Element::MapType::const_iterator I=mt.find(nm);
     if (I == mt.end())
 	throw std::invalid_argument("in getArg, member name not found");
     return I->second;
@@ -36,19 +36,19 @@ const Object getArg(const Object &op, const std::string &nm)
 
 bool hasArg(const Object &op, const std::string &nm)
 {
-    const Object::ListType args(Eris::getMember(op, "args").AsList());
+    const Element::ListType args(Eris::getMember(op, "args").asList());
     if (args.empty()) return false;
 	
-    const Object::MapType mt(args[0].AsMap());
-    Object::MapType::const_iterator I=mt.find(nm);
+    const Element::MapType mt(args[0].asMap());
+    Element::MapType::const_iterator I=mt.find(nm);
     return (I != mt.end());
 }
 
-const Atlas::Message::Object&
-getMember(const Atlas::Message::Object &obj, unsigned int i)
+const Atlas::Message::Element&
+getMember(const Atlas::Message::Element &obj, unsigned int i)
 {
-	assert(obj.IsList());
-	const Object::ListType &l = obj.AsList();
+	assert(obj.isList());
+	const Element::ListType &l = obj.asList();
 	
 	assert(i < l.size());
 	if (i >= l.size())
@@ -56,12 +56,12 @@ getMember(const Atlas::Message::Object &obj, unsigned int i)
 	return l[i];
 }
 
-const Atlas::Message::Object&
-getMember(const Atlas::Message::Object &obj, const std::string &nm)
+const Atlas::Message::Element&
+getMember(const Atlas::Message::Element &obj, const std::string &nm)
 {
-	assert(obj.IsMap());
-	const Object::MapType &m = obj.AsMap();
-	Object::MapType::const_iterator i = m.find(nm);
+	assert(obj.isMap());
+	const Element::MapType &m = obj.asMap();
+	Element::MapType::const_iterator i = m.find(nm);
 	
 	assert(i != m.end());
 	if (i == m.end())

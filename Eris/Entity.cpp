@@ -33,12 +33,12 @@ using namespace Atlas::Message;
 namespace Eris {
 
 Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge, World *world) :
-	_id(ge.GetId()),
+	_id(ge.getId()),
 	_stamp(-1.0),
 	_visible(true),
 	_container(NULL),
-	_position(ge.GetPos()),
-	_velocity(ge.GetVelocity()),
+	_position(ge.getPos()),
+	_velocity(ge.getVelocity()),
 	_orientation(1.0, 0., 0., 0.),
 	_inUpdate(false),
 	_hasBBox(false),
@@ -118,7 +118,7 @@ bool Entity::hasProperty(const std::string &p) const
     return (pi != _properties.end());
 }
 
-const Atlas::Message::Object& Entity::getProperty(const std::string &p)
+const Atlas::Message::Element& Entity::getProperty(const std::string &p)
 {
     PropertyMap::iterator pi = _properties.find(p);
     if (pi == _properties.end())
@@ -128,7 +128,7 @@ const Atlas::Message::Object& Entity::getProperty(const std::string &p)
 }
 
 void Entity::observeProperty(const std::string &nm, 
-    const SigC::Slot1<void, const Atlas::Message::Object&> slot)
+    const SigC::Slot1<void, const Atlas::Message::Element&> slot)
 {
     PropertyMap::iterator pi = _properties.find(nm);
     if (pi == _properties.end())
@@ -190,8 +190,8 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 {    
     beginUpdate();
     
-    Atlas::Message::Object::MapType amp = ge.AsObject().AsMap();
-    for (Atlas::Message::Object::MapType::iterator A = amp.begin(); A!=amp.end(); ++A) {
+    Atlas::Message::Element::MapType amp = ge.asObject().asMap();
+    for (Atlas::Message::Element::MapType::iterator A = amp.begin(); A!=amp.end(); ++A) {
 	if (A->first == "id") continue;
 	setProperty(A->first, A->second);
     }
@@ -203,9 +203,9 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 {	
     beginUpdate();
     
-    const Atlas::Message::Object::MapType &args = 
-	mv.GetArgs().front().AsMap();
-    for (Atlas::Message::Object::MapType::const_iterator A = args.begin(); 
+    const Atlas::Message::Element::MapType &args = 
+	mv.getArgs().front().asMap();
+    for (Atlas::Message::Element::MapType::const_iterator A = args.begin(); 
 	    A != args.end(); ++A) {
 	setProperty(A->first, A->second);
     }
@@ -216,10 +216,10 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 
 void Entity::recvSet(const Atlas::Objects::Operation::Set &st)
 {
-    const Atlas::Message::Object::MapType &attrs = st.GetArgs().front().AsMap();
+    const Atlas::Message::Element::MapType &attrs = st.getArgs().front().asMap();
     beginUpdate();
     // blast through the map, setting each property
-    for (Atlas::Message::Object::MapType::const_iterator ai = attrs.begin(); ai != attrs.end(); ++ai) {
+    for (Atlas::Message::Element::MapType::const_iterator ai = attrs.begin(); ai != attrs.end(); ++ai) {
 	if (ai->first=="id") continue;	// important
 	setProperty(ai->first, ai->second);
     }
@@ -233,12 +233,12 @@ void Entity::recvSound(const Atlas::Objects::Operation::Sound &/*snd*/)
 
 void Entity::recvTalk(const Atlas::Objects::Operation::Talk &tk)
 {
-	const Atlas::Message::Object &obj = getArg(tk, 0);
-	Atlas::Message::Object::MapType::const_iterator m = obj.AsMap().find("say");
-	if (m == obj.AsMap().end())
+	const Atlas::Message::Element &obj = getArg(tk, 0);
+	Atlas::Message::Element::MapType::const_iterator m = obj.asMap().find("say");
+	if (m == obj.asMap().end())
 		throw IllegalObject(tk, "No sound object in arg 0");
 	
-	handleTalk(m->second.AsString());
+	handleTalk(m->second.asString());
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,18 +260,18 @@ void Entity::handleMove()
 // this really needs a global switch from strings to integer Atoms to be effective;
 // once that is done the if ( == "") tests can be replaced with a nice efficent switch
 
-void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val)
+void Entity::setProperty(const std::string &s, const Atlas::Message::Element &val)
 {
     /* we allow mapping of attributes to different internal values; use this with
     caution */
     std::string mapped(s);
 	
     if (s == "name")
-	_name = val.AsString();
+	_name = val.asString();
     else if (s == "stamp")
-	_stamp = val.AsFloat();
+	_stamp = val.asFloat();
     else if (s == "loc") {
-	std::string loc = val.AsString();
+	std::string loc = val.asString();
 	setContainerById(loc);
     } else if (s == "pos") {
 	WFMath::Point<3> pos;
@@ -287,12 +287,12 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 	// build the quaternion from rotation about z axis
 	_orientation.rotation(2, atan2(face[1], face[0]));	
     } else if (s == "description")
-	_description = val.AsString();
+	_description = val.asString();
     else if (s == "bbox") {
 	_bbox.fromAtlas(val);
         _hasBBox = true;
     } else if (s == "contains") {
-	setContents(val.AsList());
+	setContents(val.asList());
     }
     
     PropertyMap::iterator P=_properties.find(mapped);
@@ -378,13 +378,13 @@ void Entity::setPosition(const WFMath::Point<3>& pt)
     _position = pt;
 }
 
-void Entity::setContents(const Atlas::Message::Object::ListType &contents)
+void Entity::setContents(const Atlas::Message::Element::ListType &contents)
 {
-    for (Atlas::Message::Object::ListType::const_iterator
+    for (Atlas::Message::Element::ListType::const_iterator
 	    C=contents.begin(); C!=contents.end();++C) {
 	// check we have it; if yes, ensure it's installed. if not, it will be attached when
 	// it arrives.
-	Entity *con = _world->lookup(C->AsString());
+	Entity *con = _world->lookup(C->asString());
 	if (con) {
 	    Eris::log(LOG_DEBUG, 
 		"already have entity '%s', not setting container",
@@ -417,16 +417,16 @@ void Entity::setContainerById(const std::string &id)
 			Atlas::Objects::Operation::Set setc = 
 				Atlas::Objects::Operation::Set::Instantiate();
 				
-			Atlas::Message::Object::MapType args;
+			Atlas::Message::Element::MapType args;
 			args["loc"] = id;
-			setc.SetArgs(Atlas::Message::Object::ListType(1,args));
-			setc.SetTo(_id);
+			setc.setArgs(Atlas::Message::Element::ListType(1,args));
+			setc.setTo(_id);
 			
 			Atlas::Objects::Operation::Sight ssc =
 				Atlas::Objects::Operation::Sight::Instantiate();
-			ssc.SetArgs(Atlas::Message::Object::ListType(1, setc.AsObject()));
-			ssc.SetTo(_world->getFocusedEntityID());
-			ssc.SetSerialno(getNewSerialno());
+			ssc.setArgs(Atlas::Message::Element::ListType(1, setc.asObject()));
+			ssc.setTo(_world->getFocusedEntityID());
+			ssc.setSerialno(getNewSerialno());
 			
 			// if we received sets/creates/sights in rapid sucession, this can happen, and is
 			// very, very bad
@@ -462,7 +462,7 @@ public:
 	mv.SetLocation("foo");
 	Coord v1(2.0, 3.0, -4.0);
 	mv.SetVelocity(v1.asObject());
-	mv.SetAttr("face", 120.0);
+	mv.setAttr("face", 120.0);
 	
 	testA.recvMove(mv);
 	

@@ -22,7 +22,7 @@
 
 namespace Eris {
 
-WaitForBase::WaitForBase(const Atlas::Message::Object &m, Connection *conn) :
+WaitForBase::WaitForBase(const Atlas::Message::Element &m, Connection *conn) :
 		_pending(false),
 		_msg(m),
 		_conn(conn)
@@ -42,7 +42,7 @@ void WaitForBase::fire()
 	
 //////////////////////////////////////////////////////////////////////////////////////////
 	
-WaitForDispatch::WaitForDispatch(const Atlas::Message::Object &msg,  
+WaitForDispatch::WaitForDispatch(const Atlas::Message::Element &msg,  
 	const std::string &ppath,
 	Dispatcher *dsp,
 	Connection *conn) :
@@ -59,7 +59,7 @@ WaitForDispatch::WaitForDispatch(const Atlas::Objects::Root &obj,
 	const std::string &ppath,
 	Dispatcher *dsp,
 	Connection *conn) :
-	WaitForBase(obj.AsObject(), conn),
+	WaitForBase(obj.asObject(), conn),
 	_parentPath(ppath),
 	_dsp(dsp)
 {
@@ -78,7 +78,7 @@ WaitForDispatch::~WaitForDispatch()
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Object &msg,
+WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Element &msg,
 	Connection *conn) :
 	WaitForBase(msg, conn)
 {

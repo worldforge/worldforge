@@ -18,7 +18,7 @@ class Connection;
 class WaitForBase : virtual public SigC::Object
 {
 public:
-	WaitForBase(const Atlas::Message::Object &m, Connection *conn);
+	WaitForBase(const Atlas::Message::Element &m, Connection *conn);
 	virtual ~WaitForBase() {;}
 		
 	bool isPending() const
@@ -33,14 +33,14 @@ public:
 	
 protected:
 	bool _pending;
-	Atlas::Message::Object _msg;
+	Atlas::Message::Element _msg;
 	Connection* _conn;
 };
 
 class WaitForDispatch : public WaitForBase
 {
 public:
-	WaitForDispatch(const Atlas::Message::Object &msg,  
+	WaitForDispatch(const Atlas::Message::Element &msg,  
 		const std::string &ppath,
 		Dispatcher *dsp,
 		Connection *conn);
@@ -60,7 +60,7 @@ protected:
 class WaitForSignal : public WaitForBase
 {
 public:	
-	WaitForSignal(Signal &sig, const Atlas::Message::Object &msg, Connection *conn);
+	WaitForSignal(Signal &sig, const Atlas::Message::Element &msg, Connection *conn);
 	virtual ~WaitForSignal();
 protected:
 	

@@ -70,16 +70,16 @@ void Meta::connect()
 	
 	_stream = new udp_socket_stream();  
     _stream->setTimeout(30);	
-    Poll::instance().addStream(_stream);
+	_stream->setTarget(_metaHost, META_SERVER_PORT);
     
     // open connection to meta server
-    remote_host metaserver_data(_metaHost, META_SERVER_PORT);
-    (*_stream) << metaserver_data;
     if (!_stream->is_open()) {
 		doFailure("Couldn't open connection to metaserver " + _metaHost);
 		return;
     }
     
+	Poll::instance().addStream(_stream);
+	
     // build the initial 'ping' and send
     unsigned int dsz = 0;
     pack_uint32(CKEEP_ALIVE, _data, dsz);
@@ -360,18 +360,18 @@ void Meta::listReq(int base)
 	}
 }
 
-void Meta::ObjectArrived(const Atlas::Message::Object &msg)
+void Meta::objectArrived(const Atlas::Message::Element &msg)
 {	
 	// build an info op (quick hack)
 	Atlas::Objects::Operation::Info ifo = 
 		Atlas::Objects::Operation::Info::Instantiate();
 	
-	Atlas::Message::Object::MapType::const_iterator I = msg.AsMap().begin();
-	for (; I != msg.AsMap().end(); ++I)
-        	ifo.SetAttr(I->first, I->second);
+	Atlas::Message::Element::MapType::const_iterator I = msg.asMap().begin();
+	for (; I != msg.asMap().end(); ++I)
+        	ifo.setAttr(I->first, I->second);
 	
 	// work out which query this is
-	long refno = ifo.GetRefno();
+	long refno = ifo.getRefno();
 	MetaQueryList::iterator Q;
 	
 	for (Q = _activeQueries.begin(); Q != _activeQueries.end(); ++Q)
@@ -393,9 +393,9 @@ void Meta::ObjectArrived(const Atlas::Message::Object &msg)
 	Atlas::Objects::Entity::RootEntity svr =
 		Atlas::Objects::Entity::RootEntity::Instantiate();
 	
-	Atlas::Message::Object::MapType m = getArg(ifo, 0).AsMap();
-	for (Atlas::Message::Object::MapType::iterator I=m.begin() ; I != m.end(); ++I)
-        	svr.SetAttr(I->first, I->second);
+	Atlas::Message::Element::MapType m = getArg(ifo, 0).asMap();
+	for (Atlas::Message::Element::MapType::iterator I=m.begin() ; I != m.end(); ++I)
+        	svr.setAttr(I->first, I->second);
 	
 	// update the server-info structure
 	ServerInfoMap::iterator S = _gameServers.find((*Q)->getHost());

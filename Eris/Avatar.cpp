@@ -91,14 +91,14 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc
 
     Atlas::Objects::Operation::Move moveOp =
         Atlas::Objects::Operation::Move::Instantiate();
-    moveOp.SetFrom(_entity->getID());
+    moveOp.setFrom(_entity->getID());
 
-    Atlas::Message::Object::MapType what;
+    Atlas::Message::Element::MapType what;
     what["loc"] = loc;
     what["pos"] = pos.toAtlas();
     what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
     what["id"] = e->getID();
-    moveOp.SetArgs(Atlas::Message::Object::ListType(1, what));
+    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 
     _world->getConnection()->send(moveOp);
 }
@@ -132,11 +132,11 @@ std::vector<Avatar*> Avatar::getAvatars(Connection* con)
 void Avatar::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 		const Atlas::Objects::Entity::GameEntity &character)
 {
-    log(LOG_DEBUG, "Have id %s, got id %s", _id.c_str(), character.GetId().c_str());
+    log(LOG_DEBUG, "Have id %s, got id %s", _id.c_str(), character.getId().c_str());
 
-    assert(_id.empty() || _id == character.GetId());
+    assert(_id.empty() || _id == character.getId());
     if(_id.empty()) {
-	_id = character.GetId();
+	_id = character.getId();
 	bool success = _avatars.insert(std::make_pair(
 	    AvatarIndex(_world->getConnection(), _id), this)).second;
 	assert(success); // Newly created character should have unique id

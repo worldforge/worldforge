@@ -5,33 +5,33 @@
 
 #include "refcount.h"
 
-SV* AtlasToSV(const Atlas::Message::Object &obj)
+SV* AtlasToSV(const Atlas::Message::Element &obj)
 {
-  switch(obj.GetType()) {
-    case Atlas::Message::Object::TYPE_NONE:
+  switch(obj.getType()) {
+    case Atlas::Message::Element::TYPE_NONE:
       return NEWSV(0, 0);
-    case Atlas::Message::Object::TYPE_INT:
-      return newSViv(obj.AsInt());
-    case Atlas::Message::Object::TYPE_FLOAT:
-      return newSVnv(obj.AsFloat());
-    case Atlas::Message::Object::TYPE_STRING:
+    case Atlas::Message::Element::TYPE_INT:
+      return newSViv(obj.asInt());
+    case Atlas::Message::Element::TYPE_FLOAT:
+      return newSVnv(obj.asFloat());
+    case Atlas::Message::Element::TYPE_STRING:
       {
-        const std::string &str = obj.AsString();
+        const std::string &str = obj.asString();
         return newSVpv(str.c_str(), str.size());
       }
-    case Atlas::Message::Object::TYPE_MAP:
+    case Atlas::Message::Element::TYPE_MAP:
       {
         HV *hv = newHV();
-        const Atlas::Message::Object::MapType &map = obj.AsMap();
-        Atlas::Message::Object::MapType::const_iterator I;
+        const Atlas::Message::Element::MapType &map = obj.asMap();
+        Atlas::Message::Element::MapType::const_iterator I;
         for(I = map.begin(); I != map.end(); ++I)
              hv_store(hv, I->first.c_str(), I->first.size(), AtlasToSV(I->second), 0);
         return newRV_noinc((SV*) hv);
       }
-    case Atlas::Message::Object::TYPE_LIST:
+    case Atlas::Message::Element::TYPE_LIST:
       {
         AV *av = newAV();
-        const Atlas::Message::Object::ListType &list = obj.AsList();
+        const Atlas::Message::Element::ListType &list = obj.asList();
         av_extend(av, list.size() - 1);
         for(I32 i; i < list.size(); ++i)
           av_store(av, i, AtlasToSV(list[i]));
@@ -43,10 +43,10 @@ SV* AtlasToSV(const Atlas::Message::Object &obj)
 }
 
 namespace SigCPerl {
-  inline SV* GetSV(const Atlas::Message::Object &obj) {return AtlasToSV(obj);}
+  inline SV* GetSV(const Atlas::Message::Element &obj) {return AtlasToSV(obj);}
 }
 
-void SVToAtlas(SV *sv, Atlas::Message::Object& obj)
+void SVToAtlas(SV *sv, Atlas::Message::Element& obj)
 {
   svtype type = (svtype) SvTYPE(sv);
   if(type == SVt_RV)
@@ -71,11 +71,11 @@ void SVToAtlas(SV *sv, Atlas::Message::Object& obj)
         AV* av = (AV*) SvRV(sv);
         I32 len = av_len(av);
         assert(len >= -1);
-        obj = Atlas::Message::Object::ListType(len + 1);
+        obj = Atlas::Message::Element::ListType(len + 1);
         if(len == -1)
           break;
-        assert(obj.IsList());
-        Atlas::Message::Object::ListType& list = obj.AsList();
+        assert(obj.isList());
+        Atlas::Message::Element::ListType& list = obj.asList();
         for(I32 i = 0; i <= len; ++i) {
           SV **val = av_fetch(av, i, 0);
           assert(val);
@@ -86,9 +86,9 @@ void SVToAtlas(SV *sv, Atlas::Message::Object& obj)
     case SVt_PVHV:
       {
         HV* hv = (HV*) SvRV(sv);
-        obj = Atlas::Message::Object::MapType();
-	assert(obj.IsMap());
-	Atlas::Message::Object::MapType& map = obj.AsMap();
+        obj = Atlas::Message::Element::MapType();
+	assert(obj.isMap());
+	Atlas::Message::Element::MapType& map = obj.asMap();
         I32 havekeys = hv_iterinit(hv);
         while(havekeys) {
           char *key;
@@ -98,7 +98,7 @@ void SVToAtlas(SV *sv, Atlas::Message::Object& obj)
       }
       break;
     case SVt_NULL: // undef -> TYPE_NONE (?)
-      obj = Atlas::Message::Object();
+      obj = Atlas::Message::Element();
       break;
     default:
       throw Atlas::Message::WrongTypeException();

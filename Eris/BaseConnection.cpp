@@ -76,7 +76,7 @@ void BaseConnection::hardDisconnect(bool emit)
 	} else {
 		// okay, tear it down
 		if ((_status == CONNECTED) || (_status == DISCONNECTING)){
-			_codec->StreamEnd();
+			_codec->streamEnd();
 			(*_stream) << std::flush;
 			
 			delete _codec;
@@ -126,10 +126,10 @@ void BaseConnection::recv()
 		
 		case CONNECTED:
 		case DISCONNECTING:
-			_codec->Poll();
+			_codec->poll();
 			break;
 		default:
-			throw InvalidOperation("Unexpected connection status in Poll()");
+			throw InvalidOperation("Unexpected connection status in poll()");
 		}	
 	}
 	
@@ -173,16 +173,16 @@ void BaseConnection::pollNegotiation()
 		throw InvalidOperation("pollNegotiation: unexpected connection status");
 	}
 	
-	_sc->Poll();
-	if (_sc->GetState() == Atlas::Negotiate<std::iostream>::IN_PROGRESS)
+	_sc->poll();
+	if (_sc->getState() == Atlas::Negotiate<std::iostream>::IN_PROGRESS)
 		// more negotiation to do once more netwrok data arrives
 	    return;
 	
-	if (_sc->GetState() == Atlas::Negotiate<std::iostream>::SUCCEEDED) {
+	if (_sc->getState() == Atlas::Negotiate<std::iostream>::SUCCEEDED) {
 	    log(LOG_DEBUG, "Negotiation Success");
-	    _codec = _sc->GetCodec();
+	    _codec = _sc->getCodec();
 	    _encode = new Atlas::Objects::Encoder(_codec);
-	    _codec->StreamBegin();
+	    _codec->streamBegin();
 	    _msgEncode = new Atlas::Message::Encoder(_codec);
 	    // clean up
 	    delete _sc;

@@ -68,7 +68,7 @@ public:
 	/** this function reads data from the network  and dispatches
 	complete messages. Note the behaviour has changed since earlier versions of
 	Eris; formerly it called select() internally to check for data (and hence was guranteed
-	to be non-blocking. With the addition of the Poll interface and PollDefault implementation,
+	to be non-blocking. With the addition of the poll interface and PollDefault implementation,
 	this call will now block if no data is pending on the connection.*/
 	//void poll();
 
@@ -98,10 +98,10 @@ public:
 	therefore validate the connection using IsConnected first */
 	virtual void send(const Atlas::Objects::Root &obj);
 	
-	/// transmit an Atlas::Message::Object to the server
+	/// transmit an Atlas::Message::Element to the server
 	/** The same comments regarding connection status and
 	disconnect operation apply as above */
-	virtual void send(const Atlas::Message::Object &msg);
+	virtual void send(const Atlas::Message::Element &msg);
 	
 	/** Lock then connection's state. This prevents the connection changing status
 	until a corresponding unlock() call is issued. The only use at present is to hold
@@ -140,10 +140,10 @@ protected:
 	virtual void setStatus(Status sc);
 	
 	/// the Atlas::Message::Decoder mandated over-ride
-	/** ObjectArrived is the entry point for all data from the server into the client;
+	/** objectArrived is the entry point for all data from the server into the client;
 	notably, the message is forwarded to the root of the dispatcher tree and thus
 	disseminated to all matching nodes.*/
-	virtual void ObjectArrived(const Atlas::Message::Object& obj);
+	virtual void objectArrived(const Atlas::Message::Element& obj);
 
 	/// Process failures (to track when reconnection should be permitted)
 	virtual void handleFailure(const std::string &msg);
@@ -153,7 +153,7 @@ protected:
 	virtual void onConnect();
 
 	/** this is how waitForBase gets it's payload back into the dispatch queue*/
-	void postForDispatch(const Atlas::Message::Object &msg);
+	void postForDispatch(const Atlas::Message::Element &msg);
 
 	Dispatcher* _rootDispatch;	///< the root of the dispatch tree
 	unsigned int _statusLock;	///< locks connection to current state while > 0	

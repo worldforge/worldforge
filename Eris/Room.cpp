@@ -30,8 +30,8 @@
 
 using namespace Atlas;
 
-typedef Atlas::Message::Object::ListType AtlasListType;
-typedef Atlas::Message::Object::MapType AtlasMapType;
+typedef Atlas::Message::Element::ListType AtlasListType;
+typedef Atlas::Message::Element::MapType AtlasMapType;
 
 namespace Eris
 {
@@ -119,14 +119,14 @@ void Room::say(const std::string &tk)
 	Atlas::Objects::Operation::Talk t = 
 		Atlas::Objects::Operation::Talk::Instantiate();
 	
-	Atlas::Message::Object::MapType speech;
+	Atlas::Message::Element::MapType speech;
 	speech["say"] = tk;
 	speech["loc"] = _id;
 	
-	t.SetArgs(Atlas::Message::Object::ListType(1, speech));
-	t.SetTo(_id);
-	t.SetFrom(_lobby->getAccountID());
-	t.SetSerialno(getNewSerialno());
+	t.setArgs(Atlas::Message::Element::ListType(1, speech));
+	t.setTo(_id);
+	t.setFrom(_lobby->getAccountID());
+	t.setSerialno(getNewSerialno());
 	
 	_lobby->getConnection()->send(t);
 }
@@ -140,15 +140,15 @@ void Room::emote(const std::string &em)
 	Atlas::Objects::Operation::Imaginary im = 
 		Atlas::Objects::Operation::Imaginary::Instantiate();
 	
-	Atlas::Message::Object::MapType emote;
+	Atlas::Message::Element::MapType emote;
 	emote["id"] = "emote";
 	emote["description"] = em;
 	emote["loc"] = _id;
 	
-	im.SetArgs(Atlas::Message::Object::ListType(1, emote));
-	im.SetTo(_id);
-	im.SetFrom(_lobby->getAccountID());
-	im.SetSerialno(getNewSerialno());
+	im.setArgs(Atlas::Message::Element::ListType(1, emote));
+	im.setTo(_id);
+	im.setFrom(_lobby->getAccountID());
+	im.setSerialno(getNewSerialno());
 	
 	_lobby->getConnection()->send(im);
 }
@@ -161,13 +161,13 @@ void Room::leave()
 		
 	Atlas::Objects::Operation::Move part = 
 		Atlas::Objects::Operation::Move::Instantiate();
-	part.SetFrom(_lobby->getAccountID());
-	part.SetSerialno(getNewSerialno());
+	part.setFrom(_lobby->getAccountID());
+	part.setSerialno(getNewSerialno());
 	
-	Message::Object::MapType args;
+	Message::Element::MapType args;
 	args["loc"] = _id;
 	args["mode"] = "part";
-	part.SetArgs(Message::Object::ListType(1, args));
+	part.setArgs(Message::Element::ListType(1, args));
 	
 	c->send(part);
 	// FIXME - confirm the part somehow?
@@ -182,16 +182,16 @@ Room* Room::createRoom(const std::string &name)
     
     Atlas::Objects::Operation::Create cr = 
 	Atlas::Objects::Operation::Create::Instantiate();
-    cr.SetFrom(_lobby->getAccountID());
-    cr.SetTo(_id);
+    cr.setFrom(_lobby->getAccountID());
+    cr.setTo(_id);
     int serial = getNewSerialno();
-    cr.SetSerialno(serial);
+    cr.setSerialno(serial);
     
-    Message::Object::MapType args;
-    args["parents"] = Message::Object::ListType(1, "room");
+    Message::Element::MapType args;
+    args["parents"] = Message::Element::ListType(1, "room");
     args["name"] = name;
     
-    cr.SetArgs(Message::Object::ListType(1, args));
+    cr.setArgs(Message::Element::ListType(1, args));
     c->send(cr);
     
     Room *r = new Room(_lobby);
@@ -207,16 +207,16 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 	log(LOG_NOTICE, "Got sight of room %s", _id.c_str());
 	_initialGet = true;
 		
-	_name = room.GetName();
-	//_creator = room.GetAttr("creator").AsString();
+	_name = room.getName();
+	//_creator = room.getAttr("creator").asString();
 
 	// extract the current people list
-	if (room.HasAttr("people")) {
-		Message::Object::ListType people = room.GetAttr("people").AsList();
+	if (room.hasAttr("people")) {
+		Message::Element::ListType people = room.getAttr("people").asList();
 			
-		for (Message::Object::ListType::const_iterator i=people.begin(); i!=people.end(); ++i) {
+		for (Message::Element::ListType::const_iterator i=people.begin(); i!=people.end(); ++i) {
 	
-			std::string account = i->AsString();
+			std::string account = i->asString();
 			_people.insert(account);
 		
 			if (_lobby->getPerson(account) == NULL) {
@@ -239,11 +239,11 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 	// wire up the signal for initial get
 	_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
 	
-	if (room.HasAttr("rooms")) {
-	    Message::Object::ListType rooms = room.GetAttr("rooms").AsList();
+	if (room.hasAttr("rooms")) {
+	    Message::Element::ListType rooms = room.getAttr("rooms").asList();
 	    // rattle through the list, jamming them into our set
 	    for (unsigned int R=0; R<rooms.size();R++)
-		_subrooms.insert(rooms[R].AsString());
+		_subrooms.insert(rooms[R].asString());
 	}
 }
 
@@ -265,59 +265,59 @@ void Room::notifyPersonSight(Person *p)
 
 void Room::recvSoundTalk(const Atlas::Objects::Operation::Talk &tk)
 {
-	const Atlas::Message::Object &obj = getArg(tk, 0);
-	Message::Object::MapType::const_iterator m = obj.AsMap().find("say");
-	if (m == obj.AsMap().end())
+	const Atlas::Message::Element &obj = getArg(tk, 0);
+	Message::Element::MapType::const_iterator m = obj.asMap().find("say");
+	if (m == obj.asMap().end())
 		throw IllegalObject(tk, "No sound object in arg 0");
-	std::string say = m->second.AsString();
+	std::string say = m->second.asString();
 	
 	// quick sanity check
-	if (_pending.find(tk.GetFrom()) != _pending.end()) {
+	if (_pending.find(tk.getFrom()) != _pending.end()) {
 		// supress this talk until we have the name
 		// FIXME - buffer these and spool back?
 		return;
 	}
 	// hit this assert if get a talk from somone we know *nothing* about
-	if (_people.find(tk.GetFrom()) == _people.end()) {
+	if (_people.find(tk.getFrom()) == _people.end()) {
 	    log(LOG_DEBUG, "unknown FROM %s in TALK operation");
 	    assert(false);
 	}
 	
 	// get the player name and emit the signal already
-	Person *p = _lobby->getPerson(tk.GetFrom());
+	Person *p = _lobby->getPerson(tk.getFrom());
 	assert(p);
 	Talk.emit(this, p->getAccount(), say);
 }
 
 void Room::recvSightImaginary(const Atlas::Objects::Operation::Imaginary &im)
 {
-    const Atlas::Message::Object &obj = getArg(im, 0);
-    Message::Object::MapType::const_iterator m = obj.AsMap().find("description");
-    if (m == obj.AsMap().end())
+    const Atlas::Message::Element &obj = getArg(im, 0);
+    Message::Element::MapType::const_iterator m = obj.asMap().find("description");
+    if (m == obj.asMap().end())
 	return;
-    const std::string & description = m->second.AsString();
+    const std::string & description = m->second.asString();
     // quick sanity check
-    if (_pending.find(im.GetFrom()) != _pending.end()) {
+    if (_pending.find(im.getFrom()) != _pending.end()) {
     	// supress this talk until we have the name
     	// FIXME - buffer these and spool back?
     	return;
     }
     // hit this assert if get a talk from somone we know *nothing* about
-    if (_people.find(im.GetFrom()) == _people.end()) {
+    if (_people.find(im.getFrom()) == _people.end()) {
         log(LOG_DEBUG, "unknown FROM %s in TALK operation");
         assert(false);
     }
-    Person *p = _lobby->getPerson(im.GetFrom());
+    Person *p = _lobby->getPerson(im.getFrom());
     Emote.emit(this, p->getAccount(), description);
 }
 
 void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 {
-	const AtlasListType &args = ap.GetArgs();
+	const AtlasListType &args = ap.getArgs();
 	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
-		const AtlasMapType &app = A->AsMap();
+		const AtlasMapType &app = A->asMap();
 		AtlasMapType::const_iterator V(app.find("id"));
-		std::string account(V->second.AsString());
+		std::string account(V->second.asString());
 		
 		_people.insert(account);
 		if (_lobby->getPerson(account)) {
@@ -336,11 +336,11 @@ void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 void Room::recvDisappear(const Atlas::Objects::Operation::Disappearance &dis)
 {
 	
-	const AtlasListType &args = dis.GetArgs();
+	const AtlasListType &args = dis.getArgs();
 	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
-		const AtlasMapType &app = A->AsMap();
+		const AtlasMapType &app = A->asMap();
 		AtlasMapType::const_iterator V(app.find("id"));
-		std::string account(V->second.AsString());
+		std::string account(V->second.asString());
 		
 		if (_people.find(account) == _people.end())
 			throw IllegalObject(dis, "room disappearance for unknown person");
