@@ -19,9 +19,9 @@ using namespace Atlas;
 
 using namespace Atlas::Objects;
 
-void callback_loggedIn(const Objects::Entity::Player &acc, bool &flag);
-void callback_roomChanged(const Eris::StringSet &attrs, bool &flag);
-void callback_roomEntered(Eris::Room *r, bool &flag);
+void callback_loggedIn(const Objects::Entity::Player &acc, bool* flag);
+void callback_roomChanged(const Eris::StringSet &attrs, bool* flag);
+void callback_roomEntered(Eris::Room *r, bool* flag);
 
 void callback_privateChat(const std::string &src, const std::string &msg);
 
@@ -50,7 +50,7 @@ void TestLobby::testEntry()
     
     bool didLogin = false;
     test_lobby->LoggedIn.connect(
-	SigC::bind(SigC::slot(&callback_loggedIn), didLogin));
+	SigC::bind(SigC::slot(&callback_loggedIn), &didLogin));
     
     Message::Object::MapType info;
     info["refno"] = 42;
@@ -84,11 +84,11 @@ try {
     CPPUNIT_ASSERT(test_lobby->getAccountID() == std::string("test_acc1"));
 }
 
-void callback_loggedIn(const Objects::Entity::Player &acc, bool &flag)
+void callback_loggedIn(const Objects::Entity::Player &acc, bool* flag)
 {
     CPPUNIT_ASSERT(acc.GetId() == "test_acc1");
     CPPUNIT_ASSERT(acc.GetName() == "James");
-    flag = true;
+    *flag = true;
 }
 
 void TestLobby::testRoomCreate()
@@ -122,11 +122,11 @@ try {
     // now send the create, and check the logic in Lobby fires okay
     bool lobbyChanged = false;
     test_lobby->Changed.connect(SigC::bind(
-	SigC::slot(&callback_roomChanged), lobbyChanged));
+	SigC::slot(&callback_roomChanged), &lobbyChanged));
     
     bool roomEntry = false;
     eroom->Entered.connect(
-	SigC::bind(SigC::slot(&callback_roomEntered), roomEntry));
+	SigC::bind(SigC::slot(&callback_roomEntered), &roomEntry));
     
     Message::Object::MapType sight;
     sight["objtype"] = "op";
@@ -140,17 +140,17 @@ try {
     con->push(sight);
 }
 
-void callback_roomChanged(const Eris::StringSet &attrs, bool &flag)
+void callback_roomChanged(const Eris::StringSet &attrs, bool* flag)
 {
     CPPUNIT_ASSERT(attrs.count("rooms") == 1);
-    flag = true;
+    *flag = true;
 }
 
-void callback_roomEntered(Eris::Room *r, bool &flag)
+void callback_roomEntered(Eris::Room *r, bool* flag)
 {
     CPPUNIT_ASSERT(r->getName() == "My Sweet Room");
     CPPUNIT_ASSERT(r->getID() == "new_room_id");
-    flag = true;
+    *flag = true;
 }
 
 void TestLobby::testPrivateChat()

@@ -26,7 +26,7 @@ using namespace Atlas::Message;
 using namespace Atlas::Objects;
 using namespace std;
 
-void onLoginComplete(bool &f) { f=true; }
+void onLoginComplete(bool *f) { *f=true; }
 
 TestPlayer::TestPlayer(): 
     CppUnit::TestCase("player")
@@ -59,7 +59,7 @@ void TestPlayer::testLogin()
     m_player->LoginSuccess.connect(
 	SigC::bind(
 	    SigC::slot(&onLoginComplete),
-	    gotLoginComplete
+	    &gotLoginComplete
 	)
     );
     

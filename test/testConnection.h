@@ -59,11 +59,11 @@ protected:
     void onAnyDispatch(const Atlas::Objects::Operation::Info&);
 
     bool m_gotFailure, 
-	m_gotConnect,
-	m_gotTimeout,
-	m_gotDisconnecting,
-	m_gotDisconnect,
-	m_gotArbitraryDispatch;
+		m_gotConnect,
+		m_gotTimeout,
+		m_gotDisconnecting,
+		m_gotDisconnect,
+		m_gotArbitraryDispatch;
 };
 
 #endif

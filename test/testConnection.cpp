@@ -20,6 +20,8 @@
 #include <sigc++/signal.h>
 #endif
 
+#include <sigc++/object_slot.h>
+
 #include "testUtils.h"
 #include "Utils.h"
 #include "Timestamp.h"
@@ -47,9 +49,9 @@ void TestConnection::setUp()
     m_server = new StubServer(TEST_SERVER_PORT);
     
     // attach to all the signals globaly for monitoring later
-    m_con->Timeout.connect(SigC::slot(this, &TestConnection::onTimeout));
-    m_con->Failure.connect(SigC::slot(this, &TestConnection::onFailure));
-    m_con->Connected.connect(SigC::slot(this, &TestConnection::onConnect));
+    m_con->Timeout.connect(SigC::slot(*this, &TestConnection::onTimeout));
+    m_con->Failure.connect(SigC::slot(*this, &TestConnection::onFailure));
+    m_con->Connected.connect(SigC::slot(*this, &TestConnection::onConnect));
     
     m_gotFailure = m_gotConnect = m_gotTimeout = false;
 }
@@ -93,9 +95,9 @@ void TestConnection::testDisconnect()
     testConnect();
     
     SigC::Connection ref = m_con->Disconnecting.connect(
-	SigC::slot(this, &TestConnection::onDisconnecting));
+		SigC::slot(*this, &TestConnection::onDisconnecting));
     m_gotDisconnecting = false;
-    m_con->Disconnected.connect(SigC::slot(this, &TestConnection::onDisconnect));
+    m_con->Disconnected.connect(SigC::slot(*this, &TestConnection::onDisconnect));
     m_gotDisconnect = false;
     
     m_con->disconnect();
@@ -180,7 +182,7 @@ void TestConnection::testDispatch()
     
     Eris::Dispatcher *sigD = rd->addSubdispatch(new Eris::SignalDispatcher<Operation::Info>(
 	"dummy", 
-	SigC::slot(this, &TestConnection::onAnyDispatch)
+	SigC::slot(*this, &TestConnection::onAnyDispatch)
     ));
     
     Eris::Dispatcher *sigD2 = m_con->getDispatcherByPath("dummy");
