@@ -74,13 +74,13 @@ void Entity::init(const GameEntity& ge)
 
 #pragma mark -
 
-Element Entity::valueOfAttr(const std::string& attr) const
+const Element& Entity::valueOfAttr(const std::string& attr) const
 {
     AttrMap::const_iterator A = m_attrs.find(attr);
     if (A == m_attrs.end())
     {
         error() << "did getAttr(" << attr << ") on entity " << m_id << " which has no such attr";
-        return Element();
+        throw InvalidOperation("no such attribute " + attr);
     } else
         return A->second;
 }
@@ -245,17 +245,12 @@ void Entity::onChildRemoved(Entity* child)
 void Entity::setAttr(const std::string &attr, const Element &val)
 {
     beginUpdate();
-    //debug() << "setting attr " << attr << " of " << m_id;
 
-    if (!nativeAttrChanged(attr, val)) {
-        // add to map
-        m_attrs[attr] = val;
+    nativeAttrChanged(attr, val);
+    m_attrs[attr] = val;
 
-        // fire observers
-        if (m_observers.count(attr)) {
-            m_observers[attr].emit(attr, val);
-        }
-    }
+    // fire observers
+    if (m_observers.count(attr)) m_observers[attr].emit(attr, val);
 
     addToUpdate(attr);
     endUpdate();

@@ -82,6 +82,11 @@ void Avatar::take(Entity* e)
 
     GameEntity what;
     what->setLoc(m_entityId);
+    
+    std::vector<double> p;
+    p[0] = p[1] = p[2] = 0.0;
+    what->setPos(p); // cyphesis is rejecting move ops with no pos set
+    
     what->setId(e->getId());
     moveOp->setArgs1(what);
 

@@ -53,7 +53,7 @@ public:
         return m_contents[index];
     }
 
-    Atlas::Message::Element valueOfAttr(const std::string& attr) const;
+    const Atlas::Message::Element& valueOfAttr(const std::string& attr) const;
         
     bool hasAttr(const std::string &p) const;
 

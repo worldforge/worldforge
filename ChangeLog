@@ -1,3 +1,13 @@
+2004-11-1  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp: change signature of 'valueOfAttr' to return by
+	  reference. This entailed pushing all attributes into the primary
+	  storage map (including native ones), which means hasAttr and
+	  observers will now work for native attrs as normal.
+	  
+	* Eris/Avatar.cpp: modify take() to send an empty position in the
+	  move op, otherwise cyphesis rejects it.
+	
 2004-10-30  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp: add virtual hooks for ChildAdded / Removed, as
