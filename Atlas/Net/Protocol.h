@@ -46,7 +46,7 @@ public:
 	const string&       getPrefix() const { return prefix; }
 	void                setPrefix(  const string& s)	{ prefix = s; }
 	
-    virtual	Protocol*	makenew()=0; // { 
+    virtual	Protocol*	makenew() { 
     	assert( false ); return 0; 
 	/*should not be called on base class! - fex*/ 
 	}
