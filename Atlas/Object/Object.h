@@ -4,6 +4,12 @@
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
         email           : jbarrett@box100.com
+
+changes
+
+25 Jan 1999 - fex
+
+    The great great bool conversion
 */
 
 #ifndef __AtlasObject_h_
@@ -37,11 +43,11 @@ using namespace std;
  * <pre>
  *@@	AObject		C/C++ Type
  *@@	==========================
- *@@	Int		long
- *@@	Float		double
- *@@	String		char *
- *@@	List		list<AObject*>
- *@@	Map		map<AObject*>
+ *@@	Int         long
+ *@@	Float       double
+ *@@	String      char *
+ *@@	List        list<AObject*>
+ *@@	Map         map<AObject*>
  * </pre>
  *
  * Atlas Typed Lists are supported by means
@@ -148,73 +154,71 @@ static void dump(const AObject& msg);
 
 
 /** (Map) test for named element of a map */
-	int		has(const string& name) const;
+    bool    has(const string& name) const;
 
 /** (Map) get an AObject attribute */
-	int		get(const string& name, AObject& val) const;
+    bool    get(const string& name, AObject& val) const;
 
 /** (Map) get an Int attribute */
-	int		get(const string& name, int& val) const;
+    bool    get(const string& name, int& val) const;
 
 /** (Map) get an Long attribute */
-	int		get(const string& name, long& val) const;
+    bool    get(const string& name, long& val) const;
 
 /** (Map) get a Float attribute */
-	int		get(const string& name, double& val) const;
+    bool    get(const string& name, double& val) const;
 
 /** (Map) get a String attribute */
-	int		get(const string& name, string& val) const;
+    bool    get(const string& name, string& val) const;
 
 
 /** (Map) get an AObject attribute */
-	int		get(const string& name, AObject& val, AObject& def)
-                          const;
+    bool    get(const string& name, AObject& val, AObject& def) const;
 
 /** (Map) get an Int attribute */
-	int		get(const string& name, int& val, int def) const;
+    bool    get(const string& name, int& val, int def) const;
 
 /** (Map) get an Long attribute */
-	int		get(const string& name, long& val, long def) const;
+    bool    get(const string& name, long& val, long def) const;
 
 /** (Map) get a Float attribute */
-	int		get(const string& name, double& val, double def) const;
+    bool    get(const string& name, double& val, double def) const;
 
 /** (Map) get a String attribute */
-	int		get(const string& name, string& val, string& def)
-                          const;
+    bool    get(const string& name, string& val, string& def) const;
 
 
 
 /** (Map) set an Object attribute */
-	int		set(const string& name, const AObject& src);
+    bool    set(const string& name, const AObject& src);
 
 /** (Map) set an Int attribute */
-	int		set(const string& name, int src);
+    bool    set(const string& name, int src);
 
 /** (Map) set an Long attribute */
-	int		set(const string& name, long src);
+    bool    set(const string& name, long src);
 
 /** (Map) set a Float attribute */
-	int		set(const string& name, double src);
+    bool    set(const string& name, double src);
 
 /** (Map) set a String attribute */
-	int		set(const string& name, const string& src);
+    bool    set(const string& name, const string& src);
 
 /** (Map) set an AObject attribute using its stored name */
-	int		set(const AObject& src);
+    bool    set(const AObject& src);
 
 
 
 /** (Map) remove an attribute */
-	int		del(const string& name);
+    bool    del(const string& name);
 
 
 
 /** return a hash value for this AObject */
-	int		hash() const;
+	int     hash() const;
 
 /** return if this AObject evaluates to True or False */
-	int		isTrue() const;
+    bool    isTrue() const;
 
 /** return the length of this object */
 	int		length() const;
@@ -263,40 +267,40 @@ static	AObject	mkStringList(int len);
 
 
 /** true if this AObject is a Map */
-	int		isMap() const;
+    bool    isMap() const;
 
 /** true if this AObject is a List */
-	int 		isList() const;
+    bool    isList() const;
 
 /** true if this AObject is a URI */
-	int		isURI() const;
+    bool    isURI() const;
 
 /** true if this AObject is a Int */
-	int		isInt() const;
+    bool    isInt() const;
 
 /** true if this AObject is a Int */
-	int		isLong() const;
+    bool    isLong() const;
 
 /** true if this AObject is a Float */
-	int		isFloat() const;
+    bool    isFloat() const;
 
 /** true if this AObject is a String */
-	int		isString() const;
+    bool    isString() const;
 
 /** true if this AObject is a URI */
-	int		isURIList() const;
+    bool    isURIList() const;
 
 /** true if this AObject is a Int */
-	int		isIntList() const;
+    bool    isIntList() const;
 
 /** true if this AObject is a Int */
-	int		isLongList() const;
+    bool    isLongList() const;
 
 /** true if this AObject is a Float */
-	int		isFloatList() const;
+    bool    isFloatList() const;
 
 /** true if this AObject is a String */
-	int		isStringList() const;
+    bool    isStringList() const;
 
 
 /** (URI) return path to reference */
@@ -323,64 +327,64 @@ static	AObject	mkStringList(int len);
 
 
 /** (List) reverse the order of a list */
-	int		reverse();
+    bool    reverse();
 
 /** (List) insert an AObject at this index */
-	int		insert(int ndx, const AObject& val);
+    bool    insert(int ndx, const AObject& val);
 /** (List) insert an Int at this index */
-	int		insert(int ndx, int val);
+    bool    insert(int ndx, int val);
 /** (List) insert an Long at this index */
-	int		insert(int ndx, long val);
+    bool    insert(int ndx, long val);
 /** (List) insert a Float at this index */
-	int		insert(int ndx, double val);
+    bool    insert(int ndx, double val);
 /** (List) insert a String at this index */
-	int		insert(int ndx, const string& val);
+    bool    insert(int ndx, const string& val);
 
 /** (List) append an AObject */
-	int		append(const AObject& val);
+    bool    append(const AObject& val);
 /** (List) append an Int */
-	int		append(int val);
+    bool    append(int val);
 /** (List) append an Long */
-	int		append(long val);
+    bool    append(long val);
 /** (List) append a Float */
-	int		append(double val);
+    bool    append(double val);
 /** (List) append a String */
-	int		append(const string& val);
+    bool    append(const string& val);
 
 /** (List) replace an AObject at this index */
-	int		set(int ndx, const AObject& src);
+    bool    set(int ndx, const AObject& src);
 /** (List) replace an Int at this index */
-	int		set(int ndx, int val);
+    bool    set(int ndx, int val);
 /** (List) replace an Long at this index */
-	int		set(int ndx, long val);
+    bool    set(int ndx, long val);
 /** (List) replace a Float at this index */
-	int		set(int ndx, double val);
+    bool    set(int ndx, double val);
 /** (List) replace a String at this index */
-	int		set(int ndx, const string& val);
+    bool    set(int ndx, const string& val);
 
 /** (List) get an AObject from this index */
-	int		get(int ndx, AObject& src) const;
+    bool    get(int ndx, AObject& src) const;
 /** (List) get an Int from this index */
-	int		get(int ndx, int& val) const;
+    bool    get(int ndx, int& val) const;
 /** (List) get an Long from this index */
-	int		get(int ndx, long& val) const;
+    bool    get(int ndx, long& val) const;
 /** (List) get a Float from this index */
-	int		get(int ndx, double& val) const;
+    bool    get(int ndx, double& val) const;
 /** (List) get a String from this index */
-	int		get(int ndx, string& val) const;
+    bool    get(int ndx, string& val) const;
 
 /** (List) get an AObject from this index with default */
-	int		get(int ndx, AObject& src, AObject& def) const;
+    bool    get(int ndx, AObject& src, AObject& def) const;
 /** (List) get an Int from this index */
-	int		get(int ndx, int& val, int def) const;
+    bool    get(int ndx, int& val, int def) const;
 /** (List) get an Long from this index */
-	int		get(int ndx, long& val, long def) const;
+    bool    get(int ndx, long& val, long def) const;
 /** (List) get a Float from this index */
-	int		get(int ndx, double& val, double def) const;
+    bool    get(int ndx, double& val, double def) const;
 /** (List) get a String from this index */
-	int		get(int ndx, string& val, string& def) const;
+    bool    get(int ndx, string& val, string& def) const;
 
-	// typed returns
+// typed returns
 /** get an Int value from this AObject */
 	long		asInt() const;
 /** get an Int value from this AObject */
