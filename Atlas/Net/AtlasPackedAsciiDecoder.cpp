@@ -66,7 +66,7 @@ int APackedAsciiDecoder::hasTokens()
 			break;
 
 		case 2:
-			pos = buffer.find_first_of("[<(%$#])>}");
+			pos = buffer.find_first_of("[<(%@!$#])>}");
 			if (pos == -1) break;
 			if (pos != 0)
 			{
@@ -148,11 +148,12 @@ int APackedAsciiDecoder::hasTokens()
 			break;
 
 		case 3:
-			pos = buffer.find_first_of("[(<%$#]>)}");
+			pos = buffer.find_first_of("[(<%@!$#]>)}");
 			if (pos == -1) break;
 			// got an end marker, pull the data
 			sval = buffer.substr(0,pos);
 			if (type == AProtocol::atlasINT) ival = atoi(sval.c_str());
+			if (type == AProtocol::atlasLNG) ival = atol(sval.c_str());
 			if (type == AProtocol::atlasFLT) fval = atof(sval.c_str());
 			// strip up to token
 			buffer = buffer.substr(pos);
