@@ -10,7 +10,7 @@ PREREQUISITES
 
 You need at least gcc 2.95.2, here is URL for RPMS:
 (not all are needed, like java, g77 and chil)
-ftp://rawhide.redhat.com/rawhide/i386/RedHat/RPMS/ 
+ftp://rawhide.redhat.com/pub/rawhide/i386/RedHat/RPMS/ 
    14414259 Dec 12 15:03 gcc-2.95.2-3.src.rpm
       94155 Dec 13 23:21 cpp-2.95.2-3.i386.rpm
     1005779 Dec 13 23:21 gcc-java-2.95.2-3.i386.rpm
