@@ -127,3 +127,9 @@ try {
     return 1;
 }
 to initialize default objects.
+
+
+11)
+unknown objects/args:
+Decoder::unknownObjectArrived(const Entity::Empty&);
+and for args: if(op->getArgs()[0]->getClassNo() == Entity::EMPTY_NO) ...
