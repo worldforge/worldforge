@@ -44,7 +44,7 @@ class StreamConnect : public Atlas::Negotiate<iostream>
 {
     public:
 
-    StreamConnect(const std::string& name, iostream&);
+    StreamConnect(const std::string& name, iostream&, Atlas::Bridge*);
 
     virtual void Poll();
     virtual void Run();
@@ -70,6 +70,7 @@ class StreamConnect : public Atlas::Negotiate<iostream>
     std::string outName;
     std::string inName;
     iostream& socket;
+    Atlas::Bridge* bridge;
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
   
@@ -93,7 +94,7 @@ class StreamAccept : public Atlas::Negotiate<iostream>
 {
     public:
 
-    StreamAccept(const std::string& name, iostream&);
+    StreamAccept(const std::string& name, iostream&, Atlas::Bridge*);
 
     virtual void Poll();
     virtual void Run();
@@ -119,6 +120,7 @@ class StreamAccept : public Atlas::Negotiate<iostream>
     std::string outName;
     std::string inName;
     iostream& socket;
+    Atlas::Bridge* bridge;
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
   

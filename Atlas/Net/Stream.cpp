@@ -79,8 +79,9 @@ void Atlas::Net::NegotiateHelper<T>::put(string &buf, string header)
   buf += "\n";
 }
 
-Atlas::Net::StreamConnect::StreamConnect(const string& name, iostream& s) :
-  state(SERVER_GREETING), outName(name), socket(s),
+Atlas::Net::StreamConnect::StreamConnect(const string& name, iostream& s,
+Bridge* bridge) :
+  state(SERVER_GREETING), outName(name), socket(s), bridge(bridge),
   codecHelper(&inCodecs, &outCodecs),
   filterHelper(&inFilters, &outFilters)
 {
@@ -167,7 +168,7 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamConnect::GetState()
 
 Atlas::Connection<iostream> Atlas::Net::StreamConnect::GetConnection()
 {
-    return Connection<iostream>(0, inName);
+    return Connection<iostream>((*outCodecs.begin())->New(Codec<iostream>::Parameters(socket,bridge)), inName);
 }
 
 
@@ -222,8 +223,9 @@ void Atlas::Net::StreamConnect::processClientFilters()
     outFilters = *myFilters;
 }
 
-Atlas::Net::StreamAccept::StreamAccept(const string& name, iostream& s) :
-  state(SERVER_GREETING), outName(name), socket(s),
+Atlas::Net::StreamAccept::StreamAccept(const string& name, iostream& s,
+Bridge* bridge) :
+  state(SERVER_GREETING), outName(name), socket(s), bridge(bridge),
   codecHelper(&inCodecs, &outCodecs),
   filterHelper(&inFilters, &outFilters)
 {
@@ -309,7 +311,7 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::GetState()
 
 Atlas::Connection<iostream> Atlas::Net::StreamAccept::GetConnection()
 {
-    return Connection<iostream>(0, inName);
+    return Connection<iostream>((*outCodecs.begin())->New(Codec<iostream>::Parameters(socket,bridge)), inName);
 }
 
 void Atlas::Net::StreamAccept::processServerCodecs()
