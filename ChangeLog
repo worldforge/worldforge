@@ -1,5 +1,10 @@
 2003-09-10 Damien McGinnes 
 
+	* Mercator/Intersect.cpp,h: added point intersection with terrain
+	  and height over terrain functions
+
+2003-09-10 Damien McGinnes 
+
 	* Mercator/Intersect.cpp,h: added files for axisbox intersection
 	  with terrain
 	* tests/testIntersect.cpp: added files for intersection unit tests

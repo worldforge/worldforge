@@ -4,12 +4,14 @@
 namespace Mercator {
 //floor and ceil functions that return d-1 and d+1
 //respectively if d is integral
-float gridceil(float d) {
+float gridceil(float d) 
+{
     float c = ceil(d);
     return (c==d) ? c+1.0f : c;
 }
 
-float gridfloor(float d) {
+float gridfloor(float d) 
+{
     float c = floor(d);
     return (c==d) ? c-1.0f : c;
 }
@@ -73,6 +75,22 @@ bool Intersect(const Terrain &t, const WFMath::AxisBox<3> &bbox)
     }
     return false;
 }
+
+bool Intersect(const Terrain &t, const WFMath::Point<3> &pt) 
+{
+    return HOT(t, pt) <= 0.0;
+}
+
+float HOT(const Terrain &t, const WFMath::Point<3> &pt) 
+{
+    WFMath::Vector<3> normal; 
+    float terrHeight;
+    t.getHeightAndNormal(pt[0], pt[1], terrHeight, normal);
+
+    return (pt[2] - terrHeight);
+}
+
+
 
 } // namespace Mercator
 
