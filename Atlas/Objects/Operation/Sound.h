@@ -19,12 +19,12 @@ Base operator for all kind of perceptions
 class Sound : public Perception
 {
 public:
-                /// Construct a Sound class definition.
+    /// Construct a Sound class definition.
     Sound();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Sound() { }
 
-                /// Create a new instance of Sound.
+    /// Create a new instance of Sound.
     static Sound Instantiate();
 
 protected:

@@ -19,12 +19,12 @@ Base operator for all kind of perceptions
 class Imaginary : public Perception
 {
 public:
-                /// Construct a Imaginary class definition.
+    /// Construct a Imaginary class definition.
     Imaginary();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Imaginary() { }
 
-                /// Create a new instance of Imaginary.
+    /// Create a new instance of Imaginary.
     static Imaginary Instantiate();
 
 protected:

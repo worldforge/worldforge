@@ -23,12 +23,12 @@ This is base operation for all other
 class Listen : public Perceive
 {
 public:
-                /// Construct a Listen class definition.
+    /// Construct a Listen class definition.
     Listen();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Listen() { }
 
-                /// Create a new instance of Listen.
+    /// Create a new instance of Listen.
     static Listen Instantiate();
 
 protected:

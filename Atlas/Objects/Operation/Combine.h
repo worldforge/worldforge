@@ -19,12 +19,12 @@ This is how normal characters create objects.
 class Combine : public Create
 {
 public:
-                /// Construct a Combine class definition.
+    /// Construct a Combine class definition.
     Combine();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Combine() { }
 
-                /// Create a new instance of Combine.
+    /// Create a new instance of Combine.
     static Combine Instantiate();
 
 protected:

@@ -19,12 +19,12 @@ For more about <a href="login.html">out of game atlas here</a>
 class Logout : public Login
 {
 public:
-                /// Construct a Logout class definition.
+    /// Construct a Logout class definition.
     Logout();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Logout() { }
 
-                /// Create a new instance of Logout.
+    /// Create a new instance of Logout.
     static Logout Instantiate();
 
 protected:

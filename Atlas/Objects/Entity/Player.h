@@ -19,37 +19,39 @@ Later in hierarchy tree objtype changes to 'object' when actual game objects are
 class Player : public Account
 {
 public:
-                /// Construct a Player class definition.
+    /// Construct a Player class definition.
     Player();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Player() { }
 
-                /// Create a new instance of Player.
+    /// Create a new instance of Player.
     static Player Instantiate();
 
-                /// Check whether the attribute "name" exists.
+    /// Check whether the attribute "name" exists.
     virtual bool HasAttr(const std::string& name)const;
-                /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
-                /// not exist.
+    /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
+    /// not exist.
     virtual Atlas::Message::Object GetAttr(const std::string& name)
             const throw (NoSuchAttrException);
-                /// Set the attribute "name" to the value given by"attr"
+    /// Set the attribute "name" to the value given by"attr"
     virtual void SetAttr(const std::string& name,
                          const Atlas::Message::Object& attr);
-                /// Remove the attribute "name". This will not work for static attributes.
+    /// Remove the attribute "name". This will not work for static attributes.
     virtual void RemoveAttr(const std::string& name);
 
-                /// Send the contents of this object to a Bridge.
+    /// Send the contents of this object to a Bridge.
     virtual void SendContents(Atlas::Bridge* b);
 
-                /// Convert this object to a Message::Object.
+    /// Convert this object to a Message::Object.
     virtual Atlas::Message::Object AsObject() const;
 
-                /// Set the "characters" attribute.
+    /// Set the "characters" attribute.
     inline void SetCharacters(const Atlas::Message::Object::ListType& val);
 
-                /// Retrieve the "characters" attribute.
+    /// Retrieve the "characters" attribute.
     inline const Atlas::Message::Object::ListType& GetCharacters() const;
+    /// Retrieve the "characters" attribute as a non-const reference.
+    inline Atlas::Message::Object::ListType& GetCharacters();
 
 protected:
     Atlas::Message::Object::ListType attr_characters;
@@ -68,6 +70,11 @@ void Player::SetCharacters(const Atlas::Message::Object::ListType& val)
 }
 
 const Atlas::Message::Object::ListType& Player::GetCharacters() const
+{
+    return attr_characters;
+}
+
+Atlas::Message::Object::ListType& Player::GetCharacters()
 {
     return attr_characters;
 }

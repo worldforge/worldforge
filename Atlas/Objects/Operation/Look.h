@@ -23,12 +23,12 @@ This is base operation for all other
 class Look : public Perceive
 {
 public:
-                /// Construct a Look class definition.
+    /// Construct a Look class definition.
     Look();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Look() { }
 
-                /// Create a new instance of Look.
+    /// Create a new instance of Look.
     static Look Instantiate();
 
 protected:

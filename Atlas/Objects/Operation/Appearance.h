@@ -19,12 +19,12 @@ Base operator for all kind of perceptions
 class Appearance : public Sight
 {
 public:
-                /// Construct a Appearance class definition.
+    /// Construct a Appearance class definition.
     Appearance();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Appearance() { }
 
-                /// Create a new instance of Appearance.
+    /// Create a new instance of Appearance.
     static Appearance Instantiate();
 
 protected:

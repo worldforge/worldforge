@@ -23,12 +23,12 @@ This is base operation for all other
 class Get : public Action
 {
 public:
-                /// Construct a Get class definition.
+    /// Construct a Get class definition.
     Get();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Get() { }
 
-                /// Create a new instance of Get.
+    /// Create a new instance of Get.
     static Get Instantiate();
 
 protected:

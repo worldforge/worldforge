@@ -19,12 +19,12 @@ Later in hierarchy tree objtype changes to 'object' when actual game objects are
 class GameEntity : public RootEntity
 {
 public:
-                /// Construct a GameEntity class definition.
+    /// Construct a GameEntity class definition.
     GameEntity();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~GameEntity() { }
 
-                /// Create a new instance of GameEntity.
+    /// Create a new instance of GameEntity.
     static GameEntity Instantiate();
 
 protected:

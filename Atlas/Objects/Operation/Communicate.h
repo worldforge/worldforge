@@ -19,12 +19,12 @@ Map editor is main user for this in client side. Server uses this inside "info" 
 class Communicate : public Create
 {
 public:
-                /// Construct a Communicate class definition.
+    /// Construct a Communicate class definition.
     Communicate();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Communicate() { }
 
-                /// Create a new instance of Communicate.
+    /// Create a new instance of Communicate.
     static Communicate Instantiate();
 
 protected:

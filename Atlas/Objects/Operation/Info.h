@@ -23,12 +23,12 @@ This is base operation for all other
 class Info : public RootOperation
 {
 public:
-                /// Construct a Info class definition.
+    /// Construct a Info class definition.
     Info();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Info() { }
 
-                /// Create a new instance of Info.
+    /// Create a new instance of Info.
     static Info Instantiate();
 
 protected:

@@ -64,15 +64,21 @@ public:
 
     /// Retrieve the "parents" attribute.
     inline const Atlas::Message::Object::ListType& GetParents() const;
+    inline Atlas::Message::Object::ListType& GetParents();
     /// Retrieve the "id" attribute.
     inline const std::string& GetId() const;
+    inline std::string& GetId();
     /// Retrieve the "objtype" attribute.
     inline const std::string& GetObjtype() const;
+    inline std::string& GetObjtype();
     /// Retrieve the "name" attribute.
     inline const std::string& GetName() const;
+    inline std::string& GetName();
     
     /// Convert this object to a Message::Object.
     virtual Atlas::Message::Object AsObject() const;
+    /// Convert this object to an std::map.
+    virtual Atlas::Message::Object::MapType AsMap() const;
 
     /// Send the contents of this object to a Bridge.
     virtual void SendContents(Atlas::Bridge* b) const;
@@ -119,7 +125,17 @@ const Atlas::Message::Object::ListType& Root::GetParents() const
     return attr_parents;
 }
 
+Atlas::Message::Object::ListType& Root::GetParents()
+{
+    return attr_parents;
+}
+
 const std::string& Root::GetId() const
+{
+    return attr_id;
+}
+
+std::string& Root::GetId()
 {
     return attr_id;
 }
@@ -129,7 +145,17 @@ const std::string& Root::GetObjtype() const
     return attr_objtype;
 }
 
+std::string& Root::GetObjtype()
+{
+    return attr_objtype;
+}
+
 const std::string& Root::GetName() const
+{
+    return attr_name;
+}
+
+std::string& Root::GetName()
 {
     return attr_name;
 }

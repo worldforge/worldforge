@@ -19,12 +19,12 @@ One of the pieces might be original object modified.
 class Divide : public Create
 {
 public:
-                /// Construct a Divide class definition.
+    /// Construct a Divide class definition.
     Divide();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Divide() { }
 
-                /// Create a new instance of Divide.
+    /// Create a new instance of Divide.
     static Divide Instantiate();
 
 protected:

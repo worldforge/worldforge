@@ -23,12 +23,12 @@ This is base operation for all other
 class Perceive : public Get
 {
 public:
-                /// Construct a Perceive class definition.
+    /// Construct a Perceive class definition.
     Perceive();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Perceive() { }
 
-                /// Create a new instance of Perceive.
+    /// Create a new instance of Perceive.
     static Perceive Instantiate();
 
 protected:

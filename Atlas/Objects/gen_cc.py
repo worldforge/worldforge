@@ -14,24 +14,36 @@ copyright = \
 // Copyright 2000 Stefanus Du Toit.\n\
 // Automatically generated using gen_cc.py.\n"
 
+# These are only used for description.
 descr_attrs = ['children', 'description', 'args_description', 'example', \
                'long_description', 'specification', 'interface']
+# C++ equivalents of atlas types              
 cpp_type = {'map':'Atlas::Message::Object::MapType',
             'list':'Atlas::Message::Object::ListType',
             'string':'std::string',
             'int':'int',
             'float':'double'}
 
+# Const references
 cpp_param_type = {'map':'const ' + cpp_type['map'] + '&',
                   'list':'const ' + cpp_type['list'] + '&',
                   'string':'const ' + cpp_type['string'] + '&',
                   'int':cpp_type['int'],
                   'float':cpp_type['float']}
 
+# Non-const references
+cpp_param_type2 = {'map':cpp_type['map'] + '&',
+                  'list':cpp_type['list'] + '&',
+                  'string':cpp_type['string'] + '&',
+                  'int':cpp_type['int'] + '&',
+                  'float':cpp_type['float'] + '&'}
+
+# Turns some_thing into SomeThing
 def classize(id):
     return string.join(map(lambda part:string.capitalize(part), \
                        string.split(id, '_')), "")
-                       
+
+# Atlas equivalent of python type
 type2string={StringType:"string",
              IntType:"int",
              FloatType:"float"}
@@ -83,7 +95,7 @@ class GenerateCC:
         self.out.write("\n")
     def doc(self, indent, text):
         for i in range(0, indent):
-            self.out.write("    ")
+            self.out.write(" ")
         self.out.write("/// %s\n" % text)
     def constructors_if(self, obj):
         self.doc(4, "Construct a " + self.classname + " class definition.")
@@ -177,6 +189,11 @@ class GenerateCC:
             self.out.write('{\n')
             self.out.write('    return attr_%s;\n' % attr.name)
             self.out.write('}\n\n')
+            self.out.write('%s %s::Get%s()\n' % (cpp_param_type2[attr.type], \
+                           classname, classize(attr.name))) 
+            self.out.write('{\n')
+            self.out.write('    return attr_%s;\n' % attr.name)
+            self.out.write('}\n\n')
     def static_inline_sends(self, obj, statics):
         classname = classize(obj.attr['id'].value)
         for attr in statics:
@@ -256,6 +273,17 @@ class GenerateCC:
                     (attr.name, attr.name))
         self.out.write('    return Object(m);\n')
         self.out.write("}\n\n")
+    def asmap_im(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        self.out.write("Object::MapType %s::AsMap() const\n" % classname)
+        self.out.write("{\n")
+        parent = obj.attr['parents'].value[0]
+        self.out.write("    Object::MapType m = %s::AsMap();\n" % classize(parent))
+        for attr in statics:
+            self.out.write('    m["%s"] = Object(attr_%s);\n' % \
+                    (attr.name, attr.name))
+        self.out.write('    return m;\n')
+        self.out.write("}\n\n")
     def interface(self, obj):
         print "Output of interface for:"
         outfile = self.outdir + '/' + self.classname + ".h"
@@ -332,6 +360,9 @@ class GenerateCC:
                 self.doc(4, 'Retrieve the "%s" attribute.' % attr.name)
                 self.out.write('    inline %s Get' % cpp_param_type[attr.type])
                 self.out.write(classize(attr.name) + '() const;\n')
+                self.doc(4, 'Retrieve the "%s" attribute as a non-const reference.' % attr.name)
+                self.out.write('    inline %s Get' % cpp_param_type2[attr.type])
+                self.out.write(classize(attr.name) + '();\n')
             self.out.write('\n')
         self.out.write("protected:\n")
         if len(static_attrs) > 0:

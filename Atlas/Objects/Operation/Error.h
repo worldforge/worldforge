@@ -23,12 +23,12 @@ This is base operation for all other
 class Error : public Info
 {
 public:
-                /// Construct a Error class definition.
+    /// Construct a Error class definition.
     Error();
-                /// Default destructor.
+    /// Default destructor.
     virtual ~Error() { }
 
-                /// Create a new instance of Error.
+    /// Create a new instance of Error.
     static Error Instantiate();
 
 protected:

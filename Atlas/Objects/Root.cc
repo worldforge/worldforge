@@ -88,6 +88,16 @@ Object Root::AsObject() const
     return Object(allattrs);
 }
 
+Object::MapType Root::AsMap() const
+{
+    Object::MapType allattrs = attributes;
+    allattrs["parents"] = Object(attr_parents);
+    allattrs["id"] = Object(attr_id);
+    allattrs["objtype"] = Object(attr_objtype);
+    allattrs["name"] = Object(attr_name);
+    return allattrs;
+}
+
 void Root::SendContents(Bridge* b) const
 {
     SendParents(b);
