@@ -48,7 +48,7 @@ Meta::Meta(const std::string &/*cnm*/,
     _stream = new udp_socket_stream();  
     _stream->setTimeout(30);	
     
-    Poll::instance().connect(slot(this, &Meta::gotData));
+	Poll::instance().connect(SigC::slot(*this, &Meta::gotData));
     
     // open connection to meta server
    
@@ -70,7 +70,7 @@ Meta::Meta(const std::string &/*cnm*/,
     // check for meta-server timeouts; this is going to be
     // fairly common as long as the protocol is UDP, I think
     _timeout = new Timeout("meta_ckeepalive_"+msv, 8000);
-    _timeout->Expired.connect(SigC::slot(this, &Meta::metaTimeout));
+    _timeout->Expired.connect(SigC::slot(*this, &Meta::metaTimeout));
 }
 
 Meta::~Meta()
@@ -344,7 +344,7 @@ void Meta::listReq(int base)
 		_timeout->reset(5000);
 	else {
 		_timeout = new Timeout("meta_list_req", 8000);
-		_timeout->Expired.connect(SigC::slot(this, &Meta::metaTimeout));
+		_timeout->Expired.connect(SigC::slot(*this, &Meta::metaTimeout));
 	}
 }
 

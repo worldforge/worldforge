@@ -51,8 +51,8 @@ Lobby::Lobby(Connection *con) :
 	_infoRefno(-1)
 {
 	assert(_con);
-	_con->Failure.connect(SigC::slot(this, &Lobby::netFailure));
-	_con->Connected.connect(SigC::slot(this, &Lobby::netConnected));
+	_con->Failure.connect(SigC::slot(*this, &Lobby::netFailure));
+	_con->Connected.connect(SigC::slot(*this, &Lobby::netConnected));
 	
 	if (_con->getStatus() == BaseConnection::CONNECTED) {
 		// otherwise we never see the Connected signal for obvious reasons
@@ -166,7 +166,7 @@ void Lobby::registerCallbacks()
 	Dispatcher *d = sndd->addSubdispatch(new OpToDispatcher("private", _account));
 	d = d->addSubdispatch(ClassDispatcher::newAnonymous());
 	d->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Talk>("lobby",
-		SigC::slot(this, &Lobby::recvPrivateChat)),
+		SigC::slot(*this, &Lobby::recvPrivateChat)),
 		"talk"
 	);
 	
@@ -180,13 +180,13 @@ void Lobby::registerCallbacks()
 	Dispatcher *esight = d->addSubdispatch(ClassDispatcher::newAnonymous());
 	// the room entity callback
 	esight->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::RootEntity>("lobby", 
-		SigC::slot(this, &Lobby::recvSightRoom)),
+		SigC::slot(*this, &Lobby::recvSightRoom)),
 		"room"
 	);
 	
 	// the account / player object callback
 	esight->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::Account>("lobby", 
-		SigC::slot(this, &Lobby::recvSightPerson)),
+		SigC::slot(*this, &Lobby::recvSightPerson)),
 		"account"
 	);
 }
@@ -211,7 +211,7 @@ void Lobby::netConnected()
 	Dispatcher *accd = ied->addSubdispatch(ClassDispatcher::newAnonymous());
 	
 	accd->addSubdispatch( new SignalDispatcher2<Operation::Info, AtlasEntity::Account>(
-		"lobby", SigC::slot(this, &Lobby::recvInfoAccount)),
+		"lobby", SigC::slot(*this, &Lobby::recvInfoAccount)),
 		"account"
 	);
 }

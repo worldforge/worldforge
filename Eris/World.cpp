@@ -71,12 +71,12 @@ World::World(Player *p, Connection *c) :
 	d = d->addSubdispatch(ClassDispatcher::newAnonymous());
 	d->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Info, 
 		Atlas::Objects::Entity::GameEntity>(
-		"character", SigC::slot(this, &World::recvInfoCharacter)),
+		"character", SigC::slot(*this, &World::recvInfoCharacter)),
 		"game_entity"
 	);
 	       	
 	// setup network callbacks
-	_con->Connected.connect(SigC::slot(this, &World::netConnect));
+	_con->Connected.connect(SigC::slot(*this, &World::netConnect));
 	// check for auto-firing, etc
 	//if (_con->getStatus() == BaseConnection::CONNECTED)
 	//	netConnect();
@@ -250,7 +250,7 @@ void  World::registerCallbacks()
 	// sight of game-entities (rather important this!)
 	ed->addSubdispatch(new SignalDispatcher2<Atlas::Objects::Operation::Sight,
 		Atlas::Objects::Entity::GameEntity>("world", 
-		SigC::slot(this, &World::recvSightObject)
+		SigC::slot(*this, &World::recvSightObject)
 	));
 	
 	Dispatcher *od = sightd->addSubdispatch(new TypeDispatcher("op", "op"));
@@ -262,24 +262,24 @@ void  World::registerCallbacks()
 	Dispatcher *cr = opclass->addSubdispatch(new EncapDispatcher("create"), "create");
 	cr->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Create,
 		Atlas::Objects::Entity::GameEntity>("world", 
-		SigC::slot(this, &World::recvSightCreate)
+		SigC::slot(*this, &World::recvSightCreate)
 	));
 	
 	// sight of delete operations
 	opclass->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Delete>("delete", 
-		SigC::slot(this, &World::recvSightDelete)),
+		SigC::slot(*this, &World::recvSightDelete)),
 		"delete"
 	);
 	
 	// sight of set operations
 	opclass->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Set>("set", 
-		SigC::slot(this, &World::recvSightSet)),
+		SigC::slot(*this, &World::recvSightSet)),
 		"set"
 	);
 	
 	// sight of move operations
 	opclass->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Move>("move", 
-		SigC::slot(this, &World::recvSightMove)),
+		SigC::slot(*this, &World::recvSightMove)),
 		"move"
 	);
 	
@@ -287,18 +287,18 @@ void  World::registerCallbacks()
 	soundd = soundd->addSubdispatch(ClassDispatcher::newAnonymous());
 	soundd->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Sound,
 		Atlas::Objects::Operation::Talk>("world",
-		SigC::slot(this, &World::recvSoundTalk)),
+		SigC::slot(*this, &World::recvSoundTalk)),
 		"talk"
 	);
 	
 // appearance . disappearance : note these inherit from sight so need to be careful
 	igclass->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Disappearance>("disappear",
-		SigC::slot(this, &World::recvDisappear)),
+		SigC::slot(*this, &World::recvDisappear)),
 		"disappearance"
 	);
 	
 	igclass->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Appearance>("appear",
-		SigC::slot(this, &World::recvAppear)),
+		SigC::slot(*this, &World::recvAppear)),
 		"appearance"
 	);
 }

@@ -89,7 +89,7 @@ void MetaQuery::handleFailure(const std::string &msg)
 
 void MetaQuery::bindTimeout(Timeout &t, Status /*sc*/)
 {
-	t.Expired.connect(bind(SigC::slot(_meta, &Meta::queryTimeout), this));
+	t.Expired.connect(SigC::bind(SigC::slot(*_meta, &Meta::queryTimeout), this));
 }
 
 } // of namsespace

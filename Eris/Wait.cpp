@@ -44,7 +44,7 @@ WaitForDispatch::WaitForDispatch(const Atlas::Message::Object &msg,
 {
 	Dispatcher *pr = Connection::Instance()->getDispatcherByPath(ppath);
 	pr->addSubdispatch( dsp );
-	dsp->addSubdispatch(new SignalDispatcher0("sig", SigC::slot(this, &WaitForBase::fire)));
+	dsp->addSubdispatch(new SignalDispatcher0("sig", SigC::slot(*this, &WaitForBase::fire)));
 }
 
 WaitForDispatch::WaitForDispatch(const Atlas::Objects::Root &obj,  
@@ -56,7 +56,7 @@ WaitForDispatch::WaitForDispatch(const Atlas::Objects::Root &obj,
 {
 	Dispatcher *pr = Connection::Instance()->getDispatcherByPath(ppath);
 	pr->addSubdispatch( dsp );
-	dsp->addSubdispatch(new SignalDispatcher0("sig", SigC::slot(this, &WaitForBase::fire)));
+	dsp->addSubdispatch(new SignalDispatcher0("sig", SigC::slot(*this, &WaitForBase::fire)));
 }
 
 
@@ -72,7 +72,7 @@ WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Object &msg) :
 	WaitForBase(msg)
 {
 	//Eris::Log("Created WaitForSignal %p", this);
-	sig.connect(SigC::slot(this, &WaitForBase::fire));
+	sig.connect(SigC::slot(*this, &WaitForBase::fire));
 }
 
 WaitForSignal::~WaitForSignal()

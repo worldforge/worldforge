@@ -4,7 +4,11 @@
 /** Timing related primitives in a portable fashion - note this is for interval / elapsed
 time measurement, not displaying a human readable time. */
 
+#ifdef _MSC_VER
+#include <sys/timeb.h>
+#else
 #include <sys/time.h>
+#endif
 #if defined ( __WIN32__ )
 #include <winsock.h> 
 extern "C" {

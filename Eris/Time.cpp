@@ -4,8 +4,12 @@
 
 #include "Time.h"
 
+#ifndef _MSC_VER
 #include <unistd.h>	
 #include <sys/time.h>
+#else
+#include <sys/timeb.h>
+#endif
 
 bool Time::Stamp::_did_init = false;
 	

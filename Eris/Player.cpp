@@ -45,16 +45,16 @@ Player::Player(Connection *con) :
     
 	assert(_con);
 
-	_con->Connected.connect(SigC::slot(this, &Player::netConnected));
-	_con->Failure.connect(SigC::slot(this, &Player::netFailure));
+	_con->Connected.connect(SigC::slot(*this, &Player::netConnected));
+	_con->Failure.connect(SigC::slot(*this, &Player::netFailure));
 	
 	Dispatcher *d = _con->getDispatcherByPath("op:error");
 	assert(d);
 	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Error>("player",
-		SigC::slot(this, &Player::recvOpError)
+		SigC::slot(*this, &Player::recvOpError)
 	));
 	
-	_lobby->LoggedIn.connect(SigC::slot(this, &Player::loginComplete));
+	_lobby->LoggedIn.connect(SigC::slot(*this, &Player::loginComplete));
 }	
 
 Player::~Player()
@@ -151,7 +151,7 @@ void Player::logout()
     _currentSerial = l.GetSerialno();
 	
     _logoutTimeout = new Timeout("logout", 5000);
-    _logoutTimeout->Expired.connect(SigC::slot(this, &Player::handleLogoutTimeout));
+    _logoutTimeout->Expired.connect(SigC::slot(*this, &Player::handleLogoutTimeout));
 }
 
 CharacterList Player::getCharacters()
@@ -295,18 +295,18 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
     // there will be several anonymous children, I guess
     d = d->addSubdispatch(ClassDispatcher::newAnonymous());
     d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("character",
-	SigC::slot(this, &Player::recvSightCharacter)),
+	SigC::slot(*this, &Player::recvSightCharacter)),
 	"game_entity"
     );
     
     d = _con->getDispatcherByPath("op:info:op");
     Dispatcher *infoLogout = d->addSubdispatch(ClassDispatcher::newAnonymous());
     infoLogout->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Logout>(
-	"player", SigC::slot(this, &Player::recvLogoutInfo)),
+	"player", SigC::slot(*this, &Player::recvLogoutInfo)),
 	"logout"
     );
     
-    _con->Disconnecting.connect(SigC::slot(this, &Player::netDisconnecting));
+    _con->Disconnecting.connect(SigC::slot(*this, &Player::netDisconnecting));
 }
 
 void Player::recvOpError(const Atlas::Objects::Operation::Error &err)

@@ -5,7 +5,9 @@
 #if __MWERKS__
    #include <map.h>
 #else
-   #include <multimap.h>
+#ifndef _MSC_VER
+  #include <multimap.h>
+#endif
 #endif
 
 #include <assert.h>

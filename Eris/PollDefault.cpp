@@ -49,7 +49,13 @@ PollDataDefault::PollDataDefault(const std::set<const basic_socket_stream*>& str
 {
 	FD_ZERO(&pending);
 
+#ifndef _MSC_VER
 	for(_iter I = str.begin(); I != str.end(); ++I) {
+#else
+//MSVC stupidity fix
+	std::set<const basic_socket_stream*> *str2 = const_cast<std::set<const basic_socket_stream*>* >(&str);
+	for(_iter I = str2->begin(); I != str2->end(); ++I) {
+#endif
 		SOCKET_TYPE fd = (*I)->getSocket();
 		FD_SET(fd, &pending);
 		if(fd > maxfd)

@@ -16,7 +16,7 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/Encoder.h>
 
-#include <atlas_utils.h>
+#include "atlas_utils.h"
 
 #include "Connection.h"
 #include "Dispatcher.h"
@@ -77,7 +77,7 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 		sdd = new DebugDispatcher(_clientName + ".atlas-sendlog");
 	}
 
-	Poll::instance().connect(slot(this, &Connection::gotData));
+	Poll::instance().connect(SigC::slot(*this, &Connection::gotData));
 }
 	
 Connection::~Connection()

@@ -63,7 +63,7 @@ Dispatcher* ClassDispatcher::addSubdispatch(Dispatcher *d, const std::string cln
 		to re-order of course (and sharpish!) */
 		_subs.push_front(cl);
 		
-		SigC::Slot0<void> sl(SigC::bind(SigC::slot(this, &ClassDispatcher::boundType), ty));
+		SigC::Slot0<void> sl(SigC::bind(SigC::slot(*this, &ClassDispatcher::boundType), ty));
 		ty->getBoundSignal().connect(sl);
 		return d;
 	}

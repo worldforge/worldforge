@@ -6,7 +6,9 @@
 
 #include <map>
 #if !__MWERKS__
+#ifndef _MSC_VER
 #include <multimap.h>
+#endif
 #endif
 
 namespace Atlas {

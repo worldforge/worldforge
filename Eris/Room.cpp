@@ -74,7 +74,7 @@ void Room::setup()
 	
 // talk 
 	sound->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Talk>("foo",
-		SigC::slot(this, &Room::recvSoundTalk)
+		SigC::slot(*this, &Room::recvSoundTalk)
 	));
 
 // visual stuff (sights)
@@ -106,21 +106,21 @@ void Room::setup()
     sig->addSubdispatch(
 	new SignalDispatcher2<Atlas::Objects::Operation::Imaginary,
 		Atlas::Objects::Root>("emote",
-		SigC::slot(this, &Room::recvSightEmote)
+		SigC::slot(*this, &Room::recvSightEmote)
     ));
 
 // appearance
 	Dispatcher *apd = con->getDispatcherByPath("op:oog:appearance");
 	apd = apd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
 	apd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Appearance>("foo",
-		SigC::slot(this, &Room::recvAppear)
+		SigC::slot(*this, &Room::recvAppear)
 	));
 	
 // disappearance
 	Dispatcher *disd = con->getDispatcherByPath("op:oog:disappearance");
 	disd = disd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
 	disd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Disappearance>("foo",
-		SigC::slot(this, &Room::recvDisappear)
+		SigC::slot(*this, &Room::recvDisappear)
 	));
 	
 // initial look	
@@ -228,7 +228,7 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 	}
 
 	// wire up the signal for initial get
-	_lobby->SightPerson.connect(SigC::slot(this, &Room::notifyPersonSight));
+	_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
 	
 	if (room.HasAttr("rooms")) {
 		Message::Object::ListType rooms = room.GetAttr("rooms").AsList();
@@ -319,7 +319,7 @@ void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 		} else {
 			// need to wait on the lookup
 			if (_pending.empty())
-				_lobby->SightPerson.connect(SigC::slot(this, &Room::notifyPersonSight));
+				_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
 			
 			_pending.insert(account);
 		}
