@@ -57,6 +57,8 @@ PollDataDefault::PollDataDefault(const std::set<const basic_socket_stream*>& str
 	for(_iter I = str2->begin(); I != str2->end(); ++I) {
 #endif
 		SOCKET_TYPE fd = (*I)->getSocket();
+		if(fd == INVALID_SOCKET)
+                  continue;
 		FD_SET(fd, &pending);
 		if(fd > maxfd)
 			maxfd = fd;
@@ -81,7 +83,7 @@ bool PollDataDefault::isReady(const basic_socket_stream* str)
 {
 	SOCKET_TYPE fd = str->getSocket();
 
-	return (fd <= maxfd) && FD_ISSET(fd, &pending);
+	return (fd != INVALID_SOCKET) && (fd <= maxfd) && FD_ISSET(fd, &pending);
 }
 
 void PollDefault::doPoll()

@@ -1,3 +1,7 @@
+Monday, April 29, Ron Steinke
+
+	* Added check for fd == INVALID_SOCKET in PollDefault
+
 Sunday, June 2, James Turner
 
 	* Safety tweaks in Connection::recv() and Metaserver::recv()
