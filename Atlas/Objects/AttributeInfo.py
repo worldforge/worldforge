@@ -182,6 +182,25 @@ class AttributeInfo:
         return res + '}\n\n'
         
 
+    def default_assign(self, classname):
+        var = 'defaults_%s->attr_%s' % (classname, self.name)
+        if self.type == "int" or self.type == "float":
+            return '        %s = %s;\n' \
+                    % (var, self.value)
+        elif self.type == "string":
+            if len(self.value) == 0:
+                return ''
+            return '        %s = "%s";\n' \
+                    % (var, self.value)
+        elif self.type == "string_list_length" or self.type == "string_list":
+            if len(self.value) == 0:
+                return ''
+            if len(self.value) == 1:
+                return '        %s = %s(1, "%s");\n' \
+                       % (var, cpp_type[self.type], self.value[0])
+        else:
+            return '        // %s\n' % (var)
+
 #[gs]etattr_im: convert to use get/set'Attrname'
 
     def check_obj(self, name, obj):

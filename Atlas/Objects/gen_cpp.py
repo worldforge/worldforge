@@ -49,10 +49,10 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
             if res: return res
 
     def get_name_value_type(self, obj, first_definition = 0,
-                            real_attr_only = 0):
+                            real_attr_only = 0, include_desc_attrs = 0):
         lst = []
         for name, value in obj.items():
-            if name in descr_attrs:
+            if not include_desc_attrs and name in descr_attrs:
                 continue
             #required that no parent has this attribute?
             if first_definition:
@@ -60,6 +60,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                     continue
             #basic type
             type, attr_class_lst = self.find_attr_class(self.objects[name])
+            print 'Attr ', name, value, type
             if real_attr_only:
                 lst.append(apply(attr_class_lst[0],
                                  (name, value, type)))
@@ -152,6 +153,11 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         classname = classize(obj.id, data=1)
         for attr in statics:
             self.write(attr.inline_send(classname))
+
+    def static_default_assigns(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        for attr in statics:
+            self.write(attr.default_assign(classname))
 
     def getattrclass_im(self, obj, statics):
         classname = classize(obj.id, data=1)
@@ -282,11 +288,18 @@ void %(classname)s::free()
     begin_%(classname)s = this;
 }
 
+""" % vars()) #"for xemacs syntax highlighting
+
+    def default_object_im(self, obj, static_attrs):
+        classname = self.classname
+        self.write("""
 %(classname)s *%(classname)s::getDefaultObjectInstance()
 {
     if (defaults_%(classname)s == 0) {
         defaults_%(classname)s = new %(classname)s;
-    }
+""" % vars()) #"for xemacs syntax highlighting
+        self.static_default_assigns(obj, static_attrs)
+        self.write("""    }
     return defaults_%(classname)s;
 }
 
@@ -527,6 +540,7 @@ void %(classname)s::free()
         self.destructor_im(obj)
         self.instanceof_im(obj)
         self.freelist_im()
+        self.default_object_im(obj, static_attrs)
 
         #inst# self.instance_im()
         

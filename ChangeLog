@@ -1,5 +1,11 @@
 2004-02-23  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py:
+	  Work in progress to set default values for objects at build
+	  time.
+
+2004-02-23  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/common.py: Add one more useless attribute.
 
 	* tests/Objects/objects2.cpp: Fix the tests.
