@@ -196,7 +196,20 @@ void XML::TokenData(char next)
 
 void XML::ParseStartTag()
 {
-    tag = string(tag, 0, tag.find(' '));
+    int tag_end = tag.find(' ');
+    int name_start = tag.find("name=\"") + 6;
+    int name_end = tag.rfind("\"");
+    
+    if (name_start < name_end)
+    {
+	name = string(tag, name_start, name_end - name_start);
+    }
+    else
+    {
+	name.erase();
+    }
+    
+    tag = string(tag, 0, tag_end);
 
     switch (state.top())
     {
@@ -375,7 +388,7 @@ void XML::ParseEndTag()
 		state.pop();
 		if (state.top() == PARSE_MAP)
 		{
-		    bridge->MapItem("foo", atoi(data.top().c_str()));
+		    bridge->MapItem(name, atoi(data.top().c_str()));
 		}
 		else
 		{
@@ -395,7 +408,7 @@ void XML::ParseEndTag()
 		state.pop();
 		if (state.top() == PARSE_MAP)
 		{
-		    bridge->MapItem("foo", atof(data.top().c_str()));
+		    bridge->MapItem(name, atof(data.top().c_str()));
 		}
 		else
 		{
@@ -415,7 +428,7 @@ void XML::ParseEndTag()
 		state.pop();
 		if (state.top() == PARSE_MAP)
 		{
-		    bridge->MapItem("foo", data.top());
+		    bridge->MapItem(name, data.top());
 		}
 		else
 		{

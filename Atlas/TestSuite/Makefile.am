@@ -6,7 +6,7 @@ noinst_PROGRAMS = \
 	test-packed \
 	test-xml
 
-CXXFLAGS = -Wall -D_ADebug_
+CXXFLAGS = -Wall -g
 
 test_object_map_SOURCES		= test-object-map.cpp
 test_object_mapincludedir	= $(includedir)/Atlas/src/TestSuite
