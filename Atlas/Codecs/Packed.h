@@ -75,7 +75,7 @@ protected:
         PARSE_INT,
         PARSE_FLOAT,
         PARSE_STRING,
-        PARSE_NAME,
+        PARSE_NAME
     };
     
     std::stack<State> state;
