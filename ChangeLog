@@ -1,3 +1,12 @@
+Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/MersenneTwister.h, wfmath/const.h, wfmath/miniball_funcs.h:
+	  Replace ANSI C headers #include <foo.h> with #include <cfoo>.
+	* wfmath/stream.h: Removed commented-out sstream #include.
+	* wfmath/timestamp.*: Moved winsock.h #include into the .cpp file,
+	  moved timeval class declaration for win32 inside the TimeStamp
+	  class.
+
 Sunday, January 11th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* wfmath/timestamp.h: Pull winsock #include outside of

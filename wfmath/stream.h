@@ -38,7 +38,6 @@
 #include <wfmath/error.h>
 #include <string>
 #include <iostream>
-//#include <sstream>
 #include <list> // For Polygon<>::operator>>()
 
 namespace WFMath {

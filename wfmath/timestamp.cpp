@@ -32,6 +32,10 @@
 
 #include "timestamp.h"
 
+#ifdef __WIN32__
+#include <winsock2.h> 
+#endif
+
 #ifdef HAVE_CONFIG_H
 	#include "config.h"
 #endif

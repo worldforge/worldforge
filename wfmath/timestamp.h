@@ -37,15 +37,6 @@ time measurement, not displaying a human readable time. */
 #else
 #include <sys/time.h>
 #endif
-#if defined ( __WIN32__ )
-#include <winsock2.h> 
-namespace WFMath { extern "C" {
-  struct eris_timeval  {
-    long tv_sec;	/* seconds */
-    long tv_usec;	/* microseconds */
-  };
-}}
-#endif
 
 namespace WFMath {
 
@@ -124,14 +115,12 @@ inline bool operator!=(const TimeDiff &a, const TimeDiff &b) {return !(b == a);}
  **/
 class TimeStamp {
  private:
-#if defined( __WIN32__ )
-	
+#ifdef __WIN32__ 
   // We roll our own timeval... may only need to be done for mingw32.
-  // FIXME since we're no longer doing a typedef, do we really need to do this?
-  struct eris_timeval _val;
-
-#elif defined( macintosh ) // This doesn't appear to be supported
-  UnsignedWide _val;	// micro-seconds
+  struct {
+    long tv_sec;	/* seconds */
+    long tv_usec;	/* microseconds */
+  } _val;
 #else
   // POSIX, BeOS, ....
   struct timeval _val;

@@ -64,8 +64,8 @@
 // its own MTRand object)
 
 #include <iosfwd>
-#include <limits.h>
-#include <math.h>
+#include <climits>
+#include <cmath>
 
 // namespace safety for inclusion in the lib
 

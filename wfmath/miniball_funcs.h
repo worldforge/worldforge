@@ -36,7 +36,7 @@
 #ifndef WFMATH_MINIBALL_FUNCS_H
 #define WFMATH_MINIBALL_FUNCS_H
 
-#include<assert.h>
+#include <cassert>
 
 namespace WFMath { namespace _miniball {
 

@@ -26,11 +26,11 @@
 #ifndef WFMATH_CONST_H
 #define WFMATH_CONST_H
 
-#include <float.h>
+#include <cfloat>
 // The next two aren't used in this file, but are used
 // everywhere else in the library.
-#include <assert.h>
-#include <math.h>
+#include <cassert>
+#include <cmath>
 
 #ifdef _MSC_VER
   #if _MSC_VER < 1300
