@@ -19,3 +19,5 @@ mercator*.pc
 missing
 mkinstalldirs
 stamp-h*
+.DS_Store
+build
