@@ -8,6 +8,56 @@ message and then closes the connection.
 Both client and server use libsocket++ (see @ref tutorial_preamble) for socket
 communications.
 
+@section general General Concepts
+
+I assume you already know a little about the way Atlas works. Broadly speaking
+it allows the transmission of messages, which can contain objects of different
+types. These types are integers, floating-point values, character strings,
+lists of objects and lastly maps (which are keyed lists, such as perl hashes,
+python dicts, and STL maps).
+
+Atlas-C++ allows you to comfortably send and receive such messages in a stream
+fashion through iostreams (which can be socket streams), without ever having
+to deal with the Atlas protocol itself.
+
+The Atlas "protocol" is an implementation-independent definition. This means
+you can express atlas messages in different ways, such as in an XML-like
+fashion, in a simple ASCII protocol or in a very space-efficient binary
+protocol. Such protocol implementations are called "codecs".
+
+An Atlas-C++ Codec takes an iostream as parameter at construction and has
+functions for sending the various different types of values (maps, lists and
+single values). Each codec also provides a function called Poll(). This gets
+a character from the stream (note that it will block - so check your socket
+first!) and parses it. "That's great," I hear you say, "but how do I get the
+data that it receives?" Well, this is where one of the neat things about
+Atlas-C++ comes in: Bridges.
+
+Codec is in fact publicly derived from Bridge. Bridge is an abstract class
+which contains all those functions to send maps, lists and other values. The
+neat thing about Bridge is though that it is asymetric. That means it's not
+just used to send messages, but also to receive them.
+
+So, when you create a Codec you pass it a pointer to a Bridge as well. The
+virtual functions in that Bridge get called whenever parts of a message are
+received. So, you can put whatever you want to do with that data into a Bridge
+of your own, pass an instance of that to the Codec, and you will have instant
+satisfaction! :)
+
+Now, it would be a hassle if you would have to check which codecs the peer
+you are connecting to has each time you make a new connection, since Atlas-C++
+supports any number of different codecs. But fear not, for Atlas-C++ does even
+this for you. Whenever you connect to a server or client, you first enter a
+negotiation stage, in which the client and server decide which Codec to use.
+
+This is done by creating a Net::StreamAccept object in the server or a
+Net::StreamConnect object in the client, passing the name of the server/client,
+the Bridge to be used by the Codec and the stream on which the connection has
+been established. You then repeatedly call the Poll() method of these classes
+until their state is not IN_PROGRESS any more. If negotiation was successful,
+you can retrieve the codec to be used with GetCodec(), and then go on sending
+and receiving messages happily with your peer.
+
 @section server The Server
 
 See under the code for more documentation.
@@ -25,8 +75,6 @@ As mentioned before, the server does the following:
 
 Only steps 3 and 4 really involve Atlas-C++, the rest is handled by the socket
 library I'm using (libsocket++, see @ref tutorial_preamble).
-
-
 
 @section client The Client
 
