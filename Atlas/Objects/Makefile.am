@@ -1,4 +1,4 @@
-SUBDIRS = . Entity
+SUBDIRS = . Entity Operation
 
 lib_LTLIBRARIES = libAtlasObjects.la
 

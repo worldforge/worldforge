@@ -5,12 +5,9 @@ lib_LTLIBRARIES = libAtlasObjectsOperation.la
 libAtlasObjectsOperationincludedir = $(includedir)/Atlas/Objects/Operation
 
 libAtlasObjectsOperation_la_SOURCES =
-	
-libAtlasObjectsOperationinclude_HEADERS = \
-	Action.h       Disappearance.h  Info.h    Perceive.h       Sniff.h \
-	Appearance.h   Divide.h         Listen.h  Perception.h     Sound.h \
-	Combine.h      Error.h          Login.h   RootOperation.h  Talk.h \
-	Communicate.h  Feel.h           Logout.h  Set.h            Touch.h \
-	Create.h       Get.h            Look.h    Sight.h \
-	Delete.h       Imaginary.h      Move.h    Smell.h
 
+libAtlasObjectsOperationinclude_HEADERS = \
+Action.h Appearance.h Combine.h Communicate.h Create.h Delete.h \
+Disappearance.h Divide.h Error.h Feel.h Get.h Imaginary.h Info.h Listen.h \
+Login.h Logout.h Look.h Move.h Perceive.h Perception.h RootOperation.h Set.h \
+Sight.h Smell.h Sniff.h Sound.h Talk.h Touch.h
