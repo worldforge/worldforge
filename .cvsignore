@@ -19,3 +19,7 @@ wfmath-0.3.pc
 wfmath-*.tar.gz
 build
 .DS_Store
+depcomp
+install-sh
+missing
+mkinstalldirs
