@@ -9,3 +9,5 @@ libAtlasObjects_la_SOURCES = \
 
 libAtlasObjectsinclude_HEADERS = \
 	Root.h Decoder.h Encoder.h
+
+EXTRA_DIST = gen_cc.py README DESIGN
