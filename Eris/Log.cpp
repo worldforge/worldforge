@@ -53,4 +53,4 @@ void log(LogLevel lvl, const char *str, ...)
 	va_end(args);
 }    
     
-}
+} // of namespace
