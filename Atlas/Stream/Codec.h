@@ -62,7 +62,7 @@ class Codec : public Bridge
 	public:
 
 	Factory(const std::string& name, const Metrics& metrics)
-	 : Atlas::Stream::Factory<Codec>(name, metrics)
+	    : Atlas::Stream::Factory<Codec>(name, metrics)
 	{
 	}
 
