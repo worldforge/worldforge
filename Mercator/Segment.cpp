@@ -19,7 +19,7 @@ Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)])
 {
 }
 
-#if 1
+#if 0
 void Segment::populate(const Matrix<4, 4> & base)
 {
 #if 0
@@ -107,15 +107,15 @@ void Segment::populate(const Matrix<4, 4> & base)
 #else
 void Segment::populate(const Matrix<4, 4> & base)
 {
-    tile(64, fallOff, roughness, base(1, 1), base(1, 2), base(2, 2), base(2, 1),
-         m_points);
+    tile(m_res, fallOff, roughness, base(1, 1), base(2, 1),
+                                    base(2, 2), base(1, 2), m_points);
 }
 #endif
 
 float Segment::qRMD(float nn, float fn, float nf, float ff, int depth) const
 {
     float tot = nn + fn + nf + ff;
-    srand((unsigned int)fabsf(tot));
+    srand((unsigned int)::fabsf(tot));
 
     float heightDifference = std::max(std::max(nn, fn), std::max(nf, ff)) -
                              std::min(std::min(nn, fn), std::min(nf, ff));
@@ -123,7 +123,7 @@ float Segment::qRMD(float nn, float fn, float nf, float ff, int depth) const
 
     // std::cout << "D: " << tot / 4 << ":" << displacement << ":"
               // << heightDifference << std::endl << std::flush;
-    return tot / 4.f + (displacement * heightDifference * roughness) / (powf(depth,fallOff) + 1.f);
+    return tot / 4.f + (displacement * heightDifference * roughness) / (::pow(depth,fallOff) + 1.f);
 }
 
 } // namespace Mercator

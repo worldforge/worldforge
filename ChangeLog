@@ -1,3 +1,10 @@
+2003-03-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/tile.cpp: Tweak tile() to create a size+1 * size+1 segment.
+
+	* src/Segment.cpp: Switch to using damien's algorithm for
+	  testing.
+
 2003-03-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Matrix.h, src/Matrix.cpp: Add matrix class for handling

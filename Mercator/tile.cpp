@@ -119,42 +119,42 @@ void tile(int size, float falloff, float roughness,
     for (int j=0;j<size*size;j++) array[j]=0;
 
 
-    float edge[size];
+    float edge[size + 1];
     
     //top edge
     edge[0]=p1;
-    edge[size-1]=p2;
-    fill1d(size-1,falloff,roughness,edge);
-    for (int i=0;i<size;i++) {
+    edge[size]=p2;
+    fill1d(size,falloff,roughness,edge);
+    for (int i=0;i<=size;i++) {
         array[0*size + i] = edge[i];
     }
 
     //left edge
     edge[0]=p1;
-    edge[size-1]=p4;
-    fill1d(size-1,falloff,roughness,edge);
-    for (int i=0;i<size;i++) {
-        array[i*size + 0] = edge[i];
+    edge[size]=p4;
+    fill1d(size,falloff,roughness,edge);
+    for (int i=0;i<=size;i++) {
+        array[i*(size + 1) + 0] = edge[i];
     }
    
     //right edge
     edge[0]=p2;
-    edge[size-1]=p3;
-    fill1d(size-1,falloff,roughness,edge);
-    for (int i=0;i<size;i++) {
-        array[i*size + (size-1)] = edge[i];
+    edge[size]=p3;
+    fill1d(size,falloff,roughness,edge);
+    for (int i=0;i<=size;i++) {
+        array[i*(size + 1) + size] = edge[i];
     }
 
     //bottom edge
     edge[0]=p4;
-    edge[size-1]=p3;
-    fill1d(size-1,falloff,roughness,edge);
-    for (int i=0;i<size;i++) {
-        array[(size-1)*size + i] = edge[i];
+    edge[size]=p3;
+    fill1d(size,falloff,roughness,edge);
+    for (int i=0;i<=size;i++) {
+        array[size*(size + 1) + i] = edge[i];
     }
     
     //fill in the centre
-    fill2d(size-1,falloff,roughness,array);
+    fill2d(size,falloff,roughness,array);
 }
 
 #if 0
