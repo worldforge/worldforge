@@ -8,7 +8,7 @@
 #include "Decoder.h"
 #include "Encoder.h"
 #include "Codec.h"
-#include "Compressor.h"
+#include "Filter.h"
 
 #include "PackedDecoder.h"
 #include "PackedEncoder.h"

@@ -15,24 +15,22 @@ using std::string;
 #include "Client.h"
 #include "Codec.h"
 #include "Socket.h"
-#include "Compressor.h"
+#include "Filter.h"
 
 namespace Atlas
 {
 
-Client::Client(Socket* aSocket, Codec* aCodec, Compressor* aCompressor)
-    : csock( aSocket ), codec( aCodec ), cmprs ( aCompressor )
+Client::Client(Socket* aSocket, Codec* aCodec, Filter* aFilter)
+    : csock( aSocket ), codec( aCodec ), filter ( aFilter )
 { DebugMsg1( 5, "client :: Client() ", "" ); }
 
 Client::~Client()
 {
     DebugMsg1( 5, "client :: ~Client() ", "" );
-	if (csock)
-	    delete csock;
-	if (codec)
-	    delete codec;
-	if (cmprs)
-	    delete cmprs;
+
+    delete csock;
+    delete codec;
+    delete filter;
 }
 
 SOCKET Client::getSock()
@@ -57,8 +55,8 @@ bool Client::canRead()
 	    return false;
 
 	//decompress
-	if (cmprs)
-	    buf = cmprs->decode(buf);
+	if (filter)
+	    buf = filter->decode(buf);
 	
 	DebugMsg1(5,"client :: ISTREAM = %s\n", buf.c_str());
 	
@@ -138,8 +136,8 @@ void Client::readMsg(Object& msg)
 		len = csock->recv(buf);
 		if (len < 1)
 		    return;
-		if (cmprs)
-		    buf = cmprs->decode(buf);
+		if (filter)
+		    buf = filter->decode(buf);
 		codec->feedStream(buf);
 	}
 	msg = codec->getMessage();
@@ -152,8 +150,8 @@ void Client::sendMsg(const Object& msg)
     assert ( codec != 0 );
 
     string data = codec->encodeMessage(msg);
-    if (cmprs)
-	    data = cmprs->encode(data);
+    if (filter)
+	    data = filter->encode(data);
 	
     DebugMsg2(5,"client :: Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
     int res = csock->send(data);
