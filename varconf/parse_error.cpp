@@ -15,18 +15,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  For more information on the GPL, please go to: 
+ *  http://www.gnu.org/copyleft/gpl.html
+ *
+ *      Contact:  Joseph Zupko
+ *                jaz147@psu.edu
+ *
+ *                189 Reese St.
+ *                Old Forge, PA 18518
  */
 
+#include <cstdio>
 #include <iostream>
 #include "parse_error.h"
 
 using namespace std;
 
 namespace varconf {
-
-ParseError::ParseError()
-{
-}
 
 ParseError::ParseError( const ParseError& p)
 {
@@ -42,14 +48,18 @@ ParseError::ParseError( const string& exp, int line, int col)
   m_col  = col;
 }
 
-ParseError::~ParseError()
-{
-}
-
 ostream& operator<<( ostream& os, const ParseError& p)
 {
   return ( os << "ParseError: Expected " << p.m_exp << " at line " << p.m_line
               << ", column " << p.m_col << "." << endl);
 }
 
+ParseError::operator string() 
+{
+  char buf[1024];
+  snprintf( buf, 1024, "ParseError: Expected %s at line %d, column %d.",
+            m_exp.c_str(), m_line, m_col);
+  return string( buf);
+}
+ 
 } // namespace varconf

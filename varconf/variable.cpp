@@ -15,6 +15,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  For more information on the GPL, please go to: 
+ *  http://www.gnu.org/copyleft/gpl.html
+ *
+ *      Contact:  Joseph Zupko
+ *                jaz147@psu.edu
+ *
+ *                189 Reese St.
+ *                Old Forge, PA 18518
  */
 
 #include <string>
@@ -84,10 +93,6 @@ Variable::Variable(const char* s)
 {
 }
 
-Variable::~Variable()
-{
-}
-
 ostream& operator<<( ostream& out, const Variable& v)
 {
     for (size_t i = 0; i < v.m_val.size(); i++) {
@@ -95,6 +100,21 @@ ostream& operator<<( ostream& out, const Variable& v)
       out << v.m_val[i];
     }
     return out;
+}
+
+bool operator ==( const Variable& one, const Variable& two)
+{
+  if ( one.m_have_bool == two.m_have_bool &&
+       one.m_have_int == two.m_have_int &&
+       one.m_have_double == two.m_have_double &&
+       one.m_have_string == two.m_have_string &&
+       one.m_val_bool == two.m_val_bool &&
+       one.m_val_int == two.m_val_int &&
+       one.m_val_double == two.m_val_double &&
+       one.m_val == two.m_val)
+    return true;
+ 
+  return false;
 }
 
 Variable& Variable::operator=( const Variable& c)

@@ -1,39 +1,52 @@
-#include <iostream.h>
-#include <unistd.h>
-#include <../varconf/varconf.h>
+#include <iostream>
+#include <string>
+#include <varconf/varconf.h>
 
 using namespace varconf;
 using namespace SigC;
 
-void callback(const string& section, const string& name)
+void callback( const string& section, const string& key, Config& conf)
 {
-  cout << section << "->" << name << " has changed to "
-       << Config::inst()->getItem(section, name) << "!" << endl;
+  cout << "\nConfig Change: item " << key << " under section " << section
+       << " has changed to " << conf.getItem( section, key) << ".\n"; 
+}
+ 
+void error( const char* message)
+{
+  cerr << message;
 }
 
-int main(int argc, char** argv)
+int main( int argc, char** argv)
 {
-  Config::inst()->setParameterLookup('f', "foo", true);
-  Config::inst()->setParameterLookup('b', "bar", false);
-  
-  if (argc < 2) {
-    if (isatty(STDIN_FILENO)) cout << "Go ahead and type your own "
-                                      "configuration" << endl;
-    try {
-      Config::inst()->parseStream(cin);
-    }
-    catch (ParseError p)
-    {
-      cout << "While parsing from standard input:\n";
-      cout << p;
-    }
-  } else {
-    Config::inst()->getCmdline(argc, argv);
+  Config config;
+
+  config.sige.connect( slot( error));
+  config.sigsv.connect( slot( callback));
+
+  config.setParameterLookup( 'f', "foo", true);
+  config.setParameterLookup( 'b', "bar", false);
+
+  config.getCmdline( argc, argv);
+  config.getEnv( "TEST_");
+  config.readFromFile( "conf.cfg");
+  config.setItem( "tcp", "port", 6700);
+  config.setItem( "console", "colours", "plenty");
+
+  cout << "\nEnter sample configuration data to test parseStream() method.\n";
+
+  try {
+    config.parseStream( cin);
   }
-  Config::inst()->readFromFile( "conf.cfg");
-  Config::inst()->writeToStream(cout);
-  cout << "---" << endl;
-  Config::inst()->sigv.connect( slot( callback));
-  Config::inst()->setItem("tcp", "port", 6700);
-  Config::inst()->setItem("console", "colours", "plenty");
+  catch ( ParseError p) {
+    cout << "\nError while parsing from standard input stream.\n";
+    cout << p;
+  }
+
+  config.writeToFile( "conf2.cfg");
+  
+  cout << "\nFile configuration data:\n"
+       << "--------------------------\n"
+       << config;
+
+  return 0;
 }

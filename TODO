@@ -1,5 +1,12 @@
 TODO for varconf
 
+  * Revise getEnv() and getCmdline() to report errors more often.
+  * Review code and add the "const" modifier where appropriate.
+  * Revise file parser.
+  * Make ParseError useful.
+  * Add Observer class back in.
+  * Revise documentation.
+  
 
 
 

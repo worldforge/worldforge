@@ -15,11 +15,26 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  For more information on the GPL, please go to: 
+ *  http://www.gnu.org/copyleft/gpl.html
+ *
+ *      Contact:  Joseph Zupko
+ *                jaz147@psu.edu
+ *
+ *                189 Reese St.
+ *                Old Forge, PA 18518
  */
 
+#include <cstdio>
 #include <iostream>
 #include <fstream>
 #include <string>
+
+#ifdef __WIN32__
+#include <tchar.h>
+#define snprintf _snprintf
+#endif
 
 #include "Config.h"
 
@@ -78,16 +93,51 @@ namespace varconf {
 
 Config* Config::m_instance;
 
-Config::Config()
-{
-}
-
 Config* Config::inst()
 {
   if ( m_instance == NULL) 
     m_instance = new Config;
   
   return m_instance;
+}
+
+Config::Config( const Config& conf)
+{
+  m_conf = conf.m_conf;
+  m_par_lookup = conf.m_par_lookup;
+}
+
+ostream& operator <<( ostream& out, Config& conf)
+{
+  if ( !conf.writeToStream( out))
+    conf.sige.emit( "\nVarconf Error: error while trying to write "
+                    "configuration data to output stream.\n");
+ 
+  return out;
+}
+
+istream& operator >>( istream& in, Config& conf)
+{
+  try {
+    conf.parseStream( in);
+  }
+  catch ( ParseError p) {
+    char buf[1024];
+    string p_str = p;
+    snprintf( buf, 1024, "\nVarconf Error: parser exception throw while "
+                         "parsing input stream.\n%s", p_str.c_str());   
+    conf.sige.emit( buf);
+  }
+
+  return in;
+} 
+
+bool operator ==( const Config& one, const Config& two)
+{
+  if ( one.m_conf == two.m_conf && one.m_par_lookup == two.m_par_lookup)
+    return true;
+  else
+    return false;
 }
 
 void Config::clean( string& str)
@@ -102,7 +152,7 @@ void Config::clean( string& str)
     else 
       str[i] = tolower( str[i]);
   } 
-} // Config::clean()
+}
 
 bool Config::erase( const string& section, const string& key = "")
 {
@@ -119,7 +169,7 @@ bool Config::erase( const string& section, const string& key = "")
  
   return false;
 }
- 
+
 bool Config::find( const string& section, const string& key = "")
 {
   if ( m_conf.count( section)) {
@@ -130,7 +180,12 @@ bool Config::find( const string& section, const string& key = "")
   }
 
   return false;
-} // Config::find
+}
+
+bool Config::findItem( const std::string& section, const std::string& key)
+{
+  return find( section, key);
+}
 
 void Config::getCmdline( int argc, char** argv)
 {
@@ -172,22 +227,31 @@ void Config::getCmdline( int argc, char** argv)
         name = ( ( *I).second).first;
         bool needs_value = ( ( *I).second).second;
 
-        if ( needs_value && argv[i+1] != NULL && argv[i+1][0] != '-') 
+        if ( needs_value && argv[i+1] != NULL && argv[i+1][0] != '-'
+                         && argv[i+1] != "") {
           value = argv[++i];
-        else 
-          cerr << "WARNING: Short argument -" << argv[i][1] 
-               << " expects a value but none was given.";
+        } 
+        else {
+          char buf[1024];
+          snprintf( buf, 1024, "\nVarconf Warning: short argument \"%s\""
+                               " given on command-line expects a value"
+                               " but none was given.\n", argv[i]); 
+          sige.emit( buf);
+        }
       }
       else {
-        cerr << "WARNING: Short argument -" << argv[i][1]
-             << " in command-line is not in the lookup table.";
+        char buf[1024];
+        snprintf( buf, 1024, "\nVarconf Warning: short argument \"%s\""
+                             " given on command-line does not exist in"
+                             " the lookup table.\n", argv[i]);
+        sige.emit( buf);
       }
     } // short argument
 
     if ( !name.empty()) 
       setItem( section, name, value);
   }
-} // Config::getCmdline()
+}
 
 void Config::getEnv( const string& prefix)
 {
@@ -212,12 +276,12 @@ void Config::getEnv( const string& prefix)
       setItem( section, name, value);
     }
   }
-} // Config::getEnv()
+}
 
 Variable Config::getItem( const string& section, const string& key)
 {
   return ( m_conf[section])[key];
-} // Config::getItem()
+}
 
 void Config::parseStream( istream& in) throw ( ParseError)
 {
@@ -396,14 +460,18 @@ void Config::parseStream( istream& in) throw ( ParseError)
   if ( state == S_VALUE) {
     setItem( section, name, value);
   }
-} // Config::parseStream()
+}
 
 bool Config::readFromFile( const string& filename)
 {
   ifstream fin( filename.c_str());
   
   if ( fin.fail()) {
-    cerr << "Could not open " << filename << " for input!\n";
+    char buf[1024];
+    snprintf( buf, 1024, "\nVarconf Error: could not open configuration file"
+                         " \"%s\" for input.\n", filename.c_str());    
+    sige.emit( buf);
+    
     return false;
   }
 
@@ -411,18 +479,24 @@ bool Config::readFromFile( const string& filename)
     parseStream( fin);
   }
   catch ( ParseError p) {
-    cerr << "While parsing " << filename << ":\n";
-    cerr << p;
+    char buf[1024];
+    string p_str = p;
+    snprintf( buf, 1024, "\nVarconf Error: parsing exception thrown while "
+                       "parsing \"%s\".\n%s", filename.c_str(), p_str.c_str());
+    sige.emit( buf);
     return false;
   }
   
   return true;
-} // Config::readFromFile()
+}
 
 void Config::setItem( const string& section, const string& key, const Variable& item)
 {
   if ( key.empty()) {
-    cerr << "WARNING: Blank configuration item key sent to varconf set() method.";
+    char buf[1024];
+    snprintf( buf, 1024, "\nVarconf Warning: blank key under section \"%s\""
+                         " sent to setItem() method.\n", section.c_str());
+    sige.emit( buf);
   }
   else {
     string sec_clean = section; 
@@ -436,25 +510,28 @@ void Config::setItem( const string& section, const string& key, const Variable& 
     sig.emit(); 
     sigv.emit( sec_clean, key_clean);
   }
-} // Config::setItem()
+}
 
-void Config::setParameterLookup( char s_name, const string& l_name, 
-                                 bool value = false)
+void Config::setParameterLookup( char s_name, const string& l_name, bool value = false)
 {
     m_par_lookup[s_name] = pair<string, bool>( l_name, value);  
-} // Config::setParameterLookup()
+}
 
 bool Config::writeToFile( const string& filename)
 {
   ofstream fout( filename.c_str());
 
   if ( fout.fail()) {
-    cerr << "Could not open " << filename << " for output!\n";
+    char buf[1024];
+    snprintf( buf, 1024, "\nVarconf Error: could not open configuration file"
+                         " \"%s\" for output.\n", filename.c_str());
+    sige.emit( buf);
+
     return false;
   }
 
   return writeToStream( fout);
-} // Config::writeToFile()
+}
 
 bool Config::writeToStream( ostream& out)
 {
@@ -464,13 +541,12 @@ bool Config::writeToStream( ostream& out)
   for ( I = m_conf.begin(); I != m_conf.end(); I++) {
     out << endl << "[" << ( *I).first << "]\n\n";
     
-    for ( J = ( *I).second.begin(); J != ( *I).second.end(); J++) {
+    for ( J = ( *I).second.begin(); J != ( *I).second.end(); J++) 
       out << ( *J).first << " = \"" << ( *J).second << "\"\n";
-    }
   }
   
   return true;
-} // Config::writeToStream
+}
 
 } // namespace varconf
 

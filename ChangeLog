@@ -1,5 +1,17 @@
 ChangeLog for varconf
 
+Tue Dec 12 14:30:00 EST 2000 -- jaz <jaz147@psu.edu>
+  * Config.h: Added "super-verbose" callback.
+  * Config.h: Added << operator.
+  * Config.h: Added >> operator.
+  * Config.h: Added == operator.
+  * Config.h: Made constructors non-protected.
+  * Config.h: Added error signal.
+  * config.cpp: Redirected all error messages through error signal.
+  * parse_error.h: Added string() operator.
+  * variable.h: Added == operator.
+  * conftest.cpp: Rewrote to take advantage of Config objects.
+
 Sun Dec 10 20:30:00 EST 2000 -- jaz <jaz147@psu.edu>
   + added varconf.h (again)
 

@@ -15,6 +15,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *  For more information on the GPL, please go to: 
+ *  http://www.gnu.org/copyleft/gpl.html
+ *
+ *      Contact:  Joseph Zupko
+ *                jaz147@psu.edu
+ *
+ *                189 Reese St.
+ *                Old Forge, PA 18518
  */
 
 #ifndef VARCONF_VARIABLE_H
@@ -34,9 +43,10 @@ public:
   Variable( const std::string& s);
   Variable( const char* s);
 
-  virtual ~Variable();
+  virtual ~Variable() {}
 
   friend ostream& operator<<( ostream& out, const Variable& v);
+  friend bool operator ==( const Variable& one, const Variable& two);
 
   Variable& operator=( const Variable& c);
   Variable& operator=( const bool b);
