@@ -14,7 +14,8 @@ Copyright:         LGPL
 Group:             Amusements/Games
 Source:            %{name}-%{version}.tar.gz
 BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
-Requires:          libsigc++ >= @MIN_SIGC_VERSION@ libstdc++ = 2.96
+Requires:          libsigc++ >= @MIN_SIGC_VERSION@ libstdc++
+BuildRequires:     libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel >= 2.95.2
 
 %description
 @VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE server.  @VARCONF_PACKAGE@ can parse configuration files, command-line arguments and environment variables.  It supports callbacks through libsigc++ @MIN_SIGC_VERSION@ or greater and can store configuration data in configuration objects or one global configuration instance.
@@ -22,6 +23,7 @@ Requires:          libsigc++ >= @MIN_SIGC_VERSION@ libstdc++ = 2.96
 %package devel
 Summary:           A config handling library headers and static libs.
 Group:             Amusements/Games
+Requires:          %{name} = %{version}
 
 %description devel
 @VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE server.  @VARCONF_PACKAGE@ can parse configuration files, command-line arguments and environment variables.  It supports callbacks through libsigc++ @MIN_SIGC_VERSION@ or greater and can store configuration data in configuration objects or one global configuration instance.
@@ -31,7 +33,6 @@ Group:             Amusements/Games
 
 %build
 CFLAGS=$RPM_OPT_FLAGS ./configure --prefix=%{prefix}
-fi
 make
 
 %install
@@ -53,6 +54,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root)
+%{prefix}/bin/varconf-config
 %{prefix}/include/varconf/Config.h
 %{prefix}/include/varconf/parse_error.h
 %{prefix}/include/varconf/variable.h

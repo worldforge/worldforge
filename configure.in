@@ -179,8 +179,8 @@ dnl Generate files
 AC_OUTPUT([
 	Makefile
 	varconf.spec
-        doc/Makefile
-        doc/old/Makefile
+	doc/Makefile
+	doc/old/Makefile
 	tests/Makefile
 	varconf/Makefile
 	varconf-config
