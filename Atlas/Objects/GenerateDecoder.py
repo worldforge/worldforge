@@ -110,7 +110,7 @@ void ObjectsDecoder::dispatchObject(const Root& obj)
             idc = classize(obj.id)
             serialno_name = string.upper(obj.id) + "_NO"
             self.write("""    case %(namespace)s%(serialno_name)s:
-        objectArrived((%(namespace)s%(idc)s&)obj);
+        objectArrived(%(namespace)s%(idc)s(obj));
         break;
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""    default:

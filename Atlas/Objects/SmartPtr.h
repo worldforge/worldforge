@@ -23,9 +23,9 @@ public:
         incRef();
     }
     template<class oldType>
-    explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(dynamic_cast<T*>(a.ptr)) {
+    explicit SmartPtr(const SmartPtr<oldType>& a) : ptr(dynamic_cast<T*>(a.get())) {
 	if (ptr == 0) {
-	    ptr = *(void**)0;
+	    ptr = *(T**)0;
 	    // FIXME throw something
 	}
     }

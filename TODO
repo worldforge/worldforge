@@ -1,5 +1,8 @@
 New TODO by Al Riddoch
 
+Ensure that the Decoder method registration code is type safe. Probably good
+to use templates.
+
 Items below are probably still valid, but this is where i reconsider the
 order and priority of tasks, and make my own notes.
 

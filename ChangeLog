@@ -1,5 +1,10 @@
 2001-11-29  Al Riddoch  <alriddoch@zepler.org>
 
+	* src/Objects/GenerateDecoder.py, src/Objects/SmartPtr.h: Modify
+	  decoder to use type safe conversions.
+
+2001-11-29  Al Riddoch  <alriddoch@zepler.org>
+
 	* tests/Objects: Get the tests compiling again.
 
 2001-11-29  Al Riddoch  <alriddoch@zepler.org>
