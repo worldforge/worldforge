@@ -205,7 +205,7 @@ void TestConnection::testSend()
 {
     testConnect();
     
-    Operation::Get get(Operation::Get::Instantiate());
+    Operation::Get get;
     
     m_con->send(get);
     m_server->waitForMessage(10);

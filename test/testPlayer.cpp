@@ -69,7 +69,7 @@ void TestPlayer::testAccountCreate()
 	ERIS_ASSERT("Dipsy" == getArg(op, "name").asString());
 	
 // send a response, and check that eris does the right thing
-	Operation::Info ifo = Operation::Info::Instantiate();
+	Operation::Info ifo;
     ifo.setTo("502");
     
     Message::Element::MapType acmap(getArg(op, 0).asMap());
@@ -101,7 +101,7 @@ void TestPlayer::doStandardLogin()
     ERIS_ASSERT("foo" == getArg(op, "password").asString());
 	
 // send a response, and check that eris does the right thing
-	Operation::Info ifo = Operation::Info::Instantiate();
+	Operation::Info ifo;
     ifo.setTo("501");
     
     Message::Element::MapType acmap;
@@ -139,7 +139,7 @@ void TestPlayer::testClientLogout()
 	
 	ERIS_ASSERT("logout" == getType(op));
 	
-	Operation::Logout logout(Operation::Logout::Instantiate());
+	Operation::Logout logout;
 	logout.setRefno(getMember(op, "serialno").asInt());
 	
 	m_server->push(logout);
@@ -165,7 +165,7 @@ void TestPlayer::testCharacterLook()
 	Message::Element op;
 	ERIS_ASSERT_MESSAGE(m_server->get(op), "login failed to send anything");
 	
-	Operation::Info ifo = Operation::Info::Instantiate();
+	Operation::Info ifo;
     ifo.setTo("503");
     
     Message::Element::MapType acmap;

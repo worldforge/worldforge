@@ -1,3 +1,7 @@
+Thursday, 22th January, Ron Steinke <rsteinke@w-link.net>
+
+	* Remove ::Instantiate() calls from test/*
+
 Thursday, 22nd January 2004, James Turner <james@worldforge.org>
 
     * Remove use of deprecated ::Instantiate() calls

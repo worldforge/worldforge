@@ -269,7 +269,7 @@ void StubServer::waitForMessage(int timeout)
 
 void StubServer::sendInfoForType(const std::string &type, const Operation::RootOperation &get)
 {
-	Operation::Info info(Operation::Info::Instantiate());
+	Operation::Info info;
 	Element::ListType &args(info.getArgs());
 	
 	if (type == "root")
@@ -297,7 +297,7 @@ void StubServer::sendInfoForType(const std::string &type, const Operation::RootO
 	} else {
 		ERIS_MESSAGE("unknown type in sendInfoForType, responing with ERROR instead");
 	
-		Operation::Error error(Operation::Error::Instantiate());
+		Operation::Error error;
 	
 		Element::ListType& eargs(error.getArgs());
 		eargs.push_back("undefined type " + type);
