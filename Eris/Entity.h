@@ -27,14 +27,18 @@ namespace Atlas {
 #include "Types.h"
 #include "SignalDispatcher.h"
 
+
 namespace Eris {
 
 // Forward Declerations	
 class Entity;
 class World;	
 class Dispatcher;
-	
+class Property;
+    
 typedef std::vector<Entity*> EntityArray;
+
+typedef std::map<std::string, Property*> PropertyMap;
 
 /// Entity is a concrete (instanitable) class representing one game entity
 /** Entity encapsulates the state and tracking of one game entity; this includes
@@ -110,7 +114,7 @@ public:
 	SigC::Signal2<void, Entity*, Entity*> Recontainered;
 
 	/** Emitted when a macro change occurs */
-	SigC::Signal0<void> Changed;
+	SigC::Signal1<void, const StringSet&> Changed;
 
 	/** Emitted when then entity's position or orientation have changed; i.e the
 	displayed model/sprite/etc needs to be updated. The argument is the new position */
@@ -118,9 +122,6 @@ public:
 
 	/** Emitted with this entity speaks. In the future langauge may be specified */
 	SigC::Signal1<void, const std::string&> Say;
-	
-	// signal accessors (dynamically created signals)
-	//void ConnectPropertySlot(const std::string &p, PropertySlot &slot);
 	
 	/** Emitted when this entity originates the specified class of operation;
 	note the derived operations will also invoke the signal */
@@ -144,7 +145,6 @@ protected:
 
 	virtual void handleMove();
 	virtual void handleTalk(const std::string &msg);
-	virtual void handleChanged();
 	
 	/// set the property value; this protected so only Entity / World may use it
 	virtual void setProperty(const std::string &p, const Atlas::Message::Object &v);	
@@ -183,25 +183,22 @@ protected:
 		_velocity;
 	Quaternion _orientation;
 	
-// attribute synchronisation
-	/// Mark the attribute set as needing a resync operation before any Get()s
-	/// @param attr The attribute which is no longer in sync
-	void setUnsync(const std::string &attr)
-	{ _unsynched.insert(attr); }
+// properties
+	void beginUpdate();
+	void endUpdate();
 	
-	/// Resynchronize the native and Atlas values of the  named attributes
-	/// @param attrs The set of attributes to be synchronised
-	virtual void resync(StringSet &attrs);
-
-	/// Predicate, valid if every attribute is synchronised between native and Atlas
-	bool isFullySynched() const
-	{ return _unsynched.empty(); }
-
-	bool isSynched(const std::string &attr) const
-	{ return _unsynched.find(attr) == _unsynched.end(); }
+	PropertyMap _properties;
 	
-	Atlas::Message::Object::MapType _properties;
-	StringSet _unsynched;	///< unsynchronised attributes
+	/** This flag is set if a property update is in progress. This supresses emission
+	of the Changed signal until endUpdate is called, so that a number of
+	attributes may be updated en-masse, generating just one signal. */
+	bool _inUpdate;
+	
+	/** When a batched property update is in progress, the set tracks the names
+	of each modified property. This set is passed as a parameter of the Changed
+	callback when endUpdate is called, to allow clients to determine what
+	was changed. */
+	StringSet _modified;
 
 private:
 	//friend class World;	// World has to be a friend so it can call these

@@ -20,6 +20,7 @@
 #include "Connection.h"
 #include "Utils.h"
 #include "Wait.h"
+#include "Property.h"
 
 #include "OpDispatcher.h"
 #include "IdDispatcher.h"
@@ -33,7 +34,8 @@ Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
 	_visible(true),
 	_container(NULL),
 	_position(ge.GetPos()),
-	_velocity(ge.GetVelocity())
+	_velocity(ge.GetVelocity()),
+	_inUpdate(false)
 {	
 	_parents = getParentsAsSet(ge);
 	recvSight(ge);	
@@ -44,7 +46,8 @@ Entity::Entity(const std::string &id) :
 	_stamp(-1.0),
 	_container(NULL),
 	_position(0., 0., 0.),
-	_velocity(0., 0., 0.)
+	_velocity(0., 0., 0.),
+	_inUpdate(false)
 {
 	;
 }
@@ -92,27 +95,21 @@ Entity* Entity::getMember(unsigned int i)
 
 bool Entity::hasProperty(const std::string &p) const
 {
-	Atlas::Message::Object::MapType::const_iterator pi =
-	    _properties.find(p);
-	return (pi != _properties.end());
+    PropertyMap::const_iterator pi =
+	_properties.find(p);
+    return (pi != _properties.end());
 }
 
 const Atlas::Message::Object& Entity::getProperty(const std::string &p)
 {
-	Atlas::Message::Object::MapType::const_iterator pi =
-		_properties.find(p);
-	if (pi == _properties.end())
-		throw InvalidOperation("Unknown property " + p);
-	
-    if (!isSynched(p)) {
-	StringSet rs;
-	rs.insert(p);
-	resync(rs);	
-	assert(rs.empty());	// sweet mother of moses, I hope this never happens...
-	pi = _properties.find(p); // in case this changed
-    }
-	
-    return pi->second;
+    PropertyMap::iterator pi = _properties.find(p);
+    if (pi == _properties.end())
+	throw InvalidOperation("Unknown property " + p);
+
+    // invoke the getter if one is defined
+    if (!pi->second->get.empty())
+	pi->second->value = pi->second->get();
+    return pi->second->value;
 }
 
 Coord Entity::getPosition() const
@@ -140,7 +137,7 @@ void Entity::setVisible(bool vis)
 	bool wasVisible = _visible;
 	_visible = vis;
   
-	// recurse on children
+	// recurse onz children
 	for (EntityArray::iterator E=_members.begin();E!=_members.end();++E)
 		(*E)->setVisible(vis);
 	
@@ -159,81 +156,43 @@ void Entity::setVisible(bool vis)
 
 void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 {
-	if (ge.HasAttr("stamp"))
-		_stamp = ge.GetAttr("stamp").AsFloat();
-	
-	_name = ge.GetName();
-	
-	if (ge.HasAttr("description"))
-		_description = ge.GetAttr("description").AsString();
-	
-	// parenting
-	const Atlas::Message::Object::ListType& parents = ge.GetParents();
-	//attrs.erase("parents");
-	
-	// FIXME - deal with multiple parents
-	std::string type = parents.front().AsString();
-	
-	std::string containerId = ge.GetLoc();
-	setContainerById(ge.GetLoc());
+    beginUpdate();
+    
+    const Atlas::Message::Object::MapType &amp = ge.AsMap();
+    for (Atlas::Message::Object::MapType::const_iterator A = amp.begin(); A!=amp.end(); ++A) {
+	if (A->first == "id") continue;
+	setProperty(A->first, A->second);
+    }
 
-	_position = ge.GetPos();
-	_velocity = ge.GetVelocity();
-	
-	// bounding box
-	if (ge.HasAttr("bbox"))
-		_bbox = BBox( ge.GetAttr("bbox") );
-	
-	if (ge.HasAttr("orientation"))
-	    _orientation = Quaternion(ge.GetAttr("orientation"));
-	else if (ge.HasAttr("face")) {
-	    // FIXME - legacy stuff to handle the Acorn 'face' angle
-	    Coord face(ge.GetAttr("face"));
-	    // build the quaternion from roll, pitch and yaw.
-	    Quaternion quat(0.0, 0.0, atan2(face.y, face.x));	
-	    setProperty("orientation", quat.asObject());
-	}
-	
-	// copy *every* attribute through
-	const Atlas::Message::Object::MapType &amp = ge.AsMap();
-	for (Atlas::Message::Object::MapType::const_iterator a = amp.begin(); a!=amp.end(); ++a)
-		_properties[a->first] = a->second;
-	
-	// emit the hook
-	handleChanged();
+    endUpdate();
 }
 
 void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 {	
-	_stamp = mv.GetSeconds();
-	setUnsync("stamp");
-	
-	setProperty("loc", getArg(mv, "loc"));
-	setProperty("pos", getArg(mv, "pos"));
-	setProperty("velocity", getArg(mv, "velocity"));
+    beginUpdate();
     
-    	if (hasArg(mv, "orientation"))
-	    setProperty("orientation", getArg(mv, "orientation"));
-	else if (hasArg(mv, "face")) {
-	    // FIXME - legacy stuff to handle the Acorn 'face' angle
-	    Coord face(getArg(mv, "face"));
-	    // build the quaternion from roll, pitch and yaw.
-	    Quaternion quat(0.0, 0.0, atan2(face.y, face.x));
-	    setProperty("orientation", quat.asObject());
-	}
-	    
-	handleMove();
+    const Atlas::Message::Object::MapType &args = 
+	mv.GetArgs().front().AsMap();
+    for (Atlas::Message::Object::MapType::const_iterator A = args.begin(); A != args.end(); ++A) {
+	setProperty(A->first, A->second);
+    }
+
+    // FIXME - we are manually ending the update, which is naughty
+    _inUpdate = false;
+    _modified.clear();
+    handleMove();
 }
 
 void Entity::recvSet(const Atlas::Objects::Operation::Set &st)
 {
-	const Atlas::Message::Object::MapType &attrs = st.GetArgs().front().AsMap();
-	
-	// blast through the map, setting each property
-	for (Atlas::Message::Object::MapType::const_iterator ai = attrs.begin(); ai != attrs.end(); ++ai)
-		setProperty(ai->first, ai->second);
-	
-	handleChanged();
+    const Atlas::Message::Object::MapType &attrs = st.GetArgs().front().AsMap();
+    beginUpdate();
+    // blast through the map, setting each property
+    for (Atlas::Message::Object::MapType::const_iterator ai = attrs.begin(); ai != attrs.end(); ++ai) {
+	if (ai->first=="id") continue;	// important
+	setProperty(ai->first, ai->second);
+    }
+    endUpdate();
 }
 
 void Entity::recvSound(const Atlas::Objects::Operation::Sound &/*snd*/)
@@ -259,11 +218,6 @@ void Entity::handleTalk(const std::string &msg)
 	Say.emit(msg);
 }
 
-void Entity::handleChanged()
-{
-	Changed.emit();
-}
-
 void Entity::handleMove()
 {
 	Moved.emit(_position);
@@ -277,33 +231,66 @@ void Entity::handleMove()
 
 void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val)
 {
-    if (s == "stamp") {
+    /* we allow mapping of attributes to different internal values; use this with
+    caution */
+    std::string mapped(s);
+    
+    if (s == "stamp")
 	_stamp = val.AsFloat();
-	setUnsync(s);
-    } else if (s == "loc") {
+    else if (s == "loc") {
 	std::string loc = val.AsString();
 	setContainerById(loc);
-	setUnsync(s);
-    } else if (s == "pos") {
+    } else if (s == "pos")
 	_position = Coord(val);
-	setUnsync(s);
-    } else if (s == "velocity") {
+    else if (s == "velocity")
 	_velocity = Coord(val);
-	setUnsync(s);
-    } else if (s == "orientation") {
+    else if (s == "orientation")
 	_orientation = Quaternion(val);
-	setUnsync(s);
-    } else
-	_properties[s] = val;
-	
-    // check for a signal bound to property 's'; emit if found
-    /*	
-    PropSignalDict::iterator psi = _propSignals.find(s);
-    if (psi != _propSignals.end())
-	    psi->second->emit(val);
-    */
+    else if (s == "face") {
+	mapped = "orientation";
+	Coord face(val);
+	// build the quaternion from roll, pitch and yaw.
+	_orientation = Quaternion(0.0, 0.0, atan2(face.y, face.x));	
+    } else if (s == "description")
+	_description = val.AsString();
     
-    handleChanged();
+    PropertyMap::iterator P=_properties.find(mapped);
+    if (P == _properties.end()) {
+	P = _properties.insert(P, 
+	    PropertyMap::value_type(mapped, new Property())
+	);
+    }
+    
+    P->second->value = val;
+    P->second->set(val);
+    
+    if (_inUpdate) {
+	// add to modified set
+	_modified.insert(mapped);
+    } else {
+	// generate a Changed single with a temporary set
+	StringSet ms;
+	ms.insert(mapped);
+	Changed.emit(ms);
+    }
+}
+
+
+void Entity::beginUpdate()
+{
+    if (_inUpdate)
+	throw InvalidOperation("Entity::beingUpdate called inside of property update");
+    assert(_modified.empty());
+    _inUpdate = true;
+}
+
+void Entity::endUpdate()
+{
+    if (!_inUpdate)
+	throw InvalidOperation("Entity::endUpdate called outside of property update");
+    _inUpdate = false;
+    Changed.emit(_modified);
+    _modified.clear();
 }
 
 void Entity::innerOpFromSlot(Dispatcher *s)
@@ -396,66 +383,6 @@ void Entity::setContainerById(const std::string &id)
 	
 	if (id.empty())	// id of "" implies local root
 		World::Instance()->setRootEntity(this);	
-}
-
-/*
-Note to madmen, hackers  and Irishmen : this code is not exactly elegant, and
-neither is it fast. However, it does get the job done correctly for the relevant
-attributes, which is all that matters right now. At present, I do not expect Resyncs()
-to be that common, even assuming worst case scripting requirements (eg a Python
-radar requiring a Resync() on position 4 times a second). If Resyncs are going to
-be common, and dispersed, then the whole mechansim needs to be rethought,
-switching from O(ln N) operations to O(k) ones [i.e hashes and bitsets] 
-
-You have been warned.
-*/
-
-void Entity::resync(StringSet &attrs)
-{
-	StringSet::iterator a;
-	
-	a = attrs.find("stamp");
-	if (a != attrs.end()) {
-		_properties["stamp"] = _stamp;
-		attrs.erase(a);
-	}
-	
-	a = attrs.find("pos");
-	if (a != attrs.end()) {
-		_properties["pos"] = _position.asObject();
-		attrs.erase(a);
-	}
-	
-	a = attrs.find("loc");
-	if (a != attrs.end()) {
-		_properties["loc"] = _container->getID();
-		attrs.erase(a);
-	}
-	
-	a = attrs.find("description");
-	if (a != attrs.end()) {
-		_properties["description"] = _description;
-		attrs.erase(a);
-	}
-	
-	a = attrs.find("name");
-	if (a != attrs.end()) {
-		_properties["name"] = _name;
-		attrs.erase(a);
-	}
-	
-	if ((a = attrs.find("orientation")) != attrs.end()) {
-	    _properties["orientation"] = _orientation.asObject();
-	    attrs.erase(a);
-	}
-	
-    std::string attrNames;
-    for (a=attrs.begin(); a!=attrs.end();++a)
-	attrNames += *a + ", ";
-    attrNames.resize(attrNames.size() - 2); // remove the last comma and space
-    
-    Eris::Log(LOG_ERROR, "Entity::resync(): failed to synchronise %i attributes [%s]",
-	attrNames.c_str());
 }
 
 #ifdef HAVE_CPPUNIT

@@ -1,3 +1,16 @@
+Tuesday, January 15 2002, James Turner
+
+	* Rewrote proeprty handling completely : should be
+	  much simpler (no unsync() / resync()) and much more
+	  flexible now. Properties now have get and set signals
+	  that can be observed for value changes.
+	* Moved all the attribute handling into setProperty(),
+	  removing the coresponding code from recvSet/Sight/Move.
+	  This unifies the decoding of every attribute, but
+	  also bypasses the Atlas::Objects handling of core
+	  attributes (only relevant for name, location, stamp
+	  and position).
+
 Monday, January 14 2002, James Turner
 
 	* Skstream exception handling fixes, suggested by
