@@ -33,14 +33,14 @@ along with the name of sender and a Socket
 
   public:
 
-    NegotiateHelper(std::list<std::string> *names);
+    NegotiateHelper(std::list<std::string> & names);
 
     bool get(std::string &buf, const std::string & header);
     void put(std::string &buf, const std::string & header);
 
   private:
 
-    std::list<std::string> *m_names;
+    std::list<std::string> & m_names;
 
   };
 
@@ -65,8 +65,8 @@ class StreamConnect : public Atlas::Negotiate
 	CLIENT_GREETING,
 	CLIENT_CODECS,
 	SERVER_CODECS,
-	CLIENT_FILTERS,
-	SERVER_FILTERS,
+	// CLIENT_FILTERS,
+	// SERVER_FILTERS,
 	DONE
     };
 

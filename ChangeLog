@@ -1,3 +1,10 @@
+2003-08-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/SmartPtr.h: Fix null pointer checks.
+
+	* Atlas/Net/Stream.h, Atlas/Net/Stream.cpp: Remove filter
+	  stage from negotiation state.
+
 2003-08-03  Ron Steinke <rsteinke@w-link.net>
 
 	* configure.ac: changed AM_CONFIG_HEADER([config.h]) to

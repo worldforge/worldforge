@@ -32,7 +32,7 @@ static inline std::string get_line(std::string &s1, char ch, std::string &s2)
 
 namespace Atlas { namespace Net {
 
-NegotiateHelper::NegotiateHelper(std::list<std::string> *names) :
+NegotiateHelper::NegotiateHelper(std::list<std::string> & names) :
   m_names(names)
 { 
 }
@@ -55,7 +55,7 @@ bool NegotiateHelper::get(std::string &buf, const std::string & header)
         
       if(get_line(s, ' ', h) == header)
         {
-          m_names->push_back(s);
+          m_names.push_back(s);
             
           std::cout << " got: " << s << std::endl;
         }
@@ -90,7 +90,7 @@ void NegotiateHelper::put(std::string &buf, const std::string & header)
 StreamConnect::StreamConnect(const std::string& name, std::iostream& s,
 Bridge* bridge) :
   m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
-  m_codecHelper(&m_inCodecs), m_filterHelper(&m_inFilters),
+  m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
   m_canPacked(true), m_canXML(true), m_canBach(true),m_canGzip(true), m_canBzip2(true)
 {
 }
@@ -145,6 +145,7 @@ void StreamConnect::poll(bool can_read)
         }
     }
     
+#if 0
     if (m_state == CLIENT_FILTERS)
     {
         //processClientFilters();
@@ -161,6 +162,7 @@ void StreamConnect::poll(bool can_read)
             m_state++;
         }
     }
+#endif
     }
     while ((m_state != DONE) && (m_socket.rdbuf()->in_avail() > 0));
 }
@@ -197,7 +199,7 @@ void StreamConnect::processServerCodecs()
     {
         if (*j == "XML") { m_canXML = true; }
         if (*j == "Packed") { m_canPacked = true; }
-	if (*j == "Bach") { m_canBach = true; }
+        if (*j == "Bach") { m_canBach = true; }
     }
 }
   
@@ -241,7 +243,7 @@ StreamAccept::~StreamAccept()
 StreamAccept::StreamAccept(const std::string& name, std::iostream& s,
 Bridge* bridge) :
   m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
-  m_codecHelper(&m_inCodecs), m_filterHelper(&m_inFilters),
+  m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
   m_canPacked(false), m_canXML(false), m_canGzip(false), m_canBzip2(false)
 {
 }
@@ -288,11 +290,12 @@ void StreamAccept::poll(bool can_read)
         {
             if (m_canPacked) { m_socket << "IWILL Packed\n"; }
             else if (m_canXML) { m_socket << "IWILL XML\n"; }
-	    else if (m_canBach) { m_socket << "IWILL Bach\n"; }
+            else if (m_canBach) { m_socket << "IWILL Bach\n"; }
             m_socket << std::endl;
             m_state++;
         }
 
+#if 0
         if(m_state == CLIENT_FILTERS)
         {
             if (m_filterHelper.get(m_buf, "ICAN"))
@@ -310,6 +313,7 @@ void StreamAccept::poll(bool can_read)
             m_socket << std::endl;
             m_state++;
         }
+#endif
     }
     while ((m_state != DONE) && (m_socket.rdbuf()->in_avail() > 0));
 }

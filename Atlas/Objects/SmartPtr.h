@@ -55,13 +55,13 @@ class SmartPtr
         return ptr == 0;
     }
     T& operator*() const { 
-        if (ptr != 0) {
+        if (ptr == 0) {
             throw NullSmartPtrDereference();
         }
         return *ptr;
     }
     T* operator->() const {
-        if (ptr != 0) {
+        if (ptr == 0) {
             throw NullSmartPtrDereference();
         }
         return ptr;
