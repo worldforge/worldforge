@@ -1,3 +1,8 @@
+2004-10-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Entity.cpp: Handle orientation in the new
+	  setPosAndVelocityFromAtlas() method.
+
 2004-10-22  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp, Eris/IGRouter.cpp, Eris/EntityRouter.cpp: change

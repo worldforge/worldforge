@@ -174,6 +174,9 @@ void Entity::setPosAndVelocityFromAtlas(const Root& data)
     if (data->hasAttr("velocity"))
         setAttr("velocity", data->getAttr("velocity"));
     
+    if (data->hasAttr("orientation"))
+        setAttr("orientation", data->getAttr("orientation"));
+    
     endUpdate();
 }
 
