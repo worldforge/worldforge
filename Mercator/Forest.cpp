@@ -68,7 +68,9 @@ void Forest::populate()
 
     for(int j = ly; j < hy; ++j) {
         for(int i = lx; i < hx; ++i) {
-            rng.seed(i + j * 1024);
+            WFMath::MTRand::uint32 seed[2]={ i, j};
+            rng.seed(seed, 2);
+
             if (rng() < plant_chance) {
                 std::cout << "Plant at [" << i << ", " << j << "]"
                           << std::endl << std::flush;

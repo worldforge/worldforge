@@ -1,3 +1,6 @@
+2004-01-17  Damien McGinnes <mcginnes at netspeed dot com.au>
+	* Mercator/Forest.cpp modified seeding in forest to use an array
+
 2004-01-15  James Turner <james@worldforge.org>
     
 	* Update XCode project : proper WFMath dependancy, and many more
