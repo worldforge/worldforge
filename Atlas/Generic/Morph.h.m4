@@ -75,7 +75,7 @@ define(`CLEAR', `
 define(`IS_T', `
     bool Is(Token<T$1>) const { return (v$1 != NULL); }')dnl
 define(`AS_T', `
-    const T$1& As(Token<T$1>) const throw (WrongTypeException)
+    T$1& As(Token<T$1>) const throw (WrongTypeException)
     {
         if (v$1 != NULL) return *v$1;
         throw WrongTypeException();
