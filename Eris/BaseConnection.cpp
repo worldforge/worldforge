@@ -48,21 +48,29 @@ void BaseConnection::connect(const std::string &host, short port)
 	bindTimeout(*_timeout, CONNECTING);
 	
 	setStatus(CONNECTING);
- 	_stream->open(host, port);
-  
-	if(!_stream->is_open()) {
-		handleFailure("Failed to connect to " + host);
-		hardDisconnect(false);
-      		return;
- 	}
+try {	
+    _stream->open(host, port);
+}
+    catch (SocketException &except) {
+	handleFailure("Failed to connect to " + host);
+	hardDisconnect(false);
+	return;
+    }
+    
+    // is this necessary? will we always get an exception, or not?
+    if(!_stream->is_open()) {
+	handleFailure("Failed to connect to " + host);
+	hardDisconnect(false);
+	return;
+    }
 
-	// negotiation timeout
-	delete _timeout;
-	_timeout = new Timeout("negotiate_" + _id, 5000);
-	bindTimeout(*_timeout, NEGOTIATE);
-	
-	_sc = new Atlas::Net::StreamConnect(_clientName, *_stream, _bridge);
-	setStatus(NEGOTIATE);
+    // negotiation timeout
+    delete _timeout;
+    _timeout = new Timeout("negotiate_" + _id, 5000);
+    bindTimeout(*_timeout, NEGOTIATE);
+    
+    _sc = new Atlas::Net::StreamConnect(_clientName, *_stream, _bridge);
+    setStatus(NEGOTIATE);
 }
 
 void BaseConnection::hardDisconnect(bool emit)

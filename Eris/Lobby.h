@@ -17,7 +17,8 @@ namespace Eris
 class Player;
 class Person;
 	
-/// Lobby is the Out-of-Game session object, valid from connection to the server until disconnection
+/** Lobby is the Out-of-Game session object, valid from connection to the server until disconnection.
+*/
 class Lobby : public Room
 {
 public:	

@@ -1,3 +1,9 @@
-Original Author is James Turner (jmtn@blueyonder.co.uk);
-based on Uclient code by Karsten Olaf-Laux and with
-considerable help from Alistair Riddoch
+Original Author is James Turner (jmtn@blueyonder.co.uk)
+Eris would not have been possible without Uclient by Karsten Olaf-Laux
+
+Contributors :
+	Alistair Riddoch
+	Karsten Olaf-Laux
+	Anders Petersen
+	
+eris.m4 and eris-config by Michael Kocg

@@ -20,10 +20,10 @@ Timeout::Timeout(const std::string &label, unsigned long milli) :
 {
 	TimeoutMap::iterator T = _allTimeouts.find(label);
 	if (T != _allTimeouts.end())
-		throw InvalidOperation("Duplicate label '" + label + "' for timeout");
+	    throw InvalidOperation("Duplicate label '" + label + "' for timeout");
 	
 	_allTimeouts.insert(_allTimeouts.begin(),
-		TimeoutMap::value_type(label, this));
+	    TimeoutMap::value_type(label, this));
 	
 	_due = Time::getCurrentStamp() + milli;
 }

@@ -197,6 +197,9 @@ protected:
 	bool isFullySynched() const
 	{ return _unsynched.empty(); }
 
+	bool isSynched(const std::string &attr) const
+	{ return _unsynched.find(attr) == _unsynched.end(); }
+	
 	Atlas::Message::Object::MapType _properties;
 	StringSet _unsynched;	///< unsynchronised attributes
 

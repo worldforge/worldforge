@@ -9,7 +9,8 @@ namespace Eris
 {
 	
 /** An Out-of-Game Person (found in a Room / Lobby)	As more person data becomes available,
-this class will be extended, for example to return nicknames, location, the choosen 'face' graphic.*/
+this class will be extended, for example to return nicknames, location, the choosen 'face' graphic.
+*/
 class Person {	
 public:
 	/// create a person from sight

@@ -93,7 +93,7 @@ Entity* Entity::getMember(unsigned int i)
 bool Entity::hasProperty(const std::string &p) const
 {
 	Atlas::Message::Object::MapType::const_iterator pi =
-		_properties.find(p);
+	    _properties.find(p);
 	return (pi != _properties.end());
 }
 
@@ -104,20 +104,15 @@ const Atlas::Message::Object& Entity::getProperty(const std::string &p)
 	if (pi == _properties.end())
 		throw InvalidOperation("Unknown property " + p);
 	
-	// FIXME
-	// re-synchronise if necessary; note this is assumed to
-	// keep the iterator valid, which is fine for maps, but NOT for hash_maps
-	// so you (yes you!) the person optimising this to hell and back, 
-	// watch out.
+    if (!isSynched(p)) {
+	StringSet rs;
+	rs.insert(p);
+	resync(rs);	
+	assert(rs.empty());	// sweet mother of moses, I hope this never happens...
+	pi = _properties.find(p); // in case this changed
+    }
 	
-	if (!isFullySynched()) {
-		StringSet rs;
-		rs.insert(p);
-		resync(rs);	
-		assert(rs.empty());	// sweet mother of moses, I hope this never happens...
-	}
-	
-	return pi->second;
+    return pi->second;
 }
 
 Coord Entity::getPosition() const
@@ -282,34 +277,33 @@ void Entity::handleMove()
 
 void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val)
 {
-	//if (!hasProperty(s))
-	//	throw UnknownProperty(s, "on entity " + _id);
-	
-	// none of the following cases call Unsync(), becuase we always copy the value
-	// to the property map here
+    if (s == "stamp") {
+	_stamp = val.AsFloat();
+	setUnsync(s);
+    } else if (s == "loc") {
+	std::string loc = val.AsString();
+	setContainerById(loc);
+	setUnsync(s);
+    } else if (s == "pos") {
+	_position = Coord(val);
+	setUnsync(s);
+    } else if (s == "velocity") {
+	_velocity = Coord(val);
+	setUnsync(s);
+    } else if (s == "orientation") {
+	_orientation = Quaternion(val);
+	setUnsync(s);
+    } else
 	_properties[s] = val;
 	
-	if (s == "stamp") {
-		_stamp = val.AsFloat();
-	} else if (s == "loc") {
-		std::string loc = val.AsString();
-		setContainerById(loc);
-	} else if (s == "pos") {
-		_position = Coord(val);
-	} else if (s == "velocity") {
-		_velocity = Coord(val);
-	} else if (s == "orientation") {
-	    _orientation = Quaternion(val);
-	}
-	
-	// check for a signal bound to property 's'; emit if found
-	/*	
-	PropSignalDict::iterator psi = _propSignals.find(s);
-	if (psi != _propSignals.end())
-		psi->second->emit(val);
-	*/
-	
-	handleChanged();
+    // check for a signal bound to property 's'; emit if found
+    /*	
+    PropSignalDict::iterator psi = _propSignals.find(s);
+    if (psi != _propSignals.end())
+	    psi->second->emit(val);
+    */
+    
+    handleChanged();
 }
 
 void Entity::innerOpFromSlot(Dispatcher *s)
@@ -449,6 +443,19 @@ void Entity::resync(StringSet &attrs)
 		_properties["name"] = _name;
 		attrs.erase(a);
 	}
+	
+	if ((a = attrs.find("orientation")) != attrs.end()) {
+	    _properties["orientation"] = _orientation.asObject();
+	    attrs.erase(a);
+	}
+	
+    std::string attrNames;
+    for (a=attrs.begin(); a!=attrs.end();++a)
+	attrNames += *a + ", ";
+    attrNames.resize(attrNames.size() - 2); // remove the last comma and space
+    
+    Eris::Log(LOG_ERROR, "Entity::resync(): failed to synchronise %i attributes [%s]",
+	attrNames.c_str());
 }
 
 #ifdef HAVE_CPPUNIT

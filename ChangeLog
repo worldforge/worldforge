@@ -1,3 +1,13 @@
+Monday, January 14 2002, James Turner
+
+	* Skstream exception handling fixes, suggested by
+	  Stepher Meier.
+	* Fixed to bugs and general tweaking of attribute synchronisation
+	  in Entity : this code hasn't been excercised before, so it's
+	  a bit wrinkly.
+	* CodeWarrior and GCC 3.0 return value warning fixes from
+	  Michael Koch and Jesse Jones
+
 Wednesday, December 26 2001, James Turner
 
 	* Tweaked configure.in slightly, to use CXXFLAGS. Should

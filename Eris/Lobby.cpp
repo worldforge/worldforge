@@ -108,8 +108,9 @@ Room* Lobby::join(const std::string &roomID)
 		Room *nr = new Room(this, roomID);
 		_roomDict[roomID] = nr;
 		return nr;
-	} else
-		return R->second;
+	}
+	
+	return R->second;
 }
 
 Person* Lobby::getPerson(const std::string &acc)

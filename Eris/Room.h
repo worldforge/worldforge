@@ -28,7 +28,8 @@ class Lobby;
 
 /** The out-of-game (OOG) heirarchy is composed of Rooms, containing Persons and other
 Rooms. Generally rooms corespond to chanels in IRC, and the interface and commands should
-be clear if you are familiar with that medium. */
+be clear if you are familiar with that medium. 
+*/
 class Room : public SigC::Object
 {
 public:	
