@@ -68,11 +68,12 @@ protected:
         PARSE_STRING,
         PARSE_NAME,
         PARSE_VALUE,
-	PARSE_ENCODED,
     };
     
     stack<State> state;
-    stack<string> fragment;
+
+    string name;
+    string data;
 
     inline void ParseStream(char);
     inline void ParseMessage(char);
@@ -84,7 +85,6 @@ protected:
     inline void ParseFloat(char);
     inline void ParseString(char);
     inline void ParseName(char);
-    inline void ParseEncoded(char);
 };
 
 namespace
@@ -148,35 +148,27 @@ void PackedAscii::ParseMap(char next)
 	    state.push(PARSE_MAP);
 	    state.push(PARSE_MAP_BEGIN);
 	    state.push(PARSE_NAME);
-	    fragment.push("");
 	break;
 
 	case '(':
 	    state.push(PARSE_LIST);
 	    state.push(PARSE_LIST_BEGIN);
 	    state.push(PARSE_NAME);
-	    fragment.push("");
 	break;
 
 	case '$':
 	    state.push(PARSE_STRING);
 	    state.push(PARSE_NAME);
-	    fragment.push("");
-	    fragment.push("");
 	break;
 
 	case '@':
 	    state.push(PARSE_INT);
 	    state.push(PARSE_NAME);
-	    fragment.push("");
-	    fragment.push("");
 	break;
 
 	case '#':
 	    state.push(PARSE_FLOAT);
 	    state.push(PARSE_NAME);
-	    fragment.push("");
-	    fragment.push("");
 	break;
 
 	default:
@@ -207,17 +199,14 @@ void PackedAscii::ParseList(char next)
 
 	case '$':
 	    state.push(PARSE_STRING);
-	    fragment.push("");
 	break;
 
 	case '@':
 	    state.push(PARSE_INT);
-	    fragment.push("");
 	break;
 
 	case '#':
 	    state.push(PARSE_FLOAT);
-	    fragment.push("");
 	break;
 
 	default:
@@ -229,22 +218,18 @@ void PackedAscii::ParseList(char next)
 
 void PackedAscii::ParseMapBegin(char next)
 {
-    string name = fragment.top();
-    fragment.pop();
-    
-    bridge->MapItem(name, MapBegin);
+    bridge->MapItem(hexDecode("+", name), MapBegin);
     socket.putback(next);
     state.pop();
+    name.erase();
 }
 
 void PackedAscii::ParseListBegin(char next)
 {
-    string name = fragment.top();
-    fragment.pop();
-    
-    bridge->MapItem(name, ListBegin);
+    bridge->MapItem(hexDecode("+", name), ListBegin);
     socket.putback(next);
     state.pop();
+    name.erase();
 }
 
 void PackedAscii::ParseInt(char next)
@@ -260,25 +245,18 @@ void PackedAscii::ParseInt(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		string data = fragment.top();
-		fragment.pop();
-
-		string name = fragment.top();
-		fragment.pop();
-		
-		bridge->MapItem(name, atoi(data.c_str()));
+		bridge->MapItem(hexDecode("+", name), atoi(data.c_str()));
+		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		string data = fragment.top();
-		fragment.pop();
-		
 		bridge->ListItem(atoi(data.c_str()));
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
+	    data.erase();
 	break;
 
 	case '0':
@@ -291,7 +269,7 @@ void PackedAscii::ParseInt(char next)
 	case '7':
 	case '8':
 	case '9':
-	    fragment.top() += next;
+	    data += next;
 	break;
 
 	default:
@@ -314,25 +292,18 @@ void PackedAscii::ParseFloat(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		string data = fragment.top();
-		fragment.pop();
-
-		string name = fragment.top();
-		fragment.pop();
-		
-		bridge->MapItem(name, atof(data.c_str()));
+		bridge->MapItem(hexDecode("+", name), atof(data.c_str()));
+		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		string data = fragment.top();
-		fragment.pop();
-		
 		bridge->ListItem(atof(data.c_str()));
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
+	    data.erase();
 	break;
 
 	case '0':
@@ -346,7 +317,7 @@ void PackedAscii::ParseFloat(char next)
 	case '8':
 	case '9':
 	case '.':
-	    fragment.top() += next;
+	    data += next;
 	break;
 
 	default:
@@ -369,30 +340,18 @@ void PackedAscii::ParseString(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		string data = fragment.top();
-		fragment.pop();
-		
-		string name = fragment.top();
-		fragment.pop();
-
-		bridge->MapItem(name, data);
+		bridge->MapItem(hexDecode("+", name), hexDecode("+", data));
+		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		string data = fragment.top();
-		fragment.pop();
-		
-		bridge->ListItem(data);
+		bridge->ListItem(hexDecode("+", data));
 	    }
 	    else
 	    {
 		// FIXME some kind of sanity checking assertion here
 	    }
-	break;
-
-	case '+':
-	   state.push(PARSE_ENCODED);
-	   fragment.push("");
+	    data.erase();
 	break;
 
 	case '=':
@@ -401,7 +360,7 @@ void PackedAscii::ParseString(char next)
 	break;
 
 	default:
-	    fragment.top() += next;
+	    data += next;
 	break;
     }
 }
@@ -414,11 +373,6 @@ void PackedAscii::ParseName(char next)
 	    state.pop();
 	break;
 
-	case '+':
-	    state.push(PARSE_ENCODED);
-	    fragment.push("");
-	break;
-	
 	case '[':
 	case '(':
 	case '$':
@@ -429,15 +383,8 @@ void PackedAscii::ParseName(char next)
 	break;
 
 	default:
-	    fragment.top() += next;
+	    name += next;
 	break;
-    }
-}
-
-void PackedAscii::ParseEncoded(char next)
-{
-    switch (next)
-    {
     }
 }
 
@@ -459,7 +406,6 @@ void PackedAscii::Poll()
 	    case PARSE_FLOAT:	    ParseFloat(next); break;
 	    case PARSE_STRING:	    ParseString(next); break;
 	    case PARSE_NAME:	    ParseName(next); break;
-	    case PARSE_ENCODED:	    ParseEncoded(next); break;
 	}
     }
 }
