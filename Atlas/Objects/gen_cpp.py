@@ -198,7 +198,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher):
 
     def sendcontents_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("void %s::sendContents(Bridge* b) const\n" % classname)
+        self.write("void %s::sendContents(Bridge & b) const\n" % classname)
         self.write("{\n")
         for attr in statics:
             self.write('    send%s(b);\n' % classize(attr.name))
@@ -381,7 +381,7 @@ void %(classname)s::free()
             self.write("const std::string& name);\n")
             self.write("\n")
             self.doc(4, 'Send the contents of this object to a Bridge.')
-            self.write("    virtual void sendContents(Atlas::Bridge* b) const;\n")
+            self.write("    virtual void sendContents(Atlas::Bridge & b) const;\n")
             self.write("\n")
             self.doc(4, 'Convert this object to a Element.')
             self.write("    virtual const Atlas::Message::Element::MapType asMessage() const;\n")
@@ -407,7 +407,7 @@ void %(classname)s::free()
             self.write('\n')
             for attr in static_attrs:
                 self.write("    inline void send" + attr.cname)
-                self.write('(Atlas::Bridge*) const;\n')
+                self.write('(Atlas::Bridge&) const;\n')
         self.freelist_if()
         self.write("};\n\n")
 

@@ -24,20 +24,20 @@ namespace Atlas { namespace Message {
 class Encoder : public Atlas::EncoderBase
 {
 public:
-    explicit Encoder(Atlas::Bridge*);
+    explicit Encoder(Atlas::Bridge &);
 
-    virtual ~Encoder();
+    ~Encoder();
 
     /// Send a message (must be a map!) in stream state.
-    virtual void streamMessageElement(const Element::MapType & obj);
+    void streamMessageElement(const Element::MapType & obj);
     /// Send an object as a map item.
-    virtual void mapElementItem(const std::string&, const Element&);
-    virtual void mapElementMapItem(const std::string&, const Element::MapType&);
-    virtual void mapElementListItem(const std::string&, const Element::ListType&);
+    void mapElementItem(const std::string&, const Element&);
+    void mapElementMapItem(const std::string&, const Element::MapType&);
+    void mapElementListItem(const std::string&, const Element::ListType&);
     /// Send an object as a list item.
-    virtual void listElementItem(const Element&);
-    virtual void listElementMapItem(const Element::MapType&);
-    virtual void listElementListItem(const Element::ListType&);
+    void listElementItem(const Element&);
+    void listElementMapItem(const Element::MapType&);
+    void listElementListItem(const Element::ListType&);
 };
 
 } } // namespace Atlas::Message

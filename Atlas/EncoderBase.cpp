@@ -6,6 +6,8 @@
 
 namespace Atlas {
 
+#if 0
+
 EncoderBase::~EncoderBase()
 {
 }
@@ -84,5 +86,7 @@ void EncoderBase::listEnd()
 {
     m_bridge->listEnd();
 }
+
+#endif
 
 }

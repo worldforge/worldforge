@@ -1,3 +1,13 @@
+2003-04-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/EncoderBase.cpp, Atlas/EncoderBase.h,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
+	  Atlas/Objects/AttributeInfo.py, Atlas/Objects/BaseObject.cpp,
+	  Atlas/Objects/BaseObject.h, Atlas/Objects/Encoder.h,
+	  Atlas/Objects/gen_cpp.py, Atlas/Utilities/atlas_convert.cpp,
+	  tests/Objects/encoder1.cpp, tests/Objects/objects2.cpp:
+	  Clean up and de-virtualised encoders for performance.
+
 2003-04-13  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Exception.h, Atlas/Exception.cpp,

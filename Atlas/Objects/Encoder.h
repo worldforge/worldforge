@@ -26,17 +26,17 @@ class ObjectsEncoder : public Atlas::EncoderBase
 public:
     /// The default constructor.
     /// @param b The Bridge to which objects are to be sent.
-    explicit ObjectsEncoder(Atlas::Bridge* b) : EncoderBase(b) { }
+    explicit ObjectsEncoder(Atlas::Bridge & b) : EncoderBase(b) { }
     /// The default destructor.
-    virtual ~ObjectsEncoder();
+    ~ObjectsEncoder();
 
     /// Send an object to the bridge.
     /// @param o The object that is to be sent.
-    virtual void streamObjectsMessage(const Atlas::Objects::Root& o)
+    void streamObjectsMessage(const Atlas::Objects::Root& o)
     {
-        m_bridge->streamMessage();
-        o->sendContents(m_bridge);
-        m_bridge->mapEnd();
+        m_b.streamMessage();
+        o->sendContents(m_b);
+        m_b.mapEnd();
     }
 };
 

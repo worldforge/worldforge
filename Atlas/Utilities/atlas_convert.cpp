@@ -54,7 +54,7 @@ void convert(std::string file_in, std::string codec_in, std::string file_out, st
     std::cout << "Writing... ";
 
     Atlas::Codec *outCodec = getCodec(codec_out, out, NULL);
-    Atlas::Message::Encoder encoder(outCodec);
+    Atlas::Message::Encoder encoder(*outCodec);
     encoder.streamBegin();
     while (decoder.queueSize() > 0 ) {
         Atlas::Message::Element::MapType msg(decoder.popMessage());

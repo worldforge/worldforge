@@ -28,7 +28,7 @@ int main(int argc, char** argv)
         return 1;
     }
     RootDecoder rd;
-    Atlas::Objects::ObjectsEncoder re(&rd);
+    Atlas::Objects::ObjectsEncoder re(rd);
 
     rd.streamBegin(); // important, otherwise we'll segfault!
     Atlas::Objects::Root root_inst;

@@ -25,35 +25,41 @@ offer a completely different interface from that of bridge.
 @see Bridge
 */
 
-class EncoderBase : public Atlas::Bridge {
+class EncoderBase { // : public Atlas::Bridge {
 public:
 
     /// You will need to implement this in subclasses
-    EncoderBase(Atlas::Bridge* b) : m_bridge(b) { }
+    EncoderBase(Atlas::Bridge & b) : m_b(b) { }
 
-    virtual ~EncoderBase();
+    ~EncoderBase() { }
     
-    virtual void streamBegin();
-    virtual void streamMessage();
-    virtual void streamEnd();
+    void streamBegin() { m_b.streamBegin(); }
+    void streamMessage() { m_b.streamMessage(); }
+    void streamEnd() { m_b.streamEnd(); }
     
-    virtual void mapMapItem(const std::string& name);
-    virtual void mapListItem(const std::string& name);
-    virtual void mapIntItem(const std::string& name, long i);
-    virtual void mapFloatItem(const std::string& name, double d);
-    virtual void mapStringItem(const std::string& name, const std::string& s);
-    virtual void mapEnd();
+    void mapMapItem(const std::string& name)
+    { m_b.mapMapItem(name); }
+    void mapListItem(const std::string& name)
+    { m_b.mapListItem(name); }
+    void mapIntItem(const std::string& name, long i)
+    { m_b.mapIntItem(name, i); }
+    void mapFloatItem(const std::string& name, double d)
+    { m_b.mapFloatItem(name, d); }
+    void mapStringItem(const std::string& name, const std::string& s)
+    { m_b.mapStringItem(name, s); }
+    void mapEnd()
+    { m_b.mapEnd(); }
     
-    virtual void listMapItem();
-    virtual void listListItem();
-    virtual void listIntItem(long i);
-    virtual void listFloatItem(double d);
-    virtual void listStringItem(const std::string& s);
-    virtual void listEnd();
+    void listMapItem() { m_b.listMapItem(); }
+    void listListItem() { m_b.listListItem(); }
+    void listIntItem(long i) { m_b.listIntItem(i); }
+    void listFloatItem(double d) { m_b.listFloatItem(d); }
+    void listStringItem(const std::string& s) { m_b.listStringItem(s); }
+    void listEnd() { m_b.listEnd(); }
 
 protected:
     /// The bridge that requests are forwarded to.
-    Atlas::Bridge* m_bridge;
+    Atlas::Bridge & m_b;
 };
 
 } // namespace Atlas 

@@ -77,7 +77,7 @@ public:
     virtual void addToMessage(Atlas::Message::Element::MapType &) const;
 
     /// Send the contents of this object to a Bridge.
-    virtual void sendContents(Atlas::Bridge* b) const;
+    virtual void sendContents(Atlas::Bridge & b) const;
 
     //move to protected once SmartPtr <-> BaseObject order established
     inline void incRef();

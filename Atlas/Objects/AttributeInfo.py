@@ -94,7 +94,7 @@ class AttributeInfo:
 
     def inline_send(self, classname):
         res = 'void %s::send%s' % (classname, self.cname)
-        res = res + '(Atlas::Bridge* b) const\n'
+        res = res + '(Atlas::Bridge & b) const\n'
         res = res + '{\n'
         if self.name not in ["parents", "objtype"]:
             res = res + '    if(m_attrFlags & %s) {\n' % self.flag_name
@@ -103,13 +103,13 @@ class AttributeInfo:
             indent = ""
 
         if self.type == "int":
-            res = res + indent + '    b->mapIntItem("%s", get%s%s());\n' \
+            res = res + indent + '    b.mapIntItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
         elif self.type == "float":
-            res = res + indent + '    b->mapFloatItem("%s", get%s%s());\n' \
+            res = res + indent + '    b.mapFloatItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
         elif self.type == "string":
-            res = res + indent + '    b->mapStringItem("%s", get%s%s());\n' \
+            res = res + indent + '    b.mapStringItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
         elif self.type == "list":
             res = res + indent + '    Atlas::Message::Encoder e(b);\n'

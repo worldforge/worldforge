@@ -60,7 +60,7 @@ void BaseObjectData::addToMessage(Element::MapType & m) const
     }
 }
 
-void BaseObjectData::sendContents(Bridge* b) const
+void BaseObjectData::sendContents(Bridge & b) const
 {
     Message::Encoder e(b);
     typedef Element::MapType::const_iterator Iter;

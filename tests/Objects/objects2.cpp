@@ -49,7 +49,7 @@ std::string object2String(const Root& obj)
     codec = new Atlas::Codecs::XML(stream, &bridge);
     assert(codec);
     codec->streamBegin();
-    Atlas::Objects::ObjectsEncoder eno(codec);
+    Atlas::Objects::ObjectsEncoder eno(*codec);
     eno.streamObjectsMessage(obj);
     codec->streamEnd();
     delete codec;
@@ -171,7 +171,7 @@ void testXML()
 #else
     codec->streamBegin();
 
-    Atlas::Objects::ObjectsEncoder eno(codec);
+    Atlas::Objects::ObjectsEncoder eno(*codec);
 //    eno.streamObjectsMessage(move_op);
     eno.streamObjectsMessage(l);
 
