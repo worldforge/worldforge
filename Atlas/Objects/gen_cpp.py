@@ -150,15 +150,17 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher):
         for attr in statics:
             self.write(attr.inline_send(classname))
 
-    def hasattr_im(self, obj, statics):
+    def getattrclass_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("bool %s::hasAttr(const std::string& name) const\n"
+        serialno_name = string.upper(obj.id) + "_NO"
+        self.write("int %s::getAttrClass(const std::string& name) const\n"
                         % classname)
         self.write("{\n")
         for attr in statics:
-            self.write('    if (name == "%s") return true;\n' % attr.name)
+            self.write('    if (name == "%s")' % attr.name)
+            self.write(' return %s;\n' % serialno_name)
         parent = self.get_cpp_parent(obj)
-        self.write("    return %s::hasAttr(name);\n" % parent)
+        self.write("    return %s::getAttrClass(name);\n" % parent)
         self.write("}\n\n")
 
     def getattr_im(self, obj, statics):
@@ -404,9 +406,6 @@ void %(classname)s::free()
 
         if len(static_attrs) > 0:
             #generic access/etc.. methods
-            self.doc(4, 'Check whether the attribute "name" exists.')
-            self.write("    virtual bool hasAttr(const std::string& name)"\
-                           + "const;\n")
             self.doc(4, 'Retrieve the attribute "name". Throws ' \
                        +'NoSuchAttrException if it does')
             self.doc(4, 'not exist.')
@@ -443,6 +442,10 @@ void %(classname)s::free()
             self.write('\n')
 
             self.write("protected:\n")
+
+            self.doc(4, 'Find the class which contains the attribute "name".')
+            self.write("    virtual int getAttrClass(const std::string& name)"\
+                           + "const;\n")
 
             for attr in static_attrs:
                 self.write('    %s attr_%s;\n' %
@@ -497,7 +500,7 @@ void %(classname)s::free()
     def implementation(self, obj, static_attrs=[]):
         if len(static_attrs) > 0:
             #self.constructors_im(obj)
-            self.hasattr_im(obj, static_attrs)
+            self.getattrclass_im(obj, static_attrs)
             self.getattr_im(obj, static_attrs)
             self.setattr_im(obj, static_attrs)
             self.remattr_im(obj, static_attrs)

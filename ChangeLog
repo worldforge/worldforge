@@ -1,3 +1,15 @@
+2003-08-03  Ron Steinke <rsteinke@w-link.net>
+
+	* Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/gen_cpp.py: Added new function BaseObjectData::find().
+	  In the process replaced virtual public hasAttr() function
+	  with virtual protected getAttrClass() function, which
+	  returns the class_no of the class that has the attribute
+	  instead of just bool. The (now non-virtual) hasAttr()
+	  in BaseObjectData wraps getAttrClass().
+	* Atlas/Objects/BaseObject.h: Added a const_iterator
+	  constructor from iterator.
+
 2003-08-05  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/GenerateDispatcher.py: Fix generated dispatcher

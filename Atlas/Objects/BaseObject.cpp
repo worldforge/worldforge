@@ -24,7 +24,7 @@ bool BaseObjectData::instanceOf(int classNo) const
 
 bool BaseObjectData::hasAttr(const std::string& name) const
 {
-    return (m_attributes.find(name) != m_attributes.end());
+    return (getAttrClass(name) >= 0) || (m_attributes.find(name) != m_attributes.end());
 }
 
 const Element BaseObjectData::getAttr(const std::string& name) const
@@ -240,6 +240,46 @@ BaseObjectData::const_iterator::PsuedoElement::operator Message::Element() const
 {
     return (m_I.m_I != m_I.m_obj->m_attributes.end()) ?
 	m_I.m_I->second : m_I.m_obj->getAttr(m_I.m_val.first);
+}
+
+BaseObjectData::iterator BaseObjectData::find(const std::string& name)
+{
+  iterator I;
+  I.m_obj = this;
+  I.m_val.first = name;
+
+  I.m_I = m_attributes.find(name);
+  if (I.m_I != m_attributes.end()) 
+    I.m_current_class = -1;
+  else {
+    I.m_current_class = getAttrClass(name);
+    if(I.m_current_class < 0) { // no such attribute
+      I.m_current_class = BASE_OBJECT_NO;
+      I.m_val.first = "";
+    }
+  }
+
+  return I;
+}
+
+BaseObjectData::const_iterator BaseObjectData::find(const std::string& name) const
+{
+  const_iterator I;
+  I.m_obj = this;
+  I.m_val.first = name;
+
+  I.m_I = m_attributes.find(name);
+  if (I.m_I != m_attributes.end()) 
+    I.m_current_class = -1;
+  else {
+    I.m_current_class = getAttrClass(name);
+    if(I.m_current_class < 0) { // no such attribute
+      I.m_current_class = BASE_OBJECT_NO;
+      I.m_val.first = "";
+    }
+  }
+
+  return I;
 }
 
 

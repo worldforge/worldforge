@@ -59,7 +59,7 @@ public:
     virtual bool instanceOf(int classNo) const;
     
     /// Check whether the attribute "name" exists.
-    virtual bool hasAttr(const std::string& name) const;
+    bool hasAttr(const std::string& name) const;
     /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
     /// not exist.
     virtual const Atlas::Message::Element getAttr(const std::string& name)
@@ -102,11 +102,16 @@ public:
     // end(), lets you iterate through all attributes which are either
     // named in derived classes or in m_attributes.
 
+    class const_iterator;
+
     // FIXME should this hold a reference to the object it's
     // iterating over?
     friend class iterator
     {
     public:
+        friend class BaseObjectData;
+        friend class const_iterator;
+
         iterator() : m_obj(0), m_val("", *this) {}
         iterator(const iterator& I) : m_obj(I.m_obj),
             m_current_class(I.m_current_class),
@@ -158,8 +163,13 @@ public:
     friend class const_iterator
     {
     public:
+        friend class BaseObjectData;
+
         const_iterator() : m_obj(0), m_val("", *this) {}
         const_iterator(const const_iterator& I) : m_obj(I.m_obj),
+            m_current_class(I.m_current_class),
+            m_I(I.m_I), m_val(I.m_val.first, *this) {}
+        const_iterator(const iterator& I) : m_obj(I.m_obj),
             m_current_class(I.m_current_class),
             m_I(I.m_I), m_val(I.m_val.first, *this) {}
         const_iterator(const BaseObjectData& obj, int current_class);
@@ -201,11 +211,15 @@ public:
 
     iterator begin() {return iterator(*this, -1);}
     iterator end() {return iterator(*this, BASE_OBJECT_NO);}
+    iterator find(const std::string&);
 
     const_iterator begin() const {return const_iterator(*this, -1);}
     const_iterator end() const {return const_iterator(*this, BASE_OBJECT_NO);}
+    const_iterator find(const std::string&) const;
 
 protected:
+
+    inline virtual int getAttrClass(const std::string& name) const {return -1;}
 
     inline virtual void iterate(int& current_class, std::string& attr) const;
 
