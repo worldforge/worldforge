@@ -29,12 +29,14 @@
 #include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
+#include <wfmath/quaternion.h>
 
 namespace WFMath {
 
 template<const int dim> class Point;
 template<const int dim> class AxisBox;
 template<const int dim> class Ball;
+template<const int dim> class RotBox;
 
 template<const int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
@@ -154,11 +156,47 @@ class Point
   Point rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Point rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
+  // 3D rotation functions
+  Point<3>& rotate(const Quaternion& q, const Point<3>& p)
+	{return (*this = p + (*this - p).rotate(q));}
+  Point<3> rotateCorner(const Quaternion& q, int corner)
+	{assert(corner == 0); return *this;}
+  Point<3> rotateCenter(const Quaternion& q) {return *this;}
+  Point<3> rotatePoint(const Quaternion& q, const Point<3>& p) {return rotate(q, p);}
+
   // The implementations of these lie in axisbox_funcs.h and
   // ball_funcs.h, to reduce include dependencies
   AxisBox<dim> boundingBox() const;
   Ball<dim> boundingSphere() const;
   Ball<dim> boundingSphereSloppy() const;
+
+  Point toParentCoords(const Point& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+	{return origin + (*this - Point(0, 0, 0)) * rotation;}
+  Point toParentCoords(const AxisBox<dim>& coords) const
+	{return coords.lowCorner() + (*this - Point(0, 0, 0));}
+  Point toParentCoords(const RotBox<dim>& coords) const
+	{return coords.corner0() + (*this - Point(0, 0, 0)) * coords.orientation();}
+
+  // toLocal is just like toParent, expect we reverse the order of
+  // translation and rotation and use the opposite sense of the rotation
+  // matrix
+
+  Point toLocalCoords(const Point& origin,
+      const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
+	{return Point(0, 0, 0) + rotation * (*this - origin);}
+  Point toLocalCoords(const AxisBox<dim>& coords) const
+	{return Point(0, 0, 0) + (*this - origin);}
+  Point toLocalCoords(const RotBox<dim>& coords) const
+	{return Point(0, 0, 0) + coords.orientation() * (*this - coords.corner0());}
+
+  // 3D only
+  Point<3> toParentCoords(const Point<3>& origin,
+       const Quaternion& rotation = Quaternion().identity()) const
+	{return origin + (*this - Point(0, 0, 0)).rotate(rotation);}
+  Point<3> toLocalCoords(const Point<3>& origin,
+       const Quaternion& rotation = Quaternion().identity()) const
+	{return Point(0, 0, 0) + (*this - origin).rotate(-rotation);}
 
   // Member access
 
