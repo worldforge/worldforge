@@ -9,6 +9,12 @@ TARGETS = $(OUTDIR)/libAtlas.a \
 	$(OUTDIR)/CopyTest$(EXE_EXT) \
 
 LIBOBJS = \
+	$(OUTDIR)/AtlasURI.o \
+	$(OUTDIR)/AtlasURIList.o \
+	$(OUTDIR)/AtlasIntList.o \
+	$(OUTDIR)/AtlasLongList.o \
+	$(OUTDIR)/AtlasFloatList.o \
+	$(OUTDIR)/AtlasStringList.o \
 	$(OUTDIR)/AtlasCodec.o \
 	$(OUTDIR)/AtlasPackedAsciiDecoder.o \
 	$(OUTDIR)/AtlasPackedAsciiEncoder.o \
@@ -185,4 +191,24 @@ $(OUTDIR)/EchoTest.o: EchoTest.cpp EchoTest.h AtlasClient.h AtlasCodec.h \
 
 $(OUTDIR)/CopyTest.o: CopyTest.cpp CopyTest.h AtlasDebug.h AtlasObject.h 
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/AtlasURI.o: AtlasURI.c AtlasURI.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/AtlasURIList.o: AtlasURIList.c AtlasURIList.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/AtlasIntList.o: AtlasIntList.c AtlasIntList.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/AtlasLongList.o: AtlasLongList.c AtlasLongList.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/AtlasFloatList.o: AtlasFloatList.c AtlasFloatList.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/AtlasStringList.o: AtlasStringList.c AtlasStringList.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+
 
