@@ -1,3 +1,12 @@
+2003-09-22 Damien McGinnes 
+
+	* Mercator/Segment.cpp: minor changes to interpolation to improve 
+	  performance in the general case. (gives about a 5% speedup)
+
+	* Mercator/Intersect.cpp: made some file scope functions static on
+	  advice from rsteinke. init'ed som vars to keep gcc happy. made ray
+	  intersect return true if ray begins below terrain.
+
 2003-09-14 Damien McGinnes 
 
 	* testPhys.cpp: added a rudimentary physics model to do a more useful

@@ -14,6 +14,7 @@
 #include <wfmath/MersenneTwister.h>
 
 #include <cmath>
+#include <cassert>
 
 namespace Mercator {
 
@@ -22,25 +23,44 @@ namespace Mercator {
 class LinInterp {
   private:
     int m_size;
+    bool noCalc;
   public:
     float ep1, ep2;
-    float calc(int loc) {
-        return ((m_size-loc) * ep1 + loc * ep2);
+    inline float calc(int loc) 
+    {
+        return ((noCalc) ? ep1 : ((m_size-loc) * ep1 + loc * ep2));
     }
-    LinInterp(int size,float l, float h) : m_size(size), ep1(l/size), ep2(h/size) {} 
+    LinInterp(int size,float l, float h) : m_size(size), noCalc(false), 
+              ep1(l/size), ep2(h/size) 
+    {
+        if (l==h) {
+            ep1 = l;
+            noCalc=true;
+        }
+    } 
 };
 
 class QuadInterp {
   private:
     int m_size;
+    bool noCalc;
   public:
     float ep1, ep2, ep3, ep4;
-    float calc(int locX, int locY) {
-        return (( ep1*(m_size-locX) + ep2 * locX) * (m_size-locY) +
-                ( ep4*(m_size-locX) + ep3 * locX) * (locY) ) / m_size;
+    inline float calc(int locX, int locY) 
+    {
+        return  ((noCalc) ? ep1 :
+                (( ep1*(m_size-locX) + ep2 * locX) * (m_size-locY) +
+                ( ep4*(m_size-locX) + ep3 * locX) * (locY) ) / m_size );
     }
     QuadInterp(int size,float e1, float e2, float e3, float e4)
-        : m_size(size), ep1(e1/size), ep2(e2/size), ep3(e3/size), ep4(e4/size) {} 
+        : m_size(size), noCalc(false),
+          ep1(e1/size), ep2(e2/size), ep3(e3/size), ep4(e4/size) 
+    {
+        if ((e1==e2) && (e3==e4) && (e2==e3)) {
+            ep1 = e1;
+            noCalc=true;
+        }
+    } 
 };      
 
 Segment::Segment(unsigned int resolution) :
@@ -314,15 +334,16 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
 
     //float roughness = (p1.roughness+p2.roughness+p3.roughness+p4.roughness)/(4.0f);
     float roughness = qi.calc(stride, stride);
-    m_points[stride*m_size + stride] = qRMD( m_points[0 * m_size + m_res/2],
-                                        m_points[m_res/2*m_size + 0],
-                                        m_points[m_res/2*m_size + m_res],
-                                        m_points[m_res*m_size + m_res/2],
+    m_points[stride*m_size + stride] = qRMD( m_points[0 * m_size + stride],
+                                        m_points[stride*m_size + 0],
+                                        m_points[stride*m_size + m_res],
+                                        m_points[m_res*m_size + stride],
                                         roughness,
                                         f, depth);
                     
 
     checkMaxMin(m_points[stride*m_size + stride]);
+
     stride >>= 1;
 
     // skip across the m_points and fill in the points
