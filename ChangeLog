@@ -1,3 +1,7 @@
+2004-06-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix devel dependencies in rpm spec.
+
 2004-05-13  Al Riddoch  <alriddoch@zepler.org>
 
 * Remove header files from the library source list, and remove a stray
