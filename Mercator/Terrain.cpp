@@ -6,6 +6,8 @@
 #include "config.h"
 #endif
 
+#include "iround.h"
+
 #include <Mercator/Terrain.h>
 
 #include <Mercator/Matrix.h>
@@ -56,16 +58,6 @@ void Terrain::shadeSurfaces(Segment & seg)
 {
     seg.populateSurfaces();
 }
-
-#ifdef HAVE_LRINTF
-    #define I_ROUND(x) (::lrintf(x)) 
-#elif defined(HAVE_RINTF)
-    #define I_ROUND(x) ((int)::rintf(x)) 
-#elif defined(HAVE_RINT)
-    #define I_ROUND(x) ((int)::rint(x)) 
-#else
-    #define I_ROUND(x) ((int)(x)) 
-#endif
 
 float Terrain::get(float x, float y) const
 {

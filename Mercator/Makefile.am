@@ -5,6 +5,7 @@ lib_LTLIBRARIES = libmercator-0.2.la
 libmercator_0_2_la_LDFLAGS = -version-info @MERCATOR_VERSION_INFO@
 
 libmercator_0_2_la_SOURCES = \
+	iround.h \
 	Mercator.cpp \
 	Matrix.cpp \
 	Terrain.cpp \

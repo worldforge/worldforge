@@ -6,11 +6,14 @@
 #include "config.h"
 #endif
 
+#include "iround.h"
+
 #include <Mercator/Segment.h>
 #include <Mercator/Terrain.h>
 #include <Mercator/TerrainMod.h>
 #include <Mercator/Surface.h>
 #include <Mercator/BasePoint.h>
+
 #include <wfmath/MersenneTwister.h>
 
 #include <cmath>
@@ -152,8 +155,8 @@ void Segment::populateNormals()
         h2 = get(i + 1, m_res);
         
         np[m_res * m_size * 3 + i * 3]     = (h1 - h2) / 2.f;
-        np[m_res * m_size * 3 + i * 3 + 1] = 0.0;
-        np[m_res * m_size * 3 + i * 3 + 2] = 1.0;
+        np[m_res * m_size * 3 + i * 3 + 1] = 0.0f;
+        np[m_res * m_size * 3 + i * 3 + 2] = 1.0f;
     }
     
     //left and right boundary
@@ -163,33 +166,33 @@ void Segment::populateNormals()
         
         np[j * m_size * 3]     = 0;
         np[j * m_size * 3 + 1] = (h1 - h2) / 2.f;
-        np[j * m_size * 3 + 2] = 1.0;
+        np[j * m_size * 3 + 2] = 1.f;
  
         h1 = get(m_res, j - 1);
         h2 = get(m_res, j + 1);
 
-        np[j * m_size * 3 + m_res * 3]     = 0.0;
+        np[j * m_size * 3 + m_res * 3]     = 0.f;
         np[j * m_size * 3 + m_res * 3 + 1] = (h1 - h2) / 2.f;
-        np[j * m_size * 3 + m_res * 3 + 2] = 1.0;
+        np[j * m_size * 3 + m_res * 3 + 2] = 1.f;
     }
 
     //corners - these are all treated as flat
     //so the normal points straight up
-    np[0] = 0.0;
-    np[1] = 0.0;
-    np[2] = 1.0;
+    np[0] = 0.f;
+    np[1] = 0.f;
+    np[2] = 1.f;
 
-    np[m_res * m_size * 3]     = 0.0;
-    np[m_res * m_size * 3 + 1] = 0.0;
-    np[m_res * m_size * 3 + 2] = 1.0;
+    np[m_res * m_size * 3]     = 0.f;
+    np[m_res * m_size * 3 + 1] = 0.f;
+    np[m_res * m_size * 3 + 2] = 1.f;
 
-    np[m_res * 3]     = 0.0;
-    np[m_res * 3 + 1] = 0.0;
-    np[m_res * 3 + 2] = 1.0;
+    np[m_res * 3]     = 0.f;
+    np[m_res * 3 + 1] = 0.f;
+    np[m_res * 3 + 2] = 1.f;
     
-    np[m_res * m_size * 3 + m_res * 3]     = 0.0;
-    np[m_res * m_size * 3 + m_res * 3 + 1] = 0.0;
-    np[m_res * m_size * 3 + m_res * 3 + 2] = 1.0;
+    np[m_res * m_size * 3 + m_res * 3]     = 0.f;
+    np[m_res * m_size * 3 + m_res * 3 + 1] = 0.f;
+    np[m_res * m_size * 3 + m_res * 3 + 2] = 1.f;
 }
 
 void Segment::populateSurfaces()
@@ -257,15 +260,15 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
         for (int i=stride;i<m_res;i+=stride*2) {
             float hh = array[i-stride];
             float lh = array[i+stride];
-            float hd = fabs(hh-lh);
+            float hd = fabsf(hh-lh);
             float roughness = li.calc(i);
 
             //eliminate the problem where hd is nearly zero, leaving a flat section.
             if ((hd*100.f) < roughness) {
-                hd+=0.05 * roughness;       
+                hd+=0.05f * roughness;       
             }
           
-            array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1+::pow(depth,BasePoint::FALLOFF));
+            array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1.f+::pow(depth,BasePoint::FALLOFF));
         }
         stride >>= 1;
         depth++;
@@ -407,9 +410,9 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
 {
     // FIXME this ignores edges and corners
     assert(x <= m_res);
-    assert(x >= 0.0);
+    assert(x >= 0.0f);
     assert(y <= m_res);
-    assert(y >= 0.0);
+    assert(y >= 0.0f);
     
     // get index of the actual tile in the segment
     int tile_x = (int)floor(x);
@@ -426,33 +429,23 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
 
     // square is broken into two triangles
     // top triangle |/
-    if ((off_x - off_y) <= 0) {
-        normal = WFMath::Vector<3>(h2-h3, h1-h2, 1.0);
+    if ((off_x - off_y) <= 0.f) {
+        normal = WFMath::Vector<3>(h2-h3, h1-h2, 1.0f);
 
         //normal for intersection of both triangles
         if (off_x == off_y) {
-            normal += WFMath::Vector<3>(h1-h4, h4-h3, 1.0);
+            normal += WFMath::Vector<3>(h1-h4, h4-h3, 1.0f);
         }
         normal.normalize();
         h = h1 + (h3-h2) * off_x + (h2-h1) * off_y;
     } 
     // bottom triangle /|
     else {
-        normal = WFMath::Vector<3>(h1-h4, h4-h3, 1.0);
+        normal = WFMath::Vector<3>(h1-h4, h4-h3, 1.0f);
         normal.normalize();
         h = h1 + (h4-h1) * off_x + (h3-h4) * off_y;
     }
 }
-
-#ifdef HAVE_LRINTF
-    #define I_ROUND(x) (::lrintf(x)) 
-#elif defined(HAVE_RINTF)
-    #define I_ROUND(x) ((int)::rintf(x)) 
-#elif defined(HAVE_RINT)
-    #define I_ROUND(x) ((int)::rint(x)) 
-#else
-    #define I_ROUND(x) ((int)(x)) 
-#endif
 
 bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
                                                             int &ly, int &hy) 

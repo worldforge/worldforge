@@ -1,3 +1,13 @@
+2004-06-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/iround.h, Mercator/DepthShader.cpp, Mercator/Forest.cpp,
+	  Mercator/Segment.cpp, Mercator/Terrain.cpp: Clean up use of the
+	  I_ROUND macro by moving its definition into a build only header.
+
+	* Mercator/Segment.cpp: Ensure floats are used not doubles in
+	  calculations, and use the float version of libm calls where
+	  apropriate.
+
 2004-05-18  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.2.0, interface version 1.0.0

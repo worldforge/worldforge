@@ -6,6 +6,8 @@
 #include "config.h"
 #endif
 
+#include "iround.h"
+
 #include <Mercator/Forest.h>
 
 #include <Mercator/Plant.h>
@@ -15,16 +17,6 @@
 
 #include <iostream>
 #include <cmath>
-
-#ifdef HAVE_LRINTF
-    #define I_ROUND(x) (::lrintf(x)) 
-#elif defined(HAVE_RINTF)
-    #define I_ROUND(x) ((int)::rintf(x)) 
-#elif defined(HAVE_RINT)
-    #define I_ROUND(x) ((int)::rint(x)) 
-#else
-    #define I_ROUND(x) ((int)(x)) 
-#endif
 
 namespace Mercator {
 
