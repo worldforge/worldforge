@@ -1,5 +1,10 @@
 2003-01-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* src/Segment.cpp, src/Segment.h: Fully implement qRMD with roughness
+	  and falloff.
+
+2003-01-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Segment.cpp, src/Segment.h: First stab at qRMD algorithm.
 
 2003-01-28  Al Riddoch  <alriddoch@zepler.org>

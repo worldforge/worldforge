@@ -34,7 +34,7 @@ class Segment {
     }
 
     void populate(const float *);
-    float qRMD(float, float, float, float) const;
+    float qRMD(float, float, float, float, int depth) const;
 
 };
 
