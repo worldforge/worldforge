@@ -1,5 +1,11 @@
 /** @page tutorial_message Using Message::Object and higher layers
 
+<h3>Note</h3>
+
+Some of this has changed recently and may not be applicable anymore. Please be
+patient until I get this rewritten. Sorry, but there's much coding to do in
+addition to writing tutorials :) -- Stefanus Du Toit <sdt@gmx.net>
+
 @section higher_concepts Higher Concepts
 
 @subsection intro Introduction
