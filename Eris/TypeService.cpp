@@ -304,13 +304,31 @@ void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
         unbound.insert(type);
     }
 
-    if (obj->getObjtype() == "op") {
+    if (obj->getObjtype() == "op")
+        verifyOpArguments(obj, unbound);
+}
+
+void TypeService::verifyOpArguments(const Root& obj, TypeInfoSet& unbound)
+{
+    /* two different cases for verifying op arguments; one where the op
+    itself was bound, and hence has the args decoded, and another for
+    the case where the op type was unknown, and hence we only have
+    Message::Elements. */
+    if (obj->instanceOf(Atlas::Objects::Operation::ROOT_OPERATION_NO)) {
         RootOperation op = smart_dynamic_cast<RootOperation>(obj);
         assert(op.isValid());
         const std::vector<Root>& args = op->getArgs();
         
-        for  (std::vector<Root>::const_iterator A=args.begin(); A != args.end(); ++A) {
+        for  (std::vector<Root>::const_iterator A=args.begin(); A != args.end(); ++A)
             innerVerifyType(*A, unbound);
+    } else {
+        Atlas::Message::Element args = obj->getAttr("args");
+        assert(args.isList());
+    
+        Atlas::Message::ListType::const_iterator A;
+        for  (A = args.asList().begin(); A != args.asList().end(); ++A) {
+            Root argObj = Atlas::Objects::messageElement2ClassObject(A->asMap());
+            innerVerifyType(argObj, unbound);
         }
     }
 }

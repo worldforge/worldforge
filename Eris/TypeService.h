@@ -80,7 +80,8 @@ public:
     TypeInfoPtr defineBuiltin(const std::string& name, TypeInfoPtr parent);
 
     void innerVerifyType(const Atlas::Objects::Root& obj, TypeInfoSet& unbound);
-
+    void verifyOpArguments(const Atlas::Objects::Root& obj, TypeInfoSet& unbound);
+    
     typedef std::map<std::string, TypeInfoPtr> TypeInfoMap;
     /** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')
     to the corresponding TypeInfo instance. This could be a hash_map in the

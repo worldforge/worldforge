@@ -219,8 +219,7 @@ void Connection::dispatchOp(const RootOperation& op)
 // give the type service a go   
     /// @todo - wrap this in an anonymous=true guard?
     rr = m_typeService->handleOperation(op);
-    if (rr == Router::HANDLED)
-        return;
+    if (rr == Router::HANDLED) return;
     
 // locate a router based on from
     IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
@@ -234,10 +233,8 @@ void Connection::dispatchOp(const RootOperation& op)
     R = m_toRouters.find(op->getTo());
     if (R != m_toRouters.end()) {
         rr = R->second->handleOperation(op);
-        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) {
+        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH))
             return;
-        } else
-            debug() << "TO router " << R->first << " didn't handle op: " << op;
     } else if (!anonymous && !m_toRouters.empty())
         warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
             

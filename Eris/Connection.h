@@ -89,9 +89,12 @@ public:
 	void unlock();
     
     void postForDispatch(const Atlas::Objects::Root& obj);
+    
 ///////////////////////
 	
-    /// Emitted when the disconnection process is initiated
+    /** Emitted when the disconnection process is initiated. The argument
+    is a flag indicating if the disconnection was clean or not.
+    */
     SigC::Signal0<bool> Disconnecting;
     
     /** Emitted when a non-fatal error occurs; these are nearly always network

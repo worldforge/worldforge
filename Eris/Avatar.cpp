@@ -19,6 +19,7 @@
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::GameEntity;
+using WFMath::TimeStamp;
 
 namespace Eris
 {
@@ -191,38 +192,6 @@ void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
 
 #pragma mark -
 
-/*
-void Avatar::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
-		const Atlas::Objects::Entity::GameEntity &character)
-{
-    log(LOG_DEBUG, "Have id %s, got id %s", m_entityId.c_str(), character->getId().c_str());
-
-    assert(m_entityId.empty() || m_entityId == character->getId());
-    if(m_entityId.empty()) {
-	m_entityId = character->getId();
-	bool success = _avatars.insert(std::make_pair(
-	    AvatarIndex(_world->getConnection(), m_entityId), this)).second;
-	assert(success); // Newly created character should have unique id
-    }
-
-    log(LOG_DEBUG, "Got character info with id %s", m_entityId.c_str());
-
-    _world->recvInfoCharacter(ifo, character);
-
-    _world->getConnection()->removeDispatcherByPath("op:info", _dispatch_id);
-    _dispatch_id = "";
-}
-
-void Avatar::recvEntity(Entity* e)
-{
-  assert(!_entity);
-  _entity = e;
-
-  e->AddedMember.connect(InvAdded.slot());
-  e->RemovedMember.connect(InvRemoved.slot());
-}
-*/
-
 void Avatar::onEntityAppear(Entity* ent)
 {
     if (ent->getId() == m_entityId) {
@@ -239,12 +208,12 @@ Connection* Avatar::getConnection() const
 
 WFMath::TimeStamp Avatar::getWorldTime()
 {
-    return WFMath::TimeStamp::now() + m_worldTimeOffset;
+    return TimeStamp::now() + m_worldTimeOffset;
 }
 
 void Avatar::updateWorldTime(double seconds)
 {
-
+   // m_worldTimeOffset = TimeStamp(seconds, 0) - TimeStamp::now();
 }
 
 } // of namespace Eris

@@ -96,11 +96,8 @@ void BaseConnection::hardDisconnect(bool emit)
 		_stream = NULL;
 	}
 
-    if (emit) {
-	    Disconnected.emit();
-	    setStatus(DISCONNECTED);
-    } else
-	    _status = DISCONNECTED;
+    setStatus(DISCONNECTED);
+    if (emit) Disconnected.emit();
 }
 
 void BaseConnection::recv()

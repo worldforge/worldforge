@@ -196,7 +196,7 @@ Person* Lobby::getPerson(const std::string &acc)
     {
         look(acc);
         // create a NULL entry (indicates we are doing the look)
-	P = m_people.insert(P, IdPersonMap::value_type(acc, NULL));
+        P = m_people.insert(P, IdPersonMap::value_type(acc, NULL));
     }
     
     return P->second;

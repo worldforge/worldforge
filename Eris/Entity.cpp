@@ -440,7 +440,7 @@ bool Entity::isVisible() const
     if (m_location)
         return m_visible && m_location->isVisible();
     else
-        return m_visible;
+        return m_visible; // only for the root entity
 }
 
 void Entity::updateCalculatedVisibility(bool wasVisible)

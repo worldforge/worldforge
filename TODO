@@ -11,13 +11,12 @@ as a child. We need to be invulnerable to this.
   
   map<serialno, Room*> m_pendingSightCreates on lobby makes this work.
   yech.
-  
-- rename Player to Account
+
+- add more helpers for common client actions on Avatar. For example
+  use and emote, to go with say and touch.  
 
 - Go over the Poll api, see if work can be delegated to skstream or not
 
-- go over and clean up the metaquery code, it's horrible, especially the
-  snprint stuff.
 - add world time support to igRouter / Avatar
 
 - Talk handlers (and others) on the recipient, i.e a Hear(const Sound&) on Avatar

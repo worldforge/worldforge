@@ -1,3 +1,22 @@
+2004-08-05  James Turner  <james@worldforge.org>
+
+    * Eris/Connection.cpp: make dispatchOp less noisy in some situations, 
+      notably the case where a TO router doesn't handle an op.
+      
+    * Eris/TypeService.cpp, Eris/TypeService.h: factor out the recursive
+      verification of op arguments, and handle the case where to op itself
+      was built as Anonymous. In that situation, we need to extract 'args'
+      as a Message::Element, and try running the ObjectFactory ourselves.
+
+	* TODO updates
+
+2004-08-04  James Turner  <james@worldforge.org>
+
+	* Documentation updates all over the place
+	
+	* Eris/BaseConnection.cpp: Reorder code in hardDisconnect, so status is set
+	  before we emit the Disconnected signal.
+
 2004-08-03  James Turner  <james@worldforge.org>
 
 	* Rename the actual class Player to Account, and all the uses thereof.
