@@ -9,13 +9,16 @@
 
 namespace Atlas {
 
+/*%TODO(Jesse,Atlas,Exception)
+* Exception should descend from std::exception.
+*/
 class Exception
 {
   protected:
     std::string description;
   public:
-    Exception(const string & d = "UNKNOW ERROR") : description(d) { }
-    const std::string & getDescription() {
+    Exception(const std::string & d = "UNKNOWN ERROR") : description(d) { }
+    const std::string & getDescription() const {
         return description;
     }
 };
