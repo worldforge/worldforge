@@ -4,7 +4,7 @@ EXTRA_DIST = bc_sloppy_mag_3
 
 headerdir = $(includedir)/wfmath
 header_HEADERS = error.h const.h \
-	probability.h \
+	probability.h timestamp.h randgen.h \
 	vector.h vector_funcs.h \
 	rotmatrix.h rotmatrix_funcs.h \
 	point.h point_funcs.h \
@@ -20,8 +20,8 @@ header_HEADERS = error.h const.h \
 
 lib_LTLIBRARIES = libwfmath.la
 libwfmath_la_SOURCES = basis.h const.cpp stream.cpp probability.cpp \
-	rotmatrix.cpp vector.cpp point.cpp quaternion.cpp polygon.cpp \
-	intersect.cpp polygon_intersect.cpp
+	timestamp.cpp randgen.cpp rotmatrix.cpp vector.cpp point.cpp \
+	quaternion.cpp polygon.cpp intersect.cpp polygon_intersect.cpp
 libwfmath_la_LDFLAGS = -lm -version-info @WFMATH_VERSION_INFO@
 
 check_PROGRAMS = vector_test rotmatrix_test point_test \

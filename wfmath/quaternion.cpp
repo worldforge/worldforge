@@ -151,6 +151,14 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
   return not_flip;
 }
 
+Quaternion Quaternion::inverse() const
+{
+  Quaternion q(m_valid);
+  q.m_w = m_w;
+  q.m_vec = -m_vec;
+  return q;
+}
+
 Quaternion& Quaternion::rotation(int axis, const CoordType angle)
 {
   CoordType half_angle = angle / 2;

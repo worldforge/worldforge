@@ -81,6 +81,8 @@ class Quaternion
   // Returns "not_flip", similar to RotMatrix<>.toEuler()
   bool fromRotMatrix(const RotMatrix<3>& m);
 
+  Quaternion inverse() const;
+
   Quaternion& rotation(int axis, const CoordType angle);
   Quaternion& rotation(const Vector<3>& axis, const CoordType angle);
   Quaternion& rotation(const Vector<3>& axis); // angle == axis.mag()
@@ -95,6 +97,7 @@ class Quaternion
   const Vector<3>& vector() const	{return m_vec;}
 
  private:
+  Quaternion(bool valid) : m_valid(valid) {}
   CoordType m_w;
   Vector<3> m_vec;
   bool m_valid;

@@ -1,3 +1,9 @@
+Saturday, June 23, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Added timestamp class from Eris
+	* Added random number generators (really wrappers for rand())
+	* Added Quaternion::inverse()
+
 Saturday, May 11, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* Bumped version number to 0.2.8, due to the sign convention changes
