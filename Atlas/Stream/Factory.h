@@ -20,6 +20,7 @@ class Factory
     virtual void Delete(T*) = 0;
 
     virtual std::string GetName() = 0;
+    virtual typename T::Metrics GetMetrics() = 0;
 };
 
 } } // Atlas::Stream
