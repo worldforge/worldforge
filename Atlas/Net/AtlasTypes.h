@@ -1,8 +1,8 @@
 #ifndef __AtlasTypes_h__
 #define __AtlasTypes_h__
 
-// #include <AtlasURI.h>
-// #include <AtlasURIList.h>
+#include <AtlasURI.h>
+#include <AtlasURIList.h>
 #include <AtlasIntList.h>
 #include <AtlasLongList.h>
 #include <AtlasFloatList.h>

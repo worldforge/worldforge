@@ -11,6 +11,7 @@
 
 #include "AtlasDebug.h"
 #include "AtlasPython.h"
+#include "AtlasTypes.h"
 
 #include <string>
 using namespace std;
@@ -62,9 +63,6 @@ class AObject
 {
 protected:
 
-/** Typed List Flag */
-	int		typ;
-
 /** Python Object to hold the data */
 	PyObject*	obj;
 
@@ -76,25 +74,7 @@ public:
 /** output object stucture to debug streams */
 static void dump(const AObject& msg);
 
-/** Default "typ" value, not a typed list */
-static	int AScalar;
-
-/** "typ" value for a List of Integers */
-static	int AIntList;
-
-/** "typ" value for a List of URIs */
-static	int AUriList;
-
-/** "typ" value for a List of Floats */
-static	int AFloatList;
-
-/** "typ" value for a List of Strings */
-static	int AStringList;
-
-/** "typ" value for a List of Objects */
-static	int AObjList;
-
-/** return string type description for debugging */
+/** return string representation of object type */
 	char* typeString();
 
 /** overload assignment so copying works right */
@@ -113,10 +93,16 @@ static	int AObjList;
 	AObject(AObject& src);
 
 /** Constuct an Int type AObject */
+	AObject(int val);
+
+/** Constuct an Long type AObject */
 	AObject(long val);
 
 /** Contruct a Float type AObject */
 	AObject(double val);
+
+/** Construct a String type AObject */
+	AObject(string& val);
 
 /** Construct a String type AObject */
 	AObject(const string& val);
@@ -131,6 +117,9 @@ static	int AObjList;
 /** Construct a Long typed list AObject */
 	AObject(int len, long val, ...);
 
+/** Construct a Int typed list AObject */
+	AObject(int len, int val, ...);
+
 
 /** Construct a String typed list AObject from an array */
 	AObject(int len, string* val);
@@ -140,6 +129,9 @@ static	int AObjList;
 
 /** Construct a Long typed list AObject from an array */
 	AObject(int len, long *val);
+
+/** Construct a Long typed list AObject from an array */
+	AObject(int len, int *val);
 
 
 
@@ -153,16 +145,8 @@ static	int AObjList;
 
 
 
-/** get the data type for a typed list */
-	int		getListType() const;
-
-/** set the data type for a typed list */
-	void		setListType(int atype);
-
 /** (Map) test for named element of a map */
 	int		has(const string& name) const;
-
-
 
 /** (Map) get an AObject attribute */
 	int		get(const string& name, AObject& val) const;
@@ -252,6 +236,12 @@ static	AObject	mkString(const string& val);
 /** true if this AObject is a List */
 	int 		isList() const;
 
+/** true if this AObject is a URI */
+	int		isURI() const;
+
+/** true if this AObject is a Int */
+	int		isInt() const;
+
 /** true if this AObject is a Int */
 	int		isLong() const;
 
@@ -260,6 +250,22 @@ static	AObject	mkString(const string& val);
 
 /** true if this AObject is a String */
 	int		isString() const;
+
+/** true if this AObject is a URI */
+	int		isURIList() const;
+
+/** true if this AObject is a Int */
+	int		isIntList() const;
+
+/** true if this AObject is a Int */
+	int		isLongList() const;
+
+/** true if this AObject is a Float */
+	int		isFloatList() const;
+
+/** true if this AObject is a String */
+	int		isStringList
+() const;
 
 
 
@@ -323,6 +329,8 @@ static	AObject	mkString(const string& val);
 	int		get(int ndx, string& val, string& def) const;
 
 	// typed returns
+/** get an Int value from this AObject */
+	long		asInt() const;
 /** get an Int value from this AObject */
 	long		asLong() const;
 /** get a Float value from this AObject */

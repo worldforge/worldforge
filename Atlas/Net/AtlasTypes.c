@@ -12,8 +12,8 @@ void initAtlasTypes()
 {
 	Py_Initialize();
 
-	//initURI();
-	//initURIList();
+	initURI();
+	initURIList();
 	initIntList();
 	initLongList();
 	initFloatList();

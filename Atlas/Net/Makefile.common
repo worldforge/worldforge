@@ -11,6 +11,8 @@ TARGETS = $(OUTDIR)/libAtlas.a \
 LIBOBJS = \
 	$(OUTDIR)/AtlasTypes.o \
 	$(OUTDIR)/AtlasTransport.o \
+	$(OUTDIR)/AtlasURI.o \
+	$(OUTDIR)/AtlasURIList.o \
 	$(OUTDIR)/AtlasIntList.o \
 	$(OUTDIR)/AtlasLongList.o \
 	$(OUTDIR)/AtlasFloatList.o \
@@ -35,8 +37,6 @@ LIBOBJS = \
 	$(OUTDIR)/AtlasCompressor.o \
 
 
-#	$(OUTDIR)/AtlasURI.o \
-#	$(OUTDIR)/AtlasURIList.o \
 
 all:		$(TARGETS)
 
