@@ -21,10 +21,11 @@ using std::string;
 
 AClient::AClient(ASocket* aSocket, ACodec* aCodec, ACompressor* aCompressor)
     : csock( aSocket ), codec( aCodec ), cmprs ( aCompressor )
-{ /*empty*/ }
+{ DebugMsg1( 5, "aclient :: Aclient() ", "" ); }
 
 AClient::~AClient()
 {
+    DebugMsg1( 5, "aclient :: ~Aclient() ", "" );
 	if (csock)
 	    delete csock;
 	if (codec)
@@ -35,12 +36,14 @@ AClient::~AClient()
 
 SOCKET AClient::getSock()
 {
+    DebugMsg1( 5, "aclient :: getSock()", "" );
     assert( csock != 0 );
 	return csock->getSock();
 }
 
 bool AClient::canRead()
 {
+    DebugMsg1( 5, "aclient :: canRead()", "" );
 	int	len;
 	string	buf;
 	
@@ -64,7 +67,7 @@ bool AClient::canRead()
 	
 	while ( codec->hasMessage() ) {
 		DebugMsg1(4,"aclient :: processing codec message","");
-		gotMsg(codec->getMessage());
+		gotMsg( codec->getMessage() );
 		codec->freeMessage();
 	}
 	return true;
@@ -73,9 +76,10 @@ bool AClient::canRead()
 
 bool AClient::gotErrs()
 {
+    DebugMsg1( 5, "aclient :: gotErrs()", "" );
     // errors are assumed to be a disconnect, propogate to subclasses
     assert( csock != 0 );
-    DebugMsg1(0,"aclient :: SOCKET ERRORS ON %li", (long)csock->getSock());
+    DebugMsg1( 0, "aclient :: SOCKET ERRORS ON %li", (long)csock->getSock());
     csock->close();
     gotDisconnect();
     return true;
@@ -83,13 +87,12 @@ bool AClient::gotErrs()
 
 void AClient::doPoll()
 {
+    DebugMsg1( 5, "aclient :: doPoll()", "" );
     assert ( csock != 0 );
 
     fd_set		fdread;
     fd_set		fdsend;
     struct timeval	tm;
-
-    DebugMsg1( 6, "aclient :: POLLING CLIENT STREAM !!", "" );
 
     tm.tv_sec = 0;
     tm.tv_usec = 1000;
@@ -116,6 +119,7 @@ void AClient::doPoll()
 
 void AClient::readMsg(AObject& msg)
 {
+    DebugMsg1( 5, "aclient :: readMsg()", "" );
     assert ( csock != 0 );
 
 	// read and return a message
@@ -137,6 +141,7 @@ void AClient::readMsg(AObject& msg)
 
 void AClient::sendMsg(const AObject& msg)
 {
+    DebugMsg1( 5, "aclient :: sendMsg()", "" );
     assert ( codec != 0 );
 
     string data = codec->encodeMessage(msg);
@@ -152,11 +157,13 @@ void AClient::sendMsg(const AObject& msg)
 void AClient::gotMsg(const AObject& msg)
 {
     DebugMsg1(0,"aclient :: gotMsg() was not implemented in subclass","");
+    assert( false );
 }
 
 void AClient::gotDisconnect()
 {
     DebugMsg1(0,"aclient :: gotDisconnect() was not implemented in subclass","");
+    assert( false );
 }
 
 

@@ -15,6 +15,7 @@ changes 13 Jan 2000 - fex
 
 #include <string>
 using std::string;
+#include <cassert>
 
 class AProtocolEncoder;
 class AProtocolDecoder;
@@ -22,14 +23,14 @@ class AProtocolDecoder;
 class AProtocol
 {
 public:
-    AProtocol() : encoder(0), decoder(0), prefix("") {}
-    virtual ~AProtocol() {};
+    virtual ~AProtocol();
+	
 	AProtocolEncoder*   getEncoder();
 	AProtocolDecoder*   getDecoder();
 	const string&       getPrefix() const { return prefix; }
 	void                setPrefix( const string& s)	{ prefix = s; }
 	
-    virtual	AProtocol*		makenew()		{ return 0; }
+    //virtual	AProtocol*		makenew()		{ return 0; }
 
 	static int atlasERRTOK;  // error token
 	static int atlasMSGBEG;  // message begins
@@ -51,6 +52,12 @@ public:
 	                    atlasMAP
 	                    };
 protected:
+    AProtocol( AProtocolEncoder* anEncoder, AProtocolDecoder* aDecoder, const string& aPrefix = "" )
+     : encoder( anEncoder ), decoder( aDecoder ), prefix( aPrefix ) {
+    	assert( encoder != 0 );
+	    assert( decoder != 0 );
+	}
+	
 	AProtocolEncoder*   encoder;
 	AProtocolDecoder*   decoder;
     string              prefix;

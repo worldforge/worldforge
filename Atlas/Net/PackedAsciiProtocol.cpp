@@ -6,6 +6,8 @@
         email           : jbarrett@box100.com
 */
 
+#include <cassert>
+
 #include "Protocol.h"
 #include "PackedAsciiProtocol.h"
 
@@ -14,10 +16,8 @@ AProtocol* APackedAsciiProtocol::makenew()
 	return new APackedAsciiProtocol();
 }
 APackedAsciiProtocol::APackedAsciiProtocol()
-{
-	encoder = new APackedAsciiEncoder();
-	decoder = new APackedAsciiDecoder();
-}
+ : AProtocol( new APackedAsciiEncoder(), new APackedAsciiDecoder() )
+{ /*empty*/ }
 
 
 

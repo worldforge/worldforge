@@ -22,34 +22,40 @@ changes:
 
 ACodec::ACodec(AProtocol* aproto) : proto( aproto ), nestd( 0 )
 {
+    DebugMsg1( 5, "acodec :: ACodec()", "" );
     assert( proto != 0 );
+    assert( proto->getDecoder() != 0 );
     proto->getDecoder()->newStream();
     myState = ACodec::IDLE;
 }
 
 string ACodec::encodeMessage(const AObject& amsg)
 {
+    DebugMsg1( 5, "acodec :: encodeMessage()", "" );
 	return proto->getEncoder()->encodeMessage(amsg);
 }
 
 int ACodec::encodedLength()
 {
+    DebugMsg1( 5, "acodec :: encodedLength()", "" );
 	return proto->getEncoder()->encodedLength();
 }
 
 void ACodec::feedStream( const string& data)
 {
+    DebugMsg1( 5, "acodec :: feedStream()", "" );
 	proto->getDecoder()->feedStream(data);
 }
 
 AObject& ACodec::getMessage()
 {
-	DebugMsg1(5,"codec :: Returning a message\n","");
+    DebugMsg1( 5, "acodec :: getMessage()", "" );
 	return msg;
 }
 
 void ACodec::freeMessage()
 {
+	DebugMsg1( 5,"codec :: freeMessage()","");
 	//delete msg;
 	//msg->clear();
 }
@@ -57,6 +63,7 @@ void ACodec::freeMessage()
 
 bool ACodec::hasMessage()
 {
+	DebugMsg1( 5,"codec :: hasMessage()","");
 	// cant have a message until we have recieved tokens
     if ( !proto->getDecoder()->hasTokens() ) {
         return false;

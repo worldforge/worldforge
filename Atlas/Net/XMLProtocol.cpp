@@ -22,17 +22,9 @@ AProtocol* AXMLProtocol::makenew()
 }
 
 AXMLProtocol::AXMLProtocol()
-{
-	setPrefix( "<atlas>" );
-	encoder = new AXMLEncoder();
-	decoder = new AXMLDecoder();
-	assert( encoder != 0 );
-	assert( decoder != 0 );
-}
+ : AProtocol( new AXMLEncoder, new AXMLDecoder, "<atlas>" )
+{ /*empty*/ }
 
-AXMLProtocol::~AXMLProtocol() {
-    delete encoder;
-    delete decoder;
-}
+AXMLProtocol::~AXMLProtocol() {}
 
 

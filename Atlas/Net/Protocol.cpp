@@ -9,6 +9,13 @@
 #include <cassert>
 
 #include "Protocol.h"
+#include "ProtocolDecoder.h"
+#include "ProtocolEncoder.h"
+
+AProtocol::~AProtocol() {
+    delete encoder;
+    delete decoder;
+}
 
 AProtocolEncoder*	AProtocol::getEncoder() {
     assert( encoder != 0 );
