@@ -170,14 +170,19 @@ AC_CHECK_HEADERS(cstdio iostream list map string vector)
 AC_LANG_RESTORE
 
 dnl Test for libsigc++
-AM_PATH_SIGC($MIN_SIGC_VERSION,
-[
-  CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
-  LDFLAGS="$LDFLAGS $SIGC_LIBS"
-],
-[
-  AC_ERROR(libsigc++ not found or version < $MIN_SIGC_VERSION) 
-]) 
+PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.1.11,
+    [
+        CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
+        LDFLAGS="$LDFLAGS $SIGC_LIBS"
+    ],
+    [
+        AM_PATH_SIGC(1.0.3,[
+                CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
+                LDFLAGS="$LDFLAGS $SIGC_LIBS"
+                ]
+        )
+    ])
+
 
 SYSTEM_LIBS=
 AC_SUBST(SYSTEM_LIBS)

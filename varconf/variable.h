@@ -29,7 +29,13 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <sigc++/object.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/handle_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
+
 
 namespace varconf {
 
@@ -77,8 +83,59 @@ private:
   std::string m_val;
 };
 
+// The next two classes manage a reference count to
+// a pointer to class VarBase.
+
+class VarBox
+{
+ public:
+  VarBox(VarBase *vb) : m_var(vb), m_ref(1) {}
+  ~VarBox() {delete m_var;}
+
+  void ref() {++m_ref;}
+  void unref() {if(--m_ref == 0) delete this;}
+
+  VarBase *elem() {return m_var;}
+
+ private:
+  VarBox(const VarBox&);
+  VarBox& operator=(const VarBox&);
+
+  VarBase *m_var;
+  unsigned long m_ref;
+};
+
+class VarPtr
+{
+ public:
+  VarPtr(VarBase *vb) : m_box(new VarBox(vb)) {}
+  VarPtr(const VarPtr &vp) : m_box(vp.m_box) {m_box->ref();}
+  ~VarPtr() {m_box->unref();}
+
+  VarPtr& operator=(const VarPtr &vp)
+  {
+    if(vp.m_box != m_box) {
+      m_box->unref();
+      m_box = vp.m_box;
+      m_box->ref();
+    }
+
+    return *this;
+  }
+
+  // These four copied directly from handle.h in libsigc++-1.0,
+  // not quite sure what the first two do.
+  operator VarBase*() {return m_box->elem();}
+  operator VarBase*() const {return m_box->elem();}
+
+  VarBase& operator*() const {return *m_box->elem();}
+  VarBase* operator->() const {return m_box->elem();}
+
+ private:
+  VarBox *m_box;
+};
+
 class Variable;
-typedef SigC::Handle<VarBase,SigC::Scopes::Extend> VarPtr;
 typedef std::vector<Variable> VarList;
 
 class Variable : public VarPtr {
