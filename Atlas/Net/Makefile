@@ -10,23 +10,23 @@ C_FLAGS	=	-g -Wall
 #C_FLAGS	=	-O3 -Wall
 MK_DEP	=	$(CC) $(C_FLAGS) $(incDirs) -MM
 
-#OUTDIR         =       linux
-#EXE_EXT        =
-#incDirs        =       -I/usr/local/include/python1.5 $(STDINCS)
-#libDirs        =       $(STDLIBS)
-#LIBS           =       -lstdc++ -lpython1.5 -lAtlas -ldl
+OUTDIR         = linux
+EXE_EXT        =
+incDirs        =       -I/usr/local/include/python1.5 $(STDINCS)
+#incDirs        =       -I/usr/include/python1.5 $(STDINCS)
+libDirs        =       $(STDLIBS)
+LIBS           =       -lstdc++ -lpython1.5 -lAtlas -ldl
 #LIBS           =       -lstdc++ -lpython1.5 -lAtlas -ldl -lz -ltk -ltcl -L/usr/X11R6/lib -lX11 -lreadline -lpthread
 
-OUTDIR          =       win32
-EXE_EXT         =       .exe
-incDirs         =       -Ic:/mingw32/include/Python $(STDINCS)
-libDirs         =       $(STDLIBS)
-LIBS            =       -lAtlas -lpython15 -lwsock32 -lstdc++
+#OUTDIR          =       win32
+#EXE_EXT         =       .exe
+#incDirs         =       -Ic:/mingw32/include/Python $(STDINCS)
+#libDirs         =       $(STDLIBS)
+#LIBS            =       -lAtlas -lpython15 -lwsock32 -lstdc++
 
 # Targets follow ---------------------------------
 
-TARGETS = \
-	$(OUTDIR)/libAtlas.a \
+TARGETS = $(OUTDIR)/libAtlas.a \
 	$(OUTDIR)/CodecBench$(EXE_EXT) \
 	$(OUTDIR)/SocketTest$(EXE_EXT) \
 	$(OUTDIR)/XMLTest$(EXE_EXT) \
