@@ -359,7 +359,7 @@ Object	keys() const
 {
 	Object			keylst;
 
-	if (obj->rt !=Map) return keylst;
+	if (obj->rt != Map) return keylst;
 
 	varmap::iterator	i;
 
@@ -373,9 +373,9 @@ Object	keys() const
 /** (Map) return a List of all values for a Map */
 Object	vals() const
 {
-	if (obj->rt !=Map) return false;
+	if (obj->rt != Map) return false;
 
-	Object				keylst(List);
+	Object				keylst(Atlas::List);
 	varmap::iterator	i;
 
 	for (i = ((VMap*)obj)->vm.begin(); i != ((VMap*)obj)->vm.end(); i++)

@@ -193,14 +193,14 @@ bool    Object::get(size_t ndx, string& val) const
 bool	Object::get(size_t ndx, Object& val, Object& def) const
 {
 	val = def;
-	get(ndx,val);
+	return get(ndx,val);
 }
 
 /** (List) get an Int from this index */
 bool    Object::get(size_t ndx, int& val, int def) const
 {
 	val = def;
-	get(ndx,val);
+	return get(ndx,val);
 }
 
 
@@ -208,14 +208,14 @@ bool    Object::get(size_t ndx, int& val, int def) const
 bool    Object::get(size_t ndx, long& val, long def) const
 {
 	val = def;
-	get(ndx,val);
+	return get(ndx,val);
 }
 
 /** (List) get a Float from this index */
 bool    Object::get(size_t ndx, double& val, double def) const
 {
 	val = def;
-	get(ndx,val);
+	return get(ndx,val);
 }
 
 
@@ -223,7 +223,7 @@ bool    Object::get(size_t ndx, double& val, double def) const
 bool    Object::get(size_t ndx, string& val, string& def) const
 {
 	val = def;
-	get(ndx,val);
+	return get(ndx,val);
 }
 
 } // end namespace atlas
