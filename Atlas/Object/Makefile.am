@@ -9,4 +9,5 @@ libAtlasObjectincludedir = $(includedir)/Atlas/Object
 
 libAtlasObjectinclude_HEADERS = \
 	Object.h \
-	FloatList.h IntList.h LongList.h StringList.h Types.h URI.h URIList.h
+	FloatList.h IntList.h LongList.h StringList.h Types.h URI.h URIList.h \
+	XList.inc XList_h.inc

@@ -78,7 +78,7 @@ libAtlasObject_la_SOURCES =  	Object.cpp 	FloatList.c IntList.c LongList.c Strin
 
 libAtlasObjectincludedir = $(includedir)/Atlas/Object
 
-libAtlasObjectinclude_HEADERS =  	Object.h 	FloatList.h IntList.h LongList.h StringList.h Types.h URI.h URIList.h
+libAtlasObjectinclude_HEADERS =  	Object.h 	FloatList.h IntList.h LongList.h StringList.h Types.h URI.h URIList.h 	XList.inc XList_h.inc
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
