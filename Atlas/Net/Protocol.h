@@ -21,10 +21,11 @@ protected:
 static	string			prefix;
 
 public:
-	AProtocolEncoder*	getEncoder()	{ return encoder; }
-	AProtocolDecoder*	getDecoder()	{ return decoder; }
-	string			getPrefix()	{ return prefix; }
+	AProtocolEncoder*	getEncoder()		{ return encoder; }
+	AProtocolDecoder*	getDecoder()		{ return decoder; }
+	string			getPrefix()		{ return prefix; }
 	void			setPrefix(string s)	{ prefix = s; }
+virtual	AProtocol*		makenew()		{ return NULL; }
 
 	static int atlasERRTOK;  // error token
 	static int atlasMSGBEG;  // message begins

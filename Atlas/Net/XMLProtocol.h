@@ -16,7 +16,9 @@
 class AXMLProtocol: public AProtocol
 {
 public:
-	AXMLProtocol();
+		AXMLProtocol();
+
+AProtocol*	makenew();
 };
 
 #endif

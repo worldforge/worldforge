@@ -41,7 +41,7 @@ int AServer::poll(long usec)
 	fd_set	xsend = fdsend;
 	fd_set	xerrs = fderrs;
 
-	select(FD_SETSIZE,&xread,&xsend,&xerrs,&tm);
+	if (select(FD_SETSIZE,&xread,&xsend,&xerrs,&tm) == -1)  return 0;
 
 	for (i=0; i<FD_SETSIZE; i++) 
 	if (i != slsock && csock[i] != NULL)

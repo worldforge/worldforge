@@ -9,6 +9,11 @@
 #include "Protocol.h"
 #include "XMLProtocol.h"
 
+AProtocol* AXMLProtocol::makenew()
+{
+	return new AXMLProtocol();
+}
+
 AXMLProtocol::AXMLProtocol()
 {
 	string aprefix("<atlas>");

@@ -16,7 +16,9 @@
 class APackedAsciiProtocol: public AProtocol
 {
 public:
-	APackedAsciiProtocol();
+		APackedAsciiProtocol();
+
+AProtocol*	makenew();
 };
 
 #endif

@@ -9,6 +9,10 @@
 #include "Protocol.h"
 #include "PackedAsciiProtocol.h"
 
+AProtocol* APackedAsciiProtocol::makenew()
+{
+	return new APackedAsciiProtocol();
+}
 APackedAsciiProtocol::APackedAsciiProtocol()
 {
 	encoder = new APackedAsciiEncoder();
