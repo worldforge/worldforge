@@ -46,7 +46,8 @@ template<const int dim>
 class Shape
 {
  public:
-  Shape() {}
+  Shape() {m_center.origin();}
+  Shape(const Point<dim>& p) : m_center(p) {}
   Shape(const Shape<dim>& s) : m_center(s.m_center) {}
 
   virtual ~Shape() {}
@@ -67,7 +68,7 @@ class Shape
   bool operator!=(const Shape<dim>& s) const	{return !isEqualTo(s);}
 #endif // WFMATH_NO_DYNAMIC_CAST
 
-  // Without an operator=(), you can't make a map<Shape<>>, and so
+  // Without an operator=(), you can't make a map<Shape<dim>, foo>, and so
   // we don't need an operator<().
 
   // Descriptive characteristics
@@ -88,8 +89,6 @@ class Shape
 
   virtual AxisBox<dim> boundingBox() const = 0;
   virtual AxisBox<dim> enclosedBox() const = 0;
-
-  // FIXME comment describing how the following work
 
   // The following functions check the intersection of
   // the shape and a passed Point<>, AxisBox<>, etc,. of
@@ -133,20 +132,21 @@ class RotShape : public Shape<dim> // a shape that can be rotated.
 {
  public:
   RotShape() {}
-  RotShape(const RotShape<dim>& s) {}
+  RotShape(const Point<dim>& p) : Shape<dim>(p) {}
+  RotShape(const RotShape<dim>& s) : Shape<dim>(s) {}
 
   virtual ~RotShape() {}
 
   // All this class does is add a few functions to the Shape<> interface
 
   // Rotate while holding a corner fixed
-  RotShape<dim>& rotateCorner(const RotMatrix<size>& m, int corner)
+  RotShape<dim>& rotateCorner(const RotMatrix<dim>& m, int corner)
 	{return rotatePoint(m, Shape<dim>::getCorner(corner));}
   // Rotate while holding the center fixed
-  RotShape<dim>& rotateCenter(const RotMatrix<size>& m)
+  RotShape<dim>& rotateCenter(const RotMatrix<dim>& m)
 	{return rotatePoint(m, Shape<dim>::m_center);}
   // Rotate while holding a certain point fixed
-  virtual RotShape<dim>& rotatePoint(const RotMatrix<size>& m, const Point<dim>& p) = 0;
+  virtual RotShape<dim>& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p) = 0;
 };
 
 }} // namespace WF::Math

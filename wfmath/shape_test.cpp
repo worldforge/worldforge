@@ -1,5 +1,5 @@
 // -*-C++-*-
-// stringconv.h (WFMath library string utility functions)
+// shape_test.cpp (Shape<> derived classes test functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -22,29 +22,48 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 
 // Author: Ron Steinke
-// Created: 2001-12-7
+// Created: 2001-12-12
 
-#ifndef WFMATH_STRING_FUNCS_H
-#define WFMATH_STRING_FUNCS_H
+#include "vector.h"
+#include "matrix.h"
+#include "point.h"
+#include "const.h"
+#include "stream.h"
+#include "shape.h"
+#include "axisbox.h"
+#include "ball.h"
+#include "segment.h"
+#include "rotbox.h"
+#include <iostream>
 
-#include <wfmath/const.h>
-#include <string>
-#include <string.h>
+using namespace WF::Math;
 
-namespace WF { namespace Math {
+template<const int dim>
+void test_shape(const Point<dim>& p1, const Point<dim>& p2)
+{
+  AxisBox<dim> box(p1, p2);
 
-bool _StringToCoordList(const std::string& s, CoordType* d, const int num);
-std::string _StringFromCoordList(const CoordType* d, const int num);
+  cout << "Testing " << box << std::endl;
 
-bool _StringToCoordArray(const std::string& s, CoordType* d, const int rows,
-			 const int columns);
-std::string _StringFromCoordArray(const CoordType* d, const int rows,
-				  const int columns);
+  Ball<dim> ball(p1, 1);
 
-inline CoordType _StringToFloat(const std::string& s)
-	{return atof(s.c_str());} // Here for naming consistency
-std::string _StringFromFloat(CoordType d);
+  cout << "Testing " << ball << std::endl;
 
-}} // namespace WF::Math
+  Segment<dim> seg(p1, p2);
 
-#endif // WFMATH_STRING_FUNCS_H
+  cout << "Testing " << seg << std::endl;
+
+  RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, WFMATH_CONST_PI / 6));
+
+  cout << "Testing " << rbox << std::endl;
+
+  // FIXME
+}
+
+int main()
+{
+  test_shape(Point<2>(1, -1), Point<2>().origin());
+  test_shape(Point<3>(1, -1, WFMATH_CONST_SQRT2), Point<3>().origin());
+
+  return 0;
+}

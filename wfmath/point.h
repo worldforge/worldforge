@@ -33,6 +33,7 @@
 #include <string>
 #include <wfmath/const.h>
 #include <wfmath/stringconv.h>
+#include <matrix.h>
 
 namespace WF { namespace Math {
 
@@ -53,7 +54,7 @@ class Point
 {
  public:
   Point () {}
-  Point (const Point<dim>& c);
+  Point (const Point<dim>& p);
 
   ~Point() {}
 
@@ -80,8 +81,12 @@ class Point
   friend Point<dim> operator-<dim> (const Point<dim>& c, const Vector<dim>& v);
   friend Point<dim> operator+<dim> (const Vector<dim>& v, const Point<dim>& c);
 
-  Point& operator+= (const Vector<dim>& rhs);
-  Point& operator-= (const Vector<dim>& rhs);
+  Point<dim>& operator+= (const Vector<dim>& rhs);
+  Point<dim>& operator-= (const Vector<dim>& rhs);
+
+  // Rotate about point p
+  Point<dim>& rotate(const RotMatrix<dim>& m, const Point<dim>& p)
+	{return (*this = p + Prod(m, *this - p));}
 
   const CoordType& operator[](const int i) const {return m_elem[i];}
   CoordType& operator[](const int i)		 {return m_elem[i];}

@@ -34,6 +34,8 @@
 #include <wfmath/point.h>
 #include <wfmath/shape.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
+#include <wfmath/segment.h>
 
 // Do not include stream.h, as it includes iostream.
 // Let end users include it on their own.

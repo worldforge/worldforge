@@ -41,19 +41,24 @@
 
 namespace WF { namespace Math {
 
-template<const int dim> class AxisBox;
-
 template<const int dim>
 bool Intersect(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out)
 {
+  bool intersect = true;
+
   for(int i = 0; i < dim; ++i) {
     out.m_low[i] = std::max(a1.m_low[i], a2.m_low[i]);
     out.m_high[i] = std::min(a1.m_high[i], a2.m_high[i]);
-    if(out.m_low[i] > out.m_high[i])
-      return false;
+    if(out.m_low[i] > out.m_high[i]) {
+      intersect = false;
+      out.m_high[i] = out.m_low[i];  // Keep "out" valid
+      out.Shape<dim>::m_center[i] = FloatAdd(out.m_high[i], out.m_low[i]) / 2;
+      break;
+    }
+    out.Shape<dim>::m_center[i] = FloatAdd(out.m_high[i], out.m_low[i]) / 2;
   }
 
-  return true;
+  return intersect;
 }
 
 template<const int dim>
@@ -73,14 +78,14 @@ template<const int dim>
 AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p2)
 {
   for(int i = 0; i < dim; ++i) {
-    Shape<dim>::m_center[i] = (p1[i] + p2[i]) / 2;
+    Shape<dim>::m_center[i] = FloatAdd(p1[i], p2[i]) / 2;
     if(p1[i] > p2[i]) {
       m_low[i] = p2[i];
-      m_high[i] = p1[1];
+      m_high[i] = p1[i];
     }
     else {
       m_low[i] = p1[i];
-      m_high[i] = p2[1];
+      m_high[i] = p2[i];
     }
   }
 
@@ -101,8 +106,21 @@ bool AxisBox<dim>::fromString(const std::string& s)
   low_pos = s.find('(', s.find("m_low"));
   high_pos = s.find('(', s.find("m_high"));
 
-  return m_low.fromString(s.substr(low_pos))
-      && m_high.fromString(s.substr(high_pos));
+  if(low_pos == std::npos || high_pos == std::npos)
+    return false;
+
+  if(!m_low.fromString(s.substr(low_pos))
+      || !m_high.fromString(s.substr(high_pos))) {
+    m_low.origin();
+    m_high.origin();
+    Shape<dim>::m_center.origin();
+    return false;
+  }
+
+  for(int i = 0; i < dim; ++i)
+    Shape<dim>::m_center[i] = FloatAdd(m_low[i], m_high[i]) / 2;
+
+  return true;
 }
 
 template<const int dim>
@@ -150,17 +168,20 @@ AxisBox<dim> AxisBox<dim>::quadrant(int i) const
       out.m_low[i] = m_low[i];
       out.m_high[i] = Shape<dim>::m_center[i];
     }
+    out.m_center[i] = FloatAdd(out.m_low[i], out.m_high[i]) / 2;
   }
 
   return out;
 }
 
 template<const int dim>
-AxisBox<dim>& AxisBox<dim>::shift(const Vector<dim>& v)
+Shape<dim>& AxisBox<dim>::shift(const Vector<dim>& v)
 {
   m_low += v;
   m_high += v;
   Shape<dim>::m_center += v;
+
+  return *this;
 }
 
 template<const int dim>

@@ -33,11 +33,12 @@
 #define WFMATH_CONST_SQRT2	1.414213562373095048801688724210
 #define WFMATH_CONST_SQRT3	1.732050807568877293527446341506
 
-// This is the attempted precision of the library, and is
-// used in functions like Matrix<>::determinant() and
-// Matrix<>::inverse(). It's essentially the machine precision
-// multiplied by a fudge factor.
+// This is the attempted precision of the library. It's essentially
+// the machine precision multiplied by a fudge factor.
 #define WFMATH_EPSILON		(30 * DBL_EPSILON)
+// Typical precision for string representation of a double, used
+// in fromString() and FromAtlas().
+#define WFMATH_STRING_EPSILON	(1e-6)
 
 typedef double CoordType;
 

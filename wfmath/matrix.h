@@ -107,6 +107,8 @@ class RotMatrix {
   // The first one is vals[row][column], the second is vals[row*size+column].
   bool setVals(const CoordType vals[size][size], double precision = WFMATH_EPSILON);
   bool setVals(const CoordType vals[size*size], double precision = WFMATH_EPSILON);
+  // Backend
+  bool _setVals(CoordType *vals, double precision = WFMATH_EPSILON);
 
   Vector<size> row(const int i) const;
   Vector<size> column(const int i) const;

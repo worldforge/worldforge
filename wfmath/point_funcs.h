@@ -47,6 +47,13 @@ template<> Point<3>::Point(CoordType x, CoordType y, CoordType z)
 }
 
 template<const int dim>
+Point<dim>::Point(const Point<dim>& p)
+{
+  for(int i = 0; i < dim; ++i)
+    m_elem[i] = p.m_elem[i];
+}
+
+template<const int dim>
 Point<dim>& Point<dim>::origin()
 {
   for(int i = 0; i < dim; ++i)
@@ -68,10 +75,12 @@ bool Point<dim>::isEqualTo(const Point<dim> &rhs, double tolerance) const
 template<const int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
 {
+  // FIXME friend of vector
+
   Vector<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatSubtract(c1.m_elem[i], c2.m_elem[i]);
+    out[i] = FloatSubtract(c1.m_elem[i], c2.m_elem[i]);
 
   return out;
 }
@@ -79,10 +88,12 @@ Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
 template<const int dim>
 Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
 {
+  // FIXME friend of vector
+
   Point<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatAdd(c.m_elem[i], v.m_elem[i]);
+    out.m_elem[i] = FloatAdd(c.m_elem[i], v[i]);
 
   return out;
 }
@@ -90,10 +101,12 @@ Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
 template<const int dim>
 Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
 {
+  // FIXME friend of vector
+
   Point<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatSubtract(c.m_elem[i], v.m_elem[i]);
+    out.m_elem[i] = FloatSubtract(c.m_elem[i], v[i]);
 
   return out;
 }
@@ -101,10 +114,12 @@ Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
 template<const int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
 {
+  // FIXME friend of vector
+
   Point<dim> out;
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatAdd(c.m_elem[i], v.m_elem[i]);
+    out.m_elem[i] = FloatAdd(c.m_elem[i], v[i]);
 
   return out;
 }
@@ -135,8 +150,10 @@ Point<dim>& Point<dim>::operator=(const double d[dim])
 template<const int dim>
 Point<dim>& Point<dim>::operator+=(const Vector<dim> &rhs)
 {
+  // FIXME friend of vector
+
     for(int i = 0; i < dim; ++i)
-      m_elem[i] = FloatAdd(m_elem[i], rhs.m_elem[i]);
+      m_elem[i] = FloatAdd(m_elem[i], rhs[i]);
 
     return *this;
 }
@@ -144,8 +161,10 @@ Point<dim>& Point<dim>::operator+=(const Vector<dim> &rhs)
 template<const int dim>
 Point<dim>& Point<dim>::operator-=(const Vector<dim> &rhs)
 {
+  // FIXME friend of vector
+
     for(int i = 0; i < dim; ++i)
-      m_elem[i] = FloatSubtract(m_elem[i], rhs.m_elem[i]);
+      m_elem[i] = FloatSubtract(m_elem[i], rhs[i]);
 
     return *this;
 }

@@ -36,9 +36,6 @@
 
 namespace WF { namespace Math {
 
-bool _MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
-			CoordType* buf2, double precision);
-
 template<const int size>
 inline RotMatrix<size>::RotMatrix(const RotMatrix<size>& m)
 {
@@ -62,21 +59,12 @@ std::string RotMatrix<size>::toString() const
 template<const int size>
 bool RotMatrix<size>::fromString(const std::string& s)
 {
-  CoordType d[size*size], buf1[size*size], buf2[size*size];
+  CoordType d[size*size];
 
   if(!_StringToCoordArray(s, d, size, size))
     return false;
 
-  if(_MatrixSetValsImpl(size, d, buf1, buf2, 1e-6) == false)
-    return false; // Standard precision for string representation
-
-  // Do the assignment
-
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      m_elem[i][j] = d[i*size+j];
-
-  return true;
+  return _setVals(d, WFMATH_STRING_EPSILON);
 }
 
 template<const int size>
@@ -259,41 +247,45 @@ template<const int size>
 bool RotMatrix<size>::setVals(const CoordType vals[size][size], double precision)
 {
   // Scratch space for the backend
-  CoordType scratch_vals[size*size], buf1[size*size], buf2[size*size];
+  CoordType scratch_vals[size*size];
 
   for(int i = 0; i < size; ++i)
     for(int j = 0; j < size; ++j)
       scratch_vals[i*size+j] = vals[i][j];
 
-  if(_MatrixSetValsImpl(size, scratch_vals, buf1, buf2, precision) == false)
-    return false;
-
-  // Do the assignment
-
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      m_elem[i][j] = scratch_vals[i*size+j];
-
-  return true;
+  return _setVals(scratch_vals, precision);
 }
 
 template<const int size>
 bool RotMatrix<size>::setVals(const CoordType vals[size*size], double precision)
 {
   // Scratch space for the backend
-  CoordType scratch_vals[size*size], buf1[size*size], buf2[size*size];
+  CoordType scratch_vals[size*size];
 
   for(int i = 0; i < size*size; ++i)
       scratch_vals[i] = vals[i];
 
-  if(_MatrixSetValsImpl(size, scratch_vals, buf1, buf2, precision) == false)
+  return _setVals(scratch_vals, precision);
+}
+
+bool _MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
+			CoordType* buf2, double precision);
+
+template<const int size>
+bool RotMatrix<size>::_setVals(CoordType *vals, double precision)
+{
+  // Cheaper to allocate space on the stack here than with
+  // new in _MatrixSetValsImpl()
+  CoordType buf1[size*size], buf2[size*size];
+
+  if(!_MatrixSetValsImpl(size, vals, buf1, buf2, precision))
     return false;
 
   // Do the assignment
 
   for(int i = 0; i < size; ++i)
     for(int j = 0; j < size; ++j)
-      m_elem[i][j] = scratch_vals[i*size+j];
+      m_elem[i][j] = vals[i*size+j];
 
   return true;
 }

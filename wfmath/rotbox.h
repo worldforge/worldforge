@@ -1,5 +1,5 @@
 // -*-C++-*-
-// axisbox.h (An axis-aligned box)
+// rotbox.h (A box with arbitrary orientation)
 //
 //  The WorldForge Project
 //  Copyright (C) 2000, 2001  The WorldForge Project
@@ -22,84 +22,65 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
 
-// The implementation of this class is based on the geometric
-// parts of the Tree and Placement classes from stage/shepherd/sylvanus
-
-#ifndef WFMATH_AXIS_BOX_H
-#define WFMATH_AXIS_BOX_H
+#ifndef WFMATH_ROT_BOX_H
+#define WFMATH_ROT_BOX_H
 
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
+#include <wfmath/matrix.h>
 #include <wfmath/const.h>
 #include <wfmath/shape.h>
+#include <wfmath/axisbox.h>
 
 namespace WF { namespace Math {
 
-template<const int dim> class AxisBox;
-
 template<const int dim>
-bool Intersect(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out);
-template<const int dim>
-AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2);
-
-template<const int dim>
-class AxisBox : public Shape<dim>
+class RotBox : public RotShape<dim>
 {
  public:
-  AxisBox() {m_low.origin(); m_high.origin();}
-  AxisBox(const Point<dim>& p1, const Point<dim>& p2) {setCorners(p1, p2);}
-  AxisBox(const AxisBox<dim>& a) : Shape<dim>(a), m_low(a.m_low), m_high(a.m_high) {}
+  RotBox() {m_corner0.origin(); m_size.zero();}
+  RotBox(const Point<dim>& p, const Vector<dim>& size,
+	 const RotMatrix<dim>& orientation);
+  RotBox(const RotBox<dim>& b) : Shape<dim>(b), m_corner0(b.m_corner0),
+	m_size(b.m_size), m_orient(b.m_orient) {}
 
-  virtual ~AxisBox() {}
+  virtual ~RotBox() {}
 
   virtual std::string toString() const;
   bool fromString(const std::string& s);
 
-  AxisBox<dim>& operator=(const AxisBox<dim>& a);
+  RotBox<dim>& operator=(const RotBox<dim>& s);
 
 #ifndef WFMATH_NO_DYNAMIC_CAST
   virtual bool isEqualTo(const Shape<dim>& s, double tolerance = WFMATH_EPSILON) const
     {
-      const AxisBox<dim> *a = dynamic_cast<const AxisBox*>(&s);
-      return (a && isEqualTo(*a, tolerance));
+      const RotBox<dim> *b = dynamic_cast<const RotBox*>(&s);
+      return (b && isEqualTo(*b, tolerance));
     }
 #endif // WFMATH_NO_DYNAMIC_CAST
-  bool isEqualTo(const AxisBox<dim>& a, double tolerance = WFMATH_EPSILON) const
-	{return m_low.isEqualTo(a.m_low, tolerance)
-	     && m_high.isEqualTo(a.m_high, tolerance);}
+  bool isEqualTo(const RotBox<dim>& s, double tolerance = WFMATH_EPSILON) const;
 
-  bool operator==(const AxisBox<dim>& a) const	{return isEqualTo(a);}
-  bool operator!=(const AxisBox<dim>& a) const	{return !isEqualTo(a);}
+  bool operator==(const RotBox<dim>& b) const	{return isEqualTo(b);}
+  bool operator!=(const RotBox<dim>& b) const	{return !isEqualTo(b);}
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the box.
-  bool operator< (const AxisBox<dim>& a) const;
+  bool operator< (const RotBox<dim>& b) const;
 
   // Descriptive characteristics
 
   virtual int numCorners() const {return 1 << dim;}
   virtual Point<dim> getCorner(int i) const;
-  AxisBox<dim> quadrant(int i) const;
-  Point<dim> lowCorner() const {return m_low;}
-  Point<dim> highCorner() const {return m_high;}
-
-  CoordType lowerBound(const int axis) const	{return m_low[axis];}
-  CoordType upperBound(const int axis) const	{return m_high[axis];}
-
-  AxisBox<dim>& setCorners(const Point<dim>& p1, const Point<dim>& p2);
 
   // Movement functions
 
   virtual Shape<dim>& shift(const Vector<dim>& v);
+  virtual RotShape<dim>& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p);
 
   // Intersection functions
 
-  virtual AxisBox<dim> boundingBox() const {return *this;}
-  virtual AxisBox<dim> enclosedBox() const {return *this;}
-
-  friend bool Intersect<dim>(const AxisBox<dim>& a1, const AxisBox<dim>& a2,
-			     AxisBox<dim>& out);
-  friend AxisBox<dim> Union<dim>(const AxisBox<dim>& a1, const AxisBox<dim>& a2);
+  virtual AxisBox<dim> boundingBox() const;
+  virtual AxisBox<dim> enclosedBox() const;
 
   virtual bool contains(const Point<dim>& p) const;
   virtual bool containsProper(const Point<dim>& p) const;
@@ -114,11 +95,13 @@ class AxisBox : public Shape<dim>
 
  private:
 
-  Point<dim> m_low, m_high;
+  Point<dim> m_corner0;
+  Vector<dim> m_size;
+  RotMatrix<dim> m_orient;
 };
 
 }} // namespace WF::Math
 
-#include <wfmath/axisbox_funcs.h>
+#include <wfmath/rotbox_funcs.h>
 
-#endif  // WFMATH_AXIS_BOX_H
+#endif  // WFMATH_ROT_BOX_H

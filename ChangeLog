@@ -1,3 +1,10 @@
+Tuesday, December 18, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Some cleanup on RotMatrix<>::setVals() backend, Atlas conversion
+	  functions
+	* Added Ball<>, Segment<>, RotBox<> classes (not all RotBox<>
+	  intersection functions written yet)
+
 Monday, December 17, 2001	Ron Steinke <rsteinke@w-link.net>
 
 	* Wrote Shape<> base class

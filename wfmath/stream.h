@@ -29,10 +29,8 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
-#include <wfmath/matrix_funcs.h>
 #include <wfmath/point.h>
 #include <wfmath/shape.h>
-#include <wfmath/axisbox_funcs.h>
 #include <iostream>
 
 namespace WF { namespace Math {

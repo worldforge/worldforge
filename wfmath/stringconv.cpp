@@ -32,6 +32,18 @@ namespace WF { namespace Math {
 static void _ToString(std::ostream& os, const CoordType* d, const int num);
 static bool _FromString(std::istream& is, CoordType* d, const int num);
 
+// FIXME the string/double conversion should be replaced
+// with something using pure C, not streams
+
+std::string _StringFromFloat(CoordType d)
+{
+  ostringstream ost;
+
+  ost << d;
+
+  return ost.str();
+}
+
 bool _StringToCoordList(const std::string& s, CoordType* d, const int num)
 {
   istringstream ist(s);
