@@ -4,7 +4,9 @@
 namespace Atlas
 {
 
-list<Variant*>	Variant::freelist;
+list<VNum*>	VNum::freelist;
+list<VMap*>	VMap::freelist;
+list<VVec*>	VVec::freelist;
 
 }
 

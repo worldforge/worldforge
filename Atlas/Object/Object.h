@@ -30,7 +30,7 @@ Object &operator=(const Object& src)
 /** Construct an Object */
 Object() 
 {
-	obj = new Variant(Map); 
+	obj = new VMap(); 
 }
 
 /** Construct a copy of an existing Object */
@@ -44,37 +44,41 @@ Object(const Object& src)
 /** Constuct an Int type Object */
 Object(int val)
 {
-	obj = new Variant(val);
+	obj = new VNum(val);
 }
 
 /** Constuct an Long type Object */
 Object(long val)
 {
-	obj = new Variant(val);
+	obj = new VNum(val);
 }
 
 /** Contruct a Float type Object */
 Object(double val)
 {
-	obj = new Variant(val);
+	obj = new VNum(val);
 }
 
 /** Construct a String type Object */
 Object(const string& val)
 {
-	obj = new Variant(val);
+	obj = new VStr(val);
 }
 
 /** Construct a List or Map Object */
 Object(Type val)
 {
-	obj = new Variant(val);
+	if (val == Map) obj = new VMap();
+	if (val == List) obj = new VVec();
+	assert(0);
 }
 
 /** Construct a List Object with initial size */
 Object(Type val, int size)
 {
-	obj = new Variant(val,size);
+	if (val == Map) obj = new VMap();
+	if (val == List) obj = new VVec(size);
+	assert(0);
 }
 
 /** Destroy an Object */
@@ -86,37 +90,37 @@ Object(Type val, int size)
 /** Construct a Float typed list Object from an array */
 Object(int len, double *val)
 {
-	obj = new Variant(List);
-	for (int i=0;i<len;i++) obj->od.lp->push_back(new Variant(val[i]));
+	obj = new VVec();
+	for (int i=0;i<len;i++) ((VVec*)obj)->vv.push_back(new VNum(val[i]));
 }
 
 /** Construct a Long typed list Object from an array */
 Object(int len, long *val)
 {
-	obj = new Variant(List);
-	for (int i=0;i<len;i++) obj->od.lp->push_back(new Variant(val[i]));
+	obj = new VVec(List);
+	for (int i=0;i<len;i++) ((VVec*)obj)->vv.push_back(new VNum(val[i]));
 }
 
 /** Construct a Long typed list Object from an array */
 Object(int len, int *val)
 {
-	obj = new Variant(List);
-	for (int i=0;i<len;i++) obj->od.lp->push_back(new Variant(val[i]));
+	obj = new VVec(List);
+	for (int i=0;i<len;i++) ((VVec*)obj)->vv.push_back(new VNum(val[i]));
 }
 
 /** (Map) test for named element of a map */
 bool	has(const string& name) const
 {
 	if (obj->rt != Map) return false;
-	return (obj->od.mp->count(name) > 0);
+	return ( ((VMap*)obj)->vm.count(name) > 0);
 }
 
 /** (Map) get an Object attribute */
 bool	get(const string& name, Object& val) const
 {
 	if (obj->rt !=Map) return false;
-	varmap::iterator i = obj->od.mp->find(name);
-	if (i == obj->od.mp->end()) return false;
+	varmap::iterator i = ((VMap*)obj)->vm.find(name);
+	if (i == ((VMap*)obj)->vm.end()) return false;
 	val.obj->decref();
 	val.obj = (*i).second;
 	val.obj->incref();
@@ -127,10 +131,10 @@ bool	get(const string& name, Object& val) const
 bool	get(const string& name, int& val) const
 {
 	if (obj->rt !=Map) return false;
-	varmap::iterator i = obj->od.mp->find(name);
-	if (i == obj->od.mp->end()) return false;
+	varmap::iterator i = ((VMap*)obj)->vm.find(name);
+	if (i == ((VMap*)obj)->vm.end()) return false;
 	if ((*i).second->rt != Int) return false;
-	val = (*i).second->od.lv;
+	val = ((VNum*)(*i).second)->lv;
 	return true;
 }
 
@@ -138,10 +142,10 @@ bool	get(const string& name, int& val) const
 bool	get(const string& name, long& val) const
 {
 	if (obj->rt !=Map) return false;
-	varmap::iterator i = obj->od.mp->find(name);
-	if (i == obj->od.mp->end()) return false;
+	varmap::iterator i = ((VMap*)obj)->vm.find(name);
+	if (i == ((VMap*)obj)->vm.end()) return false;
 	if ((*i).second->rt != Int) return false;
-	val = (*i).second->od.lv;
+	val = ((VNum*)(*i).second)->lv;
 	return true;
 }
 
@@ -149,10 +153,10 @@ bool	get(const string& name, long& val) const
 bool    get(const string& name, double& val) const
 {
 	if (obj->rt !=Map) return false;
-	varmap::iterator i = obj->od.mp->find(name);
-	if (i == obj->od.mp->end()) return false;
+	varmap::iterator i = ((VMap*)obj)->vm.find(name);
+	if (i == ((VMap*)obj)->vm.end()) return false;
 	if ((*i).second->rt != Float) return false;
-	val = (*i).second->od.dv;
+	val = ((VNum*)(*i).second)->dv;
 	return true;
 }
 
@@ -160,10 +164,10 @@ bool    get(const string& name, double& val) const
 bool    get(const string& name, string& val) const
 {
 	if (obj->rt !=Map) return false;
-	varmap::iterator i = obj->od.mp->find(name);
-	if (i == obj->od.mp->end()) return false;
-	if ((*i).second->rt != Float) return false;
-	val = *((*i).second->od.sp);
+	varmap::iterator i = ((VMap*)obj)->vm.find(name);
+	if (i == ((VMap*)obj)->vm.end()) return false;
+	if ((*i).second->rt != String) return false;
+	val = ((VStr*)(*i).second)->st;
 	return true;
 }
 
@@ -207,7 +211,7 @@ bool    set(const string& name, const Object& src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
-	(*(obj->od.mp))[name] = src.obj;
+	((VMap*)obj)->vm[name] = src.obj;
 	src.obj->incref();
 	return true;
 }
@@ -217,7 +221,7 @@ bool    set(const string& name, int src)
 {
 	del(name);
 	if (obj->rt != Map) return false;
-	(*(obj->od.mp))[name] = new Variant(src);
+	((VMap*)obj)->vm[name] = new VNum(src);
 	return true;
 }
 
@@ -226,7 +230,7 @@ bool    set(const string& name, long src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
-	(*(obj->od.mp))[name] = new Variant(src);
+	((VMap*)obj)->vm[name] = new VNum(src);
 	return true;
 }
 
@@ -235,7 +239,7 @@ bool    set(const string& name, double src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
-	(*(obj->od.mp))[name] = new Variant(src);
+	((VMap*)obj)->vm[name] = new VNum(src);
 	return true;
 }
 
@@ -244,7 +248,7 @@ bool    set(const string& name, const string& src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
-	(*(obj->od.mp))[name] = new Variant(src);
+	((VMap*)obj)->vm[name] = new VStr(src);
 	return true;
 }
 
@@ -252,20 +256,43 @@ bool    set(const string& name, const string& src)
 bool    del(const string& name)
 {
 	if (obj->rt !=Map) return false;
-	varmap::iterator i = obj->od.mp->find(name);
-	if (i == obj->od.mp->end()) return false;
+	varmap::iterator i = ((VMap*)obj)->vm.find(name);
+	if (i == ((VMap*)obj)->vm.end()) return false;
 	(*i).second->decref();
-	obj->od.mp->erase(name);
+	((VMap*)obj)->vm.erase(name);
 	return true;
 }
 
 /** return the length of this object */
 int     length() const
 {
-	if (obj->rt == List) return obj->od.lp->size();
-	if (obj->rt == Map) return obj->od.mp->size();
+	if (obj->rt == List) return ((VVec*)obj)->vv.size();
+	if (obj->rt == Map) return ((VMap*)obj)->vm.size();
 	return 0;
 }
+
+/** return object value as an int */
+int	asInt() const
+{
+	if (obj->rt == Int)		return ((VNum*)obj)->lv;
+	if (obj->rt == Float)	return (int)((VNum*)obj)->dv;
+	return 0;
+}	
+
+/** return object value as an int */
+double	asFloat() const
+{
+	if (obj->rt == Int)		return (double)((VNum*)obj)->lv;
+	if (obj->rt == Float)	return ((VNum*)obj)->dv;
+	return 0;
+}	
+
+/** return object value as an int */
+string	asString() const
+{
+	if (obj->rt == String) return ((VStr*)obj)->st;
+	return "";
+}	
 
 /** return an empty map */
 static	Object	mkMap()
@@ -312,33 +339,33 @@ static	Object	mkString(const string& val)
 
 
 /** true if this Object is a Map */
-bool    isMap() const		{ return (obj->rt ==Map); }
+bool    isMap() const		{ return (obj->rt == Map); }
 
 /** true if this Object is a List */
-bool    isList() const		{ return (obj->rt ==List); }
+bool    isList() const		{ return (obj->rt == List); }
 
 /** true if this Object is a Int */
-bool    isInt() const		{ return (obj->rt ==Int); }
+bool    isInt() const		{ return (obj->rt == Int); }
 
 /** true if this Object is a Float */
-bool    isFloat() const		{ return (obj->rt ==Float); }
+bool    isFloat() const		{ return (obj->rt == Float); }
 
 /** true if this Object is a String */
-bool    isString() const	{ return (obj->rt ==String); }
+bool    isString() const	{ return (obj->rt == String); }
 
 
 /** (Map) return a List of all keys for a Map */
-Atlas::strlst	keys() const
+Object	keys() const
 {
-	Atlas::strlst			keylst;
+	Object			keylst;
 
 	if (obj->rt !=Map) return keylst;
 
 	varmap::iterator	i;
 
-	for (i = obj->od.mp->begin(); i != obj->od.mp->end(); i++)
+	for (i = ((VMap*)obj)->vm.begin(); i != ((VMap*)obj)->vm.end(); i++)
 	{
-		keylst.push_back((*i).first);
+		((VVec*)keylst.obj)->vv.push_back(new VStr((*i).first));
 	}
 	return keylst;
 }
@@ -348,19 +375,23 @@ Object	vals() const
 {
 	if (obj->rt !=Map) return false;
 
-	Object			keylst = mkList();
+	Object				keylst(List);
 	varmap::iterator	i;
 
-	for (i = obj->od.mp->begin(); i != obj->od.mp->end(); i++)
-		keylst.obj->od.lp->push_back((*i).second);
+	for (i = ((VMap*)obj)->vm.begin(); i != ((VMap*)obj)->vm.end(); i++)
+	{
+		Variant* p = (*i).second;
+		((VVec*)keylst.obj)->vv.push_back(p);
+		p->incref();
+	}
 	return keylst;
 }
 
 /** (Map/List) clear values for a Map or List */
 bool	clear()
 {
-	if (obj->rt ==Map)	{ obj->dellst(); obj->od.mp->clear(); return true; }
-	if (obj->rt ==List)	{ obj->delmap(); obj->od.lp->clear(); return true; }
+	if (obj->rt == Map)		{ ((VMap*)obj)->delmap(); ((VMap*)obj)->vm.clear(); return true; }
+	if (obj->rt == List)	{ ((VVec*)obj)->delvec(); ((VVec*)obj)->vv.clear(); return true; }
 	return false;
 }
 

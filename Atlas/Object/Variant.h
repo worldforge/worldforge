@@ -11,24 +11,42 @@ namespace Atlas
 
 enum Type {
 	None=0,
-	Int,
-	Float,
-	String,
-	List,
-	Map
+	Int=1,
+	Float=2,
+	String=3,
+	List=4,
+	Map=5
 };
 
 
 class Variant;
 
-typedef vector<Variant*>	varlst;
-typedef vector<string>		strlst;
+typedef vector<Variant*>		varvec;
 typedef map<string, Variant*>	varmap;
 
 class Variant
 {
 
-static	list<Variant*>	freelist;
+public:
+	int	rc:12;	// refcount
+	int	rt:4;	// data type
+
+	Variant()					{ rc=1; rt = None; }
+virtual	~Variant();
+
+	void	incref()	{ rc++; }
+	void	decref()
+	{
+		if (--rc > 0) return;
+		delete this;
+	}
+
+};
+
+class VNum: public Variant
+{
+
+static	list<VNum*>	freelist;
 
 public:
 
@@ -38,7 +56,7 @@ public:
 			// no more elements, make a new one
 			return new char[sz];
 		} else {
-			Variant* tmp = freelist.front();
+			VNum* tmp = freelist.front();
 			freelist.pop_front();
 			return tmp;
 		}
@@ -47,63 +65,138 @@ public:
 	
 	void	operator delete(void *ptr)
 	{
-		freelist.push_back((Variant*)ptr);
+		freelist.push_back((VNum*)ptr);
 	}
 
-	void	dellst()
+	union {
+		long		lv;		// long value
+		double		dv;		// double value
+	};
+
+	VNum()			{ rc=1; rt = Int;	lv = 0; }
+	VNum(int v)		{ rc=1; rt = Int;	lv = v; }
+	VNum(long v)	{ rc=1; rt = Int;	lv = v; }
+	VNum(double v)	{ rc=1; rt = Float;	dv = v; }
+
+	~VNum()
 	{
-		varlst::iterator i;
-		for(i=od.lp->begin(); i != od.lp->end(); i++)
-			(*i)->decref();
 	}
+
+
+};
+
+class VStr: public Variant
+{
+
+static	list<VStr*>	freelist;
+
+public:
+
+	void*	operator new(size_t sz)
+	{
+		if (freelist.empty()) {
+			// no more elements, make a new one
+			return new char[sz];
+		} else {
+			VStr* tmp = freelist.front();
+			freelist.pop_front();
+			return tmp;
+		}
+			
+	}
+	
+	void	operator delete(void *ptr)
+	{
+		freelist.push_back((VStr*)ptr);
+	}
+
+	string	st;
+
+	VStr()					{ rc=1; rt = String; st = ""; }
+	VStr(const string& v)	{ rc=1; rt = String; st = v; }
+
+	~VStr()
+	{
+	}
+
+
+};
+
+class VMap: public Variant
+{
+
+static	list<VMap*>	freelist;
+
+public:
+
+	void*	operator new(size_t sz)
+	{
+		if (freelist.empty()) {
+			// no more elements, make a new one
+			return new char[sz];
+		} else {
+			VMap* tmp = freelist.front();
+			freelist.pop_front();
+			return tmp;
+		}
+			
+	}
+	
+	void	operator delete(void *ptr)
+	{
+		freelist.push_back((VMap*)ptr);
+	}
+
+	varmap		vm;
+
+	VMap()		{}
+	~VMap()		{ delmap(); }
+
 	void	delmap()
 	{
 		varmap::iterator i;
-		for(i = od.mp->begin(); i != od.mp->end(); i++)
+		for(i = vm.begin(); i != vm.end(); i++)
 			(*i).second->decref();
 	}
 
+};
+
+class VVec: public Variant
+{
+
+static	list<VVec*>	freelist;
+
+public:
+
+	void*	operator new(size_t sz)
+	{
+		if (freelist.empty()) {
+			// no more elements, make a new one
+			return new char[sz];
+		} else {
+			VVec* tmp = freelist.front();
+			freelist.pop_front();
+			return tmp;
+		}
+			
+	}
 	
-	int		rc;	// refcount
-	Atlas::Type	rt;	// data type
-	union {
-		long	lv;	// long value
-		double	dv;	// double value
-		varlst*	lp;	// list pointer
-		varmap*	mp;	// map pointer
-		string*	sp;	// string pointer
-	} od;
-
-	Variant()					{ rc=1; rt = None; }
-	Variant(int v)				{ rc=1; rt = Int; od.lv = v; }
-	Variant(long v)				{ rc=1; rt = Int; od.lv = v; }
-	Variant(double v)			{ rc=1; rt = Float; od.dv = v; }
-	Variant(const string &v)	{ rc=1; rt = String; od.sp = new string(v); }
-	Variant(Atlas::Type type)
+	void	operator delete(void *ptr)
 	{
-		rc=1; rt=type;
-		if (rt == List)	od.lp=new varlst;
-		if (rt == Map)	od.mp=new varmap;
-	}
-	Variant(Atlas::Type type, int size)
-	{
-		rc=1; rt=type;
-		if (rt == List)	od.lp=new varlst(size);
-		if (rt == Map)	od.mp=new varmap;
+		freelist.push_back((VVec*)ptr);
 	}
 
-	~Variant()
-	{
-		if (rt == String)		{ 			delete od.sp; }
-		else if (rt == List)	{ dellst();	delete od.lp; }
-		else if (rt == Map)		{ delmap();	delete od.mp; }
-	}
+	varvec		vv;
 
-	void	incref()	{ rc++; }
-	void	decref()
+	VVec()			{}
+	VVec(int sz)	{ vv.reserve(sz); }
+	~VVec()			{ delvec(); }
+
+	void	delvec()
 	{
-		if (--rc > 0) return;
-		delete this;
+		varvec::iterator i;
+		for(i=vv.begin(); i != vv.end(); i++)
+			(*i)->decref();
 	}
 
 };
