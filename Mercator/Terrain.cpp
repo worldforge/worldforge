@@ -63,6 +63,19 @@ float Terrain::get(float x, float y) const
     return s->get((int)(x - (ix * m_res)), (int)(y - (iy * m_res)));
 }
 
+void Terrain::getHeightAndNormal(float x, float y, float & h,
+                                  WFMath::Vector<3> & n) const
+{
+    int ix = (int)floor(x / m_res);
+    int iy = (int)floor(y / m_res);
+
+    Segment * s = getSegment(ix, iy);
+    if ((s == 0) || (!s->isValid())) {
+        return;
+    }
+    s->getHeightAndNormal(x - (ix * m_res), y - (iy * m_res), h, n);
+}
+
 bool Terrain::getBasePoint(int x, int y, BasePoint& z) const
 {
     Pointstore::const_iterator I = m_basePoints.find(x);

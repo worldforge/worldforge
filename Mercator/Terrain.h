@@ -8,6 +8,8 @@
 #include <Mercator/Mercator.h>
 #include <Mercator/BasePoint.h>
 
+#include <wfmath/vector.h>
+
 #include <map>
 #include <list>
 #include <cmath>
@@ -52,6 +54,7 @@ class Terrain {
     ~Terrain();
 
     float get(float x, float y) const;
+    void getHeightAndNormal(float x, float y, float&, WFMath::Vector<3>&) const;
 
     bool getBasePoint(int x, int y, BasePoint& z) const;
     void setBasePoint(int x, int y, const BasePoint& z);

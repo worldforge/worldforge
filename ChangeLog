@@ -1,5 +1,11 @@
 2003-08-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Terrain.h, Mercator/Terrain.cpp: Add new
+	  getHeightAndNormal() method which makes available the method
+	  of the same name from Segment on the whole terrain.
+
+2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Shader.h: Add default arguments for constructor,
 	  which default to alpha channel only.
 
