@@ -3,6 +3,8 @@
 
 #include "Debug.h"
 
+using std::string;
+
 static int level = 0;
 static FILE* logfile = 0;
 

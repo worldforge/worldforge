@@ -37,24 +37,70 @@ namespace
     Codec::Factory<XML> factory("XML", "1.0");
 }
 
-void XML::MessageBegin();
-void XML::MessageEnd();
+void XML::MessageBegin()
+{
+}
 
-void XML::ListBegin(const std::string& name);
-void XML::MapBegin(const std::string& name);
-void XML::Item(const std::string& name, int);
-void XML::Item(const std::string& name, float);
-void XML::Item(const std::string& name, const std::string&);
-void XML::Item(const std::string& name, const Atlas::Object&);
-void XML::ListEnd();
+void XML::MessageEnd()
+{
+}
 
-void XML::ListBegin();
-void XML::MapBegin();
-void XML::Item(int);
-void XML::Item(float);
-void XML::Item(const std::string&);
-void XML::Item(const Atlas::Object&);
-void XML::MapEnd();
+void XML::ListBegin(const std::string& name)
+{
+}
+
+void XML::MapBegin(const std::string& name)
+{
+}
+
+void XML::Item(const std::string& name, int)
+{
+}
+
+void XML::Item(const std::string& name, float)
+{
+}
+
+void XML::Item(const std::string& name, const std::string&)
+{
+}
+
+void XML::Item(const std::string& name, const Atlas::Object&)
+{
+}
+
+void XML::ListEnd()
+{
+}
+
+void XML::ListBegin()
+{
+}
+
+void XML::MapBegin()
+{
+}
+
+void XML::Item(int)
+{
+}
+
+void XML::Item(float)
+{
+}
+
+void XML::Item(const std::string&)
+{
+}
+
+void XML::Item(const Atlas::Object&)
+{
+}
+
+void XML::MapEnd()
+{
+}
+
 /*
 void Atlas::Codecs::XML::BeginList()
 {

@@ -8,6 +8,8 @@
 #include "Factory.h"
 #include "../Object/Object.h"
 
+#include <algorithm>
+
 //#include <sigc++/signal_system.h>
 
 namespace Atlas { namespace Stream {
@@ -59,7 +61,7 @@ class Codec
 	virtual ~Factory()
 	{
 	    std::list<Atlas::Stream::Factory<Codec>*>::iterator i;
-	    i = find(factories.begin(), factories.end(), this);
+	    i = std::find(factories.begin(), factories.end(), this);
 	    factories.erase(i);
 	}
 

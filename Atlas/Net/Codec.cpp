@@ -20,6 +20,7 @@ changes:
 #include "Encoder.h"
 #include "Decoder.h"
 
+using std::string;
 
 namespace Atlas
 {

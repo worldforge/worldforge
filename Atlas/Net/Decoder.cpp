@@ -11,7 +11,7 @@
 #include <string.h>
 #include <memory.h>
 
-#include <string>
+using std::string;
 
 namespace Atlas
 {
