@@ -1,3 +1,7 @@
+2004-02-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix Atlas-C++ dependency to the 0.6 series.
+
 Thursday 26th February 2004, James Turner <james@worldforge.org>
 
 * Implement the new logging system, pretty easy in the end.
