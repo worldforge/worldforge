@@ -28,25 +28,26 @@
 #define WFMATH_BASIS_H
 
 #include <math.h>
+#include <wfmath/const.h>
 
 namespace WF { namespace Math {
 
 // Expects (r, theta) for polar, (x, y) for cart
-inline void _CartToPolar(const double *in, double *out)
+inline void _CartToPolar(const CoordType *in, CoordType *out)
 {
   out[0] = sqrt(in[0] * in[0] + in[1] * in[1]);
   out[1] = atan2(in[0], in[1]);
 }
 
 // Expects (r, theta) for polar, (x, y) for cart
-inline void _PolarToCart(const double *in, double *out)
+inline void _PolarToCart(const CoordType *in, CoordType *out)
 {
   out[0] = in[0] * cos(in[1]);
   out[1] = in[0] * sin(in[1]);
 }
 
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
-inline void _CartToSpherical(const double *in, double *out)
+inline void _CartToSpherical(const CoordType *in, CoordType *out)
 {
   out[0] = sqrt(in[0] * in[0] + in[1] * in[1] + in[2] * in[2]);
   out[1] = atan2(in[2], sqrt(in[0] * in[0] + in[1] * in[1]));
@@ -54,7 +55,7 @@ inline void _CartToSpherical(const double *in, double *out)
 }
 
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
-inline void _SphericalToCart(const double *in, double *out)
+inline void _SphericalToCart(const CoordType *in, CoordType *out)
 {
   double stheta = sin(in[1]);
 

@@ -29,10 +29,10 @@
 #include "matrix.h"
 #include "matrix_funcs.h"
 #include "const.h"
-#include <assert.h>
-#include "stream_funcs.h"
+#include "stream.h"
 #include <iostream>
 #include <sstream>
+#include <assert.h>
 
 using namespace WF::Math;
 

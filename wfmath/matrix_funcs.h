@@ -27,12 +27,17 @@
 #ifndef WFMATH_MATRIX_FUNCS_H
 #define WFMATH_MATRIX_FUNCS_H
 
+#include <wfmath/vector.h>
 #include <wfmath/matrix.h>
 #include <wfmath/error.h>
 #include <wfmath/const.h>
-#include <wfmath/string_funcs.h>
+#include <wfmath/stringconv.h>
+#include <math.h>
 
 namespace WF { namespace Math {
+
+bool _MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
+			CoordType* buf2, double precision);
 
 template<const int size>
 inline RotMatrix<size>::RotMatrix(const RotMatrix<size>& m)
@@ -250,9 +255,6 @@ Vector<size> InvProd(const RotMatrix<size>& m, const Vector<size>& v)
   return out;
 }
 
-bool _MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
-			CoordType* buf2, double precision);
-
 template<const int size>
 bool RotMatrix<size>::setVals(const CoordType vals[size][size], double precision)
 {
@@ -362,8 +364,7 @@ RotMatrix<size>& RotMatrix<size>::fromEuler(const CoordType angles[nParams])
     for(int j = 0; j < i; ++j)
       *this = Prod(RotMatrix<size>().rotation(j, j + 1, angles[ang_num++]), *this);
 
-  if(ang_num != nParams)
-    assert(false);
+  assert(ang_num == nParams);
 
   return *this;
 }

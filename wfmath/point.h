@@ -32,13 +32,12 @@
 
 #include <string>
 #include <wfmath/const.h>
-#include <wfmath/string_funcs.h>
-#include <wfmath/vector.h>
+#include <wfmath/stringconv.h>
 
 namespace WF { namespace Math {
 
-template<const int len> class Vector;
 template<const int dim> class Point;
+template<const int len> class Vector;
 
 template<const int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
@@ -121,5 +120,7 @@ class Point
 };
 
 }} // namespace WF::Math
+
+#include <wfmath/point_funcs.h>
 
 #endif  // WFMATH_POINT_H

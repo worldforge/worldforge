@@ -27,13 +27,21 @@
 #ifndef WFMATH_WFMATH_H
 #define WFMATH_WFMATH_H
 
-#include <wfmath/vector.h>
-#include <wfmath/vector_funcs.h>
-#include <wfmath/matrix.h>
-#include <wfmath/matrix_funcs.h>
 #include <wfmath/error.h>
 #include <wfmath/const.h>
-// Do not include stream_funcs.h, as it includes iostream.
+#include <wfmath/vector.h>
+#include <wfmath/matrix.h>
+#include <wfmath/point.h>
+#include <wfmath/shape.h>
+#include <wfmath/axisbox.h>
+
+// Do not include stream.h, as it includes iostream.
 // Let end users include it on their own.
+
+// This file doesn't directly include header files which contain only
+// functions which are intended for internal library use only (prefixed with '_').
+
+// Any header file "foo_funcs.h" is automatically included in "foo.h",
+// so those files are not listed here.
 
 #endif // WFMATH_WFMATH_H

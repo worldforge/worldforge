@@ -1,5 +1,5 @@
 // -*-C++-*-
-// atlas_funcs.h (Functions to convert WFMath library object to/from an Atlas Message)
+// atlasconv.h (Functions to convert WFMath library object to/from an Atlas Message)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -32,15 +32,17 @@
 #ifndef WFMATH_ATLAS_FUNCS_H
 #define WFMATH_ATLAS_FUNCS_H
 
-#include<Atlas/Message/Object.h>
+#include <Atlas/Message/Object.h>
 
-#include<wfmath/vector.h>
-#include<wfmath/matrix.h>
+#include <wfmath/vector.h>
+#include <wfmath/matrix.h>
+#include <wfmath/point.h>
+#include <wfmath/axisbox.h>
 
 namespace WF { namespace Math {
 
-bool GetAtlasDoubleList(const Atlas::Message::Object& a, double* d, int num);
-Atlas::Message::Object SetAtlasDoubleList(double* d, int num);
+bool _GetAtlasDoubleList(const Atlas::Message::Object& a, double* d, int num);
+Atlas::Message::Object _SetAtlasDoubleList(double* d, int num);
 
 template<const int len>
 bool FromAtlas(Vector<len>& v, const Atlas::Message::Object& a)
@@ -94,7 +96,7 @@ Atlas::Message::Object ToAtlas(const RotMatrix<size>& m)
 template<const int dim>
 bool FromAtlas(Point<dim>& p, const Atlas::Message::Object& a)
 {
-  double d[len];
+  double d[dim];
 
   if(GetAtlasDoubleList(a, d, dim)) {
     p = d;
@@ -111,6 +113,37 @@ Atlas::Message::Object ToAtlas(const Point<dim>& p)
 
   for(int i = 0; i < dim; ++i)
     d[i] = p[i];
+
+  return SetAtlasDoubleList(d, dim);
+}
+
+template<const int dim>
+bool FromAtlas(AxisBox<dim>& a, const Atlas::Message::Object& a)
+{
+  double d[2*dim];
+
+  if(GetAtlasDoubleList(a, d, 2*dim)) {
+    Point<dim> p_low, p_high;
+    for(int i = 0; i < dim; ++i) {
+      p_low[i] = d[i];
+      p_high[i] = d[i+dim];
+    }
+    a = AxisBox<dim>(p_low, p_high);
+    return true;
+  }
+  else
+    return false;
+}
+
+template<const int dim>
+Atlas::Message::Object ToAtlas(const Point<dim>& p)
+{
+  double d[2*dim];
+
+  for(int i = 0; i < dim; ++i) {
+    d[i] = lowerBound(i);
+    d[dim+i] = upperBound(i);
+  }
 
   return SetAtlasDoubleList(d, dim);
 }

@@ -33,9 +33,9 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
-#include <wfmath/error.h>
-#include <math.h>
+#include <wfmath/const.h>
 #include <float.h>
+#include <math.h>
 
 namespace WF { namespace Math {
 

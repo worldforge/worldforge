@@ -1,5 +1,5 @@
 // -*-C++-*-
-// atlas_funcs.cpp (Backend to WFMath/Atlas Message conversion)
+// atlasconv.cpp (Backend to WFMath/Atlas Message conversion)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -24,12 +24,12 @@
 // Author: Ron Steinke
 // Created: 2001-12-12
 
-#include<Atlas/Message/Object.h>
-#include "atlas_funcs.h"
+#include <Atlas/Message/Object.h>
+#include "atlasconv.h"
 
 using namespace WF::Math;
 
-bool GetAtlasDoubleList(const Atlas::Message::Object& a, double* d, int num);
+bool _GetAtlasDoubleList(const Atlas::Message::Object& a, double* d, int num);
 {
   if(!a.IsList())
     return false;
@@ -48,7 +48,7 @@ bool GetAtlasDoubleList(const Atlas::Message::Object& a, double* d, int num);
   return true;
 }
 
-Atlas::Message::Object SetAtlasDoubleList(double* d, int num);
+Atlas::Message::Object _SetAtlasDoubleList(double* d, int num);
 {
   Atlas::Message::Object::ListType a;
 

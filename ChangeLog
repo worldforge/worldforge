@@ -1,3 +1,8 @@
+	* Wrote Shape<> base class
+	* Wrote AxisBox<> class
+	* Cleaned up header file naming convention, so foo_funcs.h is
+	  always the function templates for the class in foo.h
+
 Friday, December 14, 2001	Ron Steinke <rsteinke@w-link.net>
 
 	* .cvsignore fixes

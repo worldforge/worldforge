@@ -1,5 +1,5 @@
 // -*-C++-*-
-// stream_funcs.h (WFMath library string utility functions)
+// stringconv.h (WFMath library string utility functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project

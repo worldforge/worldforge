@@ -1,5 +1,5 @@
 // -*-C++-*-
-// stream_funcs.h (Functions in the WFMath library that use streams)
+// stream.h (Functions in the WFMath library that use streams)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -29,7 +29,10 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
+#include <wfmath/matrix_funcs.h>
 #include <wfmath/point.h>
+#include <wfmath/shape.h>
+#include <wfmath/axisbox_funcs.h>
 #include <iostream>
 
 namespace WF { namespace Math {
@@ -53,6 +56,13 @@ template<const int dim>
 inline std::ostream& operator<< (std::ostream& os, const Point<dim>& coord)
 {
   return os << coord.toString();
+}
+
+// This next one covers Shape<> and all its derived classes.
+template<const int dim>
+inline std::ostream& operator<< (std::ostream& os, const Shape<dim>& s)
+{
+  return os << s.toString();
 }
 
 }} // namespace WF::Math

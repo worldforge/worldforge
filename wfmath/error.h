@@ -28,7 +28,7 @@
 #define WFMATH_ERROR_H
 
 #include <wfmath/vector.h>
-#include <wfmath/matrix.h>
+#include <wfmath/vector_funcs.h>
 
 namespace WF { namespace Math {
 

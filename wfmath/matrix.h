@@ -28,9 +28,10 @@
 #define WFMATH_MATRIX_H
 
 #include <wfmath/const.h>
-#include <wfmath/vector.h>
 
 namespace WF { namespace Math {
+
+template<const int len> class Vector;
 
 // Elements of this class represent rotation matrices. The NxN dimensional
 // rotation matrices form a group called SO(N), the special orthogonal
@@ -162,5 +163,7 @@ class RotMatrix {
 };
 
 }} // namespace WF::Math
+
+#include <wfmath/matrix_funcs.h>
 
 #endif // WFMATH_MATRIX_H

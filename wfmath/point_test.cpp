@@ -29,8 +29,7 @@
 #include "point.h"
 #include "point_funcs.h"
 #include "const.h"
-#include <assert.h>
-#include "stream_funcs.h"
+#include "stream.h"
 #include <iostream>
 
 using namespace WF::Math;

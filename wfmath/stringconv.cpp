@@ -1,5 +1,5 @@
 // -*-C++-*-
-// stream_funcs.cpp (String utility backend in the WFMath library)
+// stringconv.cpp (String utility backend in the WFMath library)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -25,25 +25,25 @@
 // Created: 2001-12-13
 
 #include <sstream>
-#include "string_funcs.h"
+#include "stringconv.h"
 
 namespace WF { namespace Math {
 
-static void ToString(std::ostream& os, const CoordType* d, const int num);
-static bool FromString(std::istream& is, CoordType* d, const int num);
+static void _ToString(std::ostream& os, const CoordType* d, const int num);
+static bool _FromString(std::istream& is, CoordType* d, const int num);
 
 bool _StringToCoordList(const std::string& s, CoordType* d, const int num)
 {
   istringstream ist(s);
 
-  return FromString(ist, d, num);
+  return _FromString(ist, d, num);
 }
 
 std::string _StringFromCoordList(const CoordType* d, const int num)
 {
   ostringstream ost;
 
-  ToString(ost, d, num);
+  _ToString(ost, d, num);
 
   return ost.str();
 }
@@ -59,7 +59,7 @@ bool _StringToCoordArray(const std::string& s, CoordType* d, const int rows,
     return false;
 
   for(int i = 0; i < rows; ++i) {
-    if(!FromString(ist, d + i * columns, columns))
+    if(!_FromString(ist, d + i * columns, columns))
       return false;
     ist >> next;
     char want = (i == rows - 1) ? ')' : ',';
@@ -80,7 +80,7 @@ std::string _StringFromCoordArray(const CoordType* d, const int rows,
   int i = 0;
 
   while(true) {
-    ToString(ost, d + i * columns, columns);
+    _ToString(ost, d + i * columns, columns);
     if(++i == rows)
       break;
     ost << ',';
@@ -91,7 +91,7 @@ std::string _StringFromCoordArray(const CoordType* d, const int rows,
   return ost.str();
 }
 
-static void ToString(std::ostream& os, const CoordType* d, const int num)
+static void _ToString(std::ostream& os, const CoordType* d, const int num)
 {
   os << '(';
 
@@ -107,7 +107,7 @@ static void ToString(std::ostream& os, const CoordType* d, const int num)
   os << ')';
 }
 
-static bool FromString(std::istream& is, CoordType* d, const int num)
+static bool _FromString(std::istream& is, CoordType* d, const int num)
 {
   char next;
 

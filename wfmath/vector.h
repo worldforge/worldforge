@@ -33,8 +33,7 @@
 
 #include <math.h>
 #include <wfmath/const.h>
-#include <wfmath/string_funcs.h>
-#include <wfmath/basis.h>
+#include <wfmath/stringconv.h>
 
 namespace WF { namespace Math {
 
@@ -69,10 +68,20 @@ Point<len> operator-(const Point<len>& c, const Vector<len>& v);
 template<const int len>
 Point<len> operator+(const Vector<len>& v, const Point<len>& c);
 
-const double SloppyMagMaxTable[] = {1, 1,
+// These two functions are inline, since they're only ever called
+// with a defined constant as argument.
+
+inline const double _SloppyMagMaxTable(int i)
+{
+  const double d[] = {1, 1,
   1.082392200292393968799446410733,
   1.145934719303161490541433900265,
-};
+  };
+  const int dsize = sizeof(d) / sizeof(double);
+
+  return (i < dsize) ? d[i] : 0;
+}
+
 
 // Note for people trying to compute the above numbers
 // more accurately:
@@ -87,16 +96,16 @@ const double SloppyMagMaxTable[] = {1, 1,
 // Running the script bc_sloppy_mag_3 provided with the WFMath source
 // will calculate the above number.
 
-#define SLOPPY_MAG_MAX(len) ((len) < sizeof(SloppyMagMaxTable)/sizeof(double) \
-				   ? SloppyMagMaxTable[len] : 0)
-
-const double SloppyMagMaxSqrtTable[] = {1, 1,
+inline const double _SloppyMagMaxSqrtTable(int i)
+{
+  const double d[] = {1, 1,
   1.040380795811030899095785063701,
   1.070483404496847625250328653179,
-};
+  };
+  const int dsize = sizeof(d) / sizeof(double);
 
-#define SLOPPY_MAG_MAX_SQRT(len) ((len) < sizeof(SloppyMagMaxSqrtTable)/sizeof(double) \
-				        ? SloppyMagMaxSqrtTable[len] : 0)
+  return (i < dsize) ? d[i] : 0;
+}
 
 template<const int len>
 class Vector {
@@ -147,8 +156,8 @@ class Vector {
 
   // Don't do range checking, it'll slow things down, and people
   // should be able to figure it out on their own
-  const CoordType& operator[](const int i) const	{return m_elem[i];}
-  CoordType& operator[](const int i)		{return m_elem[i];}
+  const CoordType& operator[](const int i) const {return m_elem[i];}
+  CoordType& operator[](const int i)		 {return m_elem[i];}
 
 // FIXME same problem as operator*
 //  friend Vector<len> operator-<len> (const Point<len>& c1, const Point<len>& c2);
@@ -178,8 +187,8 @@ class Vector {
 
   // Can't seem to implement these as constants, implementing
   // inline lookup functions instead.
-  static const double sloppyMagMax() {return SLOPPY_MAG_MAX(len);}
-  static const double sloppyMagMaxSqrt() {return SLOPPY_MAG_MAX_SQRT(len);}
+  static const double sloppyMagMax() {return _SloppyMagMaxTable(len);}
+  static const double sloppyMagMaxSqrt() {return _SloppyMagMaxSqrtTable(len);}
 
   // Rotate the vector in the (axis1,axis2) plane by the angle theta
 
@@ -256,5 +265,7 @@ inline double Cross(const Vector<2>& v1, const Vector<2>& v2)
 Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
 
 }} // namespace WF::Math
+
+#include <wfmath/vector_funcs.h>
 
 #endif // WFMATH_VECTOR_H

@@ -30,6 +30,8 @@
 
 #include "vector_funcs.h"
 #include "const.h"
+#include "error.h"
+#include "basis.h"
 #include <math.h>
 
 namespace WF { namespace Math {

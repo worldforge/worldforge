@@ -1,7 +1,7 @@
-Rearrange the functions in foo_funcs.h to match the order in the class
-	in foo.h
 Add a Shape class, and child classes which include everything
 	in shape.h from libCoal, and axisalignedbox.h, math_volume.h,
 	and volume.h from stage/math
 Check stage/math and libCoal for any leftover math bits which haven't
 	gotten included yet
+Rearrange the functions in foo_funcs.h to match the order in the class
+	in foo.h
