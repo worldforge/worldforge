@@ -1,3 +1,25 @@
+2002-05-14  Michael Koch  <konqueror@gmx.de>
+
+	* src/Makefile.am: added Atlas.h
+	* src/Objects/BaseObject.h: remove debugging code
+
+2002-05-14  Michael Koch  <konqueror@gmx.de>
+
+        * src/Objects/SmartPtr.h:
+	  removed DEBUG code: it doesnt compiles and aloril
+	  said its not needed.
+	* configure.in: added --enable-debug
+	  by default debugging is disabled
+	* src/Atlas.h:
+	  new file for gobal definitions
+	  currently used for the definition of ATLAS_DEBUG
+	* src/Codecs/Bach.cpp,
+	  src/Bindings/Python/wrapperObject.cpp:
+	  use ATLAS_DEBUG macro
+	* src/Message/DecoderBase.cpp:
+	  added some asserts
+	  use ATLAS_DEBUG macro
+
 2002-05-13  Michael Koch  <konqueror@gmx.de>
 
 	* src/*, configure.in:

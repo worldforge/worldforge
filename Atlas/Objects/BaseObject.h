@@ -93,16 +93,10 @@ protected:
 };
 
 void BaseObjectData::incRef() {
-#if DEBUG
-    cout << "FreeList.IncRef(): this: " << this << " m_refCount: " << m_refCount << " -> " << m_refCount+1 << endl;
-#endif
     m_refCount++;
 }
 
 void BaseObjectData::decRef() {
-#if DEBUG
-    cout << "FreeList.DecRef(): this: " << this << " m_refCount: " << m_refCount << " -> " << m_refCount-1 << endl;
-#endif
     //why zero based refCount? avoids one m_refCount-- ;-)
     assert( m_refCount >= 0 );
     if(!m_refCount) {
