@@ -46,7 +46,7 @@ void	decref();
 class VNum: public Variant
 {
 
-static	list<VNum*>	freelist;
+static	std::list<VNum*>	freelist;
 
 public:
 
@@ -95,7 +95,7 @@ public:
 class VStr: public Variant
 {
 
-static	list<VStr*>	freelist;
+static	std::list<VStr*>	freelist;
 
 public:
 
@@ -137,7 +137,7 @@ public:
 class VMap: public Variant
 {
 
-static	list<VMap*>	freelist;
+static	std::list<VMap*>	freelist;
 
 public:
 
@@ -182,7 +182,7 @@ public:
 class VVec: public Variant
 {
 
-static	list<VVec*>	freelist;
+static	std::list<VVec*>	freelist;
 
 public:
 
