@@ -27,6 +27,9 @@ using Atlas::Message::Element;
 using Atlas::Objects::smart_static_cast;
 using Atlas::Objects::smart_dynamic_cast;
 
+using WFMath::TimeStamp;
+using WFMath::TimeDiff;
+
 namespace Eris {
 
 Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
@@ -38,7 +41,8 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
     m_limbo(false),
     m_updateLevel(0),
     m_view(vw),
-    m_hasBBox(false)
+    m_hasBBox(false),
+    m_moving(false)
 {
     m_router = new EntityRouter(this);
     m_view->getConnection()->registerRouterForFrom(m_router, m_id);
@@ -99,6 +103,24 @@ WFMath::Quaternion Entity::getViewOrientation() const
         vor *= e->getOrientation();
         
     return vor;
+}
+
+WFMath::Point<3> Entity::getPredictedPos() const
+{
+    return (m_moving ? m_predictedPosition : m_position);
+}
+
+bool Entity::isMoving() const
+{
+    return m_moving;
+}
+
+void Entity::updatePredictedPosition(const WFMath::TimeStamp& t)
+{
+    assert(isMoving());
+    
+    double dt = (t - m_lastMoveTime).milliseconds() / 1000.0; 
+    m_predictedPosition = m_position + (m_velocity * dt);
 }
 
 #pragma mark -
@@ -162,6 +184,17 @@ void Entity::imaginary(const Atlas::Objects::Root& arg)
         Emote.emit(arg->getAttr("description").asString());
 }
 
+void Entity::setMoving(bool inMotion)
+{
+    assert(m_moving != inMotion);
+    
+    if (m_moving) m_view->removeFromPrediction(this);
+    m_moving = inMotion;
+    if (m_moving) m_view->addToPrediction(this);
+    
+    Moving.emit(this, inMotion);
+}
+
 #pragma mark -
 
 void Entity::setAttr(const std::string &attr, const Element &val)
@@ -200,6 +233,7 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
     else if (attr == "pos")
     {
         m_position.fromAtlas(v);
+        m_predictedPosition = m_position;
         return true;
     }
     else if (attr == "velocity")
@@ -258,7 +292,12 @@ void Entity::endUpdate()
             m_modifiedAttrs.count("velocity") ||
             m_modifiedAttrs.count("orientation"))
         {
-           moved(); // call the hook method, and hence emit the signal
+            m_lastMoveTime = TimeStamp::now();
+            
+            bool nowMoving = (getVelocity().sqrMag() > 1e-3);
+            if (nowMoving != m_moving) setMoving(nowMoving);
+            
+            moved(); // call the hook method, and hence emit the signal
         }
         
         m_modifiedAttrs.clear();

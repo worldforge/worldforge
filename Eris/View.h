@@ -40,6 +40,13 @@ public:
     {
         return m_topLevel;
     }
+    
+    /** once-per-frame update of the View - clients should call this method
+    once per game loop (or similar), to allow the View to update Entity
+    state. This includes motion prediction for moving entities, and confidence
+    levels for disappeared entities.
+    */
+    void update();
 
     /** emitted whenever the View creates a new Entity instance. This signal
     is emitted once the entity has been fully bound into the View */
@@ -71,6 +78,9 @@ protected:
 
     /// test if the specified entity ID is pending initial sight on the View
     bool isPending(const std::string& eid) const;
+
+    void addToPrediction(Entity* ent);
+    void removeFromPrediction(Entity* ent);
 
 private:
     Entity* initialSight(const Atlas::Objects::Entity::GameEntity& ge);
@@ -106,6 +116,11 @@ private:
 
     typedef std::map<std::string, SightAction> PendingSightMap;
     PendingSightMap m_pending;
+    
+    typedef std::set<Entity*> EntitySet;
+    /** all the entities in the view which are moving, so they can be
+    motion predicted. */
+    EntitySet m_moving;
 };
 
 } // of namespace Eris

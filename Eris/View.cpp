@@ -53,6 +53,31 @@ void View::setEntityVisible(Entity* ent, bool vis)
 }
 
 #pragma mark -
+
+void View::update()
+{
+    WFMath::TimeStamp t(WFMath::TimeStamp::now());
+    
+    // run motion prediction for each moving entity
+    for (EntitySet::iterator it=m_moving.begin(); it != m_moving.end(); ++it)
+        (*it)->updatePredictedPosition(t);
+}
+
+void View::addToPrediction(Entity* ent)
+{
+    assert(ent->isMoving());
+    assert(m_moving.count(ent) == 0);
+    m_moving.insert(ent);
+}
+
+void View::removeFromPrediction(Entity* ent)
+{
+    assert(ent->isMoving());
+    assert(m_moving.count(ent) == 1);
+    m_moving.erase(ent);
+}
+
+#pragma mark -
 // Atlas operation handlers
 
 void View::appear(const std::string& eid, float stamp)

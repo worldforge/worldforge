@@ -11,6 +11,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/quaternion.h>
+#include <wfmath/timestamp.h>
 
 #include <sigc++/object.h>
 #include <sigc++/slot.h>
@@ -95,6 +96,14 @@ public:
         return m_position;
     }
     
+    /** Test if this entity has a non-zero velocity vector. */
+    bool isMoving() const;
+        
+    /** retrieve the predicted position of this entity, based on it's
+    velocity. If the entity is not moving, this is the same as calling
+    getPosition(). */
+    WFMath::Point<3> getPredictedPos() const;
+        
     /** retreive this Entity's position in view coordinates. */
     WFMath::Point<3> getViewPosition() const;
 
@@ -129,13 +138,13 @@ public:
     template<class C>
     C toLocationCoords(const C& c) const
     {
-        return c.toParentCoords(m_position, m_orientation);
+        return c.toParentCoords(getPredictedPos(), m_orientation);
     }
     
     template<class C>
     C fromLocationCoords(const C& c) const
     {
-        return c.toLocalCoords(m_position, m_orientation);
+        return c.toLocalCoords(getPredictedPos(), m_orientation);
     }
     
     // A vector (e.g., the distance between two points, or
@@ -173,6 +182,10 @@ public:
     Argument is the entity that moved, so you can bind the same slot to
     multiple entities if desired. */
     SigC::Signal1<void, Entity*> Moved;
+
+    /** Emitted when an entity starts or stops moving (as determined by the
+    'inMotion' method. */
+    SigC::Signal2<void, Entity*, bool> Moving;
 
     /** Emitted with this entity speaks. In the future langauge may be specified */
     SigC::Signal1<void, const std::string&> Say;
@@ -231,6 +244,13 @@ protected:
     */
     virtual void imaginary(const Atlas::Objects::Root& act);
 
+    /** over-rideable hook for when the entity changes from stationary to
+    moving or vice-versa. This hook exists so a client can treat moving objects
+    differently (eg, placing them in a different part of the scene graph).
+    If you over-ride this, you <em>must</em> call the base version, or motion prediction
+    will stop working for the entity. */
+    virtual void setMoving(bool moving);
+
 private:
     friend class IGRouter;
     friend class View;
@@ -269,6 +289,8 @@ private:
     appropriate signals. */
     void updateCalculatedVisibility(bool wasVisible);
     
+    void updatePredictedPosition(const WFMath::TimeStamp& t);
+    
     typedef std::map<std::string, Atlas::Message::Element> AttrMap;
     AttrMap m_attrs;
     
@@ -290,7 +312,8 @@ private:
     WFMath::Point<3> m_position;
     WFMath::Vector<3> m_velocity;
     WFMath::Quaternion m_orientation;    
-	
+	WFMath::Point<3> m_predictedPosition;
+    
 // extra state and state tracking things
     /** If greater than zero, we are doing a batched update. This supresses emission
     of the Changed signal until endUpdate is called, so that a number of
@@ -308,12 +331,15 @@ private:
     typedef std::map<std::string, AttrChangedSignal> ObserverMap;
     ObserverMap m_observers;
         
-    View* m_view;
+    View* m_view;   ///< the View which owns this Entity
     
     /** This flag should be set when the server notifies that this entity
     has a bounding box. If this flag is not true, the contents of the
     BBox attribute are undefined.  */
     bool m_hasBBox;
+    
+    WFMath::TimeStamp m_lastMoveTime;
+    bool m_moving; ///< flag recording if this entity is current considered in-motion
 };
 
 } // of namespace

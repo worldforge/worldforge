@@ -1,3 +1,8 @@
+2004-09-30  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp, Eris/Entity.h, Eris/View.cpp, Eris/View.h: add
+	  initial support for motion prediction of entities.
+
 2004-09-29  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp: typographic cleans ups
