@@ -32,6 +32,9 @@ class Terrain {
     Pointstore m_basePoints;
     Segmentstore m_segments;
     Shaderstore m_shaders;
+  
+    void addSurfaces(Segment &);
+    void shadeSurfaces(Segment &);
   public:
     static const float defaultLevel = 8;
     explicit Terrain(unsigned int resolution = defaultResolution);

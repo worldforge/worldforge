@@ -27,6 +27,14 @@ Terrain::~Terrain()
     }
 }
 
+void Terrain::addSurfaces(Segment & seg)
+{
+}
+
+void Terrain::shadeSurfaces(Segment & seg)
+{
+}
+
 float Terrain::get(float x, float y) const
 {
     int ix = (int)floor(x / m_res);

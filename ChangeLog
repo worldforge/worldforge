@@ -1,5 +1,25 @@
 2003-07-24  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/FillShader.h: Make FillShader inherit from Shader,
+	  as it should have done all along.
+
+	* Mercator/Segment.h: Add list of surfaces of this segment.
+	  Fill out some comments.
+
+	* Mercator/Surface.cpp, Mercator/Surface.h: Store a reference to
+	  its shader in a surface. Add populate member which causes the
+	  shader to shade this surface. This allows the code to populate
+	  a set of surfaces without knowing what the shaders are supposed
+	  to be.
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add methods to add
+	  and shade the surfaces of a segment.
+
+	* tests/testShader.cpp: Modify unit test to account for modified
+	  API.
+
+2003-07-24  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Buffer.h, Mercator/Buffer.cpp: Add member to store
 	  number of channels, and add accessors for channels, and Segment
 	  reference.

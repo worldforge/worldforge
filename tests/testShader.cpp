@@ -9,9 +9,8 @@
 int main()
 {
     Mercator::Segment segment;
-    Mercator::Surface surface(segment);
-
     Mercator::FillShader fill_shader;
+    Mercator::Surface surface(segment, fill_shader);
 
-    fill_shader.shade(surface);
+    surface.populate();
 }

@@ -9,11 +9,16 @@
 
 namespace Mercator {
 
+class Shader;
+
 class Surface : public Buffer {
+  private:
+    Shader & m_shader;
   public:
-    explicit Surface(Segment & segment);
+    explicit Surface(Segment & segment, Shader & shader);
     virtual ~Surface();
 
+    void populate();
     // Do we need an accessor presenting the array in colour form?
 };
 

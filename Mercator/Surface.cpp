@@ -4,16 +4,21 @@
 
 #include <Mercator/Surface.h>
 
-#include <Mercator/Segment.h>
+#include <Mercator/Shader.h>
 
 namespace Mercator {
 
-Surface::Surface(Segment & segment) : Buffer(segment, 4)
+Surface::Surface(Segment & seg, Shader & sh) : Buffer(seg, 4), m_shader(sh)
 {
 }
 
 Surface::~Surface()
 {
+}
+
+void Surface::populate()
+{
+    m_shader.shade(*this);
 }
 
 } // namespace Mercator

@@ -17,6 +17,7 @@
 namespace Mercator {
 
 class Terrain;
+class Surface;
 class TerrainMod;
 typedef std::list<TerrainMod *> ModList;
 
@@ -29,15 +30,29 @@ class Segment {
     const int m_res;
     /// Size of segment, m_res + 1
     const int m_size;
+    /// Global x reference of this segment
     int m_xRef;
+    /// Global y reference of this segment
     int m_yRef;
+    /// 2x2 matrix of points which control this segment
     Matrix<2, 2, BasePoint> m_controlPoints;
+    /// Pointer to buffer containing height points
     float * m_points;
+    /// Pointer to buffer containing normals for height points
     float * m_normals;
+    /// Maximum height of any point in this segment
     float m_max;
+    /// Minimum height of any point in this segment
     float m_min;
+    /// Flag indicating whether the contains of this segment is valid
     bool m_validPt;
+    /// Flag indicating whether the normals of this segment is valid
     bool m_validNorm;
+    /// Flag indicating whether the surfaces of this segment are valid
+    bool m_validSurfaces;
+
+    /// Store of surfaces which can be rendered on this terrain
+    std::list<Surface *> m_surfaces;
 
     void invalidate() {
         m_validPt = false;

@@ -9,7 +9,7 @@
 
 namespace Mercator {
 
-class FillShader {
+class FillShader : public Shader {
   public:
     explicit FillShader();
     virtual ~FillShader();
