@@ -1,0 +1,12 @@
+/** @page tutorial_building Building the examples
+
+@section The Makefile
+
+The following is the makefile that can be used to build the examples.
+
+@verbinclude Makefile
+
+@ref tutorial_objects "Previous"
+@ref tutorial_index "Index"
+
+*/
