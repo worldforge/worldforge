@@ -5,8 +5,9 @@ note that Static_Move is 'mock' test, hopefully achievable
                     creation   movement
 C++/Message_Move  : 2.9K/s     1.9K/s
 C++/Objects_Move  : 860/s      500/s
+C++/Objects2_Move : 56K/s      28K/s
 C++/Static_Move   : 7.6M/s     1.7M/s
-C++/SmartPtr_Move : 1.8K/s     810K/s
+C++/SmartPtr_Move : 1.8M/s     810K/s
 C++/Call_Move     :            1.9M/s
 Python/OldMove    : 1.5K/s     900/s
 Python/Move       : 1.3K/s     840/s
@@ -114,3 +115,13 @@ Call_Move.py:
                 iterations=100000  CPU Time=3.7076369524  iter/s=26971.3570352
         3.38user 0.03system 0:03.84elapsed 88%CPU
 
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+2000-10-30:
+Optimized Atlas-C++/src/Objects:
+Objects2_Move.cpp
+        Plain creating of sight operation: 
+                iterations=100000 CPU Time=1.75 iter/s=57142.9
+        NPC movements: 
+                iterations=100000 CPU Time=3.52 iter/s=28409.1
+        5.28user 0.00system 0:05.40elapsed 97%CPU (0avgtext+0avgdata 0maxresident)k
