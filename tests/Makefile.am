@@ -1,5 +1,7 @@
 TESTS = mercatortest
 
+INCLUDES = -I$(top_srcdir)
+
 check_PROGRAMS = mercatortest
 
 mercatortest_SOURCES = \
