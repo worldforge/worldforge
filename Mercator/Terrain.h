@@ -15,7 +15,7 @@ class Segment;
 
 class Terrain {
   public:
-    typedef std::map<int, double> Pointcolumn;
+    typedef std::map<int, float> Pointcolumn;
     typedef std::map<int, Segment *> Segmentcolumn;
 
     typedef std::map<int, Pointcolumn > Pointstore;
@@ -30,25 +30,25 @@ class Terrain {
     void remove(int x, int y);
     void invalidate(int x, int y);
   public:
-    static const double defaultLevel = 8;
+    static const float defaultLevel = 8;
     explicit Terrain(int res = 64);
 
-    double get(double x, double y) const;
+    float get(float x, float y) const;
 
-    bool getBasePoint(int x, int y, double & z);
+    bool getBasePoint(int x, int y, float & z);
     
-    void setBasePoint(int x, int y, double z) {
+    void setBasePoint(int x, int y, float z) {
         m_basePoints[x][y] = z;
         invalidate(x,y);
     }
 
-    Segment * getSegmentSafe(double x, double y) {
+    Segment * getSegmentSafe(float x, float y) {
         int ix = (int)floor(x / m_res);
         int iy = (int)floor(y / m_res);
         return getSegmentSafe(ix, iy);
     }
 
-    Segment * getSegmentQuik(double x, double y) const {
+    Segment * getSegmentQuik(float x, float y) const {
         int ix = (int)floor(x / m_res);
         int iy = (int)floor(y / m_res);
         return getSegmentQuik(ix, iy);

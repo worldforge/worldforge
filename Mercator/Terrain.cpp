@@ -38,7 +38,7 @@ Terrain::Terrain(int res) : m_res(res)
 
 }
 
-double Terrain::get(double x, double y) const
+float Terrain::get(float x, float y) const
 {
     int ix = (int)floor(x / m_res);
     int iy = (int)floor(y / m_res);
@@ -50,7 +50,7 @@ double Terrain::get(double x, double y) const
     return s->get((int)(x - (ix * m_res)), (int)(y - (iy * m_res)));
 }
 
-bool Terrain::getBasePoint(int x, int y, double & z)
+bool Terrain::getBasePoint(int x, int y, float & z)
 {
     Pointstore::const_iterator I = m_basePoints.find(x);
     if (I == m_basePoints.end()) {
@@ -70,7 +70,7 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
     if (s != 0) {
         return s;
     }
-    double nn = Terrain::defaultLevel, fn = Terrain::defaultLevel,
+    float nn = Terrain::defaultLevel, fn = Terrain::defaultLevel,
            ff = Terrain::defaultLevel, nf = Terrain::defaultLevel;
     bool complete = getBasePoint(x,     y,     nn) &&
                     getBasePoint(x + 1, y,     fn) &&

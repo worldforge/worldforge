@@ -1,3 +1,8 @@
+2003-01-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Segment.cpp, src/Segment.h, src/Terrain.cpp, src/Terrain.h:
+	  Switch to using floats instead of doubles internally for performance.
+
 2003-01-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Segment.h, src/Segment.cpp: Add class for terrain segment, which

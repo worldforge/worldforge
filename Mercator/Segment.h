@@ -14,7 +14,7 @@ namespace Mercator {
 class Segment {
   private:
     int m_res;
-    double * const m_points;
+    float * const m_points;
   public:
     explicit Segment(int res = 64);
 
@@ -22,18 +22,18 @@ class Segment {
         return m_res;
     }
     
-    const double * getPoints() const {
+    const float * getPoints() const {
         return m_points;
     }
-    double * getPoints() {
+    float * getPoints() {
         return m_points;
     }
 
-    double get(int x, int y) {
+    float get(int x, int y) {
         return m_points[y * m_res + x];
     }
 
-    void populate(double, double, double, double);
+    void populate(float, float, float, float);
 
 };
 
