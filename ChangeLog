@@ -1,4 +1,9 @@
 ChangeLog for varconf
+2004-11-11  Ron Steinke <rsteinke@w-link.net>
+
+	* varconf/config.cpp: Initialize Config::m_instance to 0, instead
+	  of leaving it uninitialized.
+
 2004-10-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.6.2. Interface version 2.0.0, or 3.0.0 with sigc++ 2.0.

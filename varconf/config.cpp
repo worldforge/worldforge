@@ -93,7 +93,7 @@ namespace {
 
 namespace varconf {
 
-Config* Config::m_instance;
+Config* Config::m_instance = 0;
 
 Config* Config::inst()
 {
