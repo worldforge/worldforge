@@ -1,5 +1,5 @@
 # Autoconf setup
-AC_INIT
+AC_INIT(eris, 1.3.3)
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 
@@ -7,17 +7,9 @@ AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-# Information
-ERIS_MAJOR=1
-ERIS_MINOR=3
-ERIS_MICRO=3
-ERIS_VERSION=$ERIS_MAJOR.$ERIS_MINOR.$ERIS_MICRO
-
 # Automake setup
-AM_INIT_AUTOMAKE(eris, $ERIS_VERSION)
+AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
-
-AC_SUBST(ERIS_VERSION)
 
 dnl versioning info for libtool
 dnl DO NOT CHANGE ERIS_CURRENT HERE. See the checks for sigc++
@@ -103,18 +95,12 @@ dnl perl and sucks in its CFLAGS and LIBS
 ])
 AM_CONDITIONAL(PERL_BINDINGS, test "x$enable_perl" = "xyes")
 
-ERIS_POLL_PKGCONFIGS=
-ERIS_POLL_GLIB_REQUIRES=
-
 PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     [
-	ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.3.pc"
-	ERIS_POLL_GLIB_REQUIRES=glib-2.0
 	have_glib='yes'
     ],
     [
         AM_PATH_GLIB(1.2.0,[
-		ERIS_POLL_PKGCONFIGS="$ERIS_POLL_PKGCONFIGS eris-poll-glib-1.3.pc"
 		have_glib='yes'
 	        ],[
 		AC_MSG_WARN(Couldn't find glib, not building glib poll)
@@ -157,8 +143,6 @@ ERIS_VERSION_INFO=$ERIS_CURRENT:$ERIS_REVISION:$ERIS_AGE
 AC_SUBST(ERIS_LIB_SUFFIX)
 AC_SUBST(ERIS_LIBS)
 AC_SUBST(ERIS_REQUIRES)
-AC_SUBST(ERIS_POLL_PKGCONFIGS)
-AC_SUBST(ERIS_POLL_GLIB_REQUIRES)
 AC_SUBST(ERIS_VERSION_INFO)
 
 AC_CONFIG_FILES([
@@ -172,6 +156,5 @@ test/Makefile
 eris.dox
 eris.spec
 eris-1.3.pc
-eris-poll-glib-1.3.pc
 ])
 AC_OUTPUT
