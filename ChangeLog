@@ -1,3 +1,10 @@
+2004-10-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Add configure checks for sigc++ 2.0.
+
+	* Eris/Entity.h: Include sigc++/connection.h so that code works
+	  with all versions of sigc++.
+
 2004-09-30  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp, Eris/Entity.h, Eris/View.cpp, Eris/View.h: add

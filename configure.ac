@@ -9,10 +9,9 @@ AC_CANONICAL_TARGET
 
 # Information
 ERIS_MAJOR=1
-ERIS_MINOR=1
-ERIS_MICRO=1
-ERIS_PATCH=0
-ERIS_VERSION=$ERIS_MAJOR.$ERIS_MINOR.$ERIS_MICRO.$ERIS_PATCH
+ERIS_MINOR=3
+ERIS_MICRO=0
+ERIS_VERSION=$ERIS_MAJOR.$ERIS_MINOR.$ERIS_MICRO
 
 # Automake setup
 AM_INIT_AUTOMAKE(eris, $ERIS_VERSION)
@@ -22,16 +21,17 @@ AM_CONFIG_HEADER(config.h)
 AC_SUBST(ERIS_VERSION)
 
 dnl versioning info for libtool
+dnl DO NOT CHANGE ERIS_CURRENT HERE. See the checks for sigc++
+dnl further down. If we link against sigc++ 1.2, then this should be
+dnl N, if we link against sigc++ 2.0 it should be N+1. If you change
+dnl this because of API changes, it needs to be incremented by
+dnl 2, and the changes made to the values assigned in the sigc++ check.
 ERIS_CURRENT=1
 ERIS_REVISION=0
 ERIS_AGE=0
-ERIS_VERSION_INFO=$ERIS_CURRENT:$ERIS_REVISION:$ERIS_AGE
 
 ERIS_REQUIRES=""
 
-AC_SUBST(ERIS_VERSION_INFO)
-
-AC_ISC_POSIX
 AC_PROG_CC
 AC_PROG_CXX
 AC_HEADER_STDC([])
@@ -53,8 +53,21 @@ PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
         CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
         ERIS_REQUIRES="$ERIS_REQUIRES sigc++-1.2"
+        ERIS_CURRENT=1
     ],
-AC_MSG_ERROR(Couldn't find libsigc++ config [or config failed]))
+    [
+        PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0,
+            [
+                CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
+                LDFLAGS="$LDFLAGS $SIGC_LIBS"
+                ERIS_REQUIRES="$ERIS_REQUIRES sigc++-2.0"
+                ERIS_CURRENT=2
+            ],
+            [
+                AC_MSG_ERROR([Couldn't find sigc++ library!])
+            ])
+    ])
+
 
 # check for all the WorldForge libs we use
 PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 wfmath-0.3 >= 0.3.2,
@@ -138,17 +151,16 @@ AC_SUBST(CXXFLAGS)
 AC_SUBST(CPPFLAGS)
 AC_SUBST(LDFLAGS)
 
-SYSTEM_LIBS=""
 ERIS_LIB_SUFFIX="-1.3"
 ERIS_LIBS="-leris$ERIS_LIB_SUFFIX -lm"
-ERIS_CFLAGS=""
-AC_SUBST(SYSTEM_LIBS)
+ERIS_VERSION_INFO=$ERIS_CURRENT:$ERIS_REVISION:$ERIS_AGE
+
 AC_SUBST(ERIS_LIB_SUFFIX)
 AC_SUBST(ERIS_LIBS)
-AC_SUBST(ERIS_CFLAGS)
 AC_SUBST(ERIS_REQUIRES)
 AC_SUBST(ERIS_POLL_PKGCONFIGS)
 AC_SUBST(ERIS_POLL_GLIB_REQUIRES)
+AC_SUBST(ERIS_VERSION_INFO)
 
 AC_CONFIG_FILES([
 Makefile

@@ -16,6 +16,7 @@
 #include <sigc++/object.h>
 #include <sigc++/slot.h>
 #include <sigc++/signal.h>
+#include <sigc++/connection.h>
 
 namespace Eris {
 
