@@ -103,7 +103,14 @@ dnl
 // Copyright (C) 2000 Stefanus Du Toit
 // Generated from __file__ - do not edit!
 
+#ifndef ATLAS_GENERIC_MORPH_H
+#define ATLAS_GENERIC_MORPH_H
+
+#include "Token.h"
+
 namespace Atlas { namespace Generic {
+
+class WrongTypeException { };
 
 MORPH(2)
 MORPH(3)
@@ -113,3 +120,5 @@ MORPH(6)
 MORPH(7)
 
 } } // namespace Atlas::Generic
+
+#endif
