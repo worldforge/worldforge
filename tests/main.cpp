@@ -12,7 +12,7 @@
 int main() 
 {
     int size = 64;
-    Mercator::Segment *s = new Mercator::Segment(size);
+    Mercator::Segment *s = new Mercator::Segment(0, 0, size);
 
     Mercator::Matrix<2, 2, Mercator::BasePoint> & base = s->getControlPoints();
     base[0] = Mercator::BasePoint(10.f, 3.f);

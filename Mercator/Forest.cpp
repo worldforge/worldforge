@@ -20,15 +20,22 @@
 
 namespace Mercator {
 
+
+/// \brief Construct a new forest with the given seed.
 Forest::Forest(unsigned long seed) : m_seed(seed), 
     m_randCache(seed, new ZeroSpiralOrdering())
 {
 }
 
+/// \brief Destruct a forest.
+///
+/// All contained vegetation is lost, so references to contained
+/// vegetation must not be maintained if this is likely to occur.
 Forest::~Forest()
 {
 }
 
+/// Calculate the convex polygon described by an axis aligned box.
 void Forest::areaFromBBox()
 {
     const WFMath::Point<2> & lc = m_bbox.lowCorner();
@@ -41,21 +48,27 @@ void Forest::areaFromBBox()
     m_area.addCorner(0, WFMath::Point<2>(hc.x(), lc.y()));
 }
 
+/// Calculate axis aligned box the bounds the convex polygon.
 void Forest::bBoxFromArea()
 {
 }
 
+/// Define the area of the forest in terms of an axis aligned rectangle.
 void Forest::setArea(const WFMath::AxisBox<2> & area)
 {
     m_bbox = area;
     areaFromBBox();
 }
 
+/// Define the area of the forest as a convex polygon.
 void Forest::setArea(const WFMath::Polygon<2> & area)
 {
     m_area = area;
 }
 
+/// Define the area of the forest in terms of an axis aligned box.
+/// @param vol an axis aligned box a section of which defines the area of the
+/// forest.
 void Forest::setVolume(const WFMath::AxisBox<3> & vol)
 {
     m_bbox = WFMath::AxisBox<2>(WFMath::Point<2>(vol.lowCorner().x(),
@@ -70,22 +83,26 @@ static const float plant_min_height = 5;
 static const float plant_height_range = 20;
 
 
+/// \brief This function uses a pseudo-random technique to populate the
+/// forest with trees. This algorithm as the following essental properties:
+///
+///   - It is repeatable. It can be repeated on the client and the server,
+///     and give identical results.
+///
+///   - It is location independant. It gives the same results even if the
+///     forest is in a different place.
+///
+///   - It is shape and size independant. A given area of the forest is
+///     the same even if the borders of the forest change.
+///
+///   - It is localisable. It is possible to only partially populate the
+///     the forest, and still get the same results in that area.
+///
+/// This function will have no effect if the area defining the forest remains
+/// uninitialised. Any previously generated contents are erased.
+/// For each instance a new seed is used to ensure it is repeatable, and
+/// height, displacement and orientation are calculated.
 void Forest::populate()
-// This function uses a pseudo-random technique to populate the forrest with
-// trees. This algorithm as the following essental properties:
-//
-//   * It is repeatable. It can be repeated on the client and the server,
-//     and give identical results.
-//
-//   * It is location independant. It gives the same results even if the
-//     forest is in a different place.
-//
-//   * It is shape and size independant. A given area of the forest is
-//     the same even if the borders of the forest change.
-//
-//   * It is localisable. It is possible to only partially populate the
-//     the forest, and still get the same results in that area.
-//
 {
     if (!m_bbox.isValid()) {
         return;

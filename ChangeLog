@@ -1,3 +1,13 @@
+2004-07-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Matrix.h,
+	  Mercator/Plant.h, Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Shader.cpp, Mercator/Shader.h, Mercator/Terrain.cpp,
+	  Mercator/Terrain.h: Some minor API tweaks and cleanups.
+
+	* tests/main.cpp, tests/testShader.cpp: Update tests to take
+	  account of API changes.
+
 2004-06-07  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/TerrainMod_impl.h: Fixes to work with gcc 3.4 stricter

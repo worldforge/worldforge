@@ -24,8 +24,12 @@ typedef std::list<TerrainMod *> ModList;
 // This class will need to be reference counted if we want the code to
 // be able to hold onto it, as currently they get deleted internally
 // whenever height points are asserted.
+
+/// \brief Class storing heightfield and other data for a single fixed size
+/// square area of terrain defined by four adjacent BasePoint objects.
 class Segment {
   public:
+    /// STL list of pointers to Surface objects.
     typedef std::list<Surface *> Surfacestore;
   private:
     /// Distance between segments
@@ -33,9 +37,9 @@ class Segment {
     /// Size of segment, m_res + 1
     const int m_size;
     /// Global x reference of this segment
-    int m_xRef;
+    const int m_xRef;
     /// Global y reference of this segment
-    int m_yRef;
+    const int m_yRef;
     /// 2x2 matrix of points which control this segment
     Matrix<2, 2, BasePoint> m_controlPoints;
     /// Pointer to buffer containing height points
@@ -60,29 +64,40 @@ class Segment {
     /// Store of surfaces which can be rendered on this terrain
     Surfacestore m_surfaces;
   public:
-    explicit Segment(unsigned int resolution = defaultResolution);
+    explicit Segment(int x, int y, unsigned int resolution);
     ~Segment();
 
+    /// \brief Accessor for resolution of this segment.
     const int getResolution() const {
         return m_res;
     }
 
+    /// \brief Accessor for array size of this segment.
     const int getSize() const {
         return m_size;
     }
 
+    /// \brief Check whether this Segment contains valid point data.
+    ///
+    /// @return true if this Segment is valid, false otherwise.
     const bool isValid() const {
         return (m_points != 0);
     }
 
+    /// \brief Obsolete.
     const bool isVertexCacheValid() const {
         return m_validVert;
     }
 
+    /// \brief Obsolete.
     void setVertexCacheValid(bool f = true) {
         m_validVert = true;
     }
 
+    /// \brief Set min and max height values for this Segment.
+    ///
+    /// This is used after construction to set the initial values, and
+    /// should not be used after populate has been called.
     void setMinMax(float min, float max) {
         m_min = min;
         m_max = max;
@@ -90,60 +105,73 @@ class Segment {
 
     void invalidate(bool points = true);
 
-    void setRef(int x, int y) {
-        m_xRef=x*m_res;
-        m_yRef=y*m_res;
-    }
-
+    /// \brief Set the BasePoint data for one of the four that define this
+    /// Segment.
+    ///
+    /// @param x relative x coord of base point. Must be 0 or 1.
+    /// @param y relative y coord of base point. Must be 0 or 1.
+    /// @param bp BasePoint data to be used.
     void setCornerPoint(unsigned int x, unsigned int y, const BasePoint & bp) {
         m_controlPoints(x, y) = bp;
         invalidate();
     }
     
+    /// \brief Accessor for 2D matrix of base points.
     const Matrix<2, 2, BasePoint> & getControlPoints() const {
         return m_controlPoints;
     }
 
+    /// \brief Accessor for modifying 2D matrix of base points.
     Matrix<2, 2, BasePoint> & getControlPoints() {
         return m_controlPoints;
     }
 
+    /// \brief Accessor for list of attached Surface objects.
     const Surfacestore & getSurfaces() const {
         return m_surfaces;
     }
 
+    /// \brief Accessor for modifying list of attached Surface objects.
     Surfacestore & getSurfaces() {
         return m_surfaces;
     }
 
+    /// \brief Accessor for buffer containing height points.
     const float * getPoints() const {
         return m_points;
     }
 
+    /// \brief Accessor for write access to buffer containing height points.
     float * getPoints() {
         return m_points;
     }
 
+    /// \brief Accessor for buffer containing surface normals.
     const float * getNormals() const {
         return m_normals;
     }
 
+    /// \brief Accessor for write access to buffer containing surface normals.
     float * getNormals() {
         return m_normals;
     }
 
+    /// \brief Obsolete.
     const float * getVertexCache() const {
         return m_vertices;
     }
 
+    /// \brief Obsolete.
     float * getVertexCache() {
         return m_vertices;
     }
 
+    /// \brief Obsolete.
     float * setVertexCache(float * v) {
         return m_vertices = v;
     }
 
+    /// \brief Get the height at a relative integer position in the Segment.
     float get(int x, int y) const {
         return m_points[y * (m_res + 1) + x];
     }
@@ -155,13 +183,19 @@ class Segment {
     void populateNormals();
     void populateSurfaces();
 
+    /// \brief Accessor for the maximum height value in this Segment.
     float getMax() const { return m_max; }
+    /// \brief Accessor for the minimum height value in this Segment.
     float getMin() const { return m_min; }
 
     void addMod(TerrainMod *t);
     void clearMods();
     
   private:
+    /// \brief Check a value against m_min and m_max and set one of them
+    /// if appropriate.
+    ///
+    /// Called by internal functions whenever a new data point is generated.
     void checkMaxMin(float h) { 
         if (h<m_min) {
             m_min=h;
@@ -183,6 +217,7 @@ class Segment {
 
     void applyMod(TerrainMod *t);
 
+    /// \brief List of TerrainMod objects that are applied to this Segment.
     ModList m_modList;
 
 };

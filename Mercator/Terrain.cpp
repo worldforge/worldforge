@@ -21,12 +21,22 @@ namespace Mercator {
 
 const float Terrain::defaultLevel = 8;
 
+/// \brief Construct a new Terrain object with optional options and resolution.
+///
+/// @param options a bitfield of option flags. Defaults to no flags set.
+/// - DEFAULT value provided for no flags set.
+/// - SHADED is set if shaders are going to be used on this terrain.
+/// @param resolution the spacing between adjacent base points. Defaults to 64.
 Terrain::Terrain(unsigned int options, unsigned int resolution) : m_options(options),
                                                                   m_res(resolution)
 {
 
 }
 
+/// \brief Desctruct Terrain object, deleting contained objects.
+///
+/// All Segment objects are deleted, but Shader objects are not yet deleted.
+/// Probably need to be fixed.
 Terrain::~Terrain()
 {
     for (Segmentstore::iterator I = m_segments.begin(); 
@@ -39,6 +49,15 @@ Terrain::~Terrain()
     }
 }
 
+/// \brief Add the required Surface objects to a Segment.
+///
+/// If shading is enabled, each Segment has a set of Surface objects
+/// corresponding to the Shader objects available for this terrain.
+/// This function creates the necessary Surface objects, and adds them
+/// to the list in the Segment object. At this point the Segment is
+/// not yet populated with heightfield data, so the Surface cannot
+/// be populated. A newly constructed surface does not allocate its
+/// buffer memory, so there is very little overhead to creating it.
 void Terrain::addSurfaces(Segment & seg)
 {
     Segment::Surfacestore & sss = seg.getSurfaces();
@@ -54,11 +73,26 @@ void Terrain::addSurfaces(Segment & seg)
     }
 }
 
+/// \brief Populate the Surface objects associated with a Segment.
+///
+/// This is called after a Segment has been populated with heightfield
+/// data. The actual responsibility for populating the Surface objects
+/// is in Segment::populateSurfaces().
 void Terrain::shadeSurfaces(Segment & seg)
 {
     seg.populateSurfaces();
 }
 
+/// \brief Get the height value at a given coordinate x,y.
+///
+/// This is a convenience function provided to quickly get a height
+/// value at a given point. It always succeeds, as if no height data
+/// is available it just returns the default value. If a Segment does
+/// exist in the right place and is populated, the coords within that
+/// Segment are determined, and the heightfield queried. This function
+/// does not cause any data to be populated, and does not attempt to
+/// do any interpolation to get an accurate height figure. For more
+/// accurate results see Terrain::getHeightAndNormal.
 float Terrain::get(float x, float y) const
 {
     int ix = I_ROUND(floor(x / m_res));
@@ -71,7 +105,25 @@ float Terrain::get(float x, float y) const
     return s->get(I_ROUND(x) - (ix * m_res), I_ROUND(y) - (iy * m_res));
 }
 
-void Terrain::getHeightAndNormal(float x, float y, float & h,
+/// \brief Get an accurate height and normal vector at a given coordinate
+/// x,y.
+///
+/// This is a more expensive function that Terrain::get() for getting an
+/// accurate height value and surface normal at a given point. The main
+/// body of functionality is in the Segment::getHeightAndNormal() function
+/// called from here.
+/// The height and normal are interpolated based on a model where each
+/// tile of the heightfield comprises two triangles. If no heightfield data
+/// is available for the given location, this function returns false, and
+/// no data is returned.
+/// @param x coordinate of point to be returned.
+/// @param y coordinate of point to be returned.
+/// @param h reference to variable which will be used to store the resulting
+/// height value.
+/// @param n reference to variable which will be used to store the resulting
+/// normal value.
+/// @return true if heightdata was available, false otherwise.
+bool Terrain::getHeightAndNormal(float x, float y, float & h,
                                   WFMath::Vector<3> & n) const
 {
     int ix = I_ROUND(floor(x / m_res));
@@ -79,11 +131,22 @@ void Terrain::getHeightAndNormal(float x, float y, float & h,
 
     Segment * s = getSegment(ix, iy);
     if ((s == 0) || (!s->isValid())) {
-        return;
+        return false;
     }
     s->getHeightAndNormal(x - (ix * m_res), y - (iy * m_res), h, n);
+    return true;
 }
 
+/// \brief Get the BasePoint at a given base point coordinate.
+///
+/// Get the BasePoint value for the given coordinate on the base
+/// point grid.
+/// @param x coordinate on the base point grid.
+/// @param y coordinate on the base point grid.
+/// @param z reference to varaible which will be used to store the
+/// BasePoint data.
+/// @return true if a BasePoint is defined at the given coordinate, false
+/// otherwise.
 bool Terrain::getBasePoint(int x, int y, BasePoint& z) const
 {
     Pointstore::const_iterator I = m_basePoints.find(x);
@@ -98,6 +161,18 @@ bool Terrain::getBasePoint(int x, int y, BasePoint& z) const
     return true;
 }
 
+/// \brief Set the BasePoint value at a given base point coordinate.
+///
+/// Set the BasePoint value for the given coordinate on the base
+/// point grid.
+/// If inserting this BasePoint completes the set of points required
+/// to define one or more Segment objects which were not yet defined,
+/// new Segment objects are created. If this replaces a point for one
+/// or more Segment objects that were already defined, the contents of
+/// those Segment objects are invalidated.
+/// @param x coordinate on the base point grid.
+/// @param y coordinate on the base point grid.
+/// @param z BasePoint value to be used at the given coordinate.
 void Terrain::setBasePoint(int x, int y, const BasePoint& z)
 {
     m_basePoints[x][y] = z;
@@ -119,8 +194,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 if (!complete) {
                     continue;
                 }
-                s = new Segment(m_res);
-                s->setRef(i,j);
+                s = new Segment(i, j, m_res);
                 Matrix<2, 2, BasePoint> & cp = s->getControlPoints();
                 float min = existingPoint[ri][rj].height();
                 float max = existingPoint[ri][rj].height();
@@ -143,6 +217,15 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
     }
 }
 
+/// \brief Get the Segment at a given base point coordinate.
+///
+/// Get the Segment pointer for the given coordinate on the base
+/// point grid. The Segment in question may not have been populated
+/// with heightfield or surface data.
+/// @param x coordinate on the base point grid.
+/// @param y coordinate on the base point grid.
+/// @return a valid pointer if a Segment is defined at the given coordinate,
+/// zero otherwise.
 Segment * Terrain::getSegment(int x, int y) const
 {
     Segmentstore::const_iterator I = m_segments.find(x);
@@ -156,6 +239,13 @@ Segment * Terrain::getSegment(int x, int y) const
     return J->second;
 }
 
+/// \brief Add a modifier to the terrain.
+///
+/// Add a new TerrainMod object to the terrain, which defines a modification
+/// to the terrain heightfield or surface data. The segments are responsible
+/// for storing the TerrainMod objects, so the apropriate Segment objects
+/// are found and the TerrainMode is passed to each in turn.
+/// @param t reference to the TerrainMod object to be applied.
 void Terrain::addMod(const TerrainMod &t) {
 
     //work out which segments are overlapped by thus mod

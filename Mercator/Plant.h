@@ -10,36 +10,50 @@
 
 namespace Mercator {
 
-/// This is the core class for any area to be populated with vegetation
+/// \brief This is the simple class for representing instances of vegetation.
+///
+/// It is used in instances of class Forest to represent each instance
+/// of vegetation created when the Forest is populated.
 class Plant {
   private:
+    /// Position of the vegetation relative to its grid point.
     WFMath::Point<2> m_displacement;
+    /// Orientation of the vegetation.
     WFMath::Quaternion m_orientation;
+    /// Height of the vegetation.
     float m_height;
   public:
+    /// Height is initialised explicitly to zero.
     Plant();
+    /// Nothing special in the destructor.
     ~Plant();
 
+    /// Accessor for displacement from grid point.
     const WFMath::Point<2> & getDisplacement() const {
         return m_displacement;
     }
 
+    /// Set the displacement to a new value.
     void setDisplacement(const WFMath::Point<2> & d) {
         m_displacement = d;
     }
 
+    /// Accessor for orientation.
     const WFMath::Quaternion & getOrientation() const {
         return m_orientation;
     }
 
+    /// Set the orientation to a new value.
     void setOrientation(const WFMath::Quaternion & o) {
         m_orientation = o;
     }
 
+    /// Accessor for height.
     const float getHeight() const {
         return m_height;
     }
 
+    /// Set the height to a new value.
     void setHeight(float h) {
         m_height = h;
     }

@@ -23,6 +23,7 @@ namespace Mercator {
 
 // A couple of helper classes
 // These interpolate between points or across a quad
+
 class LinInterp {
   private:
     int m_size;
@@ -66,14 +67,30 @@ class QuadInterp {
     } 
 };      
 
-Segment::Segment(unsigned int resolution) :
+/// \brief Construct an empty segment with the given resolution.
+///
+/// Generally it is not necessary to call this from outside the Mercator
+/// library Segment objects are created as required. The Segment is
+/// constructed without allocating any storage for heightfield or surface
+/// normal data. The m_min and m_max members are initialised to extreme
+/// values, and should be set to appropriate using setMinMax() as soon as
+/// possible after construction. Similarly the control points should be
+/// set soon after construction.
+Segment::Segment(int x, int y, unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
+                            m_xRef(x), m_yRef(y),
                             m_points(0), m_normals(0), m_vertices(0),
                             m_max(-1000000.f), m_min(1000000.0f),
                             m_validVert(false), m_validSurf(false)
 {
 }
 
+/// \brief Destruct the Segment.
+///
+/// Generally it is not necessary to delete Segment objects from application
+/// code, as Segment instances are owned by the Terrain object.
+/// Storage allocated for heightfield and surface normals is implicitly
+/// deleted.
 Segment::~Segment()
 {
     clearMods();
@@ -85,6 +102,11 @@ Segment::~Segment()
     }
 }
 
+/// \brief Populate the Segment with heightfield data.
+///
+/// Storage for the heightfield data is allocated if necessary, the 
+/// qRMD algorithm is used to calculate the heightfield data, and
+/// required modifications are applied.
 void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 {
     if (m_points == 0) {
@@ -98,6 +120,14 @@ void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
     }
 }
 
+/// \brief Mark the contents of this Segment as stale.
+///
+/// This is called internally whenever changes occur that mean that the
+/// heightfield and surface normal data are no longer valid.
+/// If surface normal storage is deallocated, and if the points argument
+/// is true the heightfield storage is also deallocated. The
+/// Surface::invalidate() method is called for each surface associated with
+/// this Segment.
 void Segment::invalidate(bool points)
 {
     if (points && m_points != 0) {
@@ -116,8 +146,16 @@ void Segment::invalidate(bool points)
     m_validSurf = false;
 }
 
+/// \brief Populate the Segment with surface normal data.
+///
+/// Storage for the normals is allocated if necessary, and the average
+/// normal at each heightpoint is calculated. The middle normals are
+/// calculated first, followed by the boundaries which are done in
+/// 2 dimensions to ensure that there is no visible seam between segments.
 void Segment::populateNormals()
 {
+    assert(m_points != NULL);
+
     if (m_normals == 0) {
         m_normals = new float[m_size * m_size * 3];
     }
@@ -195,6 +233,9 @@ void Segment::populateNormals()
     np[m_res * m_size * 3 + m_res * 3 + 2] = 1.f;
 }
 
+/// \brief Populate the surfaces associated with this Segment.
+///
+/// Call Surface::populate() for each Surface in turn.
 void Segment::populateSurfaces()
 {
     Surfacestore::const_iterator I = m_surfaces.begin();
@@ -215,7 +256,7 @@ inline float randHalf()
 }
 
 
-// quasi-Random Midpoint Displacement algorithm
+/// \brief quasi-Random Midpoint Displacement (qRMD) algorithm.
 float Segment::qRMD(float nn, float fn, float ff, float nf,
                     float roughness, float falloff, int depth) const
 {
@@ -226,11 +267,12 @@ float Segment::qRMD(float nn, float fn, float ff, float nf,
     return ((nn+fn+ff+nf)/4.f) + randHalf() * roughness * heightDifference / (1.f+::pow(depth,falloff));
 }
 
-// 1 dimensional midpoint displacement fractal
-// size must be a power of 2
-// falloff is the decay of displacement as the fractal is refined
-// array is size+1 long. array[0] and array[size] are filled
-//      with the control points for the fractal
+/// \brief One dimensional midpoint displacement fractal.
+///
+/// Size must be a power of 2.
+/// Falloff is the decay of displacement as the fractal is refined.
+/// Array is size + 1 long. array[0] and array[size] are filled
+/// with the control points for the fractal.
 void Segment::fill1d(const BasePoint& l, const BasePoint &h, 
                      float *array) const
 {
@@ -275,9 +317,11 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
     }
 }
 
-// 2 dimensional midpoint displacement fractal for a tile where
-// edges are to be filled by 1d fractals.// size must be a power of 2
-// array is size+1  * size+1 with the corners the control points.
+/// \brief Two dimensional midpoint displacement fractal.
+///
+/// For a tile where edges are to be filled by 1d fractals.
+/// Size must be a power of 2, array is (size + 1) * (size + 1) with the
+/// corners the control points.
 void Segment::fill2d(const BasePoint& p1, const BasePoint& p2, 
                      const BasePoint& p3, const BasePoint& p4)
 {
@@ -405,6 +449,18 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
     delete [] edge;
 }
 
+/// \brief Get an accurate height and normal vector at a given coordinate
+/// relative to this segment.
+///
+/// The height and surface normal are determined by finding the four adjacent
+/// height points nearest to the coordinate, and interpolating between
+/// those height values. The square area defined by the 4 height points is
+/// considered as two triangles for the purposes of interpolation to ensure
+/// that the calculated height falls on the surface rendered by a 3D
+/// graphics engine from the same heightfield data. The line used to
+/// divide the area is defined by the gradient y = x, so the first
+/// triangle has relative vertex coordinates (0,0) (1,0) (1,1) and
+/// the second triangle has vertex coordinates (0,0) (0,1) (1,1).
 void Segment::getHeightAndNormal(float x, float y, float& h,
                                  WFMath::Vector<3> &normal) const
 {
@@ -447,6 +503,15 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
     }
 }
 
+/// \brief Determine the intersection between an axis aligned box and
+/// this segment.
+///
+/// @param bbox axis aligned box to be tested.
+/// @param lx lower x coordinate of intersection area.
+/// @param hx upper x coordinate of intersection area.
+/// @param ly lower y coordinate of intersection area.
+/// @param hy upper y coordinate of intersection area.
+/// @return true if the box intersects with this Segment, false otherwise.
 bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
                                                             int &ly, int &hy) 
 {
@@ -469,6 +534,10 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
     return true;
 }
 
+/// \brief Add a TerrainMod to this Segment.
+///
+/// Called from Terrain::addMod(). If this point data is already valid,
+/// the modification will be applied directly.
 void Segment::addMod(TerrainMod *t) 
 {
     m_modList.push_back(t);
@@ -477,6 +546,10 @@ void Segment::addMod(TerrainMod *t)
     }
 }
 
+/// \brief Delete all the modifications applied to this Segment.
+///
+/// Usually called from the destructor. It is not normally necessary to call
+/// this function from the application.
 void Segment::clearMods() 
 {
     if (m_modList.size()) {
@@ -488,6 +561,11 @@ void Segment::clearMods()
     }
 }
 
+/// \brief Modify the heightfield data using the TerrainMod objects which
+/// are attached to this Segment.
+///
+/// Usually called from Segment::populate(). It is not normally necessary to
+/// call this function from the application.
 void Segment::applyMod(TerrainMod *t) 
 {
     int lx,hx,ly,hy;

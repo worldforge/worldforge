@@ -27,7 +27,7 @@ int shadeTest(Mercator::Segment & segment)
 
 int main()
 {
-    Mercator::Segment segment;
+    Mercator::Segment segment(0,0,Mercator::defaultResolution);
     segment.populate();
 
     int errorCount = 0;
