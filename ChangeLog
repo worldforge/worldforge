@@ -1,3 +1,8 @@
+2003-08-08  Damien McGinnes
+
+	* Mercator/Segment.cpp: changed round() to rint()
+ 	* updated TODO
+
 2003-08-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Removed depency on Atlas-C++ for now.

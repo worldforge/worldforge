@@ -383,19 +383,19 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
                                                             int &ly, int &hy) 
 {
 
-    lx = (int)round(bbox.lowCorner()[0]); 
+    lx = (int)rint(bbox.lowCorner()[0]); 
     if (lx > m_res) return false;
     if (lx < 0) lx = 0;
     
-    hx = (int)round(bbox.highCorner()[0]); 
+    hx = (int)rint(bbox.highCorner()[0]); 
     if (hx < 0) return false;
     if (hx > m_res) hx = m_res;
     
-    ly = (int)round(bbox.lowCorner()[1]); 
+    ly = (int)rint(bbox.lowCorner()[1]); 
     if (ly > m_res) return false;
     if (ly < 0) ly = 0;
     
-    hy = (int)round(bbox.highCorner()[1]); 
+    hy = (int)rint(bbox.highCorner()[1]); 
     if (hy < 0) return false;
     if (hy > m_res) hy = m_res;
 

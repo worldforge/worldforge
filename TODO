@@ -1,6 +1,3 @@
-* Why are we using round() rather than rint() or indeed any other function
-  in Segment::clipToSegment()
-
 * SHould probably make segment etc. less involved in memory, and provide
   a way for the memory to be special
 
@@ -28,12 +25,12 @@
 * Re-work code to use 2D arrays for 2D data - AJR
 
 * allow local terrain deformation:
-   -subtraction eg of a sphere to make a crater
-   -addition eg of a cylindroid to make a mesa
-   -set all heights within a polygon to one value (level ground on which to build)
+   -subtraction eg of a sphere to make a crater - DONE dpm
+   -addition eg of a cylindroid to make a mesa - DONE dpm
+   -set all heights within a polygon to one value (level ground on which to build) - DONE dpm
 
 * move some of the stage terrain code into mercator
-   - normal/height calcs
+   - normal/height calcs - DONE dpm
 
 * a sea level? multiple sea levels?
 
@@ -45,7 +42,7 @@
 * investigate interpolation of height points to eliminate gradient discontinuities at tile edges
   this is low priority because gradients differences are only a problem occasionally
 
-* variable roughness. this was trialled in forge/scratchpad/damien but might have some bugs
+* variable roughness. DONE dpm
 
 * allow for non fractal tiles (hand drawn ones inserted into the landscape) ??
 
