@@ -11,6 +11,7 @@ config.h.in
 confdefs.h
 configure
 stamp-h
+stamp-h[0-9]*
 stamp-h.in
 libtool
 ltmain.sh
