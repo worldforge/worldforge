@@ -17,6 +17,7 @@ static float roughness = 1.5;
 
 Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)])
 {
+	m_max=m_min=0.0f;
 }
 
 #if 0
@@ -108,7 +109,8 @@ void Segment::populate(const Matrix<4, 4> & base)
 void Segment::populate(const Matrix<4, 4> & base)
 {
     tile(m_res, fallOff, roughness, base(1, 1), base(2, 1),
-                                    base(2, 2), base(1, 2), m_points);
+                                    base(2, 2), base(1, 2), m_points,
+				    m_min, m_max);
 }
 #endif
 

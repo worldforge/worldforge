@@ -12,6 +12,11 @@ inline float qRMD(float nn, float fn, float ff, float nf, float roughness, float
     return ((nn+fn+ff+nf)/4.f) + randHalf() * roughness * heightDifference / (1.f+::pow(depth,falloff));
 }
 
+void checkMaxMin(float h, float &max, float &min) 
+{ 
+    if (h>max) max=h;
+    if (h<min) min=h;
+}
 
 //1 dimensional midpoint displacement fractal
 //size must be a power of 2
@@ -48,7 +53,7 @@ void fill1d(int size, float falloff, float roughness, float l, float h, float *a
 //edges are already filled by 1d fractals.
 //size must be a power of 2
 //array is size+1  * size+1 with the corners the control points.
-void tile(int size, float falloff, float roughness, float p1, float p2, float p3, float p4, float *array) {
+void tile(int size, float falloff, float roughness, float p1, float p2, float p3, float p4, float *array, float &min, float &max) {
     assert(falloff!=-1.0);
     
     int line = size+1;
@@ -61,24 +66,28 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
     fill1d(size,falloff,roughness,p1,p2,edge);
     for (int i=0;i<=size;i++) {
         array[0*line + i] = edge[i];
+	checkMaxMin(edge[i], max, min);
     }
 
     //left edge
     fill1d(size,falloff,roughness,p1,p4,edge);
     for (int i=0;i<=size;i++) {
         array[i*line + 0] = edge[i];
+	checkMaxMin(edge[i], max, min);
     }
    
     //right edge
     fill1d(size,falloff,roughness,p2,p3,edge);
     for (int i=0;i<=size;i++) {
         array[i*line + size] = edge[i];
+	checkMaxMin(edge[i], max, min);
     }
 
     //bottom edge
     fill1d(size,falloff,roughness,p4,p3,edge);
     for (int i=0;i<=size;i++) {
         array[size*line + i] = edge[i];
+	checkMaxMin(edge[i], max, min);
     }
     
     //fill in the centre
@@ -101,6 +110,8 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
 					roughness,
 					f, depth);
 		    
+
+    checkMaxMin(array[stride*line + stride], max, min);
     stride >>= 1;
 
     //skip across the array and fill in the points
@@ -118,6 +129,7 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
                                        array[(i+stride) + (j+stride) * (line)],
                                        array[(i-stride) + (j-stride) * (line)],
 			               roughness, f, depth);
+              checkMaxMin(array[j*line + i], max, min);
 	  }
       }
 
@@ -134,6 +146,7 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
                                        array[(i) + (j+stride) * (line)],
                                        array[(i) + (j-stride) * (line)], 
                                        roughness, f , depth);
+              checkMaxMin(array[j*line + i], max, min);
 	  }
       }
 	       
@@ -144,6 +157,7 @@ void tile(int size, float falloff, float roughness, float p1, float p2, float p3
                                        array[(i) + (j+stride) * (line)],
                                        array[(i) + (j-stride) * (line)],
                                        roughness, f, depth);
+              checkMaxMin(array[j*line + i], max, min);
           }
       }
 

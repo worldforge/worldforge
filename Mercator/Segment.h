@@ -17,6 +17,8 @@ class Segment {
   private:
     int m_res;
     float * const m_points;
+    float m_max;
+    float m_min;
   public:
     explicit Segment(int res = 64);
 
@@ -39,6 +41,9 @@ class Segment {
     void populate(const float *);
     float qRMD(float, float, float, float, int depth) const;
 
+    float getMax() { return m_max; }
+    float getMin() { return m_max; }
+	
 };
 
 } // namespace Mercator
