@@ -28,7 +28,7 @@
 #include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/matrix.h>
+#include <wfmath/rotmatrix.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>

@@ -1,5 +1,5 @@
 // -*-C++-*-
-// matrix.cpp (Matrix<> implementation)
+// rotmatrix.cpp (RotMatrix<> implementation)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -25,8 +25,9 @@
 // Created: 2001-12-7
 
 #include "const.h"
-#include "matrix.h"
+#include "rotmatrix.h"
 #include "vector.h"
+#include "quaternion.h"
 
 using namespace WF::Math;
 
@@ -54,8 +55,45 @@ template<> bool WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
     angles[3] = 0;
   }
 
-  return m_flip;
+  return !m_flip;
 }
+
+namespace WF { namespace Math {
+
+template<> RotMatrix<3>::RotMatrix(const Quaternion& q, const bool not_flip)
+{
+  CoordType xx, yy, zz, xy, xz, yz;
+  const Vector<3> &vref = q.vector();
+
+  // FIXME get friend stuff working
+
+  xx = vref[0] * vref[0];
+  xy = vref[0] * vref[1];
+  xz = vref[0] * vref[2];
+  yy = vref[1] * vref[1];
+  yz = vref[1] * vref[2];
+  zz = vref[2] * vref[2];
+
+  Vector<3> wvec = vref * q.scalar();
+
+  m_elem[0][0] = FloatSubtract(1, 2 * FloatAdd(xx, yy));
+  m_elem[1][1] = FloatSubtract(1, 2 * FloatAdd(xx, zz));
+  m_elem[2][2] = FloatSubtract(1, 2 * FloatAdd(yy, zz));
+
+  m_elem[0][1] = 2 * FloatAdd(xy, wvec[2]);
+  m_elem[0][2] = 2 * FloatSubtract(xz, wvec[1]);
+  m_elem[1][0] = 2 * FloatSubtract(xy, wvec[2]);
+  m_elem[1][2] = 2 * FloatAdd(yz, wvec[0]);
+  m_elem[2][0] = 2 * FloatAdd(xz, wvec[1]);
+  m_elem[2][1] = 2 * FloatSubtract(xy, wvec[0]);
+
+  m_flip = !not_flip;
+
+  if(!not_flip)
+    *this = Prod(*this, RotMatrix<3>().mirror(0));
+}
+
+}} // namespace WF::Math
 
 template<>
 RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,

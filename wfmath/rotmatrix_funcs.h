@@ -1,5 +1,5 @@
 // -*-C++-*-
-// matrix_funcs.h (Matrix<> template functions)
+// rotmatrix_funcs.h (RotMatrix<> template functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -28,7 +28,7 @@
 #define WFMATH_MATRIX_FUNCS_H
 
 #include <wfmath/vector.h>
-#include <wfmath/matrix.h>
+#include <wfmath/rotmatrix.h>
 #include <wfmath/error.h>
 #include <wfmath/const.h>
 
@@ -327,22 +327,22 @@ inline RotMatrix<dim>& RotMatrix<dim>::identity()
 template<const int dim>
 inline CoordType RotMatrix<dim>::trace() const
 {
-  CoordType out = 0;
+  CoordType out = dim ? m_elem[0][0] : 0;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 1; i < dim; ++i)
     out = FloatAdd(out, m_elem[i][i]);
 
   return out;
 }
 
 template<const int dim>
-RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams], bool flip)
+RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams], bool not_flip)
 {
   int ang_num = 0;
 
-  m_flip = flip;
+  m_flip = !flip;
 
-  if(flip)
+  if(m_flip)
     mirror(0);
   else
     identity();
@@ -366,7 +366,7 @@ RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams], bool 
 
 // Only have this for special cases
 template<> inline bool RotMatrix<2>::toEuler(CoordType angles[1]) const
-	{angles[0] = atan2(m_elem[1][1], m_elem[0][1]); return m_flip;}
+	{angles[0] = atan2(m_elem[1][1], m_elem[0][1]); return !m_flip;}
 template<> bool RotMatrix<3>::toEuler(CoordType angles[3]) const;
 
 template<const int dim>
@@ -445,6 +445,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
 						 const CoordType& theta);
+template<> RotMatrix<3>::RotMatrix(const Quaternion& q, const bool not_flip);
 
 template<const int dim>
 RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)

@@ -1,5 +1,5 @@
 // -*-C++-*-
-// matrix.h (RotMatrix<> class definition)
+// rotmatrix.h (RotMatrix<> class definition)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -32,6 +32,7 @@
 namespace WF { namespace Math {
 
 template<const int dim> class Vector;
+class Quaternion;
 
 // Elements of this class represent rotation matrices. The NxN dimensional
 // rotation matrices form a group called O(N), the orthogonal
@@ -99,7 +100,7 @@ class RotMatrix {
 
   const CoordType& elem(const int i, const int j) const 	{return m_elem[i][j];}
 
-  // Can't set one element at a time and keep it an SO(N) matrix,
+  // Can't set one element at a time and keep it an O(N) matrix,
   // but can try to set all values at once, and see if they match.
   // The first one is vals[row][column], the second is vals[row*dim+column].
   bool setVals(const CoordType vals[dim][dim], double precision = WFMATH_EPSILON);
@@ -112,11 +113,13 @@ class RotMatrix {
   CoordType determinant() const {return m_flip ? -1 : 1;}
   RotMatrix inverse() const;
 
-  // flip indicates the parity of the matrix. It's true for odd matrices
-  // and false for even ones. Odd parity is implemented by right-multiplying
-  // the Euler matrix by a flip in the first axis
-  RotMatrix& fromEuler(const CoordType angles[nParams], bool flip = false);
-  bool toEuler(CoordType angles[nParams]) const; // returns flip
+  // not_flip indicates the parity of the matrix. It's false for odd matrices
+  // and true for even ones. It can also be treated as true for success
+  // and false for failure (couldn't convert odd parity matrix), consistent
+  // with other conversion routines in the library. Odd parity is implemented
+  // by right-multiplying the Euler matrix by a flip in the first axis.
+  RotMatrix& fromEuler(const CoordType angles[nParams], bool not_flip = true);
+  bool toEuler(CoordType angles[nParams]) const; // returns not_flip
 
   friend RotMatrix Prod<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
   friend RotMatrix ProdInv<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
@@ -141,8 +144,10 @@ class RotMatrix {
 
   // Euler angles, 3D only
   RotMatrix(const CoordType& alpha, const CoordType& beta,
-	    const CoordType& gamma, bool flip = false)
-	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d, flip);}
+	    const CoordType& gamma, bool not_flip = true)
+	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d, not_flip);}
+  // Quaternion, 3D only
+  RotMatrix(const Quaternion& q, const bool not_flip = true);
 
   // 2D only
   RotMatrix<2>& rotation(const CoordType& theta)
@@ -168,6 +173,6 @@ class RotMatrix {
 
 }} // namespace WF::Math
 
-#include <wfmath/matrix_funcs.h>
+#include <wfmath/rotmatrix_funcs.h>
 
 #endif // WFMATH_MATRIX_H

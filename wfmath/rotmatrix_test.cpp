@@ -1,5 +1,5 @@
 // -*-C++-*-
-// matrix_test.cpp (Matrix<> test functions)
+// rotmatrix_test.cpp (RotMatrix<> test functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -26,7 +26,7 @@
 
 #include "const.h"
 #include "vector.h"
-#include "matrix.h"
+#include "rotmatrix.h"
 #include "stream.h"
 
 #include "general_test.h"
@@ -34,9 +34,9 @@
 using namespace WF::Math;
 
 template<const int dim>
-void test_matrix(const RotMatrix<dim>& m)
+void test_rotmatrix(const RotMatrix<dim>& m)
 {
-  cout << "Testing matrix: " << m << std::endl;
+  cout << "Testing RotMatrix: " << m << std::endl;
 
   test_general(m);
 
@@ -107,8 +107,8 @@ int main()
   m2.rotation(WFMATH_CONST_PI / 6);
   m3.rotation(Vector<3>(1, 0, WFMATH_CONST_SQRT2), WFMATH_CONST_PI / 5);
 
-  test_matrix(m2);
-  test_matrix(m3);
+  test_rotmatrix(m2);
+  test_rotmatrix(m3);
 
   // FIXME toEuler(), fromEuler()
 

@@ -26,7 +26,7 @@
 
 #include "const.h"
 #include "vector.h"
-#include "matrix.h"
+#include "rotmatrix.h"
 #include "point.h"
 #include "axisbox.h"
 #include "ball.h"

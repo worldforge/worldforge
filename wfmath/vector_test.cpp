@@ -26,7 +26,7 @@
 
 #include "const.h"
 #include "vector.h"
-#include "matrix.h"
+#include "rotmatrix.h"
 #include "stream.h"
 
 #include "general_test.h"

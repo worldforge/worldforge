@@ -28,7 +28,7 @@
 #define WFMATH_STREAM_H
 
 #include <wfmath/vector.h>
-#include <wfmath/matrix.h>
+#include <wfmath/rotmatrix.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
@@ -62,6 +62,7 @@ bool FromString(C& c, const std::string& s, unsigned int precision = 6)
 
 void _ReadCoordList(std::istream& is, CoordType* d, const int num);
 void _WriteCoordList(std::ostream& os, const CoordType* d, const int num);
+CoordType _GetEpsilon(std::istream& is);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
@@ -114,12 +115,7 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
     }
   }
 
-  int str_prec = is.precision();
-  double str_eps = 1;
-  while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
-    str_eps /= 10;
-
-  if(!m._setVals(d, FloatMax(WFMATH_EPSILON, str_eps)))
+  if(!m._setVals(d, FloatMax(WFMATH_EPSILON, _GetEpsilon(is))))
     is.setstate(std::istream::failbit);
 
   return is;

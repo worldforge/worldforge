@@ -6,7 +6,7 @@
 Makefile
 Makefile.in
 vector_test
-matrix_test
+rotmatrix_test
 point_test
 shape_test
 intersect_test

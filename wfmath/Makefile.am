@@ -4,8 +4,9 @@ EXTRA_DIST = bc_sloppy_mag_3
 headerdir = $(includedir)/wfmath
 header_HEADERS = error.h const.h \
 	vector.h vector_funcs.h \
-	matrix.h matrix_funcs.h \
+	rotmatrix.h rotmatrix_funcs.h \
 	point.h point_funcs.h \
+	quaternion.h \
 	axisbox.h axisbox_funcs.h \
 	ball.h ball_funcs.h \
 	miniball_config.h wrapped_array.h miniball.h miniball_funcs.h \
@@ -17,19 +18,19 @@ header_HEADERS = error.h const.h \
 
 lib_LTLIBRARIES = libwfmath.la
 libwfmath_la_SOURCES = basis.h const.cpp stream.cpp \
-	matrix.cpp vector.cpp point.cpp polygon.cpp intersect.cpp
+	rotmatrix.cpp vector.cpp point.cpp quaternion.cpp polygon.cpp intersect.cpp
 libwfmath_la_LDFLAGS = -lm
 
-check_PROGRAMS = vector_test matrix_test point_test intersect_test
+check_PROGRAMS = vector_test rotmatrix_test point_test intersect_test
 TESTS = $(check_PROGRAMS)
 
 vector_test_SOURCES = vector_test.cpp general_test.h
 vector_test_LDFLAGS = -lm
 vector_test_LDADD = libwfmath.la
 
-matrix_test_SOURCES = matrix_test.cpp general_test.h
-matrix_test_LDFLAGS = -lm
-matrix_test_LDADD = libwfmath.la
+rotmatrix_test_SOURCES = rotmatrix_test.cpp general_test.h
+rotmatrix_test_LDFLAGS = -lm
+rotmatrix_test_LDADD = libwfmath.la
 
 point_test_SOURCES = point_test.cpp general_test.h shape_test.h
 point_test_LDFLAGS = -lm

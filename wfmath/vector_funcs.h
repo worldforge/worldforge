@@ -32,7 +32,7 @@
 #define WFMATH_VECTOR_FUNCS_H
 
 #include <wfmath/vector.h>
-#include <wfmath/matrix.h>
+#include <wfmath/rotmatrix.h>
 #include <wfmath/const.h>
 
 namespace WF { namespace Math {
@@ -252,6 +252,7 @@ Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
 }
 
 template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta);
+template<> Vector<3>& Vector<3>::rotate(const Quaternion& q);
 
 template<const int dim>
 CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)

@@ -1,3 +1,12 @@
+Friday, January 11, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added Quaternion class, based on code from eris
+	* Renamed matrix.h, matrix_funcs.h, matrix.cpp, matrix_test.cpp
+	  to rotmatrix.h, rotmatrix_funcs.h, rotmatrix.cpp, rotmatrix_test.cpp;
+	  this matches the name of the class, and it's best to have the
+	  matrix.h slot available in case we need it later. Need to do
+	  this now before everyone starts using the library
+
 Wednesday, January 9, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Added BoundingBox(), BoundingSphere() functions for a

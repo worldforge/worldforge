@@ -32,7 +32,7 @@
 
 #include <wfmath/const.h>
 #include <wfmath/vector.h>
-#include <wfmath/matrix.h>
+#include <wfmath/rotmatrix.h>
 
 namespace WF { namespace Math {
 

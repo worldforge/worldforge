@@ -31,6 +31,7 @@
 #include "const.h"
 #include "basis.h"
 #include "vector.h"
+#include "quaternion.h"
 
 using namespace WF::Math;
 
@@ -78,6 +79,20 @@ template<> WF::Math::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordTy
   Vector<3> rot90 = Cross(axis, perp_part) / sqrt(axis_sqr_mag);
 
   *this += perp_part * (cos(theta) - 1) + rot90 * sin(theta);
+
+  return *this;
+}
+
+template<> Vector<3>& Vector<3>::rotate(const Quaternion& q)
+{
+  // FIXME get friend stuff working
+
+  CoordType w = q.scalar();
+  const Vector<3>& vec = q.vector();
+
+  *this = FloatSubtract(2 * w * w, 1) * *this
+	  + 2 * vec * Dot(vec, *this)
+	  + 2 * w * Cross(vec, *this);
 
   return *this;
 }

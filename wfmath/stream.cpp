@@ -25,6 +25,7 @@
 // Created: 2001-12-13
 
 #include "stream.h"
+#include "quaternion.h"
 
 using namespace WF::Math;
 
@@ -56,6 +57,17 @@ void WF::Math::_ReadCoordList(std::istream& is, CoordType* d, const int num)
     }
   }
 }
+
+CoordType WF::Math::_GetEpsilon(std::istream& is)
+{
+  int str_prec = is.precision();
+  double str_eps = 1;
+  while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
+    str_eps /= 10;
+
+  return str_eps;
+}
+
 
 // This is the only way I could get the operator<<() and operator>>()
 // templates to recognize the declarations in the headers
@@ -102,6 +114,53 @@ std::istream& operator>>(std::istream& is, Polygon<2>& r)
       return is;
     }
   }
+}
+
+std::ostream& operator<<(std::ostream& os, const Quaternion& q)
+{
+  return os << "Quaternion: (" << q.m_w << ',' << q.m_vec << ')';
+}
+
+std::istream& operator>>(std::istream& is, Quaternion& q)
+{
+  char next;
+
+  do {
+    if(!is)
+      return is;
+    is >> next;
+  } while(next != '(');
+
+  is >> q.m_w;
+  if(!is)
+    return is;
+
+  is >> next;
+  if(next != ',') {
+    is.setstate(std::istream::failbit);
+    return is;
+  }
+
+  is >> q.m_vec;
+  if(!is)
+    return is;
+
+  CoordType norm = q.m_w * q.m_w + q.m_vec.sqrMag();
+
+  if(!IsFloatEqual(norm, 1, _GetEpsilon(is))) {
+    is.setstate(std::istream::failbit);
+    return is;
+  }
+
+  norm = sqrt(norm);
+  q.m_w /= norm;
+  q.m_vec /= norm;
+
+  is >> next;
+  if(next != ')')
+    is.setstate(std::istream::failbit);
+
+  return is;
 }
 
 }} // namespace WF::Math

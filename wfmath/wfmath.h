@@ -32,8 +32,9 @@
 #include <wfmath/const.h>
 // Basic types
 #include <wfmath/vector.h>
-#include <wfmath/matrix.h>
+#include <wfmath/rotmatrix.h>
 #include <wfmath/point.h>
+#include <wfmath/quaternion.h>
 // Shape types
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>

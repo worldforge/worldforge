@@ -38,6 +38,7 @@ namespace WF { namespace Math {
 template<const int dim> class RotMatrix;
 template<const int dim> class Vector;
 template<const int dim> class Point;
+class Quaternion;
 
 template<const int dim>
 Vector<dim> operator*(const CoordType& d, const Vector<dim>& v);
@@ -228,6 +229,7 @@ class Vector {
   Vector<3>& rotateZ(CoordType theta);
 
   Vector<3>& rotate(const Vector<3>& axis, CoordType theta);
+  Vector<3>& rotate(const Quaternion& q);
 
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
