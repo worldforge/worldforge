@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+#include <cassert>
+
 namespace Atlas { namespace Message {
 
 DecoderBase::DecoderBase()
