@@ -123,8 +123,13 @@ int AXMLDecoder::hasTokens()
 			else if (tag == "str")		type = AProtocol::atlasSTR;
 			else if (tag == "string")	type = AProtocol::atlasSTR;
 			else if (tag == "float")	type = AProtocol::atlasFLT;
+			else if (tag == "uri")		type = AProtocol::atlasURI;
 			else if (tag == "map")		type = AProtocol::atlasMAP;
-			else if (tag.find("list") > string::npos)	type = AProtocol::atlasLST;
+			else if (tag == "int_list")	type = AProtocol::atlasLSTINT;
+			else if (tag == "long_list")	type = AProtocol::atlasLSTLNG;
+			else if (tag == "float_list")	type = AProtocol::atlasLSTFLT;
+			else if (tag == "string_list")	type = AProtocol::atlasLSTSTR;
+			else if (tag == "uri_list")	type = AProtocol::atlasLSTURI;
 			else if (tag == "list")		type = AProtocol::atlasLST;
 			else {
 				// bad tag type !!
@@ -137,6 +142,11 @@ int AXMLDecoder::hasTokens()
 				state = 3;
 				if (type == AProtocol::atlasMAP) state = 2;
 				if (type == AProtocol::atlasLST) state = 2;
+				if (type == AProtocol::atlasLSTINT) state = 2;
+				if (type == AProtocol::atlasLSTLNG) state = 2;
+				if (type == AProtocol::atlasLSTFLT) state = 2;
+				if (type == AProtocol::atlasLSTSTR) state = 2;
+				if (type == AProtocol::atlasLSTURI) state = 2;
 			} else {
 				token = AProtocol::atlasATREND;
 				state = 2;
