@@ -114,28 +114,34 @@ void PollDefault::poll(unsigned long timeout)
   assert(!already_polling);
   already_polling = true;
 
-  unsigned long wait_time = 0;
-  inst.new_timeout_ = false;
+  try {
+    unsigned long wait_time = 0;
+    inst.new_timeout_ = false;
 
-  // This will only happen for timeout != 0
-  while(wait_time < timeout) {
-    inst.doPoll(wait_time);
-    timeout -= wait_time;
-    wait_time = Timeout::pollAll();
-    if(inst.new_timeout_) {
-      // Added a timeout, the time until it must be called
-      // may be shorter than wait_time
-      wait_time = 0;
-      inst.new_timeout_ = false;
+    // This will only happen for timeout != 0
+    while(wait_time < timeout) {
+      inst.doPoll(wait_time);
+      timeout -= wait_time;
+      wait_time = Timeout::pollAll();
+      if(inst.new_timeout_) {
+        // Added a timeout, the time until it must be called
+        // may be shorter than wait_time
+        wait_time = 0;
+        inst.new_timeout_ = false;
+      }
     }
+
+    inst.doPoll(timeout);
+    Timeout::pollAll();
+
+    // We're done, turn off the reentrancy prevention flag
+    assert(already_polling);
+    already_polling = false;
   }
-
-  inst.doPoll(timeout);
-  Timeout::pollAll();
-
-  // We're done, turn off the reentrancy prevention flag
-  assert(already_polling);
-  already_polling = false;
+  catch(...) {
+    already_polling = false;
+    throw;
+  }
 }
 
 void PollDefault::addStream(const basic_socket_stream* str, Check c)

@@ -66,7 +66,8 @@ void TypeInfo::processTypeData(const Root &atype)
 // here we aggressively lookup child types. this tends to cane the server hard
     if (atype->hasAttr("children"))
     {
-        const Atlas::Message::ListType& children(atype->getAttr("children").asList());
+        const Atlas::Message::Element childElem(atype->getAttr("children"));
+        const Atlas::Message::ListType & children(childElem.asList());
         
         for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C)
             addChild(m_typeService->getTypeByName(C->asString()));
@@ -110,6 +111,14 @@ void TypeInfo::addParent(TypeInfoPtr tp)
 
 void TypeInfo::addChild(TypeInfoPtr tp)
 {
+    if (tp == this) {
+        error() << "Attempt to add " << getName() << " as a child if itself";
+        return;
+    }
+    if (tp->getName() == this->getName()) {
+        error() << "Attempt to add " << getName() << " as child to identical parent ";
+        return;
+    }
     if (m_children.count(tp)) 
         return; 	
     

@@ -181,7 +181,7 @@ Router::RouterResult TypeService::handleOperation(const RootOperation& op)
         return HANDLED;
     }
     
-    error() << "type service got op that wasn't get or error";
+    error() << "type service got op that wasn't info or error";
     return IGNORED;
 }
 

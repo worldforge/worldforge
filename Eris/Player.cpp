@@ -84,6 +84,10 @@ public:
                 {
                     m_player->sightCharacter(character);
                     return HANDLED;
+                } else {
+#warning This will be true for everything until we can register factories and aliases
+                    warning() << "Invalid character from server";
+                    return HANDLED;
                 }
             }
         }

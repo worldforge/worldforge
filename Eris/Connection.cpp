@@ -195,7 +195,9 @@ void Connection::objectArrived(const Root& obj)
   //  std::cout << "recieved:" << debugStream.str() << std::endl;
 
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
-    m_opDeque.push_back(op);
+    if (op.isValid()) {
+        m_opDeque.push_back(op);
+    }
 }
 
 void Connection::dispatchOp(const RootOperation& op)

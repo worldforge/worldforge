@@ -1,5 +1,12 @@
 Eris TODO
 
+addAncestor() gets into a tight loop which suggests that a type lists itself
+as a child. We need to be invulnerable to this.
+
+View may need to be created earlier, as I may need to connect to its signals.
+If I can't do this until Avatar::InGame is fired, then I may miss some
+entities on View::EntityCreated.
+
 1.2 TODO
 
 - room creation / binding

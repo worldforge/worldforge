@@ -22,7 +22,7 @@ tasks.
 %package devel
 Summary: A WorldForge client library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version}
+Requires: %{name} = %{version} Atlas-C++-devel wfmath-devel skstream-devel libsigc++-devel
 
 %description devel
 Eris is designed to simplify client development (and avoid repeating the same

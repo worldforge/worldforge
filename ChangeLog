@@ -1,4 +1,19 @@
-2004-05-02  James Turner <james@worldforge.org>
+2004-05-03  Al Riddoch  <alriddoch@zepler.org>
+
+* Eris/TypeService.cpp: Fix a type in an error message.
+
+* Eris/TypeInfo.cpp: Fix illegal taking reference from function returning
+  by value, and add checks to make sure type is never made a child of itself.
+
+* Eris/PollDefault.cpp: Add try/catch pair to ensure that already_polling
+  is exception safe.
+
+* Eris/Player.cpp: Print a warning if Player gets an Info(Character) op
+  but can't decode the character.
+
+* Eris/Connection.cpp: Check ops are valid before queueing them.
+
+2004-05-02  James Turner  <james@worldforge.org>
 
 * Fix autobuild warnings in tests
 
