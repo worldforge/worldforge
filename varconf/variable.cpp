@@ -8,6 +8,11 @@
 #include <cstdio>
 #include "Variable.h"
 
+#ifdef __WIN32__
+#include <tchar.h>
+#define snprintf _snprintf
+#endif  
+
 using namespace std;
 
 namespace varconf {
