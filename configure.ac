@@ -1,0 +1,107 @@
+dnl Process this file with autoconf to generate configure
+
+dnl Autoconf Initialization
+AC_INIT()
+AC_CONFIG_SRCDIR([varconf/variable.cpp])
+
+dnl Detect the canonical host and target environment
+
+AC_CANONICAL_SYSTEM
+
+dnl Information
+
+VARCONF_VERSION=0.6.2
+
+AM_INIT_AUTOMAKE(varconf, $VARCONF_VERSION)
+AM_CONFIG_HEADER(config.h)
+AM_MAINTAINER_MODE
+
+dnl versioning info for libtool
+VARCONF_CURRENT=2
+VARCONF_REVISION=0
+VARCONF_AGE=0
+VARCONF_VERSION_INFO=$VARCONF_CURRENT:$VARCONF_REVISION:$VARCONF_AGE
+VARCONF_VERSION_NO=$VARCONF_CURRENT.$VARCONF_AGE.$VARCONF_REVISION
+VARCONF_REQUIRES=""
+VARCONF_LIB_SUFFIX="-1.0"
+
+AC_SUBST(VARCONF_VERSION)
+AC_SUBST(VARCONF_VERSION_INFO)
+AC_SUBST(VARCONF_VERSION_NO)
+AC_SUBST(VARCONF_LIB_SUFFIX)
+
+VARCONF_PACKAGE=varconf
+MIN_SIGC_VERSION=1.2.0
+
+dnl General Initialization
+AC_SUBST(VARCONF_CURRENT)
+AC_SUBST(VARCONF_REVISION)
+AC_SUBST(VARCONF_AGE)
+AC_SUBST(VARCONF_VERSION)
+AC_SUBST(VARCONF_PACKAGE)
+AC_SUBST(MIN_SIGC_VERSION)
+
+dnl Test for GNU libtool
+
+AM_DISABLE_STATIC
+AM_PROG_LIBTOOL
+
+dnl Test for C++ Language
+
+dnl Test for C++ Compiler
+AC_PROG_CXX
+
+AC_ARG_ENABLE(debug,
+    [  --enable-debug          enable debug information [default=no]],
+    [
+        if test "$enableval" = "yes"; then
+            CXXFLAGS="$CXXFLAGS -Wall -DDEBUG"
+        else
+            CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
+        fi
+    ],[
+        CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
+    ]
+)
+
+AC_LANG_PUSH(C++)
+
+dnl Test for libsigc++
+PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= $MIN_SIGC_VERSION,
+    [
+        CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
+        LDFLAGS="$LDFLAGS $SIGC_LIBS"
+        VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-1.2"
+    ],
+    [
+        PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
+            [
+                CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
+                LDFLAGS="$LDFLAGS $SIGC_LIBS"
+                VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-2.0"
+            ],
+            [
+                AC_MSG_ERROR([Couldn't find sigc++ library!])
+            ])
+    ])
+
+AC_LANG_POP(C++)
+
+SYSTEM_LIBS=
+AC_SUBST(SYSTEM_LIBS)
+
+VARCONF_LIBS="-lvarconf$VARCONF_LIB_SUFFIX"
+AC_SUBST(VARCONF_LIBS)
+
+AC_SUBST(VARCONF_REQUIRES)
+
+dnl Generate files                         
+AC_OUTPUT([
+	Makefile
+	varconf.spec
+	doc/Makefile
+	doc/old/Makefile
+	tests/Makefile
+	varconf/Makefile
+	varconf-1.0.pc
+])
