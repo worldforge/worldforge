@@ -57,7 +57,7 @@ public:
 #if DEBUG
     cout << "FreeList.free(): this: " << this << " data_type: " << data_type << endl;
 #endif
-    data.FreeObjectPtr();
+    //data.FreeObjectPtr();
     next = begin;
     begin = this;
   }

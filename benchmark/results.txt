@@ -6,7 +6,7 @@ note that Static_Move is 'mock' test, hopefully achievable
 C++/Message_Move  : 2.9K/s     1.9K/s
 C++/Objects_Move  : 860/s      500/s
 C++/Static_Move   : 7.6M/s     1.7M/s
-C++/SmartPtr_Move : 970K/s     500K/s
+C++/SmartPtr_Move : 1.3K/s     650K/s
 C++/Call_Move     :            1.9M/s
 Python/OldMove    : 1.5K/s     900/s
 Python/Move       : 1.3K/s     840/s
@@ -61,6 +61,13 @@ SmartPtr_Move:
         NPC movements: 
                 iterations=1e+07 CPU Time=19.5 iter/s=512821
         29.36user 0.00system 0:31.44elapsed 93%CPU
+
+        //lazy freeing:
+        Plain creating of sight operation: 
+                iterations=1e+07 CPU Time=7.34 iter/s=1.3624e+06
+        NPC movements: 
+                iterations=1e+07 CPU Time=15 iter/s=666667
+        22.34user 0.01system 0:23.74elapsed 94%CPU
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
