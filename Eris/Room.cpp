@@ -178,8 +178,7 @@ Router::RouterResult Room::handleOperation(const RootOperation& op)
         assert(!args.empty());
         RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
             
-        if (ent.isValid() && (ent->getId() == m_roomId))
-        {
+        if (ent.isValid() && (ent->getId() == m_roomId)) {
             sight(ent);
             return HANDLED;
         }
@@ -188,16 +187,6 @@ Router::RouterResult Room::handleOperation(const RootOperation& op)
         if (img.isValid())
         {
             handleSightImaginary(img);
-            return HANDLED;
-        }
-    }
-
-    if (op->instanceOf(SOUND_NO))
-    {
-        Talk tk = smart_dynamic_cast<Talk>(args.front());
-        if (tk.isValid())
-        {
-            handleSoundTalk(tk);
             return HANDLED;
         }
     }
@@ -233,30 +222,16 @@ void Room::sight(const RootEntity &room)
     }
 }
 
-void Room::handleSoundTalk(const Talk &tk)
+void Room::handleSoundTalk(Person* p, const std::string& speech)
 {
-    IdPersonMap::const_iterator P = m_members.find(tk->getFrom());
-    if (P == m_members.end())
-    {
+    assert(p);
+    
+    if (m_members.count(p->getAccount()) == 0) {
         error() << "room " << m_roomId << " got sound(talk) from non-member account";
         return;
     }
     
-    if (P->second == NULL)
-        return; // consume but ignore till we have sight
-        
-    const std::vector<Root>& args = tk->getArgs();
-    if (args.empty())
-    {
-        warning() << "room " << m_roomId << " recieved sound(talk) with no args";
-        return;
-    }
-    
-    if (!args.front()->hasAttr("say"))
-        return;
-    
-    std::string description = args.front()->getAttr("say").asString();
-    Speech.emit(this, P->second, description);
+    Speech.emit(this, p, speech);
 }
 
 void Room::handleSightImaginary(const Imaginary& im)

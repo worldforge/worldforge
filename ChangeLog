@@ -1,5 +1,10 @@
 2004-08-01  James Turner  <james@worldforge.org>
 
+	* Eris/Room.cpp, Eris/Room.h, Eris/Lobby.cpp, Eris/Lobby.h: change
+	  how OOG chat is handled, so in-room chats do the right thing.
+
+2004-08-01  James Turner  <james@worldforge.org>
+
 	* Eris/Entity.h, Eris/Entity.cpp: implement getViewPosition, and add
 	  getViewOrientation.
 	 

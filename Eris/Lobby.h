@@ -48,7 +48,7 @@ protected:
     void look(const std::string &id);
 		
     void sightPerson(const Atlas::Objects::Entity::Account &ac);
-    Router::RouterResult privateTalk(const Atlas::Objects::Operation::Talk& tk);
+    Router::RouterResult recvTalk(const Atlas::Objects::Operation::Talk& tk);
     void recvInitialSight(const Atlas::Objects::Entity::RootEntity& ent);
         
     void recvAppearance(const Atlas::Objects::Root& obj);

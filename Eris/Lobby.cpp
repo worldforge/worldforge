@@ -82,7 +82,7 @@ protected:
             assert(!args.empty());
             Talk talk = smart_dynamic_cast<Talk>(args.front());
             if (talk.isValid())
-                return m_lobby->privateTalk(talk);
+                return m_lobby->recvTalk(talk);
         }
         
         return IGNORED;
@@ -261,30 +261,42 @@ private:
     std::string m_person;
 };
 
-Router::RouterResult Lobby::privateTalk(const Atlas::Objects::Operation::Talk& tk)
+Router::RouterResult Lobby::recvTalk(const Talk& tk)
 {
     IdPersonMap::const_iterator P = m_people.find(tk->getFrom());
-    if ((P == m_people.end()) || (P->second == NULL))
-    {
+    if ((P == m_people.end()) || (P->second == NULL)) {
         getPerson(tk->getFrom()); // force a LOOK if necessary
+        debug() << "creating sight-person-redispatch for " << tk->getFrom();
         
-        //SightPersonRedispatch *spr = new SightPersonRedispatch(m_account->getConnection(), tk->getFrom(), );
-        //SightPerson.connect(SigC::slot(*spr, SightPersonRedispatch::onSightPerson));
+        Sight sight;
+        sight->setArgs1(tk);
+        sight->setTo(getAccount()->getId());
+        
+        SightPersonRedispatch *spr = new SightPersonRedispatch(getConnection(), tk->getFrom(), sight);
+        SightPerson.connect(SigC::slot(*spr, &SightPersonRedispatch::onSightPerson));
+        
         return WILL_REDISPATCH;
     }
     
     const std::vector<Root>& args = tk->getArgs();
-    if (args.empty())
-    {
-        warning() << "room " << m_roomId << " recieved sound(talk) with no args";
+    if (args.empty() || !args.front()->hasAttr("say")) {
+        error() << "recieved sound(talk) with no / bad args";
         return HANDLED;
     }
+
+    std::string speech = args.front()->getAttr("say").asString();
     
-    if (!args.front()->hasAttr("say"))
-        return HANDLED;
-    
-    std::string description = args.front()->getAttr("say").asString();
-    PrivateTalk.emit(P->second, description);
+    if (args.front()->hasAttr("loc")) {
+        std::string loc = args.front()->getAttr("loc").asString();
+        if (m_rooms.count(loc)) {
+            m_rooms[loc]->handleSoundTalk(P->second, speech);
+        } else
+            error() << "lobby got sound(talk) with unknown loc: " << loc;
+    } else {
+        // no location, hence assume it's one-to-one chat
+        PrivateTalk.emit(P->second, speech);
+    }
+
     return HANDLED;
 }
 

@@ -102,7 +102,8 @@ protected:
     explicit Room(Lobby *l, const std::string& id);
 	
     virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
-
+    void handleSoundTalk(Person* p, const std::string& speech);
+    
     std::string m_roomId;
 private:
     /// helper to see if all the people in the room are valid, and if so, do entry
@@ -110,7 +111,7 @@ private:
 
     void sight(const Atlas::Objects::Entity::RootEntity &room);
     void handleSightImaginary(const Atlas::Objects::Operation::Imaginary &im);
-    void handleSoundTalk(const Atlas::Objects::Operation::Talk &tk);
+    
 
     void appearance(const std::string& personId);
     void disappearance(const std::string& personId);
