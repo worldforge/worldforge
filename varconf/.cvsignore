@@ -7,5 +7,4 @@ stamp-h.in
 config.h
 stamp-h
 *.lo
-libvarconf.la
-libvarconf-sigc1.2.la
+libvarconf-1.0.la
