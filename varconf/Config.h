@@ -30,11 +30,7 @@
 #include <varconf/variable.h>
 
 #include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/handle_system.h>
-#else
 #include <sigc++/signal.h>
-#endif
 
 #include <iostream>
 #include <map>
@@ -48,70 +44,72 @@ typedef std::map< std::string, Variable > sec_map;
 
 class Config : virtual public SigC::Object {
 public:
-  static Config* inst();
   // Allows use as a singleton, if desired.
+  static Config* inst();
 
   Config() { }
 
-  Config( const Config& conf);
   // New Config object, but deep-copies the m_conf and m_par_lookup of existing,
   // passed Config object.
+  Config(const Config& conf);
 
   virtual ~Config() {if(m_instance == this) m_instance = 0;}
 
-  friend std::ostream& operator <<( std::ostream& out, Config& conf);
-  friend std::istream& operator >>( std::istream& in, Config& conf);
-  friend bool operator ==( const Config& one, const Config& two);
+  friend std::ostream& operator <<(std::ostream& out, Config& conf);
+  friend std::istream& operator >>(std::istream& in, Config& conf);
+  friend bool operator ==(const Config& one, const Config& two);
 
-  void clean( std::string& str);
   // Converts all nonalphanumeric characters in str except ``-'' and ``_'' to
   // ``_''; converts caps in str to lower-case.
+  void clean(std::string& str);
 
-  bool find( const std::string& section, const std::string& key = "");
   // Returns true if specified key exists under specified section.
+  bool find(const std::string& section, const std::string& key = "");
 
-  bool erase( const std::string& section, const std::string& key = ""); 
   // Returns true if specified key exists under specified section and is
   // successfully deleted.
+  bool erase(const std::string& section, const std::string& key = ""); 
 
-  bool writeToStream( std::ostream& out);
   // Writes to the specified output stream.
   // Why isn't this protected?
+  bool writeToStream(std::ostream& out);
 
-  int getCmdline( int argc, char** argv);
   // Gets, sets conf info based on options passed via command line.
+  int getCmdline(int argc, char** argv);
 
-  void getEnv( const std::string& prefix); 
   // Gets, stores a name/value pair from the environment variable with 
   // name == prefix.
   // prefix is case-sensitive!
+  void getEnv(const std::string& prefix); 
 
-  bool writeToFile( const std::string& filename);
   // Writes conf map to specified file.
+  bool writeToFile(const std::string& filename);
 
-  bool readFromFile( const std::string& filename);
   // Reads contents of specified file and set into conf map.
+  bool readFromFile(const std::string& filename);
 
-  void parseStream( std::istream& in) throw ( ParseError);
   // Ensures specified filestream is properly formatted.
   // Why isn't this protected?
+  void parseStream(std::istream& in) throw (ParseError);
 
-  bool findSection( const std::string& section);
   // Wrapper for find(section)
+  bool findSection(const std::string& section);
 
-  bool findItem( const std::string& section, const std::string& key);
   // Wrapper for find(section, key)
+  bool findItem(const std::string& section, const std::string& key);
 
-  const sec_map & getSection( const std::string& section);
   // Returns value of specified section.
+  const sec_map & getSection(const std::string& section);
 
-  Variable getItem( const std::string& section, const std::string& key);
   // Returns value of specified key under specified section.
+  Variable getItem(const std::string& section, const std::string& key);
 
-  void setParameterLookup( char s_name, const std::string& l_name, bool value = false); 
+  void setParameterLookup(char s_name, const std::string & l_name,
+                          bool value = false); 
 
-  void setItem( const std::string& section, const std::string& key, const Variable& item); 
   // If key isn't null, clean() section and key and set variable.
+  void setItem(const std::string& section, const std::string & key,
+               const Variable& item); 
  
   SigC::Signal0<void> sig;
   SigC::Signal1<void, const char*> sige;
@@ -127,5 +125,5 @@ private:
 };
 
 } // namespace varconf
-#endif
 
+#endif // VARCONF_CONFIG_H

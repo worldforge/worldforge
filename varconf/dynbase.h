@@ -37,9 +37,9 @@ class Base : public VarBase {
 public:
   Base() : VarBase(), m_looping(false) {}
   // Don't copy m_looping
-  Base( const Base& d) : VarBase(d), m_looping(false) {}
+  Base(const Base& d) : VarBase(d), m_looping(false) {}
 
-  virtual ~Base() {}
+  virtual ~Base();
 
   Base& operator= (const Base& b);
 
@@ -47,21 +47,21 @@ public:
   // for VarBase
 
 private: // Does making these private do anything?
-  friend std::ostream& operator<<( std::ostream& out, const Base& v);
-  friend bool operator ==( const Base& one, const VarBase& two);
-  friend bool operator ==( const VarBase& one, const Base& two);
-  friend bool operator ==( const Base& one, const Base& two);
+  friend std::ostream& operator<<(std::ostream& out, const Base& v);
+  friend bool operator ==(const Base& one, const VarBase& two);
+  friend bool operator ==(const VarBase& one, const Base& two);
+  friend bool operator ==(const Base& one, const Base& two);
 public:
 
   // The real versions
 
-  friend std::ostream& operator<<( std::ostream& out, Base& v);
-  friend bool operator ==( Base& one, const VarBase& two);
-  friend bool operator ==( const VarBase& one, Base& two);
-  friend bool operator ==( Base& one, Base& two);
+  friend std::ostream& operator<<(std::ostream& out, Base& v);
+  friend bool operator ==(Base& one, const VarBase& two);
+  friend bool operator ==(const VarBase& one, Base& two);
+  friend bool operator ==(Base& one, Base& two);
 
-  friend bool operator ==( Base& one, const VarArray& two) {return false;}
-  friend bool operator ==( const VarArray& one, Base& two) {return false;}
+  friend bool operator ==(Base& one, const VarArray& two) {return false;}
+  friend bool operator ==(const VarArray& one, Base& two) {return false;}
 
   virtual operator bool();
   virtual operator int();

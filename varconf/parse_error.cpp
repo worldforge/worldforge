@@ -49,6 +49,10 @@ ParseError::ParseError( const std::string& exp, int line, int col)
   m_col  = col;
 }
 
+ParseError::~ParseError()
+{
+}
+
 std::ostream& operator<<( std::ostream& os, const ParseError& p)
 {
   return ( os << "ParseError: Expected " << p.m_exp << " at line " << p.m_line

@@ -98,6 +98,10 @@ VarBase::VarBase(const char* s)
 {
 }
 
+VarBase::~VarBase()
+{
+}
+
 std::ostream& operator<<( std::ostream& out, const VarBase& v)
 {
     for (size_t i = 0; i < v.m_val.size(); i++) {
@@ -269,6 +273,10 @@ Variable::Variable( const VarList& v) : VarPtr(new VarArray(v))
 
 }
 
+Variable::~Variable()
+{
+}
+
 Variable& Variable::operator=( const Variable& c)
 {
   VarList *array_val = c.array();
@@ -367,6 +375,47 @@ bool operator ==( const VarArray& one, const VarArray& two)
       return false;
 
   return true;
+}
+
+VarArray::operator bool()
+{
+  return 0;
+}
+
+VarArray::operator int()
+{
+  return 0;
+}
+
+VarArray::operator double()
+{
+  return 0;
+}
+
+VarArray::operator std::string() const
+{
+  return "";
+}
+
+
+bool VarArray::is_bool()
+{
+  return false;
+}
+
+bool VarArray::is_int()
+{
+  return false;
+}
+
+bool VarArray::is_double()
+{
+  return false;
+}
+
+bool VarArray::is_string()
+{
+  return false;
 }
 
 } // namespace varconf

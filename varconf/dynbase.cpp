@@ -31,6 +31,10 @@
 namespace varconf {
 namespace dynvar {
 
+Base::~Base()
+{
+}
+
 // operator<<, operator== aren't virtual, so we can use
 // static casts to avoid calling copy constructors
 
@@ -41,25 +45,25 @@ Base& Base::operator= (const Base& b)
   return *this;
 }
 
-std::ostream& operator<<( std::ostream& out, Base& v)
+std::ostream& operator<<(std::ostream& out, Base& v)
 {
     v.call_set_val();
     return out << *static_cast<VarBase*>(&v);
 }
 
-bool operator ==( Base& one, const VarBase& two)
+bool operator ==(Base& one, const VarBase& two)
 {
     one.call_set_val();
     return *static_cast<VarBase*>(&one) == two;
 }
 
-bool operator ==( const VarBase& one, Base& two)
+bool operator ==(const VarBase& one, Base& two)
 {
     two.call_set_val();
     return one == *static_cast<VarBase*>(&two);
 }
 
-bool operator ==( Base& one, Base& two)
+bool operator ==(Base& one, Base& two)
 {
     one.call_set_val();
     two.call_set_val();

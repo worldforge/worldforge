@@ -34,12 +34,12 @@ namespace varconf {
 class ParseError {
 public:
   ParseError() {}
-  ParseError( const ParseError& p);
-  ParseError( const std::string& exp, int line, int col);
+  ParseError(const ParseError& p);
+  ParseError(const std::string& exp, int line, int col);
 
-  virtual ~ParseError() {}
+  virtual ~ParseError();
 
-  friend std::ostream& operator<<( std::ostream& os, const ParseError& p);
+  friend std::ostream& operator<<(std::ostream& os, const ParseError& p);
 
   operator std::string();
 

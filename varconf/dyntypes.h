@@ -37,12 +37,12 @@ namespace dynvar {
 class Concat : public Base {
 public:
   Concat() : Base(), m_v1(0), m_v2(0) {}
-  Concat( const Variable& one, const Variable& two) : Base(), m_v1(one), m_v2(two) {}
-  Concat( const Concat& c) : Base(c), m_v1(c.m_v1), m_v2(c.m_v2) {}
+  Concat(const Variable& one, const Variable& two) : Base(), m_v1(one), m_v2(two) {}
+  Concat(const Concat& c) : Base(c), m_v1(c.m_v1), m_v2(c.m_v2) {}
 
-  virtual ~Concat() {}
+  virtual ~Concat();
 
-  Concat& operator=( const Concat& c);
+  Concat& operator=(const Concat& c);
 
 protected:
 
@@ -56,14 +56,14 @@ private:
 class Ternary : public Base {
 public:
   Ternary() : Base(), m_test(0), m_true(0), m_false(0) {}
-  Ternary( const Variable& test, const Variable& true_val, const Variable& false_val)
-	: Base(), m_test(test), m_true(true_val), m_false(false_val) {}
-  Ternary( const Ternary& t) : Base(t), m_test(t.m_test), m_true(t.m_true),
+  Ternary(const Variable& test, const Variable& true_val, const Variable& false_val)
+        : Base(), m_test(test), m_true(true_val), m_false(false_val) {}
+  Ternary(const Ternary& t) : Base(t), m_test(t.m_test), m_true(t.m_true),
                          m_false(t.m_false) {}
 
-  virtual ~Ternary() {}
+  virtual ~Ternary();
 
-  Ternary& operator=( const Ternary& t);
+  Ternary& operator=(const Ternary& t);
 
 protected:
 
@@ -77,15 +77,15 @@ private:
 class Item : public Base {
 public:
   Item() : Base(), m_section(""), m_key("") {}
-  Item( const Item& d) : Base(d), m_section(d.m_section), m_key(d.m_key) {}
-  Item( const std::string section, const std::string key)
-	: Base(), m_section(section), m_key(key) {}
+  Item(const Item& d) : Base(d), m_section(d.m_section), m_key(d.m_key) {}
+  Item(const std::string section, const std::string key)
+        : Base(), m_section(section), m_key(key) {}
 
-  virtual ~Item() {}
+  virtual ~Item();
 
-  Item& operator=( const Item& i);
+  Item& operator=(const Item& i);
 
-  void assign( const Variable &v);
+  void assign(const Variable &v);
 
 protected:
 

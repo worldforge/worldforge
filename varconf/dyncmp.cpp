@@ -30,7 +30,11 @@
 namespace varconf {
 namespace dynvar {
 
-Compare& Compare::operator=( const Compare& c)
+Compare::~Compare()
+{
+}
+
+Compare& Compare::operator=(const Compare& c)
 {
   VarBase::operator=(c);
   m_v1 = c.m_v1;
@@ -52,6 +56,150 @@ void Compare::set_val()
   }
   else
     VarBase::operator=(VarBase()); // Set it invalid
+}
+
+Equal::~Equal()
+{
+}
+
+bool Equal::bool_cmp(const bool b1, const bool b2)
+{
+  return b1 == b2;
+}
+
+bool Equal::int_cmp(const int i1, const int i2)
+{
+  return i1 == i2;
+}
+
+bool Equal::double_cmp(const double d1, const double d2)
+{
+  return d1 == d2;
+}
+
+bool Equal::string_cmp(const std::string& s1, const std::string& s2)
+{
+  return s1 == s2;
+}
+
+NotEq::~NotEq()
+{
+}
+
+bool NotEq::bool_cmp(const bool b1, const bool b2)
+{
+  return b1 != b2;
+}
+
+bool NotEq::int_cmp(const int i1, const int i2)
+{
+  return i1 != i2;
+}
+
+bool NotEq::double_cmp(const double d1, const double d2)
+{
+  return d1 != d2;
+}
+
+bool NotEq::string_cmp(const std::string& s1, const std::string& s2)
+{
+  return s1 != s2;
+}
+
+Greater::~Greater()
+{
+}
+
+bool Greater::bool_cmp(const bool b1, const bool b2)
+{
+  return b1 > b2;
+}
+
+bool Greater::int_cmp(const int i1, const int i2)
+{
+  return i1 > i2;
+}
+
+bool Greater::double_cmp(const double d1, const double d2)
+{
+  return d1 > d2;
+}
+
+bool Greater::string_cmp(const std::string& s1, const std::string& s2)
+{
+  return s1 > s2;
+}
+
+GreaterEq::~GreaterEq()
+{
+}
+
+bool GreaterEq::bool_cmp(const bool b1, const bool b2)
+{
+  return b1 >= b2;
+}
+
+bool GreaterEq::int_cmp(const int i1, const int i2)
+{
+  return i1 >= i2;
+}
+
+bool GreaterEq::double_cmp(const double d1, const double d2)
+{
+  return d1 >= d2;
+}
+
+bool GreaterEq::string_cmp(const std::string& s1, const std::string& s2)
+{
+  return s1 >= s2;
+}
+
+Less::~Less()
+{
+}
+
+bool Less::bool_cmp(const bool b1, const bool b2)
+{
+  return b1 < b2;
+}
+
+bool Less::int_cmp(const int i1, const int i2)
+{
+  return i1 < i2;
+}
+
+bool Less::double_cmp(const double d1, const double d2)
+{
+  return d1 < d2;
+}
+
+bool Less::string_cmp(const std::string& s1, const std::string& s2)
+{
+  return s1 < s2;
+}
+
+LessEq::~LessEq()
+{
+}
+
+bool LessEq::bool_cmp(const bool b1, const bool b2)
+{
+  return b1 <= b2;
+}
+
+bool LessEq::int_cmp(const int i1, const int i2)
+{
+  return i1 <= i2;
+}
+
+bool LessEq::double_cmp(const double d1, const double d2)
+{
+  return d1 <= d2;
+}
+
+bool LessEq::string_cmp(const std::string& s1, const std::string& s2)
+{
+  return s1 <= s2;
 }
 
 }} // namespace varconf::dynvar

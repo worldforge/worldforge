@@ -1,4 +1,16 @@
 ChangeLog for varconf
+2004-10-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Reverse the order of configure checks, so sigc++ 2.0 is detected
+	  first. Better in the long run.
+
+	* varconf/Config.h, varconf/config.cpp, varconf/dynbase.cpp,
+	  varconf/dynbase.h, varconf/dyncmp.cpp, varconf/dyncmp.h,
+	  varconf/dyntypes.cpp, varconf/dyntypes.h, varconf/parse_error.cpp,
+	  varconf/parse_error.h, varconf/variable.cpp, varconf/variable.h:
+	  Clean up the code moving virtual function definitions out of
+	  the headers, making the style more consistent.
+
 2004-10-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Add configure check for sigc++ 2.0, make the pkgconfig file

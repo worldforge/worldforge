@@ -31,7 +31,11 @@
 namespace varconf {
 namespace dynvar {
 
-Concat& Concat::operator=( const Concat& c)
+Concat::~Concat()
+{
+}
+
+Concat& Concat::operator=(const Concat& c)
 {
   VarBase::operator=(c);
   m_v1 = c.m_v1;
@@ -47,7 +51,11 @@ void Concat::set_val()
     VarBase::operator=(VarBase()); // Set it invalid
 }
 
-Ternary& Ternary::operator=( const Ternary& t)
+Ternary::~Ternary()
+{
+}
+
+Ternary& Ternary::operator=(const Ternary& t)
 {
   VarBase::operator=(t);
   m_test = t.m_test;
@@ -67,7 +75,11 @@ void Ternary::set_val()
   }
 }
 
-Item& Item::operator=( const Item& i)
+Item::~Item()
+{
+}
+
+Item& Item::operator=(const Item& i)
 {
   VarBase::operator=(i);
   m_section = i.m_section;
@@ -75,7 +87,7 @@ Item& Item::operator=( const Item& i)
   return *this;
 }
 
-void Item::assign( const Variable& v)
+void Item::assign(const Variable& v)
 {
   Config::inst()->setItem(m_section, m_key, v);
 }

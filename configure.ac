@@ -60,22 +60,22 @@ AC_ARG_ENABLE(debug,
 AC_LANG_PUSH(C++)
 
 dnl Test for libsigc++
-PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= $MIN_SIGC_VERSION,
+PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
     [
         CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
-        VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-1.2"
-        VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-2.0 > 1.9"
-        VARCONF_CURRENT=2
+        VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-2.0"
+        VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-1.2 < 2.0"
+        VARCONF_CURRENT=3
     ],
     [
-        PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
+        PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= $MIN_SIGC_VERSION,
             [
                 CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
                 LDFLAGS="$LDFLAGS $SIGC_LIBS"
-                VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-2.0"
-                VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-1.2 < 2.0"
-                VARCONF_CURRENT=3
+                VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-1.2"
+                VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-2.0 > 1.9"
+                VARCONF_CURRENT=2
             ],
             [
                 AC_MSG_ERROR([Couldn't find sigc++ library!])
