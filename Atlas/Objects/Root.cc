@@ -45,7 +45,7 @@ bool Root::HasAttr(const string& name) const
     if (name == "id") return true;
     if (name == "objtype") return true;
     if (name == "name") return true;
-    return (attributes.find(name) == attributes.end());
+    return (attributes.find(name) != attributes.end());
 }
 
 Object Root::GetAttr(const string& name) const
