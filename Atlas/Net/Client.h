@@ -1,3 +1,4 @@
+
 /*
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
@@ -11,40 +12,34 @@ changes:
     copy constructor disabled
 */
 
-/** Base Class for Client connection obbects.
-@doc
-<p>Client objects are used to manage streaming data
-for connections at both the client and server.
-<p>Client objects integrate the streaming transport
-functionality of Sockets and Filters with the
-Object encoding and decoding capabilities of
-Codecs and Protocol. All of these elements 
-combined form a reliable object streaming system.
+#ifndef __AtlasClient_h_
+#define __AtlasClient_h_
+
+
+#include "Socket.h"
+#include "Codec.h"
+#include "Filter.h"
+#include "../Object/Object.h"
+
+namespace Atlas
+{
+/** Base Class for Client connection objects.
+	<p>Client objects are used to manage streaming data
+	for connections at both the client and server.
+	<p>Client objects integrate the streaming transport
+	functionality of Sockets and Filters with the
+	Object encoding and decoding capabilities of
+	Codecs and Protocols. All of these elements 
+	combined form a reliable object streaming system.
 
 @see Socket
 @see Codec
 @see Protocol
 @see Filter
 @see Server
-**/
 
-#ifndef __AtlasClient_h_
-#define __AtlasClient_h_
-
-#include "Socket.h"
-#include "../Object/Object.h"
-
-namespace Atlas
-{
-
-class Codec;
-class Filter;
-/** Class for client object.
-    Once constructed with a socket, codec and filter can be used to send and read messages
-    using the Atlas::Object class.
-
-    Is resposible for cleanup of Socket, Codec and Filter passed in when AClient destroyed.
 */
+
 class Client
 {
 public:

@@ -43,6 +43,7 @@ void	decref();
 
 };
 
+/// Variant Object for Numbers
 class VNum: public Variant
 {
 
