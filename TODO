@@ -1,3 +1,6 @@
+* Add threshold shaders. Add an underwater shader which colors the sea bed
+  according to its depth.
+
 * Try and do something smarter with Segment texCoords and lineIndeces, as they
   are the same for every segment, but recalculated every time.
 
