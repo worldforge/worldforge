@@ -11,7 +11,7 @@ Version:           %{version}
 Release:           %{release}
 Serial:            %{serial}
 Copyright:         LGPL
-Group:             Amusements/Games
+Group:             System Environment/Libraries
 Source:            %{name}-%{version}.tar.gz
 BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
 Requires:          libsigc++ >= @MIN_SIGC_VERSION@ libstdc++
@@ -22,7 +22,7 @@ BuildRequires:     libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel >= 2.95
 
 %package devel
 Summary:           A config handling library headers and static libs.
-Group:             Amusements/Games
+Group:             Development/Libraries
 Requires:          %{name} = %{version}
 
 %description devel
@@ -46,23 +46,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{prefix}/lib/libvarconf.so.@VARCONF_CURRENT@
 %{prefix}/lib/libvarconf.so.@VARCONF_VERSION_NO@
-%{prefix}/share/doc/%{name}-%{version}/README
-%{prefix}/share/doc/%{name}-%{version}/COPYING
-%{prefix}/share/doc/%{name}-%{version}/AUTHORS
-%{prefix}/share/doc/%{name}-%{version}/THANKS
-%{prefix}/share/doc/%{name}-%{version}/NEWS
+%doc README COPYING AUTHORS THANKS NEWS
 
 %files devel
 %defattr(-,root,root)
 %{prefix}/bin/varconf-config
-%{prefix}/include/varconf/Config.h
-%{prefix}/include/varconf/parse_error.h
-%{prefix}/include/varconf/variable.h
-%{prefix}/include/varconf/varconf.h
-%{prefix}/include/varconf/dynbase.h
-%{prefix}/include/varconf/dyntypes.h
-%{prefix}/include/varconf/dyncmp.h
-%{prefix}/include/varconf/dynvar.h
+%{prefix}/include/varconf
 %{prefix}/lib/libvarconf.a
 %{prefix}/lib/libvarconf.so
 %{prefix}/share/aclocal/varconf.m4
