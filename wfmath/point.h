@@ -100,7 +100,7 @@ class Point
   bool operator== (const Point& rhs) const	{return isEqualTo(rhs);}
   bool operator!= (const Point& rhs) const	{return !isEqualTo(rhs);}
 
-  Point& origin(); // Set point to (0,0,...,0)
+  Point& setToOrigin(); // Set point to (0,0,...,0)
 
   // Sort only, don't use otherwise
   bool operator< (const Point& rhs) const;
@@ -122,14 +122,16 @@ class Point
   // Functions so that Point<> has the generic shape interface
 
   int numCorners() const {return 1;}
-  Point<dim> getCorner(int i) const {return *this;}
+  Point<dim> getCorner(int i) const {assert(i == 0); return *this;}
   Point<dim> getCenter() const {return *this;}
 
   Point shift(const Vector<dim>& v) {return *this += v;}
-  Point moveCornerTo(const Point& p, int corner) {return operator=(p);}
+  Point moveCornerTo(const Point& p, int corner)
+	{assert(corner == 0); return operator=(p);}
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
-  Point rotateCorner(const RotMatrix<dim>& m, int corner) {return *this;}
+  Point rotateCorner(const RotMatrix<dim>& m, int corner)
+	{assert(corner == 0); return *this;}
   Point rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Point rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
@@ -139,8 +141,8 @@ class Point
 
   // Member access
 
-  CoordType operator[](const int i) const	{return m_elem[i];}
-  CoordType& operator[](const int i)		{return m_elem[i];}
+  CoordType operator[](const int i) const {assert(i >= 0 && i < dim); return m_elem[i];}
+  CoordType& operator[](const int i)	  {assert(i >= 0 && i < dim); return m_elem[i];}
 
   friend CoordType SquaredDistance<dim>(const Point& p1, const Point& p2);
 
@@ -158,12 +160,12 @@ class Point
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
 
-  CoordType x() const	{return m_elem[0];}
-  CoordType& x()	{return m_elem[0];}
-  CoordType y() const	{return m_elem[1];}
-  CoordType& y()	{return m_elem[1];}
-  CoordType z() const	{return m_elem[2];}
-  CoordType& z()	{return m_elem[2];}
+  CoordType x() const	{assert(dim > 0); return m_elem[0];}
+  CoordType& x()	{assert(dim > 0); return m_elem[0];}
+  CoordType y() const	{assert(dim > 1); return m_elem[1];}
+  CoordType& y()	{assert(dim > 1); return m_elem[1];}
+  CoordType z() const	{assert(dim > 2); return m_elem[2];}
+  CoordType& z()	{assert(dim > 2); return m_elem[2];}
 
   Point<2>& polar(CoordType r, CoordType theta);
   void asPolar(CoordType& r, CoordType& theta) const;

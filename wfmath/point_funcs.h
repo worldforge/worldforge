@@ -43,7 +43,7 @@ Point<dim>::Point(const Point<dim>& p)
 }
 
 template<const int dim>
-Point<dim>& Point<dim>::origin()
+Point<dim>& Point<dim>::setToOrigin()
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = 0;

@@ -22,6 +22,8 @@ Intersect functions unimplemented:
 Add shape tests from COAL
 Write rotateInverse() functions
 Rip out and redo Euler angle stuff
+Look into whether miniball code can handle using float instead of double;
+	if so, replace Wrapped_array with Point
 Requests from Jesse: NAN, INFINITY, RADIANS_TO_DEGREES, DEGREES_TO_RADIANS
 Write an API reference for the library. Find some inline documentation tool?
 Portability questions and miniball_config.h

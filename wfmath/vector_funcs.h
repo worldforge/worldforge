@@ -215,6 +215,8 @@ CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
 template<const int dim>
 Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
 {
+  assert(axis1 >= 0 && axis2 >= 0 && axis1 < dim && axis2 < dim && axis1 != axis2);
+
   CoordType tmp1 = m_elem[axis1], tmp2 = m_elem[axis2];
   CoordType stheta = sin(theta), ctheta = cos(theta);
 
@@ -329,6 +331,8 @@ template<> inline Vector<2>::Vector(CoordType x, CoordType y)
 	{m_elem[0] = x; m_elem[1] = y;}
 template<> inline Vector<3>::Vector(CoordType x, CoordType y, CoordType z)
 	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
+
+// Don't need asserts here, they're taken care of in the general function
 
 template<> inline Vector<2>& Vector<2>::rotate(CoordType theta)
 	{return rotate(0, 1, theta);}

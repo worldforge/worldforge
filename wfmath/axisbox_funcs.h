@@ -97,6 +97,8 @@ AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p
 template<const int dim>
 Point<dim> AxisBox<dim>::getCorner(int i) const
 {
+  assert(i >= 0 && i < (1 << dim));
+
   Point<dim> out;
 
   if(i == 0)

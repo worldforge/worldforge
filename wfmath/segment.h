@@ -71,7 +71,7 @@ class Segment
 
   int numCorners() const {return 2;}
   // No checks on i in any of the other shapes, why should this be different?
-  Point<dim> getCorner(int i) const {return i ? m_p2 : m_p1;}
+  Point<dim> getCorner(int i) const {assert(i == 0 || i == 1); return i ? m_p2 : m_p1;}
   Point<dim> getCenter() const {return Midpoint(m_p1, m_p2);}
 
   const Point<dim>& endpoint(const int i) const	{return i ? m_p2 : m_p1;}

@@ -150,8 +150,8 @@ class Vector {
 
   // Don't do range checking, it'll slow things down, and people
   // should be able to figure it out on their own
-  CoordType operator[](const int i) const {return m_elem[i];}
-  CoordType& operator[](const int i)		 {return m_elem[i];}
+  CoordType operator[](const int i) const {assert(0 <= i && i < dim); return m_elem[i];}
+  CoordType& operator[](const int i)	  {assert(0 <= i && i < dim); return m_elem[i];}
 
   friend Vector operator-<dim>(const Point<dim>& c1, const Point<dim>& c2);
   friend Point<dim> operator+<dim>(const Point<dim>& c, const Vector& v);
@@ -198,10 +198,10 @@ class Vector {
 
   // mirror image functions
 
-  Vector& mirror(const int i)	{m_elem[i] *= -1; return *this;}
+  Vector& mirror(const int i) {assert(0 <= i && i < dim); m_elem[i] *= -1; return *this;}
   Vector& mirror(const Vector& v)
-	{operator-=(2 * v * Dot(v, *this) / v.sqrMag()); return *this;}
-  Vector& mirror()		{operator*=(-1); return *this;}
+	{return operator-=(2 * v * Dot(v, *this) / v.sqrMag());}
+  Vector& mirror()		{return operator*=(-1);}
 
   // Specialized 2D/3D stuff starts here
 
@@ -226,13 +226,14 @@ class Vector {
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
 
-  CoordType x() const	{return m_elem[0];}
-  CoordType& x()	{return m_elem[0];}
-  CoordType y() const	{return m_elem[1];}
-  CoordType& y()	{return m_elem[1];}
-  CoordType z() const	{return m_elem[2];}
-  CoordType& z()	{return m_elem[2];}
+  CoordType x() const	{assert(dim > 0); return m_elem[0];}
+  CoordType& x()	{assert(dim > 0); return m_elem[0];}
+  CoordType y() const	{assert(dim > 1); return m_elem[1];}
+  CoordType& y()	{assert(dim > 1); return m_elem[1];}
+  CoordType z() const	{assert(dim > 2); return m_elem[2];}
+  CoordType& z()	{assert(dim > 2); return m_elem[2];}
 
+  // Don't need asserts here, they're taken care of in the general function
   Vector& mirrorX()	{return mirror(0);}
   Vector& mirrorY()	{return mirror(1);}
   Vector& mirrorZ()	{return mirror(2);}

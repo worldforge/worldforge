@@ -51,6 +51,8 @@ bool Segment<dim>::operator< (const Segment& s) const
 template<const int dim>
 Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
 {
+  assert(corner == 0 || corner == 1);
+
   Vector<dim> diff = m_p2 - m_p1;
 
   if(!corner) {
@@ -68,6 +70,8 @@ Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
 template<const int dim>
 Segment<dim>& Segment<dim>::rotateCorner(const RotMatrix<dim>& m, int corner)
 {
+  assert(corner == 0 || corner == 1);
+
   if(corner)
     m_p1.rotate(m, m_p2);
   else

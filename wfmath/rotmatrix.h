@@ -102,7 +102,8 @@ class RotMatrix {
 
   static const int nParams = dim*(dim-1)/2;
 
-  CoordType elem(const int i, const int j) const 	{return m_elem[i][j];}
+  CoordType elem(const int i, const int j) const
+	{assert(i >= 0 && j >= 0 && i < dim && j < dim); return m_elem[i][j];}
 
   // Can't set one element at a time and keep it an O(N) matrix,
   // but can try to set all values at once, and see if they match.
@@ -144,8 +145,7 @@ class RotMatrix {
 
   // Set the value to mirror image about a certain axis
 
-  RotMatrix& mirror(const int i)
-	{identity(); m_elem[i][i] = -1; m_flip = true; return *this;}
+  RotMatrix& mirror(const int i);
   RotMatrix& mirror(const Vector<dim>& v);
   RotMatrix& mirror(); // Flip all axes, only changes the parity if dim is odd
 

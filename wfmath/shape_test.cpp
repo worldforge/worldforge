@@ -161,8 +161,8 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
 int main()
 {
-  test_shape(Point<2>(1, -1), Point<2>().origin());
-  test_shape(Point<3>(1, -1, Sqrt2), Point<3>().origin());
+  test_shape(Point<2>(1, -1), Point<2>().setToOrigin());
+  test_shape(Point<3>(1, -1, Sqrt2), Point<3>().setToOrigin());
 
   return 0;
 }

@@ -50,7 +50,7 @@ int main()
   Quaternion q(v, 0.7);
   atlas_test(q);
 
-  AxisBox<3> b1(Point<3>().origin(), p), b2(p, p + v);
+  AxisBox<3> b1(Point<3>().setToOrigin(), p), b2(p, p + v);
   atlas_test(b1);
   atlas_test(b2);
 

@@ -129,7 +129,7 @@ void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
 
   switch(list.size()) {
     case 1:
-      m_low.origin();
+      m_low.setToOrigin();
       m_high.fromAtlas(list[0]);
       break;
     case 2:
@@ -137,7 +137,7 @@ void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
       m_high.fromAtlas(list[1]);
       break;
     case dim:
-      m_low.origin();
+      m_low.setToOrigin();
       m_high.fromAtlas(a);
       break;
     case (2 * dim):
@@ -169,12 +169,12 @@ void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
 
   switch(list.size()) {
     case 1:
-      m_low.origin();
+      m_low.setToOrigin();
       m_high.fromAtlas(list[0]);
       break;
     case 2: // 2 possible different cases
       if(list[0].IsFloat()) {
-        m_low.origin();
+        m_low.setToOrigin();
         m_high.fromAtlas(a);
       }
       else {
@@ -213,7 +213,7 @@ void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
 
   switch(list.size()) {
     case 1:
-      m_low.origin();
+      m_low.setToOrigin();
       m_high.fromAtlas(got_float ? a : list[0]);
       break;
     case 2:
@@ -240,7 +240,7 @@ void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
 template<const int dim>
 Atlas::Message::Object AxisBox<dim>::toAtlas() const
 {
-  if(m_low == Point<dim>().origin())
+  if(m_low == Point<dim>().setToOrigin())
     return m_high.toAtlas(); // matches case 'dim' above
 
   // Do case '2' above

@@ -68,6 +68,8 @@ bool RotBox<dim>::operator< (const RotBox<dim>& a) const
 template<const int dim>
 Point<dim> RotBox<dim>::getCorner(int i) const
 {
+  assert(i >= 0 && i < (1 << dim));
+
   Vector<dim> dist;
 
   if(i == 0)
