@@ -1,3 +1,7 @@
+2004-04-14 James Turner <james@worldforge.org>
+
+* Sort autoXXX compilation of tests
+
 2004-03-22 James Turner <james@worldforge.org>
 
 * Expand the tests, get more of them working (note you will need Atlas-C++ 0.6
@@ -7,12 +11,12 @@
 * StubServer mechanics to support the above.
 * Initial playing around towards registering Atlas factory methods for dynamic
   types, needs more Atlas API work to do anything.
-  
+
 2004-03-18 James Turner <james@worldforge.org>
 
 * Make the stubServer uses sk_poll, so the login test is closer to working,
-  at least data is moving over the stream now. 
-  
+  at least data is moving over the stream now.
+
 2004-03-17  Kai Blin  <blin@gmx.net>
 * eris.dox.in: updated to work with a current version of doxygen
 

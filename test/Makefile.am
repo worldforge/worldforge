@@ -4,11 +4,9 @@ INCLUDES = -I$(top_srcdir)
 
 check_PROGRAMS = $(TESTS_DIS)
 
-testEris_SOURCES = tests.cpp testHarness.h \
+testEris_SOURCES = tests.cpp \
     stubServer.h stubServer.cpp \
-    testUtils.h testUtils.cpp \
-    testConnection.cpp testConnection.h \
-    testPlayer.h testPlayer.cpp
+    clientConnection.cpp clientConnection.h
 
 testEris_LDADD = $(top_builddir)/Eris/liberis-1.3.la
 

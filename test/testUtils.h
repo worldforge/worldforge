@@ -7,17 +7,17 @@
 class TestFailure : public std::exception
 {
 public:
-    TestFailure(const std::string& what) : 
+    TestFailure(const std::string& what) :
         m_what(what)
     {
         ;
     }
-    
+
     ~TestFailure() throw()
     {
         ;
     }
-    
+
     virtual const char* what() const throw()
     {
         return m_what.c_str();

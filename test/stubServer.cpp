@@ -34,13 +34,13 @@ StubServer::StubServer(short port) :
     ::setsockopt(m_serverSocket.getSocket(),
         SOL_SOCKET,SO_LINGER,
         (linger*)&listenerLinger,sizeof(listenerLinger));
-    
+
     const int reuseFlag = 1;
-    ::setsockopt(m_serverSocket.getSocket(), SOL_SOCKET, SO_REUSEADDR, 
+    ::setsockopt(m_serverSocket.getSocket(), SOL_SOCKET, SO_REUSEADDR,
             &reuseFlag, sizeof(reuseFlag));
-            
+
     setupTestAccounts();
-    
+
     RootEntity lobby;
     std::list<std::string> parents(1, "room");
     lobby->setParents(parents);
@@ -48,7 +48,7 @@ StubServer::StubServer(short port) :
     lobby->setAttr("people", AtlasListType());
     lobby->setAttr("topic", "Welcome to Stub World");
     lobby->setName("Lobby");
-    
+
     m_rooms[lobby->getId()] = lobby;
 }
 
@@ -69,19 +69,19 @@ void StubServer::setupTestAccounts()
     std::list<std::string> parents(1, "player");
     accA->setParents(parents);
     m_accounts[accA->getId()] = accA;
-    
+
     AtlasPlayer accB;
     accB->setId("_24_account_B");
     accB->setAttr("username", "account_B");
     accB->setPassword("sweede");
     accB->setObjtype("obj");
     accB->setParents(parents);
-    
+
     StringList& characters = accB->modifyCharacters();
     characters.push_back("acc_b_character");
 
     m_accounts[accB->getId()] = accB;
-    
+
     GameEntity avatarB0;
     avatarB0->setName("Joe Blow");
     avatarB0->setId("acc_b_character");
@@ -96,15 +96,15 @@ void StubServer::run()
     {
         m_clients.push_back(new ClientConnection(this, m_serverSocket.accept()));
     }
-    
+
     basic_socket_poll::socket_map clientSockets;
-    
+
     for (unsigned int C=0; C < m_clients.size(); ++C)
         clientSockets[m_clients[C]->getStream()] = basic_socket_poll::READ;
-        
+
     basic_socket_poll poller;
     poller.poll(clientSockets);
-    
+
     for (unsigned int C=0; C < m_clients.size(); ++C)
     {
         if (poller.isReady(m_clients[C]->getStream()))
@@ -117,7 +117,7 @@ void StubServer::sendInfoForType(const std::string &type, const Operation::RootO
 {
 	Operation::Info info;
 	Element::ListType &args(info.getArgs());
-	
+
 	if (type == "root")
 		args.push_back(Atlas::Objects::Root().asObject());
 	else if (type == "root_entity") {
@@ -142,15 +142,15 @@ void StubServer::sendInfoForType(const std::string &type, const Operation::RootO
 		args.push_back(Operation::Appearance().asObject());
 	} else {
 		ERIS_MESSAGE("unknown type in sendInfoForType, responing with ERROR instead");
-	
+
 		Operation::Error error;
-	
+
 		Element::ListType& eargs(error.getArgs());
 		eargs.push_back("undefined type " + type);
 		eargs.push_back(get.asObject());
-	
+
 		error.setRefno(get.getSerialno());
-	
+
 		push(error);
 	}
 }
@@ -159,10 +159,10 @@ void StubServer::sendInfoForType(const std::string &type, const Operation::RootO
 ClientConnection* StubServer::getConnectionForAccount(const std::string& accId)
 {
     assert(!accId.empty());
-    
+
      for (unsigned int C=0; C < m_clients.size(); ++C)
         if (m_clients[C]->getAccount() == accId) return m_clients[C];
-        
+
     return NULL;
 }
 
@@ -172,7 +172,7 @@ AccountMap::const_iterator StubServer::findAccountByUsername(const std::string &
     {
         if (A->second->getAttr("username").asString() == uname) return A;
     }
-    
+
     return m_accounts.end();
 }
 
@@ -183,11 +183,11 @@ StringSet StubServer::peopleInRoom(const std::string& room)
 {
     assert(m_rooms.count(room));
     const AtlasListType& people = m_rooms[room]->getAttr("people").asList();
-    
+
     StringSet result;
     for (AtlasListType::const_iterator P = people.begin(); P != people.end(); ++P)
         result.insert(P->asString());
-        
+
     return result;
 }
 
@@ -195,18 +195,18 @@ void StubServer::joinRoom(const std::string& acc, const std::string& room)
 {
     assert(m_accounts.count(acc));
     assert(m_rooms.count(room));
-    
+
     StringSet members = peopleInRoom(room);
     if (members.count(acc))
         throw InvalidOperation("duplicate join of room " + room + " by " + acc);
-        
+
     Appearance app;
     app->setFrom(room);
-    
+
     Root arg;
     arg->setId(acc);
     app->setArgs1(arg);
-    
+
     for (StringSet::const_iterator M=members.begin(); M != members.end(); ++M)
     {
         ClientConnection* con = getConnectionForAccount(*M);
@@ -214,7 +214,7 @@ void StubServer::joinRoom(const std::string& acc, const std::string& room)
         app->setTo(*M);
         con->send(app);
     }
-    
+
     // and actually update the data, so LOOKs work
     AtlasListType people = m_rooms[room]->getAttr("people").asList();
     people.push_back(acc);
@@ -225,19 +225,19 @@ void StubServer::partRoom(const std::string& acc, const std::string& room)
 {
     assert(m_accounts.count(acc));
     assert(m_rooms.count(room));
-    
+
     StringSet members = peopleInRoom(room);
     if (members.count(acc) == 0)
         throw InvalidOperation("part of non-member " + acc + " from room " + room);
     members.erase(acc); // so we don't generate a DISAPEPARANCE for the parting account
-    
+
     Disappearance disapp;
     disapp->setFrom(room);
-    
+
     Root arg;
     arg->setId(acc);
     disapp->setArgs1(arg);
-    
+
     for (StringSet::const_iterator M=members.begin(); M != members.end(); ++M)
     {
         ClientConnection* con = getConnectionForAccount(*M);
@@ -253,9 +253,9 @@ void StubServer::partRoom(const std::string& acc, const std::string& room)
         {
             people.erase(P);
             break;
-        } 
+        }
     }
-    
+
     m_rooms[room]->setAttr("people", people);
 }
 
@@ -275,22 +275,22 @@ void StubServer::talkInRoom(const Talk& tk, const std::string& room)
     }
 }
 
-#pragma mark - 
+#pragma mark -
 
 void StubServer::subclassType(const std::string& base, const std::string& derivedName)
 {
     assert(m_types.count(base));
     assert(m_types.count(derivedName) == 0);
-    
+
     AtlasTypeMap::iterator T = m_types.find(base);
-    
+  /*
     StringSet baseChildren(T->second->getChildren().begin(), T->second->getChildren().end());
     assert(baseChildren.count(derivedName) == 0);
-    
+
     T->second->modifyChildren().push_back(derivedName);
-    Root derived = T->second;
+*/    Root derived = T->second;
     derived->setParents(StringList(1, base));
     derived->setId(derivedName);
-    
+
     m_types[derivedName] = derived;
 }
