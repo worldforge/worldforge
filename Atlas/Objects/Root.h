@@ -12,13 +12,22 @@
 
 namespace Atlas { namespace Objects {
 
+/** An exception indicating the requested attribute does not exist.
+ *
+ * This is thrown by Root::GetAttr() [and derivatives thereof!]
+ */
 class NoSuchAttrException
 {
 public:
     NoSuchAttrException(const std::string& name) : name(name) {}
     std::string name;
 };
-    
+
+/** All objects inherit from this
+
+
+  
+*/
 class Root {
 public:
     Root();
