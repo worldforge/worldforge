@@ -1,3 +1,8 @@
+2004-11-14  James Turner  <james@worldforge.org>
+
+	* Eris/Avatar.cpp: fix initialisation of a dummy position vector.
+	  Thanks to erik for the catch.
+
 2004-11-1  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp: change signature of 'valueOfAttr' to return by
