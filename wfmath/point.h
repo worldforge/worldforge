@@ -1,4 +1,3 @@
-// -*-C++-*-
 // point.h (imported from forge/servers/pangea/MapLaw/MapPoint.h via libCoal)
 //
 //  The WorldForge Project
@@ -22,10 +21,7 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
 
-// DESCRIPTION:
-// A single coordinate
-//
-
+// Author: Ron Steinke
 
 #ifndef WFMATH_POINT_H
 #define WFMATH_POINT_H

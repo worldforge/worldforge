@@ -1,4 +1,3 @@
-// -*-C++-*-
 // atlasconv.h (Functions to convert WFMath library object to/from an Atlas Message)
 //
 //  The WorldForge Project

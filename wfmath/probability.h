@@ -1,4 +1,3 @@
-// -*-C++-*-
 // probability.h (probability and statistics functions)
 //
 //  The WorldForge Project

@@ -1,8 +1,7 @@
-// -*-C++-*-
 // shape.h (A general base class for shapes)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2001  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 // This class borrows heavily from the base shape class in libCoal,
 // plus certain intersection ideas from stage/shepherd/sylvanus

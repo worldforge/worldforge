@@ -1,4 +1,3 @@
-// -*-C++-*-
 // atlas_tests.cpp (WFMath/Atlas Message conversion test code)
 //
 //  The WorldForge Project
@@ -42,7 +41,7 @@ void atlas_test(const C& c)
 
 int main()
 {
-  Point<3> p(1, 0, WFMATH_CONST_SQRT2);
+  Point<3> p(1, 0, Sqrt2);
   atlas_test(p);
 
   Vector<3> v(1, -1, 4);

@@ -1,4 +1,3 @@
-// -*-C++-*-
 // rotmatrix.h (RotMatrix<> class definition)
 //
 //  The WorldForge Project

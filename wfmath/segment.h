@@ -1,4 +1,3 @@
-// -*-C++-*-
 // segment.h (A line segment)
 //
 //  The WorldForge Project
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 #ifndef WFMATH_SEGMENT_H
 #define WFMATH_SEGMENT_H

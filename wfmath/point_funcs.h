@@ -1,4 +1,3 @@
-// -*-C++-*-
 // point_funcs.h (imported from forge/servers/pangea/MapLaw/MapPoint.cc via lib)
 //
 //  The WorldForge Project
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 
 #ifndef WFMATH_POINT_FUNCS_H

@@ -1,4 +1,3 @@
-// -*-C++-*-
 // rotmatrix.cpp (RotMatrix<> implementation)
 //
 //  The WorldForge Project
@@ -51,7 +50,7 @@ template<> bool WFMath::RotMatrix<3>::toEuler(CoordType angles[3]) const
   }
   else {
     angles[0] = atan2(m_elem[1][1], (m_flip ? -1 : 1) * m_elem[1][0]);
-    angles[1] = (m_elem[2][2] > 0) ? 0 : WFMATH_CONST_PI;
+    angles[1] = (m_elem[2][2] > 0) ? 0 : Pi;
     angles[2] = 0;
   }
 

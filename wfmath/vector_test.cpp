@@ -1,4 +1,3 @@
-// -*-C++-*-
 // vector_test.cpp (Vector<> test functions)
 //
 //  The WorldForge Project
@@ -59,7 +58,7 @@ void test_vector(const Vector<dim>& v)
 
   for(int j = 0; j < dim; ++j) {
     for(int i = 0; i < steps; ++i) {
-      vcopy.rotate(v1, v2, 2 * WFMATH_CONST_PI / steps);
+      vcopy.rotate(v1, v2, 2 * Pi / steps);
 //      cout << vcopy << std::endl;
       assert(IsFloatEqual(sqr_mag, vcopy.sqrMag()));
     }
@@ -70,7 +69,7 @@ void test_vector(const Vector<dim>& v)
     v2 -= v1 / 2; // operator-=(), operator/()
 
     int k = (j < dim - 1) ? j + 1 : 0;
-    v1.rotate(j, k, WFMATH_CONST_PI / 2);
+    v1.rotate(j, k, Pi / 2);
   }
 
   v2 *= 2; // operator*=()
@@ -102,7 +101,7 @@ void test_vector(const Vector<dim>& v)
 int main()
 {
   Vector<2> v2(1, -1);
-  Vector<3> v3(1, -1, WFMATH_CONST_SQRT2);
+  Vector<3> v3(1, -1, Sqrt2);
 
   test_vector(v2);
   test_vector(v3);
@@ -114,7 +113,7 @@ int main()
   v3.sloppyNorm(1);
 
   assert((Vector<3>(1, 0, 0).rotate(Cross(Vector<3>(1, 0, 0), Vector<3>(0, 1, 0)),
-	 WFMATH_CONST_PI / 2) - Vector<3>(0, 1, 0)).sqrMag()
+	 Pi / 2) - Vector<3>(0, 1, 0)).sqrMag()
 	 < WFMATH_EPSILON * WFMATH_EPSILON); 
 
   // Need 2D+3D stuff

@@ -1,4 +1,3 @@
-// -*-C++-*-
 // intersect_decls.h (Declarations for "friend" intersection functions)
 //
 //  The WorldForge Project
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 #ifndef WFMATH_INTERSECT_DECLS_H
 #define WFMATH_INTERSECT_DECLS_H

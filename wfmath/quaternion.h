@@ -1,4 +1,3 @@
-// -*-C++-*-
 // quaternion.h (based on the Quaternion class from eris)
 //
 //  The WorldForge Project
@@ -22,7 +21,7 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
 
-// A class of normalized quaternions
+// Author: Ron Steinke
 
 #ifndef WFMATH_QUATERNION_H
 #define WFMATH_QUATERNION_H

@@ -1,8 +1,7 @@
-// -*-C++-*-
 // const.h (Defined constants for the WFMath library)
 //
 //  The WorldForge Project
-//  Copyright (C) 2001  The WorldForge Project
+//  Copyright (C) 2001, 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -39,9 +38,13 @@ namespace Atlas { namespace Message { class Object;}}
 
 namespace WFMath {
 
-#define WFMATH_CONST_PI		3.141592653589793238462643383279
-#define WFMATH_CONST_SQRT2	1.414213562373095048801688724210
-#define WFMATH_CONST_SQRT3	1.732050807568877293527446341506
+// Constants
+
+const double Pi		= 3.141592653589793238462643383279;
+const double Sqrt2	= 1.414213562373095048801688724210;
+const double Sqrt3	= 1.732050807568877293527446341506;
+
+// Basic floating point type
 
 typedef float CoordType;
 
@@ -53,35 +56,23 @@ typedef float CoordType;
 #define WFMATH_MAX		FLT_MAX
 #define WFMATH_MIN		FLT_MIN
 
+// Basic comparisons
+
 bool IsFloatEqual(double x, double y, double epsilon = WFMATH_EPSILON);
-inline double FloatAdd(double x, double y,
-		       double epsilon = WFMATH_EPSILON)
+inline double FloatAdd(double x, double y, double epsilon = WFMATH_EPSILON)
 	{return IsFloatEqual(x, -y, epsilon) ? 0 : x + y;}
-inline double FloatSubtract(double x, double y,
-			    double epsilon = WFMATH_EPSILON)
+inline double FloatSubtract(double x, double y, double epsilon = WFMATH_EPSILON)
 	{return IsFloatEqual(x, y, epsilon) ? 0 : x - y;}
 
 // These let us avoid including <algorithm> for the sake of
 // std::max() and std::min()
+
 inline CoordType FloatMax(CoordType a, CoordType b)
 	{return (a > b) ? a : b;}
 inline CoordType FloatMin(CoordType a, CoordType b)
 	{return (a < b) ? a : b;}
 inline CoordType FloatClamp(CoordType val, CoordType min, CoordType max)
 	{return (min >= val) ? min : (max <= val ? max : val);}
-
-// This stuff came from libCoal
-
-#ifdef WIN32
-#define isnan _isnan
-#endif
-
-// Set NAN to be an impossible value, so isnan() will pick it up.
-#ifdef NAN
-const CoordType NanVal = NAN;
-#else
-const CoordType NanVal = sqrt (-4.0);
-#endif
 
 } // namespace WFMath
 

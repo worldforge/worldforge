@@ -1,4 +1,3 @@
-// -*-C++-*-
 // quaternion_test.cpp (Quaternion test functions)
 //
 //  The WorldForge Project

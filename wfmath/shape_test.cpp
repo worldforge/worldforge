@@ -1,4 +1,3 @@
-// -*-C++-*-
 // shape_test.cpp (basic shape test functions)
 //
 //  The WorldForge Project
@@ -120,7 +119,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   assert(Contains(seg, seg));
   assert(!ContainsProper(seg, seg));
 
-  RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, WFMATH_CONST_PI / 6));
+  RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, Pi / 6));
 
   cout << "Testing " << rbox << std::endl;
 
@@ -163,7 +162,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 int main()
 {
   test_shape(Point<2>(1, -1), Point<2>().origin());
-  test_shape(Point<3>(1, -1, WFMATH_CONST_SQRT2), Point<3>().origin());
+  test_shape(Point<3>(1, -1, Sqrt2), Point<3>().origin());
 
   return 0;
 }

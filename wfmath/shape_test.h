@@ -1,4 +1,3 @@
-// -*-C++-*-
 // shape_test.h (generic shape interface test functions)
 //
 //  The WorldForge Project
@@ -81,7 +80,7 @@ void test_shape(const Shape<dim>& s)
   int corners = s2.numCorners();
 
   if(dim >= 2)
-    m.rotation(0, 1, WFMATH_CONST_PI / 6);
+    m.rotation(0, 1, Pi / 6);
   else
     m.identity();
 

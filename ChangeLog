@@ -1,3 +1,9 @@
+Monday, January 28, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Cleanups to const.h, const.cpp suggested by Jesse Jones
+	  in the code review, and associated repurcussions to the
+	  rest of the codebase.
+
 Friday, January 25, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Some efficiency improvements and generalizations to the

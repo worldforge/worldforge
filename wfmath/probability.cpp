@@ -1,8 +1,7 @@
-// -*-C++-*-
 // probability.cpp (probability and statistics implementation)
 //
 //  The WorldForge Project
-//  Copyright (C) 2001  The WorldForge Project
+//  Copyright (C) 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -26,10 +25,7 @@
 
 #include "probability.h"
 
-#include <iostream>
-
 using namespace WFMath;
-
 
 static double LogPoisson(double mean, unsigned int step);
 static double IncompleteGamma(double a, double z);
@@ -64,7 +60,7 @@ double WFMath::Gaussian(double mean, double stddev, double val)
   assert(stddev != 0);
 
   const double sqrt_pi = 1.77245385090551602729816748334114518279754945612237;
-  const double factor = sqrt_pi * WFMATH_CONST_SQRT2;
+  const double factor = sqrt_pi * Sqrt2;
 
   double diff = FloatSubtract(mean, val, DBL_EPSILON) / stddev;
 

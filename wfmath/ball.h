@@ -1,4 +1,3 @@
-// -*-C++-*-
 // ball.h (A n-dimensional ball)
 //
 //  The WorldForge Project
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 // This class is called Ball<> instead of Sphere to be more in tune
 // with the usual mathematical naming conventions, where a ball is

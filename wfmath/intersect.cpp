@@ -1,4 +1,3 @@
-// -*-C++-*-
 // intersect.cpp (Backends to intersection functions)
 //
 //  The WorldForge Project
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 #include "const.h"
 #include "intersect.h"

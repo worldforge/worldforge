@@ -1,5 +1,4 @@
-// -*-C++-*-
-// stream.cpp (Stream utility backend in the WFMath library)
+// stream.cpp (Stream conversion backend in the WFMath library)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project

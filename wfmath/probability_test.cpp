@@ -1,4 +1,3 @@
-// -*-C++-*-
 // probability_test.cpp (probability and statistics test functions)
 //
 //  The WorldForge Project

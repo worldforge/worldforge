@@ -1,4 +1,3 @@
-// -*-C++-*-
 // polygon.h (A 2D polygon embeded in a <dim> dimensional space)
 //
 //  The WorldForge Project
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 #ifndef WFMATH_POLYGON_H
 #define WFMATH_POLYGON_H

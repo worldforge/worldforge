@@ -1,4 +1,3 @@
-// -*-C++-*-
 // vector.cpp (Vector<> implementation)
 //
 //  The WorldForge Project
@@ -38,7 +37,7 @@ using namespace WFMath;
 template<> CoordType WFMath::Vector<2>::sloppyMag() const
 {
   CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]);
-  const CoordType p = WFMATH_CONST_SQRT2 - 1;
+  const CoordType p = Sqrt2 - 1;
 
   // Don't need float add, all terms > 0
 
@@ -53,8 +52,8 @@ template<> CoordType WFMath::Vector<2>::sloppyMag() const
 template<> CoordType WFMath::Vector<3>::sloppyMag() const
 {
   CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]), az = fabs(m_elem[2]);
-  const CoordType p = WFMATH_CONST_SQRT2 - 1;
-  const CoordType q = WFMATH_CONST_SQRT3 + 1 - 2 * WFMATH_CONST_SQRT2;
+  const CoordType p = Sqrt2 - 1;
+  const CoordType q = Sqrt3 + 1 - 2 * Sqrt2;
 
   // Don't need FloatAdd, only term < 0 is q, it's very small,
   // and amin1 * amin2 / amax < amax.

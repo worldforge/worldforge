@@ -1,4 +1,3 @@
-// -*-C++-*-
 // intersect.h (Shape intersection functions)
 //
 //  The WorldForge Project

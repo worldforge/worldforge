@@ -1,4 +1,3 @@
-// -*-C++-*-
 // polygon.cpp (Polygon<> implementation)
 //
 //  The WorldForge Project

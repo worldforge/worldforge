@@ -1,4 +1,3 @@
-// -*-C++-*-
 // axisbox.h (An axis-aligned box)
 //
 //  The WorldForge Project
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 // The implementation of this class is based on the geometric
 // parts of the Tree and Placement classes from stage/shepherd/sylvanus

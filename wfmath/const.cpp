@@ -1,8 +1,7 @@
-// -*-C++-*-
 // const.cpp (imported from forge/servers/pangea/MapLaw/MapCoord.cc via libCoal)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2000, 2001, 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke (sort of, this is a straight steal from COAL)
 
 #include <wfmath/const.h>
 
@@ -48,8 +49,7 @@ bool WFMath::IsFloatEqual(double x1, double x2, double epsilon)
     // Hack to get around nonstandard std:: namespacing in MSVC
     using namespace std;
 
-    if (epsilon < 0.0)
-        epsilon = 0.0;
+    assert(epsilon > 0);
 
     // Get the exponent of the smaller of the two numbers (using the
     // smaller of the two gives us a tighter epsilon value).

@@ -1,4 +1,3 @@
-// -*-C++-*-
 // quaternion.cpp (Quaternion implementation)
 //
 //  The WorldForge Project
@@ -21,6 +20,8 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 //
+
+// Author: Ron Steinke
 
 // Some code here was taken from the quaternion implementation is
 // eris. Some of the other algorithms are based on information

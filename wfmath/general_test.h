@@ -1,4 +1,3 @@
-// -*-C++-*-
 // general_test.h (generic class interface test functions)
 //
 //  The WorldForge Project

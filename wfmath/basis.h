@@ -1,4 +1,3 @@
-// -*-C++-*-
 // basis.h (Cartesian/polar/spherical conversion for the WFMath library)
 //
 //  The WorldForge Project

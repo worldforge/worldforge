@@ -1,4 +1,3 @@
-// -*-C++-*-
 // point_test.cpp (Point<> test functions)
 //
 //  The WorldForge Project
@@ -59,7 +58,7 @@ void test_point(const Point<dim>& p)
 int main()
 {
   test_point(Point<2>(1, -1));
-  test_point(Point<3>(1, -1, WFMATH_CONST_SQRT2));
+  test_point(Point<3>(1, -1, Sqrt2));
 
   return 0;
 }

@@ -1,4 +1,3 @@
-// -*-C++-*-
 // vector_funcs.h (Vector<> template functions)
 //
 //  The WorldForge Project

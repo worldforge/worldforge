@@ -1,4 +1,3 @@
-// -*-C++-*-
 // rotmatrix_test.cpp (RotMatrix<> test functions)
 //
 //  The WorldForge Project
@@ -106,8 +105,8 @@ int main()
   RotMatrix<2> m2;
   RotMatrix<3> m3;
 
-  m2.rotation(WFMATH_CONST_PI / 6);
-  m3.rotation(Vector<3>(1, 0, WFMATH_CONST_SQRT2), WFMATH_CONST_PI / 5);
+  m2.rotation(Pi / 6);
+  m3.rotation(Vector<3>(1, 0, Sqrt2), Pi / 5);
 
   test_rotmatrix(m2);
   test_rotmatrix(m3);

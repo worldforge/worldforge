@@ -1,4 +1,3 @@
-// -*-C++-*-
 // vector.h (Vector<> class definition)
 //
 //  The WorldForge Project

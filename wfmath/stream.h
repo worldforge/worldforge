@@ -1,4 +1,3 @@
-// -*-C++-*-
 // stream.h (Functions in the WFMath library that use streams)
 //
 //  The WorldForge Project

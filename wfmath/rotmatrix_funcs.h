@@ -1,4 +1,3 @@
-// -*-C++-*-
 // rotmatrix_funcs.h (RotMatrix<> template functions)
 //
 //  The WorldForge Project
