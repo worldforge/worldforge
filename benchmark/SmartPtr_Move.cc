@@ -14,12 +14,15 @@ public:
     int data_type1, data_type2;
 };
 
+//#undef assert
+//#define assert(expr)		((void) 0)
 #define DEBUG 0
 #if DEBUG
-#define MAX_ITER 3.0
+#define MAX_ITER 10.0
 #else
 #define MAX_ITER 10000000.0
 #endif
+#define FINE_GRAINED_LISTS 1
 
 template <class T>
 class FreeList
@@ -88,7 +91,7 @@ public:
 };
 
 class ObjectData;
-void DecRef(FreeList<ObjectData> *ptr);
+inline void DecRef(FreeList<ObjectData> *ptr);
 
 enum {
   OBJECT_DATA,
@@ -157,7 +160,7 @@ public:
 FreeList<OperationData> *FreeList<OperationData>::begin = NULL;
 int FreeList<OperationData>::data_type = OPERATION_DATA;
 
-void DecRef(FreeList<ObjectData> *ptr)
+inline void DecRef(FreeList<ObjectData> *ptr)
 {
   switch(ptr->data.type) {
   case OBJECT_DATA:
@@ -396,10 +399,12 @@ Operation NPC::move(Operation &op)
   cout << endl << "DEBUG: " << __LINE__ << ":  Entity human_ent;" << endl;
 #endif
   Entity human_ent;
+#if !FINE_GRAINED_LISTS
 #if DEBUG
   cout << endl << "DEBUG: " << __LINE__ << ":  human_ent->Set_parent(human.AsObjectPtr());" << endl;
 #endif
   human_ent->Set_parent(human.AsObjectPtr());
+#endif // !FINE_GRAINED_LISTS
   human_ent->id = GetId();
   human_ent->pos[0] = x;
   human_ent->pos[1] = y;
@@ -413,11 +418,13 @@ Operation NPC::move(Operation &op)
   cout << endl << "DEBUG: " << __LINE__ << ":  Operation move_op;" << endl;
 #endif
   Operation move_op;
+#if !FINE_GRAINED_LISTS
   move_op->objtype = OP;
 #if DEBUG
   cout << endl << "DEBUG: " << __LINE__ << ":  move_op->Set_parent(::move.AsObjectPtr());" << endl;
 #endif
   move_op->Set_parent(::move.AsObjectPtr());
+#endif // !FINE_GRAINED_LISTS
 #if DEBUG
   cout << endl << "DEBUG: " << __LINE__ << ":  move_op->Set_arg(human_ent.AsObjectPtr());" << endl;
 #endif
@@ -428,11 +435,13 @@ Operation NPC::move(Operation &op)
   cout << endl << "DEBUG: " << __LINE__ << ":  Operation sight_op;" << endl;
 #endif
   Operation sight_op;
+#if !FINE_GRAINED_LISTS
   sight_op->objtype = OP;
 #if DEBUG
   cout << endl << "DEBUG: " << __LINE__ << ":  sight_op->Set_parent(sight.AsObjectPtr());" << endl;
 #endif
   sight_op->Set_parent(sight.AsObjectPtr());
+#endif // !FINE_GRAINED_LISTS
 #if DEBUG
   cout << endl << "DEBUG: " << __LINE__ << ":  sight_op->Set_from(human_ent.AsObjectPtr());" << endl;
 #endif
@@ -455,11 +464,13 @@ int main(int argc, char** argv)
     cout << endl << "DEBUG: " << __LINE__ << ":    Entity ent;" << endl;
 #endif
     Entity ent;
+#if !FINE_GRAINED_LISTS
     ent->objtype=OBJECT;
 #if DEBUG
     cout << endl << "DEBUG: " << __LINE__ << ":    ent->Set_parent(human.AsObjectPtr());" << endl;
 #endif
     ent->Set_parent(human.AsObjectPtr());
+#endif // !FINE_GRAINED_LISTS
     ent->pos[0] = i;
     ent->pos[1] = i-1.0;
     ent->pos[2] = i+1.0;
@@ -472,11 +483,13 @@ int main(int argc, char** argv)
     cout << endl << "DEBUG: " << __LINE__ << ":    Operation move_op;" << endl;
 #endif
     Operation move_op;
+#if !FINE_GRAINED_LISTS
     move_op->objtype=OP;
 #if DEBUG
     cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_parent(move.AsObjectPtr());" << endl;
 #endif
     move_op->Set_parent(move.AsObjectPtr());
+#endif // !FINE_GRAINED_LISTS
 #if DEBUG
     cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_arg(ent.AsObjectPtr());" << endl;
 #endif
@@ -487,17 +500,19 @@ int main(int argc, char** argv)
     cout << endl << "DEBUG: " << __LINE__ << ":    Operation sight_op;" << endl;
 #endif
     Operation sight_op;
+#if !FINE_GRAINED_LISTS
     sight_op->objtype=OP;
 #if DEBUG
-    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_parent(sight.AsObjectPtr());" << endl;
+    cout << endl << "DEBUG: " << __LINE__ << ":    sight_op->Set_parent(sight.AsObjectPtr());" << endl;
 #endif
     sight_op->Set_parent(sight.AsObjectPtr());
+#endif // !FINE_GRAINED_LISTS
 #if DEBUG
-    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_from(ent.AsObjectPtr());" << endl;
+    cout << endl << "DEBUG: " << __LINE__ << ":    sight_op->Set_from(ent.AsObjectPtr());" << endl;
 #endif
     sight_op->Set_from(ent.AsObjectPtr());
 #if DEBUG
-    cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_arg(move_op.AsObjectPtr());" << endl;
+    cout << endl << "DEBUG: " << __LINE__ << ":    sight_op->Set_arg(move_op.AsObjectPtr());" << endl;
 #endif
     sight_op->Set_arg(move_op.AsObjectPtr());
 #if DEBUG
@@ -522,7 +537,9 @@ int main(int argc, char** argv)
 #if DEBUG
     cout << endl << "DEBUG: " << __LINE__ << ":    human_ent->Set_parent(human.AsObjectPtr());" << endl;
 #endif
+#if !FINE_GRAINED_LISTS
     human_ent->Set_parent(human.AsObjectPtr());
+#endif // !FINE_GRAINED_LISTS
     human_ent->id = npc1.GetId();
     human_ent->velocity[0] = i;
     human_ent->velocity[1] = i-1.0;
@@ -533,11 +550,13 @@ int main(int argc, char** argv)
     cout << endl << "DEBUG: " << __LINE__ << ":    Operation move_op;" << endl;
 #endif
     Operation move_op;
+#if !FINE_GRAINED_LISTS
     move_op->objtype = OP;
 #if DEBUG
     cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_parent(move.AsObjectPtr());" << endl;
 #endif
     move_op->Set_parent(move.AsObjectPtr());
+#endif // !FINE_GRAINED_LISTS
 #if DEBUG
     cout << endl << "DEBUG: " << __LINE__ << ":    move_op->Set_arg(human_ent.AsObjectPtr());" << endl;
 #endif
