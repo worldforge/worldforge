@@ -169,6 +169,8 @@ public:
   VarList* array() const {return dynamic_cast<VarList*>(&this->elem());}
   Variable& operator[](const int i);
 
+  std::string as_string() const {return std::string(this->elem());}
+
   // This is sort of funky. The corresponding functions in VarBase
   // can't be const, since the versions in dynvar::Base call
   // set_val(), which certainly isn't const. These versions

@@ -1,4 +1,10 @@
 ChangeLog for varconf
+2004-10-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/variable.h: Add an accessor function explicitly making
+	  a variable available as string, to get round nasty impicit
+	  conversion rules in modern C++ compilers.
+
 2004-10-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Reverse the order of configure checks, so sigc++ 2.0 is detected
