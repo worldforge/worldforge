@@ -1,3 +1,7 @@
+Tuesday, May 14, Al Riddoch
+
+	* src/Player.cpp: Ensure that USERNAME is provided for logins.
+
 Sunday, May 5, James Turner
 
 	* Fix Connection::Disconneting system (found by unit testing!)

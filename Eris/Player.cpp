@@ -252,6 +252,7 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
 		Atlas::Objects::Entity::Account::Instantiate();
 	account.SetId(uname);
  	account.SetPassword(pwd);
+	account.SetAttr("username", uname);
 
  	Atlas::Objects::Operation::Login l = 
    		Atlas::Objects::Operation::Login::Instantiate();
