@@ -1,5 +1,12 @@
 2004-10-19  James Turner  <james@worldforge.org>
 
+	* CHANGES-1.4: add this file, summarising the API and internal changes
+	  since the 1.2 series, and giving some hints on migrating to the new API
+	  
+	* Makefile.am: add CHANGES-1.4 to EXTRA_DIST
+
+2004-10-19  James Turner  <james@worldforge.org>
+
 	* configure.ac: require Atlas-C++ >= 0.5.91	
 	* tests/Makefile.am: add missing files so make distcheck works
 	* NEWS: updates describing development release

@@ -6,6 +6,9 @@ internal message routing structure, and the re-factoring of the public API
 based on experiences with Eris 1.2. SigC++ 2.0 is now optionally supported;
 if it is available when Eris is configured, it will be picked over 1.2.
 
+For a detailed description of these changes, see the accompanying
+CHANGES-1.4 file, which includes help on migrating to the new API.
+
 Please note the API for this release is still evolving based on feedback
 (which is welcomed, see the AUTHORS file for contact info). The API WILL
 change prior to the 1.4 release.
