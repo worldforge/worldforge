@@ -1,3 +1,9 @@
+Wednesday, March 3rd, 2004 James Turner <james@worldforge.org>
+
+	* Made atlasconv.h use the new Atlas::Message public typdefs, instead
+	  of the current Element typedefs, which are becoming private.
+	* ProjectBuilder updates for X-Code 
+	
 Wednesday, February 18th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed 'no newline at end of file' warning for timestamp_test.cpp.

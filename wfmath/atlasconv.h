@@ -44,9 +44,11 @@ namespace WFMath {
 
 typedef Atlas::Message::WrongTypeException _AtlasBadParse;
 typedef Atlas::Message::Element _AtlasMessageType;
+typedef Atlas::Message::FloatType _AtlasFloatType;
+typedef Atlas::Message::ListType _AtlasListType;
 
 inline bool _isNum(const _AtlasMessageType& a) {return a.isNum();}
-inline _AtlasMessageType::FloatType _asNum(const _AtlasMessageType& a) {return a.asNum();}
+inline _AtlasFloatType _asNum(const _AtlasMessageType& a) {return a.asNum();}
 
 #elif defined(ATLAS_MESSAGE_OBJECT_H)
 
@@ -74,10 +76,10 @@ class AtlasInType
   operator const _AtlasMessageType&() const {return m_val;}
 #ifdef ATLAS_MESSAGE_ELEMENT_H
   bool IsList() const {return m_val.isList();}
-  const _AtlasMessageType::ListType& AsList() const {return m_val.asList();}
+  const _AtlasListType& AsList() const {return m_val.asList();}
 #else // ATLAS_MESSAGE_OBJECT_H
   bool IsList() const {return m_val.IsList();}
-  const _AtlasMessageType::ListType& AsList() const {return m_val.AsList();}
+  const _AtlasListType& AsList() const {return m_val.AsList();}
 #endif
  private:
   _AtlasMessageType m_obj;
@@ -87,7 +89,7 @@ class AtlasInType
 class AtlasOutType
 {
  public:
-  AtlasOutType(const _AtlasMessageType::ListType& l) : m_val(l) {}
+  AtlasOutType(const _AtlasListType& l) : m_val(l) {}
   operator _AtlasMessageType&() {return m_val;}
   operator const _AtlasMessageType&() const {return m_val;}
  private:
@@ -96,7 +98,7 @@ class AtlasOutType
 
 inline AtlasOutType _ArrayToAtlas(const CoordType* array, unsigned len)
 {
-  _AtlasMessageType::ListType a(len);
+  _AtlasListType a(len);
 
   for(unsigned i = 0; i < len; ++i)
     a[i] = array[i];
@@ -109,7 +111,7 @@ inline void _ArrayFromAtlas(CoordType* array, unsigned len, const AtlasInType& a
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  const _AtlasMessageType::ListType& list(a.AsList());
+  const _AtlasListType& list(a.AsList());
 
   if(list.size() != (unsigned int) len)
     throw _AtlasBadParse();
@@ -137,7 +139,7 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
     throw _AtlasBadParse();
 
 
-  const _AtlasMessageType::ListType& list(a.AsList());
+  const _AtlasListType& list(a.AsList());
 
   if(list.size() != 4)
     throw _AtlasBadParse();
@@ -159,7 +161,7 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
 
 inline AtlasOutType Quaternion::toAtlas() const
 {
-  _AtlasMessageType::ListType a(4);
+  _AtlasListType a(4);
 
   for(int i = 0; i < 3; ++i)
     a[i] = m_vec[i];
@@ -187,7 +189,7 @@ void AxisBox<dim>::fromAtlas(const AtlasInType& a)
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  const _AtlasMessageType::ListType& list(a.AsList());
+  const _AtlasListType& list(a.AsList());
 
   switch(list.size()) {
     case dim:
@@ -229,7 +231,7 @@ AtlasOutType AxisBox<dim>::toAtlas() const
 
   // Do case '2 * dim' above
 
-  _AtlasMessageType::ListType a(2*dim);
+  _AtlasListType a(2*dim);
   for(i = 0; i < dim; ++i) {
     a[i] = m_low[i];
     a[dim+i] = m_high[i];

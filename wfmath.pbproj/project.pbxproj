@@ -61,6 +61,7 @@
 				C4C56B25055AF69F00944C0F,
 				C4C56B32055AF6AE00944C0F,
 				C447BEF005C5D8AA00C5675E,
+				C4ED226305D199C7006B876D,
 			);
 		};
 		C4337F7B03CE491D000063C9 = {
@@ -1618,6 +1619,101 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		C4ED226305D199C7006B876D = {
+			buildPhases = (
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = Tests;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+				C4ED226505D199D1006B876D,
+				C4ED226705D199D1006B876D,
+				C4ED226905D199D1006B876D,
+				C4ED226B05D199D1006B876D,
+				C4ED226D05D199D1006B876D,
+				C4ED226F05D199D1006B876D,
+			);
+			isa = PBXAggregateTarget;
+			name = Tests;
+			productName = Tests;
+		};
+		C4ED226405D199D1006B876D = {
+			containerPortal = C4337F7303CE4905000063C9;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C4C56946055AF2CB00944C0F;
+			remoteInfo = testQuaternion;
+		};
+		C4ED226505D199D1006B876D = {
+			isa = PBXTargetDependency;
+			target = C4C56946055AF2CB00944C0F;
+			targetProxy = C4ED226405D199D1006B876D;
+		};
+		C4ED226605D199D1006B876D = {
+			containerPortal = C4337F7303CE4905000063C9;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C4C56AF3055AF62200944C0F;
+			remoteInfo = polygonTest;
+		};
+		C4ED226705D199D1006B876D = {
+			isa = PBXTargetDependency;
+			target = C4C56AF3055AF62200944C0F;
+			targetProxy = C4ED226605D199D1006B876D;
+		};
+		C4ED226805D199D1006B876D = {
+			containerPortal = C4337F7303CE4905000063C9;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C4C56B02055AF62F00944C0F;
+			remoteInfo = shapeTest;
+		};
+		C4ED226905D199D1006B876D = {
+			isa = PBXTargetDependency;
+			target = C4C56B02055AF62F00944C0F;
+			targetProxy = C4ED226805D199D1006B876D;
+		};
+		C4ED226A05D199D1006B876D = {
+			containerPortal = C4337F7303CE4905000063C9;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C4C56B25055AF69F00944C0F;
+			remoteInfo = vectorTest;
+		};
+		C4ED226B05D199D1006B876D = {
+			isa = PBXTargetDependency;
+			target = C4C56B25055AF69F00944C0F;
+			targetProxy = C4ED226A05D199D1006B876D;
+		};
+		C4ED226C05D199D1006B876D = {
+			containerPortal = C4337F7303CE4905000063C9;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C4C56B32055AF6AE00944C0F;
+			remoteInfo = atlasTest;
+		};
+		C4ED226D05D199D1006B876D = {
+			isa = PBXTargetDependency;
+			target = C4C56B32055AF6AE00944C0F;
+			targetProxy = C4ED226C05D199D1006B876D;
+		};
+		C4ED226E05D199D1006B876D = {
+			containerPortal = C4337F7303CE4905000063C9;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C447BEF005C5D8AA00C5675E;
+			remoteInfo = timeTest;
+		};
+		C4ED226F05D199D1006B876D = {
+			isa = PBXTargetDependency;
+			target = C447BEF005C5D8AA00C5675E;
+			targetProxy = C4ED226E05D199D1006B876D;
 		};
 //C40
 //C41
