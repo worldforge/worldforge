@@ -3,7 +3,14 @@
 // Copyright (C) 2000 Stefanus Du Toit
 // Generated from Morph.h.m4 - do not edit!
 
+#ifndef ATLAS_GENERIC_MORPH_H
+#define ATLAS_GENERIC_MORPH_H
+
+#include "Token.h"
+
 namespace Atlas { namespace Generic {
+
+class WrongTypeException { };
 
 template<typename T1, typename T2>
 class Morph2
@@ -1141,3 +1148,5 @@ protected:
 
 
 } } // namespace Atlas::Generic
+
+#endif
