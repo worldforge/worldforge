@@ -4,7 +4,7 @@
 
 #include "../Codec.h"
 #include "../Hack.h"
-#include "../Funky/Encoder.h"
+//#include "../Funky/Encoder.h"
 
 #include <iostream>
 
@@ -59,24 +59,14 @@ class LoopBridge : public Bridge
 	cout << "StreamBegin!\n";
     }
 
+    virtual void StreamMessage(const Map&)
+    {
+	cout << "StreamMessageMap\n";
+    }
+
     virtual void StreamEnd()
     {
         cout << "StreamEnd!\n";
-    }
-
-    virtual void MessageBegin()
-    {
-	cout << "MessageBegin\n";
-    }
-    
-    virtual void MessageItem(const Map&)
-    {
-	cout << "MessageItemMap\n";
-    }
-    
-    virtual void MessageEnd()
-    {
-	cout << "MessageEnd\n";
     }
     
     // Interface for map context
@@ -158,7 +148,7 @@ int main()
     
     Codec<iostream>* codec = Atlas::UngodlyHack::GetPacked(client_stream,
     &bridge);
-
+/*
     Funky::Encoder enc = Funky::Encoder(codec);
 
     enc << Funky::Encoder::begin_message
@@ -168,16 +158,13 @@ int main()
               << "weight" << 1.5
           << Funky::Encoder::end_map
           << Funky::Encoder::end_message;
-
-    /*
-    codec->MessageBegin();
-    codec->MessageItem(Codec<iostream>::MapBegin);
+*/
+    
+    codec->StreamMessage(Bridge::MapBegin);
 	codec->MapItem("id", 17);
 	codec->MapItem("name", "Fred (the + great)");
 	codec->MapItem("weight", 1.5);
 	codec->MapEnd();
-    codec->MessageEnd();
-    */
     
     codec->Poll();
 

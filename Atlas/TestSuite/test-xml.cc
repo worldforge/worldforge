@@ -4,7 +4,7 @@
 
 #include "../Codec.h"
 #include "../Hack.h"
-#include "../Funky/Encoder.h"
+//#include "../Funky/Encoder.h"
 
 #include <iostream>
 

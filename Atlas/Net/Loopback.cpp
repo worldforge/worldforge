@@ -13,26 +13,21 @@ class LoopBridge : public Bridge
 
     LoopBridge(Bridge* bridge) : bridge(bridge) { }
     
+    virtual void StreamBegin()
+    {
+	bridge->StreamBegin();
+    }
+    
+    virtual void StreamMessage(const Map&)
+    {
+	bridge->StreamMessage(MapBegin);
+    }
+    
     virtual void StreamEnd()
     {
 	bridge->StreamEnd();
     }
 
-    virtual void MessageBegin()
-    {
-	bridge->MessageBegin();
-    }
-    
-    virtual void MessageItem(const Map&)
-    {
-	bridge->MessageItem(MapBegin);
-    }
-    
-    virtual void MessageEnd()
-    {
-	bridge->MessageEnd();
-    }
-    
     virtual void MapItem(const std::string& name, const Map&)
     {
 	bridge->MapItem(name, MapBegin);

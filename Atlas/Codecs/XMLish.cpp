@@ -23,12 +23,9 @@ class XMLish : public Codec<iostream>
     virtual void Poll();
 
     virtual void StreamBegin();
+    virtual void StreamMessage(const Map&);
     virtual void StreamEnd();
 
-    virtual void MessageBegin();
-    virtual void MessageItem(const Map&);
-    virtual void MessageEnd();
-    
     virtual void MapItem(const std::string& name, const Map&);
     virtual void MapItem(const std::string& name, const List&);
     virtual void MapItem(const std::string& name, int);
@@ -77,23 +74,14 @@ void XMLish::StreamBegin()
     socket << "<atlas>";
 }
 
+void XMLish::StreamMessage(const Map&)
+{
+    socket << "<map>";
+}
+
 void XMLish::StreamEnd()
 {
     socket << "</atlas>";
-}
-
-void XMLish::MessageBegin()
-{
-    socket << "<obj>";
-}
-
-void XMLish::MessageItem(const Map&)
-{
-}
-
-void XMLish::MessageEnd()
-{
-    socket << "</obj>";
 }
 
 void XMLish::MapItem(const std::string& name, const Map&)

@@ -16,7 +16,6 @@ The form for each element of this codec is as follows:
 
 [type][name=][data][|endtype]
   
-{ } for message
 ( ) for lists
 [ ] for maps
 $ for string
@@ -25,7 +24,7 @@ $ for string
 
 Sample output for this codec: (whitespace added for clarity)
 
-{[@id=17$name=Fred +28the +2b great+29#weight=1.5(args=@1@2@3)]}
+[@id=17$name=Fred +28the +2b great+29#weight=1.5(args=@1@2@3)]
 
 The complete specification is located in cvs at:
     forge/protocols/atlas/spec/packed_syntax.html
@@ -41,12 +40,9 @@ public:
     virtual void Poll();
 
     virtual void StreamBegin();
+    virtual void StreamMessage(const Map&);
     virtual void StreamEnd();
 
-    virtual void MessageBegin();
-    virtual void MessageItem(const Map&);
-    virtual void MessageEnd();
-    
     virtual void MapItem(const std::string& name, const Map&);
     virtual void MapItem(const std::string& name, const List&);
     virtual void MapItem(const std::string& name, int);
@@ -69,7 +65,6 @@ protected:
     enum State
     {
 	PARSE_STREAM,
-        PARSE_MESSAGE,
         PARSE_MAP,
         PARSE_LIST,
 	PARSE_MAP_BEGIN,
@@ -87,7 +82,6 @@ protected:
     string data;
 
     inline void ParseStream(char);
-    inline void ParseMessage(char);
     inline void ParseMap(char);
     inline void ParseList(char);
     inline void ParseMapBegin(char);
@@ -99,7 +93,7 @@ protected:
 
     inline const string HexEncode(const string& data)
     {
-	return hexEncode("+", "+{}[]()@#$=", data);
+	return hexEncode("+", "+[]()@#$=", data);
     }
 
     inline const string HexDecode(const string& data)
@@ -126,32 +120,11 @@ void Packed::ParseStream(char next)
 {
     switch (next)
     {
-	case '{':
-	    bridge->MessageBegin();
-	    state.push(PARSE_MESSAGE);
-	break;
-    
-	default:
-	    // FIXME signal error here
-	    // unexpected character
-	break;
-    }
-}
-
-void Packed::ParseMessage(char next)
-{
-    switch (next)
-    {
 	case '[':
-	    bridge->MessageItem(MapBegin);
+	    bridge->StreamMessage(MapBegin);
 	    state.push(PARSE_MAP);
 	break;
     
-	case '}':
-	    bridge->MessageEnd();
-	    state.pop();
-	break;
-	
 	default:
 	    // FIXME signal error here
 	    // unexpected character
@@ -435,7 +408,6 @@ void Packed::Poll()
 	switch (state.top())
 	{
 	    case PARSE_STREAM:	    ParseStream(next); break;
-	    case PARSE_MESSAGE:	    ParseMessage(next); break;
 	    case PARSE_MAP:	    ParseMap(next); break;
 	    case PARSE_LIST:	    ParseList(next); break;
 	    case PARSE_MAP_BEGIN:   ParseMapBegin(next); break;
@@ -452,82 +424,72 @@ void Packed::StreamBegin()
 {
 }
 
+void Packed::StreamMessage(const Map&)
+{
+    socket << '[';
+}
+
 void Packed::StreamEnd()
 {
 }
 
-void Packed::MessageBegin()
-{
-    socket << "{";
-}
-
-void Packed::MessageItem(const Map&)
-{
-    socket << "[";
-}
-
-void Packed::MessageEnd()
-{
-    socket << "}";
-}
-
 void Packed::MapItem(const std::string& name, const Map&)
 {
-    socket << "[" << HexEncode(name) << "=";
+    socket << '[' << HexEncode(name) << '=';
 }
 
 void Packed::MapItem(const std::string& name, const List&)
 {
-    socket << "(" << HexEncode(name) << "=";
+    socket << '(' << HexEncode(name) << '=';
 }
 
 void Packed::MapItem(const std::string& name, int data)
 {
-    socket << "@" << HexEncode(name) << "=" << data;
+    socket << '@' << HexEncode(name) << '=' << data;
 }
 
 void Packed::MapItem(const std::string& name, double data)
 {
-    socket << "#" << HexEncode(name) << "=" << data;
+    socket << '#' << HexEncode(name) << '=' << data;
 }
 
 void Packed::MapItem(const std::string& name, const std::string& data)
 {
-    socket << "$" << HexEncode(name) << "=" << HexEncode(data);
+    socket << '$' << HexEncode(name) << '=' << HexEncode(data);
 }
 
 void Packed::MapEnd()
 {
-    socket << "]";
+    socket << ']';
 }
 
 void Packed::ListItem(const Map&)
 {
-    socket << "[";
+    socket << '[';
 }
 
 void Packed::ListItem(const List&)
 {
-    socket << "(";
+    socket << '(';
 }
 
 void Packed::ListItem(int data)
 {
-    socket << "@" << data;
+    socket << '@' << data;
 }
 
 void Packed::ListItem(double data)
 {
-    socket << "#" << data;
+    socket << '#' << data;
 }
 
 void Packed::ListItem(const std::string& data)
 {
-    socket << "$" << HexEncode(data);
+    socket << '$' << HexEncode(data);
 }
 
 void Packed::ListEnd()
 {
-    socket << ")";
+    socket << ')';
 }
 

@@ -15,13 +15,16 @@ using namespace Atlas;
 Sample output for this codec: (whitespace added for clarity)
 
 <atlas>
-    <obj>
-	<map>
-	    <int name="foo">13</int>
-	    <float name="meep">1.5</float>
-	    <string name="bar">hello</string>
-	</map>
-    </obj>
+    <map>
+	<int name="foo">13</int>
+	<float name="meep">1.5</float>
+	<string name="bar">hello</string>
+	<list name="args">
+	    <int>1</int>
+	    <int>2</int>
+	    <float>3.0</float>
+	</list>
+    </map>
 </atlas>
 
 The complete specification is located in cvs at:
@@ -38,11 +41,8 @@ class XML : public Codec<iostream>
     virtual void Poll();
 
     virtual void StreamBegin();
+    virtual void StreamMessage(const Map&);
     virtual void StreamEnd();
-
-    virtual void MessageBegin();
-    virtual void MessageItem(const Map&);
-    virtual void MessageEnd();
     
     virtual void MapItem(const std::string& name, const Map&);
     virtual void MapItem(const std::string& name, const List&);
@@ -77,7 +77,6 @@ class XML : public Codec<iostream>
     {
 	PARSE_NOTHING,
 	PARSE_STREAM,
-        PARSE_MESSAGE,
         PARSE_MAP,
         PARSE_LIST,
 	PARSE_INT,
@@ -232,22 +231,9 @@ void XML::ParseStartTag()
 	break;
 	
 	case PARSE_STREAM:
-	    if (tag == "obj")
-	    {
-		bridge->MessageBegin();
-		state.push(PARSE_MESSAGE);
-	    }
-	    else
-	    {
-		// FIXME signal error here
-		// unexpected tag
-	    }
-	break;
-	
-        case PARSE_MESSAGE:
 	    if (tag == "map")
 	    {
-		bridge->MessageItem(MapBegin);
+		bridge->StreamMessage(MapBegin);
 		state.push(PARSE_MAP);
 	    }
 	    else
@@ -339,19 +325,6 @@ void XML::ParseEndTag()
 	    if (tag == "atlas")
 	    {
 		bridge->StreamEnd();
-		state.pop();
-	    }
-	    else
-	    {
-		// FIXME signal error here
-		// unexpected tag
-	    }
-	break;
-	
-        case PARSE_MESSAGE:
-	    if (tag == "obj")
-	    {
-		bridge->MessageEnd();
 		state.pop();
 	    }
 	    else
@@ -475,19 +448,9 @@ void XML::StreamEnd()
     socket << "</atlas>";
 }
 
-void XML::MessageBegin()
-{
-    socket << "<obj>";
-}
-
-void XML::MessageItem(const Map&)
+void XML::StreamMessage(const Map&)
 {
     socket << "<map>";
-}
-
-void XML::MessageEnd()
-{
-    socket << "</obj>";
 }
 
 void XML::MapItem(const std::string& name, const Map&)

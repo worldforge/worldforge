@@ -36,13 +36,8 @@ class Bridge
     // Interface for stream context
 
     virtual void StreamBegin() = 0;
+    virtual void StreamMessage(const Map&) = 0;
     virtual void StreamEnd() = 0;
-
-    // Interface for message context
-
-    virtual void MessageBegin() = 0;
-    virtual void MessageItem(const Map&) = 0;
-    virtual void MessageEnd() = 0;
     
     // Interface for map context
 
