@@ -155,17 +155,26 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamConnect::GetState()
 {
     if (state == DONE)
     {
-	return SUCCEEDED;
+        if (! outCodecs.empty ())
+        {
+            return SUCCEEDED;
+        }
     }
-    else
+    else if (socket)
     {
 	return IN_PROGRESS;
     }
+    return FAILED;
 }
 
 Atlas::Codec<iostream>* Atlas::Net::StreamConnect::GetCodec()
 {
-    return (*outCodecs.begin())->New(Codec<iostream>::Parameters(socket,bridge));
+    if (! outCodecs.empty ())
+    {
+        return (*outCodecs.begin())-> \
+                New(Codec<iostream>::Parameters(socket,bridge));
+    }
+    return NULL; // throw exception?
 }
 
 
@@ -252,7 +261,6 @@ void Atlas::Net::StreamAccept::Poll(bool can_read = true)
 	
 	if (buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
 	cout << "client: " << inName << endl;
-	
 	state++;
     }
     
@@ -295,17 +303,26 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::GetState()
 {
     if (state == DONE)
     {
-	return SUCCEEDED;
+        if (! outCodecs.empty ())
+        {
+            return SUCCEEDED;
+        }
     }
-    else
+    else if (socket)
     {
 	return IN_PROGRESS;
     }
 }
+    return FAILED;
 
 Atlas::Codec<iostream>* Atlas::Net::StreamAccept::GetCodec()
 {
-    return (*outCodecs.begin())->New(Codec<iostream>::Parameters(socket,bridge));
+    if (! outCodecs.empty ())
+    {
+        return (*outCodecs.begin())-> \
+                New(Codec<iostream>::Parameters(socket,bridge));
+    }
+    return NULL; // throw exception?
 }
 
 void Atlas::Net::StreamAccept::processServerCodecs()
