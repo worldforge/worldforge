@@ -1,8 +1,7 @@
-linux
+*.log
 Makefile
 Makefile.in
 .deps
 .libs
 *.lo
 *.la
-
