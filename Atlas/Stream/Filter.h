@@ -13,6 +13,27 @@
 
 namespace Atlas { namespace Stream {
 
+/** Atlas stream filter
+
+A filter transforms a byte stream into another byte stream. The transform
+must be invertible; that is to say, encoding a string and then decoding it
+must result in the original string. Filters can be used for compression,
+encryption or performing checksums and other forms of transmission error
+detection. A compound filter can be created that acts like a single filter,
+allowing various filters to be chained together in useful ways such as
+compressing and then encrypting.
+
+FIXME talk about filter factories and metrics FIXME
+
+Filters are used by Codec to transform the byte stream before transmission.
+A filter chain is created during negotiation to ensure that both sides of
+the Atlas connection are using the same filters in the same order.
+
+@see Codec
+@see Negotiate
+
+*/
+
 class Filter
 {
     public:

@@ -5,16 +5,7 @@
 #ifndef ATLAS_STREAM_NEGOTIATE_H
 #define ATLAS_STREAM_NEGOTIATE_H
 
-#include "../Net/Socket.h"
-#include "Factory.h"
 #include "Codec.h"
-#include "Filter.h"
-
-#include <string>
-#include <list>
-
-using std::string;
-using std::list;
 
 namespace Atlas { namespace Stream {
 
@@ -32,15 +23,15 @@ namespace Atlas { namespace Stream {
   };
 
 
-  typedef list<Factory<Codec>*> FactoryCodecs;
-  typedef list<Factory<Filter>*> FactoryFilters;
-  typedef list<FactoryName> FactoryNames;
+  typedef std::list<Factory<Codec>*> FactoryCodecs;
+  typedef std::list<Factory<Filter>*> FactoryFilters;
+  typedef std::list<FactoryName> FactoryNames;
 
 
   template <class T>
   class NegotiateHelper {
 
-    typedef list<T*> Factories;
+    typedef std::list<T*> Factories;
 
   public:
 
