@@ -329,6 +329,7 @@ AC_OUTPUT([
 	src/Net/Makefile
 	src/Objects/Makefile
 	src/Objects/Entity/Makefile
+	src/Objects/Operation/Makefile
 	src/TestSuite/Makefile
 	src/Message/Makefile
 	src/Funky/Makefile
