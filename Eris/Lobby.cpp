@@ -63,9 +63,6 @@ Lobby::~Lobby()
 {
 	_con->removeDispatcherByPath("op:oog:sight:entity", "account");
 	_con->removeDispatcherByPath("op:oog:sight:entity", "room");
-	
-	// FIXME - unecesary when Cyphesis updates to new OOG standards
-	//_con->removeDispatcherByPath("op:oog:sight:entity:lobby", "lobby");
 }
 
 Lobby* Lobby::instance()

@@ -40,7 +40,8 @@ Entity::Entity(const std::string &id) :
 	_id(id),
 	_stamp(-1.0),
 	_container(NULL),
-	_position(0., 0., 0.)
+	_position(0., 0., 0.),
+	_velocity(0., 0., 0.)
 {
 	;
 }
@@ -121,6 +122,11 @@ Coord Entity::getPosition() const
 	return _position;
 }
 
+Coord Entity::getVelocity() const
+{
+	return _velocity;
+}
+
 BBox Entity::getBBox() const
 {
 	return _bbox;
@@ -191,7 +197,7 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 	
 	setProperty("loc", getArg(mv, "loc"));
 	setProperty("pos", getArg(mv, "pos"));
-	//setProperty("velocity", getArg(mv, "velocity"));
+	setProperty("velocity", getArg(mv, "velocity"));
 
 	handleMove();
 }

@@ -1,3 +1,12 @@
+Wednesday, December 12 2001, James Turner
+
+	* Fixed OOG recvAppearance/Disappearance to handle multiple
+	  entities in ARGS. (RT ticket #165). I have verified that the current
+	  behaviour still works, can't test the actual multi-args becuase
+	  no server sends that format (I think)
+	* Added getVelocity accessor to Entity, which somehow got left out
+	* Updated Entity::recvMove to update the velocity value.
+
 Thursday, December 06 2001, Al Riddoch
 	* Strict C++ compliance fixes, tested with gcc3.
 

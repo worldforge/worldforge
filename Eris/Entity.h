@@ -73,6 +73,8 @@ public:
 	// dynamics; these are virtual to allow derived class to implement motion
 	// prediction or other effects that can't be guessed here
 	virtual Coord getPosition() const;
+	virtual Coord getVelocity() const;
+	
 	// virtual Vector GetOrientation() const; (heading or euler triple?)
 	virtual BBox getBBox() const;
 	

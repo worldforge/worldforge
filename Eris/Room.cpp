@@ -23,6 +23,9 @@
 
 using namespace Atlas;
 
+typedef Atlas::Message::Object::ListType AtlasListType;
+typedef Atlas::Message::Object::MapType AtlasMapType;
+
 namespace Eris
 {
 	
@@ -263,6 +266,7 @@ void Room::recvSightEmote(const Atlas::Objects::Operation::Imaginary &imag,
 
 void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 {
+/*	
 	std::string account = getArg(ap, "id").AsString();
 	_people.insert(account);
 	
@@ -275,17 +279,50 @@ void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 			_lobby->SightPerson.connect(SigC::slot(this, &Room::notifyPersonSight));
 		
 		_pending.insert(account);
+	}*/
+	
+	const AtlasListType &args = ap.GetArgs();
+	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
+		const AtlasMapType &app = A->AsMap();
+		AtlasMapType::const_iterator V(app.find("id"));
+		std::string account(V->second.AsString());
+		
+		_people.insert(account);
+		if (_lobby->getPerson(account)) {
+			// player is already known, can emit right now
+			Appearance.emit(this, account);
+		} else {
+			// need to wait on the lookup
+			if (_pending.empty())
+				_lobby->SightPerson.connect(SigC::slot(this, &Room::notifyPersonSight));
+			
+			_pending.insert(account);
+		}
 	}
 }
 
 void Room::recvDisappear(const Atlas::Objects::Operation::Disappearance &dis)
 {
+/*	
 	std::string account = getArg(dis, "id").AsString();
  	if (_people.find(account) == _people.end())
 		throw IllegalObject(dis, "room disappearance for unknown person");
 	
 	_people.erase(account);
 	Disappearance.emit(this, account);
+*/	
+	const AtlasListType &args = dis.GetArgs();
+	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
+		const AtlasMapType &app = A->AsMap();
+		AtlasMapType::const_iterator V(app.find("id"));
+		std::string account(V->second.AsString());
+		
+		if (_people.find(account) == _people.end())
+			throw IllegalObject(dis, "room disappearance for unknown person");
+	
+		_people.erase(account);
+		Disappearance.emit(this, account);
+	}
 }
 
 };

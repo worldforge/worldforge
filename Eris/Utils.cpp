@@ -142,7 +142,7 @@ try {
 	
 		if (type == "set") {
 			const Atlas::Message::Object::ListType &arglist = op.GetArgs();
-			ret.push_back('(');
+			ret.append("(");
 			
 			if (!arglist.empty() && arglist[0].IsMap()) {			
 				const Atlas::Message::Object::MapType& values = 
@@ -156,7 +156,7 @@ try {
 			} else
 				ret.append("...");
 		
-			ret.push_back(')');
+			ret.append(")");
 		}
 		
 		// show the error message and also summarise the deffective op
