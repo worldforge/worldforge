@@ -162,6 +162,15 @@ VarBase& VarBase::operator=(const std::string& s)
   return (*this);
 }
 
+VarBase& VarBase::operator=(const char* s)
+{
+  m_have_bool = false; m_have_int = false;
+  m_have_double = false; m_have_string = true;
+  m_val_bool = false; m_val_int = 0;
+  m_val_double = 0.0; m_val = s;
+  return (*this);
+}
+
 VarBase::operator bool()
 {
   if (!m_have_bool) {
@@ -237,9 +246,31 @@ bool VarBase::is_string()
   return m_have_string;
 }
 
+Variable::Variable (const Variable& c) : VarPtr(c.is_array()
+  ? new VarArray(*(c.array())) : &*c)
+{
+
+}
+
+Variable::Variable( const int n, const Variable& v)
+  : VarPtr(new VarArray(n, v))
+{
+
+}
+
+Variable::Variable( const VarList& v) : VarPtr(new VarArray(v))
+{
+
+}
+
 Variable& Variable::operator=( const Variable& c)
 {
-  VarPtr::operator=(c);
+  VarList *array_val = c.array();
+
+  if(array_val) // Equivalent to c.is_array()
+    VarPtr::operator=(new VarArray(*array_val));
+  else
+    VarPtr::operator=(c);
   return *this;
 }
 
@@ -271,6 +302,64 @@ Variable& Variable::operator=( const std::string& s)
 {
   VarPtr::operator=(new VarBase(s));
   return *this;
+}
+
+Variable& Variable::operator=( const char* s)
+{
+  VarPtr::operator=(new VarBase(s));
+  return *this;
+}
+
+Variable& Variable::operator=( const VarList& v)
+{
+  VarPtr::operator=(new VarArray(v));
+  return *this;
+}
+
+Variable& Variable::operator[](const int i)
+{
+  vector<Variable> *the_array = array();
+
+  if(!the_array) {
+    VarArray *new_array = new VarArray(i + 1);
+    (*new_array)[0] = *this;
+    VarPtr::operator=(new_array);
+    the_array = new_array;
+  }
+  else if (the_array->size() < i + 1)
+    the_array->resize(i + 1);
+
+  return (*the_array)[i];
+}
+
+
+std::ostream& operator<<( std::ostream& out, const VarArray& v)
+{
+  out << "(";
+
+  VarArray::const_iterator i = v.begin();
+  while(true) {
+    out << *i;
+    if(++i = v.end())
+      break;
+    out << ",";
+  }
+
+  out << ")";
+}
+
+bool operator ==( const VarArray& one, const VarArray& two)
+{
+  if(one.size() != two.size())
+    return false;
+
+  VarArray::const_iterator i1, i2;
+
+  for(i1 = one.begin(), i2 = two.begin(); i1 != one.end(); ++i1, ++i2)
+    if(*i1 != *i2)
+      return false;
+
+  return true;
 }
 
 } // namespace varconf

@@ -28,6 +28,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 #include <sigc++/handle_system.h>
 
 namespace varconf {
@@ -52,6 +53,7 @@ public:
   virtual VarBase& operator=( const int i);
   virtual VarBase& operator=( const double d);
   virtual VarBase& operator=( const std::string& s);
+  virtual VarBase& operator=( const char* s);
 
   virtual operator bool();
   virtual operator int();
@@ -75,18 +77,22 @@ private:
   std::string m_val;
 };
 
+class Variable;
 typedef SigC::Handle<VarBase,SigC::Scopes::Extend> VarPtr;
+typedef vector<Variable> VarList;
 
 class Variable : public VarPtr {
 public:
   Variable()			  : VarPtr(new VarBase())  {}
-  Variable( const Variable& c)	  : VarPtr(c)              {}
+  Variable( const Variable& c);
   Variable( VarBase* vb)	  : VarPtr(vb)             {}
   Variable( const bool b)	  : VarPtr(new VarBase(b)) {}
   Variable( const int i)	  : VarPtr(new VarBase(i)) {}
   Variable( const double d)	  : VarPtr(new VarBase(d)) {}
   Variable( const std::string& s) : VarPtr(new VarBase(s)) {}
   Variable( const char* s)	  : VarPtr(new VarBase(s)) {}
+  Variable( const int n, const Variable& v);
+  Variable( const VarList& v);
 
   virtual ~Variable() {}
 
@@ -101,11 +107,15 @@ public:
   Variable& operator=( const int i);
   Variable& operator=( const double d);
   Variable& operator=( const std::string& s);
+  Variable& operator=( const char* s);
+  Variable& operator=( const VarList& v);
 
   operator bool()		{return bool(**this);}
   operator int()		{return int(**this);}
   operator double()		{return double(**this);}
   operator std::string()	{return std::string(**this);}
+  VarList* array() const {return dynamic_cast<VarList*>(&**this);}
+  Variable& operator[]( const int i);
 
   // This is sort of funky. The corresponding functions in VarBase
   // can't be const, since the versions in dynvar::Base call
@@ -117,6 +127,31 @@ public:
   bool is_int()	 const		{return (*this)->is_int();}
   bool is_double() const	{return (*this)->is_double();}
   bool is_string() const	{return (*this)->is_string();}
+  bool is_array() const		{return array() != 0;}
+};
+
+class VarArray : public VarBase, public VarList {
+public:
+  VarArray() : VarBase(), VarList() {}
+  VarArray( const VarArray& v) : VarBase(), VarList(v) {}
+  VarArray( const int n, const Variable& v = Variable())
+	: VarBase(), VarList(n, v) {}
+  VarArray( const VarList& v) : VarBase(), VarList(v) {}
+
+  friend std::ostream& operator<<( std::ostream& out, const VarArray& v);
+  friend bool operator ==( const VarBase& one, const VarArray& two) {return false;}
+  friend bool operator ==( const VarArray& one, const VarBase& two) {return false;}
+  friend bool operator ==( const VarArray& one, const VarArray& two);
+
+  virtual operator bool()		{return 0;}
+  virtual operator int()		{return 0;}
+  virtual operator double()		{return 0;}
+  virtual operator std::string()	{return "";}
+
+  virtual bool is_bool()		{return false;}
+  virtual bool is_int()			{return false;}
+  virtual bool is_double()		{return false;}
+  virtual bool is_string()		{return false;}
 };
 
 } // namespace varconf

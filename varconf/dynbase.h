@@ -59,6 +59,9 @@ public:
   friend bool operator ==( const VarBase& one, Base& two);
   friend bool operator ==( Base& one, Base& two);
 
+  friend bool operator ==( Base& one, const VarArray& two) {return false;}
+  friend bool operator ==( const VarArray& one, Base& two) {return false;}
+
   virtual operator bool();
   virtual operator int();
   virtual operator double();

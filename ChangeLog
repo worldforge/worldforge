@@ -1,5 +1,12 @@
 ChangeLog for varconf
 
+Sunday, November 11, 2001 -- Ron Steinke <rsteinke@w-link.net>
+  * variable.h, variable.cpp, dynbase.h: Added the capacity for
+    Variable to hold an array of Variable (really vector<Variable>)
+  * variable.h, variable.cpp: Added operator=(const char*),
+    previously had both char* and std::string as constructors
+    but only std::string as an assignment operator
+
 Wednesday, November 7, 2001 -- Ron Steinke <rsteinke@w-link.net>
   * dynvar.h: Forgot the "inline" keyword. Oops.
 
