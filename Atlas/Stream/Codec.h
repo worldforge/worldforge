@@ -49,6 +49,8 @@ class Codec
 
 	Metrics(int speed, int bandwidth) { }
     };
+	
+    static std::list<Atlas::Stream::Factory<Codec>*> factories;
 
     template <typename T>
     class Factory : public Atlas::Stream::Factory<Codec>
@@ -87,8 +89,6 @@ class Codec
 	{
 	    return metrics;
 	}
-
-	static std::list<Atlas::Stream::Factory<Codec>*> factories;
 
 	private:
 

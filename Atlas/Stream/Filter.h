@@ -39,6 +39,8 @@ class Filter
 	Metrics(Type) { }
     };
 
+    static std::list<Atlas::Stream::Factory<Filter>*> factories;
+
     template <typename T>
     class Factory : public Atlas::Stream::Factory<Filter>
     {
@@ -76,8 +78,6 @@ class Filter
 	{
 	    return metrics;
 	}
-
-	static std::list<Atlas::Stream::Factory<Filter>*> factories;
 
 	private:
 

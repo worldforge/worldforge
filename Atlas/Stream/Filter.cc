@@ -2,9 +2,9 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#include "Codec.h"
+#include "Filter.h"
 
 using namespace std;
 using namespace Atlas::Stream;
 
-list<Factory<Codec>*> Codec::factories;
+list<Factory<Filter>*> Filter::factories;
