@@ -318,7 +318,7 @@ Variable& Variable::operator=( const VarList& v)
 
 Variable& Variable::operator[](const int i)
 {
-  vector<Variable> *the_array = array();
+  std::vector<Variable> *the_array = array();
 
   if(!the_array) {
     VarArray *new_array = new VarArray(i + 1);
@@ -340,7 +340,7 @@ std::ostream& operator<<( std::ostream& out, const VarArray& v)
   VarArray::const_iterator i = v.begin();
   while(true) {
     out << *i;
-    if(++i = v.end())
+    if(++i == v.end())
       break;
     out << ",";
   }

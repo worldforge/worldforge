@@ -5,7 +5,7 @@ echo aclocal...
     echo aclocal not found
     exit 1
 }
-aclocal
+aclocal $ACLOCAL_FLAGS
 
 echo autoheader...
 (autoheader --version) < /dev/null > /dev/null 2>&1 || {

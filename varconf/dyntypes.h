@@ -92,7 +92,7 @@ protected:
 
 private:
 
-  string m_section, m_key;
+  std::string m_section, m_key;
 
 };
 

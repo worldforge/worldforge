@@ -1,5 +1,8 @@
 ChangeLog for varconf
 
+Wednesday, Decemer 18, 2001 -- Al Riddoch <alriddoch@zepler.org>
+  * C++ compliance fixes, for compiling under gcc v3.
+
 Sunday, November 11, 2001 -- Ron Steinke <rsteinke@w-link.net>
   * variable.h, variable.cpp, dynbase.h: Added the capacity for
     Variable to hold an array of Variable (really vector<Variable>)

@@ -45,7 +45,7 @@ void Compare::set_val()
   else if(m_v1.is_double() && m_v2.is_double())
     VarBase::operator=(double_cmp(double(m_v1), double(m_v2)));
   else if(m_v1.is_string() && m_v2.is_string()) {
-    string s1 = std::string(m_v1), s2 = std::string(m_v2);
+    std::string s1 = std::string(m_v1), s2 = std::string(m_v2);
     VarBase::operator=(string_cmp(s1, s2));
   }
   else

@@ -79,7 +79,7 @@ private:
 
 class Variable;
 typedef SigC::Handle<VarBase,SigC::Scopes::Extend> VarPtr;
-typedef vector<Variable> VarList;
+typedef std::vector<Variable> VarList;
 
 class Variable : public VarPtr {
 public:
