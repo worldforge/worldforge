@@ -1,3 +1,12 @@
+// This file may be redistributed and modified only under the terms of
+// the GNU General Public License (See COPYING for details).
+// Copyright (C) 2003 Alistair Riddoch
+
+#ifndef MERCATOR_SEGMENT_IMPL_H
+#define MERCATOR_SEGMENT_IMPL_H
+
+#include <wfmath/intersect.h>
+
 namespace Mercator {
 
 //level a shape of terrain at altitude 'level'
@@ -7,12 +16,12 @@ void Segment::levelShape(const Shape &s, float level)
     int lx,hx,ly,hy;
     if (clipToSegment(s.boundingBox(), lx, hx, ly, hy)) {
         for (int i=ly;i<=hy;i++) {
-	    for (int j=lx;j<=hx;j++) {
-		if (Contains(WFMath::Point<2>(j,i),s,true)) {
+            for (int j=lx;j<=hx;j++) {
+                if (Contains(WFMath::Point<2>(j,i),s,true)) {
                     m_points[i * (m_res + 1) + j] = level;
-		}
-	    }
-	}
+                }
+            }
+        }
     }
 }
 
@@ -23,12 +32,12 @@ void Segment::modifyShape(const Shape &s, float dist)
     int lx,hx,ly,hy;
     if (clipToSegment(s.boundingBox(), lx, hx, ly, hy)) {
         for (int i=ly;i<=hy;i++) {
-	    for (int j=lx;j<=hx;j++) {
-		if (Contains(WFMath::Point<2>(j,i),s,true)) {
+            for (int j=lx;j<=hx;j++) {
+                if (Contains(WFMath::Point<2>(j,i),s,true)) {
                     m_points[i * (m_res + 1) + j] += dist;
-		}
-	    }
-	}
+                }
+            }
+        }
     }
 }
 
@@ -38,16 +47,18 @@ void Segment::slopeShape(const Shape &s, float level, float dX, float dY)
 {
     int lx,hx,ly,hy;
     if (clipToSegment(s.boundingBox(), lx, hx, ly, hy)) {
-	float gradX = gradX/m_res;
-	float gradY = gradY/m_res;
+        float gradX = gradX/m_res;
+        float gradY = gradY/m_res;
         for (int i=ly;i<=hy;i++) {
-	    for (int j=lx;j<=hx;j++) {
-		if (Contains(WFMath::Point<2>(j,i),s,true)) {
+            for (int j=lx;j<=hx;j++) {
+                if (Contains(WFMath::Point<2>(j,i),s,true)) {
                     m_points[i * (m_res + 1) + j] = level + (centerY-i) * gradY + (centerX-j) * gradX;
-		}
-	    }
-	}
+                }
+            }
+        }
     }
 }
 
 } //namespace Mercator
+
+#endif // MERCATOR_SEGMENT_IMPL_H

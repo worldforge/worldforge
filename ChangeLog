@@ -1,9 +1,16 @@
+2003-06-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment_impl.h Mercator/Segment.cpp: Fix problem
+	  with wfmath template instances, and clean up code.
+
 2003-06-03 Damien McGinnes
-        * Segment.cpp Segment.h Segment_impl.h: started work on modification
+
+	* Segment.cpp Segment.h Segment_impl.h: started work on modification
 	  of terrain. Still got a problem that the Contains call in
 	  Segment_impl.h doesnt work (link error)
-	  
+
 2003-05-24 Damien McGinnes
+
 	* Mercator/Segment.h Mercator/Segment.cpp: Cleaned up Segment, removed
 	  tile.cpp and tile.h and moved them into Segment
 	* TODO: added some ideas

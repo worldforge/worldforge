@@ -263,6 +263,7 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, in
 
     return true;
 }
-	
-template void Segment::modifyShape< WFMath::Ball<2> >(const WFMath::Ball<2> &s, float dist);
+
+template void Segment::modifyShape<WFMath::Ball<2> >(const WFMath::Ball<2>&s, float dist);
+
 } // namespace Mercator

@@ -6,6 +6,7 @@ libmercator_0_2_la_SOURCES = \
 	Mercator.cpp \
 	Matrix.cpp \
 	Terrain.cpp \
+	Segment_impl.h \
 	Segment.cpp
 
 libmercatordir = $(includedir)/Mercator-0.2/Mercator
@@ -14,5 +15,4 @@ libmercator_HEADERS = \
 	Mercator.h \
 	Matrix.h \
 	Terrain.h \
-	Segment.h \
-	Segment_impl.h
+	Segment.h
