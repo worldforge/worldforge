@@ -6,6 +6,8 @@
 #define ATLAS_STREAM_FACTORY_H
 
 #include <string>
+#include <list>
+#include <algorithm>
 
 namespace Atlas { namespace Stream {
 
@@ -15,6 +17,8 @@ Factory is a template class for automatic registration, construction and
 destruction of particular classes. It can be used by creating a static
 instance for each class that requires it. Both Codec and Filter specialise
 Factory and use it for class registration.
+
+FIXME talk about name and metrics FIXME
 
 @see Codec
 @see Filter
@@ -26,13 +30,40 @@ class Factory
 {
     public:
 
-    virtual ~Factory() { }
+    typedef typename T::Metrics Metrics;
 
+    Factory(const std::string& name, const Metrics& metrics)
+     : name(name), metrics(metrics)
+    {
+	factories.push_back(this);
+    }
+    
+    virtual ~Factory()
+    {
+	std::list<Factory*>::iterator i;
+	i = std::find(factories.begin(), factories.end(), this);
+	factories.erase(i);
+    }
+    
     virtual T* New() = 0;
     virtual void Delete(T*) = 0;
 
-    virtual std::string GetName() = 0;
-    virtual typename T::Metrics GetMetrics() = 0;
+    std::string GetName()
+    {
+	return name;
+    }
+    
+    Metrics GetMetrics()
+    {
+	return metrics;
+    }
+    
+    static std::list<Factory*> factories;
+
+    protected:
+
+    std::string name;
+    Metrics metrics;
 };
 
 } } // Atlas::Stream

@@ -79,7 +79,7 @@ void NegotiateHelper<T>::put(string &buf, string header)
 
 
 
-Negotiate::Negotiate(string &name, Socket *s, FactoryCodecs *fc, FactoryFilters *ff) :
+Negotiate::Negotiate(string &name, Net::Socket *s, FactoryCodecs *fc, FactoryFilters *ff) :
   state(0), outName(name), sock(s),
   myCodecs(fc), myFilters(ff),
   codecHelper(&inCodecs, &outCodecs),

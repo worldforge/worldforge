@@ -26,7 +26,7 @@ user specified callback functions FIXME this doesn't happen yet FIXME
 Codecs should declare an instance of Codec::Factory in the module they are
 defined in. This will allow them to be automatically included in the
 negotiation process that chooses which codecs and filters an Atlas connection
-will use.
+will use. FIXME talk about codec metrics FIXME
 
 @see Filter
 @see Socket
@@ -39,7 +39,7 @@ class Codec
 {
     public:
 
-    Codec(Socket*, Filter* = 0);
+    Codec(Net::Socket*, Filter* = 0);
     virtual ~Codec();
 
     // Interface for top level context
@@ -74,24 +74,14 @@ class Codec
 	Metrics(int speed, int bandwidth) { }
     };
 	
-    static std::list<Atlas::Stream::Factory<Codec>*> factories;
-
     template <typename T>
     class Factory : public Atlas::Stream::Factory<Codec>
     {
 	public:
 
 	Factory(const std::string& name, const Metrics& metrics)
-	    : name(name), metrics(metrics)
+	 : Factory(name, metrics)
 	{
-	    factories.push_back(this);
-	}
-	    
-	virtual ~Factory()
-	{
-	    std::list<Atlas::Stream::Factory<Codec>*>::iterator i;
-	    i = std::find(factories.begin(), factories.end(), this);
-	    factories.erase(i);
 	}
 
 	virtual Codec* New()
@@ -103,26 +93,11 @@ class Codec
 	{
 	    delete codec;
 	}
-
-	virtual std::string GetName()
-	{
-	    return name;
-	}
-
-	virtual Metrics GetMetrics()
-	{
-	    return metrics;
-	}
-
-	private:
-
-	std::string name;
-	Metrics metrics;
     };
 
     protected:
 
-    Socket *socket;
+    Net::Socket *socket;
     Filter *filter;
 };
 

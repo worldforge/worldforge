@@ -2,15 +2,10 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#include "Filter.h"
+#include "Factory.h"
 
+using namespace std;
 using namespace Atlas::Stream;
 
-Atlas::Stream::Filter::Filter(Filter* next) : next(next)
-{
-}
-
-Atlas::Stream::Filter::~Filter()
-{
-    delete next;
-}
+template <typename T>
+std::list<Factory<T>*> Factory<T>::factories;
