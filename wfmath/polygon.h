@@ -108,14 +108,18 @@ class Polygon<2>
   Polygon& shift(const Vector<2>& v);
   Polygon& moveCornerTo(const Point<2>& p, int corner)
 	{return shift(p - getCorner(corner));}
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Polygon& moveCenterTo(const Point<2>& p)
 	{return shift(p - getCenter());}
+#endif
 
   Polygon& rotateCorner(const RotMatrix<2>& m, int corner)
 	{rotatePoint(m, getCorner(corner)); return *this;}
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Polygon& rotateCenter(const RotMatrix<2>& m)
 	{rotatePoint(m, getCenter()); return *this;}
   Polygon& rotatePoint(const RotMatrix<2>& m, const Point<2>& p);
+#endif
 
   // Intersection functions
 

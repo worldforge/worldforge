@@ -41,7 +41,9 @@
     #define WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION 1
     #define WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS 1
   #endif
-  #define WFMATH_USING_MSVC
+  #define WFMATH_USING_MSVC 1
+  // need to define here, since this doesn't use config.h
+  #define HAVE_SSTREAM
 #endif
 
 // Forward declarations for all classes
