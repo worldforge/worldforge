@@ -18,9 +18,10 @@ enum Type {
 	Map=5
 };
 
+class Variant;
 
-#define varvec std::vector<Variant*>
-#define varmap std::map<std::string, Variant*>
+typedef std::vector<Variant*> varvec;
+typedef std::map<std::string, Variant*> varmap;
 
 /// Base class for variant objects
 class Variant
@@ -119,12 +120,12 @@ public:
 		freelist.push_back((VStr*)ptr);
 	}
 
-	string	st;
+	std::string	st;
 
 	/// construct an empty Variant String
 	VStr()					{ rc=1; rt = String; st = ""; }
 	/// construct a Variant String with content
-	VStr(const string& v)	{ rc=1; rt = String; st = v; }
+	VStr(const std::string& v)	{ rc=1; rt = String; st = v; }
 
 	~VStr()
 	{

@@ -57,7 +57,7 @@ class Object
 	Variant*	obj;
 
 /** support routine for dump */
-static void walkTree(int nest, string name, const Object& list);
+static void walkTree(int nest, std::string name, const Object& list);
 
 public:
 
@@ -80,7 +80,7 @@ Object &operator=(const Object& src)
 }
 
 /** */
-Object &operator=(const string& val)
+Object &operator=(const std::string& val)
 {
   obj->decref();
   obj = new VStr(val); 
@@ -153,8 +153,8 @@ bool operator==(const Object& src)
   return false;
 }
 
-/** compare to string*/
-bool operator==(const string& val)
+/** compare to std::string*/
+bool operator==(const std::string& val)
 {
   if(obj->rt != String)
     return false;
@@ -226,7 +226,7 @@ Object(double val)
 }
 
 /** Construct a String type Object */
-Object(const string& val)
+Object(const std::string& val)
 {
 	obj = new VStr(val);
 }
@@ -283,7 +283,7 @@ Object(int len, int *val)
 }
 
 /** (Map) test for named element of a map */
-bool	has(const string& name) const
+bool	has(const std::string& name) const
 {
 	if (obj->rt != Map) return false;
 	return ( ((VMap*)obj)->vm.count(name) > 0);
@@ -293,11 +293,11 @@ bool	has(const string& name) const
  In contrast to stl's []-operators this returns an empty Object 
  if the requested attribute does not exist.
 */
-const Object& operator[](const string& name) const;
+const Object& operator[](const std::string& name) const;
 
 
 /** (Map) get an Object attribute */
-bool	get(const string& name, Object& val) const
+bool	get(const std::string& name, Object& val) const
 {
 	if (obj->rt !=Map) return false;
 	varmap::iterator i = ((VMap*)obj)->vm.find(name);
@@ -309,7 +309,7 @@ bool	get(const string& name, Object& val) const
 }
 
 /** (Map) get an Int attribute */
-bool	get(const string& name, int& val) const
+bool	get(const std::string& name, int& val) const
 {
 	if (obj->rt !=Map) return false;
 	varmap::iterator i = ((VMap*)obj)->vm.find(name);
@@ -320,7 +320,7 @@ bool	get(const string& name, int& val) const
 }
 
 /** (Map) get an Long attribute */
-bool	get(const string& name, long& val) const
+bool	get(const std::string& name, long& val) const
 {
 	if (obj->rt !=Map) return false;
 	varmap::iterator i = ((VMap*)obj)->vm.find(name);
@@ -331,7 +331,7 @@ bool	get(const string& name, long& val) const
 }
 
 /** (Map) get a Float attribute */
-bool    get(const string& name, double& val) const
+bool    get(const std::string& name, double& val) const
 {
 	if (obj->rt !=Map) return false;
 	varmap::iterator i = ((VMap*)obj)->vm.find(name);
@@ -342,7 +342,7 @@ bool    get(const string& name, double& val) const
 }
 
 /** (Map) get a String attribute */
-bool    get(const string& name, string& val) const
+bool    get(const std::string& name, std::string& val) const
 {
 	if (obj->rt !=Map) return false;
 	varmap::iterator i = ((VMap*)obj)->vm.find(name);
@@ -353,42 +353,42 @@ bool    get(const string& name, string& val) const
 }
 
 /** (Map) get an Object attribute */
-bool    get(const string& name, Object& val, Object& def) const
+bool    get(const std::string& name, Object& val, Object& def) const
 {
 	val = def;
 	return get(name,val);
 }
 
 /** (Map) get an Int attribute */
-bool    get(const string& name, int& val, int def) const
+bool    get(const std::string& name, int& val, int def) const
 {
 	val = def;
 	return get(name,val);
 }
 
 /** (Map) get an Long attribute */
-bool    get(const string& name, long& val, long def) const
+bool    get(const std::string& name, long& val, long def) const
 {
 	val = def;
 	return get(name,val);
 }
 
 /** (Map) get a Float attribute */
-bool    get(const string& name, double& val, double def) const
+bool    get(const std::string& name, double& val, double def) const
 {
 	val = def;
 	return get(name,val);
 }
 
 /** (Map) get a String attribute */
-bool    get(const string& name, string& val, string& def) const
+bool    get(const std::string& name, std::string& val, std::string& def) const
 {
 	val = def;
 	return get(name,val);
 }
 
 /** (Map) set an Object attribute */
-bool    set(const string& name, const Object& src)
+bool    set(const std::string& name, const Object& src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
@@ -398,7 +398,7 @@ bool    set(const string& name, const Object& src)
 }
 
 /** (Map) set an Int attribute */
-bool    set(const string& name, int src)
+bool    set(const std::string& name, int src)
 {
 	del(name);
 	if (obj->rt != Map) return false;
@@ -407,7 +407,7 @@ bool    set(const string& name, int src)
 }
 
 /** (Map) set an Long attribute */
-bool    set(const string& name, long src)
+bool    set(const std::string& name, long src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
@@ -416,7 +416,7 @@ bool    set(const string& name, long src)
 }
 
 /** (Map) set a Float attribute */
-bool    set(const string& name, double src)
+bool    set(const std::string& name, double src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
@@ -425,7 +425,7 @@ bool    set(const string& name, double src)
 }
 
 /** (Map) set a String attribute */
-bool    set(const string& name, const string& src)
+bool    set(const std::string& name, const std::string& src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
@@ -434,7 +434,7 @@ bool    set(const string& name, const string& src)
 }
 
 /** (Map) set a String attribute */
-bool    set(const string& name, const char* src)
+bool    set(const std::string& name, const char* src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
@@ -443,7 +443,7 @@ bool    set(const string& name, const char* src)
 }
 
 /** (Map) remove an attribute */
-bool    del(const string& name)
+bool    del(const std::string& name)
 {
 	if (obj->rt !=Map) return false;
 	varmap::iterator i = ((VMap*)obj)->vm.find(name);
@@ -486,7 +486,7 @@ double	asFloat() const
 }	
 
 /** return object value as an int */
-string	asString() const
+std::string	asString() const
 {
 	if (obj->rt == String) return ((VStr*)obj)->st;
 	return "";
@@ -528,7 +528,7 @@ static	Object	mkFloat(double val)
 }
 
 /** return a String Object */
-static	Object	mkString(const string& val)
+static	Object	mkString(const std::string& val)
 {
 	Object	tmp(val);
 	return tmp;
@@ -612,7 +612,7 @@ bool    insert(size_t ndx, long val);
 bool    insert(size_t ndx, double val);
 
 /** (List) insert a String at this index */
-bool    insert(size_t ndx, const string& val);
+bool    insert(size_t ndx, const std::string& val);
 
 /** (List) insert a String at this index */
 bool    insert(size_t ndx, const char* val);
@@ -631,7 +631,7 @@ bool    append(long val);
 bool    append(double val);
 
 /** (List) append a String */
-bool    append(const string& val);
+bool    append(const std::string& val);
 
 /** (List) replace an Object at this index */
 bool    set(size_t ndx, const Object& src);
@@ -646,7 +646,7 @@ bool    set(size_t ndx, long val);
 bool    set(size_t ndx, double val);
 
 /** (List) replace a String at this index */
-bool    set(size_t ndx, const string& val);
+bool    set(size_t ndx, const std::string& val);
 
 /** (List) replace a String at this index */
 bool    set(size_t ndx, const char* val);
@@ -664,7 +664,7 @@ bool    get(size_t ndx, long& val) const;
 bool    get(size_t ndx, double& val) const;
 
 /** (List) get a String from this index */
-bool    get(size_t ndx, string& val) const;
+bool    get(size_t ndx, std::string& val) const;
 
 /** (List) get an Object from this index with default */
 bool	get(size_t ndx, Object& src, Object& def) const;
@@ -679,7 +679,7 @@ bool    get(size_t ndx, long& val, long def) const;
 bool    get(size_t ndx, double& val, double def) const;
 
 /** (List) get a String from this index */
-bool    get(size_t ndx, string& val, string& def) const;
+bool    get(size_t ndx, std::string& val, std::string& def) const;
 
 };
 
