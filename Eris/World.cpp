@@ -501,8 +501,7 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &/*ifo*/,
 	const Atlas::Objects::Entity::GameEntity &character)
 {
-	std::cerr << "Setting up World for character "
-		<< character.GetName() << std::endl;
+	log(LOG_DEBUG, "Setting up World for character %s", character.GetName().c_str());
 
 	_characterID = character.GetId();
 	

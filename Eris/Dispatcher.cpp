@@ -223,6 +223,24 @@ bool OpToDispatcher::dispatch(DispatchContextDeque &dq)
 	return StdBranchDispatcher::subdispatch(dq);	
 }
 
+bool OpRefnoDispatcher::dispatch(DispatchContextDeque &dq)
+{
+	assert(dq.front().IsMap());
+	const Atlas::Message::Object::MapType &map = dq.front().AsMap();
+	Atlas::Message::Object::MapType::const_iterator I = map.find("refno");
+	if(I == map.end()) {
+		std::string warning = "Op without a refno, keys are:";
+		for(I = map.begin(); I != map.end(); ++I)
+			warning += " " + I->first;
+		log(LOG_DEBUG, warning.c_str());
+		return false;
+	}
+	assert(I->second.IsInt());
+	if (I->second.AsInt() != _refno)
+		return false;
+	return StdBranchDispatcher::subdispatch(dq);	
+}
+
 bool EncapDispatcher::dispatch(DispatchContextDeque &dq)
 {
 	const Atlas::Message::Object::ListType &args = 

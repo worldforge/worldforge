@@ -6,9 +6,10 @@
 
 #include "World.h"
 #include "Entity.h"
-#include "ArgumentDispatcher.h"
+#include "OpDispatcher.h"
 #include "Connection.h"
 #include "ClassDispatcher.h"
+#include "Log.h"
 
 using namespace Eris;
 
@@ -48,8 +49,7 @@ Avatar::Avatar(World* world, long refno, const std::string& character_id)
     Dispatcher *d = _world->getConnection()->getDispatcherByPath("op:info");
     assert(d);
     d = d->addSubdispatch(ClassDispatcher::newAnonymous(_world->getConnection()));
-    d = d->addSubdispatch(new ArgumentDispatcher(_dispatch_id, "refno", refno),
-	"game_entity");
+    d = d->addSubdispatch(new OpRefnoDispatcher(_dispatch_id, refno), "game_entity");
     d->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Info, 
     	Atlas::Objects::Entity::GameEntity>(
     	"character", SigC::slot(*this, &Avatar::recvInfoCharacter))
@@ -62,7 +62,7 @@ Avatar::Avatar(World* world, long refno, const std::string& character_id)
 	    throw InvalidOperation("Character " + _id + " already has an Avatar");
     }
 
-    std::cerr << "Created new Avatar with id " << _id << " and refno " << refno << std::endl;
+    log(LOG_DEBUG, "Created new Avatar with id %s and refno %i", _id.c_str(), refno);
 }
 
 Avatar::~Avatar()
@@ -99,6 +99,8 @@ std::vector<Avatar*> Avatar::getAvatars(Connection* con)
 void Avatar::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 		const Atlas::Objects::Entity::GameEntity &character)
 {
+    log(LOG_DEBUG, "Have id %s, got id %s", _id.c_str(), character.GetId().c_str());
+
     assert(_id.empty() || _id == character.GetId());
     if(_id.empty()) {
 	_id = character.GetId();
@@ -107,7 +109,7 @@ void Avatar::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 	assert(success); // Newly created character should have unique id
     }
 
-    std::cerr << "Got character info with id " << _id << std::endl;
+    log(LOG_DEBUG, "Got character info with id %s", _id.c_str());
 
     _world->recvInfoCharacter(ifo, character);
 

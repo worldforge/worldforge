@@ -1,3 +1,8 @@
+Friday, 1st November, Ron Steinke
+
+	* Change ArgumentDispatcher to (new) OpRefnoDispatcher in Avatar
+	* Change std::cerr to log(LOG_DEBUG,...) for debugging code
+
 Friday, 1st November, Al Riddoch
 
 	* src/World.cpp: ISO C++ does not allow default value for arg to be

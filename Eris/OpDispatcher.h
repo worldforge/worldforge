@@ -35,6 +35,21 @@ protected:
 	const std::string _id;
 };
 
+
+class OpRefnoDispatcher : public StdBranchDispatcher
+{
+public:	
+	OpRefnoDispatcher(const std::string &nm, long refno) :
+		StdBranchDispatcher(nm), _refno(refno)
+	{;}
+	
+	virtual ~OpRefnoDispatcher() {;}
+		
+	virtual bool dispatch(DispatchContextDeque &dq);
+protected:
+	const long _refno;
+};
+
 }
 
 #endif
