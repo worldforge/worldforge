@@ -12,6 +12,7 @@
 #include "Wait.h"
 #include "Utils.h"
 #include "Connection.h"
+#include "Log.h"
 
 namespace Eris
 {
@@ -31,7 +32,7 @@ bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
 {
 	TypeInfoPtr mty = TypeInfo::getSafe(dq.front());
 	if (!mty->isBound()) {
-	    Eris::Log(LOG_VERBOSE, "waiting for bind of %s", mty->getName().c_str());
+	    Eris::log(LOG_VERBOSE, "waiting for bind of %s", mty->getName().c_str());
 	    new WaitForSignal(mty->getBoundSignal(), dq.back());
 	    // set dispatched, to avoid warnings about not hitting a leaf
 	    Atlas::Message::Object::MapType &o = dq.back().AsMap();
@@ -98,7 +99,7 @@ void ClassDispatcher::rmvSubdispatch(Dispatcher *d)
 		}
 	}
 	
-	Eris::Log(LOG_ERROR, "Unknown dispatcher %s in ClassDispatcher:rmvSubdispatcher",
+	Eris::log(LOG_ERROR, "Unknown dispatcher %s in ClassDispatcher:rmvSubdispatcher",
 		d->getName().c_str());
 }
 
@@ -131,12 +132,12 @@ void ClassDispatcher::boundType(TypeInfo *ty)
 		}
 		
 	if (cl.sub == NULL) {
-		Eris::Log(LOG_ERROR, "Couldn't find type %s in dispatcher %s doing full bind",
+		Eris::log(LOG_ERROR, "Couldn't find type %s in dispatcher %s doing full bind",
 			ty->getName().c_str(), _name.c_str());
 		throw InvalidOperation("Missing type doing full bind in class dispatcher");
 	}
 	
-	Eris::Log(LOG_DEBUG, "reordering class dispatcher %s node %s",
+	Eris::log(LOG_DEBUG, "reordering class dispatcher %s node %s",
 		_name.c_str(), cl.type->getName().c_str());
 	boundInsert(cl);
 }

@@ -37,7 +37,8 @@ liberis_la_SOURCES = \
 	ClassDispatcher.cpp \
 	InvisibleEntityCache.cpp \
 	InvisibleEntityCache.h \
-	PollDefault.cpp
+	PollDefault.cpp \
+	Log.cpp
 	
 liberisdir = $(includedir)/Eris
 
@@ -71,6 +72,7 @@ liberis_HEADERS = \
 	Property.h \
 	Poll.h \
 	PollDefault.h \
-	atlas_utils.h
+	atlas_utils.h \
+	Log.h
 	
 	

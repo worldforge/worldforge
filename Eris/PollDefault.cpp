@@ -2,10 +2,11 @@
 
 #include <sigc++/object_slot.h>
 
-#include "Types.h"
+#include "Eris/Types.h"
 
 #include "PollDefault.h"
 #include "Timeout.h"
+#include "Log.h"
 
 Eris::Poll& Eris::Poll::instance()
 {
@@ -79,18 +80,11 @@ bool PollDataDefault::isReady(const basic_socket_stream* str)
 
 void PollDefault::doPoll()
 {
-/*
-	// Run the pre-poll check, if there is one.
-	if(_prePoll.connected() && !_prePoll.call())
-		return;
-*/
+    bool got_data;
+    PollDataDefault data(_streams, got_data);
 
-	bool got_data;
-
-	PollDataDefault data(_streams, got_data);
-
-	if(got_data)
-		emit(data);
+    if(got_data)
+	emit(data);
 }
 
 void PollDefault::poll()
@@ -110,6 +104,6 @@ void PollDefault::addStream(const basic_socket_stream* str)
 
 void PollDefault::removeStream(const basic_socket_stream* str)
 {
-	if(_streams.erase(str) == 0)
-		throw Eris::InvalidOperation("Can't find stream in PollDefault");
+    if(_streams.erase(str) == 0)
+	throw Eris::InvalidOperation("Can't find stream in PollDefault");
 }

@@ -8,6 +8,7 @@
 #include "Utils.h"
 #include "atlas_utils.h"
 #include "Connection.h"
+#include "Log.h"
 
 using namespace Atlas::Message;
 
@@ -195,7 +196,7 @@ try {
 	return ret;
 }
 	catch (Atlas::Message::WrongTypeException &wte) {
-		Eris::Log(LOG_ERROR, "caught WTE in Utils::objectSummary");
+		Eris::log(LOG_ERROR, "caught WTE in Utils::objectSummary");
 		return "<invalid>";
 	}
 }

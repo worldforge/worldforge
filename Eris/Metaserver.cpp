@@ -14,6 +14,8 @@
 #include "Timeout.h"
 #include "Poll.h"
 #include "PollDefault.h"
+#include "Connection.h"
+#include "Log.h"
 
 namespace Eris {
 
@@ -85,32 +87,34 @@ Meta::~Meta()
 
 void Meta::queryServer(const std::string &ip)
 {
-	if (_status != IN_PROGRESS)
-		_status = IN_PROGRESS;
-	
-	if (_activeQueries.size() >= _maxActiveQueries) {
-		_pendingQueries.push_back(ip);
-	} else {
-		MetaQuery *q =  new MetaQuery(this, ip);
+    if (_status != IN_PROGRESS)
+	    _status = IN_PROGRESS;
+    
+    if (_activeQueries.size() >= _maxActiveQueries) {
+	    _pendingQueries.push_back(ip);
+    } else {
+	    MetaQuery *q =  new MetaQuery(this, ip);
+	    if (q->isComplete()) {
+		// indicated a failure occurred, so we'll kill it now and say no more
+		delete q;
+	    } else
 		_activeQueries.push_back(q);
-	
-		//q->Failure.connect(SigC::slot(this, &Meta::QueryFailure));
-	}
+    }
 }
 
 void Meta::refresh()
 {
-	if (_status == VALID) {
-		// FIXME - save the current list
-	}
+    if (_status == VALID) {
+	// FIXME - save the current list
+    }
 
-	_gameServers.clear();
+    _gameServers.clear();
 	
-	// close the existing connection (rather brutal this...)
-	if (_stream->is_open()) {
-		Poll::instance().removeStream(_stream);
-		_stream->close();
-	}
+    // close the existing connection (rather brutal this...)
+    if (_stream->is_open()) {
+	Poll::instance().removeStream(_stream);
+	_stream->close();
+    }
 
     // open connection to meta server
     remote_host metaserver_data(_metaHost, META_SERVER_PORT);
@@ -119,6 +123,7 @@ void Meta::refresh()
 	doFailure("Couldn't contact metaserver " + _metaHost);
 	return;
     }
+    
     Poll::instance().addStream(_stream);
     
     listReq(0);
@@ -136,40 +141,41 @@ ServerList Meta::getGameServerList()
 	return ret;
 }
 
-/*
-bool Meta::prePoll()
-{
-	// very fast reject if nothing to do
-	if (_status != IN_PROGRESS) return false;
-	if (_activeQueries.empty() && (_bytesToRecv == 0)) return false;
-		
-	return true;
-}
-*/
 void Meta::poll()
 {
 	PollDefault::poll();
-	}
+}
 		
 void Meta::gotData(PollData &data)
 {
-	bool got_one = false;
+    bool got_one = false;
+    
+    if (!_stream->is_open()) {
+	doFailure("Connection to the meta-server failed");
+	return;
+    }
+    
+    if (data.isReady(_stream)) {
+	    recv();	
+	    got_one = true;
+    }
+
+    for (MetaQueryList::iterator Q=_activeQueries.begin();
+	    Q != _activeQueries.end(); ++Q)
+    {
+	if (!(*Q)->_stream->is_open()) {
+	    queryFailure(*Q, "");
+	    continue;
+	}
 	
-	if (data.isReady(_stream)) {
-		recv();	
-		got_one = true;
+	if ((*Q)->isReady(data)) {
+	    (*Q)->recv();	
+	    got_one = true;
 	}
+    }
 
-	for (MetaQueryList::iterator Q=_activeQueries.begin();
-		Q != _activeQueries.end(); ++Q) {
-		if ((*Q)->isReady(data)) {
-			(*Q)->recv();	
-			got_one = true;
-		}
-	}
-
-	if(!got_one)
-		return;
+    if(!got_one)
+	    return;
 
 	// clean up old quereis
 	while (!_deleteQueries.empty()) {
@@ -187,13 +193,8 @@ void Meta::gotData(PollData &data)
 
 void Meta::recv()
 {
-	assert(_bytesToRecv);	
-	if (_stream->fail()) {
-		doFailure("Connection to the meta-server failed");
-		return;
-	}
-	
-	std::cerr << "got data from the meta-server" << std::endl;
+	assert(_bytesToRecv);
+	Eris::log(LOG_DEBUG, "got data from the meta-server");
 	
 	do {
 		int d = _stream->get();
@@ -223,6 +224,9 @@ void Meta::cancel()
 	for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
 		delete *Q;
 	_activeQueries.clear();
+	
+	_stream->close();
+	Poll::instance().removeStream(_stream);
 	
 	// FIXME - revert to the last valid server list?
 	_status = INVALID;
@@ -311,10 +315,13 @@ void Meta::processCmd()
 			// request some more
 			listReq(_gameServers.size());
 		else {
-			// all done, clean everything up
-			delete _timeout;
-			_timeout = NULL;
-			_status = VALID;
+		    // all done, clean everything up
+		    delete _timeout;
+		    _timeout = NULL;
+		    _status = VALID;
+		    
+		    Poll::instance().removeStream(_stream);
+		    _stream->close();
 		}
 		
 		} break;
@@ -359,13 +366,15 @@ void Meta::ObjectArrived(const Atlas::Message::Object &msg)
 		if ((*Q)->getQueryNo() == refno) break;
 	
 	if (Q == _activeQueries.end()) {
-		// handle old behaviour (no serial / refno set in reply); this only works
-		// with single query mode (i.e Max-Queries = 1)
-		
-		if (_activeQueries.size() == 1)
-			Q = _activeQueries.begin();
-		else
-			throw InvalidOperation("Couldn't locate query for reply");
+	    // handle old behaviour (no serial / refno set in reply); this only works
+	    // with single query mode (i.e Max-Queries = 1)
+	    
+	    if (_activeQueries.size() == 1)
+		    Q = _activeQueries.begin();
+	    else {
+		Eris::log(LOG_ERROR, "Couldn't locate query for meta-query reply");
+		return;
+	    }
 	}
 	
 	// extract the server object
@@ -391,19 +400,21 @@ void Meta::ObjectArrived(const Atlas::Message::Object &msg)
 
 void Meta::doFailure(const std::string &msg)
 {
-	Failure.emit(msg);	
-
-	// try to revert back to the last good list
-	if (!_lastValidList.empty()) {
-		_gameServers = _lastValidList;
-		_status = VALID;
-	} else
-		_status = INVALID;
-	
-	if (_timeout) {
-		delete _timeout;
-		_timeout = NULL;
-	}
+    Failure.emit(msg);
+    _stream->close();
+    Poll::instance().removeStream(_stream);
+    
+    // try to revert back to the last good list
+    if (!_lastValidList.empty()) {
+	    _gameServers = _lastValidList;
+	    _status = VALID;
+    } else
+	    _status = INVALID;
+    
+    if (_timeout) {
+	    delete _timeout;
+	    _timeout = NULL;
+    }
 		
 }
 

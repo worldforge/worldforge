@@ -1,3 +1,16 @@
+Wednesday, April 10 2002, James Turner
+
+	* Fixed OOG emotes in Room.cpp (dispatcher logic was totally
+	  wrong, the replacement is big but correct)
+	* Moved logging resposibilites from Connection to seperate
+	  Log.h file. Presently, this means clients which used to
+	  attach to Eris::Connection::Log should now use
+	  Eris::Logged.
+	* Updated all the Eris log call sites to use the new impl
+	* Numerous Metaserver tweaks to make it more stable when
+	  connection errors and timeouts occurs; needs more work,
+	  alas.
+
 Monday, April 08 2002, Al Riddoch
 
 	* src/Entity.h, src/Entity.cpp: Add a flag which indicates whether

@@ -27,6 +27,7 @@
 #include "ArgumentDispatcher.h"
 
 #include "Utils.h"
+#include "Log.h"
 #include "Player.h"
 #include "Room.h"
 #include "Person.h"
@@ -154,7 +155,7 @@ void Lobby::registerCallbacks()
 	if (_account.empty())
 		throw InvalidOperation("can't register lobby dispatchers yet (need account ID)");
 	
-	Eris::Log(LOG_DEBUG, "in Lobby::registerCallbacks");
+	Eris::log(LOG_DEBUG, "in Lobby::registerCallbacks");
 	
 	Dispatcher *rop = _con->getDispatcherByPath("op");
 	assert(rop);	
@@ -247,7 +248,7 @@ void Lobby::look(const std::string &id)
 void Lobby::recvInfoAccount(const Operation::Info &ifo, 
 	const AtlasEntity::Account &account)
 {
-	Eris::Log(LOG_VERBOSE, "in recvInfoAccount");
+	Eris::log(LOG_VERBOSE, "in recvInfoAccount");
 	
 	// reject lots of extraneous INFOs we don't care about
 	// FIXME  - enable the refno test once stage correctly processes it
@@ -277,7 +278,7 @@ void Lobby::recvSightPerson(const Atlas::Objects::Entity::Account &ac)
 {
 	PersonDict::iterator i = _peopleDict.find(ac.GetId());
 	if (i == _peopleDict.end()) {
-		Eris::Log(LOG_WARNING, "got un-requested sight of person %s", ac.GetId().c_str());
+		Eris::log(LOG_WARNING, "got un-requested sight of person %s", ac.GetId().c_str());
 		return;
 	}
 	
@@ -295,7 +296,7 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 {
 	// check if this is initial room (lobby), from the anonymous LOOK
 	if (_id.empty()) {
-		Log(LOG_NOTICE, "recieved sight of root room (lobby)");
+		log(LOG_NOTICE, "recieved sight of root room (lobby)");
 		_roomDict[room.GetId()] = this;
 		
 		_id = room.GetId();
@@ -308,7 +309,7 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 		if (i == _roomDict.end())
 			throw InvalidOperation("Got sight of unknown room!");
 		
-		Log(LOG_NOTICE, "recived sight of room %s", i->first.c_str());
+		log(LOG_NOTICE, "recived sight of room %s", i->first.c_str());
 		i->second->sight(room);
 	}
 	

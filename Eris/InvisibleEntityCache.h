@@ -6,7 +6,7 @@
 #include <set>
 
 #include "Time.h"
-#include "Connection.h"
+#include "Log.h"
 #include "Entity.h"
 
 namespace Eris {
@@ -30,7 +30,7 @@ public:
 		for (BucketQueue::iterator B=_buckets.begin(); B!=_buckets.end();++B)
 			if (B->remove(e)) return;
 				
-		Eris::Log(LOG_ERROR, "Entity %s not found in InvisibleEntityCache doing ::remove",
+		Eris::log(LOG_ERROR, "Entity %s not found in InvisibleEntityCache doing ::remove",
 			e->getID().c_str());
 	}
 	

@@ -14,6 +14,7 @@
 #include "Connection.h"
 #include "Utils.h"
 #include "Person.h"
+#include "Log.h"
 
 #include "OpDispatcher.h"
 #include "SignalDispatcher.h"
@@ -77,17 +78,36 @@ void Room::setup()
 	));
 
 // visual stuff (sights)
-	Dispatcher *img = con->getDispatcherByPath("op:oog:sight:op");
-	assert(img);
-	img = img->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
-	img = img->addSubdispatch(ClassDispatcher::newAnonymous());
+    
+    Dispatcher *sightOp = con->getDispatcherByPath("op:oog:sight:op");
 	
-	// emotes
-	Dispatcher *em = img->addSubdispatch(new IdDispatcher("emote", "emote"), "imaginary");
-	em->addSubdispatch(new SignalDispatcher2<Atlas::Objects::Operation::Imaginary,
+    Dispatcher *imaginary = sightOp->getSubdispatch("imaginary");
+    if (!imaginary) {
+	imaginary = sightOp->addSubdispatch(ClassDispatcher::newAnonymous());
+	imaginary = imaginary->addSubdispatch(
+	    new EncapDispatcher("imaginary"), 
+	    "imaginary"
+	);
+    }
+    
+    Dispatcher *emote = imaginary->getSubdispatch("emote");
+    if (!emote) {
+	// verify it's an emote by looking at the id ... what other types are there?
+	emote = imaginary->addSubdispatch(new ArgumentDispatcher("emote", "id", "emote"));
+    }
+    
+    Dispatcher *location = emote->getSubdispatch(rid);
+    if (!location) {
+	// verify the location is this room
+	location = emote->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
+    }
+    
+    Dispatcher *sig = location->addSubdispatch(new EncapDispatcher("encap"));
+    sig->addSubdispatch(
+	new SignalDispatcher2<Atlas::Objects::Operation::Imaginary,
 		Atlas::Objects::Root>("emote",
 		SigC::slot(this, &Room::recvSightEmote)
-	));
+    ));
 
 // appearance
 	Dispatcher *apd = con->getDispatcherByPath("op:oog:appearance");
@@ -175,7 +195,7 @@ void Room::leave()
 
 void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 {
-	Log(LOG_NOTICE, "Got sight of room %s", _id.c_str());
+	log(LOG_NOTICE, "Got sight of room %s", _id.c_str());
 	_initialGet = true;
 		
 	_name = room.GetName();
@@ -198,7 +218,7 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 	}
 	
 	if (_pending.empty()) {
-		Log(LOG_NOTICE, "Doing immediate entry to room %s", _id.c_str());
+		log(LOG_NOTICE, "Doing immediate entry to room %s", _id.c_str());
 		// FIXME  - this code will cause OOG entry, even if the server
 		// doesn't really support it (just to an empty lobby). The option
 		// is not to emit the 'entered' signal at all. I don't know which
@@ -249,7 +269,7 @@ void Room::recvSoundTalk(const Atlas::Objects::Operation::Talk &tk)
 	}
 	// hit this assert if get a talk from somone we know *nothing* about
 	if (_people.find(tk.GetFrom()) == _people.end()) {
-	    Log(LOG_DEBUG, "unknown FROM %s in TALK operation");
+	    log(LOG_DEBUG, "unknown FROM %s in TALK operation");
 	    assert(false);
 	}
 	

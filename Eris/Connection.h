@@ -22,19 +22,6 @@ class Dispatcher;
 class WaitForBase;
 class Timeout;
 class PollData;
-	
-/** Logging level : setting a higher level will automaticaly pull in the lower
- levels (i.e NOTICE implies ERROR and WARNING) */
-typedef enum {
-	LOG_ERROR = 0,	///< serious failure indications
-	LOG_WARNING,	///< something is amiss, but probably okay to continue
-	LOG_NOTICE,		///< general information
-	LOG_VERBOSE,	///< <i>lots</i> of information, about every recieved operation, for example
-	LOG_DEBUG		///< excessive amounts of stuff
-} LogLevel;
-
-/// the default logging level for a new connection
-const LogLevel DEFAULT_LOG = LOG_WARNING;
 
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
@@ -103,10 +90,6 @@ public:
 	/** The same comments regarding connection status and
 	disconnect operation apply as above */
 	void send(const Atlas::Message::Object &msg);
-
-	/** set the logging level for all sucessive messages : this can be called at any time, so it is
-	reasonable to bracket suspect calls in setLogLevel calls if you choose */
-	void setLogLevel(LogLevel lvl);
 	
 	/** Lock then connection's state. This prevents the connection changing status
 	until a corresponding unlock() call is issued. The only use at present is to hold
@@ -138,11 +121,6 @@ public:
 	correspond to the emission of a more specific signal (such as Connected),
 	which should be used where available. */
 	SigC::Signal1<void, Status> StatusChanged;
-	
-	/** Emitted with logging information; client may handle as it see fit.
-	There is room for considerable expansion of this feature; notably message
-	classes (warning / info / debug). Any feedback greatly appreciated */
-	SigC::Signal2<void, LogLevel, const std::string&> Log;
 
 protected:
 	/// update the connection status (and emit the appropriate signal)
@@ -169,9 +147,7 @@ protected:
 	unsigned int _statusLock;	///< locks connection to current state while > 0	
 	
 	friend class WaitForBase;	// so can call addWaitFor
-	
-	friend void Log(LogLevel lvl, const char *str, ...);
-	
+		
 	/// register a new WaitFor into the list
 	void addWait(WaitForBase *w);
 	
@@ -181,7 +157,6 @@ protected:
 	std::string _host;
 	short _port;		///< port of the server
 	bool _debug;
-	LogLevel _logLevel;	///< the current logging level
 	
 	// static singleton instance
 	static Connection* _theConnection;
@@ -198,11 +173,8 @@ private:
 	typedef std::list<WaitForBase*> WaitForList;
 	WaitForList _waitList;
 
-//	bool prePoll();
 	void gotData(PollData&);
 };
-
-void Log(LogLevel lvl, const char *str, ...);
 
 }
 

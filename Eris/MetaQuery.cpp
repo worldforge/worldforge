@@ -24,14 +24,18 @@ MetaQuery::MetaQuery(Meta *ms, const std::string &host) :
 	_meta(ms),
 	_complete(false)
 {
-	assert(ms);
-	//cerr << "created new query" << endl;
-	connect(host, 6767);
+    assert(ms);
+    
+    connect(host, 6767);
+    if (_status != NEGOTIATE) {
+	// failed! - the metaserver code (in queryServer) will pick this up and clean up
+	_complete = true;
+    }
 }
 	
 MetaQuery::~MetaQuery()
 {
-	//cerr << "deleting query" << endl; // clean up is all done by the Base Connection
+    // clean up is all done by the Base Connection
 }
 	
 SOCKET_TYPE MetaQuery::getSocket()
@@ -43,8 +47,6 @@ SOCKET_TYPE MetaQuery::getSocket()
 
 void MetaQuery::onConnect()
 {
-	//cerr << "doing anonymous GET" << endl;
-	
 	// servers must responed to a fully anonymous GET operation
 	// with pertinent info
 	Atlas::Objects::Operation::Get gt = 
@@ -82,7 +84,7 @@ void MetaQuery::setComplete()
 
 void MetaQuery::handleFailure(const std::string &msg)
 {
-	_meta->queryFailure(this, msg);
+    _meta->queryFailure(this, msg);
 }
 
 void MetaQuery::bindTimeout(Timeout &t, Status /*sc*/)

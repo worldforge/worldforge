@@ -23,6 +23,7 @@
 #include "Utils.h"
 #include "Connection.h"
 #include "atlas_utils.h"
+#include "Log.h"
 
 #include "TypeDispatcher.h"
 #include "EncapDispatcher.h"
@@ -86,7 +87,7 @@ bool TypeInfo::isA(TypeInfoPtr tp)
 		// progress. Need to pick a sensible repost condition here
 	
 		//Signal & sig = signalWhenBound(this);
-		Eris::Log(LOG_DEBUG, "throwing OperationBlocked doing isA on %s", _name.c_str());
+		Eris::log(LOG_DEBUG, "throwing OperationBlocked doing isA on %s", _name.c_str());
 		throw OperationBlocked(getBoundSignal());
 	}
 		
@@ -158,7 +159,7 @@ void TypeInfo::addParent(TypeInfoPtr tp)
 	}
 	
 	if (_ancestors.count(tp)) {
-		Eris::Log(LOG_WARNING, "Adding %s as parent of %s, but already markes as ancestor",
+		Eris::log(LOG_WARNING, "Adding %s as parent of %s, but already markes as ancestor",
 			tp->_name.c_str(), _name.c_str());
 		throw InvalidOperation("Bad inheritance graph : new parent is ancestor");
 	}
@@ -210,7 +211,7 @@ void TypeInfo::validateBind()
 	for (TypeInfoSet::iterator P=_parents.begin(); P!=_parents.end();++P)
 		if (!(*P)->isBound()) return;
 	
-	Eris::Log(LOG_VERBOSE, "Bound type %s", _name.c_str());
+	Eris::log(LOG_VERBOSE, "Bound type %s", _name.c_str());
 	_bound = true;
 	Bound.emit();
 		
@@ -237,7 +238,7 @@ Signal& TypeInfo::getBoundSignal()
 	if (isBound())
 		throw InvalidOperation("Type node is already bound, what are you playing at?");
 		
-	Eris::Log(LOG_DEBUG, "in TypeInfo::getBoundSignal() for %s", _name.c_str());
+	Eris::log(LOG_DEBUG, "in TypeInfo::getBoundSignal() for %s", _name.c_str());
 	setupDepends();
 	
 	return Bound;
@@ -256,7 +257,7 @@ void TypeInfo::setupDepends()
 			
 			if (Ddep->second.count(this)) continue;
 			
-			Eris::Log(LOG_DEBUG, "adding dependancy on %s from %s", Ddep->first.c_str(),
+			Eris::log(LOG_DEBUG, "adding dependancy on %s from %s", Ddep->first.c_str(),
 				_name.c_str());
 			// becuase we're doing a set<> insert, there is no problem with duplicates!
 			Ddep->second.insert(this);
@@ -287,7 +288,7 @@ void TypeInfo::init()
 	if (_inited)
 		return;	// this can happend during re-connections, for example.
 	
-	Eris::Log(LOG_NOTICE, "Starting Eris TypeInfo system...");
+	Eris::log(LOG_NOTICE, "Starting Eris TypeInfo system...");
 	
 	Dispatcher *info = Connection::Instance()->getDispatcherByPath("op:info");
 	
@@ -337,11 +338,11 @@ void TypeInfo::readAtlasSpec(const std::string &specfile)
 {
     std::fstream specStream(specfile.c_str(), std::ios::in);
     if(!specStream.is_open()) {
-		Eris::Log(LOG_NOTICE, "Unable to open Atlas spec file %s, will obtain all type data from the server", specfile.c_str());
+		Eris::log(LOG_NOTICE, "Unable to open Atlas spec file %s, will obtain all type data from the server", specfile.c_str());
 		return;
     }
  
-	Eris::Log(LOG_NOTICE, "Found Atlas type data in %s, using for initial type info", specfile.c_str());
+	Eris::log(LOG_NOTICE, "Found Atlas type data in %s, using for initial type info", specfile.c_str());
 	
 	// build an XML codec, and bundle it all up; then Poll the codec for each byte to read the entire file into
 	// the QueuedDecoder : not exactly incremetnal but hey...
@@ -387,7 +388,7 @@ TypeInfoPtr TypeInfo::findSafe(const std::string &id)
 	TypeInfoMap::iterator ti = globalTypeMap.find(id);
 	if (ti == globalTypeMap.end()) {
 		// not found, do some work
-		Eris::Log(LOG_VERBOSE, "Requesting type data for %s", id.c_str());
+		Eris::log(LOG_VERBOSE, "Requesting type data for %s", id.c_str());
 		
 		// FIXME  - verify the id is not in the authorative invalid ID list
 		TypeInfoPtr node = new TypeInfo(id);
@@ -445,10 +446,10 @@ try {
 	if (T->second->isBound() && (id!="root"))
 		return;
 	
-	Eris::Log(LOG_DEBUG, "processing type data for %s", id.c_str());
+	Eris::log(LOG_DEBUG, "processing type data for %s", id.c_str());
 	T->second->processTypeData(atype);
 } catch (Atlas::Message::WrongTypeException &wte) {
-	Eris::Log(LOG_ERROR, "caught WTE in TypeInfo::recvOp");
+	Eris::log(LOG_ERROR, "caught WTE in TypeInfo::recvOp");
 }
 
 }
@@ -490,13 +491,13 @@ void TypeInfo::recvTypeError(const Atlas::Objects::Operation::Error &/*error*/,
 	TypeInfoMap::iterator T = globalTypeMap.find(typenm);
 	if (T == globalTypeMap.end()) {
 			// what the fuck? getting out of here...
-			Eris::Log(LOG_WARNING, "Got ERROR(GET) for type lookup on %s, but I never asked for it, I swear!",
+			Eris::log(LOG_WARNING, "Got ERROR(GET) for type lookup on %s, but I never asked for it, I swear!",
 				typenm.c_str());
 			return;
 	}
 	
 	// XXX - at this point, we could kill the type; instead we just mark it as bound
-	Eris::Log(LOG_ERROR, "got error from server looking up type %s",
+	Eris::log(LOG_ERROR, "got error from server looking up type %s",
 		typenm.c_str());
 	
 	// parent to root?
@@ -505,20 +506,20 @@ void TypeInfo::recvTypeError(const Atlas::Objects::Operation::Error &/*error*/,
 
 void TypeInfo::listUnbound()
 {
-	Eris::Log(LOG_DEBUG, "%i pending types", globalDependancyMap.size());
+	Eris::log(LOG_DEBUG, "%i pending types", globalDependancyMap.size());
 	
 	for (TypeDepMap::iterator T = globalDependancyMap.begin(); 
 			T !=globalDependancyMap.end(); ++T) {
 		// list all the depds
-		Eris::Log(LOG_DEBUG, "bind of %s is blocking:", T->first.c_str());
+		Eris::log(LOG_DEBUG, "bind of %s is blocking:", T->first.c_str());
 		for (TypeInfoSet::iterator D=T->second.begin(); D!=T->second.end();++D) {
-			Eris::Log(LOG_DEBUG, "\t%s", (*D)->getName().c_str());
+			Eris::log(LOG_DEBUG, "\t%s", (*D)->getName().c_str());
 		}
 	}
 	
 	for (TypeInfoMap::iterator T=globalTypeMap.begin(); T!=globalTypeMap.end(); ++T) {
 		if (!T->second->isBound())
-			Eris::Log(LOG_DEBUG, "type %s is unbound", T->second->getName().c_str());
+			Eris::log(LOG_DEBUG, "type %s is unbound", T->second->getName().c_str());
 	}
 	
 }

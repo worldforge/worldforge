@@ -42,7 +42,7 @@ public:
 
 	bool isReady(PollData &data) const
 	{return data.isReady(_stream);}
-	
+		
 	friend class Meta;
 protected:
 	/// Over-ride the default connection behaviour to issue the query

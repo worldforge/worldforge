@@ -31,6 +31,7 @@
 #include "World.h"
 #include "Entity.h"
 #include "Connection.h"
+#include "Log.h"
 #include "Factory.h"
 #include "Utils.h"
 #include "Wait.h"
@@ -116,7 +117,7 @@ void World::tick()
 EntityPtr World::getRootEntity()
 {
 	if (!_root) {
-		Eris::Log(LOG_WARNING, "called World::getRootEntity before initial world entry, returning NULL");
+		Eris::log(LOG_WARNING, "called World::getRootEntity before initial world entry, returning NULL");
 		return NULL;
 	}
 	
@@ -316,7 +317,7 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 	// passed in as const referenced, so we need a nasty cast to make this go through
 	
 	if (id == "game_entity") {
-		Eris::Log(LOG_WARNING, "ID not set on entity");
+		Eris::log(LOG_WARNING, "ID not set on entity");
 		id = sight.GetFrom();
 		(const_cast<Atlas::Objects::Entity::GameEntity&>(ent)).SetId(id);
 	}
@@ -336,7 +337,7 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 			if (_initialEntry && _root) {
 				Entered.emit(e);
 				_initialEntry = false;	
-				Eris::Log(LOG_VERBOSE, "did IG entry after sight of character");
+				Eris::log(LOG_VERBOSE, "did IG entry after sight of character");
 			}
 		}
 	
@@ -386,6 +387,8 @@ void World::recvSightCreate(const Atlas::Objects::Operation::Create &cr,
 		Atlas::Objects::Operation::Sight::Instantiate();
 	
 	st.SetFrom(cr.GetFrom());
+	_pendingInitialSight.insert(ge.GetId());
+    
 	recvSightObject(st, ge);
 }
 
@@ -395,7 +398,7 @@ void World::recvSightDelete(const Atlas::Objects::Operation::Delete &del)
 	EntityIDMap::iterator ei = _lookup.find(id);	
 	
 	if (ei == _lookup.end()) {
-		Eris::Log(LOG_ERROR, "Unknown entity %s from DELETE", id.c_str());
+		Eris::log(LOG_ERROR, "Unknown entity %s from DELETE", id.c_str());
 		return;
 	}
 	
@@ -493,7 +496,7 @@ void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 			stamp = V->second.AsFloat();
 		
 		if (stamp > e->getStamp()) {
-			Eris::Log(LOG_DEBUG, "Issuing re-look for existing APPEARED entity %s with new stamp",
+			Eris::log(LOG_DEBUG, "Issuing re-look for existing APPEARED entity %s with new stamp",
 				id.c_str());
 			look(id);
 		}
@@ -519,7 +522,7 @@ void World::recvDisappear(const Atlas::Objects::Operation::Disappearance &ds)
 
 void World::recvSightSet(const Atlas::Objects::Operation::Set &set)
 {
-	Eris::Log(LOG_DEBUG, "processing IG sight(set)");
+	Eris::log(LOG_DEBUG, "processing IG sight(set)");
 	
 	Entity *e = lookup(set.GetTo());
 	if (!e) {
@@ -558,7 +561,7 @@ void World::setRootEntity(Entity* rt)
 		if (character) {
 			Entered.emit(character);
 			_initialEntry = false;
-			Eris::Log(LOG_VERBOSE, "did IG entry after setRootEntity");
+			Eris::log(LOG_VERBOSE, "did IG entry after setRootEntity");
 		} // else still waiting for the character
 	}
 }

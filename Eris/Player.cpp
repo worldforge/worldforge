@@ -26,6 +26,7 @@
 #include "SignalDispatcher.h"
 #include "ClassDispatcher.h"
 #include "Utils.h"
+#include "Log.h"
 
 typedef Atlas::Message::Object::ListType AtlasListType;
 typedef Atlas::Message::Object::MapType AtlasMapType;
@@ -128,13 +129,13 @@ void Player::logout()
 	    throw InvalidOperation("connection is invalid");
     
     if (!_con->isConnected()) {
-	    Eris::Log(LOG_WARNING, "connection not open, ignoring Player::logout");
+	    Eris::log(LOG_WARNING, "connection not open, ignoring Player::logout");
 	    // FIXME - provide feedback here
 	    return;
     }
 	
     if (!_currentAction.empty()) {
-	Eris::Log(LOG_WARNING, "got logout with action (%s) already in progress",
+	Eris::log(LOG_WARNING, "got logout with action (%s) already in progress",
 	    _currentAction.c_str());
 	return;
     }
@@ -156,7 +157,7 @@ void Player::logout()
 CharacterList Player::getCharacters()
 {
     if (_account.empty())
-	    Eris::Log(LOG_ERROR, "Not logged into an account : getCharacter returning empty list");
+	    Eris::log(LOG_ERROR, "Not logged into an account : getCharacter returning empty list");
     return _characters;
 }
 
@@ -311,7 +312,7 @@ void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 	
 	std::string serverMsg = getMember(getArg(err, 0), "message").AsString();
 	// can actually use error[2]->parents here to detrmine the current action
-	Eris::Log(LOG_WARNING, "Received Atlas error %s", serverMsg.c_str());
+	Eris::log(LOG_WARNING, "Received Atlas error %s", serverMsg.c_str());
 	
 	std::string pr = getMember(getArg(err, 1), "parents").AsList().front().AsString();
 	if (pr == "login") {
@@ -334,7 +335,7 @@ void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 
 void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
 {
-    Eris::Log(LOG_DEBUG, "got sight of character %s", ge.GetName().c_str());
+    Eris::log(LOG_DEBUG, "got sight of character %s", ge.GetName().c_str());
     
     _characters.push_back(ge);
     GotCharacterInfo.emit(ge);
@@ -346,7 +347,7 @@ void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
 
 void Player::recvLogoutInfo(const Atlas::Objects::Operation::Logout &lo)
 {
-    Eris::Log(LOG_DEBUG, "got INFO(logout)");
+    Eris::log(LOG_DEBUG, "got INFO(logout)");
     
     // cancel that gear
     _currentAction = "";
@@ -387,7 +388,7 @@ void Player::netFailure(const std::string& /*msg*/)
 
 void Player::handleLogoutTimeout()
 {
-    Eris::Log(LOG_DEBUG, "LOGOUT timed out waiting for response");
+    Eris::log(LOG_DEBUG, "LOGOUT timed out waiting for response");
     
     _currentAction = "";
     delete _logoutTimeout;

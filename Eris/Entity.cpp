@@ -26,6 +26,7 @@
 #include "TypeInfo.h"
 #include "OpDispatcher.h"
 #include "IdDispatcher.h"
+#include "Log.h"
 
 using namespace Atlas::Message;
 
@@ -49,6 +50,7 @@ Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
 Entity::Entity(const std::string &id) :
 	_id(id),
 	_stamp(-1.0),
+	_visible(true),
 	_container(NULL),
 	_position(0., 0., 0.),
 	_velocity(0., 0., 0.),
@@ -78,7 +80,7 @@ void Entity::setContainer(Entity *cnt)
 
 void Entity::addMember(Entity *e)
 {
-    Eris::Log(LOG_DEBUG, "adding entity '%s' as member of '%s'",
+    Eris::log(LOG_DEBUG, "adding entity '%s' as member of '%s'",
 	e->getName().c_str(), getName().c_str());
     
     assert(e != this);
@@ -381,7 +383,7 @@ void Entity::setContents(const Atlas::Message::Object::ListType &contents)
 	// it arrives.
 	Entity *con = World::Instance()->lookup(C->AsString());
 	if (con) {
-	    Eris::Log(LOG_DEBUG, 
+	    Eris::log(LOG_DEBUG, 
 		"already have entity '%s', not setting container",
 		con->getName().c_str()
 	    );
@@ -394,7 +396,7 @@ void Entity::setContainerById(const std::string &id)
     if ( !_container || (id != _container->getID()) ) {
 		
 	if (_container) {
-	    Eris::Log(LOG_DEBUG, "Entity::setContainerById: setting container to NULL");
+	    Eris::log(LOG_DEBUG, "Entity::setContainerById: setting container to NULL");
 	    _container->rmvMember(this);
 	    _container = NULL;
 	}
@@ -436,7 +438,7 @@ void Entity::setContainerById(const std::string &id)
     }	
 	
     if (id.empty()) {	// id of "" implies local root
-	Eris::Log(LOG_DEBUG, "got entity with empty container, assuming it's the world");
+	Eris::log(LOG_DEBUG, "got entity with empty container, assuming it's the world");
 	World::Instance()->setRootEntity(this);	
     }
 }

@@ -14,6 +14,7 @@
 #include "EncapDispatcher.h"
 #include "IdDispatcher.h"
 #include "Connection.h"
+#include "Log.h"
 
 #ifdef __WIN32__
 
@@ -193,7 +194,7 @@ bool LeafDispatcher::dispatch(DispatchContextDeque &dq)
 
 Dispatcher* LeafDispatcher::getSubdispatch(const std::string &nm)
 {
-	Eris::Log(LOG_ERROR, "looking for child %s in LeafDispatcher %s", 
+	Eris::log(LOG_ERROR, "looking for child %s in LeafDispatcher %s", 
 		nm.c_str(), _name.c_str());
 	return NULL;
 }

@@ -26,21 +26,13 @@
 #include "TypeInfo.h"
 #include "Poll.h"
 #include "PollDefault.h"
+#include "Log.h"
 
 #include "TypeDispatcher.h"
 #include "ClassDispatcher.h"
 #include "DebugDispatcher.h"
 #include "SignalDispatcher.h"
 #include "EncapDispatcher.h"
-
-#ifdef __WIN32__
-
-// Provide missing / misaligned function names.  May only be for mingw32
-#ifndef vsnprintf
-#define vsnprintf _vsnprintf
-#endif
-
-#endif // __WIN32__
 
 namespace Eris {
 
@@ -59,8 +51,7 @@ typedef std::set<SerialFrom> SerialFromSet;
 Connection::Connection(const std::string &cnm, bool dbg) :
 	BaseConnection(cnm, "game_", this),
 	_statusLock(0),
-	_debug(dbg),
-	_logLevel(DEFAULT_LOG)
+	_debug(dbg)
 {
 	// setup the singleton instance variable
 	assert(_theConnection == NULL);
@@ -118,7 +109,7 @@ void Connection::disconnect()
 	setStatus(DISCONNECTING);
 	
 	if (!_statusLock) {
-		Eris::Log(LOG_NOTICE, "no locks, doing immediate disconnection");
+		Eris::log(LOG_NOTICE, "no locks, doing immediate disconnection");
 		hardDisconnect(true);
 		return;
 	}
@@ -132,7 +123,7 @@ void Connection::disconnect()
 void Connection::reconnect()
 {
 	if (_host.empty()) {
-		Eris::Log(LOG_ERROR, "Called Connection::reconnect() without prior sucessful connection");
+		Eris::log(LOG_ERROR, "Called Connection::reconnect() without prior sucessful connection");
 		handleFailure("Previous connection attempt failed, ignorning reconnect()");
 	} else
 		BaseConnection::connect(_host, _port);
@@ -165,7 +156,7 @@ void Connection::gotData(PollData &data)
 	if(!data.isReady(_stream))
 		return;
 	else if (_status == DISCONNECTED)
-		Eris::Log(LOG_ERROR, "Got data on a disconnected stream");
+		Eris::log(LOG_ERROR, "Got data on a disconnected stream");
 	else
 		BaseConnection::recv();
 }		
@@ -256,12 +247,12 @@ void Connection::unlock()
 	if (!_statusLock) 
 		switch (_status) {
 		case DISCONNECTING:	
-			Eris::Log(LOG_NOTICE, "Connection unlocked in DISCONNECTING, closing socket");
+			Eris::log(LOG_NOTICE, "Connection unlocked in DISCONNECTING, closing socket");
 			hardDisconnect(true);
 			break;
 		
 		default:
-			Eris::Log(LOG_WARNING, "Connection unlocked in spurious state : this may case a failure later");
+			Eris::log(LOG_WARNING, "Connection unlocked in spurious state : this may case a failure later");
 		}
 }
 
@@ -273,17 +264,12 @@ Connection* Connection::Instance()
 	return _theConnection;
 }
 
-void Connection::setLogLevel(LogLevel lvl)
-{
-	_logLevel = lvl;
-}
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // protected / private gunk
 
 void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 {
-	Eris::Log(LOG_VERBOSE, "-");
+	Eris::log(LOG_VERBOSE, "-");
 	postForDispatch(obj);
     
 	if (_debug) {
@@ -300,9 +286,9 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 			dd->dispatch(dq);
 		
 		// manual check becuase objectSummary is a minor hit
-		if (_logLevel >= LOG_VERBOSE) {
-			std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
-			Eris::Log(LOG_VERBOSE, "Dispatching %s", summary.c_str());
+		if (getLogLevel() >= LOG_VERBOSE) {
+		    std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
+		    Eris::log(LOG_VERBOSE, "Dispatching %s", summary.c_str());
 		}
 		
 		Dispatcher::enter();
@@ -316,20 +302,20 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 				const Atlas::Message::Object::MapType &m(dq.back().AsMap());
 				if (m.find("__DISPATCHED__") == m.end()) {
 					std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
-					Eris::Log(LOG_WARNING, "op %s never hit a leaf node", summary.c_str());	
+					Eris::log(LOG_WARNING, "op %s never hit a leaf node", summary.c_str());	
 				}
 			}
 		} 
 	
 		catch (OperationBlocked &block) {
 			std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
-			Eris::Log(LOG_VERBOSE, "Caugh OperationBlocked exception dispatching %s", summary.c_str());
+			Eris::log(LOG_VERBOSE, "Caugh OperationBlocked exception dispatching %s", summary.c_str());
 			new WaitForSignal(block._continue, dq.back());
 		}
 	
 		// catch actual failures, becuase they're bad.
 		catch (BaseException &be) {
-			Eris::Log(LOG_ERROR, "Dispatch: caught exception: %s", be._msg.c_str());
+			Eris::log(LOG_ERROR, "Dispatch: caught exception: %s", be._msg.c_str());
 		}
 		
 		Dispatcher::exit();
@@ -358,7 +344,7 @@ void Connection::clearSignalledWaits()
 	
 	ccount -= _waitList.size();
 	if (ccount)
-		Eris::Log(LOG_VERBOSE, "Cleared %i signalled waitFors", ccount);
+		Eris::log(LOG_VERBOSE, "Cleared %i signalled waitFors", ccount);
 }
 
 void Connection::setStatus(Status ns)
@@ -408,7 +394,7 @@ void Connection::validateSerial(const Atlas::Objects::Operation::RootOperation &
 	// don't bother to validate if the serial-no is 0
 	if (sfm.second == 0) {
 		std::string summary(objectSummary(op));
-		Eris::Log(LOG_WARNING, "recieved op [%s] from %s with no serial number set",
+		Eris::log(LOG_WARNING, "recieved op [%s] from %s with no serial number set",
 			summary.c_str(), sfm.first.c_str());
 		return;
 	}
@@ -416,7 +402,7 @@ void Connection::validateSerial(const Atlas::Objects::Operation::RootOperation &
 	SerialFromSet::iterator S = seen.find(sfm);
 	if (S != seen.end()) {
 		std::string summary(objectSummary(op));
-		Eris::Log(LOG_ERROR, "duplicate process of op [%s] from %s with serial# %i",
+		Eris::log(LOG_ERROR, "duplicate process of op [%s] from %s with serial# %i",
 			summary.c_str(), sfm.first.c_str(), sfm.second);
 	} else
 		seen.insert(sfm);
@@ -438,25 +424,6 @@ StringList tokenize(const std::string &s, char t)
 	}
 	
 	return ret;
-}
-
-const int MSG_BUFFER_SIZE = 2048;	///< bounds for the static char[] buffers useds in vsnprintf
-
-/** Log the specified printf() style string if the current LogLevel is sufficent. The client is free to attach
-any (and several) outputs to the Connection::Log signal; notably to files, standard out, Quake style 'consoles',
-etc, etc. Note this is purely informational - the client should never need to watch the log stream.*/
-void Log(LogLevel lvl, const char *str, ...)
-{
-	if (Connection::Instance()->_logLevel < lvl) return;
-	
-	va_list args;
-	va_start(args, str);
-	
-	static char buffer[MSG_BUFFER_SIZE];
-	::vsnprintf(buffer, MSG_BUFFER_SIZE, str, args);
-	
-	Connection::Instance()->Log.emit(lvl, buffer);
-	va_end(args);
 }
 
 } // of namespace

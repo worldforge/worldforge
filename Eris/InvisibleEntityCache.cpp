@@ -6,6 +6,7 @@
 #include "InvisibleEntityCache.h"
 #include "World.h"
 #include "Connection.h"
+#include "Log.h"
 
 using namespace Time;
 
@@ -24,7 +25,7 @@ void InvisibleEntityCache::add(Entity *e)
 		be a few seconds. Anything above 30 seconds is too much, if the 'view' is changing
 		fast, since the buckets will get enormous (hundreds of entities) */
 		
-		Eris::Log(LOG_DEBUG, "adding new IEC bucket, previous bucket has size %i",
+		Eris::log(LOG_DEBUG, "adding new IEC bucket, previous bucket has size %i",
 			_buckets.front().contents.size());
 		_buckets.push_front(_Bucket());
 	}
@@ -40,7 +41,7 @@ void InvisibleEntityCache::flush()
 			World::Instance()->flush(*E);
 			delete *E;
 		}
-		Eris::Log(LOG_VERBOSE, "IEC flushed %i entities", _buckets.back().contents.size());
+		Eris::log(LOG_VERBOSE, "IEC flushed %i entities", _buckets.back().contents.size());
 		_buckets.pop_back();
 	}
 }
