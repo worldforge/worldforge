@@ -19,7 +19,7 @@ class Shader {
     bool m_color;
     bool m_alpha;
   protected:
-    Shader(bool color, bool alpha);
+    explicit Shader(bool color = false, bool alpha = true);
   public:
     virtual ~Shader();
 

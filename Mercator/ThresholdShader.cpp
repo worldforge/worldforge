@@ -9,8 +9,7 @@
 
 namespace Mercator {
 
-HighShader::HighShader(float threshold) : Shader(true, true),
-                                          m_threshold(threshold)
+HighShader::HighShader(float threshold) : m_threshold(threshold)
 {
 }
 
@@ -51,8 +50,7 @@ void HighShader::shade(Surface & s) const
     }
 }
 
-LowShader::LowShader(float threshold) : Shader(true, true),
-                                        m_threshold(threshold)
+LowShader::LowShader(float threshold) : m_threshold(threshold)
 {
 }
 
@@ -93,7 +91,7 @@ void LowShader::shade(Surface & s) const
     }
 }
 
-BandShader::BandShader(float lowThreshold, float highThreshold) : Shader(true, true),
+BandShader::BandShader(float lowThreshold, float highThreshold) : 
     m_lowThreshold(lowThreshold), m_highThreshold(highThreshold)
 {
 }

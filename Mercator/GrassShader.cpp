@@ -10,7 +10,7 @@
 namespace Mercator {
 
 GrassShader::GrassShader(float lowThreshold, float highThreshold,
-                         float cutoff, float intercept) : Shader(true, true),
+                         float cutoff, float intercept) :
              m_lowThreshold(lowThreshold), m_highThreshold(highThreshold),
              m_cutoff(cutoff), m_intercept(intercept)
 {
@@ -33,8 +33,6 @@ inline ColorT GrassShader::slopeToAlpha(float height, float slope) const
     }
 }
 
-static const unsigned int chanAlpha = 3;
-
 bool GrassShader::checkIntersect(Surface & s) const
 {
     if ((s.m_segment.getMin() < m_highThreshold) &&
@@ -48,7 +46,8 @@ bool GrassShader::checkIntersect(Surface & s) const
 void GrassShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
-    assert(channels > 3);
+    assert(channels > 0);
+    unsigned int chanAlpha = channels - 1;
     Segment & seg = s.getSegment();
     ColorT * data = s.getData();
     const float * height_data = seg.getPoints();

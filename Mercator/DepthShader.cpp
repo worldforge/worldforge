@@ -9,7 +9,7 @@
 
 namespace Mercator {
 
-DepthShader::DepthShader(float waterLevel, float murkyDepth) : Shader(true, true),
+DepthShader::DepthShader(float waterLevel, float murkyDepth) : 
               m_waterLevel(waterLevel), m_murkyDepth(murkyDepth)
 {
 }

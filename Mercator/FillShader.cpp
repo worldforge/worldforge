@@ -9,7 +9,7 @@
 
 namespace Mercator {
 
-FillShader::FillShader() : Shader(true, true)
+FillShader::FillShader()
 {
 }
 

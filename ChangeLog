@@ -1,3 +1,14 @@
+2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Shader.h: Add default arguments for constructor,
+	  which default to alpha channel only.
+
+	* Mercator/ThresholdShader.cpp, Mercator/GrassShader.cpp,
+	  Mercator/FillShader.cpp, Mercator/DepthShader.cpp:
+	  Stop specifying arguements to the shader constructor, and thus
+	  accept the defaults. Net effect is that surface buffers now
+	  just contain alpha values by default.
+
 2003-08-22 Damien McGinnes
 
 	* Mercator/Segment.cpp: fixed edge and corner normals.
