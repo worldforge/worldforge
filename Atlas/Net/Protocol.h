@@ -5,9 +5,16 @@
         copyright       : (C) 1999 by John Barrett (ZW)
         email           : jbarrett@box100.com
 
-changes 13 Jan 2000 - fex
+changes
+
+23 Jan 2000 - fex
     some safety assertions added..
     (pointers passed from here are dereferenced in chains, can never be 0)
+    bunch of statics dropped in the enum below.. rest may follow
+
+25 Jan 2000 - fex
+    makenew() now abstract, worthless without knowing protocols
+    constructor made protected, must be given pointers to its encoder and decoder
 */
 
 #ifndef __AtlasProtocol_h_
@@ -28,9 +35,9 @@ public:
 	AProtocolEncoder*   getEncoder();
 	AProtocolDecoder*   getDecoder();
 	const string&       getPrefix() const { return prefix; }
-	void                setPrefix( const string& s)	{ prefix = s; }
+	void                setPrefix(  const string& s)	{ prefix = s; }
 	
-    //virtual	AProtocol*		makenew()		{ return 0; }
+    virtual	AProtocol*	makenew()=0; // { assert( false ); return 0; /*should not be called on base class! - fex*/ }
 
 	static int atlasERRTOK;  // error token
 	static int atlasMSGBEG;  // message begins

@@ -20,8 +20,10 @@ changes:
 #include <cassert>
 #endif
 
+const int AOBJECT_DEBUG_LVL = 5;
+
 inline void DBGMSG( char* debugMsg ) {
-    DebugMsg1(9, debugMsg, "");
+    DebugMsg1( AOBJECT_DEBUG_LVL, debugMsg, "");
 }
 
 char*	AObject::typeString()
@@ -67,43 +69,63 @@ AObject &AObject::operator=(const AObject& src)
 AObject::AObject()
 {
 	obj = PyDict_New();
+	assert( obj != 0 );
 }
+
 
 AObject::AObject(AObject& src)
 {
-	assert((unsigned long)src.obj != 1);
+/*	assert((unsigned long)src.obj != 1);
 
 	obj = src.obj;
 	Py_XINCREF(obj);
 	assert(obj->ob_refcnt > 1);
 	DebugMsg1(9,"OBJ RefCount=%li (AObject constructor)", obj->ob_refcnt);
+*/
+	obj = src.obj;
+	assert( obj != 0 );
+	Py_XINCREF(obj);
+    DBGMSG( "aobject :: copy constructor ok" );
+
 }
+
 
 AObject::AObject(const AObject& src)
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	assert((unsigned long)src.obj != 1);
 
 	obj = src.obj;
 	Py_XINCREF(obj);
 	assert(obj->ob_refcnt > 1);
 	DebugMsg1(9,"OBJ RefCount=%li (AObject constructor)", obj->ob_refcnt);
+*/
+	obj = src.obj;
+	assert( obj != 0 );
+	Py_XINCREF(obj);
+    DBGMSG( "aobject :: copy constructor ok" );
 }
 
 AObject::AObject(PyObject* src)
 {
-	assert((unsigned long)src != 1);
-
+/*	assert((unsigned long)src != 1);
 	obj = src;
 	Py_XINCREF(obj);
 	assert(obj->ob_refcnt > 1);
 	DebugMsg1(9,"OBJ RefCount=%li (PyObject constructor)", obj->ob_refcnt);
+*/
+
+    obj = src;
+	Py_XINCREF(obj);
+    DBGMSG( "aobject :: aobject( PyObject* ) ok");
+
 }
 
 AObject::AObject(const string& src)
 {
-	obj = PyString_FromString(src.c_str());
-	assert((unsigned long)obj != 1);
+	obj = PyString_FromString( src.c_str() );
+	assert( obj != 0 );
+	//assert((unsigned long)obj != 1);
 }
 
 /*AObject::AObject(string& src)
@@ -115,19 +137,22 @@ AObject::AObject(const string& src)
 AObject::AObject(double src)
 {
 	obj = PyFloat_FromDouble(src);
-	assert((unsigned long)obj != 1);
+	assert( obj != 0 );
+	//assert((unsigned long)obj != 1);
 }
 
 AObject::AObject(long src)
 {
 	obj = PyInt_FromLong(src);
-	assert((unsigned long)obj != 1);
+	assert( obj != 0 );
+	//assert((unsigned long)obj != 1);
 }
 
 AObject::AObject(int src)
 {
 	obj = PyInt_FromLong((long)src);
-	assert((unsigned long)obj != 1);
+	assert( obj != 0 );
+	//assert((unsigned long)obj != 1);
 }
 
 AObject::AObject(int len, long src, ...)
@@ -217,15 +242,12 @@ AObject::AObject(int len, double* src)
 	}
 }
 
-AObject::~AObject()
-{
-	Py_XDECREF(obj);
-	obj = NULL;
-}
+AObject::~AObject() { Py_XDECREF(obj); }
 
 PyObject* AObject::pyObject()
 {
-	assert((unsigned long)obj != 1);
+	assert( obj != 0 );
+	//assert((unsigned long)obj != 1);
 	return obj;
 }
 
@@ -322,7 +344,7 @@ int	AObject::get(const string& name, string& val) const {
     char* aString = PyString_AsString( aPyObject );
     assert( aString != 0 );
     val = aString;
-    DBGMSG("aobject :: get(string) ok");
+    DBGMSG("aobject :: get( name, string ) ok");
     return true;
 }
 
@@ -345,26 +367,35 @@ int	AObject::get(const string& name, AObject& val, AObject& def) const
         val = def;
     else
         val = aPyObject;
-    DBGMSG("aobject :: get(const string&, AObejct&, AObject&) ok");
+    DBGMSG("aobject :: get( name, AObject&, AObject& ) ok");
     return true;
 }
 
 int	AObject::get(const string& name, int& val, int def) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	//if (!this->isLong()) return 0;
 	char* tmp = strdup(name.c_str());
 	if (has(name))
-		val = PyInt_AsLong(PyDict_GetItemString(obj,tmp));
+		val = PyInt_AsLong(PyDict_GetItemString( obj, const_cast<char*>(name.c_str()) );
 	else
 		val = def;
 	free(tmp);
 	return 1;
+*/
+
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ));
+    if ( aPyObject == 0 )
+        val = def;
+    else
+        val = PyInt_AsLong( aPyObject );
+    DBGMSG("aobject :: get( name, int&, int) ok");
+    return true;
 }
 
 int	AObject::get(const string& name, long& val, long def) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	//if (!this->isLong()) return 0;
 	char* tmp = strdup(name.c_str());
 	if (has(name))
@@ -373,11 +404,19 @@ int	AObject::get(const string& name, long& val, long def) const
 		val = def;
 	free(tmp);
 	return 1;
+*/
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ));
+    if ( aPyObject == 0 )
+        val = def;
+    else
+        val = PyLong_AsLong( aPyObject );
+    DBGMSG("aobject :: get( name, long&, long) ok");
+    return true;
 }
 
 int	AObject::get(const string& name, double& val, double def) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	//if (!this->isFloat()) return 0;
 	char* tmp = strdup(name.c_str());
 	if (has(name))
@@ -386,11 +425,19 @@ int	AObject::get(const string& name, double& val, double def) const
 		val = def;
 	free(tmp);
 	return 1;
+*/
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ));
+    if ( aPyObject == 0 )
+        val = def;
+    else
+        val = PyFloat_AsDouble( aPyObject );
+    DBGMSG("aobject :: get( name, double&, double ) ok");
+    return true;
 }
 
 int	AObject::get(const string& name, string& val, string& def) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	//if (!this->isString()) return 0;
 	char* tmp = strdup(name.c_str());
 	if (has(name))
@@ -399,6 +446,14 @@ int	AObject::get(const string& name, string& val, string& def) const
 		val = def;
 	free(tmp);
 	return 1;
+*/
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ));
+    if ( aPyObject == 0 )
+        val = def;
+    else
+        val = PyString_AsString( aPyObject );
+    DBGMSG("aobject :: get( name, string&, string ) ok");
+    return true;
 }
 
 int	AObject::get(int ndx, AObject& val) const
