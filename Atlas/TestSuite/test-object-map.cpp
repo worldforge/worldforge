@@ -110,7 +110,7 @@ bool mapTest() {
         check ( map.length() == 0 );
 
         println( "Adding value" );
-        map.set( "string", "Stringval" );
+        map.set( "string", "Stringval first" );
 
         println( "Consistency checks" );
         check( map.length() == 1 );
@@ -118,11 +118,17 @@ bool mapTest() {
         check( !map.has( "" ) );
 
         println( "Overwriting value" );
-        map.set( "string", "stringval" );
+        map.set( "string", "Stringval second" );
 
         check( map.length() == 1 );
         check( map.has( "string" ) );
         check( !map.has( "" ) );
+        check( !map.has( "Stringval second" ) );
+
+        string test;
+        check( map.get( "string", test ) );
+        check( map.has( "string" ) );
+        check( test == "Stringval second" );
 
         println( "Delete check 1" );
         map.del( "" );

@@ -97,6 +97,12 @@ bool listTest() {
 
     try {
 
+
+      /* insert list checking here
+         - awaiting fixes in Object
+      */
+
+
       return true;
 
     } catch ( TestError& e ) {
