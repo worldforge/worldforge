@@ -108,6 +108,7 @@ public:
         return m_hasBBox;
     }
     
+    /** determine if this entity is visible. */
     bool isVisible() const;
 
 // coordinate transformations
@@ -193,7 +194,7 @@ protected:
     void addToUpdate(const std::string& attr);
     void endUpdate();
 
-    /** the View calls this to change entity visibility. No one else
+    /** the View calls this to change local entity visibility. No one else
     should be calling it!*/
     void setVisible(bool vis);
 
@@ -217,7 +218,7 @@ private:
 
     /** recursively update the real visiblity of this entity, and fire
     appropriate signals. */
-    void updateCalculatedVisibility();
+    void updateCalculatedVisibility(bool wasVisible);
     
     typedef std::map<std::string, Atlas::Message::Element> AttrMap;
     AttrMap m_attrs;

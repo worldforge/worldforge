@@ -1,3 +1,17 @@
+Saturday 6th March 2004, James Turner <james@worldforge.org>
+
+* Sorted out Entity visiblity code, following discussion with Al Riddoch
+* Similarly, cleaned up handling in view, to store a single map of all
+  entitied.
+* Replaced the pending and cancelled sets on View with a unified map,
+  which will handle edge cases correclty and with more obvious logic.
+* Ensured that LOC and CONTAINS of an Entity cannot be altered via a SET op,
+  and that nativeAttrChanged treats them as errors.
+* Add code in EntityRouter to handle updating LOC during MOVE operations  
+* Route all SIGHT(entity) ops to the View, not just initial sights. Hence
+  all updating based on sights is driven by the View.
+* Sorted error handling on Player (-> Account)
+  
 Saturday 28th February 2004, James Turner <james@worldforge.org>
 
 * All code compiles, doesn't link

@@ -38,6 +38,7 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
     m_hasBBox(false)
 {
     m_router = new EntityRouter(this);
+    sight(ge);
 }
 
 Entity::~Entity()
@@ -74,6 +75,9 @@ SigC::Connection Entity::observe(const std::string& attr, const AttrChangedSlot&
 
 void Entity::sight(const GameEntity &ge)
 {    
+    setLocationFromAtlas(ge->getLoc());
+    setContentsFromAtlas(get->getContains());
+    
     setFromRoot(smart_static_cast<Root>(ge));
 }
 
@@ -83,10 +87,9 @@ void Entity::setFromRoot(const Root& obj)
     
     for (Atlas::Objects::RootData::const_iterator A = obj->begin(); A != obj->end(); ++A)
     {
-        if (A->first == "id") 
+        if ((A->first == "id") || (A->first == "loc") || (A->first == "contains"))
         {
-            //assert(A->second.asString() == m_id);
-            continue; // never set ID
+            continue; // never set these on a SET op
         }
         
         // see if the value in the sight matches the exsiting value
@@ -176,15 +179,9 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
         m_hasBBox = true;
         return true;
     }
-    else if (attr == "loc")
+    else if ((attr == "loc") ||(attr == "contains"))
     {
-	setLocationFromAtlas(v.asString());
-        return true;
-    }
-    else if (attr == "contains")
-    {
-	//setContentsFromAtlas();
-        return true;
+	throw InvalidOperation("tried to set loc or contains via setProperty");
     }
 
     return false; // not a native property
@@ -228,24 +225,20 @@ void Entity::endUpdate()
 
 void Entity::setLocationFromAtlas(const std::string& locId)
 {
-    if (m_location)
-        if (locId == m_location->getId()) return;
-    else
-        if (locId.empty()) return;
-    // definitley changing the location
+    assert(!locId.empty());
     
-    Entity* newLocation = NULL;
-    if (!locId.empty())
+    Entity* newLocation = m_view->getEntity(locId);
+    if (!newLocation)
     {
-        newLocation = m_view->getExistingEntity(locId);
-        if (!newLocation)
-        {
-            m_view->getEntityFromServer(locId);
-            // mark ourselves invisible for now, we assume when the location
-            // entity arrives, it will find us and bind us / appear us
-            setVisible(false);
-            return;
-        }
+        m_view->getEntityFromServer(locId);
+        
+        setVisible(false);
+        
+        if (m_location)
+            removeFromLocation();
+        m_location = NULL;
+        
+        return;
     }
     
     setLocation(newLocation);
@@ -255,7 +248,7 @@ void Entity::setLocation(Entity* newLocation)
 {
     if (newLocation == m_location) return;
     
-    if (m_location && m_visible)
+    if (m_location)
         removeFromLocation();
     
 // do the actual member updating
@@ -263,25 +256,14 @@ void Entity::setLocation(Entity* newLocation)
     m_location = newLocation;
     LocationChanged.emit(this, oldLocation);
     
-    if (m_location && m_visible)
+    if (m_location)
         addToLocation();
 }
 
 void Entity::addToLocation()
 {
-    bool wasPending = m_location->m_pendingContents.erase(m_id);
-    if (wasPending)
-    {
-        m_location->addChild(this);
-    }
-    else if (m_location->hasChild(m_id))
-    {
-        // nothing to do, parent already knows about us. Probably
-        // becuase it got SET(contents=) before we got SET(location=)
-    } else {
-        // location doesn't know anything about us at all
-        m_location->addChild(this);
-    }
+    m_location->m_pendingContents.erase(m_id);
+    m_location->addChild(this);
 }
 
 void Entity::removeFromLocation()
@@ -293,27 +275,46 @@ void Entity::removeFromLocation()
     else if (m_location->m_pendingContents.erase(m_id))
     {
         // nipped it in the bud, no problem
-    } else {
-        error() << "location " << m_location->getId() <<
-            " denies all knowledge of child " << m_id;
-    }
+    } else
+        error() << "location " << m_location->getId() << " denies all knowledge of child " << m_id;
 }
+
+#pragma mark -
 
 void Entity::setContentsFromAtlas(const StringList& contents)
 {
-    m_contents.clear();
+    StringSet currentContents = .... ;
 
     for (StringList::const_iterator I=contents.begin(); I != contents.end(); ++I)
     {
-        Entity* child = m_view->getExistingEntity(*I);
+        currentContents.erase(*I);
+    
+        if (hasChild(*I))
+        {
+            // ensure it's visible
+            continue;
+        }
+        
+        Entity* child = m_view->getLimboEntity(*I);
         if (child)
         {
-            addChild(child);
-        } else {   
+            child->setLocation(this);
+        }
+        else if (child = m_view->getEntity(*I))
+        {
+            /* this is bad; entity is in the main set, i.e has a valid LOC, but
+            the hasChild check above didn't find it */
+            error() << "got entity " *I << " specified in contents for entity " << m_id
+                << " but it is already defined elsewhere with LOC=" << child->getLocation()->getId();
+        }
+        else
+        {   
             m_view->getEntityFromServer(*I);
             m_pendingContents.insert(*I);
         }
     } // of contents list iteration
+    
+    // for all children remaning in currentContents, mark invisible
 }
 
 bool Entity::hasChild(const std::string& eid) const
@@ -349,19 +350,16 @@ void Entity::removeChild(Entity* e)
 }
 
 #pragma mark -
+// visiblity related methods
 
 void Entity::setVisible(bool vis)
 {
     if (m_visible == vis) return;
-
-    if (m_location && m_visible)
-        removeFromLocation();
-
-    m_visible = vis;
-    updateCalculatedVisibility();
     
-    if (m_location && m_visible)
-        addToLocation();
+    bool wasVisible = isVisible(); // store before we update m_visible
+    m_visible = vis;
+    
+    updateCalculatedVisibility(wasVisible);
 }
 
 bool Entity::isVisible() const
@@ -372,21 +370,35 @@ bool Entity::isVisible() const
         return m_visible;
 }
 
-void Entity::updateCalculatedVisibility()
+void Entity::updateCalculatedVisibility(bool wasVisible)
 {
-    bool wasVisible = m_view->isEntityVisible(this),
-        nowVisible = isVisible();
-        
-    if (wasVisible == nowVisible) return;
+    bool nowVisible = isVisible();
+    if (nowVisible == wasVisible) return;
     
-    // fires Appearance / Disappearance as necessary 
-    // (if we have a valid parent)
-    m_view->setEntityVisible(this, nowVisible);
+    /* the following code looks odd, so remember that only one of nowVisible and
+    wasVisible can ever be true. The structure is necesary so that we fire
+    Appearances top-down, but Disappearances bottom-up. */
     
-    VisibilityChanged.emit(this, nowVisible);
+    if (nowVisible)
+    {
+        VisibilityChanged.emit(this, true);
+        m_view->setEntityVisible(this, true);
+    }
     
     for (unsigned int C=0; C < m_contents.size(); ++C)
-        m_contents[C]->updateCalculatedVisibility();
+    {
+        /* in case this isn't clear; if we were visible, then child visibility
+        was simply it's locally set value; if we were invisible, that the
+        child must also have been invisile too. */
+        bool childWasVisible = wasVisible ? m_contents[c]->m_visible : false;
+        m_contents[C]->updateCalculatedVisibility(childWasVisible);
+    }
+    
+    if (wasVisible)
+    {
+        VisibilityChanged.emit(this, false);
+        m_view->setEntityVisible(this, false);
+    }
 }
 
 } // of namespace 

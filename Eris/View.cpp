@@ -9,6 +9,7 @@
 #include <Eris/logStream.h>
 #include <Eris/Factory.h>
 #include <Eris/Connection.h>
+#include <Eris/Exceptions.h>
 
 #include <Atlas/Objects/Entity.h>
 
@@ -43,116 +44,130 @@ View::View(Avatar* av, const GameEntity& gent) :
     m_owner(av)
 {
     assert(gent->getId() == av->getId());
-    
+    getEntityFromServer(""); // initial anonymous LOOK
 }
 
 View::~View()
 {
-    // delete them all!
-    for (IdEntityMap::iterator E = m_visible.begin(); E != m_visible.end(); ++E)
-        delete E->second;
-        
-    for (IdEntityMap::iterator E = m_invisible.begin(); E != m_invisible.end(); ++E)
+    for (IdEntityMap::iterator E = m_contents.begin(); E != m_contents.end(); ++E)
         delete E->second;
 }
 
-Entity* View::getTopLevel() const
+Entity* View::getEntity(const std::string& eid) const
 {
-    if (!m_topLevel)
-    {
-        // issue an anonymous LOOK
-        getEntityFromServer("");
-    }
+    IdEntityMap::const_iterator E = m_contents.find(eid);
+    if (E == m_contents.end()) return NULL;
     
-    return m_topLevel;
+    return E->second;
+}
+
+void View::setEntityVisible(Entity* ent, bool vis)
+{
+    assert(ent);
+    if (vis)
+        Apperance.emit(ent);
+    else
+        Disappearance.emit(ent);
 }
 
 #pragma mark -
+// Atlas operation handlers
 
 void View::appear(const std::string& eid, float stamp)
 {
-    Entity* ent = getExistingEntity(eid);
-    if (ent)
+    Entity* ent = getEntity(eid);
+    if (!ent)
     {
-        ent->setVisible(true); // will ultimately cause appearances
-    } else {
         getEntityFromServer(eid);
-        // once it arrives, it'll get bound in and Appearance fired if it's
-        // visible
+        return; // everything else will be done once the SIGHT arrives
     }
+    
+    if (ent->isVisible())
+    {
+        error() << "server sent an appearance for entity " << eid << " which thinks it is already visible.";
+        return;
+    }
+    
+    if (stamp > ent->getStamp())
+    {
+        // local data is out of data, re-look
+        getEntityFromServer(eid);
+    } else
+        ent->setVisible(true); 
+   
 }
 
 void View::disappear(const std::string& eid)
 {
-    Entity* ent = getExistingEntity(eid);
+    Entity* ent = getEntity(eid);
     if (ent)
     {
         ent->setVisible(false); // will ultimately cause disapeparances
     } else {
-        if (isPending(eid)) cancelPendingSight(eid);
+        if (isPending(eid))
+        {
+            m_pending[eid] = SACTION_HIDE;
+        } else
+            error() << "got disappear for unknown entity " << eid;
     }
 }
 
-void View::initialSight(const GameEntity& gent)
-{    
-    if (getExistingEntity(gent->getId()))
+void View::sight(const GameEntity& gent)
+{
+    bool visible;
+    
+// examine the pending map, to see what we should do with this entity    
+    switch (m_pending[gent->getId()])
     {
-        error() << "got 'initial' sight of entity " << gent->getId() << " which View already has";
+    case SACTION_APPEAR:
+        visible = true;
+        break;
+        
+    case SACTION_DISCARD:
+        m_pending.erase(gent->getId());
         return;
-    }
-
-    Entity* location = NULL;
-    if (!gent->isDefaultLoc())
-    {
-        location = getExistingEntity(gent->getLoc());
-        if (!location)
-        {
-            /* get location entity from server; when we get it's sight, this
-            entity will be in it's contents, and we'll get looked up */
-            getEntityFromServer(gent->getLoc());
-        }
+    
+    case SACTION_HIDE:
+        visible = false;
+        break;
+                
+    default:
+        throw InvalidOperation("got bad pending action for entity");
     }
     
-    // this will work even if ent isn't in the pending set
-    m_pendingEntitySet.erase(gent->getId());
+    m_pending.erase(gent->getId());
     
-    // run the factory method ...
-    Entity* ent = Factory::createEntity(gent);
-    
-    if (m_cancelledSightSet.count(gent->getId()))
+// if we got this far, go ahead and build / update it    
+    Entity *ent = getEntity(gent->getId());
+    if (ent)
     {
-        debug() << "got initial sight for cancelled entity " << gent->getId() << ", supressing";
-        m_cancelledSightSet.erase(gent->getId());
+        // existing entity, update in place
+        ent->sight(gent);
     } else
-        ent->setVisible(true);
-    
-    if (location)
-        ent->setLocation(location); // will set visibility and fire appearances
+        ent = initialSight(gent);
         
     if (gent->isDefaultLoc()) // new top level entity
         setTopLevelEntity(ent);
     
+    ent->setVisible(visible);
+}
+
+Entity* View::initialSight(const GameEntity& gent)
+{    
+    Entity* ent = Factory::createEntity(gent, this);
+    m_contents[gent->getId()] = ent;
+     
     InitialSightEntity.emit(ent);
+    return ent;
 }
 
 void View::create(const GameEntity& gent)
 {
-    Entity* location = NULL;
-    if (!gent->isDefaultLoc())
-    {
-        location = getExistingEntity(gent->getLoc());
-        if (!location)
-        {
-            /* get location entity from server; when we get it's sight, this
-            entity will be in it's contents, and we'll get looked up */
-            getEntityFromServer(gent->getLoc());
-        }
-    }
+    Entity* ent = Factory::createEntity(gent, this);
+    m_contents[gent->getId()] = ent;
     
-    // build it
-    Entity* ent = Factory::createEntity(gent);
-    if (location)
-        ent->setLocation(location);
+    if (gent->isDefaultLoc())
+        setTopLevelEntity(ent);
 
     ent->setVisible(true);
     EntityCreated.emit(ent);
@@ -160,64 +175,29 @@ void View::create(const GameEntity& gent)
 
 void View::deleteEntity(const std::string& eid)
 {
-    Entity* ent = getExistingEntity(eid);
+    Entity* ent = getEntity(eid);
     if (ent)
     {
         EntityDeleted.emit(ent);
         #warning entity deletion in view is suspect
-        if (ent->isVisible())
-            m_visible.erase(ent->getId());
-        else
-            m_invisible.erase(ent->getId());
+        m_contents.erase(eid);
         delete ent; // actually kill it off
     } else {
         if (isPending(eid))
         {
             debug() << "got delete for pending entity, argh";
-            cancelPendingSight(eid);
+            m_pending[eid] = SACTION_DISCARD;
         } else
             error() << "got delete for non-visible entity " << eid;
     }
 }
 
-Entity* View::getExistingEntity(const std::string& eid) const
-{
-    IdEntityMap::const_iterator I = m_visible.find(eid);
-    if (I != m_visible.end())
-        return I->second;
-        
-    I = m_invisible.find(eid);
-    if (I != m_invisible.end())
-        return I->second;
-        
-    return NULL;
-}
+#pragma mark -
 
 bool View::isPending(const std::string& eid) const
 {
-    return m_pendingEntitySet.count(eid);
+    return m_pending.count(eid);
 }
-
-#pragma mark -
-
-void View::setEntityVisible(Entity* ent, bool vis)
-{
-    assert(ent->isVisible() == vis);
-    
-    if (vis)
-    {
-        assert(m_visible.count(ent->getId()) == 0);
-        assert(m_invisible.erase(ent->getId()) == 1);
-        m_visible[ent->getId()] = ent;
-        
-    } else {
-        assert(m_visible.erase(ent->getId()) == 1);
-        assert(m_invisible.count(ent->getId()) == 0);
-        m_invisible[ent->getId()] = ent;
-    }
-}
-
-#pragma mark -
 
 Connection* View::getConnection() const
 {
@@ -226,14 +206,13 @@ Connection* View::getConnection() const
 
 void View::getEntityFromServer(const std::string& eid)
 {
-    if (m_pendingEntitySet.count(eid))
+    if (isPending(eid))
     {
-        debug() << "suppressing duplicate getEntityFromServer for entity " << eid;
-        return;
+        // we force the action back to SACTION_APPEAR in a minute
+        debug() << "duplicate getEntityFromServer for entity " << eid;
     }
     
-    m_pendingEntitySet.insert(eid);
-    assert(m_cancelledSightSet.count(eid) == 0);
+    m_pending[eid] = SACTION_APPEAR;
     
     Look look;
     if (!eid.empty())
@@ -245,19 +224,6 @@ void View::getEntityFromServer(const std::string& eid)
     look->setSerialno(getNewSerialno());
     look->setFrom(m_owner->getId());
     getConnection()->send(look);
-}
-
-void View::cancelPendingSight(const std::string& eid)
-{
-    if (!m_pendingEntitySet.count(eid))
-    {
-        error() << "asked to cancel pending sight for entity " << eid << ", but it's not pending!";
-        return;
-    }
-
-    m_cancelledSightSet.insert(eid);
-    m_pendingEntitySet.erase(eid);
-    // cancel outstanding redispatches ...
 }
 
 void View::setTopLevelEntity(Entity* newTopLevel)

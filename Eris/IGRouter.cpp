@@ -49,7 +49,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         GameEntity gent = smart_dynamic_cast<GameEntity>(args.front());
         if (gent.isValid())
         {
-            m_view->initialSight(gent);
+            m_view->sight(gent);
             return HANDLED;
         }
     }

@@ -27,15 +27,19 @@ public:
     View(Avatar* av, const Atlas::Objects::Entity::GameEntity& gent);
     ~View();
     
-    /** test if the specified entity is in this View */
-    bool isEntityVisible(const Entity* ent) const;
-
-    /** test if the entity with the specified ID is in this View */
-    bool isEntityVisible(const std::string& eid) const;
-    
     Entity* getEntity(const std::string& eid) const;
     
-    Entity* getTopLevel() const;
+    Avatar* getAvatar() const
+    {
+        return m_owner;
+    }
+    
+    /** return the current top-level entity. This will return NULL
+    until the first emission of the TopLevelEntityChanged signal. */
+    Entity* getTopLevel() const
+    {
+        return m_topLevel;
+    }
         
     SigC::Signal1<void, Entity*> EntityCreated;
     SigC::Signal1<void, Entity*> EntityDeleted;
@@ -52,24 +56,20 @@ protected:
     
     void appear(const std::string& eid, float stamp);
     void disappear(const std::string& eid);
-    void initialSight(const Atlas::Objects::Entity::GameEntity& ge);
+    void sight(const Atlas::Objects::Entity::GameEntity& ge);
     void create(const Atlas::Objects::Entity::GameEntity& ge);
     void deleteEntity(const std::string& eid);
     
-    /** retrieve the specified entity if it exists in the view at all, or
-    return NULL otherwise */
-    Entity* getExistingEntity(const std::string& id) const;
+    void setEntityVisible(Entity* ent, bool vis);
     
     /// test if the specified entity ID is pending initial sight on the View
     bool isPending(const std::string& eid) const;
-        
-    void setEntityVisible(Entity* ent, bool visible);
-    
+            
 private:
+    Entity* initialSight(const Atlas::Objects::Entity::GameEntity& ge);
+    
     Connection* getConnection() const;
     void getEntityFromServer(const std::string& eid);
-    
-    void cancelPendingSight(const std::string& eid);
     
     /** helper to update the top-level entity, fire signals, etc */
     void setTopLevelEntity(Entity* newTopLevel);
@@ -77,18 +77,24 @@ private:
     typedef std::map<std::string, Entity*> IdEntityMap;
     
     Avatar* m_owner;
-    IdEntityMap m_visible,
-        m_invisible;
+    IdEntityMap m_contents;
     Entity* m_topLevel; ///< the top-level visible entity for this view
     
     SigC::Signal1<void, Entity*> InitialSightEntity;
     
-    typedef std::set<std::string> StringSet;
-    StringSet m_pendingEntitySet;
-    
-    /** to correctly handle deletes/disappears soon after looks/appears, we
-    record entities in this set, and check it in the initialSight code. */
-    StringSet m_cancelledSightSet;
+    /** enum describing what action to take when sight of an entity
+    arrives. This allows us to handle intervening disappears or
+    deletes cleanly. */
+    typedef enum
+    {
+        SACTION_INVALID,
+        SACTION_APPEAR,
+        SACTION_HIDE,
+        SACTION_DISCARD
+    } SightAction;
+
+    typedef std::map<std::string, SightAction> PendingSightMap;
+    PendingSightMap m_pending;
 };
 
 } // of namespace Eris

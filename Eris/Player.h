@@ -12,17 +12,6 @@ namespace Eris
 class Connection;
 class Avatar;
 
-/** Enumeration of various server-side things that can go wrong when trying
-to create an account or login.*/
-typedef enum {
-    LOGIN_INVALID = 0,
-    LOGIN_DUPLICATE_ACCOUNT,	///< The requested account already exists (when creating)
-    LOGIN_BAD_ACCOUNT,		///< The account data was invalid
-    LOGIN_UNKNOWN_ACCOUNT,	///< The account was not found (logging in)
-    LOGIN_BAD_PASSWORD,		///< The supplied password do not match
-    LOGIN_DUPLICATE_CONNECT	///< The account is already active (not always an error)
-} LoginFailureType;
-
 /** Type used to return available characters */
 typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> CharacterMap;
 
@@ -122,7 +111,7 @@ public:
     SigC::Signal0<void> GotAllCharacters;
     
     /// emitted when a server-side error occurs during account creation / login
-    SigC::Signal2<void, LoginFailureType, const std::string &> LoginFailure;
+    SigC::Signal1<void, const std::string &> LoginFailure;
     
     SigC::Signal0<void> LoginSuccess;
     
@@ -136,9 +125,10 @@ public:
 protected:
     friend class AccountRouter;
     
-    void recvOpError(const Atlas::Objects::Operation::Error &err);	
     void sightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
+    
     void loginComplete(const Atlas::Objects::Entity::Account &p);
+    void loginError(const Atlas::Objects::Operation::Error& err);
 
     void internalLogin(const std::string &unm, const std::string &pwd);
     void internalLogout(bool clean);
@@ -155,9 +145,6 @@ protected:
 	void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
 
 	void createCharacterHandler(long serialno);
-
-	
-	long _currentSerial;	///< serial no of the Atlas operation
 
 	Timeout* _logoutTimeout;
     

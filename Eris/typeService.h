@@ -36,7 +36,6 @@ public:
     
     /** retrive the TypeInfo for an object; this should be faster (hopefully constant time) since it
     can take advantage of integer typeids */
-    TypeInfoPtr getTypeForAtlas(const Atlas::Message::Element &msg);
     TypeInfoPtr getTypeForAtlas(const Atlas::Objects::Root &obj);
     
     /** Lookup the requested type, by name, and return NULL if it's unknown. */

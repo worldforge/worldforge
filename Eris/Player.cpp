@@ -64,7 +64,11 @@ public:
     // errors
         if (op->instanceOf(ERROR_NO))
         {
-        
+            if (m_player->isLoggedIn())
+            {
+                warning() << "Player got error op while logged in";
+            } else
+                m_player->loginError(smart_dynamic_cast<Error>(op));
         }
         
     // only-when connected ops
@@ -393,36 +397,16 @@ void Player::loginComplete(const AtlasAccount &p)
     m_con->Disconnecting.connect(SigC::slot(*this, &Player::netDisconnecting));
 }
 
-/*
-void Player::recvOpError(const Error &err)
+void Player::loginError(const Error& err)
 {
-	// skip errors if we're not doing anything
-	if (_currentAction.empty() || (err.getRefno() != _currentSerial))
-		return;
-	
-	std::string serverMsg = getMember(getArg(err, 0), "message").asString();
-	// can actually use error[2]->parents here to detrmine the current action
-	Eris::log(LOG_WARNING, "Received Atlas error %s", serverMsg.c_str());
-	
-	std::string pr = getMember(getArg(err, 1), "parents").asList().front().asString();
-	if (pr == "login") {
-		// prevent re-logins on the account
-		_username="";
-		LoginFailure.emit(LOGIN_INVALID, serverMsg);
-	}
-	
-	if (_currentAction == "create-account") {
-		assert(pr == "create");
-		// prevent re-logins on the account
-		_username="";
-		LoginFailure.emit(LOGIN_INVALID, serverMsg);
-	}
-	
-	// clear these out
-	_currentAction = "";
-	_currentSerial = 0;
+    if (m_status != LOGGING_IN)
+        error() << "got loginError while not logging in";
+        
+    const std::vector<Root>& args = err->getArgs();
+    std::string msg = args[0]->getAttr("message").asString();
+    warning() << "got login error: " << msg;
+    LoginFailure.emit(msg);
 }
-*/
 
 void Player::sightCharacter(const GameEntity& ge)
 {

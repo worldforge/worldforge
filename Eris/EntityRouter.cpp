@@ -78,11 +78,15 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
     Move mv = smart_dynamic_cast<Move>(op);
     if (mv.isValid())
     {
-        // sight of move, we can handle as a specialization of set.
-        // note for the moment the actual behaviour is identical, so this
-        // code is uncessary (but I think that may change)
+        // sight of move, we handle as a specialization of set.
         assert(!args.empty());
-        m_entity->setFromRoot(args.front());
+        Root arg = args.front();
+        
+        // break out LOC, which MOVE ops are allowed to update
+        if (arg->hasAttr("loc"))
+            m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
+        
+        m_entity->setFromRoot(arg);
         return HANDLED;
     }
     

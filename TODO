@@ -11,12 +11,12 @@ Eris TODO
   
 - rename Player to Account
 
-- Error handling in Player
-
 - Go over the Poll api, see if work can be delegated to skstream or not
 
 - go over and clean up the metaquery code, it's horrible, especially the
   snprint stuff.
+
+- all the visibility cases, once Al gets back to me
 
 Longer Term TODO
 
