@@ -1,6 +1,12 @@
+ChangeLog for varconf
+
+Tue Oct 17 11:42:32 EST 2000 -- jaz <jaz147@psu.edu>
+ * AUTHORS: Added myself to list 
+ * README: Added some general info. 
+
 ChangeLog for conftest
 
-Fri Dec 24 09:30:32 UTC 1999
+Fri Dec 24 09:30:32 UTC 1999 -- sdt <sdt@gmx.net>
  * Variable.h, Variable.cc: Added conversion constructor for char*
  * Config.h: Added register and unregister functions for callbacks
  * Config.cc: Implemented register and unregister functions for callbacks

@@ -1,1 +1,3 @@
 A prototype configuration system for STAGE.
+
+NOTE: This library is in a period of flux.  Please let me know if anyone has varconf deeply embedded into their code and would have serious problems with any sort of interface change.  <jaz147@psu.edu>
