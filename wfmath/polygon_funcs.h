@@ -286,6 +286,139 @@ Vector<dim> _Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2) const
   return out;
 }
 
+template<>
+bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) const;
+
+template<const int dim>
+bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2) const
+{
+  assert(m_origin_valid);
+
+  if(!m_axes_valid[0]) {
+    // Single point
+    p2[0] = p2[1] = 0;
+    return Intersect(b, convert(p2));
+  }
+
+  if(m_axes_valid[1]) {
+    // A plane
+
+    // I only know how to do this in 3D, so write a function which will
+    // specialize to different dimensions
+
+    return checkIntersectPlane(b, p2);
+  }
+
+  // A line
+
+  // This is a modified version of AxisBox<>/Segment<> intersection
+
+  CoordType min = 0, max = 0; // Initialize to avoid compiler warnings
+  bool got_bounds = false;
+
+  for(int i = 0; i < dim; ++i) {
+    const CoordType dist = (m_axes[0])[i]; // const may optimize away better
+    if(dist == 0) {
+      if(m_origin[i] < b.lowerBound[i] || m_origin[i] > b.upperBound[i])
+        return false;
+    }
+    else {
+      CoordType low = (b.lowerBound[i] - m_origin[i]) / dist;
+      CoordType high = (b.upperBound[i] - m_origin[i]) / dist;
+      if(low > high) {
+        CoordType tmp = high;
+        high = low;
+        low = tmp;
+      }
+      if(got_bounds) {
+        if(low > min)
+          min = low;
+        if(high < max)
+          max = high;
+      }
+      else {
+        min = low;
+        max = high;
+        got_bounds = true;
+      }
+    }
+  }
+
+  assert(got_bounds); // We can't be parallel in _all_ dimensions
+
+  if(min <= max) {
+    p2 = m_origin + m_axes[0] * FloatSubtract(max, min) / 2;
+    return true;
+  }
+  else
+    return false;
+}
+
+template<const int dim>
+bool _Poly2Orient<dim>::checkIntersectProper(const AxisBox<dim>& b, Point<2>& p2) const
+{
+  assert(m_origin_valid);
+
+  if(!m_axes_valid[0]) {
+    // Single point
+    p2[0] = p2[1] = 0;
+    return IntersectProper(b, convert(p2));
+  }
+
+  if(m_axes_valid[1]) {
+    // A plane
+
+    // I only know how to do this in 3D, so write a function which will
+    // specialize to different dimensions
+
+    return checkIntersectPlane(b, p2) && ContainsProper(b, p2);
+  }
+
+  // A line
+
+  // This is a modified version of AxisBox<>/Segment<> intersection
+
+  CoordType min = 0, max = 0; // Initialize to avoid compiler warnings
+  bool got_bounds = false;
+
+  for(int i = 0; i < dim; ++i) {
+    const CoordType dist = (m_axes[0])[i]; // const may optimize away better
+    if(dist == 0) {
+      if(m_origin[i] <= b.lowerBound[i] || m_origin[i] >= b.upperBound[i])
+        return false;
+    }
+    else {
+      CoordType low = (b.lowerBound[i] - m_origin[i]) / dist;
+      CoordType high = (b.upperBound[i] - m_origin[i]) / dist;
+      if(low > high) {
+        CoordType tmp = high;
+        high = low;
+        low = tmp;
+      }
+      if(got_bounds) {
+        if(low > min)
+          min = low;
+        if(high < max)
+          max = high;
+      }
+      else {
+        min = low;
+        max = high;
+        got_bounds = true;
+      }
+    }
+  }
+
+  assert(got_bounds); // We can't be parallel in _all_ dimensions
+
+  if(min < max) {
+    p2 = m_origin + m_axes[0] * FloatSubtract(max, min) / 2;
+    return true;
+  }
+  else
+    return false;
+}
+
 template<const int dim>
 bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
 {
@@ -399,9 +532,55 @@ bool ContainsProper(const Point<dim>& p, const Polygon<dim>& r)
 }
 
 template<const int dim>
-bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b);
+bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b)
+{
+  if(p.m_points.size() == 0)
+    return false;
+
+  Point<2> p2;
+
+  if(!p.m_orient.checkIntersect(b, p2))
+    return false;
+
+  Segment<dim> s;
+  s.endpoint(0) = p.m_orient.convert(p.m_points.last());
+  int next_end = 1;
+
+  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i) {
+    s.endpoint(next_end) = p.m_orient.convert(*i);
+    if(Intersect(b, s))
+      return true;
+    next_end = next_end ? 0 : 1;
+  }
+
+  return Contains(p, p2);
+}
+
 template<const int dim>
-bool IntersectProper(const Polygon<dim>& p, const AxisBox<dim>& b);
+bool IntersectProper(const Polygon<dim>& p, const AxisBox<dim>& b)
+{
+  if(p.m_points.size() == 0)
+    return false;
+
+  Point<2> p2;
+
+  if(!p.m_orient.checkIntersectProper(b, p2))
+    return false;
+
+  Segment<dim> s;
+  s.endpoint(0) = p.m_orient.convert(p.m_points.last());
+  int next_end = 1;
+
+  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i) {
+    s.endpoint(next_end) = p.m_orient.convert(*i);
+    if(IntersectProper(b, s))
+      return true;
+    next_end = next_end ? 0 : 1;
+  }
+
+  return ContainsProper(p, p2);
+}
+
 template<const int dim>
 bool Contains(const Polygon<dim>& p, const AxisBox<dim>& b);
 template<const int dim>
@@ -695,9 +874,67 @@ bool ContainsProper(const Segment<dim>& s, const Polygon<dim>& p)
 }
 
 template<const int dim>
-bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r);
+bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r)
+{
+  if(p.m_points.size() == 0)
+    return false;
+
+  _Poly2Orient<dim> orient(m_orient);
+  // FIXME rotateInverse()
+  orient.rotate(r.m_orient.inverse(), r.m_corner0);
+
+  AxisBox<dim> b(r.m_corner0, r.m_corner0 + r.m_size);
+
+  Point<2> p2;
+
+  if(!orient.checkIntersect(b, p2))
+    return false;
+
+  Segment<dim> s;
+  s.endpoint(0) = orient.convert(p.m_points.last());
+  int next_end = 1;
+
+  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i) {
+    s.endpoint(next_end) = orient.convert(*i);
+    if(Intersect(b, s))
+      return true;
+    next_end = next_end ? 0 : 1;
+  }
+
+  return Contains(p, p2);
+}
+
 template<const int dim>
-bool IntersectProper(const Polygon<dim>& p, const RotBox<dim>& r);
+bool IntersectProper(const Polygon<dim>& p, const RotBox<dim>& r)
+{
+  if(p.m_points.size() == 0)
+    return false;
+
+  _Poly2Orient<dim> orient(m_orient);
+  // FIXME rotateInverse()
+  orient.rotate(r.m_orient.inverse(), r.m_corner0);
+
+  AxisBox<dim> b(r.m_corner0, r.m_corner0 + r.m_size);
+
+  Point<2> p2;
+
+  if(!orient.checkIntersectProper(b, p2))
+    return false;
+
+  Segment<dim> s;
+  s.endpoint(0) = orient.convert(p.m_points.last());
+  int next_end = 1;
+
+  for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i) {
+    s.endpoint(next_end) = orient.convert(*i);
+    if(IntersectProper(b, s))
+      return true;
+    next_end = next_end ? 0 : 1;
+  }
+
+  return ContainsProper(p, p2);
+}
+
 template<const int dim>
 bool Contains(const Polygon<dim>& p, const RotBox<dim>& r);
 template<const int dim>

@@ -1,3 +1,9 @@
+Friday, January 25, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Some efficiency improvements and generalizations to the
+	  backend of the probability functions
+	* Wrote Polygon<3> intersections with AxisBox<3> and RotBox<3>
+
 Thursday, January 24, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Karsten's Makefile.am fixes for srcdir != builddir

@@ -376,7 +376,7 @@ bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b)
   // each i. Find the intersection of those segments and the
   // segment (0, 1), and check if it's nonzero.
 
-  CoordType min = 0, max = 1, low, high, small, big;
+  CoordType min = 0, max = 1;
 
   for(int i = 0; i < dim; ++i) {
     CoordType dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
@@ -385,20 +385,17 @@ bool Intersect(const Segment<dim>& s, const AxisBox<dim>& b)
         return false;
     }
     else {
-      low = (b.m_low[i] - s.m_p1[i]) / dist;
-      high = (b.m_high[i] - s.m_p1[i]) / dist;
-      if(low < high) {
-        small = low;
-        big = high;
+      CoordType low = (b.m_low[i] - s.m_p1[i]) / dist;
+      CoordType high = (b.m_high[i] - s.m_p1[i]) / dist;
+      if(low > high) {
+        CoordType tmp = high;
+        high = low;
+        low = tmp;
       }
-      else {
-        big = low;
-        small = high;
-      }
-      if(small > min)
-        min = small;
-      if(big < max)
-        max = big;
+      if(low > min)
+        min = low;
+      if(high < max)
+        max = high;
     }
   }
 
@@ -416,7 +413,7 @@ bool IntersectProper(const Segment<dim>& s, const AxisBox<dim>& b)
   // each i. Find the intersection of those segments and the
   // segment (0, 1), and check if it's nonzero.
 
-  CoordType min = 0, max = 1, low, high, small, big;
+  CoordType min = 0, max = 1;
 
   for(int i = 0; i < dim; ++i) {
     CoordType dist = FloatSubtract(s.m_p2[i], s.m_p1[i]);
@@ -425,20 +422,17 @@ bool IntersectProper(const Segment<dim>& s, const AxisBox<dim>& b)
         return false;
     }
     else {
-      low = (b.m_low[i] - s.m_p1[i]) / dist;
-      high = (b.m_high[i] - s.m_p1[i]) / dist;
-      if(low < high) {
-        small = low;
-        big = high;
+      CoordType low = (b.m_low[i] - s.m_p1[i]) / dist;
+      CoordType high = (b.m_high[i] - s.m_p1[i]) / dist;
+      if(low > high) {
+        CoordType tmp = high;
+        high = low;
+        low = tmp;
       }
-      else {
-        big = low;
-        small = high;
-      }
-      if(small > min)
-        min = small;
-      if(big < max)
-        max = big;
+      if(low > min)
+        min = low;
+      if(high < max)
+        max = high;
     }
   }
 

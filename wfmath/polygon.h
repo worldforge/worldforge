@@ -225,7 +225,15 @@ class _Poly2Orient
   // the basis, and puts the nearest point in p2.
   Vector<dim> offset(const Point<dim>& pd, Point<2>& p2) const;
 
+  // Check if the AxisBox intersects the spanned space, and if so
+  // return a point in the intersection.
+  bool checkIntersect(const AxisBox<dim>& b, Point<2>& p2) const;
+  bool checkIntersectProper(const AxisBox<dim>& b, Point<2>& p2) const;
+
  private:
+  // special case of the above when both axes are valid
+  bool checkIntersectPlane(const AxisBox<dim>& b, Point<2>& p2) const;
+
   Point<dim> m_origin;
   Vector<dim> m_axes[2]; // Normalized to unit length
   bool m_origin_valid, m_axes_valid[2];

@@ -72,7 +72,8 @@ Point<dim> Barycenter(const container<Point<dim> >& c,
 
 // This is used a couple of places in the library
 template<const int dim>
-Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2);
+Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2,
+		    CoordType dist = 0.5);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
@@ -152,7 +153,7 @@ class Point
 //  template<template<class> class container>
 //  friend Point Barycenter(const container<Point>& c);
 
-  friend Point<dim> Midpoint<dim>(const Point& p1, const Point& p2);
+  friend Point<dim> Midpoint<dim>(const Point& p1, const Point& p2, CoordType dist);
 
   // 2D/3D stuff
 

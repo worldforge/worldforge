@@ -257,12 +257,13 @@ Point<dim> Barycenter(const container<Point<dim> >& c)
 }
 
 template<const int dim>
-Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2)
+Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)
 {
   Point<dim> out;
+  CoordType conj_dist = FloatSubtract(1, dist);
 
   for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = FloatAdd(p1.m_elem[i], p2.m_elem[i]) / 2;
+    out.m_elem[i] = FloatAdd(p1.m_elem[i] * conj_dist, p2.m_elem[i] * dist);
 
   return out;
 }

@@ -220,7 +220,7 @@ class Vector {
   // sloppyMagMax is greater than or equal to one.
   // The constant sloppyMagMaxSqrt is provided for those
   // who want to most closely approximate the true magnitude,
-  // without carring whether it's too low or too high.
+  // without caring whether it's too low or too high.
 
   CoordType sloppyMag() const;
   Vector& sloppyNorm(CoordType norm);

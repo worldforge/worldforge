@@ -88,6 +88,65 @@ void _Poly2Reorient::reorient(Polygon<2>& poly, int skip = -1) const
   }
 }
 
+template<>
+bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) const
+{
+  assert(m_origin_valid && m_axes_valid[0] && m_axes_valid[1]);
+
+  Vector<3> normal = Cross(m_axes[0], m_axes[1]); // normal to the plane
+
+  enum {
+    AXIS_UP,
+    AXIS_DOWN,
+    AXIS_FLAT
+  } axis_direction[3];
+
+  CoordType normal_mag = normal.sloppyMag();
+  int high_corner_num = 0;
+
+  for(int i = 0; i < 3; ++i) {
+    if(fabs(normal[i]) < normal_mag * WFMATH_EPSILON)
+      axis_direction[i] = AXIS_FLAT;
+    else if(normal[i] > 0) {
+      axis_direction[i] = AXIS_UP;
+      high_corner_num |= (1 << i);
+    }
+    else
+      axis_direction[i] = AXIS_DOWN;
+  }
+
+  int low_corner_num = high_corner_num ^ 7;
+
+  Point<3> high_corner = b.getCorner(high_corner_num);
+  Point<3> low_corner = b.getCorner(low_corner_num);
+
+  // If these are on opposite sides of the plane, we have an intersection
+
+  CoordType perp_size = Dot(normal, high_corner - low_corner) / normal_mag;
+  assert(perp_size >= 0);
+
+  if(perp_size < normal_mag * WFMATH_EPSILON) {
+    // We have a very flat box, lying parallel to the plane
+    return offset(Midpoint(high_corner, low_corner), p2).sqrMag()
+		< normal_mag * normal_mag * WFMATH_EPSILON;
+  }
+
+  if(Dot(high_corner - m_origin, normal) < 0
+     || Dot(low_corner - m_origin, normal) > 0)
+    return false; // box lies above or below the plane
+
+  // Find the intersection of the line through the corners with the plane
+
+  Point<2> p2_high, p2_low;
+
+  CoordType high_dist = offset(high_corner, p2_high).mag();
+  CoordType low_dist = offset(low_corner, p2_low).mag();
+
+  p2 = Midpoint(p2_high, p2_low, high_dist / FloatAdd(high_dist, low_dist));
+
+  return true;
+}
+
 //template<>
 bool Polygon<2>::isEqualTo(const Polygon& p, double tolerance) const
 {

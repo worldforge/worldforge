@@ -2,20 +2,22 @@ Intersect functions unimplemented:
 	Intersect(RotBox<>, AxisBox<>)
 	IntersectProper(RotBox<>, AxisBox<>)
         for dim != 2,
-	  Intersect(Polygon<>, AxisBox<>)
-	  IntersectProper(Polygon<>, AxisBox<>)
 	  Contains(Polygon<>, AxisBox<>)
 	  ContainsProper(Polygon<>, AxisBox<>)
-	  Intersect(Polygon<>, RotBox<>)
-	  IntersectProper(Polygon<>, RotBox<>)
 	  Contains(Polygon<>, RotBox<>)
 	  ContainsProper(Polygon<>, RotBox<>)
 	  Intersect(Polygon<>, Polygon<>)
 	  IntersectProper(Polygon<>, Polygon<>)
 	  Contains(Polygon<>, Polygon<>)
 	  ContainsProper(Polygon<>, Polygon<>)
+        for dim != 2,3 (extremely low priority)
+	  Intersect(Polygon<>, AxisBox<>)
+	  IntersectProper(Polygon<>, AxisBox<>)
+	  Intersect(Polygon<>, RotBox<>)
+	  IntersectProper(Polygon<>, RotBox<>)
     These will be postponed until I can think of a way to write them,
     or someone needs them, whichever comes first
+Add shape tests from COAL
 Write rotateInverse() functions
 Rip out and redo Euler angle stuff
 Write an API reference for the library. Find some inline documentation tool?

@@ -55,7 +55,7 @@ double WFMath::GaussianConditional(double mean, double stddev, double val)
     return Gaussian(mean, stddev, val) / normalization;
   }
 
-  return 2 / (fabs(stddev * diff)
+  return 2.0 / (fabs(stddev * diff)
 	 * IncompleteGammaComplementNoPrefactor(0.5, diffsqr_over_two));
 }
 
@@ -75,13 +75,13 @@ double WFMath::PoissonConditional(double mean, unsigned int step)
 {
   assert(mean >= 0);
 
+  if(mean == 0) // Funky limit, but allow it
+    return (step == 0) ? 1 : 0;
+
   if(mean > step + 1)
     return Poisson(mean, step) / IncompleteGamma(step, mean);
 
-  double log_prefactor = step * log(mean) - mean - LogGamma(step+1);
-
-  return exp(LogPoisson(mean, step) - log_prefactor)
-	 / IncompleteGammaNoPrefactor(step, mean);
+  return 1.0 / IncompleteGammaNoPrefactor(step, mean);
 }
 
 double WFMath::Poisson(double mean, unsigned int step)
@@ -125,22 +125,36 @@ double WFMath::LogFactorial(unsigned int n)
 
 double LogGamma(double z)
 {
-  assert(z > 0); // Avoid negative \Gamma(z)
-
   if(z == 0.5) // special case for Gaussian
     return 0.57236494292470008707171367567652935582364740645764; // log(sqrt(pi))
 
-  double shift = 1;
+  if(z == 1 || z == 2) // 0! and 1!
+    return 0;
 
-  while(z < GammaCutoff)
-    shift *= z++;
+  double log_shift;
+
+  // FIXME make this O(1) for z < GammaCutoff
+  // this isn't too urgent, though, since we always use this
+  // with z >= 0.5 (as of 1/24/02)
+
+  if(z < GammaCutoff) {
+    double shift = 1;
+    while(z < GammaCutoff) {
+      if(z == 0) // Hit a pole
+        return log(-1); // Get nan in a system-independent way, set errno = EDOM
+      shift *= z++;
+    }
+    log_shift = log(fabs(shift));
+  }
+  else
+    log_shift = 0;
 
   // Stirling approximation (see Gradshteyn + Ryzhik, Table of Integrals,
   // Series, and Products, fifth edition, formula 8.344 for a specific formula)
 
   const double LogSqrtTwoPi = 0.91893853320467274178032973640561763986139747363777;
 
-  double ans = (z - 0.5) * log(z) - log(shift) - z + LogSqrtTwoPi;
+  double ans = (z - 0.5) * log(z) - log_shift - z + LogSqrtTwoPi;
 
   // coeffs[i] is the 2*(i+1)th Ber.. number, divided by (2i + 1)*(2i + 2)
   const double coeffs[] = 	{1.0/12.0,		-1.0/360.0,
@@ -181,7 +195,7 @@ static double IncompleteGamma(double a, double z)
   if(z > a + 1)
     return 1 - IncompleteGammaComplement(a, z);
 
-  double prefactor = exp(a * log(z) - z - LogGamma(a+1));
+  double prefactor = exp(a * (log(z) + 1) - z - LogGamma(a));
 
   return IncompleteGammaNoPrefactor(a, z) * prefactor;
 }
@@ -234,7 +248,7 @@ static double IncompleteGammaComplementNoPrefactor(double a, double z)
   double b_contrib = z + 1 - a;
   double a_last, b_last, a_next, b_next;
   int term = 1;
-  bool last_zero = false, next_zero = (fabs(b_contrib) <= DBL_MIN * fudge);
+  bool last_zero, next_zero = (fabs(b_contrib) <= DBL_MIN * fudge);
 
   if(next_zero) {
     a_last = 0;
