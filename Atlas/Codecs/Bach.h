@@ -54,8 +54,6 @@ class Bach : public Codec<std::iostream>
 	PARSE_STREAM,
         PARSE_MAP,
         PARSE_LIST,
-	PARSE_MAP_BEGIN,
-	PARSE_LIST_BEGIN,
         PARSE_NAME,
         PARSE_DATA,
         PARSE_INT,
@@ -70,8 +68,6 @@ class Bach : public Codec<std::iostream>
     inline void parseStream(char);
     inline void parseMap(char);
     inline void parseList(char);
-    inline void parseMapBegin(char);
-    inline void parseListBegin(char);
     inline void parseData(char);
     inline void parseInt(char);
     inline void parseFloat(char);
