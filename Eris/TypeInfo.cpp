@@ -2,8 +2,13 @@
 	#include "config.h"
 #endif
 
-#include <multimap.h>
+#if __MWERKS__
+   #include <map.h>
+#else
+   #include <multimap.h>
+#endif
 
+#include <assert.h>
 #include <fstream>
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Message/QueuedDecoder.h>
@@ -80,8 +85,9 @@ bool TypeInfo::isA(TypeInfoPtr tp)
 		//Signal & sig = signalWhenBound(this);
 		Eris::Log(LOG_DEBUG, "throwing OperationBlocked doing isA on %s", _name.c_str());
 		throw OperationBlocked(getBoundSignal());
-	} else
-		return false;
+	}
+		
+	return false;
 }
 
 bool TypeInfo::safeIsA(TypeInfoPtr tp)
@@ -456,7 +462,7 @@ void TypeInfo::sendInfoRequest(const std::string &id)
 	Connection::Instance()->send(get);
 }
 
-void TypeInfo::recvTypeError(const Atlas::Objects::Operation::Error &error,
+void TypeInfo::recvTypeError(const Atlas::Objects::Operation::Error &/*error*/,
 	const Atlas::Objects::Operation::Get &get)
 {
 	const Atlas::Message::Object::ListType &largs = get.GetArgs();
@@ -508,4 +514,4 @@ void TypeInfo::listUnbound()
 	
 }
 
-}; // of namespace
+} // of namespace
