@@ -5,13 +5,10 @@
 #ifndef ATLAS_NEGOTIATE_H
 #define ATLAS_NEGOTIATE_H
 
-#include "Task.h"
-
 #define Debug(prg) { if (debug_flag) { prg } }
 
 namespace Atlas {
 
-template <class Stream>
 class Codec;
 
 /** Negotiation of codecs and filters for an Atlas connection
@@ -25,8 +22,7 @@ along with the name of sender and a Socket
 @see Filter
 */
 
-template <typename Stream>
-class Negotiate : public Task
+class Negotiate
 {
     public:
 
@@ -38,7 +34,8 @@ class Negotiate : public Task
     };
 
     virtual State getState() = 0;
-    virtual Codec<Stream>* getCodec() = 0;
+    virtual Codec * getCodec() = 0;
+    virtual void poll(bool can_get = true) = 0;
 };
 
 } // Atlas namespace

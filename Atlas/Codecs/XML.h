@@ -34,7 +34,7 @@ The complete specification is located in cvs at:
 
 */
 
-class XML : public Codec<std::iostream>
+class XML : public Codec
 {
     public:
 

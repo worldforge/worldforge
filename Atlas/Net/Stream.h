@@ -44,7 +44,7 @@ along with the name of sender and a Socket
 
   };
 
-class StreamConnect : public Atlas::Negotiate<std::iostream>
+class StreamConnect : public Atlas::Negotiate
 {
     public:
 
@@ -55,7 +55,7 @@ class StreamConnect : public Atlas::Negotiate<std::iostream>
     virtual void poll(bool can_read = true);
 
     virtual State getState();
-    virtual Atlas::Codec<std::iostream> * getCodec();
+    virtual Atlas::Codec * getCodec();
 
     private:
 
@@ -97,7 +97,7 @@ class StreamConnect : public Atlas::Negotiate<std::iostream>
     bool m_canBzip2;
 };
  
-class StreamAccept : public Atlas::Negotiate<std::iostream>
+class StreamAccept : public Atlas::Negotiate
 {
     public:
 
@@ -108,7 +108,7 @@ class StreamAccept : public Atlas::Negotiate<std::iostream>
     virtual void poll(bool can_read = true);
 
     virtual State getState();
-    virtual Atlas::Codec<std::iostream>* getCodec();
+    virtual Atlas::Codec * getCodec();
 
     private:
 

@@ -8,7 +8,7 @@
 #include "../src/Message/QueuedDecoder.h"
 #include "../src/Message/MEncoder.h"
 
-Atlas::Codec<std::iostream>* getCodec(std::string type, std::iostream &stream, Atlas::Message::DecoderBase* decoder)
+Atlas::Codec * getCodec(std::string type, std::iostream &stream, Atlas::Message::DecoderBase* decoder)
 {
     if (type == "XML")
         return new Atlas::Codecs::XML(stream, decoder);
@@ -42,14 +42,14 @@ void convert(std::string file_in, std::string codec_in, std::string file_out, st
     std::cout << "Reading... ";
 
     Atlas::Message::QueuedDecoder decoder;
-    Atlas::Codec<std::iostream> *inCodec = getCodec(codec_in, in, &decoder);
+    Atlas::Codec *inCodec = getCodec(codec_in, in, &decoder);
     while (!in.eof())
         inCodec->poll(true);
 
     std::cout << "done." << std::endl;
     std::cout << "Writing... ";
 
-    Atlas::Codec<std::iostream> *outCodec = getCodec(codec_out, out, NULL);
+    Atlas::Codec *outCodec = getCodec(codec_out, out, NULL);
     Atlas::Message::Encoder encoder(outCodec);
     encoder.streamBegin();
     while (decoder.queueSize() > 0 ) {

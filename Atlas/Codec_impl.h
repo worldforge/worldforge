@@ -9,7 +9,7 @@
 
 namespace Atlas {
 
-template <class Stream> Codec<Stream>::~Codec()
+/* template <class Stream> */ Codec/*<Stream>*/::~Codec()
 {
 }
 

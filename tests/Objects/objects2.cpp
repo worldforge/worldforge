@@ -45,7 +45,7 @@ std::string object2String(const Root& obj)
 {
     DebugBridge bridge;
     std::stringstream stream;
-    Atlas::Codec<std::iostream> *codec;
+    Atlas::Codec *codec;
     codec = new Atlas::Codecs::XML(stream, &bridge);
     assert(codec);
     codec->streamBegin();
@@ -155,7 +155,7 @@ void testXML()
 //jtype">op_definition</std::string></map>
 
 
-    Atlas::Codec<std::iostream> *codec;
+    Atlas::Codec *codec;
 #if USE_XML
     codec = new Atlas::Codecs::XML((std::iostream&)stream, &bridge);
 #else

@@ -6,7 +6,6 @@
 #define ATLAS_CODEC_H
 
 #include "Bridge.h"
-#include "Task.h"
 
 namespace Atlas {
 
@@ -20,17 +19,16 @@ socket, piped through the filters in the opposite direction and passed to
 a user specified Bridge callback class.
 
 @see Bridge
-@see Task
 @see Negotiate
 */
 
-template <class Stream>
-class Codec : public Bridge, public Task
+class Codec : public Bridge
 {
     public:
 
     virtual ~Codec();
 
+    virtual void poll(bool can_get = true) = 0;
 };
 
 } // Atlas namespace

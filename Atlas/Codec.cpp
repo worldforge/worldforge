@@ -4,12 +4,10 @@
 
 #include "Codec.h"
 
-#include <iostream>
-
-#include "Codec_impl.h"
-
 namespace Atlas {
-  
-template class Codec<std::iostream>;
 
+Codec::~Codec()
+{
+}
+  
 }

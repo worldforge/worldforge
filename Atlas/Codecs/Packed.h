@@ -34,7 +34,7 @@ The complete specification is located in cvs at:
     
 */
   
-class Packed : public Codec<std::iostream>
+class Packed : public Codec
 {
 public:
     

@@ -38,7 +38,7 @@ while test $# -gt 0; do
       echo $exec_prefix
       ;;
     --version)
-      echo @VERSION@
+      echo @ATLAS_VERSION@
       ;;
     --cflags)
       if test @includedir@ != /usr/include ; then
@@ -50,16 +50,14 @@ while test $# -gt 0; do
       echo $includes @ATLAS_CFLAGS@
       ;;
     --libs)
-      libdirs="-L@libdir@"
       if test @libdir@ != /usr/lib ; then
-          libdirs=""
+          libdirs="-L@libdir@"
       fi
       echo $libdirs @ATLAS_LIBS@
       ;;
     --static-libs)
-      libdirs="-L@libdir@"
       if test @libdir@ != /usr/lib ; then
-          libdirs=""
+          libdirs="-L@libdir@"
       fi
       echo $libdirs @ATLAS_LIBS@ @SYSTEM_LIBS@
       ;;

@@ -160,7 +160,7 @@ void Atlas::Net::StreamConnect::poll(bool can_read)
     while ((m_state != DONE) && (m_socket.rdbuf()->in_avail() > 0));
 }
 
-Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamConnect::getState()
+Atlas::Negotiate::State Atlas::Net::StreamConnect::getState()
 {
     if (m_state == DONE)
     {
@@ -176,7 +176,7 @@ Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamConnect::getState()
     return FAILED;
 }
 
-Atlas::Codec<std::iostream>* Atlas::Net::StreamConnect::getCodec()
+Atlas::Codec * Atlas::Net::StreamConnect::getCodec()
 {
     if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_bridge); }
     if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_bridge); }
@@ -305,7 +305,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read)
     while ((m_state != DONE) && (m_socket.rdbuf()->in_avail() > 0));
 }
 
-Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamAccept::getState()
+Atlas::Negotiate::State Atlas::Net::StreamAccept::getState()
 {
     if (m_state == DONE)
     {
@@ -321,7 +321,7 @@ Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamAccept::getState()
     return FAILED;
 }
 
-Atlas::Codec<std::iostream>* Atlas::Net::StreamAccept::getCodec()
+Atlas::Codec * Atlas::Net::StreamAccept::getCodec()
 {
       // XXX XXX XXX XXX
       // should pass an appropriate filterbuf here instead of socket,

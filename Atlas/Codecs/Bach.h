@@ -16,7 +16,7 @@ namespace Atlas { namespace Codecs {
  * This class implements Bach Codec
  */
 
-class Bach : public Codec<std::iostream>
+class Bach : public Codec
 {
   public:
 

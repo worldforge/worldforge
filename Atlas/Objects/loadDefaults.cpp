@@ -53,7 +53,7 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
     //if((*i)->getName() == "XML")
       //codec = (*i)->New(Codec<std::iostream>::Parameters((iostream&)stream, this));
   //end of replace
-    Atlas::Codec<std::iostream> *codec = new Atlas::Codecs::XML((std::iostream&)stream, this);
+    Atlas::Codec *codec = new Atlas::Codecs::XML((std::iostream&)stream, this);
 
     if (!codec) {
         throw DefaultLoadingException("XML codec not found");

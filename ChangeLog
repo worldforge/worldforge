@@ -1,3 +1,14 @@
+2003-04-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Codec.cpp, src/Codec.h, src/Codec_impl.h,
+	  src/Negotiate.h, src/Negotiate.h, src/Codecs/Bach.h,
+	  src/Codecs/Packed.h, src/Codecs/XML.h,
+	  src/Net/Stream.cpp, src/Net/Stream.h,
+	  src/Objects/loadDefaults.cpp, src/Utilities/atlas_convert.cpp,
+	  tests/Objects/objects2.cpp: Get rid of pointless Task interface
+	  and make Codec and Negotiate base classes no longer templates,
+	  as it makes no difference.
+
 2003-04-09  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Message/MEncoder.h, src/Objects/Encoder.h: Make Encoder
