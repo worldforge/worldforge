@@ -4,7 +4,7 @@ dnl Initialise autoconf
 AC_INIT("Atlas-C++", "0.5.1", "alriddoch@zepler.org")
 AM_INIT_AUTOMAKE("Atlas-C++", "0.5.1")
 AC_CONFIG_SRCDIR([Atlas/Bridge.cpp])
-AM_CONFIG_HEADER([config.h])
+AM_CONFIG_HEADER(config.h)
 
 dnl Initialise automake
 

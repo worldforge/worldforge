@@ -1,5 +1,11 @@
 2003-08-03  Ron Steinke <rsteinke@w-link.net>
 
+	* configure.ac: changed AM_CONFIG_HEADER([config.h]) to
+	  AM_CONFIG_HEADER(config.h), since automake 1.4 was interpreting
+	  [config.h] as a literal.
+
+2003-08-03  Ron Steinke <rsteinke@w-link.net>
+
 	* Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
 	  Atlas/Objects/gen_cpp.py: Added new function BaseObjectData::find().
 	  In the process replaced virtual public hasAttr() function
