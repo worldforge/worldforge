@@ -18,7 +18,7 @@ namespace Eris
 {
 	
 MetaQuery::MetaQuery(Meta *ms, const std::string &host) :
-	BaseConnection(ms->getClientName(), ms),
+	BaseConnection(ms->getClientName(), "mq_" + host + "-", ms),
 	_host(host),
 	_meta(ms),
 	_complete(false)
@@ -90,3 +90,7 @@ void MetaQuery::bindTimeout(Timeout &t, Status sc)
 }
 
 } // of namsespace
+
+
+
+

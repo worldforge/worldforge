@@ -8,6 +8,8 @@
 #include <set>
 #include <deque>
 
+#include <stdexcept>
+
 #include <Atlas/Message/Object.h>
 #include <Atlas/Objects/Root.h>
 
@@ -19,10 +21,15 @@ namespace Eris
 typedef std::list<std::string> StringList;	
 typedef std::set<std::string> StringSet;
 
-class BaseException : public std::exception
+/** This is the Eris base for all exceptions; note it inherits from std::except,
+which isn't ideal. One option would be to refactor the various final
+exceptions so they inherit from the 'closest' ISO C++ exception, but it
+hardly seems worth it. */
+class BaseException : public std::runtime_error
 {
 public:
-	BaseException(const std::string &m) : _msg(m) {;}
+	BaseException(const std::string &m) : 
+		std::runtime_error(m), _msg(m) {;}
 	const std::string _msg;
 };	
 	

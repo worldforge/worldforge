@@ -65,8 +65,9 @@ public:
 protected:
 	/// create an unconnected instance
 	/** Create a new connection, with the client-name  string specified. The client-name
-	is sent during Atlas negotiation of the connection. */
-	BaseConnection(const string &cnm, Atlas::Bridge *br);	
+	is sent during Atlas negotiation of the connection. Id is a unique string to identify
+	timeouts created by the connection (and potentially errors in the future) */
+	BaseConnection(const std::string &cnm, const std::string &id, Atlas::Bridge *br);	
 
 	void recv();
 
@@ -91,12 +92,13 @@ protected:
 	Atlas::Codec<iostream>* _codec;		///< the underlying codec object
 
 	Status _status;			///< current status of the connection
+	const std::string _id;	///< a unique identifier for this connection
 	
 	client_socket_stream* _stream;		///< the underlying iostream channel
 	std::string _clientName;		///< the client identified used during connection
 	
 	Atlas::Bridge* _bridge;
-	Timeout* _timeout;		///< network level timeouts
+	Timeout* _timeout;		///< network level timeouts		
 };
 		
 };

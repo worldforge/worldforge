@@ -56,6 +56,9 @@ World::World(Player *p, Connection *c) :
 	assert(_con);
 	assert(_player);
 	
+	// store the instance pointer  ( "new Entity(..)" already needs this !)
+	_theWorld = this;
+	
 	// create the root entity
 	Atlas::Objects::Entity::GameEntity rootDef = 
 		Atlas::Objects::Entity::GameEntity::Instantiate();
@@ -70,10 +73,7 @@ World::World(Player *p, Connection *c) :
 	d->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Info>("world", 
 		SigC::slot(this, &World::recvInfoOp)
 	));
-	
-	// store the instance pointer
-	_theWorld = this;
-	
+	       	
 	// setup network callbacks
 	_con->Connected.connect(SigC::slot(this, &World::netConnect));
 }

@@ -3,6 +3,7 @@
 #endif
 
 #include <skstream.h>
+
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Encoder.h>
@@ -16,9 +17,12 @@ namespace Eris {
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
-BaseConnection::BaseConnection(const std::string &cnm, Atlas::Bridge *br) :
+BaseConnection::BaseConnection(const std::string &cnm, 
+	const std::string &id,
+	Atlas::Bridge *br) :
 	_sc(NULL),
 	_status(DISCONNECTED),
+	_id(id),
 	_clientName(cnm),
 	_bridge(br),
 	_timeout(NULL)
@@ -39,7 +43,7 @@ void BaseConnection::connect(const std::string &host, short port)
 		hardDisconnect(true);
 	
 	// start timeout
-	_timeout = new Timeout("connect_" + host, 5000);
+	_timeout = new Timeout("connect_" + _id, 5000);
 	bindTimeout(*_timeout, CONNECTING);
 	
 	setStatus(CONNECTING);
@@ -53,7 +57,7 @@ void BaseConnection::connect(const std::string &host, short port)
 
 	// negotiation timeout
 	delete _timeout;
-	_timeout = new Timeout("negotiate_" + host, 5000);
+	_timeout = new Timeout("negotiate_" + _id, 5000);
 	bindTimeout(*_timeout, NEGOTIATE);
 	
 	_sc = new Atlas::Net::StreamConnect(_clientName, *_stream, _bridge);

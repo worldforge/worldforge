@@ -36,7 +36,7 @@ Connection* Connection::_theConnection = NULL;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
 Connection::Connection(const string &cnm) :
-	BaseConnection(cnm, this),
+	BaseConnection(cnm, "game_", this),
 	_statusLock(0)
 {
 	// setup the singleton instance variable
