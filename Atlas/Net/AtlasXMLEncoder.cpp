@@ -82,13 +82,13 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 		printf("%s</float_list>\n",pre.c_str());
 	} 
 	if (list.isStringList()) {
-		printf("%s<str_list%s>\n", pre.c_str(), nam.c_str());
+		printf("%s<string_list%s>\n", pre.c_str(), nam.c_str());
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
 			list.get(i, tmp);
 			walkTree(nest+1, "", tmp);
 		}
-		printf("%s</str_list>\n",pre.c_str());
+		printf("%s</string_list>\n",pre.c_str());
 	} 
 
 	if (list.isMap()) {
@@ -105,13 +105,13 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 	} 
 
 	if (list.isString()) {
-		printf("%s<str%s>%s</str>\n",
+		printf("%s<string%s>%s</string>\n",
 			pre.c_str(), nam.c_str(),list.asString().c_str()
 		);
 	}
 	if (list.isURI()) {
-		printf("%s<uri%s>%li</uri>\n",
-			pre.c_str(), nam.c_str(),list.asLong()
+		printf("%s<uri%s>%s</uri>\n",
+			pre.c_str(), nam.c_str(),list.getURIPath().asString().c_str()
 		);
 	}
 	if (list.isInt()) {

@@ -149,6 +149,9 @@ static void dump(const AObject& msg);
 	int		get(const string& name, AObject& val) const;
 
 /** (Map) get an Int attribute */
+	int		get(const string& name, int& val) const;
+
+/** (Map) get an Long attribute */
 	int		get(const string& name, long& val) const;
 
 /** (Map) get a Float attribute */
@@ -163,6 +166,9 @@ static void dump(const AObject& msg);
                           const;
 
 /** (Map) get an Int attribute */
+	int		get(const string& name, int& val, int def) const;
+
+/** (Map) get an Long attribute */
 	int		get(const string& name, long& val, long def) const;
 
 /** (Map) get a Float attribute */
@@ -178,6 +184,9 @@ static void dump(const AObject& msg);
 	int		set(const string& name, const AObject& src);
 
 /** (Map) set an Int attribute */
+	int		set(const string& name, int src);
+
+/** (Map) set an Long attribute */
 	int		set(const string& name, long src);
 
 /** (Map) set a Float attribute */
@@ -308,6 +317,8 @@ static	AObject	mkStringList(int len);
 /** (List) insert an AObject at this index */
 	int		insert(int ndx, const AObject& val);
 /** (List) insert an Int at this index */
+	int		insert(int ndx, int val);
+/** (List) insert an Long at this index */
 	int		insert(int ndx, long val);
 /** (List) insert a Float at this index */
 	int		insert(int ndx, double val);
@@ -317,6 +328,8 @@ static	AObject	mkStringList(int len);
 /** (List) append an AObject */
 	int		append(const AObject& val);
 /** (List) append an Int */
+	int		append(int val);
+/** (List) append an Long */
 	int		append(long val);
 /** (List) append a Float */
 	int		append(double val);
@@ -326,6 +339,8 @@ static	AObject	mkStringList(int len);
 /** (List) replace an AObject at this index */
 	int		set(int ndx, const AObject& src);
 /** (List) replace an Int at this index */
+	int		set(int ndx, int val);
+/** (List) replace an Long at this index */
 	int		set(int ndx, long val);
 /** (List) replace a Float at this index */
 	int		set(int ndx, double val);
@@ -335,6 +350,8 @@ static	AObject	mkStringList(int len);
 /** (List) get an AObject from this index */
 	int		get(int ndx, AObject& src) const;
 /** (List) get an Int from this index */
+	int		get(int ndx, int& val) const;
+/** (List) get an Long from this index */
 	int		get(int ndx, long& val) const;
 /** (List) get a Float from this index */
 	int		get(int ndx, double& val) const;
@@ -344,6 +361,8 @@ static	AObject	mkStringList(int len);
 /** (List) get an AObject from this index with default */
 	int		get(int ndx, AObject& src, AObject& def) const;
 /** (List) get an Int from this index */
+	int		get(int ndx, int& val, int def) const;
+/** (List) get an Long from this index */
 	int		get(int ndx, long& val, long def) const;
 /** (List) get a Float from this index */
 	int		get(int ndx, double& val, double def) const;

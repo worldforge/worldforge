@@ -13,7 +13,7 @@
 #include <multimap.h>
 using namespace std;
 
-#include <Atlas.h>
+#include <AtlasTransport.h>
 
 #include "Arg.h"
 
@@ -68,8 +68,8 @@ public:
     
 private:
 
-    long m_serialno;
-    long m_nextserialno;
+    int m_serialno;
+    int m_nextserialno;
 
     AObject m_reply;
     multimap<string, fptr_abstract*> m_msghandlers;

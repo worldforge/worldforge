@@ -10,7 +10,7 @@
 
 void AUserClient::gotMsg(const AObject& msg)
 {
-    long refno;
+    int refno;
     msg.get("refno", refno, 0);
     if((m_serialno) && (refno == m_serialno)) {
         m_reply = msg;
@@ -22,7 +22,9 @@ void AUserClient::gotMsg(const AObject& msg)
     bool found = false;
     AObject parent; string msgOp;
     msg.get("parent", parent);
-    parent.get(0, msgOp);
+    AObject msgOpObj;
+    parent.get(0, msgOpObj);
+    msgOp=msgOpObj.getURIPath().asString();
     for (I = m_msghandlers.begin(); I != m_msghandlers.end(); I++) {
         if ((*I).first == msgOp) {
             (*I).second->use(msg);
@@ -73,7 +75,7 @@ AObject AUserClient::createOperation(const string& id, Arg* args ...)
 {
     AObject op;
     op.set("abstract_type", "operation");
-    AObject parent = AObject::mkList(0);
+    AObject parent = AObject::mkURIList(0);
     parent.append(id);
     op.set("parent", parent);
     op.set("serialno", m_nextserialno++);

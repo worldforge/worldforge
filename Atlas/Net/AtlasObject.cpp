@@ -230,6 +230,18 @@ int	AObject::get(const string& name, AObject& val) const
 	return 1;
 }
 
+int	AObject::get(const string& name, int& val) const
+{
+	assert((unsigned long)obj != 1);
+	//it should check PyDict_GetItemString(obj,tmp) result, not this object! 
+        //same for other get methods
+        //if (!this->isLong()) return 0;
+	char* tmp = strdup(name.c_str());
+	val = PyInt_AsLong(PyDict_GetItemString(obj,tmp));
+	free(tmp);
+	return 1;
+}
+
 int	AObject::get(const string& name, long& val) const
 {
 	assert((unsigned long)obj != 1);
@@ -274,6 +286,19 @@ int	AObject::get(const string& name, AObject& val, AObject& def) const
 		val = def;
 	free(tmp);
 	assert(val.obj->ob_refcnt > 1);
+	return 1;
+}
+
+int	AObject::get(const string& name, int& val, int def) const
+{
+	assert((unsigned long)obj != 1);
+	//if (!this->isLong()) return 0;
+	char* tmp = strdup(name.c_str());
+	if (has(name))
+		val = PyInt_AsLong(PyDict_GetItemString(obj,tmp));
+	else
+		val = def;
+	free(tmp);
 	return 1;
 }
 
@@ -328,6 +353,14 @@ int	AObject::get(int ndx, AObject& val) const
 	return 1;
 }
 
+int	AObject::get(int ndx, int& val) const
+{
+	assert((unsigned long)obj != 1);
+	//if (!this->isLong()) return 0;
+	val = PyInt_AsLong(PySequence_GetItem(obj,ndx));
+	return 1;
+}
+
 int	AObject::get(int ndx, long& val) const
 {
 	assert((unsigned long)obj != 1);
@@ -363,6 +396,22 @@ int	AObject::get(int ndx, AObject& val, AObject& def) const
 	}
 	val = AObject(PySequence_GetItem(obj,ndx));
 	assert(val.obj->ob_refcnt > 1);
+	return 1;
+}
+
+int	AObject::get(int ndx, int& val, int def) const
+{
+	assert((unsigned long)obj != 1);
+	if (ndx > PyObject_Length(obj)) {
+		val = def;
+		return 0;
+	}
+	PyObject* tmp = PySequence_GetItem(obj,ndx);
+	if (!PyInt_Check(tmp)) {
+		val = def;
+		return 0;
+	}
+	val = PyInt_AsLong(tmp);
 	return 1;
 }
 
@@ -440,6 +489,24 @@ int	AObject::set(const string& name, const string& src)
 	return res;
 }
 
+int	AObject::set(const string& name, int src)
+{
+	assert((unsigned long)obj != 1);
+	DebugMsg1(5,"Make key copy","");
+	char* tmp = strdup(name.c_str());
+	DebugMsg1(5,"Make value object","");
+	PyObject* ptmp = PyInt_FromLong(src);
+	DebugMsg1(5,"Store to Dict","");
+	int res = PyDict_SetItemString(obj, tmp, ptmp);
+	DebugMsg1(5,"Release ownership","");
+	//Py_XDECREF(ptmp);
+	//assert(ptmp->ob_refcnt == 1);
+	DebugMsg1(5,"Releses key copy","");
+	free(tmp);
+	DebugMsg1(5,"Return Result","");
+	return res;
+}
+
 int	AObject::set(const string& name, long src)
 {
 	assert((unsigned long)obj != 1);
@@ -478,6 +545,13 @@ int	AObject::set(int ndx, const AObject& src)
 
 	return PySequence_SetItem(obj, ndx, src.obj);
 	Py_XINCREF(src.obj);
+}
+
+int	AObject::set(int ndx, int src)
+{
+	assert((unsigned long)obj != 1);
+	//if (!this->isLong()) return 0;
+	return PySequence_SetItem(obj, ndx, PyInt_FromLong(src));
 }
 
 int	AObject::set(int ndx, long src)
@@ -555,6 +629,17 @@ int	AObject::append(const AObject& src)
 	return -1;
 }
 
+int	AObject::append(int src)
+{
+	int res = -1;
+	PyObject* ptmp = PyInt_FromLong(src);
+	if (PyList_Check(obj))		res = PyList_Append(obj, ptmp);
+	if (IntList_Check(obj))		res = IntList_Append(obj, ptmp);
+	if (LongList_Check(obj))	res = LongList_Append(obj, ptmp);
+	Py_XDECREF(ptmp);
+        return res;
+}
+
 int	AObject::append(long src)
 {
 	int res = -1;
@@ -580,9 +665,15 @@ int	AObject::append(const string& src)
 {
 	int res = -1;
 	char* tmp = strdup(src.c_str());
-	PyObject* ptmp = PyString_FromString(tmp);
-	if (PyList_Check(obj))		res = PyList_Append(obj, ptmp);
-	if (StringList_Check(obj))	res = StringList_Append(obj, ptmp);
+        PyObject* ptmp;
+        if (URIList_Check(obj)) {
+		ptmp = URI_New(src.c_str());
+		res = URIList_Append(obj, ptmp);
+        } else {
+		ptmp = PyString_FromString(tmp);
+		if (PyList_Check(obj))		res = PyList_Append(obj, ptmp);
+		if (StringList_Check(obj))	res = StringList_Append(obj, ptmp);
+        }
 	Py_XDECREF(ptmp);
 	free(tmp);
 	return res;
@@ -621,6 +712,17 @@ int	AObject::insert(int ndx, double src)
 	PyObject* ptmp = PyFloat_FromDouble(src);
 	if (PyList_Check(obj))		res = PyList_Insert(obj, ndx, ptmp);
 	if (FloatList_Check(obj))	res = FloatList_Insert(obj, ndx, ptmp);
+	Py_XDECREF(ptmp);
+	return res;
+}
+
+int	AObject::insert(int ndx, int src)
+{
+	int res = -1;
+	PyObject* ptmp = PyInt_FromLong(src);
+	if (PyList_Check(obj))		res = PyList_Insert(obj, ndx, ptmp);
+	if (IntList_Check(obj))		res = IntList_Insert(obj, ndx, ptmp);
+	if (LongList_Check(obj))	res = LongList_Insert(obj, ndx, ptmp);
 	Py_XDECREF(ptmp);
 	return res;
 }
@@ -879,8 +981,8 @@ void AObject::walkTree(int nest, string name, const AObject& list)
 		);
 	}
 	if (list.isURI()) {
-		DebugMsg3(0,"%s<uri%s>%li</uri>",
-			pre.c_str(), nam.c_str(),list.asLong()
+		DebugMsg3(0,"%s<uri%s>%s</uri>",
+			pre.c_str(), nam.c_str(),list.getURIPath().asString().c_str()
 		);
 	}
 	if (list.isInt()) {
