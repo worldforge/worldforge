@@ -275,7 +275,7 @@ dnl Test for socklen_t -- sdt
 
 dnl AC_CHECK_TYPE(socklen_t, int)
 AC_TRY_COMPILE([#include <sys/types.h>], [
-  socklen_t t
+  socklen_t t;
 ], ,AC_DEFINE(socklen_t, int))
 
 dnl Generate files
