@@ -204,12 +204,12 @@ void Avatar::onEntityAppear(Entity* ent)
     }
 }
 
-void Avatar::onCharacterChildAdded(Entity*, Entity* child)
+void Avatar::onCharacterChildAdded(Entity* child)
 {
     InvAdded.emit(child);
 }
 
-void Avatar::onCharacterChildRemoved(Entity*, Entity* child)
+void Avatar::onCharacterChildRemoved(Entity* child)
 {
     InvRemoved.emit(child);
 }

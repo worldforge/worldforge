@@ -165,28 +165,28 @@ public:
     }
 	
 // Signals
-    SigC::Signal2<void, Entity*, Entity*> ChildAdded;
-    SigC::Signal2<void, Entity*, Entity*> ChildRemoved;
+    SigC::Signal1<void, Entity*> ChildAdded;
+    SigC::Signal1<void, Entity*> ChildRemoved;
     
     /// Signal that the entity's container changed
     /** emitted when our location changes. First argument is the entity,
     second is the old location. The new location can be found via getLocation.
     Note either the old or new location might be NULL.
     */
-    SigC::Signal2<void, Entity*, Entity*> LocationChanged;
+    SigC::Signal1<void, Entity*> LocationChanged;
 
     /** Emitted when one or more attributes change. The arguments are the
     Entity which changed, and a set of attribute IDs which were modified. */
-    SigC::Signal2<void, Entity*, const StringSet&> Changed;
+    SigC::Signal1<void, const StringSet&> Changed;
 
     /** Emitted when then entity's position, orientation or velocity change.
     Argument is the entity that moved, so you can bind the same slot to
     multiple entities if desired. */
-    SigC::Signal1<void, Entity*> Moved;
+    SigC::Signal0<void> Moved;
 
     /** Emitted when an entity starts or stops moving (as determined by the
     'inMotion' method. */
-    SigC::Signal2<void, Entity*, bool> Moving;
+    SigC::Signal1<void, bool> Moving;
 
     /** Emitted with this entity speaks. In the future langauge may be specified */
     SigC::Signal1<void, const std::string&> Say;
@@ -204,7 +204,7 @@ public:
     */
     SigC::Signal1<void, const Atlas::Objects::Root&> Acted;
     
-    SigC::Signal2<void, Entity*, bool> VisibilityChanged;
+    SigC::Signal1<void, bool> VisibilityChanged;
         
 protected:	        
     /** over-rideable initialisation helper. When subclassing, if you
@@ -225,7 +225,7 @@ protected:
     */
     virtual bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
 	
-    virtual void onLocationChanged(Entity* oldLoc, Entity* newLoc);
+    virtual void onLocationChanged(Entity* oldLoc);
     
     /** over-rideable hook method when then Entity position, orientation or
     velocity change. The default implementation emits the Moved signal. */
@@ -258,6 +258,18 @@ protected:
     If you over-ride this, you <em>must</em> call the base version, or motion prediction
     will stop working for the entity. */
     virtual void setMoving(bool moving);
+    
+    /**
+    Over-rideable hook when child entities are added. The default implementation
+    emits the ChildAdded signal.
+    */
+    virtual void onChildAdded(Entity* child);
+    
+    /**
+    Over-rideable hook when child entities are removed. The default implementation
+    emits the Childremoved signal.
+    */
+    virtual void onChildRemoved(Entity* child);
 
 private:
     friend class IGRouter;

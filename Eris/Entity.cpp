@@ -198,14 +198,14 @@ void Entity::onTalk(const Root& talkArgs)
     Say.emit(talkArgs->getAttr("say").asString());
 }
 
-void Entity::onLocationChanged(Entity* oldLoc, Entity* newLoc)
+void Entity::onLocationChanged(Entity* oldLoc)
 {
-    LocationChanged.emit(newLoc, oldLoc);
+    LocationChanged.emit(oldLoc);
 }
 
 void Entity::onMoved()
 {
-    Moved.emit(this);
+    Moved.emit();
 }
 
 void Entity::onAction(const Atlas::Objects::Root& arg)
@@ -227,7 +227,17 @@ void Entity::setMoving(bool inMotion)
     m_moving = inMotion;
     if (m_moving) m_view->addToPrediction(this);
     
-    Moving.emit(this, inMotion);
+    Moving.emit(inMotion);
+}
+
+void Entity::onChildAdded(Entity* child)
+{
+    ChildAdded.emit(child);
+}
+
+void Entity::onChildRemoved(Entity* child)
+{
+    ChildRemoved(child);
 }
 
 #pragma mark -
@@ -305,7 +315,7 @@ void Entity::endUpdate()
         
     if (--m_updateLevel == 0) // unlocking updates
     {
-        Changed.emit(this, m_modifiedAttrs);
+        Changed.emit(m_modifiedAttrs);
         
         if (m_modifiedAttrs.count("pos") || 
             m_modifiedAttrs.count("velocity") ||
@@ -359,7 +369,7 @@ void Entity::setLocation(Entity* newLocation)
     Entity* oldLocation = m_location;
     m_location = newLocation;
     
-    onLocationChanged(oldLocation, newLocation);
+    onLocationChanged(oldLocation);
     
 // fire VisChanged and Appearance/Disappearance signals
     updateCalculatedVisibility(wasVisible);
@@ -448,7 +458,7 @@ bool Entity::hasChild(const std::string& eid) const
 void Entity::addChild(Entity* e)
 {
     m_contents.push_back(e);
-    ChildAdded.emit(this, e);
+    onChildAdded(e);
     assert(e->getLocation() == this);
 }
 
@@ -461,7 +471,7 @@ void Entity::removeChild(Entity* e)
         if (*C == e)
         {
             m_contents.erase(C);
-            ChildRemoved.emit(this, e);
+            onChildRemoved(e);
             return;
         }
     }
@@ -521,7 +531,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
 
 void Entity::onVisibilityChanged(bool vis)
 {
-    VisibilityChanged.emit(this, vis);
+    VisibilityChanged.emit(vis);
 }
 
 } // of namespace 

@@ -1,5 +1,19 @@
 2004-10-30  James Turner  <james@worldforge.org>
 
+	* Eris/Entity.cpp: add virtual hooks for ChildAdded / Removed, as
+	  requested by Erik. The default implementation emits the
+	  existing signals as you'd expect.
+	
+	* Eris/Entity.cpp: change the signatures of almost all the signals on
+	  Entity to NOT include 'this' as an argument. If you want this
+	  behaviour, please use the SigC::bind<> templates at connect time.
+	  Additional, LocationChanged now only includes the previous location:
+	  the new location is available directly from the Entity.
+
+	* Eris/Avatar.cpp: update Avatar for the new signal signature
+	
+2004-10-30  James Turner  <james@worldforge.org>
+
 	* Eris/TypeObject.cpp: actually emit the BoundType signal from the
 	  TypeService, as well as the Bound signal on TypeObject. Ooops.
 
