@@ -82,8 +82,6 @@ class RotBox
   bool isValid() const {return m_corner0.isValid() && m_size.isValid()
 	&& m_orient.isValid();}
 
-  bool operator< (const RotBox& b) const;
-
   // Descriptive characteristics
 
   int numCorners() const {return 1 << dim;}

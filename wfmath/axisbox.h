@@ -95,9 +95,6 @@ class AxisBox
 
   bool isValid() const {return m_low.isValid() && m_high.isValid();}
 
-  bool operator< (const AxisBox& a) const
-	{return m_low < a.m_low || (m_low != a.m_low && m_high < a.m_high);}
-
   // Descriptive characteristics
 
   int numCorners() const {return 1 << dim;}

@@ -84,13 +84,6 @@ class Shape
   /// generic: returns true if the class instance has been initialized
   bool isValid() const {return m_valid;}
 
-  /// generic: WARNING! DON'T USE!
-  /**
-   * This operator is for sorting only. It does not
-   * reflect any sensible property of the class.
-   **/
-  bool operator< (const Shape& a) const;
-
   // Now we begin with the functions in the shape interface
 
   // Descriptive characteristics

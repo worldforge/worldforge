@@ -104,28 +104,6 @@ bool Polygon<2>::isValid() const
 }
 
 //template<>
-bool Polygon<2>::operator< (const Polygon& p) const
-{
-  if(m_points.size() < p.m_points.size())
-    return true;
-  if(p.m_points.size() < m_points.size())
-    return false;
-
-  theConstIter i1 = m_points.begin(), i2 = p.m_points.begin(), end = m_points.end();
-
-  while(i1 != end) {
-    if(*i1 < *i2)
-      return true;
-    if(*i2 < *i1)
-      return false;
-    ++i1;
-    ++i2;
-  }
-
-  return false;
-}
-
-//template<>
 Polygon<2>& Polygon<2>::shift(const Vector<2>& v)
 {
   for(theIter i = m_points.begin(); i != m_points.end(); ++i)

@@ -43,7 +43,6 @@ void test_general(const C& c)
   assert(Equal(c1, c2));
   assert(c1 == c2);
   assert(!(c1 != c2));
-  assert(!(c1 < c2));
 
   std::string s = ToString(c); // Uses operator<<() implicitly
   C c3;

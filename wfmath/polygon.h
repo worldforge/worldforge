@@ -68,10 +68,6 @@ class Polygon<2>
 
   bool isValid() const;
 
-  // WARNING! This operator is for sorting only. It does not
-  // reflect any property of the polygon.
-  bool operator< (const Polygon& p) const;
-
   // Descriptive characteristics
 
   int numCorners() const {return m_points.size();}
@@ -276,10 +272,6 @@ class Polygon
   bool operator!=(const Polygon& p) const	{return !isEqualTo(p);}
 
   bool isValid() const {return m_poly.isValid();}
-
-  // WARNING! This operator is for sorting only. It does not
-  // reflect any property of the polygon.
-  bool operator< (const Polygon& p) const;
 
   // Descriptive characteristics
 

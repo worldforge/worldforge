@@ -63,25 +63,6 @@ inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
   return true;
 }
 
-// WARNING! This operator is for sorting only. It does not
-// reflect any property of the box.
-template<const int dim>
-inline bool Polygon<dim>::operator< (const Polygon<dim>& s) const
-{
-  int size = m_poly.numCorners(), s_size = s.m_poly.numCorners();
-
-  if(size != s_size)
-    return size < s_size;
-
-  for(int i = 0; i < size; ++i) {
-    Point<dim> p = getCorner(i), sp = s.getCorner(i);
-    if(p != sp)
-      return p < sp;
-  }
-
-  return false;
-}
-
 template<const int dim>
 inline Point<dim> _Poly2Orient<dim>::convert(const Point<2>& p) const
 {

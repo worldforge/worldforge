@@ -2,8 +2,8 @@ dnl Process this file with autoconf to produce a configure script.
 AC_INIT(wfmath/wfmath.h)
 
 WFMATH_MAJOR=0
-WFMATH_MINOR=2
-WFMATH_MICRO=11
+WFMATH_MINOR=3
+WFMATH_MICRO=0
 WFMATH_VERSION=$WFMATH_MAJOR.$WFMATH_MINOR.$WFMATH_MICRO
 
 AC_SUBST(WFMATH_MAJOR)
@@ -12,7 +12,7 @@ AC_SUBST(WFMATH_MICRO)
 AC_SUBST(WFMATH_VERSION)
 
 dnl versioning info for libtool
-WFMATH_CURRENT=2
+WFMATH_CURRENT=3
 WFMATH_REVISION=0
 WFMATH_AGE=0
 WFMATH_VERSION_INFO=$WFMATH_CURRENT:$WFMATH_REVISION:$WFMATH_AGE
@@ -34,7 +34,7 @@ dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
 SYSTEM_LIBS="-lm"
 WFMATH_CFLAGS=""
-WFMATH_LIB_SUFFIX="-0.2"
+WFMATH_LIB_SUFFIX="-0.3"
 WFMATH_LIBS="-lwfmath$WFMATH_LIB_SUFFIX"
 
 AC_MSG_NOTICE([Ignore the Atlas checks, they're just used for building test code])
@@ -81,7 +81,6 @@ AC_OUTPUT([Makefile
            atlas/Makefile 
            doc/Makefile
            doc/Doxyfile
-           wfmath-config
            wfmath.spec
-           wfmath-0.2.pc
+           wfmath-0.3.pc
 ])

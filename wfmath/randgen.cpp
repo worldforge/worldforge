@@ -71,9 +71,20 @@ double WFMath::DRand() // returns between 0 and 1
 
 unsigned int WFMath::IRand(unsigned int max) // returns from 0 to arg-1
 {
-  assert(max > 0 && MyRandMax >= max);
-  unsigned int divisor = MyRandMax / max;
-  unsigned int rand_val = MyRand();
+  assert("Need valid input" && max > 0);
+
+  unsigned rand_max = MyRandMax, rand_val = MyRand();
+  // The UINT_MAX check should make it easier for the
+  // compiler to optimize this away when it's not needed.
+  while(UINT_MAX > MyRandMax && max > rand_max) {
+    if(max == rand_max + 1)
+      return rand_val;
+    // deal with 16 bit rand with 32 bit ints
+    rand_val += MyRand() * (rand_max + 1);
+    rand_max += MyRandMax * (rand_max + 1);
+  }
+
+  unsigned int divisor = rand_max / max;
   unsigned int ans = rand_val / divisor;
 
   if(ans < max)
@@ -81,7 +92,7 @@ unsigned int WFMath::IRand(unsigned int max) // returns from 0 to arg-1
 
   // Rounding error, rare case
 
-  unsigned int leftover = RAND_MAX - rand_val;
+  unsigned int leftover = rand_max - rand_val;
   assert(leftover < max);
   return leftover;
 }

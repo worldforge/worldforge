@@ -1,3 +1,23 @@
+Monday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Updated version number to 0.3 in preparation for doing
+	  a release next week.
+	* Got rid of wfmath-config, we won't support it in 0.3.
+	* Added instring_test, which tests both IntToString() and IRand().
+	* Got rid of operator<() in all classes except for those
+	  in timestamp.*. It was only there 'so we could use wfmath
+	  classes as keys in std::map'. However, since equality
+	  isn't transitive (a == b && b == c does not imply a == c),
+	  this has some problems. If you really want a map of spatial
+	  objects, you probably want something like stage's OctTree
+	  instead.
+	* Fixed IRand() to deal with the fact that UINT_MAX is often
+	  larger than RAND_MAX.
+	* Added a few inline IntToString() cases to make sure short
+	  and int get cast to the appropriate (signed or unsigned)
+	  version of long.
+	* Added int_to_string.h to wfmath.h.
+
 Monday, August 4th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Added IntToString() utility function, because I'm tired of

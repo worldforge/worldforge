@@ -14,7 +14,6 @@ aclocal.m4
 autom4te.cache
 config.h
 stamp-h*
-wfmath-config
 wfmath.spec
-wfmath-0.2.pc
+wfmath-0.3.pc
 wfmath-*.tar.gz

@@ -86,8 +86,6 @@ class Quaternion
   /// Set the Quaternion to the identity rotation
   Quaternion& identity() {m_w = 1; m_vec.zero(); m_valid = true; return *this;} // Set to null rotation
 
-  bool operator< (const Quaternion& rhs) const;
-
   // Operators
 
   ///

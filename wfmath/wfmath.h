@@ -51,6 +51,7 @@
 #include <wfmath/shuffle.h>
 // iostreams and strings
 #include <wfmath/stream.h>
+#include <wfmath/int_to_string.h>
 
 // Don't include atlasconv.h, which includes <Atlas/Message/Object.h>
 // There is, however, no linker dependency on atlas in the library,

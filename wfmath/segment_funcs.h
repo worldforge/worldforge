@@ -40,15 +40,6 @@ inline bool Segment<dim>::isEqualTo(const Segment<dim>& s, double epsilon) const
 }
 
 template<const int dim>
-inline bool Segment<dim>::operator< (const Segment& s) const
-{
-  if(!Equal(m_p1, s.m_p1))
-    return m_p1 < s.m_p1;
-  else
-    return m_p2 < s.m_p2;
-}
-
-template<const int dim>
 inline Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
 {
   assert(corner == 0 || corner == 1);

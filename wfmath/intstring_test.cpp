@@ -1,7 +1,7 @@
-// int_to_string.h (Simple integer to std::string conversion)
+// intstring_test.cpp (IntToString() test functions)
 //
 //  The WorldForge Project
-//  Copyright (C) 2001, 2002  The WorldForge Project
+//  Copyright (C) 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,22 +21,32 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 
 // Author: Ron Steinke
-// Created: 2003-8-4
+// Created: 2002-1-28
 
-#ifndef WFMATH_INT_TO_STRING_H
-#define WFMATH_INT_TO_STRING_H
+#include "int_to_string.h"
+#include "randgen.h"
 
-#include <string>
+#include <climits>
+#include <cstdlib>
 
-namespace WFMath {
+using namespace WFMath;
 
-std::string IntToString(unsigned long);
-std::string IntToString(long);
-std::string IntToString(unsigned int val) {return IntToString((unsigned long) val);}
-std::string IntToString(int val) {return IntToString((long) val);}
-std::string IntToString(unsigned short val) {return IntToString((unsigned long) val);}
-std::string IntToString(short val) {return IntToString((long) val);}
+static void TestConvert()
+{
+  for(unsigned i = 0; i < 100; ++i) {
+    unsigned int val = IRand(UINT_MAX);
+    assert(strtoul(IntToString(val).c_str(), 0, 0) == val);
+    // This assignment changes the value, but we just want a
+    // random number, so we don't care. Large unsigned ints will
+    // provide us negative numbers for testing.
+    int val2 = (int) val;
+    assert(atoi(IntToString(val2).c_str()) == val2);
+  }
+}
 
-} // namespace WFMath
+int main()
+{
+  TestConvert();
 
-#endif // WFMATH_INT_TO_STRING_H
+  return 0;
+}

@@ -88,8 +88,6 @@ class Ball
 
   bool isValid() const {return m_center.isValid();}
 
-  bool operator< (const Ball& b) const;
-
   // Descriptive characteristics
 
   int numCorners() const {return 0;}

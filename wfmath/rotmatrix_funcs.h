@@ -79,20 +79,6 @@ inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) c
   return true;
 }
 
-template<const int dim>
-inline bool RotMatrix<dim>::operator< (const RotMatrix<dim>& m) const
-{
-  if(operator==(m))
-    return false;
-
-  for(int i = 0; i < dim; ++i)
-    for(int j = 0; j < dim; ++j)
-      if(m_elem[i][j] != m.m_elem[i][j])
-        return m_elem[i][j] < m.m_elem[i][j];
-
-  assert(false);
-}
-
 template<const int dim> // m1 * m2
 inline RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {

@@ -42,15 +42,6 @@ inline bool Ball<dim>::isEqualTo(const Ball<dim>& b, double epsilon) const
 }
 
 template<const int dim>
-inline bool Ball<dim>::operator< (const Ball<dim>& b) const
-{
-  if(!Equal(m_radius, b.m_radius))
-    return m_radius < b.m_radius;
-
-  return m_center < b.m_center;
-}
-
-template<const int dim>
 AxisBox<dim> Ball<dim>::boundingBox() const
 {
   Point<dim> p_low, p_high;

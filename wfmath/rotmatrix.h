@@ -111,8 +111,6 @@ class RotMatrix {
   /// set the matrix to the identity matrix
   RotMatrix& identity();
 
-  bool operator< (const RotMatrix& m) const;
-
   /// get the (i, j) element of the matrix
   CoordType elem(const int i, const int j) const
 	{assert(i >= 0 && j >= 0 && i < dim && j < dim); return m_elem[i][j];}

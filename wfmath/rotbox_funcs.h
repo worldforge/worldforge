@@ -53,18 +53,6 @@ inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
       && Equal(m_orient, b.m_orient, epsilon);
 }
 
-// WARNING! This operator is for sorting only. It does not
-// reflect any property of the box.
-template<const int dim>
-inline bool RotBox<dim>::operator< (const RotBox<dim>& a) const
-{
-  if(!Equal(m_corner0, a.m_corner0))
-    return m_corner0 < a.m_corner0;
-  if(!Equal(m_size, a.m_size))
-    return m_size < a.m_size;
-  return m_orient < a.m_orient;
-}
-
 template<const int dim>
 inline Point<dim> RotBox<dim>::getCorner(int i) const
 {

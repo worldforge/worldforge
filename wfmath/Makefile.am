@@ -25,7 +25,8 @@ libwfmath_0_2_la_SOURCES = basis.h const.cpp stream.cpp int_to_string.cpp \
 libwfmath_0_2_la_LDFLAGS = -lm -version-info @WFMATH_VERSION_INFO@
 
 check_PROGRAMS = vector_test rotmatrix_test point_test \
-	quaternion_test shape_test polygon_test probability_test const_test
+	quaternion_test shape_test polygon_test probability_test \
+	const_test intstring_test
 TESTS = $(check_PROGRAMS)
 
 vector_test_SOURCES = vector_test.cpp general_test.h
@@ -59,3 +60,7 @@ probability_test_LDADD = libwfmath-0.2.la
 const_test_SOURCES = const_test.cpp
 const_test_LDFLAGS = -lm
 const_test_LDADD = libwfmath-0.2.la
+
+intstring_test_SOURCES = intstring_test.cpp
+intstring_test_LDFLAGS = -lm
+intstring_test_LDADD = libwfmath-0.2.la

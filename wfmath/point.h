@@ -123,8 +123,6 @@ class Point
   /// Set point to (0,0,...,0)
   Point& setToOrigin();
 
-  bool operator< (const Point& rhs) const;
-
   // Operators
 
   // Documented in vector.h

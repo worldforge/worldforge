@@ -146,8 +146,6 @@ class Vector {
   /// Zero the components of a vector
   Vector& zero();
 
-  bool operator< (const Vector& v) const;
-
   // Math operators
 
   /// Add the second vector to the first

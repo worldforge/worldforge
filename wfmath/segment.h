@@ -73,8 +73,6 @@ class Segment
 
   bool isValid() const {return m_p1.isValid() && m_p2.isValid();}
 
-  bool operator< (const Segment& s) const;
-
   // Descriptive characteristics
 
   int numCorners() const {return 2;}

@@ -152,28 +152,6 @@ inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
     return p;
 }
 
-// Pointinate comparison operator, most likely only used for sorting
-// in an STL container.  The implementation is fairly arbitrary, but
-// consistent, i.e., it satisfies the following constraint:
-//
-//   !(a < b) && !(b < a) => a == b
-//
-// The implementation doesn't express any physical or geometrical
-// relationship (e.g., vector magnitude or distance from origin).
-template<const int dim>
-inline bool Point<dim>::operator< (const Point<dim>& rhs) const
-{
-  if(operator==(rhs))
-    return false;
-
-  for(int i = 0; i < dim; ++i)
-    if(m_elem[i] != rhs.m_elem[i])
-      return m_elem[i] < rhs.m_elem[i];
-
-  assert(false);
-  return false; // keep compiler happy
-}
-
 template<const int dim>
 inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
 {

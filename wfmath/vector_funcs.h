@@ -66,20 +66,6 @@ inline bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
   return true;
 }
 
-template<const int dim>
-inline bool Vector<dim>::operator< (const Vector<dim>& v) const
-{
-  if(operator==(v))
-    return false;
-
-  for(int i = 0; i < dim; ++i)
-    if(m_elem[i] != v.m_elem[i])
-      return m_elem[i] < v.m_elem[i];
-
-  assert(false); // Checked for equality earlier
-  return false; // Keep compiler happy
-}
-
 template <const int dim>
 inline Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
 {
