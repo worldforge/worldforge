@@ -1,3 +1,7 @@
+
+2004-03-17  Kai Blin  <blin@gmx.net>
+* eris.dox.in: updated to work with a current version of doxygen
+	
 2004-03-16 James Turner <james@worldforge.org>
 
 * Getting the in-progress test code to build, so it's not such
