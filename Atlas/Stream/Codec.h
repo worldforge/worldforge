@@ -5,28 +5,44 @@
 #ifndef ATLAS_STREAM_CODEC_H
 #define ATLAS_STREAM_CODEC_H
 
-#include "../Object/Object.h"
+#include "Encoder.h"
+#include "Decoder.h"
+#include "Filter.h"
 
-#include <string>
+#include "../Object/Object.h"
 
 namespace Atlas
 {
     namespace Stream
     {
-	enum Type
-	{
-	    LIST,
-	    MAP,
-	};
-	
-	void Begin(const std::string& name, Type);
-	void End();
-	
-	void Send(const std::string& name, int value);
-	void Send(const std::string& name, float value);
-	void Send(const std::string& name, const std::string& value);
-	void Send(const std::string& name, const Object& value);
+	class Codec;
     }
 }
+
+class Atlas::Stream::Codec
+{
+    public:
+   
+    enum Container
+    {
+	LIST,
+	MAP,
+    };
+    
+    virtual void Begin(Container) = 0;
+    virtual void Begin(const std::string& name, Container) = 0;
+    
+    virtual void End() = 0;
+    
+    virtual void Send(int) = 0;
+    virtual void Send(float) = 0;
+    virtual void Send(const std::string&) = 0;
+    virtual void Send(const Object&) = 0;
+	
+    virtual void Send(const std::string& name, int) = 0;
+    virtual void Send(const std::string& name, float) = 0;
+    virtual void Send(const std::string& name, const std::string&) = 0;
+    virtual void Send(const std::string& name, const Object&) = 0;
+};
 
 #endif
