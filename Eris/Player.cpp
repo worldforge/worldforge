@@ -286,9 +286,11 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
 	// second time around, don't try again
 	return;
     
-    d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("game_entity",
+    // there will be several anonymous children, I guess
+    d = d->addSubdispatch(ClassDispatcher::newAnonymous());
+    d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("character",
 	SigC::slot(this, &Player::recvSightCharacter)),
-	"character"
+	"game_entity"
     );
     
     d = _con->getDispatcherByPath("op:info:op");

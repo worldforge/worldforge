@@ -3,6 +3,7 @@
 
 #include <map>	
 #include <deque>
+#include <list>
 
 #include <Atlas/Message/Object.h>
 
@@ -52,6 +53,8 @@ protected:
 	friend class StdBranchDispatcher;
 	friend class ClassDispatcher;
 		
+	virtual void purge() = 0;
+	
 	const std::string _name;
 
 	void addRef()
@@ -61,6 +64,9 @@ protected:
 	{if (!(--_refcount)) delete this; }	
 private:	
 	unsigned int _refcount;
+
+    static bool global_inDispatch;
+    static std::list<Dispatcher*> global_needsPurging;
 };
 
 /** A base class for all leaf Dispatcher nodes (currently SignalDispatcher and WaitForDispatcher) This 
@@ -83,6 +89,10 @@ public:
 	
 	virtual bool empty()
 	{ throw InvalidOperation("called empty() on LeafDispatcher " + _name); }
+	
+protected:
+	virtual void purge()
+	{ throw InvalidOperation("called purge() on LeafDispatcher " + _name); }	 
 };
 
 class StdBranchDispatcher:  public Dispatcher
@@ -101,10 +111,13 @@ public:
 	virtual bool empty()
 	{ return _subs.empty(); }
 protected:
+	typedef std::map<std::string, Dispatcher*> DispatcherDict;
+
 	/// dispatch the message to every child node
 	bool subdispatch(DispatchContextDeque &dq);
+	void safeSubErase(const DispatcherDict::iterator &d);
 
-	typedef std::map<std::string, Dispatcher*> DispatcherDict;
+	virtual void purge();
 
 	DispatcherDict _subs;
 };

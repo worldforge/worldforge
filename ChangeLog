@@ -1,3 +1,9 @@
+Wednesday, March 06 2002, James Turner
+
+	* Fixed character looks to actually work (had name and type
+	  name args to ClaassDispatcher child in the wrong order!)
+	* Implemented disptch-safe adding and removal of subdispatchers.
+
 Monday, March 04 2002, Al Riddoch
 
 	* Fix removal of deleted entities from their container.

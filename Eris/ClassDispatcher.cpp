@@ -31,8 +31,11 @@ bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
 {
 	TypeInfoPtr mty = TypeInfo::getSafe(dq.front());
 	if (!mty->isBound()) {
-		Eris::Log(LOG_VERBOSE, "waiting for bind of %s", mty->getName().c_str());
-		new WaitForSignal(mty->getBoundSignal(), dq.back());
+	    Eris::Log(LOG_VERBOSE, "waiting for bind of %s", mty->getName().c_str());
+	    new WaitForSignal(mty->getBoundSignal(), dq.back());
+	    // set dispatched, to avoid warnings about not hitting a leaf
+	    Atlas::Message::Object::MapType &o = dq.back().AsMap();
+	    o["__DISPATCHED__"] = "1";
 	}
 	
 	for (ClassDispatcherList::iterator I=_subs.begin(); I !=_subs.end(); ++I)

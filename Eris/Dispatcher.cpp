@@ -49,13 +49,23 @@ std::string Dispatcher::getAnonymousSuffix(Dispatcher *d)
 
 void Dispatcher::enter()
 {
-    
+    assert(global_inDispatch == false);
+    global_inDispatch = true;
 }
 
 void Dispatcher::exit()
 {
+    assert(global_inDispatch == true);
+    global_inDispatch = false;
     
+    while (!global_needsPurging.empty()) {
+	global_needsPurging.front()->purge();
+	global_needsPurging.pop_front();
+    }
 }
+
+bool Dispatcher::global_inDispatch = false;
+std::list<Dispatcher*> Dispatcher::global_needsPurging;
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -77,11 +87,17 @@ Dispatcher* StdBranchDispatcher::addSubdispatch(Dispatcher *d, const std::string
 		throw InvalidOperation("NULL dispatcher passed to addSubdispatch");
 	std::string nm = d->getName();
 	DispatcherDict::iterator di = _subs.find(nm);
-	if (di != _subs.end())
+	if (di != _subs.end() && (di->second != NULL))
 		throw InvalidOperation("Duplicate dispatcher <" + nm + "> added");
 	
 	d->addRef();
-	_subs.insert(di, DispatcherDict::value_type(nm, d));
+	
+	if (di != _subs.end()) {
+	    /* entry has been removed inside a dispatch, so the map entry still exists. Instead of
+	    inserting, we just update the current one and we're done. */
+	    di->second = d;
+	} else
+	    _subs.insert(di, DispatcherDict::value_type(nm, d));
 	return d;
 }
 
@@ -91,51 +107,73 @@ void StdBranchDispatcher::rmvSubdispatch(Dispatcher *d)
 		throw InvalidOperation("NULL dispatcher passed to rmvSubdispatch");
 	std::string nm = d->getName();
 	DispatcherDict::iterator di = _subs.find(nm);
+	
 	if (di != _subs.end()) {
-		_subs.erase(di);
-		d->decRef();
-		return;
+	    if (di->second == NULL) // might happen with delayed deleteion
+		throw InvalidOperation("duplicate remove of dispatcher " + di->first);
+	    
+	    safeSubErase(di);
+	    d->decRef();
+	    return;
 	}
 	
 	// check for anonymous
 	for (di=_subs.begin(); di!=_subs.end(); ++di)
-		if (di->second->_name[0] == '_') {
-			Dispatcher *ds = di->second->getSubdispatch(nm);
-			if (ds) {
-				di->second->rmvSubdispatch(d);
-				// clean up empty anonymous nodes automatically
-				if (di->second->empty()) {
-					di->second->decRef();
-					_subs.erase(di);
-				}
-				return;
-			}
-		}
+	    if (di->second && (di->second->_name[0] == '_')) {
+		Dispatcher *ds = di->second->getSubdispatch(nm);
+		if (ds) {
+		    di->second->rmvSubdispatch(d);
+		    // clean up empty anonymous nodes automatically
+		    if (di->second->empty()) {
+			di->second->decRef();
+			safeSubErase(di);
+		    }
+		    return;
+	    }
+	}
 }
 
 Dispatcher* StdBranchDispatcher::getSubdispatch(const std::string &nm)
 {
-	DispatcherDict::iterator D = _subs.find(nm);
-	if (D != _subs.end())
+    DispatcherDict::iterator D = _subs.find(nm);
+    if (D != _subs.end())
 		return D->second;
 	
-	// deal with annonymous ones
-	for (D=_subs.begin(); D!=_subs.end(); ++D)
-		if (D->second->_name[0] == '_') {
-			Dispatcher *ds = D->second->getSubdispatch(nm);
-			if (ds)
-				return ds;
-		}
+    // deal with annonymous ones
+    for (D=_subs.begin(); D!=_subs.end(); ++D)
+	if (D->second && (D->second->_name[0] == '_')) {
+	    Dispatcher *ds = D->second->getSubdispatch(nm);
+	    if (ds)
+		return ds;
+	}
 	
-	return NULL;
+    return NULL;
 }
 
 bool StdBranchDispatcher::subdispatch(DispatchContextDeque &dq)
 {
-	for (DispatcherDict::iterator d = _subs.begin(); d!=_subs.end(); ++d)
-		if (d->second->dispatch(dq)) return true;
+    for (DispatcherDict::iterator d = _subs.begin(); d!=_subs.end(); ++d)
+	if (d->second && (d->second->dispatch(dq))) return true;
 	
-	return false;		
+    return false;		
+}
+
+void StdBranchDispatcher::safeSubErase(const DispatcherDict::iterator &D)
+{
+    if (Dispatcher::global_inDispatch) {
+	global_needsPurging.push_back(this); // make sure it gets cleaned up ASAP
+	D->second = NULL;	// remove the entry
+    } else
+	_subs.erase(D);
+}
+
+void StdBranchDispatcher::purge()
+{
+    for (DispatcherDict::iterator d = _subs.begin(); d!=_subs.end();) {
+	DispatcherDict::iterator cur(d++);
+	if (!cur->second)
+	    _subs.erase(cur);
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
