@@ -45,8 +45,7 @@ std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r);
 template<const int dim>
 std::istream& operator>>(std::istream& is, Polygon<dim>& r);
 
-// The 2D specialization
-
+/// The 2D specialization of the Polygon<> template
 template<>
 class Polygon<2>
 {
@@ -255,6 +254,7 @@ class _Poly2Orient
   Vector<dim> m_axes[2]; // Normalized to unit length
 };
 
+/// A polygon, all of whose points lie in a plane, embedded in dim dimensions
 template<const int dim>
 class Polygon
 {

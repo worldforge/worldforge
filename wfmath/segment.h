@@ -42,6 +42,7 @@ std::ostream& operator<<(std::ostream& os, const Segment<dim>& s);
 template<const int dim>
 std::istream& operator>>(std::istream& is, Segment<dim>& s);
 
+/// A line segment embedded in dim dimensions
 template<const int dim>
 class Segment
 {

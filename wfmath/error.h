@@ -32,6 +32,8 @@
 
 namespace WFMath {
 
+/// An error thrown by certain functions (e.g. finding the plane two
+/// vectors lie in) when passed parallel vectors.
 template<const int dim>
 struct ColinearVectors : virtual public std::exception {
   ColinearVectors(const Vector<dim>& v1_in, const Vector<dim>& v2_in)
@@ -41,6 +43,7 @@ struct ColinearVectors : virtual public std::exception {
   Vector<dim> v1, v2;
 };
 
+/// An error thrown by operator>>() when it fails to parse wfmath types
 struct ParseError : virtual public std::exception {
   virtual ~ParseError() throw () { }
 };

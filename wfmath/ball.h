@@ -54,6 +54,7 @@ std::ostream& operator<<(std::ostream& os, const Ball<dim>& m);
 template<const int dim>
 std::istream& operator>>(std::istream& is, Ball<dim>& m);
 
+/// A dim dimensional ball
 template<const int dim>
 class Ball
 {

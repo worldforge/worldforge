@@ -51,27 +51,34 @@
 #include <iosfwd>
 namespace Atlas { namespace Message { class Object;}}
 
+/// Generic library namespace
 namespace WFMath {
 
 // Constants
 
+/// The constant pi
 const double Pi		= 3.14159265358979323846264338327950288419716939937508;
+/// The square root of pi
 const double SqrtPi	= 1.77245385090551602729816748334114518279754945612237;
+/// The natural logarithm of pi
 const double LogPi	= 1.14472988584940017414342735135305871164729481291530;
+/// The square root of 2
 const double Sqrt2	= 1.41421356237309504880168872420969807856967187537693;
+/// The square root of 3
 const double Sqrt3	= 1.73205080756887729352744634150587236694280525381037;
+/// The natural logarithm of 2
 const double Log2	= 0.69314718055994530941723212145817656807550013436025;
 
-// Basic floating point type
-
+/// Basic floating point type
 typedef float CoordType;
 
-// This is the attempted precision of the library. It's essentially
-// the machine precision multiplied by a fudge factor.
+/// This is the attempted precision of the library. It's essentially
+/// the machine precision multiplied by a fudge factor.
 #define WFMATH_EPSILON		(30 * FLT_EPSILON)
 
-// Max and min values of CoordType
+/// Max value of CoordType
 #define WFMATH_MAX		FLT_MAX
+/// Min value of CoordType
 #define WFMATH_MIN		FLT_MIN
 
 // Basic comparisons
@@ -80,15 +87,17 @@ double _ScaleEpsilon(double x1, double x2, double epsilon);
 double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
 		     int length, double epsilon = WFMATH_EPSILON);
 
+/// Test for equality up to precision epsilon
+/**
+ * Returns true if the difference between the numbers is less
+ * than epsilon. Note that epsilon is multiplied by 2 raised
+ * to the power of the exponent of the smaller number. So,
+ * for example, Equal(0.00010000, 0.00010002, 1.0e-4) will not
+ * compare equal, but Equal(0.00010000, 0.00010002, 1.0e-3) will.
+ **/
 template<class C>
 inline bool Equal(const C& c1, const C& c2, double epsilon = WFMATH_EPSILON)
 	{return c1.isEqualTo(c2, epsilon);}
-
-// Returns true if the difference between the numbers is less
-// than epsilon. Note that epsilon is multiplied by 2 raised
-// to the power of the exponent of the smaller number. So,
-// for example, Equal(0.00010000, 0.00010002, 1.0e-4) will not
-// compare equal, but Equal(0.00010000, 0.00010002, 1.0e-3) will.
 
 bool Equal(double x1, double x2, double epsilon = WFMATH_EPSILON);
 // Avoid template, make sure floats are cast to doubles.

@@ -133,13 +133,15 @@ class Vector {
   /// Check if two vectors are not equal
   bool operator!=(const Vector& v) const {return !isEqualTo(v);}
 
+  ///
   bool isValid() const {return m_valid;}
+  ///
   void setValid(bool valid = true) {m_valid = valid;}
 
   /// Zero the components of a vector
   Vector& zero();
 
-  /// WARNING! This operator is for sorting only.
+  // WARNING! This operator is for sorting only.
   bool operator< (const Vector& v) const;
 
   // Math operators
@@ -166,8 +168,10 @@ class Vector {
   /// Divide a vector by a scalar
   friend Vector operator/<dim>(const Vector& v, CoordType d);
 
+  ///
   friend Vector Prod<dim>	(const RotMatrix<dim>& m,
 				 const Vector& v);
+  ///
   friend Vector InvProd<dim>	(const RotMatrix<dim>& m,
 				 const Vector& v);
 

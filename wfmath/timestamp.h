@@ -51,6 +51,7 @@ extern "C" {
 
 class TimeStamp;
 
+/// The difference between two timestamps
 class TimeDiff
 {
   TimeDiff(long sec, long usec, bool is_valid);
@@ -90,6 +91,7 @@ inline bool operator<=(const TimeDiff &a, const TimeDiff &b) {return !(b < a);}
 inline bool operator>=(const TimeDiff &a, const TimeDiff &b) {return !(a < b);}
 inline bool operator!=(const TimeDiff &a, const TimeDiff &b) {return !(b == a);}
 
+/// A time stamp
 class TimeStamp {
  private:
 #if defined( __WIN32__ )

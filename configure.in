@@ -63,5 +63,6 @@ AC_OUTPUT([Makefile
            wfmath/Makefile 
            atlas/Makefile 
            doc/Makefile
+           doc/Doxyfile
            wfmath-config
 ])

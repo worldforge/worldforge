@@ -76,6 +76,8 @@ std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m);
 template<const int dim>
 std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
 
+/// A dim dimensional rotation matrix. Technically, a
+/// member of the group O(dim).
 template<const int dim>
 class RotMatrix {
  public:

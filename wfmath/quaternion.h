@@ -32,6 +32,7 @@
 
 namespace WFMath {
 
+/// A normalized quaterion
 class Quaternion
 {
  public:

@@ -43,6 +43,7 @@ std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r);
 template<const int dim>
 std::istream& operator>>(std::istream& is, RotBox<dim>& r);
 
+/// A dim dimensional box, lying at an arbitrary angle
 template<const int dim>
 class RotBox
 {
