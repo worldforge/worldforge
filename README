@@ -6,10 +6,8 @@ the file INSTALL. The current maintainer is Ron Steinke
 
 
 The only library that WFMath checks for is Atlas, and it only does this
-for the sake of some test functions (FIXME write these). The only
-dependency on Atlas is in the file atlasconv.h, which is found
-in the atlas directory in the source distribution but installs
-under wfmath with everything else. This header file contains
+for the sake of some test functions. The only dependency on Atlas is
+in the file atlasconv.h. This header file contains
 some inline functions which can be used to convert the various
 objects in WFMath to Atlas::Message::Object and back. This
 header file will be installed whether Atlas is present or not,
@@ -20,13 +18,14 @@ but to use it you must of course have the Atlas headers installed.
 The currently implemented classes can be divided into two sorts. The
 first kind are basic mathematical objects, whose members are all fundamental
 types. The second kind are shapes, which implement the shape class
-interface described in doc/shape.h. There are three classes of the first kind:
+interface described in doc/shape.h. There are four classes of the first kind:
 
 Vector<>	A basic mathematical vector
 RotMatrix<>	An orthogonal matrix of determinant 1, useful for
 		describing rotations.
 Point<>		A point in space. This basic class also implements
 		the shape interface in doc/shape.h.
+Quaternion	A quaternion
 
 The shape classes are:
 
@@ -35,18 +34,19 @@ Ball<>		Ball<2> is a circle, Ball<3> is a sphere, etc.
 Segment<>	A line segment, defined by its endpoints
 RotBox<>	Like AxisBox<>, but it can be rotated to arbitrary
 		angles
-
+Polygon<>	A 2 dimensional polygon contained in a (possibly)
+		larger dimensional space
 
 
 Anyone interested in contributing to this project should do three things:
 
 1) Send me an email. This is mostly to let me know someone else is working
-   with the CVS repository, so I can be careful about mergin commits.
+   with the CVS repository, so I can be careful about merging commits.
 
 2) Look at the file doc/CLASS_LAYOUT, which specifies which member functions
    all classes should have, and what order they should appear in.
    This only applies to significant classes, not things like
-   ColinearVectors in error.h which is only there to be thrown as
+   ColinearVectors in error.h, which is only there to be thrown as
    as exception.
 
 3) Update the ChangeLog _every_ time you commit to CVS. This makes

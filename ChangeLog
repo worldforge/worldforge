@@ -1,3 +1,9 @@
+Sunday, February 17, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Some doc fixes
+	* Added a #warning about using the Polygon<> Intersect()
+	  and Contains() functions
+
 Thursday, February 14, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Missed a change in rotation sense in Vector<3>::rotate(const Quaterion&),
