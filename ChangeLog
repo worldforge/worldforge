@@ -1,3 +1,8 @@
+Monday, 8th December, James Turner, <james@worldforge.org>
+
+    * Fix a warning on Mingw32, due to me using -1 in BaseConnection,
+      when I should have used the constant supplied by skstream.
+
 Friday, 5th December, Al Riddoch <alriddoch@zepler.org>
 
 	* Fix LDADD for testEris so it works right.

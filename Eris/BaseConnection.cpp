@@ -111,7 +111,7 @@ void BaseConnection::recv()
 	assert(_status != DISCONNECTED);
 	assert(_stream);
 	
-	if (_stream->getSocket() == -1) {
+	if (_stream->getSocket() == INVALID_SOCKET) {
 		handleFailure("Connection stream closed unexpectedly");
 		hardDisconnect(false);
 	} else {
