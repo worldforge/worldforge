@@ -45,10 +45,21 @@ public:
 	/// Get the Entity this Avatar refers to
 	EntityPtr getEntity() const {return _entity;}
 
-	// FIXME make this signal give info about the Entity which changed
-	SigC::Signal0<void> InvChanged;
+	// These two signals just transmit the Entity's
+	// AddedMember and RemovedMember signals, but
+	// you're allowed to connect to them as soon as
+	// the Avatar has been created, instead of having to wait
+	// for the Entity to be created.
+
+	/// An object was added to the inventory
+	SigC::Signal1<void,Entity*> InvAdded;
+	/// An object was removed from the inventory
+	SigC::Signal1<void,Entity*> InvRemoved;
+
+	/// Drop an object in the Avatar's inventory at the given location
 	void drop(Entity*, const WFMath::Point<3>& pos, const std::string& loc);
-	void drop(Entity*);
+	/// Drop an object in the Avatar's inventory at the Avatar's feet
+	void drop(Entity*, const WFMath::Vector<3>& offset = WFMath::Vector<3>(0, 0, 0));
 
 	static Avatar* find(Connection*, const std::string&);
 	static std::vector<Avatar*> getAvatars(Connection*);
@@ -60,7 +71,6 @@ private:
 	void recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 		const Atlas::Objects::Entity::GameEntity &character);
 	void recvEntity(Entity*);
-	void emitInvChanged(Entity*) {InvChanged.emit();}
 
 	World* _world;
 	std::string _id;

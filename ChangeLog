@@ -1,3 +1,9 @@
+Tuesday, 12th November, Ron Steinke
+
+	* Added an optional offset to Avatar::drop().
+	* Split Avatar::InvChanged into Avatar::InvAdded
+	  and Avatar::InvRemoved.
+
 Wednesday, 6th November, Ron Steinke
 
 	* Added a signal handler to set Avatar's _entity member

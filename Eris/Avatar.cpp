@@ -103,13 +103,13 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc
     _world->getConnection()->send(moveOp);
 }
 
-void Avatar::drop(Entity* e)
+void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset)
 {
     if(!_entity)
 	throw InvalidOperation("Character Entity does not exist yet!");
     assert(_entity->getContainer());
 
-    drop(e, _entity->getPosition(), _entity->getContainer()->getID());
+    drop(e, _entity->getPosition() + offset, _entity->getContainer()->getID());
 }
 
 Avatar* Avatar::find(Connection* con, const std::string& id)
@@ -155,6 +155,6 @@ void Avatar::recvEntity(Entity* e)
   assert(!_entity);
   _entity = e;
 
-  e->AddedMember.connect(SigC::slot(*this, &Avatar::emitInvChanged));
-  e->RemovedMember.connect(SigC::slot(*this, &Avatar::emitInvChanged));
+  e->AddedMember.connect(InvAdded.slot());
+  e->RemovedMember.connect(InvRemoved.slot());
 }
