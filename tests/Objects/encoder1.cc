@@ -1,6 +1,5 @@
 #include <string>
 #include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Operation/Combine.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/DecoderBase.h>
 

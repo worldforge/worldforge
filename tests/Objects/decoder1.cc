@@ -2,17 +2,28 @@
 
 using namespace Atlas;
 
+bool root_arrived = false;
+bool look_arrived = false;
+bool acct_arrived = false;
+
 class TestDecoder : public Objects::Decoder
 {
 protected:
     virtual void ObjectArrived(const Objects::Root& r)
     {
         assert(r.GetAttr("id").AsString() == "root_instance");
+        root_arrived = true;
     }
 
     virtual void ObjectArrived(const Objects::Operation::Look& l)
     {
         assert(l.GetAttr("id").AsString() == "look_instance");
+        look_arrived = true;
+    }
+
+    virtual void ObjectArrived(const Objects::Entity::Account a)
+    {
+        acct_arrived = true;
     }
 };
 
@@ -33,4 +44,7 @@ int main(int argc, char** argv)
         t.MapItem("id", "look_instance");
     t.MapEnd();
     t.StreamEnd();
+    assert(root_arrived);
+    assert(look_arrived);
+    assert(!acct_arrived);
 }
