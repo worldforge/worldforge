@@ -30,6 +30,7 @@ public:
 		cmprs = NULL; 
 	}
 
+			AClient(AClient* client);
 			AClient(ASocket* asock, ACodec* acodec);
 			AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs);
 	virtual		~AClient();
@@ -47,6 +48,7 @@ public:
 	void		doPoll();
 
 	void		sendMsg(const AObject& msg);
+	void		readMsg(AObject& msg);
 
 	virtual	void	gotMsg(const AObject& msg);
 	virtual	void	gotDisconnect();

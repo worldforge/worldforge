@@ -15,6 +15,13 @@ AClient::~AClient()
 	if (cmprs) delete cmprs;
 }
 
+AClient::AClient(AClient* client)
+{
+	csock = client->csock;
+	codec = client->codec;
+	cmprs = client->cmprs;
+}
+
 AClient::AClient(ASocket* asock, ACodec* acodec)
 {
 	csock = asock;
@@ -100,6 +107,23 @@ void AClient::doPoll()
 	if (FD_ISSET(csock->getSock(),&fdread))
  		if (!canRead()) { gotDisconnect(); return; }
 	if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
+}
+
+void AClient::readMsg(AObject& msg)
+{
+	// read and return a message
+	int	len;
+	string	buf;
+
+	while (!codec->hasMessage())
+	{
+		len = csock->recv(buf);
+		if (len < 1) return;
+		if (cmprs) buf = cmprs->decode(buf);
+		codec->feedStream(buf);
+	}
+	msg = codec->getMessage();
+	codec->freeMessage();
 }
 
 void AClient::sendMsg(const AObject& msg)
