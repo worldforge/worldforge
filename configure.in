@@ -333,4 +333,5 @@ AC_OUTPUT([
 	src/TestSuite/Makefile
 	src/Message/Makefile
 	src/Funky/Makefile
+	doc/Makefile
 ])

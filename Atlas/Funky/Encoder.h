@@ -11,16 +11,20 @@
 
 namespace Atlas { namespace Funky {
 
-/** Atlas funky encoder
-
-@see Bridge
+/** @defgroup funky_encoder Atlas funky encoder
 */
 
+/// @ingroup funky_encoder
 class BeginMessage {};
+/// @ingroup funky_encoder
 class EndMessage {};
+/// @ingroup funky_encoder
 class BeginMap {};
+/// @ingroup funky_encoder
 class EndMap {};
+/// @ingroup funky_encoder
 class BeginList {};
+/// @ingroup funky_encoder
 class EndList {};
 
 template<class B> class Encoder;
@@ -28,6 +32,7 @@ template<class B, class T> class EncMap;
 template<class B, class T> class EncList;
 template<class B, class T> class EncMapValue;
 
+/// @ingroup funky_encoder
 template<class B, class T>
 class EncMapValue {
 public:
@@ -68,6 +73,7 @@ protected:
     string name;
 };
 
+/// @ingroup funky_encoder
 template<class B, class T>
 class EncMap {
 public:
@@ -88,6 +94,7 @@ protected:
     B& b;
 };
 
+/// @ingroup funky_encoder
 template<class B, class T>
 class EncList {
 public:
@@ -133,6 +140,37 @@ protected:
     B& b;
 };
 
+/** @ingroup funky_encoder
+ *
+ * The root encoder in "stream" state.
+ *
+ * This encoder is composed of several classes which each have different
+ * operator<<. You can use it to send a message through a bridge in a format
+ * similar to the following:
+ *
+ * <PRE>
+ * using namespace Funky;
+ * Funky::Encoder enc(&myBridge);
+ * enc << Token::begin_message
+ *     << Token::begin_map
+ *        << "an int" << 1234
+ *        << "a float" << 3.142
+ *        << "a string" << "Hello World!"
+ *        << "a list" << Token::begin_list
+ *           << 5678
+ *           << 2.181
+ *           << "another string!"
+ *        << Token::end_list
+ *     << Token::end_map
+ *     << Token::end_message;
+ * </PRE>
+ * 
+ * The special thing is that it will perform semantic checking automatically
+ * <I>at compile time</I> via a template stack.
+ *
+ * @see Atlas::Bridge
+ */
+
 template <class B>
 class Encoder
 {
@@ -148,6 +186,7 @@ protected:
     B& b;
 };
 
+/// @ingroup funky_encoder
 class Tokens {
 public:
 
