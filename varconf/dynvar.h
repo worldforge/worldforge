@@ -34,32 +34,32 @@
 namespace varconf {
 namespace dynvar {
 
-Variable concat(const Variable& one, const Variable& two)
+inline Variable concat(const Variable& one, const Variable& two)
 { return Variable(new Concat(one, two)); }
 
-Variable ternary(const Variable& test, const Variable& true_val,
+inline Variable ternary(const Variable& test, const Variable& true_val,
 	const Variable& false_val)
 { return Variable(new Ternary(test, true_val, false_val)); }
 
-Variable item(const std::string& section, const std::string& key)
+inline Variable item(const std::string& section, const std::string& key)
 { return Variable(new Item(section, key)); }
 
-Variable equal(const Variable& one, const Variable& two)
+inline Variable equal(const Variable& one, const Variable& two)
 { return Variable(new Equal(one, two)); }
 
-Variable noteq(const Variable& one, const Variable& two)
+inline Variable noteq(const Variable& one, const Variable& two)
 { return Variable(new NotEq(one, two)); }
 
-Variable greater(const Variable& one, const Variable& two)
+inline Variable greater(const Variable& one, const Variable& two)
 { return Variable(new Greater(one, two)); }
 
-Variable greatereq(const Variable& one, const Variable& two)
+inline Variable greatereq(const Variable& one, const Variable& two)
 { return Variable(new GreaterEq(one, two)); }
 
-Variable less(const Variable& one, const Variable& two)
+inline Variable less(const Variable& one, const Variable& two)
 { return Variable(new Less(one, two)); }
 
-Variable lesseq(const Variable& one, const Variable& two)
+inline Variable lesseq(const Variable& one, const Variable& two)
 { return Variable(new LessEq(one, two)); }
 
 }} // namespace varconf::dynvar

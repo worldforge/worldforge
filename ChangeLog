@@ -1,6 +1,9 @@
 ChangeLog for varconf
 
 Wednesday, November 7, 2001 -- Ron Steinke <rsteinke@w-link.net>
+  * dynvar.h: Forgot the "inline" keyword. Oops.
+
+Wednesday, November 7, 2001 -- Ron Steinke <rsteinke@w-link.net>
   * Changed the Variable class to a smart pointer to its old implementation,
     essentially %s/Variable/VarBase/g, then wrote a new Variable class
     based on SigC::Handle with the Variable API added.
