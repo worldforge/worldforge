@@ -47,7 +47,10 @@ public:
 	
 	/// Emitted when sight of a room is recieved
 	//SigC::Signal1<void Room*> SightRoom;
+	
+	// emitted when someone does a private (direct) chat
 	SigC::Signal2<void, const std::string&, const std::string&> PrivateTalk;
+	
 	/// Emitted when initial login completes
 	SigC::Signal1<void, const Atlas::Objects::Entity::Player&> LoggedIn;
 	

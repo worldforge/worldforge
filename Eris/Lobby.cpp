@@ -285,7 +285,7 @@ void Lobby::recvSightPerson(const Atlas::Objects::Entity::Account &ac)
 		i->second->sight(ac);
 	else
 		// install the new Person object
-		i->second = new Person(ac);
+		i->second = new Person(this, ac);
 	
 	// emit the signal; this lets rooms waiting on this player's info update
 	SightPerson.emit(i->second);

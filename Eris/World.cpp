@@ -555,21 +555,24 @@ void World::setRootEntity(Entity* rt)
 
 void World::markInvisible(Entity *e)
 {
+    if (e != _root)
 	_ieCache->add(e);
 	// remove from lookup? not for now
 }
 
 void World::markVisible(Entity *e)
 {
+    if (e != _root)
 	_ieCache->remove(e);
 }
 
+/** callback from the entity cache, when it decided an entity can be completely deleted */
 void World::flush(Entity *e)
 {
-	assert(e);
-	EntityIDMap::iterator E = _lookup.find(e->getID());
-	assert(E != _lookup.end());
-	_lookup.erase(E);
+    assert(e);
+    EntityIDMap::iterator E = _lookup.find(e->getID());
+    assert(E != _lookup.end());
+    _lookup.erase(E);
 }
 
 } // of namespace Eris

@@ -246,7 +246,9 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
     caution */
     std::string mapped(s);
     
-    if (s == "stamp")
+    if (s == "name")
+	_name = val.AsString();
+    else if (s == "stamp")
 	_stamp = val.AsFloat();
     else if (s == "loc") {
 	std::string loc = val.AsString();
@@ -348,12 +350,12 @@ void Entity::innerOpToSlot(Dispatcher *s)
 
 void Entity::setContainerById(const std::string &id)
 {
-	if ( !_container || (id != _container->getID()) ) {
+    if ( !_container || (id != _container->getID()) ) {
 		
-		if (_container) {
-			_container->rmvMember(this);
-			_container = NULL;
-		}
+	if (_container) {
+	    _container->rmvMember(this);
+	    _container = NULL;
+	}
 		
 		// have to check this, becuase changes in what the client can see
 		// may cause the client's root to change
@@ -392,10 +394,13 @@ void Entity::setContainerById(const std::string &id)
 			}
 		
 		}
+		    
 	}	
 	
-	if (id.empty())	// id of "" implies local root
-		World::Instance()->setRootEntity(this);	
+    if (id.empty()) {	// id of "" implies local root
+	Eris::Log(LOG_DEBUG, "got entity with empty container, assuming it's the world");
+	World::Instance()->setRootEntity(this);	
+    }
 }
 
 #ifdef HAVE_CPPUNIT
