@@ -3,6 +3,8 @@
 Makefile
 Makefile.in
 mercatortest
+testIntersect
+testPhys
 testShader
 testTerrain
 testTerrainMod
