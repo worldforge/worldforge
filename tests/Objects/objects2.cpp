@@ -169,6 +169,10 @@ void testXML()
 //    eno.streamMessage((Root&)move_op);
     eno.streamMessage((Root&)l);
 
+    Entity::Empty e;
+    eno.streamMessage((Root&)e);
+    e->setId("foo");
+    eno.streamMessage((Root&)e);
 //    Atlas::Message::Encoder en(codec);
 //    en.streamMessage(human->asObject());
 
@@ -245,18 +249,29 @@ void testValues()
 
     {
     Atlas::Message::Object::MapType mobj;
-    mobj["id"] = string("account");
-    mobj["name"] = string("foo");
     Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
-    cout<<"Implement Empty class !!!!!!!!!!!!!!!!!!"<<endl;
-#if 0 // do these when Empty class done
-    assert(obj->getClassNo() == Entity::ACCOUNT_NO);
-    assert(obj->getId() == "account");
+    assert(obj->getClassNo() == Entity::EMPTY_NO);
+    assert(obj->getId() == "");
+    assert(obj->getName() == "");
+    assert(obj->getParents().size() == 0);
+    assert(obj->getObjtype() == "obj");
+    assert(obj->getDescription() == "");
+    }
+
+    {
+    Atlas::Message::Object::MapType mobj;
+    mobj["id"] = string("bar");
+    mobj["name"] = string("foo");
+    Atlas::Message::Object::ListType parents;
+    parents.push_back(string("account"));
+    mobj["parents"] = parents;
+    Root obj = Atlas::Objects::messageObject2ClassObject(mobj);
+    assert(obj->getClassNo() == Entity::EMPTY_NO);
+    assert(obj->getId() == "bar");
     assert(obj->getName() == "foo");
-    assert(obj->getParents().front() == "admin_entity");
-    assert(obj->getObjtype() == "class");
-    assert(obj->getDescription() == "Base class for accounts");
-#endif
+    assert(obj->getParents().front() == "account");
+    assert(obj->getObjtype() == "obj");
+    assert(obj->getDescription() == "");
     }
 }
 

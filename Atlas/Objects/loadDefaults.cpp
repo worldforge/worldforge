@@ -34,37 +34,31 @@ private:
 
 LoadDefaultsDecoder::LoadDefaultsDecoder(const string& filename)
 {
-    ifstream stream;
-    stream.open(filename.c_str());
-    if(!stream) 
-        throw DefaultLoadingException("Failed to open file " + filename);
-
-    //replace following code with:
-    //getCodecByName(const string& name, Stream& stream, Bridge* bridge)
-    typedef list<Atlas::Factory<Atlas::Codec<iostream> >*> FactoryCodecs;
-    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::factories();
-    FactoryCodecs::iterator i;
-    Atlas::Codec<iostream> *codec = NULL;
-    for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
-        if((*i)->getName() == "XML")
-            codec = (*i)->New(Codec<iostream>::Parameters((iostream&)stream, this));
-    //end of replace
-    if(!codec)
-        throw DefaultLoadingException("XML codec not found");
-    while(stream) {
-      codec->poll();
-    }
-    delete codec;
-    
-    Atlas::Message::Object::MapType empty_obj;
-    Atlas::Message::Object::ListType coords;
-    coords.push_back(0.0);
-    coords.push_back(0.0);
-    coords.push_back(0.0);
-    empty_obj["pos"] = coords;
-    empty_obj["velocity"] = coords;
-    m_objects["empty"] = empty_obj;
-    fillDefaults();
+  ifstream stream;
+  stream.open(filename.c_str());
+  if(!stream) 
+    throw DefaultLoadingException("Failed to open file " + filename);
+  
+  //replace following code with:
+  //getCodecByName(const string& name, Stream& stream, Bridge* bridge)
+  typedef list<Atlas::Factory<Atlas::Codec<iostream> >*> FactoryCodecs;
+  FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::factories();
+  FactoryCodecs::iterator i;
+  Atlas::Codec<iostream> *codec = NULL;
+  for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
+    if((*i)->getName() == "XML")
+      codec = (*i)->New(Codec<iostream>::Parameters((iostream&)stream, this));
+  //end of replace
+  if(!codec)
+    throw DefaultLoadingException("XML codec not found");
+  while(stream) {
+    codec->poll();
+  }
+  delete codec;
+  
+  Atlas::Message::Object::MapType empty_obj;
+  m_objects["empty"] = empty_obj;
+  fillDefaults();
 }
 
 Atlas::Message::Object LoadDefaultsDecoder::getMessageObject(const string& id)
@@ -159,6 +153,13 @@ void LoadDefaultsDecoder::fillDefaults()
 void loadDefaults(const string& filename)
 {
    LoadDefaultsDecoder load_defaults(filename);
+   Entity::Empty e;
+   e = e->getDefaultObject();
+   vector<double> coords(3, 0.0);
+   e->setPos(coords);
+   e->setVelocity(coords);
+   list<string> parents;
+   e->setParents(parents);
 }
 
 } } // namespace Atlas::Objects
