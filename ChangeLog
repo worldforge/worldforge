@@ -1,3 +1,8 @@
+Sunday, 17th August, Ron Steinke <rsteinke@w-link.net>
+
+	* Eris/UIFactory.*: Fixes to UI code for change
+	  to atlas-transitional.
+
 Monday, 11th August, James Turner <james@worldforge.org>
 
 	* Fix a dumb bug I introduced in June, in handling server-

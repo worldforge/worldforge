@@ -19,7 +19,7 @@ Eris::UI::Factory::Factory(const Atlas::Objects::Entity::UIEntity& entity,
 	_persistent(false), _refcount(1), _attrs(attrs)
 {
   _id_list.push_back(_id);
-  _attrs["display_status"] = entity.GetDisplayStatus();
+  _attrs["display_status"] = entity.getDisplayStatus();
   Atlas::Objects::Root::const_iterator I, last(entity, base_type);
   for(I = entity.begin(); I != last; ++I)
     _attrs[I->first] = I->second;
@@ -118,10 +118,10 @@ Eris::UI::FrameFactory::FrameFactory(const Atlas::Objects::Entity::Frame& frame,
 			             const Atlas::Message::Element::MapType& attrs,
 				     BaseGen* gen)
 	: Factory(frame, "frame", parents, attrs, 0),
-	  _valign(frame.GetValign()), _halign(frame.GetHalign()),
-	  _rel_pos(frame.GetRelPos()), _gen(gen)
+	  _valign(frame.getValign()), _halign(frame.getHalign()),
+	  _rel_pos(frame.getRelPos()), _gen(gen)
 {
-  const Atlas::Message::Element::ListType& contains = frame.GetContains();
+  const Atlas::Message::Element::ListType& contains = frame.getContains();
 
   Atlas::Message::Element::ListType::const_iterator I;
 
@@ -138,7 +138,7 @@ Eris::UI::SlotFactory::SlotFactory(const Atlas::Objects::Entity::Slot& slot,
 				   const IDList& parents,
 				   const Atlas::Message::Element::MapType& attrs,
 				   BaseGen* gen)
-	: Factory(slot, "slot", parents, attrs, gen), _target(slot.GetTarget())
+	: Factory(slot, "slot", parents, attrs, gen), _target(slot.getTarget())
 {
 
 }
@@ -172,7 +172,7 @@ Eris::UI::SlotFactory::parse(const Atlas::Message::Element::MapType& map,
   while(I != map.end())
     slot.setAttr(I->first, I->second);
 
-  if(slot.GetTarget().empty())
+  if(slot.getTarget().empty())
     return 0;
 
   return new SlotFactory(slot, idlist(), attrs(), gen());
@@ -229,7 +229,7 @@ Eris::UI::Bindings::parse(const Atlas::Message::Element& obj)
   Factory* factory = 0;
 
   Atlas::Message::Element::ListType::const_iterator I;
-  for(I = parents->second.asList().begin(); I != parents->second.AsList().end(); ++I) {
+  for(I = parents->second.asList().begin(); I != parents->second.asList().end(); ++I) {
     Factory* parent = findFactory(*I);
     if(parent) {
       factory = parent->parse(obj.asMap(), *this);

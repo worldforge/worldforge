@@ -12,7 +12,7 @@
 #include <sigc++/signal.h>
 #endif
 
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 
 namespace Atlas {
   namespace Objects {
