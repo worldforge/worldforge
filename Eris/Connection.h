@@ -3,6 +3,7 @@
 
 #include <Eris/BaseConnection.h>
 #include <Eris/Types.h>
+#include <Eris/ServerInfo.h>
 
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Objects/ObjectsFwd.h>
@@ -91,6 +92,23 @@ public:
 	information about status locking. */
 	void unlock();
     
+    /**
+    Update the information stored about the current server.
+    While the refresh is taking place, the current info is still available,
+    but with it's status set to QUERYING. The signal GotServerInfo will be
+    emitted once the new data is recieved.
+    */
+    void refreshServerInfo();
+    
+    /**
+    Retrive the current server information.
+    Check the status field of the returned object before using this data,
+    since it may be out of date or invalid.
+    */
+    void getServerInfo(ServerInfo&) const;
+    
+    SigC::Signal0<void> GotServerInfo;
+    
 ///////////////////////
 	
     /** Emitted when the disconnection process is initiated. The argument
@@ -145,7 +163,8 @@ private:
     void gotData(PollData&);
 
     void dispatchOp(const Atlas::Objects::Operation::RootOperation& op);
-
+    void handleServerInfo(const Atlas::Objects::Operation::RootOperation& op);
+    
     void onDisconnectTimeout();
 
     typedef std::deque<Atlas::Objects::Operation::RootOperation> OpDeque;
@@ -163,6 +182,7 @@ private:
     Atlas::Objects::ObjectsEncoder* m_debugRecvEncoder;
     
     std::vector<Redispatch*> m_finishedRedispatches;
+    ServerInfo m_info;
 };
 
 /// operation serial number sequencing

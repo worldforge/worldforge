@@ -15,6 +15,7 @@
 #include <skstream/skstream.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
 
@@ -27,6 +28,7 @@
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
+using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
@@ -35,7 +37,8 @@ Connection::Connection(const std::string &cnm, bool dbg) :
     BaseConnection(cnm, "game_", this),
     m_typeService(new TypeService(this)),
     m_defaultRouter(NULL),
-    m_lock(0)
+    m_lock(0),
+    m_info("")
 {	
     // SigC::slot(*this, &Account::handleLoginTimeout)
     Poll::instance().Ready.connect(SigC::slot(*this, &Connection::gotData));
@@ -203,6 +206,24 @@ void Connection::unlock()
     }
 }
 
+void Connection::getServerInfo(ServerInfo& si) const
+{
+    si = m_info;
+}
+
+void Connection::refreshServerInfo()
+{
+    if (_status != CONNECTED) {
+        warning() << "called refreshServerInfo while not connected, ignoring";
+        return;
+    }
+    
+    m_info.setStatus(ServerInfo::QUERYING);
+    Get gt;
+    gt->setSerialno(getNewSerialno());
+    send(gt);
+}
+
 #pragma mark -
 
 void Connection::objectArrived(const Root& obj)
@@ -234,6 +255,11 @@ void Connection::dispatchOp(const RootOperation& op)
     /// @todo - wrap this in an anonymous=true guard?
     rr = m_typeService->handleOperation(op);
     if (rr == Router::HANDLED) return;
+    
+    if (anonymous && op->instanceOf(INFO_NO) && op->getFrom().empty()) {
+        handleServerInfo(op);
+        return;
+    }
     
 // locate a router based on from
     IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
@@ -286,10 +312,23 @@ void Connection::handleTimeout(const std::string& msg)
     handleFailure(msg); // all the same in the end
 }
 
+void Connection::handleServerInfo(const RootOperation& op)
+{
+    RootEntity svr = smart_dynamic_cast<RootEntity>(op->getArgs().front());	
+    if (!svr.isValid()) {
+        error() << "server INFO argument object is broken";
+        return;
+    }
+    
+    m_info.processServer(svr);
+    GotServerInfo.emit();
+}
+
 void Connection::onConnect()
 {
     BaseConnection::onConnect();
     m_typeService->init();
+    m_info = ServerInfo(_host);
 }
 
 void Connection::onDisconnectTimeout()

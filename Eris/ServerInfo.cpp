@@ -41,4 +41,9 @@ void ServerInfo::setPing(int p)
     _ping = p;
 }
 
+void ServerInfo::setStatus(Status s)
+{
+    m_status = s;
+}
+
 } // of namespace Eris

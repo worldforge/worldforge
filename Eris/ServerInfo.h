@@ -67,7 +67,8 @@ public:
 	
 protected:
     friend class Meta;
-
+    friend class Connection;
+    
     /// construct with the host IP only; other values will be set to defaults
     ServerInfo(const std::string &host);
     
@@ -76,7 +77,8 @@ protected:
     void processServer(const Atlas::Objects::Entity::RootEntity &svr);
 
     void setPing(int p);
-	
+	void setStatus(Status s);
+    
 private:
     Status m_status;
     

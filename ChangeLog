@@ -1,3 +1,12 @@
+2005-02-02  James Turner  <james@worldforge.org>
+
+	* Eris/Connection.cpp, Eris/Connection.h: add support for querying the
+	  information data for the connected server. Results are returned using
+	  the same format as meta-server queries.
+
+	* Eris/ServerInfo.cpp, Eris/ServerInfo.h: make Connection a friend, so it
+	  can update the information as necessary.
+
 2005-01-30  James Turner  <james@worldforge.org>
 
 	* Eris/TypeInfo.cpp, Eris/TypeInfo.h: switch from greedy to lazy expansion
