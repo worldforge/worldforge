@@ -6,6 +6,7 @@
 #define ATLAS_STREAM_BRIDGE_H
 
 #include <string>
+#include "../Object/Object.h"
 
 namespace Atlas { namespace Stream {
 
@@ -45,8 +46,9 @@ class Bridge
     virtual void MapItem(const std::string& name, const Map&) = 0;
     virtual void MapItem(const std::string& name, const List&) = 0;
     virtual void MapItem(const std::string& name, int) = 0;
-    virtual void MapItem(const std::string& name, float) = 0;
+    virtual void MapItem(const std::string& name, double) = 0;
     virtual void MapItem(const std::string& name, const std::string&) = 0;
+    virtual void MapItem(const std::string& name, const Atlas::Object&) = 0;
     virtual void MapEnd() = 0;
     
     // Interface for list context
@@ -54,8 +56,9 @@ class Bridge
     virtual void ListItem(const Map&) = 0;
     virtual void ListItem(const List&) = 0;
     virtual void ListItem(int) = 0;
-    virtual void ListItem(float) = 0;
+    virtual void ListItem(double) = 0;
     virtual void ListItem(const std::string&) = 0;
+    virtual void ListItem(const Atlas::Object&) = 0;
     virtual void ListEnd() = 0;
 };
 

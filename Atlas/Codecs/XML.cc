@@ -1,8 +1,9 @@
-// This file may be redistributed and modified only under the terms of
-// the GNU Lesser General Public License (See COPYING for details).
+// This file may be redistributed and modified under the terms of the
+// GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
 #include "../Stream/Codec.h"
+#include "Utility.h"
 
 using namespace std;
 using namespace Atlas::Stream;
@@ -13,6 +14,8 @@ class XML : public Codec
 
     XML(const Codec::Parameters&);
 
+    virtual void Poll();
+
     virtual void MessageBegin();
     virtual void MessageMapBegin();
     virtual void MessageEnd();
@@ -20,15 +23,17 @@ class XML : public Codec
     virtual void MapItem(const std::string& name, const Map&);
     virtual void MapItem(const std::string& name, const List&);
     virtual void MapItem(const std::string& name, int);
-    virtual void MapItem(const std::string& name, float);
+    virtual void MapItem(const std::string& name, double);
     virtual void MapItem(const std::string& name, const std::string&);
+    virtual void MapItem(const std::string& name, const Atlas::Object&);
     virtual void MapEnd();
     
     virtual void ListItem(const Map&);
     virtual void ListItem(const List&);
     virtual void ListItem(int);
-    virtual void ListItem(float);
+    virtual void ListItem(double);
     virtual void ListItem(const std::string&);
+    virtual void ListItem(const Atlas::Object&);
     virtual void ListEnd();
 
     protected:
@@ -46,6 +51,11 @@ namespace
 XML::XML(const Codec::Parameters& p)
     : socket(p.stream), filter(p.filter), bridge(p.bridge)
 {
+}
+
+void XML::Poll()
+{
+    // FIXME add polling
 }
 
 void XML::MessageBegin()
@@ -77,7 +87,7 @@ void XML::MapItem(const std::string& name, int data)
     socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
 
-void XML::MapItem(const std::string& name, float data)
+void XML::MapItem(const std::string& name, double data)
 {
     socket << "<float name=\"" << name << "\">" << data << "</float>";
 }
@@ -85,6 +95,11 @@ void XML::MapItem(const std::string& name, float data)
 void XML::MapItem(const std::string& name, const std::string& data)
 {
     socket << "<string name=\"" << name << "\">" << data << "</string>";
+}
+
+void XML::MapItem(const std::string& name, const Atlas::Object& data)
+{
+    recurseMapObject(data, this, name);
 }
 
 void XML::MapEnd()
@@ -107,7 +122,7 @@ void XML::ListItem(int data)
     socket << "<int>" << data << "</int>";
 }
 
-void XML::ListItem(float data)
+void XML::ListItem(double data)
 {
     socket << "<float>" << data << "</float>";
 }
@@ -115,6 +130,11 @@ void XML::ListItem(float data)
 void XML::ListItem(const std::string& data)
 {
     socket << "<string>" << data << "</string>";
+}
+
+void XML::ListItem(const Atlas::Object& data)
+{
+    recurseListObject(data, this);
 }
 
 void XML::ListEnd()
