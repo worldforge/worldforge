@@ -104,7 +104,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
 
     def update_outfile(self, outfile):
         if os.access(outfile, os.F_OK):
-            if cmp.cmp(outfile + ".tmp", outfile) == 0:
+            if filecmp(outfile + ".tmp", outfile) == 0:
                 os.remove(outfile)
                 os.rename(outfile + ".tmp", outfile)
                 print "Generated:", outfile

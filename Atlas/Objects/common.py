@@ -2,7 +2,13 @@
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
 
-import sys, os, cmp
+import sys, os
+try:
+    import filecmp
+    filecmp = filecmp.cmp
+except ImportError:
+    import cmp
+    filecmp = cmp.cmp
 sys.path.append("../../../Atlas-Python")
 from atlas import *
 from atlas.codecs import *
