@@ -3,6 +3,7 @@
 
 #include "BaseConnection.h"
 #include "Time.h"
+#include "Poll.h"
 
 namespace Eris {
 
@@ -38,6 +39,9 @@ public:
 	/// Determine whether the query has been handled
 	bool isComplete() const
 	{ return _complete; }
+
+	bool isReady(PollData &data) const
+	{return data.isReady(_stream);}
 	
 	friend class Meta;
 protected:

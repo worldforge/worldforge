@@ -1,3 +1,17 @@
+Thursday, April 04 2002, James Turner
+
+	* Comitted Ron Steinke's polling changes. These add a new
+	  class (Poll), which is an abstract polling interface
+	  by the connections. A default implementation is supplied,
+	  which simple calls 'select()': to retain the current Eris
+	  behaviour, simple replace Connection::poll(), Meta::poll()
+	  and Timeout::pollAll() with a single call to
+	  Eris::PollDefault::poll() (defined in Eris/PollDefault.h).
+	  If you're using Gtk+ or some other widget set that provides
+	  idle and input notifications, then you can write your
+	  own Poll subclass (or steal one: Ron already has a Gtk+
+	  implementation!) and everything will work.
+
 Friday, March 15 2002, James Turner
 
 	* Fixed logic in setContainerById, when the parent was

@@ -11,6 +11,9 @@
 /** Every Eris class and type lives inside the Eris namespace; certain utility functions live in the
 Util namespace, since they may be moved to a generic WorldForge foundation library in the future.*/
 
+// forward decleration of the skstrem type
+class basic_socket_stream;
+
 namespace Eris
 {
 	
@@ -18,6 +21,7 @@ namespace Eris
 class Dispatcher;
 class WaitForBase;
 class Timeout;
+class PollData;
 	
 /** Logging level : setting a higher level will automaticaly pull in the lower
  levels (i.e NOTICE implies ERROR and WARNING) */
@@ -193,6 +197,9 @@ private:
 
 	typedef std::list<WaitForBase*> WaitForList;
 	WaitForList _waitList;
+
+//	bool prePoll();
+	void gotData(PollData&);
 };
 
 void Log(LogLevel lvl, const char *str, ...);

@@ -24,6 +24,8 @@
 #include "Timeout.h"
 #include "Utils.h"
 #include "TypeInfo.h"
+#include "Poll.h"
+#include "PollDefault.h"
 
 #include "TypeDispatcher.h"
 #include "ClassDispatcher.h"
@@ -82,6 +84,8 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 		dd = new DebugDispatcher(_clientName + ".atlas-recvlog");
 		sdd = new DebugDispatcher(_clientName + ".atlas-sendlog");
 	}
+
+	Poll::instance().connect(slot(this, &Connection::gotData));
 }
 	
 Connection::~Connection()
@@ -133,33 +137,37 @@ void Connection::reconnect()
 	} else
 		BaseConnection::connect(_host, _port);
 }
-
-void Connection::poll()
+/*
+bool Connection::prePoll()
 {
-	//if (!_stream) return;
+	//if (!_stream) return false;
 	int err = 0;
 	
 	// sit in idle correctly
-	if (_status == DISCONNECTED) return;
+	if (_status == DISCONNECTED) return false;
 		
 	if ((err = _stream->getLastError()) != 0) {
 		handleFailure("Error reading from socket");
 		hardDisconnect(false);
-		return;
+		return false;
 	}
 	
-	SOCKET_TYPE fd = _stream->getSocket();
-	fd_set pending;
-     	struct timeval tv = {0, 0};
+	return true;
+}
+*/
+void Connection::poll()
+{
+	PollDefault::poll();
+}
       
-     	FD_ZERO(&pending);
-      	FD_SET(fd, &pending);
-      
-     	int retval = select(fd+1, &pending, NULL, NULL, &tv);
-      	if (retval && FD_ISSET(fd, &pending))
+void Connection::gotData(PollData &data)
+{
+	if(!data.isReady(_stream))
+		return;
+	else if (_status == DISCONNECTED)
+		Eris::Log(LOG_ERROR, "Got data on a disconnected stream");
+	else
 		BaseConnection::recv();
-	
-	Timeout::pollAll();
 }		
 
 void Connection::send(const Atlas::Objects::Root &obj)

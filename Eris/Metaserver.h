@@ -40,6 +40,7 @@ typedef unsigned int uint32_t;
 
 // Forward decls
 class udp_socket_stream;
+class basic_socket_stream;
 	
 namespace Eris {
 	
@@ -47,6 +48,7 @@ namespace Eris {
 class MetaQuery;
 class BaseConnection;
 class Timeout;
+class PollData;
 	
 #ifndef uint32_t
 	/* WIN32 hack ...
@@ -188,6 +190,9 @@ protected:
 	uint32_t _gotCmd;	///< the curent command being processed
 	
 	Timeout* _timeout;	///< Metaserver channel timeout
+
+//	bool prePoll();
+	void gotData(PollData&);
 };
 	
 } // of namespace Eris

@@ -12,6 +12,8 @@
 #include "Utils.h"
 #include "ServerInfo.h"
 #include "Timeout.h"
+#include "Poll.h"
+#include "PollDefault.h"
 
 namespace Eris {
 
@@ -44,6 +46,8 @@ Meta::Meta(const std::string &/*cnm*/,
     _stream = new udp_socket_stream();  
     _stream->setTimeout(30);	
     
+    Poll::instance().connect(slot(this, &Meta::gotData));
+    
     // open connection to meta server
    
     remote_host metaserver_data(msv, META_SERVER_PORT);
@@ -52,6 +56,7 @@ Meta::Meta(const std::string &/*cnm*/,
 	doFailure("Couldn't open connection to metaserver " + msv);
 	return;
     }
+    Poll::instance().addStream(_stream);
     
     // build the initial 'ping' and send
     unsigned int dsz = 0;
@@ -68,6 +73,8 @@ Meta::Meta(const std::string &/*cnm*/,
 
 Meta::~Meta()
 {
+	if(_stream->is_open())
+		Poll::instance().removeStream(_stream);
 	delete _stream;
 	for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
 		delete *Q;
@@ -100,8 +107,10 @@ void Meta::refresh()
 	_gameServers.clear();
 	
 	// close the existing connection (rather brutal this...)
-	if (_stream->is_open())
+	if (_stream->is_open()) {
+		Poll::instance().removeStream(_stream);
 		_stream->close();
+	}
 
     // open connection to meta server
     remote_host metaserver_data(_metaHost, META_SERVER_PORT);
@@ -110,6 +119,7 @@ void Meta::refresh()
 	doFailure("Couldn't contact metaserver " + _metaHost);
 	return;
     }
+    Poll::instance().addStream(_stream);
     
     listReq(0);
     _status = IN_PROGRESS;
@@ -126,51 +136,40 @@ ServerList Meta::getGameServerList()
 	return ret;
 }
 
-// not const, becuase select() moans
-struct timeval TIMEOUT_ZERO = {0, 0};
-
-void Meta::poll()
+/*
+bool Meta::prePoll()
 {
 	// very fast reject if nothing to do
-	if (_status != IN_PROGRESS) return;
-	if (_activeQueries.empty() && (_bytesToRecv == 0)) return;
-	
-	fd_set pending;
-	SOCKET_TYPE maxfd=0;
-	FD_ZERO(&pending);
-	
-	FD_SET(_stream->getSocket(), &pending);
-	if (_stream->getSocket() > maxfd) maxfd = _stream->getSocket();
+	if (_status != IN_PROGRESS) return false;
+	if (_activeQueries.empty() && (_bytesToRecv == 0)) return false;
 		
-	// update all the current light-weight connections
-	for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q) {
-		SOCKET_TYPE fd = (*Q)->getSocket();
-		FD_SET(fd, &pending);
-		if (fd > maxfd) maxfd = fd;
+	return true;
+}
+*/
+void Meta::poll()
+{
+	PollDefault::poll();
 	}
 		
-	int retval = select(maxfd+1, &pending, NULL, NULL, &TIMEOUT_ZERO);
-	if (retval < 0)
-		// FIXME - is an error from select fatal or not? At present I think yes,
-		// but I'm sort of open to persuasion on this matter.
-		throw InvalidOperation("Error at Meta::Poll() doing select()");
+void Meta::gotData(PollData &data)
+{
+	bool got_one = false;
 	
-	
-	Timeout::pollAll();
-	
-	// get out if nothing to do
-	if (!retval) return;
-	
-	// meta server data
-	if (FD_ISSET(_stream->getSocket(), &pending)) {
+	if (data.isReady(_stream)) {
 		recv();	
+		got_one = true;
 	}
 
-	for (MetaQueryList::iterator Q=_activeQueries.begin(); Q != _activeQueries.end(); ++Q) {
-		if (FD_ISSET((*Q)->getSocket(), &pending))
+	for (MetaQueryList::iterator Q=_activeQueries.begin();
+		Q != _activeQueries.end(); ++Q) {
+		if ((*Q)->isReady(data)) {
 			(*Q)->recv();	
-		
+			got_one = true;
+		}
 	}
+
+	if(!got_one)
+		return;
 
 	// clean up old quereis
 	while (!_deleteQueries.empty()) {

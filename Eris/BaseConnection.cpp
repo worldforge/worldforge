@@ -11,8 +11,9 @@
 #include <Atlas/Message/Encoder.h>
 
 #include "BaseConnection.h"
-#include "Connection.h"
+//#include "Connection.h"
 #include "Timeout.h"
+#include "Poll.h"
 
 namespace Eris {
 	
@@ -59,6 +60,8 @@ void BaseConnection::connect(const std::string &host, short port)
 	return;
     }
 
+    Poll::instance().addStream(_stream);
+
     // negotiation timeout
     delete _timeout;
     _timeout = new Timeout("negotiate_" + _id, 5000);
@@ -92,6 +95,7 @@ void BaseConnection::hardDisconnect(bool emit)
     
     if (emit) {
 	    Disconnected.emit();
+	    Poll::instance().removeStream(_stream);
 	    setStatus(DISCONNECTED);
     } else
 	    _status = DISCONNECTED;
