@@ -24,7 +24,7 @@ Group: Development/Libraries
 Requires: %{name} = %{version}
 
 %description devel
-This is the WorldForge math library. The primary of %{name} is
+This is the WorldForge math library. The primary focus of %{name} is
 geometric objects.
 
 %prep

@@ -1,3 +1,8 @@
+Wednesday, February 4th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Added a missing word to some descriptive text in wfmath.spec.
+	* 0.3.2 release!
+
 Friday, January 30th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Changed the fooCorner() functions in Ball from {assert(false);}
