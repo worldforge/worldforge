@@ -9,7 +9,7 @@
 #include <map>
 #include <list>
 
-namespace Atlas { namespace Message {
+namespace Atlas {
 
 /// An exception class issued when the wrong type is requested in As().
 class WrongTypeException { };
@@ -358,7 +358,7 @@ protected:
     };
 };
 
-}}
+} // namespace Atlas
 
 
 #endif

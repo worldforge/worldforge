@@ -3,18 +3,15 @@ check_PROGRAMS = Objects3_Move Call_Move Message_Move \
 
 TESTS = $(check_PROGRAMS)
 
-CPPFLAGS = -I$(prefix)/include -Wall
+CPPFLAGS = -I../src -Wall
 
-LDADD  = -L$(prefix)/lib -lsocket++
-LDADD += \
-        -lAtlasObjects \
-        -lAtlasMessage \
-	-lAtlas \
-	-lAtlasCodecs \
-	-lAtlasFilters \
-	-lAtlasNet \
-	-lbz2
+LDADD  = -L../src/.libs -L../src/Codecs/.libs -L../src/Filters/.libs \
+         -L../src/Message/.libs -L../src/Net/.libs -L../src/Objects/.libs
 
+LIBS = -lAtlasObjects -lAtlasNet -lAtlas -lAtlasCodecs -lAtlasFilters \
+       -lAtlasMessage -lAtlas -lbz2 -lz
+
+LDFLAGS = -all-static
 
 # In a real program the above lines should be:
 # LDADD +=-lAtlasCodecs -lAtlasFilters -lAtlasNet

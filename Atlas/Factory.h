@@ -36,14 +36,14 @@ class Factory
     Factory(const std::string& name, const typename T::Metrics& metrics)
      : name(name), metrics(metrics)
     {
-	factories().push_back(this);
+	factories()->push_back(this);
     }
     
     virtual ~Factory()
     {
 	std::list<Factory*>::iterator i;
-	i = std::find(factories().begin(), factories().end(), this);
-	factories().erase(i);
+	i = std::find(factories()->begin(), factories()->end(), this);
+	factories()->erase(i);
     }
     
     virtual T* New(const typename T::Parameters&) = 0;
@@ -59,9 +59,13 @@ class Factory
 	return metrics;
     }
    
-    static std::list<Factory*>& factories()
+    static std::list<Factory*> * factories()
     {
-	static std::list<Factory*> m_factories;
+	static std::list<Factory*> * m_factories = NULL;
+        if (m_factories == NULL) {
+            m_factories = new std::list<Factory*>;
+            getFactories();
+        }
 	return m_factories;
     }
 
@@ -69,6 +73,10 @@ class Factory
 
     std::string name;
     typename T::Metrics metrics;
+
+    private:
+
+    static void getFactories();
 };
 
 } // Atlas namespace

@@ -8,16 +8,7 @@
 
 #if defined(HAVE_BZLIB_H) && defined(HAVE_LIBBZ2)
 
-#include "../Filter.h"
-
-#include <cstdio>
-
-// my version of bzlib.h does not have extern "C" in the header file,
-// like it should
-// dmitryd 05/08/200
-extern "C" {
-#include <bzlib.h>
-}
+#include "Bzip2.h"
 
 #ifndef ASSERT
 #include <cassert>
@@ -30,25 +21,10 @@ using namespace Atlas;
 const int BS100K = 6;
 const int WORKFACTOR = 30;
 
-class Bzip2 : public Filter
-{
-    bz_stream incoming;
-    bz_stream outgoing;
-    char buf[4096];
-
-    public:
-
-    virtual void begin();
-    virtual void end();
-    
-    virtual string encode(const string&);
-    virtual string decode(const string&);
-};
-
-namespace
-{
-    Filter::Factory<Bzip2> factory("BZIP2", Filter::Metrics(Filter::COMPRESSION));
-}
+//namespace
+//{
+    //Filter::Factory<Bzip2> factory("BZIP2", Filter::Metrics(Filter::COMPRESSION));
+//}
 
 void Bzip2::begin()
 {

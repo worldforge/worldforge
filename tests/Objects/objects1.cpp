@@ -1,14 +1,13 @@
 #include <iostream>
 #include <cassert>
-#include "Atlas/Message/Object.h"
-#include "Atlas/Objects/Root.h"
-#include "Atlas/Objects/Operation.h"
-#include "Atlas/Objects/Entity.h"
-#include "Atlas/Objects/objectFactory.h"
-#include "Atlas/Objects/loadDefaults.h"
+#include "Message/Object.h"
+#include "Objects/Root.h"
+#include "Objects/Operation.h"
+#include "Objects/Entity.h"
+#include "Objects/objectFactory.h"
+#include "Objects/loadDefaults.h"
 
 using namespace Atlas;
-using namespace Atlas::Objects;
 using namespace std;
 
 int main(int argc, char** argv)
@@ -30,8 +29,8 @@ int main(int argc, char** argv)
     assert((*root_inst->getAttr("parents").asList().begin()).asString() ==
             "root");
 
-    Operation::Look look = (Operation::Look&)objectDefinitions.find("look")->second;
-    Operation::Look look_inst;
+    Look look = (Look&)objectDefinitions.find("look")->second;
+    Look look_inst;
     look_inst->setAttr("id", string("look_instantiation"));
     assert(look->getAttr("id").asString() == "look");
     assert(look_inst->getAttr("id").asString() == "look_instantiation");
@@ -42,8 +41,8 @@ int main(int argc, char** argv)
     assert((*look_inst->getAttr("parents").asList().begin()).asString() ==
             "look");
 
-    Entity::Account acct = (Entity::Account&)objectDefinitions.find("account")->second;
-    Entity::Account acct_inst;
+    Account acct = (Account&)objectDefinitions.find("account")->second;
+    Account acct_inst;
     acct_inst->setAttr("id", string("account_instantiation"));
     assert(acct->getAttr("id").asString() == "account");
     assert(acct_inst->getAttr("id").asString() == "account_instantiation");

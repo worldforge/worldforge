@@ -6,10 +6,9 @@
 #include "BaseObject.h"
 
 using namespace Atlas;
-using namespace Atlas::Message;
 using namespace std;
 
-namespace Atlas { namespace Objects {
+namespace Atlas {
 
 bool BaseObjectData::instanceOf(int classNo) const
 {
@@ -47,10 +46,10 @@ Object BaseObjectData::asObject() const
 
 void BaseObjectData::sendContents(Bridge* b) const
 {
-    Message::Encoder e(b);
+    Encoder e(b);
     typedef map<string, Object>::const_iterator Iter;
     for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++)
         e.mapItem((*I).first, (*I).second);
 }
 
-} } // namespace Atlas::Objects
+} // namespace Atlas

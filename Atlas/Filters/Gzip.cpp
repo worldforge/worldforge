@@ -8,9 +8,7 @@
 
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 
-#include "../Filter.h"
-
-#include <zlib.h>
+#include "Gzip.h"
 
 #ifndef ASSERT
 #include <cassert>
@@ -22,25 +20,10 @@ using namespace Atlas;
 
 const int DEFAULT_LEVEL = 6;
 
-class Gzip : public Filter
-{
-    z_stream incoming;
-    z_stream outgoing;
-    unsigned char buf[4096];
-
-    public:
-
-    virtual void begin();
-    virtual void end();
-    
-    virtual string encode(const string&);
-    virtual string decode(const string&);
-};
-
-namespace
-{
-    Filter::Factory<Gzip> factory("GZIP", Filter::Metrics(Filter::COMPRESSION));
-}
+//namespace
+//{
+  //Filter::Factory<Gzip> factory("GZIP", Filter::Metrics(Filter::COMPRESSION));
+//}
 
 void Gzip::begin()
 {

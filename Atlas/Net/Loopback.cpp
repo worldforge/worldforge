@@ -93,7 +93,7 @@ class LoopBridge : public Bridge
     Bridge* bridge;
 };
 
-void Atlas::Net::loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
+void Atlas::loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
 {
     e1 = new LoopBridge(d1);
     e2 = new LoopBridge(d2);

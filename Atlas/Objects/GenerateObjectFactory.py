@@ -69,14 +69,14 @@ void Factories::addFactory(const std::string& name, FactoryMethod method)
     m_factories[name] = method;
 }
 
-Root messageObject2ClassObject(const Atlas::Message::Object& mobj_arg)
+Root messageObject2ClassObject(const Atlas::Object& mobj_arg)
 {
     Root obj;
     if(mobj_arg.isMap()) { // should we throw exeception if this is not true?
-        const Atlas::Message::Object::MapType& mobj = mobj_arg.asMap();
+        const Atlas::Object::MapType& mobj = mobj_arg.asMap();
 
         // is this instance of entity or operation?
-        Atlas::Message::Object::MapType::const_iterator I = 
+        Atlas::Object::MapType::const_iterator I = 
             mobj.find("objtype");
         bool is_instance = false;
         if(I != mobj.end() && (*I).second.isString()) {
@@ -87,7 +87,7 @@ Root messageObject2ClassObject(const Atlas::Message::Object& mobj_arg)
                 // get parent
                 I = mobj.find("parents");
                 if(I != mobj.end()) {
-                    Atlas::Message::Object::ListType parents_lst =
+                    Atlas::Object::ListType parents_lst =
                         I->second.asList();
                     if(parents_lst.size()>=1 && parents_lst.front().isString()) {
                         string parent = parents_lst.front().asString();

@@ -31,85 +31,17 @@ The complete specification is located in cvs at:
     
 */
 
-class Packed : public Codec<iostream>
-{
-public:
-    
-    Packed(const Codec<iostream>::Parameters&);
+#include "Packed.h"
 
-    virtual void poll(bool can_read = true);
+//namespace
+//{
+    //Codec::Factory<Packed> factory(
+	//"Packed",				    // name
+	//Codec::Metrics(1, 2)			    // metrics
+    //);
+//}
 
-    virtual void streamBegin();
-    virtual void streamMessage(const Map&);
-    virtual void streamEnd();
-
-    virtual void mapItem(const std::string& name, const Map&);
-    virtual void mapItem(const std::string& name, const List&);
-    virtual void mapItem(const std::string& name, int);
-    virtual void mapItem(const std::string& name, double);
-    virtual void mapItem(const std::string& name, const std::string&);
-    virtual void mapEnd();
-    
-    virtual void listItem(const Map&);
-    virtual void listItem(const List&);
-    virtual void listItem(int);
-    virtual void listItem(double);
-    virtual void listItem(const std::string&);
-    virtual void listEnd();
-
-protected:
-    
-    iostream& socket;
-    Bridge* bridge;
-
-    enum State
-    {
-	PARSE_STREAM,
-        PARSE_MAP,
-        PARSE_LIST,
-	PARSE_MAP_BEGIN,
-	PARSE_LIST_BEGIN,
-        PARSE_INT,
-        PARSE_FLOAT,
-        PARSE_STRING,
-        PARSE_NAME,
-    };
-    
-    stack<State> state;
-
-    string name;
-    string data;
-
-    inline void parseStream(char);
-    inline void parseMap(char);
-    inline void parseList(char);
-    inline void parseMapBegin(char);
-    inline void parseListBegin(char);
-    inline void parseInt(char);
-    inline void parseFloat(char);
-    inline void parseString(char);
-    inline void parseName(char);
-
-    inline const string hexEncode(const string& data)
-    {
-	return hexEncodeWithPrefix("+", "+[]()@#$=", data);
-    }
-
-    inline const string hexDecode(const string& data)
-    {
-	return hexDecodeWithPrefix("+", data);
-    }
-};
-
-namespace
-{
-    Codec<iostream>::Factory<Packed> factory(
-	"Packed",				    // name
-	Codec<iostream>::Metrics(1, 2)		    // metrics
-    );
-}
-
-Packed::Packed(const Codec<iostream>::Parameters& p) :
+Packed::Packed(const Codec::Parameters& p) :
     socket(p.stream), bridge(p.bridge)
 {
     state.push(PARSE_STREAM);

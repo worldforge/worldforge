@@ -11,7 +11,7 @@
 
 #include "Root.h"
 
-namespace Atlas { namespace Objects {
+namespace Atlas {
 
 class NoSuchFactoryException
 {
@@ -38,8 +38,8 @@ extern map<const std::string, Root> objectDefinitions;
 extern Factories objectFactory;
 //extern Factories objectInstanceFactory;
 
-Root messageObject2ClassObject(const Atlas::Message::Object& mobj);
+Root messageObject2ClassObject(const Atlas::Object& mobj);
 
-} } // namespace Atlas::Objects
+} // namespace Atlas
 
 #endif

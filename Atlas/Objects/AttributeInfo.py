@@ -106,7 +106,7 @@ class AttributeInfo:
             res = res + indent + '    b->mapItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
         else:
-            res = res + indent + '    Atlas::Message::Encoder e(b);\n'
+            res = res + indent + '    Atlas::Encoder e(b);\n'
             res = res + indent + '    e.mapItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
         if self.name not in ["parents", "objtype"]:
@@ -206,11 +206,11 @@ class ArgsRootList(AttributeInfo):
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
-    for(Atlas::Message::Object::ListType::const_iterator I = val.begin();
+    for(Atlas::Object::ListType::const_iterator I = val.begin();
         I != val.end();
         I++)
     {
-        attr_%(name)s.push_back(Atlas::Objects::messageObject2ClassObject(*I));
+        attr_%(name)s.push_back(Atlas::messageObject2ClassObject(*I));
     }
 }
 
@@ -228,7 +228,7 @@ void %(classname)s::set%(cname)s1(Root& val)
                """%(cpp_param_type_as_object)s %(classname)s::get%(cname)s%(as_object)s() const
 {
     %(cpp_param_type)s args_in = get%(cname)s();
-    Atlas::Message::Object::ListType args_out;
+    Atlas::Object::ListType args_out;
     for(%(cpp_type)s::const_iterator I = args_in.begin();
         I != args_in.end();
         I++)
@@ -270,7 +270,7 @@ class TypedList(AttributeInfo):
 {
     m_attrFlags |= %(flag_name)s;
     attr_%(name)s.resize(0);
-    for(Atlas::Message::Object::ListType::const_iterator I = val.begin();
+    for(Atlas::Object::ListType::const_iterator I = val.begin();
         I != val.end();
         I++)
     {
@@ -286,7 +286,7 @@ class TypedList(AttributeInfo):
                """%(cpp_param_type_as_object)s %(classname)s::get%(cname)s%(as_object)s() const
 {
     %(cpp_param_type)s lst_in = get%(cname)s();
-    Atlas::Message::Object::ListType lst_out;
+    Atlas::Object::ListType lst_out;
     for(%(cpp_type)s::const_iterator I = lst_in.begin();
         I != lst_in.end();
         I++)

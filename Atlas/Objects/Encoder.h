@@ -7,7 +7,7 @@
 
 #include "../EncoderBase.h"
 
-namespace Atlas { namespace Objects {
+namespace Atlas {
 
 /** Objects hierarchy encoder
  *
@@ -20,18 +20,18 @@ namespace Atlas { namespace Objects {
  * @see Atlas::Objects::Decoder
  * @author Stefanus Du Toit <sdt@gmx.net>
  */
-class Encoder : public Atlas::EncoderBase
+class ObjectsEncoder : public Atlas::EncoderBase
 {
 public:
     /// The default constructor.
     /// @param b The Bridge to which objects are to be sent.
-    Encoder(Atlas::Bridge* b) : EncoderBase(b) { }
+    ObjectsEncoder(Atlas::Bridge* b) : EncoderBase(b) { }
     /// The default destructor.
-    virtual ~Encoder() { }
+    virtual ~ObjectsEncoder() { }
 
     /// Send an object to the bridge.
     /// @param o The object that is to be sent.
-    virtual void streamMessage(const Atlas::Objects::Root& o)
+    virtual void streamMessage(const Atlas::Root& o)
     {
         b->streamMessage(Bridge::mapBegin);
         o->sendContents(b);
@@ -39,6 +39,6 @@ public:
     }
 };
 
-} } // namespace Atlas::Objects
+} // namespace Atlas
 
 #endif

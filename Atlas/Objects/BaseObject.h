@@ -11,7 +11,7 @@
 #include "../Message/Object.h"
 #include "../Bridge.h"
 
-namespace Atlas { namespace Objects {
+namespace Atlas {
 
 /** An exception indicating the requested attribute does not exist.
  *
@@ -54,16 +54,16 @@ public:
     virtual bool hasAttr(const std::string& name) const;
     /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
     /// not exist.
-    virtual Atlas::Message::Object getAttr(const std::string& name)
+    virtual Atlas::Object getAttr(const std::string& name)
         const throw (NoSuchAttrException);
     /// Set the attribute "name" to the value given by "attr".
     virtual void setAttr(const std::string& name,
-                         const Atlas::Message::Object& attr);
+                         const Atlas::Object& attr);
     /// Remove the attribute "name". This will not work for static attributes.
     virtual void removeAttr(const std::string& name);
 
-    /// Convert this object to a Message::Object.
-    virtual Atlas::Message::Object asObject() const;
+    /// Convert this object to a Object.
+    virtual Atlas::Object asObject() const;
 
     /// Send the contents of this object to a Bridge.
     virtual void sendContents(Atlas::Bridge* b) const;
@@ -80,7 +80,7 @@ protected:
     //this will be defined in each subclass separately, so no need here for it
     //static BaseObjectData *begin; 
     BaseObjectData *m_next;
-    std::map<std::string, Atlas::Message::Object> m_attributes;
+    std::map<std::string, Atlas::Object> m_attributes;
     // is attribute in this object or in default object?
     int m_attrFlags;
 };
@@ -106,6 +106,6 @@ void BaseObjectData::decRef() {
 }
 
 
-} }
+}
 
 #endif

@@ -1,5 +1,5 @@
-#include "Atlas/Objects/Decoder.h"
-#include "Atlas/Objects/loadDefaults.h"
+#include "Objects/Decoder.h"
+#include "Objects/loadDefaults.h"
 
 using namespace Atlas;
 
@@ -9,31 +9,31 @@ bool acct_arrived = false;
 bool anonymous_arrived = false;
 bool unknown_arrived = false;
 
-class TestDecoder : public Objects::Decoder
+class TestDecoder : public ObjectsDecoder
 {
 protected:
-    virtual void objectArrived(const Objects::Root& r)
+    virtual void objectArrived(const Root& r)
     {
         assert(r->getAttr("id").asString() == "root_instance");
         root_arrived = true;
     }
 
-    virtual void objectArrived(const Objects::Operation::Look& l)
+    virtual void objectArrived(const Look& l)
     {
         assert(l->getAttr("id").asString() == "look_instance");
         look_arrived = true;
     }
 
-    virtual void objectArrived(const Objects::Entity::Account &a)
+    virtual void objectArrived(const Account &a)
     {
         acct_arrived = true;
     }
 
-    virtual void objectArrived(const Objects::Entity::Anonymous&) {
+    virtual void objectArrived(const Anonymous&) {
         anonymous_arrived = true;
     }
 
-    virtual void unknownObjectArrived(const Atlas::Message::Object&) {
+    virtual void unknownObjectArrived(const Object&) {
         unknown_arrived = true;
     }
 };
@@ -41,8 +41,8 @@ protected:
 int main(int argc, char** argv)
 {
     try {
-        Objects::loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
-    } catch(Objects::DefaultLoadingException e) {
+        loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
+    } catch(DefaultLoadingException e) {
         cout << "DefaultLoadingException: "
              << e.msg << endl;
         return 1;

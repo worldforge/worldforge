@@ -7,7 +7,7 @@
 
 #include "Decoder.h"
 
-namespace Atlas { namespace Objects {
+namespace Atlas {
 
 class DefaultLoadingException
 {
@@ -18,5 +18,5 @@ public:
 
 void loadDefaults(const string& filename);
 
-} } // namespace Atlas::Objects
+} // namespace Atlas
 #endif

@@ -8,7 +8,7 @@
 using namespace Atlas;
 using namespace std;
 
-namespace Atlas { namespace Message {
+namespace Atlas {
 
 Encoder::Encoder(Atlas::Bridge* b)
     : EncoderBase(b)
@@ -86,4 +86,4 @@ void Encoder::streamMessage(const Object& obj)
 
 
 
-} } // namespace Atlas::Message
+} // namespace Atlas

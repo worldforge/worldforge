@@ -1,11 +1,10 @@
 #include <iostream>
 #include <cassert>
-#include "Atlas/Message/Object.h"
+#include "Message/Object.h"
 
 #include "timer.h"
 
 using namespace Atlas;
-using namespace Atlas::Message;
 using namespace std;
 
 class NPC

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace Atlas { namespace Message {
+namespace Atlas {
 
 QueuedDecoder::QueuedDecoder()
 {
@@ -34,4 +34,4 @@ void QueuedDecoder::objectArrived(const Object& obj)
     objectQueue.push(obj);
 }
 
-} } // namespace Atlas::Message
+} // namespace Atlas

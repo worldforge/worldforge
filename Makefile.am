@@ -2,7 +2,10 @@ SUBDIRS = src tests tutorial benchmark
 
 bin_SCRIPTS = atlas-config
 
-EXTRA_DIST = ROADMAP Doxyfile footer.html index.dox
+EXTRA_DIST = ROADMAP Doxyfile footer.html index.dox atlas.m4
+
+m4datadir = $(datadir)/aclocal
+m4data_DATA = atlas.m4
 
 docs:
 	@echo "running doxygen..."

@@ -17,7 +17,7 @@ class NPC
 {
 public:
   NPC() : id("123") {x=y=z = vx=vy=vz = 0.0;}
-  Operation::Sight move(Operation::Move &op);
+  Sight move(Move &op);
   string getId() {return id;}
 private:
   string id;
@@ -25,7 +25,7 @@ private:
   double vx,vy,vz;
 };
 
-Operation::Sight NPC::move(Operation::Move &op)
+Sight NPC::move(Move &op)
 {
   Object::ListType::iterator new_vel_i = op.getArgs().
     front().asMap()["velocity"].asList().begin();
@@ -38,7 +38,7 @@ Operation::Sight NPC::move(Operation::Move &op)
   z += vz;
 
   //human:
-  Entity::GameEntity human = Entity::GameEntity::Instantiate();
+  GameEntity human = GameEntity::Instantiate();
   human.setId(getId());
   Object::ListType pos;
   pos.push_back(x);
@@ -52,13 +52,13 @@ Operation::Sight NPC::move(Operation::Move &op)
   human.setVelocity(vel);
 
   //move:
-  Operation::Move move = Operation::Move::Instantiate();
+  Move move = Move::Instantiate();
   Object::ListType move_args;
   move_args.push_back(human.asObject());
   move.setArgs(move_args);
 
   //sight:
-  Operation::Sight sight = Operation::Sight::Instantiate();
+  Sight sight = Sight::Instantiate();
   sight.setFrom(getId());
   Object::ListType sight_args;
   sight_args.push_back(move.asObject());
@@ -73,7 +73,7 @@ int main(int argc, char** argv)
   TIME_ON;
   for(i=0; i<10000.0; i+=1.0) {
     //human:
-    Entity::GameEntity human = Entity::GameEntity::Instantiate();
+    GameEntity human = GameEntity::Instantiate();
     Object::ListType pos;
     pos.push_back(i);
     pos.push_back(i-1.0);
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 //    cout<<foo.size()<<":"<<foo.front().asFloat()<<","<<foo.back().asFloat()<<endl;
 
     //move:
-    Operation::Move move = Operation::Move::Instantiate();
+    Move move = Move::Instantiate();
     Object::ListType move_args;
     move_args.push_back(human.asObject());
     move.setArgs(move_args);
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 //    cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<endl;
 
     //sight:
-    Operation::Sight sight = Operation::Sight::Instantiate();
+    Sight sight = Sight::Instantiate();
     sight.setFrom("123");
     Object::ListType sight_args;
     sight_args.push_back(move.asObject());
@@ -124,7 +124,7 @@ int main(int argc, char** argv)
   TIME_ON;
   for(i=0; i<10000.0; i+=1.0) {
     //human:
-    Entity::GameEntity human = Entity::GameEntity::Instantiate();
+    GameEntity human = GameEntity::Instantiate();
     human.setId(npc1.getId());
     Object::ListType vel;
     vel.push_back(i);
@@ -133,12 +133,12 @@ int main(int argc, char** argv)
     human.setVelocity(vel);
 
     //move:
-    Operation::Move move = Operation::Move::Instantiate();
+    Move move = Move::Instantiate();
     Object::ListType move_args;
     move_args.push_back(human.asObject());
     move.setArgs(move_args);
 
-    Operation::Sight res_sight = npc1.move(move);
+    Sight res_sight = npc1.move(move);
     Object::ListType::iterator new_pos_i = res_sight.getArgs().
       front().asMap()["args"].asList().
       front().asMap()["pos"].asList().begin();

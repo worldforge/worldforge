@@ -1,8 +1,37 @@
-2000-12-19  AlRiddoch  <ajr@ecs.soton.ac.uk>
+2000-12-22  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Removed dependency on socket++ in test programs.
+
+	* Added atlas.m4 autoconf macro script.
+
+2000-12-21  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Split filters into header and cpp file in the same model
+	  as Codecs.
+
+	* Re-worked tutorial, test and benchmarks so they compile without
+	  installing the library.
+
+2000-12-20  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Removed hierarchical namespaces, leaving single flat Atlas
+	  namespace.
+
+	* Reduced template usage, especially removing all Stream
+	  templates.
+
+	* Split codecs into header and cpp file, and removed static Codec
+	  instances.
+
+	* Re-worked factories() static member function in Factory
+	  so it now uses portable static list pointer instead of static
+	  list.
+
+2000-12-19  Al Riddoch  <ajr@ecs.soton.ac.uk>
 
 	* Added atlas-config script.
 
-2000-12-13  AlRiddoch  <ajr@ecs.soton.ac.uk>
+2000-12-13  Al Riddoch  <ajr@ecs.soton.ac.uk>
 
 	* Added first attempt at a UML class diagram.
 

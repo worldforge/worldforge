@@ -39,18 +39,18 @@ class GenerateDecoder:
  * @see Atlas::Objects::Encoder
  * @author Stefanus Du Toit <sdt@gmx.net>
  */
-class Decoder : public Atlas::Message::DecoderBase
+class ObjectsDecoder : public Atlas::DecoderBase
 {
 public:
     /// Default destructor.
-    virtual ~Decoder();
+    virtual ~ObjectsDecoder();
 
 protected:
     /// Overridden by Objects::Decoder to retrieve the object.
-    virtual void objectArrived(const Atlas::Message::Object&);
+    virtual void objectArrived(const Atlas::Object&);
 
     /// An unknown object has arrived.
-    virtual void unknownObjectArrived(const Atlas::Message::Object&) { }
+    virtual void unknownObjectArrived(const Atlas::Object&) { }
 
     /// An unknown object has arrived.
     virtual void unknownObjectArrived(const Root&) { }
@@ -80,17 +80,17 @@ protected:
         self.write('\n#include "Decoder.h"\n\n')
         self.ns_open(self.base_list)
         self.write("""
-Decoder::~Decoder()
+ObjectsDecoder::~ObjectsDecoder()
 {
 }
 
-void Decoder::objectArrived(const Atlas::Message::Object& o)
+void ObjectsDecoder::objectArrived(const Atlas::Object& o)
 {
     Root obj =  messageObject2ClassObject(o);
     dispatchObject(obj);
 }
 
-void Decoder::dispatchObject(const Root& obj)
+void ObjectsDecoder::dispatchObject(const Root& obj)
 {
     switch(obj->getClassNo()) {
 """) #"for xemacs syntax highlighting

@@ -32,82 +32,17 @@ The complete specification is located in cvs at:
 
 */
 
-class XML : public Codec<iostream>
-{
-    public:
+#include "XML.h"
 
-    XML(const Codec<iostream>::Parameters&);
-
-    virtual void poll(bool can_read = true);
-
-    virtual void streamBegin();
-    virtual void streamMessage(const Map&);
-    virtual void streamEnd();
+//namespace
+//{
+    //Codec::Factory<XML> factory(
+	//"XML",					    // name
+	//Codec::Metrics(1, 2)			    // metrics
+    //);
+//}
     
-    virtual void mapItem(const std::string& name, const Map&);
-    virtual void mapItem(const std::string& name, const List&);
-    virtual void mapItem(const std::string& name, int);
-    virtual void mapItem(const std::string& name, double);
-    virtual void mapItem(const std::string& name, const std::string&);
-    virtual void mapEnd();
-    
-    virtual void listItem(const Map&);
-    virtual void listItem(const List&);
-    virtual void listItem(int);
-    virtual void listItem(double);
-    virtual void listItem(const std::string&);
-    virtual void listEnd();
-
-    protected:
-
-    iostream& socket;
-    Bridge* bridge;
-    
-    enum Token
-    {
-	TOKEN_TAG,
-	TOKEN_START_TAG,
-	TOKEN_END_TAG,
-	TOKEN_DATA,
-    };
-    
-    Token token;
-    
-    enum State
-    {
-	PARSE_NOTHING,
-	PARSE_STREAM,
-        PARSE_MAP,
-        PARSE_LIST,
-	PARSE_INT,
-	PARSE_FLOAT,
-	PARSE_STRING,
-    };
-    
-    stack<State> state;
-    stack<string> data;
-
-    string tag;
-    string name;
-
-    inline void tokenTag(char);
-    inline void tokenStartTag(char);
-    inline void tokenEndTag(char);
-    inline void tokenData(char);
-
-    inline void parseStartTag();
-    inline void parseEndTag();
-};
-
-namespace
-{
-    Codec<iostream>::Factory<XML> factory(
-	"XML",					    // name
-	Codec<iostream>::Metrics(1, 2)		    // metrics
-    );
-}
-    
-XML::XML(const Codec<iostream>::Parameters& p)
+XML::XML(const Codec::Parameters& p)
     : socket(p.stream), bridge(p.bridge)
 {
     token = TOKEN_DATA;

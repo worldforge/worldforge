@@ -34,7 +34,6 @@ However, the scale of these values is not yet decided upon. FIXME
 @see Negotiate
 */
 
-template <class Stream>
 class Codec : public Bridge, public Task
 {
     public:
@@ -50,10 +49,10 @@ class Codec : public Bridge, public Task
 
     struct Parameters
     {
-        Stream& stream;
+        iostream& stream;
 	Bridge* bridge;
 
-        Parameters(Stream& stream, Bridge* bridge) 
+        Parameters(iostream& stream, Bridge* bridge) 
            : stream(stream), bridge(bridge) { }
     };
 

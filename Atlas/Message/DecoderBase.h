@@ -10,7 +10,7 @@
 #include "../Bridge.h"
 #include "Object.h"
 
-namespace Atlas { namespace Message {
+namespace Atlas {
 
 /** Base class for decoders that take Atlas::Message::Object.
  *
@@ -75,6 +75,6 @@ protected:
     virtual void objectArrived(const Object& obj) = 0;
 };
 
-} } // namespace Atlas::Message
+} // namespace Atlas
 
 #endif

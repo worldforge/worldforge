@@ -1,16 +1,16 @@
 #include <string>
-#include "Atlas/Objects/Root.h"
-#include "Atlas/Objects/Encoder.h"
-#include "Atlas/Message/DecoderBase.h"
-#include "Atlas/Objects/loadDefaults.h"
+#include "Objects/Root.h"
+#include "Objects/Encoder.h"
+#include "Message/DecoderBase.h"
+#include "Objects/loadDefaults.h"
 
 using namespace std;
 using namespace Atlas;
 
-class RootDecoder : public Message::DecoderBase
+class RootDecoder : public DecoderBase
 {
 protected:
-    virtual void objectArrived(const Message::Object& o)
+    virtual void objectArrived(const Object& o)
     {
         assert(o.isMap());
         assert(o.asMap().find(string("parents")) != o.asMap().end());
@@ -23,18 +23,18 @@ protected:
 int main(int argc, char** argv)
 {
     try {
-        Objects::loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
-    } catch(Objects::DefaultLoadingException e) {
+        loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
+    } catch(DefaultLoadingException e) {
         cout << "DefaultLoadingException: "
              << e.msg << endl;
         return 1;
     }
     RootDecoder rd;
-    Objects::Encoder re(&rd);
+    ObjectsEncoder re(&rd);
 
     rd.streamBegin(); // important, otherwise we'll segfault!
-    Objects::Root root_inst;
+    Root root_inst;
     root_inst->setAttr("id", string("root_instantiation"));
-    re.streamMessage((Objects::Root&)root_inst);
+    re.streamMessage((Root&)root_inst);
     rd.streamEnd();
 }

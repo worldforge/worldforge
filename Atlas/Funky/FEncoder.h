@@ -9,7 +9,7 @@
 
 #include <string>
 
-namespace Atlas { namespace Funky {
+namespace Atlas {
 
 /** @defgroup funky_encoder Atlas Funky Encoder
  *
@@ -80,7 +80,7 @@ class BeginList {};
  */
 class EndList {};
 
-template<class B> class Encoder;
+template<class B> class FunkyEncoder;
 template<class B, class T> class EncMap;
 template<class B, class T> class EncList;
 template<class B, class T> class EncMapValue;
@@ -244,20 +244,20 @@ protected:
  * @see funky_encoder
  */
 template <class B>
-class Encoder
+class FunkyEncoder
 {
 public:
-    Encoder(B& b) : b(b) { }
+    FunkyEncoder(B& b) : b(b) { }
     
     /// Start a message (as a map).
-    EncMap<B, Encoder> operator<<(const BeginMap&) {
+    EncMap<B, FunkyEncoder> operator<<(const BeginMap&) {
         b.streamMessage(B::mapBegin);
-        return EncMap<B, Encoder>(b);
+        return EncMap<B, FunkyEncoder>(b);
     }
 
     /// If the encoder supports it, send a different kind of message.
     template<typename Arg>
-    Encoder<B> operator<<(const Arg& a)
+    FunkyEncoder<B> operator<<(const Arg& a)
     {
         b.streamMessage(a);
         return *this;
@@ -284,6 +284,6 @@ public:
 };
 
 
-} } // Atlas::Funky namespace
+} // Atlas::Funky namespace
 
 #endif

@@ -2,6 +2,9 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit, Michael Day
 
+#ifndef ATLAS_CODECS_UTILITY_H
+#define ATLAS_CODECS_UTILITY_H
+
 /** @file Codecs/Utility.h
  * Various utility functions for codec implementation.
  *
@@ -102,3 +105,5 @@ inline const string hexDecodeWithPrefix(const string& prefix, const string& mess
 
     return newMessage;
 }
+
+#endif // ATLAS_CODECS_UTILITY_H

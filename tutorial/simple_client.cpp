@@ -11,12 +11,21 @@
 #include <iostream>
 // sleep()
 #include <unistd.h>
-// iosockinet - the iostream-based socket class
-#include <sockinet.h>
 // Atlas negotiation
-#include <Atlas/Net/Stream.h>
+#include <Net/Stream.h>
 // The DebugBridge
 #include "DebugBridge.h"
+
+#include "sockbuf.h"
+
+extern "C" {
+    #include <stdio.h>
+    #include <sys/time.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <netinet/in.h>
+    #include <unistd.h>
+}
 
 #include <map>
 #include <list>
@@ -25,7 +34,7 @@ using namespace Atlas;
 using namespace std;
 
 // This sends a very simple message to c
-void helloWorld(Codec<iostream>& c)
+void helloWorld(Codec & c)
 {
     cout << "Sending hello world message... " << flush;
     c.streamMessage(Bridge::mapBegin);
@@ -36,46 +45,58 @@ void helloWorld(Codec<iostream>& c)
 
 int main(int argc, char** argv)
 {
-    // The socket that connects us to the server
-    iosockinet stream(sockbuf::sock_stream);
+    int cli_fd = socket(PF_INET, SOCK_STREAM, 0);
+    if (cli_fd < 0) {
+        cerr << "ERROR: Could not open socket" << endl << flush;
+        exit(1);
+    }
 
     cout << "Connecting..." << flush;
-    
-    // Connect to the server
-    if(argc>1) {
-      stream->connect(argv[1], 6767);
-    } else {
-      stream->connect("127.0.0.1", 6767);
+
+    struct sockaddr_in sin;
+    sin.sin_family = AF_INET;
+    sin.sin_port = htons(6767);
+    sin.sin_addr.s_addr = htonl(0x7f000001);
+  
+
+    int res = connect(cli_fd, (struct sockaddr *)&sin, sizeof(sin));
+
+    sockbuf cli_buf(cli_fd);
+    iostream connection(&cli_buf);
+
+    if (res == -1) {
+        cerr << "ERROR: Connection failed" << endl << flush;
+        exit(1);
     }
-    
+
     // The DebugBridge puts all that comes through the codec on cout
     DebugBridge bridge;
     // Do client negotiation with the server
-    Net::StreamConnect conn("simple_client", stream, &bridge);
+    StreamConnect conn("simple_client", connection, &bridge);
 
     cout << "Negotiating... " << flush;
     // conn.poll() does all the negotiation
-    while (conn.getState() == Negotiate<iostream>::IN_PROGRESS) {
+    while (conn.getState() == Negotiate::IN_PROGRESS) {
         conn.poll();
     }
     cout << "done" << endl;
 
     // Check whether negotiation was successful
-    if (conn.getState() == Negotiate<iostream>::FAILED) {
+    if (conn.getState() == Negotiate::FAILED) {
         cerr << "Failed to negotiate" << endl;
         return 2;
     }
     // Negotiation was successful
 
     // Get the codec that negotiation established
-    Codec<iostream>* codec = conn.getCodec();
+    Codec * codec = conn.getCodec();
 
     // This should always be sent at the beginning of a session
     codec->streamBegin();
     
     // Say hello to the server
     helloWorld(*codec);
-    stream << flush;
+    connection << flush;
 
     cout << "Sleeping for 2 seconds... " << flush;
     // Sleep a little
@@ -83,14 +104,14 @@ int main(int argc, char** argv)
     cout << "done." << endl;
 
     // iosockinet::operator bool() returns false if the connection was broken
-    if (!stream) cout << "Server exited." << endl; else {
+    if (!connection) cout << "Server exited." << endl; else {
         // It was not broken by the server, so we'll close ourselves
         cout << "Closing connection... " << flush;
         // This should always be sent at the end of a session
         codec->streamEnd();
-        stream << flush;
+        connection << flush;
         // Close the socket
-        stream->close();
+        close(cli_fd);
         cout << "done." << endl;
     }
 

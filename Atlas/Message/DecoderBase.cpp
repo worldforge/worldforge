@@ -4,7 +4,7 @@
 
 #include "DecoderBase.h"
 
-namespace Atlas { namespace Message {
+namespace Atlas {
 
 DecoderBase::DecoderBase()
 {
@@ -125,4 +125,4 @@ void DecoderBase::listEnd()
     }
 }
     
-} } // namespace Atlas::Message
+} // namespace Atlas

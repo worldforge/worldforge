@@ -1,16 +1,14 @@
 #include <iostream>
 #include <cassert>
-#include "Atlas/Message/Object.h"
-#include "Atlas/Objects/Root.h"
-#include "Atlas/Objects/Operation.h"
-#include "Atlas/Objects/Entity.h"
-#include "Atlas/Objects/loadDefaults.h"
+#include "Message/Object.h"
+#include "Objects/Root.h"
+#include "Objects/Operation.h"
+#include "Objects/Entity.h"
+#include "Objects/loadDefaults.h"
 
 #include "timer.h"
 
 using namespace Atlas;
-using namespace Atlas::Objects;
-using namespace Atlas::Message;
 using namespace std;
 
 #define DEBUG 0
@@ -29,7 +27,7 @@ class NPC
 {
 public:
   NPC() : id("123") {x=y=z = vx=vy=vz = 0.0;}
-  Operation::Sight move(Operation::Move &op);
+  Sight move(Move &op);
   string getId() {return id;}
 private:
   string id;
@@ -37,10 +35,10 @@ private:
   double vx,vy,vz;
 };
 
-Operation::Sight NPC::move(Operation::Move &op)
+Sight NPC::move(Move &op)
 {
     const vector<double>& new_vel = 
-        ((Entity::GameEntity&)op->getArgs()[0])->
+        ((GameEntity&)op->getArgs()[0])->
         getVelocity();
     vx = new_vel[0];
     vy = new_vel[1];
@@ -51,8 +49,8 @@ Operation::Sight NPC::move(Operation::Move &op)
     z += vz;
     
     //human:
-    Entity::GameEntity human;
-    //Entity::GameEntity human = Entity::GameEntity::Instantiate();
+    GameEntity human;
+    //GameEntity human = GameEntity::Instantiate();
 #if USE_STRING
     human->setId(getId());
 #endif
@@ -64,11 +62,11 @@ Operation::Sight NPC::move(Operation::Move &op)
     human->modifyVelocity()[2] = vz;
     
     //move:
-    Operation::Move move;
+    Move move;
     move->setArgs1((Root&)human);
 
     //sight:
-    Operation::Sight sight;
+    Sight sight;
     sight->setFrom(getId());
     sight->setArgs1((Root&)move);
     
@@ -88,7 +86,7 @@ int main(int argc, char** argv)
     TIME_ON;
     for(i=0; i<MAX_ITER; i+=1.0) {
         //human:
-        Entity::GameEntity human;
+        GameEntity human;
         Object::ListType pos;
         human->modifyPos()[0] = i;
         human->modifyPos()[1] = i-1.0;
@@ -101,13 +99,13 @@ int main(int argc, char** argv)
 //        cout<<foo.size()<<":"<<foo.front().asFloat()<<","<<foo.back().asFloat()<<endl;
 
         //move:
-        Operation::Move move;
+        Move move;
         move->setArgs1((Root&)human);
 //        Object::MapType ent = move.getArgs().front().asMap();
 //        cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<endl;
 
         //sight:
-        Operation::Sight sight;
+        Sight sight;
 #if USE_STRING
         sight->setFrom("123");
 #endif
@@ -122,7 +120,7 @@ int main(int argc, char** argv)
     TIME_ON;
     for(i=0; i<MAX_ITER; i+=1.0) {
         //human:
-        Entity::GameEntity human;
+        GameEntity human;
 #if USE_STRING
         human->setId(npc1.getId());
 #endif
@@ -131,13 +129,13 @@ int main(int argc, char** argv)
         human->modifyVelocity()[2] = i+1.0;
         
         //move:
-        Operation::Move move;
+        Move move;
         move->setArgs1((Root&)human);
 
-        Operation::Sight res_sight = npc1.move(move);
+        Sight res_sight = npc1.move(move);
         const vector<double>& new_pos = 
-            ((Entity::GameEntity&)
-               ((Operation::Move&)res_sight->getArgs()[0])
+            ((GameEntity&)
+               ((Move&)res_sight->getArgs()[0])
              ->getArgs()[0])->
             getVelocity();
         x = new_pos[0];

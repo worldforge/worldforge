@@ -14,11 +14,11 @@ using namespace Atlas;
 
 */
 
-class XMLish : public Codec<iostream>
+class XMLish : public Codec
 {
     public:
 
-    XMLish(const Codec<iostream>::Parameters&);
+    XMLish(const Codec::Parameters&);
 
     virtual void poll(bool can_read = true);
 
@@ -59,7 +59,7 @@ namespace
     */
 }
     
-XMLish::XMLish(const Codec<iostream>::Parameters& p)
+XMLish::XMLish(const Codec::Parameters& p)
     : socket(p.stream), bridge(p.bridge)
 {
 }
