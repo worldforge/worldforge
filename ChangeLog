@@ -1,5 +1,9 @@
 Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>
 
+	* Merged in Grimicus' patch to add wfmath-config
+
+Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>
+
 	* Redid sstream vs. strstream compatibility code
 
 Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>

@@ -13,3 +13,4 @@ aclocal.m4
 config.h
 stamp-h
 stamp-h.in
+wfmath-config

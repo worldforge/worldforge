@@ -29,8 +29,15 @@ AM_PROG_LIBTOOL
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
+WFMATH_CFLAGS=""
+WFMATH_LIBS="-lwfmath"
 
-AM_PATH_ATLAS(0.4.3, found_atlas=yes, [
+AM_PATH_ATLAS(0.4.3, [
+                      found_atlas=yes
+dnl Don't add Atlas CFLAGS, LIBS, since Atlas is only used in
+dnl conversion functions to Atlas::Message::Object. Anyone using
+dnl those should already be using atlas-config explicitly.
+                     ], [
     AC_MSG_RESULT(*** Could not find libAtlas...skipping compile for libwfmath_atlas)
     found_atlas=no
 ]) 
@@ -46,4 +53,12 @@ dnl AC_C_CONST
 
 dnl Checks for library functions.
 
-AC_OUTPUT(Makefile wfmath/Makefile atlas/Makefile doc/Makefile)
+AC_SUBST(WFMATH_CFLAGS)
+AC_SUBST(WFMATH_LIBS)
+
+AC_OUTPUT([Makefile 
+           wfmath/Makefile 
+           atlas/Makefile 
+           doc/Makefile
+           wfmath-config
+])
