@@ -1,3 +1,12 @@
+2003-09-13 Damien McGinnes 
+
+	* Mercator/Intersect.cpp,h: some intersection code cleanup
+	  ray intersection now returns the point of intersection
+	  and normal.
+	* Mercator/Segment.cpp: fixed normal for intersection on diagonal
+	  of a cell (between the two triangles of the quad) also normalised
+	  the returned normal
+
 2003-09-12 Damien McGinnes 
 
 	* Mercator/Intersect.cpp,h: maybe finished ray intersection
