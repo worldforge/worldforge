@@ -43,38 +43,16 @@ AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 
-dnl Check for Atlas-C++ library
-PKG_CHECK_MODULES(ATLAS, atlascpp-0.4 >= 0.4.4,
+dnl Check for Atlas-C++ and wfmath library
+PKG_CHECK_MODULES(WF, atlascpp-0.4 >= 0.4.4 wfmath-0.2 >= 0.2.10,
     [
-        CPPFLAGS="$CPPFLAGS $ATLAS_CFLAGS"
-        LIBS="$LIBS $ATLAS_LIBS"
-        MERCATOR_REQUIRES="$MERCATOR_REQUIRES atlascpp-0.4"
+        CPPFLAGS="$CPPFLAGS $WF_CFLAGS"
+        LIBS="$LIBS $WF_LIBS"
+        MERCATOR_REQUIRES="$MERCATOR_REQUIRES atlascpp-0.4 wfmath-0.2"
     ],
     [
-        AM_PATH_ATLAS(0.4.4, [
-            CPPFLAGS="$CPPFLAGS $ATLAS_CFLAGS"
-            LIBS="$LIBS $ATLAS_LIBS"],
-            AC_MSG_ERROR(Couldn't find Atlas or version is insufficent)
-        )
+        AC_MSG_ERROR(Couldn't find Atlas or wfmath or version is insufficent)
     ])
-
-dnl Check for WFMath library
-PKG_CHECK_MODULES(WFMATH, wfmath-0.2 >= 0.2.10,
-    [
-        CPPFLAGS="$CPPFLAGS $WFMATH_CFLAGS"
-        LIBS="$LIBS $WFMATH_LIBS"
-        MERCATOR_REQUIRES="$MERCATOR_REQUIRES wfmath-0.2"
-    ],
-    [
-        AM_PATH_WFMATH(0.2.6,[
-            CPPFLAGS="$CPPFLAGS $WFMATH_CFLAGS"
-            LIBS="$LIBS $WFMATH_LIBS"
-            MERCATOR_LIBS="$MERCATOR_LIBS $WFMATH_LIBS"
-            ],
-            AC_MSG_ERROR(Couldn't find wfmath config [or config failed])
-        )
-    ])
-
 
 AC_LANG_RESTORE
 
@@ -82,12 +60,12 @@ dnl AC_MSG_NOTICE(Checking for test environment)
 
 AM_PATH_CPPUNIT(1.6.1,
     [
-	enable_cppunit=yes
-	AC_SUBST(CPPUNIT_CFLAGS)
-	AC_SUBST(CPPUNIT_LIBS)
+        enable_cppunit=yes
+        AC_SUBST(CPPUNIT_CFLAGS)
+        AC_SUBST(CPPUNIT_LIBS)
     ], [
-	AC_MSG_WARN(Couldn't Find CppUnit - make check will not work)
-	enable_cppunit=no
+        AC_MSG_WARN(Couldn't Find CppUnit - make check will not work)
+        enable_cppunit=no
     ]
 )
 

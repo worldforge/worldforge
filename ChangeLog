@@ -1,3 +1,7 @@
+2003-07-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Clean up configure.in a bit.
+
 2003-07-05 Damien McGinnes
         
 	* Mercator/TerrainMod.h: added a CraterTerrainMod that subtracts a 
