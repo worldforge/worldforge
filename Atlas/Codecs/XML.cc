@@ -8,11 +8,11 @@
 using namespace std;
 using namespace Atlas::Stream;
 
-class XML : public Codec
+class XML : public Codec<iostream>
 {
     public:
 
-    XML(const Codec::Parameters&);
+    XML(const Codec<iostream>::Parameters&);
 
     virtual void Poll();
 
@@ -43,10 +43,13 @@ class XML : public Codec
 
 namespace
 {
-    Codec::Factory<XML> factory("XML", Codec::Metrics(1, 2));
+    Codec<iostream>::Factory<XML> factory(
+	"XML",					    // name
+	Codec<iostream>::Metrics(1, 2)		    // metrics
+    );
 }
     
-XML::XML(const Codec::Parameters& p)
+XML::XML(const Codec<iostream>::Parameters& p)
     : socket(p.stream), filter(p.filter), bridge(p.bridge)
 {
 }

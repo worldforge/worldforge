@@ -135,16 +135,16 @@ class LoopBridge : public Bridge
 
 int main()
 {
-    list<Factory<Codec>*>::iterator i;
+    list<Factory<Codec<iostream> >*>::iterator i;
 
-    for (i = Factory<Codec>::Factories().begin();
-	 i != Factory<Codec>::Factories().end();
+    for (i = Factory<Codec<iostream> >::Factories().begin();
+	 i != Factory<Codec<iostream> >::Factories().end();
 	 ++i)
     {
 	if ((*i)->GetName() == "Packed") break;
     }
 
-    if (i == Factory<Codec>::Factories().end())
+    if (i == Factory<Codec<iostream> >::Factories().end())
     {
 	cerr << "Could not find Packed codec\n";
 	return -1;
@@ -159,10 +159,10 @@ int main()
 
     LoopBridge bridge;
     
-    Codec* codec = (*i)->New(Codec::Parameters(client_stream, 0, &bridge));
+    Codec<iostream>* codec = (*i)->New(Codec<iostream>::Parameters(client_stream, 0, &bridge));
 
     codec->MessageBegin();
-    codec->MessageItem(Codec::MapBegin);
+    codec->MessageItem(Codec<iostream>::MapBegin);
 	codec->MapItem("id", 17);
 	codec->MapItem("name", "Fred (the + great)");
 	codec->MapItem("weight", 1.5);

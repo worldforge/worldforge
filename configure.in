@@ -346,6 +346,7 @@ AC_OUTPUT([
 	src/Codecs/Makefile
 	src/Content/Makefile
 	src/Debug/Makefile
+	src/Net/Makefile
 	src/Object/Makefile
 	src/Stream/Makefile
 	src/TestSuite/Makefile

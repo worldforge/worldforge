@@ -23,11 +23,11 @@ $ for string
 
 */
 
-class PackedAscii : public Codec
+class Packed : public Codec<iostream>
 {
 public:
     
-    PackedAscii(const Codec::Parameters&);
+    Packed(const Codec<iostream>::Parameters&);
 
     virtual void Poll();
 
@@ -89,16 +89,19 @@ protected:
 
 namespace
 {
-    Codec::Factory<PackedAscii> factory("Packed", Codec::Metrics(1, 2));
+    Codec<iostream>::Factory<Packed> factory(
+	"Packed",				    // name
+	Codec<iostream>::Metrics(1, 2)		    // metrics
+    );
 }
 
-PackedAscii::PackedAscii(const Codec::Parameters& p) :
+Packed::Packed(const Codec<iostream>::Parameters& p) :
     socket(p.stream), filter(p.filter), bridge(p.bridge)
 {
     state.push(PARSE_STREAM);
 }
 
-void PackedAscii::ParseStream(char next)
+void Packed::ParseStream(char next)
 {
     switch (next)
     {
@@ -114,7 +117,7 @@ void PackedAscii::ParseStream(char next)
     }
 }
 
-void PackedAscii::ParseMessage(char next)
+void Packed::ParseMessage(char next)
 {
     switch (next)
     {
@@ -135,7 +138,7 @@ void PackedAscii::ParseMessage(char next)
     }
 }
 
-void PackedAscii::ParseMap(char next)
+void Packed::ParseMap(char next)
 {
     switch (next)
     {
@@ -178,7 +181,7 @@ void PackedAscii::ParseMap(char next)
     }
 }
 
-void PackedAscii::ParseList(char next)
+void Packed::ParseList(char next)
 {
     switch (next)
     {
@@ -216,7 +219,7 @@ void PackedAscii::ParseList(char next)
     }
 }
 
-void PackedAscii::ParseMapBegin(char next)
+void Packed::ParseMapBegin(char next)
 {
     bridge->MapItem(hexDecode("+", name), MapBegin);
     socket.putback(next);
@@ -224,7 +227,7 @@ void PackedAscii::ParseMapBegin(char next)
     name.erase();
 }
 
-void PackedAscii::ParseListBegin(char next)
+void Packed::ParseListBegin(char next)
 {
     bridge->MapItem(hexDecode("+", name), ListBegin);
     socket.putback(next);
@@ -232,7 +235,7 @@ void PackedAscii::ParseListBegin(char next)
     name.erase();
 }
 
-void PackedAscii::ParseInt(char next)
+void Packed::ParseInt(char next)
 {
     switch (next)
     {
@@ -283,7 +286,7 @@ void PackedAscii::ParseInt(char next)
     }
 }
 
-void PackedAscii::ParseFloat(char next)
+void Packed::ParseFloat(char next)
 {
     switch (next)
     {
@@ -337,7 +340,7 @@ void PackedAscii::ParseFloat(char next)
     }
 }
 
-void PackedAscii::ParseString(char next)
+void Packed::ParseString(char next)
 {
     switch (next)
     {
@@ -377,7 +380,7 @@ void PackedAscii::ParseString(char next)
     }
 }
 
-void PackedAscii::ParseName(char next)
+void Packed::ParseName(char next)
 {
     switch (next)
     {
@@ -402,7 +405,7 @@ void PackedAscii::ParseName(char next)
     }
 }
 
-void PackedAscii::Poll()
+void Packed::Poll()
 {
     while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
     {
@@ -424,78 +427,78 @@ void PackedAscii::Poll()
     }
 }
 
-void PackedAscii::MessageBegin()
+void Packed::MessageBegin()
 {
     socket << "{";
 }
 
-void PackedAscii::MessageItem(const Map&)
+void Packed::MessageItem(const Map&)
 {
     socket << "[";
 }
 
-void PackedAscii::MessageEnd()
+void Packed::MessageEnd()
 {
     socket << "}";
 }
 
-void PackedAscii::MapItem(const std::string& name, const Map&)
+void Packed::MapItem(const std::string& name, const Map&)
 {
     socket << "[" << hexEncode("+", "+{}[]()@#$=", name) << "=";
 }
 
-void PackedAscii::MapItem(const std::string& name, const List&)
+void Packed::MapItem(const std::string& name, const List&)
 {
     socket << "(" << hexEncode("+", "+{}[]()@#$=", name) << "=";
 }
 
-void PackedAscii::MapItem(const std::string& name, int data)
+void Packed::MapItem(const std::string& name, int data)
 {
     socket << "@" << hexEncode("+", "+{}[]()@#$=", name) << "=" << data;
 }
 
-void PackedAscii::MapItem(const std::string& name, double data)
+void Packed::MapItem(const std::string& name, double data)
 {
     socket << "#" << hexEncode("+", "+{}[]()@#$=", name) << "=" << data;
 }
 
-void PackedAscii::MapItem(const std::string& name, const std::string& data)
+void Packed::MapItem(const std::string& name, const std::string& data)
 {
     socket << "$" << hexEncode("+", "+{}[]()@#$=", name) << "=" <<
             hexEncode("+", "+{}[]()@#$=", data);
 }
 
-void PackedAscii::MapEnd()
+void Packed::MapEnd()
 {
     socket << "]";
 }
 
-void PackedAscii::ListItem(const Map&)
+void Packed::ListItem(const Map&)
 {
     socket << "[";
 }
 
-void PackedAscii::ListItem(const List&)
+void Packed::ListItem(const List&)
 {
     socket << "(";
 }
 
-void PackedAscii::ListItem(int data)
+void Packed::ListItem(int data)
 {
     socket << "@" << data;
 }
 
-void PackedAscii::ListItem(double data)
+void Packed::ListItem(double data)
 {
     socket << "#" << data;
 }
 
-void PackedAscii::ListItem(const std::string& data)
+void Packed::ListItem(const std::string& data)
 {
     socket << "$" << hexEncode("+", "+{}[]()@#$=", data);
 }
 
-void PackedAscii::ListEnd()
+void Packed::ListEnd()
 {
     socket << ")";
 }

@@ -1,35 +1,13 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Michael Day, Dmitry Derevyanko
+// Copyright (C) 2000 Michael Day
 
 #ifndef ATLAS_STREAM_NEGOTIATE_H
 #define ATLAS_STREAM_NEGOTIATE_H
 
-#include "Codec.h"
+#include "Connection.h"
 
 namespace Atlas { namespace Stream {
-
-  typedef std::list<Factory<Codec>*> FactoryCodecs;
-  typedef std::list<Factory<Filter>*> FactoryFilters;
-
-  template <class T>
-  class NegotiateHelper {
-
-    typedef std::list<T*> Factories;
-
-  public:
-
-    NegotiateHelper(std::list<std::string> *names, Factories *out_factories);
-
-    bool get(std::string &buf, std::string header);
-    void put(std::string &buf, std::string header);
-
-  private:
-
-    std::list<std::string> *names;
-    Factories *outFactories;
-
-  };
 
 /** Negotiation of codecs and filters for an Atlas connection
 
@@ -37,56 +15,27 @@ non blocking negotiation of Codecs and Filters
 requires a list of avalable Codecs and Filters,
 along with the name of sender and a Socket
 
+@see Connection
 @see Codec
 @see Filter
-
 */
 
+template <typename Stream>
 class Negotiate
 {
     public:
 
-    Negotiate(const std::string& name, iostream&);
-
-    bool done();
-
-    void negotiateServer();
-    void negotiateClient();
-
-    private:
-
-    enum
+    enum State
     {
-	SERVER_GREETING,
-	CLIENT_GREETING,
-	CLIENT_CODECS,
-	SERVER_CODECS,
-	CLIENT_FILTERS,
-	SERVER_FILTERS,
-	DONE
+	IN_PROGRESS,
+	SUCCEEDED,
+	FAILED,
     };
 
-    int state;
-
-    std::string outName;
-    std::string inName;
-    iostream& socket;
-    std::list<std::string> inCodecs;
-    std::list<std::string> inFilters;
-    FactoryCodecs outCodecs;
-    FactoryFilters outFilters;
-    NegotiateHelper<Factory<Codec> > codecHelper;
-    NegotiateHelper<Factory<Filter> > filterHelper;
-    std::string buf;
-
-    void processServerCodecs();
-    void processServerFilters();
-
-    void processClientCodecs();
-    void processClientFilters();
+    virtual State Poll() = 0;
+    virtual Connection<Stream> GetConnection() = 0;
 };
- 
+
 } } // Atlas::Stream
 
-#endif // ATLAS_STREAM_NEGOTIATE_H
-
+#endif

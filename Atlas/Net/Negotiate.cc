@@ -29,13 +29,13 @@ string get_line(string &s1, char ch, string &s2)
 using namespace Atlas::Stream;
 
 template <class T>
-NegotiateHelper<T>::NegotiateHelper(list<string> *names, Factories *out_factories) :
+Atlas::Net::NegotiateHelper<T>::NegotiateHelper(list<string> *names, Factories *out_factories) :
   names(names), outFactories(out_factories)
 { 
 }
 
 template <class F>
-bool NegotiateHelper<F>::get(string &buf, string header)
+bool Atlas::Net::NegotiateHelper<F>::get(string &buf, string header)
 {
   string s, h;
   
@@ -64,7 +64,7 @@ bool NegotiateHelper<F>::get(string &buf, string header)
 }
 
 template <class T>
-void NegotiateHelper<T>::put(string &buf, string header)
+void Atlas::Net::NegotiateHelper<T>::put(string &buf, string header)
 {
   Factories::iterator i;
   
@@ -79,19 +79,15 @@ void NegotiateHelper<T>::put(string &buf, string header)
   buf += "\n";
 }
 
-Negotiate::Negotiate(const string& name, iostream& s) :
+Atlas::Net::NegotiateClient::NegotiateClient(const string& name, iostream& s) :
   state(SERVER_GREETING), outName(name), socket(s),
   codecHelper(&inCodecs, &outCodecs),
   filterHelper(&inFilters, &outFilters)
 {
 }
 
-bool Negotiate::done() 
-{
-    return (state == DONE);
-}
-
-void Negotiate::negotiateServer()
+/*
+void Atlas::Net::NegotiateServer::Poll()
 {
     cout << "** Server(" << state << ") : " << endl;
 
@@ -152,8 +148,9 @@ void Negotiate::negotiateServer()
 	state++;
     }
 }
+*/
 
-void Negotiate::negotiateClient()
+Atlas::Stream::Negotiate::State Atlas::Net::NegotiateClient::Poll()
 {
     cout << "** Client(" << state << ") : " << endl;
 
@@ -215,12 +212,12 @@ void Negotiate::negotiateClient()
     }
 }
 
-void Negotiate::processServerCodecs()
+void Atlas::Net::NegotiateClient::processServerCodecs()
 {
     FactoryCodecs::iterator i;
     list<string>::iterator j;
 
-    FactoryCodecs *myCodecs = &Factory<Codec>::Factories();
+    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
 
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
     {
@@ -235,7 +232,7 @@ void Negotiate::processServerCodecs()
     }
 }
   
-void Negotiate::processServerFilters()
+void Atlas::Net::NegotiateClient::processServerFilters()
 {
   FactoryFilters::iterator i;
     list<string>::iterator j;
@@ -254,13 +251,13 @@ void Negotiate::processServerFilters()
     }
 }
 
-void Negotiate::processClientCodecs()
+void Atlas::Net::NegotiateClient::processClientCodecs()
 {
-    FactoryCodecs *myCodecs = &Factory<Codec>::Factories();
+    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
     outCodecs = *myCodecs;
 }
   
-void Negotiate::processClientFilters()
+void Atlas::Net::NegotiateClient::processClientFilters()
 {
     FactoryFilters *myFilters = &Factory<Filter>::Factories();
     outFilters = *myFilters;

@@ -8,10 +8,6 @@
 #include "Bridge.h"
 #include "Filter.h"
 
-#include <list>
-#include <algorithm>
-#include <iostream>
-
 namespace Atlas { namespace Stream {
 
 /** Atlas stream codec
@@ -37,11 +33,12 @@ However, the scale of these values is not yet decided upon. FIXME
 @see Negotiate
 */
 
+template <class Stream>
 class Codec : public Bridge
 {
     public:
 
-    virtual ~Codec();
+    virtual ~Codec() { }
 
     virtual void Poll() = 0;
 
@@ -54,10 +51,12 @@ class Codec : public Bridge
 
     struct Parameters
     {
-        iostream& stream; Filter* filter; Bridge* bridge;
+        Stream& stream;
+	Filter* filter;
+	Bridge* bridge;
 
-        Parameters(iostream& ios, Filter* f, Bridge* b) 
-           : stream(ios), filter(f), bridge(b) { }
+        Parameters(Stream& stream, Filter* filter, Bridge* bridge) 
+           : stream(stream), filter(filter), bridge(bridge) { }
     };
 
     template <typename T>

@@ -4,7 +4,7 @@ lib_LTLIBRARIES = libAtlasStream.la
 libAtlasStreamincludedir = $(includedir)/Atlas/Stream
 
 libAtlasStream_la_SOURCES = \
-	Bridge.cc Codec.cc Filter.cc Negotiate.cc
+	Bridge.cc Filter.cc
 
 libAtlasStreaminclude_HEADERS = \
 	Factory.h Bridge.h Codec.h Filter.h Negotiate.h

@@ -33,10 +33,7 @@ class Factory
 {
     public:
 
-    typedef typename T::Metrics Metrics;
-    typedef typename T::Parameters Parameters;
-
-    Factory(const std::string& name, const Metrics& metrics)
+    Factory(const std::string& name, const typename T::Metrics& metrics)
      : name(name), metrics(metrics)
     {
 	Factories().push_back(this);
@@ -49,7 +46,7 @@ class Factory
 	Factories().erase(i);
     }
     
-    virtual T* New(const Parameters&) = 0;
+    virtual T* New(const typename T::Parameters&) = 0;
     virtual void Delete(T*) = 0;
 
     std::string GetName()
@@ -57,7 +54,7 @@ class Factory
 	return name;
     }
     
-    Metrics GetMetrics()
+    typename T::Metrics GetMetrics()
     {
 	return metrics;
     }
@@ -71,7 +68,7 @@ class Factory
     protected:
 
     std::string name;
-    Metrics metrics;
+    typename T::Metrics metrics;
 };
 
 } } // Atlas::Stream
