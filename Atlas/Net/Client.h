@@ -22,7 +22,6 @@ changes:
 namespace Atlas
 {
 
-class Socket;
 class Codec;
 class Compressor;
 /** Class for client object.
