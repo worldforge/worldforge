@@ -1,14 +1,11 @@
-- More testing
-
 - add Empty object: all values are empty (pos, velocity: [0.0, 0.0, 0.0])
 
 - check that Set{Pos,Velocity}AsList() doesn't changes size from
   default one.
 
-- decoder.cpp: use objectDefinitions to map from string to int
-  and then use switch(obj_def->getClassNo())
-
 - id's as int/Root/void* in addition to current string
 
 - add IsDefault method for dynamic attributes also
   and test dynamic default values also
+
+- More testing?
