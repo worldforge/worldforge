@@ -93,27 +93,27 @@ class AtlasOutType
   _AtlasMessageType m_val;
 };
 
-inline AtlasOutType _ArrayToAtlas(const CoordType* array, int len)
+inline AtlasOutType _ArrayToAtlas(const CoordType* array, unsigned len)
 {
-  _AtlasMessageType::ListType a;
+  _AtlasMessageType::ListType a(len);
 
-  for(const CoordType* i = array; i < array + len; ++i)
-    a.push_back(*i);
+  for(unsigned i = 0; i < len; ++i)
+    a[i] = array[i];
 
   return a;
 }
 
-inline void _ArrayFromAtlas(CoordType* array, int len, const AtlasInType& a)
+inline void _ArrayFromAtlas(CoordType* array, unsigned len, const AtlasInType& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  _AtlasMessageType::ListType list(a.AsList());
+  const _AtlasMessageType::ListType& list(a.AsList());
 
   if(list.size() != (unsigned int) len)
     throw _AtlasBadParse();
 
-  for(int i = 0; i < len; ++i)
+  for(unsigned i = 0; i < len; ++i)
     array[i] = _asNum(list[i]);
 }
 
@@ -136,7 +136,7 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
     throw _AtlasBadParse();
 
 
-  _AtlasMessageType::ListType list(a.AsList());
+  const _AtlasMessageType::ListType& list(a.AsList());
 
   if(list.size() != 4)
     throw _AtlasBadParse();
@@ -157,11 +157,11 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
 
 inline AtlasOutType Quaternion::toAtlas() const
 {
-  _AtlasMessageType::ListType a;
+  _AtlasMessageType::ListType a(4);
 
   for(int i = 0; i < 3; ++i)
-    a.push_back(m_vec[i]);
-  a.push_back(m_w);
+    a[i] = m_vec[i];
+  a[3] = m_w;
 
   return a;
 }
@@ -185,17 +185,9 @@ void AxisBox<dim>::fromAtlas(const AtlasInType& a)
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  _AtlasMessageType::ListType list(a.AsList());
+  const _AtlasMessageType::ListType& list(a.AsList());
 
   switch(list.size()) {
-    case 1:
-      m_low.setToOrigin();
-      m_high.fromAtlas(list[0]);
-      break;
-    case 2:
-      m_low.fromAtlas(list[0]);
-      m_high.fromAtlas(list[1]);
-      break;
     case dim:
       m_low.setToOrigin();
       m_high.fromAtlas(a);
@@ -221,88 +213,6 @@ void AxisBox<dim>::fromAtlas(const AtlasInType& a)
   }
 }
 
-template<>
-inline void AxisBox<2>::fromAtlas(const AtlasInType& a)
-{
-  if(!a.IsList())
-    throw _AtlasBadParse();
-
-  _AtlasMessageType::ListType list(a.AsList());
-
-  switch(list.size()) {
-    case 1:
-      m_low.setToOrigin();
-      m_high.fromAtlas(list[0]);
-      break;
-    case 2: // 2 possible different cases
-      if(_isNum(list[0])) {
-        m_low.setToOrigin();
-        m_high.fromAtlas(a);
-      }
-      else {
-        m_low.fromAtlas(list[0]);
-        m_high.fromAtlas(list[1]);
-      }
-      break;
-    case 4:
-      for(int i = 0; i < 2; ++i) {
-        m_low[i] = _asNum(list[i]);
-        m_high[i] = _asNum(list[i+2]);
-      }
-      m_low.setValid();
-      m_high.setValid();
-      break;
-    default:
-      throw _AtlasBadParse();
-  }
-
-  for(int i = 0; i < 2; ++i) {
-    if(m_low[i] > m_high[i]) { // spec may allow this?
-      CoordType tmp = m_low[i];
-      m_low[i] = m_high[i];
-      m_high[i] = tmp;
-    }
-  }
-}
-
-template<>
-inline void AxisBox<1>::fromAtlas(const AtlasInType& a)
-{
-  if(!a.IsList())
-    throw _AtlasBadParse();
-
-  _AtlasMessageType::ListType list(a.AsList());
-
-  bool got_float = _isNum(list[0]);
-
-  switch(list.size()) {
-    case 1:
-      m_low.setToOrigin();
-      m_high.fromAtlas(got_float ? a : AtlasInType(list[0]));
-      break;
-    case 2:
-      if(got_float) {
-        m_low[0] = _asNum(list[0]);
-        m_high[0] = _asNum(list[1]); 
-        m_low.setValid();
-        m_high.setValid();
-      }
-      else {
-        m_low.fromAtlas(list[0]);
-        m_high.fromAtlas(list[1]);
-      }
-      break;
-    default:
-      throw _AtlasBadParse();
-  }
-
-  if(m_low[0] > m_high[0]) { // spec may allow this?
-    CoordType tmp = m_low[0];
-    m_low[0] = m_high[0];
-    m_high[0] = tmp;
-  }
-}
-
 template<const int dim>
 AtlasOutType AxisBox<dim>::toAtlas() const
 {
@@ -317,11 +227,11 @@ AtlasOutType AxisBox<dim>::toAtlas() const
 
   // Do case '2 * dim' above
 
-  _AtlasMessageType::ListType a;
-  for(i = 0; i < dim; ++i)
-    a.push_back(m_low[i]);
-  for(i = 0; i < dim; ++i)
-    a.push_back(m_high[i]);
+  _AtlasMessageType::ListType a(2*dim);
+  for(i = 0; i < dim; ++i) {
+    a[i] = m_low[i];
+    a[dim+i] = m_high[i];
+  }
 
   return a;
 }
