@@ -17,6 +17,7 @@
 
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Sight.h>
+#include <Atlas/Objects/Operation/Logout.h>
 
 using namespace Atlas;
 using namespace Atlas::Objects;
