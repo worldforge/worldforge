@@ -3,5 +3,3 @@
 // Copyright (C) 2000 Michael Day
 
 #include "Encoder.h"
-
-#endif
