@@ -10,6 +10,8 @@ communications.
 
 @section general General Concepts
 
+@subsection atlas About Atlas
+
 I assume you already know a little about the way Atlas works. Broadly speaking
 it allows the transmission of messages, which can contain objects of different
 types. These types are integers, floating-point values, character strings,
@@ -19,6 +21,8 @@ python dicts, and STL maps).
 Atlas-C++ allows you to comfortably send and receive such messages in a stream
 fashion through iostreams (which can be socket streams), without ever having
 to deal with the Atlas protocol itself.
+
+@subsection codecs Codecs
 
 The Atlas "protocol" is an implementation-independent definition. This means
 you can express atlas messages in different ways, such as in an XML-like
@@ -33,6 +37,8 @@ first!) and parses it. "That's great," I hear you say, "but how do I get the
 data that it receives?" Well, this is where one of the neat things about
 Atlas-C++ comes in: Bridges.
 
+@subsection bridges Bridges
+
 Codec is in fact publicly derived from Bridge. Bridge is an abstract class
 which contains all those functions to send maps, lists and other values. The
 neat thing about Bridge is though that it is asymetric. That means it's not
@@ -43,6 +49,8 @@ virtual functions in that Bridge get called whenever parts of a message are
 received. So, you can put whatever you want to do with that data into a Bridge
 of your own, pass an instance of that to the Codec, and you will have instant
 satisfaction! :)
+
+@subsection negotiation Negotiation
 
 Now, it would be a hassle if you would have to check which codecs the peer
 you are connecting to has each time you make a new connection, since Atlas-C++
@@ -58,11 +66,15 @@ until their state is not IN_PROGRESS any more. If negotiation was successful,
 you can retrieve the codec to be used with GetCodec(), and then go on sending
 and receiving messages happily with your peer.
 
+@subsection filters Filters
+
 Lastly, it should be noted that not only codecs exist, but also filters. These
 "wrap around" the codecs and do things like bzip2/gzip compression, or
 encryption. These are represented in Atlas-C++ by the Filter class, and also
 automatically negotiated by the Negotiation classes. This means that while
 coding you never actually have to worry about them.
+
+@subsection magic Automagic detection
 
 You should know that Atlas-C++ will automagically detect what codecs and
 filters are linked into your application, so you will never need to provide
@@ -89,6 +101,21 @@ library I'm using (libsocket++, see @ref tutorial_preamble).
 @section client The Client
 
 @verbinclude simple_client.cc
+
+The client corresponds with the server by doing the following:
+
+<ol>
+  <li>Connect to the server</li>
+  <li>Negotiate a server connection</li>
+  <li>Send a message</li>
+  <li>Sleep a little while</li>
+  <li>Close the connection</li>
+</ol>
+
+Again, only steps 2, 3 and 5 involve dealing with Atlas-C++.
+
+The code should be pretty straightforward to understand if you have read the
+@ref general.
 
 @section debug_bridge DebugBridge
 
