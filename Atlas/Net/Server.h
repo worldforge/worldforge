@@ -24,7 +24,6 @@ changes:
 namespace Atlas
 {
 
-class Socket;
 class Client;
 
 class Server
@@ -67,6 +66,3 @@ private:
 
 #endif
 
-	
-
-	
