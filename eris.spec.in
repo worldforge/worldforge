@@ -13,8 +13,8 @@ Copyright:         GPL
 Group:             System Environment/Libraries
 Source:            %{name}-%{version}.tar.gz
 BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
-Requires:          Atlas-C++ >= 0.4.4 skstream > 0.2 libstdc++
-BuildRequires:     Atlas-C++-devel >= 0.4.4 skstream-devel > 0.2 libstdc++-devel >= 2.95.2
+Requires:          Atlas-C++ >= 0.4.4 wfmath >= 0.2.10 skstream > 0.2 libstdc++
+BuildRequires:     Atlas-C++-devel >= 0.4.4 wfmath-devel >= 0.2.10 skstream-devel > 0.2 libstdc++-devel >= 2.95.2
 
 %description
 Eris is designed to simplify client development (and avoid repeating the same
@@ -53,7 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %{prefix}/bin/eris-config
-%{prefix}/include/eris
+%{prefix}/include/Eris
 %{prefix}/lib/liberis.a
 %{prefix}/lib/liberis.so
 %{prefix}/share/aclocal/eris.m4
