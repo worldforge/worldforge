@@ -1,3 +1,40 @@
+//
+//  The Worldforge Project
+//  Copyright (C) 1998,1999,2000  The Worldforge Project
+//
+//  This program is free software; you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation; either version 2 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program; if not, write to the Free Software
+//  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+//
+//  For information about Worldforge and its authors, please contact
+//  the Worldforge Web Site at http://www.worldforge.org.
+//
+
+/* Changes:
+
+   2000-02-26  Karsten <klaux@rhrk.uni-kl.de>
+               * added operators:
+	         "=" for all types except for Asignment Object = Object
+		 "==" for simple types like String, Int, Long, Float
+		 "[] const" for getting elements from Maps (readonly)
+		 "[]" for adding/setting elements to Maps (readwrite)
+	       * moved implementation to .cpp file
+	       * added copyright header
+               * added asLong()
+  ...
+ 
+ */
+
 #ifndef __AtlasObject_h_
 #define __AtlasObject_h_
 
@@ -28,6 +65,9 @@ public:
 /** output object stucture to debug streams */
 static void dump(const Object& msg);
 
+/** assignment operators
+ */
+//@{
 /** overload assignment so copying works right */
 Object &operator=(const Object& src)
 {
@@ -36,6 +76,104 @@ Object &operator=(const Object& src)
 	obj->incref();
 	return *this;
 }
+/** */
+Object &operator=(const string& val)
+{
+  obj->decref();
+  obj = new VStr(val); 
+  return *this;
+}
+
+/**  */
+Object &operator=(int val)
+{
+  obj->decref();
+  obj = new VNum(val);
+  return *this;
+}
+
+/**  */
+Object &operator=(long val)
+{
+  obj->decref();
+  obj = new VNum(val);
+  return *this;
+}
+
+/** */
+Object &operator=(double val)
+{
+  obj->decref();
+  obj = new VNum(val);
+  return *this;
+}
+//@}
+
+/** comparism operators
+ */
+//@{
+/**Compare two Objects.
+
+ FIXME !! 
+
+ The result is true if and only if the compared objects 
+ refer to the same memory object.
+ e.g.
+ Object a = Object::mkString("hello");
+ Object b = Object::mkString("hello");
+
+ (a == b) equals to  "false" !
+
+ but Object c = a;
+
+ (c == a) equals to "true"
+
+*/
+bool operator==(const Object& src)
+{
+  return obj == src.obj;
+}
+
+/** compare to string*/
+bool operator==(const string& val)
+{
+  if(obj->rt != String)
+    return false;
+  
+  return ((VStr*)obj)->st == val;
+}
+
+/** compare to a Integer  */
+bool operator==(int val)
+{
+  if(obj->rt != Int)
+    return false;
+  
+  return ((VNum*)obj)->lv == val; 
+}
+
+/** compare to a long  */
+bool operator==(long val)
+{
+  if(obj->rt != Int)
+    return false;
+  
+  return ((VNum*)obj)->lv == val; 
+}
+
+/** compare to a double*/
+bool operator==(double val)
+{
+   if(obj->rt != Float)
+    return false;
+  
+  return ((VNum*)obj)->dv == val; 
+}
+//@}
+
+/**Constructors.
+ */
+//@{
 
 /** Construct an Object */
 Object() 
@@ -90,12 +228,6 @@ Object(Type val, int size)
 	assert(0);
 }
 
-/** Destroy an Object */
-~Object()
-{
-	obj->decref();
-}
-
 /** Construct a Float typed list Object from an array */
 Object(int len, double *val)
 {
@@ -117,12 +249,34 @@ Object(int len, int *val)
 	for (int i=0;i<len;i++) ((VVec*)obj)->vv.push_back(new VNum(val[i]));
 }
 
+//@}
+
+/** Destroy an Object */
+~Object()
+{
+	obj->decref();
+}
+
 /** (Map) test for named element of a map */
 bool	has(const string& name) const
 {
 	if (obj->rt != Map) return false;
 	return ( ((VMap*)obj)->vm.count(name) > 0);
 }
+
+/** (Map) get an Object attribute.
+ In contrast to stl's []-operators this returns an empty Object 
+ if the requested attribute does not exist.
+*/
+Object& operator[](const string& name) const;
+
+
+/** (Map) access an Object attribute.
+ If the attribute does not exist it will be added to the object,
+ as long as the object is a Map.
+*/
+Object& operator[] (const string& name);
+
 
 /** (Map) get an Object attribute */
 bool	get(const string& name, Object& val) const
@@ -288,6 +442,14 @@ int	asInt() const
 	return 0;
 }	
 
+/** return object value as an long */
+long	asLong() const
+{
+	if (obj->rt == Int)		return ((VNum*)obj)->lv;
+	if (obj->rt == Float)	return (int)((VNum*)obj)->dv;
+	return 0;
+}	
+
 /** return object value as an int */
 double	asFloat() const
 {
@@ -403,6 +565,18 @@ bool	clear()
 	if (obj->rt == List)	{ ((VVec*)obj)->delvec(); ((VVec*)obj)->vv.clear(); return true; }
 	return false;
 }
+
+/** (List) get an Object at position ndx.
+    In contrast to stl's []-operators this returns an empty Object 
+    if the requested element does not exist.
+*/
+Object& operator[](size_t ndx) const;
+
+
+/** (List) get an Object at position ndx.
+    If there is no element at ndx, a new empty Object will be created.
+*/
+Object& operator[] (size_t ndx);
 
 /** (List) insert an Object at this index */
 bool    insert(size_t ndx, const Object& val);

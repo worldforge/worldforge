@@ -14,6 +14,49 @@ void	Object::dump(const Object& msg)
 }
 
 
+Object& Object::operator[] (const string& name)
+{
+  Object* result = new Object();
+
+  if (obj->rt !=Map) 
+    return *result;
+
+  varmap::iterator i = ((VMap*)obj)->vm.find(name);
+  
+  if (i == ((VMap*)obj)->vm.end()) 
+    {
+      //requested attribute does not exist, 
+      //so we need to create it
+      ((VMap*)obj)->vm[name] = result->obj;
+    }
+  else
+    {
+      result->obj = (*i).second;
+    }
+
+  result->obj->incref();
+
+  return *result;
+}
+
+Object& Object::operator[](const string& name) const
+{
+  Object* result = new Object();
+
+  if (obj->rt !=Map) 
+    return *result;
+
+  varmap::iterator i = ((VMap*)obj)->vm.find(name);
+  if (i == ((VMap*)obj)->vm.end()) 
+    return *result;
+
+  result->obj = (*i).second;
+  result->obj->incref();
+
+  return *result;
+}
+
+
 /** (List) insert an Object at this index */
 bool    Object::insert(size_t ndx, const Object& val)
 {
@@ -96,6 +139,50 @@ bool    Object::append(const string& val)
 	return true;
 }
 
+Object& Object::operator[] (size_t ndx)
+{
+  Object* result = new Object();
+  Variant* v;
+
+  if (obj->rt !=List) 
+    return *result;
+  
+  v = ((VVec*)obj)->vv[ndx];
+  if(v)
+    {
+      result->obj = v;
+    }
+  else
+    {
+      ((VVec*)obj)->vv[ndx] = result->obj;
+    }
+	
+  result->obj->incref();
+
+  return *result;
+}
+
+Object& Object::operator[] (size_t ndx) const
+{
+  Object* result = new Object();
+  Variant* v;
+
+  if (obj->rt !=List) 
+    return *result;
+  
+  v = ((VVec*)obj)->vv[ndx];
+ 
+  if(!v)
+    return *result;
+
+    
+  result->obj = v; 
+  result->obj->incref();
+  
+  return *result;
+}
+
+
 /** (List) replace an Object at this index */
 bool    Object::set(size_t ndx, const Object& src)
 {
@@ -120,6 +207,7 @@ bool    Object::set(size_t ndx, long val)
 	((VVec*)obj)->vv[ndx] = new VNum(val);
 	return true;
 }
+
 
 /** (List) replace a Float at this index */
 bool    Object::set(size_t ndx, double val)

@@ -17,15 +17,53 @@ Encoder::Encoder()
 
 void Encoder::printf(char* fmt, ...)
 {
+
+	int     bufsiz = 2048;
 	int	siz;
-	char	str[2048];
+	char	*str = (char*)malloc(bufsiz*sizeof(char));
 	va_list	va;
-	
+
+/*	
 	va_start(va,fmt);
 	siz = vsprintf(str, fmt, va);
 	va_end(va);
 
 	buffer.append(str,siz);
+
+*/
+	/* workaround in order to allow "arbitrary" long buffers...
+	   (NOT 8bit clean !)
+	*/
+	
+	do 
+	  {
+	    va_start(va, fmt);
+	    siz = vsnprintf(str, 2048, fmt, va);
+	    if(siz < 0)
+	      {	
+		// prior glibc 2.0.6
+		bufsiz = 2*siz;
+		str = (char*)realloc(str, bufsiz);
+		va_start(va, fmt);
+		siz = vsnprintf(str, bufsiz, fmt, va);
+
+	      }
+	    else if(siz > bufsiz)
+	      {
+		
+		bufsiz = siz + 1;
+		str = (char*)realloc(str, bufsiz);	
+		va_start(va, fmt);
+		siz = vsnprintf(str, bufsiz, fmt, va);
+		
+              }
+	  } while(siz < 0);
+	
+	va_end(va);
+	
+	buffer.append(str,siz);
+	
+	free(str);
 }
 	
 void Encoder::append(string& data)
