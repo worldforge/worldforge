@@ -1,14 +1,23 @@
+2004-01-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp: Revert changes to rng seeding as the
+	  behavoir broke some of the key repeatability features required.
+	  Add comments explaining what the valued properties of the
+	  algorithm are.
+
 2004-01-17  Damien McGinnes <mcginnes at netspeed dot com.au>
+
 	* Mercator/Forest.cpp, Mercator/Forest.h : modified seeding
 	  arrangement so that number of rng seeds is proportional to
 	  number of trees, not number of gridpoints. This significantly 
-	  speeds up forest generation and has the byproduct of improving	 
+	  speeds up forest generation and has the byproduct of improving
 	  the randomness of forests. I defaulted the seed to 0 in the
 	  constructor so hopefully existing code will still compile
 	* tests/testForest.cpp put a seed in the forest constructor
 	* tests/timeSeg.cpp added a test to time forest population
 
 2004-01-17  Damien McGinnes <mcginnes at netspeed dot com.au>
+
 	* Mercator/Forest.cpp : modified seeding in forest to use an array
 
 2004-01-15  James Turner <james@worldforge.org>

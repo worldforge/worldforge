@@ -25,8 +25,7 @@
 
 namespace Mercator {
 
-Forest::Forest(unsigned long seed) :
-    m_seed(seed)
+Forest::Forest(unsigned long seed) : m_seed(seed)
 {
 }
 
@@ -53,14 +52,30 @@ static const float plant_chance = 0.04;
 static const float plant_min_height = 5;
 static const float plant_height_range = 20;
 
+
 void Forest::populate()
+// This function uses a pseudo-random technique to populate the forrest with
+// trees. This algorithm as the following essental properties:
+//
+//   * It is repeatable. It can be repeated on the client and the server,
+//     and give identical results.
+//
+//   * It is location independant. It gives the same results even if the
+//     forest is in a different place.
+//
+//   * It is shape and size independant. A given area of the forest is
+//     the same even if the borders of the forest change.
+//
+//   * It is localisable. It is possible to only partially populate the
+//     the forest, and still get the same results in that area.
+//
 {
     if (!m_area.isValid()) {
         return;
     }
     // Fill the plant store with plants.
     m_plants.clear();
-    WFMath::MTRand rng(m_seed), plantrng;
+    WFMath::MTRand rng;
 
     int lx = I_ROUND(m_area.lowCorner().x()),
         ly = I_ROUND(m_area.lowCorner().y()),
@@ -69,16 +84,17 @@ void Forest::populate()
 
     for(int j = ly; j < hy; ++j) {
         for(int i = lx; i < hx; ++i) {
-            int nextseed=rng.randInt();
+            WFMath::MTRand::uint32 seed[] = {i, j, m_seed};
+            rng.seed(seed, 3);
+
             if (rng() < plant_chance) {
-                plantrng.seed(nextseed);
-//                std::cout << "Plant at [" << i << ", " << j << "]"
-//                          << std::endl << std::flush;
+                std::cout << "Plant at [" << i << ", " << j << "]"
+                          << std::endl << std::flush;
                 Plant & plant = m_plants[i][j];
-                plant.setHeight(plantrng() * plant_height_range + plant_min_height);
-                plant.setDisplacement(WFMath::Point<2>(plantrng() - 0.5f,
-                                                       plantrng() - 0.5f));
-                plant.setOrientation(WFMath::Quaternion(2, plantrng() * 2 * M_PI));
+                plant.setHeight(rng() * plant_height_range + plant_min_height);
+                plant.setDisplacement(WFMath::Point<2>(rng() - 0.5f,
+                                                       rng() - 0.5f));
+                plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * M_PI));
             }
         }
     }
