@@ -3,8 +3,8 @@
 // Copyright (C) 2003 Alistair Riddoch
 
 #include <Mercator/Segment.h>
-#include <Mercator/Segment_impl.h>
 #include <Mercator/Terrain.h>
+#include <Mercator/TerrainMod.h>
 #include <iostream>
 #include <cmath>
 
@@ -21,12 +21,17 @@ Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
 Segment::~Segment()
 {
     delete m_points;
+    clearMods();
 }
 
 void Segment::populate(const Matrix<4, 4> & base)
 {
     fill2d(m_res, FALLOFF, ROUGHNESS, base(1, 1), base(2, 1),
                                     base(2, 2), base(1, 2));
+
+    for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
+	applyMod(*I);
+    }
 }
 
 //rand num between -0.5...0.5
@@ -264,6 +269,30 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, in
     return true;
 }
 
-template void Segment::modifyShape<WFMath::Ball<2> >(const WFMath::Ball<2>&s, float dist);
+void Segment::addMod(TerrainMod *t) 
+{
+      m_modList.push_back(t);
+      applyMod(t);
+}
+
+void Segment::clearMods() 
+{
+      for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
+          delete(*I);
+      }
+      m_modList.clear();
+}
+
+void Segment::applyMod(TerrainMod *t) 
+{
+    int lx,hx,ly,hy;
+    if (clipToSegment(t->bbox(), lx, hx, ly, hy)) {
+        for (int i=ly;i<=hy;i++) {
+            for (int j=lx;j<=hx;j++) {
+                t->apply(m_points[i * (m_res + 1) + j], j, i);
+            }
+        }
+    }
+}
 
 } // namespace Mercator

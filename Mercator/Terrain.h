@@ -71,6 +71,7 @@ class Terrain {
     Segment * getSegmentQuik(int x, int y) const;
 
     void refresh(int x, int y);
+
 };
 
 } // namespace Mercator

@@ -1,3 +1,10 @@
+2003-06-03 Damien McGinnes
+
+	* TerrainMod.h : added. Defines modifiers for the terrain.
+	* Segment.h/Segment.cpp : modified to use TerrainMod objects, stored in a list,
+	  applied in order during populate
+	* removed Segment_impl.h refactored out.
+
 2003-06-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment_impl.h Mercator/Segment.cpp: Fix problem

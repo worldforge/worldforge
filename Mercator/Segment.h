@@ -8,13 +8,16 @@
 #include <Mercator/Matrix.h>
 #include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
+#include <list>
 
 namespace Mercator {
+
+class TerrainMod;
+typedef std::list<TerrainMod *> ModList;
 
 // This class will need to be reference counted if we want the code to
 // be able to hold onto it, as currently they get deleted internally
 // whenever height points are asserted.
-
 class Segment {
   private:
     int m_res;
@@ -49,11 +52,10 @@ class Segment {
     float getMax() const { return m_max; }
     float getMin() const { return m_min; }
 
-    template <typename Shape> void levelShape(const Shape &s, float level);
-    template <typename Shape> void modifyShape(const Shape &s, float dist);
-    template <typename Shape> void slopeShape(const Shape &s, float level, float dX, float dY);
+    void addMod(TerrainMod *t);
+    void clearMods();
     
-private:
+  private:
     inline void checkMaxMin(float h) { 
 	    if (h<m_min) m_min=h;
             if (h>m_max) m_max=h;
@@ -69,6 +71,10 @@ private:
                float roughness, float falloff, int depth) const;
 
     bool clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &ly, int &hy);
+
+    void applyMod(TerrainMod *t);
+
+    ModList m_modList;
 };
 
 } // namespace Mercator
