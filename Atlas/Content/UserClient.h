@@ -16,7 +16,7 @@ using std::ostream;
 using std::string;
 using std::list;
 
-#include "../Net/Net.h"
+#include "../Net/Client.h"
 #include "Arg.h"
 
 namespace Atlas
