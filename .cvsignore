@@ -1,6 +1,7 @@
 Makefile
 Makefile.in
 config.def.in
+config.h
 config.h.in
 aclocal.m4
 config.cache
@@ -15,4 +16,5 @@ ltconfig
 ltmain.sh
 missing
 mkinstalldirs
-
+stamp-h
+stamp-h.in
