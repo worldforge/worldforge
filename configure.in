@@ -331,6 +331,5 @@ AC_OUTPUT([
 	src/Objects/Makefile
 	src/Objects/Entity/Makefile
 	src/Objects/Operation/Makefile
-	src/TestSuite/Makefile
 	src/Funky/Makefile
 ])
