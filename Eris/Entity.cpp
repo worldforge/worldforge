@@ -155,7 +155,8 @@ void Entity::setFromRoot(const Root& obj)
             (A->first == "contains") ||
             (A->first == "parents") ||
             (A->first == "pos") ||
-            (A->first == "velocity"))
+            (A->first == "velocity") ||
+            (A->first == "mode"))
         {
             continue; // never set these on a SET op
         }
@@ -182,6 +183,9 @@ void Entity::setPosAndVelocityFromAtlas(const Root& data)
     
     if (data->hasAttr("orientation"))
         setAttr("orientation", data->getAttr("orientation"));
+    
+    if (data->hasAttr("mode"))
+        setAttr("mode", data->getAttr("mode"));
     
     endUpdate();
 }

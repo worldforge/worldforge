@@ -1,3 +1,7 @@
+2005-04-04  James Turner  <james@worldforge.org>
+
+    * Eris/Entity.cpp: support the 'mode' attribute on MOVE ops
+
 2005-02-21  James Turner  <james@worldforge.org>
 
 	* Eris/View.cpp, Eris/View.h, Eris/IGRouter.cpp: route in-game sight
