@@ -1,14 +1,15 @@
 The .cc and .h files in here are automatically generated.
 
+This is done by issuing the following:
+
+./gen_cc.py root_entity Entity
+./gen_cc.py root_operation Operation
+
 The generation script is a _work in progress_, hence a few things aren't yet
 implemented:
 
- - non-default constructors
- - Makefile.am generation
- - Decoder.cc generation
-
-The following are optimisations that are yet to be done:
-
- - static values
+ - non-default constructors (not important)
+ - Makefile.am generation (not important)
+ - Decoder.cc generation (not important)
 
 Please do not touch anything in this directory yet. -- sdt@gmx.net
