@@ -14,6 +14,7 @@ using namespace std;
             I != o.AsMap().end(); I++) \
         obj.SetAttr(I->first, I->second); \
     ObjectArrived(obj);\
+    return;\
 }
 
 namespace Atlas { namespace Objects {
