@@ -104,7 +104,7 @@ void PollDefault::doPoll(unsigned long timeout)
 	emit(data);
 }
 
-void PollDefault::poll(unsigned long timeout = 0)
+void PollDefault::poll(unsigned long timeout)
 {
   // This will throw if someone is using another kind
   // of poll, and that's a good thing.
