@@ -11,4 +11,4 @@ libAtlas_la_SOURCES = \
 
 libAtlasinclude_HEADERS = \
 	Bridge.h Codec.h Filter.h Negotiate.h EncoderBase.h \
-	Task.h Codec_impl.h
+	Task.h Codec_impl.h Exception.h
