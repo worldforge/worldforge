@@ -17,7 +17,7 @@
 #define ASSERT(exp) assert(exp)
 #endif
 
-using std::string;
+using namespace std;
 using namespace Atlas::Stream;
 
 const int DEFAULT_LEVEL = 6;
@@ -67,17 +67,13 @@ string Gzip::Encode(const string& data)
     string out_string;
     int status;
     
-    //cout << "encoding [" 
-    //<< data.data() 
-    // << "] " << data.size() << endl;
-
-    buf[0] = '\0';
+    buf[0] = 0;
 
     outgoing.next_in = (unsigned char *)data.data();
     outgoing.avail_in = data.size();
 
     do 
-      {       
+    {       
 	outgoing.next_out = buf;
 	outgoing.avail_out = sizeof(buf);
 	  
@@ -87,11 +83,8 @@ string Gzip::Encode(const string& data)
 	  
 	out_string.append((char*)buf, sizeof(buf) - outgoing.avail_out);	
 	  
-      } while(outgoing.avail_out == 0);
+    } while (outgoing.avail_out == 0);
     
-    //cout << "out [" 
-    // << "] " << out_string.size() << endl;
-      
     return out_string;
 }
     
@@ -100,16 +93,13 @@ string Gzip::Decode(const string& data)
     string out_string;
     int status;
 
-    //cout << "decoding ["
-    //	 << "] " << data.size() << endl;
-
-    buf[0] = '\0';
+    buf[0] = 0;
 
     incoming.next_in = (unsigned char*)data.data();
     incoming.avail_in = data.size();
 
     do 
-      {
+    {
 	incoming.next_out = buf;
 	incoming.avail_out = sizeof(buf);
 	  
@@ -119,11 +109,7 @@ string Gzip::Decode(const string& data)
 	  
 	out_string.append((char*)buf, sizeof(buf) - incoming.avail_out);
 	  
-      } while(incoming.avail_out == 0);
-
-    //cout << "out [" 
-    //<<  out_string 
-    //<< "] " << out_string.size() << endl;
+    } while(incoming.avail_out == 0);
 
     return out_string;
 }
