@@ -97,7 +97,8 @@ void AClient::doPoll()
         // fixed the select call in unix - sdt
 	select(csock->getSock()+1,&fdread,&fdsend,NULL,&tm);
 
-	if (FD_ISSET(csock->getSock(),&fdread)) canRead();
+	if (FD_ISSET(csock->getSock(),&fdread))
+            if (!canRead()) return gotDisconnect();
 	if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
 }
 
