@@ -2,7 +2,7 @@ TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhy
 
 INCLUDES = -I$(top_srcdir)
 
-check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG
+check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG testArea
 
 mercatortest_SOURCES = main.cpp
 mercatortest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2

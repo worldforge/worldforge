@@ -1,3 +1,7 @@
+2005-03-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Makefile.am: Add testArea to the check programs so it builds.
+
 2005-03-25  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/AreaShader.cpp: Include config.h so that iround.h works
