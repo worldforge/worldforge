@@ -185,16 +185,15 @@ bool AreaShader::checkIntersect(Surface& s) const
 void AreaShader::shade(Surface &s) const
 {
     const Segment::Areastore& areas(s.m_segment.getAreas());
-    Segment::Areastore::const_iterator it = areas.find(m_layer);
+    Segment::Areastore::const_iterator it = areas.lower_bound(m_layer);
+    Segment::Areastore::const_iterator itend = areas.upper_bound(m_layer);
     
-    while (it->first == m_layer) {
+    for (;it != itend; ++it) {
         // apply to surface in turn
         if (it->second->isHole()) {
             // shadeHole
         } else
             shadeArea(s, it->second);
-            
-        ++it;
     } // of areas in layer
 }
 
