@@ -9,8 +9,11 @@ namespace Atlas {
 
 /** Atlas task
 
-FIXME document this class
+A task can be polled. Currently, Codecs and Negotiates are both Tasks. This is
+a rather minimal interface and may perhaps fade away.
 
+@see Codec
+@see Negotiate
 */
 
 class Task
