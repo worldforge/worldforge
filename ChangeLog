@@ -1,5 +1,12 @@
 2004-02-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Message/QueuedDecoder.cpp, Atlas/Message/QueuedDecoder.h,
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h:
+	  Shuffle headers around a little to solve problems in recent
+	  gcc.
+
+2004-02-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* Fix detection and flagging for zlib and libbz2.
 
 	* Atlas/Filters/Bzip2.cpp, Atlas/Filters/Bzip2.h, Atlas/Filters/Gzip.h:

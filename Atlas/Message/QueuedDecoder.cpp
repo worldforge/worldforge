@@ -4,8 +4,6 @@
 
 #include <Atlas/Message/QueuedDecoder.h>
 
-#include <Atlas/Message/Element.h>
-
 namespace Atlas { namespace Message {
 
 QueuedDecoder::QueuedDecoder()

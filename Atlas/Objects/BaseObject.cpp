@@ -4,8 +4,6 @@
 
 #include <Atlas/Objects/BaseObject.h>
 
-#include <Atlas/Message/Element.h>
-
 using Atlas::Message::Element;
 using Atlas::Message::MapType;
 
