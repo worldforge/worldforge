@@ -41,6 +41,7 @@
     #define WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION 1
     #define WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS 1
   #endif
+  #define WFMATH_USING_MSVC
 #endif
 
 // Forward declarations for all classes

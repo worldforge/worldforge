@@ -53,8 +53,8 @@ void test_probability(double mean, double std_dev, double step)
 
       if(val > fudge * DBL_MIN) {
         if(cond_conj != 0) {
-          double first_frac = val / cond, second_frac = val / cond_conj;
-          double sum = first_frac + second_frac;
+//          double first_frac = val / cond, second_frac = val / cond_conj;
+//          double sum = first_frac + second_frac;
 //          std::cout << first_frac << ',' << second_frac << ',' << sum - 1 << std::endl;
 //          assert(Equal(sum, 1, use_epsilon));
 //          while(!Equal(sum, 1, my_fudge * DBL_EPSILON))

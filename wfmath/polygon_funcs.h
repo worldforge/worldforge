@@ -277,7 +277,7 @@ void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>& p)
 }
 
 template<const int dim>
-void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<2>& p)
+void _Poly2Orient<dim>::rotate2(const RotMatrix<dim>& m, const Point<2>& p)
 {
   assert(m_origin_valid);
 

@@ -76,7 +76,9 @@ class Polygon<2>
   int numCorners() const {return m_points.size();}
   Point<2> getCorner(int i) const
 	{assert(i >= 0 && ((unsigned int) i) < m_points.size()); return m_points[i];}
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Point<2> getCenter() const {return Barycenter(m_points);}
+#endif
 
   // For a Polygon<2>, addCorner() and moveCorner() always succeed.
   // The return values are present for the sake of a unified template
@@ -117,9 +119,11 @@ class Polygon<2>
 
   // Intersection functions
 
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   AxisBox<2> boundingBox() const {return BoundingBox(m_points);}
   Ball<2> boundingSphere() const {return BoundingSphere(m_points);}
   Ball<2> boundingSphereSloppy() const {return BoundingSphereSloppy(m_points);}
+#endif
 
   friend bool Intersect<2>(const Polygon& r, const Point<2>& p, bool proper);
   friend bool Contains<2>(const Point<2>& p, const Polygon& r, bool proper);
@@ -222,7 +226,7 @@ class _Poly2Orient
   void shift(const Vector<dim>& v) {if(m_origin_valid) m_origin += v;}
   void rotate(const RotMatrix<dim>& m, const Point<dim>& p);
   // Rotates about the point which corresponds to "p" in the oriented plane
-  void rotate(const RotMatrix<dim>& m, const Point<2>& p);
+  void rotate2(const RotMatrix<dim>& m, const Point<2>& p);
 
   // Gives the offset from pd to the space spanned by
   // the basis, and puts the nearest point in p2.
@@ -307,10 +311,10 @@ class Polygon
 	{return shift(p - getCenter());}
 
   Polygon& rotateCorner(const RotMatrix<dim>& m, int corner)
-	{m_orient.rotate(m, m_poly[corner]); return *this;}
+	{m_orient.rotate2(m, m_poly[corner]); return *this;}
   Polygon& rotateCenter(const RotMatrix<dim>& m)
 	{if(m_poly.numCorners() > 0)
-		m_orient.rotate(m, m_poly.getCenter());
+		m_orient.rotate2(m, m_poly.getCenter());
 	 return *this;}
   Polygon& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_orient.rotate(m, p); return *this;}
