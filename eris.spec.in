@@ -1,14 +1,12 @@
 %define name @PACKAGE@
 %define version @VERSION@
 %define release 1
-%define serial 1
 %define libsuffix @ERIS_LIB_SUFFIX@
 
 Summary: A WorldForge client library.
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Serial: %{serial}
 Copyright: GPL
 Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz
