@@ -1,5 +1,11 @@
 2003-07-27  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h:
+	  Add a shader for tinting terrain below water level to simulate
+	  light attenuation due to water.
+
+2003-07-27  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Shader.cpp, Mercator/Shader.h: Add flags to shader
 	  to specify whether this shader requires colour and alpha
 	  elements in the surface buffer. Add a method which
