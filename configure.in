@@ -49,9 +49,6 @@ fi
 
 AM_CONDITIONAL(HAVE_ATLAS, test $found_atlas == yes)
 
-dnl Checks for header files.
-AC_HEADER_STDC
-
 AC_LANG_PUSH(C++)
 
 AC_CHECK_HEADERS(sstream strstream, [ found_string_stream=yes break ],
