@@ -2,9 +2,6 @@
     #include "config.h"
 #endif
 
-#include <unistd.h>
-#include <sys/socket.h>
-
 #include "stubServer.h"
 #include "Time.h"
 #include "PollDefault.h"
@@ -22,23 +19,41 @@ StubServer::StubServer(short port) :
     m_acceptor(NULL),
     m_doNegotiate(true)
 {
-    m_listenSocket = new tcp_socket_server(port);
-    CPPUNIT_ASSERT_MESSAGE("failed to open server socket", m_listenSocket);
+     // create socket
+    m_listenSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    CPPUNIT_ASSERT(m_listenSocket != INVALID_SOCKET);
 
-    if (!m_listenSocket->is_open())
-	throw std::invalid_argument("unable to open server socket in stub server");
-    
     const int optvalue = 1;
-    setsockopt(m_listenSocket->getSocket(), SOL_SOCKET, SO_REUSEADDR, &optvalue, sizeof(int));
+    setsockopt(m_listenSocket, SOL_SOCKET, 
+	  SO_REUSEADDR, &optvalue, sizeof(int));
+  
+    // Bind Socket
+    sockaddr_in sa;
+    sa.sin_family = AF_INET;
+    sa.sin_addr.s_addr = INADDR_ANY; // we want to connect to ANY client!
+    sa.sin_port = htons((unsigned short)port); // define service port
+    if(::bind(m_listenSocket, (sockaddr*)&sa, sizeof(sa)) == SOCKET_ERROR) {
+	CPPUNIT_ASSERT_MESSAGE("bind() failed in StubServer", false);
+	close(m_listenSocket);
+	return;
+    }
+
+    // Listen
+    if(::listen(m_listenSocket, 5) == SOCKET_ERROR) { // max backlog
+	CPPUNIT_ASSERT_MESSAGE("listen() failed in StubServer", false);
+	close(m_listenSocket);
+	return;
+    }
+    
     m_state = LISTEN;
 }
 
 StubServer::~StubServer()
 {
-    delete m_listenSocket;
+    close(m_listenSocket);
     
-    if (m_stream)
-	delete m_stream;
+//    if (m_stream)
+//	delete m_stream;
     
     if (m_acceptor)
 	delete m_acceptor;
@@ -49,7 +64,7 @@ StubServer::~StubServer()
 
 void StubServer::run()
 {
-    if ((m_state == LISTEN) && m_listenSocket->can_accept()) {
+    if ((m_state == LISTEN) && can_accept()) {
 	accept();
 	return;
     }
@@ -65,9 +80,23 @@ void StubServer::run()
     m_codec->Poll();	// read any data in
 }
 
+bool StubServer::can_accept()
+{
+    fd_set sock_fds;
+    struct timeval tv = {0,0};
+    FD_ZERO(&sock_fds);
+    FD_SET(m_listenSocket, &sock_fds);
+
+    int ret = ::select((m_listenSocket + 1), &sock_fds, NULL, NULL, &tv);
+    if (ret < 0)
+	throw std::runtime_error("select() failed in StubServer");
+    
+    return (ret > 0);
+}
+
 void StubServer::accept()
 {
-    SOCKET_TYPE socket(m_listenSocket->accept());
+    SOCKET_TYPE socket = ::accept(m_listenSocket, NULL, NULL);
     if (socket == INVALID_SOCKET)
 	throw std::runtime_error("error accepting connection in stub server");
     

@@ -4,6 +4,19 @@
 
 #include "stubConnection.h"
 
+StubConnection::StubConnection() :
+    Eris::Connection("stub_con", false)
+{
+    // make sure it always looks CONNECTED
+    _status = Eris::BaseConnection::CONNECTED;
+}
+
+StubConnection::~StubConnection()
+{
+    // stop the base destructor from interfering
+    _status = Eris::BaseConnection::DISCONNECTED;
+}
+
 void StubConnection::clear()
 {
     m_queue.clear();

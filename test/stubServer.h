@@ -43,12 +43,14 @@ protected:
     std::queue<Atlas::Message::Object> m_queue;	// all the atlas messages we've received
 
     void accept();
+    bool can_accept();
+
     void negotiate();
 
     void fail();
     bool isStreamPending(basic_socket_stream *stream);
 
-    tcp_socket_server* m_listenSocket;
+    SOCKET_TYPE m_listenSocket;
     basic_socket_stream* m_stream;
 
     // Atlas stuff

@@ -92,19 +92,6 @@ StringSet getParentsAsSet(const Atlas::Objects::Root &obj)
 	return ret;
 }
 
-/*
-bool checkInherits(const Atlas::Objects::Root &obj, const std::string &cid)
-{
-	const Object::ListType &parents = obj.GetParents();
-	Object::ListType::const_iterator i = parents.begin();
-	
-	for (; i!=parents.end(); ++i)
-		if (*i == cid) return true;
-			
-	return false;	
-}
-*/
-
 long getNewSerialno()
 {
 	static long _nextSerial = 1001;

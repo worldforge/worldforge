@@ -7,8 +7,8 @@
 class StubConnection : public Eris::Connection
 {
 public:
-    StubConnection() : Eris::Connection("stub_con", false) {;}
-    virtual ~StubConnection() {;}
+    StubConnection();
+    virtual ~StubConnection();
 	
     // over-ride the necessary connection methods to let us do magic
 

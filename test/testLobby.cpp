@@ -15,7 +15,8 @@ void callback_loggedIn(const Objects::Entity::Player &acc, bool &flag);
 void callback_roomChanged(const Eris::StringSet &attrs, bool &flag);
 void callback_roomEntered(Eris::Room *r, bool &flag);
 
-TestLobby::TestLobby()
+TestLobby::TestLobby() :
+    test_lobby(NULL)
 {
     
 }
@@ -45,11 +46,13 @@ void TestLobby::testEntry()
     info["refno"] = 42;
     info["parents"] = Message::Object::ListType(1, "info");
     info["objtype"] = "op";
+    info["to"] = "test_acc1";
     
     Message::Object::MapType account;
     account["id"] = "test_acc1";
     account["name"] = "James";
-    // what else?
+    account["objtype"] = "object";
+    account["parents"] = Message::Object::ListType(1, "account");
     
     info["args"] = Message::Object::ListType(1, account);
 
@@ -59,6 +62,7 @@ try {
 }
     catch (Eris::InvalidOperation &ex) { /* this is fine */ }
 
+    // send it out
     con->push(info);
     CPPUNIT_ASSERT(didLogin);
     

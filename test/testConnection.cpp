@@ -52,7 +52,6 @@ void TestConnection::setUp()
 
 void TestConnection::tearDown()
 {
-    cerr << "doing tear-down" << endl;
     delete m_con;
     delete m_server;
 }
@@ -115,6 +114,8 @@ void TestConnection::testComplexDisconnect()
 
 bool TestConnection::onDisconnecting()
 {
+    CPPUNIT_ASSERT(m_con->getStatus() == Eris::BaseConnection::DISCONNECTING);
+    m_gotDisconnecting = true;
     return false;
 }
 

@@ -108,7 +108,8 @@ void Connection::disconnect()
 	// connection, and unlock when their work is done. A timeout stops
 	// locks from preventing disconnection
 	setStatus(DISCONNECTING);
-	
+	Disconnecting.emit();
+    
 	if (!_statusLock) {
 		Eris::log(LOG_NOTICE, "no locks, doing immediate disconnection");
 		hardDisconnect(true);

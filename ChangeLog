@@ -1,3 +1,14 @@
+Sunday, May 5, James Turner
+
+	* Fix Connection::Disconneting system (found by unit testing!)
+	* Made more of the tests work (had to stop using tcp_server_socketm
+	  becuase it seems you must set SO_REUSEADDR before calling bind())
+	* Fixed some return-by-reference bugs in testUtils, which again
+	  helps more of the tests work.
+	* Some tests are still not working right, GDB is being unhelpful
+	  though. Investigation by people who's GDB doesn't suck
+	  appreciated (eg, for whom 'break __throw' does the right thing)
+
 Thursday, May 2, James Turner
 
     * Changed Time::Stamp::getCurrent() into a static

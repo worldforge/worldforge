@@ -62,10 +62,10 @@ void TestPlayer::testLogin()
     CPPUNIT_ASSERT_MESSAGE("login failed to send anything", m_stub->get(op));
     
 try {
-    CPPUNIT_ASSERT("login" == getType(op));    
+    CPPUNIT_ASSERT("login" == getType(op));  
     CPPUNIT_ASSERT(ac1 == getArg(op, "id").AsString());
     CPPUNIT_ASSERT("tinky-winky" == getArg(op, "password").AsString());
-    
+
     // build a response
     Operation::Info ifo = Operation::Info::Instantiate();
     ifo.SetTo(ac1);
@@ -75,17 +75,27 @@ try {
     acmap["password"] = "tinky-winky";
     acmap["parents"] = Object::ListType(1,"account");
     acmap["objtype"] = "object";
-
+    
     ifo.SetArgs(Object::ListType(1, acmap));
     // give it to Eris
     m_stub->push(ifo.AsObject());
-    
     CPPUNIT_ASSERT(gotLoginComplete);
+    
+    cerr << "mk0" << endl;
     
     // eris should go for lobby entry now
     CPPUNIT_ASSERT(m_stub->get(op));
+    
+    cerr << "mk1/2" << endl;
+    
     CPPUNIT_ASSERT("look" == getType(op));
+
+    cerr << "mk1" << endl;
+
     CPPUNIT_ASSERT(ac1 == Eris::getMember(op, "from").AsString());
+    
+    cerr << "mk2" << endl;
+    
     CPPUNIT_ASSERT(!hasArg(op, "id"));	// should be anonymous
     
     // build the lobby response
@@ -98,13 +108,15 @@ try {
     lobbyObj["objtype"] = "object";
     lobbyObj["parents"] = Object::ListType(1, "room");
     
+    cerr << "tp3" << endl;
     sight.SetArgs(Object::ListType(1, lobbyObj));
     m_stub->push(sight.AsObject());
     
-} catch (...)
+} catch (std::exception &except)
     {
 	// probably means we got some malformed atlas
-	CPPUNIT_ASSERT_MESSAGE("caught an exception testing Player::Login",false);
+	std::string msg(except.what());
+	CPPUNIT_ASSERT_MESSAGE("caught an exception testing Player::Login: " + msg,false);
     }
 
 }

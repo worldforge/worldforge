@@ -55,8 +55,8 @@ Lobby::Lobby(Connection *con) :
 	_con->Connected.connect(SigC::slot(*this, &Lobby::netConnected));
 	
 	if (_con->getStatus() == BaseConnection::CONNECTED) {
-		// otherwise we never see the Connected signal for obvious reasons
-		netConnected();
+	    // otherwise we never see the Connected signal for obvious reasons
+	    netConnected();
 	}
 }
 	
@@ -258,13 +258,14 @@ void Lobby::recvInfoAccount(const Operation::Info &ifo,
 	
 	// reject lots of extraneous INFOs we don't care about
 	// FIXME  - enable the refno test once stage correctly processes it
-	if (!_account.empty() && (ifo.GetTo() != _account) /*|| (ifo.getRefno() != _infoRefnno)*/) return;
+	if (!_account.empty() && (ifo.GetTo() != _account))
+	    return;
 	
 	_infoRefno = -1; // clear the expect value to reject further INFOs (unless we set them!);
 	
 	_account = account.GetId();
 	if (!_reconnect) // obviously only register first time around
-		registerCallbacks();
+	    registerCallbacks();
 	
 	// broadcast the login
 	LoggedIn.emit(Atlas::atlas_cast<AtlasEntity::Player>(account));
