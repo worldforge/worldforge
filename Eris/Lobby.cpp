@@ -181,7 +181,7 @@ void Lobby::registerCallbacks()
 	Dispatcher *cr = opsight->addSubdispatch(new EncapDispatcher("create"), "create");
 	cr->addSubdispatch(new SignalDispatcher2<Atlas::Objects::Operation::Create,
 		Atlas::Objects::Entity::RootEntity>("lobby",
-	    SigC::slot(this, &Lobby::recvSightCreate)));
+	    SigC::slot(*this, &Lobby::recvSightCreate)));
 	
 	d = sight->addSubdispatch(new TypeDispatcher("entity", "object"));
 	Dispatcher *esight = d->addSubdispatch(ClassDispatcher::newAnonymous());
