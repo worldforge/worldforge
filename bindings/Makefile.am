@@ -45,7 +45,7 @@ endif
 
 perl-dist-hook:
 	perl_dist_dir=`cd $(distdir) && pwd`/perl; \
-	mkdir -p $$perl_dist_dir || exit 1; \
+	test -d $$perl_dist_dir || mkdir $$perl_dist_dir || exit 1; \
 	perl_dist_files=`cat perl/MANIFEST`; \
 	for file in $$perl_dist_files; do \
 		test -e perl/$$file || exit 1; \

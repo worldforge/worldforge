@@ -1,3 +1,9 @@
+Thursday, 8th May 2003, Ron Steinke
+
+	* Changed Al's mkdir -p fix in bindings/Makefile.am
+	  to test -d || mkdir, since that's the way autoconf
+	  does it and it's sure to be portable.
+
 Thursday, 8th May 2003, James Turner <james@worldforge.org>
 	
 	* Don't make or install eris-config, eris.m4 or 
