@@ -11,3 +11,5 @@ libAtlasObjectinclude_HEADERS = \
 	Object.h Debug.h \
 	FloatList.h IntList.h LongList.h StringList.h Types.h URI.h URIList.h \
 	XList.inc XList_h.inc
+
+CXXFLAGS = -D_ADebug_

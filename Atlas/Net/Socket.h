@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <memory.h>
 
-#include "Debug.h"
+#include "Object/Debug.h"
 
 #include <string>
 using namespace std;

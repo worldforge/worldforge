@@ -14,7 +14,7 @@
 
 #include <stdio.h>
 
-#include "Debug.h"
+#include "Object/Debug.h"
 #include "Object/Object.h"
 #include "Protocol.h"
 

@@ -81,6 +81,8 @@ libAtlasNetincludedir = $(includedir)/Atlas/Net
 
 libAtlasNetinclude_HEADERS =  	Client.h Codec.h Compressor.h 	Net.h PackedAsciiDecoder.h PackedAsciiEncoder.h 	PackedAsciiProtocol.h Protocol.h ProtocolDecoder.h 	ProtocolEncoder.h Server.h Socket.h TCPSocket.h 	XMLDecoder.h XMLEncoder.h XMLProtocol.h
 
+
+CXXFLAGS = -D_ADebug_
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../src/config.h
 CONFIG_CLEAN_FILES = 
@@ -97,7 +99,6 @@ libAtlasNet_la_OBJECTS =  Client.lo Codec.lo Compressor.lo Net.lo \
 PackedAsciiDecoder.lo PackedAsciiEncoder.lo PackedAsciiProtocol.lo \
 Protocol.lo ProtocolDecoder.lo ProtocolEncoder.lo Server.lo Socket.lo \
 TCPSocket.lo XMLDecoder.lo XMLEncoder.lo XMLProtocol.lo
-CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)

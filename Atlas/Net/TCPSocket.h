@@ -9,7 +9,7 @@
 #ifndef __AtlasTCPSocket_h_
 #define __AtlasTCPSocket_h_
 
-#include "Debug.h"
+#include "Object/Debug.h"
 #include "Socket.h"
 
 #include <sys/types.h>

@@ -1,8 +1,7 @@
 #ifndef __AtlasNet_h__
 #define __AtlasNet_h__
 
-#include "Debug.h"
-
+#include "Object/Debug.h"
 #include "Object/Types.h"
 #include "Object/Object.h"
 
