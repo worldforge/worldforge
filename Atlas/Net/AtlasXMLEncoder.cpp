@@ -19,28 +19,24 @@
 
 void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 {
+        /* note that printf if member method, not normal printf function */
 	int	i;
 	string	buf;
 	string	pre;
+	string	nam;
 
 	for (int j=0; j<nest; j++) {
 		pre.append("    ");
 	}
 
+	if (name.length() > 0) {
+		char buf[80];
+		sprintf(buf, " name=\"%s\"", name.c_str());
+		nam.append(buf);
+	}
 
 	if (list.isList()) {
-		// precheck types here
-		string pfix("");
-
-// 		if (list.getListType() == AObject::AIntList)		pfix.append("int_");
-// 		else if (list.getListType() == AObject::AFloatList)	pfix.append("float_");
-// 		else if (list.getListType() == AObject::AStringList)	pfix.append("string_");
-
-		if (name.length() > 0) {
-			printf("%s<%slist name=\"%s\">\n", pre.c_str(), pfix.c_str(), name.c_str());
-		} else {
-			printf("%s<%slist>\n", pre.c_str(), pfix.c_str());
-		}
+		printf("%s<list%s>\n", pre.c_str(), nam.c_str());
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
 			list.get(i, tmp);
@@ -48,13 +44,56 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 		}
 		printf("%s</list>\n",pre.c_str());
 	} 
+
+	if (list.isURIList()) {
+		printf("%s<uri_list%s>\n", pre.c_str(), nam.c_str());
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i, tmp);
+			walkTree(nest+1, "", tmp);
+		}
+		printf("%s</uri_list>\n",pre.c_str());
+	} 
+	if (list.isIntList()) {
+		printf("%s<int_list%s>\n", pre.c_str(), nam.c_str());
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i, tmp);
+			walkTree(nest+1, "", tmp);
+		}
+		printf("%s</int_list>\n",pre.c_str());
+	} 
+	if (list.isLongList()) {
+		printf("%s<long_list%s>\n", pre.c_str(), nam.c_str());
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i, tmp);
+			walkTree(nest+1, "", tmp);
+		}
+		printf("%s</long_list>\n",pre.c_str());
+	} 
+	if (list.isFloatList()) {
+		printf("%s<float_list%s>\n", pre.c_str(), nam.c_str());
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i, tmp);
+			walkTree(nest+1, "", tmp);
+		}
+		printf("%s</float_list>\n",pre.c_str());
+	} 
+	if (list.isStringList()) {
+		printf("%s<str_list%s>\n", pre.c_str(), nam.c_str());
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i, tmp);
+			walkTree(nest+1, "", tmp);
+		}
+		printf("%s</str_list>\n",pre.c_str());
+	} 
+
 	if (list.isMap()) {
 		AObject keys = list.keys();
-		if (name.length() > 0) {
-			printf("%s<map name=\"%s\">\n",pre.c_str(), name.c_str());
-		} else {
-			printf("%s<map>\n", pre.c_str());
-		}
+		printf("%s<map%s>\n", pre.c_str(), nam.c_str());
 		for (i=0; i<keys.length(); i++) {
 			AObject key;
 			keys.get(i, key);
@@ -66,33 +105,30 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 	} 
 
 	if (list.isString()) {
-		if (name.length() > 0) {
-			printf("%s<string name=\"%s\">%s</string>\n",
-				pre.c_str(), name.c_str(),list.asString().c_str()
-			);
-		} else {
-			printf("%s<string>%s</string>\n",pre.c_str(), list.asString().c_str());
-		}
+		printf("%s<str%s>%s</str>\n",
+			pre.c_str(), nam.c_str(),list.asString().c_str()
+		);
+	}
+	if (list.isURI()) {
+		printf("%s<uri%s>%li</uri>\n",
+			pre.c_str(), nam.c_str(),list.asLong()
+		);
+	}
+	if (list.isInt()) {
+		printf("%s<int%s>%li</int>\n",
+			pre.c_str(), nam.c_str(),list.asLong()
+		);
 	}
 	if (list.isLong()) {
-		if (name.length() > 0) {
-			printf("%s<int name=\"%s\">%li</int>\n",
-				pre.c_str(), name.c_str(),list.asLong()
-			);
-		} else {
-			printf("%s<int>%li</int>\n", pre.c_str(), list.asLong());
-		}
+		printf("%s<long%s>%li</long>\n",
+			pre.c_str(), nam.c_str(),list.asLong()
+		);
 	}
 	if (list.isFloat()) {
-		if (name.length() > 0) {
-			printf("%s<float name=\"%s\">%.2f</float>\n",
-				pre.c_str(), name.c_str(),list.asFloat()
-			);
-		} else {
-			printf("%s<float>%.2f</float>\n",pre.c_str(), list.asFloat());
-		}
+		printf("%s<float%s>%.2f</float>\n",
+			pre.c_str(), nam.c_str(),list.asFloat()
+		);
 	}
-
 }
 
 

@@ -16,7 +16,7 @@ EXE_EXT        =
 #incDirs        =       -I/usr/local/include/python1.5 $(STDINCS)
 incDirs        =       -I/usr/include/python1.5 $(STDINCS)
 libDirs        =       $(STDLIBS)
-LIBS           =       -lAtlas -lpython1.5 -lstdc++ -ldl
-#LIBS           =       -lstdc++ -lpython1.5 -lAtlas -ldl -lz -ltk -ltcl -L/usr/X11R6/lib -lX11 -lreadline -lpthread
+#LIBS           =       -lAtlas -lpython1.5 -lstdc++ -ldl
+LIBS           =       -lstdc++ -lAtlas -lpython1.5 -ldl -lz -ltk -ltcl -L/usr/X11R6/lib -lX11 -lreadline -lpthread
 
 include Makefile.common

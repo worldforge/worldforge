@@ -43,15 +43,16 @@ void EchoTest::execute()
 	printf("NEW SOCK = %i\n", sock->getSock());
 		fflush(stdout);
 
-	string servname("90.0.0.2");
-        //string servname("127.0.0.1");
+	//string servname("90.0.0.2");
+        string servname("127.0.0.1");
 
 	res = sock->connect(servname, 7);
 	printf("Connect = %li\n", res);
 	fflush(stdout);
 	if (res == -1) exit(0);
 
-	ACodec* codec = new ACodec(new APackedAsciiProtocol());
+	//ACodec* codec = new ACodec(new APackedAsciiProtocol());
+	ACodec* codec = new ACodec(new AXMLProtocol());
 
 	AClient* client = new EchoClient(sock, codec);
 
@@ -66,9 +67,15 @@ void EchoTest::execute()
         test.set("astring",	"stringval");
         test.set("aint",	(long)12345);
         test.set("afloat",	9876.54);
+        //double lst[]={3.4,-0.8};
+        //test.set("flst",2,3.4,-0.8);
 
         test.set("list1", list);
         test.set("map1", amap);
+        
+        string data=codec->encodeMessage(test);
+        printf("%s",data.c_str());
+        fflush(stdout);
 
         for (i=0;i<10000;i++) {
                 // printf("SEND = %li\n", i);
