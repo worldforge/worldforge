@@ -16,7 +16,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-prefix = /home/ajr/atlas-install
+prefix = /opt/atlas-install
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
@@ -71,7 +71,7 @@ NM = /usr/bin/nm -B
 OBJDUMP = @OBJDUMP@
 PACKAGE = Atlas
 RANLIB = ranlib
-VERSION = 0.3.9
+VERSION = 0.3.10
 
 noinst_PROGRAMS = simple_client simple_server
 
@@ -82,8 +82,8 @@ LDADD = -L$(prefix)/lib -lsocket++ 	../src/.libs/libAtlas.a 	../src/Codecs/.libs
 # In a real program the above lines should be:
 # LDADD +=-lAtlasCodecs -lAtlasFilters -lAtlasNet
 
-simple_client_SOURCES = simple_client.cc
-simple_server_SOURCES = simple_server.cc
+simple_client_SOURCES = simple_client.cpp
+simple_server_SOURCES = simple_server.cpp
 
 EXTRA_DIST =  	DebugBridge.h building.dox index.dox message.dox 	objects.dox preamble.dox simple.dox
 
@@ -126,7 +126,7 @@ OBJECTS = $(simple_client_OBJECTS) $(simple_server_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .cc .lo .o .s
+.SUFFIXES: .S .c .cpp .lo .o .s
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu tutorial/Makefile
 
@@ -183,9 +183,9 @@ simple_client: $(simple_client_OBJECTS) $(simple_client_DEPENDENCIES)
 simple_server: $(simple_server_OBJECTS) $(simple_server_DEPENDENCIES)
 	@rm -f simple_server
 	$(CXXLINK) $(simple_server_LDFLAGS) $(simple_server_OBJECTS) $(simple_server_LDADD) $(LIBS)
-.cc.o:
+.cpp.o:
 	$(CXXCOMPILE) -c $<
-.cc.lo:
+.cpp.lo:
 	$(LTCXXCOMPILE) -c $<
 
 tags: TAGS
@@ -270,7 +270,7 @@ maintainer-clean-depend:
 	    >> .deps/$(*F).P; \
 	rm -f .deps/$(*F).pp
 
-%.o: %.cc
+%.o: %.cpp
 	@echo '$(CXXCOMPILE) -c $<'; \
 	$(CXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
 	@-cp .deps/$(*F).pp .deps/$(*F).P; \
@@ -279,7 +279,7 @@ maintainer-clean-depend:
 	    >> .deps/$(*F).P; \
 	rm .deps/$(*F).pp
 
-%.lo: %.cc
+%.lo: %.cpp
 	@echo '$(LTCXXCOMPILE) -c $<'; \
 	$(LTCXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
