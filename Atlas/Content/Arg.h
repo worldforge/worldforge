@@ -14,22 +14,26 @@ using namespace std;
 
 #include "../Object/Object.h"
 
-using namespace Atlas;
+namespace Atlas
+{
 
-class Arg // Container for an attribute argument
+/// Container for an attribute argument
+class Arg 
 {
 public:
+    /// construct a named attribute
     Arg(const string& name, const Object& val);
-
+    /// construct an anonymous attribute
     Arg(const Object& val);
-
+    /// get the name of this attribute
     const string& getName() const;
-    
+    /// get the value of this attribute
     const Object& getVal() const;
 
 protected:
+    /// attribute name
     string m_name;
-    
+    /// attribute value
     Object m_val;
 
 private:
@@ -46,5 +50,7 @@ Arg* A(const string& value);
 Arg* A(long value);
 Arg* A(double value);
 Arg* A(const Object& value);
+
+} // end namespace Atlas
 
 #endif

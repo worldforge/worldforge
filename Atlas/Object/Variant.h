@@ -18,7 +18,6 @@ enum Type {
 	Map=5
 };
 
-} // end namespace Atlas
 
 #define varvec vector<Variant*>
 #define varmap map<string, Variant*>
@@ -226,6 +225,7 @@ public:
 
 };
 
+} // end namespace Atlas
 
 #endif
 

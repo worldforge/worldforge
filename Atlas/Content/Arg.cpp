@@ -8,62 +8,64 @@
 
 #include "Arg.h"
 
-Arg::Arg(const string& name, const Object& val)
+using namespace Atlas;
+
+Atlas::Arg::Arg(const string& name, const Object& val)
  : m_name(name), m_val(val)
 {
 }
 
-Arg::Arg(const Object& val)
+Atlas::Arg::Arg(const Object& val)
  : m_name(""), m_val(val)
 {
 }
 
-const string& Arg::getName() const 
+const string& Atlas::Arg::getName() const 
 {
     return m_name;
 }
     
-const Object& Arg::getVal() const
+const Object& Atlas::Arg::getVal() const
 {
     return m_val;
 }
 
-Arg* A(const string& id, const string& value)
+Atlas::Arg* Atlas::A(const string& id, const string& value)
 {
     return new Arg(id, Object(value));
 }
 
-Arg* A(const string& id, long value)
+Atlas::Arg* Atlas::A(const string& id, long value)
 {
     return new Arg(id, Object(value));
 }
 
-Arg* A(const string& id, double value)
+Atlas::Arg* Atlas::A(const string& id, double value)
 {
     return new Arg(id, Object(value));
 }
 
-Arg* A(const string& id, const Object& value)
+Atlas::Arg* Atlas::A(const string& id, const Object& value)
 {
     return new Arg(id, Object(value));
 }
 
-Arg* A(const string& value)
+Atlas::Arg* Atlas::A(const string& value)
 {
     return new Arg(Object(value));
 }
 
-Arg* A(long value)
+Atlas::Arg* Atlas::A(long value)
 {
     return new Arg(Object(value));
 }
 
-Arg* A(double value)
+Atlas::Arg* Atlas::A(double value)
 {
     return new Arg(Object(value));
 }
 
-Arg* A(const Object& value)
+Atlas::Arg* Atlas::A(const Object& value)
 {
     return new Arg(Object(value));
 }

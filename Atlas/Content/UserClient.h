@@ -15,10 +15,10 @@
 using namespace std;
 
 #include "../Net/Net.h"
-
-using namespace Atlas;
-
 #include "Arg.h"
+
+namespace Atlas
+{
 
 class fptr_abstract {
 public:
@@ -96,5 +96,7 @@ private:
     list< pair<string, fptr_abstract*> > m_msghandlers;
     list< pair<string, void(*)(const Object&)> > m_msghandlers_simp;
 };
+
+} // end namespace Atlas
 
 #endif

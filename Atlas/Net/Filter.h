@@ -17,7 +17,7 @@ namespace Atlas
 @see Client
 **/
 
-class Filter@
+class Filter
 {
     public:
     

@@ -8,6 +8,8 @@
 
 #include "UserClient.h"
 
+using namespace Atlas;
+
 #ifdef _MSC_VER
 #include <iostream>
 #endif
