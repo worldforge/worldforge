@@ -4,9 +4,7 @@
 
 #include "Filter.h"
 
-using namespace Atlas;
-
-Atlas::Filter::Filter(Filter* next) : next(next)
+Atlas::Filter::Filter(Atlas::Filter* next) : next(next)
 {
 }
 

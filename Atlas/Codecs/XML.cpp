@@ -1,51 +1,13 @@
 // This file may be redistributed and modified under the terms of the
 // GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Michael Day
-
-#include "Utility.h"
-#include "../Codec.h"
-
-#include <iostream>
-#include <stack>
-
-using namespace Atlas;
-
-/*
-
-Sample output for this codec: (whitespace added for clarity)
-
-<atlas>
-    <map>
-	<int name="foo">13</int>
-	<float name="meep">1.5</float>
-	<string name="bar">hello</string>
-	<list name="args">
-	    <int>1</int>
-	    <int>2</int>
-	    <float>3.0</float>
-	</list>
-    </map>
-</atlas>
-
-The complete specification is located in cvs at:
-    forge/protocols/atlas/spec/xml_syntax.html
-
-*/
+// Copyright (C) 2000-2001 Michael Day, Stefanus Du Toit
 
 #include "XML.h"
 
 namespace Atlas { namespace Codecs {
-
-//namespace
-//{
-    //Codec::Factory<XML> factory(
-	//"XML",					    // name
-	//Codec::Metrics(1, 2)			    // metrics
-    //);
-//}
     
-XML::XML(const Codec<std::iostream>::Parameters& p)
-    : socket(p.stream), bridge(p.bridge)
+XML::XML(std::iostream& s, Atlas::Bridge* b)
+    : socket(s), bridge(b)
 {
     token = TOKEN_DATA;
     state.push(PARSE_NOTHING);
@@ -452,4 +414,4 @@ void XML::listEnd()
     socket << "</list>";
 }
 
-} } // namespace Atlas::Codecs
+} } //namespace Atlas::Codecs

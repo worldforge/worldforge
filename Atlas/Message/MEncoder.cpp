@@ -5,9 +5,9 @@
 #include <string>
 #include "Encoder.h"
 
-using namespace Atlas;
-
 namespace Atlas { namespace Message {
+
+void * Object::freeList = NULL;
 
 Encoder::Encoder(Atlas::Bridge* b)
     : EncoderBase(b)
@@ -21,7 +21,7 @@ void Encoder::listItem(const Object& obj)
         case Object::TYPE_FLOAT: b->listItem(obj.asFloat()); break;
         case Object::TYPE_STRING: b->listItem(obj.asString()); break;
         case Object::TYPE_MAP: {
-            b->listItem(Bridge::mapBegin);
+            b->listItem(Atlas::Bridge::mapBegin);
             Object::MapType::const_iterator I;
             for (I = obj.asMap().begin(); I != obj.asMap().end();
                     I++)
@@ -30,7 +30,7 @@ void Encoder::listItem(const Object& obj)
             }
             break;
         case Object::TYPE_LIST: {
-            b->listItem(Bridge::listBegin);
+            b->listItem(Atlas::Bridge::listBegin);
             Object::ListType::const_iterator I;
             for (I = obj.asList().begin(); I != obj.asList().end();
                     I++)
@@ -49,7 +49,7 @@ void Encoder::mapItem(const std::string& name, const Object& obj)
         case Object::TYPE_FLOAT: b->mapItem(name, obj.asFloat()); break;
         case Object::TYPE_STRING: b->mapItem(name, obj.asString()); break;
         case Object::TYPE_MAP: {
-            b->mapItem(name, Bridge::mapBegin);
+            b->mapItem(name, Atlas::Bridge::mapBegin);
             Object::MapType::const_iterator I;
             for (I = obj.asMap().begin(); I != obj.asMap().end();
                     I++)
@@ -58,7 +58,7 @@ void Encoder::mapItem(const std::string& name, const Object& obj)
             }
             break;
         case Object::TYPE_LIST: {
-            b->mapItem(name, Bridge::listBegin);
+            b->mapItem(name, Atlas::Bridge::listBegin);
             Object::ListType::const_iterator I;
             for (I = obj.asList().begin(); I != obj.asList().end();
                     I++)
@@ -74,7 +74,7 @@ void Encoder::mapItem(const std::string& name, const Object& obj)
 void Encoder::streamMessage(const Object& obj)
 {
     if (obj.isMap()) {
-        b->streamMessage(Bridge::mapBegin);
+        b->streamMessage(Atlas::Bridge::mapBegin);
         Object::MapType::const_iterator I;
         for (I = obj.asMap().begin();
              I != obj.asMap().end(); I++)

@@ -18,7 +18,7 @@ extern "C" {
 #include <bzlib.h>
 }
 
-using namespace Atlas;
+namespace Atlas { namespace Filters {
 
 class Bzip2 : public Filter
 {
@@ -34,6 +34,8 @@ class Bzip2 : public Filter
     virtual std::string encode(const std::string&);
     virtual std::string decode(const std::string&);
 };
+
+} } // namespace Atlas::Filters
 
 #endif // HAVE_BZLIB_H && HAVE_LIBBZ2
 

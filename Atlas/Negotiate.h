@@ -7,6 +7,8 @@
 
 #include "Codec.h"
 
+#define Debug(prg) { if (debug_flag) { prg } }
+
 namespace Atlas {
 
 /** Negotiation of codecs and filters for an Atlas connection

@@ -1,16 +1,16 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Stefanus Du Toit, Michael Day
+// Copyright (C) 2000-2001 Stefanus Du Toit, Michael Day
 
 #ifndef ATLAS_CODECS_PACKED_H
 #define ATLAS_CODECS_PACKED_H
 
-#include "Utility.h"
-#include "../Codec.h"
-
+#include <iostream>
+#include <string>
 #include <stack>
 
-using namespace Atlas;
+#include "Utility.h"
+#include "../Codec.h"
 
 namespace Atlas { namespace Codecs {
 
@@ -34,12 +34,12 @@ The complete specification is located in cvs at:
     forge/protocols/atlas/spec/packed_syntax.html
     
 */
-
+  
 class Packed : public Codec<std::iostream>
 {
 public:
     
-    Packed(const Codec<std::iostream>::Parameters&);
+    Packed(std::iostream& s, Atlas::Bridge* b);
 
     virtual void poll(bool can_read = true);
 
@@ -94,12 +94,12 @@ protected:
     inline void parseString(char);
     inline void parseName(char);
 
-    inline const std::string hexEncode(const std::string& data)
+    inline const string hexEncode(const std::string& data)
     {
 	return hexEncodeWithPrefix("+", "+[]()@#$=", data);
     }
 
-    inline const std::string hexDecode(const std::string& data)
+    inline const string hexDecode(const std::string& data)
     {
 	return hexDecodeWithPrefix("+", data);
     }
@@ -107,4 +107,4 @@ protected:
 
 } } // namespace Atlas::Codecs
 
-#endif // ATLAS_CODECS_PACKED_H
+#endif

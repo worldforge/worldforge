@@ -11,7 +11,7 @@
 
 #include "../Filter.h"
 
-using namespace Atlas;
+namespace Atlas { namespace Filters {
 
 class Gzip : public Filter
 {
@@ -27,6 +27,8 @@ class Gzip : public Filter
     virtual std::string encode(const std::string&);
     virtual std::string decode(const std::string&);
 };
+
+} } // namespace Atlas::Filters
 
 #endif // HAVE_ZLIB_H && HAVE_LIBZ
 

@@ -1,11 +1,11 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Michael Day
+// Copyright (C) 2000-2001 Michael Day, Stefanus Du Toit
 
 #ifndef ATLAS_FILTER_H
 #define ATLAS_FILTER_H
 
-#include "../config.h"
+#include "config.h"
 
 #include <string>
 
@@ -17,8 +17,6 @@
 
 #include <cstring>
 // for memcpy
-
-#include "Factory.h"
 
 namespace Atlas {
 
@@ -32,16 +30,7 @@ transmission error detection. A compound filter can be created that acts like
 a single filter, allowing various filters to be chained together in useful
 ways such as compressing and then encrypting.
 
-Filters declare an instance of Filter::Factory in the module they are defined
-in. This allows them to be automatically included in the negotiation process
-that chooses which codecs and filters an Atlas connection will use. Each
-filter has metrics that allow Negotiate to make informed decisions when more
-than one filter is available for use. Currently these metrics consist of the
-type of the filter, whether it is for compression, encryption or check
-summing.
-
 @see Codec
-@see Factory
 @see Negotiate
 */
 
@@ -63,38 +52,6 @@ class Filter
 	CHECKSUM,
 	COMPRESSION,
 	ENCRYPTION,
-    };
-
-    class Metrics
-    {
-	public:
-
-	Metrics(Type) { }
-    };
-
-    struct Parameters
-    {
-    };
-
-    template <typename T>
-    class Factory : public Atlas::Factory<Filter>
-    {
-	public:
-
-	Factory(const std::string& name, const Metrics &metrics)
-	    : Atlas::Factory<Filter>(name, metrics)
-	{
-	}
-	    
-	virtual Filter* New(const Parameters&)
-	{
-	    return new T;
-	}
-
-	virtual void Delete(Filter* filter)
-	{
-	    delete filter;
-	}
     };
 
     protected:

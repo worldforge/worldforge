@@ -12,23 +12,19 @@ This library implements the Atlas protocol, for use in client-server
 game applications.  This library is suitable for linking to either
 clients or servers.
 
-Short instructions:
-1) ./autgen.sh
-2) ./configure
-3) cd src
-4) make
-5) as root: make install
-6) cd ..
-7) make
-step 7 only needed if want to compile: tutorial
-8) make check
-step 8 only needed if want to compile and run: tests and benchmark
+VERSION
+
+This is Atlas-C++ 0.5.x, the latest development version of Atlas-C++. The
+0.4.x branch will contain NO API CHANGES. The 0.5.x branch is completely
+experimental and may not be easy to track. Any changes affecting the API
+should go into 0.5.x, as should any features which are not completely
+stable. 0.6.0 will be the next stable branch.
 
 PREREQUISITES
 
 You need at least gcc 2.95.2, here is URL for RPMS:
 (not all are needed, like java, g77 and chil)
-http://www.worldforge.net/aloril/atlas/libs/compiler/
+ftp://rawhide.redhat.com/pub/rawhide/i386/RedHat/RPMS/ 
    14414259 Dec 12 15:03 gcc-2.95.2-3.src.rpm
       94155 Dec 13 23:21 cpp-2.95.2-3.i386.rpm
     1005779 Dec 13 23:21 gcc-java-2.95.2-3.i386.rpm
@@ -48,6 +44,13 @@ http://www.worldforge.net/aloril/atlas/libs/compiler/
 * Any versions of gcc older than 2.95.2 are not supported! *
 
 In order to generate the documentation, you will need doxygen.
+
+This release should compile and work with:
+ - gcc 2.95.2
+ - gcc 2.95.3test2 and up
+ - "gcc 2.96" from Red Hat 7 (make sure you have the latest update -
+   packages aending in "-69" and above should work)
+ - gcc 3.0 (this was not out at the time of release, but CVS gcc worked)
 
 SOCKET LIBRARIES
 
@@ -72,6 +75,8 @@ DOCUMENTATION
 To generate the documentation, simply configure the tree, then in Atlas-C++/
 type "make docs". This will use doxygen to generate the documentation, which
 will then reside in Atlas-C++/doc/.
+
+Please read the file HACKING carefully before working on Atlas-C++.
 
 LICENSING
 

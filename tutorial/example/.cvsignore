@@ -1,0 +1,13 @@
+? .deps
+? .libs
+? Makefile
+? Makefile.in
+? aclocal.m4
+? config.cache
+? config.h.in
+? config.log
+? config.status
+? configure
+? libtool
+? simple_client
+? simple_server

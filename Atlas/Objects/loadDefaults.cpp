@@ -7,7 +7,7 @@
 #include <map>
 #include <set>
 
-#include "../Codec.h"
+#include "../Codecs/XML.h"
 #include "Decoder.h"
 #include "loadDefaults.h"
 #include "objectFactory.h"
@@ -40,14 +40,16 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
   
   //replace following code with:
   //getCodecByName(const std::string& name, Stream& stream, Bridge* bridge)
-  typedef list<Atlas::Factory<Atlas::Codec<std::iostream> >*> FactoryCodecs;
-  FactoryCodecs *myCodecs = Factory<Codec<std::iostream> >::factories();
-  FactoryCodecs::iterator i;
-  Atlas::Codec<std::iostream> *codec = NULL;
-  for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
-    if((*i)->getName() == "XML")
-      codec = (*i)->New(Codec<std::iostream>::Parameters((iostream&)stream, this));
+
+  //typedef list<Atlas::Factory<Atlas::Codec<std::iostream> >*> FactoryCodecs;
+  //FactoryCodecs *myCodecs = Factory<Codec<std::iostream> >::factories();
+  //FactoryCodecs::iterator i;
+  //Atlas::Codec<std::iostream> *codec = NULL;
+  //for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
+    //if((*i)->getName() == "XML")
+      //codec = (*i)->New(Codec<std::iostream>::Parameters((iostream&)stream, this));
   //end of replace
+  Atlas::Codec<std::iostream> *codec = new Atlas::Codecs::XML((iostream&)stream, this);
   if(!codec)
     throw DefaultLoadingException("XML codec not found");
   while(stream) {

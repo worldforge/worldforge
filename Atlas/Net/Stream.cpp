@@ -4,9 +4,9 @@
 
 #include <iostream>
 
+#include "../Codecs/XML.h"
+#include "../Codecs/Packed.h"
 #include "Stream.h"
-
-using namespace Atlas;
 
 std::string get_line(std::string &s, char ch)
 {
@@ -29,14 +29,12 @@ std::string get_line(std::string &s1, char ch, std::string &s2)
 }
 
 
-template <class T>
-Atlas::Net::NegotiateHelper<T>::NegotiateHelper(list<std::string> *names, Factories *out_factories) :
-  names(names), outFactories(out_factories)
+Atlas::Net::NegotiateHelper::NegotiateHelper(list<std::string> *names) :
+  names(names)
 { 
 }
 
-template <class F>
-bool Atlas::Net::NegotiateHelper<F>::get(std::string &buf, std::string header)
+bool Atlas::Net::NegotiateHelper::get(std::string &buf, std::string header)
 {
   std::string s, h;
   
@@ -44,47 +42,50 @@ bool Atlas::Net::NegotiateHelper<F>::get(std::string &buf, std::string header)
     {
       // check for end condition
       if(buf.find('\n') == 0)
-	{
-	  buf.erase(0, 1);
-	  return true;
-	}
-	
+        {
+          buf.erase(0, 1);
+          return true;
+        }
+        
       if(get_line(buf, '\n', s) == "")
-	break;
-	
+        break;
+        
       if(get_line(s, ' ', h) == header)
-	{
-	  names->push_back(s);
-	    
-	  cout << " got: " << s << endl;
-	}
+        {
+          names->push_back(s);
+            
+          cout << " got: " << s << endl;
+        }
       else
-	cerr << "Unknown pattern " << h << endl;
+        cerr << "Unknown pattern " << h << endl;
     }
   return false;
 }
 
-template <class T>
-void Atlas::Net::NegotiateHelper<T>::put(std::string &buf, std::string header)
+void Atlas::Net::NegotiateHelper::put(std::string &buf, std::string header)
 {
-  Factories::iterator i;
-  
   buf.erase();
-  for(i = outFactories->begin(); i != outFactories->end(); i++)
-    {
-      buf += header;
-      buf += " ";
-      buf += (*i)->getName();
-      buf += "\n";
-    }
+
+  buf += header;
+  buf += " Packed\n";
+
+  buf += header;
+  buf += " XML\n";
+
+  buf += header;
+  buf += " Gzip\n";
+
+  buf += header;
+  buf += " Bzip2\n";
+
   buf += "\n";
 }
 
 Atlas::Net::StreamConnect::StreamConnect(const std::string& name, std::iostream& s,
 Bridge* bridge) :
   state(SERVER_GREETING), outName(name), socket(s), bridge(bridge),
-  codecHelper(&inCodecs, &outCodecs),
-  filterHelper(&inFilters, &outFilters)
+  codecHelper(&inCodecs), filterHelper(&inFilters),
+  m_canPacked(true), m_canXML(true), m_canGzip(true), m_canBzip2(true)
 {
 }
 
@@ -96,59 +97,59 @@ void Atlas::Net::StreamConnect::poll(bool can_read = true)
 
     do
     {
-	if (can_read || socket.rdbuf()->in_avail()) buf += socket.get();
+        if (can_read || socket.rdbuf()->in_avail()) buf += socket.get();
 
     if(state == SERVER_GREETING)
     {
-	// get server greeting
+        // get server greeting
 
-	if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
-	{
-	    cout << "server: " << inName << endl;
-	    state++;
-	}
+        if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
+        {
+            cout << "server: " << inName << endl;
+            state++;
+        }
     }
 
     if(state == CLIENT_GREETING)
     {
-	// send client greeting
-	
-	socket << outName << endl;
-	state++;
+        // send client greeting
+        
+        socket << outName << endl;
+        state++;
     }
     
     if (state == CLIENT_CODECS)
     {
-	processClientCodecs();
-	codecHelper.put(out, "ICAN");
-	socket << out << flush;
-	state++;
+        //processClientCodecs();
+        codecHelper.put(out, "ICAN");
+        socket << out << flush;
+        state++;
     }
 
     if(state == SERVER_CODECS)
     {
-	if (codecHelper.get(buf, "IWILL"))
-	{
-	    processServerCodecs();
-	    state++;
-	}
+        if (codecHelper.get(buf, "IWILL"))
+        {
+            processServerCodecs();
+            state++;
+        }
     }
     
     if (state == CLIENT_FILTERS)
     {
-	processClientFilters();
-	filterHelper.put(out, "ICAN");
-	socket << out << flush;
-	state++;
+        //processClientFilters();
+        filterHelper.put(out, "ICAN");
+        socket << out << flush;
+        state++;
     }
     
     if (state == SERVER_FILTERS)
     {
-	if (filterHelper.get(buf, "IWILL"))
-	{
-	    processServerFilters();
-	    state++;
-	}
+        if (filterHelper.get(buf, "IWILL"))
+        {
+            processServerFilters();
+            state++;
+        }
     }
     }
     while ((state != DONE) && (socket.rdbuf()->in_avail()));
@@ -158,88 +159,74 @@ Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamConnect::getState()
 {
     if (state == DONE)
     {
-        if (! outCodecs.empty ())
+        if (m_canPacked || m_canXML)
         {
             return SUCCEEDED;
         }
     }
     else if (socket)
     {
-	return IN_PROGRESS;
+        return IN_PROGRESS;
     }
     return FAILED;
 }
 
 Atlas::Codec<std::iostream>* Atlas::Net::StreamConnect::getCodec()
 {
-    if (! outCodecs.empty ())
-    {
-        return (*outCodecs.begin())-> \
-                New(Codec<std::iostream>::Parameters(socket,bridge));
-    }
+    if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }
+    if (m_canPacked) { return new Atlas::Codecs::Packed(socket, bridge); }
     return NULL; // throw exception?
 }
 
-
 void Atlas::Net::StreamConnect::processServerCodecs()
 {
-    FactoryCodecs::iterator i;
     list<std::string>::iterator j;
-
-    outCodecs.erase(outCodecs.begin(), outCodecs.end());
-
-    FactoryCodecs *myCodecs = Factory<Codec<std::iostream> >::factories();
-
-    for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
+    
+    for (j = inFilters.begin(); j != inFilters.end(); ++j)
     {
-	for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
-	{
-	    if ((*i)->getName() == *j)
-	    {
-		outCodecs.push_back(*i);
-		cerr << *j << " is the one" << endl << flush;
-		return;	      
-	    }
-	}
+        if (*j == "XML") { m_canXML = true; }
+        if (*j == "Packed") { m_canPacked = true; }
     }
 }
   
 void Atlas::Net::StreamConnect::processServerFilters()
 {
-  FactoryFilters::iterator i;
     list<std::string>::iterator j;
     
-    FactoryFilters *myFilters = Factory<Filter>::factories();
-
-    for (i = myFilters->begin(); i != myFilters->end(); ++i)
+    for (j = inFilters.begin(); j != inFilters.end(); ++j)
     {
-	for (j = inFilters.begin(); j != inFilters.end(); ++j)
-	{
-	    if ((*i)->getName() == *j)
-	    {
-		outFilters.push_back(*i);
-	    }
-	}
+        if (*j == "Gzip") { m_canGzip = true; }
+        if (*j == "Bzip2") { m_canBzip2 = true; }
     }
 }
 
+#if 0
 void Atlas::Net::StreamConnect::processClientCodecs()
 {
-    FactoryCodecs *myCodecs = Factory<Codec<std::iostream> >::factories();
-    outCodecs = *myCodecs;
+    std::list<std::string>::const_iterator j;
+
+    for (j = inCodecs.begin(); j != inCodecs.end(); j++)
+    {
+        // Do what?
+    }
 }
   
 void Atlas::Net::StreamConnect::processClientFilters()
 {
-    FactoryFilters *myFilters = Factory<Filter>::factories();
-    outFilters = *myFilters;
+    std::list<std::string>::const_iterator j;
+
+    for (j = inFilters.begin(); j != inFilters.end(); j++)
+    {
+        // Do what?
+    }
 }
+#endif
 
 Atlas::Net::StreamAccept::StreamAccept(const std::string& name, std::iostream& s,
 Bridge* bridge) :
   state(SERVER_GREETING), outName(name), socket(s), bridge(bridge),
-  codecHelper(&inCodecs, &outCodecs),
-  filterHelper(&inFilters, &outFilters)
+  codecHelper(&inCodecs), filterHelper(&inFilters),
+  m_canPacked(false), m_canXML(false), m_canGzip(false), m_canBzip2(false)
 {
 }
 
@@ -251,56 +238,59 @@ void Atlas::Net::StreamAccept::poll(bool can_read = true)
 
     if (state == SERVER_GREETING) 
     {
-	// send server greeting
+        // send server greeting
 
-	socket << outName << endl;
-	state++;
+        socket << outName << endl;
+        state++;
     }
 
     do
     {
-	if (can_read || socket.rdbuf()->in_avail()) buf += socket.get();
+        if (can_read || socket.rdbuf()->in_avail()) buf += socket.get();
 
-    if (state == CLIENT_GREETING)
-    {
-	// get client greeting
-	
-	if (buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
-	cout << "client: " << inName << endl;
-	state++;
-    }
-    
-    if (state == CLIENT_CODECS)
-    {
-	if (codecHelper.get(buf, "ICAN"))
-	{
-	    state++;
-	}
-    }
-    
-    if (state == SERVER_CODECS)
-    {
-	processServerCodecs();
-	codecHelper.put(out, "IWILL");
-	socket << out << flush;
-	state++;
-    }
-    
-    if(state == CLIENT_FILTERS)
-    {
-	if (filterHelper.get(buf, "ICAN"))
-	{
-	    state++;
-	}
-    }
-    
-    if (state == SERVER_FILTERS)
-    {
-	processServerFilters();
-	filterHelper.put(out, "IWILL");
-	socket << out << flush;
-	state++;
-    }
+        if (state == CLIENT_GREETING)
+        {
+            // get client greeting
+        
+            if (buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
+            cout << "client: " << inName << endl;
+            state++;
+        }
+
+        if (state == CLIENT_CODECS)
+        {
+            if (codecHelper.get(buf, "ICAN"))
+            {
+                state++;
+            }
+            processClientCodecs();
+        }
+
+        if (state == SERVER_CODECS)
+        {
+            if (m_canXML) { socket << "IWILL XML\n"; }
+            else if (m_canPacked) { socket << "IWILL Packed\n"; }
+            socket << endl;
+            state++;
+        }
+
+        if(state == CLIENT_FILTERS)
+        {
+            if (filterHelper.get(buf, "ICAN"))
+            {
+                state++;
+            }
+            processClientFilters();
+        }
+
+        if (state == SERVER_FILTERS)
+        {
+            //No Filters until they actually work.
+            //if (m_canGzip) { socket << "IWILL Gzip\n"; }
+            //else if (m_canBzip2) { socket << "IWILL Bzip2\n"; }
+            socket << endl;
+            state++;
+        }
     }
     while ((state != DONE) && (socket.rdbuf()->in_avail()));
 }
@@ -309,34 +299,34 @@ Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamAccept::getState()
 {
     if (state == DONE)
     {
-        if (! outCodecs.empty ())
+        if (m_canPacked || m_canXML)
         {
             return SUCCEEDED;
         }
     }
     else if (socket)
     {
-	return IN_PROGRESS;
+        return IN_PROGRESS;
     }
     return FAILED;
 }
 
 Atlas::Codec<std::iostream>* Atlas::Net::StreamAccept::getCodec()
 {
-    if (! outCodecs.empty ())
-    {
       // XXX XXX XXX XXX
       // should pass an appropriate filterbuf here instead of socket,
       // if we found a filter of course.
       // this poses the problem of the filter being passed by
       // reference, so we'd have to allocate on the heap, but then who
       // would deallocate? erk. -- sdt 2001-01-05
-        return (*outCodecs.begin())-> \
-                New(Codec<std::iostream>::Parameters(socket,bridge));
-    }
+        //return (*outCodecs.begin())-> \
+                //New(Codec<std::iostream>::Parameters(socket,bridge));
+    if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }
+    if (m_canPacked) { return new Atlas::Codecs::Packed(socket, bridge); }
     return NULL; // throw exception?
 }
 
+#if 0
 void Atlas::Net::StreamAccept::processServerCodecs()
 {
     FactoryCodecs::iterator i;
@@ -346,14 +336,14 @@ void Atlas::Net::StreamAccept::processServerCodecs()
 
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
     {
-	for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
-	{
-	    if ((*i)->getName() == *j)
-	    {
-		outCodecs.push_back(*i);
-		return;	      
-	    }
-	}
+        for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
+        {
+            if ((*i)->getName() == *j)
+            {
+                outCodecs.push_back(*i);
+                return;              
+            }
+        }
     }
 }
   
@@ -366,24 +356,35 @@ void Atlas::Net::StreamAccept::processServerFilters()
 
     for (i = myFilters->begin(); i != myFilters->end(); ++i)
     {
-	for (j = inFilters.begin(); j != inFilters.end(); ++j)
-	{
-	    if ((*i)->getName() == *j)
-	    {
-		outFilters.push_back(*i);
-	    }
-	}
+        for (j = inFilters.begin(); j != inFilters.end(); ++j)
+        {
+            if ((*i)->getName() == *j)
+            {
+                outFilters.push_back(*i);
+            }
+        }
     }
 }
+#endif
 
 void Atlas::Net::StreamAccept::processClientCodecs()
 {
-    FactoryCodecs *myCodecs = Factory<Codec<std::iostream> >::factories();
-    outCodecs = *myCodecs;
+    std::list<std::string>::const_iterator j;
+
+    for (j = inCodecs.begin(); j != inCodecs.end(); j++)
+    {
+        if (*j == "XML") { m_canXML = true; }
+        if (*j == "Packed") { m_canPacked = true; }
+    }
 }
   
 void Atlas::Net::StreamAccept::processClientFilters()
 {
-    FactoryFilters *myFilters = Factory<Filter>::factories();
-    outFilters = *myFilters;
+    std::list<std::string>::const_iterator j;
+
+    for (j = inFilters.begin(); j != inFilters.end(); j++)
+    {
+        if (*j == "Gzip") { m_canGzip = true; }
+        if (*j == "Bzip2") { m_canBzip2 = true; }
+    }
 }

@@ -5,8 +5,7 @@
 #include "../Message/Encoder.h"
 #include "BaseObject.h"
 
-using namespace Atlas;
-using namespace Atlas::Message;
+using Atlas::Message::Object;
 
 namespace Atlas { namespace Objects {
 

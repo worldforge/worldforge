@@ -15,15 +15,10 @@
 #define ASSERT(exp) assert(exp)
 #endif
 
-using namespace Atlas;
+using Atlas::Filters::Bzip2;
 
 const int BS100K = 6;
 const int WORKFACTOR = 30;
-
-//namespace
-//{
-    //Filter::Factory<Bzip2> factory("BZIP2", Filter::Metrics(Filter::COMPRESSION));
-//}
 
 void Bzip2::begin()
 {

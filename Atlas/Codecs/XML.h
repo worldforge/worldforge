@@ -1,16 +1,16 @@
 // This file may be redistributed and modified under the terms of the
 // GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Michael Day
+// Copyright (C) 2000-2001 Michael Day, Stefanus Du Toit
 
 #ifndef ATLAS_CODECS_XML_H
 #define ATLAS_CODECS_XML_H
 
-#include "Utility.h"
-#include "../Codec.h"
-
+#include <iostream>
+#include <string>
 #include <stack>
 
-using namespace Atlas;
+#include "Utility.h"
+#include "../Codec.h"
 
 namespace Atlas { namespace Codecs {
 
@@ -40,7 +40,7 @@ class XML : public Codec<std::iostream>
 {
     public:
 
-    XML(const Codec<std::iostream>::Parameters&);
+    XML(std::iostream& s, Atlas::Bridge* b);
 
     virtual void poll(bool can_read = true);
 
@@ -57,8 +57,8 @@ class XML : public Codec<std::iostream>
     
     virtual void listItem(const Map&);
     virtual void listItem(const List&);
-    virtual void listItem(long);
     virtual void listItem(double);
+    virtual void listItem(long);
     virtual void listItem(const std::string&);
     virtual void listEnd();
 

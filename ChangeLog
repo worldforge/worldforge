@@ -1,3 +1,33 @@
+2001-03-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Codec.*, src/Codecs/*: Ported across simplified ISO compliant
+	  Codec classes from stable branch. Removed Metrics and Parameters.
+	  
+	* src/Filter.*, src/Filters/*: Removed Metrics and Parameters.
+
+	* src/Factory.*: Removed Factory mechanism, changes copied from
+	  stable branch.
+
+	* src/Net/Stream.*: Changed negotiation classes to simplified but
+	  ISO compliant version from stable branch, with placeholder
+	  code for Filter negotiation.
+
+	* HACKING: Copied across from stable branch, and modified to reflect
+	  status of this branch.
+
+	* README: Updated contents from the stable branch.
+
+	* tutorial/example/*: Created similar tutorial to that on stable
+	  branch. The only differences are differences to the API.
+
+	* src/Filter.h, Makefile.am: Sorted out using config.h in Filter.h.
+
+	* src/Filters/*: Moved filters into their own namespace,
+	  in accordance with the convention used throughout this
+	  library.
+
+	* src/*: Removed all "using namespace .." directives.
+
 2001-03-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/*: Removed "using namespace std;" throughout code, as all

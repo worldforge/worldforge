@@ -4,7 +4,7 @@
 
 #include "Loopback.h"
 
-using namespace Atlas;
+using Atlas::Bridge;
 
 class LoopBridge : public Bridge
 {

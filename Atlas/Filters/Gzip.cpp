@@ -15,14 +15,9 @@
 #define ASSERT(exp) assert(exp)
 #endif
 
-using namespace Atlas;
+using Atlas::Filters::Gzip;
 
 const int DEFAULT_LEVEL = 6;
-
-//namespace
-//{
-  //Filter::Factory<Gzip> factory("GZIP", Filter::Metrics(Filter::COMPRESSION));
-//}
 
 void Gzip::begin()
 {

@@ -4,7 +4,5 @@
 
 #include "Bridge.h"
 
-using namespace Atlas;
-
-Bridge::Map Bridge::mapBegin;
-Bridge::List Bridge::listBegin;
+Atlas::Bridge::Map Atlas::Bridge::mapBegin;
+Atlas::Bridge::List Atlas::Bridge::listBegin;

@@ -1,6 +1,6 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Michael Day, Dmitry Derevyanko
+// Copyright (C) 2000-2001 Michael Day, Dmitry Derevyanko, Stefanus Du Toit
 
 #ifndef ATLAS_NET_STREAM_H
 #define ATLAS_NET_STREAM_H
@@ -25,14 +25,11 @@ along with the name of sender and a Socket
 @see Filter
 */
 
-  template <class T>
   class NegotiateHelper {
-
-    typedef std::list<T*> Factories;
 
   public:
 
-    NegotiateHelper(std::list<std::string> *names, Factories *out_factories);
+    NegotiateHelper(std::list<std::string> *names);
 
     bool get(std::string &buf, std::string header);
     void put(std::string &buf, std::string header);
@@ -40,7 +37,6 @@ along with the name of sender and a Socket
   private:
 
     std::list<std::string> *names;
-    Factories *outFactories;
 
   };
 
@@ -79,20 +75,21 @@ class StreamConnect : public Atlas::Negotiate<std::iostream>
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
   
-    typedef std::list<Atlas::Factory<Atlas::Codec<std::iostream> >*> FactoryCodecs;
-    typedef std::list<Atlas::Factory<Atlas::Filter>*> FactoryFilters;
-
-    FactoryCodecs outCodecs;
-    FactoryFilters outFilters;
-    NegotiateHelper<Atlas::Factory<Atlas::Codec<std::iostream> > > codecHelper;
-    NegotiateHelper<Atlas::Factory<Atlas::Filter> > filterHelper;
+    NegotiateHelper codecHelper;
+    NegotiateHelper filterHelper;
     std::string buf;
 
     void processServerCodecs();
     void processServerFilters();
 
-    void processClientCodecs();
-    void processClientFilters();
+    //void processClientCodecs();
+    //void processClientFilters();
+
+    bool m_canPacked;
+    bool m_canXML;
+
+    bool m_canGzip;
+    bool m_canBzip2;
 };
  
 class StreamAccept : public Atlas::Negotiate<std::iostream>
@@ -130,20 +127,21 @@ class StreamAccept : public Atlas::Negotiate<std::iostream>
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
   
-    typedef std::list<Atlas::Factory<Atlas::Codec<std::iostream> >*> FactoryCodecs;
-    typedef std::list<Atlas::Factory<Atlas::Filter>*> FactoryFilters;
-
-    FactoryCodecs outCodecs;
-    FactoryFilters outFilters;
-    NegotiateHelper<Atlas::Factory<Atlas::Codec<std::iostream> > > codecHelper;
-    NegotiateHelper<Atlas::Factory<Atlas::Filter > > filterHelper;
+    NegotiateHelper codecHelper;
+    NegotiateHelper filterHelper;
     std::string buf;
 
-    void processServerCodecs();
-    void processServerFilters();
+    //void processServerCodecs();
+    //void processServerFilters();
 
     void processClientCodecs();
     void processClientFilters();
+
+    bool m_canPacked;
+    bool m_canXML;
+
+    bool m_canGzip;
+    bool m_canBzip2;
 };
 
 } } // namespace Atlas::Net
