@@ -1,3 +1,11 @@
+2003-12-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Clean up and canonicalise configure.ac.
+
+	* Fix link order issues with atlas_convert.
+
+	* Use suffix define in pkgconfig spec.
+
 2003-12-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Utilities/Makefile.am: Ensure atlas_convert builds

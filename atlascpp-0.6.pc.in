@@ -7,4 +7,4 @@ Name: Atlas-C++
 Description: The Atlas protocol C++ implementation
 Version: @VERSION@
 Libs: -L${libdir} @ATLAS_LIBS@
-Cflags: -I${includedir}/Atlas-C++-0.6
+Cflags: -I${includedir}/Atlas-C++@ATLAS_LIB_SUFFIX@

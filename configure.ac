@@ -1,10 +1,20 @@
 dnl Initialise autoconf
 
 
-AC_INIT("Atlas-C++", "0.5.1", "alriddoch@zepler.org")
-AM_INIT_AUTOMAKE("Atlas-C++", "0.5.1")
+AC_INIT()
 AC_CONFIG_SRCDIR([Atlas/Bridge.cpp])
 AM_CONFIG_HEADER(config.h)
+
+dnl Detect the canonical host and target environment
+
+AC_CANONICAL_HOST
+AC_CANONICAL_TARGET
+
+dnl Initialise automake
+
+VERSION=0.5.1
+
+AM_INIT_AUTOMAKE("Atlas-C++", $VERSION)
 
 dnl Initialise automake
 
@@ -35,6 +45,9 @@ AC_ARG_ENABLE(debug,
         CXXFLAGS="$CXXFLAGS -Wall -Werror -DNDEBUG"
     ]
 )
+
+AC_LANG_CPLUSPLUS
+AC_REQUIRE_CPP
 
 dnl Test for C++ Standard Library
 
