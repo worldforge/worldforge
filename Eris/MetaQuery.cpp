@@ -5,7 +5,12 @@
 #include <assert.h>
 #include <skstream/skstream.h>
 #include <sigc++/bind.h>
+#include <sigc++/object_slot.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/signal_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
 
 #include <Atlas/Objects/Operation/Get.h>
 #include <Atlas/Objects/Encoder.h>

@@ -2,7 +2,11 @@
 #define ERIS_PLAYER_H
 
 #include <sigc++/object.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/basic_signal.h>
+#else
+#include <sigc++/signal.h>
+#endif
 
 #include <Atlas/Objects/Entity/GameEntity.h>
 #include <Atlas/Objects/Operation/Error.h>

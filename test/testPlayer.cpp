@@ -12,8 +12,12 @@
 #include <Atlas/Objects/Operation/Sight.h>
 #include <Atlas/Objects/Entity/Account.h>
 
-#include <sigc++/signal_system.h>
 #include <sigc++/bind.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
+#include <sigc++/signal_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
 
 #include "testUtils.h"
 #include "Utils.h"

@@ -15,7 +15,13 @@
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Message/QueuedDecoder.h>
 
+#include <sigc++/object.h>
+#include <sigc++/object_slot.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/signal_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
 
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Get.h>
@@ -293,7 +299,7 @@ void TypeInfoEngine::init()
 	
 	Dispatcher *d = info->addSubdispatch(new TypeDispatcher("meta", "meta"));
 	Dispatcher *ti = d->addSubdispatch(
-		new SignalDispatcher<Atlas::Objects::Root>("typeinfo", SigC::slot(this, &TypeInfoEngine::recvInfoOp))
+		new SignalDispatcher<Atlas::Objects::Root>("typeinfo", SigC::slot(*this, &TypeInfoEngine::recvInfoOp))
 	);
 	
 	// note, we just turned our tree into a graph. time to refcount dispatchers!
@@ -315,7 +321,7 @@ void TypeInfoEngine::init()
 	err->addSubdispatch(
 		new SignalDispatcher2<Atlas::Objects::Operation::Error,
 			Atlas::Objects::Operation::Get>("typeerror",
-			SigC::slot(this, &TypeInfoEngine::recvTypeError)
+			SigC::slot(*this, &TypeInfoEngine::recvTypeError)
 		)
 	);
 	

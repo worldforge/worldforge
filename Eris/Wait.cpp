@@ -3,7 +3,13 @@
 #endif
 
 #include <assert.h>
+#include <sigc++/object.h>
+#include <sigc++/object_slot.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/signal_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
 #include <Atlas/Objects/Root.h>
 
 #include "atlas_utils.h"

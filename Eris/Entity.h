@@ -3,7 +3,11 @@
 
 // system headers
 #include <sigc++/object.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/basic_signal.h>
+#else
+#include <sigc++/signal.h>
+#endif
 
 #include <Atlas/Message/Object.h>
 

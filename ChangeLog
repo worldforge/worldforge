@@ -1,3 +1,8 @@
+Thursday, August 8th, Al Riddoch
+
+	* Fixed sigc++ use so it complies with published APIs, and put
+	  conditionals in to pick up headers for sigc++ 1.0 or 1.2.
+
 Saturday, August 3rd, James Turner
 
 	* Change BaseConnection to create a new tcp_socket_stream
