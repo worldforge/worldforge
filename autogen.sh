@@ -17,7 +17,7 @@ DIE=0
 }
 
 (grep "^AM_PROG_LIBTOOL" ./configure.in >/dev/null) && {
-  (libtool --version) < /dev/null > /dev/null 2>&1 || {
+  (libtoolize --version) < /dev/null > /dev/null 2>&1 || {
     echo
     echo "**Error**: You must have \`libtool' installed to compile WFMath."
     echo "Get ftp://ftp.gnu.org/pub/gnu/libtool-1.2d.tar.gz"

@@ -1,3 +1,10 @@
+Saturday, January 11, 2003	James Turner <james@worldforge.org>
+
+	* Changed 'libtool' to 'libtoolize' in autogen.sh so
+	  an autoXXXX build works under Mac OS-X.
+	* Added project builder files to produce a WFMath framework
+	  If you use this or have any comments, please let me know.
+
 Monday, November 4, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Added isValid() member functions to TimeStamp, TimeDiff
