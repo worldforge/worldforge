@@ -4,13 +4,23 @@
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
         email           : jbarrett@box100.com
+
+changes 13 Jan 2000 - fex
+    some safety assertions added..
+    (pointers passed from here are dereferenced in chains, can never be 0)
 */
 
 #ifndef __AtlasProtocol_h_
 #define __AtlasProtocol_h_
 
-#include "ProtocolEncoder.h"
-#include "ProtocolDecoder.h"
+#include <string>
+using std::string;
+
+//#include "ProtocolEncoder.h"
+//#include "ProtocolDecoder.h"
+
+class AProtocolEncoder;
+class AProtocolDecoder;
 
 class AProtocol
 {
@@ -21,8 +31,8 @@ protected:
 static	string			prefix;
 
 public:
-	AProtocolEncoder*	getEncoder()		{ return encoder; }
-	AProtocolDecoder*	getDecoder()		{ return decoder; }
+	AProtocolEncoder*	getEncoder();
+	AProtocolDecoder*	getDecoder();
 	string			getPrefix()		{ return prefix; }
 	void			setPrefix(string s)	{ prefix = s; }
 virtual	AProtocol*		makenew()		{ return NULL; }

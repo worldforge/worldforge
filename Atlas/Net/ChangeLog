@@ -1,3 +1,8 @@
+2000-00-23  fex <who@which.net>
+
+        * spring cleaning starts early
+	* changes listed directly in files (easier to spot if they break something)
+	
 1999-12-24  Aloril  <aloril@iki.fi>
 
 	* porting to MSC (not complete) and more bugfixes

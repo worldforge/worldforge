@@ -4,21 +4,27 @@
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
         email           : jbarrett@box100.com
-*/
 
-#include <stdio.h>
+changes:
+
+13 Jan 2000 - fex
+    commented waitn variable out.. seems to be unused now
+    some source dependencies removed
+    some costmetic changes
+*/
+#include <cassert>
 
 #include "Codec.h"
 #include "Protocol.h"
+#include "ProtocolEncoder.h"
+#include "ProtocolDecoder.h"
 
-ACodec::ACodec(AProtocol* aproto)
+ACodec::ACodec(AProtocol* aproto) : proto( aproto ), nestd( 0 )
 {
-	proto = aproto;
+    assert( proto != 0 );
 	proto->getDecoder()->newStream();
-
-	state = codecIDLE;    // waiting for message to start
-
-	nestd = 0;
+	//waiting for message to start
+	state = codecIDLE;
 }
 
 string ACodec::encodeMessage(const AObject& amsg)
@@ -112,10 +118,17 @@ int ACodec::hasMessage()
 				stack[nestd] = AObject::mkStringList(0);
 				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
-			} else {
+			}
+			
+			
+/*			 else {
 				// its a scalar, wait for the value
 				waitn = 1;
 			}
+*/			
+			
+			
+			
 		}
 		if (tok == AProtocol::atlasATREND) {
 			// end of attribute detected.. un-nest
@@ -155,14 +168,18 @@ int ACodec::hasMessage()
 					stack[nestd-1].set(names[nestd], stack[nestd]);
 				}
 			}
-			waitn = 0;
+			
+//			waitn = 0;
+
 		}
 		if (tok == AProtocol::atlasMSGBEG) {
 			// got a message header
 			// start constructing a message on the stack
 			// stack[0] = AObject::mkMap();
 			nestd = 0;
-			waitn = 0;
+
+//			waitn = 0;
+		
 		}
 		if (tok == AProtocol::atlasMSGEND) {
 			// got a message trailer

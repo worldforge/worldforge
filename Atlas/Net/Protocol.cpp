@@ -6,9 +6,21 @@
         email           : jbarrett@box100.com
 */
 
+#include <cassert>
+
 #include "Protocol.h"
 
 string	AProtocol::prefix("");
+
+AProtocolEncoder*	AProtocol::getEncoder() {
+    assert( encoder != 0 );
+    return encoder;
+}
+
+AProtocolDecoder*	AProtocol::getDecoder() {
+    assert( decoder != 0 );
+    return decoder;
+}
 
 int AProtocol::atlasERRTOK = -1;  // error token
 int AProtocol::atlasMSGBEG = 1;   // message begins
