@@ -8,6 +8,7 @@
  */
 
 #include <iostream>
+#include <unistd.h>
 #include <sockinet.h>
 #include <Atlas/Bridge.h>
 #include <Atlas/Negotiate.h>
@@ -31,6 +32,7 @@ int main(int argc, char** argv)
     iosockinet stream(sockbuf::sock_stream);
 
     cout << "Connecting..." << flush;
+    
     stream->connect("127.0.0.1", 6767);
     
     DebugBridge bridge;
@@ -56,11 +58,17 @@ int main(int argc, char** argv)
 
     stream << flush;
 
-    cout << "Polling server..." << endl;
-    while (stream) {
-        codec->Poll();
+    cout << "Sleeping for 2 seconds... " << flush;
+    sleep(2);
+    cout << "done." << endl;
+
+    if (!stream) cout << "Server exited." << endl; else {
+        cout << "Closing connection... " << flush;
+        codec->StreamEnd();
+        stream << flush;
+        stream->close();
+        cout << "done." << endl;
     }
-    cout << "Server exited." << endl;
 
     return 0;
 }

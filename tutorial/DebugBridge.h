@@ -21,64 +21,64 @@ public:
         addPadding();
     }
     virtual void StreamEnd() {
-        std::cout << padding << "StreamEnd" << endl;
         removePadding();
+        std::cout << padding << "StreamEnd" << endl;
     }
     
     virtual void MapItem(const std::string& name, const Map&)
     {
-        std::cout << name << " -> New Map" << endl;
+        std::cout << padding << name << " -> New Map" << endl;
         addPadding();
     }
     virtual void MapItem(const std::string& name, const List&)
     {
-        std::cout << name << " -> New List" << endl;
+        std::cout << padding << name << " -> New List" << endl;
         addPadding();
     }
     virtual void MapItem(const std::string& name, int i)
     {
-        std::cout << name << " -> Int: " << i << endl;
+        std::cout << padding << name << " -> Int: " << i << endl;
     }
     virtual void MapItem(const std::string& name, double d)
     {
-        std::cout << name << " -> Float: " << d << endl;
+        std::cout << padding << name << " -> Float: " << d << endl;
     }
     virtual void MapItem(const std::string& name, const std::string& s)
     {
-        std::cout << name << " -> String: " << s << endl;
+        std::cout << padding << name << " -> String: " << s << endl;
     }
     virtual void MapEnd()
     {
-        std::cout << "MapEnd" << endl;
         removePadding();
+        std::cout << padding << "MapEnd" << endl;
     }
     
     virtual void ListItem(const Map&)
     {
-        std::cout << "New Map" << endl;
+        std::cout << padding << "New Map" << endl;
         addPadding();
     }
     virtual void ListItem(const List&)
     {
-        std::cout << "New List" << endl;
+        std::cout << padding << "New List" << endl;
         addPadding();
     }
     virtual void ListItem(int i)
     {
-        std::cout << "Int: " << i << endl;
+        std::cout << padding << "Int: " << i << endl;
     }
     virtual void ListItem(double d)
     {
-        std::cout << "Float: " << d << endl;
+        std::cout << padding << "Float: " << d << endl;
     }
     virtual void ListItem(const std::string& s)
     {
-        std::cout << "String: " << s << endl;
+        std::cout << padding << "String: " << s << endl;
     }
     virtual void ListEnd()
     {
-        std::cout << "ListEnd" << endl;
         removePadding();
+        std::cout << padding << "ListEnd" << endl;
     }
 
 protected:
