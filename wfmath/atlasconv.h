@@ -62,7 +62,7 @@ inline bool _isNum(const _AtlasMessageType& a) {return a.IsNum();}
 inline _AtlasMessageType::FloatType _asNum(const _AtlasMessageType& a) {return a.AsNum();}
 
 #else
-#error "You must include Atlas::Message::Element.h or Atlas::Message::Object.h before wfmath/atlasconv.h"
+#error "You must include Atlas/Message/Element.h or Atlas/Message/Object.h before wfmath/atlasconv.h"
 #endif
 
 class AtlasInType

@@ -1,4 +1,10 @@
-Monday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
+Thursday, August 14th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed typos in a #error message in atlasconv.h.
+	* Changed atlas/Makefile.am to build the tests with 0.3.
+	* 0.3.0 release!
+
+Friday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Changed to using Mersenne Twister for random number
 	  generation. Anyone who wants the old interface
@@ -7,7 +13,7 @@ Monday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
 	  This version of the API was used briefly in stage
 	  at one point, and that was at least a year ago.
 
-Monday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
+Friday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Forgot to change to 0.3 in wfmath/Makefile.am, fixed that.
 	* Got rid of support for old 'list of lists' encoding
@@ -15,7 +21,7 @@ Monday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
 	  of push_back() calls by predeclaring the size of
 	  Atlas::Message::Foo::ListType instances.
 
-Monday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
+Friday, August 8th, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Updated version number to 0.3 in preparation for doing
 	  a release next week.
