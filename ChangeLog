@@ -1,3 +1,7 @@
+2005-01-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.5.92, Interface version 0.
+
 2004-12-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* atlas-cpp.spec.in: Update spec with License URL Package Vendor

@@ -11,7 +11,7 @@ AC_CANONICAL_SYSTEM
 
 dnl Initialise automake
 
-VERSION=0.5.91
+VERSION=0.5.92
 
 AM_INIT_AUTOMAKE("Atlas-C++", $VERSION)
 
