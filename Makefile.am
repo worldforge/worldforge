@@ -1,10 +1,6 @@
-SUBDIRS = src
+SUBDIRS = src tutorial
 
-EXTRA_DIST = ROADMAP Doxyfile footer.html index.dox \
-             tutorial/DebugBridge.h tutorial/Makefile tutorial/index.dox \
-             tutorial/message.dox tutorial/objects.dox tutorial/preamble.dox \
-             tutorial/simple.dox tutorial/simple_client.cc \
-             tutorial/simple_server.cc
+EXTRA_DIST = ROADMAP Doxyfile footer.html index.dox
 
 docs:
 	@echo "running doxygen..."
