@@ -1,4 +1,9 @@
-2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+2003-09-06 Damien McGinnes 
+
+	* Mercator/Surface.cpp: fixed a segfault in invalidate; slight
+	  cleanup to the rounding code in clipToSegment.
+
+2003-09-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Surface.h: Use <climits> to get the max value of
 	  a char.
@@ -14,13 +19,13 @@
 	  Add a few to be called to cause the segment to free its
 	  data, with the option to keep hold of the height field.
 
-2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+2003-09-01  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Terrain.h, Mercator/Terrain.cpp: Add new
 	  getHeightAndNormal() method which makes available the method
 	  of the same name from Segment on the whole terrain.
 
-2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+2003-08-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Shader.h: Add default arguments for constructor,
 	  which default to alpha channel only.
