@@ -31,7 +31,7 @@
 
 using namespace WFMath;
 
-void _Poly2Reorient::reorient(Polygon<2>& poly, int skip = -1) const
+void _Poly2Reorient::reorient(Polygon<2>& poly, int skip) const
 {
   int end = poly.numCorners();
 
