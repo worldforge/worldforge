@@ -1,4 +1,8 @@
 2004-01-24  Damien McGinnes <mcginnes at netspeed dot com.au>
+	* Mercator/RandCache.h: make RandCache store uint32 rather than
+	  double. Should halve memory usage.
+
+2004-01-24  Damien McGinnes <mcginnes at netspeed dot com.au>
 	* Mercator/Forest.h, Mercator/Forest.cpp: make forest use
 	  RandCache.
 

@@ -15,8 +15,8 @@
 class RandCache
 {
  public:
-  typedef std::vector<double>::size_type size_type;
   typedef WFMath::MTRand::uint32 uint32;
+  typedef std::vector<uint32>::size_type size_type;
 
   struct Ordering {
     virtual ~Ordering() {}
@@ -24,30 +24,30 @@ class RandCache
   };
 
   RandCache(uint32 seed, Ordering* o) :
-	rand_(seed), ordering_(o) {}
+	m_rand(seed), m_ordering(o) {}
   RandCache(uint32* seed, uint32 seed_len, Ordering* o) :
-	rand_(seed, seed_len), ordering_(o) {}
-  ~RandCache() {delete ordering_;}
+	m_rand(seed, seed_len), m_ordering(o) {}
+  ~RandCache() {delete m_ordering;}
 
   double operator()(int x, int y)
   {
-    size_type cache_order = (*ordering_)(x, y);
+    size_type cache_order = (*m_ordering)(x, y);
 
     // make sure we've cached the value
-    if(cache_order >= cache_.size()) {
-      size_type old_size = cache_.size();
-      cache_.resize(cache_order + 64); //do 64 at once
-      while(old_size < cache_.size())
-        cache_[old_size++] = rand_();
+    if(cache_order >= m_cache.size()) {
+      size_type old_size = m_cache.size();
+      m_cache.resize(cache_order + 64); //do 64 at once
+      while(old_size < m_cache.size())
+        m_cache[old_size++] = m_rand.randInt();
     }
 
-    return cache_[cache_order];
+    return double(m_cache[cache_order] * (1.0/4294967295.0));
   }
 
  private:
-  WFMath::MTRand rand_;
-  std::vector<double> cache_;
-  Ordering* ordering_;
+  WFMath::MTRand m_rand;
+  std::vector<uint32> m_cache;
+  Ordering* m_ordering;
 };
 
 //a spiral around 0,0
@@ -86,5 +86,6 @@ public:
 
 
 #endif
+
 
 
