@@ -1,7 +1,7 @@
 #ifndef __AtlasURI_h__
 #define __AtlasURI_h__
 
-#include "Python.h"
+#include <Python.h>
 
 #ifdef STDC_HEADERS
 #include <stddef.h>

@@ -3,7 +3,6 @@
 
 #include "Debug.h"
 
-#include "Python.h"
 #include "Types.h"
 #include "Object.h"
 
@@ -26,6 +25,8 @@
 
 #include "Client.h"
 #include "Server.h"
+
+#include <Python.h>
 
 void initAtlasTransport();
 

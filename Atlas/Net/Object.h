@@ -10,8 +10,9 @@
 #define __AtlasObject_h_
 
 #include "Debug.h"
-#include "Python.h"
 #include "Types.h"
+
+#include <Python.h>
 
 #include <string>
 using namespace std;

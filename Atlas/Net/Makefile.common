@@ -32,7 +32,6 @@ LIBOBJS = \
 	$(OUTDIR)/Server.o \
 	$(OUTDIR)/Client.o \
 	$(OUTDIR)/Object.o \
-	$(OUTDIR)/Python.o \
 	$(OUTDIR)/Debug.o \
 	$(OUTDIR)/Compressor.o \
 
@@ -81,9 +80,6 @@ $(OUTDIR)/CopyTest$(EXE_EXT): $(OUTDIR)/CopyTest.o $(OUTDIR)/libAtlas.a
 # Dependency rules follow -----------------------------
 
 $(OUTDIR)/Object.o: Object.cpp Object.h Debug.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Python.o: Python.cpp Python.h Debug.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 $(OUTDIR)/Codec.o: Codec.cpp Codec.h Debug.h Object.h \
