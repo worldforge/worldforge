@@ -15,6 +15,11 @@ Root::Root()
     SetAttr("id", 0);
 }
 
+Root::Root(int id)
+{
+    SetAttr("id", id);
+}
+
 Root::~Root()
 {
 }

@@ -15,6 +15,7 @@ namespace Atlas { namespace Objects {
 class Root {
 public:
     Root();
+    Root(int id);
     virtual ~Root();
 
     virtual bool HasAttr(const std::string& name) const;
