@@ -96,8 +96,68 @@ int main()
 
 
     float xxx;
-    return Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, 20.0), 
-                               WFMath::Vector<3>(-3.0,4.0,-18.0), xxx);
+    //test vertical ray
+    if (Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(0.0,0.0,50.0), xxx)) {
+        std::cerr << "vertical ray intersected when it shouldnt" << std::endl;
+        return 1;
+    }
+    
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(0.0,0.0,-50.0), xxx)) {
+        std::cerr << "vertical ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
 
+    //test each quadrant
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(10.0,10.0,-100.0), xxx)) {
+        std::cerr << "quad1 ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
+
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(10.0,-15.0,-50.0), xxx)) {
+        std::cerr << "quad2 ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
+
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(-10.0,-10.0,-50.0), xxx)) {
+        std::cerr << "quad3 ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
+
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(-10.0,10.0,-50.0), xxx)) {
+        std::cerr << "quad4 ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
+    
+    //test dx==0 and dy==0
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(0.0,10.0,-50.0), xxx)) {
+        std::cerr << "y+ ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
+
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(0.0,-10.0,-50.0), xxx)) {
+        std::cerr << "y- ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
+
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(-10.0,0.0,-50.0), xxx)) {
+        std::cerr << "x- ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
+
+    if (!Mercator::Intersect(terrain, WFMath::Point<3>(20.1, 20.2, segmax + 3), 
+                               WFMath::Vector<3>(0.01,0.0,-50.0), xxx)) {
+        std::cerr << "x+ ray didnt intersect when it should" << std::endl;
+        return 1;
+    }
+    
     return 0;
 }
