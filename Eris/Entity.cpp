@@ -190,9 +190,7 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 	setProperty(A->first, A->second);
     }
 
-    // FIXME - we are manually ending the update, which is naughty
-    _inUpdate = false;
-    _modified.clear();
+    endUpdate();	// emit 'Changed' too
     handleMove();
 }
 
