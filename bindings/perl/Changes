@@ -1,0 +1,32 @@
+Revision history for Perl extension WorldForge::Eris.
+
+      Monday, November 25 2002
+	- Added Factory class, modified Entity typeinfo so it would work,
+	  at this point the 'public API' of Eris is fully wrapped, though
+	  the wrapper code is almost completely untested
+
+      Friday, November 22 2002
+	- Added Avatar, World, Entity, Log, TypeInfo classes
+	- Added new classes, plus Meta and Timeout, to MANIFEST
+
+      Wednesday, July 17 2002
+	- Added the Connection, Room, Lobby, and Player
+		modules to the MANIFEST, instead
+		of having each module buildable on
+		its own. This allows them to share
+		header files.
+	- Modified the Makefile.PL to use the
+		new SigCPerl automatic conversion
+		code generation, cleaned old by-hand
+		conversion code out of the .xs files
+
+      Thursday, July 4 2002
+	- put this in WorldForge namespace
+
+      Sunday, June 16 2002
+	- restarted work on this, now that SigCPerl is working
+
+0.01  Thu Apr 25 12:50:30 2002
+	- original version; created by h2xs 1.21 with options
+		-X -n Eris
+

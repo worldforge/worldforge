@@ -1,0 +1,16 @@
+TYPEMAP
+SignalBase*	O_OBJECT
+Object*		T_ATLAS_OBJECT
+Connection*	O_OBJECT
+Lobby*		O_OBJECT_INHERIT
+Person*		O_OBJECT
+Room*		O_OBJECT_INHERIT
+Player*		O_OBJECT
+Meta*		O_OBJECT
+Timeout*	O_OBJECT
+AtlasObject	T_ATLAS_OBJECT
+AtlasConstObject* T_ATLAS_OBJECT
+World*		O_OBJECT
+Avatar*		O_OBJECT
+Entity*		O_ENTITY_OBJECT
+TypeInfo*	O_OBJECT
