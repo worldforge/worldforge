@@ -6,7 +6,7 @@
 	email   : jbarrett@box100.com
 */
 
-#include "Object/Object.h"
+#include "../Object/Object.h"
 #include "Protocol.h"
 #include "PackedAsciiDecoder.h"
 

@@ -1,9 +1,9 @@
 #ifndef __AtlasNet_h__
 #define __AtlasNet_h__
 
-#include "Object/Debug.h"
-#include "Object/Types.h"
-#include "Object/Object.h"
+#include "../Object/Debug.h"
+#include "../Object/Types.h"
+#include "../Object/Object.h"
 
 #include "Protocol.h"
 #include "ProtocolDecoder.h"

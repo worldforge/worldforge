@@ -14,8 +14,8 @@
 
 #include <stdio.h>
 
-#include "Object/Debug.h"
-#include "Object/Object.h"
+#include "../Object/Debug.h"
+#include "../Object/Object.h"
 #include "Protocol.h"
 
 class ACodec

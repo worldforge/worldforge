@@ -5,7 +5,7 @@ libAtlasObject_la_SOURCES = \
 	Object.cpp Debug.cpp \
 	FloatList.c IntList.c LongList.c StringList.c Types.c URI.c URIList.c
 
-libAtlasObjectincludedir = $(includedir)/Atlas/Object
+libAtlasObjectincludedir = $(includedir)/Object
 
 libAtlasObjectinclude_HEADERS = \
 	Object.h Debug.h \
