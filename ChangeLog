@@ -1,4 +1,7 @@
 ChangeLog for varconf
+Friday, 13th December, 2002, Michael Koch <konqueror@gmx.de>
+	* Added manpage for varconf-config.
+
 Monday, 2nd September, 2002, Al Riddoch <alriddoch@zepler.org>
 	* Increment version to 0.5.4
 	* Release 0.5.4
@@ -20,7 +23,7 @@ Saturday, 20th June, 2002, Al Riddoch <alriddoch@zepler.org>
 	* Use rpm supplied compiler flags in spec.
 	* Increment version, and release
 
-Saturday, 20th June, 2002, Michael Koch <konquerorgmx.de>
+Saturday, 20th June, 2002, Michael Koch <konqueror@gmx.de>
 	* Depend on sigc++ >= 1.0.2
 	* cleaned up Makefile.am
 
