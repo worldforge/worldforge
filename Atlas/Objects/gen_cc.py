@@ -255,7 +255,7 @@ class GenerateCC:
         self.out.write("}\n\n")
     def sendcontents_im(self, obj, statics):
         classname = classize(obj.attr['id'].value)
-        self.out.write("void %s::SendContents(Bridge* b)\n" % classname)
+        self.out.write("void %s::SendContents(Bridge* b) const\n" % classname)
         self.out.write("{\n")
         for attr in statics:
             self.out.write('    Send%s(b);\n' % classize(attr.name))
@@ -346,7 +346,7 @@ class GenerateCC:
             self.out.write("const std::string& name);\n")
             self.out.write("\n")
             self.doc(4, 'Send the contents of this object to a Bridge.')
-            self.out.write("    virtual void SendContents(Atlas::Bridge* b);\n")
+            self.out.write("    virtual void SendContents(Atlas::Bridge* b) const;\n")
             self.out.write("\n")
             self.doc(4, 'Convert this object to a Message::Object.')
             self.out.write("    virtual Atlas::Message::Object AsObject() const;\n")
