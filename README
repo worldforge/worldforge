@@ -52,7 +52,7 @@ We have not had the chance to test this in windows yet.
 DOCUMENTATION
 
 To generate the documentation, simply configure the tree, then in Atlas-C++/
-type "gmake docs". This will use doxygen to generate the documentation, which
+type "make docs". This will use doxygen to generate the documentation, which
 will then reside in Atlas-C++/doc/.
 
 LICENSING
