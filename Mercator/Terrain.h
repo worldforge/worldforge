@@ -55,6 +55,10 @@ class Terrain {
         return getSegmentQuik(ix, iy);
     }
 
+    const int getRed() const {
+        return m_res;
+    }
+
     const Segmentstore & getTerrain() const {
         return m_segments;
     }
