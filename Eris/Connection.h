@@ -38,9 +38,8 @@ public:
     /** Create a new connection, with the client-name  string specified. The client-name
     is sent during Atlas negotiation of the connection. 
     @param debug Perform extra (slower) validation on the connection 
-    @param defaultRouter The router which handles all otherwise unhandled objects
     */
-    Connection(const std::string &cnm, bool debug, Router* defaultRouter);	
+    Connection(const std::string &cnm, bool debug);	
 
     virtual ~Connection();
 

@@ -60,7 +60,7 @@ void erisLog(Eris::LogLevel, const std::string& msg)
 void testLogin(StubServer& stub)
 {
     
-    Eris::Connection* con = new Eris::Connection("eris-test", false, NULL);
+    Eris::Connection* con = new Eris::Connection("eris-test", false);
     Eris::Player *player = new Eris::Player(con);
     
     con->connect("localhost", 7450);
@@ -100,7 +100,7 @@ void testLogin(StubServer& stub)
 
 void testAccountCharacters(StubServer& stub)
 {
-    Eris::Connection* con = new Eris::Connection("eris-test", false, NULL);
+    Eris::Connection* con = new Eris::Connection("eris-test", false);
     Eris::Player *player = new Eris::Player(con);
     
     con->connect("localhost", 7450);

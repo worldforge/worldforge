@@ -1,3 +1,15 @@
+2004-05-01  James Turner <james@worldforge.org>
+
+* Use Username accessors on Atlas::Objects::Entity::Account, thanks to
+  spec updates
+  
+* Make the factory set in Factory.cpp a lazy-initialized pointer, to
+  avoid potential static initialization problems
+  
+* Remove the default router argument from Connection
+
+* XCode project updates
+
 2004-04-29  Al Riddoch  <alriddoch@zepler.org>
 
 * Eris/Player.h, Eris/Player.cpp: Accept logins from any account type,

@@ -241,7 +241,6 @@ void Entity::setLocationFromAtlas(const std::string& locId)
         if (m_location)
             removeFromLocation();
         m_location = NULL;
-        
         return;
     }
     

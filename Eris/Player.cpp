@@ -105,12 +105,10 @@ private:
             
         if (info->getRefno() == m_loginRefno)
         {            
-            
             AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
-            if (!acc.isValid()) {
-                std::cout << "Got account like objtype = " << args.front()->getObjtype() << " and parents = " << args.front()->getParents().front() << " and classno = " << args.front()->getClassNo() << std::endl << std::flush;
-                return HANDLED;
-            }
+            if (!acc.isValid()) 
+                throw InvalidOperation("Account got INFO() whose's arg is not an account");
+            
             m_player->loginComplete(acc);
             return HANDLED;
         }
@@ -194,7 +192,7 @@ void Player::createAccount(const std::string &uname,
     AtlasAccount account;
     account->setPassword(pwd);
     account->setName(fullName);
-    account->setAttr("username", uname);
+    account->setUsername(uname);
     
     Create c;
     c->setSerialno(getNewSerialno());
@@ -350,7 +348,7 @@ void Player::internalLogin(const std::string &uname, const std::string &pwd)
 
     AtlasAccount account;
     account->setPassword(pwd);
-    account->setAttr("username", uname);
+    account->setUsername(uname);
 
     Login l;
     l->setArgs1(account);
@@ -387,7 +385,7 @@ void Player::loginComplete(const AtlasAccount &p)
     if (m_status != LOGGING_IN)
         error() << "got loginComplete, but not currently logging in!";
         
-    if (!p->hasAttr("username") || (p->getAttr("username").asString() != m_username))
+    if (p->getUsername()  != m_username)
         error() << "missing or incorrect username on login INFO";
         
     m_status = LOGGED_IN;

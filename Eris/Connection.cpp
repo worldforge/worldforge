@@ -30,10 +30,10 @@ namespace Eris {
 
 
 
-Connection::Connection(const std::string &cnm, bool dbg, Router* dr) :
+Connection::Connection(const std::string &cnm, bool dbg) :
     BaseConnection(cnm, "game_", this),
     m_typeService(new TypeService(this)),
-    m_defaultRouter(dr),
+    m_defaultRouter(NULL),
     m_lock(0)
 {	
     Poll::instance().connect(SigC::slot(*this, &Connection::gotData));

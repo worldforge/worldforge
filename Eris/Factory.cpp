@@ -27,7 +27,7 @@ public:
 };
 
 typedef std::multiset<Factory*, FactoryOrdering> PriorityFactorySet;
-static PriorityFactorySet global_factorySet;
+static PriorityFactorySet* global_factorySet = NULL;
 
 #pragma mark -
 
@@ -36,20 +36,24 @@ Entity* Factory::createEntity(const GameEntity& gent, View* view)
     // this next line is a weird tribute to encapsulation...
     TypeInfo* type = view->getAvatar()->getConnection()->getTypeService()->getTypeForAtlas(gent);
 
-    PriorityFactorySet::const_iterator F=global_factorySet.begin();
-    for (; F != global_factorySet.end(); ++F)
+    if (global_factorySet) // we might not have a factory at all
     {
-        if ((*F)->accept(gent, type))
-            return (*F)->instantiate(gent, type, view);
+        PriorityFactorySet::const_iterator F = global_factorySet->begin();
+        for (; F != global_factorySet->end(); ++F)
+        {
+            if ((*F)->accept(gent, type))
+                return (*F)->instantiate(gent, type, view);
+        }
     }
-
+    
     return new Eris::Entity(gent, type, view);
 }
 
 void Factory::registerFactory(Factory* f)
 {
+    if (!global_factorySet) global_factorySet = new PriorityFactorySet();
     // no check for duplicates here... should we?
-    global_factorySet.insert(f);
+    global_factorySet->insert(f);
 }
 
 int Factory::priority()
