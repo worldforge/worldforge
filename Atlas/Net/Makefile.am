@@ -1,4 +1,6 @@
 
+INCLUDES = -I$(top_srcdir)
+
 lib_LTLIBRARIES = libAtlasNet-0.6.la
 
 libAtlasNet_0_6_la_LDFLAGS = $(INTERFACE_VERSION)

@@ -12,7 +12,7 @@
 // sleep()
 #include <unistd.h>
 // Atlas negotiation
-#include <Net/Stream.h>
+#include <Atlas/Net/Stream.h>
 // The DebugBridge
 #include "DebugBridge.h"
 

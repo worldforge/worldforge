@@ -1,4 +1,6 @@
 
+INCLUDES = -I$(top_srcdir)
+
 lib_LTLIBRARIES = libAtlasFunky-0.6.la
 
 libAtlasFunky_0_6_la_LDFLAGS = $(INTERFACE_VERSION)

@@ -1,4 +1,6 @@
 
+INCLUDES = -I$(top_srcdir)
+
 bin_PROGRAMS = atlas_convert
 
 atlas_convert_SOURCES = atlas_convert.cpp

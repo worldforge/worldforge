@@ -1,5 +1,6 @@
-
 SUBDIRS = . Message Codecs Filters Net Objects Funky Utilities
+
+INCLUDES = -I$(top_srcdir)
 
 lib_LTLIBRARIES = libAtlas-0.6.la
 

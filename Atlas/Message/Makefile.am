@@ -1,4 +1,6 @@
 
+INCLUDES = -I$(top_srcdir)
+
 lib_LTLIBRARIES = libAtlasMessage-0.6.la
 
 libAtlasMessage_0_6_la_LDFLAGS = $(INTERFACE_VERSION)

@@ -10,7 +10,7 @@
 // cout, cerr
 #include <iostream>
 // isockinet, iosockinet - the iostream socket classes
-#include <Net/Stream.h>
+#include <Atlas/Net/Stream.h>
 // The DebugBridge
 #include "DebugBridge.h"
 #include "sockbuf.h"

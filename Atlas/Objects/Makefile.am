@@ -1,4 +1,6 @@
 
+INCLUDES = -I$(top_srcdir)
+
 lib_LTLIBRARIES = libAtlasObjects-0.6.la
 
 libAtlasObjects_0_6_la_LDFLAGS = $(INTERFACE_VERSION)

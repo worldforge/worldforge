@@ -1,5 +1,5 @@
 
-CPPFLAGS = -I$(top_srcdir)/Atlas
+INCLUDES = -I$(top_srcdir)
 
 LDADD  = -L$(top_builddir)/Atlas/ -L$(top_builddir)/Atlas/Codecs/ \
          -L$(top_builddir)/Atlas/Filters/ \

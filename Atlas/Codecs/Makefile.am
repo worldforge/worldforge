@@ -1,4 +1,6 @@
 
+INCLUDES = -I$(top_srcdir)
+
 lib_LTLIBRARIES = libAtlasCodecs-0.6.la
 
 libAtlasCodecs_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
