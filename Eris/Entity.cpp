@@ -77,18 +77,26 @@ void Entity::setContainer(Entity *cnt)
 
 void Entity::addMember(Entity *e)
 {
-	_members.push_back(e);
-	AddedMember.emit(e);
-	e->setContainer(this);
+    Eris::Log(LOG_DEBUG, "adding entity '%s' as member of '%s'",
+	e->getName().c_str(), getName().c_str());
+    
+    assert(e != this);
+    
+    _members.push_back(e);
+    AddedMember.emit(e);
+    e->setContainer(this);
 }
 
 void Entity::rmvMember(Entity *e)
 {
-	EntityArray::iterator ei = std::find(_members.begin(), _members.end(), e);
-	if (ei == _members.end())
-		throw InvalidOperation("Unknown member to remove");
-	_members.erase(ei);
-	RemovedMember.emit(e);
+    if (!e)
+	throw InvalidOperation("passed NULL pointer to Entity::rmvMember");
+    EntityArray::iterator ei = std::find(_members.begin(), _members.end(), e);
+    if (ei == _members.end())
+	    throw InvalidOperation("Unknown member " + e->getName() + 
+		" to remove from " + getName());
+    _members.erase(ei);
+    RemovedMember.emit(e);
 }
 
 Entity* Entity::getMember(unsigned int i)
@@ -373,7 +381,7 @@ void Entity::setContents(const Atlas::Message::Object::ListType &contents)
 	if (con) {
 	    Eris::Log(LOG_DEBUG, 
 		"already have entity '%s', not setting container",
-		con->getName()
+		con->getName().c_str()
 	    );
 	}
     }
@@ -384,6 +392,7 @@ void Entity::setContainerById(const std::string &id)
     if ( !_container || (id != _container->getID()) ) {
 		
 	if (_container) {
+	    Eris::Log(LOG_DEBUG, "Entity::setContainerById: setting container to NULL");
 	    _container->rmvMember(this);
 	    _container = NULL;
 	}
@@ -394,7 +403,7 @@ void Entity::setContainerById(const std::string &id)
 		Entity *ncr = World::Instance()->lookup(id);
 		if (ncr) {
 			ncr->addMember(this);
-			setContainer(this);
+			setContainer(ncr);
 		} else {
 			// setup a redispatch once we have the container
 			// sythesises a set, with just the container.

@@ -1,3 +1,10 @@
+Friday, March 15 2002, James Turner
+
+	* Fixed logic in setContainerById, when the parent was
+	  already defined: was doing 'setContainer(this)' which
+	  is clearly nonsense.
+	* Added in / corrected lots of debugging stuff
+
 Tuesday, March 12 2002, James Turner
 
 	* Fix for #222 - made logic in BaseConnection more robust
