@@ -1,3 +1,12 @@
+2004-10-22  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp, Eris/IGRouter.cpp, Eris/EntityRouter.cpp: change
+	  how position and velocity updates are handled, to ensure a SET op
+	  can never modify them. 
+	  
+	* test/controller.cpp: add more test functions to modify the stub
+	  server's world
+
 2004-10-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/agent.cpp, test/controller.cpp, test/stubServer.cpp:

@@ -10,13 +10,16 @@
 #include <Atlas/Codec.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
+#include <wfmath/atlasconv.h>
 
 using std::endl;
 using std::cout;
 
 using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Entity::RootEntity;
 
 Controller::Controller(int fd) :
     m_stream(fd)
@@ -90,4 +93,27 @@ void Controller::setAttr(const std::string& eid, const std::string& attr, const 
     s->setArgs1(obj);
     
     send(s);
+}
+
+void Controller::create(const Atlas::Objects::Entity::GameEntity& ent)
+{
+    Create c;
+    c->setArgs1(ent);
+    send(c);
+}
+
+void Controller::moveLocation(const std::string& eid, const std::string& loc, const WFMath::Point<3>& pos)
+{
+    Move mv;
+    RootEntity arg;
+    arg->setLoc(loc);
+  //  arg->setPosAsList(pos.toAtlas().asList());
+    mv->setTo(eid);
+    mv->setArgs1(arg);
+    send(mv);
+}
+
+void Controller::movePos(const std::string& eid, const WFMath::Point<3>& pos)
+{
+    
 }

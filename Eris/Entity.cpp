@@ -134,6 +134,7 @@ void Entity::sight(const GameEntity &ge)
         setLocationFromAtlas(ge->getLoc());
     
     setContentsFromAtlas(ge->getContains());
+    setPosAndVelocityFromAtlas(ge);
     
     setFromRoot(smart_static_cast<Root>(ge));
 }
@@ -146,7 +147,9 @@ void Entity::setFromRoot(const Root& obj)
         if ((A->first == "id") || 
             (A->first == "loc") || 
             (A->first == "contains") ||
-            (A->first == "parents"))
+            (A->first == "parents") ||
+            (A->first == "pos") ||
+            (A->first == "velocity"))
         {
             continue; // never set these on a SET op
         }
@@ -157,6 +160,19 @@ void Entity::setFromRoot(const Root& obj)
 
         setAttr(A->first, A->second);
     }
+    
+    endUpdate();
+}
+
+void Entity::setPosAndVelocityFromAtlas(const Root& data)
+{
+    beginUpdate();
+    
+    if (data->hasAttr("pos"))
+        setAttr("pos", data->getAttr("pos"));
+    
+    if (data->hasAttr("velocity"))
+        setAttr("velocity", data->getAttr("velocity"));
     
     endUpdate();
 }

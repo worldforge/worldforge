@@ -31,24 +31,26 @@ login to bad account / bad password
 ------------------------
  
  
+ ---- movement ---------
  
- ---- stamp refresh --------
- - disappear visible with state
- - set state on the server
- - appear it
- check new value comes through before it appears.
- 
- 
- 
+ 	prediction ? risky.
  
  ----- batched appearance ------
  
+ 	toggle option for batching on agent, and re-run test?
+ 	yes, that's a good idea.
  
+ ---- entity deletes -----
  
- ---- child changes of disappeared entities ----
- 
+  check disapperance fires too
+  check it gets deleted -- when?
+  check state (eg location) after delete
  
  ---- container deletes ------
  
+  as above, check contents disappear as well
+ 
+ 
+ ---- creation checks ------
  
  

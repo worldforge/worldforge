@@ -263,6 +263,8 @@ private:
     the MOVE handler to update the location information. */
     void setLocationFromAtlas(const std::string& locId);
     
+    void setPosAndVelocityFromAtlas(const Atlas::Objects::Root& data);
+    
     void sight(const Atlas::Objects::Entity::GameEntity& gent);
     void setFromRoot(const Atlas::Objects::Root& obj);
     

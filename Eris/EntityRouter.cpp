@@ -78,7 +78,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
         if (arg->hasAttr("loc"))
             m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
         
-        m_entity->setFromRoot(arg);
+        m_entity->setPosAndVelocityFromAtlas(arg);
         return HANDLED;
     }
     

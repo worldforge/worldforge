@@ -4,6 +4,7 @@
 #include <skstream/skstream_unix.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/Decoder.h>
+#include <wfmath/point.h>
 
 namespace Atlas { class Codec; }
 
@@ -19,6 +20,11 @@ public:
 
     void setEntityInvisibleToAvatar(const std::string& eid, Eris::Avatar* av);
     void setEntityInvisibleToAvatar(const std::string& eid, const std::string& charId);   
+    
+    void moveLocation(const std::string& eid, const std::string& loc, const WFMath::Point<3>& pos);
+    void movePos(const std::string& eid, const WFMath::Point<3>& pos);
+
+    void create(const Atlas::Objects::Entity::GameEntity& ent);
     
     /** generalised attribute modification interface */
     void setAttr(const std::string& eid, const std::string& attr, const Atlas::Message::Element v); 

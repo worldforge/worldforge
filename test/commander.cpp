@@ -17,7 +17,7 @@ using namespace Atlas::Objects::Operation;
 using namespace Eris;
 using namespace Atlas::Objects::Entity;
 
-
+typedef std::list<std::string> StringList;
 
 #pragma mark -
 
@@ -124,9 +124,10 @@ void Commander::dispatch(const RootOperation& op)
             GameEntity oldLoc = m_server->getEntity(ent->getLoc()),
                 newLoc = m_server->getEntity(newLocId);
             
-            ent->setLoc(newLocId); // the easy part!
-            
-            // update contents list of oldLoc and newloc
+            ent->setLoc(newLocId);
+            // modify stamps?
+            oldLoc->modifyContains().remove(ent->getId());
+            newLoc->modifyContains().push_back(ent->getId());
         }
         
         if (args.front()->hasAttr("pos"))
