@@ -66,7 +66,8 @@ int	ATCPSocket::connect(string& addr, int port)
 
         res=::connect(sock, (struct sockaddr*)&sin, sizeof(sin));
 #ifndef _WIN32
-        fcntl(sock,F_SETFL,O_NONBLOCK);
+// Shouldn't need this using select() - sdt
+//        fcntl(sock,F_SETFL,O_NONBLOCK);
 #endif
         return res;
 }

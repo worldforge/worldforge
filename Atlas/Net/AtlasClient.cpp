@@ -76,7 +76,8 @@ void AClient::doPoll()
 	FD_SET(csock->getSock(), &fdread);
 	FD_SET(csock->getSock(), &fdsend);
 
-	select(0,&fdread,&fdsend,NULL,&tm);
+        // fixed the select call in unix - sdt
+	select(csock->getSock()+1,&fdread,&fdsend,NULL,&tm);
 
 	if (FD_ISSET(csock->getSock(),&fdread)) canRead();
 	if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
