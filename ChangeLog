@@ -1,5 +1,10 @@
 ChangeLog for varconf
 
+Wednesday, May 21 2002, Michael Koch (man-di)
+	* Updated AUTHORS file
+	* Made some text files more readable
+	* removed generated file from CVS
+
 Saturday, May 11 2002, Joel Schander (nullstar)
 	* Added comments after member functions in Config.h.  Wasn't clear
 	  on purpose of setParameterLookup() so didn't add anything.
