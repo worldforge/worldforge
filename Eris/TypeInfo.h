@@ -102,6 +102,12 @@ private:
     const std::string m_name;	///< the Atlas unique typename
     int m_atlasClassNo;         ///< if we registered an atlas factory, this is it's class
     
+    /** confidence-tracking - to facilitate clients displaying disappeared
+    entities, we estimate a confidence that they have not changed since they
+    disappeared. For the moment, that confidence is inversely proportional to
+    how frequently entities of that type move, which we count here. */
+    unsigned int m_moveCount;
+    
     TypeService* m_typeService;
 };
 

@@ -17,12 +17,9 @@ as a child. We need to be invulnerable to this.
 
 - Go over the Poll api, see if work can be delegated to skstream or not
 
-- add world time support to igRouter / Avatar
-
 - Talk handlers (and others) on the recipient, i.e a Hear(const Sound&) on Avatar
 
 Longer Term TODO
 
-- motion prediction, nicked from Sear
 - UI backend stuff
 

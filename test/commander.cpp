@@ -24,8 +24,8 @@ Commander::Commander(StubServer* stub, int fd) :
     m_server(stub),
     m_channel(fd)
 {
-
-
+    m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", m_channel, *this);
+    m_acceptor->poll(false);
 }
 
 Commander::~Commander()
@@ -36,6 +36,8 @@ Commander::~Commander()
 
 void Commander::recv()
 {
+    if (m_channel.fail()) throw InvalidOperation("Commander's stream failed");
+        
     if (m_acceptor)
         negotiate();
     else {
@@ -45,7 +47,7 @@ void Commander::recv()
         {
             RootOperation op = smart_dynamic_cast<RootOperation>(m_objDeque.front());
             if (!op.isValid())
-                throw InvalidOperation("ClientConnection recived something that isn't an op");
+                throw InvalidOperation("Commander recived something that isn't an op");
             
             //
             

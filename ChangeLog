@@ -1,3 +1,18 @@
+2004-10-03  James Turner  <james@worldforge.org>
+
+	* tests/* : change the parent/child relationship of the stub server
+	  and test code, so the stub server is now the parent. This makes
+	  termination a bit easier to think about (stub server runs until
+	  the child process exits)
+	  
+	* tests/* replaced use of a named pipe for OOB control in the tests,
+	  with a socketpair, and made various tweaks so it now actually starts up
+	  reliably and repeatably.
+
+	* Eris/View.cpp: clean up logging output in some edge cases
+	
+	* Eris/TypeInfo.cpp: add asserts to try and catch an edge case Al reported
+
 2004-10-02  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp: Fix the strange asserts and crashes I introduced by

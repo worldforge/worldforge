@@ -115,7 +115,7 @@ void View::disappear(const std::string& eid)
             debug() << "got disappearance for pending " << eid;
             m_pending[eid] = SACTION_HIDE;
         } else
-            error() << "got disappear for unknown entity " << eid;
+            warning() << "got disappear for unknown entity " << eid;
     }
 }
 
@@ -186,7 +186,6 @@ void View::create(const GameEntity& gent)
 
 void View::deleteEntity(const std::string& eid)
 {
-    debug() << "view got delete for " << eid;
     Entity* ent = getEntity(eid);
     if (ent) {
          // force a disappear if one hasn't already happened
@@ -200,7 +199,7 @@ void View::deleteEntity(const std::string& eid)
             debug() << "got delete for pending entity, argh";
             m_pending[eid] = SACTION_DISCARD;
         } else
-            error() << "got delete for non-visible entity " << eid;
+            warning() << "got delete for unknown entity " << eid;
     }
 }
 

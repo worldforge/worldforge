@@ -20,12 +20,13 @@
 #include <Eris/LogStream.h>
 #include <Eris/Log.h>
 
-#include <sys/wait.h>
 #include <signal.h>
+#include <sys/socket.h>
 
 using namespace Eris;
 using std::endl;
 using std::cout;
+using std::cerr;
 
 typedef std::auto_ptr<Eris::Connection> AutoConnection;
 typedef std::auto_ptr<Eris::Account> AutoAccount;
@@ -80,9 +81,12 @@ AutoConnection stdConnect()
     SignalCounter0 connectCount;
     con->Connected.connect(SigC::slot(connectCount, &SignalCounter0::fired));
     
+    SignalCounter1<const std::string&> fail;
+    con->Failure.connect(SigC::slot(fail, &SignalCounter1<const std::string&>::fired));
+    
     con->connect("localhost", 7450);
     
-    while (!connectCount.fireCount())
+    while (!connectCount.fireCount() && !fail.fireCount())
     {
         Eris::PollDefault::poll();
     }
@@ -261,28 +265,24 @@ void testCharActivate()
     cout << "completed charatcer activation test" << endl;
 }
 
-void killAndWaitFor(pid_t childPid)
-{
-    kill(childPid, 9);
-    
-    int childStatus;
-    waitpid(childPid, &childStatus, 0);
-}
-
 int main(int argc, char **argv)
 {
-    Eris::setLogLevel(LOG_DEBUG);
-    Eris::Logged.connect(SigC::slot(&erisLog));
-
+    int sockets[2];
+    int err = socketpair(AF_UNIX, SOCK_STREAM, 0, sockets);
+    if (err != 0) {
+        cerr << "unable to create socket-pair" << endl;
+        return EXIT_FAILURE;
+    }
+    
     pid_t childPid = fork();
     if (childPid == 0)
     {
-        StubServer stub(7450);
-        return stub.run();
-    } else {
-        sleep(1);
-        Controller ctl;
+        Controller ctl(sockets[1]);
+        cout << "starting tests" << endl;
         
+        Eris::setLogLevel(LOG_DEBUG);
+        Eris::Logged.connect(SigC::slot(&erisLog));
+    
         try {    
             testLogin();
             testBadLogin();
@@ -294,19 +294,20 @@ int main(int argc, char **argv)
         catch (TestFailure& tfexp)
         {
             cout << "tests failed: " << tfexp.what() << endl;
-            killAndWaitFor(childPid);
             return EXIT_FAILURE;
         }
         catch (std::exception& except)
         {
             cout << "caught general exception: " << except.what() << endl;
-            killAndWaitFor(childPid);
             return EXIT_FAILURE;
         }
 
         cout << "all tests passed" << endl;
-        killAndWaitFor(childPid);
-        return EXIT_SUCCESS; // tests passed okay
+        return EXIT_SUCCESS;
+    } else {
+        sleep(1);
+        StubServer stub(7450, sockets[0]);
+        return stub.run(childPid);
     }
 }
 

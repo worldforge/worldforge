@@ -7,7 +7,6 @@
 #include <memory>
 
 #include <skstream/skserver.h>
-#include <skstream/skserver_unix.h>
 
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -23,10 +22,10 @@ typedef std::map<std::string, Atlas::Objects::Entity::Account> AccountMap;
 class StubServer
 { 
 public:
-    StubServer(short port);
+    StubServer(short port, int commandSocket);
     ~StubServer();
 
-    int run();	// run the server, return a process result
+    int run(pid_t childPid);	// run the server until the child exists, return a process result
   
     void setupTestAccounts();
 
@@ -43,8 +42,6 @@ private:
     void subclassType(const std::string& base, const std::string& derivedName);
     
     tcp_socket_server m_serverSocket;
-    /** we use a unix socket for out-of-band control of the stub server */
-    unix_socket_server m_commandListener;
     
     friend class ClientConnection;
     friend class Agent;
@@ -53,7 +50,6 @@ private:
     ConArray m_clients;
     
     AccountMap m_accounts;
-    bool m_done;
     
     typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> EntityMap;
     EntityMap m_world;

@@ -3,16 +3,20 @@
 
 #include <skstream/skstream_unix.h>
 #include <Atlas/Objects/ObjectsFwd.h>
-
+#include <Atlas/Objects/Decoder.h>
 
 namespace Atlas { class Codec; }
 
-class Controller
+class Controller : public Atlas::Objects::ObjectsDecoder
 {
 public:
-    Controller();
+    Controller(int fd);
+    
+protected:
+    virtual void objectArrived(const Atlas::Objects::Root& obj);
+    
 private:
-    unix_socket_stream m_stream;
+    tcp_socket_stream m_stream;
 
     Atlas::Objects::ObjectsEncoder* m_encode;
     Atlas::Codec* m_codec;

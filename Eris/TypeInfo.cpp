@@ -24,6 +24,7 @@ TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
     m_bound(false),
     m_name(id),
     m_atlasClassNo(0),
+    m_moveCount(0),
     m_typeService(ts)
 {
     if (m_name == "root")
@@ -33,6 +34,7 @@ TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
 TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
     m_bound(false),
     m_name(atype->getId()),
+    m_moveCount(0),
     m_typeService(ts)
 {
     if (m_name == "root")
@@ -128,6 +130,12 @@ void TypeInfo::addChild(TypeInfoPtr tp)
 
 void TypeInfo::addAncestor(TypeInfoPtr tp)
 {
+    // someone has reported getting into a loop here (i.e a circular inheritance
+    // graph). To try and catch that, I'm putting this assert in. If / when you
+    // hit it, get in touch with James.
+    assert(m_children.count(tp) == 0);
+    assert(m_ancestors.count(tp) == 0);
+    
     m_ancestors.insert(tp);
 	
     const TypeInfoSet& parentAncestors = tp->m_ancestors;

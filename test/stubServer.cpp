@@ -10,6 +10,8 @@
 #include <skstream/skpoll.h>
 #include "commander.h"
 
+#include <sys/wait.h>
+
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;
@@ -18,15 +20,15 @@ using Atlas::Objects::Entity::RootEntity;
 typedef Atlas::Message::ListType AtlasListType;
 typedef Atlas::Objects::Entity::Account AtlasAccount;
 
+using std::endl;
+using std::cout;
+
 typedef std::list<std::string> StringList;
 
 using Atlas::Objects::Entity::GameEntity;
 
-const std::string VAR_DIR = "/tmp";
-
-StubServer::StubServer(short port) :
-    m_serverSocket(port),
-    m_done(false)
+StubServer::StubServer(short port, int cmdSocket) :
+    m_serverSocket(port)
 {
     if (!m_serverSocket.is_open())
         throw InvalidOperation("unable to open listen socket");
@@ -42,13 +44,8 @@ StubServer::StubServer(short port) :
     const int reuseFlag = 1;
     ::setsockopt(m_serverSocket.getSocket(), SOL_SOCKET, SO_REUSEADDR,
             &reuseFlag, sizeof(reuseFlag));
-
-    std::string path = VAR_DIR + "/testeris.sock";
-    unlink(path.c_str());
     
-    m_commandListener.open(path);
-    assert(m_commandListener.is_open());
-    debug() << "stub server listenting on " << path;
+    m_command = std::auto_ptr<Commander>(new Commander(this, cmdSocket));
     
     setupTestAccounts();
 
@@ -88,8 +85,7 @@ StubServer::StubServer(short port) :
 
 StubServer::~StubServer()
 {
-    std::string path = VAR_DIR + "/testeris.sock";
-    unlink(path.c_str());
+
 }
 
 #pragma mark -
@@ -174,19 +170,13 @@ void StubServer::setupTestAccounts()
     m_world[avatarB0->getId()] = avatarB0;
 }
 
-int StubServer::run()
+int StubServer::run(pid_t child)
 {
-    while (!m_done) {
+    while (true) {
     
         if (m_serverSocket.can_accept())
         {
             m_clients.push_back(new ClientConnection(this, m_serverSocket.accept()));
-        }
-
-        if (m_commandListener.can_accept())
-        {
-            debug() << "stub server accepting command connection";
-            m_command = std::auto_ptr<Commander>(new Commander(this, m_commandListener.accept()));
         }
         
         basic_socket_poll::socket_map clientSockets;
@@ -196,12 +186,12 @@ int StubServer::run()
 
         for (unsigned int C=0; C < m_clients.size(); ++C)
             clientSockets[m_clients[C]->getStream()] = POLL_MASK;
-
-        if (m_command.get())
-            clientSockets[m_command->getStream()] = POLL_MASK;
+        
+        // and include the command socket
+        clientSockets[m_command->getStream()] = POLL_MASK;
 
         basic_socket_poll poller;
-        poller.poll(clientSockets);
+        poller.poll(clientSockets, 50); // 50 milliseconds wait
 
         for (ConArray::iterator C=m_clients.begin(); C != m_clients.end(); )
         {
@@ -224,15 +214,23 @@ int StubServer::run()
             } else
                 ++C;
         }
-        
-        if (m_command.get()) {
-            if (poller.isReady(m_command->getStream()))
-                m_command->recv();
+    
+        if (poller.isReady(m_command->getStream())) m_command->recv();
+
+        int childStatus;
+        int result = waitpid(child, &childStatus, WNOHANG);
+        if (result == child) {
+            cout << "stub server got child exit" << endl;
+            
+            if (WIFEXITED(childStatus)) return WEXITSTATUS(childStatus);
+            // child died for some other reason (SIGTERM, SIGABRT, core-dump, etc)
+            return EXIT_FAILURE;
         }
         
+        if (result == -1) return EXIT_FAILURE; // waidpid() failed        
     } // of stub server main loop
     
-    return EXIT_SUCCESS;
+    return EXIT_SUCCESS; // never reached
 }
 
 /*
