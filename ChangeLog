@@ -1,3 +1,8 @@
+2004-03-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/GrassShader.cpp: Fix uninitialised 0,0 corner tile
+	  in grass shader.
+
 2004-02-22  Damien McGinnes <mcginnes at netspeed dot com.au>
 
 	* README: minor mods, added Vegetation section

@@ -65,7 +65,7 @@ void GrassShader::shade(Surface & s) const
     }
 
     // Deal with corner points
-    // s(0, 0, chanAlpha) = slopeToAlpha(seg.get(0,0), 0.f);
+    s(0, 0, chanAlpha) = slopeToAlpha(seg.get(0,0), 0.f);
     s(res, 0, chanAlpha) = slopeToAlpha(seg.get(res,0), 0.f);
     s(0, res, chanAlpha) = slopeToAlpha(seg.get(0,res), 0.f);
     s(res, res, chanAlpha) = slopeToAlpha(seg.get(res,res), 0.f);
