@@ -14,5 +14,6 @@ libvarconfinclude_HEADERS = \
   ParseError.h \
   Variable.h \
   dtags.h \
-  ftos.h
+  ftos.h \
+  varconf.h
 
