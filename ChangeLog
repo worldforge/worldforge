@@ -1,3 +1,8 @@
+Sunday, April 21, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Changed format sent by AxisBox<>::toAtlas() for better
+	  network optimization
+
 Wednesday, April 9, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* The eris-support-on-msvc changes now work

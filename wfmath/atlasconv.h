@@ -246,14 +246,22 @@ inline void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
 template<const int dim>
 Atlas::Message::Object AxisBox<dim>::toAtlas() const
 {
-  if(m_low == Point<dim>().setToOrigin())
+  int i;
+
+  for(i = 0; i < dim; ++i)
+    if(m_low[i] != 0)
+      break;
+
+  if(i == dim)
     return m_high.toAtlas(); // matches case 'dim' above
 
-  // Do case '2' above
+  // Do case '2 * dim' above
 
   Atlas::Message::Object::ListType a;
-  a.push_back(m_low.toAtlas());
-  a.push_back(m_high.toAtlas());
+  for(i = 0; i < dim; ++i)
+    a.push_back(m_low[i]);
+  for(i = 0; i < dim; ++i)
+    a.push_back(m_high[i]);
 
   return a;
 }
