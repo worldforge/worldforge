@@ -8,4 +8,4 @@ config.h
 stamp-h
 *.lo
 libvarconf.la
-
+libvarconf-sigc1.2.la

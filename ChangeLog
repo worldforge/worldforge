@@ -1,4 +1,9 @@
 ChangeLog for varconf
+Friday, 30th January, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Added mechanism to differentiate between varconf built
+	  against sigc++ 1.0 and 1.2, and use pkg-config to
+	  detect the 1.2 version.
+
 Friday, 13th December, 2002, Michael Koch <konqueror@gmx.de>
 	* Added manpage for varconf-config.
 

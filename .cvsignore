@@ -18,3 +18,5 @@ config.cache
 config.log
 libtool
 varconf-config
+varconf.spec
+varconf-0.5.pc

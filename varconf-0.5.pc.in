@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: varconf
+Description: A config handling library.
+Version: @VERSION@
+Libs: -L${libdir} -lvarconf@VARCONF_SUFFIX@
+Cflags: -I${includedir}/varconf-0.5
