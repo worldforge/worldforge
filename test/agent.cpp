@@ -28,6 +28,11 @@ Agent::Agent(ClientConnection* con, const std::string& charId) :
     
 }
 
+Agent::~Agent()
+{
+
+}
+
 void Agent::processOp(const RootOperation& op)
 {
     switch (op->getClassNo())
