@@ -9,13 +9,15 @@ using std::string;
 
 namespace Atlas
 {
-    class Filter;
-}
 
-/** Interface for Atlas protocol filter
-*/
+/**	Abstract Base Class for Atlas protocol filter.
+@doc
+<p>Filters provide streaming data commpression and decompression for Client connections
 
-class Atlas::Filter
+@see Client
+**/
+
+class Filter@
 {
     public:
     
@@ -24,5 +26,7 @@ class Atlas::Filter
     virtual string encode(const string& data) = 0;
     virtual string decode(const string& data) = 0;
 };
+
+} // end namespace Atlas
 
 #endif

@@ -18,12 +18,12 @@ enum Type {
 	Map=5
 };
 
+} // end namespace Atlas
 
-class Variant;
+#define varvec vector<Variant*>
+#define varmap map<string, Variant*>
 
-typedef vector<Variant*>		varvec;
-typedef map<string, Variant*>	varmap;
-
+/// Base class for variant objects
 class Variant
 {
 
@@ -31,11 +31,16 @@ public:
 	int	rc:12;	// refcount
 	int	rt:4;	// data type
 
+	/// constructor
 	Variant();
+	// virtual destrucor
 virtual	~Variant();
 
-	void	incref()	{ rc++; }
-	void	decref();
+	/// increment reference count
+void	incref()	{ rc++; }
+	/// deccrement reference count
+void	decref();
+
 };
 
 class VNum: public Variant
@@ -45,6 +50,7 @@ static	list<VNum*>	freelist;
 
 public:
 
+	/// retrieve a VNum instance from the static pool, or create one
 	void*	operator new(size_t sz)
 	{
 		if (freelist.empty()) {
@@ -58,6 +64,7 @@ public:
 			
 	}
 	
+	/// return a VNum instance to the static pool
 	void	operator delete(void *ptr)
 	{
 		freelist.push_back((VNum*)ptr);
@@ -68,9 +75,13 @@ public:
 		double		dv;		// double value
 	};
 
+	/// construct an empty Variant Number
 	VNum()			{ rc=1; rt = Int;	lv = 0; }
+	/// construct an integer Variant Number
 	VNum(int v)		{ rc=1; rt = Int;	lv = v; }
+	/// construct a long integer Variant Number
 	VNum(long v)	{ rc=1; rt = Int;	lv = v; }
+	/// construct a double Variant Number
 	VNum(double v)	{ rc=1; rt = Float;	dv = v; }
 
 	~VNum()
@@ -80,6 +91,7 @@ public:
 
 };
 
+/// Variant Object for Strings
 class VStr: public Variant
 {
 
@@ -87,6 +99,7 @@ static	list<VStr*>	freelist;
 
 public:
 
+	/// retrieve a VStr instance from the static pool, or create one
 	void*	operator new(size_t sz)
 	{
 		if (freelist.empty()) {
@@ -100,6 +113,7 @@ public:
 			
 	}
 	
+	/// return a VStr instance to the static pool
 	void	operator delete(void *ptr)
 	{
 		freelist.push_back((VStr*)ptr);
@@ -107,7 +121,9 @@ public:
 
 	string	st;
 
+	/// construct an empty Variant String
 	VStr()					{ rc=1; rt = String; st = ""; }
+	/// construct a Variant String with content
 	VStr(const string& v)	{ rc=1; rt = String; st = v; }
 
 	~VStr()
@@ -117,6 +133,7 @@ public:
 
 };
 
+/// Variant Object for Hashes
 class VMap: public Variant
 {
 
@@ -124,6 +141,7 @@ static	list<VMap*>	freelist;
 
 public:
 
+	/// retrieve a VMap instance from the static pool, or create one
 	void*	operator new(size_t sz)
 	{
 		if (freelist.empty()) {
@@ -137,6 +155,7 @@ public:
 			
 	}
 	
+	/// return a VMap instance to the static pool
 	void	operator delete(void *ptr)
 	{
 		freelist.push_back((VMap*)ptr);
@@ -144,9 +163,12 @@ public:
 
 	varmap		vm;
 
+	/// Construct a Variant Map
 	VMap()		{ rc=1; rt=Map; }
+	/// Destroy a Variant Map
 	~VMap()		{ delmap(); }
 
+	/// Release the contents of a Map
 	void	delmap()
 	{
 		varmap::iterator i;
@@ -156,6 +178,7 @@ public:
 
 };
 
+/// Variant Object for Vectors
 class VVec: public Variant
 {
 
@@ -163,6 +186,7 @@ static	list<VVec*>	freelist;
 
 public:
 
+	/// retrieve a VVec instance from the static pool, or create one
 	void*	operator new(size_t sz)
 	{
 		if (freelist.empty()) {
@@ -176,6 +200,7 @@ public:
 			
 	}
 	
+	/// return a VVec instance to the static pool
 	void	operator delete(void *ptr)
 	{
 		freelist.push_back((VVec*)ptr);
@@ -183,10 +208,14 @@ public:
 
 	varvec		vv;
 
+	/// Construct a Variant Vector
 	VVec()			{ rc=1; rt=List; }
+	/// Construct a Variant Vector of specifc size
 	VVec(int sz)	{ rc=1; rt=List; vv.reserve(sz); }
+	/// Destroy a Variant Vector
 	~VVec()			{ delvec(); }
 
+	/// Release the contents of a Vector
 	void	delvec()
 	{
 		varvec::iterator i;
@@ -196,7 +225,6 @@ public:
 
 };
 
-} // end namespace Atlas
 
 #endif
 

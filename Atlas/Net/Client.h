@@ -11,6 +11,23 @@ changes:
     copy constructor disabled
 */
 
+/** Base Class for Client connection obbects.
+@doc
+<p>Client objects are used to manage streaming data
+for connections at both the client and server.
+<p>Client objects integrate the streaming transport
+functionality of Sockets and Filters with the
+Object encoding and decoding capabilities of
+Codecs and Protocol. All of these elements 
+combined form a reliable object streaming system.
+
+@see Socket
+@see Codec
+@see Protocol
+@see Filter
+@see Server
+**/
+
 #ifndef __AtlasClient_h_
 #define __AtlasClient_h_
 
