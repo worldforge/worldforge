@@ -2,12 +2,12 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_BRIDGE_H
-#define ATLAS_STREAM_BRIDGE_H
+#ifndef ATLAS_BRIDGE_H
+#define ATLAS_BRIDGE_H
 
 #include <string>
 
-namespace Atlas { namespace Stream {
+namespace Atlas {
 
 /** Atlas stream bridge
 
@@ -20,11 +20,10 @@ which put the encoder into nested map and list contexts respectively. When
 the encoder is in a list context, it can send nameless values whose order is
 significant.
 
-Encoder is used by Codec to accept Atlas messages for conversion to a byte
+Bridge is used by Codec to accept Atlas messages for conversion to a byte
 stream and subsequent transmission.
 
 @see Codec
-
 */
 
 class Bridge
@@ -59,6 +58,6 @@ class Bridge
     virtual void ListEnd() = 0;
 };
 
-} } // Atlas::Stream
+} // Atlas namespace
 
 #endif

@@ -5,13 +5,13 @@
 #include "Filter.h"
 
 using namespace std;
-using namespace Atlas::Stream;
+using namespace Atlas;
 
-Atlas::Stream::Filter::Filter(Filter* next) : next(next)
+Atlas::Filter::Filter(Filter* next) : next(next)
 {
 }
 
-Atlas::Stream::Filter::~Filter()
+Atlas::Filter::~Filter()
 {
     delete next;
 }

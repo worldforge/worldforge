@@ -2,12 +2,12 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_FILTER_H
-#define ATLAS_STREAM_FILTER_H
+#ifndef ATLAS_FILTER_H
+#define ATLAS_FILTER_H
 
 #include "Factory.h"
 
-namespace Atlas { namespace Stream {
+namespace Atlas {
 
 /** Atlas stream filter
 
@@ -64,12 +64,12 @@ class Filter
     };
 
     template <typename T>
-    class Factory : public Atlas::Stream::Factory<Filter>
+    class Factory : public Atlas::Factory<Filter>
     {
 	public:
 
 	Factory(const std::string& name, const Metrics &metrics)
-	    : Atlas::Stream::Factory<Filter>(name, metrics)
+	    : Atlas::Factory<Filter>(name, metrics)
 	{
 	}
 	    
@@ -89,6 +89,6 @@ class Filter
     Filter* next;
 };
 
-} } // Atlas::Stream
+} // Atlas namespace
 
 #endif

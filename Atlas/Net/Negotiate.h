@@ -40,14 +40,14 @@ along with the name of sender and a Socket
 
   };
 
-class NegotiateClient : public Atlas::Stream::Negotiate<iostream>
+class NegotiateClient : public Atlas::Negotiate<iostream>
 {
     public:
 
     NegotiateClient(const std::string& name, iostream&);
 
     virtual State Poll();
-    virtual Atlas::Stream::Connection<iostream> GetConnection();
+    virtual Atlas::Connection<iostream> GetConnection();
 
     private:
 
@@ -70,13 +70,13 @@ class NegotiateClient : public Atlas::Stream::Negotiate<iostream>
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
   
-    typedef std::list<Atlas::Stream::Factory<Atlas::Stream::Codec<iostream> >*> FactoryCodecs;
-    typedef std::list<Atlas::Stream::Factory<Atlas::Stream::Filter>*> FactoryFilters;
+    typedef std::list<Atlas::Factory<Atlas::Codec<iostream> >*> FactoryCodecs;
+    typedef std::list<Atlas::Factory<Atlas::Filter>*> FactoryFilters;
 
     FactoryCodecs outCodecs;
     FactoryFilters outFilters;
-    NegotiateHelper<Atlas::Stream::Factory<Atlas::Stream::Codec<iostream> > > codecHelper;
-    NegotiateHelper<Atlas::Stream::Factory<Atlas::Stream::Filter > > filterHelper;
+    NegotiateHelper<Atlas::Factory<Atlas::Codec<iostream> > > codecHelper;
+    NegotiateHelper<Atlas::Factory<Atlas::Filter > > filterHelper;
     std::string buf;
 
     void processServerCodecs();

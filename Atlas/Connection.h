@@ -2,12 +2,12 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_CONNECTION_H
-#define ATLAS_STREAM_CONNECTION_H
+#ifndef ATLAS_CONNECTION_H
+#define ATLAS_CONNECTION_H
 
 #include "Codec.h"
 
-namespace Atlas { namespace Stream {
+namespace Atlas {
 
 /** Atlas connection
 
@@ -24,16 +24,15 @@ template <typename Stream>
 struct Connection
 {
     Codec<Stream>* codec;
-    Stream& stream;
     std::string peer;
 
-    Connection(Codec<Stream>* codec, Stream& stream, const std::string& peer)
-	: codec(codec), stream(stream), peer(peer) { }
+    Connection(Codec<Stream>* codec, const std::string& peer)
+	: codec(codec), peer(peer) { }
 	
     Connection(const Connection& that)
-	: codec(that.codec), stream(that.stream), peer(that.peer) { }
+	: codec(that.codec), peer(that.peer) { }
 };
 
-} } // Atlas::Stream
+} // Atlas namespace
 
 #endif

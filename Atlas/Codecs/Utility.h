@@ -6,7 +6,7 @@
 #include "../Codec.h"
 
 using namespace std;
-using namespace Atlas::Stream;
+using namespace Atlas;
 
 inline const string charToHex(char c)
 {

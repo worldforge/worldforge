@@ -5,6 +5,7 @@
 #include "Negotiate.h"
 
 using namespace std;
+using namespace Atlas;
 
 string get_line(string &s, char ch)
 {
@@ -26,7 +27,6 @@ string get_line(string &s1, char ch, string &s2)
   return s2;
 }
 
-using namespace Atlas::Stream;
 
 template <class T>
 Atlas::Net::NegotiateHelper<T>::NegotiateHelper(list<string> *names, Factories *out_factories) :
@@ -150,7 +150,7 @@ void Atlas::Net::NegotiateServer::Poll()
 }
 */
 
-Atlas::Stream::Negotiate<iostream>::State Atlas::Net::NegotiateClient::Poll()
+Atlas::Negotiate<iostream>::State Atlas::Net::NegotiateClient::Poll()
 {
     cout << "** Client(" << state << ") : " << endl;
 

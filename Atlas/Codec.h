@@ -2,13 +2,13 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_CODEC_H
-#define ATLAS_STREAM_CODEC_H
+#ifndef ATLAS_CODEC_H
+#define ATLAS_CODEC_H
 
 #include "Bridge.h"
 #include "Factory.h"
 
-namespace Atlas { namespace Stream {
+namespace Atlas {
 
 /** Atlas stream codec
 
@@ -59,12 +59,12 @@ class Codec : public Bridge
     };
 
     template <typename T>
-    class Factory : public Atlas::Stream::Factory<Codec>
+    class Factory : public Atlas::Factory<Codec>
     {
 	public:
 
 	Factory(const std::string& name, const Metrics& metrics)
-	    : Atlas::Stream::Factory<Codec>(name, metrics)
+	    : Atlas::Factory<Codec>(name, metrics)
 	{
 	}
 
@@ -80,6 +80,6 @@ class Codec : public Bridge
     };
 };
 
-} } // Atlas::Stream
+} // Atlas namespace
 
 #endif

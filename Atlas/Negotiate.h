@@ -2,12 +2,12 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_NEGOTIATE_H
-#define ATLAS_STREAM_NEGOTIATE_H
+#ifndef ATLAS_NEGOTIATE_H
+#define ATLAS_NEGOTIATE_H
 
 #include "Connection.h"
 
-namespace Atlas { namespace Stream {
+namespace Atlas {
 
 /** Negotiation of codecs and filters for an Atlas connection
 
@@ -36,6 +36,6 @@ class Negotiate
     virtual Connection<Stream> GetConnection() = 0;
 };
 
-} } // Atlas::Stream
+} // Atlas namespace
 
 #endif

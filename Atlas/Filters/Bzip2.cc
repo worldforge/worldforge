@@ -19,7 +19,7 @@
 #endif
 
 using namespace std;
-using namespace Atlas::Stream;
+using namespace Atlas;
 
 const int BS100K = 6;
 const int WORKFACTOR = 30;

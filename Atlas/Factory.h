@@ -2,14 +2,14 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_STREAM_FACTORY_H
-#define ATLAS_STREAM_FACTORY_H
+#ifndef ATLAS_FACTORY_H
+#define ATLAS_FACTORY_H
 
 #include <string>
 #include <list>
 #include <algorithm>
 
-namespace Atlas { namespace Stream {
+namespace Atlas {
 
 /** Class factory
 
@@ -71,6 +71,6 @@ class Factory
     typename T::Metrics metrics;
 };
 
-} } // Atlas::Stream
+} // Atlas namespace
 
 #endif

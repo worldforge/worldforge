@@ -18,7 +18,7 @@
 #endif
 
 using namespace std;
-using namespace Atlas::Stream;
+using namespace Atlas;
 
 const int DEFAULT_LEVEL = 6;
 

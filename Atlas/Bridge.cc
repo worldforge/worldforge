@@ -4,7 +4,7 @@
 
 #include "Bridge.h"
 
-using namespace Atlas::Stream;
+using namespace Atlas;
 
 Bridge::Map Bridge::MapBegin;
 Bridge::List Bridge::ListBegin;

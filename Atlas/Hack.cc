@@ -5,7 +5,7 @@
 #include "Hack.h"
 
 using namespace std;
-using namespace Atlas::Stream;
+using namespace Atlas;
 
 Codec<iostream>* Atlas::UngodlyHack::GetPacked(iostream& stream, Bridge* bridge)
 {

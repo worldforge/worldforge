@@ -6,7 +6,7 @@
 #include "Utility.h"
 
 using namespace std;
-using namespace Atlas::Stream;
+using namespace Atlas;
 
 class XML : public Codec<iostream>
 {
