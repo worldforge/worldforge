@@ -1,12 +1,21 @@
+2004-02-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.h, Mercator/Forest.cpp: Modify accessors
+	  so area of a forest is stored as Polygon instead of a
+	  box.
+
 2004-02-03  Damien McGinnes <mcginnes at netspeed dot com.au>
+
 	* Mercator/RandCache.h: make RandCache store uint32 rather than
 	  double. Should halve memory usage.
 
 2004-01-24  Damien McGinnes <mcginnes at netspeed dot com.au>
+
 	* Mercator/Forest.h, Mercator/Forest.cpp: make forest use
 	  RandCache.
 
 2004-01-24  Damien McGinnes <mcginnes at netspeed dot com.au>
+
 	* Mercator/RandCache.h: add code to provide a pool of repeatable
 	  (2d indexed) random numbers for use by Forest etc.
 	  thanks to rsteinke.

@@ -5,8 +5,10 @@
 #ifndef MERCATOR_FOREST_H
 #define MERCATOR_FOREST_H
 
-#include <wfmath/axisbox.h>
 #include <Mercator/RandCache.h>
+
+#include <wfmath/axisbox.h>
+#include <wfmath/polygon.h>
 
 #include <map>
 
@@ -20,15 +22,23 @@ class Forest {
     typedef std::map<int, Plant> PlantColumn;
     typedef std::map<int, PlantColumn> PlantStore;
   private:
-    WFMath::AxisBox<2> m_area;
+    WFMath::AxisBox<2> m_bbox;
+    WFMath::Polygon<2> m_area;
     PlantStore m_plants;
     unsigned long m_seed;
     RandCache m_randCache;
+
+    void areaFromBBox();
+    void bBoxFromArea();
   public:
     explicit Forest(unsigned long seed = 0);
     ~Forest();
 
-    const WFMath::AxisBox<2> & getArea() const {
+    const WFMath::AxisBox<2> & getBBox() const {
+        return m_bbox;
+    }
+
+    const WFMath::Polygon<2> & getArea() const {
         return m_area;
     }
 
@@ -37,6 +47,7 @@ class Forest {
     }
 
     void setArea(const WFMath::AxisBox<2> & area);
+    void setArea(const WFMath::Polygon<2> & area);
     void setVolume(const WFMath::AxisBox<3> &);
 
     void populate();

@@ -34,19 +34,40 @@ Forest::~Forest()
 {
 }
 
+void Forest::areaFromBBox()
+{
+    const WFMath::Point<2> & lc = m_bbox.lowCorner();
+    const WFMath::Point<2> & hc = m_bbox.highCorner();
+
+    m_area.clear();
+    m_area.addCorner(0, lc);
+    m_area.addCorner(1, WFMath::Point<2>(lc.x(), hc.y()));
+    m_area.addCorner(2, hc);
+    m_area.addCorner(2, WFMath::Point<2>(hc.x(), lc.y()));
+}
+
+void Forest::bBoxFromArea()
+{
+}
+
 void Forest::setArea(const WFMath::AxisBox<2> & area)
+{
+    m_bbox = area;
+    areaFromBBox();
+}
+
+void Forest::setArea(const WFMath::Polygon<2> & area)
 {
     m_area = area;
 }
 
-
 void Forest::setVolume(const WFMath::AxisBox<3> & vol)
 {
-    m_area = WFMath::AxisBox<2>(WFMath::Point<2>(vol.lowCorner().x(),
+    m_bbox = WFMath::AxisBox<2>(WFMath::Point<2>(vol.lowCorner().x(),
                                                  vol.lowCorner().y()),
                                 WFMath::Point<2>(vol.highCorner().x(),
                                                  vol.highCorner().y()));
-
+    areaFromBBox();
 }
 
 static const float plant_chance = 0.04;
@@ -71,17 +92,17 @@ void Forest::populate()
 //     the forest, and still get the same results in that area.
 //
 {
-    if (!m_area.isValid()) {
+    if (!m_bbox.isValid()) {
         return;
     }
     // Fill the plant store with plants.
     m_plants.clear();
     WFMath::MTRand rng;
 
-    int lx = I_ROUND(m_area.lowCorner().x()),
-        ly = I_ROUND(m_area.lowCorner().y()),
-        hx = I_ROUND(m_area.highCorner().x()),
-        hy = I_ROUND(m_area.highCorner().y());
+    int lx = I_ROUND(m_bbox.lowCorner().x()),
+        ly = I_ROUND(m_bbox.lowCorner().y()),
+        hx = I_ROUND(m_bbox.highCorner().x()),
+        hy = I_ROUND(m_bbox.highCorner().y());
 
     for(int j = ly; j < hy; ++j) {
         for(int i = lx; i < hx; ++i) {
