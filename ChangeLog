@@ -1,3 +1,8 @@
+2003-11-03 James Turner <james@worldforge.org>
+
+	* Add ProjectBuilder project, Mercator builds with no
+	  problems, but hasn't been tested.
+
 2003-11-01  Al Riddoch  <alriddoch@zepler.org>
 
 	* Fix BuildRequires in rpm spec.
