@@ -25,7 +25,10 @@ typedef std::list<TerrainMod *> ModList;
 // whenever height points are asserted.
 class Segment {
   private:
+    /// Distance between segments
     const int m_res;
+    /// Size of segment, m_res + 1
+    const int m_size;
     int m_xRef;
     int m_yRef;
     Matrix<2, 2, BasePoint> m_controlPoints;

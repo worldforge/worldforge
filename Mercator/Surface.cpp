@@ -8,9 +8,10 @@
 
 namespace Mercator {
 
-Surface::Surface(Segment & segment) : m_segment(segment),
-                 m_colors(new float[(segment.getResolution() + 1) *
-                                    (segment.getResolution() + 1) * 4])
+Surface::Surface(Segment & segment, unsigned int channels) :
+         m_segment(segment),
+         m_colors(new float[(segment.getResolution() + 1) *
+                            (segment.getResolution() + 1) * channels])
 {
 }
 

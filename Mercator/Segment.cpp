@@ -37,8 +37,9 @@ class QuadInterp {
         : m_size(size), ep1(e1/size), ep2(e2/size), ep3(e3/size), ep4(e4/size) {} 
 };      
 
-Segment::Segment(unsigned int resolution) : m_res(resolution),
-                            m_points(new float[(m_res+1) * (m_res+1)]),
+Segment::Segment(unsigned int resolution) :
+                            m_res(resolution), m_size(m_res+1),
+                            m_points(new float[m_size * m_size]),
                             m_normals(0), m_max(0.f), m_min(0.0f),
                             m_validPt(false), m_validNorm(false)
 {
@@ -68,7 +69,7 @@ void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 void Segment::populateNormals()
 {
     if (m_normals == 0) {
-        m_normals = new float[(m_res+1) * (m_res+1) * 3];
+        m_normals = new float[m_size * m_size * 3];
     }
 
     float * np = m_normals;
@@ -83,9 +84,9 @@ void Segment::populateNormals()
            h4 = get(i, j - 1);
            
            // Caclulate the normal vector.
-           np[j * (m_res+1) * 3 + i * 3]     = h1 - h3;
-           np[j * (m_res+1) * 3 + i * 3 + 1] = h2 - h4;
-           np[j * (m_res+1) * 3 + i * 3 + 2] = 1.0;
+           np[j * m_size * 3 + i * 3]     = h1 - h3;
+           np[j * m_size * 3 + i * 3 + 1] = h2 - h4;
+           np[j * m_size * 3 + i * 3 + 2] = 1.0;
         }
     }
 
@@ -105,9 +106,9 @@ void Segment::populateNormals()
         h3 = get(i + 1, m_res);
         h4 = get(i + 1, m_res -1);
         
-        np[m_res * (m_res+1) * 3 + i * 3]     = (h2-h3 + h1-h4) / 2.0;
-        np[m_res * (m_res+1) * 3 + i * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
-        np[m_res * (m_res+1) * 3 + i * 3 + 2] = 1.0;
+        np[m_res * m_size * 3 + i * 3]     = (h2-h3 + h1-h4) / 2.0;
+        np[m_res * m_size * 3 + i * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[m_res * m_size * 3 + i * 3 + 2] = 1.0;
     }
     
     //left and right boundary
@@ -117,18 +118,18 @@ void Segment::populateNormals()
         h3 = get(1, j - 1);
         h4 = get(1, j);
         
-        np[j * (m_res + 1) * 3]     = (h2-h3 + h1-h4) / 2.0;
-        np[j * (m_res + 1) * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
-        np[j * (m_res + 1) * 3 + 2] = 1.0;
+        np[j * m_size * 3]     = (h2-h3 + h1-h4) / 2.0;
+        np[j * m_size * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[j * m_size * 3 + 2] = 1.0;
  
         h1 = get(m_res - 1, j);
         h2 = get(m_res - 1, j - 1);
         h3 = get(m_res, j - 1);
         h4 = get(m_res, j);
 
-        np[j * (m_res+1) * 3 + m_res * 3]     = (h2-h3 + h1-h4) / 2.0;
-        np[j * (m_res+1) * 3 + m_res * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
-        np[j * (m_res+1) * 3 + m_res * 3 + 2] = 1.0;
+        np[j * m_size * 3 + m_res * 3]     = (h2-h3 + h1-h4) / 2.0;
+        np[j * m_size * 3 + m_res * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[j * m_size * 3 + m_res * 3 + 2] = 1.0;
     }
 
     m_validNorm = true;
@@ -410,7 +411,7 @@ void Segment::applyMod(TerrainMod *t)
     if (clipToSegment(bbox, lx, hx, ly, hy)) {
         for (int i=ly; i<=hy; i++) {
             for (int j=lx; j<=hx; j++) {
-                t->apply(m_points[i * (m_res + 1) + j], j + m_xRef, i + m_yRef);
+                t->apply(m_points[i * m_size + j], j + m_xRef, i + m_yRef);
             }
         }
     }

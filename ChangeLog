@@ -1,3 +1,12 @@
+2003-07-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Surface.h, Mercator/Surface.cpp: Make surface class a little
+	  more flexible by paramaterising the number of channels.
+
+	* Mercator/Segment.h, Mercator/Segment.cpp: Add convenience membe
+	  m_size which is m_res + 1, so we don't have to keep doing that
+	  calculation.
+
 2003-07-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.h: Re-name getSize() to getResolution()

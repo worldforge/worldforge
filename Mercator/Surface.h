@@ -12,14 +12,12 @@ namespace Mercator {
     class Segment;
 
     class Surface {
-      public:
-        typedef enum orient { SURFACE_XY, SURFACE_XZ, SURFACE_YZ } Orientation;
       private:
         Segment & m_segment;
         float * const m_colors;
 
       public:
-        explicit Surface(Segment & segment);
+        explicit Surface(Segment & segment, unsigned int channels = 4);
         ~Surface();
 
         float * getColors() {
