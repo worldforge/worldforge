@@ -3,7 +3,8 @@
 #endif
 
 #include <algorithm>
-#include <set>
+#include <assert.h>
+#include <set> 
 #include <cmath>
 
 #include <Atlas/Objects/Entity/RootEntity.h>
@@ -22,6 +23,7 @@
 
 #include "OpDispatcher.h"
 #include "IdDispatcher.h"
+
 
 namespace Eris {
 
@@ -193,7 +195,7 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 	    // FIXME - legacy stuff to handle the Acorn 'face' angle
 	    Coord face(ge.GetAttr("face"));
 	    // build the quaternion from roll, pitch and yaw.
-	    Quaternion quat(0.0, 0.0, std::atan2(face.y, face.x));
+	    Quaternion quat(0.0, 0.0, atan2(face.y, face.x));	
 	    setProperty("orientation", quat.asObject());
 	}
 	
@@ -221,7 +223,7 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 	    // FIXME - legacy stuff to handle the Acorn 'face' angle
 	    Coord face(getArg(mv, "face"));
 	    // build the quaternion from roll, pitch and yaw.
-	    Quaternion quat(0.0, 0.0, std::atan2(face.y, face.x));
+	    Quaternion quat(0.0, 0.0, atan2(face.y, face.x));
 	    setProperty("orientation", quat.asObject());
 	}
 	    
@@ -239,7 +241,7 @@ void Entity::recvSet(const Atlas::Objects::Operation::Set &st)
 	handleChanged();
 }
 
-void Entity::recvSound(const Atlas::Objects::Operation::Sound &snd)
+void Entity::recvSound(const Atlas::Objects::Operation::Sound &/*snd*/)
 {
 	// FIXME - decide upon a clever way to handle these. 
 }
@@ -474,4 +476,4 @@ private:
 };
 #endif
 
-}; // of namespace 
+} // of namespace 
