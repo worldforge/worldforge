@@ -1,4 +1,8 @@
 ChangeLog for varconf
+Tuesday, 10th December, 2004, Kai Blin <blin@gmx.net>
+	* fixed documentation in Makefile.am, it was installing the docs
+	  without asking where to put them.
+
 Friday, 19th December, 2003, Al Riddoch <alriddoch@zepler.org>
 	* Use AC_CANONICAL_SYSTEM macro
 	* Remove Serial from rpm spec as it is not required, and messes up

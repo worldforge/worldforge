@@ -7,5 +7,5 @@ pkgconfig_DATA = varconf-1.0.pc
 
 EXTRA_DIST = autogen.sh varconf.spec.in
 
-docdir = $(datadir)/doc/varconf-$(VERSION)
-doc_DATA = README COPYING AUTHORS THANKS NEWS
+# docdir = $(datadir)/doc/varconf-$(VERSION)
+noinst_DATA = README COPYING AUTHORS THANKS NEWS
