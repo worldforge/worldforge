@@ -191,11 +191,9 @@ class Point
 	{return Point(0, 0, 0) + coords.orientation() * (*this - coords.corner0());}
 
   // 3D only
-  Point<3> toParentCoords(const Point<3>& origin,
-       const Quaternion& rotation = Quaternion().identity()) const
+  Point<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
 	{return origin + (*this - Point(0, 0, 0)).rotate(rotation);}
-  Point<3> toLocalCoords(const Point<3>& origin,
-       const Quaternion& rotation = Quaternion().identity()) const
+  Point<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
 	{return Point(0, 0, 0) + (*this - origin).rotate(rotation.inverse());}
 
   // Member access

@@ -1,5 +1,11 @@
 Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
 
+	* Only one of the Point/Quaterion and Point/Matrix coordinate
+	  transformation functions can or needs to have a default
+	  rotation argument.
+
+Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
+
 	* The inverse of a Quaternion is q.inverse(), not -q.
 
 Thursday, November 27th, 2003   Ron Steinke <rsteinke@w-link.net>
