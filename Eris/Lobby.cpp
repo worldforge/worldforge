@@ -57,7 +57,7 @@ Lobby::Lobby(Player *p, Connection *con) :
 	
 Lobby::~Lobby()
 {
-	_con->removeDispatcherByPath("op:oog:sight:entity:acccount", "lobby");
+	_con->removeDispatcherByPath("op:oog:sight:entity:player", "lobby");
 	_con->removeDispatcherByPath("op:oog:sight:entity:room", "lobby");
 	
 	// FIXME - unecesary when Cyphesis updates to new OOG standards
@@ -160,7 +160,7 @@ void Lobby::registerCallbacks()
 	));
 	
 	// the account / player object callback
-	Dispatcher *pl = d->addSubdispatch(new ClassDispatcher("account", "account"));
+	Dispatcher *pl = d->addSubdispatch(new ClassDispatcher("player", "player"));
 	pl->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::Account>("lobby", 
 		SigC::slot(this, &Lobby::recvSightPerson)
 	));

@@ -112,6 +112,11 @@ public:
 	correspond to the emission of a more specific signal (such as Connected),
 	which should be used where available. */
 	SigC::Signal1<void, Status> StatusChanged;
+	
+	/** Emitted with logging information; client may handle as it see fit.
+	There is room for considerable expansion of this feature; notably message
+	classes (warning / info / debug). Any feedback greatly appreciated */
+	SigC::Signal1<void, std::string> Log;
 
 protected:
 	/// update the connection status (and emit the appropriate signal)
@@ -150,7 +155,9 @@ protected:
 	// static singleton instance
 	static Connection* _theConnection;
 };
-		
+
+void Log(const char *str, ...);
+
 }
 
 #endif

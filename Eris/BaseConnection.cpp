@@ -9,6 +9,7 @@
 #include <Atlas/Message/Encoder.h>
 
 #include "BaseConnection.h"
+#include "Connection.h"
 #include "Timeout.h"
 
 namespace Eris {
@@ -71,7 +72,10 @@ void BaseConnection::hardDisconnect(bool emit)
 	} else if (_status == NEGOTIATE) {
 		delete _sc;
 		_sc = NULL;
-	}
+	} else
+		throw InvalidOperation("Bad connection state for disconnection");
+	
+	_stream->close();
 	
 	delete _timeout;
 	_timeout = NULL;

@@ -152,22 +152,24 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 	//attrs.erase("parents");
 	
 	// FIXME - deal with multiple parents
-	std::string np = parents.front().AsString();
-/*	
-	if ( !_parent || (np != _parent->GetID()) ) {
+	std::string type = parents.front().AsString();
+	
+	std::string containerId = ge.GetAttr("loc").AsString();
+	if ( !_container || (containerId != _container->getID()) ) {
 		
-		if (_parent)
-			_parent->RemoveChild(this);
+		if (_container)
+			_container->rmvMember(this);
 		
-		Entity *npr = World::Instance()->Lookup(np);
-		npr->AddChild(this);
-		
-		Reparented.emit(_parent, npr);
-		_parent = npr;
+		Entity *ncr = World::Instance()->lookup(containerId);
+		if (ncr) {
+			ncr->addMember(this);
+			Recontainered.emit(_container, ncr);
+			_container = ncr;
+		} else
+			throw InvalidOperation("FIXME - support delayed dispatch on parents");
 	}
-*/
 
-// bounding box
+	// bounding box
 	if (ge.HasAttr("bounding_box"))
 		_bbox = BBox( ge.GetAttr("bounding_box") );
 	
@@ -182,7 +184,7 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 }
 
 void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
-{
+{	
 	_stamp = mv.GetSeconds();
 	setUnsync("stamp");
 	

@@ -2,6 +2,9 @@
 	#include "config.h"
 #endif
 
+#include <stdarg.h>
+#include <stdio.h>
+
 #include <skstream.h>
 #include <sigc++/signal_system.h>
 #include <sigc++/bind.h>
@@ -83,6 +86,7 @@ void Connection::disconnect()
 	setStatus(DISCONNECTING);
 	
 	if (!_statusLock) {
+		Eris::Log("no locks, doing immediate disconnection");
 		hardDisconnect(true);
 		return;
 	}
@@ -206,12 +210,12 @@ void Connection::unlock()
 	if (!_statusLock) 
 		switch (_status) {
 		case DISCONNECTING:	
+			Eris::Log("Connection unlocked in DISCONNECTING, closing socket");
 			hardDisconnect(true);
 			break;
 		
 		default:
-			cerr << "Connection unlocked in spurious state : no harm done (yet)"
-				<< " but this indicates things are awry" << endl; 
+			Eris::Log("Connection unlocked in spurious state : this may case a failure later");
 		}
 }
 
@@ -256,6 +260,8 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 {
 	postForDispatch(obj);
+
+	Eris::Log("ObjectArrived: dispatch queue size is %i", _repostQueue.size());
 	
 	while (!_repostQueue.empty()) {
 		DispatchContextDeque dq(1, _repostQueue.front());
@@ -272,7 +278,7 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 	
 		// catch actual failures, becuase they're bad.
 		catch (BaseException &be) {
-			cerr << "Dispatch: caught exception: " << be._msg << endl;
+			Eris::Log("Dispatch: caught exception: %s", be._msg.c_str());
 			dd->dispatch(dq);
 		}
 		
@@ -349,5 +355,17 @@ void _Pending::Trigger()
 	con->Delete
 }
 */
+
+void Log(const char *str, ...)
+{
+	va_list args;
+	va_start(args, str);
+	
+	char buffer[1024];
+	::vsnprintf(buffer, 1024, str, args);
+	
+	Connection::Instance()->Log.emit(buffer);
+	va_end(args);
+}
 
 }; // of namespace

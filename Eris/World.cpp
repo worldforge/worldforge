@@ -42,6 +42,9 @@
 
 //using namespace Atlas::Objects;
 
+
+
+
 namespace Eris {
 	
 World* World::_theWorld = NULL;
@@ -339,10 +342,10 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 			ei->second->recvSight(ent);
 	}
 	
-	// check for new children (oh! how exciting!)
-	const Atlas::Message::Object::ListType& children = ent.GetContains();
-	for (Atlas::Message::Object::ListType::const_iterator ci = children.begin();
-			ci != children.end(); ++ci)
+	// check for new contained entities
+	const Atlas::Message::Object::ListType& contained = ent.GetContains();
+	for (Atlas::Message::Object::ListType::const_iterator ci = contained.begin();
+			ci != contained.end(); ++ci)
 	{
 		// just pull it in
 		lookup(ci->AsString());

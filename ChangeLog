@@ -1,3 +1,23 @@
+Sunday, September 16 2001, James Turner <jmtn@blueyonder.co.uk>
+	* Correclty process the location / contains
+	  attributes to construct the IG entity tree
+
+Monday, September 10 2001, James Turner <jmtn@blueyonder.co.uk>
+	* Handle both 'account' and 'player' entites in Lobby;
+	  necessary until proper client-side Atlas type handling
+	  is available.
+	* Configuration changes to lay ground work for Python
+	  bingings - talk to me if you want to help / test
+
+Wednesday, August 29 2001, James Turner <jmtn@blueyonder.co.uk>
+
+	* Fixed disconnection (actually call _stream->close())
+	  and hence reconnection - rejoice!
+	* Added a simple logging system using va_args and a
+	  signal on Connection (Log). Seems to work, and doesn't mess up
+	  ncurses like simply using 'cout' does. Wish I'd done this ages
+	  ago, took about 5 minutes <sigh>.
+
 Tuesday, August 28 2001, James Turner <jmtn@blueyonder.co.uk>
 
 	* Added #include "ServerInfo.h" to Metaserver.h so people don't

@@ -2,7 +2,20 @@ lib_LTLIBRARIES = liberis.la
 
 # RELEASE = -release $(VERSION)-unstable
 
-liberis_la_LDFLAGS = -version-info 0:0:0 $(RELEASE)
+if PYTHON_BINDINGS
+PYBIND_CFLAGS = -I$(top_srcdir)/boost-python -I/usr/include/python 
+PYBIND_LDFLAGS = -lpython \
+	-L$(top_builddir)/boost-python/src \
+	-lBoostPy
+else
+PYBIND_CFLAGS =
+PYBIND_LDFLAGS =
+endif
+
+INCLUDES += $(PYBIND_CFLAGS)
+liberis_la_LDFLAGS = -version-info 0:0:0 $(RELEASE) $(PYBIND_LDFLAGS)
+	
+	
 liberis_la_SOURCES = \
 	Entity.cpp \
 	World.cpp \
