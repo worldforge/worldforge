@@ -3,8 +3,16 @@
 
 #include "Stream.h"
 	
-void Atlas::Stream::Begin(const std::string& name, Type)
+void Atlas::Stream::Begin(const std::string& name, Type type)
 {
+    switch (type)
+    {
+	case LIST:
+	break;
+
+	case MAP:
+	break;
+    }
 }
 
 void Atlas::Stream::End()
