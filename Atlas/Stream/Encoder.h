@@ -8,6 +8,13 @@
 #include "Filter.h"
 #include "../Object/Object.h"
 
+/* $Log$
+/* Revision 1.3  2000-02-21 05:17:13  mike
+/* Testing how $Log$ tag works
+/*
+
+*/
+
 namespace Atlas
 {
     namespace Stream
