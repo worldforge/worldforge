@@ -66,7 +66,9 @@ int ACodec::hasMessage()
 		if (tok == AProtocol::atlasATRVAL) {
 			// got a value for an attribute
 			if (type == AProtocol::atlasSTR) stack[nestd] = AObject::mkString(adec->getString());
-			if (type == AProtocol::atlasINT) stack[nestd] = AObject::mkLong(adec->getInt());
+			if (type == AProtocol::atlasINT) stack[nestd] = AObject::mkInt(adec->getInt());
+			if (type == AProtocol::atlasLNG) stack[nestd] = AObject::mkLong(adec->getInt());
+			if (type == AProtocol::atlasURI) stack[nestd] = AObject::mkURI(adec->getString());
 			if (type == AProtocol::atlasFLT) stack[nestd] = AObject::mkFloat(adec->getFloat());
 			DebugMsg2(1,"ADDATTR nestd=%i name=%s", nestd, name.c_str());
 		}
@@ -82,6 +84,31 @@ int ACodec::hasMessage()
 			} else if (type == AProtocol::atlasLST) {
 				// start a nested list
 				stack[nestd] = AObject::mkList(0);
+				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
+				nestd++;
+			} else if (type == AProtocol::atlasLSTURI) {
+				// start a nested list
+				stack[nestd] = AObject::mkURIList(0);
+				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
+				nestd++;
+			} else if (type == AProtocol::atlasLSTINT) {
+				// start a nested list
+				stack[nestd] = AObject::mkIntList(0);
+				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
+				nestd++;
+			} else if (type == AProtocol::atlasLSTLNG) {
+				// start a nested list
+				stack[nestd] = AObject::mkLongList(0);
+				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
+				nestd++;
+			} else if (type == AProtocol::atlasLSTFLT) {
+				// start a nested list
+				stack[nestd] = AObject::mkFloatList(0);
+				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
+				nestd++;
+			} else if (type == AProtocol::atlasLSTSTR) {
+				// start a nested list
+				stack[nestd] = AObject::mkStringList(0);
 				DebugMsg2(1,"ADDLIST nestd=%i name=%s", nestd, names[nestd].c_str());
 				nestd++;
 			} else {
