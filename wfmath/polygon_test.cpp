@@ -40,7 +40,7 @@ using namespace WFMath;
 template<const int dim>
 void test_polygon(const Polygon<dim>& p)
 {
-  cout << "Testing " << p << std::endl;
+  std::cout << "Testing " << p << std::endl;
 
   test_general(p);
   test_shape(p);

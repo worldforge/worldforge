@@ -1,3 +1,11 @@
+Tuesday, March 12, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Added a default value of 1.0 for the norm in Vector::normalize()
+	* Added a virtual destructor to the exception defined in atlasconv.h
+	* Fixed a terminate-the-loop-proberly bug in probability.cpp
+	  (replaced DBL_MIN by DBL_EPSILON)
+	* Got test functions to compile with gcc-3.0
+
 Saturday, March 9, 2002		Dan Tomalesky <grim@xynesis.com>
 
     * Added acinclude.m4 for atlas so people without atlas can still

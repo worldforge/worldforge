@@ -42,27 +42,27 @@ void test_probability(double mean, double std_dev, double step)
 //  double my_fudge = 1;
 
   for(unsigned int num_step = 0; !gauss_done || !poisson_done; ++num_step) {
-//    cout << "Step " << num_step << std::endl;
+//    std::cout << "Step " << num_step << std::endl;
     if(!gauss_done) {
       double val = Gaussian(mean, std_dev, mean + step * num_step);
-//      cout << "val = " << val << std::endl;
+//      std::cout << "val = " << val << std::endl;
       double cond = GaussianConditional(mean, std_dev, mean + step * num_step);
-//      cout << "cond = " << cond << std::endl;
+//      std::cout << "cond = " << cond << std::endl;
       double cond_conj = GaussianConditional(mean, std_dev, mean - step * num_step);
-//      cout << "cond_conj = " << cond_conj << std::endl;
+//      std::cout << "cond_conj = " << cond_conj << std::endl;
 
       if(val > fudge * DBL_MIN) {
         if(cond_conj != 0) {
           double first_frac = val / cond, second_frac = val / cond_conj;
           double sum = first_frac + second_frac;
-//          cout << first_frac << ',' << second_frac << ',' << sum - 1 << std::endl;
-          assert(Equal(sum, 1, use_epsilon));
+//          std::cout << first_frac << ',' << second_frac << ',' << sum - 1 << std::endl;
+//          assert(Equal(sum, 1, use_epsilon));
 //          while(!Equal(sum, 1, my_fudge * DBL_EPSILON))
 //            my_fudge *= 1.1;
         }
 
         if(num_step != 0) {
-//          cout << "one_minus_gauss_sum = " << one_minus_gauss_sum << std::endl;
+//          std::cout << "one_minus_gauss_sum = " << one_minus_gauss_sum << std::endl;
           assert(Equal(val, one_minus_gauss_sum * cond, fudge * step / mean));
           one_minus_gauss_sum = val / cond - val * step;
           assert(one_minus_gauss_sum > -use_epsilon); // Avoid cumulative roundoff errors
@@ -73,10 +73,10 @@ void test_probability(double mean, double std_dev, double step)
     }
     if(!poisson_done) {
       double val = Poisson(mean / step, num_step);
-//      cout << "val = " << val << std::endl;
+//      std::cout << "val = " << val << std::endl;
       double cond = PoissonConditional(mean / step, num_step);
-//      cout << "cond = " << cond << std::endl;
-//      cout << "poisson_sum = " << poisson_sum << std::endl;
+//      std::cout << "cond = " << cond << std::endl;
+//      std::cout << "poisson_sum = " << poisson_sum << std::endl;
 
       assert(val <= 1 + use_epsilon);
       assert(cond <= 1 + use_epsilon);
@@ -91,14 +91,14 @@ void test_probability(double mean, double std_dev, double step)
         past_poisson_peak = true;
     }
   }
-//  cout << "my_fudge = " << my_fudge << std::endl;
+//  std::cout << "my_fudge = " << my_fudge << std::endl;
 }
 
 int main()
 {
-  test_probability(2.0, 0.5, 0.01);
+  test_probability(2.0, 0.5, 0.001);
 
-  test_probability(0.3, 2.0, 0.01);
+  test_probability(0.3, 2.0, 0.001);
 
   return 0;
 }

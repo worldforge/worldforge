@@ -35,13 +35,13 @@ using namespace WFMath;
 template<const int dim>
 void test_vector(const Vector<dim>& v)
 {
-  cout << "Testing vector: " << v << std::endl;
+  std::cout << "Testing vector: " << v << std::endl;
 
   test_general(v);
 
   CoordType sqr_mag = v.sqrMag();
 
-  assert(Equal(sqrt(sqr_mag), v.mag()));
+  assert(Equal((CoordType) sqrt(sqr_mag), v.mag()));
 
   assert(Equal(sqr_mag, Dot(v, v)));
 
@@ -59,7 +59,7 @@ void test_vector(const Vector<dim>& v)
   for(int j = 0; j < dim; ++j) {
     for(int i = 0; i < steps; ++i) {
       vcopy.rotate(v1, v2, 2 * Pi / steps);
-//      cout << vcopy << std::endl;
+//      std::cout << vcopy << std::endl;
       assert(Equal(sqr_mag, vcopy.sqrMag()));
     }
 
@@ -75,11 +75,11 @@ void test_vector(const Vector<dim>& v)
   v2 *= 2; // operator*=()
 
   for(int i = 0; i < dim; ++i)
-    assert(Equal(v2[i], 1));
+    assert(Equal(v2[i], (CoordType) 1.0));
 
   // operator+(), operator-(), operator*() (pre and post), operator/()
   CoordType check = Dot((v1 + v2) * 5 - v2 / 4, 2 * v2);
-  assert(Equal((10.0 + dim * 38.0 / 4.0), check));
+  assert(Equal((CoordType) (10.0 + dim * 38.0 / 4.0), check));
 
   Vector<dim> v3 = v;
   v3 += v;

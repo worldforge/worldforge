@@ -43,7 +43,10 @@ namespace WFMath {
 
 // Change this when we go to Atlas-0.5
 struct _AtlasBadParse : public Atlas::Message::WrongTypeException,
-			virtual public std::exception {};
+			virtual public std::exception
+{
+  virtual ~_AtlasBadParse() throw() {}
+};
 
 inline Atlas::Message::Object _ArrayToAtlas(const CoordType* array, int len)
 {

@@ -35,7 +35,7 @@ using namespace WFMath;
 template<const int dim>
 void test_rotmatrix(const RotMatrix<dim>& m)
 {
-  cout << "Testing RotMatrix: " << m << std::endl;
+  std::cout << "Testing RotMatrix: " << m << std::endl;
 
   test_general(m);
 

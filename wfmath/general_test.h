@@ -29,6 +29,7 @@
 #include "const.h"
 #include "stream.h"
 #include <string>
+#include <iostream>
 
 namespace WFMath {
 
@@ -50,7 +51,7 @@ void test_general(const C& c)
     FromString(c3, s); // Uses operator>>() implicitly
   }
   catch(ParseError) {
-    cerr << "Couldn't parse generated string: " << s << std::endl;
+    std::cerr << "Couldn't parse generated string: " << s << std::endl;
     abort();
   }
 

@@ -47,7 +47,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   AxisBox<dim> box(p1, p2), tmp;
 
-  cout << "Testing " << box << std::endl;
+  std::cout << "Testing " << box << std::endl;
 
   test_general(box);
   test_shape_no_rotate(box);
@@ -56,7 +56,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   assert(tmp == box);
   assert(Intersection(box, box, tmp));
   assert(tmp == box);
-  vector<AxisBox<dim> > boxvec;
+  std::vector<AxisBox<dim> > boxvec;
   boxvec.push_back(box);
   assert(box == BoundingBox(boxvec));
 
@@ -70,7 +70,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   Ball<dim> ball(p1, 1);
 
-  cout << "Testing " << ball << std::endl;
+  std::cout << "Testing " << ball << std::endl;
 
   test_general(ball);
   test_shape(ball);
@@ -92,7 +92,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   Segment<dim> seg(p1, p2);
 
-  cout << "Testing " << seg << std::endl;
+  std::cout << "Testing " << seg << std::endl;
 
   test_general(seg);
   test_shape(seg);
@@ -121,7 +121,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, Pi / 6));
 
-  cout << "Testing " << rbox << std::endl;
+  std::cout << "Testing " << rbox << std::endl;
 
   test_general(rbox);
   test_shape(rbox);

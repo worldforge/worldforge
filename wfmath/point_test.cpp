@@ -41,15 +41,15 @@ using namespace WFMath;
 template<const int dim>
 void test_point(const Point<dim>& p)
 {
-  cout << "Testing point: " << p << std::endl;
+  std::cout << "Testing point: " << p << std::endl;
 
   test_general(p);
   test_shape(p);
 
-  vector<Point<dim> > pvec;
+  std::vector<Point<dim> > pvec;
   pvec.push_back(p);
   assert(p == Barycenter(pvec));
-  list<CoordType> clist;
+  std::list<CoordType> clist;
   clist.push_back(5);
   assert(p == Barycenter(pvec, clist));
 

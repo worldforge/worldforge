@@ -36,7 +36,7 @@ using namespace WFMath;
 
 void test_quaternion(const Quaternion& q)
 {
-  cout << "Testing " << q << std::endl;
+  std::cout << "Testing " << q << std::endl;
 
   test_general(q);
 
@@ -50,8 +50,8 @@ void test_quaternion(const Quaternion& q)
 
   q2 /= q;
 
-  cout << "q = " << q << std::endl;
-  cout << "q2 = " << q2 << std::endl;
+  std::cout << "q = " << q << std::endl;
+  std::cout << "q2 = " << q2 << std::endl;
 
   assert(q * q2 == Quaternion().identity());
 
@@ -70,7 +70,7 @@ void test_quaternion(const Quaternion& q)
       CoordType dot_sum = 0;
       for(int k = 0; k < 3; ++k)
         dot_sum += m.elem(i, k) * m.elem(j, k);
-//      cout << '(' << i << ',' << j << ") dot_sum == " << dot_sum << std::endl;
+//      std::cout << '(' << i << ',' << j << ") dot_sum == " << dot_sum << std::endl;
       assert(Equal(dot_sum, (i == j) ? 1 : 0));
     }
   }
@@ -79,7 +79,7 @@ void test_quaternion(const Quaternion& q)
 
   assert(q4.fromRotMatrix(m));
 
-//  cout << m << std::endl << q4 << std::endl;
+//  std::cout << m << std::endl << q4 << std::endl;
 
   assert(q4 == q); //FIXME 2->1 Quaternion->RotMatrix<3> mapping
 
@@ -90,12 +90,12 @@ void test_quaternion(const Quaternion& q)
 
   assert(v2 == v);
 
-//  cout << v << std::endl << v2 << std::endl;
+//  std::cout << v << std::endl << v2 << std::endl;
 
   v.rotate(q);
   v2 = Prod(v2, m);
 
-//  cout << v << std::endl << v2 << std::endl;
+//  std::cout << v << std::endl << v2 << std::endl;
 
   assert(v == v2);
 

@@ -308,7 +308,7 @@ static double IncompleteGammaComplementNoPrefactor(double a, double z)
 
     a_next /= b_next;
 
-    if(!last_zero && fabs(a_next - a_last) < fabs(a_last) * DBL_MIN)
+    if(!last_zero && fabs(a_next - a_last) < fabs(a_last) * DBL_EPSILON)
       return a_next; // Can't compare if b_last was zero
 
     a_last /= b_next;

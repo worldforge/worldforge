@@ -166,7 +166,7 @@ class Vector {
 
   CoordType sqrMag() const;
   CoordType mag() const		{return sqrt(sqrMag());}
-  Vector& normalize(CoordType norm)
+  Vector& normalize(CoordType norm = 1.0)
 	{CoordType themag = mag(); assert(themag > 0); return (*this *= norm / themag);}
 
   // The sloppyMag() function gives a value between
