@@ -32,11 +32,14 @@
 #define WFMATH_VECTOR_H
 
 #include <math.h>
+#include <wfmath/const.h>
+#include <wfmath/string_funcs.h>
 
 namespace WF { namespace Math {
 
 template<const int size> class RotMatrix;
 template<const int len> class Vector;
+template<const int dim> class Point;
 
 template<const int len>
 Vector<len> operator*(const double& d, const Vector<len>& v);
@@ -55,6 +58,15 @@ template<const int size> // v * m
 Vector<size> Prod(const Vector<size>& v, const RotMatrix<size>& m);
 template<const int size> // v * m^-1
 Vector<size> ProdInv(const Vector<size>& v, const RotMatrix<size>& m);
+
+template<const int len>
+Vector<len> operator-(const Point<len>& c1, const Point<len>& c2);
+template<const int len>
+Point<len> operator+(const Point<len>& c, const Vector<len>& v);
+template<const int len>
+Point<len> operator-(const Point<len>& c, const Vector<len>& v);
+template<const int len>
+Point<len> operator+(const Vector<len>& v, const Point<len>& c);
 
 const double SloppyMagMaxTable[] = {1, 1,
   1.082392200292393968799446410733,
@@ -93,6 +105,9 @@ class Vector {
 
   // Non-virtual destructor, does nothing, no need to write it
 
+  std::string toString() const		{return StringFromCoordList(m_elem, len);}
+  bool fromString(const std::string& s) {return StringToCoordList(s, m_elem, len);}
+
   Vector<len>& operator=(const double d[len]);
   Vector<len>& operator=(const Vector<len>& v);
 
@@ -123,15 +138,21 @@ class Vector {
   friend Vector<len> InvProd<len>	(const RotMatrix<len>& m,
 					 const Vector<len>& v);
 
+// FIXME same problem as operator*
+//  friend Vector<len> operator-<len> (const Point<len>& c1, const Point<len>& c2);
+//  friend Point<len> operator+<len> (const Point<len>& c, const Vector<len>& v);
+//  friend Point<len> operator-<len> (const Point<len>& c, const Vector<len>& v);
+//  friend Point<len> operator+<len> (const Vector<len>& v, const Point<len>& c);
+
   friend double Dot<len>(const Vector<len>& v1, const Vector<len>& v2);
   friend double Angle<len>(const Vector<len>& v, const Vector<len>& u);
 
   // Don't do range checking, it'll slow things down, and people
   // should be able to figure it out on their own
-  const double& operator[](const int i) const	{return m_elem[i];}
-  double& operator[](const int i)		{return m_elem[i];}
+  const CoordType& operator[](const int i) const	{return m_elem[i];}
+  CoordType& operator[](const int i)		{return m_elem[i];}
 
-  double sqrMag() const		{return Dot(*this, *this);}
+  double sqrMag() const;
   double mag() const		{return sqrt(sqrMag());}
   Vector<len>& normalize(double norm) {return (*this *= norm / mag());}
 
@@ -151,8 +172,6 @@ class Vector {
   static const double sloppyMagMax() {return SLOPPY_MAG_MAX(len);}
   static const double sloppyMagMaxSqrt() {return SLOPPY_MAG_MAX_SQRT(len);}
 
-  static const double tryMe;
-
   Vector<len>& zero();
 
   // Rotate the vector in the (axis1,axis2) plane by the angle theta
@@ -164,8 +183,6 @@ class Vector {
 
   Vector<len>& rotate(const Vector<len>& v1, const Vector<len>& v2, double theta);
 
-  //TODO string stuff like in CoalCoord
-
   // Specialized 2D/3D stuff starts here
 
   // The following functions are defined only for
@@ -174,8 +191,8 @@ class Vector {
   // Attempting to call these on any other vector will
   // result in a linker error.
 
-  Vector(const double& x, const double& y);
-  Vector(const double& x, const double& y, const double& z);
+  Vector(const CoordType& x, const CoordType& y);
+  Vector(const CoordType& x, const CoordType& y, const CoordType& z);
 
   Vector<2>& rotate(double theta);
 
@@ -188,24 +205,25 @@ class Vector {
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
 
-  const double& x() const	{return m_elem[0];}
-  double& x()			{return m_elem[0];}
-  const double& y() const	{return m_elem[1];}
-  double& y()			{return m_elem[1];}
-  const double& z() const	{return m_elem[2];}
-  double& z()			{return m_elem[2];}
+  const CoordType& x() const	{return m_elem[0];}
+  CoordType& x()			{return m_elem[0];}
+  const CoordType& y() const	{return m_elem[1];}
+  CoordType& y()			{return m_elem[1];}
+  const CoordType& z() const	{return m_elem[2];}
+  CoordType& z()			{return m_elem[2];}
 
  private:
-  double m_elem[len];
+  CoordType m_elem[len];
 };
 
 template<> inline double Vector<1>::sloppyMag() const	{return fabs(m_elem[0]);}
 template<> double Vector<2>::sloppyMag() const;
 template<> double Vector<3>::sloppyMag() const;
 
-template<> inline Vector<2>::Vector(const double& x, const double& y)
+template<> inline Vector<2>::Vector(const CoordType& x, const CoordType& y)
 	{m_elem[0] = x; m_elem[1] = y;}
-template<> inline Vector<3>::Vector(const double& x, const double& y, const double& z)
+template<> inline Vector<3>::Vector(const CoordType& x, const CoordType& y,
+				    const CoordType& z)
 	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
 
 template<> inline Vector<2>& Vector<2>::rotate(double theta)

@@ -36,8 +36,10 @@ namespace WF { namespace Math {
 
 template<> double Vector<2>::sloppyMag() const
 {
-  double ax = fabs(m_elem[0]), ay = fabs(m_elem[1]);
-  const double p = WFMATH_CONST_SQRT2 - 1;
+  CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]);
+  const CoordType p = WFMATH_CONST_SQRT2 - 1;
+
+  // Don't need float add, all terms > 0
 
   if(ax > ay)
     return ax + p * ay;
@@ -49,9 +51,12 @@ template<> double Vector<2>::sloppyMag() const
 
 template<> double Vector<3>::sloppyMag() const
 {
-  double ax = fabs(m_elem[0]), ay = fabs(m_elem[1]), az = fabs(m_elem[2]);
-  const double p = WFMATH_CONST_SQRT2 - 1;
-  const double q = WFMATH_CONST_SQRT3 + 1 - 2 * WFMATH_CONST_SQRT2;
+  CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]), az = fabs(m_elem[2]);
+  const CoordType p = WFMATH_CONST_SQRT2 - 1;
+  const CoordType q = WFMATH_CONST_SQRT3 + 1 - 2 * WFMATH_CONST_SQRT2;
+
+  // Don't need FloatAdd, only term < 0 is q, it's very small,
+  // and amin1 * amin2 / amax < amax.
 
   if(ax > ay && ax > az)
     return ax + p * (ay + az) + q * ay * az / ax;
@@ -82,9 +87,9 @@ Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2)
 {
   Vector<3> ans;
 
-  ans[0] = v1[1] * v2[2] - v2[1] * v1[2];
-  ans[1] = v1[2] * v2[0] - v2[2] * v1[0];
-  ans[2] = v1[0] * v2[1] - v2[0] * v1[1];
+  ans[0] = FloatSubtract(v1[1] * v2[2], v2[1] * v1[2]);
+  ans[1] = FloatSubtract(v1[2] * v2[0], v2[2] * v1[0]);
+  ans[2] = FloatSubtract(v1[0] * v2[1], v2[0] * v1[1]);
 
   return ans;
 }

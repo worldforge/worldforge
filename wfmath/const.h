@@ -37,6 +37,27 @@
 // used in functions like Matrix<>::determinant() and
 // Matrix<>::inverse(). It's essentially the machine precision
 // multiplied by a fudge factor.
-#define WFMATH_EPSILON		(10 * DBL_EPSILON)
+#define WFMATH_EPSILON		(30 * DBL_EPSILON)
+
+typedef double CoordType;
+
+bool IsFloatEqual(CoordType x, CoordType y, double epsilon = WFMATH_EPSILON);
+inline CoordType FloatAdd(CoordType x, CoordType y,
+			  double epsilon = WFMATH_EPSILON)
+	{return IsFloatEqual(x, -y, epsilon) ? 0 : x + y;}
+inline CoordType FloatSubtract(CoordType x, CoordType y,
+			       double epsilon = WFMATH_EPSILON)
+	{return IsFloatEqual(x, y, epsilon) ? 0 : x - y;}
+
+#ifdef WIN32
+#define isnan _isnan
+#endif
+
+// Set NAN to be an impossible value, so isnan() will pick it up.
+#ifdef NAN
+const CoordType NanVal = NAN;
+#else
+const CoordType NanVal = sqrt (-4.0);
+#endif
 
 #endif // WFMATH_CONST_H

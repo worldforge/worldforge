@@ -32,6 +32,7 @@
 #include <assert.h>
 #include "stream_funcs.h"
 #include <iostream>
+#include <sstream>
 
 using namespace WF::Math;
 
@@ -52,7 +53,31 @@ void test_matrix(const RotMatrix<size>& m)
 
   for(int i = 0; i < size; ++i)
     for(int j = 0; j < size; ++j)
-      assert(fabs(ident.elem(i, j) - try_ident.elem(i, j)) < WFMATH_EPSILON);
+      assert(IsFloatEqual(ident.elem(i, j), try_ident.elem(i, j)));
+
+  std::string s_mat = m.toString();
+
+  RotMatrix<size> str_m;
+
+  if(!str_m.fromString(s_mat)) {
+    cout << "Could not convert string back into matrix" << std::endl;
+    exit(-1);
+  }
+
+  cout << "After conversion through a string, the matrix is " << str_m << std::endl;
+
+  cout << "Element differences after conversion are: ";
+  for(int i = 0; i < size; ++i) {
+    for(int j = 0; j < size; ++j) {
+      cout << m.elem(i, j) - str_m.elem(i, j);
+      if(i < size - 1 || j < size - 1)
+        cout << ", ";
+    }
+  }
+  cout << std::endl;
+
+  cout << "Converted M * M^T identity check: " << Prod(str_m, str_m.inverse());
+  cout << std::endl;
 }
 
 int main()

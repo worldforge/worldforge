@@ -1,5 +1,5 @@
 // -*-C++-*-
-// matrix.cpp (Matrix<> implementation)
+// point_test.cpp (Point<> test functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -22,29 +22,31 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 
 // Author: Ron Steinke
-// Created: 2001-12-7
+// Created: 2001-12-12
 
-#include "matrix_funcs.h"
+#include "vector.h"
+#include "vector_funcs.h"
+#include "point.h"
+#include "point_funcs.h"
 #include "const.h"
-#include <float.h>
+#include <assert.h>
+#include "stream_funcs.h"
+#include <iostream>
 
-namespace WF { namespace Math {
+using namespace WF::Math;
 
-Matrix<3> SkewSymmetric(const Vector<3>& v)
+template<const int dim>
+void test_point(const Point<dim>& p)
 {
-  Matrix<3> out;
+  cout << "Testing point: " << p << std::endl;
 
-  out.elem(0, 0) = out.elem(1, 1) = out.elem(2, 2) = 0;
-
-  out.elem(0, 1) = v[2];
-  out.elem(1, 0) = -v[2];
-  out.elem(1, 2) = v[0];
-  out.elem(2, 1) = -v[0];
-  out.elem(2, 0) = v[1];
-  out.elem(0, 2) = -v[1];
-
-  return out;
+  // FIXME
 }
 
+int main()
+{
+  test_point(Point<2>(1, -1));
+  test_point(Point<3>(1, -1, WFMATH_CONST_SQRT2));
 
-}} // namespace WF::Math
+  return 0;
+}

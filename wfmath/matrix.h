@@ -27,6 +27,7 @@
 #ifndef WFMATH_MATRIX_H
 #define WFMATH_MATRIX_H
 
+#include <wfmath/const.h>
 #include <wfmath/vector.h>
 
 namespace WF { namespace Math {
@@ -78,9 +79,12 @@ class RotMatrix {
   static const int nParams = size*(size-1)/2;
 
   RotMatrix() {identity();} // Need a valid RotMatrix for default
-  RotMatrix(const double& alpha, const double& beta, const double& gamma)
-	{double d[3] = {alpha, beta, gamma}; toEuler(d);} // Euler angles, 3D only
+  RotMatrix(const CoordType& alpha, const CoordType& beta, const CoordType& gamma)
+	{CoordType d[3] = {alpha, beta, gamma}; toEuler(d);} // Euler angles, 3D only
   RotMatrix(const RotMatrix<size>& m);
+
+  std::string toString() const;
+  bool fromString(const std::string& s);
 
   bool operator==(const RotMatrix<size>& m) const;
   bool operator!=(const RotMatrix<size>& m) const {return !(*this == m);}
@@ -89,7 +93,11 @@ class RotMatrix {
   // reflect any property of the matrix.
   bool operator< (const RotMatrix<size>& m) const;
 
-  const double& elem(const int i, const int j) const 	{return m_elem[i][j];}
+  const CoordType& elem(const int i, const int j) const 	{return m_elem[i][j];}
+
+  // Can't set one element at a time and keep it an SO(N) matrix,
+  // but can try to set all values at once, and see if they match
+  bool setVals(const CoordType vals[size][size], double precision = WFMATH_EPSILON);
 
   Vector<size> row(const int i) const;
   Vector<size> column(const int i) const;
@@ -100,8 +108,8 @@ class RotMatrix {
   double determinant() const {return 1;} // here in case we extend to O(N) later
   RotMatrix<size> inverse() const;
 
-  RotMatrix<size>& fromEuler(const double angles[nParams]);
-  void toEuler(double angles[nParams]) const;
+  RotMatrix<size>& fromEuler(const CoordType angles[nParams]);
+  void toEuler(CoordType angles[nParams]) const;
 
   friend RotMatrix<size> Prod<size>		(const RotMatrix<size>& m1,
 						 const RotMatrix<size>& m2);
@@ -138,10 +146,8 @@ class RotMatrix {
   const RotMatrix<3>& rotation			(const Vector<3>& axis,
 						 const double& theta);
 
-  //TODO string functions
-
  private:
-  double m_elem[size][size];
+  CoordType m_elem[size][size];
 };
 
 }} // namespace WF::Math

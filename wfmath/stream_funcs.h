@@ -29,46 +29,30 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
+#include <wfmath/point.h>
 #include <iostream>
 
 namespace WF { namespace Math {
 
+//TODO some template for all of these, that won't be too general
+// and impact non-WFMath classes?
+
 template<const int len>
-ostream& operator<<(ostream& os, const Vector<len>& v)
+inline std::ostream& operator<<(std::ostream& os, const Vector<len>& v)
 {
-  os << '(';
-
-  int i = 0;
-
-  while(true) {
-    os << v[i];
-    if(++i == len)
-      break;
-    os << ',';
-  }
-
-  os << ')';
-
-  return os;
+  return os << v.toString();
 }
 
 template<const int size>
-ostream& operator<<(ostream& os, const RotMatrix<size>& m)
+inline std::ostream& operator<<(std::ostream& os, const RotMatrix<size>& m)
 {
-  os << '(';
+  return os << m.toString();
+}
 
-  int i = 0;
-
-  while(true) {
-    os << m.row(i);
-    if(++i == size)
-      break;
-    os << ',';
-  }
-
-  os << ')';
-
-  return os;
+template<const int dim>
+inline std::ostream& operator<< (std::ostream& os, const Point<dim>& coord)
+{
+  return os << coord.toString();
 }
 
 }} // namespace WF::Math

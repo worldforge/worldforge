@@ -28,17 +28,23 @@
 #include "vector_funcs.h"
 #include "const.h"
 #include <float.h>
+#include <sstream>
+#include <algorithm>
 
 namespace WF { namespace Math {
 
-template<> void RotMatrix<3>::toEuler(double angles[3]) const
+static double _MatrixDeterminantImpl(const int size, CoordType* m);
+static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
+
+template<> void RotMatrix<3>::toEuler(CoordType angles[3]) const
 {
   // There's a 2:1 map from Euler angles to matrices. Flipping the
   // sign of the middle angle and adding pi to each of the others produces
   // the same matrix. Therefore, this function will never return a value greater
   // than pi for the middle angle.
 
-  double sin_sqr_beta = m_elem[0][2] * m_elem[0][2] + m_elem[1][2] * m_elem[1][2];
+  // Dont' need float add, both terms > 0
+  CoordType sin_sqr_beta = m_elem[0][2] * m_elem[0][2] + m_elem[1][2] * m_elem[1][2];
 
   if(sin_sqr_beta > WFMATH_EPSILON) {
     angles[0] = atan2(m_elem[2][1], m_elem[2][0]);
@@ -55,11 +61,11 @@ template<> void RotMatrix<3>::toEuler(double angles[3]) const
 template<>
 const RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, const double& theta)
 {
-  double max = 0;
+  CoordType max = 0;
   int main_comp = -1;
 
   for(int i = 0; i < 3; ++i) {
-    double val = fabs(axis[i]);
+    CoordType val = fabs(axis[i]);
     if(val > max) {
       max = val;
       main_comp = i;
@@ -78,6 +84,211 @@ const RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, const double&
   v2 = Cross(axis, v1);
 
   return rotation(v1, v2, theta);
+}
+
+bool _MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
+			CoordType* buf2, double precision)
+{
+  precision = fabs(precision);
+
+  if(precision >= .9) // Can get an infinite loop for precision == 1
+    return false;
+
+  // Check that vals form an orthogonal matrix, also increase their
+  // precision to WFMATH_EPSILON
+
+  while(true) {
+    double try_prec = 0;
+
+    for(int i = 0; i < size; ++i) {
+      for(int j = 0; j < size; ++j) {
+        CoordType ans = 0;
+        CoordType max_val = 0;
+        for(int k = 0; k < size; ++k) {
+          CoordType val = vals[i*size+k] * vals[j*size+k];
+          ans += val;
+          CoordType aval = fabs(val);
+          if(aval > max_val)
+            max_val = aval;
+        }
+        if(max_val > 0 && fabs(ans/max_val) < try_prec)
+          ans = 0;
+        try_prec = std::max(fabs(ans - ((i == j) ? 1 : 0)), try_prec);
+      }
+    }
+
+    if(try_prec > precision)
+      return false;
+
+    if(try_prec <= WFMATH_EPSILON)
+      break;
+
+    // Precision needs improvement, use linear approximation scheme.
+
+    // This scheme takes the original matrix (call it A)
+    // and subtracts another matrix (delta), where
+    //
+    // delta = (A - (A^T)^-1) / 2
+    //
+    // This is correct, up to errors of order delta^2,
+    // if you assume you can choose a delta such that
+    // A^T * delta is symmetric (delta is underdetermined
+    // by the linear approximation scheme)
+
+    // This procedure will not increase the precision of
+    // the parameters which determine the matrix (i.e. the
+    // Euler angles), but it will increase the precision
+    // to which the matrix satisfies the condition
+    // A^T * A == (identity matrix).
+
+    // The symmetry condition on A^T * delta represents an
+    // arbitrary condition which will determine the higher
+    // precision components of the Euler angles. This
+    // makes the problem of increasing the precision of
+    // the matrix well determined, and solvable by this
+    // perturbative method.
+
+    for(int i = 0; i < size; ++i) {
+      for(int j = 0; j < size; ++j) {
+        buf1[i*size+j] = vals[j*size+i];
+        buf2[i*size+j] = (i == j) ? 1 : 0;
+      }
+    }
+
+    bool ans = _MatrixInverseImpl(size, buf1, buf2);
+
+    if(ans == false) // Degenerate matrix, something badly wrong
+      return false;
+
+    for(int i = 0; i < size; ++i) {
+      for(int j = 0; j < size; ++j) {
+        double delta = FloatSubtract(vals[i*size+j], buf2[i*size+j]) / 2;
+        vals[i*size+j] -= delta; // delta is small, don't need FloatAdd()
+      }
+    }
+
+    // The above scheme should approx. square the precision.
+    // That is, try_prec -> try_prec * try_prec * (fudge factor)
+    // in the next iteration.
+  }
+
+  // Check that the determinant of vals is 1 (as opposed to -1)
+
+  for(int i = 0; i < size; ++i)
+    for(int j = 0; j < size; ++j)
+      buf1[i*size+j] = vals[i*size+j];
+
+  return (_MatrixDeterminantImpl(size, buf1) > 0);
+}
+
+static double _MatrixDeterminantImpl(const int size, CoordType* m)
+{
+  // First, construct an upper triangular matrix with the
+  // same determinant as the original matrix. Then just
+  // multiply the diagonal terms to get the determinant.
+
+  for(int i = 0; i < size - 1; ++i) {
+    CoordType minval = 0;
+    for(int j = 0; j < size; ++j)
+      minval += m[j*size+i] * m[j*size+i]; // Don't need FloatAdd()
+    minval /= DBL_MAX;
+    if(minval < DBL_MIN)
+      minval = DBL_MIN;
+    if(m[i*size+i] * m[i*size+i] < minval) { // Find a row with nonzero element
+      int j;
+      for(j = i + 1; j < size; ++j)
+        if(m[j*size+i] * m[j*size+i] >= minval)
+          break;
+      if(j == size) // No nonzero element found, degenerate matrix, det == 0
+        return 0;
+      m[i*size+i] = m[j*size+i];
+      for(int k = i + 1; k < size; ++k) // For k < i, m[j*size+k] == 0
+        m[i*size+k] = FloatAdd(m[i*size+k], m[j*size+k]);
+    }
+    for(int j = i + 1; j < size; ++j) {
+      CoordType factor = m[j*size+i] / m[i*size+i];
+      // We know factor isn't bigger than about sqrt(DBL_MAX), due to
+      // the comparison with minval done above.
+      m[j*size+i] = 0;
+      if(factor != 0) {
+        for(int k = i + 1; k < size; ++k) // For k < i, m[k*size+j] == 0
+	  m[j*size+k] = FloatSubtract(m[j*size+k], m[i*size+k] * factor);
+      }
+    }
+  }
+
+  double out = 1;
+
+  for(int i = 0; i < size; ++i)
+    out *= m[i*size+i];
+
+  return out;
+}
+
+static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
+{
+  // Invert using row operations. First, make m upper triangular,
+  // with 1's on the diagonal
+
+  for(int i = 0; i < size; ++i) {
+
+    // Make sure in[i*size+i] is nonzero
+    CoordType minval = 0;
+    for(int j = 0; j < size; ++j)
+      minval += in[j*size+i] * in[j*size+i]; // Don't need FloatAdd()
+    minval /= DBL_MAX;
+    if(minval < DBL_MIN)
+      minval = DBL_MIN;
+    if(in[i*size+i] * in[i*size+i] < minval) { // Find a nonzero element
+      int j;
+      for(j = i + 1;  j < size; ++j)
+        if(in[j*size+i] * in[j*size+i] >= minval)
+          break;
+      if(j == size) // degenerate matrix
+        return false;
+      for(int k = 0; k < size; ++k) {
+        out[i*size+k] = FloatAdd(out[i*size+k], in[j*size+k]);
+        in[i*size+k] = FloatAdd(in[i*size+k], in[j*size+k]);
+      }
+    }
+    // We now know in[i*size+i] / in[j*size+i] >= sqrt(DBL_MIN) for any j
+
+    // Normalize the row, so in[i*size+i] == 1
+    CoordType tmp = in[i*size+i];
+    in[i*size+i] = 1;
+    for(int j = 0; j < size; ++j) {
+      out[i*size+j] /= tmp;
+      if(j > i) // in[i*size+j] == 0 for j < i
+        in[i*size+j] /= tmp;
+    }
+
+    // Do row subtraction to make in[j*size+i] zero for j > i
+    for(int j = i + 1; j < size; ++j) {
+      CoordType tmp = in[j*size+i];
+      in[j*size+i] = 0;
+      if(tmp != 0) {
+        for(int k = 0; k < size; ++k) {
+          out[j*size+k] = FloatSubtract(out[j*size+k], out[i*size+k] * tmp);
+          in[j*size+k] = FloatSubtract(in[j*size+k], in[i*size+k] * tmp);
+        }
+      }
+    }
+  }
+
+  // Now perform row operations on "out" which would make "m"
+  // into the identity matrix
+
+  for(int i = size - 1; i >= 1; --i) {
+    for(int j = i - 1; j >= 0; --j) {
+      CoordType tmp = in[j*size+i];
+      if(tmp != 0)
+        for(int k = 0; k < size; ++k)
+          out[j*size+k] = FloatSubtract(out[j*size+k], out[i*size+k] * tmp);
+          // Don't bother modifying in[j*size+k], we never use it again.
+    }
+  }
+
+  return true;
 }
 
 }} // namespace WF::Math

@@ -1,9 +1,23 @@
+Thursday, December 13, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Added setVals() method to Matrix<>
+	* Added operator>> for Vector<>, Matrix<>, Point<> to give
+	  string read capability, added stream_funcs.cpp
+	* Added toString() and fromString() for Vector<>, Matrix<>, Point<>,
+	  changed operator<< to use toString(), removed operator>>
+
 Wednesday, December 12, 2001	Ron Steinke <rsteinke@w-link.net>
 
 	* Created atlas_funcs.cpp, wrote GetAtlasDoubleList() and
 	  SetAtlasDoubleList() to handle most of the Atlas
 	  interface work
 	* Got a test for Atlas into configure.in
+	* First CVS upload
+`	* Copied the CoalCoord class in as Point<>, moved CoordType
+	  and IsFloatEqual() into const.h, const.cpp
+	* Added FloatAdd() and FloatSubtract() to handle numbers
+	  whose sum/difference is (nearly) zero
+	* Modified Vector<> and Matrix<> to use CoordType
 
 Tuesday, December 11, 2001	Ron Steinke <rsteinke@w-link.net>
 

@@ -41,9 +41,9 @@ void test_vector(const Vector<len>& v)
 
   double sqr_mag = v.sqrMag();
 
-  assert(fabs(sqrt(sqr_mag) / v.mag() - 1) < WFMATH_EPSILON);
+  assert(IsFloatEqual(sqrt(sqr_mag), v.mag()));
 
-  assert(fabs(sqr_mag/Dot(v, v) - 1) < WFMATH_EPSILON);
+  assert(IsFloatEqual(sqr_mag, Dot(v, v)));
 
   Vector<len> v1, v2;
 
@@ -60,11 +60,11 @@ void test_vector(const Vector<len>& v)
     for(int i = 0; i < steps; ++i) {
       vcopy.rotate(v1, v2, 2 * WFMATH_CONST_PI / steps);
 //      cout << vcopy << std::endl;
-      assert(fabs(sqr_mag/vcopy.sqrMag() - 1) < WFMATH_EPSILON);
+      assert(IsFloatEqual(sqr_mag, vcopy.sqrMag()));
     }
 
     for(int i = 0; i < len; ++i)
-      assert(fabs(v[i]/vcopy[i] - 1) < WFMATH_EPSILON);
+      assert(IsFloatEqual(v[i], vcopy[i]));
 
     v2 -= v1 / 2;
 
@@ -75,11 +75,11 @@ void test_vector(const Vector<len>& v)
   v2 *= 2;
 
   for(int i = 0; i < len; ++i)
-    assert(fabs(v2[i] - 1) < WFMATH_EPSILON);
+    assert(IsFloatEqual(v2[i], 1));
 
   double check = Dot((v1 + v2) * 5 - v2 / 4, 2 * v2);
 
-  assert(fabs((10.0 + len * 38.0 / 4.0) / check - 1) < WFMATH_EPSILON);
+  assert(IsFloatEqual((10.0 + len * 38.0 / 4.0), check));
 
   double check_mag = v.sloppyMag() / v.mag();
 

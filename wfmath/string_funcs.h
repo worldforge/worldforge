@@ -1,5 +1,5 @@
 // -*-C++-*-
-// matrix.cpp (Matrix<> implementation)
+// stream_funcs.h (WFMath library string utility functions)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -24,27 +24,22 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#include "matrix_funcs.h"
-#include "const.h"
-#include <float.h>
+#ifndef WFMATH_STRING_FUNCS_H
+#define WFMATH_STRING_FUNCS_H
+
+#include <wfmath/const.h>
+#include <string>
 
 namespace WF { namespace Math {
 
-Matrix<3> SkewSymmetric(const Vector<3>& v)
-{
-  Matrix<3> out;
+bool StringToCoordList(const std::string& s, CoordType* d, const int num);
+std::string StringFromCoordList(const CoordType* d, const int num);
 
-  out.elem(0, 0) = out.elem(1, 1) = out.elem(2, 2) = 0;
-
-  out.elem(0, 1) = v[2];
-  out.elem(1, 0) = -v[2];
-  out.elem(1, 2) = v[0];
-  out.elem(2, 1) = -v[0];
-  out.elem(2, 0) = v[1];
-  out.elem(0, 2) = -v[1];
-
-  return out;
-}
-
+bool StringToCoordArray(const std::string& s, CoordType* d, const int rows,
+			const int columns);
+std::string StringFromCoordArray(const CoordType* d, const int rows,
+				 const int columns);
 
 }} // namespace WF::Math
+
+#endif // WFMATH_STRING_FUNCS_H

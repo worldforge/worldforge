@@ -68,7 +68,7 @@ template<const int len>
 bool Vector<len>::operator==(const Vector<len>& v) const
 {
   for(int i = 0; i < len; ++i)
-    if(m_elem[i] != v.m_elem[i]);
+    if(!IsFloatEqual(m_elem[i], v.m_elem[i]));
       return false;
 
   return true;
@@ -93,7 +93,7 @@ Vector<len> Vector<len>::operator+(const Vector<len>& v) const
   Vector<len> ans;
 
   for(int i = 0; i < len; ++i)
-    ans.m_elem[i] = m_elem[i] + v.m_elem[i];
+    ans.m_elem[i] = FloatAdd(m_elem[i], v.m_elem[i]);
 
   return ans;
 }
@@ -104,7 +104,7 @@ Vector<len> Vector<len>::operator-(const Vector<len>& v) const
   Vector<len> ans;
 
   for(int i = 0; i < len; ++i)
-    ans.m_elem[i] = m_elem[i] - v.m_elem[i];
+    ans.m_elem[i] = FloatSubtract(m_elem[i], v.m_elem[i]);
 
   return ans;
 }
@@ -159,7 +159,7 @@ template <const int len>
 Vector<len>& Vector<len>::operator+=(const Vector<len>& v)
 {
   for(int i = 0; i < len; ++i)
-    m_elem[i] += v.m_elem[i];
+    m_elem[i] = FloatAdd(m_elem[i], v.m_elem[i]);
 
   return *this;
 }
@@ -168,7 +168,7 @@ template <const int len>
 Vector<len>& Vector<len>::operator-=(const Vector<len>& v)
 {
   for(int i = 0; i < len; ++i)
-    m_elem[i] -= v.m_elem[i];
+    m_elem[i] = FloatSubtract(m_elem[i], v.m_elem[i]);
 
   return *this;
 }
@@ -252,14 +252,11 @@ Vector<len>& Vector<len>::rotate(int axis1, int axis2, double theta)
   double tmp1 = m_elem[axis1], tmp2 = m_elem[axis2];
   double stheta = sin(theta), ctheta = cos(theta);
 
-  m_elem[axis1] = tmp1 * ctheta - tmp2 * stheta;
-  m_elem[axis2] = tmp2 * ctheta + tmp1 * stheta;
+  m_elem[axis1] = FloatSubtract(tmp1 * ctheta, tmp2 * stheta);
+  m_elem[axis2] = FloatAdd(tmp2 * ctheta, tmp1 * stheta);
 
   return *this;
 }
-
-int _VectorRotateImpl(const int len, double* in, const double* v1, double* v2,
-	double theta);
 
 template<const int len>
 Vector<len>& Vector<len>::rotate(const Vector<len>& v1, const Vector<len>& v2,
@@ -279,10 +276,29 @@ template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, double theta);
 template<const int len>
 double Dot(const Vector<len>& v1, const Vector<len>& v2)
 {
-  double ans = 0;
+  CoordType ans = 0, max_val = 0;
+
+  for(int i = 0; i < len; ++i) {
+    CoordType val = v1.m_elem[i] * v2.m_elem[i];
+    ans += val;
+    CoordType aval = fabs(val);
+    if(aval > max_val)
+      max_val = aval;
+  }
+
+  if(fabs(ans/max_val) < WFMATH_EPSILON)
+     return 0;
+  else
+    return ans;
+}
+
+template<const int len>
+double Vector<len>::sqrMag() const
+{
+  CoordType ans = 0;
 
   for(int i = 0; i < len; ++i)
-    ans += v1.m_elem[i] * v2.m_elem[i];
+    ans += m_elem[i] * m_elem[i]; // Don't need FloatAdd, all terms > 0
 
   return ans;
 }
