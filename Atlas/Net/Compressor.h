@@ -10,21 +10,18 @@
 #define __AtlasCompressor_h_
 
 #include <string>
-using namespace std;
+using std::string;
 
+/** Stub for inline atlas compressor
+*/
 class ACompressor
 {
-
 public:
+    string  encode(const string& data);
+    string  decode(const string& data);
 
-string		encode(string& data);
-string		decode(string& data);
-
-void		resetEncoder();
-void		resetDecoder();
-
+    void    resetEncoder();
+    void    resetDecoder();
 };
-
-
 #endif
 

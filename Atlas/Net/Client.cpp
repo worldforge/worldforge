@@ -48,7 +48,7 @@ bool AClient::canRead()
 	assert( csock != 0);
 	len = csock->recv(buf);
 	
-	//if problem return, use gotErrs() to check
+	//if problem return
 	if (len < 1)
 	    return false;
 

@@ -8,14 +8,14 @@
 
 #include "Compressor.h"
 
-string		ACompressor::encode(string& data)
+string  ACompressor::encode( const string& data)
 {
-	return data;
+    return data;
 }
 
-string		ACompressor::decode(string& data)
+string  ACompressor::decode( const string& data)
 {
-	return data;
+    return data;
 }
 
 void		ACompressor::resetEncoder() {}
