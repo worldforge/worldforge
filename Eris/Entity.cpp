@@ -27,6 +27,7 @@
 #include "OpDispatcher.h"
 #include "IdDispatcher.h"
 
+using namespace Atlas::Message;
 
 namespace Eris {
 
@@ -258,9 +259,11 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
     else if (s == "loc") {
 	std::string loc = val.AsString();
 	setContainerById(loc);
-    } else if (s == "pos")
-	_position.fromAtlas(val);
-    else if (s == "velocity")
+    } else if (s == "pos") {
+	WFMath::Point<3> pos;
+	pos.fromAtlas(val);
+	setPosition(pos);
+    } else if (s == "velocity")
 	_velocity.fromAtlas(val);
     else if (s == "orientation")
 	_orientation.fromAtlas(val);
@@ -273,6 +276,8 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 	_description = val.AsString();
     else if (s == "bbox") {
 	_bbox.fromAtlas(val);
+    } else if (s == "contains") {
+	setContents(val.AsList());
     }
     
     PropertyMap::iterator P=_properties.find(mapped);
@@ -353,6 +358,27 @@ void Entity::innerOpToSlot(Dispatcher *s)
 	etd->addSubdispatch(s);
 }
 
+void Entity::setPosition(const WFMath::Point<3>& pt)
+{
+    _position = pt;
+}
+
+void Entity::setContents(const Atlas::Message::Object::ListType &contents)
+{
+    for (Atlas::Message::Object::ListType::const_iterator
+	    C=contents.begin(); C!=contents.end();++C) {
+	// check we have it; if yes, ensure it's installed. if not, it will be attached when
+	// it arrives.
+	Entity *con = World::Instance()->lookup(C->AsString());
+	if (con) {
+	    Eris::Log(LOG_DEBUG, 
+		"already have entity '%s', not setting container",
+		con->getName()
+	    );
+	}
+    }
+}
+
 void Entity::setContainerById(const std::string &id)
 {
     if ( !_container || (id != _container->getID()) ) {
@@ -362,45 +388,41 @@ void Entity::setContainerById(const std::string &id)
 	    _container = NULL;
 	}
 		
-		// have to check this, becuase changes in what the client can see
-		// may cause the client's root to change
-		if (!id.empty()) {
-		
-			Entity *ncr = World::Instance()->lookup(id);
-			if (ncr) {
-				ncr->addMember(this);
-				Recontainered.emit(_container, ncr);
-				_container = ncr;
-			} else {
-				// setup a redispatch once we have the container
-				// sythesises a set, with just the container.
-				Atlas::Objects::Operation::Set setc = 
-					Atlas::Objects::Operation::Set::Instantiate();
-					
-				Atlas::Message::Object::MapType args;
-				args["loc"] = id;
-				setc.SetArgs(Atlas::Message::Object::ListType(1,args));
-				setc.SetTo(_id);
+	// have to check this, becuase changes in what the client can see
+	// may cause the client's root to change
+	if (!id.empty()) {
+		Entity *ncr = World::Instance()->lookup(id);
+		if (ncr) {
+			ncr->addMember(this);
+			setContainer(this);
+		} else {
+			// setup a redispatch once we have the container
+			// sythesises a set, with just the container.
+			Atlas::Objects::Operation::Set setc = 
+				Atlas::Objects::Operation::Set::Instantiate();
 				
-				Atlas::Objects::Operation::Sight ssc =
-					Atlas::Objects::Operation::Sight::Instantiate();
-				ssc.SetArgs(Atlas::Message::Object::ListType(1, setc.AsObject()));
-				ssc.SetTo(World::Instance()->getFocusedEntityID());
-				ssc.SetSerialno(getNewSerialno());
-				
-				// if we received sets/creates/sights in rapid sucession, this can happen, and is
-				// very, very bad
-				std::string setid("set_container_" + _id);
-				Connection::Instance()->removeIfDispatcherByPath(
-					"op:ig:sight:entity", setid);
-				
-				new WaitForDispatch(ssc, "op:ig:sight:entity", 
-					new IdDispatcher(setid, id) );
-			}
-		
+			Atlas::Message::Object::MapType args;
+			args["loc"] = id;
+			setc.SetArgs(Atlas::Message::Object::ListType(1,args));
+			setc.SetTo(_id);
+			
+			Atlas::Objects::Operation::Sight ssc =
+				Atlas::Objects::Operation::Sight::Instantiate();
+			ssc.SetArgs(Atlas::Message::Object::ListType(1, setc.AsObject()));
+			ssc.SetTo(World::Instance()->getFocusedEntityID());
+			ssc.SetSerialno(getNewSerialno());
+			
+			// if we received sets/creates/sights in rapid sucession, this can happen, and is
+			// very, very bad
+			std::string setid("set_container_" + _id);
+			Connection::Instance()->removeIfDispatcherByPath(
+				"op:ig:sight:entity", setid);
+			
+			new WaitForDispatch(ssc, "op:ig:sight:entity", 
+				new IdDispatcher(setid, id) );
 		}
-		    
-	}	
+	} // of new container is valid
+    }	
 	
     if (id.empty()) {	// id of "" implies local root
 	Eris::Log(LOG_DEBUG, "got entity with empty container, assuming it's the world");

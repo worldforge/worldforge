@@ -1,3 +1,14 @@
+Tuesday, March 12 2002, James Turner
+
+	* Fix for #222 - made logic in BaseConnection more robust
+	  in handling unusual cases / states. If there are other
+	  ways to 'wedge' the connections, please let me know.
+	* Fix for #216 - logic in World::recvSightDelete to fix
+	  container ship of visible contents
+	* Preliminary work / re-factoring for #217 : added 
+	  setContents helper to Entity, and handle that case
+	  in setProperty.
+
 Sunday, March 10 2002, James Turner
 
 	* Set a default orientation on Entities, to avoid some

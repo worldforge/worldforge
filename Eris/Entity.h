@@ -160,8 +160,11 @@ protected:
 	/// set the property value; this protected so only Entity / World may use it
 	virtual void setProperty(const std::string &p, const Atlas::Message::Object &v);	
 
+	virtual void setPosition(const WFMath::Point<3>& pt);
 	/// update the container of this entity (may be NULL)
 	virtual void setContainer(Entity *pr);
+	
+	virtual void setContents(const Atlas::Message::Object::ListType &contents);
 	
 	/// add a contained entity to this object (sets container)
 	virtual void addMember(Entity *e);

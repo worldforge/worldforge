@@ -34,20 +34,23 @@ BaseConnection::BaseConnection(const std::string &cnm,
 	
 BaseConnection::~BaseConnection()
 {
+    if (_status != DISCONNECTED) {
 	hardDisconnect(true);
-	delete _stream;
+    }
+    
+    delete _stream;
 }
 	
 void BaseConnection::connect(const std::string &host, short port)
 {
-	if (_stream->is_open())
-		hardDisconnect(true);
+    if (_stream->is_open())
+	hardDisconnect(true);
 	
-	// start timeout
-	_timeout = new Timeout("connect_" + _id, 5000);
-	bindTimeout(*_timeout, CONNECTING);
+    // start timeout
+    _timeout = new Timeout("connect_" + _id, 5000);
+    bindTimeout(*_timeout, CONNECTING);
 	
-	setStatus(CONNECTING);
+    setStatus(CONNECTING);
 
     _stream->open(host, port);    
     if(!_stream->is_open()) {
@@ -67,29 +70,31 @@ void BaseConnection::connect(const std::string &host, short port)
 
 void BaseConnection::hardDisconnect(bool emit)
 {
-	if ((_status == CONNECTED) || (_status == DISCONNECTING)){
-		_codec->StreamEnd();
-		(*_stream) << std::flush;
-		
-		delete _codec;
-		delete _encode;
-		delete _msgEncode;
-	} else if (_status == NEGOTIATE) {
-		delete _sc;
-		_sc = NULL;
-	} else
-		throw InvalidOperation("Bad connection state for disconnection");
-	
-	_stream->close();
-	
-	delete _timeout;
-	_timeout = NULL;
-	
-	if (emit) {
-		Disconnected.emit();
-		setStatus(DISCONNECTED);
-	} else
-		_status = DISCONNECTED;
+    if ((_status == CONNECTED) || (_status == DISCONNECTING)){
+	    _codec->StreamEnd();
+	    (*_stream) << std::flush;
+	    
+	    delete _codec;
+	    delete _encode;
+	    delete _msgEncode;
+    } else if (_status == NEGOTIATE) {
+	    delete _sc;
+	    _sc = NULL;
+    } else if (_status == CONNECTING){
+	// nothing to be done, but can happen
+    } else
+	throw InvalidOperation("Bad connection state for disconnection");
+    
+    _stream->close();
+    
+    delete _timeout;
+    _timeout = NULL;
+    
+    if (emit) {
+	    Disconnected.emit();
+	    setStatus(DISCONNECTED);
+    } else
+	    _status = DISCONNECTED;
 }
 
 void BaseConnection::recv()

@@ -403,9 +403,21 @@ void World::recvSightDelete(const Atlas::Objects::Operation::Delete &del)
 		return;
 	}
 	
+	Entity *victim = ei->second,
+	    *vcontainer = victim->getContainer();
+	WFMath::Vector<3> victimOffset = victim->getPosition() - WFMath::Point<3>(0,0,0);
+	
+	// fix container elements
+	for (unsigned int E=0; E<victim->getNumMembers();E++) {
+	    Entity *child = victim->getMember(E);
+	    // protected method, is this okay?
+	    child->setContainer(vcontainer);
+	    child->setPosition(child->getPosition() + victimOffset);
+	}
+	
 	// emit some general deletion signal? (flush will if ever requried)
-	flush(ei->second);
-	delete ei->second;
+	flush(victim);
+	delete victim;
 }
 
 void World::recvSightMove(const Atlas::Objects::Operation::Move &mv)
