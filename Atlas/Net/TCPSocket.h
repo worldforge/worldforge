@@ -15,9 +15,6 @@ specification for Linux and Windows platforms.
 #ifndef __AtlasTCPSocket_h_
 #define __AtlasTCPSocket_h_
 
-#include <string>
-using std::string;
-
 #include "../Object/Debug.h"
 #include "Socket.h"
 

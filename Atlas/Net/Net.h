@@ -5,14 +5,14 @@
 #include "../Object/Object.h"
 
 #include "Protocol.h"
-#include "ProtocolDecoder.h"
-#include "ProtocolEncoder.h"
+#include "Decoder.h"
+#include "Encoder.h"
 #include "Codec.h"
 #include "Compressor.h"
 
-#include "PackedAsciiDecoder.h"
-#include "PackedAsciiEncoder.h"
-#include "PackedAsciiProtocol.h"
+#include "PackedDecoder.h"
+#include "PackedEncoder.h"
+#include "PackedProtocol.h"
 
 #include "XMLDecoder.h"
 #include "XMLEncoder.h"
