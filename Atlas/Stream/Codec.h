@@ -36,13 +36,13 @@ will use. FIXME talk about codec metrics FIXME
 
 */
 
-class Codec : public Encoder, public Decoder
+class Codec : public Encoder
 {
     public:
 
     virtual ~Codec();
 
-    virtual void Initialise(Net::Socket*, Filter*) = 0;
+    virtual void Initialise(Net::Socket*, Filter*, Encoder*) = 0;
 
     class Metrics
     {

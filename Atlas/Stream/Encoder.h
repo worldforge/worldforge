@@ -11,22 +11,19 @@ namespace Atlas { namespace Stream {
 
 /** Atlas stream encoder
 
-This class presents an interface for sending and receiving Atlas messages.
-Each outgoing message is converted to a byte stream and piped through an
-optional chain of filters for compression or other transformations, then
-passed to a socket for transmission. Incoming messages are read from the
-socket, piped through the filters in the opposite direction and passed to
-user specified callback functions FIXME this doesn't happen yet FIXME
+This class presents an interface for sending Atlas messages. Starting a new
+message with MessageBegin() puts the encoder into a message context. A valid
+message consists of one map from strings to values, created with
+MessageBeginMap(). This puts the encoder into a map context, allowing named
+attributes to be sent. These attributes include other nested maps and lists,
+which put the encoder into nested map and list contexts respectively. When
+the encoder is in a list context, it can send nameless values whose order is
+significant.
 
-Codecs should declare an instance of Codec::Factory in the module they are
-defined in. This will allow them to be automatically included in the
-negotiation process that chooses which codecs and filters an Atlas connection
-will use. FIXME talk about codec metrics FIXME
+Encoder is used by Codec to accept Atlas messages for conversion to a byte
+stream and subsequent transmission.
 
-@see Filter
-@see Socket
-@see Factory
-@see Negotiate
+@see Codec
 
 */
 
@@ -34,32 +31,31 @@ class Encoder
 {
     public:
 
-    virtual ~Encoder();
-
-    // Interface for top level context
+    // Interface for message context
 
     virtual void MessageBegin() = 0;
+    virtual void MessageMapBegin() = 0;
     virtual void MessageEnd() = 0;
     
     // Interface for map context
     
-    virtual void ListBegin(const std::string& name) = 0;
-    virtual void MapBegin(const std::string& name) = 0;
-    virtual void Item(const std::string& name, int) = 0;
-    virtual void Item(const std::string& name, float) = 0;
-    virtual void Item(const std::string& name, const std::string&) = 0;
-    virtual void Item(const std::string& name, const Atlas::Object&) = 0;
-    virtual void ListEnd() = 0;
+    virtual void MapMapBegin(const std::string& name) = 0;
+    virtual void MapListBegin(const std::string& name) = 0;
+    virtual void MapItem(const std::string& name, int) = 0;
+    virtual void MapItem(const std::string& name, float) = 0;
+    virtual void MapItem(const std::string& name, const std::string&) = 0;
+    virtual void MapItem(const std::string& name, const Atlas::Object&) = 0;
+    virtual void MapEnd() = 0;
     
     // Interface for list context
     
-    virtual void ListBegin() = 0;
-    virtual void MapBegin() = 0;
-    virtual void Item(int) = 0;
-    virtual void Item(float) = 0;
-    virtual void Item(const std::string&) = 0;
-    virtual void Item(const Atlas::Object&) = 0;
-    virtual void MapEnd() = 0;
+    virtual void ListMapBegin() = 0;
+    virtual void ListListBegin() = 0;
+    virtual void ListItem(int) = 0;
+    virtual void ListItem(float) = 0;
+    virtual void ListItem(const std::string&) = 0;
+    virtual void ListItem(const Atlas::Object&) = 0;
+    virtual void ListEnd() = 0;
 };
 
 } } // Atlas::Stream
