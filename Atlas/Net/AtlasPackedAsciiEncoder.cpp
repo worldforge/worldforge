@@ -93,7 +93,7 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name,
 		printf("$%s=%s", name, list.asString().c_str());
 	}
 	if (list.isURI()) {
-		printf("!%s=%li", name, list.getURIPath().asString());
+		printf("!%s=%li", name, list.getURIPath().asString().c_str());
 	}
 	if (list.isInt()) {
 		printf("@%s=%li", name, list.asInt());
