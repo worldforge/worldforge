@@ -345,8 +345,9 @@ AC_OUTPUT([
 	src/Makefile
 	src/Codecs/Makefile
 	src/Content/Makefile
+	src/Filters/Makefile
 	src/Net/Makefile
 	src/Object/Makefile
 	src/TestSuite/Makefile
-	src/Filters/Makefile
+	src/Message/Makefile
 ])
