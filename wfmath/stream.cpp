@@ -1,5 +1,5 @@
 // -*-C++-*-
-// stringconv.h (WFMath library string utility functions)
+// stream.cpp (Stream utility backend in the WFMath library)
 //
 //  The WorldForge Project
 //  Copyright (C) 2001  The WorldForge Project
@@ -22,29 +22,36 @@
 //  the Worldforge Web Site at http://www.worldforge.org.
 
 // Author: Ron Steinke
-// Created: 2001-12-7
+// Created: 2001-12-13
 
-#ifndef WFMATH_STRING_CONV_H
-#define WFMATH_STRING_CONV_H
+#include "stream.h"
+#include <iostream>
 
-#include <wfmath/const.h>
-#include <string>
-#include <string.h>
+using namespace WF::Math;
 
-namespace WF { namespace Math {
+void WF::Math::_WriteCoordList(std::ostream& os, const CoordType* d, const int num)
+{
+  os << '(';
 
-bool _StringToCoordList(const std::string& s, CoordType* d, const int num);
-std::string _StringFromCoordList(const CoordType* d, const int num);
+  for(int i = 0; i < num; ++i)
+    os << d[i] << (i < (num - 1) ? ',' : ')');
+}
 
-bool _StringToCoordArray(const std::string& s, CoordType* d, const int rows,
-			 const int columns);
-std::string _StringFromCoordArray(const CoordType* d, const int rows,
-				  const int columns);
+bool WF::Math::_ReadCoordList(std::istream& is, CoordType* d, const int num)
+{
+  char next;
 
-inline CoordType _StringToFloat(const std::string& s)
-	{return atof(s.c_str());} // Here for naming consistency
-std::string _StringFromFloat(CoordType d);
+  is >> next;
 
-}} // namespace WF::Math
+  if(next != '(')
+    return false;
 
-#endif // WFMATH_STRING_CONV_H
+  for(int i = 0; i < num; ++i) {
+    is >> d[i] >> next;
+    char want = (i == num - 1) ? ')' : ',';
+    if(next != want)
+      return false;
+  }
+
+  return true;
+}

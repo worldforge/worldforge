@@ -33,6 +33,11 @@
 
 namespace WF { namespace Math {
 
+template<const int dim> class Segment;
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const Segment<dim>& s);
+
 template<const int dim>
 class Segment
 {
@@ -43,8 +48,8 @@ class Segment
 
   ~Segment() {}
 
-  std::string toString() const;
-  bool fromString(const std::string& s);
+  friend std::ostream& operator<< <dim>(std::ostream& os, const Segment& s);
+  bool fromStream(std::istream& is);
 
   Segment& operator=(const Segment& s);
 

@@ -31,8 +31,8 @@
 #include <wfmath/matrix.h>
 #include <wfmath/error.h>
 #include <wfmath/const.h>
-#include <wfmath/stringconv.h>
 #include <math.h>
+#include <assert.h>
 
 namespace WF { namespace Math {
 
@@ -42,29 +42,6 @@ inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
       m_elem[i][j] = m.m_elem[i][j];
-}
-
-template<const int dim>
-std::string RotMatrix<dim>::toString() const
-{
-  CoordType d[dim*dim];
-
-  for(int i = 0; i < dim; ++i)
-    for(int j = 0; j < dim; ++j)
-      d[i*dim+j] = m_elem[i][j];
-
-  return _StringFromCoordArray(d, dim, dim);
-}
-
-template<const int dim>
-bool RotMatrix<dim>::fromString(const std::string& s)
-{
-  CoordType d[dim*dim];
-
-  if(!_StringToCoordArray(s, d, dim, dim))
-    return false;
-
-  return _setVals(d, WFMATH_STRING_EPSILON);
 }
 
 template<const int dim>

@@ -36,8 +36,14 @@
 #include <wfmath/const.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/intersect_decls.h>
+#include <iosfwd>
 
 namespace WF { namespace Math {
+
+template<const int dim> class Ball;
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const Ball<dim>& m);
 
 template<const int dim>
 class Ball
@@ -50,8 +56,8 @@ class Ball
 
   ~Ball() {}
 
-  std::string toString() const;
-  bool fromString(const std::string& s);
+  friend std::ostream& operator<< <dim>(std::ostream& os, const Ball& b);
+  bool fromStream(std::istream& is);
 
   Ball& operator=(const Ball& b);
 

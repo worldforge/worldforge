@@ -31,34 +31,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/rotbox.h>
 
-#include <string>
-
 namespace WF { namespace Math {
-
-template<const int dim>
-std::string RotBox<dim>::toString() const
-{
-  return "RotBox: m_corner0 = " + m_corner0.toString()
-	 + ", m_size = " + m_size.toString()
-	 + ", m_orient = " + m_orient.toString();
-}
-
-template<const int dim>
-bool RotBox<dim>::fromString(const std::string& s)
-{
-  int corner_pos, size_pos, orient_pos;
-
-  corner_pos = s.find('(', s.find("m_corner0"));
-  size_pos = s.find('(', s.find("m_size"));
-  orient_pos = s.find('(', s.find("m_orient"));
-
-  if(corner_pos == std::npos || size_pos == std::npos || orient_pos == std::npos)
-    return false;
-
-  return m_corner0.fromString(s.substr(corner_pos))
-      && m_size.fromString(s.substr(size_pos))
-      && m_orient.fromString(s.substr(orient_pos));
-}
 
 template<const int dim>
 RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)

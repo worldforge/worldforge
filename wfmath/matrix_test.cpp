@@ -25,10 +25,9 @@
 // Created: 2001-12-7
 
 #include "vector.h"
-#include "vector_funcs.h"
 #include "matrix.h"
-#include "matrix_funcs.h"
 #include "const.h"
+#include "stream.h"
 #include <iostream>
 #include <sstream>
 #include <assert.h>
@@ -38,11 +37,11 @@ using namespace WF::Math;
 template<const int dim>
 void test_matrix(const RotMatrix<dim>& m)
 {
-  cout << "Testing matrix: " << m.toString() << std::endl;
+  cout << "Testing matrix: " << m << std::endl;
 
   RotMatrix<dim> minv = m.inverse();
 
-//  cout << "Inverse is: " << minv.toString() << std::endl;
+//  cout << "Inverse is: " << minv << std::endl;
 
   RotMatrix<dim> ident; // Initialized to identity
 
@@ -50,7 +49,7 @@ void test_matrix(const RotMatrix<dim>& m)
 
   try_ident = ProdInv(m, m);
 
-//  cout << "This should be the identity: " << try_ident.toString() << std::endl;
+//  cout << "This should be the identity: " << try_ident << std::endl;
 
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
@@ -58,22 +57,22 @@ void test_matrix(const RotMatrix<dim>& m)
 
   try_ident = Prod(m, minv);
 
-//  cout << "This should be the identity: " << try_ident.toString() << std::endl;
+//  cout << "This should be the identity: " << try_ident << std::endl;
 
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
       assert(IsFloatEqual(ident.elem(i, j), try_ident.elem(i, j)));
 
-  std::string s_mat = m.toString();
+  std::string s_mat = ToString(m);
 
   RotMatrix<dim> str_m;
 
-  if(!str_m.fromString(s_mat)) {
+  if(!FromString(str_m, s_mat)) {
     cout << "Could not convert string back into matrix" << std::endl;
     exit(-1);
   }
 
-//  cout << "After conversion through a string, the matrix is " << str_m.toString() << std::endl;
+//  cout << "After conversion through a string, the matrix is " << str_m << std::endl;
 
 //  cout << "Element differences after conversion are: ";
   for(int i = 0; i < dim; ++i) {
@@ -89,7 +88,7 @@ void test_matrix(const RotMatrix<dim>& m)
 
   RotMatrix<dim> conv_ident = Prod(str_m, str_m.inverse());
 
-//  cout << "Converted M * M^T identity check: " << conv_ident.toString();
+//  cout << "Converted M * M^T identity check: " << conv_ident;
 //  cout << std::endl;
 
   for(int i = 0; i < dim; ++i)

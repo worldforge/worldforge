@@ -31,32 +31,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 
-#include <string>
-
 namespace WF { namespace Math {
-
-template<const int dim>
-std::string Ball<dim>::toString() const
-{
-  return "Ball: m_center = " + m_center.toString()
-	  + ", m_radius = " + _StringFromFloat(m_radius);
-}
-
-template<const int dim>
-bool Ball<dim>::fromString(const std::string& s)
-{
-  int cen_pos, rad_pos;
-
-  cen_pos = s.find('(', s.find("m_center"));
-  rad_pos = s.find('=', s.find("m_radius")) + 2;
-
-  if(cen_pos == std::npos || rad_pos == std::npos)
-    return false;
-
-  m_radius = _StringToFloat(s.substr(rad_pos));
-
-  return m_center.fromString(s.substr(cen_pos));
-}
 
 template<const int dim>
 Ball<dim>& Ball<dim>::operator=(const Ball<dim>& a)

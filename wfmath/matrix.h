@@ -28,6 +28,7 @@
 #define WFMATH_MATRIX_H
 
 #include <wfmath/const.h>
+#include <iosfwd>
 
 namespace WF { namespace Math {
 
@@ -75,13 +76,16 @@ inline Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m)
 	{return Prod(m, v);} // Since transpose() and inverse() are the same
 
 template<const int dim>
+std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m);
+
+template<const int dim>
 class RotMatrix {
  public:
   RotMatrix() {identity();} // Need a valid RotMatrix for default
   RotMatrix(const RotMatrix& m);
 
-  std::string toString() const;
-  bool fromString(const std::string& s);
+  friend std::ostream& operator<< <dim>(std::ostream& os, const RotMatrix& m);
+  bool fromStream(std::istream& is);
 
   RotMatrix& operator=(const RotMatrix& m);
   // No operator=(double d[dim][dim]), since it can fail.

@@ -31,30 +31,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/segment.h>
 
-#include <string>
-
 namespace WF { namespace Math {
-
-template<const int dim>
-std::string Segment<dim>::toString() const
-{
-  return "Segment: m_p1 = " + m_p1.toString() + ", m_p2 = " + m_p2.toString();
-}
-
-template<const int dim>
-bool Segment<dim>::fromString(const std::string& s)
-{
-  int p1_pos, p2_pos;
-
-  p1_pos = s.find('(', s.find("m_p1"));
-  p2_pos = s.find('(', s.find("m_p2"));
-
-  if(p1_pos == std::npos || p2_pos == std::npos)
-    return false;
-
-  return m_p1.fromString(s.substr(p1_pos))
-     && m_p2.fromString(s.substr(p2_pos));
-}
 
 template<const int dim>
 Segment<dim>& Segment<dim>::operator=(const Segment<dim>& a)

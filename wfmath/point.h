@@ -30,10 +30,10 @@
 #ifndef WFMATH_POINT_H
 #define WFMATH_POINT_H
 
-#include <string>
 #include <wfmath/const.h>
-#include <wfmath/stringconv.h>
+#include <wfmath/vector.h>
 #include <wfmath/matrix.h>
+#include <iosfwd>
 
 namespace WF { namespace Math {
 
@@ -51,15 +51,22 @@ template<const int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
 
 template<const int dim>
-CoordType Distance(const Point<dim>& p1, const Point<dim>& p2);
-template<const int dim>
 CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2);
+template<const int dim>
+CoordType Distance(const Point<dim>& p1, const Point<dim>& p2)
+	{return sqrt(SquaredDistance(p1, p2));}
+template<const int dim>
+CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
+	{return (p1 - p2).sloppyMag();}
 
 template<const int dim>
 Point<dim> Barycenter(const int num_points, const Point<dim> *points);
 template<const int dim>
 Point<dim> Barycenter(const int num_points, const Point<dim> *points,
 		      const CoordType *weights);
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
 
 template<const int dim>
 class Point
@@ -70,8 +77,8 @@ class Point
 
   ~Point() {}
 
-  std::string toString() const		{return _StringFromCoordList(m_elem, dim);}
-  bool fromString(const std::string& s) {return _StringToCoordList(s, m_elem, dim);}
+  friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
+  bool fromStream(std::istream& is);
 
   Point& operator= (const Point& rhs);
   Point& operator= (const double d[dim]);

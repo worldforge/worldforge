@@ -5,21 +5,22 @@ under the corresponding section. Currently it's this:
 1) Constructors and destructor
 
 The default constructor will not initialize the object. If the default
-constructor is used, the object must first be initialized with fromString(),
-fromAtlas(), operator=(), or one of the initializer functions given later
-in the class. There is no constructor from a string value, as such
+constructor is used, the object must first be initialized with fromStream(),
+FromString(), FromAtlas(), operator=(), or one of the initializer functions
+given later in the class. There is no constructor from a string value, as such
 construction can fail. The destructor is not virtual, nor is any other
 function in the class, as this is a low-level library designed primarily
-for speed
+for speed.
 
-2) toString() and fromString() methods
+2) operator<<() and fromStream() method
 
-std::string C::toString() const;
-bool C::fromString(std::string& s);
+friend std::ostream& operator<<(std::ostream& os, const Foo& f);
+bool fromStream(std::istream& is);
 
-The fromString() method will return true if it successfully parsed the
+The fromStream() method will return true if it successfully parsed the
 string, and false otherwise. A return value of false also indicates that
-the object is in an invalid state
+the object is in an invalid state. The definitions of these functions are
+placed in the file stream.h, so the class only needs to include <iosfwd>.
 
 3) operator=()
 
@@ -51,22 +52,8 @@ sort only, if comparison makes sense stick others here too
 
 e.g. Vector(CoordType& x, CoordType& y, CoordType& z) for Vector<3>
 
-Every class is also required to define three non-member functions:
-
-a (non-friend) operator<<() in wfmath/stream.h:
-
-std::ostream& operator<<(std::ostream& os, const C& c)
-{
-  return os << c.toString();
-}
-
-ToAtlas() and FromAtlas() functions in atlas/atlasconv.h:
-
-bool FromAtlas(C& c, const Atlas::Message::Object& a)
-{
-  return a.isString() && c.fromString(a.asString());
-}
-Atlas::Message::Object ToAtlas(const C& c)
-{
-  return c.toString();
-}
+Every class is also defines four non-member functions:
+ToString() and FromString() in stream.h, and ToAtlas() and
+FromAtlas() in atlasconv.h. These functions are automatically
+generated using templates and the operator<<() and fromStream()
+functions.

@@ -1,16 +1,11 @@
 Shapes left to do:
 	Polygon (2D only)
 	Simplex<> (triangle in 2D, tetrahedron in 3D, etc.)
-	RotBox<> (like the Volume class in stage/math)
 Check stage/math and libCoal for any leftover math bits which haven't
-	gotten included yet
-Improve efficiency of toString()/fromString() backend
+	gotten included yet; the only things left appear to be
+	CoalPolygonShape and a possible boundingSphere() function
+	suggested by Volume in stage/math, also possibly boundingSphereSloppy()
+	which uses sloppyMag() to calculate the radius
+Write an API reference for the library. Find some inline documentation tool?
 Rearrange the functions in foo_funcs.h to match the order in the class
 	in foo.h
-
-Does putting operator<<() in stream.h to avoid including <iostream> really
-	help when <string> is being included everywhere? Is there some way
-	to work around this, but still preserve the toString()/fromString()
-	member functions in every class?
-
-Write an API reference for the library. Find some inline documentation tool?

@@ -27,24 +27,29 @@
 #ifndef WFMATH_WFMATH_H
 #define WFMATH_WFMATH_H
 
+// Simple stuff
 #include <wfmath/error.h>
 #include <wfmath/const.h>
+// Basic types
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
 #include <wfmath/point.h>
+// Shape types
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/segment.h>
 #include <wfmath/rotbox.h>
+// Shape intersection functions
 #include <wfmath/intersect.h>
 
-// Do not include stream.h, as it includes iostream.
+// Do not include stream.h, as it includes <iostream> and <string>.
 // Let end users include it on their own.
 
-// This file doesn't directly include basis.h and stringconv.h, which contain only
-// functions which are intended for internal library use only (prefixed with '_').
+// This file doesn't include basis.h, which only contains declarations
+// for some functions which are used in vector.cpp and point.cpp
 
 // Any header file "foo_funcs.h" is automatically included in "foo.h",
-// so those files are not listed here.
+// so those files are not listed here. Similarly, "intersect_decls.h"
+// is included in "intersect.h"
 
 #endif // WFMATH_WFMATH_H

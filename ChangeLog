@@ -1,3 +1,9 @@
+Monday, December 31, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Cleaned up string and stream stuff, classes only need
+	  to include <iosfwd>, everything else is in stream.h/stream.cpp,
+	  removed stringconv.h/stringconv.cpp
+
 Sunday, December 30, 2001	Ron Steinke <rsteinke@w-link.net>
 
 	* Finished the RotBox<> intersection functions

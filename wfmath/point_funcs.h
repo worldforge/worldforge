@@ -26,7 +26,6 @@
 #ifndef WFMATH_POINT_FUNCS_H
 #define WFMATH_POINT_FUNCS_H
 
-#include <string>
 #include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
@@ -195,12 +194,6 @@ template<const int dim>
 inline AxisBox<dim> Point<dim>::boundingBox() const
 {
   return AxisBox<dim>(*this, *this, true);
-}
-
-template<const int dim>
-inline CoordType Distance(const Point<dim>& p1, const Point<dim>& p2)
-{
-  return sqrt(SquaredDistance(p1, p2));
 }
 
 template<const int dim>

@@ -34,91 +34,20 @@
 
 #include <Atlas/Message/Object.h>
 #include <wfmath/wfmath.h>
+#include <wfmath/stream.h>
 
 namespace WF { namespace Math {
 
-template<const int dim>
-bool FromAtlas(Vector<dim>& v, const Atlas::Message::Object& a)
+template<class C>
+bool FromAtlas(C& c, const Atlas::Message::Object& a)
 {
-  return a.isString() && v.fromString(a.asString());
+  return a.isString() && FromString(c, a.asString());
 }
 
-template<const int dim>
-Atlas::Message::Object ToAtlas(const Vector<dim>& v)
+template<class C>
+Atlas::Message::Object ToAtlas(const C& c)
 {
-  return v.toString();
-}
-
-template<const int dim>
-bool FromAtlas(RotMatrix<dim>& m, const Atlas::Message::Object& a)
-{
-  return a.isString() && m.fromString(a.asString());
-}
-
-template<const int dim>
-Atlas::Message::Object ToAtlas(const RotMatrix<dim>& m)
-{
-  return m.toString();
-}
-
-template<const int dim>
-bool FromAtlas(Point<dim>& p, const Atlas::Message::Object& a)
-{
-  return a.isString() && p.fromString(a.asString());
-}
-
-template<const int dim>
-Atlas::Message::Object ToAtlas(const Point<dim>& p)
-{
-  return p.toString();
-}
-
-template<const int dim>
-bool FromAtlas(AxisBox<dim>& b, const Atlas::Message::Object& a)
-{
-  return a.isString() && b.fromString(a.asString());
-}
-
-template<const int dim>
-Atlas::Message::Object ToAtlas(const AxisBox<dim>& b)
-{
-  return b.toString();
-}
-
-template<const int dim>
-bool FromAtlas(Ball<dim>& b, const Atlas::Message::Object& a)
-{
-  return a.isString() && b.fromString(a.asString());
-}
-
-template<const int dim>
-Atlas::Message::Object ToAtlas(const Ball<dim>& b)
-{
-  return b.toString();
-}
-
-template<const int dim>
-bool FromAtlas(Segment<dim>& s, const Atlas::Message::Object& a)
-{
-  return a.isString() && s.fromString(a.asString());
-}
-
-template<const int dim>
-Atlas::Message::Object ToAtlas(const Segment<dim>& s)
-{
-  return s.toString();
-}
-
-template<const int dim>
-bool FromAtlas(RotBoxim>& b, const Atlas::Message::Object& a)
-{
-  return a.isString() && b.fromString(a.asString());
-}
-
-template<const int dim>
-Atlas::Message::Object ToAtlas(const RotBoxim>& b)
-{
-  return b.toString();
+  return ToString(c);
 }
 
 }} // namespace WF:Math

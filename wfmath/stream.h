@@ -28,53 +28,201 @@
 #define WFMATH_STREAM_H
 
 #include <wfmath/wfmath.h>
+#include <string>
 #include <iostream>
+#include <sstream>
 
 namespace WF { namespace Math {
 
-//TODO some template for all of these, that won't be too general
-// and impact non-WFMath classes?
+template<class C>
+inline std::string ToString(const C& c)
+{
+  ostringstream ost;
+  ost << c;
+  return ost.str();
+}
+
+template<class C>
+inline bool FromString(C& c, const std::string& s)
+{
+  istringstream ist(s);
+  return c.fromStream(ist);
+}
+
+bool _ReadCoordList(std::istream& is, CoordType* d, const int num);
+void _WriteCoordList(std::ostream& os, const CoordType* d, const int num);
 
 template<const int dim>
-inline std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
+std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
 {
-  return os << v.toString();
+  _WriteCoordList(os, v.m_elem, dim);
+  return os;
 }
 
 template<const int dim>
-inline std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
+inline bool Vector<dim>::fromStream(std::istream& is)
 {
-  return os << m.toString();
+  return _ReadCoordList(is, m_elem, dim);
 }
 
 template<const int dim>
-inline std::ostream& operator<< (std::ostream& os, const Point<dim>& coord)
+std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
 {
-  return os << coord.toString();
+  os << '(';
+
+  for(int i = 0; i < dim; ++i) {
+    _WriteCoordList(os, m.m_elem[i], dim);
+    os << (i < (dim - 1) ? ',' : ')');
+  }
+
+  return os;
 }
 
 template<const int dim>
-inline std::ostream& operator<< (std::ostream& os, const AxisBox<dim>& a)
+bool RotMatrix<dim>::fromStream(std::istream& is)
 {
-  return os << a.toString();
+  CoordType d[dim*dim];
+  char next;
+
+  is >> next;
+  if(next != '(')
+    return false;
+
+  for(int i = 0; i < dim; ++i) {
+    if(!_ReadCoordList(is, d + i * dim, dim))
+      return false;
+    is >> next;
+    char want = (i == dim - 1) ? ')' : ',';
+    if(next != want)
+      return false;
+  }
+
+  return _setVals(d, WFMATH_STRING_EPSILON);
 }
 
 template<const int dim>
-inline std::ostream& operator<< (std::ostream& os, const Ball<dim>& b)
+std::ostream& operator<<(std::ostream& os, const Point<dim>& p)
 {
-  return os << b.toString();
+  _WriteCoordList(os, p.m_elem, dim);
+  return os;
 }
 
 template<const int dim>
-inline std::ostream& operator<< (std::ostream& os, const Segment<dim>& s)
+inline bool Point<dim>::fromStream(std::istream& is)
 {
-  return os << s.toString();
+  return _ReadCoordList(is, m_elem, dim);
 }
 
 template<const int dim>
-inline std::ostream& operator<< (std::ostream& os, const RotBox<dim>& b)
+std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& a)
 {
-  return os << b.toString();
+  return os << "AxisBox: m_low = " << a.m_low << ", m_high = " << a.m_high;
+}
+
+template<const int dim>
+bool AxisBox<dim>::fromStream(std::istream& is)
+{
+  char next;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  if(!m_low.fromStream(is))
+    return false;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  return m_high.fromStream(is);
+}
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const Ball<dim>& b)
+{
+  return os << "Ball: m_center = " << b.m_center <<
+	  + ", m_radius = " << b.m_radius;
+}
+
+template<const int dim>
+inline bool Ball<dim>::fromStream(std::istream& is)
+{
+  char next;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  if(!m_center.fromStream(is))
+    return false;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  is >> m_radius;
+
+  return true;
+}
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const Segment<dim>& s)
+{
+  return os << "Segment: m_p1 = " << s.m_p1 << ", m_p2 = " << s.m_p2;
+}
+
+template<const int dim>
+bool Segment<dim>::fromStream(std::istream& is)
+{
+  char next;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  if(!m_p1.fromStream(is))
+    return false;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  return m_p2.fromStream(is);
+}
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r)
+{
+  return os << "RotBox: m_corner0 = " << r.m_corner0
+	 << ", m_size = " << r.m_size
+	 << ", m_orient = " << r.m_orient;
+}
+
+template<const int dim>
+bool RotBox<dim>::fromStream(std::istream& is)
+{
+  char next;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  if(!m_corner0.fromStream(is))
+    return false;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  if(!m_size.fromStream(is))
+    return false;
+
+  do
+    is >> next;
+  while(next != '=');
+
+  return m_orient.fromStream(is);
 }
 
 }} // namespace WF::Math

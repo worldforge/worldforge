@@ -32,11 +32,7 @@
 #include <wfmath/point.h>
 #include <wfmath/const.h>
 #include <wfmath/axisbox.h>
-#include <wfmath/vector_funcs.h>
-#include <wfmath/point_funcs.h>
-
 #include <algorithm>
-#include <string>
 
 namespace WF { namespace Math {
 
@@ -88,27 +84,6 @@ AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p
   }
 
   return *this;
-}
-
-template<const int dim>
-std::string AxisBox<dim>::toString() const
-{
-  return "AxisBox: m_low = " + m_low.toString() + ", m_high = " + m_high.toString();
-}
-
-template<const int dim>
-bool AxisBox<dim>::fromString(const std::string& s)
-{
-  int low_pos, high_pos;
-
-  low_pos = s.find('(', s.find("m_low"));
-  high_pos = s.find('(', s.find("m_high"));
-
-  if(low_pos == std::npos || high_pos == std::npos)
-    return false;
-
-  return m_low.fromString(s.substr(low_pos))
-      && m_high.fromString(s.substr(high_pos));
 }
 
 template<const int dim>

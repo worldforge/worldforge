@@ -32,8 +32,8 @@
 #define WFMATH_VECTOR_H
 
 #include <math.h>
+#include <iosfwd>
 #include <wfmath/const.h>
-#include <wfmath/stringconv.h>
 
 namespace WF { namespace Math {
 
@@ -67,6 +67,9 @@ template<const int dim>
 Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v);
 template<const int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const Vector<dim>& v);
 
 // These two functions are inline, since they're only ever called
 // with a defined constant as argument.
@@ -115,8 +118,8 @@ class Vector {
 
   ~Vector() {}
 
-  std::string toString() const		{return _StringFromCoordList(m_elem, dim);}
-  bool fromString(const std::string& s) {return _StringToCoordList(s, m_elem, dim);}
+  friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
+  bool fromStream(std::istream& is);
 
   Vector& operator=(const double d[dim]);
   Vector& operator=(const Vector& v);

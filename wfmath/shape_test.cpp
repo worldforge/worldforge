@@ -33,6 +33,7 @@
 #include "segment.h"
 #include "rotbox.h"
 #include "intersect.h"
+#include "stream.h"
 #include <iostream>
 
 using namespace WF::Math;
@@ -44,7 +45,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   AxisBox<dim> box(p1, p2), tmp;
 
-  cout << "Testing " << box.toString() << std::endl;
+  cout << "Testing " << box << std::endl;
 
   tmp = Union(box, box);
   assert(tmp == box);
@@ -61,7 +62,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   Ball<dim> ball(p1, 1);
 
-  cout << "Testing " << ball.toString() << std::endl;
+  cout << "Testing " << ball << std::endl;
 
   assert(Intersect(ball, p1));
   assert(IntersectProper(ball, p1));
@@ -80,7 +81,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   Segment<dim> seg(p1, p2);
 
-  cout << "Testing " << seg.toString() << std::endl;
+  cout << "Testing " << seg << std::endl;
 
   assert(Intersect(seg, p1));
   assert(!IntersectProper(seg, p1));
@@ -106,7 +107,7 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
   RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, WFMATH_CONST_PI / 6));
 
-  cout << "Testing " << rbox.toString() << std::endl;
+  cout << "Testing " << rbox << std::endl;
 
   assert(Intersect(rbox, p1));
   assert(!IntersectProper(rbox, p1));

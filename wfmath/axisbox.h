@@ -32,6 +32,7 @@
 #include <wfmath/point.h>
 #include <wfmath/const.h>
 #include <wfmath/intersect_decls.h>
+#include <iosfwd>
 
 namespace WF { namespace Math {
 
@@ -41,6 +42,9 @@ template<const int dim>
 bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out);
 template<const int dim>
 AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2);
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& m);
 
 template<const int dim>
 class AxisBox
@@ -53,8 +57,8 @@ class AxisBox
 
   ~AxisBox() {}
 
-  std::string toString() const;
-  bool fromString(const std::string& s);
+  friend std::ostream& operator<< <dim>(std::ostream& os, const AxisBox& a);
+  bool fromStream(std::istream& is);
 
   AxisBox& operator=(const AxisBox& a);
 

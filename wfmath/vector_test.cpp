@@ -25,9 +25,9 @@
 // Created: 2001-12-7
 
 #include "vector.h"
-#include "vector_funcs.h"
-#include "matrix_funcs.h"
+#include "matrix.h"
 #include "const.h"
+#include "stream.h"
 #include <iostream>
 
 using namespace WF::Math;
@@ -35,7 +35,7 @@ using namespace WF::Math;
 template<const int dim>
 void test_vector(const Vector<dim>& v)
 {
-  cout << "Testing vector: " << v.toString() << std::endl;
+  cout << "Testing vector: " << v << std::endl;
 
   double sqr_mag = v.sqrMag();
 
@@ -57,7 +57,7 @@ void test_vector(const Vector<dim>& v)
   for(int j = 0; j < dim; ++j) {
     for(int i = 0; i < steps; ++i) {
       vcopy.rotate(v1, v2, 2 * WFMATH_CONST_PI / steps);
-//      cout << vcopy.toString() << std::endl;
+//      cout << vcopy << std::endl;
       assert(IsFloatEqual(sqr_mag, vcopy.sqrMag()));
     }
 

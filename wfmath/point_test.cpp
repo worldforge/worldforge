@@ -27,6 +27,7 @@
 #include "vector.h"
 #include "point.h"
 #include "const.h"
+#include "stream.h"
 #include <iostream>
 
 using namespace WF::Math;
@@ -34,7 +35,7 @@ using namespace WF::Math;
 template<const int dim>
 void test_point(const Point<dim>& p)
 {
-  cout << "Testing point: " << p.toString() << std::endl;
+  cout << "Testing point: " << p << std::endl;
 
   assert(p == Barycenter(1, &p));
   CoordType weight = 5;

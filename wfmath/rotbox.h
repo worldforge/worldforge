@@ -34,6 +34,11 @@
 
 namespace WF { namespace Math {
 
+template<const int dim> class RotBox;
+
+template<const int dim>
+std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r);
+
 template<const int dim>
 class RotBox
 {
@@ -47,8 +52,8 @@ class RotBox
 
   ~RotBox() {}
 
-  std::string toString() const;
-  bool fromString(const std::string& s);
+  friend std::ostream& operator<< <dim>(std::ostream& os, const RotBox& r);
+  bool fromStream(std::istream& is);
 
   RotBox& operator=(const RotBox& s);
 
