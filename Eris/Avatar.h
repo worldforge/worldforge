@@ -77,9 +77,20 @@ public:
 	void place(Entity*, Entity* container, const WFMath::Point<3>& pos
 		= WFMath::Point<3>(0, 0, 0));
 
-    /** emitted when the Avatar goes in game, i.e getEntity() will return
-    a valid object, which is visible in the view */
+    /** Emitted when the in-game subscription (taking a character) is known
+    to have worked. After this point, entities will start appearing in the view,
+    so this is your last chance to register factories and connect to signals
+    on View.
+    */
     SigC::Signal1<void, Avatar*> InGame;
+    
+    /**
+    Emitted when the character entity of this Avatar is valid (and presumably,
+    visible). This will happen some time after the InGame signal is emitted.
+    A client might wish to show some kind of 'busy' animation, eg an hour-glass,
+    while waiting for this signal.
+    */
+    SigC::Signal1<void, Entity*> GotCharacterEntity;
 
 // These two signals just transmit the Entity's
     // AddedMember and RemovedMember signals, but

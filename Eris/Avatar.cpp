@@ -46,6 +46,8 @@ void Avatar::setEntity(const std::string& entId)
 
     m_view->getEntityFromServer("");
     m_view->getEntity(m_entityId);
+    
+    InGame.emit(this);
 }
 
 #pragma mark -
@@ -197,7 +199,7 @@ void Avatar::onEntityAppear(Entity* ent)
     if (ent->getId() == m_entityId) {
         assert(m_entity == NULL);
         m_entity = ent;
-        InGame.emit(this);
+        GotCharacterEntity.emit(ent);
     }
 }
 

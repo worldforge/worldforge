@@ -1,5 +1,12 @@
 2004-08-07  James Turner  <james@worldforge.org>
 
+    * Eris/Avatar.cpp, Eris/Avatar.h: Change the meaning of Avatar::InGame to
+      be 'in-game subscription successfull' instead of 'character entity
+      apepared'. Add a new signal, bizzarely entitled 'GotCharacterEntity',
+      to replicate the old behaviour of the InGame signal.
+
+2004-08-07  James Turner  <james@worldforge.org>
+
     * Eris/TypeInfo.cpp: add another custom factory, for types derived from
       action. This makes sight(burn) do the right thing, which we get for
       the campfire.
