@@ -16,7 +16,7 @@ Server classes.
 #define __AtlasSocket_h_
 
 #include <string>
-using namespace std;
+using std::string;
 
 #ifdef __linux__
 	#include <sys/time.h>

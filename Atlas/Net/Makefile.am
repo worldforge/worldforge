@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libAtlasNet.la
 
 libAtlasNet_la_SOURCES = \
 	Client.cpp Codec.cpp Compressor.cpp \
-	Net.cpp PackedAsciiDecoder.cpp PackedAsciiEncoder.cpp \
+	PackedAsciiDecoder.cpp PackedAsciiEncoder.cpp \
 	PackedAsciiProtocol.cpp Protocol.cpp ProtocolDecoder.cpp \
 	ProtocolEncoder.cpp Server.cpp Socket.cpp TCPSocket.cpp \
 	XMLDecoder.cpp XMLEncoder.cpp XMLProtocol.cpp

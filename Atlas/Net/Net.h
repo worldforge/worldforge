@@ -24,11 +24,4 @@
 #include "Client.h"
 #include "Server.h"
 
-namespace Atlas
-{
-
-void initAtlasNet();
-
-}
-
 #endif
