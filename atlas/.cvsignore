@@ -5,4 +5,4 @@
 .libs
 Makefile
 Makefile.in
-atlas_test
+atlas_*_test
