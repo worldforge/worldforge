@@ -170,7 +170,7 @@ void Meta::gotData(PollData &data)
 	    Q != _activeQueries.end(); ++Q)
     {
 	if (!(*Q)->_stream->is_open()) {
-	    queryFailure(*Q, "");
+	    queryFailure(*Q, "Query connection closed unexpectedly!");
 	    continue;
 	}
 	
@@ -451,16 +451,19 @@ void Meta::metaTimeout()
 	doFailure("Connection to the meta-server timed out");
 }
 
-void Meta::queryFailure(MetaQuery *q, const std::string &/*msg*/)
+void Meta::queryFailure(MetaQuery *q, const std::string &msg)
 {
 	// we do NOT emit a failure signal here (becuase that would probably cause the 
 	// host app to pop up a dialog or something) since query failures are likely to
 	// be very frequent.
+         Eris::log(LOG_DEBUG, "Query Failure: %s", msg.c_str());
+
 	_deleteQueries.push_back(q);
 }
 
 void Meta::queryTimeout(MetaQuery *q)
 {
+        Eris::log(LOG_DEBUG, "Query Timeout");
 	_deleteQueries.push_back(q);
 }
 

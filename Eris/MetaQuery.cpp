@@ -14,6 +14,7 @@
 #include "MetaQuery.h"
 #include "Utils.h"
 #include "Timeout.h"
+#include "Log.h"
 
 namespace Eris
 {
@@ -47,6 +48,8 @@ SOCKET_TYPE MetaQuery::getSocket()
 
 void MetaQuery::onConnect()
 {
+        Eris::log(LOG_DEBUG, "Query connected to %s", _host.c_str());
+
 	// servers must responed to a fully anonymous GET operation
 	// with pertinent info
 	Atlas::Objects::Operation::Get gt = 
