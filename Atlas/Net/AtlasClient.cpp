@@ -47,7 +47,7 @@ void AClient::canRead()
 	DebugMsg1(5,"ISTREAM = %s\n", buf.c_str());
 	codec->feedStream(buf);
 	while (codec->hasMessage()>0) {
-		DebugMsg1(4,"PROCESSING MESSAGE !!\n\n","");
+		DebugMsg1(4,"PROCESSING MESSAGE !!","");
 		gotMsg(codec->getMessage());
 		codec->freeMessage();
 	}
@@ -66,6 +66,8 @@ void AClient::doPoll()
 	fd_set		fdread;
 	fd_set		fdsend;
 	struct timeval	tm;
+
+	DebugMsg1(4,"POLLING CLIENT STREAM !!","");
 
 	tm.tv_sec = 0;
 	tm.tv_usec = 1000;
@@ -87,6 +89,7 @@ void AClient::sendMsg(const AObject& msg)
 {
 	string data = codec->encodeMessage(msg);
 	if (cmprs) data = cmprs->encode(data);
+	DebugMsg2(5,"Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
 	int res = csock->send(data);
 	DebugMsg1(5,"Client Message Sent = %i", res);
 	// do something about buffer full conditions here
@@ -94,7 +97,7 @@ void AClient::sendMsg(const AObject& msg)
 
 void AClient::gotMsg(const AObject& msg)
 {
-	DebugMsg1(1,"BAD VIRTUAL CALL !!!","");
+	DebugMsg1(0,"BAD VIRTUAL CALL !!!","");
 }
 
 

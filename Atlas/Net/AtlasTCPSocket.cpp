@@ -26,6 +26,7 @@ ATCPSocket::ATCPSocket()
 #endif
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
+	DebugMsg1(4, "ATCPSocket created Socket=%li", (long)sock);
 }
 
 ATCPSocket::ATCPSocket(SOCKET asock): ASocket(asock)
@@ -105,6 +106,7 @@ ASocket*	ATCPSocket::accept()
 
 int	ATCPSocket::send(string& data)
 {
+	DebugMsg2(4, "Sending Data on Socket=%li Data=%s", (long)sock, data.c_str());
 	return ::send(sock, data.c_str(), data.length(), 0);
 }
 

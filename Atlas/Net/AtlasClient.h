@@ -30,23 +30,23 @@ public:
 		cmprs = NULL; 
 	}
 
-	AClient(ASocket* asock, ACodec* acodec);
-	AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs);
-	virtual ~AClient() {}
+			AClient(ASocket* asock, ACodec* acodec);
+			AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs);
+	virtual		~AClient() {}
 
-	virtual void setCodec(ACodec* acodec);
-	virtual void setCompressor(ACompressor* acmprs);
+	void		setCodec(ACodec* acodec);
+	void		setCompressor(ACompressor* acmprs);
 
-	virtual SOCKET getSock();
+	SOCKET		getSock();
 
-	virtual void	canRead();
-	virtual void	canSend();
-	virtual void	gotErrs();
-	virtual void	doPoll();
+	void		canRead();
+	void		canSend();
+	void		gotErrs();
+	void		doPoll();
 
-	virtual void	sendMsg(const AObject& msg);
+	void		sendMsg(const AObject& msg);
 
-	virtual	void gotMsg(const AObject& msg);
+	virtual	void	gotMsg(const AObject& msg);
 };
 
 #endif

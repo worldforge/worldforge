@@ -22,17 +22,41 @@ ASocket::ASocket(SOCKET asock)
 ASocket* ASocket::accept()				{return NULL;}
 
 
-int ASocket::connect(string& addr, int port)		{return -1;}
+int ASocket::connect(string& addr, int port)		
+{
+	DebugMsg1(0, "ASocket::connect BAD VIRTUAL CALL !!!", "");
+	return -1;
+}
 
-int ASocket::listen(string& addr, int port, int blog)	{return -1;}
+int ASocket::listen(string& addr, int port, int blog)
+{
+	DebugMsg1(0, "ASocket::listen BAD VIRTUAL CALL !!!", "");
+	return -1;
+}
 
-int ASocket::send(string& data)				{return -1;}
+int ASocket::send(string& data)
+{
+	DebugMsg1(0, "ASocket::send BAD VIRTUAL CALL !!!", "");
+	return -1;
+}
 
-int ASocket::sendTo(string& data, sockaddr_in& addr)	{return -1;}
+int ASocket::sendTo(string& data, sockaddr_in& addr)
+{
+	DebugMsg1(0, "ASocket::sendTo BAD VIRTUAL CALL !!!", "");
+	return -1;
+}
 
-int ASocket::recv(string& buf)				{return -1;}
+int ASocket::recv(string& buf)
+{
+	DebugMsg1(0, "ASocket::recv BAD VIRTUAL CALL !!!", "");
+	return -1;
+}
 
-int ASocket::recvFrom(string& buf, sockaddr_in& addr)	{return -1;}
+int ASocket::recvFrom(string& buf, sockaddr_in& addr)
+{
+	DebugMsg1(0, "ASocket::recvFrom BAD VIRTUAL CALL !!!", "");
+	return -1;
+}
 
 void ASocket::close()
 {
