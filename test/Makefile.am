@@ -10,8 +10,4 @@ testEris_SOURCES = tests.cpp testHarness.h \
     testConnection.cpp testConnection.h \
     testPlayer.h testPlayer.cpp
 
-#testEris_LDADD = $(top_builddir)/Eris/liberis-1.2.la
-
-testEris_LDADD = $(top_builddir)/Eris/.libs/liberis-1.2.so
-
-
+testEris_LDADD = $(top_builddir)/Eris/liberis-1.2.la

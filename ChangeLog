@@ -1,5 +1,9 @@
 Friday, 5th December, Al Riddoch <alriddoch@zepler.org>
 
+	* Fix LDADD for testEris so it works right.
+
+Friday, 5th December, Al Riddoch <alriddoch@zepler.org>
+
 	* Fix test/Makefile.am so the tests build but don't run.
 
 Tuesday, 2nd December, Al Riddoch <alriddoch@zepler.org>
