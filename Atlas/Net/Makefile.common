@@ -9,32 +9,32 @@ TARGETS = $(OUTDIR)/libAtlas.a \
 	$(OUTDIR)/CopyTest$(EXE_EXT) \
 
 LIBOBJS = \
-	$(OUTDIR)/AtlasTypes.o \
-	$(OUTDIR)/AtlasTransport.o \
-	$(OUTDIR)/AtlasURI.o \
-	$(OUTDIR)/AtlasURIList.o \
-	$(OUTDIR)/AtlasIntList.o \
-	$(OUTDIR)/AtlasLongList.o \
-	$(OUTDIR)/AtlasFloatList.o \
-	$(OUTDIR)/AtlasStringList.o \
-	$(OUTDIR)/AtlasCodec.o \
-	$(OUTDIR)/AtlasPackedAsciiDecoder.o \
-	$(OUTDIR)/AtlasPackedAsciiEncoder.o \
-	$(OUTDIR)/AtlasPackedAsciiProtocol.o \
-	$(OUTDIR)/AtlasXMLDecoder.o \
-	$(OUTDIR)/AtlasXMLEncoder.o \
-	$(OUTDIR)/AtlasXMLProtocol.o \
-	$(OUTDIR)/AtlasProtocol.o \
-	$(OUTDIR)/AtlasProtocolDecoder.o \
-	$(OUTDIR)/AtlasProtocolEncoder.o \
-	$(OUTDIR)/AtlasTCPSocket.o \
-	$(OUTDIR)/AtlasSocket.o \
-	$(OUTDIR)/AtlasServer.o \
-	$(OUTDIR)/AtlasClient.o \
-	$(OUTDIR)/AtlasObject.o \
-	$(OUTDIR)/AtlasPython.o \
-	$(OUTDIR)/AtlasDebug.o \
-	$(OUTDIR)/AtlasCompressor.o \
+	$(OUTDIR)/Types.o \
+	$(OUTDIR)/Transport.o \
+	$(OUTDIR)/URI.o \
+	$(OUTDIR)/URIList.o \
+	$(OUTDIR)/IntList.o \
+	$(OUTDIR)/LongList.o \
+	$(OUTDIR)/FloatList.o \
+	$(OUTDIR)/StringList.o \
+	$(OUTDIR)/Codec.o \
+	$(OUTDIR)/PackedAsciiDecoder.o \
+	$(OUTDIR)/PackedAsciiEncoder.o \
+	$(OUTDIR)/PackedAsciiProtocol.o \
+	$(OUTDIR)/XMLDecoder.o \
+	$(OUTDIR)/XMLEncoder.o \
+	$(OUTDIR)/XMLProtocol.o \
+	$(OUTDIR)/Protocol.o \
+	$(OUTDIR)/ProtocolDecoder.o \
+	$(OUTDIR)/ProtocolEncoder.o \
+	$(OUTDIR)/TCPSocket.o \
+	$(OUTDIR)/Socket.o \
+	$(OUTDIR)/Server.o \
+	$(OUTDIR)/Client.o \
+	$(OUTDIR)/Object.o \
+	$(OUTDIR)/Python.o \
+	$(OUTDIR)/Debug.o \
+	$(OUTDIR)/Compressor.o \
 
 
 
@@ -80,144 +80,144 @@ $(OUTDIR)/CopyTest$(EXE_EXT): $(OUTDIR)/CopyTest.o $(OUTDIR)/libAtlas.a
 
 # Dependency rules follow -----------------------------
 
-$(OUTDIR)/AtlasObject.o: AtlasObject.cpp AtlasObject.h AtlasDebug.h
+$(OUTDIR)/Object.o: Object.cpp Object.h Debug.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasPython.o: AtlasPython.cpp AtlasPython.h AtlasDebug.h
+$(OUTDIR)/Python.o: Python.cpp Python.h Debug.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasCodec.o: AtlasCodec.cpp AtlasCodec.h AtlasDebug.h AtlasObject.h \
-	AtlasProtocol.h AtlasProtocolEncoder.h AtlasProtocolDecoder.h
+$(OUTDIR)/Codec.o: Codec.cpp Codec.h Debug.h Object.h \
+	Protocol.h ProtocolEncoder.h ProtocolDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasClient.o: AtlasClient.cpp AtlasClient.h AtlasCodec.h AtlasDebug.h \
-	AtlasObject.h AtlasProtocol.h AtlasProtocolEncoder.h \
-	AtlasProtocolDecoder.h AtlasSocket.h
+$(OUTDIR)/Client.o: Client.cpp Client.h Codec.h Debug.h \
+	Object.h Protocol.h ProtocolEncoder.h \
+	ProtocolDecoder.h Socket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasDebug.o: AtlasDebug.cpp AtlasDebug.h
+$(OUTDIR)/Debug.o: Debug.cpp Debug.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasPackedAsciiDecoder.o: AtlasPackedAsciiDecoder.cpp AtlasObject.h \
-	AtlasDebug.h AtlasProtocol.h AtlasProtocolEncoder.h \
-	AtlasProtocolDecoder.h AtlasPackedAsciiDecoder.h
+$(OUTDIR)/PackedAsciiDecoder.o: PackedAsciiDecoder.cpp Object.h \
+	Debug.h Protocol.h ProtocolEncoder.h \
+	ProtocolDecoder.h PackedAsciiDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasPackedAsciiEncoder.o: AtlasPackedAsciiEncoder.cpp \
-	AtlasPackedAsciiEncoder.h AtlasObject.h AtlasDebug.h \
-	AtlasProtocolEncoder.h
+$(OUTDIR)/PackedAsciiEncoder.o: PackedAsciiEncoder.cpp \
+	PackedAsciiEncoder.h Object.h Debug.h \
+	ProtocolEncoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasPackedAsciiProtocol.o: AtlasPackedAsciiProtocol.cpp \
-	AtlasProtocol.h AtlasProtocolEncoder.h AtlasObject.h AtlasDebug.h \
-	AtlasProtocolDecoder.h AtlasPackedAsciiProtocol.h \
-	AtlasPackedAsciiEncoder.h AtlasPackedAsciiDecoder.h
+$(OUTDIR)/PackedAsciiProtocol.o: PackedAsciiProtocol.cpp \
+	Protocol.h ProtocolEncoder.h Object.h Debug.h \
+	ProtocolDecoder.h PackedAsciiProtocol.h \
+	PackedAsciiEncoder.h PackedAsciiDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasProtocol.o: AtlasProtocol.cpp AtlasProtocol.h \
-	AtlasProtocolEncoder.h AtlasObject.h AtlasDebug.h \
-	AtlasProtocolDecoder.h
+$(OUTDIR)/Protocol.o: Protocol.cpp Protocol.h \
+	ProtocolEncoder.h Object.h Debug.h \
+	ProtocolDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasProtocolDecoder.o: AtlasProtocolDecoder.cpp \
-	AtlasProtocolDecoder.h AtlasObject.h AtlasDebug.h
+$(OUTDIR)/ProtocolDecoder.o: ProtocolDecoder.cpp \
+	ProtocolDecoder.h Object.h Debug.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasProtocolEncoder.o: AtlasProtocolEncoder.cpp \
-	AtlasProtocolEncoder.h AtlasObject.h AtlasDebug.h
+$(OUTDIR)/ProtocolEncoder.o: ProtocolEncoder.cpp \
+	ProtocolEncoder.h Object.h Debug.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasServer.o: AtlasServer.cpp AtlasServer.h AtlasSocket.h \
-	AtlasClient.h AtlasCodec.h AtlasDebug.h AtlasObject.h AtlasProtocol.h \
-	AtlasProtocolEncoder.h AtlasProtocolDecoder.h
+$(OUTDIR)/Server.o: Server.cpp Server.h Socket.h \
+	Client.h Codec.h Debug.h Object.h Protocol.h \
+	ProtocolEncoder.h ProtocolDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasSocket.o: AtlasSocket.cpp AtlasSocket.h
+$(OUTDIR)/Socket.o: Socket.cpp Socket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasTCPSocket.o: AtlasTCPSocket.cpp AtlasTCPSocket.h AtlasSocket.h
+$(OUTDIR)/TCPSocket.o: TCPSocket.cpp TCPSocket.h Socket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasXMLDecoder.o: AtlasXMLDecoder.cpp AtlasObject.h AtlasDebug.h \
-	AtlasProtocol.h AtlasProtocolEncoder.h AtlasProtocolDecoder.h \
-	AtlasXMLDecoder.h
+$(OUTDIR)/XMLDecoder.o: XMLDecoder.cpp Object.h Debug.h \
+	Protocol.h ProtocolEncoder.h ProtocolDecoder.h \
+	XMLDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasXMLEncoder.o: AtlasXMLEncoder.cpp AtlasXMLEncoder.h AtlasObject.h \
-	AtlasDebug.h AtlasProtocolEncoder.h
+$(OUTDIR)/XMLEncoder.o: XMLEncoder.cpp XMLEncoder.h Object.h \
+	Debug.h ProtocolEncoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasXMLProtocol.o: AtlasXMLProtocol.cpp AtlasProtocol.h \
-	AtlasProtocolEncoder.h AtlasObject.h AtlasDebug.h \
-	AtlasProtocolDecoder.h AtlasXMLProtocol.h AtlasXMLEncoder.h \
-	AtlasXMLDecoder.h
+$(OUTDIR)/XMLProtocol.o: XMLProtocol.cpp Protocol.h \
+	ProtocolEncoder.h Object.h Debug.h \
+	ProtocolDecoder.h XMLProtocol.h XMLEncoder.h \
+	XMLDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasCompressor.o: AtlasCompressor.cpp AtlasCompressor.h
+$(OUTDIR)/Compressor.o: Compressor.cpp Compressor.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 $(OUTDIR)/ChatClient.o: ChatClient.cpp ChatClient.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/ChatServer.o: ChatServer.cpp SocketTest.h AtlasSocket.h \
-	AtlasTCPSocket.h
+$(OUTDIR)/ChatServer.o: ChatServer.cpp SocketTest.h Socket.h \
+	TCPSocket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/CodecBench.o: CodecBench.cpp AtlasCodec.h AtlasDebug.h AtlasObject.h \
-	AtlasProtocol.h AtlasProtocolEncoder.h AtlasProtocolDecoder.h \
-	AtlasXMLProtocol.h AtlasXMLEncoder.h AtlasXMLDecoder.h \
-	AtlasPackedAsciiProtocol.h AtlasPackedAsciiEncoder.h \
-	AtlasPackedAsciiDecoder.h CodecBench.h
+$(OUTDIR)/CodecBench.o: CodecBench.cpp Codec.h Debug.h Object.h \
+	Protocol.h ProtocolEncoder.h ProtocolDecoder.h \
+	XMLProtocol.h XMLEncoder.h XMLDecoder.h \
+	PackedAsciiProtocol.h PackedAsciiEncoder.h \
+	PackedAsciiDecoder.h CodecBench.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/PackedAsciiTest.o: PackedAsciiTest.cpp AtlasCodec.h AtlasDebug.h \
-	AtlasObject.h AtlasProtocol.h AtlasProtocolEncoder.h \
-	AtlasProtocolDecoder.h AtlasPackedAsciiProtocol.h \
-	AtlasPackedAsciiEncoder.h AtlasPackedAsciiDecoder.h PackedAsciiTest.h
+$(OUTDIR)/PackedAsciiTest.o: PackedAsciiTest.cpp Codec.h Debug.h \
+	Object.h Protocol.h ProtocolEncoder.h \
+	ProtocolDecoder.h PackedAsciiProtocol.h \
+	PackedAsciiEncoder.h PackedAsciiDecoder.h PackedAsciiTest.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/SocketTest.o: SocketTest.cpp SocketTest.h AtlasSocket.h \
-	AtlasTCPSocket.h
+$(OUTDIR)/SocketTest.o: SocketTest.cpp SocketTest.h Socket.h \
+	TCPSocket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/XMLTest.o: XMLTest.cpp XMLTest.h AtlasObject.h AtlasDebug.h \
-	AtlasCodec.h AtlasProtocol.h AtlasProtocolEncoder.h \
-	AtlasProtocolDecoder.h AtlasXMLProtocol.h AtlasXMLEncoder.h \
-	AtlasXMLDecoder.h
+$(OUTDIR)/XMLTest.o: XMLTest.cpp XMLTest.h Object.h Debug.h \
+	Codec.h Protocol.h ProtocolEncoder.h \
+	ProtocolDecoder.h XMLProtocol.h XMLEncoder.h \
+	XMLDecoder.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/EchoTest.o: EchoTest.cpp EchoTest.h AtlasClient.h AtlasCodec.h \
-	AtlasDebug.h AtlasObject.h AtlasProtocol.h AtlasProtocolEncoder.h \
-	AtlasProtocolDecoder.h AtlasSocket.h AtlasCompressor.h \
-	AtlasPackedAsciiProtocol.h AtlasPackedAsciiEncoder.h \
-	AtlasPackedAsciiDecoder.h AtlasTCPSocket.h
+$(OUTDIR)/EchoTest.o: EchoTest.cpp EchoTest.h Client.h Codec.h \
+	Debug.h Object.h Protocol.h ProtocolEncoder.h \
+	ProtocolDecoder.h Socket.h Compressor.h \
+	PackedAsciiProtocol.h PackedAsciiEncoder.h \
+	PackedAsciiDecoder.h TCPSocket.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/CopyTest.o: CopyTest.cpp CopyTest.h AtlasDebug.h AtlasObject.h 
+$(OUTDIR)/CopyTest.o: CopyTest.cpp CopyTest.h Debug.h Object.h 
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasURI.o: AtlasURI.c AtlasURI.h
+$(OUTDIR)/URI.o: URI.c URI.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasURIList.o: AtlasURIList.c AtlasURIList.h
+$(OUTDIR)/URIList.o: URIList.c URIList.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasIntList.o: AtlasIntList.c AtlasIntList.h
+$(OUTDIR)/IntList.o: IntList.c IntList.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasLongList.o: AtlasLongList.c AtlasLongList.h
+$(OUTDIR)/LongList.o: LongList.c LongList.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasFloatList.o: AtlasFloatList.c AtlasFloatList.h
+$(OUTDIR)/FloatList.o: FloatList.c FloatList.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasStringList.o: AtlasStringList.c AtlasStringList.h
+$(OUTDIR)/StringList.o: StringList.c StringList.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasTransport.o: AtlasTransport.cpp AtlasTransport.h
+$(OUTDIR)/Transport.o: Transport.cpp Transport.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/AtlasTypes.o: AtlasTypes.c AtlasTransport.h
+$(OUTDIR)/Types.o: Types.c Transport.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 
