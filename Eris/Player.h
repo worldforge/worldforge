@@ -24,7 +24,7 @@ class Lobby;
 class Connection;
 class World;
 class Avatar;
-class Interface;
+class UserInterface;
 
 /** Enumeration of various server-side things that can go wrong when trying
 to create an account or login.*/
@@ -54,7 +54,7 @@ class Player : virtual public SigC::Object
 public:
 	/** create a new Player object : currently only one is assumed, but multiple might be supported
 	in the future */
-	Player(Connection *con, Interface *iface = 0);
+	Player(Connection *con, UserInterface *iface = 0);
 	~Player();
 
 	/// Login to the server using the existing account specified

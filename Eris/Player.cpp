@@ -38,7 +38,7 @@ typedef Atlas::Message::Object::MapType AtlasMapType;
 
 namespace Eris {
 
-Player::Player(Connection *con, Interface* iface) :
+Player::Player(Connection *con, UserInterface* iface) :
 	_con(con),
 	_account(""),
 	_iface(iface),
@@ -242,7 +242,7 @@ void Player::createCharacter()
 		throw InvalidOperation("Not connected to server");
 
 	if (!_iface)
-		throw InvalidOperation("No Interface handler defined");
+		throw InvalidOperation("No UserInterface handler defined");
 
 	// FIXME look up the dialog, create the instance,
 	// hook in a slot to feed the serialno of any Create op
