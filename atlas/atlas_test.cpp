@@ -46,14 +46,15 @@ int main()
   Point<3> p(1, 0, WFMATH_CONST_SQRT2);
   atlas_test(p);
 
-  Vector<2> v(1, -1);
+  Vector<3> v(1, -1, 4);
   atlas_test(v);
 
-  Polygon<2> pol2;
-  atlas_test(pol2);
+  Quaternion q(v, 0.7);
+  atlas_test(q);
 
-  Polygon<3> pol3;
-  atlas_test(pol3);
+  AxisBox<3> b1(Point<3>().origin(), p), b2(p, p + v);
+  atlas_test(b1);
+  atlas_test(b2);
 
   return 0;
 }

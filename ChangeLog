@@ -1,3 +1,20 @@
+Tuesday, January 22, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Changed the atlas functions for Quaternion and AxisBox<>
+	  to conform to atlas specs, got rid of atlas functions which
+	  still used string conversion
+	* Fixed Contains(Polygon<2>, Segment<2>) and
+	  Contains(Polygon<2>, Polygon<2>) for endpoint intersection;
+	  commented out Intersect(RotBox<>, AxisBox<>) and
+	  IntersectProper(RotBox<>, AxisBox<>) because I'm
+	  pretty sure the algorithm's wrong
+	* Added another rotation() function to RotMatrix<>, this
+	  one constructs the rotation necessary to rotate one vector
+	  into another
+	* Got versioning on library build working correctly
+	* Changed version to 0.2.0, implementation of remaining
+	  Polygon<> intersection routines delayed until a later version
+
 Sunday, January 20, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Wrote all the Polygon<2> intersection functions, and

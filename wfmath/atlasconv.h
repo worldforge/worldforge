@@ -78,26 +78,38 @@ Atlas::Message::Object Vector<dim>::toAtlas() const
   return _ArrayToAtlas(m_elem, dim);
 }
 
-template<const int dim>
-bool RotMatrix<dim>::fromAtlas(const Atlas::Message::Object& a)
-{
-  return a.IsString() && FromString(*this, a.AsString());
-}
-
-template<const int dim>
-Atlas::Message::Object RotMatrix<dim>::toAtlas() const
-{
-  return ToString(*this);
-}
-
 inline bool Quaternion::fromAtlas(const Atlas::Message::Object& a)
 {
-  return a.IsString() && FromString(*this, a.AsString());
+  if(!a.IsList())
+    return false;
+
+  Atlas::Message::Object::ListType list(a.AsList());
+
+  if(list.size() != 4)
+    return false;
+
+  for(int i = 0; i < 3; ++i) {
+    if(!list[i].IsFloat())
+      return false;
+    m_vec[i] = list[i].AsFloat();
+  }
+
+  if(!list[3].IsFloat())
+    return false;
+  m_w = list[3].AsFloat();
+
+  return true;
 }
 
 inline Atlas::Message::Object Quaternion::toAtlas() const
 {
-  return ToString(*this);
+  Atlas::Message::Object::ListType a;
+
+  for(int i = 0; i < 3; ++i)
+    a.push_back(m_vec[i]);
+  a.push_back(m_w);
+
+  return a;
 }
 
 template<const int dim>
@@ -115,75 +127,136 @@ Atlas::Message::Object Point<dim>::toAtlas() const
 template<const int dim>
 bool AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
 {
-  return a.IsString() && FromString(*this, a.AsString());
+  if(!a.IsList())
+    return false;
+
+  Atlas::Message::Object::ListType list(a.AsList());
+
+  switch(list.size()) {
+    case 1:
+      m_low.origin();
+      if(!m_high.fromAtlas(list[0]))
+        return false;
+      break;
+    case 2:
+      if(!m_low.fromAtlas(list[0]) || !m_high.fromAtlas(list[1]))
+        return false;
+      break;
+    case dim:
+      m_low.origin();
+      if(!m_high.fromAtlas(a))
+        return false;
+      break;
+    case (2 * dim):
+      for(int i = 0; i < dim; ++i) {
+        if(!list[i].IsFloat() || !list[i+dim].IsFloat())
+          return false;
+        m_low[i] = list[i].AsFloat();
+        m_high[i] = list[i+dim].AsFloat();
+      }
+      break;
+    default:
+      return false;
+  }
+
+  for(int i = 0; i < dim; ++i)
+    if(m_low[i] > m_high[i])
+      return false;
+
+  return true;
+}
+
+template<>
+bool AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
+{
+  if(!a.IsList())
+    return false;
+
+  Atlas::Message::Object::ListType list(a.AsList());
+
+  switch(list.size()) {
+    case 1:
+      m_low.origin();
+      if(!m_high.fromAtlas(list[0]))
+        return false;
+      break;
+    case 2: // 2 possible different cases
+      if(list[0].IsFloat()) {
+        m_low.origin();
+        if(!m_high.fromAtlas(a))
+          return false;
+      }
+      else if(!m_low.fromAtlas(list[0]) || !m_high.fromAtlas(list[1]))
+        return false;
+      break;
+    case 4:
+      for(int i = 0; i < 2; ++i) {
+        if(!list[i].IsFloat() || !list[i+2].IsFloat())
+          return false;
+        m_low[i] = list[i].AsFloat();
+        m_high[i] = list[i+2].AsFloat();
+      }
+      break;
+    default:
+      return false;
+  }
+
+  for(int i = 0; i < 2; ++i)
+    if(m_low[i] > m_high[i])
+      return false;
+
+  return true;
+}
+
+template<>
+bool AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
+{
+  if(!a.IsList())
+    return false;
+
+  Atlas::Message::Object::ListType list(a.AsList());
+
+  bool got_float = list[0].IsFloat();
+
+  switch(list.size()) {
+    case 1:
+      m_low.origin();
+      if(!m_high.fromAtlas(got_float ? a : list[0]))
+        return false;
+      break;
+    case 2:
+      if(got_float) {
+          if(!list[1].IsFloat())
+            return false;
+          m_low[0] = list[0].AsFloat();
+          m_high[0] = list[1].AsFloat(); 
+      }
+      else if(!m_low.fromAtlas(list[0]) || !m_high.fromAtlas(list[1]))
+        return false;
+      break;
+    default:
+      return false;
+  }
+
+  if(m_low[0] > m_high[0])
+    return false;
+
+  return true;
 }
 
 template<const int dim>
 Atlas::Message::Object AxisBox<dim>::toAtlas() const
 {
-  return ToString(*this);
-}
+  if(m_low == Point<dim>().origin())
+    return m_high.toAtlas(); // matches case 'dim' above
 
-template<const int dim>
-bool Ball<dim>::fromAtlas(const Atlas::Message::Object& a)
-{
-  return a.IsString() && FromString(*this, a.AsString());
-}
+  // Do case '2' above
 
-template<const int dim>
-Atlas::Message::Object Ball<dim>::toAtlas() const
-{
-  return ToString(*this);
-}
+  Atlas::Message::Object::ListType a;
+  a.push_back(m_low.toAtlas());
+  a.push_back(m_high.toAtlas());
 
-template<const int dim>
-bool Segment<dim>::fromAtlas(const Atlas::Message::Object& a)
-{
-  return a.IsString() && FromString(*this, a.AsString());
-}
-
-template<const int dim>
-Atlas::Message::Object Segment<dim>::toAtlas() const
-{
-  return ToString(*this);
-}
-
-template<const int dim>
-bool RotBox<dim>::fromAtlas(const Atlas::Message::Object& a)
-{
-  return a.IsString() && FromString(*this, a.AsString());
-}
-
-template<const int dim>
-Atlas::Message::Object RotBox<dim>::toAtlas() const
-{
-  return ToString(*this);
-}
-
-template<const int dim>
-bool Polygon<dim>::fromAtlas(const Atlas::Message::Object& a)
-{
-  return a.IsString() && FromString(*this, a.AsString());
-}
-
-template<const int dim>
-Atlas::Message::Object Polygon<dim>::toAtlas() const
-{
-  return ToString(*this);
-}
-
-// Need this because Polygon<2> is a specialization
-
-//template<>
-bool Polygon<2>::fromAtlas(const Atlas::Message::Object& a)
-{
-  return a.IsString() && FromString(*this, a.AsString());
-}
-
-//template<>
-Atlas::Message::Object Polygon<2>::toAtlas() const
-{
-  return ToString(*this);
+  return a;
 }
 
 }} // namespace WF:Math

@@ -19,7 +19,7 @@ header_HEADERS = error.h const.h \
 lib_LTLIBRARIES = libwfmath.la
 libwfmath_la_SOURCES = basis.h const.cpp stream.cpp \
 	rotmatrix.cpp vector.cpp point.cpp quaternion.cpp polygon.cpp intersect.cpp
-libwfmath_la_LDFLAGS = -lm
+libwfmath_la_LDFLAGS = -lm -version-info @WFMATH_VERSION_INFO@
 
 check_PROGRAMS = vector_test rotmatrix_test point_test \
 	quaternion_test shape_test polygon_test

@@ -675,24 +675,76 @@ bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const Segment<2>& s)
 template<>
 bool WF::Math::Contains<2>(const Polygon<2>& p, const Segment<2>& s)
 {
-  if(!Contains(p, s.endpoint(0)))
-    return false;
-
   const Polygon<2>::theConstIter begin = p.m_points.begin(), end = p.m_points.end();
 
   Segment<2> s2;
 
   s2.endpoint(0) = p.m_points.back();
   int next_point = 1;
+  bool hit = false;
 
   for(Polygon<2>::theConstIter i = begin; i != end; ++i) {
     s2.endpoint(next_point) = *i;
-    if(IntersectProper(s2, s)) // FIXME crossing at corners
+    if(IntersectProper(s2, s))
       return false;
+    bool this_point = next_point;
     next_point = next_point ? 0 : 1;
+
+    // Check for crossing at an endpoint
+    if(Contains(s, *i) && (*i != s.m_p2)) {
+      Vector<2> segment = s.m_p2 - s.m_p1;
+      Vector<2> edge1 = *i - s2.endpoint(next_point); // Gives prev point in this case
+      Vector<2> edge2 = *i - *(i + 1);
+
+      CoordType c1 = Cross(segment, edge1), c2 = Cross(segment, edge2);
+
+      if(c1 * c2 < 0) { // opposite sides
+        if(*i == s.m_p1) { // really a containment issue
+          if(edge1[1] * edge2[1] > 0 // Edges either both up or both down
+            || ((edge1[1] > 0) ? c1 : c2) < 0) // segment lies to the left
+            hit = !hit;
+          continue; // Already checked containment for this point
+        }
+        else
+          return false;
+      }
+    }
+
+    // Check containment of one endpoint
+
+    // next_point also gives prev_point
+    bool vertically_between =
+        ((s2.endpoint(this_point)[1] <= s.m_p1[1]
+       && s.m_p1[1] < s2.endpoint(next_point)[1]) ||
+         (s2.endpoint(next_point)[1] <= s.m_p1[1]
+       && s.m_p1[1] < s2.endpoint(this_point)[1]));
+
+    if (!vertically_between)
+      continue;
+
+    CoordType x_intersect = s2.m_p1[0] + FloatSubtract(s2.m_p2[0], s2.m_p1[0])
+			    * FloatSubtract(s.m_p1[1], s2.m_p1[1])
+			    / FloatSubtract(s2.m_p2[1], s2.m_p1[1]);
+
+    if(IsFloatEqual(s.m_p1[0], x_intersect)) { // Figure out which side the segment's on
+
+      // Equal points are handled in the crossing routine above
+      if(s2.endpoint(next_point) == s.m_p1)
+        continue;
+      assert(s2.endpoint(this_point) != s.m_p1);
+
+      Vector<2> poly_edge = (s2.m_p1[1] < s2.m_p2[1]) ? (s2.m_p2 - s2.m_p1)
+						      : (s2.m_p1 - s2.m_p2);
+      Vector<2> segment = s.m_p2 - s.m_p1;
+
+      if(Cross(segment, poly_edge) < 0)
+        hit = !hit;
+    }
+    else if(s.m_p1[0] < x_intersect)
+      hit = !hit;
   }
 
-  return true;
+  return hit;
 }
 
 template<>
@@ -1200,28 +1252,16 @@ bool WF::Math::IntersectProper<2>(const Polygon<2>& p1, const Polygon<2>& p2)
 template<>
 bool WF::Math::Contains<2>(const Polygon<2>& outer, const Polygon<2>& inner)
 {
-  if(!Contains(outer, inner.m_points.front()))
-    return false;
+  Polygon<2>::theConstIter begin = inner.m_points.begin(), end = inner.m_points.end();
+  Segment<2> s;
+  s.endpoint(0) = inner.m_points.back();
+  int next_end = 1;
 
-  Polygon<2>::theConstIter begin1 = outer.m_points.begin(), end1 = outer.m_points.end();
-  Polygon<2>::theConstIter begin2 = inner.m_points.begin(), end2 = inner.m_points.end();
-  Segment<2> s1, s2;
-  int next_end1, next_end2;
-
-  s1.endpoint(0) = outer.m_points.back();
-  s2.endpoint(0) = inner.m_points.back();
-  next_end1 = next_end2 = 1;
-  for(Polygon<2>::theConstIter i1 = begin1; i1 != end1; ++i1) {
-    s1.endpoint(next_end1) = *i1;
-    next_end1 = next_end1 ? 0 : 1;
-
-    for(Polygon<2>::theConstIter i2 = begin2; i2 != end2; ++i2) {
-      s2.endpoint(next_end2) = *i2;
-      next_end2 = next_end2 ? 0 : 1;
-
-      if(IntersectProper(s1, s2)) // FIXME crossing at corners
-        return false;
-    }
+  for(Polygon<2>::theConstIter i = begin; i != end; ++i) {
+    s.endpoint(next_end) = *i;
+    next_end = next_end ? 0 : 1;
+    if(!Contains(outer, s))
+      return false;
   }
 
   return true;

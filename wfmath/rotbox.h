@@ -58,9 +58,6 @@ class RotBox
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotBox& r);
   friend std::istream& operator>> <dim>(std::istream& is, RotBox& r);
 
-  Atlas::Message::Object toAtlas() const;
-  bool fromAtlas(const Atlas::Message::Object& a);
-
   RotBox& operator=(const RotBox& s);
 
   bool isEqualTo(const RotBox& s, double tolerance = WFMATH_EPSILON) const;

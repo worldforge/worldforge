@@ -1,6 +1,22 @@
-Shapes left to do:
-	Polygon<>
-	Simplex<> (triangle in 2D, tetrahedron in 3D, etc.)
+Intersect functions unimplemented:
+	Intersect(RotBox<>, AxisBox<>)
+	IntersectProper(RotBox<>, AxisBox<>)
+        for dim != 2,
+	  Intersect(Polygon<>, AxisBox<>)
+	  IntersectProper(Polygon<>, AxisBox<>)
+	  Contains(Polygon<>, AxisBox<>)
+	  ContainsProper(Polygon<>, AxisBox<>)
+	  Intersect(Polygon<>, RotBox<>)
+	  IntersectProper(Polygon<>, RotBox<>)
+	  Contains(Polygon<>, RotBox<>)
+	  ContainsProper(Polygon<>, RotBox<>)
+	  Intersect(Polygon<>, Polygon<>)
+	  IntersectProper(Polygon<>, Polygon<>)
+	  Contains(Polygon<>, Polygon<>)
+	  ContainsProper(Polygon<>, Polygon<>)
+    These will be postponed until I can think of a way to write them,
+    or someone needs them, whichever comes first
+Write rotateInverse() functions
 Write an API reference for the library. Find some inline documentation tool?
 Portability questions and miniball_config.h
 Deal with difficulties in making certain functions friends of the

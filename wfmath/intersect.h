@@ -709,6 +709,12 @@ bool Contains(const Point<dim>& p, const RotBox<dim>& r)
   return p == r.m_corner0;
 }
 
+template<const int dim>
+bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b);
+template<const int dim>
+bool IntersectProper(const RotBox<dim>& r, const AxisBox<dim>& b);
+
+/*
 // This does row reduction to solve a system of linear equations
 // for the next two functions.
 void  _RotBoxAxisBoxIntersectImpl(int dim, int params, CoordType* matrix,
@@ -746,6 +752,8 @@ bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b)
       matrix[j*params+num_param] = r.m_orient.elem(j, i) * r.m_size[i];
     ++num_param;
   }
+
+  // FIXME I don't think this algorithm is correct
 
   _RotBoxAxisBoxIntersectImpl(dim, params, matrix, low, high);
 
@@ -806,6 +814,7 @@ bool IntersectProper(const RotBox<dim>& r, const AxisBox<dim>& b)
 
   return true;
 }
+*/
 
 template<const int dim>
 bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b)

@@ -58,9 +58,6 @@ class Polygon<2>
   friend std::ostream& operator<< <2>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <2>(std::istream& is, Polygon& p);
 
-  Atlas::Message::Object toAtlas() const;
-  bool fromAtlas(const Atlas::Message::Object& a);
-
   Polygon& operator=(const Polygon& p)
 	{m_points = p.m_points; return *this;}
 
@@ -245,9 +242,6 @@ class Polygon
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <dim>(std::istream& is, Polygon& p);
-
-  Atlas::Message::Object toAtlas() const;
-  bool fromAtlas(const Atlas::Message::Object& a);
 
   Polygon& operator=(const Polygon& p)
 	{m_orient = p.m_orient; m_poly = p.m_poly; return *this;}

@@ -26,7 +26,7 @@
 #include "intersect.h"
 
 using namespace WF::Math;
-
+/*
 void  WF::Math::_RotBoxAxisBoxIntersectImpl(int dim, int params, CoordType* matrix,
 					    CoordType* low, CoordType* high)
 {
@@ -110,3 +110,4 @@ void  WF::Math::_RotBoxAxisBoxIntersectImpl(int dim, int params, CoordType* matr
     }
   }
 }
+*/

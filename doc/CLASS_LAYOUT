@@ -21,9 +21,10 @@ operator>>() indicates a parse failure by setting the fail() flag on the stream.
 Failure also indicates that the object is in an invalid state. The definitions
 of these functions are placed in the file stream.h, so the class only needs to
 include <iosfwd>. The toAtlas() and fromAtlas() functions need a forward
-declaration of Atlas::Message::Object, which is done in const.h. The
-implementations of these functions belong in atlasconv.h, and must be
-done inline or as templates, so that the library can be built and
+declaration of Atlas::Message::Object, which is done in const.h. They
+are only defined for certain classes (see Atlas protocol specs (where?)
+for details). The implementations of these functions belong in atlasconv.h,
+and must be done inline or as templates, so that the library can be built and
 used without libAtlas.
 
 3) operator=()

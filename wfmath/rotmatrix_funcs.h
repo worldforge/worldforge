@@ -445,6 +445,49 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
   return *this;
 }
 
+template<const int dim>
+RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
+					 const Vector<dim>& to)
+{
+  // This is sort of similar to the above, with the rotation angle determined
+  // by the angle between the vectors
+
+  CoordType fromSqrMag = from.sqrMag();
+  assert(fromSqrMag > 0);
+  CoordType toSqrMag = to.sqrMag();
+  assert(toSqrMag > 0);
+  CoordType dot = Dot(from, to);
+  CoordType sqrmagprod = fromSqrMag * toSqrMag;
+  CoordType magprod = sqrt(sqrmagprod);
+  CoordType ctheta_plus_1 = FloatAdd(dot / magprod, 1);
+
+  for(int i = 0; i < dim; ++i) {
+    for(int j = i; j < dim; ++j) {
+      CoordType projfrom = from[i] * from[j] / fromSqrMag;
+      CoordType projto = to[i] * to[j] / toSqrMag;
+
+      CoordType ijprod = from[i] * to[j], jiprod = to[i] * from[j];
+
+      CoordType termthree = FloatAdd(ijprod, jiprod) * dot / sqrmagprod;
+
+      CoordType combined = FloatSubtract(FloatAdd(projfrom, projto), termthree)
+			   / ctheta_plus_1;
+
+      if(i == j) {
+        m_elem[i][i] = FloatSubtract(1, combined);
+      }
+      else {
+        diffterm = FloatSubtract(jiprod, ijprod) / magprod;
+
+        m_elem[i][j] = FloatSubtract(diffterm, combined);
+        m_elem[j][i] = -FloatAdd(diffterm, combined);
+      }
+    }
+  }
+
+  return *this;
+}
+
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
 						 const CoordType& theta);
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,

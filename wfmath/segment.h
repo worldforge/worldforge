@@ -54,9 +54,6 @@ class Segment
   friend std::ostream& operator<< <dim>(std::ostream& os, const Segment& s);
   friend std::istream& operator>> <dim>(std::istream& is, Segment& s);
 
-  Atlas::Message::Object toAtlas() const;
-  bool fromAtlas(const Atlas::Message::Object& a);
-
   Segment& operator=(const Segment& s)
 	{m_p1 = s.m_p1; m_p2 = s.m_p2; return *this;}
 
