@@ -2,15 +2,15 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#ifndef ATLAS_OBJECT_LAYER_H
-#define ATLAS_OBJECT_LAYER_H
+#ifndef ATLAS_MESSAGE_LAYER_H
+#define ATLAS_MESSAGE_LAYER_H
 
 #include "../Bridge.h"
 #include "Object.h"
 
-namespace Atlas { namespace Object {
+namespace Atlas { namespace Message {
 
-/** Atlas object layer
+/** Atlas message layer
 
 FIXME document this
 
@@ -29,6 +29,6 @@ class Layer : public Atlas::Bridge
     Atlas::Bridge* bridge;
 };
 
-} } // Atlas::Object namespace
+} } // Atlas::Message namespace
 
 #endif

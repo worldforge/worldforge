@@ -3,7 +3,7 @@
 using std::string;
 
 namespace Atlas
-{ namespace Object {
+{ namespace Message {
 
 void	Object::walkTree(int nest, string name, const Object& list)
 {

@@ -42,7 +42,7 @@
 #include <cassert>
 
 namespace Atlas
-{ namespace Object {
+{ namespace Message {
 /** Standard Message Container Object.
 <p>Object is the standard class for all data and messages
 handled by the Atlas libraries.

@@ -6,19 +6,20 @@
 
 using namespace std;
 using namespace Atlas;
+using namespace Atlas::Message;
 
-inline void recurseListObject(const Object::Object& obj, Bridge* b);
+inline void recurseListObject(const Object& obj, Bridge* b);
 
-inline void recurseMapObject(const Object::Object& obj, Bridge* b, const string&
+inline void recurseMapObject(const Object& obj, Bridge* b, const string&
         name)
 {
     if (obj.isMap()) {
         b->MapItem(name, Bridge::MapBegin);
-        Object::Object names = obj.keys();
-        Object::Object values = obj.vals();
+        Object names = obj.keys();
+        Object values = obj.vals();
         for (size_t i = 0; i < names.length(); i++) {
             string itemName;
-            Object::Object value;
+            Object value;
             names.get(i, itemName);
             values.get(i, value);
             recurseMapObject(value, b, itemName);
@@ -28,7 +29,7 @@ inline void recurseMapObject(const Object::Object& obj, Bridge* b, const string&
     if (obj.isList()) {
         b->MapItem(name, Bridge::ListBegin);
         for (size_t i = 0; i < obj.length(); i++) {
-            Object::Object value;
+            Object value;
             obj.get(i, value);
             recurseListObject(value, b);
         }
@@ -45,15 +46,15 @@ inline void recurseMapObject(const Object::Object& obj, Bridge* b, const string&
     }
 }
 
-inline void recurseListObject(const Object::Object& obj, Bridge* b)
+inline void recurseListObject(const Object& obj, Bridge* b)
 {
     if (obj.isMap()) {
         b->ListItem(Bridge::MapBegin);
-        Object::Object names = obj.keys();
-        Object::Object values = obj.vals();
+        Object names = obj.keys();
+        Object values = obj.vals();
         for (size_t i = 0; i < names.length(); i++) {
             string itemName;
-            Object::Object value;
+            Object value;
             names.get(i, itemName);
             values.get(i, value);
             recurseMapObject(value, b, itemName);
@@ -63,7 +64,7 @@ inline void recurseListObject(const Object::Object& obj, Bridge* b)
     if (obj.isList()) {
         b->ListItem(Bridge::ListBegin);
         for (size_t i = 0; i < obj.length(); i++) {
-            Object::Object value;
+            Object value;
             obj.get(i, value);
             recurseListObject(value, b);
         }
