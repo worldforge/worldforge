@@ -123,15 +123,15 @@ class Vector {
   /// Construct a copy of a vector
   Vector(const Vector& v);
   /// Construct a vector from an object passed by Atlas
-  explicit Vector(const Atlas::Message::Object& a) {fromAtlas(a);}
+  explicit Vector(const AtlasInType& a) {fromAtlas(a);}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
 
   /// Create an Atlas object from the vector
-  Atlas::Message::Object toAtlas() const;
+  AtlasOutType toAtlas() const;
   /// Set the vector's value to that given by an Atlas object
-  void fromAtlas(const Atlas::Message::Object& a);
+  void fromAtlas(const AtlasInType& a);
 
   Vector& operator=(const Vector& v);
 

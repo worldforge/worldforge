@@ -33,8 +33,8 @@
 
 using namespace WFMath;
 
-Quaternion::Quaternion (const CoordType w_in, const CoordType x_in,
-			const CoordType y_in, const CoordType z_in) : m_valid(true)
+Quaternion::Quaternion (CoordType w_in, CoordType x_in, CoordType y_in, CoordType z_in)
+	: m_valid(true)
 {
   CoordType norm = (CoordType) sqrt(w_in*w_in + x_in*x_in + y_in*y_in + z_in*z_in);
 
@@ -234,7 +234,7 @@ Quaternion Quaternion::inverse() const
   return q;
 }
 
-Quaternion& Quaternion::rotation(int axis, const CoordType angle)
+Quaternion& Quaternion::rotation(int axis, CoordType angle)
 {
   CoordType half_angle = angle / 2;
 
@@ -248,7 +248,7 @@ Quaternion& Quaternion::rotation(int axis, const CoordType angle)
   return *this;
 }
 
-Quaternion& Quaternion::rotation(const Vector<3>& axis, const CoordType angle)
+Quaternion& Quaternion::rotation(const Vector<3>& axis, CoordType angle)
 {
   CoordType half_angle = angle / 2;
 

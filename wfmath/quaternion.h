@@ -46,12 +46,11 @@ class Quaternion
   /**
    * This normalizes the components so the sum of their squares is one.
    **/
-  Quaternion (const CoordType w_in, const CoordType x_in, const CoordType y_in,
-	      const CoordType z_in);
+  Quaternion (CoordType w_in, CoordType x_in, CoordType y_in, CoordType z_in);
   /// Construct a Quaternion giving a rotation around axis by angle
-  Quaternion (int axis, const CoordType angle) {rotation(axis, angle);}
+  Quaternion (int axis, CoordType angle) {rotation(axis, angle);}
   /// Construct a Quaternion giving a rotation around the Vector axis by angle
-  Quaternion (const Vector<3>& axis, const CoordType angle) {rotation(axis, angle);}
+  Quaternion (const Vector<3>& axis, CoordType angle) {rotation(axis, angle);}
   /// Construct a Quaternion giving a rotation around the Vector axis
   /**
    * The angle of rotating is equal to the magnitude of the Vector
@@ -60,7 +59,7 @@ class Quaternion
   /// Construct a copy of a Quaternion
   Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec), m_valid(p.m_valid) {}
   /// Construct a Quaternion from an Atlas::Message::Object
-  explicit Quaternion (const Atlas::Message::Object& a) {fromAtlas(a);}
+  explicit Quaternion (const AtlasInType& a) {fromAtlas(a);}
 
   ~Quaternion() {}
 
@@ -68,9 +67,9 @@ class Quaternion
   friend std::istream& operator>>(std::istream& is, Quaternion& p);
 
   /// Create an Atlas object from the Quaternion
-  Atlas::Message::Object toAtlas() const;
+  AtlasOutType toAtlas() const;
   /// Set the Quaternion's value to that given by an Atlas object
-  void fromAtlas(const Atlas::Message::Object& a);
+  void fromAtlas(const AtlasInType& a);
 
   Quaternion& operator= (const Quaternion& rhs)
 	{m_w = rhs.m_w; m_vec = rhs.m_vec; m_valid = rhs.m_valid; return *this;}
@@ -121,9 +120,9 @@ class Quaternion
   Quaternion inverse() const;
 
   /// sets the Quaternion to a rotation by angle around axis
-  Quaternion& rotation(int axis, const CoordType angle);
+  Quaternion& rotation(int axis, CoordType angle);
   /// sets the Quaternion to a rotation by angle around the Vector axis
-  Quaternion& rotation(const Vector<3>& axis, const CoordType angle);
+  Quaternion& rotation(const Vector<3>& axis, CoordType angle);
   /// sets the Quaternion to a rotation around the Vector axis
   /**
    * The rotation angle is given by the magnitude of the Vector

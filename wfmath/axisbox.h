@@ -76,15 +76,15 @@ class AxisBox
   /// Construct a copy of a box
   AxisBox(const AxisBox& a) : m_low(a.m_low), m_high(a.m_high) {}
   /// Construct a box from an object passed by Atlas
-  explicit AxisBox(const Atlas::Message::Object& a) {fromAtlas(a);}
+  explicit AxisBox(const AtlasInType& a) {fromAtlas(a);}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const AxisBox& a);
   friend std::istream& operator>> <dim>(std::istream& is, AxisBox& a);
 
   /// Create an Atlas object from the box
-  Atlas::Message::Object toAtlas() const;
+  AtlasOutType toAtlas() const;
   /// Set the box's value to that given by an Atlas object
-  void fromAtlas(const Atlas::Message::Object& a);
+  void fromAtlas(const AtlasInType& a);
 
   AxisBox& operator=(const AxisBox& a)
 	{m_low = a.m_low; m_high = a.m_high; return *this;}

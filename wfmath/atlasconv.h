@@ -32,7 +32,6 @@
 #define WFMATH_ATLAS_CONV_H
 
 #include <stdexcept>
-#include <Atlas/Message/Object.h>
 #include <wfmath/const.h>
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
@@ -41,16 +40,59 @@
 
 namespace WFMath {
 
-// Change this when we go to Atlas-0.5
+#ifdef ATLAS_MESSAGE_ELEMENT_H
+
+typedef Atlas::Message::WrongTypeException _AtlasBadParse;
+typedef Atlas::Message::Element _AtlasMessageType;
+
+bool _isNum(const _AtlasMessageType& a) {return a.isNum();}
+_AtlasMessageType::FloatType _asNum(const _AtlasMessageType& a) {return a.asNum();}
+
+#elif defined(ATLAS_MESSAGE_OBJECT_H)
+
 struct _AtlasBadParse : public Atlas::Message::WrongTypeException,
 			virtual public std::exception
 {
   virtual ~_AtlasBadParse() throw() {}
 };
 
-inline Atlas::Message::Object _ArrayToAtlas(const CoordType* array, int len)
+typedef Atlas::Message::Object _AtlasMessageType;
+
+bool _isNum(const _AtlasMessageType& a) {return a.IsNum();}
+_AtlasMessageType::FloatType _asNum(const _AtlasMessageType& a) {return a.AsNum();}
+
+#else
+#error "You must include Atlas::Message::Element.h or Atlas::Message::Object.h before wfmath/atlasconv.h"
+#endif
+
+class AtlasInType
 {
-  Atlas::Message::Object::ListType a;
+ public:
+  AtlasInType(const _AtlasMessageType& val) : m_val(val) {}
+  operator const _AtlasMessageType&() const {return m_val;}
+#ifdef ATLAS_MESSAGE_ELEMENT_H
+  bool IsList() const {return m_val.isList();}
+  const _AtlasMessageType::ListType& AsList() const {return m_val.asList();}
+#else // ATLAS_MESSAGE_OBJECT_H
+  bool IsList() const {return m_val.IsList();}
+  const _AtlasMessageType::ListType& AsList() const {return m_val.AsList();}
+#endif
+ private:
+  const _AtlasMessageType& m_val;
+};
+
+class AtlasOutType
+{
+ public:
+  AtlasOutType(const _AtlasMessageType::ListType& l) : m_val(l) {}
+  operator _AtlasMessageType() {return m_val;}
+ private:
+  _AtlasMessageType m_val;
+};
+
+inline AtlasOutType _ArrayToAtlas(const CoordType* array, int len)
+{
+  _AtlasMessageType::ListType a;
 
   for(const CoordType* i = array; i < array + len; ++i)
     a.push_back(*i);
@@ -58,49 +100,49 @@ inline Atlas::Message::Object _ArrayToAtlas(const CoordType* array, int len)
   return a;
 }
 
-inline void _ArrayFromAtlas(CoordType* array, int len, const Atlas::Message::Object& a)
+inline void _ArrayFromAtlas(CoordType* array, int len, const AtlasInType& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  Atlas::Message::Object::ListType list(a.AsList());
+  _AtlasMessageType::ListType list(a.AsList());
 
   if(list.size() != (unsigned int) len)
     throw _AtlasBadParse();
 
   for(int i = 0; i < len; ++i)
-    array[i] = list[i].AsNum();
+    array[i] = _asNum(list[i]);
 }
 
 template<const int dim>
-inline void Vector<dim>::fromAtlas(const Atlas::Message::Object& a)
+inline void Vector<dim>::fromAtlas(const AtlasInType& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
   m_valid = true;
 }
 
 template<const int dim>
-inline Atlas::Message::Object Vector<dim>::toAtlas() const
+inline AtlasOutType Vector<dim>::toAtlas() const
 {
   return _ArrayToAtlas(m_elem, dim);
 }
 
-inline void Quaternion::fromAtlas(const Atlas::Message::Object& a)
+inline void Quaternion::fromAtlas(const AtlasInType& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();
 
 
-  Atlas::Message::Object::ListType list(a.AsList());
+  _AtlasMessageType::ListType list(a.AsList());
 
   if(list.size() != 4)
     throw _AtlasBadParse();
 
 
   for(int i = 0; i < 3; ++i)
-    m_vec[i] = list[i].AsNum();
+    m_vec[i] = _asNum(list[i]);
 
-  m_w = list[3].AsNum();
+  m_w = _asNum(list[3]);
 
   CoordType norm = sqrt(m_w * m_w + m_vec.sqrMag());
 
@@ -110,9 +152,9 @@ inline void Quaternion::fromAtlas(const Atlas::Message::Object& a)
   m_valid = true;
 }
 
-inline Atlas::Message::Object Quaternion::toAtlas() const
+inline AtlasOutType Quaternion::toAtlas() const
 {
-  Atlas::Message::Object::ListType a;
+  _AtlasMessageType::ListType a;
 
   for(int i = 0; i < 3; ++i)
     a.push_back(m_vec[i]);
@@ -122,25 +164,25 @@ inline Atlas::Message::Object Quaternion::toAtlas() const
 }
 
 template<const int dim>
-inline void Point<dim>::fromAtlas(const Atlas::Message::Object& a)
+inline void Point<dim>::fromAtlas(const AtlasInType& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
   m_valid = true;
 }
 
 template<const int dim>
-inline Atlas::Message::Object Point<dim>::toAtlas() const
+inline AtlasOutType Point<dim>::toAtlas() const
 {
   return _ArrayToAtlas(m_elem, dim);
 }
 
 template<const int dim>
-void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
+void AxisBox<dim>::fromAtlas(const AtlasInType& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  Atlas::Message::Object::ListType list(a.AsList());
+  _AtlasMessageType::ListType list(a.AsList());
 
   switch(list.size()) {
     case 1:
@@ -157,8 +199,8 @@ void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
       break;
     case (2 * dim):
       for(int i = 0; i < dim; ++i) {
-        m_low[i] = list[i].AsNum();
-        m_high[i] = list[i+dim].AsNum();
+        m_low[i] = _asNum(list[i]);
+        m_high[i] = _asNum(list[i+dim]);
       }
       m_low.setValid();
       m_high.setValid();
@@ -177,12 +219,12 @@ void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
 }
 
 template<>
-inline void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
+inline void AxisBox<2>::fromAtlas(const AtlasInType& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  Atlas::Message::Object::ListType list(a.AsList());
+  _AtlasMessageType::ListType list(a.AsList());
 
   switch(list.size()) {
     case 1:
@@ -190,7 +232,7 @@ inline void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
       m_high.fromAtlas(list[0]);
       break;
     case 2: // 2 possible different cases
-      if(list[0].IsFloat()) {
+      if(_isNum(list[0])) {
         m_low.setToOrigin();
         m_high.fromAtlas(a);
       }
@@ -201,8 +243,8 @@ inline void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
       break;
     case 4:
       for(int i = 0; i < 2; ++i) {
-        m_low[i] = list[i].AsNum();
-        m_high[i] = list[i+2].AsNum();
+        m_low[i] = _asNum(list[i]);
+        m_high[i] = _asNum(list[i+2]);
       }
       m_low.setValid();
       m_high.setValid();
@@ -221,24 +263,24 @@ inline void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
 }
 
 template<>
-inline void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
+inline void AxisBox<1>::fromAtlas(const AtlasInType& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  Atlas::Message::Object::ListType list(a.AsList());
+  _AtlasMessageType::ListType list(a.AsList());
 
-  bool got_float = list[0].IsFloat();
+  bool got_float = _isNum(list[0]);
 
   switch(list.size()) {
     case 1:
       m_low.setToOrigin();
-      m_high.fromAtlas(got_float ? a : list[0]);
+      m_high.fromAtlas(got_float ? a : AtlasInType(list[0]));
       break;
     case 2:
       if(got_float) {
-        m_low[0] = list[0].AsNum();
-        m_high[0] = list[1].AsNum(); 
+        m_low[0] = _asNum(list[0]);
+        m_high[0] = _asNum(list[1]); 
         m_low.setValid();
         m_high.setValid();
       }
@@ -259,7 +301,7 @@ inline void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
 }
 
 template<const int dim>
-Atlas::Message::Object AxisBox<dim>::toAtlas() const
+AtlasOutType AxisBox<dim>::toAtlas() const
 {
   int i;
 
@@ -272,7 +314,7 @@ Atlas::Message::Object AxisBox<dim>::toAtlas() const
 
   // Do case '2 * dim' above
 
-  Atlas::Message::Object::ListType a;
+  _AtlasMessageType::ListType a;
   for(i = 0; i < dim; ++i)
     a.push_back(m_low[i]);
   for(i = 0; i < dim; ++i)

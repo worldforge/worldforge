@@ -37,21 +37,24 @@ WFMATH_CFLAGS=""
 WFMATH_LIB_SUFFIX="-0.2"
 WFMATH_LIBS="-lwfmath$WFMATH_LIB_SUFFIX"
 
-PKG_CHECK_MODULES(ATLAS, atlascpp-0.4 >= 0.4.5, 
-	[ found_atlas=yes
+AC_MSG_NOTICE([Ignore the Atlas checks, they're just used for building test code])
+
+PKG_CHECK_MODULES(ATLAS_0_4, atlascpp-0.4 >= 0.4.5, 
+	[ found_atlas_0_4=yes
 	dnl Don't add Atlas CFLAGS, LIBS, since Atlas is only used in
     dnl conversion functions to Atlas::Message::Object. Anyone using
     dnl those should already be using Atlas explicitly.
-	], found_atlas=no)
+	], found_atlas_0_4=no)
 
-if test $found_atlas == no; then
-	AC_MSG_NOTICE([
-*** stable libAtlas >= 0.4.5 not found -- tests of Atlas <-> wfmath
-*** type conversion code stubs will not be built,
-*** if you don't know what Atlas is, this message does not apply to you])
-fi
+PKG_CHECK_MODULES(ATLAS_0_6, atlascpp-0.6 >= 0.5.0, 
+	[ found_atlas_0_6=yes
+	dnl Don't add Atlas CFLAGS, LIBS, since Atlas is only used in
+    dnl conversion functions to Atlas::Message::Object. Anyone using
+    dnl those should already be using Atlas explicitly.
+	], found_atlas_0_6=no)
 
-AM_CONDITIONAL(HAVE_ATLAS, test $found_atlas == yes)
+AM_CONDITIONAL(HAVE_ATLAS_0_4, test $found_atlas_0_4 == yes)
+AM_CONDITIONAL(HAVE_ATLAS_0_6, test $found_atlas_0_6 == yes)
 
 AC_LANG_PUSH(C++)
 

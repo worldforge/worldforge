@@ -49,10 +49,15 @@
 
 // Forward declarations for all classes
 #include <iosfwd>
-namespace Atlas { namespace Message { class Object;}}
 
 /// Generic library namespace
 namespace WFMath {
+
+// WFMath::Foo::toAtlas() has to return a definite type,
+// we deal with supporting both 0.4 and 0.6 by forward declaring
+// types which we define in the AtlasConv header
+class AtlasInType;
+class AtlasOutType;
 
 // Constants
 

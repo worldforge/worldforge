@@ -100,15 +100,15 @@ class Point
   /// Construct a copy of a point
   Point (const Point& p);
   /// Construct a point from an object passed by Atlas
-  explicit Point (const Atlas::Message::Object& a) {fromAtlas(a);}
+  explicit Point (const AtlasInType& a) {fromAtlas(a);}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);
 
   /// Create an Atlas object from the point
-  Atlas::Message::Object toAtlas() const;
+  AtlasOutType toAtlas() const;
   /// Set the point's value to that given by an Atlas object
-  void fromAtlas(const Atlas::Message::Object& a);
+  void fromAtlas(const AtlasInType& a);
 
   Point& operator= (const Point& rhs);
 
