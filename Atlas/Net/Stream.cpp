@@ -128,6 +128,7 @@ void Atlas::Net::StreamConnect::Poll(bool can_read = true)
     {
 	if (codecHelper.get(buf, "IWILL"))
 	{
+	    processServerCodecs();
 	    state++;
 	}
     }
@@ -144,6 +145,7 @@ void Atlas::Net::StreamConnect::Poll(bool can_read = true)
     {
 	if (filterHelper.get(buf, "IWILL"))
 	{
+	    processServerFilters();
 	    state++;
 	}
     }
@@ -183,6 +185,8 @@ void Atlas::Net::StreamConnect::processServerCodecs()
     FactoryCodecs::iterator i;
     list<string>::iterator j;
 
+    outCodecs.erase(outCodecs.begin(), outCodecs.end());
+
     FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
 
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
@@ -192,6 +196,7 @@ void Atlas::Net::StreamConnect::processServerCodecs()
 	    if ((*i)->GetName() == *j)
 	    {
 		outCodecs.push_back(*i);
+		cerr << *j << " is the one" << endl << flush;
 		return;	      
 	    }
 	}

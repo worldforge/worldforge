@@ -1,0 +1,5 @@
+2000-11-01  Al Riddoch  <ajr@ecs.soton.ac.uk>
+
+	* Fixed negotiation so it is now possible for packed to get picked.
+	  (Packed decoder appears to segfault though)
+	
