@@ -95,7 +95,7 @@ void RootOperation::RemoveAttr(const string& name)
     Root::RemoveAttr(name);
 }
 
-void RootOperation::SendContents(Bridge* b)
+void RootOperation::SendContents(Bridge* b) const
 {
     SendSerialno(b);
     SendRefno(b);

@@ -44,7 +44,7 @@ public:
     virtual void RemoveAttr(const std::string& name);
 
     /// Send the contents of this object to a Bridge.
-    virtual void SendContents(Atlas::Bridge* b);
+    virtual void SendContents(Atlas::Bridge* b) const;
 
     /// Convert this object to a Message::Object.
     virtual Atlas::Message::Object AsObject() const;
