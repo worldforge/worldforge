@@ -159,7 +159,7 @@ void World::look(const std::string &id)
      		look.SetArgs(args);
 		
 		// unecessary according to spec, but Stage needs it <sigh>
-		look.SetTo(id);
+		// look.SetTo(id);
 	}
 	
 	look.SetSerialno(getNewSerialno());
