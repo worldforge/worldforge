@@ -20,9 +20,11 @@ int main()
         // Forest has zero area, so even when populated it is empty
         assert(forest.getPlants().empty());
 
-        assert(!forest.getArea().isValid());
+        assert(!forest.getBBox().isValid());
+        assert(forest.getArea().isValid());
         forest.setArea(WFMath::AxisBox<2>(WFMath::Point<2>(-5, -5),
                                           WFMath::Point<2>(5, 5)));
+        assert(forest.getBBox().isValid());
         assert(forest.getArea().isValid());
 
         forest.populate();
