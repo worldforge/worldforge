@@ -174,7 +174,7 @@ void Room::leave()
 
 void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 {
-	Log("Got sight of room %s", _id.c_str());
+	Log(LOG_NOTICE, "Got sight of room %s", _id.c_str());
 	_initialGet = true;
 		
 	_name = room.GetName();
@@ -197,7 +197,7 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 	}
 	
 	if (_pending.empty()) {
-		Log("Doing immediate entry to room %s", _id.c_str());
+		Log(LOG_NOTICE, "Doing immediate entry to room %s", _id.c_str());
 		// FIXME  - this code will cause OOG entry, even if the server
 		// doesn't really support it (just to an empty lobby). The option
 		// is not to emit the 'entered' signal at all. I don't know which

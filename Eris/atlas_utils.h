@@ -32,7 +32,7 @@ template <class T>
 const T atlas_cast(const Objects::Root &data)
 {
 	T obj = T::Instantiate();
-	Message::Object::MapType mp = data.AsMap();
+	Message::Object::MapType mp = data.AsObject().AsMap();
 	
 	for (Message::Object::MapType::iterator A = mp.begin();
 		A != mp.end(); ++A)

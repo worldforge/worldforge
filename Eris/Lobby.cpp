@@ -248,7 +248,7 @@ void Lobby::look(const std::string &id)
 void Lobby::recvInfoAccount(const Operation::Info &ifo, 
 	const AtlasEntity::Account &account)
 {
-	Eris::Log("in recvInfoAccount");
+	Eris::Log(LOG_VERBOSE, "in recvInfoAccount");
 	
 	// reject lots of extraneous INFOs we don't care about
 	// FIXME  - enable the refno test once stage correctly processes it
@@ -278,7 +278,7 @@ void Lobby::recvSightPerson(const Atlas::Objects::Entity::Account &ac)
 {
 	PersonDict::iterator i = _peopleDict.find(ac.GetId());
 	if (i == _peopleDict.end()) {
-		Eris::Log("got un-requested sight of person %s", ac.GetId().c_str());
+		Eris::Log(LOG_WARNING, "got un-requested sight of person %s", ac.GetId().c_str());
 		return;
 	}
 	
@@ -296,7 +296,7 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 {
 	// check if this is initial room (lobby), from the anonymous LOOK
 	if (_id.empty()) {
-		Log("recieved sight of root room (lobby)");
+		Log(LOG_NOTICE, "recieved sight of root room (lobby)");
 		_roomDict[room.GetId()] = this;
 		
 		_id = room.GetId();
@@ -309,7 +309,7 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 		if (i == _roomDict.end())
 			throw InvalidOperation("Got sight of unknown room!");
 		
-		Log("recived sight of room %s", i->first.c_str());
+		Log(LOG_NOTICE, "recived sight of room %s", i->first.c_str());
 		i->second->sight(room);
 	}
 	

@@ -19,6 +19,19 @@ class Dispatcher;
 class WaitForBase;
 class Timeout;
 	
+/** Logging level : setting a higher level will automaticaly pull in the lower
+ levels (i.e NOTICE implies ERROR and WARNING) */
+typedef enum {
+	LOG_ERROR = 0,	///< serious failure indications
+	LOG_WARNING,	///< something is amiss, but probably okay to continue
+	LOG_NOTICE,		///< general information
+	LOG_VERBOSE,	///< <i>lots</i> of information, about every recieved operation, for example
+	LOG_DEBUG		///< excessive amounts of stuff
+} LogLevel;
+
+/// the default logging level for a new connection
+const LogLevel DEFAULT_LOG = LOG_WARNING;
+
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
 a single TCP connection, if re-connections occur. */
@@ -30,8 +43,9 @@ class Connection :
 public:
 	/// Create an unconnected instance
 	/** Create a new connection, with the client-name  string specified. The client-name
-	is sent during Atlas negotiation of the connection. */
-	Connection(const std::string &cnm);	
+	is sent during Atlas negotiation of the connection. 
+	@param debug Perform extra (slower) validation on the connection */
+	Connection(const std::string &cnm, bool debug);	
 	virtual ~Connection();
 
 	static Connection* Instance();
@@ -86,8 +100,9 @@ public:
 	disconnect operation apply as above */
 	void send(const Atlas::Message::Object &msg);
 
-	/// (should be protected?) pretend you never saw this ...
-	void postForDispatch(const Atlas::Message::Object &msg);
+	/** set the logging level for all sucessive messages : this can be called at any time, so it is
+	reasonable to bracket suspect calls in setLogLevel calls if you choose */
+	void setLogLevel(LogLevel lvl);
 	
 	/** Lock then connection's state. This prevents the connection changing status
 	until a corresponding unlock() call is issued. The only use at present is to hold
@@ -98,6 +113,7 @@ public:
 	/** Unlock the connection (permit status change). See Connection::lock for more
 	information about status locking. */
 	void unlock();
+///////////////////////
 	
 	/// Emitted when the disconnection process is initiated
 	SigC::Signal0<bool> Disconnecting;
@@ -122,7 +138,7 @@ public:
 	/** Emitted with logging information; client may handle as it see fit.
 	There is room for considerable expansion of this feature; notably message
 	classes (warning / info / debug). Any feedback greatly appreciated */
-	SigC::Signal1<void, std::string> Log;
+	SigC::Signal2<void, LogLevel, std::string> Log;
 
 protected:
 	/// update the connection status (and emit the appropriate signal)
@@ -142,10 +158,15 @@ protected:
 
 	virtual void onConnect();
 
+	/** this is how waitForBase gets it's payload back into the dispatch queue*/
+	void postForDispatch(const Atlas::Message::Object &msg);
+
 	Dispatcher* _rootDispatch;	///< the root of the dispatch tree
 	unsigned int _statusLock;	///< locks connection to current state while > 0	
 	
 	friend class WaitForBase;	// so can call addWaitFor
+	
+	friend void Log(LogLevel lvl, const char *str, ...);
 	
 	/// register a new WaitFor into the list
 	void addWait(WaitForBase *w);
@@ -156,6 +177,7 @@ protected:
 	std::string _host;
 	short _port;		///< port of the server
 	bool _debug;
+	LogLevel _logLevel;	///< the current logging level
 	
 	// static singleton instance
 	static Connection* _theConnection;
@@ -173,7 +195,7 @@ private:
 	WaitForList _waitList;
 };
 
-void Log(const char *str, ...);
+void Log(LogLevel lvl, const char *str, ...);
 
 }
 

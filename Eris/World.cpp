@@ -309,7 +309,7 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 	// passed in as const referenced, so we need a nasty cast to make this go through
 	
 	if (id == "game_entity") {
-		cerr << "WARNING: ID not set on entity" << endl;
+		Eris::Log(LOG_WARNING, "ID not set on entity");
 		id = sight.GetFrom();
 		(const_cast<Atlas::Objects::Entity::GameEntity&>(ent)).SetId(id);
 	}
@@ -329,7 +329,7 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 			if (_initialEntry && _root) {
 				Entered.emit(e);
 				_initialEntry = false;	
-				Eris::Log("did IG entry after sight of character");
+				Eris::Log(LOG_VERBOSE, "did IG entry after sight of character");
 			}
 		}
 	
@@ -479,6 +479,8 @@ void World::recvDisappear(const Atlas::Objects::Operation::Disappearance &ds)
 
 void World::recvSightSet(const Atlas::Objects::Operation::Set &set)
 {
+	Eris::Log(LOG_DEBUG, "processing IG sight(set)");
+	
 	Entity *e = lookup(set.GetTo());
 	if (!e) {
 		// no need to re-dispatch; we'll get the set value anyway as part
@@ -513,7 +515,7 @@ void World::setRootEntity(Entity* rt)
 		if (character) {
 			Entered.emit(character);
 			_initialEntry = false;
-			Eris::Log("did IG entry after setRootEntity");
+			Eris::Log(LOG_VERBOSE, "did IG entry after setRootEntity");
 		} // else still waiting for the character
 	}
 }

@@ -194,7 +194,7 @@ try {
 	return ret;
 }
 	catch (Atlas::Message::WrongTypeException &wte) {
-		Eris::Log("caught WTE in Utils::objectSummary");
+		Eris::Log(LOG_ERROR, "caught WTE in Utils::objectSummary");
 		return "<invalid>";
 	}
 }

@@ -117,7 +117,7 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 	}
 
 	if (isBound()) {
-		Eris::Log("Bound type %s", id.c_str());
+		Eris::Log(LOG_VERBOSE, "Bound type %s", id.c_str());
 		Bound.emit();
 	}
 	
@@ -135,7 +135,7 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 			assert(!wasBound);
 			// emit the signal, will probably trigger all manner of crap
 			(*D)->Bound.emit();
-			Eris::Log("Bound type %s", (*D)->getName().c_str());
+			Eris::Log(LOG_VERBOSE, "Bound type %s", (*D)->getName().c_str());
 		}
 		++D;
 	}
@@ -275,7 +275,7 @@ void TypeInfo::init()
 	if (_inited)
 		return;	// this can happend during re-connections, for example.
 	
-	Eris::Log("Starting Eris TypeInfo system...");
+	Eris::Log(LOG_NOTICE, "Starting Eris TypeInfo system...");
 	
 	Dispatcher *info = Connection::Instance()->getDispatcherByPath("op:info");
 	
@@ -325,7 +325,7 @@ void TypeInfo::readAtlasSpec(const std::string &specfile)
 {
     fstream specStream(specfile.c_str(), ios::in);
     if(!specStream.is_open()) {
-		Eris::Log("Unable to open Atlas spec file %s, hope the server boot-straps okay", specfile.c_str());
+		Eris::Log(LOG_ERROR, "Unable to open Atlas spec file %s, hope the server boot-straps okay", specfile.c_str());
 		return;
     }
  
@@ -364,7 +364,7 @@ TypeInfoPtr TypeInfo::findSafe(const std::string &id)
 	TypeInfoMap::iterator ti = globalTypeMap.find(id);
 	if (ti == globalTypeMap.end()) {
 		// not found, do some work
-		Eris::Log("Requesting type data for %s", id.c_str());
+		Eris::Log(LOG_VERBOSE, "Requesting type data for %s", id.c_str());
 		
 		// FIXME  - verify the id is not in the authorative invalid ID list
 		TypeInfoPtr node = new TypeInfo(id);
@@ -414,7 +414,7 @@ try {
 	
 	T->second->processTypeData(atype);
 } catch (Atlas::Message::WrongTypeException &wte) {
-	Eris::Log("caught WTE in TypeInfo::recvOp");
+	Eris::Log(LOG_ERROR, "caught WTE in TypeInfo::recvOp");
 }
 
 }
@@ -456,13 +456,13 @@ void TypeInfo::recvTypeError(const Atlas::Objects::Operation::Error &error,
 	TypeInfoMap::iterator T = globalTypeMap.find(typenm);
 	if (T == globalTypeMap.end()) {
 			// what the fuck? getting out of here...
-			Eris::Log("Got ERROR(GET) for type lookup on %s, but I never asked for it, I swear!",
+			Eris::Log(LOG_WARNING, "Got ERROR(GET) for type lookup on %s, but I never asked for it, I swear!",
 				typenm.c_str());
 			return;
 	}
 	
 	// XXX - at this point, we could kill the type; instead we just mark it as bound
-	Eris::Log("ERROR: got error from server looking up type %s",
+	Eris::Log(LOG_ERROR, "got error from server looking up type %s",
 		typenm.c_str());
 	
 	// parent to root?

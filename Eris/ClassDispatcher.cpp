@@ -54,7 +54,7 @@ bool ClassDispatcher::accept(DispatchContextDeque &dq)
 	// 'full' logic, locates the type node, etc
 	TypeInfoPtr mty = TypeInfo::getSafe(dq.front());
 	if (!mty->isBound()) {
-		Eris::Log("waiting for bind of %s", mty->getName().c_str());
+		Eris::Log(LOG_VERBOSE, "waiting for bind of %s", mty->getName().c_str());
 		new WaitForSignal(mty->getBoundSignal(), dq.back());
 		return false;
 	} else

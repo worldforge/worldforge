@@ -121,7 +121,7 @@ void Player::logout()
 		throw InvalidOperation("connection is invalid");
 	
 	if (!_con->isConnected()) {
-		Eris::Log("connection not open, ignoring Player::logout");
+		Eris::Log(LOG_WARNING, "connection not open, ignoring Player::logout");
 		// FIXME - provide feedback here
 		return;
 	}
@@ -131,10 +131,7 @@ void Player::logout()
      	l.SetId(_account);
 	l.SetSerialno(getNewSerialno());
 	
-	//_con->send(&l);
-	//l.SendContents(_con->GetEncoder());
 	_con->send(l);
-	
 	_currentAction = "logout";
 	_currentSerial = l.GetSerialno();
 }
@@ -142,7 +139,7 @@ void Player::logout()
 StringList Player::getCharacters()
 {
 	if (_account.empty())
-		throw InvalidOperation("Not logged into account yet");
+		Eris::Log(LOG_ERROR, "Not logged into an account : getCharacter returning empty list");
 	return _characters;
 }
 
@@ -217,18 +214,6 @@ World* Player::takeCharacter(const std::string &id)
   	return _world;
 }
 
-/*
-void Player::ActionComplete
-{
-	// character (game entity) callback	
-	Dispatcher *ge = d->AddSubdispatch(new ClassDispatcher("game_entity", "gameentity"));
-	ge->AddSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("lobby", 
-		SigC::slot(this, &Lobby::RecvSightEntity)
-	));
-}
-*/
-
-
 void Player::internalLogin(const string &uname, const string &pwd)
 {
 	Atlas::Objects::Entity::Account account = 
@@ -288,7 +273,7 @@ void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 	
 	std::string serverMsg = getMember(getArg(err, 0), "message").AsString();
 	// can actually use error[2]->parents here to detrmine the current action
-	Eris::Log("Received Atlas error %s", serverMsg.c_str());
+	Eris::Log(LOG_WARNING, "Received Atlas error %s", serverMsg.c_str());
 	
 	std::string pr = getMember(getArg(err, 1), "parents").AsList().front().AsString();
 	if (pr == "login") {
@@ -344,10 +329,4 @@ void Player::netFailure(std::string msg)
 	; // do something useful here?
 }
 
-/*
-void Player::LobbyFailure()
-{
-	
-}
-*/
 }; // of namespace Eris

@@ -17,6 +17,14 @@ Sunday, November 18 2001, James Turner
 	  since I am clearly doing something stupid with STL remove_if; it was
 	  leaving some objects in the queue. My reading for tonight is
 	  Scott Meyer's 'Effective STL', <sigh>
+	  
+	* Added a 'LogLevel' argument to Eris::Log, and changed all the callers to
+	  set it a sensible value; should reduce the amout of crap we have to
+	  wade through.
+	* Changed atlas_cast to use AsObject().AsMap() since AsMap doesn't
+	  work correctly for RootEntity/Operation : this was causing lots of
+	  strange pseudo-corruption bugs. Eternal gratitude and your first
+	  born to be sacrificed to the greater glory of alriddoch!
 
 Thursday, November 15 2001, James Turner
 
