@@ -25,10 +25,9 @@
    2000-02-26  Karsten <klaux@rhrk.uni-kl.de>
                * added operators:
 	         "=" for all types except for Asignment Object = Object
-		 "==" for simple types like String, Int, Long, Float
-		 "[] const" for getting elements from Maps (readonly)
-		 "[]" for adding/setting elements to Maps (readwrite)
-	       * moved implementation to .cpp file
+		 "==" also for comparism to simple types
+		 "[] const" for getting elements from Maps & Lists (readonly)
+	       * moved some implementation to .cpp file
 	       * added copyright header
                * added asLong()
   ...
@@ -68,16 +67,28 @@ static void dump(const Object& msg);
 /** assignment operators
  */
 //@{
-/** overload assignment so copying works right */
+/** overload assignment so copying works right   
+    
+*/
 Object &operator=(const Object& src)
 {
-	obj->decref();
-	obj = src.obj;
-	obj->incref();
-	return *this;
+  obj->decref();
+  obj = src.obj;
+  obj->incref();
+
+  return *this;
 }
+
 /** */
 Object &operator=(const string& val)
+{
+  obj->decref();
+  obj = new VStr(val); 
+  return *this;
+}
+
+/** */
+Object &operator=(const char* val)
 {
   obj->decref();
   obj = new VStr(val); 
@@ -114,24 +125,32 @@ Object &operator=(double val)
 //@{
 /**Compare two Objects.
 
- FIXME !! 
-
- The result is true if and only if the compared objects 
- refer to the same memory object.
- e.g.
- Object a = Object::mkString("hello");
- Object b = Object::mkString("hello");
-
- (a == b) equals to  "false" !
-
- but Object c = a;
-
- (c == a) equals to "true"
-
 */
 bool operator==(const Object& src)
 {
-  return obj == src.obj;
+  if(obj->rt == src.obj->rt)
+    {
+      switch(obj->rt)
+	{
+	case Int:
+	  return ((VNum*)obj)->lv == ((VNum*)src.obj)->lv;
+	  break;
+	case Float:
+	  return ((VNum*)obj)->dv == ((VNum*)src.obj)->dv;	  
+	  break;
+	case String:
+	  return ((VStr*)obj)->st == ((VStr*)src.obj)->st;
+	  break;
+	case Map:
+	  return ((VMap*)obj)->vm == ((VMap*)src.obj)->vm;
+	  break;
+	case List:
+	  return ((VVec*)obj)->vv == ((VVec*)src.obj)->vv;
+	  break;
+	}
+    }
+
+  return false;
 }
 
 /** compare to string*/
@@ -212,6 +231,12 @@ Object(const string& val)
 	obj = new VStr(val);
 }
 
+/** Construct a String type Object */
+Object(const char* val)
+{
+	obj = new VStr(val);
+}
+
 /** Construct a List or Map Object */
 Object(Type val)
 {
@@ -268,14 +293,7 @@ bool	has(const string& name) const
  In contrast to stl's []-operators this returns an empty Object 
  if the requested attribute does not exist.
 */
-Object& operator[](const string& name) const;
-
-
-/** (Map) access an Object attribute.
- If the attribute does not exist it will be added to the object,
- as long as the object is a Map.
-*/
-Object& operator[] (const string& name);
+const Object& operator[](const string& name) const;
 
 
 /** (Map) get an Object attribute */
@@ -408,6 +426,15 @@ bool    set(const string& name, double src)
 
 /** (Map) set a String attribute */
 bool    set(const string& name, const string& src)
+{
+	del(name);
+	if (obj->rt !=Map) return false;
+	((VMap*)obj)->vm[name] = new VStr(src);
+	return true;
+}
+
+/** (Map) set a String attribute */
+bool    set(const string& name, const char* src)
 {
 	del(name);
 	if (obj->rt !=Map) return false;
@@ -570,13 +597,7 @@ bool	clear()
     In contrast to stl's []-operators this returns an empty Object 
     if the requested element does not exist.
 */
-Object& operator[](size_t ndx) const;
-
-
-/** (List) get an Object at position ndx.
-    If there is no element at ndx, a new empty Object will be created.
-*/
-Object& operator[] (size_t ndx);
+const Object& operator[](size_t ndx) const;
 
 /** (List) insert an Object at this index */
 bool    insert(size_t ndx, const Object& val);
@@ -592,6 +613,10 @@ bool    insert(size_t ndx, double val);
 
 /** (List) insert a String at this index */
 bool    insert(size_t ndx, const string& val);
+
+/** (List) insert a String at this index */
+bool    insert(size_t ndx, const char* val);
+
 
 /** (List) append an Object */
 bool    append(const Object& val);
@@ -622,6 +647,9 @@ bool    set(size_t ndx, double val);
 
 /** (List) replace a String at this index */
 bool    set(size_t ndx, const string& val);
+
+/** (List) replace a String at this index */
+bool    set(size_t ndx, const char* val);
 
 /** (List) get an Object from this index */
 bool    get(size_t ndx, Object& src) const;

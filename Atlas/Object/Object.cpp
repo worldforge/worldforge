@@ -14,32 +14,7 @@ void	Object::dump(const Object& msg)
 }
 
 
-Object& Object::operator[] (const string& name)
-{
-  Object* result = new Object();
-
-  if (obj->rt !=Map) 
-    return *result;
-
-  varmap::iterator i = ((VMap*)obj)->vm.find(name);
-  
-  if (i == ((VMap*)obj)->vm.end()) 
-    {
-      //requested attribute does not exist, 
-      //so we need to create it
-      ((VMap*)obj)->vm[name] = result->obj;
-    }
-  else
-    {
-      result->obj = (*i).second;
-    }
-
-  result->obj->incref();
-
-  return *result;
-}
-
-Object& Object::operator[](const string& name) const
+const Object& Object::operator[](const string& name) const
 {
   Object* result = new Object();
 
@@ -49,6 +24,8 @@ Object& Object::operator[](const string& name) const
   varmap::iterator i = ((VMap*)obj)->vm.find(name);
   if (i == ((VMap*)obj)->vm.end()) 
     return *result;
+ 
+  result->obj->decref();
 
   result->obj = (*i).second;
   result->obj->incref();
@@ -98,6 +75,14 @@ bool    Object::insert(size_t ndx, const string& val)
 	return true;
 }
 
+/** (List) insert a String at this index */
+bool    Object::insert(size_t ndx, const char* val)
+{
+	if (obj->rt != List) return false;
+	((VVec*)obj)->vv.insert(((VVec*)obj)->vv.begin()+ndx, new VStr(val));
+	return true;
+}
+
 /** (List) append an Object */
 bool    Object::append(const Object& val)
 {
@@ -139,30 +124,7 @@ bool    Object::append(const string& val)
 	return true;
 }
 
-Object& Object::operator[] (size_t ndx)
-{
-  Object* result = new Object();
-  Variant* v;
-
-  if (obj->rt !=List) 
-    return *result;
-  
-  v = ((VVec*)obj)->vv[ndx];
-  if(v)
-    {
-      result->obj = v;
-    }
-  else
-    {
-      ((VVec*)obj)->vv[ndx] = result->obj;
-    }
-	
-  result->obj->incref();
-
-  return *result;
-}
-
-Object& Object::operator[] (size_t ndx) const
+const Object& Object::operator[] (size_t ndx) const
 {
   Object* result = new Object();
   Variant* v;
@@ -219,6 +181,14 @@ bool    Object::set(size_t ndx, double val)
 
 /** (List) replace a String at this index */
 bool    Object::set(size_t ndx, const string& val)
+{
+	if (obj->rt != List) return false;
+	((VVec*)obj)->vv[ndx] = new VStr(val);
+	return true;
+}
+
+/** (List) replace a String at this index */
+bool    Object::set(size_t ndx, const char* val)
 {
 	if (obj->rt != List) return false;
 	((VVec*)obj)->vv[ndx] = new VStr(val);
