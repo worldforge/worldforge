@@ -1,4 +1,4 @@
-2003-06-19  Damien McGinnes
+2003-06-21  Damien McGinnes
         * Mercator/Terrain.cpp: 
           - fixed a bug in invalidatePoint (i, j), not (x,y)
           - removed the erase line in invalidateSegment (mem leak, and loses
