@@ -43,11 +43,10 @@ namespace Eris {
 // declare the static member
 Lobby* Lobby::_theLobby = NULL;	
 	
-Lobby::Lobby(/*Player *p,*/ Connection *con) :
+Lobby::Lobby(Connection *con) :
 	Room(this),
 	_account(""),
 	_con(con),
-	//_player(p),
 	_reconnect(false),
 	_infoRefno(-1)
 {

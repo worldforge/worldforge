@@ -1,3 +1,10 @@
+Monday, April 15 2002, James Turner
+
+	* Unit tests! Configure with --enable-cppunit, and do
+	  'make check' to run them. Note they only cover a few
+	  classes at present, feel free to add more, or suggest
+	  them in RT.
+
 Wednesday, April 10 2002, James Turner
 
 	* Fixed OOG emotes in Room.cpp (dispatcher logic was totally

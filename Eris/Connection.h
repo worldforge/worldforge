@@ -37,6 +37,7 @@ public:
 	is sent during Atlas negotiation of the connection. 
 	@param debug Perform extra (slower) validation on the connection */
 	Connection(const std::string &cnm, bool debug);	
+
 	virtual ~Connection();
 
 	static Connection* Instance();
@@ -59,12 +60,13 @@ public:
 	/// Initiate disconnection from the server
 	void disconnect();
 
-	/// clients must call this frequently enough to service the connection
-	/** this function reads data from the network (if available), and dispatches
-	complete messages. Thus, it should be called frequently, such as from
-	the client's main event loop. It will return very quickly if no data
-	is waiting to be read */
-	void poll();
+	/// receive data from the network, then deocde and dispatch Atlas messages
+	/** this function reads data from the network  and dispatches
+	complete messages. Note the behaviour has changed since earlier versions of
+	Eris; formerly it called select() internally to check for data (and hence was guranteed
+	to be non-blocking. WIth the addition of the Poll interface and PollDefault implementation,
+	this call will now block if no data is pending on the connection.*/
+	//void poll();
 
 	/// get the root dispatcher for incoming messages
 	Dispatcher* getDispatcher() const
@@ -84,12 +86,12 @@ public:
 	/** If the connection is not fully connected, an exception will
 	be thrown. To correctly handle disconnection, callers should
 	therefore validate the connection using IsConnected first */
-	void send(const Atlas::Objects::Root &obj);
+	virtual void send(const Atlas::Objects::Root &obj);
 	
 	/// transmit an Atlas::Message::Object to the server
 	/** The same comments regarding connection status and
 	disconnect operation apply as above */
-	void send(const Atlas::Message::Object &msg);
+	virtual void send(const Atlas::Message::Object &msg);
 	
 	/** Lock then connection's state. This prevents the connection changing status
 	until a corresponding unlock() call is issued. The only use at present is to hold
@@ -158,7 +160,7 @@ protected:
 	short _port;		///< port of the server
 	bool _debug;
 	
-	// static singleton instance
+	/// static singleton instance
 	static Connection* _theConnection;
 
 private:
@@ -176,7 +178,7 @@ private:
 	void gotData(PollData&);
 };
 
-}
+} // of Eris namespace
 
 #endif
 

@@ -54,7 +54,8 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 	_debug(dbg)
 {
 	// setup the singleton instance variable
-	assert(_theConnection == NULL);
+	if (_theConnection != NULL)
+	    throw InvalidOperation("existing connection instance in Connection ctor");
 	_theConnection = this;
 	
 	// build the initial dispatch hierarchy
@@ -81,10 +82,10 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 	
 Connection::~Connection()
 {
-	// clear the singleton instance pointer back to NULL
-	// (becuase dereferencing deleted memory costs lives!)
-	_theConnection = NULL;
-	delete _rootDispatch;
+    // clear the singleton instance pointer back to NULL
+    // (becuase dereferencing deleted memory costs lives!)
+    _theConnection = NULL;
+    delete _rootDispatch;
 }
 
 
@@ -128,29 +129,7 @@ void Connection::reconnect()
 	} else
 		BaseConnection::connect(_host, _port);
 }
-/*
-bool Connection::prePoll()
-{
-	//if (!_stream) return false;
-	int err = 0;
-	
-	// sit in idle correctly
-	if (_status == DISCONNECTED) return false;
-		
-	if ((err = _stream->getLastError()) != 0) {
-		handleFailure("Error reading from socket");
-		hardDisconnect(false);
-		return false;
-	}
-	
-	return true;
-}
-*/
-void Connection::poll()
-{
-	PollDefault::poll();
-}
-      
+   
 void Connection::gotData(PollData &data)
 {
 	if(!data.isReady(_stream))
