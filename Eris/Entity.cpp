@@ -137,12 +137,12 @@ void Entity::setVisible(bool vis)
 	
 	if (!wasVisible && _visible) {
 		//move back to actice
-		// World::Instance()->mark
+		World::Instance()->markVisible(this);
 	}
 	
 	if (wasVisible && !_visible) {
 		// move to the cache ... keep around for 'a while'
-		//World::Instance()->addInvisible(this);
+		World::Instance()->markInvisible(this);
 	}
 }
 

@@ -69,7 +69,10 @@ public:
 	Connection* getConnection() const
 	{ return _con; }
 	
-	/** update the World state periodically */
+	/** update the World state periodically : this runs various house-keeping tasks, such
+	as running client side looping events, flushing old entities from memory, and running
+	client-side motion prediction and interpolation. Basically, you want to be calling this
+	reasonably often. */
 	void tick();
 	
 // focus / observation

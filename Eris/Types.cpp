@@ -57,7 +57,7 @@ BBox::BBox(const Atlas::Message::Object &obj)
 	} else {
 		assert(outer.size() == 6);
 		u = Coord(outer);
-		v = Coord(outer[3].AsFloat(), outer[3].AsFloat(), outer[5].AsFloat());
+		v = Coord(outer[3].AsFloat(), outer[4].AsFloat(), outer[5].AsFloat());
 	}
 }
 

@@ -1,3 +1,11 @@
+Thursday, November 29 2001, James Turner
+
+	* Changed to actually call World::mark[Inv|V]isible from
+	  Entity::setVisible; thus the IEC gets some testing.
+	* Handle various edge-cases in the IEC correctly, notably
+	  when there are no buckets defined
+	* Various comment and dead-code clean-ups.
+
 Monday, November 26 2001, James Turner
 	* Re-built dispatch system with various new features:
 	* Dispatcher is now abstract, since much logic has been factored

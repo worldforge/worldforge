@@ -40,7 +40,7 @@ AC_CHECK_LIB(skstream, main, LIBS="$LIBS -lskstream",
 AC_CHECK_HEADER(skstream.h, , AC_MSG_ERROR(Couldn't find skstream header file)) 
 
 
-AM_PATH_ATLAS(0.4.3, [
+AM_PATH_ATLAS(0.4.4, [
 	CFLAGS="$CFLAGS $ATLAS_CFLAGS"
 	CXXFLAGS="$CXXFLAGS $ATLAS_CXXFLAGS"
 	LIBS="$LIBS $ATLAS_LIBS"],

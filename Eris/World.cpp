@@ -398,12 +398,14 @@ void World::recvSightDelete(const Atlas::Objects::Operation::Delete &del)
 	string id = getArg(del, "id").AsString();	
 	EntityIDMap::iterator ei = _lookup.find(id);	
 	
-	if (ei == _lookup.end())
-		throw UnknownEntity("Unknown entity at delete", id);
-	// emit some general deletion signal?
+	if (ei == _lookup.end()) {
+		Eris::Log(LOG_ERROR, "Unknown entity %s from DELETE", id.c_str());
+		return;
+	}
 	
+	// emit some general deletion signal? (flush will if ever requried)
+	flush(ei->second);
 	delete ei->second;
-	_lookup.erase(ei);
 }
 
 void World::recvSightMove(const Atlas::Objects::Operation::Move &mv)
@@ -480,8 +482,11 @@ void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
 		if ((V = app.find("stamp")) != app.end())
 			stamp = V->second.AsFloat();
 		
-		if (stamp > e->getStamp())
+		if (stamp > e->getStamp()) {
+			Eris::Log(LOG_DEBUG, "Issuing re-look for existing APPEARED entity %s with new stamp",
+				id.c_str());
 			look(id);
+		}
 	}
 }
 
