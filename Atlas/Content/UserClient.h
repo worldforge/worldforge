@@ -11,12 +11,6 @@
 
 #include <string>
 
-#ifdef _MSC_VER
-#include <map>
-#else
-#include <multimap.h>
-#endif
-
 #include <list>
 using namespace std;
 
