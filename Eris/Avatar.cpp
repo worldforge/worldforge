@@ -115,7 +115,8 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos)
     GameEntity what;
     what->setLoc(m_entity->getLocation()->getId());
     what->setId(m_entityId);
-
+    what->setAttr("pos", pos.toAtlas());
+    
     Move moveOp;
     moveOp->setFrom(m_entityId);
     moveOp->setArgs1(what);

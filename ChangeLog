@@ -1,3 +1,8 @@
+2005-02-16  James Turner  <james@worldforge.org>
+
+	* Eris/Avatar.cpp: fix missing set of 'pos' attribute on the argument to
+	  a move operation in implementation of moveToPoint.
+
 2005-02-09  James Turner  <james@worldforge.org>
 
 	* Eris/Response.h, Eris/Response.cpp: add in helper class to track request
