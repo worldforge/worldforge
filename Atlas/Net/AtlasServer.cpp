@@ -14,6 +14,10 @@ AServer::AServer(ASocket* listener)
 	lsock = listener;
 	slsock = lsock->getSock();
 
+	FD_ZERO(&fdread);
+	FD_ZERO(&fdsend);
+	FD_ZERO(&fderrs);
+
 	FD_SET(slsock, &fdread);
 	FD_SET(slsock, &fderrs);
 }
