@@ -96,8 +96,14 @@ public:
   // Ensures specified filestream is properly formatted.
   // Why isn't this protected?
 
+  bool findSection( const std::string& section);
+  // Wrapper for find(section)
+
   bool findItem( const std::string& section, const std::string& key);
   // Wrapper for find(section, key)
+
+  const sec_map & getSection( const std::string& section);
+  // Returns value of specified section.
 
   Variable getItem( const std::string& section, const std::string& key);
   // Returns value of specified key under specified section.

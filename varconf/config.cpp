@@ -176,14 +176,24 @@ bool Config::erase( const std::string& section, const std::string& key)
 
 bool Config::find( const std::string& section, const std::string& key)
 {
-  if ( m_conf.count( section)) {
-    if ( key == "") 
+  conf_map::const_iterator I = m_conf.find(section);
+  if (I != m_conf.end()) {
+    if ( key == "") {
       return true;
-    else if ( m_conf[section].count( key))
+    } 
+    const sec_map & sectionRef = I->second;
+    sec_map::const_iterator J = sectionRef.find(key);
+    if (J != sectionRef.end()) {
       return true;
+    }
   }
 
   return false;
+}
+
+bool Config::findSection( const std::string& section)
+{
+  return find( section);
 }
 
 bool Config::findItem( const std::string& section, const std::string& key)
@@ -285,6 +295,11 @@ void Config::getEnv( const std::string& prefix)
       setItem( section, name, value);
     }
   }
+}
+
+const sec_map & Config::getSection(const std::string & section)
+{
+  return m_conf[section];
 }
 
 Variable Config::getItem( const std::string& section, const std::string& key)

@@ -1,4 +1,8 @@
 ChangeLog for varconf
+Friday, 21st November, 2003, Al Riddoch <alriddoch@zepler.org>
+	* varconf/config.cpp, varconf/Config.h: Clean up accessing
+	  config to use std::map::find() when apropriate. Add functions
+	  to query and retrieve sections.
 
 Sunday, 19th October, 2003, James Turner <james@worldforge.org>
 	* Add ProjectBuilder project, which current relies on a
