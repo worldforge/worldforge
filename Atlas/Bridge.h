@@ -11,17 +11,13 @@ namespace Atlas {
 
 /** Atlas stream bridge
 
-This class presents an interface for sending Atlas messages. Starting a new
-message with MessageBegin() puts the encoder into a message context. A valid
-message consists of one map from strings to values, created with
-MessageBeginMap(). This puts the encoder into a map context, allowing named
-attributes to be sent. These attributes include other nested maps and lists,
-which put the encoder into nested map and list contexts respectively. When
-the encoder is in a list context, it can send nameless values whose order is
-significant.
+This class presents an interface that accepts an Atlas stream. The stream
+begins with a call to StreamBegin() and finishes with StreamEnd(). While the
+Bridge is in this stream context, a message can be sent using StreamMessage().
+This puts the Bridge into a map context, allowing various MapItem() calls.
 
-Bridge is used by Codec to accept Atlas messages for conversion to a byte
-stream and subsequent transmission.
+Several classes are derived from Bridge, the most notable of which is Codec,
+which accepts an Atlas stream for encoding and transmission.
 
 @see Codec
 */
