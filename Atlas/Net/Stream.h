@@ -12,7 +12,11 @@
 #include "../Negotiate.h"
 #include "../Filter.h"
 
-namespace Atlas { namespace Net {
+namespace Atlas { 
+
+class Bridge;
+
+namespace Net {
 
 /** Negotiation of codecs and filters for an Atlas connection
 
