@@ -45,13 +45,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{prefix}/lib/libwfmath.so.*
+%{prefix}/lib/libwfmath-0.2.so.*
 %doc AUTHORS COPYING NEWS README
 
 %files devel
 %defattr(-,root,root)
 %{prefix}/bin/wfmath-config
-%{prefix}/include/wfmath
+%{prefix}/man/man1/wfmath-config.1*
+%{prefix}/include/wfmath-0.2
 %{prefix}/lib/libwfmath-0.2.a
 %{prefix}/lib/libwfmath-0.2.la
 %{prefix}/lib/libwfmath-0.2.so

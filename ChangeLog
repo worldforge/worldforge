@@ -4,6 +4,12 @@ Thursday, May 1st, 2003   Ron Steinke <rsteinke@w-link.net>
 	  it now contains code which is incompatible
 	  with autoconf 2.13
 
+Thursday, April 24th, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Add news item, and fix rpm spec.
+
+	* Release 0.2.11, API 0.2, interface version 1.
+
 Wednesday, April 23rd, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* Update spec file, and set the interface version ready for
