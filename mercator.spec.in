@@ -50,4 +50,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.la
 %{_libdir}/lib*.a
 %{_libdir}/pkgconfig/*
-%{_includedir}/%{name}%{libsuffix}
+%{_includedir}/*
