@@ -224,7 +224,9 @@ int	AObject::get(const string& name, AObject& val) const
 	assert((unsigned long)val.obj != 1);
 
 	char* tmp = strdup(name.c_str());
-	val = AObject(PyDict_GetItemString(obj,tmp));
+        PyObject *foundObj=PyDict_GetItemString(obj,tmp);
+        if(!foundObj) return 0;
+	val = AObject(foundObj);
 	free(tmp);
 	assert(val.obj->ob_refcnt > 1);
 	return 1;
