@@ -1,5 +1,5 @@
 
-CPPFLAGS = -I$(top_srcdir)/src -Wall
+CPPFLAGS = -I$(top_srcdir)/src
 
 LDADD  = -L$(top_builddir)/src/ -L$(top_builddir)/src/Codecs/ \
          -L$(top_builddir)/src/Filters/ \

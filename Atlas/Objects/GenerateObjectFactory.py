@@ -76,7 +76,7 @@ int Factories::addFactory(const std::string& name, FactoryMethod method)
     return ++enumMax;
 }
 
-Root messageObject2ClassObject(const Element& mobj_arg)
+Root messageElement2ClassObject(const Element& mobj_arg)
 {
     Root obj;
     if(mobj_arg.isMap()) { // should we throw exeception if this is not true?

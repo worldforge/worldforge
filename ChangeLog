@@ -1,5 +1,16 @@
 2001-11-30  Al Riddoch  <alriddoch@zepler.org>
 
+	* src/Objects/GenerateObjectFactory.py,
+	  src/Objects/GenerateDecoder.py,
+	  src/Objects/AttributeInfo.py: Fix method name change in generated
+	  code.
+
+	* benchmark/timer.h, benchmark/Objects3_Move.cpp,
+	  benchmark/Message_Move.cpp, benchmark/Call_Move.cpp:
+	  Get the benchmarks building again.
+
+2001-11-30  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Objects/BaseObject.h, src/Objects/gen_cpp.py: Make class numbers
 	  static.
 

@@ -4,14 +4,14 @@
 
 #include "timer.h"
 
-using namespace Atlas;
+using Atlas::Message::Element;
 using namespace std;
 
 class NPC
 {
 public:
   NPC() : id("123") {x=y=z = vx=vy=vz = 0.0;}
-  Object move(const Object &op);
+  Element move(const Element &op);
   string getId() {return id;}
 private:
   string id;
@@ -19,9 +19,9 @@ private:
   double vx,vy,vz;
 };
 
-Object NPC::move(const Object &op)
+Element NPC::move(const Element &op)
 {
-  Object::ListType::iterator new_vel_i = ((Object&)op).asMap()["args"].asList().
+  Element::ListType::iterator new_vel_i = ((Element&)op).asMap()["args"].asList().
     front().asMap()["velocity"].asList().begin();
   vx = (*new_vel_i).asFloat();
   new_vel_i++; vy = (*new_vel_i).asFloat();
@@ -32,34 +32,34 @@ Object NPC::move(const Object &op)
   z += vz;
 
   //human:
-  Object::MapType human;
+  Element::MapType human;
   human["id"] = getId();
-  Object::ListType pos;
+  Element::ListType pos;
   pos.push_back(x);
   pos.push_back(y);
   pos.push_back(z);
   human["pos"] = pos;
-  Object::ListType vel;
+  Element::ListType vel;
   vel.push_back(vx);
   vel.push_back(vy);
   vel.push_back(vz);
   human["velocity"] = vel;
   
   //move:
-  Object::MapType move;
-  move["objtype"] = Object("op");
-  Object::ListType move_parents(1, Object("move"));
+  Element::MapType move;
+  move["objtype"] = Element("op");
+  Element::ListType move_parents(1, Element("move"));
   move["parents"] = move_parents;
-  Object::ListType move_args(1, human);
+  Element::ListType move_args(1, human);
   move["args"] = move_args;
   
   //sight:
-  Object::MapType sight;
-  sight["objtype"] = Object("op");
-  Object::ListType sight_parents(1, Object("sight"));
+  Element::MapType sight;
+  sight["objtype"] = Element("op");
+  Element::ListType sight_parents(1, Element("sight"));
   sight["parents"] = sight_parents;
   sight["from"] = getId();
-  Object::ListType sight_args(1, move);
+  Element::ListType sight_args(1, move);
   sight["args"] = sight_args;
 
   return sight;
@@ -68,41 +68,41 @@ Object NPC::move(const Object &op)
 int main(int argc, char** argv)
 {
   double i;
-  Object bar(42);
+  Element bar(42);
   cout<<sizeof(bar)<<endl;
   TIME_ON;
   for(i=0; i<100000.0; i+=1.0) {
     //human:
-    Object::MapType human;
-    human["objtype"] = Object("object");
-    Object::ListType human_parents(1, Object("human"));
+    Element::MapType human;
+    human["objtype"] = Element("object");
+    Element::ListType human_parents(1, Element("human"));
     human["parents"] = human_parents;
-    Object::ListType pos;
+    Element::ListType pos;
     pos.push_back(i);
     pos.push_back(i-1.0);
     pos.push_back(i+1.0);
     human["pos"] = pos;
-    Object::ListType vel;
+    Element::ListType vel;
     vel.push_back(i);
     vel.push_back(i-1.0);
     vel.push_back(i+1.0);
     human["velocity"] = vel;
 
     //move:
-    Object::MapType move;
-    move["objtype"] = Object("op");
-    Object::ListType move_parents(1, Object("move"));
+    Element::MapType move;
+    move["objtype"] = Element("op");
+    Element::ListType move_parents(1, Element("move"));
     move["parents"] = move_parents;
-    Object::ListType move_args(1, human);
+    Element::ListType move_args(1, human);
     move["args"] = move_args;
 
     //sight:
-    Object::MapType sight;
-    sight["objtype"] = Object("op");
-    Object::ListType sight_parents(1, Object("sight"));
+    Element::MapType sight;
+    sight["objtype"] = Element("op");
+    Element::ListType sight_parents(1, Element("sight"));
     sight["parents"] = sight_parents;
-    sight["from"] = Object("123");
-    Object::ListType sight_args(1, move);
+    sight["from"] = Element("123");
+    Element::ListType sight_args(1, move);
     sight["args"] = sight_args;
 
 #if 0
@@ -128,24 +128,24 @@ int main(int argc, char** argv)
   TIME_ON;
   for(i=0; i<100000.0; i+=1.0) {
     //human:
-    Object::MapType human;
+    Element::MapType human;
     human["id"] = npc1.getId();
-    Object::ListType vel;
+    Element::ListType vel;
     vel.push_back(i);
     vel.push_back(i-1.0);
     vel.push_back(i+1.0);
     human["velocity"] = vel;
 
     //move:
-    Object::MapType move;
-    move["objtype"] = Object("op");
-    Object::ListType move_parents(1, Object("move"));
+    Element::MapType move;
+    move["objtype"] = Element("op");
+    Element::ListType move_parents(1, Element("move"));
     move["parents"] = move_parents;
-    Object::ListType move_args(1, human);
+    Element::ListType move_args(1, human);
     move["args"] = move_args;
 
-    Object res_sight = npc1.move(move);
-    Object::ListType::iterator new_pos_i = res_sight.asMap()["args"].asList().
+    Element res_sight = npc1.move(move);
+    Element::ListType::iterator new_pos_i = res_sight.asMap()["args"].asList().
       front().asMap()["args"].asList().
       front().asMap()["pos"].asList().begin();
     x = (*new_pos_i).asFloat();

@@ -98,7 +98,7 @@ void ObjectsDecoder::addMethod(int num, objectArrivedPtr method)
 
 void ObjectsDecoder::objectArrived(const Atlas::Message::Element::MapType& o)
 {
-    Root obj =  messageObject2ClassObject(o);
+    Root obj =  messageElement2ClassObject(o);
     dispatchObject(obj);
 }
 

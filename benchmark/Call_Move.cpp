@@ -43,6 +43,6 @@ int main()
   for(i=0; i<10000000.0; i+=1.0)
     npc1.move(i,i-1.0,i+1.0, x,y,z, vx,vy,vz);
   TIME_OFF("NPC movements");
-  cout<<"Resulting position: ("<<x<<","<<y<<","<<z<<")"<<endl;
+  std::cout<<"Resulting position: ("<<x<<","<<y<<","<<z<<")"<<std::endl;
   return 0;
 }

@@ -210,7 +210,7 @@ class ArgsRootList(AttributeInfo):
         I != val.end();
         I++)
     {
-        attr_%(name)s.push_back(Atlas::Objects::messageObject2ClassObject(*I));
+        attr_%(name)s.push_back(Atlas::Objects::messageElement2ClassObject(*I));
     }
 }
 

@@ -8,10 +8,13 @@
 
 #include "timer.h"
 
-using namespace Atlas;
+using Atlas::Objects::Root;
+using Atlas::Objects::Operation::Move;
+using Atlas::Objects::Operation::Sight;
+using Atlas::Objects::Entity::GameEntity;
 using namespace std;
 
-#define DEBUG 0
+//#define DEBUG 0
 #if DEBUG
 #define MAX_ITER 10.0
 #else
@@ -76,18 +79,18 @@ Sight NPC::move(Move &op)
 int main(int argc, char** argv)
 {
     try {
-        loadDefaults("../../../protocols/atlas/spec/atlas.xml");
-    } catch(DefaultLoadingException e) {
+        Atlas::Objects::loadDefaults("../../../protocols/atlas/spec/atlas.xml");
+    } catch(Atlas::Objects::DefaultLoadingException e) {
         cout << "DefaultLoadingException: "
-             << e.msg << endl;
+             << e.getDescription() << endl;
         return 1;
     }
     double i;
-    TIME_ON;
+    TIME_ON
     for(i=0; i<MAX_ITER; i+=1.0) {
         //human:
         GameEntity human;
-        Object::ListType pos;
+        Atlas::Message::Element::ListType pos;
         human->modifyPos()[0] = i;
         human->modifyPos()[1] = i-1.0;
         human->modifyPos()[2] = i+1.0;
