@@ -16,6 +16,8 @@ class XML : public Codec<iostream>
 
     virtual void Poll();
 
+    virtual void StreamEnd() { }
+
     virtual void MessageBegin();
     virtual void MessageItem(const Map&);
     virtual void MessageEnd();
