@@ -43,9 +43,13 @@ typedef std::map< std::string, Variable > sec_map;
 class Config {
 public:
   static Config* inst();
+  // Allows use as a singleton, if desired.
 
   Config() { }
+
   Config( const Config& conf);
+  // New Config object, but deep-copies the m_conf and m_par_lookup of existing,
+  // passed Config object.
 
   virtual ~Config() { }
 
@@ -54,20 +58,49 @@ public:
   friend bool operator ==( const Config& one, const Config& two);
 
   void clean( std::string& str);
+  // Converts all nonalphanumeric characters in str except ``-'' and ``_'' to
+  // ``_''; converts caps in str to lower-case.
+
   bool find( const std::string& section, const std::string& key = "");
+  // Returns true if specified key exists under specified section.
+
   bool erase( const std::string& section, const std::string& key = ""); 
+  // Returns true if specified key exists under specified section and is
+  // successfully deleted.
 
   bool writeToStream( std::ostream& out);
+  // Writes to the specified output stream.
+  // Why isn't this protected?
+
   void getCmdline( int argc, char** argv);
-  void getEnv( const std::string& prefix); // prefix is case-sensitive!
+  // Gets, sets conf info based on options passed via command line.
+
+  void getEnv( const std::string& prefix); 
+  // Gets, stores a name/value pair from the environment variable with 
+  // name == prefix.
+  // prefix is case-sensitive!
+
   bool writeToFile( const std::string& filename);
+  // Writes conf map to specified file.
+
   bool readFromFile( const std::string& filename);
+  // Reads contents of specified file and set into conf map.
+
   void parseStream( std::istream& in) throw ( ParseError);
+  // Ensures specified filestream is properly formatted.
+  // Why isn't this protected?
+
   bool findItem( const std::string& section, const std::string& key);
+  // Wrapper for find(section, key)
+
   Variable getItem( const std::string& section, const std::string& key);
+  // Returns value of specified key under specified section.
+
   void setParameterLookup( char s_name, const std::string& l_name, bool value = false); 
+
   void setItem( const std::string& section, const std::string& key, const Variable& item); 
-  
+  // If key isn't null, clean() section and key and set variable.
+ 
   SigC::Signal0<void> sig;
   SigC::Signal1<void, const char*> sige;
   SigC::Signal2<void, const std::string&, const std::string&> sigv; 
@@ -83,8 +116,4 @@ private:
 
 } // namespace varconf
 #endif
-
-
-
-
 

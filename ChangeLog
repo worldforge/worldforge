@@ -1,5 +1,9 @@
 ChangeLog for varconf
 
+Saturday, May 11 2002, Joel Schander (nullstar)
+	* Added comments after member functions in Config.h.  Wasn't clear
+	  on purpose of setParameterLookup() so didn't add anything.
+
 Friday, March 19 2002, Martin Pollard
 
 	* Fixed one of variable.cpp's operator<<'s  doesn't
