@@ -19,6 +19,8 @@
 #include <Eris/LogStream.h>
 #include <Eris/Log.h>
 
+#include <sys/wait.h>
+
 using namespace Eris;
 using std::endl;
 using std::cout;
@@ -70,7 +72,7 @@ void erisLog(Eris::LogLevel level, const std::string& msg)
     cout << "ERIS: " << msg << endl;
 }
 
-AutoConnection stdConnect(StubServer& stub)
+AutoConnection stdConnect()
 {
     AutoConnection con(new Eris::Connection("eris-test", false));
     SignalCounter0 connectCount;
@@ -80,7 +82,6 @@ AutoConnection stdConnect(StubServer& stub)
     
     while (!connectCount.fireCount())
     {
-        stub.run();
         Eris::PollDefault::poll();
     }
     
@@ -88,7 +89,7 @@ AutoConnection stdConnect(StubServer& stub)
     return con;
 }
 
-AutoPlayer stdLogin(const std::string& uname, const std::string& pwd, StubServer& stub, Eris::Connection* con)
+AutoPlayer stdLogin(const std::string& uname, const std::string& pwd, Eris::Connection* con)
 {
     AutoPlayer player(new Eris::Player(con));
     
@@ -102,7 +103,6 @@ AutoPlayer stdLogin(const std::string& uname, const std::string& pwd, StubServer
 
     while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
     {
-        stub.run();
         Eris::PollDefault::poll();
     }
     
@@ -112,9 +112,9 @@ AutoPlayer stdLogin(const std::string& uname, const std::string& pwd, StubServer
 
 #pragma mark -
 
-void testLogin(StubServer& stub)
+void testLogin()
 {
-    AutoConnection con = stdConnect(stub);
+    AutoConnection con = stdConnect();
     AutoPlayer player(new Eris::Player(con.get()));
     
     SignalCounter0 loginCount;
@@ -127,7 +127,6 @@ void testLogin(StubServer& stub)
 
     while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
     {
-        stub.run();
         Eris::PollDefault::poll();
     }
     
@@ -138,9 +137,9 @@ void testLogin(StubServer& stub)
     assert(player->isLoggedIn());
 }
 
-void testBadLogin(StubServer& stub)
+void testBadLogin()
 {
-    AutoConnection con = stdConnect(stub);
+    AutoConnection con = stdConnect();
     AutoPlayer player(new Eris::Player(con.get()));
     
     SignalCounter0 loginCount;
@@ -153,7 +152,6 @@ void testBadLogin(StubServer& stub)
 
     while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
     {
-        stub.run();
         Eris::PollDefault::poll();
     }
     
@@ -162,9 +160,9 @@ void testBadLogin(StubServer& stub)
     assert(!player->isLoggedIn());
 }
 
-void testAccCreate(StubServer& stub)
+void testAccCreate()
 {
-    AutoConnection con = stdConnect(stub);
+    AutoConnection con = stdConnect();
     AutoPlayer player(new Eris::Player(con.get()));
     
     SignalCounter0 loginCount;
@@ -177,7 +175,6 @@ void testAccCreate(StubServer& stub)
 
     while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
     {
-        stub.run();
         Eris::PollDefault::poll();
     }
     
@@ -188,10 +185,10 @@ void testAccCreate(StubServer& stub)
     assert(player->isLoggedIn());
 }
 
-void testAccountCharacters(StubServer& stub)
+void testAccountCharacters()
 {
-    AutoConnection con = stdConnect(stub);
-    AutoPlayer player = stdLogin("account_B", "sweede", stub, con.get());
+    AutoConnection con = stdConnect();
+    AutoPlayer player = stdLogin("account_B", "sweede", con.get());
 
     SignalCounter0 gotChars;
     player->GotAllCharacters.connect(SigC::slot(gotChars, &SignalCounter0::fired));
@@ -199,7 +196,6 @@ void testAccountCharacters(StubServer& stub)
     
     while (gotChars.fireCount() == 0)
     {
-        stub.run();
         Eris::PollDefault::poll();
     }
     
@@ -210,10 +206,10 @@ void testAccountCharacters(StubServer& stub)
     assert(C->second->getName() == "Joe Blow");
 }
 
-void testLogout(StubServer& stub)
+void testLogout()
 {
-    AutoConnection con = stdConnect(stub);
-    AutoPlayer player = stdLogin("account_C", "lemon", stub, con.get());
+    AutoConnection con = stdConnect();
+    AutoPlayer player = stdLogin("account_C", "lemon", con.get());
     
     SignalCounter1<bool> gotLogout;
     player->LogoutComplete.connect(SigC::slot(gotLogout, &SignalCounter1<bool>::fired));
@@ -221,17 +217,16 @@ void testLogout(StubServer& stub)
     
     while (gotLogout.fireCount() == 0)
     {
-        stub.run();
         Eris::PollDefault::poll();
     }
     
     assert(!player->isLoggedIn());
 }
 
-void testCharActivate(StubServer& stub)
+void testCharActivate()
 {
-    AutoConnection con = stdConnect(stub);
-    AutoPlayer player = stdLogin("account_B", "sweede", stub, con.get());
+    AutoConnection con = stdConnect();
+    AutoPlayer player = stdLogin("account_B", "sweede", con.get());
 
     Avatar* av = player->takeCharacter("acc_b_character");
     
@@ -240,7 +235,6 @@ void testCharActivate(StubServer& stub)
     
     while (wentInGame.fireCount() == 0)
     {
-        stub.run();
         Eris::PollDefault::poll();
     }
     
@@ -255,42 +249,43 @@ void testCharActivate(StubServer& stub)
     delete av;
 }
 
-void stubMain()
-{
-    StubServer stub(7450);
-    while (true)
-    {
-        stub.run();
-    }
-}
-
 int main(int argc, char **argv)
 {
     Eris::setLogLevel(LOG_WARNING);
     Eris::Logged.connect(SigC::slot(&erisLog));
 
-    try {    
+    pid_t childPid = fork();
+    if (childPid == 0)
+    {
         StubServer stub(7450);
-        testLogin(stub);
-        testBadLogin(stub);
-        testAccCreate(stub);
-        testLogout(stub);
-        testAccountCharacters(stub);
-        testCharActivate(stub);
-    }
-    catch (TestFailure& tfexp)
-    {
-        cout << "tests failed: " << tfexp.what() << endl;
-        return EXIT_FAILURE;
-    }
-    catch (std::exception& except)
-    {
-        cout << "caught general exception: " << except.what() << endl;
-        return EXIT_FAILURE;
-    }
+        return stub.run();
+    } else {
+        try {    
+            testLogin();
+            testBadLogin();
+            testAccCreate();
+            testLogout();
+            testAccountCharacters();
+            testCharActivate();
+        }
+        catch (TestFailure& tfexp)
+        {
+            cout << "tests failed: " << tfexp.what() << endl;
+            return EXIT_FAILURE;
+        }
+        catch (std::exception& except)
+        {
+            cout << "caught general exception: " << except.what() << endl;
+            return EXIT_FAILURE;
+        }
 
-    cout << "all tests passed" << endl;
-    return EXIT_SUCCESS; // tests passed okay
+        cout << "all tests passed" << endl;
+        // tell the stub server to shutdown
+
+        int childStatus;
+        waitpid(childPid, &childStatus, 0);
+        return EXIT_SUCCESS; // tests passed okay
+    }
 }
 
 

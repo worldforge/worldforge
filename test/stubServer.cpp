@@ -25,7 +25,8 @@ using Atlas::Objects::Entity::GameEntity;
 const std::string VAR_DIR = "/tmp";
 
 StubServer::StubServer(short port) :
-    m_serverSocket(port)
+    m_serverSocket(port),
+    m_done(false)
 {
     if (!m_serverSocket.is_open())
         throw InvalidOperation("unable to open listen socket");
@@ -172,58 +173,64 @@ void StubServer::setupTestAccounts()
     m_world[avatarB0->getId()] = avatarB0;
 }
 
-void StubServer::run()
+int StubServer::run()
 {
-    if (m_serverSocket.can_accept())
-    {
-        m_clients.push_back(new ClientConnection(this, m_serverSocket.accept()));
-    }
-
-    if (m_commandListener.can_accept())
-    {
-        m_command = std::auto_ptr<Commander>(new Commander(this, m_commandListener.accept()));
-    }
+    while (!m_done) {
     
-    basic_socket_poll::socket_map clientSockets;
-
-    static const basic_socket_poll::poll_type POLL_MASK
-        = (basic_socket_poll::poll_type)(basic_socket_poll::READ | basic_socket_poll::EXCEPT);
-
-    for (unsigned int C=0; C < m_clients.size(); ++C)
-        clientSockets[m_clients[C]->getStream()] = POLL_MASK;
-
-    if (m_command.get())
-        clientSockets[m_command->getStream()] = POLL_MASK;
-
-    basic_socket_poll poller;
-    poller.poll(clientSockets);
-
-    for (ConArray::iterator C=m_clients.begin(); C != m_clients.end(); )
-    {
-        if (poller.isReady((*C)->getStream()))
-            (*C)->poll();
-    
-        if ((*C)->isDisconnected())
+        if (m_serverSocket.can_accept())
         {
-            std::string accId = (*C)->getAccount();
-            if (!accId.empty()) {
-                for (RoomMap::iterator R=m_rooms.begin(); R != m_rooms.end(); ++R)
-                {
-                    if (peopleInRoom(R->first).count(accId))
-                        partRoom(accId, R->first);
-                }
-            }
+            m_clients.push_back(new ClientConnection(this, m_serverSocket.accept()));
+        }
+
+        if (m_commandListener.can_accept())
+        {
+            m_command = std::auto_ptr<Commander>(new Commander(this, m_commandListener.accept()));
+        }
         
-            delete *C;
-            C = m_clients.erase(C);
-        } else
-            ++C;
-    }
+        basic_socket_poll::socket_map clientSockets;
+
+        static const basic_socket_poll::poll_type POLL_MASK
+            = (basic_socket_poll::poll_type)(basic_socket_poll::READ | basic_socket_poll::EXCEPT);
+
+        for (unsigned int C=0; C < m_clients.size(); ++C)
+            clientSockets[m_clients[C]->getStream()] = POLL_MASK;
+
+        if (m_command.get())
+            clientSockets[m_command->getStream()] = POLL_MASK;
+
+        basic_socket_poll poller;
+        poller.poll(clientSockets);
+
+        for (ConArray::iterator C=m_clients.begin(); C != m_clients.end(); )
+        {
+            if (poller.isReady((*C)->getStream()))
+                (*C)->poll();
+        
+            if ((*C)->isDisconnected())
+            {
+                std::string accId = (*C)->getAccount();
+                if (!accId.empty()) {
+                    for (RoomMap::iterator R=m_rooms.begin(); R != m_rooms.end(); ++R)
+                    {
+                        if (peopleInRoom(R->first).count(accId))
+                            partRoom(accId, R->first);
+                    }
+                }
+            
+                delete *C;
+                C = m_clients.erase(C);
+            } else
+                ++C;
+        }
+        
+        if (m_command.get()) {
+            if (poller.isReady(m_command->getStream()))
+                m_command->recv();
+        }
+        
+    } // of stub server main loop
     
-    if (m_command.get()) {
-        if (poller.isReady(m_command->getStream()))
-            m_command->recv();
-    }
+    return EXIT_SUCCESS;
 }
 
 /*

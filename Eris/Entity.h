@@ -95,6 +95,9 @@ public:
         return m_position;
     }
     
+    /** retreive this Entity's position in view coordinates. */
+    WFMath::Point<3> getViewPosition() const;
+    
     WFMath::Vector<3> getVelocity() const
     {
         return m_velocity;
@@ -173,18 +176,7 @@ public:
 	
     SigC::Signal2<void, Entity*, bool> VisibilityChanged;
         
-protected:	
-    friend class IGRouter;
-    friend class View;
-    friend class EntityRouter;
-    
-    void sight(const Atlas::Objects::Entity::GameEntity& gent);
-    void setFromRoot(const Atlas::Objects::Root& obj);
-    
-    /** update the entity's location based on Atlas data. This is used by
-    the MOVE handler to update the location information. */
-    void setLocationFromAtlas(const std::string& locId);
-    
+protected:	        
     /** process TALK data - default implementation emits the Say signal.
     @param obj The TALK operation arguments
     */
@@ -201,16 +193,32 @@ protected:
     /** over-rideable hook method when then Entity position, orientation or
     velocity change. The default implementation emits the Moved signal. */
     virtual void moved();
-        
+    
+    /** over-rideable hook when the actual (computed) visiblity of this
+    entity changed. The default implementation emits the VisiblityChanged
+    signal. */
+    virtual void visibilityChanged(bool vis);
+                
     void beginUpdate();
     void addToUpdate(const std::string& attr);
     void endUpdate();
 
+private:
+    friend class IGRouter;
+    friend class View;
+    friend class EntityRouter;
+    
+    /** update the entity's location based on Atlas data. This is used by
+    the MOVE handler to update the location information. */
+    void setLocationFromAtlas(const std::string& locId);
+    
+    void sight(const Atlas::Objects::Entity::GameEntity& gent);
+    void setFromRoot(const Atlas::Objects::Root& obj);
+    
     /** the View calls this to change local entity visibility. No one else
     should be calling it!*/
     void setVisible(bool vis);
-
-private:
+    
     /** setLocation is the core of the entity hierarchy maintenance logic.
     We make setting location the 'fixup' action; addChild / removeChild are
     correspondingly simple. */

@@ -595,29 +595,13 @@
 		};
 		C44CB2F305D804C50075E2A1 = {
 			children = (
-				C44CB2F405D804C60075E2A1,
-				C44CB2F505D804C60075E2A1,
+				C47CE2F706A20978009B80C1,
+				C47CE2F806A20978009B80C1,
 			);
 			isa = PBXGroup;
 			name = Products;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		C44CB2F405D804C60075E2A1 = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = skstream.framework;
-			refType = 3;
-			remoteRef = C44CB2F805D804F20075E2A1;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C44CB2F505D804C60075E2A1 = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = Ping;
-			refType = 3;
-			remoteRef = C44CB2F905D804F20075E2A1;
-			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C44CB2F605D804D30075E2A1 = {
 			containerPortal = C44CB2F205D804C50075E2A1;
@@ -630,26 +614,6 @@
 			isa = PBXTargetDependency;
 			name = "skstream (from Skstream.pbproj)";
 			targetProxy = C44CB2F605D804D30075E2A1;
-		};
-		C44CB2F805D804F20075E2A1 = {
-			containerPortal = C44CB2F205D804C50075E2A1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C568BC055AF1D600944C0F;
-			remoteInfo = skstream;
-		};
-		C44CB2F905D804F20075E2A1 = {
-			containerPortal = C44CB2F205D804C50075E2A1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C568C8055AF1DC00944C0F;
-			remoteInfo = Ping;
-		};
-		C44CB2FC05D8075A0075E2A1 = {
-			fileRef = C44CB2F405D804C60075E2A1;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		C44E352E05D969F2005C5DF9 = {
 			isa = PBXFileReference;
@@ -889,11 +853,11 @@
 			buildRules = (
 			);
 			buildSettings = {
-				DEPLOYMENT_LOCATION = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DEPLOYMENT_LOCATION = NO;
+				DYLIB_COMPATIBILITY_VERSION = 2;
+				DYLIB_CURRENT_VERSION = 2;
 				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build /Users/jmt/Library/Frameworks";
-				FRAMEWORK_VERSION = A;
+				FRAMEWORK_VERSION = B;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = ATLAS_ELEMENT_TYPEDEF_PRIVATE;
@@ -1293,7 +1257,6 @@
 		C45DC4290562F83D00D8F8F4 = {
 			buildActionMask = 2147483647;
 			files = (
-				C44CB2FC05D8075A0075E2A1,
 				C45DC42B0562F83D00D8F8F4,
 				C45DC42D0562F83D00D8F8F4,
 				C44E352F05D969F2005C5DF9,
@@ -1418,6 +1381,111 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		C47CE2EC06A1FFEC009B80C1 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = wfmath.framework;
+			refType = 3;
+			remoteRef = C47CE2F206A1FFF3009B80C1;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C47CE2ED06A1FFEC009B80C1 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = testQuaternion;
+			refType = 3;
+			remoteRef = C47CE2F306A1FFF3009B80C1;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C47CE2EE06A1FFEC009B80C1 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = polygonTest;
+			refType = 3;
+			remoteRef = C47CE2F406A1FFF3009B80C1;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C47CE2EF06A1FFEC009B80C1 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = shapeTest;
+			refType = 3;
+			remoteRef = C47CE2F506A1FFF3009B80C1;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C47CE2F006A1FFEC009B80C1 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = vectorTest;
+			refType = 3;
+			remoteRef = C47CE2F606A1FFF3009B80C1;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C47CE2F206A1FFF3009B80C1 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56943055AF2C400944C0F;
+			remoteInfo = wfmath;
+		};
+		C47CE2F306A1FFF3009B80C1 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C5694E055AF2CB00944C0F;
+			remoteInfo = testQuaternion;
+		};
+		C47CE2F406A1FFF3009B80C1 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56AFA055AF62200944C0F;
+			remoteInfo = polygonTest;
+		};
+		C47CE2F506A1FFF3009B80C1 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56B0A055AF62F00944C0F;
+			remoteInfo = shapeTest;
+		};
+		C47CE2F606A1FFF3009B80C1 = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56B2C055AF69F00944C0F;
+			remoteInfo = vectorTest;
+		};
+		C47CE2F706A20978009B80C1 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = skstream.framework;
+			refType = 3;
+			remoteRef = C47CE2F906A20996009B80C1;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C47CE2F806A20978009B80C1 = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = Ping;
+			refType = 3;
+			remoteRef = C47CE2FA06A20996009B80C1;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C47CE2F906A20996009B80C1 = {
+			containerPortal = C44CB2F205D804C50075E2A1;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C568BC055AF1D600944C0F;
+			remoteInfo = skstream;
+		};
+		C47CE2FA06A20996009B80C1 = {
+			containerPortal = C44CB2F205D804C50075E2A1;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C568C8055AF1DC00944C0F;
+			remoteInfo = Ping;
+		};
 		C485B1FE05B60252002F2D80 = {
 			isa = PBXFileReference;
 			lastKnownFileType = "wrapper.pb-project";
@@ -1428,58 +1496,18 @@
 		};
 		C485B1FF05B60252002F2D80 = {
 			children = (
-				C485B20005B60252002F2D80,
-				C485B20105B60252002F2D80,
-				C485B20205B60252002F2D80,
-				C485B20305B60252002F2D80,
-				C485B20405B60252002F2D80,
 				C485B20505B60252002F2D80,
 				C4ED222305D0FCD0006B876D,
+				C47CE2EC06A1FFEC009B80C1,
+				C47CE2ED06A1FFEC009B80C1,
+				C47CE2EE06A1FFEC009B80C1,
+				C47CE2EF06A1FFEC009B80C1,
+				C47CE2F006A1FFEC009B80C1,
 			);
 			isa = PBXGroup;
 			name = Products;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		C485B20005B60252002F2D80 = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = wfmath.framework;
-			refType = 3;
-			remoteRef = C485B20805B60277002F2D80;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C485B20105B60252002F2D80 = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = testQuaternion;
-			refType = 3;
-			remoteRef = C485B20905B60277002F2D80;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C485B20205B60252002F2D80 = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = polygonTest;
-			refType = 3;
-			remoteRef = C485B20A05B60277002F2D80;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C485B20305B60252002F2D80 = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = shapeTest;
-			refType = 3;
-			remoteRef = C485B20B05B60277002F2D80;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C485B20405B60252002F2D80 = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = vectorTest;
-			refType = 3;
-			remoteRef = C485B20C05B60277002F2D80;
-			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C485B20505B60252002F2D80 = {
 			fileType = "compiled.mach-o.executable";
@@ -1500,41 +1528,6 @@
 			isa = PBXTargetDependency;
 			name = "wfmath (from wfmath.pbproj)";
 			targetProxy = C485B20605B60261002F2D80;
-		};
-		C485B20805B60277002F2D80 = {
-			containerPortal = C485B1FE05B60252002F2D80;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56943055AF2C400944C0F;
-			remoteInfo = wfmath;
-		};
-		C485B20905B60277002F2D80 = {
-			containerPortal = C485B1FE05B60252002F2D80;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C5694E055AF2CB00944C0F;
-			remoteInfo = testQuaternion;
-		};
-		C485B20A05B60277002F2D80 = {
-			containerPortal = C485B1FE05B60252002F2D80;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56AFA055AF62200944C0F;
-			remoteInfo = polygonTest;
-		};
-		C485B20B05B60277002F2D80 = {
-			containerPortal = C485B1FE05B60252002F2D80;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56B0A055AF62F00944C0F;
-			remoteInfo = shapeTest;
-		};
-		C485B20C05B60277002F2D80 = {
-			containerPortal = C485B1FE05B60252002F2D80;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56B2C055AF69F00944C0F;
-			remoteInfo = vectorTest;
 		};
 		C485B20D05B60277002F2D80 = {
 			containerPortal = C485B1FE05B60252002F2D80;
@@ -1890,7 +1883,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4E7E0000606733C00721E8D,
-				C4E7E0010606734400721E8D,
 				C4E7DFFE0606733700721E8D,
 				C4E7DFFF0606733700721E8D,
 			);
@@ -1911,12 +1903,6 @@
 		};
 		C4E7E0000606733C00721E8D = {
 			fileRef = C46345F705E11AA900B90E4E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C4E7E0010606734400721E8D = {
-			fileRef = C44CB2F405D804C60075E2A1;
 			isa = PBXBuildFile;
 			settings = {
 			};

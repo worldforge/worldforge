@@ -26,7 +26,7 @@ public:
     StubServer(short port);
     ~StubServer();
 
-    void run();	// keep the server alive
+    int run();	// run the server, return a process result
   
     void setupTestAccounts();
 
@@ -53,7 +53,8 @@ private:
     ConArray m_clients;
     
     AccountMap m_accounts;
-
+    bool m_done;
+    
     typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> EntityMap;
     EntityMap m_world;
     

@@ -1,3 +1,13 @@
+2004-07-12  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp: Clean up the protected interface available to
+	  people subclassing Entity, by moving many methods to be private.
+	  Add a virtual wrapper around the VisibilityChanged signal, so
+	  derived classes can easily hook into it.
+
+	* tests/stubServer.cpp: Re-factor the test server to work as a child
+	  process via fork(); this simplifies the tests on the client side.
+
 2004-06-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Fix devel dependencies in rpm spec on glib2-devel.
