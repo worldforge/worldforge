@@ -3,7 +3,11 @@
 // Copyright (C) 2000 Michael Day
 
 // $Log$
-// Revision 1.9  2000-02-21 11:49:49  mike
+// Revision 1.10  2000-02-22 03:52:38  mike
+// Added output signal to Encoder, the first (but definitely not the last)
+// usage of libsigc++ within the library.
+//
+// Revision 1.9  2000/02/21 11:49:49  mike
 // Added change log
 //
 
@@ -12,6 +16,8 @@
 
 #include "Filter.h"
 #include "../Object/Object.h"
+
+#include <sigc++/signal_system.h>
 
 namespace Atlas
 {
@@ -27,6 +33,8 @@ class Atlas::Stream::Encoder
 
     virtual ~Encoder() { }
 
+    SigC::Signal1<void, std::string> output;
+
     enum Container
     {
 	LIST,
@@ -35,8 +43,6 @@ class Atlas::Stream::Encoder
     
     virtual void Begin(Container) = 0;
     virtual void Begin(const std::string& name, Container) = 0;
-    
-    virtual void End() = 0;
     
     virtual void Send(int) = 0;
     virtual void Send(float) = 0;
@@ -47,6 +53,8 @@ class Atlas::Stream::Encoder
     virtual void Send(const std::string& name, float) = 0;
     virtual void Send(const std::string& name, const std::string&) = 0;
     virtual void Send(const std::string& name, const Object&) = 0;
+    
+    virtual void End() = 0;
 };
 
 #endif
