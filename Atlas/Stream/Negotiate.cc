@@ -4,6 +4,8 @@
 
 #include "Negotiate.h"
 
+using namespace std;
+
 string get_line(string &s, char ch)
 {
   string out;
@@ -27,8 +29,8 @@ string get_line(string &s1, char ch, string &s2)
 using namespace Atlas::Stream;
 
 template <class T>
-NegotiateHelper<T>::NegotiateHelper(FactoryNames *in_factories, Factories *out_factories) :
-  inFactories(in_factories), outFactories(out_factories)
+NegotiateHelper<T>::NegotiateHelper(list<string> *names, Factories *out_factories) :
+  names(names), outFactories(out_factories)
 { 
 }
 
@@ -51,7 +53,7 @@ bool NegotiateHelper<F>::get(string &buf, string header)
 	
       if(get_line(s, ' ', h) == header)
 	{
-	  inFactories->push_back(FactoryName(s));
+	  names->push_back(s);
 	    
 	  cout << " got: " << s << endl;
 	}
@@ -96,15 +98,15 @@ void Negotiate::negotiateServer()
     string in;
     string out;
 
-    sock->recv(in);
+    sock->Receive(in);
     buf += in;
 
     if (state == SERVER_GREETING) 
     {
 	// send server greeting
 
-	sock->send(outName);
-	sock->send(string("\n"));
+	sock->Send(outName);
+	sock->Send(string("\n"));
 	
 	state++;
     }
@@ -131,7 +133,7 @@ void Negotiate::negotiateServer()
     {
 	processServerCodecs();
 	codecHelper.put(out, "IWILL");
-	sock->send(out);
+	sock->Send(out);
 	state++;
     }
     
@@ -147,7 +149,7 @@ void Negotiate::negotiateServer()
     {
 	processServerFilters();
 	filterHelper.put(out, "IWILL");
-	sock->send(out);
+	sock->Send(out);
 	state++;
     }
 }
@@ -159,7 +161,7 @@ void Negotiate::negotiateClient()
     string in;
     string out;
 
-    sock->recv(in);
+    sock->Receive(in);
     buf += in;
 
     if(state == SERVER_GREETING)
@@ -176,8 +178,8 @@ void Negotiate::negotiateClient()
     {
 	// send client greeting
 	
-	sock->send(outName);
-	sock->send(string("\n"));
+	sock->Send(outName);
+	sock->Send(string("\n"));
 
 	state++;
     }
@@ -186,7 +188,7 @@ void Negotiate::negotiateClient()
     {
 	processClientCodecs();
 	codecHelper.put(out, "ICAN");
-	sock->send(out);
+	sock->Send(out);
 
 	state++;
     }
@@ -203,7 +205,7 @@ void Negotiate::negotiateClient()
     {
 	processClientFilters();
 	filterHelper.put(out, "ICAN");
-	sock->send(out);
+	sock->Send(out);
 	state++;
     }
     
@@ -219,7 +221,7 @@ void Negotiate::negotiateClient()
 void Negotiate::processServerCodecs()
 {
     FactoryCodecs::iterator i;
-    FactoryNames::iterator j;
+    list<string>::iterator j;
 
     FactoryCodecs *myCodecs = &Factory<Codec>::factories;
 
@@ -227,7 +229,7 @@ void Negotiate::processServerCodecs()
     {
 	for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
 	{
-	    if ((*i)->GetName() == (*j).GetName())
+	    if ((*i)->GetName() == *j)
 	    {
 		outCodecs.push_back(*i);
 		return;	      
@@ -239,7 +241,7 @@ void Negotiate::processServerCodecs()
 void Negotiate::processServerFilters()
 {
   FactoryFilters::iterator i;
-    FactoryNames::iterator j;
+    list<string>::iterator j;
     
     FactoryFilters *myFilters = &Factory<Filter>::factories;
 
@@ -247,7 +249,7 @@ void Negotiate::processServerFilters()
     {
 	for (j = inFilters.begin(); j != inFilters.end(); ++j)
 	{
-	    if ((*i)->GetName() == (*j).GetName())
+	    if ((*i)->GetName() == *j)
 	    {
 		outFilters.push_back(*i);
 	    }

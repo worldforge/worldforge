@@ -9,24 +9,8 @@
 
 namespace Atlas { namespace Stream {
 
-  class FactoryName {
-  public:
-
-    FactoryName(std::string n) : name(n) { }
-
-    std::string &GetName() { return name; }
-
-  private:
-
-    std::string name;
-
-  };
-
-
   typedef std::list<Factory<Codec>*> FactoryCodecs;
   typedef std::list<Factory<Filter>*> FactoryFilters;
-  typedef std::list<FactoryName> FactoryNames;
-
 
   template <class T>
   class NegotiateHelper {
@@ -35,14 +19,14 @@ namespace Atlas { namespace Stream {
 
   public:
 
-    NegotiateHelper(FactoryNames *in_factories, Factories *out_factories);
+    NegotiateHelper(std::list<std::string> *names, Factories *out_factories);
 
     bool get(std::string &buf, std::string header);
     void put(std::string &buf, std::string header);
 
   private:
 
-    FactoryNames *inFactories;
+    std::list<std::string> *names;
     Factories *outFactories;
 
   };
@@ -87,9 +71,9 @@ class Negotiate
     std::string outName;
     std::string inName;
     Net::Socket* sock;
-    FactoryNames inCodecs;
+    std::list<std::string> inCodecs;
+    std::list<std::string> inFilters;
     FactoryCodecs outCodecs;
-    FactoryNames inFilters;
     FactoryFilters outFilters;
     NegotiateHelper<Factory<Codec> > codecHelper;
     NegotiateHelper<Factory<Filter> > filterHelper;

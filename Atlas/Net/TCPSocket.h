@@ -11,6 +11,35 @@
 #include <unistd.h>
 #endif
 
+#ifdef __linux__
+	#include <sys/time.h>
+	#include <time.h>
+	#include <sys/socket.h>
+	#include <sys/select.h>
+	#include <sys/ioctl.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <netdb.h>
+	#define SOCKET int
+	#define sinlen_t size_t
+#elif _WIN32
+	#define Win32_Winsock
+	#define FD_SETSIZE 2048
+	#include <windows.h>
+	#define sinlen_t int
+#else
+	#include <sys/time.h>
+	#include <time.h>
+	#include <sys/socket.h>
+	#include <sys/select.h>
+	#include <sys/ioctl.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <netdb.h>
+	#define SOCKET int
+	#define sinlen_t size_t
+#endif
+
 namespace Atlas
 {
 /** TCP Implementation of the Socket Class.
