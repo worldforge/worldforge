@@ -97,7 +97,7 @@ protected:
   virtual bool dispatch()
   {
     if(check())
-      emit(*this);
+      Ready.emit(*this);
 
     unsigned long wait = Eris::Timeout::pollAll();
 

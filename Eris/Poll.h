@@ -17,7 +17,7 @@ public:
 	virtual bool isReady(const basic_socket_stream*) = 0;
 };
 
-class Poll : public SigC::Signal1<void,PollData&>
+class Poll
 {
 public:
 	Poll() {}
@@ -38,6 +38,7 @@ public:
 
 	static void newTimeout() {new_timeout_ = true;}
 
+    SigC::Signal1<void, PollData&> Ready;
 private:
 	Poll(const Poll&);
 	static Poll *_inst;

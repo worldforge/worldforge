@@ -100,7 +100,7 @@ void PollDefault::doPoll(unsigned long timeout)
     PollDataDefault data(_streams, got_data, timeout);
 
     if(got_data)
-	emit(data);
+	Ready.emit(data);
 }
 
 void PollDefault::poll(unsigned long timeout)

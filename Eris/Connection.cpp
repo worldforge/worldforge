@@ -37,7 +37,8 @@ Connection::Connection(const std::string &cnm, bool dbg) :
     m_defaultRouter(NULL),
     m_lock(0)
 {	
-    Poll::instance().connect(SigC::slot(*this, &Connection::gotData));
+    // SigC::slot(*this, &Account::handleLoginTimeout)
+    Poll::instance().Ready.connect(SigC::slot(*this, &Connection::gotData));
 }
 	
 Connection::~Connection()

@@ -1,3 +1,13 @@
+2005-01-12  James Turner  <james@worldforge.org>
+
+    * Eris/Poll.h, Eris/PollDefault.cpp: change Eris::Poll to have a signal
+      object, instead of inheriting SigC::Signal, which causes warnings and
+      is generally complex.
+
+    * Eris/PollGlib.h: keep the Glib poller in sync
+
+    * Eris/Connection.cpp, Eris/Metaserver.cpp: update users of the above API
+
 2004-01-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Prefer sigc++ 2.0 over 1.2 to keep things a little

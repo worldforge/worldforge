@@ -57,7 +57,7 @@ Meta::Meta(const std::string& metaServer, unsigned int maxQueries) :
     m_stream(NULL),
     m_timeout(NULL)
 {
-    Poll::instance().connect(SigC::slot(*this, &Meta::gotData));
+    Poll::instance().Ready.connect(SigC::slot(*this, &Meta::gotData));
 }
 
 Meta::~Meta()
