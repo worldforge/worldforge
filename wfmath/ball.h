@@ -33,6 +33,8 @@
 #include <wfmath/rotbox.h>
 #include <wfmath/intersect_decls.h>
 
+#include <cstdlib> // for abort()
+
 namespace WFMath {
 
 template<const int dim> class Ball;
@@ -96,7 +98,7 @@ class Ball
   // that finds the number of corners with numCorners(), and does something
   // with each corner with getCorner(). No idea how useful that is, but
   // it's not a particularly complicated function to write.
-  Point<dim> getCorner(int i) const {assert(false);}
+  Point<dim> getCorner(int i) const {assert(false); abort();}
   Point<dim> getCenter() const {return m_center;}
 
   /// get the center of the ball
@@ -111,16 +113,16 @@ class Ball
   // Movement functions
 
   Ball& shift(const Vector<dim>& v) {m_center += v; return *this;}
-  Ball& moveCornerTo(const Point<dim>& p, int corner) {assert(false);}
+  Ball& moveCornerTo(const Point<dim>& p, int corner) {assert(false); abort();}
   Ball& moveCenterTo(const Point<dim>& p) {m_center = p; return *this;}
 
-  Ball& rotateCorner(const RotMatrix<dim>& m, int corner) {assert(false);}
+  Ball& rotateCorner(const RotMatrix<dim>& m, int corner) {assert(false); abort();}
   Ball& rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Ball& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_center.rotate(m, p); return *this;}
 
   // 3D rotation function
-  Ball<3>& rotateCorner(const Quaternion&, int corner) {assert(false);}
+  Ball<3>& rotateCorner(const Quaternion&, int corner) {assert(false); abort();}
   Ball<3>& rotateCenter(const Quaternion&) {return *this;}
   Ball<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
 	{m_center.rotate(q, p); return *this;}

@@ -1,3 +1,9 @@
+Friday, January 30th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed the fooCorner() functions in Ball from {assert(false);}
+	  to {assert(false); abort();}, per Al's comments, so they
+	  fail properly if used when NDEBUG is defined.
+
 Thursday, January 29th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Updated the AUTHORS file.
