@@ -3,9 +3,9 @@ LIBS = -lpthread -lsigc
 lib_LTLIBRARIES = libvarconf.la
 
 libvarconf_la_SOURCES = \
-  Config.cc \
-  ParseError.cc \
-  Variable.cc
+  config.cpp \
+  parse_error.cpp \
+  variable.cpp
 
 libvarconfincludedir = $(includedir)/varconf
 libvarconfinclude_HEADERS = \

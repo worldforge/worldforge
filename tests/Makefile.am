@@ -6,5 +6,5 @@ INCLUDES = -I../varconf
 
 bin_PROGRAMS = conftest
 
-conftest_SOURCES = conftest.cc
+conftest_SOURCES = conftest.cpp
 conftest_LDADD = ../varconf/.libs/libvarconf.a
