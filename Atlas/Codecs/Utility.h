@@ -20,7 +20,12 @@
 inline const string charToHex(char c)
 {
     char hex[3];
+#ifdef __MINGW32__
+    // Perhaps this should #ifdef _WIN32 instead?    
+    _snprintf(hex, 3, "%x", c);
+#else
     snprintf(hex, 3, "%x", c);
+#endif
     return hex;
 }
 
