@@ -421,6 +421,11 @@ void World::recvSightDelete(const Atlas::Objects::Operation::Delete &del)
 
 void World::recvSightMove(const Atlas::Objects::Operation::Move &mv)
 {
+    if (!hasArg(mv, "id")) {
+	Eris::log(LOG_ERROR, "received SIGHT(MOVE) with no ID argument");
+	return;
+    }
+    
     std::string id = getArg(mv, "id").AsString();
     Entity *e = lookup(id);
 	

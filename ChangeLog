@@ -1,3 +1,10 @@
+Tuesday, May 21, James Turner
+
+	* Protected against MOVE ops with no ID argument set: fail
+	  rather than asserting.
+	* Protected against character refreshed prior to account
+	  login. (Thanks man-di)
+
 Wednesday, May 15, James Turner
 
 	* Added implemention of missing getServerCount to the Metaserver

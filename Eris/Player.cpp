@@ -166,6 +166,12 @@ void Player::refreshCharacterInfo()
     if (!_con->isConnected())
 	throw InvalidOperation("Not connected to server");
 	
+    // we need to be logged in too
+    if (_account.empty()) {
+	Eris::log(LOG_ERROR, "refreshCharacterInfo: Not logged into an account yet");
+	return;
+    }
+    
     _characters.clear();
 
     if (_charIds.empty()) {
