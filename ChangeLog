@@ -1,4 +1,9 @@
+Friday, March 24, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Tweaked the syntax of the new Parallel() function slightly
+
 Thursday, March 23, 2002	Ron Steinke <rsteinke@w-link.net>
+
 	* Finished Intersect(Polygon, Polygon). Now I've just got to
 	  test all those intersection functions
 	* Added Parallel() and Perpendicular() functions to compare the

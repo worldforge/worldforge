@@ -257,8 +257,17 @@ class Vector {
 CoordType Cross(const Vector<2>& v1, const Vector<2>& v2);
 Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
 
+// Returns true if the vectors are parallel. For parallel
+// vectors, same_dir is set to true if they point the same
+// direction, and false if they point opposite directions
+template<const int dim>
+bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir);
+
+// Convienience wrapper if you don't care about same_dir
 template<const int dim>
 bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2);
+
+// Returns true if the vectors are perpendicular
 template<const int dim>
 bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2);
 

@@ -263,11 +263,21 @@ CoordType Vector<dim>::sqrMag() const
 }
 
 template<const int dim>
-bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
+bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir)
 {
   CoordType dot = Dot(v1, v2);
 
+  same_dir = (dot > 0);
+
   return Equal(dot * dot, v1.sqrMag() * v2.sqrMag());
+}
+
+template<const int dim>
+bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  bool same_dir;
+
+  return Parallel(v1, v2, same_dir);
 }
 
 template<const int dim>
