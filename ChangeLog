@@ -1,3 +1,8 @@
+Monday, 20th October, James Turner <james@worldforge.org>
+
+	* Add ProjectBuilder project - currently requires a modified
+	  libsigc++ framework which I'll upload to FTP at some point.
+
 Saturday, 20th September, Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed test code so it acutally builds, mostly Atlas
