@@ -15,12 +15,9 @@
 #include <sys/types.h>
 #include <memory.h>
 #include <string.h>
-#if defined(_WIN32) || defined(__WINDOWS__)
-/* no unistd.h on windows */
-#else
 #include <unistd.h>
-#endif
 #include <stdlib.h>
+#include <stdio.h>
 
 class ATCPSocket: public ASocket
 {
@@ -35,6 +32,7 @@ struct WSAData	wsadata;
 public:
 		ATCPSocket();
 		ATCPSocket(SOCKET asock);
+		~ATCPSocket();
 
 ASocket*	accept();
 

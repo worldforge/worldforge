@@ -32,7 +32,7 @@ public:
 
 			AClient(ASocket* asock, ACodec* acodec);
 			AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs);
-	virtual		~AClient() {}
+	virtual		~AClient();
 
 	void		setCodec(ACodec* acodec);
 	void		setCompressor(ACompressor* acmprs);

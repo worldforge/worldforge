@@ -8,6 +8,13 @@
 
 #include "AtlasClient.h"
 
+AClient::~AClient()
+{
+	if (csock) delete csock;
+	if (codec) delete codec;
+	if (cmprs) delete cmprs;
+}
+
 AClient::AClient(ASocket* asock, ACodec* acodec)
 {
 	csock = asock;

@@ -62,7 +62,7 @@ int AServer::poll(long usec)
 			DebugMsg1(0,"[AServer] SOCKET ERRORS ON %li", (long)i);
 			delClient(csock[i]);
 			csock[i]->gotErrs();
-			csock[i] == NULL;
+			csock[i] = NULL;
 		}
 	}
 	if (FD_ISSET(slsock, &xread)) return 1;

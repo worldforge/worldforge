@@ -29,6 +29,12 @@ ATCPSocket::ATCPSocket()
 	DebugMsg1(4, "ATCPSocket created Socket=%li", (long)sock);
 }
 
+ATCPSocket::~ATCPSocket()
+{
+	::close(sock);
+	sock = (SOCKET)-1;
+}
+
 ATCPSocket::ATCPSocket(SOCKET asock): ASocket(asock)
 {
 }
