@@ -331,5 +331,7 @@ AC_OUTPUT([
 	src/Objects/Makefile
 	src/Objects/Entity/Makefile
 	src/Objects/Operation/Makefile
+	tests/Makefile
+	tests/Objects/Makefile
 	tutorial/Makefile
 ])
