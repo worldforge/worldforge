@@ -1,4 +1,10 @@
-2005-04-06  James Turner  <james@worldforge.org>
+2005-04-05  James Turner  <james@worldforge.org>
+
+	* Eris/View.cpp, Eris/View.h, Eris/IGRouter.cpp: revert handling of SIGHT
+	  of entities to use the IGRouter instead of the Responder code, so we
+	  are not reliant on refnos for anything in-game.
+
+2005-04-05  James Turner  <james@worldforge.org>
 
 	* Eris/Connection.cpp, Eris/Connection.h: change Connection so hostname
 	  and port are passed as constructor argument, and make the members const.

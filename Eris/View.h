@@ -70,7 +70,6 @@ protected:
     
     void appear(const std::string& eid, float stamp);
     void disappear(const std::string& eid);
-    void sightResponse(const Atlas::Objects::Operation::RootOperation& op);
     void sight(const Atlas::Objects::Entity::GameEntity& ge);
     void create(const Atlas::Objects::Entity::GameEntity& ge);
     void deleteEntity(const std::string& eid);
