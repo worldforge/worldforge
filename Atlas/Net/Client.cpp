@@ -24,7 +24,6 @@ using std::string;
 #include "Client.h"
 #include "Codec.h"
 #include "Socket.h"
-#include "Filter.h"
 
 namespace Atlas
 {

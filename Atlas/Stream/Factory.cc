@@ -8,4 +8,4 @@ using namespace std;
 using namespace Atlas::Stream;
 
 template <typename T>
-std::list<Factory<T>*> Factory<T>::factories;
+list<Factory<T>*> Factory<T>::factories;

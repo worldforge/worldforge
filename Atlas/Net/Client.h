@@ -18,7 +18,7 @@ changes:
 
 #include "Socket.h"
 #include "Codec.h"
-#include "Filter.h"
+#include "../Stream/Filter.h"
 #include "../Object/Object.h"
 
 namespace Atlas
