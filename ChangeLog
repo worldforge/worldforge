@@ -1,5 +1,11 @@
 Wednesday, April 17 2002, Ron Steinke
 
+	* Added a test to PollDefault: if there are no file
+	  descriptors, fall out immediately before trying
+	  to poll
+
+Wednesday, April 17 2002, Ron Steinke
+
 	* Changed Time::Stamp from a typedef'd struct to a full
 	  class, operator-(const Stamp&, const Stamp&) is now
 	  recognized properly

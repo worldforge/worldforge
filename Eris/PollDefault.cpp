@@ -80,6 +80,9 @@ bool PollDataDefault::isReady(const basic_socket_stream* str)
 
 void PollDefault::doPoll()
 {
+    if(_streams.size() == 0)
+	return;
+
     bool got_data;
     PollDataDefault data(_streams, got_data);
 
