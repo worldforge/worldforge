@@ -12,8 +12,8 @@ int main(int argc, char** argv)
 {
 	EchoTest* app = new EchoTest();
 
-	ADebug::setDebug(2);
-	ADebug::openLog("EchoTest.log");
+        //ADebug::setDebug(2);
+        //ADebug::openLog("EchoTest.log");
 
 	app->execute();
 
@@ -136,8 +136,8 @@ void EchoTest::execute()
 	printf("NEW SOCK = %i\n", sock->getSock());
 		fflush(stdout);
 
-	//string servname("90.0.0.2");
-        string servname("127.0.0.1");
+	string servname("90.0.0.2");
+        //string servname("127.0.0.1");
 
 	res = sock->connect(servname, 7);
 	printf("Connect = %li\n", res);
@@ -163,8 +163,8 @@ void EchoTest::execute()
         test.set("list1", list);
         test.set("map1", amap);
 
-	for (i=0;i<100;i++) {
-		printf("SEND = %li\n", i);
+        for (i=0;i<10000;i++) {
+                // printf("SEND = %li\n", i);
 		test.set("count", i);
 		client->sendMsg(test);
 		client->doPoll();
@@ -181,8 +181,8 @@ static	long	cnt = 0;
 	long	val;
 
 	cnt++;
-	DisplayMessage(msg);
-	//if ((cnt % 50) == 0) {
+        // DisplayMessage(msg);
+        if ((cnt % 50) == 0) {
 		AObject tmp;
 		if (msg.has("count") == 1) {
 			msg.get("count",tmp);
@@ -192,7 +192,7 @@ static	long	cnt = 0;
 			printf("%li = NO COUNT !!\n", cnt);
 		}
 		fflush(stdout);
-	//}
+        }
 }
 
 

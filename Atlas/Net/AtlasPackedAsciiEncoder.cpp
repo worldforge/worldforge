@@ -67,7 +67,7 @@ string APackedAsciiEncoder::encodeMessage(const AObject& msg)
 	// walk the tree
 	walkTree(0, "", msg);
 	// and close off the message
-	printf("}");
+	printf("}\n");
 	// return result
 	return buffer;
 }

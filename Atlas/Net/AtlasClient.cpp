@@ -87,14 +87,14 @@ void AClient::sendMsg(const AObject& msg)
 {
 	string data = codec->encodeMessage(msg);
 	if (cmprs) data = cmprs->encode(data);
-	//int res = csock->send(data);
-	csock->send(data);
+	int res = csock->send(data);
+	DebugMsg1(5,"Client Message Sent = %i", res);
 	// do something about buffer full conditions here
 }
 
 void AClient::gotMsg(const AObject& msg)
 {
-	DebugMsg1(1,"BAD VIRTUAL CALL !!!\n\n","");
+	DebugMsg1(1,"BAD VIRTUAL CALL !!!","");
 }
 
 

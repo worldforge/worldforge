@@ -34,18 +34,17 @@ public:
 	AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs);
 	virtual ~AClient() {}
 
-	void setCodec(ACodec* acodec);
-	void setCompressor(ACompressor* acmprs);
+	virtual void setCodec(ACodec* acodec);
+	virtual void setCompressor(ACompressor* acmprs);
 
-	SOCKET getSock();
+	virtual SOCKET getSock();
 
-	void	canRead();
-	void	canSend();
-	void	gotErrs();
+	virtual void	canRead();
+	virtual void	canSend();
+	virtual void	gotErrs();
+	virtual void	doPoll();
 
-	void	doPoll();
-
-	void	sendMsg(const AObject& msg);
+	virtual void	sendMsg(const AObject& msg);
 
 	virtual	void gotMsg(const AObject& msg);
 };
