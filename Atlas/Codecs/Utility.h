@@ -39,7 +39,7 @@ inline char hexToChar(const std::string& hex)
 {
     int c;
     sscanf(hex.c_str(), "%x", &c);
-    return c;
+    return (char) c;
 }
 
 /** Escape a string by converting certain characters to their hexadecimal

@@ -300,7 +300,7 @@ void Packed::poll(bool can_read)
     if (!can_read) return;
     do
     {
-	char next = socket.get();
+	char next = (char) socket.get();
 
 	switch (state.top())
 	{
