@@ -21,6 +21,7 @@ class Segment {
     float m_min;
   public:
     explicit Segment(int res = 64);
+    ~Segment();
 
     const int getSize() const {
         return m_res;

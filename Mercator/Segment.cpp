@@ -20,6 +20,11 @@ Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
 {
 }
 
+Segment::~Segment()
+{
+    delete m_points;
+}
+
 #if 0
 void Segment::populate(const Matrix<4, 4> & base)
 {
