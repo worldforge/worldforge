@@ -10,6 +10,10 @@
 
 #include <iostream>
 
+#define Debug(prg) { if (debug_flag) { prg } }
+
+static const bool debug_flag = false;
+
 static std::string get_line(std::string &s, char ch)
 {
   std::string out;
@@ -57,10 +61,10 @@ bool NegotiateHelper::get(std::string &buf, const std::string & header)
         {
           m_names.push_back(s);
             
-          std::cout << " got: " << s << std::endl;
+          Debug( std::cout << " got: " << s << std::endl; );
         }
       else
-        std::cerr << "Unknown pattern " << h << std::endl;
+        Debug( std::cerr << "Unknown pattern " << h << std::endl; );
     }
   return false;
 }
@@ -101,7 +105,7 @@ StreamConnect::~StreamConnect()
 
 void StreamConnect::poll(bool can_read)
 {
-    std::cout << "** Client(" << m_state << ") : " << std::endl;
+    Debug( std::cout << "** Client(" << m_state << ") : " << std::endl; );
 
     std::string out;
 
@@ -115,7 +119,7 @@ void StreamConnect::poll(bool can_read)
 
         if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
         {
-            std::cout << "server: " << m_inName << std::endl;
+            Debug( std::cout << "server: " << m_inName << std::endl; );
             m_state++;
         }
     }
@@ -250,7 +254,7 @@ Bridge* bridge) :
 
 void StreamAccept::poll(bool can_read)
 {
-    std::cout << "** Server(" << m_state << ") : " << std::endl;
+    Debug( std::cout << "** Server(" << m_state << ") : " << std::endl; );
 
     std::string out;
 
@@ -272,7 +276,7 @@ void StreamAccept::poll(bool can_read)
         
             if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
             {
-                std::cout << "client: " << m_inName << std::endl;
+                Debug( std::cout << "client: " << m_inName << std::endl; );
                 m_state++;
             }
         }
