@@ -13,11 +13,10 @@
 
 bool Time::Stamp::_did_init = false;
 	
-Time::Stamp Time::getCurrentStamp()
+Time::Stamp& Time::Stamp::getCurrent()
 {
-	Stamp n;
 #ifndef __WIN32__
-	gettimeofday(&n._val, NULL);
+	gettimeofday(&_val, NULL);
 #else
   SYSTEMTIME sysTime;
   FILETIME fileTime;  /* 100ns == 1 */
@@ -29,11 +28,11 @@ Time::Stamp Time::getCurrentStamp()
    * FILETIME. */
   memcpy(&i, &fileTime, sizeof(LARGE_INTEGER));
 
-  n._val.tv_sec = i.QuadPart / 10000000; /*10e7*/
-  n._val.tv_usec = (i.QuadPart / 10) % 1000000;  /*10e6*/
+  _val.tv_sec = i.QuadPart / 10000000; /*10e7*/
+  _val.tv_usec = (i.QuadPart / 10) % 1000000;  /*10e6*/
                                   
 #endif
-	return n;
+	return *this;
 }
 
 // The operator definitons need the Time:: prefix, since
@@ -47,11 +46,11 @@ bool Time::operator<(const Time::Stamp &a, const Time::Stamp &b)
 		return a._val.tv_sec < b._val.tv_sec;
 }
 
-Time::Stamp Time::operator+(const Time::Stamp &a, unsigned long msec)
+Time::Stamp Time::operator+(const Time::Stamp &a, long msec)
 {
 	Stamp ret = a;
 	ret._val.tv_sec += msec / 1000;
-	ret._val.tv_usec += (msec % 1000) * 1000;
+	ret._val.tv_usec += (long) ((msec % 1000) * 1000);
 	
 	if (ret._val.tv_usec > 1000000) {
 		ret._val.tv_sec++;
@@ -61,7 +60,7 @@ Time::Stamp Time::operator+(const Time::Stamp &a, unsigned long msec)
 	return ret;
 }
 
-Time::Stamp Time::operator-(const Time::Stamp &a, unsigned long msec)
+Time::Stamp Time::operator-(const Time::Stamp &a, long msec)
 {
 	Stamp ret = a;
 	ret._val.tv_sec -= msec / 1000;
@@ -77,7 +76,7 @@ Time::Stamp Time::operator-(const Time::Stamp &a, unsigned long msec)
 
 long Time::operator-(const Time::Stamp &a, const Time::Stamp &b)
 {
-	unsigned long ret = (a._val.tv_sec - b._val.tv_sec) * 1000;
+	long ret = (a._val.tv_sec - b._val.tv_sec) * 1000;
 	ret += (a._val.tv_usec - b._val.tv_usec) / 1000;
 	return ret;
 }

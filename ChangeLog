@@ -1,3 +1,10 @@
+Sunday, April 28, Ron Steinke
+
+	* Fixed signed vs. unsigned problems in Time::Stamp by making
+	  everything signed.
+	* Added a getCurrent() member function equivalent to getCurrentTime(),
+	  made getCurrentTime() an inline wrapper around it
+
 Sunday, April 28, Al Riddoch
 
 	* src/Player.cpp: Fix so that GotAllCharacters is emitted when

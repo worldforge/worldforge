@@ -49,13 +49,15 @@ class Stamp {
 
 	friend bool operator<(const Stamp &a, const Stamp &b);
 
-	friend Stamp operator+(const Stamp &a, unsigned long msec);
-	friend Stamp operator-(const Stamp &a, unsigned long msec);
+	friend Stamp operator+(const Stamp &a, long msec);
+	friend Stamp operator-(const Stamp &a, long msec);
 	
 	friend long operator-(const Stamp &a, const Stamp &b);	
-	
-	friend Stamp getCurrentStamp();
+
+	Stamp& getCurrent();
 };
+
+inline Stamp getCurrentStamp() {return Stamp().getCurrent();}
 	
 inline Stamp operator+(unsigned long msec, const Stamp &a) {return a + msec;}
 
