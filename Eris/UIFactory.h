@@ -6,9 +6,7 @@
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
 
-#include <map>
 #include <list>
-#include <cassert>
 
 namespace Atlas {
   namespace Objects {

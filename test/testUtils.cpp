@@ -8,6 +8,8 @@
 
 #include <stdexcept>
 
+#include <cassert>
+
 using namespace Atlas::Message;
 
 std::string getType(const Element &obj)
