@@ -53,12 +53,12 @@ typedef float CoordType;
 #define WFMATH_MAX		FLT_MAX
 #define WFMATH_MIN		FLT_MIN
 
-bool IsFloatEqual(CoordType x, CoordType y, double epsilon = WFMATH_EPSILON);
-inline CoordType FloatAdd(CoordType x, CoordType y,
-			  double epsilon = WFMATH_EPSILON)
+bool IsFloatEqual(double x, double y, double epsilon = WFMATH_EPSILON);
+inline double FloatAdd(double x, double y,
+		       double epsilon = WFMATH_EPSILON)
 	{return IsFloatEqual(x, -y, epsilon) ? 0 : x + y;}
-inline CoordType FloatSubtract(CoordType x, CoordType y,
-			       double epsilon = WFMATH_EPSILON)
+inline double FloatSubtract(double x, double y,
+			    double epsilon = WFMATH_EPSILON)
 	{return IsFloatEqual(x, y, epsilon) ? 0 : x - y;}
 
 // These let us avoid including <algorithm> for the sake of

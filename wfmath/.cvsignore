@@ -11,3 +11,4 @@ quaternion_test
 point_test
 shape_test
 polygon_test
+probability_test

@@ -1,3 +1,10 @@
+Thursday, January 24, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Karsten's Makefile.am fixes for srcdir != builddir
+	* New probability distribution functions, Gaussian
+	  and Poisson distributions
+	* Increment version to 0.2.2
+
 Tuesday, January 22, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Changed namespace from WF::Math to WFMath

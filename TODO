@@ -17,6 +17,7 @@ Intersect functions unimplemented:
     These will be postponed until I can think of a way to write them,
     or someone needs them, whichever comes first
 Write rotateInverse() functions
+Rip out and redo Euler angle stuff
 Write an API reference for the library. Find some inline documentation tool?
 Portability questions and miniball_config.h
 Deal with difficulties in making certain functions friends of the

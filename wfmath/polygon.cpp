@@ -1,8 +1,8 @@
 // -*-C++-*-
-// vector.cpp (Vector<> implementation)
+// polygon.cpp (Polygon<> implementation)
 //
 //  The WorldForge Project
-//  Copyright (C) 2001  The WorldForge Project
+//  Copyright (C) 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by

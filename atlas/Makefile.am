@@ -1,6 +1,7 @@
 if HAVE_ATLAS
 
-AM_CPPFLAGS = -O2 -Wall -I.. -I../wfmath @ATLAS_CFLAGS@
+AM_CXXFLAGS = -O2 -Wall @ATLAS_CFLAGS@
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/wfmath
 
 check_PROGRAMS = atlas_test
 TESTS = $(check_PROGRAMS)
