@@ -52,7 +52,8 @@ World* World::_theWorld = NULL;
 World::World(Player *p, Connection *c) :
 	_con(c),
 	_player(p),
-	_root(NULL)
+	_root(NULL),
+	_focused(NULL)
 {
 	assert(_con);
 	assert(_player);
@@ -119,6 +120,7 @@ EntityPtr World::getRootEntity()
 void World::setFocusedEntity(EntityPtr f)
 {
 	assert(f);
+	_focused = f;
 	_characterID = f->getID();
 	look(NULL);
 }
@@ -300,14 +302,17 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 		Entity *e = create(ent);
 		assert(e);
 		
-		// signal entry into the world; we delay this (from the INFO)
-		// until the character and the root entity are both valid
-		
-		if (_initialEntry && _root && (e->getID() == _characterID)) {
-			Entered.emit(e);
-			_initialEntry = false;	
+		if (e->getID() == _characterID) {
+			_focused = e;
+			
+			// signal entry into the world; we delay this (from the INFO)
+			// until the character and the root entity are both valid
+			if (_initialEntry && _root) {
+				Entered.emit(e);
+				_initialEntry = false;	
+			}
 		}
-		
+	
 		StringSet::iterator I = _pendingInitialSight.find(e->getID());
 		if (I != _pendingInitialSight.end()) {
 			// FIXME - this effectively generates synthetic appearance ops,

@@ -1,3 +1,15 @@
+Sunday, October 14 2001, James Turner
+
+	* Added ArgumentDispatcher (map args only,  list args are easy too add too).
+	  This is required to route based upon args[loc=ID] in the new OOG
+	  format we are switching too.
+	* Rebuilt the Room and Lobby OOG routing code for sight / sound / imaginary
+	  apperance / disappearance. The code has been flipped; Lobby sets up 
+	  global class selectors for each op, and rooms insert ArgDispatch
+	  children below these to examine the 'loc' attribute.
+	* This needs some testing and verification, but I can't right now so
+	  comitting and hoping.
+
 Monday, October 01 2001, James Turner
 
 	* Support deffered binding of containers in Entity::recvSight,

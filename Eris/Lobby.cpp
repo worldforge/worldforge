@@ -23,6 +23,7 @@
 #include "OpDispatcher.h"
 #include "TypeDispatcher.h"
 #include "EncapDispatcher.h"
+#include "ArgumentDispatcher.h"
 
 #include "Utils.h"
 #include "Player.h"
@@ -137,18 +138,14 @@ void Lobby::registerCallbacks()
 	if (_account.empty())
 		throw InvalidOperation("can't register lobby dispatchers yet (need account ID)");
 	
-	
-	
-	//oogd->AddSubdispatch(new EncapDispatcher("sound", "sound"));
-	// setup some common framing for appear / disappera ops
-	//oogd->AddSubdispatch(new ClassDispatcher("appear", "appearance"));
-	//oogd->AddSubdispatch(new ClassDispatcher("disappear", "disappearance"));
-	
 	Dispatcher *rop = _con->getDispatcherByPath("op");
-	assert(rop);
+	assert(rop);	
+	Dispatcher *oogd = rop->addSubdispatch(new OpToDispatcher("oog", _account));
 	
-	Dispatcher *oogd = new OpToDispatcher("oog", _account);
-	rop->addSubdispatch(oogd);
+	// add in the basics so rooms can hook below
+	oogd->addSubdispatch(new EncapDispatcher("sound", "sound"));
+	oogd->addSubdispatch(new EncapDispatcher("appearance", "appearance"));
+	oogd->addSubdispatch(new EncapDispatcher("disappearance", "disappearance"));
 	
 	// the room entity callback
 	Dispatcher *d = oogd->addSubdispatch(new EncapDispatcher("sight", "sight"));

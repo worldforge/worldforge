@@ -17,7 +17,7 @@ liberis_la_SOURCES = \
 	Lobby.cpp \
 	Player.cpp \
 	Dispatcher.cpp \
-	BaseConnectioncpp \
+	BaseConnection.cpp \
 	Connection.cpp \
 	Utils.cpp \
 	Types.cpp \
@@ -29,7 +29,8 @@ liberis_la_SOURCES = \
 	ServerInfo.cpp \
 	Wait.cpp \
 	Timeout.cpp \
-	Time.cpp
+	Time.cpp \
+	ArgumentDispatcher.cpp
 	
 liberisdir = $(includedir)/Eris
 
@@ -56,4 +57,5 @@ liberis_HEADERS = \
 	ServerInfo.h \
 	IdDispatcher.h \
 	Timeout.h \
-	Time.h
+	Time.h \
+	ArgumentDispatcher.h 

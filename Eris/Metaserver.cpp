@@ -188,6 +188,8 @@ void Meta::recv()
 		return;
 	}
 	
+	cerr << "got data from the meta-server" << endl;
+	
 	do {
 		int d = _stream->get();
 		*(_dataPtr++) = static_cast<char>(d);

@@ -19,6 +19,7 @@
 #include "ClassDispatcher.h"
 #include "EncapDispatcher.h"
 #include "IdDispatcher.h"
+#include "ArgumentDispatcher.h"
 
 using namespace Atlas;
 
@@ -42,8 +43,6 @@ Room::Room(Lobby *l) :
 
 Room::~Room()
 {
-	//cerr << "deleting room " << _name << endl;
-	
 	if (!_parted)
 		leave();
 	
@@ -51,31 +50,31 @@ Room::~Room()
 	std::string rid = "room_" + _id;
 	
 	// delete *everything* below our node
-	con->removeDispatcherByPath("op:oog", rid);
+	con->removeDispatcherByPath("op:oog:sound", rid);
+	//con->removeDispatcherByPath("op:oog:sight", rid);
+	con->removeDispatcherByPath("op:oog:imaginary", rid);
+	con->removeDispatcherByPath("op:oog:appearance", rid);
+	con->removeDispatcherByPath("op:oog:disappearance", rid);
 }
 
 void Room::setup()
 {
 	assert(!_id.empty());
-	
+	std::string rid("room_" + _id);
 	// setup the dispatchers
 	Connection *con = _lobby->getConnection();
 	
-	Dispatcher *d = con->getDispatcherByPath("op:oog");
-	assert(d);
-	Dispatcher *room = d->addSubdispatch(new OpFromDispatcher("room_" + _id, _id));
+	Dispatcher *sound = con->getDispatcherByPath("op:oog:sound");
+	sound = sound->addSubdispatch(new ArgumentDispatcher("room_" + _id, "loc", _id));
 	
-	// talk 
-	Dispatcher *sndd = room->addSubdispatch(new EncapDispatcher("sound", "sound"));
-	sndd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Talk>("foo",
+// talk 
+	sound->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Talk>("foo",
 		SigC::slot(this, &Room::recvSoundTalk)
 	));
 	
-	// visual stuff (sights)
-	Dispatcher *sight = room->addSubdispatch(new EncapDispatcher("sight", "sight"));
-	
-	// imaginarys
-	Dispatcher *img = sight->addSubdispatch(new EncapDispatcher("imag", "imaginary"));
+// imaginarys
+	Dispatcher *img = con->getDispatcherByPath("op:oog:imaginary");
+	img = img->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
 	
 	// emotes
 	Dispatcher *em = img->addSubdispatch(new IdDispatcher("emote", "emote"));
@@ -83,31 +82,28 @@ void Room::setup()
 		Atlas::Objects::Root>("emote",
 		SigC::slot(this, &Room::recvSightEmote)
 	));
-	
-	// appearance
-	Dispatcher *apd  = room->addSubdispatch(new ClassDispatcher("appear", "appearance"));
+
+	// visual stuff (sights)	
+	//Dispatcher *sight = con->getDispatcherByPath("op:oog:sight");
+	//sight = sight->addSubdispatch(new ArgumentDispatcher("room_" + _id, "loc", _id));
+
+// appearance
+	Dispatcher *apd = con->getDispatcherByPath("op:oog:appearance");
+	apd = apd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
 	apd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Appearance>("foo",
 		SigC::slot(this, &Room::recvAppear)
 	));
 	
-	// disappearance
-	Dispatcher *disd = room->addSubdispatch(new ClassDispatcher("disappear", "disappearance"));
+// disappearance
+	Dispatcher *disd = con->getDispatcherByPath("op:oog:disappearance");
+	disd = disd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
 	disd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Disappearance>("foo",
 		SigC::slot(this, &Room::recvDisappear)
 	));
 	
-// initial look
-	/*
-	Atlas::Objects::Operation::Look lk = 
-		Atlas::Objects::Operation::Look::Instantiate();
-	
-	lk.SetFrom(_lobby->GetAccountID());
-	lk.SetTo(_id);
-	*/
-	
+// initial look	
 	if (_lobby != this) // not actually necessary, but avoids a duplicate initial look
 		_lobby->look(_id);
-	//con->Send(lk);
 }
 
 void Room::say(const std::string &tk)
