@@ -128,7 +128,7 @@ Room* Room::createRoom(const std::string &name)
     cr->setArgs1(room);
     m_lobby->getConnection()->send(cr);
     
-    
+    return NULL;
 }
 
 Person* Room::getPersonByUID(const std::string& uid)
