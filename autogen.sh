@@ -1,5 +1,7 @@
 #! /bin/sh
 
+rm -f config.cache
+
 echo aclocal...
 (aclocal --version) < /dev/null > /dev/null 2>&1 || {
     echo aclocal not found
