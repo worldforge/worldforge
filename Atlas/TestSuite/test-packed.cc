@@ -4,7 +4,7 @@
 
 #include "../Codec.h"
 #include "../Hack.h"
-//#include "../Funky/Encoder.h"
+#include "../Funky/Encoder.h"
 
 #include <iostream>
 
@@ -148,24 +148,22 @@ int main()
     
     Codec<iostream>* codec = Atlas::UngodlyHack::GetPacked(client_stream,
     &bridge);
-/*
-    Funky::Encoder enc = Funky::Encoder(codec);
 
-    enc << Funky::Encoder::begin_message
-          << Funky::Encoder::begin_map
+    Funky::Encoder< Codec<iostream> > enc(*codec);
+
+    enc << Funky::Tokens::begin_map
               << "id" << 17
               << "name" << "Fred (the + great)"
               << "weight" << 1.5
-          << Funky::Encoder::end_map
-          << Funky::Encoder::end_message;
-*/
-    
+        << Funky::Tokens::end_map;
+
+/*    
     codec->StreamMessage(Bridge::MapBegin);
 	codec->MapItem("id", 17);
 	codec->MapItem("name", "Fred (the + great)");
 	codec->MapItem("weight", 1.5);
 	codec->MapEnd();
-    
+*/    
     codec->Poll();
 
     cout << client_buffer << endl;

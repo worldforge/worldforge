@@ -6,11 +6,9 @@
 
 namespace Atlas { namespace Funky {
 
-BeginMessage Encoder::begin_message;
-EndMessage Encoder::end_message;
-BeginMap Encoder::begin_map;
-EndMap Encoder::end_map;
-BeginList Encoder::begin_list;
-EndList Encoder::end_list;
+BeginMap Tokens::begin_map;
+EndMap Tokens::end_map;
+BeginList Tokens::begin_list;
+EndList Tokens::end_list;
 
 } } // namespace Atlas::Funky

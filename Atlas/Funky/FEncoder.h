@@ -9,8 +9,6 @@
 
 #include <string>
 
-#include "../Bridge.h"
-
 namespace Atlas { namespace Funky {
 
 /** Atlas funky encoder
@@ -25,27 +23,26 @@ class EndMap {};
 class BeginList {};
 class EndList {};
 
-class Encoder;
-template<class T> class EncMessage;
-template<class T> class EncMap;
-template<class T> class EncList;
-template<class T> class EncMapValue;
+template<class B> class Encoder;
+template<class B, class T> class EncMap;
+template<class B, class T> class EncList;
+template<class B, class T> class EncMapValue;
 
-template<class T>
+template<class B, class T>
 class EncMapValue {
 public:
-    EncMapValue(Bridge& b, const string& name) : b(b), name(name) { }
+    EncMapValue(B& b, const string& name) : b(b), name(name) { }
     
-    EncMap<T> operator<<(const BeginMap&)
+    EncMap<B, T> operator<<(const BeginMap&)
     {
-        b.MapItem(name, Bridge::MapBegin);
-        return EncMap<T>(b);
+        b.MapItem(name, B::MapBegin);
+        return EncMap<B, T>(b);
     }
 
-    EncList<T> operator<<(const BeginList&)
+    EncList<B, T> operator<<(const BeginList&)
     {
-        b.MapItem(name, Bridge::ListBegin);
-        return EncList<T>(b);
+        b.MapItem(name, B::ListBegin);
+        return EncList<B, T>(b);
     }
 
     T operator<<(int i)
@@ -67,18 +64,18 @@ public:
     }
 
 protected:
-    Bridge& b;
+    B& b;
     string name;
 };
 
-template<class T>
+template<class B, class T>
 class EncMap {
 public:
-    EncMap(Bridge& b) : b(b) { }
+    EncMap(B& b) : b(b) { }
 
-    EncMapValue< EncMap<T> > operator<<(const string& name)
+    EncMapValue< B, EncMap<B, T> > operator<<(const string& name)
     {
-        return EncMapValue< EncMap<T> >(b, name);
+        return EncMapValue< B, EncMap<B, T> >(b, name);
     }
 
     T operator<<(EndMap)
@@ -88,39 +85,39 @@ public:
     }
     
 protected:
-    Bridge& b;
+    B& b;
 };
 
-template<class T>
+template<class B, class T>
 class EncList {
 public:
-    EncList(Bridge& b) : b(b) { }
+    EncList(B& b) : b(b) { }
 
-    EncMap<EncList<T> > operator<<(const BeginMap&)
+    EncMap<B, EncList<B, T> > operator<<(const BeginMap&)
     {
-        b.ListItem(Bridge::MapBegin);
-        return EncMap<EncList<T> >(b);
+        b.ListItem(B::MapBegin);
+        return EncMap<B, EncList<B, T> >(b);
     }
 
-    EncList<EncList<T> > operator<<(const BeginList&)
+    EncList<B, EncList<B, T> > operator<<(const BeginList&)
     {
-        b.ListItem(Bridge::ListBegin);
-        return EncList<EncList<T> >(b);
+        b.ListItem(B::ListBegin);
+        return EncList<B, EncList<B, T> >(b);
     }
 
-    EncList<T> operator<<(int i)
+    EncList<B, T> operator<<(int i)
     {
         b.ListItem(i);
         return *this;
     }
 
-    EncList<T> operator<<(double d)
+    EncList<B, T> operator<<(double d)
     {
         b.ListItem(d);
         return *this;
     }
 
-    EncList<T> operator<<(const std::string& s)
+    EncList<B, T> operator<<(const std::string& s)
     {
         b.ListItem(s);
         return *this;
@@ -133,51 +130,33 @@ public:
     }
     
 protected:
-    Bridge& b;
+    B& b;
 };
 
-template<class T>
-class EncMessage
-{
-public:
-    EncMessage(Bridge& b) : b(b) { }
-
-    EncMap<EncMessage> operator<<(const BeginMap&)
-    {
-        b.MessageItem(Bridge::MapBegin);
-        return EncMap<EncMessage>(b);
-    }
-        
-    T operator<<(EndMessage)
-    {
-        b.MessageEnd();
-        return T(&b);
-    }
-    
-protected:
-    Bridge& b;
-};
-
+template <class B>
 class Encoder
 {
 public:
-    Encoder(Bridge* b) : b(*b) { }
+    Encoder(B& b) : b(b) { }
     
-    EncMessage<Encoder> operator<<(const BeginMessage&) {
-        b.MessageBegin();
-        return EncMessage<Encoder>(b);
+    EncMap<B, Encoder> operator<<(const BeginMap&) {
+        b.StreamMessage(B::MapBegin);
+        return EncMap<B, Encoder>(b);
     }
 
-    static BeginMessage begin_message;
-    static EndMessage end_message;
+protected:
+    B& b;
+};
+
+class Tokens {
+public:
+
     static BeginMap begin_map;
     static EndMap end_map;
     static BeginList begin_list;
     static EndList end_list;
-
-protected:
-    Bridge& b;
 };
+
 
 } } // Atlas::Funky namespace
 
