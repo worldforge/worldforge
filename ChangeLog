@@ -1,3 +1,10 @@
+2004-02-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/common.py: Add a list
+	  of atlas attributes used for description in the spec, or only
+	  very occaisionally in the field, which should not be implemented
+	  as hard coded attributes.
+
 2004-02-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/Objects/encoder1.cpp: Add extra required include.

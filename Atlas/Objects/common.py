@@ -27,6 +27,11 @@ copyright = copyright_template % "Stefanus Du Toit and Aloril"
 #objects that will have static attributes
 static_objects = ["root", "root_entity", "root_operation"]
 
+# These are only used for description.
+descr_attrs = ['children', 'description', 'args_description', 'example', \
+               'long_description', 'specification', 'specification_file', \
+               'stamp_inherit', 'interface']
+
 # C++ equivalents of atlas types              
 cpp_type = {'map' : 'Atlas::Message::MapType',
             'list' : 'Atlas::Message::ListType',

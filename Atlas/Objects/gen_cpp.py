@@ -52,6 +52,8 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                             real_attr_only = 0):
         lst = []
         for name, value in obj.items():
+            if name in descr_attrs:
+                continue
             #required that no parent has this attribute?
             if first_definition:
                 if find_in_parents(obj, name):
