@@ -131,8 +131,8 @@ void Segment::populateNormals()
            h4 = get(i, j - 1);
            
            // Caclulate the normal vector.
-           np[j * m_size * 3 + i * 3]     = h1 - h3;
-           np[j * m_size * 3 + i * 3 + 1] = h2 - h4;
+           np[j * m_size * 3 + i * 3]     = (h1 - h3) / 2.f;
+           np[j * m_size * 3 + i * 3 + 1] = (h4 - h2) / 2.f;
            np[j * m_size * 3 + i * 3 + 2] = 1.0;
         }
     }
@@ -144,14 +144,14 @@ void Segment::populateNormals()
         h1 = get(i - 1, 0);
         h2 = get(i + 1, 0);
         
-        np[i * 3]     = h1-h2;
+        np[i * 3]     = (h1 - h2) / 2.f;
         np[i * 3 + 1] = 0.0;
         np[i * 3 + 2] = 1.0;
  
         h1 = get(i - 1, m_res);
         h2 = get(i + 1, m_res);
         
-        np[m_res * m_size * 3 + i * 3]     = h1-h2;
+        np[m_res * m_size * 3 + i * 3]     = (h1 - h2) / 2.f;
         np[m_res * m_size * 3 + i * 3 + 1] = 0.0;
         np[m_res * m_size * 3 + i * 3 + 2] = 1.0;
     }
@@ -162,14 +162,14 @@ void Segment::populateNormals()
         h2 = get(0, j + 1);
         
         np[j * m_size * 3]     = 0;
-        np[j * m_size * 3 + 1] = h2 - h1;
+        np[j * m_size * 3 + 1] = (h1 - h2) / 2.f;
         np[j * m_size * 3 + 2] = 1.0;
  
         h1 = get(m_res, j - 1);
         h2 = get(m_res, j + 1);
 
         np[j * m_size * 3 + m_res * 3]     = 0.0;
-        np[j * m_size * 3 + m_res * 3 + 1] = h2 - h1;
+        np[j * m_size * 3 + m_res * 3 + 1] = (h1 - h2) / 2.f;
         np[j * m_size * 3 + m_res * 3 + 2] = 1.0;
     }
 

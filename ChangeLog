@@ -1,3 +1,8 @@
+2004-04-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp: Fix the normal calculation. Really right
+	  now.
+
 2004-04-07  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Terrain.h, Mercator/Terrain.cpp: Fixes to be compatible
