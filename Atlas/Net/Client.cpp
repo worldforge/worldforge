@@ -56,14 +56,14 @@ bool AClient::canRead()
 	if (cmprs)
 	    buf = cmprs->decode(buf);
 	
-	DebugMsg1(5,"ISTREAM = %s\n", buf.c_str());
+	DebugMsg1(5,"aclient :: ISTREAM = %s\n", buf.c_str());
 	
 	//parse through codec
 	assert( codec != 0 );
 	codec->feedStream(buf);
 	
 	while (codec->hasMessage()>0) {
-		DebugMsg1(4,"PROCESSING MESSAGE !!","");
+		DebugMsg1(4,"aclient :: PROCESSING MESSAGE !!","");
 		gotMsg(codec->getMessage());
 		codec->freeMessage();
 	}
@@ -75,7 +75,7 @@ bool AClient::gotErrs()
 {
     // errors are assumed to be a disconnect, propogate to subclasses
     assert( csock != 0 );
-    DebugMsg1(0,"[AClient] SOCKET ERRORS ON %li", (long)csock->getSock());
+    DebugMsg1(0,"aclient :: SOCKET ERRORS ON %li", (long)csock->getSock());
     csock->close();
     gotDisconnect();
     return true;
@@ -89,7 +89,7 @@ void AClient::doPoll()
     fd_set		fdsend;
     struct timeval	tm;
 
-    DebugMsg1(4,"POLLING CLIENT STREAM !!","");
+    DebugMsg1(4,"aclient :: POLLING CLIENT STREAM !!","");
 
     tm.tv_sec = 0;
     tm.tv_usec = 1000;
@@ -101,16 +101,17 @@ void AClient::doPoll()
     FD_SET(csock->getSock(), &fdsend);
 
     // fixed the select call in unix - sdt
-    select(csock->getSock()+1,&fdread,&fdsend,NULL,&tm);
+    select( csock->getSock()+1, &fdread, &fdsend, NULL, &tm);
 
-    if (FD_ISSET(csock->getSock(),&fdread))
-
-    if (!canRead()) {
-        gotDisconnect();
-        return;
+    if ( FD_ISSET( csock->getSock(), &fdread) ) {
+        if (!canRead()) {
+            gotDisconnect();
+            return;
+        }
     }
 
-    if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
+    if ( FD_ISSET( csock->getSock(), &fdsend) )
+        canSend();
 }
 
 void AClient::readMsg(AObject& msg)
@@ -142,20 +143,20 @@ void AClient::sendMsg(const AObject& msg)
     if (cmprs)
 	    data = cmprs->encode(data);
 	
-    DebugMsg2(5,"Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
+    DebugMsg2(5,"aclient :: Client Message Socket=%li Sending=%s", (long)csock->getSock(), data.c_str());
     int res = csock->send(data);
-    DebugMsg1(5,"Client Message Sent = %i", res);
+    DebugMsg1(5,"aclient :: Client Message Sent = %i", res);
 	// do something about buffer full conditions here
 }
 
 void AClient::gotMsg(const AObject& msg)
 {
-    DebugMsg1(0,"AClient::gotMsg() was not implemented in subclass","");
+    DebugMsg1(0,"aclient :: gotMsg() was not implemented in subclass","");
 }
 
 void AClient::gotDisconnect()
 {
-    DebugMsg1(0,"AClient::gotDisconnect() was not implemented in subclass","");
+    DebugMsg1(0,"aclient :: gotDisconnect() was not implemented in subclass","");
 }
 
 

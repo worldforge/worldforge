@@ -1,4 +1,8 @@
+#ifdef _MSC_VER
 #include "Python.h"
+#else
+#include <python1.5/Python.h>
+#endif
 
 #ifdef STDC_HEADERS
 #include <stddef.h>

@@ -23,8 +23,8 @@ changes:
 ACodec::ACodec(AProtocol* aproto) : proto( aproto ), nestd( 0 )
 {
     assert( proto != 0 );
-	proto->getDecoder()->newStream();
-	myState = IDLE;
+    proto->getDecoder()->newStream();
+    myState = ACodec::IDLE;
 }
 
 string ACodec::encodeMessage(const AObject& amsg)
@@ -62,7 +62,7 @@ bool ACodec::hasMessage()
         return false;
 
 	// got a token, we must be busy processing a message !!
-	myState = BUSY;
+	myState = ACodec::BUSY;
 	// process tokens until we run out or we complete a msg
     DebugMsg1(1,"codec :: Scanning Tokens","");
     AProtocolDecoder* adec = proto->getDecoder();
@@ -176,12 +176,12 @@ bool ACodec::hasMessage()
 			DebugMsg1(1,"codec :: message complete","");
 			msg = stack[0];
 			// get outa the loop !!
-			myState = IDLE;
+			myState = ACodec::IDLE;
 		}
-	} while (proto->getDecoder()->hasTokens() && myState == BUSY);
+	} while (proto->getDecoder()->hasTokens() && myState == ACodec::BUSY);
 	
 	//If finished a whole message return true, else false
-    return ( myState == IDLE);
+    return ( myState == ACodec::IDLE);
 }
 
 
