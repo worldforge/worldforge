@@ -5,17 +5,19 @@ AR     	=	ar
 RANLIB  =	ranlib
 libDirs	=	-L$(OUTDIR)
 incDirs	=	-I. -I/usr/include/python1.5
-C_FLAGS	=	-g -D_ADebug_
-# C_FLAGS	=	-O3
+#C_FLAGS	=	-g -D_ADebug_
+C_FLAGS	=	-g
+#C_FLAGS	=	-O3
 MK_DEP  =	$(CC) $(C_FLAGS) $(incDirs) -MM
 
-#OUTDIR	=	linux
-#EXE_EXT =
+OUTDIR	=	linux
+EXE_EXT =
 #LIBS	=	-lstdc++ -lpython1.5 -lAtlas -ldl
+LIBS	=	-lstdc++ -lpython1.5 -lAtlas -ldl -lz -ltk -ltcl -L/usr/X11R6/lib -lX11 -lreadline -lpthread
 
-OUTDIR  =       win32
-EXE_EXT =	.exe
-LIBS	=	-lAtlas -lpython15 -lwsock32 -lstdc++
+#OUTDIR  =       win32
+#EXE_EXT =	.exe
+#LIBS	=	-lAtlas -lpython15 -lwsock32 -lstdc++
 
 # Targets follow ---------------------------------
 

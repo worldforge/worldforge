@@ -209,7 +209,9 @@ int	AObject::get(const string& name, AObject& val)
 int	AObject::get(const string& name, long& val)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isLong()) return 0;
+	//it should check PyDict_GetItemString(obj,tmp) result, not this object! 
+        //same for other get methods
+        //if (!this->isLong()) return 0;
 	char* tmp = strdup(name.c_str());
 	val = PyLong_AsLong(PyDict_GetItemString(obj,tmp));
 	free(tmp);
@@ -219,7 +221,7 @@ int	AObject::get(const string& name, long& val)
 int	AObject::get(const string& name, double& val)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isFloat()) return 0;
+	//if (!this->isFloat()) return 0;
 	char* tmp = strdup(name.c_str());
 	val = PyFloat_AsDouble(PyDict_GetItemString(obj,tmp));
 	free(tmp);
@@ -229,8 +231,8 @@ int	AObject::get(const string& name, double& val)
 int	AObject::get(const string& name, string& val)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isString()) return 0;
-	char* tmp = strdup(val.c_str());
+	//if (!this->isString()) return 0;
+	char* tmp = strdup(name.c_str());
 	val = PyString_AsString(PyDict_GetItemString(obj,tmp));
 	free(tmp);
 	return 1;
@@ -254,7 +256,7 @@ int	AObject::get(const string& name, AObject& val, AObject& def)
 int	AObject::get(const string& name, long& val, long def)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isLong()) return 0;
+	//if (!this->isLong()) return 0;
 	char* tmp = strdup(name.c_str());
 	if (has(name))
 		val = PyLong_AsLong(PyDict_GetItemString(obj,tmp));
@@ -267,7 +269,7 @@ int	AObject::get(const string& name, long& val, long def)
 int	AObject::get(const string& name, double& val, double def)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isFloat()) return 0;
+	//if (!this->isFloat()) return 0;
 	char* tmp = strdup(name.c_str());
 	if (has(name))
 		val = PyFloat_AsDouble(PyDict_GetItemString(obj,tmp));
@@ -280,8 +282,8 @@ int	AObject::get(const string& name, double& val, double def)
 int	AObject::get(const string& name, string& val, string& def)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isString()) return 0;
-	char* tmp = strdup(val.c_str());
+	//if (!this->isString()) return 0;
+	char* tmp = strdup(name.c_str());
 	if (has(name))
 		val = PyString_AsString(PyDict_GetItemString(obj,tmp));
 	else
@@ -305,7 +307,7 @@ int	AObject::get(int ndx, AObject& val)
 int	AObject::get(int ndx, long& val)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isLong()) return 0;
+	//if (!this->isLong()) return 0;
 	val = PyLong_AsLong(PyList_GetItem(obj,ndx));
 	return 1;
 }
@@ -313,7 +315,7 @@ int	AObject::get(int ndx, long& val)
 int	AObject::get(int ndx, double& val)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isFloat()) return 0;
+	//if (!this->isFloat()) return 0;
 	val = PyFloat_AsDouble(PyList_GetItem(obj,ndx));
 	return 1;
 }
@@ -321,7 +323,7 @@ int	AObject::get(int ndx, double& val)
 int	AObject::get(int ndx, string& val)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isString()) return 0;
+	//if (!this->isString()) return 0;
 	val = PyString_AsString(PyList_GetItem(obj,ndx));
 	return 1;
 }
@@ -407,7 +409,7 @@ int	AObject::set(const string& name, const string& src)
 	char* var = strdup(name.c_str());
 	char* tmp = strdup(src.c_str());
 	PyObject* ptmp = PyString_FromString(tmp);
-	bool res = PyDict_SetItemString(obj, tmp, ptmp);
+	bool res = PyDict_SetItemString(obj, var, ptmp);
 	//Py_XDECREF(ptmp);
 	free(tmp);
 	free(var);
@@ -457,14 +459,14 @@ int	AObject::set(int ndx, AObject& src)
 int	AObject::set(int ndx, long src)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isLong()) return 0;
+	//if (!this->isLong()) return 0;
 	return PyList_SetItem(obj, ndx, PyLong_FromLong(src));
 }
 
 int	AObject::set(int ndx, double src)
 {
 	assert((unsigned long)obj != 1);
-	if (!this->isFloat()) return 0;
+	//if (!this->isFloat()) return 0;
 	return PyList_SetItem(obj, ndx, PyFloat_FromDouble(src));
 }
 
@@ -472,7 +474,7 @@ int	AObject::set(int ndx, const string& src)
 {
 	assert((unsigned long)obj != 1);
 
-	if (!this->isString()) return 0;
+	//if (!this->isString()) return 0;
 	char* tmp = strdup(src.c_str());
 	bool res = PyList_SetItem(obj, ndx, PyString_FromString(tmp));
 	free(tmp);

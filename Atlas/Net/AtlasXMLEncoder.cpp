@@ -32,9 +32,9 @@ void AXMLEncoder::walkTree(int nest, string name, AObject& list)
 		// precheck types here
 		string pfix("");
 
-		if (list.getListType() == AObject::AIntList)		pfix.append("int_");
-		else if (list.getListType() == AObject::AFloatList)	pfix.append("float_");
-		else if (list.getListType() == AObject::AStringList)	pfix.append("string_");
+// 		if (list.getListType() == AObject::AIntList)		pfix.append("int_");
+// 		else if (list.getListType() == AObject::AFloatList)	pfix.append("float_");
+// 		else if (list.getListType() == AObject::AStringList)	pfix.append("string_");
 
 		if (name.length() > 0) {
 			printf("%s<%slist name=\"%s\">\n", pre.c_str(), pfix.c_str(), name.c_str());

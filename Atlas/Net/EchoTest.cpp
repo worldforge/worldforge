@@ -137,7 +137,8 @@ void EchoTest::execute()
 	printf("NEW SOCK = %i\n", sock->getSock());
 		fflush(stdout);
 
-	string servname("90.0.0.2");
+	//string servname("90.0.0.2");
+        string servname("127.0.0.1");
 
 	res = sock->connect(servname, 7);
 	printf("Connect = %i\n", res);
