@@ -11,6 +11,7 @@
 
 #include "AtlasCodec.h"
 #include "AtlasSocket.h"
+#include "AtlasCompressor.h"
 
 class AClient
 {
@@ -18,12 +19,17 @@ private:
 
 	ASocket*	csock;
 	ACodec*		codec;
+	ACompressor*	cmprs;
 	char*		buffr;
 	int		bufsz;
 
 public:
 
 	AClient(ASocket* asock, ACodec* acodec);
+	AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs);
+
+	void setCodec(ACodec* acodec);
+	void setCompressor(ACompressor* acmprs);
 
 	SOCKET getSock();
 

@@ -39,7 +39,8 @@ LIBOBJS = \
 	AtlasServer.o\
 	AtlasClient.o\
 	AtlasObject.o\
-	AtlasDebug.o
+	AtlasDebug.o \
+	AtlasCompressor.o
 
 all:		$(TARGETS)
 
@@ -73,6 +74,7 @@ makedeps:
 	$(MK_DEP) AtlasXMLDecoder.cpp		>>Makefile.dep
 	$(MK_DEP) AtlasXMLEncoder.cpp		>>Makefile.dep
 	$(MK_DEP) AtlasXMLProtocol.cpp		>>Makefile.dep
+	$(MK_DEP) AtlasCompressor.cpp		>>Makefile.dep
 	$(MK_DEP) ChatClient.cpp		>>Makefile.dep
 	$(MK_DEP) ChatServer.cpp		>>Makefile.dep
 	$(MK_DEP) CodecBench.cpp		>>Makefile.dep

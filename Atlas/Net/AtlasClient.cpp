@@ -12,6 +12,24 @@ AClient::AClient(ASocket* asock, ACodec* acodec)
 {
 	csock = asock;
 	codec = acodec;
+	cmprs = NULL;
+}
+
+AClient::AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs)
+{
+	csock = asock;
+	codec = acodec;
+	cmprs = acmprs;
+}
+
+void AClient::setCodec(ACodec* acodec)
+{
+	codec = acodec;
+}
+
+void AClient::setCompressor(ACompressor* acmprs)
+{
+	cmprs = acmprs;
 }
 
 SOCKET AClient::getSock()
@@ -25,6 +43,7 @@ void AClient::canRead()
 	string	buf;
 
 	len = csock->recv(buf);
+	if (cmprs) buf = cmprs->decode(buf);
 	codec->feedStream(buf);
 	while (codec->hasMessage()) {
 		gotMsg(codec->getMessage());
@@ -43,6 +62,7 @@ void AClient::gotErrs()
 void AClient::sendMsg(AObject& msg)
 {
 	string data = codec->encodeMessage(msg);
+	if (cmprs) data = cmprs->encode(data);
 	int res = csock->send(data);
 	// do something about buffer full conditions here
 }
