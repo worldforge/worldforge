@@ -1,3 +1,8 @@
+2004-10-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/agent.cpp, test/controller.cpp, test/stubServer.cpp:
+	  Add newlines to ends of files as required.
+
 2004-10-19  James Turner  <james@worldforge.org>
 
 	* CHANGES-1.4: add this file, summarising the API and internal changes
