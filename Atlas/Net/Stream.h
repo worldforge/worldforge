@@ -31,8 +31,8 @@ along with the name of sender and a Socket
 
     NegotiateHelper(std::list<std::string> *names);
 
-    bool get(std::string &buf, std::string header);
-    void put(std::string &buf, std::string header);
+    bool get(std::string &buf, const std::string & header);
+    void put(std::string &buf, const std::string & header);
 
   private:
 

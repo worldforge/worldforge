@@ -1,3 +1,16 @@
+2001-05-06  Al Riddoch  <alriddoch@zepler.org>
+
+        * src/Message/Object.cpp: Added true cpp file so that class static
+          member is handled cleanly.
+
+        * src/Message/Object.h: Moved clear and operator new/delete()
+          functions around so they can be inlined.
+
+        * src/Net/Stream.cc: Added ATLAS to greeting message as required
+          by the Atlas protocol.
+
+        * src/Net/Stream.*: Made header in NegotiateHelper pass by reference.
+
 2001-03-22  Al Riddoch  <alriddoch@zepler.org>
 
         * configure.in: Changed package name to Atlas-C++ to ensure it
