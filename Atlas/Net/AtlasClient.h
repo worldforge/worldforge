@@ -45,9 +45,9 @@ public:
 
 	void	doPoll();
 
-	void	sendMsg(AObject& msg);
+	void	sendMsg(const AObject& msg);
 
-	virtual	void gotMsg(AObject& msg);
+	virtual	void gotMsg(const AObject& msg);
 };
 
 #endif

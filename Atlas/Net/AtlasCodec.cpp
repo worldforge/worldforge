@@ -20,7 +20,7 @@ ACodec::ACodec(AProtocol* aproto)
 	nestd = 0;
 }
 
-string ACodec::encodeMessage(AObject& amsg)
+string ACodec::encodeMessage(const AObject& amsg)
 {
 	return proto->getEncoder()->encodeMessage(amsg);
 }

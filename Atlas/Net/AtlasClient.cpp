@@ -83,7 +83,7 @@ void AClient::doPoll()
 	if (FD_ISSET(csock->getSock(),&fdsend)) canSend();
 }
 
-void AClient::sendMsg(AObject& msg)
+void AClient::sendMsg(const AObject& msg)
 {
 	string data = codec->encodeMessage(msg);
 	if (cmprs) data = cmprs->encode(data);
@@ -92,7 +92,7 @@ void AClient::sendMsg(AObject& msg)
 	// do something about buffer full conditions here
 }
 
-void AClient::gotMsg(AObject& msg)
+void AClient::gotMsg(const AObject& msg)
 {
 	DebugMsg1(1,"BAD VIRTUAL CALL !!!\n\n","");
 }

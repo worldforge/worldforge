@@ -16,7 +16,8 @@
 
 #include <string>
 
-void APackedAsciiEncoder::walkTree(int nest, const char* name, AObject& list)
+void APackedAsciiEncoder::walkTree(int nest, const char* name,
+                                   const AObject& list)
 {
 	int	i;
 	string	buf;
@@ -55,7 +56,7 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name, AObject& list)
 
 }
 
-string APackedAsciiEncoder::encodeMessage(AObject& msg)
+string APackedAsciiEncoder::encodeMessage(const AObject& msg)
 {
 	//int	i;
 

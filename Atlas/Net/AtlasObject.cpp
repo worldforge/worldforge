@@ -183,9 +183,9 @@ PyObject* AObject::pyObject()
 }
 
 void	AObject::setListType(int atype)	{ typ = atype; }
-int	AObject::getListType()		{ return typ; }
+int	AObject::getListType() const	{ return typ; }
 
-int	AObject::has(const string& name)
+int	AObject::has(const string& name) const
 {
 	assert((unsigned long)obj != 1);
 	char* tmp = strdup(name.c_str());
@@ -194,7 +194,7 @@ int	AObject::has(const string& name)
 	return res;
 }
 
-int	AObject::get(const string& name, AObject& val)
+int	AObject::get(const string& name, AObject& val) const
 {
 	assert((unsigned long)obj != 1);
 	assert((unsigned long)val.obj != 1);
@@ -206,7 +206,7 @@ int	AObject::get(const string& name, AObject& val)
 	return 1;
 }
 
-int	AObject::get(const string& name, long& val)
+int	AObject::get(const string& name, long& val) const
 {
 	assert((unsigned long)obj != 1);
 	//it should check PyDict_GetItemString(obj,tmp) result, not this object! 
@@ -218,7 +218,7 @@ int	AObject::get(const string& name, long& val)
 	return 1;
 }
 
-int	AObject::get(const string& name, double& val)
+int	AObject::get(const string& name, double& val) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isFloat()) return 0;
@@ -228,7 +228,7 @@ int	AObject::get(const string& name, double& val)
 	return 1;
 }
 
-int	AObject::get(const string& name, string& val)
+int	AObject::get(const string& name, string& val) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isString()) return 0;
@@ -238,7 +238,7 @@ int	AObject::get(const string& name, string& val)
 	return 1;
 }
 
-int	AObject::get(const string& name, AObject& val, AObject& def)
+int	AObject::get(const string& name, AObject& val, AObject& def) const
 {
 	assert((unsigned long)obj != 1);
 	assert((unsigned long)val.obj != 1);
@@ -253,7 +253,7 @@ int	AObject::get(const string& name, AObject& val, AObject& def)
 	return 1;
 }
 
-int	AObject::get(const string& name, long& val, long def)
+int	AObject::get(const string& name, long& val, long def) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isLong()) return 0;
@@ -266,7 +266,7 @@ int	AObject::get(const string& name, long& val, long def)
 	return 1;
 }
 
-int	AObject::get(const string& name, double& val, double def)
+int	AObject::get(const string& name, double& val, double def) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isFloat()) return 0;
@@ -279,7 +279,7 @@ int	AObject::get(const string& name, double& val, double def)
 	return 1;
 }
 
-int	AObject::get(const string& name, string& val, string& def)
+int	AObject::get(const string& name, string& val, string& def) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isString()) return 0;
@@ -292,7 +292,7 @@ int	AObject::get(const string& name, string& val, string& def)
 	return 1;
 }
 
-int	AObject::get(int ndx, AObject& val)
+int	AObject::get(int ndx, AObject& val) const
 {
 	assert((unsigned long)obj != 1);
 	assert((unsigned long)val.obj != 1);
@@ -304,7 +304,7 @@ int	AObject::get(int ndx, AObject& val)
 	return 1;
 }
 
-int	AObject::get(int ndx, long& val)
+int	AObject::get(int ndx, long& val) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isLong()) return 0;
@@ -312,7 +312,7 @@ int	AObject::get(int ndx, long& val)
 	return 1;
 }
 
-int	AObject::get(int ndx, double& val)
+int	AObject::get(int ndx, double& val) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isFloat()) return 0;
@@ -320,7 +320,7 @@ int	AObject::get(int ndx, double& val)
 	return 1;
 }
 
-int	AObject::get(int ndx, string& val)
+int	AObject::get(int ndx, string& val) const
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isString()) return 0;
@@ -328,7 +328,7 @@ int	AObject::get(int ndx, string& val)
 	return 1;
 }
 
-int	AObject::get(int ndx, AObject& val, AObject& def)
+int	AObject::get(int ndx, AObject& val, AObject& def) const
 {
 	assert((unsigned long)obj != 1);
 	assert((unsigned long)val.obj != 1);
@@ -342,7 +342,7 @@ int	AObject::get(int ndx, AObject& val, AObject& def)
 	return 1;
 }
 
-int	AObject::get(int ndx, long& val, long def)
+int	AObject::get(int ndx, long& val, long def) const
 {
 	assert((unsigned long)obj != 1);
 	if (ndx > PyObject_Length(obj)) {
@@ -358,7 +358,7 @@ int	AObject::get(int ndx, long& val, long def)
 	return 1;
 }
 
-int	AObject::get(int ndx, double& val, double def)
+int	AObject::get(int ndx, double& val, double def) const
 {
 	assert((unsigned long)obj != 1);
 	if (ndx > PyObject_Length(obj)) {
@@ -374,7 +374,7 @@ int	AObject::get(int ndx, double& val, double def)
 	return 1;
 }
 
-int	AObject::get(int ndx, string& val, string& def)
+int	AObject::get(int ndx, string& val, string& def) const
 {
 	assert((unsigned long)obj != 1);
 	if (ndx > PyObject_Length(obj)) {
@@ -390,7 +390,7 @@ int	AObject::get(int ndx, string& val, string& def)
 	return 1;
 }
 
-int	AObject::set(const string& name, AObject& src)
+int	AObject::set(const string& name, const AObject& src)
 {
 	assert((unsigned long)obj != 1);
 	assert((unsigned long)src.obj != 1);
@@ -447,7 +447,7 @@ int	AObject::set(const string& name, double src)
 	return res;
 }
 
-int	AObject::set(int ndx, AObject& src)
+int	AObject::set(int ndx, const AObject& src)
 {
 	assert((unsigned long)obj != 1);
 	assert((unsigned long)src.obj != 1);
@@ -491,17 +491,17 @@ int	AObject::del(const string& name)
 	return res;
 }
 
-int	AObject::hash()
+int	AObject::hash() const
 {
 	return PyObject_Hash(obj);	
 }
 
-int	AObject::isTrue()
+int	AObject::isTrue() const
 {
 	return PyObject_IsTrue(obj);	
 }
 
-int	AObject::length()
+int	AObject::length() const
 {
 	return PyObject_Length(obj);	
 }
@@ -511,7 +511,7 @@ int	AObject::reverse()
 	return PyList_Reverse(obj);
 }
 
-int	AObject::append(AObject& src)
+int	AObject::append(const AObject& src)
 {
 	assert((unsigned long)obj != 1);
 	assert((unsigned long)src.obj != 1);
@@ -545,7 +545,7 @@ int	AObject::append(const string& src)
 	return res;
 }
 
-int	AObject::insert(int ndx, AObject& src)
+int	AObject::insert(int ndx, const AObject& src)
 {
 	assert((unsigned long)obj != 1);
 	assert((unsigned long)src.obj != 1);
@@ -579,7 +579,7 @@ int	AObject::insert(int ndx, long src)
 	return res;
 }
 
-AObject	AObject::keys()
+AObject	AObject::keys() const
 {
 	PyObject* tmp = PyDict_Keys(obj);
 	AObject res(tmp);
@@ -587,7 +587,7 @@ AObject	AObject::keys()
 	return res;
 }
 
-AObject	AObject::vals()
+AObject	AObject::vals() const
 {
 	PyObject* tmp = PyDict_Values(obj);
 	AObject res(tmp);
@@ -595,15 +595,15 @@ AObject	AObject::vals()
 	return res;
 }
 
-long	AObject::asLong()	{ return PyLong_AsLong(obj); }
-double	AObject::asFloat()	{ return PyFloat_AsDouble(obj); }
-string	AObject::asString()	{ return PyString_AsString(obj); }
+long	AObject::asLong() const	        { return PyLong_AsLong(obj); }
+double	AObject::asFloat() const	{ return PyFloat_AsDouble(obj); }
+string	AObject::asString() const	{ return PyString_AsString(obj); }
 
-int	AObject::isMap()	{ return PyMapping_Check(obj); }
-int	AObject::isList()	{ return PyList_Check(obj); }
-int	AObject::isLong()	{ return PyLong_Check(obj); }
-int	AObject::isFloat()	{ return PyFloat_Check(obj); }
-int	AObject::isString()	{ return PyString_Check(obj); }
+int	AObject::isMap() const	        { return PyMapping_Check(obj); }
+int	AObject::isList() const	        { return PyList_Check(obj); }
+int	AObject::isLong() const	        { return PyLong_Check(obj); }
+int	AObject::isFloat() const	{ return PyFloat_Check(obj); }
+int	AObject::isString() const	{ return PyString_Check(obj); }
 
 AObject AObject::mkMap()
 {
@@ -657,7 +657,7 @@ AObject AObject::mkString(const string& val)
 	return res;
 }
 
-void AObject::walkTree(int nest, string name, AObject& list)
+void AObject::walkTree(int nest, string name, const AObject& list)
 {
 	int	i;
 	string	buf;
@@ -736,7 +736,7 @@ void AObject::walkTree(int nest, string name, AObject& list)
 }
 
 
-void AObject::dump(AObject& msg)
+void AObject::dump(const AObject& msg)
 {
 	// format the message header
 	DebugMsg1(0,"<obj>", "");

@@ -30,7 +30,7 @@ void AProtocolEncoder::append(string& data)
 	buffer.append(data);
 }
 		
-string AProtocolEncoder::encodeMessage(AObject& msg)
+string AProtocolEncoder::encodeMessage(const AObject& msg)
 {
 	string	res("");
 	return	res;

@@ -78,7 +78,7 @@ double Arg::getFloat() const
     return m_valFloat;
 }
 
-AObject& Arg::getObject()
+const AObject& Arg::getObject() const
 {
     return m_valObject;
 }

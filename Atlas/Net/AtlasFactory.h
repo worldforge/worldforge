@@ -44,7 +44,7 @@ public:
     const string& getString() const;
     long getInt() const;
     double getFloat() const;
-    AObject& getObject();
+    const AObject& getObject() const;
 
 protected:
     atype_t m_type;

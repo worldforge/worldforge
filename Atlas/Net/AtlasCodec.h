@@ -39,7 +39,7 @@ private:
 public:
 		ACodec(AProtocol* aproto);
 
-string		encodeMessage(AObject& amsg);
+string		encodeMessage(const AObject& amsg);
 int		encodedLength();
 
 void 		feedStream(string& data);

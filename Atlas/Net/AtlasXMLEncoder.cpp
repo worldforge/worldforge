@@ -17,7 +17,7 @@
 #include <string>
 
 
-void AXMLEncoder::walkTree(int nest, string name, AObject& list)
+void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 {
 	int	i;
 	string	buf;
@@ -96,7 +96,7 @@ void AXMLEncoder::walkTree(int nest, string name, AObject& list)
 }
 
 
-string AXMLEncoder::encodeMessage(AObject& msg)
+string AXMLEncoder::encodeMessage(const AObject& msg)
 {
 	//int	i;
 

@@ -40,7 +40,7 @@ public:
 
 	EchoClient(ASocket* asock, ACodec* acodec): AClient(asock,acodec) {}
 
-void	gotMsg(AObject& msg);
+void	gotMsg(const AObject& msg);
 };
 
 

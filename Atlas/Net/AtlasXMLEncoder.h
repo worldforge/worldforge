@@ -18,10 +18,10 @@
 class AXMLEncoder: public AProtocolEncoder
 {
 private:
-    void walkTree(int nest, string name, AObject& list);
+    void walkTree(int nest, string name, const AObject& list);
 
 public:
-    string encodeMessage(AObject& msg);
+    string encodeMessage(const AObject& msg);
 };
 
 

@@ -69,12 +69,12 @@ protected:
 	PyObject*	obj;
 
 /** support routine for dump */
-static void walkTree(int nest, string name, AObject& list);
+static void walkTree(int nest, string name, const AObject& list);
 
 public:
 
 /** output object stucture to debug streams */
-static void dump(AObject& msg);
+static void dump(const AObject& msg);
 
 /** Default "typ" value, not a typed list */
 static	int AScalar;
@@ -154,45 +154,47 @@ static	int AObjList;
 
 
 /** get the data type for a typed list */
-	int		getListType();
+	int		getListType() const;
 
 /** set the data type for a typed list */
 	void		setListType(int atype);
 
 /** (Map) test for named element of a map */
-	int		has(const string& name);
+	int		has(const string& name) const;
 
 
 
 /** (Map) get an AObject attribute */
-	int		get(const string& name, AObject& val);
+	int		get(const string& name, AObject& val) const;
 
 /** (Map) get an Int attribute */
-	int		get(const string& name, long& val);
+	int		get(const string& name, long& val) const;
 
 /** (Map) get a Float attribute */
-	int		get(const string& name, double& val);
+	int		get(const string& name, double& val) const;
 
 /** (Map) get a String attribute */
-	int		get(const string& name, string& val);
+	int		get(const string& name, string& val) const;
 
 
 /** (Map) get an AObject attribute */
-	int		get(const string& name, AObject& val, AObject& def);
+	int		get(const string& name, AObject& val, AObject& def)
+                          const;
 
 /** (Map) get an Int attribute */
-	int		get(const string& name, long& val, long def);
+	int		get(const string& name, long& val, long def) const;
 
 /** (Map) get a Float attribute */
-	int		get(const string& name, double& val, double def);
+	int		get(const string& name, double& val, double def) const;
 
 /** (Map) get a String attribute */
-	int		get(const string& name, string& val, string& def);
+	int		get(const string& name, string& val, string& def)
+                          const;
 
 
 
 /** (Map) set an Object attribute */
-	int		set(const string& name, AObject& src);
+	int		set(const string& name, const AObject& src);
 
 /** (Map) set an Int attribute */
 	int		set(const string& name, long src);
@@ -204,7 +206,7 @@ static	int AObjList;
 	int		set(const string& name, const string& src);
 
 /** (Map) set an AObject attribute using its stored name */
-	int		set(AObject& src);
+	int		set(const AObject& src);
 
 
 
@@ -214,13 +216,13 @@ static	int AObjList;
 
 
 /** return a hash value for this AObject */
-	int		hash();
+	int		hash() const;
 
 /** return if this AObject evaluates to True or False */
-	int		isTrue();
+	int		isTrue() const;
 
 /** return the length of this object */
-	int		length();
+	int		length() const;
 
 
 
@@ -245,27 +247,27 @@ static	AObject	mkString(const string& val);
 
 
 /** true if this AObject is a Map */
-	int		isMap();
+	int		isMap() const;
 
 /** true if this AObject is a List */
-	int 		isList();
+	int 		isList() const;
 
 /** true if this AObject is a Int */
-	int		isLong();
+	int		isLong() const;
 
 /** true if this AObject is a Float */
-	int		isFloat();
+	int		isFloat() const;
 
 /** true if this AObject is a String */
-	int		isString();
+	int		isString() const;
 
 
 
 /** (Map) return a List of all keys for a Map */
-	AObject		keys();
+	AObject		keys() const;
 
 /** (Map) return a List of all values for a Map */
-	AObject		vals();
+	AObject		vals() const;
 
 
 /** (List) sort a List */
@@ -276,7 +278,7 @@ static	AObject	mkString(const string& val);
 	int		reverse();
 
 /** (List) insert an AObject at this index */
-	int		insert(int ndx, AObject& val);
+	int		insert(int ndx, const AObject& val);
 /** (List) insert an Int at this index */
 	int		insert(int ndx, long val);
 /** (List) insert a Float at this index */
@@ -285,7 +287,7 @@ static	AObject	mkString(const string& val);
 	int		insert(int ndx, const string& val);
 
 /** (List) append an AObject */
-	int		append(AObject& val);
+	int		append(const AObject& val);
 /** (List) append an Int */
 	int		append(long val);
 /** (List) append a Float */
@@ -294,7 +296,7 @@ static	AObject	mkString(const string& val);
 	int		append(const string& val);
 
 /** (List) replace an AObject at this index */
-	int		set(int ndx, AObject& src);
+	int		set(int ndx, const AObject& src);
 /** (List) replace an Int at this index */
 	int		set(int ndx, long val);
 /** (List) replace a Float at this index */
@@ -303,30 +305,30 @@ static	AObject	mkString(const string& val);
 	int		set(int ndx, const string& val);
 
 /** (List) get an AObject from this index */
-	int		get(int ndx, AObject& src);
+	int		get(int ndx, AObject& src) const;
 /** (List) get an Int from this index */
-	int		get(int ndx, long& val);
+	int		get(int ndx, long& val) const;
 /** (List) get a Float from this index */
-	int		get(int ndx, double& val);
+	int		get(int ndx, double& val) const;
 /** (List) get a String from this index */
-	int		get(int ndx, string& val);
+	int		get(int ndx, string& val) const;
 
 /** (List) get an AObject from this index with default */
-	int		get(int ndx, AObject& src, AObject& def);
+	int		get(int ndx, AObject& src, AObject& def) const;
 /** (List) get an Int from this index */
-	int		get(int ndx, long& val, long def);
+	int		get(int ndx, long& val, long def) const;
 /** (List) get a Float from this index */
-	int		get(int ndx, double& val, double def);
+	int		get(int ndx, double& val, double def) const;
 /** (List) get a String from this index */
-	int		get(int ndx, string& val, string& def);
+	int		get(int ndx, string& val, string& def) const;
 
 	// typed returns
 /** get an Int value from this AObject */
-	long		asLong();
+	long		asLong() const;
 /** get a Float value from this AObject */
-	double		asFloat();
+	double		asFloat() const;
 /** get a String value from this AObject */
-	string		asString();
+	string		asString() const;
 
 };
 

@@ -35,7 +35,7 @@ int WINAPI WinMain(
 }
 #endif
 
-void XMLTest::walkTree(int nest, string name, AObject& list)
+void XMLTest::walkTree(int nest, string name, const AObject& list)
 {
 	int	i;
 	string	buf;
@@ -113,7 +113,7 @@ void XMLTest::walkTree(int nest, string name, AObject& list)
 
 }
 
-void XMLTest::DisplayMessage(AObject& msg)
+void XMLTest::DisplayMessage(const AObject& msg)
 {
 	AObject keys = msg.keys();
 	printf("<obj>\n");

@@ -14,8 +14,8 @@ class XMLTest
 
 public:
 
-void walkTree(int nest, string name, AObject& list);
-void DisplayMessage(AObject& msg);
+void walkTree(int nest, string name, const AObject& list);
+void DisplayMessage(const AObject& msg);
 void execute();
 
 };

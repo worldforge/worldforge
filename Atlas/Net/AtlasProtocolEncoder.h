@@ -24,7 +24,7 @@ public:
 	virtual ~AProtocolEncoder() {};
 	void printf(char* fmt, ...);
 	void append(string& data);
-	virtual string encodeMessage(AObject& msg);
+	virtual string encodeMessage(const AObject& msg);
 	virtual int encodedLength();	
 };
 

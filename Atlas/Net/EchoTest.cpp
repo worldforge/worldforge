@@ -34,7 +34,7 @@ int WINAPI WinMain(
 
 
 
-void walkTree(int nest, string name, AObject& list)
+void walkTree(int nest, string name, const AObject& list)
 {
 	int	i;
 	string	buf;
@@ -112,7 +112,7 @@ void walkTree(int nest, string name, AObject& list)
 
 }
 
-void DisplayMessage(AObject& msg)
+void DisplayMessage(const AObject& msg)
 {
 	printf("<obj>\n");
 	walkTree(1, "", msg);
@@ -175,7 +175,7 @@ void EchoTest::execute()
 	}
 }
 
-void EchoClient::gotMsg(AObject& msg)
+void EchoClient::gotMsg(const AObject& msg)
 {
 static	long	cnt = 0;
 	long	val;
