@@ -73,12 +73,12 @@ VERSION = @VERSION@
 
 lib_LTLIBRARIES = libAtlasObject.la
 
-libAtlasObject_la_SOURCES =  	Object.cpp
+libAtlasObject_la_SOURCES =  	Object.cpp 	FloatList.c IntList.c LongList.c StringList.c Types.c URI.c URIList.c
 
 
 libAtlasObjectincludedir = $(includedir)/Atlas/Object
 
-libAtlasObjectinclude_HEADERS =  	Object.h
+libAtlasObjectinclude_HEADERS =  	Object.h 	FloatList.h IntList.h LongList.h StringList.h Types.h URI.h URIList.h
 
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
@@ -92,12 +92,18 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libAtlasObject_la_LDFLAGS = 
 libAtlasObject_la_LIBADD = 
-libAtlasObject_la_OBJECTS =  Object.lo
+libAtlasObject_la_OBJECTS =  Object.lo FloatList.lo IntList.lo \
+LongList.lo StringList.lo Types.lo URI.lo URIList.lo
 CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
 HEADERS =  $(libAtlasObjectinclude_HEADERS)
 
 DIST_COMMON =  Makefile.am Makefile.in
@@ -107,7 +113,9 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/Object.P
+DEP_FILES =  .deps/FloatList.P .deps/IntList.P .deps/LongList.P \
+.deps/Object.P .deps/StringList.P .deps/Types.P .deps/URI.P \
+.deps/URIList.P
 SOURCES = $(libAtlasObject_la_SOURCES)
 OBJECTS = $(libAtlasObject_la_OBJECTS)
 

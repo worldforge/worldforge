@@ -12,7 +12,7 @@
 #include "Debug.h"
 #include "Types.h"
 
-#include <Python.h>
+#include <python1.5/Python.h>
 
 #include <string>
 using namespace std;

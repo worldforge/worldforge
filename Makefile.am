@@ -1,1 +1,1 @@
-SUBDIRS = Net Bus Content
+SUBDIRS = Object Net Bus Content
