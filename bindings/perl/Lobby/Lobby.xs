@@ -15,10 +15,6 @@ using namespace Eris;
 using std::string;
 using SigCPerl::SignalBase;
 
-// No destructor for Lobby, it's owned by Connection
-
-// No destructor for Person, Lobby owns the instance
-
 // Haven't wrapped Lobby::LoggedIn, Person::Sight, Person constructor
 
 MODULE = WorldForge::Eris::Lobby		PACKAGE = WorldForge::Eris::Lobby		
@@ -58,6 +54,11 @@ Lobby::PrivateTalk()
     RETVAL
 
 MODULE = WorldForge::Eris::Lobby		PACKAGE = WorldForge::Eris::Person		
+
+void
+Person::DESTROY()
+  CODE:
+    connectionUnref(THIS->getLobby()->getConnection());
 
 void
 Person::msg(string msg)

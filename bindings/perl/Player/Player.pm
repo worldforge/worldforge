@@ -31,6 +31,8 @@ bootstrap WorldForge::Eris::Player $VERSION;
 
 # Preloaded methods go here.
 
+our %_Refcount_Hash_;
+
 sub createCharacter {
   my $self = shift;
   my %attrs = @_;

@@ -1,16 +1,82 @@
 TYPEMAP
+
 SignalBase*	O_OBJECT
-Object*		T_ATLAS_OBJECT
 Connection*	O_OBJECT
-Lobby*		O_OBJECT_INHERIT
-Person*		O_OBJECT
-Room*		O_OBJECT_INHERIT
+Person*		O_PERSON
+Lobby*		O_ROOM
+Room*		O_ROOM
+RoomHandle*	O_OBJECT
 Player*		O_OBJECT
 Meta*		O_OBJECT
 Timeout*	O_OBJECT
-AtlasObject	T_ATLAS_OBJECT
-AtlasConstObject* T_ATLAS_OBJECT
+AtlasObject	T_ATLAS
+AtlasConstObject* T_ATLAS_CONST
 World*		O_OBJECT
 Avatar*		O_OBJECT
-Entity*		O_ENTITY_OBJECT
-TypeInfo*	O_OBJECT
+Entity*		O_ENTITY
+TypeInfo*	O_TYPEINFO
+TypeInfoHandle*	O_OBJECT
+
+OUTPUT
+
+O_ROOM
+	sv_setref_pv( $arg, CLASS, (void*) new RoomHandle($var) );
+
+O_PERSON
+	sv_setref_pv( $arg, CLASS, (void*) $var );
+	connectionRef($var->getLobby()->getConnection());
+
+O_ENTITY
+	$arg = dynamic_cast<PerlEntity*>($var)->sv();
+
+T_ATLAS_CONST
+	$arg = AtlasToSV(*$var);
+
+INPUT
+
+O_ROOM
+	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) ) {
+		RoomHandle* handle = (RoomHandle*)SvIV((SV*)SvRV( $arg ));
+		assert(handle);
+		$var = *handle;
+		if(!$var) {
+			warn( \"Stale reference for Room %s\", handle->id().c_str() );
+			XSRETURN_UNDEF;
+		}
+	}
+	else {
+		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
+		XSRETURN_UNDEF;
+	}
+
+O_PERSON
+	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) )
+		$var = ($type)SvIV((SV*)SvRV( $arg ));
+	else{
+		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
+		XSRETURN_UNDEF;
+	}
+
+O_TYPEINFO
+	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVMG) )
+		$var = *(TypeInfoHandle*)SvIV((SV*)SvRV( $arg ));
+	else{
+		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
+		XSRETURN_UNDEF;
+	}
+
+O_ENTITY
+	$var = PerlEntity::get($arg);
+	if(!$var) {
+		warn( \"${Package}::$func_name() -- $var is not a blessed SV reference\" );
+		XSRETURN_UNDEF;
+	}
+
+T_ATLAS
+	try {
+		SVToAtlas($arg, $var);
+	}
+	catch (...) {
+		warn( \"Unable to convert $var to an Atlas::Message::Object\" );
+		XSRETURN_UNDEF;
+	}

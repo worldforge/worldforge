@@ -73,6 +73,9 @@ public:
 	 * being emitted; in that case it throws an exception to avoid returning an invalid
 	 * ID */
 	const std::string& getID() const;
+
+	///
+	Lobby* getLobby() const {return _lobby;}
 	
 	/// Called by the lobby when sight of us arrives	
 	void sight(const Atlas::Objects::Entity::RootEntity &room);	

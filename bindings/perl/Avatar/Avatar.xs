@@ -26,10 +26,17 @@ using SigCPerl::SignalBase;
 
 MODULE = WorldForge::Eris::Avatar		PACKAGE = WorldForge::Eris::Avatar		
 
+void
+Avatar::DESTROY()
+  CODE:
+    playerUnref(THIS->getWorld()->getPlayer());
+
 World*
 Avatar::getWorld()
   PREINIT:
     const char* CLASS = "WorldForge::Eris::World";
+  CLEANUP:
+    playerRef(RETVAL->getPlayer());
 
 string
 Avatar::getID()
@@ -69,6 +76,7 @@ find(Connection* c, string s)
   CODE:
     const char* CLASS = "WorldForge::Eris::Avatar";
     RETVAL = Avatar::find(c, s);
+    playerRef(RETVAL->getWorld()->getPlayer());
   OUTPUT:
     RETVAL
 

@@ -64,6 +64,7 @@ liberis_HEADERS = \
 	PollDefault.h \
 	atlas_utils.h \
 	Log.h \
-	Avatar.h
+	Avatar.h \
+	Interface.h
 
 

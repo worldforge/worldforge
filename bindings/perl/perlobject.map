@@ -20,8 +20,6 @@
 # T_STRING	-> C++ std::string
 # O_OBJECT_INHERIT -> inheritance-safe O_OBJECT
 
-# T_ATLAS_OBJECT -> Special case conversion for Atlas::Message::Object
-
 TYPEMAP
 
 HV *		T_HvRV
@@ -63,37 +61,6 @@ T_STRING
 
 O_OBJECT_INHERIT
 	$arg = sv_bless( newRV_noinc((SV*) PackInheritanceHV($var, newHV())), gv_stashpv(CLASS,1) );
-
-T_ATLAS_OBJECT
-	$arg = AtlasToSV($var);
-
-O_ENTITY_OBJECT
-	SV* tmp;
-	{
-		// We have to do this as a function call, because the World module
-		// contains the C++ typeinfo necessary for a dynamic_cast<>()
-
-		dSP;
-
-		ENTER;
-		SAVETMPS;
-
-		PUSHMARK(SP);
-		XPUSHs(sv_2mortal(newSViv((IV) $var)));
-		PUTBACK;
-
-		int count = call_pv(\"WorldForge::Eris::World::_entity_to_sv\", G_SCALAR);
-
-		SPAGAIN;
-
-		assert(count == 1);
-
-		tmp = POPs;
-
-		FREETMPS;
-		LEAVE;
-	}
-	$arg = tmp;
 
 ######################################################################
 INPUT
@@ -163,33 +130,6 @@ O_OBJECT_INHERIT
 			XSRETURN_UNDEF;
 		}
 		$var = ($type)SvIV(*object_inherit_fetched_sv);
-	}
-	else{
-		warn( \"${Package}::$func_name() -- $var is not\"
-			 \" a blessed HV reference\" );
-		XSRETURN_UNDEF;
-	}
-
-T_ATLAS_OBJECT
-	try {
-		$var = SVToAtlas($arg);
-	}
-	catch (...) {
-		warn( \"Unable to convert $var to an Atlas::Message::Object\" );
-		XSRETURN_UNDEF;
-	}
-
-O_ENTITY_OBJECT
-	if( sv_isobject($arg) && (SvTYPE(SvRV($arg)) == SVt_PVHV) ) {
-		const char *CLASS = \"Entity\";
-		SV** object_inherit_fetched_sv = hv_fetch((HV*) SvRV($arg),
-			CLASS, sizeof(CLASS) - 1, 0);
-		if(!object_inherit_fetched_sv) {
-			warn( \"Can't find pointer of type Entity\"
-				\" in blessed HV $var\" );
-			XSRETURN_UNDEF;
-		}
-		$var = (Eris::Entity*)SvIV(*object_inherit_fetched_sv);
 	}
 	else{
 		warn( \"${Package}::$func_name() -- $var is not\"

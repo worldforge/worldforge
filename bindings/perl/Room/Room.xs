@@ -19,10 +19,12 @@ using SigCPerl::SignalBase;
 for(StringList::iterator i = list.begin(); i != list.end(); ++i) \
   XPUSHs(sv_2mortal(newSVpv(i->c_str(), i->size())));
 
-// We don't implement Room::Destroy, since the blessed SV doesn't
-// own the object it contains a pointer to
+// Room::Destroy, actually deletes the RoomHandle, not the Room
 
 MODULE = WorldForge::Eris::Room		PACKAGE = WorldForge::Eris::Room		
+
+void
+RoomHandle::DESTROY()
 
 void
 Room::say(string tk)

@@ -136,15 +136,20 @@ Entity::getInherits()
     StringSet strings = THIS->getInherits();
     PUSH_STRING_SET(strings)
 
-TypeInfo*
+TypeInfoHandle*
 Entity::getType()
-  PREINIT:
+  CODE:
     const char* CLASS = "WorldForge::Eris::TypeInfo";
+    RETVAL = new TypeInfoHandle(THIS);
+  OUTPUT:
+    RETVAL
 
 World*
 Entity::getWorld()
   PREINIT:
     const char* CLASS = "WorldForge::Eris::World";
+  CLEANUP:
+    playerRef(RETVAL->getPlayer());
 
 bool
 Entity::isVisible()

@@ -1,3 +1,19 @@
+Tuesday, 13th May 2003, Ron Steinke <rsteinke@w-link.net>
+
+	* Gave the perl bindings better memory management.
+	  The biggest change is that rooms are now passed
+	  around as a lobby pointer and id string, so we
+	  don't get seg faults if room references go stale.
+	  Most of the rest is incrementing/decrementing
+	  the refcounts of the perl SV's that own Connection
+	  and Player instances.
+	* Added some getConnection()/getLobby()/getPlayer()
+	  accessors to various classes, as needed for the
+	  above memory management code.
+	* Added an Interface class, for the beginning
+	  of incorporating handling of the soon-to-be-defined
+	  Atlas interface ops (old janus functionality).
+
 Saturday, 10th May 2003, Al Riddoch <alriddoch@zepler.org>
 
 	* Incremented version to 0.9.8.1 for a patch release with

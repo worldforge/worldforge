@@ -2,6 +2,8 @@
 
 #include <sigcperl/signal_wrap.h>
 
+#include "../conversion.h"
+
 extern "C" {
 #include "EXTERN.h"
 #include "perl.h"
@@ -17,6 +19,9 @@ using std::string;
 using SigCPerl::SignalBase;
 
 MODULE = WorldForge::Eris::TypeInfo		PACKAGE = WorldForge::Eris::TypeInfo		
+
+void
+TypeInfoHandle::DESTROY()
 
 bool
 TypeInfo::isA(TypeInfo* t)

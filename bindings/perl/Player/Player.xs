@@ -1,5 +1,8 @@
 #include <Eris/Player.h>
 #include <Eris/Connection.h>
+#include <Eris/Factory.h>
+#include <Eris/Avatar.h>
+#include <Eris/World.h>
 
 #include <sigcperl/signal_wrap.h>
 
@@ -100,6 +103,15 @@ class CharacterSignalWrap : public SigCPerl::SignalBase
   SigCPerl::ParentBox m_parent;
 };
 
+class DefaultFactory : public Eris::Factory
+{
+ public:
+  virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge, Eris::World *world)
+	{return true;}
+  virtual Eris::EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge, Eris::World *world)
+	{return new PerlEntity(ge, world);}
+};
+
 extern "C" {
 #include "EXTERN.h"
 #include "perl.h"
@@ -117,9 +129,17 @@ MODULE = WorldForge::Eris::Player		PACKAGE = WorldForge::Eris::Player
 
 Player*
 Player::new(Connection *conn)
+  CLEANUP:
+    connectionRef(RETVAL->getConnection());
+    registerControlingSV(player_hash_string, RETVAL, SvRV(ST(0)));
+
 
 void
 Player::DESTROY()
+  INIT:
+    connectionUnref(THIS->getConnection());
+    unregisterControlingSV(player_hash_string, THIS);
+
 
 void
 Player::login(string uname, string pwd)
@@ -143,11 +163,11 @@ Player::refreshCharacterInfo()
 
 Avatar*
 Player::takeCharacter(string id)
-  CODE:
+  PREINIT:
     const char *CLASS = "WorldForge::Eris::Avatar";
-    RETVAL = THIS->takeCharacter(id);
-  OUTPUT:
-    RETVAL
+  CLEANUP:
+    playerRef(THIS);
+    RETVAL->getWorld()->registerFactory(new DefaultFactory(), 0);
 
 Avatar*
 Player::_createCharacter(AtlasObject attrs)
@@ -163,6 +183,9 @@ Player::_createCharacter(AtlasObject attrs)
       character.SetAttr(I->first, I->second);
 
     RETVAL = THIS->createCharacter(character);
+
+    playerRef(THIS);
+    RETVAL->getWorld()->registerFactory(new DefaultFactory(), 0);
   OUTPUT:
     RETVAL
 

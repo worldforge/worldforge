@@ -2,7 +2,7 @@ SUBDIRS = polls
 
 ## **************** Generic Stuff *****************
 
-.PHONY: perl-all perl-clean perl-check perl-dist-hook
+.PHONY: perl-all perl-clean perl-check perl-dist-hook perl-install
 
 all: perl-all
 
@@ -12,6 +12,8 @@ check: perl-check
 
 dist-hook: perl-dist-hook
 
+install: perl-install
+
 ## ************** Specific Modules ****************
 
 if PERL_BINDINGS
@@ -20,7 +22,7 @@ if PERL_BINDINGS
 ## so that the module gets rebuilt, the dependence on the build lib
 ## ensures the rebuild happens
 perl-makefile.stamp: perl/Makefile.PL perl/*/Makefile.PL perl/compile_flags.pl \
-			$(top_builddir)/Eris/.libs/liberis-1.0.so
+			$(top_builddir)/Eris/.libs/liberis-1.0.so perl/*.h
 	cd perl && perl Makefile.PL PREFIX=$(prefix) LIB=$(libdir)/perl
 	touch perl-makefile.stamp
 
@@ -33,6 +35,9 @@ perl-clean:
 
 perl-check: perl-makefile.stamp
 	cd perl && make test
+
+perl-install: perl-makefile.stamp
+	cd perl && make install
 
 endif
 ## PERL_BINDINGS

@@ -22,6 +22,13 @@ MODULE = WorldForge::Eris::Connection		PACKAGE = WorldForge::Eris::Connection
 
 Connection*
 Connection::new(string client_name, bool debug = false)
+  CLEANUP:
+    registerControlingSV(connection_hash_string, RETVAL, SvRV(ST(0)));
+
+void
+Connection::DESTROY()
+  INIT:
+    unregisterControlingSV(connection_hash_string, THIS);
 
 void
 Connection::connect(string host, short port = 6767)

@@ -9,6 +9,11 @@ compile_flags.pl.in
 typemap
 perlobject.map
 conversion.h
+atlas_convert.h
+roomhandle.h
+typeinfohandle.h
+perlentity.h
+refcount.h
 Avatar/Avatar.xs
 Avatar/Avatar.pm
 Avatar/Makefile.PL

@@ -24,6 +24,7 @@ class Lobby;
 class Connection;
 class World;
 class Avatar;
+class Interface;
 
 /** Enumeration of various server-side things that can go wrong when trying
 to create an account or login.*/
@@ -53,7 +54,7 @@ class Player : virtual public SigC::Object
 public:
 	/** create a new Player object : currently only one is assumed, but multiple might be supported
 	in the future */
-	Player(Connection *con);
+	Player(Connection *con, Interface *iface = 0);
 	~Player();
 
 	/// Login to the server using the existing account specified
@@ -104,8 +105,16 @@ public:
 	/// enter the game using a new character
 	Avatar* createCharacter(const Atlas::Objects::Entity::GameEntity &character);
 
+	/// pop up the game's character creation dialog, if present
+	void createCharacter();
+
+	///  returns true if the game has defined a character creation dialog
+	bool canCreateCharacter() {return false;}
+
 	/// returns the account ID if logged in, or throws and exception
 	const std::string& getAccountID() const;
+
+	Connection* getConnection() const {return _con;}
 
 // signals
 	/// emitted when a character has been retrived from the server
@@ -123,6 +132,9 @@ public:
 	indicating the LOGOUT was acknowledged by the server, or due to a timeout
 	or other error (argument = false) */
 	SigC::Signal1<void, bool> LogoutComplete;
+
+	/// emitted when a character is created by the zero-argument createCharacter()
+	SigC::Signal1<void, Avatar*> NewCharacter;
 protected:
 	void recvOpError(const Atlas::Objects::Operation::Error &err);	
 	void recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
@@ -140,8 +152,12 @@ protected:
 	void recvLogoutInfo(const Atlas::Objects::Operation::Logout &lo);
 	void handleLogoutTimeout();
 
+	void createCharacterHandler(long serialno);
+
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)
+
+	Interface* _iface; ///< interface operation handler
 
 	CharacterList _characters;	///< charatcers belonging to this player
 	StringList _charIds;

@@ -31,6 +31,8 @@ bootstrap WorldForge::Eris::Connection $VERSION;
 
 # Preloaded methods go here.
 
+our %_Refcount_Hash_;
+
 use SigC;
 
 1;

@@ -78,6 +78,10 @@ public:
 	/// Retrieve the Connection object associated with the World
 	Connection* getConnection() const
 	{ return _con; }
+
+	///
+	Player* getPlayer() const
+	{ return _player; }
 	
 	/** update the World state periodically : this runs various house-keeping tasks, such
 	as running client side looping events, flushing old entities from memory, and running

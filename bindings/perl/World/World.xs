@@ -33,18 +33,6 @@ class PerlFactory : public Eris::Factory
   static FactoryMap _factory_map;
 };
 
-class PerlEntity : public Eris::Entity
-{
- public:
-  PerlEntity(const Atlas::Objects::Entity::GameEntity &ge, Eris::World *world);
-  virtual ~PerlEntity() {SvREFCNT_dec((SV*) _hash);}
-
-  SV* sv() const {return newRV_inc((SV*) _hash);}
-
- private:
-  HV* _hash;
-};
-
 PerlFactory::FactoryMap PerlFactory::_factory_map;
 
 PerlFactory::PerlFactory(SV* factory, Eris::World* world)
@@ -126,38 +114,16 @@ PerlFactory* PerlFactory::find(SV* factory, Eris::World* world)
   return (I != _factory_map.end()) ? I->second : 0;
 }
 
-PerlEntity::PerlEntity(const Atlas::Objects::Entity::GameEntity &ge, Eris::World *world)
-	: Eris::Entity(ge, world), _hash(newHV())
-{
-  PACK_HV(Entity, static_cast<Eris::Entity*>(this), _hash);
-  PACK_HV(PerlEntity, this, _hash);
-}
-
 using namespace Eris;
 using std::string;
 using SigCPerl::SignalBase;
 
 MODULE = WorldForge::Eris::World		PACKAGE = WorldForge::Eris::World
 
-SV*
-_entity_to_sv(IV entity_ptr)
+void
+World::DESTROY()
   CODE:
-    const char* CLASS = "WorldForge::Eris::Entity";
-
-    // helper function for Eris::Entity* typeinfo
-    Entity* entity = (Entity*) entity_ptr;
-
-    PerlEntity* pentity = dynamic_cast<PerlEntity*>(entity);
-
-    if(pentity)
-      RETVAL = pentity->sv();
-    else {
-      HV* hv = newHV();
-      PACK_HV(Entity, entity, hv);
-      RETVAL = sv_bless( newRV_noinc((SV*) hv), gv_stashpv(CLASS, 1));
-    }
-  OUTPUT:
-    RETVAL
+    playerUnref(THIS->getPlayer());
 
 Entity*
 World::lookup(string s)
@@ -207,6 +173,8 @@ Avatar*
 World::getPrimaryAvatar()
   PREINIT:
     const char* CLASS = "WorldForge::Eris::Avatar";
+  CLEANUP:
+    playerRef(THIS->getPlayer());
 
 SignalBase*
 World::EntityCreate()

@@ -38,9 +38,10 @@ typedef Atlas::Message::Object::MapType AtlasMapType;
 
 namespace Eris {
 
-Player::Player(Connection *con) :
+Player::Player(Connection *con, Interface* iface) :
 	_con(con),
 	_account(""),
+	_iface(iface),
 	_username(""),
 	_lobby(con->getLobby())
 {
@@ -230,6 +231,28 @@ Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 	_con->send(c);
 
 	return avatar;
+}
+
+void Player::createCharacter()
+{
+	if (!_lobby || _lobby->getAccountID().empty())
+		throw InvalidOperation("no account exists!");
+
+	if (!_con->isConnected())
+		throw InvalidOperation("Not connected to server");
+
+	if (!_iface)
+		throw InvalidOperation("No Interface handler defined");
+
+	// FIXME look up the dialog, create the instance,
+	// hook in a slot to feed the serialno of any Create op
+	// the dialog passes back to createCharacterHandler()
+}
+
+void Player::createCharacterHandler(long serialno)
+{
+	if(serialno)
+		NewCharacter((new World(this, _con))->createAvatar(serialno));
 }
 
 Avatar* Player::takeCharacter(const std::string &id)
