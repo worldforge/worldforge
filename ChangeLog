@@ -1,5 +1,10 @@
 2003-08-10  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Message/Element.h: Add an explicit operator!= for gccs 
+	  before 3, which get confused by the template version.
+
+2003-08-10  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/GenerateDispatcher.py: Correctness tweak
 	  of the way data class member is generated.
 

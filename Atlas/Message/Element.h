@@ -264,6 +264,13 @@ public:
     /// Check for equality with another Element.
     bool operator==(const Element& o) const;
 
+#if defined(__GNUC__) && __GNUC__ < 3
+    bool operator!=(const Element& o) const
+    {
+        return !(*this == o);
+    }
+#endif // defined(__GNUC__) && __GNUC__ < 3
+    
     /// Check for inequality with anything we can check equality with
     template<class C>
     bool operator!=(C c) const
