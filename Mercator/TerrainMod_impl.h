@@ -27,7 +27,7 @@ template <typename Shape> LevelTerrainMod<Shape>::~LevelTerrainMod()
 template <typename Shape>
 void LevelTerrainMod<Shape>::apply(float &point, int x, int y) const
 {
-    if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
+    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
         point = m_level;
     }
 }
@@ -35,7 +35,7 @@ void LevelTerrainMod<Shape>::apply(float &point, int x, int y) const
 template <typename Shape>
 TerrainMod * LevelTerrainMod<Shape>::clone() const
 {
-    return new LevelTerrainMod<Shape>(m_level, m_shape);
+    return new LevelTerrainMod<Shape>(m_level, this->m_shape);
 }
 
 template <typename Shape> AdjustTerrainMod<Shape>::~AdjustTerrainMod()
@@ -45,7 +45,7 @@ template <typename Shape> AdjustTerrainMod<Shape>::~AdjustTerrainMod()
 template <typename Shape>
 void AdjustTerrainMod<Shape>::apply(float &point, int x, int y) const
 {
-    if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
+    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
         point += m_dist;
     }
 }
@@ -53,7 +53,7 @@ void AdjustTerrainMod<Shape>::apply(float &point, int x, int y) const
 template <typename Shape>
 TerrainMod * AdjustTerrainMod<Shape>::clone() const
 {
-    return new AdjustTerrainMod<Shape>(m_dist, m_shape);
+    return new AdjustTerrainMod<Shape>(m_dist, this->m_shape);
 }
 
 template <typename Shape> SlopeTerrainMod<Shape>::~SlopeTerrainMod()
@@ -63,16 +63,16 @@ template <typename Shape> SlopeTerrainMod<Shape>::~SlopeTerrainMod()
 template <typename Shape>
 void SlopeTerrainMod<Shape>::apply(float &point, int x, int y) const
 {
-    if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
-        point = m_level + (m_shape.getCenter()[0] - x) * m_dx 
-                        + (m_shape.getCenter()[1] - y) * m_dy;
+    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
+        point = m_level + (this->m_shape.getCenter()[0] - x) * m_dx 
+                        + (this->m_shape.getCenter()[1] - y) * m_dy;
     }
 }
     
 template <typename Shape>
 TerrainMod * SlopeTerrainMod<Shape>::clone() const
 {
-    return new SlopeTerrainMod<Shape>(m_level, m_dx, m_dy, m_shape);
+    return new SlopeTerrainMod<Shape>(m_level, m_dx, m_dy, this->m_shape);
 }
     
 } //namespace Mercator
