@@ -24,7 +24,7 @@ objects or one global configuration instance.
 %package devel
 Summary: A config handling library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version}
+Requires: %{name} = %{version} libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel >= 2.95.2
 
 %description devel
 @VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE
