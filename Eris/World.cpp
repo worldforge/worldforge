@@ -3,6 +3,7 @@
 #endif
 
 #include <sigc++/signal_system.h>
+#include <algorithm>
 
 // various atlas headers we need
 #include <Atlas/Bridge.h>
@@ -183,20 +184,30 @@ EntityPtr World::create(const Atlas::Objects::Entity::GameEntity &ge)
 	return e;
 }
 
-void World::registerFactory(Factory *f, int priority)
+void World::registerFactory(Factory *f, unsigned int priority)
 {
-	_efactories.insert(FactoryMap::value_type(priority, f));
+	if (!f)
+		throw InvalidOperation("NULL factory passed to World::registerFactory");
+	
+	_efactories.insert(_efactories.begin(),
+		FactoryMap::value_type(priority, f)
+	);
 }
 
 void World::unregisterFactory(Factory *f)
 {
-	for (FactoryMap::iterator fi = _efactories.begin(); 
-		fi != _efactories.end(); ++fi)
-		if (fi->second == f) {
-			_efactories.erase(fi);
+	if (!f)
+		throw InvalidOperation("NULL factory passed to World::unregisterFactory");
+	
+	FactoryMap::iterator F;
+	for (F = _efactories.begin(); F != _efactories.end(); ++F) {
+		if (F->second == f) {
+			_efactories.erase(F);
 			return;
 		}
-	// FIXME  - display a warning that we didn't remove the factory?
+	}
+	
+	throw InvalidOperation("Factory not registered in World::unregisterFactory");
 }
 
 World* World::Instance()

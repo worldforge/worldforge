@@ -9,6 +9,7 @@
 #include <Atlas/Message/Encoder.h>
 
 #include "BaseConnection.h"
+#include "Timeout.h"
 
 namespace Eris {
 	
@@ -18,7 +19,8 @@ BaseConnection::BaseConnection(const std::string &cnm, Atlas::Bridge *br) :
 	_sc(NULL),
 	_status(DISCONNECTED),
 	_clientName(cnm),
-	_bridge(br)
+	_bridge(br),
+	_timeout(NULL)
 {
 	assert(_bridge);
 	_stream = new client_socket_stream(client_socket_stream::TCP);
@@ -30,11 +32,14 @@ BaseConnection::~BaseConnection()
 	delete _stream;
 }
 	
-	
 void BaseConnection::connect(const std::string &host, short port)
 {
 	if (_stream->is_open())
 		hardDisconnect(true);
+	
+	// start timeout
+	_timeout = new Timeout("connect_" + host, 5000);
+	bindTimeout(*_timeout, CONNECTING);
 	
 	setStatus(CONNECTING);
  	_stream->open(host, port);
@@ -45,6 +50,11 @@ void BaseConnection::connect(const std::string &host, short port)
       		return;
  	}
 
+	// negotiation timeout
+	delete _timeout;
+	_timeout = new Timeout("negotiate_" + host, 5000);
+	bindTimeout(*_timeout, NEGOTIATE);
+	
 	_sc = new Atlas::Net::StreamConnect(_clientName, *_stream, _bridge);
 	setStatus(NEGOTIATE);
 }
@@ -62,6 +72,9 @@ void BaseConnection::hardDisconnect(bool emit)
 		delete _sc;
 		_sc = NULL;
 	}
+	
+	delete _timeout;
+	_timeout = NULL;
 	
 	if (emit) {
 		Disconnected.emit();
@@ -115,6 +128,9 @@ void BaseConnection::pollNegotiation()
 			delete _sc;
 			_sc = NULL;
 			
+			delete _timeout;
+			_timeout = NULL;
+			
 			setStatus(CONNECTED);
 			onConnect();
 		} else {
@@ -127,7 +143,7 @@ void BaseConnection::pollNegotiation()
 
 void BaseConnection::onConnect()
 {
-	// tell anyone who cares with a signal6
+	// tell anyone who cares with a signal
 	Connected.emit();	
 }
 

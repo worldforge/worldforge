@@ -4,6 +4,7 @@
 
 #include <skstream.h>
 #include <sigc++/signal_system.h>
+#include <sigc++/bind.h>
 
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Root.h>
@@ -13,6 +14,7 @@
 #include "Connection.h"
 #include "Dispatcher.h"
 #include "Wait.h"
+#include "Timeout.h"
 
 #include "TypeDispatcher.h"
 #include "ClassDispatcher.h"
@@ -71,8 +73,20 @@ void Connection::connect(const string &host, short port)
 void Connection::disconnect()
 {
 	// this is a soft disconnect; it will give people a chance to do tear down and so on
+	// in response, people who need to hold the disconnect will lock() the
+	// connection, and unlock when their work is done. A timeout stops
+	// locks from preventing disconnection
 	setStatus(DISCONNECTING);
 	
+	if (!_statusLock) {
+		hardDisconnect(true);
+		return;
+	}
+	
+	// fell through, so someone has locked =>
+	// start a disconnect timeout
+	_timeout = new Eris::Timeout("disconnect_" + _host, 5000);
+	bindTimeout(*_timeout, DISCONNECTING);
 }
 
 void Connection::reconnect()
@@ -172,6 +186,29 @@ void Connection::removeDispatcherByPath(const string &stem, const string &n)
 	d->rmvSubdispatch(rm);
 }
 
+void Connection::lock()
+{
+	_statusLock++;
+}
+
+void Connection::unlock()
+{
+	if (_statusLock < 1)
+		throw InvalidOperation("Imbalanced lock/unlock calls on Connection");
+	--_statusLock;
+	
+	if (!_statusLock) 
+		switch (_status) {
+		case DISCONNECTING:	
+			hardDisconnect(true);
+			break;
+		
+		default:
+			cerr << "Connection unlocked in spurious state : no harm done (yet)"
+				<< " but this indicates things are awry" << endl; 
+		}
+}
+
 Connection* Connection::Instance()
 {
 	if (_theConnection)
@@ -267,6 +304,15 @@ void Connection::handleFailure(const string &msg)
 		// the reconnect data
 		_host = "";
 	}
+	
+	// FIXME - reset I think, but ensure this is safe
+	_statusLock = 0;
+}
+
+void Connection::bindTimeout(Eris::Timeout &t, Status sc)
+{
+	// wire up all the stuff
+	t.Expired.connect( SigC::bind(Timeout.slot(),sc) );
 }
 
 void Connection::postForDispatch(const Atlas::Message::Object &msg)

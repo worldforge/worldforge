@@ -1,3 +1,23 @@
+Tuesday, August 28 2001, James Turner <jmtn@blueyonder.co.uk>
+
+	* Added #include "ServerInfo.h" to Metaserver.h so people don't
+	  get hit with a huge raft of STL errors if they forget to include
+	  it themselves.
+	* Added timeouts to Metaserver and hooked up MetaQuery timeouts
+
+Monday, August 27 2001, Jmaes Turner <jmtn@blueyonder.co.uk>
+
+	* Add timeouts to BaseConnection / Connection, and
+	  exposed in a relatively sane way.
+	* Modifed Time.h/.cpp to be more portable, and
+	  updated the timing code in Meta that used it.
+	* Made Connection::disconnect actually do something. This entailed
+	  adding status locking to the connection =>
+	* Added lock() / unlock() calls to Connection; these can hold the
+	  Connection in a state (currently only DISCONNECTING) while
+	  users of the connection perform tasks. Needs testing of
+	  course, but I think the principle is sound.
+	
 Sunday, August 19 2001, James Turner <jmtn@blueyonder.co.uk>
 
 	* Added support for emotes to OOG session

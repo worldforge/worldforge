@@ -10,6 +10,7 @@
 #include "MetaQuery.h"
 #include "Utils.h"
 #include "ServerInfo.h"
+#include "Timeout.h"
 
 namespace Eris {
 
@@ -36,7 +37,8 @@ Meta::Meta(const std::string &cnm,
 	unsigned int maxQueries) :
 	_status(INVALID),
 	_metaHost(msv),
-	_maxActiveQueries(maxQueries)
+	_maxActiveQueries(maxQueries),
+	_timeout(NULL)
 {
 	_stream = new client_socket_stream(client_socket_stream::UDP);  
 	_stream->setTimeout(30);
@@ -52,6 +54,11 @@ Meta::Meta(const std::string &cnm,
 		(*_stream) << string(_data, dsz) << flush;
 		setupRecvCmd();
 		_status = IN_PROGRESS;
+		
+		// check for meta-server timeouts; this is going to be
+		// fairly common as long as the protocol is UDP, I think
+		_timeout = new Timeout("meta_ckeepalive_"+msv, 8000);
+		_timeout->Expired.connect(SigC::slot(this, &Meta::metaTimeout));
 	}
 }
 
@@ -60,11 +67,14 @@ Meta::~Meta()
 	delete _stream;
 	for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
 		delete *Q;
+	
+	if (_timeout)
+		delete _timeout;
 }
 
 void Meta::queryServer(const std::string &ip)
 {
-	if (_status != IN_PROGRESS) 
+	if (_status != IN_PROGRESS)
 		_status = IN_PROGRESS;
 	
 	if (_activeQueries.size() >= _maxActiveQueries) {
@@ -95,9 +105,7 @@ void Meta::refresh()
 		doFailure("Couldn't contact metaserver " + _metaHost);
 	} else {
 		listReq(0);
-	
-		if (_status != IN_PROGRESS)
-			_status = IN_PROGRESS;
+		_status = IN_PROGRESS;
 	}
 }
 
@@ -242,7 +250,11 @@ void Meta::processCmd()
 		pack_uint32(stamp, _dataPtr, dsz);
 		
 		(*_stream) << string(_data, dsz) << flush;
-			
+		
+		// clear the handshake timeout, so listReq can start it's own.
+		delete _timeout;
+		_timeout = NULL;
+		
 		// send the initial list request
 		listReq(0);
 		} break;
@@ -285,10 +297,16 @@ void Meta::processCmd()
 			queryServer(buf);
 		}
 			
-		// request some more
 		if (_gameServers.size() < _totalServers)
+			// request some more
 			listReq(_gameServers.size());
-	
+		else {
+			// all done, clean everything up
+			delete _timeout;
+			_timeout = NULL;
+			_status = VALID;
+		}
+		
 		} break;
 		
 	default:
@@ -304,6 +322,13 @@ void Meta::listReq(int base)
 	
 	(*_stream) << string(_data, dsz) << flush;
 	setupRecvCmd();
+	
+	if (_timeout)
+		_timeout->reset(5000);
+	else {
+		_timeout = new Timeout("meta_list_req", 8000);
+		_timeout->Expired.connect(SigC::slot(this, &Meta::metaTimeout));
+	}
 }
 
 void Meta::ObjectArrived(const Atlas::Message::Object &msg)
@@ -354,14 +379,6 @@ void Meta::ObjectArrived(const Atlas::Message::Object &msg)
 	_deleteQueries.push_back(*Q);
 }
 
-void Meta::queryFailure(MetaQuery *q, const std::string &msg)
-{
-	//cerr << "got query failure: " << msg << endl;
-	// we do NOT emit a failure signal here (becuase that would probably cause the 
-	// host app to pop up a dialog or something)
-	_deleteQueries.push_back(q);
-}
-
 void Meta::doFailure(const std::string &msg)
 {
 	Failure.emit(msg);	
@@ -372,6 +389,31 @@ void Meta::doFailure(const std::string &msg)
 		_status = VALID;
 	} else
 		_status = INVALID;
+	
+	if (_timeout) {
+		delete _timeout;
+		_timeout = NULL;
+	}
+		
+}
+
+void Meta::metaTimeout()
+{
+	// might want different behaviour in the future, I suppose
+	doFailure("Connection to the meta-server timed out");
+}
+
+void Meta::queryFailure(MetaQuery *q, const std::string &msg)
+{
+	// we do NOT emit a failure signal here (becuase that would probably cause the 
+	// host app to pop up a dialog or something) since query failures are likely to
+	// be very frequent.
+	_deleteQueries.push_back(q);
+}
+
+void Meta::queryTimeout(MetaQuery *q)
+{
+	_deleteQueries.push_back(q);
 }
 
 void Meta::setupRecvCmd()

@@ -1,17 +1,33 @@
-#ifndef FORGE_CLOCK_H
-#define FORGE_CLOCK_H
+#ifndef FORGE_TIME_H
+#define FORGE_TIME_H
+
+/** Timing related primitives in a portable fashion - note this is for interval / elapsed
+time measurement, not displaying a human readable time. */
+
+#include <sys/time.h>
 
 namespace Time {
-	
-#ifdef WIN32
 
+#if defined( WIN32 )
+	
+	// ??
+
+#elif defined( macintosh )
+	typedef UnsignedWide Stamp;	// micro-seconds
 #else
-	
-#endif
+	// POSIX, BeOS, ....
+	typedef struct timeval Stamp;
+#endif	
 
+bool operator<(const Stamp &a, const Stamp &b);
+
+Stamp& operator+(const Stamp &a, unsigned long msec);
+	
+long operator-(const Stamp &a, const Stamp &b);	
+	
 void Init();	
 	
-long GetTicks();
+Stamp getCurrentStamp();
 	
 }; // of namespace Time
 

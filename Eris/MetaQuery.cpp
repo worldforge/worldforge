@@ -3,6 +3,8 @@
 #endif
 
 #include <skstream.h>
+#include <sigc++/bind.h>
+#include <sigc++/signal_system.h>
 
 #include <Atlas/Objects/Operation/Get.h>
 #include <Atlas/Objects/Encoder.h>
@@ -10,6 +12,7 @@
 #include "Metaserver.h"
 #include "MetaQuery.h"
 #include "Utils.h"
+#include "Timeout.h"
 
 namespace Eris
 {
@@ -52,15 +55,23 @@ void MetaQuery::onConnect()
 	_encode->StreamMessage(&gt);
 	(*_stream) << std::flush;
 	
-	_stamp = Time::GetTicks();
+	_stamp = Time::getCurrentStamp();
 	
 	// save our serial-no (so we can identify replies)
 	_queryNo = gt.GetSerialno();
+	
+	if (_timeout)
+		throw InvalidOperation("MetaQuery timeout not cleared");
+	_timeout = new Timeout("metaquery_get_" + _host, 10000);
+	bindTimeout(*_timeout,  QUERY_GET);
 }
+
+using namespace Time;
 
 long MetaQuery::getElapsed()
 {
-	return Time::GetTicks() - _stamp;
+	Time::Stamp t = Time::getCurrentStamp();
+	return  t - _stamp;
 }
 
 void MetaQuery::setComplete()
@@ -71,6 +82,11 @@ void MetaQuery::setComplete()
 void MetaQuery::handleFailure(const std::string &msg)
 {
 	_meta->queryFailure(this, msg);
+}
+
+void MetaQuery::bindTimeout(Timeout &t, Status sc)
+{
+	t.Expired.connect(bind(SigC::slot(_meta, &Meta::queryTimeout), this));
 }
 
 } // of namsespace

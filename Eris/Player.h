@@ -50,11 +50,13 @@ public:
 	username, will throw an exception. state which ones! */
 
 	/// @param con The connection object to the server
-	/// @param uname The desired username of the account
+	/// @param uname The desired username of the account (eg 'bryceh')
+	/// @param name The real name of the user (e.g 'Bryce Harrington')
 	/// @param pwd The password for the new account
 
 	Lobby* createAccount(Connection *con,
 		const std::string &uname,
+		const std::string &name,
 		const std::string &pwd);
 	
 	/// Initiate a clean disconnection from the server

@@ -24,6 +24,9 @@ class client_socket_stream;
 namespace Eris
 {
 
+// forward declerations 
+class Timeout;	
+	
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 class BaseConnection : 
 	public SigC::Object
@@ -41,6 +44,9 @@ public:
 		CONNECTED,		///< connection fully established
 		DISCONNECTED,		///< finished disconnection
 		DISCONNECTING,		///< clean disconnection in progress
+		
+		// doesn't really belong here, but enums aren't subclassable
+		QUERY_GET		///< meta-query performing GET operation
 	} Status;
 
 	/// get the current status of the connection
@@ -69,6 +75,9 @@ protected:
 	virtual void onConnect();
 	virtual void handleFailure(const std::string &msg) = 0;
 
+	/// hook for derived classes to install a signal handler onto the timeout
+	virtual void bindTimeout(Timeout &t, Status sc) = 0;
+
 	/// performs and instant disconnection from the server
 	/// @emit specified whether the change of state should be signalled
 	void hardDisconnect(bool emit);
@@ -82,11 +91,12 @@ protected:
 	Atlas::Codec<iostream>* _codec;		///< the underlying codec object
 
 	Status _status;			///< current status of the connection
-
+	
 	client_socket_stream* _stream;		///< the underlying iostream channel
 	std::string _clientName;		///< the client identified used during connection
 	
 	Atlas::Bridge* _bridge;
+	Timeout* _timeout;		///< network level timeouts
 };
 		
 };

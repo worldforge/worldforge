@@ -45,6 +45,8 @@ protected:
 	virtual void onConnect();
 	virtual void handleFailure(const std::string &msg);
 
+	virtual void bindTimeout(Timeout &t, Status sc);
+	
 	/// Called by the Meta system once the reply has been recieved and processed
 	void setComplete();
 
@@ -52,7 +54,7 @@ protected:
 	Meta* _meta;			///< The Meta-server object which owns the query
 
 	long _queryNo;		///< The serial number of the query GET
-	long _stamp;		///< Time stamp of the request, to estimate ping to server
+	Time::Stamp _stamp;	///< Time stamp of the request, to estimate ping to server
 	bool _complete;		///< Flag to indicate when the query is complete
 };
 

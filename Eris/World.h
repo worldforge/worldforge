@@ -42,9 +42,6 @@ class Factory;
 // the name is wrong, but I feel 'IDEntityMap' is worse
 typedef std::map<std::string, Entity*> EntityIDMap;
 
-// factory storage : allows ordering
-typedef std::multimap<int, Factory*> FactoryMap;
-
 class UnknownEntity : public BaseException
 {
 public:
@@ -86,7 +83,7 @@ public:
 	Factory accept()s will be passed to the Factory for instantiation. */
 	/// @param f The factory instance
 	/// @param priority Controls the search order; higher-valued factories are tried first
-	void registerFactory(Factory *f, int priority = 1);
+	void registerFactory(Factory *f, unsigned int priority = 1);
 	
 	/// Remove an factory from the search set.
 	void unregisterFactory(Factory *f);
@@ -157,6 +154,9 @@ protected:
 	EntityIDMap _lookup;	///< this map tracks <i>all</i> entities we mirror
 	EntityPtr _root,		///< the root entity of the world (manged by us)
 		_focused;	///< origin entity for field-of-view and so on
+
+	// factory storage : allows ordering
+	typedef std::multimap<unsigned int, Factory*> FactoryMap;
 
 	FactoryMap _efactories;
 	

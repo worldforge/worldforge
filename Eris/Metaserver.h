@@ -12,6 +12,7 @@
 #include <Atlas/Objects/Entity/RootEntity.h>
 
 #include "Types.h"
+#include "ServerInfo.h"
 
 // Forward decls
 class client_socket_stream;
@@ -20,8 +21,8 @@ namespace Eris {
 	
 // Forward Declerations
 class MetaQuery;
-class ServerInfo;
 class BaseConnection;
+class Timeout;
 	
 #ifndef uint32_t
 	/* WIN32 hack ...
@@ -131,6 +132,9 @@ protected:
 	void doFailure(const std::string &msg);
 	void queryFailure(MetaQuery *q, const std::string& msg);
 
+	void queryTimeout(MetaQuery *q);
+	void metaTimeout();
+	
 	std::string _clientName;	///< the name to use when negotiating
 	MetaStatus _status;
 	std::string _metaHost;
@@ -158,6 +162,8 @@ protected:
 		
 	bool _recvCmd; 		///< true if the next block is a new command
 	uint32_t _gotCmd;	///< the curent command being processed
+	
+	Timeout* _timeout;	///< Metaserver channel timeout
 };
 	
 } // of namespace Eris

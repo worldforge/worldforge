@@ -81,6 +81,7 @@ Lobby* Player::login(Connection *con,
 
 Lobby* Player::createAccount(Connection *con, 
 	const std::string &uname, 
+	const std::string &name,
 	const std::string &pwd)
 {
 	if (!con || (con->getStatus() != BaseConnection::CONNECTED))
@@ -99,9 +100,11 @@ Lobby* Player::createAccount(Connection *con,
 	// need option to create an admin object here
 	Atlas::Objects::Entity::Player account = 
    		Atlas::Objects::Entity::Player::Instantiate();
- 	account.SetId(uname);
+ 	account.SetId(uname);	// FIXME - I think this should be deprectaed in all of Atlas
  	account.SetPassword(pwd);
-
+	account.SetName(name);
+	account.SetAttr("username", uname);
+	
  	Atlas::Message::Object::ListType args(1,account.AsObject());
 	Atlas::Objects::Operation::Create c = 
   		Atlas::Objects::Operation::Create::Instantiate();

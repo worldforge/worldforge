@@ -23,3 +23,6 @@ Motion-prediction entity sub-class. Fairly simple initialy, assuming no collisio
 Test compilation on MSVC, Cygwin, Mingw32, Metrowerks / Mac (with GUSI)
 
 Fully support inheritance queries, and correctly build and cache the inheritance graph.
+
+Don't crash on unexpected server disconnects
+

@@ -14,6 +14,7 @@ namespace Eris
 // Foward declerations
 class Dispatcher;
 class WaitForBase;
+class Timeout;
 	
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
@@ -82,6 +83,16 @@ public:
 	/// (should be protected?) pretend you never saw this ...
 	void postForDispatch(const Atlas::Message::Object &msg);
 	
+	/** Lock then connection's state. This prevents the connection changing status
+	until a corresponding unlock() call is issued. The only use at present is to hold
+	the connection in the 'DISCONNECTING' state while other objects clean up
+	and so on. In the future locking may also be applicable to other states. */
+	void lock();
+	
+	/** Unlock the connection (permit status change). See Connection::lock for more
+	information about status locking. */
+	void unlock();
+	
 	/// Emitted when the disconnection process is initiated
 	SigC::Signal0<bool> Disconnecting;
 	
@@ -91,6 +102,10 @@ public:
 	is emitted; thus the current state (when the failure occured) is still valid
 	during the callback */
 	SigC::Signal1<void, string> Failure;
+	
+	/** Emitted when a network-level timeout occurs; the status code indicates
+	in which stage of operation the timeout occurred. */
+	SigC::Signal1<void, Status> Timeout;
 	
 	/// indicates a status change on the connection
 	/** emitted when the connection status changes; This will often
@@ -112,8 +127,11 @@ protected:
 	/// Process failures (to track when reconnection should be permitted)
 	virtual void handleFailure(const std::string &msg);
 
+	virtual void bindTimeout(Eris::Timeout &t, Status sc);
+
 	Dispatcher* _rootDispatch;	///< the root of the dispatch tree
-	
+	unsigned int _statusLock;	///< locks connection to current state while > 0	
+
 	/** queue of messages that have been signalled (from the wait list)
 	and can now be re-posted */
 	MessageList _repostQueue;
