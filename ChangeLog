@@ -1,5 +1,12 @@
 2004-01-13  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Forest.cpp, Mercator/Forest.h,
+	  Mercator/Plant.cpp, Mercator/Plant.h, tests/testPlant.cpp:
+	  New classes for handling vegetation, including basics of
+	  functionality, and unit tests.
+
+2004-01-13  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/BasePoint.h, Mercator/BasePoint.cpp:
 	  Move static float variable definition into cpp file
 	  for strict C++ compliance.

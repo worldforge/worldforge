@@ -1,8 +1,8 @@
-TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg
+TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant
 
 INCLUDES = -I$(top_srcdir)
 
-check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg
+check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant
 
 mercatortest_SOURCES = main.cpp
 mercatortest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
@@ -24,3 +24,6 @@ testPhys_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 timeSeg_SOURCES = timeSeg.cpp util_timer.h util_timer.cpp
 timeSeg_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+
+testPlant_SOURCES = testPlant.cpp
+testPlant_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
