@@ -1,3 +1,14 @@
+Thursday, 8th May 2003, James Turner <james@worldforge.org>
+
+	* Updated configure.in to be Autoconf 2.5 happy, removed lots
+	  of deprecated macros
+	* We now rely on pkg-config versions of sigc++ and all the 
+	  WorldForge libs, so configure is smaller and all the
+	  AM_PATH_xxx copies in acinclude.m4 go away and die.
+	* Made the WFmath handling sane too (we had extra -lwfmath
+	  and such in ERIS_LIBS, which is unecessary since pkg-config
+	  will pick that stuff up for us)
+
 Thursday, 8th May 2003, Ron Steinke
 
 	* Added typemaps to perl MANIFEST

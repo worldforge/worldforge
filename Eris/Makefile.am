@@ -1,16 +1,5 @@
 lib_LTLIBRARIES = liberis-1.0.la
 
-
-if PYTHON_BINDINGS
-PYBIND_CFLAGS = -I$(top_srcdir)/boost-python -I/usr/include/python 
-else
-PYBIND_CFLAGS =
-endif
-
-## Can't do this while Types.cpp needs the conversion stuff in Types.h
-##AM_CXXFLAGS = -DWFMATH_CONVERSION
-
-INCLUDES = $(PYBIND_CFLAGS)
 liberis_1_0_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
 	
 liberis_1_0_la_SOURCES = \

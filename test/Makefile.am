@@ -13,6 +13,5 @@ testEris_SOURCES = tests.cpp \
 
 INCLUDES = @CPPUNIT_CFLAGS@ -I$(top_srcdir)/src
 
-testEris_LDADD = @CPPUNIT_LIBS@ \
-    -leris-1.0 \
-    @WFMATH_LIBS@
+testEris_LDADD = @CPPUNIT_LIBS@ ../Eris/liberis-1.0.la
+    
