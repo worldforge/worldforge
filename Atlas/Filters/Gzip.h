@@ -25,8 +25,8 @@ class Gzip : public Filter
     virtual void begin();
     virtual void end();
     
-    virtual string encode(const string&);
-    virtual string decode(const string&);
+    virtual std::string encode(const std::string&);
+    virtual std::string decode(const std::string&);
 };
 
 #endif // HAVE_ZLIB_H && HAVE_LIBZ

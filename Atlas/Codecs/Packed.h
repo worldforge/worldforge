@@ -13,6 +13,8 @@
 using namespace std;
 using namespace Atlas;
 
+namespace Atlas { namespace Codecs {
+
 /*
 
 The form for each element of this codec is as follows:
@@ -34,11 +36,11 @@ The complete specification is located in cvs at:
     
 */
 
-class Packed : public Codec
+class Packed : public Codec<std::iostream>
 {
 public:
     
-    Packed(const Codec::Parameters&);
+    Packed(const Codec<std::iostream>::Parameters&);
 
     virtual void poll(bool can_read = true);
 
@@ -48,21 +50,21 @@ public:
 
     virtual void mapItem(const std::string& name, const Map&);
     virtual void mapItem(const std::string& name, const List&);
-    virtual void mapItem(const std::string& name, int);
+    virtual void mapItem(const std::string& name, long);
     virtual void mapItem(const std::string& name, double);
     virtual void mapItem(const std::string& name, const std::string&);
     virtual void mapEnd();
     
     virtual void listItem(const Map&);
     virtual void listItem(const List&);
-    virtual void listItem(int);
+    virtual void listItem(long);
     virtual void listItem(double);
     virtual void listItem(const std::string&);
     virtual void listEnd();
 
 protected:
     
-    iostream& socket;
+    std::iostream& socket;
     Bridge* bridge;
 
     enum State
@@ -78,10 +80,10 @@ protected:
         PARSE_NAME,
     };
     
-    stack<State> state;
+    std::stack<State> state;
 
-    string name;
-    string data;
+    std::string name;
+    std::string data;
 
     inline void parseStream(char);
     inline void parseMap(char);
@@ -93,15 +95,17 @@ protected:
     inline void parseString(char);
     inline void parseName(char);
 
-    inline const string hexEncode(const string& data)
+    inline const std::string hexEncode(const std::string& data)
     {
 	return hexEncodeWithPrefix("+", "+[]()@#$=", data);
     }
 
-    inline const string hexDecode(const string& data)
+    inline const std::string hexDecode(const std::string& data)
     {
 	return hexDecodeWithPrefix("+", data);
     }
 };
+
+} } // namespace Atlas::Codecs
 
 #endif // ATLAS_CODECS_PACKED_H

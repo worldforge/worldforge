@@ -41,7 +41,7 @@ public:
     { b->mapItem(name, m); }
     virtual void mapItem(const std::string& name, const Bridge::List& l)
     { b->mapItem(name, l); }
-    virtual void mapItem(const std::string& name, int i)
+    virtual void mapItem(const std::string& name, long i)
     { b->mapItem(name, i); }
     virtual void mapItem(const std::string& name, double d)
     { b->mapItem(name, d); }
@@ -51,7 +51,7 @@ public:
     
     virtual void listItem(const Bridge::Map& m) { b->listItem(m); }
     virtual void listItem(const Bridge::List& l) { b->listItem(l); }
-    virtual void listItem(int i) { b->listItem(i); }
+    virtual void listItem(long i) { b->listItem(i); }
     virtual void listItem(double d) { b->listItem(d); }
     virtual void listItem(const std::string& s) { b->listItem(s); }
     virtual void listEnd() { b->listEnd(); }

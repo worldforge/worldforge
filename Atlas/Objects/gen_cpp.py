@@ -17,8 +17,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
         self.outdir = "."
         if outdir != ".":
             self.base_list = ['Atlas', 'Objects', outdir]
-            #self.name_space = outdir + "::"
-            self.name_space = ""
+            self.name_space = outdir + "::"
         else:
             self.base_list = ['Atlas', 'Objects']
             self.name_space = ""
@@ -91,14 +90,12 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
 
     #namespace
     def ns_open(self, ns_list):
-        #for namespace in ns_list:
-            #self.write("namespace " + namespace + " { ")
-        self.write("namespace Atlas { ")
+        for namespace in ns_list:
+            self.write("namespace " + namespace + " { ")
         self.write("\n")
     def ns_close(self, ns_list):
-        #for i in range(0, len(ns_list)):
-            #self.write("} ")
-        self.write(" } ")
+        for i in range(0, len(ns_list)):
+            self.write("} ")
         self.write("// namespace " + string.join(ns_list, "::"))
         self.write("\n")
 
@@ -348,14 +345,14 @@ BaseObjectData *%(classname)s::getDefaultObject()
             self.doc(4, 'Retrieve the attribute "name". Throws ' \
                        +'NoSuchAttrException if it does')
             self.doc(4, 'not exist.')
-            self.write("    virtual Atlas::Object getAttr(")
+            self.write("    virtual Atlas::Message::Object getAttr(")
             self.write("const std::string& name)\n")
             self.write("            const throw (NoSuchAttrException);\n")
             self.doc(4, 'Set the attribute "name" to the value given by' \
                       + '"attr"')
             self.write("    virtual void setAttr(const std::string& name,\n")
             self.write("                         ")
-            self.write("const Atlas::Object& attr);\n")
+            self.write("const Atlas::Message::Object& attr);\n")
             self.doc(4, 'Remove the attribute "name". This will not work for '\
                       + 'static attributes.')
             self.write("    virtual void removeAttr(")
@@ -365,7 +362,7 @@ BaseObjectData *%(classname)s::getDefaultObject()
             self.write("    virtual void sendContents(Atlas::Bridge* b) const;\n")
             self.write("\n")
             self.doc(4, 'Convert this object to a Object.')
-            self.write("    virtual Atlas::Object asObject() const;\n")
+            self.write("    virtual Atlas::Message::Object asObject() const;\n")
             self.write("\n")
             for attr in static_attrs:
                 self.write(attr.set_if())
@@ -410,6 +407,7 @@ BaseObjectData *%(classname)s::getDefaultObject()
         self.write("\n")
         self.write("using namespace std;\n")
         self.write("using namespace Atlas;\n")
+        self.write("using namespace Atlas::Message;\n")
         self.write("\n")
         self.ns_open(self.base_list)
         self.write("\n")
@@ -520,6 +518,7 @@ public:
         self.write("\n")
         self.write("using namespace std;\n")
         self.write("using namespace Atlas;\n")
+        self.write("using namespace Atlas::Message;\n")
         self.write("\n")
         self.ns_open(self.base_list)
         self.write("\n")

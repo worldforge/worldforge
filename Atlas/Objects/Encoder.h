@@ -7,7 +7,7 @@
 
 #include "../EncoderBase.h"
 
-namespace Atlas {
+namespace Atlas { namespace Objects {
 
 /** Objects hierarchy encoder
  *
@@ -31,7 +31,7 @@ public:
 
     /// Send an object to the bridge.
     /// @param o The object that is to be sent.
-    virtual void streamMessage(const Atlas::Root& o)
+    virtual void streamMessage(const Atlas::Objects::Root& o)
     {
         b->streamMessage(Bridge::mapBegin);
         o->sendContents(b);
@@ -39,6 +39,6 @@ public:
     }
 };
 
-} // namespace Atlas
+} } // namespace Atlas::Objects
 
 #endif

@@ -16,11 +16,11 @@ using namespace Atlas;
 
 */
 
-class XMLish : public Codec
+class XMLish : public Codec<std::iostream>
 {
     public:
 
-    XMLish(const Codec::Parameters&);
+    XMLish(const Codec<std::iostream>::Parameters&);
 
     virtual void poll(bool can_read = true);
 
@@ -30,21 +30,21 @@ class XMLish : public Codec
 
     virtual void mapItem(const std::string& name, const Map&);
     virtual void mapItem(const std::string& name, const List&);
-    virtual void mapItem(const std::string& name, int);
+    virtual void mapItem(const std::string& name, long);
     virtual void mapItem(const std::string& name, double);
     virtual void mapItem(const std::string& name, const std::string&);
     virtual void mapEnd();
     
     virtual void listItem(const Map&);
     virtual void listItem(const List&);
-    virtual void listItem(int);
+    virtual void listItem(long);
     virtual void listItem(double);
     virtual void listItem(const std::string&);
     virtual void listEnd();
 
     protected:
 
-    iostream& socket;
+    std::iostream& socket;
     Bridge* bridge;
 };
 
@@ -53,15 +53,15 @@ namespace
     /*
         We're not going to enable this sucker until it actually works.
     
-    Codec<iostream>::Factory<XMLish> factory(
+    Codec<std::iostream>::Factory<XMLish> factory(
 	"XMLish",				    // name
-	Codec<iostream>::Metrics(1, 2)		    // metrics
+	Codec<std::iostream>::Metrics(1, 2)		    // metrics
     );
 
     */
 }
     
-XMLish::XMLish(const Codec::Parameters& p)
+XMLish::XMLish(const Codec<std::iostream>::Parameters& p)
     : socket(p.stream), bridge(p.bridge)
 {
 }
@@ -103,7 +103,7 @@ void XMLish::mapItem(const std::string& name, const List&)
     socket << "<list name=\"" << name << "\">";
 }
 
-void XMLish::mapItem(const std::string& name, int data)
+void XMLish::mapItem(const std::string& name, long data)
 {
     socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
@@ -133,7 +133,7 @@ void XMLish::listItem(const List&)
     socket << "<list>";
 }
 
-void XMLish::listItem(int data)
+void XMLish::listItem(long data)
 {
     socket << "<int>" << data << "</int>";
 }

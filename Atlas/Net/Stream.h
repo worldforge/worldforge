@@ -12,7 +12,7 @@
 #include "../Negotiate.h"
 #include "../Filter.h"
 
-namespace Atlas {
+namespace Atlas { namespace Net {
 
 /** Negotiation of codecs and filters for an Atlas connection
 
@@ -44,7 +44,7 @@ along with the name of sender and a Socket
 
   };
 
-class StreamConnect : public Atlas::Negotiate
+class StreamConnect : public Atlas::Negotiate<std::iostream>
 {
     public:
 
@@ -55,7 +55,7 @@ class StreamConnect : public Atlas::Negotiate
     virtual void poll(bool can_read = true);
 
     virtual State getState();
-    virtual Atlas::Codec * getCodec();
+    virtual Atlas::Codec<std::iostream> * getCodec();
 
     private:
 
@@ -79,12 +79,12 @@ class StreamConnect : public Atlas::Negotiate
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
   
-    typedef std::list<Atlas::Factory<Atlas::Codec >*> FactoryCodecs;
+    typedef std::list<Atlas::Factory<Atlas::Codec<std::iostream> >*> FactoryCodecs;
     typedef std::list<Atlas::Factory<Atlas::Filter>*> FactoryFilters;
 
     FactoryCodecs outCodecs;
     FactoryFilters outFilters;
-    NegotiateHelper<Atlas::Factory<Atlas::Codec > > codecHelper;
+    NegotiateHelper<Atlas::Factory<Atlas::Codec<std::iostream> > > codecHelper;
     NegotiateHelper<Atlas::Factory<Atlas::Filter> > filterHelper;
     std::string buf;
 
@@ -95,7 +95,7 @@ class StreamConnect : public Atlas::Negotiate
     void processClientFilters();
 };
  
-class StreamAccept : public Atlas::Negotiate
+class StreamAccept : public Atlas::Negotiate<std::iostream>
 {
     public:
 
@@ -106,7 +106,7 @@ class StreamAccept : public Atlas::Negotiate
     virtual void poll(bool can_read = true);
 
     virtual State getState();
-    virtual Atlas::Codec* getCodec();
+    virtual Atlas::Codec<std::iostream>* getCodec();
 
     private:
 
@@ -130,12 +130,12 @@ class StreamAccept : public Atlas::Negotiate
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
   
-    typedef std::list<Atlas::Factory<Atlas::Codec >*> FactoryCodecs;
+    typedef std::list<Atlas::Factory<Atlas::Codec<std::iostream> >*> FactoryCodecs;
     typedef std::list<Atlas::Factory<Atlas::Filter>*> FactoryFilters;
 
     FactoryCodecs outCodecs;
     FactoryFilters outFilters;
-    NegotiateHelper<Atlas::Factory<Atlas::Codec  > > codecHelper;
+    NegotiateHelper<Atlas::Factory<Atlas::Codec<std::iostream> > > codecHelper;
     NegotiateHelper<Atlas::Factory<Atlas::Filter > > filterHelper;
     std::string buf;
 
@@ -146,7 +146,7 @@ class StreamAccept : public Atlas::Negotiate
     void processClientFilters();
 };
 
-} // namespace Atlas
+} } // namespace Atlas::Net
 
 #endif
 

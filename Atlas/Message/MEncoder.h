@@ -10,7 +10,7 @@
 #include "../Bridge.h"
 #include "Object.h"
 
-namespace Atlas {
+namespace Atlas { namespace Message {
 
 /** Encoder that transmits Atlas::Message::Object.
  *
@@ -37,6 +37,6 @@ public:
     virtual void listItem(const Object&);
 };
 
-} // namespace Atlas
+} } // namespace Atlas::Message
 
 #endif

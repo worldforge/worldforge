@@ -39,7 +39,7 @@ class Bridge
 
     virtual void mapItem(const std::string& name, const Map&) = 0;
     virtual void mapItem(const std::string& name, const List&) = 0;
-    virtual void mapItem(const std::string& name, int) = 0;
+    virtual void mapItem(const std::string& name, long) = 0;
     virtual void mapItem(const std::string& name, double) = 0;
     virtual void mapItem(const std::string& name, const std::string&) = 0;
     virtual void mapEnd() = 0;
@@ -48,7 +48,7 @@ class Bridge
     
     virtual void listItem(const Map&) = 0;
     virtual void listItem(const List&) = 0;
-    virtual void listItem(int) = 0;
+    virtual void listItem(long) = 0;
     virtual void listItem(double) = 0;
     virtual void listItem(const std::string&) = 0;
     virtual void listEnd() = 0;

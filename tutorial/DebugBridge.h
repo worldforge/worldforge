@@ -36,7 +36,7 @@ public:
         std::cout << padding << name << " -> New List" << endl;
         addPadding();
     }
-    virtual void mapItem(const std::string& name, int i)
+    virtual void mapItem(const std::string& name, long i)
     {
         std::cout << padding << name << " -> Int: " << i << endl;
     }
@@ -64,7 +64,7 @@ public:
         std::cout << padding << "New List" << endl;
         addPadding();
     }
-    virtual void listItem(int i)
+    virtual void listItem(long i)
     {
         std::cout << padding << "Int: " << i << endl;
     }

@@ -7,10 +7,10 @@
 
 #include "../Bridge.h"
 
-namespace Atlas {
+namespace Atlas { namespace Net {
 
 void loopback(Bridge*, Bridge*, Bridge*&, Bridge*&);
 
-} // namespace Atlas
+} } // namespace Atlas::Net
 
 #endif

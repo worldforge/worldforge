@@ -48,9 +48,9 @@ void Bzip2::end()
     bzDecompressEnd(&incoming);
 }
     
-string Bzip2::encode(const string& data)
+std::string Bzip2::encode(const std::string& data)
 {
-    string out_string;
+    std::string out_string;
     int status;
     
     buf[0] = 0;
@@ -75,9 +75,9 @@ string Bzip2::encode(const string& data)
     return out_string;
 }
     
-string Bzip2::decode(const string& data)
+std::string Bzip2::decode(const std::string& data)
 {
-    string out_string;
+    std::string out_string;
     int status;
 
     buf[0] = 0;

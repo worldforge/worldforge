@@ -23,17 +23,17 @@ copyright = copyright_template % "Stefanus Du Toit and Aloril"
 static_objects = ["root", "root_entity", "root_operation"]
 
 # C++ equivalents of atlas types              
-cpp_type = {'map' : 'Atlas::Object::MapType',
-            'list' : 'Atlas::Object::ListType',
+cpp_type = {'map' : 'Atlas::Message::Object::MapType',
+            'list' : 'Atlas::Message::Object::ListType',
             'string' : 'std::string',
-            'int' : 'int',
+            'int' : 'long',
             'float' : 'double',
             'RootList' : 'std::vector<Root>',
             'string_list' : 'std::list<std::string>',
-            'int_list' : 'std::list<int>',
+            'int_list' : 'std::list<long>',
             'float_list' : 'std::list<double>',
             'string_list_length' : 'std::vector<std::string>',
-            'int_list_length' : 'std::vector<int>',
+            'int_list_length' : 'std::vector<long>',
             'float_list_length' : 'std::vector<double>'}
 
 # Const references

@@ -4,7 +4,7 @@
 
 #include "DecoderBase.h"
 
-namespace Atlas {
+namespace Atlas { namespace Message {
 
 DecoderBase::DecoderBase()
 {
@@ -43,7 +43,7 @@ void DecoderBase::mapItem(const std::string& name, const List&)
     state.push(STATE_LIST);
 }
     
-void DecoderBase::mapItem(const std::string& name, int i)
+void DecoderBase::mapItem(const std::string& name, long i)
 {
     maps.top()[name] = i;
 }
@@ -91,7 +91,7 @@ void DecoderBase::listItem(const List&)
     state.push(STATE_LIST);
 }
     
-void DecoderBase::listItem(int i)
+void DecoderBase::listItem(long i)
 {
     lists.top().push_back(i);
 }
@@ -125,4 +125,4 @@ void DecoderBase::listEnd()
     }
 }
     
-} // namespace Atlas
+} } // namespace Atlas::Message

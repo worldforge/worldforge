@@ -34,7 +34,7 @@ using namespace Atlas;
 using namespace std;
 
 // This sends a very simple message to c
-void helloWorld(Codec & c)
+void helloWorld(Codec<std::iostream> & c)
 {
     cout << "Sending hello world message... " << flush;
     c.streamMessage(Bridge::mapBegin);
@@ -72,24 +72,24 @@ int main(int argc, char** argv)
     // The DebugBridge puts all that comes through the codec on cout
     DebugBridge bridge;
     // Do client negotiation with the server
-    StreamConnect conn("simple_client", connection, &bridge);
+    Net::StreamConnect conn("simple_client", connection, &bridge);
 
     cout << "Negotiating... " << flush;
     // conn.poll() does all the negotiation
-    while (conn.getState() == Negotiate::IN_PROGRESS) {
+    while (conn.getState() == Negotiate<std::iostream>::IN_PROGRESS) {
         conn.poll();
     }
     cout << "done" << endl;
 
     // Check whether negotiation was successful
-    if (conn.getState() == Negotiate::FAILED) {
+    if (conn.getState() == Negotiate<std::iostream>::FAILED) {
         cerr << "Failed to negotiate" << endl;
         return 2;
     }
     // Negotiation was successful
 
     // Get the codec that negotiation established
-    Codec * codec = conn.getCodec();
+    Codec<std::iostream> * codec = conn.getCodec();
 
     // This should always be sent at the beginning of a session
     codec->streamBegin();

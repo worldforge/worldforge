@@ -20,6 +20,7 @@ along with the name of sender and a Socket
 @see Filter
 */
 
+template <typename Stream>
 class Negotiate : public Task
 {
     public:
@@ -32,7 +33,7 @@ class Negotiate : public Task
     };
 
     virtual State getState() = 0;
-    virtual Codec * getCodec() = 0;
+    virtual Codec<Stream>* getCodec() = 0;
 };
 
 } // Atlas namespace

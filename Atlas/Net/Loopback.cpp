@@ -38,7 +38,7 @@ class LoopBridge : public Bridge
 	bridge->mapItem(name, listBegin);
     }
     
-    virtual void mapItem(const std::string& name, int data)
+    virtual void mapItem(const std::string& name, long data)
     {
 	bridge->mapItem(name, data);
     }
@@ -68,7 +68,7 @@ class LoopBridge : public Bridge
 	bridge->listItem(listBegin);
     }
     
-    virtual void listItem(int data)
+    virtual void listItem(long data)
     {
 	bridge->listItem(data);
     }
@@ -93,7 +93,7 @@ class LoopBridge : public Bridge
     Bridge* bridge;
 };
 
-void Atlas::loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
+void Atlas::Net::loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
 {
     e1 = new LoopBridge(d1);
     e2 = new LoopBridge(d2);

@@ -7,7 +7,7 @@
 
 #include "BaseObject.h"
 
-namespace Atlas {
+namespace Atlas { namespace Objects {
 
 template <class T> 
 class SmartPtr
@@ -103,6 +103,6 @@ protected:
     T *ptr;
 };
 
-} // namespace Atlas
+} } // namespace Atlas::Objects
 
 #endif

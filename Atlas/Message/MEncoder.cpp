@@ -8,7 +8,7 @@
 using namespace Atlas;
 using namespace std;
 
-namespace Atlas {
+namespace Atlas { namespace Message {
 
 Encoder::Encoder(Atlas::Bridge* b)
     : EncoderBase(b)
@@ -18,7 +18,7 @@ Encoder::Encoder(Atlas::Bridge* b)
 void Encoder::listItem(const Object& obj)
 {
     switch (obj.getType()) {
-        case Object::TYPE_INT: b->listItem((int)obj.asInt()); break;
+        case Object::TYPE_INT: b->listItem(obj.asInt()); break;
         case Object::TYPE_FLOAT: b->listItem(obj.asFloat()); break;
         case Object::TYPE_STRING: b->listItem(obj.asString()); break;
         case Object::TYPE_MAP: {
@@ -43,10 +43,10 @@ void Encoder::listItem(const Object& obj)
     }
 }
 
-void Encoder::mapItem(const string& name, const Object& obj)
+void Encoder::mapItem(const std::string& name, const Object& obj)
 {
     switch (obj.getType()) {
-        case Object::TYPE_INT: b->mapItem(name, (int)obj.asInt()); break;
+        case Object::TYPE_INT: b->mapItem(name, obj.asInt()); break;
         case Object::TYPE_FLOAT: b->mapItem(name, obj.asFloat()); break;
         case Object::TYPE_STRING: b->mapItem(name, obj.asString()); break;
         case Object::TYPE_MAP: {
@@ -86,4 +86,4 @@ void Encoder::streamMessage(const Object& obj)
 
 
 
-} // namespace Atlas
+} } // namespace Atlas::Message

@@ -34,6 +34,8 @@ The complete specification is located in cvs at:
 
 #include "Packed.h"
 
+namespace Atlas { namespace Codecs {
+
 //namespace
 //{
     //Codec::Factory<Packed> factory(
@@ -42,7 +44,7 @@ The complete specification is located in cvs at:
     //);
 //}
 
-Packed::Packed(const Codec::Parameters& p) :
+Packed::Packed(const Codec<std::iostream>::Parameters& p) :
     socket(p.stream), bridge(p.bridge)
 {
     state.push(PARSE_STREAM);
@@ -176,12 +178,12 @@ void Packed::parseInt(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->mapItem(hexDecode(name), atoi(data.c_str()));
+		bridge->mapItem(hexDecode(name), atol(data.c_str()));
 		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		bridge->listItem(atoi(data.c_str()));
+		bridge->listItem(atol(data.c_str()));
 	    }
 	    else
 	    {
@@ -377,7 +379,7 @@ void Packed::mapItem(const std::string& name, const List&)
     socket << '(' << hexEncode(name) << '=';
 }
 
-void Packed::mapItem(const std::string& name, int data)
+void Packed::mapItem(const std::string& name, long data)
 {
     socket << '@' << hexEncode(name) << '=' << data;
 }
@@ -407,7 +409,7 @@ void Packed::listItem(const List&)
     socket << '(';
 }
 
-void Packed::listItem(int data)
+void Packed::listItem(long data)
 {
     socket << '@' << data;
 }
@@ -427,3 +429,4 @@ void Packed::listEnd()
     socket << ')';
 }
 
+} } // namespace Atlas::Codecs

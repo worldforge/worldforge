@@ -10,7 +10,7 @@
 #include "../Bridge.h"
 #include "Object.h"
 
-namespace Atlas {
+namespace Atlas { namespace Message {
 
 /** Base class for decoders that take Atlas::Message::Object.
  *
@@ -41,14 +41,14 @@ public:
 
     virtual void mapItem(const std::string& name, const Map&);
     virtual void mapItem(const std::string& name, const List&);
-    virtual void mapItem(const std::string& name, int);
+    virtual void mapItem(const std::string& name, long);
     virtual void mapItem(const std::string& name, double);
     virtual void mapItem(const std::string& name, const std::string&);
     virtual void mapEnd();
     
     virtual void listItem(const Map&);
     virtual void listItem(const List&);
-    virtual void listItem(int);
+    virtual void listItem(long);
     virtual void listItem(double);
     virtual void listItem(const std::string&);
     virtual void listEnd();
@@ -75,6 +75,6 @@ protected:
     virtual void objectArrived(const Object& obj) = 0;
 };
 
-} // namespace Atlas
+} } // namespace Atlas::Message
 
 #endif

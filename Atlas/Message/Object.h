@@ -1,6 +1,6 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Stefanus Du Toit
+// Copyright (C) 2000 Stefanus Du Toit, Karsten-O. Laux
 
 #ifndef ATLAS_MESSAGE_OBJECT_H
 #define ATLAS_MESSAGE_OBJECT_H
@@ -8,10 +8,11 @@
 #include <string>
 #include <map>
 #include <list>
+#include <vector>
 
-namespace Atlas {
+namespace Atlas { namespace Message {
 
-/// An exception class issued when the wrong type is requested in As().
+/// An exception class issued when the wrong type is requested in as().
 class WrongTypeException { };
 
 /** Multi-type container
@@ -41,7 +42,7 @@ public:
     typedef double FloatType;
     typedef std::string StringType;
     typedef std::map<std::string, Object> MapType;
-    typedef std::list<Object> ListType;
+    typedef std::vector<Object> ListType;
 
     enum Type {
         TYPE_NONE,
@@ -290,6 +291,8 @@ public:
     bool isInt() const { return (t == TYPE_INT); }
     /// Check whether the current type is double.
     bool isFloat() const { return (t == TYPE_FLOAT); }
+    /// Check whether the current type is numeric.
+    bool isNum() const { return ((t == TYPE_FLOAT) || (t == TYPE_INT)); }
     /// Check whether the current type is std::string.
     bool isString() const { return (t == TYPE_STRING); }
     /// Check whether the current type is MapType.
@@ -307,6 +310,13 @@ public:
     FloatType asFloat() const throw (WrongTypeException)
     {
         if (t == TYPE_FLOAT) return f;
+        throw WrongTypeException();
+    }
+    /// Retrieve the current value as a number.
+    FloatType asNum() const throw (WrongTypeException)
+    {
+        if (t == TYPE_FLOAT) return f;
+        if (t == TYPE_INT) return FloatType(i);
         throw WrongTypeException();
     }
     /// Retrieve the current value as a const std::string reference.
@@ -355,10 +365,55 @@ protected:
       StringType* s;
       MapType* m;
       ListType* l;
+      void* n;
     };
+
+    static void * freeList;
+public:
+    static void * operator new(size_t size, void * location)
+    {
+        return location;
+    }
+
+    static void * operator new(size_t size)
+    {
+        if (size == 0) { size = 1; }
+
+        if (size != sizeof(Object)) {
+            return ::operator new(size);
+        }
+
+        if (freeList == NULL) {
+            Object * block = (Object *)::operator new(sizeof(Object) * 512);
+            freeList = block;
+            for(int i = 0; i < 511; i++) {
+                block->n = ++block;
+            }
+            block->n = NULL;
+        }
+
+        Object * ret = (Object *)freeList;
+        freeList = ret->n;
+        return ret;
+    }
+
+    static void operator delete(void * rawMem, size_t size)
+    {
+        if (rawMem == NULL) return;
+
+        if (size != sizeof(Object)) {
+            ::operator delete(rawMem);
+            return;
+        }
+
+        ((Object *)rawMem)->n = freeList;
+        freeList = rawMem;
+
+        return;
+    }
 };
 
-} // namespace Atlas
+} } // namespace Atlas::Message
 
 
 #endif

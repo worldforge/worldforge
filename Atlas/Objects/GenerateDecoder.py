@@ -39,7 +39,7 @@ class GenerateDecoder:
  * @see Atlas::Objects::Encoder
  * @author Stefanus Du Toit <sdt@gmx.net>
  */
-class ObjectsDecoder : public Atlas::DecoderBase
+class ObjectsDecoder : public Atlas::Message::DecoderBase
 {
 public:
     /// Default destructor.
@@ -47,10 +47,10 @@ public:
 
 protected:
     /// Overridden by Objects::Decoder to retrieve the object.
-    virtual void objectArrived(const Atlas::Object&);
+    virtual void objectArrived(const Atlas::Message::Object&);
 
     /// An unknown object has arrived.
-    virtual void unknownObjectArrived(const Atlas::Object&) { }
+    virtual void unknownObjectArrived(const Atlas::Message::Object&) { }
 
     /// An unknown object has arrived.
     virtual void unknownObjectArrived(const Root&) { }
@@ -84,7 +84,7 @@ ObjectsDecoder::~ObjectsDecoder()
 {
 }
 
-void ObjectsDecoder::objectArrived(const Atlas::Object& o)
+void ObjectsDecoder::objectArrived(const Atlas::Message::Object& o)
 {
     Root obj =  messageObject2ClassObject(o);
     dispatchObject(obj);

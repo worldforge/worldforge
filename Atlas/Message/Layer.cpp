@@ -4,10 +4,10 @@
 
 #include "Layer.h"
 
-namespace Atlas {
+namespace Atlas { namespace Message {
     
 Layer::Layer(Atlas::Bridge* bridge) : Encoder(bridge), DecoderBase()
 {
 }
 
-} // namespace Atlas
+} } // namespace Atlas::Message

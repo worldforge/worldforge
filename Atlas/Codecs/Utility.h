@@ -19,6 +19,8 @@
 #include <string>
 #include <algorithm>
 
+namespace Atlas { namespace Codecs {
+
 /// Convert an ASCII char to its hexadecimal value
 inline const std::string charToHex(char c)
 {
@@ -111,5 +113,7 @@ inline const std::string hexDecodeWithPrefix(const std::string&
 
     return newMessage;
 }
+
+} } // namespace Atlas::Codecs
 
 #endif // ATLAS_CODECS_UTILITY_H

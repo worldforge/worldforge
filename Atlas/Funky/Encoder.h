@@ -9,7 +9,7 @@
 
 #include <string>
 
-namespace Atlas {
+namespace Atlas { namespace Funky {
 
 /** @defgroup funky_encoder Atlas Funky Encoder
  *
@@ -110,7 +110,7 @@ public:
     }
 
     /// Send an integer value.
-    T operator<<(int i)
+    T operator<<(long i)
     {
         b.mapItem(name, i);
         return T(b);
@@ -198,7 +198,7 @@ public:
     }
 
     /// Send an integer value.
-    EncList<B, T> operator<<(int i)
+    EncList<B, T> operator<<(long i)
     {
         b.listItem(i);
         return *this;
@@ -284,6 +284,6 @@ public:
 };
 
 
-} // Atlas::Funky namespace
+} } // Atlas::Funky namespace
 
 #endif

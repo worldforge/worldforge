@@ -1,3 +1,17 @@
+2001-03-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/*: Backed off changes to namespaces and template classes with
+	  Stream parameter, as they proved to be of no benefit to portability.
+
+	* src/*: Finished off a bit more ISO conformance. (all std:: additions).
+
+	* src/Message/Object.h: Copied changes from stable branch
+	  including memory pool optimisation, asNum() and isNum() methods, and
+	  change of ListType from std::list to std::vector.
+
+	* src/*: Replaced int with long throughout code for compatability
+	  with changes type in Message::Object
+
 2001-01-05  Stefanus Du Toit  <sjdutoit@uwaterloo.ca>
 
 	* src/Filter.h: added filterbuf. Input filtering is not

@@ -13,6 +13,8 @@
 using namespace std;
 using namespace Atlas;
 
+namespace Atlas { namespace Codecs {
+
 /*
 
 Sample output for this codec: (whitespace added for clarity)
@@ -35,11 +37,11 @@ The complete specification is located in cvs at:
 
 */
 
-class XML : public Codec
+class XML : public Codec<std::iostream>
 {
     public:
 
-    XML(const Codec::Parameters&);
+    XML(const Codec<std::iostream>::Parameters&);
 
     virtual void poll(bool can_read = true);
 
@@ -49,21 +51,21 @@ class XML : public Codec
     
     virtual void mapItem(const std::string& name, const Map&);
     virtual void mapItem(const std::string& name, const List&);
-    virtual void mapItem(const std::string& name, int);
+    virtual void mapItem(const std::string& name, long);
     virtual void mapItem(const std::string& name, double);
     virtual void mapItem(const std::string& name, const std::string&);
     virtual void mapEnd();
     
     virtual void listItem(const Map&);
     virtual void listItem(const List&);
-    virtual void listItem(int);
+    virtual void listItem(long);
     virtual void listItem(double);
     virtual void listItem(const std::string&);
     virtual void listEnd();
 
     protected:
 
-    iostream& socket;
+    std::iostream& socket;
     Bridge* bridge;
     
     enum Token
@@ -87,11 +89,11 @@ class XML : public Codec
 	PARSE_STRING,
     };
     
-    stack<State> state;
-    stack<string> data;
+    std::stack<State> state;
+    std::stack<std::string> data;
 
-    string tag;
-    string name;
+    std::string tag;
+    std::string name;
 
     inline void tokenTag(char);
     inline void tokenStartTag(char);
@@ -101,5 +103,7 @@ class XML : public Codec
     inline void parseStartTag();
     inline void parseEndTag();
 };
+
+} } // namespace Atlas::Codecs
 
 #endif // ATLAS_CODECS_XML_H

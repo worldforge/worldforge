@@ -9,7 +9,7 @@
 #include "Object.h"
 #include "DecoderBase.h"
 
-namespace Atlas {
+namespace Atlas { namespace Message {
 
 /** Decoder that presents a queue of Atlas::Message::Object.
  *
@@ -49,6 +49,6 @@ private:
     std::queue<Object> objectQueue;
 };
 
-} // namespace Atlas
+} } // namespace Atlas::Message
 
 #endif

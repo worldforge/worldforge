@@ -35,6 +35,8 @@ The complete specification is located in cvs at:
 
 #include "XML.h"
 
+namespace Atlas { namespace Codecs {
+
 //namespace
 //{
     //Codec::Factory<XML> factory(
@@ -43,7 +45,7 @@ The complete specification is located in cvs at:
     //);
 //}
     
-XML::XML(const Codec::Parameters& p)
+XML::XML(const Codec<std::iostream>::Parameters& p)
     : socket(p.stream), bridge(p.bridge)
 {
     token = TOKEN_DATA;
@@ -142,14 +144,14 @@ void XML::parseStartTag()
     
     if (name_start < name_end)
     {
-	name = string(tag, name_start, name_end - name_start);
+	name = std::string(tag, name_start, name_end - name_start);
     }
     else
     {
 	name.erase();
     }
     
-    tag = string(tag, 0, tag_end);
+    tag = std::string(tag, 0, tag_end);
 
     switch (state.top())
     {
@@ -302,11 +304,11 @@ void XML::parseEndTag()
 		state.pop();
 		if (state.top() == PARSE_MAP)
 		{
-		    bridge->mapItem(name, atoi(data.top().c_str()));
+		    bridge->mapItem(name, atol(data.top().c_str()));
 		}
 		else
 		{
-		    bridge->listItem(atoi(data.top().c_str()));
+		    bridge->listItem(atol(data.top().c_str()));
 		}
 	    }
 	    else
@@ -401,7 +403,7 @@ void XML::mapItem(const std::string& name, const List&)
     socket << "<list name=\"" << name << "\">";
 }
 
-void XML::mapItem(const std::string& name, int data)
+void XML::mapItem(const std::string& name, long data)
 {
     socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
@@ -431,7 +433,7 @@ void XML::listItem(const List&)
     socket << "<list>";
 }
 
-void XML::listItem(int data)
+void XML::listItem(long data)
 {
     socket << "<int>" << data << "</int>";
 }
@@ -451,3 +453,4 @@ void XML::listEnd()
     socket << "</list>";
 }
 
+} } // namespace Atlas::Codecs

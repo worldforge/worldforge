@@ -7,7 +7,7 @@
 
 #include "Encoder.h"
 
-namespace Atlas {
+namespace Atlas { namespace Message {
 
 /** Layer that combines Atlas::Message::Encoder and a decoder.
  *
@@ -27,6 +27,6 @@ public:
     virtual ~Layer() { }
 };
 
-} // namespace Atlas
+} } // namespace Atlas::Message
 
 #endif

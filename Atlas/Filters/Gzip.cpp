@@ -45,9 +45,9 @@ void Gzip::end()
     deflateEnd(&outgoing);
 }
     
-string Gzip::encode(const string& data)
+std::string Gzip::encode(const std::string& data)
 {
-    string out_string;
+    std::string out_string;
     int status;
     
     buf[0] = 0;
@@ -71,9 +71,9 @@ string Gzip::encode(const string& data)
     return out_string;
 }
     
-string Gzip::decode(const string& data)
+std::string Gzip::decode(const std::string& data)
 {
-    string out_string;
+    std::string out_string;
     int status;
 
     buf[0] = 0;

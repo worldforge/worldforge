@@ -18,10 +18,10 @@
 
 namespace Atlas {
 
-void Factory<Codec>::getFactories()
+void Factory<Codec<std::iostream> >::getFactories()
 {
-    new Codec::Factory<XML> ("XML", Codec::Metrics(1,2));
-    new Codec::Factory<Packed> ("Packed", Codec::Metrics(1,2));
+    new Codec<std::iostream>::Factory<Codecs::XML> ("XML", Codec<std::iostream>::Metrics(1,2));
+    new Codec<std::iostream>::Factory<Codecs::Packed> ("Packed", Codec<std::iostream>::Metrics(1,2));
 }
 
 void Factory<Filter>::getFactories()
