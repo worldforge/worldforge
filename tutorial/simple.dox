@@ -87,6 +87,12 @@ lists of these or any such inconveniences.
 
 See under the code for more documentation.
 
+<b>Note:</b>
+
+If the server does not seem to be accepting connections, try changing
+bind("0.0.0.0", 6767) to bind("127.0.0.1", 6767) (or other similar addresses
+that might be appropriate.
+
 @verbinclude simple_server.cc
 
 As mentioned before, the server does the following:
