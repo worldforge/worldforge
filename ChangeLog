@@ -1,3 +1,8 @@
+2004-12-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* atlas-cpp.spec.in: Update spec with License URL Package Vendor
+	  and Distribution tags.
+
 2004-08-05  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/testIntersect.cpp: Fix equality test in the tests and

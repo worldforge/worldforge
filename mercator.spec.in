@@ -7,8 +7,12 @@ Summary: A WorldForge terrain library.
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Copyright: GPL
+License: GPL
 Group: System Environment/Libraries
+URL: http://www.worldforge.org/dev/eng/libraries/mercator
+Packager: Al Riddoch <alriddoch@zepler.org>
+Vendor: WorldForge
+Distribution: Mason
 Source: %{name}-%{version}.tar.gz
 Requires: wfmath >= 0.3.2 libstdc++
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
