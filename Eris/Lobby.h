@@ -51,6 +51,9 @@ protected:
     Router::RouterResult privateTalk(const Atlas::Objects::Operation::Talk& tk);
     void recvInitialSight(const Atlas::Objects::Entity::RootEntity& ent);
         
+    void recvAppearance(const Atlas::Objects::Root& obj);
+    void recvDisappearance(const Atlas::Objects::Root& obj);
+        
 private:
     void onLoggedIn();
     void onLogout(bool clean);

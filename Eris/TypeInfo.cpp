@@ -49,17 +49,17 @@ bool TypeInfo::isA(TypeInfoPtr tp)
     if (tp == this) // uber fast short-circuit for type equality
         return true;
 	
-    return m_ancestors.count(tp); // non-authorative
+    return m_ancestors.count(tp); // non-authorative if not bound
 }
 
 void TypeInfo::processTypeData(const Root &atype)
 {
-    if (atype->getId() != m_name)
-    {
+    if (atype->getId() != m_name) {
         error() << "mis-targeted INFO operation for " << atype->getId() << " arrived at " << m_name;
         return;
     }
         
+    debug() << "got type data for " << m_name;
     const StringList& parents(atype->getParents());
     for (StringList::const_iterator P = parents.begin(); P != parents.end(); ++P)
         addParent(m_typeService->getTypeByName(*P));
@@ -140,9 +140,14 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
         (*C)->addAncestor(tp);
 }
 
-Atlas::Objects::Root gameEntityFactory()
+static Atlas::Objects::Root gameEntityFactory()
 {
     return Atlas::Objects::Entity::GameEntity();
+}
+
+static Atlas::Objects::Root adminEntityFactory()
+{
+    return Atlas::Objects::Entity::AdminEntity();
 }
 
 /*
@@ -169,14 +174,18 @@ void TypeInfo::validateBind()
     
     if (!Atlas::Objects::objectFactory.hasFactory(m_name))
     {
-        //debug() << "registering Atlas factory for newly bound type " << m_name;
-        static TypeInfo* gameEntityType = m_typeService->getTypeByName("game_entity");
-        
-        if (isA(gameEntityType))
-        {
+        static TypeInfoPtr gameEntityType = m_typeService->getTypeByName("game_entity"),
+            adminEntityType = m_typeService->getTypeByName("admin_entity");
+            
+        if (isA(gameEntityType)) {
             m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
-        } else
-            error() << "got custom type that doesn't inherit game_entity, no factory";
+        } else if (isA(adminEntityType)) {
+            m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &adminEntityFactory);
+        } else {
+            error() << "type " << m_name <<  " doesn't inherit game_entity or admin_entity";
+            for (TypeInfoSet::iterator P=m_ancestors.begin(); P!=m_ancestors.end();++P)
+                debug() << m_name << " has ancestor " << (*P)->getName();
+        }
     }
     
     Bound.emit(this);

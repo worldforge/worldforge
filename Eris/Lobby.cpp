@@ -13,6 +13,7 @@
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Anonymous.h>
 
 #include <algorithm> 
 #include <cassert>
@@ -44,24 +45,35 @@ protected:
     {
         const std::vector<Root>& args = op->getArgs();
 
-        Sight sight = smart_dynamic_cast<Sight>(op);
-        if (sight.isValid())
-        {
+        if (op->instanceOf(APPEARANCE_NO)) {
+            for (unsigned int A=0; A < args.size(); ++A)
+                m_lobby->recvAppearance(args[A]);
+
+            return HANDLED;
+        }
+
+        if (op->instanceOf(DISAPPEARANCE_NO)) {
+            for (unsigned int A=0; A < args.size(); ++A)
+                m_lobby->recvDisappearance(args[A]);
+            
+            return HANDLED;
+        }
+
+        // note it's important we match exactly on sight here, and not derived ops
+        // like appearance and disappearance
+        if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
             assert(!args.empty());
             AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
-            if (acc.isValid())
-            {
+            if (acc.isValid()) {
                 m_lobby->sightPerson(acc);
                 return HANDLED;
             }
             
-            if (op->getRefno() == m_anonymousLookSerialno)
-            {
+            if (op->getRefno() == m_anonymousLookSerialno) {
                 RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
                 m_lobby->recvInitialSight(ent);
                 return HANDLED;
             }
-            
         }
         
         Sound sound = smart_dynamic_cast<Sound>(op);
@@ -107,8 +119,7 @@ Lobby::Lobby(Player* pl) :
 	
 Lobby::~Lobby()
 {
-    for (IdRoomMap::const_iterator R = m_rooms.begin(); R != m_rooms.end(); ++R)
-    {
+    for (IdRoomMap::const_iterator R = m_rooms.begin(); R != m_rooms.end(); ++R) {
         if (R->second == this) continue; // that would really be bad
         delete R->second;
     }
@@ -126,19 +137,18 @@ void Lobby::look(const std::string &id)
         return;
     }
     
-    Root what;
-    //if (!id.empty())
-        what->setId(id);
-        
     Look look;
     look->setFrom(m_account->getId());
     look->setSerialno(getNewSerialno());
-    look->setArgs1(what);
     
-    if (id.empty()) {
-        m_router->setAnonymousLookSerialno(look->getSerialno());
-        debug() << "anonymousLookSerialno=" << look->getSerialno();
+    if (!id.empty()) {
+        Root what;
+        what->setId(id);
+        look->setArgs1(what);
     }
+    
+    if (id.empty())
+        m_router->setAnonymousLookSerialno(look->getSerialno());
     
     getConnection()->send(look);
 }
@@ -162,8 +172,7 @@ Room* Lobby::join(const std::string& roomId)
     getConnection()->send(join);
 	
     IdRoomMap::iterator R = m_rooms.find(roomId);
-    if (R == m_rooms.end())
-    {
+    if (R == m_rooms.end()) {
         Room *nr = new Room(this, roomId);
         R = m_rooms.insert(R, IdRoomMap::value_type(roomId, nr));
     }
@@ -192,8 +201,7 @@ Person* Lobby::getPerson(const std::string &acc)
 Room* Lobby::getRoom(const std::string &id)
 {
     IdRoomMap::iterator R = m_rooms.find(id);
-    if (R == m_rooms.end())
-    {
+    if (R == m_rooms.end()) {
         error() << "called getRoom with unknown ID " << id;
         return NULL;
     }
@@ -206,16 +214,14 @@ Room* Lobby::getRoom(const std::string &id)
 void Lobby::sightPerson(const AtlasAccount &ac)
 {
     IdPersonMap::iterator P = m_people.find(ac->getId());
-    if (P == m_people.end())
-    {
+    if (P == m_people.end()) {
         error() << "got un-requested sight of person " << ac->getId();
         return;
     }
 	
     if (P->second)
         P->second->sight(ac);
-    else
-    {
+    else {
         // install the new Person object
         P->second = new Person(this, ac);
     }
@@ -231,6 +237,7 @@ void Lobby::recvInitialSight(const RootEntity& ent)
     if (!m_roomId.empty()) return;
 
     m_roomId = ent->getId();
+    m_rooms[m_roomId] = this;
     m_account->getConnection()->registerRouterForFrom(this, m_roomId);
     Room::sight(ent);
 }
@@ -279,6 +286,34 @@ Router::RouterResult Lobby::privateTalk(const Atlas::Objects::Operation::Talk& t
     std::string description = args.front()->getAttr("say").asString();
     PrivateTalk.emit(P->second, description);
     return HANDLED;
+}
+
+void Lobby::recvAppearance(const Atlas::Objects::Root& obj)
+{
+    if (!obj->hasAttr("loc")) {
+        error() << "lobby got appearance arg without loc: " << obj;
+        return;
+    }
+    
+    std::string loc = obj->getAttr("loc").asString();
+    if (m_rooms.count(loc)) {
+        m_rooms[loc]->appearance(obj->getId());
+    } else
+        error() << "lobby got appearance with unknown loc: " << loc;
+}
+
+void Lobby::recvDisappearance(const Atlas::Objects::Root& obj)
+{
+    if (!obj->hasAttr("loc")) {
+        error() << "lobby got disappearance arg without loc: " << obj;
+        return;
+    }
+    
+    std::string loc = obj->getAttr("loc").asString();
+    if (m_rooms.count(loc)) {
+        m_rooms[loc]->disappearance(obj->getId());
+    } else
+        error() << "lobby got disappearance with unknown loc: " << loc;
 }
 
 /*

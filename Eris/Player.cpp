@@ -62,6 +62,7 @@ public:
                 const std::vector<Root>& args = err->getArgs();
                 std::string msg = args[0]->getAttr("message").asString();
                 warning() << "Player got error op while logged in:" << msg;
+                debug() << "op that caused the error was: " << args[1];
             } else {
                 m_player->loginError(err);
             }
@@ -70,8 +71,8 @@ public:
         }
 
         // logout
-        if (op->instanceOf(LOGOUT_NO))
-        {
+        if (op->instanceOf(LOGOUT_NO)) {
+            debug() << "player reciev forced logout from server";
             m_player->internalLogout(false);
             return HANDLED;
         }
@@ -121,16 +122,15 @@ private:
         }
         
         Logout logout = smart_dynamic_cast<Logout>(args.front());
-        if (logout.isValid())
-        {
+        if (logout.isValid()) {
+            debug() << "player recived logout acknowledgement";
             m_player->internalLogout(true);
             return HANDLED;
         }
            
         if (m_player->isLoggedIn()) {
             GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
-            if (ent.isValid())
-            {
+            if (ent.isValid()) {
                 debug() << "got candidate IG subscription";
                 // IG transition info, maybe
                 RefnoAvatarMap::iterator A = global_pendingInfoAvatars.find(info->getRefno());
@@ -175,8 +175,7 @@ Player::~Player()
 
 void Player::login(const std::string &uname, const std::string &password)
 {
-    if (!m_con->isConnected() || (m_status != DISCONNECTED))
-    {
+    if (!m_con->isConnected() || (m_status != DISCONNECTED)) {
         error() << "called login on unconnected Connection / already logged-in Player";
         return;
     }
@@ -216,8 +215,7 @@ void Player::createAccount(const std::string &uname,
 
 void Player::logout()
 {
-    if (!m_con->isConnected() || (m_status != LOGGED_IN))
-    {
+    if (!m_con->isConnected() || (m_status != LOGGED_IN)) {
         error() << "called logout on bad connection / unconnected Player, ignoring";
         return;
     }
@@ -354,6 +352,7 @@ Avatar* Player::takeCharacter(const std::string &id)
 void Player::internalLogin(const std::string &uname, const std::string &pwd)
 {
     assert(m_status == DISCONNECTED);
+        
     m_status = LOGGING_IN;
     m_username = uname; // store for posterity
 
@@ -373,23 +372,24 @@ void Player::internalLogout(bool clean)
 {
     if (clean) {
         if (m_status != LOGGING_OUT)
-        {
             error() << "got clean logout, but not logging out already";
-        }
     } else {
         if (m_status != LOGGED_IN)
-        {
             error() << "got forced logout, but not currently logged in";
-        }
     }
     
     m_status = DISCONNECTED;
+    delete _logoutTimeout;
+	_logoutTimeout = NULL;
     
-    if (_logoutTimeout)
-        delete _logoutTimeout;
-	
-    m_con->disconnect();
-    LogoutComplete.emit(clean);
+    if (m_con->getStatus() == BaseConnection::DISCONNECTING) {
+        m_con->unlock();
+    } else {
+        // note this will cause netDisconnect to run, which is why we set
+        // status to DISCONNECT already
+        m_con->disconnect(); 
+        LogoutComplete.emit(clean);
+    }
 }
 
 void Player::loginComplete(const AtlasAccount &p)
@@ -402,7 +402,6 @@ void Player::loginComplete(const AtlasAccount &p)
         
     m_status = LOGGED_IN;
     m_accountId = p->getId();
-    debug() << "login, account ID is " << m_accountId;
     
     m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
     // notify an people watching us 
@@ -435,14 +434,12 @@ void Player::sightCharacter(const GameEntity& ge)
         return;
     }
     
-    debug() << "got character info";
     // okay, we can now add it to our map
     _characters.insert(C, CharacterMap::value_type(ge->getId(), ge));
     GotCharacterInfo.emit(ge);
     
-// check if we'redone
+    // check if we're done
     if (_characters.size() == m_characterIds.size()) {
-        debug() << "got all characters";
         m_doingCharacterRefresh = false;
         GotAllCharacters.emit();
     }
@@ -456,8 +453,10 @@ state */
 void Player::netConnected()
 {
     // re-connection
-    if (!m_username.empty())
+    if (!m_username.empty() && !m_pass.empty() && (m_status == DISCONNECTED)) {
+        debug() << "Player " << m_username << " got netConnected, doing reconnect";
         internalLogin(m_username, m_pass);
+    }
 }
 
 bool Player::netDisconnecting()
@@ -465,9 +464,6 @@ bool Player::netDisconnecting()
     if (m_status == LOGGED_IN) {
         m_con->lock();
         logout();
-        // FIXME  -  decide what reponse logout should have, install a handler
-        // for it (in logout() itself), and then attach a signal to the handler
-        // that calls m_con->unlock();
         return false;
     } else
         return true;
@@ -484,6 +480,7 @@ void Player::handleLogoutTimeout()
     
     m_status = DISCONNECTED;
     delete _logoutTimeout;
+    _logoutTimeout = NULL;
     
     LogoutComplete.emit(false);
 }

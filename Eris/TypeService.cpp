@@ -168,7 +168,6 @@ void TypeService::recvTypeInfo(const Root &atype)
     if (T->second->isBound() && (atype->getId() != "root"))
         return;
 	
-    debug() << "got info for type " << T->second->getName();
     T->second->processTypeData(atype);
 }
 
@@ -298,7 +297,11 @@ void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
             return;
         }
         
-        assert(!type->isBound());
+        if (type->isBound()) {
+            error() << "Type " << type->getName() << " is bound, but got anonymous Object for obj:" << obj;
+            return;
+        }
+
         unbound.insert(type);
     }
 

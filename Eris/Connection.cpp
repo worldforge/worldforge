@@ -150,9 +150,8 @@ void Connection::unregisterRouterForFrom(Router* router, const std::string fromI
         
 void Connection::setDefaultRouter(Router* router)
 {
-    if (m_defaultRouter || !router)
-    {
-        error() << "setDefaultRoute duplicate set or null argument";
+    if (m_defaultRouter || !router) {
+        error() << "setDefaultRouter duplicate set or null argument";
         return;
     }
     
@@ -169,8 +168,7 @@ void Connection::unlock()
     if (m_lock < 1)
         throw InvalidOperation("Imbalanced lock/unlock calls on Connection");
 	
-    if (--m_lock == 0)
-    {
+    if (--m_lock == 0) {
         switch (_status)
         {
         case DISCONNECTING:	

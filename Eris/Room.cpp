@@ -153,16 +153,28 @@ std::vector<Person*> Room::getPeople() const
 
 Router::RouterResult Room::handleOperation(const RootOperation& op)
 {
-    if (op->getTo() != m_lobby->getAccount()->getId())
-    {
+    if (op->getTo() != m_lobby->getAccount()->getId()) {
         error() << "Room recived op TO account " << op->getTo() << ", not the account ID";
         return IGNORED;
     }
 
     const std::vector<Root>& args = op->getArgs();
+    
+    if (op->instanceOf(APPEARANCE_NO)) {
+        for (unsigned int A=0; A < args.size(); ++A)
+            appearance(args[A]->getId());
 
-    if (op->instanceOf(SIGHT_NO))
-    {
+        return HANDLED;
+    }
+
+    if (op->instanceOf(DISAPPEARANCE_NO)) {
+        for (unsigned int A=0; A < args.size(); ++A)
+            disappearance(args[A]->getId());
+        
+        return HANDLED;
+    }
+
+    if (op->instanceOf(SIGHT_NO)) {
         assert(!args.empty());
         RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
             
@@ -178,22 +190,6 @@ Router::RouterResult Room::handleOperation(const RootOperation& op)
             handleSightImaginary(img);
             return HANDLED;
         }
-    }
-
-    if (op->instanceOf(APPEARANCE_NO))
-    {
-        for (unsigned int A=0; A < args.size(); ++A)
-            appearance(args[A]->getId());
-
-        return HANDLED;
-    }
-
-    if (op->instanceOf(DISAPPEARANCE_NO))
-    {
-        for (unsigned int A=0; A < args.size(); ++A)
-            disappearance(args[A]->getId());
-        
-        return HANDLED;
     }
 
     if (op->instanceOf(SOUND_NO))
@@ -295,8 +291,7 @@ void Room::handleSightImaginary(const Imaginary& im)
 void Room::appearance(const std::string& personId)
 {
     IdPersonMap::iterator P = m_members.find(personId);
-    if (P != m_members.end())
-    {
+    if (P != m_members.end()) {
         error() << "duplicate appearance of person " << personId << " in room " << m_roomId;
         return;
     }
@@ -335,14 +330,13 @@ void Room::notifyPersonSight(Person *p)
     if (P == m_members.end())
         return; // this could happen if we got appear and disappear before the SIGHT
     
-    if (P->second != NULL)
-    {
-        if (P->second != p)
-        {
+    if (P->second != NULL) {
+        if (P->second != p) {
             error() << "duplicate Person objects exist for account " << P->first;
             return;
         }
-    }
+    } else
+        P->second = p;
         
     if (m_entered)
         Appearance.emit(this, p);

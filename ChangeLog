@@ -1,3 +1,26 @@
+2004-07-32  James Turner  <james@worldforge.org>
+
+	* Eris/Player.cpp: change logic in ::netConnected, so cresting and logging-in
+	  a player inside Connection::Connected doesn't assert.
+	  
+	* Eris/Player.cpp: many chanegs to logout logic, should generally work now,
+	  but still needs lots of testing, since there are many edge cases.
+
+	* Eris/TypeInfo.cpp: handle custom types that inherit admin_entity, not
+	  game_entity. This is true for the OOG chat structure
+	  
+	* Eris/Lobby.cpp: make OOG looks do the right thing with the LOOK args.
+
+	* Eris/Lobby.cpp: when recieving the initial lobby sight, add it to the
+	  m_rooms map, so talking and other actions work.
+	  
+	* Eris/Room.cpp: when recieving sight of a person, actually update the NULL
+	  pointer in m_members with the Person object, so checkEntry succeeds.
+
+	* Eris/Lobby.cpp: extend the router and Lobby code to deal with cyphesis's
+	  OOG appearance / disapperance ops, which are from the thing, and have 
+	  location set.
+
 2004-07-31  James Turner  <james@worldforge.org>
 
 	* Eris/View.cpp, Eris/Entity.cpp: many fixes to Apperance / Visibility logic,
