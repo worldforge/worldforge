@@ -1,3 +1,11 @@
+Tuesday, January 27th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Changed the Shuffle() function to use the new random
+	  number API instead of the old one, and use
+	  std::vector<>::size_type instead of unsigned for
+	  greater portability. Added a basic test to make sure
+	  it builds and runs.
+
 Sunday, January 18th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Made the Quaternion costructor from a Vector<3> (for

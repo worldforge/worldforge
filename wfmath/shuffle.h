@@ -29,7 +29,7 @@
 #include <vector>
 
 #include <wfmath/const.h>
-#include <wfmath/randgen.h>
+#include <wfmath/MersenneTwister.h>
 
 namespace WFMath {
 
@@ -40,7 +40,8 @@ namespace WFMath {
 template<class C>
 void Shuffle(std::vector<C>& v) // need vector for random access
 {
-  unsigned pos = v.size();
+  typedef typename std::vector<C>::size_type size_type;
+  size_type pos = v.size();
 
   if(!pos) // handle size() == 0 nicely
     return;
@@ -52,7 +53,7 @@ void Shuffle(std::vector<C>& v) // need vector for random access
   // vector. Note that the loop only executes size() - 1
   // times, as element 0 has nothing to swap with.
   while(--pos) {
-    unsigned new_pos = IRand(pos + 1); // 0 <= new_pos <= pos
+    size_type new_pos = MTRand::instance.randInt(pos); // 0 <= new_pos <= pos
     if(new_pos == pos)
       continue;
     C tmp = v[pos];
