@@ -4,11 +4,7 @@
 #include <Atlas/Message/Element.h>
 
 #include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/basic_signal.h>
-#else
 #include <sigc++/signal.h>
-#endif
 
 #include <map>
 #include <list>

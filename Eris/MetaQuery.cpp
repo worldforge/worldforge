@@ -2,8 +2,9 @@
 	#include "config.h"
 #endif
 
-#include <Eris/Metaserver.h>
 #include <Eris/MetaQuery.h>
+
+#include <Eris/Metaserver.h>
 #include <Eris/Utils.h>
 #include <Eris/Timeout.h>
 #include <Eris/Log.h>
@@ -11,11 +12,8 @@
 #include <Atlas/Objects/Operation/Get.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include <skstream/skstream.h>
-
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
-#include <sigc++/signal.h>
 
 #include <cassert>
 

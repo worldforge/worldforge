@@ -11,14 +11,6 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/quaternion.h>
 
-// system headers
-#include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/basic_signal.h>
-#else
-#include <sigc++/signal.h>
-#endif
-
 namespace Atlas {
 	namespace Objects {
 		namespace Entity {

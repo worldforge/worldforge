@@ -4,6 +4,8 @@
 #include <Eris/Types.h>
 #include <Eris/Timestamp.h>
 
+#include <sigc++/object.h>
+
 namespace Eris {
 
 /** Timeout  */	

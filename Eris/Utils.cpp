@@ -3,12 +3,11 @@
 #endif
 
 #include <Eris/Utils.h>
+
 #include <Eris/atlas_utils.h>
-#include <Eris/Connection.h>
 #include <Eris/Log.h>
 
 #include <Atlas/Objects/Operation/RootOperation.h>
-#include <Atlas/Objects/Entity/RootEntity.h>
 
 #include <cassert>
 

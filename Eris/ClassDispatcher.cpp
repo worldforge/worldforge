@@ -3,19 +3,14 @@
 #endif
 
 #include <Eris/ClassDispatcher.h>
+
 #include <Eris/TypeInfo.h>
 #include <Eris/Wait.h>
-#include <Eris/Utils.h>
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
 
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
 
 #include <cassert>
 

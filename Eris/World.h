@@ -1,12 +1,9 @@
 #ifndef ERIS_WORLD_H
 #define ERIS_WORLD_H
 
+#include <Eris/Types.h>
+
 #include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/basic_signal.h>
-#else
-#include <sigc++/signal.h>
-#endif
 
 #include <map>
 
@@ -37,8 +34,6 @@ namespace Atlas {
 		}
 	}
 }
-
-#include <Eris/Types.h>
 
 namespace Eris {
 

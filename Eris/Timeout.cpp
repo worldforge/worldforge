@@ -2,8 +2,8 @@
 	#include "config.h"
 #endif
 
-#include <Eris/Types.h>
 #include <Eris/Timeout.h>
+
 #include <Eris/Poll.h>
 
 #include <limits.h>

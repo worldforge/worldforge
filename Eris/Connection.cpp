@@ -6,7 +6,6 @@
 
 #include <Eris/atlas_utils.h>
 
-#include <Eris/Dispatcher.h>
 #include <Eris/Wait.h>
 #include <Eris/Timeout.h>
 #include <Eris/Utils.h>
@@ -17,25 +16,17 @@
 #include <Eris/TypeDispatcher.h>
 #include <Eris/ClassDispatcher.h>
 #include <Eris/DebugDispatcher.h>
-#include <Eris/SignalDispatcher.h>
 #include <Eris/EncapDispatcher.h>
 
 #include <Eris/Lobby.h>
 
-#include <Atlas/Net/Stream.h>
-#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Encoder.h>
-#include <Atlas/Message/Encoder.h>
 #include <Atlas/Objects/Operation/RootOperation.h>
 
 #include <skstream/skstream.h>
 
 #include <sigc++/bind.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
+#include <sigc++/object_slot.h>
 
 #include <cassert>
 

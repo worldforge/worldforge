@@ -2,14 +2,12 @@
 	#include "config.h"
 #endif
 
-#include <Eris/Dispatcher.h>
 #include <Eris/Utils.h>
 #include <Eris/ClassDispatcher.h>
 #include <Eris/TypeDispatcher.h>
 #include <Eris/OpDispatcher.h>
 #include <Eris/EncapDispatcher.h>
 #include <Eris/IdDispatcher.h>
-#include <Eris/Connection.h>
 #include <Eris/Log.h>
 
 #include <Atlas/Message/Element.h>

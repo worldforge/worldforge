@@ -3,6 +3,8 @@
 
 #include <Eris/Poll.h>
 
+#include <sigc++/object.h>
+
 #include <map>
 
 namespace Eris {

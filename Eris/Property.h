@@ -2,6 +2,7 @@
 #define ERIS_PROPERTY_H
 
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
 
 namespace Atlas {
   namespace Message {

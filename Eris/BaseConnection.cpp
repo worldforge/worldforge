@@ -10,13 +10,9 @@
 
 #include <Atlas/Codec.h>
 #include <Atlas/Net/Stream.h>
-#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Encoder.h>
-#include <Atlas/Message/Encoder.h>
 
 #include <skstream/skstream.h>
-
-#include <stdio.h>
 
 #include <cassert>
 

@@ -3,7 +3,6 @@
 #endif
 
 #include <Eris/ArgumentDispatcher.h>
-#include <Eris/Utils.h>
 
 namespace Eris {
 

@@ -9,19 +9,13 @@
 #include <Eris/OpDispatcher.h>
 #include <Eris/TypeDispatcher.h>
 #include <Eris/EncapDispatcher.h>
-#include <Eris/ArgumentDispatcher.h>
 
 #include <Eris/Utils.h>
 #include <Eris/Log.h>
-#include <Eris/Player.h>
-#include <Eris/Room.h>
 #include <Eris/Person.h>
 #include <Eris/atlas_utils.h>
 
 // various atlas headers we need
-#include <Atlas/Bridge.h>
-#include <Atlas/EncoderBase.h>
-#include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Encoder.h>
 
 #include <Atlas/Objects/Operation/Look.h>
@@ -30,14 +24,9 @@
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Talk.h>
 #include <Atlas/Objects/Entity/Player.h>
-#include <Atlas/Objects/Entity/GameEntity.h>
 
-#include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
+#include <sigc++/object_slot.h>
+
 #include <algorithm> 
 #include <cassert>
 

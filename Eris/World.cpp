@@ -3,6 +3,7 @@
 #endif
 
 #include <Eris/World.h>
+
 #include <Eris/Entity.h>
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
@@ -20,27 +21,20 @@
 #include <Eris/IdDispatcher.h>
 
 // various atlas headers we need
-#include <Atlas/EncoderBase.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include <Atlas/Objects/Entity/RootEntity.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
 
-#include <Atlas/Objects/Operation/Sight.h>
 #include <Atlas/Objects/Operation/Create.h>
 #include <Atlas/Objects/Operation/Look.h>
-#include <Atlas/Objects/Operation/Set.h>
 #include <Atlas/Objects/Operation/Delete.h>
-#include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Talk.h>
 #include <Atlas/Objects/Operation/Appearance.h>
 #include <Atlas/Objects/Operation/Disappearance.h>
 #include <Atlas/Objects/Operation/Sound.h>
 #include <Atlas/Objects/Operation/Move.h>
 
-#include <sigc++/object.h>
 #include <sigc++/object_slot.h>
-#include <sigc++/signal.h>
 
 #include <algorithm>
 #include <float.h>

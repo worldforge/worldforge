@@ -12,7 +12,6 @@
 #include <Eris/Log.h>
 
 // various atlas headers we need
-#include <Atlas/Bridge.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Entity/Player.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
@@ -23,12 +22,8 @@
 #include <Atlas/Objects/Operation/Look.h>
 #include <Atlas/Objects/Operation/Error.h>
 
-#include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
+#include <sigc++/object_slot.h>
+
 #include <algorithm>
 #include <cassert>
 

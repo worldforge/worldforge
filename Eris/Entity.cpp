@@ -13,12 +13,9 @@
 #include <Eris/IdDispatcher.h>
 #include <Eris/Log.h>
 
-#include <Atlas/Objects/Entity/RootEntity.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
 #include <Atlas/Objects/Operation/Move.h>
-#include <Atlas/Objects/Operation/Set.h>
 #include <Atlas/Objects/Operation/Talk.h>
-#include <Atlas/Objects/Operation/Sound.h>
 #include <Atlas/Objects/Operation/Sight.h>
 
 #include <wfmath/atlasconv.h>

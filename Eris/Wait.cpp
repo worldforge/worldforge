@@ -7,14 +7,11 @@
 #include <Eris/atlas_utils.h>
 #include <Eris/Utils.h>
 #include <Eris/Connection.h>
-#include <Eris/Dispatcher.h>
 #include <Eris/SignalDispatcher.h>
 
 #include <Atlas/Objects/Root.h>
 
-#include <sigc++/object.h>
 #include <sigc++/object_slot.h>
-#include <sigc++/signal.h>
 
 #include <cassert>
 

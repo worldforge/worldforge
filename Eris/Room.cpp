@@ -9,11 +9,8 @@
 #include <Eris/Person.h>
 #include <Eris/Log.h>
 
-#include <Eris/OpDispatcher.h>
 #include <Eris/SignalDispatcher.h>
 #include <Eris/ClassDispatcher.h>
-#include <Eris/EncapDispatcher.h>
-#include <Eris/IdDispatcher.h>
 #include <Eris/ArgumentDispatcher.h>
 
 #include <Atlas/Objects/Entity/RootEntity.h>
@@ -25,12 +22,8 @@
 #include <Atlas/Objects/Operation/Imaginary.h>
 #include <Atlas/Objects/Operation/Talk.h>
 
-#include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
+#include <sigc++/object_slot.h>
+
 #include <cassert>
 
 using namespace Atlas;
