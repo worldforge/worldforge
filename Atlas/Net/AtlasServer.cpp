@@ -84,7 +84,7 @@ int AServer::delClient(AClient* client)
 	return 1;
 }
 
-// add a client from the send event list
+// add a client to the send event list
 int AServer::addClientSend(AClient* client)
 {
 	SOCKET sock = client->getSock();
