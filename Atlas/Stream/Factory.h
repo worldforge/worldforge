@@ -14,15 +14,18 @@ namespace Atlas { namespace Stream {
 /** Class factory
 
 Factory is a template class for automatic registration, construction and
-destruction of particular classes. It can be used by creating a static
-instance for each class that requires it. Both Codec and Filter specialise
-Factory and use it for class registration.
+destruction of particular classes. It is used by creating a static instance
+for each class that requires it. Each registered class specifies a name and
+Metrics (can be any class) that is used when enumerating the classes for the
+purposes of negotiation. Each class also declares a Parameters structure,
+which is passed to the constructor of the class at creation time by the
+factory.
 
-FIXME talk about name and metrics and parameters FIXME
+Both Codec and Filter specialise Factory and use it for class registration.
 
 @see Codec
 @see Filter
-
+@see Negotiate
 */
 
 template <typename T>
