@@ -36,7 +36,7 @@
 #ifndef WFMATH_MINIBALL_CONFIG_H
 #define WFMATH_MINIBALL_CONFIG_H
 
-namespace WF { namespace Math { namespace _miniball {
+namespace WFMath { namespace _miniball {
 
     #if defined(__sgi) && !defined(__GNUC__)              // assume MIPS-IRIX
         #define MINIBALL_NO_STD_NAMESPACE
@@ -62,6 +62,6 @@ namespace WF { namespace Math { namespace _miniball {
         #endif
     #endif
 
-}}} // namespace WF::Math::_miniball   
+}} // namespace WFMath::_miniball   
 
 #endif // WFMATH_MINIBALL_CONFIG_H

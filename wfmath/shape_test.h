@@ -36,7 +36,7 @@
 #include "intersect.h"
 #include "stream.h"
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim, template<const int> class Shape>
 void test_shape_no_rotate(const Shape<dim>& s)
@@ -94,6 +94,6 @@ void test_shape(const Shape<dim>& s)
   s2.rotateCenter(m);
 }
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif // WFMATH_SHAPE_TEST_H

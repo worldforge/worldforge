@@ -26,10 +26,10 @@
 #include "basis.h"
 #include "point.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 template<>
-Point<2>& WF::Math::Point<2>::polar(CoordType r, CoordType theta)
+Point<2>& WFMath::Point<2>::polar(CoordType r, CoordType theta)
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
@@ -37,7 +37,7 @@ Point<2>& WF::Math::Point<2>::polar(CoordType r, CoordType theta)
 }
 
 template<>
-void WF::Math::Point<2>::asPolar(CoordType& r, CoordType& theta) const
+void WFMath::Point<2>::asPolar(CoordType& r, CoordType& theta) const
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -46,7 +46,7 @@ void WF::Math::Point<2>::asPolar(CoordType& r, CoordType& theta) const
 }
 
 template<>
-Point<3>& WF::Math::Point<3>::polar(CoordType r, CoordType theta,
+Point<3>& WFMath::Point<3>::polar(CoordType r, CoordType theta,
 				    CoordType z)
 {
   CoordType d[2] = {r, theta};
@@ -56,7 +56,7 @@ Point<3>& WF::Math::Point<3>::polar(CoordType r, CoordType theta,
 }
 
 template<>
-void WF::Math::Point<3>::asPolar(CoordType& r, CoordType& theta,
+void WFMath::Point<3>::asPolar(CoordType& r, CoordType& theta,
 				 CoordType& z) const
 {
   CoordType d[2];
@@ -67,7 +67,7 @@ void WF::Math::Point<3>::asPolar(CoordType& r, CoordType& theta,
 }
 
 template<>
-Point<3>& WF::Math::Point<3>::spherical(CoordType r, CoordType theta,
+Point<3>& WFMath::Point<3>::spherical(CoordType r, CoordType theta,
 					CoordType phi)
 {
   CoordType d[3] = {r, theta, phi};
@@ -76,7 +76,7 @@ Point<3>& WF::Math::Point<3>::spherical(CoordType r, CoordType theta,
 }
 
 template<>
-void WF::Math::Point<3>::asSpherical(CoordType& r, CoordType& theta,
+void WFMath::Point<3>::asSpherical(CoordType& r, CoordType& theta,
 				     CoordType& phi) const
 {
   CoordType d[3];

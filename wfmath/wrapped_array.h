@@ -40,7 +40,7 @@
    #include <iostream>
 #endif
 
-namespace WF { namespace Math { namespace _miniball {
+namespace WFMath { namespace _miniball {
    
    template <int d>
    class Wrapped_array {
@@ -117,6 +117,6 @@ namespace WF { namespace Math { namespace _miniball {
        }
    #endif
    
-}}} // namespace WF::Math::_miniball   
+}} // namespace WFMath::_miniball   
 
 #endif // WFMATH_WRAPPED_ARRAY_H

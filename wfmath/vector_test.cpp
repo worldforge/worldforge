@@ -31,7 +31,7 @@
 
 #include "general_test.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 template<const int dim>
 void test_vector(const Vector<dim>& v)

@@ -35,7 +35,7 @@
 #include "polygon.h"
 #include "intersect.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 void _Poly2Reorient::reorient(Polygon<2>& poly, int skip = -1) const
 {
@@ -150,7 +150,7 @@ Polygon<2>& Polygon<2>::rotatePoint(const RotMatrix<2>& m, const Point<2>& p)
 // from shape.cpp in libCoal
 
 template<>
-bool WF::Math::Intersect<2>(const Polygon<2>& r, const Point<2>& p)
+bool WFMath::Intersect<2>(const Polygon<2>& r, const Point<2>& p)
 {
   const Polygon<2>::theConstIter begin = r.m_points.begin(), end = r.m_points.end();
   bool hit = false;
@@ -178,7 +178,7 @@ bool WF::Math::Intersect<2>(const Polygon<2>& r, const Point<2>& p)
 }
 
 template<>
-bool WF::Math::IntersectProper<2>(const Polygon<2>& r, const Point<2>& p)
+bool WFMath::IntersectProper<2>(const Polygon<2>& r, const Point<2>& p)
 {
   const Polygon<2>::theConstIter begin = r.m_points.begin(), end = r.m_points.end();
   bool hit = false;
@@ -206,7 +206,7 @@ bool WF::Math::IntersectProper<2>(const Polygon<2>& r, const Point<2>& p)
 }
 
 template<>
-bool WF::Math::Contains<2>(const Point<2>& p, const Polygon<2>& r)
+bool WFMath::Contains<2>(const Point<2>& p, const Polygon<2>& r)
 {
   for(unsigned int i = 0; i < r.m_points.size(); ++i)
     if(p != r.m_points[i])
@@ -216,7 +216,7 @@ bool WF::Math::Contains<2>(const Point<2>& p, const Polygon<2>& r)
 }
 
 template<>
-bool WF::Math::Intersect<2>(const Polygon<2>& p, const AxisBox<2>& b)
+bool WFMath::Intersect<2>(const Polygon<2>& p, const AxisBox<2>& b)
 {
   const Polygon<2>::theConstIter begin = p.m_points.begin(), end = p.m_points.end();
   bool hit = false;
@@ -287,7 +287,7 @@ bool WF::Math::Intersect<2>(const Polygon<2>& p, const AxisBox<2>& b)
 }
 
 template<>
-bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
+bool WFMath::IntersectProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
 {
   const Polygon<2>::theConstIter begin = p.m_points.begin(), end = p.m_points.end();
   bool hit = false;
@@ -358,7 +358,7 @@ bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
 }
 
 template<>
-bool WF::Math::Contains<2>(const Polygon<2>& p, const AxisBox<2>& b)
+bool WFMath::Contains<2>(const Polygon<2>& p, const AxisBox<2>& b)
 {
   const Polygon<2>::theConstIter begin = p.m_points.begin(), end = p.m_points.end();
   bool hit = false;
@@ -432,7 +432,7 @@ bool WF::Math::Contains<2>(const Polygon<2>& p, const AxisBox<2>& b)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
+bool WFMath::ContainsProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
 {
   const Polygon<2>::theConstIter begin = p.m_points.begin(), end = p.m_points.end();
   bool hit = false;
@@ -503,7 +503,7 @@ bool WF::Math::ContainsProper<2>(const Polygon<2>& p, const AxisBox<2>& b)
 }
 
 template<>
-bool WF::Math::Contains<2>(const AxisBox<2>& b, const Polygon<2>& p)
+bool WFMath::Contains<2>(const AxisBox<2>& b, const Polygon<2>& p)
 {
   for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
     if(!Contains(b, *i))
@@ -513,7 +513,7 @@ bool WF::Math::Contains<2>(const AxisBox<2>& b, const Polygon<2>& p)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const AxisBox<2>& b, const Polygon<2>& p)
+bool WFMath::ContainsProper<2>(const AxisBox<2>& b, const Polygon<2>& p)
 {
   for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
     if(!ContainsProper(b, *i))
@@ -523,7 +523,7 @@ bool WF::Math::ContainsProper<2>(const AxisBox<2>& b, const Polygon<2>& p)
 }
 
 template<>
-bool WF::Math::Intersect<2>(const Polygon<2>& p, const Ball<2>& b)
+bool WFMath::Intersect<2>(const Polygon<2>& p, const Ball<2>& b)
 {
   if(Contains(p, b.m_center))
     return true;
@@ -543,7 +543,7 @@ bool WF::Math::Intersect<2>(const Polygon<2>& p, const Ball<2>& b)
 }
 
 template<>
-bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const Ball<2>& b)
+bool WFMath::IntersectProper<2>(const Polygon<2>& p, const Ball<2>& b)
 {
   if(ContainsProper(p, b.m_center))
     return true;
@@ -563,7 +563,7 @@ bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const Ball<2>& b)
 }
 
 template<>
-bool WF::Math::Contains<2>(const Polygon<2>& p, const Ball<2>& b)
+bool WFMath::Contains<2>(const Polygon<2>& p, const Ball<2>& b)
 {
   if(!Contains(p, b.m_center))
     return false;
@@ -583,7 +583,7 @@ bool WF::Math::Contains<2>(const Polygon<2>& p, const Ball<2>& b)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const Polygon<2>& p, const Ball<2>& b)
+bool WFMath::ContainsProper<2>(const Polygon<2>& p, const Ball<2>& b)
 {
   if(!ContainsProper(p, b.m_center))
     return false;
@@ -603,7 +603,7 @@ bool WF::Math::ContainsProper<2>(const Polygon<2>& p, const Ball<2>& b)
 }
 
 template<>
-bool WF::Math::Contains<2>(const Ball<2>& b, const Polygon<2>& p)
+bool WFMath::Contains<2>(const Ball<2>& b, const Polygon<2>& p)
 {
   CoordType sqr_dist = b.m_radius * b.m_radius;
 
@@ -615,7 +615,7 @@ bool WF::Math::Contains<2>(const Ball<2>& b, const Polygon<2>& p)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const Ball<2>& b, const Polygon<2>& p)
+bool WFMath::ContainsProper<2>(const Ball<2>& b, const Polygon<2>& p)
 {
   CoordType sqr_dist = b.m_radius * b.m_radius;
 
@@ -627,7 +627,7 @@ bool WF::Math::ContainsProper<2>(const Ball<2>& b, const Polygon<2>& p)
 }
 
 template<>
-bool WF::Math::Intersect<2>(const Polygon<2>& p, const Segment<2>& s)
+bool WFMath::Intersect<2>(const Polygon<2>& p, const Segment<2>& s)
 {
   if(Contains(p, s.endpoint(0)))
     return true;
@@ -650,7 +650,7 @@ bool WF::Math::Intersect<2>(const Polygon<2>& p, const Segment<2>& s)
 }
 
 template<>
-bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const Segment<2>& s)
+bool WFMath::IntersectProper<2>(const Polygon<2>& p, const Segment<2>& s)
 {
   if(ContainsProper(p, s.endpoint(0)))
     return true;
@@ -673,7 +673,7 @@ bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const Segment<2>& s)
 }
 
 template<>
-bool WF::Math::Contains<2>(const Polygon<2>& p, const Segment<2>& s)
+bool WFMath::Contains<2>(const Polygon<2>& p, const Segment<2>& s)
 {
   const Polygon<2>::theConstIter begin = p.m_points.begin(), end = p.m_points.end();
 
@@ -748,7 +748,7 @@ bool WF::Math::Contains<2>(const Polygon<2>& p, const Segment<2>& s)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const Polygon<2>& p, const Segment<2>& s)
+bool WFMath::ContainsProper<2>(const Polygon<2>& p, const Segment<2>& s)
 {
   if(!ContainsProper(p, s.endpoint(0)))
     return false;
@@ -771,7 +771,7 @@ bool WF::Math::ContainsProper<2>(const Polygon<2>& p, const Segment<2>& s)
 }
 
 template<>
-bool WF::Math::Contains<2>(const Segment<2>& s, const Polygon<2>& p)
+bool WFMath::Contains<2>(const Segment<2>& s, const Polygon<2>& p)
 {
   for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
     if(!Contains(s, *i))
@@ -781,7 +781,7 @@ bool WF::Math::Contains<2>(const Segment<2>& s, const Polygon<2>& p)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const Segment<2>& s, const Polygon<2>& p)
+bool WFMath::ContainsProper<2>(const Segment<2>& s, const Polygon<2>& p)
 {
   for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
     if(!ContainsProper(s, *i))
@@ -791,7 +791,7 @@ bool WF::Math::ContainsProper<2>(const Segment<2>& s, const Polygon<2>& p)
 }
 
 template<>
-bool WF::Math::Intersect<2>(const Polygon<2>& p, const RotBox<2>& r)
+bool WFMath::Intersect<2>(const Polygon<2>& p, const RotBox<2>& r)
 {
   CoordType m_low[2], m_high[2];
 
@@ -886,7 +886,7 @@ bool WF::Math::Intersect<2>(const Polygon<2>& p, const RotBox<2>& r)
 }
 
 template<>
-bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const RotBox<2>& r)
+bool WFMath::IntersectProper<2>(const Polygon<2>& p, const RotBox<2>& r)
 {
   CoordType m_low[2], m_high[2];
 
@@ -981,7 +981,7 @@ bool WF::Math::IntersectProper<2>(const Polygon<2>& p, const RotBox<2>& r)
 }
 
 template<>
-bool WF::Math::Contains<2>(const Polygon<2>& p, const RotBox<2>& r)
+bool WFMath::Contains<2>(const Polygon<2>& p, const RotBox<2>& r)
 {
   CoordType m_low[2], m_high[2];
 
@@ -1079,7 +1079,7 @@ bool WF::Math::Contains<2>(const Polygon<2>& p, const RotBox<2>& r)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const Polygon<2>& p, const RotBox<2>& r)
+bool WFMath::ContainsProper<2>(const Polygon<2>& p, const RotBox<2>& r)
 {
   CoordType m_low[2], m_high[2];
 
@@ -1174,7 +1174,7 @@ bool WF::Math::ContainsProper<2>(const Polygon<2>& p, const RotBox<2>& r)
 }
 
 template<>
-bool WF::Math::Contains<2>(const RotBox<2>& r, const Polygon<2>& p)
+bool WFMath::Contains<2>(const RotBox<2>& r, const Polygon<2>& p)
 {
   for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
     if(!Contains(r, *i))
@@ -1184,7 +1184,7 @@ bool WF::Math::Contains<2>(const RotBox<2>& r, const Polygon<2>& p)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const RotBox<2>& r, const Polygon<2>& p)
+bool WFMath::ContainsProper<2>(const RotBox<2>& r, const Polygon<2>& p)
 {
   for(Polygon<2>::theConstIter i = p.m_points.begin(); i != p.m_points.end(); ++i)
     if(!ContainsProper(r, *i))
@@ -1194,7 +1194,7 @@ bool WF::Math::ContainsProper<2>(const RotBox<2>& r, const Polygon<2>& p)
 }
 
 template<>
-bool WF::Math::Intersect<2>(const Polygon<2>& p1, const Polygon<2>& p2)
+bool WFMath::Intersect<2>(const Polygon<2>& p1, const Polygon<2>& p2)
 {
   Polygon<2>::theConstIter begin1 = p1.m_points.begin(), end1 = p1.m_points.end();
   Polygon<2>::theConstIter begin2 = p2.m_points.begin(), end2 = p2.m_points.end();
@@ -1222,7 +1222,7 @@ bool WF::Math::Intersect<2>(const Polygon<2>& p1, const Polygon<2>& p2)
 }
 
 template<>
-bool WF::Math::IntersectProper<2>(const Polygon<2>& p1, const Polygon<2>& p2)
+bool WFMath::IntersectProper<2>(const Polygon<2>& p1, const Polygon<2>& p2)
 {
   Polygon<2>::theConstIter begin1 = p1.m_points.begin(), end1 = p1.m_points.end();
   Polygon<2>::theConstIter begin2 = p2.m_points.begin(), end2 = p2.m_points.end();
@@ -1250,7 +1250,7 @@ bool WF::Math::IntersectProper<2>(const Polygon<2>& p1, const Polygon<2>& p2)
 }
 
 template<>
-bool WF::Math::Contains<2>(const Polygon<2>& outer, const Polygon<2>& inner)
+bool WFMath::Contains<2>(const Polygon<2>& outer, const Polygon<2>& inner)
 {
   Polygon<2>::theConstIter begin = inner.m_points.begin(), end = inner.m_points.end();
   Segment<2> s;
@@ -1268,7 +1268,7 @@ bool WF::Math::Contains<2>(const Polygon<2>& outer, const Polygon<2>& inner)
 }
 
 template<>
-bool WF::Math::ContainsProper<2>(const Polygon<2>& outer, const Polygon<2>& inner)
+bool WFMath::ContainsProper<2>(const Polygon<2>& outer, const Polygon<2>& inner)
 {
   if(!ContainsProper(outer, inner.m_points.front()))
     return false;

@@ -2,7 +2,7 @@
 // polygon.h (A 2D polygon embeded in a <dim> dimensional space)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 
 #include <vector>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class Polygon;
 
@@ -347,7 +347,7 @@ class Polygon
   Polygon<2> m_poly;
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #include <wfmath/polygon_funcs.h>
 

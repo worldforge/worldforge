@@ -34,7 +34,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
 bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out)
@@ -156,6 +156,6 @@ AxisBox<dim> BoundingBox(const container<Point<dim> >& c)
 }
 
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_AXIS_BOX_FUNCS_H

@@ -42,7 +42,7 @@
    #include<cassert>
 #endif
 
-namespace WF { namespace Math { namespace _miniball {
+namespace WFMath { namespace _miniball {
 
    // Miniball
    // --------
@@ -356,6 +356,6 @@ namespace WF { namespace Math { namespace _miniball {
        return ( (min_l < 0) ? -min_l : 0);
    }
    
-}}} // namespace WF::Math::_miniball   
+}} // namespace WFMath::_miniball   
 
 #endif // WFMATH_MINIBALL_FUNCS_H

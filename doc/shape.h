@@ -37,7 +37,7 @@
 #include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
 class Shape
@@ -128,6 +128,6 @@ class Shape
 
 #include<wfmath/shape_funcs.h>
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_SHAPE_H

@@ -34,7 +34,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class Point;
 template<const int dim> class AxisBox;
@@ -85,6 +85,8 @@ class Point
  public:
   Point () {}
   Point (const Point& p);
+  explicit Point (const Atlas::Message::Object& a) {fromAtlas(a);}
+
 
   ~Point() {}
 
@@ -92,7 +94,7 @@ class Point
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);
 
   Atlas::Message::Object toAtlas() const;
-  bool fromAtlas(const Atlas::Message::Object& a);
+  void fromAtlas(const Atlas::Message::Object& a);
 
   Point& operator= (const Point& rhs);
   Point& operator= (const CoordType d[dim]);
@@ -180,7 +182,7 @@ class Point
   CoordType m_elem[dim];
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #include <wfmath/point_funcs.h>
 

@@ -2,7 +2,7 @@
 // intersect_decls.h (Declarations for "friend" intersection functions)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #ifndef WFMATH_INTERSECT_DECLS_H
 #define WFMATH_INTERSECT_DECLS_H
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class Point;
 template<const int dim> class AxisBox;
@@ -244,6 +244,6 @@ bool Contains(const Polygon<dim>& outer, const Polygon<dim>& inner);
 template<const int dim>
 bool ContainsProper(const Polygon<dim>& outer, const Polygon<dim>& inner);
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_INTERSECT_DECLS_H

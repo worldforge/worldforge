@@ -31,7 +31,7 @@
 #include "stream.h"
 #include <string>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<class C>
 void test_general(const C& c)
@@ -52,6 +52,6 @@ void test_general(const C& c)
   assert(c3.isEqualTo(c, FloatMax(WFMATH_EPSILON, 1e-5)));
 }
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif // WFMATH_GENERAL_TEST_H

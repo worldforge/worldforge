@@ -32,7 +32,7 @@
 #include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class Segment;
 
@@ -141,7 +141,7 @@ class Segment
   Point<dim> m_p1, m_p2;
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #include <wfmath/segment_funcs.h>
 

@@ -35,7 +35,7 @@
 #include "general_test.h"
 #include "shape_test.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 template<const int dim>
 void test_polygon(const Polygon<dim>& p)

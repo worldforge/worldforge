@@ -33,7 +33,7 @@
 
 #include "general_test.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 void test_quaternion(const Quaternion& q)
 {

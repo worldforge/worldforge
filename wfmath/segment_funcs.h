@@ -29,10 +29,10 @@
 #include <wfmath/point.h>
 #include <wfmath/segment.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 // FIXME purge this file?
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_SEGMENT_FUNCS_H

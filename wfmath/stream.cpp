@@ -27,9 +27,9 @@
 #include "stream.h"
 #include "quaternion.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
-void WF::Math::_WriteCoordList(std::ostream& os, const CoordType* d, const int num)
+void WFMath::_WriteCoordList(std::ostream& os, const CoordType* d, const int num)
 {
   os << '(';
 
@@ -37,7 +37,7 @@ void WF::Math::_WriteCoordList(std::ostream& os, const CoordType* d, const int n
     os << d[i] << (i < (num - 1) ? ',' : ')');
 }
 
-void WF::Math::_ReadCoordList(std::istream& is, CoordType* d, const int num)
+void WFMath::_ReadCoordList(std::istream& is, CoordType* d, const int num)
 {
   char next;
 
@@ -58,7 +58,7 @@ void WF::Math::_ReadCoordList(std::istream& is, CoordType* d, const int num)
   }
 }
 
-CoordType WF::Math::_GetEpsilon(std::istream& is)
+CoordType WFMath::_GetEpsilon(std::istream& is)
 {
   int str_prec = is.precision();
   double str_eps = 1;
@@ -71,7 +71,7 @@ CoordType WF::Math::_GetEpsilon(std::istream& is)
 
 // This is the only way I could get the operator<<() and operator>>()
 // templates to recognize the declarations in the headers
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<>
 std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
@@ -176,4 +176,4 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
   return is;
 }
 
-}} // namespace WF::Math
+} // namespace WFMath

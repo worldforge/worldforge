@@ -32,7 +32,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
 Point<dim>::Point(const Point<dim>& p)
@@ -292,6 +292,6 @@ template<> Point<3>& Point<3>::spherical(CoordType r, CoordType theta,
 template<> void Point<3>::asSpherical(CoordType& r, CoordType& theta,
 				      CoordType& phi) const;
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_POINT_FUNCS_H

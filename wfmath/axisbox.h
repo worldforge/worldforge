@@ -33,7 +33,7 @@
 #include <wfmath/point.h>
 #include <wfmath/intersect_decls.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class AxisBox;
 template<const int dim> class Ball;
@@ -62,6 +62,7 @@ class AxisBox
   AxisBox(const Point<dim>& p1, const Point<dim>& p2, bool ordered = false)
     {setCorners(p1, p2, ordered);}
   AxisBox(const AxisBox& a) : m_low(a.m_low), m_high(a.m_high) {}
+  explicit AxisBox(const Atlas::Message::Object& a) {fromAtlas(a);}
 
   ~AxisBox() {}
 
@@ -69,7 +70,7 @@ class AxisBox
   friend std::istream& operator>> <dim>(std::istream& is, AxisBox& a);
 
   Atlas::Message::Object toAtlas() const;
-  bool fromAtlas(const Atlas::Message::Object& a);
+  void fromAtlas(const Atlas::Message::Object& a);
 
   AxisBox& operator=(const AxisBox& a)
 	{m_low = a.m_low; m_high = a.m_high; return *this;}
@@ -160,7 +161,7 @@ class AxisBox
   Point<dim> m_low, m_high;
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #include <wfmath/axisbox_funcs.h>
 

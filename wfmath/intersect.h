@@ -2,7 +2,7 @@
 // intersect.h (Shape intersection functions)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 #include <wfmath/segment.h>
 #include <wfmath/rotbox.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 // Get the reversed order intersect functions (is this safe? FIXME)
 
@@ -987,6 +987,6 @@ bool ContainsProper(const RotBox<dim>& outer, const RotBox<dim>& inner)
 // Polygon<> intersection functions are in polygon_funcs.h, to avoid
 // unnecessary inclusion of <vector>
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_INTERSECT_H

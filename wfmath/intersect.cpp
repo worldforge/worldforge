@@ -2,7 +2,7 @@
 // intersect.cpp (Backends to intersection functions)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -25,9 +25,9 @@
 #include "const.h"
 #include "intersect.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 /*
-void  WF::Math::_RotBoxAxisBoxIntersectImpl(int dim, int params, CoordType* matrix,
+void  WFMath::_RotBoxAxisBoxIntersectImpl(int dim, int params, CoordType* matrix,
 					    CoordType* low, CoordType* high)
 {
   // Invert using row operations. First, make m upper triangular,

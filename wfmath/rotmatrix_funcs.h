@@ -24,15 +24,15 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#ifndef WFMATH_MATRIX_FUNCS_H
-#define WFMATH_MATRIX_FUNCS_H
+#ifndef WFMATH_ROTMATRIX_FUNCS_H
+#define WFMATH_ROTMATRIX_FUNCS_H
 
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
 #include <wfmath/error.h>
 #include <wfmath/const.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
 inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m) : m_flip(m.m_flip)
@@ -532,6 +532,6 @@ RotMatrix<dim>& RotMatrix<dim>::mirror()
   return *this;
 }
 
-}} // namespace WF::Math
+} // namespace WFMath
 
-#endif // WFMATH_MATRIX_FUNCS_H
+#endif // WFMATH_ROTMATRIX_FUNCS_H

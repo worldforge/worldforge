@@ -35,7 +35,7 @@
 #include <wfmath/rotmatrix.h>
 #include <wfmath/const.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
 Vector<dim>::Vector(const Vector<dim>& v)
@@ -315,6 +315,6 @@ template<> inline Vector<3>& Vector<3>::rotateZ(CoordType theta)
 	{return rotate(0, 1, theta);}
 
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif // WFMATH_VECTOR_FUNCS_H

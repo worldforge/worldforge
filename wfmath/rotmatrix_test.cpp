@@ -31,7 +31,7 @@
 
 #include "general_test.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 template<const int dim>
 void test_rotmatrix(const RotMatrix<dim>& m)

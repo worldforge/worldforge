@@ -45,7 +45,7 @@
 #include <wfmath/miniball_config.h>
 #include <wfmath/wrapped_array.h>
 
-namespace WF { namespace Math { namespace _miniball {
+namespace WFMath { namespace _miniball {
 
     template <int d> class Miniball;
     template <int d> class Basis;
@@ -143,7 +143,7 @@ namespace WF { namespace Math { namespace _miniball {
             double              slack() const;
     };
     
-}}} // namespace WF::Math::_miniball   
+}} // namespace WFMath::_miniball   
 
 #include <wfmath/miniball_funcs.h>
 

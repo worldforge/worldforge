@@ -33,9 +33,9 @@
 #include "vector.h"
 #include "quaternion.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
-template<> CoordType WF::Math::Vector<2>::sloppyMag() const
+template<> CoordType WFMath::Vector<2>::sloppyMag() const
 {
   CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]);
   const CoordType p = WFMATH_CONST_SQRT2 - 1;
@@ -50,7 +50,7 @@ template<> CoordType WF::Math::Vector<2>::sloppyMag() const
     return 0;
 }
 
-template<> CoordType WF::Math::Vector<3>::sloppyMag() const
+template<> CoordType WFMath::Vector<3>::sloppyMag() const
 {
   CoordType ax = fabs(m_elem[0]), ay = fabs(m_elem[1]), az = fabs(m_elem[2]);
   const CoordType p = WFMATH_CONST_SQRT2 - 1;
@@ -69,7 +69,7 @@ template<> CoordType WF::Math::Vector<3>::sloppyMag() const
     return 0;
 }
 
-template<> WF::Math::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta)
+template<> WFMath::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta)
 {
   CoordType axis_sqr_mag = axis.sqrMag();
 
@@ -97,7 +97,7 @@ template<> Vector<3>& Vector<3>::rotate(const Quaternion& q)
   return *this;
 }
 
-Vector<3> WF::Math::Cross(const Vector<3>& v1, const Vector<3>& v2)
+Vector<3> WFMath::Cross(const Vector<3>& v1, const Vector<3>& v2)
 {
   Vector<3> ans;
 
@@ -109,7 +109,7 @@ Vector<3> WF::Math::Cross(const Vector<3>& v1, const Vector<3>& v2)
 }
 
 template<>
-Vector<2>& WF::Math::Vector<2>::polar(CoordType r, CoordType theta)
+Vector<2>& WFMath::Vector<2>::polar(CoordType r, CoordType theta)
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
@@ -117,7 +117,7 @@ Vector<2>& WF::Math::Vector<2>::polar(CoordType r, CoordType theta)
 }
 
 template<>
-void WF::Math::Vector<2>::asPolar(CoordType& r, CoordType& theta) const
+void WFMath::Vector<2>::asPolar(CoordType& r, CoordType& theta) const
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -126,7 +126,7 @@ void WF::Math::Vector<2>::asPolar(CoordType& r, CoordType& theta) const
 }
 
 template<>
-Vector<3>& WF::Math::Vector<3>::polar(CoordType r, CoordType theta,
+Vector<3>& WFMath::Vector<3>::polar(CoordType r, CoordType theta,
 				      CoordType z)
 {
   CoordType d[2] = {r, theta};
@@ -136,7 +136,7 @@ Vector<3>& WF::Math::Vector<3>::polar(CoordType r, CoordType theta,
 }
 
 template<>
-void WF::Math::Vector<3>::asPolar(CoordType& r, CoordType& theta,
+void WFMath::Vector<3>::asPolar(CoordType& r, CoordType& theta,
 				  CoordType& z) const
 {
   CoordType d[2];
@@ -147,7 +147,7 @@ void WF::Math::Vector<3>::asPolar(CoordType& r, CoordType& theta,
 }
 
 template<>
-Vector<3>& WF::Math::Vector<3>::spherical(CoordType r, CoordType theta,
+Vector<3>& WFMath::Vector<3>::spherical(CoordType r, CoordType theta,
 					  CoordType phi)
 {
   CoordType d[3] = {r, theta, phi};
@@ -156,7 +156,7 @@ Vector<3>& WF::Math::Vector<3>::spherical(CoordType r, CoordType theta,
 }
 
 template<>
-void WF::Math::Vector<3>::asSpherical(CoordType& r, CoordType& theta,
+void WFMath::Vector<3>::asSpherical(CoordType& r, CoordType& theta,
 				      CoordType& phi) const
 {
   CoordType d[3];

@@ -33,7 +33,7 @@
 #include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class RotBox;
 
@@ -150,7 +150,7 @@ class RotBox
   RotMatrix<dim> m_orient;
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #include <wfmath/rotbox_funcs.h>
 

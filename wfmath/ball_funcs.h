@@ -31,7 +31,7 @@
 #include <wfmath/ball.h>
 #include <wfmath/miniball.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
 bool Ball<dim>::operator< (const Ball<dim>& b) const
@@ -150,6 +150,6 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
   return Ball<2>(center, dist);
 }
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_BALL_FUNCS_H

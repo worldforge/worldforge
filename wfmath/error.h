@@ -27,18 +27,19 @@
 #ifndef WFMATH_ERROR_H
 #define WFMATH_ERROR_H
 
+#include <stdexcept>
 #include <wfmath/vector.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
-struct ColinearVectors {
+struct ColinearVectors : virtual public std::exception {
   ColinearVectors(const Vector<dim>& v1_in, const Vector<dim>& v2_in)
     : v1(v1_in), v2(v2_in) {}
 
   Vector<dim> v1, v2;
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif // WFMATH_ERROR_H

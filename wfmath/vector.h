@@ -33,7 +33,7 @@
 
 #include <wfmath/const.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class RotMatrix;
 template<const int dim> class Vector;
@@ -141,6 +141,7 @@ class Vector {
  public:
   Vector() {}
   Vector(const Vector& v);
+  explicit Vector(const Atlas::Message::Object& a) {fromAtlas(a);}
 
   ~Vector() {}
 
@@ -148,7 +149,7 @@ class Vector {
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
 
   Atlas::Message::Object toAtlas() const;
-  bool fromAtlas(const Atlas::Message::Object& a);
+  void fromAtlas(const Atlas::Message::Object& a);
 
   Vector& operator=(const CoordType d[dim]);
   Vector& operator=(const Vector& v);
@@ -296,7 +297,7 @@ inline CoordType Cross(const Vector<2>& v1, const Vector<2>& v2)
 	{return v1[0] * v2[1] - v2[0] * v1[1];}
 Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #include <wfmath/vector_funcs.h>
 

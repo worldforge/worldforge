@@ -24,12 +24,12 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#ifndef WFMATH_MATRIX_H
-#define WFMATH_MATRIX_H
+#ifndef WFMATH_ROTMATRIX_H
+#define WFMATH_ROTMATRIX_H
 
 #include <wfmath/const.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class Vector;
 class Quaternion;
@@ -179,8 +179,8 @@ class RotMatrix {
   bool _setVals(CoordType *vals, double precision = WFMATH_EPSILON);
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #include <wfmath/rotmatrix_funcs.h>
 
-#endif // WFMATH_MATRIX_H
+#endif // WFMATH_ROTMATRIX_H

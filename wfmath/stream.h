@@ -2,7 +2,7 @@
 // stream.h (Functions in the WFMath library that use streams)
 //
 //  The WorldForge Project
-//  Copyright (C) 2001  The WorldForge Project
+//  Copyright (C) 2001,2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@
 #include <sstream>
 #include <list> // For Polygon<>::operator>>()
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<class C>
 std::string ToString(const C& c, unsigned int precision = 6)
@@ -433,6 +433,6 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
   return is;
 }
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif // WFMATH_STREAM_H

@@ -31,7 +31,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 class Quaternion
 {
@@ -46,6 +46,7 @@ class Quaternion
   Quaternion (const Vector<3>& axis, const CoordType angle)
 	{rotation(axis, angle);}
   Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec) {}
+  explicit Quaternion (const Atlas::Message::Object& a) {fromAtlas(a);}
 
   ~Quaternion() {}
 
@@ -53,7 +54,7 @@ class Quaternion
   friend std::istream& operator>>(std::istream& is, Quaternion& p);
 
   Atlas::Message::Object toAtlas() const;
-  bool fromAtlas(const Atlas::Message::Object& a);
+  void fromAtlas(const Atlas::Message::Object& a);
 
   Quaternion& operator= (const Quaternion& rhs)
 	{m_w = rhs.m_w; m_vec = rhs.m_vec; return *this;}
@@ -104,6 +105,6 @@ class Quaternion
   Vector<3> m_vec;
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_QUATERNION_H

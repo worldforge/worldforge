@@ -32,7 +32,7 @@
 #include <wfmath/ball.h>
 #include <wfmath/rotbox.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
 RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
@@ -131,6 +131,6 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
   return AxisBox<dim>(min, max, true);
 }
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_ROT_BOX_FUNCS_H

@@ -37,7 +37,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/intersect_decls.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim> class Ball;
 
@@ -155,7 +155,7 @@ class Ball
   CoordType m_radius;
 };
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #include <wfmath/ball_funcs.h>
 

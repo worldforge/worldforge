@@ -30,7 +30,7 @@
 #include "quaternion.h"
 #include "rotmatrix.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 Quaternion::Quaternion (const CoordType w_in, const CoordType x_in,
 			const CoordType y_in, const CoordType z_in)

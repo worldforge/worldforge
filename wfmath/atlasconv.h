@@ -32,10 +32,16 @@
 #ifndef WFMATH_ATLAS_CONV_H
 #define WFMATH_ATLAS_CONV_H
 
+#include <stdexcept>
 #include <Atlas/Message/Object.h>
+#include <wfmath/const.h>
 #include <wfmath/stream.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
+
+// Change this when we go to Atlas-0.5
+struct _AtlasBadParse : public Atlas::Message::WrongTypeException,
+			virtual public std::exception {};
 
 inline Atlas::Message::Object _ArrayToAtlas(const CoordType* array, int len)
 {
@@ -47,29 +53,24 @@ inline Atlas::Message::Object _ArrayToAtlas(const CoordType* array, int len)
   return a;
 }
 
-inline bool _ArrayFromAtlas(CoordType* array, int len, const Atlas::Message::Object& a)
+inline void _ArrayFromAtlas(CoordType* array, int len, const Atlas::Message::Object& a)
 {
   if(!a.IsList())
-    return false;
+    throw _AtlasBadParse();
 
   Atlas::Message::Object::ListType list(a.AsList());
 
   if(list.size() != (unsigned int) len)
-    return false;
+    throw _AtlasBadParse();
 
-  for(int i = 0; i < len; ++i) {
-    if(!list[i].IsFloat())
-      return false;
+  for(int i = 0; i < len; ++i)
     array[i] = list[i].AsFloat();
-  }
-
-  return true;
 }
 
 template<const int dim>
-bool Vector<dim>::fromAtlas(const Atlas::Message::Object& a)
+void Vector<dim>::fromAtlas(const Atlas::Message::Object& a)
 {
-  return _ArrayFromAtlas(m_elem, dim, a);
+  _ArrayFromAtlas(m_elem, dim, a);
 }
 
 template<const int dim>
@@ -78,27 +79,22 @@ Atlas::Message::Object Vector<dim>::toAtlas() const
   return _ArrayToAtlas(m_elem, dim);
 }
 
-inline bool Quaternion::fromAtlas(const Atlas::Message::Object& a)
+inline void Quaternion::fromAtlas(const Atlas::Message::Object& a)
 {
   if(!a.IsList())
-    return false;
+    throw _AtlasBadParse();
+
 
   Atlas::Message::Object::ListType list(a.AsList());
 
   if(list.size() != 4)
-    return false;
+    throw _AtlasBadParse();
 
-  for(int i = 0; i < 3; ++i) {
-    if(!list[i].IsFloat())
-      return false;
+
+  for(int i = 0; i < 3; ++i)
     m_vec[i] = list[i].AsFloat();
-  }
 
-  if(!list[3].IsFloat())
-    return false;
   m_w = list[3].AsFloat();
-
-  return true;
 }
 
 inline Atlas::Message::Object Quaternion::toAtlas() const
@@ -113,9 +109,9 @@ inline Atlas::Message::Object Quaternion::toAtlas() const
 }
 
 template<const int dim>
-bool Point<dim>::fromAtlas(const Atlas::Message::Object& a)
+void Point<dim>::fromAtlas(const Atlas::Message::Object& a)
 {
-  return _ArrayFromAtlas(m_elem, dim, a);
+  _ArrayFromAtlas(m_elem, dim, a);
 }
 
 template<const int dim>
@@ -125,94 +121,92 @@ Atlas::Message::Object Point<dim>::toAtlas() const
 }
 
 template<const int dim>
-bool AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
+void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
 {
   if(!a.IsList())
-    return false;
+    throw _AtlasBadParse();
 
   Atlas::Message::Object::ListType list(a.AsList());
 
   switch(list.size()) {
     case 1:
       m_low.origin();
-      if(!m_high.fromAtlas(list[0]))
-        return false;
+      m_high.fromAtlas(list[0]);
       break;
     case 2:
-      if(!m_low.fromAtlas(list[0]) || !m_high.fromAtlas(list[1]))
-        return false;
+      m_low.fromAtlas(list[0]);
+      m_high.fromAtlas(list[1]);
       break;
     case dim:
       m_low.origin();
-      if(!m_high.fromAtlas(a))
-        return false;
+      m_high.fromAtlas(a);
       break;
     case (2 * dim):
       for(int i = 0; i < dim; ++i) {
-        if(!list[i].IsFloat() || !list[i+dim].IsFloat())
-          return false;
         m_low[i] = list[i].AsFloat();
         m_high[i] = list[i+dim].AsFloat();
       }
       break;
     default:
-      return false;
+      throw _AtlasBadParse();
   }
 
-  for(int i = 0; i < dim; ++i)
-    if(m_low[i] > m_high[i])
-      return false;
-
-  return true;
+  for(int i = 0; i < dim; ++i) {
+    if(m_low[i] > m_high[i]) { // spec may allow this?
+      CoordType tmp = m_low[i];
+      m_low[i] = m_high[i];
+      m_high[i] = tmp;
+    }
+  }
 }
 
 template<>
-bool AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
+void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
 {
   if(!a.IsList())
-    return false;
+    throw _AtlasBadParse();
 
   Atlas::Message::Object::ListType list(a.AsList());
 
   switch(list.size()) {
     case 1:
       m_low.origin();
-      if(!m_high.fromAtlas(list[0]))
-        return false;
+      m_high.fromAtlas(list[0]);
       break;
     case 2: // 2 possible different cases
       if(list[0].IsFloat()) {
         m_low.origin();
-        if(!m_high.fromAtlas(a))
-          return false;
+        m_high.fromAtlas(a);
       }
-      else if(!m_low.fromAtlas(list[0]) || !m_high.fromAtlas(list[1]))
-        return false;
+      else {
+        m_low.fromAtlas(list[0]);
+        m_high.fromAtlas(list[1]);
+      }
       break;
     case 4:
       for(int i = 0; i < 2; ++i) {
-        if(!list[i].IsFloat() || !list[i+2].IsFloat())
-          return false;
         m_low[i] = list[i].AsFloat();
         m_high[i] = list[i+2].AsFloat();
       }
       break;
     default:
-      return false;
+      throw _AtlasBadParse();
   }
 
-  for(int i = 0; i < 2; ++i)
-    if(m_low[i] > m_high[i])
-      return false;
-
-  return true;
+  for(int i = 0; i < 2; ++i) {
+    if(m_low[i] > m_high[i]) { // spec may allow this?
+      CoordType tmp = m_low[i];
+      m_low[i] = m_high[i];
+      m_high[i] = tmp;
+    }
+  }
 }
 
 template<>
-bool AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
+void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
 {
   if(!a.IsList())
-    return false;
+    throw _AtlasBadParse();
 
   Atlas::Message::Object::ListType list(a.AsList());
 
@@ -221,27 +215,27 @@ bool AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
   switch(list.size()) {
     case 1:
       m_low.origin();
-      if(!m_high.fromAtlas(got_float ? a : list[0]))
-        return false;
+      m_high.fromAtlas(got_float ? a : list[0]);
       break;
     case 2:
       if(got_float) {
-          if(!list[1].IsFloat())
-            return false;
           m_low[0] = list[0].AsFloat();
           m_high[0] = list[1].AsFloat(); 
       }
-      else if(!m_low.fromAtlas(list[0]) || !m_high.fromAtlas(list[1]))
-        return false;
+      else {
+        m_low.fromAtlas(list[0]);
+        m_high.fromAtlas(list[1]);
+      }
       break;
     default:
-      return false;
+      throw _AtlasBadParse();
   }
 
-  if(m_low[0] > m_high[0])
-    return false;
-
-  return true;
+  if(m_low[0] > m_high[0]) { // spec may allow this?
+    CoordType tmp = m_low[0];
+    m_low[0] = m_high[0];
+    m_high[0] = tmp;
+  }
 }
 
 template<const int dim>
@@ -259,6 +253,6 @@ Atlas::Message::Object AxisBox<dim>::toAtlas() const
   return a;
 }
 
-}} // namespace WF:Math
+} // namespace WFMath
 
 #endif // WFMATH_ATLAS_CONV_H

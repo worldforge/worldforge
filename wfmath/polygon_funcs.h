@@ -2,7 +2,7 @@
 // polygon_funcs.h (line polygon implementation)
 //
 //  The WorldForge Project
-//  Copyright (C) 2000, 2001  The WorldForge Project
+//  Copyright (C) 2002  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@
 #include <wfmath/ball.h>
 #include <wfmath/polygon.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 template<const int dim>
 _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& a)
@@ -816,6 +816,6 @@ bool Contains(const Polygon<2>& outer, const Polygon<2>& inner);
 template<>
 bool ContainsProper(const Polygon<2>& outer, const Polygon<2>& inner);
 
-}} // namespace WF::Math
+} // namespace WFMath
 
 #endif  // WFMATH_POLYGON_FUNCS_H

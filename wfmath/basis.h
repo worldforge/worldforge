@@ -29,7 +29,7 @@
 
 #include <wfmath/const.h>
 
-namespace WF { namespace Math {
+namespace WFMath {
 
 // These are used internally in point.cpp and vector.cpp. This header
 // file is not included in any other, nor are these functions exported,
@@ -67,5 +67,6 @@ inline void _SphericalToCart(const CoordType *in, CoordType *out)
   out[2] = in[0] * cos(in[1]);
 }
 
-}} // namespace WF::Math
+} // namespace WFMath
+
 #endif // WFMATH_BASIS_H

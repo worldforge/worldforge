@@ -27,15 +27,14 @@
 #include<Atlas/Message/Object.h>
 #include "atlasconv.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 template<class C>
 void atlas_test(const C& c)
 {
 //  cout << c << std::endl;
   Atlas::Message::Object a = c.toAtlas();
-  C out;
-  assert(out.fromAtlas(a));
+  C out(a);
 //  cout << out << std::endl;
   // Only match to string precision
   assert(c.isEqualTo(out, FloatMax(WFMATH_EPSILON,1e-5)));

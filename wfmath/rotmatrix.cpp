@@ -29,12 +29,12 @@
 #include "vector.h"
 #include "quaternion.h"
 
-using namespace WF::Math;
+using namespace WFMath;
 
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
 static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
 
-template<> bool WF::Math::RotMatrix<3>::toEuler(CoordType angles[3]) const
+template<> bool WFMath::RotMatrix<3>::toEuler(CoordType angles[3]) const
 {
   // There's a 2:1 map from Euler angles to matrices. Flipping the
   // sign of the middle angle and adding pi to each of the others produces
@@ -93,7 +93,7 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 }
 
 template<>
-RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,
+RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
 						const CoordType& theta)
 {
   CoordType max = 0;
@@ -120,7 +120,7 @@ RotMatrix<3>& WF::Math::RotMatrix<3>::rotation (const Vector<3>& axis,
   return rotation(v1, v2, theta);
 }
 
-bool WF::Math::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
+bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 				  CoordType* buf1, CoordType* buf2, double precision)
 {
   precision = fabs(precision);

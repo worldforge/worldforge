@@ -1,5 +1,15 @@
 Tuesday, January 22, 2002	Ron Steinke <rsteinke@w-link.net>
 
+	* Changed namespace from WF::Math to WFMath
+	* Changed fromAtlas() to throw an exception instead of
+	  returning bool, added constructors from Atlas::Message::Object
+	  to appropriate types
+	* Incremented version number to 0.2.1, since there were API changes
+	  and other people are starting to care about dependencies on this
+	  library; there'll probably be a lot of 0.2 versions
+
+Tuesday, January 22, 2002	Ron Steinke <rsteinke@w-link.net>
+
 	* Changed the atlas functions for Quaternion and AxisBox<>
 	  to conform to atlas specs, got rid of atlas functions which
 	  still used string conversion
