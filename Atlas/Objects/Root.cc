@@ -16,6 +16,8 @@ Root::Root()
     Object::ListType parent;
     SetAttr("parents", parent);
     SetAttr("id", string("root"));
+    SetAttr("objtype", string("meta"));
+    SetAttr("name", string(""));
 }
 
 Root::Root(const string& id)
@@ -24,7 +26,7 @@ Root::Root(const string& id)
     parent.push_back(string("root"));
     SetAttr("parents", parent);
     SetAttr("id", id);
-    SetAttr("objtype", string("class"));
+    SetAttr("objtype", string("instance"));
 }
 
 Root::~Root()
