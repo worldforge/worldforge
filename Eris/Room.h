@@ -119,8 +119,7 @@ protected:
 	void recvSoundTalk(const Atlas::Objects::Operation::Talk &tk);
 	void recvAppear(const Atlas::Objects::Operation::Appearance &ap);
 	void recvDisappear(const Atlas::Objects::Operation::Disappearance &dis);
-	void recvSightEmote(const Atlas::Objects::Operation::Imaginary &imag,
-		const Atlas::Objects::Root &emote);	
+	void recvSightImaginary(const Atlas::Objects::Operation::Imaginary &im);
 
 	std::string _id;	///< ID of the room entity
 	Lobby* _lobby;		///< the Lobby object

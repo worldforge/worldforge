@@ -89,34 +89,12 @@ void Room::setup()
 // visual stuff (sights)
     
     Dispatcher *sightOp = con->getDispatcherByPath("op:oog:sight:op");
-	
-    Dispatcher *imaginary = sightOp->getSubdispatch("imaginary");
-    if (!imaginary) {
-	imaginary = sightOp->addSubdispatch(ClassDispatcher::newAnonymous(
-		_lobby->getConnection()));
-	imaginary = imaginary->addSubdispatch(
-	    new EncapDispatcher("imaginary"), 
-	    "imaginary"
-	);
-    }
+
+    Dispatcher *cd = sightOp->addSubdispatch(ClassDispatcher::newAnonymous(con));
+    Dispatcher *location = cd->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id), "imaginary");
     
-    Dispatcher *emote = imaginary->getSubdispatch("emote");
-    if (!emote) {
-	// verify it's an emote by looking at the id ... what other types are there?
-	emote = imaginary->addSubdispatch(new ArgumentDispatcher("emote", "id", "emote"));
-    }
-    
-    Dispatcher *location = emote->getSubdispatch(rid);
-    if (!location) {
-	// verify the location is this room
-	location = emote->addSubdispatch(new ArgumentDispatcher(rid, "loc", _id));
-    }
-    
-    Dispatcher *sig = location->addSubdispatch(new EncapDispatcher("encap"));
-    sig->addSubdispatch(
-	new SignalDispatcher2<Atlas::Objects::Operation::Imaginary,
-		Atlas::Objects::Root>("emote",
-		SigC::slot(*this, &Room::recvSightEmote)
+    location->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Imaginary>("imag",
+		SigC::slot(*this, &Room::recvSightImaginary)
     ));
 
 // appearance
@@ -317,14 +295,26 @@ void Room::recvSoundTalk(const Atlas::Objects::Operation::Talk &tk)
 	Talk.emit(this, p->getAccount(), say);
 }
 
-void Room::recvSightEmote(const Atlas::Objects::Operation::Imaginary &imag,
-		const Atlas::Objects::Root &emote)
+void Room::recvSightImaginary(const Atlas::Objects::Operation::Imaginary &im)
 {
-	std::string msg = emote.GetAttr("description").AsString();
-	
-	Person *p = _lobby->getPerson(imag.GetFrom());
-	assert(p);
-	Emote.emit(this, p->getAccount(), msg);
+    const Atlas::Message::Object &obj = getArg(im, 0);
+    Message::Object::MapType::const_iterator m = obj.AsMap().find("description");
+    if (m == obj.AsMap().end())
+	return;
+    const std::string & description = m->second.AsString();
+    // quick sanity check
+    if (_pending.find(im.GetFrom()) != _pending.end()) {
+    	// supress this talk until we have the name
+    	// FIXME - buffer these and spool back?
+    	return;
+    }
+    // hit this assert if get a talk from somone we know *nothing* about
+    if (_people.find(im.GetFrom()) == _people.end()) {
+        log(LOG_DEBUG, "unknown FROM %s in TALK operation");
+        assert(false);
+    }
+    Person *p = _lobby->getPerson(im.GetFrom());
+    Emote.emit(this, p->getAccount(), description);
 }
 
 void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)

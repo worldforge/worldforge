@@ -1,3 +1,11 @@
+Wednesday, 09th October 2002, Al Riddoch
+
+	* src/ArgumentDispatcher.cpp: Prevent ArgumentDispatcher from
+	  aborting if the object it is passed has no args.
+
+	* src/Room.h, src/Room.cpp: Rework handling of imaginary emote
+	  ops to be a bit more general.
+
 Tuesday, September 17, Ron Steinke
 
 	* Backed out fix for Connection seg fault, which was
