@@ -35,7 +35,7 @@ void queriesDone()
 
 int main(int argc, char* argv[])
 {
-    Eris::setLogLevel(Eris::LOG_DEBUG);
+    Eris::setLogLevel(Eris::LOG_WARNING);
     Eris::Logged.connect(SigC::slot(&erisLog));
     
     std::string metaServer = "metaserver.worldforge.org";

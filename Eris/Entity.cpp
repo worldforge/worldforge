@@ -431,7 +431,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     if (nowVisible)
     {
         m_view->setEntityVisible(this, true);
-        visiblityChanged(true);
+        visibilityChanged(true);
     }
     
     for (unsigned int C=0; C < m_contents.size(); ++C)
@@ -446,7 +446,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     if (wasVisible)
     {
         m_view->setEntityVisible(this, false);
-        visiblityChanged(false);
+        visibilityChanged(false);
     }
 }
 

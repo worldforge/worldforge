@@ -24,5 +24,11 @@ LogLevel getLogLevel()
 {
     return _logLevel;
 }
-    
+
+void doLog(LogLevel lvl, const std::string& msg)
+{
+    if (lvl <= _logLevel)
+        Logged.emit(lvl, msg);
+}
+
 } // of namespace

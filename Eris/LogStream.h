@@ -7,6 +7,8 @@
 namespace Eris
 {
 
+void doLog(LogLevel lvl, const std::string& msg);
+
 class logStreamBase
 {
 public:
@@ -27,7 +29,7 @@ public:
     ~debug()
     {
         m_stream << std::flush;
-        Logged.emit(LOG_DEBUG, m_stream.str());
+        doLog(LOG_DEBUG, m_stream.str());
     }
 };
 
@@ -37,7 +39,7 @@ public:
     ~warning()
     {
         m_stream << std::flush;
-        Logged.emit(LOG_WARNING, m_stream.str());
+        doLog(LOG_DEBUG, m_stream.str());
     }
 };
 
@@ -47,7 +49,7 @@ public:
     ~error()
     {
         m_stream << std::flush;
-        Logged.emit(LOG_ERROR, m_stream.str());
+        doLog(LOG_DEBUG, m_stream.str());
     }
 };
 

@@ -1,3 +1,13 @@
+2004-07-18  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp: fix a typo in my previous change, oops.
+	* Eris/Log.cpp, Eris/LogStream.h: make logStreams respect the log level
+	  setting.
+	* Eris/ServerInfo.h: fix a copy-and-paste bug which made getServerName
+	  return the hostname (IP) instead.
+	* Eris.pbrpoj/project.pbxproj: Update XCode project for cleaned up
+	  framework locations.
+
 2004-07-12  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp: Clean up the protected interface available to

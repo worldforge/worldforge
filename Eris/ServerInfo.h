@@ -41,7 +41,7 @@ public:
 
     /// retrieve the human-readable name of the server (e.g 'Bob's Mason Server')
     const std::string& getServername() const
-    { return _host; }
+    { return _name; }
     
     /// retrieve a human-readable name of the ruleset (e.g. 'mason' or 'circe')
     const std::string& getRuleset() const

@@ -97,8 +97,6 @@
 			};
 			dependencies = (
 				C4E7E0030606735400721E8D,
-				C4E7E0050606735400721E8D,
-				C4E7E0070606735400721E8D,
 			);
 			isa = PBXNativeTarget;
 			name = tests;
@@ -152,8 +150,6 @@
 				C43FBCF2054315F2008FC2ED,
 				C4AD291A05FA259900AFB402,
 				C43FBCF1054315C5008FC2ED,
-				C46345F405E11AA900B90E4E,
-				C44CB2F205D804C50075E2A1,
 				C485B1FE05B60252002F2D80,
 			);
 			isa = PBXGroup;
@@ -199,16 +195,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = C44CB2F305D804C50075E2A1;
-					ProjectRef = C44CB2F205D804C50075E2A1;
-				},
-				{
 					ProductGroup = C485B1FF05B60252002F2D80;
 					ProjectRef = C485B1FE05B60252002F2D80;
-				},
-				{
-					ProductGroup = C46345F505E11AA900B90E4E;
-					ProjectRef = C46345F405E11AA900B90E4E;
 				},
 			);
 			targets = (
@@ -576,58 +564,15 @@
 		};
 		C43FBE250543162E008FC2ED = {
 			children = (
-				C44E352E05D969F2005C5DF9,
-				C4BB158B0544A61B00A800CF,
-				C4BB158D0544A61B00A800CF,
+				C4BD5A0606AAA15D0039CF5E,
+				C4BD59F606AAA1330039CF5E,
+				C4BD59CA06AAA1250039CF5E,
+				C4BD59C806AAA0F20039CF5E,
 			);
 			isa = PBXGroup;
 			name = Frameworks;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		C44CB2F205D804C50075E2A1 = {
-			isa = PBXFileReference;
-			lastKnownFileType = "wrapper.pb-project";
-			name = Skstream.pbproj;
-			path = /Users/jmt/Worldforge/forge/libs/skstream/Skstream.pbproj;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		C44CB2F305D804C50075E2A1 = {
-			children = (
-				C47CE2F706A20978009B80C1,
-				C47CE2F806A20978009B80C1,
-			);
-			isa = PBXGroup;
-			name = Products;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C44CB2F605D804D30075E2A1 = {
-			containerPortal = C44CB2F205D804C50075E2A1;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = C4C568AC055AF1D600944C0F;
-			remoteInfo = skstream;
-		};
-		C44CB2F705D804D30075E2A1 = {
-			isa = PBXTargetDependency;
-			name = "skstream (from Skstream.pbproj)";
-			targetProxy = C44CB2F605D804D30075E2A1;
-		};
-		C44E352E05D969F2005C5DF9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = Atlas.framework;
-			path = "/Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build/Atlas.framework";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		C44E352F05D969F2005C5DF9 = {
-			fileRef = C44E352E05D969F2005C5DF9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		C45D3199063C4795001112F7 = {
 			fileEncoding = 30;
@@ -856,14 +801,13 @@
 				DEPLOYMENT_LOCATION = NO;
 				DYLIB_COMPATIBILITY_VERSION = 2;
 				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build /Users/jmt/Library/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "../wfmath/build ../skstream/build ../Atlas-C++/build";
 				FRAMEWORK_VERSION = B;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = ATLAS_ELEMENT_TYPEDEF_PRIVATE;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INFOPLIST_FILE = "Info-eris__Upgraded_.plist";
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-seg1addr 0x21000000";
@@ -879,9 +823,7 @@
 			};
 			comments = "The WorldForge client-side session layer, which simplifies Atlas communication for many clients.";
 			dependencies = (
-				C46345FA05E11ABB00B90E4E,
 				C485B20705B60261002F2D80,
-				C44CB2F705D804D30075E2A1,
 			);
 			isa = PBXNativeTarget;
 			name = eris;
@@ -1257,24 +1199,13 @@
 		C45DC4290562F83D00D8F8F4 = {
 			buildActionMask = 2147483647;
 			files = (
-				C45DC42B0562F83D00D8F8F4,
-				C45DC42D0562F83D00D8F8F4,
-				C44E352F05D969F2005C5DF9,
+				C4BD59C906AAA0F20039CF5E,
+				C4BD59CB06AAA1250039CF5E,
+				C4BD59F706AAA1330039CF5E,
+				C4BD5A0706AAA15D0039CF5E,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C45DC42B0562F83D00D8F8F4 = {
-			fileRef = C4BB158B0544A61B00A800CF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C45DC42D0562F83D00D8F8F4 = {
-			fileRef = C4BB158D0544A61B00A800CF;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		C45DC4310562F83D00D8F8F4 = {
 			explicitFileType = wrapper.framework;
@@ -1320,50 +1251,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		C46345F405E11AA900B90E4E = {
-			isa = PBXFileReference;
-			lastKnownFileType = "wrapper.pb-project";
-			name = Atlas.pbproj;
-			path = "/Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/Atlas.pbproj";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		C46345F505E11AA900B90E4E = {
-			children = (
-				C46345F705E11AA900B90E4E,
-			);
-			isa = PBXGroup;
-			name = Products;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C46345F705E11AA900B90E4E = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = Atlas.framework;
-			refType = 3;
-			remoteRef = C46345FB05E11AC400B90E4E;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C46345F905E11ABB00B90E4E = {
-			containerPortal = C46345F405E11AA900B90E4E;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = C4C5683A055AEFDB00944C0F;
-			remoteInfo = Atlas;
-		};
-		C46345FA05E11ABB00B90E4E = {
-			isa = PBXTargetDependency;
-			name = "Atlas (from Atlas.pbproj)";
-			targetProxy = C46345F905E11ABB00B90E4E;
-		};
-		C46345FB05E11AC400B90E4E = {
-			containerPortal = C46345F405E11AA900B90E4E;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C5688D055AEFDB00944C0F;
-			remoteInfo = Atlas;
-		};
 		C47BF1800600F1DD00CC2146 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1405,22 +1292,6 @@
 			remoteRef = C47CE2F406A1FFF3009B80C1;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C47CE2EF06A1FFEC009B80C1 = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = shapeTest;
-			refType = 3;
-			remoteRef = C47CE2F506A1FFF3009B80C1;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C47CE2F006A1FFEC009B80C1 = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = vectorTest;
-			refType = 3;
-			remoteRef = C47CE2F606A1FFF3009B80C1;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		C47CE2F206A1FFF3009B80C1 = {
 			containerPortal = C485B1FE05B60252002F2D80;
 			isa = PBXContainerItemProxy;
@@ -1442,50 +1313,6 @@
 			remoteGlobalIDString = C4C56AFA055AF62200944C0F;
 			remoteInfo = polygonTest;
 		};
-		C47CE2F506A1FFF3009B80C1 = {
-			containerPortal = C485B1FE05B60252002F2D80;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56B0A055AF62F00944C0F;
-			remoteInfo = shapeTest;
-		};
-		C47CE2F606A1FFF3009B80C1 = {
-			containerPortal = C485B1FE05B60252002F2D80;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C56B2C055AF69F00944C0F;
-			remoteInfo = vectorTest;
-		};
-		C47CE2F706A20978009B80C1 = {
-			fileType = wrapper.framework;
-			isa = PBXReferenceProxy;
-			path = skstream.framework;
-			refType = 3;
-			remoteRef = C47CE2F906A20996009B80C1;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C47CE2F806A20978009B80C1 = {
-			fileType = "compiled.mach-o.executable";
-			isa = PBXReferenceProxy;
-			path = Ping;
-			refType = 3;
-			remoteRef = C47CE2FA06A20996009B80C1;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		C47CE2F906A20996009B80C1 = {
-			containerPortal = C44CB2F205D804C50075E2A1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C568BC055AF1D600944C0F;
-			remoteInfo = skstream;
-		};
-		C47CE2FA06A20996009B80C1 = {
-			containerPortal = C44CB2F205D804C50075E2A1;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = C4C568C8055AF1DC00944C0F;
-			remoteInfo = Ping;
-		};
 		C485B1FE05B60252002F2D80 = {
 			isa = PBXFileReference;
 			lastKnownFileType = "wrapper.pb-project";
@@ -1501,8 +1328,8 @@
 				C47CE2EC06A1FFEC009B80C1,
 				C47CE2ED06A1FFEC009B80C1,
 				C47CE2EE06A1FFEC009B80C1,
-				C47CE2EF06A1FFEC009B80C1,
-				C47CE2F006A1FFEC009B80C1,
+				C4BD59B906AAA0880039CF5E,
+				C4BD59BA06AAA0880039CF5E,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1642,7 +1469,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build /Users/jmt/Library/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "../wfmath/build ../skstream/build ../Atlas-C++/build";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = /usr/local/bin;
@@ -1651,7 +1478,7 @@
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = metaQuery;
 				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wmost";
+				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
 			};
 			dependencies = (
@@ -1692,7 +1519,6 @@
 		C4AD294705FA58E400AFB402 = {
 			buildActionMask = 2147483647;
 			files = (
-				C4AD294A05FA58F200AFB402,
 				C4AD294905FA58E900AFB402,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -1700,12 +1526,6 @@
 		};
 		C4AD294905FA58E900AFB402 = {
 			fileRef = C45DC4310562F83D00D8F8F4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C4AD294A05FA58F200AFB402 = {
-			fileRef = C4BB158B0544A61B00A800CF;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1766,24 +1586,6 @@
 			settings = {
 			};
 		};
-		C4BB158B0544A61B00A800CF = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			lastKnownFileType = wrapper.framework;
-			name = "sigc++.framework";
-			path = "/Users/jmt/Library/Frameworks/sigc++.framework";
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
-		C4BB158D0544A61B00A800CF = {
-			fallbackIsa = PBXFileReference;
-			isa = PBXFrameworkReference;
-			lastKnownFileType = wrapper.framework;
-			name = wfmath.framework;
-			path = /Users/jmt/Library/Frameworks/wfmath.framework;
-			refType = 0;
-			sourceTree = "<absolute>";
-		};
 		C4BB15920544A6C100A800CF = {
 			children = (
 				C43FBD1B054315F3008FC2ED,
@@ -1817,6 +1619,92 @@
 			name = Source;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		C4BD59B906AAA0880039CF5E = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = shapeTest;
+			refType = 3;
+			remoteRef = C4BD59C606AAA0E00039CF5E;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4BD59BA06AAA0880039CF5E = {
+			fileType = "compiled.mach-o.executable";
+			isa = PBXReferenceProxy;
+			path = vectorTest;
+			refType = 3;
+			remoteRef = C4BD59C706AAA0E00039CF5E;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4BD59C606AAA0E00039CF5E = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56B0A055AF62F00944C0F;
+			remoteInfo = shapeTest;
+		};
+		C4BD59C706AAA0E00039CF5E = {
+			containerPortal = C485B1FE05B60252002F2D80;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = C4C56B2C055AF69F00944C0F;
+			remoteInfo = vectorTest;
+		};
+		C4BD59C806AAA0F20039CF5E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = "sigc++.framework";
+			path = "/Library/Frameworks/sigc++.framework";
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		C4BD59C906AAA0F20039CF5E = {
+			fileRef = C4BD59C806AAA0F20039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4BD59CA06AAA1250039CF5E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = wfmath.framework;
+			path = ../wfmath/build/wfmath.framework;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		C4BD59CB06AAA1250039CF5E = {
+			fileRef = C4BD59CA06AAA1250039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4BD59F606AAA1330039CF5E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = skstream.framework;
+			path = ../skstream/build/skstream.framework;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		C4BD59F706AAA1330039CF5E = {
+			fileRef = C4BD59F606AAA1330039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4BD5A0606AAA15D0039CF5E = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = Atlas.framework;
+			path = "../Atlas-C++/build/Atlas.framework";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		C4BD5A0706AAA15D0039CF5E = {
+			fileRef = C4BD5A0606AAA15D0039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C4E59E5805C050D7003934C3 = {
 			fileEncoding = 30;
@@ -1882,27 +1770,13 @@
 		C4E7DFC90606732B00721E8D = {
 			buildActionMask = 2147483647;
 			files = (
-				C4E7E0000606733C00721E8D,
-				C4E7DFFE0606733700721E8D,
 				C4E7DFFF0606733700721E8D,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C4E7DFFE0606733700721E8D = {
-			fileRef = C4BB158B0544A61B00A800CF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		C4E7DFFF0606733700721E8D = {
 			fileRef = C45DC4310562F83D00D8F8F4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C4E7E0000606733C00721E8D = {
-			fileRef = C46345F705E11AA900B90E4E;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1918,30 +1792,6 @@
 			isa = PBXTargetDependency;
 			target = C45DC3E60562F83D00D8F8F4;
 			targetProxy = C4E7E0020606735400721E8D;
-		};
-		C4E7E0040606735400721E8D = {
-			containerPortal = C44CB2F205D804C50075E2A1;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = C4C568AC055AF1D600944C0F;
-			remoteInfo = skstream;
-		};
-		C4E7E0050606735400721E8D = {
-			isa = PBXTargetDependency;
-			name = "skstream (from Skstream.pbproj)";
-			targetProxy = C4E7E0040606735400721E8D;
-		};
-		C4E7E0060606735400721E8D = {
-			containerPortal = C46345F405E11AA900B90E4E;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = C4C5683A055AEFDB00944C0F;
-			remoteInfo = Atlas;
-		};
-		C4E7E0070606735400721E8D = {
-			isa = PBXTargetDependency;
-			name = "Atlas (from Atlas.pbproj)";
-			targetProxy = C4E7E0060606735400721E8D;
 		};
 		C4ED222305D0FCD0006B876D = {
 			fileType = "compiled.mach-o.executable";
