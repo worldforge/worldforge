@@ -254,7 +254,7 @@ void Room::recvSoundTalk(const Atlas::Objects::Operation::Talk &tk)
 	// get the player name and emit the signal already
 	Person *p = _lobby->getPerson(tk.GetFrom());
 	assert(p);
-	Talk.emit(this, p->getName(), say);
+	Talk.emit(this, p->getAccount(), say);
 }
 
 void Room::recvSightEmote(const Atlas::Objects::Operation::Imaginary &imag,
@@ -264,7 +264,7 @@ void Room::recvSightEmote(const Atlas::Objects::Operation::Imaginary &imag,
 	
 	Person *p = _lobby->getPerson(imag.GetFrom());
 	assert(p);
-	Emote.emit(this, p->getName(), msg);
+	Emote.emit(this, p->getAccount(), msg);
 }
 
 void Room::recvAppear(const Atlas::Objects::Operation::Appearance &ap)

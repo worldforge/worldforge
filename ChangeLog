@@ -5,6 +5,8 @@ Sunday, August 19 2001, James Turner <jmtn@blueyonder.co.uk>
 	* Re-wrote the Connection dispatch model to handle 
 	  re-dispathces more flexibly.
 	* Added a zero-argument SignalDispatcher
+	* Fixed Room Talk and Emote signals to send the
+	  account ID, instead of the user's name.
 
 Friday, August 10 2001, James Turner <jmtn@blueyonder.co.uk>
 
