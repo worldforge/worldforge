@@ -62,7 +62,7 @@ void Ternary::set_val()
   else {
     Variable val = bool(m_test) ? m_true : m_false;
     val.is_string(); // Force a call of set_val()
-    VarBase::operator=(*val);
+    VarBase::operator=(val.elem());
   }
 }
 
@@ -82,7 +82,7 @@ void Item::assign( const Variable& v)
 void Item::set_val()
 {
   if(Config::inst()->findItem(m_section, m_key))
-    VarBase::operator=(*Config::inst()->getItem(m_section, m_key));
+    VarBase::operator=(Config::inst()->getItem(m_section, m_key).elem());
   else
     VarBase::operator=(VarBase()); // Set it invalid
 }

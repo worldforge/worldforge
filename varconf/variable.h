@@ -90,11 +90,11 @@ private:
 class VarBox
 {
  public:
-  VarBox(VarBase *vb) : m_var(vb), m_ref(1) { std::cerr << "C"; }
-  ~VarBox() {delete m_var; std::cerr << "D"; }
+  VarBox(VarBase *vb) : m_var(vb), m_ref(1) {}
+  ~VarBox() {delete m_var;}
 
-  void ref() {++m_ref; std::cerr << "R"; }
-  void unref() {if(--m_ref == 0) delete this; std::cerr << "U"; }
+  void ref() {++m_ref;}
+  void unref() {if(--m_ref == 0) delete this;}
 
   VarBase *elem() {return m_var;}
 
@@ -124,12 +124,7 @@ class VarPtr
     return *this;
   }
 
-  // These four copied directly from handle.h in libsigc++-1.0,
-  // not quite sure what the first two do.
-  operator VarBase*() {return m_box->elem();}
-  operator VarBase*() const {return m_box->elem();}
-
-  VarBase& operator*() const {return *m_box->elem();}
+  VarBase& elem() const {return *m_box->elem();}
   VarBase* operator->() const {return m_box->elem();}
 
  private:
@@ -155,9 +150,9 @@ public:
   virtual ~Variable() {}
 
   friend std::ostream& operator<<( std::ostream& out, const Variable& v)
-	{return (out << *v);}
+	{return (out << v.elem());}
   friend bool operator ==( const Variable& one, const Variable& two)
-	{return (*one == *two);}
+	{return (one.elem() == two.elem());}
 
   Variable& operator=( const Variable& c);
   Variable& operator=( VarBase* vb);
@@ -168,11 +163,11 @@ public:
   Variable& operator=( const char* s);
   Variable& operator=( const VarList& v);
 
-  operator bool()		{return bool(**this);}
-  operator int()		{return int(**this);}
-  operator double()		{return double(**this);}
-  operator std::string()	{return std::string(**this);}
-  VarList* array() const {return dynamic_cast<VarList*>(&**this);}
+  operator bool()		{return bool(this->elem());}
+  operator int()		{return int(this->elem());}
+  operator double()		{return double(this->elem());}
+  operator std::string()	{return std::string(this->elem());}
+  VarList* array() const {return dynamic_cast<VarList*>(&this->elem());}
   Variable& operator[]( const int i);
 
   // This is sort of funky. The corresponding functions in VarBase
