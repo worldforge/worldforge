@@ -67,8 +67,12 @@ AM_PATH_ATLAS(0.4.4, [
 )
 
 dnl Check for WFMath library
-AC_CHECK_LIB(wfmath,  main,          LIBS="$LIBS -lwfmath", [             
-                         AC_MSG_ERROR(Couldn't find wfmath library.);  ])
+AM_PATH_WFMATH(0.2.6,[
+	CXXFLAGS="$CXXFLAGS $WFMATH_CFLAGS"
+	LDFLAGS="$LDFLAGS $WFMATH_LIBS"
+	],
+	AC_MSG_ERROR(Couldn't find wfmath config [or config failed])
+)
 
 
 AC_LANG_RESTORE
