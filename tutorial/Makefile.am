@@ -1,5 +1,13 @@
+bin_PROGRAMS = simple_client simple_server
 
+CPPFLAGS = -I/usr/local/include
+
+LDADD  = -L/usr/local/lib -lsocket++
+LDADD += -lAtlas -lAtlasCodecs -lAtlasFilters -lAtlasNet
+
+simple_client_SOURCES = simple_client.cc
+simple_server_SOURCES = simple_server.cc
 
 EXTRA_DIST = \
-	DebugBridge.h Makefile.am building.dox index.dox message.dox \
-	objects.dox preamble.dox simple.dox simple_client.cc simple_server.cc
+	DebugBridge.h building.dox index.dox message.dox \
+	objects.dox preamble.dox simple.dox
