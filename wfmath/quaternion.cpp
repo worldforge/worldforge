@@ -69,12 +69,17 @@ bool Quaternion::operator< (const Quaternion& rhs) const
   return m_vec < rhs.m_vec;
 }
 
+// order of multiplication vs sense of rotation
+//
+// v.rotate(q1).rotate(q2) is the same as v.rotate(q1 * q2),
+// the same as with matrices
+
 Quaternion Quaternion::operator* (const Quaternion& rhs) const
 {
   Quaternion out;
 
   out.m_w = m_w * rhs.m_w - Dot(m_vec, rhs.m_vec);
-  out.m_vec = m_w * rhs.m_vec + rhs.m_w * m_vec + Cross(m_vec, rhs.m_vec);
+  out.m_vec = m_w * rhs.m_vec + rhs.m_w * m_vec - Cross(m_vec, rhs.m_vec);
 
   return out;
 }
@@ -84,7 +89,7 @@ Quaternion Quaternion::operator/ (const Quaternion& rhs) const
   Quaternion out;
 
   out.m_w = m_w * rhs.m_w + Dot(m_vec, rhs.m_vec);
-  out.m_vec = rhs.m_w * m_vec - m_w * rhs.m_vec - Cross(m_vec, rhs.m_vec);
+  out.m_vec = rhs.m_w * m_vec - m_w * rhs.m_vec + Cross(m_vec, rhs.m_vec);
 
   return out;
 }
@@ -114,9 +119,9 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     m_w = (CoordType) (s / 2.0);
     s = (CoordType) (0.5 / s);
 
-    m_vec[0] = (m_ref.elem(2, 1) - m_ref.elem(1, 2)) * s;
-    m_vec[1] = (m_ref.elem(0, 2) - m_ref.elem(2, 0)) * s;
-    m_vec[2] = (m_ref.elem(1, 0) - m_ref.elem(0, 1)) * s;
+    m_vec[0] = -(m_ref.elem(2, 1) - m_ref.elem(1, 2)) * s;
+    m_vec[1] = -(m_ref.elem(0, 2) - m_ref.elem(2, 0)) * s;
+    m_vec[2] = -(m_ref.elem(1, 0) - m_ref.elem(0, 1)) * s;
   } else {
     // diagonal is negative
     int i = 0;
@@ -127,14 +132,14 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     int j = nxt[i], k = nxt[j];
 
     s = (CoordType) sqrt (1.0 + m_ref.elem(i, i) - m_ref.elem(j, j) - m_ref.elem(k, k));
-    m_vec[i] = (CoordType) (s * 0.5);
+    m_vec[i] = -(CoordType) (s * 0.5);
 
     assert("sqrt() returns positive" && s > 0.0);
     s = (CoordType) (0.5 / s);
 
     m_w = (m_ref.elem(k, j) - m_ref.elem(j, k)) * s;
-    m_vec[j] = (m_ref.elem(i, j) + m_ref.elem(j, i)) * s;
-    m_vec[k] = (m_ref.elem(i, k) + m_ref.elem(k, i)) * s;
+    m_vec[j] = -(m_ref.elem(i, j) + m_ref.elem(j, i)) * s;
+    m_vec[k] = -(m_ref.elem(i, k) + m_ref.elem(k, i)) * s;
   }
 
   return not_flip;
@@ -147,7 +152,7 @@ Quaternion& Quaternion::rotation(int axis, const CoordType angle)
   m_w = (CoordType) cos(half_angle);
   for(int i = 0; i < 3; ++i)
     // Note sin() only called once
-    m_vec[i] = (i == axis) ? (CoordType) -sin(half_angle) : 0;
+    m_vec[i] = (i == axis) ? (CoordType) sin(half_angle) : 0;
 
   return *this;
 }
@@ -157,7 +162,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, const CoordType angle)
   CoordType half_angle = angle / 2;
 
   m_w = (CoordType) cos(half_angle);
-  m_vec = axis * (CoordType) (-sin(half_angle) / axis.mag());
+  m_vec = axis * (CoordType) (sin(half_angle) / axis.mag());
 
   return *this;
 }
@@ -168,7 +173,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis)
   CoordType half_angle = mag / 2;
 
   m_w = (CoordType) cos(half_angle);
-  m_vec = axis * (CoordType) (-sin(half_angle) / mag);
+  m_vec = axis * (CoordType) (sin(half_angle) / mag);
 
   return *this;
 }

@@ -38,7 +38,7 @@ dnl Don't add Atlas CFLAGS, LIBS, since Atlas is only used in
 dnl conversion functions to Atlas::Message::Object. Anyone using
 dnl those should already be using atlas-config explicitly.
                      ], [
-    AC_MSG_RESULT(*** Could not find libAtlas...skipping compile for libwfmath_atlas)
+    AC_MSG_RESULT(*** Could not find libAtlas...not building Atlas conversion tests)
     found_atlas=no
 ]) 
 AM_CONDITIONAL(HAVE_ATLAS, test $found_atlas == yes)

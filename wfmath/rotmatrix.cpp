@@ -58,12 +58,12 @@ void WFMath::_NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& 
   m_elem[1][1] = 1 - 2 * (xx + zz);
   m_elem[2][2] = 1 - 2 * (xx + yy);
 
-  m_elem[0][1] = 2 * (xy - wvec[2]);
-  m_elem[0][2] = 2 * (xz + wvec[1]);
-  m_elem[1][0] = 2 * (xy + wvec[2]);
-  m_elem[1][2] = 2 * (yz - wvec[0]);
-  m_elem[2][0] = 2 * (xz - wvec[1]);
-  m_elem[2][1] = 2 * (yz + wvec[0]);
+  m_elem[0][1] = 2 * (xy + wvec[2]);
+  m_elem[0][2] = 2 * (xz - wvec[1]);
+  m_elem[1][0] = 2 * (xy - wvec[2]);
+  m_elem[1][2] = 2 * (yz + wvec[0]);
+  m_elem[2][0] = 2 * (xz + wvec[1]);
+  m_elem[2][1] = 2 * (yz - wvec[0]);
 
   m_flip = !not_flip;
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION

@@ -111,7 +111,7 @@ Vector<3>& WFMath::_NCFS_Vector3_rotate(Vector<3>& v, const Quaternion& q)
   CoordType w = q.scalar();
   const Vector<3>& vec = q.vector();
 
-  v = (2 * w * w - 1) * v + 2 * vec * Dot(vec, v) - 2 * w * Cross(vec, v);
+  v = (2 * w * w - 1) * v + 2 * vec * Dot(vec, v) + 2 * w * Cross(vec, v);
 
   return v;
 }

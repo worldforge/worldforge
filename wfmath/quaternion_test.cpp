@@ -103,7 +103,12 @@ void test_quaternion(const Quaternion& q)
 
   assert(Equal(s * s + q.vector().sqrMag(), 1));
 
-  // FIXME test Euler angle conversion
+  Quaternion q_other(1, 2, 3, 4);
+
+  v.rotate(q).rotate(q_other);
+  v2.rotate(q * q_other);
+
+  assert(v == v2);
 }
 
 int main()
