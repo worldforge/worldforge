@@ -24,7 +24,7 @@ void FillShader::shade(Surface & s)
     unsigned int size = s.getSegment().getSize();
 
     unsigned int buflen = size * size * channels;
-    for (int i = 0; i < buflen; ++i) {
+    for (unsigned int i = 0; i < buflen; ++i) {
         data[i] = 1.f;
     }
 }

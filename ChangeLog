@@ -1,3 +1,13 @@
+2003-07-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/FillShader.cpp: Fix unsigned int warning.
+
+	* Mercator/ThresholdShader.cpp Mercator/ThresholdShader.h:
+	  Implement threshold shaders for simple landscape concepts.
+
+	* tests/testShader.cpp: Update shader unit test to test all current
+	  shaders.
+
 2003-07-25  Al Riddoch  <alriddoch@zepler.org>
 
 	* We're not using CppUnit, so get rid of the check.

@@ -12,6 +12,7 @@ libmercator_0_2_la_SOURCES = \
 	Buffer.cpp \
 	Shader.cpp \
 	FillShader.cpp \
+	ThresholdShader.cpp \
 	Surface.cpp
 
 libmercatordir = $(includedir)/Mercator-0.2/Mercator
@@ -26,4 +27,5 @@ libmercator_HEADERS = \
 	Buffer.h \
 	Shader.h \
 	FillShader.h \
+	ThresholdShader.h \
 	Surface.h
