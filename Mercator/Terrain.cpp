@@ -74,6 +74,26 @@ bool Terrain::getBasePoint(int x, int y, float & z)
     return true;
 }
 
+void Terrain::getAvgBasePoint(int x, int y, float & z)
+{
+    float total = 0.f;
+    int num = 0;
+    for(int i = (x - 1); i < (x + 2); i++) {
+        for(int j = (y - 1); j < (y + 2); j++) {
+            float val;
+            if (getBasePoint(i, j, val)) {
+                total += val;
+                ++num;
+            }
+        }
+    }
+    if (num == 0) {
+        z = Terrain::defaultLevel; 
+    } else {
+        z = total / num;
+    }
+}
+
 Segment * Terrain::getSegmentSafe(int x, int y, bool force)
 {
     Segment * s = getSegmentQuik(x, y);
@@ -86,22 +106,42 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
                     getBasePoint(x + 1, y,     base[1*4 + 2]) &&
                     getBasePoint(x,     y + 1, base[2*4 + 1]) &&
                     getBasePoint(x + 1, y + 1, base[2*4 + 2]);
-    // base[0*4 + 0] = base[1*4 + 0] = base[0*4 + 1] = base[1*4 + 1];
-    // base[2*4 + 0] = base[3*4 + 0] = base[3*4 + 1] = base[2*4 + 1];
-    // base[2*4 + 3] = base[3*4 + 3] = base[3*4 + 2] = base[2*4 + 2];
-    // base[0*4 + 3] = base[1*4 + 3] = base[0*4 + 2] = base[1*4 + 2];
-    getBasePoint(x - 1, y - 1, base[0*4 + 0]);
-    getBasePoint(x - 1, y + 0, base[1*4 + 0]);
-    getBasePoint(x - 1, y + 1, base[2*4 + 0]);
-    getBasePoint(x - 1, y + 2, base[3*4 + 0]);
-    getBasePoint(x + 0, y - 1, base[0*4 + 1]);
-    getBasePoint(x + 0, y + 2, base[3*4 + 1]);
-    getBasePoint(x + 1, y - 1, base[0*4 + 2]);
-    getBasePoint(x + 1, y + 2, base[3*4 + 2]);
-    getBasePoint(x + 2, y - 1, base[0*4 + 3]);
-    getBasePoint(x + 2, y + 0, base[1*4 + 3]);
-    getBasePoint(x + 2, y + 1, base[2*4 + 3]);
-    getBasePoint(x + 2, y + 2, base[3*4 + 3]);
+    if (!getBasePoint(x - 1, y - 1, base[0*4 + 0])) {
+        getAvgBasePoint(x - 1, y - 1, base[0*4 + 0]);
+    }
+    if (!getBasePoint(x - 1, y + 0, base[1*4 + 0])) {
+        getAvgBasePoint(x - 1, y + 0, base[1*4 + 0]);
+    }
+    if (!getBasePoint(x - 1, y + 1, base[2*4 + 0])) {
+        getAvgBasePoint(x - 1, y + 1, base[2*4 + 0]);
+    }
+    if (!getBasePoint(x - 1, y + 2, base[3*4 + 0])) {
+        getAvgBasePoint(x - 1, y + 2, base[3*4 + 0]);
+    }
+    if (!getBasePoint(x + 0, y - 1, base[0*4 + 1])) {
+        getAvgBasePoint(x + 0, y - 1, base[0*4 + 1]);
+    }
+    if (!getBasePoint(x + 0, y + 2, base[3*4 + 1])) {
+        getAvgBasePoint(x + 0, y + 2, base[3*4 + 1]);
+    }
+    if (!getBasePoint(x + 1, y - 1, base[0*4 + 2])) {
+        getAvgBasePoint(x + 1, y - 1, base[0*4 + 2]);
+    }
+    if (!getBasePoint(x + 1, y + 2, base[3*4 + 2])) {
+        getAvgBasePoint(x + 1, y + 2, base[3*4 + 2]);
+    }
+    if (!getBasePoint(x + 2, y - 1, base[0*4 + 3])) {
+        getAvgBasePoint(x + 2, y - 1, base[0*4 + 3]);
+    }
+    if (!getBasePoint(x + 2, y + 0, base[1*4 + 3])) {
+        getAvgBasePoint(x + 2, y + 0, base[1*4 + 3]);
+    }
+    if (!getBasePoint(x + 2, y + 1, base[2*4 + 3])) {
+        getAvgBasePoint(x + 2, y + 1, base[2*4 + 3]);
+    }
+    if (!getBasePoint(x + 2, y + 2, base[3*4 + 3])) {
+        getAvgBasePoint(x + 2, y + 2, base[3*4 + 3]);
+    }
     if (force || complete) {
         s = new Segment(m_res);
         s->populate(base); // , fn, ff, nf);

@@ -1,5 +1,11 @@
 2003-03-19  Al Riddoch  <alriddoch@zepler.org>
 
+	* src/Terrain.h, src/Terrain.cpp: Make value for missing points the
+	  the average of surrounding points that are present. Makes edges
+	  of know terrain more sane.
+
+2003-03-19  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Terrain.cpp: Back off change to default height points to make
 	  terrain seamless again.
 
