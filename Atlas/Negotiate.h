@@ -34,7 +34,7 @@ class Negotiate : public Task
     {
 	IN_PROGRESS,
 	SUCCEEDED,
-	FAILED,
+	FAILED
     };
 
     virtual State getState() = 0;
