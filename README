@@ -24,7 +24,7 @@ compiling varconf. The library can be aquired at
 
 http://sourceforge.net/projects/libsigc/.
 
-Varconf requires version 1.0.0 or greater of libsigc++.
+Varconf requires version 1.0.2 or greater of libsigc++.
 
 
 3.1 Basic Installation
