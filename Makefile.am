@@ -1,4 +1,4 @@
 SUBDIRS = varconf tests doc
 
-EXTRA_DIST = COPYING TODO THANKS
+EXTRA_DIST = COPYING TODO THANKS config_format
 

@@ -1,3 +1,15 @@
 Makefile.in
-configure
 Makefile
+aclocal.m4
+config.guess
+config.h.in
+config.h
+config.sub
+configure
+install-sh
+ltconfig
+ltmain.sh
+missing
+mkinstalldirs
+stamp-h.in
+stamp-h
