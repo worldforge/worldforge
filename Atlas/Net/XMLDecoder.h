@@ -26,7 +26,6 @@ changes:
 #include <string>
 using std::string;
 
-#include "../Object/Debug.h"
 #include "Decoder.h"
 
 namespace Atlas

@@ -11,7 +11,9 @@ changes:
 
 */
 
+#include "../Object/Debug.h"
 #include "../Object/Object.h"
+
 #include "Protocol.h"
 #include "XMLDecoder.h"
 

@@ -12,6 +12,8 @@ changes:
 using std::string;
 #include <cassert>
 
+#include "../Object/Debug.h"
+
 #include "Client.h"
 #include "Codec.h"
 #include "Socket.h"

@@ -13,6 +13,8 @@ changes:
 
 #include <cassert>
 
+#include "../Object/Debug.h"
+
 #include "Codec.h"
 #include "Protocol.h"
 #include "Encoder.h"
