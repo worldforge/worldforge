@@ -1,3 +1,14 @@
+2003-04-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.cpp: Re-implement asMessage() in terms of
+	  addToMessage() and make it non-virtual.
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/gen_cpp.py: Move
+	  send*() functions into the implementation, while keeping them
+	  inlined, as there is no need for them to be exposed as inlined.
+
+	* Atlas/Objects/gen_cpp.py: Remove asMessage().
+
 2003-04-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/AttributeInfo.py: Add explicit send members for

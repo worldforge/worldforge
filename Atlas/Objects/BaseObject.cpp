@@ -49,7 +49,9 @@ void BaseObjectData::removeAttr(const std::string& name)
 
 const Element::MapType BaseObjectData::asMessage() const
 {
-    return m_attributes;
+    Element::MapType m;
+    addToMessage(m);
+    return m;
 }
 
 void BaseObjectData::addToMessage(Element::MapType & m) const

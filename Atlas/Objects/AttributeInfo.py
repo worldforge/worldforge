@@ -93,7 +93,7 @@ class AttributeInfo:
 """ % self.__dict__ #"for xemacs syntax highlighting
 
     def inline_send(self, classname):
-        res = 'void %s::send%s' % (classname, self.cname)
+        res = 'inline void %s::send%s' % (classname, self.cname)
         res = res + '(Atlas::Bridge & b) const\n'
         res = res + '{\n'
         if self.name not in ["parents", "objtype"]:
