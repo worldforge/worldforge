@@ -13,73 +13,73 @@ public:
 
     virtual ~DebugBridge() { }
 
-    virtual void StreamBegin() {
-        std::cout << padding << "StreamBegin" << endl;
+    virtual void streamBegin() {
+        std::cout << padding << "streamBegin" << endl;
         addPadding();
     }
-    virtual void StreamMessage(const Map&) {
+    virtual void streamMessage(const Map&) {
         std::cout << padding << "New Map" << endl;
         addPadding();
     }
-    virtual void StreamEnd() {
+    virtual void streamEnd() {
         removePadding();
-        std::cout << padding << "StreamEnd" << endl;
+        std::cout << padding << "streamEnd" << endl;
     }
     
-    virtual void MapItem(const std::string& name, const Map&)
+    virtual void mapItem(const std::string& name, const Map&)
     {
         std::cout << padding << name << " -> New Map" << endl;
         addPadding();
     }
-    virtual void MapItem(const std::string& name, const List&)
+    virtual void mapItem(const std::string& name, const List&)
     {
         std::cout << padding << name << " -> New List" << endl;
         addPadding();
     }
-    virtual void MapItem(const std::string& name, int i)
+    virtual void mapItem(const std::string& name, int i)
     {
         std::cout << padding << name << " -> Int: " << i << endl;
     }
-    virtual void MapItem(const std::string& name, double d)
+    virtual void mapItem(const std::string& name, double d)
     {
         std::cout << padding << name << " -> Float: " << d << endl;
     }
-    virtual void MapItem(const std::string& name, const std::string& s)
+    virtual void mapItem(const std::string& name, const std::string& s)
     {
         std::cout << padding << name << " -> String: " << s << endl;
     }
-    virtual void MapEnd()
+    virtual void mapEnd()
     {
         removePadding();
-        std::cout << padding << "MapEnd" << endl;
+        std::cout << padding << "mapEnd" << endl;
     }
     
-    virtual void ListItem(const Map&)
+    virtual void listItem(const Map&)
     {
         std::cout << padding << "New Map" << endl;
         addPadding();
     }
-    virtual void ListItem(const List&)
+    virtual void listItem(const List&)
     {
         std::cout << padding << "New List" << endl;
         addPadding();
     }
-    virtual void ListItem(int i)
+    virtual void listItem(int i)
     {
         std::cout << padding << "Int: " << i << endl;
     }
-    virtual void ListItem(double d)
+    virtual void listItem(double d)
     {
         std::cout << padding << "Float: " << d << endl;
     }
-    virtual void ListItem(const std::string& s)
+    virtual void listItem(const std::string& s)
     {
         std::cout << padding << "String: " << s << endl;
     }
-    virtual void ListEnd()
+    virtual void listEnd()
     {
         removePadding();
-        std::cout << padding << "ListEnd" << endl;
+        std::cout << padding << "listEnd" << endl;
     }
 
 protected:

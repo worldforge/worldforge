@@ -46,7 +46,7 @@ inline char hexToChar(const string& hex)
  * @param message The message that is to be escaped.
  * @see hexDecode
  */
-inline const string hexEncode(const string& prefix, const string& special,
+inline const string hexEncodeWithPrefix(const string& prefix, const string& special,
         const string& message)
 {
     string encoded;
@@ -78,7 +78,7 @@ inline const string hexEncode(const string& prefix, const string& special,
  * @param prefix The string that is followed by the escaped characters
  * @param message The escaped message.
  */
-inline const string hexDecode(const string& prefix, const string& message)
+inline const string hexDecodeWithPrefix(const string& prefix, const string& message)
 {
     string newMessage;
     string curFragment;

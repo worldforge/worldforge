@@ -1,15 +1,129 @@
-The .cc and .h files in here are automatically generated.
+Many .cpp and .h files in here are automatically generated.
 
 This is done by issuing the following:
 
-./gen_cc.py root_entity Entity
-./gen_cc.py root_operation Operation
+make
+
+Look at top of file to see whether it's generated or not.
 
 The generation script is a _work in progress_, hence a few things aren't yet
 implemented:
 
  - non-default constructors (not important)
  - Makefile.am generation (not important)
- - Decoder.cc generation (not important)
 
-Please do not touch anything in this directory yet. -- sdt@gmx.net
+
+
+============================================================
+
+Conversion from old Atlas-C++/src/Objects:
+
+See Atlas-C++/benchmark/Objects3_Move.cpp for example
+(compare to Atlas-C++/benchmark/Objects_Move.cc)
+
+0)
+MethodNames
+->
+methodNames
+
+FileName.*
+->
+fileName.*
+
+1)
+Headers like "Atlas/Objects/Operation/Look.h"
+-> "Atlas/Objects/operation.h"
+Similarly only "Atlas/Objects/entity.h"
+needed for all Entity/*.h headers
+(they have been combined for compilation speed)
+
+
+
+2)
+ Entity::GameEntity human = Entity::GameEntity::Instantiate();
+->
+ Entity::GameEntity human;
+Reason: Now default values are for instances, not definitions like earlier.
+For definitions use global ObjectDefinitions object at ObjectFactory.h
+(Root obj = ObjectFactory.CreateObject("game_entity"); also works, but 
+is slower)
+
+
+3)
+ human.SetPos(pos);
+->
+ human->setPos(pos);
+Reason: Now all classes are actually smart pointers:
+
+Constructor automatically allocates new object (or increases reference
+count in copy constructor or assign) and compiler placed destructor
+when object goes out of scope automatically decreases reference count
+and if zero it deallocates it.
+
+Which means that there is no need to manage memory anymore.
+
+Also means that instances only contain one attribute: T *ptr;
+And you access attributes pointed by it by using: T* operator->()
+just like you would access things pointed by pointer: some_obj->GetPos();
+
+
+4)
+Args attribute is internally of different type:
+
+Object::ListType move_args;
+move_args.push_back(human.AsObject());
+move.SetArgs(move_args);
+->
+vector<Root> move_args(1);
+move_args[0] = (Root&)human;
+move->setArgs(move_args);
+
+or use different set/get functions (which of course is much slower):
+Object::ListType move_args;
+move_args.push_back(human.asObject());
+move->setArgsAsList(move_args);
+
+Also move->setArgs1((Root&)human);
+has been added: it is equivalent to setting it to vector with length 1 
+having (Root&)human as only element. (except it modifies existing one
+and if it's already size()==1, then only setting that element is
+needed: fast)
+
+
+5)
+All attributes inherited from string_list, int_list and float_list are
+internally different type:
+Object::ListType
+->
+list<string>, list<int>, list<double>
+
+6)
+All attributes inherited from string_list_length, int_list_length and
+float_list_length are internally different type:
+Object::ListType
+->
+vector<string>, vector<int>, vector<double>
+
+
+7)
+getPos(), etc.. return now only const refence
+For non const reference use modifyPos()
+
+8)
+bool isDefaultPos() tells whether object has default value (which is
+shared by all instances)
+
+9)
+getDefaultObject() returns default object for this class which is
+shared by all instances.
+
+10)
+Use code like:
+try {
+    LoadDefaults("../../../protocols/atlas/spec/atlas.xml");
+} catch(DefaultLoadingException e) {
+    cout << "DefaultLoadingException: "
+         << e.msg << endl;
+    return 1;
+}
+to initialize default objects.

@@ -29,11 +29,11 @@ public:
     virtual ~Encoder() { }
 
     /// Send a message (must be a map!) in stream state.
-    virtual void StreamMessage(const Object& obj);
+    virtual void streamMessage(const Object& obj);
     /// Send an object as a map item.
-    virtual void MapItem(const string&, const Object&);
+    virtual void mapItem(const string&, const Object&);
     /// Send an object as a list item.
-    virtual void ListItem(const Object&);
+    virtual void listItem(const Object&);
 };
 
 } } // namespace Atlas::Message

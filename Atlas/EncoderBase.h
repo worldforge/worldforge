@@ -33,28 +33,28 @@ public:
 
     virtual ~EncoderBase() { }
     
-    virtual void StreamBegin() { b->StreamBegin(); }
-    virtual void StreamMessage(const Map& m) { b->StreamMessage(m); }
-    virtual void StreamEnd() { b->StreamEnd(); }
+    virtual void streamBegin() { b->streamBegin(); }
+    virtual void streamMessage(const Map& m) { b->streamMessage(m); }
+    virtual void streamEnd() { b->streamEnd(); }
     
-    virtual void MapItem(const std::string& name, const Bridge::Map& m)
-    { b->MapItem(name, m); }
-    virtual void MapItem(const std::string& name, const Bridge::List& l)
-    { b->MapItem(name, l); }
-    virtual void MapItem(const std::string& name, int i)
-    { b->MapItem(name, i); }
-    virtual void MapItem(const std::string& name, double d)
-    { b->MapItem(name, d); }
-    virtual void MapItem(const std::string& name, const std::string& s)
-    { b->MapItem(name, s); }
-    virtual void MapEnd() { b->MapEnd(); }
+    virtual void mapItem(const std::string& name, const Bridge::Map& m)
+    { b->mapItem(name, m); }
+    virtual void mapItem(const std::string& name, const Bridge::List& l)
+    { b->mapItem(name, l); }
+    virtual void mapItem(const std::string& name, int i)
+    { b->mapItem(name, i); }
+    virtual void mapItem(const std::string& name, double d)
+    { b->mapItem(name, d); }
+    virtual void mapItem(const std::string& name, const std::string& s)
+    { b->mapItem(name, s); }
+    virtual void mapEnd() { b->mapEnd(); }
     
-    virtual void ListItem(const Bridge::Map& m) { b->ListItem(m); }
-    virtual void ListItem(const Bridge::List& l) { b->ListItem(l); }
-    virtual void ListItem(int i) { b->ListItem(i); }
-    virtual void ListItem(double d) { b->ListItem(d); }
-    virtual void ListItem(const std::string& s) { b->ListItem(s); }
-    virtual void ListEnd() { b->ListEnd(); }
+    virtual void listItem(const Bridge::Map& m) { b->listItem(m); }
+    virtual void listItem(const Bridge::List& l) { b->listItem(l); }
+    virtual void listItem(int i) { b->listItem(i); }
+    virtual void listItem(double d) { b->listItem(d); }
+    virtual void listItem(const std::string& s) { b->listItem(s); }
+    virtual void listEnd() { b->listEnd(); }
 
 protected:
     /// The bridge that requests are forwarded to.

@@ -20,25 +20,25 @@ class XMLish : public Codec<iostream>
 
     XMLish(const Codec<iostream>::Parameters&);
 
-    virtual void Poll(bool can_read = true);
+    virtual void poll(bool can_read = true);
 
-    virtual void StreamBegin();
-    virtual void StreamMessage(const Map&);
-    virtual void StreamEnd();
+    virtual void streamBegin();
+    virtual void streamMessage(const Map&);
+    virtual void streamEnd();
 
-    virtual void MapItem(const std::string& name, const Map&);
-    virtual void MapItem(const std::string& name, const List&);
-    virtual void MapItem(const std::string& name, int);
-    virtual void MapItem(const std::string& name, double);
-    virtual void MapItem(const std::string& name, const std::string&);
-    virtual void MapEnd();
+    virtual void mapItem(const std::string& name, const Map&);
+    virtual void mapItem(const std::string& name, const List&);
+    virtual void mapItem(const std::string& name, int);
+    virtual void mapItem(const std::string& name, double);
+    virtual void mapItem(const std::string& name, const std::string&);
+    virtual void mapEnd();
     
-    virtual void ListItem(const Map&);
-    virtual void ListItem(const List&);
-    virtual void ListItem(int);
-    virtual void ListItem(double);
-    virtual void ListItem(const std::string&);
-    virtual void ListEnd();
+    virtual void listItem(const Map&);
+    virtual void listItem(const List&);
+    virtual void listItem(int);
+    virtual void listItem(double);
+    virtual void listItem(const std::string&);
+    virtual void listEnd();
 
     protected:
 
@@ -64,7 +64,7 @@ XMLish::XMLish(const Codec<iostream>::Parameters& p)
 {
 }
 
-void XMLish::Poll(bool can_read = true)
+void XMLish::poll(bool can_read = true)
 {
     if (!can_read) return;
     do
@@ -76,77 +76,77 @@ void XMLish::Poll(bool can_read = true)
     while (socket.rdbuf()->in_avail());
 }
 
-void XMLish::StreamBegin()
+void XMLish::streamBegin()
 {
     socket << "<atlas>";
 }
 
-void XMLish::StreamMessage(const Map&)
+void XMLish::streamMessage(const Map&)
 {
     socket << "<map>";
 }
 
-void XMLish::StreamEnd()
+void XMLish::streamEnd()
 {
     socket << "</atlas>";
 }
 
-void XMLish::MapItem(const std::string& name, const Map&)
+void XMLish::mapItem(const std::string& name, const Map&)
 {
     socket << "<map name=\"" << name << "\">";
 }
 
-void XMLish::MapItem(const std::string& name, const List&)
+void XMLish::mapItem(const std::string& name, const List&)
 {
     socket << "<list name=\"" << name << "\">";
 }
 
-void XMLish::MapItem(const std::string& name, int data)
+void XMLish::mapItem(const std::string& name, int data)
 {
     socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
 
-void XMLish::MapItem(const std::string& name, double data)
+void XMLish::mapItem(const std::string& name, double data)
 {
     socket << "<float name=\"" << name << "\">" << data << "</float>";
 }
 
-void XMLish::MapItem(const std::string& name, const std::string& data)
+void XMLish::mapItem(const std::string& name, const std::string& data)
 {
     socket << "<string name=\"" << name << "\">" << data << "</string>";
 }
 
-void XMLish::MapEnd()
+void XMLish::mapEnd()
 {
     socket << "</map>";
 }
 
-void XMLish::ListItem(const Map&)
+void XMLish::listItem(const Map&)
 {
     socket << "<map>";
 }
 
-void XMLish::ListItem(const List&)
+void XMLish::listItem(const List&)
 {
     socket << "<list>";
 }
 
-void XMLish::ListItem(int data)
+void XMLish::listItem(int data)
 {
     socket << "<int>" << data << "</int>";
 }
 
-void XMLish::ListItem(double data)
+void XMLish::listItem(double data)
 {
     socket << "<float>" << data << "</float>";
 }
 
-void XMLish::ListItem(const std::string& data)
+void XMLish::listItem(const std::string& data)
 {
     socket << "<string>" << data << "</string>";
 }
 
-void XMLish::ListEnd()
+void XMLish::listEnd()
 {
     socket << "</list>";
 }

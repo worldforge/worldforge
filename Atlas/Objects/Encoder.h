@@ -14,7 +14,7 @@ namespace Atlas { namespace Objects {
  * This Encoder can be used to send objects in the Atlas::Objects hierarchy to
  * a certain Bridge (e.g. a codec).
  *
- * Simply call the StreamMessage member with a pointer to the object to be
+ * Simply call the streamMessage member with a pointer to the object to be
  * sent.
  *
  * @see Atlas::Objects::Decoder
@@ -31,11 +31,11 @@ public:
 
     /// Send an object to the bridge.
     /// @param o The object that is to be sent.
-    virtual void StreamMessage(const Atlas::Objects::Root* o)
+    virtual void streamMessage(const Atlas::Objects::Root& o)
     {
-        b->StreamMessage(Bridge::MapBegin);
-        o->SendContents(b);
-        b->MapEnd();
+        b->streamMessage(Bridge::mapBegin);
+        o->sendContents(b);
+        b->mapEnd();
     }
 };
 

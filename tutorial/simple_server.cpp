@@ -42,27 +42,27 @@ int main(int argc, char** argv)
     Net::StreamAccept accepter("simple_server", client, &bridge);
 
     cout << "Negotiating.... " << flush;
-    // accepter.Poll() does all the negotiation
-    while (accepter.GetState() == Net::StreamAccept::IN_PROGRESS)
-        accepter.Poll();
+    // accepter.poll() does all the negotiation
+    while (accepter.getState() == Net::StreamAccept::IN_PROGRESS)
+        accepter.poll();
     cout << "done." << endl;
 
     // Check the negotiation state to see whether it was successful
-    if (accepter.GetState() == Net::StreamAccept::FAILED) {
+    if (accepter.getState() == Net::StreamAccept::FAILED) {
         cerr << "Negotiation failed." << endl;
         return 2;
     }
     // Negotiation was successful! 
 
     // Get the codec that negotation established
-    Codec<iostream>* codec = accepter.GetCodec();
+    Codec<iostream>* codec = accepter.getCodec();
 
     cout << "Polling client..." << endl;
     
     // iosockinet::operator bool() returns false once a connection closes
     while (client) {
         // Get incoming data and process it
-        codec->Poll(); // this blocks!
+        codec->poll(); // this blocks!
     }
 
     // The connection closed

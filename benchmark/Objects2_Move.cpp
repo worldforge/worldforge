@@ -27,7 +27,7 @@ class NPC
 public:
   NPC() : id("123") {x=y=z = vx=vy=vz = 0.0;}
   Operation::SightInstance move(Operation::MoveInstance &op);
-  string GetId() {return id;}
+  string getId() {return id;}
 private:
   string id;
   double x,y,z;
@@ -37,8 +37,8 @@ private:
 Operation::SightInstance NPC::move(Operation::MoveInstance &op)
 {
     Object::ListType::const_iterator new_vel_i =
-        ((Entity::GameEntityInstance&)op->GetArgs()[0])->
-        GetVelocity().begin();
+        ((Entity::GameEntityInstance&)op->getArgs()[0])->
+        getVelocity().begin();
     vx = (*new_vel_i).AsFloat();
     new_vel_i++; vy = (*new_vel_i).AsFloat();
     new_vel_i++; vz = (*new_vel_i).AsFloat();
@@ -50,32 +50,32 @@ Operation::SightInstance NPC::move(Operation::MoveInstance &op)
     //human:
     Entity::GameEntityInstance human;
     //Entity::GameEntity human = Entity::GameEntity::Instantiate();
-    human->SetId(GetId());
+    human->setId(getId());
     Object::ListType pos;
     pos.push_back(x);
     pos.push_back(y);
     pos.push_back(z);
-    human->SetPos(pos);
+    human->setPos(pos);
     Object::ListType vel;
     vel.push_back(vx);
     vel.push_back(vy);
     vel.push_back(vz);
-    human->SetVelocity(vel);
+    human->setVelocity(vel);
     
     //move:
     Operation::MoveInstance move;
     //Operation::Move move = Operation::Move::Instantiate();
     vector<Root> move_args(1);
     move_args[0] = (Root&)human;
-    move->SetArgs(move_args);
+    move->setArgs(move_args);
 
     //sight:
     Operation::SightInstance sight;
     //Operation::Sight sight = Operation::Sight::Instantiate();
-    sight->SetFrom(GetId());
+    sight->setFrom(getId());
     vector<Root> sight_args(1);
     sight_args[0] = (Root&)move;
-    sight->SetArgs(sight_args);
+    sight->setArgs(sight_args);
     
     return sight;
 }
@@ -91,33 +91,33 @@ int main(int argc, char** argv)
         pos.push_back(i);
         pos.push_back(i-1.0);
         pos.push_back(i+1.0);
-        human->SetPos(pos);
+        human->setPos(pos);
         
         Object::ListType vel;
         vel.push_back(i);
         vel.push_back(i-1.0);
         vel.push_back(i+1.0);
-        human->SetVelocity(vel);
-//        Object::ListType foo = human->GetVelocity();
-//        cout<<foo.size()<<":"<<foo.front().AsFloat()<<","<<foo.back().AsFloat()<<endl;
+        human->setVelocity(vel);
+//        Object::ListType foo = human->getVelocity();
+//        cout<<foo.size()<<":"<<foo.front().asFloat()<<","<<foo.back().asFloat()<<endl;
 
         //move:
         Operation::MoveInstance move;
         vector<Root> move_args(1);
         move_args[0] = (Root&)human;
-        move->SetArgs(move_args);
-//        Object::MapType ent = move.GetArgs().front().AsMap();
-//        cout<<"vel0:"<<ent["velocity"].AsList().front().AsFloat()<<endl;
+        move->setArgs(move_args);
+//        Object::MapType ent = move.getArgs().front().asMap();
+//        cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<endl;
 
         //sight:
         Operation::SightInstance sight;
-        sight->SetFrom("123");
+        sight->setFrom("123");
         vector<Root> sight_args(1);
         sight_args[0] = (Root&)move;
-        sight->SetArgs(sight_args);
-//        Object::MapType ent = sight.GetArgs().front().AsMap()
-//          ["args"].AsList().front().AsMap();
-//        cout<<"vel0:"<<ent["velocity"].AsList().front().AsFloat()<<endl;
+        sight->setArgs(sight_args);
+//        Object::MapType ent = sight.getArgs().front().asMap()
+//          ["args"].asList().front().asMap();
+//        cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<endl;
     }
     TIME_OFF("Plain creating of sight operation");
     NPC npc1;
@@ -126,28 +126,28 @@ int main(int argc, char** argv)
     for(i=0; i<MAX_ITER; i+=1.0) {
         //human:
         Entity::GameEntityInstance human;
-        human->SetId(npc1.GetId());
+        human->setId(npc1.getId());
         Object::ListType vel;
         vel.push_back(i);
         vel.push_back(i-1.0);
         vel.push_back(i+1.0);
-        human->SetVelocity(vel);
+        human->setVelocity(vel);
         
         //move:
         Operation::MoveInstance move;
         vector<Root> move_args(1);
         move_args[0] = (Root&)human;
-        move->SetArgs(move_args);
+        move->setArgs(move_args);
 
         Operation::SightInstance res_sight = npc1.move(move);
         Object::ListType::const_iterator new_pos_i =
             ((Entity::GameEntityInstance&)
-               ((Operation::MoveInstance&)res_sight->GetArgs()[0])
-             ->GetArgs()[0])->
-            GetVelocity().begin();
-        x = (*new_pos_i).AsFloat();
-        new_pos_i++; y = (*new_pos_i).AsFloat();
-        new_pos_i++; z = (*new_pos_i).AsFloat();
+               ((Operation::MoveInstance&)res_sight->getArgs()[0])
+             ->getArgs()[0])->
+            getVelocity().begin();
+        x = (*new_pos_i).asFloat();
+        new_pos_i++; y = (*new_pos_i).asFloat();
+        new_pos_i++; z = (*new_pos_i).asFloat();
     }
     TIME_OFF("NPC movements");
     cout<<"Resulting position: ("<<x<<","<<y<<","<<z<<")"<<endl;

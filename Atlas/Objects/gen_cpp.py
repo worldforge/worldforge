@@ -1,392 +1,118 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python
+#This file is distributed under the terms of 
+#the GNU Lesser General Public license (See the file COPYING for details).
+#Copyright (C) 2000 Stefanus Du Toit and Aloril
 
-import string
-import sys
-import os
-import cmp
-sys.path.append("../../../../protocols/atlas/spec")
-from types import *
-from ParseDef import read_all_defs
+from common import *
+from AttributeInfo import *
+from GenerateObjectFactory import GenerateObjectFactory
+from GenerateDecoder import GenerateDecoder
 
-copyright = \
-"// This file may be redistributed and modified only under the terms of\n\
-// the GNU Lesser General Public License (See COPYING for details).\n\
-// Copyright 2000 Stefanus Du Toit.\n\
-// Automatically generated using gen_cpp.py.\n"
+class_serial_no = 1
 
-# These are only used for description.
-descr_attrs = ['children', 'description', 'args_description', 'example', \
-               'long_description', 'specification', 'interface']
-# C++ equivalents of atlas types              
-cpp_type = {'map':'Atlas::Message::Object::MapType',
-            'list':'Atlas::Message::Object::ListType',
-            'string':'std::string',
-            'int':'int',
-            'float':'double'}
-
-# Const references
-cpp_param_type = {'map':'const ' + cpp_type['map'] + '&',
-                  'list':'const ' + cpp_type['list'] + '&',
-                  'string':'const ' + cpp_type['string'] + '&',
-                  'int':cpp_type['int'],
-                  'float':cpp_type['float']}
-
-# Non-const references
-cpp_param_type2 = {'map':cpp_type['map'] + '&',
-                  'list':cpp_type['list'] + '&',
-                  'string':cpp_type['string'] + '&',
-                  'int':cpp_type['int'] + '&',
-                  'float':cpp_type['float'] + '&'}
-
-# Turns some_thing into SomeThing
-def classize(id):
-    return string.join(map(lambda part:string.capitalize(part), \
-                       string.split(id, '_')), "")
-
-# Atlas equivalent of python type
-type2string={StringType:"string",
-             IntType:"int",
-             FloatType:"float"}
-
-def find_in_parents(parents, attr_name):
-    for parent_name in parents:
-        parent = defs.id_dict.get(parent_name)
-        if attr_name in map(lambda attr: attr.name, parent.attr_list):
-            return 1
+class GenerateCC(GenerateObjectFactory, GenerateDecoder):
+    def __init__(self, objects, outdir):
+        self.objects = objects
+        #self.outdir = outdir
+        self.outdir = "."
+        if outdir != ".":
+            self.base_list = ['Atlas', 'Objects', outdir]
+            self.name_space = outdir + "::"
         else:
-            if find_in_parents(parent.attr['parents'].value, attr_name) \
-               == 1:
-                return 1
-    return 0
+            self.base_list = ['Atlas', 'Objects']
+            self.name_space = ""
+
+    def __call__(self, obj, class_only_files):
+        self.classname = classize(obj.id, data=1)
+        self.classname_pointer = classize(obj.id)
+        self.generic_class_name = capitalize_only(string.split(obj.id, "_")[-1])
+        self.interface_file(obj)
+        self.implementation_file(obj)
+        if class_only_files:
+##             self.class_only_files = class_only_files
+##             self.basic_classname = capitalize_only(string.split(obj.id, "_")[1])
+##             self.for_all_children(obj, self.add_to_progeny)
+##             self.progeny = self.progeny[1:]
+            self.find_progeny(obj, class_only_files)
+            self.children_interface_file(obj)
+            self.children_implementation_file(obj)
+            res = [obj] + self.progeny
+            #self.decoder()
+        else:
+            res = [obj]
+        return map(lambda o,n=self.name_space:(o,n), res)
+    
+##     def get_type(self, name):
+##         obj = self.objects[name]
+##         while obj.objtype!='data_type':
+##             obj = obj.parents[0]
+##         return obj.id
+
+    def find_attr_class(self, obj):
+        name = obj.id
+        if attr_name2class.has_key(name):
+            return name, attr_name2class[name]
+        for parent in obj.parents:
+            res = self.find_attr_class(parent)
+            if res: return res
+
+    def get_name_value_type(self, obj, first_definition = 0,
+                            real_attr_only = 0):
+        lst = []
+        for name, value in obj.items():
+            #required that no parent has this attribute?
+            if first_definition:
+                if find_in_parents(obj, name):
+                    continue
+            #basic type
+            type, attr_class_lst = self.find_attr_class(self.objects[name])
+            if real_attr_only:
+                lst.append(apply(attr_class_lst[0],
+                                 (name, value, type)))
+            else:
+                for attr_class in attr_class_lst:
+                    lst.append(apply(attr_class,
+                                     (name, value, type)))
+        return lst
 
 
-class GenerateCC:
-    def __init__(self, defs, outdir):
-        self.outdir = outdir
-        self.defs = defs
-    def __call__(self, id_list):
-        for id in id_list:
-            obj = self.defs.id_dict.get(id)
-            if not obj:
-                raise SyntaxError, 'no such id: "' + id + '"!'
-            self.classname = classize(id)
-            self.interface(obj)
-            self.implementation(obj)
-            children = obj.attr['children'].value
-            if children:
-                self(children)
-    def header(self, list):
-        self.out.write(copyright)
-        self.out.write("\n")
-        guard = string.join(map(lambda part:string.upper(part), list), "_")
-        self.out.write("#ifndef " + guard + "\n")
-        self.out.write("#define " + guard + "\n\n")
+    def get_cpp_parent(self, obj):
+        if len(obj.parents) == 0:
+            parent = "BaseObject"
+        elif len(obj.parents) == 1:
+            parent = obj.parents[0].id
+        else:
+            raise ValueError, "Multiple parents needs supporting code"
+        return classize(parent, data=1)
+
+    def write(self, str):
+        self.out.write(str)
+
+    def header(self, list, copyright = copyright):
+        self.write(copyright)
+        self.write("\n")
+        guard = string.join(map(string.upper, list), "_")
+        self.write("#ifndef " + guard + "\n")
+        self.write("#define " + guard + "\n\n")
     def footer(self, list):
-        guard = string.join(map(lambda part:string.upper(part), list), "_")
-        self.out.write("\n#endif // " + guard + "\n")
+        guard = string.join(map(string.upper, list), "_")
+        self.write("\n#endif // " + guard + "\n")
+
+    #namespace
     def ns_open(self, ns_list):
         for namespace in ns_list:
-            self.out.write("namespace " + namespace + " { ")
-        self.out.write("\n")
+            self.write("namespace " + namespace + " { ")
+        self.write("\n")
     def ns_close(self, ns_list):
         for i in range(0, len(ns_list)):
-            self.out.write("} ")
-        self.out.write("// namespace " + string.join(ns_list, "::"))
-        self.out.write("\n")
+            self.write("} ")
+        self.write("// namespace " + string.join(ns_list, "::"))
+        self.write("\n")
+
     def doc(self, indent, text):
-        for i in range(0, indent):
-            self.out.write(" ")
-        self.out.write("/// %s\n" % text)
-    def constructors_if(self, obj):
-        self.doc(4, "Construct a " + self.classname + " class definition.")
-        self.out.write("    " + self.classname + "();\n")
-    def default_map(self, name, obj):
-        self.out.write("    Object::MapType " + name + ";\n")
-        for sub in obj.attr_list:
-            if sub.type == "list":
-                self.default_list("%s_%d" % (name, sub.name), sub)
-            if sub.type == "map":
-                self.default_map("%s_%d" % (name, sub.name), sub)
-            self.out.write("    %s.push_back(" % name)
-            if sub.type == "list" or sub_type == "map":
-                self.out.write("%s_%d" % (name, sub.name))
-            elif sub.type == "string":
-                self.out.write('string("%s")' % sub.value)
-            else:
-                self.out.write("%s" % sub.value)
-            self.out.write(");\n")
-    def default_list(self, name, obj):
-        i = 0
-        self.out.write("    Object::ListType " + name + ";\n")
-        for sub in obj.value:
-            sub_type = type2string[type(sub)]
-            if sub_type == "list":
-                self.default_list("%s_%d" % (name, ++i), sub)
-            elif sub_type == "map":
-                self.default_map("%s_%d" % (name, ++i), sub)
-            self.out.write("    %s.push_back(" % name)
-            if sub_type == "list" or sub_type == "map":
-                self.out.write("%s_%d" % (name, i))
-            elif sub_type == "string":
-                self.out.write('string("%s")' % sub)
-            else:
-                self.out.write('%s' % sub)
-            self.out.write(");\n")
-    def constructors_im(self, obj):
-        self.out.write(self.classname + "::" + self.classname + "()\n")
-        self.out.write("     : ")
-        self.out.write(string.join(map(lambda parent:classize(parent)+"()", \
-                       obj.attr['parents'].value), ", ") + "\n")
-        self.out.write("{\n")
-        for sub_obj in obj.attr_list:
-            if sub_obj.attr_container_obj == obj and \
-               sub_obj.name not in descr_attrs:
-                if sub_obj.type == "list":
-                    self.default_list(sub_obj.name, sub_obj)
-                if sub_obj.type == "map":
-                    self.default_map(sub_obj.name, sub_obj)
-                self.out.write('    Set' + classize(sub_obj.name) + '(')
-                if sub_obj.type == "string":
-                    self.out.write('string("' + sub_obj.value + '")')
-                elif sub_obj.type == "list" or sub_obj.type == "map":
-                    self.out.write(sub_obj.name)
-                else:
-                    self.out.write('%s' % sub_obj.value)
-                self.out.write(');\n')
-        self.out.write("}\n")
-        self.out.write("\n")
-    def instantiation(self, obj):
-        id = obj.attr['id'].value
-        objtype = obj.attr['objtype'].value
-        self.out.write("%s %s::Instantiate()\n{\n" \
-                       % (self.classname, self.classname))
-        self.out.write("    " + self.classname + " value;\n\n")
-        self.out.write("    Object::ListType parents;\n")
-        self.out.write('    parents.push_back(string("%s"));\n' % id)
-        self.out.write('    value.SetParents(parents);\n')
-        if objtype == "op_definition":
-            self.out.write('    value.SetObjtype(string("op"));\n')
-        elif objtype == "class":
-            self.out.write('    value.SetObjtype(string("object"));\n')
-        else:
-            self.out.write('    value.SetObjtype(string("instance"));\n')
-        self.out.write("    \n")
-        self.out.write("    return value;\n")
-        self.out.write("}\n\n")
-    def static_inline_sets(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        for attr in statics:
-            self.out.write('void %s::Set%s' % (classname, classize(attr.name)))
-            self.out.write('(%s val)\n' % cpp_param_type[attr.type])
-            self.out.write('{\n')
-            self.out.write('    attr_%s = val;\n' % attr.name)
-            self.out.write('}\n\n')
-    def static_inline_gets(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        for attr in statics:
-            self.out.write('%s %s::Get%s() const\n' % (cpp_param_type[attr.type], \
-                           classname, classize(attr.name))) 
-            self.out.write('{\n')
-            self.out.write('    return attr_%s;\n' % attr.name)
-            self.out.write('}\n\n')
-            self.out.write('%s %s::Get%s()\n' % (cpp_param_type2[attr.type], \
-                           classname, classize(attr.name))) 
-            self.out.write('{\n')
-            self.out.write('    return attr_%s;\n' % attr.name)
-            self.out.write('}\n\n')
-    def static_inline_sends(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        for attr in statics:
-            self.out.write('void %s::Send%s' % (classname, classize(attr.name)))
-            self.out.write('(Atlas::Bridge* b) const\n')
-            self.out.write('{\n')
-            if attr.type in ('int', 'float', 'string'):
-                self.out.write('    b->MapItem("%s", attr_%s);\n' \
-                               % (attr.name, attr.name))
-            else:
-                self.out.write('    Atlas::Message::Encoder e(b);\n')
-                self.out.write('    e.MapItem("%s", attr_%s);\n' \
-                               % (attr.name, attr.name))
-            self.out.write('}\n\n')
-    def hasattr_im(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        self.out.write("bool %s::HasAttr(const string& name) const\n"
-                        % classname)
-        self.out.write("{\n")
-        for attr in statics:
-            self.out.write('    if (name == "%s") return true;\n' % attr.name)
-        parent = obj.attr['parents'].value[0]
-        self.out.write("    return %s::HasAttr(name);\n" % classize(parent))
-        self.out.write("}\n\n")
-    def getattr_im(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        self.out.write("Object %s::GetAttr" % classname)
-        self.out.write("(const string& name) const\n")
-        self.out.write("    throw (NoSuchAttrException)\n")
-        self.out.write("{\n")
-        for attr in statics:
-            self.out.write('    if (name == "%s") return attr_%s;\n' \
-                            % (attr.name, attr.name))
-        parent = obj.attr['parents'].value[0]
-        self.out.write("    return %s::GetAttr(name);\n" % classize(parent))
-        self.out.write("}\n\n")
-    def setattr_im(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        self.out.write("void %s::SetAttr" % classname)
-        self.out.write("(const string& name, const Object& attr)\n")
-        self.out.write("{\n")
-        for attr in statics:
-            self.out.write('    if (name == "%s") {' % attr.name)
-            self.out.write(' Set%s(attr.As%s()); ' % \
-                           (classize(attr.name), classize(attr.type)))
-            self.out.write('return; }\n')
-        parent = obj.attr['parents'].value[0]
-        self.out.write("    %s::SetAttr(name, attr);\n" % classize(parent))
-        self.out.write("}\n\n")
-    def remattr_im(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        self.out.write("void %s::RemoveAttr(const string& name)\n"
-                        % classname)
-        self.out.write("{\n")
-        for attr in statics:
-            self.out.write('    if (name == "%s") return;\n' % attr.name)
-        parent = obj.attr['parents'].value[0]
-        self.out.write("    %s::RemoveAttr(name);\n" % classize(parent))
-        self.out.write("}\n\n")
-    def sendcontents_im(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        self.out.write("void %s::SendContents(Bridge* b) const\n" % classname)
-        self.out.write("{\n")
-        for attr in statics:
-            self.out.write('    Send%s(b);\n' % classize(attr.name))
-        parent = obj.attr['parents'].value[0]
-        self.out.write("    %s::SendContents(b);\n" % classize(parent))
-        self.out.write("}\n\n")
-    def asobject_im(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        self.out.write("Object %s::AsObject() const\n" % classname)
-        self.out.write("{\n")
-        parent = obj.attr['parents'].value[0]
-        self.out.write("    Object::MapType m = %s::AsObject().AsMap();\n" % classize(parent))
-        for attr in statics:
-            self.out.write('    m["%s"] = Object(attr_%s);\n' % \
-                    (attr.name, attr.name))
-        self.out.write('    return Object(m);\n')
-        self.out.write("}\n\n")
-    def asmap_im(self, obj, statics):
-        classname = classize(obj.attr['id'].value)
-        self.out.write("Object::MapType %s::AsMap() const\n" % classname)
-        self.out.write("{\n")
-        parent = obj.attr['parents'].value[0]
-        self.out.write("    Object::MapType m = %s::AsMap();\n" % classize(parent))
-        for attr in statics:
-            self.out.write('    m["%s"] = Object(attr_%s);\n' % \
-                    (attr.name, attr.name))
-        self.out.write('    return m;\n')
-        self.out.write("}\n\n")
-    def interface(self, obj):
-        print "Output of interface for:"
-        outfile = self.outdir + '/' + self.classname + ".h"
-        print outfile
-        self.out = open(outfile + ".tmp", "w")
-        if outdir != ".":
-            self.header(['Atlas', 'Objects', outdir, self.classname, "H"])
-        else:
-            self.header(['Atlas', 'Objects', self.classname, "H"])
-        for parent in obj.attr['parents'].value:
-            self.out.write('#include "')
-            if parent == "root": self.out.write('../')
-            self.out.write(classize(parent) + '.h"\n')
-        self.out.write("\n\n")
-        if outdir != ".":
-            self.ns_open(['Atlas', 'Objects', outdir])
-        else:
-            self.ns_open(['Atlas', 'Objects'])
-        self.out.write("\n")
-        self.out.write("/** " + obj.attr['description'].value + "\n")
-        self.out.write("\n")
-        self.out.write(obj.attr['long_description'].value + "\n\n")
-        self.out.write("*/\n")
-        self.out.write("class " + self.classname)
-        parentlist = map(lambda parent:"public " + classize(parent), \
-                     obj.attr['parents'].value)
-        if len(parentlist) > 0:
-            self.out.write(" : ")
-            self.out.write(string.join(parentlist, ", "))
-        self.out.write("\n{\n")
-        self.out.write("public:\n")
-        self.constructors_if(obj)
-        self.doc(4, "Default destructor.")
-        self.out.write("    virtual ~" + self.classname + "() { }\n")
-        self.out.write("\n")
-        self.doc(4, "Create a new instance of " + self.classname + ".")
-        self.out.write("    static " + self.classname + " Instantiate();\n")
-        self.out.write("\n")
-        static_attrs = filter(lambda attr,obj=obj:(not attr.name in descr_attrs) \
-          and (not find_in_parents(obj.attr['parents'].value, attr.name)), \
-          obj.attr_list)
-        if len(static_attrs) > 0:
-            self.doc(4, 'Check whether the attribute "name" exists.')
-            self.out.write("    virtual bool HasAttr(const std::string& name)"\
-                           + "const;\n")
-            self.doc(4, 'Retrieve the attribute "name". Throws ' \
-                       +'NoSuchAttrException if it does')
-            self.doc(4, 'not exist.')
-            self.out.write("    virtual Atlas::Message::Object GetAttr(")
-            self.out.write("const std::string& name)\n")
-            self.out.write("            const throw (NoSuchAttrException);\n")
-            self.doc(4, 'Set the attribute "name" to the value given by' \
-                      + '"attr"')
-            self.out.write("    virtual void SetAttr(const std::string& name,\n")
-            self.out.write("                         ")
-            self.out.write("const Atlas::Message::Object& attr);\n")
-            self.doc(4, 'Remove the attribute "name". This will not work for '\
-                      + 'static attributes.')
-            self.out.write("    virtual void RemoveAttr(")
-            self.out.write("const std::string& name);\n")
-            self.out.write("\n")
-            self.doc(4, 'Send the contents of this object to a Bridge.')
-            self.out.write("    virtual void SendContents(Atlas::Bridge* b) const;\n")
-            self.out.write("\n")
-            self.doc(4, 'Convert this object to a Message::Object.')
-            self.out.write("    virtual Atlas::Message::Object AsObject() const;\n")
-            self.out.write("\n")
-            for attr in static_attrs:
-                self.doc(4, 'Set the "%s" attribute.' % attr.name)
-                self.out.write("    inline void Set" + classize(attr.name))
-                self.out.write('(' + cpp_param_type[attr.type] + ' val);\n')
-            self.out.write('\n')
-            for attr in static_attrs:
-                self.doc(4, 'Retrieve the "%s" attribute.' % attr.name)
-                self.out.write('    inline %s Get' % cpp_param_type[attr.type])
-                self.out.write(classize(attr.name) + '() const;\n')
-                self.doc(4, 'Retrieve the "%s" attribute as a non-const reference.' % attr.name)
-                self.out.write('    inline %s Get' % cpp_param_type2[attr.type])
-                self.out.write(classize(attr.name) + '();\n')
-            self.out.write('\n')
-        self.out.write("protected:\n")
-        if len(static_attrs) > 0:
-            for attr in static_attrs:
-                self.out.write('    %s attr_%s;\n' % (cpp_type[attr.type], attr.name))
-            self.out.write('\n')
-            for attr in static_attrs:
-                self.out.write("    inline void Send" + classize(attr.name))
-                self.out.write('(Atlas::Bridge*) const;\n')
-        self.out.write('\n')
-        self.out.write("};\n\n")
-        if len(static_attrs) > 0:
-            self.out.write('//\n// Inlined member functions follow.\n//\n\n')
-            self.static_inline_sets(obj, static_attrs)
-            self.static_inline_gets(obj, static_attrs)
-            self.static_inline_sends(obj, static_attrs)
-            self.out.write('\n')
-        if outdir != ".":
-            self.ns_close(['Atlas', 'Objects', outdir])
-            self.footer(['Atlas', 'Objects', outdir, self.classname, "H"])
-        else:
-            self.ns_close(['Atlas', 'Objects'])
-            self.footer(['Atlas', 'Objects', self.classname, "H"])
-        self.out.close()
+        self.write(doc(indent, text))
+
+    def update_outfile(self, outfile):
         if os.access(outfile, os.F_OK):
             if cmp.cmp(outfile + ".tmp", outfile) == 0:
                 os.remove(outfile)
@@ -396,62 +122,599 @@ class GenerateCC:
                 os.remove(outfile + ".tmp")
         else:
             os.rename(outfile + ".tmp", outfile)
-    def implementation(self, obj):
-        print "Output of implementation for:"
-        outfile = self.outdir + '/' + self.classname + ".cpp"
+
+    def constructors_if(self, obj, static_attrs):
+        self.doc(4, "Construct a " + self.classname + " class definition.")
+        classname_base = self.get_cpp_parent(obj)
+        classname = self.classname
+        serialno_name = string.upper(obj.id) + "_NO"
+        self.write("""    %(classname)s(%(classname)s *defaults = NULL) : 
+        %(classname_base)s((%(classname_base)s*)defaults)
+    {
+        m_class_no = %(serialno_name)s;
+    }
+""" % vars()) #"for xemacs syntax highlighting
+
+##     def constructors_if(self, obj, static_attrs):
+##         self.doc(4, "Construct a " + self.classname + " class definition.")
+##         self.write("    %s(%s *defaults = NULL)" %
+##                    (self.classname, self.classname))
+##         if static_attrs:
+##             self.write(";\n")
+##         else:
+##             if len(obj.parents)==1:
+##                 classname_base = classize(obj.parents[0], data=1)
+##                 self.write(" : \n        %s((%s*)defaults) {}\n" %
+##                            (classname_base, classname_base))
+##             else:
+##                 raise ValueError, "No code to handle this case"
+
+##     def constructors_im(self, obj):
+##         self.write("%s::%s(%s *defaults = NULL)\n" %
+##                    (self.classname, self.classname, self.classname))
+##         self.write("     : ")
+##         parentlist = obj.parents
+##         if not parentlist: parentlist = ["BaseObject"]
+##         def base_constructor(parent):
+##             bname = classize(parent, data=1)
+##             return "%s((%s*)defaults)" % (bname, bname)
+##         self.write(string.join(map(base_constructor, parentlist), ", ") + "\n")
+##         self.write("{\n")
+##         self.write("    if(!defaults) {\n")
+##         for attr in self.get_name_value_type(obj, real_attr_only=1):
+##             self.write(attr.constructors_im())
+##         self.write("    }\n")
+##         self.write("}\n")
+##         self.write("\n")
+
+    def static_inline_sets(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        for attr in statics:
+            self.write("const int %s = 1 << %i;\n" %
+                       (attr.flag_name, attr.enum))
+            self.write(attr.inline_set(classname))
+
+    def static_inline_gets(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        for attr in statics:
+            self.write(attr.inline_get(classname))
+
+    def static_inline_is_defaults(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        for attr in statics:
+            self.write(attr.inline_is_default(classname))
+
+    def static_inline_sends(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        for attr in statics:
+            self.write(attr.inline_send(classname))
+
+    def hasattr_im(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        self.write("bool %s::hasAttr(const string& name) const\n"
+                        % classname)
+        self.write("{\n")
+        for attr in statics:
+            self.write('    if (name == "%s") return true;\n' % attr.name)
+        parent = self.get_cpp_parent(obj)
+        self.write("    return %s::hasAttr(name);\n" % parent)
+        self.write("}\n\n")
+
+    def getattr_im(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        self.write("Object %s::getAttr" % classname)
+        self.write("(const string& name) const\n")
+        self.write("    throw (NoSuchAttrException)\n")
+        self.write("{\n")
+        for attr in statics:
+            self.write(attr.getattr_im())
+        parent = self.get_cpp_parent(obj)
+        self.write("    return %s::getAttr(name);\n" % parent)
+        self.write("}\n\n")
+
+    def setattr_im(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        self.write("void %s::setAttr" % classname)
+        self.write("(const string& name, const Object& attr)\n")
+        self.write("{\n")
+        for attr in statics:
+            self.write(attr.setattr_im())
+        parent = self.get_cpp_parent(obj)
+        self.write("    %s::setAttr(name, attr);\n" % parent)
+        self.write("}\n\n")
+
+    def remattr_im(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        self.write("void %s::removeAttr(const string& name)\n"
+                        % classname)
+        self.write("{\n")
+        for attr in statics:
+            self.write('    if (name == "%s")\n' % attr.name)
+            self.write('        { m_attrFlags &= ~%s; return;}\n' % attr.flag_name)
+        parent = self.get_cpp_parent(obj)
+        self.write("    %s::removeAttr(name);\n" % parent)
+        self.write("}\n\n")
+
+    def sendcontents_im(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        self.write("void %s::sendContents(Bridge* b) const\n" % classname)
+        self.write("{\n")
+        for attr in statics:
+            self.write('    send%s(b);\n' % classize(attr.name))
+        parent = self.get_cpp_parent(obj)
+        self.write("    %s::sendContents(b);\n" % parent)
+        self.write("}\n\n")
+
+    def asobject_im(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        self.write("Object %s::asObject() const\n" % classname)
+        self.write("{\n")
+        parent = self.get_cpp_parent(obj)
+        self.write("    Object::MapType m = %s::asObject().asMap();\n" % parent)
+        for attr in statics:
+            self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
+            self.write('        m["%s"] = Object(get%s%s());\n' % \
+                    (attr.name, attr.cname, attr.as_object))
+        self.write('    return Object(m);\n')
+        self.write("}\n\n")
+
+    def smart_ptr_if(self, name_addition=""):
+        self.write("\nclass %s;\n" % (self.classname + name_addition))
+        self.write("typedef SmartPtr<%s> %s;\n" %
+                   (self.classname + name_addition,
+                    self.classname_pointer + name_addition))
+        self.write("\n")
+
+    def freelist_if(self, name_addition=""):
+        classname = self.classname + name_addition
+        self.write("""
+    //freelist related things
+public:
+    static BaseObjectData *alloc();
+    virtual void free();
+    virtual BaseObjectData *getDefaultObject();
+private:
+    static %(classname)s defaults_%(classname)s;
+    static %(classname)s *begin_%(classname)s;
+""" % vars()) #"for xemacs syntax highlighting
+    def freelist_im(self, name_addition=""):
+        classname = self.classname + name_addition
+        self.write("""
+//freelist related methods specific to this class
+%(classname)s %(classname)s::defaults_%(classname)s;
+%(classname)s *%(classname)s::begin_%(classname)s = NULL;
+
+BaseObjectData *%(classname)s::alloc()
+{
+    if(begin_%(classname)s) {
+      %(classname)s *res = begin_%(classname)s;
+      assert( res->m_refCount == 0 );
+      res->m_attrFlags = 0;
+      begin_%(classname)s = (%(classname)s *)begin_%(classname)s->m_next;
+      return (BaseObjectData*)res;
+    }
+    return (BaseObjectData*)new %(classname)s(&defaults_%(classname)s);
+}
+
+void %(classname)s::free()
+{
+    m_next = begin_%(classname)s;
+    begin_%(classname)s = this;
+}
+
+BaseObjectData *%(classname)s::getDefaultObject()
+{
+    return (BaseObjectData*)&defaults_%(classname)s;
+}
+
+""" % vars()) #"for xemacs syntax highlighting
+
+    def interface_file(self, obj):
+        print "Output of interface for:",
+        outfile = self.outdir + '/' + self.classname_pointer + ".h"
         print outfile
         self.out = open(outfile + ".tmp", "w")
-        self.out.write(copyright)
-        self.out.write("\n")
-        self.out.write('#include "' + self.classname + '.h"\n')
-        self.out.write("\n")
-        self.out.write("using namespace std;\n")
-        self.out.write("using namespace Atlas;\n")
-        self.out.write("using namespace Atlas::Message;\n")
-        self.out.write("\n")
-        if outdir != ".":
-            self.ns_open(['Atlas', 'Objects', outdir])
-        else:
-            self.ns_open(['Atlas', 'Objects'])
-        self.out.write("\n")
-        self.constructors_im(obj)
-        self.instantiation(obj)
-        static_attrs = filter(lambda attr,obj=obj:(not attr.name in descr_attrs) \
-          and (not find_in_parents(obj.attr['parents'].value, attr.name)), \
-          obj.attr_list)
+        self.header(self.base_list + [self.classname_pointer, "H"])
+        for parent in obj.parents:
+            parent = parent.id
+            self.write('#include "')
+            #if parent == "root": self.write('../')
+            self.write(classize(parent) + '.h"\n')
+        if not obj.parents:
+            self.write('#include "BaseObject.h"\n')
+            self.write('#include "SmartPtr.h"\n')
+            self.write('#include <vector>\n')
+        if obj.id=="root_operation":
+            #self.write('#include "../objectFactory.h"\n')
+            self.write('#include "objectFactory.h"\n')
+        self.write("\n\n")
+        self.ns_open(self.base_list)
+        static_attrs = self.get_name_value_type(obj, first_definition=1)
+        self.interface(obj, static_attrs)
+        self.ns_close(self.base_list)
+        self.footer(self.base_list + [self.classname_pointer, "H"])
+        self.out.close()
+        self.update_outfile(outfile)
+
+    def interface(self, obj, static_attrs=[]):
+        self.write("\n")
+        self.write("/** " + obj.description + "\n")
+        self.write("\n")
+        self.write(obj.long_description + "\n\n")
+        self.write("*/\n")
+        self.smart_ptr_if()
+        global class_serial_no
+        self.write("const int %s_NO = %i;\n\n" % (
+            string.upper(obj.id), class_serial_no))
+        class_serial_no = class_serial_no + 1
+        self.write("class " + self.classname)
+        parentlist = obj.parents
+        if not parentlist: parentlist = ["BaseObject"]
+        parentlist = map(lambda parent:"public " + classize(parent, data=1), \
+                         parentlist)
+        if len(parentlist) > 0:
+            self.write(" : ")
+            self.write(string.join(parentlist, ", "))
+        self.write("\n{\n")
+
+        self.write("public:\n")
+        self.constructors_if(obj, static_attrs)
+        self.doc(4, "Default destructor.")
+        self.write("    virtual ~" + self.classname + "() { }\n")
+        self.write("\n")
+
         if len(static_attrs) > 0:
+            #generic access/etc.. methods
+            self.doc(4, 'Check whether the attribute "name" exists.')
+            self.write("    virtual bool hasAttr(const std::string& name)"\
+                           + "const;\n")
+            self.doc(4, 'Retrieve the attribute "name". Throws ' \
+                       +'NoSuchAttrException if it does')
+            self.doc(4, 'not exist.')
+            self.write("    virtual Atlas::Message::Object getAttr(")
+            self.write("const std::string& name)\n")
+            self.write("            const throw (NoSuchAttrException);\n")
+            self.doc(4, 'Set the attribute "name" to the value given by' \
+                      + '"attr"')
+            self.write("    virtual void setAttr(const std::string& name,\n")
+            self.write("                         ")
+            self.write("const Atlas::Message::Object& attr);\n")
+            self.doc(4, 'Remove the attribute "name". This will not work for '\
+                      + 'static attributes.')
+            self.write("    virtual void removeAttr(")
+            self.write("const std::string& name);\n")
+            self.write("\n")
+            self.doc(4, 'Send the contents of this object to a Bridge.')
+            self.write("    virtual void sendContents(Atlas::Bridge* b) const;\n")
+            self.write("\n")
+            self.doc(4, 'Convert this object to a Message::Object.')
+            self.write("    virtual Atlas::Message::Object asObject() const;\n")
+            self.write("\n")
+            for attr in static_attrs:
+                self.write(attr.set_if())
+            self.write('\n')
+            for attr in static_attrs:
+                self.write(attr.get_if())
+            self.write('\n')
+            for attr in static_attrs:
+                self.write(attr.is_default_if())
+            self.write('\n')
+
+            self.write("protected:\n")
+
+            for attr in static_attrs:
+                self.write('    %s attr_%s;\n' %
+                               (cpp_type[attr.type], attr.name))
+            self.write('\n')
+            for attr in static_attrs:
+                self.write("    inline void send" + attr.cname)
+                self.write('(Atlas::Bridge*) const;\n')
+        self.freelist_if()
+        self.write("};\n\n")
+
+        #inst# self.instance_if(obj)
+
+        if len(static_attrs) > 0:
+            self.write('//\n// Inlined member functions follow.\n//\n\n')
+            self.static_inline_sets(obj, static_attrs)
+            self.static_inline_gets(obj, static_attrs)
+            self.static_inline_is_defaults(obj, static_attrs)
+            self.static_inline_sends(obj, static_attrs)
+            self.write('\n')
+
+    def implementation_file (self, obj):
+        print "Output of implementation for:",
+        outfile = self.outdir + '/' + self.classname_pointer + ".cpp"
+        print outfile
+        self.out = open(outfile + ".tmp", "w")
+        self.write(copyright)
+        self.write("\n")
+        self.write('#include "' + self.classname_pointer + '.h"\n')
+        self.write("\n")
+        self.write("using namespace std;\n")
+        self.write("using namespace Atlas;\n")
+        self.write("using namespace Atlas::Message;\n")
+        self.write("\n")
+        self.ns_open(self.base_list)
+        self.write("\n")
+        static_attrs = self.get_name_value_type(obj, first_definition=1,
+                                                real_attr_only=1)
+        self.implementation(obj, static_attrs)
+        self.ns_close(self.base_list)
+        self.out.close()
+        self.update_outfile(outfile)
+
+    def implementation(self, obj, static_attrs=[]):
+        if len(static_attrs) > 0:
+            #self.constructors_im(obj)
             self.hasattr_im(obj, static_attrs)
             self.getattr_im(obj, static_attrs)
             self.setattr_im(obj, static_attrs)
             self.remattr_im(obj, static_attrs)
             self.sendcontents_im(obj, static_attrs)
             self.asobject_im(obj, static_attrs)
-        if outdir != ".":
-            self.ns_close(['Atlas', 'Objects', outdir])
-        else:
-            self.ns_close(['Atlas', 'Objects'])
+        self.freelist_im()
+
+        #inst# self.instance_im()
+        
+    def instance_if(self, obj):
+        self.smart_ptr_if("Instance")
+        classname_base = self.classname
+        classname = classname_base + "Instance"
+        serialno_name = string.upper(obj.id) + "_INSTANCE_NO"
+        global class_serial_no
+        cs_no = class_serial_no
+        self.write("""
+const int %(serialno_name)s = %(cs_no)s;
+
+class %(classname)s : public %(classname_base)s
+{
+public:
+    %(classname)s(%(classname)s *defaults = NULL) : 
+        %(classname_base)s((%(classname_base)s*)defaults)
+    {
+        m_class_no = %(serialno_name)s;
+    }
+""" % vars()) #"for xemacs syntax highlighting
+        class_serial_no = class_serial_no + 1
+        self.freelist_if("Instance")
+        self.write("};\n\n")
+
+    def instance_im(self):
+        self.freelist_im("Instance")
+
+##     one .h file:
+##         go trough all children
+##     one .cpp file:
+##         go trough all children
+##     def for_all_children(self, obj, func):
+##         if obj.specification_file.filename not in class_only_files:
+##             return
+##         bak_classname = self.classname
+##         bak_classname_pointer = self.classname_pointer
+##         self.classname = classize(obj.id, data=1)
+##         self.classname_pointer = classize(obj.id)
+##         func(obj, [])
+##         self.classname = bak_classname
+##         self.classname_pointer = bak_classname_pointer
+##         for child in obj.children:
+##             self.for_all_children(child, func)
+
+##     def template_interface(self, obj, tmp):
+##         ind = self.progeny.index(obj)*2
+##         name = classize(obj.id)
+##         if tmp: 
+##             ind = ind +1
+##             name = name + "Instance"
+##         self.write("typedef SmartPtr<%sData<%s> > %s;\n" % 
+##                    (self.basic_classname, ind, name))
+##         if not tmp: self.template_interface(obj, 1)
+
+##     def template_implementation(self, obj, tmp):
+##         ind = self.progeny.index(obj)*2
+##         if tmp: ind = ind +1
+##         basic_classname = self.basic_classname
+##         self.write("""
+## %(basic_classname)sData<%(ind)s> %(basic_classname)sData<%(ind)s>::defaults_%(basic_classname)sData;
+## %(basic_classname)sData<%(ind)s> *%(basic_classname)sData<%(ind)s>::begin_%(basic_classname)sData = NULL;
+## """ % vars()) #"for xemacs syntax highlighting
+##         if not tmp: self.template_implementation(obj, 1)
+
+##     def children_interface_file(self, obj):
+##         print "Output of interface for:",
+##         outfile = self.outdir + '/' + self.classname_pointer + "Children.h"
+##         print outfile
+##         self.out = open(outfile + ".tmp", "w")
+##         self.header(self.base_list + [self.classname_pointer+"Children", "H"])
+##         self.write('#include "%s.h"\n' % self.classname_pointer)
+##         self.write("\n\n")
+##         self.ns_open(self.base_list)
+        
+##         self.write("""
+## template <int No>
+## class %(basic_classname)sData : public Root%(basic_classname)sData
+## {
+## public:
+##     /// Construct a %(basic_classname)sData class definition.
+##     %(basic_classname)sData(%(basic_classname)sData *defaults = NULL) : 
+##         Root%(basic_classname)sData((Root%(basic_classname)sData*)defaults) {}
+##     /// Default destructor.
+##     virtual ~%(basic_classname)sData() { }
+
+
+##     //freelist related things
+## public:
+##     static BaseObjectData *alloc();
+##     virtual void free();
+##     virtual BaseObjectData *getDefaultObject();
+## private:
+##     static %(basic_classname)sData defaults_%(basic_classname)sData;
+##     static %(basic_classname)sData *begin_%(basic_classname)sData;
+## };
+## """ % self.__dict__) #"for xemacs syntax highlighting
+
+##         for child in obj.children:
+##             self.for_all_children(child, self.template_interface)
+
+##         self.ns_close(self.base_list)
+##         self.footer(self.base_list + [self.classname_pointer, "H"])
+##         self.out.close()
+##         self.update_outfile(outfile)
+
+##     def children_implementation_file (self, obj):
+##         print "Output of implementation for:",
+##         outfile = self.outdir + '/' + self.classname_pointer + "Children.cpp"
+##         print outfile
+##         self.out = open(outfile + ".tmp", "w")
+##         self.write(copyright)
+##         self.write("\n")
+##         self.write('#include "' + self.classname_pointer + 'Children.h"\n')
+##         self.write("\n")
+##         self.write("using namespace std;\n")
+##         self.write("using namespace Atlas;\n")
+##         self.write("using namespace Atlas::Message;\n")
+##         self.write("\n")
+##         self.ns_open(self.base_list)
+##         self.write("\n")
+
+##         self.write("""
+## template <int No> 
+## BaseObjectData *%(basic_classname)sData<No>::alloc()
+## {
+##     if(begin_%(basic_classname)sData) {
+##       %(basic_classname)sData *res = begin_%(basic_classname)sData;
+##       assert( res->m_refCount == 0 );
+##       res->m_attrFlags = 0;
+##       begin_%(basic_classname)sData = (%(basic_classname)sData *)begin_%(basic_classname)sData->m_next;
+##       return (BaseObjectData*)res;
+##     }
+##     return (BaseObjectData*)new %(basic_classname)sData(&defaults_%(basic_classname)sData);
+## }
+
+## template <int No> 
+## void %(basic_classname)sData<No>::free()
+## {
+##     m_next = begin_%(basic_classname)sData;
+##     begin_%(basic_classname)sData = this;
+## }
+
+## template <int No> 
+## BaseObjectData *%(basic_classname)sData<No>::getDefaultObject()
+## {
+##     return (BaseObjectData*)&defaults_%(basic_classname)sData;
+## }
+## """ % self.__dict__) #"for xemacs syntax highlighting
+##         for child in obj.children:
+##             self.for_all_children(child, self.template_implementation)
+
+##         self.ns_close(self.base_list)
+##         self.out.close()
+##         self.update_outfile(outfile)
+
+    def for_progeny(self, progeny, func):
+        for child in progeny:
+            bak_classname = self.classname
+            bak_classname_pointer = self.classname_pointer
+            self.classname = classize(child.id, data=1)
+            self.classname_pointer = classize(child.id)
+            func(child)
+            self.classname = bak_classname
+            self.classname_pointer = bak_classname_pointer
+
+    def find_progeny(self, obj, class_only_files):
+        self.progeny = []
+        for child in obj.children:
+            self.find_progeny_recursive(child, class_only_files)
+
+    def find_progeny_recursive(self, obj, class_only_files):
+        if obj.specification_file.filename not in class_only_files:
+            return
+        self.progeny.append(obj)
+        for child in obj.children:
+            self.find_progeny_recursive(child, class_only_files)
+
+    def children_interface_file(self, obj):
+        print "Output of interface for:",
+        outfile = self.outdir + '/' + self.generic_class_name + ".h"
+        print outfile
+        self.out = open(outfile + ".tmp", "w")
+        self.header(self.base_list + [self.generic_class_name, "H"])
+        self.write('#include "%s.h"\n' % self.classname_pointer)
+        self.write("\n\n")
+        self.ns_open(self.base_list)
+        self.for_progeny(self.progeny, self.interface)
+        self.ns_close(self.base_list)
+        self.footer(self.base_list + [self.generic_class_name, "H"])
         self.out.close()
-        if os.access(outfile, os.F_OK):
-            if cmp.cmp(outfile + ".tmp", outfile) == 0:
-                os.remove(outfile)
-                os.rename(outfile + ".tmp", outfile)
-            else:
-                print "Output file same as existing one, not updating"
-                os.remove(outfile + ".tmp")
+        self.update_outfile(outfile)
+
+    def children_implementation_file(self, obj):
+        size_limit = 6
+        if len(self.progeny)<=size_limit:
+            self.children_implementation_one_file(obj, "", self.progeny)
         else:
-            os.rename(outfile + ".tmp", outfile)
+            for i in range(0, len(self.progeny), size_limit):
+                self.children_implementation_one_file(
+                    obj, i/size_limit+1, self.progeny[i:i+size_limit])
+
+    def children_implementation_one_file(self, obj, serial, progeny):
+        print "Output of implementation for:",
+        outfile = self.outdir + '/' + self.classname_pointer + \
+                  "Children%s.cpp" % serial
+        print outfile
+        self.out = open(outfile + ".tmp", "w")
+        self.write(copyright)
+        self.write("\n")
+        self.write('#include "' + self.generic_class_name + '.h"\n')
+        self.write("\n")
+        self.write("using namespace std;\n")
+        self.write("using namespace Atlas;\n")
+        self.write("using namespace Atlas::Message;\n")
+        self.write("\n")
+        self.ns_open(self.base_list)
+        self.write("\n")
+        self.for_progeny(progeny, self.implementation)
+        self.ns_close(self.base_list)
+        self.out.close()
+        self.update_outfile(outfile)
+
+        
+
 
 # Main program
+if __name__=="__main__":
+##     if len(sys.argv) < 2:
+##         print "Syntax:"
+##         print sys.argv[0] + " root [outdir]"
+##         sys.argv.append("root")
+##         sys.exit()
 
-if len(sys.argv) < 2:
-    print "Syntax:"
-    print sys.argv[0] + " root [outdir]"
-    sys.exit()
-filelist = ["root","entity","operation","type","interface"]
-defs = read_all_defs(map(lambda file:"../../../../protocols/atlas/spec/" + file+".def", filelist))
-if len(sys.argv) >= 3:
-    outdir = sys.argv[2]
-else:
-    outdir = "."
-gen_header = GenerateCC(defs, outdir)
-gen_header([sys.argv[1]])
+    #read XML spec
+    parseXML=parse_xml.get_parser()
+    spec_xml_string = open("../../../../protocols/atlas/spec/atlas.xml").read()
+#    spec_xml_string = open("../../../../protocols/atlas/spec/core_atlas.xml").read()
+    #convert list into dictionary
+    objects = {}
+    for obj in parseXML(spec_xml_string):
+        objects[obj.id] = obj
+    find_parents_children_objects(objects)
+
+    print "Loaded atlas.xml"
+
+##     if len(sys.argv) >= 3:
+##         outdir = sys.argv[2]
+##     else:
+##         outdir = "."
+    object_enum = 0
+    all_objects = []
+    for name, outdir, class_only_files in (
+                ("root", ".", []),
+                ("root_entity", "Entity", ["entity.def"]),
+                ("root_operation", "Operation", ["operation.def"])):
+        object_enum = object_enum + 1
+        gen_code = GenerateCC(objects, outdir) #, object_enum)
+        all_objects = all_objects + gen_code(objects[name], class_only_files)
+    #generate code common to all objects
+    gen_code = GenerateCC(objects, ".") #, object_enum)
+    gen_code.generate_object_factory(all_objects)
+    gen_code.generate_decoder(all_objects)

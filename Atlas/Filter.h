@@ -39,11 +39,11 @@ class Filter
     Filter(Filter* = 0);
     virtual ~Filter();
 
-    virtual void Begin() = 0;
-    virtual void End() = 0;
+    virtual void begin() = 0;
+    virtual void end() = 0;
 
-    virtual std::string Encode(const std::string&) = 0;
-    virtual std::string Decode(const std::string&) = 0;
+    virtual std::string encode(const std::string&) = 0;
+    virtual std::string decode(const std::string&) = 0;
 
     enum Type
     {

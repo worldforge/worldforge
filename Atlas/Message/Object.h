@@ -143,7 +143,7 @@ public:
     bool operator!=(const ListType& v) const { return !(*this == v); }
 
     /// Clear all values.
-    void Clear()
+    void clear()
     {
         t = TYPE_NONE;
         s.erase();
@@ -152,64 +152,64 @@ public:
     }
 
     /// Get the current type.
-    Type GetType() const { return t; }
+    Type getType() const { return t; }
     /// Check whether the current type is nothing.
-    bool IsNone() const { return (t == TYPE_NONE); }
+    bool isNone() const { return (t == TYPE_NONE); }
     /// Check whether the current type is int.
-    bool IsInt() const { return (t == TYPE_INT); }
+    bool isInt() const { return (t == TYPE_INT); }
     /// Check whether the current type is double.
-    bool IsFloat() const { return (t == TYPE_FLOAT); }
+    bool isFloat() const { return (t == TYPE_FLOAT); }
     /// Check whether the current type is std::string.
-    bool IsString() const { return (t == TYPE_STRING); }
+    bool isString() const { return (t == TYPE_STRING); }
     /// Check whether the current type is MapType.
-    bool IsMap() const { return (t == TYPE_MAP); }
+    bool isMap() const { return (t == TYPE_MAP); }
     /// Check whether the current type is ListType.
-    bool IsList() const { return (t == TYPE_LIST); }
+    bool isList() const { return (t == TYPE_LIST); }
 
     /// Retrieve the current value as a int.
-    int AsInt() const throw (WrongTypeException)
+    int asInt() const throw (WrongTypeException)
     {
         if (t == TYPE_INT) return i;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a double.
-    double AsFloat() const throw (WrongTypeException)
+    double asFloat() const throw (WrongTypeException)
     {
         if (t == TYPE_FLOAT) return f;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a const std::string reference.
-    const std::string& AsString() const throw (WrongTypeException)
+    const std::string& asString() const throw (WrongTypeException)
     {
         if (t == TYPE_STRING) return s;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const std::string reference.
-    std::string& AsString() throw (WrongTypeException)
+    std::string& asString() throw (WrongTypeException)
     {
         if (t == TYPE_STRING) return s;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a const MapType reference.
-    const MapType& AsMap() const throw (WrongTypeException)
+    const MapType& asMap() const throw (WrongTypeException)
     {
         if (t == TYPE_MAP) return m;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const MapType reference.
-    MapType& AsMap() throw (WrongTypeException)
+    MapType& asMap() throw (WrongTypeException)
     {
         if (t == TYPE_MAP) return m;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a const ListType reference.
-    const ListType& AsList() const throw (WrongTypeException)
+    const ListType& asList() const throw (WrongTypeException)
     {
         if (t == TYPE_LIST) return l;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a non-const ListType reference.
-    ListType& AsList() throw (WrongTypeException)
+    ListType& asList() throw (WrongTypeException)
     {
         if (t == TYPE_LIST) return l;
         throw WrongTypeException();

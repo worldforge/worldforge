@@ -73,7 +73,7 @@ void Atlas::Net::NegotiateHelper<T>::put(string &buf, string header)
     {
       buf += header;
       buf += " ";
-      buf += (*i)->GetName();
+      buf += (*i)->getName();
       buf += "\n";
     }
   buf += "\n";
@@ -87,7 +87,7 @@ Bridge* bridge) :
 {
 }
 
-void Atlas::Net::StreamConnect::Poll(bool can_read = true)
+void Atlas::Net::StreamConnect::poll(bool can_read = true)
 {
     cout << "** Client(" << state << ") : " << endl;
 
@@ -153,7 +153,7 @@ void Atlas::Net::StreamConnect::Poll(bool can_read = true)
     while ((state != DONE) && (socket.rdbuf()->in_avail()));
 }
 
-Atlas::Negotiate<iostream>::State Atlas::Net::StreamConnect::GetState()
+Atlas::Negotiate<iostream>::State Atlas::Net::StreamConnect::getState()
 {
     if (state == DONE)
     {
@@ -169,7 +169,7 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamConnect::GetState()
     return FAILED;
 }
 
-Atlas::Codec<iostream>* Atlas::Net::StreamConnect::GetCodec()
+Atlas::Codec<iostream>* Atlas::Net::StreamConnect::getCodec()
 {
     if (! outCodecs.empty ())
     {
@@ -187,13 +187,13 @@ void Atlas::Net::StreamConnect::processServerCodecs()
 
     outCodecs.erase(outCodecs.begin(), outCodecs.end());
 
-    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
+    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::factories();
 
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
     {
 	for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
 	{
-	    if ((*i)->GetName() == *j)
+	    if ((*i)->getName() == *j)
 	    {
 		outCodecs.push_back(*i);
 		cerr << *j << " is the one" << endl << flush;
@@ -208,13 +208,13 @@ void Atlas::Net::StreamConnect::processServerFilters()
   FactoryFilters::iterator i;
     list<string>::iterator j;
     
-    FactoryFilters *myFilters = &Factory<Filter>::Factories();
+    FactoryFilters *myFilters = &Factory<Filter>::factories();
 
     for (i = myFilters->begin(); i != myFilters->end(); ++i)
     {
 	for (j = inFilters.begin(); j != inFilters.end(); ++j)
 	{
-	    if ((*i)->GetName() == *j)
+	    if ((*i)->getName() == *j)
 	    {
 		outFilters.push_back(*i);
 	    }
@@ -224,13 +224,13 @@ void Atlas::Net::StreamConnect::processServerFilters()
 
 void Atlas::Net::StreamConnect::processClientCodecs()
 {
-    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
+    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::factories();
     outCodecs = *myCodecs;
 }
   
 void Atlas::Net::StreamConnect::processClientFilters()
 {
-    FactoryFilters *myFilters = &Factory<Filter>::Factories();
+    FactoryFilters *myFilters = &Factory<Filter>::factories();
     outFilters = *myFilters;
 }
 
@@ -242,7 +242,7 @@ Bridge* bridge) :
 {
 }
 
-void Atlas::Net::StreamAccept::Poll(bool can_read = true)
+void Atlas::Net::StreamAccept::poll(bool can_read = true)
 {
     cout << "** Server(" << state << ") : " << endl;
 
@@ -304,7 +304,7 @@ void Atlas::Net::StreamAccept::Poll(bool can_read = true)
     while ((state != DONE) && (socket.rdbuf()->in_avail()));
 }
 
-Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::GetState()
+Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::getState()
 {
     if (state == DONE)
     {
@@ -320,7 +320,7 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::GetState()
     return FAILED;
 }
 
-Atlas::Codec<iostream>* Atlas::Net::StreamAccept::GetCodec()
+Atlas::Codec<iostream>* Atlas::Net::StreamAccept::getCodec()
 {
     if (! outCodecs.empty ())
     {
@@ -335,13 +335,13 @@ void Atlas::Net::StreamAccept::processServerCodecs()
     FactoryCodecs::iterator i;
     list<string>::iterator j;
 
-    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
+    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::factories();
 
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
     {
 	for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
 	{
-	    if ((*i)->GetName() == *j)
+	    if ((*i)->getName() == *j)
 	    {
 		outCodecs.push_back(*i);
 		return;	      
@@ -355,13 +355,13 @@ void Atlas::Net::StreamAccept::processServerFilters()
   FactoryFilters::iterator i;
     list<string>::iterator j;
     
-    FactoryFilters *myFilters = &Factory<Filter>::Factories();
+    FactoryFilters *myFilters = &Factory<Filter>::factories();
 
     for (i = myFilters->begin(); i != myFilters->end(); ++i)
     {
 	for (j = inFilters.begin(); j != inFilters.end(); ++j)
 	{
-	    if ((*i)->GetName() == *j)
+	    if ((*i)->getName() == *j)
 	    {
 		outFilters.push_back(*i);
 	    }
@@ -371,12 +371,12 @@ void Atlas::Net::StreamAccept::processServerFilters()
 
 void Atlas::Net::StreamAccept::processClientCodecs()
 {
-    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
+    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::factories();
     outCodecs = *myCodecs;
 }
   
 void Atlas::Net::StreamAccept::processClientFilters()
 {
-    FactoryFilters *myFilters = &Factory<Filter>::Factories();
+    FactoryFilters *myFilters = &Factory<Filter>::factories();
     outFilters = *myFilters;
 }

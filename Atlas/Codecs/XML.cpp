@@ -38,25 +38,25 @@ class XML : public Codec<iostream>
 
     XML(const Codec<iostream>::Parameters&);
 
-    virtual void Poll(bool can_read = true);
+    virtual void poll(bool can_read = true);
 
-    virtual void StreamBegin();
-    virtual void StreamMessage(const Map&);
-    virtual void StreamEnd();
+    virtual void streamBegin();
+    virtual void streamMessage(const Map&);
+    virtual void streamEnd();
     
-    virtual void MapItem(const std::string& name, const Map&);
-    virtual void MapItem(const std::string& name, const List&);
-    virtual void MapItem(const std::string& name, int);
-    virtual void MapItem(const std::string& name, double);
-    virtual void MapItem(const std::string& name, const std::string&);
-    virtual void MapEnd();
+    virtual void mapItem(const std::string& name, const Map&);
+    virtual void mapItem(const std::string& name, const List&);
+    virtual void mapItem(const std::string& name, int);
+    virtual void mapItem(const std::string& name, double);
+    virtual void mapItem(const std::string& name, const std::string&);
+    virtual void mapEnd();
     
-    virtual void ListItem(const Map&);
-    virtual void ListItem(const List&);
-    virtual void ListItem(int);
-    virtual void ListItem(double);
-    virtual void ListItem(const std::string&);
-    virtual void ListEnd();
+    virtual void listItem(const Map&);
+    virtual void listItem(const List&);
+    virtual void listItem(int);
+    virtual void listItem(double);
+    virtual void listItem(const std::string&);
+    virtual void listEnd();
 
     protected:
 
@@ -90,13 +90,13 @@ class XML : public Codec<iostream>
     string tag;
     string name;
 
-    inline void TokenTag(char);
-    inline void TokenStartTag(char);
-    inline void TokenEndTag(char);
-    inline void TokenData(char);
+    inline void tokenTag(char);
+    inline void tokenStartTag(char);
+    inline void tokenEndTag(char);
+    inline void tokenData(char);
 
-    inline void ParseStartTag();
-    inline void ParseEndTag();
+    inline void parseStartTag();
+    inline void parseEndTag();
 };
 
 namespace
@@ -115,7 +115,7 @@ XML::XML(const Codec<iostream>::Parameters& p)
     data.push("");
 }
 
-void XML::TokenTag(char next)
+void XML::tokenTag(char next)
 {
     tag.erase();
     
@@ -137,7 +137,7 @@ void XML::TokenTag(char next)
     }
 }
 
-void XML::TokenStartTag(char next)
+void XML::tokenStartTag(char next)
 {
     switch (next)
     {
@@ -147,7 +147,7 @@ void XML::TokenStartTag(char next)
 	break;
 
 	case '>':
-	    ParseStartTag();
+	    parseStartTag();
 	    token = TOKEN_DATA;
 	    data.push("");
 	break;
@@ -158,7 +158,7 @@ void XML::TokenStartTag(char next)
     }
 }
 
-void XML::TokenEndTag(char next)
+void XML::tokenEndTag(char next)
 {
     switch (next)
     {
@@ -168,7 +168,7 @@ void XML::TokenEndTag(char next)
 	break;
 
 	case '>':
-	    ParseEndTag();
+	    parseEndTag();
 	    token = TOKEN_DATA;
 	    data.pop();
 	break;
@@ -179,7 +179,7 @@ void XML::TokenEndTag(char next)
     }
 }
 
-void XML::TokenData(char next)
+void XML::tokenData(char next)
 {
     switch (next)
     {
@@ -198,7 +198,7 @@ void XML::TokenData(char next)
     }
 }
 
-void XML::ParseStartTag()
+void XML::parseStartTag()
 {
     int tag_end = tag.find(' ');
     int name_start = tag.find("name=\"") + 6;
@@ -220,7 +220,7 @@ void XML::ParseStartTag()
 	case PARSE_NOTHING:
 	    if (tag == "atlas")
 	    {
-		bridge->StreamBegin();
+		bridge->streamBegin();
 		state.push(PARSE_STREAM);
 	    }
 	    else
@@ -233,7 +233,7 @@ void XML::ParseStartTag()
 	case PARSE_STREAM:
 	    if (tag == "map")
 	    {
-		bridge->StreamMessage(MapBegin);
+		bridge->streamMessage(mapBegin);
 		state.push(PARSE_MAP);
 	    }
 	    else
@@ -246,12 +246,12 @@ void XML::ParseStartTag()
         case PARSE_MAP:
 	    if (tag == "map")
 	    {
-		bridge->MapItem(name, MapBegin);
+		bridge->mapItem(name, mapBegin);
 		state.push(PARSE_MAP);
 	    }
 	    else if (tag == "list")
 	    {
-		bridge->MapItem(name, ListBegin);
+		bridge->mapItem(name, listBegin);
 		state.push(PARSE_LIST);
 	    }
 	    else if (tag == "int")
@@ -276,12 +276,12 @@ void XML::ParseStartTag()
         case PARSE_LIST:
 	    if (tag == "map")
 	    {
-		bridge->ListItem(MapBegin);
+		bridge->listItem(mapBegin);
 		state.push(PARSE_MAP);
 	    }
 	    else if (tag == "list")
 	    {
-		bridge->ListItem(ListBegin);
+		bridge->listItem(listBegin);
 		state.push(PARSE_LIST);
 	    }
 	    else if (tag == "int")
@@ -312,7 +312,7 @@ void XML::ParseStartTag()
     }
 }
 
-void XML::ParseEndTag()
+void XML::parseEndTag()
 {
     switch (state.top())
     {
@@ -324,7 +324,7 @@ void XML::ParseEndTag()
 	case PARSE_STREAM:
 	    if (tag == "atlas")
 	    {
-		bridge->StreamEnd();
+		bridge->streamEnd();
 		state.pop();
 	    }
 	    else
@@ -337,7 +337,7 @@ void XML::ParseEndTag()
         case PARSE_MAP:
 	    if (tag == "map")
 	    {
-		bridge->MapEnd();
+		bridge->mapEnd();
 		state.pop();
 	    }
 	    else
@@ -350,7 +350,7 @@ void XML::ParseEndTag()
         case PARSE_LIST:
 	    if (tag == "list")
 	    {
-		bridge->ListEnd();
+		bridge->listEnd();
 		state.pop();
 	    }
 	    else
@@ -366,11 +366,11 @@ void XML::ParseEndTag()
 		state.pop();
 		if (state.top() == PARSE_MAP)
 		{
-		    bridge->MapItem(name, atoi(data.top().c_str()));
+		    bridge->mapItem(name, atoi(data.top().c_str()));
 		}
 		else
 		{
-		    bridge->ListItem(atoi(data.top().c_str()));
+		    bridge->listItem(atoi(data.top().c_str()));
 		}
 	    }
 	    else
@@ -386,11 +386,11 @@ void XML::ParseEndTag()
 		state.pop();
 		if (state.top() == PARSE_MAP)
 		{
-		    bridge->MapItem(name, atof(data.top().c_str()));
+		    bridge->mapItem(name, atof(data.top().c_str()));
 		}
 		else
 		{
-		    bridge->ListItem(atof(data.top().c_str()));
+		    bridge->listItem(atof(data.top().c_str()));
 		}
 	    }
 	    else
@@ -406,11 +406,11 @@ void XML::ParseEndTag()
 		state.pop();
 		if (state.top() == PARSE_MAP)
 		{
-		    bridge->MapItem(name, data.top());
+		    bridge->mapItem(name, data.top());
 		}
 		else
 		{
-		    bridge->ListItem(data.top());
+		    bridge->listItem(data.top());
 		}
 	    }
 	    else
@@ -422,7 +422,7 @@ void XML::ParseEndTag()
     }
 }
 
-void XML::Poll(bool can_read = true)
+void XML::poll(bool can_read = true)
 {
     if (!can_read) return;
     do
@@ -431,86 +431,86 @@ void XML::Poll(bool can_read = true)
 
 	switch (token)
 	{
-	    case TOKEN_TAG:	    TokenTag(next); break;
-	    case TOKEN_START_TAG:   TokenStartTag(next); break;
-	    case TOKEN_END_TAG:	    TokenEndTag(next); break;
-	    case TOKEN_DATA:	    TokenData(next); break;
+	    case TOKEN_TAG:	    tokenTag(next); break;
+	    case TOKEN_START_TAG:   tokenStartTag(next); break;
+	    case TOKEN_END_TAG:	    tokenEndTag(next); break;
+	    case TOKEN_DATA:	    tokenData(next); break;
 	}
     }
     while (socket.rdbuf()->in_avail());
 }
 
-void XML::StreamBegin()
+void XML::streamBegin()
 {
     socket << "<atlas>";
 }
 
-void XML::StreamEnd()
+void XML::streamEnd()
 {
     socket << "</atlas>";
 }
 
-void XML::StreamMessage(const Map&)
+void XML::streamMessage(const Map&)
 {
     socket << "<map>";
 }
 
-void XML::MapItem(const std::string& name, const Map&)
+void XML::mapItem(const std::string& name, const Map&)
 {
     socket << "<map name=\"" << name << "\">";
 }
 
-void XML::MapItem(const std::string& name, const List&)
+void XML::mapItem(const std::string& name, const List&)
 {
     socket << "<list name=\"" << name << "\">";
 }
 
-void XML::MapItem(const std::string& name, int data)
+void XML::mapItem(const std::string& name, int data)
 {
     socket << "<int name=\"" << name << "\">" << data << "</int>";
 }
 
-void XML::MapItem(const std::string& name, double data)
+void XML::mapItem(const std::string& name, double data)
 {
     socket << "<float name=\"" << name << "\">" << data << "</float>";
 }
 
-void XML::MapItem(const std::string& name, const std::string& data)
+void XML::mapItem(const std::string& name, const std::string& data)
 {
     socket << "<string name=\"" << name << "\">" << data << "</string>";
 }
 
-void XML::MapEnd()
+void XML::mapEnd()
 {
     socket << "</map>";
 }
 
-void XML::ListItem(const Map&)
+void XML::listItem(const Map&)
 {
     socket << "<map>";
 }
 
-void XML::ListItem(const List&)
+void XML::listItem(const List&)
 {
     socket << "<list>";
 }
 
-void XML::ListItem(int data)
+void XML::listItem(int data)
 {
     socket << "<int>" << data << "</int>";
 }
 
-void XML::ListItem(double data)
+void XML::listItem(double data)
 {
     socket << "<float>" << data << "</float>";
 }
 
-void XML::ListItem(const std::string& data)
+void XML::listItem(const std::string& data)
 {
     socket << "<string>" << data << "</string>";
 }
 
-void XML::ListEnd()
+void XML::listEnd()
 {
     socket << "</list>";
 }

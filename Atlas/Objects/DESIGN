@@ -1,6 +1,6 @@
 Atlas-C++ - Objects
 
-Last modified: Wed Jun 21 04:24:38 UTC 2000
+Last modified: Mon Oct 23 08:16:53 UTC 2000
 
 1. GENERAL NOTES
 
@@ -73,3 +73,106 @@ SendContents:
 And that's all there is to it!
 
 Stefanus Du Toit (sdt) -- <sdt@gmx.net>
+
+
+
+3.0 SMART_PTR
+Smart pointer + preallocated + static based implementation
+See ../../benchmark/SmartPtr_Move.cc for basic 'research'
+
+SmartPtr encapsulates pointers and uses reference counting for
+handling alloc/free
+
+3.1
+Objects constist of two parts:
+1) pointer Default instance with default attribute values
+2) modified attributes (stored in this object)
+BaseObjectData.m_attrFlags tells which one to use
+
+3.2
+For each class have two different kind of objects:
+1) Normal: values just like in atlas
+2) Instance: defaults like in atlas when instance values taken into account
+
+3.3
+Have several ways to express same attribute:
+Generic and optimized in particular
+
+3.3.1
+args:
+Object::ListType vs vector<BaseObject>
+vector<BaseObject> -> Object::ListType: use AsObject to convert
+Object::ListType -> vector<BaseObject>: use BaseObjectData and make all dynamic?
+
+3.3.2
+id (and all attributes that inherit from id type, like "from", "to", "loc"
+    and also id_list based ones, like "parents", "chidlren", "contains"):
+string vs int vs BaseObjectData* vs void*
+ 
+string -> int: convert to number or to 0
+string -> BaseObjectData*: exception
+string -> void*: exception? (or try to convert as "%p"?)
+ 
+int -> string: convert
+int -> BaseObjectData*: exception
+int -> void*: exception?
+ 
+BaseObjectData* -> string: look for id attribute in that object: use that or ""
+BaseObjectData* -> int: -"-: use that or 0
+BaseObjectData* -> void*: cast into it
+ 
+void* -> string: convert using "%p"
+void* -> int: exception?
+void* -> BaseObjectData*: exception? or cast into it?
+
+3.3.3
+typed list: string_list, int_list, float_list
+Object::ListType vs list<foo>
+list<foo> -> Object::ListType: just add
+Object::ListType -> list<foo>: check type and ignore not matching types
+
+3.3.4
+typed list with fixed length: 
+string_list_length, int_list_length, float_list_length
+Object::ListType vs vector<foo>
+vector<foo> -> Object::ListType: just add
+Object::ListType -> vector<foo>: check type and ignore not matching types
+                    also check length and ignore all extra elements and 
+                    fill missing elements with defaults
+
+3.4
+Factories and lists of objects:
+Factories ObjectFactory;
+
+3.4.1:
+create object of something by name
+Root ObjectFactory.CreateObject(const std::string& name);
+
+3.4.2:
+get all keys
+list<const std::string> ObjectFactory.GetKeys();
+
+3.4.3:
+add factory method
+void ObjectFactory.AddFactory(const std::string& name, Root (*factory_method)());
+
+3.4.4:
+ditto for instances of objects
+Factories ObjectInstanceFactory;
+
+3.4.5:
+'pseudocode':
+Root MessageObject2ClassObject(const Atlas::Message::Object& mobj_arg)
+if objtype=="op" or objtype=="obj":
+    if hasattr("parents") and hasfactory(parents[0]):
+        obj = createobject(parents[0])
+    elif objtype=="op":
+        obj = createobject("root_operation")
+    else:
+        obj = createobject("root_entity")
+else:
+    obj = Root
+return obj
+
+3.4.6
+LoadDefaults("../../../protocols/atlas/spec/atlas.xml");

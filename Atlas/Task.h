@@ -20,7 +20,7 @@ class Task
 {
     public:
 
-    virtual void Poll(bool can_get = true) = 0;
+    virtual void poll(bool can_get = true) = 0;
 };
 
 } // Atlas namespace

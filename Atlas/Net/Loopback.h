@@ -9,7 +9,7 @@
 
 namespace Atlas { namespace Net {
 
-void Loopback(Bridge*, Bridge*, Bridge*&, Bridge*&);
+void loopback(Bridge*, Bridge*, Bridge*&, Bridge*&);
 
 } } // Atlas::Net namespace
 

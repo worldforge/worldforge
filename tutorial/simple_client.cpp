@@ -28,9 +28,9 @@ using namespace std;
 void helloWorld(Codec<iostream>& c)
 {
     cout << "Sending hello world message... " << flush;
-    c.StreamMessage(Bridge::MapBegin);
-    c.MapItem("hello", "world");
-    c.MapEnd();
+    c.streamMessage(Bridge::mapBegin);
+    c.mapItem("hello", "world");
+    c.mapEnd();
     cout << "done." << endl;
 }
 
@@ -54,24 +54,24 @@ int main(int argc, char** argv)
     Net::StreamConnect conn("simple_client", stream, &bridge);
 
     cout << "Negotiating... " << flush;
-    // conn.Poll() does all the negotiation
-    while (conn.GetState() == Negotiate<iostream>::IN_PROGRESS) {
-        conn.Poll();
+    // conn.poll() does all the negotiation
+    while (conn.getState() == Negotiate<iostream>::IN_PROGRESS) {
+        conn.poll();
     }
     cout << "done" << endl;
 
     // Check whether negotiation was successful
-    if (conn.GetState() == Negotiate<iostream>::FAILED) {
+    if (conn.getState() == Negotiate<iostream>::FAILED) {
         cerr << "Failed to negotiate" << endl;
         return 2;
     }
     // Negotiation was successful
 
     // Get the codec that negotiation established
-    Codec<iostream>* codec = conn.GetCodec();
+    Codec<iostream>* codec = conn.getCodec();
 
     // This should always be sent at the beginning of a session
-    codec->StreamBegin();
+    codec->streamBegin();
     
     // Say hello to the server
     helloWorld(*codec);
@@ -87,7 +87,7 @@ int main(int argc, char** argv)
         // It was not broken by the server, so we'll close ourselves
         cout << "Closing connection... " << flush;
         // This should always be sent at the end of a session
-        codec->StreamEnd();
+        codec->streamEnd();
         stream << flush;
         // Close the socket
         stream->close();

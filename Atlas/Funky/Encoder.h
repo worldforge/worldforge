@@ -98,35 +98,35 @@ public:
     /// Begin a map.
     EncMap<B, T> operator<<(const BeginMap&)
     {
-        b.MapItem(name, B::MapBegin);
+        b.mapItem(name, B::mapBegin);
         return EncMap<B, T>(b);
     }
 
     /// Begin a list.
     EncList<B, T> operator<<(const BeginList&)
     {
-        b.MapItem(name, B::ListBegin);
+        b.mapItem(name, B::listBegin);
         return EncList<B, T>(b);
     }
 
     /// Send an integer value.
     T operator<<(int i)
     {
-        b.MapItem(name, i);
+        b.mapItem(name, i);
         return T(b);
     }
 
     /// Send a double value.
     T operator<<(double d)
     {
-        b.MapItem(name, d);
+        b.mapItem(name, d);
         return T(b);
     }
 
     /// Send a string value.
     T operator<<(const string& s)
     {
-        b.MapItem(name, s);
+        b.mapItem(name, s);
         return T(b);
     }
 
@@ -134,7 +134,7 @@ public:
     template<typename Arg>
     T operator<<(const Arg& a)
     {
-        b.MapItem(name, a);
+        b.mapItem(name, a);
         return T(b);
     }
 
@@ -164,7 +164,7 @@ public:
     /// End this map
     T operator<<(EndMap)
     {
-        b.MapEnd();
+        b.mapEnd();
         return T(b);
     }
     
@@ -186,35 +186,35 @@ public:
     /// Start a map.
     EncMap<B, EncList<B, T> > operator<<(const BeginMap&)
     {
-        b.ListItem(B::MapBegin);
+        b.listItem(B::mapBegin);
         return EncMap<B, EncList<B, T> >(b);
     }
 
     /// Start a list.
     EncList<B, EncList<B, T> > operator<<(const BeginList&)
     {
-        b.ListItem(B::ListBegin);
+        b.listItem(B::listBegin);
         return EncList<B, EncList<B, T> >(b);
     }
 
     /// Send an integer value.
     EncList<B, T> operator<<(int i)
     {
-        b.ListItem(i);
+        b.listItem(i);
         return *this;
     }
 
     /// Send a double value.
     EncList<B, T> operator<<(double d)
     {
-        b.ListItem(d);
+        b.listItem(d);
         return *this;
     }
 
     /// Send a string value.
     EncList<B, T> operator<<(const std::string& s)
     {
-        b.ListItem(s);
+        b.listItem(s);
         return *this;
     }
 
@@ -222,14 +222,14 @@ public:
     template<typename Arg>
     EncList<B, T> operator<<(const Arg& a)
     {
-        b.ListItem(a);
+        b.listItem(a);
         return *this;
     }
     
     /// End this list.
     T operator<<(EndList)
     {
-        b.ListEnd();
+        b.listEnd();
         return T(b);
     }
     
@@ -251,7 +251,7 @@ public:
     
     /// Start a message (as a map).
     EncMap<B, Encoder> operator<<(const BeginMap&) {
-        b.StreamMessage(B::MapBegin);
+        b.streamMessage(B::mapBegin);
         return EncMap<B, Encoder>(b);
     }
 
@@ -259,7 +259,7 @@ public:
     template<typename Arg>
     Encoder<B> operator<<(const Arg& a)
     {
-        b.StreamMessage(a);
+        b.streamMessage(a);
         return *this;
     }
 

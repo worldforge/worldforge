@@ -48,10 +48,10 @@ class StreamConnect : public Atlas::Negotiate<iostream>
 
     virtual ~StreamConnect() {}
 
-    virtual void Poll(bool can_read = true);
+    virtual void poll(bool can_read = true);
 
-    virtual State GetState();
-    virtual Atlas::Codec<iostream>* GetCodec();
+    virtual State getState();
+    virtual Atlas::Codec<iostream>* getCodec();
 
     private:
 
@@ -99,10 +99,10 @@ class StreamAccept : public Atlas::Negotiate<iostream>
 
     virtual ~StreamAccept() {}
 
-    virtual void Poll(bool can_read = true);
+    virtual void poll(bool can_read = true);
 
-    virtual State GetState();
-    virtual Atlas::Codec<iostream>* GetCodec();
+    virtual State getState();
+    virtual Atlas::Codec<iostream>* getCodec();
 
     private:
 

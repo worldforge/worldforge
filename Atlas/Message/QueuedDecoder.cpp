@@ -12,24 +12,24 @@ QueuedDecoder::QueuedDecoder()
 {
 }
 
-size_t QueuedDecoder::QueueSize()
+size_t QueuedDecoder::queueSize()
 {
     return objectQueue.size();
 }
 
-Object QueuedDecoder::Front()
+Object QueuedDecoder::front()
 {
     return objectQueue.front();
 }
 
-Object QueuedDecoder::Pop()
+Object QueuedDecoder::pop()
 {
     Object r = objectQueue.front();
     objectQueue.pop();
     return r;
 }
 
-void QueuedDecoder::ObjectArrived(const Object& obj)
+void QueuedDecoder::objectArrived(const Object& obj)
 {
     objectQueue.push(obj);
 }

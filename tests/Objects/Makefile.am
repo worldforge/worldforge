@@ -6,13 +6,15 @@ TESTS = $(check_PROGRAMS)
 
 CPPFLAGS = -I$(prefix)/include -Wall
 
-objects1_SOURCES = objects1.cc
+objects1_SOURCES = objects1.cpp
 objects2_SOURCES = objects2.cpp
-encoder1_SOURCES = encoder1.cc
-decoder1_SOURCES = decoder1.cc
+encoder1_SOURCES = encoder1.cpp
+decoder1_SOURCES = decoder1.cpp
 
 LDADD = \
-        ../../src/Objects/.libs/libAtlasObjects.a \
-        ../../src/Message/.libs/libAtlasMessage.a \
-        ../../src/.libs/libAtlas.a
+	-lAtlasCodecs \
+        -lAtlasObjects \
+        -lAtlasMessage \
+        -lAtlas \
+	-lbz2
 

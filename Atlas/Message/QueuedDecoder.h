@@ -31,18 +31,18 @@ public:
     QueuedDecoder();
 
     /// Retrieve the current size of the message queue.    
-    size_t QueueSize();
+    size_t queueSize();
     /// Pop an object from the front of the message queue.
-    Object Pop();
+    Object pop();
     /// Peek at the object at the front of the queue.
-    Object Front();
+    Object front();
     /// Clear the message queue.
-    void Clear();
+    void clear();
     
 protected:
 
     /// This adds a message to the queue.
-    void ObjectArrived(const Object& obj);
+    void objectArrived(const Object& obj);
     
 private:
     

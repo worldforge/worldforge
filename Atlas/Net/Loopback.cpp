@@ -13,79 +13,79 @@ class LoopBridge : public Bridge
 
     LoopBridge(Bridge* bridge) : bridge(bridge) { }
     
-    virtual void StreamBegin()
+    virtual void streamBegin()
     {
-	bridge->StreamBegin();
+	bridge->streamBegin();
     }
     
-    virtual void StreamMessage(const Map&)
+    virtual void streamMessage(const Map&)
     {
-	bridge->StreamMessage(MapBegin);
+	bridge->streamMessage(mapBegin);
     }
     
-    virtual void StreamEnd()
+    virtual void streamEnd()
     {
-	bridge->StreamEnd();
+	bridge->streamEnd();
     }
 
-    virtual void MapItem(const std::string& name, const Map&)
+    virtual void mapItem(const std::string& name, const Map&)
     {
-	bridge->MapItem(name, MapBegin);
+	bridge->mapItem(name, mapBegin);
     }
     
-    virtual void MapItem(const std::string& name, const List&)
+    virtual void mapItem(const std::string& name, const List&)
     {
-	bridge->MapItem(name, ListBegin);
+	bridge->mapItem(name, listBegin);
     }
     
-    virtual void MapItem(const std::string& name, int data)
+    virtual void mapItem(const std::string& name, int data)
     {
-	bridge->MapItem(name, data);
+	bridge->mapItem(name, data);
     }
     
-    virtual void MapItem(const std::string& name, double data)
+    virtual void mapItem(const std::string& name, double data)
     {
-	bridge->MapItem(name, data);
+	bridge->mapItem(name, data);
     }
 
-    virtual void MapItem(const std::string& name, const std::string& data)
+    virtual void mapItem(const std::string& name, const std::string& data)
     {
-	bridge->MapItem(name, data);
+	bridge->mapItem(name, data);
     }
     
-    virtual void MapEnd()
+    virtual void mapEnd()
     {
-	bridge->MapEnd();
+	bridge->mapEnd();
     }
     
-    virtual void ListItem(const Map&)
+    virtual void listItem(const Map&)
     {
-	bridge->ListItem(MapBegin);
+	bridge->listItem(mapBegin);
     }
     
-    virtual void ListItem(const List&)
+    virtual void listItem(const List&)
     {
-	bridge->ListItem(ListBegin);
+	bridge->listItem(listBegin);
     }
     
-    virtual void ListItem(int data)
+    virtual void listItem(int data)
     {
-	bridge->ListItem(data);
+	bridge->listItem(data);
     }
     
-    virtual void ListItem(double data)
+    virtual void listItem(double data)
     {
-	bridge->ListItem(data);
+	bridge->listItem(data);
     }
     
-    virtual void ListItem(const std::string& data)
+    virtual void listItem(const std::string& data)
     {
-	bridge->ListItem(data);
+	bridge->listItem(data);
     }
     
-    virtual void ListEnd()
+    virtual void listEnd()
     {
-	bridge->ListEnd();
+	bridge->listEnd();
     }
 
     private:
@@ -93,7 +93,7 @@ class LoopBridge : public Bridge
     Bridge* bridge;
 };
 
-void Atlas::Net::Loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
+void Atlas::Net::loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
 {
     e1 = new LoopBridge(d1);
     e2 = new LoopBridge(d2);

@@ -16,7 +16,7 @@ namespace Atlas { namespace Message {
  *
  * This class is passed to a codec as receiver bridge. It decodes a stream
  * into Message::Object objects, and after completion calls the abstract
- * ObjectArrived() method. This is to be overridden by base classes, which
+ * objectArrived() method. This is to be overridden by base classes, which
  * might, for instance, provide an object queue or a callback method for
  * arrived messages.
  *
@@ -35,23 +35,23 @@ public:
     virtual ~DecoderBase() {}
 
     // Callback functions from Bridge
-    virtual void StreamBegin();
-    virtual void StreamMessage(const Map&);
-    virtual void StreamEnd();
+    virtual void streamBegin();
+    virtual void streamMessage(const Map&);
+    virtual void streamEnd();
 
-    virtual void MapItem(const std::string& name, const Map&);
-    virtual void MapItem(const std::string& name, const List&);
-    virtual void MapItem(const std::string& name, int);
-    virtual void MapItem(const std::string& name, double);
-    virtual void MapItem(const std::string& name, const std::string&);
-    virtual void MapEnd();
+    virtual void mapItem(const std::string& name, const Map&);
+    virtual void mapItem(const std::string& name, const List&);
+    virtual void mapItem(const std::string& name, int);
+    virtual void mapItem(const std::string& name, double);
+    virtual void mapItem(const std::string& name, const std::string&);
+    virtual void mapEnd();
     
-    virtual void ListItem(const Map&);
-    virtual void ListItem(const List&);
-    virtual void ListItem(int);
-    virtual void ListItem(double);
-    virtual void ListItem(const std::string&);
-    virtual void ListEnd();
+    virtual void listItem(const Map&);
+    virtual void listItem(const List&);
+    virtual void listItem(int);
+    virtual void listItem(double);
+    virtual void listItem(const std::string&);
+    virtual void listEnd();
     
 protected:
 
@@ -72,7 +72,7 @@ protected:
     std::stack<std::string> names;
 
     /// Override this - called when an object was received.
-    virtual void ObjectArrived(const Object& obj) = 0;
+    virtual void objectArrived(const Object& obj) = 0;
 };
 
 } } // namespace Atlas::Message

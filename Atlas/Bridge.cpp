@@ -6,5 +6,5 @@
 
 using namespace Atlas;
 
-Bridge::Map Bridge::MapBegin;
-Bridge::List Bridge::ListBegin;
+Bridge::Map Bridge::mapBegin;
+Bridge::List Bridge::listBegin;

@@ -37,25 +37,25 @@ public:
     
     Packed(const Codec<iostream>::Parameters&);
 
-    virtual void Poll(bool can_read = true);
+    virtual void poll(bool can_read = true);
 
-    virtual void StreamBegin();
-    virtual void StreamMessage(const Map&);
-    virtual void StreamEnd();
+    virtual void streamBegin();
+    virtual void streamMessage(const Map&);
+    virtual void streamEnd();
 
-    virtual void MapItem(const std::string& name, const Map&);
-    virtual void MapItem(const std::string& name, const List&);
-    virtual void MapItem(const std::string& name, int);
-    virtual void MapItem(const std::string& name, double);
-    virtual void MapItem(const std::string& name, const std::string&);
-    virtual void MapEnd();
+    virtual void mapItem(const std::string& name, const Map&);
+    virtual void mapItem(const std::string& name, const List&);
+    virtual void mapItem(const std::string& name, int);
+    virtual void mapItem(const std::string& name, double);
+    virtual void mapItem(const std::string& name, const std::string&);
+    virtual void mapEnd();
     
-    virtual void ListItem(const Map&);
-    virtual void ListItem(const List&);
-    virtual void ListItem(int);
-    virtual void ListItem(double);
-    virtual void ListItem(const std::string&);
-    virtual void ListEnd();
+    virtual void listItem(const Map&);
+    virtual void listItem(const List&);
+    virtual void listItem(int);
+    virtual void listItem(double);
+    virtual void listItem(const std::string&);
+    virtual void listEnd();
 
 protected:
     
@@ -80,24 +80,24 @@ protected:
     string name;
     string data;
 
-    inline void ParseStream(char);
-    inline void ParseMap(char);
-    inline void ParseList(char);
-    inline void ParseMapBegin(char);
-    inline void ParseListBegin(char);
-    inline void ParseInt(char);
-    inline void ParseFloat(char);
-    inline void ParseString(char);
-    inline void ParseName(char);
+    inline void parseStream(char);
+    inline void parseMap(char);
+    inline void parseList(char);
+    inline void parseMapBegin(char);
+    inline void parseListBegin(char);
+    inline void parseInt(char);
+    inline void parseFloat(char);
+    inline void parseString(char);
+    inline void parseName(char);
 
-    inline const string HexEncode(const string& data)
+    inline const string hexEncode(const string& data)
     {
-	return hexEncode("+", "+[]()@#$=", data);
+	return hexEncodeWithPrefix("+", "+[]()@#$=", data);
     }
 
-    inline const string HexDecode(const string& data)
+    inline const string hexDecode(const string& data)
     {
-	return hexDecode("+", data);
+	return hexDecodeWithPrefix("+", data);
     }
 };
 
@@ -115,12 +115,12 @@ Packed::Packed(const Codec<iostream>::Parameters& p) :
     state.push(PARSE_STREAM);
 }
 
-void Packed::ParseStream(char next)
+void Packed::parseStream(char next)
 {
     switch (next)
     {
 	case '[':
-	    bridge->StreamMessage(MapBegin);
+	    bridge->streamMessage(mapBegin);
 	    state.push(PARSE_MAP);
 	break;
     
@@ -131,12 +131,12 @@ void Packed::ParseStream(char next)
     }
 }
 
-void Packed::ParseMap(char next)
+void Packed::parseMap(char next)
 {
     switch (next)
     {
 	case ']':
-	    bridge->MapEnd();
+	    bridge->mapEnd();
 	    state.pop();
 	break;
 
@@ -174,22 +174,22 @@ void Packed::ParseMap(char next)
     }
 }
 
-void Packed::ParseList(char next)
+void Packed::parseList(char next)
 {
     switch (next)
     {
 	case ')':
-	    bridge->ListEnd();
+	    bridge->listEnd();
 	    state.pop();
 	break;
 
 	case '[':
-	    bridge->ListItem(MapBegin);
+	    bridge->listItem(mapBegin);
 	    state.push(PARSE_MAP);
 	break;
 
 	case '(':
-	    bridge->ListItem(ListBegin);
+	    bridge->listItem(listBegin);
 	    state.push(PARSE_LIST);
 	break;
 
@@ -212,23 +212,23 @@ void Packed::ParseList(char next)
     }
 }
 
-void Packed::ParseMapBegin(char next)
+void Packed::parseMapBegin(char next)
 {
-    bridge->MapItem(HexDecode(name), MapBegin);
+    bridge->mapItem(hexDecode(name), mapBegin);
     socket.putback(next);
     state.pop();
     name.erase();
 }
 
-void Packed::ParseListBegin(char next)
+void Packed::parseListBegin(char next)
 {
-    bridge->MapItem(HexDecode(name), ListBegin);
+    bridge->mapItem(hexDecode(name), listBegin);
     socket.putback(next);
     state.pop();
     name.erase();
 }
 
-void Packed::ParseInt(char next)
+void Packed::parseInt(char next)
 {
     switch (next)
     {
@@ -243,12 +243,12 @@ void Packed::ParseInt(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(HexDecode(name), atoi(data.c_str()));
+		bridge->mapItem(hexDecode(name), atoi(data.c_str()));
 		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		bridge->ListItem(atoi(data.c_str()));
+		bridge->listItem(atoi(data.c_str()));
 	    }
 	    else
 	    {
@@ -279,7 +279,7 @@ void Packed::ParseInt(char next)
     }
 }
 
-void Packed::ParseFloat(char next)
+void Packed::parseFloat(char next)
 {
     switch (next)
     {
@@ -294,12 +294,12 @@ void Packed::ParseFloat(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(HexDecode(name), atof(data.c_str()));
+		bridge->mapItem(hexDecode(name), atof(data.c_str()));
 		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		bridge->ListItem(atof(data.c_str()));
+		bridge->listItem(atof(data.c_str()));
 	    }
 	    else
 	    {
@@ -333,7 +333,7 @@ void Packed::ParseFloat(char next)
     }
 }
 
-void Packed::ParseString(char next)
+void Packed::parseString(char next)
 {
     switch (next)
     {
@@ -348,12 +348,12 @@ void Packed::ParseString(char next)
 	    state.pop();
 	    if (state.top() == PARSE_MAP)
 	    {
-		bridge->MapItem(HexDecode(name), HexDecode(data));
+		bridge->mapItem(hexDecode(name), hexDecode(data));
 		name.erase();
 	    }
 	    else if (state.top() == PARSE_LIST)
 	    {
-		bridge->ListItem(HexDecode(data));
+		bridge->listItem(hexDecode(data));
 	    }
 	    else
 	    {
@@ -373,7 +373,7 @@ void Packed::ParseString(char next)
     }
 }
 
-void Packed::ParseName(char next)
+void Packed::parseName(char next)
 {
     switch (next)
     {
@@ -398,7 +398,7 @@ void Packed::ParseName(char next)
     }
 }
 
-void Packed::Poll(bool can_read = true)
+void Packed::poll(bool can_read = true)
 {
     if (!can_read) return;
     do
@@ -407,89 +407,89 @@ void Packed::Poll(bool can_read = true)
 
 	switch (state.top())
 	{
-	    case PARSE_STREAM:	    ParseStream(next); break;
-	    case PARSE_MAP:	    ParseMap(next); break;
-	    case PARSE_LIST:	    ParseList(next); break;
-	    case PARSE_MAP_BEGIN:   ParseMapBegin(next); break;
-	    case PARSE_LIST_BEGIN:  ParseListBegin(next); break;
-	    case PARSE_INT:	    ParseInt(next); break;
-	    case PARSE_FLOAT:	    ParseFloat(next); break;
-	    case PARSE_STRING:	    ParseString(next); break;
-	    case PARSE_NAME:	    ParseName(next); break;
+	    case PARSE_STREAM:	    parseStream(next); break;
+	    case PARSE_MAP:	    parseMap(next); break;
+	    case PARSE_LIST:	    parseList(next); break;
+	    case PARSE_MAP_BEGIN:   parseMapBegin(next); break;
+	    case PARSE_LIST_BEGIN:  parseListBegin(next); break;
+	    case PARSE_INT:	    parseInt(next); break;
+	    case PARSE_FLOAT:	    parseFloat(next); break;
+	    case PARSE_STRING:	    parseString(next); break;
+	    case PARSE_NAME:	    parseName(next); break;
 	}
     }
     while (socket.rdbuf()->in_avail());
 }
 
-void Packed::StreamBegin()
+void Packed::streamBegin()
 {
 }
 
-void Packed::StreamMessage(const Map&)
+void Packed::streamMessage(const Map&)
 {
     socket << '[';
 }
 
-void Packed::StreamEnd()
+void Packed::streamEnd()
 {
 }
 
-void Packed::MapItem(const std::string& name, const Map&)
+void Packed::mapItem(const std::string& name, const Map&)
 {
-    socket << '[' << HexEncode(name) << '=';
+    socket << '[' << hexEncode(name) << '=';
 }
 
-void Packed::MapItem(const std::string& name, const List&)
+void Packed::mapItem(const std::string& name, const List&)
 {
-    socket << '(' << HexEncode(name) << '=';
+    socket << '(' << hexEncode(name) << '=';
 }
 
-void Packed::MapItem(const std::string& name, int data)
+void Packed::mapItem(const std::string& name, int data)
 {
-    socket << '@' << HexEncode(name) << '=' << data;
+    socket << '@' << hexEncode(name) << '=' << data;
 }
 
-void Packed::MapItem(const std::string& name, double data)
+void Packed::mapItem(const std::string& name, double data)
 {
-    socket << '#' << HexEncode(name) << '=' << data;
+    socket << '#' << hexEncode(name) << '=' << data;
 }
 
-void Packed::MapItem(const std::string& name, const std::string& data)
+void Packed::mapItem(const std::string& name, const std::string& data)
 {
-    socket << '$' << HexEncode(name) << '=' << HexEncode(data);
+    socket << '$' << hexEncode(name) << '=' << hexEncode(data);
 }
 
-void Packed::MapEnd()
+void Packed::mapEnd()
 {
     socket << ']';
 }
 
-void Packed::ListItem(const Map&)
+void Packed::listItem(const Map&)
 {
     socket << '[';
 }
 
-void Packed::ListItem(const List&)
+void Packed::listItem(const List&)
 {
     socket << '(';
 }
 
-void Packed::ListItem(int data)
+void Packed::listItem(int data)
 {
     socket << '@' << data;
 }
 
-void Packed::ListItem(double data)
+void Packed::listItem(double data)
 {
     socket << '#' << data;
 }
 
-void Packed::ListItem(const std::string& data)
+void Packed::listItem(const std::string& data)
 {
-    socket << '$' << HexEncode(data);
+    socket << '$' << hexEncode(data);
 }
 
-void Packed::ListEnd()
+void Packed::listEnd()
 {
     socket << ')';
 }

@@ -32,8 +32,8 @@ class Negotiate : public Task
 	FAILED,
     };
 
-    virtual State GetState() = 0;
-    virtual Codec<Stream>* GetCodec() = 0;
+    virtual State getState() = 0;
+    virtual Codec<Stream>* getCodec() = 0;
 };
 
 } // Atlas namespace

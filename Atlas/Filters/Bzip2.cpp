@@ -38,11 +38,11 @@ class Bzip2 : public Filter
 
     public:
 
-    virtual void Begin();
-    virtual void End();
+    virtual void begin();
+    virtual void end();
     
-    virtual string Encode(const string&);
-    virtual string Decode(const string&);
+    virtual string encode(const string&);
+    virtual string decode(const string&);
 };
 
 namespace
@@ -50,7 +50,7 @@ namespace
     Filter::Factory<Bzip2> factory("BZIP2", Filter::Metrics(Filter::COMPRESSION));
 }
 
-void Bzip2::Begin()
+void Bzip2::begin()
 {
     incoming.next_in = NULL;
     incoming.avail_in = 0;
@@ -66,13 +66,13 @@ void Bzip2::Begin()
     bzDecompressInit(&incoming, 0, 0);
 }
   
-void Bzip2::End()
+void Bzip2::end()
 {
     bzCompressEnd(&outgoing);
     bzDecompressEnd(&incoming);
 }
     
-string Bzip2::Encode(const string& data)
+string Bzip2::encode(const string& data)
 {
     string out_string;
     int status;
@@ -99,7 +99,7 @@ string Bzip2::Encode(const string& data)
     return out_string;
 }
     
-string Bzip2::Decode(const string& data)
+string Bzip2::decode(const string& data)
 {
     string out_string;
     int status;

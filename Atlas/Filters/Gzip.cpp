@@ -30,11 +30,11 @@ class Gzip : public Filter
 
     public:
 
-    virtual void Begin();
-    virtual void End();
+    virtual void begin();
+    virtual void end();
     
-    virtual string Encode(const string&);
-    virtual string Decode(const string&);
+    virtual string encode(const string&);
+    virtual string decode(const string&);
 };
 
 namespace
@@ -42,7 +42,7 @@ namespace
     Filter::Factory<Gzip> factory("GZIP", Filter::Metrics(Filter::COMPRESSION));
 }
 
-void Gzip::Begin()
+void Gzip::begin()
 {
     incoming.next_in = Z_NULL;
     incoming.avail_in = 0;
@@ -56,13 +56,13 @@ void Gzip::Begin()
     deflateInit(&outgoing, DEFAULT_LEVEL);
 }
   
-void Gzip::End()
+void Gzip::end()
 {
     inflateEnd(&incoming);
     deflateEnd(&outgoing);
 }
     
-string Gzip::Encode(const string& data)
+string Gzip::encode(const string& data)
 {
     string out_string;
     int status;
@@ -88,7 +88,7 @@ string Gzip::Encode(const string& data)
     return out_string;
 }
     
-string Gzip::Decode(const string& data)
+string Gzip::decode(const string& data)
 {
     string out_string;
     int status;

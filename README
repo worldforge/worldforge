@@ -6,6 +6,18 @@ This library implements the Atlas protocol, for use in client-server
 game applications.  This library is suitable for linking to either
 clients or servers.
 
+Short instructions:
+1) ./autgen.sh
+2) ./configure
+3) cd src
+4) make
+5) as root: make install
+6) cd ..
+7) make
+step 7 only needed if want to compile: tutorial
+8) make check
+step 8 only needed if want to compile and run: tests and benchmark
+
 PREREQUISITES
 
 You need at least gcc 2.95.2, here is URL for RPMS:

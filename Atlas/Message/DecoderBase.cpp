@@ -10,24 +10,24 @@ DecoderBase::DecoderBase()
 {
 }
 
-void DecoderBase::StreamBegin()
+void DecoderBase::streamBegin()
 {
     state.push(STATE_STREAM);
 }
 
-void DecoderBase::StreamMessage(const Map&)
+void DecoderBase::streamMessage(const Map&)
 {
     Object::MapType m;
     maps.push(m);
     state.push(STATE_MAP);
 }
 
-void DecoderBase::StreamEnd()
+void DecoderBase::streamEnd()
 {
     state.pop();
 }
 
-void DecoderBase::MapItem(const std::string& name, const Map&)
+void DecoderBase::mapItem(const std::string& name, const Map&)
 {
     Object::MapType m;
     names.push(name);
@@ -35,7 +35,7 @@ void DecoderBase::MapItem(const std::string& name, const Map&)
     state.push(STATE_MAP);
 }
 
-void DecoderBase::MapItem(const std::string& name, const List&)
+void DecoderBase::mapItem(const std::string& name, const List&)
 {
     Object::ListType l;
     names.push(name);
@@ -43,22 +43,22 @@ void DecoderBase::MapItem(const std::string& name, const List&)
     state.push(STATE_LIST);
 }
     
-void DecoderBase::MapItem(const std::string& name, int i)
+void DecoderBase::mapItem(const std::string& name, int i)
 {
     maps.top()[name] = i;
 }
     
-void DecoderBase::MapItem(const std::string& name, double d)
+void DecoderBase::mapItem(const std::string& name, double d)
 {
     maps.top()[name] = d;
 }
     
-void DecoderBase::MapItem(const std::string& name, const std::string& s)
+void DecoderBase::mapItem(const std::string& name, const std::string& s)
 {
     maps.top()[name] = s;
 }
 
-void DecoderBase::MapEnd()
+void DecoderBase::mapEnd()
 {
     Object::MapType map = maps.top();
     maps.pop();
@@ -72,41 +72,41 @@ void DecoderBase::MapEnd()
             lists.top().insert(lists.top().end(), map);
             break;
         case STATE_STREAM:
-            ObjectArrived(map);
+            objectArrived(map);
             break;
     }
 }
   
-void DecoderBase::ListItem(const Map&)
+void DecoderBase::listItem(const Map&)
 {
     Object::MapType map;
     maps.push(map);
     state.push(STATE_MAP);
 }
     
-void DecoderBase::ListItem(const List&)
+void DecoderBase::listItem(const List&)
 {
     Object::ListType list;
     lists.push(list);
     state.push(STATE_LIST);
 }
     
-void DecoderBase::ListItem(int i)
+void DecoderBase::listItem(int i)
 {
     lists.top().push_back(i);
 }
 
-void DecoderBase::ListItem(double d)
+void DecoderBase::listItem(double d)
 {
     lists.top().push_back(d);
 }
     
-void DecoderBase::ListItem(const std::string& s)
+void DecoderBase::listItem(const std::string& s)
 {
     lists.top().push_back(s);
 }
     
-void DecoderBase::ListEnd()
+void DecoderBase::listEnd()
 {
     Object::ListType list = lists.top();
     lists.pop();

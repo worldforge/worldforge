@@ -36,33 +36,33 @@ class Factory
     Factory(const std::string& name, const typename T::Metrics& metrics)
      : name(name), metrics(metrics)
     {
-	Factories().push_back(this);
+	factories().push_back(this);
     }
     
     virtual ~Factory()
     {
 	std::list<Factory*>::iterator i;
-	i = std::find(Factories().begin(), Factories().end(), this);
-	Factories().erase(i);
+	i = std::find(factories().begin(), factories().end(), this);
+	factories().erase(i);
     }
     
     virtual T* New(const typename T::Parameters&) = 0;
     virtual void Delete(T*) = 0;
 
-    std::string GetName()
+    std::string getName()
     {
 	return name;
     }
     
-    typename T::Metrics GetMetrics()
+    typename T::Metrics getMetrics()
     {
 	return metrics;
     }
    
-    static std::list<Factory*>& Factories()
+    static std::list<Factory*>& factories()
     {
-	static std::list<Factory*> factories;
-	return factories;
+	static std::list<Factory*> m_factories;
+	return m_factories;
     }
 
     protected:
