@@ -5,7 +5,6 @@
 #include "Codec.h"
 
 using namespace std;
-using namespace Atlas::Net;
 using namespace Atlas::Stream;
 
 list<Factory<Codec>*> Codec::factories;

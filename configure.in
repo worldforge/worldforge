@@ -7,9 +7,15 @@ dnl Initialise automake
 AM_INIT_AUTOMAKE("Atlas", "0.2.0")
 AM_CONFIG_HEADER(config.h)
 
+dnl Test for C++ Language
+
+
 dnl Test for C++ compiler
 
 AC_PROG_CXX
+
+dnl Test for ANSI standard language features
+
 
 dnl Test for C++ bool keyword
 
@@ -187,11 +193,15 @@ fi
 
 AC_LANG_RESTORE
 
+dnl Test for C++ Standard Library
+
+
 dnl Test for <cassert> header file
 
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(cassert)
+
 AC_LANG_RESTORE
 
 dnl Test for <cstdarg> header file
@@ -199,6 +209,7 @@ dnl Test for <cstdarg> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(cstdarg)
+
 AC_LANG_RESTORE
 
 dnl Test for <cstdio> header file
@@ -206,6 +217,7 @@ dnl Test for <cstdio> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(cstdio)
+
 AC_LANG_RESTORE
 
 dnl Test for <iostream> header file
@@ -213,6 +225,7 @@ dnl Test for <iostream> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(iostream)
+
 AC_LANG_RESTORE
 
 dnl Test for <list> header file
@@ -220,6 +233,7 @@ dnl Test for <list> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(list)
+
 AC_LANG_RESTORE
 
 dnl Test for <map> header file
@@ -227,6 +241,7 @@ dnl Test for <map> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(map)
+
 AC_LANG_RESTORE
 
 dnl Test for <cstdlib> header file
@@ -234,6 +249,7 @@ dnl Test for <cstdlib> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(cstdlib)
+
 AC_LANG_RESTORE
 
 dnl Test for <cstring> header file
@@ -241,6 +257,7 @@ dnl Test for <cstring> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(cstring)
+
 AC_LANG_RESTORE
 
 dnl Test for <string> header file
@@ -248,6 +265,7 @@ dnl Test for <string> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(string)
+
 AC_LANG_RESTORE
 
 dnl Test for <vector> header file
@@ -255,6 +273,7 @@ dnl Test for <vector> header file
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AC_CHECK_HEADERS(vector)
+
 AC_LANG_RESTORE
 
 dnl Test for GNU libtool
@@ -263,27 +282,68 @@ AM_PROG_LIBTOOL
 
 dnl Test for gzip compression library
 
-AC_CHECK_LIB(z, inflateInit_)
+AC_ARG_WITH(zlib,
+[  --with-zlib=DIR         gzip compression library (optional)],
+[with_zlib="$withval"],
+[with_zlib=""])
+
+ac_save_CFLAGS="$CFLAGS"
+ac_save_LIBS="$LIBS"
+CFLAGS="$CFLAGS -I$with_zlib/include"
+LIBS="$LIBS -L$with_zlib/lib"
+
+AC_CHECK_LIB(z, inflate)
+
 AC_CHECK_HEADERS(zlib.h)
+
+
+CFLAGS="$ac_save_CFLAGS"
+LIBS="$ac_save_LIBS"
 
 dnl Test for bzip2 compression library
 
+AC_ARG_WITH(bzlib,
+[  --with-bzlib=DIR        bzip2 compression library (optional)],
+[with_bzlib="$withval"],
+[with_bzlib=""])
+
+ac_save_CFLAGS="$CFLAGS"
+ac_save_LIBS="$LIBS"
+CFLAGS="$CFLAGS -I$with_bzlib/include"
+LIBS="$LIBS -L$with_bzlib/lib"
+
 AC_CHECK_LIB(bz2, bzCompressInit)
+
 AC_CHECK_HEADERS(bzlib.h)
 
-dnl Test for socklen_t -- sdt
 
-AC_MSG_CHECKING([for socklen_t])
-AC_TRY_COMPILE([#include <sys/socket.h>], [
-    socklen_t t;
-  ],
-  [
-    AC_MSG_RESULT([yes])
-  ],
-  [
-    AC_DEFINE(socklen_t, int)
-    AC_MSG_RESULT([no])
-  ])
+CFLAGS="$ac_save_CFLAGS"
+LIBS="$ac_save_LIBS"
+
+dnl Test for Simple DirectMedia Layer
+
+AC_ARG_WITH(sdl,
+[  --with-sdl=DIR          Simple DirectMedia Layer (optional)],
+[with_sdl="$withval"],
+[with_sdl=""])
+
+ac_save_CFLAGS="$CFLAGS"
+ac_save_LIBS="$LIBS"
+CFLAGS="$CFLAGS -I$with_sdl/include"
+LIBS="$LIBS -L$with_sdl/lib"
+
+AC_CHECK_LIB(SDL, SDL_Init,,
+[AC_MSG_ERROR(could not find libSDL from Simple DirectMedia Layer)])
+
+AC_CHECK_HEADERS(SDL/SDL.h,,
+[AC_MSG_ERROR(could not find SDL/SDL.h from Simple DirectMedia Layer)])
+
+AC_CHECK_HEADERS(SDL/SDL_version.h,,
+[AC_MSG_ERROR(could not find SDL/SDL_version.h from Simple DirectMedia Layer)])
+
+
+CFLAGS="$ac_save_CFLAGS"
+LIBS="$ac_save_LIBS"
 
 dnl Generate files
 
