@@ -37,7 +37,7 @@ public:
     
     Packed(const Codec<iostream>::Parameters&);
 
-    virtual void Poll();
+    virtual void Poll(bool can_read = true);
 
     virtual void StreamBegin();
     virtual void StreamMessage(const Map&);
@@ -398,8 +398,9 @@ void Packed::ParseName(char next)
     }
 }
 
-void Packed::Poll()
+void Packed::Poll(bool can_read = true)
 {
+    if (!can_read) return;
     do
     {
 	char next = socket.get();

@@ -20,7 +20,7 @@ class XMLish : public Codec<iostream>
 
     XMLish(const Codec<iostream>::Parameters&);
 
-    virtual void Poll();
+    virtual void Poll(bool can_read = true);
 
     virtual void StreamBegin();
     virtual void StreamMessage(const Map&);
@@ -64,8 +64,9 @@ XMLish::XMLish(const Codec<iostream>::Parameters& p)
 {
 }
 
-void XMLish::Poll()
+void XMLish::Poll(bool can_read = true)
 {
+    if (!can_read) return;
     do
     {
 	char next = socket.get();
