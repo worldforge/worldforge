@@ -3,7 +3,6 @@
 // Copyright (C) 2000 Stefanus Du Toit
 
 #include "RootEntity.h"
-#include "../Macros.h"
 
 using namespace std;
 using namespace Atlas::Message;
@@ -11,40 +10,26 @@ using namespace Atlas::Message;
 namespace Atlas { namespace Objects { namespace Entity {
 
 RootEntity::RootEntity()
+    : Root()
 {
-    INIT(loc, "")
-    fill_n(pos.begin(), 3, 0.0);
-    fill_n(velocity.begin(), 3, 0.0);
+    SetAttr("parent", string("root_entity"));
+    SetAttr("loc", string(""));
+    Object::ListType triple;
+    triple.push_back(0.0);
+    triple.push_back(0.0);
+    triple.push_back(0.0);
+    SetAttr("pos", triple);
+    SetAttr("velocity", triple);
 }
 
-Object RootEntity::GetAttr(const string& name) const
+RootEntity::RootEntity(const string& id, const string& loc,
+               const list<Atlas::Message::Object>& pos,
+               const list<Atlas::Message::Object>& velocity)
+    : Root(id)
 {
-    GETATTR(loc)
-    GETATTR(pos)
-    GETATTR(velocity)
-    return Root::GetAttr(name);
+    SetAttr("loc", loc);
+    SetAttr("pos", pos);
+    SetAttr("velocity", velocity);
 }
-
-void RootEntity::SetAttr(const string& name, const Object& object)
-{
-    SETATTR(loc, String)
-    SETATTR(pos, List)
-    SETATTR(velocity, List)
-
-    Root::SetAttr(name, object);
-}
-
-bool RootEntity::HasAttr(const string& name) const
-{
-    HASATTR(loc)
-    HASATTR(pos)
-    HASATTR(velocity)
-
-    return Root::HasAttr(name);
-}
-
-IMPL_METHODS(RootEntity, string, loc)
-IMPL_METHODS(RootEntity, list<Object>, pos)
-IMPL_METHODS(RootEntity, list<Object>, velocity)
 
 } } } // namespace Atlas::Objects::Entity

@@ -25,9 +25,8 @@ In constructors:
   - First we call our parent
   - Then we do our own thing
 In GetAttr:
-  - First check if we have it
-  - Then call parent
-  - At Root, we throw an exception (maybe)
+  - No inheritance issues
+  - In fact, we can just rely on root's implementation
 In SetAttr:
   - No inheritance issues
   - In fact, we can just rely on root's implementation

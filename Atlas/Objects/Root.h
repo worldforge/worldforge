@@ -22,12 +22,12 @@ public:
 class Root {
 public:
     Root();
-    Root(int id);
+    Root(const string& id);
     virtual ~Root();
 
     virtual bool HasAttr(const std::string& name) const;
     virtual const Atlas::Message::Object& GetAttr(const std::string& name)
-        const;
+        const throw (NoSuchAttrException);
     virtual void SetAttr(const std::string& name,
                          const Atlas::Message::Object& attr);
     virtual void RemoveAttr(const std::string& name);

@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects {
 Root::Root()
 {
     SetAttr("parent", string("root"));
-    SetAttr("id", 0);
+    SetAttr("id", string(""));
 }
 
-Root::Root(int id)
+Root::Root(const string& id)
 {
     SetAttr("parent", string("root"));
     SetAttr("id", id);
@@ -32,7 +32,8 @@ bool Root::HasAttr(const string& name) const
     return (attributes.find(name) == attributes.end());
 }
 
-const Object& Root::GetAttr(const string& name) const 
+const Object& Root::GetAttr(const string& name) const
+    throw (NoSuchAttrException) 
 {
     if (attributes.find(name) == attributes.end())
         throw NoSuchAttrException(name);
