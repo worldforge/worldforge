@@ -15,6 +15,10 @@ Eris TODO
 
 - go over and clean up the metaquery code, it's horrible, especially the
   snprint stuff.
+- update metaserver to API agreed with Al
+- add world time support to igRouter / Avatar
+
+- register types with the Atlas objects factory when they're loaded
 
 Longer Term TODO
 

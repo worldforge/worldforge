@@ -67,7 +67,6 @@ void BaseConnection::connect(const std::string &host, short port)
     _stream = new tcp_socket_stream(host, port, true);
 
     Poll::instance().addStream(_stream, Poll::WRITE);
-    debug() << "Stream added to poller";
 }
 
 void BaseConnection::hardDisconnect(bool emit)
@@ -180,7 +179,6 @@ void BaseConnection::pollNegotiation()
 	
     if (_sc->getState() == Atlas::Net::StreamConnect::SUCCEEDED)
     {
-        debug() << "Negotiation Success";
         m_codec = _sc->getCodec();
         _encode = new Atlas::Objects::ObjectsEncoder(*m_codec);
         m_codec->streamBegin();

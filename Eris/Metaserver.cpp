@@ -221,7 +221,6 @@ void Meta::gotData(PollData &data)
 
 void Meta::deleteQuery(MetaQuery* query)
 {
-    debug() << "deleting query";
     assert(m_activeQueries.count(query));
     m_activeQueries.erase(query);
     delete query;
@@ -233,9 +232,7 @@ void Meta::deleteQuery(MetaQuery* query)
         queryServer(m_pendingQueries.front());
         m_pendingQueries.pop_front();
     }
-    
-    debug() << "active queries size is now " << m_activeQueries.size();
-    
+        
     if ((m_status == QUERYING) && m_activeQueries.empty())
     {
         assert(m_pendingQueries.empty());
@@ -248,7 +245,6 @@ void Meta::deleteQuery(MetaQuery* query)
 void Meta::recv()
 {
     assert(_bytesToRecv);
-    debug() << "got data from the meta-server";
 	
 	do {
 		int d = m_stream->get();
@@ -256,26 +252,23 @@ void Meta::recv()
 		_bytesToRecv--;
 	} while (m_stream->rdbuf()->in_avail() && _bytesToRecv);
 	
-	if (_bytesToRecv == 0) {
-		// recieved the next set
-		if (_recvCmd) {
-			uint32_t op;
-			unpack_uint32(op, _data);
-			recvCmd(op);
-		} else {
-			processCmd();
-		}
+    if (_bytesToRecv > 0) return; // can't do anything till we get more data
+    
+    if (_recvCmd) {
+        uint32_t op;
+        unpack_uint32(op, _data);
+        recvCmd(op);
+    } else {
+        processCmd();
+    }
 		
-		// try and read more
-		if (_bytesToRecv && m_stream->rdbuf()->in_avail())
-		    recv();
-	}
+    // try and read more
+    if (_bytesToRecv && m_stream->rdbuf()->in_avail())
+        recv();
 }
 
 void Meta::recvCmd(uint32_t op)
 {
-    debug() << "recvd meta-server CMD " << op;
-    
     switch (op) {
     case HANDSHAKE:
         setupRecvData(1, HANDSHAKE);
@@ -393,6 +386,47 @@ void Meta::listReq(int base)
     }
 }
 
+void Meta::setupRecvCmd()
+{
+	_recvCmd = true;
+	_bytesToRecv = sizeof(uint32_t);
+	_dataPtr = (char*) _data;
+}
+
+void Meta::setupRecvData(int words, uint32_t got)
+{
+	_recvCmd = false;
+	_bytesToRecv = words * sizeof(uint32_t);
+	_dataPtr = (char*) _data;
+	_gotCmd = got;
+}
+
+/* pack the data into the specified buffer, update the buffer size, and return
+the new buffer insert pointer */
+
+char* pack_uint32(uint32_t data, char* buffer, unsigned int &size)
+{
+	uint32_t netorder;
+ 
+	netorder = htonl(data);
+	memcpy(buffer, &netorder, sizeof(uint32_t));
+	size += sizeof(uint32_t);
+ 	return buffer+sizeof(uint32_t);
+}
+
+/* unpack one data from the buffer, and return the next extract pointer */
+
+char* unpack_uint32(uint32_t &dest, char* buffer)
+{
+	uint32_t netorder;
+ 
+	memcpy(&netorder, buffer, sizeof(uint32_t));
+	dest = ntohl(netorder);
+	return buffer+sizeof(uint32_t);
+} 
+
+#pragma mark -
+
 void Meta::objectArrived(const Root& obj)
 {	
     Info info = smart_dynamic_cast<Info>(obj);
@@ -453,45 +487,6 @@ void Meta::queryTimeout(MetaQuery *q)
     debug() << "meta-query timed out";
     deleteQuery(q);
 }
-
-void Meta::setupRecvCmd()
-{
-	_recvCmd = true;
-	_bytesToRecv = sizeof(uint32_t);
-	_dataPtr = (char*) _data;
-}
-
-void Meta::setupRecvData(int words, uint32_t got)
-{
-	_recvCmd = false;
-	_bytesToRecv = words * sizeof(uint32_t);
-	_dataPtr = (char*) _data;
-	_gotCmd = got;
-}
-
-/* pack the data into the specified buffer, update the buffer size, and return
-the new buffer insert pointer */
-
-char* pack_uint32(uint32_t data, char* buffer, unsigned int &size)
-{
-	uint32_t netorder;
- 
-	netorder = htonl(data);
-	memcpy(buffer, &netorder, sizeof(uint32_t));
-	size += sizeof(uint32_t);
- 	return buffer+sizeof(uint32_t);
-}
-
-/* unpack one data from the buffer, and return the next extract pointer */
-
-char* unpack_uint32(uint32_t &dest, char* buffer)
-{
-	uint32_t netorder;
- 
-	memcpy(&netorder, buffer, sizeof(uint32_t));
-	dest = ntohl(netorder);
-	return buffer+sizeof(uint32_t);
-} 
 
 } // of Eris namespace
 

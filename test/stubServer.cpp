@@ -3,170 +3,52 @@
 #endif
 
 #include "stubServer.h"
-#include "testHarness.h"
-
-#include <Eris/Timestamp.h>
-#include <Eris/PollDefault.h>
-
-#include <Atlas/Objects/Encoder.h>
-
-#include "Eris/atlas_utils.h"
-
-#include <Atlas/Objects/Operation/RootOperation.h>
-#include <Atlas/Objects/Operation/Error.h>
-#include <Atlas/Objects/Operation/Info.h>
-#include <Atlas/Objects/Operation/Get.h>
-#include <Atlas/Objects/Operation/Set.h>
-#include <Atlas/Objects/Operation/Create.h>
-#include <Atlas/Objects/Operation/Move.h>
-#include <Atlas/Objects/Operation/Appearance.h>
-
-#include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Entity/RootEntity.h>
-#include <Atlas/Objects/Entity/GameEntity.h>
-
-#include <skstream/skstream.h>
-
-using namespace Time;
-
-using namespace Atlas::Objects;
-using namespace Atlas::Message;
-
-//////////////////////////////////////////////////////////////////////////////////////////////
+#include "clientConnection.h"
+#include <Eris/Exceptions.h>
 
 StubServer::StubServer(short port) :
+    m_serverSocket(port),
     m_stream(NULL),
-    m_msgEncoder(NULL),
-    m_acceptor(NULL),
-    m_doNegotiate(true),
-	m_handleTypeQueries(true)
+    m_acceptor(NULL)
 {
-     // create socket
-    m_listenSocket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    ERIS_ASSERT_MESSAGE(m_listenSocket != INVALID_SOCKET, "failed to create listen socket");
+    if (!m_serverSocket.is_open())
+        throw InvalidOperation("unable to open listen socket");
 
-    const int optvalue = 1;
-    setsockopt(m_listenSocket, SOL_SOCKET, 
-	  SO_REUSEADDR, &optvalue, sizeof(int));
-  
-    // Bind Socket
-    sockaddr_in sa;
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = INADDR_ANY; // we want to connect to ANY client!
-    sa.sin_port = htons((unsigned short)port); // define service port
-    if(::bind(m_listenSocket, (sockaddr*)&sa, sizeof(sa)) == SOCKET_ERROR) {
-		ERIS_MESSAGE("bind() failed in StubServer");
-		close(m_listenSocket);
-		return;
-    }
-
-    // Listen
-    if(::listen(m_listenSocket, 5) == SOCKET_ERROR) { // max backlog
-		ERIS_MESSAGE("listen() failed in StubServer");
-		close(m_listenSocket);
-		return;
-    }
+    // set the linger of the socket to zero, for debugging ease
+    linger listenerLinger;
+    listenerLinger.l_onoff = 1;
+    listenerLinger.l_linger = 0;
+    ::setsockopt(m_serverSocket.getSocket(),
+        SOL_SOCKET,SO_LINGER,
+        (linger*)&listenerLinger,sizeof(listenerLinger));
     
-    m_state = LISTEN;
-	
+    const int reuseFlag = 1;
+    ::setsockopt(m_serverSocket.getSocket(), SOL_SOCKET, SO_REUSEADDR, 
+            &reuseFlag, sizeof(reuseFlag));
+
+    debug() << "stub server listening";
 }
 
 StubServer::~StubServer()
 {
-    close(m_listenSocket);
-    
-//    if (m_stream)
-//	delete m_stream;
-    
-    if (m_acceptor)
-	delete m_acceptor;
-    
-    if (m_msgEncoder)
-	delete m_msgEncoder;
+    delete m_acceptor;
+    delete m_encoder;
 }
 
 void StubServer::run()
 {
-    if ((m_state == LISTEN) && can_accept()) {
-		accept();
-		return;
+    if (m_serverSocket.can_accept())
+    {
+        debug() << "stub server accepting connection";
+        m_clients.push_back(new ClientConnect(m_serverSocket.accept()));
     }
     
-    if (m_state == NEGOTIATE) {
-		negotiate();
-		return;
-    }
-    
-    if (!isStreamPending(m_stream)) 
-		return; // if there's no data on the Atlas connection, we're done
-    
-    m_codec->poll();	// read any data in
+    for (unsigned int C=0; C < m_clients.size(); ++C)
+        m_clients[C]->poll();
 }
 
-bool StubServer::can_accept()
-{
-    fd_set sock_fds;
-    struct timeval tv = {0,0};
-    FD_ZERO(&sock_fds);
-    FD_SET(m_listenSocket, &sock_fds);
 
-    int ret = ::select((m_listenSocket + 1), &sock_fds, NULL, NULL, &tv);
-	if (ret < 0) {
-		ERIS_MESSAGE("select() failed in StubServer");
-		throw std::runtime_error("select() failed in StubServer");
-    }
-	
-    return (ret > 0);
-}
 
-void StubServer::accept()
-{
-    SOCKET_TYPE socket = ::accept(m_listenSocket, NULL, NULL);
-    if (socket == INVALID_SOCKET)
-		throw std::runtime_error("error accepting connection in stub server");
-    
-    m_stream = new tcp_socket_stream(socket);
-    ERIS_ASSERT(m_stream->is_open());
-    
-    m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", *m_stream, this);
-    m_state = NEGOTIATE;
-}
-
-void StubServer::negotiate()
-{
-    if (!m_doNegotiate) return;	// stall here forever
-    
-    m_acceptor->poll(false); // don't block
-    
-    // get any more
-    while (isStreamPending(m_stream))
-		m_acceptor->poll();
-    
-    switch (m_acceptor->getState()) {
-    case Atlas::Net::StreamAccept::IN_PROGRESS:
-		break;
-
-    case Atlas::Net::StreamAccept::FAILED:
-		fail();
-		break;
-
-    case Atlas::Net::StreamAccept::SUCCEEDED:
-		m_codec = m_acceptor->getCodec();
-	
-		m_msgEncoder = new Atlas::Message::Encoder(m_codec);
-		m_objectEncoder = new Atlas::Objects::Encoder(m_codec);
-	
-		m_codec->streamBegin();
-		m_state = CONNECTED;
-			
-		delete m_acceptor;
-		m_acceptor = NULL;
-		break;
-
-    default:
-		ERIS_MESSAGE("unknown state from Atlas StreamAccept in StubServer::negotiate");
-    }             
-}
 
 void StubServer::disconnect()
 {
@@ -177,92 +59,6 @@ void StubServer::disconnect()
     m_stream = NULL;
     
     m_state = LISTEN;
-}
-
-bool StubServer::isStreamPending(basic_socket_stream *stream)
-{
-    if (stream->rdbuf()->in_avail() > 0)
-		return true;
-    
-    SOCKET_TYPE fd(stream->getSocket());
-    fd_set fds;
-    FD_ZERO(&fds);
-    
-    FD_SET(fd, &fds);
-    struct timeval TIMEOUT_ZERO = {0, 0};
-    
-    int retval = select(fd + 1,&fds, NULL, NULL, &TIMEOUT_ZERO);
-    if (retval < 0)
-		ERIS_MESSAGE("stub-server select() failed");
-    
-    return FD_ISSET(fd, &fds);
-}
-
-void StubServer::push(const Atlas::Message::Element &obj)
-{
-    m_msgEncoder->streamMessage(obj);
-    (*m_stream) << std::flush;
-}
-
-void StubServer::push(const Atlas::Objects::Root &obj)
-{
-    m_objectEncoder->streamMessage(&obj);
-    (*m_stream) << std::flush;
-}
-
-void StubServer::objectArrived(const Atlas::Message::Element& obj)
-{
-	if (m_handleTypeQueries) {
-		Operation::RootOperation op(Atlas::atlas_cast<Operation::RootOperation>(obj));
-		
-		if ((op.getParents() == Element::ListType(1, "get")) &&
-			(op.getFrom() == "") && 
-			(op.getTo() == "")) 
-		{
-			/* okay, we have an anonymous GET, now we just need to discard server object
-			lookups, be ensuring we have an argument value. */
-			
-			Element::ListType &args(op.getArgs());
-			if ((args.size() == 1) && (args[0].isString())) {
-				/* yay, we're good to go */
-				sendInfoForType(args[0].asString(), op);
-				return;
-			}
-		}
-	}
-	
-    m_queue.push(obj);
-}
-
-bool StubServer::get(Atlas::Message::Element &obj)
-{
-    if (m_queue.empty()) return false;
-    obj = m_queue.front();
-    m_queue.pop();
-    return true;
-}
-
-void StubServer::fail()
-{
-    m_state = FAILURE;
-    ERIS_MESSAGE("stub-server got failure");
-    // what else?
-}
-
-void StubServer::waitForMessage(int timeout)
-{
-    Time::Stamp ts(Time::Stamp::now());
-    ts = ts + (timeout * 1000);
-    
-    while (ts > Time::Stamp::now()) {
-		run();
-		Eris::PollDefault::poll();
-		usleep(10000); // 10 msec = 1/100 of a second
-		
-		if (!m_queue.empty()) return;	// all done
-    }
-    
-    ERIS_MESSAGE("timed out in stub-server::waitForMessage");
 }
 
 #pragma mark -
@@ -307,4 +103,21 @@ void StubServer::sendInfoForType(const std::string &type, const Operation::RootO
 	
 		push(error);
 	}
+}
+
+
+void StubServer::join(const std::string& acc, const std::string& room)
+{
+    assert(m_accounts.count(acc));
+    assert(m_rooms.count(room));
+    
+    if (rooom->contains(acc))
+        throw InvalidOperation("duplicate join of room " + room + " by " + acc);
+        
+    Appearance app;
+    
+    for ( .. room members ...)
+    {
+    
+    }
 }

@@ -1,86 +1,34 @@
 #ifndef ERIS_STUB_SERVER_H
 #define ERIS_STUB_SERVER_H
 
-#include <skstream/skstream.h>
+#include <map>
+#include <vector>
+
 #include <skstream/skserver.h>
+#include <Atlas/Objects/Entity.h>
 
-#include <queue>
-
-#include <Atlas/Message/DecoderBase.h>
-#include <Atlas/Message/Encoder.h>
-#include <Atlas/Net/Stream.h>
-#include <Atlas/Codec.h>
-
-namespace Atlas { namespace Objects {
-	class Encoder;
-	class Root;
-		
-	namespace Operation {
-		class RootOperation;
-	}
-	
-	namespace Entity {
-	
-	}
-}}
-
-class StubServer : public Atlas::Message::DecoderBase
+class StubServer
 { 
 public:
     StubServer(short port);
     ~StubServer();
 
     void run();	// keep the server alive
+  
+     
 
-    typedef enum {
-	LISTEN,
-	NEGOTIATE,
-	FAILURE,
-	CONNECTED
-    } State;
+private:
+    tcp_socket_server m_serverSocket;
 
-    // critical override from DecoderBase
-    virtual void objectArrived(const Atlas::Message::Element& obj);
+    class ClientConnection;
     
-    // the test interface
-    bool get(Atlas::Message::Element &obj);
-    void push(const Atlas::Message::Element &obj);
-    void push(const Atlas::Objects::Root &obj);
-	
-    void waitForMessage(int timeout);
+    typedef std::vector<ClientConnection*> m_clients;
     
-    void setNegotiation(bool enable) {m_doNegotiate=enable;}
-    void disconnect();
-    
-protected:
-    void sendInfoForType(const std::string &type, const Atlas::Objects::Operation::RootOperation &get);
+    typedef std::map<std::string, Atlas::Objects::Entity::Account> AccountMap;
+    AccountMap m_accounts;
 
-	State m_state;
-    std::queue<Atlas::Message::Element> m_queue;	// all the atlas messages we've received
-
-    void accept();
-    bool can_accept();
-
-    void negotiate();
-
-    void fail();
-    bool isStreamPending(basic_socket_stream *stream);
-
-    SOCKET_TYPE m_listenSocket;
-    basic_socket_stream* m_stream;
-
-    // Atlas stuff
-    Atlas::Message::Encoder *m_msgEncoder;
-    Atlas::Codec<std::iostream>* m_codec;   // Atlas codec.
-    Atlas::Net::StreamAccept*m_acceptor;
-    Atlas::Objects::Encoder* m_objectEncoder;
-	
-    bool m_doNegotiate;
-	
-	/** this flag is set if the stub server should automatically process and respond to
-	type queries, without them ever entering the queue. This behaviour can be disabled
-	to test the type info logic in eris reliably. */
-	bool m_handleTypeQueries;
+    typedef std::map<std::string, Atlas::Objects::Entty::GameEntity> EntityMap;
+    EntityMap m_world;
 };
 
 #endif
