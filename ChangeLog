@@ -5,6 +5,12 @@ Friday, March 08 2002, James Turner
 	* Added varconf-config and varconf.m4, plus configure
 	  changes.
 	* Bumped the version up
+	* Set the .so version correctly, thanks to WFMath /
+	  Ron Steinke for the help/
+ 	* Tweaked makefiles (using builddir when then they
+	  should have been using srcdir) and .cpp files (using
+	  < > includes when they should have been using "..").
+	* make distcheck works cleanly.
 
 Wednesday, Decemer 18, 2001 -- Al Riddoch <alriddoch@zepler.org>
   * C++ compliance fixes, for compiling under gcc v3.

@@ -2,7 +2,7 @@
 
 EXTRA_DIST = conf.cfg 
 
-INCLUDES = -I$(top_builddir)
+INCLUDES = -I$(top_srcdir)
 LDADD = $(top_builddir)/varconf/libvarconf.la 
 
 noinst_PROGRAMS = conftest

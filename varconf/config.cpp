@@ -28,7 +28,7 @@
 #include <fstream>
 #include <string>
 
-#include <varconf/Config.h>
+#include "varconf/Config.h"
 
 #ifdef __WIN32__
 #include <tchar.h>

@@ -1,5 +1,5 @@
 %define name       varconf
-%define version	   0.5.0
+%define version	   0.5.2
 %define release    1
 %define serial     1
 %define prefix     /usr
@@ -51,4 +51,4 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/lib/libvarconf.la
 %{prefix}/lib/libvarconf.so
 %{prefix}/lib/libvarconf.so.0
-%{prefix}/lib/libvarconf.so.0.5.0
+%{prefix}/lib/libvarconf.so.0.5.2
