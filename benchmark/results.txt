@@ -48,11 +48,19 @@ Static_Move:
         6.88user 0.00system 0:07.69elapsed 89%CPU
 
 SmartPtr_Move:
+        //original working version:
         Plain creating of sight operation: 
                 iterations=1e+07 CPU Time=10.06 iter/s=994036
         NPC movements: 
                 iterations=1e+07 CPU Time=19.45 iter/s=514139
         29.50user 0.02system 0:31.84elapsed 92%CPU
+
+        //remove res->IncRef() from alloc:
+        Plain creating of sight operation: 
+                iterations=1e+07 CPU Time=9.85 iter/s=1.01523e+06
+        NPC movements: 
+                iterations=1e+07 CPU Time=19.5 iter/s=512821
+        29.36user 0.00system 0:31.44elapsed 93%CPU
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 

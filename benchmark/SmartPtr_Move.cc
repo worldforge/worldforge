@@ -25,7 +25,7 @@ template <class T>
 class FreeList
 {
 public:
-  FreeList() : count(1) { 
+  FreeList() : count(0) { 
 #if DEBUG
     cout << "FreeList(): this: " << this << " data_type: " << data_type << endl; 
 #endif
@@ -43,7 +43,7 @@ public:
 #endif
       FreeList *res = begin;
       assert( res->count == 0 );
-      res->IncRef();
+      //res->IncRef();
       begin = begin->next;
       return res;
     }
@@ -72,9 +72,12 @@ public:
 #if DEBUG
     cout << "FreeList.DecRef(): this: " << this << " count: " << count << " -> " << count-1 << endl;
 #endif
-    assert( count > 0 );
+    assert( count >= 0 );
+    if(!count) {
+      free();
+      return;
+    }
     count--;
-    if(!count) free();
   }
 //private:
   static int data_type;
