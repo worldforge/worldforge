@@ -5,18 +5,15 @@ CPPFLAGS = -I$(prefix)/include -Wall
 
 LDADD  = -L$(prefix)/lib -lsocket++
 LDADD += \
-        ../src/Objects/*.o \
-        ../src/Objects/Entity/*.o \
-        ../src/Objects/Operation/*.o \
+        ../src/Objects/.libs/libAtlasObjects.a \
+        ../src/Objects/Entity/.libs/libAtlasObjectsEntity.a \
+        ../src/Objects/Operation/.libs/libAtlasObjectsOperation.a \
         ../src/Message/.libs/libAtlasMessage.a \
 	../src/.libs/libAtlas.a \
 	../src/Codecs/.libs/libAtlasCodecs.a \
 	../src/Filters/.libs/libAtlasFilters.a \
 	../src/Net/.libs/libAtlasNet.a
 
-#        ../src/Objects/.libs/libAtlasObjects.a \
-#        ../src/Objects/Entity/.libs/libAtlasObjectsEntity.a \
-#        ../src/Objects/Operation/.libs/libAtlasObjectsOperation.a
 
 # In a real program the above lines should be:
 # LDADD +=-lAtlasCodecs -lAtlasFilters -lAtlasNet
