@@ -10,7 +10,7 @@ namespace Eris
 typedef SigC::Signal1<void, Atlas::Message::Object&> Getter;    
 typedef SigC::Signal1<void, const Atlas::Message::Object&> Setter;
 
-class Property : public SigC::Object
+class Property : virtual public SigC::Object
 {
 public:    
     Getter Get;	///< emitted before the proeprty value is retrieved

@@ -15,7 +15,7 @@ namespace Eris
 class Dispatcher;
 class Connection;
 	
-class WaitForBase : public SigC::Object
+class WaitForBase : virtual public SigC::Object
 {
 public:
 	WaitForBase(const Atlas::Message::Object &m, Connection *conn);

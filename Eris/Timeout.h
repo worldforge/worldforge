@@ -7,7 +7,7 @@
 namespace Eris {
 
 /** Timeout  */	
-class Timeout : public SigC::Object
+class Timeout : virtual public SigC::Object
 {
 public:	
 	/** standard constructor for new timeouts

@@ -10,7 +10,7 @@ namespace Eris
 class TypeInfo;
 class Connection;
 	
-class ClassDispatcher : public Dispatcher, public SigC::Object
+class ClassDispatcher : public Dispatcher, virtual public SigC::Object
 {
 public:	
 	ClassDispatcher(const std::string &nm, Connection *conn);

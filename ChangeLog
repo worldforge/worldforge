@@ -1,3 +1,12 @@
+Monday, 16th December, Ron Steinke
+
+	* src/Avatar.h, src/BaseConnection.h, src/ClassDispatcher.h,
+	  src/Entity.h, src/Metaserver.h, src/Player.h, src/Property.h,
+	  src/Room.h, src/SignalDispatcher.h, src/Timeout.h,
+	  src/TypeInfo.h, src/Wait.h, src/World.h: Changed classes
+	  inheriting 'public SigC::Object' to inherit 'virtual public
+	  SigC::Object' instead, so multiple inheritance will work
+
 Wednesday, 14th December, Al Riddoch
 
 	* src/Dispatcher.cpp: Take reference to StdBranchDispatcher before

@@ -15,7 +15,7 @@ namespace Eris {
 template <class T>
 class SignalDispatcher :
 	public LeafDispatcher, 
-	public SigC::Object
+	virtual public SigC::Object
 {
 public:
 	SignalDispatcher(const std::string &nm, const SigC::Slot1<void, const T& > &slot) :
@@ -45,7 +45,7 @@ protected:
 
 class SignalDispatcher0 :
 	public LeafDispatcher, 
-	public SigC::Object
+	virtual public SigC::Object
 {
 public:
 	SignalDispatcher0(const std::string &nm, const SigC::Slot0<void> &slot) :
@@ -70,7 +70,7 @@ protected:
 template <class T, class S>
 class SignalDispatcher2 :
 	public LeafDispatcher, 
-	public SigC::Object
+	virtual public SigC::Object
 {
 public:
 	SignalDispatcher2(const std::string &nm, 
@@ -113,7 +113,7 @@ useful in conjunction with the EncapDispatcher, where the de-encapsulated object
 but simple some defined map or list structure.*/
 class MessageDispatcher :
 	public Dispatcher,
-	public SigC::Object
+	virtual public SigC::Object
 {
 public:	
 	/** standard constructor

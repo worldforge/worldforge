@@ -48,7 +48,7 @@ configurations of interface, proxies and so forth.
 Player is also the mechanism by which Lobby and World objects are made available to the client,
 in response to login / create operations */
 
-class Player : public SigC::Object
+class Player : virtual public SigC::Object
 {
 public:
 	/** create a new Player object : currently only one is assumed, but multiple might be supported

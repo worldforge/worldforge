@@ -81,7 +81,7 @@ typedef enum {
 } MetaStatus;
 
 /// Meta encapsulates the meta-game system, including the meta-server protocol and queries
-class Meta : public SigC::Object,
+class Meta : virtual public SigC::Object,
 		public Atlas::Message::DecoderBase
 {
 public:

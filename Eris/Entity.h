@@ -61,7 +61,7 @@ integration strategies; either subclassing and over-riding virtual functions,
 or creating peer clases and attaching them to the signals.
 */
 
-class Entity : public SigC::Object
+class Entity : virtual public SigC::Object
 {
 public:	
 	explicit Entity(const Atlas::Objects::Entity::GameEntity &ge, World *world);

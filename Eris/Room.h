@@ -35,7 +35,7 @@ class Lobby;
 Rooms. Generally rooms corespond to chanels in IRC, and the interface and commands should
 be clear if you are familiar with that medium. 
 */
-class Room : public SigC::Object
+class Room : virtual public SigC::Object
 {
 public:	
 	virtual ~Room();

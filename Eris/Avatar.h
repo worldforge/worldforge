@@ -29,7 +29,7 @@ class World;
 class Player;
 class Connection;
 
-class Avatar : public SigC::Object
+class Avatar : virtual public SigC::Object
 {
 public:
 	/** Create a new Avatar object. Currently only one per

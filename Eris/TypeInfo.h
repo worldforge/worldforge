@@ -41,7 +41,7 @@ necessary type data has become available, without intervention by the client. Ho
 routines may throw the 'OperationBlocked' exception, which must be forward to the Connection
 instance for handling.
 */
-class TypeInfo : public SigC::Object
+class TypeInfo : virtual public SigC::Object
 {
 public:	
 	/** Test whether this type inherits (directly or indirectly) from the specific class. If this

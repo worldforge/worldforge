@@ -32,7 +32,7 @@ class Timeout;
 	
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 class BaseConnection : 
-	public SigC::Object
+	virtual public SigC::Object
 {
 public:
 	/// destructor, will perform a hard disconnect if necessary

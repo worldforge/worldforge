@@ -62,7 +62,7 @@ public:
 };
 
 /// the entity database and dispatch point
-class World : public SigC::Object
+class World : virtual public SigC::Object
 {
 public:
 	// life-cycle management
