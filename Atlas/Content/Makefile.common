@@ -1,0 +1,41 @@
+# Targets follow ---------------------------------
+
+TARGETS = $(OUTDIR)/libAtlasContent.a \
+
+LIBOBJS = \
+	$(OUTDIR)/Creation.o \
+	$(OUTDIR)/Arg.o \
+	$(OUTDIR)/AtlasUserClient.o
+
+all:		$(TARGETS)
+
+cleanobjs:
+		rm -f $(OUTDIR)/*.o $(OUTDIR)/*.a
+
+cleanbin:
+		rm -f $(TARGETS)
+
+clean:	 	cleanobjs
+
+cleanall:	cleanobjs cleanbin
+
+# custom make rules
+
+.cpp.o:
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+# Target rules follow -----------------------------
+
+$(OUTDIR)/libAtlasContent.a: $(LIBOBJS)
+	$(AR) -r $(OUTDIR)/libAtlasContent.a $(LIBOBJS) 
+
+# Dependency rules follow -----------------------------
+
+$(OUTDIR)/Creation.o: Creation.cpp Creation.h Arg.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/Arg.o: Arg.cpp Arg.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/AtlasUserClient.o: AtlasUserClient.cpp AtlasUserClient.h
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
