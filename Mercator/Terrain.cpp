@@ -28,9 +28,10 @@ void Terrain::remove(int x, int y)
 
 void Terrain::invalidate(int x, int y)
 {
-    for(int i = x - 2; i < x + 2; ++i) {
-        for(int j = y - 2; j < y + 2; ++j) {
+    for(int i = x - 1; i < x + 1; ++i) {
+        for(int j = y - 1; j < y + 1; ++j) {
             remove(i, j);
+            //m_segments[i][j]->invalidate();
         }
     }
 }

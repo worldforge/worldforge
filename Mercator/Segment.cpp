@@ -11,6 +11,8 @@
 
 namespace Mercator {
 
+//a couple of helper classes
+//these interpolate between points or across a quad
 class LinInterp {
   private:
     int m_size;
@@ -36,7 +38,8 @@ class QuadInterp {
 };	
 
 Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
-                            m_normals(0), m_max(0.f), m_min(0.0f)
+                            m_normals(0), m_max(0.f), m_min(0.0f), m_validPt(false),
+                            m_validNorm(false)
 {
 }
 
@@ -51,11 +54,14 @@ Segment::~Segment()
 
 void Segment::populate(const Matrix<2, 2, BasePoint> & base)
 {
-    fill2d(m_res, base(0, 0), base(1, 0),
+    fill2d(m_res, base(0, 0), base(1, 0), 
                   base(1, 1), base(0, 1));
+
     for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
         applyMod(*I);
     }
+
+    m_validPt = true;
 }
 
 void Segment::populateNormals()
@@ -124,6 +130,7 @@ void Segment::populateNormals()
         np[j * (m_res+1) * 3 + m_res * 3 + 2] = 1.0;
     }
 
+    m_validNorm = true;
 }
 
 // rand num between -0.5...0.5
@@ -378,16 +385,20 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
 
 void Segment::addMod(TerrainMod *t) 
 {
-      m_modList.push_back(t);
-      applyMod(t);
+    m_modList.push_back(t);
+    applyMod(t);
+    //currently mods dont fix the normals
+    m_validNorm = false;
 }
 
 void Segment::clearMods() 
 {
-      for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
-          delete(*I);
-      }
-      m_modList.clear();
+    for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
+        delete(*I);
+    }
+    m_modList.clear();
+    m_validPt = false;
+    m_validNorm = false;
 }
 
 void Segment::applyMod(TerrainMod *t) 
@@ -400,6 +411,9 @@ void Segment::applyMod(TerrainMod *t)
             }
         }
     }
+
+    //currently mods dont fix the normals
+    m_validNorm = false;
 }
 
 } // namespace Mercator

@@ -13,6 +13,7 @@
 
 namespace Mercator {
 
+class Terrain;
 class TerrainMod;
 typedef std::list<TerrainMod *> ModList;
 
@@ -26,12 +27,23 @@ class Segment {
     float * m_normals;
     float m_max;
     float m_min;
+    bool m_validPt;
+    bool m_validNorm;
   public:
     explicit Segment(int res = 64);
     ~Segment();
 
     const int getSize() const {
         return m_res;
+    }
+
+    const bool isValid() {
+        return m_validPt;
+    }
+
+    void invalidate() {
+        m_validPt = false;
+        m_validNorm = false;
     }
     
     const float * getPoints() const {
@@ -57,7 +69,7 @@ class Segment {
     void getHeightAndNormal(float x, float y, float &h, 
                     WFMath::Vector<3> &normal) const;
 
-    void populate(const Matrix<2,2, BasePoint> &);
+    void populate(const Matrix<2, 2, BasePoint> &);
     void populateNormals();
 
     float getMax() const { return m_max; }
