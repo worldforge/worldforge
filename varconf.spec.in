@@ -7,8 +7,12 @@ Summary: A config handling library.
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Copyright: LGPL
+License: LGPL
 Group: System Environment/Libraries
+URL: http://www.worldforge.org/dev/eng/libraries/varconf
+Packager: Al Riddoch <alriddoch@zepler.org>
+Vendor: WorldForge
+Distribution: Mason
 Source: %{name}-%{version}.tar.gz
 Requires: libsigc++ libstdc++
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot

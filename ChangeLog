@@ -1,3 +1,8 @@
+2004-12-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf.spec.in: Update spec with License URL Package Vendor
+	  and Distribution tags.
+
 2004-11-13  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/conftest.cpp: Fix a couple of places to work with sigc++2.
