@@ -223,7 +223,7 @@ public:
     EncList<B, T> operator<<(const Arg& a)
     {
         b.ListItem(a);
-        return T(b);
+        return *this;
     }
     
     /// End this list.
