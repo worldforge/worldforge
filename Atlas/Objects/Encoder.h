@@ -17,9 +17,9 @@ public:
 
     virtual void StreamMessage(Atlas::Objects::Root* o)
     {
-        b->StreamMessage(Bridge::Map);
-        o->Transmit(b);
-        b->EndMap();
+        b->StreamMessage(Bridge::MapBegin);
+        o->SendContents(b);
+        b->MapEnd();
     }
 };
 
