@@ -1,12 +1,10 @@
 // This file may be redistributed and modified under the terms of the
 // GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Stefanus Du Toit
+// Copyright (C) 2000 Stefanus Du Toit, Michael Day
 
 #include <cstdio>
-#include "../Codec.h"
-
-using namespace std;
-using namespace Atlas;
+#include <string>
+#include <algorithm>
 
 inline const string charToHex(char c)
 {
@@ -25,16 +23,22 @@ inline char hexToChar(const string& hex)
 inline const string hexEncode(const string& prefix, const string& special,
         const string& message)
 {
-    string newMessage;
-    
-    for (int i = 0; i < message.size(); i++) {
-        if (find(special.begin(), special.end(), message[i]) != special.end()) {
-            newMessage += prefix;
-            newMessage += charToHex(message[i]);
-        } else newMessage += message[i];
+    string encoded;
+
+    for (string::const_iterator i = message.begin(); i != message.end(); ++i)
+    {
+	if (find(special.begin(), special.end(), *i) != special.end())
+	{
+	    encoded += prefix;
+	    encoded += charToHex(*i);
+	}
+	else
+	{
+	    encoded += *i;
+	}
     }
 
-    return newMessage;
+    return encoded;
 }
 
 inline const string hexDecode(const string& prefix, const string& message)
