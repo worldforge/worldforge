@@ -252,7 +252,7 @@ void Config::getCmdline( int argc, char** argv)
 
 void Config::getEnv( const string& prefix)
 {
-  string name, value, section, env = "";
+  string name = "", value = "", section = "", env = "";
   size_t eq_pos = 0;
 
   for ( size_t i = 0; environ[i] != NULL; i++) {
