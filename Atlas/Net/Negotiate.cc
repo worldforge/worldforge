@@ -150,7 +150,7 @@ void Atlas::Net::NegotiateServer::Poll()
 }
 */
 
-Atlas::Stream::Negotiate::State Atlas::Net::NegotiateClient::Poll()
+Atlas::Stream::Negotiate<iostream>::State Atlas::Net::NegotiateClient::Poll()
 {
     cout << "** Client(" << state << ") : " << endl;
 
@@ -165,10 +165,11 @@ Atlas::Stream::Negotiate::State Atlas::Net::NegotiateClient::Poll()
     {
 	// get server greeting
 
-	if(buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
-	cout << "server: " << inName << endl;
-	
-	state++;
+	if (buf.size() > 0 && get_line(buf, '\n', inName) != "")
+	{
+	    cout << "server: " << inName << endl;
+	    state++;
+	}
     }
 
     if(state == CLIENT_GREETING)
@@ -210,6 +211,8 @@ Atlas::Stream::Negotiate::State Atlas::Net::NegotiateClient::Poll()
 	    state++;
 	}
     }
+
+    return IN_PROGRESS;
 }
 
 void Atlas::Net::NegotiateClient::processServerCodecs()
