@@ -1,8 +1,8 @@
 
 lib_LTLIBRARIES = libAtlasStream.la
 
-libAtlasStream_la_SOURCES = Stream.cc
-
 libAtlasStreamincludedir = $(includedir)/Atlas/Stream
 
-libAtlasStreaminclude_HEADERS = Stream.h
+libAtlasStream_la_SOURCES = Codec.cc
+
+libAtlasStreaminclude_HEADERS = Codec.h
