@@ -1,4 +1,4 @@
-2003-07-23  Al Riddoch  <alriddoch@zepler.org>
+2003-07-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Negotiate.h: Removed unused Debug() macro. It was polluting
 	  the global namespace.
