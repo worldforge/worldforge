@@ -320,31 +320,6 @@ AC_CHECK_HEADERS(bzlib.h)
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
 
-dnl Test for Simple DirectMedia Layer
-
-AC_ARG_WITH(sdl,
-[  --with-sdl=DIR          Simple DirectMedia Layer (optional)],
-[with_sdl="$withval"],
-[with_sdl=""])
-
-ac_save_CFLAGS="$CFLAGS"
-ac_save_LIBS="$LIBS"
-CFLAGS="$CFLAGS -I$with_sdl/include"
-LIBS="$LIBS -L$with_sdl/lib"
-
-AC_CHECK_LIB(SDL, SDL_Init,,
-[AC_MSG_ERROR(could not find libSDL from Simple DirectMedia Layer)])
-
-AC_CHECK_HEADERS(SDL/SDL.h,,
-[AC_MSG_ERROR(could not find SDL/SDL.h from Simple DirectMedia Layer)])
-
-AC_CHECK_HEADERS(SDL/SDL_version.h,,
-[AC_MSG_ERROR(could not find SDL/SDL_version.h from Simple DirectMedia Layer)])
-
-
-CFLAGS="$ac_save_CFLAGS"
-LIBS="$ac_save_LIBS"
-
 dnl Generate files
 
 AC_OUTPUT([

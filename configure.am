@@ -29,5 +29,4 @@
     <require id="libtool"/>
     <require id="zlib" generate="config"/>
     <require id="bzlib" generate="config"/>
-    <require id="sdl" type="critical"/>
 </package>
