@@ -265,7 +265,7 @@ class Vector {
   /**
    * This is a nice way to implement the parity operation if dim is odd.
    **/
-  Vector& mirror()		{return operator*=(-1);}
+  Vector& mirror()		{return operator*=(*this, -1);}
 
   // Specialized 2D/3D stuff starts here
 

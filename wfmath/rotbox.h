@@ -123,7 +123,7 @@ class RotBox
   RotBox<3>& rotateCenter(const Quaternion& q)
 	{rotatePoint(q, getCenter()); return *this;}
   RotBox<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
-	{m_orient = m_orient.rotate(q); m_corner0.rotate(m, p); return *this;}
+	{m_orient = m_orient.rotate(q); m_corner0.rotate(q, p); return *this;}
 
   // Intersection functions
 
@@ -162,7 +162,7 @@ class RotBox
         {return RotBox<3>(m_corner0.toParentCoords(origin, rotation), m_size,
 		m_orient.rotate(rotation));}
   RotBox<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return RotBox<3>(m_p1.toLocalCoords(origin, rotation), m_size,
+        {return RotBox<3>(m_corner0.toLocalCoords(origin, rotation), m_size,
 		m_orient.rotate(rotation.inverse()));}
 
   friend bool Intersect<dim>(const RotBox& r, const Point<dim>& p, bool proper);

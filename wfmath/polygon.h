@@ -278,11 +278,11 @@ class _Poly2Orient
   // 3D only
   _Poly2Orient<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
 	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
-		p.m_axes[0].rotate(rotation); p.m_axes[0].rotate(rotation); return q;}
+		p.m_axes[0].rotate(rotation); p.m_axes[0].rotate(rotation); return p;}
   _Poly2Orient<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
 	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
 		p.m_axes[0].rotate(rotation.inverse());
-		p.m_axes[0].rotate(rotation.inverse()); return q;}
+		p.m_axes[0].rotate(rotation.inverse()); return p;}
 
   // Gives the offset from pd to the space spanned by
   // the basis, and puts the nearest point in p2.

@@ -1,3 +1,7 @@
+Wednesday, June 30th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Erik Hjortsberg's gcc 3.4 compile fixes.
+
 2004-06-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Fix devel dependencies in rpm spec.
