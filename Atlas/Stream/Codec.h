@@ -10,8 +10,6 @@
 
 #include <algorithm>
 
-//#include <sigc++/signal_system.h>
-
 namespace Atlas { namespace Stream {
     
 class Codec
@@ -20,8 +18,6 @@ class Codec
 
     virtual ~Codec() { }
 
-//  SigC::Signal1<void, std::string> output;
-    
     // Interface for top level context
 
     virtual void MessageBegin() = 0;
