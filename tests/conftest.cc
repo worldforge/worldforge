@@ -4,7 +4,7 @@
 void callback(const string& section, const string& name)
 {
   cout << section << "->" << name << " has changed to "
-       << Config::Instance()->getItem(section, name) << "!" << endl;
+       << Config::inst()->getItem(section, name) << "!" << endl;
 }
 
 int main(int argc, char** argv)
@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     if (isatty(STDIN_FILENO)) cout << "Go ahead and type your own "
                                       "configuration" << endl;
     try {
-      Config::Instance()->parseStream(cin);
+      Config::inst()->parseStream(cin);
     }
     catch (ParseError p)
     {
@@ -21,12 +21,12 @@ int main(int argc, char** argv)
       cout << p;
     }
   } else {
-    Config::Instance()->readFromFile(argv[1]);
+    Config::inst()->readFromFile(argv[1]);
   }
-  Config::Instance()->writeToStream(cout);
+  Config::inst()->writeToStream(cout);
   cout << "---" << endl;
-  Config::Instance()->registerCallback(&callback, "tcp", "port");
-  Config::Instance()->registerCallback(&callback, "console", "colours");
-  Config::Instance()->setItem("tcp", "port", 6700);
-  Config::Instance()->setItem("console", "colours", "plenty");
+  Config::inst()->registerCallback(&callback, "tcp", "port");
+  Config::inst()->registerCallback(&callback, "console", "colours");
+  Config::inst()->setItem("tcp", "port", 6700);
+  Config::inst()->setItem("console", "colours", "plenty");
 }

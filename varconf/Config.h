@@ -38,6 +38,8 @@ public:
 
   bool readFromFile(const string& filename);
 
+  bool writeToFile(const string& filename);
+
   bool writeToStream(ostream& ios);
   /// May throw a ParseError exception
   void parseStream(istream& ios);

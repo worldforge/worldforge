@@ -151,17 +151,27 @@ bool Config::readFromFile(const string& filename)
 {
   ifstream in(filename.c_str());
   if (!in) {
-    cout << "Could not open " << filename << " for input!\n";
+    cerr << "Could not open " << filename << " for input!\n";
     return false;
   }
   try {
     parseStream(in);
   }
   catch (ParseError p) {
-    cout << "While parsing " << filename << ":\n";
-    cout << p;
+    cerr << "While parsing " << filename << ":\n";
+    cerr << p;
   }
   return true;
+}
+
+bool Config::writeToFile(const string& filename)
+{
+    ofstream out(filename.c_str());
+    if (!out) {
+      cerr << "Could not open " << filename << " for output!\n";
+      return false;
+    }
+    return writeToStream(out);
 }
 
 bool Config::writeToStream(ostream& ios)
