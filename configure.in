@@ -1,26 +1,27 @@
-AC_INIT(src)
+dnl Initialise autoconf
 
-AM_INIT_AUTOMAKE("Atlas", "0.1.0")
-AM_CONFIG_HEADER(src/config.h)
+AC_INIT()
 
-dnl Test for c++:
+dnl Initialise automake
+
+AM_INIT_AUTOMAKE("Atlas", "0.2.0")
+
+dnl Test for C++ compiler
 
 AC_PROG_CXX
 
-dnl Test for libtool:
+dnl Test for GNU libtool
 
 AM_PROG_LIBTOOL
 
-dnl Test for python:
-
-CXXFLAGS='-g -D_ADebug_ -Wall -O2'
-AC_SUBST(CXXFLAGS)
+dnl Generate files
 
 AC_OUTPUT([
 	Makefile
 	src/Makefile
-	src/Debug/Makefile
-	src/Object/Makefile
-	src/Net/Makefile
 	src/Content/Makefile
+	src/Debug/Makefile
+	src/Net/Makefile
+	src/Object/Makefile
+	src/TestSuite/Makefile
 ])

@@ -1,0 +1,9 @@
+<package>
+    <name>Atlas</name>
+    <version>0.2.0</version>
+    <desc></desc>
+    <require tag="c++">
+	<require tag="compiler"/>
+    </require>
+    <require tag="libtool"/>
+</package>
