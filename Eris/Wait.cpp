@@ -15,6 +15,13 @@
 
 namespace Eris {
 
+WaitForBase::WaitForBase(const Atlas::Message::Object &m) :
+		_pending(false),
+		_msg(m)
+{ 
+	Connection::Instance()->addWait(this);
+}
+	
 void WaitForBase::fire()
 {
 	assert(!_pending);
@@ -64,6 +71,11 @@ WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Object &msg) :
 	WaitForBase(msg)
 {
 	sig.connect(SigC::slot(this, &WaitForBase::fire));
+}
+
+WaitForSignal::~WaitForSignal()
+{
+	;
 }
 
 };

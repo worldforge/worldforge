@@ -4,6 +4,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <algorithm>
 
 #include <skstream.h>
 #include <sigc++/signal_system.h>
@@ -25,6 +26,7 @@
 #include "TypeDispatcher.h"
 #include "ClassDispatcher.h"
 #include "DebugDispatcher.h"
+#include "SignalDispatcher.h"
 
 namespace Eris {
 
@@ -35,7 +37,9 @@ StringList tokenize(const string &s, char t);
 // declare the static member
 Connection* Connection::_theConnection = NULL;	
 
-
+typedef std::pair<std::string, long> SerialFrom;
+typedef std::set<SerialFrom> SerialFromSet;
+	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
 Connection::Connection(const string &cnm) :
@@ -53,6 +57,12 @@ Connection::Connection(const string &cnm) :
 	Dispatcher *opd = new TypeDispatcher("op", "op");
 	_rootDispatch->addSubdispatch(opd);
 
+	if (_debug) {
+		opd->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::RootOperation>(
+			"serial-validator", SigC::slot(this, &Connection::validateSerial)
+		));
+	}
+	
 	opd->addSubdispatch(new ClassDispatcher("info", "info"));
 	opd->addSubdispatch(new ClassDispatcher("error", "error"));
 	
@@ -241,44 +251,20 @@ Connection* Connection::Instance()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // protected / private gunk
-/*
-void Connection::ObjectArrived(const Atlas::Message::Object& obj)
-{
-	
-	
-	// stage 2 : having completed the primary dispatch, check for any dependants that
-	// are now pending.
-	
-	try {
-		// pick up an re-dispatches which have been intiated by the incoming message
-		while (!_postQueue.empty()) {
-			RepostDispatcher *rp = _postQueue.front();
-			DispatchContextDeque pdq(1, rp->_post);	
-			_rootDispatch->dispatch(pdq);
-			
-			// note this will delete rp!
-			removeDispatcherByPath(rp->_removePath, rp->getName());
-			_postQueue.pop_front();
-		}
-		
-	} catch (BaseException &be) {
-		cerr << "Dispatch: caught exception from post queue: " << be._msg << endl;
-		DispatchContextDeque pdq(1, _postQueue.front());
-		dd->dispatch(pdq);
-	}
 
-}
-*/
 void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 {
+	Eris::Log("-");
 	postForDispatch(obj);
 
 	while (!_repostQueue.empty()) {
 		DispatchContextDeque dq(1, _repostQueue.front());
-		if (_debug) {
+		_repostQueue.pop_front();
+		
+		if (_debug) {	
 			dd->dispatch(dq);
 		
-			std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(obj) ));
+			std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
 			Eris::Log("Dispatching %s", summary.c_str());
 		}
 		
@@ -288,7 +274,9 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 		} 
 	
 		catch (OperationBlocked &block) {
-			new WaitForSignal(block._continue, _repostQueue.front());
+			std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
+			Eris::Log("Caugh OperationBlocked exception dispatching %s", summary.c_str());
+			new WaitForSignal(block._continue, dq.back());
 		}
 	
 		// catch actual failures, becuase they're bad.
@@ -296,26 +284,34 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 			Eris::Log("Dispatch: caught exception: %s", be._msg.c_str());
 			dd->dispatch(dq);
 		}
-		
-		_repostQueue.pop_front();
 	}
 	
 	clearSignalledWaits();
 }
 
+void Connection::addWait(WaitForBase *w)
+{
+	assert(w);
+	_waitList.push_front(w);
+}
+
+void deleteFiredWait(WaitForBase *w)
+{
+	if (w->isPending())
+		delete w;
+}
+
 void Connection::clearSignalledWaits()
 {
-	int ccount = 0;
+	int ccount = _waitList.size();
 	
-	for (WaitForList::iterator I=_waitList.begin(); I!=_waitList.end(); ) {
-		WaitForList::iterator cur = I++;
-		if ((*cur)->isPending()) {
-			delete (*cur);
-			_waitList.erase(cur);
-			ccount++;
-		}
-	}
+	std::for_each(_waitList.begin(), _waitList.end(), deleteFiredWait); 
 	
+	_waitList.erase(
+		std::remove_if(_waitList.begin(), _waitList.end(), WaitForBase::hasFired), 
+		_waitList.end());
+	
+	ccount -= _waitList.size();
 	if (ccount)
 		Eris::Log("Cleared %i signalled waitFors", ccount);
 }
@@ -357,6 +353,29 @@ void Connection::onConnect()
 void Connection::postForDispatch(const Atlas::Message::Object &msg)
 {
 	_repostQueue.push_back(msg);
+}
+
+void Connection::validateSerial(const Atlas::Objects::Operation::RootOperation &op)
+{
+	static SerialFromSet seen;
+	SerialFrom sfm(op.GetFrom(), op.GetSerialno());
+	
+	// don't bother to validate if the serial-no is 0
+	if (sfm.second == 0) {
+		std::string summary(objectSummary(op));
+		Eris::Log("WARNING: recieved op [%s] from %s with no serial number set",
+			summary.c_str(), sfm.first.c_str());
+		return;
+	}
+	
+	SerialFromSet::iterator S = seen.find(sfm);
+	if (S != seen.end()) {
+		std::string summary(objectSummary(op));
+		Eris::Log("ERROR: duplicate process of op [%s] from %s with serial# %i",
+			summary.c_str(), sfm.first.c_str(), sfm.second);
+	} else
+		seen.insert(sfm);
+	
 }
 
 StringList tokenize(const string &s, char t)

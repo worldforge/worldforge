@@ -125,6 +125,14 @@ void World::setFocusedEntity(EntityPtr f)
 	look(NULL);
 }
 
+std::string World::getFocusedEntityID()
+{
+	if (_focused)
+		return _focused->getID();
+	else // so we can call this *early*
+		return _characterID;
+}
+
 void World::look(const std::string &id)
 {
 	// if connection is down, do nothing
@@ -268,6 +276,14 @@ void  World::registerCallbacks()
 		SigC::slot(this, &World::recvSightSet)
 	));
 	
+	// set operations
+/*	
+	set = igd->addSubdispatch(new ClassDispatcher("set", "set"));
+	set->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Set>("world", 
+		SigC::slot(this, &World::recvSightSet)
+	));
+*/
+
 	// sight of move oprations
 	Dispatcher *mv = od->addSubdispatch(new ClassDispatcher("move", "move"));
 	mv->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Move>("world", 
@@ -317,6 +333,7 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 			if (_initialEntry && _root) {
 				Entered.emit(e);
 				_initialEntry = false;	
+				Eris::Log("did IG entry after sight of character");
 			}
 		}
 	
@@ -498,6 +515,7 @@ void World::setRootEntity(Entity* rt)
 		if (character) {
 			Entered.emit(character);
 			_initialEntry = false;
+			Eris::Log("did IG entry after setRootEntity");
 		} // else still waiting for the character
 	}
 }

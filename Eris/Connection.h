@@ -1,9 +1,9 @@
-
 #ifndef ERIS_CONNECTION_H
 #define ERIS_CONNECTION_H
 
 #include <deque>
 #include <Atlas/Message/DecoderBase.h>
+#include <Atlas/Objects/Operation/RootOperation.h>
 
 #include "BaseConnection.h"
 #include "Types.h"
@@ -141,15 +141,11 @@ protected:
 
 	Dispatcher* _rootDispatch;	///< the root of the dispatch tree
 	unsigned int _statusLock;	///< locks connection to current state while > 0	
-
-	/** queue of messages that have been signalled (from the wait list)
-	and can now be re-posted */
-	MessageList _repostQueue;
-		
-	void clearSignalledWaits();
-
-	typedef std::list<WaitForBase*> WaitForList;
-	WaitForList _waitList;
+	
+	friend class WaitForBase;	// so can call addWaitFor
+	
+	/// register a new WaitFor into the list
+	void addWait(WaitForBase *w);
 	
 	/// hostname of the server (for reconnection)
 	/** This is cleared if connection fails during establishment (i.e CONNECTING
@@ -160,6 +156,18 @@ protected:
 	
 	// static singleton instance
 	static Connection* _theConnection;
+
+private:
+	void validateSerial(const Atlas::Objects::Operation::RootOperation &op);
+
+	/** queue of messages that have been signalled (from the wait list)
+	and can now be re-posted */
+	MessageList _repostQueue;
+		
+	void clearSignalledWaits();
+
+	typedef std::list<WaitForBase*> WaitForList;
+	WaitForList _waitList;
 };
 
 void Log(const char *str, ...);

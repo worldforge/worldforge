@@ -100,14 +100,25 @@ std::string objectSummary(const Atlas::Objects::Root &obj)
 		}
 		
 		// list the values being set
+	
 		if (type == "set") {
-			const Atlas::Message::Object::MapType& values = 
-				obj.GetAttr("args").AsList().front().AsMap();
+			const Atlas::Message::Object::ListType &arglist = 
+				obj.GetAttr("args").AsList();
+			
 			ret.push_back('(');
-			for (Atlas::Message::Object::MapType::const_iterator V = values.begin();
-					V != values.end(); ++V) {
-				ret.append(V->first);
-			}
+			
+			if (!arglist.empty() && arglist[0].IsMap()) {			
+				const Atlas::Message::Object::MapType& values = 
+					arglist[0].AsMap();
+				
+				// blast through the list
+				for (Atlas::Message::Object::MapType::const_iterator V = values.begin();
+						V != values.end(); ++V) {
+					ret.append(V->first + ", ");
+				}
+			} else
+				ret.append("...");
+		
 			ret.push_back(')');
 		}
 		

@@ -17,15 +17,19 @@ class Dispatcher;
 class WaitForBase : public SigC::Object
 {
 public:
-	WaitForBase(const Atlas::Message::Object &m) :
-		_pending(false),
-		_msg(m)
-	{ ; }
-
+	WaitForBase(const Atlas::Message::Object &m);
+	virtual ~WaitForBase() {;}
+		
 	bool isPending() const
 	{ return _pending; }
 	
 	void fire();
+	
+	/** Predicate matching STL UnaryFunction, indicating whether the wait has been fired. This
+	is used in STL remove_if and so on. */
+	static bool hasFired(WaitForBase *w)
+	{ return w->_pending; }
+	
 protected:
 	bool _pending;
 	Atlas::Message::Object _msg;
@@ -42,7 +46,7 @@ public:
 		const std::string &ppath,
 		Dispatcher *dsp);
 
-	~WaitForDispatch();
+	virtual ~WaitForDispatch();
 
 protected:
 	std::string _parentPath;
@@ -53,7 +57,7 @@ class WaitForSignal : public WaitForBase
 {
 public:	
 	WaitForSignal(Signal &sig, const Atlas::Message::Object &msg);
-
+	virtual ~WaitForSignal();
 protected:
 	
 };

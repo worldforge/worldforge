@@ -78,6 +78,8 @@ public:
 	EntityPtr getFocusedEntity()
 	{ return _focused; }
 
+	std::string getFocusedEntityID();
+	
 // factories
 	/** Register an entity factory with the world. Any new entities that the
 	Factory accept()s will be passed to the Factory for instantiation. */

@@ -11,6 +11,7 @@
 #include <Atlas/Objects/Operation/Set.h>
 #include <Atlas/Objects/Operation/Talk.h>
 #include <Atlas/Objects/Operation/Sound.h>
+#include <Atlas/Objects/Operation/Sight.h>
 
 #include "Entity.h"
 #include "World.h"
@@ -326,7 +327,7 @@ void Entity::setContainerById(const std::string &id)
 				_container = ncr;
 			} else {
 				// setup a redispatch once we have the container
-				// sythesies a set, with just the container.
+				// sythesises a set, with just the container.
 				Atlas::Objects::Operation::Set setc = 
 					Atlas::Objects::Operation::Set::Instantiate();
 					
@@ -335,13 +336,19 @@ void Entity::setContainerById(const std::string &id)
 				setc.SetArgs(Atlas::Message::Object::ListType(1,args));
 				setc.SetTo(_id);
 				
+				Atlas::Objects::Operation::Sight ssc =
+					Atlas::Objects::Operation::Sight::Instantiate();
+				ssc.SetArgs(Atlas::Message::Object::ListType(1, setc.AsObject()));
+				ssc.SetTo(World::Instance()->getFocusedEntityID());
+				ssc.SetSerialno(getNewSerialno());
+				
 				// if we received sets/creates/sights in rapid sucession, this can happen, and is
 				// very, very bad
 				std::string setid("set_container_" + _id);
 				Connection::Instance()->removeIfDispatcherByPath(
 					"op:ig:sight:entity", setid);
 				
-				new WaitForDispatch(setc, "op:ig:sight:entity", 
+				new WaitForDispatch(ssc, "op:ig:sight:entity", 
 					new IdDispatcher(setid, id) );
 			}
 		

@@ -1,3 +1,20 @@
+Thursday, October 25 2001, James Turner
+
+	* Tweaked objectSummary to handle SET ops better, still needs more
+	  work
+	* Changed the SET op synthesised by Entity::setContainerById to
+	  include the encapsulatig SIGHT : this means the SET actually gets
+	  processed insetad of just being ignored
+	* In Connection debug mode, store pairs of FROM/SERIALNO for
+	  recieved ops, and ensure their uniqueness. Ops with SERIALNO==0 are
+	  flagged with a warning, this needs to be clarified. This is
+	  correctly flagging the duplicate recieve bug, w00t!
+	* Re-wrote Connection::clearSignalledWaits to actually work
+	* Made ~WaitForBase virtual so delete doesn't segfault, d'oh
+	* Added WaitForBase as a friend of Connection so it can call the new method
+	  addWait which actually puts the WaitFors into the WaitList; this wasn't
+	  happending, hence the bug with WaitFors being fired multiple times.
+	  
 Tuesday, October 23 2001, James Turner
 
 	* Added objectSummary function in Utils, which gives a compact
