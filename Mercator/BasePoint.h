@@ -32,7 +32,7 @@ class BasePoint {
     const float falloff() const { return m_falloff; }
     float & falloff() { return m_falloff; }
 
-    int seed() const { return (int)(m_height * 10.0);}
+    unsigned int seed() const { return (unsigned int)(m_height * 1000.0);}
 };
 
 } //namespace Mercator

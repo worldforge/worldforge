@@ -7,6 +7,7 @@
 #include <Mercator/TerrainMod.h>
 #include <Mercator/Surface.h>
 #include <Mercator/BasePoint.h>
+#include <wfmath/MersenneTwister.h>
 
 #include <iostream>
 #include <cmath>
@@ -152,10 +153,15 @@ void Segment::populateSurfaces()
     }
 }
 
-// rand num between -0.5...0.5
+// the random number generator
+static WFMath::MTRand rng;
+
+// generate a rand num between -0.5...0.5
 inline float randHalf()
 {
-    return (float) rand() / RAND_MAX - 0.5f;
+    //return (float) rand() / RAND_MAX - 0.5f;
+    double r=rng();
+    return r - 0.5;
 }
 
 
@@ -185,7 +191,9 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
     // The RNG is seeded only once for the line and the seed is based on the
     // two endpoints -because they are the common parameters for two adjoining
     // tiles
-    srand((l.seed() * 1000 + h.seed()));
+    //srand((l.seed() * 1000 + h.seed()));
+    WFMath::MTRand::uint32 seed[2]={ l.seed(), h.seed() };
+    rng.seed(seed, 2);
 
     // stride is used to step across the array in a deterministic fashion
     // effectively we do the 1/2  point, then the 1/4 points, then the 1/8th
@@ -194,8 +202,7 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
     int stride = m_res/2;
 
     // depth is used to indicate what level we are on. the displacement is
-    // reduced each time we traverse the array. because this is really the
-    // edge of a 2d array, the depth decrement is doubled within the loop
+    // reduced each time we traverse the array.
     int depth=1;
  
     while (stride) {
@@ -266,7 +273,9 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
     
     // seed the RNG - this is the 5th and last seeding for the tile.
     // it was seeded once for each edge, now once for the tile.
-    srand(p1.seed()*20 + p2.seed()*15 + p3.seed()*10 + p4.seed()*5);
+    //srand(p1.seed()*20 + p2.seed()*15 + p3.seed()*10 + p4.seed()*5);
+    WFMath::MTRand::uint32 seed[4]={ p1.seed(), p2.seed(), p3.seed(), p4.seed() };
+    rng.seed(seed, 4);
 
     QuadInterp qi(m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
 
@@ -343,7 +352,6 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
     }
 }
 
-// FIXME getHeightAndNormal seems a bit verbose
 void Segment::getHeightAndNormal(float x, float y, float& h,
                                  WFMath::Vector<3> &normal) const
 {
@@ -382,7 +390,6 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
 bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
                                                             int &ly, int &hy) 
 {
-
     lx = (int)rint(bbox.lowCorner()[0]); 
     if (lx > m_res) return false;
     if (lx < 0) lx = 0;

@@ -1,3 +1,17 @@
+2003-08-09  Damien McGinnes
+
+	* Mercator/Segment.cpp: use a local random number generator to
+	  ensure the rng state cant be affected by other use of rand() in
+	  an app. Change the RNG code to utilise the MersenneTwister.
+	* configure.in: require wfmath 0.3 for the MersenneTwister RNG.
+	* Mercator/BasePoint.h: seed() now returns an unsigned int.
+	* this RNG gives a 20% spped increase on optimized (-O2) code 
+	  compared with rand(). (unoptimized it's roughly the same)
+
+          generate 400 tiles (height only, res 64)
+          std rand = 1.75 seconds = 4.4 ms per tile
+          mt rand = 1.41 seconds = 3.5 ms per tile
+
 2003-08-08  Damien McGinnes
 
 	* Mercator/Segment.cpp: changed round() to rint()
