@@ -11,8 +11,8 @@ Copyright: GPL
 Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-Requires: Atlas-C++ >= 0.4.93 wfmath >= 0.3.2 skstream > 0.3
-BuildRequires: Atlas-C++-devel >= 0.4.93 wfmath-devel >= 0.3.2 skstream-devel > 0.3 libsigc++-devel libstdc++-devel
+Requires: Atlas-C++ >= 0.5.91 wfmath >= 0.3.2 skstream > 0.3
+BuildRequires: Atlas-C++-devel >= 0.5.91 wfmath-devel >= 0.3.2 skstream-devel > 0.3 libsigc++-devel libstdc++-devel
 
 %description
 Eris is designed to simplify client development (and avoid repeating the same
@@ -65,40 +65,27 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.la
 %{_libdir}/lib*.a
 %{_libdir}/pkgconfig/eris%{libsuffix}.pc
-%{_includedir}/Eris%{libsuffix}/Eris/ArgumentDispatcher.h
-%{_includedir}/Eris%{libsuffix}/Eris/atlas_utils.h
 %{_includedir}/Eris%{libsuffix}/Eris/Avatar.h
 %{_includedir}/Eris%{libsuffix}/Eris/BaseConnection.h
-%{_includedir}/Eris%{libsuffix}/Eris/ClassDispatcher.h
 %{_includedir}/Eris%{libsuffix}/Eris/Connection.h
-%{_includedir}/Eris%{libsuffix}/Eris/DebugDispatcher.h
-%{_includedir}/Eris%{libsuffix}/Eris/Dispatcher.h
-%{_includedir}/Eris%{libsuffix}/Eris/EncapDispatcher.h
 %{_includedir}/Eris%{libsuffix}/Eris/Entity.h
 %{_includedir}/Eris%{libsuffix}/Eris/Exceptions.h
 %{_includedir}/Eris%{libsuffix}/Eris/Factory.h
-%{_includedir}/Eris%{libsuffix}/Eris/IdDispatcher.h
 %{_includedir}/Eris%{libsuffix}/Eris/Lobby.h
 %{_includedir}/Eris%{libsuffix}/Eris/Log.h
 %{_includedir}/Eris%{libsuffix}/Eris/Metaserver.h
-%{_includedir}/Eris%{libsuffix}/Eris/OpDispatcher.h
 %{_includedir}/Eris%{libsuffix}/Eris/Person.h
-%{_includedir}/Eris%{libsuffix}/Eris/Player.h
+%{_includedir}/Eris%{libsuffix}/Eris/Account.h
 %{_includedir}/Eris%{libsuffix}/Eris/PollDefault.h
+%{_includedir}/Eris%{libsuffix}/Eris/LogStream.h
 %{_includedir}/Eris%{libsuffix}/Eris/Poll.h
-%{_includedir}/Eris%{libsuffix}/Eris/Property.h
 %{_includedir}/Eris%{libsuffix}/Eris/Room.h
 %{_includedir}/Eris%{libsuffix}/Eris/ServerInfo.h
-%{_includedir}/Eris%{libsuffix}/Eris/SignalDispatcher.h
 %{_includedir}/Eris%{libsuffix}/Eris/Timeout.h
-%{_includedir}/Eris%{libsuffix}/Eris/Timestamp.h
-%{_includedir}/Eris%{libsuffix}/Eris/TypeDispatcher.h
-%{_includedir}/Eris%{libsuffix}/Eris/typeService.h
+%{_includedir}/Eris%{libsuffix}/Eris/TypeService.h
 %{_includedir}/Eris%{libsuffix}/Eris/TypeInfo.h
 %{_includedir}/Eris%{libsuffix}/Eris/Types.h
-%{_includedir}/Eris%{libsuffix}/Eris/Utils.h
-%{_includedir}/Eris%{libsuffix}/Eris/Wait.h
-%{_includedir}/Eris%{libsuffix}/Eris/World.h
+%{_includedir}/Eris%{libsuffix}/Eris/View.h
 
 %files poll-glib
 %defattr(-,root,root)
