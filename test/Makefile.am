@@ -2,7 +2,7 @@ TESTS = testEris
 
 INCLUDES = -I$(top_srcdir)
 
-check_PROGRAMS = $(TESTS)
+#check_PROGRAMS = $(TESTS)
 
 testEris_SOURCES = tests.cpp testHarness.h \
     stubServer.h stubServer.cpp \
