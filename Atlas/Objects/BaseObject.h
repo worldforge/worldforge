@@ -28,7 +28,7 @@ class NoSuchAttrException : public Atlas::Exception
   public:
     NoSuchAttrException(const std::string& name) :
              Atlas::Exception("No such attribute"), name(name) {}
-    virtual ~NoSuchAttrException() throw () { }
+    virtual ~NoSuchAttrException() throw ();
     const std::string & getName() const {
         return name;
     }
@@ -47,10 +47,8 @@ public:
         m_refCount = 0;
     }
 
-    virtual ~BaseObjectData()
-    {
-        assert( m_refCount==0 );
-    }
+    virtual ~BaseObjectData();
+
     /// Get class number:
     int getClassNo() const 
     {

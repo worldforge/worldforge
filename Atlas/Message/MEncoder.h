@@ -26,7 +26,7 @@ class Encoder : public Atlas::EncoderBase
 public:
     explicit Encoder(Atlas::Bridge*);
 
-    virtual ~Encoder() { }
+    virtual ~Encoder();
 
     /// Send a message (must be a map!) in stream state.
     virtual void streamMessageElement(const Element::MapType & obj);

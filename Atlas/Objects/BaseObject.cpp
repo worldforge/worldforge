@@ -8,6 +8,15 @@ using Atlas::Message::Element;
 
 namespace Atlas { namespace Objects {
 
+NoSuchAttrException::~NoSuchAttrException() throw ()
+{
+}
+
+BaseObjectData::~BaseObjectData()
+{
+    assert( m_refCount==0 );
+}
+
 bool BaseObjectData::instanceOf(int classNo) const
 {
     return BASE_OBJECT_NO == classNo;

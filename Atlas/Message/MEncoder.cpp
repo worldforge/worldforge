@@ -13,6 +13,10 @@ Encoder::Encoder(Atlas::Bridge* b)
 {
 }
 
+Encoder::~Encoder()
+{
+}
+
 void Encoder::listElementItem(const Element& obj)
 {
     switch (obj.getType()) {

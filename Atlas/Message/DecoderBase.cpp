@@ -14,6 +14,10 @@ DecoderBase::DecoderBase()
 {
 }
 
+DecoderBase::~DecoderBase()
+{
+}
+
 void DecoderBase::streamBegin()
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::streamBegin" << std::endl)

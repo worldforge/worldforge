@@ -33,7 +33,7 @@ class DecoderBase : public Bridge
 public:
     DecoderBase();
 
-    virtual ~DecoderBase() {}
+    virtual ~DecoderBase();
 
     // Callback functions from Bridge
     virtual void streamBegin();

@@ -24,6 +24,10 @@ class GenerateObjectFactory:
         self.write("""
 using Atlas::Message::Element;
 
+NoSuchFactoryException::~NoSuchFactoryException() throw ()
+{
+}
+
 std::map<const std::string, Root> objectDefinitions;
 Factories objectFactory;
 

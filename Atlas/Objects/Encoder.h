@@ -6,6 +6,7 @@
 #define ATLAS_OBJECTS_ENCODER_H
 
 #include <Atlas/EncoderBase.h>
+#include <Atlas/Objects/Root.h>
 
 namespace Atlas { namespace Objects {
 
@@ -27,7 +28,7 @@ public:
     /// @param b The Bridge to which objects are to be sent.
     explicit ObjectsEncoder(Atlas::Bridge* b) : EncoderBase(b) { }
     /// The default destructor.
-    virtual ~ObjectsEncoder() { }
+    virtual ~ObjectsEncoder();
 
     /// Send an object to the bridge.
     /// @param o The object that is to be sent.

@@ -50,7 +50,7 @@ class StreamConnect : public Atlas::Negotiate
 
     StreamConnect(const std::string& name, std::iostream&, Atlas::Bridge*);
 
-    virtual ~StreamConnect() {}
+    virtual ~StreamConnect();
 
     virtual void poll(bool can_read = true);
 
@@ -103,7 +103,7 @@ class StreamAccept : public Atlas::Negotiate
 
     StreamAccept(const std::string& name, std::iostream&, Atlas::Bridge*);
 
-    virtual ~StreamAccept() {}
+    virtual ~StreamAccept();
 
     virtual void poll(bool can_read = true);
 

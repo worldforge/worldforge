@@ -47,7 +47,7 @@ protected:
     virtual void messageArrived(const Atlas::Message::Element::MapType&);
 
     /// An unknown object has arrived.
-    virtual void unknownMessageArrived(const Atlas::Message::Element&) { }
+    virtual void unknownMessageArrived(const Atlas::Message::Element&);
 
     /// call right object*Arrived method
     virtual void objectArrived(const Root& obj) = 0;
@@ -84,6 +84,11 @@ void ObjectsDecoder::messageArrived(const Atlas::Message::Element::MapType& o)
     Root obj =  messageElement2ClassObject(o);
     objectArrived(obj);
 }
+
+void ObjectsDecoder::unknownMessageArrived(const Atlas::Message::Element&)
+{
+}
+
 """) #"for xemacs syntax highlighting
         self.ns_close(self.base_list)
         self.out.close()

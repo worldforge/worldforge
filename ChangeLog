@@ -1,5 +1,18 @@
 2003-04-13  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Exception.h, Atlas/Exception.cpp,
+	  Atlas/Message/DecoderBase.cpp, Atlas/Message/DecoderBase.h,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
+	  Atlas/Net/Stream.cpp, Atlas/Net/Stream.h,
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/Encoder.h, Atlas/Objects/Encoder.cpp,
+	  Atlas/Objects/GenerateDecoder.py,
+	  Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.h:
+	  Take more virtual functions out of headers.
+
+2003-04-13  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/EncoderBase.h, Atlas/EncoderBase.cpp,
 	  Atlas/Objects/gen_cpp.py:
 	  Take virtual functions out of headers, as they can't be inlined.

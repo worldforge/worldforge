@@ -20,7 +20,7 @@ class NoSuchFactoryException : public Atlas::Exception
   public:
     NoSuchFactoryException(const std::string& name) :
                Atlas::Exception("No factory for Objects type"), name(name) { }
-    virtual ~NoSuchFactoryException() throw () { }
+    virtual ~NoSuchFactoryException() throw ();
     const std::string & getName() {
         return name;
     }

@@ -18,7 +18,7 @@ GENERATED_H = Root.h Decoder.h Dispatcher.h \
 	Anonymous.h
 
 libAtlasObjects_0_6_la_SOURCES = \
-	gen_cpp.py BaseObject.cpp loadDefaults.cpp objectFactory.cpp \
+	gen_cpp.py BaseObject.cpp Encoder.cpp loadDefaults.cpp objectFactory.cpp \
 	$(GENERATED_CPP)
 
 BUILT_SOURCES = $(GENERATED_CPP) $(GENERATED_H)

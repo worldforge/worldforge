@@ -17,7 +17,7 @@ class Exception : public std::exception
     
   public:
     Exception(const std::string & d = "UNKNOWN ERROR") : m_description(d) { }
-    virtual ~Exception() throw () { }
+    virtual ~Exception() throw ();
     const std::string & getDescription() const {
         return m_description;
     }
