@@ -1,3 +1,8 @@
+2003-10-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDispatcher.py: Final attempt to get
+	  OSX's weird gcc to take this code.
+
 2003-10-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/GenerateForward.py: Make forward header a true
