@@ -31,7 +31,7 @@ public:
 	
 	/// cancel the Timeout immediately
 	void cancel();
-	void poll(const Time::Stamp &t);
+	unsigned long poll(const Time::Stamp &t);
 	
 	/// test whether or not the timeout has fired or not
 	bool isExpired() const;
@@ -50,7 +50,7 @@ public:
 	triggers expiry signals and so on. Timeout accuracy is directly related
 	to how frequently polling is done (but timeouts aren't supposed to be
 	accurate, so once per main loop iteration should be fine) */
-	static void pollAll();
+	static unsigned long pollAll();
 
 	/** helper function to lookup a timeout and call extend(). If the timeout is not found,
 	InvalidOperation will be thrown */

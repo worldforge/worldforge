@@ -7,6 +7,9 @@
 
 using namespace Time;
 
+// The longest wait time for poll() to return, currently 100ms
+static const unsigned long max_wait = 100;
+
 namespace Eris
 {
 
@@ -49,12 +52,17 @@ bool Timeout::isExpired() const
 	return (_due < Time::Stamp::now());
 }
 
-void Timeout::poll(const Time::Stamp &t)
+unsigned long Timeout::poll(const Time::Stamp &t)
 {
-	if (!_fired && (_due < t)) {
+	if (!_fired) {
+		long diff = _due - t;
+		if(diff > 0) // not finished yet
+			return diff;
 		Expired();	// invoke the signal
 		_fired = true;
 	}
+
+	return max_wait; // Doesn't need to be called again
 }
 
 void Timeout::reset(unsigned long milli)
@@ -78,12 +86,16 @@ const Timeout* Timeout::findByName(const std::string &nm)
 	return T->second;
 }
 
-void Timeout::pollAll()
+unsigned long Timeout::pollAll()
 {
 	Time::Stamp now = Time::Stamp::now();
+	unsigned long wait = max_wait;
 	for (TimeoutMap::iterator T=_allTimeouts.begin(); T != _allTimeouts.end(); ++T) {
-		T->second->poll(now);
+		unsigned long this_wait = T->second->poll(now);
+		if(this_wait < wait)
+			wait = this_wait;
 	}
+	return wait;
 }
 
 

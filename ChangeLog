@@ -1,3 +1,9 @@
+Sunday, June 30, Ron Steinke
+
+	* PollDefault fixes
+	* Timeout::poll() and Timeout::pollAll() now return info
+	  on when to poll again
+
 Wednesday, June 26, Al Riddoch
 
 	* Switched to new location for skstream headers.

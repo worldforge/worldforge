@@ -46,10 +46,11 @@ private:
 using namespace Eris;
 
 PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
-    bool &got_data, unsigned long usec_timeout) : maxfd(0)
+    bool &got_data, unsigned long msec_timeout) : maxfd(0)
 {
 	FD_ZERO(&reading);
 	FD_ZERO(&writing);
+	got_data = false;
 
 #ifndef _MSC_VER
 	for(_iter I = str.begin(); I != str.end(); ++I) {
@@ -61,6 +62,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 		SOCKET_TYPE fd = I->first->getSocket();
 		if(fd == INVALID_SOCKET)
                 	continue;
+		got_data = true;
 		if(I->second & Poll::READ)
 			FD_SET(fd, &reading);
 		if(I->second & Poll::WRITE)
@@ -69,12 +71,10 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 			maxfd = fd;
 	}
 
-	if(maxfd == -1) {
-		got_data = false;
+	if(!got_data)
 		return;
-	}
 
-	struct timeval timeout = {0, usec_timeout};
+	struct timeval timeout = {msec_timeout / 1000, msec_timeout % 1000};
 	int retval = select(maxfd+1, &reading, &writing, NULL, &timeout);
 	if (retval < 0)
 		// FIXME - is an error from select fatal or not? At present I think yes,
@@ -108,8 +108,20 @@ void PollDefault::poll(unsigned long timeout)
 {
   // This will throw if someone is using another kind
   // of poll, and that's a good thing.
-  dynamic_cast<PollDefault&>(Poll::instance()).doPoll(timeout);
+  PollDefault &inst = dynamic_cast<PollDefault&>(Poll::instance());
 
+  unsigned long wait_time = 0;
+
+  // This will only happen for timeout != 0
+  while(wait_time < timeout) {
+    // Don't wait quite the full time, in case the callbacks take some time
+    unsigned long skip_time = (wait_time * 4) / 5;
+    inst.doPoll(skip_time);
+    timeout -= skip_time;
+    wait_time = Timeout::pollAll();
+  }
+
+  inst.doPoll(timeout);
   Timeout::pollAll();
 }
 
