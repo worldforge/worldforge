@@ -309,7 +309,6 @@ void testLogin()
     
     assert(loginErrorCounter.fireCount() == 0);
     
-    cout << "login success" << endl;
     assert(player->getId() == "_23_account_A");
     assert(player->isLoggedIn());
 }

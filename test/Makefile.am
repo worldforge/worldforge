@@ -1,6 +1,7 @@
 INCLUDES = -I$(top_srcdir)
 
 check_PROGRAMS = testEris
+TESTS = $(check_PROGRAMS)
 
 testEris_SOURCES = tests.cpp \
     stubServer.h stubServer.cpp \
