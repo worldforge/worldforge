@@ -1,3 +1,7 @@
+Saturday, May 11, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Bumped version number to 0.2.8, due to the sign convention changes
+
 Friday, May 10, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* Added an isValid() flag to all classes. Point and Vector
