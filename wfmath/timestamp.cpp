@@ -38,7 +38,10 @@
 
 const long Million = 1000000;
 
-static void regularize(long &sec, long &usec)
+// apparently, some architectures use int instead of long
+// in struct timeval
+template<class T1, class T2>
+static void regularize(T1 &sec, T2 &usec)
 {
   if(usec >= Million) {
     usec -= Million;

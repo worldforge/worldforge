@@ -1,3 +1,8 @@
+Wednesday, October 23, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Portability fix. Apparently debian on sparc uses
+	  int instead of long for the usec field of struct timeval.
+
 Monday, October 10, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Changed operator==() for quaternions to regard two
