@@ -1,8 +1,9 @@
+Atlas-C++-*.*.*
 aclocal.m4
 atlascpp-0.6.pc
 atlas-config
 atlas-cpp.spec
-autom4te-*.cache
+autom4te*.cache
 config.cache
 config.def.in
 config.guess

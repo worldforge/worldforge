@@ -1,3 +1,7 @@
+2003-07-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Switch to a cleaned up configure.ac.
+
 2003-07-22  Ron Steinke <rsteinke@w-link.net>
 
 	* Added internal refcounting to Atlas::Message::Element,
