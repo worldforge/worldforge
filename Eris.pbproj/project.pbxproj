@@ -122,6 +122,10 @@
 		};
 		C43FBCF2054315F2008FC2ED = {
 			children = (
+				C4D7703405EA7B1D00423FA7,
+				C492F63C05E97D8500AFF6AE,
+				C492F63005E97AAB00AFF6AE,
+				C4903CDC05E96B9D0014EFCA,
 				C4E59E5905C050D7003934C3,
 				C43FBD1C054315F3008FC2ED,
 				C43FBD20054315F3008FC2ED,
@@ -147,7 +151,6 @@
 				C43FBD80054315F4008FC2ED,
 				C43FBD82054315F4008FC2ED,
 				C43FBD8A054315F4008FC2ED,
-				C43FBD1A054315F3008FC2ED,
 				C43FBD7C054315F4008FC2ED,
 				C437AF410562987C00ACFA1E,
 				C437AF420562987C00ACFA1E,
@@ -159,14 +162,6 @@
 			isa = PBXGroup;
 			name = Headers;
 			path = Eris;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C43FBD1A054315F3008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = atlas_utils.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -720,7 +715,6 @@
 		C45DC3E70562F83D00D8F8F4 = {
 			buildActionMask = 2147483647;
 			files = (
-				C45DC3E90562F83D00D8F8F4,
 				C45DC3EA0562F83D00D8F8F4,
 				C45DC3EB0562F83D00D8F8F4,
 				C45DC3ED0562F83D00D8F8F4,
@@ -752,15 +746,13 @@
 				C4E59E5B05C050D7003934C3,
 				C44E341D05D856FC005C5DF9,
 				C44E341F05D857DB005C5DF9,
+				C4903CDE05E96B9D0014EFCA,
+				C492F63105E97AAB00AFF6AE,
+				C492F63D05E97D8500AFF6AE,
+				C4D7703505EA7B1D00423FA7,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C45DC3E90562F83D00D8F8F4 = {
-			fileRef = C43FBD1A054315F3008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		C45DC3EA0562F83D00D8F8F4 = {
 			fileRef = C43FBD1C054315F3008FC2ED;
@@ -1035,6 +1027,9 @@
 				C45DC4260562F83D00D8F8F4,
 				C45DC4280562F83D00D8F8F4,
 				C4E59E5A05C050D7003934C3,
+				C4903CDD05E96B9D0014EFCA,
+				C492F64005E97DFF00AFF6AE,
+				C4D7703A05EA7DB700423FA7,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1394,6 +1389,78 @@
 			remoteGlobalIDString = C4C56B39055AF6AE00944C0F;
 			remoteInfo = atlasTest;
 		};
+		C4903CDB05E96B9D0014EFCA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = igRouter.cpp;
+			path = Eris/igRouter.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4903CDC05E96B9D0014EFCA = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = igRouter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4903CDD05E96B9D0014EFCA = {
+			fileRef = C4903CDB05E96B9D0014EFCA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4903CDE05E96B9D0014EFCA = {
+			fileRef = C4903CDC05E96B9D0014EFCA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C492F63005E97AAB00AFF6AE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = redispatch.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C492F63105E97AAB00AFF6AE = {
+			fileRef = C492F63005E97AAB00AFF6AE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C492F63C05E97D8500AFF6AE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = entityRouter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C492F63D05E97D8500AFF6AE = {
+			fileRef = C492F63C05E97D8500AFF6AE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C492F63F05E97DFF00AFF6AE = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = entityRouter.cpp;
+			path = Eris/entityRouter.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C492F64005E97DFF00AFF6AE = {
+			fileRef = C492F63F05E97DFF00AFF6AE;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C4BB158B0544A61B00A800CF = {
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
@@ -1414,6 +1481,8 @@
 		};
 		C4BB15920544A6C100A800CF = {
 			children = (
+				C4903CDB05E96B9D0014EFCA,
+				C4D7703905EA7DB700423FA7,
 				C4E59E5805C050D7003934C3,
 				C43FBD1B054315F3008FC2ED,
 				C43FBD1F054315F3008FC2ED,
@@ -1434,6 +1503,7 @@
 				C43FBD77054315F4008FC2ED,
 				C43FBD7F054315F4008FC2ED,
 				C43FBD81054315F4008FC2ED,
+				C492F63F05E97DFF00AFF6AE,
 				C43FBD89054315F4008FC2ED,
 				C43FBD7B054315F4008FC2ED,
 			);
@@ -1441,6 +1511,35 @@
 			name = Source;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		C4D7703405EA7B1D00423FA7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = view.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4D7703505EA7B1D00423FA7 = {
+			fileRef = C4D7703405EA7B1D00423FA7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4D7703905EA7DB700423FA7 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = view.cpp;
+			path = Eris/view.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4D7703A05EA7DB700423FA7 = {
+			fileRef = C4D7703905EA7DB700423FA7;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C4E59E5805C050D7003934C3 = {
 			fileEncoding = 30;

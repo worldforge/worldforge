@@ -2,12 +2,7 @@
 #define ERIS_PERSON_H
 
 #include <string>
-
-namespace Atlas {
-  namespace Objects {
-    namespace Entity { class Account; }
-  }
-}
+#include <Atlas/Objects/ObjectsFwd.h>
 
 namespace Eris
 {
@@ -17,7 +12,8 @@ class Lobby;
 /** An Out-of-Game Person (found in a Room / Lobby)	As more person data becomes available,
 this class will be extended, for example to return nicknames, location, the choosen 'face' graphic.
 */
-class Person {
+class Person
+{
 public:
     /// create a person from sight
     Person(Lobby *l, const Atlas::Objects::Entity::Account &acc);
@@ -29,19 +25,16 @@ public:
     void msg(const std::string &msg);
 
     /// access the Atlas account ID for this person
-    const std::string& getAccount() const { return _id; }
+    const std::string& getAccount() const { return m_id; }
+    
     /// access the human-readable name for this person 
-    const std::string& getName() const {return _name;}
-
-    ///
-    Lobby* getLobby() const {return _lobby;}
+    const std::string& getName() const {return m_name;}
 
 protected:
-    const std::string _id;	///< the account ID 
-    std::string _name;	///< the name, i.e account.GetName()
-	// other fields ...
+    const std::string m_id;	///< the account ID 
+    std::string m_name;         ///< the name, i.e account.GetName()
 
-    Lobby* _lobby;	///< the lobby owning this Person
+    Lobby* m_lobby;	///< the lobby owning this Person
 };
 
 }

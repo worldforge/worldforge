@@ -1,3 +1,22 @@
+Wednesday 25th February 2004, James Turner <james@worldforge.org>
+
+* Added entityRouter, essentially an internal helper to keep most Atlas
+  decode stuff out of Entity.
+* Total re-work of Entity, subclassing should be sane now, API is
+  collapsing to a more useful set too.
+* Sorting out which ops are handled by the EntityRouter (decodes on FROM)
+  vs the IGRouter (decodes on TO)
+  
+Monday 23rd February 2004, James Turner <james@worldforge.org>
+
+* Added View class, which handles all the icky appearance / disappearance
+  logic wich used to reside in World. The InvisibleEntityCache logic
+  can also be plugged in here, or the IEC can be made an internal helper.
+* Made IGRouter simpler, it's purely what it's name suggests, the routing
+  helper for Avatar.
+* Started cleaning up Avatar. Hopefully will need to add very few methods,
+  even once World is gone.
+
 Sunday, 22nd February 2004, James Turner <james@worldforge.org>
 
 * First portion of work migrating to Atlas-C++ 0.6, and many other

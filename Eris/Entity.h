@@ -2,6 +2,7 @@
 #define ERIS_ENTITY_H
 
 #include <Eris/Types.h>
+#include <Eris/router.h>
 
 #include <Atlas/Message/Element.h>
 #include <Atlas/Objects/ObjectsFwd.h>
@@ -15,13 +16,9 @@ namespace Eris {
 
 // Forward Declerations	
 class Entity;
-class World;	
-class Property;
 class TypeInfo;
     
 typedef std::vector<Entity*> EntityArray;
-
-typedef std::map<std::string, Property*> PropertyMap;
 
 /// Entity is a concrete (instanitable) class representing one game entity
 /** Entity encapsulates the state and tracking of one game entity; this includes
@@ -37,207 +34,201 @@ or creating peer clases and attaching them to the signals.
 class Entity : virtual public SigC::Object
 {
 public:	
-	explicit Entity(const Atlas::Objects::Entity::GameEntity &ge, World *world);
-	virtual ~Entity();
+    explicit Entity(const Atlas::Objects::Entity::GameEntity &ge);
+    virtual ~Entity();
 
-	/* container interface; not virtualized, should it be? i.e, will anyone want to
-	change containership semantics on the client? Assume no until proved
-	otherwise */
-	Entity* getContainer() const
-	{ return _container; }
+// heirarchy interface    
+    unsigned int numContained() const;
+    Entity* getContained(unsigned int index) const;
 
-	unsigned int getNumMembers() const
-	{ return _members.size(); }
+    Atlas::Message::Element valueOfAttr(const std::string& attr) const;
+        
+    bool hasAttr(const std::string &p) const;
 
-        bool hasBBox() const
-        { return _hasBBox; }
+    typedef SigC::Slot2<void, const std::string&, const Atlas::Message::Element&> AttrChangedSlot;
 
-	Entity* getMember(unsigned int index);
+    /** setup an observer so that the specified slot is fired when the
+    named attribue's value changes */
+    SigC::Connection observe(const std::string& attr, const AttrChangedSlot& aslot);
 
-	// property query interface
-	/// access a property; thows UnknownProperty if not found
-	virtual const Atlas::Message::Element& getProperty(const std::string &p);
-	/// test whether the named property exists on this entity
-	virtual bool hasProperty(const std::string &p) const;
-
-	// dynamics; these are virtual to allow derived class to implement motion
-	// prediction or other effects that can't be guessed here
-	virtual WFMath::Point<3> getPosition() const;
-	virtual WFMath::Vector<3> getVelocity() const;
+// accesors
+    /// retrieve the unique entity ID
+    const std::string& getID() const
+    {
+        return m_id;
+    }
+    
+    const std::string& getName() const
+    {
+        return m_name;
+    }
 	
-	/** retrieve the orientation as a quaternion */
-	virtual WFMath::Quaternion getOrientation() const;
-	
-	virtual WFMath::AxisBox<3> getBBox() const;
-	
-	// accesors
-	/// retrieve the unique entity ID
-	const std::string& getID() const { return _id;}
-	const std::string& getName() const { return _name;}
-	
-	/// access the current time-stamp of the entity
-	float getStamp() const
-	{ return _stamp; }
+    /// access the current time-stamp of the entity
+    float getStamp() const
+    {
+        return m_stamp;
+    }
 
-	/// Get a set of the parent objects of the entity
-	StringSet getInherits() const
-	{ return _parents; }
-	
-	TypeInfo* getType() const;
+    TypeInfoPtr getType() const
+    {
+        return m_type;
+    }
+    
+    /** the containing entity, or null if this is a top-level visible entity. */
+    Entity* getLocation() const
+    {
+        return m_location;
+    }
 
-	World* getWorld() const
-	{ return _world; }
+    WFMath::Point<3> getPosition() const
+    {
+        return m_position;
+    }
+    
+    WFMath::Vector<3> getVelocity() const
+    {
+        return m_velocity;
+    }
+    
+    WFMath::Quaternion getOrientation() const
+    {
+        return m_orientation;
+    }
 	
-	/** Query the visiblity of this entity; this is controlled by Appearance/Disappearance ops
-	from the server */
-	bool isVisible() const
-	{ return _visible; }
+    WFMath::AxisBox<3> getBBox() const;
+	
+    bool hasBBox() const
+    {
+        return m_hasBBox;
+    }
 
-	// coordinate transformations
-	template<class C> C toParentCoords(const C& c) const
-		{return c.toParentCoords(_position, _orientation);}
-	template<class C> C fromParentCoords(const C& c) const
-		{return c.toLocalCoords(_position, _orientation);}
-	// A vector (e.g., the distance between two points, or
-	// a velocity) gets rotated by a coordinate transformation,
-	// but doesn't get shifted by the change in the position
-	// of the origin, so we handle it separately. We also
-	// need to copy the vector before rotating, because
-	// Vector::rotate() rotates it in place.
-	WFMath::Vector<3> toParentCoords(const WFMath::Vector<3>& v) const
-		{return WFMath::Vector<3>(v).rotate(_orientation);}
-	WFMath::Vector<3> fromParentCoords(const WFMath::Vector<3>& v) const
-		{return WFMath::Vector<3>(v).rotate(_orientation.inverse());}
+// coordinate transformations
+    template<class C>
+    C toParentCoords(const C& c) const
+    {
+        return c.toParentCoords(m_position, m_orientation);
+    }
+    
+    template<class C>
+    C fromParentCoords(const C& c) const
+    {
+        return c.toLocalCoords(m_position, m_orientation);
+    }
+    
+    // A vector (e.g., the distance between two points, or
+    // a velocity) gets rotated by a coordinate transformation,
+    // but doesn't get shifted by the change in the position
+    // of the origin, so we handle it separately. We also
+    // need to copy the vector before rotating, because
+    // Vector::rotate() rotates it in place.
+    WFMath::Vector<3> toParentCoords(const WFMath::Vector<3>& v) const
+    {
+        return WFMath::Vector<3>(v).rotate(m_orientation);
+    }
+    
+    WFMath::Vector<3> fromParentCoords(const WFMath::Vector<3>& v) const
+    {
+        return WFMath::Vector<3>(v).rotate(m_orientation.inverse());
+    }
 	
 // Signals
-	SigC::Signal1<void, Entity*> AddedMember;
-	SigC::Signal1<void, Entity*> RemovedMember;
+    SigC::Signal1<void, Entity*> AddedMember;
+    SigC::Signal1<void, Entity*> RemovedMember;
 	
-	/// Signal that the entity's container changed
-	/** Emitted when the entity's container changes; note if the entity has
-	just been created, or is being deleted, then one of the arguments may be NULL
-	(but not both)
-	*/
-	SigC::Signal2<void, Entity*, Entity*> Recontainered;
+    /// Signal that the entity's container changed
+    /** Emitted when the entity's container changes; note if the entity has
+    just been created, or is being deleted, then one of the arguments may be NULL
+    (but not both)
+    */
+    SigC::Signal2<void, Entity*, Entity*> Recontainered;
 
-	/** Emitted when a macro change occurs */
-	SigC::Signal1<void, const StringSet&> Changed;
+    /** Emitted when one or more attributes change. The arguments are the
+    Entity which changed, and a set of attribute IDs which were modified. */
+    SigC::Signal2<void, Entity* const StringSet&> Changed;
 
-	/** Emitted when then entity's position or orientation have changed; i.e the
-	displayed model/sprite/etc needs to be updated. The argument is the new position */
-	SigC::Signal1<void, const WFMath::Point<3>&> Moved;
+    /** Emitted when then entity's position, orientation or velocity change.
+    Argument is the entity that moved, so you can bind the same slot to
+    multiple entities if desired. */
+    SigC::Signal1<void, Entity*> Moved;
 
-	/** Emitted with this entity speaks. In the future langauge may be specified */
-	SigC::Signal1<void, const std::string&> Say;
-	
-	/** Emitted when this entity originates the specified class of operation;
-	note the derived operations will also invoke the signal */
-	template <class T>
-	void connectOpToSlot(const std::string &op, const SigC::Slot1<void, const T&> &slot)
-	{ innerOpToSlot(new SignalDispatcher<T>(op, slot)); }
-	
-	/** Emitted when this entity receives a specified class of operations; again
-	derived operations will also trigger the signal to be invoked */
-	template <class T>
-	void connectOpFromSlot(const std::string &op, SigC::Slot1<void, const T&> &slot)
-	{  innerOpFromSlot(new SignalDispatcher<T>(op, slot)); }
-	
-	void observeProperty(const std::string &nm, 
-	    const SigC::Slot1<void, const Atlas::Message::Element&> slot);
+    /** Emitted with this entity speaks. In the future langauge may be specified */
+    SigC::Signal1<void, const std::string&> Say;
 	
 protected:	
-	/// constructor for use by derived classes only!
-	explicit Entity(const std::string &id, World *world);	
+    friend class IGRouter;
+    friend class View;
+    
+    void sight(const Atlas::Objects::Entity::GameEntity& gent);
+    void setFromRoot(const Atlas::Objects::Root& obj);
 
-	// the World is a friend, so that it may set properties and containership of
-	// entities.
-	friend class World;
+    /** process TALK data - default implementation emits the Say signal.
+    @param obj The TALK operation arguments
+    */
+    virtual void talk(const Atlas::Objects::Root& obj);
 
-	virtual void handleMove();
-	virtual void handleTalk(const std::string &msg);
-	
-	/// set the property value; this protected so only Entity / World may use it
-	virtual void setProperty(const std::string &p, const Atlas::Message::Element &v);	
+    void setAttr(const std::string &p, const Atlas::Message::Element &v);	
 
-	virtual void setPosition(const WFMath::Point<3>& pt);
-	/// update the container of this entity (may be NULL)
-	virtual void setContainer(Entity *pr);
+    /** over-rideable method to map Atlas attributes to natively
+    stored properties. Return true if you handle the attribute, false other-
+    wise. Always call you base classe's implemention if you override this!.
+    */
+    virtual bool nativeAttrChange(const std::string &p, const Atlas::Message::Element &v);
 	
-	virtual void setContents(const Atlas::Message::Element::ListType &contents);
-	
-	/// add a contained entity to this object (sets container)
-	virtual void addMember(Entity *e);
-	
-	/// remove an contained entity
-	/** remove a contained entity; throws InvalidOperation if not found. Note
-	that the container of e is <i>not<i/> reset */
-	virtual void rmvMember(Entity *e);
-	
-	/** called by World in response to Appearance/Disappearance messages : note that
-	after a disappearance (vis = false), the server will not send any futher messages to the
-	entity. At some point, invisible entities get flushed by Eris using an LRU scheme. */
-	virtual void setVisible(bool vis);
-	
-	void setContainerById(const std::string &id);
-	
-	const std::string _id;	///< the Atlas object ID
-	std::string _name;		///< a human readable name
-	float _stamp;		///< last modification time (in seconds) 
-	std::string _description;// surely this should be retrieved dynamically from the server?
-	StringSet _parents;
-	bool _visible;
-	
-	// container-ship / entity heirarchy
-	Entity* _container;	///< The container entity, NULL for the root-entity, or if un-parented
-	EntityArray _members;
+    /** over-rideable hook method when then Entity position, orientation or
+    velocity change. The default implementation emits the Moved signal. */
+    virtual void moved(Entity* ins);
+        
+    void beginUpdate();
+    void addToUpdate(const std::string& attr);
+    void endUpdate();
 
-	WFMath::AxisBox<3> _bbox;
-	WFMath::Point<3> _position;
-	WFMath::Vector<3> _velocity;
-	WFMath::Quaternion _orientation;
-	
-// properties
-	void beginUpdate();
-	void endUpdate();
-	
-	PropertyMap _properties;
-	
-	/** This flag is set if a property update is in progress. This supresses emission
-	of the Changed signal until endUpdate is called, so that a number of
-	attributes may be updated en-masse, generating just one signal. */
-	bool _inUpdate;
-
-        /** This flag should be set when the server notifies that this entity
-        has a bounding box. If this flag is not true, the contents of the
-        BBox attribute are undefined.  */
-        bool _hasBBox;
-	
-	/** When a batched property update is in progress, the set tracks the names
-	of each modified property. This set is passed as a parameter of the Changed
-	callback when endUpdate is called, to allow clients to determine what
-	was changed. */
-	StringSet _modified;
+    /** the View calls this to change entity visibility. No one else
+    should be calling it!*/
+    void setVisible(bool vis);
 
 private:
-	//friend class World;	// World has to be a friend so it can call these
-		
-	// these are private and final so sub-classing people don't get confused with the
-	// respective handleXXXX methods. If you want to change how the raw Atlas
-	// operation is processed, setup a custom dispatcher.
-	void recvSight(const Atlas::Objects::Entity::GameEntity &ge);	
-	void recvMove(const Atlas::Objects::Operation::Move &mv);
-	void recvSet(const Atlas::Objects::Operation::Set &st);
+    class EntityRouter;
+
+    typedef std::map<std::string, Atlas::Message::Element> AttrMap;
+    AttrMap m_attrs;
+    
+    TypeInfoPtr m_type;
+    
+    Entity* m_location;	
+    EntityArray m_contents;
+        
+    const std::string m_id;	///< the Atlas object ID
+    std::string m_name;		///< a human readable name
+    float m_stamp;		///< last modification time (in seconds) 
+    std::string m_description;
+    Router* m_router;
+    bool m_visible;
+    
+    WFMath::AxisBox<3> m_bbox;
+    WFMath::Point<3> m_position;
+    WFMath::Vector<3> m_velocity;
+    WFMath::Quaternion m_orientation;    
 	
-	void recvSound(const Atlas::Objects::Operation::Sound &snd);
-	void recvTalk(const Atlas::Objects::Operation::Talk &tk);
+    /** If greater than zero, we are doing a batched update. This supresses emission
+    of the Changed signal until endUpdate is called, so that a number of
+    attributes may be updated en-masse, generating just one signal. */
+    int m_updateLevel;
 
-	void innerOpFromSlot(Dispatcher *s);
-	void innerOpToSlot(Dispatcher *s);
-
-	// disptchers that have been bound to this entity (so we know to delete them)
-	StringList _localDispatchers;
-
-	World *_world; // the World that created the Entity
+    /** When a batched property update is in progress, the set tracks the names
+    of each modified property. This set is passed as a parameter of the Changed
+    callback when endUpdate is called, to allow clients to determine what
+    was changed. */
+    StringSet m_modifiedAttrs;
+        
+    typedef SigC::Signal2<void, const std::string&, const Atlas::Message::Element&> AttrChangedSignal;
+        
+    typedef std::map<std::string, AttrChangedSignal> ObserverMap;
+    ObserverMap m_observer;
+        
+    /** This flag should be set when the server notifies that this entity
+    has a bounding box. If this flag is not true, the contents of the
+    BBox attribute are undefined.  */
+    bool _hasBBox;
 };
 
 } // of namespace

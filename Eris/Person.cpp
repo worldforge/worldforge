@@ -1,5 +1,5 @@
 #ifdef HAVE_CONFIG_H
-	#include "config.h"
+    #include "config.h"
 #endif
 
 #include <Eris/Person.h>
@@ -8,48 +8,55 @@
 #include <Eris/Lobby.h>
 #include <Eris/Utils.h>
 
-#include <Atlas/Objects/Entity/Account.h>
-#include <Atlas/Objects/Operation/Talk.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
+
+typedef Atlas::Objects::Entity::Account AtlasAccount;
+using namespace Atlas::Objects::Operation;
 
 namespace Eris
 {
 	
-Person::Person(Lobby *l, const Atlas::Objects::Entity::Account &acc) :
-	_id(acc.getId()),
-	_name(acc.getName()),
-	_lobby(l)
+Person::Person(Lobby *l, const AtlasAccount &acc) :
+    m_id(acc->getId()),
+    m_fullName(acc->getName()),
+    m_lobby(l)
 {
-	;
+    
 }
 	
-void Person::sight(const Atlas::Objects::Entity::Account &acc)
+void Person::sight(const AtlasAccount &acc)
 {
-	if (acc.getId() != _id)
-		throw IllegalObject(acc, "Person's ID doesn't match account ID: " + _id);
-	_name = acc.getName();
-	
-	// FIXME - remove this once all clients set a name
-	if (_name.empty())
-		_name = _id;
+    if (acc->getId() != m_id)
+    {
+        error() << "person got sight(account) with mismatching Ids";
+        return;
+    }
+    
+    if (acc->isDefaultName())
+        m_name = m_id;
+    else
+        m_name = acc->getName();
 }
 
 void Person::msg(const std::string &msg)
 {
-    if (!_lobby->getConnection()->isConnected())
-	// FIXME - provide some feed-back here
-	return;
+    if (!m_lobby->getConnection()->isConnected())
+    {
+        error() << "sending private chat, but connection is down";
+        return;
+    }
 	
-    Atlas::Objects::Operation::Talk t;
     Atlas::Message::Element::MapType speech;
-    speech["say"] = msg;
-    //speech["loc"] =   no location for private chat
+    speech["say"] = tk;
 	
+    Talk t;
     t.setArgs(Atlas::Message::Element::ListType(1, speech));
-    t.setTo(_id);
-    t.setFrom(_lobby->getAccountID());
-    t.setSerialno(getNewSerialno());
+    t->setTo(m_id);
+    t->setFrom(m_lobby->getAccountID());
+    t->setSerialno(getNewSerialno());
 	
-    _lobby->getConnection()->send(t);
+    m_lobby->getConnection()->send(t);
 }
 
 } // of namespace Eris

@@ -491,32 +491,7 @@ void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &/*ifo*/,
 	look("");
 }
 
-void World::recvAppear(const Atlas::Objects::Operation::Appearance &ap)
-{
-	const AtlasListType &args = ap.getArgs();
-	for (AtlasListType::const_iterator A=args.begin();A!=args.end();++A) {
-		const AtlasMapType &app = A->asMap();
-		AtlasMapType::const_iterator V(app.find("id"));
-		std::string id(V->second.asString());
-		Entity *e = lookup(id);
-		if (!e) continue;
-	
-		// wunderbar, we have it already
-		e->setVisible(true);
-		Appearance.emit(e);
-		
-		float stamp(FLT_MAX);
-		// but it might be out of data - check the stamp [NULL indicates no stamping]
-		if ((V = app.find("stamp")) != app.end())
-			stamp = V->second.asFloat();
-		
-		if (stamp > e->getStamp()) {
-			Eris::log(LOG_DEBUG, "Issuing re-look for existing APPEARED entity %s with new stamp",
-				id.c_str());
-			look(id);
-		}
-	}
-}
+
 
 void World::recvDisappear(const Atlas::Objects::Operation::Disappearance &ds)
 {

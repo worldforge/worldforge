@@ -1,94 +1,40 @@
+#ifdef HAVE_CONFIG_H
+    #include "config.h"
+#endif
+
 #include <Eris/Avatar.h>
-
-
-
-#include <Eris/World.h>
 #include <Eris/Entity.h>
-#include <Eris/OpDispatcher.h>
 #include <Eris/Connection.h>
-#include <Eris/ClassDispatcher.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
 
-#include <Atlas/Objects/Entity.h>
-#include <Atlas/Objects/Operation.h>
-
-#include <Atlas/Message/Element.h>
 #include <wfmath/atlasconv.h>
 #include <sigc++/object_slot.h>
 
-using namespace Eris;
-using Atlas::Message::Element;
+using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Root;
+using Atlas::Objects::Entity::GameEntity;
 
-Avatar::AvatarMap Avatar::_avatars;
-
-// Not very efficient, but it works.
-static std::string refno_to_string(long refno)
+namespace Eris
 {
-  // deal with any character set weirdness
-  const char digits[10] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
-  unsigned long val = (refno >= 0) ? refno : -refno;
-
-  std::string result;
-
-  do {
-    result = digits[val % 10] + result;
-    val /= 10;
-  } while(val);
-
-  if(refno < 0)
-    result = '-' + result;
-
-  return result;
-}
-
-// We may not be able to set _entity yet, if we haven't gotten a
-// Sight op from the server
-Avatar::Avatar(World* world, long refno, const std::string& character_id) : 
-    _world(world),
-    m_entityId(character_id),
-    _entity(0)
+Avatar::Avatar(Player pl, long refno, const std::string& charId) : 
+    m_account(pl),
+    m_entityId(charId),
+    m_entity(NULL)
 {
-    assert(world);
-
-    _dispatch_id = "character_" + refno_to_string(refno);
-
-// info operation
-    Dispatcher *d = _world->getConnection()->getDispatcherByPath("op:info");
-    assert(d);
-    d = d->addSubdispatch(ClassDispatcher::newAnonymous(_world->getConnection()));
-    d = d->addSubdispatch(new OpRefnoDispatcher(_dispatch_id, refno, 1), "game_entity");
-    d->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Info, 
-    	Atlas::Objects::Entity::GameEntity>(
-    	"character", SigC::slot(*this, &Avatar::recvInfoCharacter))
-    );
-
-    if(!m_entityId.empty()) {
-	bool success = _avatars.insert(std::make_pair(
-	    AvatarIndex(_world->getConnection(), m_entityId), this)).second;
-	if(!success) // We took a character that already had an Avatar
-	    throw InvalidOperation("Character " + m_entityId + " already has an Avatar");
-    }
-
-    _world->Entered.connect(SigC::slot(*this, &Avatar::recvEntity));
-
-    log(LOG_DEBUG, "Created new Avatar with id %s and refno %i", m_entityId.c_str(), refno);
+    m_view = new View(this);
+    if (!charId.empty())
+        m_router = new IGRouter(this);
 }
 
 Avatar::~Avatar()
 {
-    if(!_dispatch_id.empty())
-	_world->getConnection()->removeDispatcherByPath("op:info", _dispatch_id);
-    if(!m_entityId.empty()) {
-	AvatarMap::iterator I = _avatars.find(AvatarIndex(_world->getConnection(), m_entityId));
-	assert(I != _avatars.end());
-	_avatars.erase(I);
-    }
-    // If at some point we have multiple Avatars per World, this will need to
-    // be changed to some unregister function
-    delete _world;
+    delete m_router;
+    delete m_view;
 }
+
+#pragma mark -
 
 void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc)
 {
@@ -242,22 +188,7 @@ void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
     _world->getConnection()->send(moveOp);
 }
 
-Avatar* Avatar::find(Connection* con, const std::string& id)
-{
-    AvatarMap::const_iterator I = _avatars.find(AvatarIndex(con, id));
-    return (I != _avatars.end()) ? I->second : 0;
-}
-
-std::vector<Avatar*> Avatar::getAvatars(Connection* con)
-{
-    std::vector<Avatar*> result;
-
-    for(AvatarMap::const_iterator I = _avatars.begin(); I != _avatars.end(); ++I)
-	if(I->first.first == con)
-	    result.push_back(I->second);
-
-    return result;
-}
+#pragma mark -
 
 void Avatar::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 		const Atlas::Objects::Entity::GameEntity &character)
@@ -288,3 +219,5 @@ void Avatar::recvEntity(Entity* e)
   e->AddedMember.connect(InvAdded.slot());
   e->RemovedMember.connect(InvRemoved.slot());
 }
+
+} // of namespace Eris

@@ -20,12 +20,9 @@ namespace Eris
 {
 	
 // Forward declarations
-class Dispatcher;
-class WaitForBase;
 class Timeout;
 class PollData;
 class TypeService;
-class Lobby;
 class Router;
 
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
@@ -93,25 +90,25 @@ public:
     void postForDispatch(const Atlas::Objects::Root& obj);
 ///////////////////////
 	
-	/// Emitted when the disconnection process is initiated
-	SigC::Signal0<bool> Disconnecting;
-	
-	/** Emitted when a non-fatal error occurs; these are nearly always network
-	related, such as connections being lost, or host names not found. The
-	connection will be placed into the DISCONNECTED state after the signal
-	is emitted; thus the current state (when the failure occured) is still valid
-	during the callback */
-	SigC::Signal1<void, const std::string&> Failure;
-	
-	/** Emitted when a network-level timeout occurs; the status code indicates
-	in which stage of operation the timeout occurred. */
-	SigC::Signal1<void, Status> Timeout;
-	
-	/// indicates a status change on the connection
-	/** emitted when the connection status changes; This will often
-	correspond to the emission of a more specific signal (such as Connected),
-	which should be used where available. */
-	SigC::Signal1<void, Status> StatusChanged;
+    /// Emitted when the disconnection process is initiated
+    SigC::Signal0<bool> Disconnecting;
+    
+    /** Emitted when a non-fatal error occurs; these are nearly always network
+    related, such as connections being lost, or host names not found. The
+    connection will be placed into the DISCONNECTED state after the signal
+    is emitted; thus the current state (when the failure occured) is still valid
+    during the callback */
+    SigC::Signal1<void, const std::string&> Failure;
+    
+    /** Emitted when a network-level timeout occurs; the status code indicates
+    in which stage of operation the timeout occurred. */
+    SigC::Signal1<void, Status> Timeout;
+    
+    /// indicates a status change on the connection
+    /** emitted when the connection status changes; This will often
+    correspond to the emission of a more specific signal (such as Connected),
+    which should be used where available. */
+    SigC::Signal1<void, Status> StatusChanged;
 
 protected:
 	/// update the connection status (and emit the appropriate signal)
