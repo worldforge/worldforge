@@ -126,6 +126,7 @@ bool cellIntersect(float h1, float h2, float h3, float h4, float crossX,
         topP = - (Dot((sPt-WFMath::Point<3>(0.,0.,0.)), topNormal) 
                - Dot(topNormal, p0)) / t; 
         WFMath::Point<3> topInt = sPt + nDir*topP;
+        //ensure our parameter is reported using the real vector, not the normalised one
         topP = topP/dirLen;
         //check the intersection is inside the triangle, and within the ray extents
         if ((topP <= 1.0) && (topP > 0.0) &&
@@ -147,8 +148,8 @@ bool cellIntersect(float h1, float h2, float h3, float h4, float crossX,
                - Dot(botNormal, p0)) / b; 
         WFMath::Point<3> botInt = sPt + nDir*botP;
         //ensure our parameter is reported using the real vector, not the normalised one
-        //check the intersection is inside the triangle, and within the ray extents
         botP = botP/dirLen; 
+        //check the intersection is inside the triangle, and within the ray extents
         if ((botP <= 1.0) && (botP > 0.0) &&
             (botInt[0] <= crossX + 1 ) && (botInt[1] >= crossY ) && 
             ((botInt[0] - botInt[1]) >= (crossX - crossY))) {
