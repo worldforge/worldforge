@@ -8,15 +8,22 @@
 #include <skstream/skstream.h>
 #include <deque>
 
-class Account::ClientConnection : public Atlas::Objects::DecoderBase
+class StubServer;
+
+class ClientConnection : public Atlas::Objects::ObjectsDecoder
 {
 public:
-    ClientConnect(int socket);
-
+    ClientConnection(StubServer* ss, int socket);
+    ~ClientConnection();
+    
     void poll();
+    
+    const std::string& getAccount() const 
+    { return m_account; }
     
     //void handleOperation(const Atlas::Objects::Operation::RootOperation& op);
     
+    void send(const Atlas::Objects::Root& obj);
     
 // critical override from ObjectsDecoder
     virtual void objectArrived(const Atlas::Objects::Root& obj);
@@ -26,9 +33,19 @@ private:
     void fail();
     
     void dispatch(const Atlas::Objects::Operation::RootOperation& op);
+    void dispatchOOG(const Atlas::Objects::Operation::RootOperation& op);
     
-    basic_socket_stream m_stream;
+    void processLogin(const Atlas::Objects::Operation::Login& login);
+    void processAccountCreate(const Atlas::Objects::Operation::Create& cr);
+    void processOOGLook(const Atlas::Objects::Operation::Look& lk);
+    
+    void sendError(const std::string& msg, const Atlas::Objects::Operation::RootOperation& op);
+    
+    bool entityIsCharacter(const std::string& id);
+    
+    tcp_socket_stream m_stream;
     std::string m_account;
+    StubServer* m_server;
     
     typedef std::deque<Atlas::Objects::Root> RootDeque;
     RootDeque m_objDeque;
@@ -36,5 +53,5 @@ private:
 // Atlas stuff
     Atlas::Codec* m_codec;
     Atlas::Net::StreamAccept* m_acceptor;
-    Atlas::Objects::Encoder* m_encoder;
+    Atlas::Objects::ObjectsEncoder* m_encoder;
 };

@@ -3,29 +3,39 @@
 #endif
 
 #include "clientConnection.h"
+#include "stubServer.h"
+
 #include <Eris/logStream.h>
 #include <Eris/Exceptions.h>
+#include <Atlas/Objects/Encoder.h>
+#include <Atlas/Objects/RootOperation.h>
+#include <Atlas/Objects/Operation.h>
 
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;
+using namespace Eris;
+using Atlas::Objects::Entity::RootEntity;
 
-StubServer::ClientConnection::ClientConnection(int socket) :
+typedef Atlas::Objects::Entity::Account AtlasAccount;
+
+ClientConnection::ClientConnection(StubServer* ss, int socket) :
     m_stream(socket),
+    m_server(ss),
     m_codec(NULL),
     m_encoder(NULL)
 {
     m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", m_stream, this);
 }
 
-StubServer::ClientConnection::~ClientConnection()
+ClientConnection::~ClientConnection()
 {
     delete m_encoder;
     delete m_acceptor;
     delete m_codec;
 }
 
-void StubServer::ClientConnection::poll()
+void ClientConnection::poll()
 {
     if (!m_stream.isReady()) return;
 
@@ -39,7 +49,7 @@ void StubServer::ClientConnection::poll()
         while (!m_objDeque.empty())
         {
             RootOperation op = smart_dynamic_cast<RootOperation>(m_objDeque.front());
-            if (!op.valid())
+            if (!op.isValid())
                 throw InvalidOperation("ClientConnection recived something that isn't an op");
             
             dispatch(op);
@@ -51,28 +61,28 @@ void StubServer::ClientConnection::poll()
 #pragma mark -
 // basic Atlas connection / stream stuff
 
-void StubServer::ClientConnection::fail()
+void ClientConnection::fail()
 {
     m_stream.close();
     // tell the stub server to kill us off
 }
 
-void StubServer::ClientConnection::negotiate()
+void ClientConnection::negotiate()
 {
     m_acceptor->poll(); 
     
     switch (m_acceptor->getState()) {
-    case Atlas::Net::StreamAccept::IN_PROGRESS:
+    case Atlas::Negotiate::IN_PROGRESS:
         break;
 
-    case Atlas::Net::StreamAccept::FAILED:
+    case Atlas::Negotiate::FAILED:
         error() << "ClientConnection got Atlas negotiation failure";
         fail();
         break;
 
-    case Atlas::Net::StreamAccept::SUCCEEDED:
+    case Atlas::Negotiate::SUCCEEDED:
         m_codec = m_acceptor->getCodec();
-        m_encoder = new Atlas::Objects::Encoder(m_codec);
+        m_encoder = new Atlas::Objects::ObjectsEncoder(*m_codec);
         m_codec->streamBegin();
                 
         delete m_acceptor;
@@ -84,7 +94,7 @@ void StubServer::ClientConnection::negotiate()
     }             
 }
 
-void StubServer::ClientConnection::objectArrived(const Root& obj)
+void ClientConnection::objectArrived(const Root& obj)
 {
     m_objDeque.push_back(obj);
 }
@@ -92,7 +102,7 @@ void StubServer::ClientConnection::objectArrived(const Root& obj)
 #pragma mark -
 // dispatch / decode logic
 
-void StubServer::ClientConnection::dispatch(const RootOperation& op)
+void ClientConnection::dispatch(const RootOperation& op)
 {
     const std::vector<Root>& args = op->getArgs();
     
@@ -100,39 +110,40 @@ void StubServer::ClientConnection::dispatch(const RootOperation& op)
     {
         // not logged in yet
         Login login = smart_dynamic_cast<Login>(op);
-        if (login.valid())
+        if (login.isValid())
         {
             processLogin(login);
             return;
         }
    
         Create cr = smart_dynamic_cast<Create>(op);
-        if (cr.valid())
+        if (cr.isValid())
         {
             assert(!args.empty());
+            processAccountCreate(cr);
             return;
         }
     }
 
     if (op->getFrom() == m_account)
     {
-        .. OOG ops ....
+       // .. OOG ops ....
     }
     
     
 }
 
-void StubServer::ClientConnection::dispatchOOG(const RootOperation& op)
+void ClientConnection::dispatchOOG(const RootOperation& op)
 {
     Look lk = smart_dynamic_cast<Look>(op);
-    if (lk.valid())
+    if (lk.isValid())
     {
         processOOGLook(lk);
         return;
     }
     
     Move mv = smart_dynamic_cast<Move>(op);
-    if (mv.valid())
+    if (mv.isValid())
     {
         // deocde part vs join
         // issue command
@@ -140,7 +151,7 @@ void StubServer::ClientConnection::dispatchOOG(const RootOperation& op)
     }
 
     Talk tk = smart_dynamic_cast<Talk>(op);
-    if (tk.valid())
+    if (tk.isValid())
     {
     
     
@@ -148,20 +159,20 @@ void StubServer::ClientConnection::dispatchOOG(const RootOperation& op)
     }
     
     Imaginary imag = smart_dynamic_cast<Imaginary>(op);
-    if (imag.valid())
+    if (imag.isValid())
     {
     
         return;
     }
 }
 
-void StubServer::ClientConnection::processLogin(const Login& login)
+void ClientConnection::processLogin(const Login& login)
 {
     const std::vector<Root>& args = login->getArgs();
-    if (!args.front()->hasAtrr("password") || !args.front()->hasAttr("username"))
+    if (!args.front()->hasAttr("password") || !args.front()->hasAttr("username"))
         throw InvalidOperation("got bad LOGIN op");
     
-    std::string username = args.front()->getAttr("username").asString(),
+    std::string username = args.front()->getAttr("username").asString();
     if (!m_server->m_accounts.count(username))
     {
         sendError("unknown account: " + username, login);
@@ -184,10 +195,10 @@ void StubServer::ClientConnection::processLogin(const Login& login)
     loginInfo->setRefno(login->getSerialno());
     send(loginInfo);
     
-    m_server->join(m_account, "_lobby");
+    m_server->joinRoom(m_account, "_lobby");
 }
 
-void StubSevrer::ClientConnection::processAccountCreate(const Create& cr)
+void ClientConnection::processAccountCreate(const Create& cr)
 {
 
     // check for duplicate username
@@ -203,10 +214,10 @@ void StubSevrer::ClientConnection::processAccountCreate(const Create& cr)
     createInfo->setRefno(cr->getSerialno());
     send(createInfo);
     
-    m_server->join(m_account, "_lobby");
+    m_server->joinRoom(m_account, "_lobby");
 }
 
-void StubServer::ClientConnection::processOOGLook(const Look& lk)
+void ClientConnection::processOOGLook(const Look& lk)
 {
     const std::vector<Root>& args = lk->getArgs();
     std::string lookTarget;
@@ -266,7 +277,7 @@ void StubServer::ClientConnection::processOOGLook(const Look& lk)
 
 #pragma mark -
 
-void StubServer::ClientConnection::sendError(const std::string& msg, const RootOperation& op)
+void ClientConnection::sendError(const std::string& msg, const RootOperation& op)
 {
     Error errOp;
     
@@ -274,7 +285,7 @@ void StubServer::ClientConnection::sendError(const std::string& msg, const RootO
     errOp->setTo(op->getFrom());
     
     Root arg0;
-    arg0.setAttr("message", msg);
+    arg0->setAttr("message", msg);
     
     std::vector<Root>& args = errOp->modifyArgs();
     args.push_back(arg0);
@@ -283,7 +294,7 @@ void StubServer::ClientConnection::sendError(const std::string& msg, const RootO
     send(errOp);
 }
 
-bool StubServer::ClientConnection::entityIsCharacter(const std::string& id)
+bool ClientConnection::entityIsCharacter(const std::string& id)
 {
 
 
