@@ -29,8 +29,8 @@ Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
 	_stamp(-1.0),
 	_visible(true),
 	_container(NULL),
-	_bbox(0., 0., 0.),
-	_position(ge.GetPos())
+	_position(ge.GetPos()),
+	_velocity(ge.GetVelocity())
 {	
 	_parents = getParentsAsSet(ge);
 	recvSight(ge);	
@@ -40,7 +40,6 @@ Entity::Entity(const std::string &id) :
 	_id(id),
 	_stamp(-1.0),
 	_container(NULL),
-	_bbox(0., 0., 0.),
 	_position(0., 0., 0.)
 {
 	;
@@ -134,7 +133,7 @@ void Entity::setVisible(bool vis)
   
 	// recurse on children
 	for (EntityArray::iterator E=_members.begin();E!=_members.end();++E)
-		setVisible(vis);
+		(*E)->setVisible(vis);
 	
 	if (!wasVisible && _visible) {
 		//move back to actice
@@ -169,9 +168,18 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 	std::string containerId = ge.GetLoc();
 	setContainerById(ge.GetLoc());
 
+	_position = ge.GetPos();
+	_velocity = ge.GetVelocity();
+	
 	// bounding box
-	if (ge.HasAttr("bounding_box"))
-		_bbox = BBox( ge.GetAttr("bounding_box") );
+	if (ge.HasAttr("bbox"))
+		_bbox = BBox( ge.GetAttr("bbox") );
+	
+	if (ge.HasAttr("bmedian")) {
+		// convert acorn/cyphesis bbox to our kind
+		Coord med(ge.GetAttr("bmedian"));
+		_bbox.offset(med.x, med.y, med.z);
+	}
 	
 	// copy *every* attribute through
 	const Atlas::Message::Object::MapType &amp = ge.AsMap();
@@ -189,10 +197,8 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 	
 	setProperty("loc", getArg(mv, "loc"));
 	setProperty("pos", getArg(mv, "pos"));
-	
-/*	
-	SetProperty("velocity", GetArg(mv, "velocity"));
-*/	
+	//setProperty("velocity", getArg(mv, "velocity"));
+
 	handleMove();
 }
 
@@ -262,7 +268,8 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 		setContainerById(loc);
 	} else if (s == "pos") {
 		_position = Coord(val);
-		// Moved.emit(_position);
+	} else if (s == "velocity") {
+		_velocity = Coord(val);
 	}
 	
 	// check for a signal bound to property 's'; emit if found

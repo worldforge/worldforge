@@ -77,16 +77,30 @@ class Coord
 {
 public:
 	Coord(const Atlas::Message::Object &obj);
-	Coord(double a, double b, double c) :
+	Coord(double a = 0., double b=0., double c=0.) :
 		x(a), y(b), z(c)
 	{;}
 	
-	Atlas::Message::Object asObject() const;
+	Coord& operator=(const Atlas::Message::Object &obj);
+		
+	const Atlas::Message::Object asObject() const;
 		
 	double x,y,z;
 };
 	
-typedef Coord BBox;
+class BBox
+{
+public:
+	BBox(double ux = 0., double uy = 0., double uz = 0.,
+			double vx=1., double vy=1., double vz=1.);
+	BBox(const Atlas::Message::Object &obj);
+	
+	void offset(double x, double y, double z);
+
+	const Atlas::Message::Object asObject() const;
+
+	Coord u,v;
+};
 
 // Forward Decls
 class Entity;

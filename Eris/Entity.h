@@ -175,7 +175,8 @@ protected:
 	EntityArray _members;
 
 	BBox _bbox;
-	Coord _position;
+	Coord _position,
+		_velocity;
 
 // attribute synchronisation
 	/// Mark the attribute set as needing a resync operation before any Get()s

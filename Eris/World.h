@@ -75,10 +75,13 @@ public:
 // focus / observation
 	/// specify the origin entity for the world; nearly always the player
 	void setFocusedEntity(EntityPtr f);
-	/// get the currently focused entity
+	/** get the currently focused entity. This value is only valid after World.Entered is emitted;
+	prior to that it will return NULL. */
 	EntityPtr getFocusedEntity()
 	{ return _focused; }
 
+	/** get the id of the focused entity. This should be identical to doing getFocusedEntity()->getID(),
+	except that is value is valid before World.Entered is emitted. */
 	std::string getFocusedEntityID();
 	
 // factories

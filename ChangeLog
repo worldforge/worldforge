@@ -11,6 +11,10 @@ Monday, November 26 2001, James Turner
 	  and interfaces - tested and most things seem to work, including
 	  IG entry. OOG chat emotes are broken, will fix tomorrow.
 
+	* Handle Bounding boxes, the 'BMEDIAN' attribute and velocity/
+	  position better in Entity.
+	* Added BBox to Types
+	
 Saturday, November 24 2001, James Turner
 
 	* Cleaned up logging output for TypeInfo.cpp
