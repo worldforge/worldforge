@@ -6,6 +6,7 @@
 
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
+#include <wfmath/quaternion.h>
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
@@ -14,10 +15,6 @@
 #include <map>
 #include <vector>
 
-namespace WFMath {
-  class Quaternion;
-}
-
 namespace Eris
 {
 	
@@ -25,6 +22,7 @@ namespace Eris
 class Player;
 class IGRouter;
 class View;
+class Connection;
 
 class Avatar : virtual public SigC::Object
 {
@@ -95,12 +93,14 @@ protected:
     Avatar(Player* pl, long refno, const std::string& charId);
     
 private:
+    Connection* getConnection() const;
+    
     Player* m_account;
     
     std::string m_entityId;
     EntityPtr m_entity;
     
-    IGRouter m_router;
+    IGRouter* m_router;
     View* m_view;
 };
 	

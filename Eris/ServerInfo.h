@@ -2,12 +2,7 @@
 #define ERIS_SERVER_INFO_H
 
 #include <string>
-
-namespace Atlas {
-  namespace Objects {
-    namespace Entity { class RootEntity; }
-  }
-}
+#include <Atlas/Objects/ObjectsFwd.h>
 
 namespace Eris {
 	

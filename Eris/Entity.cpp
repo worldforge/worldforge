@@ -3,15 +3,15 @@
 #endif
 
 #include <Eris/Entity.h>
-#include <Eris/World.h>
 #include <Eris/Connection.h>
-#include <Eris/Utils.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/Log.h>
-#include <Eris/Exceptions.h>
 #include <Eris/entityRouter.h>
+#include <Eris/view.h>
 
 #include <wfmath/atlasconv.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/BaseObject.h>
 
 #include <algorithm>
 #include <set> 
@@ -21,24 +21,28 @@
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::GameEntity;
-
+using Atlas::Message::Element;
+using Atlas::Objects::smart_static_cast;
+using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-Entity::Entity(const GameEntity& ge, TypeInfoPtr ty) :
+Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
     m_type(ty),
     m_location(NULL),
     m_id(ge->getId()),
     m_stamp(-1.0),
     m_visible(false),
     m_updateLevel(0),
-    _hasBBox(false)
+    m_view(vw),
+    m_hasBBox(false)
 {
     m_router = new EntityRouter(this);
 }
 
 Entity::~Entity()
 {
+    setLocation(NULL);
     delete m_router;
 }
 
@@ -60,52 +64,11 @@ bool Entity::hasAttr(const std::string& attr) const
     return m_attrs.count(attr) > 0;
 }
 
-SigC::Connection Entity::observe(const std::string& attr, AttrChangedSlot slot)
+SigC::Connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
 {
     // sometimes, I realize how great SigC++
-    return m_observers[prop].connect(slot);
+    return m_observers[attr].connect(slot);
 }
-
-
-#pragma mark -
-
-void Entity::setContainer(Entity *cnt)
-{
-	Recontainered.emit(_container, cnt);
-	_container = cnt;
-}
-
-void Entity::addMember(Entity *e)
-{
-    Eris::log(LOG_DEBUG, "adding entity '%s' as member of '%s'",
-	e->getName().c_str(), getName().c_str());
-    
-    assert(e != this);
-    
-    _members.push_back(e);
-    AddedMember.emit(e);
-    e->setContainer(this);
-}
-
-void Entity::rmvMember(Entity *e)
-{
-    if (!e)
-	throw InvalidOperation("passed NULL pointer to Entity::rmvMember");
-    EntityArray::iterator ei = std::find(_members.begin(), _members.end(), e);
-    if (ei == _members.end())
-	    throw InvalidOperation("Unknown member " + e->getName() + 
-		" to remove from " + getName());
-    _members.erase(ei);
-    RemovedMember.emit(e);
-}
-
-Entity* Entity::getMember(unsigned int i)
-{
-	if (i >= _members.size())
-		throw InvalidOperation("Illegal member index");
-	return _members[i];
-}
-
 
 #pragma mark -
 
@@ -118,20 +81,20 @@ void Entity::setFromRoot(const Root& obj)
 {	
     beginUpdate();
     
-    for (Root::const_iterator A = obj.begin(); A != obj.end(); ++A)
+    for (Atlas::Objects::RootData::const_iterator A = obj->begin(); A != obj->end(); ++A)
     {
         if (A->first == "id") 
         {
-            assert(A->second.asString() == m_id);
+            //assert(A->second.asString() == m_id);
             continue; // never set ID
         }
         
         // see if the value in the sight matches the exsiting value
-        AttributeMap::iterator I = m_attrs.find(A->first);
+        AttrMap::iterator I = m_attrs.find(A->first);
         if ((I != m_attrs.end()) && (I->second == A->second))
             continue;
 
-        setProperty(A->first, A->second);
+        setAttr(A->first, A->second);
     }
     
     endUpdate();
@@ -139,14 +102,14 @@ void Entity::setFromRoot(const Root& obj)
 
 void Entity::talk(const Root& talkArgs)
 {
-    if (!talkArgs.hasAttr("say"))
+    if (!talkArgs->hasAttr("say"))
     {
         error() << "entity " << m_id << " got talk with no 'say' argument";
         return;
     }
     
     // just emit the signal
-    Say.emit(talkArgs.getAttr("say").asString());
+    Say.emit(talkArgs->getAttr("say").asString());
 }
 
 void Entity::moved()
@@ -156,21 +119,21 @@ void Entity::moved()
 
 #pragma mark -
 
-void Entity::setAttr(const std::string &s, const Element &val)
+void Entity::setAttr(const std::string &attr, const Element &val)
 {
     beginUpdate();
 
-    if (!nativePropertyChanged(attr, e))
+    if (!nativeAttrChanged(attr, val))
     {
         // add to map
-        m_attrs[attr] = e;
+        m_attrs[attr] = val;
 
         // fire observers
-        if (m_observers.count(prop))
-            m_observers[attr].emit(e);
+        if (m_observers.count(attr))
+            m_observers[attr].emit(attr, val);
     }
 
-    addToUpdate(prop);
+    addToUpdate(attr);
     endUpdate();
 
 }
@@ -189,9 +152,7 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
     }
     else if (attr == "pos")
     {
-	WFMath::Point<3> pos;
-	pos.fromAtlas(val);
-	setPosition(pos);
+	m_position.fromAtlas(v);
         return true;
     }
     else if (attr == "velocity")
@@ -211,19 +172,18 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
     }
     else if (attr == "bbox")
     {
-	m_bbox.fromAtlas(val);
+	m_bbox.fromAtlas(v);
         m_hasBBox = true;
         return true;
     }
     else if (attr == "loc")
     {
-	std::string loc = v.asString();
-	setContainerById(loc);
+	setLocationFromAtlas(v.asString());
         return true;
     }
     else if (attr == "contains")
     {
-	... implement me .... 
+	//setContentsFromAtlas();
         return true;
     }
 
@@ -245,7 +205,7 @@ void Entity::endUpdate()
 {
     if (m_updateLevel < 1)
     {
-        error() << "mismatched begin/end update pair on entity"
+        error() << "mismatched begin/end update pair on entity";
         return;
     }
         
@@ -266,78 +226,167 @@ void Entity::endUpdate()
 
 #pragma mark -
 
-void Entity::setPosition(const WFMath::Point<3>& pt)
+void Entity::setLocationFromAtlas(const std::string& locId)
 {
-    _position = pt;
+    if (m_location)
+        if (locId == m_location->getId()) return;
+    else
+        if (locId.empty()) return;
+    // definitley changing the location
+    
+    Entity* newLocation = NULL;
+    if (!locId.empty())
+    {
+        newLocation = m_view->getExistingEntity(locId);
+        if (!newLocation)
+        {
+            m_view->getEntityFromServer(locId);
+            // mark ourselves invisible for now, we assume when the location
+            // entity arrives, it will find us and bind us / appear us
+            setVisible(false);
+            return;
+        }
+    }
+    
+    setLocation(newLocation);
 }
 
-void Entity::setContents(const Atlas::Message::Element::ListType &contents)
+void Entity::setLocation(Entity* newLocation)
 {
-    for (Atlas::Message::Element::ListType::const_iterator
-	    C=contents.begin(); C!=contents.end();++C) {
-	// check we have it; if yes, ensure it's installed. if not, it will be attached when
-	// it arrives.
-	Entity *con = _world->lookup(C->asString());
-	if (con) {
-	    Eris::log(LOG_DEBUG, 
-		"already have entity '%s', not setting container",
-		con->getName().c_str()
-	    );
-	}
+    if (newLocation == m_location) return;
+    
+    if (m_location && m_visible)
+        removeFromLocation();
+    
+// do the actual member updating
+    Entity* oldLocation = m_location;
+    m_location = newLocation;
+    LocationChanged.emit(this, oldLocation);
+    
+    if (m_location && m_visible)
+        addToLocation();
+}
+
+void Entity::addToLocation()
+{
+    bool wasPending = m_location->m_pendingContents.erase(m_id);
+    if (wasPending)
+    {
+        m_location->addChild(this);
+    }
+    else if (m_location->hasChild(m_id))
+    {
+        // nothing to do, parent already knows about us. Probably
+        // becuase it got SET(contents=) before we got SET(location=)
+    } else {
+        // location doesn't know anything about us at all
+        m_location->addChild(this);
     }
 }
 
-void Entity::setContainerById(const std::string &id)
+void Entity::removeFromLocation()
 {
-    if ( !_container || (id != _container->getID()) ) {
-		
-	if (_container) {
-	    Eris::log(LOG_DEBUG, "Entity::setContainerById: setting container to NULL");
-	    _container->rmvMember(this);
-	    _container = NULL;
-	}
-		
-	// have to check this, becuase changes in what the client can see
-	// may cause the client's root to change
-	if (!id.empty()) {
-		Entity *ncr = _world->lookup(id);
-		if (ncr) {
-			ncr->addMember(this);
-			setContainer(ncr);
-		} else {
-			// setup a redispatch once we have the container
-			// sythesises a set, with just the container.
-			Atlas::Objects::Operation::Set setc;
-				
-			Atlas::Message::Element::MapType args;
-			args["loc"] = id;
-			setc.setArgs(Atlas::Message::Element::ListType(1,args));
-			setc.setTo(_id);
-			
-			Atlas::Objects::Operation::Sight ssc;
-			ssc.setArgs(Atlas::Message::Element::ListType(1, setc.asObject()));
-			ssc.setTo(_world->getFocusedEntityID());
-			ssc.setSerialno(getNewSerialno());
-			
-			// if we received sets/creates/sights in rapid sucession, this can happen, and is
-			// very, very bad
-			std::string setid("set_container_" + _id);
-			std::string dispatch_id = "op:" + _world->getDispatcherID()
-				+ ":sight:entity";
-
-			_world->getConnection()->removeIfDispatcherByPath(
-				dispatch_id, setid);
-			
-			new WaitForDispatch(ssc, dispatch_id, 
-				new IdDispatcher(setid, id), _world->getConnection());
-		}
-	} // of new container is valid
-    }	
-	
-    if (id.empty()) {	// id of "" implies local root
-	Eris::log(LOG_DEBUG, "got entity with empty container, assuming it's the world");
-	_world->setRootEntity(this);	
+    if (m_location->hasChild(m_id))
+    {
+        m_location->removeChild(this);
     }
+    else if (m_location->m_pendingContents.erase(m_id))
+    {
+        // nipped it in the bud, no problem
+    } else {
+        error() << "location " << m_location->getId() <<
+            " denies all knowledge of child " << m_id;
+    }
+}
+
+void Entity::setContentsFromAtlas(const StringList& contents)
+{
+    m_contents.clear();
+
+    for (StringList::const_iterator I=contents.begin(); I != contents.end(); ++I)
+    {
+        Entity* child = m_view->getExistingEntity(*I);
+        if (child)
+        {
+            addChild(child);
+        } else {   
+            m_view->getEntityFromServer(*I);
+            m_pendingContents.insert(*I);
+        }
+    } // of contents list iteration
+}
+
+bool Entity::hasChild(const std::string& eid) const
+{
+    for (EntityArray::iterator C=m_contents.end(); C != m_contents.end(); ++C)
+        if ((*C)->getId() == eid) return true;
+        
+    return false;
+}
+
+void Entity::addChild(Entity* e)
+{
+    m_contents.push_back(e);
+    ChildAdded.emit(this, e);
+    assert(e->getLocation() == this);
+}
+
+void Entity::removeChild(Entity* e)
+{
+    assert(e->getLocation() == this);
+    
+    for (EntityArray::iterator C=m_contents.end(); C != m_contents.end(); ++C)
+    {
+        if (*C == e)
+        {
+            m_contents.erase(C);
+            ChildRemoved.emit(this, e);
+            return;
+        }
+    }
+        
+   error() << "child " << e->getId() << " of entity " << m_id << " not found doing remove";
+}
+
+#pragma mark -
+
+void Entity::setVisible(bool vis)
+{
+    if (m_visible == vis) return;
+
+    if (m_location && m_visible)
+        removeFromLocation();
+
+    m_visible = vis;
+    updateCalculatedVisibility();
+    
+    if (m_location && m_visible)
+        addToLocation();
+}
+
+bool Entity::isVisible() const
+{
+    if (m_location)
+        return m_visible && m_location->isVisible();
+    else
+        return m_visible;
+}
+
+void Entity::updateCalculatedVisibility()
+{
+    bool wasVisible = m_view->isEntityVisible(this),
+        nowVisible = isVisible();
+        
+    if (wasVisible == nowVisible) return;
+    
+    // fires Appearance / Disappearance as necessary 
+    // (if we have a valid parent)
+    m_view->setEntityVisible(this, nowVisible);
+    
+    VisibilityChanged.emit(this, nowVisible);
+    
+    for (unsigned int C=0; C < m_contents.size(); ++C)
+        m_contents[C]->updateCalculatedVisibility();
 }
 
 } // of namespace 

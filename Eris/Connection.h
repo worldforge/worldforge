@@ -31,7 +31,7 @@ a single TCP connection, if re-connections occur. */
 
 class Connection : 
     public BaseConnection,
-    public Atlas::Objects::Decoder
+    public Atlas::Objects::ObjectsDecoder
 {
 public:
     /// Create an unconnected instance
@@ -71,6 +71,8 @@ public:
     therefore validate the connection using IsConnected first */
     virtual void send(const Atlas::Objects::Root &obj);
 	
+    void setDefaultRouter(Router* router);
+    
     void registerRouterForTo(Router* router, const std::string toId);
     void unregisterRouterForTo(Router* router, const std::string toId);
                 
@@ -123,6 +125,7 @@ protected:
 	virtual void onConnect();
 
 	
+    void objectArrived(const Atlas::Objects::Root& obj);
 
 	
 	/// hostname of the server (for reconnection)
@@ -146,7 +149,12 @@ private:
     typedef std::map<std::string, Router*> IdRouterMap;
     IdRouterMap m_toRouters;
     IdRouterMap m_fromRouters;
+    
+    int m_lock;
 };
+
+/// operation serial number sequencing
+long getNewSerialno();
 
 } // of Eris namespace
 

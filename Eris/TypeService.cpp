@@ -8,18 +8,16 @@
 #include <Eris/Log.h>
 #include <Eris/Connection.h>
 #include <Eris/Utils.h>
-#include <Eris/atlas_utils.h>
-
+#include <Eris/redispatch.h>
 #include <Eris/Exceptions.h>
 
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Objects/Operation.h>
-#include <Atlas/Objects//RootEntity.h>
+#include <Atlas/Objects/RootEntity.h>
 
 #include <sigc++/object_slot.h>
 
 #include <fstream>
-#include <string>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -97,26 +95,17 @@ TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 
 #pragma mark -
 
-/** private helper class to manage redispatch of operations when
-types become bound (which is the reason for 99% of resdispatches). This
-object just waits for the signal, then posts the op. */
-class TypeBoundRedispatch : public SigC::Object
+class TypeBoundRedispatch : public Redispatch
 {
 public:
     TypeBoundRedispatch(Connection* con, const Root& obj) :
-        m_obj(obj),
-        m_con(con)
+        Redispatch(con, obj)
     { ; }
     
     void onBound()
     {
-        m_con->postForDispatch(m_obj);
-        delete this;
+        post();
     }
-    
-private:
-    Root m_obj;
-    Connection* m_con;
 };
 
 RouterResult TypeService::redispatchWhenBound(TypeInfoPtr ty, const Root& obj)
@@ -212,7 +201,7 @@ void TypeService::sendRequest(const std::string &id)
 
 void TypeService::recvError(const Get& get)
 {
-    const Atlas::Message::::MapType& args = get.getArgsAsList().front();
+    const Atlas::Message::MapType& args = get.getArgsAsList().front();
     Atlas::Message::MapType::const_iterator A = args.find("id");
     assert(A != args.end());
         	

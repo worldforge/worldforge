@@ -6,7 +6,7 @@
 #include <Eris/Types.h>
 #include <Eris/ServerInfo.h>
 
-#include <Atlas/Message/DecoderBase.h>
+#include <Atlas/Objects/Decoder.h>
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
@@ -67,7 +67,7 @@ typedef enum {
 
 /// Meta encapsulates the meta-game system, including the meta-server protocol and queries
 class Meta : virtual public SigC::Object,
-		public Atlas::Message::DecoderBase
+		public Atlas::Objects::ObjectsDecoder
 {
 public:
 	Meta(const std::string &cnm, 
@@ -123,7 +123,7 @@ public:
 protected:
 	friend class MetaQuery;
 		
-	virtual void objectArrived(const Atlas::Message::Element &msg);
+	virtual void objectArrived(const Atlas::Objects::Root& obj);
 
 	/// process raw UDP packets from the meta-server
 	void recv();

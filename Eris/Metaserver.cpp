@@ -5,15 +5,13 @@
 #include <Eris/Metaserver.h>
 
 #include <Eris/MetaQuery.h>
-#include <Eris/Utils.h>
 #include <Eris/ServerInfo.h>
 #include <Eris/Timeout.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
 
-#include <Atlas/Objects/Operation/Info.h>
-#include <Atlas/Objects/Entity/RootEntity.h>
-
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/RootEntity.h>
 #include <sigc++/object_slot.h>
 
 #include <cassert>
@@ -26,6 +24,11 @@
 #endif
 
 #endif // __WIN32__
+
+using namespace Atlas::Objects::Operation;
+using Atlas::Objects::smart_dynamic_cast;
+using Atlas::Objects::Root;
+using Atlas::Objects::Entity::RootEntity;
 
 namespace Eris {
 
@@ -62,28 +65,29 @@ Meta::Meta(const std::string &/*cnm*/,
 
 Meta::~Meta()
 {
-	disconnect();
+    disconnect();
       
     // delete any outstanding queries
     for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
-		delete *Q;
+        delete *Q;
 }
 
 void Meta::connect()
 {
-	disconnect();
+    disconnect();
 	
-	_stream = new udp_socket_stream();  
+    _stream = new udp_socket_stream();  
     _stream->setTimeout(30);	
-	_stream->setTarget(_metaHost, META_SERVER_PORT);
+    _stream->setTarget(_metaHost, META_SERVER_PORT);
     
     // open connection to meta server
-    if (!_stream->is_open()) {
-		doFailure("Couldn't open connection to metaserver " + _metaHost);
-		return;
+    if (!_stream->is_open())
+    {
+        doFailure("Couldn't open connection to metaserver " + _metaHost);
+        return;
     }
     
-	Poll::instance().addStream(_stream);
+    Poll::instance().addStream(_stream);
 	
     // build the initial 'ping' and send
     unsigned int dsz = 0;
@@ -100,57 +104,62 @@ void Meta::connect()
 
 void Meta::disconnect()
 {
-	if(_stream) {
-		Poll::instance().removeStream(_stream);
-		delete _stream;
-		_stream = NULL;
+    if(_stream)
+    {
+        Poll::instance().removeStream(_stream);
+        delete _stream;
+        _stream = NULL;
     }
     
-    if (_timeout) {
-      delete _timeout;
-      _timeout = NULL;
+    if (_timeout)
+    {
+        delete _timeout;
+        _timeout = NULL;
     }
 }
 
 void Meta::queryServer(const std::string &ip)
 {
     if (_status != IN_PROGRESS)
-	    _status = IN_PROGRESS;
+        _status = IN_PROGRESS;
     
-    if (_activeQueries.size() >= _maxActiveQueries) {
-	    _pendingQueries.push_back(ip);
+    if (_activeQueries.size() >= _maxActiveQueries)
+    {
+        _pendingQueries.push_back(ip);
     } else {
-	    MetaQuery *q =  new MetaQuery(this, ip);
-	    if (q->isComplete()) {
-		// indicated a failure occurred, so we'll kill it now and say no more
-		delete q;
-	    } else
-		_activeQueries.push_back(q);
+        MetaQuery *q =  new MetaQuery(this, ip);
+        if (q->isComplete())
+        {
+            // indicated a failure occurred, so we'll kill it now and say no more
+            delete q;
+        } else
+            _activeQueries.push_back(q);
     }
 }
 
 void Meta::refresh()
 {
-	connect();
+    connect();
 
-    if (_status == VALID) {
+    if (_status == VALID)
+    {
     	// save the current list in case we fail
-		_lastValidList = _gameServers;
+        _lastValidList = _gameServers;
     }
 
     _gameServers.clear();
-	connect();
+    connect();
 }
 
 ServerList Meta::getGameServerList()
 {
-	ServerList ret;
-	// bail out quickly if INVALID
-	if (_status == INVALID) return ret;
-		
-	for (ServerInfoMap::iterator I=_gameServers.begin();  I!=_gameServers.end();++I)
-		ret.push_back(I->second);
-	return ret;
+    ServerList ret;
+    // bail out quickly if INVALID
+    if (_status == INVALID) return ret;
+            
+    for (ServerInfoMap::iterator I=_gameServers.begin();  I!=_gameServers.end();++I)
+        ret.push_back(I->second);
+    return ret;
 }
 		
 int Meta::getGameServerCount()
@@ -208,7 +217,7 @@ void Meta::gotData(PollData &data)
 void Meta::recv()
 {
 	assert(_bytesToRecv);
-	Eris::log(LOG_DEBUG, "got data from the meta-server");
+    debug() << "got data from the meta-server";
 	
 	do {
 		int d = _stream->get();
@@ -251,7 +260,7 @@ void Meta::cancel()
 
 void Meta::recvCmd(uint32_t op)
 {
-    Eris::log(LOG_DEBUG, "recvd meta-server CMD %i", op);
+    debug() << "recvd meta-server CMD " << op;
     
 	switch (op) {
 	case HANDSHAKE:
@@ -288,7 +297,7 @@ void Meta::processCmd()
 		delete _timeout;
 		_timeout = NULL;
 		
-	    Eris::log(LOG_DEBUG, "processed HANDSHAKE, sending list request");
+	    debug() << "processed HANDSHAKE, sending list request";
 		// send the initial list request
 		listReq(0);
 		} break;
@@ -299,7 +308,7 @@ void Meta::processCmd()
 		unpack_uint32(_packed, _dataPtr);
 		setupRecvData(_packed, LIST_RESP2);
 		
-	    Eris::log(LOG_DEBUG, "processed LIST_RESP");
+	    debug() << "processed LIST_RESP";
 		// allow progress bars to setup, etc, etc
 		GotServerCount.emit(_totalServers);
 		
@@ -327,14 +336,14 @@ void Meta::processCmd()
 					ServerInfoMap::value_type(buf, ServerInfo(buf))
 				);
 			
-			Eris::log(LOG_DEBUG, "queueing game server %s for query", buf);
+			debug() << "queueing game server " << buf << " for query";
 			// is always querying a good idea?
 			queryServer(buf);
 		}
 			
 		if (_gameServers.size() < _totalServers) {
 			// request some more
-			Eris::log(LOG_DEBUG, "in LIST_RESP2, issuing request for next block");
+			debug() << "in LIST_RESP2, issuing request for next block";
 			listReq(_gameServers.size());
 		} else {
 		  	// all done, clean up
@@ -365,51 +374,38 @@ void Meta::listReq(int base)
 	}
 }
 
-void Meta::objectArrived(const Atlas::Message::Element &msg)
+void Meta::objectArrived(const Root& obj)
 {	
-	// build an info op (quick hack)
-	Atlas::Objects::Operation::Info ifo;
-	Atlas::Message::Element::MapType::const_iterator I = msg.asMap().begin();
-	for (; I != msg.asMap().end(); ++I)
-        	ifo.setAttr(I->first, I->second);
+    Info info = smart_dynamic_cast<Info>(obj);
+    if (!info.isValid())
+    {
+        error() << "Meta::objectArrived, failed to convert object to INFO op";
+        return;
+    }
 	
-	// work out which query this is
-	long refno = ifo.getRefno();
-	MetaQueryList::iterator Q;
+// work out which query this is
+    long refno = info->getRefno();
+    MetaQueryList::iterator Q;
 	
-	for (Q = _activeQueries.begin(); Q != _activeQueries.end(); ++Q)
-		if ((*Q)->getQueryNo() == refno) break;
+    for (Q = _activeQueries.begin(); Q != _activeQueries.end(); ++Q)
+        if ((*Q)->getQueryNo() == refno) break;
 	
-	if (Q == _activeQueries.end()) {
-	    // handle old behaviour (no serial / refno set in reply); this only works
-	    // with single query mode (i.e Max-Queries = 1)
-	    
-	    if (_activeQueries.size() == 1)
-		    Q = _activeQueries.begin();
-	    else {
-		Eris::log(LOG_ERROR, "Couldn't locate query for meta-query reply");
-		return;
-	    }
-	}
+    if (Q == _activeQueries.end())
+    {
+        error() << "Couldn't locate query for meta-query reply";
+        return;
+    }
+    
+    RootEntity svr = info->getArgs().front();		
+    ServerInfoMap::iterator S = _gameServers.find((*Q)->getHost());
 	
-	// extract the server object
-	Atlas::Objects::Entity::RootEntity svr;
+    S->second.processServer(svr);
+    S->second.setPing((*Q)->getElapsed());
 	
-	Atlas::Message::Element::MapType m = getArg(ifo, 0).asMap();
-	for (Atlas::Message::Element::MapType::iterator I=m.begin() ; I != m.end(); ++I)
-        	svr.setAttr(I->first, I->second);
+    // emit the signal
+    ReceivedServerInfo.emit(S->second);
 	
-	// update the server-info structure
-	ServerInfoMap::iterator S = _gameServers.find((*Q)->getHost());
-	assert(S != _gameServers.end());
-	
-	S->second.processServer(svr);
-	S->second.setPing((*Q)->getElapsed());
-	
-	// emit the signal
-	ReceivedServerInfo.emit(S->second);
-	
-	_deleteQueries.push_back(*Q);
+    _deleteQueries.push_back(*Q);
 }
 
 void Meta::doFailure(const std::string &msg)
@@ -436,15 +432,14 @@ void Meta::queryFailure(MetaQuery *q, const std::string &msg)
 	// we do NOT emit a failure signal here (becuase that would probably cause the 
 	// host app to pop up a dialog or something) since query failures are likely to
 	// be very frequent.
-         Eris::log(LOG_DEBUG, "Query Failure: %s", msg.c_str());
-
-	_deleteQueries.push_back(q);
+    debug() << "meta-query failure: " << msg;
+    _deleteQueries.push_back(q);
 }
 
 void Meta::queryTimeout(MetaQuery *q)
 {
-        Eris::log(LOG_DEBUG, "Query Timeout");
-	_deleteQueries.push_back(q);
+    debug() << "meta-query timed out";
+    _deleteQueries.push_back(q);
 }
 
 void Meta::setupRecvCmd()

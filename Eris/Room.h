@@ -3,6 +3,8 @@
 
 #include <Eris/Types.h>
 #include <Eris/router.h>
+#include <vector>
+#include <map>
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
@@ -91,7 +93,10 @@ public:
 	
 	
 protected:
-		
+    friend class Lobby;
+
+    typedef std::map<std::string, Person*> IdPersonMap;
+    
     /** standard constructor. Issues a LOOK against the specified ID, and sets up
     the necessary signals to drive the Room if id arg is provided */
     explicit Room(Lobby *l, const std::string& id);
@@ -115,7 +120,6 @@ private:
     bool m_entered;     ///< set once we enter the room, i.e have info on all the members
     Lobby* m_lobby;
     
-    typedef std::map<std::string, Person*> IdPersonMap;
     IdPersonMap m_members;
     
     std::vector<Room*> m_subrooms;

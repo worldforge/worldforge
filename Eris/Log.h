@@ -32,9 +32,8 @@ void setLogLevel(LogLevel lvl);
 
 LogLevel getLogLevel();
 
-/// the internal log call : kindly leave alone
-void log(LogLevel lvl, const char *str, ...);
-
 }
+
+#include <Eris/logStream.h>
 
 #endif

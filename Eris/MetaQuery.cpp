@@ -6,17 +6,20 @@
 
 #include <Eris/Exceptions.h>
 #include <Eris/Metaserver.h>
-#include <Eris/Utils.h>
-#include <Eris/Timeout.h>
 #include <Eris/Log.h>
+#include <Eris/Connection.h>
+#include <Eris/Timeout.h>
 
-#include <Atlas/Objects/Operation/Get.h>
+#include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
 
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
 
 #include <cassert>
+
+using namespace Atlas::Objects::Operation;
+using WFMath::TimeStamp;
 
 namespace Eris
 {
@@ -43,41 +46,42 @@ MetaQuery::~MetaQuery()
 	
 SOCKET_TYPE MetaQuery::getSocket()
 {
-	if (!_stream)
-		throw InvalidOperation("Not connected, hence no FD");
-	return _stream->getSocket();	
+    if (!_stream)
+        throw InvalidOperation("Not connected, hence no FD");
+    return _stream->getSocket();	
 }
 
 void MetaQuery::onConnect()
 {
-        Eris::log(LOG_DEBUG, "Query connected to %s", _host.c_str());
+    debug() << "meta-query connection to " << _host;
+    
 
-	// servers must responed to a fully anonymous GET operation
-	// with pertinent info
-	Atlas::Objects::Operation::Get gt;
-	gt.setSerialno(getNewSerialno());
-	
-	// send code from Connection
-	_encode->streamMessage(&gt);
-	(*_stream) << std::flush;
-	
-	_stamp = Time::Stamp::now();
-	
-	// save our serial-no (so we can identify replies)
-	_queryNo = gt.getSerialno();
-	
-	if (_timeout)
-		throw InvalidOperation("MetaQuery timeout not cleared");
-	_timeout = new Timeout("metaquery_get_" + _host, this, 10000);
-	bindTimeout(*_timeout,  QUERY_GET);
+    // servers must responed to a fully anonymous GET operation
+    // with pertinent info
+    Get gt;
+    gt->setSerialno(getNewSerialno());
+    
+    // send code from Connection
+    _encode->streamObjectsMessage(gt);
+    (*_stream) << std::flush;
+    
+    _stamp = TimeStamp::now();
+    
+    // save our serial-no (so we can identify replies)
+    _queryNo = gt->getSerialno();
+    
+    if (_timeout)
+    {
+        error() << "meta-query already has a timeout set";
+    }
+    
+    _timeout = new Timeout("metaquery_get_" + _host, this, 10000);
+    bindTimeout(*_timeout,  QUERY_GET);
 }
-
-using namespace Time;
 
 long MetaQuery::getElapsed()
 {
-	Time::Stamp t = Time::Stamp::now();
-	return  (t - _stamp).milliseconds();
+    return  (TimeStamp::now() - _stamp).milliseconds();
 }
 
 void MetaQuery::setComplete()
@@ -92,7 +96,7 @@ void MetaQuery::handleFailure(const std::string &msg)
 
 void MetaQuery::bindTimeout(Timeout &t, Status /*sc*/)
 {
-	t.Expired.connect(SigC::bind(SigC::slot(*_meta, &Meta::queryTimeout), this));
+    t.Expired.connect(SigC::bind(SigC::slot(*_meta, &Meta::queryTimeout), this));
 }
 
 } // of namsespace

@@ -28,11 +28,11 @@ public:
     const std::string& getAccount() const { return m_id; }
     
     /// access the human-readable name for this person 
-    const std::string& getName() const {return m_name;}
+    const std::string& getName() const {return m_fullName;}
 
 protected:
     const std::string m_id;	///< the account ID 
-    std::string m_name;         ///< the name, i.e account.GetName()
+    std::string m_fullName;         ///< the name, i.e account.GetName()
 
     Lobby* m_lobby;	///< the lobby owning this Person
 };

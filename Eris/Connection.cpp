@@ -4,9 +4,7 @@
 
 #include <Eris/Connection.h>
 
-#include <Eris/Wait.h>
 #include <Eris/Timeout.h>
-#include <Eris/Utils.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
@@ -14,21 +12,25 @@
 #include <Eris/router.h>
 
 #include <skstream/skstream.h>
-
+#include <Atlas/Objects/Encoder.h>
+#include <Atlas/Objects/Operation.h>
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
 
 #include <cassert>
 #include <algorithm>
 
+using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Root;
+using Atlas::Objects::smart_dynamic_cast;
+
 namespace Eris {
 
 Connection::Connection(const std::string &cnm, bool dbg, Router* dr) :
-	BaseConnection(cnm, "game_", this),
-	_statusLock(0),
-	_debug(dbg),
+    BaseConnection(cnm, "game_", this),
     m_typeService(new TypeService(this)),
-    m_defaultRouter(dr)
+    m_defaultRouter(dr),
+    m_lock(0)
 {	
     Poll::instance().connect(SigC::slot(*this, &Connection::gotData));
 }
@@ -50,35 +52,33 @@ void Connection::connect(const std::string &host, short port)
 
 void Connection::disconnect()
 {
-	assert(_statusLock == 0);
-	_statusLock = 0;
+    assert(m_lock == 0);
 	
-	// this is a soft disconnect; it will give people a chance to do tear down and so on
-	// in response, people who need to hold the disconnect will lock() the
-	// connection, and unlock when their work is done. A timeout stops
-	// locks from preventing disconnection
-	setStatus(DISCONNECTING);
-	Disconnecting.emit();
+    // this is a soft disconnect; it will give people a chance to do tear down and so on
+    // in response, people who need to hold the disconnect will lock() the
+    // connection, and unlock when their work is done. A timeout stops
+    // locks from preventing disconnection
+    setStatus(DISCONNECTING);
+    Disconnecting.emit();
+
+    if (m_lock == 0) {
+        debug() << "no locks, doing immediate disconnection";
+        hardDisconnect(true);
+        return;
+    }
     
-	if (!_statusLock) {
-		Eris::log(LOG_NOTICE, "no locks, doing immediate disconnection");
-		hardDisconnect(true);
-		return;
-	}
-	
-	// fell through, so someone has locked =>
-	// start a disconnect timeout
-	_timeout = new Eris::Timeout("disconnect_" + _host, this, 5000);
-	bindTimeout(*_timeout, DISCONNECTING);
+    // fell through, so someone has locked =>
+    // start a disconnect timeout
+    _timeout = new Eris::Timeout("disconnect_" + _host, this, 5000);
+    bindTimeout(*_timeout, DISCONNECTING);
 }
 
 void Connection::reconnect()
 {
-	if (_host.empty()) {
-		Eris::log(LOG_ERROR, "Called Connection::reconnect() without prior sucessful connection");
-		handleFailure("Previous connection attempt failed, ignorning reconnect()");
-	} else
-		BaseConnection::connect(_host, _port);
+    if (_host.empty()) {
+        handleFailure("Previous connection attempt failed, ignorning reconnect()");
+    } else
+        BaseConnection::connect(_host, _port);
 }
    
 void Connection::gotData(PollData &data)
@@ -108,7 +108,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
         return;
     }
 	
-    _encode->streamMessage(&obj);
+    _encode->streamObjectsMessage(obj);
     (*_stream) << std::flush;
 }
 
@@ -130,43 +130,45 @@ void Connection::setDefaultRouter(Router* router)
         return;
     }
     
-    m_defaultRoute = router;
+    m_defaultRouter = router;
 }
     
 void Connection::lock()
 {
-	_statusLock++;
+    ++m_lock;
 }
 
 void Connection::unlock()
 {
-	if (_statusLock < 1)
-		throw InvalidOperation("Imbalanced lock/unlock calls on Connection");
-	--_statusLock;
+    if (m_lock < 1)
+        throw InvalidOperation("Imbalanced lock/unlock calls on Connection");
 	
-	if (!_statusLock) 
-		switch (_status) {
-		case DISCONNECTING:	
-			Eris::log(LOG_NOTICE, "Connection unlocked in DISCONNECTING, closing socket");
-			hardDisconnect(true);
-			break;
+    if (--m_lock == 0)
+    {
+        switch (_status)
+        {
+        case DISCONNECTING:	
+            debug() << "Connection unlocked in DISCONNECTING, closing socket";
+            hardDisconnect(true);
+            break;
 
-		default:
-			Eris::log(LOG_WARNING, "Connection unlocked in spurious state : this may case a failure later");
-		}
+        default:
+            warning() << "Connection unlocked in spurious state : this may case a failure later";
+        }
+    }
 }
 
 #pragma mark -
 
-void Connection::objectArrived(const Atlas::Objects::Root& obj)
+void Connection::objectArrived(const Root& obj)
 {
-    Operation::RootOperation op = smart_dynamic_cast<Operation::RootOperation>(obj);
+    RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     m_opDeque.push_back(op);
 }
 
-void Connection::dispatchOp(const Atlas::Objects::Operation::RootOperation& op)
+void Connection::dispatchOp(const RootOperation& op)
 {
-    RouterResult rr;
+    Router::RouterResult rr;
     bool anonymous = op->getTo().empty();
     
 // give the type service a go   
@@ -197,7 +199,7 @@ void Connection::dispatchOp(const Atlas::Objects::Operation::RootOperation& op)
         warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
             
 // go to the default router
-    rr = m_defaultRoute->handleOperation(op);
+    rr = m_defaultRouter->handleOperation(op);
     if (rr != Router::HANDLED)
         warning() << "no-one handled op";
 }
@@ -222,7 +224,7 @@ void Connection::handleFailure(const std::string &msg)
 	}
 	
 	// FIXME - reset I think, but ensure this is safe
-	_statusLock = 0;
+        m_lock= 0;
 }
 
 void Connection::bindTimeout(Eris::Timeout &t, Status sc)
@@ -239,7 +241,7 @@ void Connection::onConnect()
 
 void Connection::postForDispatch(const Root& obj)
 {
-    Operation::RootOperation op = smart_dynamic_cast<Operation::RootOperation>(obj);
+    RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     m_opDeque.push_back(op);
 }
 

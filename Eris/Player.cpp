@@ -4,25 +4,126 @@
 
 #include <Eris/Player.h>
 #include <Eris/Lobby.h>
-#include <Eris/World.h>
 #include <Eris/Connection.h>
-#include <Eris/Utils.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
 
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
 
 #include <sigc++/object_slot.h>
 
 #include <algorithm>
 #include <cassert>
 
-using namespace Atlas::Message;
-
 using Atlas::Objects::Root;
 using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Entity::GameEntity;
+typedef Atlas::Objects::Entity::Account AtlasAccount;
+using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
+
+class AccountRouter : public Router
+{
+public:
+    AccountRouter(Player* pl) :
+        m_player(pl)
+    {
+        m_player->getConnection()->setDefaultRouter(this);
+    }
+
+    virtual ~AccountRouter()
+    {
+        //m_player->getConnection()->
+    }
+
+    /** specify the serialNo of the operation used to connect the
+    account to the server (either a create or a login). */
+    void setLoginSerial(int serialNo)
+    {
+        m_loginRefno = serialNo;
+    }
+
+    virtual RouterResult handleOperation(const RootOperation& op)
+    {
+        if (op->instanceOf(INFO_NO))
+            return handleInfo(smart_dynamic_cast<Info>(op));
+        
+    // logout
+        if (op->instanceOf(LOGOUT_NO))
+        {
+            m_player->internalLogout(false);
+            return HANDLED;
+        }
+            
+    // errors
+        if (op->instanceOf(ERROR_NO))
+        {
+        
+        }
+        
+    // only-when connected ops
+        if (m_player->isLoggedIn() && (op->getTo() == m_player->getID()))
+        {
+            // character looks
+            if (op->instanceOf(SIGHT_NO))
+            {
+                const std::vector<Root>& args = op->getArgs();
+                assert(!args.empty());
+                GameEntity character = smart_dynamic_cast<GameEntity>(args.front());
+                if (character.isValid())
+                {
+                    m_player->sightCharacter(character);
+                    return HANDLED;
+                }
+            }
+        }
+        
+        return IGNORED;
+    }
+
+private:
+    /** INFO operations mean various things, so the decode is slightly complex
+    */
+    RouterResult handleInfo(const Info& info)
+    {
+        const std::vector<Root>& args = info->getArgs();
+        if (args.empty())
+            throw InvalidOperation("Account got INFO() with no arguments");
+            
+        if (info->getRefno() == m_loginRefno)
+        {
+            AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
+            m_player->handleLogin(acc);
+            return HANDLED;
+        }
+        
+        Logout logout = smart_dynamic_cast<Logout>(args.front());
+        if (logout.isValid())
+        {
+            m_player->internalLogout(true);
+            return HANDLED;
+        }
+           
+        if (m_player->isLoggedIn() && (op->getTo() == m_player->getID())
+        {
+            GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
+            if (ent.isValid())
+            {
+                // IG transition info, maybe
+                ....
+            }
+        }
+          
+        return IGNORED;
+    }
+
+    Player* m_player;
+    int m_loginRefno;
+};
+
+#pragma mark -
 
 Player::Player(Connection *con) :
     m_con(con),
@@ -165,8 +266,7 @@ Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
     c->setFrom(m_accountId);
     c->setSerialno(getNewSerialno());
 
-    World* world = new World(this, _con);
-    Avatar* avatar = world->createAvatar(c.getSerialno());
+    
 
     m_con->send(c);
 
@@ -213,8 +313,7 @@ Avatar* Player::takeCharacter(const std::string &id)
     l->setArgs1(what);
     l->setSerialno(getNewSerialno());
 	
-    World* world = new World(this, _con);
-    Avatar* avatar = world->createAvatar(l.getSerialno(), id);
+    
 	
     m_con->send(l);
     return avatar;
@@ -378,106 +477,5 @@ void Player::handleLogoutTimeout()
     
     LogoutComplete.emit(false);
 }
-
-#pragma mark -
-
-class AccountRouter : public Router
-{
-public:
-    AccountRouter(Player* pl) :
-        m_player(pl)
-    {
-        m_player->getConnection()->setDefaultRouter(this);
-    }
-
-    ~AccountRouter()
-    {
-        //m_player->getConnection()->
-    }
-
-    /** specify the serialNo of the operation used to connect the
-    account to the server (either a create or a login). */
-    void setLoginSerial(int serialNo)
-    {
-        m_loginRefno = serialNo;
-    }
-
-    virtual RouterResult handleOperation(const RootOperation& op)
-    {
-        if (op->instanceOf(Operation::INFO_NO))
-            return handleInfo(smart_dynamic_cast<Operation::Info>(op));
-        
-    // logout
-        if (op->instanceOf(Operation::LOGOUT_NO))
-        {
-            m_player->internalLogout(false);
-            return HANDLED;
-        }
-            
-    // errors
-        if (op->instanceOf(Operation::ERROR_NO))
-        {
-        
-        }
-        
-    // only-when connected ops
-        if (m_player->isLoggedIn() && (op->getTo() == m_player->getAccountId())
-        {
-            // character looks
-            if (op->instanceOf(Operation::SIGHT_NO))
-            {
-                const std::vector<Root>& args = op->getArgs();
-                assert(!args.empty());
-                AtlasGameEntity character = smart_dynamic_cast<AtlasGameEntity>(args.front());
-                if (character)
-                {
-                    m_player->sightCharacter(character);
-                    return HANDLED;
-                }
-            }
-        }
-        
-        return IGNORED;
-    }
-
-private:
-    /** INFO operations mean various things, so the decode is slightly complex
-    */
-    RouterResult handleInfo(const Info& info)
-    {
-        const std::vector<Root>& args = info.getArgs();
-        if (args.empty())
-            throw InvalidOperation("Account got INFO() with no arguments");
-            
-        if (info->getRefno() == m_loginRefno)
-        {
-            AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
-            m_player->handleLogin(acc);
-            return HANDLED;
-        }
-        
-        Logout logout = smart_dynamic_cast<Logout>(args.front());
-        if (logout)
-        {
-            m_player->internalLogout(true);
-            return HANDLED;
-        }
-           
-        if (m_player->isLoggedIn() && (op->getTo() == m_player->getAccountId())
-        {
-            GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
-            if (ent)
-            {
-                // IG transition info, maybe
-                ....
-            }
-        }
-          
-        return IGNORED;
-    }
-
-    Player* m_player;
-    int m_loginRefno;
-};
 
 } // of namespace Eris

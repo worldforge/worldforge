@@ -5,6 +5,7 @@
 #include <sigc++/signal.h>
 
 #include <Eris/router.h>
+#include <Atlas/Objects/Decoder.h>
 
 #include <map>
 #include <set>
@@ -49,7 +50,7 @@ class TypeService : virtual public SigC::Object, public Router
 	
  private:
     /** helper class to parse definitions out of the spec file */
-    class TypeService::SpecDecoder : public Atlas::Objects::Decoder
+    class SpecDecoder : public Atlas::Objects::ObjectsDecoder
     {
     public:
         SpecDecoder(TypeService* ts);            

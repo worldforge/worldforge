@@ -6,10 +6,15 @@
 #include <Eris/Entity.h>
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
+#include <Eris/view.h>
+#include <Eris/igRouter.h>
+#include <Eris/Player.h>
 #include <Eris/Exceptions.h>
 
 #include <wfmath/atlasconv.h>
 #include <sigc++/object_slot.h>
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -18,7 +23,7 @@ using Atlas::Objects::Entity::GameEntity;
 namespace Eris
 {
 
-Avatar::Avatar(Player pl, long refno, const std::string& charId) : 
+Avatar::Avatar(Player* pl, long refno, const std::string& charId) : 
     m_account(pl),
     m_entityId(charId),
     m_entity(NULL)
@@ -38,91 +43,82 @@ Avatar::~Avatar()
 
 void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc)
 {
-    if(e->getContainer() != _entity)
-	throw InvalidOperation("Can't drop an Entity which is not"
-			       " held by the character");
+    if(e->getLocation() != m_entity)
+	throw InvalidOperation("Can't drop an Entity which is not held by the character");
 
-    Atlas::Objects::Operation::Move moveOp;
-    moveOp->setFrom(_entity->getID());
+    Move moveOp;
+    moveOp->setFrom(m_entityId);
 
-    Atlas::Objects::Entity::GameEntity what;
+    GameEntity what;
     what->setLoc(loc);
-    what->setPosAsList(pos.toAtlas());
-    what->setId(e->getID());
+    //what->setPosAsList(pos.toAtlas());
+    what->setId(e->getId());
     moveOp->setArgs1(what);
 
-    _world->getConnection()->send(moveOp);
+    getConnection()->send(moveOp);
 }
 
 void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset)
 {
-    if(!_entity)
-	throw InvalidOperation("Character Entity does not exist yet!");
-    assert(_entity->getContainer());
-
-    drop(e, _entity->getPosition() + offset, _entity->getContainer()->getID());
+    drop(e, m_entity->getPosition() + offset, m_entity->getLocation()->getId());
 }
 
 void Avatar::take(Entity* e)
 {
-    Atlas::Objects::Operation::Move moveOp;
-    moveOp->setFrom(_entity->getID());
+    Move moveOp;
+    moveOp->setFrom(m_entityId);
 
-    Atlas::Objects::Entity::GameEntity what;
-    what->setLoc(getID());
+    GameEntity what;
+    what->setLoc(m_entityId);
     //what->setPosAsList(pos.toAtlas());
-    what->setId(e->getID());
+    what->setId(e->getId());
     moveOp->setArgs1(what);
 
-    _world->getConnection()->send(moveOp);
+    getConnection()->send(moveOp);
 }
 
 void Avatar::touch(Entity* e)
 {
-    Atlas::Objects::Operation::Touch touchOp;
-    touchOp->setFrom(getID());
-    Element::MapType ent;
-    ent["id"] = e->getID();
-    touchOp->setArgsAsList(Atlas::Message::ListType(1, ent));
+    Touch touchOp;
+    touchOp->setFrom(m_entityId);
+    
+    Root what;
+    what->setId(e->getId());
+    touchOp->setArgs1(what);
 
-    _world->getConnection()->send(touchOp);
+    getConnection()->send(touchOp);
 }
 
 void Avatar::say(const std::string& msg)
 {
-    Atlas::Objects::Operation::Talk t;
+    Talk t;
 
-    Element::MapType what;
-    what["say"] = msg;
-    t->setArgsAsList(Atlas::Message::ListType(1, what));
-    t->setFrom(getID());
+    Root what;
+    what->setAttr("say", msg);
+    t->setArgs1(what);
+    t->setFrom(m_entityId);
     
-    _world->getConnection()->send(t);
+    getConnection()->send(t);
 }
 
 void Avatar::moveToPoint(const WFMath::Point<3>& pos)
 {
-    if(!_entity)
-	throw InvalidOperation("Character Entity does not exist yet!");
+    GameEntity what;
+    what->setLoc(m_entity->getLocation()->getId());
+   // what->setPosAsList(pos.toAtlas());
+   // what->setVelocityAsList(pos.toAtlas());
+    what->setId(m_entityId);
 
-    Element::MapType what;
-    what["loc"] = _entity->getContainer()->getID();
-    what["pos"] = pos.toAtlas();
-    what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
-    what["id"] = getID();
+    Move moveOp;
+    moveOp->setFrom(m_entityId);
+    moveOp->setArgs1(what);
 
-    Atlas::Objects::Operation::Move moveOp;
-    moveOp->setFrom(getID());
-    moveOp->setArgsAsList(Element::ListType(1, what));
-
-    _world->getConnection()->send(moveOp);
+    getConnection()->send(moveOp);
 }
 
 void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
 {
-    if(!_entity)
-	throw InvalidOperation("Character Entity does not exist yet!");
-
+/*
     const WFMath::CoordType min_val = WFMATH_MIN * 100000000;
 
     Element::MapType what;
@@ -152,44 +148,42 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
     moveOp->setArgsAsList(Element::ListType(1, what));
 
     _world->getConnection()->send(moveOp);
+    */
 }
 
-void Avatar::moveInDirection(const WFMath::Vector<3>& vel,
-			const WFMath::Quaternion& orient)
+void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quaternion& orient)
 {
-    if(!_entity)
-	throw InvalidOperation("Character Entity does not exist yet!");
+    GameEntity what;
+    what->setLoc(m_entity->getLocation()->getId());
+   // what->setVelocityAsList(pos.toAtlas());
+   // what->setOrientationAsList(orient.toAtlas());
+    what->setId(m_entityId);
 
-    Element::MapType what;
-    what["loc"] = _entity->getContainer()->getID();
-    what["velocity"] = vel.toAtlas();
-    what["orientation"] = orient.toAtlas();
-    what["id"] = getID();
+    Move moveOp;
+    moveOp->setFrom(m_entityId);
+    moveOp->setArgs1(what);
 
-    Atlas::Objects::Operation::Move moveOp;
-    moveOp->setFrom(getID());
-    moveOp->setArgsAsList(Element::ListType(1, what));
-
-    _world->getConnection()->send(moveOp);
+    getConnection()->send(moveOp);
 }
 
 void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
 {
-    Element::MapType what;
-    what["loc"] = container->getID();
-    what["pos"] = pos.toAtlas();
-    what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
-    what["id"] = e->getID();
+    GameEntity what;
+    what->setLoc(container->getId());
+   // what->setPosAsList(pos.toAtlas());
+   // what->setVelocityAsList( .... zero ... );
+    what->setId(e->getId());
 
-    Atlas::Objects::Operation::Move moveOp;
-    moveOp->setFrom(getID());
-    moveOp->setArgsAsList(Element::ListType(1, what));
+    Move moveOp;
+    moveOp->setFrom(m_entityId);
+    moveOp->setArgs1(what);
 
-    _world->getConnection()->send(moveOp);
+    getConnection()->send(moveOp);
 }
 
 #pragma mark -
 
+/*
 void Avatar::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 		const Atlas::Objects::Entity::GameEntity &character)
 {
@@ -218,6 +212,12 @@ void Avatar::recvEntity(Entity* e)
 
   e->AddedMember.connect(InvAdded.slot());
   e->RemovedMember.connect(InvRemoved.slot());
+}
+*/
+
+Connection* Avatar::getConnection() const
+{
+    return m_account->getConnection();
 }
 
 } // of namespace Eris

@@ -39,100 +39,46 @@ View::View(Avatar* av) :
 
 void View::appear(const std::string& eid, float stamp)
 {
-    IdEntityMap::iterator E = m_visible.find(eid);
-    if (E != m_visible.end())
+    Entity* ent = getExistingEntity(eid);
+    if (ent)
     {
-        error() << "duplicate appear for entity " << eid;
-        return;
+        ent->setVisible(true); // will ultimately cause appearances
+    } else {
+        getEntityFromServer(eid);
+        // once it arrives, it'll get bound in and Appearance fired if it's
+        // visible
     }
-    
-// is it in the invisible pool?
-    E = m_invisible.find(eid);
-    if (E != m_invisible.end())
-    {
-        if (stamp > E->second->getStamp())
-        {
-            // re-LOOK, but should we appear with the old data anyway?
-        }
-        
-        E->second->setVisible(true);
-        Apperance.emit(E->second);
-        return;
-    }
-    
-    getEntityFromServer(eid);
-    
-// build a trivial Appearance to send once we have the Entity in sight
-    Root what;
-    what->setId(eid);
-    
-    Appearance appear;
-    appear->setTo(m_avatar->getId());
-    appear->setFrom(eid);
-    appear->setArgs1(what);
-    
-// and hook it in
-    SightEntityRedispatch* ser = new SightEntityRedispatch(eid, getConnection(), appear);
-    InitialSightEntity.connect(SigC::slot(*ser, &SightEntityRedispatch::onSightEntity));
 }
 
 void View::disappear(const std::string& eid)
 {
-    IdEntityMap::iterator E = m_visible.find(eid);
-    if (E == m_visible.end())
+    Entity* ent = getExistingEntity(eid);
+    if (ent)
     {
-        if (m_pendingEntitySet.count(eid))
-        {
-            debug() << "got disappear for pending entity, argh";
-            cancelPendingSight(eid);
-        } else
-            error() << "got disappear for non-visible entity, ignoring";
-        
-        return;
+        ent->setVisible(false); // will ultimately cause disapeparances
+    } else {
+        if (isPending(eid)) cancelPendingSight(eid);
     }
-    
-    E->second->setVisible(false);
-    Disappearance.emit(E->second);
-    m_invisible.insert(m_invisible.end(), *E);
-    m_visible.erase(E);
 }
 
 void View::initialSight(const GameEntity& gent)
 {    
-    IdEntityMap::iterator E = m_visible.find(gent->getId());
-    if (E != m_visible.end())
+    if (getExistingEntity(gent->getId()))
     {
         error() << "got 'initial' sight of entity " << gent->getId() << " which View already has";
         return;
-    }
-    
-    if (m_cancelledSightSet.count(gent->getId()))
-    {
-        debug() << "got initial sight for cancelled entity " << gent->getId() << ", supressing";
-        m_cancelledSightSet.erase(gent->getId());
-        return; 
     }
 
     Entity* location = NULL;
     if (!gent->isDefaultLoc())
     {
-        IdEntityMap::iterator L = m_visible.find(gent->getLoc());
-        if (L == m_visible.end())
+        location = getExistingEntity(gent->getLoc());
+        if (!location)
         {
-        // uh-oh, we don't have the location entity yet : retrieve it and try
-        // again when we do
+            /* get location entity from server; when we get it's sight, this
+            entity will be in it's contents, and we'll get looked up */
             getEntityFromServer(gent->getLoc());
-            
-            Sight st;
-            st->setTo(m_avatar->getId());
-            st->setFrom(gent->getId());
-            st->setArgs1(gent);
-            
-            SightEntityRedispatch* ser = new SightEntityRedispatch(gent->getLoc(), getConnection(), st);
-            InitialSightEntity.connect(SigC::slot(*ser, &SightEntityRedispatch::onSightEntity));
-            return;
-        } else
-            location = L->second; // we already have it, easy
+        }
     }
     
     // this will work even if ent isn't in the pending set
@@ -140,10 +86,18 @@ void View::initialSight(const GameEntity& gent)
     
     // run the factory method ...
     Entity* ent = Factory::builtEntity(gent);
+    
+    if (m_cancelledSightSet.count(gent->getId()))
+    {
+        debug() << "got initial sight for cancelled entity " << gent->getId() << ", supressing";
+        m_cancelledSightSet.erase(gent->getId());
+    } else
+        ent->setVisible(true);
+    
     if (location)
-        ent->setLocation(location);
+        ent->setLocation(location); // will set visibility and fire appearances
         
-    if (!location)
+    if (gent->isDefaultLoc())
         m_topLevel = ent;
     
     InitalSightEntity.emit(ent);
@@ -154,24 +108,13 @@ void View::create(const GameEntity& gent)
     Entity* location = NULL;
     if (!gent->isDefaultLoc())
     {
-        IdEntityMap::iterator L = m_visible.find(gent->getLoc());
-        if (L == m_visible.end())
+        location = getExistingEntity(gent->getLoc());
+        if (!location)
         {
+            /* get location entity from server; when we get it's sight, this
+            entity will be in it's contents, and we'll get looked up */
             getEntityFromServer(gent->getLoc());
-            
-            Create cr;
-            cr->setArgs1(gent);
-            
-            Sight stcr;
-            stcr->setTo(m_avatar->getId());
-            stcr->setFrom(gent->getId());
-            stcr->setArgs1(cr);
-            
-            SightEntityRedispatch* ser = new SightEntityRedispatch(gent->getLoc(), getConnection(), stcr);
-            InitialSightEntity.connect(SigC::slot(*ser, &SightEntityRedispatch::onSightEntity));
-            return;
-        } else
-            location = L->second; // we already have it, easy
+        }
     }
     
     // build it
@@ -179,27 +122,25 @@ void View::create(const GameEntity& gent)
     if (location)
         ent->setLocation(location);
 
+    ent->setVisible(true);
     EntityCreated.emit(eny);
 }
 
 void View::deleteEntity(const std::string& eid)
 {
-    IdEntityMap::iterator E = m_visible.find(eid);
-    if (E == m_visible.end())
+    Entity* ent = getExistingEntity(eid);
+    if (ent)
     {
-        if (m_pendingEntitySet.count(eid))
+        EntityDeleted.emit(E->second);
+        delete E->second; // actually kill it off
+    } else {
+        if (isPending(eid))
         {
             debug() << "got delete for pending entity, argh";
             cancelPendingSight(eid);
         } else
             error() << "got delete for non-visible entity " << eid;
-        
-        return;
     }
-    
-    EntityDeleted.emit(E->second);
-    delete E->second; // actually kill it off
-    m_visible.erase(E);
 }
 
 Entity* View::getExistingEntity(const std::string& eid) const
@@ -218,6 +159,25 @@ Entity* View::getExistingEntity(const std::string& eid) const
 bool View::isPending(const std::string& eid) const
 {
     return m_pendingEntitySet.count(eid);
+}
+
+#pragma mark -
+
+void View::setEntityVisible(Entity* ent, bool vis)
+{
+    assert(ent->isVisible() == vis);
+    
+    if (vis)
+    {
+        assert(m_visible.count(ent->getId()) == 0);
+        assert(m_invisible.erase(ent->getId()) == 1);
+        m_visible[ent->getId()] = ent;
+        
+    } else {
+        assert(m_visible.erase(ent->getId()) == 1);
+        assert(m_invisible.count(ent->getId()) == 0);
+        m_invisible[ent->getId()] = ent;
+    }
 }
 
 #pragma mark -

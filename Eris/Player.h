@@ -10,6 +10,7 @@ namespace Eris
 {
 	
 class Connection;
+class Avatar;
 
 /** Enumeration of various server-side things that can go wrong when trying
 to create an account or login.*/
@@ -171,7 +172,7 @@ private:
     AccountRouter* m_router;
     
     std::string m_accountId;	///< the account ID
-    std::string m_username	///< The player's username ( != account object's ID)
+    std::string m_username;	///< The player's username ( != account object's ID)
     
     CharacterMap _characters;	///< charatcers belonging to this player
     StringSet m_characterIds;

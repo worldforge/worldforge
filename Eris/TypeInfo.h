@@ -54,7 +54,7 @@ public:
 
 // accessors
     /// the unique type name (matches the Atlas type)
-    const std::string& getName() const;
+    const std::string& getName() const
     {
         return m_name;
     }

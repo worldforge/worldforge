@@ -12,12 +12,18 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/quaternion.h>
 
+#include <sigc++/object.h>
+#include <sigc++/slot.h>
+#include <sigc++/signal.h>
+
 namespace Eris {
 
 // Forward Declerations	
 class Entity;
 class TypeInfo;
-    
+class View;
+class EntityRouter;
+
 typedef std::vector<Entity*> EntityArray;
 
 /// Entity is a concrete (instanitable) class representing one game entity
@@ -34,7 +40,7 @@ or creating peer clases and attaching them to the signals.
 class Entity : virtual public SigC::Object
 {
 public:	
-    explicit Entity(const Atlas::Objects::Entity::GameEntity &ge);
+    explicit Entity(const Atlas::Objects::Entity::GameEntity &ge, TypeInfo* ty, View* vw);
     virtual ~Entity();
 
 // heirarchy interface    
@@ -53,7 +59,7 @@ public:
 
 // accesors
     /// retrieve the unique entity ID
-    const std::string& getID() const
+    const std::string& getId() const
     {
         return m_id;
     }
@@ -69,7 +75,7 @@ public:
         return m_stamp;
     }
 
-    TypeInfoPtr getType() const
+    TypeInfo* getType() const
     {
         return m_type;
     }
@@ -101,6 +107,8 @@ public:
     {
         return m_hasBBox;
     }
+    
+    bool isVisible() const;
 
 // coordinate transformations
     template<class C>
@@ -132,19 +140,19 @@ public:
     }
 	
 // Signals
-    SigC::Signal1<void, Entity*> AddedMember;
-    SigC::Signal1<void, Entity*> RemovedMember;
-	
+    SigC::Signal2<void, Entity*, Entity*> ChildAdded;
+    SigC::Signal2<void, Entity*, Entity*> ChildRemoved;
+    
     /// Signal that the entity's container changed
-    /** Emitted when the entity's container changes; note if the entity has
-    just been created, or is being deleted, then one of the arguments may be NULL
-    (but not both)
+    /** emitted when our location changes. First argument is the entity,
+    second is the old location. The new location can be found via getLocation.
+    Note either the old or new location might be NULL.
     */
-    SigC::Signal2<void, Entity*, Entity*> Recontainered;
+    SigC::Signal2<void, Entity*, Entity*> LocationChanged;
 
     /** Emitted when one or more attributes change. The arguments are the
     Entity which changed, and a set of attribute IDs which were modified. */
-    SigC::Signal2<void, Entity* const StringSet&> Changed;
+    SigC::Signal2<void, Entity*, const StringSet&> Changed;
 
     /** Emitted when then entity's position, orientation or velocity change.
     Argument is the entity that moved, so you can bind the same slot to
@@ -154,6 +162,8 @@ public:
     /** Emitted with this entity speaks. In the future langauge may be specified */
     SigC::Signal1<void, const std::string&> Say;
 	
+    SigC::Signal2<void, Entity*, bool> VisibilityChanged;
+        
 protected:	
     friend class IGRouter;
     friend class View;
@@ -172,11 +182,11 @@ protected:
     stored properties. Return true if you handle the attribute, false other-
     wise. Always call you base classe's implemention if you override this!.
     */
-    virtual bool nativeAttrChange(const std::string &p, const Atlas::Message::Element &v);
+    virtual bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
 	
     /** over-rideable hook method when then Entity position, orientation or
     velocity change. The default implementation emits the Moved signal. */
-    virtual void moved(Entity* ins);
+    virtual void moved();
         
     void beginUpdate();
     void addToUpdate(const std::string& attr);
@@ -187,21 +197,43 @@ protected:
     void setVisible(bool vis);
 
 private:
-    class EntityRouter;
+    /** setLocation is the core of the entity hierarchy maintenance logic.
+    We make setting location the 'fixup' action; addChild / removeChild are
+    correspondingly simple. */
+    void setLocation(Entity* newLocation);
+    
+    /// wrapper for setLocation with additional code the retrive the
+    /// location if it's not available right now
+    void setLocationFromAtlas(const std::string& locId);
+    void setContentsFromAtlas(const StringList& contents);
+    
+    bool hasChild(const std::string& eid) const;
+    void addChild(Entity* e);
+    void removeChild(Entity* e);
 
+    void addToLocation();
+    void removeFromLocation();
+
+    /** recursively update the real visiblity of this entity, and fire
+    appropriate signals. */
+    void updateCalculatedVisibility();
+    
     typedef std::map<std::string, Atlas::Message::Element> AttrMap;
     AttrMap m_attrs;
     
-    TypeInfoPtr m_type;
+    TypeInfo* m_type;
     
     Entity* m_location;	
     EntityArray m_contents;
-        
+    /** record children we are waiting on sight of - they will attach
+    themselves as they come in */
+    StringSet m_pendingContents;
+    
     const std::string m_id;	///< the Atlas object ID
     std::string m_name;		///< a human readable name
     float m_stamp;		///< last modification time (in seconds) 
     std::string m_description;
-    Router* m_router;
+    EntityRouter* m_router;
     bool m_visible;
     
     WFMath::AxisBox<3> m_bbox;
@@ -223,12 +255,14 @@ private:
     typedef SigC::Signal2<void, const std::string&, const Atlas::Message::Element&> AttrChangedSignal;
         
     typedef std::map<std::string, AttrChangedSignal> ObserverMap;
-    ObserverMap m_observer;
+    ObserverMap m_observers;
         
+    View* m_view;
+    
     /** This flag should be set when the server notifies that this entity
     has a bounding box. If this flag is not true, the contents of the
     BBox attribute are undefined.  */
-    bool _hasBBox;
+    bool m_hasBBox;
 };
 
 } // of namespace

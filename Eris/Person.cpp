@@ -3,16 +3,18 @@
 #endif
 
 #include <Eris/Person.h>
-
+#include <Eris/logStream.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Lobby.h>
-#include <Eris/Utils.h>
+#include <Eris/Connection.h>
+#include <Eris/Player.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 
 typedef Atlas::Objects::Entity::Account AtlasAccount;
 using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Root;
 
 namespace Eris
 {
@@ -34,9 +36,9 @@ void Person::sight(const AtlasAccount &acc)
     }
     
     if (acc->isDefaultName())
-        m_name = m_id;
+        m_fullName = m_id;
     else
-        m_name = acc->getName();
+        m_fullName = acc->getName();
 }
 
 void Person::msg(const std::string &msg)
@@ -47,13 +49,13 @@ void Person::msg(const std::string &msg)
         return;
     }
 	
-    Atlas::Message::Element::MapType speech;
-    speech["say"] = tk;
+    Root speech;
+    speech->setAttr("say",msg);
 	
     Talk t;
-    t.setArgs(Atlas::Message::Element::ListType(1, speech));
+    t->setArgs1(speech);
     t->setTo(m_id);
-    t->setFrom(m_lobby->getAccountID());
+    t->setFrom(m_lobby->getAccount()->getID());
     t->setSerialno(getNewSerialno());
 	
     m_lobby->getConnection()->send(t);

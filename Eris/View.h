@@ -4,6 +4,7 @@
 #include <Eris/Types.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <sigc++/object.h>
+#include <map>
 
 namespace Eris
 {
@@ -25,7 +26,7 @@ public:
     View(Avatar* av);
     
     /** test if the specified entity is in this View */
-    bool isEntityVisible(Entity* ent) const;
+    bool isEntityVisible(const Entity* ent) const;
 
     /** test if the entity with the specified ID is in this View */
     bool isEntityVisible(const std::string& eid) const;
@@ -42,6 +43,7 @@ public:
 protected:    
     // the router passes various relevant things to us directly
     friend class IGRouter;
+    friend class Entity;
     
     void appear(const std::string& eid, float stamp);
     void disappear(const std::string& eid);
@@ -51,16 +53,20 @@ protected:
     
     /** retrieve the specified entity if it exists in the view at all, or
     return NULL otherwise */
-    Entity* getExistingEntity(comnst std::string& id) const;
+    Entity* getExistingEntity(const std::string& id) const;
     
     /// test if the specified entity ID is pending initial sight on the View
-    bool isPending(const std::string& const);
+    bool isPending(const std::string& eid);
+        
+    void setEntityVisible(const Entity* ent, bool visible);
     
 private:
     Connection* getConnection() const;
     void getEntityFromServer(const std::string& eid);
     
     void cancelPendingSight(const std::string& eid);
+    
+    typedef std::map<std::string, Entity*> IdEntityMap;
     
     Avatar* m_owner;
     IdEntityMap m_visible,

@@ -2,9 +2,9 @@
 #define ERIS_META_QUERY_H
 
 #include <Eris/BaseConnection.h>
-#include <Eris/Timestamp.h>
 #include <Eris/Poll.h>
 
+#include <wfmath/timestamp.h>
 #include <skstream/skstream.h>
 
 namespace Eris {
@@ -60,7 +60,7 @@ protected:
 	Meta* _meta;			///< The Meta-server object which owns the query
 
 	long _queryNo;		///< The serial number of the query GET
-	Time::Stamp _stamp;	///< Time stamp of the request, to estimate ping to server
+    WFMath::TimeStamp _stamp;	///< Time stamp of the request, to estimate ping to server
 	bool _complete;		///< Flag to indicate when the query is complete
 };
 

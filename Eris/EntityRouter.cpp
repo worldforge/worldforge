@@ -69,6 +69,17 @@ RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 {
     const std::vector<Root>& args = op->getArgs();
     
+    Move mv = smart_dynamic_cast<Move>(op);
+    if (mv)
+    {
+        // sight of move, we can handle as a specialization of set.
+        // note for the moment the actual behaviour is identical, so this
+        // code is uncessary (but I think that may change)
+        assert(!args.empty());
+        m_entity->setFromRoot(args.front());
+        return HANDLED;
+    }
+    
     // explicitly do NOT handle set ops here, since they can
     // validly change multiple entities - handled by the IGRouter
 

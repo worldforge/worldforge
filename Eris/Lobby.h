@@ -8,7 +8,8 @@ namespace Eris
 	
 class Player;
 class Person;
-	
+class Connection;
+
 /** Lobby is the Out-of-Game session object, valid from connection to the server until disconnection.
 */
 class Lobby : public Room
@@ -26,7 +27,7 @@ public:
     /// obtain a Room object, given the id; may return NULL
     Room* getRoom(const std::string &id);
 
-    Person* getAccount() const
+    Player* getAccount() const
     {
         return m_account;
     }
@@ -49,15 +50,14 @@ protected:
     virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
 	
     void sightPerson(const Atlas::Objects::Entity::Account &ac);
-    RouterResult privateTalk(const Atlas::Objects::Operation::Talk& tk)
+    Router::RouterResult privateTalk(const Atlas::Objects::Operation::Talk& tk);
     void recvInitialSight(const Atlas::Objects::Entity::RootEntity& ent);
         
 private:
     void onLoggedIn();
     void onLogout(bool clean);
     
-    Player* m_account;
-    
+    Player* m_account;    
     IdPersonMap m_people;
 	
     typedef std::map<std::string, Room*> IdRoomMap;

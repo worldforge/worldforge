@@ -3,6 +3,8 @@
 namespace Eris
 {
 
+class Entity;
+
 class EntityRouter : public Router
 {
 public:

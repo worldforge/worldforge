@@ -4,12 +4,15 @@
 
 #include <Eris/Lobby.h>
 #include <Eris/Connection.h>
-#include <Eris/Utils.h>
 #include <Eris/Log.h>
 #include <Eris/Person.h>
-#include <Eris/Exceptions.h>
+#include <Eris/Player.h>
+#include <Eris/redispatch.h>
 
 #include <sigc++/object_slot.h>
+
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
 
 #include <algorithm> 
 #include <cassert>
@@ -17,13 +20,79 @@
 typedef Atlas::Objects::Entity::Account AtlasAccount; 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
+using Atlas::Objects::smart_static_cast;
+using Atlas::Objects::smart_dynamic_cast;
+using Atlas::Objects::Entity::RootEntity;
 
 namespace Eris {
 
+class OOGRouter : public Router
+{
+public:
+    OOGRouter(Lobby* l) :
+        m_lobby(l),
+        m_anonymousLookSerialno(0)
+    {;}
+        
+    void setAnonymousLookSerialno(int serial)
+    {
+        m_anonymousLookSerialno = serial;
+    }
+    
+protected:
+    RouterResult handleOperation(const RootOperation& op)
+    {
+        const std::vector<Root>& args = op->getArgs();
+
+        Sight sight = smart_dynamic_cast<Sight>(op);
+        if (sight.isValid())
+        {
+            assert(!args.empty());
+            AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
+            if (acc.isValid())
+            {
+                m_lobby->sightPerson(acc);
+                return HANDLED;
+            }
+            
+            if (op->getRefno() == m_anonymousLookSerialno)
+            {
+                RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
+                m_lobby->recvInitialSight(ent);
+                return HANDLED;
+            }
+            
+        }
+        
+        Sound sound = smart_dynamic_cast<Sound>(op);
+        if (sound.isValid())
+        {
+            assert(!args.empty());
+            Talk talk = smart_dynamic_cast<Talk>(args.front());
+            if (talk.isValid())
+                return m_lobby->privateTalk(talk);
+        }
+        
+        return IGNORED;
+    }
+    
+private:
+    TypeService* typeService()
+    {
+        // none of these can ever be NULL, honest
+        return m_lobby->getConnection()->getTypeService();
+    }
+
+    Lobby* m_lobby;
+    int m_anonymousLookSerialno;
+};
+
+
+#pragma mark -
+
 Lobby::Lobby(Player* pl) :
     Room(this, std::string()),
-    m_account(pl),
-    m_anonymousLookSerialno(0)
+    m_account(pl)
 {
     m_router = new OOGRouter(this);
     assert(pl);
@@ -76,12 +145,12 @@ void Lobby::look(const std::string &id)
     getConnection()->send(look);
 }
 
-Room* Lobby::join(const std::string& roomID)
+Room* Lobby::join(const std::string& roomId)
 {
     if (!m_account->isLoggedIn())
     {
         error() << "Lobby trying join while not logged in";
-        return;
+        return NULL;
     }
 	
     Root what;
@@ -94,10 +163,10 @@ Room* Lobby::join(const std::string& roomID)
     join->setArgs1(what);
     getConnection()->send(join);
 	
-    IdRoomMap::iterator R = m_rooms.find(roomID);
+    IdRoomMap::iterator R = m_rooms.find(roomId);
     if (R == m_rooms.end())
     {
-        Room *nr = new Room(this, roomID);
+        Room *nr = new Room(this, roomId);
         R = m_rooms.insert(R, IdRoomMap::value_type(roomId, nr));
     }
 	
@@ -136,69 +205,6 @@ Room* Lobby::getRoom(const std::string &id)
 
 #pragma mark -
 
-class OOGRouter : public Router
-{
-public:
-    OOGRouter(Lobby* l) :
-        m_lobby(l),
-        m_anonymousLookSerialno(0)
-    {;}
-        
-    void setAnonymousLookSerialno(int serial)
-    {
-        m_anonymousLookSerialno = serial;
-    }
-    
-protected:
-    RouterResult handleOperation(const RootOperation& op)
-    {
-        const std::vector<Root>& args = op.getArgs();
-
-        Sight sight = smart_dynamic_cast<Sight>(op);
-        if (sight)
-        {
-            assert(!args.empty());
-            AtlasAccount acc = smart_dyanmic_cast<AtlasAccount>(args.front());
-            if (acc)
-            {
-                m_lobby->sightPerson(acc);
-                return HANDLED;
-            }
-            
-            if (op->getRefno() == m_anonymousLookSerialno)
-            {
-                RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
-                m_lobby->recvInitialSight(ent);
-                return HANDLED;
-            }
-            
-        }
-        
-        Sound sound = smart_dynamic_cast<Sound>(op);
-        if (sound)
-        {
-            assert(!args.empty());
-            Talk talk = smart_dynamic_cast<Talk>(args.front());
-            if (talk)
-                return m_lobby->privateTalk(talk);
-        }
-        
-        return IGNORED;
-    }
-    
-private:
-    TypeService* typeService()
-    {
-        // none of these can ever be NULL, honest
-        return m_lobby->getConnection()->getTypeService();
-    }
-
-    Lobby* m_lobby;
-    int m_anonymousLookSerialno;
-};
-
-#pragma mark -
-
 void Lobby::sightPerson(const AtlasAccount &ac)
 {
     IdPersonMap::iterator P = m_people.find(ac->getId());
@@ -227,59 +233,53 @@ void Lobby::recvInitialSight(const RootEntity& ent)
     if (!m_roomId.empty()) return;
 
     m_roomId = ent->getId();
-    m_account->getConnection()->registerRouterForFrom(m_roomId);
+    m_account->getConnection()->registerRouterForFrom(this, m_roomId);
     Room::sight(ent);
 }
 
 /** helper to buffer operations when waiting on sight of a person. Used by
 private chat in the first instance, and potentially more later. */
-class SightPersonRedispatch : public SigC::Object
+class SightPersonRedispatch : public Redispatch
+
 {
 public:
     SightPersonRedispatch(Connection* con, const std::string& pid, const Root& obj) :
-        m_con(con),
-        m_obj(obj),
+        Redispatch(con, obj),
         m_person(pid)
     {;}
     
     void onSightPerson(Person* p)
     {
-        if ( p->getAccountID() == m_person)
-        {
-            m_con->postForDispatch(m_obj);
-            delete this;
-        }
+        if ( p->getAccount() == m_person) post();
     }
 private:
-    Connection* m_con;
-    Root m_obj;
     std::string m_person;
 };
 
-RouterResult Lobby::privateTalk(const Talk& tk)
+Router::RouterResult Lobby::privateTalk(const Atlas::Objects::Operation::Talk& tk)
 {
     IdPersonMap::const_iterator P = m_people.find(tk->getFrom());
     if ((P == m_people.end()) || (P->second == NULL))
     {
         getPerson(tk->getFrom()); // force a LOOK if necessary
         
-        SightPersonRedispatch *spr = new SightPersonRedispatch(m_account->getConnection(), tk->getFrom(), ... );
-        SightPerson.connect(SigC::slot(*spr, SightPersonRedispatch::onSightPerson));
+        //SightPersonRedispatch *spr = new SightPersonRedispatch(m_account->getConnection(), tk->getFrom(), );
+        //SightPerson.connect(SigC::slot(*spr, SightPersonRedispatch::onSightPerson));
         return WILL_REDISPATCH;
     }
     
-    const std::vector<Root>& args = tk.getArgs();
+    const std::vector<Root>& args = tk->getArgs();
     if (args.empty())
     {
         warning() << "room " << m_roomId << " recieved sound(talk) with no args";
-        return;
+        return HANDLED;
     }
     
     if (!args.front()->hasAttr("say"))
-        return;
+        return HANDLED;
     
     std::string description = args.front()->getAttr("say").asString();
-    PrivateTalk.emit(P->second, say);
+    PrivateTalk.emit(P->second, description);
     return HANDLED;
 }
 
@@ -319,13 +319,13 @@ void Lobby::processRoomCreate(const Atlas::Objects::Operation::Create &cr,
 void Lobby::onLoggedIn()
 {
     assert(m_account->isLoggedIn());
-    getConnection()->registerRouterForTo(m_account->getID(), m_router);
+    getConnection()->registerRouterForTo(m_router, m_account->getID());
     look(""); // do initial anonymous look
 }
 
 void Lobby::onLogout(bool clean)
 {
-    getConnection()->unregisterRouterForTo(m_account->getID(), m_router);
+    getConnection()->unregisterRouterForTo(m_router, m_account->getID());
 }
 
 } // of namespace

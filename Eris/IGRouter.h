@@ -12,7 +12,7 @@ class View;
 class IGRouter : public Router
 {
 public:
-    IGRouter(Avatar* av)
+    IGRouter(Avatar* av);
     virtual ~IGRouter();
         
 protected:

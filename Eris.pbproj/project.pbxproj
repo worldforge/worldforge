@@ -132,7 +132,6 @@
 				C43FBD28054315F3008FC2ED,
 				C43FBD35054315F3008FC2ED,
 				C43FBD38054315F3008FC2ED,
-				C43FBD3B054315F3008FC2ED,
 				C43FBD40054315F4008FC2ED,
 				C43FBD44054315F4008FC2ED,
 				C43FBD4B054315F4008FC2ED,
@@ -158,6 +157,7 @@
 				C437AF440562987C00ACFA1E,
 				C44E341C05D856FC005C5DF9,
 				C44E341E05D857DB005C5DF9,
+				C49FB08005EE989300E25C44,
 			);
 			isa = PBXGroup;
 			name = Headers;
@@ -238,23 +238,6 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			path = Factory.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C43FBD3A054315F3008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			name = InvisibleEntityCache.cpp;
-			path = Eris/InvisibleEntityCache.cpp;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C43FBD3B054315F3008FC2ED = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = InvisibleEntityCache.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -686,6 +669,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Library/Frameworks /Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build";
 				FRAMEWORK_VERSION = A;
+				GCC_PREPROCESSOR_DEFINITIONS = ATLAS_ELEMENT_TYPEDEF_PRIVATE;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Info-eris__Upgraded_.plist";
@@ -720,7 +704,6 @@
 				C45DC3ED0562F83D00D8F8F4,
 				C45DC3F10562F83D00D8F8F4,
 				C45DC3F20562F83D00D8F8F4,
-				C45DC3F40562F83D00D8F8F4,
 				C45DC3F50562F83D00D8F8F4,
 				C45DC3F60562F83D00D8F8F4,
 				C45DC3F70562F83D00D8F8F4,
@@ -750,6 +733,7 @@
 				C492F63105E97AAB00AFF6AE,
 				C492F63D05E97D8500AFF6AE,
 				C4D7703505EA7B1D00423FA7,
+				C49FB08105EE989300E25C44,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -796,15 +780,6 @@
 			settings = {
 				ATTRIBUTES = (
 					Public,
-				);
-			};
-		};
-		C45DC3F40562F83D00D8F8F4 = {
-			fileRef = C43FBD3B054315F3008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Private,
 				);
 			};
 		};
@@ -1010,7 +985,6 @@
 				C45DC4120562F83D00D8F8F4,
 				C45DC4140562F83D00D8F8F4,
 				C45DC4170562F83D00D8F8F4,
-				C45DC4180562F83D00D8F8F4,
 				C45DC4190562F83D00D8F8F4,
 				C45DC41A0562F83D00D8F8F4,
 				C45DC41B0562F83D00D8F8F4,
@@ -1054,12 +1028,6 @@
 		};
 		C45DC4170562F83D00D8F8F4 = {
 			fileRef = C43FBD34054315F3008FC2ED;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C45DC4180562F83D00D8F8F4 = {
-			fileRef = C43FBD3A054315F3008FC2ED;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -1461,6 +1429,23 @@
 			settings = {
 			};
 		};
+		C49FB08005EE989300E25C44 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = logStream.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C49FB08105EE989300E25C44 = {
+			fileRef = C49FB08005EE989300E25C44;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Private,
+				);
+			};
+		};
 		C4BB158B0544A61B00A800CF = {
 			fallbackIsa = PBXFileReference;
 			isa = PBXFrameworkReference;
@@ -1488,7 +1473,6 @@
 				C43FBD1F054315F3008FC2ED,
 				C43FBD27054315F3008FC2ED,
 				C43FBD34054315F3008FC2ED,
-				C43FBD3A054315F3008FC2ED,
 				C43FBD3F054315F4008FC2ED,
 				C43FBD43054315F4008FC2ED,
 				C43FBD4A054315F4008FC2ED,

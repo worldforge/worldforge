@@ -2,32 +2,16 @@ Eris TODO
 
 1.2 TODO
 
-- migrate to Atlas 0.6 API
-- make Avatar storage map on world, remove the bizzare global map. 
-- remove all the global accessors (Instance()) and friends, and properly
-  sort out the ownership relations
-  
-  Connection owns a type service
-  
-  World owns Avatars, Entities
-  Lobby owns Rooms and OOG person objects
-  
-  Player (maybe this shoukd be renamed to Account?)
-  
-  Account could potentially own a connection, lobby and world. Depends
-  how we assume re-use. At the moment, Lobby and World are both bound to a
-  single account.
-  
-- use routers generally. Connection is the routing base, with an anonymous
-  router (almost certainly the account), and various routers bound to
-  TO (one for oog account, going to the lobby, and one for each Avatar, all
-  forward to World, except for any avatar specific stuff)
-  
-- Anoymous router on Account hence handles all the activation INFO edge cases,
-  also needs to forward tpye service onwards. And logout, and maybe
-  INFO(LOGOUT)
+- Avatar creation, especially in the character creation case. Hook
+  into Player
+- rename Player to Account
+
+- go over and clean up the metaquery code, it's horrible, especially the
+  snprint stuff.
 
 Longer Term TODO
+
+
 
 - motion prediction, nicked from Sear
 - UI backend stuff

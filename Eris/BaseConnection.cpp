@@ -40,19 +40,20 @@ BaseConnection::BaseConnection(const std::string &cnm,
 	
 BaseConnection::~BaseConnection()
 {    
-    if (_status != DISCONNECTED) {
-		hardDisconnect(true);
+    if (_status != DISCONNECTED)
+    {
+        hardDisconnect(true);
     }
     
-    //delete _stream;
 }
 	
 void BaseConnection::connect(const std::string &host, short port)
 {
-    if (_stream != NULL) {
-		log(LOG_WARNING, "in base connection :: connect, had existing stream, discarding it");
-		hardDisconnect(true);
-	}
+    if (_stream != NULL)
+    {
+        warning() << "in base connection :: connect, had existing stream, discarding it";
+        hardDisconnect(true);
+    }
 	
     _host = host;
     _port = port;
@@ -66,22 +67,22 @@ void BaseConnection::connect(const std::string &host, short port)
     _stream = new tcp_socket_stream(host, port, true);
 
     Poll::instance().addStream(_stream, Poll::WRITE);
-    log(LOG_DEBUG, "Stream added to poller");
+    debug() << "Stream added to poller";
 }
 
 void BaseConnection::hardDisconnect(bool emit)
 {
-	if (!_stream) {
-		log(LOG_WARNING, "in baseConnection::hardDisconnect with a NULL stream!");
-	} else {
+    if (!_stream)
+    {
+        warning() << "in baseConnection::hardDisconnect with a NULL stream!";
+    } else {
 		// okay, tear it down
 		if ((_status == CONNECTED) || (_status == DISCONNECTING)){
-			_codec->streamEnd();
+			m_codec->streamEnd();
 			(*_stream) << std::flush;
 			
-			delete _codec;
+			delete m_codec;
 			delete _encode;
-			delete _msgEncode;
 		} else if (_status == NEGOTIATE) {
 			delete _sc;
 			_sc = NULL;
@@ -121,13 +122,13 @@ void BaseConnection::recv()
 		    break;
 
 		case NEGOTIATE:
-			pollNegotiation();
-			break;
+                    pollNegotiation();
+                    break;
 		
 		case CONNECTED:
 		case DISCONNECTING:
-			_codec->poll();
-			break;
+                    m_codec->poll();
+                    break;
 		default:
 			throw InvalidOperation("Unexpected connection status in poll()");
 		}	
@@ -161,60 +162,59 @@ void BaseConnection::nonblockingConnect()
     _timeout = new Timeout("negotiate_" + _id, this, 5000);
     bindTimeout(*_timeout, NEGOTIATE);
 
-    _sc = new Atlas::Net::StreamConnect(_clientName,
-	    *_stream, _bridge);
+    _sc = new Atlas::Net::StreamConnect(_clientName, *_stream, _bridge);
     setStatus(NEGOTIATE);
 }
 
 void BaseConnection::pollNegotiation()
 {
-	if (!_sc || (_status != NEGOTIATE)) {
-		log(LOG_DEBUG, "pollNegotiation: unexpected connection status");
-		throw InvalidOperation("pollNegotiation: unexpected connection status");
-	}
+    if (!_sc || (_status != NEGOTIATE))
+    {
+        throw InvalidOperation("pollNegotiation: unexpected connection status");
+    }
 	
-	_sc->poll();
-	if (_sc->getState() == Atlas::Negotiate<std::iostream>::IN_PROGRESS)
-		// more negotiation to do once more netwrok data arrives
-	    return;
+    _sc->poll();
+    if (_sc->getState() == Atlas::Net::StreamConnect::IN_PROGRESS)
+        // more negotiation to do once more netwrok data arrives
+        return;
 	
-	if (_sc->getState() == Atlas::Negotiate<std::iostream>::SUCCEEDED) {
-	    log(LOG_DEBUG, "Negotiation Success");
-	    _codec = _sc->getCodec();
-	    _encode = new Atlas::Objects::Encoder(_codec);
-	    _codec->streamBegin();
-	    _msgEncode = new Atlas::Message::Encoder(_codec);
-	    // clean up
-	    delete _sc;
-	    _sc = NULL;
+    if (_sc->getState() == Atlas::Net::StreamConnect::SUCCEEDED)
+    {
+        debug() << "Negotiation Success";
+        m_codec = _sc->getCodec();
+        _encode = new Atlas::Objects::ObjectsEncoder(*m_codec);
+        m_codec->streamBegin();
+        // clean up
+        delete _sc;
+        _sc = NULL;
 	    
-	    delete _timeout;
-	    _timeout = NULL;
+        delete _timeout;
+        _timeout = NULL;
 	    
-	    setStatus(CONNECTED);
-	    onConnect();
-	} else {
-	    // assume it all went wrong
-	    handleFailure("Atlas negotiation failed");
-	    hardDisconnect(false);
-	}
+        setStatus(CONNECTED);
+        onConnect();
+    } else {
+        // assume it all went wrong
+        handleFailure("Atlas negotiation failed");
+        hardDisconnect(false);
+    }
 }
 
 void BaseConnection::onConnect()
 {
-	// tell anyone who cares with a signal
-	Connected.emit();	
+    // tell anyone who cares with a signal
+    Connected.emit();	
 }
 
 void BaseConnection::setStatus(Status sc)
 {
-	_status = sc;
+    _status = sc;
 }
 
 int BaseConnection::getFileDescriptor()
 {
     if (!_stream)
-		throw InvalidOperation("Not connected, hence no FD");
+        throw InvalidOperation("Not connected, hence no FD");
     return _stream->getSocket();
 }
 

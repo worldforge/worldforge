@@ -3,13 +3,6 @@
 
 #include <Eris/Types.h>
 
-namespace Atlas {
-  namespace Objects {
-    class Root;
-    namespace Operation { class RootOperation; }
-  }
-}
-
 namespace Eris
 {
 
@@ -46,8 +39,7 @@ and use set::find(). */
 //bool checkInherits(const Atlas::Objects::Root &obj, const std::string &cid);
 // bool CheckInherits(const Atlas::Message::Element &obj, const string &cid);
 
-// operation serial number sequencing
-long getNewSerialno();
+
 
 /** Generate a compact, sensible summary of an Atlas objects, suitable  for logging or sending
 to a console. This should include the type/name, the ID of entities, and contained objects for
