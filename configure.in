@@ -341,4 +341,5 @@ AC_OUTPUT([
 	tests/Makefile
 	tests/Objects/Makefile
 	tutorial/Makefile
-])
+	atlas-config
+], [chmod +x atlas-config])

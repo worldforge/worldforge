@@ -1,5 +1,9 @@
 2001-03-14  Al Riddoch  <alriddoch@zepler.org>
 
+	* configure.in: Added atlas-config support back in.
+
+2001-03-14  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Codecs/Makefile.am: Install Codec header files, so codecs can
 	  be used directly.
 
