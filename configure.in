@@ -5,4 +5,7 @@ AM_CONFIG_HEADER(config.h)
 
 AC_OUTPUT([
 	Makefile
+	Bus/Makefile
+	Content/Makefile
+	Net/Makefile
 ])
