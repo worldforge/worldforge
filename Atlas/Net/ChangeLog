@@ -1,7 +1,8 @@
 2000-00-23  fex <who@which.net>
 
-        * spring cleaning starts early
+    * spring cleaning starts early
 	* changes listed directly in files (easier to spot if they break something)
+	* where not commented in files, changes only shifting includes and cosmetic changes
 	
 1999-12-24  Aloril  <aloril@iki.fi>
 

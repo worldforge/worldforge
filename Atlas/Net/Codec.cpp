@@ -148,10 +148,10 @@ bool ACodec::hasMessage()
 				} else if (stack[nestd-1].isIntList()) {
 					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
 					stack[nestd-1].append(stack[nestd]);
-				} else if (stack[nestd-1].isLongList()) {
+/*				} else if (stack[nestd-1].isLongList()) {
 					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
 					stack[nestd-1].append(stack[nestd]);
-				} else if (stack[nestd-1].isFloatList()) {
+*/				} else if (stack[nestd-1].isFloatList()) {
 					DebugMsg1(1,"codec :: UNSTACK nest=%i LIST", nestd);
 					stack[nestd-1].append(stack[nestd]);
 				} else if (stack[nestd-1].isStringList()) {

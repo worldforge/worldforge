@@ -6,6 +6,10 @@
         email           : jbarrett@box100.com
 */
 
+#include <cassert>
+#include <cstdlib>
+
+#include "../Object/Debug.h"
 #include "TCPSocket.h"
 
 #if defined(_WIN32) || defined(__WINDOWS__)
@@ -13,9 +17,8 @@ int ATCPSocket::didWSAInit = 0;
 #else
 #include <fcntl.h>
 #endif
-#ifdef _MSC_VER
-#include <assert.h>
-#endif
+
+const u_long ADDRESS_ERROR = 0xFFFFFFFF;
 
 ATCPSocket::ATCPSocket()
 {
@@ -24,12 +27,12 @@ ATCPSocket::ATCPSocket()
 	if (!didWSAInit) {
 		WSAStartup(0x0101, &wsadata);
 		didWSAInit = 1;
-		printf("Did WSAStartup\n\n");
+		DebugMsg1(4, "ATCPSocket :: Did WSAStartup\n\n");
 	}
 #endif
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
-	DebugMsg1(4, "ATCPSocket created Socket=%li", (long)sock);
+	DebugMsg1(4, "ATCPSocket :: Created Socket=%li", (long)sock);
 }
 
 ATCPSocket::~ATCPSocket()
@@ -46,52 +49,46 @@ ATCPSocket::ATCPSocket(SOCKET asock): ASocket(asock)
 
 int	ATCPSocket::connect(const string& addr, int port)
 {
-	struct hostent		*host;
-	u_long			hostaddr;
-	struct sockaddr_in	sin;
-	int			res;
+    struct hostent      *host;
+    u_long              hostaddr;
+    struct sockaddr_in  sin;
+    int                 res;
 
-	host = gethostbyname(addr.c_str());
-	if (host == NULL)
+    host = gethostbyname(addr.c_str());
+    if (host == NULL)
 	{
-		// try it as an IP address
-		printf("converting IP Address\n");
-		fflush(stdout);
-		hostaddr = inet_addr(addr.c_str());
-		printf("converting IP Address = %li \n", hostaddr);
-		fflush(stdout);
-		if (hostaddr == 0xFFFFFFFF) return -1;
-	} else {
-		// name lookup worked, get address
-		printf("reading host entry\n");
-		fflush(stdout);
-		hostaddr = *((u_long *)host->h_addr);
-	}
+        //convert string to IP address
+        hostaddr = inet_addr(addr.c_str());
+        DebugMsg1(4, "ATCPSocket :: Converted IP Address = %li \n", hostaddr);
+        if ( hostaddr == ADDRESS_ERROR )
+            return -1;
+    } else {
+        // name lookup worked, get address
+        DebugMsg1(4, "ATCPSocket :: Reading host entry\n","");
+        hostaddr = *((u_long *)host->h_addr);
+    }
 
-	printf("opening connection to %li:%i on socket = %i\n", hostaddr,port,sock);
-	fflush(stdout);
+    DebugMsg3(4, "ATCPSocket :: Opening connection to %li:%i on socket = %i\n", hostaddr,port,sock);
 
-	memset(&sin, 0, sizeof(sin)); // make sure everything zero
-	sin.sin_family = AF_INET;
-	sin.sin_port = htons(port);
-	sin.sin_addr.s_addr = hostaddr;
+    memset(&sin, 0, sizeof(sin)); // make sure everything zero
+    sin.sin_family = AF_INET;
+    sin.sin_port = htons(port);
+    sin.sin_addr.s_addr = hostaddr;
 
-        res=::connect(sock, (struct sockaddr*)&sin, sizeof(sin));
-#if defined(_WIN32) || defined(__WINDOWS__)
-// Shouldn't need this using select() - sdt
-//        fcntl(sock,F_SETFL,O_NONBLOCK);
-#endif
-        return res;
+    res=::connect(sock, (struct sockaddr*)&sin, sizeof(sin));
+
+    return res;
 }
 
 int	ATCPSocket::listen(const string& addr, int port, int backlog)
 {
-	u_long			myaddr;
-	struct sockaddr_in	sin;
-	int			res;
+	u_long              myaddr;
+	struct sockaddr_in  sin;
+	int                 res;
 
 	myaddr = inet_addr(addr.c_str());
-	if (myaddr == 0xFFFFFFFF) return -1;
+	if (myaddr == ADDRESS_ERROR )
+	    return -1;
 
 	memset(&sin, 0, sizeof(sin)); // make sure everything zero
 	sin.sin_family = AF_INET;
@@ -99,7 +96,8 @@ int	ATCPSocket::listen(const string& addr, int port, int backlog)
 	sin.sin_addr.s_addr = myaddr;
 
 	res = bind(sock, (struct sockaddr*)&sin, sizeof(sin));
-	if (res == -1) return -1;
+	if (res == -1)
+	    return -1;
 
 	return ::listen(sock, backlog);
 }
@@ -126,7 +124,8 @@ int		ATCPSocket::recv(string& data)
 	char	buf[2048];
 
 	int res = ::recv(sock,buf,2047,0);
-        if(res<0) res=0;
+    if(res<0)
+        res=0;
 
 	data.erase();
 	data.assign(buf,res);

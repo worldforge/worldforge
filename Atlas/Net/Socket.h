@@ -9,13 +9,6 @@
 #ifndef __AtlasSocket_h_
 #define __AtlasSocket_h_
 
-#include <sys/types.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <memory.h>
-
-#include "../Object/Debug.h"
-
 #include <string>
 using namespace std;
 
@@ -37,36 +30,31 @@ using namespace std;
 	#define sinlen_t int
 #endif
 
-
 class ASocket
 {
-
-protected:
-	SOCKET	sock;
-	string	rbuf;
-
 public:
-	ASocket();
-	ASocket(SOCKET asock);
+    ASocket() { sock = (SOCKET)-1; }
+    ASocket( SOCKET asock ) { sock = asock; }
 
-	virtual ~ASocket() {}
+    virtual ~ASocket() {}
 
-	// these 2 calls are mutually exclusive
-	// you can either connect or listen/accept !!
-	virtual int connect(const string& addr, int port);
-	virtual int listen(const string& addr, int port, int backlog);
+    // these 2 calls are mutually exclusive
+    // you can either connect or listen/accept !!
+    virtual int connect(const string& addr, int port);
+    virtual int listen(const string& addr, int port, int backlog);
 
-	virtual ASocket* accept();
+    virtual ASocket* accept() { return 0; }
 
-	virtual int send(const string& data);
-	virtual int sendTo(const string& data, const struct sockaddr_in& addr);
+    virtual int send    (const string& data);
+    virtual int sendTo  (const string& data, const struct sockaddr_in& addr);
 
-	virtual int recv(string& buf);
-	virtual int recvFrom(string& buf, const struct sockaddr_in& addr);	
+    virtual int recv    (string& buf);
+    virtual int recvFrom(string& buf, const struct sockaddr_in& addr);	
 
-	virtual void close();
-	virtual SOCKET getSock();
-
+    virtual void close();
+    virtual SOCKET getSock();
+protected:
+    SOCKET	sock;
+    string	rbuf;
 };
-
 #endif

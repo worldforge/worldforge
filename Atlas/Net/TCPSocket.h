@@ -9,41 +9,37 @@
 #ifndef __AtlasTCPSocket_h_
 #define __AtlasTCPSocket_h_
 
+#include <string>
+using std::string;
+
 #include "../Object/Debug.h"
 #include "Socket.h"
 
 #include <sys/types.h>
 #include <memory.h>
-#include <string.h>
+
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-#include <stdlib.h>
-#include <stdio.h>
+
 
 class ATCPSocket: public ASocket
 {
-private:
-
-#if defined(_WIN32) || defined(__WINDOWS__)
-static	int	didWSAInit;
-
-struct WSAData	wsadata;
-#endif
-
 public:
-		ATCPSocket();
-		ATCPSocket(SOCKET asock);
-		~ATCPSocket();
+    ATCPSocket();
+    ATCPSocket(SOCKET asock);
+    ~ATCPSocket();
 
-ASocket*	accept();
+    ASocket*    accept();
 
-int		connect(const string& addr, int port);
-int		listen(const string& addr, int port, int blog);
-
-int		send(const string& data);
-int		recv(string& data);
-
+    int connect (const string& addr, int port);
+    int listen  (const string& addr, int port, int blog);
+    int send    (const string& data);
+    int recv    (string& data);
+private:
+#if defined(_WIN32) || defined(__WINDOWS__)
+    static  int didWSAInit;
+    struct WSAData  wsadata;
+#endif
 };
-
 #endif

@@ -4,6 +4,12 @@
 	begin: 1999.11.29
 	copyright: (C) 1999 by John Barrett (ZW)
 	email: jbarrett@box100.com
+
+changes:
+
+23 Jan 2000 - fex
+    references to atlas long removed
+
 */
 
 #include "Object.h"
@@ -86,12 +92,12 @@ AObject::AObject(const string& src)
 	assert((unsigned long)obj != 1);
 }
 
-AObject::AObject(string& src)
+/*AObject::AObject(string& src)
 {
 	obj = PyString_FromString(src.c_str());
 	assert((unsigned long)obj != 1);
 }
-
+*/
 AObject::AObject(double src)
 {
 	obj = PyFloat_FromDouble(src);
@@ -244,6 +250,7 @@ int	AObject::get(const string& name, int& val) const
 	return 1;
 }
 
+
 int	AObject::get(const string& name, long& val) const
 {
 	assert((unsigned long)obj != 1);
@@ -255,6 +262,7 @@ int	AObject::get(const string& name, long& val) const
 	free(tmp);
 	return 1;
 }
+
 
 int	AObject::get(const string& name, double& val) const
 {

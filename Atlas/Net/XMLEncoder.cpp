@@ -63,7 +63,7 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 		}
 		printf("%s</int_list>\n",pre.c_str());
 	} 
-	if (list.isLongList()) {
+/*	if (list.isLongList()) {
 		printf("%s<long_list%s>\n", pre.c_str(), nam.c_str());
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
@@ -72,7 +72,7 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 		}
 		printf("%s</long_list>\n",pre.c_str());
 	} 
-	if (list.isFloatList()) {
+*/	if (list.isFloatList()) {
 		printf("%s<float_list%s>\n", pre.c_str(), nam.c_str());
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
@@ -119,12 +119,12 @@ void AXMLEncoder::walkTree(int nest, string name, const AObject& list)
 			pre.c_str(), nam.c_str(),list.asInt()
 		);
 	}
-	if (list.isLong()) {
+/*	if (list.isLong()) {
 		printf("%s<long%s>%li</long>\n",
 			pre.c_str(), nam.c_str(),list.asLong()
 		);
 	}
-	if (list.isFloat()) {
+*/	if (list.isFloat()) {
 		printf("%s<float%s>%.2f</float>\n",
 			pre.c_str(), nam.c_str(),list.asFloat()
 		);

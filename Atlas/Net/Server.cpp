@@ -24,14 +24,14 @@ changes:
 // start listening for connections on an established socket
 AServer::AServer(ASocket* listener)
 {
-    assert( lsock != 0 );
+    assert( listener != 0 );
 	lsock = listener;
+	
+	//init 'real' socket
 	slsock = lsock->getSock();
-
 	FD_ZERO(&fdread);
 	FD_ZERO(&fdsend);
 	FD_ZERO(&fderrs);
-
 	FD_SET(slsock, &fdread);
 	FD_SET(slsock, &fderrs);
 }

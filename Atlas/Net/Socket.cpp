@@ -6,58 +6,47 @@
         email           : jbarrett@box100.com
 */
 
+#include <cstdio>
+#include <cstdlib>
+#include <memory.h>
+
 #include "Socket.h"
-#ifdef _MSC_VER
-#include <assert.h>
-#endif
-
-ASocket::ASocket()
-{
-	sock = (SOCKET)-1;
-}
-
-ASocket::ASocket(SOCKET asock)
-{
-	sock = asock;
-}
-
-
-ASocket* ASocket::accept()				{return NULL;}
-
+#include "../Object/Debug.h"
+#include <sys/types.h>
 
 int ASocket::connect(const string& addr, int port)		
 {
-	DebugMsg1(0, "ASocket::connect BAD VIRTUAL CALL !!!", "");
+	DebugMsg1(0, "ASocket :: connect() not overidden in subclass", "");
 	return -1;
 }
 
 int ASocket::listen(const string& addr, int port, int blog)
 {
-	DebugMsg1(0, "ASocket::listen BAD VIRTUAL CALL !!!", "");
+	DebugMsg1(0, "ASocket :: listen() not overidden in subclass", "");
 	return -1;
 }
 
 int ASocket::send(const string& data)
 {
-	DebugMsg1(0, "ASocket::send BAD VIRTUAL CALL !!!", "");
+	DebugMsg1(0, "ASocket :: send() not overidden in subclass", "");
 	return -1;
 }
 
 int ASocket::sendTo(const string& data, const sockaddr_in& addr)
 {
-	DebugMsg1(0, "ASocket::sendTo BAD VIRTUAL CALL !!!", "");
+	DebugMsg1(0, "ASocket :: sendTo() not overidden in subclass", "");
 	return -1;
 }
 
 int ASocket::recv(string& buf)
 {
-	DebugMsg1(0, "ASocket::recv BAD VIRTUAL CALL !!!", "");
+	DebugMsg1(0, "ASocket :: recv() not overidden in subclass", "");
 	return -1;
 }
 
 int ASocket::recvFrom(string& buf, const sockaddr_in& addr)
 {
-	DebugMsg1(0, "ASocket::recvFrom BAD VIRTUAL CALL !!!", "");
+	DebugMsg1(0, "ASocket :: recvFrom() not overidden in subclass", "");
 	return -1;
 }
 

@@ -14,12 +14,12 @@
 int 	ADebug::doDebug = 0;
 FILE*	ADebug::logfile = NULL;
 
-	ADebug::ADebug()		{}
+ADebug::ADebug() {}
 
-void	ADebug::setDebug(int level)	{ doDebug = level; }
-int	ADebug::getDebug()		{ return doDebug; }
+void ADebug::setDebug(int level)    { doDebug = level; }
+int  ADebug::getDebug()             { return doDebug; }
 
-void	ADebug::openLog(char* fname)
+void ADebug::openLog(char* fname)
 {
 	ADebug::closeLog();
 	logfile = fopen(fname, "a");
