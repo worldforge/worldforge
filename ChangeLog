@@ -1,9 +1,10 @@
 Friday, December 14, 2001	Ron Steinke <rsteinke@w-link.net>
 
 	* .cvsignore fixes
-	* rearranged the ordering of function declarations in the
+	* Rearranged the ordering of function declarations in the
 	  classes in an attempt at a cross-class standard, added
 	  some bits I'd missed
+	* Added polar, spherical coordinate conversions to Point<> and Vector<>
 
 Thursday, December 13, 2001	Ron Steinke <rsteinke@w-link.net>
 
