@@ -25,7 +25,7 @@ class ObjectsEncoder : public Atlas::EncoderBase
 public:
     /// The default constructor.
     /// @param b The Bridge to which objects are to be sent.
-    ObjectsEncoder(Atlas::Bridge* b) : EncoderBase(b) { }
+    explicit ObjectsEncoder(Atlas::Bridge* b) : EncoderBase(b) { }
     /// The default destructor.
     virtual ~ObjectsEncoder() { }
 

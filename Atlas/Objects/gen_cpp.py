@@ -219,6 +219,19 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher):
         self.write('    return m;\n')
         self.write("}\n\n")
 
+    def addtoobject_im(self, obj, statics):
+        classname = classize(obj.id, data=1)
+        self.write("void %s::addToMessage(Element::MapType & m) const\n" % classname)
+        self.write("{\n")
+        parent = self.get_cpp_parent(obj)
+        self.write("    %s::addToMessage(m);\n" % parent)
+        for attr in statics:
+            self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
+            self.write('        m["%s"] = Element(get%s%s());\n' % \
+                    (attr.name, attr.cname, attr.as_object))
+        self.write('    return;\n')
+        self.write("}\n\n")
+
     def smart_ptr_if(self, name_addition=""):
         self.write("\nclass %s;\n" % (self.classname + name_addition))
         self.write("typedef SmartPtr<%s> %s;\n" %
@@ -365,6 +378,9 @@ void %(classname)s::free()
             self.doc(4, 'Convert this object to a Element.')
             self.write("    virtual const Atlas::Message::Element::MapType asMessage() const;\n")
             self.write("\n")
+            self.doc(4, 'Write this object to an existing Element.')
+            self.write("    virtual void addToMessage(Atlas::Message::Element::MapType &) const;\n")
+            self.write("\n")
             for attr in static_attrs:
                 self.write(attr.set_if())
             self.write('\n')
@@ -429,6 +445,7 @@ void %(classname)s::free()
             self.remattr_im(obj, static_attrs)
             self.sendcontents_im(obj, static_attrs)
             self.asobject_im(obj, static_attrs)
+            self.addtoobject_im(obj, static_attrs)
         self.instanceof_im(obj)
         self.freelist_im()
 

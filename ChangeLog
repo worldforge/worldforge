@@ -1,3 +1,23 @@
+2003-04-09  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/MEncoder.h, src/Objects/Encoder.h: Make Encoder
+	  constructors explicit for safety.
+
+	* src/Message/Object.cpp, src/Message/Object.h: Add assignment
+	  operators for all the possible types for efficiency.
+	  Move long functions out of header, so they are not
+	  inlined.
+
+	* src/Objects/gen_cpp.py, src/Objects/BaseObject.cpp,
+	  src/Objects/BaseObject.h: Add new method for more efficient
+	  conversion of Objects into Messages.
+
+	* src/Objects/AttributeInfo.py: Make use of more efficient
+	  conversion methods.
+
+	* Make sure the tests and benchmarks are picking up the right
+	  libraries.
+
 2003-03-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Message/DecoderBase.cpp, src/Message/DecoderBase.h,

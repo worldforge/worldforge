@@ -73,6 +73,9 @@ public:
     /// Convert this object to a Object.
     virtual const Atlas::Message::Element::MapType asMessage() const;
 
+    /// Write this object to an existing Element
+    virtual void addToMessage(Atlas::Message::Element::MapType &) const;
+
     /// Send the contents of this object to a Bridge.
     virtual void sendContents(Atlas::Bridge* b) const;
 

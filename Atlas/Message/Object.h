@@ -28,6 +28,8 @@ class WrongTypeException : public Atlas::Exception
  *
  * Changes:
  *
+ *   2003/04/02   Al Riddcoh <alriddoch@zepler.org>
+ *                Add in some assignment operators for efficiency
  *   2002/11/07   Al Riddcoh <alriddoch@zepler.org>
  *                Changed the name to Element as Object is a stupid name
  *                for a class.
@@ -63,71 +65,25 @@ public:
         TYPE_LIST
     };
 
+private:
+    /// Clear all values.
+    void clear(Type new_type = TYPE_NONE);
+
+public:
     /// Construct an empty object.
     Element()
       : t(TYPE_NONE)
     {
     }
 
-    /// Clear all values.
-    void clear()
-    {
-     switch(t) 
-	{
-      case TYPE_NONE:
-      case TYPE_INT:
-      case TYPE_FLOAT:
-      case TYPE_PTR:
-	break;
-      case TYPE_STRING:
-	delete s;
-	break;
-      case TYPE_MAP:
-	delete m;
-	break;
-      case TYPE_LIST:
-	delete l;
-	break;
-      }
-     
-     t = TYPE_NONE;
-    }
-
     ///
-    virtual ~Element()
-      {
-	clear();
-      }
+    ~Element()
+    {
+        clear();
+    }
 
     /// Copy an existing object.
-    Element(const Element& obj)
-      : t(obj.t)
-    {
-      switch(t) 
-	{
-      case TYPE_NONE:
-	break;
-      case TYPE_INT:
-	i = obj.i;
-	break;
-      case TYPE_FLOAT:
-	f = obj.f;
-	break;
-      case TYPE_PTR:
-	p = obj.p;
-	break;
-      case TYPE_STRING:
-	s = new StringType(*obj.s);
-	break;
-      case TYPE_MAP:
-	m = new MapType(*obj.m);
-	break;
-      case TYPE_LIST:
-	l = new ListType(*obj.l);
-	break;
-      }
-	
-    }
+    Element(const Element& obj);
 
     /// Set type to int, and value to v.
     Element(int v)
@@ -160,7 +116,7 @@ public:
     }
 
     /// Set type to PtrType, and value to v.
-    Element(const PtrType& v)
+    Element(PtrType v)
       : t(TYPE_PTR), p(v)
     {
     }
@@ -170,9 +126,9 @@ public:
       : t(TYPE_STRING)
     {
       if(v)
-	s = new StringType(v);
+        s = new StringType(v);
       else
-	s = new StringType();
+        s = new StringType();
     }
 
     /// Set type to std::string, and value to v.
@@ -195,60 +151,118 @@ public:
     }
 
     /// overload assignment operator !
-    Element& operator=(const Element& obj) 
+    Element& operator=(const Element& obj);
+
+    Element& operator=(int v) 
     {
-      //check for self assignment
-      if(&obj == this)
-	return *this;
+      if (TYPE_INT != t)
+      {
+        clear(TYPE_INT);
+      }
+      i = v;
+      return *this;
+    }
 
-      //first clear
-      clear();
-    
-      // then perform actual assignment of members
-      t =  obj.t;
-      
-      switch(t) 
-	{
-	case TYPE_NONE:
-	  break;
-	case TYPE_INT:
-	  i = obj.i;
-	  break;
-	case TYPE_FLOAT:
-	  f = obj.f;
-	  break;
-	case TYPE_PTR:
-	  p = obj.p;
-	  break;
-	case TYPE_STRING:
-	  s = new StringType(*obj.s);
-	  break;
-	case TYPE_MAP:
-	  m = new MapType(*obj.m);
-	  break;
-	case TYPE_LIST:
-	  l = new ListType(*obj.l);
-	  break;
-	}
+    Element& operator=(bool v) 
+    {
+      if (TYPE_INT != t)
+      {
+        clear(TYPE_INT);
+      }
+      i = v;
+      return *this;
+    }
 
+    Element& operator=(IntType v) 
+    {
+      if (TYPE_INT != t)
+      {
+        clear(TYPE_INT);
+      }
+      i = v;
+      return *this;
+    }
+
+    Element& operator=(float v) 
+    {
+      if (TYPE_FLOAT != t)
+      {
+        clear(TYPE_FLOAT);
+      }
+      f = v;
+      return *this;
+    }
+
+    Element& operator=(FloatType v) 
+    {
+      if (TYPE_FLOAT != t)
+      {
+        clear(TYPE_FLOAT);
+      }
+      f = v;
+      return *this;
+    }
+
+    Element& operator=(PtrType v) 
+    {
+      if (TYPE_PTR != t)
+      {
+        clear(TYPE_PTR);
+      }
+      p = v;
+      return *this;
+    }
+
+    Element& operator=(const char * v) 
+    {
+      if (TYPE_STRING != t)
+      {
+        clear(TYPE_STRING);
+        s = new StringType(v);
+      } else {
+        *s = v;
+      }
+      return *this;
+    }
+
+    Element& operator=(const StringType & v) 
+    {
+      if (TYPE_STRING != t)
+      {
+        clear(TYPE_STRING);
+        s = new StringType(v);
+      } else {
+        *s = v;
+      }
+      return *this;
+    }
+
+    Element& operator=(const MapType & v) 
+    {
+      if (TYPE_MAP != t)
+      {
+        clear(TYPE_MAP);
+        m = new MapType(v);
+      } else {
+        *m = v;
+      }
+      return *this;
+    }
+
+    Element& operator=(const ListType & v) 
+    {
+      if (TYPE_LIST != t)
+      {
+        clear(TYPE_LIST);
+        l = new ListType(v);
+      } else {
+        *l = v;
+      }
       return *this;
     }
 
     /// Check for equality with another Element.
-    bool operator==(const Element& o) const
-    {
-        if (t != o.t) return false;
-        switch(t) {
-            case TYPE_NONE: return true;
-            case TYPE_INT: return i == o.i;
-            case TYPE_FLOAT: return f == o.f;
-            case TYPE_PTR: return p == o.p;
-            case TYPE_STRING: return *s == *o.s;
-            case TYPE_MAP: return *m == *o.m;
-            case TYPE_LIST: return *l == *o.l;
-        }
-        return false;
-    }
+    bool operator==(const Element& o) const;
 
     /// Check for inequality with another Element.
     bool operator!=(const Element& m) const
@@ -287,7 +301,7 @@ public:
     bool operator==(const StringType& v) const
     {
       if(t == TYPE_STRING)
-	return (*s == v);
+        return (*s == v);
       return false;
     }
 
@@ -298,7 +312,7 @@ public:
     bool operator==(const MapType& v) const
     {
       if(t == TYPE_MAP)
-	return (*m == v);
+        return (*m == v);
       return false;
     }
 
@@ -309,7 +323,7 @@ public:
     bool operator==(const ListType& v) const
     {
       if (t == TYPE_LIST)
-	return (*l == v);
+        return (*l == v);
       return false;
     }
 
@@ -343,7 +357,7 @@ public:
     }
     IntType Int() const
     {
-	return i;
+        return i;
     }
     /// Retrieve the current value as a double.
     FloatType asFloat() const throw (WrongTypeException)
@@ -353,7 +367,7 @@ public:
     }
     FloatType Float() const
     {
-	return f;
+        return f;
     }
     /// Retrieve the current value as a pointer.
     PtrType asPtr() const throw (WrongTypeException)
@@ -363,7 +377,7 @@ public:
     }
     PtrType Ptr() const
     {
-	return p;
+        return p;
     }
     /// Retrieve the current value as a number.
     FloatType asNum() const throw (WrongTypeException)
@@ -386,11 +400,11 @@ public:
     }
     const StringType& String() const
     {
-	return *s;
+        return *s;
     }
     StringType& String()
     {
-	return *s;
+        return *s;
     }
     /// Retrieve the current value as a const MapType reference.
     const MapType& asMap() const throw (WrongTypeException)
@@ -406,11 +420,11 @@ public:
     }
     const MapType& Map() const
     {
-	return *m;
+        return *m;
     }
     MapType& Map()
     {
-	return *m;
+        return *m;
     }
     /// Retrieve the current value as a const ListType reference.
     const ListType& asList() const throw (WrongTypeException)
@@ -426,11 +440,11 @@ public:
     }
     const ListType& List() const
     {
-	return *l;
+        return *l;
     }
     ListType& List()
     {
-	return *l;
+        return *l;
     }
 
 protected:

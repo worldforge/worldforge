@@ -1,5 +1,7 @@
 New TODO by Al Riddoch
 
+There is some inefficient copying going on in the way args are encoded.
+
 Note that most people are not interested in the Objects::Decoder also
 handling dispatch. Just decode and pass to the application.
 

@@ -25,3 +25,5 @@ flag.cpp
 objectFactory.cpp
 Decoder.h
 Decoder.cpp
+Dispatcher.h
+Dispatcher.cpp

@@ -24,7 +24,7 @@ namespace Atlas { namespace Message {
 class Encoder : public Atlas::EncoderBase
 {
 public:
-    Encoder(Atlas::Bridge*);
+    explicit Encoder(Atlas::Bridge*);
 
     virtual ~Encoder() { }
 

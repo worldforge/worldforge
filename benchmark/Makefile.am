@@ -9,8 +9,8 @@ CPPFLAGS = -I$(top_srcdir)/src -Wall
 LDADD  = -L$(top_builddir)/src/ -L$(top_builddir)/src/Codecs/ -L$(top_builddir)/src/Filters/ \
          -L$(top_builddir)/src/Message/ -L$(top_builddir)/src/Net/ -L$(top_builddir)/src/Objects/
 
-LIBS = -lAtlasObjects -lAtlasNet -lAtlas -lAtlasCodecs -lAtlasFilters \
-       -lAtlasMessage -lAtlas -lbz2 -lz
+LIBS = -lAtlasObjects-0.6 -lAtlasNet-0.6 -lAtlas-0.6 -lAtlasCodecs-0.6 \
+       -lAtlasFilters-0.6 -lAtlasMessage-0.6 -lAtlas-0.6 -lbz2 -lz
 
 Message_Move_SOURCES = Message_Move.cpp
 

@@ -249,7 +249,8 @@ void %(classname)s::set%(cname)s1(Root& val)
         I != args_in.end();
         I++)
     {
-        args_out.push_back((*I)->asMessage());
+        args_out.push_back(Atlas::Message::Element::MapType());
+        (*I)->addToMessage(args_out.back().asMap());
     }
     return args_out;
 }

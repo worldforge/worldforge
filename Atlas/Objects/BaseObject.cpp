@@ -43,6 +43,14 @@ const Element::MapType BaseObjectData::asMessage() const
     return m_attributes;
 }
 
+void BaseObjectData::addToMessage(Element::MapType & m) const
+{
+    typedef Element::MapType::const_iterator Iter;
+    for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++) {
+        m[I->first] = I->second;
+    }
+}
+
 void BaseObjectData::sendContents(Bridge* b) const
 {
     Message::Encoder e(b);
