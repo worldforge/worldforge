@@ -78,7 +78,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 	if (retval < 0)
 		// FIXME - is an error from select fatal or not? At present I think yes,
 		// but I'm sort of open to persuasion on this matter.
-		throw InvalidOperation("Error at pollDefault::Poll() doing select()");
+		throw InvalidOperation("Error at PollDefault::Poll() doing select()");
 
 	got_data = (retval != 0);
 }
@@ -143,7 +143,7 @@ void PollDefault::addStream(const basic_socket_stream* str, Check c)
     assert(c && Poll::MASK);
 
     if(!_streams.insert(std::make_pair(str, c)).second)
-	throw Eris::InvalidOperation("Duplicate streams in pollDefault"); 
+	throw Eris::InvalidOperation("Duplicate streams in PollDefault"); 
 }
 
 void PollDefault::changeStream(const basic_socket_stream* str, Check c)
@@ -153,7 +153,7 @@ void PollDefault::changeStream(const basic_socket_stream* str, Check c)
     _iter i = _streams.find(str);
 
     if(i == _streams.end())
-	throw Eris::InvalidOperation("Can't find stream in pollDefault");
+	throw Eris::InvalidOperation("Can't find stream in PollDefault");
 
     i->second = c;
 }
@@ -161,5 +161,5 @@ void PollDefault::changeStream(const basic_socket_stream* str, Check c)
 void PollDefault::removeStream(const basic_socket_stream* str)
 {
     if(_streams.erase(str) == 0)
-	throw Eris::InvalidOperation("Can't find stream in pollDefault");
+	throw Eris::InvalidOperation("Can't find stream in PollDefault");
 }

@@ -1,3 +1,8 @@
+Monday, 9th August, Al Riddoch <alriddoch@zepler.org>
+
+	* Eris/PollDefault.cpp, Eris/PollDefault.h: Fix more incorrect mangling
+	  of Poll by conversion script.
+
 Saturday, 9th August, Al Riddoch <alriddoch@zepler.org>
 
 	* Switch all the build files over to using 1.2 API suffix.
