@@ -10,18 +10,18 @@ C_FLAGS	=	-g -Wall
 #C_FLAGS	=	-O3 -Wall
 MK_DEP	=	$(CC) $(C_FLAGS) $(incDirs) -MM
 
-#OUTDIR	=	linux
-#EXE_EXT	=
-#incDirs	=	-I/usr/include/python1.5 $(STDINCS)
-#libDirs	=	$(STDLIBS)
-#LIBS		=	-lstdc++ -lpython1.5 -lAtlas -ldl
+OUTDIR	=	linux
+EXE_EXT	=
+incDirs	=	-I/usr/local/include/python1.5 $(STDINCS)
+libDirs	=	$(STDLIBS)
+LIBS		=	-lstdc++ -lpython1.5 -lAtlas -ldl
 #LIBS		=	-lstdc++ -lpython1.5 -lAtlas -ldl -lz -ltk -ltcl -L/usr/X11R6/lib -lX11 -lreadline -lpthread
 
-OUTDIR	=	win32
-EXE_EXT	=	.exe
-incDirs	=	-Ic:/gcc-2.95.2/include/Python $(STDINCS)
-libDirs	=	$(STDLIBS)
-LIBS		=	-lAtlas -lpython15 -lwsock32 -lstdc++
+#OUTDIR	=	win32
+#EXE_EXT	=	.exe
+#incDirs	=	-Ic:/gcc-2.95.2/include/Python $(STDINCS)
+#libDirs	=	$(STDLIBS)
+#LIBS		=	-lAtlas -lpython15 -lwsock32 -lstdc++
 
 # Targets follow ---------------------------------
 
@@ -52,7 +52,8 @@ LIBOBJS = \
 	$(OUTDIR)/AtlasObject.o \
 	$(OUTDIR)/AtlasPython.o \
 	$(OUTDIR)/AtlasDebug.o \
-	$(OUTDIR)/AtlasCompressor.o
+	$(OUTDIR)/AtlasCompressor.o \
+	$(OUTDIR)/AtlasFactory.o
 
 all:		$(TARGETS)
 
@@ -210,6 +211,9 @@ $(OUTDIR)/EchoTest.o: EchoTest.cpp EchoTest.h AtlasClient.h AtlasCodec.h \
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 $(OUTDIR)/CopyTest.o: CopyTest.cpp CopyTest.h AtlasDebug.h AtlasObject.h 
+	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
+
+$(OUTDIR)/AtlasFactory.o: AtlasFactory.cpp AtlasFactory.h AtlasObject.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 
