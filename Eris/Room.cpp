@@ -247,7 +247,10 @@ void Room::recvSoundTalk(const Atlas::Objects::Operation::Talk &tk)
 		return;
 	}
 	// hit this assert if get a talk from somone we know *nothing* about
-	assert (_people.find(tk.GetFrom()) != _people.end());
+	if (_people.find(tk.GetFrom()) == _people.end()) {
+	    Log(LOG_DEBUG, "unknown FROM %s in TALK operation");
+	    assert(false);
+	}
 	
 	// get the player name and emit the signal already
 	Person *p = _lobby->getPerson(tk.GetFrom());

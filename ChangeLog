@@ -1,3 +1,12 @@
+Wednesday, December 26 2001, James Turner
+
+	* Tweaked configure.in slightly, to use CXXFLAGS. Should
+	  correctly pick up CXXFLAGS / CFLAGS variables if they are set.
+	* Made an assertion in Room.cpp more verbose becuase I hit it once,
+	  using stage. This maybe a sequencing issue (similar to what
+	  happens when logging in before the type hierarchy has fully
+	  transferred)
+
 Saturday, December 22 2001, James Turner
 
 	* Committed build improvement by Michael Kocg - Eris now as
