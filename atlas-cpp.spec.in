@@ -1,16 +1,19 @@
-%define name Atlas-C++
+%define name @PACKAGE@
 %define version @VERSION@
+%define release 1
+%define serial 1
 %define libsuffix @ATLAS_LIB_SUFFIX@
 
 Summary: The Atlas protocol C++ implementation
 Name: %{name}
 Version: %{version}
-Release: 1
+Release: %{release}
+Serial: %{serial}
 Copyright: LGPL
 Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz
 Requires: libstdc++
-BuildRoot: %{_tmppath}/%{name}-buildroot
+BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires: gcc-c++ >= 2.95.2
 
 %description
