@@ -1,3 +1,8 @@
+2002-05-18  Michael Koch  <konqueror@gmx.de>
+
+	* all Makefile.am: 
+	  fixes for builddir != srcdir
+
 2002-05-17  Michael Koch  <konqueror@gmx.de>
 
         * atlas-config.in:

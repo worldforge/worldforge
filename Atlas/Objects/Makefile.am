@@ -3,8 +3,6 @@ lib_LTLIBRARIES = libAtlasObjects.la
 
 libAtlasObjects_la_LDFLAGS = $(INTERFACE_VERSION)
 
-libAtlasObjectsincludedir = $(includedir)/Atlas/Objects
-
 REAL_GENERATED_CPP = Root.cpp Decoder.cpp \
 	RootEntity.cpp RootEntityChildren.cpp \
         RootOperation.cpp RootOperationChildren1.cpp \
@@ -25,7 +23,6 @@ libAtlasObjects_la_SOURCES = \
 
 BUILT_SOURCES = $(GENERATED_CPP) $(GENERATED_H)
 
-
 PY_SOURCES = gen_cpp.py common.py AttributeInfo.py GenerateObjectFactory.py \
 	GenerateDecoder.py
 
@@ -37,6 +34,8 @@ $(REAL_GENERATED_CPP) $(GENERATED_H):
 
 flag.cpp: $(PY_SOURCES)
 	python gen_cpp.py && touch flag.cpp
+
+libAtlasObjectsincludedir = $(includedir)/Atlas/Objects
 
 libAtlasObjectsinclude_HEADERS = \
 	BaseObject.h SmartPtr.h Encoder.h objectFactory.h loadDefaults.h \

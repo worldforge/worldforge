@@ -1,3 +1,4 @@
+
 SUBDIRS = src tests tutorial benchmark
 
 bin_SCRIPTS = atlas-config
