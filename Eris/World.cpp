@@ -521,6 +521,8 @@ void World::recvInfoCharacter(const Atlas::Objects::Operation::Info &/*ifo*/,
 	// get the character, to glue things up
 	lookup(_characterID);
 	
+	CharacterSuccess.emit();
+	
 	// get the local root for us
 	look("");
 }

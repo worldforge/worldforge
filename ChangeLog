@@ -1,3 +1,9 @@
+Tuesday, 6th January 2004, Al Riddoch <alriddoch@zepler.org>
+
+	* Eris/World.h, Eris/World.cpp: Add a signal to indicate if
+	  if a player has successfully taken control of a new or existing
+	  avatar.
+
 Saturday, 20th December, Ron Steinke <rsteinke@w-link.net>
 
 	* Don't need Avatar::GotEntity, World::Entered does

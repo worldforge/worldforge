@@ -134,6 +134,9 @@ public:
 	is unregistered or entity is unparented */
 	SigC::Signal1<void, Entity*> EntityDelete;
 
+	/// CharacterSuccess signal is invoked just once, when we get notice that a character was taken or created.
+	SigC::Signal0<void> CharacterSuccess;
+
 	/// Entered signal is invoked just once, when the player enters the IG world
 	SigC::Signal1<void, Entity*> Entered;
 	
