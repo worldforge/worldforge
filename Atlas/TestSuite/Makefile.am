@@ -18,7 +18,7 @@ test_object_list_LDADD		= ../Message/.libs/libAtlasMessage.so
 
 test_negotiate_SOURCES		= test-negotiate.cc
 test_negotiateincludedir	= $(includedir)/Atlas/src/TestSuite
-test_negotiate_LDADD		= ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a ../Codecs/.libs/libAtlasCodecs.so ../Filters/.libs/libAtlasFilters.so -lz -lbz2
+test_negotiate_LDADD		= ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a ../Codecs/.libs/libAtlasCodecs.so ../Filters/.libs/libAtlasFilters.so -lz -lbz2 ../Net/.libs/libAtlasNet.so
 
 test_packed_SOURCES		= test-packed.cc
 test_packed_LDADD		= ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a ../Codecs/.libs/libAtlasCodecs.so ../Filters/.libs/libAtlasFilters.a ../Funky/.libs/libAtlasFunky.so

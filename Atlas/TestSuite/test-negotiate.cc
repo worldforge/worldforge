@@ -57,8 +57,8 @@ int main()
     iostream client_stream(&clientbuf);
     iostream server_stream(&serverbuf);
 
-    Negotiate s("SERVER BOB", server_stream);
-    Negotiate c("CLIENT 1.0", client_stream);
+    StreamAccept s("SERVER BOB", server_stream);
+    StreamConnect c("CLIENT 1.0", client_stream);
 
   //while(!s.Done() && !c.Done())
   for(int i=0; i < 10; i++)
@@ -66,13 +66,14 @@ int main()
       //cout << "SB : " << server_buf.size() << " [" << server_buf << "] "
       //   << "CB : " << client_buf.size() << " [" << client_buf << "] " 
       //   <<endl;
-      s.negotiateServer();
-      c.negotiateClient();
-      if(s.done() && c.done()) break;
+      s.Poll();
+      c.Poll();
+      if(s.GetState() == Negotiate<iostream>::SUCCEEDED && c.GetState() ==
+	  Negotiate<iostream>::SUCCEEDED) break;
     }
 
-  if(!s.done()) cout << "Server NOT done" << endl;
-  if(!c.done()) cout << "Client NOT done" << endl;
+  if(s.GetState() != Negotiate<iostream>::SUCCEEDED) cout << "Server NOT done" << endl;
+  if(c.GetState() != Negotiate<iostream>::SUCCEEDED) cout << "Client NOT done" << endl;
 
     return 0;
 }

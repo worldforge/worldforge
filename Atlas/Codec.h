@@ -6,6 +6,7 @@
 #define ATLAS_CODEC_H
 
 #include "Bridge.h"
+#include "Task.h"
 #include "Factory.h"
 
 namespace Atlas {

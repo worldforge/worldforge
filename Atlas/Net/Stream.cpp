@@ -79,78 +79,14 @@ void Atlas::Net::NegotiateHelper<T>::put(string &buf, string header)
   buf += "\n";
 }
 
-Atlas::Net::NegotiateClient::NegotiateClient(const string& name, iostream& s) :
+Atlas::Net::StreamConnect::StreamConnect(const string& name, iostream& s) :
   state(SERVER_GREETING), outName(name), socket(s),
   codecHelper(&inCodecs, &outCodecs),
   filterHelper(&inFilters, &outFilters)
 {
 }
 
-/*
-void Atlas::Net::NegotiateServer::Poll()
-{
-    cout << "** Server(" << state << ") : " << endl;
-
-    string out;
-
-    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
-    {
-	buf += socket.get();
-    }
-
-    if (state == SERVER_GREETING) 
-    {
-	// send server greeting
-
-	socket << outName << '\n';
-	state++;
-    }
-    
-    if (state == CLIENT_GREETING)
-    {
-	// get client greeting
-	
-	if (buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
-	cout << "client: " << inName << endl;
-	
-	state++;
-    }
-    
-    if (state == CLIENT_CODECS)
-    {
-	if (codecHelper.get(buf, "ICAN"))
-	{
-	    state++;
-	}
-    }
-    
-    if (state == SERVER_CODECS)
-    {
-	processServerCodecs();
-	codecHelper.put(out, "IWILL");
-	socket << out;
-	state++;
-    }
-    
-    if(state == CLIENT_FILTERS)
-    {
-	if (filterHelper.get(buf, "ICAN"))
-	{
-	    state++;
-	}
-    }
-    
-    if (state == SERVER_FILTERS)
-    {
-	processServerFilters();
-	filterHelper.put(out, "IWILL");
-	socket << out;
-	state++;
-    }
-}
-*/
-
-Atlas::Negotiate<iostream>::State Atlas::Net::NegotiateClient::Poll()
+void Atlas::Net::StreamConnect::Poll()
 {
     cout << "** Client(" << state << ") : " << endl;
 
@@ -211,11 +147,31 @@ Atlas::Negotiate<iostream>::State Atlas::Net::NegotiateClient::Poll()
 	    state++;
 	}
     }
-
-    return IN_PROGRESS;
 }
 
-void Atlas::Net::NegotiateClient::processServerCodecs()
+void Atlas::Net::StreamConnect::Run()
+{
+}
+
+Atlas::Negotiate<iostream>::State Atlas::Net::StreamConnect::GetState()
+{
+    if (state == DONE)
+    {
+	return SUCCEEDED;
+    }
+    else
+    {
+	return IN_PROGRESS;
+    }
+}
+
+Atlas::Connection<iostream> Atlas::Net::StreamConnect::GetConnection()
+{
+    return Connection<iostream>(0, "foo");
+}
+
+
+void Atlas::Net::StreamConnect::processServerCodecs()
 {
     FactoryCodecs::iterator i;
     list<string>::iterator j;
@@ -235,7 +191,7 @@ void Atlas::Net::NegotiateClient::processServerCodecs()
     }
 }
   
-void Atlas::Net::NegotiateClient::processServerFilters()
+void Atlas::Net::StreamConnect::processServerFilters()
 {
   FactoryFilters::iterator i;
     list<string>::iterator j;
@@ -254,13 +210,154 @@ void Atlas::Net::NegotiateClient::processServerFilters()
     }
 }
 
-void Atlas::Net::NegotiateClient::processClientCodecs()
+void Atlas::Net::StreamConnect::processClientCodecs()
 {
     FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
     outCodecs = *myCodecs;
 }
   
-void Atlas::Net::NegotiateClient::processClientFilters()
+void Atlas::Net::StreamConnect::processClientFilters()
+{
+    FactoryFilters *myFilters = &Factory<Filter>::Factories();
+    outFilters = *myFilters;
+}
+
+Atlas::Net::StreamAccept::StreamAccept(const string& name, iostream& s) :
+  state(SERVER_GREETING), outName(name), socket(s),
+  codecHelper(&inCodecs, &outCodecs),
+  filterHelper(&inFilters, &outFilters)
+{
+}
+
+void Atlas::Net::StreamAccept::Poll()
+{
+    cout << "** Server(" << state << ") : " << endl;
+
+    string out;
+
+    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    {
+	buf += socket.get();
+    }
+
+    if (state == SERVER_GREETING) 
+    {
+	// send server greeting
+
+	socket << outName << '\n';
+	state++;
+    }
+    
+    if (state == CLIENT_GREETING)
+    {
+	// get client greeting
+	
+	if (buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
+	cout << "client: " << inName << endl;
+	
+	state++;
+    }
+    
+    if (state == CLIENT_CODECS)
+    {
+	if (codecHelper.get(buf, "ICAN"))
+	{
+	    state++;
+	}
+    }
+    
+    if (state == SERVER_CODECS)
+    {
+	processServerCodecs();
+	codecHelper.put(out, "IWILL");
+	socket << out;
+	state++;
+    }
+    
+    if(state == CLIENT_FILTERS)
+    {
+	if (filterHelper.get(buf, "ICAN"))
+	{
+	    state++;
+	}
+    }
+    
+    if (state == SERVER_FILTERS)
+    {
+	processServerFilters();
+	filterHelper.put(out, "IWILL");
+	socket << out;
+	state++;
+    }
+}
+
+void Atlas::Net::StreamAccept::Run()
+{
+}
+
+Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::GetState()
+{
+    if (state == DONE)
+    {
+	return SUCCEEDED;
+    }
+    else
+    {
+	return IN_PROGRESS;
+    }
+}
+
+Atlas::Connection<iostream> Atlas::Net::StreamAccept::GetConnection()
+{
+    return Connection<iostream>(0, "foo");
+}
+
+void Atlas::Net::StreamAccept::processServerCodecs()
+{
+    FactoryCodecs::iterator i;
+    list<string>::iterator j;
+
+    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
+
+    for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
+    {
+	for (j = inCodecs.begin(); j != inCodecs.end(); ++j)
+	{
+	    if ((*i)->GetName() == *j)
+	    {
+		outCodecs.push_back(*i);
+		return;	      
+	    }
+	}
+    }
+}
+  
+void Atlas::Net::StreamAccept::processServerFilters()
+{
+  FactoryFilters::iterator i;
+    list<string>::iterator j;
+    
+    FactoryFilters *myFilters = &Factory<Filter>::Factories();
+
+    for (i = myFilters->begin(); i != myFilters->end(); ++i)
+    {
+	for (j = inFilters.begin(); j != inFilters.end(); ++j)
+	{
+	    if ((*i)->GetName() == *j)
+	    {
+		outFilters.push_back(*i);
+	    }
+	}
+    }
+}
+
+void Atlas::Net::StreamAccept::processClientCodecs()
+{
+    FactoryCodecs *myCodecs = &Factory<Codec<iostream> >::Factories();
+    outCodecs = *myCodecs;
+}
+  
+void Atlas::Net::StreamAccept::processClientFilters()
 {
     FactoryFilters *myFilters = &Factory<Filter>::Factories();
     outFilters = *myFilters;
