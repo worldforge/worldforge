@@ -73,7 +73,7 @@ WaitForDispatch::~WaitForDispatch()
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Element &msg,
+WaitForSignal::WaitForSignal(SigC::Signal0<void> &sig, const Atlas::Message::Element &msg,
 	Connection *conn) :
 	WaitForBase(msg, conn)
 {

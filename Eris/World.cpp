@@ -19,6 +19,7 @@
 #include <Eris/OpDispatcher.h>
 #include <Eris/TypeDispatcher.h>
 #include <Eris/IdDispatcher.h>
+#include <Eris/Exceptions.h>
 
 // various atlas headers we need
 #include <Atlas/Objects/Encoder.h>

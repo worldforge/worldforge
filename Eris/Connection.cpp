@@ -19,6 +19,7 @@
 #include <Eris/EncapDispatcher.h>
 
 #include <Eris/Lobby.h>
+#include <Eris/Exceptions.h>
 
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation/RootOperation.h>

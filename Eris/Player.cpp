@@ -10,6 +10,7 @@
 #include <Eris/ClassDispatcher.h>
 #include <Eris/Utils.h>
 #include <Eris/Log.h>
+#include <Eris/Exceptions.h>
 
 // various atlas headers we need
 #include <Atlas/Objects/Encoder.h>

@@ -75,7 +75,7 @@ public:
 	
 	/** obtain a <i>reference</i> to a signal that will be emitted when the type is bound. If the
 	type is already bound, InvalidOperation will be thrown */
-	Signal& getBoundSignal();
+	SigC::Signal0<void> & getBoundSignal();
 	
 	/// Return the names of each direct parent class, as a set.
 	StringSet getParentsAsSet();

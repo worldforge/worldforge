@@ -1,8 +1,7 @@
 #ifndef ERIS_DISPATCH_H
 #define ERIS_DISPATCH_H
 
-#include <Eris/Types.h>
-
+#include <string>
 #include <map>
 #include <deque>
 #include <list>
@@ -79,20 +78,16 @@ public:
 		
 	virtual bool dispatch(DispatchContextDeque &dq);
 
-	virtual Dispatcher* addSubdispatch(Dispatcher*, const std::string)
-	{ throw InvalidOperation("called addSubdispatch on LeafDispatcher " + _name); }
+	virtual Dispatcher* addSubdispatch(Dispatcher*, const std::string);
 		
-	virtual void rmvSubdispatch(Dispatcher*)
-	{ throw InvalidOperation("called rmvSubdispatch on LeafDispatcher " + _name); }
+	virtual void rmvSubdispatch(Dispatcher*);
 
 	virtual Dispatcher* getSubdispatch(const std::string &nm);
 	
-	virtual bool empty()
-	{ throw InvalidOperation("called empty() on LeafDispatcher " + _name); }
+	virtual bool empty();
 	
 protected:
-	virtual void purge()
-	{ throw InvalidOperation("called purge() on LeafDispatcher " + _name); }	 
+	virtual void purge();
 };
 
 class StdBranchDispatcher:  public Dispatcher

@@ -4,6 +4,7 @@
 #include <Eris/PollGlibVersion.h>
 #include <Eris/PollGlibFD.h>
 #include <Eris/PollGlibSource.h>
+#include <Eris/Exceptions.h>
 
 #include <map>
 #include <Eris/Poll.h>

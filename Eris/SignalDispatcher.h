@@ -3,7 +3,10 @@
 
 #include <Eris/Dispatcher.h>
 
+#include <Atlas/Message/Element.h>
+
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
 
 namespace Eris {
 

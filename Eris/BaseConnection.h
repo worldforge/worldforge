@@ -1,14 +1,14 @@
 #ifndef ERIS_BASE_CONNECTION_H
 #define ERIS_BASE_CONNECTION_H
 
-#include <Eris/Types.h>
-
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
 
 #include <iostream>
 
 // Forward declarations
 namespace Atlas {
+	class Bridge;
 	template <class Stream> class Codec;
 	namespace Objects { class Encoder; }
 	namespace Net { class StreamConnect; }

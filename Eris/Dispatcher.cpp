@@ -9,6 +9,7 @@
 #include <Eris/EncapDispatcher.h>
 #include <Eris/IdDispatcher.h>
 #include <Eris/Log.h>
+#include <Eris/Exceptions.h>
 
 #include <Atlas/Message/Element.h>
 
@@ -189,11 +190,33 @@ bool LeafDispatcher::dispatch(DispatchContextDeque &dq)
 	return false;
 }
 
+Dispatcher* LeafDispatcher::addSubdispatch(Dispatcher*, const std::string)
+{
+    throw InvalidOperation("called addSubdispatch on LeafDispatcher " + _name);
+}
+	
+void LeafDispatcher::rmvSubdispatch(Dispatcher*)
+{
+    throw InvalidOperation("called rmvSubdispatch on LeafDispatcher " + _name);
+}
+
+
 Dispatcher* LeafDispatcher::getSubdispatch(const std::string &nm)
 {
 	Eris::log(LOG_ERROR, "looking for child %s in LeafDispatcher %s", 
 		nm.c_str(), _name.c_str());
 	return NULL;
+}
+
+bool LeafDispatcher::empty()
+{
+	throw InvalidOperation("called empty() on LeafDispatcher " + _name);
+}
+
+
+void LeafDispatcher::purge()
+{
+    throw InvalidOperation("called purge() on LeafDispatcher " + _name);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

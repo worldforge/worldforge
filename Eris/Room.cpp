@@ -13,6 +13,8 @@
 #include <Eris/ClassDispatcher.h>
 #include <Eris/ArgumentDispatcher.h>
 
+#include <Eris/Exceptions.h>
+
 #include <Atlas/Objects/Entity/RootEntity.h>
 
 #include <Atlas/Objects/Operation/Appearance.h>

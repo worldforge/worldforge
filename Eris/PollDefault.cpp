@@ -2,6 +2,7 @@
 
 #include <Eris/PollDefault.h>
 #include <Eris/Timeout.h>
+#include <Eris/Exceptions.h>
 
 #include <skstream/skstream.h>
 

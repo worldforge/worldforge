@@ -2,8 +2,11 @@
     #include "config.h"
 #endif
 
-#include <stdexcept>
 #include <Eris/Utils.h>
+
+#include <Atlas/Message/Element.h>
+
+#include <stdexcept>
 
 using namespace Atlas::Message;
 

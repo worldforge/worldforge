@@ -4,6 +4,7 @@
 
 #include <Eris/Utils.h>
 
+#include <Eris/Exceptions.h>
 #include <Eris/atlas_utils.h>
 #include <Eris/Log.h>
 

@@ -3,6 +3,7 @@
 
 // local headers
 #include <Eris/SignalDispatcher.h>
+#include <Eris/Types.h>
 
 #include <Atlas/Message/Element.h>
 
@@ -273,17 +274,6 @@ public:
 protected:
 	WFMath::Vector<3> _velocity,
 		_delta;
-};
-
-class UnknownProperty : public InvalidOperation
-{
-public:	
-	UnknownProperty(const std::string &p, const std::string &m) :
-		InvalidOperation(m), prop(p)
-	{;}
-        virtual ~UnknownProperty() throw () { }
-	
-	const std::string prop;
 };
 
 } // of namespace

@@ -4,6 +4,7 @@
 #include <Eris/Types.h>
 
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
 
 namespace Atlas { namespace Objects {
 	namespace Operation {

@@ -1,10 +1,13 @@
 #ifndef ERIS_TIMEOUT_H
 #define ERIS_TIMEOUT_H
 
-#include <Eris/Types.h>
 #include <Eris/Timestamp.h>
 
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
+
+#include <map>
+#include <string>
 
 namespace Eris {
 

@@ -13,6 +13,7 @@ ATLAS_JANUS_H =
 endif
 
 liberis_1_2_la_SOURCES = \
+	Exceptions.cpp \
 	Entity.cpp \
 	World.cpp \
 	Lobby.cpp \
@@ -44,6 +45,7 @@ liberis_1_2_la_SOURCES = \
 liberisdir = $(includedir)/Eris-1.2/Eris
 
 liberis_HEADERS = \
+	Exceptions.h \
 	Lobby.h \
 	Factory.h \
 	Entity.h \

@@ -8,6 +8,7 @@
 #include <Eris/Wait.h>
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
+#include <Eris/Exceptions.h>
 
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
@@ -117,6 +118,11 @@ Dispatcher* ClassDispatcher::getSubdispatch(const std::string &nm)
 	}
 	
 	return NULL;
+}
+
+void ClassDispatcher::purge()
+{
+	throw InvalidOperation("called purge() on ClassDispatcher " + _name);
 }
 
 void ClassDispatcher::boundType(TypeInfo *ty)

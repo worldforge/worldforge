@@ -3,6 +3,8 @@
 #endif
 
 #include <Eris/Person.h>
+
+#include <Eris/Exceptions.h>
 #include <Eris/Lobby.h>
 #include <Eris/Utils.h>
 

@@ -9,6 +9,7 @@
 #include <Atlas/Message/DecoderBase.h>
 
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
 
 #ifndef __WIN32__
 // pull in uint32_t on POSIX - is this generic?!

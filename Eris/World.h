@@ -4,6 +4,7 @@
 #include <Eris/Types.h>
 
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
 
 #include <map>
 
@@ -43,18 +44,10 @@ class Player;
 class Factory;
 class InvisibleEntityCache;
 class Avatar;
+class Entity;
 	
 // the name is wrong, but I feel 'IDEntityMap' is worse
 typedef std::map<std::string, Entity*> EntityIDMap;
-
-class UnknownEntity : public BaseException
-{
-public:
-	UnknownEntity(const std::string &msg, const std::string &id) :
-		BaseException(msg), _id(id) {;}
-	virtual ~UnknownEntity() throw() { }
-	std::string _id;
-};
 
 /// the entity database and dispatch point
 class World : virtual public SigC::Object

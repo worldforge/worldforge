@@ -12,6 +12,7 @@
 #include <Eris/OpDispatcher.h>
 #include <Eris/IdDispatcher.h>
 #include <Eris/Log.h>
+#include <Eris/Exceptions.h>
 
 #include <Atlas/Objects/Entity/GameEntity.h>
 #include <Atlas/Objects/Operation/Move.h>

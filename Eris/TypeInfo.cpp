@@ -5,6 +5,7 @@
 #include <Eris/TypeInfo.h>
 
 #include <Eris/Log.h>
+#include <Eris/Exceptions.h>
 
 #include <Atlas/Objects/Root.h>
 

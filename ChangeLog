@@ -1,3 +1,12 @@
+Thursday, 22nd January 2004, Al Riddoch <alriddoch@zepler.org>
+
+	* Eris/Exceptions.h Eris/Exceptions.cpp: New files to contain
+	  exception class declarations and definitions.
+
+	* Eris/Types.h: Remove exceptions, and clean up types.
+
+	* Re-organise includes to use new exceptions header.
+
 Thursday, 22th January, Ron Steinke <rsteinke@w-link.net>
 
 	* Remove ::Instantiate() calls from test/*

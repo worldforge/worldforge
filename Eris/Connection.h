@@ -16,6 +16,7 @@ class basic_socket_stream;
 
 namespace Atlas {
   namespace Objects {
+    class Root;
     namespace Operation {
       class RootOperation;
     }

@@ -4,7 +4,10 @@
 #include <Eris/Types.h>
 
 namespace Atlas {
-  namespace Objects { namespace Operation { class RootOperation; } }
+  namespace Objects {
+    class Root;
+    namespace Operation { class RootOperation; }
+  }
 }
 
 namespace Eris

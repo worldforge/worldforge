@@ -5,6 +5,7 @@
 #include <Eris/Timeout.h>
 
 #include <Eris/Poll.h>
+#include <Eris/Exceptions.h>
 
 #include <limits.h>
 

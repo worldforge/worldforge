@@ -3,13 +3,15 @@
 
 #include <Eris/Types.h>
 
+#include <wfmath/point.h>
+#include <wfmath/vector.h>
+
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
 
 #include <string>
 #include <map>
 #include <vector>
-
-#include <cassert>
 
 namespace Atlas {
 	namespace Objects {
@@ -21,6 +23,10 @@ namespace Atlas {
 			class Info;
 		}
 	}
+}
+
+namespace WFMath {
+  class Quaternion;
 }
 
 namespace Eris

@@ -14,6 +14,7 @@
 #include <Eris/Log.h>
 #include <Eris/Person.h>
 #include <Eris/atlas_utils.h>
+#include <Eris/Exceptions.h>
 
 // various atlas headers we need
 #include <Atlas/Objects/Encoder.h>

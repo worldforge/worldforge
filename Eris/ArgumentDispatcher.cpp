@@ -4,6 +4,8 @@
 
 #include <Eris/ArgumentDispatcher.h>
 
+#include <iostream>
+
 namespace Eris {
 
 bool ArgumentDispatcher::dispatch(DispatchContextDeque &dq)

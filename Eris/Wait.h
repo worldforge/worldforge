@@ -1,9 +1,10 @@
 #ifndef ERIS_WAIT_H
 #define ERIS_WAIT_H
 
-#include <Eris/Types.h>
+#include <Atlas/Message/Element.h>
 
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
 
 namespace Atlas { namespace Objects {
 	class Root;
@@ -61,7 +62,7 @@ protected:
 class WaitForSignal : public WaitForBase
 {
 public:	
-	WaitForSignal(Signal &sig, const Atlas::Message::Element &msg, Connection *conn);
+	WaitForSignal(SigC::Signal0<void> &sig, const Atlas::Message::Element &msg, Connection *conn);
 	virtual ~WaitForSignal();
 protected:
 	

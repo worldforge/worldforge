@@ -3,6 +3,8 @@
 
 #include <Eris/Dispatcher.h>
 
+#include <Atlas/Message/Element.h>
+
 namespace Eris
 {
 

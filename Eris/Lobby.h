@@ -1,7 +1,6 @@
 #ifndef ERIS_LOBBY_H
 #define ERIS_LOBBY_H
 
-#include <Eris/Types.h>
 #include <Eris/Connection.h>
 #include <Eris/Room.h>
 

@@ -15,6 +15,8 @@
 #include <Eris/OpDispatcher.h>
 #include <Eris/ClassDispatcher.h>
 
+#include <Eris/Exceptions.h>
+
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Message/QueuedDecoder.h>
 #include <Atlas/Objects/Operation/Get.h>

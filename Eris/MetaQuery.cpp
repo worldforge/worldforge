@@ -4,6 +4,7 @@
 
 #include <Eris/MetaQuery.h>
 
+#include <Eris/Exceptions.h>
 #include <Eris/Metaserver.h>
 #include <Eris/Utils.h>
 #include <Eris/Timeout.h>

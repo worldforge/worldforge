@@ -6,6 +6,7 @@
 #include <Eris/Connection.h>
 #include <Eris/ClassDispatcher.h>
 #include <Eris/Log.h>
+#include <Eris/Exceptions.h>
 
 #include <Atlas/Objects/Entity/GameEntity.h>
 #include <Atlas/Objects/Operation/Info.h>

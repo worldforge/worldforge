@@ -34,7 +34,7 @@ protected:
 		TypeInfo* type;
 	} _Class;
 
-	virtual void purge() { throw InvalidOperation("called purge() on ClassDispatcher " + _name); }
+	virtual void purge();
 	
 	void boundType(TypeInfo *tp);
 	void boundInsert(const _Class &cl);
