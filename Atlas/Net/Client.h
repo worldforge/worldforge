@@ -4,54 +4,58 @@
         begin           : 1999.11.29
         copyright       : (C) 1999 by John Barrett (ZW)
         email           : jbarrett@box100.com
+
+changes:
+
+23 Jan 2000 - fex
+    Constructor changes, removed some source dependencies
+    pseudo booleans now use bool
+    copy constructor disabled
 */
 
 #ifndef __AtlasClient_h_
 #define __AtlasClient_h_
 
-#include "Codec.h"
+//#include "Codec.h"
 #include "Socket.h"
-#include "Compressor.h"
+//#include "Compressor.h"
+#include "../Object/Object.h"
+
+class ASocket;
+class ACodec;
+class ACompressor;
 
 class AClient
 {
-protected:
-
-	ASocket*	csock;
-	ACodec*		codec;
-	ACompressor*	cmprs;
-
 public:
 
-	AClient() 
-	{ 
-		csock = NULL;
-		codec = NULL;
-		cmprs = NULL; 
-	}
+    AClient( ASocket* = 0, ACodec* = 0, ACompressor* = 0 );
+    virtual ~AClient();
 
-			AClient(AClient* client);
-			AClient(ASocket* asock, ACodec* acodec);
-			AClient(ASocket* asock, ACodec* acodec, ACompressor* acmprs);
-	virtual		~AClient();
+    void    setCodec(ACodec* acodec) { codec = acodec; }
+    void    setCompressor( ACompressor* aCompressor ) { cmprs = aCompressor; }
 
-	void		setCodec(ACodec* acodec);
-	void		setCompressor(ACompressor* acmprs);
+    SOCKET  getSock();
 
-	SOCKET		getSock();
+    bool    canRead();
+    bool    canSend() const { return true; }
+    bool    gotErrs();
 
-	// all of these functions return 0 on errors, 1 if ok
-	int		canRead();
-	int		canSend();
-	int		gotErrs();
+    void    doPoll();
 
-	void		doPoll();
+    void    sendMsg( const AObject& msg );
+    void    readMsg( AObject& msg );
 
-	void		sendMsg(const AObject& msg);
-	void		readMsg(AObject& msg);
+    virtual void    gotMsg(const AObject& msg);
+    virtual void    gotDisconnect();
 
-	virtual	void	gotMsg(const AObject& msg);
-	virtual	void	gotDisconnect();
+protected:
+    ASocket*        csock;
+    ACodec*         codec;
+    ACompressor*    cmprs;
+
+private:
+    AClient( const AClient& );
 };
 
 #endif
