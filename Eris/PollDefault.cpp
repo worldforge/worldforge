@@ -74,7 +74,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 	if(!got_data)
 		return;
 
-	struct timeval timeout = {msec_timeout / 1000, msec_timeout % 1000};
+	struct timeval timeout = {msec_timeout / 1000, (msec_timeout % 1000) * 1000};
 	int retval = select(maxfd+1, &reading, &writing, NULL, &timeout);
 	if (retval < 0)
 		// FIXME - is an error from select fatal or not? At present I think yes,
