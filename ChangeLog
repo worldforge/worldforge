@@ -1,4 +1,8 @@
 ChangeLog for varconf
+Thursday, 3rd July, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Update rpm spec to be cleaner, and make the technical sections
+	  more generic.
+
 Friday, 25th June, 2003, Al Riddoch <alriddoch@zepler.org>
 	* Make test program a check_PROGRAMS, so its not compiled by default.
 

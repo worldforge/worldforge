@@ -1,57 +1,63 @@
-%define name       @VARCONF_PACKAGE@
-%define version	   @VARCONF_VERSION@
-%define release    1
-%define serial     1
-%define prefix     /usr
-%define sysconfdir /etc
+%define name @PACKAGE@
+%define version @VERSION@
+%define release 1
+%define serial 1
+%define libsuffix @VARCONF_LIB_SUFFIX@
 
-Summary:           A config handling library.
-Name:              %{name} 
-Version:           %{version} 
-Release:           %{release}
-Serial:            %{serial}
-Copyright:         LGPL
-Group:             System Environment/Libraries
-Source:            %{name}-%{version}.tar.gz
-BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
-Requires:          libsigc++ >= @MIN_SIGC_VERSION@ libstdc++
-BuildRequires:     libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel >= 2.95.2
+Summary: A config handling library.
+Name: %{name}
+Version: %{version}
+Release: %{release}
+Serial: %{serial}
+Copyright: LGPL
+Group: System Environment/Libraries
+Source: %{name}-%{version}.tar.gz
+Requires: libsigc++ >= @MIN_SIGC_VERSION@ libstdc++
+BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
+BuildRequires: libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel >= 2.95.2
 
 %description
-@VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE server.  @VARCONF_PACKAGE@ can parse configuration files, command-line arguments and environment variables.  It supports callbacks through libsigc++ @MIN_SIGC_VERSION@ or greater and can store configuration data in configuration objects or one global configuration instance.
+@VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE
+server. @VARCONF_PACKAGE@ can parse configuration files, command-line arguments
+and environment variables. It supports callbacks through libsigc++
+@MIN_SIGC_VERSION@ or greater and can store configuration data in configuration
+objects or one global configuration instance.
 
 %package devel
-Summary:           A config handling library headers and static libs.
-Group:             Development/Libraries
-Requires:          %{name} = %{version}
+Summary: A config handling library headers and static libs.
+Group: Development/Libraries
+Requires: %{name} = %{version}
 
 %description devel
-@VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE server.  @VARCONF_PACKAGE@ can parse configuration files, command-line arguments and environment variables.  It supports callbacks through libsigc++ @MIN_SIGC_VERSION@ or greater and can store configuration data in configuration objects or one global configuration instance.
+@VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE
+server. @VARCONF_PACKAGE@ can parse configuration files, command-line arguments
+and environment variables. It supports callbacks through libsigc++
+@MIN_SIGC_VERSION@ or greater and can store configuration data in configuration
+objects or one global configuration instance.
 
 %prep
-%setup
+%setup -q
 
 %build
-CXXFLAGS=$RPM_OPT_FLAGS ./configure --enable-static --prefix=%{prefix}
+%configure --enable-static
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make prefix=$RPM_BUILD_ROOT%{prefix} install
+%makeinstall
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{prefix}/lib/libvarconf-1.0.so.@VARCONF_CURRENT@
-%{prefix}/lib/libvarconf-1.0.so.@VARCONF_VERSION_NO@
-%doc README COPYING AUTHORS THANKS NEWS
+%{_libdir}/lib*.so.*
+%doc README COPYING AUTHORS THANKS NEWS ChangeLog TODO
 
 %files devel
 %defattr(-,root,root)
-%{prefix}/include/varconf-1.0
-%{prefix}/lib/libvarconf-1.0.a
-%{prefix}/lib/libvarconf-1.0.la
-%{prefix}/lib/libvarconf-1.0.so
-%{prefix}/lib/pkgconfig/varconf-1.0.pc
+%{_libdir}/lib*.so
+%{_libdir}/lib*.la
+%{_libdir}/lib*.a
+%{_libdir}/pkgconfig/*
+%{_includedir}/%{name}%{libsuffix}

@@ -1,11 +1,9 @@
-prefix=@prefix@
-exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: varconf
+Name: @VARCONF_PACKAGE@
 Description: A config handling library.
 Requires: @VARCONF_REQUIRES@
-Version: @VERSION@
+Version: @VARCONF_VERSION@
 Libs: -L${libdir} @VARCONF_LIBS@
-Cflags: -I${includedir}/varconf-1.0
+Cflags: -I${includedir}/varconf@VARCONF_LIB_SUFFIX@
