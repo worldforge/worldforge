@@ -42,7 +42,7 @@ Variable::Variable(const double d)
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d)
 {
   char buf[1024];
-  snprintf(buf, 1024, "%d", d);
+  snprintf(buf, 1024, "%lf", d);
   m_val = buf;
 }
 
@@ -109,7 +109,7 @@ Variable& Variable::operator=(const double d)
   m_have_double = true; m_have_string = true;
   m_val_bool = false; m_val_int = 0;
   m_val_double = d;
-  char buf[1024]; snprintf(buf, 1024, "%d", d);
+  char buf[1024]; snprintf(buf, 1024, "%lf", d);
   m_val = buf;
   return (*this);
 }
