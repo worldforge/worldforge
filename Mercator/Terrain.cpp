@@ -34,6 +34,15 @@ void Terrain::invalidate(int x, int y)
     }
 }
 
+void Terrain::refresh(int x, int y)
+{
+    for(int i = x - 2; i < x + 2; ++i) {
+        for(int j = y - 2; j < y + 2; ++j) {
+            getSegmentSafe(i, j, false);
+        }
+    }
+}
+
 Terrain::Terrain(int res) : m_res(res)
 {
 
@@ -109,14 +118,6 @@ Segment * Terrain::getSegmentQuik(int x, int y) const
         return 0;
     }
     return J->second;
-}
-
-void Terrain::refresh(int x, int y)
-{
-    getSegmentSafe(x,     y,     false);
-    getSegmentSafe(x - 1, y,     false);
-    getSegmentSafe(x,     y - 1, false);
-    getSegmentSafe(x - 1, y - 1, false);
 }
 
 } // namespace Mercator

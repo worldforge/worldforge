@@ -1,3 +1,7 @@
+2003-02-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.cpp: Make refreshing work more sanely.
+
 2003-02-21  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Terrain.h: Add accessor for point store.
