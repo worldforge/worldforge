@@ -23,15 +23,17 @@ transmission error detection. A compound filter can be created that acts like
 a single filter, allowing various filters to be chained together in useful
 ways such as compressing and then encrypting.
 
-Filters should declare an instance of Filter::Factory in the module they are
-defined in. This will allow them to be automatically included in the
-negotiation process that chooses which codecs and filters an Atlas connection
-will use. FIXME talk about filter metrics FIXME
+Filters declare an instance of Filter::Factory in the module they are defined
+in. This allows them to be automatically included in the negotiation process
+that chooses which codecs and filters an Atlas connection will use. Each
+filter has metrics that allow Negotiate to make informed decisions when more
+than one filter is available for use. Currently these metrics consist of the
+type of the filter, whether it is for compression, encryption or check
+summing.
 
 @see Codec
 @see Factory
 @see Negotiate
-
 */
 
 class Filter
