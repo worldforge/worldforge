@@ -51,21 +51,29 @@ void Segment::populate(const float * base)
         std::cout << "Pass " << m << " with level " << l << std::endl << std::flush;
         for(int i = 0; i < (m * 3); i++) {
             for(int j = 0; j < (m * 3); j++) {
-                float tot = tmp[j * l][i * l] +
-                            tmp[j * l][(i + 1) * l] +
-                            tmp[(j + 1) * l][i * l] +
-                            tmp[(j + 1) * l][(i + 1) * l];
-                tmp[j * l + l / 2][i * l + l / 2] = tot / 4;
+                // float tot = tmp[j * l][i * l] +
+                            // tmp[j * l][(i + 1) * l] +
+                            // tmp[(j + 1) * l][i * l] +
+                            // tmp[(j + 1) * l][(i + 1) * l];
+                // tmp[j * l + l / 2][i * l + l / 2] = tot / 4;
+                tmp[j * l + l / 2][i * l + l / 2] = qRMD(tmp[j * l][i * l],
+                                                         tmp[j * l][(i + 1) * l],
+                                                         tmp[(j + 1) * l][i * l],
+                                                         tmp[(j + 1) * l][(i + 1) * l]);
             }
         }
 
         for(int i = 0; i < (m * 3); ++i) {
             for(int j = 1; j < (m * 3); ++j) {
-                float tot = tmp[j * l][i * l] +
-                            tmp[j * l][(i + 1) * l] +
-                            tmp[j * l + l / 2][i * l + l / 2] +
-                            tmp[j * l - l / 2][i * l + l / 2];
-                tmp[j * l][i * l + l / 2] = tot / 4;
+                // float tot = tmp[j * l][i * l] +
+                            // tmp[j * l][(i + 1) * l] +
+                            // tmp[j * l + l / 2][i * l + l / 2] +
+                            // tmp[j * l - l / 2][i * l + l / 2];
+                // tmp[j * l][i * l + l / 2] = tot / 4;
+                tmp[j * l][i * l + l / 2] = qRMD(tmp[j * l][i * l],
+                                                 tmp[j * l][(i + 1) * l],
+                                                 tmp[j * l + l / 2][i * l + l / 2],
+                                                 tmp[j * l - l / 2][i * l + l / 2]);
             }
             if (i == 0) { continue; }
             for(int j = 0; j < (m * 3); ++j) {
@@ -85,6 +93,48 @@ void Segment::populate(const float * base)
     }
 
 #endif
+}
+
+#if 0
+const std::string Segment::height2string(float h) const
+{
+    // THis is not yet deterministic enough.
+    char buff[12];
+    snprintf(buff, 12, "%.10g", fabsf(h));
+    bool shift = false;
+    for(int i = 0; i < 11; ++i) {
+        if (buff[i] == '.') {
+            shift = true;
+        }
+        if (shift) {
+            buff[i] = buff[i + 1];
+        }
+    }
+    buff[10] = 0;
+    bool rot = false;
+    for(int i = 0, j = -1; i < 10; ++i) {
+        if (buff[i] == 0) {
+            rot = true;
+        }
+        if (rot) {
+            buff[i] = buff[++j];
+        }
+    }
+
+    return buff;
+}
+#endif
+
+float Segment::qRMD(float nn, float fn, float nf, float ff) const
+{
+    float tot = nn + fn + nf + ff;
+    srand((unsigned int)fabsf(tot));
+
+    float heightDifference = std::max(std::max(nn, fn), std::max(nf, ff)) -
+                             std::min(std::min(nn, fn), std::min(nf, ff));
+    float displacement = ((float)rand()) / RAND_MAX;
+
+    return tot / 4 + displacement * heightDifference;
 }
 
 } // namespace Mercator

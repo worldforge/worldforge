@@ -29,11 +29,12 @@ class Segment {
         return m_points;
     }
 
-    float get(int x, int y) {
+    float get(int x, int y) const {
         return m_points[y * m_res + x];
     }
 
     void populate(const float *);
+    float qRMD(float, float, float, float) const;
 
 };
 
