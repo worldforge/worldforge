@@ -72,13 +72,27 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
     }
     float nn = Terrain::defaultLevel, fn = Terrain::defaultLevel,
            ff = Terrain::defaultLevel, nf = Terrain::defaultLevel;
-    bool complete = getBasePoint(x,     y,     nn) &&
-                    getBasePoint(x + 1, y,     fn) &&
-                    getBasePoint(x,     y + 1, nf) &&
-                    getBasePoint(x + 1, y + 1, ff);
+    float base[16];
+    for(int i = 0; i < 16; ++i) { base[i] = Terrain::defaultLevel; }
+    bool complete = getBasePoint(x,     y,     base[1*4 + 1]) &&
+                    getBasePoint(x + 1, y,     base[1*4 + 2]) &&
+                    getBasePoint(x,     y + 1, base[2*4 + 1]) &&
+                    getBasePoint(x + 1, y + 1, base[2*4 + 2]);
+    getBasePoint(x - 1, y - 1, base[0*4 + 0]);
+    getBasePoint(x - 1, y + 0, base[1*4 + 0]);
+    getBasePoint(x - 1, y + 1, base[2*4 + 0]);
+    getBasePoint(x - 1, y + 2, base[3*4 + 0]);
+    getBasePoint(x + 0, y - 1, base[0*4 + 1]);
+    getBasePoint(x + 0, y + 2, base[3*4 + 1]);
+    getBasePoint(x + 1, y - 1, base[0*4 + 2]);
+    getBasePoint(x + 1, y + 2, base[3*4 + 2]);
+    getBasePoint(x + 2, y - 1, base[0*4 + 3]);
+    getBasePoint(x + 2, y + 0, base[1*4 + 3]);
+    getBasePoint(x + 2, y + 1, base[2*4 + 3]);
+    getBasePoint(x + 2, y + 2, base[3*4 + 3]);
     if (force || complete) {
         s = new Segment(m_res);
-        s->populate(nn, fn, ff, nf);
+        s->populate(base); // , fn, ff, nf);
         m_segments[x][y] = s;
         return s;
     }

@@ -33,7 +33,7 @@ class Segment {
         return m_points[y * m_res + x];
     }
 
-    void populate(float, float, float, float);
+    void populate(const float *);
 
 };
 
