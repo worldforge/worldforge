@@ -26,7 +26,9 @@ public:
 
     virtual ~Encoder() { }
 
-    virtual void SendMessage(const Object& obj);
+    virtual void StreamMessage(const Object& obj);
+    virtual void MapItem(const string&, const Object&);
+    virtual void ListItem(const Object&);
 
 protected:
 
