@@ -39,7 +39,7 @@ class QuadInterp {
 
 Segment::Segment(unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
-                            m_points(new float[m_size * m_size]),
+                            m_points(0), // new float[m_size * m_size]),
                             m_normals(0), m_max(0.f), m_min(0.0f),
                             m_validPt(false), m_validNorm(false)
 {
@@ -56,8 +56,11 @@ Segment::~Segment()
 
 void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 {
-    fill2d(m_res, m_controlPoints(0, 0), m_controlPoints(1, 0), 
-                  m_controlPoints(1, 1), m_controlPoints(0, 1));
+    if (m_points == 0) {
+        m_points = new float[m_size * m_size];
+    }
+    fill2d(m_controlPoints(0, 0), m_controlPoints(1, 0), 
+           m_controlPoints(1, 1), m_controlPoints(0, 1));
 
     for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
         applyMod(*I);
@@ -157,12 +160,12 @@ float Segment::qRMD(float nn, float fn, float ff, float nf,
 // falloff is the decay of displacement as the fractal is refined
 // array is size+1 long. array[0] and array[size] are filled
 //      with the control points for the fractal
-void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h, 
+void Segment::fill1d(const BasePoint& l, const BasePoint &h, 
                      float *array) const
 {
     array[0] = l.height();
-    array[size] = h.height();
-    LinInterp li(size, l.roughness(), h.roughness());
+    array[m_res] = h.height();
+    LinInterp li(m_res, l.roughness(), h.roughness());
    
     // seed the RNG.
     // The RNG is seeded only once for the line and the seed is based on the
@@ -174,7 +177,7 @@ void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h,
     // effectively we do the 1/2  point, then the 1/4 points, then the 1/8th
     // points etc. this has to be the same order every time because we call
     // on the RNG at every point 
-    int stride = size/2;
+    int stride = m_res/2;
 
     // depth is used to indicate what level we are on. the displacement is
     // reduced each time we traverse the array. because this is really the
@@ -182,7 +185,7 @@ void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h,
     int depth=1;
  
     while (stride) {
-        for (int i=stride;i<size;i+=stride*2) {
+        for (int i=stride;i<m_res;i+=stride*2) {
             float hh = array[i-stride];
             float lh = array[i+stride];
             float hd = fabs(hh-lh);
@@ -203,12 +206,12 @@ void Segment::fill1d(int size, const BasePoint& l, const BasePoint &h,
 // 2 dimensional midpoint displacement fractal for a tile where
 // edges are to be filled by 1d fractals.// size must be a power of 2
 // array is size+1  * size+1 with the corners the control points.
-void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2, 
-                               const BasePoint& p3, const BasePoint& p4)
+void Segment::fill2d(const BasePoint& p1, const BasePoint& p2, 
+                     const BasePoint& p3, const BasePoint& p4)
 {
     assert(m_points!=0);
     
-    int line = size+1;
+    // int line = m_res+1;
     
     // calculate the edges first. This is necessary so that segments tile
     // seamlessly note the order in which the edges are calculated and the
@@ -217,33 +220,33 @@ void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2,
     // with sides.
     
     // temporary array used to hold each edge
-    float edge[line];
+    float edge[m_size];
     
     // calc top edge and copy into m_points
-    fill1d(size,p1,p2,edge);
-    for (int i=0;i<=size;i++) {
-        m_points[0*line + i] = edge[i];
+    fill1d(p1,p2,edge);
+    for (int i=0;i<=m_res;i++) {
+        m_points[0*m_size + i] = edge[i];
         checkMaxMin(edge[i]);
     }
 
     // calc left edge and copy into m_points
-    fill1d(size,p1,p4,edge);
-    for (int i=0;i<=size;i++) {
-        m_points[i*line + 0] = edge[i];
+    fill1d(p1,p4,edge);
+    for (int i=0;i<=m_res;i++) {
+        m_points[i*m_size + 0] = edge[i];
         checkMaxMin(edge[i]);
     }
    
     // calc right edge and copy into m_points
-    fill1d(size,p2,p3,edge);
-    for (int i=0;i<=size;i++) {
-        m_points[i*line + size] = edge[i];
+    fill1d(p2,p3,edge);
+    for (int i=0;i<=m_res;i++) {
+        m_points[i*m_size + m_res] = edge[i];
         checkMaxMin(edge[i]);
     }
 
     // calc bottom edge and copy into m_points
-    fill1d(size,p4,p3,edge);
-    for (int i=0;i<=size;i++) {
-        m_points[size*line + i] = edge[i];
+    fill1d(p4,p3,edge);
+    for (int i=0;i<=m_res;i++) {
+        m_points[m_res*m_size + i] = edge[i];
         checkMaxMin(edge[i]);
     }
     
@@ -251,25 +254,25 @@ void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2,
     // it was seeded once for each edge, now once for the tile.
     srand(p1.seed()*20 + p2.seed()*15 + p3.seed()*10 + p4.seed()*5);
 
-    QuadInterp qi(size, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
+    QuadInterp qi(m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
 
     float f = BasePoint::FALLOFF;
     int depth=0;
     
     // center of m_points is done separately
-    int stride = size/2;
+    int stride = m_res/2;
 
     //float roughness = (p1.roughness+p2.roughness+p3.roughness+p4.roughness)/(4.0f);
     float roughness = qi.calc(stride, stride);
-    m_points[stride*line + stride] = qRMD( m_points[0 * line + size/2],
-                                        m_points[size/2*line + 0],
-                                        m_points[size/2*line + size],
-                                        m_points[size*line + size/2],
+    m_points[stride*m_size + stride] = qRMD( m_points[0 * m_size + m_res/2],
+                                        m_points[m_res/2*m_size + 0],
+                                        m_points[m_res/2*m_size + m_res],
+                                        m_points[m_res*m_size + m_res/2],
                                         roughness,
                                         f, depth);
                     
 
-    checkMaxMin(m_points[stride*line + stride]);
+    checkMaxMin(m_points[stride*m_size + stride]);
     stride >>= 1;
 
     // skip across the m_points and fill in the points
@@ -280,15 +283,15 @@ void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2,
       //+ . +
       //. X .
       //+ . +
-      for (int i=stride;i<size;i+=stride*2) {
-          for (int j=stride;j<size;j+=stride*2) {
+      for (int i=stride;i<m_res;i+=stride*2) {
+          for (int j=stride;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
-              m_points[j*line + i] = qRMD(m_points[(i-stride) + (j+stride) * (line)],
-                                       m_points[(i+stride) + (j-stride) * (line)],
-                                       m_points[(i+stride) + (j+stride) * (line)],
-                                       m_points[(i-stride) + (j-stride) * (line)],
+              m_points[j*m_size + i] = qRMD(m_points[(i-stride) + (j+stride) * (m_size)],
+                                       m_points[(i+stride) + (j-stride) * (m_size)],
+                                       m_points[(i+stride) + (j+stride) * (m_size)],
+                                       m_points[(i-stride) + (j-stride) * (m_size)],
                                        roughness, f, depth);
-              checkMaxMin(m_points[j*line + i]);
+              checkMaxMin(m_points[j*m_size + i]);
           }
       }
  
@@ -297,27 +300,27 @@ void Segment::fill2d(int size, const BasePoint& p1, const BasePoint& p2,
       //. + .
       //+ X +
       //. + .
-      for (int i=stride*2;i<size;i+=stride*2) {
-          for (int j=stride;j<size;j+=stride*2) {
+      for (int i=stride*2;i<m_res;i+=stride*2) {
+          for (int j=stride;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
-              m_points[j*line + i] = qRMD(m_points[(i-stride) + (j) * (line)],
-                                       m_points[(i+stride) + (j) * (line)],
-                                       m_points[(i) + (j+stride) * (line)],
-                                       m_points[(i) + (j-stride) * (line)], 
+              m_points[j*m_size + i] = qRMD(m_points[(i-stride) + (j) * (m_size)],
+                                       m_points[(i+stride) + (j) * (m_size)],
+                                       m_points[(i) + (j+stride) * (m_size)],
+                                       m_points[(i) + (j-stride) * (m_size)], 
                                        roughness, f , depth);
-              checkMaxMin(m_points[j*line + i]);
+              checkMaxMin(m_points[j*m_size + i]);
           }
       }
                
-      for (int i=stride;i<size;i+=stride*2) {
-          for (int j=stride*2;j<size;j+=stride*2) {
+      for (int i=stride;i<m_res;i+=stride*2) {
+          for (int j=stride*2;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
-              m_points[j*line + i] = qRMD(m_points[(i-stride) + (j) * (line)],
-                                       m_points[(i+stride) + (j) * (line)],
-                                       m_points[(i) + (j+stride) * (line)],
-                                       m_points[(i) + (j-stride) * (line)],
+              m_points[j*m_size + i] = qRMD(m_points[(i-stride) + (j) * (m_size)],
+                                       m_points[(i+stride) + (j) * (m_size)],
+                                       m_points[(i) + (j+stride) * (m_size)],
+                                       m_points[(i) + (j-stride) * (m_size)],
                                        roughness, f, depth);
-              checkMaxMin(m_points[j*line + i]);
+              checkMaxMin(m_points[j*m_size + i]);
           }
       }
 

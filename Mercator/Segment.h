@@ -32,7 +32,7 @@ class Segment {
     int m_xRef;
     int m_yRef;
     Matrix<2, 2, BasePoint> m_controlPoints;
-    float * const m_points;
+    float * m_points;
     float * m_normals;
     float m_max;
     float m_min;
@@ -115,11 +115,10 @@ class Segment {
         }
     } 
 
-    void fill1d(int size, const BasePoint& l, const BasePoint &h, 
-                     float *array) const;
+    void fill1d(const BasePoint& l, const BasePoint &h, float *array) const;
 
-    void fill2d(int size, const BasePoint& p1, const BasePoint& p2, 
-                               const BasePoint& p3, const BasePoint& p4);
+    void fill2d(const BasePoint& p1, const BasePoint& p2, 
+                const BasePoint& p3, const BasePoint& p4);
 
     float qRMD(float nn, float fn, float ff, float nf, 
                float roughness, float falloff, int depth) const;
