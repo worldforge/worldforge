@@ -13,7 +13,6 @@
 #include <Mercator/BasePoint.h>
 #include <wfmath/MersenneTwister.h>
 
-#include <iostream>
 #include <cmath>
 
 namespace Mercator {
@@ -48,7 +47,7 @@ Segment::Segment(unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
                             m_points(0), // new float[m_size * m_size]),
                             m_normals(0), m_vertices(0),
-                            m_max(0.f), m_min(0.0f),
+                            m_max(-1000000.f), m_min(1000000.0f),
                             m_validPt(false), m_validNorm(false),
                             m_validVert(false), m_validSurf(false)
 {

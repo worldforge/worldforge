@@ -18,6 +18,15 @@ HighShader::~HighShader()
 {
 }
 
+bool HighShader::checkIntersect(Surface & s) const
+{
+    if (s.m_segment.getMax() > m_threshold) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void HighShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
@@ -51,6 +60,15 @@ LowShader::~LowShader()
 {
 }
 
+bool LowShader::checkIntersect(Surface & s) const
+{
+    if (s.m_segment.getMin() < m_threshold) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void LowShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
@@ -82,6 +100,16 @@ BandShader::BandShader(float lowThreshold, float highThreshold) : Shader(true, t
 
 BandShader::~BandShader()
 {
+}
+
+bool BandShader::checkIntersect(Surface & s) const
+{
+    if ((s.m_segment.getMin() < m_highThreshold) &&
+        (s.m_segment.getMax() > m_lowThreshold)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 void BandShader::shade(Surface & s) const

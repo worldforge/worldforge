@@ -17,6 +17,11 @@ FillShader::~FillShader()
 {
 }
 
+bool FillShader::checkIntersect(Surface & s) const
+{
+    return true;
+}
+
 void FillShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();

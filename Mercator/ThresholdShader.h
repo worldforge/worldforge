@@ -16,6 +16,7 @@ class HighShader : public Shader {
     explicit HighShader(float threshold = 1.f);
     virtual ~HighShader();
 
+    virtual bool checkIntersect(Surface &) const;
     virtual void shade(Surface &) const;
 };
 
@@ -26,6 +27,7 @@ class LowShader : public Shader {
     explicit LowShader(float threshold = -1.f);
     virtual ~LowShader();
 
+    virtual bool checkIntersect(Surface &) const;
     virtual void shade(Surface &) const;
 };
 
@@ -37,6 +39,7 @@ class BandShader : public Shader {
     explicit BandShader(float lowThreshold = -1.f, float highThreshold = 1.f);
     virtual ~BandShader();
 
+    virtual bool checkIntersect(Surface &) const;
     virtual void shade(Surface &) const;
 };
 

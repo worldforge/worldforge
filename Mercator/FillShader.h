@@ -14,6 +14,7 @@ class FillShader : public Shader {
     explicit FillShader();
     virtual ~FillShader();
 
+    virtual bool checkIntersect(Surface &) const;
     virtual void shade(Surface &) const;
 };
 

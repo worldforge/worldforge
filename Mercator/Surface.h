@@ -17,9 +17,9 @@ static const ColorT colorMax = 255;
 static const ColorT colorMin = 0;
 
 class Surface : public Buffer<ColorT> {
-  private:
-    const Shader & m_shader;
   public:
+    const Shader & m_shader;
+
     explicit Surface(Segment & segment, const Shader & shader,
                      bool colors = true, bool alpha = true);
     virtual ~Surface();

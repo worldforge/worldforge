@@ -35,6 +35,16 @@ inline ColorT GrassShader::slopeToAlpha(float height, float slope) const
 
 static const unsigned int chanAlpha = 3;
 
+bool GrassShader::checkIntersect(Surface & s) const
+{
+    if ((s.m_segment.getMin() < m_highThreshold) &&
+        (s.m_segment.getMax() > m_lowThreshold)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void GrassShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();

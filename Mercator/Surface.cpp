@@ -19,7 +19,9 @@ Surface::~Surface()
 
 void Surface::populate()
 {
-    m_shader.shade(*this);
+    if (m_shader.checkIntersect(*this)) {
+        m_shader.shade(*this);
+    }
 }
 
 } // namespace Mercator

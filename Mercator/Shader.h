@@ -33,6 +33,7 @@ class Shader {
 
     Surface * newSurface(Segment &) const;
 
+    virtual bool checkIntersect(Surface &) const = 0;
     virtual void shade(Surface &) const = 0;
 };
 

@@ -11,8 +11,9 @@ class Segment;
 
 template<typename DataType>
 class Buffer {
-  private:
+  public:
     Segment & m_segment;
+  private:
     const unsigned int m_channels;
     const unsigned int m_size;
     DataType * const m_data;

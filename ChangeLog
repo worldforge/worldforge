@@ -1,3 +1,22 @@
+2003-08-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Buffer.h: Make segment this buffer is bound to public.
+
+	* Mercator/Segment.cpp: Set m_min and m_max to values other
+	  that 0, so that they end up with the right value.
+
+	* Mercator/DepthShader.h, Mercator/DepthShader.cpp,
+	  Mercator/FillShader.h, Mercator/FillShader.cpp,
+	  Mercator/GrassShader.h, Mercator/GrassShader.cpp,
+	  Mercator/ThresholdShader.h, Mercator/ThresholdShader.cpp,
+	  Mercator/Shader.h: Add virtual method to shaders to
+	  allow a check whether the min and max values of a segment
+	  intersect with the range affected by this shader.
+
+	* Mercator/Surface.h, Mercator/Surface.cpp: Make shader
+	  reference public, and add a check so that we only
+	  shade surfaces where the shader usefully applies to the segment.
+
 2003-08-15  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.cpp: Add test for lrintf() which is more

@@ -17,6 +17,7 @@ class DepthShader : public Shader {
     explicit DepthShader(float waterLevel = 0.f, float murkyDepth = -64.f);
     virtual ~DepthShader();
 
+    virtual bool checkIntersect(Surface &) const;
     virtual void shade(Surface &) const;
 };
 

@@ -18,6 +18,15 @@ DepthShader::~DepthShader()
 {
 }
 
+bool DepthShader::checkIntersect(Surface & s) const
+{
+    if (s.m_segment.getMin() < m_waterLevel) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 void DepthShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
