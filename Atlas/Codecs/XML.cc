@@ -6,11 +6,15 @@
 
 #include <strstream>
 
+using namespace std;
+using namespace Atlas::Net;
 using namespace Atlas::Stream;
 
 class XML : public Codec
 {
     public:
+
+    virtual void Initialise(Socket*, Filter*);
 
     virtual void MessageBegin();
     virtual void MessageEnd();
@@ -30,11 +34,22 @@ class XML : public Codec
     virtual void Item(const std::string&);
     virtual void Item(const Atlas::Object&);
     virtual void MapEnd();
+
+    protected:
+
+    Socket* socket;
+    Filter* filter;
 };
 
 namespace
 {
     Codec::Factory<XML> factory("XML", Codec::Metrics(1, 2));
+}
+    
+void XML::Initialise(Socket* s, Filter* f)
+{
+    socket = s;
+    filter = f;
 }
 
 void XML::MessageBegin()

@@ -39,8 +39,9 @@ class Codec
 {
     public:
 
-    Codec(Net::Socket*, Filter* = 0);
     virtual ~Codec();
+
+    virtual void Initialise(Net::Socket*, Filter*) = 0;
 
     // Interface for top level context
 
@@ -94,11 +95,6 @@ class Codec
 	    delete codec;
 	}
     };
-
-    protected:
-
-    Net::Socket *socket;
-    Filter *filter;
 };
 
 } } // Atlas::Stream

@@ -4,13 +4,11 @@
 
 #include "Codec.h"
 
+using namespace std;
 using namespace Atlas::Net;
 using namespace Atlas::Stream;
 
-Atlas::Stream::Codec::Codec(Socket *socket, Filter *filter)
- : socket(socket), filter(filter)
-{
-}
+list<Factory<Codec>*> Factory<Codec>::factories;
 
 Atlas::Stream::Codec::~Codec()
 {
