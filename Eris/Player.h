@@ -24,7 +24,6 @@ class Lobby;
 class Connection;
 class World;
 class Avatar;
-class UserInterface;
 
 /** Enumeration of various server-side things that can go wrong when trying
 to create an account or login.*/
@@ -54,7 +53,7 @@ class Player : virtual public SigC::Object
 public:
 	/** create a new Player object : currently only one is assumed, but multiple might be supported
 	in the future */
-	Player(Connection *con, UserInterface *iface = 0);
+	Player(Connection *con);
 	~Player();
 
 	/// Login to the server using the existing account specified
@@ -159,15 +158,11 @@ protected:
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)
 
-	UserInterface* _iface; ///< interface operation handler
-
 	CharacterList _characters;	///< charatcers belonging to this player
 	StringList _charIds;
 
 	std::string _username,	///< The player's username ( != account object's ID)
 		_pass;		///< The password; FIXME - clear text.
-
-	UserInterface* _uiHandler; ///< interface operation handler
 
 	/// current action tracking (for error processing)
 	std::string _currentAction;

@@ -40,11 +40,10 @@ using namespace Atlas::Objects;
 
 namespace Eris {
 
-Player::Player(Connection *con, UserInterface* iface) :
+Player::Player(Connection *con) :
 	_con(con),
 	_account(""),
 	_username(""),
-	_uiHandler(NULL),
 	_lobby(con->getLobby())
 {
     _currentAction = "";
@@ -247,8 +246,7 @@ void Player::createCharacter()
 	if (!_con->isConnected())
 		throw InvalidOperation("Not connected to server");
 
-	if (!_uiHandler)
-		throw InvalidOperation("No UserInterface handler defined");
+	throw InvalidOperation("No UserInterface handler defined");
 
 	// FIXME look up the dialog, create the instance,
 	// hook in a slot to feed the serialno of any Create op

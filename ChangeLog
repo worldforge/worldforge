@@ -1,3 +1,10 @@
+Tuesday, 22nd July 2003, Ron Steinke <rsteinke@w-link.net>
+
+	* Added UI Factory code, based on the new experimental
+	  Janus UI Atlas entities. You need the experimental
+	  janus branch of Atlas-C++ to compile it, so it's
+	  wrapped in a nice-freindly ./configure check.
+
 Monday, 23rd June 2003, Al Riddoch <alriddoch@zepler.org>
 
 	* Fix Makefile.ams so that distcheck works.
