@@ -5,6 +5,8 @@
 #ifndef ATLAS_STREAM_FACTORY_H
 #define ATLAS_STREAM_FACTORY_H
 
+#include <string>
+
 namespace Atlas { namespace Stream {
 
 template <typename T>
@@ -16,6 +18,8 @@ class Factory
 
     virtual T* New() = 0;
     virtual void Delete(T*) = 0;
+
+    virtual std::string GetName() = 0;
 };
 
 } } // Atlas::Stream
