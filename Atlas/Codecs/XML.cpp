@@ -2,36 +2,59 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-// $Log$
-// Revision 1.2  2000-02-27 01:48:58  mike
-// Much silliness
-//
-// Revision 1.1  2000/02/23 06:51:28  mike
-// Please state the nature of your medical emergency.
-//
-
-#include "XML.h"
+#include "../Stream/Codec.h"
 
 #include <strstream>
 
-void Atlas::Codecs::XML::MessageBegin();
-void Atlas::Codecs::XML::MessageEnd();
+using namespace Atlas::Stream;
 
-void Atlas::Codecs::XML::ListBegin(const std::string& name);
-void Atlas::Codecs::XML::MapBegin(const std::string& name);
-void Atlas::Codecs::XML::Item(const std::string& name, int);
-void Atlas::Codecs::XML::Item(const std::string& name, float);
-void Atlas::Codecs::XML::Item(const std::string& name, const std::string&);
-void Atlas::Codecs::XML::Item(const std::string& name, const Atlas::Object&);
-void Atlas::Codecs::XML::ListEnd();
+class XML : public Codec
+{
+    public:
 
-void Atlas::Codecs::XML::ListBegin();
-void Atlas::Codecs::XML::MapBegin();
-void Atlas::Codecs::XML::Item(int);
-void Atlas::Codecs::XML::Item(float);
-void Atlas::Codecs::XML::Item(const std::string&);
-void Atlas::Codecs::XML::Item(const Atlas::Object&);
-void Atlas::Codecs::XML::MapEnd();
+    virtual void MessageBegin();
+    virtual void MessageEnd();
+    
+    virtual void ListBegin(const std::string& name);
+    virtual void MapBegin(const std::string& name);
+    virtual void Item(const std::string& name, int);
+    virtual void Item(const std::string& name, float);
+    virtual void Item(const std::string& name, const std::string&);
+    virtual void Item(const std::string& name, const Atlas::Object&);
+    virtual void ListEnd();
+    
+    virtual void ListBegin();
+    virtual void MapBegin();
+    virtual void Item(int);
+    virtual void Item(float);
+    virtual void Item(const std::string&);
+    virtual void Item(const Atlas::Object&);
+    virtual void MapEnd();
+};
+
+namespace
+{
+    Codec::Factory<XML> factory("XML", "1.0");
+}
+
+void XML::MessageBegin();
+void XML::MessageEnd();
+
+void XML::ListBegin(const std::string& name);
+void XML::MapBegin(const std::string& name);
+void XML::Item(const std::string& name, int);
+void XML::Item(const std::string& name, float);
+void XML::Item(const std::string& name, const std::string&);
+void XML::Item(const std::string& name, const Atlas::Object&);
+void XML::ListEnd();
+
+void XML::ListBegin();
+void XML::MapBegin();
+void XML::Item(int);
+void XML::Item(float);
+void XML::Item(const std::string&);
+void XML::Item(const Atlas::Object&);
+void XML::MapEnd();
 /*
 void Atlas::Codecs::XML::BeginList()
 {
