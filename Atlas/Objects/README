@@ -1,0 +1,6 @@
+The Objects classes are bound to be replaced with files generated from .def
+files in protocols/atlas/spec. The interface will stay the same.
+
+They will remain undocumented until then.
+
+ -- sdt@gmx.net
