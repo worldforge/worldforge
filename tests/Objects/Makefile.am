@@ -9,7 +9,7 @@ LDADD  = -L$(top_builddir)/Atlas/ -L$(top_builddir)/Atlas/Codecs/ \
 LIBS = -lAtlasObjects-0.6 -lAtlasNet-0.6 -lAtlas-0.6 -lAtlasCodecs-0.6 \
        -lAtlasFilters-0.6 -lAtlasMessage-0.6 -lAtlas-0.6 $(OTHER_LIBS)
 
-check_PROGRAMS = objects1 objects2 encoder1 decoder1
+check_PROGRAMS = objects1 objects2 encoder1 decoder1 objects_fwd
 
 TESTS = $(check_PROGRAMS)
 
@@ -20,3 +20,5 @@ objects2_SOURCES = objects2.cpp
 encoder1_SOURCES = encoder1.cpp
 
 decoder1_SOURCES = decoder1.cpp
+
+objects_fwd_SOURCES = objects_fwd.cpp

@@ -23,6 +23,7 @@ Anonymous.h
 Anonymous.cpp
 flag.cpp
 objectFactory.cpp
+ObjectsFwd.h
 Decoder.h
 Decoder.cpp
 Dispatcher.h

@@ -14,7 +14,7 @@ REAL_GENERATED_CPP = Root.cpp Decoder.cpp Dispatcher.cpp \
 
 GENERATED_CPP = flag.cpp $(REAL_GENERATED_CPP)
 
-GENERATED_H = Root.h Decoder.h Dispatcher.h \
+GENERATED_H = Root.h Decoder.h Dispatcher.h ObjectsFwd.h \
 	RootEntity.h Entity.h \
 	RootOperation.h Operation.h \
 	Anonymous.h
@@ -27,7 +27,7 @@ libAtlasObjects_0_6_la_SOURCES = \
 BUILT_SOURCES = $(GENERATED_CPP) $(GENERATED_H)
 
 PY_SOURCES = gen_cpp.py common.py AttributeInfo.py GenerateObjectFactory.py \
-	GenerateDecoder.py GenerateDispatcher.py
+	GenerateDecoder.py GenerateDispatcher.py GenerateForward.py
 
 $(REAL_GENERATED_CPP) $(GENERATED_H):
 	if [ ! -e $@ ]; \

@@ -1,3 +1,16 @@
+2003-08-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDispatcher.py: Correctness tweak
+	  of the way data class member is generated.
+
+	* Atlas/Objects/GenerateForward.py, Atlas/Objects/gen_cpp.py:
+	  Add code to generate a forward declarations header which
+	  includes forward declarations for most of the classes
+	  in the Objects namespace, and the related typedefs.
+
+	* tests/Objects/objects_fwd.cpp: A check to ensure the contents
+	  of the forward header are valid and correct.
+
 2003-08-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/GenerateDispatcher.py: Use insert to
