@@ -1,5 +1,11 @@
 2004-02-23  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/common.py: Add one more useless attribute.
+
+	* tests/Objects/objects2.cpp: Fix the tests.
+
+2004-02-23  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/gen_cpp.py, Atlas/Objects/common.py: Add a list
 	  of atlas attributes used for description in the spec, or only
 	  very occaisionally in the field, which should not be implemented

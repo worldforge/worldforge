@@ -30,7 +30,7 @@ static_objects = ["root", "root_entity", "root_operation"]
 # These are only used for description.
 descr_attrs = ['children', 'description', 'args_description', 'example', \
                'long_description', 'specification', 'specification_file', \
-               'stamp_inherit', 'interface']
+               'stamp_inherit', 'interface', 'time_string']
 
 # C++ equivalents of atlas types              
 cpp_type = {'map' : 'Atlas::Message::MapType',

@@ -206,13 +206,13 @@ void testValues()
     account->setAttr("password", std::string("ping"));
     l->setArgs1((Root&)account);
 
-    assert(l->getArgs()[0]->getLongDescription()=="Later in hierarchy tree objtype changes to 'object' when actual game objects are made.");
-    assert(l->getArgs()[0]->getDescription()=="Base class for accounts");
+    // assert(l->getArgs()[0]->getLongDescription()=="Later in hierarchy tree objtype changes to 'object' when actual game objects are made.");
+    // assert(l->getArgs()[0]->getDescription()=="Base class for accounts");
     assert(l->getId()=="");
     assert(l->getParents().front()=="login");
     assert(l->getObjtype()=="op");
-    std::cout<<std::cout<<"account.long_description: "
-        <<l->getArgs()[0]->getLongDescription()<<std::cout;
+    // std::cout<<std::cout<<"account.long_description: "
+        // <<l->getArgs()[0]->getLongDescription()<<std::cout;
     
     {
     Atlas::Message::Element::MapType mobj;
@@ -232,8 +232,8 @@ void testValues()
     assert(obj->isDefaultParents() == false);
     assert(obj->getObjtype() == "op");
     assert(obj->isDefaultObjtype() == false); //should this be true? 
-    assert(obj->getDescription() == "Base class for accounts");
-    assert(obj->isDefaultDescription() == true);
+    // assert(obj->getDescription() == "Base class for accounts");
+    // assert(obj->isDefaultDescription() == true);
     }
     
     {
@@ -248,8 +248,8 @@ void testValues()
     assert(obj->isDefaultParents() == false);
     assert(obj->getObjtype() == "class");
     assert(obj->isDefaultObjtype() == false);
-    assert(obj->getDescription() == "Base class for accounts");
-    assert(obj->isDefaultDescription() == false);
+    // assert(obj->getDescription() == "Base class for accounts");
+    // assert(obj->isDefaultDescription() == false);
     }
 
     {
@@ -260,7 +260,7 @@ void testValues()
     assert(obj->getName() == "");
     assert(obj->getParents().size() == 0);
     assert(obj->getObjtype() == "obj");
-    assert(obj->getDescription() == "");
+    // assert(obj->getDescription() == "");
     }
 
     {
@@ -276,7 +276,7 @@ void testValues()
     assert(obj->getName() == "foo");
     assert(obj->getParents().front() == "account");
     assert(obj->getObjtype() == "obj");
-    assert(obj->getDescription() == "");
+    // assert(obj->getDescription() == "");
     }
 
     {
@@ -309,8 +309,8 @@ void testValues()
     assert(op->getParents().size() == 1);
     assert(op->getParents().front() == "create");
     assert(op->getObjtype() == "op");
-    assert(op->getDescription() == 
-           "Create new things from nothing using this operator.");
+    // assert(op->getDescription() == 
+           // "Create new things from nothing using this operator.");
     assert(op->getArgs().size() == 1);
 
     Account op_arg = (Account&)op->getArgs().front();
@@ -325,7 +325,7 @@ void testValues()
     assert(op_arg->getParents().size() == 1);
     assert(op_arg->getParents().front() == "player");
     assert(op_arg->getObjtype() == "obj");
-    assert(op_arg->getDescription() == "Player accounts");
+    // assert(op_arg->getDescription() == "Player accounts");
     assert(op_arg->getName() == "foo");
 #if 0 //tmp
     assert(op_arg->hasAttr("password"));
