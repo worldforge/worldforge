@@ -6,6 +6,7 @@
 #define ATLAS_MESSAGE_DECODERBASE_H
 
 #include <string>
+#include <stack>
 #include "../Bridge.h"
 #include "Object.h"
 
@@ -53,7 +54,15 @@ public:
     
 protected:
 
-    Object objFragment;
+    enum State {
+        STATE_STREAM,
+        STATE_MAP,
+        STATE_LIST
+    };
+
+    std::stack<State> state;
+    std::stack<Object> objects;
+    std::stack<string> names;
 
     // To be overridden by derived classes
     virtual void ObjectArrived(const Object& obj) = 0;

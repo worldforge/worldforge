@@ -4,7 +4,8 @@ noinst_PROGRAMS = \
 	test-object-list \
 	test-negotiate \
 	test-packed \
-	test-xml
+	test-xml \
+        test-message-layer
 
 CXXFLAGS = -Wall -g
 
@@ -25,6 +26,9 @@ test_packed_LDADD		= ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a ../
 
 test_xml_SOURCES	    = test-xml.cc
 test_xml_LDADD		    = ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a ../Codecs/.libs/libAtlasCodecs.so ../Filters/.libs/libAtlasFilters.a ../Funky/.libs/libAtlasFunky.so
+
+test_message_layer_SOURCES = test-message-layer.cc
+test_message_layer_LDADD   = ../.libs/libAtlas.so ../Message/.libs/libAtlasMessage.a
 
 TESTS = test-object-map test-object-list test-negotiate
 

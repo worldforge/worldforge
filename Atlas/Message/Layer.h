@@ -6,7 +6,6 @@
 #define ATLAS_MESSAGE_LAYER_H
 
 #include "Encoder.h"
-#include "DecoderBase.h"
 
 namespace Atlas { namespace Message {
 
@@ -20,10 +19,11 @@ FIXME document this
 
 */
 
-class Layer : public Encoder, public DecoderBase
+template <class Decoder>
+class Layer : public Encoder, public Decoder
 {
 public:
-    Layer(Atlas::Bridge*);
+    Layer(Atlas::Bridge* b) : Encoder(b), Decoder() { }
     virtual ~Layer() { }
 };
 
