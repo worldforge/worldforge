@@ -7,6 +7,7 @@
 #include <Eris/LogStream.h>
 #include <Eris/Connection.h>
 #include <Eris/TypeService.h>
+#include <Eris/TypeInfo.h>
 #include <Eris/View.h>
 #include <Eris/Avatar.h>
 
@@ -35,7 +36,8 @@ Entity* Factory::createEntity(const GameEntity& gent, View* view)
 {
     // this next line is a weird tribute to encapsulation...
     TypeInfo* type = view->getAvatar()->getConnection()->getTypeService()->getTypeForAtlas(gent);
-
+    assert(type->isBound());
+    
     if (global_factorySet) // we might not have a factory at all
     {
         PriorityFactorySet::const_iterator F = global_factorySet->begin();

@@ -57,6 +57,7 @@
 				C49E621F060B46740054632A,
 				C49E6224060B4FD80054632A,
 				C4ADF7D306457B6D00D3CCAC,
+				C4ADF6A4064ECA7D0074F881,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,6 +69,7 @@
 				C43A91490604E069004FFDC2,
 				C43A91470604E066004FFDC2,
 				C4ADF7D006457A3500D3CCAC,
+				C4ADF6AD064ED5320074F881,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -898,7 +900,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Info-eris__Upgraded_.plist";
-				INSTALL_PATH = /Users/jmt/Library/Frameworks;
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "-seg1addr 0x21000000";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -906,6 +908,7 @@
 				PRINCIPAL_CLASS = "";
 				PRODUCT_NAME = Eris;
 				SECTORDER_FLAGS = "";
+				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
@@ -1571,16 +1574,18 @@
 		};
 		C4AD291A05FA259900AFB402 = {
 			children = (
-				C47BF1800600F1DD00CC2146,
+				C4ADF6AC064ED5320074F881,
+				C4ADF7CF06457A3500D3CCAC,
+				C4ADF7D206457B6D00D3CCAC,
 				C47BF18C0600F42E00CC2146,
+				C47BF1800600F1DD00CC2146,
+				C4ADF6A3064ECA7D0074F881,
 				C4AD293505FA53EA00AFB402,
+				C49E621E060B46740054632A,
 				C4AD291F05FA259900AFB402,
 				C4AD292005FA259900AFB402,
 				C43A913E0604E02D004FFDC2,
-				C49E621E060B46740054632A,
 				C49E6223060B4FD80054632A,
-				C4ADF7CF06457A3500D3CCAC,
-				C4ADF7D206457B6D00D3CCAC,
 			);
 			isa = PBXGroup;
 			path = test;
@@ -1708,6 +1713,34 @@
 		};
 		C4AD294A05FA58F200AFB402 = {
 			fileRef = C4BB158B0544A61B00A800CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4ADF6A3064ECA7D0074F881 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = commander.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4ADF6A4064ECA7D0074F881 = {
+			fileRef = C4ADF6A3064ECA7D0074F881;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4ADF6AC064ED5320074F881 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = commander.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4ADF6AD064ED5320074F881 = {
+			fileRef = C4ADF6AC064ED5320074F881;
 			isa = PBXBuildFile;
 			settings = {
 			};

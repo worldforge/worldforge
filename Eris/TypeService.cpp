@@ -275,10 +275,7 @@ bool TypeService::verifyObjectTypes(const Root& obj)
 void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
 {
     int classNo = obj->getClassNo();
-    if ((classNo == Atlas::Objects::Entity::ANONYMOUS_NO) || 
-        (classNo == ROOT_OPERATION_NO) ||
-        (classNo == Atlas::Objects::Entity::ROOT_ENTITY_NO) /*||
-        (classNo == Atlas::Objects::ROOT_NO)*/)
+    if (classNo == Atlas::Objects::Entity::ANONYMOUS_NO)
     {
         // if no objtype or parents, it's just plain : we're done
         if (obj->isDefaultObjtype() && obj->isDefaultParents()) return;

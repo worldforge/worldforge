@@ -1,3 +1,14 @@
+2004-05-12  James Turner  <james@worldforge.org>
+
+* Record the classNo alloctaed by the objectFactory when registering
+  new factory methods
+  
+* Simplify the type verification logic following the objectFactory
+  clean up Al committed.
+  
+* Add a 'Commander' object to the stub server, in preperation for
+  doing a fork() and hence a multi-process test.
+
 2004-05-08  James Turner  <james@worldforge.org>
 
 * Add a compile time toggle at the top of Connecton for send/recv logging.

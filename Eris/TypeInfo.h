@@ -100,7 +100,8 @@ private:
 
     bool m_bound;               ///< cache the 'bound-ness' of the node, see the isBound() implementation
     const std::string m_name;	///< the Atlas unique typename
-
+    int m_atlasClassNo;         ///< if we registered an atlas factory, this is it's class
+    
     TypeService* m_typeService;
 };
 

@@ -8,6 +8,7 @@
 #include <Eris/LogStream.h>
 #include <Atlas/Objects/Operation.h>
 #include <skstream/skpoll.h>
+#include "commander.h"
 
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
@@ -20,6 +21,8 @@ typedef Atlas::Objects::Entity::Account AtlasAccount;
 typedef std::list<std::string> StringList;
 
 using Atlas::Objects::Entity::GameEntity;
+
+const std::string VAR_DIR = "/tmp";
 
 StubServer::StubServer(short port) :
     m_serverSocket(port)
@@ -39,6 +42,12 @@ StubServer::StubServer(short port) :
     ::setsockopt(m_serverSocket.getSocket(), SOL_SOCKET, SO_REUSEADDR,
             &reuseFlag, sizeof(reuseFlag));
 
+    std::string path = VAR_DIR + "/testeris.sock";
+    unlink(path.c_str());
+    
+    m_commandListener.open(VAR_DIR + "/testeris.sock");
+    assert(m_commandListener.is_open());
+    
     setupTestAccounts();
 
     RootEntity lobby;
@@ -77,7 +86,8 @@ StubServer::StubServer(short port) :
 
 StubServer::~StubServer()
 {
-
+    std::string path = VAR_DIR + "/testeris.sock";
+    unlink(path.c_str());
 }
 
 #pragma mark -
@@ -169,6 +179,11 @@ void StubServer::run()
         m_clients.push_back(new ClientConnection(this, m_serverSocket.accept()));
     }
 
+    if (m_commandListener.can_accept())
+    {
+        m_command = std::auto_ptr<Commander>(new Commander(this, m_commandListener.accept()));
+    }
+    
     basic_socket_poll::socket_map clientSockets;
 
     static const basic_socket_poll::poll_type POLL_MASK
@@ -176,6 +191,9 @@ void StubServer::run()
 
     for (unsigned int C=0; C < m_clients.size(); ++C)
         clientSockets[m_clients[C]->getStream()] = POLL_MASK;
+
+    if (m_command.get())
+        clientSockets[m_command->getStream()] = POLL_MASK;
 
     basic_socket_poll poller;
     poller.poll(clientSockets);
@@ -200,6 +218,11 @@ void StubServer::run()
             C = m_clients.erase(C);
         } else
             ++C;
+    }
+    
+    if (m_command.get()) {
+        if (poller.isReady(m_command->getStream()))
+            m_command->recv();
     }
 }
 

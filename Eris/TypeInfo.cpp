@@ -21,9 +21,10 @@ namespace Eris {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
-	m_bound(false),
-	m_name(id),
-	m_typeService(ts)
+    m_bound(false),
+    m_name(id),
+    m_atlasClassNo(0),
+    m_typeService(ts)
 {
     if (m_name == "root")
         m_bound = true; // root node is always bound
@@ -173,7 +174,7 @@ void TypeInfo::validateBind()
         
         if (isA(gameEntityType))
         {
-            Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
+            m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
         } else
             error() << "got custom type that doesn't inherit game_entity, no factory";
     }

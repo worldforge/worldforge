@@ -4,13 +4,16 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <memory>
 
 #include <skstream/skserver.h>
+#include <skstream/skserver_unix.h>
 
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/Entity.h>
 
+class Commander;
 class ClientConnection;
 
 typedef std::set<std::string> StringSet;
@@ -40,7 +43,9 @@ private:
     void subclassType(const std::string& base, const std::string& derivedName);
     
     tcp_socket_server m_serverSocket;
-
+    /** we use a unix socket for out-of-band control of the stub server */
+    unix_socket_server m_commandListener;
+    
     friend class ClientConnection;
     friend class Agent;
     
@@ -57,6 +62,8 @@ private:
     
     typedef std::map<std::string, Atlas::Objects::Root> AtlasTypeMap;
     AtlasTypeMap m_types;
+    
+    std::auto_ptr<Commander> m_command;
 };
 
 #endif

@@ -255,6 +255,15 @@ void testCharActivate(StubServer& stub)
     delete av;
 }
 
+void stubMain()
+{
+    StubServer stub(7450);
+    while (true)
+    {
+        stub.run();
+    }
+}
+
 int main(int argc, char **argv)
 {
     Eris::setLogLevel(LOG_WARNING);

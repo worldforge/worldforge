@@ -7,7 +7,8 @@ check_PROGRAMS = $(TESTS)
 testEris_SOURCES = tests.cpp \
     stubServer.h stubServer.cpp \
     clientConnection.cpp clientConnection.h \
-    agent.cpp agent.h
+    agent.cpp agent.h \
+    commander.cpp commander.h
 
 testEris_LDADD = $(top_builddir)/Eris/liberis-1.3.la
 
