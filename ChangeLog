@@ -1,3 +1,7 @@
+Friday, 9th May 2003, James Turner <james@worldforge.org>
+
+	* Incremented version to 0.9.8 for stable release.
+
 Thursday, 8th May 2003, Ron Steinke
 
 	* Changed Al's mkdir -p fix in bindings/Makefile.am
