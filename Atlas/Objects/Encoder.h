@@ -12,7 +12,7 @@ namespace Atlas { namespace Objects {
 class Encoder : public Atlas::EncoderBase
 {
 public:
-    Encoder(Atlas::Bridge* b) : b(b) { }
+    Encoder(Atlas::Bridge* b) : EncoderBase(b) { }
     virtual ~Encoder() { }
 
     virtual void StreamMessage(Atlas::Objects::Root* o) {o->Transmit(b); }
