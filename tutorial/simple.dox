@@ -58,6 +58,16 @@ until their state is not IN_PROGRESS any more. If negotiation was successful,
 you can retrieve the codec to be used with GetCodec(), and then go on sending
 and receiving messages happily with your peer.
 
+Lastly, it should be noted that not only codecs exist, but also filters. These
+"wrap around" the codecs and do things like bzip2/gzip compression, or
+encryption. These are represented in Atlas-C++ by the Filter class, and also
+automatically negotiated by the Negotiation classes. This means that while
+coding you never actually have to worry about them.
+
+You should know that Atlas-C++ will automagically detect what codecs and
+filters are linked into your application, so you will never need to provide
+lists of these or any such inconveniences.
+
 @section server The Server
 
 See under the code for more documentation.
