@@ -2,13 +2,14 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#include "../Stream/Codec.h"
-#include "../Stream/Hack.h"
+#include "../Codec.h"
+#include "../Hack.h"
+#include "../Funky/Encoder.h"
 
 #include <iostream>
 
 using namespace std;
-using namespace Atlas::Stream;
+using namespace Atlas;
 
 class loopbuf : public streambuf
 {
@@ -52,6 +53,11 @@ class loopbuf : public streambuf
 class LoopBridge : public Bridge
 {
     public:
+
+    virtual void StreamEnd()
+    {
+        cout << "StreamEnd!\n";
+    }
 
     virtual void MessageBegin()
     {
@@ -148,6 +154,17 @@ int main()
     Codec<iostream>* codec = Atlas::UngodlyHack::GetPacked(client_stream,
     &bridge);
 
+    Funky::Encoder enc = Funky::Encoder(codec);
+
+    enc << Funky::Encoder::begin_message
+          << Funky::Encoder::begin_map
+              << make_pair((string)"id", 17)
+              << make_pair((string)"name", (string)"Fred (the + great)")
+              << make_pair((string)"weight", 1.5)
+          << Funky::Encoder::end_map
+          << Funky::Encoder::end_message;
+
+    /*
     codec->MessageBegin();
     codec->MessageItem(Codec<iostream>::MapBegin);
 	codec->MapItem("id", 17);
@@ -155,11 +172,14 @@ int main()
 	codec->MapItem("weight", 1.5);
 	codec->MapEnd();
     codec->MessageEnd();
+    */
     
     codec->Poll();
 
     cout << client_buffer << endl;
     cout << server_buffer << endl;
+    
+          
 /*    
 
     Negotiate s("SERVER BOB", server_stream);

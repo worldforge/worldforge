@@ -2,12 +2,13 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day, Dmitry Derevyanko
 
-#include "../Stream/Negotiate.h"
+#include "../Net/Stream.h"
 
 #include <iostream>
 
 using namespace std;
-using namespace Atlas::Stream;
+using namespace Atlas;
+using namespace Atlas::Net;
 
 class loopbuf : public streambuf
 {

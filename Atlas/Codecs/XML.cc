@@ -57,7 +57,7 @@ XML::XML(const Codec<iostream>::Parameters& p)
 
 void XML::Poll()
 {
-    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    while (socket.rdbuf()->in_avail() /* || socket.rdbuf()->showmanyc() */)
     {
 	char next = socket.get();
 

@@ -8,8 +8,8 @@
 
 */
 
-#include "../Object/Object.h"
-using Atlas::Object;
+#include "../Message/Object.h"
+using Atlas::Message::Object;
 
 #include <iostream>
 using std::cout;

@@ -1,4 +1,4 @@
-SUBDIRS = . Object Codecs Filters Net
+SUBDIRS = . Message Codecs Filters Net Funky
 
 lib_LTLIBRARIES = libAtlas.la
 

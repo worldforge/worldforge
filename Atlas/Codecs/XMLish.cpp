@@ -58,7 +58,7 @@ XMLish::XMLish(const Codec<iostream>::Parameters& p)
 
 void XMLish::Poll()
 {
-    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    while (socket.rdbuf()->in_avail()/* || socket.rdbuf()->showmanyc() */)
     {
 	char next = socket.get();
 

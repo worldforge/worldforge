@@ -156,7 +156,7 @@ Atlas::Negotiate<iostream>::State Atlas::Net::NegotiateClient::Poll()
 
     string out;
 
-    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    while (socket.rdbuf()->in_avail()/* || socket.rdbuf()->showmanyc()*/)
     {
 	buf += socket.get();
     }

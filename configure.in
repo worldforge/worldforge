@@ -294,7 +294,6 @@ LIBS="$LIBS -L$with_sigc++/lib"
 
 AC_CHECK_LIB(sigc, main)
 
-
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
 
@@ -313,7 +312,6 @@ LIBS="$LIBS -L$with_zlib/lib"
 AC_CHECK_LIB(z, inflate)
 
 AC_CHECK_HEADERS(zlib.h)
-
 
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
@@ -334,7 +332,6 @@ AC_CHECK_LIB(bz2, bzCompressInit)
 
 AC_CHECK_HEADERS(bzlib.h)
 
-
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
 
@@ -346,7 +343,8 @@ AC_OUTPUT([
 	src/Codecs/Makefile
 	src/Content/Makefile
 	src/Filters/Makefile
-	src/Message/Makefile
 	src/Net/Makefile
 	src/TestSuite/Makefile
+	src/Message/Makefile
+	src/Funky/Makefile
 ])

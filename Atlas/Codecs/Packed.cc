@@ -418,7 +418,7 @@ void Packed::ParseName(char next)
 
 void Packed::Poll()
 {
-    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
+    while (socket.rdbuf()->in_avail()  /* || socket.rdbuf()->showmanyc() */)
     {
 	char next = socket.get();
 
