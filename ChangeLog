@@ -1,3 +1,8 @@
+2004-01-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Prefer sigc++ 2.0 over 1.2 to keep things a little
+	  more consistent.
+
 2005-01-08  James Turner  <james@worldforge.org>
 
 	* configure.ac: increase minor version number

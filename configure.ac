@@ -47,20 +47,20 @@ AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 
 AC_LANG_PUSH(C++)
 
-PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
+PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0,
     [
         CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
-        ERIS_REQUIRES="$ERIS_REQUIRES sigc++-1.2"
-        ERIS_CURRENT=1
+        ERIS_REQUIRES="$ERIS_REQUIRES sigc++-2.0"
+        ERIS_CURRENT=2
     ],
     [
-        PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0,
+        PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
             [
                 CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
                 LDFLAGS="$LDFLAGS $SIGC_LIBS"
-                ERIS_REQUIRES="$ERIS_REQUIRES sigc++-2.0"
-                ERIS_CURRENT=2
+                ERIS_REQUIRES="$ERIS_REQUIRES sigc++-1.2"
+                ERIS_CURRENT=1
             ],
             [
                 AC_MSG_ERROR([Couldn't find sigc++ library!])
