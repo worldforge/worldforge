@@ -10,6 +10,13 @@
 #define __AtlasUserClient_h_
 
 #include <string>
+
+#ifdef _MSC_VER
+#include <map>
+#else
+#include <multimap.h>
+#endif
+
 #include <list>
 using namespace std;
 
@@ -53,13 +60,28 @@ public:
     
     virtual AObject call(const AObject& msg);
 
-    void addMsgHandler(const string& type, void(*hdl)(const AObject&));
-    void remMsgHandler(const string& type, void(*hdl)(const AObject&));
+    template<class T> void addMsgHandler(const string& type, T& obj, void(T::*handler)(const AObject&))
+	{
+		m_msghandlers.insert(m_msghandlers.end(),
+			   pair<string, fptr_abstract*>(type, new fptr<T>(obj, handler)));
+
+	}
     
-    template<class T> void addMsgHandler(const string& type, T& obj,
-                                         void(T::*handler)(const AObject&));
-    template<class T> void remMsgHandler(const string& type, T& obj,
-                                         void(T::*handler)(const AObject&));
+	template<class T> void remMsgHandler(const string& type, T& obj, void(T::*handler)(const AObject&))
+	{
+		list< pair<string, fptr_abstract*> >::iterator I;
+		bool quit = false;
+		for (I = m_msghandlers.begin(); I != m_msghandlers.end() && !quit; I++) 
+		{
+			if (((*I).first == type) && (*(*I).second == fptr<T>(obj, handler))) 
+			{
+				delete (*I).second;
+				m_msghandlers.erase(I);
+				quit = true;
+			}
+		}
+	}
+										 
 
     AObject createOperation(const string& id, Arg* args ...);
     AObject createEntity(Arg* args ...);
@@ -78,29 +100,5 @@ private:
     list< pair<string, fptr_abstract*> > m_msghandlers;
     list< pair<string, void(*)(const AObject&)> > m_msghandlers_simp;
 };
-
-// need to put these here so all instantiations get compiled properly
-
-template<class T> void AUserClient::addMsgHandler(const string& type,
-                              T& obj, void(T::*handler)(const AObject&))
-{
-    m_msghandlers.insert(m_msghandlers.end(),
-               pair<string, fptr_abstract*>(type, new fptr<T>(obj, handler)));
-}
-
-template<class T> void AUserClient::remMsgHandler(const string& type,
-                              T& obj, void(T::*handler)(const AObject&))
-{
-    list< pair<string, fptr_abstract*> >::iterator I;
-    bool quit = false;
-    for (I = m_msghandlers.begin(); I != m_msghandlers.end() && !quit; I++) {
-        if (((*I).first == type) && (*(*I).second == fptr<T>(obj, handler))) {
-            delete (*I).second;
-            m_msghandlers.erase(I);
-            quit = true;
-        }
-    }
-}
-
 
 #endif

@@ -1,4 +1,4 @@
-#include "python1.5/Python.h"
+#include "Python.h"
 
 #ifdef STDC_HEADERS
 #include <stddef.h>

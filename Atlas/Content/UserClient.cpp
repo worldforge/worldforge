@@ -8,6 +8,9 @@
 
 #include "UserClient.h"
 
+#ifdef _MSC_VER
+#include <iostream>
+#endif
 void AUserClient::gotMsg(const AObject& msg)
 {
     long refno;
@@ -51,7 +54,7 @@ AObject AUserClient::call(const AObject& msg)
     }
     return m_reply;
 }
-
+/*
 void AUserClient::addMsgHandler(const string& type, void(*hdl)(const AObject&))
 {
     m_msghandlers_simp.insert(m_msghandlers_simp.end(),
@@ -70,7 +73,7 @@ void AUserClient::remMsgHandler(const string& type, void(*hdl)(const AObject&))
         }
     }
 }
-
+*/
 AObject AUserClient::createOperation(const string& id, Arg* args ...)
 {
   //example result:

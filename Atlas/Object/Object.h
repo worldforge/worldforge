@@ -12,7 +12,11 @@
 #include "Debug.h"
 #include "Types.h"
 
+#ifdef PYTHON_INC_HACK
+#include "Python.h"
+#else
 #include <python1.5/Python.h>
+#endif
 
 #include <string>
 using namespace std;
