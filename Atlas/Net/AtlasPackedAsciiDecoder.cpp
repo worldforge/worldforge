@@ -113,23 +113,33 @@ int APackedAsciiDecoder::hasTokens()
 			name = buffer.substr(1,pos-1);
 			buffer = buffer.substr(pos+1);
 			// got an attribute name
+			if (typ == "(") type = AProtocol::atlasLST;
+			if (typ == "[") type = AProtocol::atlasMAP;
+			if (typ == "!") type = AProtocol::atlasURI;
+			if (typ == "@") type = AProtocol::atlasINT;
+			if (typ == "%") type = AProtocol::atlasLNG;
+			if (typ == "#") type = AProtocol::atlasFLT;
+			if (typ == "$") type = AProtocol::atlasSTR;
 			if (typ == "<") {
-				typ = buffer.substr(0,1);
+				typ = name.substr(0,1);
+				name = name.substr(1);
 				if (typ == "!") type = AProtocol::atlasLSTURI;
 				if (typ == "@") type = AProtocol::atlasLSTINT;
 				if (typ == "#") type = AProtocol::atlasLSTFLT;
 				if (typ == "$") type = AProtocol::atlasLSTSTR;
 				if (typ == "%") type = AProtocol::atlasLSTLNG;
 			}
-			if (typ == "(") type = AProtocol::atlasLST;
-			if (typ == "[") type = AProtocol::atlasMAP;
-			if (typ == "@") type = AProtocol::atlasINT;
-			if (typ == "%") type = AProtocol::atlasLNG;
-			if (typ == "#") type = AProtocol::atlasFLT;
-			if (typ == "$") type = AProtocol::atlasSTR;
 			// change states, wait for value
 			token = AProtocol::atlasATRBEG;
-			if (type==AProtocol::atlasLST || type==AProtocol::atlasMAP) {
+			if (
+				type==AProtocol::atlasLST || 
+				type==AProtocol::atlasLSTURI || 
+				type==AProtocol::atlasLSTINT || 
+				type==AProtocol::atlasLSTFLT || 
+				type==AProtocol::atlasLSTSTR || 
+				type==AProtocol::atlasLSTLNG || 
+				type==AProtocol::atlasMAP
+			) {
 				state = 2;
 			} else {
 				state = 3;

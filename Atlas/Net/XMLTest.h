@@ -3,11 +3,7 @@
 #ifndef __XMLTest_h_
 #define __XMLTest_h_
 
-#include "AtlasDebug.h"
-#include "AtlasCodec.h"
-#include "AtlasObject.h"
-#include "AtlasProtocol.h"
-#include "AtlasXMLProtocol.h"
+#include "AtlasTransport.h"
 
 class XMLTest
 {

@@ -41,40 +41,40 @@ void APackedAsciiEncoder::walkTree(int nest, const char* name,
 		printf(">");
 	} 
 	if (list.isIntList()) {
-		printf("{@%s=", name);
+		printf("<@%s=", name);
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
 			list.get(i,tmp);
 			walkTree(0, "", tmp);
 		}
-		printf("}");
+		printf(">");
 	} 
 	if (list.isLongList()) {
-		printf("{%%%s=", name);
+		printf("<%%%s=", name);
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
 			list.get(i,tmp);
 			walkTree(0, "", tmp);
 		}
-		printf("}");
+		printf(">");
 	} 
 	if (list.isFloatList()) {
-		printf("{#%s=", name);
+		printf("<#%s=", name);
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
 			list.get(i,tmp);
 			walkTree(0, "", tmp);
 		}
-		printf("}");
+		printf(">");
 	} 
 	if (list.isStringList()) {
-		printf("{$%s=", name);
+		printf("<$%s=", name);
 		for (i=0; i<list.length(); i++) {
 			AObject tmp;
 			list.get(i,tmp);
 			walkTree(0, "", tmp);
 		}
-		printf("}");
+		printf(">");
 	} 
 	if (list.isMap()) {
 		AObject keys = list.keys();

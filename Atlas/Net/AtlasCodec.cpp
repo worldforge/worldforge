@@ -118,12 +118,35 @@ int ACodec::hasMessage()
 		}
 		if (tok == AProtocol::atlasATREND) {
 			// end of attribute detected.. un-nest
-			if (type == AProtocol::atlasLST || type == AProtocol::atlasMAP) {
+                        if (    
+                                type==AProtocol::atlasLST ||
+                                type==AProtocol::atlasLSTURI ||
+                                type==AProtocol::atlasLSTINT ||
+                                type==AProtocol::atlasLSTFLT ||
+                                type==AProtocol::atlasLSTSTR ||
+                                type==AProtocol::atlasLSTLNG ||
+                                type==AProtocol::atlasMAP
+                        ) { 
 				nestd--;
 				DebugMsg1(1,"ENDLIST nest=%i", nestd);
 			}
 			if (nestd > 0) {
 				if (stack[nestd-1].isList()) {
+					DebugMsg1(1,"UNSTACK nest=%i LIST", nestd);
+					stack[nestd-1].append(stack[nestd]);
+				} else if (stack[nestd-1].isURIList()) {
+					DebugMsg1(1,"UNSTACK nest=%i LIST", nestd);
+					stack[nestd-1].append(stack[nestd]);
+				} else if (stack[nestd-1].isIntList()) {
+					DebugMsg1(1,"UNSTACK nest=%i LIST", nestd);
+					stack[nestd-1].append(stack[nestd]);
+				} else if (stack[nestd-1].isLongList()) {
+					DebugMsg1(1,"UNSTACK nest=%i LIST", nestd);
+					stack[nestd-1].append(stack[nestd]);
+				} else if (stack[nestd-1].isFloatList()) {
+					DebugMsg1(1,"UNSTACK nest=%i LIST", nestd);
+					stack[nestd-1].append(stack[nestd]);
+				} else if (stack[nestd-1].isStringList()) {
 					DebugMsg1(1,"UNSTACK nest=%i LIST", nestd);
 					stack[nestd-1].append(stack[nestd]);
 				} else {
