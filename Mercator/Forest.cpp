@@ -94,7 +94,7 @@ void Forest::populate()
                 plant.setHeight(rng() * plant_height_range + plant_min_height);
                 plant.setDisplacement(WFMath::Point<2>(rng() - 0.5f,
                                                        rng() - 0.5f));
-                plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * M_PI));
+                plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * WFMath::Pi));
             }
         }
     }
