@@ -91,124 +91,130 @@ bool Negotiate::done()
 
 void Negotiate::negotiateServer()
 {
-  cout << "** Server(" << state << ") : " << endl;
+    cout << "** Server(" << state << ") : " << endl;
 
-  string in;
-  string out;
+    string in;
+    string out;
 
-  sock->recv(in);
-  buf += in;
+    sock->recv(in);
+    buf += in;
 
-  if(state == SERVER_GREETING) 
+    if (state == SERVER_GREETING) 
     {
-      // send server greeting
+	// send server greeting
 
-      sock->send(outName);
-      sock->send(string("\n"));
+	sock->send(outName);
+	sock->send(string("\n"));
 	
-      state++;
-      return;
+	state++;
     }
-  if(state == CLIENT_GREETING)
+    
+    if (state == CLIENT_GREETING)
     {
-      // get client greeting
+	// get client greeting
 	
-      if(buf.size() <= 0
-	 || get_line(buf, '\n', inName) == "")
-	return;
-
-      cout << "client: " << inName << endl;
+	if (buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
+	cout << "client: " << inName << endl;
 	
-      state++;
+	state++;
     }
-  if(state == CLIENT_CODECS)
+    
+    if (state == CLIENT_CODECS)
     {
-      if(codecHelper.get(buf, "ICAN")) state++;
+	if (codecHelper.get(buf, "ICAN"))
+	{
+	    state++;
+	}
     }
-  if(state == SERVER_CODECS)
+    
+    if (state == SERVER_CODECS)
     {
-      processServerCodecs();
-      codecHelper.put(out, "IWILL");
-      sock->send(out);
-      state++;
-      return;
+	processServerCodecs();
+	codecHelper.put(out, "IWILL");
+	sock->send(out);
+	state++;
     }
-  if(state == CLIENT_FILTERS)
+    
+    if(state == CLIENT_FILTERS)
     {
-      if(filterHelper.get(buf, "ICAN")) state++;
+	if (filterHelper.get(buf, "ICAN"))
+	{
+	    state++;
+	}
     }
-  if(state == SERVER_FILTERS)
+    
+    if (state == SERVER_FILTERS)
     {
-      processServerFilters();
-      filterHelper.put(out, "IWILL");
-      sock->send(out);
-      state++;
-      return;
+	processServerFilters();
+	filterHelper.put(out, "IWILL");
+	sock->send(out);
+	state++;
     }
-  if(state == 6)
-    state = 10;
 }
 
 void Negotiate::negotiateClient()
 {
-  cout << "** Client(" << state << ") : " << endl;
-  string in;
-  string out;
+    cout << "** Client(" << state << ") : " << endl;
 
-  sock->recv(in);
-  buf += in;
+    string in;
+    string out;
 
-  if(state == SERVER_GREETING)
+    sock->recv(in);
+    buf += in;
+
+    if(state == SERVER_GREETING)
     {
-      // get server greeting
+	// get server greeting
 
-      if(buf.size() <= 0
-	 || get_line(buf, '\n', inName) == "")
-	return;
-
-      cout << "server: " << inName << endl;
+	if(buf.size() <= 0 || get_line(buf, '\n', inName) == "") return;
+	cout << "server: " << inName << endl;
 	
-      state++;
+	state++;
     }
-  if(state == CLIENT_GREETING)
+
+    if(state == CLIENT_GREETING)
     {
-      // send client greeting
+	// send client greeting
 	
-      sock->send(outName);
-      sock->send(string("\n"));
+	sock->send(outName);
+	sock->send(string("\n"));
 
-      state++;
+	state++;
     }
+    
     if (state == CLIENT_CODECS)
     {
+	processClientCodecs();
+	codecHelper.put(out, "ICAN");
+	sock->send(out);
 
-      processClientCodecs();
+	state++;
+    }
 
-      codecHelper.put(out, "ICAN");
-      sock->send(out);
-
-      state++;
-      return;
-    }
-  if(state == SERVER_CODECS)
+    if(state == SERVER_CODECS)
     {
-      if(codecHelper.get(buf, "IWILL")) state++;
+	if (codecHelper.get(buf, "IWILL"))
+	{
+	    state++;
+	}
     }
-  if(state == CLIENT_FILTERS)
+    
+    if (state == CLIENT_FILTERS)
     {
-      processClientFilters();
-      filterHelper.put(out, "ICAN");
-      sock->send(out);
-      state++;
-      return;
+	processClientFilters();
+	filterHelper.put(out, "ICAN");
+	sock->send(out);
+	state++;
     }
-  if(state == SERVER_FILTERS)
+    
+    if (state == SERVER_FILTERS)
     {
-      if(filterHelper.get(buf, "IWILL")) state++;
+	if (filterHelper.get(buf, "IWILL"))
+	{
+	    state++;
+	}
     }
 }
-
-
 
 void Negotiate::processServerCodecs()
 {
