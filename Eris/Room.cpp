@@ -2,7 +2,8 @@
 	#include "config.h"
 #endif
 
-#include <sigc++/signal_system.h>
+#include <sigc++/signal_system.h> 
+#include <assert.h>
 
 #include <Atlas/Objects/Operation/Look.h>
 #include <Atlas/Objects/Operation/Move.h>
@@ -329,4 +330,4 @@ void Room::recvDisappear(const Atlas::Objects::Operation::Disappearance &dis)
 	}
 }
 
-};
+}

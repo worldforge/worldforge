@@ -1,6 +1,7 @@
 #ifndef ERIS_INVISIBLE_ENTITY_CACHE_H
 #define ERIS_INVISIBLE_ENTITY_CACHE_H
 
+#include <assert.h>
 #include <deque>
 #include <set>
 

@@ -2,6 +2,7 @@
 	#include "config.h"
 #endif
 
+#include <assert.h>
 #include <skstream.h>
 #include <sigc++/bind.h>
 #include <sigc++/signal_system.h>
@@ -84,7 +85,7 @@ void MetaQuery::handleFailure(const std::string &msg)
 	_meta->queryFailure(this, msg);
 }
 
-void MetaQuery::bindTimeout(Timeout &t, Status sc)
+void MetaQuery::bindTimeout(Timeout &t, Status /*sc*/)
 {
 	t.Expired.connect(bind(SigC::slot(_meta, &Meta::queryTimeout), this));
 }

@@ -2,6 +2,7 @@
 	#include "config.h"
 #endif
 
+#include <assert.h>
 #include <Atlas/Objects/Entity/RootEntity.h>
 
 #include "Utils.h"

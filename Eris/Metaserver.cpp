@@ -2,6 +2,7 @@
 	#include "config.h"
 #endif
 
+#include <assert.h>
 #include <cstdio>
 #include <skstream.h>
 #include <sigc++/signal_system.h>
@@ -32,7 +33,7 @@ const uint32_t LIST_RESP2 = 999;
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Meta::Meta(const std::string &cnm, 
+Meta::Meta(const std::string &/*cnm*/, 
 	const std::string &msv, 
 	unsigned int maxQueries) :
 	_status(INVALID),
@@ -282,7 +283,7 @@ void Meta::processCmd()
 			_dataPtr = unpack_uint32(ip, _dataPtr);
 			
 			char buf[32];
-			std::snprintf(buf, 32, "%i.%i.%i.%i", 
+			snprintf(buf, 32, "%i.%i.%i.%i", 
 				(ip & 0x000000FF),
 				(ip & 0x0000FF00) >> 8,
 				(ip & 0x00FF0000) >> 16,
@@ -408,7 +409,7 @@ void Meta::metaTimeout()
 	doFailure("Connection to the meta-server timed out");
 }
 
-void Meta::queryFailure(MetaQuery *q, const std::string &msg)
+void Meta::queryFailure(MetaQuery *q, const std::string &/*msg*/)
 {
 	// we do NOT emit a failure signal here (becuase that would probably cause the 
 	// host app to pop up a dialog or something) since query failures are likely to

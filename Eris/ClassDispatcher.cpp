@@ -5,6 +5,8 @@
 #include <sigc++/signal_system.h>
 #include <sigc++/bind.h>
 
+#include <assert.h>
+
 #include "ClassDispatcher.h"
 #include "TypeInfo.h"
 #include "Wait.h"
@@ -143,7 +145,8 @@ void ClassDispatcher::boundInsert(const _Class &cl)
 	for (ClassDispatcherList::iterator I=_subs.begin(); I !=_subs.end(); ++I)
 		if (cl.type->isA(I->type)) {
 			_subs.insert(I, cl); // insert before, and get out
-			return;		}
+			return;
+		}
 		
 	_subs.push_back(cl);	
 }

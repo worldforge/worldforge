@@ -2,6 +2,7 @@
 	#include "config.h"
 #endif
 
+#include <assert.h>
 #include <sigc++/signal_system.h>
 #include <Atlas/Objects/Root.h>
 
