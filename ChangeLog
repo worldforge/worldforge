@@ -3,6 +3,8 @@
 	  tile.cpp and tile.h and moved them into Segment
 	* TODO: added some ideas
 	* AUTHORS: added some authors
+	* added getHeightAndNormal to segment
+	* addded some test code for modifying terrain to segment
 
 2003-05-14  Al Riddoch  <alriddoch@zepler.org>
 

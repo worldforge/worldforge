@@ -6,6 +6,7 @@
 #define MERCATOR_SEGMENT_H
 
 #include <Mercator/Matrix.h>
+#include <wfmath/vector.h>
 
 namespace Mercator {
 
@@ -39,10 +40,16 @@ class Segment {
         return m_points[y * (m_res + 1) + x];
     }
 
+    void getHeightAndNormal(float x, float y, float &h, 
+		    WFMath::Vector<3> &normal) const;
+
     void populate(const Matrix<4,4> &);
 
     float getMax() const { return m_max; }
     float getMin() const { return m_min; }
+
+    //temporary testing code for terrain mods
+    void modifySq(float centerX, float centerY, float side, float level);
 
 private:
     inline void checkMaxMin(float h) { 
@@ -51,13 +58,13 @@ private:
     } 
 
     void fill1d(int size, float falloff, float roughness, 
-		float l, float h, float *array) const;
+                float l, float h, float *array) const;
 
     void fill2d(int size, float falloff, float roughness,
-	      float p1, float p2, float p3, float p4);
+                float p1, float p2, float p3, float p4);
 	
     float qRMD(float nn, float fn, float ff, float nf, 
-	       float roughness, float falloff, int depth) const;
+               float roughness, float falloff, int depth) const;
 };
 
 } // namespace Mercator

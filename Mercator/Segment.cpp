@@ -30,7 +30,7 @@ void Segment::populate(const Matrix<4, 4> & base)
 
 //rand num between -0.5...0.5
 inline float randHalf() {
-	return (float) rand() / RAND_MAX - 0.5f;
+    return (float) rand() / RAND_MAX - 0.5f;
 }
 
 
@@ -73,15 +73,15 @@ void Segment::fill1d(int size, float falloff, float roughness, float l, float h,
  
     while (stride) {
         for (int i=stride;i<size;i+=stride*2) {
-	    float hh = array[i-stride];
-	    float lh = array[i+stride];
+            float hh = array[i-stride];
+            float lh = array[i+stride];
             float hd = fabs(hh-lh); //fabs necessary?
  
             array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1+::pow(depth,falloff));
-	}
+        }
         stride >>= 1;
-	depth+=2;
-     }
+        depth+=2;
+    }
 }
 
 //2 dimensional midpoint displacement fractal for a tile where
@@ -107,28 +107,28 @@ void Segment::fill2d(int size, float falloff, float roughness,
     fill1d(size,falloff,roughness,p1,p2,edge);
     for (int i=0;i<=size;i++) {
         m_points[0*line + i] = edge[i];
-	checkMaxMin(edge[i]);
+        checkMaxMin(edge[i]);
     }
 
     //calc left edge and copy into m_points
     fill1d(size,falloff,roughness,p1,p4,edge);
     for (int i=0;i<=size;i++) {
         m_points[i*line + 0] = edge[i];
-	checkMaxMin(edge[i]);
+        checkMaxMin(edge[i]);
     }
    
     //calc right edge and copy into m_points
     fill1d(size,falloff,roughness,p2,p3,edge);
     for (int i=0;i<=size;i++) {
         m_points[i*line + size] = edge[i];
-	checkMaxMin(edge[i]);
+        checkMaxMin(edge[i]);
     }
 
     //calc bottom edge and copy into m_points
     fill1d(size,falloff,roughness,p4,p3,edge);
     for (int i=0;i<=size;i++) {
         m_points[size*line + i] = edge[i];
-	checkMaxMin(edge[i]);
+        checkMaxMin(edge[i]);
     }
     
     //seed the RNG - this is the 5th and last seeding for the tile.
@@ -169,7 +169,7 @@ void Segment::fill2d(int size, float falloff, float roughness,
                                        m_points[(i+stride) + (j-stride) * (line)],
                                        m_points[(i+stride) + (j+stride) * (line)],
                                        m_points[(i-stride) + (j-stride) * (line)],
-			               roughness, f, depth);
+                                       roughness, f, depth);
               checkMaxMin(m_points[j*line + i]);
 	  }
       }
@@ -206,5 +206,63 @@ void Segment::fill2d(int size, float falloff, float roughness,
     }
 }
 
+void Segment::getHeightAndNormal(float x, float y, float& h, WFMath::Vector<3> &normal) const
+{
+    //FIXME this ignores edges and corners
+    assert(x < m_res);
+    assert(x >= 0.0);
+    assert(y < m_res);
+    assert(y >= 0.0);
+    
+    //get index of the actual tile in the segment
+    int tile_x = (int)floor(x);
+    int tile_y = (int)floor(y);
+
+    //work out the offset into that tile
+    float off_x = x - tile_x;
+    float off_y = y - tile_y;
+ 
+    float h1=get(tile_x, tile_y);
+    float h2=get(tile_x, tile_y+1);
+    float h3=get(tile_x+1, tile_y+1);
+    float h4=get(tile_x+1, tile_y);
+
+    //square is broken into two triangles
+    // top triangle |/
+    if ((off_x - off_y) < 0) {
+        normal = WFMath::Vector<3>(h2-h3, h1-h2, 1.0);
+        h = h1 + (h3-h2) * off_x + (h2-h1) * off_y;
+    } 
+    // bottom triangle /|
+    else {
+        normal = WFMath::Vector<3>(h1-h4, h4-h3, 1.0);
+        h = h1 + (h4-h1) * off_x + (h3-h4) * off_y;
+    }
+}
+
+void Segment::modifySq(float centerX, float centerY, float side, float level)
+{
+    float lx = centerX - side/2;
+    if (lx > m_res) return;
+    if (lx < 0.0) lx = 0.0;
+    
+    float hx = centerX + side/2;
+    if (hx < 0.0) return;
+    if (hx > m_res) hx = m_res;
+    
+    float ly = centerY - side/2;
+    if (ly > m_res) return;
+    if (ly < 0.0) ly = 0.0;
+    
+    float hy = centerY + side/2;
+    if (hy < 0.0) return;
+    if (hy > m_res) hy = m_res;
+
+    for (int i=(int)round(ly);i<=hy;i++) {
+	for (int j=(int)round(lx);j<=hx;j++) {
+            m_points[i * (m_res + 1) + j] = level;
+	}
+    }
+}
 
 } // namespace Mercator
