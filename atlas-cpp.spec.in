@@ -1,14 +1,16 @@
-%define prefix /usr
+%define name Atlas-C++
+%define version @VERSION@
+%define libsuffix @ATLAS_LIB_SUFFIX@
 
 Summary: The Atlas protocol C++ implementation
-Name: Atlas-C++
-Version: @VERSION@
+Name: %{name}
+Version: %{version}
 Release: 1
 Copyright: LGPL
 Group: System Environment/Libraries
-Source: Atlas-C++-@VERSION@.tar.gz
+Source: %{name}-%{version}.tar.gz
 Requires: libstdc++
-BuildRoot: /var/tmp/%{name}-buildroot
+BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires: gcc-c++ >= 2.95.2
 
 %description
@@ -20,7 +22,7 @@ clients or servers.
 %package devel
 Summary: The Atlas protocol C++ implementation library headers and static libs.
 Group: Development/Libraries
-Requires: Atlas-C++ = @VERSION@
+Requires: %{name} = %{version}
 
 %description devel
 This library implements the Atlas protocol, for use in client-server
@@ -32,26 +34,25 @@ clients or servers.
 %setup -q
 
 %build
-CXXFLAGS=$RPM_OPT_FLAGS ./configure --enable-static --prefix=%{prefix}
+%configure --enable-static
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make prefix=$RPM_BUILD_ROOT%{prefix} install
+%makeinstall
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%{prefix}/lib/libAtlas*.so.@ATLAS_INTERFACE_VERSION_NO@
-%{prefix}/lib/libAtlas*.so.@ATLAS_CURRENT@
-%doc README COPYING AUTHORS THANKS NEWS
+%{_libdir}/lib*.so.*
+%doc README COPYING AUTHORS THANKS NEWS ChangeLog TODO HACKING ROADMAP
 
 %files devel
 %defattr(-,root,root)
-%{prefix}/lib/libAtlas*.so
-%{prefix}/lib/libAtlas*.la
-%{prefix}/lib/libAtlas*.a
-%{prefix}/lib/pkgconfig
-%{prefix}/include/Atlas-C++-0.6
+%{_libdir}/lib*.so
+%{_libdir}/lib*.la
+%{_libdir}/lib*.a
+%{_libdir}/pkgconfig/*
+%{_includedir}/%{name}%{libsuffix}

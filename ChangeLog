@@ -1,3 +1,8 @@
+2003-07-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Update rpm spec to be cleaner, and make the technical sections
+	  more generic.
+
 2003-07-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Filter.h: Sort out streambuf.h problems by including
