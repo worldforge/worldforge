@@ -1,3 +1,6 @@
+Thursday, 24th October 2002, Simon Goodall
+	* Clean up DebugDispatchers when deleting Connection object
+
 Wednesday, 09th October 2002, Al Riddoch
 
 	* src/ArgumentDispatcher.cpp: Prevent ArgumentDispatcher from
