@@ -1,6 +1,9 @@
+// This file may be redistributed and modified under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2000 Michael Day
 
-#ifndef __AtlasTCPSocket_h_
-#define __AtlasTCPSocket_h_
+#ifndef ATLAS_NET_TCP_H
+#define ATLAS_NET_TCP_H
 
 #include "Socket.h"
 
@@ -40,8 +43,8 @@
 	#define sinlen_t size_t
 #endif
 
-namespace Atlas
-{
+namespace Atlas { namespace Net {
+
 /** TCP Implementation of the Socket Class.
 
 The TCP Socket Class implements basic client and server
@@ -86,6 +89,6 @@ struct WSAData	wsadata;
 #endif
 };
 
-} // namespace Atlas
+} } // Atlas::Net
 
 #endif
