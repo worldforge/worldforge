@@ -1,5 +1,9 @@
 Monday, 24th March, Al Riddoch
 
+	* src/Dispatcher.cpp: Handle missing TO on operations.
+
+Monday, 24th March, Al Riddoch
+
 	* bindings/polls/glib/Makefile.am: Move bindings headers to the new
 	  pkgconfig compliant header directory.
 

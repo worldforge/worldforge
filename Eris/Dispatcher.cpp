@@ -225,6 +225,7 @@ bool OpFromDispatcher::dispatch(DispatchContextDeque &dq)
 
 bool OpToDispatcher::dispatch(DispatchContextDeque &dq)
 {
+	if (!hasMember(dq.front(), "to")) return false;
 	if (getMember(dq.front(), "to").AsString() != _id)
 		return false;
 	return StdBranchDispatcher::subdispatch(dq);	
