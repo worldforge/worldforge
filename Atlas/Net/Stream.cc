@@ -312,8 +312,8 @@ Atlas::Negotiate<iostream>::State Atlas::Net::StreamAccept::GetState()
     {
 	return IN_PROGRESS;
     }
-}
     return FAILED;
+}
 
 Atlas::Codec<iostream>* Atlas::Net::StreamAccept::GetCodec()
 {
