@@ -6,12 +6,13 @@
 #define ATLAS_STREAM_CODEC_H
 
 #include "Bridge.h"
-#include "Filter.h"
+#include "Factory.h"
 
 namespace Atlas { namespace Stream {
 
 /** Atlas stream codec
 
+FIXME update documentation to reflect reality
 This class presents an interface for sending and receiving Atlas messages.
 Each outgoing message is converted to a byte stream and piped through an
 optional chain of filters for compression or other transformations, then
@@ -28,7 +29,6 @@ two integers to represent the cpu speed and bandwidth that the codec uses.
 However, the scale of these values is not yet decided upon. FIXME
 
 @see Bridge
-@see Filter
 @see Factory
 @see Negotiate
 */
@@ -52,11 +52,10 @@ class Codec : public Bridge
     struct Parameters
     {
         Stream& stream;
-	Filter* filter;
 	Bridge* bridge;
 
-        Parameters(Stream& stream, Filter* filter, Bridge* bridge) 
-           : stream(stream), filter(filter), bridge(bridge) { }
+        Parameters(Stream& stream, Bridge* bridge) 
+           : stream(stream), bridge(bridge) { }
     };
 
     template <typename T>

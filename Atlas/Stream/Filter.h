@@ -7,10 +7,6 @@
 
 #include "Factory.h"
 
-#include <string>
-#include <list>
-#include <algorithm>
-
 namespace Atlas { namespace Stream {
 
 /** Atlas stream filter

@@ -52,7 +52,6 @@ public:
 protected:
     
     iostream& socket;
-    Filter* filter;
     Bridge* bridge;
 
     enum State
@@ -93,7 +92,7 @@ protected:
 
     inline const string HexDecode(const string& data)
     {
-	return hexDecoder("+", data);
+	return hexDecode("+", data);
     }
 };
 
@@ -106,7 +105,7 @@ namespace
 }
 
 Packed::Packed(const Codec<iostream>::Parameters& p) :
-    socket(p.stream), filter(p.filter), bridge(p.bridge)
+    socket(p.stream), bridge(p.bridge)
 {
     state.push(PARSE_STREAM);
 }

@@ -20,5 +20,5 @@ Codec<iostream>* Atlas::UngodlyHack::GetPacked(iostream& stream, Bridge* bridge)
 
     if (i == Factory<Codec<iostream> >::Factories().end()) abort();
 
-    return (*i)->New(Codec<iostream>::Parameters(stream, 0, bridge));
+    return (*i)->New(Codec<iostream>::Parameters(stream, bridge));
 }

@@ -37,7 +37,6 @@ class XML : public Codec<iostream>
     protected:
 
     iostream& socket;
-    Filter* filter;
     Bridge* bridge;
 };
 
@@ -50,7 +49,7 @@ namespace
 }
     
 XML::XML(const Codec<iostream>::Parameters& p)
-    : socket(p.stream), filter(p.filter), bridge(p.bridge)
+    : socket(p.stream), bridge(p.bridge)
 {
 }
 
