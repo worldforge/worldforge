@@ -103,48 +103,60 @@ void Segment::populateNormals()
         }
     }
 
+    //edges have one axis pegged to 0
+    
     //top and bottom boundary
-    for (int i=0; i <= m_res; ++i) {
-        h1 = get(i, 0);
-        h2 = get(i, 1);
-        h3 = get(i + 1, 1);
-        h4 = get(i + 1, 0);
+    for (int i=1; i < m_res; ++i) {
+        h1 = get(i - 1, 0);
+        h2 = get(i + 1, 0);
         
-        np[i * 3]     = (h2-h3 + h1-h4) / 2.0;
-        np[i * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[i * 3]     = h2-h1;
+        np[i * 3 + 1] = 0.0;
         np[i * 3 + 2] = 1.0;
  
-        h1 = get(i, m_res - 1);
-        h2 = get(i, m_res);
-        h3 = get(i + 1, m_res);
-        h4 = get(i + 1, m_res -1);
+        h1 = get(i - 1, m_res);
+        h2 = get(i + 1, m_res);
         
-        np[m_res * m_size * 3 + i * 3]     = (h2-h3 + h1-h4) / 2.0;
-        np[m_res * m_size * 3 + i * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[m_res * m_size * 3 + i * 3]     = h2-h1;
+        np[m_res * m_size * 3 + i * 3 + 1] = 0.0;
         np[m_res * m_size * 3 + i * 3 + 2] = 1.0;
     }
     
     //left and right boundary
     for (int j=1; j < m_res; ++j) {
-        h1 = get(0, j);
-        h2 = get(0, j - 1);
-        h3 = get(1, j - 1);
-        h4 = get(1, j);
+        h1 = get(0, j - 1);
+        h2 = get(0, j + 1);
         
-        np[j * m_size * 3]     = (h2-h3 + h1-h4) / 2.0;
-        np[j * m_size * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[j * m_size * 3]     = 0;
+        np[j * m_size * 3 + 1] = h2 - h1;
         np[j * m_size * 3 + 2] = 1.0;
  
-        h1 = get(m_res - 1, j);
-        h2 = get(m_res - 1, j - 1);
-        h3 = get(m_res, j - 1);
-        h4 = get(m_res, j);
+        h1 = get(m_res, j - 1);
+        h2 = get(m_res, j + 1);
 
-        np[j * m_size * 3 + m_res * 3]     = (h2-h3 + h1-h4) / 2.0;
-        np[j * m_size * 3 + m_res * 3 + 1] = (h1-h2 + h4-h3) / 2.0;
+        np[j * m_size * 3 + m_res * 3]     = 0.0;
+        np[j * m_size * 3 + m_res * 3 + 1] = h2 - h1;
         np[j * m_size * 3 + m_res * 3 + 2] = 1.0;
     }
 
+    //corners - these are all treated as flat
+    //so the normal points straight up
+    np[0] = 0.0;
+    np[1] = 0.0;
+    np[2] = 1.0;
+
+    np[m_res * m_size * 3]     = 0.0;
+    np[m_res * m_size * 3 + 1] = 0.0;
+    np[m_res * m_size * 3 + 2] = 1.0;
+
+    np[m_res * 3]     = 0.0;
+    np[m_res * 3 + 1] = 0.0;
+    np[m_res * 3 + 2] = 1.0;
+    
+    np[m_res * m_size * 3 + m_res * 3]     = 0.0;
+    np[m_res * m_size * 3 + m_res * 3 + 1] = 0.0;
+    np[m_res * m_size * 3 + m_res * 3 + 2] = 1.0;
+ 
     m_validNorm = true;
 }
 

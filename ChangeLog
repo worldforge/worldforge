@@ -1,3 +1,7 @@
+2003-08-22 Damien McGinnes
+
+	* Mercator/Segment.cpp: fixed edge and corner normals.
+
 2003-08-17  Al Riddoch  <alriddoch@zepler.org>
 
 	* Buffer_impl.h: Add to distribution.
