@@ -184,7 +184,7 @@ Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 {
   CoordType mag = sloppyMag();
 
-  assert(mag > norm / WFMATH_MAX); // nonzero length vector
+  assert("need nonzero length vector" && mag > norm / WFMATH_MAX);
 
   return (*this *= norm / mag);
 }
@@ -231,7 +231,7 @@ Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
 				 CoordType theta)
 {
   RotMatrix<dim> m;
-  return operator=(Prod(m.rotation(v1, v2, theta), *this));
+  return operator=(Prod(*this, m.rotation(v1, v2, theta)));
 }
 
 template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta);

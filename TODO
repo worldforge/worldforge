@@ -19,6 +19,7 @@ Intersect functions unimplemented:
 	  IntersectProper(Polygon<>, RotBox<>)
     These will be postponed until I can think of a way to write them,
     or someone needs them, whichever comes first
+Talk to Alriddoch about sense of rotation with quaternions
 Add shape tests from COAL
 Write rotateInverse() functions
 Rip out and redo Euler angle stuff
@@ -26,7 +27,6 @@ Look into whether miniball code can handle using float instead of double;
 	if so, replace Wrapped_array with Point
 Requests from Jesse: NAN, INFINITY, RADIANS_TO_DEGREES, DEGREES_TO_RADIANS
 Write an API reference for the library. Find some inline documentation tool?
-Portability questions and miniball_config.h
 Deal with difficulties in making certain functions friends of the
 	appropriate classes
 Rearrange the functions in foo_funcs.h to match the order in the class

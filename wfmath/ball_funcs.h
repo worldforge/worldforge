@@ -80,7 +80,8 @@ Ball<dim> BoundingSphere(const container<Point<dim> >& c)
   m.build();
 
   double dummy;
-  assert(m.accuracy(dummy) < WFMATH_EPSILON);
+  assert("Check that bounding sphere is good to library accuracy" &&
+         m.accuracy(dummy) < WFMATH_EPSILON);
 
   w = m.center();
   Point<dim> center;
@@ -134,7 +135,7 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
     }
   }
 
-  assert(direction != -1);
+  assert("Have a direction of maximum size" && direction != -1);
 
   Point<dim> center = Midpoint(*(min_p[direction]), *(max_p[direction]));
   CoordType dist = SloppyDistance(*(min_p[direction]), center);
@@ -151,7 +152,8 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
       // always gives enough of a shift to include the new point.
       center += (*i - center) * delta_dist / new_dist;
       dist += delta_dist;
-      assert(SquaredDistance(*i, center) <= dist * dist);
+      assert("Shifted ball contains new point" &&
+             SquaredDistance(*i, center) <= dist * dist);
     }
   }
 

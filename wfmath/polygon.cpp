@@ -90,7 +90,8 @@ void _Poly2Reorient::reorient(Polygon<2>& poly, int skip = -1) const
 template<>
 bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) const
 {
-  assert(m_origin_valid && m_axes_valid[0] && m_axes_valid[1]);
+  assert("This function should only be called if the orientation represents a plane" &&
+         m_origin_valid && m_axes_valid[0] && m_axes_valid[1]);
 
   Vector<3> normal = Cross(m_axes[0], m_axes[1]); // normal to the plane
 

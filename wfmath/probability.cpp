@@ -103,11 +103,12 @@ static double LogPoisson(double mean, unsigned int step)
   double first = step * log(mean);
   double second = mean +  LogFactorial(step);
 
-  assert(second > 0);
+  assert("LogFactorial() always returns positive" && second > 0);
 
   double ans = first - second;
 
-  assert(ans < 0); // probability < 1, can only get == 1 for step == mean == 0
+  // can only get probability == 1 for step == mean == 0
+  assert("must get probability < 1" && ans < 0);
 
   return ans;
 }

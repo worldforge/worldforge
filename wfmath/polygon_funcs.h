@@ -246,7 +246,7 @@ void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>& p)
 
   for(int j = 0; j < 2; ++j)
     if(m_axes_valid[j])
-      m_axes[j] = Prod(m, m_axes[j]);
+      m_axes[j] = Prod(m_axes[j], m);
 }
 
 template<const int dim>
@@ -260,16 +260,16 @@ void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<2>& p)
   }
 
   Vector<dim> shift = m_axes[0] * p[0];
-  m_axes[0] = Prod(m, m_axes[0]);
+  m_axes[0] = Prod(m_axes[0], m);
 
   if(m_axes_valid[1]) {
     shift += m_axes[1] * p[1];
-    m_axes[1] = Prod(m, m_axes[1]);
+    m_axes[1] = Prod(m_axes[1], m);
   }
   else
     assert(p[1] == 0);
 
-  m_origin += shift - Prod(m, shift);
+  m_origin += shift - Prod(shift, m);
 }
 
 template<const int dim>

@@ -71,7 +71,8 @@ bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) const
 
   // Don't need to test m_flip, it's determined by the values of m_elem.
 
-  assert(m_flip == m.m_flip);
+  assert("Generated values, must be equal if all components are equal" &&
+         m_flip == m.m_flip);
 
   return true;
 }
@@ -277,7 +278,7 @@ bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
 }
 
 template<const int dim>
-inline Vector<dim> RotMatrix<dim>::row(const int i) const
+Vector<dim> RotMatrix<dim>::row(const int i) const
 {
   Vector<dim> out;
 
@@ -288,7 +289,7 @@ inline Vector<dim> RotMatrix<dim>::row(const int i) const
 }
 
 template<const int dim>
-inline Vector<dim> RotMatrix<dim>::column(const int i) const
+Vector<dim> RotMatrix<dim>::column(const int i) const
 {
   Vector<dim> out;
 
@@ -299,7 +300,7 @@ inline Vector<dim> RotMatrix<dim>::column(const int i) const
 }
 
 template<const int dim>
-inline RotMatrix<dim> RotMatrix<dim>::inverse() const
+RotMatrix<dim> RotMatrix<dim>::inverse() const
 {
   RotMatrix<dim> m;
 
@@ -311,7 +312,7 @@ inline RotMatrix<dim> RotMatrix<dim>::inverse() const
 }
 
 template<const int dim>
-inline RotMatrix<dim>& RotMatrix<dim>::identity()
+RotMatrix<dim>& RotMatrix<dim>::identity()
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
@@ -323,7 +324,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::identity()
 }
 
 template<const int dim>
-inline CoordType RotMatrix<dim>::trace() const
+CoordType RotMatrix<dim>::trace() const
 {
   CoordType out = dim ? m_elem[0][0] : 0;
 
@@ -332,46 +333,6 @@ inline CoordType RotMatrix<dim>::trace() const
 
   return out;
 }
-
-template<const int dim>
-RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams], bool not_flip)
-{
-  int ang_num = 0;
-
-  m_flip = !not_flip;
-
-  if(m_flip)
-    mirror(0);
-  else
-    identity();
-
-  // This is a simple rotation in 2D, and follows the z-y-z convention in 3D
-  for(int i = dim; i > 1; --i)
-    for(int j = 1; j < i; ++j)
-      *this = Prod(RotMatrix<dim>().rotation(0, j,
-	      angles[ang_num++] * ((j%2) ? 1 : -1)), *this);
-
-  assert(ang_num == nParams);
-
-  return *this;
-}
-
-// TODO generalize if possible at some point
-
-//template<const int dim>
-//bool RotMatrix<dim>::toEuler(CoordType angles[nParams]) const
-//{
-//
-//}
-
-// Only have this for special cases
-template<> inline bool RotMatrix<2>::toEuler(CoordType angles[1]) const
-{
-  angles[0] = atan2(m_elem[1][1], m_elem[0][1]);
-  return !m_flip;
-}
-
-template<> bool RotMatrix<3>::toEuler(CoordType angles[3]) const;
 
 template<const int dim>
 RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
@@ -391,9 +352,9 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
       }
       else {
         if(k == i && l == j)
-          m_elem[k][l] = -stheta;
-        else if(k == j && l == i)
           m_elem[k][l] = stheta;
+        else if(k == j && l == i)
+          m_elem[k][l] = -stheta;
         else
           m_elem[k][l] = 0;
       }
@@ -412,7 +373,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 {
   CoordType v1_sqr_mag = v1.sqrMag();
 
-  assert(v1_sqr_mag > 0);
+  assert("need nonzero length vector" && v1_sqr_mag > 0);
 
   // Get an in-plane vector which is perpendicular to v1
 
@@ -420,7 +381,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
   CoordType vperp_sqr_mag = vperp.sqrMag();
 
   if((vperp_sqr_mag / v1_sqr_mag) < (dim * WFMATH_EPSILON * WFMATH_EPSILON)) {
-    assert(v2.sqrMag() > 0);
+    assert("need nonzero length vector" && v2.sqrMag() > 0);
     // The original vectors were parallel
     throw ColinearVectors<dim>(v1, v2);
   }
@@ -440,7 +401,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
     for(int j = 0; j < dim; ++j)
       m_elem[i][j] += ((ctheta - 1) * (v1[i] * v1[j] / v1_sqr_mag
 		      + vperp[i] * vperp[j] / vperp_sqr_mag)
-		      + stheta * (vperp[i] * v1[j] - v1[i] * vperp[j]) / mag_prod);
+		      - stheta * (vperp[i] * v1[j] - v1[i] * vperp[j]) / mag_prod);
 
   m_flip = false;
 
@@ -455,9 +416,9 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
   // by the angle between the vectors
 
   CoordType fromSqrMag = from.sqrMag();
-  assert(fromSqrMag > 0);
+  assert(("need nonzero length vector", fromSqrMag > 0));
   CoordType toSqrMag = to.sqrMag();
-  assert(toSqrMag > 0);
+  assert(("need nonzero length vector", toSqrMag > 0));
   CoordType dot = Dot(from, to);
   CoordType sqrmagprod = fromSqrMag * toSqrMag;
   CoordType magprod = sqrt(sqrmagprod);
@@ -485,8 +446,8 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
       else {
         diffterm = (jiprod - ijprod) / magprod;
 
-        m_elem[i][j] = diffterm - combined;
-        m_elem[j][i] = -diffterm - combined;
+        m_elem[i][j] = -diffterm - combined;
+        m_elem[j][i] = diffterm - combined;
       }
     }
   }
@@ -502,7 +463,7 @@ template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 template<const int dim>
 RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
 {
-  assert(i >=0 && i < dim);
+  assert(i >= 0 && i < dim);
 
   identity();
   m_elem[i][i] = -1;
@@ -522,7 +483,7 @@ RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
 
   CoordType sqr_mag = v.sqrMag();
 
-  assert(sqr_mag > 0);
+  assert(("need nonzero length vector", sqr_mag > 0));
 
   // off diagonal
   for(int i = 0; i < dim - 1; ++i)

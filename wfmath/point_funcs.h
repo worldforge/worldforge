@@ -205,8 +205,8 @@ Point<dim> Barycenter(const container<Point<dim> >& c,
   typename container2<CoordType>::const_iterator w_i = weights.begin(),
 						 w_end = weights.end();
 
-  assert(c_i != c_end);
-  assert(w_i != w_end);
+  assert("nonempty list of points" && c_i != c_end);
+  assert("nonempty list of weights" && w_i != w_end);
 
   CoordType tot_weight = *w_i, max_weight = fabs(*w_i);
   Point<dim> out;
@@ -223,7 +223,8 @@ Point<dim> Barycenter(const container<Point<dim> >& c,
   }
 
   // Make sure the weights don't add up to zero
-  assert(max_weight > 0 && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
+  assert("sum of weights must be nonzero" && max_weight > 0
+         && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
 
   for(int j = 0; j < dim; ++j)
     out[j] /= tot_weight;
@@ -238,7 +239,7 @@ Point<dim> Barycenter(const container<Point<dim> >& c)
 
   typename container<Point<dim> >::const_iterator i = c.begin(), end = c.end();
 
-  assert(i != end);
+  assert("nonempty list of points" && i != end);
 
   Point<dim> out = *i;
   int num_points = 1;

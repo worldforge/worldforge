@@ -33,30 +33,6 @@ using namespace WFMath;
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
 static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
 
-template<> bool WFMath::RotMatrix<3>::toEuler(CoordType angles[3]) const
-{
-  // There's a 2:1 map from Euler angles to matrices. Flipping the
-  // sign of the middle angle and adding pi to each of the others produces
-  // the same matrix. Therefore, this function will never return a value greater
-  // than pi for the middle angle.
-
-  // Dont' need float add, both terms > 0
-  CoordType sin_sqr_beta = m_elem[0][2] * m_elem[0][2] + m_elem[1][2] * m_elem[1][2];
-
-  if(sin_sqr_beta > WFMATH_EPSILON) {
-    angles[0] = atan2(m_elem[2][0] * (m_flip ? -1 : 1), m_elem[2][1]);
-    angles[1] = -acos(m_elem[2][2]);
-    angles[2] = atan2(m_elem[0][2], m_elem[1][2]);
-  }
-  else {
-    angles[0] = atan2(m_elem[1][1], (m_flip ? -1 : 1) * m_elem[1][0]);
-    angles[1] = (m_elem[2][2] > 0) ? 0 : Pi;
-    angles[2] = 0;
-  }
-
-  return !m_flip;
-}
-
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip)
 {
@@ -106,7 +82,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
     }
   }
 
-  assert(main_comp != -1); // zero length vector
+  assert("Must pass a nonzero length vector as axis to avoid this" && main_comp != -1);
 
   Vector<3> tmp, v1, v2;
 

@@ -129,7 +129,7 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     s = sqrt (1.0 + m_ref.elem(i, i) - m_ref.elem(j, j) - m_ref.elem(k, k));
     m_vec[i] = s * 0.5;
 
-    assert(s > 0.0);
+    assert("sqrt() returns positive" && s > 0.0);
     s = 0.5 / s;
 
     m_w = (m_ref.elem(k, j) - m_ref.elem(j, k)) * s;
@@ -146,7 +146,7 @@ Quaternion& Quaternion::rotation(int axis, const CoordType angle)
 
   m_w = cos(half_angle);
   for(int i = 0; i < 3; ++i)
-    m_vec[i] = (i == axis) ? sin(half_angle) : 0; // Note sin() only called once
+    m_vec[i] = (i == axis) ? -sin(half_angle) : 0; // Note sin() only called once
 
   return *this;
 }
@@ -156,36 +156,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, const CoordType angle)
   CoordType half_angle = angle / 2;
 
   m_w = cos(half_angle);
-  m_vec = sin(half_angle) * axis / axis.mag();
+  m_vec = axis * (-sin(half_angle) / axis.mag());
 
   return *this;
-}
-
-Quaternion& Quaternion::fromEuler(const CoordType alpha, const CoordType beta,
-				  const CoordType gamma)
-{
-  rotation(2, gamma); // Do the last rotation first, since we'll right multiplying
-  operator*=(Quaternion(1, beta));
-  operator*=(Quaternion(2, alpha));
-
-  return *this;
-}
-
-void Quaternion::toEuler(CoordType& alpha, CoordType& beta, CoordType& gamma)
-{
-  // This is _really_ complicated, so just use the matrix version so we
-  // only have to do this once.
-
-  // FIXME reverse this so that the matrix version uses this one?
-  // Will that be simpler?
-
-  RotMatrix<3> m(*this);
-  CoordType d[3];
-
-  bool not_flip = m.toEuler(d);
-  assert(not_flip);
-
-  alpha = d[0];
-  beta = d[1];
-  gamma = d[2];
 }

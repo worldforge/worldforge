@@ -97,7 +97,7 @@ class RotBox
   RotBox& rotateCenter(const RotMatrix<dim>& m)
 	{rotatePoint(m, getCenter()); return *this;}
   RotBox& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
-	{m_orient = Prod(m, m_orient); m_corner0.rotate(m, p); return *this;}
+	{m_orient = Prod(m_orient, m); m_corner0.rotate(m, p); return *this;}
 
   // Intersection functions
 

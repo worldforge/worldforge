@@ -117,7 +117,7 @@ class Point
 
   // Rotate about point p
   Point& rotate(const RotMatrix<dim>& m, const Point& p)
-	{return (*this = p + Prod(m, *this - p));}
+	{return (*this = p + Prod(*this - p, m));}
 
   // Functions so that Point<> has the generic shape interface
 

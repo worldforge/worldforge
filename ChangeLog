@@ -1,3 +1,13 @@
+Thursday, February 14, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added comments to many assert()'s
+	* Switched the sense of rotation in RotMatrix<> and Quaternion
+	  to be compatible with OpenGL and the rest of Worldforge. Also
+	  used this as an excuse to scrap all the Euler angle stuff,
+	  since: 1) with different axis conventions floating around, it's
+	  very confusing, and 2) I have yet to see someone try to use
+	  it in the case where it is the correct solution
+
 Tuesday, February 12, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Changed Point<>:origin() to Point<>::setToOrigin()

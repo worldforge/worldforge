@@ -38,12 +38,8 @@ class Quaternion
   Quaternion () {}
   Quaternion (const CoordType w_in, const CoordType x_in, const CoordType y_in,
 	      const CoordType z_in);
-  Quaternion (const CoordType alpha, const CoordType beta, const CoordType gamma)
-	{fromEuler(alpha, beta, gamma);}
-  Quaternion (int axis, const CoordType angle)
-	{rotation(axis, angle);}
-  Quaternion (const Vector<3>& axis, const CoordType angle)
-	{rotation(axis, angle);}
+  Quaternion (int axis, const CoordType angle) {rotation(axis, angle);}
+  Quaternion (const Vector<3>& axis, const CoordType angle) {rotation(axis, angle);}
   Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec) {}
   explicit Quaternion (const Atlas::Message::Object& a) {fromAtlas(a);}
 
@@ -84,10 +80,6 @@ class Quaternion
 
   Quaternion& rotation(int axis, const CoordType angle);
   Quaternion& rotation(const Vector<3>& axis, const CoordType angle);
-
-  Quaternion& fromEuler(const CoordType alpha, const CoordType beta,
-			const CoordType gamma);
-  void toEuler(CoordType& alpha, CoordType& beta, CoordType& gamma);
 
   template<const int dim>
   friend Vector<3>& Vector<dim>::rotate(const Quaternion& q);

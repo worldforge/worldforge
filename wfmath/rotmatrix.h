@@ -118,14 +118,6 @@ class RotMatrix {
   CoordType determinant() const {return m_flip ? -1 : 1;}
   RotMatrix inverse() const;
 
-  // not_flip indicates the parity of the matrix. It's false for odd matrices
-  // and true for even ones. It can also be treated as true for success
-  // and false for failure (couldn't convert odd parity matrix), consistent
-  // with other conversion routines in the library. Odd parity is implemented
-  // by right-multiplying the Euler matrix by a flip in the first axis.
-  RotMatrix& fromEuler(const CoordType angles[nParams], bool not_flip = true);
-  bool toEuler(CoordType angles[nParams]) const; // returns not_flip
-
   friend RotMatrix Prod<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
   friend RotMatrix ProdInv<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
   friend RotMatrix InvProd<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
@@ -151,9 +143,6 @@ class RotMatrix {
 
   // 2D/3D stuff
 
-  // Euler angles, 3D only
-  RotMatrix(CoordType alpha, CoordType beta, CoordType gamma, bool not_flip = true)
-	{CoordType d[3] = {alpha, beta, gamma}; fromEuler(d, not_flip);}
   // Quaternion, 3D only
   RotMatrix(const Quaternion& q, const bool not_flip = true)
 	{fromQuaternion(q, not_flip);}
