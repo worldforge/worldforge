@@ -16,12 +16,16 @@ AM_PROG_LIBTOOL
 
 dnl Generate files
 
+CXXFLAGS="$CXXFLAGS -I/usr/lib/sigc++/include"
+AC_SUBST(CXXFLAGS)
+
 AC_OUTPUT([
 	Makefile
 	src/Makefile
 	src/Content/Makefile
 	src/Debug/Makefile
 	src/Stream/Makefile
+	src/Codecs/Makefile
 	src/Net/Makefile
 	src/Object/Makefile
 	src/TestSuite/Makefile
