@@ -13,7 +13,7 @@ def deb(): import pdb; pdb.pm()
 copyright_template = \
 """// This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright 2000 %s.
+// Copyright 2000-2001 %s.
 // Automatically generated using gen_cpp.py.
 """
 

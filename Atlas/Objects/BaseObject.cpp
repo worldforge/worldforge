@@ -1,6 +1,6 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Stefanus Du Toit and Aloril
+// Copyright (C) 2000-2001 Stefanus Du Toit and Aloril
 
 #include "../Message/Encoder.h"
 #include "BaseObject.h"
@@ -22,9 +22,11 @@ bool BaseObjectData::hasAttr(const std::string& name) const
 Object BaseObjectData::getAttr(const std::string& name) const
     throw (NoSuchAttrException) 
 {
-    if (m_attributes.find(name) == m_attributes.end())
+    Object::MapType::const_iterator I = m_attributes.find(name);
+    if (I == m_attributes.end()) {
         throw NoSuchAttrException(name);
-    return ((*m_attributes.find(name)).second);
+    }
+    return (I->second);
 }
 
 void BaseObjectData::setAttr(const std::string& name, const Object& attr)
@@ -46,9 +48,10 @@ Object BaseObjectData::asObject() const
 void BaseObjectData::sendContents(Bridge* b) const
 {
     Message::Encoder e(b);
-    typedef std::map<std::string, Object>::const_iterator Iter;
-    for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++)
+    typedef Object::MapType::const_iterator Iter;
+    for (Iter I = m_attributes.begin(); I != m_attributes.end(); I++) {
         e.mapItem((*I).first, (*I).second);
+    }
 }
 
 } } // namespace Atlas::Objects

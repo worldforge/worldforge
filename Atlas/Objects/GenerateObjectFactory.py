@@ -1,6 +1,6 @@
 #This file is distributed under the terms of 
 #the GNU Lesser General Public license (See the file COPYING for details).
-#Copyright (C) 2000 Aloril
+#Copyright (C) 2000-2001 Aloril
 
 #just used to partition gen_cpp.py into files, 
 #not usable without GenerateCC class
@@ -19,7 +19,9 @@ class GenerateObjectFactory:
         self.write('#include "Operation.h"\n\n')
         self.ns_open(self.base_list)
         self.write("""
-map<const std::string, Root> objectDefinitions;
+using Atlas::Message::Object;
+
+std::map<const std::string, Root> objectDefinitions;
 Factories objectFactory;
 
 class AddFactories {
@@ -48,19 +50,20 @@ bool Factories::hasFactory(const std::string& name)
 Root Factories::createObject(const std::string& name)
 {
     FactoryMap::const_iterator I = m_factories.find(name);
-    if (I == m_factories.end())
+    if (I == m_factories.end()) {
         throw NoSuchFactoryException(name);
-    else
+    } else {
         return (*I).second();
+    }
 }
     
-list<std::string> Factories::getKeys()
+std::list<std::string> Factories::getKeys()
 {
-    list<std::string> keys;
-    for(FactoryMap::const_iterator I = m_factories.begin();
-        I != m_factories.end();
-        I++)
+    std::list<std::string> keys;
+    for (FactoryMap::const_iterator I = m_factories.begin();
+         I != m_factories.end(); I++) {
         keys.push_back(I->first);
+    }
     return keys;
 }
     
@@ -69,15 +72,14 @@ void Factories::addFactory(const std::string& name, FactoryMethod method)
     m_factories[name] = method;
 }
 
-Root messageObject2ClassObject(const Atlas::Message::Object& mobj_arg)
+Root messageObject2ClassObject(const Object& mobj_arg)
 {
     Root obj;
     if(mobj_arg.isMap()) { // should we throw exeception if this is not true?
-        const Atlas::Message::Object::MapType& mobj = mobj_arg.asMap();
+        const Object::MapType& mobj = mobj_arg.asMap();
 
         // is this instance of entity or operation?
-        Atlas::Message::Object::MapType::const_iterator I = 
-            mobj.find("objtype");
+        Object::MapType::const_iterator I = mobj.find("objtype");
         bool is_instance = false;
         if(I != mobj.end() && (*I).second.isString()) {
             std::string objtype = (*I).second.asString();
@@ -87,8 +89,7 @@ Root messageObject2ClassObject(const Atlas::Message::Object& mobj_arg)
                 // get parent
                 I = mobj.find("parents");
                 if(I != mobj.end()) {
-                    Atlas::Message::Object::ListType parents_lst =
-                        I->second.asList();
+                    Object::ListType parents_lst = I->second.asList();
                     if(parents_lst.size()>=1 && parents_lst.front().isString()) {
                         std::string parent = parents_lst.front().asString();
                         // objtype and parent ok, try to create it:
@@ -109,12 +110,12 @@ Root messageObject2ClassObject(const Atlas::Message::Object& mobj_arg)
                 } // parent was not ok
             } // is instance
         } // has objtype attr
-        if(!is_instance) {
+        if (!is_instance) {
             obj = objectFactory.createObject("anonymous");
         } // not instance
-        for (I = mobj.begin();
-             I != mobj.end(); I++)
+        for (I = mobj.begin(); I != mobj.end(); I++) {
             obj->setAttr(I->first, I->second);
+        }
     }
     return (Root)obj;
 }

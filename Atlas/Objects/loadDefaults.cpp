@@ -1,6 +1,6 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright 2000 Aloril.
+// Copyright 2000-2001 Aloril.
 
 #include <fstream>
 #include <string>
@@ -12,20 +12,22 @@
 #include "loadDefaults.h"
 #include "objectFactory.h"
 
+using Atlas::Message::Object;
+
 namespace Atlas { namespace Objects {
 
-typedef std::map<std::string, Atlas::Message::Object> MessageObjectMap;
+typedef std::map<std::string, Object> MessageObjectMap;
 
 class LoadDefaultsDecoder : public ObjectsDecoder
 {
-public:
+  public:
     LoadDefaultsDecoder(const std::string& filename);
-    Atlas::Message::Object getMessageObject(const std::string& id);
-protected:
-    virtual void objectArrived(const Atlas::Message::Object&);
-private:
+    Object getMessageObject(const std::string& id);
+  protected:
+    virtual void objectArrived(const Object&);
+  private:
     void setAttributes(Root &obj, //Root &obj_inst, 
-                       const Atlas::Message::Object& mobj, 
+                       const Object& mobj, 
                        std::set<std::string> used_attributes);
     void fillDefaults();
     MessageObjectMap m_objects;
@@ -33,10 +35,11 @@ private:
 
 LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
 {
-  std::ifstream stream;
-  stream.open(filename.c_str());
-  if(!stream) 
-    throw DefaultLoadingException("Failed to open file " + filename);
+    std::ifstream stream;
+    stream.open(filename.c_str());
+    if (!stream) {
+        throw DefaultLoadingException("Failed to open file " + filename);
+    }
   
   //replace following code with:
   //getCodecByName(const std::string& name, Stream& stream, Bridge* bridge)
@@ -49,29 +52,34 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
     //if((*i)->getName() == "XML")
       //codec = (*i)->New(Codec<std::iostream>::Parameters((iostream&)stream, this));
   //end of replace
-  Atlas::Codec<std::iostream> *codec = new Atlas::Codecs::XML((std::iostream&)stream, this);
-  if(!codec)
-    throw DefaultLoadingException("XML codec not found");
-  while(stream) {
-    codec->poll();
-  }
-  delete codec;
+    Atlas::Codec<std::iostream> *codec = new Atlas::Codecs::XML((std::iostream&)stream, this);
+
+    if (!codec) {
+        throw DefaultLoadingException("XML codec not found");
+    }
+
+    while(stream) {
+        codec->poll();
+    }
+
+    delete codec;
   
-  Atlas::Message::Object::MapType anonymous_obj;
-  m_objects["anonymous"] = anonymous_obj;
-  fillDefaults();
+    Object::MapType anonymous_obj;
+    m_objects["anonymous"] = anonymous_obj;
+    fillDefaults();
 }
 
-Atlas::Message::Object LoadDefaultsDecoder::getMessageObject(const std::string& id)
+Object LoadDefaultsDecoder::getMessageObject(const std::string& id)
 {
     MessageObjectMap::const_iterator I = m_objects.find(id);
-    if (I == m_objects.end())
+    if (I == m_objects.end()) {
         throw DefaultLoadingException(id + " not found in XML file");
-    else
+    } else {
         return (*I).second;
+    }
 }
 
-void LoadDefaultsDecoder::objectArrived(const Atlas::Message::Object& o)
+void LoadDefaultsDecoder::objectArrived(const Object& o)
 {
     MessageObjectMap::const_iterator I = o.asMap().find("id");
     if (I == o.asMap().end()) {
@@ -84,14 +92,14 @@ void LoadDefaultsDecoder::objectArrived(const Atlas::Message::Object& o)
 }
 
 void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst, 
-                                        const Atlas::Message::Object& mobj, 
+                                        const Object& mobj, 
                                         std::set<std::string> used_attributes)
 {
-    Atlas::Message::Object::MapType::const_iterator I;
+    Object::MapType::const_iterator I;
     for (I = mobj.asMap().begin(); I != mobj.asMap().end(); I++) {
         std::set<std::string>::const_iterator attr_found = 
                                used_attributes.find(I->first);
-        if(attr_found == used_attributes.end()) {
+        if (attr_found == used_attributes.end()) {
             //cout<<"    -->"<<I->first<<endl;
             obj->setAttr(I->first, I->second);
             //obj_inst->setAttr(I->first, I->second);
@@ -99,13 +107,11 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
         used_attributes.insert(I->first);
     }
     I = mobj.asMap().find("parents");
-    if(I != mobj.asMap().end()) {
-        for(Atlas::Message::Object::ListType::const_iterator J =
-                I->second.asList().begin();
-            J != I->second.asList().end();
-            J++) {
+    if (I != mobj.asMap().end()) {
+        for (Object::ListType::const_iterator J = I->second.asList().begin();
+             J != I->second.asList().end(); J++) {
             //cout<<"  >"<<J->asString()<<endl;
-            Atlas::Message::Object parent_mobj = getMessageObject(J->asString());
+            Object parent_mobj = getMessageObject(J->asString());
             setAttributes(obj, /*obj_inst,*/ parent_mobj, used_attributes);
         }
     }
@@ -119,7 +125,7 @@ void LoadDefaultsDecoder::fillDefaults()
         I++) {
         //cout<<(*I)<<endl;
         //get atlas.xml object
-        Atlas::Message::Object mobj = getMessageObject(*I);
+        Object mobj = getMessageObject(*I);
         //get class instances
         Root obj = objectFactory.createObject(*I).getDefaultObject();
         //Root obj_inst = objectInstanceFactory.createObject(*I).getDefaultObject();
@@ -130,10 +136,8 @@ void LoadDefaultsDecoder::fillDefaults()
         //add object definition
         Root obj_def = objectFactory.createObject(*I);
         obj_def->setObjtype(obj->getObjtype());
-        Atlas::Message::Object::MapType::const_iterator J;
-        for (J = mobj.asMap().begin();
-             J != mobj.asMap().end();
-             J++) {
+        Object::MapType::const_iterator J;
+        for (J = mobj.asMap().begin(); J != mobj.asMap().end(); J++) {
             obj_def->setAttr(J->first, J->second);
         }
         objectDefinitions[obj_def->getId()] = obj_def;
@@ -152,14 +156,14 @@ void LoadDefaultsDecoder::fillDefaults()
 
 void loadDefaults(const std::string& filename)
 {
-   LoadDefaultsDecoder load_defaults(filename);
-   Entity::Anonymous e;
-   e = e->getDefaultObject();
-   std::vector<double> coords(3, 0.0);
-   e->setPos(coords);
-   e->setVelocity(coords);
-   std::list<std::string> parents;
-   e->setParents(parents);
+     LoadDefaultsDecoder load_defaults(filename);
+     Entity::Anonymous e;
+     e = e->getDefaultObject();
+     std::vector<double> coords(3, 0.0);
+     e->setPos(coords);
+     e->setVelocity(coords);
+     std::list<std::string> parents;
+     e->setParents(parents);
 }
 
 } } // namespace Atlas::Objects

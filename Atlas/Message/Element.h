@@ -1,6 +1,6 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Stefanus Du Toit, Karsten-O. Laux
+// Copyright (C) 2000-2001 Stefanus Du Toit, Karsten-O. Laux and Al Riddoch
 
 #ifndef ATLAS_MESSAGE_OBJECT_H
 #define ATLAS_MESSAGE_OBJECT_H
@@ -10,10 +10,16 @@
 #include <list>
 #include <vector>
 
+#include "../Exception.h"
+
 namespace Atlas { namespace Message {
 
 /// An exception class issued when the wrong type is requested in as().
-class WrongTypeException { };
+class WrongTypeException : public Atlas::Exception
+{
+  public:
+    WrongTypeException() : Atlas::Exception("Wrong Message::Object type") { }
+};
 
 /** Multi-type container
  *
@@ -40,6 +46,7 @@ class Object
 public:
     typedef long IntType;
     typedef double FloatType;
+    typedef void * PtrType;
     typedef std::string StringType;
     typedef std::map<std::string, Object> MapType;
     typedef std::vector<Object> ListType;
@@ -48,6 +55,7 @@ public:
         TYPE_NONE,
         TYPE_INT,
         TYPE_FLOAT,
+        TYPE_PTR,
         TYPE_STRING,
         TYPE_MAP,
         TYPE_LIST
@@ -67,6 +75,7 @@ public:
       case TYPE_NONE:
       case TYPE_INT:
       case TYPE_FLOAT:
+      case TYPE_PTR:
 	break;
       case TYPE_STRING:
 	delete s;
@@ -101,6 +110,9 @@ public:
 	break;
       case TYPE_FLOAT:
 	f = obj.f;
+	break;
+      case TYPE_PTR:
+	p = obj.p;
 	break;
       case TYPE_STRING:
 	s = new StringType(*obj.s);
@@ -142,6 +154,12 @@ public:
     /// Set type to double, and value to v.
     Object(FloatType v)
       : t(TYPE_FLOAT), f(v)
+    {
+    }
+
+    /// Set type to PtrType, and value to v.
+    Object(const PtrType& v)
+      : t(TYPE_PTR), p(v)
     {
     }
 
@@ -196,7 +214,10 @@ public:
 	  break;
 	case TYPE_FLOAT:
 	  f = obj.f;
-	break;
+	  break;
+	case TYPE_PTR:
+	  p = obj.p;
+	  break;
 	case TYPE_STRING:
 	  s = new StringType(*obj.s);
 	  break;
@@ -219,6 +240,7 @@ public:
             case TYPE_NONE: return true;
             case TYPE_INT: return i == o.i;
             case TYPE_FLOAT: return f == o.f;
+            case TYPE_PTR: return p == o.p;
             case TYPE_STRING: return *s == *o.s;
             case TYPE_MAP: return *m == *o.m;
             case TYPE_LIST: return *l == *o.l;
@@ -227,7 +249,7 @@ public:
     }
 
     /// Check for inequality with another Object.
-    bool operator!=(const Object m) const
+    bool operator!=(const Object& m) const
     {
         return !(*this == m);
     }
@@ -249,6 +271,15 @@ public:
 
     /// Check for inequality with a double.
     bool operator!=(FloatType v) const { return !(*this == v); }
+
+    /// Check for equality with a pointer.
+    bool operator==(PtrType v) const
+    {
+      return t == TYPE_PTR && p == v;
+    }
+
+    /// Check for inequality with a pointer.
+    bool operator!=(PtrType v) const { return !(*this == v); }
 
     /// Check for equality with a std::string.
     bool operator==(const StringType& v) const
@@ -291,6 +322,8 @@ public:
     bool isInt() const { return (t == TYPE_INT); }
     /// Check whether the current type is double.
     bool isFloat() const { return (t == TYPE_FLOAT); }
+    /// Check whether the current type is pointer.
+    bool isPtr() const { return (t == TYPE_PTR); }
     /// Check whether the current type is numeric.
     bool isNum() const { return ((t == TYPE_FLOAT) || (t == TYPE_INT)); }
     /// Check whether the current type is std::string.
@@ -301,7 +334,7 @@ public:
     bool isList() const { return (t == TYPE_LIST); }
 
     /// Retrieve the current value as a int.
-    long asInt() const throw (WrongTypeException)
+    IntType asInt() const throw (WrongTypeException)
     {
         if (t == TYPE_INT) return i;
         throw WrongTypeException();
@@ -310,6 +343,12 @@ public:
     FloatType asFloat() const throw (WrongTypeException)
     {
         if (t == TYPE_FLOAT) return f;
+        throw WrongTypeException();
+    }
+    /// Retrieve the current value as a pointer.
+    PtrType asPtr() const throw (WrongTypeException)
+    {
+        if (t == TYPE_PTR) return p;
         throw WrongTypeException();
     }
     /// Retrieve the current value as a number.
@@ -362,13 +401,11 @@ protected:
     union {
       IntType i;
       FloatType f;
+      void* p;
       StringType* s;
       MapType* m;
       ListType* l;
-      void* n;
     };
-
-    static void * freeList;
 };
 
 } } // namespace Atlas::Message

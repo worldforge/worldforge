@@ -1,6 +1,6 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Stefanus Du Toit and Aloril
+// Copyright (C) 2000-2001 Stefanus Du Toit, Aloril and Al Riddoch
 
 #ifndef ATLAS_OBJECTS_BASEOBJECT_H
 #define ATLAS_OBJECTS_BASEOBJECT_H
@@ -10,6 +10,7 @@
 #include "../Message/Encoder.h"
 #include "../Message/Object.h"
 #include "../Bridge.h"
+#include "../Exception.h"
 
 namespace Atlas { namespace Objects {
 
@@ -17,11 +18,15 @@ namespace Atlas { namespace Objects {
  *
  * This is thrown by Root::getAttr() [and derivatives thereof!]
  */
-class NoSuchAttrException
+class NoSuchAttrException : public Atlas::Exception
 {
-public:
-    NoSuchAttrException(const std::string& name) : name(name) {}
     std::string name;
+  public:
+    NoSuchAttrException(const std::string& name) :
+             Atlas::Exception("No such attribute"), name(name) {}
+    const string & getName() {
+        return name;
+    }
 };
 
 const int BASE_OBJECT_NO = 0;

@@ -1,3 +1,23 @@
+2001-07-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Exception.h: Added exception base class, with string
+	  description.
+
+	* src/Objects/loadDefaults.h, src/Objects/BaseObject.h,
+	  src/Message/Object.h: Modify exception classes to derive from
+	  exception base class.
+
+	* src/Objects/loadDefaults.cpp, src/Objects/BaseObject.cpp: Re-style
+	  code for consistancy and readability.
+
+	* src/Message/Object.h: Added feature to Message::Object so it
+	  can store pointers properlly.
+
+	* src/Objects/GenerateObjectFactory.py: Make generated code ISO
+	  conformant, and more readable.
+
+	* src/Objects/common.py: Updated copyright date for generated files.
+
 2001-07-15  Al Riddoch  <alriddoch@zepler.org>
 
 	* Added interface and library versioning.
