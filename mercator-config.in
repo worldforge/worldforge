@@ -47,7 +47,7 @@ while test $# -gt 0; do
           # Handle oddities in Win32 path handling (assumes prefix)
           prefix=`echo ${prefix} | sed 's,^//\([A-Z]\),\1:,'`
 
-          includes=-I@includedir@
+          includes=-I@includedir@/Mercator-0.2
       fi
       echo $includes @MERCATOR_CFLAGS@
       ;;

@@ -1,3 +1,7 @@
+2003-01-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Convert to using pkg-config
+
 2003-01-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Segment.cpp, src/Segment.h: Fully implement qRMD with roughness

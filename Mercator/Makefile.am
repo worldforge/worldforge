@@ -1,13 +1,13 @@
-lib_LTLIBRARIES = libmercator.la
+lib_LTLIBRARIES = libmercator-0.2.la
 
-libmercator_la_LDFLAGS = -version-info @MERCATOR_VERSION_INFO@
+libmercator_0_2_la_LDFLAGS = -version-info @MERCATOR_VERSION_INFO@
 
-libmercator_la_SOURCES = \
+libmercator_0_2_la_SOURCES = \
 	Mercator.cpp \
 	Terrain.cpp \
 	Segment.cpp
 
-libmercatordir = $(includedir)/Mercator
+libmercatordir = $(includedir)/Mercator-0.2/Mercator
 
 libmercator_HEADERS = \
 	Mercator.h \
