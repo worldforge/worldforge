@@ -1,3 +1,12 @@
+2005-01-26  James Turner  <james@worldforge.org>
+
+    * Eris/BaseConnection.cpp: delete the timeout late, since it's likely to
+      be on the stack in the timeout case (which explicitly calls hardDisconnect,
+      oops).
+      
+    * Eris/DeleteLater.cpp, Eris/DeleteLater.h: re-order delete code, so it's
+      safe against new delete laters being added to the queue during execution.
+
 2005-01-25  James Turner  <james@worldforge.org>
 
     * Eris/BaseConnection.cpp, Eris/Connection.cpp: clean up how timeouts

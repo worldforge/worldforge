@@ -8,6 +8,7 @@
 #include <Eris/Timeout.h>
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
+#include <Eris/DeleteLater.h>
 
 #include <Atlas/Codec.h>
 #include <Atlas/Net/Stream.h>
@@ -89,7 +90,7 @@ void BaseConnection::hardDisconnect(bool emit)
 		} else
 			throw InvalidOperation("Bad connection state for disconnection");
 		
-		delete _timeout;
+		deleteLater(_timeout);
 		_timeout = NULL;
 		
 		Poll::instance().removeStream(_stream);

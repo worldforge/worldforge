@@ -7,7 +7,7 @@ namespace Eris
 class BaseDeleteLater
 {
 public:
-	virtual void execute() = 0;
+	virtual ~BaseDeleteLater() = 0;
 };
 
 
@@ -16,8 +16,11 @@ class DerivedDeleteLater : public BaseDeleteLater
 {
 public:
 	DerivedDeleteLater(T* ins) : m_instance(ins) { }
-	
-	virtual void execute() { delete m_instance; }
+    virtual ~DerivedDeleteLater()
+    {
+        delete m_instance;
+    }
+    
 private:
 	T* m_instance;
 };
