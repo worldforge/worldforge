@@ -12,7 +12,7 @@
 //#include "../../src/Net/Stream.h"
 #include "../../tutorial/DebugBridge.h"
 
-#define DEBUG_PRINT(foo) foo;
+#define DEBUG_PRINT(foo) //foo;
 
 using namespace Atlas;
 using namespace Atlas::Objects;
@@ -20,11 +20,18 @@ using namespace Atlas::Message;
 using namespace std;
 
 #include "../../src/Codecs/XML.cc"
+//#include "../../src/Codecs/Packed.cc"
 
 void testXML()
 {
     Entity::RootEntityInstance human;
     human->SetId("foo");
+
+    Operation::RootOperationInstance move_op;
+    move_op->SetFrom(string("bar"));
+    vector<Root> move_args(1);
+    move_args[0] = (Root&)human;
+    move_op->SetArgs(move_args);
 
     DebugBridge bridge;
     strstream stream;
@@ -43,18 +50,21 @@ void testXML()
 
     Atlas::Codec<iostream> *codec;
     codec = new XML(Codec<iostream>::Parameters(stream, &bridge));
+    //codec = new Packed(Codec<iostream>::Parameters(stream, &bridge));
     assert(codec);
 
     codec->StreamBegin();
 
     Objects::Encoder eno(codec);
-    eno.StreamMessage((Root&)human);
+    eno.StreamMessage((Root&)move_op);
 
     Atlas::Message::Encoder en(codec);
     en.StreamMessage(human->AsObject());
 
     codec->StreamEnd();
     cout<<stream.str()<<endl;
+    //[$from=bar(args=[$id=foo])][$id=foo]
+    //<atlas><map><string name="from">bar</string><list name="args"><map><string name="id">foo</string></map></list></map><map><string name="id">foo</string></map></atlas>
 }
 
 

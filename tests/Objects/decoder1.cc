@@ -11,17 +11,17 @@ class TestDecoder : public Objects::Decoder
 protected:
     virtual void ObjectArrived(const Objects::Root& r)
     {
-        assert(r.GetAttr("id").AsString() == "root_instance");
+        assert(r->GetAttr("id").AsString() == "root_instance");
         root_arrived = true;
     }
 
     virtual void ObjectArrived(const Objects::Operation::Look& l)
     {
-        assert(l.GetAttr("id").AsString() == "look_instance");
+        assert(l->GetAttr("id").AsString() == "look_instance");
         look_arrived = true;
     }
 
-    virtual void ObjectArrived(const Objects::Entity::Account a)
+    virtual void ObjectArrived(const Objects::Entity::Account &a)
     {
         acct_arrived = true;
     }
