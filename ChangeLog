@@ -1,3 +1,11 @@
+2003-10-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/SmartPtr.h: Modified explicit casts so they are
+	  easier to use.
+
+	* Atlas/Objects/GenerateDispatcher.py: Updated usage of casts in
+	  Atlas::Objects::Dispatcher.
+
 2003-10-27  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/loadDefaults.cpp: Modify LoadDefaultsDecoder

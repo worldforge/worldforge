@@ -20,6 +20,8 @@ template <class T>
 class SmartPtr
 {
   public:
+    typedef T DataT;
+
     SmartPtr() : ptr(T::alloc()) { 
     }
     SmartPtr(const SmartPtr<T>& a) : ptr(a.get()) {
@@ -95,16 +97,16 @@ class SmartPtr
     T * ptr;
 };
 
-template<class returnType, class fromType>
-SmartPtr<returnType> smart_dynamic_cast(const SmartPtr<fromType> & o)
+template<typename returnPtrType, class fromType>
+returnPtrType smart_dynamic_cast(const SmartPtr<fromType> & o)
 {
-    return SmartPtr<returnType>(dynamic_cast<returnType *>(o.get()));
+    return returnPtrType(dynamic_cast<typename returnPtrType::DataT*>(o.get()));
 }
 
-template<class returnType, class fromType>
-SmartPtr<returnType> smart_static_cast(const SmartPtr<fromType> & o)
+template<typename returnPtrType, class fromType>
+returnPtrType smart_static_cast(const SmartPtr<fromType> & o)
 {
-    return SmartPtr<returnType>((returnType*)o.get());
+    return returnPtrType((typename returnPtrType::DataT *)o.get());
 }
 
 } } // namespace Atlas::Objects
