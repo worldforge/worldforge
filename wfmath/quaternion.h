@@ -73,7 +73,7 @@ class Quaternion
   void fromAtlas(const Atlas::Message::Object& a);
 
   Quaternion& operator= (const Quaternion& rhs)
-	{m_w = rhs.m_w; m_vec = rhs.m_vec; return *this;}
+	{m_w = rhs.m_w; m_vec = rhs.m_vec; m_valid = rhs.m_valid; return *this;}
 
   // This regards q and -1*q as equal, since they give the
   // same RotMatrix<3>

@@ -69,7 +69,7 @@ inline void _ArrayFromAtlas(CoordType* array, int len, const Atlas::Message::Obj
     throw _AtlasBadParse();
 
   for(int i = 0; i < len; ++i)
-    array[i] = list[i].AsFloat();
+    array[i] = list[i].AsNum();
 }
 
 template<const int dim>
@@ -98,9 +98,9 @@ inline void Quaternion::fromAtlas(const Atlas::Message::Object& a)
 
 
   for(int i = 0; i < 3; ++i)
-    m_vec[i] = list[i].AsFloat();
+    m_vec[i] = list[i].AsNum();
 
-  m_w = list[3].AsFloat();
+  m_w = list[3].AsNum();
 
   CoordType norm = sqrt(m_w * m_w + m_vec.sqrMag());
 
@@ -157,8 +157,8 @@ void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
       break;
     case (2 * dim):
       for(int i = 0; i < dim; ++i) {
-        m_low[i] = list[i].AsFloat();
-        m_high[i] = list[i+dim].AsFloat();
+        m_low[i] = list[i].AsNum();
+        m_high[i] = list[i+dim].AsNum();
       }
       m_low.setValid();
       m_high.setValid();
@@ -201,8 +201,8 @@ inline void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
       break;
     case 4:
       for(int i = 0; i < 2; ++i) {
-        m_low[i] = list[i].AsFloat();
-        m_high[i] = list[i+2].AsFloat();
+        m_low[i] = list[i].AsNum();
+        m_high[i] = list[i+2].AsNum();
       }
       m_low.setValid();
       m_high.setValid();
@@ -237,8 +237,8 @@ inline void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
       break;
     case 2:
       if(got_float) {
-        m_low[0] = list[0].AsFloat();
-        m_high[0] = list[1].AsFloat(); 
+        m_low[0] = list[0].AsNum();
+        m_high[0] = list[1].AsNum(); 
         m_low.setValid();
         m_high.setValid();
       }

@@ -1,3 +1,11 @@
+Monday, July 21st, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/atlasconv.h: Use AsNum() rather than AsFloat() so that
+	  integers don't cause exceptions.
+
+	* wfmath/quaternion.h: Fix operator=() so it copies m_valid to
+	  the assignee.
+
 Thursday, July 3rd, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* Update rpm spec to be cleaner, and make the technical sections
