@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: wfmath
+Description: A math library.
+Version: @VERSION@
+Libs: -L${libdir} -lwfmath-0.2
+Cflags: -I${includedir}/wfmath-0.2

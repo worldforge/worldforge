@@ -1,3 +1,7 @@
+Friday, January 31, 2003	Al Riddoch <alriddoch@zepler.org>
+
+	* Convert to using pkg-config
+
 Saturday, January 11, 2003	James Turner <james@worldforge.org>
 
 	* Changed 'libtool' to 'libtoolize' in autogen.sh so

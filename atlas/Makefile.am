@@ -7,6 +7,6 @@ check_PROGRAMS = atlas_test
 TESTS = $(check_PROGRAMS)
 
 atlas_test_SOURCES = atlas_test.cpp
-atlas_test_LDADD = ../wfmath/libwfmath.la @ATLAS_LIBS@
+atlas_test_LDADD = ../wfmath/libwfmath-0.2.la @ATLAS_LIBS@
 
 endif

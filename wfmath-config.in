@@ -41,12 +41,10 @@ while test $# -gt 0; do
       echo @VERSION@
       ;;
     --cflags)
-      if test @includedir@ != /usr/include ; then
-          # Handle oddities in Win32 path handling (assumes prefix)
-          prefix=`echo ${prefix} | sed 's,^//\([A-Z]\),\1:,'`
+      # Handle oddities in Win32 path handling (assumes prefix)
+      prefix=`echo ${prefix} | sed 's,^//\([A-Z]\),\1:,'`
 
-          includes=-I@includedir@
-      fi
+      includes=-I@includedir@/wfmath-0.2
       echo $includes $WFMATH_CFLAGS
       ;;
     --libs)
