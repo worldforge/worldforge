@@ -62,20 +62,6 @@ void Bach::parseMap(char next)
         m_state.pop();
         break;
 
-    case '{':
-        m_state.push(PARSE_MAP);
-        m_state.push(PARSE_MAP_BEGIN);
-        m_state.push(PARSE_DATA);
-        m_state.push(PARSE_NAME);
-        break;
-
-    case '[':
-        m_state.push(PARSE_LIST);
-        m_state.push(PARSE_LIST_BEGIN);
-        m_state.push(PARSE_DATA);
-        m_state.push(PARSE_NAME);
-        break;
-
     case ',':
         break;
 
@@ -111,14 +97,14 @@ void Bach::parseList(char next)
     case '{':
         m_bridge->listItem(m_mapBegin);
         m_state.push(PARSE_MAP);
-        m_state.push(PARSE_NAME);
-        m_state.push(PARSE_DATA);
         break;
 
     case '[':
         m_bridge->listItem(m_listBegin);
         m_state.push(PARSE_LIST);
-        m_state.push(PARSE_DATA);
+        break;
+
+    case ',':
         break;
 
     case '1':
@@ -134,6 +120,10 @@ void Bach::parseList(char next)
     case '-':
         m_state.push(PARSE_FLOAT);
         m_socket.putback(next);
+        break;
+
+    case '\"':
+        m_state.push(PARSE_STRING);
         break;
 
     default:
@@ -187,7 +177,6 @@ void Bach::parseFloat(char next)
             cout << "Float: " << m_data << endl;
 
             m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
-            m_name.erase();
         }
         else if (m_state.top() == PARSE_LIST)
         {
@@ -200,6 +189,7 @@ void Bach::parseFloat(char next)
             cout << "Bach::parseFloat: Error: " << m_state.top() << endl;
             // FIXME some kind of sanity checking assertion here
         }
+        m_name.erase();
         m_data.erase();
 	break;
 
@@ -242,7 +232,6 @@ void Bach::parseString(char next)
             cout << "String: " << m_data << endl;
 
             m_bridge->mapItem(decodeString(m_name), decodeString(m_data));
-            m_name.erase();
         }
         else if (m_state.top() == PARSE_LIST)
         {
@@ -252,8 +241,11 @@ void Bach::parseString(char next)
         }
         else
         {
+            cout << "Error" << endl;
+
             // FIXME some kind of sanity checking assertion here
         }
+        m_name.erase();
         m_data.erase();
         break;
 
@@ -294,14 +286,11 @@ void Bach::parseData(char next)
     case '{':
         m_state.pop();
         m_state.push(PARSE_MAP);
-        m_state.push(PARSE_NAME);
-        m_state.push(PARSE_DATA);
         break;
 
     case '[':
         m_state.pop();
         m_state.push(PARSE_LIST);
-        m_state.push(PARSE_DATA);
         break;
 
     case '\"':

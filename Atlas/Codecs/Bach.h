@@ -50,6 +50,7 @@ class Bach : public Codec<std::iostream>
 
     enum State
     {
+        PARSE_INIT,
 	PARSE_STREAM,
         PARSE_MAP,
         PARSE_LIST,
@@ -65,6 +66,7 @@ class Bach : public Codec<std::iostream>
     std::string m_name, m_data;
     std::stack<State> m_state;
 
+    inline void parseInit(char);
     inline void parseStream(char);
     inline void parseMap(char);
     inline void parseList(char);
