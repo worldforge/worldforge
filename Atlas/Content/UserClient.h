@@ -10,7 +10,7 @@
 #define __AtlasUserClient_h_
 
 #include <string>
-#include <multimap.h>
+#include <list>
 using namespace std;
 
 #include "../Net/Net.h"
@@ -75,8 +75,8 @@ private:
     long m_nextserialno;
 
     AObject m_reply;
-    multimap<string, fptr_abstract*> m_msghandlers;
-    multimap<string, void(*)(const AObject&)> m_msghandlers_simp;
+    list< pair<string, fptr_abstract*> > m_msghandlers;
+    list< pair<string, void(*)(const AObject&)> > m_msghandlers_simp;
 };
 
 // need to put these here so all instantiations get compiled properly
@@ -91,10 +91,11 @@ template<class T> void AUserClient::addMsgHandler(const string& type,
 template<class T> void AUserClient::remMsgHandler(const string& type,
                               T& obj, void(T::*handler)(const AObject&))
 {
-    multimap<string, fptr_abstract*>::iterator I;
+    list< pair<string, fptr_abstract*> >::iterator I;
     bool quit = false;
     for (I = m_msghandlers.begin(); I != m_msghandlers.end() && !quit; I++) {
         if (((*I).first == type) && (*(*I).second == fptr<T>(obj, handler))) {
+            delete (*I).second;
             m_msghandlers.erase(I);
             quit = true;
         }

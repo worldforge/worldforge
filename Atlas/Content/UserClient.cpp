@@ -18,7 +18,7 @@ void AUserClient::gotMsg(const AObject& msg)
         return;
     }
     // Lookup message handlers and call them
-    multimap<string, fptr_abstract*>::iterator I;
+    list< pair<string, fptr_abstract*> >::iterator I;
     bool found = false;
     AObject parent; string msgOp;
     msg.get("parent", parent);
@@ -31,7 +31,7 @@ void AUserClient::gotMsg(const AObject& msg)
             found = true;
         }
     }
-    multimap<string, void(*)(const AObject&)>::iterator J;
+    list< pair<string, void(*)(const AObject&)> >::iterator J;
     for (J = m_msghandlers_simp.begin(); J != m_msghandlers_simp.end(); J++) {
         if ((*J).first == msgOp) {
             (*(*J).second)(msg);
@@ -60,7 +60,7 @@ void AUserClient::addMsgHandler(const string& type, void(*hdl)(const AObject&))
 
 void AUserClient::remMsgHandler(const string& type, void(*hdl)(const AObject&))
 {
-    multimap<string, void(*)(const AObject&)>::iterator I;
+    list< pair<string, void(*)(const AObject&)> >::iterator I;
     bool quit = false;
     for (I = m_msghandlers_simp.begin(); I != m_msghandlers_simp.end()
                                          && !quit; I++) {
