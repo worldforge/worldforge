@@ -1,3 +1,8 @@
+2004-08-03  Hagen Moebius  <hagen.moebius@starschiffchen.de>
+
+	* docs/.cvsignore: Added to ignore doxygen html and latex output.
+	* .cvsignore: Added a few files from the gnu autotools process.
+
 2004-08-03  James Turner  <james@worldforge.org>
 
 	* Rename Player to Account.
