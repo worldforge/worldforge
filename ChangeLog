@@ -1,4 +1,4 @@
-2004-01-24  Damien McGinnes <mcginnes at netspeed dot com.au>
+2004-02-03  Damien McGinnes <mcginnes at netspeed dot com.au>
 	* Mercator/RandCache.h: make RandCache store uint32 rather than
 	  double. Should halve memory usage.
 
