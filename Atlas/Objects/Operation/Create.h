@@ -19,9 +19,12 @@ Map editor is main user for this in client side. Server uses this inside "info" 
 class Create : public Action
 {
 public:
+                /// Construct a Create class definition.
     Create();
+                /// Default destructor.
     virtual ~Create() { }
 
+                /// Create a new instance of Create.
     static Create Instantiate();
 
 protected:

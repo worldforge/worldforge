@@ -19,32 +19,52 @@ Later in hierarchy tree objtype changes to 'object' when actual game objects are
 class RootEntity : public Root
 {
 public:
+                /// Construct a RootEntity class definition.
     RootEntity();
+                /// Default destructor.
     virtual ~RootEntity() { }
 
+                /// Create a new instance of RootEntity.
     static RootEntity Instantiate();
 
+                /// Check whether the attribute "name" exists.
     virtual bool HasAttr(const std::string& name)const;
+                /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
+                /// not exist.
     virtual Atlas::Message::Object GetAttr(const std::string& name)
             const throw (NoSuchAttrException);
+                /// Set the attribute "name" to the value given by"attr"
     virtual void SetAttr(const std::string& name,
                          const Atlas::Message::Object& attr);
+                /// Remove the attribute "name". This will not work for static attributes.
     virtual void RemoveAttr(const std::string& name);
 
+                /// Send the contents of this object to a Bridge.
     virtual void SendContents(Atlas::Bridge* b);
 
+                /// Convert this object to a Message::Object.
     virtual Atlas::Message::Object AsObject() const;
 
+                /// Set the "loc" attribute.
     inline void SetLoc(const std::string& val);
+                /// Set the "pos" attribute.
     inline void SetPos(const Atlas::Message::Object::ListType& val);
+                /// Set the "velocity" attribute.
     inline void SetVelocity(const Atlas::Message::Object::ListType& val);
+                /// Set the "contains" attribute.
     inline void SetContains(const Atlas::Message::Object::ListType& val);
+                /// Set the "stamp_contains" attribute.
     inline void SetStampContains(double val);
 
+                /// Retrieve the "loc" attribute.
     inline const std::string& GetLoc() const;
+                /// Retrieve the "pos" attribute.
     inline const Atlas::Message::Object::ListType& GetPos() const;
+                /// Retrieve the "velocity" attribute.
     inline const Atlas::Message::Object::ListType& GetVelocity() const;
+                /// Retrieve the "contains" attribute.
     inline const Atlas::Message::Object::ListType& GetContains() const;
+                /// Retrieve the "stamp_contains" attribute.
     inline double GetStampContains() const;
 
 protected:

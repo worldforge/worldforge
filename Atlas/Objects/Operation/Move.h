@@ -19,9 +19,12 @@ More about <a href="move.html">movement here</a>
 class Move : public Set
 {
 public:
+                /// Construct a Move class definition.
     Move();
+                /// Default destructor.
     virtual ~Move() { }
 
+                /// Create a new instance of Move.
     static Move Instantiate();
 
 protected:

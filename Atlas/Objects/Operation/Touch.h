@@ -23,9 +23,12 @@ This is base operation for all other
 class Touch : public Perceive
 {
 public:
+                /// Construct a Touch class definition.
     Touch();
+                /// Default destructor.
     virtual ~Touch() { }
 
+                /// Create a new instance of Touch.
     static Touch Instantiate();
 
 protected:

@@ -23,9 +23,12 @@ This is base operation for all other
 class Set : public Action
 {
 public:
+                /// Construct a Set class definition.
     Set();
+                /// Default destructor.
     virtual ~Set() { }
 
+                /// Create a new instance of Set.
     static Set Instantiate();
 
 protected:

@@ -23,38 +23,64 @@ This is base operation for all other
 class RootOperation : public Root
 {
 public:
+                /// Construct a RootOperation class definition.
     RootOperation();
+                /// Default destructor.
     virtual ~RootOperation() { }
 
+                /// Create a new instance of RootOperation.
     static RootOperation Instantiate();
 
+                /// Check whether the attribute "name" exists.
     virtual bool HasAttr(const std::string& name)const;
+                /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
+                /// not exist.
     virtual Atlas::Message::Object GetAttr(const std::string& name)
             const throw (NoSuchAttrException);
+                /// Set the attribute "name" to the value given by"attr"
     virtual void SetAttr(const std::string& name,
                          const Atlas::Message::Object& attr);
+                /// Remove the attribute "name". This will not work for static attributes.
     virtual void RemoveAttr(const std::string& name);
 
+                /// Send the contents of this object to a Bridge.
     virtual void SendContents(Atlas::Bridge* b);
 
+                /// Convert this object to a Message::Object.
     virtual Atlas::Message::Object AsObject() const;
 
+                /// Set the "serialno" attribute.
     inline void SetSerialno(int val);
+                /// Set the "refno" attribute.
     inline void SetRefno(int val);
+                /// Set the "from" attribute.
     inline void SetFrom(const std::string& val);
+                /// Set the "to" attribute.
     inline void SetTo(const std::string& val);
+                /// Set the "seconds" attribute.
     inline void SetSeconds(double val);
+                /// Set the "future_seconds" attribute.
     inline void SetFutureSeconds(double val);
+                /// Set the "time_string" attribute.
     inline void SetTimeString(const std::string& val);
+                /// Set the "args" attribute.
     inline void SetArgs(const Atlas::Message::Object::ListType& val);
 
+                /// Retrieve the "serialno" attribute.
     inline int GetSerialno() const;
+                /// Retrieve the "refno" attribute.
     inline int GetRefno() const;
+                /// Retrieve the "from" attribute.
     inline const std::string& GetFrom() const;
+                /// Retrieve the "to" attribute.
     inline const std::string& GetTo() const;
+                /// Retrieve the "seconds" attribute.
     inline double GetSeconds() const;
+                /// Retrieve the "future_seconds" attribute.
     inline double GetFutureSeconds() const;
+                /// Retrieve the "time_string" attribute.
     inline const std::string& GetTimeString() const;
+                /// Retrieve the "args" attribute.
     inline const Atlas::Message::Object::ListType& GetArgs() const;
 
 protected:

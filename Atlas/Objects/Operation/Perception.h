@@ -19,9 +19,12 @@ Base operator for all kind of perceptions
 class Perception : public Info
 {
 public:
+                /// Construct a Perception class definition.
     Perception();
+                /// Default destructor.
     virtual ~Perception() { }
 
+                /// Create a new instance of Perception.
     static Perception Instantiate();
 
 protected:

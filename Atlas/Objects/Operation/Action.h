@@ -23,9 +23,12 @@ This is base operation for all other
 class Action : public RootOperation
 {
 public:
+                /// Construct a Action class definition.
     Action();
+                /// Default destructor.
     virtual ~Action() { }
 
+                /// Create a new instance of Action.
     static Action Instantiate();
 
 protected:

@@ -1,5 +1,7 @@
 Atlas-C++ - Objects
 
+Last modified: Wed Jun 21 04:24:38 UTC 2000
+
 1. GENERAL NOTES
 
 implement hierarchy as given in atlas spec.
@@ -14,8 +16,8 @@ attributes can be retrieved
 attributes can be stored
 attributes can be removed
 objects have default attributes (set in constructors)
-
-somehow we should be able to conver Objects to Message::Objects
+objects can be converted into Message::Object
+objects can be instantiated (i.e. parents = id, objtype is an instance)
 
 2.1.1 INHERITANCE
 
@@ -38,4 +40,36 @@ In RemoveAttr:
 
 attributes can be specific types
 attributes can be stored as members
+access functions for specific attributes (these can be non-virtual inline)
+protected send functions for specific attributes (-"-)
+virtual functions need to be overrided
 
+Note: attributes should only be stored once in the hierarchy
+
+2.2.1 VIRTUAL FUNCTIONS
+
+GetAttr:
+ - if name == one of the locally stored, return that
+ - else call parent
+
+SetAttr:
+ - if name == one of the locally stored, set that & return
+ - else call parent
+
+HasAttr:
+ - if name == on of the locally stored, return true
+ - else call parent
+
+RemoveAttr:
+ - if name== one of the locally stored, no effect
+ - else call parent
+
+SendContents:
+ - send each of the locally stored (using the protected functions)
+ - call parent
+
+---
+
+And that's all there is to it!
+
+Stefanus Du Toit (sdt) -- <sdt@gmx.net>

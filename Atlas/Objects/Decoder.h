@@ -45,16 +45,30 @@
 
 namespace Atlas { namespace Objects {
 
+/** Objects hierarchy decoder
+ *
+ * This decoder can be bound to a codec, will assemble incoming messages,
+ * check their type, convert them into the appropriate instance in the
+ * Objects hierarchy and call the relevant member functions, which
+ * subclasses can conveniently override to pick up the object.
+ *
+ * @see Atlas::Objects::Encoder
+ * @author Stefanus Du Toit <sdt@gmx.net>
+ */
 class Decoder : public Atlas::Message::DecoderBase
 {
 public:
+    /// Default destructor.
     virtual ~Decoder();
 
 protected:
+    /// Overridden by Objects::Decoder to retrieve the object.
     virtual void ObjectArrived(const Atlas::Message::Object&);
 
+    /// An unknown object has arrived.
     virtual void UnknownObjectArrived(const Atlas::Message::Object&) { }
 
+    /// A Root object has arrived.
     virtual void ObjectArrived(const Root&) { }
 
     virtual void ObjectArrived(const Entity::Account&) { }

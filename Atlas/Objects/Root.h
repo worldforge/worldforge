@@ -31,31 +31,50 @@ public:
 */
 class Root {
 public:
+    /// Construct a Root class definition.
     Root();
+    /// Construct a Root instance.
     Root(const string& id);
+    /// Default destructor.
     virtual ~Root();
 
+    /// Create a new instance of Root.
     static Root Instantiate();
 
+    /// Check whether the attribute "name" exists.
     virtual bool HasAttr(const std::string& name) const;
+    /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
+    /// not exist.
     virtual Atlas::Message::Object GetAttr(const std::string& name)
         const throw (NoSuchAttrException);
+    /// Set the attribute "name" to the value given by "attr".
     virtual void SetAttr(const std::string& name,
                          const Atlas::Message::Object& attr);
+    /// Remove the attribute "name". This will not work for static attributes.
     virtual void RemoveAttr(const std::string& name);
 
+    /// Set the "parents" attribute.
     inline void SetParents(const Atlas::Message::Object::ListType& val);
+    /// Set the "id" attribute.
     inline void SetId(const std::string& val);
+    /// Set the "objtype" attribute.
     inline void SetObjtype(const std::string& val);
+    /// Set the "name" attribute.
     inline void SetName(const std::string& val);
 
+    /// Retrieve the "parents" attribute.
     inline const Atlas::Message::Object::ListType& GetParents() const;
+    /// Retrieve the "id" attribute.
     inline const std::string& GetId() const;
+    /// Retrieve the "objtype" attribute.
     inline const std::string& GetObjtype() const;
+    /// Retrieve the "name" attribute.
     inline const std::string& GetName() const;
     
+    /// Convert this object to a Message::Object.
     virtual Atlas::Message::Object AsObject() const;
 
+    /// Send the contents of this object to a Bridge.
     virtual void SendContents(Atlas::Bridge* b) const;
 
 protected:

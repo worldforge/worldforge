@@ -23,9 +23,12 @@ This is base operation for all other
 class Sniff : public Perceive
 {
 public:
+                /// Construct a Sniff class definition.
     Sniff();
+                /// Default destructor.
     virtual ~Sniff() { }
 
+                /// Create a new instance of Sniff.
     static Sniff Instantiate();
 
 protected:

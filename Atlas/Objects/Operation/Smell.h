@@ -19,9 +19,12 @@ Base operator for all kind of perceptions
 class Smell : public Perception
 {
 public:
+                /// Construct a Smell class definition.
     Smell();
+                /// Default destructor.
     virtual ~Smell() { }
 
+                /// Create a new instance of Smell.
     static Smell Instantiate();
 
 protected:

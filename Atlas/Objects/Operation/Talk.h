@@ -19,9 +19,12 @@ need to relook at that 'Magic voice that steps on something crunchy and makes ma
 class Talk : public Communicate
 {
 public:
+                /// Construct a Talk class definition.
     Talk();
+                /// Default destructor.
     virtual ~Talk() { }
 
+                /// Create a new instance of Talk.
     static Talk Instantiate();
 
 protected:

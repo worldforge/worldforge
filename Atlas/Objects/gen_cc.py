@@ -81,7 +81,12 @@ class GenerateCC:
             self.out.write("} ")
         self.out.write("// namespace " + string.join(ns_list, "::"))
         self.out.write("\n")
+    def doc(self, indent, text):
+        for i in range(0, indent):
+            self.out.write("    ")
+        self.out.write("/// %s\n" % text)
     def constructors_if(self, obj):
+        self.doc(4, "Construct a " + self.classname + " class definition.")
         self.out.write("    " + self.classname + "();\n")
     def default_map(self, name, obj):
         self.out.write("    Object::MapType " + name + ";\n")
@@ -283,34 +288,48 @@ class GenerateCC:
         self.out.write("\n{\n")
         self.out.write("public:\n")
         self.constructors_if(obj)
+        self.doc(4, "Default destructor.")
         self.out.write("    virtual ~" + self.classname + "() { }\n")
         self.out.write("\n")
+        self.doc(4, "Create a new instance of " + self.classname + ".")
         self.out.write("    static " + self.classname + " Instantiate();\n")
         self.out.write("\n")
         static_attrs = filter(lambda attr,obj=obj:(not attr.name in descr_attrs) \
           and (not find_in_parents(obj.attr['parents'].value, attr.name)), \
           obj.attr_list)
         if len(static_attrs) > 0:
+            self.doc(4, 'Check whether the attribute "name" exists.')
             self.out.write("    virtual bool HasAttr(const std::string& name)"\
                            + "const;\n")
+            self.doc(4, 'Retrieve the attribute "name". Throws ' \
+                       +'NoSuchAttrException if it does')
+            self.doc(4, 'not exist.')
             self.out.write("    virtual Atlas::Message::Object GetAttr(")
             self.out.write("const std::string& name)\n")
             self.out.write("            const throw (NoSuchAttrException);\n")
+            self.doc(4, 'Set the attribute "name" to the value given by' \
+                      + '"attr"')
             self.out.write("    virtual void SetAttr(const std::string& name,\n")
             self.out.write("                         ")
             self.out.write("const Atlas::Message::Object& attr);\n")
+            self.doc(4, 'Remove the attribute "name". This will not work for '\
+                      + 'static attributes.')
             self.out.write("    virtual void RemoveAttr(")
             self.out.write("const std::string& name);\n")
             self.out.write("\n")
+            self.doc(4, 'Send the contents of this object to a Bridge.')
             self.out.write("    virtual void SendContents(Atlas::Bridge* b);\n")
             self.out.write("\n")
+            self.doc(4, 'Convert this object to a Message::Object.')
             self.out.write("    virtual Atlas::Message::Object AsObject() const;\n")
             self.out.write("\n")
             for attr in static_attrs:
+                self.doc(4, 'Set the "%s" attribute.' % attr.name)
                 self.out.write("    inline void Set" + classize(attr.name))
                 self.out.write('(' + cpp_param_type[attr.type] + ' val);\n')
             self.out.write('\n')
             for attr in static_attrs:
+                self.doc(4, 'Retrieve the "%s" attribute.' % attr.name)
                 self.out.write('    inline %s Get' % cpp_param_type[attr.type])
                 self.out.write(classize(attr.name) + '() const;\n')
             self.out.write('\n')

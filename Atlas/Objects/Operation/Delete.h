@@ -23,9 +23,12 @@ This is base operation for all other
 class Delete : public Action
 {
 public:
+                /// Construct a Delete class definition.
     Delete();
+                /// Default destructor.
     virtual ~Delete() { }
 
+                /// Create a new instance of Delete.
     static Delete Instantiate();
 
 protected:

@@ -19,9 +19,12 @@ Later in hierarchy tree objtype changes to 'object' when actual game objects are
 class Admin : public Account
 {
 public:
+                /// Construct a Admin class definition.
     Admin();
+                /// Default destructor.
     virtual ~Admin() { }
 
+                /// Create a new instance of Admin.
     static Admin Instantiate();
 
 protected:

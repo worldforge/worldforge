@@ -19,9 +19,12 @@ Base operator for all kind of perceptions
 class Disappearance : public Sight
 {
 public:
+                /// Construct a Disappearance class definition.
     Disappearance();
+                /// Default destructor.
     virtual ~Disappearance() { }
 
+                /// Create a new instance of Disappearance.
     static Disappearance Instantiate();
 
 protected:

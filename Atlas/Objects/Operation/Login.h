@@ -19,9 +19,12 @@ For more about <a href="login.html">out of game atlas here</a>
 class Login : public Get
 {
 public:
+                /// Construct a Login class definition.
     Login();
+                /// Default destructor.
     virtual ~Login() { }
 
+                /// Create a new instance of Login.
     static Login Instantiate();
 
 protected:

@@ -8,13 +8,29 @@
 #include "../EncoderBase.h"
 
 namespace Atlas { namespace Objects {
-    
+
+/** Objects hierarchy encoder
+ *
+ * This Encoder can be used to send objects in the Atlas::Objects hierarchy to
+ * a certain Bridge (e.g. a codec).
+ *
+ * Simply call the StreamMessage member with a pointer to the object to be
+ * sent.
+ *
+ * @see Atlas::Objects::Decoder
+ * @author Stefanus Du Toit <sdt@gmx.net>
+ */
 class Encoder : public Atlas::EncoderBase
 {
 public:
+    /// The default constructor.
+    /// @param b The Bridge to which objects are to be sent.
     Encoder(Atlas::Bridge* b) : EncoderBase(b) { }
+    /// The default destructor.
     virtual ~Encoder() { }
 
+    /// Send an object to the bridge.
+    /// @param o The object that is to be sent.
     virtual void StreamMessage(Atlas::Objects::Root* o)
     {
         b->StreamMessage(Bridge::MapBegin);
