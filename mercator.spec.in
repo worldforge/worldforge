@@ -29,7 +29,7 @@ Mercator is designed to handle terrain data.
 %setup -q
 
 %build
-%configure --enable-static
+CXXFLAGS=$RPM_OPT_FLAGS %configure --enable-static
 make
 
 %install
