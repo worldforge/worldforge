@@ -9,6 +9,10 @@
 #include <Eris/Connection.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
+#include <Eris/TypeService.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/TypeBoundRedispatch.h>
+#include <Eris/Response.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -125,6 +129,38 @@ void View::disappear(const std::string& eid)
     }
 }
 
+void View::sightResponse(const RootOperation& op)
+{
+    if (op->instanceOf(ERROR_NO)) {
+        warning() << "got error response to View LOOK";
+        return;
+    } else if (!op->instanceOf(SIGHT_NO) || op->getArgs().empty()) {
+        warning() << "got malformed LOOK response, not a SIGHT";
+        return;
+    }
+    
+    GameEntity gent = smart_dynamic_cast<GameEntity>(op->getArgs().front());
+    if (!gent.isValid()) {
+        warning() << "got malformed SIGHT, arg is not an entity";
+        return;
+    }
+    
+    TypeInfo* type = getConnection()->getTypeService()->getTypeForAtlas(gent);
+    if (!type->isBound()) {
+        TypeInfoSet unbound;
+        unbound.insert(type);
+        
+        // we have to re-await this now, hmm
+        getConnection()->getResponder()->await(op->getRefno(), 
+                                        this, &View::sightResponse);
+                                        
+        new TypeBoundRedispatch(getConnection(), op, unbound);
+        return;
+    }
+    
+    sight(gent);
+}
+
 void View::sight(const GameEntity& gent)
 {
     bool visible = true;
@@ -172,6 +208,7 @@ void View::sight(const GameEntity& gent)
 Entity* View::initialSight(const GameEntity& gent)
 {
     Entity* ent = Factory::createEntity(gent, this);
+    assert(m_contents.count(gent->getId()) == 0);
     m_contents[gent->getId()] = ent;
     ent->init(gent);
     
@@ -182,6 +219,7 @@ Entity* View::initialSight(const GameEntity& gent)
 void View::create(const GameEntity& gent)
 {
     Entity* ent = Factory::createEntity(gent, this);
+    assert(m_contents.count(gent->getId()) == 0);
     m_contents[gent->getId()] = ent;
     ent->init(gent);
     
@@ -211,11 +249,6 @@ void View::deleteEntity(const std::string& eid)
     }
 }
 
-bool View::maybeHandleError(const Error& err)
-{
-    return false;
-}
-
 #pragma mark -
 
 bool View::isPending(const std::string& eid) const
@@ -243,6 +276,8 @@ void View::getEntityFromServer(const std::string& eid)
     look->setSerialno(getNewSerialno());
     look->setFrom(m_owner->getId());
     
+    getConnection()->getResponder()->await(look->getSerialno(), 
+                                        this, &View::sightResponse);
     getConnection()->send(look);
 }
 

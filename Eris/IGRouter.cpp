@@ -8,9 +8,6 @@
 #include <Eris/View.h>
 #include <Eris/Entity.h>
 #include <Eris/LogStream.h>
-#include <Eris/TypeService.h>
-#include <Eris/TypeInfo.h>
-#include <Eris/TypeBoundRedispatch.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -38,38 +35,18 @@ IGRouter::~IGRouter()
 
 Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 {
-    if (!op->isDefaultSeconds())
-    {
+    if (!op->isDefaultSeconds()) {
         // grab out world time
         m_avatar->updateWorldTime(op->getSeconds());
     }
     
     const std::vector<Root>& args = op->getArgs();
-    
+
     Sight sight = smart_dynamic_cast<Sight>(op);
-    if (sight.isValid())
-    {
+    if (sight.isValid()) {
         assert(!args.empty());
         RootOperation sop = smart_dynamic_cast<RootOperation>(args.front());
-        if (sop.isValid())
-            return handleSightOp(sop);
-            
-        // initial sight of entities
-        GameEntity gent = smart_dynamic_cast<GameEntity>(args.front());
-        if (gent.isValid())
-        {
-            TypeInfo* type = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
-            if (!type->isBound()) {
-                TypeInfoSet unbound;
-                unbound.insert(type);
-                
-                new TypeBoundRedispatch(m_avatar->getConnection(), op, unbound);
-                return WILL_REDISPATCH;
-            }
-    
-            m_view->sight(gent);
-            return HANDLED;
-        }
+        if (sop.isValid()) return handleSightOp(sop);
     }
     
     Appearance appear = smart_dynamic_cast<Appearance>(op);
@@ -94,12 +71,6 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
             m_view->disappear(args[A]->getId());
             
         return HANDLED;
-    }
-    
-    if (op->getClassNo() == ERROR_NO) {
-        Error err = smart_dynamic_cast<Error>(op);
-        if (m_view->maybeHandleError(err)) 
-            return HANDLED;
     }
     
     return IGNORED;

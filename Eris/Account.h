@@ -162,7 +162,7 @@ public:
 protected:
     friend class AccountRouter;
     
-    void sightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
+    void sightCharacter(const Atlas::Objects::Operation::RootOperation& op);
     
     void loginComplete(const Atlas::Objects::Entity::Account &p);
     void loginError(const Atlas::Objects::Operation::Error& err);

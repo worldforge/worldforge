@@ -1,6 +1,29 @@
-2005-01-18  Simon Goodall <simon@simongoodall.co.uk>
+2005-02-21  James Turner  <james@worldforge.org>
+
+	* Eris/View.cpp, Eris/View.h, Eris/IGRouter.cpp: route in-game sight
+	  responses through the responder logic.
+	  
+	* Eris/Response.cpp: make the responder logic deal with re-awaits,
+	  since this is needed for redispatching of in-game sights where the
+	  entity type is still unbound.
+
+	* Eris/Account.cpp: fix the ordering in loginResponse and avatarResponse,
+	  so errors are handled correctly.
+
+2005-02-18  Simon Goodall <simon@simongoodall.co.uk>
 
 	* Eris/TypeInfo.h: Add getParents() accessor.
+	
+2005-02-17  James Turner  <james@worldforge.org>
+
+	* Eris/Factory.cpp: make the factory set be stored as an auto_ptr, so it
+	  gets cleaned up at library tear-down. This should mean Eris cleans up
+	  all it's data structures cleanly, but work with valgrind and other
+	  tools is needed to verify this.
+	  
+	* Eris/Account.cpp, Eris/Account.h: change character looks to use the
+	  responder system. As a result, AccountRouter is now very small, only
+	  handling spontaneous (server-initiated) logout ops.
 
 2005-01-17  Al Riddoch  <alriddoch@zepler.org>
 

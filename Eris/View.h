@@ -70,6 +70,7 @@ protected:
     
     void appear(const std::string& eid, float stamp);
     void disappear(const std::string& eid);
+    void sightResponse(const Atlas::Objects::Operation::RootOperation& op);
     void sight(const Atlas::Objects::Entity::GameEntity& ge);
     void create(const Atlas::Objects::Entity::GameEntity& ge);
     void deleteEntity(const std::string& eid);
@@ -95,10 +96,6 @@ private:
 
     /** helper to update the top-level entity, fire signals, etc */
     void setTopLevelEntity(Entity* newTopLevel);
-
-    /** handle an error operation from the IG router, if it applies to
-    us, otherwise return false. */
-    bool maybeHandleError(const Atlas::Objects::Operation::Error& err);
 
     typedef std::map<std::string, Entity*> IdEntityMap;
 

@@ -21,13 +21,17 @@ bool ResponseTracker::handleOp(const RootOperation& op)
     
     RefnoResponseMap::iterator it = m_pending.find(op->getRefno());
     if (it == m_pending.end()) {
-        warning() << "received op with valid refno. but no response is registered";
+        warning() << "received op with valid refno (" << op->getRefno() << 
+            ") but no response is registered";
         return false;
     }
 
-    it->second->responseReceived(op);
-    delete it->second;
+// order here is important, so the responseReceived can re-await the op
     m_pending.erase(it);
+        
+    ResponseBase* resp = it->second;
+    resp->responseReceived(op);
+    delete resp;
 
     return true;
 }

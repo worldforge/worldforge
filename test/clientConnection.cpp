@@ -424,7 +424,7 @@ void ClientConnection::activateCharacter(const std::string& charId, const RootOp
     info->setRefno(op->getSerialno());
     
     send(info);
-    ag->processOp(op); // process as normal
+    //ag->processOp(op); // process as normal
 }
 
 #pragma mark -

@@ -50,23 +50,7 @@ public:
             m_account->internalLogout(false);
             return HANDLED;
         }
-           
-        if (m_account->isLoggedIn() && op->instanceOf(SIGHT_NO))
-        {
-            if (op->getTo() != m_account->getId()) {
-                warning() << "accountRouter got weird sight of " << op;
-                return IGNORED;
-            }
-            
-            const std::vector<Root>& args = op->getArgs();
-            assert(!args.empty());
-            GameEntity character = smart_dynamic_cast<GameEntity>(args.front());
-            if (character.isValid()) {
-                m_account->sightCharacter(character);
-                return HANDLED;
-            }
-        }
-        
+  
         return IGNORED;
     }
 
@@ -206,6 +190,7 @@ void Account::refreshCharacterInfo()
         obj->setId(*I);
         lk->setArgs1(obj);
         lk->setSerialno(getNewSerialno());
+        m_con->getResponder()->await(lk->getSerialno(), this, &Account::sightCharacter);
         m_con->send(lk);
     }
 }
@@ -343,11 +328,11 @@ void Account::internalLogout(bool clean)
 
 void Account::loginResponse(const RootOperation& op)
 {
-    if (op->instanceOf(INFO_NO)) {
+    if (op->instanceOf(ERROR_NO)) {
+        loginError(smart_dynamic_cast<Error>(op));
+    } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args = op->getArgs();
         loginComplete(smart_dynamic_cast<AtlasAccount>(args.front()));
-    } else if (op->instanceOf(ERROR_NO)) {
-        loginError(smart_dynamic_cast<Error>(op));
     } else
         warning() << "received malformed login response";
 }
@@ -373,6 +358,7 @@ void Account::loginComplete(const AtlasAccount &p)
 
 void Account::loginError(const Error& err)
 {
+    assert(err.isValid());
     if (m_status != LOGGING_IN)
         error() << "got loginError while not logging in";
         
@@ -397,7 +383,14 @@ void Account::handleLoginTimeout()
 
 void Account::avatarResponse(const RootOperation& op)
 {
-    if (op->instanceOf(INFO_NO)) {
+    if (op->instanceOf(ERROR_NO)) {
+        const std::vector<Root>& args = op->getArgs();
+        std::string msg = args[0]->getAttr("message").asString();
+        
+        // creating or taking a character failed for some reason
+        AvatarFailure(msg);
+        m_status = Account::LOGGED_IN;
+    } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args = op->getArgs();
    
         GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
@@ -409,24 +402,22 @@ void Account::avatarResponse(const RootOperation& op)
         Avatar* av = new Avatar(this, ent->getId());
         AvatarSuccess.emit(av);
         m_status = Account::LOGGED_IN;
-    } else if (op->instanceOf(ERROR_NO)) {
-        const std::vector<Root>& args = op->getArgs();
-        std::string msg = args[0]->getAttr("message").asString();
-        
-        // creating or taking a character failed for some reason
-        AvatarFailure(msg);
-        m_status = Account::LOGGED_IN;
-    } else
+    } else 
         warning() << "received malformed login response";
 }
 
-void Account::sightCharacter(const GameEntity& ge)
+void Account::sightCharacter(const RootOperation& op)
 {
     if (!m_doingCharacterRefresh) {
-        error() << "got sight of character " << ge->getId() << " while outside a refresh, ignoring";
+        error() << "got sight of character outside a refresh, ignoring";
         return;
     }
     
+    const std::vector<Root>& args = op->getArgs();
+    assert(!args.empty());
+    GameEntity ge = smart_dynamic_cast<GameEntity>(args.front());
+    assert(ge.isValid());
+
     CharacterMap::iterator C = _characters.find(ge->getId());
     if (C != _characters.end()) {
         error() << "duplicate sight of character " << ge->getId();

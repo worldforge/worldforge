@@ -302,10 +302,12 @@ void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
 
 void TypeService::verifyOpArguments(const Root& obj, TypeInfoSet& unbound)
 {
-    /* two different cases for verifying op arguments; one where the op
+    /*
+    Two different cases for verifying op arguments; one where the op
     itself was bound, and hence has the args decoded, and another for
     the case where the op type was unknown, and hence we only have
-    Message::Elements. */
+    Message::Elements. 
+    */
     if (obj->instanceOf(Atlas::Objects::Operation::ROOT_OPERATION_NO)) {
         RootOperation op = smart_dynamic_cast<RootOperation>(obj);
         assert(op.isValid());
