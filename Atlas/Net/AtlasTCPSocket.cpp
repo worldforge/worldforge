@@ -32,7 +32,7 @@ ATCPSocket::ATCPSocket()
 ATCPSocket::~ATCPSocket()
 {
 #ifndef _WIN32
-	close(sock);
+	::close(sock);
 	sock = (SOCKET)-1;
 #endif
 }
