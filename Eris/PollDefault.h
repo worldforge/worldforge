@@ -18,7 +18,7 @@ public:
 	virtual void changeStream(const basic_socket_stream*, Check);
 	virtual void removeStream(const basic_socket_stream*);
 
-	static void poll(unsigned long timeout);
+	static void poll(unsigned long timeout = 0);
 
 	typedef std::map<const basic_socket_stream*,Check> MapType;
 private:
