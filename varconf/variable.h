@@ -28,39 +28,40 @@
 
 #include <string>
 #include <iostream>
+#include <sigc++/handle_system.h>
 
 namespace varconf {
 
-class Variable {
+class VarBase : virtual public SigC::Object {
 public:
-  Variable();
-  Variable( const Variable& c);
-  Variable( const bool b);
-  Variable( const int i);
-  Variable( const double d);
-  Variable( const std::string& s);
-  Variable( const char* s);
+  VarBase();
+  VarBase( const VarBase& c);
+  VarBase( const bool b);
+  VarBase( const int i);
+  VarBase( const double d);
+  VarBase( const std::string& s);
+  VarBase( const char* s);
 
-  virtual ~Variable() {}
+  virtual ~VarBase() {}
 
-  friend std::ostream& operator<<( std::ostream& out, const Variable& v);
-  friend bool operator ==( const Variable& one, const Variable& two);
+  friend std::ostream& operator<<( std::ostream& out, const VarBase& v);
+  friend bool operator ==( const VarBase& one, const VarBase& two);
 
-  Variable& operator=( const Variable& c);
-  Variable& operator=( const bool b);
-  Variable& operator=( const int i);
-  Variable& operator=( const double d);
-  Variable& operator=( const std::string& s);
+  virtual VarBase& operator=( const VarBase& c);
+  virtual VarBase& operator=( const bool b);
+  virtual VarBase& operator=( const int i);
+  virtual VarBase& operator=( const double d);
+  virtual VarBase& operator=( const std::string& s);
 
-  operator bool();
-  operator int();
-  operator double();
-  operator std::string();
+  virtual operator bool();
+  virtual operator int();
+  virtual operator double();
+  virtual operator std::string();
 
-  bool is_bool();
-  bool is_int();
-  bool is_double();
-  bool is_string();
+  virtual bool is_bool();
+  virtual bool is_int();
+  virtual bool is_double();
+  virtual bool is_string();
 
 private:
   bool m_have_bool;
@@ -72,6 +73,50 @@ private:
   int m_val_int;
   double m_val_double;
   std::string m_val;
+};
+
+typedef SigC::Handle<VarBase,SigC::Scopes::Extend> VarPtr;
+
+class Variable : public VarPtr {
+public:
+  Variable()			  : VarPtr(new VarBase())  {}
+  Variable( const Variable& c)	  : VarPtr(c)              {}
+  Variable( VarBase* vb)	  : VarPtr(vb)             {}
+  Variable( const bool b)	  : VarPtr(new VarBase(b)) {}
+  Variable( const int i)	  : VarPtr(new VarBase(i)) {}
+  Variable( const double d)	  : VarPtr(new VarBase(d)) {}
+  Variable( const std::string& s) : VarPtr(new VarBase(s)) {}
+  Variable( const char* s)	  : VarPtr(new VarBase(s)) {}
+
+  virtual ~Variable() {}
+
+  friend std::ostream& operator<<( std::ostream& out, const Variable& v)
+	{return (out << *v);}
+  friend bool operator ==( const Variable& one, const Variable& two)
+	{return (*one == *two);}
+
+  Variable& operator=( const Variable& c);
+  Variable& operator=( VarBase* vb);
+  Variable& operator=( const bool b);
+  Variable& operator=( const int i);
+  Variable& operator=( const double d);
+  Variable& operator=( const std::string& s);
+
+  operator bool()		{return bool(**this);}
+  operator int()		{return int(**this);}
+  operator double()		{return double(**this);}
+  operator std::string()	{return std::string(**this);}
+
+  // This is sort of funky. The corresponding functions in VarBase
+  // can't be const, since the versions in dynvar::Base call
+  // set_val(), which certainly isn't const. These versions
+  // can be const, however, since (const Variable) is a pointer
+  // to VarBase, not (const VarBase).
+
+  bool is_bool() const		{return (*this)->is_bool();}
+  bool is_int()	 const		{return (*this)->is_int();}
+  bool is_double() const	{return (*this)->is_double();}
+  bool is_string() const	{return (*this)->is_string();}
 };
 
 } // namespace varconf

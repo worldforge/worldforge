@@ -43,6 +43,10 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/include/varconf/parse_error.h
 %{prefix}/include/varconf/variable.h
 %{prefix}/include/varconf/varconf.h
+%{prefix}/include/varconf/dynbase.h
+%{prefix}/include/varconf/dyntypes.h
+%{prefix}/include/varconf/dyncmp.h
+%{prefix}/include/varconf/dynvar.h
 %{prefix}/lib/libvarconf.a
 %{prefix}/lib/libvarconf.la
 %{prefix}/lib/libvarconf.so

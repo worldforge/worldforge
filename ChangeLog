@@ -1,4 +1,20 @@
 ChangeLog for varconf
+
+Wednesday, November 7, 2001 -- Ron Steinke <rsteinke@w-link.net>
+  * Changed the Variable class to a smart pointer to its old implementation,
+    essentially %s/Variable/VarBase/g, then wrote a new Variable class
+    based on SigC::Handle with the Variable API added.
+  + added dynbase.h, dynbase.cpp, dyntypes.h, dyntypes.cpp,
+    dyncmp.h, dyncmp.cpp, dynvar.h; these provide derived types
+    of VarBase which dynamically depend on the configuration
+    variables in Config::inst(), the user interface (for most
+    purposes) consists of the functions in dynvar.h which
+    deal only with class Variable
+  + added doc/.cvsignore, doc/old/.cvsignore to ignore Makefile, Makefile.in
+  * modified tests/.cvsignore to ignore .libs directory
+  * modified varconf/.cvsignore to ignore new .lo objects
+  * modified varconf.spec.in to add new header files
+
 Saturday, August 4, 2001 -- Joseph A. Zupko <jaz147@psu.edu>
   * fixed outdated information, formatting and wording in README.
   * minor fixes to config.cpp

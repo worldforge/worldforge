@@ -34,14 +34,14 @@
 
 namespace varconf {
 
-Variable::Variable()
+VarBase::VarBase()
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(false), m_val_bool(false), m_val_int(0), m_val_double(0.0),
    m_val("")
 {
 }
 
-Variable::Variable(const Variable& c)
+VarBase::VarBase(const VarBase& c)
  : m_have_bool(c.m_have_bool), m_have_int(c.m_have_int),
    m_have_double(c.m_have_double), m_have_string(c.m_have_string),
    m_val_bool(c.m_val_bool), m_val_int(c.m_val_int),
@@ -49,14 +49,14 @@ Variable::Variable(const Variable& c)
 {
 }
 
-Variable::Variable(const bool b)
+VarBase::VarBase(const bool b)
  : m_have_bool(true), m_have_int(false), m_have_double(false),
    m_have_string(true), m_val_bool(b), m_val_int(0), m_val_double(0.0)
 {
   m_val = (b ? "true" : "false");
 }
 
-Variable::Variable(const int i)
+VarBase::VarBase(const int i)
  : m_have_bool(false), m_have_int(true), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0)
 {
@@ -65,7 +65,7 @@ Variable::Variable(const int i)
   m_val = buf;
 }
 
-Variable::Variable(const double d)
+VarBase::VarBase(const double d)
  : m_have_bool(false), m_have_int(false), m_have_double(true),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d)
 {
@@ -74,21 +74,21 @@ Variable::Variable(const double d)
   m_val = buf;
 }
 
-Variable::Variable(const std::string& s)
+VarBase::VarBase(const std::string& s)
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
    m_val(s)
 {
 }
 
-Variable::Variable(const char* s)
+VarBase::VarBase(const char* s)
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
    m_val(s)
 {
 }
 
-std::ostream& operator<<( std::ostream& out, const Variable& v)
+std::ostream& operator<<( std::ostream& out, const VarBase& v)
 {
     for (size_t i = 0; i < v.m_val.size(); i++) {
       if (v.m_val[i] == '"') out << '\\';
@@ -97,7 +97,7 @@ std::ostream& operator<<( std::ostream& out, const Variable& v)
     return out;
 }
 
-bool operator ==( const Variable& one, const Variable& two)
+bool operator ==( const VarBase& one, const VarBase& two)
 {
   if ( one.m_have_bool == two.m_have_bool &&
        one.m_have_int == two.m_have_int &&
@@ -112,7 +112,7 @@ bool operator ==( const Variable& one, const Variable& two)
   return false;
 }
 
-Variable& Variable::operator=( const Variable& c)
+VarBase& VarBase::operator=( const VarBase& c)
 {
   if (&c == this) return (*this);
   m_have_bool = c.m_have_bool; m_have_int = c.m_have_int;
@@ -122,7 +122,7 @@ Variable& Variable::operator=( const Variable& c)
   return (*this);
 }
 
-Variable& Variable::operator=(const bool b)
+VarBase& VarBase::operator=(const bool b)
 {
   m_have_bool = true; m_have_int = false;
   m_have_double = false; m_have_string = true;
@@ -131,7 +131,7 @@ Variable& Variable::operator=(const bool b)
   return (*this);
 }
 
-Variable& Variable::operator=(const int i)
+VarBase& VarBase::operator=(const int i)
 {
   m_have_bool = false; m_have_int = true;
   m_have_double = false; m_have_string = true;
@@ -142,7 +142,7 @@ Variable& Variable::operator=(const int i)
   return (*this);
 }
 
-Variable& Variable::operator=(const double d)
+VarBase& VarBase::operator=(const double d)
 {
   m_have_bool = false; m_have_int = false;
   m_have_double = true; m_have_string = true;
@@ -153,7 +153,7 @@ Variable& Variable::operator=(const double d)
   return (*this);
 }
 
-Variable& Variable::operator=(const std::string& s)
+VarBase& VarBase::operator=(const std::string& s)
 {
   m_have_bool = false; m_have_int = false;
   m_have_double = false; m_have_string = true;
@@ -162,7 +162,7 @@ Variable& Variable::operator=(const std::string& s)
   return (*this);
 }
 
-Variable::operator bool()
+VarBase::operator bool()
 {
   if (!m_have_bool) {
     if ((m_val == "on") || (m_val == "1") || (m_val == "true") || (m_val ==
@@ -172,7 +172,7 @@ Variable::operator bool()
   return m_val_bool;
 }
 
-Variable::operator int()
+VarBase::operator int()
 {
   if (!m_have_int) {
     m_val_int = atoi(m_val.c_str());
@@ -181,7 +181,7 @@ Variable::operator int()
   return m_val_int;
 }
 
-Variable::operator double()
+VarBase::operator double()
 {
   if (!m_have_double) {
     m_val_double = atof(m_val.c_str());
@@ -190,12 +190,12 @@ Variable::operator double()
   return m_val_double;
 }
 
-Variable::operator std::string()
+VarBase::operator std::string()
 {
   return m_val;
 }
 
-bool Variable::is_bool()
+bool VarBase::is_bool()
 {
   if (!is_string()) return false;
   if ( (m_val == "on") || (m_val == "off")
@@ -206,7 +206,7 @@ bool Variable::is_bool()
      ) return true; else return false;
 }
 
-bool Variable::is_int()
+bool VarBase::is_int()
 {
   if (!is_string()) return false;
   for (size_t i = 0; i < m_val.size(); i++) if (!isdigit(m_val[i]))
@@ -214,7 +214,7 @@ bool Variable::is_int()
   return true;
 }
 
-bool Variable::is_double()
+bool VarBase::is_double()
 {
   if (!is_string()) return false;
 
@@ -232,9 +232,45 @@ bool Variable::is_double()
   return true;
 }
 
-bool Variable::is_string()
+bool VarBase::is_string()
 {
   return m_have_string;
+}
+
+Variable& Variable::operator=( const Variable& c)
+{
+  VarPtr::operator=(c);
+  return *this;
+}
+
+Variable& Variable::operator=( VarBase* vb)
+{
+  VarPtr::operator=(vb);
+  return *this;
+}
+
+Variable& Variable::operator=( const bool b)
+{
+  VarPtr::operator=(new VarBase(b));
+  return *this;
+}
+
+Variable& Variable::operator=( const int i)
+{
+  VarPtr::operator=(new VarBase(i));
+  return *this;
+}
+
+Variable& Variable::operator=( const double d)
+{
+  VarPtr::operator=(new VarBase(d));
+  return *this;
+}
+
+Variable& Variable::operator=( const std::string& s)
+{
+  VarPtr::operator=(new VarBase(s));
+  return *this;
 }
 
 } // namespace varconf

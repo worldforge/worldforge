@@ -4,5 +4,6 @@
 #include <varconf/Config.h>
 #include <varconf/parse_error.h>
 #include <varconf/variable.h>
+#include <varconf/dynvar.h>
 
 #endif
