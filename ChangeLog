@@ -1,3 +1,8 @@
+Friday, March 08 2002, James Turner
+
+	* Fixed .so version information. Thanks to Damien for the
+	  motivation, and Ron Steinke for showing me how.
+
 Thursday, March 07 2002, James Turner
 
 	* Changed delay on select() to be 0,0 : previously it was

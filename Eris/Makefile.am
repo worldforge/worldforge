@@ -1,6 +1,5 @@
 lib_LTLIBRARIES = liberis.la
 
-# RELEASE = -release $(VERSION)-unstable
 
 if PYTHON_BINDINGS
 PYBIND_CFLAGS = -I$(top_srcdir)/boost-python -I/usr/include/python 
@@ -12,7 +11,7 @@ endif
 ##AM_CXXFLAGS = -DWFMATH_CONVERSION
 
 INCLUDES += $(PYBIND_CFLAGS)
-liberis_la_LDFLAGS = -version-info 0:0:0 $(RELEASE)
+liberis_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
 	
 liberis_la_SOURCES = \
 	Entity.cpp \
