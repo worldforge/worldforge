@@ -1,3 +1,8 @@
+2004-07-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.h: Don't use friend on class definitions
+	  as its forbidden in gcc 3.4.1.
+
 2004-06-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Fix devel dependencies in rpm spec.

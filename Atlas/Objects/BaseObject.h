@@ -106,7 +106,7 @@ public:
 
     // FIXME should this hold a reference to the object it's
     // iterating over?
-    friend class iterator
+    class iterator
     {
     public:
         friend class BaseObjectData;
@@ -130,7 +130,7 @@ public:
 
         bool operator!=(const iterator& I) const {return !operator==(I);}
 
-        friend class PsuedoElement
+        class PsuedoElement
         {
             public:
                 PsuedoElement(const iterator& I) : m_I(I) {}
@@ -146,6 +146,8 @@ public:
                 const iterator& m_I;
         };
 
+        friend class PsuedoElement;
+
         typedef std::pair<std::string,PsuedoElement> value_type;
 
         const value_type& operator*() const {return m_val;}
@@ -157,10 +159,11 @@ public:
         Message::MapType::iterator m_I; // iterator in m_obj->m_attributes
         value_type m_val;
     };
+    friend class iterator;
 
     // FIXME should this hold a reference to the object it's
     // iterating over?
-    friend class const_iterator
+    class const_iterator
     {
     public:
         friend class BaseObjectData;
@@ -186,7 +189,7 @@ public:
 
         bool operator!=(const const_iterator& I) const {return !operator==(I);}
 
-        friend class PsuedoElement
+        class PsuedoElement
         {
             public:
                 PsuedoElement(const const_iterator& I) : m_I(I) {}
@@ -196,6 +199,8 @@ public:
             private:
                 const const_iterator& m_I;
         };
+
+        friend class PsuedoElement;
 
         typedef std::pair<std::string,PsuedoElement> value_type;
 
@@ -208,6 +213,8 @@ public:
         Message::MapType::const_iterator m_I; // const_iterator in m_obj->m_attributes
         value_type m_val;
     };
+
+    friend class const_iterator;
 
     iterator begin() {return iterator(*this, -1);}
     iterator end() {return iterator(*this, BASE_OBJECT_NO);}
