@@ -4,9 +4,8 @@
 
 import sys, os, filecmp
 sys.path.append("../../../Atlas-Python")
-import parse_xml
-from atlas_types import *
 from atlas import *
+from atlas.codecs import *
 
 def deb(): import pdb; pdb.pm()
 

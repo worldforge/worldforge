@@ -541,7 +541,8 @@ if __name__=="__main__":
 ##         sys.exit()
 
     #read XML spec
-    parseXML=parse_xml.get_parser()
+    parseXML=parse_xml.get_decoder()
+    parseXML.set_stream_mode()
     spec_xml_string = open("../../../../protocols/atlas/spec/atlas.xml").read()
 #    spec_xml_string = open("../../../../protocols/atlas/spec/core_atlas.xml").read()
     #convert list into dictionary
