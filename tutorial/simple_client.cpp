@@ -8,7 +8,7 @@
  */
 
 #include <iostream>
-#include <cc++/socket.h>
+#include <sockinet.h>
 #include <Atlas/Bridge.h>
 #include <Atlas/Negotiate.h>
 #include <Atlas/Net/Stream.h>
@@ -26,13 +26,10 @@ void helloWorld(Codec<iostream>& c)
 
 int main(int argc, char** argv)
 {
-    tcpstream stream("127.0.0.1:6767");
+    iosockinet stream(sockbuf::sock_stream);
 
-    if (!stream.isConnected()) {
-        cerr << "Failed to connect to 127.0.0.1:6767" << endl;
-        return 1;
-    }
-
+    stream->connect("127.0.0.1", 6767);
+    
     DebugBridge d;
     Net::StreamConnect conn("simple_client", stream, &d);
 
@@ -50,8 +47,6 @@ int main(int argc, char** argv)
     }
 
     Codec<iostream>* codec = conn.GetCodec();
-
-    stream.close();
 
     return 0;
 }
