@@ -59,12 +59,6 @@ const int DATA_BUFFER_SIZE = 4096;
 /// Storage of server information
 typedef std::list<ServerInfo> ServerList;
 
-typedef enum {
-	INVALID = 0,	///< The server list is not valid
-	VALID,		///< The list is valid and completed
-	IN_PROGRESS	///< The list is being collected / queried
-} MetaStatus;
-
 /// Meta encapsulates the meta-game system, including the meta-server protocol and queries
 class Meta : virtual public SigC::Object,
 		public Atlas::Objects::ObjectsDecoder
@@ -112,12 +106,6 @@ public:
     that 'CompletedServerList' is not emitted following cancellation. 
     */
     void cancel();
-
-    /// Get the current status of the Meta server list
-    MetaStatus getStatus() const
-    {
-        return m_status;
-    }
 
 // signals
 	
@@ -169,14 +157,24 @@ private:
     void setupRecvCmd();
     void setupRecvData(int words, uint32_t got);
         
+    void deleteQuery(MetaQuery* query);
+        
     const std::string m_clientName;	///< the name to use when negotiating
+    
+    typedef enum
+    {
+        INVALID = 0,	///< The server list is not valid
+        VALID,		///< The list is valid and completed
+        GETTING_LIST,   ///< Retrieving the list of game servers from the metaserver
+        QUERYING	///< Querying game servers for information
+    } MetaStatus;
+
     MetaStatus m_status;
     /// the metaserver query, eg metaserver.worldforge.org
     const std::string m_metaHost;       
 	
-    typedef std::list<MetaQuery*> MetaQueryList;
-    MetaQueryList m_activeQueries,
-		m_deleteQueries;
+    typedef std::set<MetaQuery*> QuerySet;
+    QuerySet m_activeQueries;
                 
     /// queries we will execute when active slots become frree
     StringList m_pendingQueries;

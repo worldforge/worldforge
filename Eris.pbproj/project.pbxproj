@@ -110,11 +110,13 @@
 			);
 			targets = (
 				C45DC3E60562F83D00D8F8F4,
+				C4AD293A05FA547D00AFB402,
 			);
 		};
 		C43FBCF1054315C5008FC2ED = {
 			children = (
 				C45DC4310562F83D00D8F8F4,
+				C4AD293B05FA547D00AFB402,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -627,6 +629,7 @@
 			buildRules = (
 			);
 			buildSettings = {
+				DEPLOYMENT_LOCATION = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Library/Frameworks /Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build";
@@ -637,6 +640,7 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Info-eris__Upgraded_.plist";
+				INSTALL_PATH = "/Users/jmt/Library/Frameworks ";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOL_FLAGS = "";
@@ -646,6 +650,7 @@
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = NO;
 			};
 			comments = "The WorldForge client-side session layer, which simplifies Atlas communication for many clients.";
 			dependencies = (
@@ -1379,6 +1384,7 @@
 		};
 		C4AD291A05FA259900AFB402 = {
 			children = (
+				C4AD293505FA53EA00AFB402,
 				C4AD291D05FA259900AFB402,
 				C4AD291E05FA259900AFB402,
 				C4AD291F05FA259900AFB402,
@@ -1537,6 +1543,107 @@
 			path = docs/Testcases;
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
+		};
+		C4AD293505FA53EA00AFB402 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = metaQuery.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4AD293805FA547D00AFB402 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4AD293905FA547D00AFB402 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4AD293F05FA549000AFB402,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4AD293A05FA547D00AFB402 = {
+			buildPhases = (
+				C4AD293805FA547D00AFB402,
+				C4AD293905FA547D00AFB402,
+				C4AD294705FA58E400AFB402,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge/forge/libs/HEAD-Atlas-C++/build /Users/jmt/Library/Frameworks";
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INSTALL_PATH = /usr/local/bin;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = metaQuery;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				ZERO_LINK = NO;
+			};
+			dependencies = (
+				C4AD293E05FA548700AFB402,
+			);
+			isa = PBXNativeTarget;
+			name = metaQuery;
+			productName = metaQuery;
+			productReference = C4AD293B05FA547D00AFB402;
+			productType = "com.apple.product-type.tool";
+		};
+		C4AD293B05FA547D00AFB402 = {
+			explicitFileType = "compiled.mach-o.executable";
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = metaQuery;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C4AD293D05FA548700AFB402 = {
+			containerPortal = C43FBCE9054315B9008FC2ED;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C45DC3E60562F83D00D8F8F4;
+			remoteInfo = eris;
+		};
+		C4AD293E05FA548700AFB402 = {
+			isa = PBXTargetDependency;
+			target = C45DC3E60562F83D00D8F8F4;
+			targetProxy = C4AD293D05FA548700AFB402;
+		};
+		C4AD293F05FA549000AFB402 = {
+			fileRef = C4AD293505FA53EA00AFB402;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4AD294705FA58E400AFB402 = {
+			buildActionMask = 2147483647;
+			files = (
+				C4AD294A05FA58F200AFB402,
+				C4AD294905FA58E900AFB402,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C4AD294905FA58E900AFB402 = {
+			fileRef = C45DC4310562F83D00D8F8F4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4AD294A05FA58F200AFB402 = {
+			fileRef = C4BB158B0544A61B00A800CF;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C4BB158B0544A61B00A800CF = {
 			fallbackIsa = PBXFileReference;

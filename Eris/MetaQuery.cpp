@@ -1,12 +1,12 @@
 #ifdef HAVE_CONFIG_H
-	#include "config.h"
+    #include "config.h"
 #endif
 
 #include <Eris/MetaQuery.h>
 
 #include <Eris/Exceptions.h>
 #include <Eris/Metaserver.h>
-#include <Eris/Log.h>
+#include <Eris/logStream.h>
 #include <Eris/Connection.h>
 #include <Eris/Timeout.h>
 
@@ -25,10 +25,10 @@ namespace Eris
 {
 	
 MetaQuery::MetaQuery(Meta *ms, const std::string &host) :
-	BaseConnection("eris-metaquery", "mq_" + host + "-", ms),
-	_host(host),
-	_meta(ms),
-	_complete(false)
+    BaseConnection("eris-metaquery", "mq_" + host + "-", ms),
+    _host(host),
+    _meta(ms),
+    _complete(false)
 {
     assert(ms);
     
@@ -54,7 +54,6 @@ SOCKET_TYPE MetaQuery::getSocket()
 void MetaQuery::onConnect()
 {
     debug() << "meta-query connection to " << _host;
-    
 
     // servers must responed to a fully anonymous GET operation
     // with pertinent info
@@ -86,7 +85,7 @@ long MetaQuery::getElapsed()
 
 void MetaQuery::setComplete()
 {
-	_complete = true;	
+    _complete = true;	
 }
 
 void MetaQuery::handleFailure(const std::string &msg)

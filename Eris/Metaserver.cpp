@@ -65,9 +65,76 @@ Meta::~Meta()
     disconnect();
       
     // delete any outstanding queries
-    for (MetaQueryList::iterator Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
+    for (QuerySet::const_iterator Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
         delete *Q;
 }
+
+void Meta::queryServer(const std::string &ip)
+{
+    m_status = QUERYING;
+    
+    if (m_activeQueries.size() >= m_maxActiveQueries)
+    {
+        m_pendingQueries.push_back(ip);
+    } else {
+        MetaQuery *q =  new MetaQuery(this, ip);
+        if (q->isComplete())
+        {
+            // indicated a failure occurred, so we'll kill it now and say no more
+            delete q;
+        } else
+            m_activeQueries.insert(q);
+    }
+}
+
+void Meta::refresh()
+{
+    if (m_status == VALID)
+    {
+    	// save the current list in case we fail
+        m_lastValidList = m_gameServers;
+    }
+
+    m_gameServers.clear();
+    connect();
+}
+
+void Meta::cancel()
+{
+    m_pendingQueries.clear();
+    for (QuerySet::iterator Q=m_activeQueries.begin(); Q!=m_activeQueries.end();++Q)
+        delete *Q;
+    m_activeQueries.clear();
+	
+    disconnect();
+
+    // revert to the last valid list if possible	
+    if (!m_lastValidList.empty())
+    {
+        m_gameServers = m_lastValidList;
+        m_status = VALID;
+    } else
+        m_status = INVALID;
+}
+
+ServerList Meta::getGameServerList() const
+{
+    ServerList ret;
+    // bail out quickly if INVALID
+    if (m_status == INVALID) return ret;
+            
+    for (ServerInfoMap::const_iterator I=m_gameServers.begin();  I!=m_gameServers.end();++I)
+        ret.push_back(I->second);
+    return ret;
+}
+		
+unsigned int Meta::getGameServerCount() const
+{
+    if (m_status == INVALID) return 0;
+    return m_gameServers.size();
+}
+
+#pragma mark -
 
 void Meta::connect()
 {
@@ -91,7 +158,8 @@ void Meta::connect()
     pack_uint32(CKEEP_ALIVE, _data, dsz);
     (*m_stream) << std::string(_data, dsz) << std::flush;
     setupRecvCmd();
-    m_status = IN_PROGRESS;
+    
+    m_status = GETTING_LIST;
     
     // check for meta-server timeouts; this is going to be
     // fairly common as long as the protocol is UDP, I think
@@ -115,53 +183,6 @@ void Meta::disconnect()
     }
 }
 
-void Meta::queryServer(const std::string &ip)
-{
-    m_status = IN_PROGRESS;
-    
-    if (m_activeQueries.size() >= m_maxActiveQueries)
-    {
-        m_pendingQueries.push_back(ip);
-    } else {
-        MetaQuery *q =  new MetaQuery(this, ip);
-        if (q->isComplete())
-        {
-            // indicated a failure occurred, so we'll kill it now and say no more
-            delete q;
-        } else
-            m_activeQueries.push_back(q);
-    }
-}
-
-void Meta::refresh()
-{
-    if (m_status == VALID)
-    {
-    	// save the current list in case we fail
-        m_lastValidList = m_gameServers;
-    }
-
-    m_gameServers.clear();
-    connect();
-}
-
-ServerList Meta::getGameServerList() const
-{
-    ServerList ret;
-    // bail out quickly if INVALID
-    if (m_status == INVALID) return ret;
-            
-    for (ServerInfoMap::const_iterator I=m_gameServers.begin();  I!=m_gameServers.end();++I)
-        ret.push_back(I->second);
-    return ret;
-}
-		
-unsigned int Meta::getGameServerCount() const
-{
-    if (m_status == INVALID) return 0;
-    return m_gameServers.size();
-}
-
 void Meta::gotData(PollData &data)
 {
     bool got_one = false; // set if at least one socket had data
@@ -180,32 +201,45 @@ void Meta::gotData(PollData &data)
         }
     } // of _stream being valid
 
-    for (MetaQueryList::iterator Q=m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
+    QuerySet complete;
+    
+    for (QuerySet::iterator Q=m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
     {
-        (*Q)->recv();	
+        (*Q)->recv();
+        if ((*Q)->isComplete())
+            complete.insert(*Q);
+            
         got_one = true;
     }
 
     if(!got_one) return; // nothing had data, so do not run the clean up stuff
 
-    // clean up old queries
-    while (!m_deleteQueries.empty())
-    {
-        MetaQuery *qr = m_deleteQueries.front();
-        m_activeQueries.remove(qr);
-        delete qr;
-        m_deleteQueries.pop_front();
-    }
+// clean up old queries
+    for (QuerySet::const_iterator Q = complete.begin(); Q != complete.end(); ++Q)
+        deleteQuery(*Q);
+}
+
+void Meta::deleteQuery(MetaQuery* query)
+{
+    debug() << "deleting query";
+    assert(m_activeQueries.count(query));
+    m_activeQueries.erase(query);
+    delete query;
     
-    // start pending queries as slots become available
-    while (!m_pendingQueries.empty() && (m_activeQueries.size() < m_maxActiveQueries))
+    // start a new query if there's more to go
+    if (!m_pendingQueries.empty())
     {
+        assert(m_activeQueries.size() < m_maxActiveQueries);
         queryServer(m_pendingQueries.front());
         m_pendingQueries.pop_front();
     }
     
-    if ((m_status == VALID) && (m_activeQueries.empty()))
+    debug() << "active queries size is now " << m_activeQueries.size();
+    
+    if ((m_status == QUERYING) && m_activeQueries.empty())
     {
+        assert(m_pendingQueries.empty());
+        m_status = VALID;
         // we're all done, emit the signal
         CompletedServerList.emit();
     }
@@ -238,24 +272,6 @@ void Meta::recv()
 	}
 }
 
-void Meta::cancel()
-{
-    m_pendingQueries.clear();
-    for (MetaQueryList::iterator Q=m_activeQueries.begin(); Q!=m_activeQueries.end();++Q)
-        delete *Q;
-    m_activeQueries.clear();
-	
-    disconnect();
-
-    // revert to the last valid list if possible	
-    if (!m_lastValidList.empty())
-    {
-        m_gameServers = m_lastValidList;
-        m_status = VALID;
-    } else
-        m_status = INVALID;
-}
-
 void Meta::recvCmd(uint32_t op)
 {
     debug() << "recvd meta-server CMD " << op;
@@ -280,77 +296,83 @@ void Meta::recvCmd(uint32_t op)
 
 void Meta::processCmd()
 {
-	switch (_gotCmd) {
-	case HANDSHAKE: {	
-		uint32_t stamp;
-		unpack_uint32(stamp, _data);
-			
-		unsigned int dsz = 0;
-		_dataPtr = pack_uint32(CLIENTSHAKE, _data, dsz);
-		pack_uint32(stamp, _dataPtr, dsz);
+    assert(m_status == GETTING_LIST);
+
+    switch (_gotCmd)
+    {
+    case HANDSHAKE: {	
+        uint32_t stamp;
+        unpack_uint32(stamp, _data);
+                
+        unsigned int dsz = 0;
+        _dataPtr = pack_uint32(CLIENTSHAKE, _data, dsz);
+        pack_uint32(stamp, _dataPtr, dsz);
+        
+        (*m_stream) << std::string(_data, dsz) << std::flush;
+        
+        // clear the handshake timeout, so listReq can start it's own.
+        delete m_timeout;
+        m_timeout = NULL;
 		
-		(*m_stream) << std::string(_data, dsz) << std::flush;
-		
-		// clear the handshake timeout, so listReq can start it's own.
-		delete m_timeout;
-		m_timeout = NULL;
-		
-	    debug() << "processed HANDSHAKE, sending list request";
-		// send the initial list request
-		listReq(0);
-		} break;
+        debug() << "processed HANDSHAKE, sending list request";
+        // send the initial list request
+        listReq(0);
+    } break;
 	
-	case LIST_RESP:	{
-		//uint32_t _totalServers, _packed;
-		_dataPtr = unpack_uint32(_totalServers, _data);
-		unpack_uint32(_packed, _dataPtr);
-		setupRecvData(_packed, LIST_RESP2);
+    case LIST_RESP:	{
+        //uint32_t _totalServers, _packed;
+        _dataPtr = unpack_uint32(_totalServers, _data);
+        unpack_uint32(_packed, _dataPtr);
+        setupRecvData(_packed, LIST_RESP2);
 		
-	    debug() << "processed LIST_RESP";
-		// allow progress bars to setup, etc, etc
-		GotServerCount.emit(_totalServers);
+        debug() << "processed LIST_RESP";
+        // allow progress bars to setup, etc, etc
+        GotServerCount.emit(_totalServers);
 		
-		} break;
+    } break;
 	
-	case LIST_RESP2: {
-		_dataPtr = _data;
-		while (_packed--) {
-			uint32_t ip;
-			_dataPtr = unpack_uint32(ip, _dataPtr);
+    case LIST_RESP2: {
+        _dataPtr = _data;
+        while (_packed--)
+        {
+            uint32_t ip;
+            _dataPtr = unpack_uint32(ip, _dataPtr);
+            
+            char buf[32];
+            snprintf(buf, 32, "%i.%i.%i.%i", 
+                    (ip & 0x000000FF),
+                    (ip & 0x0000FF00) >> 8,
+                    (ip & 0x00FF0000) >> 16,
+                    (ip & 0xFF000000) >> 24
+            );
+            
+            // FIXME  - decide whther a reverse name lookup is necessary here or not
+
+            // create as required
+            if (m_gameServers.count(buf) == 0)
+                m_gameServers.insert(ServerInfoMap::value_type(buf, ServerInfo(buf)));
+            
+            debug() << "queueing game server " << buf << " for query";
+            // is always querying a good idea?
+            queryServer(buf);
+        }
 			
-			char buf[32];
-			snprintf(buf, 32, "%i.%i.%i.%i", 
-				(ip & 0x000000FF),
-				(ip & 0x0000FF00) >> 8,
-				(ip & 0x00FF0000) >> 16,
-				(ip & 0xFF000000) >> 24
-			);
-			
-			// FIXME  - decide whther a reverse name lookup is necessary here or not
-	
-			// create as required
-			if (m_gameServers.count(buf) == 0)
-                            m_gameServers.insert(ServerInfoMap::value_type(buf, ServerInfo(buf)));
-                        
-			debug() << "queueing game server " << buf << " for query";
-			// is always querying a good idea?
-			queryServer(buf);
-		}
-			
-		if (m_gameServers.size() < _totalServers) {
-			// request some more
-			debug() << "in LIST_RESP2, issuing request for next block";
-			listReq(m_gameServers.size());
-		} else {
-		  	// all done, clean up
-		  	disconnect();
-		}
+        if (m_gameServers.size() < _totalServers)
+        {
+            // request some more
+            debug() << "in LIST_RESP2, issuing request for next block";
+            listReq(m_gameServers.size());
+        } else {
+            m_status = QUERYING;
+            // all done, clean up
+            disconnect();
+        }
 		
-		} break;
+    } break;
 		
-	default:
-		doFailure("Unknown Meta server command");
-	}
+    default:
+        doFailure("Unknown Meta server command");
+    }
 }
 
 void Meta::listReq(int base)
@@ -382,7 +404,7 @@ void Meta::objectArrived(const Root& obj)
 	
 // work out which query this is
     long refno = info->getRefno();
-    MetaQueryList::iterator Q;
+    QuerySet::iterator Q;
 	
     for (Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
         if ((*Q)->getQueryNo() == refno) break;
@@ -393,7 +415,9 @@ void Meta::objectArrived(const Root& obj)
         return;
     }
     
-    RootEntity svr = info->getArgs().front();		
+    (*Q)->setComplete(); // so it gets cleaned up
+    
+    RootEntity svr = smart_dynamic_cast<RootEntity>(info->getArgs().front());		
     ServerInfoMap::iterator S = m_gameServers.find((*Q)->getHost());
 	
     S->second.processServer(svr);
@@ -401,8 +425,6 @@ void Meta::objectArrived(const Root& obj)
 	
     // emit the signal
     ReceivedServerInfo.emit(S->second);
-	
-    m_deleteQueries.push_back(*Q);
 }
 
 void Meta::doFailure(const std::string &msg)
@@ -423,13 +445,13 @@ void Meta::queryFailure(MetaQuery *q, const std::string &msg)
     // host app to pop up a dialog or something) since query failures are likely to
     // be very frequent.
     debug() << "meta-query failure: " << msg;
-    m_deleteQueries.push_back(q);
+    q->setComplete();
 }
 
 void Meta::queryTimeout(MetaQuery *q)
 {
     debug() << "meta-query timed out";
-    m_deleteQueries.push_back(q);
+    deleteQuery(q);
 }
 
 void Meta::setupRecvCmd()
