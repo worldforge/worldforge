@@ -13,4 +13,4 @@ libAtlasincludedir = $(includedir)/Atlas-C++-0.6/Atlas
 
 libAtlasinclude_HEADERS = \
 	Bridge.h Codec.h Filter.h Negotiate.h EncoderBase.h \
-	Task.h Codec_impl.h Exception.h Atlas.h
+	Task.h Codec_impl.h Exception.h Debug.h

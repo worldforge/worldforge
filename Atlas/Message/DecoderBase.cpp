@@ -4,11 +4,13 @@
 
 #include <Atlas/Message/DecoderBase.h>
 
-#include <Atlas/Atlas.h>
+#include <Atlas/Debug.h>
 
 #include <iostream>
 
 #include <cassert>
+
+static const bool debug_flag = false;
 
 namespace Atlas { namespace Message {
 
@@ -62,14 +64,14 @@ void DecoderBase::mapListItem(const std::string& name)
 void DecoderBase::mapIntItem(const std::string& name, long i)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapIntItem" << std::endl)
-    assert(!m_maps.empty());	    
+    assert(!m_maps.empty());        
     m_maps.top()[name] = i;
 }
 
 void DecoderBase::mapFloatItem(const std::string& name, double d)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::mapFloatItem" << std::endl)
-    assert(!m_maps.empty());	   
+    assert(!m_maps.empty());       
     m_maps.top()[name] = d;
 }
 
@@ -90,13 +92,13 @@ void DecoderBase::mapEnd()
     m_state.pop();
     switch (m_state.top()) {
         case STATE_MAP:
-	    assert(!m_maps.empty());
+            assert(!m_maps.empty());
             assert(!m_names.empty());
             m_maps.top()[m_names.top()] = map;
             m_names.pop();
             break;
         case STATE_LIST:
-	    assert(!m_lists.empty());
+            assert(!m_lists.empty());
             m_lists.top().insert(m_lists.top().end(), map);
             break;
         case STATE_STREAM:
@@ -124,7 +126,7 @@ void DecoderBase::listListItem()
 void DecoderBase::listIntItem(long i)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::listIntItem" << std::endl)
-    assert(!m_lists.empty());	    
+    assert(!m_lists.empty());       
     m_lists.top().push_back(i);
 }
 
@@ -137,7 +139,7 @@ void DecoderBase::listFloatItem(double d)
 void DecoderBase::listStringItem(const std::string& s)
 {
     ATLAS_DEBUG(std::cout << "DecoderBase::listStringItem" << std::endl)
-    assert(!m_lists.empty());	    
+    assert(!m_lists.empty());       
     m_lists.top().push_back(s);
 }
 
@@ -157,7 +159,7 @@ void DecoderBase::listEnd()
             m_names.pop();
             break;
         case STATE_LIST:
-	    assert(!m_lists.empty());
+            assert(!m_lists.empty());
             m_lists.top().push_back(list);
             break;
         case STATE_STREAM:

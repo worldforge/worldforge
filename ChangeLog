@@ -1,3 +1,12 @@
+2003-12-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Atlas.h, Atlas/Debug.h: Move Atlas.h to Debug.h and
+	  modify macro to use file specific flag, to curb the flood
+	  of debug output.
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Message/DecoderBase.cpp: Add
+	  local debug flag, and disable excessive output.
+
 2003-12-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* benchmark/SmartPtr_Move.cpp: Sort out DEBUG definition clash.

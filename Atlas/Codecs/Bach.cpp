@@ -4,7 +4,9 @@
 
 #include <Atlas/Codecs/Bach.h>
 
-#include <Atlas/Atlas.h>
+#include <Atlas/Debug.h>
+
+static const bool debug_flag = false;
 
 namespace Atlas { namespace Codecs {
 
