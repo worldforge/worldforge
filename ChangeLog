@@ -1,3 +1,7 @@
+Wednesday, February 18th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed 'no newline at end of file' warning for timestamp_test.cpp.
+
 Sunday, February 15th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Changed the Atlas forward declaration workaround to return
