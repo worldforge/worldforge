@@ -183,7 +183,7 @@ void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 			
 		for (Message::Object::ListType::const_iterator i=people.begin(); i!=people.end(); ++i) {
 	
-			string account = i->AsString();
+			std::string account = i->AsString();
 			_people.insert(account);
 		
 			if (_lobby->getPerson(account) == NULL) {

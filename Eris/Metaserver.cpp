@@ -51,7 +51,7 @@ Meta::Meta(const std::string &cnm,
 		// build the initial 'ping' and send
 		unsigned int dsz = 0;
 		pack_uint32(CKEEP_ALIVE, _data, dsz);
-		(*_stream) << string(_data, dsz) << flush;
+		(*_stream) << std::string(_data, dsz) << std::flush;
 		setupRecvCmd();
 		_status = IN_PROGRESS;
 		
@@ -188,7 +188,7 @@ void Meta::recv()
 		return;
 	}
 	
-	cerr << "got data from the meta-server" << endl;
+	std::cerr << "got data from the meta-server" << std::endl;
 	
 	do {
 		int d = _stream->get();
@@ -254,7 +254,7 @@ void Meta::processCmd()
 		_dataPtr = pack_uint32(CLIENTSHAKE, _data, dsz);
 		pack_uint32(stamp, _dataPtr, dsz);
 		
-		(*_stream) << string(_data, dsz) << flush;
+		(*_stream) << std::string(_data, dsz) << std::flush;
 		
 		// clear the handshake timeout, so listReq can start it's own.
 		delete _timeout;
@@ -325,7 +325,7 @@ void Meta::listReq(int base)
 	char* _dataPtr = pack_uint32(LIST_REQ, _data, dsz);
 	pack_uint32(base, _dataPtr, dsz);
 	
-	(*_stream) << string(_data, dsz) << flush;
+	(*_stream) << std::string(_data, dsz) << std::flush;
 	setupRecvCmd();
 	
 	if (_timeout)

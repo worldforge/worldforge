@@ -30,6 +30,7 @@ class BaseException : public std::runtime_error
 public:
 	BaseException(const std::string &m) : 
 		std::runtime_error(m), _msg(m) {;}
+        virtual ~BaseException() throw() { }
 	const std::string _msg;
 };	
 	
@@ -37,6 +38,7 @@ class InvalidOperation : public BaseException
 {
 public:
 	InvalidOperation(const std::string &m) : BaseException(m) {;}
+        virtual ~InvalidOperation() throw() { }
 };
 	
 /// throw when processing encounters an Atlas message that deviates from the spec
@@ -46,6 +48,7 @@ class IllegalMessage : public BaseException
 public:
 	IllegalMessage(const Atlas::Message::Object &m, const std::string &s) :
 		BaseException(s), what(m) {;}
+        virtual ~IllegalMessage() throw() { }
 			
 	Atlas::Message::Object what;
 };
@@ -56,6 +59,7 @@ class IllegalObject : public BaseException
 public:
 	IllegalObject(const Atlas::Objects::Root &o, const std::string &s) :
 		BaseException(s), what(o) {;}
+        virtual ~IllegalObject() throw() { }
 			
 	Atlas::Objects::Root what;
 };
@@ -65,6 +69,7 @@ class NetworkFailure : public BaseException
 public:
 	NetworkFailure(const std::string &s) :
 		BaseException(s) {;}
+        virtual ~NetworkFailure() throw() { }
 };
 
 

@@ -221,7 +221,7 @@ World* Player::takeCharacter(const std::string &id)
   	return _world;
 }
 
-void Player::internalLogin(const string &uname, const string &pwd)
+void Player::internalLogin(const std::string &uname, const std::string &pwd)
 {
 	Atlas::Objects::Entity::Account account = 
 		Atlas::Objects::Entity::Account::Instantiate();

@@ -27,7 +27,7 @@ public:
 	explicit Dispatcher(const std::string &nm);
 	virtual ~Dispatcher();
 
-	virtual Dispatcher* addSubdispatch(Dispatcher *sub, const std::string data = string()) = 0;
+	virtual Dispatcher* addSubdispatch(Dispatcher *sub, const std::string data = std::string()) = 0;
 	virtual void rmvSubdispatch(Dispatcher *sub) = 0;
 	
 	/// locate a child dispatcher by name (NULL if not found)
@@ -101,7 +101,7 @@ protected:
 	/// dispatch the message to every child node
 	bool subdispatch(DispatchContextDeque &dq);
 
-	typedef std::map<string, Dispatcher*> DispatcherDict;
+	typedef std::map<std::string, Dispatcher*> DispatcherDict;
 
 	DispatcherDict _subs;
 };

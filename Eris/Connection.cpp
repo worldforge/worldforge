@@ -34,7 +34,7 @@ namespace Eris {
 
 DebugDispatcher *dd, *sdd;	
 	
-StringList tokenize(const string &s, char t);
+StringList tokenize(const std::string &s, char t);
 
 // declare the static member
 Connection* Connection::_theConnection = NULL;	
@@ -44,7 +44,7 @@ typedef std::set<SerialFrom> SerialFromSet;
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	
-Connection::Connection(const string &cnm, bool dbg) :
+Connection::Connection(const std::string &cnm, bool dbg) :
 	BaseConnection(cnm, "game_", this),
 	_statusLock(0),
 	_debug(dbg),
@@ -82,7 +82,7 @@ Connection::~Connection()
 }
 
 
-void Connection::connect(const string &host, short port)
+void Connection::connect(const std::string &host, short port)
 {
 	// save for reconnection later
 	_host = host;
@@ -179,7 +179,7 @@ void Connection::send(const Atlas::Message::Object &msg)
 	}
 }
 
-Dispatcher* Connection::getDispatcherByPath(const string &path) const
+Dispatcher* Connection::getDispatcherByPath(const std::string &path) const
 {
 	if (path.empty() || (":" == path))
 		return _rootDispatch;
@@ -199,7 +199,7 @@ Dispatcher* Connection::getDispatcherByPath(const string &path) const
 
 /** Remove a node from the dispatcher tree. Throws InvalidOperation if path is
 invalid, or the the node is not found. */
-void Connection::removeDispatcherByPath(const string &stem, const string &n)
+void Connection::removeDispatcherByPath(const std::string &stem, const std::string &n)
 {
 	Dispatcher *d = getDispatcherByPath(stem);
 	if (!d)
@@ -211,7 +211,7 @@ void Connection::removeDispatcherByPath(const string &stem, const string &n)
 	d->rmvSubdispatch(rm);
 }
 
-void Connection::removeIfDispatcherByPath(const string &stem, const string &n)
+void Connection::removeIfDispatcherByPath(const std::string &stem, const std::string &n)
 {
 	Dispatcher *d = getDispatcherByPath(stem);
 	if (!d)
@@ -343,7 +343,7 @@ void Connection::setStatus(Status ns)
 	_status = ns;
 }
 
-void Connection::handleFailure(const string &msg)
+void Connection::handleFailure(const std::string &msg)
 {
 	Failure.emit(msg);
 	
@@ -398,7 +398,7 @@ void Connection::validateSerial(const Atlas::Objects::Operation::RootOperation &
 }
 
 /** strtok for the next generation : uses STL strings and returns a list*/
-StringList tokenize(const string &s, char t)
+StringList tokenize(const std::string &s, char t)
 {
 	StringList ret;
 	

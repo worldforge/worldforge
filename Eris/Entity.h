@@ -113,10 +113,10 @@ public:
 	SigC::Signal2<void, Entity*, Coord> Moved;
 
 	/** Emitted with this entity speaks. In the future langauge may be specified */
-	SigC::Signal2<void, Entity*, string> Say;
+	SigC::Signal2<void, Entity*, std::string> Say;
 	
 	// signal accessors (dynamically created signals)
-	//void ConnectPropertySlot(const string &p, PropertySlot &slot);
+	//void ConnectPropertySlot(const std::string &p, PropertySlot &slot);
 	
 	/** Emitted when this entity originates the specified class of operation;
 	note the derived operations will also invoke the signal */
@@ -139,7 +139,7 @@ protected:
 	friend class World;
 
 	virtual void handleMove();
-	virtual void handleTalk(const string &msg);
+	virtual void handleTalk(const std::string &msg);
 	virtual void handleChanged();
 	
 	/// set the property value; this protected so only Entity / World may use it
@@ -220,7 +220,7 @@ private:
 class Moveable : public Entity
 {
 public:
-	Moveable(const string &id);
+	Moveable(const std::string &id);
 	virtual ~Moveable();
 
 	void getPosition(bool predicted);
@@ -236,6 +236,7 @@ public:
 	UnknownProperty(const std::string &p, const std::string &m) :
 		InvalidOperation(m), prop(p)
 	{;}
+        virtual ~UnknownProperty() throw () { }
 	
 	const std::string prop;
 };

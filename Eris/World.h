@@ -46,9 +46,10 @@ typedef std::map<std::string, Entity*> EntityIDMap;
 class UnknownEntity : public BaseException
 {
 public:
-	UnknownEntity(const string &msg, const string &id) :
+	UnknownEntity(const std::string &msg, const std::string &id) :
 		BaseException(msg), _id(id) {;}
-	string _id;
+	virtual ~UnknownEntity() throw() { }
+	std::string _id;
 };
 
 /// the entity database and dispatch point

@@ -69,7 +69,7 @@ void StdBranchDispatcher::rmvSubdispatch(Dispatcher *d)
 {
 	if (!d)
 		throw InvalidOperation("NULL dispatcher passed to rmvSubdispatch");
-	string nm = d->getName();
+	std::string nm = d->getName();
 	DispatcherDict::iterator di = _subs.find(nm);
 	if (di != _subs.end()) {
 		_subs.erase(di);

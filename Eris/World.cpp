@@ -172,7 +172,7 @@ void World::look(const std::string &id)
 EntityPtr World::create(const Atlas::Objects::Entity::GameEntity &ge)
 {
 	Entity *e = NULL;
-	string id = ge.GetId();
+	std::string id = ge.GetId();
 	
 	EntityIDMap::iterator I = _lookup.find(id);
 	if (I != _lookup.end())
@@ -312,7 +312,7 @@ void  World::registerCallbacks()
 void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 	const Atlas::Objects::Entity::GameEntity &ent)
 {
-	string id = ent.GetId();
+	std::string id = ent.GetId();
 	
 	// FIXME - work around a bug in Stage RIM Chat; the entity ID is not set, so
 	// Atlas-C++ defaults to 'game_entity'. The work around is to used to 'FROM'
@@ -360,13 +360,13 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 			
 			StringSet speced = getParentsAsSet(ent);
 			for (StringSet::iterator I=speced.begin(); I!=speced.end();++I)
-				cerr << *I << endl;
+				std::cerr << *I << std::endl;
 			
-			cerr << "----" << endl;
+			std::cerr << "----" << std::endl;
 			
 			StringSet actual = ei->second->getInherits();
 			for (StringSet::iterator I=actual.begin(); I!=actual.end();++I)
-				cerr << *I << endl;
+				std::cerr << *I << std::endl;
 			
 			throw InvalidOperation("Mutations currently unsupported!");
 		} else
@@ -395,7 +395,7 @@ void World::recvSightCreate(const Atlas::Objects::Operation::Create &cr,
 
 void World::recvSightDelete(const Atlas::Objects::Operation::Delete &del)
 {
-	string id = getArg(del, "id").AsString();	
+	std::string id = getArg(del, "id").AsString();	
 	EntityIDMap::iterator ei = _lookup.find(id);	
 	
 	if (ei == _lookup.end()) {
@@ -430,7 +430,7 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 		if ( isPendingInitialSight(snd.GetFrom()) ) {
 			
 			// FIXME - ensure name uniqueness
-			string nm = "talk_" /* + snd.GetSerialno() */ ;
+			std::string nm = "talk_" /* + snd.GetSerialno() */ ;
 			new WaitForDispatch(snd, 
 				"op:ig:sight:entity", 
 				new IdDispatcher(nm, snd.GetFrom())
@@ -524,7 +524,7 @@ void World::recvSightSet(const Atlas::Objects::Operation::Set &set)
 void World::recvErrorLook(const Atlas::Objects::Operation::Look &lk)
 {
 	// probably, this means the entity ID is bollocks
-	string id = getArg(lk, "id").AsString();
+	std::string id = getArg(lk, "id").AsString();
 }
 
 void World::netConnect()

@@ -225,7 +225,7 @@ void Entity::recvTalk(const Atlas::Objects::Operation::Talk &tk)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // default implementions of handle simple emit the corresponding signal
 
-void Entity::handleTalk(const string &msg)
+void Entity::handleTalk(const std::string &msg)
 {
 	Say.emit(this, msg);
 }
@@ -258,7 +258,7 @@ void Entity::setProperty(const std::string &s, const Atlas::Message::Object &val
 	if (s == "stamp") {
 		_stamp = val.AsFloat();
 	} else if (s == "loc") {
-		string loc = val.AsString();
+		std::string loc = val.AsString();
 		setContainerById(loc);
 	} else if (s == "pos") {
 		_position = Coord(val);

@@ -329,7 +329,7 @@ void TypeInfo::init()
 
 void TypeInfo::readAtlasSpec(const std::string &specfile)
 {
-    fstream specStream(specfile.c_str(), ios::in);
+    std::fstream specStream(specfile.c_str(), std::ios::in);
     if(!specStream.is_open()) {
 		Eris::Log(LOG_NOTICE, "Unable to open Atlas spec file %s, will obtain all type data from the server", specfile.c_str());
 		return;

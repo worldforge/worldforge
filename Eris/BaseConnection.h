@@ -37,7 +37,7 @@ public:
 
 	/** open a connection to the specified host/port; invokes the failure handler if
 	the connection could not be opened. */
-	virtual void connect(const string &host, short port);
+	virtual void connect(const std::string &host, short port);
 
 	/// possible states for the connection
 	typedef enum {
@@ -97,7 +97,7 @@ protected:
 	Atlas::Objects::Encoder* _encode;	///< the objects encoder, bound to _codec
 	Atlas::Message::Encoder* _msgEncode;	///< the message encoder, again bound to _codec
 	Atlas::Net::StreamConnect* _sc;		///< negotiation object (NULL after connection!)
-	Atlas::Codec<iostream>* _codec;		///< the underlying codec object
+	Atlas::Codec<std::iostream>* _codec;		///< the underlying codec object
 
 	Status _status;			///< current status of the connection
 	const std::string _id;	///< a unique identifier for this connection

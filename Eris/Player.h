@@ -102,7 +102,7 @@ protected:
 	void recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
 	void loginComplete(const Atlas::Objects::Entity::Player &p);
 
-	void internalLogin(const string &unm, const string &pwd);
+	void internalLogin(const std::string &unm, const std::string &pwd);
 
 	/// Callback for network re-establishment
 	void netConnected();

@@ -68,7 +68,7 @@ void BaseConnection::hardDisconnect(bool emit)
 {
 	if ((_status == CONNECTED) || (_status == DISCONNECTING)){
 		_codec->StreamEnd();
-		(*_stream) << flush;
+		(*_stream) << std::flush;
 		
 		delete _codec;
 		delete _encode;
@@ -126,8 +126,8 @@ void BaseConnection::pollNegotiation()
 		throw InvalidOperation("unexpected connection status");
 	
 	_sc->Poll();
-	if (_sc->GetState() != Atlas::Negotiate<iostream>::IN_PROGRESS) {
-		if (_sc->GetState() == Atlas::Negotiate<iostream>::SUCCEEDED) {
+	if (_sc->GetState() != Atlas::Negotiate<std::iostream>::IN_PROGRESS) {
+		if (_sc->GetState() == Atlas::Negotiate<std::iostream>::SUCCEEDED) {
 			_codec = _sc->GetCodec();
 			_encode = new Atlas::Objects::Encoder(_codec);
 			_codec->StreamBegin();

@@ -21,7 +21,7 @@ public:
 	virtual bool dispatch(DispatchContextDeque &dq);
 
 protected:
-	Atlas::Codec<iostream> *_codec;
+	Atlas::Codec<std::iostream> *_codec;
 	Atlas::Message::Encoder *_enc;
 	std::fstream _log;
 };
