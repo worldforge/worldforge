@@ -12,6 +12,8 @@ using namespace Atlas;
 
 /*
 
+Sample output for this codec: (whitespace added for clarity)
+
 <atlas>
     <obj>
 	<map>
@@ -21,6 +23,9 @@ using namespace Atlas;
 	</map>
     </obj>
 </atlas>
+
+The complete specification is located in cvs at:
+    forge/protocols/atlas/spec/xml_syntax.html
 
 */
 

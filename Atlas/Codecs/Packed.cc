@@ -12,15 +12,24 @@ using namespace Atlas;
 
 /*
 
+The form for each element of this codec is as follows:
+
 [type][name=][data][|endtype]
   
-{} for message
-() for lists
-[] for maps
+{ } for message
+( ) for lists
+[ ] for maps
 $ for string
 @ for int
 # for float
 
+Sample output for this codec: (whitespace added for clarity)
+
+{[@id=17$name=Fred +28the +2b great+29#weight=1.5(args=@1@2@3)]}
+
+The complete specification is located in cvs at:
+    forge/protocols/atlas/spec/packed_syntax.html
+    
 */
 
 class Packed : public Codec<iostream>

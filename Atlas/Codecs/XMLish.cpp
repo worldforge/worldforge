@@ -10,7 +10,7 @@ using namespace Atlas;
 
 /*
 
-    FIXME example forthcoming
+    FIXME documentation forthcoming
 
 */
 
