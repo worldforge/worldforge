@@ -239,8 +239,8 @@ World::createAvatar(long refno, const std::string& id)
 	throw InvalidOperation("World already has an Avatar");
 	
     _avatar = new Avatar(this, refno, id);
-    _player->LogoutComplete.connect(SigC::slot(_avatar, &Avatar::slotLogout));
-    _con->Disconnected.connect(SigC::slot(_avatar, &Avatar::slotDisconnect));
+    _player->LogoutComplete.connect(SigC::slot(*_avatar, &Avatar::slotLogout));
+    _con->Disconnected.connect(SigC::slot(*_avatar, &Avatar::slotDisconnect));
 
     return _avatar;
 }

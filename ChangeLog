@@ -1,3 +1,8 @@
+Friday, 1st November, Al Riddoch
+
+	* src/World.cpp: Fix calls to SigC::slot so it is sigc++ 1.2
+	  compatable.
+
 Friday, 1st November, Ron Steinke
 
 	* Change ArgumentDispatcher to (new) OpRefnoDispatcher in Avatar
