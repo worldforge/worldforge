@@ -68,9 +68,9 @@ define(`CLEAR', `
         if (v`'i`' != NULL) { delete v`'i`'; v`'i`' = NULL; }')
     }')dnl
 define(`IS_T', `
-    bool Is(Token<T$1>) { return (v$1 != NULL); }')dnl
+    bool Is(Token<T$1>) const { return (v$1 != NULL); }')dnl
 define(`AS_T', `
-    T$1 As(Token<T$1>) throw (WrongTypeException)
+    T$1 As(Token<T$1>) const throw (WrongTypeException)
     {
         if (v$1 != NULL) return *v$1;
         throw WrongTypeException();

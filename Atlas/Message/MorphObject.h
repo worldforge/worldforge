@@ -30,41 +30,48 @@ public:
         v4 = NULL;
         v5 = NULL;
     }
+
+    MorphObject(const MorphObject& m)
+    {
+        Clear();
+        if (m.v1 != NULL) *this = *m.v1;
+        if (m.v2 != NULL) *this = *m.v2;
+        if (m.v3 != NULL) *this = *m.v3;
+        if (m.v4 != NULL) *this = *m.v4;
+        if (m.v5 != NULL) *this = *m.v5;
+    }
+
     MorphObject(int i)
     {
-        v1 = NULL;
+        v1 = new int(i);
         v2 = NULL;
         v3 = NULL;
         v4 = NULL;
         v5 = NULL;
-        *this = i;
     }
     MorphObject(double d) 
     {
         v1 = NULL;
-        v2 = NULL;
+        v2 = new double(d);
         v3 = NULL;
         v4 = NULL;
         v5 = NULL;
-        *this = d;
     }
     MorphObject(std::string s)
     {
         v1 = NULL;
         v2 = NULL;
-        v3 = NULL;
+        v3 = new std::string(s);
         v4 = NULL;
         v5 = NULL;
-        *this = s;
     }
     MorphObject(map<std::string, MorphObject> m)
     {
         v1 = NULL;
         v2 = NULL;
         v3 = NULL;
-        v4 = NULL;
+        v4 = new map<std::string, MorphObject>(m);
         v5 = NULL;
-        *this = m;
     }
     MorphObject(list<MorphObject> l) 
     {
@@ -72,10 +79,9 @@ public:
         v2 = NULL;
         v3 = NULL;
         v4 = NULL;
-        v5 = NULL;
-        *this = l;
+        v5 = new list<MorphObject>(l);
     }
-    
+   
     typedef int Int;
     static Atlas::Generic::Token<Int> IntToken;
     typedef double Float;
