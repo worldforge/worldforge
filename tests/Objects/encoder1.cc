@@ -12,9 +12,9 @@ protected:
     virtual void ObjectArrived(const Message::Object& o)
     {
         assert(o.IsMap());
-        assert(o.AsMap().find(string("parent")) != o.AsMap().end());
-        assert((*o.AsMap().find("parent")).second.AsList().size() == 1);
-        assert(*(*o.AsMap().find("parent")).second.AsList().begin() ==
+        assert(o.AsMap().find(string("parents")) != o.AsMap().end());
+        assert((*o.AsMap().find("parents")).second.AsList().size() == 1);
+        assert(*(*o.AsMap().find("parents")).second.AsList().begin() ==
                 string("root"));
     }
 };

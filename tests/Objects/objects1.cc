@@ -16,9 +16,9 @@ int main(int argc, char** argv)
     root_inst.SetAttr("id", string("root_instantiation"));
     assert(root.GetAttr("id").AsString() == "root");
     assert(root_inst.GetAttr("id").AsString() == "root_instantiation");
-    assert(root.GetAttr("parent").AsList().size() == 0);
-    assert(root_inst.GetAttr("parent").AsList().size() == 1);
-    assert((*root_inst.GetAttr("parent").AsList().begin()).AsString() ==
+    assert(root.GetAttr("parents").AsList().size() == 0);
+    assert(root_inst.GetAttr("parents").AsList().size() == 1);
+    assert((*root_inst.GetAttr("parents").AsList().begin()).AsString() ==
             "root");
 
     Operation::Look look;
@@ -26,11 +26,11 @@ int main(int argc, char** argv)
     look_inst.SetAttr("id", string("look_instantiation"));
     assert(look.GetAttr("id").AsString() == "look");
     assert(look_inst.GetAttr("id").AsString() == "look_instantiation");
-    assert(look.GetAttr("parent").AsList().size() == 1);
-    assert((*look.GetAttr("parent").AsList().begin()).AsString() ==
+    assert(look.GetAttr("parents").AsList().size() == 1);
+    assert((*look.GetAttr("parents").AsList().begin()).AsString() ==
             "perceive");
-    assert(look_inst.GetAttr("parent").AsList().size() == 1);
-    assert((*look_inst.GetAttr("parent").AsList().begin()).AsString() ==
+    assert(look_inst.GetAttr("parents").AsList().size() == 1);
+    assert((*look_inst.GetAttr("parents").AsList().begin()).AsString() ==
             "look");
 
     Entity::Account acct;
@@ -38,10 +38,10 @@ int main(int argc, char** argv)
     acct_inst.SetAttr("id", string("account_instantiation"));
     assert(acct.GetAttr("id").AsString() == "account");
     assert(acct_inst.GetAttr("id").AsString() == "account_instantiation");
-    assert(acct.GetAttr("parent").AsList().size() == 1);
-    assert((*acct.GetAttr("parent").AsList().begin()).AsString() ==
+    assert(acct.GetAttr("parents").AsList().size() == 1);
+    assert((*acct.GetAttr("parents").AsList().begin()).AsString() ==
             "admin_entity");
-    assert(acct_inst.GetAttr("parent").AsList().size() == 1);
-    assert((*acct_inst.GetAttr("parent").AsList().begin()).AsString() ==
+    assert(acct_inst.GetAttr("parents").AsList().size() == 1);
+    assert((*acct_inst.GetAttr("parents").AsList().begin()).AsString() ==
             "account");
 }

@@ -32,13 +32,13 @@ int main(int argc, char** argv)
     TestDecoder t;
     t.StreamBegin();
     t.StreamMessage(Bridge::MapBegin);
-        t.MapItem("parent", Bridge::ListBegin);
+        t.MapItem("parents", Bridge::ListBegin);
             t.ListItem("root");
         t.ListEnd();
         t.MapItem("id", "root_instance");
     t.MapEnd();
     t.StreamMessage(Bridge::MapBegin);
-        t.MapItem("parent", Bridge::ListBegin);
+        t.MapItem("parents", Bridge::ListBegin);
             t.ListItem("look");
         t.ListEnd();
         t.MapItem("id", "look_instance");
