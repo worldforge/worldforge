@@ -21,4 +21,3 @@ libAtlasObjectsinclude_HEADERS = \
 	Operation/RootOperation.h Operation/Set.h Operation/Sight.h \
 	Operation/Smell.h Operation/Sniff.h Operation/Sound.h \
 	Operation/Talk.h Operation/Touch.h
-

@@ -296,7 +296,6 @@ AC_CHECK_LIB(z, inflate)
 
 AC_CHECK_HEADERS(zlib.h)
 
-
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
 
@@ -316,7 +315,6 @@ AC_CHECK_LIB(bz2, bzCompressInit)
 
 AC_CHECK_HEADERS(bzlib.h)
 
-
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
 
@@ -326,9 +324,11 @@ AC_OUTPUT([
 	Makefile
 	src/Makefile
 	src/Codecs/Makefile
+	src/Generic/Makefile
 	src/Filters/Makefile
-	src/Funky/Makefile
-	src/Message/Makefile
 	src/Net/Makefile
+	src/Objects/Makefile
 	src/TestSuite/Makefile
+	src/Message/Makefile
+	src/Funky/Makefile
 ])
