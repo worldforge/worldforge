@@ -68,16 +68,16 @@ Object(const string& val)
 /** Construct a List or Map Object */
 Object(Type val)
 {
-	if (val == Map) obj = new VMap();
-	if (val == List) obj = new VVec();
+	if (val == Map)	{ obj = new VMap(); return; }
+	if (val == List) { obj = new VVec(); return; }
 	assert(0);
 }
 
 /** Construct a List Object with initial size */
 Object(Type val, int size)
 {
-	if (val == Map) obj = new VMap();
-	if (val == List) obj = new VVec(size);
+	if (val == Map) { obj = new VMap(); return; }
+	if (val == List) { obj = new VVec(size); return; }
 	assert(0);
 }
 
