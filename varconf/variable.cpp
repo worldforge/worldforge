@@ -243,7 +243,7 @@ bool VarBase::is_string()
 }
 
 Variable::Variable (const Variable& c) : VarPtr(c.is_array()
-  ? VarPtr(new VarArray(*(c.array()))) : c)
+  ? VarPtr(new VarArray(*(c.array()))) : static_cast<const VarPtr&>(c))
 {
 
 }
