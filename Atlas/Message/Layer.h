@@ -5,7 +5,7 @@
 #ifndef ATLAS_MESSAGE_LAYER_H
 #define ATLAS_MESSAGE_LAYER_H
 
-#include "Encoder.h"
+#include <Atlas/Message/Encoder.h>
 
 namespace Atlas { namespace Message {
 

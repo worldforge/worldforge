@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#include "Filter.h"
+#include <Atlas/Filter.h>
 
 namespace Atlas {
 

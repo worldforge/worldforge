@@ -5,7 +5,7 @@
 #ifndef ATLAS_OBJECTS_ENCODER_H
 #define ATLAS_OBJECTS_ENCODER_H
 
-#include "../EncoderBase.h"
+#include <Atlas/EncoderBase.h>
 
 namespace Atlas { namespace Objects {
 

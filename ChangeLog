@@ -1,5 +1,9 @@
 2003-04-10  Al Riddoch  <alriddoch@zepler.org>
 
+	* Rename src to Atlas for portability
+
+2003-04-10  Al Riddoch  <alriddoch@zepler.org>
+
 	* src/Codec.cpp, src/Codec.h, src/Codec_impl.h,
 	  src/Negotiate.h, src/Negotiate.h, src/Codecs/Bach.h,
 	  src/Codecs/Packed.h, src/Codecs/XML.h,

@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2001 Stefanus Du Toit and Aloril
 
-#include "BaseObject.h"
+#include <Atlas/Objects/BaseObject.h>
 
 using Atlas::Message::Element;
 

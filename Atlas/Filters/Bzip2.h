@@ -7,7 +7,7 @@
 
 #if defined(HAVE_BZLIB_H) && defined(HAVE_LIBBZ2)
 
-#include "../Filter.h"
+#include <Atlas/Filter.h>
 
 #include <cstdio>
 

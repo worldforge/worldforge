@@ -19,9 +19,9 @@
 
 #define USE_XML 1
 #if USE_XML
-#include "../../src/Codecs/XML.h"
+#include "Codecs/XML.h"
 #else
-#include "../../src/Codecs/Packed.h"
+#include "Codecs/Packed.h"
 #endif
 
 #if USE_XML

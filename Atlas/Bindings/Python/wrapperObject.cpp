@@ -2,14 +2,16 @@
 
 /* AtlasWrapper objects */
 
-#include <Python.h>
-#include <Atlas/Object/Object.h>
+#include <Atlas/Bindings/Python/wrapperObject.h>
+
+#include <Atlas/Message/Object.h>
 #include <Atlas/Net/Codec.h>
 #include <Atlas/Net/XMLProtocol.h>
 #include <Atlas/Net/PackedProtocol.h>
+
 #include <string>
 
-#include "wrapperObject.h"
+#include <Python.h>
 
 static PyObject *ErrorObject;
 

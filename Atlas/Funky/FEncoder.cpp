@@ -2,7 +2,7 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
 
-#include "FEncoder.h"
+#include <Atlas/Funky/FEncoder.h>
 
 namespace Atlas { namespace Funky {
 

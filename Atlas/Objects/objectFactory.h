@@ -5,11 +5,11 @@
 #ifndef ATLAS_OBJECTS_OBJECTFACTORY_H
 #define ATLAS_OBJECTS_OBJECTFACTORY_H
 
+#include <Atlas/Objects/Root.h>
+
 #include <string>
 #include <list>
 #include <map>
-
-#include "Root.h"
 
 namespace Atlas { namespace Objects {
 

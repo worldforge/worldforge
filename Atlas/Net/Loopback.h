@@ -5,7 +5,7 @@
 #ifndef ATLAS_NET_LOOPBACK_H
 #define ATLAS_NET_LOOPBACK_H
 
-#include "../Bridge.h"
+#include <Atlas/Bridge.h>
 
 namespace Atlas { namespace Net {
 

@@ -5,8 +5,8 @@
 #ifndef ATLAS_LOAD_DEFAULTS_H
 #define ATLAS_LOAD_DEFAULTS_H
 
-#include "Decoder.h"
-#include "../Exception.h"
+#include <Atlas/Objects/Decoder.h>
+#include <Atlas/Exception.h>
 
 namespace Atlas { namespace Objects {
 

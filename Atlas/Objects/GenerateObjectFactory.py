@@ -14,9 +14,9 @@ class GenerateObjectFactory:
         #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright_template % "Aloril")
-        self.write('\n#include "objectFactory.h"\n')
-        self.write('#include "Entity.h"\n')
-        self.write('#include "Operation.h"\n\n')
+        self.write('\n#include <Atlas/Objects/objectFactory.h>\n')
+        self.write('#include <Atlas/Objects/Entity.h>\n')
+        self.write('#include <Atlas/Objects/Operation.h>\n\n')
         self.ns_open(self.base_list)
         self.write('\nint enumMax = ')
         self.write(str(max_class_no))

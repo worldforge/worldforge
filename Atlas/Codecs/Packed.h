@@ -5,11 +5,11 @@
 #ifndef ATLAS_CODECS_PACKED_H
 #define ATLAS_CODECS_PACKED_H
 
+#include <Atlas/Codecs/Utility.h>
+#include <Atlas/Codec.h>
+
 #include <iostream>
 #include <stack>
-
-#include "Utility.h"
-#include "../Codec.h"
 
 namespace Atlas { namespace Codecs {
 

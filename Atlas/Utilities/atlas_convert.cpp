@@ -1,12 +1,16 @@
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2002 Michael Koch
+
+#include <Atlas/Codecs/XML.h>
+#include <Atlas/Codecs/Bach.h>
+#include <Atlas/Codecs/Packed.h>
+//#include <Atlas/Codecs/Binary.h>
+#include <Atlas/Message/QueuedDecoder.h>
+#include <Atlas/Message/MEncoder.h>
+
 #include <fstream>
 #include <iostream>
-
-#include "../src/Codecs/XML.h"
-#include "../src/Codecs/Bach.h"
-#include "../src/Codecs/Packed.h"
-//#include "../src/Codecs/Binary.h"
-#include "../src/Message/QueuedDecoder.h"
-#include "../src/Message/MEncoder.h"
 
 Atlas::Codec * getCodec(std::string type, std::iostream &stream, Atlas::Message::DecoderBase* decoder)
 {

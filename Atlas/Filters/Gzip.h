@@ -7,9 +7,9 @@
 
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 
-#include <zlib.h>
+#include <Atlas/Filter.h>
 
-#include "../Filter.h"
+#include <zlib.h>
 
 namespace Atlas { namespace Filters {
 

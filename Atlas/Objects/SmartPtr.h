@@ -5,7 +5,7 @@
 #ifndef ATLAS_OBJECTS_SMARTPTR_H
 #define ATLAS_OBJECTS_SMARTPTR_H
 
-#include "BaseObject.h"
+#include <Atlas/Objects/BaseObject.h>
 
 namespace Atlas { namespace Objects {
 

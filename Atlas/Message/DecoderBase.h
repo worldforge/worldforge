@@ -5,9 +5,11 @@
 #ifndef ATLAS_MESSAGE_DECODERBASE_H
 #define ATLAS_MESSAGE_DECODERBASE_H
 
+#include <Atlas/Message/Object.h>
+
+#include <Atlas/Bridge.h>
+
 #include <stack>
-#include "../Bridge.h"
-#include "Object.h"
 
 namespace Atlas { namespace Message {
 

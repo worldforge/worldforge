@@ -5,7 +5,7 @@
 #ifndef ATLAS_CODEC_H
 #define ATLAS_CODEC_H
 
-#include "Bridge.h"
+#include <Atlas/Bridge.h>
 
 namespace Atlas {
 

@@ -20,11 +20,11 @@ class GenerateDispatcher:
         header_list = ['Atlas', 'Objects', 'Dispatcher', 'H']
         self.header(header_list)
         self.write("""
-#include "Decoder.h"
+#include <Atlas/Objects/Decoder.h>
 
-#include "Root.h"
-#include "Entity.h"
-#include "Operation.h"
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
 
 """) #"for xemacs syntax highlighting
         self.ns_open(self.base_list)
@@ -81,7 +81,7 @@ protected:
         #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
-        self.write('\n#include "Dispatcher.h"\n\n')
+        self.write('\n#include <Atlas/Objects/Dispatcher.h>\n\n')
         self.ns_open(self.base_list)
         self.write("""
 Dispatcher::~Dispatcher()

@@ -5,14 +5,16 @@
 #ifndef ATLAS_OBJECTS_BASEOBJECT_H
 #define ATLAS_OBJECTS_BASEOBJECT_H
 
-#include <assert.h>
+#include <Atlas/Message/MEncoder.h>
+#include <Atlas/Message/Object.h>
+#include <Atlas/Bridge.h>
+#include <Atlas/Exception.h>
+
 #include <map>
 #include <list>
 #include <string>
-#include "../Message/MEncoder.h"
-#include "../Message/Object.h"
-#include "../Bridge.h"
-#include "../Exception.h"
+
+#include <assert.h>
 
 namespace Atlas { namespace Objects {
 

@@ -2,7 +2,7 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2001 Michael Day, Stefanus Du Toit
 
-#include "XML.h"
+#include <Atlas/Codecs/XML.h>
 
 namespace Atlas { namespace Codecs {
     

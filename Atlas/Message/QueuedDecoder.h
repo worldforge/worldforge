@@ -5,9 +5,10 @@
 #ifndef ATLAS_MESSAGE_QUEUEDDECODER_H
 #define ATLAS_MESSAGE_QUEUEDDECODER_H
 
+#include <Atlas/Message/Object.h>
+#include <Atlas/Message/DecoderBase.h>
+
 #include <queue>
-#include "Object.h"
-#include "DecoderBase.h"
 
 namespace Atlas { namespace Message {
 

@@ -5,10 +5,10 @@
 #ifndef ATLAS_CODECS_BACH_H
 #define ATLAS_CODECS_BACH_H
 
+#include <Atlas/Codec.h>
+
 #include <iostream>
 #include <stack>
-
-#include "../Codec.h"
 
 namespace Atlas { namespace Codecs {
 

@@ -20,11 +20,9 @@ class GenerateDecoder:
         header_list = ['Atlas', 'Objects', 'Decoder', 'H']
         self.header(header_list)
         self.write("""
-#include "../Message/DecoderBase.h"
+#include <Atlas/Message/DecoderBase.h>
 
-#include "Root.h"
-// #include "Entity.h"
-// #include "Operation.h"
+#include <Atlas/Objects/Root.h>
 
 """) #"for xemacs syntax highlighting
         self.ns_open(self.base_list)
@@ -73,8 +71,8 @@ protected:
         #print outfile
         self.out = open(outfile + ".tmp", "w")
         self.write(copyright)
-        self.write('\n#include "Decoder.h"\n')
-        self.write('\n#include "objectFactory.h"\n\n')
+        self.write('\n#include <Atlas/Objects/Decoder.h>\n')
+        self.write('\n#include <Atlas/Objects/objectFactory.h>\n\n')
         self.ns_open(self.base_list)
         self.write("""
 ObjectsDecoder::~ObjectsDecoder()

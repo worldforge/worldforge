@@ -5,11 +5,11 @@
 #ifndef ATLAS_MESSAGE_OBJECT_H
 #define ATLAS_MESSAGE_OBJECT_H
 
+#include <Atlas/Exception.h>
+
 #include <string>
 #include <map>
 #include <vector>
-
-#include "../Exception.h"
 
 namespace Atlas { namespace Message {
 

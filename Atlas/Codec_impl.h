@@ -5,7 +5,7 @@
 #ifndef ATLAS_CODEC_IMPL_H
 #define ATLAS_CODEC_IMPL_H
 
-#include "Codec.h"
+#include <Atlas/Codec.h>
 
 namespace Atlas {
 

@@ -8,7 +8,7 @@
 
 #if defined(HAVE_ZLIB_H) && defined(HAVE_LIBZ)
 
-#include "Gzip.h"
+#include <Atlas/Filters/Gzip.h>
 
 #ifndef ASSERT
 #include <cassert>

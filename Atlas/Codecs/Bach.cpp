@@ -2,9 +2,9 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2002 Michael Koch <konqueror@gmx.de>
 
-#include "../Atlas.h"
+#include <Bach.h>
 
-#include "Bach.h"
+#include <Atlas/Atlas.h>
 
 namespace Atlas { namespace Codecs {
 

@@ -6,23 +6,23 @@
 #include "config.h"
 #endif
 
-#include "Factory.h"
-#include "Codec.h"
-#include "Filter.h"
+#include <Atlas/Codecs/XML.h>
+#include <Atlas/Codecs/Packed.h>
 
-#include "Codecs/XML.h"
-#include "Codecs/Packed.h"
+#include <Atlas/Filters/Gzip.h>
+#include <Atlas/Filters/Bzip2.h>
 
-#include "Filters/Gzip.h"
-#include "Filters/Bzip2.h"
+#include <Atlas/Factory.h>
+#include <Atlas/Codec.h>
+#include <Atlas/Filter.h>
 
 namespace Atlas {
 
 void Factory<Codec<std::iostream> >::getFactories()
 {
-    new Codec<std::iostream>::Factory<Codecs::XML> ("XML", Codec<std::iostream>::Metrics(1,2));
-    new Codec<std::iostream>::Factory<Codecs::Packed> ("Packed", Codec<std::iostream>::Metrics(1,2));
-    new Codec<std::iostream>::Factory<Codecs::Bach> ("Bach", Codec<std::iostream>::Metrics(1,2));
+    new Codec::Factory<Codecs::XML> ("XML", Codec::Metrics(1,2));
+    new Codec::Factory<Codecs::Packed> ("Packed", Codec::Metrics(1,2));
+    new Codec::Factory<Codecs::Bach> ("Bach", Codec::Metrics(1,2));
 }
 
 void Factory<Filter>::getFactories()

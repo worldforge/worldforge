@@ -5,12 +5,12 @@
 #ifndef ATLAS_NET_STREAM_H
 #define ATLAS_NET_STREAM_H
 
+#include <Atlas/Negotiate.h>
+#include <Atlas/Filter.h>
+
 #include <iosfwd>
 #include <string>
 #include <list>
-
-#include "../Negotiate.h"
-#include "../Filter.h"
 
 namespace Atlas { 
 

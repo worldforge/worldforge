@@ -367,14 +367,14 @@ dnl Generate files
 AC_OUTPUT([
 	Makefile
 	benchmark/Makefile
-	src/Makefile
-	src/Codecs/Makefile
-	src/Filters/Makefile
-	src/Funky/Makefile
-	src/Message/Makefile
-	src/Net/Makefile
-	src/Objects/Makefile
-	src/Utilities/Makefile
+	Atlas/Makefile
+	Atlas/Codecs/Makefile
+	Atlas/Filters/Makefile
+	Atlas/Funky/Makefile
+	Atlas/Message/Makefile
+	Atlas/Net/Makefile
+	Atlas/Objects/Makefile
+	Atlas/Utilities/Makefile
 	tests/Makefile
 	tests/Objects/Makefile
 	tutorial/Makefile

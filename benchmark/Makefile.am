@@ -4,10 +4,11 @@ check_PROGRAMS = Objects3_Move Call_Move Message_Move \
 
 TESTS = $(check_PROGRAMS)
 
-CPPFLAGS = -I$(top_srcdir)/src -Wall
+CPPFLAGS = -I$(top_srcdir)/Atlas
 
-LDADD  = -L$(top_builddir)/src/ -L$(top_builddir)/src/Codecs/ -L$(top_builddir)/src/Filters/ \
-         -L$(top_builddir)/src/Message/ -L$(top_builddir)/src/Net/ -L$(top_builddir)/src/Objects/
+LDADD  = -L$(top_builddir)/Atlas/ -L$(top_builddir)/Atlas/Codecs/ \
+         -L$(top_builddir)/Atlas/Filters/ -L$(top_builddir)/Atlas/Message/ \
+         -L$(top_builddir)/Atlas/Net/ -L$(top_builddir)/Atlas/Objects/
 
 LIBS = -lAtlasObjects-0.6 -lAtlasNet-0.6 -lAtlas-0.6 -lAtlasCodecs-0.6 \
        -lAtlasFilters-0.6 -lAtlasMessage-0.6 -lAtlas-0.6 -lbz2 -lz

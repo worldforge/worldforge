@@ -2,16 +2,17 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Aloril.
 
-#include "loadDefaults.h"
+#include <Atlas/Objects/loadDefaults.h>
+
+#include <Atlas/Objects/Dispatcher.h>
+#include <Atlas/Objects/objectFactory.h>
+
+#include <Atlas/Codecs/XML.h>
 
 #include <fstream>
 #include <string>
 #include <map>
 #include <set>
-
-#include "../Codecs/XML.h"
-#include "Dispatcher.h"
-#include "objectFactory.h"
 
 using Atlas::Message::Element;
 

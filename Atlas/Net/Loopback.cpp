@@ -2,9 +2,9 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#include "Loopback.h"
+#include <Atlas/Net/Loopback.h>
 
-using Atlas::Bridge;
+namespace Atlas { namespace Net {
 
 class LoopBridge : public Bridge
 {
@@ -92,8 +92,10 @@ class LoopBridge : public Bridge
     Bridge* m_bridge;
 };
 
-void Atlas::Net::loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
+void loopback(Bridge* d1, Bridge* d2, Bridge*& e1, Bridge*& e2)
 {
     e1 = new LoopBridge(d1);
     e2 = new LoopBridge(d2);
 }
+
+} } // namespace Atlas::Net

@@ -2,13 +2,13 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day, Dmitry Derevyanko
 
-#include "Stream.h"
+#include <Atlas/Net/Stream.h>
+
+#include <Atlas/Codecs/XML.h>
+#include <Atlas/Codecs/Packed.h>
+#include <Atlas/Codecs/Bach.h>
 
 #include <iostream>
-
-#include "../Codecs/XML.h"
-#include "../Codecs/Packed.h"
-#include "../Codecs/Bach.h"
 
 static std::string get_line(std::string &s, char ch)
 {
