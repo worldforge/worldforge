@@ -1,3 +1,8 @@
+2004-01-15  James Turner <james@worldforge.org>
+    
+    * Update XCode project : proper WFMath dependancy, and many more
+      tests, plus an aggregate target which builds all the tests.
+
 2004-01-15  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/DepthShader.cpp, Mercator/Forest.cpp,
