@@ -16,9 +16,9 @@ class BasePoint {
     float m_falloff;
 
   public:
-    const static float HEIGHT = 8.0;
-    const static float ROUGHNESS = 1.15;
-    const static float FALLOFF = 0.15;
+    const static float HEIGHT;
+    const static float ROUGHNESS;
+    const static float FALLOFF;
 
     explicit BasePoint(float h = HEIGHT, float r = ROUGHNESS, float f = FALLOFF) :
                  m_height(h), m_roughness(r), m_falloff(f) {}

@@ -1,3 +1,9 @@
+2004-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/BasePoint.h, Mercator/BasePoint.cpp:
+	  Move static float variable definition into cpp file
+	  for strict C++ compliance.
+
 2003-12-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* Remove Serial from rpm spec as it is not required, and messes up
