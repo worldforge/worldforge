@@ -1,6 +1,11 @@
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
+// Copyright (C) 2000 Stefanus Du Toit
+
 #ifndef ATLAS_OBJECTS_ROOT_H
 #define ATLAS_OBJECTS_ROOT_H
 
+#include <string>
 #include "ObjectType.h"
 
 namespace Atlas { namespace Objects {
@@ -10,13 +15,15 @@ class Root
 public:
     Root(const string& id, const string& name);
 
-    string GetId();
-    void SetId(const string& id);
+    virtual ~Root();
+
+    std::string GetId();
+    void SetId(const std::string& id);
     void RemoveId();
     bool HasId();
     
-    string GetName();
-    void SetName(const string& name);
+    std::string GetName();
+    void SetName(const std::string& name);
     void RemoveName();
     bool HasName();
     
@@ -28,11 +35,11 @@ public:
     
 protected:
     
-    string id; bool haveId;
-    string name; bool haveName;
+    std::string* id;
+    std::string* name;
     
     ObjectType objectType;
-}
+};
 
 } } // namespace Atlas::Objects
 
