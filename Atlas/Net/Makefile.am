@@ -17,4 +17,4 @@ libAtlasNetinclude_HEADERS = \
 	ProtocolEncoder.h Server.h Socket.h TCPSocket.h \
 	XMLDecoder.h XMLEncoder.h XMLProtocol.h
 
-CXXFLAGS = -D_ADebug_
+CXXFLAGS = -g -D_ADebug_

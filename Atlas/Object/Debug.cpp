@@ -34,7 +34,7 @@ void	ADebug::logmsg(char* fmt, ...)
 	char	buf[1024];
 	va_list	va;
 
-	va = va_start(va,fmt);
+	va_start(va,fmt);
 	vsprintf(buf, fmt, va);
 	va_end(va);
 
