@@ -48,7 +48,7 @@ Entity* Factory::createEntity(const GameEntity& gent, View* view)
         }
     }
     
-    return new Eris::Entity(gent, type, view);
+    return new Eris::Entity(gent->getId(), type, view);
 }
 
 void Factory::registerFactory(Factory* f)

@@ -30,7 +30,7 @@ Avatar::Avatar(Account* pl) :
     m_router(NULL)
 {
     m_view = new View(this);
-    m_view->Appearance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
+    m_entityAppearanceCon = m_view->Appearance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
 }
 
 Avatar::~Avatar()
@@ -204,8 +204,7 @@ void Avatar::onEntityAppear(Entity* ent)
         ent->ChildRemoved.connect(SigC::slot(*this, &Avatar::onCharacterChildRemoved));
         
         GotCharacterEntity.emit(ent);
-        #warning avatar appearance disconnection
-        // m_view->Appearance.disconnect(SigC::slot(*this, &Avatar::onEntityAppear));
+        m_entityAppearanceCon.disconnect(); // stop listenting to View::Appearance
     }
 }
 

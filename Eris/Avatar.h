@@ -140,6 +140,8 @@ private:
     
     IGRouter* m_router;
     View* m_view;
+    
+    SigC::Connection m_entityAppearanceCon;
 };
 	
 } // of namespace Eris

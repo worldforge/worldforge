@@ -1,9 +1,22 @@
+2004-10-24  James Turner  <james@worldforge.org>
+
+    * Eris/Entity.cpp: fix second argument to onLocationChanged in
+      setLocation, thinko error.
+      
+    * Eris/Entity.cpp: add virtual init() method, so processing of initial
+      Entity state happens after the vtbl is fully constructed.
+      
+    * Eris/View.cpp: call init() on newly created Entities.
+    
+    * Eris/View.cpp: ensure that the InitialSight signal is emitted on the
+      entity creation path.
+
 2004-10-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Entity.cpp: Handle orientation in the new
 	  setPosAndVelocityFromAtlas() method.
 
-2004-10-22  James Turner  <james@worldforge.org>
+2004-10-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Entity.cpp, Eris/IGRouter.cpp, Eris/EntityRouter.cpp: change
 	  how position and velocity updates are handled, to ensure a SET op

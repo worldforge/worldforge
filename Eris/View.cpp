@@ -173,7 +173,8 @@ Entity* View::initialSight(const GameEntity& gent)
 {
     Entity* ent = Factory::createEntity(gent, this);
     m_contents[gent->getId()] = ent;
-
+    ent->init(gent);
+    
     InitialSightEntity.emit(ent);
     return ent;
 }
@@ -182,10 +183,12 @@ void View::create(const GameEntity& gent)
 {
     Entity* ent = Factory::createEntity(gent, this);
     m_contents[gent->getId()] = ent;
-
+    ent->init(gent);
+    
     if (gent->isDefaultLoc())
         setTopLevelEntity(ent);
 
+    InitialSightEntity.emit(ent);
     ent->setVisible(true);
     EntityCreated.emit(ent);
 }

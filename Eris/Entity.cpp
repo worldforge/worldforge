@@ -32,10 +32,10 @@ using WFMath::TimeDiff;
 
 namespace Eris {
 
-Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
+Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
     m_type(ty),
     m_location(NULL),
-    m_id(ge->getId()),
+    m_id(id),
     m_stamp(-1.0),
     m_visible(false),
     m_limbo(false),
@@ -48,7 +48,6 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
     
     m_router = new EntityRouter(this);
     m_view->getConnection()->registerRouterForFrom(m_router, m_id);
-    sight(ge);
 }
 
 Entity::~Entity()
@@ -64,6 +63,12 @@ Entity::~Entity()
     m_view->getConnection()->unregisterRouterForFrom(m_router, m_id);
     m_view->entityDeleted(this); // remove ourselves from the View's content map
     delete m_router;
+}
+
+void Entity::init(const GameEntity& ge)
+{
+    // setup initial state
+    sight(ge);
 }
 
 #pragma mark -
@@ -353,7 +358,7 @@ void Entity::setLocation(Entity* newLocation)
     Entity* oldLocation = m_location;
     m_location = newLocation;
     
-    onLocationChanged(oldLocation, this);
+    onLocationChanged(oldLocation, newLocation);
     
 // fire VisChanged and Appearance/Disappearance signals
     updateCalculatedVisibility(wasVisible);

@@ -42,7 +42,7 @@ or creating peer clases and attaching them to the signals.
 class Entity : virtual public SigC::Object
 {
 public:	
-    explicit Entity(const Atlas::Objects::Entity::GameEntity &ge, TypeInfo* ty, View* vw);
+    explicit Entity(const std::string& id, TypeInfo* ty, View* vw);
     virtual ~Entity();
 
 // heirarchy interface    
@@ -207,6 +207,11 @@ public:
     SigC::Signal2<void, Entity*, bool> VisibilityChanged;
         
 protected:	        
+    /** over-rideable initialisation helper. When subclassing, if you
+    over-ride this method, take care to call the base implementation, or
+    unfortunate things will happen. */
+    virtual void init(const Atlas::Objects::Entity::GameEntity &ge);
+    
     /** process TALK data - default implementation emits the Say signal.
     @param obj The TALK operation arguments
     */
