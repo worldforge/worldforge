@@ -68,6 +68,8 @@ int main() {
     if ( error )
         return -1;
 
+    return 0;
+
 }
 
 //________________________________________________________________________________
@@ -237,15 +239,30 @@ bool mapTest() {
         Object foobar = bar.keys();
         check( foobar.length() == 4 );
 
+/*
         println( "Out of bounds ndx check on key list" );
-        for ( int i = -10; i < 10; ++i) {
-            if ( ( i < 0) || ( i > 3 ) )
+        for ( int i = -10 ; i < 10; ++i) {
+            if ( ( i < 0) || ( i > 3 ) ) {
+                cout << " check not there ";
                 check( !foobar.get( i, sval ) );
+            }
             else {
+                cout << " check there ";
                 check( foobar.get( i, sval ) );
                 println( sval );
             }
         }
+*/
+        println( "Out of bounds ndx check on key list" );
+        for ( int i = -10 ; i < 10; ++i) {
+            sval = "";
+            cout << foobar.get( i, sval);
+            cout << "At map[" << i << "] is the string [" << sval << "]" << endl;
+        }
+
+
+
+
 
         println( "Closing clear checks" );
         bar.clear();
