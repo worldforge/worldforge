@@ -1,5 +1,10 @@
 2003-06-08  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Segment.h, Mercator/Segment.cpp: Tidy up some code,
+	  and add the beginnings of the normal calculation code.
+
+2003-06-08  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Terrain.h, Mercator/Terrain.cpp: Get rid of the passing
 	  over extra surrounding basepoints into Segment::populate.
 

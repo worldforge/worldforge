@@ -20,7 +20,7 @@ typedef std::list<TerrainMod *> ModList;
 // whenever height points are asserted.
 class Segment {
   private:
-    int m_res;
+    const int m_res;
     float * const m_points;
     float * m_normals;
     float m_max;
