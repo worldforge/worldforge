@@ -3,6 +3,7 @@
 // Copyright (C) 2000 Stefanus Du Toit
 
 #include <stack>
+#include <string>
 
 #include "../Stream/Codec.h"
 #include "Utility.h"
@@ -12,7 +13,7 @@ using namespace Atlas::Stream;
 
 /*
 
-[type][name]=[data]
+[type][name]=[data][|endtype]
   
 {} for message
 () for lists
@@ -57,7 +58,7 @@ protected:
     Filter* filter;
     Bridge* bridge;
 
-    enum parsestack_t {
+    enum parsestate_t {
         PARSE_MSG,
         PARSE_MAP,
         PARSE_LIST,
@@ -69,7 +70,9 @@ protected:
         PARSE_VALUE
     };
     
-    stack<parsestack_t> parseStack;
+    stack< list<parsestate_t> > parseStack;
+    stack< list<string> > fragments;
+    string currentFragment;
 };
 
 namespace
@@ -82,12 +85,43 @@ PackedAscii::PackedAscii(const Codec::Parameters& p) :
 {
 }
 
-void PackedAscii::Poll()
+void popStack(stack<parsestate_t>& parseStack, stack<string>& fragments,
+        Bridge* b)
+{
+    // FIXME
+    // check for right stack entries (VALUE, ASSIGN, NAME)
+    // depending on what comes before that, add to the bridge, pop off nicely
+}
+
+void PackedAscii::Poll() // muchas FIXME
 {
     if (!socket.rdbuf()->in_avail()) return; // no data waiting
 
+    // FIXME
+    // what about dehexifying?
+    // basically, we should look at everything in the stream
+    // if we find '+' plus 2 chars, dehexify and put back?
+    // maybe...
+    
+    char next = socket.get(); // get character
+    
+    switch (next) {
+        case '{': if (parseStack.length() > 0) return;
+                  bridge->MessageBegin();
+                  parseStack.push(PARSE_MSG);
+                  break;
+        case '}': break; // FIXME
+        case '[': parseStack.push(PARSE_MAP);
+                  break; // FIXME
+        case ']': break; // FIXME
+        case '(': parseStack.push(PARSE_LIST);
+                  break; // FIXME
+        case ')': break; // FIXME
+        case '$': break; // FIXME
+        case '@': break; // FIXME
+        case '#': break; // FIXME
+    }
     // FIXME - finish this
-    // get character
     // do whatever with it depending on the stack
     // possibly pop off the stack
 }
