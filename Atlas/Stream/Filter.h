@@ -3,7 +3,10 @@
 // Copyright (C) 2000 Michael Day
 
 // $Log$
-// Revision 1.4  2000-02-22 03:55:45  mike
+// Revision 1.5  2000-03-04 23:44:08  mike
+// Begun work on codec/filter negotiation
+//
+// Revision 1.4  2000/02/22 03:55:45  mike
 // Added output signal to Filter.
 //
 // Revision 1.3  2000/02/21 11:49:49  mike
@@ -17,15 +20,9 @@
 
 #include <sigc++/signal_system.h>
 
-namespace Atlas
-{
-    namespace Stream
-    {
-	class Filter;
-    }
-}
+namespace Atlas { namespace Stream {
 
-class Atlas::Stream::Filter
+class Filter
 {
     public:
     
@@ -35,5 +32,7 @@ class Atlas::Stream::Filter
     
     virtual void Process(const std::string& data) = 0;
 };
+
+} } // Atlas::Stream
 
 #endif

@@ -5,18 +5,19 @@
 #ifndef ATLAS_STREAM_FACTORY_H
 #define ATLAS_STREAM_FACTORY_H
 
-namespace Atlas
+namespace Atlas { namespace Stream {
+
+template <typename T>
+class Factory
 {
-    template <typename T>
-    class Factory
-    {
-	public:
+    public:
 
-	virtual ~Factory() { }
+    virtual ~Factory() { }
 
-	virtual T* New() = 0;
-	virtual void Delete(T*) = 0;
-    };
-}
+    virtual T* New() = 0;
+    virtual void Delete(T*) = 0;
+};
+
+} } // Atlas::Stream
 
 #endif

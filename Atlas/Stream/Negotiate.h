@@ -2,10 +2,11 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
-#include "Codec.h"
+#ifndef ATLAS_STREAM_NEGOTIATE_H
+#define ATLAS_STREAM_NEGOTIATE_H
 
-using namespace std;
-using namespace Atlas::Stream;
+namespace Atlas { namespace Stream {
 
-template <typename T>
-list<Factory<Codec>*> Codec::Factory<T>::factories;
+} } // Atlas::Stream
+
+#endif
