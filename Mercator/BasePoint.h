@@ -1,9 +1,9 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU General Public License (See COPYING for details).
-// Copyright (C) 2003 Damien McGinnes
+// Copyright (C) 2003 Damien McGinnes, Alistair Riddoch
 
-#ifndef MERCATOR_POINT_H
-#define MERCATOR_POINT_H
+#ifndef MERCATOR_BASE_POINT_H
+#define MERCATOR_BASE_POINT_H
 
 #include <iostream>
 
@@ -37,4 +37,4 @@ class BasePoint {
 
 } //namespace Mercator
 
-#endif // MERCATOR_POINT_H
+#endif // MERCATOR_BASE_POINT_H
