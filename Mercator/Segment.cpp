@@ -38,8 +38,8 @@ class QuadInterp {
 };      
 
 Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
-                            m_normals(0), m_max(0.f), m_min(0.0f), m_validPt(false),
-                            m_validNorm(false)
+                            m_normals(0), m_max(0.f), m_min(0.0f),
+                            m_validPt(false), m_validNorm(false)
 {
 }
 
@@ -52,10 +52,10 @@ Segment::~Segment()
     clearMods();
 }
 
-void Segment::populate(const Matrix<2, 2, BasePoint> & base)
+void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 {
-    fill2d(m_res, base(0, 0), base(1, 0), 
-                  base(1, 1), base(0, 1));
+    fill2d(m_res, m_controlPoints(0, 0), m_controlPoints(1, 0), 
+                  m_controlPoints(1, 1), m_controlPoints(0, 1));
 
     for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
         applyMod(*I);

@@ -74,6 +74,39 @@ bool Terrain::getBasePoint(int x, int y, BasePoint& z)
     return true;
 }
 
+void Terrain::setBasePoint(int x, int y, const BasePoint& z)
+{
+    m_basePoints[x][y] = z;
+    bool pointIsSet[3][3];
+    BasePoint existingPoint[3][3];
+    for(int i = x - 1, ri = 0; i < x + 2; ++i, ++ri) {
+        for(int j = y - 1, rj = 0; j < y + 2; ++j, ++rj) {
+            pointIsSet[ri][rj] = getBasePoint(i, j, existingPoint[ri][rj]);
+        }
+    }
+    // invalidatePoint(x,y);
+    for(int i = x - 1, ri = 0; i < x + 1; ++i, ++ri) {
+        for(int j = y - 1, rj = 0; j < y + 1; ++j, ++rj) {
+            Segment * s = getSegmentQuik(i, j);
+            if (s == 0) { 
+                bool complete = pointIsSet[ri][rj] && pointIsSet[ri + 1][rj + 1] &&
+                                pointIsSet[ri + 1][rj] && pointIsSet[ri][rj + 1];
+                if (!complete) {
+                    continue;
+                }
+                s = new Segment(m_res);
+                Matrix<2, 2, BasePoint> & cp = s->getControlPoints();
+                for(unsigned int k = 0; k < 2; ++k) {
+                    for(unsigned int l = 0; l < 2; ++l) {
+                        cp(k, l) = existingPoint[ri + k][rj + l];
+                    }
+                }
+            }
+            s->setCornerPoint(ri, rj, z);
+        }
+    }
+}
+
 Segment * Terrain::getSegmentSafe(int x, int y, bool force)
 {
     Segment * s = getSegmentQuik(x, y);
@@ -81,6 +114,7 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
         return s;
     }
     
+#if 0
     Matrix<2, 2, BasePoint> base;
     bool complete = getBasePoint(x,     y,     base(0, 0)) &&
                     getBasePoint(x + 1, y,     base(1, 0)) &&
@@ -94,6 +128,7 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
         m_segments[x][y] = s;
         return s;
     }
+#endif // 0
     return 0;
 }
 

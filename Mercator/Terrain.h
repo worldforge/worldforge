@@ -38,14 +38,14 @@ class Terrain {
 
     bool getBasePoint(int x, int y, BasePoint& z);
     
-    void setBasePoint(int x, int y, const BasePoint& z) {
-        m_basePoints[x][y] = z;
-        invalidatePoint(x,y);
-    }
+    void setBasePoint(int x, int y, const BasePoint& z); // {
+        // m_basePoints[x][y] = z;
+        // invalidatePoint(x,y);
+    // }
 
     void setBasePoint(int x, int y, float z) {
-        m_basePoints[x][y] = BasePoint(z);
-        invalidatePoint(x,y);
+        BasePoint bp(z);
+        setBasePoint(x, y, bp);
     }
 
     Segment * getSegmentSafe(float x, float y) {

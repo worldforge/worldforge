@@ -7,8 +7,10 @@
 
 #include <Mercator/Matrix.h>
 #include <Mercator/BasePoint.h>
+
 #include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
+
 #include <list>
 
 namespace Mercator {
@@ -23,6 +25,7 @@ typedef std::list<TerrainMod *> ModList;
 class Segment {
   private:
     const int m_res;
+    Matrix<2, 2, BasePoint> m_controlPoints;
     float * const m_points;
     float * m_normals;
     float m_max;
@@ -46,6 +49,19 @@ class Segment {
         m_validNorm = false;
     }
     
+    void setCornerPoint(unsigned int x, unsigned int y, const BasePoint & bp) {
+        m_controlPoints(x, y) = bp;
+        invalidate();
+    }
+    
+    const Matrix<2, 2, BasePoint> & getControlPoints() const {
+        return m_controlPoints;
+    }
+
+    Matrix<2, 2, BasePoint> & getControlPoints() {
+        return m_controlPoints;
+    }
+
     const float * getPoints() const {
         return m_points;
     }
@@ -69,7 +85,7 @@ class Segment {
     void getHeightAndNormal(float x, float y, float &h, 
                     WFMath::Vector<3> &normal) const;
 
-    void populate(const Matrix<2, 2, BasePoint> &);
+    void populate();
     void populateNormals();
 
     float getMax() const { return m_max; }

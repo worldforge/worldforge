@@ -1,11 +1,24 @@
-2003-06-21  Damien McGinnes
-        * Mercator/Terrain.cpp: 
-          - fixed a bug in invalidatePoint (i, j), not (x,y)
-          - removed the erase line in invalidateSegment (mem leak, and loses
-            mods to the segment)
-          - fixed one of the loop limits in refresh
+2003-06-21  Al Riddoch  <alriddoch@zepler.org>
 
-2003-06-19  Al Riddoch  <alriddoch@zepler.org>
+	* Mercator/Segment.cpp, Mercator/Segment.h: Store control
+	  points in the segment object, so it can be re-populated.
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Manage the creation of
+	  new Segment objects when inserting new base points, and handle
+	  invalidation at this point too. getSegmentSafe is now deprecated.
+	  Untested.
+
+	* tests/main.cpp: Update tests for API change, and clean up output.
+
+2003-06-21  Damien McGinnes
+
+	* Mercator/Terrain.cpp: 
+	  - fixed a bug in invalidatePoint (i, j), not (x,y)
+	  - removed the erase line in invalidateSegment (mem leak, and loses
+	    mods to the segment)
+	  - fixed one of the loop limits in refresh
+
+2003-06-20  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Matrix.cpp: Add template instantiations, which I assume
 	  was the effect intended by the previous code.
@@ -17,13 +30,13 @@
 	* Mercator/Segment.cpp, Mercator/Segment.h, Mercator/TerrainMod.h:
 	  Fix comment and code formatting.
 
-2003-06-19  Damien McGinnes
+2003-06-20  Damien McGinnes
 
 	* Mercator/Terrain.cpp: changed invalidate and getSegmentSafe to use
 	  the validity flags
 	* tests/main.cpp: did a 30 second test of the above code
         
-2003-06-19  Damien McGinnes
+2003-06-20  Damien McGinnes
 
 	* Mercator/Segment.cpp: added validity flags for points and normals,
 	  and fixed up a few code alignment probs
