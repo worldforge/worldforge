@@ -11,7 +11,19 @@ Bach::Bach(std::iostream& s, Atlas::Bridge* b)
     , m_bridge(b)
     , m_comma( false )
 {
-    m_state.push(PARSE_STREAM);
+    m_state.push(PARSE_INIT);
+}
+
+void Bach::parseInit(char next)
+{
+    cout << "parseInit" << endl;
+
+    if (next=='{')
+    {
+        m_bridge->streamBegin();
+        m_socket.putback(next);
+        m_state.push(PARSE_STREAM);
+    }
 }
 
 void Bach::parseStream(char next)
@@ -20,9 +32,16 @@ void Bach::parseStream(char next)
 
     switch (next)
     {
-    case '[':
+    case '{':
         m_bridge->streamMessage(m_mapBegin);
         m_state.push(PARSE_MAP);
+        break;
+
+    case ',':
+        break;
+
+    case ']':
+        m_bridge->streamEnd();
         break;
 
     default:
@@ -164,14 +183,14 @@ void Bach::parseFloat(char next)
     case ',':
         m_socket.putback(next);
         m_state.pop();
-        if (m_state.top() == PARSE_MAP_BEGIN)
+        if (m_state.top() == PARSE_MAP)
         {
             cout << "Float: " << m_data << endl;
 
             m_bridge->mapItem(decodeString(m_name), atof(m_data.c_str()));
             m_name.erase();
         }
-        else if (m_state.top() == PARSE_LIST_BEGIN)
+        else if (m_state.top() == PARSE_LIST)
         {
             cout << "Float: " << m_data << endl;
 
@@ -350,6 +369,7 @@ void Bach::poll(bool can_read)
 
         switch (m_state.top())
 	{
+        case PARSE_INIT:       parseInit(next); break;
         case PARSE_STREAM:     parseStream(next); break;
         case PARSE_MAP:        parseMap(next); break;
         case PARSE_LIST:       parseList(next); break;
