@@ -1,6 +1,11 @@
+2003-04-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h:
+	  Initialise min and max properlly, and make their accessors const.
+
 2003-04-25  Damien McGinnes
 
-        * Mercator/tile.cpp,h Added min and max calcs
+	* Mercator/tile.cpp,h Added min and max calcs
 	* Mercator/Segment.cpp,h added accessors for min and max
 
 2003-04-19  Al Riddoch  <alriddoch@zepler.org>

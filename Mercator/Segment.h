@@ -41,8 +41,8 @@ class Segment {
     void populate(const float *);
     float qRMD(float, float, float, float, int depth) const;
 
-    float getMax() { return m_max; }
-    float getMin() { return m_max; }
+    float getMax() const { return m_max; }
+    float getMin() const { return m_max; }
 	
 };
 

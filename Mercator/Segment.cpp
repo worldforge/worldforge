@@ -15,9 +15,9 @@ namespace Mercator {
 static float fallOff = 0.15;
 static float roughness = 1.5;
 
-Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)])
+Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)]),
+                            m_max(0.f), m_min(0.0f)
 {
-	m_max=m_min=0.0f;
 }
 
 #if 0
