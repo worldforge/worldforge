@@ -2,6 +2,8 @@
 
 import string
 import sys
+import os
+import cmp
 sys.path.append("../../../../protocols/atlas/spec")
 from types import *
 from ParseDef import read_all_defs
@@ -133,8 +135,9 @@ class GenerateCC:
         self.out.write("}\n\n")
     def interface(self, obj):
         print "Output of interface for:"
-        print self.outdir + '/' + self.classname + ".h"
-        self.out = open(self.outdir + '/' + self.classname + ".h", "w")
+        outfile = self.outdir + '/' + self.classname + ".h"
+        print outfile
+        self.out = open(outfile + ".tmp", "w")
         if outdir != ".":
             self.header(['Atlas', 'Objects', outdir, self.classname, "H"])
         else:
@@ -175,10 +178,20 @@ class GenerateCC:
             self.ns_close(['Atlas', 'Objects'])
             self.footer(['Atlas', 'Objects', self.classname, "H"])
         self.out.close()
+        if os.access(outfile, os.F_OK):
+            if cmp.cmp(outfile + ".tmp", outfile) == 0:
+                os.remove(outfile)
+                os.rename(outfile + ".tmp", outfile)
+            else:
+                print "Output file same as existing one, not updating"
+                os.remove(outfile + ".tmp")
+        else:
+            os.rename(outfile + ".tmp", outfile)
     def implementation(self, obj):
         print "Output of implementation for:"
-        print self.outdir + '/' + self.classname + ".cc"
-        self.out = open(self.outdir + '/' + self.classname + ".cc", "w")
+        outfile = self.outdir + '/' + self.classname + ".cc"
+        print outfile
+        self.out = open(outfile + ".tmp", "w")
         self.out.write(copyright)
         self.out.write("\n")
         self.out.write('#include "' + self.classname + '.h"\n')
@@ -199,6 +212,15 @@ class GenerateCC:
         else:
             self.ns_close(['Atlas', 'Objects'])
         self.out.close()
+        if os.access(outfile, os.F_OK):
+            if cmp.cmp(outfile + ".tmp", outfile) == 0:
+                os.remove(outfile)
+                os.rename(outfile + ".tmp", outfile)
+            else:
+                print "Output file same as existing one, not updating"
+                os.remove(outfile + ".tmp")
+        else:
+            os.rename(outfile + ".tmp", outfile)
 
 # Main program
 
