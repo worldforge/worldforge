@@ -60,6 +60,8 @@ fi
 aclocalinclude="$ACLOCAL_FLAGS"
 
 #echo "Running libtoolize..."
+libtoolize --automake --copy --force
+
 #libtoolize --force --copy
 
 echo "Running aclocal $aclocalinclude ..."
