@@ -305,6 +305,7 @@ private:
       %(classname)s *res = begin_%(classname)s;
       assert( res->m_refCount == 0 );
       res->m_attrFlags = 0;
+      res->m_attributes.clear();
       begin_%(classname)s = (%(classname)s *)begin_%(classname)s->m_next;
       return res;
     }
