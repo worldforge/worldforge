@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <set>
+#include <cmath>
 
 #include <Atlas/Objects/Entity/RootEntity.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
@@ -189,8 +190,11 @@ void Entity::recvSight(const Atlas::Objects::Entity::GameEntity &ge)
 	if (ge.HasAttr("orientation"))
 	    _orientation = Quaternion(ge.GetAttr("orientation"));
 	else if (ge.HasAttr("face")) {
-	    // FIXME - handle legacy Acorn face attribute
-	    _orientation = Quaternion(0.0, 0.0, ge.GetAttr("face").AsFloat());
+	    // FIXME - legacy stuff to handle the Acorn 'face' angle
+	    Coord face(ge.GetAttr("face"));
+	    // build the quaternion from roll, pitch and yaw.
+	    Quaternion quat(0.0, 0.0, std::atan2(face.y, face.x));
+	    setProperty("orientation", quat.asObject());
 	}
 	
 	// copy *every* attribute through
@@ -215,8 +219,9 @@ void Entity::recvMove(const Atlas::Objects::Operation::Move &mv)
 	    setProperty("orientation", getArg(mv, "orientation"));
 	else if (hasArg(mv, "face")) {
 	    // FIXME - legacy stuff to handle the Acorn 'face' angle
-	    // build the quaternion from roll, pitch and yaw. Yaw is the fac, others are zero
-	    Quaternion quat(0.0, 0.0, getArg(mv, "face").AsFloat());
+	    Coord face(getArg(mv, "face"));
+	    // build the quaternion from roll, pitch and yaw.
+	    Quaternion quat(0.0, 0.0, std::atan2(face.y, face.x));
 	    setProperty("orientation", quat.asObject());
 	}
 	    
