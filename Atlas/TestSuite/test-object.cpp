@@ -228,15 +228,16 @@ bool mapTest() {
 
         println( "Embedded object test" );
         Object bar;
+        Object bar2;
         bar.set( "object", map );
         check( bar.length() == 1);
         check( map.length() == 4);
         check( bar.has( "object" ) );
-        check( bar.get( "object", bar ) );
-        check( bar.length() == 4 );
+        check( bar.get( "object", bar2 ) );
+        check( bar2.length() == 4 );
 
         println( "Key list check" );
-        Object foobar = bar.keys();
+        Object foobar = bar2.keys();
         check( foobar.length() == 4 );
 
 /*
