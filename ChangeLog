@@ -1,3 +1,9 @@
+2003-03-31 Damien McGinnes
+        * src/tile.cpp: modified algorithm, cleaned up code slightly
+	  algorithm now generates 1 tile very quickly, but has problems
+	  on steep tiles where one side is quite flat. (seams are more
+	  visible).
+
 2003-03-29  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/tile.cpp: Tweak tile() to create a size+1 * size+1 segment.
