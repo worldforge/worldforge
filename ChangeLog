@@ -1,5 +1,8 @@
 ChangeLog for varconf
 
+Tuesday, 6th August, 2002, Simon Goodall <simon@simongoodall.co.uk>
+	* fixed varconf/config.cpp so parseStream now allows - and _ characters in a section name instead of throwing an exception.
+
 Saturday, 20th June, 2002, Al Riddoch <alriddoch@zepler.org>
 	* Add --enable-debug to configure.in
 	* Use rpm supplied compiler flags in spec.

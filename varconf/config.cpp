@@ -317,6 +317,7 @@ void Config::parseStream( std::istream& in) throw ( ParseError)
 	switch ( ctype( c)) {
 	  case C_ALPHA:
 	  case C_NUMERIC:
+	  case C_DASH:
 	    section += c;
 	    break;
 	  case C_SQUARE_CLOSE:
