@@ -1,2 +1,2 @@
-SUBDIRS = Object Net Content Bus BusTest
+SUBDIRS = Object Net Content Bus NetTest BusTest
 

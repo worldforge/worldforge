@@ -24,6 +24,7 @@ AC_OUTPUT([
 	src/Makefile
 	src/Bus/Makefile
 	src/Net/Makefile
+	src/NetTest/Makefile
 	src/BusTest/Makefile
 	src/Content/Makefile
 	src/Object/Makefile
