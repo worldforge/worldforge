@@ -10,9 +10,9 @@ Release: %{release}
 Copyright: GPL
 Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz
-Requires: Atlas-C++ >= 0.4.4 wfmath >= 0.2.10 libstdc++
+Requires: wfmath >= 0.3.2 libstdc++
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-BuildRequires: wfmath-devel >= 0.2.10 libstdc++-devel >= 2.95.2
+BuildRequires: wfmath-devel >= 0.3.2 libstdc++-devel
 
 %description
 Mercator is designed to handle terrain data.
