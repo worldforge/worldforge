@@ -1,6 +1,9 @@
 ChangeLog for varconf
 
 Wednesday, May 21 2002, Michael Koch (man-di)
+	* tests/Makefile.am: make tests link
+	
+Wednesday, May 21 2002, Michael Koch (man-di)
 	* Updated AUTHORS file
 	* Made some text files more readable
 	* removed generated file from CVS
