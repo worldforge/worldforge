@@ -35,6 +35,7 @@ Concat& Concat::operator=( const Concat& c)
   VarBase::operator=(c);
   m_v1 = c.m_v1;
   m_v2 = c.m_v2;
+  return *this;
 }
 
 void Concat::set_val()
@@ -51,6 +52,7 @@ Ternary& Ternary::operator=( const Ternary& t)
   m_test = t.m_test;
   m_true = t.m_true;
   m_false = t.m_false;
+  return *this;
 }
 
 void Ternary::set_val()
@@ -69,6 +71,7 @@ Item& Item::operator=( const Item& i)
   VarBase::operator=(i);
   m_section = i.m_section;
   m_key = i.m_key;
+  return *this;
 }
 
 void Item::assign( const Variable& v)
