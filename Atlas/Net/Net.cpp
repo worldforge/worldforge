@@ -10,12 +10,5 @@
 
 void initAtlasNet()
 {
-	Py_Initialize();
-
-	initURI();
-	initURIList();
-	initIntList();
-	initLongList();
-	initFloatList();
-	initStringList();
+	initAtlasTypes();
 }
