@@ -8,4 +8,4 @@ libAtlasObjects_la_SOURCES = \
 	Root.cc Decoder.cc
 
 libAtlasObjectsinclude_HEADERS = \
-	ObjectType.h Root.h Decoder.h Macros.h Encoder.h
+	ObjectType.h Root.h Decoder.h Encoder.h

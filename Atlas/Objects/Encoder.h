@@ -15,7 +15,12 @@ public:
     Encoder(Atlas::Bridge* b) : EncoderBase(b) { }
     virtual ~Encoder() { }
 
-    virtual void StreamMessage(Atlas::Objects::Root* o) {o->Transmit(b); }
+    virtual void StreamMessage(Atlas::Objects::Root* o)
+    {
+        b->StreamMessage(Bridge::Map);
+        o->Transmit(b);
+        b->EndMap();
+    }
 };
 
 } } // namespace Atlas::Objects
