@@ -141,9 +141,10 @@ bool    Object::set(size_t ndx, const string& val)
 bool    Object::get(size_t ndx, Object& src) const
 {
 	if (obj->rt != List) return false;
-	src.obj->decref();
-	src.obj = ((VVec*)obj)->vv[ndx];
+	Variant* tmp = ((VVec*)obj)->vv[ndx];
 	if (tmp == NULL) return false;
+	src.obj->decref();
+	src.obj = tmp;
 	src.obj->incref();
 	return true;
 }
