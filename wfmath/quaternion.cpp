@@ -290,5 +290,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& from, const Vector<3>& to)
   // sin(x) = 2sin(x/2)cos(x/2), so sin(x/2) = sin(x)/(2cos(x/2))
   m_vec = Cross(from, to) / (2 * mag_prod * m_w);
 
+  m_valid = from.isValid() && to.isValid();
+
   return *this;
 }

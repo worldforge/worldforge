@@ -21,6 +21,9 @@ Deal with difficulties in making certain functions friends of the
 Rearrange the functions in foo_funcs.h to match the order in the class
 	in foo.h
 
+Change 'const CoordType' to 'CoordType' in Quaternion constructors, rotation()
+	functions next time we break binary compatibility.
+
 Schedule:
 0.3.0 will come out once I get around to testing the Polygon intersect functions
       and make sure they work. At that point the old Intersect()/IntersectProper()
