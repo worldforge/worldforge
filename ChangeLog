@@ -1,3 +1,17 @@
+2003-08-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Buffer.cpp, Mercator/Buffer.h, Mercator/Buffer_impl.h:
+	  Convert to template so that buffer data can be an array of any
+	  type.
+
+	* Mercator/Surface.cpp, Mercator/Surface.h: Specialise Buffer as
+	  unsigned bytes. Much more compact than floats.
+
+	* Mercator/ThresholdShader.cpp, Mercator/GrassShader.h,
+	  Mercator/GrassShader.cpp, Mercator/FillShader.cpp,
+	  Mercator/DepthShader.cpp: Re-write shaders to be largely
+	  buffer type independant.
+
 2003-08-09  Damien McGinnes
 
 	* Mercator/Segment.cpp, Mercator/MersenneTwister.h, configure,in: 
@@ -21,7 +35,7 @@
 2003-08-08  Damien McGinnes
 
 	* Mercator/Segment.cpp: changed round() to rint()
- 	* updated TODO
+	* updated TODO
 
 2003-08-06  Al Riddoch  <alriddoch@zepler.org>
 

@@ -9,7 +9,7 @@
 namespace Mercator {
 
 Surface::Surface(Segment & seg, const Shader & sh, bool color, bool alpha) :
-    Buffer(seg, (color ? 3 : 0) + (alpha ? 1 : 0)), m_shader(sh)
+    Buffer<ColorT>(seg, (color ? 3 : 0) + (alpha ? 1 : 0)), m_shader(sh)
 {
 }
 

@@ -2,21 +2,11 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
-#include <Mercator/Buffer.h>
-
-#include <Mercator/Segment.h>
+#include <Mercator/Buffer_impl.h>
 
 namespace Mercator {
 
-Buffer::Buffer(Segment & segment, unsigned int channels) :
-         m_segment(segment), m_channels(channels), m_size(segment.getSize()),
-         m_data(new float[segment.getSize() * segment.getSize() * channels])
-{
-}
-
-Buffer::~Buffer()
-{
-    delete [] m_data;
-}
+template class Buffer<float>;
+template class Buffer<unsigned char>;
 
 } // namespace Mercator

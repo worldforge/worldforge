@@ -23,7 +23,7 @@ void HighShader::shade(Surface & s) const
     unsigned int channels = s.getChannels();
     assert(channels > 0);
     unsigned int colors = channels - 1;
-    float * data = s.getData();
+    ColorT * data = s.getData();
     const float * height_data = s.getSegment().getPoints();
     if (height_data == 0) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
@@ -36,9 +36,9 @@ void HighShader::shade(Surface & s) const
     int j = -1;
     for (unsigned int i = 0; i < count; ++i) {
         for (unsigned int k = 0; k < colors; ++k) {
-            data[++j] = 1.f;
+            data[++j] = colorMax;
         }
-        data[++j] = ((height_data[i] > m_threshold) ? 1.f : 0.f);
+        data[++j] = ((height_data[i] > m_threshold) ? colorMax : colorMin);
     }
 }
 
@@ -56,7 +56,7 @@ void LowShader::shade(Surface & s) const
     unsigned int channels = s.getChannels();
     assert(channels > 0);
     unsigned int colors = channels - 1;
-    float * data = s.getData();
+    ColorT * data = s.getData();
     const float * height_data = s.getSegment().getPoints();
     if (height_data == 0) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
@@ -69,9 +69,9 @@ void LowShader::shade(Surface & s) const
     int j = -1;
     for (unsigned int i = 0; i < count; ++i) {
         for (unsigned int k = 0; k < colors; ++k) {
-            data[++j] = 1.f;
+            data[++j] = colorMax;
         }
-        data[++j] = ((height_data[i] < m_threshold) ? 1.f : 0.f);
+        data[++j] = ((height_data[i] < m_threshold) ? colorMax : colorMin);
     }
 }
 
@@ -89,7 +89,7 @@ void BandShader::shade(Surface & s) const
     unsigned int channels = s.getChannels();
     assert(channels > 0);
     unsigned int colors = channels - 1;
-    float * data = s.getData();
+    ColorT * data = s.getData();
     const float * height_data = s.getSegment().getPoints();
     if (height_data == 0) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
@@ -102,10 +102,10 @@ void BandShader::shade(Surface & s) const
     int j = -1;
     for (unsigned int i = 0; i < count; ++i) {
         for (unsigned int k = 0; k < colors; ++k) {
-            data[++j] = 1.f;
+            data[++j] = colorMax;
         }
         data[++j] = (((height_data[i] > m_lowThreshold) &&
-                      (height_data[i] < m_highThreshold)) ? 1.f : 0.f);
+                      (height_data[i] < m_highThreshold)) ? colorMax : colorMin);
     }
 }
 

@@ -23,7 +23,7 @@ void DepthShader::shade(Surface & s) const
     unsigned int channels = s.getChannels();
     assert(channels > 0);
     unsigned int colors = channels - 1;
-    float * data = s.getData();
+    ColorT * data = s.getData();
     const float * height_data = s.getSegment().getPoints();
     if (height_data == 0) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
@@ -36,15 +36,15 @@ void DepthShader::shade(Surface & s) const
     int j = -1;
     for (unsigned int i = 0; i < count; ++i) {
         for (unsigned int k = 0; k < colors; ++k) {
-            data[++j] = 1.f;
+            data[++j] = colorMax;
         }
         float depth = height_data[i];
         if (depth > m_waterLevel) {
-            data[++j] = 0.f;
+            data[++j] = colorMin;
         } else if (depth < m_murkyDepth) {
-            data[++j] = 1.f;
+            data[++j] = colorMax;
         } else {
-            data[++j] = 1.f - (depth - m_murkyDepth) / (m_waterLevel - m_murkyDepth);
+            data[++j] = colorMax - (colorMax * ((depth - m_murkyDepth) / (m_waterLevel - m_murkyDepth)));
         }
     }
 }

@@ -9,24 +9,25 @@ namespace Mercator {
 
 class Segment;
 
+template<typename DataType>
 class Buffer {
   private:
     Segment & m_segment;
     const unsigned int m_channels;
     const unsigned int m_size;
-    float * const m_data;
+    DataType * const m_data;
 
   public:
     explicit Buffer(Segment & segment, unsigned int channels = 4);
     virtual ~Buffer();
 
-    float & operator()(unsigned int x, unsigned int y, unsigned int channel) {
+    DataType & operator()(unsigned int x,unsigned int y,unsigned int channel) {
         return m_data[(y * m_size + x) * m_channels + channel];
     }
 
-    const float & operator()(unsigned int x,
-                             unsigned int y,
-                             unsigned int channel) const {
+    const DataType & operator()(unsigned int x,
+                                unsigned int y,
+                                unsigned int channel) const {
         return m_data[(y * m_size + x) * m_channels + channel];
     }
     
@@ -38,7 +39,7 @@ class Buffer {
         return m_channels;
     }
 
-    float * getData() {
+    DataType * getData() {
         return m_data;
     }
 

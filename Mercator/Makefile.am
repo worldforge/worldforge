@@ -9,8 +9,8 @@ libmercator_0_2_la_SOURCES = \
 	Matrix.cpp \
 	Terrain.cpp \
 	TerrainMod.cpp \
-	Segment.cpp \
 	Buffer.cpp \
+	Segment.cpp \
 	Shader.cpp \
 	FillShader.cpp \
 	ThresholdShader.cpp \

@@ -20,12 +20,12 @@ FillShader::~FillShader()
 void FillShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
-    float * data = s.getData();
+    ColorT * data = s.getData();
     unsigned int size = s.getSegment().getSize();
 
     unsigned int buflen = size * size * channels;
     for (unsigned int i = 0; i < buflen; ++i) {
-        data[i] = 1.f;
+        data[i] = colorMax;
     }
 }
 

@@ -11,7 +11,12 @@ namespace Mercator {
 
 class Shader;
 
-class Surface : public Buffer {
+typedef unsigned char ColorT;
+
+static const ColorT colorMax = 255;
+static const ColorT colorMin = 0;
+
+class Surface : public Buffer<ColorT> {
   private:
     const Shader & m_shader;
   public:

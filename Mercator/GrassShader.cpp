@@ -20,16 +20,16 @@ GrassShader::~GrassShader()
 {
 }
 
-inline float GrassShader::slopeToAlpha(float height, float slope) const
+inline ColorT GrassShader::slopeToAlpha(float height, float slope) const
 {
     if ((height < m_lowThreshold) ||
         (height > m_highThreshold) ||
         (slope > m_intercept)) {
-        return 0.f;
+        return colorMin;
     } else if (slope < m_cutoff) {
-        return 1.f;
+        return colorMax;
     } else {
-        return (slope - m_cutoff) / (m_intercept - m_cutoff);
+        return (ColorT)(colorMax * ((slope - m_cutoff) / (m_intercept - m_cutoff)));
     }
 }
 
@@ -40,7 +40,7 @@ void GrassShader::shade(Surface & s) const
     unsigned int channels = s.getChannels();
     assert(channels > 3);
     Segment & seg = s.getSegment();
-    float * data = s.getData();
+    ColorT * data = s.getData();
     const float * height_data = seg.getPoints();
     if (height_data == 0) {
         std::cerr << "WARNING: Mercator: Attempting to shade empty segment."
@@ -52,7 +52,7 @@ void GrassShader::shade(Surface & s) const
 
     unsigned int data_count = size * size * channels;
     for (unsigned int i = 0; i < data_count; ++i) {
-        data[i] = 1.f;
+        data[i] = colorMax;
     }
 
     // Deal with corner points
