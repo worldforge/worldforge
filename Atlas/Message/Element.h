@@ -312,6 +312,14 @@ public:
       return t == TYPE_PTR && p == v;
     }
 
+    /// Check for equality with a const char *.
+    bool operator==(const char * v) const
+    {
+      if(t == TYPE_STRING)
+        return (*s == v);
+      return false;
+    }
+
     /// Check for equality with a std::string.
     bool operator==(const StringType& v) const
     {

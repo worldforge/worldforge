@@ -1,5 +1,10 @@
 2004-10-12  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Message/Element.h: Add operator== for comparing to C
+	  strings, to avoid the ambiguity problem.
+
+2004-10-12  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/BaseObject.h: Add pure virtual copy method to
 	  BaseObjectData to help solve the problems which occur
 	  when modifying objects using smart pointers.
