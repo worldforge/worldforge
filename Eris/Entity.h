@@ -99,8 +99,8 @@ public:
 	
 	// accesors
 	/// retrieve the unique entity ID
-	std::string getID() const { return _id;}
-	std::string getName() const { return _name;}
+	const std::string& getID() const { return _id;}
+	const std::string& getName() const { return _name;}
 	
 	/// access the current time-stamp of the entity
 	float getStamp() const

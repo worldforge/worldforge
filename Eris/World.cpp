@@ -137,7 +137,7 @@ void World::setFocusedEntity(EntityPtr f)
 	look(NULL);
 }
 
-std::string World::getFocusedEntityID()
+const std::string& World::getFocusedEntityID()
 {
 	if (_focused)
 		return _focused->getID();

@@ -58,7 +58,7 @@ public:
     Room* createRoom(const std::string &name);
 
 	/// Obtain the human-readable name  of this room
-	std::string getName() const
+	const std::string& getName() const
 	{ return _name; }
 	
 	/// Obtain a list of the account IDs of each person in this room
@@ -72,7 +72,7 @@ public:
 	/** Get the Atlas object ID of the Room; note this can fail prior to the Entered signal
 	 * being emitted; in that case it throws an exception to avoid returning an invalid
 	 * ID */
-	std::string getID() const;
+	const std::string& getID() const;
 	
 	/// Called by the lobby when sight of us arrives	
 	void sight(const Atlas::Objects::Entity::RootEntity &room);	

@@ -44,7 +44,7 @@ public:
 	Room* getRoom(const std::string &id);
 
 	/// get the player's account ID
-	std::string getAccountID();
+	const std::string& getAccountID();
 	
 	/// The underlying connection for the lobby
 	Connection* getConnection() const { return _con; }

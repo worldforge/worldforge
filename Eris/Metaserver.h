@@ -113,7 +113,7 @@ public:
 	void cancel();
 
 	/// Access the client name
-	std::string getClientName() const
+	const std::string& getClientName() const
 	{ return _clientName; }
 
 	/// Get the current status of the Meta server list

@@ -105,7 +105,7 @@ public:
 	Avatar* createCharacter(const Atlas::Objects::Entity::GameEntity &character);
 
 	/// returns the account ID if logged in, or throws and exception
-	std::string getAccountID() const;
+	const std::string& getAccountID() const;
 
 // signals
 	/// emitted when a character has been retrived from the server

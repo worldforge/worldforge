@@ -355,7 +355,7 @@ void Room::recvDisappear(const Atlas::Objects::Operation::Disappearance &dis)
 	}
 }
 
-std::string Room::getID() const
+const std::string& Room::getID() const
 {
     if (_id.empty() || _id == "") {
 	throw InvalidOperation("called Room::getID() before the ID was available \

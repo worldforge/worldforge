@@ -95,7 +95,7 @@ public:
 
 	/** get the id of the focused entity. This should be identical to doing getFocusedEntity()->getID(),
 	except that is value is valid before World.Entered is emitted. */
-	std::string getFocusedEntityID();
+	const std::string& getFocusedEntityID();
 
 	const std::string& getDispatcherID() const {return _igID;}
 	

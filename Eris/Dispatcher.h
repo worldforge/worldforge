@@ -39,10 +39,10 @@ public:
 
 	virtual bool empty() = 0;
 
-	std::string getName() const
+	const std::string& getName() const
 	{ return _name; }
 
-	virtual std::string getData() const
+	virtual const std::string& getData() const
 	{ return _name; }
 	
 	static std::string getAnonymousSuffix(Dispatcher *d);

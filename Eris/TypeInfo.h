@@ -64,7 +64,7 @@ public:
 
 // accessors
 	/// the unique type name (matches the Atlas type)
-	std::string getName() const;
+	const std::string& getName() const;
 	const TypeInfoSet & getChildren() const {
 	    return _children;
 	}

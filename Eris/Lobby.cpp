@@ -68,7 +68,7 @@ Lobby::~Lobby()
 	_con->removeIfDispatcherByPath("op:oog:sight:entity", "room");
 }
 
-std::string Lobby::getAccountID()
+const std::string& Lobby::getAccountID()
 {
 	if (_account.empty())
 		throw InvalidOperation("Not logged into account yet");

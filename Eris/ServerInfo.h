@@ -25,19 +25,19 @@ public:
 	/** retrive the hostname (or dotted-decimal IP) of the server. For multi-server worlds, this will be
 	a name that resolves to a machine capable of accepting the initial LOGIN, and hence should not need
 	special handling. */
-	std::string getHostname() const
+	const std::string& getHostname() const
 	{ return _host; }
 
 	/// retrieve the human-readable name of the server (e.g 'Bob's Mason Server')
-	std::string getServername() const
+	const std::string& getServername() const
 	{ return _host; }
 	
 	/// retrieve a human-readable name of the ruleset (e.g. 'mason' or 'circe')
-	std::string getRuleset() const
+	const std::string& getRuleset() const
 	{ return _ruleset; }
 	
 	/// the server program name, i.e 'stage' or 'cyphesis'
-	std::string getServer() const
+	const std::string& getServer() const
 	{ return _server; }
 	
 	/// the number of clients currently connected to the server

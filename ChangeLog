@@ -1,3 +1,8 @@
+Monday, 18th November, Ron Steinke
+
+	* Changed a bunch of accessors that returned std::string
+	  to return const std::string& instead
+
 Thursday, 14th November, Ron Steinke
 
 	* Changed the second argument of Meta::ReceivedServerInfo

@@ -30,7 +30,7 @@ public:
 	{ return _queryNo; }
 
 	/// return the host string this query is using
-	std::string getHost() const
+	const std::string& getHost() const
 	{ return _host; }
 	
 	/// Access the elapsed time (in millseconds) since the query was issued

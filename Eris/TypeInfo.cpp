@@ -257,7 +257,7 @@ void TypeInfo::setupDepends()
 	}
 }
 
-std::string TypeInfo::getName() const
+const std::string& TypeInfo::getName() const
 {
 	return _name;
 }

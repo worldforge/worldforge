@@ -25,9 +25,9 @@ public:
     void msg(const std::string &msg);
 
     /// access the Atlas account ID for this person
-    std::string getAccount() const { return _id; }
+    const std::string& getAccount() const { return _id; }
     /// access the human-readable name for this person 
-    std::string getName() const {return _name;}
+    const std::string& getName() const {return _name;}
 protected:
     const std::string _id;	///< the account ID 
     std::string _name;	///< the name, i.e account.GetName()
