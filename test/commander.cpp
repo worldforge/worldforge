@@ -37,7 +37,7 @@ Commander::~Commander()
 
 void Commander::recv()
 {
-    if (m_channel.fail()) throw InvalidOperation("Commander's stream failed");
+    if (m_channel.fail()) return;
         
     if (m_acceptor)
         negotiate();
