@@ -2,7 +2,7 @@
 <!--NewPage-->
 <html>
 <head>
-<meta name="CreationDate"   content="Tue Dec 07 08:06:22 1999">
+<meta name="CreationDate"   content="Fri Dec 10 02:02:31 1999">
 <meta name="CcDocCopyright" content="(C) Joe Linoff 1998,1999">
 <meta name="CcDocAuthor"    content="Joe Linoff">
 <meta name="CcDocVersion"   content="0.7a">
@@ -47,7 +47,7 @@ AtlasCodec.h:21
 <img src="images/constructor-index.gif" alt="Constructors Index">
 </h2>
 <dl>
-  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r27"><b>ACodec</b></a>
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r28"><b>ACodec</b></a>
   <dd><b>[public]</b> 
 </dl>
 <p>
@@ -57,17 +57,17 @@ AtlasCodec.h:21
 <img src="images/method-index.gif" alt="Methods Index">
 </h2>
 <dl>
-  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r29"><b>encodedLength</b></a>
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2a"><b>encodedLength</b></a>
   <dd><b>[public]</b> 
-  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r28"><b>encodeMessage</b></a>
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r29"><b>encodeMessage</b></a>
   <dd><b>[public]</b> 
-  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2a"><b>feedStream</b></a>
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2b"><b>feedStream</b></a>
   <dd><b>[public]</b> 
-  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2d"><b>freeMessage</b></a>
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2e"><b>freeMessage</b></a>
   <dd><b>[public]</b> 
-  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2b"><b>getMessage</b></a>
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2c"><b>getMessage</b></a>
   <dd><b>[public]</b> 
-  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2c"><b>hasMessage</b></a>
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r2d"><b>hasMessage</b></a>
   <dd><b>[public]</b> 
 </dl>
 <p>
@@ -76,12 +76,12 @@ AtlasCodec.h:21
 <h2>
 <img src="images/constructors.gif" alt="Constructors">
 </h2>
-<a name="r27"></a>
+<a name="r28"></a>
 <p>
 <a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> ACodec</b>
 <dir>
 <pre>
-public <b>ACodec</b> ( <a href="ccdoc.r10b.html">AProtocol</a> * aproto ) ;</pre>
+public <b>ACodec</b> ( <a href="ccdoc.rfb.html">AProtocol</a> * aproto ) ;</pre>
 <p>
 </dir>
 <hr>
@@ -89,15 +89,15 @@ public <b>ACodec</b> ( <a href="ccdoc.r10b.html">AProtocol</a> * aproto ) ;</pre
 <h2>
 <img src="images/methods.gif" alt="Methods">
 </h2>
-<a name="r28"></a>
+<a name="r29"></a>
 <p>
 <a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> encodeMessage</b>
 <dir>
 <pre>
-public <font color=green><b>char</b></font> * <b>encodeMessage</b> ( <a href="ccdoc.r36.html">AObject</a> * amsg ) ;</pre>
+public string <b>encodeMessage</b> ( <a href="ccdoc.r38.html">AObject</a> & amsg ) ;</pre>
 <p>
 </dir>
-<a name="r29"></a>
+<a name="r2a"></a>
 <p>
 <a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> encodedLength</b>
 <dir>
@@ -105,24 +105,23 @@ public <font color=green><b>char</b></font> * <b>encodeMessage</b> ( <a href="cc
 public <font color=green><b>int</b></font> <b>encodedLength</b> ( ) ;</pre>
 <p>
 </dir>
-<a name="r2a"></a>
+<a name="r2b"></a>
 <p>
 <a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> feedStream</b>
 <dir>
 <pre>
-public <font color=green><b>void</b></font> <b>feedStream</b> ( <font color=green><b>char</b></font> * data ,
-                         <font color=green><b>int</b></font> len ) ;</pre>
+public <font color=green><b>void</b></font> <b>feedStream</b> ( string & data ) ;</pre>
 <p>
 </dir>
-<a name="r2b"></a>
+<a name="r2c"></a>
 <p>
 <a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> getMessage</b>
 <dir>
 <pre>
-public <a href="ccdoc.r36.html">AObject</a> * <b>getMessage</b> ( ) ;</pre>
+public <a href="ccdoc.r38.html">AObject</a> <b>getMessage</b> ( ) ;</pre>
 <p>
 </dir>
-<a name="r2c"></a>
+<a name="r2d"></a>
 <p>
 <a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> hasMessage</b>
 <dir>
@@ -130,7 +129,7 @@ public <a href="ccdoc.r36.html">AObject</a> * <b>getMessage</b> ( ) ;</pre>
 public <font color=green><b>int</b></font> <b>hasMessage</b> ( ) ;</pre>
 <p>
 </dir>
-<a name="r2d"></a>
+<a name="r2e"></a>
 <p>
 <a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> freeMessage</b>
 <dir>

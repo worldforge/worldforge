@@ -9,8 +9,9 @@
 #include "AtlasCodec.h"
 #include "AtlasObject.h"
 #include "AtlasProtocol.h"
-#include "AtlasPackedAsciiProtocol.h"
 
+#include "AtlasXMLProtocol.h"
+#include "AtlasPackedAsciiProtocol.h"
 
 
 #include "CodecBench.h"
@@ -40,15 +41,18 @@ int WINAPI WinMain(
  
 void CodecBench::execute()
 {
-	string msg;
+	int	i;
+	string	msg;
+	time_t	stim,enctime,dectime;
+	double	encloop,decloop;
+
+	AProtocol*	proto;
+        ACodec* 	codec;
 
 	Py_Initialize();
 
-	AProtocol*	proto = new APackedAsciiProtocol();
-        ACodec* 	codec = new ACodec(proto);
-
         AObject test = AObject::mkMap("test1");
-        AObject list = AObject::mkList("list1",1);
+        AObject list = AObject::mkList("list1",0);
         AObject amap = AObject::mkMap("map1");
 
         list.append("stringval");
@@ -62,27 +66,73 @@ void CodecBench::execute()
         test.set(list);
         test.set(amap);
 
-	time_t stim = time(NULL);
+	// packed ascii codec tests !!
 
-	for (int i=0; i<50; i++) {
-		printf("encode\n",i);
-		fflush(stdout);
+	proto = new APackedAsciiProtocol();
+	codec = new ACodec(proto);
+
+	stim = time(NULL);
+
+	for (i=0; i<50000; i++) {
 	        msg = codec->encodeMessage(test);
-		printf("feed stream\n",i);
-		fflush(stdout);
+	}
+
+	enctime = time(NULL) - stim;
+
+	encloop = 50000.0 / enctime;
+	printf("PAS Encode/Sec = %.2f\n", encloop);
+	fflush(stdout);
+
+	stim = time(NULL);
+
+	for (i=0; i<50000; i++) {
 	        codec->feedStream(msg);
-		printf("check for msg\n",i);
-		fflush(stdout);
 	        int res = codec->hasMessage();
 		codec->freeMessage();
 	}
 
-	time_t tim = (time(NULL) - stim);
+	dectime = time(NULL) - stim;
 
-	double perloop = 1 / (tim / 50.0);
+	decloop = 50000.0 / dectime;
+	printf("PAS Decode/Sec = %.2f\n", decloop);
+	fflush(stdout);
 
-	printf("Codecs/Sec = %.2f\n", perloop);
+	delete codec;
+	delete proto;
 
+	// XML codec tests !!
+
+	proto = new AXMLProtocol();
+	codec = new ACodec(proto);
+
+	stim = time(NULL);
+
+	for (i=0; i<50000; i++) {
+	        msg = codec->encodeMessage(test);
+	}
+
+	enctime = time(NULL) - stim;
+
+	encloop = 50000.0 / enctime;
+	printf("PAS Encode/Sec = %.2f\n", encloop);
+	fflush(stdout);
+
+	stim = time(NULL);
+
+	for (i=0; i<50000; i++) {
+	        codec->feedStream(msg);
+	        int res = codec->hasMessage();
+		codec->freeMessage();
+	}
+
+	dectime = time(NULL) - stim;
+
+	decloop = 50000.0 / dectime;
+	printf("PAS Decode/Sec = %.2f\n", decloop);
+	fflush(stdout);
+
+	delete codec;
+	delete proto;
 }
 
 

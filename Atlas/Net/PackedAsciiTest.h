@@ -8,8 +8,8 @@ class PackedAsciiTest
 
 public:
 
-void walkTree(int nest, int names, AObject *list);
-void DisplayMessage(AObject *msg);
+void walkTree(int nest, int names, AObject& list);
+void DisplayMessage(AObject& msg);
 void execute();
 
 };

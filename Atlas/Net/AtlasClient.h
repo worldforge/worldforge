@@ -31,9 +31,9 @@ public:
 	void	canSend();
 	void	gotErrs();
 
-	void	sendMsg(AObject* msg);
+	void	sendMsg(AObject& msg);
 
-	virtual	void gotMsg(AObject* msg);
+	virtual	void gotMsg(const AObject& msg);
 };
 
 #endif

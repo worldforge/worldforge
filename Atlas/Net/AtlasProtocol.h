@@ -18,10 +18,13 @@ class AProtocol
 protected:
 	AProtocolEncoder*	encoder;
 	AProtocolDecoder*	decoder;
+static	string			prefix;
 
 public:
-	AProtocolEncoder* getEncoder() { return encoder; }
-	AProtocolDecoder* getDecoder() { return decoder; }
+	AProtocolEncoder*	getEncoder()	{ return encoder; }
+	AProtocolDecoder*	getDecoder()	{ return decoder; }
+	string			getPrefix()	{ return prefix; }
+	void			setPrefix(string s)	{ prefix = s; }
 
 	static int atlasERRTOK;  // error token
 	static int atlasMSGBEG;  // message begins

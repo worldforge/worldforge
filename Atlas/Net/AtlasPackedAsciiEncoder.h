@@ -18,10 +18,10 @@
 class APackedAsciiEncoder: public AProtocolEncoder
 {
 private:
-    void walkTree(int nest, int names,AObject *list);
+    void walkTree(int nest, int names,AObject& list);
 
 public:
-    char* encodeMessage(AObject *msg);
+    string encodeMessage(AObject& msg);
 };
 
 

@@ -14,75 +14,85 @@
 #include <string.h>
 #include <stdio.h>
 
-void APackedAsciiEncoder::walkTree(int nest, int names, AObject *list)
+#include <string>
+
+void APackedAsciiEncoder::walkTree(int nest, int names, AObject& list)
 {
 	int	i;
-	char	buf[80];
-	char	pre[80];
+	string	buf;
 
-	*pre = 0;
-	for (int j=0; j<nest; j++) {
-		strcat(pre,"\t");
-	}
-
-	if (list->isList()) {
-		char* name = "";
-		if (names) name = list->getName();
-		printf("(%s=", name);
-		for (i=0; i<list->length(); i++) {
-			AObject* tmp;
-			list->get(i,tmp);
+	if (list.isList()) {
+		//::printf("encode list\n");
+		//fflush(stdout);
+		string name;
+		if (names) name = list.getName();
+		printf("(%s=", name.c_str());
+		for (i=0; i<list.length(); i++) {
+			AObject tmp;
+			list.get(i,tmp);
 			walkTree(0, 0, tmp);
 		}
 		printf(")");
 	} 
-	if (list->isMap()) {
-		AObject* keys = list->keys();
-		char* name = "";
-		if (names) name = list->getName();
-		printf("[%s=", name);
-		for (i=0; i<keys->length(); i++) {
-			char* key; AObject* tmp;
-			keys->get(i, key);
-			list->get(key, tmp);
+	if (list.isMap()) {
+		//::printf("encode map\n");
+		//fflush(stdout);
+		AObject keys = list.keys();
+		string name;
+		if (names) name = list.getName();
+		printf("[%s=", name.c_str());
+		for (i=0; i<keys.length(); i++) {
+			AObject key;
+			AObject	tmp;
+			keys.get(i, key);
+			list.get(key.asString(), tmp);
 			walkTree(0, 1, tmp);
 		}
 		printf("]");
 	} 
 
-	if (list->isString()) {
-		char* name = "";
-		if (names) name = list->getName();
-		printf("$%s=%s", name, list->asString());
+	if (list.isString()) {
+		//::printf("encode string\n");
+		//fflush(stdout);
+		string name;
+		if (names) name = list.getName();
+		printf("$%s=%s", name.c_str(), list.asString().c_str());
 	}
-	if (list->isLong()) {
-		char* name = "";
-		if (names) name = list->getName();
-		printf("%%%s=%li", name, list->asLong());
+	if (list.isLong()) {
+		//::printf("encode long\n");
+		//fflush(stdout);
+		string name;
+		if (names) name = list.getName();
+		printf("%%%s=%li", name.c_str(), list.asLong());
 	}
-	if (list->isFloat()) {
-		char* name = "";
-		if (names) name = list->getName();
-		printf("#%s=%.2f", name, list->asFloat());
+	if (list.isFloat()) {
+		//::printf("encode float\n");
+		//fflush(stdout);
+		string name;
+		if (names) name = list.getName();
+		printf("#%s=%.2f", name.c_str(), list.asFloat());
 	}
 
 }
 
-char* APackedAsciiEncoder::encodeMessage(AObject *msg)
+string APackedAsciiEncoder::encodeMessage(AObject& msg)
 {
 	int	i;
 
 	// start a new message
-	*buffer = 0;
+	buffer = "";
 	// format the message header
-	printf("{%s=", msg->getName());
+	printf("{%s=", msg.getName().c_str());
 	// walk the tree
 
-	AObject* keys = msg->keys();
-	for (i=0; i<keys->length(); i++) {
-		char* key; AObject* tmp;
-		keys->get(i, key);
-		msg->get(key, tmp);
+	AObject keys = msg.keys();
+	for (i=0; i<keys.length(); i++) {
+		AObject	key;
+		AObject	tmp;
+		keys.get(i, key);
+		//::printf("\n **** %i = %s\n", i, key.asString().c_str());
+		fflush(stdout);
+		msg.get(key.asString(), tmp);
 		walkTree(0, 1, tmp);
 	}
 	// and close off the message

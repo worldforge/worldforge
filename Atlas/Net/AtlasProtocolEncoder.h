@@ -15,15 +15,13 @@ class AProtocolEncoder
 {
 
 protected:
-	unsigned int    size;
-	char*           buffer;
-	int		bufsiz;
+	string          buffer;
 	
 public:
 	AProtocolEncoder();
 	void printf(char* fmt, ...);
-	void append(char* data, int len);
-	virtual char* encodeMessage(AObject *msg);
+	void append(string& data);
+	virtual string encodeMessage(AObject& msg);
 	virtual int encodedLength();	
 };
 

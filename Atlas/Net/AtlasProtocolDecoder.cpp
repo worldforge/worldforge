@@ -12,19 +12,20 @@
 #include <string.h>
 #include <memory.h>
 
+#include <string>
+
 AProtocolDecoder::AProtocolDecoder()
 {
-    buffer = (char*)malloc(1024);
 }
 
-char*   AProtocolDecoder::getName()                 { return name; }
-int     AProtocolDecoder::getType()                 { return type; }
-char*   AProtocolDecoder::getString()               { return sval; }
+string	AProtocolDecoder::getName()                 { return name; }
+int	AProtocolDecoder::getType()                 { return type; }
+string	AProtocolDecoder::getString()               { return sval; }
 long	AProtocolDecoder::getInt()                  { return ival; }
-double  AProtocolDecoder::getFloat()                { return fval; }
+double	AProtocolDecoder::getFloat()                { return fval; }
 
-void    AProtocolDecoder::newStream()               		{}
-void    AProtocolDecoder::feedStream(char* data, int len)	{}
-int     AProtocolDecoder::hasTokens()              		{ return 0; }
-int     AProtocolDecoder::getToken()                		{ return 0; }
+void	AProtocolDecoder::newStream()               	{}
+void	AProtocolDecoder::feedStream(string& data)	{}
+int	AProtocolDecoder::hasTokens()			{ return 0; }
+int	AProtocolDecoder::getToken()                	{ return 0; }
 

@@ -24,53 +24,36 @@ ATCPSocket::ATCPSocket()
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 }
 
-ATCPSocket::ATCPSocket(int bufsz): ASocket(bufsz)
+ATCPSocket::ATCPSocket(int asock): ASocket(asock)
 {
-
-#ifdef _WIN32
-	if (!didWSAInit) {
-		WSAStartup(0x0101, &wsadata);
-		didWSAInit = 1;
-		printf("Did WSAStartup\n\n");
-	}
-#endif
-
-	sock = socket(AF_INET, SOCK_STREAM, 0);
 }
 
-ATCPSocket::ATCPSocket(int asock, int bufsz): ASocket(asock,bufsz)
-{
-#ifdef _WIN32
-	if (!didWSAInit) {
-		WSAStartup(0x0101, &wsadata);
-		didWSAInit = 1;
-		printf("Did WSAStartup\n\n");
-	}
-#endif
-}
-
-int		ATCPSocket::connect(char* addr, int port)
+int	ATCPSocket::connect(string& addr, int port)
 {
 	struct hostent		*host;
 	u_long			hostaddr;
 	struct sockaddr_in	sin;
 	int			res;
 
-	host = gethostbyname(addr);
+	host = gethostbyname(addr.c_str());
 	if (host == NULL)
 	{
 		// try it as an IP address
 		printf("converting IP Address\n");
-		hostaddr = inet_addr(addr);
+		fflush(stdout);
+		hostaddr = inet_addr(addr.c_str());
 		printf("converting IP Address = %li \n", hostaddr);
+		fflush(stdout);
 		if (hostaddr == -1) return -1;
 	} else {
 		// name lookup worked, get address
 		printf("reading host entry\n");
+		fflush(stdout);
 		hostaddr = *((u_long *)host->h_addr);
 	}
 
 	printf("opening connection to %li:%i on socket = %i\n", hostaddr,port,sock);
+	fflush(stdout);
 
 	memset(&sin, 0, sizeof(sin)); // make sure everything zero
 	sin.sin_family = AF_INET;
@@ -80,13 +63,13 @@ int		ATCPSocket::connect(char* addr, int port)
 	return ::connect(sock, (struct sockaddr*)&sin, sizeof(sin));
 }
 
-int		ATCPSocket::listen(char* addr, int port, int backlog)
+int	ATCPSocket::listen(string& addr, int port, int backlog)
 {
 	u_long			myaddr;
 	struct sockaddr_in	sin;
 	int			res;
 
-	myaddr = inet_addr(addr);
+	myaddr = inet_addr(addr.c_str());
 	if (myaddr == -1) return -1;
 
 	memset(&sin, 0, sizeof(sin)); // make sure everything zero
@@ -108,30 +91,22 @@ ATCPSocket*	ATCPSocket::accept()
 
 	sinlen = sizeof(sin);
 	newsock = ::accept(sock, (struct sockaddr*)&sin, &sinlen);
-	return new ATCPSocket(newsock,rbufsize);
+	return new ATCPSocket(newsock);
 }
 
-int		ATCPSocket::send(char* data)
+int	ATCPSocket::send(string& data)
 {
-	return ::send(sock, data, strlen(data), 0);
+	return ::send(sock, data.c_str(), data.length(), 0);
 }
 
-int		ATCPSocket::send(char* data, size_t len)
+int		ATCPSocket::recv(string& data)
 {
-	return ::send(sock, data, len, 0);
-}
+	char	buf[2048];
 
-char*		ATCPSocket::recv()
-{
-	*rbuf = 0;
-	::recv(sock,rbuf,rbufsize,0);
-	return rbuf;
-	
-}
+	int res = ::recv(sock,buf,2047,0);
 
-int		ATCPSocket::recv(char* buf, int len)
-{
-	return ::recv(sock,buf,len,0);
+	data.erase();
+	data.assign(buf,res);
+	return res;
 }
-
 

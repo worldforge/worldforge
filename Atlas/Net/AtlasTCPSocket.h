@@ -11,7 +11,7 @@
 
 #include "AtlasSocket.h"
 
-#include <sys\types.h>
+#include <sys/types.h>
 #include <memory.h>
 #include <string.h>
 #include <unistd.h>
@@ -28,17 +28,16 @@ struct WSAData	wsadata;
 #endif
 
 public:
-	ATCPSocket();
-	ATCPSocket(int bufsz);
-	ATCPSocket(int asock, int bufsz);
+		ATCPSocket();
+		ATCPSocket(int asock);
 
-int		connect(char* addr, int port);
-int		listen(char* addr, int port, int backlog);
 ATCPSocket*	accept();
-int		send(char* data);
-int		send(char* data, size_t len);
-char*		recv();
-int		recv(char* buf, int len);
+
+int		connect(string& addr, int port);
+int		listen(string& addr, int port, int blog);
+
+int		send(string& data);
+int		recv(string& data);
 
 };
 

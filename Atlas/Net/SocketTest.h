@@ -17,13 +17,19 @@
 
 #include <windows.h>
 
+#ifdef _WIN32
 #include <Python/python.h>
+#else
+#include <Python.h>
+#endif
 
 class SocketTest
 {
 
 public:
-	void execute();
+
+void	execute();
+  
 };
 
 

@@ -15,143 +15,52 @@ int AObject::AFloatList		= 3;
 int AObject::AStringList	= 4;
 int AObject::AObjList		= 5;
 
-AObject::AObject(char *name, PyObject* src)
+AObject &AObject::operator=(const AObject& src)
 {
-	nam = strdup(name);
+	if (this == &src) return (*this);
+	obj = src.obj;
+	typ = src.typ;
+	Py_XINCREF(obj);
+	return (*this);
+}
+
+AObject::AObject()
+{
+	obj = PyDict_New();
+}
+
+AObject::AObject(const AObject& src)
+{
+	obj = src.obj;
+	typ = src.typ;
+	Py_XINCREF(obj);
+}
+
+AObject::AObject(PyObject* src)
+{
 	obj = src;
 	Py_XINCREF(obj);
 }
 
-AObject::AObject(char *name, AObject* src)
+AObject::AObject(AObject& src)
 {
-	nam = strdup(name);
-	obj = src->obj;
+	obj = src.obj;
+	typ = src.typ;
 	Py_XINCREF(obj);
-}
-
-AObject::AObject(char *name, char* src)
-{
-	nam = strdup(name);
-	obj = PyString_FromString(src);
-}
-
-AObject::AObject(char *name, double src)
-{
-	nam = strdup(name);
-	obj = PyFloat_FromDouble(src);
-}
-
-AObject::AObject(char *name, long src)
-{
-	nam = strdup(name);
-	obj = PyLong_FromLong(src);
-}
-
-AObject::AObject(char* src)
-{
-	nam = strdup("str");
-	obj = PyString_FromString(src);
 }
 
 AObject::AObject(double src)
 {
-	nam = strdup("flt");
 	obj = PyFloat_FromDouble(src);
 }
 
 AObject::AObject(long src)
 {
-	nam = strdup("int");
 	obj = PyLong_FromLong(src);
-}
-
-AObject::AObject(char* name, int len, long src, ...)
-{
-	nam = strdup(name);
-	obj = PyList_New(len);
-	typ = AObject::AIntList;
-
-	PyList_SetItem(obj, 0, PyLong_FromLong(src));
-	len--;
-	va_list	va;
-	va_start(va,src);
-	for (int i=1; i<len; i++) {
-		long tmp = va_arg(va,long);
-		PyList_SetItem(obj, i, PyLong_FromLong(src));
-	}
-	va_end(ap);
-}
-
-AObject::AObject(char* name, int len, double src, ...)
-{
-	nam = strdup(name);
-	obj = PyList_New(len);
-	typ = AObject::AFloatList;
-
-	PyList_SetItem(obj, 0, PyFloat_FromDouble(src));
-	len--;
-	va_list	va;
-	va_start(va,src);
-	for (int i=1; i<len; i++) {
-		double tmp = va_arg(va,double);
-		PyList_SetItem(obj, i, PyFloat_FromDouble(src));
-	}
-	va_end(ap);
-}
-
-AObject::AObject(char* name, int len, char* src, ...)
-{
-	nam = strdup(name);
-	obj = PyList_New(len);
-	typ = AObject::AStringList;
-
-	PyList_SetItem(obj, 0, PyString_FromString(src));
-	len--;
-	va_list	va;
-	va_start(va,src);
-	for (int i=1; i<len; i++) {
-		char* tmp = va_arg(va,char*);
-		PyList_SetItem(obj, i, PyString_FromString(src));
-	}
-	va_end(ap);
-}
-
-AObject::AObject(char* name, int len, long* src)
-{
-	nam = strdup(name);
-	obj = PyList_New(len);
-	typ = AObject::AIntList;
-
-	for (int i=0; i<len; i++) {
-		PyList_SetItem(obj, i, PyLong_FromLong(src[i]));
-	}
-}
-
-AObject::AObject(char* name, int len, double* src)
-{
-	nam = strdup(name);
-	obj = PyList_New(len);
-	typ = AObject::AFloatList;
-
-	for (int i=0; i<len; i++) {
-		PyList_SetItem(obj, i, PyFloat_FromDouble(src[i]));
-	}
-}
-
-AObject::AObject(char* name, int len, char** src)
-{
-	nam = strdup(name);
-	obj = PyList_New(len);
-	typ = AObject::AStringList;
-
-	for (int i=0; i<len; i++) {
-		PyList_SetItem(obj, i, PyString_FromString(src[i]));
-	}
 }
 
 AObject::AObject(int len, long src, ...)
 {
-	nam = strdup("");
 	obj = PyList_New(len);
 	typ = AObject::AIntList;
 
@@ -168,7 +77,6 @@ AObject::AObject(int len, long src, ...)
 
 AObject::AObject(int len, double src, ...)
 {
-	nam = strdup("");
 	obj = PyList_New(len);
 	typ = AObject::AFloatList;
 
@@ -183,26 +91,28 @@ AObject::AObject(int len, double src, ...)
 	va_end(ap);
 }
 
-AObject::AObject(int len, char* src, ...)
+AObject::AObject(int len, string* src, ...)
 {
-	nam = strdup("");
 	obj = PyList_New(len);
 	typ = AObject::AStringList;
 
-	PyList_SetItem(obj, 0, PyString_FromString(src));
+	char* tmp = strdup(src->c_str());
+	PyList_SetItem(obj, 0, PyString_FromString(tmp));
+	free(tmp);
 	len--;
 	va_list	va;
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
-		char* tmp = va_arg(va,char*);
-		PyList_SetItem(obj, i, PyString_FromString(src));
+		string* val = va_arg(va,string*);
+		char* tmp = strdup(val->c_str());
+		PyList_SetItem(obj, i, PyString_FromString(tmp));
+		free(tmp);
 	}
 	va_end(ap);
 }
 
 AObject::AObject(int len, double* src)
 {
-	nam = strdup("");
 	obj = PyList_New(len);
 	typ = AObject::AFloatList;
 
@@ -211,14 +121,15 @@ AObject::AObject(int len, double* src)
 	}
 }
 
-AObject::AObject(int len, char** src)
+AObject::AObject(int len, string* src)
 {
-	nam = strdup("");
 	obj = PyList_New(len);
 	typ = AObject::AStringList;
 
 	for (int i=0; i<len; i++) {
-		PyList_SetItem(obj, i, PyString_FromString(src[i]));
+		char* tmp = strdup(src[i].c_str());
+		PyList_SetItem(obj, i, PyString_FromString(tmp));
+		free(tmp);
 	}
 }
 
@@ -232,53 +143,57 @@ PyObject* AObject::pyObject()
 	return obj;
 }
 
-char*	AObject::getName()
+void	AObject::setListType(int atype)	{ typ = atype; }
+int	AObject::getListType()		{ return typ; }
+
+int	AObject::has(const string& name)
 {
-	return nam;
+	char* tmp = strdup(name.c_str());
+	bool res = PyObject_HasAttrString(obj, tmp);
+	free(tmp);
+	return res;
 }
 
-void	AObject::setName(char* name)
+int	AObject::get(const string& name, AObject& val)
 {
-	nam = strdup(name);
-}
-
-int	AObject::has(char* name)
-{
-	return PyObject_HasAttrString(obj,name);
-}
-
-int	AObject::get(char* name, AObject*& val)
-{
-	val = new AObject(name, PyDict_GetItemString(obj,name));
+	char* tmp = strdup(name.c_str());
+	val = AObject(PyDict_GetItemString(obj,tmp));
+	free(tmp);
 	return 1;
 }
 
-int	AObject::get(char* name, long& val)
+int	AObject::get(const string& name, long& val)
 {
 	if (!this->isLong()) return 0;
-	val = PyLong_AsLong(PyDict_GetItemString(obj,name));
+	char* tmp = strdup(name.c_str());
+	val = PyLong_AsLong(PyDict_GetItemString(obj,tmp));
+	free(tmp);
 	return 1;
 }
 
-int	AObject::get(char* name, double& val)
+int	AObject::get(const string& name, double& val)
 {
 	if (!this->isFloat()) return 0;
-	val = PyFloat_AsDouble(PyDict_GetItemString(obj,name));
+	char* tmp = strdup(name.c_str());
+	val = PyFloat_AsDouble(PyDict_GetItemString(obj,tmp));
+	free(tmp);
 	return 1;
 }
 
-int	AObject::get(char* name, char*& val)
+int	AObject::get(const string& name, string& val)
 {
 	if (!this->isString()) return 0;
-	val = PyString_AsString(PyDict_GetItemString(obj,name));
+	char* tmp = strdup(val.c_str());
+	val = PyString_AsString(PyDict_GetItemString(obj,tmp));
+	free(tmp);
 	return 1;
 }
 
-int	AObject::get(int ndx, AObject*& val)
+int	AObject::get(int ndx, AObject& val)
 {
 	char buf[20];
 	sprintf(buf,"%i", ndx);
-	val = new AObject(buf, PyList_GetItem(obj,ndx));
+	val = AObject(PyList_GetItem(obj,ndx));
 	return 1;
 }
 
@@ -296,41 +211,50 @@ int	AObject::get(int ndx, double& val)
 	return 1;
 }
 
-int	AObject::get(int ndx, char*& val)
+int	AObject::get(int ndx, string& val)
 {
 	if (!this->isString()) return 0;
 	val = PyString_AsString(PyList_GetItem(obj,ndx));
 	return 1;
 }
 
-int	AObject::set(char* name, AObject* src)
+int	AObject::set(const string& name, AObject& src)
 {
-	return PyDict_SetItemString(obj,name,src->obj);
+	char* tmp = strdup(name.c_str());
+	bool res = PyDict_SetItemString(obj,tmp,src.obj);
+	free(tmp);
+	return res;
 }
 
-int	AObject::set(char* name, char* src)
+int	AObject::set(const string& name, const string& src)
 {
-	return PyDict_SetItemString(obj,name, PyString_FromString(src));
+	char* var = strdup(name.c_str());
+	char* tmp = strdup(src.c_str());
+	bool res = PyDict_SetItemString(obj, var, PyString_FromString(tmp));
+	free(tmp);
+	free(var);
+	return res;
 }
 
-int	AObject::set(char* name, long src)
+int	AObject::set(const string& name, long src)
 {
-	return PyDict_SetItemString(obj,name, PyLong_FromLong(src));
+	char* tmp = strdup(name.c_str());
+	bool res = PyDict_SetItemString(obj, tmp, PyLong_FromLong(src));
+	free(tmp);
+	return res;
 }
 
-int	AObject::set(char* name, double src)
+int	AObject::set(const string& name, double src)
 {
-	return PyDict_SetItemString(obj,name, PyFloat_FromDouble(src));
+	char* tmp = strdup(name.c_str());
+	bool res = PyDict_SetItemString(obj, tmp, PyFloat_FromDouble(src));
+	free(tmp);
+	return res;
 }
 
-int	AObject::set(AObject* src)
+int	AObject::set(int ndx, AObject& src)
 {
-	return PyDict_SetItemString(obj,src->getName(),src->obj);
-}
-
-int	AObject::set(int ndx, AObject* src)
-{
-	return PyList_SetItem(obj, ndx, src->obj);
+	return PyList_SetItem(obj, ndx, src.obj);
 }
 
 int	AObject::set(int ndx, long src)
@@ -345,15 +269,21 @@ int	AObject::set(int ndx, double src)
 	return PyList_SetItem(obj, ndx, PyFloat_FromDouble(src));
 }
 
-int	AObject::set(int ndx, char* src)
+int	AObject::set(int ndx, const string& src)
 {
 	if (!this->isString()) return 0;
-	return PyList_SetItem(obj, ndx, PyString_FromString(src));
+	char* tmp = strdup(src.c_str());
+	bool res = PyList_SetItem(obj, ndx, PyString_FromString(tmp));
+	free(tmp);
+	return res;
 }
 
-int	AObject::del(char* name)
+int	AObject::del(const string& name)
 {
-	return PyDict_DelItemString(obj,name);
+	char* tmp = strdup(name.c_str());
+	bool res = PyDict_DelItemString(obj,tmp);
+	free(tmp);
+	return res;
 }
 
 int	AObject::hash()
@@ -376,9 +306,9 @@ int	AObject::reverse()
 	return PyList_Reverse(obj);
 }
 
-int	AObject::append(AObject* src)
+int	AObject::append(AObject& src)
 {
-	return PyList_Append(obj, src->obj);
+	return PyList_Append(obj, src.obj);
 }
 
 int	AObject::append(long src)
@@ -391,19 +321,25 @@ int	AObject::append(double src)
 	return PyList_Append(obj, PyFloat_FromDouble(src));
 }
 
-int	AObject::append(char* src)
+int	AObject::append(const string& src)
 {
-	return PyList_Append(obj, PyString_FromString(src));
+	char* tmp = strdup(src.c_str());
+	bool res = PyList_Append(obj, PyString_FromString(tmp));
+	free(tmp);
+	return res;
 }
 
-int	AObject::insert(int ndx, AObject* src)
+int	AObject::insert(int ndx, AObject& src)
 {
-	return PyList_Insert(obj, ndx, src->obj);
+	return PyList_Insert(obj, ndx, src.obj);
 }
 
-int	AObject::insert(int ndx, char* src)
+int	AObject::insert(int ndx, const string& src)
 {
-	return PyList_Insert(obj, ndx, PyString_FromString(src));
+	char* tmp = strdup(src.c_str());
+	bool res = PyList_Insert(obj, ndx, PyString_FromString(tmp));
+	free(tmp);
+	return res;
 }
 
 int	AObject::insert(int ndx, double src)
@@ -416,19 +352,21 @@ int	AObject::insert(int ndx, long src)
 	return PyList_Insert(obj, ndx, PyLong_FromLong(src));
 }
 
-AObject*	AObject::keys()
+AObject	AObject::keys()
 {
-	return new AObject("list",PyDict_Keys(obj));
+	AObject res(PyDict_Keys(obj));
+	return res;
 }
 
-AObject*	AObject::vals()
+AObject	AObject::vals()
 {
-	return new AObject("list",PyDict_Values(obj));
+	AObject res(PyDict_Values(obj));
+	return res;
 }
 
 long	AObject::asLong()	{ return PyLong_AsLong(obj); }
 double	AObject::asFloat()	{ return PyFloat_AsDouble(obj); }
-char*	AObject::asString()	{ return PyString_AsString(obj); }
+string	AObject::asString()	{ return PyString_AsString(obj); }
 
 int	AObject::isMap()	{ return PyMapping_Check(obj); }
 int	AObject::isList()	{ return PyList_Check(obj); }
@@ -436,31 +374,29 @@ int	AObject::isLong()	{ return PyLong_Check(obj); }
 int	AObject::isFloat()	{ return PyFloat_Check(obj); }
 int	AObject::isString()	{ return PyString_Check(obj); }
 
-AObject*	AObject::mkMap(char* name)
+AObject AObject::mkMap()
 {
-	return new AObject(name, PyDict_New());
+	AObject res(PyDict_New());
+	return res;
 }
 
-AObject*	AObject::mkList(char* name, int size)
+AObject AObject::mkList(int size)
 {
-	AObject* tmp = new AObject(name, PyList_New(size));
-	tmp->typ = AObject::AObjList;
-	return tmp;
+	AObject res(PyList_New(size));
+	res.typ = AObject::AObjList;
+	return res;
 }
 
-AObject*	AObject::mkLong(char* name, long val)
+AObject AObject::mkFloat(double val)
 {
-	return new AObject(name, PyLong_FromLong(val));
+	AObject res(PyFloat_FromDouble(val));
+	return res;
 }
 
-AObject*	AObject::mkFloat(char* name, double val)
+AObject AObject::mkString(const string& val)
 {
-	return new AObject(name, PyFloat_FromDouble(val));
-}
-
-AObject*	AObject::mkString(char* name, char* val)
-{
-	return new AObject(name, PyString_FromString(val));
+	AObject res(PyString_FromString(val.c_str()));
+	return res;
 }
 
 

@@ -96,21 +96,14 @@ public:
         state = 1;
         nestd = 0;
         token = 0;
-
-        //buffer = (char*)malloc(2048);
-        //name = (char*)malloc(80);
-        sval = (char*)NULL;
     }
 
     ~APackedAsciiDecoder()
     {
-        //free(buffer);
-        //free(name);
-        if (sval != NULL) free(sval);
     }
 
     void newStream();
-    void feedStream(char* data);
+    void feedStream(string& data);
     int getToken();
     int hasTokens();
 

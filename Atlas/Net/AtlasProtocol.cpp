@@ -8,6 +8,8 @@
 
 #include "AtlasProtocol.h"
 
+string	AProtocol::prefix("");
+
 int AProtocol::atlasERRTOK = -1;  // error token
 int AProtocol::atlasMSGBEG = 1;   // message begins
 int AProtocol::atlasATRBEG = 2;   // attribute begins

@@ -14,10 +14,10 @@
 class AProtocolDecoder
 {
 protected:
-	char*	buffer;
-	char	name[80];
+	string	buffer;
+	string	name;
 	int	type;
-	char*	sval;
+	string	sval;
 	long	ival;
 	double	fval;
 
@@ -25,15 +25,15 @@ protected:
 public:
 	AProtocolDecoder();
 
-	char*	getName();
+	string	getName();
 	int	getType();
-	char*	getString();
+	string	getString();
 	long	getInt();
 	double	getFloat();
 
 
 	virtual void	newStream();
-	virtual void	feedStream(char* data, int len);
+	virtual void	feedStream(string& data);
 	virtual int	hasTokens();
 	virtual int	getToken();
 

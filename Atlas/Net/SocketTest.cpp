@@ -13,6 +13,8 @@ int main(int argc, char** argv)
 	SocketTest* app = new SocketTest();
 
 	app->execute();
+
+	return 0;	
 }
 
 int WINAPI WinMain( 
@@ -33,18 +35,25 @@ void SocketTest::execute()
         ASocket* sock = new ATCPSocket();
 
 	printf("NEW SOCK = %i\n", sock->getSock());
+		fflush(stdout);
 
-	res = sock->connect("www.worldforge.org", 80);
+	string servname("www.worldforge.org");
+
+	res = sock->connect(servname, 80);
 	printf("Connect = %i\n", res);
+	fflush(stdout);
+	if (res == -1) exit(0);
 
-	res = sock->send("GET /\n\n");
+	string command("GET /\n\n");
+	res = sock->send(command);
 	printf("send = %i\n", res);
-	char	buf[1024];
-	int	len;
-	while ((len = sock->recv((char*)&buf,1023)) > 0)
+	fflush(stdout);
+
+	string	buf;
+
+	while (sock->recv(buf) > 0)
 	{
-		buf[len] = 0;
-		printf("%s", buf);
+		printf("%s", buf.c_str());
 	}
 	sock->close();
 }

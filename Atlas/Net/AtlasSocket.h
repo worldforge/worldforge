@@ -14,10 +14,14 @@
 #include <stdlib.h>
 #include <memory.h>
 
+#include <string>
+
 #ifdef __linux__
+	#include <time.h>
 	#include <sys/socket.h>
 	#include <sys/ioctl.h>
 	#include <netinet/in.h>
+	#define SOCKET int
 #elif _WIN32
 	#define Win32_Winsock
 	#define FD_SETSIZE 2048
@@ -30,37 +34,30 @@ class ASocket
 
 protected:
 	int	sock;
-	char*	rbuf;
-	int	rbufsize;
+	string	rbuf;
 
 public:
 	ASocket();
-	ASocket(int recvbufsize);
-	ASocket(int asock, int recvbufsize);
+	ASocket(int asock);
+
 	~ASocket();
 
 	// these 2 calls are mutually exclusive
 	// you can either connect or listen/accept !!
-	virtual int connect(char* addr, int port);
-	virtual int listen(char* addr, int port, int backlog);
+	virtual int connect(string& addr, int port);
+	virtual int listen(string& addr, int port, int backlog);
 
 	virtual ASocket* accept();
-	virtual int send(char* data);
-	virtual int send(char* data, size_t len);
-	virtual int sendTo(char* data, struct sockaddr_in* addr);
-	virtual int sendTo(char* data, size_t len, struct sockaddr_in* addr);
 
-	// returns ptr to internal buf -- dont delete !!
-	virtual char* recv();
+	virtual int send(string& data);
+	virtual int sendTo(string& data, struct sockaddr_in& addr);
 
-	virtual int recv(char* buf, int len);
+	virtual int recv(string& buf);
+	virtual int recvFrom(string& buf, struct sockaddr_in& addr);	
 
-	// returns ptr to internal buf -- dont delete !!
-	virtual char* recvFrom(struct sockaddr_in* addr);	
 	virtual void close();
 	virtual int getSock();
 
-	void setupsock(int sock, int bufsiz);
 };
 
 #endif
