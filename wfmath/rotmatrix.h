@@ -153,6 +153,11 @@ class RotMatrix {
    * Since the matrix is orthogonal, the inverse is equal to the transpose.
    **/
   RotMatrix inverse() const;
+  /// Get the parity of the matrix
+  /**
+   * Returns true for odd parity, false for even.
+   **/
+  bool parity() const {return m_flip;}
 
   // documented outside the class
 

@@ -1,3 +1,7 @@
+Tuesday, April 22nd, 2003 	Ron Steinke <rsteinke@w-link.net>
+
+	* Added trivial RotMatrix<>::parity() function.
+
 Wednesday, April 16th, 2003 	James Turner <james@worldforge.org>
 
 	* Updated the ProjectBuilder files, including targets for some of

@@ -10,6 +10,7 @@ config.h.in
 config.sub
 ltmain.sh
 aclocal.m4
+autom4te.cache
 config.h
 stamp-h
 stamp-h.in
