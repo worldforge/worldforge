@@ -79,9 +79,8 @@ class QuadInterp {
 Segment::Segment(int x, int y, unsigned int resolution) :
                             m_res(resolution), m_size(m_res+1),
                             m_xRef(x), m_yRef(y),
-                            m_points(0), m_normals(0), m_vertices(0),
-                            m_max(-1000000.f), m_min(1000000.0f),
-                            m_validVert(false), m_validSurf(false)
+                            m_points(0), m_normals(0),
+                            m_max(-1000000.f), m_min(1000000.0f)
 {
 }
 
@@ -138,12 +137,10 @@ void Segment::invalidate(bool points)
         delete [] m_normals;
         m_normals = 0;
     }
-    m_validVert = false;
     Segment::Surfacestore::const_iterator I = m_surfaces.begin();
     for(; I != m_surfaces.end(); ++I) {
         (*I)->invalidate();
     }
-    m_validSurf = false;
 }
 
 /// \brief Populate the Segment with surface normal data.

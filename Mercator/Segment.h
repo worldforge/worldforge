@@ -46,20 +46,10 @@ class Segment {
     float * m_points;
     /// Pointer to buffer containing normals for height points
     float * m_normals;
-    /// Pointer to buffer containing vertices
-    float * m_vertices;
     /// Maximum height of any point in this segment
     float m_max;
     /// Minimum height of any point in this segment
     float m_min;
-    /// Flag indicating whether the contains of this segment is valid
-    // bool m_validPt;
-    /// Flag indicating whether the normals of this segment is valid
-    // bool m_validNorm;
-    /// Flag indicating whether the vertices of this segment are valid
-    bool m_validVert;
-    /// Flag indicating whether the surfaces of this segment are valid
-    bool m_validSurf;
 
     /// Store of surfaces which can be rendered on this terrain
     Surfacestore m_surfaces;
@@ -82,16 +72,6 @@ class Segment {
     /// @return true if this Segment is valid, false otherwise.
     const bool isValid() const {
         return (m_points != 0);
-    }
-
-    /// \brief Obsolete.
-    const bool isVertexCacheValid() const {
-        return m_validVert;
-    }
-
-    /// \brief Obsolete.
-    void setVertexCacheValid(bool f = true) {
-        m_validVert = true;
     }
 
     /// \brief Set min and max height values for this Segment.
@@ -154,21 +134,6 @@ class Segment {
     /// \brief Accessor for write access to buffer containing surface normals.
     float * getNormals() {
         return m_normals;
-    }
-
-    /// \brief Obsolete.
-    const float * getVertexCache() const {
-        return m_vertices;
-    }
-
-    /// \brief Obsolete.
-    float * getVertexCache() {
-        return m_vertices;
-    }
-
-    /// \brief Obsolete.
-    float * setVertexCache(float * v) {
-        return m_vertices = v;
     }
 
     /// \brief Get the height at a relative integer position in the Segment.

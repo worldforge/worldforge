@@ -1,3 +1,8 @@
+2005-02-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h: Remove obsolete unused
+	  vertex cache code.
+
 2004-12-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* mercator.spec.in: Update spec with License URL Package Vendor
