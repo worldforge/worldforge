@@ -6,6 +6,10 @@ Wednesday, December 26 2001, James Turner
 	  using stage. This maybe a sequencing issue (similar to what
 	  happens when logging in before the type hierarchy has fully
 	  transferred)
+	* Provide a platform specific way to access the underlying connection
+	  primitive (i.e the socket's file-descriptor under POSIX). This is
+	  to allow efficent integration with the Gtk+ main-loop system,
+	  which cna automatically poll file-descriptors and invoke callbacks.
 
 Saturday, December 22 2001, James Turner
 
@@ -24,6 +28,12 @@ Friday, December 21 2001, James Turner
 	* Calling this version 0.9 in preperation for a beta release in
 	  a few weeks.
 
+Friday, December 14 2001, James Turner
+
+	* Correct processing of 'face' attr : it's a unit vector giving
+	  the direction, not a heading float. Thanks to Karsten for the
+	  info, hopefully this should work now.
+	  
 Wednesday, December 12 2001, James Turner
 
 	* Added Quaternion class to Types.h and Types.cpp

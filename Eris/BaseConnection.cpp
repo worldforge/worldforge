@@ -160,13 +160,11 @@ void BaseConnection::setStatus(Status sc)
 	_status = sc;
 }
 
-/*
-SOCKET_TYPE BaseConnection::GetSocket()
+int BaseConnection::getFileDescriptor()
 {
-	if (!_stream)
-		throw InvalidOperation("Not connected, hence no FD");
-	return _stream->getSocket();
+    if (!_stream)
+	throw InvalidOperation("Not connected, hence no FD");
+    return _stream->getSocket();
 }
-*/
 
 }; // of namespace
