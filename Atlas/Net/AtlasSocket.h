@@ -26,10 +26,12 @@
 	#include <arpa/inet.h>
 	#include <netdb.h>
 	#define SOCKET int
+	#define sinlen_t size_t
 #elif _WIN32
 	#define Win32_Winsock
 	#define FD_SETSIZE 2048
 	#include <windows.h>
+	#define sinlen_t int
 #endif
 
 
@@ -42,7 +44,7 @@ protected:
 
 public:
 	ASocket();
-	ASocket(int asock);
+	ASocket(SOCKET asock);
 
 	~ASocket();
 
@@ -60,7 +62,7 @@ public:
 	virtual int recvFrom(string& buf, struct sockaddr_in& addr);	
 
 	virtual void close();
-	virtual int getSock();
+	virtual SOCKET getSock();
 
 };
 

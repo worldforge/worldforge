@@ -29,7 +29,7 @@ struct WSAData	wsadata;
 
 public:
 		ATCPSocket();
-		ATCPSocket(int asock);
+		ATCPSocket(SOCKET asock);
 
 ATCPSocket*	accept();
 

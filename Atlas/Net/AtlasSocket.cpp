@@ -13,7 +13,7 @@ ASocket::ASocket()
 	sock = -1;
 }
 
-ASocket::ASocket(int asock)
+ASocket::ASocket(SOCKET asock)
 {
 	sock = asock;
 }
@@ -41,9 +41,6 @@ void ASocket::close()
 	sock = -1;
 }
 
-int ASocket::getSock()					{return sock;}
-
-
-
+SOCKET ASocket::getSock()				{return sock;}
 
 

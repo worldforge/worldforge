@@ -26,7 +26,7 @@ ATCPSocket::ATCPSocket()
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 }
 
-ATCPSocket::ATCPSocket(int asock): ASocket(asock)
+ATCPSocket::ATCPSocket(SOCKET asock): ASocket(asock)
 {
 }
 
@@ -89,7 +89,7 @@ ATCPSocket*	ATCPSocket::accept()
 {
 	int			newsock;
 	struct sockaddr_in	sin;
-	unsigned int		sinlen;
+	sinlen_t			sinlen;
 
 	sinlen = sizeof(sin);
 	newsock = ::accept(sock, (struct sockaddr*)&sin, &sinlen);
