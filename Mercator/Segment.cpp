@@ -404,9 +404,9 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
                                  WFMath::Vector<3> &normal) const
 {
     // FIXME this ignores edges and corners
-    assert(x < m_res);
+    assert(x <= m_res);
     assert(x >= 0.0);
-    assert(y < m_res);
+    assert(y <= m_res);
     assert(y >= 0.0);
     
     // get index of the actual tile in the segment

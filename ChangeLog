@@ -1,3 +1,7 @@
+2003-10-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp: Fix incorrect assert.
+
 2003-09-22 Damien McGinnes 
 
 	* Mercator/Segment.cpp: minor changes to interpolation to improve 
