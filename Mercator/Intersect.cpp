@@ -94,7 +94,7 @@ float HOT(const Terrain &t, const WFMath::Point<3> &pt)
 bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y, 
                    const WFMath::Vector<3> &nDir, float dirLen,
                    const WFMath::Point<3> &sPt, WFMath::Point<3> &intersection,
-                   WFMath::Vector<3> &normal)
+                   WFMath::Vector<3> &normal, float &par)
 {
     //ray plane intersection roughly using the following:
     //parametric ray eqn:  p=po + par V
@@ -126,14 +126,14 @@ bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y,
 
     float topP;
 
-    if (t!=0.0) {
+    if ((t > 1e-7) || (t < -1e-7)) {
         topP = - (Dot((sPt-WFMath::Point<3>(0.,0.,0.)), topNormal) 
                - Dot(topNormal, p0)) / t; 
         topInt = sPt + nDir*topP;
         //check the intersection is inside the triangle, and within the ray extents
         if ((topP <= dirLen) && (topP > 0.0) &&
-            (topInt[0] >= X ) && (topInt[1] <= Y + 1 ) && 
-            ((topInt[0] - topInt[1]) <= (X - Y))) {
+            (topInt[0] >= X ) && (topInt[1] <= Y + 1 ) &&
+            ((topInt[0] - topInt[1]) <= (X - Y)) ) {
                 topIntersected=true;
         }
     }
@@ -145,39 +145,46 @@ bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y,
     float b = Dot(nDir, botNormal);
     float botP;
 
-    if (b!=0.0) {
+    if ((b > 1e-7) || (b < -1e-7)) {
         botP = - (Dot((sPt-WFMath::Point<3>(0.,0.,0.)), botNormal) 
                - Dot(botNormal, p0)) / b; 
         botInt = sPt + nDir*botP;
         //check the intersection is inside the triangle, and within the ray extents
         if ((botP <= dirLen) && (botP > 0.0) &&
             (botInt[0] <= X + 1 ) && (botInt[1] >= Y ) && 
-            ((botInt[0] - botInt[1]) >= (X - Y))) {
+            ((botInt[0] - botInt[1]) >= (X - Y)) ) {
                 botIntersected = true;
         }
- 
     }
 
     if (topIntersected && botIntersected) { //intersection with both
         if (botP <= topP) {
             intersection = botInt;
-            normal = (botNormal+topNormal) / 2.0; 
+            normal = botNormal; 
+            par=botP/dirLen;
+            if (botP == topP) {
+                normal += topNormal;
+                normal.normalize();
+            }
             return true;    
         }
         else {
             intersection = topInt;
             normal = topNormal; 
+            par=topP/dirLen;
             return true;
         }
     }
     else if (topIntersected) { //intersection with top
         intersection = topInt;
         normal = topNormal; 
+        par=topP/dirLen;
         return true;
     }
     else if (botIntersected) { //intersection with bot
         intersection = botInt;
         normal = botNormal; 
+        par=botP/dirLen;
         return true;
     }
 
@@ -191,9 +198,11 @@ bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y,
 //and a direction vector (dir). The length of dir is
 //used as the length of the ray. (ie not an infinite ray)
 //intersection and normal are filled in on a successful result.
+//par is the distance along the ray where intersection occurs
+//0.0 == start, 1.0 == end.
 
 bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vector<3>& dir,
-        WFMath::Point<3> &intersection, WFMath::Vector<3> &normal)
+        WFMath::Point<3> &intersection, WFMath::Vector<3> &normal, float &par)
 {
     //FIXME early reject using segment max
     //FIXME handle height point getting in a more optimal way
@@ -235,6 +244,7 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
     paraX = std::abs(paraX);
     paraY = std::abs(paraY);
 
+    bool endpoint = false;
     //check each candidate tile for an intersection
     while (1) {
         last = next;
@@ -263,13 +273,16 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
         if ( (last[2] < height) || (next[2] < height) ) {
             // possible intersect with this tile
             if (cellIntersect(h1, h2, h3, h4, x, y, nDir, dirLen, sPt,
-                              intersection, normal)) {
+                              intersection, normal, par)) {
                 return true;
             }
         }
 
         if ((pX >= 1.0f) && (pY >= 1.0f)) {
-            break; //past end of ray segment
+            if (endpoint) {
+                break;
+            }
+            else endpoint = true;
         }
     }
 

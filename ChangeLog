@@ -1,3 +1,10 @@
+2003-09-14 Damien McGinnes 
+
+	* testPhys.cpp: added a rudimentary physics model to do a more useful
+	  test of the ray-terrain intersection
+	* Mercator/Intersect.cpp,h: some cleanups for bugs found during the
+	  above test
+
 2003-09-13 Damien McGinnes 
 
 	* TODO: cleaned up a few old TODOs

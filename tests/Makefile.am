@@ -1,8 +1,8 @@
-TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect
+TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys
 
 INCLUDES = -I$(top_srcdir)
 
-check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect
+check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys
 
 mercatortest_SOURCES = main.cpp
 mercatortest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
@@ -18,3 +18,6 @@ testTerrainMod_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testIntersect_SOURCES = testIntersect.cpp
 testIntersect_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+
+testPhys_SOURCES = testPhys.cpp
+testPhys_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
