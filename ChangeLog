@@ -1,3 +1,25 @@
+2004-05-08  James Turner  <james@worldforge.org>
+
+* Add a compile time toggle at the top of Connecton for send/recv logging.
+  This could become a runtime flag in the future, I guess
+
+* Remove some explicit sets of objtype/parents now Atlas is fixed
+
+* Expand the Redispatch base class, now it's being used in anger
+
+* Add a type verification system, which checks recieved objects for
+  default constructed items, and issues type lookups as necessary. Seems
+  to work pretty well, and engages the Redispatch and Type bind logic
+  for the first time.
+
+* Factored out TypeBoundRedispatch into it's own source file, since > 1
+  other part of the code now uses it.
+
+* Expand the types and toy world defined by the stub server, and use some
+  custom types in key places.
+  
+* Lots of other tweaks and improvements
+  
 2004-05-05  Al Riddoch  <alriddoch@zepler.org>
 
 * Enable running the test on "make check"

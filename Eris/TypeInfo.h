@@ -66,7 +66,8 @@ public:
 
 protected:
     friend class TypeService;
-
+    friend class TypeBoundRedispatch;
+    
     /// forward constructor, when data is not available
     TypeInfo(const std::string &id, TypeService*);
 
@@ -80,7 +81,7 @@ protected:
 
     /** Emitted when the type is bound, i.e there is an unbroken graph of
     TypeInfo instances through every ancestor to the root object. */
-    SigC::Signal0<void> Bound;
+    SigC::Signal1<void, TypeInfo*> Bound;
     
 private:
     void addParent(TypeInfoPtr tp);

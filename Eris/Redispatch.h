@@ -14,18 +14,23 @@ class Connection;
 class Redispatch : public SigC::Object
 {
 protected:
-    Redispatch(Connection* con, Atlas::Objects::Root obj) :
-        m_con(con),
-        m_obj(obj)
+    Redispatch(Connection* con, const Atlas::Objects::Root& obj) :
+        m_obj(obj),
+        m_con(con)
     {
 
     }
 
     void post();
 
+    void postModified(const Atlas::Objects::Root& obj);
+
+    void fail();
+
+    const Atlas::Objects::Root m_obj;
+    
 private:
     Connection* m_con;
-    Atlas::Objects::Root m_obj;
 };
 
 } // of namespace Eris

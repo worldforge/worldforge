@@ -41,14 +41,17 @@ public:
     /** Lookup the requested type, by name, and return NULL if it's unknown. */
     TypeInfoPtr findTypeByName(const std::string &tynm);
 
-    RouterResult redispatchWhenBound(TypeInfoPtr ty, const Atlas::Objects::Root& obj);
-
     /** emitted when a new type is available and bound to it's parents */
     SigC::Signal1<void, TypeInfoPtr> BoundType;
+
+    /** emitted when a type is confirmed as being undefined */
+    SigC::Signal1<void, TypeInfoPtr> BadType;
 
     void listUnbound();
 
     RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation&);
+
+    bool verifyObjectTypes(const Atlas::Objects::Root& obj);
 
  private:
     /** helper class to parse definitions out of the spec file */
@@ -75,6 +78,8 @@ public:
     void recvError(const Atlas::Objects::Operation::Get& get);
 
     void defineBuiltin(const std::string& name, TypeInfo* parent);
+
+    void innerVerifyType(const Atlas::Objects::Root& obj, TypeInfoSet& unbound);
 
     typedef std::map<std::string, TypeInfoPtr> TypeInfoMap;
     /** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')

@@ -3,7 +3,6 @@
 #endif
 
 #include <Eris/View.h>
-#include <Eris/Redispatch.h>
 #include <Eris/Entity.h>
 #include <Eris/LogStream.h>
 #include <Eris/Factory.h>
@@ -12,6 +11,7 @@
 #include <Eris/Avatar.h>
 
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -20,25 +20,6 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris
 {
-
-class SightEntityRedispatch : public Redispatch
-{
-public:
-    SightEntityRedispatch(const std::string& eid, Connection* con, const Root& obj) :
-        Redispatch(con, obj),
-        m_id(eid)
-    {;}
-
-    void onSightEntity(Entity* ent)
-    {
-        if (ent->getId() == m_id) post(); // KA-ching!
-    }
-
-private:
-    std::string m_id;
-};
-
-#pragma mark -
 
 View::View(Avatar* av) :
     m_owner(av),
@@ -199,6 +180,11 @@ void View::deleteEntity(const std::string& eid)
     }
 }
 
+bool View::maybeHandleError(const Error& err)
+{
+    return false;
+}
+
 #pragma mark -
 
 bool View::isPending(const std::string& eid) const
@@ -213,15 +199,13 @@ Connection* View::getConnection() const
 
 void View::getEntityFromServer(const std::string& eid)
 {
-    if (isPending(eid))
-    {
-        // we force the action back to SACTION_APPEAR in a minute
+    if (isPending(eid)) {
         debug() << "duplicate getEntityFromServer for entity " << eid;
+        return;
     }
     
     Look look;
-    if (!eid.empty())
-    {
+    if (!eid.empty()) {
         m_pending[eid] = SACTION_APPEAR;
 	Root what;
         what->setId(eid);

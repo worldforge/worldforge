@@ -50,6 +50,29 @@ StubServer::StubServer(short port) :
     lobby->setName("Lobby");
 
     m_rooms[lobby->getId()] = lobby;
+    
+    Atlas::Objects::Root rootType;
+    rootType->setId("root");
+    rootType->setObjtype("meta");
+    m_types["root"] = rootType;
+    
+    Atlas::Objects::Root rootEntityType;
+    rootEntityType->setId("root_entity");
+    rootEntityType->setObjtype("class");
+    parents.clear();
+    parents.push_back("root");
+    rootEntityType->setParents(parents);
+    m_types["root_entity"] = rootEntityType;
+    
+    Atlas::Objects::Root rootOpType;
+    rootOpType->setId("root_operation");
+    rootOpType->setObjtype("op_definition");
+    rootOpType->setParents(parents);
+    m_types["root_operation"] = rootOpType;
+    
+    subclassType("root_entity", "game_entity");
+    subclassType("game_entity", "settler");
+    subclassType("game_entity", "pig");
 }
 
 StubServer::~StubServer()
@@ -91,6 +114,7 @@ void StubServer::setupTestAccounts()
     world->setParents(StringList(1, "game_entity"));
     
     contents.push_back("_field_01");
+    contents.push_back("_hut_01");
     world->setContains(contents);
     
     m_world[world->getId()] = world;
@@ -101,19 +125,40 @@ void StubServer::setupTestAccounts()
     field->setObjtype("obj");
     field->setLoc(world->getId());
     field->setParents(StringList(1, "game_entity"));
+
+    contents.clear();
+    contents.push_back("_pig_01");
+    field->setContains(contents);
+
+     m_world[field->getId()] = field;
+
+    GameEntity pig;
+    pig->setName("A piggy");
+    pig->setId("_pig_01");
+    pig->setObjtype("obj");
+    pig->setParents(StringList(1, "pig"));
+    pig->setLoc(field->getId());
+    m_world[pig->getId()] = pig;
+
+    GameEntity hut;
+    hut->setName("A hutt");
+    hut->setId("_hut_01");
+    hut->setObjtype("obj");
+    hut->setLoc(world->getId());
+    hut->setParents(StringList(1, "game_entity"));
     
     contents.clear();
     contents.push_back("acc_b_character");
-    field->setContains(contents);
+    hut->setContains(contents);
     
-    m_world[field->getId()] = field;
+    m_world[hut->getId()] = hut;
     
     GameEntity avatarB0;
     avatarB0->setName("Joe Blow");
     avatarB0->setId("acc_b_character");
     avatarB0->setObjtype("obj");
-    avatarB0->setParents(StringList(1, "game_entity"));
-    avatarB0->setLoc(field->getId());
+    avatarB0->setParents(StringList(1, "settler"));
+    avatarB0->setLoc(hut->getId());
     m_world[avatarB0->getId()] = avatarB0;
 }
 
@@ -336,7 +381,9 @@ void StubServer::subclassType(const std::string& base, const std::string& derive
     assert(baseChildren.count(derivedName) == 0);
 
     T->second->modifyChildren().push_back(derivedName);
-*/    Root derived = T->second;
+*/  
+    Root derived;
+    derived->setObjtype(T->second->getObjtype());
     derived->setParents(StringList(1, base));
     derived->setId(derivedName);
 

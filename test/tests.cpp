@@ -64,8 +64,9 @@ private:
     int m_count;
 };
 
-void erisLog(Eris::LogLevel, const std::string& msg)
+void erisLog(Eris::LogLevel level, const std::string& msg)
 {
+    if (level > LOG_WARNING) return; 
     cout << "ERIS: " << msg << endl;
 }
 
@@ -249,14 +250,14 @@ void testCharActivate(StubServer& stub)
     Eris::View* v = av->getView();
     assert(v->getTopLevel()->getId() == "_world");
     
-    assert(v->getTopLevel()->hasChild("_field_01"));
+    assert(v->getTopLevel()->hasChild("_hut_01"));
     
     delete av;
 }
 
 int main(int argc, char **argv)
 {
-    Eris::setLogLevel(LOG_DEBUG);
+    Eris::setLogLevel(LOG_WARNING);
     Eris::Logged.connect(SigC::slot(&erisLog));
 
     try {    
@@ -279,6 +280,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
+    cout << "all tests passed" << endl;
     return EXIT_SUCCESS; // tests passed okay
 }
 

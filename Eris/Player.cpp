@@ -11,6 +11,7 @@
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Anonymous.h>
 
 #include <sigc++/object_slot.h>
 
@@ -20,6 +21,7 @@
 using Atlas::Objects::Root;
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::Entity::Anonymous;
 typedef Atlas::Objects::Entity::Account AtlasAccount;
 using Atlas::Objects::smart_dynamic_cast;
 
@@ -85,8 +87,7 @@ public:
                     m_player->sightCharacter(character);
                     return HANDLED;
                 } else {
-#warning This will be true for everything until we can register factories and aliases
-                    warning() << "Invalid character from server";
+                    warning() << "Invalid character type from server";
                     return HANDLED;
                 }
             }
@@ -198,9 +199,6 @@ void Player::createAccount(const std::string &uname,
     account->setPassword(pwd);
     account->setName(fullName);
     account->setUsername(uname);
-    account->setObjtype("obj");
-    std::list<std::string> parents(1, "player");
-    account->setParents(parents);
     
     Create c;
     c->setSerialno(getNewSerialno());
@@ -269,7 +267,7 @@ void Player::refreshCharacterInfo()
     m_doingCharacterRefresh = true;
     
     Look lk;
-    Root obj;
+    Anonymous obj;
     lk->setFrom(m_accountId);
         
     for (StringSet::iterator I=m_characterIds.begin(); I!=m_characterIds.end(); ++I)

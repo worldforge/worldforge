@@ -7,12 +7,14 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/Log.h>
 #include <Eris/Connection.h>
-#include <Eris/Redispatch.h>
+#include <Eris/TypeBoundRedispatch.h>
 #include <Eris/Exceptions.h>
 
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
+#include <Atlas/Objects/RootOperation.h>
+#include <Atlas/Objects/Anonymous.h>
 
 #include <sigc++/object_slot.h>
 
@@ -80,8 +82,9 @@ TypeInfoPtr TypeService::findTypeByName(const std::string &id)
 TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 {
     TypeInfoMap::iterator T = m_types.find(id);
-    if (T != m_types.end())
+    if (T != m_types.end()) {
         return T->second;
+    }
     
     if (m_badTypes.count(id))
     {
@@ -115,38 +118,6 @@ TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 
 #pragma mark -
 
-class TypeBoundRedispatch : public Redispatch
-{
-public:
-    TypeBoundRedispatch(Connection* con, const Root& obj) :
-        Redispatch(con, obj)
-    { ; }
-    
-    void onBound()
-    {
-        post();
-    }
-};
-
-Router::RouterResult TypeService::redispatchWhenBound(TypeInfoPtr ty, const Root& obj)
-{
-    if (ty->isBound())
-    {
-        error() << "called redispatchWhenBound for bound type " << ty->getName();
-        // try and do the right thing
-        m_con->postForDispatch(obj);
-        return WILL_REDISPATCH;
-    }
-
-    TypeBoundRedispatch* tbr = new TypeBoundRedispatch(m_con, obj);
-    ty->Bound.connect(SigC::slot(*tbr, &TypeBoundRedispatch::onBound));
- 
-    // and stop processing the op for now   
-    return WILL_REDISPATCH;
-}
-
-#pragma mark -
-
 Router::RouterResult TypeService::handleOperation(const RootOperation& op)
 {
     // skip any operation who's refno doesn't match the serial of a 
@@ -170,7 +141,7 @@ Router::RouterResult TypeService::handleOperation(const RootOperation& op)
     if (op->instanceOf(ERROR_NO))
     {
         const std::vector<Root>& args(op->getArgs());
-        Get request = smart_dynamic_cast<Get>(args.front());
+        Get request = smart_dynamic_cast<Get>(args[1]);
         if (!request.isValid())
             throw InvalidOperation("TypeService got ERROR whose arg is not GET");
             
@@ -188,8 +159,7 @@ Router::RouterResult TypeService::handleOperation(const RootOperation& op)
 void TypeService::recvTypeInfo(const Root &atype)
 {
     TypeInfoMap::iterator T = m_types.find(atype->getId());
-    if (T == m_types.end())
-    {
+    if (T == m_types.end()) {
         error() << "recived type object with unknown ID " << atype->getId();
         return;
     }
@@ -198,6 +168,7 @@ void TypeService::recvTypeInfo(const Root &atype)
     if (T->second->isBound() && (atype->getId() != "root"))
         return;
 	
+    debug() << "got info for type " << T->second->getName();
     T->second->processTypeData(atype);
 }
 
@@ -206,9 +177,7 @@ void TypeService::sendRequest(const std::string &id)
     // stop premature requests (before the connection is available); when TypeInfo::init
     // is called, the requests will be re-issued manually
     if (!m_inited) return;
-    
-    debug() << "requesting type " << id;
-    
+        
     Root what;
     what->setId(id);
     
@@ -233,6 +202,8 @@ void TypeService::recvError(const Get& get)
     }
     
     error() << " got error from server looking up type " << request->getId();
+    BadType.emit(T->second);
+    
     m_badTypes.insert(request->getId());
     delete T->second;
     m_types.erase(T);
@@ -288,6 +259,49 @@ void TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
     type->validateBind();
     
     assert(type->isBound());
+}
+
+bool TypeService::verifyObjectTypes(const Root& obj)
+{
+    TypeInfoSet unbound;
+    innerVerifyType(obj, unbound);
+    
+    if (unbound.empty()) return true;
+    
+    new TypeBoundRedispatch(m_con, obj, unbound);
+    return false;
+}
+
+void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
+{
+    int classNo = obj->getClassNo();
+    if ((classNo == Atlas::Objects::Entity::ANONYMOUS_NO) || 
+        (classNo == ROOT_OPERATION_NO) ||
+        (classNo == Atlas::Objects::Entity::ROOT_ENTITY_NO) /*||
+        (classNo == Atlas::Objects::ROOT_NO)*/)
+    {
+        // if no objtype or parents, it's just plain : we're done
+        if (obj->isDefaultObjtype() && obj->isDefaultParents()) return;
+        
+        // don't try this on type data
+        if ((obj->getObjtype() == "class") || (obj->getObjtype() == "op_definition")) return;
+        
+        TypeInfo* type = getTypeForAtlas(obj);
+        StringList prs = obj->getParents();
+        assert(!type->isBound());
+        
+        unbound.insert(type);
+    }
+
+    if (obj->getObjtype() == "op") {
+        RootOperation op = smart_dynamic_cast<RootOperation>(obj);
+        assert(op.isValid());
+        const std::vector<Root>& args = op->getArgs();
+        
+        for  (std::vector<Root>::const_iterator A=args.begin(); A != args.end(); ++A) {
+            innerVerifyType(*A, unbound);
+        }
+    }
 }
 
 } // of namespace Eris

@@ -144,6 +144,18 @@ Atlas::Objects::Root gameEntityFactory()
     return Atlas::Objects::Entity::GameEntity();
 }
 
+/*
+Atlas::Objects::Root rootEntityFactory()
+{
+    return Atlas::Objects::Entity::RootEntity();
+}
+
+Atlas::Objects::Root rootOperationFactory()
+{
+    return Atlas::Objects::Operation::RootOperation();
+}
+*/
+
 void TypeInfo::validateBind()
 {
     if (m_bound) return;
@@ -157,10 +169,16 @@ void TypeInfo::validateBind()
     if (!Atlas::Objects::objectFactory.hasFactory(m_name))
     {
         debug() << "registering Atlas factory for newly bound type " << m_name;
-        Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
+        static TypeInfo* gameEntityType = m_typeService->getTypeByName("game_entity");
+        
+        if (isA(gameEntityType))
+        {
+            Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
+        } else
+            error() << "got custom type that doesn't inherit game_entity, no factory";
     }
     
-    Bound.emit();
+    Bound.emit(this);
         
     for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C)
         (*C)->validateBind();

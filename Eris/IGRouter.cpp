@@ -8,6 +8,9 @@
 #include <Eris/View.h>
 #include <Eris/Entity.h>
 #include <Eris/LogStream.h>
+#include <Eris/TypeService.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/TypeBoundRedispatch.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -55,6 +58,15 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         GameEntity gent = smart_dynamic_cast<GameEntity>(args.front());
         if (gent.isValid())
         {
+            TypeInfo* type = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+            if (!type->isBound()) {
+                TypeInfoSet unbound;
+                unbound.insert(type);
+                
+                new TypeBoundRedispatch(m_avatar->getConnection(), op, unbound);
+                return WILL_REDISPATCH;
+            }
+    
             m_view->sight(gent);
             return HANDLED;
         }
@@ -82,6 +94,12 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
             m_view->disappear(args[A]->getId());
             
         return HANDLED;
+    }
+    
+    if (op->getClassNo() == ERROR_NO) {
+        Error err = smart_dynamic_cast<Error>(op);
+        if (m_view->maybeHandleError(err)) 
+            return HANDLED;
     }
     
     return IGNORED;

@@ -22,13 +22,13 @@
 #include <cassert>
 #include <algorithm>
 
+// #define ATLAS_LOG 1
+
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
-
-
 
 Connection::Connection(const std::string &cnm, bool dbg) :
     BaseConnection(cnm, "game_", this),
@@ -111,7 +111,8 @@ void Connection::send(const Atlas::Objects::Root &obj)
         error() << "called send on closed connection";
         return;
     }
-/*	
+
+#ifdef ATLAS_LOG	
     std::stringstream debugStream;
     Atlas::Codecs::Bach debugCodec(debugStream, NULL);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
@@ -119,7 +120,8 @@ void Connection::send(const Atlas::Objects::Root &obj)
     debugStream << std::flush;
 
     std::cout << "sending:" << debugStream.str() << std::endl;
- */       
+#endif
+        
     _encode->streamObjectsMessage(obj);
     (*_stream) << std::flush;
 }
@@ -186,18 +188,22 @@ void Connection::unlock()
 
 void Connection::objectArrived(const Root& obj)
 {
+#ifdef ATLAS_LOG
     std::stringstream debugStream;
     Atlas::Codecs::Bach debugCodec(debugStream, NULL);
     Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-  //  std::cout << "recieved:" << debugStream.str() << std::endl;
+    std::cout << "recieved:" << debugStream.str() << std::endl;
+#endif
+    if (!m_typeService->verifyObjectTypes(obj)) return;
 
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     if (op.isValid()) {
         m_opDeque.push_back(op);
-    }
+    } else
+        error() << "Con::objectArrived got non-op";
 }
 
 void Connection::dispatchOp(const RootOperation& op)
@@ -225,10 +231,10 @@ void Connection::dispatchOp(const RootOperation& op)
     if (R != m_toRouters.end())
     {
         rr = R->second->handleOperation(op);
-        if (rr == Router::HANDLED)
+        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH))
             return;
         else
-            debug() << "TO router " << R->first << "didn't handle op";
+            debug() << "TO router " << R->first << " didn't handle op";
     } else if (!anonymous && !m_toRouters.empty())
         warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
             
@@ -275,6 +281,11 @@ void Connection::onConnect()
 
 void Connection::postForDispatch(const Root& obj)
 {
+    if (!m_typeService->verifyObjectTypes(obj)) {
+        debug() << "amazingly, re-dispatched object failed to verify!";
+        return;
+    }
+    
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     m_opDeque.push_back(op);
 }

@@ -37,7 +37,8 @@ liberis_1_3_la_SOURCES = \
 	EntityRouter.h EntityRouter.cpp \
 	IGRouter.h IGRouter.cpp \
 	Redispatch.h Redispatch.cpp \
-	Factory.cpp \
+	Factory.cpp \ 
+	TypeBoundRedispatch.cpp TypeBoundRedispatch.h \
 	$(ATLAS_JANUS_CPP)
 
 liberisdir = $(includedir)/Eris-1.3/Eris
