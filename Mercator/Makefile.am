@@ -11,6 +11,7 @@ libmercator_0_2_la_SOURCES = \
 	Segment.cpp \
 	Buffer.cpp \
 	Shader.cpp \
+	FillShader.cpp \
 	Surface.cpp
 
 libmercatordir = $(includedir)/Mercator-0.2/Mercator
@@ -24,4 +25,5 @@ libmercator_HEADERS = \
 	Segment.h \
 	Buffer.h \
 	Shader.h \
+	FillShader.h \
 	Surface.h

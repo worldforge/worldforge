@@ -9,7 +9,7 @@
 namespace Mercator {
 
 Buffer::Buffer(Segment & segment, unsigned int channels) :
-         m_segment(segment),
+         m_segment(segment), m_channels(channels),
          m_data(new float[segment.getSize() * segment.getSize() * channels])
 {
 }

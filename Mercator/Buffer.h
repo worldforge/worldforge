@@ -12,11 +12,20 @@ class Segment;
 class Buffer {
   private:
     Segment & m_segment;
+    unsigned int m_channels;
     float * const m_data;
 
   public:
     explicit Buffer(Segment & segment, unsigned int channels = 4);
     virtual ~Buffer();
+
+    Segment & getSegment() const {
+        return m_segment;
+    }
+
+    unsigned int getChannels() const {
+        return m_channels;
+    }
 
     float * getData() {
         return m_data;

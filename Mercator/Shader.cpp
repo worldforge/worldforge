@@ -8,7 +8,7 @@
 
 namespace Mercator {
 
-Shader::Shader(Segment & segment, unsigned int channels) : m_segment(segment)
+Shader::Shader()
 {
 }
 

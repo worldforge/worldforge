@@ -1,5 +1,23 @@
 2003-07-24  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Buffer.h, Mercator/Buffer.cpp: Add member to store
+	  number of channels, and add accessors for channels, and Segment
+	  reference.
+
+	* Mercator/Shader.cpp, Mercator/Shader.h: Remove constructor
+	  arguments, and segment reference member. A shader is not
+	  bound to a segment, not restricted to a fixed number of channels.
+	  Add shade() vertual method which applies the given shader to
+	  a surface.
+
+	* Mercator/FillShader.cpp, Mercator/FillShader.h: Add demo shader that
+	  just fills the surface with 1s.
+
+	* tests/testShader.cpp: Add a shader unit test which uses FillShader
+	  for now.
+
+2003-07-24  Al Riddoch  <alriddoch@zepler.org>
+
 	* tests/testTerrain.cpp: Add unit test for terrain class.
 
 2003-07-24  Al Riddoch  <alriddoch@zepler.org>

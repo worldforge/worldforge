@@ -1,11 +1,14 @@
-TESTS = mercatortest testTerrain
+TESTS = mercatortest testTerrain testShader
 
 INCLUDES = -I$(top_srcdir)
 
-check_PROGRAMS = mercatortest testTerrain
+check_PROGRAMS = mercatortest testTerrain testShader
 
 mercatortest_SOURCES = main.cpp
 mercatortest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testTerrain_SOURCES = testTerrain.cpp
 testTerrain_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+
+testShader_SOURCES = testShader.cpp
+testShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
