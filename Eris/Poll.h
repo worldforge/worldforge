@@ -20,7 +20,7 @@ public:
 class Poll : public SigC::Signal1<void,PollData&>
 {
 public:
-	Poll() {}
+	Poll() : new_timeout_(false) {}
 	virtual ~Poll() {}
 
 	enum Check {
@@ -36,8 +36,13 @@ public:
 	static Poll& instance();
 	static void setInstance(Poll*);
 
+	void newTimeout() {new_timeout_ = true;}
+
 private:
+	Poll(const Poll&);
 	static Poll *_inst;
+protected:
+	bool new_timeout_;
 };
 
 } // namespace Eris

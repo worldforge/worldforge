@@ -5,10 +5,19 @@
 #include "Types.h"
 #include "Timeout.h"
 
+#include <limits.h>
+
+#include "Poll.h"
+
 using namespace Time;
 
-// The longest wait time for poll() to return, currently 100ms
-static const unsigned long max_wait = 100;
+// The longest wait time for poll() to return.
+// This should be as long as possible, since the
+// only reason to limit the wait is due to
+// the addition of new timeouts. The timeout sets
+// a flag in the Poll class if that happens,
+// it's the responsibility of the poll to check.
+static const unsigned long max_wait = ULONG_MAX;
 
 namespace Eris
 {
@@ -29,6 +38,8 @@ Timeout::Timeout(const std::string &label, unsigned long milli) :
 	    TimeoutMap::value_type(label, this));
 	
 	_due = Time::Stamp::now() + milli;
+
+	Poll::instance().newTimeout();
 }
 
 Timeout::~Timeout()

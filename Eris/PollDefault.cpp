@@ -111,14 +111,19 @@ void PollDefault::poll(unsigned long timeout)
   PollDefault &inst = dynamic_cast<PollDefault&>(Poll::instance());
 
   unsigned long wait_time = 0;
+  inst.new_timeout_ = false;
 
   // This will only happen for timeout != 0
   while(wait_time < timeout) {
-    // Don't wait quite the full time, in case the callbacks take some time
-    unsigned long skip_time = (wait_time * 4) / 5;
-    inst.doPoll(skip_time);
-    timeout -= skip_time;
+    inst.doPoll(wait_time);
+    timeout -= wait_time;
     wait_time = Timeout::pollAll();
+    if(inst.new_timeout_) {
+      // Added a timeout, the time until it must be called
+      // may be shorter than wait_time
+      wait_time = 0;
+      inst.new_timeout_ = false;
+    }
   }
 
   inst.doPoll(timeout);

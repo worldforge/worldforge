@@ -1,3 +1,8 @@
+Tuesday, July 2, Ron Steinke
+
+	* Fixes so the blocking poll handles timeouts
+	  created during callbacks properly
+
 Sunday, June 30, Ron Steinke
 
 	* PollDefault fixes
