@@ -34,6 +34,8 @@
 #include "SignalDispatcher.h"
 #include "EncapDispatcher.h"
 
+#include "Lobby.h"
+
 namespace Eris {
 
 DebugDispatcher *dd, *sdd;	
@@ -51,19 +53,20 @@ typedef std::set<SerialFrom> SerialFromSet;
 Connection::Connection(const std::string &cnm, bool dbg) :
 	BaseConnection(cnm, "game_", this),
 	_statusLock(0),
-	_debug(dbg)
+	_debug(dbg),
+	_ti_engine(new TypeInfoEngine(this)),
+	_lobby(new Lobby(this))
 {
 	// setup the singleton instance variable
-	if (_theConnection != NULL)
-	    throw InvalidOperation("existing connection instance in Connection ctor");
-	_theConnection = this;
+	if (_theConnection == NULL)
+		_theConnection = this;
 	
 	// build the initial dispatch hierarchy
 	_rootDispatch = new StdBranchDispatcher("root");
 		
 	Dispatcher *opd = new TypeDispatcher("op", "op");
 	_rootDispatch->addSubdispatch(opd);
-	opd = opd->addSubdispatch(ClassDispatcher::newAnonymous());
+	opd = opd->addSubdispatch(ClassDispatcher::newAnonymous(this));
 	
 	Dispatcher *ifod = opd->addSubdispatch(new EncapDispatcher("info"), "info");
 	ifod->addSubdispatch(new TypeDispatcher("entity", "object")); 
@@ -84,7 +87,10 @@ Connection::~Connection()
 {
     // clear the singleton instance pointer back to NULL
     // (becuase dereferencing deleted memory costs lives!)
-    _theConnection = NULL;
+    if(_theConnection == this)
+	_theConnection = NULL;
+    delete _lobby;
+    delete _ti_engine;
     delete _rootDispatch;
 }
 
@@ -291,7 +297,7 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 		catch (OperationBlocked &block) {
 			std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
 			Eris::log(LOG_VERBOSE, "Caugh OperationBlocked exception dispatching %s", summary.c_str());
-			new WaitForSignal(block._continue, dq.back());
+			new WaitForSignal(block._continue, dq.back(), this);
 		}
 	
 		// catch actual failures, becuase they're bad.
@@ -359,7 +365,7 @@ void Connection::bindTimeout(Eris::Timeout &t, Status sc)
 void Connection::onConnect()
 {
 	BaseConnection::onConnect();
-	TypeInfo::init();
+	_ti_engine->init();
 }
 
 void Connection::postForDispatch(const Atlas::Message::Object &msg)

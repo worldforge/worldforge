@@ -2,6 +2,7 @@
 #define ERIS_TYPE_INFO_H
 
 #include <set>
+#include <sigc++/object.h>
 #include "Types.h"
 
 namespace Atlas { namespace Objects {
@@ -16,7 +17,10 @@ namespace Atlas { namespace Objects {
 namespace Eris {	
 	
 class TypeInfo;
+class TypeInfoEngine;
 typedef TypeInfo* TypeInfoPtr;
+
+class Connection;
 
 const int INVALID_TYPEID = -1;
 
@@ -76,37 +80,14 @@ public:
 	/// Return the names of each direct parent class, as a set.
 	StringSet getParentsAsSet();
 
-// static
-	/// initalise the TypeInfo system
-	static void init();
-	
-	/// load the core Atlas::Objects specification from the named file
-	static void readAtlasSpec(const std::string &specfile);
-	
-	/** find the TypeInfo for the named type; this may involve a search, or a map lookup. This
-	call is 'safe' in that it will not throw OperationBlocked. As a result, the returned TypeInfo
-	node may not be bound, and the caller should verify this before using the type. */
-	static TypeInfoPtr findSafe(const std::string &tynm);
-	
-	/** find the TypeInfo for an object; this should be faster (hoepfully constant time) since it
-	can take advantage of integer typeids */
-	static TypeInfoPtr getSafe(const Atlas::Message::Object &msg);
-	static TypeInfoPtr getSafe(const Atlas::Objects::Root &obj);
-	
-	/** Get the typeInfo for the specified type; note this may throw an OperationBlocked
-	exception as explained in the class description. */
-	static TypeInfoPtr find(const std::string &tynm);
-	
-	/** emitted when a new type is available and bound to it's parents */
-	static SigC::Signal1<void, TypeInfo*> BoundType;
-	
-	static void listUnbound();
 protected:
+	friend class TypeInfoEngine;
+
 	/// forward constructor, when data is not available
-	TypeInfo(const std::string &id);
+	TypeInfo(const std::string &id, TypeInfoEngine*);
 
 	/// full constructor, if an INFO has been received
-	TypeInfo(const Atlas::Objects::Root &atype);
+	TypeInfo(const Atlas::Objects::Root &atype, TypeInfoEngine*);
 
 	void addParent(TypeInfoPtr tp);
 	void addChild(TypeInfoPtr tp);
@@ -120,15 +101,6 @@ protected:
 	void validateBind();
 	void setupDepends();
 
-	static void sendInfoRequest(const std::string &id);
-	static void recvInfoOp(const Atlas::Objects::Root &atype);
-	
-	static void recvTypeError(const Atlas::Objects::Operation::Error &error,
-		const Atlas::Objects::Operation::Get &get);
-	
-	/// build a TypeInfo object if necessary, and add it to the database
-	static void registerLocalType(const Atlas::Objects::Root &def);
-	
 	// NOTE - I don't especially like the relations analogy, but it *is* very
 	// clear what is meant, so I'm sticking with it.
 
@@ -146,11 +118,11 @@ protected:
 	
 	/** set one the type-system has been intialised; this is to provide correct handling of TypeInfo instances
 	created before TypeInfo::init() has been called (which is neccesary and inevitable) */
-	static bool _inited;	
-	
 	/** Emitted when the type is bound, i.e there is an unbroken graph of
 	TypeInfo instances through every ancestor to the root object. */
 	SigC::Signal0<void> Bound;
+
+	TypeInfoEngine* _engine;
 };
 
 /** Note - highly likely to throw OperationBlocked exceptions! */
@@ -159,6 +131,65 @@ TypeInfoPtr getTypeInfo(const std::string &type);
 /** Get the type data for an object; this is better than the above form because it can use
 numerical typeids (which are much faster) in Atlas 0.5.x */
 TypeInfoPtr getTypeInfo(const Atlas::Objects::Root &obj);
+
+class TypeInfoEngine : virtual public SigC::Object
+{
+ public:
+	TypeInfoEngine(Connection *conn);
+
+	void init();
+
+	/// load the core Atlas::Objects specification from the named file
+	void readAtlasSpec(const std::string &specfile);
+	
+	/** find the TypeInfo for the named type; this may involve a search, or a map lookup. This
+	call is 'safe' in that it will not throw OperationBlocked. As a result, the returned TypeInfo
+	node may not be bound, and the caller should verify this before using the type. */
+	TypeInfoPtr findSafe(const std::string &tynm);
+	
+	/** find the TypeInfo for an object; this should be faster (hoepfully constant time) since it
+	can take advantage of integer typeids */
+	TypeInfoPtr getSafe(const Atlas::Message::Object &msg);
+	TypeInfoPtr getSafe(const Atlas::Objects::Root &obj);
+	
+	/** Get the typeInfo for the specified type; note this may throw an OperationBlocked
+	exception as explained in the class description. */
+	TypeInfoPtr find(const std::string &tynm);
+	
+	/** emitted when a new type is available and bound to it's parents */
+	SigC::Signal1<void, TypeInfo*> BoundType;
+	
+	void listUnbound();
+
+ protected:
+	friend class TypeInfo;
+
+	void sendInfoRequest(const std::string &id);
+	void recvInfoOp(const Atlas::Objects::Root &atype);
+	
+	void recvTypeError(const Atlas::Objects::Operation::Error &error,
+		const Atlas::Objects::Operation::Get &get);
+	
+	/// build a TypeInfo object if necessary, and add it to the database
+	void registerLocalType(const Atlas::Objects::Root &def);
+	
+	typedef std::map<std::string, TypeInfoPtr> TypeInfoMap;
+	/** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')
+	to the corresponding TypeInfo instance. This could be a hash_map in the
+	future, if efficeny consdierations indicate it would be worthwhile */
+	TypeInfoMap globalTypeMap;
+
+	typedef std::map<std::string, TypeInfoSet> TypeDepMap;
+
+	/** This is a dynamic structure indicating which Types are blocked
+	awaiting INFOs from other ops. For each blocked INFO, the first item
+	is the <i>blocking</i> type (e.g. 'tradesman') and the second item
+	the blocked TypeInfo, (e.g. 'blacksmith')*/
+	TypeDepMap globalDependancyMap;
+
+	Connection* _conn;
+	bool _inited;
+};
 
 }
 

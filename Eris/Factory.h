@@ -18,18 +18,18 @@ public:
 	an object is created, so avoid lengthy processing if possible. */
 
 	//virtual bool Accept(const Atlas::Message::Object &o) = 0;
-	virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge) = 0;
+	virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge, World *world) = 0;
 
 	/// create whatever entity the client desires
-	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge) = 0;
+	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge, World *world) = 0;
 	//virtual EntityPtr Instantiate(const Atlas::Message::Object &o) = 0;
 };
 
 class StdFactory : public Factory
 {
 public:
-	virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge);
-	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge);
+	virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge, World *world);
+	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge, World *world);
 };
 	
 

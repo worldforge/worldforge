@@ -60,7 +60,7 @@ or creating peer clases and attaching them to the signals.
 class Entity : public SigC::Object
 {
 public:	
-	explicit Entity(const Atlas::Objects::Entity::GameEntity &ge);
+	explicit Entity(const Atlas::Objects::Entity::GameEntity &ge, World *world);
 	virtual ~Entity();
 
 	/* container interface; not virtualized, should it be? i.e, will anyone want to
@@ -107,6 +107,9 @@ public:
 	{ return _parents; }
 	
 	TypeInfo* Entity::getType() const;
+
+	World* getWorld() const
+	{ return _world; }
 	
 	/** Query the visiblity of this entity; this is controlled by Appearance/Disappearance ops
 	from the server */
@@ -151,7 +154,7 @@ public:
 	
 protected:	
 	/// constructor for use by derived classes only!
-	explicit Entity(const std::string &id);	
+	explicit Entity(const std::string &id, World *world);	
 
 	// the World is a friend, so that it may set properties and containership of
 	// entities.
@@ -240,6 +243,8 @@ private:
 
 	// disptchers that have been bound to this entity (so we know to delete them)
 	StringList _localDispatchers;
+
+	World *_world; // the World that created the Entity
 };
 
 

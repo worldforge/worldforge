@@ -37,7 +37,7 @@ Player::Player(Connection *con) :
 	_con(con),
 	_account(""),
 	_username(""),
-	_lobby(Lobby::instance()),
+	_lobby(con->getLobby()),
 	_world(NULL)
 {
     _currentAction = "";
@@ -59,6 +59,8 @@ Player::Player(Connection *con) :
 
 Player::~Player()
 {
+	delete _world;
+
 	if (_con) {
 		//_con->removeDispatcherByPath
 		
@@ -306,14 +308,14 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
 	return;
     
     // there will be several anonymous children, I guess
-    d = d->addSubdispatch(ClassDispatcher::newAnonymous());
+    d = d->addSubdispatch(ClassDispatcher::newAnonymous(_con));
     d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Entity::GameEntity>("character",
 	SigC::slot(*this, &Player::recvSightCharacter)),
 	"game_entity"
     );
     
     d = _con->getDispatcherByPath("op:info:op");
-    Dispatcher *infoLogout = d->addSubdispatch(ClassDispatcher::newAnonymous());
+    Dispatcher *infoLogout = d->addSubdispatch(ClassDispatcher::newAnonymous(_con));
     infoLogout->addSubdispatch( new SignalDispatcher<Atlas::Objects::Operation::Logout>(
 	"player", SigC::slot(*this, &Player::recvLogoutInfo)),
 	"logout"

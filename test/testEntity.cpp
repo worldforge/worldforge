@@ -56,7 +56,7 @@ void TestEntity::testAccessors()
     // set orientation
     
     Entity::GameEntity ge(Entity::GameEntity::Instantiate());
-    Eris::Entity *testEnt = new Eris::Entity(ge);
+    Eris::Entity *testEnt = new Eris::Entity(ge, 0);
     
     CPPUNIT_ASSERT(testEnt->getName() == "John Doe");
     CPPUNIT_ASSERT(testEnt->getID() == "test_id");

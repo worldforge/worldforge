@@ -25,6 +25,7 @@ class Person;
 class Lobby : public Room
 {
 public:	
+	Lobby(Connection *c); 
 	~Lobby();
 
 	/// Join the specified room; throws if not allowed or not found
@@ -66,8 +67,6 @@ protected:
 	friend class Player; 
 	
 	friend class TestLobby;	///< allows tests to set things up
-	
-	Lobby(/*Player *p,*/ Connection *c);
 	
 	void look(const std::string &id);
 	void expectInfoRefno(long ref);
@@ -118,8 +117,6 @@ protected:
     typedef std::map<int, Room*> PendingCreateMap;
     /// map from the serialno of a CREATE operation to the corresponding Room instance it applies to
     PendingCreateMap _pendingCreate;
-    
-	static Lobby* _theLobby;
 };
 	
 } // of namespace Eris

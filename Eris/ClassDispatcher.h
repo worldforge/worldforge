@@ -8,11 +8,12 @@ namespace Eris
 {
 // forward decls
 class TypeInfo;
+class Connection;
 	
 class ClassDispatcher : public Dispatcher, public SigC::Object
 {
 public:	
-	ClassDispatcher(const std::string &nm);
+	ClassDispatcher(const std::string &nm, Connection *conn);
 	virtual ~ClassDispatcher();
 		
 	virtual bool dispatch(DispatchContextDeque &dq);
@@ -25,7 +26,7 @@ public:
 	virtual bool empty()
 	{ return _subs.empty(); }
 	
-	static Dispatcher* newAnonymous();
+	static Dispatcher* newAnonymous(Connection *conn);
 protected:
 	typedef struct {
 		Dispatcher* sub;
@@ -39,6 +40,7 @@ protected:
 	
 	typedef std::list<_Class> ClassDispatcherList;
 	ClassDispatcherList _subs;
+	Connection* _conn;
 };
 
 }	

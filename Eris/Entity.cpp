@@ -32,7 +32,7 @@ using namespace Atlas::Message;
 
 namespace Eris {
 
-Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
+Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge, World *world) :
 	_id(ge.GetId()),
 	_stamp(-1.0),
 	_visible(true),
@@ -41,13 +41,14 @@ Entity::Entity(const Atlas::Objects::Entity::GameEntity &ge) :
 	_velocity(ge.GetVelocity()),
 	_orientation(1.0, 0., 0., 0.),
 	_inUpdate(false),
-	_hasBBox(false)
+	_hasBBox(false),
+	_world(world)
 {	
 	_parents = getParentsAsSet(ge);
 	recvSight(ge);	
 }
 
-Entity::Entity(const std::string &id) :
+Entity::Entity(const std::string &id, World *world) :
 	_id(id),
 	_stamp(-1.0),
 	_visible(true),
@@ -55,14 +56,15 @@ Entity::Entity(const std::string &id) :
 	_position(0., 0., 0.),
 	_velocity(0., 0., 0.),
 	_orientation(1.0, 0., 0., 0.),
-	_inUpdate(false)
+	_inUpdate(false),
+	_world(world)
 {
 	;
 }
 
 Entity::~Entity()
 {
-	Connection *con = World::Instance()->getConnection();
+	Connection *con = _world->getConnection();
 	
 	while (!_localDispatchers.empty()) {
 		con->removeDispatcherByPath("op:sight:op",_localDispatchers.front());
@@ -158,7 +160,7 @@ WFMath::Quaternion Entity::getOrientation() const
 TypeInfo* Entity::getType() const
 {
     assert(!_parents.empty());
-    return Eris::TypeInfo::find(*_parents.begin());
+    return _world->getConnection()->getTypeInfoEngine()->find(*_parents.begin());
 }
 
 void Entity::setVisible(bool vis)
@@ -172,12 +174,12 @@ void Entity::setVisible(bool vis)
 	
 	if (!wasVisible && _visible) {
 		//move back to actice
-		World::Instance()->markVisible(this);
+		_world->markVisible(this);
 	}
 	
 	if (wasVisible && !_visible) {
 		// move to the cache ... keep around for 'a while'
-		World::Instance()->markInvisible(this);
+		_world->markInvisible(this);
 	}
 }
 
@@ -336,7 +338,7 @@ void Entity::innerOpFromSlot(Dispatcher *s)
 	std::string efnm = "from." + _id;
 	
 	// check if the dispatcher already exists
-	Connection *con = World::Instance()->getConnection(); 
+	Connection *con = _world->getConnection(); 
 	Dispatcher *ds = con->getDispatcherByPath("op:sight:op"),
 		*efd = ds->getSubdispatch(efnm);
 	
@@ -356,7 +358,7 @@ void Entity::innerOpToSlot(Dispatcher *s)
 	std::string etnm = "to." + _id;
 	
 	// check if the dispatcher already exists
-	Connection *con = World::Instance()->getConnection(); 
+	Connection *con = _world->getConnection(); 
 	Dispatcher *ds = con->getDispatcherByPath("op:sight:op"),
 		*etd = ds->getSubdispatch(etnm);
 	
@@ -381,7 +383,7 @@ void Entity::setContents(const Atlas::Message::Object::ListType &contents)
 	    C=contents.begin(); C!=contents.end();++C) {
 	// check we have it; if yes, ensure it's installed. if not, it will be attached when
 	// it arrives.
-	Entity *con = World::Instance()->lookup(C->AsString());
+	Entity *con = _world->lookup(C->AsString());
 	if (con) {
 	    Eris::log(LOG_DEBUG, 
 		"already have entity '%s', not setting container",
@@ -404,7 +406,7 @@ void Entity::setContainerById(const std::string &id)
 	// have to check this, becuase changes in what the client can see
 	// may cause the client's root to change
 	if (!id.empty()) {
-		Entity *ncr = World::Instance()->lookup(id);
+		Entity *ncr = _world->lookup(id);
 		if (ncr) {
 			ncr->addMember(this);
 			setContainer(ncr);
@@ -422,24 +424,24 @@ void Entity::setContainerById(const std::string &id)
 			Atlas::Objects::Operation::Sight ssc =
 				Atlas::Objects::Operation::Sight::Instantiate();
 			ssc.SetArgs(Atlas::Message::Object::ListType(1, setc.AsObject()));
-			ssc.SetTo(World::Instance()->getFocusedEntityID());
+			ssc.SetTo(_world->getFocusedEntityID());
 			ssc.SetSerialno(getNewSerialno());
 			
 			// if we received sets/creates/sights in rapid sucession, this can happen, and is
 			// very, very bad
 			std::string setid("set_container_" + _id);
-			Connection::Instance()->removeIfDispatcherByPath(
+			_world->getConnection()->removeIfDispatcherByPath(
 				"op:ig:sight:entity", setid);
 			
 			new WaitForDispatch(ssc, "op:ig:sight:entity", 
-				new IdDispatcher(setid, id) );
+				new IdDispatcher(setid, id), _world->getConnection());
 		}
 	} // of new container is valid
     }	
 	
     if (id.empty()) {	// id of "" implies local root
 	Eris::log(LOG_DEBUG, "got entity with empty container, assuming it's the world");
-	World::Instance()->setRootEntity(this);	
+	_world->setRootEntity(this);	
     }
 }
 

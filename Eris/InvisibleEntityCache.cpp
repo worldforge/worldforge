@@ -38,7 +38,7 @@ void InvisibleEntityCache::flush()
 	while (!_buckets.empty() && (_buckets.back().stamp < expiry)) {
 		for (EntitySet::iterator E=_buckets.back().contents.begin(); 
 				E!=_buckets.back().contents.end();++E) {
-			World::Instance()->flush(*E);
+			(*E)->getWorld()->flush(*E);
 			delete *E;
 		}
 		Eris::log(LOG_VERBOSE, "IEC flushed %i entities", _buckets.back().contents.size());

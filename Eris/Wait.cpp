@@ -16,11 +16,12 @@
 
 namespace Eris {
 
-WaitForBase::WaitForBase(const Atlas::Message::Object &m) :
+WaitForBase::WaitForBase(const Atlas::Message::Object &m, Connection *conn) :
 		_pending(false),
-		_msg(m)
+		_msg(m),
+		_conn(conn)
 { 
-	Connection::Instance()->addWait(this);
+	conn->addWait(this);
 }
 	
 void WaitForBase::fire()
@@ -30,31 +31,33 @@ void WaitForBase::fire()
 	
 	std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(_msg) ));
 	//Log("firing WaitFor %p, content is %s", this, summary.c_str());
-	Connection::Instance()->postForDispatch(_msg);
+	_conn->postForDispatch(_msg);
 }
 	
 //////////////////////////////////////////////////////////////////////////////////////////
 	
 WaitForDispatch::WaitForDispatch(const Atlas::Message::Object &msg,  
 	const std::string &ppath,
-	Dispatcher *dsp) :
-	WaitForBase(msg),
+	Dispatcher *dsp,
+	Connection *conn) :
+	WaitForBase(msg, conn),
 	_parentPath(ppath),
 	_dsp(dsp)
 {
-	Dispatcher *pr = Connection::Instance()->getDispatcherByPath(ppath);
+	Dispatcher *pr = conn->getDispatcherByPath(ppath);
 	pr->addSubdispatch( dsp );
 	dsp->addSubdispatch(new SignalDispatcher0("sig", SigC::slot(*this, &WaitForBase::fire)));
 }
 
 WaitForDispatch::WaitForDispatch(const Atlas::Objects::Root &obj,  
 	const std::string &ppath,
-	Dispatcher *dsp) :
-	WaitForBase(obj.AsObject()),
+	Dispatcher *dsp,
+	Connection *conn) :
+	WaitForBase(obj.AsObject(), conn),
 	_parentPath(ppath),
 	_dsp(dsp)
 {
-	Dispatcher *pr = Connection::Instance()->getDispatcherByPath(ppath);
+	Dispatcher *pr = conn->getDispatcherByPath(ppath);
 	pr->addSubdispatch( dsp );
 	dsp->addSubdispatch(new SignalDispatcher0("sig", SigC::slot(*this, &WaitForBase::fire)));
 }
@@ -62,14 +65,15 @@ WaitForDispatch::WaitForDispatch(const Atlas::Objects::Root &obj,
 
 WaitForDispatch::~WaitForDispatch()
 {
-	Dispatcher *pr = Connection::Instance()->getDispatcherByPath(_parentPath);
+	Dispatcher *pr = _conn->getDispatcherByPath(_parentPath);
 	pr->rmvSubdispatch( _dsp );
 }
 
 //////////////////////////////////////////////////////////////////////////////////////
 
-WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Object &msg) :
-	WaitForBase(msg)
+WaitForSignal::WaitForSignal(Signal &sig, const Atlas::Message::Object &msg,
+	Connection *conn) :
+	WaitForBase(msg, conn)
 {
 	//Eris::Log("Created WaitForSignal %p", this);
 	sig.connect(SigC::slot(*this, &WaitForBase::fire));

@@ -61,14 +61,15 @@ World::World(Player *p, Connection *c) :
 	assert(_player);
 	
 	// store the instance pointer  ( "new Entity(..)" already needs this !)
-	_theWorld = this;
+	if(!_theWorld)
+		_theWorld = this;
 	_ieCache = new InvisibleEntityCache(10000, 600000);	// 10 sec buckets, 10 minute lifetime
 
 // info operation
 	Dispatcher *d = _con->getDispatcherByPath("op:info");
 	assert(d);
 
-	d = d->addSubdispatch(ClassDispatcher::newAnonymous());
+	d = d->addSubdispatch(ClassDispatcher::newAnonymous(_con));
 	d->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Info, 
 		Atlas::Objects::Entity::GameEntity>(
 		"character", SigC::slot(*this, &World::recvInfoCharacter)),
@@ -88,6 +89,9 @@ World::~World()
 	if (_root)
 		delete _root;
 	delete _ieCache;
+
+	if(_theWorld == this)
+		_theWorld = 0;
 }
 
 Entity* World::lookup(const std::string &id)
@@ -180,16 +184,16 @@ EntityPtr World::create(const Atlas::Objects::Entity::GameEntity &ge)
 	// iterator here and get the desired result (higher priorty values are tested first)
 	for (FactoryMap::reverse_iterator fi = _efactories.rbegin(); 
 		fi != _efactories.rend(); ++fi) {
-		if (fi->second->accept(ge)) {
+		if (fi->second->accept(ge, this)) {
 			// call the factory
-			e = fi->second->instantiate(ge);
+			e = fi->second->instantiate(ge, this);
 			break;
 		}
 	}
 	
 	// use generic
 	if (!e) {
-		e = new Entity(ge);
+		e = new Entity(ge, this);
 	}
 	
 	// bind into the database
@@ -243,7 +247,7 @@ void  World::registerCallbacks()
 	Dispatcher *d = _con->getDispatcherByPath("op");
 	Dispatcher *igd = d->addSubdispatch(new OpToDispatcher("ig", _characterID));
 	
-	Dispatcher *igclass = igd->addSubdispatch(ClassDispatcher::newAnonymous());
+	Dispatcher *igclass = igd->addSubdispatch(ClassDispatcher::newAnonymous(_con));
 	Dispatcher *sightd = igclass->addSubdispatch(new EncapDispatcher("sight"), "sight");
 	
 	Dispatcher *ed = sightd->addSubdispatch(new TypeDispatcher("entity", "object"));
@@ -254,7 +258,7 @@ void  World::registerCallbacks()
 	));
 	
 	Dispatcher *od = sightd->addSubdispatch(new TypeDispatcher("op", "op"));
-	Dispatcher *opclass = od->addSubdispatch(ClassDispatcher::newAnonymous());
+	Dispatcher *opclass = od->addSubdispatch(ClassDispatcher::newAnonymous(_con));
 	
 	// sight of create operations; this is 2-level decoder; becuase we have SIGHT encapsulating
 	// the CREATE which encapsulates the entity.
@@ -284,7 +288,7 @@ void  World::registerCallbacks()
 	);
 	
 	Dispatcher *soundd = igclass->addSubdispatch(new EncapDispatcher("sound"), "sound");
-	soundd = soundd->addSubdispatch(ClassDispatcher::newAnonymous());
+	soundd = soundd->addSubdispatch(ClassDispatcher::newAnonymous(_con));
 	soundd->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Sound,
 		Atlas::Objects::Operation::Talk>("world",
 		SigC::slot(*this, &World::recvSoundTalk)),
@@ -451,7 +455,8 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 			std::string nm = "talk_" /* + snd.GetSerialno() */ ;
 			new WaitForDispatch(snd, 
 				"op:ig:sight:entity", 
-				new IdDispatcher(nm, snd.GetFrom())
+				new IdDispatcher(nm, snd.GetFrom()),
+				_con
 			); 
 		} else
 			throw UnknownEntity("Unknown entity at sound", snd.GetFrom());

@@ -48,6 +48,7 @@ Room::Room(Lobby *l) :
 
 Room::~Room()
 {
+    try {
 	if (!_parted)
 		leave();
 	
@@ -60,6 +61,7 @@ Room::~Room()
 	con->removeDispatcherByPath("op:oog:imaginary", rid);
 	con->removeDispatcherByPath("op:oog:appearance", rid);
 	con->removeDispatcherByPath("op:oog:disappearance", rid);
+    } catch (...) {}
 }
 
 void Room::setup()
@@ -83,7 +85,8 @@ void Room::setup()
 	
     Dispatcher *imaginary = sightOp->getSubdispatch("imaginary");
     if (!imaginary) {
-	imaginary = sightOp->addSubdispatch(ClassDispatcher::newAnonymous());
+	imaginary = sightOp->addSubdispatch(ClassDispatcher::newAnonymous(
+		_lobby->getConnection()));
 	imaginary = imaginary->addSubdispatch(
 	    new EncapDispatcher("imaginary"), 
 	    "imaginary"

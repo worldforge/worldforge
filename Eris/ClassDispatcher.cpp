@@ -17,8 +17,8 @@
 namespace Eris
 {
 	
-ClassDispatcher::ClassDispatcher(const std::string& nm) :
-	Dispatcher(nm)
+ClassDispatcher::ClassDispatcher(const std::string& nm, Connection *conn) :
+	Dispatcher(nm), _conn(conn)
 {
 }
 
@@ -30,10 +30,10 @@ ClassDispatcher::~ClassDispatcher()
 
 bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	TypeInfoPtr mty = TypeInfo::getSafe(dq.front());
+	TypeInfoPtr mty = _conn->getTypeInfoEngine()->getSafe(dq.front());
 	if (!mty->isBound()) {
 	    Eris::log(LOG_VERBOSE, "waiting for bind of %s", mty->getName().c_str());
-	    new WaitForSignal(mty->getBoundSignal(), dq.back());
+	    new WaitForSignal(mty->getBoundSignal(), dq.back(), _conn);
 	    // set dispatched, to avoid warnings about not hitting a leaf
 	    Atlas::Message::Object::MapType &o = dq.back().AsMap();
 	    o["__DISPATCHED__"] = "1";
@@ -51,7 +51,7 @@ bool ClassDispatcher::dispatch(DispatchContextDeque &dq)
 Dispatcher* ClassDispatcher::addSubdispatch(Dispatcher *d, const std::string clnm)
 {
 	assert(d);
-	TypeInfo* ty = TypeInfo::findSafe(clnm);
+	TypeInfo* ty = _conn->getTypeInfoEngine()->findSafe(clnm);
 	_Class cl = {d,ty};
 	
 	d->addRef();
@@ -155,9 +155,9 @@ void ClassDispatcher::boundInsert(const _Class &cl)
 	_subs.push_back(cl);	
 }
 
-Dispatcher* ClassDispatcher::newAnonymous()
+Dispatcher* ClassDispatcher::newAnonymous(Connection *conn)
 {
-	return new ClassDispatcher("_class");
+	return new ClassDispatcher("_class", conn);
 }
 
 } // of namespace Eris

@@ -1,3 +1,11 @@
+Monday, July 29, Ron Steinke
+
+	* Patch to allow multiple Connection instances. Lobby and
+	  TypeInfoEngine are per Connection, World is per Player,
+	  Entity instances are associated with a particular World.
+	  It may be possible at this point to have more than one
+	  Player for a given Connection, someone should check this.
+
 Wednesday, July 3, James Turner
 
 	* Compile fixes for OS-X / GCC 3.1

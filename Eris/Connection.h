@@ -22,6 +22,8 @@ class Dispatcher;
 class WaitForBase;
 class Timeout;
 class PollData;
+class TypeInfoEngine;
+class Lobby;
 
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
@@ -71,6 +73,12 @@ public:
 	/// get the root dispatcher for incoming messages
 	Dispatcher* getDispatcher() const
 	{ return _rootDispatch; }
+
+	TypeInfoEngine* getTypeInfoEngine() const
+	{ return _ti_engine;}
+
+	Lobby* getLobby() const
+	{ return _lobby; }
 	
 	/// Navigate to a specific item in the dispatcher tree using names seperated by ':'
 	/** Note that an invalid path specification will cause an exception to be thrown. To
@@ -176,6 +184,9 @@ private:
 	WaitForList _waitList;
 
 	void gotData(PollData&);
+
+	TypeInfoEngine *_ti_engine;
+	Lobby *_lobby;
 };
 
 } // of Eris namespace

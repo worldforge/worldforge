@@ -13,11 +13,12 @@ namespace Eris
 
 // Forward declarations
 class Dispatcher;
+class Connection;
 	
 class WaitForBase : public SigC::Object
 {
 public:
-	WaitForBase(const Atlas::Message::Object &m);
+	WaitForBase(const Atlas::Message::Object &m, Connection *conn);
 	virtual ~WaitForBase() {;}
 		
 	bool isPending() const
@@ -33,6 +34,7 @@ public:
 protected:
 	bool _pending;
 	Atlas::Message::Object _msg;
+	Connection* _conn;
 };
 
 class WaitForDispatch : public WaitForBase
@@ -40,11 +42,13 @@ class WaitForDispatch : public WaitForBase
 public:
 	WaitForDispatch(const Atlas::Message::Object &msg,  
 		const std::string &ppath,
-		Dispatcher *dsp);
+		Dispatcher *dsp,
+		Connection *conn);
 
 	WaitForDispatch(const Atlas::Objects::Root &msg, 
 		const std::string &ppath,
-		Dispatcher *dsp);
+		Dispatcher *dsp,
+		Connection *conn);
 
 	virtual ~WaitForDispatch();
 
@@ -56,7 +60,7 @@ protected:
 class WaitForSignal : public WaitForBase
 {
 public:	
-	WaitForSignal(Signal &sig, const Atlas::Message::Object &msg);
+	WaitForSignal(Signal &sig, const Atlas::Message::Object &msg, Connection *conn);
 	virtual ~WaitForSignal();
 protected:
 	
