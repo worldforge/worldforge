@@ -1,0 +1,1182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--NewPage-->
+<html>
+<head>
+<meta name="CreationDate"   content="Tue Dec 07 08:06:22 1999">
+<meta name="CcDocCopyright" content="(C) Joe Linoff 1998,1999">
+<meta name="CcDocAuthor"    content="Joe Linoff">
+<meta name="CcDocVersion"   content="0.7a">
+<meta name="Keywords"       content="CcDoc, Source code, documentation">
+<title>AObject</title>
+</head>
+<body bgcolor=#FFFFFF fgcolor=#000000><a name="_top_"></a>
+<pre>
+<a href=ccdoc.index.html>[ROOT]</a> --> <a href=ccdoc.index.pkg.libAtlas.html>libAtlas</a>
+</pre>
+<hr>
+<dl>
+  <dt> <font size="+3">class <b>AObject</b></font>
+</dl>
+<dir>
+<p>
+Atlas Base Object Structure
+<p>
+AObject is an implementation of the Atlas
+ Object structure based on the Python PyObject
+ type. By relating all Atlas Object Structures
+ to the Python Object type, no conversion is
+ needed when transfering messages and data from
+ the network transports, to C++, and thence to
+ Python, or from Python to C++ to the network.
+<p>
+ AObject implements 5 basic data types:
+<p>
+ <pre>
+	AObject		C/C++ Type
+	==========================
+	Int		long
+	Float		double
+	String		char *
+	List		list&lt;AObject*&gt;
+	Map		map&lt;AObject*&gt;
+ </pre>
+<p>
+ Atlas Typed Lists are supported by means
+ of the standard AObject List type and a
+ special type flag which enables type
+ checking of any data stored to a typed
+ list. Additionally, the ACodec object
+ stream handler classes can use this flag
+ to produce more efficiently compacted
+ data streams from a given AObject message.
+<p>
+ Use of the AObject type flag by any specific
+ ACodec module is optional, as the essential
+ structure of the AObject will still be sent
+ correctly to the remote system even if the
+ flag is not used during encoding.
+<p>
+<dl>
+<dt><b>Author:</b></dt>
+<dd>
+John Barrett (ZW) <a href="mailto:jbarrett@box100.com">jbarrett@box100.com</a>
+</dd>
+</dl>
+<p>
+<dl>
+<dt><b>Source:</b></dt>
+<dd>
+AtlasObject.h
+</dd>
+</dl>
+<p>
+<dl>
+<dt><b>See Also:</b></dt>
+<dd>
+<a href="ccdoc.r1a.html">ACodec</a>
+</dd>
+</dl>
+</dir>
+<hr>
+<a name="ConstructorsIndex"></a>
+<h2>
+<img src="images/constructor-index.gif" alt="Constructors Index">
+</h2>
+<dl>
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r4d"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an AObject from an existing PyObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r4f"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct a copy of an existing AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r51"><b>AObject</b></a>
+  <dd><b>[public]</b> Constuct an Int type AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r53"><b>AObject</b></a>
+  <dd><b>[public]</b> Contruct a Float type AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r55"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct a String type AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r57"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct a String typed list AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r59"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct a Float typed list AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r5b"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct a Long typed list AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r5d"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct a String typed list AObject from an array
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r5f"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct a Float typed list AObject from an array
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r61"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct a Long typed list AObject from an array
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r63"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous Int AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r65"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous Float AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r67"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous String AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r69"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous String typed list AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r6b"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous Float typed list AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r6d"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous Long typed list AObject
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r6f"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous String typed list AObject from an array
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r71"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous Float typed list AObject from an array
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r73"><b>AObject</b></a>
+  <dd><b>[public]</b> Construct an anonymous Long typed list AObject from an array
+
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r75"><b>~AObject</b></a>
+  <dd><b>[public]</b> Destroy an AObject
+
+</dl>
+<p>
+<hr>
+<a name="VariablesIndex"></a>
+<h2>
+<img src="images/variable-index.gif" alt="Variables Index">
+</h2>
+<dl>
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r47"><b>AFloatList</b></a>
+  <dd><b>[public]</b> "typ" value for a List of Floats
+
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r43"><b>AIntList</b></a>
+  <dd><b>[public]</b> "typ" value for a List of Integers
+
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r4b"><b>AObjList</b></a>
+  <dd><b>[public]</b> "typ" value for a List of Objects
+
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r41"><b>AScalar</b></a>
+  <dd><b>[public]</b> Default "typ" value, not a typed list
+
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r49"><b>AStringList</b></a>
+  <dd><b>[public]</b> "typ" value for a List of Strings
+
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r45"><b>AUriList</b></a>
+  <dd><b>[public]</b> "typ" value for a List of URIs
+
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r3c"><b>nam</b></a>
+  <dd><b>[protected]</b> Name of this AObject
+
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r3e"><b>obj</b></a>
+  <dd><b>[protected]</b> Python Object to hold the data
+
+  <dt><a href="#_top_"><img src="images/blue-ball-small.gif" border=0></a>  <a href="#r3a"><b>typ</b></a>
+  <dd><b>[protected]</b> Typed List Flag
+
+</dl>
+<p>
+<hr>
+<a name="MethodsIndex"></a>
+<h2>
+<img src="images/method-index.gif" alt="Methods Index">
+</h2>
+<dl>
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rc3"><b>append</b></a>
+  <dd><b>[public]</b> (List) append an AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rc5"><b>append</b></a>
+  <dd><b>[public]</b> (List) append an Int
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rc7"><b>append</b></a>
+  <dd><b>[public]</b> (List) append a Float
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rc9"><b>append</b></a>
+  <dd><b>[public]</b> (List) append a String
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rdd"><b>asFloat</b></a>
+  <dd><b>[public]</b> get a Float value from this AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rdb"><b>asLong</b></a>
+  <dd><b>[public]</b> get an Int value from this AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rdf"><b>asString</b></a>
+  <dd><b>[public]</b> get a String value from this AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r95"><b>del</b></a>
+  <dd><b>[public]</b> (Map) remove an attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r83"><b>get</b></a>
+  <dd><b>[public]</b> (Map) get an AObject attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r85"><b>get</b></a>
+  <dd><b>[public]</b> (Map) get an Int attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r87"><b>get</b></a>
+  <dd><b>[public]</b> (Map) get a Float attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r89"><b>get</b></a>
+  <dd><b>[public]</b> (Map) get a String attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rd3"><b>get</b></a>
+  <dd><b>[public]</b> (List) get an AObject from this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rd5"><b>get</b></a>
+  <dd><b>[public]</b> (List) get an Int from this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rd7"><b>get</b></a>
+  <dd><b>[public]</b> (List) get a Float from this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rd9"><b>get</b></a>
+  <dd><b>[public]</b> (List) get a String from this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r7d"><b>getListType</b></a>
+  <dd><b>[public]</b> get the data type for a typed list
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r79"><b>getName</b></a>
+  <dd><b>[public]</b> Get the name of this AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r81"><b>has</b></a>
+  <dd><b>[public]</b> (Map) test for named element of a map
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r97"><b>hash</b></a>
+  <dd><b>[public]</b> return a hash value for this AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rbb"><b>insert</b></a>
+  <dd><b>[public]</b> (List) insert an AObject at this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rbd"><b>insert</b></a>
+  <dd><b>[public]</b> (List) insert an Int at this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rbf"><b>insert</b></a>
+  <dd><b>[public]</b> (List) insert a Float at this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rc1"><b>insert</b></a>
+  <dd><b>[public]</b> (List) insert a String at this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#raf"><b>isFloat</b></a>
+  <dd><b>[public]</b> true if this AObject is a Float
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rab"><b>isList</b></a>
+  <dd><b>[public]</b> true if this AObject is a List
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rad"><b>isLong</b></a>
+  <dd><b>[public]</b> true if this AObject is a Int
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#ra9"><b>isMap</b></a>
+  <dd><b>[public]</b> true if this AObject is a Map
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rb1"><b>isString</b></a>
+  <dd><b>[public]</b> true if this AObject is a String
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r99"><b>isTrue</b></a>
+  <dd><b>[public]</b> return if this AObject evaluates to True or False
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rb3"><b>keys</b></a>
+  <dd><b>[public]</b> (Map) return a List of all keys for a Map
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r9b"><b>length</b></a>
+  <dd><b>[public]</b> return the length of this object
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#ra5"><b>mkFloat</b></a>
+  <dd><b>[public]</b> return a Float AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r9f"><b>mkList</b></a>
+  <dd><b>[public]</b> return an empty list
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#ra1"><b>mkList</b></a>
+  <dd><b>[public]</b> return an empty list with (len) elements
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#ra3"><b>mkLong</b></a>
+  <dd><b>[public]</b> return an Int AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r9d"><b>mkMap</b></a>
+  <dd><b>[public]</b> return an empty map
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#ra7"><b>mkString</b></a>
+  <dd><b>[public]</b> return a String AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r77"><b>pyObject</b></a>
+  <dd><b>[public]</b> Get a pointer to this AObject's PyObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rb9"><b>reverse</b></a>
+  <dd><b>[public]</b> (List) reverse the order of a list
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r8b"><b>set</b></a>
+  <dd><b>[public]</b> (Map) set an Object attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r8d"><b>set</b></a>
+  <dd><b>[public]</b> (Map) set an Int attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r8f"><b>set</b></a>
+  <dd><b>[public]</b> (Map) set a Float attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r91"><b>set</b></a>
+  <dd><b>[public]</b> (Map) set a String attribute
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r93"><b>set</b></a>
+  <dd><b>[public]</b> (Map) set an AObject attribute using its stored name
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rcb"><b>set</b></a>
+  <dd><b>[public]</b> (List) replace an AObject at this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rcd"><b>set</b></a>
+  <dd><b>[public]</b> (List) replace an Int at this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rcf"><b>set</b></a>
+  <dd><b>[public]</b> (List) replace a Float at this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rd1"><b>set</b></a>
+  <dd><b>[public]</b> (List) replace a String at this index
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r7f"><b>setListType</b></a>
+  <dd><b>[public]</b> set the data type for a typed list
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r7b"><b>setName</b></a>
+  <dd><b>[public]</b> Change the name of this AObject
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rb7"><b>sort</b></a>
+  <dd><b>[public]</b> (List) sort a List
+
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#rb5"><b>vals</b></a>
+  <dd><b>[public]</b> (Map) return a List of all values for a Map
+
+</dl>
+<p>
+<hr>
+<a name="Constructors"></a>
+<h2>
+<img src="images/constructors.gif" alt="Constructors">
+</h2>
+<a name="r4d"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 PyObject * src ) ;</pre>
+<p>
+Construct an AObject from an existing PyObject
+</dir>
+<a name="r4f"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <b>AObject</b> * src ) ;</pre>
+<p>
+Construct a copy of an existing AObject
+</dir>
+<a name="r51"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>long</b></font> val ) ;</pre>
+<p>
+Constuct an Int type AObject
+</dir>
+<a name="r53"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>double</b></font> val ) ;</pre>
+<p>
+Contruct a Float type AObject
+</dir>
+<a name="r55"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>char</b></font> * val ) ;</pre>
+<p>
+Construct a String type AObject
+</dir>
+<a name="r57"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>int</b></font> len ,
+                 <font color=green><b>char</b></font> * val ,
+                 . . . ) ;</pre>
+<p>
+Construct a String typed list AObject
+</dir>
+<a name="r59"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>int</b></font> len ,
+                 <font color=green><b>double</b></font> val ,
+                 . . . ) ;</pre>
+<p>
+Construct a Float typed list AObject
+</dir>
+<a name="r5b"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>int</b></font> len ,
+                 <font color=green><b>long</b></font> val ,
+                 . . . ) ;</pre>
+<p>
+Construct a Long typed list AObject
+</dir>
+<a name="r5d"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>int</b></font> len ,
+                 <font color=green><b>char</b></font> * * val ) ;</pre>
+<p>
+Construct a String typed list AObject from an array
+</dir>
+<a name="r5f"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>int</b></font> len ,
+                 <font color=green><b>double</b></font> * val ) ;</pre>
+<p>
+Construct a Float typed list AObject from an array
+</dir>
+<a name="r61"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>int</b></font> len ,
+                 <font color=green><b>long</b></font> * val ) ;</pre>
+<p>
+Construct a Long typed list AObject from an array
+</dir>
+<a name="r63"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>long</b></font> val ) ;</pre>
+<p>
+Construct an anonymous Int AObject
+</dir>
+<a name="r65"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>double</b></font> val ) ;</pre>
+<p>
+Construct an anonymous Float AObject
+</dir>
+<a name="r67"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>char</b></font> * val ) ;</pre>
+<p>
+Construct an anonymous String AObject
+</dir>
+<a name="r69"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>int</b></font> len ,
+                 <font color=green><b>char</b></font> * val ,
+                 . . . ) ;</pre>
+<p>
+Construct an anonymous String typed list AObject
+</dir>
+<a name="r6b"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>int</b></font> len ,
+                 <font color=green><b>double</b></font> val ,
+                 . . . ) ;</pre>
+<p>
+Construct an anonymous Float typed list AObject
+</dir>
+<a name="r6d"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>int</b></font> len ,
+                 <font color=green><b>long</b></font> val ,
+                 . . . ) ;</pre>
+<p>
+Construct an anonymous Long typed list AObject
+</dir>
+<a name="r6f"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>int</b></font> len ,
+                 <font color=green><b>char</b></font> * * val ) ;</pre>
+<p>
+Construct an anonymous String typed list AObject from an array
+</dir>
+<a name="r71"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>int</b></font> len ,
+                 <font color=green><b>double</b></font> * val ) ;</pre>
+<p>
+Construct an anonymous Float typed list AObject from an array
+</dir>
+<a name="r73"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public <b>AObject</b> ( <font color=green><b>int</b></font> len ,
+                 <font color=green><b>long</b></font> * val ) ;</pre>
+<p>
+Construct an anonymous Long typed list AObject from an array
+</dir>
+<a name="r75"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AObject</b>
+<dir>
+<pre>
+public ~ <b>AObject</b> ( ) ;</pre>
+<p>
+Destroy an AObject
+</dir>
+<hr>
+<a name="Variables"></a>
+<h2>
+<img src="images/variables.gif" alt="Variables">
+</h2>
+<a name="r3a"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> typ</b>
+<dir>
+<pre>
+protected <font color=green><b>int</b></font> <b>typ</b></pre>
+<p>
+Typed List Flag
+</dir>
+<a name="r3c"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> nam</b>
+<dir>
+<pre>
+protected <font color=green><b>char</b></font> * <b>nam</b></pre>
+<p>
+Name of this AObject
+</dir>
+<a name="r3e"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> obj</b>
+<dir>
+<pre>
+protected PyObject * <b>obj</b></pre>
+<p>
+Python Object to hold the data
+</dir>
+<a name="r41"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> AScalar</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <font color=green><b>int</b></font> <b>AScalar</b></pre>
+<p>
+Default "typ" value, not a typed list
+</dir>
+<a name="r43"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> AIntList</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <font color=green><b>int</b></font> <b>AIntList</b></pre>
+<p>
+"typ" value for a List of Integers
+</dir>
+<a name="r45"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> AUriList</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <font color=green><b>int</b></font> <b>AUriList</b></pre>
+<p>
+"typ" value for a List of URIs
+</dir>
+<a name="r47"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> AFloatList</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <font color=green><b>int</b></font> <b>AFloatList</b></pre>
+<p>
+"typ" value for a List of Floats
+</dir>
+<a name="r49"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> AStringList</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <font color=green><b>int</b></font> <b>AStringList</b></pre>
+<p>
+"typ" value for a List of Strings
+</dir>
+<a name="r4b"></a>
+<p>
+<a href="#_top_"><img src="images/blue-ball.gif" border=0></a><b> AObjList</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <font color=green><b>int</b></font> <b>AObjList</b></pre>
+<p>
+"typ" value for a List of Objects
+</dir>
+<hr>
+<a name="Methods"></a>
+<h2>
+<img src="images/methods.gif" alt="Methods">
+</h2>
+<a name="r77"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> pyObject</b>
+<dir>
+<pre>
+public PyObject * <b>pyObject</b> ( ) ;</pre>
+<p>
+Get a pointer to this AObject's PyObject
+</dir>
+<a name="r79"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> getName</b>
+<dir>
+<pre>
+public <font color=green><b>char</b></font> * <b>getName</b> ( ) ;</pre>
+<p>
+Get the name of this AObject
+</dir>
+<a name="r7b"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> setName</b>
+<dir>
+<pre>
+public <font color=green><b>void</b></font> <b>setName</b> ( <font color=green><b>char</b></font> * name ) ;</pre>
+<p>
+Change the name of this AObject
+</dir>
+<a name="r7d"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> getListType</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>getListType</b> ( ) ;</pre>
+<p>
+get the data type for a typed list
+</dir>
+<a name="r7f"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> setListType</b>
+<dir>
+<pre>
+public <font color=green><b>void</b></font> <b>setListType</b> ( <font color=green><b>int</b></font> atype ) ;</pre>
+<p>
+set the data type for a typed list
+</dir>
+<a name="r81"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> has</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>has</b> ( <font color=green><b>char</b></font> * name ) ;</pre>
+<p>
+(Map) test for named element of a map
+</dir>
+<a name="r83"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> get</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>get</b> ( <font color=green><b>char</b></font> * name ,
+                 <a href="ccdoc.r36.html">AObject</a> * & val ) ;</pre>
+<p>
+(Map) get an AObject attribute
+</dir>
+<a name="r85"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> get</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>get</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>long</b></font> & val ) ;</pre>
+<p>
+(Map) get an Int attribute
+</dir>
+<a name="r87"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> get</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>get</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>double</b></font> & val ) ;</pre>
+<p>
+(Map) get a Float attribute
+</dir>
+<a name="r89"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> get</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>get</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>char</b></font> * & val ) ;</pre>
+<p>
+(Map) get a String attribute
+</dir>
+<a name="r8b"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <font color=green><b>char</b></font> * name ,
+                 <a href="ccdoc.r36.html">AObject</a> * src ) ;</pre>
+<p>
+(Map) set an Object attribute
+</dir>
+<a name="r8d"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>long</b></font> src ) ;</pre>
+<p>
+(Map) set an Int attribute
+</dir>
+<a name="r8f"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>double</b></font> src ) ;</pre>
+<p>
+(Map) set a Float attribute
+</dir>
+<a name="r91"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <font color=green><b>char</b></font> * name ,
+                 <font color=green><b>char</b></font> * src ) ;</pre>
+<p>
+(Map) set a String attribute
+</dir>
+<a name="r93"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <a href="ccdoc.r36.html">AObject</a> * src ) ;</pre>
+<p>
+(Map) set an AObject attribute using its stored name
+</dir>
+<a name="r95"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> del</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>del</b> ( <font color=green><b>char</b></font> * name ) ;</pre>
+<p>
+(Map) remove an attribute
+</dir>
+<a name="r97"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> hash</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>hash</b> ( ) ;</pre>
+<p>
+return a hash value for this AObject
+</dir>
+<a name="r99"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> isTrue</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>isTrue</b> ( ) ;</pre>
+<p>
+return if this AObject evaluates to True or False
+</dir>
+<a name="r9b"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> length</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>length</b> ( ) ;</pre>
+<p>
+return the length of this object
+</dir>
+<a name="r9d"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> mkMap</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <a href="ccdoc.r36.html">AObject</a> * <b>mkMap</b> ( <font color=green><b>char</b></font> * name ) ;</pre>
+<p>
+return an empty map
+</dir>
+<a name="r9f"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> mkList</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <a href="ccdoc.r36.html">AObject</a> * <b>mkList</b> ( <font color=green><b>char</b></font> * name ) ;</pre>
+<p>
+return an empty list
+</dir>
+<a name="ra1"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> mkList</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <a href="ccdoc.r36.html">AObject</a> * <b>mkList</b> ( <font color=green><b>char</b></font> * name ,
+                                 <font color=green><b>int</b></font> len ) ;</pre>
+<p>
+return an empty list with (len) elements
+</dir>
+<a name="ra3"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> mkLong</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <a href="ccdoc.r36.html">AObject</a> * <b>mkLong</b> ( <font color=green><b>char</b></font> * name ,
+                                 <font color=green><b>long</b></font> val ) ;</pre>
+<p>
+return an Int AObject
+</dir>
+<a name="ra5"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> mkFloat</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <a href="ccdoc.r36.html">AObject</a> * <b>mkFloat</b> ( <font color=green><b>char</b></font> * name ,
+                                  <font color=green><b>double</b></font> val ) ;</pre>
+<p>
+return a Float AObject
+</dir>
+<a name="ra7"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> mkString</b>
+<dir>
+<pre>
+public <font color=green><b>static</b></font> <a href="ccdoc.r36.html">AObject</a> * <b>mkString</b> ( <font color=green><b>char</b></font> * name ,
+                                   <font color=green><b>char</b></font> * val ) ;</pre>
+<p>
+return a String AObject
+</dir>
+<a name="ra9"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> isMap</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>isMap</b> ( ) ;</pre>
+<p>
+true if this AObject is a Map
+</dir>
+<a name="rab"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> isList</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>isList</b> ( ) ;</pre>
+<p>
+true if this AObject is a List
+</dir>
+<a name="rad"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> isLong</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>isLong</b> ( ) ;</pre>
+<p>
+true if this AObject is a Int
+</dir>
+<a name="raf"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> isFloat</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>isFloat</b> ( ) ;</pre>
+<p>
+true if this AObject is a Float
+</dir>
+<a name="rb1"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> isString</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>isString</b> ( ) ;</pre>
+<p>
+true if this AObject is a String
+</dir>
+<a name="rb3"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> keys</b>
+<dir>
+<pre>
+public <a href="ccdoc.r36.html">AObject</a> * <b>keys</b> ( ) ;</pre>
+<p>
+(Map) return a List of all keys for a Map
+</dir>
+<a name="rb5"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> vals</b>
+<dir>
+<pre>
+public <a href="ccdoc.r36.html">AObject</a> * <b>vals</b> ( ) ;</pre>
+<p>
+(Map) return a List of all values for a Map
+</dir>
+<a name="rb7"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> sort</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>sort</b> ( ) ;</pre>
+<p>
+(List) sort a List
+</dir>
+<a name="rb9"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> reverse</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>reverse</b> ( ) ;</pre>
+<p>
+(List) reverse the order of a list
+</dir>
+<a name="rbb"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> insert</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>insert</b> ( <font color=green><b>int</b></font> ndx ,
+                    <a href="ccdoc.r36.html">AObject</a> * val ) ;</pre>
+<p>
+(List) insert an AObject at this index
+</dir>
+<a name="rbd"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> insert</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>insert</b> ( <font color=green><b>int</b></font> ndx ,
+                    <font color=green><b>long</b></font> val ) ;</pre>
+<p>
+(List) insert an Int at this index
+</dir>
+<a name="rbf"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> insert</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>insert</b> ( <font color=green><b>int</b></font> ndx ,
+                    <font color=green><b>double</b></font> val ) ;</pre>
+<p>
+(List) insert a Float at this index
+</dir>
+<a name="rc1"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> insert</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>insert</b> ( <font color=green><b>int</b></font> ndx ,
+                    <font color=green><b>char</b></font> * val ) ;</pre>
+<p>
+(List) insert a String at this index
+</dir>
+<a name="rc3"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> append</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>append</b> ( <a href="ccdoc.r36.html">AObject</a> * val ) ;</pre>
+<p>
+(List) append an AObject
+</dir>
+<a name="rc5"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> append</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>append</b> ( <font color=green><b>long</b></font> val ) ;</pre>
+<p>
+(List) append an Int
+</dir>
+<a name="rc7"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> append</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>append</b> ( <font color=green><b>double</b></font> val ) ;</pre>
+<p>
+(List) append a Float
+</dir>
+<a name="rc9"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> append</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>append</b> ( <font color=green><b>char</b></font> * val ) ;</pre>
+<p>
+(List) append a String
+</dir>
+<a name="rcb"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <font color=green><b>int</b></font> ndx ,
+                 <a href="ccdoc.r36.html">AObject</a> * src ) ;</pre>
+<p>
+(List) replace an AObject at this index
+</dir>
+<a name="rcd"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <font color=green><b>int</b></font> ndx ,
+                 <font color=green><b>long</b></font> val ) ;</pre>
+<p>
+(List) replace an Int at this index
+</dir>
+<a name="rcf"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <font color=green><b>int</b></font> ndx ,
+                 <font color=green><b>double</b></font> val ) ;</pre>
+<p>
+(List) replace a Float at this index
+</dir>
+<a name="rd1"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> set</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>set</b> ( <font color=green><b>int</b></font> ndx ,
+                 <font color=green><b>char</b></font> * val ) ;</pre>
+<p>
+(List) replace a String at this index
+</dir>
+<a name="rd3"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> get</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>get</b> ( <font color=green><b>int</b></font> ndx ,
+                 <a href="ccdoc.r36.html">AObject</a> * & src ) ;</pre>
+<p>
+(List) get an AObject from this index
+</dir>
+<a name="rd5"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> get</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>get</b> ( <font color=green><b>int</b></font> ndx ,
+                 <font color=green><b>long</b></font> & val ) ;</pre>
+<p>
+(List) get an Int from this index
+</dir>
+<a name="rd7"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> get</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>get</b> ( <font color=green><b>int</b></font> ndx ,
+                 <font color=green><b>double</b></font> & val ) ;</pre>
+<p>
+(List) get a Float from this index
+</dir>
+<a name="rd9"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> get</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>get</b> ( <font color=green><b>int</b></font> ndx ,
+                 <font color=green><b>char</b></font> * & val ) ;</pre>
+<p>
+(List) get a String from this index
+</dir>
+<a name="rdb"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> asLong</b>
+<dir>
+<pre>
+public <font color=green><b>long</b></font> <b>asLong</b> ( ) ;</pre>
+<p>
+get an Int value from this AObject
+</dir>
+<a name="rdd"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> asFloat</b>
+<dir>
+<pre>
+public <font color=green><b>double</b></font> <b>asFloat</b> ( ) ;</pre>
+<p>
+get a Float value from this AObject
+</dir>
+<a name="rdf"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> asString</b>
+<dir>
+<pre>
+public <font color=green><b>char</b></font> * <b>asString</b> ( ) ;</pre>
+<p>
+get a String value from this AObject
+</dir>
+</dir>
+<a name="Trailer"></a>
+<hr>
+<center>
+<font size="-1">
+<p>
+This documentation was generated automatically by the <b>ccdoc</b> tool (version 0.7a).
+<br>
+Click <a href="mailto:jlinoff@ix.netcom.com">here</a> to submit a bug report or feature request.
+</font>
+</center>
+<p>
+Click <a href="#_top_">here</a> to return to the top of the page.
+</body>
+</html>

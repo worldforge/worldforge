@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!--NewPage-->
+<html>
+<head>
+<meta name="CreationDate"   content="Tue Dec 07 08:06:22 1999">
+<meta name="CcDocCopyright" content="(C) Joe Linoff 1998,1999">
+<meta name="CcDocAuthor"    content="Joe Linoff">
+<meta name="CcDocVersion"   content="0.7a">
+<meta name="Keywords"       content="CcDoc, Source code, documentation">
+<title>AServer</title>
+</head>
+<body bgcolor=#FFFFFF fgcolor=#000000><a name="_top_"></a>
+<pre>
+<a href=ccdoc.index.html>[ROOT]</a> --> <a href=ccdoc.index.pkg.libAtlas.html>libAtlas</a>
+</pre>
+<hr>
+<dl>
+  <dt> <font size="+3">class <b>AServer</b></font>
+</dl>
+<dir>
+<p>
+<p>
+<dl>
+<dt><b>Author:</b></dt>
+<dd>
+unascribed
+</dd>
+</dl>
+<p>
+<dl>
+<dt><b>Version:</b></dt>
+<dd>
+unknown
+</dd>
+</dl>
+<p>
+<dl>
+<dt><b>Source:</b></dt>
+<dd>
+AtlasServer.h:16
+</dd>
+</dl>
+</dir>
+<hr>
+<a name="ConstructorsIndex"></a>
+<h2>
+<img src="images/constructor-index.gif" alt="Constructors Index">
+</h2>
+<dl>
+  <dt><a href="#_top_"><img src="images/yellow-ball-small.gif" border=0></a>  <a href="#r153"><b>AServer</b></a>
+  <dd><b>[public]</b> 
+</dl>
+<p>
+<hr>
+<a name="MethodsIndex"></a>
+<h2>
+<img src="images/method-index.gif" alt="Methods Index">
+</h2>
+<dl>
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r156"><b>accept</b></a>
+  <dd><b>[public]</b> 
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r157"><b>addClient</b></a>
+  <dd><b>[public]</b> 
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r159"><b>addClientSend</b></a>
+  <dd><b>[public]</b> 
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r158"><b>delClient</b></a>
+  <dd><b>[public]</b> 
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r15a"><b>delClientSend</b></a>
+  <dd><b>[public]</b> 
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r154"><b>poll</b></a>
+  <dd><b>[public]</b> 
+  <dt><a href="#_top_"><img src="images/red-ball-small.gif" border=0></a>  <a href="#r155"><b>poll</b></a>
+  <dd><b>[public]</b> 
+</dl>
+<p>
+<hr>
+<a name="Constructors"></a>
+<h2>
+<img src="images/constructors.gif" alt="Constructors">
+</h2>
+<a name="r153"></a>
+<p>
+<a href="#_top_"><img src="images/yellow-ball.gif" border=0></a><b> AServer</b>
+<dir>
+<pre>
+public <b>AServer</b> ( <a href="ccdoc.r161.html">ASocket</a> * listener ) ;</pre>
+<p>
+</dir>
+<hr>
+<a name="Methods"></a>
+<h2>
+<img src="images/methods.gif" alt="Methods">
+</h2>
+<a name="r154"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> poll</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>poll</b> ( ) ;</pre>
+<p>
+</dir>
+<a name="r155"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> poll</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>poll</b> ( <font color=green><b>long</b></font> usec ) ;</pre>
+<p>
+</dir>
+<a name="r156"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> accept</b>
+<dir>
+<pre>
+public <a href="ccdoc.r161.html">ASocket</a> * <b>accept</b> ( ) ;</pre>
+<p>
+</dir>
+<a name="r157"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> addClient</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>addClient</b> ( <a href="ccdoc.r4.html">AClient</a> * client ) ;</pre>
+<p>
+</dir>
+<a name="r158"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> delClient</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>delClient</b> ( <a href="ccdoc.r4.html">AClient</a> * client ) ;</pre>
+<p>
+</dir>
+<a name="r159"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> addClientSend</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>addClientSend</b> ( <a href="ccdoc.r4.html">AClient</a> * client ) ;</pre>
+<p>
+</dir>
+<a name="r15a"></a>
+<p>
+<a href="#_top_"><img src="images/red-ball.gif" border=0></a><b> delClientSend</b>
+<dir>
+<pre>
+public <font color=green><b>int</b></font> <b>delClientSend</b> ( <a href="ccdoc.r4.html">AClient</a> * client ) ;</pre>
+<p>
+</dir>
+</dir>
+<a name="Trailer"></a>
+<hr>
+<center>
+<font size="-1">
+<p>
+This documentation was generated automatically by the <b>ccdoc</b> tool (version 0.7a).
+<br>
+Click <a href="mailto:jlinoff@ix.netcom.com">here</a> to submit a bug report or feature request.
+</font>
+</center>
+<p>
+Click <a href="#_top_">here</a> to return to the top of the page.
+</body>
+</html>
