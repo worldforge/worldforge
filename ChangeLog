@@ -1,5 +1,11 @@
 ChangeLog for varconf
 
+Friday, March 08 2002, James Turner
+
+	* Added varconf-config and varconf.m4, plus configure
+	  changes.
+	* Bumped the version up
+
 Wednesday, Decemer 18, 2001 -- Al Riddoch <alriddoch@zepler.org>
   * C++ compliance fixes, for compiling under gcc v3.
 

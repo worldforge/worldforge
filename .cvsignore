@@ -17,3 +17,4 @@ config.status
 config.cache
 config.log
 libtool
+varconf-config
