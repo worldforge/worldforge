@@ -14,6 +14,8 @@
 
 #include <string>
 
+using std::string;
+
 namespace Atlas
 {
 

@@ -4,7 +4,6 @@
 	email   : jbarrett@box100.com
 */
 
-#include "../Object/Object.h"
 #include "Protocol.h"
 #include "PackedDecoder.h"
 
@@ -13,6 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <string>
+
+using std::string;
 
 namespace Atlas
 {

@@ -7,6 +7,7 @@
 #ifndef __AtlasProtocolDecoder__h_
 #define __AtlasProtocolDecoder__h_
 
+#include "../Object/Object.h"
 #include "Decoder.h"
 
 namespace Atlas

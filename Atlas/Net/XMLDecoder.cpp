@@ -19,6 +19,8 @@ changes:
 #include "Protocol.h"
 #include "XMLDecoder.h"
 
+using std::string;
+
 //constants
 const char OPEN_TAG=        '<';
 const char CLOSE_TAG=       '>';

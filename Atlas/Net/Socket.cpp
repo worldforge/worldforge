@@ -12,6 +12,8 @@
 #include "Socket.h"
 #include <sys/types.h>
 
+using std::string;
+
 namespace Atlas
 {
 

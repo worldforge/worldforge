@@ -13,10 +13,10 @@ void	Variant::decref()
 	delete this;
 }
 
-list<VNum*>	VNum::freelist;
-list<VStr*>	VStr::freelist;
-list<VMap*>	VMap::freelist;
-list<VVec*>	VVec::freelist;
+std::list<VNum*>	VNum::freelist;
+std::list<VStr*>	VStr::freelist;
+std::list<VMap*>	VMap::freelist;
+std::list<VVec*>	VVec::freelist;
 
 }
 

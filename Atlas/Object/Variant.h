@@ -1,6 +1,11 @@
 #ifndef __AtlasVariant_h_
 #define __AtlasVariant_h_
 
+#ifdef  _MSC_VER
+#pragma warning(disable : 4786)
+#define vsnprintf _vsnprintf
+#endif  /* _MSC_VER */
+
 #include <vector>
 #include <string>
 #include <list>

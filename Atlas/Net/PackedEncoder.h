@@ -20,7 +20,7 @@ private:
     void walkTree(int nest, const char* name, const Object& list);
 
 public:
-    string encodeMessage(const Object& msg);
+	std::string encodeMessage(const Object& msg);
 };
 
 } // namespace Atlas

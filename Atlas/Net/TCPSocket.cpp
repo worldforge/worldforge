@@ -10,6 +10,8 @@
 #include "../Debug/Debug.h"
 #include "TCPSocket.h"
 
+using std::string;
+
 namespace Atlas
 {
 
