@@ -1,22 +1,27 @@
+Wednesday, April 23rd, 2003   Al Riddoch <alriddoch@zepler.org>
+
+	* Update spec file, and set the interface version ready for
+	  release.
+
 Wednesday, April 23rd, 2003   James Turner <james@worldforge.org>
 
-    * Updated configure.in to use pkg-config to detect Atlas-C++,
-      removing the need for AM_PATH_ATLAS in one more place.
-    * Wrapped the sstream / strstream include tests in an
-      AC_LANG(C++) section, which they need in order to detect
-      correctly, at least on OS-X.
+	* Updated configure.in to use pkg-config to detect Atlas-C++,
+	  removing the need for AM_PATH_ATLAS in one more place.
+	* Wrapped the sstream / strstream include tests in an
+	  AC_LANG(C++) section, which they need in order to detect
+	  correctly, at least on OS-X.
 
 Tuesday, April 22nd, 2003   James Turner <james@worldforge.org>
 
-    * Added the ProjectBuilder files to EXTRA_DIST in
-      anticipation of a new stable release. 
+	* Added the ProjectBuilder files to EXTRA_DIST in
+	  anticipation of a new stable release. 
 
 Tuesday, April 22nd, 2003 	Ron Steinke <rsteinke@w-link.net>
 
 	* Added trivial RotMatrix<>::parity() function.
-	
+
 Thursday, April 17th, 2003	James Turner <james@worldforge.org>
-	
+
 	* Add support for the Atlas tests to the ProjectBuilder files
 	  (you'll need to update the reference to Atlas.framework to
 	  whereever you built it). Again, all the tests pass.

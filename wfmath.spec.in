@@ -52,6 +52,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{prefix}/bin/wfmath-config
 %{prefix}/include/wfmath
-%{prefix}/lib/libwfmath.a
-%{prefix}/lib/libwfmath.so
+%{prefix}/lib/libwfmath-0.2.a
+%{prefix}/lib/libwfmath-0.2.la
+%{prefix}/lib/libwfmath-0.2.so
+%{prefix}/lib/pkgconfig/wfmath-0.2.pc
 %{prefix}/share/aclocal/wfmath.m4
