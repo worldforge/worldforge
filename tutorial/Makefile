@@ -1,10 +1,10 @@
 CXX=g++
 CXXFLAGS=-Wall -g -I/usr/local/include
 
-CLIENT_LFLAGS = -L/usr/local/lib -lAtlas -lAtlasNet -lsocket++
+CLIENT_LFLAGS = -L/usr/local/lib -lAtlas -lAtlasNet -lAtlasCodecs -lsocket++
 CLIENT_OBJECTS = simple_client.o
 
-SERVER_LFLAGS = -L/usr/local/lib -lAtlas -lAtlasNet -lsocket++
+SERVER_LFLAGS = -L/usr/local/lib -lAtlas -lAtlasNet -lAtlasCodecs -lsocket++
 SERVER_OBJECTS = simple_server.o
 
 all: simple_client simple_server
