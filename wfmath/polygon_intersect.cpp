@@ -36,6 +36,160 @@
 
 using namespace WFMath;
 
+template<>
+bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) const
+{
+  assert("This function should only be called if the orientation represents a plane" &&
+         m_origin_valid && m_axes_valid[0] && m_axes_valid[1]);
+
+  Vector<3> normal = Cross(m_axes[0], m_axes[1]); // normal to the plane
+
+  enum {
+    AXIS_UP,
+    AXIS_DOWN,
+    AXIS_FLAT
+  } axis_direction[3];
+
+  CoordType normal_mag = normal.sloppyMag();
+  int high_corner_num = 0;
+
+  for(int i = 0; i < 3; ++i) {
+    if(fabs(normal[i]) < normal_mag * WFMATH_EPSILON)
+      axis_direction[i] = AXIS_FLAT;
+    else if(normal[i] > 0) {
+      axis_direction[i] = AXIS_UP;
+      high_corner_num |= (1 << i);
+    }
+    else
+      axis_direction[i] = AXIS_DOWN;
+  }
+
+  int low_corner_num = high_corner_num ^ 7;
+
+  Point<3> high_corner = b.getCorner(high_corner_num);
+  Point<3> low_corner = b.getCorner(low_corner_num);
+
+  // If these are on opposite sides of the plane, we have an intersection
+
+  CoordType perp_size = Dot(normal, high_corner - low_corner) / normal_mag;
+  assert(perp_size >= 0);
+
+  if(perp_size < normal_mag * WFMATH_EPSILON) {
+    // We have a very flat box, lying parallel to the plane
+    return checkContained(Midpoint(high_corner, low_corner), p2);
+  }
+
+  if(Dot(high_corner - m_origin, normal) < 0
+     || Dot(low_corner - m_origin, normal) > 0)
+    return false; // box lies above or below the plane
+
+  // Find the intersection of the line through the corners with the plane
+
+  Point<2> p2_high, p2_low;
+
+  CoordType high_dist = offset(high_corner, p2_high).mag();
+  CoordType low_dist = offset(low_corner, p2_low).mag();
+
+  p2 = Midpoint(p2_high, p2_low, high_dist / (high_dist + low_dist));
+
+  return true;
+}
+
+bool WFMath::_PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
+				const int intersect_dim,
+				const _Poly2OrientIntersectData &data, bool proper)
+{
+  switch(intersect_dim) {
+    case -1:
+      return false;
+    case 0:
+      return Intersect(poly1, data.p1, proper)
+	  && Intersect(poly2, data.p2, proper);
+    case 1:
+      // FIXME
+      break;
+    case 2:
+      // Shift one polygon into the other's coordinates.
+      // Perhaps not the most efficient, but this is a
+      // rare special case.
+      {
+        Polygon<2> tmp_poly(poly2);
+
+        for(int i = 0; i < tmp_poly.numCorners(); ++i) {
+          Point<2> &p = tmp_poly[i];
+          Point<2> shift_p = p + data.off;
+
+          p[0] = shift_p[0] * data.v1[0] + shift_p[1] * data.v2[0];
+          p[1] = shift_p[0] * data.v1[1] + shift_p[1] * data.v2[1];
+        }
+
+      return Intersect(poly1, tmp_poly, proper);
+      }
+    default:
+      assert(false);
+  }
+}
+
+bool WFMath::_PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
+			       const int intersect_dim,
+			       const _Poly2OrientIntersectData &data, bool proper)
+{
+  switch(intersect_dim) {
+    case -1:
+      return false;
+    case 0:
+      return Contains(data.p2, inner, false)
+	  && Contains(outer, data.p1, proper);
+    case 1:
+      if(!data.o2_is_line) // The inner poly isn't contained by the intersect line
+        return false;
+
+      // The inner poly lies on a line, so it reduces to a line segment
+      {
+        CoordType min = inner[0][0] - data.p1[0], max = min;
+
+        for(int i = 0; i < inner.numCorners(); ++i) {
+          CoordType val = inner[i][0] - data.p1[0];
+          if(val < min)
+            min = val;
+          if(val > max)
+            max = val;
+        }
+
+        if(data.v2[0] < 0) { // v2 = (-1, 0)
+          CoordType tmp = min;
+          min = -max;
+          max = -tmp;
+        }
+
+        Segment<2> s(data.p1 + min * data.v1, data.p1 + max * data.v1);
+
+        return Contains(outer, s, proper);
+      }
+    case 2:
+      // Shift one polygon into the other's coordinates.
+      // Perhaps not the most efficient, but this is a
+      // rare special case.
+      {
+        Polygon<2> tmp_poly(inner);
+
+        for(int i = 0; i < tmp_poly.numCorners(); ++i) {
+          Point<2> &p = tmp_poly[i];
+          Point<2> shift_p = p + data.off;
+
+          p[0] = shift_p[0] * data.v1[0] + shift_p[1] * data.v2[0];
+          p[1] = shift_p[0] * data.v1[1] + shift_p[1] * data.v2[1];
+        }
+
+        return Contains(outer, tmp_poly, proper);
+      }
+    default:
+      assert(false);
+  }
+}
+
+// Polygon<2> intersection functions
+
 // FIXME deal with round off error in _all_ these intersection functions
 
 // The Polygon<2>/Point<2> intersection function was stolen directly

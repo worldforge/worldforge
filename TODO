@@ -1,9 +1,6 @@
 Intersect functions unimplemented:
         for dim != 2,
-	  Contains(Polygon<>, AxisBox<>, bool)
-	  Contains(Polygon<>, RotBox<>, bool)
 	  Intersect(Polygon<>, Polygon<>, bool)
-	  Contains(Polygon<>, Polygon<>, bool)
         for dim != 2,3 (extremely low priority)
 	  Intersect(Polygon<>, AxisBox<>, bool)
 	  Intersect(Polygon<>, RotBox<>, bool)

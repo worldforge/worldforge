@@ -146,96 +146,123 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
     m_origin_valid = false;
     m_axes_valid[0] = false;
     m_axes_valid[1] = false;
-    return _WFMATH_POLY2REORIENT_ALL;
+    return _WFMATH_POLY2REORIENT_NONE;
   }
 
   assert(m_origin_valid);
 
+  if(!m_axes_valid[0])
+    return _WFMATH_POLY2REORIENT_NONE;
+
   // Check that we still span both axes
 
   bool still_valid[2] = {false,}, got_ratio = false;
-  CoordType ratio;
+  CoordType ratio, size;
+  double epsilon;
+  int i, end = poly.numCorners();
 
-  int i = 0, end = poly.numCorners();
+  // scale epsilon
+  for(i = 0; i < end; ++i) {
+    if(i == skip)
+      continue;
+    const Point<2> &p = poly[i];
+    CoordType x = fabs(p[0]), y = fabs(p[1]), max = (x > y) ? x : y;
+    if(i = 0 || max < size)
+      size = max;
+  }
+  CoordType exponent;
+  (void) frexp(size, exponent);
+  epsilon = ldexp(WFMATH_EPSILON, exponent);
+
+  i = 0;
   if(skip == 0)
     ++i;
   assert(i != end);
-  Point<2> first_point = m_poly[i];
+  Point<2> first_point = poly[i];
 
   while(++i != end) {
     if(i == skip)
       continue;
 
     Vector<2> diff = m_poly[i] - first_point;
-    if(diff == 0) // No addition to span
+    if(diff.sqrMag() < epsilon * epsilon) // No addition to span
       continue;
+    if(!m_axes_valid[1]) // We span 1D
+      return _WFMATH_POLY2REORIENT_NONE;
     for(int j = 0; j < 2; ++j) {
-      if(diff[j] == 0) {
-        assert(diff[j ? 0 : 1] != 0); // because diff != 0
+      if(fabs(diff[j]) < epsilon) {
+        assert(diff[j ? 0 : 1] >= epsilon); // because diff != 0
         if(still_valid[j ? 0 : 1] || got_ratio) // We span a 2D space
           return _WFMATH_POLY2REORIENT_NONE;
         still_valid[j] = true;
       }
-      // The point has both elements nonzero
-      if(still_valid[0] || still_valid[1]) // We span a 2D space
-        return _WFMATH_POLY2REORIENT_NONE;
-      CoordType new_ratio = diff[1] / diff[0];
-      if(!got_ratio) {
-        ratio = new_ratio;
-        got_ratio = true;
-        continue;
-      }
-      if(!Equal(ratio, new_ratio)) // We span a 2D space
-        return _WFMATH_POLY2REORIENT_NONE;
     }
+    // The point has both elements nonzero
+    if(still_valid[0] || still_valid[1]) // We span a 2D space
+      return _WFMATH_POLY2REORIENT_NONE;
+    CoordType new_ratio = diff[1] / diff[0];
+    if(!got_ratio) {
+      ratio = new_ratio;
+      got_ratio = true;
+      continue;
+    }
+    if(!Equal(ratio, new_ratio)) // We span a 2D space
+      return _WFMATH_POLY2REORIENT_NONE;
   }
 
   // Okay, we don't span both vectors. What now?
 
   if(still_valid[0]) {
+    assert(m_axes_valid[1]);
     assert(!still_valid[1]);
     assert(!got_ratio);
     // This is easy, m_axes[1] is just invalid
     m_axes_valid[1] = false;
-    if(first_point[1] != 0) { // Need to shift points
-      m_origin += m_axes[1] * first_point[1];
-      return _WFMATH_POLY2REORIENT_CLEAR_AXIS2;
-    }
-    else
-      return _WFMATH_POLY2REORIENT_NONE;
+    m_origin += m_axes[1] * first_point[1];
+    return _WFMATH_POLY2REORIENT_CLEAR_AXIS2;
   }
 
   if(still_valid[1]) {
+    assert(m_axes_valid[1]);
     assert(!got_ratio);
     // This is a little harder, m_axes[0] is invalid, must swap axes
-    if(first_point[0] != 0)
-      m_origin += m_axes[0] * first_point[0];
+    m_origin += m_axes[0] * first_point[0];
     m_axes[0] = m_axes[1];
     m_axes_valid[1] = false;
     return _WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1;
   }
 
+  // The !m_axes_valid[1] case reducing to a point falls into here
   if(!got_ratio) { // Nothing's valid, all points are equal
-    bool shift_points[2] = {false,};
-    for(int j = 0; j < 2; ++j) {
-      if(first_point[j] != 0)
-        shift_points = true;
-      m_axes_valid[j] = false;
-    }
-    if(shift_points[0])
-      return shift_points[1] ? _WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES
-			     : _WFMATH_POLY2REORIENT_CLEAR_AXIS1;
-    else
-      return shift_points[1] ? _WFMATH_POLY2REORIENT_CLEAR_AXIS2
-			     : _WFMATH_POLY2REORIENT_NONE;
+    m_origin += m_axes[0] * first_point[0];
+    if(m_axes_valid[1])
+      m_origin += m_axes[1] * first_point[1];
+    m_axes_valid[0] = false;
+    m_axes_valid[1] = false;
+    return _WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES;
   }
+
+  assert(m_axes_valid[1]);
 
   // All the points are colinear, along some line which is not parallel
   // to either of the original axes
 
-  m_axes[0] += m_axes[1] * ratio;
+  Vector<dim> new0;
+  new0 = m_axes[0] + m_axes[1] * ratio;
+  CoordType norm = new0.mag();
+  new0 /= norm;
+
+//  Vector diff = m_axes[0] * first_point[0] + m_axes[1] * first_point[1];
+//  // Causes Dot(diff, m_axes[0]) to vanish, so the point on the line
+//  // with x coordinate zero is the new origin
+//  diff -= new0 * (first_point[0] * norm);
+//  m_origin += diff;
+  // or, equivalently
+    m_origin += m_axes[1] * (first_point[1] - ratio * first_point[0]);
+
+  m_axes[0] = new0;
   m_axes_valid[1] = false;
-  return _Poly2Reorient(_WFMATH_POLY2REORIENT_SCALE1_CLEAR2, sqrt(1 + ratio * ratio));
+  return _Poly2Reorient(_WFMATH_POLY2REORIENT_SCALE1_CLEAR2, norm);
 }
 
 template<const int dim>
@@ -270,92 +297,6 @@ void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<2>& p)
     assert(p[1] == 0);
 
   m_origin += shift - Prod(shift, m);
-}
-
-template<const int dim>
-Vector<dim> _Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2) const
-{
-  assert(m_origin_valid); // Check for empty polygon before calling this
-
-  Vector<dim> out = pd - m_origin;
-
-  for(int j = 0; j < 2; ++j) {
-    p2[j] = Dot(out, m_axes[j]);
-    out -= p2[j] * m_axes[j];
-  }
-
-  return out;
-}
-
-template<>
-bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) const;
-
-template<const int dim>
-bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2,
-				       bool proper) const
-{
-  assert(m_origin_valid);
-
-  if(!m_axes_valid[0]) {
-    // Single point
-    p2[0] = p2[1] = 0;
-    return Intersect(b, convert(p2), proper);
-  }
-
-  if(m_axes_valid[1]) {
-    // A plane
-
-    // I only know how to do this in 3D, so write a function which will
-    // specialize to different dimensions
-
-    return checkIntersectPlane(b, p2) && (!proper || Contains(b, p2, true));
-  }
-
-  // A line
-
-  // This is a modified version of AxisBox<>/Segment<> intersection
-
-  CoordType min = 0, max = 0; // Initialize to avoid compiler warnings
-  bool got_bounds = false;
-
-  for(int i = 0; i < dim; ++i) {
-    const CoordType dist = (m_axes[0])[i]; // const may optimize away better
-    if(dist == 0) {
-      if(_Less(m_origin[i], b.lowCorner()[i], proper)
-        || _Greater(m_origin[i], b.highCorner()[i], proper))
-        return false;
-    }
-    else {
-      CoordType low = (b.lowCorner()[i] - m_origin[i]) / dist;
-      CoordType high = (b.highCorner()[i] - m_origin[i]) / dist;
-      if(low > high) {
-        CoordType tmp = high;
-        high = low;
-        low = tmp;
-      }
-      if(got_bounds) {
-        if(low > min)
-          min = low;
-        if(high < max)
-          max = high;
-      }
-      else {
-        min = low;
-        max = high;
-        got_bounds = true;
-      }
-    }
-  }
-
-  assert(got_bounds); // We can't be parallel in _all_ dimensions
-
-  if(_LessEq(min, max, proper)) {
-    p2[0] = (max - min) / 2;
-    p2[1] = 0;
-    return true;
-  }
-  else
-    return false;
 }
 
 template<const int dim>

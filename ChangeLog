@@ -1,3 +1,16 @@
+Tuesday, March 23, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed bug with declaring the default value of the "proper"
+	  argument of the intersection functions twice
+	* Moved the function definitions for intersection-oriented
+	  members of _Poly2Orient from polygon_funcs.h into
+	  polygon_intersect.h
+	* Wrote definitions for Contains(Polygon, AxisBox),
+	  Contains(Polygon, RotBox), and Contains(Polygon, Polygon).
+	  Got most of Intersect(Polygon, Polygon) done, except
+	  for the case where the two planes containing the polygons
+	  intersect in a line (the standard case in 3d)
+
 Thursday, March 21, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed Polygon<> intersection functions with AxisBox<> and

@@ -155,11 +155,10 @@ class Polygon<2>
 
 typedef enum {
   _WFMATH_POLY2REORIENT_NONE,
-  _WFMATH_POLY2REORIENT_CLEAR_AXIS1,
   _WFMATH_POLY2REORIENT_CLEAR_AXIS2,
   _WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES,
   _WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1,
-  _WFMATH_POLY2REORIENT_SCALE1_CLEAR2 // Will be needed if we normalize the axes
+  _WFMATH_POLY2REORIENT_SCALE1_CLEAR2
 } _Poly2ReorientType;
 
 // Reorient a 2D polygon to match a change in the basis
@@ -177,6 +176,23 @@ class _Poly2Reorient
   _Poly2ReorientType m_type;
   CoordType m_scale;
 };
+
+template<const int dim> class _Poly2Orient;
+
+struct _Poly2OrientIntersectData {
+  int dim;
+  Point<2> p1, p2;
+  Vector<2> v1, v2, off;
+  bool o2_is_line;
+};
+
+// Finds the intersection of the two planes, returns the
+// dimension of the intersection space, the rest of the arguments
+// are various information returned depending on the dimension of
+// the intersection
+template<const int dim>
+int  _Intersect(const _Poly2Orient<dim> &, const _Poly2Orient<dim> &,
+		_Poly2OrientIntersectData &);
 
 // Keep track of the orientation of a 2D polygon in dim dimensions
 template<const int dim>
@@ -212,9 +228,15 @@ class _Poly2Orient
   // the basis, and puts the nearest point in p2.
   Vector<dim> offset(const Point<dim>& pd, Point<2>& p2) const;
 
+  // Like offset, but returns true if the point is in the plane
+  bool checkContained(const Point<dim>& pd, Point<2> & p2) const;
+
   // Check if the AxisBox intersects the spanned space, and if so
   // return a point in the intersection.
   bool checkIntersect(const AxisBox<dim>& b, Point<2>& p2, bool proper) const;
+
+  friend int  _Intersect<dim>(const _Poly2Orient<dim> &, const _Poly2Orient<dim> &,
+			      _Poly2OrientIntersectData &);
 
  private:
   // special case of the above when both axes are valid
