@@ -1,5 +1,5 @@
 /*
- *  ParseError.cc - implementation of the parse error handling class
+ *  parse_error.cc - implementation of the parse error handling class
  *
  *  Copyright (C) 2000, The WorldForge Project
  */
@@ -39,4 +39,4 @@ ostream& operator<<( ostream& os, const ParseError& p)
               << ", column " << p.m_col << "." << endl);
 }
 
-}
+} // namespace varconf

@@ -9,6 +9,9 @@ Major Tasks:
   * Finish changing functions to general form (getItem to get, etc.)
   * Document and arrange the source better.
   * Write a proper testing program to verify functionality of features.
+  * Add setf method (to configure cerr routine, default section, etc.)
+  * Report recoverable errors to cerr.
+  * Add a function (or something similar) to return the last thrown error.
 
 Minor Tasks:
   * Make VALUE and EXPECT_VALUE behave nicer (loosen up on the unquoted value

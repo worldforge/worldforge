@@ -1,5 +1,5 @@
 /*
- * ParseError.h - parse error handling class
+ * ParseError.h - interface for parse error handling class
  *
  * Copyright (C) 2000, The WorldForge Project
  */

@@ -1,5 +1,5 @@
 /*
- *  Variable.h - typeless value container class
+ *  Variable.h - interface for typeless value container class
  *
  *  Copyright (C) 2000, The WorldForge Project
  */

@@ -1,5 +1,5 @@
 /*
- *  Config.cc - implementation of main configuration class
+ *  config.cpp - implementation of main configuration class
  *
  *  Copyright (C) 2000, The WorldForge Project
  */
@@ -92,29 +92,29 @@ bool Config::erase( const string& section, const string& key = "")
   return false;
 } 
 
-Variable Config::get( const string& section, const string& key)
+Variable Config::getItem( const string& section, const string& key)
 {
   return ( m_conf[section])[key];
-}
+} // Config::getItem()
 
-void Config::set( const string& section, const string& key,
-                  const Variable item)
+void Config::setItem( const string& section, const string& key, const Variable item)
 {
   if ( key.empty()) {
-    throw "Invalid configuration item!";
+    cerr << "WARNING: Blank configuration item key sent to varconf set() method.";
   }
   else {
-    string sec = section, nam = key;
+    string sec_clean = section; 
+    string key_clean = key; 
 
-    clean( sec);
-    clean( nam);
+    clean( sec_clean);
+    clean( key_clean);
 
-    ( m_conf[sec])[nam] = item;
+    ( m_conf[sec_clean])[key_clean] = item;
  
     sig.emit(); 
-    sigv.emit( sec, nam);
+    sigv.emit( sec_clean, key_clean);
   }
-} // Config::set()
+} // Config::setItem()
 
 bool Config::find( const string& section, const string& key = "")
 {
@@ -143,6 +143,7 @@ bool Config::readFromFile( const string& filename)
   catch ( ParseError p) {
     cerr << "While parsing " << filename << ":\n";
     cerr << p;
+    return false;
   }
   
   return true;
@@ -356,14 +357,12 @@ void Config::parseStream( istream& in) throw ( ParseError)
   }
 } // Config::parseStream()
 
-void Config::setParameterLookup( char short_form, const string& long_form,
-                                 bool needs_value = true) 
+void Config::setParameterLookup( char s_name, const string& l_name, 
+                                 bool value = false)
 {
-    m_par_lookup[short_form] = pair<string, bool>( long_form, needs_value);  
+    m_par_lookup[s_name] = pair<string, bool>( l_name, value);  
 }
 
-// * No warning if a shortname ("-a") argument is found that lacks a  
-//   longname lookup in the table.  The argument is simply ignored.
 // * This only cares if 'name.size()' >= 1; handling of bad characters
 //   is left to Config::setItem().
 void Config::getCmdline( int argc, char** argv)
@@ -408,6 +407,14 @@ void Config::getCmdline( int argc, char** argv)
         if ( needs_value && argv[i+1] != NULL && argv[i+1][0] != '-') {
           value = argv[++i];
         }
+        else {
+          cerr << "WARNING: Short argument -" << argv[i][1] 
+               << " expects a value but none was given.";
+        }
+      }
+      else {
+        cerr << "WARNING: Short argument -" << argv[i][1]
+             << " in command-line is not in the lookup table.";
       }
     } // short argument
 
@@ -445,7 +452,7 @@ void Config::getEnv( const string& prefix)
   }
 } // Config::getEnv()
 
-void Config::clean( std::string& str)
+void Config::clean( string& str)
 {
   ctype_t c;
 

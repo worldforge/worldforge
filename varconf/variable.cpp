@@ -1,5 +1,5 @@
 /*
- *  Variable.cc - implementation of the typeless value container.
+ *  variable.cpp - implementation of the typeless value container.
  *
  *  Copyright (C) 2000, The WorldForge Project
  */

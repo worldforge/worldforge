@@ -1,5 +1,5 @@
 /*
- *  Config.h - main configuration class
+ *  Config.h - interface for main configuration class
  *
  *  Copyright (C) 2000, The WorldForge Project.
  */
@@ -27,49 +27,45 @@ public:
   // returns a pointer to the global configuration instance and 
   // initializes it if it does not already exist.
  
-  Variable get( const std::string& section, const std::string& key);
-  void set( const std::string& section, const std::string& key,
-            const Variable item);
   bool erase( const std::string& section, const std::string& key = ""); 
+
   bool find( const std::string& section, const std::string& key = "");
-  // Config data manipulators - get a config key, set a config key, delete 
-  // a config key or config section and find a config key or config section. 
 
   void clean( std::string& str);
  
-  Variable getItem( const std::string& section, const std::string& key)
-  {
-    return get( section, key);
-  }
+  Variable getItem( const std::string& section, const std::string& key);
 
-  void setItem( const std::string& section, const std::string& key,
-                const Variable item)
-  {
-    set( section, key, item);
-  }
- 
+  void setItem( const std::string& section, const std::string& key, 
+                const Variable item);
+
   bool findItem( const std::string& section, const std::string& key)
   {
     return find( section, key);
   } 
 
   bool readFromFile( const std::string& filename);
-  // attempts to read a configuration file 'filename' and parse it.  Returns
-  // false if file could not be open and reports any parse errors to 
-  // cerr 
+  // Precondition: valid filename of an existing configuration file.
+  // Postcondition: configuration data in the passed configuration file is
+  //                parsed and stored; 'false' is returned if the file cannot
+  //                be opened; any parsing errors are reported to 'cerr'. 
 
   bool writeToFile( const std::string& filename);
-  // attempts to write the current configuration data to 'filename'.  Returns
-  // false if file could not be opened.
-
+  // Precondition: valid filename of an output file to write to.
+  // Postcondition: configuration data stored in memory is written to 
+  //                the passed file; 'false' is returned if the file cannot
+  //                be opened.
+    
   bool writeToStream( std::ostream& out);
-  // attempts to write the current configuration data to the out stream 
-  // 'ostream'.  Currently returns true under all circumstances.
+  // Precondition: valid output stream to write to.
+  // Postcondition: configuration data stored in memory is written to the
+  //                passed output stream; 'true' is currently returned
+  //                under all circumstances.
 
   void parseStream( std::istream& in) throw ( ParseError);
-  // attempts to parse the configuration data in the input stream 'iostream'.
-  // Throws a ParseError Object containing error information upon parse
-  // failure.
+  // Precondition: valid input stream to read configuration data from.
+  // Postcondition: configuration data is read from the input stream
+  //                and stored in memory; a 'ParseError' object is thrown
+  //                when parsing errors are encountered.
 
   void getEnv( const std::string& prefix);
   // reads-in all environment variables with the specified prefix
@@ -79,8 +75,8 @@ public:
   // reads-in all commandline arguments according to the format in
   // config_format and stores them in the m_conf config variable.
 
-  void setParameterLookup( char short_form, const std::string& long_form, 
-                           bool needs_value);
+  void setParameterLookup( char s_name, const std::string& l_name, 
+                           bool value = false);
   // attachs a one letter commandline argument (ie: -a) to a longe_name
   // version and specifies whether it is followed by a value or not
   // (ie: "-a 45" vs. "-a")
