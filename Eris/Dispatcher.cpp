@@ -79,6 +79,18 @@ bool Dispatcher::subdispatch(DispatchContextDeque &dq)
 	return false;		
 }
 
+LeafDispatcher::LeafDispatcher(const std::string &nm) :
+	Dispatcher(nm)
+{
+	;
+}
+
+bool LeafDispatcher::dispatch(DispatchContextDeque &dq)
+{
+	Object::MapType &o = dq.front().AsMap();
+	o["__DISPATCHED__"] = "1";
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 bool ClassDispatcher::dispatch(DispatchContextDeque &dq)

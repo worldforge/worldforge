@@ -165,11 +165,8 @@ EntityPtr World::create(const Atlas::Objects::Entity::GameEntity &ge)
 	string id = ge.GetId();
 	
 	EntityIDMap::iterator I = _lookup.find(id);
-	if (I != _lookup.end()) {
-		// treat it as sight; might need to handle mutations in the future
-		I->second->recvSight(ge);
-		return I->second;	
-	}
+	if (I != _lookup.end())
+		throw InvalidOperation("called World::create() for entity that already exists");
 	
 	// test factories
 	// note that since the default comparisom (for ints) is less<>, we use a reverse
@@ -377,7 +374,11 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 void World::recvSightCreate(const Atlas::Objects::Operation::Create &cr,
 	const Atlas::Objects::Entity::GameEntity &ge)
 {	
-	create(ge);
+	Atlas::Objects::Operation::Sight st = 
+		Atlas::Objects::Operation::Sight::Instantiate();
+	
+	st.SetFrom(cr.GetFrom());
+	recvSightObject(st, ge);
 }
 
 void World::recvSightDelete(const Atlas::Objects::Operation::Delete &del)

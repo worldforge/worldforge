@@ -15,6 +15,23 @@ Thursday, October 25 2001, James Turner
 	  addWait which actually puts the WaitFors into the WaitList; this wasn't
 	  happending, hence the bug with WaitFors being fired multiple times.
 	  
+	* Added LeafDispatcher, a base class for (guess what?) leaf dispatchers,
+	  that sets a special attribute (__DISPATCHED__) when it's dispatch()
+	  method is invoked
+	* Connection::ObjectArrived tests (in debug mode) that all messages 
+	  have their __DISPATCHED__ attr set after being dispatched (unless an
+	  exception is thrown). This provides a warning in the log files if
+	  a message is completely ignored and 'drops out the bottom' of the
+	  disaptcher tree
+	* Updated SignalDisaptcher0/1/2 to inherit from LeafDispatcher and
+	  call it's dispatch implementation.
+	  
+	* Changed World::recvSightCreate to just call recvSightObject with
+	  a synthetic SIGHT op; the possiblity to do special CREATE only
+	  processing still exists, but this avoids problems where
+	  SIGHT(CREATE(entity)), LOOK(entity) and SIGHT(entity) get overlapped
+	  and so on.
+	  
 Tuesday, October 23 2001, James Turner
 
 	* Added objectSummary function in Utils, which gives a compact

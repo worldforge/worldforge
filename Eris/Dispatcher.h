@@ -46,6 +46,15 @@ protected:
 	const std::string _name;
 };
 
+class LeafDispatcher : public Dispatcher
+{
+public:
+	explicit LeafDispatcher(const std::string &nm);
+	virtual ~LeafDispatcher() {;}
+		
+	virtual bool dispatch(DispatchContextDeque &dq);
+};
+
 };
 
 #endif

@@ -10,12 +10,12 @@ namespace Eris {
 
 template <class T>
 class SignalDispatcher :
-	public Dispatcher, 
+	public LeafDispatcher, 
 	public SigC::Object
 {
 public:
 	SignalDispatcher(const std::string &nm, const SigC::Slot1<void, const T& > &slot) :
-		Dispatcher(nm)
+		LeafDispatcher(nm)
 	{ Signal.connect(slot); }
 
 	virtual ~SignalDispatcher() {;}
@@ -29,7 +29,8 @@ public:
 		for (; I != dq.front().AsMap().end(); ++I)
         		object.SetAttr(I->first, I->second);
 		Signal.emit(object);
-		return false;
+		
+		return LeafDispatcher::dispatch(dq);
 	}
 
 	/// invoked when the specified class is recieved
@@ -39,12 +40,12 @@ protected:
 };
 
 class SignalDispatcher0 :
-	public Dispatcher, 
+	public LeafDispatcher, 
 	public SigC::Object
 {
 public:
 	SignalDispatcher0(const std::string &nm, const SigC::Slot0<void> &slot) :
-		Dispatcher(nm)
+		LeafDispatcher(nm)
 	{ Signal.connect(slot); }
 
 	virtual ~SignalDispatcher0() {;}
@@ -53,7 +54,7 @@ public:
 	virtual bool dispatch(DispatchContextDeque &dq)
 	{
 		Signal.emit();
-		return false;
+		return LeafDispatcher::dispatch(dq);
 	}
 
 	/// invoked when the specified class is recieved
@@ -64,13 +65,13 @@ protected:
 
 template <class T, class S>
 class SignalDispatcher2 :
-	public Dispatcher, 
+	public LeafDispatcher, 
 	public SigC::Object
 {
 public:
 	SignalDispatcher2(const std::string &nm, 
 		const SigC::Slot2<void, const T&, const S& > &slot) :
-		Dispatcher(nm)
+		LeafDispatcher(nm)
 	{ Signal.connect(slot); }
 
 	virtual ~SignalDispatcher2() {;}
@@ -92,7 +93,7 @@ public:
         		parent.SetAttr(I->first, I->second);
 		
 		Signal.emit(parent, object);
-		return false;
+		return LeafDispatcher::dispatch(dq);
 	}
 
 	/** Invoked when the specified class is recieved. The first argument is

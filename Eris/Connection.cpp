@@ -271,6 +271,14 @@ void Connection::ObjectArrived(const Atlas::Message::Object& obj)
 		try {
 			// this invokes all manner of smoke and mirrors....
 			_rootDispatch->dispatch(dq);
+			
+			if (_debug) {
+				const Atlas::Message::Object::MapType &m(dq.front().AsMap());
+				if (m.find("__DISPATCHED__") == m.end()) {
+					std::string summary(objectSummary( Atlas::atlas_cast<Atlas::Objects::Root>(dq.front())));
+					Eris::Log("WARNING : op %s never hit a leaf node", summary.c_str());	
+				}
+			}
 		} 
 	
 		catch (OperationBlocked &block) {
