@@ -1,3 +1,7 @@
+2003-10-31 Damien McGinnes 
+
+	* Added timeSeg test
+
 2003-10-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/DepthShader.cpp: Use apropriate rint() function to convert
@@ -12,6 +16,7 @@
 2003-10-31 Damien McGinnes 
 
 	* Mercator/DepthShader.cpp: fixed type warning
+
 	* README: Added some text
 
 2003-10-24  Al Riddoch  <alriddoch@zepler.org>
