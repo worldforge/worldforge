@@ -43,6 +43,11 @@ class Terrain {
         invalidate(x,y);
     }
 
+    void setBasePoint(int x, int y, float z) {
+        m_basePoints[x][y] = BasePoint(z);
+        invalidate(x,y);
+    }
+
     Segment * getSegmentSafe(float x, float y) {
         int ix = (int)floor(x / m_res);
         int iy = (int)floor(y / m_res);

@@ -1,5 +1,9 @@
 2003-06-19  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Terrain.h: Add support for legacy interface.
+
+2003-06-19  Al Riddoch  <alriddoch@zepler.org>
+
 	* tests/main.cpp: Move the test prog out of the main code.
 
 	* Mercator/BasePoint.h: Re-work BasePoint class to be more inline
