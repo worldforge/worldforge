@@ -18,7 +18,7 @@ using std::endl;
 //________________________________________________________________________________
 //Global
 bool verbose = true;
-
+int  testCount = 0;
 //________________________________________________________________________________
 //Helper inlines
 
@@ -42,6 +42,7 @@ inline void println ( const string& output ) {
 class TestError {};
 
 inline void check( const bool test ) {
+    ++testCount;
     if (!test)
         throw TestError();
     print(".Ok");
@@ -64,6 +65,9 @@ int main() {
 
 
     println("Test run finished");
+
+    if ( verbose )
+      cout << testCount << " tests performed.\n";
 
     if ( error )
         return -1;
