@@ -97,7 +97,7 @@ void Atlas::Net::StreamConnect::Poll()
     {
 	buf += socket.get();
     }
-    while (socket.rdbuf()->in_avail())
+    while (socket.rdbuf()->in_avail());
 
     if(state == SERVER_GREETING)
     {
@@ -238,7 +238,7 @@ void Atlas::Net::StreamAccept::Poll()
     {
 	buf += socket.get();
     }
-    while (socket.rdbuf()->in_avail())
+    while (socket.rdbuf()->in_avail());
 
     if (state == SERVER_GREETING) 
     {

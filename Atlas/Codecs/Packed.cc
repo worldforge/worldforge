@@ -418,7 +418,7 @@ void Packed::Poll()
 	    case PARSE_NAME:	    ParseName(next); break;
 	}
     }
-    while (socket.rdbuf()->in_avail())
+    while (socket.rdbuf()->in_avail());
 }
 
 void Packed::StreamBegin()

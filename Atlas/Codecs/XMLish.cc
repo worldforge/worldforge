@@ -72,7 +72,7 @@ void XMLish::Poll()
 
 	// FIXME handle incoming characters
     }
-    while (socket.rdbuf()->in_avail())
+    while (socket.rdbuf()->in_avail());
 }
 
 void XMLish::StreamBegin()
