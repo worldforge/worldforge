@@ -1,3 +1,13 @@
+Friday 13th June, James Turner <james@worldforge.org>
+
+	* Fix compilation of the typeService stuff, this once again
+	  provides the danger in committing while in a hurry to play
+	  games ;-)
+	* Change the dependancy maps to key off of a TypeInfoPtr instead
+	  of the string name.
+	* Moved all the remaining TypeService methods out of TypeInfo.cpp
+	  and into typeService.cpp where they belong
+
 Monday, 9th June, James Turner <james@worldforge.org>
 
 	* Fix a waring in Entity.h spotted by rsteinke

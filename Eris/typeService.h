@@ -2,6 +2,8 @@
 #define ERIS_TYPE_SERVICE_H
 
 #include <sigc++/object.h>
+#include <sigc++/signal.h>
+
 #include <map>
 #include <set>
 
@@ -48,7 +50,7 @@ class TypeService : virtual public SigC::Object
 	TypeInfoPtr findTypeByName(const std::string &tynm);
 	
 	/** emitted when a new type is available and bound to it's parents */
-	SigC::Signal1<void, TypeInfo*> BoundType;
+	SigC::Signal1<void, TypeInfoPtr> BoundType;
 	
 	void listUnbound();
 
@@ -56,7 +58,7 @@ class TypeService : virtual public SigC::Object
 		 
 	friend class TypeInfo;
 		
-	TypeInfoSet extractDependantsForType(const std::string &typeName);
+	TypeInfoSet extractDependantsForType(TypeInfoPtr ty);
  
 	void markTypeDependantOnType(TypeInfoPtr dep, TypeInfoPtr ancestor);
 	
@@ -77,12 +79,12 @@ class TypeService : virtual public SigC::Object
 	future, if efficeny consdierations indicate it would be worthwhile */
 	TypeInfoMap globalTypeMap;
 
-	typedef std::map<std::string, TypeInfoSet> TypeDepMap;
+	typedef std::map<TypeInfoPtr, TypeInfoSet> TypeDepMap;
 
 	/** This is a dynamic structure indicating which Types are blocked
 	awaiting INFOs from other ops. For each blocked INFO, the first item
 	is the <i>blocking</i> type (e.g. 'tradesman') and the second item
-	the blocked TypeInfo, (e.g. 'blacksmith')*/
+	is a set of blocked typeInfos */
 	TypeDepMap _dependancyMap;
 
 	Connection* _conn;
