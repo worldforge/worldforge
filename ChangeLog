@@ -1,5 +1,9 @@
 2003-07-25  Al Riddoch  <alriddoch@zepler.org>
 
+	* We're not using CppUnit, so get rid of the check.
+
+2003-07-25  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add new argment to to
 	  constructor for options, which amongst others will define whether the
 	  terrain has surfaces. Implement code for adding surfaces
