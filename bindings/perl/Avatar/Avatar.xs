@@ -1,6 +1,6 @@
 #include "../conversion.h"
 
-#include <Eris/Avatar.h>
+#include "Avatar.h"
 
 #include <sigcperl/signal_wrap.h>
 

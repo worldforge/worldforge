@@ -1,6 +1,6 @@
 #include "../conversion.h"
 
-#include <Eris/Entity.h>
+#include "Entity.h"
 
 #include <sigcperl/signal_wrap.h>
 #include <sigcperl/signal_array.h>

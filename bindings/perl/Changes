@@ -1,5 +1,8 @@
 Revision history for Perl extension WorldForge::Eris.
 
+      Wednesday, November 27 2002
+	- Integrated into main Eris tree
+
       Monday, November 25 2002
 	- Added Factory class, modified Entity typeinfo so it would work,
 	  at this point the 'public API' of Eris is fully wrapped, though

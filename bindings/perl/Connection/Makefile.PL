@@ -3,9 +3,10 @@ use SigC;
 
 $CC = 'g++';
 my ($sigc_cflags, $sigc_libs) = SigC::configure();
-my ($eris_cflags, $eris_libs) = SigC::basic_configure(undef, 'Eris', 'eris-config');
-$CFLAGS = $eris_cflags . ' ' . $sigc_cflags;
-$LIBS = $eris_libs . ' ' . $sigc_libs;
+my ($wfmath_cflags, $wfmath_libs) =
+	SigC::basic_configure(undef, 'WFMath', 'wfmath-config');
+$CFLAGS = '-I../../../src ' . $wfmath_cflags . ' ' . $sigc_cflags;
+$LIBS = '-L../../../src/.libs -leris ' . $wfmath_libs . ' ' . $sigc_libs;
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.

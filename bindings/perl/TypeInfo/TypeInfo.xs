@@ -1,4 +1,4 @@
-#include <Eris/TypeInfo.h>
+#include "TypeInfo.h"
 
 #include <sigcperl/signal_wrap.h>
 

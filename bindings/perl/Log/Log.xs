@@ -1,4 +1,4 @@
-#include <Eris/Log.h>
+#include "Log.h"
 
 #include <sigcperl/signal_wrap.h>
 

@@ -1,7 +1,7 @@
 #include "../conversion.h"
 
-#include <Eris/Lobby.h>
-#include <Eris/Person.h>
+#include "Lobby.h"
+#include "Person.h"
 
 #include <sigcperl/signal_wrap.h>
 

@@ -1,4 +1,4 @@
-SUBDIRS = src test
+SUBDIRS = src bindings test
 
 EXTRA_DIST = eris.m4
 

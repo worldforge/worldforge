@@ -764,3 +764,176 @@ int main (int argc, char *argv[])
   rm -f conf.wfmathtest
 ])
 
+# Configure paths for libsigcperl
+# Based on Gtk-- script by Erik Andersen and Tero Pulkkinen 
+# Stolen from Ligsigc++ and modified
+
+dnl Test for libsigcperl, and define SIGC_CFLAGS and SIGC_LIBS
+dnl   to be used as follows:
+dnl AM_PATH_SIGCPERL(MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]])
+dnl
+AC_DEFUN(AM_PATH_SIGCPERL,
+[dnl 
+dnl Get the cflags and libraries from the sigcperl-config script
+dnl
+
+dnl
+dnl Prefix options
+dnl
+AC_ARG_WITH(sigcperl-prefix,
+[  --with-sigcperl-prefix=PREFIX
+                          Prefix where libsigcperl is installed (optional)]
+, sigcperl_config_prefix="$withval", sigcperl_config_prefix="")
+
+AC_ARG_WITH(sigcperl-exec-prefix,
+[  --with-sigcperl-exec-prefix=PREFIX 
+                          Exec prefix where  libsigcperl is installed (optional)]
+, sigcperl_config_exec_prefix="$withval", sigcperl_config_exec_prefix="")
+
+AC_ARG_ENABLE(sigctest, 
+[  --disable-sigcperltest     Do not try to compile and run a test libsigcperl
+                          program],
+, enable_sigcperltest=yes)
+
+dnl
+dnl Prefix handling
+dnl
+  if test x$sigcperl_config_exec_prefix != x ; then
+     sigcperl_config_args="$sigcperl_config_args --exec-prefix=$sigcperl_config_exec_prefix"
+     if test x${SIGCPERL_CONFIG+set} != xset ; then
+        SIGCPERL_CONFIG=$sigcperl_config_exec_prefix/bin/sigcperl-config
+     fi
+  fi
+  if test x$sigcperl_config_prefix != x ; then
+     sigcperl_config_args="$sigcperl_config_args --prefix=$sigcperl_config_prefix"
+     if test x${SIGCPERL_CONFIG+set} != xset ; then
+        SIGCPERL_CONFIG=$sigcperl_config_prefix/bin/sigcperl-config
+     fi
+  fi
+
+dnl
+dnl See if sigcperl-config is alive
+dnl
+  AC_PATH_PROG(SIGCPERL_CONFIG, sigcperl-config, no)
+  sigcperl_version_min=$1
+
+dnl
+dnl  Version check
+dnl
+  AC_MSG_CHECKING(for libsigcperl - version >= $sigcperl_version_min)
+  no_sigcperl=""
+  if test "$SIGCPERL_CONFIG" = "no" ; then
+    no_sigcperl=yes
+  else
+    sigcperl_version=`$SIGCPERL_CONFIG --version`
+
+    SIGCPERL_CFLAGS=`$SIGCPERL_CONFIG $sigcperl_config_args --cflags`
+    SIGCPERL_LIBS=`$SIGCPERL_CONFIG $sigcperl_config_args --libs`
+    SIGCPERL_MACROS=`$SIGCPERL_CONFIG $sigcperl_config_args --libs`
+
+    sigcperl_major_version=`echo $sigcperl_version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+    sigcperl_minor_version=`echo $sigcperl_version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+    sigcperl_micro_version=`echo $sigcperl_version | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+    sigcperl_major_min=`echo $sigcperl_version_min | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
+    sigcperl_minor_min=`echo $sigcperl_version_min | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
+    sigcperl_micro_min=`echo $sigcperl_version_min | \
+           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
+
+    sigcperl_version_proper=`expr \
+        $sigcperl_major_version \> $sigcperl_major_min \| \
+        $sigcperl_major_version \= $sigcperl_major_min \& \
+        $sigcperl_minor_version \> $sigcperl_minor_min \| \
+        $sigcperl_major_version \= $sigcperl_major_min \& \
+        $sigcperl_minor_version \= $sigcperl_minor_min \& \
+        $sigcperl_micro_version \>= $sigcperl_micro_min `
+
+    if test "$sigcperl_version_proper" = "1" ; then
+      AC_MSG_RESULT([$sigcperl_major_version.$sigcperl_minor_version.$sigcperl_micro_version])
+    else
+      AC_MSG_RESULT(no)
+      no_sigcperl=yes
+    fi
+
+    if test "X$no_sigcperl" = "Xyes" ; then
+      enable_sigcperltest=no
+    fi
+
+    AC_LANG_SAVE
+    AC_LANG_CPLUSPLUS
+
+dnl
+dnl
+dnl
+    if test "x$enable_sigcperltest" = "xyes" ; then
+      AC_MSG_CHECKING(if libsigcperl sane)
+      ac_save_CXXFLAGS="$CXXFLAGS"
+      ac_save_LIBS="$LIBS"
+      CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
+      LIBS="$LIBS $SIGC_LIBS"
+
+      rm -f conf.sigctest
+      AC_TRY_RUN([
+#include <stdio.h>
+#include <sigc++/signal_system.h>
+
+using namespace SigCPerl;
+
+// FIXME write sigcperl test
+
+int foo1(int i) 
+  {
+   return 1;
+  }
+
+int main(int argc,char **argv)
+  {
+   if (sigcperl_major_version!=$sigcperl_major_version ||
+       sigcperl_minor_version!=$sigcperl_minor_version ||
+       sigcperl_micro_version!=$sigcperl_micro_version)
+     { printf("(%d.%d.%d) ",
+         sigcperl_major_version,sigcperl_minor_version,sigcperl_micro_version);
+       return 1;
+     }
+   Signal1<int,int> sig1;
+   sig1.connect(slot(foo1));
+   sig1(1);
+   return 0;
+  }
+
+],[
+  AC_MSG_RESULT(yes)
+],[
+  AC_MSG_RESULT(no)
+  no_sigc=yes
+]
+,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
+
+       CXXFLAGS="$ac_save_CXXFLAGS"
+       LIBS="$ac_save_LIBS"
+     fi
+  fi
+
+  dnl
+  dnl
+  if test "x$no_sigcperl" = x ; then
+     ifelse([$2], , :, [$2])     
+  else
+     SIGCPERL_CFLAGS=""
+     SIGCPERL_LIBS=""
+     SIGCPERL_MACROS=""
+     ifelse([$3], , :, [$3])
+  fi
+
+  AC_LANG_RESTORE
+
+  AC_SUBST(SIGCPERL_CFLAGS)
+  AC_SUBST(SIGCPERL_LIBS)
+  AC_SUBST(SIGCPERL_MACROS)
+])
+

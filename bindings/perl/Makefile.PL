@@ -3,8 +3,7 @@ use SigC;
 
 SigC::create_glue_code("conversion_wrapper.h",  ["perlobject.map", "typemap"],
 	{"Person *" => "WorldForge::Eris::Person",
-	"Room *" => "WorldForge::Eris::Room",
-	"Entity *" => "WorldForge::Eris::Entity"});
+	"Room *" => "WorldForge::Eris::Room"});
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.

@@ -1,4 +1,4 @@
-#include <Eris/Timeout.h>
+#include "Timeout.h"
 
 #include <sigcperl/signal_wrap.h>
 

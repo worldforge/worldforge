@@ -1,3 +1,9 @@
+Tuesday, 27th November, Ron Steinke
+
+	* Integrated Perl bindings into the build with --enable-perl.
+	  Rebuild dependencies still don't work properly, and make dist
+	  isn't integrated between the automake and makemaker parts.
+
 Tuesday, 26th November, Ron Steinke
 
 	* Added a missing forward declaration of World to Factory.h
