@@ -139,8 +139,8 @@ World::getRootEntity()
 SV*
 World::getConnection()
   CODE:
-    RETVAL = sv_mortalcopy(getControlingSV(connection_hash_string,
-	THIS->getConnection()));
+    RETVAL = sv_2mortal(newRV_inc(getControlingSV(connection_hash_string,
+	THIS->getConnection())));
   OUTPUT:
     RETVAL
 
