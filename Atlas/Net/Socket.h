@@ -1,16 +1,3 @@
-/** AtlasSocket -- ASocket Base Class.
-
-Atlas Socket defines the basic client and server
-socket interfaces by the Atlas Client and Atlas
-Server classes.
-
-@author John Barrett (ZW) <jbarrett@box100.com
-
-@see ATCPSocket
-@see AClient
-@see AServer
-
-*/
 
 #ifndef __AtlasSocket_h_
 #define __AtlasSocket_h_
@@ -38,6 +25,18 @@ using std::string;
 
 namespace Atlas
 {
+/** Base Class for Stream Sockets
+
+The Socket Class defines the basic client and server
+socket interfaces need by the Client and Server classes.
+
+@author John Barrett (ZW) <jbarrett@box100.com
+
+@see Client
+@see Server
+@see TCPSocket
+
+*/
 
 class Socket
 {

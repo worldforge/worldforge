@@ -15,7 +15,7 @@
 
 namespace Atlas
 {
-
+/// Encoder Class Implementation for the Packed Ascii Protocol.
 class PackedEncoder: public Encoder
 {
 private:

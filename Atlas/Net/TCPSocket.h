@@ -1,16 +1,3 @@
-/** AtlasTCPSocket -- TCP Implementation of the ASocket Class.
-
-Atlas TCP Socket implements basic client and server
-socket capabilities required by the Atlas Socket
-specification for Linux and Windows platforms.
-
-@author John Barrett (ZW) <jbarrett@box100.com
-
-@see ASocket
-@see AClient
-@see AServer
-
-*/
 
 #ifndef __AtlasTCPSocket_h_
 #define __AtlasTCPSocket_h_
@@ -26,6 +13,19 @@ specification for Linux and Windows platforms.
 
 namespace Atlas
 {
+/** TCP Implementation of the Socket Class.
+
+The TCP Socket Class implements basic client and server
+socket capabilities required by the Socket Class
+specification for Linux and Windows platforms.
+
+@author John Barrett (ZW) <jbarrett@box100.com
+
+@see Socket
+@see Client
+@see Server
+
+*/
 
 class TCPSocket: public Socket
 {

@@ -1,16 +1,3 @@
-/** AtlasXMLEncoder -- XML Implementation of the AProtocolEncoder Class.
-
-Atlas XML Protocol Encoder is the AObject to XML Stream
-conversion portion of the Atlas XML Protocol module
-
-@author John Barrett (ZW) <jbarrett@box100.com
-
-@see Object
-@see Protocol
-@see XMLProtocol
-@see XMLDecoder
-
-*/
 
 #ifndef __AtlasXMLEncoder_h_
 #define __AtlasXMLEncoder_h_
@@ -23,6 +10,19 @@ conversion portion of the Atlas XML Protocol module
 
 namespace Atlas
 {
+/** XML Implementation of the Encoder Class.
+
+XML Protocol Encoder is the Object to XML Stream
+conversion portion of the Atlas XML Protocol module
+
+@author John Barrett (ZW) <jbarrett@box100.com>
+
+@see Object
+@see Protocol
+@see XMLProtocol
+@see XMLDecoder
+
+*/
 
 class XMLEncoder: public Encoder
 {

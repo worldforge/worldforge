@@ -15,7 +15,7 @@
 
 namespace Atlas
 {
-
+/// Decoder Class Implementation for the Packed Ascii Protocol.
 class PackedDecoder: public Decoder
 {
 

@@ -13,7 +13,7 @@
 
 namespace Atlas
 {
-
+/// Protocol Class Implementation for the Packed Ascii Protocol.
 class PackedProtocol: public Protocol
 {
 public:

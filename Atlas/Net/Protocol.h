@@ -22,11 +22,19 @@ changes
 using std::string;
 #include <cassert>
 
+#include "Decoder.h"
+#include "Encoder.h"
+
 namespace Atlas
 {
+/** Base Class for Protocol Containers.
+<p>The Protocol Class provides a single point of access
+to a Protocol Encoder/Decoder pair.
+<p>Derived Classes will implement this class for a specific protocol.
 
-class Encoder;
-class Decoder;
+@see Decoder
+@See Encoder
+*/
 
 class Protocol
 {

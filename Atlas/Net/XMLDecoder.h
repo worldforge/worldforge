@@ -1,19 +1,4 @@
-/** AtlasXMLDecoder -- XML Implementation of the AProtocolDecoder Class.
-
-Atlas XML Protocol Decoder is the lexical analyzer 
-portion of the Atlas XML Protocol. Working under the
-direction of the Atlas Codec class, this class parses
-a stream into tokens which Atlas Codec can reassemble
-into an Atlas Object
-
-@author John Barrett (ZW) <jbarrett@box100.com
-
-@see AObject
-@see ACodec
-@see AProtocol
-@see AXMLProtocol
-@see AXMLEncoder
-
+/*
 changes:
 ---Date---- --Author---  
 23 Jan 2000 fex			removed unecessary headers
@@ -30,6 +15,23 @@ using std::string;
 
 namespace Atlas
 {
+/** XML Implementation of the Decoder Class.
+
+XML Protocol Decoder is the lexical analyzer 
+portion of the Atlas XML Protocol. Working under the
+direction of the Codec class, this class parses
+a stream into tokens which Codec can reassemble
+into an Object
+
+@author John Barrett (ZW) <jbarrett@box100.com>
+
+@see Object
+@see Codec
+@see Protocol
+@see XMLProtocol
+@see XMLEncoder
+
+*/
 
 class XMLDecoder: public Decoder
 {

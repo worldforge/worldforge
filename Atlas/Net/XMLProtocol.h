@@ -1,17 +1,3 @@
-/** AtlasXMLProtocol -- XML Implementation of the AProtocol Class.
-
-Atlas XML Protocol is a human readable text encoding an
-AObject instance, designed primarily for documentation
-and human editable data.
-
-@author John Barrett (ZW) <jbarrett@box100.com
-
-@see Object
-@see Protocol
-@see XMLEncoder
-@see XMLDecoder
-
-*/
 
 #ifndef __AtlasXMLProtocol_h_
 #define __AtlasXMLProtocol_h_
@@ -20,6 +6,20 @@ and human editable data.
 
 namespace Atlas
 {
+/** XML Implementation of the Protocol Class.
+
+XML Protocol is a human readable text encoding an
+Object instance, designed primarily for documentation
+and human editable data.
+
+@author John Barrett (ZW) <jbarrett@box100.com>
+
+@see Object
+@see Protocol
+@see XMLEncoder
+@see XMLDecoder
+
+*/
 
 class XMLProtocol: public Protocol
 {

@@ -5,6 +5,16 @@
 
 namespace Atlas
 {
+/** Standard Message Container Object.
+<p>Object is the standard class for all data and messages
+handled by the Atlas libraries.
+<p>Capable of holding many different data types, including
+hashes (maps) and arrays (lists), the Object Class provides
+storage for arbitrarily complex nested structures of attributes
+and data.
+
+@see Variant
+*/
 
 class Object
 {
