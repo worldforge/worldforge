@@ -1,3 +1,8 @@
+Monday, April 29, Ron Steinke
+
+	* Wrapped calls to PollDefault::removeStream() in Meta in a check
+	  that _stream->is_open()
+
 Sunday, April 28, Ron Steinke
 
 	* Fixed signed vs. unsigned problems in Time::Stamp by making

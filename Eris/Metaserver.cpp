@@ -225,8 +225,10 @@ void Meta::cancel()
 		delete *Q;
 	_activeQueries.clear();
 	
-	_stream->close();
-	Poll::instance().removeStream(_stream);
+	if(_stream->is_open()) {
+		Poll::instance().removeStream(_stream);
+		_stream->close();
+	}
 	
 	// FIXME - revert to the last valid server list?
 	_status = INVALID;
@@ -319,9 +321,11 @@ void Meta::processCmd()
 		    delete _timeout;
 		    _timeout = NULL;
 		    _status = VALID;
-		    
-		    Poll::instance().removeStream(_stream);
-		    _stream->close();
+	
+		    if(_stream->is_open()) {	    
+			Poll::instance().removeStream(_stream);
+			_stream->close();
+		    }
 		}
 		
 		} break;
@@ -401,8 +405,10 @@ void Meta::ObjectArrived(const Atlas::Message::Object &msg)
 void Meta::doFailure(const std::string &msg)
 {
     Failure.emit(msg);
-    _stream->close();
-    Poll::instance().removeStream(_stream);
+    if(_stream->is_open()) {
+	Poll::instance().removeStream(_stream);
+	_stream->close();
+    }
     
     // try to revert back to the last good list
     if (!_lastValidList.empty()) {
