@@ -86,20 +86,20 @@ try {
     m_stub->push(ifo.AsObject());
     CPPUNIT_ASSERT(gotLoginComplete);
     
-    cerr << "mk0" << endl;
+    std::cerr << "mk0" << std::endl;
     
     // eris should go for lobby entry now
     CPPUNIT_ASSERT(m_stub->get(op));
     
-    cerr << "mk1/2" << endl;
+    std::cerr << "mk1/2" << std::endl;
     
     CPPUNIT_ASSERT("look" == getType(op));
 
-    cerr << "mk1" << endl;
+    std::cerr << "mk1" << std::endl;
 
     CPPUNIT_ASSERT(ac1 == Eris::getMember(op, "from").AsString());
     
-    cerr << "mk2" << endl;
+    std::cerr << "mk2" << std::endl;
     
     CPPUNIT_ASSERT(!hasArg(op, "id"));	// should be anonymous
     
@@ -113,7 +113,7 @@ try {
     lobbyObj["objtype"] = "object";
     lobbyObj["parents"] = Object::ListType(1, "room");
     
-    cerr << "tp3" << endl;
+    std::cerr << "tp3" << std::endl;
     sight.SetArgs(Object::ListType(1, lobbyObj));
     m_stub->push(sight.AsObject());
     

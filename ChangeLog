@@ -1,3 +1,9 @@
+Wednesday, 11th December, Al Riddoch
+
+	* test/testPlayer.cpp: std:: namespace fixes.
+
+	* configure.in: Handle interface version correctly.
+
 Monday, 2nd December, Ron Steinke
 
 	* Fixed check for Perl bindings so it can detect SigCPerl >= 0.2.0,
