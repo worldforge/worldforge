@@ -20,7 +20,7 @@ Mercator is designed to handle terrain data.
 %package devel
 Summary: A WorldForge terrain library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version}
+Requires: %{name} = %{version} wfmath-devel >= 0.3.2 libstdc++-devel
 
 %description devel
 Mercator is designed to handle terrain data.

@@ -1,3 +1,7 @@
+2004-06-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Fix devel dependencies in rpm spec.
+
 2004-06-05  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.h: Add method to set min and max at creation time.
