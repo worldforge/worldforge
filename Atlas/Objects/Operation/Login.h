@@ -24,7 +24,11 @@ public:
 
     static Login Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

@@ -14,11 +14,11 @@ namespace Atlas { namespace Objects { namespace Entity {
 Account::Account()
      : AdminEntity()
 {
-    SetAttr("id", string("account"));
+    SetId(string("account"));
     Object::ListType parents;
     parents.push_back(string("admin_entity"));
-    SetAttr("parents", parents);
-    SetAttr("password", string(""));
+    SetParents(parents);
+    SetPassword(string(""));
 }
 
 Account Account::Instantiate()
@@ -27,8 +27,8 @@ Account Account::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("account"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("object"));
+    value.SetParents(parents);
+    value.SetObjtype(string("object"));
     
     return value;
 }

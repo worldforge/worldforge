@@ -24,7 +24,11 @@ public:
 
     static Divide Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

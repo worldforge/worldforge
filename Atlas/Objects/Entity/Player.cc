@@ -14,12 +14,12 @@ namespace Atlas { namespace Objects { namespace Entity {
 Player::Player()
      : Account()
 {
-    SetAttr("id", string("player"));
+    SetId(string("player"));
     Object::ListType parents;
     parents.push_back(string("account"));
-    SetAttr("parents", parents);
+    SetParents(parents);
     Object::ListType characters;
-    SetAttr("characters", characters);
+    SetCharacters(characters);
 }
 
 Player Player::Instantiate()
@@ -28,8 +28,8 @@ Player Player::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("player"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("object"));
+    value.SetParents(parents);
+    value.SetObjtype(string("object"));
     
     return value;
 }

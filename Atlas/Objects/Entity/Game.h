@@ -24,7 +24,11 @@ public:
 
     static Game Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Entity

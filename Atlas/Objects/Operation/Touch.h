@@ -28,7 +28,11 @@ public:
 
     static Touch Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

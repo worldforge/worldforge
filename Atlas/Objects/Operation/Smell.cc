@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Smell::Smell()
      : Perception()
 {
-    SetAttr("id", string("smell"));
+    SetId(string("smell"));
     Object::ListType parents;
     parents.push_back(string("perception"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Smell Smell::Instantiate()
@@ -26,8 +26,8 @@ Smell Smell::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("smell"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

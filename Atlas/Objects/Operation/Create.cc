@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Create::Create()
      : Action()
 {
-    SetAttr("id", string("create"));
+    SetId(string("create"));
     Object::ListType parents;
     parents.push_back(string("action"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Create Create::Instantiate()
@@ -26,8 +26,8 @@ Create Create::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("create"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

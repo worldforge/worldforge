@@ -28,7 +28,11 @@ public:
 
     static Look Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

@@ -24,7 +24,11 @@ public:
 
     static Imaginary Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

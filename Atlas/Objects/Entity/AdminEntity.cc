@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Entity {
 AdminEntity::AdminEntity()
      : RootEntity()
 {
-    SetAttr("id", string("admin_entity"));
+    SetId(string("admin_entity"));
     Object::ListType parents;
     parents.push_back(string("root_entity"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 AdminEntity AdminEntity::Instantiate()
@@ -26,8 +26,8 @@ AdminEntity AdminEntity::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("admin_entity"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("object"));
+    value.SetParents(parents);
+    value.SetObjtype(string("object"));
     
     return value;
 }

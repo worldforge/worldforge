@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Login::Login()
      : Get()
 {
-    SetAttr("id", string("login"));
+    SetId(string("login"));
     Object::ListType parents;
     parents.push_back(string("get"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Login Login::Instantiate()
@@ -26,8 +26,8 @@ Login Login::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("login"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

@@ -14,11 +14,11 @@ namespace Atlas { namespace Objects { namespace Operation {
 Combine::Combine()
      : Create()
 {
-    SetAttr("id", string("combine"));
+    SetId(string("combine"));
     Object::ListType parents;
     parents.push_back(string("create"));
-    SetAttr("parents", parents);
-    SetAttr("specification", string("atlas-game"));
+    SetParents(parents);
+    SetSpecification(string("atlas-game"));
 }
 
 Combine Combine::Instantiate()
@@ -27,8 +27,8 @@ Combine Combine::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("combine"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

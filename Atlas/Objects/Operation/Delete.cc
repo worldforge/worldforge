@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Delete::Delete()
      : Action()
 {
-    SetAttr("id", string("delete"));
+    SetId(string("delete"));
     Object::ListType parents;
     parents.push_back(string("action"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Delete Delete::Instantiate()
@@ -26,8 +26,8 @@ Delete Delete::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("delete"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

@@ -24,7 +24,11 @@ public:
 
     static Feel Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

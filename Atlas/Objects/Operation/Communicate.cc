@@ -14,11 +14,11 @@ namespace Atlas { namespace Objects { namespace Operation {
 Communicate::Communicate()
      : Create()
 {
-    SetAttr("id", string("communicate"));
+    SetId(string("communicate"));
     Object::ListType parents;
     parents.push_back(string("create"));
-    SetAttr("parents", parents);
-    SetAttr("specification", string("atlas-game"));
+    SetParents(parents);
+    SetSpecification(string("atlas-game"));
 }
 
 Communicate Communicate::Instantiate()
@@ -27,8 +27,8 @@ Communicate Communicate::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("communicate"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

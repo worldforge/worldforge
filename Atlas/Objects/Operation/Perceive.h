@@ -28,7 +28,11 @@ public:
 
     static Perceive Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

@@ -24,8 +24,37 @@ public:
 
     static Player Instantiate();
 
+    inline void SetCharacters(const Atlas::Message::Object::ListType& val);
+
+    inline const Atlas::Message::Object::ListType& GetCharacters() const;
+
 protected:
+    Atlas::Message::Object::ListType attr_characters;
+
+    inline void SendCharacters(Atlas::Bridge*) const;
+
 };
+
+//
+// Inlined member functions follow.
+//
+
+void Player::SetCharacters(const Atlas::Message::Object::ListType& val)
+{
+    attr_characters = val;
+}
+
+const Atlas::Message::Object::ListType& Player::GetCharacters() const
+{
+    return attr_characters;
+}
+
+void Player::SendCharacters(Atlas::Bridge* b) const
+{
+    Atlas::Message::Encoder e(b);
+    e.MapItem("characters", attr_characters);
+}
+
 
 } } } // namespace Atlas::Objects::Entity
 

@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Look::Look()
      : Perceive()
 {
-    SetAttr("id", string("look"));
+    SetId(string("look"));
     Object::ListType parents;
     parents.push_back(string("perceive"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Look Look::Instantiate()
@@ -26,8 +26,8 @@ Look Look::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("look"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

@@ -14,20 +14,20 @@ namespace Atlas { namespace Objects { namespace Operation {
 RootOperation::RootOperation()
      : Root()
 {
-    SetAttr("id", string("root_operation"));
+    SetId(string("root_operation"));
     Object::ListType parents;
     parents.push_back(string("root"));
-    SetAttr("parents", parents);
-    SetAttr("objtype", string("op_definition"));
-    SetAttr("serialno", 0);
-    SetAttr("refno", 0);
-    SetAttr("from", string(""));
-    SetAttr("to", string(""));
-    SetAttr("seconds", 0.0);
-    SetAttr("future_seconds", 0.0);
-    SetAttr("time_string", string(""));
+    SetParents(parents);
+    SetObjtype(string("op_definition"));
+    SetSerialno(0);
+    SetRefno(0);
+    SetFrom(string(""));
+    SetTo(string(""));
+    SetSeconds(0.0);
+    SetFutureSeconds(0.0);
+    SetTimeString(string(""));
     Object::ListType args;
-    SetAttr("args", args);
+    SetArgs(args);
 }
 
 RootOperation RootOperation::Instantiate()
@@ -36,8 +36,8 @@ RootOperation RootOperation::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("root_operation"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

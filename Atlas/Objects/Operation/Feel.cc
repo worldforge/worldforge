@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Feel::Feel()
      : Perception()
 {
-    SetAttr("id", string("feel"));
+    SetId(string("feel"));
     Object::ListType parents;
     parents.push_back(string("perception"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Feel Feel::Instantiate()
@@ -26,8 +26,8 @@ Feel Feel::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("feel"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

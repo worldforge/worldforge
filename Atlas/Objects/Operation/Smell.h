@@ -24,7 +24,11 @@ public:
 
     static Smell Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Imaginary::Imaginary()
      : Perception()
 {
-    SetAttr("id", string("imaginary"));
+    SetId(string("imaginary"));
     Object::ListType parents;
     parents.push_back(string("perception"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Imaginary Imaginary::Instantiate()
@@ -26,8 +26,8 @@ Imaginary Imaginary::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("imaginary"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

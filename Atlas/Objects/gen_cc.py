@@ -16,6 +16,17 @@ copyright = \
 
 descr_attrs = ['children', 'description', 'args_description', 'example', \
                'long_description']
+cpp_type = {'map':'Atlas::Message::Object::MapType',
+            'list':'Atlas::Message::Object::ListType',
+            'string':'std::string',
+            'int':'int',
+            'float':'double'}
+
+cpp_param_type = {'map':'const ' + cpp_type['map'] + '&',
+                  'list':'const ' + cpp_type['list'] + '&',
+                  'string':'const ' + cpp_type['string'] + '&',
+                  'int':cpp_type['int'],
+                  'float':cpp_type['float']}
 
 def classize(id):
     return string.join(map(lambda part:string.capitalize(part), \
@@ -24,6 +35,18 @@ def classize(id):
 type2string={StringType:"string",
              IntType:"int",
              FloatType:"float"}
+
+def find_in_parents(parents, attr_name):
+    for parent_name in parents:
+        parent = defs.id_dict.get(parent_name)
+        if attr_name in map(lambda attr: attr.name, parent.attr_list):
+            return 1
+        else:
+            if find_in_parents(parent.attr['parents'].value, attr_name) \
+               == 1:
+                return 1
+    return 0
+
 
 class GenerateCC:
     def __init__(self, defs, outdir):
@@ -105,7 +128,7 @@ class GenerateCC:
                     self.default_list(sub_obj.name, sub_obj)
                 if sub_obj.type == "map":
                     self.default_map(sub_obj.name, sub_obj)
-                self.out.write('    SetAttr("' + sub_obj.name + '", ')
+                self.out.write('    Set' + classize(sub_obj.name) + '(')
                 if sub_obj.type == "string":
                     self.out.write('string("' + sub_obj.value + '")')
                 elif sub_obj.type == "list" or sub_obj.type == "map":
@@ -123,16 +146,46 @@ class GenerateCC:
         self.out.write("    " + self.classname + " value;\n\n")
         self.out.write("    Object::ListType parents;\n")
         self.out.write('    parents.push_back(string("%s"));\n' % id)
-        self.out.write('    value.SetAttr("parents", parents);\n')
+        self.out.write('    value.SetParents(parents);\n')
         if objtype == "op_definition":
-            self.out.write('    value.SetAttr("objtype", string("op"));\n')
+            self.out.write('    value.SetObjtype(string("op"));\n')
         elif objtype == "class":
-            self.out.write('    value.SetAttr("objtype", string("object"));\n')
+            self.out.write('    value.SetObjtype(string("object"));\n')
         else:
-            self.out.write('    value.SetAttr("objtype", string("instance"));\n')
+            self.out.write('    value.SetObjtype(string("instance"));\n')
         self.out.write("    \n")
         self.out.write("    return value;\n")
         self.out.write("}\n\n")
+    def static_inline_sets(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        for attr in statics:
+            self.out.write('void %s::Set%s' % (classname, classize(attr.name)))
+            self.out.write('(%s val)\n' % cpp_param_type[attr.type])
+            self.out.write('{\n')
+            self.out.write('    attr_%s = val;\n' % attr.name)
+            self.out.write('}\n\n')
+    def static_inline_gets(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        for attr in statics:
+            self.out.write('%s %s::Get%s() const\n' % (cpp_param_type[attr.type], \
+                           classname, classize(attr.name))) 
+            self.out.write('{\n')
+            self.out.write('    return attr_%s;\n' % attr.name)
+            self.out.write('}\n\n')
+    def static_inline_sends(self, obj, statics):
+        classname = classize(obj.attr['id'].value)
+        for attr in statics:
+            self.out.write('void %s::Send%s' % (classname, classize(attr.name)))
+            self.out.write('(Atlas::Bridge* b) const\n')
+            self.out.write('{\n')
+            if attr.type in ('int', 'float', 'string'):
+                self.out.write('    b->MapItem("%s", attr_%s);\n' \
+                               % (attr.name, attr.name))
+            else:
+                self.out.write('    Atlas::Message::Encoder e(b);\n')
+                self.out.write('    e.MapItem("%s", attr_%s);\n' \
+                               % (attr.name, attr.name))
+            self.out.write('}\n\n')
     def interface(self, obj):
         print "Output of interface for:"
         outfile = self.outdir + '/' + self.classname + ".h"
@@ -169,8 +222,33 @@ class GenerateCC:
         self.out.write("\n")
         self.out.write("    static " + self.classname + " Instantiate();\n")
         self.out.write("\n")
+        static_attrs = filter(lambda attr,obj=obj:(not attr.name in descr_attrs) \
+          and (not find_in_parents(obj.attr['parents'].value, attr.name)), \
+          obj.attr_list)
+        for attr in static_attrs:
+            self.out.write("    inline void Set" + classize(attr.name))
+            self.out.write('(' + cpp_param_type[attr.type] + ' val);\n')
+        self.out.write('\n')
+        for attr in static_attrs:
+            self.out.write('    inline %s Get' % cpp_param_type[attr.type])
+            self.out.write(classize(attr.name) + '() const;\n')
+        self.out.write('\n')
         self.out.write("protected:\n")
+        for attr in static_attrs:
+            self.out.write('    %s attr_%s;\n' % (cpp_type[attr.type], attr.name))
+        self.out.write('\n')
+        for attr in static_attrs:
+            self.out.write("    inline void Send" + classize(attr.name))
+            self.out.write('(Atlas::Bridge*) const;\n')
+        self.out.write('\n')
+            
         self.out.write("};\n\n")
+        if len(static_attrs) > 0:
+            self.out.write('//\n// Inlined member functions follow.\n//\n\n')
+            self.static_inline_sets(obj, static_attrs)
+            self.static_inline_gets(obj, static_attrs)
+            self.static_inline_sends(obj, static_attrs)
+            self.out.write('\n')
         if outdir != ".":
             self.ns_close(['Atlas', 'Objects', outdir])
             self.footer(['Atlas', 'Objects', outdir, self.classname, "H"])

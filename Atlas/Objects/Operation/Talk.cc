@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Talk::Talk()
      : Communicate()
 {
-    SetAttr("id", string("talk"));
+    SetId(string("talk"));
     Object::ListType parents;
     parents.push_back(string("communicate"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Talk Talk::Instantiate()
@@ -26,8 +26,8 @@ Talk Talk::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("talk"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

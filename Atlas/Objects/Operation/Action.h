@@ -28,7 +28,11 @@ public:
 
     static Action Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

@@ -24,7 +24,11 @@ public:
 
     static Appearance Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

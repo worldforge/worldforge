@@ -24,7 +24,11 @@ public:
 
     static Move Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

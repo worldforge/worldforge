@@ -24,7 +24,11 @@ public:
 
     static Talk Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

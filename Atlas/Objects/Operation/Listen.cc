@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Listen::Listen()
      : Perceive()
 {
-    SetAttr("id", string("listen"));
+    SetId(string("listen"));
     Object::ListType parents;
     parents.push_back(string("perceive"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Listen Listen::Instantiate()
@@ -26,8 +26,8 @@ Listen Listen::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("listen"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

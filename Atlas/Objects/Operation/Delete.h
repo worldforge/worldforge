@@ -28,7 +28,11 @@ public:
 
     static Delete Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

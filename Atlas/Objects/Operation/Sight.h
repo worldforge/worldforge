@@ -24,7 +24,11 @@ public:
 
     static Sight Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

@@ -24,8 +24,36 @@ public:
 
     static Account Instantiate();
 
+    inline void SetPassword(const std::string& val);
+
+    inline const std::string& GetPassword() const;
+
 protected:
+    std::string attr_password;
+
+    inline void SendPassword(Atlas::Bridge*) const;
+
 };
+
+//
+// Inlined member functions follow.
+//
+
+void Account::SetPassword(const std::string& val)
+{
+    attr_password = val;
+}
+
+const std::string& Account::GetPassword() const
+{
+    return attr_password;
+}
+
+void Account::SendPassword(Atlas::Bridge* b) const
+{
+    b->MapItem("password", attr_password);
+}
+
 
 } } } // namespace Atlas::Objects::Entity
 

@@ -65,10 +65,10 @@ protected:
     std::string attr_objtype;
     std::string attr_name;
 
-    inline void SendParents(Bridge*) const;
-    inline void SendId(Bridge*) const;
-    inline void SendObjtype(Bridge*) const;
-    inline void SendName(Bridge*) const;
+    inline void SendParents(Atlas::Bridge*) const;
+    inline void SendId(Atlas::Bridge*) const;
+    inline void SendObjtype(Atlas::Bridge*) const;
+    inline void SendName(Atlas::Bridge*) const;
 };
 
 // 
@@ -115,25 +115,25 @@ const std::string& Root::GetName() const
     return attr_name;
 }
 
-void Root::SendParents(Bridge* b) const
+void Root::SendParents(Atlas::Bridge* b) const
 {
     Atlas::Message::Encoder e(b);
     e.MapItem("parents", attr_parents);
 }
 
-void Root::SendId(Bridge* b) const
+void Root::SendId(Atlas::Bridge* b) const
 {
-    b->MapItem("parents", attr_id);
+    b->MapItem("id", attr_id);
 }
 
-void Root::SendObjtype(Bridge* b) const
+void Root::SendObjtype(Atlas::Bridge* b) const
 {
-    b->MapItem("parents", attr_objtype);
+    b->MapItem("objtype", attr_objtype);
 }
 
-void Root::SendName(Bridge* b) const
+void Root::SendName(Atlas::Bridge* b) const
 {
-    b->MapItem("parents", attr_name);
+    b->MapItem("name", attr_name);
 }
 
 

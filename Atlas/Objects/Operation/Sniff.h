@@ -28,7 +28,11 @@ public:
 
     static Sniff Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

@@ -24,7 +24,11 @@ public:
 
     static Admin Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Entity

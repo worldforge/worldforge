@@ -14,11 +14,11 @@ namespace Atlas { namespace Objects { namespace Operation {
 Move::Move()
      : Set()
 {
-    SetAttr("id", string("move"));
+    SetId(string("move"));
     Object::ListType parents;
     parents.push_back(string("set"));
-    SetAttr("parents", parents);
-    SetAttr("specification", string("atlas-game"));
+    SetParents(parents);
+    SetSpecification(string("atlas-game"));
 }
 
 Move Move::Instantiate()
@@ -27,8 +27,8 @@ Move Move::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("move"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

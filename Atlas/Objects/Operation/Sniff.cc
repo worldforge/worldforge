@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Sniff::Sniff()
      : Perceive()
 {
-    SetAttr("id", string("sniff"));
+    SetId(string("sniff"));
     Object::ListType parents;
     parents.push_back(string("perceive"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Sniff Sniff::Instantiate()
@@ -26,8 +26,8 @@ Sniff Sniff::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("sniff"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

@@ -28,7 +28,11 @@ public:
 
     static Listen Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

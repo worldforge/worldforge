@@ -14,11 +14,11 @@ namespace Atlas { namespace Objects { namespace Operation {
 Divide::Divide()
      : Create()
 {
-    SetAttr("id", string("divide"));
+    SetId(string("divide"));
     Object::ListType parents;
     parents.push_back(string("create"));
-    SetAttr("parents", parents);
-    SetAttr("specification", string("atlas-game"));
+    SetParents(parents);
+    SetSpecification(string("atlas-game"));
 }
 
 Divide Divide::Instantiate()
@@ -27,8 +27,8 @@ Divide Divide::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("divide"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

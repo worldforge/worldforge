@@ -14,11 +14,11 @@ namespace Atlas { namespace Objects { namespace Operation {
 Perception::Perception()
      : Info()
 {
-    SetAttr("id", string("perception"));
+    SetId(string("perception"));
     Object::ListType parents;
     parents.push_back(string("info"));
-    SetAttr("parents", parents);
-    SetAttr("specification", string("atlas-game"));
+    SetParents(parents);
+    SetSpecification(string("atlas-game"));
 }
 
 Perception Perception::Instantiate()
@@ -27,8 +27,8 @@ Perception Perception::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("perception"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

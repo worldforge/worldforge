@@ -14,10 +14,10 @@ namespace Atlas { namespace Objects { namespace Operation {
 Appearance::Appearance()
      : Sight()
 {
-    SetAttr("id", string("appearance"));
+    SetId(string("appearance"));
     Object::ListType parents;
     parents.push_back(string("sight"));
-    SetAttr("parents", parents);
+    SetParents(parents);
 }
 
 Appearance Appearance::Instantiate()
@@ -26,8 +26,8 @@ Appearance Appearance::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("appearance"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

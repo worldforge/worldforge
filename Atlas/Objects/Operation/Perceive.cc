@@ -14,11 +14,11 @@ namespace Atlas { namespace Objects { namespace Operation {
 Perceive::Perceive()
      : Get()
 {
-    SetAttr("id", string("perceive"));
+    SetId(string("perceive"));
     Object::ListType parents;
     parents.push_back(string("get"));
-    SetAttr("parents", parents);
-    SetAttr("specification", string("atlas-game"));
+    SetParents(parents);
+    SetSpecification(string("atlas-game"));
 }
 
 Perceive Perceive::Instantiate()
@@ -27,8 +27,8 @@ Perceive Perceive::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("perceive"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("op"));
+    value.SetParents(parents);
+    value.SetObjtype(string("op"));
     
     return value;
 }

@@ -24,7 +24,11 @@ public:
 
     static Disappearance Instantiate();
 
+
+
 protected:
+
+
 };
 
 } } } // namespace Atlas::Objects::Operation

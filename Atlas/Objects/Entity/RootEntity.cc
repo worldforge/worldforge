@@ -14,25 +14,25 @@ namespace Atlas { namespace Objects { namespace Entity {
 RootEntity::RootEntity()
      : Root()
 {
-    SetAttr("id", string("root_entity"));
+    SetId(string("root_entity"));
     Object::ListType parents;
     parents.push_back(string("root"));
-    SetAttr("parents", parents);
-    SetAttr("objtype", string("class"));
-    SetAttr("loc", string(""));
+    SetParents(parents);
+    SetObjtype(string("class"));
+    SetLoc(string(""));
     Object::ListType pos;
     pos.push_back(0.0);
     pos.push_back(0.0);
     pos.push_back(0.0);
-    SetAttr("pos", pos);
+    SetPos(pos);
     Object::ListType velocity;
     velocity.push_back(0.0);
     velocity.push_back(0.0);
     velocity.push_back(0.0);
-    SetAttr("velocity", velocity);
+    SetVelocity(velocity);
     Object::ListType contains;
-    SetAttr("contains", contains);
-    SetAttr("stamp_contains", 0.0);
+    SetContains(contains);
+    SetStampContains(0.0);
 }
 
 RootEntity RootEntity::Instantiate()
@@ -41,8 +41,8 @@ RootEntity RootEntity::Instantiate()
 
     Object::ListType parents;
     parents.push_back(string("root_entity"));
-    value.SetAttr("parents", parents);
-    value.SetAttr("objtype", string("object"));
+    value.SetParents(parents);
+    value.SetObjtype(string("object"));
     
     return value;
 }
