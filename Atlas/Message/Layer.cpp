@@ -5,9 +5,6 @@
 #include "Layer.h"
 
 namespace Atlas { namespace Message {
-    
-Layer::Layer(Atlas::Bridge* bridge) : Encoder(bridge), DecoderBase()
-{
-}
+
 
 } } // namespace Atlas::Message
