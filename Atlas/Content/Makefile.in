@@ -1,4 +1,3 @@
-# Generated automatically from Makefile.in by configure.
 # Makefile.in generated automatically by automake 1.4 from Makefile.am
 
 # Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
@@ -12,44 +11,45 @@
 # PARTICULAR PURPOSE.
 
 
-SHELL = /bin/sh
+SHELL = @SHELL@
 
-srcdir = .
-top_srcdir = ..
-prefix = /usr/local
-exec_prefix = ${prefix}
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
 
-bindir = ${exec_prefix}/bin
-sbindir = ${exec_prefix}/sbin
-libexecdir = ${exec_prefix}/libexec
-datadir = ${prefix}/share
-sysconfdir = ${prefix}/etc
-sharedstatedir = ${prefix}/com
-localstatedir = ${prefix}/var
-libdir = ${exec_prefix}/lib
-infodir = ${prefix}/info
-mandir = ${prefix}/man
-includedir = ${prefix}/include
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
 oldincludedir = /usr/include
 
 DESTDIR =
 
-pkgdatadir = $(datadir)/Atlas
-pkglibdir = $(libdir)/Atlas
-pkgincludedir = $(includedir)/Atlas
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
 
 top_builddir = ..
 
-ACLOCAL = aclocal
-AUTOCONF = autoconf
-AUTOMAKE = automake
-AUTOHEADER = autoheader
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
 
-INSTALL = /usr/bin/install -c
-INSTALL_PROGRAM = ${INSTALL} $(AM_INSTALL_PROGRAM_FLAGS)
-INSTALL_DATA = ${INSTALL} -m 644
-INSTALL_SCRIPT = ${INSTALL_PROGRAM}
-transform = s,x,x,
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
 
 NORMAL_INSTALL = :
 PRE_INSTALL = :
@@ -57,19 +57,19 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = i686-pc-linux-gnu
-host_triplet = i686-pc-linux-gnu
+host_alias = @host_alias@
+host_triplet = @host@
 AS = @AS@
-CC = gcc
-CXX = c++
+CC = @CC@
+CXX = @CXX@
 DLLTOOL = @DLLTOOL@
-LIBTOOL = $(SHELL) $(top_builddir)/libtool
-LN_S = ln -s
-MAKEINFO = makeinfo
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
+MAKEINFO = @MAKEINFO@
 OBJDUMP = @OBJDUMP@
-PACKAGE = Atlas
-RANLIB = ranlib
-VERSION = 0.1.0
+PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
+VERSION = @VERSION@
 
 lib_LTLIBRARIES = libAtlasContent.la
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -78,15 +78,15 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES =  $(lib_LTLIBRARIES)
 
 
-DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I..
-CPPFLAGS = 
-LDFLAGS = 
-LIBS = 
+DEFS = @DEFS@ -I. -I$(srcdir) -I..
+CPPFLAGS = @CPPFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
 libAtlasContent_la_LDFLAGS = 
 libAtlasContent_la_LIBADD = 
 libAtlasContent_la_SOURCES = libAtlasContent.la.c
 libAtlasContent_la_OBJECTS =  libAtlasContent.la.lo
-CFLAGS = -g -O2
+CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)

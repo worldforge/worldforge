@@ -11,6 +11,10 @@ dnl Test for c++:
 
 AC_PROG_CXX
 
+dnl Test for libtool:
+
+AM_PROG_LIBTOOL
+
 AC_OUTPUT([
 	Makefile
 	Bus/Makefile

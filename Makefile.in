@@ -57,10 +57,18 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AS = @AS@
 CC = @CC@
 CXX = @CXX@
+DLLTOOL = @DLLTOOL@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
 MAKEINFO = @MAKEINFO@
+OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
+RANLIB = @RANLIB@
 VERSION = @VERSION@
 
 SUBDIRS = Net Bus Content
@@ -323,6 +331,7 @@ clean-am:  clean-hdr clean-tags clean-generic mostlyclean-am
 clean: clean-recursive
 
 distclean-am:  distclean-hdr distclean-tags distclean-generic clean-am
+	-rm -f libtool
 
 distclean: distclean-recursive
 	-rm -f config.status
