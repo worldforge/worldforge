@@ -95,38 +95,53 @@ class EncMapValue {
 public:
     EncMapValue(B& b, const string& name) : b(b), name(name) { }
     
+    /// Begin a map.
     EncMap<B, T> operator<<(const BeginMap&)
     {
         b.MapItem(name, B::MapBegin);
         return EncMap<B, T>(b);
     }
 
+    /// Begin a list.
     EncList<B, T> operator<<(const BeginList&)
     {
         b.MapItem(name, B::ListBegin);
         return EncList<B, T>(b);
     }
 
+    /// Send an integer value.
     T operator<<(int i)
     {
         b.MapItem(name, i);
         return T(b);
     }
 
+    /// Send a double value.
     T operator<<(double d)
     {
         b.MapItem(name, d);
         return T(b);
     }
 
+    /// Send a string value.
     T operator<<(const string& s)
     {
         b.MapItem(name, s);
         return T(b);
     }
 
+    /// If the encoder supports it, send any kind of value.
+    template<typename Arg>
+    T operator<<(const Arg& a)
+    {
+        b.MapItem(name, a);
+        return T(b);
+    }
+
 protected:
+    /// The bridge or encoder that is written to.
     B& b;
+    /// The name of this item
     string name;
 };
 
@@ -140,11 +155,13 @@ class EncMap {
 public:
     EncMap(B& b) : b(b) { }
 
+    /// Start a value with its name
     EncMapValue< B, EncMap<B, T> > operator<<(const string& name)
     {
         return EncMapValue< B, EncMap<B, T> >(b, name);
     }
 
+    /// End this map
     T operator<<(EndMap)
     {
         b.MapEnd();
@@ -152,6 +169,7 @@ public:
     }
     
 protected:
+    /// The bridge or encoder that is written to.
     B& b;
 };
 
@@ -165,36 +183,50 @@ class EncList {
 public:
     EncList(B& b) : b(b) { }
 
+    /// Start a map.
     EncMap<B, EncList<B, T> > operator<<(const BeginMap&)
     {
         b.ListItem(B::MapBegin);
         return EncMap<B, EncList<B, T> >(b);
     }
 
+    /// Start a list.
     EncList<B, EncList<B, T> > operator<<(const BeginList&)
     {
         b.ListItem(B::ListBegin);
         return EncList<B, EncList<B, T> >(b);
     }
 
+    /// Send an integer value.
     EncList<B, T> operator<<(int i)
     {
         b.ListItem(i);
         return *this;
     }
 
+    /// Send a double value.
     EncList<B, T> operator<<(double d)
     {
         b.ListItem(d);
         return *this;
     }
 
+    /// Send a string value.
     EncList<B, T> operator<<(const std::string& s)
     {
         b.ListItem(s);
         return *this;
     }
+
+    /// If the encoder supports it, send any kind of value.
+    template<typename Arg>
+    EncList<B, T> operator<<(const Arg& a)
+    {
+        b.ListItem(a);
+        return T(b);
+    }
     
+    /// End this list.
     T operator<<(EndList)
     {
         b.ListEnd();
@@ -202,6 +234,7 @@ public:
     }
     
 protected:
+    /// The bridge or encoder that is written to.
     B& b;
 };
 
@@ -210,26 +243,40 @@ protected:
  * @ingroup funky_encoder
  * @see funky_encoder
  */
-
 template <class B>
 class Encoder
 {
 public:
     Encoder(B& b) : b(b) { }
     
+    /// Start a message (as a map).
     EncMap<B, Encoder> operator<<(const BeginMap&) {
         b.StreamMessage(B::MapBegin);
         return EncMap<B, Encoder>(b);
     }
 
+    /// If the encoder supports it, send a different kind of message.
+    template<typename Arg>
+    Encoder<B> operator<<(const Arg& a)
+    {
+        b.StreamMessage(a);
+        return *this;
+    }
+
 protected:
+    /// The bridge or encoder that is written to.
     B& b;
 };
 
-/// @ingroup funky_encoder
+/** Tokens representing beginnings and ends of maps/lists.
+ *
+ * Use these as parameters to operator<< for the Funky::Encoder classes.
+ * 
+ * @see funky_encoder
+ * @ingroup funky_encoder
+ */
 class Tokens {
 public:
-
     static BeginMap begin_map;
     static EndMap end_map;
     static BeginList begin_list;

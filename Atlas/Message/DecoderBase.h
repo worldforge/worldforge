@@ -12,7 +12,7 @@
 
 namespace Atlas { namespace Message {
 
-/** Atlas message decoder base
+/** Base class for decoders that take Atlas::Message::Object.
  *
  * This class is passed to a codec as receiver bridge. It decodes a stream
  * into Message::Object objects, and after completion calls the abstract
@@ -20,9 +20,10 @@ namespace Atlas { namespace Message {
  * might, for instance, provide an object queue or a callback method for
  * arrived messages.
  *
- * @see Bridge
- * @see Codec
+ * @see Atlas::Bridge
+ * @see Atlas::Codec
  * @see Object
+ * @author Stefanus Du Toit <sdt@gmx.net>
  * 
  */
 
@@ -54,18 +55,23 @@ public:
     
 protected:
 
+    /// Our current decoding state.
     enum State {
         STATE_STREAM,
         STATE_MAP,
         STATE_LIST
     };
 
+    /// The state stack.
     std::stack<State> state;
+    /// The map stack.
     std::stack<Object::MapType> maps;
+    /// The list stack.
     std::stack<Object::ListType> lists;
+    /// Names for maps and lists.
     std::stack<std::string> names;
 
-    // To be overridden by derived classes
+    /// Override this - called when an object was received.
     virtual void ObjectArrived(const Object& obj) = 0;
 };
 

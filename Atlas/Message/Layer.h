@@ -9,14 +9,14 @@
 
 namespace Atlas { namespace Message {
 
-/** Atlas message layer
-
-FIXME document this
-
-@see DecoderBase
-@see Encoder
-@see Object
-
+/** Layer that combines Atlas::Message::Encoder and a decoder.
+ *
+ * This class simply combines Atlas::Message::Encoder and a decoder of your
+ * choice (derived from DecoderBase) into a single layer.
+ * 
+ * @see DecoderBase
+ * @see Encoder
+ * @see Object
 */
 
 template <class Decoder>

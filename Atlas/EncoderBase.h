@@ -18,7 +18,10 @@ namespace Atlas {
  * it and your encoder can be used as a Bridge (for instance, as argument to
  * another encoder) without you needing to implement all these forwarding
  * requests.
- * 
+ *
+ * Of course your encoder does not have to inherit from EncoderBase - you could
+ * offer a completely different interface from that of bridge.
+ *
  * @see Bridge
  */
 
@@ -59,3 +62,5 @@ protected:
 };
 
 } // namespace Atlas 
+
+#endif

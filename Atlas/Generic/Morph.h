@@ -3,7 +3,7 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
-// Generated from src/Generic/Morph.h.m4 - do not edit!
+// Generated from Morph.h.m4 - do not edit!
 
 #ifndef ATLAS_GENERIC_MORPH_H
 #define ATLAS_GENERIC_MORPH_H
@@ -44,25 +44,25 @@ class Morph2
 {
 public:
 
-    /// construct an empty Morph object
+    /// Construct an empty Morph object.
     Morph2()
       : v1(NULL),  v2(NULL)
     {
     }
 
-    /// copy an existing morph object
+    /// Copy an existing morph object.
     Morph2(const Morph2& m)
     {
         if (m.v1 != NULL) *this = *m.v1;
         if (m.v2 != NULL) *this = *m.v2;
     }
 
-    /// set type to T1, and value to v
+    /// Set type to T1, and value to v.
     Morph2(const T1& v)
       : v1(new T1(v)), v2(NULL)
     {
     }
-    /// set type to T2, and value to v
+    /// Set type to T2, and value to v.
     Morph2(const T2& v)
       : v1(NULL), v2(new T2(v))
     {
@@ -74,7 +74,7 @@ public:
         delete v2;
     }
 
-    /// Check for inequality with another Morph2
+    /// Check for inequality with another Morph2.
     bool operator!=(const Morph2& m) const
     {
         if (v1 == NULL) {
@@ -87,30 +87,30 @@ public:
         return false;
     }
 
-    /// Check for equality with another Morph2
+    /// Check for equality with another Morph2.
     bool operator==(const Morph2 m) const
     {
         return !(*this != m);
     }
 
-    /// Check for inequality with a T1
+    /// Check for inequality with a T1.
     bool operator!=(const T1& v) const
     {
         if (v1 == NULL || *v1 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T1
+    /// Check for equality with a T1.
     bool operator==(const T1& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T2
+    /// Check for inequality with a T2.
     bool operator!=(const T2& v) const
     {
         if (v2 == NULL || *v2 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T2
+    /// Check for equality with a T2.
     bool operator==(const T2& v) const { return !(*this != v); }
 
 
@@ -120,18 +120,18 @@ public:
         if (v2 != NULL) { delete v2; v2 = NULL; }
     }
 
-    /// Check whether the current type is T1
+    /// Check whether the current type is T1.
     bool Is(Token<T1>) const { return (v1 != NULL); }
-    /// Check whether the current type is T2
+    /// Check whether the current type is T2.
     bool Is(Token<T2>) const { return (v2 != NULL); }
 
-    /// Retrieve the current value as a T1
+    /// Retrieve the current value as a T1.
     T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T2
+    /// Retrieve the current value as a T2.
     T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
@@ -140,14 +140,14 @@ public:
 
 protected:
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph2* o) { *o = Morph2(); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph2* o, const Morph2& m) { *o = Morph2(m); }
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph2* o, const T1& v) { *o = Morph2(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph2* o, const T2& v) { *o = Morph2(v); }
 
     T1* v1;
@@ -166,13 +166,13 @@ class Morph3
 {
 public:
 
-    /// construct an empty Morph object
+    /// Construct an empty Morph object.
     Morph3()
       : v1(NULL), v2(NULL),  v3(NULL)
     {
     }
 
-    /// copy an existing morph object
+    /// Copy an existing morph object.
     Morph3(const Morph3& m)
     {
         if (m.v1 != NULL) *this = *m.v1;
@@ -180,17 +180,17 @@ public:
         if (m.v3 != NULL) *this = *m.v3;
     }
 
-    /// set type to T1, and value to v
+    /// Set type to T1, and value to v.
     Morph3(const T1& v)
       : v1(new T1(v)), v2(NULL), v3(NULL)
     {
     }
-    /// set type to T2, and value to v
+    /// Set type to T2, and value to v.
     Morph3(const T2& v)
       : v1(NULL), v2(new T2(v)), v3(NULL)
     {
     }
-    /// set type to T3, and value to v
+    /// Set type to T3, and value to v.
     Morph3(const T3& v)
       : v1(NULL), v2(NULL), v3(new T3(v))
     {
@@ -203,7 +203,7 @@ public:
         delete v3;
     }
 
-    /// Check for inequality with another Morph3
+    /// Check for inequality with another Morph3.
     bool operator!=(const Morph3& m) const
     {
         if (v1 == NULL) {
@@ -219,40 +219,40 @@ public:
         return false;
     }
 
-    /// Check for equality with another Morph3
+    /// Check for equality with another Morph3.
     bool operator==(const Morph3 m) const
     {
         return !(*this != m);
     }
 
-    /// Check for inequality with a T1
+    /// Check for inequality with a T1.
     bool operator!=(const T1& v) const
     {
         if (v1 == NULL || *v1 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T1
+    /// Check for equality with a T1.
     bool operator==(const T1& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T2
+    /// Check for inequality with a T2.
     bool operator!=(const T2& v) const
     {
         if (v2 == NULL || *v2 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T2
+    /// Check for equality with a T2.
     bool operator==(const T2& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T3
+    /// Check for inequality with a T3.
     bool operator!=(const T3& v) const
     {
         if (v3 == NULL || *v3 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T3
+    /// Check for equality with a T3.
     bool operator==(const T3& v) const { return !(*this != v); }
 
 
@@ -263,26 +263,26 @@ public:
         if (v3 != NULL) { delete v3; v3 = NULL; }
     }
 
-    /// Check whether the current type is T1
+    /// Check whether the current type is T1.
     bool Is(Token<T1>) const { return (v1 != NULL); }
-    /// Check whether the current type is T2
+    /// Check whether the current type is T2.
     bool Is(Token<T2>) const { return (v2 != NULL); }
-    /// Check whether the current type is T3
+    /// Check whether the current type is T3.
     bool Is(Token<T3>) const { return (v3 != NULL); }
 
-    /// Retrieve the current value as a T1
+    /// Retrieve the current value as a T1.
     T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T2
+    /// Retrieve the current value as a T2.
     T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T3
+    /// Retrieve the current value as a T3.
     T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
@@ -291,16 +291,16 @@ public:
 
 protected:
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph3* o) { *o = Morph3(); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph3* o, const Morph3& m) { *o = Morph3(m); }
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph3* o, const T1& v) { *o = Morph3(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph3* o, const T2& v) { *o = Morph3(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph3* o, const T3& v) { *o = Morph3(v); }
 
     T1* v1;
@@ -320,13 +320,13 @@ class Morph4
 {
 public:
 
-    /// construct an empty Morph object
+    /// Construct an empty Morph object.
     Morph4()
       : v1(NULL), v2(NULL), v3(NULL),  v4(NULL)
     {
     }
 
-    /// copy an existing morph object
+    /// Copy an existing morph object.
     Morph4(const Morph4& m)
     {
         if (m.v1 != NULL) *this = *m.v1;
@@ -335,22 +335,22 @@ public:
         if (m.v4 != NULL) *this = *m.v4;
     }
 
-    /// set type to T1, and value to v
+    /// Set type to T1, and value to v.
     Morph4(const T1& v)
       : v1(new T1(v)), v2(NULL), v3(NULL), v4(NULL)
     {
     }
-    /// set type to T2, and value to v
+    /// Set type to T2, and value to v.
     Morph4(const T2& v)
       : v1(NULL), v2(new T2(v)), v3(NULL), v4(NULL)
     {
     }
-    /// set type to T3, and value to v
+    /// Set type to T3, and value to v.
     Morph4(const T3& v)
       : v1(NULL), v2(NULL), v3(new T3(v)), v4(NULL)
     {
     }
-    /// set type to T4, and value to v
+    /// Set type to T4, and value to v.
     Morph4(const T4& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(new T4(v))
     {
@@ -364,7 +364,7 @@ public:
         delete v4;
     }
 
-    /// Check for inequality with another Morph4
+    /// Check for inequality with another Morph4.
     bool operator!=(const Morph4& m) const
     {
         if (v1 == NULL) {
@@ -383,50 +383,50 @@ public:
         return false;
     }
 
-    /// Check for equality with another Morph4
+    /// Check for equality with another Morph4.
     bool operator==(const Morph4 m) const
     {
         return !(*this != m);
     }
 
-    /// Check for inequality with a T1
+    /// Check for inequality with a T1.
     bool operator!=(const T1& v) const
     {
         if (v1 == NULL || *v1 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T1
+    /// Check for equality with a T1.
     bool operator==(const T1& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T2
+    /// Check for inequality with a T2.
     bool operator!=(const T2& v) const
     {
         if (v2 == NULL || *v2 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T2
+    /// Check for equality with a T2.
     bool operator==(const T2& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T3
+    /// Check for inequality with a T3.
     bool operator!=(const T3& v) const
     {
         if (v3 == NULL || *v3 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T3
+    /// Check for equality with a T3.
     bool operator==(const T3& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T4
+    /// Check for inequality with a T4.
     bool operator!=(const T4& v) const
     {
         if (v4 == NULL || *v4 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T4
+    /// Check for equality with a T4.
     bool operator==(const T4& v) const { return !(*this != v); }
 
 
@@ -438,34 +438,34 @@ public:
         if (v4 != NULL) { delete v4; v4 = NULL; }
     }
 
-    /// Check whether the current type is T1
+    /// Check whether the current type is T1.
     bool Is(Token<T1>) const { return (v1 != NULL); }
-    /// Check whether the current type is T2
+    /// Check whether the current type is T2.
     bool Is(Token<T2>) const { return (v2 != NULL); }
-    /// Check whether the current type is T3
+    /// Check whether the current type is T3.
     bool Is(Token<T3>) const { return (v3 != NULL); }
-    /// Check whether the current type is T4
+    /// Check whether the current type is T4.
     bool Is(Token<T4>) const { return (v4 != NULL); }
 
-    /// Retrieve the current value as a T1
+    /// Retrieve the current value as a T1.
     T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T2
+    /// Retrieve the current value as a T2.
     T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T3
+    /// Retrieve the current value as a T3.
     T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T4
+    /// Retrieve the current value as a T4.
     T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
@@ -474,18 +474,18 @@ public:
 
 protected:
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph4* o) { *o = Morph4(); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph4* o, const Morph4& m) { *o = Morph4(m); }
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph4* o, const T1& v) { *o = Morph4(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph4* o, const T2& v) { *o = Morph4(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph4* o, const T3& v) { *o = Morph4(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph4* o, const T4& v) { *o = Morph4(v); }
 
     T1* v1;
@@ -506,13 +506,13 @@ class Morph5
 {
 public:
 
-    /// construct an empty Morph object
+    /// Construct an empty Morph object.
     Morph5()
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL),  v5(NULL)
     {
     }
 
-    /// copy an existing morph object
+    /// Copy an existing morph object.
     Morph5(const Morph5& m)
     {
         if (m.v1 != NULL) *this = *m.v1;
@@ -522,27 +522,27 @@ public:
         if (m.v5 != NULL) *this = *m.v5;
     }
 
-    /// set type to T1, and value to v
+    /// Set type to T1, and value to v.
     Morph5(const T1& v)
       : v1(new T1(v)), v2(NULL), v3(NULL), v4(NULL), v5(NULL)
     {
     }
-    /// set type to T2, and value to v
+    /// Set type to T2, and value to v.
     Morph5(const T2& v)
       : v1(NULL), v2(new T2(v)), v3(NULL), v4(NULL), v5(NULL)
     {
     }
-    /// set type to T3, and value to v
+    /// Set type to T3, and value to v.
     Morph5(const T3& v)
       : v1(NULL), v2(NULL), v3(new T3(v)), v4(NULL), v5(NULL)
     {
     }
-    /// set type to T4, and value to v
+    /// Set type to T4, and value to v.
     Morph5(const T4& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(new T4(v)), v5(NULL)
     {
     }
-    /// set type to T5, and value to v
+    /// Set type to T5, and value to v.
     Morph5(const T5& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(new T5(v))
     {
@@ -557,7 +557,7 @@ public:
         delete v5;
     }
 
-    /// Check for inequality with another Morph5
+    /// Check for inequality with another Morph5.
     bool operator!=(const Morph5& m) const
     {
         if (v1 == NULL) {
@@ -579,60 +579,60 @@ public:
         return false;
     }
 
-    /// Check for equality with another Morph5
+    /// Check for equality with another Morph5.
     bool operator==(const Morph5 m) const
     {
         return !(*this != m);
     }
 
-    /// Check for inequality with a T1
+    /// Check for inequality with a T1.
     bool operator!=(const T1& v) const
     {
         if (v1 == NULL || *v1 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T1
+    /// Check for equality with a T1.
     bool operator==(const T1& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T2
+    /// Check for inequality with a T2.
     bool operator!=(const T2& v) const
     {
         if (v2 == NULL || *v2 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T2
+    /// Check for equality with a T2.
     bool operator==(const T2& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T3
+    /// Check for inequality with a T3.
     bool operator!=(const T3& v) const
     {
         if (v3 == NULL || *v3 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T3
+    /// Check for equality with a T3.
     bool operator==(const T3& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T4
+    /// Check for inequality with a T4.
     bool operator!=(const T4& v) const
     {
         if (v4 == NULL || *v4 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T4
+    /// Check for equality with a T4.
     bool operator==(const T4& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T5
+    /// Check for inequality with a T5.
     bool operator!=(const T5& v) const
     {
         if (v5 == NULL || *v5 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T5
+    /// Check for equality with a T5.
     bool operator==(const T5& v) const { return !(*this != v); }
 
 
@@ -645,42 +645,42 @@ public:
         if (v5 != NULL) { delete v5; v5 = NULL; }
     }
 
-    /// Check whether the current type is T1
+    /// Check whether the current type is T1.
     bool Is(Token<T1>) const { return (v1 != NULL); }
-    /// Check whether the current type is T2
+    /// Check whether the current type is T2.
     bool Is(Token<T2>) const { return (v2 != NULL); }
-    /// Check whether the current type is T3
+    /// Check whether the current type is T3.
     bool Is(Token<T3>) const { return (v3 != NULL); }
-    /// Check whether the current type is T4
+    /// Check whether the current type is T4.
     bool Is(Token<T4>) const { return (v4 != NULL); }
-    /// Check whether the current type is T5
+    /// Check whether the current type is T5.
     bool Is(Token<T5>) const { return (v5 != NULL); }
 
-    /// Retrieve the current value as a T1
+    /// Retrieve the current value as a T1.
     T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T2
+    /// Retrieve the current value as a T2.
     T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T3
+    /// Retrieve the current value as a T3.
     T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T4
+    /// Retrieve the current value as a T4.
     T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T5
+    /// Retrieve the current value as a T5.
     T5& As(Token<T5>) const throw (WrongTypeException)
     {
         if (v5 != NULL) return *v5;
@@ -689,20 +689,20 @@ public:
 
 protected:
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph5* o) { *o = Morph5(); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph5* o, const Morph5& m) { *o = Morph5(m); }
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph5* o, const T1& v) { *o = Morph5(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph5* o, const T2& v) { *o = Morph5(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph5* o, const T3& v) { *o = Morph5(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph5* o, const T4& v) { *o = Morph5(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph5* o, const T5& v) { *o = Morph5(v); }
 
     T1* v1;
@@ -724,13 +724,13 @@ class Morph6
 {
 public:
 
-    /// construct an empty Morph object
+    /// Construct an empty Morph object.
     Morph6()
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL),  v6(NULL)
     {
     }
 
-    /// copy an existing morph object
+    /// Copy an existing morph object.
     Morph6(const Morph6& m)
     {
         if (m.v1 != NULL) *this = *m.v1;
@@ -741,32 +741,32 @@ public:
         if (m.v6 != NULL) *this = *m.v6;
     }
 
-    /// set type to T1, and value to v
+    /// Set type to T1, and value to v.
     Morph6(const T1& v)
       : v1(new T1(v)), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(NULL)
     {
     }
-    /// set type to T2, and value to v
+    /// Set type to T2, and value to v.
     Morph6(const T2& v)
       : v1(NULL), v2(new T2(v)), v3(NULL), v4(NULL), v5(NULL), v6(NULL)
     {
     }
-    /// set type to T3, and value to v
+    /// Set type to T3, and value to v.
     Morph6(const T3& v)
       : v1(NULL), v2(NULL), v3(new T3(v)), v4(NULL), v5(NULL), v6(NULL)
     {
     }
-    /// set type to T4, and value to v
+    /// Set type to T4, and value to v.
     Morph6(const T4& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(new T4(v)), v5(NULL), v6(NULL)
     {
     }
-    /// set type to T5, and value to v
+    /// Set type to T5, and value to v.
     Morph6(const T5& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(new T5(v)), v6(NULL)
     {
     }
-    /// set type to T6, and value to v
+    /// Set type to T6, and value to v.
     Morph6(const T6& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(new T6(v))
     {
@@ -782,7 +782,7 @@ public:
         delete v6;
     }
 
-    /// Check for inequality with another Morph6
+    /// Check for inequality with another Morph6.
     bool operator!=(const Morph6& m) const
     {
         if (v1 == NULL) {
@@ -807,70 +807,70 @@ public:
         return false;
     }
 
-    /// Check for equality with another Morph6
+    /// Check for equality with another Morph6.
     bool operator==(const Morph6 m) const
     {
         return !(*this != m);
     }
 
-    /// Check for inequality with a T1
+    /// Check for inequality with a T1.
     bool operator!=(const T1& v) const
     {
         if (v1 == NULL || *v1 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T1
+    /// Check for equality with a T1.
     bool operator==(const T1& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T2
+    /// Check for inequality with a T2.
     bool operator!=(const T2& v) const
     {
         if (v2 == NULL || *v2 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T2
+    /// Check for equality with a T2.
     bool operator==(const T2& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T3
+    /// Check for inequality with a T3.
     bool operator!=(const T3& v) const
     {
         if (v3 == NULL || *v3 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T3
+    /// Check for equality with a T3.
     bool operator==(const T3& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T4
+    /// Check for inequality with a T4.
     bool operator!=(const T4& v) const
     {
         if (v4 == NULL || *v4 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T4
+    /// Check for equality with a T4.
     bool operator==(const T4& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T5
+    /// Check for inequality with a T5.
     bool operator!=(const T5& v) const
     {
         if (v5 == NULL || *v5 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T5
+    /// Check for equality with a T5.
     bool operator==(const T5& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T6
+    /// Check for inequality with a T6.
     bool operator!=(const T6& v) const
     {
         if (v6 == NULL || *v6 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T6
+    /// Check for equality with a T6.
     bool operator==(const T6& v) const { return !(*this != v); }
 
 
@@ -884,50 +884,50 @@ public:
         if (v6 != NULL) { delete v6; v6 = NULL; }
     }
 
-    /// Check whether the current type is T1
+    /// Check whether the current type is T1.
     bool Is(Token<T1>) const { return (v1 != NULL); }
-    /// Check whether the current type is T2
+    /// Check whether the current type is T2.
     bool Is(Token<T2>) const { return (v2 != NULL); }
-    /// Check whether the current type is T3
+    /// Check whether the current type is T3.
     bool Is(Token<T3>) const { return (v3 != NULL); }
-    /// Check whether the current type is T4
+    /// Check whether the current type is T4.
     bool Is(Token<T4>) const { return (v4 != NULL); }
-    /// Check whether the current type is T5
+    /// Check whether the current type is T5.
     bool Is(Token<T5>) const { return (v5 != NULL); }
-    /// Check whether the current type is T6
+    /// Check whether the current type is T6.
     bool Is(Token<T6>) const { return (v6 != NULL); }
 
-    /// Retrieve the current value as a T1
+    /// Retrieve the current value as a T1.
     T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T2
+    /// Retrieve the current value as a T2.
     T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T3
+    /// Retrieve the current value as a T3.
     T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T4
+    /// Retrieve the current value as a T4.
     T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T5
+    /// Retrieve the current value as a T5.
     T5& As(Token<T5>) const throw (WrongTypeException)
     {
         if (v5 != NULL) return *v5;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T6
+    /// Retrieve the current value as a T6.
     T6& As(Token<T6>) const throw (WrongTypeException)
     {
         if (v6 != NULL) return *v6;
@@ -936,22 +936,22 @@ public:
 
 protected:
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph6* o) { *o = Morph6(); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph6* o, const Morph6& m) { *o = Morph6(m); }
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph6* o, const T1& v) { *o = Morph6(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph6* o, const T2& v) { *o = Morph6(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph6* o, const T3& v) { *o = Morph6(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph6* o, const T4& v) { *o = Morph6(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph6* o, const T5& v) { *o = Morph6(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph6* o, const T6& v) { *o = Morph6(v); }
 
     T1* v1;
@@ -974,13 +974,13 @@ class Morph7
 {
 public:
 
-    /// construct an empty Morph object
+    /// Construct an empty Morph object.
     Morph7()
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(NULL),  v7(NULL)
     {
     }
 
-    /// copy an existing morph object
+    /// Copy an existing morph object.
     Morph7(const Morph7& m)
     {
         if (m.v1 != NULL) *this = *m.v1;
@@ -992,37 +992,37 @@ public:
         if (m.v7 != NULL) *this = *m.v7;
     }
 
-    /// set type to T1, and value to v
+    /// Set type to T1, and value to v.
     Morph7(const T1& v)
       : v1(new T1(v)), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(NULL), v7(NULL)
     {
     }
-    /// set type to T2, and value to v
+    /// Set type to T2, and value to v.
     Morph7(const T2& v)
       : v1(NULL), v2(new T2(v)), v3(NULL), v4(NULL), v5(NULL), v6(NULL), v7(NULL)
     {
     }
-    /// set type to T3, and value to v
+    /// Set type to T3, and value to v.
     Morph7(const T3& v)
       : v1(NULL), v2(NULL), v3(new T3(v)), v4(NULL), v5(NULL), v6(NULL), v7(NULL)
     {
     }
-    /// set type to T4, and value to v
+    /// Set type to T4, and value to v.
     Morph7(const T4& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(new T4(v)), v5(NULL), v6(NULL), v7(NULL)
     {
     }
-    /// set type to T5, and value to v
+    /// Set type to T5, and value to v.
     Morph7(const T5& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(new T5(v)), v6(NULL), v7(NULL)
     {
     }
-    /// set type to T6, and value to v
+    /// Set type to T6, and value to v.
     Morph7(const T6& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(new T6(v)), v7(NULL)
     {
     }
-    /// set type to T7, and value to v
+    /// Set type to T7, and value to v.
     Morph7(const T7& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(NULL), v7(new T7(v))
     {
@@ -1039,7 +1039,7 @@ public:
         delete v7;
     }
 
-    /// Check for inequality with another Morph7
+    /// Check for inequality with another Morph7.
     bool operator!=(const Morph7& m) const
     {
         if (v1 == NULL) {
@@ -1067,80 +1067,80 @@ public:
         return false;
     }
 
-    /// Check for equality with another Morph7
+    /// Check for equality with another Morph7.
     bool operator==(const Morph7 m) const
     {
         return !(*this != m);
     }
 
-    /// Check for inequality with a T1
+    /// Check for inequality with a T1.
     bool operator!=(const T1& v) const
     {
         if (v1 == NULL || *v1 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T1
+    /// Check for equality with a T1.
     bool operator==(const T1& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T2
+    /// Check for inequality with a T2.
     bool operator!=(const T2& v) const
     {
         if (v2 == NULL || *v2 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T2
+    /// Check for equality with a T2.
     bool operator==(const T2& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T3
+    /// Check for inequality with a T3.
     bool operator!=(const T3& v) const
     {
         if (v3 == NULL || *v3 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T3
+    /// Check for equality with a T3.
     bool operator==(const T3& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T4
+    /// Check for inequality with a T4.
     bool operator!=(const T4& v) const
     {
         if (v4 == NULL || *v4 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T4
+    /// Check for equality with a T4.
     bool operator==(const T4& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T5
+    /// Check for inequality with a T5.
     bool operator!=(const T5& v) const
     {
         if (v5 == NULL || *v5 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T5
+    /// Check for equality with a T5.
     bool operator==(const T5& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T6
+    /// Check for inequality with a T6.
     bool operator!=(const T6& v) const
     {
         if (v6 == NULL || *v6 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T6
+    /// Check for equality with a T6.
     bool operator==(const T6& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T7
+    /// Check for inequality with a T7.
     bool operator!=(const T7& v) const
     {
         if (v7 == NULL || *v7 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T7
+    /// Check for equality with a T7.
     bool operator==(const T7& v) const { return !(*this != v); }
 
 
@@ -1155,58 +1155,58 @@ public:
         if (v7 != NULL) { delete v7; v7 = NULL; }
     }
 
-    /// Check whether the current type is T1
+    /// Check whether the current type is T1.
     bool Is(Token<T1>) const { return (v1 != NULL); }
-    /// Check whether the current type is T2
+    /// Check whether the current type is T2.
     bool Is(Token<T2>) const { return (v2 != NULL); }
-    /// Check whether the current type is T3
+    /// Check whether the current type is T3.
     bool Is(Token<T3>) const { return (v3 != NULL); }
-    /// Check whether the current type is T4
+    /// Check whether the current type is T4.
     bool Is(Token<T4>) const { return (v4 != NULL); }
-    /// Check whether the current type is T5
+    /// Check whether the current type is T5.
     bool Is(Token<T5>) const { return (v5 != NULL); }
-    /// Check whether the current type is T6
+    /// Check whether the current type is T6.
     bool Is(Token<T6>) const { return (v6 != NULL); }
-    /// Check whether the current type is T7
+    /// Check whether the current type is T7.
     bool Is(Token<T7>) const { return (v7 != NULL); }
 
-    /// Retrieve the current value as a T1
+    /// Retrieve the current value as a T1.
     T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T2
+    /// Retrieve the current value as a T2.
     T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T3
+    /// Retrieve the current value as a T3.
     T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T4
+    /// Retrieve the current value as a T4.
     T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T5
+    /// Retrieve the current value as a T5.
     T5& As(Token<T5>) const throw (WrongTypeException)
     {
         if (v5 != NULL) return *v5;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T6
+    /// Retrieve the current value as a T6.
     T6& As(Token<T6>) const throw (WrongTypeException)
     {
         if (v6 != NULL) return *v6;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T7
+    /// Retrieve the current value as a T7.
     T7& As(Token<T7>) const throw (WrongTypeException)
     {
         if (v7 != NULL) return *v7;
@@ -1215,24 +1215,24 @@ public:
 
 protected:
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o) { *o = Morph7(); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o, const Morph7& m) { *o = Morph7(m); }
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o, const T1& v) { *o = Morph7(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o, const T2& v) { *o = Morph7(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o, const T3& v) { *o = Morph7(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o, const T4& v) { *o = Morph7(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o, const T5& v) { *o = Morph7(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o, const T6& v) { *o = Morph7(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph7* o, const T7& v) { *o = Morph7(v); }
 
     T1* v1;
@@ -1256,13 +1256,13 @@ class Morph8
 {
 public:
 
-    /// construct an empty Morph object
+    /// Construct an empty Morph object.
     Morph8()
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(NULL), v7(NULL),  v8(NULL)
     {
     }
 
-    /// copy an existing morph object
+    /// Copy an existing morph object.
     Morph8(const Morph8& m)
     {
         if (m.v1 != NULL) *this = *m.v1;
@@ -1275,42 +1275,42 @@ public:
         if (m.v8 != NULL) *this = *m.v8;
     }
 
-    /// set type to T1, and value to v
+    /// Set type to T1, and value to v.
     Morph8(const T1& v)
       : v1(new T1(v)), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(NULL), v7(NULL), v8(NULL)
     {
     }
-    /// set type to T2, and value to v
+    /// Set type to T2, and value to v.
     Morph8(const T2& v)
       : v1(NULL), v2(new T2(v)), v3(NULL), v4(NULL), v5(NULL), v6(NULL), v7(NULL), v8(NULL)
     {
     }
-    /// set type to T3, and value to v
+    /// Set type to T3, and value to v.
     Morph8(const T3& v)
       : v1(NULL), v2(NULL), v3(new T3(v)), v4(NULL), v5(NULL), v6(NULL), v7(NULL), v8(NULL)
     {
     }
-    /// set type to T4, and value to v
+    /// Set type to T4, and value to v.
     Morph8(const T4& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(new T4(v)), v5(NULL), v6(NULL), v7(NULL), v8(NULL)
     {
     }
-    /// set type to T5, and value to v
+    /// Set type to T5, and value to v.
     Morph8(const T5& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(new T5(v)), v6(NULL), v7(NULL), v8(NULL)
     {
     }
-    /// set type to T6, and value to v
+    /// Set type to T6, and value to v.
     Morph8(const T6& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(new T6(v)), v7(NULL), v8(NULL)
     {
     }
-    /// set type to T7, and value to v
+    /// Set type to T7, and value to v.
     Morph8(const T7& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(NULL), v7(new T7(v)), v8(NULL)
     {
     }
-    /// set type to T8, and value to v
+    /// Set type to T8, and value to v.
     Morph8(const T8& v)
       : v1(NULL), v2(NULL), v3(NULL), v4(NULL), v5(NULL), v6(NULL), v7(NULL), v8(new T8(v))
     {
@@ -1328,7 +1328,7 @@ public:
         delete v8;
     }
 
-    /// Check for inequality with another Morph8
+    /// Check for inequality with another Morph8.
     bool operator!=(const Morph8& m) const
     {
         if (v1 == NULL) {
@@ -1359,90 +1359,90 @@ public:
         return false;
     }
 
-    /// Check for equality with another Morph8
+    /// Check for equality with another Morph8.
     bool operator==(const Morph8 m) const
     {
         return !(*this != m);
     }
 
-    /// Check for inequality with a T1
+    /// Check for inequality with a T1.
     bool operator!=(const T1& v) const
     {
         if (v1 == NULL || *v1 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T1
+    /// Check for equality with a T1.
     bool operator==(const T1& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T2
+    /// Check for inequality with a T2.
     bool operator!=(const T2& v) const
     {
         if (v2 == NULL || *v2 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T2
+    /// Check for equality with a T2.
     bool operator==(const T2& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T3
+    /// Check for inequality with a T3.
     bool operator!=(const T3& v) const
     {
         if (v3 == NULL || *v3 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T3
+    /// Check for equality with a T3.
     bool operator==(const T3& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T4
+    /// Check for inequality with a T4.
     bool operator!=(const T4& v) const
     {
         if (v4 == NULL || *v4 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T4
+    /// Check for equality with a T4.
     bool operator==(const T4& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T5
+    /// Check for inequality with a T5.
     bool operator!=(const T5& v) const
     {
         if (v5 == NULL || *v5 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T5
+    /// Check for equality with a T5.
     bool operator==(const T5& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T6
+    /// Check for inequality with a T6.
     bool operator!=(const T6& v) const
     {
         if (v6 == NULL || *v6 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T6
+    /// Check for equality with a T6.
     bool operator==(const T6& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T7
+    /// Check for inequality with a T7.
     bool operator!=(const T7& v) const
     {
         if (v7 == NULL || *v7 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T7
+    /// Check for equality with a T7.
     bool operator==(const T7& v) const { return !(*this != v); }
 
-    /// Check for inequality with a T8
+    /// Check for inequality with a T8.
     bool operator!=(const T8& v) const
     {
         if (v8 == NULL || *v8 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T8
+    /// Check for equality with a T8.
     bool operator==(const T8& v) const { return !(*this != v); }
 
 
@@ -1458,66 +1458,66 @@ public:
         if (v8 != NULL) { delete v8; v8 = NULL; }
     }
 
-    /// Check whether the current type is T1
+    /// Check whether the current type is T1.
     bool Is(Token<T1>) const { return (v1 != NULL); }
-    /// Check whether the current type is T2
+    /// Check whether the current type is T2.
     bool Is(Token<T2>) const { return (v2 != NULL); }
-    /// Check whether the current type is T3
+    /// Check whether the current type is T3.
     bool Is(Token<T3>) const { return (v3 != NULL); }
-    /// Check whether the current type is T4
+    /// Check whether the current type is T4.
     bool Is(Token<T4>) const { return (v4 != NULL); }
-    /// Check whether the current type is T5
+    /// Check whether the current type is T5.
     bool Is(Token<T5>) const { return (v5 != NULL); }
-    /// Check whether the current type is T6
+    /// Check whether the current type is T6.
     bool Is(Token<T6>) const { return (v6 != NULL); }
-    /// Check whether the current type is T7
+    /// Check whether the current type is T7.
     bool Is(Token<T7>) const { return (v7 != NULL); }
-    /// Check whether the current type is T8
+    /// Check whether the current type is T8.
     bool Is(Token<T8>) const { return (v8 != NULL); }
 
-    /// Retrieve the current value as a T1
+    /// Retrieve the current value as a T1.
     T1& As(Token<T1>) const throw (WrongTypeException)
     {
         if (v1 != NULL) return *v1;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T2
+    /// Retrieve the current value as a T2.
     T2& As(Token<T2>) const throw (WrongTypeException)
     {
         if (v2 != NULL) return *v2;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T3
+    /// Retrieve the current value as a T3.
     T3& As(Token<T3>) const throw (WrongTypeException)
     {
         if (v3 != NULL) return *v3;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T4
+    /// Retrieve the current value as a T4.
     T4& As(Token<T4>) const throw (WrongTypeException)
     {
         if (v4 != NULL) return *v4;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T5
+    /// Retrieve the current value as a T5.
     T5& As(Token<T5>) const throw (WrongTypeException)
     {
         if (v5 != NULL) return *v5;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T6
+    /// Retrieve the current value as a T6.
     T6& As(Token<T6>) const throw (WrongTypeException)
     {
         if (v6 != NULL) return *v6;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T7
+    /// Retrieve the current value as a T7.
     T7& As(Token<T7>) const throw (WrongTypeException)
     {
         if (v7 != NULL) return *v7;
         throw WrongTypeException();
     }
-    /// Retrieve the current value as a T8
+    /// Retrieve the current value as a T8.
     T8& As(Token<T8>) const throw (WrongTypeException)
     {
         if (v8 != NULL) return *v8;
@@ -1526,26 +1526,26 @@ public:
 
 protected:
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o) { *o = Morph8(); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const Morph8& m) { *o = Morph8(m); }
 
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const T1& v) { *o = Morph8(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const T2& v) { *o = Morph8(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const T3& v) { *o = Morph8(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const T4& v) { *o = Morph8(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const T5& v) { *o = Morph8(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const T6& v) { *o = Morph8(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const T7& v) { *o = Morph8(v); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph8* o, const T8& v) { *o = Morph8(v); }
 
     T1* v1;

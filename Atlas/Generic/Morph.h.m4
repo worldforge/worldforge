@@ -10,19 +10,19 @@ define(`FORLOOP', `ifelse(eval($2 > $3), `1', , `pushdef(`$1', `$2')_FORLOOP(`$1
 define(`_FORLOOP', `$4`'ifelse($1, `$3', , `define(`$1', incr($1))_FORLOOP(`$1', `$2', `$3', `$4')')')dnl
 define(`TEMPLATE', `template<`'FORLOOP(`i', 1, eval($1 - 1), `typename T`'i, ')`'typename T`'$1`'>')dnl
 define(`CONSTRUCTOR', `
-    /// construct an empty Morph object
+    /// Construct an empty Morph object.
     Morph`'$1`'()
       : `'FORLOOP(`i', 1, eval($1 - 1), `v`'i`'(NULL), ') v$1(NULL)
     {
     }
 
-    /// copy an existing morph object
+    /// Copy an existing morph object.
     Morph`'$1`'(const Morph`'$1`'& m)
     {FORLOOP(`i', 1, $1, `
         if (m.v`'i`' != NULL) *this = *m.v`'i`';')
     }')dnl
 define(`CONSTRUCTOR_T', `
-    /// set type to T`'$2, and value to v
+    /// Set type to T`'$2, and value to v.
     Morph`'$1`'(const T`'$2& v)
       : `'FORLOOP(`i', 1, eval($2 - 1), `v`'i`'(NULL), ')`'v$2(new T$2(v))`'FORLOOP(`i', eval($2 + 1), eval($1 - 1), `, v`'i`'(NULL)')`'ifelse($1, $2, , `, v$1(NULL)')
     {
@@ -48,7 +48,7 @@ define(`OP_ASSIGN_T', `
         return *this;
     }')dnl
 define(`OP_EQ', `
-    /// Check for inequality with another Morph$1
+    /// Check for inequality with another Morph$1.
     bool operator!=(const Morph$1& m) const
     {`'FORLOOP(`i', 1, $1, `
         if (v`'i`' == NULL) {
@@ -58,20 +58,20 @@ define(`OP_EQ', `
         return false;
     }
 
-    /// Check for equality with another Morph$1
+    /// Check for equality with another Morph$1.
     bool operator==(const Morph$1 m) const
     {
         return !(*this != m);
     }')dnl
 define(`OP_EQ_T', `
-    /// Check for inequality with a T$1
+    /// Check for inequality with a T$1.
     bool operator!=(const T$1& v) const
     {
         if (v$1 == NULL || *v$1 != v)  return true;
         return false;
     }
 
-    /// Check for equality with a T$1
+    /// Check for equality with a T$1.
     bool operator==(const T$1& v) const { return !(*this != v); }
 ')dnl
 define(`CLEAR', `
@@ -80,10 +80,10 @@ define(`CLEAR', `
         if (v`'i`' != NULL) { delete v`'i`'; v`'i`' = NULL; }')
     }')dnl
 define(`IS_T', `
-    /// Check whether the current type is T$1
+    /// Check whether the current type is T$1.
     bool Is(Token<T$1>) const { return (v$1 != NULL); }')dnl
 define(`AS_T', `
-    /// Retrieve the current value as a T$1
+    /// Retrieve the current value as a T$1.
     T$1& As(Token<T$1>) const throw (WrongTypeException)
     {
         if (v$1 != NULL) return *v$1;
@@ -92,12 +92,12 @@ define(`AS_T', `
 define(`MEMBERS', `FORLOOP(`i', 1, $1, `
     T`'i`'* v`'i`';')')dnl
 define(`STATIC_CONSTRUCT', `
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph$1* o) { *o = Morph$1(); }
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph$1* o, const Morph$1& m) { *o = Morph$1(m); }')
 define(`STATIC_CONSTRUCT_T', `
-    /// Can be used in child class constructors
+    /// Can be used in child class constructors.
     static void construct(Morph$1* o, const T$2& v) { *o = Morph$1(v); }')
 define(`MORPH', `/** A Morph with $1 different possible types
  *

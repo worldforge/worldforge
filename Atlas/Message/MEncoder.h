@@ -5,35 +5,35 @@
 #ifndef ATLAS_MESSAGE_ENCODER_H
 #define ATLAS_MESSAGE_ENCODER_H
 
+#include "../EncoderBase.h"
 #include "../Bridge.h"
 #include "Object.h"
 
 namespace Atlas { namespace Message {
 
-/** Atlas message encoder
+/** Encoder that transmits Atlas::Message::Object.
  *
- * FIXME document this
+ * This encoder can be used to send Atlas::Message::Object objects representing
+ * full atlas messages.
  *
  * @see Object
- * @see Bridge
+ * @see Atlas::Bridge
+ * @see Atlas::EncoderBase
+ * @author Stefanus Du Toit <sdt@gmx.net>
  */
-
-class Encoder
+class Encoder : public Atlas::EncoderBase
 {
 public:
-
     Encoder(Atlas::Bridge*);
 
     virtual ~Encoder() { }
 
+    /// Send a message (must be a map!) in stream state.
     virtual void StreamMessage(const Object& obj);
+    /// Send an object as a map item.
     virtual void MapItem(const string&, const Object&);
+    /// Send an object as a list item.
     virtual void ListItem(const Object&);
-
-protected:
-
-    Atlas::Bridge* bridge;
-    
 };
 
 } } // namespace Atlas::Message
