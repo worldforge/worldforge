@@ -1,3 +1,7 @@
+Monday, 23rd June 2003, Al Riddoch <alriddoch@zepler.org>
+
+	* Fix Makefile.ams so that distcheck works.
+
 Friday 13th June, James Turner <james@worldforge.org>
 
 	* Fix compilation of the typeService stuff, this once again

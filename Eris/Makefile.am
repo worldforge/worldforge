@@ -1,3 +1,5 @@
+INCLUDES = -I$(top_srcdir)
+
 lib_LTLIBRARIES = liberis-1.0.la
 
 liberis_1_0_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
