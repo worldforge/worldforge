@@ -1,3 +1,11 @@
+Wednesday, April 23rd, 2003   James Turner <james@worldforge.org>
+
+    * Updated configure.in to use pkg-config to detect Atlas-C++,
+      removing the need for AM_PATH_ATLAS in one more place.
+    * Wrapped the sstream / strstream include tests in an
+      AC_LANG(C++) section, which they need in order to detect
+      correctly, at least on OS-X.
+
 Tuesday, April 22nd, 2003   James Turner <james@worldforge.org>
 
     * Added the ProjectBuilder files to EXTRA_DIST in
