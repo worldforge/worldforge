@@ -8,6 +8,7 @@ namespace Eris {
 
 // forward decls	
 class Entity;
+class World;
 
 /// Factory is used to allow custom entity creation by client libraries
 class Factory

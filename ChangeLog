@@ -1,3 +1,7 @@
+Tuesday, 26th November, Ron Steinke
+
+	* Added a missing forward declaration of World to Factory.h
+
 Monday, 18th November, Ron Steinke
 
 	* Changed a bunch of accessors that returned std::string
