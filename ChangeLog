@@ -1,3 +1,7 @@
+2004-10-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.5.91.
+
 2004-10-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Message/Element.h: Add operator== for comparing to C
