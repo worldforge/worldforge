@@ -3,13 +3,12 @@
 // Copyright (C) 2000 Stefanus Du Toit
 
 #include "../Stream/Codec.h"
-
 #include "Utility.h"
 
 using namespace std;
 using namespace Atlas::Stream;
 
-/** Packed ASCII codec
+/*
 
 [type][name]=[data]
   
