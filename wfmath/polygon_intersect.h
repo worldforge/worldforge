@@ -234,6 +234,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
     case 1:
       // Check for an intersection line
 
+      data.o1_is_line = !o1.m_axes_valid[1];
       data.o2_is_line = !o2.m_axes_valid[1];
 
       if(!o1.m_axes_valid[1] && !o2.m_axes_valid[1]) {

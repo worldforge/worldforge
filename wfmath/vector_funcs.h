@@ -262,6 +262,35 @@ CoordType Vector<dim>::sqrMag() const
   return ans;
 }
 
+template<const int dim>
+bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  CoordType dot = Dot(v1, v2);
+
+  return Equal(dot * dot, v1.sqrMag() * v2.sqrMag());
+}
+
+template<const int dim>
+bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  double max1 = 0, max2 = 0;
+
+  for(int i = 0; i < dim; ++i) {
+    double val1 = fabs(v1[i]), val2 = fabs(v2[i]);
+    if(val1 > max1)
+      max1 = val1;
+    if(val2 > max2)
+      max2 = val2;
+  }
+
+  // Need to scale by both, since Dot(v1, v2) goes like the product of the magnitudes
+  int exp1, exp2;
+  (void) frexp(max1, &exp1);
+  (void) frexp(max2, &exp2);
+
+  return fabs(Dot(v1, v2)) < ldexp(WFMATH_EPSILON, exp1 + exp2);
+}
+
 template<>
 inline const CoordType Vector<1>::sloppyMagMax()
 {

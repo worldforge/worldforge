@@ -1,11 +1,8 @@
-Intersect functions unimplemented:
-        for dim != 2,
-	  Intersect(Polygon<>, Polygon<>, bool)
-        for dim != 2,3 (extremely low priority)
-	  Intersect(Polygon<>, AxisBox<>, bool)
-	  Intersect(Polygon<>, RotBox<>, bool)
-	  Intersect(RotBox<>, AxisBox<>, bool)
-	  Intersect(RotBox<>, RotBox<>, bool)
+Intersect functions unimplemented for dim != 2,3 (extremely low priority):
+	Intersect(Polygon<>, AxisBox<>, bool)
+	Intersect(Polygon<>, RotBox<>, bool)
+	Intersect(RotBox<>, AxisBox<>, bool)
+	Intersect(RotBox<>, RotBox<>, bool)
     These will be postponed until I can think of a way to write them,
     or someone needs them, whichever comes first
 Add shape tests from COAL

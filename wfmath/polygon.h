@@ -183,7 +183,7 @@ struct _Poly2OrientIntersectData {
   int dim;
   Point<2> p1, p2;
   Vector<2> v1, v2, off;
-  bool o2_is_line;
+  bool o1_is_line, o2_is_line;
 };
 
 // Finds the intersection of the two planes, returns the

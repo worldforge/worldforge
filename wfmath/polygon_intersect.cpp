@@ -23,6 +23,8 @@
 // Author: Ron Steinke
 // Created: 2002-2-20
 
+#include <algorithm>
+
 #include "const.h"
 #include "vector.h"
 #include "point.h"
@@ -95,6 +97,223 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) con
   return true;
 }
 
+// This assumes the y coordinates of the points are all zero
+static void _LinePolyGetBounds(const Polygon<2> &poly, CoordType &low, CoordType &high)
+{
+	low = high = poly[0][0];
+
+        for(int i = 0; i < poly.numCorners(); ++i) {
+          CoordType val = poly[i][0];
+          if(val < low)
+            low = val;
+          if(val > high)
+            high = val;
+        }
+}
+
+// For use in _GetCrossings()
+struct LinePointData {
+  CoordType low, high;
+  bool cross;
+};
+
+// This finds the intervals where the polygon intersects the line
+// through p parallel to v, and puts the endpoints of those
+// intervals in the vector "cross"
+static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
+			  const Vector<2> &v, std::vector<CoordType> &cross,
+			  bool proper)
+{
+  assert(((unsigned int) poly.numCorners()) == cross.size()); // Already allocated
+  assert(Equal(v.sqrMag(), 1));
+
+  // The sign of the cross product changes when you cross the line
+  Point<2> old_p = poly.getCorner(poly.numCorners() - 1);
+  bool old_below = (Cross(v, old_p - p) < 0);
+  int next_cross = 0;
+
+  // Stuff for when multiple sequential corners lie on the line
+  std::list<LinePointData> *line_point_data = 0;
+
+  for(int i = 0; i < poly.numCorners(); ++i) {
+    Point<2> p_i =  poly.getCorner(i);
+    Vector<2> v_i = p_i - p;
+
+    CoordType v_i_sqr_mag = v_i.sqrMag(), proj = Dot(v_i, v);
+
+    if(Equal(v_i_sqr_mag, proj * proj)) { // corner lies on line
+      Point<2> p_j;
+      Vector<2> v_j;
+      CoordType proj_j, low_proj = proj, high_proj = proj;
+      int j;
+      for(j = i + 1; j != i; j == poly.numCorners() - 1 ? j = 0 : ++j) {
+        p_j = poly.getCorner(j);
+	v_j = p_j - p;
+        proj_j = Dot(v_j, v);
+
+        if(!Equal(v_j.sqrMag(), proj_j * proj_j))
+          break;
+
+        if(proj_j < low_proj)
+          low_proj = proj_j;
+        if(proj_j > high_proj)
+          high_proj = proj_j;
+      }
+
+      assert(j != i); // We know that the polygon spans a 2d space
+
+      bool below = (Cross(v, v_j) < 0);
+
+      if(below == old_below && proper) {
+        old_p = p_j;
+        continue;
+      }
+
+      if(j == i + 1) { // just one point on the line
+
+        if(below != old_below) {
+          old_below = below;
+          cross[next_cross++] = proj;
+        }
+        else {
+          assert(!proper);
+          // Just touches, adding it twice will give a zero length "hit" region
+          cross[next_cross++] = proj;
+          cross[next_cross++] = proj;
+        }
+
+        old_p = p_j;
+        continue;
+      }
+
+      LinePointData data = {low_proj, high_proj, below != old_below};
+
+      if(!line_point_data)
+        line_point_data = new std::list<LinePointData>;
+
+      std::list<LinePointData>::iterator I;
+
+      for(I = line_point_data->begin(); I != line_point_data->end(); ++I) {
+        if(data.low > I->high)
+          continue;
+
+        if(data.high < I->low) {
+          line_point_data->insert(I, data);
+          break;
+        }
+
+        // overlap
+
+        I->low = (I->low < data.low) ? I->low : data.low;
+        I->high = (I->high > data.high) ? I->high : data.high;
+        I->cross = (I->cross != data.cross);
+
+        std::list<LinePointData>::iterator J = I;
+
+        ++J;
+
+        if(J->low < I->high) {
+          I->high = J->high;
+          I->cross = (I->cross != J->cross);
+	  line_point_data->erase(J);
+        }
+      }
+
+      if(I == line_point_data->end())
+        line_point_data->push_back(data);
+
+      old_below = below;
+      old_p = p_j;
+      continue;
+    }
+
+    // the corner doesn't lie on the line, compute the intersection point
+
+    bool below = (Cross(v, v_i) < 0);
+
+    if(below != old_below) {
+      old_below = below;
+      Vector<2> dist = p - old_p;
+      CoordType dist_sqr_mag = dist.sqrMag();
+      CoordType dist_proj = Dot(dist, v);
+
+      CoordType denom = dist_proj * dist_proj - dist_sqr_mag;
+
+      assert(denom != 0); // We got a crossing, the vectors can't be parallel
+
+      CoordType line_pos = (dist_proj * Dot(v_i, dist) + dist_sqr_mag * proj) / denom;
+
+      cross[next_cross++] = line_pos;
+    }
+
+    old_p = p;
+  }
+
+  cross.resize(next_cross);
+  std::sort(cross.begin(), cross.end());
+
+  if(line_point_data) {
+    std::list<LinePointData>::iterator I = line_point_data->begin();
+    std::vector<CoordType>::iterator cross_num = cross.begin();
+    bool hit = false;
+
+    while(cross_num != cross.end() && I != line_point_data->end()) {
+      if(*cross_num < I->low) {
+        ++cross_num;
+	hit = !hit;
+        continue;
+      }
+
+      bool hit_between;
+      if(*cross_num > I->high) {
+        hit_between = I->cross;
+      }
+      else {
+        std::vector<CoordType>::iterator high_cross_num = cross_num;
+
+        do {
+          ++high_cross_num;
+        } while(*high_cross_num < I->high);
+
+        hit_between = (((high_cross_num - cross_num) % 2) != 0) != I->cross;
+
+        cross_num = cross.erase(cross_num, high_cross_num);
+      }
+      
+      if(hit_between) {
+        cross_num = cross.insert(cross_num, proper == hit ? I->low : I->high);
+        ++cross_num;
+        hit = !hit;
+      }
+      else if(!proper) {
+        cross_num = cross.insert(cross_num, I->low);
+        ++cross_num;
+        cross_num = cross.insert(cross_num, I->high);
+        ++cross_num;
+      }
+      ++I;
+    }
+
+    while(I != line_point_data->end()) {
+      if(I->cross) {
+        cross.push_back(proper == hit ? I->low : I->high);
+        hit = !hit;
+      }
+      else if(!proper) {
+        cross.push_back(I->low);
+        cross.push_back(I->high);
+      }
+      ++I;
+    }
+
+    assert(!hit); // end outside the polygon
+
+    delete line_point_data;
+  }
+
+  return cross.size() != 0;
+}
+
 bool WFMath::_PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
 				const int intersect_dim,
 				const _Poly2OrientIntersectData &data, bool proper)
@@ -106,8 +325,114 @@ bool WFMath::_PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2
       return Intersect(poly1, data.p1, proper)
 	  && Intersect(poly2, data.p2, proper);
     case 1:
-      // FIXME
-      break;
+      if(proper && (data.o1_is_line || data.o2_is_line))
+        return false;
+
+      if(data.o1_is_line && data.o2_is_line) {
+        assert(!proper);
+	CoordType low1, low2, high1, high2;
+
+	_LinePolyGetBounds(poly1, low1, high1);
+
+	low1 -= data.p1[0];
+	high1 -= data.p1[0];
+
+        if(data.v1[0] < 0) { // v1 = (-1, 0)
+          CoordType tmp = low1;
+          low1 = -high1;
+          high1 = -tmp;
+        }
+
+	_LinePolyGetBounds(poly2, low2, high2);
+
+	low2 -= data.p2[0];
+	high2 -= data.p2[0];
+
+        if(data.v2[0] < 0) { // v2 = (-1, 0)
+          CoordType tmp = low2;
+          low2 = -high2;
+          high2 = -tmp;
+        }
+
+	return high1 >= low2 && high2 >= low1;
+      }
+
+      if(data.o1_is_line) {
+	assert(!proper);
+	CoordType min, max;
+	_LinePolyGetBounds(poly1, min, max);
+
+	min -= data.p1[0];
+	max -= data.p1[0];
+
+        if(data.v1[0] < 0) { // v1 = (-1, 0)
+          CoordType tmp = min;
+          min = -max;
+          max = -tmp;
+        }
+
+        Segment<2> s(data.p2 + min * data.v2, data.p1 + max * data.v2);
+
+        return Intersect(poly2, s, false);
+      }
+
+      if(data.o2_is_line) {
+	assert(!proper);
+	CoordType min, max;
+	_LinePolyGetBounds(poly2, min, max);
+
+	min -= data.p2[0];
+	max -= data.p2[0];
+
+        if(data.v2[0] < 0) { // v2 = (-1, 0)
+          CoordType tmp = min;
+          min = -max;
+          max = -tmp;
+        }
+
+        Segment<2> s(data.p1 + min * data.v1, data.p1 + max * data.v1);
+
+        return Intersect(poly1, s, false);
+      }
+
+      {
+	std::vector<CoordType> cross1(poly1.numCorners());
+	if(!_GetCrossings(poly1, data.p1, data.v1, cross1, proper))
+	  return false; // line misses polygon
+
+	std::vector<CoordType> cross2(poly2.numCorners());
+	if(!_GetCrossings(poly2, data.p2, data.v2, cross2, proper))
+	  return false; // line misses polygon
+
+	std::vector<CoordType>::iterator i1 = cross1.begin(), i2 = cross2.begin();
+	bool hit1 = false, hit2 = false;
+
+	while(i1 != cross1.end() && i2 != cross2.end()) {
+	  if(Equal(*i1, *i2)) {
+	    if(!proper)
+	      return true;
+
+	    hit1 = !hit1;
+	    ++i1;
+	    hit2 = !hit2;
+	    ++i2;
+	  }
+
+	  if(*i1 < *i2) {
+	    hit1 = !hit1;
+	    ++i1;
+	  }
+	  else {
+	    hit2 = !hit2;
+	    ++i2;
+	  }
+
+	  if(hit1 && hit2)
+	    return true;
+	}
+
+	return false;
+      }
     case 2:
       // Shift one polygon into the other's coordinates.
       // Perhaps not the most efficient, but this is a
@@ -146,15 +471,11 @@ bool WFMath::_PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
 
       // The inner poly lies on a line, so it reduces to a line segment
       {
-        CoordType min = inner[0][0] - data.p1[0], max = min;
+	CoordType min, max;
+	_LinePolyGetBounds(inner, min, max);
 
-        for(int i = 0; i < inner.numCorners(); ++i) {
-          CoordType val = inner[i][0] - data.p1[0];
-          if(val < min)
-            min = val;
-          if(val > max)
-            max = val;
-        }
+	min -= data.p2[0];
+	max -= data.p2[0];
 
         if(data.v2[0] < 0) { // v2 = (-1, 0)
           CoordType tmp = min;

@@ -1,3 +1,10 @@
+Thursday, March 23, 2002	Ron Steinke <rsteinke@w-link.net>
+	* Finished Intersect(Polygon, Polygon). Now I've just got to
+	  test all those intersection functions
+	* Added Parallel() and Perpendicular() functions to compare the
+	  orientation of two vectors
+	* Incremented version number to 0.2.6
+
 Tuesday, March 23, 2002		Ron Steinke <rsteinke@w-link.net>
 
 	* Fixed bug with declaring the default value of the "proper"

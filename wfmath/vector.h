@@ -257,6 +257,11 @@ class Vector {
 CoordType Cross(const Vector<2>& v1, const Vector<2>& v2);
 Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
 
+template<const int dim>
+bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2);
+template<const int dim>
+bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2);
+
 } // namespace WFMath
 
 #include <wfmath/vector_funcs.h>
