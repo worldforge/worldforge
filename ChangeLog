@@ -1,3 +1,7 @@
+Monday, March 04 2002, Al Riddoch
+
+	* Fix removal of deleted entities from their container.
+
 Saturday, March 02 2002, James Turner
 
 	* Applied Ron Steinke's patch for WFMath support

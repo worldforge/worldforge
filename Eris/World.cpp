@@ -570,6 +570,10 @@ void World::markVisible(Entity *e)
 void World::flush(Entity *e)
 {
     assert(e);
+    Entity * r = e->getContainer();
+    if (r != NULL) {
+        r->rmvMember(e);
+    }
     EntityIDMap::iterator E = _lookup.find(e->getID());
     assert(E != _lookup.end());
     _lookup.erase(E);
