@@ -31,7 +31,8 @@ namespace Eris {
 class PollDataDefault : public PollData
 {
 public:
-	PollDataDefault(const std::set<const basic_socket_stream*>&, bool&);
+	PollDataDefault(const std::set<const basic_socket_stream*>&,
+		bool&, unsigned long);
 
 	virtual bool isReady(const basic_socket_stream*);
 private:
@@ -45,7 +46,7 @@ private:
 using namespace Eris;
 
 PollDataDefault::PollDataDefault(const std::set<const basic_socket_stream*>& str,
-				 bool &got_data) : maxfd(0)
+				 bool &got_data, unsigned long timeout) : maxfd(0)
 {
 	FD_ZERO(&pending);
 
@@ -69,8 +70,8 @@ PollDataDefault::PollDataDefault(const std::set<const basic_socket_stream*>& str
 		return;
 	}
 
-	struct timeval TIMEOUT_ZERO = {0, 0};
-	int retval = select(maxfd+1, &pending, NULL, NULL, &TIMEOUT_ZERO);
+	struct timeval use_timeout = {timeout / 1000, timeout % 1000};
+	int retval = select(maxfd+1, &pending, NULL, NULL, &use_timeout);
 	if (retval < 0)
 		// FIXME - is an error from select fatal or not? At present I think yes,
 		// but I'm sort of open to persuasion on this matter.
@@ -86,23 +87,23 @@ bool PollDataDefault::isReady(const basic_socket_stream* str)
 	return (fd != INVALID_SOCKET) && (fd <= maxfd) && FD_ISSET(fd, &pending);
 }
 
-void PollDefault::doPoll()
+void PollDefault::doPoll(unsigned long timeout)
 {
     if(_streams.size() == 0)
 	return;
 
     bool got_data;
-    PollDataDefault data(_streams, got_data);
+    PollDataDefault data(_streams, got_data, timeout);
 
     if(got_data)
 	emit(data);
 }
 
-void PollDefault::poll()
+void PollDefault::poll(unsigned long timeout = 0)
 {
   // This will throw if someone is using another kind
   // of poll, and that's a good thing.
-  dynamic_cast<PollDefault&>(Poll::instance()).doPoll();
+  dynamic_cast<PollDefault&>(Poll::instance()).doPoll(timeout);
 
   Timeout::pollAll();
 }

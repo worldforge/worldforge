@@ -17,12 +17,12 @@ public:
 	virtual void addStream(const basic_socket_stream*);
 	virtual void removeStream(const basic_socket_stream*);
 
-	static void poll();
+	static void poll(unsigned long timeout = 0);
 private:
 	std::set<const basic_socket_stream*> _streams;
 	typedef std::set<const basic_socket_stream*>::iterator _iter;
 
-	void doPoll();
+	void doPoll(unsigned long timeout);
 
 //	SigC::Slot0<bool> _prePoll;
 };

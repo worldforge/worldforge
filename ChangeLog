@@ -1,4 +1,9 @@
-Monday, April 29, Ron Steinke
+Monday, June 21, Ron Steinke
+
+	* Added an optional timeout argument to PollDefault::poll()
+
+Monday, April 29, Ron Steinke // The date's wrong here, but I don't
+				 remember the correct one
 
 	* Added check for fd == INVALID_SOCKET in PollDefault
 
