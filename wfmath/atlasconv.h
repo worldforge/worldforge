@@ -59,6 +59,8 @@ struct _AtlasBadParse : public Atlas::Message::WrongTypeException,
 };
 
 typedef Atlas::Message::Object _AtlasMessageType;
+typedef Atlas::Message::Object::FloatType _AtlasFloatType;
+typedef Atlas::Message::Object::ListType _AtlasListType;
 
 inline bool _isNum(const _AtlasMessageType& a) {return a.IsNum();}
 inline _AtlasMessageType::FloatType _asNum(const _AtlasMessageType& a) {return a.AsNum();}

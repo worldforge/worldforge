@@ -1,3 +1,8 @@
+Saturday, March 6th, 2004 Al Riddoch <alriddoch@zepler.org>
+
+	* wfmath/atlasconv.h: Add typedefs so the tests still work
+	  with the 0.4 series.
+
 Wednesday, March 3rd, 2004 James Turner <james@worldforge.org>
 
 	* Made atlasconv.h use the new Atlas::Message public typdefs, instead
