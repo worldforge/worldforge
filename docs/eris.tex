@@ -1,0 +1,192 @@
+\documentclass{article}
+\autor{James Turner}
+\begin{document}
+
+\section{Introduction}
+
+\sebsection{Prerequisites}
+Some familiarity with Atlas is assumed. While Eris does encapsulate a good deal of Atlas
+from client authors initially, acheiving good integration and extending the behaviour
+of the system will requrie dealing with Atlas objects. There are two aspects, either of
+which will prove useful; firstly familiariy with the Atlas spec, and the precise meanings
+of terms such as codec, entity and operation, and secondly a working knowledge of Atlas-C++
+and how it implements the spec.
+
+\section{Working with Eris}
+
+This section intends to cover the essential points of writing a client using Eris. Establishing
+all the issues which need to be discussed here is a large task, so please don't consider
+this to be complete, at least for a while. In addition to this document, possibly
+the best material available is the source code to other Eris clients, notably Silence-C++,
+which doubles as a test-harness and trivial example of various aspects of Eris functionality.
+
+To avoid duplication with the design section, frequent reference will be made to various
+classes without providing much background information; refer to the appropriate design section
+for that information.
+
+\subsection{Getting Started}
+The first task is to get Eris and it's dependancies compiled and installed on your system.
+This document will assume a Unix-style build system for the moment, based around
+automake and autoconf.
+
+The most basic Eris program looks like this:
+{\tt
+
+#include <Eris/Connection.h>
+#include <Eris/PollDefault.h>
+
+void main(int argc, char* argv[])
+\{
+    Eris::Connection myCon("test\_client\_id", false);
+    
+    myCon.connect("server.worldforge.org", 6767);
+    
+    while (1) \{
+	Eris::PollDefault::poll();
+    \}
+\}
+}
+
+There are a few things to note about this example:
+\begin{itemize}
+\item Every Eris function and class is declared in the Eris namespace. You can choose
+to insert 'using namespace Eris;' declerations in your source files, or prefix all
+occurrence with 'Eris::' as clarity and brevity permit.
+\item All the Eris headers are grouped inside an 'Eris' directory 
+\end{itemize}
+
+The code above creates a connection object (which there should be only one of for the entire
+program, at the moment), and then enters a loop (which would be your mainloop in a real
+application) which calls a poll function. Since Eris is deliberately not multi-threaded,
+and does not make assumptions about the environment it runs in (for example, setting up
+alarms or signals), it requries you to manually poll it for data reasonably frequently.
+However, a standard implementation is provided for convenience (PollDefault) which
+simply calls the POSIX {\tt select()} function with a zero-length timeout.
+
+The program above, when run, will open a connection to the specified server, perform
+Atlas negotiation to determine a codec, and then start synchronising the local and remote
+Atlas type-info databases. However, it has a major flaw in that your client code has no
+way of monitoring what the Eris components are doing.
+
+\subsection{Signals and Slots}
+
+As noted above, Eris is not threaded, and does not require threading in clients. Instead,
+it is fully asynchrous, and uses callbacks to notify the client code about important
+events it might wish to respond too. In order to make the example above more useful,
+we need to attach some code to those callbacks. In Eris, callbacks are implemented as
+SigC++ signals.
+
+\subsection{Callbacks in Practice}
+
+{\tt
+
+#include <Eris/Connection.h>
+#include <Eris/PollDefault.h>
+
+void main(int argc, char* argv[])
+\{
+    Eris::Connection myCon("test\_client\_id", false);
+    
+    {\b myCon.Failure.connect(SigC::slot(&failureCallback)); }
+    {\b myCon.Connected.connect(SigC::slot(&connectedCallback)); }
+    myCon.connect("server.worldforge.org", 6767);
+    
+    while (1) \{
+	Eris::PollDefault::poll();
+    \}
+\}
+
+{\b
+void connectedCallback()
+\{
+    std::cout << "connected to the server" << std::endl;
+\}
+
+void failureCallback( const std::string &msg)
+\{
+    std::cerr << "Eris reported error: " << msg << std::endl;
+\}
+}
+
+The additional code here comprises two functions (which could equally be methods
+or any other object that can become a SigC slot), and some logic to attach these
+functions to the 'Failure' and 'Connection' signals that Eris::Connection defines.
+The implementation of the callbacks is entirely up to you; for example the
+Connected callback (and the matching Disconnected signal) could be used to toggle
+an icon in your client's status bar. Similarly the Failure callback could be used to
+pop up an alert dialog, or write to an in-game console.
+
+\section{Design}
+
+\subsection{Overview}
+
+The Eris classes and objects can be grouped into four basic clusters
+\begin{itemize}
+\item The low-level network types, notably Connection, TypeInfo, the
+dispatchers and the utility classes such as Timeout.
+\item The out-of-game session objects, principally Room and Lobby, plus
+a small helper class, Person.
+\item The in-game session objects, most obviously World and Entity. Associated
+(but less visible) classes are the Factories and the InvisibleEntityCache.
+\item The meta-server object, essentially Meta, MetaQuery and ServerInfo
+\end{itemize}
+
+In addition there is a helper class, 'Player', which does not fit neatly into these
+categories, but exists to encapsulate the notion of a playing user, with the
+expectation that multiple players may be supported in the future.
+
+\subsection{Fundamentals}
+
+Eris relies heavily on a number of concepts which you should be familiar with
+(to some degree). Firstly, C++ in general, including the STL (notably containers and
+iterators), as well as templates,  namespace and exceptions. Secondly, Eris
+makes extensive use of libSigC++ to implement versatile callbacks between objects.
+Familiarity with the concepts of signals/slots (as found in Qt, Gtk+ and others) is
+invaluable. Basic introductions can be found in many places.
+
+Perhaps most importantly, virtually all Eris code makes extensive use of Atlas-C++.
+Most of Atlas can be learned by browsing the code, but having a basic understanding of
+the concepts is recommended.
+
+Connection
+
+Eris::Connection encapsulates the network stream (as provided by the skstream library), as well as the Atlas codecs and decoders. In addition, it manages Atlas negotiation just after the steam is succesfully opened. Connection is critical because it is the root of the Dispatcher heirarchy which routes incoming messages to the correct object.
+
+Immediately after a succesful Atlas negotation completes, Connection initiates initial synchronisation of the Atlas type trees stored locally and on the server. This process can take several seconds depending on what types are available locally, the size of the server's type tree, and so on. Having accurate dynamic type information about Atlas objects is critical to enable intelligent process of operations and entities by Eris and the clients, as will be explained below.  
+
+Dispatchers
+
+Dispatchers are objects that filter and route Atlas::Message::Objects received by the Connection from the network. Branch dispatches typically test some attribute of the message, such as it's sender, type, contents, etc against a stored value. If the test is passed, the message is propogated to all of this dispatchers children. If the test fails, propogation is stopped.
+
+A few branch dispatchers differ slightly in this behaviour, in that they examine an attribute of the message, and route to exactly one of their children. This behaviour is exhibited by the ClassDispatcher, which routes based on the Atlas inheritance of messages. This behaviour allows child dispatchers to handle derived object types (for example SIGHT operations) without another child registered for INFO operations being invoked.
+
+The leaf Dispatchers are much simpler, simply forwarding received messages on to a destination. The most common example of this is the Signal dispatcher, which is a template class. It first converts the Atlas message into an Atlas object (whcih is the specialisation tpye of the dispatcher), and the invokes a SigC::Signal passing the Atlas object as it's argument.
+
+Dispatchers can modify messages the propogate to their children; the most common example of this being the Encap (encapsulation) dispatcher, which propogates the object stored in some argument of an operation to it's children. The 'container' objects is pushed down a stack, so it is still available. In the case of certain dispatches (such as SIGHT(SOUND(TALK)) ), this process occurs multiple times. The motivation for retaining the outer objects (the SIGHT in the example above) is that often critical information is contained. To take advantage of this, variants of the Signal disaptcher exist which decode and pass the top two items of the stack (and more is possible).
+
+One final point is that dispatchers have a unique name in their parent context, and this can be used to address a given dispatcher instance using a path specification. Notably, Connection features a 'getDispatcherByPath' method (which may return NULL). In order to simplify the addressing of dispatchers, there is support for anonymous nodes, which are generally handled transparently by the system. Dispatchers are reference counted, so once added to the tree they should manage themselves. This reference-counting scheme also permits a dispathcer to have multiple parents (which is used in practice) and even loops (which has not been tried yet).
+
+The dispatcher system is the most complex part of Eris, and had taken considerable evolution to reach it's current form. The price of moderate complexity in design is balanced by a small amount of code (most of the dispatcherd are two methods, a constructor and the 'dispatch' implementation), and fantastic dynamic flexibility. This makes dealing with new Atlas types and  changes to the protocol specification trivial.
+
+The In-Game Classes
+
+The most important in-game classes are World and Entity. World is a slight mis-nomer, in that it represents the in-game session, which is quite different to the server's notion of the World. Neverthless, it acts as a container for every Entity visible to the client, so the name will probably remain (it was inherited from UClient). World acts as a registrar for Factories, which will be discuseed further below, and provides global callbacks to monitor Entity lifetime (creation/deletion and appearance/disappearance). These callbacks permit clients to interface with Eris in various ways. The most common is to attach every Entity to a global object via it's callbacks (Moved, Changes and so on). The other is to create a peer/proxy instance in response to EntityCreated or EntityAppeared, and have that peer class be notified via the callbacks.
+
+This allows flexible integration with other code. For example, if working with a scene graph library, this permits a visualisation node to be created when an entity appears. The 'Moved' callback can be linked to a method on the scene graph node which updates the transform used in rendering.
+
+By using callbacks, it is no longer necessary to achieve all the integration by subclassing (often involving multiple inheritance)
+
+To support much closer integration, Eris supports sub-classing of Entity via Factories. These are objects registered with the World, which are (in order, based on an integer prioirty) passed each new Atlas object representing an Entity. If they choose to 'accept' and entity, they should create whatever instance type they choose. In combination with the TypeInfo system, this permits a client to create instance of MyClientPerson for all entities inheriting from 'person', while creating instance and MyClientTree for every entity inheriting from 'tree'. Of course clients may choose to use one class for every entity.
+
+If you override certain methods in your subclass (notably those used to track the state of Atlas attributes) and fail to call the original code you may cause undefined behaviour by Eris : please take great care if doing so, and consider whether such changes are necessary. Subclassing is intended to permit complex integration and processing : you shouldn't need it to get a client working. 
+
+History 
+
+The initial work on Eris was done during June 2001, with the goal of potentially demonstrating a 3D client at LinuxTag (in July!). Given an existing renderering system, what was required was the Atlas-speaking backend, and code to track entities outside of Atlas operations, so that a render could query position, velocity and other attributes independantly of the network. At the time of writing, the only WorldForge platform capable of supporting a working game was Acorn 0.4, i.e Cyphesis-C++ and UClient. Thus, I began by studying the UClient codebase, locating all the classes which dealt with Atlas and the network, and their interface to the renderer and sprite systems.
+
+This lead to the initial Connection, Player, Entity and World classes (though in much more basic form). Sometime during this period I also despaired of the Atlas::Objects::Decoder and came up with the initial version of the Dispatcher system.
+
+As I work through the UClient code, I raise any questions with alriddoch on IRC. This reveals many areas where the Acorn 0.3/0.4 platform contains oddities or missing functionality. After LinuxTag, the out-of-game code evolves into reliable operation with
+both cyphesis-C++ and Stage. This process continually reveals areas of inconsistency
+between the two servers which are gradually addresses and resolved over the next few months. 
+\end{document}

@@ -8,6 +8,8 @@
 #include <Atlas/Message/Object.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
 
+#include <wfmath/atlasconv.h>
+
 using namespace Atlas::Objects;
 
 TestEntity::TestEntity()
