@@ -16,15 +16,6 @@
 #include "Connection.h"
 #include "Log.h"
 
-#ifdef __WIN32__
-
-// icky hack.
-#ifndef snprintf
-#define snprintf _snprintf
-#endif
-
-#endif
-
 using namespace Atlas::Message;
 
 namespace Eris
