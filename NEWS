@@ -1,3 +1,19 @@
+2005-01-08
+
+This is the second unstable release of the current development work that will
+become Eris 1.4. A large number of bugs have been fixed since the previous
+release, in all areas of the code. The API has evolved slightly, so that
+more failures can be reported to the client application (for example, failure
+to create a character).
+
+More methods have been made virtual, at the suggestion of client-developers,
+and the arguments to many signals had been reduced and simplified, since there
+was a great deal of redundancy previously.
+
+While the API is settling down, it is still likely to change before the stable
+release, and should not be considered frozen. However, any changes should
+be incremental and localised.
+
 2004-10-19
 
 This is a development release of what will become Eris 1.4, the next stable

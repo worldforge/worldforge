@@ -1,3 +1,11 @@
+2005-01-08  James Turner  <james@worldforge.org>
+
+	* configure.ac: increase minor version number
+	
+	* tests/Makefile.am: tweak to try and make tests build and run correctly
+
+	* NEWS: add information for the the 1.3.2 release
+
 2005-01-07  James Turner  <james@worldforge.org>
 
 	* Eris/Account.cpp, Eris/Account.h: delay Avatar creation until the 
