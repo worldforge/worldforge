@@ -14,6 +14,7 @@ namespace Mercator {
 class TerrainMod
 {
 public:
+    virtual ~TerrainMod();
     //apply this modifier on a terrain segment at x,y in local coordinates
     //output is placed into point
     virtual void apply(float &point, int x, int y) const = 0;

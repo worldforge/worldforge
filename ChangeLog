@@ -1,3 +1,8 @@
+2005-03-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TerrainMod.cpp, Mercator/TerrainMod.h: Add a virtual
+	  destructor to TerrainMod.
+
 2005-02-21  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Segment.cpp, Mercator/Segment.h: Remove obsolete unused

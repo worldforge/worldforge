@@ -6,6 +6,10 @@
 
 namespace Mercator {
 
+TerrainMod::~TerrainMod()
+{
+}
+
 template class LevelTerrainMod<WFMath::Ball<2> >;
 template class LevelTerrainMod<WFMath::RotBox<2> >;
 
