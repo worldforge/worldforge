@@ -36,7 +36,6 @@ Object()
 /** Construct a copy of an existing Object */
 Object(const Object& src) 
 {
-	obj->decref();
 	obj = src.obj; 
 	obj->incref();
 }
