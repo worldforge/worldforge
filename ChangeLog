@@ -1,5 +1,9 @@
 2003-09-13 Damien McGinnes 
 
+	* TODO: cleaned up a few old TODOs
+        
+2003-09-13 Damien McGinnes 
+
 	* Mercator/Intersect.cpp,h: some intersection code cleanup
 	  ray intersection now returns the point of intersection
 	  and normal.
