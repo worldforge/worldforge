@@ -10,6 +10,8 @@
 
 #ifdef _WIN32
 int ATCPSocket::didWSAInit = 0;
+#else
+#include <fcntl.h>
 #endif
 
 ATCPSocket::ATCPSocket()
@@ -62,7 +64,11 @@ int	ATCPSocket::connect(string& addr, int port)
 	sin.sin_port = htons(port);
 	sin.sin_addr.s_addr = hostaddr;
 
-	return ::connect(sock, (struct sockaddr*)&sin, sizeof(sin));
+        res=::connect(sock, (struct sockaddr*)&sin, sizeof(sin));
+#ifndef _WIN32
+        fcntl(sock,F_SETFL,O_NONBLOCK);
+#endif
+        return res;
 }
 
 int	ATCPSocket::listen(string& addr, int port, int backlog)
@@ -85,7 +91,7 @@ int	ATCPSocket::listen(string& addr, int port, int backlog)
 	return ::listen(sock, backlog);
 }
 
-ATCPSocket*	ATCPSocket::accept()
+ASocket*	ATCPSocket::accept()
 {
 	int			newsock;
 	struct sockaddr_in	sin;
@@ -106,6 +112,7 @@ int		ATCPSocket::recv(string& data)
 	char	buf[2048];
 
 	int res = ::recv(sock,buf,2047,0);
+        if(res<0) res=0;
 
 	data.erase();
 	data.assign(buf,res);

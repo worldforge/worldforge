@@ -8,7 +8,7 @@
 
 #include "AtlasPackedAsciiEncoder.h"
 
-#include <map.h>
+//#include <map.h>
 #include <memory.h>
 #include <stdlib.h>
 #include <string.h>

@@ -40,7 +40,7 @@ class ASocket
 {
 
 protected:
-	int	sock;
+	SOCKET	sock;
 	string	rbuf;
 
 public:

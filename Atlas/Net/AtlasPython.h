@@ -11,11 +11,11 @@
 
 #include "AtlasDebug.h"
 
-#ifdef _WIN32
-#include <Python/python.h>
-#else
+//#ifdef _WIN32
+//#include <Python/python.h>
+//#else
 #include <Python.h>
-#endif
+//#endif
 
 #ifdef _ADebug_
 

@@ -14,7 +14,9 @@
 #include <sys/types.h>
 #include <memory.h>
 #include <string.h>
+#ifndef __WIN32
 #include <unistd.h>
+#endif
 #include <stdlib.h>
 
 class ATCPSocket: public ASocket
@@ -31,7 +33,7 @@ public:
 		ATCPSocket();
 		ATCPSocket(SOCKET asock);
 
-ATCPSocket*	accept();
+ASocket*	accept();
 
 int		connect(string& addr, int port);
 int		listen(string& addr, int port, int blog);
