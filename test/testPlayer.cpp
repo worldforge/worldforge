@@ -20,6 +20,7 @@
 
 using namespace Atlas::Message;
 using namespace Atlas::Objects;
+using namespace std;
 
 void onLoginComplete(bool &f) { f=true; }
 
