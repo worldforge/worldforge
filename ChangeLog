@@ -1,3 +1,7 @@
+2005-01-18  Simon Goodall <simon@simongoodall.co.uk>
+
+	* Eris/TypeInfo.h: Add getParents() accessor.
+
 2005-01-17  Al Riddoch  <alriddoch@zepler.org>
 
 	* Makefile.am, configure.ac, eris.spec.in: Update the way AC_INIT

@@ -76,6 +76,11 @@ public:
         return m_children;
     }
 
+    const TypeInfoSet & getParents() const 
+    {
+         return m_parents;
+    }
+
 protected:
     friend class TypeService;
     friend class TypeBoundRedispatch;
