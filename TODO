@@ -1,0 +1,21 @@
+TODO list for Atlas-C++:
+
+Items are written up by those who they are assigned to, unless otherwise noted
+(using " -- ").
+
+TODO items for sdt <sdt@gmx.net>:
+
+ - finish tutorial/ [0.3.8]
+ - write a python script that generates src/Objects/ [0.4.0]
+
+TODO items for mike <mikeday@corplink.com.au>:
+
+ - finish your docs mike! [0.3.9] -- sdt
+
+TODO items for anybody who wants to do them:
+
+ - write tests/ [0.4.0 / 0.3.10]
+ - make all tests succeed [0.4.0]
+ - write filterbuf, which uses Filter to filter data passed to and from a
+   streambuf -- sdt [0.4.0]
+ - make use of metrics in negotiation and elsewhere -- sdt [0.4.x]
