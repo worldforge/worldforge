@@ -53,8 +53,11 @@ Room::Room(Lobby *l) :
 
 Room::~Room()
 {
-    try {
-	if (!_parted)
+	/* avoid exceptions from further down if the Lobby never recieved the OOG entry. This
+	happens if a Lobby object is created but the connection never goes live, for example. */
+    if (_id.empty()) return;
+    
+	if (!_parted) // brutal tear down
 		leave();
 	
 	Connection *con = _lobby->getConnection();
@@ -66,7 +69,6 @@ Room::~Room()
 	con->removeDispatcherByPath("op:oog:imaginary", rid);
 	con->removeDispatcherByPath("op:oog:appearance", rid);
 	con->removeDispatcherByPath("op:oog:disappearance", rid);
-    } catch (...) {}
 }
 
 void Room::setup()
@@ -145,7 +147,6 @@ void Room::say(const std::string &tk)
 	Atlas::Objects::Operation::Talk t = 
 		Atlas::Objects::Operation::Talk::Instantiate();
 	
-	//Object::ListType args;
 	Atlas::Message::Object::MapType speech;
 	speech["say"] = tk;
 	speech["loc"] = _id;
@@ -205,7 +206,7 @@ Room* Room::createRoom(const std::string &name)
 {
     Connection *c = _lobby->getConnection();
     if (!c->isConnected())
-	throw InvalidOperation("Not connected to server");
+		throw InvalidOperation("Not connected to server");
     
     Atlas::Objects::Operation::Create cr = 
 	Atlas::Objects::Operation::Create::Instantiate();

@@ -48,7 +48,8 @@ class Stamp {
 	// constructed
 
 	friend bool operator<(const Stamp &a, const Stamp &b);
-
+	friend bool operator>(const Stamp &a, const Stamp &b);
+	
 	friend Stamp operator+(const Stamp &a, long msec);
 	friend Stamp operator-(const Stamp &a, long msec);
 	
@@ -60,6 +61,7 @@ class Stamp {
 //inline Stamp getCurrentStamp() {return Stamp().getCurrent();}
 
 bool operator<(const Stamp &a, const Stamp &b);
+bool operator>(const Stamp &a, const Stamp &b);
 
 Stamp operator+(const Stamp &a, long msec);
 

@@ -162,6 +162,13 @@ protected:
 	void queryTimeout(MetaQuery *q);
 	void metaTimeout();
 	
+	/** initiate a connection to the meta-server : this will issue a keep-alive followed
+	by a list request. */
+	void connect();
+	
+	/** tear down an existing connection to the server */
+	void disconnect();
+	
 	std::string _clientName;	///< the name to use when negotiating
 	MetaStatus _status;
 	std::string _metaHost;

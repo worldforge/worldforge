@@ -47,6 +47,14 @@ bool Time::operator<(const Time::Stamp &a, const Time::Stamp &b)
 		return a._val.tv_sec < b._val.tv_sec;
 }
 
+bool Time::operator>(const Time::Stamp &a, const Time::Stamp &b)
+{
+	if (a._val.tv_sec == b._val.tv_sec)
+		return (a._val.tv_usec > b._val.tv_usec);
+	else
+		return a._val.tv_sec > b._val.tv_sec;
+}
+
 Time::Stamp Time::operator+(const Time::Stamp &a, long msec)
 {
 	Stamp ret = a;

@@ -142,9 +142,9 @@ void Player::logout()
     }
 	
     if (!_currentAction.empty()) {
-	Eris::log(LOG_WARNING, "got logout with action (%s) already in progress",
-	    _currentAction.c_str());
-	return;
+		Eris::log(LOG_WARNING, "got logout with action (%s) already in progress",
+	    	_currentAction.c_str());
+		return;
     }
     
     Atlas::Objects::Operation::Logout l = 

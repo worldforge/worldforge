@@ -1,3 +1,29 @@
+Wednesday, August 28th, James Turner
+
+	* Fix a bug (found by Simon) in Connection::gotData, introduced
+	  by switching the lifetime of the underlying tcp_socket_stream. Basically
+	  we weren't checking if the _stream existing prior to calling isReady.
+	  If the meta-server is being used, and a connection object is created but
+	  not connected, then this bug (a segfault occurs), since the Connection
+	  is registered with the Poll instance and network activity can happen.
+	  
+	* Change the meta-server code to use the same life-time rationale for
+	  it's UDP stream that BaseConnection uses for the Atlas stream. Basically
+	  create the stream on refresh() and not before. This changes the default
+	  behaviour : creating a Meta instance will not trigger a list query. This allows
+	  the client to attach to the relevant signals before any failures can
+	  occurr (thanks Simon)
+	  
+	* Fixed game server list persistance (I hope). If a failure or cancel
+	  occurs while refreshing the list, Eris will revert back to the last
+	  'good' list it recieved (if one exists).
+	  
+	* Converted dispatcher clean up in Lobby dtor to use removeIfDispatcher instead
+	  of lame try { .. } catch {}  blocks.
+	  
+	* Added an explicit greater-than comparisom to Timestamp, so the tests compile.
+	  Did GCC 2.9.x implicitly use !(a > b) before? Certainly 3.1 seems not too.
+
 Thursday, August 8th, Al Riddoch
 
 	* Fixed sigc++ use so it complies with published APIs, and put

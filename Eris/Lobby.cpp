@@ -64,12 +64,8 @@ Lobby::Lobby(Connection *con) :
 	
 Lobby::~Lobby()
 {
-    try {
-	_con->removeDispatcherByPath("op:oog:sight:entity", "account");
-    } catch(...) {}
-    try {
-	_con->removeDispatcherByPath("op:oog:sight:entity", "room");
-    } catch(...) {}
+	_con->removeIfDispatcherByPath("op:oog:sight:entity", "account");
+	_con->removeIfDispatcherByPath("op:oog:sight:entity", "room");
 }
 
 Lobby* Lobby::instance()

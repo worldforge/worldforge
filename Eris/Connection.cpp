@@ -143,8 +143,8 @@ void Connection::reconnect()
    
 void Connection::gotData(PollData &data)
 {
-    if(!data.isReady(_stream))
-	return;
+    if(!_stream || !data.isReady(_stream))
+		return;
 	
 	else if (_status == DISCONNECTED)
 		Eris::log(LOG_ERROR, "Got data on a disconnected stream");
@@ -216,8 +216,10 @@ void Connection::removeDispatcherByPath(const std::string &stem, const std::stri
 void Connection::removeIfDispatcherByPath(const std::string &stem, const std::string &n)
 {
 	Dispatcher *d = getDispatcherByPath(stem);
-	if (!d)
-		throw InvalidOperation("Unknown dispatcher in path " + stem);
+	if (!d) {
+		// this used to throw, but this allows very robust clean-ups (silently, hmm)
+		return;
+	}
 	
 	Dispatcher *rm = d->getSubdispatch(n);
 	if (rm)

@@ -49,21 +49,36 @@ Meta::Meta(const std::string &/*cnm*/,
 	_status(INVALID),
 	_metaHost(msv),
 	_maxActiveQueries(maxQueries),
+	_stream(NULL),
 	_timeout(NULL)
 {
-    _stream = new udp_socket_stream();  
-    _stream->setTimeout(30);	
-    
     Poll::instance().connect(SigC::slot(*this, &Meta::gotData));
+ 
+}
+
+Meta::~Meta()
+{
+	disconnect();
+      
+    // delete any outstanding queries
+    for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
+		delete *Q;
+}
+
+void Meta::connect()
+{
+	disconnect();
+	
+	_stream = new udp_socket_stream();  
+    _stream->setTimeout(30);	
     Poll::instance().addStream(_stream);
     
     // open connection to meta server
-   
-    remote_host metaserver_data(msv, META_SERVER_PORT);
+    remote_host metaserver_data(_metaHost, META_SERVER_PORT);
     (*_stream) << metaserver_data;
     if (!_stream->is_open()) {
-	doFailure("Couldn't open connection to metaserver " + msv);
-	return;
+		doFailure("Couldn't open connection to metaserver " + _metaHost);
+		return;
     }
     
     // build the initial 'ping' and send
@@ -75,23 +90,22 @@ Meta::Meta(const std::string &/*cnm*/,
     
     // check for meta-server timeouts; this is going to be
     // fairly common as long as the protocol is UDP, I think
-    _timeout = new Timeout("meta_ckeepalive_"+msv, 8000);
+    _timeout = new Timeout("meta_ckeepalive_"+_metaHost, 8000);
     _timeout->Expired.connect(SigC::slot(*this, &Meta::metaTimeout));
 }
 
-Meta::~Meta()
+void Meta::disconnect()
 {
-    if(_stream)
-      {
-	Poll::instance().removeStream(_stream);
-	delete _stream;
-      }
+	if(_stream) {
+		Poll::instance().removeStream(_stream);
+		delete _stream;
+		_stream = NULL;
+    }
     
-    for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
-	delete *Q;
-	
-    if (_timeout)
+    if (_timeout) {
       delete _timeout;
+      _timeout = NULL;
+    }
 }
 
 void Meta::queryServer(const std::string &ip)
@@ -113,31 +127,15 @@ void Meta::queryServer(const std::string &ip)
 
 void Meta::refresh()
 {
+	connect();
+
     if (_status == VALID) {
-	// FIXME - save the current list
+    	// save the current list in case we fail
+		_lastValidList = _gameServers;
     }
 
     _gameServers.clear();
-	
-    // close the existing connection (rather brutal this...)
-    if (_stream) {
-	Poll::instance().removeStream(_stream);
-	_stream->close();
-    } else {
-	_stream = new udp_socket_stream;
-	Poll::instance().addStream(_stream);
-    }
-    
-    // open connection to meta server
-    remote_host metaserver_data(_metaHost, META_SERVER_PORT);
-    (*_stream) << metaserver_data;
-    if (!_stream->is_open()) {
-	doFailure("Couldn't contact metaserver " + _metaHost);
-	return;
-    }
-    
-    listReq(0);
-    _status = IN_PROGRESS;
+	connect();
 }
 
 ServerList Meta::getGameServerList()
@@ -159,17 +157,18 @@ int Meta::getGameServerCount()
 
 void Meta::gotData(PollData &data)
 {
-    bool got_one = false;
+    bool got_one = false; // set if at least one socket had data
     
     if (_stream) {
-	if (!_stream->is_open()) {
-	    // it died, delete it
-	    doFailure("Connection to the meta-server failed");
-	} else
-	    if (data.isReady(_stream)) {
-		recv();
-		got_one = true;
-	    }
+		if (!_stream->is_open()) {
+			// it died, delete it
+			doFailure("Connection to the meta-server failed");
+		} else {
+			if (data.isReady(_stream)) {
+				recv();
+				got_one = true;
+			}
+		}
     } // of _stream being valid
 
     for (MetaQueryList::iterator Q=_activeQueries.begin();
@@ -180,7 +179,7 @@ void Meta::gotData(PollData &data)
     }
 
     if(!got_one)
-	    return;
+	    return; // nothing had data, so do not run the clean up stuff
 
 	// clean up old queries
 	while (!_deleteQueries.empty()) {
@@ -236,14 +235,14 @@ void Meta::cancel()
 		delete *Q;
 	_activeQueries.clear();
 	
-	if(_stream) {
-	    Poll::instance().removeStream(_stream);
-	    delete _stream;
-	    _stream = NULL;
-	}
-	
-	// FIXME - revert to the last valid server list?
-	_status = INVALID;
+	disconnect();
+
+	// revert to the last valid list if possible	
+	if (!_lastValidList.empty()) {
+		_gameServers = _lastValidList;
+		_status = VALID;
+	} else
+		_status = INVALID;
 }
 
 void Meta::recvCmd(uint32_t op)
@@ -334,17 +333,8 @@ void Meta::processCmd()
 			Eris::log(LOG_DEBUG, "in LIST_RESP2, issuing request for next block");
 			listReq(_gameServers.size());
 		} else {
-		    // all done, clean everything up
-		    delete _timeout;
-		    _timeout = NULL;
-		    _status = VALID;
-	
-		    if(_stream) {	    
-			Eris::log(LOG_DEBUG, "deleting meta-server stream");
-			Poll::instance().removeStream(_stream);
-			delete _stream;
-			_stream = NULL;
-		    }
+		  	// all done, clean up
+		  	disconnect();
 		}
 		
 		} break;
@@ -424,24 +414,14 @@ void Meta::ObjectArrived(const Atlas::Message::Object &msg)
 void Meta::doFailure(const std::string &msg)
 {
     Failure.emit(msg);
-    if(_stream) {
-	Poll::instance().removeStream(_stream);
-	delete _stream;
-	_stream = NULL;
-    }
+    disconnect();
     
     // try to revert back to the last good list
     if (!_lastValidList.empty()) {
 	    _gameServers = _lastValidList;
 	    _status = VALID;
     } else
-	    _status = INVALID;
-    
-    if (_timeout) {
-	    delete _timeout;
-	    _timeout = NULL;
-    }
-		
+	    _status = INVALID;	
 }
 
 void Meta::metaTimeout()
