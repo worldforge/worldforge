@@ -314,6 +314,9 @@ static	AObject	mkStringList(int len);
 /** (Map) return a List of all values for a Map */
 	AObject		vals() const;
 
+/** (Map) clear values for a Map */
+	void		clear();
+
 
 /** (List) sort a List */
 	int		sort();

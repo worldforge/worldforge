@@ -764,6 +764,11 @@ AObject	AObject::vals() const
 	return res;
 }
 
+void	AObject::clear()
+{
+	PyDict_Clear(obj);
+}
+
 long	AObject::asInt() const	        { return PyInt_AsLong(obj); }
 long	AObject::asLong() const	        { return PyLong_AsLong(obj); }
 double	AObject::asFloat() const	{ return PyFloat_AsDouble(obj); }
@@ -794,16 +799,7 @@ int	AObject::isStringList() const	{ return StringList_Check(obj); }
 
 AObject AObject::mkMap()
 {
-	DebugMsg1(1,"Make Map","");
-	//PyObject* tmp = PyDict_New();
-	DebugMsg1(1,"Make AObj","");
 	AObject res;
-	DebugMsg1(1,"DeRef","");
-	//Py_XDECREF(tmp);
-	DebugMsg1(1,"return","");
-
-	assert((unsigned long)res.obj != 1);
-
 	return res;
 }
 
@@ -834,14 +830,6 @@ AObject AObject::mkIntList(int size)
 	return res;
 }
 
-// AObject AObject::mkLongList(int size)
-// {
-// 	PyObject* tmp = LongList_New(size);
-// 	AObject res(tmp);
-// 	Py_XDECREF(tmp);
-// 	assert((unsigned long)res.obj != 1);
-// 	return res;
-// }
 
 AObject AObject::mkFloatList(int size)
 {
@@ -878,15 +866,6 @@ AObject AObject::mkInt(long val)
 	assert((unsigned long)res.obj != 1);
 	return res;
 }
-
-// AObject AObject::mkLong(long val)
-// {
-// 	PyObject* tmp = PyLong_FromLong(val);
-// 	AObject res(tmp);
-// 	Py_XDECREF(tmp);
-// 	assert((unsigned long)res.obj != 1);
-// 	return res;
-// }
 
 AObject AObject::mkFloat(double val)
 {
