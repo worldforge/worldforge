@@ -7,15 +7,23 @@
 
 changes:
 
-23 Jan 2000 - fex
-    references to atlas long removed
+25 Jan 2000 - fex
+    major overhaul in progress !
+    funcs rewritten to check return values from Py lib
+    strcpy removed
+	assert((unsigned long)obj != 1); assertions removed in most places
 
 */
 
 #include "Object.h"
 #ifdef _MSC_VER
-#include <assert.h>
+#include <cassert>
 #endif
+
+inline void DBGMSG( char* debugMsg ) {
+    DebugMsg1(9, debugMsg, "");
+}
+
 char*	AObject::typeString()
 {
 	if (PyString_Check(obj))	return "string";
@@ -32,7 +40,7 @@ char*	AObject::typeString()
 
 AObject &AObject::operator=(const AObject& src)
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	assert((unsigned long)src.obj != 1);
 
 	DebugMsg1(9,"OP= Test duplicate", "");
@@ -44,6 +52,15 @@ AObject &AObject::operator=(const AObject& src)
 	Py_XINCREF(obj);
 	assert(obj->ob_refcnt > 1);
 	DebugMsg1(9,"REFADD %s", this->typeString());
+	return (*this);
+*/
+	if ( obj == src.obj )
+	    return *this;
+	Py_XDECREF( obj );
+	obj = src.obj;
+	Py_XINCREF(obj);
+	assert( obj != 0 );
+	DBGMSG("aobject :: operator= ok");
 	return (*this);
 }
 
@@ -212,18 +229,14 @@ PyObject* AObject::pyObject()
 	return obj;
 }
 
-int	AObject::has(const string& name) const
-{
-	assert((unsigned long)obj != 1);
-	char* tmp = strdup(name.c_str());
-	bool res = PyMapping_HasKeyString(obj, tmp);
-	free(tmp);
-	return res;
+int	AObject::has(const string& name) const {
+	//assert((unsigned long)obj != 1);
+	return PyMapping_HasKeyString( obj, const_cast< char* >( name.c_str() ));
 }
 
 int	AObject::get(const string& name, AObject& val) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	assert((unsigned long)val.obj != 1);
 
 	char* tmp = strdup(name.c_str());
@@ -233,11 +246,18 @@ int	AObject::get(const string& name, AObject& val) const
 	free(tmp);
 	assert(val.obj->ob_refcnt > 1);
 	return 1;
+*/
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ) );
+    if ( aPyObject == 0 )
+        return false;
+    val = AObject( aPyObject );
+    DBGMSG("aobject :: get( name, AObject ) ok");
+    return true;
 }
 
 int	AObject::get(const string& name, int& val) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	//it should check PyDict_GetItemString(obj,tmp) result, not this object! 
         //same for other get methods
         //if (!this->isLong()) return 0;
@@ -245,12 +265,19 @@ int	AObject::get(const string& name, int& val) const
 	val = PyInt_AsLong(PyDict_GetItemString(obj,tmp));
 	free(tmp);
 	return 1;
+*/
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ) );
+    if ( aPyObject == 0 )
+        return false;
+    val = PyInt_AsLong( aPyObject );
+    DBGMSG("aobject :: get( name, int ) ok");
+    return true;
 }
 
 
 int	AObject::get(const string& name, long& val) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	//it should check PyDict_GetItemString(obj,tmp) result, not this object! 
         //same for other get methods
         //if (!this->isLong()) return 0;
@@ -258,44 +285,50 @@ int	AObject::get(const string& name, long& val) const
 	val = PyLong_AsLong(PyDict_GetItemString(obj,tmp));
 	free(tmp);
 	return 1;
+*/
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ) );
+    if ( aPyObject == 0 )
+        return false;
+    val = PyLong_AsLong( aPyObject );
+    DBGMSG("aobject :: get( name, long ) ok");
+    return true;
 }
 
 
 int	AObject::get(const string& name, double& val) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	//if (!this->isFloat()) return 0;
 	char* tmp = strdup(name.c_str());
 	val = PyFloat_AsDouble(PyDict_GetItemString(obj,tmp));
 	free(tmp);
 	return 1;
+*/
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ) );
+    if ( aPyObject == 0 )
+        return false;
+    val = PyFloat_AsDouble( aPyObject );
+    DBGMSG("aobject :: get( name, double ) ok");
+    return true;
 }
 
 
-
 //would change these to bool return - fex
-int	AObject::get(const string& name, string& val) const
-{
-/*	assert((unsigned long)obj != 1);
-	//if (!this->isString()) return 0;
-	char* tmp = strdup(name.c_str());
-	val = PyString_AsString(PyDict_GetItemString(obj,tmp));
-	free(tmp);
-	return 1;
-*/
+int	AObject::get(const string& name, string& val) const {
 
-    PyObject* aObject = PyDict_GetItemString( obj, const_cast<char*>( val.c_str() ) );
-    if ( aObject = 0 )
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ) );
+    if ( aPyObject == 0 )
         return false;
-    char* aString = PyString_AsString( aObject );
-    assert( aString );
+    char* aString = PyString_AsString( aPyObject );
+    assert( aString != 0 );
     val = aString;
+    DBGMSG("aobject :: get(string) ok");
     return true;
 }
 
 int	AObject::get(const string& name, AObject& val, AObject& def) const
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	assert((unsigned long)val.obj != 1);
 
 	char* tmp = strdup(name.c_str());
@@ -306,6 +339,14 @@ int	AObject::get(const string& name, AObject& val, AObject& def) const
 	free(tmp);
 	assert(val.obj->ob_refcnt > 1);
 	return 1;
+*/	
+    PyObject* aPyObject = PyDict_GetItemString( obj, const_cast<char*>( name.c_str() ) );
+    if ( aPyObject == 0 )
+        val = def;
+    else
+        val = aPyObject;
+    DBGMSG("aobject :: get(const string&, AObejct&, AObject&) ok");
+    return true;
 }
 
 int	AObject::get(const string& name, int& val, int def) const
@@ -528,7 +569,7 @@ int	AObject::set(const string& name, int src)
 
 int	AObject::set(const string& name, long src)
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	DebugMsg1(5,"Make key copy","");
 	char* tmp = strdup(name.c_str());
 	DebugMsg1(5,"Make value object","");
@@ -542,11 +583,16 @@ int	AObject::set(const string& name, long src)
 	free(tmp);
 	DebugMsg1(5,"Return Result","");
 	return res;
+*/
+
+	PyObject* ptmp = PyInt_FromLong( src );
+	assert( ptmp != 0 );
+	return PyDict_SetItemString(obj, const_cast<char*>( name.c_str() ), ptmp);
 }
 
 int	AObject::set(const string& name, double src)
 {
-	assert((unsigned long)obj != 1);
+/*	assert((unsigned long)obj != 1);
 	char* tmp = strdup(name.c_str());
 	PyObject* ptmp = PyFloat_FromDouble(src);
 	del(tmp);
@@ -555,12 +601,16 @@ int	AObject::set(const string& name, double src)
 	//assert(ptmp->ob_refcnt == 1);
 	free(tmp);
 	return res;
+*/
+	PyObject* ptmp = PyFloat_FromDouble(src);
+	assert( ptmp != 0 );
+	return PyDict_SetItemString(obj, const_cast<char*>( name.c_str() ), ptmp);
 }
 
 int	AObject::set(int ndx, const AObject& src)
 {
-	assert((unsigned long)obj != 1);
-	assert((unsigned long)src.obj != 1);
+	//assert((unsigned long)obj != 1);
+	//assert((unsigned long)src.obj != 1);
 
 	return PySequence_SetItem(obj, ndx, src.obj);
 	Py_XINCREF(src.obj);
@@ -589,9 +639,6 @@ int	AObject::set(int ndx, double src)
 
 int	AObject::set(int ndx, const string& src)
 {
-	assert((unsigned long)obj != 1);
-
-	//if (!this->isString()) return 0;
 	char* tmp = strdup(src.c_str());
 	bool res = PySequence_SetItem(obj, ndx, PyString_FromString(tmp));
 	free(tmp);
@@ -600,8 +647,6 @@ int	AObject::set(int ndx, const string& src)
 
 int	AObject::del(const string& name)
 {
-	assert((unsigned long)obj != 1);
-
 	char* tmp = strdup(name.c_str());
 	bool res = PyDict_DelItemString(obj,tmp);
 	free(tmp);
@@ -672,29 +717,31 @@ int	AObject::append(long src)
 
 int	AObject::append(double src)
 {
-	int res = -1;
-	PyObject* ptmp = PyFloat_FromDouble(src);
-	if (PyList_Check(obj))		res = PyList_Append(obj, ptmp);
-	if (FloatList_Check(obj))	res = FloatList_Append(obj, ptmp);
-	Py_XDECREF(ptmp);
-        return res;
+    int res = -1;
+    PyObject* ptmp = PyFloat_FromDouble(src);
+    if (PyList_Check(obj))
+        res = PyList_Append(obj, ptmp);
+    if (FloatList_Check(obj))
+        res = FloatList_Append(obj, ptmp);
+    Py_XDECREF(ptmp);
+    return res;
 }
 
 int	AObject::append(const string& src)
 {
-	int res = -1;
-	char* tmp = strdup(src.c_str());
-        PyObject* ptmp;
-        if (URIList_Check(obj)) {
-		ptmp = URI_New(src.c_str());
-		res = URIList_Append(obj, ptmp);
-        } else {
-		ptmp = PyString_FromString(tmp);
-		if (PyList_Check(obj))		res = PyList_Append(obj, ptmp);
-		if (StringList_Check(obj))	res = StringList_Append(obj, ptmp);
+    int res = -1;
+    PyObject* ptmp;
+    if (URIList_Check(obj)) {
+	    ptmp = URI_New(src.c_str());
+        res = URIList_Append(obj, ptmp);
+    } else {
+        ptmp = PyString_FromString( const_cast<char*>( src.c_str() ));
+        if ( PyList_Check(obj) )
+            res = PyList_Append(obj, ptmp);
+		if ( StringList_Check(obj) )
+		    res = StringList_Append(obj, ptmp);
         }
 	Py_XDECREF(ptmp);
-	free(tmp);
 	return res;
 }
 
@@ -716,12 +763,13 @@ int	AObject::insert(int ndx, const AObject& src)
 int	AObject::insert(int ndx, const string& src)
 {
 	int res = -1;
-	char* tmp = strdup(src.c_str());
-	PyObject* ptmp = PyString_FromString(tmp);
-	if (PyList_Check(obj))		res = PyList_Insert(obj, ndx, ptmp);
-	if (StringList_Check(obj))	res = StringList_Insert(obj, ndx, ptmp);
+	PyObject* ptmp = PyString_FromString( const_cast<char*>( src.c_str() ));
+	assert( ptmp != 0 );
+	if ( PyList_Check(obj) )
+	    res = PyList_Insert(obj, ndx, ptmp);
+	if ( StringList_Check(obj) )
+		res = StringList_Insert(obj, ndx, ptmp);
 	Py_XDECREF(ptmp);
-	free(tmp);
 	return res;
 }
 
@@ -729,6 +777,7 @@ int	AObject::insert(int ndx, double src)
 {
 	int res = -1;
 	PyObject* ptmp = PyFloat_FromDouble(src);
+	assert( ptmp != 0 );
 	if (PyList_Check(obj))		res = PyList_Insert(obj, ndx, ptmp);
 	if (FloatList_Check(obj))	res = FloatList_Insert(obj, ndx, ptmp);
 	Py_XDECREF(ptmp);
@@ -739,6 +788,7 @@ int	AObject::insert(int ndx, int src)
 {
 	int res = -1;
 	PyObject* ptmp = PyInt_FromLong(src);
+	assert( ptmp != 0 );
 	if (PyList_Check(obj))		res = PyList_Insert(obj, ndx, ptmp);
 	if (IntList_Check(obj))		res = IntList_Insert(obj, ndx, ptmp);
 	if (LongList_Check(obj))	res = LongList_Insert(obj, ndx, ptmp);
@@ -760,6 +810,7 @@ int	AObject::insert(int ndx, long src)
 AObject	AObject::keys() const
 {
 	PyObject* tmp = PyDict_Keys(obj);
+	assert( tmp != 0 );
 	AObject res(tmp);
 	Py_XDECREF(tmp);
 	return res;
@@ -768,6 +819,7 @@ AObject	AObject::keys() const
 AObject	AObject::vals() const
 {
 	PyObject* tmp = PyDict_Values(obj);
+	assert( tmp != 0 );
 	AObject res(tmp);
 	Py_XDECREF(tmp);
 	return res;
@@ -778,17 +830,19 @@ void	AObject::clear()
 	PyDict_Clear(obj);
 }
 
-long	AObject::asInt() const	        { return PyInt_AsLong(obj); }
-long	AObject::asLong() const	        { return PyLong_AsLong(obj); }
-double	AObject::asFloat() const	{ return PyFloat_AsDouble(obj); }
-string	AObject::asString() const	{ return PyString_AsString(obj); }
+long	AObject::asInt() const      { return PyInt_AsLong(obj); }
+long	AObject::asLong() const     { return PyLong_AsLong(obj); }
+double	AObject::asFloat() const    { return PyFloat_AsDouble(obj); }
+string	AObject::asString() const   { return PyString_AsString(obj); }
 
-AObject	AObject::getURIPath() const	{ return AObject(URI_GetPath(obj)); }
+AObject	AObject::getURIPath() const { return AObject(URI_GetPath(obj)); }
+
 int	AObject::getPath(string &val) const	
 { 
   val=AObject(URI_GetPath(obj)).asString(); 
   return 1;
 }
+
 AObject	AObject::getURIData() const	{ return AObject(URI_GetData(obj)); }
  
 int	AObject::isMap() const	        { return PyMapping_Check(obj); }
@@ -796,13 +850,13 @@ int	AObject::isList() const	        { return PyList_Check(obj); }
 
 int	AObject::isURI() const	        { return URI_Check(obj); }
 int	AObject::isInt() const	        { return PyInt_Check(obj); }
-int	AObject::isLong() const	        { return PyLong_Check(obj); }
-int	AObject::isFloat() const	{ return PyFloat_Check(obj); }
-int	AObject::isString() const	{ return PyString_Check(obj); }
+int	AObject::isLong() const         { return PyLong_Check(obj); }
+int	AObject::isFloat() const        { return PyFloat_Check(obj); }
+int	AObject::isString() const       { return PyString_Check(obj); }
 
-int	AObject::isURIList() const	{ return URIList_Check(obj); }
-int	AObject::isIntList() const	{ return IntList_Check(obj); }
-int	AObject::isLongList() const	{ return LongList_Check(obj); }
+int	AObject::isURIList() const      { return URIList_Check(obj); }
+int	AObject::isIntList() const      { return IntList_Check(obj); }
+int	AObject::isLongList() const     { return LongList_Check(obj); }
 int	AObject::isFloatList() const	{ return FloatList_Check(obj); }
 int	AObject::isStringList() const	{ return StringList_Check(obj); }
 
@@ -817,6 +871,7 @@ AObject AObject::mkList(int size)
 	AObject res;
 	Py_XDECREF(res.obj);
 	res.obj = PyList_New(size);
+	assert( res.obj != 0 );
 	return res;
 }
 
@@ -825,6 +880,7 @@ AObject AObject::mkURIList(int size)
 	AObject res;
 	Py_XDECREF(res.obj);
 	res.obj = URIList_New(size);
+	assert( res.obj != 0 );
 	return res;
 }
 
@@ -887,7 +943,7 @@ AObject AObject::mkString(const string& val)
 {
 	AObject res;
 	Py_XDECREF(res.obj);
-	res.obj = PyString_FromString(val.c_str());
+	res.obj = PyString_FromString( val.c_str() );
 	return res;
 }
 
