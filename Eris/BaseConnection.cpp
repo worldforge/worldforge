@@ -44,7 +44,6 @@ BaseConnection::~BaseConnection()
     {
         hardDisconnect(true);
     }
-    
 }
 	
 void BaseConnection::connect(const std::string &host, short port)

@@ -210,7 +210,7 @@ protected:
     /** process TALK data - default implementation emits the Say signal.
     @param obj The TALK operation arguments
     */
-    virtual void talk(const Atlas::Objects::Root& obj);
+    virtual void onTalk(const Atlas::Objects::Root& obj);
 
     void setAttr(const std::string &p, const Atlas::Message::Element &v);	
 
@@ -220,14 +220,16 @@ protected:
     */
     virtual bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
 	
+    virtual void onLocationChanged(Entity* oldLoc, Entity* newLoc);
+    
     /** over-rideable hook method when then Entity position, orientation or
     velocity change. The default implementation emits the Moved signal. */
-    virtual void moved();
+    virtual void onMoved();
     
     /** over-rideable hook when the actual (computed) visiblity of this
     entity changed. The default implementation emits the VisiblityChanged
     signal. */
-    virtual void visibilityChanged(bool vis);
+    virtual void onVisibilityChanged(bool vis);
                 
     void beginUpdate();
     void addToUpdate(const std::string& attr);
@@ -237,13 +239,13 @@ protected:
     Over-rideable hook when this entity is seen to perform an action.
     Default implementation emits the Action signal.
     */
-    virtual void action(const Atlas::Objects::Root& act);
+    virtual void onAction(const Atlas::Objects::Root& act);
 
     /**
     Over-rideable hook when this entity is seen to emit an imginary op.
     Default implementation emits the Emote signal.
     */
-    virtual void imaginary(const Atlas::Objects::Root& act);
+    virtual void onImaginary(const Atlas::Objects::Root& act);
 
     /** over-rideable hook for when the entity changes from stationary to
     moving or vice-versa. This hook exists so a client can treat moving objects

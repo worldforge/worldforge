@@ -161,7 +161,7 @@ void Entity::setFromRoot(const Root& obj)
     endUpdate();
 }
 
-void Entity::talk(const Root& talkArgs)
+void Entity::onTalk(const Root& talkArgs)
 {
     if (!talkArgs->hasAttr("say")) {
         error() << "entity " << m_id << " got talk with no 'say' argument";
@@ -173,17 +173,22 @@ void Entity::talk(const Root& talkArgs)
     Say.emit(talkArgs->getAttr("say").asString());
 }
 
-void Entity::moved()
+void Entity::onLocationChanged(Entity* oldLoc, Entity* newLoc)
+{
+    LocationChanged.emit(newLoc, oldLoc);
+}
+
+void Entity::onMoved()
 {
     Moved.emit(this);
 }
 
-void Entity::action(const Atlas::Objects::Root& arg)
+void Entity::onAction(const Atlas::Objects::Root& arg)
 {
     Acted.emit(arg);
 }
 
-void Entity::imaginary(const Atlas::Objects::Root& arg)
+void Entity::onImaginary(const Atlas::Objects::Root& arg)
 {
     if (arg->hasAttr("description"))
         Emote.emit(arg->getAttr("description").asString());
@@ -286,7 +291,7 @@ void Entity::endUpdate()
             bool nowMoving = (getVelocity().sqrMag() > 1e-3);
             if (nowMoving != m_moving) setMoving(nowMoving);
             
-            moved(); // call the hook method, and hence emit the signal
+            onMoved();
         }
         
         m_modifiedAttrs.clear();
@@ -329,7 +334,8 @@ void Entity::setLocation(Entity* newLocation)
     Entity* oldLocation = m_location;
     m_location = newLocation;
     
-    LocationChanged.emit(this, oldLocation);    
+    onLocationChanged(oldLocation, this);
+    
 // fire VisChanged and Appearance/Disappearance signals
     updateCalculatedVisibility(wasVisible);
     
@@ -470,7 +476,7 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     
     if (nowVisible) {
         m_view->setEntityVisible(this, true);
-        visibilityChanged(true);
+        onVisibilityChanged(true);
     }
     
     for (unsigned int C=0; C < m_contents.size(); ++C)
@@ -484,11 +490,11 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     
     if (wasVisible) {
         m_view->setEntityVisible(this, false);
-        visibilityChanged(false);
+        onVisibilityChanged(false);
     }
 }
 
-void Entity::visibilityChanged(bool vis)
+void Entity::onVisibilityChanged(bool vis)
 {
     VisibilityChanged.emit(this, vis);
 }

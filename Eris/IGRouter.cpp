@@ -161,7 +161,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
         
         Entity* ent = m_view->getEntity(op->getFrom());
         if (ent)
-            ent->action(args.front());
+            ent->onAction(args.front());
         else
             warning() << "ignoring action for pending entity " << op->getFrom();
         

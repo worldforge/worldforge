@@ -53,7 +53,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
                 return IGNORED;
             }
             
-            m_entity->talk(args.front());
+            m_entity->onTalk(args.front());
             return HANDLED;
         } else
             debug() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << snd;
@@ -87,7 +87,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
         if (args.empty())
             error() << "entity " << m_entity->getId() << " sent imaginary with no args: " << op;
         else
-            m_entity->imaginary(args.front());
+            m_entity->onImaginary(args.front());
         return HANDLED;        
     }
     

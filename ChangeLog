@@ -1,3 +1,11 @@
+2004-10-19  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp, Eris/Entity.h: rename the over-rideable hook
+	  methods to a consistent 'onXXXX' naming scheme, and add an additional
+	  one for LocationChanged.
+	* configure.ac: bump micro revision in preperation for a development
+	  release.
+
 2004-10-13  James Turner  <james@worldforge.org>
 
 	* tests/tests.cpp: Finish off the sight(set) test code, which seems to work
