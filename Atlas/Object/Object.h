@@ -12,7 +12,7 @@
 #include "Debug.h"
 #include "Types.h"
 
-#ifdef PYTHON_INC_HACK
+#ifdef _MSC_VER
 #include "Python.h"
 #else
 #include <python1.5/Python.h>

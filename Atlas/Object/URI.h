@@ -1,7 +1,7 @@
 #ifndef __AtlasURI_h__
 #define __AtlasURI_h__
 
-#ifdef PYTHON_INC_HACK
+#ifdef _MSC_VER
 #include "Python.h"
 #else
 #include <python1.5/Python.h>
