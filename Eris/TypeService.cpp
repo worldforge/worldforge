@@ -54,6 +54,10 @@ TypeService::TypeService(Connection *con) :
     defineBuiltin("game_entity", m_types["root_entity"]);
 }
 
+TypeService::~TypeService()
+{
+}
+
 void TypeService::init()
 {
     assert(!m_inited);

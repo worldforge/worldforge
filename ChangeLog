@@ -1,3 +1,8 @@
+2004-01-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/TypeService.cpp, Eris/TypeService.h: Add a virtual destructor
+	  to TypeService, as it has virtual functions.
+
 2004-12-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* eris.spec.in: Update spec with License URL Package Vendor

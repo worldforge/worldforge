@@ -23,6 +23,7 @@ class TypeService : virtual public SigC::Object, public Router
 {
 public:
     TypeService(Connection *con);
+    virtual ~TypeService();
 
     void init();
 
