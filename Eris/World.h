@@ -5,7 +5,9 @@
 #include <sigc++/basic_signal.h>
 
 #include <map>
+#if !__MWERKS__
 #include <multimap.h>
+#endif
 
 namespace Atlas {
 	namespace Objects {
@@ -211,5 +213,5 @@ protected:
 	static World* _theWorld;
 };
 	
-}; // of namespace
+} // of namespace
 #endif
