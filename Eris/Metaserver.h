@@ -39,7 +39,7 @@ typedef unsigned int uint32_t;
 #include "ServerInfo.h"
 
 // Forward decls
-class client_socket_stream;
+class udp_socket_stream;
 	
 namespace Eris {
 	
@@ -176,7 +176,7 @@ protected:
 		_lastValidList;
 
 	// storage for the Metaserver protocol
-	client_socket_stream* _stream;
+	udp_socket_stream* _stream;
 	char _data[DATA_BUFFER_SIZE];
 	char* _dataPtr;	///< The current insert/extract pointer in the buffer
 

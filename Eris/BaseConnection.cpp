@@ -29,7 +29,7 @@ BaseConnection::BaseConnection(const std::string &cnm,
 	_timeout(NULL)
 {
 	assert(_bridge);
-	_stream = new client_socket_stream(client_socket_stream::TCP);
+	_stream = new tcp_socket_stream();
 }
 	
 BaseConnection::~BaseConnection()
@@ -48,16 +48,8 @@ void BaseConnection::connect(const std::string &host, short port)
 	bindTimeout(*_timeout, CONNECTING);
 	
 	setStatus(CONNECTING);
-try {	
-    _stream->open(host, port);
-}
-    catch (SocketException &except) {
-	handleFailure("Failed to connect to " + host);
-	hardDisconnect(false);
-	return;
-    }
-    
-    // is this necessary? will we always get an exception, or not?
+
+    _stream->open(host, port);    
     if(!_stream->is_open()) {
 	handleFailure("Failed to connect to " + host);
 	hardDisconnect(false);

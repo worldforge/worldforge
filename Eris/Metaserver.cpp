@@ -41,26 +41,29 @@ Meta::Meta(const std::string &/*cnm*/,
 	_maxActiveQueries(maxQueries),
 	_timeout(NULL)
 {
-	_stream = new client_socket_stream(client_socket_stream::UDP);  
-	_stream->setTimeout(30);
-	
-	// open connection to meta server
- 	_stream->open(msv, META_SERVER_PORT);
-	if (!_stream->is_open())
-		doFailure("Couldn't contact metaserver " + msv);
-	else {
-		// build the initial 'ping' and send
-		unsigned int dsz = 0;
-		pack_uint32(CKEEP_ALIVE, _data, dsz);
-		(*_stream) << std::string(_data, dsz) << std::flush;
-		setupRecvCmd();
-		_status = IN_PROGRESS;
-		
-		// check for meta-server timeouts; this is going to be
-		// fairly common as long as the protocol is UDP, I think
-		_timeout = new Timeout("meta_ckeepalive_"+msv, 8000);
-		_timeout->Expired.connect(SigC::slot(this, &Meta::metaTimeout));
-	}
+    _stream = new udp_socket_stream();  
+    _stream->setTimeout(30);	
+    
+    // open connection to meta server
+   
+    remote_host metaserver_data(msv, META_SERVER_PORT);
+    (*_stream) << metaserver_data;
+    if (!_stream->is_open()) {
+	doFailure("Couldn't open connection to metaserver " + msv);
+	return;
+    }
+    
+    // build the initial 'ping' and send
+    unsigned int dsz = 0;
+    pack_uint32(CKEEP_ALIVE, _data, dsz);
+    (*_stream) << std::string(_data, dsz) << std::flush;
+    setupRecvCmd();
+    _status = IN_PROGRESS;
+    
+    // check for meta-server timeouts; this is going to be
+    // fairly common as long as the protocol is UDP, I think
+    _timeout = new Timeout("meta_ckeepalive_"+msv, 8000);
+    _timeout->Expired.connect(SigC::slot(this, &Meta::metaTimeout));
 }
 
 Meta::~Meta()
@@ -99,15 +102,17 @@ void Meta::refresh()
 	// close the existing connection (rather brutal this...)
 	if (_stream->is_open())
 		_stream->close();
-	
-	// open connection to meta server
- 	_stream->open(_metaHost, META_SERVER_PORT);
-	if (!_stream->is_open()) {
-		doFailure("Couldn't contact metaserver " + _metaHost);
-	} else {
-		listReq(0);
-		_status = IN_PROGRESS;
-	}
+
+    // open connection to meta server
+    remote_host metaserver_data(_metaHost, META_SERVER_PORT);
+    (*_stream) << metaserver_data;
+    if (!_stream->is_open()) {
+	doFailure("Couldn't contact metaserver " + _metaHost);
+	return;
+    }
+    
+    listReq(0);
+    _status = IN_PROGRESS;
 }
 
 ServerList Meta::getGameServerList()

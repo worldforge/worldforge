@@ -5,8 +5,6 @@
 #include <Atlas/Message/Object.h>
 #include <Atlas/Codec.h>
 
-//#include <Atlas/Objects/Encoder.h>
-
 #include <sigc++/object.h>
 #include <sigc++/basic_signal.h>
 
@@ -19,7 +17,8 @@ namespace Atlas {
 	namespace Message { class Encoder; }
 }	
 
-class client_socket_stream;
+// forward decleration of the skstrem type
+class tcp_socket_stream;
 
 namespace Eris
 {
@@ -107,7 +106,7 @@ protected:
 	Status _status;			///< current status of the connection
 	const std::string _id;	///< a unique identifier for this connection
 	
-	client_socket_stream* _stream;		///< the underlying iostream channel
+	tcp_socket_stream* _stream;		///< the underlying iostream channel
 	std::string _clientName;		///< the client identified used during connection
 	
 	/** the connection bridge (i.e something implementing ObjectArrived()) : this can be the derived

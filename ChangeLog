@@ -1,3 +1,8 @@
+Thursday, January 24 2002, James Turner
+
+	* Supports skstream2, thanks to Michael Koch for the 
+	  work. 
+
 Sunday, January 20 2002, Al Riddoch
 
 	* Add children accessor to TypeInfo node.
