@@ -67,8 +67,8 @@ protected:
         PARSE_VALUE
     };
     
-    stack< list<parsestate_t> > parseStack;
-    stack< list<string> > fragments;
+    stack<parsestate_t> parseStack;
+    stack<string> fragments;
     string currentFragment;
 };
 
@@ -82,12 +82,59 @@ PackedAscii::PackedAscii(const Codec::Parameters& p) :
 {
 }
 
+void mapItem(Bridge* b, parsestate_t type, const string& name,
+        const string& value)
+{
+    switch (type) {
+        case PARSE_STRING : b->MapItem(name, value);
+                            break;
+        case PARSE_INT: b->MapItem(name, atoi(value.c_str()));
+                        break;
+        case PARSE_FLOAT: b->MapItem(name, atof(value.c_str()));
+                          break;
+    }
+}
+
+void listItem(Bridge* b, parsestate_t type, const string& value)
+{
+    switch (type) {
+        case PARSE_STRING : b->ListItem(value);
+                            break;
+        case PARSE_INT: b->ListItem(atoi(value.c_str()));
+                        break;
+        case PARSE_FLOAT: b->ListItem(atof(value.c_str()));
+                          break;
+    }
+}
+
 void popStack(stack<parsestate_t>& parseStack, stack<string>& fragments,
         Bridge* b)
 {
     // FIXME
     // check for right stack entries (VALUE, ASSIGN, NAME)
     // depending on what comes before that, add to the bridge, pop off nicely
+
+    string name, value;
+    parsestate_t type;
+    
+    if (parseStack.top() != PARSE_VALUE) return; // FIXME report error
+    parseStack.pop();
+    value = fragments.pop();
+    if (parseStack.top() != PARSE_ASSIGN) return; // FIXME report error
+    parseStack.pop();
+    if (parseStack.top() != PARSE_NAME) return; // FIXME report error
+    parseStack.pop();
+    name = fragments.pop();
+    
+    type = parseStack.pop();
+    
+    switch (parseStack.top()) {
+        case PARSE_MAP: mapItem(b, type, name, value);
+                        break;
+        case PARSE_LIST: listItem(b, type, value);
+                         break;
+        default: break; // FIXME report error
+    }
 }
 
 void PackedAscii::Poll() // muchas FIXME
@@ -122,10 +169,14 @@ void PackedAscii::Poll() // muchas FIXME
 	
         case '[': parseStack.push(PARSE_MAP);
                   break; // FIXME
-        case ']': break; // FIXME
+        case ']': popStack(parseStack, fragments, bridge);
+                  parseStack.pop(); // PARSE_MAP
+                  break; // FIXME
         case '(': parseStack.push(PARSE_LIST);
                   break; // FIXME
-        case ')': break; // FIXME
+        case ')': popStack(parseStack, fragments, bridge);
+                  parseStack.pop(); // PARSE_LIST
+                  break; // FIXME
         case '$': break; // FIXME
         case '@': break; // FIXME
         case '#': break; // FIXME
