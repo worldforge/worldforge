@@ -1,3 +1,8 @@
+Tuesday, January 29th, 2004   Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed the TimeDiff constructor from milliseconds to
+	  set the is_valid flag (thanks James!).
+
 Tuesday, January 27th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Changed the Shuffle() function to use the new random

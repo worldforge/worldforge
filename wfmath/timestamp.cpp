@@ -64,7 +64,8 @@ WFMath::TimeDiff::TimeDiff(long sec, long usec, bool is_valid) : m_isvalid(is_va
         regularize(m_sec, m_usec);
 }
 
-WFMath::TimeDiff::TimeDiff(long msec) : m_sec(msec / 1000), m_usec(msec % 1000)
+WFMath::TimeDiff::TimeDiff(long msec) : m_isvalid(true),
+  m_sec(msec / 1000), m_usec(msec % 1000)
 {
   if(msec < 0) {
     --m_sec;
