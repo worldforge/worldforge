@@ -10,7 +10,7 @@
 #include <Eris/Player.h>
 #include <Eris/Connection.h>
 #include <Eris/Utils.h>
-#include <Eris/pollDefault.h>
+#include <Eris/PollDefault.h>
 
 #include <sigc++/signal.h>
 #include <sigc++/object_slot.h>
@@ -80,7 +80,7 @@ void TestPlayer::testAccountCreate()
 
 
 	m_server->push(ifo.asObject());
-	Eris::pollDefault::poll();
+	Eris::PollDefault::poll();
     ERIS_ASSERT(m_gotLoginComplete);
 }
 
@@ -118,7 +118,7 @@ void TestPlayer::doStandardLogin()
 
 // give it to Eris
 	m_server->push(ifo);
-	Eris::pollDefault::poll();
+	Eris::PollDefault::poll();
     ERIS_ASSERT(m_gotLoginComplete);
 }
 
@@ -142,7 +142,7 @@ void TestPlayer::testClientLogout()
 	logout.setRefno(getMember(op, "serialno").asInt());
 	
 	m_server->push(logout);
-	Eris::pollDefault::poll();
+	Eris::PollDefault::poll();
     ERIS_ASSERT(m_logoutValue == 1);
 	
 	//ERIS_ASSERT(m_connection->getStatus() == Eris::BaseConnection::Disconnected);
@@ -183,7 +183,7 @@ void TestPlayer::testCharacterLook()
 	ifo.setRefno(getMember(op, "serialno").asInt());
 	m_server->push(ifo.asObject());
 	
-	Eris::pollDefault::poll();
+	Eris::PollDefault::poll();
 	ERIS_ASSERT(!m_gotAllChars);
 	
 	m_player->refreshCharacterInfo();
@@ -191,7 +191,7 @@ void TestPlayer::testCharacterLook()
 	
 	while (!m_gotAllChars) {
 		m_server->run();
-		Eris::pollDefault::poll();
+		Eris::PollDefault::poll();
 		
 		Message::Element op;
 		
@@ -212,9 +212,9 @@ void TestPlayer::testCharacterLook()
 			character.setId(cid);
 			
 			if (cid == "testchar1") {
-				character.SetName("John Doe");
+				character.setName("John Doe");
 			} else if (cid == "testchar2") {
-				character.SetName("Bob the Builder");
+				character.setName("Bob the Builder");
 				
 			}
 			

@@ -7,7 +7,7 @@
 #include "testHarness.h"
 
 #include <unistd.h>	// for usleep()
-#include <Atlas/Message/Object.h>
+#include <Atlas/Message/Element.h>
 
 #include <Atlas/Objects/Operation/Login.h>
 #include <Atlas/Objects/Operation/Info.h>
@@ -21,7 +21,7 @@
 #include "testUtils.h"
 #include <Eris/Utils.h>
 #include <Eris/Timestamp.h>
-#include <Eris/pollDefault.h>
+#include <Eris/PollDefault.h>
 #include <Eris/SignalDispatcher.h>
 
 using namespace Atlas::Message;
@@ -70,7 +70,7 @@ void TestConnection::waitFor(int timeoutSeconds, bool &watch1, bool &watch2)
 			return;
 		}
 		m_server->run();
-		Eris::pollDefault::poll();
+		Eris::PollDefault::poll();
 		usleep(10000); // 10 msec = 1/100 of a second
     }
 }

@@ -1,3 +1,9 @@
+Saturday, 20th September, Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed test code so it acutally builds, mostly Atlas
+	  stuff and changing pollDefault to PollDefault (which is
+	  odd, because it's _never_ been pollDefault).
+
 Saturday, 23rd August, Al Riddoch <alriddoch@zepler.org>
 
 	* Eris/BaseConnection.cpp: Switch to using skstream::isReady()

@@ -6,7 +6,7 @@
 #include "testHarness.h"
 
 #include <Eris/Timestamp.h>
-#include <Eris/pollDefault.h>
+#include <Eris/PollDefault.h>
 
 #include <Atlas/Objects/Encoder.h>
 
@@ -24,6 +24,8 @@
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Entity/RootEntity.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
+
+#include <skstream/skstream.h>
 
 using namespace Time;
 
@@ -123,7 +125,7 @@ void StubServer::accept()
     if (socket == INVALID_SOCKET)
 		throw std::runtime_error("error accepting connection in stub server");
     
-    m_stream = new basic_socket_stream(socket);
+    m_stream = new tcp_socket_stream(socket);
     ERIS_ASSERT(m_stream->is_open());
     
     m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", *m_stream, this);
@@ -254,7 +256,7 @@ void StubServer::waitForMessage(int timeout)
     
     while (ts > Time::Stamp::now()) {
 		run();
-		Eris::pollDefault::poll();
+		Eris::PollDefault::poll();
 		usleep(10000); // 10 msec = 1/100 of a second
 		
 		if (!m_queue.empty()) return;	// all done

@@ -7,13 +7,13 @@
 
 using namespace Atlas::Message;
 
-std::string getType(const Object &obj)
+std::string getType(const Element &obj)
 {
     Element::ListType lt(Eris::getMember(obj, "parents").asList());
     return lt[0].asString();
 }
 
-const Object getArg(const Object &op, unsigned int i)
+const Element getArg(const Element &op, unsigned int i)
 {
     const Element::ListType lt(Eris::getMember(op, "args").asList());
     if (i < 0 || i >= lt.size())
@@ -22,7 +22,7 @@ const Object getArg(const Object &op, unsigned int i)
 }
 
 /// assume that args[0] is a map, and then lookup the named value
-const Object getArg(const Object &op, const std::string &nm)
+const Element getArg(const Element &op, const std::string &nm)
 {
     const Element::ListType args(Eris::getMember(op, "args").asList());
     assert(!args.empty());
@@ -34,7 +34,7 @@ const Object getArg(const Object &op, const std::string &nm)
     return I->second;
 }
 
-bool hasArg(const Object &op, const std::string &nm)
+bool hasArg(const Element &op, const std::string &nm)
 {
     const Element::ListType args(Eris::getMember(op, "args").asList());
     if (args.empty()) return false;
