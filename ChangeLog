@@ -1,5 +1,10 @@
 2003-07-21  Al Riddoch  <alriddoch@zepler.org>
 
+	* Tweak configure.in to be a little more compatable with older
+	  autoconf.
+
+2003-07-21  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Segment.h: Add accessor for the size member.
 
 	* Mercator/Buffer.h, Mercator/Buffer.cpp, Mercator/Surface.h,
