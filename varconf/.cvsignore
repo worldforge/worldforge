@@ -1,2 +1,15 @@
 Makefile
 Makefile.in
+.deps
+.libs
+config.h.in
+stamp-h.in
+config.h
+stamp-h
+Config.lo
+Observer.lo
+ParseError.lo
+Variable.lo
+ftos.lo
+libvarconf.la
+
