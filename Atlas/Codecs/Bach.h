@@ -42,12 +42,14 @@ class Bach : public Codec
     virtual void listStringItem(const std::string&);
     virtual void listEnd();
 
+    unsigned linenum() const {return m_linenum;}
+
   protected:
 
     std::iostream& m_socket;
     Bridge & m_bridge;
-    bool m_comma, m_stringmode;
-    int m_linenum;
+    bool m_comma;
+    unsigned m_linenum;
 
     enum State
     {
@@ -60,8 +62,11 @@ class Bach : public Codec
         PARSE_INT,
         PARSE_FLOAT,
         PARSE_STRING,
-	PARSE_LITERAL // for literal character escaped with backslash
+	PARSE_LITERAL, // for literal character escaped with backslash
+	PARSE_COMMENT // for when we're in the middle of a comment field
     };
+
+    bool stringmode() const;
 
     std::string m_name, m_data;
     std::stack<State> m_state;
@@ -76,6 +81,7 @@ class Bach : public Codec
     inline void parseString(char);
     inline void parseLiteral(char);
     inline void parseName(char);
+    inline void parseComment(char);
 
     inline const std::string encodeString(std::string);
     inline const std::string decodeString(std::string);

@@ -16,7 +16,6 @@ Bach::Bach(std::iostream& s, Atlas::Bridge & b)
     : m_socket(s)
     , m_bridge(b)
     , m_comma(false)
-    , m_stringmode(false)
     , m_linenum(0)
 {
     m_state.push(PARSE_INIT);
@@ -414,41 +413,53 @@ void Bach::parseName(char next)
     }
 }
 
+void Bach::parseComment(char next)
+{
+  if(next == '\n')
+    m_state.pop();
+}
+
+bool Bach::stringmode() const
+{
+    switch(m_state.top())
+    {
+    case PARSE_COMMENT:
+    case PARSE_STRING:
+    case PARSE_LITERAL:
+        return true;
+    default:
+        return false;
+    }
+}
+
 void Bach::poll(bool can_read)
 {
     if (!can_read) return;
-
-    bool comment = false;
 
     do
     {
 	char next = (char) m_socket.get();
 
-        if (comment)
-        {
-            if (next=='\n')
-                comment = false;
-
-            continue;
-        }
+        // check for comment character here, so we don't have
+        // to do it in every section
 
         switch(next)
         {
         case '#':
-            if (!m_stringmode)
+            if(!stringmode())
             {
-                comment = true;
+                m_state.push(PARSE_COMMENT);
                 continue;
             }
             break;
 
         case '\n':
 	    m_linenum++;
-            if (!m_stringmode)
+            if(!stringmode())
                 continue;
             break;
-
-        case '\r':
+        case '\r': // dealing with DOS files, I guess
+            continue;
         default:
             break;
         }
@@ -465,6 +476,7 @@ void Bach::poll(bool can_read)
         case PARSE_STRING:     parseString(next); break;
 	case PARSE_LITERAL:    parseLiteral(next); break;
         case PARSE_NAME:       parseName(next); break;
+	case PARSE_COMMENT:    parseComment(next); break;
 	}
     }
     while (m_socket.rdbuf()->in_avail() > 0);
