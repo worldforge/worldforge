@@ -67,6 +67,8 @@ class Polygon<2>
   bool operator==(const Polygon& p) const	{return isEqualTo(p);}
   bool operator!=(const Polygon& p) const	{return !isEqualTo(p);}
 
+  bool isValid() const;
+
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the polygon.
   bool operator< (const Polygon& p) const;
@@ -207,8 +209,7 @@ template<const int dim>
 class _Poly2Orient
 {
  public:
-  _Poly2Orient()
-	{m_origin_valid = false; m_axes_valid[0] = false; m_axes_valid[1] = false;}
+  _Poly2Orient() {}
   _Poly2Orient(const _Poly2Orient& p)	{operator=(p);}
   ~_Poly2Orient() {}
 
@@ -227,7 +228,7 @@ class _Poly2Orient
   // to be used to reorient the points to match the new basis.
   _Poly2Reorient reduce(const Polygon<2>& poly, int skip = -1);
 
-  void shift(const Vector<dim>& v) {if(m_origin_valid) m_origin += v;}
+  void shift(const Vector<dim>& v) {if(m_origin.isValid()) m_origin += v;}
   void rotate(const RotMatrix<dim>& m, const Point<dim>& p);
   // Rotates about the point which corresponds to "p" in the oriented plane
   void rotate2(const RotMatrix<dim>& m, const Point<2>& p);
@@ -248,11 +249,10 @@ class _Poly2Orient
 
  private:
   // special case of the above when both axes are valid
-  bool checkIntersectPlane(const AxisBox<dim>& b, Point<2>& p2) const;
+  bool checkIntersectPlane(const AxisBox<dim>& b, Point<2>& p2, bool proper) const;
 
   Point<dim> m_origin;
   Vector<dim> m_axes[2]; // Normalized to unit length
-  bool m_origin_valid, m_axes_valid[2];
 };
 
 template<const int dim>
@@ -274,6 +274,8 @@ class Polygon
 
   bool operator==(const Polygon& p) const	{return isEqualTo(p);}
   bool operator!=(const Polygon& p) const	{return !isEqualTo(p);}
+
+  bool isValid() const {return m_poly.isValid();}
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the polygon.

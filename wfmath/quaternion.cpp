@@ -34,7 +34,7 @@
 using namespace WFMath;
 
 Quaternion::Quaternion (const CoordType w_in, const CoordType x_in,
-			const CoordType y_in, const CoordType z_in)
+			const CoordType y_in, const CoordType z_in) : m_valid(true)
 {
   CoordType norm = (CoordType) sqrt(w_in*w_in + x_in*x_in + y_in*y_in + z_in*z_in);
 
@@ -78,6 +78,8 @@ Quaternion Quaternion::operator* (const Quaternion& rhs) const
 {
   Quaternion out;
 
+  out.m_valid = m_valid && rhs.m_valid;
+
   out.m_w = m_w * rhs.m_w - Dot(m_vec, rhs.m_vec);
   out.m_vec = m_w * rhs.m_vec + rhs.m_w * m_vec - Cross(m_vec, rhs.m_vec);
 
@@ -87,6 +89,8 @@ Quaternion Quaternion::operator* (const Quaternion& rhs) const
 Quaternion Quaternion::operator/ (const Quaternion& rhs) const
 {
   Quaternion out;
+
+  out.m_valid = m_valid && rhs.m_valid;
 
   out.m_w = m_w * rhs.m_w + Dot(m_vec, rhs.m_vec);
   out.m_vec = rhs.m_w * m_vec - m_w * rhs.m_vec + Cross(m_vec, rhs.m_vec);
@@ -98,6 +102,8 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
 {
   RotMatrix<3> m_tmp;
   bool not_flip;
+
+  m_valid = m.isValid();
 
   if(m.determinant() > 0) { // This is cheap for a RotMatrix<>
     not_flip = true;
@@ -154,6 +160,8 @@ Quaternion& Quaternion::rotation(int axis, const CoordType angle)
     // Note sin() only called once
     m_vec[i] = (i == axis) ? (CoordType) sin(half_angle) : 0;
 
+  m_valid = true;
+
   return *this;
 }
 
@@ -163,6 +171,8 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, const CoordType angle)
 
   m_w = (CoordType) cos(half_angle);
   m_vec = axis * (CoordType) (sin(half_angle) / axis.mag());
+
+  m_valid = axis.isValid();
 
   return *this;
 }
@@ -174,6 +184,8 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis)
 
   m_w = (CoordType) cos(half_angle);
   m_vec = axis * (CoordType) (sin(half_angle) / mag);
+
+  m_valid = axis.isValid();
 
   return *this;
 }

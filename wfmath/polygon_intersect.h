@@ -47,7 +47,7 @@ namespace WFMath {
 template<const int dim>
 Vector<dim> _Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2) const
 {
-  assert(m_origin_valid); // Check for empty polygon before calling this
+  assert(m_origin.isValid()); // Check for empty polygon before calling this
 
   Vector<dim> out = pd - m_origin;
 
@@ -72,27 +72,28 @@ bool _Poly2Orient<dim>::checkContained(const Point<dim>& pd, Point<2> & p2) cons
 }
 
 template<>
-bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) const;
+bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
+					  bool proper) const;
 
 template<const int dim>
 bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2,
 				       bool proper) const
 {
-  assert(m_origin_valid);
+  assert(m_origin.isValid());
 
-  if(!m_axes_valid[0]) {
+  if(!m_axes[0].isValid()) {
     // Single point
     p2[0] = p2[1] = 0;
     return Intersect(b, convert(p2), proper);
   }
 
-  if(m_axes_valid[1]) {
+  if(m_axes[1].isValid()) {
     // A plane
 
     // I only know how to do this in 3D, so write a function which will
     // specialize to different dimensions
 
-    return checkIntersectPlane(b, p2) && (!proper || Contains(b, p2, true));
+    return checkIntersectPlane(b, p2, proper);
   }
 
   // A line
@@ -146,13 +147,13 @@ template<const int dim>
 int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
 	        _Poly2OrientIntersectData &data)
 {
-  if(!o1.m_origin_valid || !o2.m_origin_valid) { // No points
+  if(!o1.m_origin.isValid() || !o2.m_origin.isValid()) { // No points
     return -1;
   }
 
   // Check for single point basis
 
-  if(!o1.m_axes_valid[0]) {
+  if(!o1.m_axes[0].isValid()) {
     if(!o2.checkContained(o1.m_origin, data.p2))
       return -1; // no intersect
 
@@ -163,7 +164,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
     return 0; // point intersect
   }
 
-  if(!o2.m_axes_valid[0]) {
+  if(!o2.m_axes[0].isValid()) {
     if(!o1.checkContained(o2.m_origin, data.p1))
       return -1; // no intersect
 
@@ -181,7 +182,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
   int basis_size = 0;
 
   basis1 = o2.m_basis[0] * Dot(o2.m_basis[0], o1.m_basis[0]);
-  if(o2.m_axes_valid[1])
+  if(o2.m_axes[1].isValid())
     basis1 += o2.m_basis[1] * Dot(o2.m_basis[1], o1.m_basis[0]);
 
   // Don't need to scale, the m_basis are unit vectors
@@ -189,9 +190,9 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
   if(sqrmag1 > WFMATH_EPSILON * WFMATH_EPSILON)
     basis_size = 1;
 
-  if(o1.m_axes_valid[1]) {
+  if(o1.m_axes[1].isValid()) {
     basis2 = o2.m_basis[0] * Dot(o2.m_basis[0], o1.m_basis[1]);
-    if(o2.m_axes_valid[1])
+    if(o2.m_axes[1].isValid())
       basis2 += o2.m_basis[1] * Dot(o2.m_basis[1], o1.m_basis[1]);
 
     // Project out part parallel to basis1
@@ -216,7 +217,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
 
       data.p1[0] = Dot(o1.m_axes[0], off);
       Vector<dim> off1 = o1.m_axes[0] * data.p1[0];
-      if(o1.m_axes_valid[1]) {
+      if(o1.m_axes[1].isValid()) {
         data.p1[1] = Dot(o1.m_axes[1], off);
         off1 += o1.m_axes[1] * data.p1[1];
       }
@@ -225,7 +226,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
 
       data.p2[0] = -Dot(o2.m_axes[0], off);
       Vector<dim> off2 = o2.m_axes[0] * data.p2[0];
-      if(o1.m_axes_valid[1]) {
+      if(o1.m_axes[1].isValid()) {
         data.p2[1] = -Dot(o2.m_axes[1], off);
         off2 += o1.m_axes[1] * data.p2[1];
       }
@@ -239,10 +240,10 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
     case 1:
       // Check for an intersection line
 
-      data.o1_is_line = !o1.m_axes_valid[1];
-      data.o2_is_line = !o2.m_axes_valid[1];
+      data.o1_is_line = !o1.m_axes[1].isValid();
+      data.o2_is_line = !o2.m_axes[1].isValid();
 
-      if(!o1.m_axes_valid[1] && !o2.m_axes_valid[1]) {
+      if(!o1.m_axes[1].isValid() && !o2.m_axes[1].isValid()) {
         CoordType proj2 = Dot(off, data.v2);
         if(off != data.v2 * proj)
           return -1;
@@ -258,7 +259,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
         return 1;
       }
 
-      if(!o1.m_axes_valid[1]) {
+      if(!o1.m_axes[1].isValid()) {
         data.p2[0] = -Dot(off, o2.m_axes[0]);
         data.p2[1] = -Dot(off, o2.m_axes[1]);
 
@@ -274,7 +275,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
         return 1;
       }
 
-      if(!o2.m_axes_valid[1]) {
+      if(!o2.m_axes[1].isValid()) {
         data.p1[0] = Dot(off, o1.m_axes[0]);
         data.p1[1] = Dot(off, o1.m_axes[1]);
 
@@ -308,7 +309,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
 
       return 1;
     case 2:
-      assert(o1.m_axes_valid[1] && o2.m_axes_valid[1]);
+      assert(o1.m_axes[1].isValid() && o2.m_axes[1].isValid());
 
       // The planes are parallel, check if they are the same plane
       CoordType off_sqr_mag = data.off.sqrMag();

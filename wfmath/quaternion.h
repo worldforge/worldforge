@@ -35,13 +35,13 @@ namespace WFMath {
 class Quaternion
 {
  public:
-  Quaternion () {}
+  Quaternion () : m_valid(false) {}
   Quaternion (const CoordType w_in, const CoordType x_in, const CoordType y_in,
 	      const CoordType z_in);
   Quaternion (int axis, const CoordType angle) {rotation(axis, angle);}
   Quaternion (const Vector<3>& axis, const CoordType angle) {rotation(axis, angle);}
   Quaternion (const Vector<3>& axis) {rotation(axis);} // angle == axis.mag()
-  Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec) {}
+  Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec), m_valid(p.m_valid) {}
   explicit Quaternion (const Atlas::Message::Object& a) {fromAtlas(a);}
 
   ~Quaternion() {}
@@ -59,6 +59,8 @@ class Quaternion
 
   bool operator== (const Quaternion& rhs) const	{return isEqualTo(rhs);}
   bool operator!= (const Quaternion& rhs) const	{return !isEqualTo(rhs);}
+
+  bool isValid() const {return m_valid;}
 
   Quaternion& identity() {m_w = 1; m_vec.zero(); return *this;} // Set to null rotation
 
@@ -95,6 +97,7 @@ class Quaternion
  private:
   CoordType m_w;
   Vector<3> m_vec;
+  bool m_valid;
 };
 
 } // namespace WFMath

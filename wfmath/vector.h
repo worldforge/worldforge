@@ -106,7 +106,7 @@ template<const int dim>
 class Vector {
  public:
   /// Construct an uninitialized vector
-  Vector() {}
+  Vector() : m_valid(false) {}
   /// Construct a copy of a vector
   Vector(const Vector& v);
   /// Construct a vector from an object passed by Atlas
@@ -132,6 +132,9 @@ class Vector {
   bool operator==(const Vector& v) const {return isEqualTo(v);}
   /// Check if two vectors are not equal
   bool operator!=(const Vector& v) const {return !isEqualTo(v);}
+
+  bool isValid() const {return m_valid;}
+  void setValid(bool valid = true) {m_valid = valid;}
 
   /// Zero the components of a vector
   Vector& zero();
@@ -322,6 +325,7 @@ class Vector {
 
  private:
   CoordType m_elem[dim];
+  bool m_valid;
 };
 
 /// 2D only: get the z component of the cross product of two vectors

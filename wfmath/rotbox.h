@@ -66,6 +66,9 @@ class RotBox
   bool operator==(const RotBox& b) const	{return isEqualTo(b);}
   bool operator!=(const RotBox& b) const	{return !isEqualTo(b);}
 
+  bool isValid() const {return m_corner0.isValid() && m_size.isValid()
+	&& m_orient.isValid();}
+
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the box.
   bool operator< (const RotBox& b) const;

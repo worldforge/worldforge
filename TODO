@@ -7,7 +7,6 @@ Intersect functions unimplemented for dim != 2,3 (extremely low priority):
     or someone needs them, whichever comes first
 Add shape tests from COAL
 Write rotateInverse() functions
-Redo Euler angle stuff
 Look into whether miniball code can handle using float instead of double;
 	if so, replace Wrapped_array with Point
 Requests from Jesse: NAN, INFINITY, RADIANS_TO_DEGREES, DEGREES_TO_RADIANS
@@ -16,6 +15,9 @@ Deal with difficulties in making certain functions friends of the
 	appropriate classes
 Rearrange the functions in foo_funcs.h to match the order in the class
 	in foo.h
+
+Replace the _valid flags in Poly2Orient with use of the internal
+m_valid flags in Point and Vector
 
 Schedule:
 0.2.7	- official tarball release, mostly so man-di can roll a .deb

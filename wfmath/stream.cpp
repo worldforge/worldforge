@@ -190,6 +190,7 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
   norm = (CoordType) sqrt(norm);
   q.m_w /= norm;
   q.m_vec /= norm;
+  q.m_valid = true;
 
   is >> next;
   if(next != ')')

@@ -127,6 +127,8 @@ Vector<3> WFMath::Cross(const Vector<3>& v1, const Vector<3>& v2)
 {
   Vector<3> ans;
 
+  ans.setValid(v1.isValid() && v2.isValid());
+
   ans[0] = v1[1] * v2[2] - v2[1] * v1[2];
   ans[1] = v1[2] * v2[0] - v2[2] * v1[0];
   ans[2] = v1[0] * v2[1] - v2[0] * v1[1];
@@ -150,6 +152,7 @@ void WFMath::_NCFS_Vector2_polar(CoordType *m_elem, CoordType r, CoordType theta
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+  m_valid = true;
   return *this;
 #endif
 }
@@ -179,6 +182,7 @@ void WFMath::_NCFS_Vector3_polar(CoordType *m_elem, CoordType r, CoordType theta
   _PolarToCart(d, m_elem);
   m_elem[2] = z;
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+  m_valid = true;
   return *this;
 #endif
 }
@@ -209,6 +213,7 @@ void WFMath::_NCFS_Vector3_spherical(CoordType *m_elem, CoordType r, CoordType t
   CoordType d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+  m_valid = true;
   return *this;
 #endif
 }

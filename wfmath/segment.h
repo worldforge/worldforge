@@ -63,6 +63,8 @@ class Segment
   bool operator==(const Segment& b) const	{return isEqualTo(b);}
   bool operator!=(const Segment& b) const	{return !isEqualTo(b);}
 
+  bool isValid() const {return m_p1.isValid() && m_p2.isValid();}
+
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the segment.
   bool operator< (const Segment& s) const;

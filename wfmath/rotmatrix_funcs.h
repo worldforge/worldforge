@@ -34,7 +34,8 @@
 namespace WFMath {
 
 template<const int dim>
-inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m) : m_flip(m.m_flip)
+inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
+	: m_flip(m.m_flip), m_valid(m.m_valid)
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
@@ -49,6 +50,7 @@ RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
       m_elem[i][j] = m.m_elem[i][j];
 
   m_flip = m.m_flip;
+  m_valid = m.m_valid;
 
   return *this;
 }
@@ -106,6 +108,7 @@ RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   }
 
   out.m_flip = (m1.m_flip != m2.m_flip); // XOR
+  out.m_valid = m1.m_valid && m2.m_valid;
 
   return out;
 }
@@ -125,6 +128,7 @@ RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   }
 
   out.m_flip = (m1.m_flip != m2.m_flip); // XOR
+  out.m_valid = m1.m_valid && m2.m_valid;
 
   return out;
 }
@@ -144,6 +148,7 @@ RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   }
 
   out.m_flip = (m1.m_flip != m2.m_flip); // XOR
+  out.m_valid = m1.m_valid && m2.m_valid;
 
   return out;
 }
@@ -163,6 +168,7 @@ RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   }
 
   out.m_flip = (m1.m_flip != m2.m_flip); // XOR
+  out.m_valid = m1.m_valid && m2.m_valid;
 
   return out;
 }
@@ -179,6 +185,8 @@ Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v)
     }
   }
 
+  out.m_valid = m.m_valid && v.m_valid;
+
   return out;
 }
 
@@ -193,6 +201,8 @@ Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v)
       out.m_elem[i] += m.m_elem[j][i] * v.m_elem[j];
     }
   }
+
+  out.m_valid = m.m_valid && v.m_valid;
 
   return out;
 }
@@ -273,6 +283,7 @@ bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
       m_elem[i][j] = vals[i*dim+j];
 
   m_flip = flip;
+  m_valid = true;
 
   return true;
 }
@@ -285,6 +296,8 @@ Vector<dim> RotMatrix<dim>::row(const int i) const
   for(int j = 0; j < dim; ++j)
     out[j] = m_elem[i][j];
 
+  out.setValid(m_valid);
+
   return out;
 }
 
@@ -295,6 +308,8 @@ Vector<dim> RotMatrix<dim>::column(const int i) const
 
   for(int j = 0; j < dim; ++j)
     out[j] = m_elem[j][i];
+
+  out.setValid(m_valid);
 
   return out;
 }
@@ -308,6 +323,8 @@ RotMatrix<dim> RotMatrix<dim>::inverse() const
     for(int j = 0; j < dim; ++j)
       m.m_elem[j][i] = m_elem[i][j];
 
+  m.m_valid = m_valid;
+
   return m;
 }
 
@@ -319,6 +336,7 @@ RotMatrix<dim>& RotMatrix<dim>::identity()
       m_elem[i][j] = (CoordType) ((i == j) ? 1 : 0);
 
   m_flip = false;
+  m_valid = true;
 
   return *this;
 }
@@ -362,6 +380,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
   }
 
   m_flip = false;
+  m_valid = true;
 
   return *this;
 }
@@ -404,6 +423,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 		      - stheta * (vperp[i] * v1[j] - v1[i] * vperp[j]) / mag_prod);
 
   m_flip = false;
+  m_valid = true;
 
   return *this;
 }
@@ -452,6 +472,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
     }
   }
 
+  m_valid = true;
   return *this;
 }
 
@@ -487,6 +508,7 @@ inline RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						  const bool not_flip)
 {
   _NCFS_RotMatrix3_fromQuaternion(*this, q, not_flip, m_elem, m_flip);
+  m_valid = true;
   return *this;
 }
 
@@ -500,6 +522,7 @@ RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
   identity();
   m_elem[i][i] = -1;
   m_flip = true;
+  m_valid = true;
 
   return *this;
 }
@@ -527,6 +550,7 @@ RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
     m_elem[i][i] = 1 - 2 * v[i] * v[i] / sqr_mag;
 
   m_flip = true;
+  m_valid = true;
 
   return *this;
 }
@@ -539,6 +563,7 @@ RotMatrix<dim>& RotMatrix<dim>::mirror()
       m_elem[i][j] = (i == j) ? -1 : 0;
 
   m_flip = dim%2;
+  m_valid = true;
 
   return *this;
 }

@@ -94,6 +94,8 @@ class AxisBox
   /// Check if two boxes are not equal.
   bool operator!=(const AxisBox& a) const	{return !isEqualTo(a);}
 
+  bool isValid() const {return m_low.isValid() && m_high.isValid();}
+
   /// WARNING! This operator is for sorting only.
   bool operator< (const AxisBox& a) const
 	{return m_low < a.m_low || (m_low != a.m_low && m_high < a.m_high);}

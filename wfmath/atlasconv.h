@@ -76,6 +76,7 @@ template<const int dim>
 void Vector<dim>::fromAtlas(const Atlas::Message::Object& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
+  m_valid = true;
 }
 
 template<const int dim>
@@ -100,6 +101,13 @@ inline void Quaternion::fromAtlas(const Atlas::Message::Object& a)
     m_vec[i] = list[i].AsFloat();
 
   m_w = list[3].AsFloat();
+
+  CoordType norm = sqrt(m_w * m_w + m_vec.sqrMag());
+
+  m_vec /= norm;
+  m_w /= norm;
+
+  m_valid = true;
 }
 
 inline Atlas::Message::Object Quaternion::toAtlas() const
@@ -117,6 +125,7 @@ template<const int dim>
 void Point<dim>::fromAtlas(const Atlas::Message::Object& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
+  m_valid = true;
 }
 
 template<const int dim>
@@ -151,6 +160,8 @@ void AxisBox<dim>::fromAtlas(const Atlas::Message::Object& a)
         m_low[i] = list[i].AsFloat();
         m_high[i] = list[i+dim].AsFloat();
       }
+      m_low.setValid();
+      m_high.setValid();
       break;
     default:
       throw _AtlasBadParse();
@@ -193,6 +204,8 @@ inline void AxisBox<2>::fromAtlas(const Atlas::Message::Object& a)
         m_low[i] = list[i].AsFloat();
         m_high[i] = list[i+2].AsFloat();
       }
+      m_low.setValid();
+      m_high.setValid();
       break;
     default:
       throw _AtlasBadParse();
@@ -224,8 +237,10 @@ inline void AxisBox<1>::fromAtlas(const Atlas::Message::Object& a)
       break;
     case 2:
       if(got_float) {
-          m_low[0] = list[0].AsFloat();
-          m_high[0] = list[1].AsFloat(); 
+        m_low[0] = list[0].AsFloat();
+        m_high[0] = list[1].AsFloat(); 
+        m_low.setValid();
+        m_high.setValid();
       }
       else {
         m_low.fromAtlas(list[0]);

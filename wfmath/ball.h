@@ -76,6 +76,8 @@ class Ball
   bool operator==(const Ball& b) const	{return isEqualTo(b);}
   bool operator!=(const Ball& b) const	{return !isEqualTo(b);}
 
+  bool isValid() const {return m_center.isValid();}
+
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the ball.
   bool operator< (const Ball& b) const;

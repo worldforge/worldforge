@@ -60,6 +60,11 @@ AxisBox<dim> Ball<dim>::boundingBox() const
     p_high[i] = m_center[i] + m_radius;
   }
 
+  bool valid = m_center.isValid();
+
+  p_low.setValid(valid);
+  p_high.setValid(valid);
+
   return AxisBox<dim>(p_low, p_high, true);
 }
 
@@ -71,8 +76,10 @@ Ball<dim> BoundingSphere(const container<Point<dim> >& c)
   _miniball::Wrapped_array<dim> w;
 
   typename container<Point<dim> >::const_iterator i, end = c.end();
+  bool valid = true;
 
   for(i = c.begin(); i != end; ++i) {
+    valid = valid && i->isValid();
     for(int j = 0; j < dim; ++j)
       w[j] = (*i)[j];
     m.check_in(w);
@@ -90,6 +97,8 @@ Ball<dim> BoundingSphere(const container<Point<dim> >& c)
   for(int j = 0; j < dim; ++j)
     center[j] = w[j];
 
+  center.setValid(valid);
+
   return Ball<dim>(center, sqrt(m.squared_radius()));
 }
 
@@ -106,6 +115,7 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
 
   CoordType min[dim], max[dim];
   typename container<Point<dim> >::const_iterator min_p[dim], max_p[dim];
+  bool valid = i->isValid();
 
   for(int j = 0; j < dim; ++j) {
     min[j] = max[j] = (*i)[j];
@@ -113,6 +123,7 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
   }
 
   while(++i != end) {
+    valid = valid && i->isValid();
     for(int j = 0; j < dim; ++j) {
       if(min[j] > (*i)[j]) {
         min[j] = (*i)[j];
@@ -157,6 +168,8 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
              SquaredDistance(*i, center) <= dist * dist);
     }
   }
+
+  center.setValid(valid);
 
   return Ball<2>(center, dist);
 }

@@ -79,7 +79,7 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
 template<const int dim>
 class RotMatrix {
  public:
-  RotMatrix() {}
+  RotMatrix() : m_valid(false) {}
   RotMatrix(const RotMatrix& m);
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotMatrix& m);
@@ -94,13 +94,13 @@ class RotMatrix {
   bool operator==(const RotMatrix& m) const {return isEqualTo(m);}
   bool operator!=(const RotMatrix& m) const {return !isEqualTo(m);}
 
+  bool isValid() const {return m_valid;}
+
   RotMatrix& identity();
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the matrix.
   bool operator< (const RotMatrix& m) const;
-
-  static const int nParams = dim*(dim-1)/2;
 
   CoordType elem(const int i, const int j) const
 	{assert(i >= 0 && j >= 0 && i < dim && j < dim); return m_elem[i][j];}
@@ -167,6 +167,7 @@ class RotMatrix {
  private:
   CoordType m_elem[dim][dim];
   bool m_flip; // True if the matrix is parity odd
+  bool m_valid;
 
   // Backend to setVals() above, also used in fromStream()
   bool _setVals(CoordType *vals, double precision = WFMATH_EPSILON);

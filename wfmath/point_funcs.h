@@ -34,7 +34,7 @@
 namespace WFMath {
 
 template<const int dim>
-Point<dim>::Point(const Point<dim>& p)
+Point<dim>::Point(const Point<dim>& p) : m_valid(p.m_valid)
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = p.m_elem[i];
@@ -45,6 +45,8 @@ Point<dim>& Point<dim>::setToOrigin()
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = 0;
+
+  m_valid = true;
 
   return *this;
 }
@@ -69,6 +71,8 @@ Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
   for(int i = 0; i < dim; ++i)
     out.m_elem[i] = c1.m_elem[i] - c2.m_elem[i];
 
+  out.m_valid = c1.m_valid && c2.m_valid;
+
   return out;
 }
 
@@ -79,6 +83,8 @@ Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
 
   for(int i = 0; i < dim; ++i)
     out.m_elem[i] = c.m_elem[i] + v.m_elem[i];
+
+  out.m_valid = c.m_valid && v.m_valid;
 
   return out;
 }
@@ -91,6 +97,8 @@ Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
   for(int i = 0; i < dim; ++i)
     out.m_elem[i] = c.m_elem[i] - v.m_elem[i];
 
+  out.m_valid = c.m_valid && v.m_valid;
+
   return out;
 }
 
@@ -101,6 +109,8 @@ Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
 
   for(int i = 0; i < dim; ++i)
     out.m_elem[i] = c.m_elem[i] + v.m_elem[i];
+
+  out.m_valid = c.m_valid && v.m_valid;
 
   return out;
 }
@@ -116,6 +126,8 @@ Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
     for(int i = 0; i < dim; ++i)
       m_elem[i] = rhs.m_elem[i];
 
+    m_valid = rhs.m_valid;
+
     return *this;
 }
 
@@ -125,6 +137,8 @@ Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
     for(int i = 0; i < dim; ++i)
       p.m_elem[i] += rhs.m_elem[i];
 
+    p.m_valid = p.m_valid && rhs.m_valid;
+
     return p;
 }
 
@@ -133,6 +147,8 @@ Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
 {
     for(int i = 0; i < dim; ++i)
       p.m_elem[i] -= rhs.m_elem[i];
+
+    p.m_valid = p.m_valid && rhs.m_valid;
 
     return p;
 }
@@ -187,6 +203,8 @@ Point<dim> Barycenter(const container<Point<dim> >& c,
   assert("nonempty list of points" && c_i != c_end);
   assert("nonempty list of weights" && w_i != w_end);
 
+  bool valid = c_i->isValid();
+
   CoordType tot_weight = *w_i, max_weight = fabs(*w_i);
   Point<dim> out;
   for(int j = 0; j < dim; ++j)
@@ -197,6 +215,8 @@ Point<dim> Barycenter(const container<Point<dim> >& c,
     CoordType val = fabs(*w_i);
     if(val > max_weight)
       max_weight = val;
+    if(!c_i->isValid())
+      valid = false;
     for(int j = 0; j < dim; ++j)
       out[j] += (*c_i)[j] * *w_i;
   }
@@ -207,6 +227,8 @@ Point<dim> Barycenter(const container<Point<dim> >& c,
 
   for(int j = 0; j < dim; ++j)
     out[j] /= tot_weight;
+
+  out.setValid(valid);
 
   return out;
 }
@@ -223,14 +245,20 @@ Point<dim> Barycenter(const container<Point<dim> >& c)
   Point<dim> out = *i;
   int num_points = 1;
 
+  bool valid = i->isValid();
+
   while(++i != end) {
     ++num_points;
+    if(!i->isValid())
+      valid = false;
     for(int j = 0; j < dim; ++j)
       out[j] += (*i)[j];
   }
 
   for(int j = 0; j < dim; ++j)
     out[j] /= num_points;
+
+  out.setValid(valid);
 
   return out;
 }
@@ -245,16 +273,18 @@ Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)
   for(int i = 0; i < dim; ++i)
     out.m_elem[i] = p1.m_elem[i] * conj_dist + p2.m_elem[i] * dist;
 
+  out.m_valid = p1.m_valid && p2.m_valid;
+
   return out;
 }
 
-template<> inline Point<2>::Point(CoordType x, CoordType y)
+template<> inline Point<2>::Point(CoordType x, CoordType y) : m_valid(true)
 {
   m_elem[0] = x;
   m_elem[1] = y;
 }
 
-template<> inline Point<3>::Point(CoordType x, CoordType y, CoordType z)
+template<> inline Point<3>::Point(CoordType x, CoordType y, CoordType z) : m_valid(true)
 {
   m_elem[0] = x;
   m_elem[1] = y;
@@ -290,6 +320,7 @@ template<>
 inline Point<2>& Point<2>::polar(CoordType r, CoordType theta)
 {
   _NCFS_Point2_polar((CoordType*) m_elem, r, theta);
+  m_valid = true;
   return *this;
 }
 
@@ -303,6 +334,7 @@ template<>
 inline Point<3>& Point<3>::polar(CoordType r, CoordType theta, CoordType z)
 {
   _NCFS_Point3_polar((CoordType*) m_elem, r, theta, z);
+  m_valid = true;
   return *this;
 }
 
@@ -316,6 +348,7 @@ template<>
 inline Point<3>& Point<3>::spherical(CoordType r, CoordType theta, CoordType phi)
 {
   _NCFS_Point3_spherical((CoordType*) m_elem, r, theta, phi);
+  m_valid = true;
   return *this;
 }
 

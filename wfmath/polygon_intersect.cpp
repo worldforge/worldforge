@@ -39,10 +39,11 @@
 using namespace WFMath;
 
 template<>
-bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) const
+bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
+					  bool proper) const
 {
   assert("This function should only be called if the orientation represents a plane" &&
-         m_origin_valid && m_axes_valid[0] && m_axes_valid[1]);
+         m_origin.isValid() && m_axes[0].isValid() && m_axes[1].isValid());
 
   Vector<3> normal = Cross(m_axes[0], m_axes[1]); // normal to the plane
 
@@ -78,11 +79,11 @@ bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2) con
 
   if(perp_size < normal_mag * WFMATH_EPSILON) {
     // We have a very flat box, lying parallel to the plane
-    return checkContained(Midpoint(high_corner, low_corner), p2);
+    return !proper && checkContained(Midpoint(high_corner, low_corner), p2);
   }
 
-  if(Dot(high_corner - m_origin, normal) < 0
-     || Dot(low_corner - m_origin, normal) > 0)
+  if(_Less(Dot(high_corner - m_origin, normal), 0, proper)
+     || _Less(Dot(low_corner - m_origin, normal), 0, proper))
     return false; // box lies above or below the plane
 
   // Find the intersection of the line through the corners with the plane

@@ -119,6 +119,7 @@ template<const int dim>
 std::istream& operator>>(std::istream& is, Vector<dim>& v)
 {
   _ReadCoordList(is, v.m_elem, dim);
+  v.m_valid = true;
   return is;
 }
 
@@ -170,6 +171,7 @@ template<const int dim>
 std::istream& operator>>(std::istream& is, Point<dim>& p)
 {
   _ReadCoordList(is, p.m_elem, dim);
+  p.m_valid = true;
   return is;
 }
 

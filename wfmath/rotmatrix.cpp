@@ -70,6 +70,7 @@ void WFMath::_NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& 
   if(!not_flip)
     *this = Prod(*this, RotMatrix<3>().mirror(0));
 
+  m_valid = true;
   return *this;
 #else
   if(!not_flip)

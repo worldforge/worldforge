@@ -94,6 +94,15 @@ bool Polygon<2>::isEqualTo(const Polygon<2>& p, double epsilon) const
   return true;
 }
 
+bool Polygon<2>::isValid() const
+{
+  for(theConstIter i = m_points.begin(); i != m_points.end(); ++i)
+    if(!i->isValid())
+      return false;
+
+  return true;
+}
+
 //template<>
 bool Polygon<2>::operator< (const Polygon& p) const
 {

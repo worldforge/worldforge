@@ -39,6 +39,7 @@ void WFMath::_NCFS_Point2_polar(CoordType *m_elem, CoordType r, CoordType theta)
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+  m_valid = true;
   return *this;
 #endif
 }
@@ -68,6 +69,7 @@ void WFMath::_NCFS_Point3_polar(CoordType *m_elem, CoordType r, CoordType theta,
   _PolarToCart(d, m_elem);
   m_elem[2] = z;
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+  m_valid = true;
   return *this;
 #endif
 }
@@ -98,6 +100,7 @@ void WFMath::_NCFS_Point3_spherical(CoordType *m_elem, CoordType r, CoordType th
   CoordType d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+  m_valid = true;
   return *this;
 #endif
 }

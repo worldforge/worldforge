@@ -92,7 +92,7 @@ class Point
 {
  public:
   /// Construct an uninitialized point
-  Point () {}
+  Point () : m_valid(false) {}
   /// Construct a copy of a point
   Point (const Point& p);
   /// Construct a point from an object passed by Atlas
@@ -118,6 +118,9 @@ class Point
   bool operator== (const Point& rhs) const	{return isEqualTo(rhs);}
   /// Check if two points are not equal
   bool operator!= (const Point& rhs) const	{return !isEqualTo(rhs);}
+
+  bool isValid() const {return m_valid;}
+  void setValid(bool valid = true) {m_valid = valid;}
 
   /// Set point to (0,0,...,0)
   Point& setToOrigin();
@@ -236,6 +239,7 @@ class Point
 
  private:
   CoordType m_elem[dim];
+  bool m_valid;
 };
 
 } // namespace WFMath

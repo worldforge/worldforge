@@ -37,7 +37,7 @@
 namespace WFMath {
 
 template<const int dim>
-Vector<dim>::Vector(const Vector<dim>& v)
+Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
 {
   for(int i = 0; i < dim; ++i)
     m_elem[i] = v.m_elem[i];
@@ -46,6 +46,8 @@ Vector<dim>::Vector(const Vector<dim>& v)
 template<const int dim>
 Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 {
+  m_valid = v.m_valid;
+
   for(int i = 0; i < dim; ++i)
     m_elem[i] = v.m_elem[i];
 
@@ -83,6 +85,8 @@ Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   Vector<dim> ans;
 
+  ans.m_valid = v1.m_valid && v2.m_valid;
+
   for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = v1.m_elem[i] + v2.m_elem[i];
 
@@ -93,6 +97,8 @@ template <const int dim>
 Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   Vector<dim> ans;
+
+  ans.m_valid = v1.m_valid && v2.m_valid;
 
   for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = v1.m_elem[i] - v2.m_elem[i];
@@ -105,6 +111,8 @@ Vector<dim> operator*(const Vector<dim>& v, CoordType d)
 {
   Vector<dim> ans;
 
+  ans.m_valid = v.m_valid;
+
   for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = v.m_elem[i] * d;
 
@@ -115,6 +123,8 @@ template<const int dim>
 Vector<dim> operator*(CoordType d, const Vector<dim>& v)
 {
   Vector<dim> ans;
+
+  ans.m_valid = v.m_valid;
 
   for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = v.m_elem[i] * d;
@@ -127,6 +137,8 @@ Vector<dim> operator/(const Vector<dim>& v, CoordType d)
 {
   Vector<dim> ans;
 
+  ans.m_valid = v.m_valid;
+
   for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = v.m_elem[i] / d;
 
@@ -138,6 +150,8 @@ Vector<dim> operator-(const Vector<dim>& v)
 {
   Vector<dim> ans;
 
+  ans.m_valid = v.m_valid;
+
   for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = -v.m_elem[i];
 
@@ -147,6 +161,8 @@ Vector<dim> operator-(const Vector<dim>& v)
 template <const int dim>
 Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 {
+  v1.m_valid = v1.m_valid && v2.m_valid;
+
   for(int i = 0; i < dim; ++i)
     v1.m_elem[i] += v2.m_elem[i];
 
@@ -156,6 +172,8 @@ Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 template <const int dim>
 Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 {
+  v1.m_valid = v1.m_valid && v2.m_valid;
+
   for(int i = 0; i < dim; ++i)
     v1.m_elem[i] -= v2.m_elem[i];
 
@@ -193,6 +211,8 @@ Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 template<const int dim>
 Vector<dim>& Vector<dim>::zero()
 {
+  m_valid = true;
+
   for(int i = 0; i < dim; ++i)
     m_elem[i] = 0;
 
@@ -403,6 +423,7 @@ template<>
 inline Vector<2>& Vector<2>::polar(CoordType r, CoordType theta)
 {
   _NCFS_Vector2_polar((CoordType*) m_elem, r, theta);
+  m_valid = true;
   return *this;
 }
 
@@ -416,6 +437,7 @@ template<>
 inline Vector<3>& Vector<3>::polar(CoordType r, CoordType theta, CoordType z)
 {
   _NCFS_Vector3_polar((CoordType*) m_elem, r, theta, z);
+  m_valid = true;
   return *this;
 }
 
@@ -429,6 +451,7 @@ template<>
 inline Vector<3>& Vector<3>::spherical(CoordType r, CoordType theta, CoordType phi)
 {
   _NCFS_Vector3_spherical((CoordType*) m_elem, r, theta, phi);
+  m_valid = true;
   return *this;
 }
 
@@ -454,9 +477,9 @@ inline CoordType Vector<3>::sloppyMag() const
 template<> inline CoordType Vector<1>::sloppyMag() const
 	{return (CoordType) fabs(m_elem[0]);}
 
-template<> inline Vector<2>::Vector(CoordType x, CoordType y)
+template<> inline Vector<2>::Vector(CoordType x, CoordType y) : m_valid(true)
 	{m_elem[0] = x; m_elem[1] = y;}
-template<> inline Vector<3>::Vector(CoordType x, CoordType y, CoordType z)
+template<> inline Vector<3>::Vector(CoordType x, CoordType y, CoordType z) : m_valid(true)
 	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
 
 // Don't need asserts here, they're taken care of in the general function

@@ -54,6 +54,9 @@ bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& 
       return false;
   }
 
+  out.m_low.setValid(a1.m_low.isValid() && a2.m_low.isValid());
+  out.m_high.setValid(a1.m_high.isValid() && a2.m_high.isValid());
+
   return true;
 }
 
@@ -66,6 +69,9 @@ AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2)
     out.m_low[i] = FloatMin(a1.m_low[i], a2.m_low[i]);
     out.m_high[i] = FloatMax(a1.m_high[i], a2.m_high[i]);
   }
+
+  out.m_low.setValid(a1.m_low.isValid() && a2.m_low.isValid());
+  out.m_high.setValid(a1.m_high.isValid() && a2.m_high.isValid());
 
   return out;
 }
@@ -91,6 +97,9 @@ AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p
     }
   }
 
+  m_low.setValid();
+  m_high.setValid();
+
   return *this;
 }
 
@@ -99,15 +108,17 @@ Point<dim> AxisBox<dim>::getCorner(int i) const
 {
   assert(i >= 0 && i < (1 << dim));
 
-  Point<dim> out;
-
   if(i == 0)
     return m_low;
   if(i == (1 << dim) - 1)
     return m_high;
 
+  Point<dim> out;
+
   for(int j = 0; j < dim; ++j)
     out[j] = (i & (1 << j)) ? m_high[j] : m_low[j];
+
+  out.setValid(m_low.isValid() && m_high.isValid());
 
   return out;
 }
@@ -136,14 +147,20 @@ AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c)
   assert(i != end);
 
   Point<dim> low = i->lowCorner(), high = i->highCorner();
+  bool low_valid = low.isValid(), high_valid = high.isValid();
 
   while(++i != end) {
     const Point<dim> &new_low = i->lowCorner(), &new_high = i->highCorner();
+    low_valid = low_valid && new_low.isValid();
+    high_valid = high_valid && new_high.isValid();
     for(int j = 0; j < dim; ++j) {
       low[j] = FloatMin(low[j], new_low[j]);
       high[j] = FloatMax(high[j], new_high[j]);
     }
   }
+
+  low.setValid(low_valid);
+  high.setValid(high_valid);
 
   return AxisBox<dim>(low, high, true);
 }
@@ -156,13 +173,18 @@ AxisBox<dim> BoundingBox(const container<Point<dim> >& c)
   assert(i != end);
 
   Point<dim> low = *i, high = *i;
+  bool valid = i->isValid();
 
   while(++i != end) {
+    valid = valid && i->isValid();
     for(int j = 0; j < dim; ++j) {
       low[j] = FloatMin(low[j], (*i)[j]);
       high[j] = FloatMax(high[j], (*i)[j]);
     }
   }
+
+  low.setValid(valid);
+  high.setValid(valid);
 
   return AxisBox<dim>(low, high, true);
 }

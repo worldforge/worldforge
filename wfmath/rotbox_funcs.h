@@ -78,6 +78,8 @@ Point<dim> RotBox<dim>::getCorner(int i) const
   for(int j = 0; j < dim; ++j)
     dist[j] = (i & (1 << j)) ? m_size[j] : 0;
 
+  dist.setValid(m_size.isValid());
+
   return m_corner0 + Prod(dist, m_orient);
 }
 
@@ -113,6 +115,11 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
         max[i] += value;
     }
   }
+
+  bool valid = isValid();
+
+  min.setValid(valid);
+  max.setValid(valid);
 
   return AxisBox<dim>(min, max, true);
 }
