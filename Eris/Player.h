@@ -18,6 +18,17 @@ class Lobby;
 class Connection;
 class World;
 
+/** Enumeration of various server-side things that can go wrong when trying
+to create an account or login.*/
+typedef enum {
+	LOGIN_INVALID = 0,
+	LOGIN_DUPLICATE_ACCOUNT,	///< The requested account already exists (when creating)
+	LOGIN_BAD_ACCOUNT,		///< The account data was invalid
+	LOGIN_UNKNOWN_ACCOUNT,	///< The account was not found (logging in)
+	LOGIN_BAD_PASSWORD,		///< The supplied password do not match
+	LOGIN_DUPLICATE_CONNECT	///< The account is already active (not always an error)
+} LoginFailureType;
+
 /// Per-player instance, for entire lifetime; abstracted to permit (in theorey) multiple players per client
 
 /** A Player object represents the encapsulation of a server account, and it's binding to a character in the
@@ -30,8 +41,9 @@ in response to login / create operations */
 class Player : public SigC::Object
 {
 public:
-	/// create a new Player
-	Player();
+	/** create a new Player object : currently only one is assumed, but multiple might be supported
+	in the future */
+	Player(Connection *con);
 	~Player();
 
 	/// Login to the server using the existing account specified
@@ -39,23 +51,22 @@ public:
 	/// @param pwd The correct password for the account
 	
 	/** Server-side failures during the login process, such as the account being unknown
-	or an incorrect password being supplied, will result in an exception being thrown */
+	or an incorrect password being supplied, will result in the 'LoginFailure' signal being
+	emitted with some vaugely helpful error message, and an error code.*/
 
-	Lobby* login(Connection *con, 
-		const std::string &uname,
+	void login(const std::string &uname,
 		const std::string &pwd);
 
 	/** Attempt to create a new account on the server and log into it.
 	Server-side failures, such as an account already existing with the specified
-	username, will throw an exception. state which ones! */
+	username, will cause the 'LoginFailure' signal to be emitted with an error message
+	and a code*/
 
-	/// @param con The connection object to the server
 	/// @param uname The desired username of the account (eg 'bryceh')
 	/// @param name The real name of the user (e.g 'Bryce Harrington')
 	/// @param pwd The password for the new account
 
-	Lobby* createAccount(Connection *con,
-		const std::string &uname,
+	void createAccount(const std::string &uname,
 		const std::string &name,
 		const std::string &pwd);
 	
@@ -80,9 +91,12 @@ public:
 
 	/// returns the account ID if logged in, or throws and exception
 	std::string getAccountID() const;
-
+// signals
 	/// emitted when a character has been retrived from the server
 	SigC::Signal1<void, const Atlas::Objects::Entity::GameEntity&> BrowseCharacter;
+	
+	/// emitted when a server-side error occurs during account creation / login
+	SigC::Signal2<void, LoginFailureType, const std::string &> LoginFailure;
 protected:
 	void recvOpError(const Atlas::Objects::Operation::Error &err);	
 	void recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge);
@@ -95,6 +109,7 @@ protected:
 	
 	/// help! the plug is being pulled!
 	bool netDisconnecting();
+	void netFailure(std::string msg);
 
 	Connection* _con;	///< underlying connection instance
 	std::string _account;	///< account ID (the username, at present)
@@ -104,7 +119,7 @@ protected:
 	std::string _username,	///< The player's username ( != account object's ID)
 		_pass;		///< The password; FIXME - clear text.
 
-	// current action tracing (for error processing)
+	/// current action tracking (for error processing)
 	std::string _currentAction;
 	long _currentSerial;	///< serial no of the Atlas operation
 

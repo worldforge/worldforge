@@ -67,7 +67,8 @@ Connection::Connection(const string &cnm) :
 				
 	opd->addSubdispatch(new EncapDispatcher("info", "info"));
 	opd->addSubdispatch(new ClassDispatcher("error", "error"));
-		
+	opd->addSubdispatch(new EncapDispatcher("encap-error", "error", 1));
+	
 	dd = new DebugDispatcher(_clientName + ".atlas-recvlog");
 	sdd = new DebugDispatcher(_clientName + ".atlas-sendlog");
 }

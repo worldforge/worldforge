@@ -25,11 +25,13 @@ namespace Eris
 // forward decls
 class Person;
 class Lobby;
-	
+
+/** The out-of-game (OOG) heirarchy is composed of Rooms, containing Persons and other
+Rooms. Generally rooms corespond to chanels in IRC, and the interface and commands should
+be clear if you are familiar with that medium. */
 class Room : public SigC::Object
 {
 public:	
-	Room(Lobby *l, const std::string &id);
 	virtual ~Room();
 
 	/// Send a piece of text to this room
@@ -39,7 +41,8 @@ public:
 	in Atlas, with args[0]["id"] = "emote". */
 	void emote(const std::string &em);
 
-	/// Leave the room
+	/** Leave the room - no more signals will be emitted for this room again
+	(validity of Room pointer after this call?) */
 	void leave();
 
 	/// Obtain the human-readable name  of this room
@@ -54,12 +57,14 @@ public:
 	StringList getRooms() const
 	{ return StringList(_subrooms.begin(), _subrooms.end()); }
 	
-	/// Get the Atlas object ID
+	/// Get the Atlas object ID of the Room
 	std::string getID() const {return _id;}
 	
 	/// Called by the lobby when sight of us arrives	
 	void sight(const Atlas::Objects::Entity::RootEntity &room);	
 // signals
+	/** Emitted when entry into the room (after a Join) is complete, i.e the user list has been
+	transferred and resolved. */
 	SigC::Signal1<void, Room*> Entered;
 	
 	/** The primary talk callback. The arguments are the source room, the person
@@ -69,20 +74,31 @@ public:
 	/** Emote (/me) callback. The arguments are identical to those for Talk above */
 	SigC::Signal3<void, Room*, std::string, std::string> Emote;
 	
-	/// Emitted when a person enters the room; argument is the account ID
+	/** Emitted when a person enters the room; argument is the account ID. Note that
+	Appearance is not generated for the local player when entering/leaving; use the
+	Entered signal instead. */
 	SigC::Signal2<void, Room*, std::string> Appearance;
+	/// Similarly, emitted when the specifed person leaves the room
 	SigC::Signal2<void, Room*, std::string> Disappearance;
 	
 protected:
-	/// base-construcutore for derived classes (lobby)
+	friend class Lobby;	// so Lobby can call the constructor
+		
+	/** standard constructor. Issues a LOOK against the specified ID, and sets up
+	the necessary signals to drive the Room */
+	Room(Lobby *l, const std::string &id);
+
+	/// base-constructor for derived classes (lobby)
 	explicit Room(Lobby *l);	
 
-	///  delayable initialization
+	/**  delayable initialization - allows the Lobby to defer signal binding and so on until
+	the account INFO has been recieved. */
 	void setup();
 
-	// Callbacks
+	/// routed from the Lobby, which maintains the actual dispatcher
 	void notifyPersonSight(Person *p);
-	
+
+	// Callbacks
 	void recvSoundTalk(const Atlas::Objects::Operation::Talk &tk);
 	void recvAppear(const Atlas::Objects::Operation::Appearance &ap);
 	void recvDisappear(const Atlas::Objects::Operation::Disappearance &dis);
@@ -97,9 +113,9 @@ protected:
 		_creator;	///< ID of the account that created the room
 	bool _initialGet;
 
-	StringSet _subrooms;
-	StringSet _people,
-		_pending;
+	StringSet _subrooms;	///< the IDs of any sub-rooms
+	StringSet _people,		///< the account IDs of each person in the room
+		_pending;	///< persons for which appear/disappear has been received, but not (yet) SIGHT 
 };
 	
 }

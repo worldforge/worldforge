@@ -1,6 +1,6 @@
 AC_INIT(src/Entity.cpp)
 
-AM_INIT_AUTOMAKE(eris, 0.1.4)
+AM_INIT_AUTOMAKE(eris, 0.1.8)
 AM_MAINTAINER_MODE
 
 AM_CONFIG_HEADER(config.h)	

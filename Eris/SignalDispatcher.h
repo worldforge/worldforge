@@ -76,7 +76,7 @@ public:
 
 	virtual ~SignalDispatcher2() {;}
 
-	/// virtual interface for invoking the dispatcher; causes the signal to emit
+	/// virtual interface for invoking the dispatcher; causes the signal to emitted
 	virtual bool dispatch(DispatchContextDeque &dq)
 	{
 		DispatchContextDeque::iterator Q = dq.begin();
@@ -104,11 +104,17 @@ protected:
 	
 };
 
+/** The message dispatcher provides a non-decoded output of the selected message. This is most
+useful in conjunction with the EncapDispatcher, where the de-encapsulated object is not an Atlas::Object,
+but simple some defined map or list structure.*/
 class MessageDispatcher :
 	public Dispatcher,
 	public SigC::Object
 {
-public:		
+public:	
+	/** standard constructor
+	@param nm The dispatcher label
+	@param slot A SigC  slot that takes an Atlas::Message::Object */
 	MessageDispatcher(const std::string &nm, const SigC::Slot1<void, const Atlas::Message::Object&> &slot) :
 		Dispatcher(nm)
 	{ Signal.connect(slot); }
@@ -120,7 +126,7 @@ public:
 		Signal.emit(dq.front());
 		return false;
 	}
-	
+protected:	
 	SigC::Signal1<void, const Atlas::Message::Object&> Signal;
 };
 

@@ -32,8 +32,11 @@ class BaseConnection :
 	public SigC::Object
 {
 public:
+	/// destructor, will perform a hard disconnect if necessary
 	virtual ~BaseConnection();
 
+	/** open a connection to the specified host/port; invokes the failure handler if
+	the connection could not be opened. */
 	virtual void connect(const string &host, short port);
 
 	/// possible states for the connection
@@ -69,11 +72,16 @@ protected:
 	timeouts created by the connection (and potentially errors in the future) */
 	BaseConnection(const std::string &cnm, const std::string &id, Atlas::Bridge *br);	
 
+	/// perform a blocking read from the underlying socket
 	void recv();
 
+	/// update the connection status and generate signals
 	virtual void setStatus(Status sc);
 
+	/// derived-class notification when connection and negotiation is completed
 	virtual void onConnect();
+
+	/// derived-class notification when a failure occurs
 	virtual void handleFailure(const std::string &msg) = 0;
 
 	/// hook for derived classes to install a signal handler onto the timeout
@@ -97,7 +105,9 @@ protected:
 	client_socket_stream* _stream;		///< the underlying iostream channel
 	std::string _clientName;		///< the client identified used during connection
 	
-	Atlas::Bridge* _bridge;
+	/** the connection bridge (i.e something implementing ObjectArrived()) : this can be the derived
+	class itself, or any other object */
+	Atlas::Bridge* _bridge;	
 	Timeout* _timeout;		///< network level timeouts		
 };
 		

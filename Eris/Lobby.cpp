@@ -38,27 +38,20 @@ namespace AtlasEntity = Atlas::Objects::Entity;
 
 namespace Eris {
 
-Lobby::Lobby(Player *p, Connection *con) :
+// declare the static member
+Lobby* Lobby::_theLobby = NULL;	
+	
+Lobby::Lobby(/*Player *p,*/ Connection *con) :
 	Room(this),
 	_account(""),
 	_con(con),
-	_player(p),
+	//_player(p),
 	_reconnect(false),
 	_infoRefno(-1)
 {
 	assert(_con);
 	_con->Failure.connect(SigC::slot(this, &Lobby::netFailure));
 	_con->Connected.connect(SigC::slot(this, &Lobby::netConnected));
-	
-	// the info callback	
-	Dispatcher *d = _con->getDispatcherByPath("op:info");
-	assert(d);
-
-	d = d->addSubdispatch(new TypeDispatcher("entity","object"));
-	d = d->addSubdispatch(new ClassDispatcher("account", "account"));
-	d->addSubdispatch( new SignalDispatcher2<Operation::Info, AtlasEntity::Account>(
-		"lobby", SigC::slot(this, &Lobby::recvInfoAccount)
-	));
 }
 	
 Lobby::~Lobby()
@@ -68,6 +61,17 @@ Lobby::~Lobby()
 	
 	// FIXME - unecesary when Cyphesis updates to new OOG standards
 	_con->removeDispatcherByPath("op:oog:sight:entity:lobby", "lobby");
+}
+
+Lobby* Lobby::instance()
+{
+	if (_theLobby) return _theLobby;
+		
+	if (!Connection::Instance())
+		throw InvalidOperation("called Lobby::instance() before the Connection exists");
+	
+	_theLobby = new Lobby(Connection::Instance());
+	return _theLobby;
 }
 
 std::string Lobby::getAccountID()
@@ -196,15 +200,21 @@ void Lobby::netDisconnected()
 
 void Lobby::netConnected()
 {
-	// probably in response to a re-conection, so we need to log in again
-	_reconnect = true;
+	// if the account is valid, we already connected at least one
+	_reconnect = !_account.empty();
 
 	Dispatcher *d = _con->getDispatcherByPath("op:info:entity:account");
-	assert(d);
-	
-	d->addSubdispatch( new SignalDispatcher2<Operation::Info, AtlasEntity::Account>(
-		"lobby", SigC::slot(this, &Lobby::recvInfoAccount)
-	));
+	if (!d) {
+		// the info callback	
+		Dispatcher *d = _con->getDispatcherByPath("op:info");
+		assert(d);
+
+		d = d->addSubdispatch(new TypeDispatcher("entity","object"));
+		d = d->addSubdispatch(new ClassDispatcher("account", "account"));
+		d->addSubdispatch( new SignalDispatcher2<Operation::Info, AtlasEntity::Account>(
+			"lobby", SigC::slot(this, &Lobby::recvInfoAccount)
+		));
+	}
 }
 
 void Lobby::look(const std::string &id)
@@ -268,7 +278,7 @@ void Lobby::recvSightPerson(const Atlas::Objects::Entity::Account &ac)
 {
 	PersonDict::iterator i = _peopleDict.find(ac.GetId());
 	if (i == _peopleDict.end()) {
-		cerr << "got un-requested sight of person!" << endl;
+		Eris::Log("got un-requested sight of person %s", ac.GetId().c_str());
 		return;
 	}
 	
@@ -286,7 +296,6 @@ void Lobby::recvSightRoom(const Atlas::Objects::Entity::RootEntity &room)
 {
 	// check if this is initial room (lobby), from the anonymous LOOK
 	if (_id.empty()) {
-		//cerr << "doing root-room (lobby) boot-strap" << endl;
 		Log("recieved sight of root room (lobby)");
 		_roomDict[room.GetId()] = this;
 		

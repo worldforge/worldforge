@@ -28,15 +28,26 @@
 
 namespace Eris {
 
-Player::Player() :
-	_con(NULL),
+Player::Player(Connection *con) :
+	_con(con),
 	_account(""),
 	_username(""),
-	_lobby(NULL),
+	_lobby(Lobby::instance()),
 	_world(NULL)
 {
 	_currentAction = "";
-}
+	assert(_con);
+
+	_con->Connected.connect(SigC::slot(this, &Player::netConnected));
+	_con->Failure.connect(SigC::slot(this, &Player::netFailure));
+	
+	Dispatcher *d = _con->getDispatcherByPath("op:error");
+	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Error>("player",
+		SigC::slot(this, &Player::recvOpError)
+	));
+	
+	_lobby->LoggedIn.connect(SigC::slot(this, &Player::loginComplete));
+}	
 
 Player::~Player()
 {
@@ -47,28 +58,14 @@ Player::~Player()
 	}
 }
 
-Lobby* Player::login(Connection *con,
-	const std::string &uname,
+void Player::login(const std::string &uname,
 	const std::string &password)
 {
-	if (!con || (con->getStatus() != BaseConnection::CONNECTED))
+	if (!_con || (_con->getStatus() != BaseConnection::CONNECTED))
 		throw InvalidOperation("Invalid connection");
 	
 	if (!_currentAction.empty())
 		throw InvalidOperation("action in progress (" + _currentAction + ")");
-	
-	_con = con;
-	_lobby = new Lobby(this, con);
-	
-	// notification when we are 'in'
-	_lobby->LoggedIn.connect(SigC::slot(this, &Player::loginComplete));
-	
-	_con->Connected.connect(SigC::slot(this, &Player::netConnected));
-	
-	Dispatcher *d = _con->getDispatcherByPath("op:error");
-	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Error>("player",
-		SigC::slot(this, &Player::recvOpError)
-	));
 	
 	internalLogin(uname, password);
 	
@@ -79,28 +76,18 @@ Lobby* Player::login(Connection *con,
 	// store for re-logins
 	_username = uname;
 	_pass = password;
-	
-	return _lobby;
 }
 
-Lobby* Player::createAccount(Connection *con, 
-	const std::string &uname, 
+void Player::createAccount(const std::string &uname, 
 	const std::string &name,
 	const std::string &pwd)
 {
-	if (!con || (con->getStatus() != BaseConnection::CONNECTED))
+	if (!_con || (_con->getStatus() != BaseConnection::CONNECTED))
 		throw InvalidOperation("Invalid connection");
-	_con = con;
 	
 	if (!_currentAction.empty())
 		throw InvalidOperation("action in progress (" + _currentAction + ")");
-	
-	_con->Connected.connect(SigC::slot(this, &Player::netConnected));
-	_lobby = new Lobby(this, con);
-	
-	// notification when we are 'in'
-	_lobby->LoggedIn.connect(SigC::slot(this, &Player::loginComplete));
-	
+
 	// need option to create an admin object here
 	Atlas::Objects::Entity::Player account = 
    		Atlas::Objects::Entity::Player::Instantiate();
@@ -115,13 +102,7 @@ Lobby* Player::createAccount(Connection *con,
   	
 	c.SetSerialno(getNewSerialno());
  	c.SetArgs(args);
-	con->send(c);
-	
-	Dispatcher *d = _con->getDispatcherByPath("op:error");
-	assert(d);
-	d->addSubdispatch(new SignalDispatcher<Atlas::Objects::Operation::Error>("player",
-		SigC::slot(this, &Player::recvOpError)
-	));
+	_con->send(c);
 	
 	_currentAction = "create-account";
 	_currentSerial = c.GetSerialno();
@@ -132,10 +113,6 @@ Lobby* Player::createAccount(Connection *con,
 	// store for re-logins
 	_username = uname;
 	_pass = pwd;
-	
-	// set a callback for failure
-	
-	return _lobby;
 }
 
 void Player::logout()
@@ -143,9 +120,11 @@ void Player::logout()
 	if (!_con)
 		throw InvalidOperation("connection is invalid");
 	
-	if (!_con->isConnected())
+	if (!_con->isConnected()) {
+		Eris::Log("connection not open, ignoring Player::logout");
 		// FIXME - provide feedback here
 		return;
+	}
 	
 	Atlas::Objects::Operation::Logout l = 
 		Atlas::Objects::Operation::Logout::Instantiate();
@@ -203,7 +182,10 @@ World* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 	c.SetFrom(_lobby->getAccountID());
    	c.SetSerialno(getNewSerialno());
 	
-	_world = new World(this, _con);
+	if (!_world) {
+		_world = new World(this, _con);
+	}
+	
 	_con->send(c);
 	
 	return _world;
@@ -228,8 +210,8 @@ World* Player::takeCharacter(const std::string &id)
 	l.SetArgs(args);
   	l.SetSerialno(getNewSerialno());
 	
-  	_world = new World(this, _con);
-	//l.SendContents(_con->GetEncoder()); 
+	if (!_world)
+		_world = new World(this, _con);
 	_con->send(l);
 	
   	return _world;
@@ -300,38 +282,27 @@ void Player::loginComplete(const Atlas::Objects::Entity::Player &p)
 
 void Player::recvOpError(const Atlas::Objects::Operation::Error &err)
 {
-	cerr << "recieved atlas error!" << endl;
-	// work out which operation went wrong
-	
-	if (_currentAction.empty())
-		// nothing to do with us, guv'
+	// skip errors if we're not doing anything
+	if (_currentAction.empty() || (err.GetRefno() != _currentSerial))
 		return;
-		
-	if (err.GetRefno() != _currentSerial) {
-		cerr << "skipping non-targeted error" << endl;
-		return;
-	}
 	
 	std::string serverMsg = getMember(getArg(err, 0), "message").AsString();
-	cerr << "Got atlas error, msg is " << serverMsg << endl;
 	// can actually use error[2]->parents here to detrmine the current action
+	Eris::Log("Received Atlas error %s", serverMsg.c_str());
 	
 	std::string pr = getMember(getArg(err, 1), "parents").AsList().front().AsString();
 	if (pr == "login") {
 		// prevent re-logins on the account
 		_username="";
-		throw InvalidOperation("Login failed, server reponded: " + serverMsg);
+		LoginFailure.emit(LOGIN_INVALID, serverMsg);
 	}
 	
 	if (_currentAction == "create-account") {
 		assert(pr == "create");
 		// prevent re-logins on the account
 		_username="";
-		throw InvalidOperation("Create-Account failed, server responded: " + serverMsg);
+		LoginFailure.emit(LOGIN_INVALID, serverMsg);
 	}
-	
-	// FIXME - handle failures of create account / take-over / create character
-	assert(false);
 }
 
 void Player::recvSightCharacter(const Atlas::Objects::Entity::GameEntity &ge)
@@ -362,6 +333,11 @@ bool Player::netDisconnecting()
 	// that calls _con->unlock();
 	
 	return false;
+}
+
+void Player::netFailure(std::string msg)
+{
+	; // do something useful here?
 }
 
 /*

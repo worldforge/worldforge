@@ -6,6 +6,7 @@
 
 #include "Utils.h"
 #include "atlas_utils.h"
+#include "Connection.h"
 
 using namespace Atlas::Message;
 
@@ -16,6 +17,8 @@ const Atlas::Message::Object&
 getArg(const Atlas::Objects::Operation::RootOperation &op, unsigned int i)
 {
 	const Object::ListType &l = op.GetArgs();
+	
+	assert(i < l.size());
 	if (i >= l.size())
 		throw IllegalObject(op, "list index out of range");
 	return l[i];
@@ -24,17 +27,34 @@ getArg(const Atlas::Objects::Operation::RootOperation &op, unsigned int i)
 const Atlas::Message::Object&
 getArg(const Atlas::Objects::Operation::RootOperation &op, const std::string &nm)
 {
+	assert(op.GetArgs().front().IsMap());
 	const Object::MapType &m = op.GetArgs().front().AsMap();
 	Object::MapType::const_iterator i = m.find(nm);
+	
+	assert(i != m.end());
 	if (i == m.end())
 		throw IllegalObject(op,"unknown argument " + nm);
 	return i->second;
 }
 
+bool hasArg(const Atlas::Objects::Operation::RootOperation &op, const std::string &nm)
+{
+	const Object::ListType &l = op.GetArgs();
+	if (l.empty() || !l[0].IsMap()) return false;
+	
+	const Object::MapType &m = l[0].AsMap();
+	Object::MapType::const_iterator i = m.find(nm);
+	return (i != m.end());
+}
+
+
 const Atlas::Message::Object&
 getMember(const Atlas::Message::Object &obj, unsigned int i)
 {
+	assert(obj.IsList());
 	const Object::ListType &l = obj.AsList();
+	
+	assert(i < l.size());
 	if (i >= l.size())
 		throw IllegalMessage(obj, "list index out of range");
 	return l[i];
@@ -43,8 +63,11 @@ getMember(const Atlas::Message::Object &obj, unsigned int i)
 const Atlas::Message::Object&
 getMember(const Atlas::Message::Object &obj, const std::string &nm)
 {
+	assert(obj.IsMap());
 	const Object::MapType &m = obj.AsMap();
 	Object::MapType::const_iterator i = m.find(nm);
+	
+	assert(i != m.end());
 	if (i == m.end())
 		throw IllegalMessage(obj, "unknown member " + nm);
 	return i->second;
@@ -52,6 +75,7 @@ getMember(const Atlas::Message::Object &obj, const std::string &nm)
 
 bool hasMember(const Atlas::Message::Object &obj, const std::string &nm)
 {
+	assert(obj.IsMap());
 	const Object::MapType &m = obj.AsMap();
 	return (m.find(nm) != m.end());
 }
@@ -66,6 +90,7 @@ StringSet getParentsAsSet(const Atlas::Objects::Root &obj)
 	return ret;
 }
 
+/*
 bool checkInherits(const Atlas::Objects::Root &obj, const std::string &cid)
 {
 	const Object::ListType &parents = obj.GetParents();
@@ -76,6 +101,7 @@ bool checkInherits(const Atlas::Objects::Root &obj, const std::string &cid)
 			
 	return false;	
 }
+*/
 
 long getNewSerialno()
 {
@@ -88,14 +114,24 @@ long getNewSerialno()
 
 std::string objectSummary(const Atlas::Objects::Root &obj)
 {
+	if (obj.GetParents().empty()) {
+		// this can happen if built the Object::Root out of something silly, like a string; we
+		// don't want to crash here, so bail
+		return "<invalid>";
+	}
+try {	
 	std::string type = obj.GetParents()[0].AsString(),
 		label(obj.GetName());
 	std::string ret = type;
 	
+
 	if (obj.GetObjtype() == "op") {
+		Atlas::Objects::Operation::RootOperation op =
+			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj);
+
 		if ((type == "sight") || (type == "sound")) {
 			Atlas::Objects::Operation::RootOperation inner =
-			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj.GetAttr("args").AsList()[0]);
+				Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(getArg(op,0));
 			ret.append('(' + objectSummary(inner) + ')');
 		}
 		
@@ -124,18 +160,25 @@ std::string objectSummary(const Atlas::Objects::Root &obj)
 		
 		// show the error message and also summarise the deffective op
 		if (type == "error") {
-			std::string msg = obj.GetAttr("args").AsList()[0].AsString();
-			Atlas::Objects::Operation::RootOperation inner =
-			Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(obj.GetAttr("args").AsList()[1]);
-			ret.append('(' + msg + ',' + objectSummary(inner) + ')');
+			if (!op.GetArgs().empty()) {
+				std::string msg = hasArg(op, "message") ? getArg(op, "message").AsString() : "-";
+				Atlas::Objects::Operation::RootOperation inner =
+					Atlas::atlas_cast<Atlas::Objects::Operation::RootOperation>(getArg(op, 1));
+				ret.append('(' + msg + ',' + objectSummary(inner) + ')');
+			}
 		}
 		
 		if ((type == "info") || (type == "create")) {
 			Atlas::Objects::Root inner =
-			Atlas::atlas_cast<Atlas::Objects::Root>(obj.GetAttr("args").AsList()[0]);
+				Atlas::atlas_cast<Atlas::Objects::Root>(getArg(op,0));
 			ret.append('(' + objectSummary(inner) + ')');
 		}
 		
+		if (type == "get") {
+			if (hasArg(op, "id"))
+				ret.append('(' + getArg(op, "id").AsString() + ')');
+		}
+	
 	} else if (obj.GetObjtype() == "entity") {
 		if (obj.HasAttr("id"))
 			label = obj.GetAttr("id").AsString();
@@ -148,6 +191,11 @@ std::string objectSummary(const Atlas::Objects::Root &obj)
 		ret = label + ":" + ret;
 	
 	return ret;
+}
+	catch (Atlas::Message::WrongTypeException &wte) {
+		Eris::Log("caught WTE in Utils::objectSummary");
+		return "<invalid>";
+	}
 }
 
 } // of Eris

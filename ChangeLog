@@ -1,3 +1,29 @@
+Saturday, November 10 2001, James Turner
+
+	* Made TypeInfo::init safe (doesn't assert) during reconnections
+	* Updated eris.dox.in with better settings
+	* Added more documentation to classes and generally improved the
+	  quality and accuracy, still a long way to go but getting better
+	* Made objectSummary much more robust handling suspicious objects,
+	  including a try { .. } catch block for the Atlas exceptions,
+	  and more aggresive IsXXX checking on the Message::Objects.
+	* Similarly made the getMember/Arg helpers check the structure of
+	  the input objects before extracting the data. This is slower but
+	  all done inside asserts()
+	* Changed the access control for various methods (eg Room's ctor) as
+	  a result of looking at the generated documentation, to avoid
+	  exposing lots of internal stuff to the client.
+
+Thursday, November 08 2001, James Turner
+
+	* Added LoginFailure signal to Player, which is generated instead
+	  of an exception being thrown in response to server-side failures
+	  in account creation / login.
+	* Updated Player::login/createAccount to work correctly with
+	  multiple attempts / tries. This involved moving the 'Connection'
+	  argument to both up to the Player constructor, where it should
+	  probably have been all along.
+
 Tuesday, November 06 2001, James Turner
 
 	* TypeInfo stuff basically works, parses the atlas.xml file

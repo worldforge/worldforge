@@ -56,6 +56,8 @@ private:
 	unsigned int _refcount;
 };
 
+/** A base class for all leaf Dispatcher nodes (currently SignalDispatcher and WaitForDispatcher) This 
+base is used to support the 'at least once' verification of recieved messages in strict/checcked operation.*/
 class LeafDispatcher : public Dispatcher
 {
 public:

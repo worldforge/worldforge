@@ -12,6 +12,7 @@
 
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Get.h>
+#include <Atlas/Objects/Operation/Error.h>
 
 #include "TypeInfo.h"
 #include "Utils.h"
@@ -21,6 +22,7 @@
 #include "TypeDispatcher.h"
 #include "EncapDispatcher.h"
 #include "SignalDispatcher.h"
+#include "OpDispatcher.h"
 
 using namespace Atlas;
 
@@ -102,13 +104,17 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 	}
 	
 	// expand the children ?  why not ..
-	Atlas::Message::Object::ListType children = atype.GetAttr("children").AsList();
-	for (unsigned int I=0; I<children.size(); I++) {
-		addChild(findSafe(children[I].AsString()));
+	if (atype.HasAttr("children")) {
+		assert(atype.GetAttr("children").IsList());
+		Atlas::Message::Object::ListType children = atype.GetAttr("children").AsList();
+		for (unsigned int I=0; I<children.size(); I++) {
+			assert(children[I].IsString());
+			addChild(findSafe(children[I].AsString()));
+		}
 	}
-	
-	if (isBound())
-		Eris::Log("Bound type %s", id.c_str());
+
+	//if (isBound())
+	//	Eris::Log("Bound type %s", id.c_str());
 	
 // do dependancy checking
 	TypeDepMap::iterator D = globalDependancyMap.find(id);
@@ -122,7 +128,7 @@ void TypeInfo::processTypeData(const Atlas::Objects::Root &atype)
 		if (D->second->isBound()) {
 			// emit the signal, will probably trigger all manner of crap
 			D->second->Bound.emit();
-			Eris::Log("Bound type %s", id.c_str());
+			//Eris::Log("Bound type %s", id.c_str());
 		}
 		++D;
 	}
@@ -253,7 +259,9 @@ std::string TypeInfo::getName() const
 
 void TypeInfo::init()
 {
-	assert(!_inited);
+	if (_inited)
+		return;	// this can happend during re-connections, for example.
+	
 	Eris::Log("Starting Eris TypeInfo system...");
 	
 	Dispatcher *info = Connection::Instance()->getDispatcherByPath("op:info");
@@ -272,6 +280,19 @@ void TypeInfo::init()
 	
 	d = info->addSubdispatch(new TypeDispatcher("type", "type"));
 	d->addSubdispatch(ti);
+	
+// handle errors
+	Dispatcher *err = Connection::Instance()->getDispatcherByPath("op:encap-error");
+	err = err->addSubdispatch(new ClassDispatcher("get", "get"));
+	// ensure we don't get spammed, anything IG/OOG would have set these
+	err = err->addSubdispatch(new OpFromDispatcher("anonymous", ""));
+	
+	err->addSubdispatch(
+		new SignalDispatcher2<Atlas::Objects::Operation::Error,
+			Atlas::Objects::Operation::Get>("typeerror",
+			SigC::slot(&TypeInfo::recvTypeError)
+		)
+	);
 	
 	// try to read atlas.xml to boot-strap stuff faster
 	readAtlasSpec("atlas.xml");
@@ -365,6 +386,7 @@ TypeInfoPtr TypeInfo::getSafe(const Atlas::Objects::Root &obj)
 
 void TypeInfo::recvInfoOp(const Atlas::Objects::Root &atype)
 {
+try {	
 	std::string id = atype.GetId();
 	TypeInfoMap::iterator T = globalTypeMap.find(id);
 	if (T == globalTypeMap.end()) {
@@ -374,6 +396,10 @@ void TypeInfo::recvInfoOp(const Atlas::Objects::Root &atype)
 	}
 	
 	T->second->processTypeData(atype);
+} catch (Atlas::Message::WrongTypeException &wte) {
+	Eris::Log("caught WTE in TypeInfo::recvOp");
+}
+
 }
 
 void TypeInfo::sendInfoRequest(const std::string &id)
@@ -392,6 +418,35 @@ void TypeInfo::sendInfoRequest(const std::string &id)
 	get.SetSerialno(getNewSerialno());
 	
 	Connection::Instance()->send(get);
+}
+
+void TypeInfo::recvTypeError(const Atlas::Objects::Operation::Error &error,
+	const Atlas::Objects::Operation::Get &get)
+{
+	const Atlas::Message::Object::ListType &largs = get.GetArgs();
+	if (largs.empty() || !largs[0].IsMap())
+		// something weird, certainly not a type request
+		return;
+	
+	const Atlas::Message::Object::MapType &args = largs[0].AsMap();
+	Atlas::Message::Object::MapType::const_iterator A = args.find("id");
+	
+	if (A == args.end())
+		// still wierd, again not a type request
+		return;
+	
+	std::string typenm = A->second.AsString();
+	TypeInfoMap::iterator T = globalTypeMap.find(typenm);
+	if (T == globalTypeMap.end()) {
+			// what the fuck? getting out of here...
+			Eris::Log("Got ERROR(GET) for type lookup on %s, but I never asked for it, I swear!",
+				typenm.c_str());
+			return;
+	}
+	
+	// XXX - at this point, we could kill the type; instead we just mark it as bound
+	Eris::Log("ERROR: got error from server looking up type %s",
+		typenm.c_str());
 }
 
 }; // of namespace

@@ -123,11 +123,14 @@ bool IdDispatcher::dispatch(DispatchContextDeque &dq)
 
 bool TypeDispatcher::dispatch(DispatchContextDeque &dq)
 {
+	
+	if (!hasMember(dq.front(), "objtype"))
+		return false;
+	
 	// FIXME
 	// work around for tiny cyphesis bug; this is the only place it can
 	// be dealt with, sigh...
-	if (!hasMember(dq.front(), "objtype"))
-		dq.front().AsMap()["objtype"] = "object";
+//		dq.front().AsMap()["objtype"] = "object";
 	// end of hack
 	
 	if (getMember(dq.front(), "objtype").AsString() != _type)
@@ -155,7 +158,13 @@ bool EncapDispatcher::dispatch(DispatchContextDeque &dq)
 		// note that de-encapsulation is simply getting the first arg out!
 		// this is the major change; we're no longer discarding the current msg
 		// when we de-encapsulate
-		dq.push_front(getMember(dq.front(), "args").AsList().front());
+		
+		const Atlas::Message::Object::ListType &args = 
+			getMember(dq.front(), "args").AsList();
+		if (args.size() < _position)
+			return false;
+		
+		dq.push_front(args[_position]);
 		bool ret = Dispatcher::subdispatch(dq);	
 		
 		// we need to restore the context stack, otherwise the next dispathcer along gets very confused

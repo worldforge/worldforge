@@ -50,11 +50,15 @@ public:
 	/// Emitted when initial login completes
 	SigC::Signal1<void, const Atlas::Objects::Entity::Player&> LoggedIn;
 	
+	/** Access the global Lobby instance. Do not call this prior to creating a Connection object, or
+	InvalidOperation will be thrown; the Lobby needs to be bound to a connection when it is
+	initalised, and this method creates the Lobby if an existing instance is not found. */
+	static Lobby* instance();
 protected:
 	friend class Room;
-	friend class Player;
+	friend class Player; 
 	
-	Lobby(Player *p, Connection *c);
+	Lobby(/*Player *p,*/ Connection *c);
 	
 	void look(const std::string &id);
 	void expectInfoRefno(long ref);
@@ -80,7 +84,7 @@ protected:
 	
 	std::string _account;
 	Connection* _con;
-	Player* _player;
+	//Player* _player;
 	bool _reconnect;	///< set if reconnecting (for INFO processing)
 	long _infoRefno;	///< refno of the INFO op we're looking for
 	
@@ -89,6 +93,8 @@ protected:
 	
 	typedef std::map<std::string, Room*> RoomDict;
 	RoomDict _roomDict;
+	
+	static Lobby* _theLobby;
 };
 	
 }; // of namespace Eris

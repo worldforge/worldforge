@@ -174,9 +174,6 @@ void Room::leave()
 
 void Room::sight(const Atlas::Objects::Entity::RootEntity &room)
 {
-	if (!checkInherits(room, "room"))
-		throw IllegalObject(room, "room object doesn't claim to be a room");
-	
 	Log("Got sight of room %s", _id.c_str());
 	_initialGet = true;
 		
