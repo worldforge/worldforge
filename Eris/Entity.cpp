@@ -52,17 +52,17 @@ Entity::Entity(const GameEntity& ge, TypeInfo* ty, View* vw) :
 }
 
 Entity::~Entity()
-{
-    debug() << "deleting entity " << m_id;
-    m_view->entityDeleted(this); // remove ourselves from the View's content map
-    
-    for (unsigned int C=0; C < m_contents.size(); ++C) {
-        m_contents[C]->setLocation(NULL);
-        m_contents[C]->m_limbo = true;
+{    
+    while (!m_contents.empty()) {
+        Entity* child = m_contents.front();
+        child->setLocation(NULL);
+        child->m_limbo = true;
     }
     
     setLocation(NULL);
+    
     m_view->getConnection()->unregisterRouterForFrom(m_router, m_id);
+    m_view->entityDeleted(this); // remove ourselves from the View's content map
     delete m_router;
 }
 
@@ -335,8 +335,7 @@ void Entity::setLocation(Entity* newLocation)
 {
     if (newLocation == m_location) return;
     
-    if (m_location)
-        removeFromLocation();
+    if (m_location) removeFromLocation();
     
 // do the actual member updating
     bool wasVisible = isVisible();
@@ -344,13 +343,11 @@ void Entity::setLocation(Entity* newLocation)
     Entity* oldLocation = m_location;
     m_location = newLocation;
     
-    LocationChanged.emit(this, oldLocation);
-    
+    LocationChanged.emit(this, oldLocation);    
 // fire VisChanged and Appearance/Disappearance signals
     updateCalculatedVisibility(wasVisible);
     
-    if (m_location)
-        addToLocation();
+    if (m_location) addToLocation();    
 }
 
 void Entity::addToLocation()

@@ -80,8 +80,7 @@ void erisLog(Eris::LogLevel level, const std::string& msg)
         cout << "ERIS_WARN: " << msg << endl; break;
         
     default:
-        return;
-        // cout << "ERIS: " << msg << endl;
+        cout << "ERIS: " << msg << endl;
     }
 }
 

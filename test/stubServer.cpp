@@ -186,9 +186,10 @@ int StubServer::run(pid_t child)
         int childStatus;
         int result = waitpid(child, &childStatus, WNOHANG);
         if (result == child) {
-            cout << "stub server got child exit" << endl;
             
             if (WIFEXITED(childStatus)) return WEXITSTATUS(childStatus);
+            
+            std::cerr << "child got bad exit status" << endl;
             // child died for some other reason (SIGTERM, SIGABRT, core-dump, etc)
             return EXIT_FAILURE;
         }
