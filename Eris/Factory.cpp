@@ -42,7 +42,7 @@ Entity* Factory::createEntity(const GameEntity& gent, View* view)
         if ((*F)->accept(gent, type))
             return (*F)->instantiate(gent, type, view);
     }
-    
+
     return new Eris::Entity(gent, type, view);
 }
 

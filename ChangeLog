@@ -1,5 +1,10 @@
 Monday 8th March 2004, James Turner <james@worldforge.org>
 
+* Final Linux fixes for Eris, including building the metaquery tool,
+  which works!
+
+Monday 8th March 2004, James Turner <james@worldforge.org>
+
 * First round of Linux compilation fixes, many silly things
   all over the place.
 

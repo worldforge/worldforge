@@ -14,13 +14,13 @@ class IGRouter : public Router
 public:
     IGRouter(Avatar* av);
     virtual ~IGRouter();
-        
+
 protected:
     virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
 
 private:
     RouterResult IGRouter::handleSightOp(const Atlas::Objects::Operation::RootOperation& op);
-    
+
     Avatar* m_avatar;
     View* m_view;
 };

@@ -17,7 +17,7 @@ ERIS_VERSION=$ERIS_MAJOR.$ERIS_MINOR.$ERIS_MICRO.$ERIS_PATCH
 # Automake setup
 AM_INIT_AUTOMAKE(eris, $ERIS_VERSION)
 AM_MAINTAINER_MODE
-AM_CONFIG_HEADER(config.h)	
+AM_CONFIG_HEADER(config.h)
 
 AC_SUBST(ERIS_VERSION)
 
@@ -39,6 +39,7 @@ AM_DISABLE_STATIC
 AM_PROG_LIBTOOL
 
 CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi"
+CPPFLAGS="$CPPFLAGS -DATLAS_ELEMENT_TYPEDEF_PRIVATE"
 
 dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 
@@ -66,7 +67,7 @@ PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 wfmath-0.3 >= 0.3.2,
 
 AC_LANG_POP(C++)
 
-AC_ARG_ENABLE(perl, 
+AC_ARG_ENABLE(perl,
 [  --enable-perl         Enable building of Perl bindings
 ],
 [
@@ -82,7 +83,7 @@ dnl perl and sucks in its CFLAGS and LIBS
 			AC_MSG_RESULT(no)
 			AC_MSG_WARN(SigC module not found, not building perl bindings)
 			enable_perl='no'
-		fi 
+		fi
 	],[
 		AC_MSG_WARN(libsigcperl not found, not building perl bindings)
 		enable_perl='no'
@@ -111,7 +112,7 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     ])
 AM_CONDITIONAL(HAVE_GLIB, test "x$have_glib" = "xyes")
 
-AC_ARG_ENABLE(janus, 
+AC_ARG_ENABLE(janus,
 [  --enable-janus         Enable building of experimental Atlas UI extension
 ],
 [

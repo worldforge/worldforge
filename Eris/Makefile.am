@@ -63,4 +63,3 @@ liberis_HEADERS = \
 	view.h \
 	$(ATLAS_JANUS_H)
 
-

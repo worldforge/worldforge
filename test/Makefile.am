@@ -11,3 +11,8 @@ testEris_SOURCES = tests.cpp testHarness.h \
     testPlayer.h testPlayer.cpp
 
 testEris_LDADD = $(top_builddir)/Eris/liberis-1.2.la
+
+noinst_PROGRAMS  = metaquery
+
+metaquery_SOURCES = metaQuery.cpp
+metaquery_LDADD = $(top_builddir)/Eris/liberis-1.2.la

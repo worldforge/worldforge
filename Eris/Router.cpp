@@ -3,7 +3,7 @@
 #endif
 
 #include <Eris/router.h>
-#include <Eris/exceptions.h>
+#include <Eris/Exceptions.h>
 #include <Eris/logStream.h>
 
 #include <Atlas/Objects/RootEntity.h>
@@ -21,10 +21,10 @@ Router::RouterResult Router::handleObject(const Root& obj)
 {
     if (obj->instanceOf(Atlas::Objects::Operation::ROOT_OPERATION_NO))
         return handleOperation(smart_dynamic_cast<RootOperation>(obj));
-        
+
     if (obj->instanceOf(Atlas::Objects::Entity::ROOT_ENTITY_NO))
         return handleEntity(smart_dynamic_cast<RootEntity>(obj));
-        
+
     throw InvalidOperation("router got an object that is not an op or entity");
 }
 

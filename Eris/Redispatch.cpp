@@ -3,7 +3,7 @@
 #endif
 
 #include <Eris/redispatch.h>
-#include <Eris/connection.h>
+#include <Eris/Connection.h>
 
 namespace Eris
 {
