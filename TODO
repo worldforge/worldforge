@@ -7,6 +7,9 @@ Generally speaking it seems having virtual methods with the same names
 is not all that good a trick. It causes methods to get hidden when only
 some are overridden in a subclass.
 
+Add cout operators for Message::Object at least. Its a pain having to mess about
+with them.
+
 TODO list for Atlas-C++:
 
 Items are written up by those who they are assigned to, unless otherwise noted
