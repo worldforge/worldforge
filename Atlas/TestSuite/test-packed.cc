@@ -3,13 +3,14 @@
 // Copyright (C) 2000 Michael Day
 
 #include "../Codec.h"
-#include "../Hack.h"
 #include "../Funky/Encoder.h"
+#include "../Net/Stream.h"
 
 #include <iostream>
 
 using namespace std;
 using namespace Atlas;
+using namespace Atlas::Net;
 
 class loopbuf : public streambuf
 {
@@ -138,7 +139,7 @@ class LoopBridge : public Bridge
 int main()
 {
     string client_buffer;
-    string server_buffer = "{[@id=17$name=Fred +28the +2b great+29#weight=1.5(args=@1@2@3)]}";
+    string server_buffer = "SERVER FOO\nIWILL Packed\n\nIWILL Bzip2\n\n{[@id=17$name=Fred +28the +2b great+29#weight=1.5(args=@1@2@3)]}";
     loopbuf serverbuf(server_buffer, client_buffer);
     loopbuf clientbuf(client_buffer, server_buffer);    
     iostream client_stream(&clientbuf);
@@ -146,8 +147,14 @@ int main()
 
     LoopBridge bridge;
     
-    Codec<iostream>* codec = Atlas::UngodlyHack::GetPacked(client_stream,
-    &bridge);
+    StreamConnect connect("Me!", client_stream);
+
+    while (connect.GetState() != Negotiate<iostream>::SUCCEEDED)
+    {
+	connect.Poll();
+    }
+
+    Codec<iostream> *codec = connect.GetConnection().codec;
 
     Funky::Encoder< Codec<iostream> > enc(*codec);
 
