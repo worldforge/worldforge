@@ -14,7 +14,7 @@ class FillShader : public Shader {
     explicit FillShader();
     virtual ~FillShader();
 
-    virtual void shade(Surface &);
+    virtual void shade(Surface &) const;
 };
 
 } // namespace Mercator

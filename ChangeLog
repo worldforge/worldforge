@@ -1,3 +1,25 @@
+2003-07-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Shader.cpp, Mercator/Shader.h: Add flags to shader
+	  to specify whether this shader requires colour and alpha
+	  elements in the surface buffer. Add a method which
+	  creates a surface with the required kind of buffer.
+
+	* Mercator/Surface.cpp, Mercator/Surface.h: Make a couple of
+	  references const. Add flags which provide hints about
+	  the number of channels required in the surface.
+
+	* Mercator/Terrain.cpp: Use new method in shader to create
+	  surface objects.
+
+	* Mercator/FillShader.cpp, Mercator/FillShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  Update shaders to new base class.
+
+	* tests/testShader.cpp: Update tests, check for a bit more
+	  info, and ensure that exit status reflects if an error
+	  occured.
+
 2003-07-26 Damien McGinnes
 
 	* Mercator/Segment.cpp: check segment validity before applying mod to

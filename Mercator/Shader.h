@@ -8,17 +8,32 @@
 namespace Mercator {
 
 class Surface;
+class Segment;
 
 // FIXME - PLACEHOLDER
 // This class itereates over the buffer in a segment using the data it contains
 // to populate a RGBA colour buffer based on the terrain height data. ie it is
 // used to define the texture blending for a given surface
 class Shader {
+  private:
+    bool m_color;
+    bool m_alpha;
+  protected:
+    Shader(bool color, bool alpha);
   public:
-    Shader();
     virtual ~Shader();
 
-    virtual void shade(Surface &) = 0;
+    bool getColor() const {
+        return m_color;
+    }
+
+    bool getAlpha() const {
+        return m_alpha;
+    }
+
+    Surface * newSurface(Segment &) const;
+
+    virtual void shade(Surface &) const = 0;
 };
 
 } // namespace Mercator

@@ -13,9 +13,10 @@ class Shader;
 
 class Surface : public Buffer {
   private:
-    Shader & m_shader;
+    const Shader & m_shader;
   public:
-    explicit Surface(Segment & segment, Shader & shader);
+    explicit Surface(Segment & segment, const Shader & shader,
+                     bool colors = true, bool alpha = true);
     virtual ~Surface();
 
     void populate();

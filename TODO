@@ -1,3 +1,10 @@
+* Mercator should handle weather, vegetation, maybe even houses
+
+* Delete all the leaked surfaces and shaders.
+
+* Devise some way so that FillShader surfaces don't need a shaded surface, as
+  they can just use a constant color.
+
 * Add threshold shaders. Add an underwater shader which colors the sea bed
   according to its depth.
 

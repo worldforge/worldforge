@@ -7,7 +7,7 @@
 #include <Mercator/Matrix.h>
 #include <Mercator/Segment.h>
 #include <Mercator/TerrainMod.h>
-#include <Mercator/Surface.h>
+#include <Mercator/Shader.h>
 
 #include <iostream>
 
@@ -41,7 +41,8 @@ void Terrain::addSurfaces(Segment & seg)
     }
     Shaderstore::const_iterator I = m_shaders.begin();
     for (; I != m_shaders.end(); ++I) {
-        sss.push_back(new Surface(seg, **I));
+        sss.push_back((*I)->newSurface(seg));
+        // sss.push_back(new Surface(seg, **I));
     }
 }
 

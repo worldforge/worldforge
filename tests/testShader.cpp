@@ -6,14 +6,22 @@
 #include <Mercator/Surface.h>
 #include <Mercator/FillShader.h>
 #include <Mercator/ThresholdShader.h>
+#include <Mercator/DepthShader.h>
 
 template <class ShaderType>
-void shadeTest(Mercator::Segment & segment)
+int shadeTest(Mercator::Segment & segment)
 {
     ShaderType shader;
     Mercator::Surface surface(segment, shader);
 
+    if (surface.getChannels() != 4) {
+        std::cerr << "Surface does not have 4 channels."
+                  << std::endl << std::flush;
+        return 1;
+    }
+
     surface.populate();
+    return 0;
 }
 
 int main()
@@ -21,8 +29,12 @@ int main()
     Mercator::Segment segment;
     segment.populate();
 
-    shadeTest<Mercator::FillShader>(segment);
-    shadeTest<Mercator::HighShader>(segment);
-    shadeTest<Mercator::LowShader>(segment);
-    shadeTest<Mercator::BandShader>(segment);
+    int errorCount = 0;
+    errorCount += shadeTest<Mercator::FillShader>(segment);
+    errorCount += shadeTest<Mercator::HighShader>(segment);
+    errorCount += shadeTest<Mercator::LowShader>(segment);
+    errorCount += shadeTest<Mercator::BandShader>(segment);
+    errorCount += shadeTest<Mercator::DepthShader>(segment);
+
+    return (errorCount ? 1 : 0);
 }

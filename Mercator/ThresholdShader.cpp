@@ -9,7 +9,8 @@
 
 namespace Mercator {
 
-HighShader::HighShader(float threshold) : m_threshold(threshold)
+HighShader::HighShader(float threshold) : Shader(true, true),
+                                          m_threshold(threshold)
 {
 }
 
@@ -17,7 +18,7 @@ HighShader::~HighShader()
 {
 }
 
-void HighShader::shade(Surface & s)
+void HighShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
     assert(channels > 0);
@@ -41,7 +42,8 @@ void HighShader::shade(Surface & s)
     }
 }
 
-LowShader::LowShader(float threshold) : m_threshold(threshold)
+LowShader::LowShader(float threshold) : Shader(true, true),
+                                        m_threshold(threshold)
 {
 }
 
@@ -49,7 +51,7 @@ LowShader::~LowShader()
 {
 }
 
-void LowShader::shade(Surface & s)
+void LowShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
     assert(channels > 0);
@@ -73,7 +75,7 @@ void LowShader::shade(Surface & s)
     }
 }
 
-BandShader::BandShader(float highThreshold, float lowThreshold) :
+BandShader::BandShader(float highThreshold, float lowThreshold) : Shader(true, true),
     m_highThreshold(highThreshold), m_lowThreshold(lowThreshold)
 {
 }
@@ -82,7 +84,7 @@ BandShader::~BandShader()
 {
 }
 
-void BandShader::shade(Surface & s)
+void BandShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
     assert(channels > 0);

@@ -16,7 +16,7 @@ class HighShader : public Shader {
     explicit HighShader(float threshold = 1.f);
     virtual ~HighShader();
 
-    virtual void shade(Surface &);
+    virtual void shade(Surface &) const;
 };
 
 class LowShader : public Shader {
@@ -26,7 +26,7 @@ class LowShader : public Shader {
     explicit LowShader(float threshold = -1.f);
     virtual ~LowShader();
 
-    virtual void shade(Surface &);
+    virtual void shade(Surface &) const;
 };
 
 class BandShader : public Shader {
@@ -37,7 +37,7 @@ class BandShader : public Shader {
     explicit BandShader(float lowThreshold = -1.f, float highThreshold = 1.f);
     virtual ~BandShader();
 
-    virtual void shade(Surface &);
+    virtual void shade(Surface &) const;
 };
 
 } // namespace Mercator

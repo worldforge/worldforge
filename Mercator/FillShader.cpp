@@ -9,7 +9,7 @@
 
 namespace Mercator {
 
-FillShader::FillShader()
+FillShader::FillShader() : Shader(true, true)
 {
 }
 
@@ -17,7 +17,7 @@ FillShader::~FillShader()
 {
 }
 
-void FillShader::shade(Surface & s)
+void FillShader::shade(Surface & s) const
 {
     unsigned int channels = s.getChannels();
     float * data = s.getData();
