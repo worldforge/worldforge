@@ -272,4 +272,5 @@ AC_OUTPUT([
 	src/Object/Makefile
 	src/Stream/Makefile
 	src/TestSuite/Makefile
+	src/Filters/Makefile
 ])
