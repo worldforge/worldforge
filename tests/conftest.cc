@@ -11,6 +11,9 @@ void callback(const string& section, const string& name)
 
 int main(int argc, char** argv)
 {
+  Config::inst()->setParameterLookup('f', "foo", true);
+  Config::inst()->setParameterLookup('b', "bar", false);
+  
   if (argc < 2) {
     if (isatty(STDIN_FILENO)) cout << "Go ahead and type your own "
                                       "configuration" << endl;
@@ -23,7 +26,7 @@ int main(int argc, char** argv)
       cout << p;
     }
   } else {
-    Config::inst()->readFromFile(argv[1]);
+    Config::inst()->getCmdline(argc, argv);
   }
   Config::inst()->writeToStream(cout);
   cout << "---" << endl;

@@ -10,4 +10,3 @@ Minor Tasks:
 
 Major Tasks:
  * Implement Config::getEnv()
- * Implement Config::getCmdline()

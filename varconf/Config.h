@@ -14,6 +14,7 @@ namespace varconf {
 typedef void (conf_callback)(const std::string&, const std::string&);
 typedef map< std::string, multimap<std::string, Observer*> > observer_map;
 typedef map< std::string, multimap<std::string, conf_callback*> > callback_map;
+typedef map< char, pair<std::string, bool> > parameter_map;
 
 /**
 This class contains the actual configuration.
@@ -49,6 +50,8 @@ public:
   void getEnv(const std::string& prefix);
   void getCmdline(int argc, char** argv);
 
+  void setParameterLookup(char shortForm, const std::string& longForm, bool needsValue);
+  
 protected:
   Config();
   Config(const Config& config);
@@ -60,6 +63,7 @@ private:
 
   observer_map m_observers;
   callback_map m_callbacks;
+  parameter_map m_parameter_lookup;
 };
 
 } // namespace varconf

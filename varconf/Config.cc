@@ -363,12 +363,97 @@ void Config::parseStream(istream& ios) throw (ParseError)
   if (state == S_VALUE) setItem(section, name, value);
 }
 
-void getEnv(const string& prefix)
+void Config::getCmdline(int argc, char** argv)
 {
+  // this is stolen directly from the thor.cc in scratchpad
+  // We put commandline args into the 'nonspecified' section
+  // it is searched after the 'specified' sections 
+  string name, value, section="";
+  bool valueNext = false;
+  int i, j, a=0;
+ 
+  // preprocess the args.  Switch short forms for long forms.  If we run
+  // across some short form that we don't know about, skip it and raise a
+  // warning
+  for (i = 1; i < argc; i++) {
+    string arg(argv[i]);
+    if (argv[i][0] == '-') {
+      if (argv[i][1] =='-') {
+        // arg begins with "--"
+        size_t eqPos = arg.find('=');
+        if (eqPos != string::npos) {
+          // we know where the = is
+          value = arg.substr(eqPos + 1, arg.size() - (eqPos + 1));    
+        }
+        else {
+          // string with no =
+          value = "";
+        }
+        name = arg.substr(2, eqPos - 2);
+      }
+      else /* if (argv[i][2] == '\n')*/ {
+        char shortName = argv[i][1];
+        // This is a single-char config.
+        parameter_map::iterator I;
+        
+        if((I = m_parameter_lookup.find(shortName)) != m_parameter_lookup.end()) {
+          // this parameter exists in our lookup table
+          name = ((*I).second).first;
+          valueNext = ((*I).second).second;
+          // clear the value string if valueNext is false
+          if (!valueNext) {
+            value = "";
+          }
+        }
+        else {
+          // This gets executed if we can't match a long name to a short one
+          // I think it's better to just keep going, and ignore the bad stuff
+          // for now- later on we should raise a warning
+          valueNext = false;
+        }
+      }
+    }
+    else if ((valueNext) && (argv[i][0] != '\0')) {
+      // If we're expecting a value and it is not null, grab it
+      value = argv[i];
+      valueNext = false;
+    }    
+    
+    if(!valueNext) {
+      // insert when we've got all the information
+      setItem(section, name, value);
+    }
+  }
+
 }
 
-void getCmdline(int argc, char** argv)
+void Config::getEnv(const string& prefix)
 {
+	// As above
+    // TODO: make this work!
+  string name, value, section=" ";
+ /*
+ int j, a=0;
+  for (int i = 0; environ[i] != NULL; i++)
+    if ((environ[i][0]=='W')&&(environ[i][1]=='F')&&(environ[i][2]=='_')) {
+      name = value = "";
+      for (j = 3; environ[i][j] != '='; j++) {
+        name += tolower(environ[i][j]);
+      }
+      for (++j; environ[i][j] != 0; j++) {
+        value += environ[i][j];
+      }
+      if (name.size()) { values[name] = value; a++;} else
+        throw "Invalid environment setting!";
+    }
+*/
+}
+
+void Config::setParameterLookup(char shortForm,
+                                const string& longForm,
+                                bool needsValue = true) {
+    m_parameter_lookup[shortForm] = pair<string, bool>(longForm, needsValue);  
+        
 }
 
 } // namespace varconf
