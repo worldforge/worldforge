@@ -43,7 +43,12 @@ public:
 	/// Get the Entity id of this Avatar
 	const std::string& getID() const {return _id;}
 	/// Get the Entity this Avatar refers to
-	EntityPtr getEntity();
+	EntityPtr getEntity() const {return _entity;}
+
+	// FIXME make this signal give info about the Entity which changed
+	SigC::Signal0<void> InvChanged;
+	void drop(Entity*, const WFMath::Point<3>& pos, const std::string& loc);
+	void drop(Entity*);
 
 	static Avatar* find(Connection*, const std::string&);
 	static std::vector<Avatar*> getAvatars(Connection*);
@@ -54,6 +59,8 @@ public:
 private:
 	void recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 		const Atlas::Objects::Entity::GameEntity &character);
+	void recvEntity(Entity*);
+	void emitInvChanged(Entity*) {InvChanged.emit();}
 
 	World* _world;
 	std::string _id;

@@ -1,4 +1,9 @@
-Tuesday, 5st November, Ron Steinke
+Wednesday, 6th November, Ron Steinke
+
+	* Added a signal handler to set Avatar's _entity member
+	* Added some inventory handling capabilities to Avatar
+
+Tuesday, 5th November, Ron Steinke
 
 	* Got Avatar working properly with OpRefnoDispatcher,
 	  and changed existing references in the code to the

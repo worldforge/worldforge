@@ -3,6 +3,8 @@
 #include <sigc++/object_slot.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
 #include <Atlas/Objects/Operation/Info.h>
+#include <Atlas/Objects/Operation/Move.h>
+#include <wfmath/atlasconv.h>
 
 #include "World.h"
 #include "Entity.h"
@@ -62,6 +64,8 @@ Avatar::Avatar(World* world, long refno, const std::string& character_id)
 	    throw InvalidOperation("Character " + _id + " already has an Avatar");
     }
 
+    _world->Entered.connect(SigC::slot(*this, &Avatar::recvEntity));
+
     log(LOG_DEBUG, "Created new Avatar with id %s and refno %i", _id.c_str(), refno);
 }
 
@@ -77,6 +81,35 @@ Avatar::~Avatar()
     // If at some point we have multiple Avatars per World, this will need to
     // be changed to some unregister function
     delete _world;
+}
+
+void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc)
+{
+    if(e->getContainer() != _entity)
+	throw InvalidOperation("Can't drop an Entity which is not"
+			       " held by the character");
+
+    Atlas::Objects::Operation::Move moveOp =
+        Atlas::Objects::Operation::Move::Instantiate();
+    moveOp.SetFrom(_entity->getID());
+
+    Atlas::Message::Object::MapType what;
+    what["loc"] = loc;
+    what["pos"] = pos.toAtlas();
+    what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
+    what["id"] = e->getID();
+    moveOp.SetArgs(Atlas::Message::Object::ListType(1, what));
+
+    _world->getConnection()->send(moveOp);
+}
+
+void Avatar::drop(Entity* e)
+{
+    if(!_entity)
+	throw InvalidOperation("Character Entity does not exist yet!");
+    assert(_entity->getContainer());
+
+    drop(e, _entity->getPosition(), _entity->getContainer()->getID());
 }
 
 Avatar* Avatar::find(Connection* con, const std::string& id)
@@ -115,4 +148,13 @@ void Avatar::recvInfoCharacter(const Atlas::Objects::Operation::Info &ifo,
 
     _world->getConnection()->removeDispatcherByPath("op:info", _dispatch_id);
     _dispatch_id = "";
+}
+
+void Avatar::recvEntity(Entity* e)
+{
+  assert(!_entity);
+  _entity = e;
+
+  e->AddedMember.connect(SigC::slot(*this, &Avatar::emitInvChanged));
+  e->RemovedMember.connect(SigC::slot(*this, &Avatar::emitInvChanged));
 }
