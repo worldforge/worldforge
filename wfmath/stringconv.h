@@ -24,8 +24,8 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#ifndef WFMATH_STRING_FUNCS_H
-#define WFMATH_STRING_FUNCS_H
+#ifndef WFMATH_STRING_CONV_H
+#define WFMATH_STRING_CONV_H
 
 #include <wfmath/const.h>
 #include <string>
@@ -47,4 +47,4 @@ std::string _StringFromFloat(CoordType d);
 
 }} // namespace WF::Math
 
-#endif // WFMATH_STRING_FUNCS_H
+#endif // WFMATH_STRING_CONV_H

@@ -36,63 +36,63 @@
 
 namespace WF { namespace Math {
 
-template<const int size>
-inline RotMatrix<size>::RotMatrix(const RotMatrix<size>& m)
+template<const int dim>
+inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
 {
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
       m_elem[i][j] = m.m_elem[i][j];
 }
 
-template<const int size>
-std::string RotMatrix<size>::toString() const
+template<const int dim>
+std::string RotMatrix<dim>::toString() const
 {
-  CoordType d[size*size];
+  CoordType d[dim*dim];
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      d[i*size+j] = m_elem[i][j];
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
+      d[i*dim+j] = m_elem[i][j];
 
-  return _StringFromCoordArray(d, size, size);
+  return _StringFromCoordArray(d, dim, dim);
 }
 
-template<const int size>
-bool RotMatrix<size>::fromString(const std::string& s)
+template<const int dim>
+bool RotMatrix<dim>::fromString(const std::string& s)
 {
-  CoordType d[size*size];
+  CoordType d[dim*dim];
 
-  if(!_StringToCoordArray(s, d, size, size))
+  if(!_StringToCoordArray(s, d, dim, dim))
     return false;
 
   return _setVals(d, WFMATH_STRING_EPSILON);
 }
 
-template<const int size>
-RotMatrix<size>& RotMatrix<size>::operator=(const RotMatrix<size>& m)
+template<const int dim>
+RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
 {
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
       m_elem[i][j] = m.m_elem[i][j];
 
   return *this;
 }
 
-template<const int size>
-bool RotMatrix<size>::isEqualTo(const RotMatrix<size>& rhs, double tolerance) const
+template<const int dim>
+bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& rhs, double tolerance) const
 {
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
       if(!IsFloatEqual(m_elem[i][j], rhs.m_elem[i][j], tolerance))
         return false;
 
   return true;
 }
 
-template<const int size>
-bool RotMatrix<size>::operator< (const RotMatrix<size>& m) const
+template<const int dim>
+bool RotMatrix<dim>::operator< (const RotMatrix<dim>& m) const
 {
-  for(int i = 0; i < size; ++i) {
-    for(int j = 0; j < size; ++j) {
+  for(int i = 0; i < dim; ++i) {
+    for(int j = 0; j < dim; ++j) {
       if(m_elem[i][j] < m.m_elem[i][j])
         return true;
       if(m_elem[i][j] > m.m_elem[i][j])
@@ -103,16 +103,16 @@ bool RotMatrix<size>::operator< (const RotMatrix<size>& m) const
   return false;
 }
 
-template<const int size> // m1 * m2
-RotMatrix<size> Prod(const RotMatrix<size>& m1, const RotMatrix<size>& m2)
+template<const int dim> // m1 * m2
+RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
-  RotMatrix<size> out;
+  RotMatrix<dim> out;
 
-  for(int i = 0; i < size; ++i) {
-    for(int j = 0; j < size; ++j) {
+  for(int i = 0; i < dim; ++i) {
+    for(int j = 0; j < dim; ++j) {
       out.m_elem[i][j] = 0;
       CoordType max_val = 0;
-      for(int k = 0; k < size; ++k) {
+      for(int k = 0; k < dim; ++k) {
         CoordType val = m1.m_elem[i][k] * m2.m_elem[k][j];
         out.m_elem[i][j] += val;
         CoordType aval = fabs(val);
@@ -127,16 +127,16 @@ RotMatrix<size> Prod(const RotMatrix<size>& m1, const RotMatrix<size>& m2)
   return out;
 }
 
-template<const int size> // m1 * m2^-1
-RotMatrix<size> ProdInv(const RotMatrix<size>& m1, const RotMatrix<size>& m2)
+template<const int dim> // m1 * m2^-1
+RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
-  RotMatrix<size> out;
+  RotMatrix<dim> out;
 
-  for(int i = 0; i < size; ++i) {
-    for(int j = 0; j < size; ++j) {
+  for(int i = 0; i < dim; ++i) {
+    for(int j = 0; j < dim; ++j) {
       out.m_elem[i][j] = 0;
       CoordType max_val = 0;
-      for(int k = 0; k < size; ++k) {
+      for(int k = 0; k < dim; ++k) {
         CoordType val = m1.m_elem[i][k] * m2.m_elem[j][k];
         out.m_elem[i][j] += val;
         CoordType aval = fabs(val);
@@ -151,16 +151,16 @@ RotMatrix<size> ProdInv(const RotMatrix<size>& m1, const RotMatrix<size>& m2)
   return out;
 }
 
-template<const int size> // m1^-1 * m2
-RotMatrix<size> InvProd(const RotMatrix<size>& m1, const RotMatrix<size>& m2)
+template<const int dim> // m1^-1 * m2
+RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
-  RotMatrix<size> out;
+  RotMatrix<dim> out;
 
-  for(int i = 0; i < size; ++i) {
-    for(int j = 0; j < size; ++j) {
+  for(int i = 0; i < dim; ++i) {
+    for(int j = 0; j < dim; ++j) {
       out.m_elem[i][j] = 0;
       CoordType max_val = 0;
-      for(int k = 0; k < size; ++k) {
+      for(int k = 0; k < dim; ++k) {
         CoordType val = m1.m_elem[k][i] * m2.m_elem[k][j];
         out.m_elem[i][j] += val;
         CoordType aval = fabs(val);
@@ -175,16 +175,16 @@ RotMatrix<size> InvProd(const RotMatrix<size>& m1, const RotMatrix<size>& m2)
   return out;
 }
 
-template<const int size> // m1^-1 * m2^-1
-RotMatrix<size> InvProdInv(const RotMatrix<size>& m1, const RotMatrix<size>& m2)
+template<const int dim> // m1^-1 * m2^-1
+RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
-  RotMatrix<size> out;
+  RotMatrix<dim> out;
 
-  for(int i = 0; i < size; ++i) {
-    for(int j = 0; j < size; ++j) {
+  for(int i = 0; i < dim; ++i) {
+    for(int j = 0; j < dim; ++j) {
       out.m_elem[i][j] = 0;
       CoordType max_val = 0;
-      for(int k = 0; k < size; ++k) {
+      for(int k = 0; k < dim; ++k) {
         CoordType val = m1.m_elem[k][i] * m2.m_elem[j][k];
         out.m_elem[i][j] += val;
         CoordType aval = fabs(val);
@@ -199,15 +199,15 @@ RotMatrix<size> InvProdInv(const RotMatrix<size>& m1, const RotMatrix<size>& m2)
   return out;
 }
 
-template<const int size> // m * v
-Vector<size> Prod(const RotMatrix<size>& m, const Vector<size>& v)
+template<const int dim> // m * v
+Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v)
 {
-  Vector<size> out;
+  Vector<dim> out;
 
-  for(int i = 0; i < size; ++i) {
+  for(int i = 0; i < dim; ++i) {
     out.m_elem[i] = 0;
     CoordType max_val = 0;
-    for(int j = 0; j < size; ++j) {
+    for(int j = 0; j < dim; ++j) {
       CoordType val = m.m_elem[i][j] * v.m_elem[j];
       out.m_elem[i] += val;
       CoordType aval = fabs(val);
@@ -221,15 +221,15 @@ Vector<size> Prod(const RotMatrix<size>& m, const Vector<size>& v)
   return out;
 }
 
-template<const int size> // m^-1 * v
-Vector<size> InvProd(const RotMatrix<size>& m, const Vector<size>& v)
+template<const int dim> // m^-1 * v
+Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v)
 {
-  Vector<size> out;
+  Vector<dim> out;
 
-  for(int i = 0; i < size; ++i) {
+  for(int i = 0; i < dim; ++i) {
     out.m_elem[i] = 0;
     CoordType max_val = 0;
-    for(int j = 0; j < size; ++j) {
+    for(int j = 0; j < dim; ++j) {
       CoordType val = m.m_elem[j][i] * v.m_elem[j];
       out.m_elem[i] += val;
       CoordType aval = fabs(val);
@@ -243,26 +243,26 @@ Vector<size> InvProd(const RotMatrix<size>& m, const Vector<size>& v)
   return out;
 }
 
-template<const int size>
-bool RotMatrix<size>::setVals(const CoordType vals[size][size], double precision)
+template<const int dim>
+bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], double precision)
 {
   // Scratch space for the backend
-  CoordType scratch_vals[size*size];
+  CoordType scratch_vals[dim*dim];
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      scratch_vals[i*size+j] = vals[i][j];
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
+      scratch_vals[i*dim+j] = vals[i][j];
 
   return _setVals(scratch_vals, precision);
 }
 
-template<const int size>
-bool RotMatrix<size>::setVals(const CoordType vals[size*size], double precision)
+template<const int dim>
+bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], double precision)
 {
   // Scratch space for the backend
-  CoordType scratch_vals[size*size];
+  CoordType scratch_vals[dim*dim];
 
-  for(int i = 0; i < size*size; ++i)
+  for(int i = 0; i < dim*dim; ++i)
       scratch_vals[i] = vals[i];
 
   return _setVals(scratch_vals, precision);
@@ -271,90 +271,90 @@ bool RotMatrix<size>::setVals(const CoordType vals[size*size], double precision)
 bool _MatrixSetValsImpl(const int size, CoordType* vals, CoordType* buf1,
 			CoordType* buf2, double precision);
 
-template<const int size>
-bool RotMatrix<size>::_setVals(CoordType *vals, double precision)
+template<const int dim>
+bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
 {
   // Cheaper to allocate space on the stack here than with
   // new in _MatrixSetValsImpl()
-  CoordType buf1[size*size], buf2[size*size];
+  CoordType buf1[dim*dim], buf2[dim*dim];
 
-  if(!_MatrixSetValsImpl(size, vals, buf1, buf2, precision))
+  if(!_MatrixSetValsImpl(dim, vals, buf1, buf2, precision))
     return false;
 
   // Do the assignment
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      m_elem[i][j] = vals[i*size+j];
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
+      m_elem[i][j] = vals[i*dim+j];
 
   return true;
 }
 
-template<const int size>
-inline Vector<size> RotMatrix<size>::row(const int i) const
+template<const int dim>
+inline Vector<dim> RotMatrix<dim>::row(const int i) const
 {
-  Vector<size> out;
+  Vector<dim> out;
 
-  for(int j = 0; j < size; ++j)
+  for(int j = 0; j < dim; ++j)
     out[j] = m_elem[i][j];
 
   return out;
 }
 
-template<const int size>
-inline Vector<size> RotMatrix<size>::column(const int i) const
+template<const int dim>
+inline Vector<dim> RotMatrix<dim>::column(const int i) const
 {
-  Vector<size> out;
+  Vector<dim> out;
 
-  for(int j = 0; j < size; ++j)
+  for(int j = 0; j < dim; ++j)
     out[j] = m_elem[j][i];
 
   return out;
 }
 
-template<const int size>
-inline RotMatrix<size> RotMatrix<size>::inverse() const
+template<const int dim>
+inline RotMatrix<dim> RotMatrix<dim>::inverse() const
 {
-  RotMatrix<size> m;
+  RotMatrix<dim> m;
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
       m.m_elem[j][i] = m_elem[i][j];
 
   return m;
 }
 
-template<const int size>
-inline RotMatrix<size>& RotMatrix<size>::identity()
+template<const int dim>
+inline RotMatrix<dim>& RotMatrix<dim>::identity()
 {
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
       m_elem[i][j] = (i == j) ? 1 : 0;
 
   return *this;
 }
 
-template<const int size>
-inline double RotMatrix<size>::trace() const
+template<const int dim>
+inline double RotMatrix<dim>::trace() const
 {
   double out = 0;
 
-  for(int i = 0; i < size; ++i)
+  for(int i = 0; i < dim; ++i)
     out = FloatAdd(out, m_elem[i][i]);
 
   return out;
 }
 
-template<const int size>
-RotMatrix<size>& RotMatrix<size>::fromEuler(const CoordType angles[nParams])
+template<const int dim>
+RotMatrix<dim>& RotMatrix<dim>::fromEuler(const CoordType angles[nParams])
 {
   int ang_num = 0;
 
   identity();
 
-  for(int i = size - 1; i > 0; --i)
+  for(int i = dim - 1; i > 0; --i)
     for(int j = 0; j < i; ++j)
-      *this = Prod(RotMatrix<size>().rotation(j, j + 1, angles[ang_num++]), *this);
+      *this = Prod(RotMatrix<dim>().rotation(j, j + 1, angles[ang_num++]), *this);
 
   assert(ang_num == nParams);
 
@@ -363,8 +363,8 @@ RotMatrix<size>& RotMatrix<size>::fromEuler(const CoordType angles[nParams])
 
 // TODO generalize if possible at some point
 
-//template<const int size>
-//void RotMatrix<size>::toEuler(CoordType angles[nParams]) const
+//template<const int dim>
+//void RotMatrix<dim>::toEuler(CoordType angles[nParams]) const
 //{
 //
 //}
@@ -374,17 +374,16 @@ template<> inline void RotMatrix<2>::toEuler(CoordType angles[1]) const
 	{angles[0] = atan2(m_elem[0][0], m_elem[1][0]);}
 template<> void RotMatrix<3>::toEuler(CoordType angles[3]) const;
 
-template<const int size>
-const RotMatrix<size>& RotMatrix<size>::rotation (const int i, const int j,
+template<const int dim>
+const RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
 						  const double& theta)
 {
-  if(i < 0 || i > size || j < 0 || j > size || i == j)
-    throw BadRotationAxisNum(i, j);
+  assert(i >= 0 && i < dim && j >= 0 && j < dim && i != j);
 
   double ctheta = cos(theta), stheta = sin(theta);
 
-  for(int k = 0; k < size; ++k) {
-    for(int l = 0; l < size; ++l) {
+  for(int k = 0; k < dim; ++k) {
+    for(int l = 0; l < dim; ++l) {
       if(k == l) {
         if(k == i || k == j)
           m_elem[k][l] = ctheta;
@@ -405,24 +404,25 @@ const RotMatrix<size>& RotMatrix<size>::rotation (const int i, const int j,
   return *this;
 }
 
-template<const int size>
-const RotMatrix<size>& RotMatrix<size>::rotation (const Vector<size>& v1,
-						  const Vector<size>& v2,
+template<const int dim>
+const RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
+						  const Vector<dim>& v2,
 						  const double& theta)
 {
   double v1_sqr_mag = v1.sqrMag();
 
-  if(v1_sqr_mag == 0)
-    throw BadRotationPlane<size>(v1, v2);
+  assert(v1_sqr_mag > 0);
 
   // Get an in-plane vector which is perpendicular to v1
 
-  Vector<size> vperp = v2 - v1 * Dot(v1, v2) / v1_sqr_mag;
+  Vector<dim> vperp = v2 - v1 * Dot(v1, v2) / v1_sqr_mag;
   double vperp_sqr_mag = vperp.sqrMag();
 
-  if((vperp_sqr_mag / v1_sqr_mag) < (size * WFMATH_EPSILON * WFMATH_EPSILON))
+  if((vperp_sqr_mag / v1_sqr_mag) < (dim * WFMATH_EPSILON * WFMATH_EPSILON)) {
+    assert(v2.sqrMag() > 0);
     // The original vectors were parallel
-    throw BadRotationPlane<size>(v1, v2);
+    throw ColinearVectors<dim>(v1, v2);
+  }
 
   // If we were rotating a vector vin, the answer would be
   // vin + Dot(v1, vin) * (v1 (cos(theta) - 1)/ v1_sqr_mag
@@ -435,8 +435,8 @@ const RotMatrix<size>& RotMatrix<size>::rotation (const Vector<size>& v1,
 
   identity(); // Initialize to identity matrix
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
       m_elem[i][j] += FloatAdd((ctheta - 1) * FloatAdd(v1[i] * v1[j] / v1_sqr_mag,
 		      vperp[i] * vperp[j] / vperp_sqr_mag), stheta
 		      * FloatSubtract(vperp[i] * v1[j], v1[i] * vperp[j]) / mag_prod);

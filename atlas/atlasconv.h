@@ -29,194 +29,98 @@
 
 // WARNING! WARNING! Do not include this file in any other file in wfmath.
 
-#ifndef WFMATH_ATLAS_FUNCS_H
-#define WFMATH_ATLAS_FUNCS_H
+#ifndef WFMATH_ATLAS_CONV_H
+#define WFMATH_ATLAS_CONV_H
 
 #include <Atlas/Message/Object.h>
-
-#include <wfmath/vector.h>
-#include <wfmath/matrix.h>
-#include <wfmath/point.h>
-#include <wfmath/axisbox.h>
-
-#include <algorithm>
+#include <wfmath/wfmath.h>
 
 namespace WF { namespace Math {
 
-bool _GetAtlasDoubleList(const Atlas::Message::Object& a, double* d, int num);
-Atlas::Message::Object _SetAtlasDoubleList(double* d, int num);
-
-template<const int len>
-bool FromAtlas(Vector<len>& v, const Atlas::Message::Object& a)
+template<const int dim>
+bool FromAtlas(Vector<dim>& v, const Atlas::Message::Object& a)
 {
-  double d[len];
-
-  if(_GetAtlasDoubleList(a, d, len)) {
-    v = d;
-    return true;
-  }
-  else
-    return false;
+  return a.isString() && v.fromString(a.asString());
 }
 
-template<const int len>
-Atlas::Message::Object ToAtlas(const Vector<len>& v)
+template<const int dim>
+Atlas::Message::Object ToAtlas(const Vector<dim>& v)
 {
-  double d[len];
-
-  for(int i = 0; i < len; ++i)
-    d[i] = v[i];
-
-  return _SetAtlasDoubleList(d, len);
+  return v.toString();
 }
 
-// Converting to Euler angles might save some bandwidth it 2,3 dimensions,
-// but this will work for arbitrary size. If someone ever writes
-// a generic version of Matrix<>::toEuler(), rewrite the next two
-// functions to use that.
-
-template<const int size>
-bool FromAtlas(RotMatrix<size>& m, const Atlas::Message::Object& a)
+template<const int dim>
+bool FromAtlas(RotMatrix<dim>& m, const Atlas::Message::Object& a)
 {
-  double d[size*size];
-
-  if(!_GetAtlasDoubleList(a, d, size*size))
-    return false;
-
-  return m._setVals(d, WFMATH_STRING_EPSILON); // Atlas sends things as strings
+  return a.isString() && m.fromString(a.asString());
 }
 
-template<const int size>
-Atlas::Message::Object ToAtlas(const RotMatrix<size>& m)
+template<const int dim>
+Atlas::Message::Object ToAtlas(const RotMatrix<dim>& m)
 {
-  double d[size*size];
-
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
-      d[i*size+j] = m.elem(i, j);
-
-  return _SetAtlasDoubleList(d, size*size);
+  return m.toString();
 }
 
 template<const int dim>
 bool FromAtlas(Point<dim>& p, const Atlas::Message::Object& a)
 {
-  double d[dim];
-
-  if(_GetAtlasDoubleList(a, d, dim)) {
-    p = d;
-    return true;
-  }
-  else
-    return false;
+  return a.isString() && p.fromString(a.asString());
 }
 
 template<const int dim>
 Atlas::Message::Object ToAtlas(const Point<dim>& p)
 {
-  double d[dim];
-
-  for(int i = 0; i < dim; ++i)
-    d[i] = p[i];
-
-  return _SetAtlasDoubleList(d, dim);
+  return p.toString();
 }
 
 template<const int dim>
 bool FromAtlas(AxisBox<dim>& b, const Atlas::Message::Object& a)
 {
-  double d[2*dim];
-
-  if(_GetAtlasDoubleList(a, d, 2*dim)) {
-    Point<dim> p_low, p_high;
-    for(int i = 0; i < dim; ++i) {
-      p_low[i] = d[i];
-      p_high[i] = d[i+dim];
-    }
-    b.setCorners(p_low, p_high);
-    return true;
-  }
-  else
-    return false;
+  return a.isString() && b.fromString(a.asString());
 }
 
 template<const int dim>
 Atlas::Message::Object ToAtlas(const AxisBox<dim>& b)
 {
-  double d[2*dim];
-
-  for(int i = 0; i < dim; ++i) {
-    d[i] = b.lowerBound(i);
-    d[dim+i] = b.upperBound(i);
-  }
-
-  return _SetAtlasDoubleList(d, dim);
+  return b.toString();
 }
 
 template<const int dim>
 bool FromAtlas(Ball<dim>& b, const Atlas::Message::Object& a)
 {
-  double d[dim + 1];
-
-  if(_GetAtlasDoubleList(a, d, 2*dim)) {
-    Point<dim> center;
-    for(int i = 0; i < dim; ++i)
-      center[i] = d[i];
-    b.setCenter(center);
-    b.radius() = d[dim];
-    return true;
-  }
-  else
-    return false;
+  return a.isString() && b.fromString(a.asString());
 }
 
 template<const int dim>
 Atlas::Message::Object ToAtlas(const Ball<dim>& b)
 {
-  double d[dim+1];
-  Point<dim> center = b.getCenter();
-
-  for(int i = 0; i < dim; ++i)
-    d[i] = center[i];
-
-  d[dim] = b.radius();
-
-  return _SetAtlasDoubleList(d, dim);
+  return b.toString();
 }
 
 template<const int dim>
 bool FromAtlas(Segment<dim>& s, const Atlas::Message::Object& a)
 {
-  double d[2*dim];
-
-  if(_GetAtlasDoubleList(a, d, 2*dim)) {
-    Point<dim> p1, p2;
-    for(int i = 0; i < dim; ++i) {
-      p1[i] = d[i];
-      p2[i] = d[i+dim];
-    }
-    s.setCorner(p1, 0);
-    s.setCorner(p2, 1);
-    return true;
-  }
-  else
-    return false;
+  return a.isString() && s.fromString(a.asString());
 }
 
 template<const int dim>
 Atlas::Message::Object ToAtlas(const Segment<dim>& s)
 {
-  double d[2*dim];
-  Point<dim> p1 = s.getCorner(0), p2 = s.getCorner(1);
+  return s.toString();
+}
 
-  for(int i = 0; i < dim; ++i) {
-    d[i] = p1[i];
-    d[dim+i] = p2[i];
-  }
+template<const int dim>
+bool FromAtlas(RotBoxim>& b, const Atlas::Message::Object& a)
+{
+  return a.isString() && b.fromString(a.asString());
+}
 
-  return _SetAtlasDoubleList(d, dim);
+template<const int dim>
+Atlas::Message::Object ToAtlas(const RotBoxim>& b)
+{
+  return b.toString();
 }
 
 }} // namespace WF:Math
 
-#endif // WFMATH_ATLAS_FUNCS_H
+#endif // WFMATH_ATLAS_CONV_H

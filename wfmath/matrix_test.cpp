@@ -29,55 +29,72 @@
 #include "matrix.h"
 #include "matrix_funcs.h"
 #include "const.h"
-#include "stream.h"
 #include <iostream>
 #include <sstream>
 #include <assert.h>
 
 using namespace WF::Math;
 
-template<const int size>
-void test_matrix(const RotMatrix<size>& m)
+template<const int dim>
+void test_matrix(const RotMatrix<dim>& m)
 {
-  cout << "Testing matrix: " << m << std::endl;
+  cout << "Testing matrix: " << m.toString() << std::endl;
 
-  RotMatrix<size> minv = m.inverse();
+  RotMatrix<dim> minv = m.inverse();
 
-  cout << "Inverse is: " << minv << std::endl;
+//  cout << "Inverse is: " << minv.toString() << std::endl;
 
-  RotMatrix<size> ident; // Initialized to identity
+  RotMatrix<dim> ident; // Initialized to identity
 
-  RotMatrix<size> try_ident = ProdInv(m, m);
+  RotMatrix<dim> try_ident;
 
-  cout << "This should be the identity: " << try_ident << std::endl;
+  try_ident = ProdInv(m, m);
 
-  for(int i = 0; i < size; ++i)
-    for(int j = 0; j < size; ++j)
+//  cout << "This should be the identity: " << try_ident.toString() << std::endl;
+
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
+      assert(IsFloatEqual(ident.elem(i, j), try_ident.elem(i, j)));
+
+  try_ident = Prod(m, minv);
+
+//  cout << "This should be the identity: " << try_ident.toString() << std::endl;
+
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
       assert(IsFloatEqual(ident.elem(i, j), try_ident.elem(i, j)));
 
   std::string s_mat = m.toString();
 
-  RotMatrix<size> str_m;
+  RotMatrix<dim> str_m;
 
   if(!str_m.fromString(s_mat)) {
     cout << "Could not convert string back into matrix" << std::endl;
     exit(-1);
   }
 
-  cout << "After conversion through a string, the matrix is " << str_m << std::endl;
+//  cout << "After conversion through a string, the matrix is " << str_m.toString() << std::endl;
 
-  cout << "Element differences after conversion are: ";
-  for(int i = 0; i < size; ++i) {
-    for(int j = 0; j < size; ++j) {
-      cout << m.elem(i, j) - str_m.elem(i, j);
-      if(i < size - 1 || j < size - 1)
-        cout << ", ";
+//  cout << "Element differences after conversion are: ";
+  for(int i = 0; i < dim; ++i) {
+    for(int j = 0; j < dim; ++j) {
+      double diff = m.elem(i, j) - str_m.elem(i, j);
+//      cout << diff;
+      assert(fabs(diff) < WFMATH_STRING_EPSILON);
+//      if(i < dim - 1 || j < dim - 1)
+//        cout << ", ";
     }
   }
-  cout << std::endl;
+//  cout << std::endl;
 
-  cout << "Converted M * M^T identity check: " << Prod(str_m, str_m.inverse());
-  cout << std::endl;
+  RotMatrix<dim> conv_ident = Prod(str_m, str_m.inverse());
+
+//  cout << "Converted M * M^T identity check: " << conv_ident.toString();
+//  cout << std::endl;
+
+  for(int i = 0; i < dim; ++i)
+    for(int j = 0; j < dim; ++j)
+      assert(IsFloatEqual(conv_ident.elem(i, j), (i == j) ? 1 : 0));
 }
 
 int main()

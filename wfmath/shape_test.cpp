@@ -28,12 +28,11 @@
 #include "matrix.h"
 #include "point.h"
 #include "const.h"
-#include "stream.h"
-#include "shape.h"
 #include "axisbox.h"
 #include "ball.h"
 #include "segment.h"
 #include "rotbox.h"
+#include "intersect.h"
 #include <iostream>
 
 using namespace WF::Math;
@@ -43,19 +42,22 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 {
   AxisBox<dim> box(p1, p2);
 
-  cout << "Testing " << box << std::endl;
+  cout << "Testing " << box.toString() << std::endl;
+
+  assert(Intersect(box, p1));
+  assert(!IntersectProper(box, p1));
 
   Ball<dim> ball(p1, 1);
 
-  cout << "Testing " << ball << std::endl;
+  cout << "Testing " << ball.toString() << std::endl;
 
   Segment<dim> seg(p1, p2);
 
-  cout << "Testing " << seg << std::endl;
+  cout << "Testing " << seg.toString() << std::endl;
 
   RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, WFMATH_CONST_PI / 6));
 
-  cout << "Testing " << rbox << std::endl;
+  cout << "Testing " << rbox.toString() << std::endl;
 
   // FIXME
 }

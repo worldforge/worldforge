@@ -29,69 +29,67 @@
 #include <wfmath/point.h>
 #include <wfmath/matrix.h>
 #include <wfmath/const.h>
-#include <wfmath/shape.h>
 #include <wfmath/axisbox.h>
+#include <wfmath/intersect_decls.h>
 
 namespace WF { namespace Math {
 
 template<const int dim>
-class RotBox : public RotShape<dim>
+class RotBox
 {
  public:
-  RotBox() {m_corner0.origin(); m_size.zero();}
+  RotBox() {}
   RotBox(const Point<dim>& p, const Vector<dim>& size,
-	 const RotMatrix<dim>& orientation);
-  RotBox(const RotBox<dim>& b) : Shape<dim>(b), m_corner0(b.m_corner0),
-	m_size(b.m_size), m_orient(b.m_orient) {}
+	 const RotMatrix<dim>& orientation) : m_corner0(p), m_size(size),
+		m_orient(orientation) {}
+  RotBox(const RotBox& b) : m_corner0(b.m_corner0), m_size(b.m_size),
+		m_orient(b.m_orient) {}
 
-  virtual ~RotBox() {}
+  ~RotBox() {}
 
-  virtual std::string toString() const;
+  std::string toString() const;
   bool fromString(const std::string& s);
 
-  RotBox<dim>& operator=(const RotBox<dim>& s);
+  RotBox& operator=(const RotBox& s);
 
-#ifndef WFMATH_NO_DYNAMIC_CAST
-  virtual bool isEqualTo(const Shape<dim>& s, double tolerance = WFMATH_EPSILON) const
-    {
-      const RotBox<dim> *b = dynamic_cast<const RotBox*>(&s);
-      return (b && isEqualTo(*b, tolerance));
-    }
-#endif // WFMATH_NO_DYNAMIC_CAST
-  bool isEqualTo(const RotBox<dim>& s, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const RotBox& s, double tolerance = WFMATH_EPSILON) const;
 
-  bool operator==(const RotBox<dim>& b) const	{return isEqualTo(b);}
-  bool operator!=(const RotBox<dim>& b) const	{return !isEqualTo(b);}
+  bool operator==(const RotBox& b) const	{return isEqualTo(b);}
+  bool operator!=(const RotBox& b) const	{return !isEqualTo(b);}
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the box.
-  bool operator< (const RotBox<dim>& b) const;
+  bool operator< (const RotBox& b) const;
 
   // Descriptive characteristics
 
-  virtual int numCorners() const {return 1 << dim;}
-  virtual Point<dim> getCorner(int i) const;
+  int numCorners() const {return 1 << dim;}
+  Point<dim> getCorner(int i) const;
+  Point<dim> getCenter() const {return m_corner0 + Prod(m_orient, m_size / 2);}
 
   // Movement functions
 
-  virtual Shape<dim>& shift(const Vector<dim>& v);
-  virtual RotShape<dim>& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p);
+  RotBox& shift(const Vector<dim>& v)
+	{m_corner0 += v; return *this;}
+  RotBox& moveCornerTo(const Point<dim>& p, int corner)
+	{return shift(p - getCorner(corner));}
+  RotBox& moveCenterTo(const Point<dim>& p)
+	{return shift(p - getCenter());}
+
+  RotBox& rotateCorner(const RotMatrix<dim>& m, int corner)
+	{rotatePoint(m, getCorner(corner)); return *this;}
+  RotBox& rotateCenter(const RotMatrix<dim>& m)
+	{rotatePoint(m, getCenter()); return *this;}
+  RotBox& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
+	{m_orient = Prod(m, m_orient); m_corner0.rotate(m, p); return *this;}
 
   // Intersection functions
 
-  virtual AxisBox<dim> boundingBox() const;
-  virtual AxisBox<dim> enclosedBox() const;
+  AxisBox<dim> boundingBox() const;
 
-  virtual bool contains(const Point<dim>& p) const;
-  virtual bool containsProper(const Point<dim>& p) const;
-  virtual bool contains(const AxisBox<dim>& b) const;
-  virtual bool containsProper(const AxisBox<dim>& b) const;
-  virtual bool isContainedBy(const AxisBox<dim>& b) const;
-  virtual bool isContainedByProper(const AxisBox<dim>& b) const;
-  virtual bool intersects(const AxisBox<dim>& b) const;
-  virtual bool intersectsProper(const AxisBox<dim>& b) const;
-  virtual int isSubContainedBy(const AxisBox<dim>& b) const;
-  virtual int isSubContainedByProper(const AxisBox<dim>& b) const;
+  friend bool Intersect<dim>(const RotBox& r, const Point<dim>& p);
+  friend bool IntersectProper<dim>(const RotBox& r, const Point<dim>& p);
+  friend bool Contains<dim>(const Point<dim>& p, const RotBox& r);
 
  private:
 

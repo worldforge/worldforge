@@ -33,12 +33,13 @@
 #include <string>
 #include <wfmath/const.h>
 #include <wfmath/stringconv.h>
-#include <matrix.h>
+#include <wfmath/matrix.h>
 
 namespace WF { namespace Math {
 
 template<const int dim> class Point;
-template<const int len> class Vector;
+template<const int dim> class Vector;
+template<const int dim> class AxisBox;
 
 template<const int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
@@ -50,51 +51,79 @@ template<const int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
 
 template<const int dim>
+CoordType Distance(const Point<dim>& p1, const Point<dim>& p2);
+template<const int dim>
+CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2);
+
+template<const int dim> template<const int num_points>
+Point<dim> Barycenter(const Point<dim> points[num_points],
+		      const CoordType weights[num_points] = {1,});
+
+template<const int dim>
 class Point
 {
  public:
   Point () {}
-  Point (const Point<dim>& p);
+  Point (const Point& p);
 
   ~Point() {}
 
   std::string toString() const		{return _StringFromCoordList(m_elem, dim);}
   bool fromString(const std::string& s) {return _StringToCoordList(s, m_elem, dim);}
 
-  Point& operator= (const Point<dim>& rhs);
+  Point& operator= (const Point& rhs);
   Point& operator= (const double d[dim]);
 
-  bool isEqualTo(const Point<dim> &rhs, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Point &rhs, double tolerance = WFMATH_EPSILON) const;
 
-  bool operator== (const Point<dim>& rhs) const	{return IsEqualTo(rhs);}
-  bool operator!= (const Point<dim>& rhs) const	{return !IsEqualTo(rhs);}
+  bool operator== (const Point& rhs) const	{return IsEqualTo(rhs);}
+  bool operator!= (const Point& rhs) const	{return !IsEqualTo(rhs);}
 
-  Point<dim>& origin(); // Set point to (0,0,..,0)
+  Point& origin(); // Set point to (0,0,..,0)
 
   // Sort only, don't use otherwise
-  bool operator< (const Point<dim>& rhs) const;
+  bool operator< (const Point& rhs) const;
 
   // Operators
 
-  friend Vector<dim> operator-<dim> (const Point<dim>& c1, const Point<dim>& c2);
-  friend Point<dim> operator+<dim> (const Point<dim>& c, const Vector<dim>& v);
-  friend Point<dim> operator-<dim> (const Point<dim>& c, const Vector<dim>& v);
-  friend Point<dim> operator+<dim> (const Vector<dim>& v, const Point<dim>& c);
+  friend Vector<dim> operator-<dim> (const Point& c1, const Point& c2);
+  friend Point operator+<dim> (const Point& c, const Vector<dim>& v);
+  friend Point operator-<dim> (const Point& c, const Vector<dim>& v);
+  friend Point operator+<dim> (const Vector<dim>& v, const Point& c);
 
-  Point<dim>& operator+= (const Vector<dim>& rhs);
-  Point<dim>& operator-= (const Vector<dim>& rhs);
+  Point& operator+= (const Vector<dim>& rhs);
+  Point& operator-= (const Vector<dim>& rhs);
 
   // Rotate about point p
-  Point<dim>& rotate(const RotMatrix<dim>& m, const Point<dim>& p)
+  Point& rotate(const RotMatrix<dim>& m, const Point& p)
 	{return (*this = p + Prod(m, *this - p));}
+
+  // Functions so that Point<> has the generic shape interface
+
+  int numCorners() const {return 1;}
+  Point<dim> getCorner(int i) const {return *this;}
+  Point<dim> getCenter() const {return *this;}
+
+  Point shift(const Vector<dim>& v) {return operator+=(v);}
+  Point moveCornerTo(const Point& p, int corner) {return operator=(p);}
+  Point moveCenterTo(const Point& p) {return operator=(p);}
+
+  Point rotateCorner(const RotMatrix<dim>& m, int corner) {return *this;}
+  Point rotateCenter(const RotMatrix<dim>& m) {return *this;}
+  Point rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
+
+  AxisBox<dim> boundingBox() const;
+
+  // Member access
 
   const CoordType& operator[](const int i) const {return m_elem[i];}
   CoordType& operator[](const int i)		 {return m_elem[i];}
 
-  CoordType getDistanceTo (const Point<dim> &otherPoint) const
-	{return (*this - otherPoint).mag();}
-  CoordType getSquaredDistanceTo (const Point<dim> &otherPoint) const
-	{return (*this - otherPoint).sqrMag();}
+  friend CoordType SquaredDistance<dim>(const Point& p1, const Point& p2);
+
+  template<const int num_points>
+  friend Point Barycenter(const Point points[num_points],
+			  const CoordType weights[num_points]);
 
   // 2D/3D stuff
 

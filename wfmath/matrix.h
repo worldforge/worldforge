@@ -31,7 +31,7 @@
 
 namespace WF { namespace Math {
 
-template<const int len> class Vector;
+template<const int dim> class Vector;
 
 // Elements of this class represent rotation matrices. The NxN dimensional
 // rotation matrices form a group called SO(N), the special orthogonal
@@ -52,94 +52,83 @@ template<const int len> class Vector;
 // Probably want to add a boolean variable to keep track of the sign of the
 // determinant if we do this.
 
-template<const int size> class RotMatrix;
+template<const int dim> class RotMatrix;
 
-template<const int size> // m1 * m2
-RotMatrix<size> Prod(const RotMatrix<size>& m1, const RotMatrix<size>& m2);
-template<const int size> // m1 * m2^-1
-RotMatrix<size> ProdInv(const RotMatrix<size>& m1, const RotMatrix<size>& m2);
-template<const int size> // m1^-1 * m2
-RotMatrix<size> InvProd(const RotMatrix<size>& m1, const RotMatrix<size>& m2);
-template<const int size> // m1^-1 * m2^-1
-RotMatrix<size> InvProdInv(const RotMatrix<size>& m1, const RotMatrix<size>& m2);
+template<const int dim> // m1 * m2
+RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
+template<const int dim> // m1 * m2^-1
+RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
+template<const int dim> // m1^-1 * m2
+RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
+template<const int dim> // m1^-1 * m2^-1
+RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
 
-template<const int size> // m * v
-Vector<size> Prod(const RotMatrix<size>& m, const Vector<size>& v);
-template<const int size> // m^-1 * v
-Vector<size> InvProd(const RotMatrix<size>& m, const Vector<size>& v);
-template<const int size> // v * m
-inline Vector<size> Prod(const Vector<size>& v, const RotMatrix<size>& m)
+template<const int dim> // m * v
+Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v);
+template<const int dim> // m^-1 * v
+Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v);
+template<const int dim> // v * m
+inline Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m)
 	{return InvProd(m, v);} // Since transpose() and inverse() are the same
-template<const int size> // v * m^-1
-inline Vector<size> ProdInv(const Vector<size>& v, const RotMatrix<size>& m)
+template<const int dim> // v * m^-1
+inline Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m)
 	{return Prod(m, v);} // Since transpose() and inverse() are the same
 
-template<const int size>
+template<const int dim>
 class RotMatrix {
  public:
   RotMatrix() {identity();} // Need a valid RotMatrix for default
-  RotMatrix(const RotMatrix<size>& m);
+  RotMatrix(const RotMatrix& m);
 
   std::string toString() const;
   bool fromString(const std::string& s);
 
-  RotMatrix<size>& operator=(const RotMatrix<size>& m);
-  // No operator=(double d[size][size]), since it can fail.
+  RotMatrix& operator=(const RotMatrix& m);
+  // No operator=(double d[dim][dim]), since it can fail.
   // Use setVals() instead.
 
-  bool isEqualTo(const RotMatrix<size>& rhs, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const RotMatrix& rhs, double tolerance = WFMATH_EPSILON) const;
 
-  bool operator==(const RotMatrix<size>& m) const {return isEqualTo(m);}
-  bool operator!=(const RotMatrix<size>& m) const {return !isEqualTo(m);}
+  bool operator==(const RotMatrix& m) const {return isEqualTo(m);}
+  bool operator!=(const RotMatrix& m) const {return !isEqualTo(m);}
 
-  RotMatrix<size>& identity();
+  RotMatrix& identity();
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the matrix.
-  bool operator< (const RotMatrix<size>& m) const;
+  bool operator< (const RotMatrix& m) const;
 
-  static const int nParams = size*(size-1)/2;
+  static const int nParams = dim*(dim-1)/2;
 
   const CoordType& elem(const int i, const int j) const 	{return m_elem[i][j];}
 
   // Can't set one element at a time and keep it an SO(N) matrix,
   // but can try to set all values at once, and see if they match.
-  // The first one is vals[row][column], the second is vals[row*size+column].
-  bool setVals(const CoordType vals[size][size], double precision = WFMATH_EPSILON);
-  bool setVals(const CoordType vals[size*size], double precision = WFMATH_EPSILON);
-  // Backend
-  bool _setVals(CoordType *vals, double precision = WFMATH_EPSILON);
+  // The first one is vals[row][column], the second is vals[row*dim+column].
+  bool setVals(const CoordType vals[dim][dim], double precision = WFMATH_EPSILON);
+  bool setVals(const CoordType vals[dim*dim], double precision = WFMATH_EPSILON);
 
-  Vector<size> row(const int i) const;
-  Vector<size> column(const int i) const;
+  Vector<dim> row(const int i) const;
+  Vector<dim> column(const int i) const;
 
   double trace() const;
   double determinant() const {return 1;} // here in case we extend to O(N) later
-  RotMatrix<size> inverse() const;
+  RotMatrix inverse() const;
 
-  RotMatrix<size>& fromEuler(const CoordType angles[nParams]);
+  RotMatrix& fromEuler(const CoordType angles[nParams]);
   void toEuler(CoordType angles[nParams]) const;
 
-  friend RotMatrix<size> Prod<size>		(const RotMatrix<size>& m1,
-						 const RotMatrix<size>& m2);
-  friend RotMatrix<size> ProdInv<size>		(const RotMatrix<size>& m1,
-						 const RotMatrix<size>& m2);
-  friend RotMatrix<size> InvProd<size>		(const RotMatrix<size>& m1,
-						 const RotMatrix<size>& m2);
-  friend RotMatrix<size> InvProdInv<size>	(const RotMatrix<size>& m1,
-						 const RotMatrix<size>& m2);
-  friend Vector<size> Prod<size>		(const RotMatrix<size>& m,
-						 const Vector<size>& v);
-  friend Vector<size> InvProd<size>		(const RotMatrix<size>& m,
-						 const Vector<size>& v);
+  friend RotMatrix Prod<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
+  friend RotMatrix ProdInv<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
+  friend RotMatrix InvProd<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
+  friend RotMatrix InvProdInv<dim> (const RotMatrix& m1, const RotMatrix& m2);
+  friend Vector<dim> Prod<dim>	   (const RotMatrix& m, const Vector<dim>& v);
+  friend Vector<dim> InvProd<dim>  (const RotMatrix& m, const Vector<dim>& v);
 
   // Set the value to a given rotation
-  const RotMatrix<size>& rotation		(const int i,
-						 const int j,
-						 const double& theta);
-  const RotMatrix<size>& rotation		(const Vector<size>& v1,
-						 const Vector<size>& v2,
-						 const double& theta);
+  const RotMatrix& rotation	(const int i, const int j, const double& theta);
+  const RotMatrix& rotation	(const Vector<dim>& v1, const Vector<dim>& v2,
+				 const double& theta);
 
   // 2D/3D stuff
 
@@ -161,7 +150,10 @@ class RotMatrix {
 						 const double& theta);
 
  private:
-  CoordType m_elem[size][size];
+  CoordType m_elem[dim][dim];
+
+  // Backend to setVals() above, also used in fromString()
+  bool _setVals(CoordType *vals, double precision = WFMATH_EPSILON);
 };
 
 }} // namespace WF::Math

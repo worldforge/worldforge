@@ -28,26 +28,15 @@
 #define WFMATH_ERROR_H
 
 #include <wfmath/vector.h>
-#include <wfmath/vector_funcs.h>
 
 namespace WF { namespace Math {
 
-struct BadRotationAxisNum {
-  BadRotationAxisNum(const int i_in, const int j_in) : i(i_in), j(j_in) {}
-
-  int i, j;
-};
-
-template<const int len>
-struct BadRotationPlane {
-  BadRotationPlane(const Vector<len>& v1_in, const Vector<len>& v2_in)
+template<const int dim>
+struct ColinearVectors {
+  ColinearVectors(const Vector<dim>& v1_in, const Vector<dim>& v2_in)
     : v1(v1_in), v2(v2_in) {}
 
-  Vector<len> v1, v2;
-};
-
-struct BadRotationAxis : public Vector<3> {
-  BadRotationAxis(const Vector<3>& v) : Vector<3>(v) {}
+  Vector<dim> v1, v2;
 };
 
 }} // namespace WF::Math

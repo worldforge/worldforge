@@ -30,6 +30,7 @@
 #include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
+#include <wfmath/axisbox.h>
 
 namespace WF { namespace Math {
 
@@ -180,7 +181,7 @@ Point<dim>& Point<dim>::operator-=(const Vector<dim> &rhs)
 template<const int dim>
 bool Point<dim>::operator< (const Point<dim>& rhs) const
 {
-  for(int i = 0; i < len; ++i) {
+  for(int i = 0; i < dim; ++i) {
     if(m_elem[i] < rhs.m_elem[i])
       return true;
     if(m_elem[i] > rhs.m_elem[i])
@@ -188,6 +189,63 @@ bool Point<dim>::operator< (const Point<dim>& rhs) const
   }
 
   return false;
+}
+
+template<const int dim>
+inline AxisBox<dim> Point<dim>::boundingBox() const
+{
+  return AxisBox<dim>(*this, *this, true);
+}
+
+template<const int dim>
+inline CoordType Distance(const Point<dim>& p1, const Point<dim>& p2)
+{
+  return sqrt(SquaredDistance(p1, p2));
+}
+
+template<const int dim>
+CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
+{
+  CoordType ans = 0;
+
+  for(int i = 0; i < dim; ++i) {
+    double diff = FloatSubtract(p1.m_elem[i], p2.m_elem[i]);
+    ans += diff * diff; // Don't need FloatAdd, all terms > 0
+  }
+
+  return ans;
+}
+
+template<const int dim> template<const int num_points>
+Point<dim> Barycenter(const Point<dim> points[num_points],
+		      const CoordType weights[num_points])
+{
+  double tot_weight = 0, max_weight = 0;
+
+  for(int i = 0; i < num_points; ++i) {
+    tot_weight += weights[i];
+    max_weight = std::max(max_weight, fabs(weights[i]));
+  }
+
+  assert(max_weight > 0 && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
+
+  Point<dim> out;
+
+  for(int i = 0; i < dim; ++i) {
+    out.m_elem[i] = 0;
+    double max_val = 0;
+    for(int j = 0; j < num_points; ++j) {
+      val = point[j].m_elem[i] * weight[j];
+      out.m_elem[i] += val;
+      max_val = std::max(max_val, fabs(val));
+    }
+    if(fabs(out.m_elem[i]) < max_val * WFMATH_EPSILON)
+      out.m_elem[i] = 0;
+    else
+      out.m_elem[i] /= tot_weight;
+  }
+
+  return out;
 }
 
 template<> Point<2>& Point<2>::polar(double r, double theta);

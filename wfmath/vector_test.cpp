@@ -28,15 +28,14 @@
 #include "vector_funcs.h"
 #include "matrix_funcs.h"
 #include "const.h"
-#include "stream.h"
 #include <iostream>
 
 using namespace WF::Math;
 
-template<const int len>
-void test_vector(const Vector<len>& v)
+template<const int dim>
+void test_vector(const Vector<dim>& v)
 {
-  cout << "Testing vector: " << v << std::endl;
+  cout << "Testing vector: " << v.toString() << std::endl;
 
   double sqr_mag = v.sqrMag();
 
@@ -44,46 +43,46 @@ void test_vector(const Vector<len>& v)
 
   assert(IsFloatEqual(sqr_mag, Dot(v, v)));
 
-  Vector<len> v1, v2;
+  Vector<dim> v1, v2;
 
   v1.zero();
   v1[0] = 1;
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     v2[i] = 1;
 
   const int steps = 8;
 
-  Vector<len> vcopy = v;
+  Vector<dim> vcopy = v;
 
-  for(int j = 0; j < len; ++j) {
+  for(int j = 0; j < dim; ++j) {
     for(int i = 0; i < steps; ++i) {
       vcopy.rotate(v1, v2, 2 * WFMATH_CONST_PI / steps);
-//      cout << vcopy << std::endl;
+//      cout << vcopy.toString() << std::endl;
       assert(IsFloatEqual(sqr_mag, vcopy.sqrMag()));
     }
 
-    for(int i = 0; i < len; ++i)
+    for(int i = 0; i < dim; ++i)
       assert(IsFloatEqual(v[i], vcopy[i]));
 
     v2 -= v1 / 2;
 
-    int k = (j < len - 1) ? j + 1 : 0;
+    int k = (j < dim - 1) ? j + 1 : 0;
     v1.rotate(j, k, WFMATH_CONST_PI / 2);
   }
 
   v2 *= 2;
 
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     assert(IsFloatEqual(v2[i], 1));
 
   double check = Dot((v1 + v2) * 5 - v2 / 4, 2 * v2);
 
-  assert(IsFloatEqual((10.0 + len * 38.0 / 4.0), check));
+  assert(IsFloatEqual((10.0 + dim * 38.0 / 4.0), check));
 
   double check_mag = v.sloppyMag() / v.mag();
 
   assert(1 - WFMATH_EPSILON < check_mag);
-  assert(check_mag < Vector<len>::sloppyMagMax() + WFMATH_EPSILON);
+  assert(check_mag < Vector<dim>::sloppyMagMax() + WFMATH_EPSILON);
 }
 
 int main()

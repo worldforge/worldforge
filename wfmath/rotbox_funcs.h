@@ -37,12 +37,6 @@
 namespace WF { namespace Math {
 
 template<const int dim>
-RotBox<dim>::RotBox(const Point<dim>& p, const Vector<dim>& size,
-		    const RotMatrix<dim>& orientation)
-	: RotShape<dim>(p + Prod(orientation, size / 2)),
-	  m_corner0(p), m_size(size), m_orient(orientation) {}
-
-template<const int dim>
 std::string RotBox<dim>::toString() const
 {
   return "RotBox: m_corner0 = " + m_corner0.toString()
@@ -62,19 +56,9 @@ bool RotBox<dim>::fromString(const std::string& s)
   if(corner_pos == std::npos || size_pos == std::npos || orient_pos == std::npos)
     return false;
 
-  if(!m_corner0.fromString(s.substr(corner_pos))
-      || !m_size.fromString(s.substr(size_pos))
-      || !m_orient.fromString(s.substr(orient_pos))) {
-    m_corner0.origin();
-    m_size.zero();
-    m_orient.identity();
-    Shape<dim>::m_center.origin();
-    return false;
-  }
-
-  Shape<dim>::m_center = m_corner0 + Prod(m_orient, m_size / 2);
-
-  return true;
+  return m_corner0.fromString(s.substr(corner_pos))
+      && m_size.fromString(s.substr(size_pos))
+      && m_orient.fromString(s.substr(orient_pos));
 }
 
 template<const int dim>
@@ -83,7 +67,6 @@ RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
   m_corner0 = a.m_corner0;
   m_size = a.m_size;
   m_orient = a.m_orient;
-  Shape<dim>::m_center = a.Shape<dim>::m_center;
 }
 
 template<const int dim>
@@ -122,26 +105,6 @@ Point<dim> RotBox<dim>::getCorner(int i) const
 }
 
 template<const int dim>
-Shape<dim>& RotBox<dim>::shift(const Vector<dim>& v)
-{
-  m_corner0 += v;
-  Shape<dim>::m_center += v;
-
-  return *this;
-}
-
-template<const int dim>
-RotShape<dim>& RotBox<dim>::rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
-{
-  m_orient = Prod(m, m_orient);
-
-  m_corner0.rotate(m, p);
-  Shape<dim>::m_center.rotate(m, p);
-
-  return *this;
-}
-
-template<const int dim>
 AxisBox<dim> RotBox<dim>::boundingBox() const
 {
   Point<dim> min = m_corner0, max = m_corner0;
@@ -166,112 +129,6 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
   }
 
   return AxisBox<dim>(min, max);
-}
-
-template<const int dim>
-AxisBox<dim> RotBox<dim>::enclosedBox() const
-{
-  // FIXME
-
-  return AxisBox<dim>();
-}
-
-template<const int dim>
-bool RotBox<dim>::contains(const Point<dim>& p) const
-{
-  // Rotate the point into the internal coordinate system of the box
-
-  Vector<dim> shift = InvProd(m_orient, p - m_corner0);
-
-  for(int i = 0; i < dim; ++i) {
-    if(m_size[i] < 0) {
-      if(shift[i] < m_size[i] || shift[i] > 0)
-        return false;
-    }
-    else {
-      if(shift[i] > m_size[i] || shift[i] < 0)
-        return false;
-    }
-  }
-
-  return true;
-}
-
-template<const int dim>
-bool RotBox<dim>::containsProper(const Point<dim>& p) const
-{
-  // Rotate the point into the internal coordinate system of the box
-
-  Vector<dim> shift = InvProd(m_orient, p - m_corner0);
-
-  for(int i = 0; i < dim; ++i) {
-    if(m_size[i] < 0) {
-      if(shift[i] <= m_size[i] || shift[i] >= 0)
-        return false;
-    }
-    else {
-      if(shift[i] >= m_size[i] || shift[i] <= 0)
-        return false;
-    }
-  }
-
-  return true;
-}
-
-template<const int dim>
-bool RotBox<dim>::contains(const AxisBox<dim>& b) const
-{
-  // FIXME
-
-  return false;
-}
-
-template<const int dim>
-bool RotBox<dim>::containsProper(const AxisBox<dim>& b) const
-{
-  // FIXME
-
-  return false;
-}
-
-template<const int dim>
-bool RotBox<dim>::isContainedBy(const AxisBox<dim>& b) const
-{
-  return boundingBox().isContainedBy(b);
-}
-
-template<const int dim>
-bool RotBox<dim>::isContainedByProper(const AxisBox<dim>& b) const
-{
-  return boundingBox().isContainedByProper(b);
-}
-
-template<const int dim>
-bool RotBox<dim>::intersects(const AxisBox<dim>& b) const
-{
-  // FIXME
-
-  return false;
-}
-
-template<const int dim>
-bool RotBox<dim>::intersectsProper(const AxisBox<dim>& b) const
-{
-  // FIXME
-
-  return false;
-}
-
-template<const int dim>
-int RotBox<dim>::isSubContainedBy(const AxisBox<dim>& b) const
-{
-  return boundingBox().isSubContainedBy(b);
-}
-
-template<const int dim>
-int RotBox<dim>::isSubContainedByProper(const AxisBox<dim>& b) const
-{
-  return boundingBox().isSubContainedByProper(b);
 }
 
 }} // namespace WF::Math

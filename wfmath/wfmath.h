@@ -32,15 +32,15 @@
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
 #include <wfmath/point.h>
-#include <wfmath/shape.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/segment.h>
+#include <wfmath/intersect.h>
 
 // Do not include stream.h, as it includes iostream.
 // Let end users include it on their own.
 
-// This file doesn't directly include header files which contain only
+// This file doesn't directly include basis.h and stringconv.h, which contain only
 // functions which are intended for internal library use only (prefixed with '_').
 
 // Any header file "foo_funcs.h" is automatically included in "foo.h",

@@ -24,13 +24,10 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#ifndef WFMATH_STREAM_FUNCS_H
-#define WFMATH_STREAM_FUNCS_H
+#ifndef WFMATH_STREAM_H
+#define WFMATH_STREAM_H
 
-#include <wfmath/vector.h>
-#include <wfmath/matrix.h>
-#include <wfmath/point.h>
-#include <wfmath/shape.h>
+#include <wfmath/wfmath.h>
 #include <iostream>
 
 namespace WF { namespace Math {
@@ -38,14 +35,14 @@ namespace WF { namespace Math {
 //TODO some template for all of these, that won't be too general
 // and impact non-WFMath classes?
 
-template<const int len>
-inline std::ostream& operator<<(std::ostream& os, const Vector<len>& v)
+template<const int dim>
+inline std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
 {
   return os << v.toString();
 }
 
-template<const int size>
-inline std::ostream& operator<<(std::ostream& os, const RotMatrix<size>& m)
+template<const int dim>
+inline std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
 {
   return os << m.toString();
 }
@@ -56,13 +53,30 @@ inline std::ostream& operator<< (std::ostream& os, const Point<dim>& coord)
   return os << coord.toString();
 }
 
-// This next one covers Shape<> and all its derived classes.
 template<const int dim>
-inline std::ostream& operator<< (std::ostream& os, const Shape<dim>& s)
+inline std::ostream& operator<< (std::ostream& os, const AxisBox<dim>& a)
+{
+  return os << a.toString();
+}
+
+template<const int dim>
+inline std::ostream& operator<< (std::ostream& os, const Ball<dim>& b)
+{
+  return os << b.toString();
+}
+
+template<const int dim>
+inline std::ostream& operator<< (std::ostream& os, const Segment<dim>& s)
 {
   return os << s.toString();
 }
 
+template<const int dim>
+inline std::ostream& operator<< (std::ostream& os, const RotBox<dim>& b)
+{
+  return os << b.toString();
+}
+
 }} // namespace WF::Math
 
-#endif // WFMATH_STREAM_FUNCS_H
+#endif // WFMATH_STREAM_H

@@ -30,7 +30,6 @@
 
 #include "vector_funcs.h"
 #include "const.h"
-#include "error.h"
 #include "basis.h"
 #include <math.h>
 
@@ -74,8 +73,7 @@ template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, double theta)
 {
   double axis_sqr_mag = axis.sqrMag();
 
-  if(axis_sqr_mag == 0)
-    throw BadRotationAxis(axis);
+  assert(axis_sqr_mag != 0);
 
   Vector<3> perp_part = *this - axis * Dot(*this, axis) / axis_sqr_mag;
   Vector<3> rot90 = Cross(axis, perp_part) / sqrt(axis_sqr_mag);

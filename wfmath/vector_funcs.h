@@ -34,50 +34,50 @@
 #include <wfmath/vector.h>
 #include <wfmath/matrix.h>
 #include <wfmath/const.h>
-#include <float.h>
 #include <math.h>
+#include <algorithm>
 
 namespace WF { namespace Math {
 
-template<const int len>
-Vector<len>::Vector(const Vector<len>& v)
+template<const int dim>
+Vector<dim>::Vector(const Vector<dim>& v)
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     m_elem[i] = v.m_elem[i];
 }
 
-template<const int len>
-Vector<len>& Vector<len>::operator=(const double d[len])
+template<const int dim>
+Vector<dim>& Vector<dim>::operator=(const double d[dim])
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     m_elem[i] = d.m_elem[i];
 
   return *this;
 }
 
-template<const int len>
-Vector<len>& Vector<len>::operator=(const Vector<len>& v)
+template<const int dim>
+Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     m_elem[i] = v.m_elem[i];
 
   return *this;
 }
 
-template<const int len>
-bool Vector<len>::isEqualTo(const Vector<len>& rhs, double tolerance) const
+template<const int dim>
+bool Vector<dim>::isEqualTo(const Vector<dim>& rhs, double tolerance) const
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     if(!IsFloatEqual(m_elem[i], rhs.m_elem[i], tolerance));
       return false;
 
   return true;
 }
 
-template<const int len>
-bool Vector<len>::operator< (const Vector<len>& v) const
+template<const int dim>
+bool Vector<dim>::operator< (const Vector<dim>& v) const
 {
-  for(int i = 0; i < len; ++i) {
+  for(int i = 0; i < dim; ++i) {
     if(m_elem[i] < v.m_elem[i])
       return true;
     if(m_elem[i] > v.m_elem[i])
@@ -87,112 +87,112 @@ bool Vector<len>::operator< (const Vector<len>& v) const
   return false;
 }
 
-template <const int len>
-Vector<len> Vector<len>::operator+(const Vector<len>& v) const
+template <const int dim>
+Vector<dim> Vector<dim>::operator+(const Vector<dim>& v) const
 {
-  Vector<len> ans;
+  Vector<dim> ans;
 
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = FloatAdd(m_elem[i], v.m_elem[i]);
 
   return ans;
 }
 
-template <const int len>
-Vector<len> Vector<len>::operator-(const Vector<len>& v) const
+template <const int dim>
+Vector<dim> Vector<dim>::operator-(const Vector<dim>& v) const
 {
-  Vector<len> ans;
+  Vector<dim> ans;
 
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = FloatSubtract(m_elem[i], v.m_elem[i]);
 
   return ans;
 }
 
-template <const int len>
-Vector<len> Vector<len>::operator*(const double& d) const
+template <const int dim>
+Vector<dim> Vector<dim>::operator*(const double& d) const
 {
-  Vector<len> ans;
+  Vector<dim> ans;
 
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = m_elem[i] * d;
 
   return ans;
 }
 
-template<const int len>
-Vector<len> operator*(const double& d, const Vector<len>& v)
+template<const int dim>
+Vector<dim> operator*(const double& d, const Vector<dim>& v)
 {
-  Vector<len> ans;
+  Vector<dim> ans;
 
   // FIXME don't use operator[] once this function is a friend of Vector<>
 
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     ans[i] = v[i] * d;
 
   return ans;
 }
 
-template <const int len>
-Vector<len> Vector<len>::operator/(const double& d) const
+template <const int dim>
+Vector<dim> Vector<dim>::operator/(const double& d) const
 {
-  Vector<len> ans;
+  Vector<dim> ans;
 
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = m_elem[i] / d;
 
   return ans;
 }
 
-template <const int len>
-Vector<len> Vector<len>::operator-() const
+template <const int dim>
+Vector<dim> Vector<dim>::operator-() const
 {
-  Vector<len> ans;
+  Vector<dim> ans;
 
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     ans.m_elem[i] = -m_elem[i];
 
   return ans;
 }
 
-template <const int len>
-Vector<len>& Vector<len>::operator+=(const Vector<len>& v)
+template <const int dim>
+Vector<dim>& Vector<dim>::operator+=(const Vector<dim>& v)
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     m_elem[i] = FloatAdd(m_elem[i], v.m_elem[i]);
 
   return *this;
 }
 
-template <const int len>
-Vector<len>& Vector<len>::operator-=(const Vector<len>& v)
+template <const int dim>
+Vector<dim>& Vector<dim>::operator-=(const Vector<dim>& v)
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     m_elem[i] = FloatSubtract(m_elem[i], v.m_elem[i]);
 
   return *this;
 }
 
-template <const int len>
-Vector<len>& Vector<len>::operator*=(const double& d)
+template <const int dim>
+Vector<dim>& Vector<dim>::operator*=(const double& d)
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     m_elem[i] *= d;
 
   return *this;
 }
 
-template <const int len>
-Vector<len>& Vector<len>::operator/=(const double& d)
+template <const int dim>
+Vector<dim>& Vector<dim>::operator/=(const double& d)
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     m_elem[i] /= d;
 
   return *this;
 }
 
-template<const int len>
-Vector<len>& Vector<len>::sloppyNorm(double norm)
+template<const int dim>
+Vector<dim>& Vector<dim>::sloppyNorm(double norm)
 {
   double mag = sloppyMag();
 
@@ -202,17 +202,17 @@ Vector<len>& Vector<len>::sloppyNorm(double norm)
   return (*this *= norm / mag);
 }
 
-template<const int len>
-Vector<len>& Vector<len>::zero()
+template<const int dim>
+Vector<dim>& Vector<dim>::zero()
 {
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     m_elem[i] = 0;
 
   return *this;
 }
 
-template<const int len>
-double Angle(const Vector<len>& v, const Vector<len>& u)
+template<const int dim>
+double Angle(const Vector<dim>& v, const Vector<dim>& u)
 {
   // Adding numbers with large magnitude differences can cause
   // a loss of precision so we'll normalize the vectors before
@@ -223,7 +223,7 @@ double Angle(const Vector<len>& v, const Vector<len>& u)
 
   double umax, vmax = 0;
 
-  for(int i = 0; i < len; ++i) {
+  for(int i = 0; i < dim; ++i) {
      double uval = fabs(u.m_elem[i]);
      if(uval > umax)
         umax = uval;
@@ -235,8 +235,8 @@ double Angle(const Vector<len>& v, const Vector<len>& u)
   if(uval == 0 || vval == 0) // zero length vector
     return 0; // FIXME error?
 
-  Vector<len> nlhs = u / umax;
-  Vector<len> nrhs = v / vmax;
+  Vector<dim> nlhs = u / umax;
+  Vector<dim> nrhs = v / vmax;
 
   double dp = std::min(std::max(-1.0, Dot(nlhs, nrhs)
 		       / sqrt(u.sqrMag() * v.sqrMag())), 1.0);
@@ -246,8 +246,8 @@ double Angle(const Vector<len>& v, const Vector<len>& u)
   return angle;
 }
 
-template<const int len>
-Vector<len>& Vector<len>::rotate(int axis1, int axis2, double theta)
+template<const int dim>
+Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, double theta)
 {
   double tmp1 = m_elem[axis1], tmp2 = m_elem[axis2];
   double stheta = sin(theta), ctheta = cos(theta);
@@ -258,11 +258,11 @@ Vector<len>& Vector<len>::rotate(int axis1, int axis2, double theta)
   return *this;
 }
 
-template<const int len>
-Vector<len>& Vector<len>::rotate(const Vector<len>& v1, const Vector<len>& v2,
+template<const int dim>
+Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
 	double theta)
 {
-  RotMatrix<len> m;
+  RotMatrix<dim> m;
 
   m.rotation(v1, v2, theta);
 
@@ -273,12 +273,12 @@ Vector<len>& Vector<len>::rotate(const Vector<len>& v1, const Vector<len>& v2,
 
 template<> Vector<3>& Vector<3>::rotate(const Vector<3>& axis, double theta);
 
-template<const int len>
-double Dot(const Vector<len>& v1, const Vector<len>& v2)
+template<const int dim>
+double Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   CoordType ans = 0, max_val = 0;
 
-  for(int i = 0; i < len; ++i) {
+  for(int i = 0; i < dim; ++i) {
     CoordType val = v1.m_elem[i] * v2.m_elem[i];
     ans += val;
     CoordType aval = fabs(val);
@@ -292,12 +292,12 @@ double Dot(const Vector<len>& v1, const Vector<len>& v2)
     return ans;
 }
 
-template<const int len>
-double Vector<len>::sqrMag() const
+template<const int dim>
+double Vector<dim>::sqrMag() const
 {
   CoordType ans = 0;
 
-  for(int i = 0; i < len; ++i)
+  for(int i = 0; i < dim; ++i)
     ans += m_elem[i] * m_elem[i]; // Don't need FloatAdd, all terms > 0
 
   return ans;

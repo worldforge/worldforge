@@ -37,36 +37,36 @@
 
 namespace WF { namespace Math {
 
-template<const int size> class RotMatrix;
-template<const int len> class Vector;
+template<const int dim> class RotMatrix;
+template<const int dim> class Vector;
 template<const int dim> class Point;
 
-template<const int len>
-Vector<len> operator*(const double& d, const Vector<len>& v);
-template<const int len>
-double Dot(const Vector<len>& v1, const Vector<len>& v2);
+template<const int dim>
+Vector<dim> operator*(const double& d, const Vector<dim>& v);
+template<const int dim>
+double Dot(const Vector<dim>& v1, const Vector<dim>& v2);
 
-template<const int len>
-double Angle(const Vector<len>& v, const Vector<len>& u);
+template<const int dim>
+double Angle(const Vector<dim>& v, const Vector<dim>& u);
 
 // The following are defined in matrix_funcs.h
-template<const int size> // m * v
-Vector<size> Prod(const RotMatrix<size>& m, const Vector<size>& v);
-template<const int size> // m^-1 * v
-Vector<size> InvProd(const RotMatrix<size>& m, const Vector<size>& v);
-template<const int size> // v * m
-Vector<size> Prod(const Vector<size>& v, const RotMatrix<size>& m);
-template<const int size> // v * m^-1
-Vector<size> ProdInv(const Vector<size>& v, const RotMatrix<size>& m);
+template<const int dim> // m * v
+Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v);
+template<const int dim> // m^-1 * v
+Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v);
+template<const int dim> // v * m
+Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m);
+template<const int dim> // v * m^-1
+Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m);
 
-template<const int len>
-Vector<len> operator-(const Point<len>& c1, const Point<len>& c2);
-template<const int len>
-Point<len> operator+(const Point<len>& c, const Vector<len>& v);
-template<const int len>
-Point<len> operator-(const Point<len>& c, const Vector<len>& v);
-template<const int len>
-Point<len> operator+(const Vector<len>& v, const Point<len>& c);
+template<const int dim>
+Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
+template<const int dim>
+Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v);
+template<const int dim>
+Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v);
+template<const int dim>
+Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
 
 // These two functions are inline, since they're only ever called
 // with a defined constant as argument.
@@ -86,10 +86,10 @@ inline const double _SloppyMagMaxTable(int i)
 // Note for people trying to compute the above numbers
 // more accurately:
 
-// The worst value for len == 2 occurs when the ratio of the components
+// The worst value for dim == 2 occurs when the ratio of the components
 // of the vector is sqrt(2) - 1. The value above is equal to sqrt(4 - 2 * sqrt(2)).
 
-// The worst value for len == 3 occurs when the two smaller components
+// The worst value for dim == 3 occurs when the two smaller components
 // are equal, and their ratio with the large component is the
 // (unique, real) solution to the equation q x^3 + (q-1) x + p == 0,
 // where p = sqrt(2) - 1, and q = sqrt(3) + 1 - 2 * sqrt(2).
@@ -107,52 +107,52 @@ inline const double _SloppyMagMaxSqrtTable(int i)
   return (i < dsize) ? d[i] : 0;
 }
 
-template<const int len>
+template<const int dim>
 class Vector {
  public:
   Vector() {}
-  Vector(const Vector<len>& v);
+  Vector(const Vector& v);
 
   ~Vector() {}
 
-  std::string toString() const		{return _StringFromCoordList(m_elem, len);}
-  bool fromString(const std::string& s) {return _StringToCoordList(s, m_elem, len);}
+  std::string toString() const		{return _StringFromCoordList(m_elem, dim);}
+  bool fromString(const std::string& s) {return _StringToCoordList(s, m_elem, dim);}
 
-  Vector<len>& operator=(const double d[len]);
-  Vector<len>& operator=(const Vector<len>& v);
+  Vector& operator=(const double d[dim]);
+  Vector& operator=(const Vector& v);
 
-  bool isEqualTo(const Vector<len>& rhs, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Vector& rhs, double tolerance = WFMATH_EPSILON) const;
 
-  bool operator==(const Vector<len>& v) const {return isEqualTo(v);}
-  bool operator!=(const Vector<len>& v) const {return !isEqualTo(v);}
+  bool operator==(const Vector& v) const {return isEqualTo(v);}
+  bool operator!=(const Vector& v) const {return !isEqualTo(v);}
 
-  Vector<len>& zero();
+  Vector& zero();
 
   // WARNING! This operator is for sorting only. It does not
   // reflect any property of the vector.
-  bool operator< (const Vector<len>& v) const;
+  bool operator< (const Vector& v) const;
 
   // Math operators
 
-  Vector<len> operator+(const Vector<len>& v) const;
-  Vector<len> operator-(const Vector<len>& v) const;
-  Vector<len> operator*(const double& d) const;
-  Vector<len> operator/(const double& d) const;
+  Vector operator+(const Vector& v) const;
+  Vector operator-(const Vector& v) const;
+  Vector operator*(const double& d) const;
+  Vector operator/(const double& d) const;
 
-  Vector<len> operator-() const; // Unary minus
+  Vector operator-() const; // Unary minus
 
-  Vector<len>& operator+=(const Vector<len>& v);
-  Vector<len>& operator-=(const Vector<len>& v);
-  Vector<len>& operator*=(const double& d);
-  Vector<len>& operator/=(const double& d);
+  Vector& operator+=(const Vector& v);
+  Vector& operator-=(const Vector& v);
+  Vector& operator*=(const double& d);
+  Vector& operator/=(const double& d);
 
 // FIXME this has problems
-//  friend Vector<len> operator*<len>(const double& d, const Vector<len>& v);
+//  friend Vector operator*<dim>(const double& d, const Vector& v);
 
-  friend Vector<len> Prod<len>		(const RotMatrix<len>& m,
-					 const Vector<len>& v);
-  friend Vector<len> InvProd<len>	(const RotMatrix<len>& m,
-					 const Vector<len>& v);
+  friend Vector Prod<dim>	(const RotMatrix<dim>& m,
+				 const Vector& v);
+  friend Vector InvProd<dim>	(const RotMatrix<dim>& m,
+				 const Vector& v);
 
   // Don't do range checking, it'll slow things down, and people
   // should be able to figure it out on their own
@@ -160,44 +160,44 @@ class Vector {
   CoordType& operator[](const int i)		 {return m_elem[i];}
 
 // FIXME same problem as operator*
-//  friend Vector<len> operator-<len> (const Point<len>& c1, const Point<len>& c2);
-//  friend Point<len> operator+<len> (const Point<len>& c, const Vector<len>& v);
-//  friend Point<len> operator-<len> (const Point<len>& c, const Vector<len>& v);
-//  friend Point<len> operator+<len> (const Vector<len>& v, const Point<len>& c);
+//  friend Vector operator-<dim> (const Point<dim>& c1, const Point<dim>& c2);
+//  friend Point<dim> operator+<dim> (const Point<dim>& c, const Vector& v);
+//  friend Point<dim> operator-<dim> (const Point<dim>& c, const Vector& v);
+//  friend Point<dim> operator+<dim> (const Vector& v, const Point<dim>& c);
 
-  friend double Dot<len>(const Vector<len>& v1, const Vector<len>& v2);
-  friend double Angle<len>(const Vector<len>& v, const Vector<len>& u);
+  friend double Dot<dim>(const Vector& v1, const Vector& v2);
+  friend double Angle<dim>(const Vector& v, const Vector& u);
 
   double sqrMag() const;
   double mag() const		{return sqrt(sqrMag());}
-  Vector<len>& normalize(double norm) {return (*this *= norm / mag());}
+  Vector& normalize(double norm) {return (*this *= norm / mag());}
 
   // The sloppyMag() function gives a value between
   // the true magnitude and sloppyMagMax multiplied by the
   // true magnitude. sloppyNorm() uses sloppyMag() to normalize
   // the vector. This is currently only implemented for
-  // len = {1, 2, 3}. For all current implementations,
+  // dim = {1, 2, 3}. For all current implementations,
   // sloppyMagMax is greater than or equal to one.
   // The constant sloppyMagMaxSqrt is provided for those
   // who want to most closely approximate the true magnitude,
   // without carring whether it's too low or too high.
 
   double sloppyMag() const;
-  Vector<len>& sloppyNorm(double norm);
+  Vector& sloppyNorm(double norm);
 
   // Can't seem to implement these as constants, implementing
   // inline lookup functions instead.
-  static const double sloppyMagMax() {return _SloppyMagMaxTable(len);}
-  static const double sloppyMagMaxSqrt() {return _SloppyMagMaxSqrtTable(len);}
+  static const double sloppyMagMax() {return _SloppyMagMaxTable(dim);}
+  static const double sloppyMagMaxSqrt() {return _SloppyMagMaxSqrtTable(dim);}
 
   // Rotate the vector in the (axis1,axis2) plane by the angle theta
 
-  Vector<len>& rotate(int axis1, int axis2, double theta);
+  Vector& rotate(int axis1, int axis2, double theta);
 
   // Same thing, but the axes are defined by two vectors. If the
-  // vectors are parallel, this throws a BadRotationPlane error.
+  // vectors are parallel, this throws a ColinearVectors error.
 
-  Vector<len>& rotate(const Vector<len>& v1, const Vector<len>& v2, double theta);
+  Vector& rotate(const Vector& v1, const Vector& v2, double theta);
 
   // Specialized 2D/3D stuff starts here
 
@@ -237,7 +237,7 @@ class Vector {
   void asSpherical(double& r, double& theta, double& phi) const;
 
  private:
-  CoordType m_elem[len];
+  CoordType m_elem[dim];
 };
 
 template<> inline double Vector<1>::sloppyMag() const	{return fabs(m_elem[0]);}

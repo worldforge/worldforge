@@ -72,8 +72,7 @@ const RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, const double&
     }
   }
 
-  if(main_comp == -1) // zero length vector
-    throw BadRotationAxis(axis);
+  assert(main_comp != -1); // zero length vector
 
   Vector<3> tmp, v1, v2;
 

@@ -31,7 +31,6 @@
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/const.h>
-#include <wfmath/shape.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/vector_funcs.h>
 #include <wfmath/point_funcs.h>
@@ -42,23 +41,16 @@
 namespace WF { namespace Math {
 
 template<const int dim>
-bool Intersect(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out)
+bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out)
 {
-  bool intersect = true;
-
   for(int i = 0; i < dim; ++i) {
     out.m_low[i] = std::max(a1.m_low[i], a2.m_low[i]);
     out.m_high[i] = std::min(a1.m_high[i], a2.m_high[i]);
-    if(out.m_low[i] > out.m_high[i]) {
-      intersect = false;
-      out.m_high[i] = out.m_low[i];  // Keep "out" valid
-      out.Shape<dim>::m_center[i] = FloatAdd(out.m_high[i], out.m_low[i]) / 2;
-      break;
-    }
-    out.Shape<dim>::m_center[i] = FloatAdd(out.m_high[i], out.m_low[i]) / 2;
+    if(out.m_low[i] > out.m_high[i])
+      return false;
   }
 
-  return intersect;
+  return true;
 }
 
 template<const int dim>
@@ -75,10 +67,16 @@ AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2)
 }
 
 template<const int dim>
-AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p2)
+AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p2,
+				       bool ordered)
 {
+  if(ordered) {
+    m_low = p1;
+    m_high = p2;
+    return *this;
+  }
+
   for(int i = 0; i < dim; ++i) {
-    Shape<dim>::m_center[i] = FloatAdd(p1[i], p2[i]) / 2;
     if(p1[i] > p2[i]) {
       m_low[i] = p2[i];
       m_high[i] = p1[i];
@@ -109,18 +107,8 @@ bool AxisBox<dim>::fromString(const std::string& s)
   if(low_pos == std::npos || high_pos == std::npos)
     return false;
 
-  if(!m_low.fromString(s.substr(low_pos))
-      || !m_high.fromString(s.substr(high_pos))) {
-    m_low.origin();
-    m_high.origin();
-    Shape<dim>::m_center.origin();
-    return false;
-  }
-
-  for(int i = 0; i < dim; ++i)
-    Shape<dim>::m_center[i] = FloatAdd(m_low[i], m_high[i]) / 2;
-
-  return true;
+  return m_low.fromString(s.substr(low_pos))
+      && m_high.fromString(s.substr(high_pos));
 }
 
 template<const int dim>
@@ -128,7 +116,6 @@ AxisBox<dim>& AxisBox<dim>::operator=(const AxisBox<dim>& a)
 {
   m_low = a.m_low;
   m_high = a.m_high;
-  Shape<dim>::m_center = a.Shape<dim>::m_center;
 }
 
 // WARNING! This operator is for sorting only. It does not
@@ -155,143 +142,23 @@ Point<dim> AxisBox<dim>::getCorner(int i) const
 }
 
 template<const int dim>
-AxisBox<dim> AxisBox<dim>::quadrant(int i) const
+Point<dim> AxisBox<dim>::getCenter() const
 {
-  AxisBox<dim> out;
+  Point<dim> out;
 
-  for(int j = 0; j < dim; ++j) {
-    if(i & (1 << j)) {
-      out.m_low[i] = Shape<dim>::m_center[i];
-      out.m_high[i] = m_high[i];
-    }
-    else {
-      out.m_low[i] = m_low[i];
-      out.m_high[i] = Shape<dim>::m_center[i];
-    }
-    out.m_center[i] = FloatAdd(out.m_low[i], out.m_high[i]) / 2;
-  }
+  for(int i = 0; i < dim; ++i)
+    out[i] = FloatAdd(m_low[i], m_high[i]) / 2;
 
   return out;
 }
 
 template<const int dim>
-Shape<dim>& AxisBox<dim>::shift(const Vector<dim>& v)
+AxisBox<dim>& AxisBox<dim>::shift(const Vector<dim>& v)
 {
   m_low += v;
   m_high += v;
-  Shape<dim>::m_center += v;
 
   return *this;
-}
-
-template<const int dim>
-bool AxisBox<dim>::contains(const Point<dim>& p) const
-{
-  for(int i = 0; i < dim; ++i)
-    if(p[i] < m_low[i] || p[i] > m_high[i])
-      return false;
-
-  return true;
-}
-
-template<const int dim>
-bool AxisBox<dim>::containsProper(const Point<dim>& p) const
-{
-  for(int i = 0; i < dim; ++i)
-    if(p[i] <= m_low[i] || p[i] >= m_high[i])
-      return false;
-
-  return true;
-}
-
-template<const int dim>
-bool AxisBox<dim>::contains(const AxisBox<dim>& b) const
-{
-  for(int i = 0; i < dim; ++i)
-    if(b.m_low[i] < m_low[i] || b.m_high[i] > m_high[i])
-      return false;
-
-  return true;
-}
-
-template<const int dim>
-bool AxisBox<dim>::containsProper(const AxisBox<dim>& b) const
-{
-  for(int i = 0; i < dim; ++i)
-    if(b.m_low[i] <= m_low[i] || b.m_high[i] >= m_high[i])
-      return false;
-
-  return true;
-}
-
-template<const int dim>
-bool AxisBox<dim>::isContainedBy(const AxisBox<dim>& b) const
-{
-  for(int i = 0; i < dim; ++i)
-    if(b.m_low[i] > m_low[i] || b.m_high[i] < m_high[i])
-      return false;
-
-  return true;
-}
-
-template<const int dim>
-bool AxisBox<dim>::isContainedByProper(const AxisBox<dim>& b) const
-{
-  for(int i = 0; i < dim; ++i)
-    if(b.m_low[i] >= m_low[i] || b.m_high[i] <= m_high[i])
-      return false;
-
-  return true;
-}
-
-template<const int dim>
-bool AxisBox<dim>::intersects(const AxisBox<dim>& b) const
-{
-  for(int i = 0; i < dim; ++i)
-    if(b.m_low[i] > m_high[i] || b.m_high[i] < m_low[i])
-      return false;
-
-  return true;
-}
-
-template<const int dim>
-bool AxisBox<dim>::intersectsProper(const AxisBox<dim>& b) const
-{
-  for(int i = 0; i < dim; ++i)
-    if(b.m_low[i] >= m_high[i] || b.m_high[i] <= m_low[i])
-      return false;
-
-  return true;
-}
-
-template<const int dim>
-int AxisBox<dim>::isSubContainedBy(const AxisBox<dim>& b) const
-{
-  int sector = 0;
-
-  for(int i = 0; i < dim; ++i) {
-    if(m_low[i] >= b.Shape<dim>::m_center[i])
-      sector |= 1 << i;
-    else if(m_high[i] > b.Shape<dim>::m_center[i])
-      return -1;
-  }
-
-  return sector;
-}
-
-template<const int dim>
-int AxisBox<dim>::isSubContainedByProper(const AxisBox<dim>& b) const
-{
-  int sector = 0;
-
-  for(int i = 0; i < dim; ++i) {
-    if(m_low[i] > b.Shape<dim>::m_center[i])
-      sector |= 1 << i;
-    else if(m_high[i] >= b.Shape<dim>::m_center[i])
-      return -1;
-  }
-
-  return sector;
 }
 
 }} // namespace WF::Math

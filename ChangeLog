@@ -1,3 +1,21 @@
+Saturday, December 29, 2001	Ron Steinke <rsteinke@w-link.net>
+
+	* Removed some unnecessary template specifications, changed
+	  Vector<len> to Vector<dim> and RotMatrix<size> to RotMatrix<dim>
+	  for cross class consistency in the name of the template parameter
+	* Removed the base Shape<> class, leaving a bunch of simple classes
+	  for basic shapes which possess a common interface
+	* Changed test code to use toString() method directly rather than
+	  through operator<<()
+	* Changed ToAtlas() and FromAtlas() to use toString() and fromString(),
+	  eliminating the need for a separately compiled atlas conversion
+	  library
+	* Added the shape interface functions to Point<>
+	* Replaced the symlinks to COPYING and INSTALL files added by automake
+	  with the files themselves. This should hopefully let me get them
+	  into CVS.
+	* More work on intersection functions
+
 Tuesday, December 18, 2001	Ron Steinke <rsteinke@w-link.net>
 
 	* Some cleanup on RotMatrix<>::setVals() backend, Atlas conversion
