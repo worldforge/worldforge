@@ -2,7 +2,7 @@
 #define ERIS_METASERVER_H
 
 // pull in uint32_t on POSIX - is this generic?!
-#include <stdlib.h>
+#include <stdint.h>
 
 #include <sigc++/object.h>
 #include <sigc++/basic_signal.h>
