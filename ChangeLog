@@ -1,3 +1,15 @@
+2003-03-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Matrix.h, src/Matrix.cpp: Add matrix class for handling
+	  basepoints.
+
+	* src/tile.h, src/tile.cpp: damiens experimental qRMD implementation.
+
+	* src/Terrain.h, src/Terrain.cpp, src/Segment.cpp: Use Matrix to
+	  handle basepoints.
+
+	* src/Segment.cpp: Use memcpy to make copying rows more efficient.
+
 2003-03-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Terrain.h, src/Terrain.cpp: Make value for missing points the

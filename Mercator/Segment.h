@@ -5,6 +5,8 @@
 #ifndef MERCATOR_SEGMENT_H
 #define MERCATOR_SEGMENT_H
 
+#include "Matrix.h"
+
 namespace Mercator {
 
 // This class will need to be reference counted if we want the code to
@@ -33,6 +35,7 @@ class Segment {
         return m_points[y * (m_res + 1) + x];
     }
 
+    void populate(const Matrix<4,4> &);
     void populate(const float *);
     float qRMD(float, float, float, float, int depth) const;
 

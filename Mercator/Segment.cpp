@@ -6,6 +6,8 @@
 
 #include "Terrain.h"
 
+#include "tile.h"
+
 #include <iostream>
 
 namespace Mercator {
@@ -17,7 +19,8 @@ Segment::Segment(int res) : m_res(res), m_points(new float[(res+1) * (res+1)])
 {
 }
 
-void Segment::populate(const float * base)
+#if 1
+void Segment::populate(const Matrix<4, 4> & base)
 {
 #if 0
     // A somewhat wacky proof of concept interpolation
@@ -30,25 +33,25 @@ void Segment::populate(const float * base)
     }
 #else
     float tmp[3 * m_res + 1][3 * m_res +1];
-    tmp[0][0] = base[0 * 4 + 0];
-    tmp[0][m_res] = base[0 * 4 + 1];
-    tmp[m_res][0] = base[1 * 4 + 0];
-    tmp[m_res][m_res] = base[1 * 4 + 1];
+    tmp[0][0] = base(0, 0);
+    tmp[0][m_res] = base(1, 0);
+    tmp[m_res][0] = base(0, 1);
+    tmp[m_res][m_res] = base(1, 1);
 
-    tmp[m_res * 2][m_res] = base[2 * 4 + 1];
-    tmp[m_res * 3][m_res] = base[3 * 4 + 1];
-    tmp[m_res * 2][0] = base[2 * 4 + 0];
-    tmp[m_res * 3][0] = base[3 * 4 + 0];
+    tmp[m_res * 2][m_res] = base(1, 2);
+    tmp[m_res * 3][m_res] = base(1, 3);
+    tmp[m_res * 2][0] = base(0, 2);
+    tmp[m_res * 3][0] = base(0, 3);
 
-    tmp[m_res][m_res * 2] = base[1 * 4 + 2];
-    tmp[m_res][m_res * 3] = base[1 * 4 + 3];
-    tmp[0][m_res * 2] = base[0 * 4 + 2];
-    tmp[0][m_res * 3] = base[0 * 4 + 3];
+    tmp[m_res][m_res * 2] = base(2, 1);
+    tmp[m_res][m_res * 3] = base(3, 1);
+    tmp[0][m_res * 2] = base(2, 0);
+    tmp[0][m_res * 3] = base(3, 0);
 
-    tmp[m_res * 2][m_res * 2] = base[2 * 4 + 2];
-    tmp[m_res * 3][m_res * 2] = base[3 * 4 + 2];
-    tmp[m_res * 2][m_res * 3] = base[2 * 4 + 3];
-    tmp[m_res * 3][m_res * 3] = base[3 * 4 + 3];
+    tmp[m_res * 2][m_res * 2] = base(2, 2);
+    tmp[m_res * 3][m_res * 2] = base(2, 3);
+    tmp[m_res * 2][m_res * 3] = base(3, 2);
+    tmp[m_res * 3][m_res * 3] = base(3, 3);
 
     for(int l = m_res, m = 1, n = 1; l > 1; l >>= 1, m <<= 1, ++n) {
         std::cout << "Pass " << m << " with level " << l << std::endl << std::flush;
@@ -91,42 +94,21 @@ void Segment::populate(const float * base)
         }
     }
     for(int i = 0; i < m_res + 1; ++i) {
-        for(int j = 0; j < m_res + 1; ++j) {
-            m_points[j * (m_res + 1) + i] = tmp[m_res + j][m_res + i];
-        }
-        // memcpy(&m_points[i * m_res], tmp[m_res + i], m_res * sizeof(float));
+        // for(int j = 0; j < m_res + 1; ++j) {
+            // m_points[j * (m_res + 1) + i] = tmp[m_res + j][m_res + i];
+        // }
+        memcpy(&m_points[i * (m_res + 1)],
+               &tmp[m_res + i][m_res],
+               (m_res + 1) * sizeof(float));
     }
 
 #endif
 }
-
-#if 0
-const std::string Segment::height2string(float h) const
+#else
+void Segment::populate(const Matrix<4, 4> & base)
 {
-    // THis is not yet deterministic enough.
-    char buff[12];
-    snprintf(buff, 12, "%.10g", fabsf(h));
-    bool shift = false;
-    for(int i = 0; i < 11; ++i) {
-        if (buff[i] == '.') {
-            shift = true;
-        }
-        if (shift) {
-            buff[i] = buff[i + 1];
-        }
-    }
-    buff[10] = 0;
-    bool rot = false;
-    for(int i = 0, j = -1; i < 10; ++i) {
-        if (buff[i] == 0) {
-            rot = true;
-        }
-        if (rot) {
-            buff[i] = buff[++j];
-        }
-    }
-
-    return buff;
+    tile(64, fallOff, roughness, base(1, 1), base(1, 2), base(2, 2), base(2, 1),
+         m_points);
 }
 #endif
 

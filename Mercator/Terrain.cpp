@@ -4,6 +4,7 @@
 
 #include "Terrain.h"
 
+#include "Matrix.h"
 #include "Segment.h"
 
 namespace Mercator {
@@ -100,47 +101,48 @@ Segment * Terrain::getSegmentSafe(int x, int y, bool force)
     if (s != 0) {
         return s;
     }
-    float base[16];
+    Matrix<4, 4> base;
+    // float base[16];
     for(int i = 0; i < 16; ++i) { base[i] = Terrain::defaultLevel; }
-    bool complete = getBasePoint(x,     y,     base[1*4 + 1]) &&
-                    getBasePoint(x + 1, y,     base[1*4 + 2]) &&
-                    getBasePoint(x,     y + 1, base[2*4 + 1]) &&
-                    getBasePoint(x + 1, y + 1, base[2*4 + 2]);
-    if (!getBasePoint(x - 1, y - 1, base[0*4 + 0])) {
-        getAvgBasePoint(x - 1, y - 1, base[0*4 + 0]);
+    bool complete = getBasePoint(x,     y,     base(1, 1)) &&
+                    getBasePoint(x + 1, y,     base(2, 1)) &&
+                    getBasePoint(x,     y + 1, base(1, 2)) &&
+                    getBasePoint(x + 1, y + 1, base(2, 2));
+    if (!getBasePoint(x - 1, y - 1, base(0, 0))) {
+        getAvgBasePoint(x - 1, y - 1, base(0, 0));
     }
-    if (!getBasePoint(x - 1, y + 0, base[1*4 + 0])) {
-        getAvgBasePoint(x - 1, y + 0, base[1*4 + 0]);
+    if (!getBasePoint(x - 1, y + 0, base(0, 1))) {
+        getAvgBasePoint(x - 1, y + 0, base(0, 1));
     }
-    if (!getBasePoint(x - 1, y + 1, base[2*4 + 0])) {
-        getAvgBasePoint(x - 1, y + 1, base[2*4 + 0]);
+    if (!getBasePoint(x - 1, y + 1, base(0, 2))) {
+        getAvgBasePoint(x - 1, y + 1, base(0, 2));
     }
-    if (!getBasePoint(x - 1, y + 2, base[3*4 + 0])) {
-        getAvgBasePoint(x - 1, y + 2, base[3*4 + 0]);
+    if (!getBasePoint(x - 1, y + 2, base(0, 3))) {
+        getAvgBasePoint(x - 1, y + 2, base(0, 3));
     }
-    if (!getBasePoint(x + 0, y - 1, base[0*4 + 1])) {
-        getAvgBasePoint(x + 0, y - 1, base[0*4 + 1]);
+    if (!getBasePoint(x + 0, y - 1, base(1, 0))) {
+        getAvgBasePoint(x + 0, y - 1, base(1, 0));
     }
-    if (!getBasePoint(x + 0, y + 2, base[3*4 + 1])) {
-        getAvgBasePoint(x + 0, y + 2, base[3*4 + 1]);
+    if (!getBasePoint(x + 0, y + 2, base(1, 3))) {
+        getAvgBasePoint(x + 0, y + 2, base(1, 3));
     }
-    if (!getBasePoint(x + 1, y - 1, base[0*4 + 2])) {
-        getAvgBasePoint(x + 1, y - 1, base[0*4 + 2]);
+    if (!getBasePoint(x + 1, y - 1, base(2, 0))) {
+        getAvgBasePoint(x + 1, y - 1, base(2, 0));
     }
-    if (!getBasePoint(x + 1, y + 2, base[3*4 + 2])) {
-        getAvgBasePoint(x + 1, y + 2, base[3*4 + 2]);
+    if (!getBasePoint(x + 1, y + 2, base(2, 3))) {
+        getAvgBasePoint(x + 1, y + 2, base(2, 3));
     }
-    if (!getBasePoint(x + 2, y - 1, base[0*4 + 3])) {
-        getAvgBasePoint(x + 2, y - 1, base[0*4 + 3]);
+    if (!getBasePoint(x + 2, y - 1, base(3, 0))) {
+        getAvgBasePoint(x + 2, y - 1, base(3, 0));
     }
-    if (!getBasePoint(x + 2, y + 0, base[1*4 + 3])) {
-        getAvgBasePoint(x + 2, y + 0, base[1*4 + 3]);
+    if (!getBasePoint(x + 2, y + 0, base(3, 1))) {
+        getAvgBasePoint(x + 2, y + 0, base(3, 1));
     }
-    if (!getBasePoint(x + 2, y + 1, base[2*4 + 3])) {
-        getAvgBasePoint(x + 2, y + 1, base[2*4 + 3]);
+    if (!getBasePoint(x + 2, y + 1, base(3, 2))) {
+        getAvgBasePoint(x + 2, y + 1, base(3, 2));
     }
-    if (!getBasePoint(x + 2, y + 2, base[3*4 + 3])) {
-        getAvgBasePoint(x + 2, y + 2, base[3*4 + 3]);
+    if (!getBasePoint(x + 2, y + 2, base(3, 3))) {
+        getAvgBasePoint(x + 2, y + 2, base(3, 3));
     }
     if (force || complete) {
         s = new Segment(m_res);
