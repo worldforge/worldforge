@@ -1,5 +1,10 @@
+2005-03-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/AreaShader.cpp: Include config.h so that iround.h works
+	  right.
+
 2005-03-25  James Turner  <james@worldforge.org>
-	
+
 	* Mercator/Area.cpp, Mercator/Area.h, Mercator/AreaShader.cpp, 
 	  Mercator/AreaShader.h: adding missing copyright statements on the
 	  new files.

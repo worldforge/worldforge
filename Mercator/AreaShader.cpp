@@ -2,6 +2,10 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2005 Alistair Riddoch
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "Mercator/AreaShader.h"
 #include "Mercator/Area.h"
 #include "Mercator/iround.h"
