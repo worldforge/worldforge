@@ -1,3 +1,21 @@
+2003-04-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/EncoderBase.h, Atlas/EncoderBase.cpp,
+	  Atlas/Objects/gen_cpp.py:
+	  Take virtual functions out of headers, as they can't be inlined.
+
+	* Atlas/Codecs/Bach.cpp: Fix some botched headers.
+
+	* Atlas/Message/MEncoder.h: Remove the hack which solved a problem
+	  with overloaded methods hiding virtual methods.
+
+	* benchmark/Message_Move.cpp, benchmark/Objects2_Move.cpp,
+	  benchmark/Objects3_Move.cpp, benchmark/Objects_Move.cpp,
+	  benchmark/SmartPtr_Move.cpp, benchmark/Static_Move.cpp,
+	  tests/Objects/decoder1.cpp, tests/Objects/encoder1.cpp,
+	  tests/Objects/objects1.cpp, tests/Objects/objects2.cpp:
+	  Bring benchmark and tests headers into line.
+
 2003-04-10  Al Riddoch  <alriddoch@zepler.org>
 
 	* Rename src to Atlas for portability

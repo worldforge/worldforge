@@ -1,5 +1,5 @@
-#include "Objects/Dispatcher.h"
-#include "Objects/loadDefaults.h"
+#include <Atlas/Objects/Dispatcher.h>
+#include <Atlas/Objects/loadDefaults.h>
 
 #include <iostream>
 

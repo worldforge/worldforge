@@ -1,12 +1,13 @@
+#include "timer.h"
+
+#include <Atlas/Message/Object.h>
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Operation/Move.h>
+#include <Atlas/Objects/Operation/Sight.h>
+#include <Atlas/Objects/Entity/GameEntity.h>
+
 #include <iostream>
 #include <cassert>
-#include "../src/Message/Object.h"
-#include "../src/Objects/Root.h"
-#include "../src/Objects/Operation/Move.h"
-#include "../src/Objects/Operation/Sight.h"
-#include "../src/Objects/Entity/GameEntity.h"
-
-#include "timer.h"
 
 using namespace Atlas;
 using namespace Atlas::Objects;

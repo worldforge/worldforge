@@ -1,8 +1,9 @@
+#include "timer.h"
+
+#include <Atlas/Message/Object.h>
+
 #include <iostream>
 #include <cassert>
-#include "Message/Object.h"
-
-#include "timer.h"
 
 using Atlas::Message::Element;
 using namespace std;
@@ -124,7 +125,7 @@ int main(int argc, char** argv)
 
 
   NPC npc1;
-  double x,y,z;
+  double x = 0., y = 0., z = 0.;
   TIME_ON;
   for(i=0; i<100000.0; i+=1.0) {
     //human:

@@ -1,7 +1,7 @@
-#include "Objects/Root.h"
-#include "Objects/Encoder.h"
-#include "Message/DecoderBase.h"
-#include "Objects/loadDefaults.h"
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Encoder.h>
+#include <Atlas/Message/DecoderBase.h>
+#include <Atlas/Objects/loadDefaults.h>
 
 #include <string>
 #include <iostream>

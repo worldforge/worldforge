@@ -1,11 +1,12 @@
+#include <Atlas/Message/Object.h>
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/objectFactory.h>
+#include <Atlas/Objects/loadDefaults.h>
+
 #include <iostream>
 #include <cassert>
-#include "Message/Object.h"
-#include "Objects/Root.h"
-#include "Objects/Operation.h"
-#include "Objects/Entity.h"
-#include "Objects/objectFactory.h"
-#include "Objects/loadDefaults.h"
 
 using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Look;

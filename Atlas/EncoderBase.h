@@ -31,31 +31,25 @@ public:
     /// You will need to implement this in subclasses
     EncoderBase(Atlas::Bridge* b) : m_bridge(b) { }
 
-    virtual ~EncoderBase() { }
+    virtual ~EncoderBase();
     
-    virtual void streamBegin() { m_bridge->streamBegin(); }
-    virtual void streamMessage() { m_bridge->streamMessage(); }
-    virtual void streamEnd() { m_bridge->streamEnd(); }
+    virtual void streamBegin();
+    virtual void streamMessage();
+    virtual void streamEnd();
     
-    virtual void mapMapItem(const std::string& name)
-    { m_bridge->mapMapItem(name); }
-    virtual void mapListItem(const std::string& name)
-    { m_bridge->mapListItem(name); }
-    virtual void mapIntItem(const std::string& name, long i)
-    { m_bridge->mapIntItem(name, i); }
-    virtual void mapFloatItem(const std::string& name, double d)
-    { m_bridge->mapFloatItem(name, d); }
-    virtual void mapStringItem(const std::string& name, const std::string& s)
-    { m_bridge->mapStringItem(name, s); }
-    virtual void mapEnd() { m_bridge->mapEnd(); }
+    virtual void mapMapItem(const std::string& name);
+    virtual void mapListItem(const std::string& name);
+    virtual void mapIntItem(const std::string& name, long i);
+    virtual void mapFloatItem(const std::string& name, double d);
+    virtual void mapStringItem(const std::string& name, const std::string& s);
+    virtual void mapEnd();
     
-    virtual void listMapItem() { m_bridge->listMapItem(); }
-    virtual void listListItem() { m_bridge->listListItem(); }
-    virtual void listIntItem(long i) { m_bridge->listIntItem(i); }
-    virtual void listFloatItem(double d) { m_bridge->listFloatItem(d); }
-    virtual void listStringItem(const std::string& s)
-    { m_bridge->listStringItem(s); }
-    virtual void listEnd() { m_bridge->listEnd(); }
+    virtual void listMapItem();
+    virtual void listListItem();
+    virtual void listIntItem(long i);
+    virtual void listFloatItem(double d);
+    virtual void listStringItem(const std::string& s);
+    virtual void listEnd();
 
 protected:
     /// The bridge that requests are forwarded to.

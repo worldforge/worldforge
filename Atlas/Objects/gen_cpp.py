@@ -283,6 +283,14 @@ void %(classname)s::free()
 
 """ % vars()) #"for xemacs syntax highlighting
 
+    def destructor_im(self, obj):
+        classname = self.classname
+        self.write("""%(classname)s::~%(classname)s()
+{
+}
+
+""" % vars()) #"for xemacs syntax highlighting
+
     def instanceof_im(self, obj):
         classname_base = self.get_cpp_parent(obj)
         classname = self.classname
@@ -345,7 +353,7 @@ void %(classname)s::free()
         self.write("public:\n")
         self.constructors_if(obj, static_attrs)
         self.doc(4, "Default destructor.")
-        self.write("    virtual ~" + self.classname + "() { }\n")
+        self.write("    virtual ~" + self.classname + "();\n")
         self.write("\n")
         self.doc(4, 'Is this instance of some class?')
         self.write("    virtual bool instanceOf(int classNo) const;\n")
@@ -446,6 +454,7 @@ void %(classname)s::free()
             self.sendcontents_im(obj, static_attrs)
             self.asobject_im(obj, static_attrs)
             self.addtoobject_im(obj, static_attrs)
+        self.destructor_im(obj)
         self.instanceof_im(obj)
         self.freelist_im()
 

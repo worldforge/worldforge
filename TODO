@@ -1,5 +1,11 @@
 New TODO by Al Riddoch
 
+See whether we can re-work EncoderBase so that we avoid the little stub
+functions that just pass straight through to the bridge. It may also be
+possible to eliminate the virtualisation in the Encoder classes.
+
+Avoid double copy when encoding parents attribute of Root.
+
 There is some inefficient copying going on in the way args are encoded.
 
 Note that most people are not interested in the Objects::Decoder also

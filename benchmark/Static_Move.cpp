@@ -1,7 +1,7 @@
+#include "timer.h"
+
 #include <iostream>
 #include <cassert>
-
-#include "timer.h"
 
 using namespace std;
 

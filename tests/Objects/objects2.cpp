@@ -1,17 +1,11 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cassert>
-#include <vector>
-
-#include "Message/Object.h"
-#include "Objects/Root.h"
-#include "Objects/Entity.h"
-#include "Objects/Operation.h"
-#include "Objects/Encoder.h"
-#include "Objects/Dispatcher.h"
-#include "EncoderBase.h"
-#include "Objects/loadDefaults.h"
+#include <Atlas/Message/Object.h>
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Encoder.h>
+#include <Atlas/Objects/Dispatcher.h>
+#include <Atlas/EncoderBase.h>
+#include <Atlas/Objects/loadDefaults.h>
 //#include "../../src/Net/Stream.h"
 #include "../../tutorial/DebugBridge.h"
 
@@ -19,10 +13,16 @@
 
 #define USE_XML 1
 #if USE_XML
-#include "Codecs/XML.h"
+#include <Atlas/Codecs/XML.h>
 #else
-#include "Codecs/Packed.h"
+#include <Atlas/Codecs/Packed.h>
 #endif
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cassert>
+#include <vector>
 
 #if USE_XML
 #define USE_FILE 0

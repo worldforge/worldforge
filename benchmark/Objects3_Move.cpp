@@ -1,12 +1,13 @@
+#include "timer.h"
+
+#include <Atlas/Message/Object.h>
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/loadDefaults.h>
+
 #include <iostream>
 #include <cassert>
-#include "Message/Object.h"
-#include "Objects/Root.h"
-#include "Objects/Operation.h"
-#include "Objects/Entity.h"
-#include "Objects/loadDefaults.h"
-
-#include "timer.h"
 
 using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Move;
@@ -119,7 +120,7 @@ int main(int argc, char** argv)
     }
     TIME_OFF("Plain creating of sight operation");
     NPC npc1;
-    double x,y,z;
+    double x = 0., y = 0., z = 0.;
     TIME_ON;
     for(i=0; i<MAX_ITER; i+=1.0) {
         //human:
