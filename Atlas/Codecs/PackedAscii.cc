@@ -1,5 +1,5 @@
-// This file may be redistributed and modified under the terms of the
-// GNU Lesser General Public License (See COPYING for details).
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
 
 #include "../Stream/Codec.h"
@@ -37,7 +37,6 @@ public:
     virtual void MapItem(const std::string& name, int);
     virtual void MapItem(const std::string& name, float);
     virtual void MapItem(const std::string& name, const std::string&);
-    virtual void MapItem(const std::string& name, const Atlas::Object&);
     virtual void MapEnd();
     
     virtual void ListItem(const Map&);
@@ -45,7 +44,6 @@ public:
     virtual void ListItem(int);
     virtual void ListItem(float);
     virtual void ListItem(const std::string&);
-    virtual void ListItem(const Atlas::Object&);
     virtual void ListEnd();
 
 protected:
@@ -55,7 +53,8 @@ protected:
     Bridge* bridge;
 };
 
-namespace {
+namespace
+{
     Codec::Factory<PackedAscii> factory("PackedAscii", Codec::Metrics(1, 2));
 }
 
@@ -105,11 +104,6 @@ void PackedAscii::MapItem(const std::string& name, const std::string& data)
             hexEncode("+", "+{}[]()@#$=", "", data);
 }
 
-void PackedAscii::MapItem(const std::string& name, const Atlas::Object& data)
-{
-    // FIXME recursive...
-}
-
 void PackedAscii::MapEnd()
 {
     socket << "]";
@@ -138,11 +132,6 @@ void PackedAscii::ListItem(float data)
 void PackedAscii::ListItem(const std::string& data)
 {
     socket << "$=" << hexEncode("+", "", "+{}[]()@#$=", data);
-}
-
-void PackedAscii::ListItem(const Atlas::Object& data)
-{
-    // FIXME recursive...
 }
 
 void PackedAscii::ListEnd()

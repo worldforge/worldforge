@@ -1,7 +1,6 @@
-// This file may be redistributed and modified under the terms of
+// This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright (C) 2000 Stefanus Du Toit
-// Parts taken from Dmitry Derevyanko's Gzip.cc
+// Copyright (C) 2000 Stefanus Du Toit, Dmitry Derevyanko
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

@@ -1,8 +1,7 @@
 
 lib_LTLIBRARIES = libAtlasCodecs.la
 
-libAtlasCodecsincludedir = $(includedir)/Atlas/Codecs
-
 libAtlasCodecs_la_SOURCES = \
-        PackedAscii.h \
+	Utility.h \
+        PackedAscii.cc \
 	XML.cc

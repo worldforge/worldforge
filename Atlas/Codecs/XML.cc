@@ -1,5 +1,5 @@
-// This file may be redistributed and modified under the terms of the
-// GNU Lesser General Public License (See COPYING for details).
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
 #include "../Stream/Codec.h"
@@ -22,7 +22,6 @@ class XML : public Codec
     virtual void MapItem(const std::string& name, int);
     virtual void MapItem(const std::string& name, float);
     virtual void MapItem(const std::string& name, const std::string&);
-    virtual void MapItem(const std::string& name, const Atlas::Object&);
     virtual void MapEnd();
     
     virtual void ListItem(const Map&);
@@ -30,7 +29,6 @@ class XML : public Codec
     virtual void ListItem(int);
     virtual void ListItem(float);
     virtual void ListItem(const std::string&);
-    virtual void ListItem(const Atlas::Object&);
     virtual void ListEnd();
 
     protected:
@@ -89,11 +87,6 @@ void XML::MapItem(const std::string& name, const std::string& data)
     socket << "<string name=\"" << name << "\">" << data << "</string>";
 }
 
-void XML::MapItem(const std::string& name, const Atlas::Object& data)
-{
-    // FIXME recurse through object and send it
-}
-
 void XML::MapEnd()
 {
     socket << "</map>";
@@ -122,11 +115,6 @@ void XML::ListItem(float data)
 void XML::ListItem(const std::string& data)
 {
     socket << "<string>" << data << "</string>";
-}
-
-void XML::ListItem(const Atlas::Object& data)
-{
-    // FIXME recurse through object and send it
 }
 
 void XML::ListEnd()
