@@ -9,6 +9,8 @@
 #ifndef __AtlasObject_h_
 #define __AtlasObject_h_
 
+#include "AtlasDebug.h"
+
 #ifdef _WIN32
 #include <Python/python.h>
 #else
@@ -90,6 +92,9 @@ static	int AStringList;
 
 /** "typ" value for a List of Objects */
 static	int AObjList;
+
+/** return string type description for debugging */
+	char* typeString();
 
 /** overload assignment so copying works right */
 	AObject &operator=(const AObject& src);

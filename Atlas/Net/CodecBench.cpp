@@ -87,8 +87,6 @@ void CodecBench::execute()
 	printf("PAS Encode/Sec = %.2f\n", encloop);
 	fflush(stdout);
 
-	exit(0);
-
 	stim = time(NULL);
 
 	for (i=0; i<50000; i++) {

@@ -6,7 +6,8 @@ RANLIB  =	ranlib
 libDirs	=	-L$(OUTDIR)
 incDirs	=	-I. -I/usr/include/python1.5
 LIBS	=	-lstdc++ -lpython1.5 -lAtlas -ldl
-C_FLAGS	=	-g -D_ADebug_
+#C_FLAGS	=	-g -D_ADebug_
+C_FLAGS	=	-O3
 EXE_EXT =
 MK_DEP  =	$(CC) $(C_FLAGS) $(incDirs) -MM
 
