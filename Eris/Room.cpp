@@ -8,7 +8,7 @@
 #include <Eris/Person.h>
 #include <Eris/Log.h>
 #include <Eris/Exceptions.h>
-#include <Eris/Player.h>
+#include <Eris/Account.h>
 
 #include <sigc++/object_slot.h>
 

@@ -8,7 +8,7 @@
 #include <Eris/Log.h>
 #include <Eris/View.h>
 #include <Eris/IGRouter.h>
-#include <Eris/Player.h>
+#include <Eris/Account.h>
 #include <Eris/Exceptions.h>
 
 #include <wfmath/atlasconv.h>
@@ -228,7 +228,6 @@ void Avatar::onEntityAppear(Entity* ent)
     if (ent->getId() == m_entityId) {
         assert(m_entity == NULL);
         m_entity = ent;
-        debug() << "Avatar got appearance for player entity, emiting InGame";
         InGame.emit(this);
     }
 }

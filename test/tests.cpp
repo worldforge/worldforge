@@ -9,7 +9,7 @@
 #include "testUtils.h"
 
 #include <Eris/Connection.h>
-#include <Eris/Player.h>
+#include <Eris/Account.h>
 #include <Eris/Avatar.h>
 #include <Eris/Entity.h>
 #include <Eris/View.h>

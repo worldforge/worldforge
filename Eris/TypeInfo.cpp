@@ -59,7 +59,6 @@ void TypeInfo::processTypeData(const Root &atype)
         return;
     }
         
-    debug() << "got type data for " << m_name;
     const StringList& parents(atype->getParents());
     for (StringList::const_iterator P = parents.begin(); P != parents.end(); ++P)
         addParent(m_typeService->getTypeByName(*P));
@@ -73,7 +72,6 @@ void TypeInfo::processTypeData(const Root &atype)
         for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C)
             addChild(m_typeService->getTypeByName(C->asString()));
     }
-    
       
     validateBind();
 }

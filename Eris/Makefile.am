@@ -16,7 +16,7 @@ liberis_1_3_la_SOURCES = \
 	Exceptions.cpp \
 	Entity.cpp \
 	Lobby.cpp \
-	Player.cpp \
+	Account.cpp \
 	BaseConnection.cpp \
 	Connection.cpp \
 	Types.cpp \
@@ -52,7 +52,7 @@ liberis_HEADERS = \
 	Factory.h \
 	Entity.h \
 	EntityRouter.h \
-	Player.h \
+	Account.h \
 	Types.h \
 	IGRouter.h \
 	LogStream.h \

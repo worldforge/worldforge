@@ -2,7 +2,7 @@
     #include "config.h"
 #endif
 
-#include <Eris/Player.h>
+#include <Eris/Account.h>
 #include <Eris/Connection.h>
 #include <Eris/LogStream.h>
 #include <Eris/Exceptions.h>
@@ -324,9 +324,7 @@ void Player::createCharacterHandler(long serialno)
 
 Avatar* Player::takeCharacter(const std::string &id)
 {
-    StringSet::iterator C = m_characterIds.find(id);
-    if (C == m_characterIds.end())
-    {
+    if (m_characterIds.count(id) == 0) {
         error() << "Character '" << id << "' not owned by Player " << m_username;
         return NULL;
     }
@@ -420,6 +418,8 @@ void Player::loginError(const Error& err)
     std::string msg = args[0]->getAttr("message").asString();
     warning() << "got login error: " << msg;
     LoginFailure.emit(msg);
+    
+    m_status = DISCONNECTED;
 }
 
 void Player::sightCharacter(const GameEntity& ge)

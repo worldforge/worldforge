@@ -6,7 +6,7 @@
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
 #include <Eris/Person.h>
-#include <Eris/Player.h>
+#include <Eris/Account.h>
 #include <Eris/Redispatch.h>
 
 #include <sigc++/object_slot.h>

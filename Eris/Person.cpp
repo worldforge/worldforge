@@ -7,7 +7,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/Lobby.h>
 #include <Eris/Connection.h>
-#include <Eris/Player.h>
+#include <Eris/Account.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>

@@ -1,3 +1,11 @@
+2004-08-03  James Turner  <james@worldforge.org>
+
+	* Rename Player to Account.
+	
+	* Eris/Account.cpp: fix loginError to put status back to DISCONNECTED.
+	  This means it should be possible to try another login after an error,
+	  instead of having the state get wedged.
+
 2004-08-01  James Turner  <james@worldforge.org>
 
 	* Remove lots of debug output all over the place
