@@ -5,9 +5,11 @@
 #ifndef ATLAS_STREAM_CODEC_H
 #define ATLAS_STREAM_CODEC_H
 
-#include "Factory.h"
 #include "../Object/Object.h"
+#include "../Net/Socket.h"
+#include "Filter.h"
 
+#include <list>
 #include <algorithm>
 
 namespace Atlas { namespace Stream {
@@ -16,7 +18,8 @@ class Codec
 {
     public:
 
-    virtual ~Codec() { }
+    Codec(Socket*, Filter* = 0);
+    virtual ~Codec();
 
     // Interface for top level context
 
@@ -95,6 +98,11 @@ class Codec
 	std::string name;
 	Metrics metrics;
     };
+
+    protected:
+
+    Socket *socket;
+    Filter *filter;
 };
 
 } } // Atlas::Stream

@@ -16,8 +16,9 @@ namespace Atlas { namespace Stream {
 class Filter
 {
     public:
-    
-    virtual ~Filter() { };
+   
+    Filter(Filter* = 0);
+    virtual ~Filter();
 
     virtual void Begin() = 0;
     virtual void End() = 0;
@@ -84,6 +85,10 @@ class Filter
 	std::string name;
 	Metrics metrics;
     };
+
+    protected:
+
+    Filter* next;
 };
 
 } } // Atlas::Stream

@@ -8,3 +8,12 @@ using namespace std;
 using namespace Atlas::Stream;
 
 list<Factory<Filter>*> Filter::factories;
+
+Atlas::Stream::Filter::Filter(Filter* next) : next(next)
+{
+}
+
+Atlas::Stream::Filter::~Filter()
+{
+    delete next;
+}
