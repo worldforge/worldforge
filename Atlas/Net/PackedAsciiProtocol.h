@@ -9,9 +9,9 @@
 #ifndef __AtlasPackedAsciiProtocol_h_
 #define __AtlasPackedAsciiProtocol_h_
 
-#include "AtlasProtocol.h"
-#include "AtlasPackedAsciiEncoder.h"
-#include "AtlasPackedAsciiDecoder.h"
+#include "Protocol.h"
+#include "PackedAsciiEncoder.h"
+#include "PackedAsciiDecoder.h"
 
 class APackedAsciiProtocol: public AProtocol
 {

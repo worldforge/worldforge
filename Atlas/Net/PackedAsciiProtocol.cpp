@@ -6,8 +6,8 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasProtocol.h"
-#include "AtlasPackedAsciiProtocol.h"
+#include "Protocol.h"
+#include "PackedAsciiProtocol.h"
 
 APackedAsciiProtocol::APackedAsciiProtocol()
 {

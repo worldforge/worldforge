@@ -9,7 +9,7 @@
 #ifndef __EchoTest_h_
 #define __EchoTest_h_
 
-#include "AtlasTransport.h"
+#include "Transport.h"
 
 #include <string.h>
 #include <stdio.h>

@@ -13,7 +13,7 @@
 #define IntList_SET_ITEM(op, i, v)	(((IntListObject *)(op))->ob_item[i] = (v))
 #define IntList_GET_SIZE(op)		(((IntListObject *)(op))->ob_size)
 
-#include "AtlasXList_h.inc"
+#include "XList_h.inc"
 
 #endif
 

@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasDebug.h"
+#include "Debug.h"
 
 int 	ADebug::doDebug = 0;
 FILE*	ADebug::logfile = NULL;

@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-#include "AtlasCodec.h"
+#include "Codec.h"
 
 ACodec::ACodec(AProtocol* aproto)
 {

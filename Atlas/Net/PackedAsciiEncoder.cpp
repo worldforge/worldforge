@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasPackedAsciiEncoder.h"
+#include "PackedAsciiEncoder.h"
 
 //#include <map.h>
 #include <memory.h>

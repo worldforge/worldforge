@@ -9,9 +9,9 @@
 #ifndef __AtlasObject_h_
 #define __AtlasObject_h_
 
-#include "AtlasDebug.h"
-#include "AtlasPython.h"
-#include "AtlasTypes.h"
+#include "Debug.h"
+#include "Python.h"
+#include "Types.h"
 
 #include <string>
 using namespace std;

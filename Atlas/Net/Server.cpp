@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasServer.h"
+#include "Server.h"
 
 // start listening for connections on an established socket
 AServer::AServer(ASocket* listener)

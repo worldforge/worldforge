@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <memory.h>
 
-#include "AtlasDebug.h"
+#include "Debug.h"
 
 #include <string>
 using namespace std;

@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasSocket.h"
+#include "Socket.h"
 
 ASocket::ASocket()
 {

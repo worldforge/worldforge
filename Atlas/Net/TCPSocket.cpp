@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasTCPSocket.h"
+#include "TCPSocket.h"
 
 #if defined(_WIN32) || defined(__WINDOWS__)
 int ATCPSocket::didWSAInit = 0;

@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasProtocol.h"
+#include "Protocol.h"
 
 string	AProtocol::prefix("");
 

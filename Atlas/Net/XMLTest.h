@@ -1,9 +1,9 @@
-#include "AtlasObject.h"
+#include "Object.h"
 
 #ifndef __XMLTest_h_
 #define __XMLTest_h_
 
-#include "AtlasTransport.h"
+#include "Transport.h"
 
 class XMLTest
 {

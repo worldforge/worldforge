@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasCompressor.h"
+#include "Compressor.h"
 
 string		ACompressor::encode(string& data)
 {

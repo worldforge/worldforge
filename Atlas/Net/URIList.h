@@ -1,7 +1,7 @@
 #ifndef __AtlasURIList_h__
 #define __AtlasURIList_h__
 
-#include "AtlasURI.h"
+#include "URI.h"
 
 #define X(postfix) URI##postfix
 #define X2(prefix,postfix) prefix##URI##postfix
@@ -15,7 +15,7 @@
 #define URIList_SET_ITEM(op, i, v)	(((URIListObject *)(op))->ob_item[i] = (v))
 #define URIList_GET_SIZE(op)		(((URIListObject *)(op))->ob_size)
 
-#include "AtlasXList_h.inc"
+#include "XList_h.inc"
 
 #endif
 

@@ -1,7 +1,7 @@
 #define __implementation__
 
-#include "AtlasStringList.h"
+#include "StringList.h"
 
-#include "AtlasXList.inc"
+#include "XList.inc"
 
 

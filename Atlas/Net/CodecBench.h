@@ -1,4 +1,4 @@
-#include "AtlasObject.h"
+#include "Object.h"
 
 #ifndef __CodecBench_h_
 #define __CodecBench_h_

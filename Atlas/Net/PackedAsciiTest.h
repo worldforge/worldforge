@@ -1,8 +1,8 @@
 #ifndef __PackedAsciiTest_h_
 #define __PackedAsciiTest_h_
 
-#include "AtlasDebug.h"
-#include "AtlasObject.h"
+#include "Debug.h"
+#include "Object.h"
 
 class PackedAsciiTest
 {

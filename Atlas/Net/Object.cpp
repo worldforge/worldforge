@@ -6,7 +6,7 @@
 	email: jbarrett@box100.com
 */
 
-#include "AtlasObject.h"
+#include "Object.h"
 
 char*	AObject::typeString()
 {

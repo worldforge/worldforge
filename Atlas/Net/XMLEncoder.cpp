@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasXMLEncoder.h"
+#include "XMLEncoder.h"
 
 //#include <map.h>
 #include <memory.h>

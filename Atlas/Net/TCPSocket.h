@@ -9,8 +9,8 @@
 #ifndef __AtlasTCPSocket_h_
 #define __AtlasTCPSocket_h_
 
-#include "AtlasDebug.h"
-#include "AtlasSocket.h"
+#include "Debug.h"
+#include "Socket.h"
 
 #include <sys/types.h>
 #include <memory.h>

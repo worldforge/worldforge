@@ -9,8 +9,8 @@
 #ifndef __AtlasServer_h_
 #define __AtlasServer_h_
 
-#include "AtlasSocket.h"
-#include "AtlasClient.h"
+#include "Socket.h"
+#include "Client.h"
 
 class AServer
 {

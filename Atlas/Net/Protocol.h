@@ -9,8 +9,8 @@
 #ifndef __AtlasProtocol_h_
 #define __AtlasProtocol_h_
 
-#include "AtlasProtocolEncoder.h"
-#include "AtlasProtocolDecoder.h"
+#include "ProtocolEncoder.h"
+#include "ProtocolDecoder.h"
 
 class AProtocol
 {

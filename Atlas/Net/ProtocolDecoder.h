@@ -9,7 +9,7 @@
 #ifndef __AtlasProtocolDecoder_h_
 #define __AtlasProtocolDecoder_h_
 
-#include "AtlasObject.h"
+#include "Object.h"
 
 class AProtocolDecoder
 {

@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasClient.h"
+#include "Client.h"
 
 AClient::~AClient()
 {

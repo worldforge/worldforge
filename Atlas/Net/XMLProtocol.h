@@ -9,9 +9,9 @@
 #ifndef __AtlasXMLProtocol_h_
 #define __AtlasXMLProtocol_h_
 
-#include "AtlasProtocol.h"
-#include "AtlasXMLEncoder.h"
-#include "AtlasXMLDecoder.h"
+#include "Protocol.h"
+#include "XMLEncoder.h"
+#include "XMLDecoder.h"
 
 class AXMLProtocol: public AProtocol
 {

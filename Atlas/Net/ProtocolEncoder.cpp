@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasProtocolEncoder.h"
+#include "ProtocolEncoder.h"
 
 AProtocolEncoder::AProtocolEncoder()
 {

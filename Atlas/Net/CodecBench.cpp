@@ -6,12 +6,12 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasCodec.h"
-#include "AtlasObject.h"
-#include "AtlasProtocol.h"
+#include "Codec.h"
+#include "Object.h"
+#include "Protocol.h"
 
-#include "AtlasXMLProtocol.h"
-#include "AtlasPackedAsciiProtocol.h"
+#include "XMLProtocol.h"
+#include "PackedAsciiProtocol.h"
 
 
 #include "CodecBench.h"

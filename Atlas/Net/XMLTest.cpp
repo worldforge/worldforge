@@ -8,7 +8,7 @@
 
 #include "XMLTest.h"
 
-#include <AtlasTransport.h>
+#include "Transport.h"
 #include <string.h>
 #include <stdio.h>
 

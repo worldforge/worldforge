@@ -14,9 +14,9 @@
 
 #include <stdio.h>
 
-#include "AtlasDebug.h"
-#include "AtlasObject.h"
-#include "AtlasProtocol.h"
+#include "Debug.h"
+#include "Object.h"
+#include "Protocol.h"
 
 class ACodec
 {

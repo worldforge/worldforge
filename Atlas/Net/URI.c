@@ -1,4 +1,4 @@
-#include "AtlasURI.h"
+#include "URI.h"
 
 static PyObject *ErrorObject;
 

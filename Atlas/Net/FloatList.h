@@ -13,7 +13,7 @@
 #define FloatList_SET_ITEM(op, i, v)	(((FloatListObject *)(op))->ob_item[i] = (v))
 #define FloatList_GET_SIZE(op)		(((FloatListObject *)(op))->ob_size)
 
-#include "AtlasXList_h.inc"
+#include "XList_h.inc"
 
 #endif
 

@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasProtocolDecoder.h"
+#include "ProtocolDecoder.h"
 
 #include <stdlib.h>
 #include <string.h>

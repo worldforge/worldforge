@@ -13,7 +13,7 @@
 #define LongList_SET_ITEM(op, i, v)	(((LongListObject *)(op))->ob_item[i] = (v))
 #define LongList_GET_SIZE(op)		(((LongListObject *)(op))->ob_size)
 
-#include "AtlasXList_h.inc"
+#include "XList_h.inc"
 
 #endif
 

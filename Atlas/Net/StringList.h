@@ -13,7 +13,7 @@
 #define StringList_SET_ITEM(op, i, v)	(((StringListObject *)(op))->ob_item[i] = (v))
 #define StringList_GET_SIZE(op)		(((StringListObject *)(op))->ob_size)
 
-#include "AtlasXList_h.inc"
+#include "XList_h.inc"
 
 #endif
 

@@ -6,7 +6,7 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasPython.h"
+#include "Python.h"
 
 #ifdef _ADebug_
 

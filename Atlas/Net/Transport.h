@@ -1,31 +1,31 @@
 #ifndef __AtlasTransport_h__
 #define __AtlasTransport_h__
 
-#include <AtlasDebug.h>
+#include "Debug.h"
 
-#include <AtlasPython.h>
-#include <AtlasTypes.h>
-#include <AtlasObject.h>
+#include "Python.h"
+#include "Types.h"
+#include "Object.h"
 
-#include <AtlasProtocol.h>
-#include <AtlasProtocolDecoder.h>
-#include <AtlasProtocolEncoder.h>
-#include <AtlasCodec.h>
-#include <AtlasCompressor.h>
+#include "Protocol.h"
+#include "ProtocolDecoder.h"
+#include "ProtocolEncoder.h"
+#include "Codec.h"
+#include "Compressor.h"
 
-#include <AtlasPackedAsciiDecoder.h>
-#include <AtlasPackedAsciiEncoder.h>
-#include <AtlasPackedAsciiProtocol.h>
+#include "PackedAsciiDecoder.h"
+#include "PackedAsciiEncoder.h"
+#include "PackedAsciiProtocol.h"
 
-#include <AtlasXMLDecoder.h>
-#include <AtlasXMLEncoder.h>
-#include <AtlasXMLProtocol.h>
+#include "XMLDecoder.h"
+#include "XMLEncoder.h"
+#include "XMLProtocol.h"
 
-#include <AtlasSocket.h>
-#include <AtlasTCPSocket.h>
+#include "Socket.h"
+#include "TCPSocket.h"
 
-#include <AtlasClient.h>
-#include <AtlasServer.h>
+#include "Client.h"
+#include "Server.h"
 
 void initAtlasTransport();
 

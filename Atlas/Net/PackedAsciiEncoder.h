@@ -10,8 +10,8 @@
 #define __AtlasPackedAsciiEncoder_h_
 
 
-#include "AtlasObject.h"
-#include "AtlasProtocolEncoder.h"
+#include "Object.h"
+#include "ProtocolEncoder.h"
 
 #include <memory.h>
 

@@ -6,9 +6,9 @@
 	email   : jbarrett@box100.com
 */
 
-#include "AtlasObject.h"
-#include "AtlasProtocol.h"
-#include "AtlasPackedAsciiDecoder.h"
+#include "Object.h"
+#include "Protocol.h"
+#include "PackedAsciiDecoder.h"
 
 #include <memory.h>
 #include <stdio.h>

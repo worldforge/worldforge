@@ -9,8 +9,8 @@
 #ifndef __CopyTest_h_
 #define __CopyTest_h_
 
-#include "AtlasDebug.h"
-#include "AtlasObject.h"
+#include "Debug.h"
+#include "Object.h"
 
 #include <string.h>
 #include <stdio.h>

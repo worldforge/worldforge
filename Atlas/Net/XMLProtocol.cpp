@@ -6,8 +6,8 @@
         email           : jbarrett@box100.com
 */
 
-#include "AtlasProtocol.h"
-#include "AtlasXMLProtocol.h"
+#include "Protocol.h"
+#include "XMLProtocol.h"
 
 AXMLProtocol::AXMLProtocol()
 {

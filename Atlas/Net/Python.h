@@ -9,7 +9,7 @@
 #ifndef __AtlasPython_h_
 #define __AtlasPython_h_
 
-#include "AtlasDebug.h"
+#include "Debug.h"
 
 #include <Python.h>
 

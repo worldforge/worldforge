@@ -9,9 +9,9 @@
 #ifndef __SocketTest_h_
 #define __SocketTest_h_
 
-#include "AtlasObject.h"
-#include "AtlasSocket.h"
-#include "AtlasTCPSocket.h"
+#include "Object.h"
+#include "Socket.h"
+#include "TCPSocket.h"
 
 #include <string.h>
 #include <stdio.h>
