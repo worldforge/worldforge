@@ -1,3 +1,10 @@
+2004-08-10  Ron Steinke <rsteinke@w-link.net>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h: Fixed a possible
+	  blocking read of string escaped characters to check whether
+	  data was available between reading the escape and the escaped
+	  character.
+
 2004-08-09  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h, Atlas/Codecs/Packed.cpp,

@@ -289,13 +289,19 @@ void Bach::parseString(char next)
         break;
 
     case '\\':
-        m_data += m_socket.get();
+	m_state.push(PARSE_LITERAL);
         break;
 
     default:
         m_data += next;
         break;
     }
+}
+
+void Bach::parseLiteral(char next)
+{
+    m_data += next;
+    m_state.pop();
 }
 
 void Bach::parseData(char next)
@@ -457,6 +463,7 @@ void Bach::poll(bool can_read)
         case PARSE_INT:	       parseInt(next); break;
         case PARSE_FLOAT:      parseFloat(next); break;
         case PARSE_STRING:     parseString(next); break;
+	case PARSE_LITERAL:    parseLiteral(next); break;
         case PARSE_NAME:       parseName(next); break;
 	}
     }

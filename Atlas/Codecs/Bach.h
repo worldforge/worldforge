@@ -59,7 +59,8 @@ class Bach : public Codec
         PARSE_DATA,
         PARSE_INT,
         PARSE_FLOAT,
-        PARSE_STRING
+        PARSE_STRING,
+	PARSE_LITERAL // for literal character escaped with backslash
     };
 
     std::string m_name, m_data;
@@ -73,6 +74,7 @@ class Bach : public Codec
     inline void parseInt(char);
     inline void parseFloat(char);
     inline void parseString(char);
+    inline void parseLiteral(char);
     inline void parseName(char);
 
     inline const std::string encodeString(std::string);
