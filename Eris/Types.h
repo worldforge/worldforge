@@ -92,19 +92,6 @@ typedef std::list<Atlas::Message::Element> MessageList;
 class Entity;
 typedef Entity* EntityPtr;
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#ifdef _WIN32
-	#include <winsock.h>
-	typedef SOCKET Socket;
-#else
-	typedef int Socket;
-#endif
-
-// would prefer a set (for faster find() impl), but that assumed an ordering
-// operation on Sockets; this is fine for Unix, but less certain for Win32
-typedef std::list<Socket> SocketList;
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// A Generic 'event' occurred signal, especially for use with Wait exceptions

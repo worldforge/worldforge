@@ -1,3 +1,8 @@
+Thursday, 19th December, James Turner <james@worldforge.org>
+
+    * Remove ancient socket references from Eris/Types.h - long
+      since deprecated in favour of skstream
+
 Monday, 8th December, James Turner, <james@worldforge.org>
 
     * Fix a warning on Mingw32, due to me using -1 in BaseConnection,
