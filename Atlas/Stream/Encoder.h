@@ -3,7 +3,12 @@
 // Copyright (C) 2000 Michael Day
 
 // $Log$
-// Revision 1.11  2000-02-22 05:31:22  mike
+// Revision 1.12  2000-02-22 05:34:03  mike
+// Removed inclusion of Filter into Decoder and Encoder.
+// A arbitrary chain of filters can now be fairly easily attached to these
+// by use of signals and slots.
+//
+// Revision 1.11  2000/02/22 05:31:22  mike
 // Fixed a quick namespace bug relating to use of unqualified Atlas::Object.
 //
 // Revision 1.10  2000/02/22 03:52:38  mike
@@ -17,7 +22,6 @@
 #ifndef ATLAS_STREAM_ENCODER_H
 #define ATLAS_STREAM_ENCODER_H
 
-#include "Filter.h"
 #include "../Object/Object.h"
 
 #include <sigc++/signal_system.h>
