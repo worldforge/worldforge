@@ -4,6 +4,9 @@
 namespace Atlas
 {
 
+Variant::Variant()	{ rc=1; rt = None; }
+Variant::~Variant()	{}
+
 void	Variant::decref()
 {
 	if (--rc > 0) return;

@@ -31,8 +31,8 @@ public:
 	int	rc:12;	// refcount
 	int	rt:4;	// data type
 
-	Variant()	{ rc=1; rt = None; }
-virtual	~Variant() {};
+	Variant();
+virtual	~Variant();
 
 	void	incref()	{ rc++; }
 	void	decref();
