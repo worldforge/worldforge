@@ -1,3 +1,7 @@
+2003-02-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Terrain.h: Add accessor for point store.
+
 2003-02-17  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Segment.h, src/Segment.cpp: Add a row and column of extra

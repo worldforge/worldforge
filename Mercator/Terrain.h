@@ -58,6 +58,10 @@ class Terrain {
         return m_segments;
     }
 
+    const Pointstore & getPoints() const {
+        return m_basePoints;
+    }
+
     Segment * getSegmentSafe(int x, int y, bool force = true);
     Segment * getSegmentQuik(int x, int y) const;
 
