@@ -6,6 +6,9 @@ import random
 import atlas
 sys.path.append("../../../../servers/cyphesis/modules/")
 from avl_tree import avl_tree
+import Binary
+reload(Binary)
+from Binary import Binary
 
 def deb(): import pdb; pdb.pm()
 
@@ -55,7 +58,7 @@ def disp_file_stats(msg_count, file_name, description):
     disp_stats(msg_count,size,description)
 
 def disp_stats(count,total_len,description):
-    print "%s:\n Total length: %6i, Length/msg: %4.0f" % \
+    print "%s:\n Total length: %6i, Length/msg: %6.1f" % \
           (description,total_len,1.0*total_len/count)
 
 def calculate_stats(msgs, encode, description):
@@ -113,82 +116,81 @@ def encode_binaryX_size(msg, X):
         return 1+1+len(msg)
     raise TypeError,msg
 
-int_enum=0
-float_enum=1
-string_enum=2
-list_enum=3
-map_enum=4
-latest_enum=5
-attrib_dict={}
-def encode_binaryX(msg, X):
-    res=""
-    if type(msg)==atlas.ObjectType:
-        if msg.is_map():
-            #type+len
-            res = res + chr(map_enum) + chr(len(msg))
-            for key in msg.keys():
-                #1: len(name) + name + value
-                #2: name_id + value
-                #each value themself add type (+1)
-                if X==1:
-                    res = res + chr(len(key))+key
-                else:
-                    key_id = attrib_dict.get(key)
-                    if not key_id:
-                        global latest_enum
-                        key_id = attrib_dict[key] = latest_enum
-                        latest_enum = latest_enum + 1
-                    res = res + chr(key_id)
-                res = res + encode_binaryX(getattr(msg,key),X)
-            return res
-        #is_list()
-        #len(type+len)
-        res = res + chr(list_enum) + chr(len(msg))
-        for item in msg:
-            res = res + encode_binaryX(item,X)
-        return res
-    if type(msg)==IntType:
-        return chr(int_enum) + array('l',[msg]).tostring()
-    if type(msg)==FloatType:
-        return chr(int_enum) + array('d',[msg]).tostring()
-    if type(msg)==StringType:
-        return chr(int_enum) + chr(len(msg)) + msg
-    raise TypeError,msg
-
 
 #see ftp://ftp.worldforge.org/users/aloril/atlas
 def all_encoding_stats(file_name="cyphesis_atlas_XML_2000-03-27.log"):
     """output with default file_name:
+Test file: cyphesis_atlas_XML_2000-03-27.log
 Msg count: 216
 XML:
- Total length: 306086, Length/msg: 1417
+ Total length: 306086, Length/msg: 1417.1
 gzip -9 compressed file:
- Total length:  12199, Length/msg:   56
+ Total length:  12199, Length/msg:   56.5
 bzip2 -9 compressed file:
- Total length:   7561, Length/msg:   35
+ Total length:   7561, Length/msg:   35.0
 PASCII:
- Total length:  85472, Length/msg:  396
+ Total length:  85472, Length/msg:  395.7
 gzip -9 compressed file:
- Total length:   8066, Length/msg:   37
+ Total length:   8066, Length/msg:   37.3
 bzip2 -9 compressed file:
- Total length:   6626, Length/msg:   31
+ Total length:   6626, Length/msg:   30.7
 BINARY1:
- Total length:  83980, Length/msg:  389
+ Total length:  83980, Length/msg:  388.8
 gzip -9 compressed file:
- Total length:   8373, Length/msg:   39
+ Total length:   8373, Length/msg:   38.8
 bzip2 -9 compressed file:
- Total length:   7204, Length/msg:   33
+ Total length:   7204, Length/msg:   33.4
 BINARY2:
- Total length:  57110, Length/msg:  264
+ Total length:  57110, Length/msg:  264.4
 gzip -9 compressed file:
- Total length:   7868, Length/msg:   36
+ Total length:   7868, Length/msg:   36.4
 bzip2 -9 compressed file:
- Total length:   6906, Length/msg:   32
+ Total length:   6906, Length/msg:   32.0
+BINARY3:
+ Total length:  43997, Length/msg:  203.7
+gzip -9 compressed file:
+ Total length:   8315, Length/msg:   38.5
+bzip2 -9 compressed file:
+ Total length:   7692, Length/msg:   35.6
+
+Test file: CyphesisClient_fromServerViewpoint2.log
+Msg count: 715
+XML:
+ Total length: 960968, Length/msg: 1344.0
+gzip -9 compressed file:
+ Total length:  25651, Length/msg:   35.9
+bzip2 -9 compressed file:
+ Total length:  13748, Length/msg:   19.2
+PASCII:
+ Total length: 200676, Length/msg:  280.7
+gzip -9 compressed file:
+ Total length:  17605, Length/msg:   24.6
+bzip2 -9 compressed file:
+ Total length:  13013, Length/msg:   18.2
+BINARY1:
+ Total length: 206101, Length/msg:  288.3
+gzip -9 compressed file:
+ Total length:  21787, Length/msg:   30.5
+bzip2 -9 compressed file:
+ Total length:  17140, Length/msg:   24.0
+BINARY2:
+ Total length: 131842, Length/msg:  184.4
+gzip -9 compressed file:
+ Total length:  20528, Length/msg:   28.7
+bzip2 -9 compressed file:
+ Total length:  16908, Length/msg:   23.6
+BINARY3:
+ Total length: 152391, Length/msg:  213.1
+gzip -9 compressed file:
+ Total length:  21779, Length/msg:   30.5
+bzip2 -9 compressed file:
+ Total length:  17905, Length/msg:   25.0
     """
     global all_msg
     all = open(file_name).read()
     msg_strings = re.split("<!-- .*?: -->",all)[1:]
     all_msg = map(atlas.XML2Object,msg_strings)
+    print "Test file:",file_name
     print "Msg count:",len(all_msg)
     #XML size
     xml = atlas.XMLProtocol()
@@ -201,7 +203,61 @@ bzip2 -9 compressed file:
     calculate_stats(all_msg,codec.encodeMessage,"PASCII")
 
     #BINARYX size
-    for i in [1,2]:
-        calculate_stats(all_msg,
-                        lambda msg,X=i:encode_binaryX(msg,X),
+    for i in [1,2,3]:
+        binary_codec = Binary(i)
+        calculate_stats(all_msg,binary_codec.encode,
                         "BINARY%i" % i)
+
+def pa(object):
+    pascii = atlas.PackedProtocol()
+    codec = atlas.Codec(pascii)
+    return codec.encodeMessage(object)
+
+def all_tests():
+    all_encoding_stats()
+    all_encoding_stats("CyphesisClient_fromServerViewpoint2.log")
+
+
+msg = atlas.XML2Object("""
+<obj>
+	<map>
+		<string name="abstract_type">operation</string>
+		<list name="parent">
+		<string>error</string>
+		</list>
+		<int name="serialno">2</int>
+		<int name="refno">1</int>
+		<map name="time">
+			<float name="seconds">19035676005.9</float>
+			<string name="time_string">0612-01-01 07:46:45.9</string>
+		</map>
+		<list name="args">
+			<map>
+				<string name="message">Account id already exist</string>
+			</map>
+			<map>
+				<string name="abstract_type">operation</string>
+				<list name="parent">
+				<string>create</string>
+				</list>
+				<int name="serialno">1</int>
+				<map name="time">
+					<float name="seconds">19035676005.9</float>
+					<string name="time_string">0612-01-01 07:46:45.9</string>
+				</map>
+				<list name="args">
+					<map>
+						<string name="password">lZYVYjmU</string>
+						<string name="id">admin</string>
+						<list name="parent">
+						<string>player</string>
+						</list>
+					</map>
+				</list>
+			</map>
+		</list>
+	</map>
+</obj>
+""")
+
+b = Binary(3)

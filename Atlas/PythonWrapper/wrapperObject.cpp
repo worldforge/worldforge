@@ -107,20 +107,46 @@ static PyMethodDef AtlasWrapper_methods[] = {
 	{NULL,		NULL}		/* sentinel */
 };
 
+//PyObject *testObj=NULL;
 static PyObject *
 AtlasWrapper_getattr(AtlasWrapperObject *self,
                      char *name)
 {
-
+  //printf("%p",testObj);
+  //return testObj;
   DEBUG(printf("DEBUG:%s:%s\n",__FUNCTION__,name));
   //>>> t("for i in range(100000): a=op.abstract_type")
   //Time: 0.78
-  //return PyInt_FromString(1); 
+  //return PyInt_FromLong(1); 
+
   //>>> t("for i in range(100000): a=op.abstract_type")
   //Time: 1.27
   //return PyString_FromString("operation");
+
+  //>>> class Op: pass
+  //... 
+  //>>> op = Op()
+  //>>> op.abstract_type = "operation"
   //>>> t("for i in range(100000): a=op.abstract_type")
+  //Time: 0.46
+
+  //>>> t("for i in range(100000): a=op.abstract_type")
+  //Atlas::Object obj;
+  //if(self->obj->get(name,obj))
+  //  return AtlasObject2PythonObject(obj);
   //Time: 17.65
+  
+
+  //>>> t("for i in range(100000): a=op.abstract_type")
+  //Atlas::Object obj;
+  //if(self->obj->get(name,obj))
+  //  return PyInt_FromLong(1); 
+  //Time: 4.19
+
+  //for(int i=0;i<100000;i++)
+  //  self->obj->get(name,obj);
+  //Time: 1.17
+
   Atlas::Object obj;
   if(self->obj->get(name,obj))
     return AtlasObject2PythonObject(obj);
@@ -380,6 +406,7 @@ initccAtlasObject()
 
         //initialize only once
         printCodec = new Atlas::Codec(new Atlas::XMLProtocol());
+        //testObj = PyInt_FromLong(1);
         //printCodec = new Atlas::Codec(new Atlas::PackedProtocol());
 
 	/* Initialize the type of the new type object here; doing it here
