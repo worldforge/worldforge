@@ -5,12 +5,8 @@
 #ifndef ATLAS_FILTER_H
 #define ATLAS_FILTER_H
 
+#include <iostream>
 #include <string>
-
-#include <streambuf>
-
-#include <cstring>
-// for memcpy
 
 namespace Atlas {
 

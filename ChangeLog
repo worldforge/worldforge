@@ -1,3 +1,8 @@
+2003-07-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Filter.h: Sort out streambuf.h problems by including
+	  iostream instead.
+
 2003-06-23  Al Riddoch  <alriddoch@zepler.org>
 
 	* Changes to Makefile.ams to try and get distcheck to work.
