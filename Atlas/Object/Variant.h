@@ -19,8 +19,8 @@ enum Type {
 };
 
 
-#define varvec vector<Variant*>
-#define varmap map<string, Variant*>
+#define varvec std::vector<Variant*>
+#define varmap std::map<std::string, Variant*>
 
 /// Base class for variant objects
 class Variant
