@@ -232,7 +232,7 @@ static	AObject	mkURI(const string& val);
 static	AObject	mkInt(long val);
 
 /** return an Long AObject */
-static	AObject	mkLong(long val);
+// static	AObject	mkLong(long val);
 
 /** return a Float AObject */
 static	AObject	mkFloat(double val);
@@ -247,7 +247,7 @@ static	AObject	mkURIList(int len);
 static	AObject	mkIntList(int len);
 
 /** return an LongList AObject */
-static	AObject	mkLongList(int len);
+// static	AObject	mkLongList(int len);
 
 /** return a FloatList AObject */
 static	AObject	mkFloatList(int len);

@@ -100,7 +100,7 @@ AObject::AObject(double src)
 
 AObject::AObject(long src)
 {
-	obj = PyLong_FromLong(src);
+	obj = PyInt_FromLong(src);
 	assert((unsigned long)obj != 1);
 }
 
@@ -112,14 +112,14 @@ AObject::AObject(int src)
 
 AObject::AObject(int len, long src, ...)
 {
-	obj = LongList_New(len);
+	obj = IntList_New(len);
 
-	LongList_SetItem(obj, 0, PyLong_FromLong(src));
+	IntList_SetItem(obj, 0, PyInt_FromLong(src));
 	va_list	va;
 	va_start(va,src);
 	for (int i=1; i<len; i++) {
 		long tmp = va_arg(va,long);
-		LongList_SetItem(obj, i, PyLong_FromLong(tmp));
+		IntList_SetItem(obj, i, PyInt_FromLong(tmp));
 	}
 	va_end(va);
 }
@@ -181,10 +181,10 @@ AObject::AObject(int len, int* src)
 
 AObject::AObject(int len, long* src)
 {
-	obj = LongList_New(len);
+	obj = IntList_New(len);
 
 	for (int i=0; i<len; i++) {
-		LongList_SetItem(obj, i, PyLong_FromLong(src[i]));
+		IntList_SetItem(obj, i, PyInt_FromLong(src[i]));
 	}
 }
 
@@ -513,7 +513,7 @@ int	AObject::set(const string& name, long src)
 	DebugMsg1(5,"Make key copy","");
 	char* tmp = strdup(name.c_str());
 	DebugMsg1(5,"Make value object","");
-	PyObject* ptmp = PyLong_FromLong(src);
+	PyObject* ptmp = PyInt_FromLong(src);
 	DebugMsg1(5,"Store to Dict","");
 	int res = PyDict_SetItemString(obj, tmp, ptmp);
 	DebugMsg1(5,"Release ownership","");
@@ -558,7 +558,7 @@ int	AObject::set(int ndx, long src)
 {
 	assert((unsigned long)obj != 1);
 	//if (!this->isLong()) return 0;
-	return PySequence_SetItem(obj, ndx, PyLong_FromLong(src));
+	return PySequence_SetItem(obj, ndx, PyInt_FromLong(src));
 }
 
 int	AObject::set(int ndx, double src)
@@ -643,7 +643,7 @@ int	AObject::append(int src)
 int	AObject::append(long src)
 {
 	int res = -1;
-	PyObject* ptmp = PyLong_FromLong(src);
+	PyObject* ptmp = PyInt_FromLong(src);
 	if (PyList_Check(obj))		res = PyList_Append(obj, ptmp);
 	if (IntList_Check(obj))		res = IntList_Append(obj, ptmp);
 	if (LongList_Check(obj))	res = LongList_Append(obj, ptmp);
@@ -730,7 +730,7 @@ int	AObject::insert(int ndx, int src)
 int	AObject::insert(int ndx, long src)
 {
 	int res = -1;
-	PyObject* ptmp = PyLong_FromLong(src);
+	PyObject* ptmp = PyInt_FromLong(src);
 	if (PyList_Check(obj))		res = PyList_Insert(obj, ndx, ptmp);
 	if (IntList_Check(obj))		res = IntList_Insert(obj, ndx, ptmp);
 	if (LongList_Check(obj))	res = LongList_Insert(obj, ndx, ptmp);
@@ -824,14 +824,14 @@ AObject AObject::mkIntList(int size)
 	return res;
 }
 
-AObject AObject::mkLongList(int size)
-{
-	PyObject* tmp = LongList_New(size);
-	AObject res(tmp);
-	Py_XDECREF(tmp);
-	assert((unsigned long)res.obj != 1);
-	return res;
-}
+// AObject AObject::mkLongList(int size)
+// {
+// 	PyObject* tmp = LongList_New(size);
+// 	AObject res(tmp);
+// 	Py_XDECREF(tmp);
+// 	assert((unsigned long)res.obj != 1);
+// 	return res;
+// }
 
 AObject AObject::mkFloatList(int size)
 {
@@ -869,14 +869,14 @@ AObject AObject::mkInt(long val)
 	return res;
 }
 
-AObject AObject::mkLong(long val)
-{
-	PyObject* tmp = PyLong_FromLong(val);
-	AObject res(tmp);
-	Py_XDECREF(tmp);
-	assert((unsigned long)res.obj != 1);
-	return res;
-}
+// AObject AObject::mkLong(long val)
+// {
+// 	PyObject* tmp = PyLong_FromLong(val);
+// 	AObject res(tmp);
+// 	Py_XDECREF(tmp);
+// 	assert((unsigned long)res.obj != 1);
+// 	return res;
+// }
 
 AObject AObject::mkFloat(double val)
 {
