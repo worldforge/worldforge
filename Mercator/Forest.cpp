@@ -13,6 +13,7 @@
 #include <wfmath/MersenneTwister.h>
 
 #include <iostream>
+#include <cmath>
 
 #ifdef HAVE_LRINTF
     #define I_ROUND(x) (::lrintf(x)) 

@@ -2,6 +2,10 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <Mercator/DepthShader.h>
 
 #include <Mercator/Segment.h>
@@ -14,6 +18,8 @@
 #else
     #define I_ROUND(x) ((int)::rint(x)) 
 #endif
+
+#include <cmath>
 
 namespace Mercator {
 

@@ -1,5 +1,11 @@
 2004-01-15  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/DepthShader.cpp, Mercator/Forest.cpp,
+	  Mercator/Terrain.cpp: Make sure config.h and cmath are
+	  being included as required.
+
+2004-01-15  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Forest.cpp: Reduce probability of tree at given node
 	  by factor of 10.
 
