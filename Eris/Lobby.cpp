@@ -144,8 +144,10 @@ void Lobby::registerCallbacks()
 	
 	// add in the basics so rooms can hook below
 	oogd->addSubdispatch(new EncapDispatcher("sound", "sound"));
-	oogd->addSubdispatch(new EncapDispatcher("appearance", "appearance"));
-	oogd->addSubdispatch(new EncapDispatcher("disappearance", "disappearance"));
+	oogd->addSubdispatch(new ClassDispatcher("appearance", "appearance"));
+	oogd->addSubdispatch(new ClassDispatcher("disappearance", "disappearance"));
+	oogd->addSubdispatch(new EncapDispatcher("sight", "sight"));
+	oogd->addSubdispatch(new EncapDispatcher("imaginary", "imaginary"));
 	
 	// the room entity callback
 	Dispatcher *d = oogd->addSubdispatch(new EncapDispatcher("sight", "sight"));
