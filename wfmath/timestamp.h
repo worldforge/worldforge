@@ -52,6 +52,11 @@ extern "C" {
 class TimeStamp;
 
 /// The difference between two timestamps
+/**
+ * This class implements the 'generic' subset of the interface in
+ * the fake class Shape, with the exception of the stream operators.
+ * It also has the full set of comparison * operators (<, <=, >, >=, ==, !=).
+ **/
 class TimeDiff
 {
   TimeDiff(long sec, long usec, bool is_valid);
@@ -71,34 +76,34 @@ class TimeDiff
   /// Get the value of a TimeDiff in (seconds, microseconds)
   std::pair<long,long> full_time() const {return std::make_pair(m_sec,m_usec);}
 
-  ///
+  bool isValid() const {return m_isvalid;}
+
+  /// increment a TimeDiff
   friend TimeDiff& operator+=(TimeDiff&, const TimeDiff&);
-  ///
+  /// decrement a TimeDiff
   friend TimeDiff& operator-=(TimeDiff&, const TimeDiff&);
-  ///
+  /// negate a TimeDiff
   TimeDiff operator-() const {return TimeDiff(-m_sec, -m_usec, m_isvalid);}
 
-  ///
+  /// add two TimeDiff instances
   friend TimeDiff operator+(const TimeDiff &a, const TimeDiff &b);
-  ///
+  /// subtract two TimeDiff instances
   friend TimeDiff operator-(const TimeDiff &a, const TimeDiff &b);
 
-  ///
+  /// advance a TimeStamp by a TimeDiff
   friend TimeStamp& operator+=(TimeStamp&, const TimeDiff&);
-  ///
+  /// regress a TimeStamp by a TimeDiff
   friend TimeStamp& operator-=(TimeStamp&, const TimeDiff&);
 
-  ///
+  /// find the result of advancing a TimeStamp
   friend TimeStamp operator+(const TimeStamp &a, const TimeDiff &msec);
-  ///
+  /// find the result of regressing a TimeStamp
   friend TimeStamp operator-(const TimeStamp &a, const TimeDiff &msec);
 
-  ///
+  /// find the time difference between two time stamps
   friend TimeDiff operator-(const TimeStamp &a, const TimeStamp &b);
 
-  ///
   friend bool operator<(const TimeDiff&, const TimeDiff&);
-  ///
   friend bool operator==(const TimeDiff&, const TimeDiff&);
 
  private:
@@ -106,16 +111,17 @@ class TimeDiff
   long m_sec, m_usec;
 };
 
-///
 inline bool operator>(const TimeDiff &a, const TimeDiff &b) {return b < a;}
-///
 inline bool operator<=(const TimeDiff &a, const TimeDiff &b) {return !(b < a);}
-///
 inline bool operator>=(const TimeDiff &a, const TimeDiff &b) {return !(a < b);}
-///
 inline bool operator!=(const TimeDiff &a, const TimeDiff &b) {return !(b == a);}
 
 /// A time stamp
+/**
+ * This class implements the 'generic' subset of the interface in
+ * the fake class Shape, with the exception of the stream operators.
+ * It also has the full set of comparison operators (<, <=, >, >=, ==, !=).
+ **/
 class TimeStamp {
  private:
 #if defined( __WIN32__ )
@@ -137,11 +143,13 @@ class TimeStamp {
   TimeStamp() : _isvalid(false) {}
   // default copy constructor is fine
 
-  ///
   friend bool operator<(const TimeStamp &a, const TimeStamp &b);
-  ///
   friend bool operator==(const TimeStamp &a, const TimeStamp &b);
 
+  friend std::ostream& operator<<(std::ostream& os, const TimeStamp&);
+  friend std::istream& operator>>(std::istream& is, TimeStamp&);
+
+  bool isValid() const {return _isvalid;}
   ///
   friend TimeStamp& operator+=(TimeStamp&, const TimeDiff&);
   ///
@@ -164,13 +172,9 @@ class TimeStamp {
 ///
 inline TimeStamp operator+(TimeDiff msec, const TimeStamp &a) {return a + msec;}
 
-///
 inline bool operator>(const TimeStamp &a, const TimeStamp &b) {return b < a;}
-///
 inline bool operator<=(const TimeStamp &a, const TimeStamp &b) {return !(b < a);}
-///
 inline bool operator>=(const TimeStamp &a, const TimeStamp &b) {return !(a < b);}
-///
 inline bool operator!=(const TimeStamp &a, const TimeStamp &b) {return !(b == a);}
 
 } // namespace WFMath

@@ -1,3 +1,9 @@
+Monday, November 4, 2002	Ron Steinke <rsteinke@w-link.net>
+
+	* Added isValid() member functions to TimeStamp, TimeDiff
+	  (the flags were already there)
+	* Improved TimeStamp, TimeDiff documentation
+
 Saturday, November 2, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Added documentation. With the exception of those associated
