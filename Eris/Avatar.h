@@ -61,6 +61,22 @@ public:
 	/// Drop an object in the Avatar's inventory at the Avatar's feet
 	void drop(Entity*, const WFMath::Vector<3>& offset = WFMath::Vector<3>(0, 0, 0));
 
+	/// Move an entity into the Avatar's inventory
+	void take(Entity*);
+
+	/// Touch an entity
+	void touch(Entity*);
+
+	/// Say something (in-game)
+	void say(const std::string&);
+
+	/// Have the character move towards a position
+	void move(const WFMath::Point<3>&);
+
+	/// Place an entity inside another one
+	void place(Entity*, Entity* container, const WFMath::Point<3>& pos
+		= WFMath::Point<3>(0, 0, 0));
+
 	static Avatar* find(Connection*, const std::string&);
 	static std::vector<Avatar*> getAvatars(Connection*);
 

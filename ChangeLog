@@ -1,3 +1,9 @@
+Sunday, 23nd November, Ron Steinke <rsteinke@w-link.net>
+
+	* Added take(), touch(), say(), move(), and place()
+	  methods to Avatar, to complement the existing drop()
+	  method.
+
 Sunday, 2nd November, Ron Steinke <rsteinke@w-link.net>
 
 	* Replaced Time::Stamp class with a typedef to

@@ -4,6 +4,8 @@
 #include <Atlas/Objects/Entity/GameEntity.h>
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Move.h>
+#include <Atlas/Objects/Operation/Touch.h>
+#include <Atlas/Objects/Operation/Talk.h>
 #include <wfmath/atlasconv.h>
 
 #include <Eris/World.h>
@@ -110,6 +112,83 @@ void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset)
     assert(_entity->getContainer());
 
     drop(e, _entity->getPosition() + offset, _entity->getContainer()->getID());
+}
+
+void Avatar::take(Entity* e)
+{
+    Atlas::Message::Element::MapType what;
+    what["loc"] = getID();
+    what["pos"] = WFMath::Point<3>(0, 0, 0).toAtlas();
+    what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
+    what["id"] = e->getID();
+
+    Atlas::Objects::Operation::Move moveOp =
+        Atlas::Objects::Operation::Move::Instantiate();
+    moveOp.setFrom(getID());
+    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+
+  _world->getConnection()->send(&moveOp);
+}
+
+void Avatar::touch(Entity* e)
+{
+    Atlas::Objects::Operation::Touch touchOp =
+        Atlas::Objects::Operation::Touch::Instantiate();
+    touchOp.setFrom(getID());
+    touchOp.setTo(e->getID());
+    Atlas::Message::Element::MapType ent;
+    ent["id"] = e->getID();
+    touchOp.setArgs(Atlas::Message::Element::ListType(1, ent));
+
+    _world->getConnection()->send(&touchOp);
+}
+
+void Avatar::say(const std::string& msg)
+{
+    Atlas::Objects::Operation::Talk t = Atlas::Objects::Operation::Talk::Instantiate();
+
+    Atlas::Message::Element::MapType what;
+    what["say"] = msg;
+    Atlas::Message::Element::ListType args(1, what);
+
+    t.setArgs(args);
+    t.setFrom(getID());
+    _world->getConnection()->send(&t);
+}
+
+void Avatar::move(const WFMath::Point<3>& pos)
+{
+    if(!_entity)
+	throw InvalidOperation("Character Entity does not exist yet!");
+
+    Atlas::Message::Element::MapType what;
+    what["loc"] = _entity->getContainer()->getID();
+    what["pos"] = pos.toAtlas();
+    what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
+    what["id"] = getID();
+
+    Atlas::Objects::Operation::Move moveOp =
+        Atlas::Objects::Operation::Move::Instantiate();
+    moveOp.setFrom(getID());
+    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+
+    _world->getConnection()->send(&moveOp);
+}
+
+void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
+{
+    Atlas::Message::Element::MapType what;
+    what["loc"] = container->getID();
+    what["pos"] = pos.toAtlas();
+    what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
+    what["id"] = e->getID();
+
+    Atlas::Objects::Operation::Move moveOp =
+        Atlas::Objects::Operation::Move::Instantiate();
+    moveOp.setFrom(getID());
+    moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
+
+    _world->getConnection()->send(&moveOp);
 }
 
 Avatar* Avatar::find(Connection* con, const std::string& id)
