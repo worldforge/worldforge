@@ -114,8 +114,7 @@ void Room::say(const std::string &tk)
 		// FIXME - provide some feed-back here
 		return;
 	
-	Atlas::Objects::Operation::Talk t = 
-		Atlas::Objects::Operation::Talk::Instantiate();
+	Atlas::Objects::Operation::Talk t;
 	
 	Atlas::Message::Element::MapType speech;
 	speech["say"] = tk;
@@ -135,8 +134,7 @@ void Room::emote(const std::string &em)
 		// FIXME - provide some feed-back here
 		return;
 	
-	Atlas::Objects::Operation::Imaginary im = 
-		Atlas::Objects::Operation::Imaginary::Instantiate();
+	Atlas::Objects::Operation::Imaginary im;
 	
 	Atlas::Message::Element::MapType emote;
 	emote["id"] = "emote";
@@ -157,8 +155,7 @@ void Room::leave()
 	if (!c->isConnected())
 		throw InvalidOperation("Not connected to server");
 		
-	Atlas::Objects::Operation::Move part = 
-		Atlas::Objects::Operation::Move::Instantiate();
+	Atlas::Objects::Operation::Move part;
 	part.setFrom(_lobby->getAccountID());
 	part.setSerialno(getNewSerialno());
 	
@@ -178,8 +175,7 @@ Room* Room::createRoom(const std::string &name)
     if (!c->isConnected())
 		throw InvalidOperation("Not connected to server");
     
-    Atlas::Objects::Operation::Create cr = 
-	Atlas::Objects::Operation::Create::Instantiate();
+    Atlas::Objects::Operation::Create cr;
     cr.setFrom(_lobby->getAccountID());
     cr.setTo(_id);
     int serial = getNewSerialno();

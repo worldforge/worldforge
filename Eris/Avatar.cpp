@@ -93,8 +93,7 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc
 	throw InvalidOperation("Can't drop an Entity which is not"
 			       " held by the character");
 
-    Atlas::Objects::Operation::Move moveOp =
-        Atlas::Objects::Operation::Move::Instantiate();
+    Atlas::Objects::Operation::Move moveOp;
     moveOp.setFrom(_entity->getID());
 
     Atlas::Message::Element::MapType what;
@@ -124,8 +123,7 @@ void Avatar::take(Entity* e)
     what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
     what["id"] = e->getID();
 
-    Atlas::Objects::Operation::Move moveOp =
-        Atlas::Objects::Operation::Move::Instantiate();
+    Atlas::Objects::Operation::Move moveOp;
     moveOp.setFrom(getID());
     moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 
@@ -134,8 +132,7 @@ void Avatar::take(Entity* e)
 
 void Avatar::touch(Entity* e)
 {
-    Atlas::Objects::Operation::Touch touchOp =
-        Atlas::Objects::Operation::Touch::Instantiate();
+    Atlas::Objects::Operation::Touch touchOp;
     touchOp.setFrom(getID());
     Atlas::Message::Element::MapType ent;
     ent["id"] = e->getID();
@@ -146,7 +143,7 @@ void Avatar::touch(Entity* e)
 
 void Avatar::say(const std::string& msg)
 {
-    Atlas::Objects::Operation::Talk t = Atlas::Objects::Operation::Talk::Instantiate();
+    Atlas::Objects::Operation::Talk t;
 
     Atlas::Message::Element::MapType what;
     what["say"] = msg;
@@ -168,8 +165,7 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos)
     what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
     what["id"] = getID();
 
-    Atlas::Objects::Operation::Move moveOp =
-        Atlas::Objects::Operation::Move::Instantiate();
+    Atlas::Objects::Operation::Move moveOp;
     moveOp.setFrom(getID());
     moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 
@@ -205,8 +201,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
     }
     what["id"] = getID();
 
-    Atlas::Objects::Operation::Move moveOp =
-        Atlas::Objects::Operation::Move::Instantiate();
+    Atlas::Objects::Operation::Move moveOp;
     moveOp.setFrom(getID());
     moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 
@@ -225,8 +220,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel,
     what["orientation"] = orient.toAtlas();
     what["id"] = getID();
 
-    Atlas::Objects::Operation::Move moveOp =
-        Atlas::Objects::Operation::Move::Instantiate();
+    Atlas::Objects::Operation::Move moveOp;
     moveOp.setFrom(getID());
     moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 
@@ -241,8 +235,7 @@ void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
     what["velocity"] = WFMath::Vector<3>().zero().toAtlas();
     what["id"] = e->getID();
 
-    Atlas::Objects::Operation::Move moveOp =
-        Atlas::Objects::Operation::Move::Instantiate();
+    Atlas::Objects::Operation::Move moveOp;
     moveOp.setFrom(getID());
     moveOp.setArgs(Atlas::Message::Element::ListType(1, what));
 

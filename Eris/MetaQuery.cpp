@@ -53,9 +53,7 @@ void MetaQuery::onConnect()
 
 	// servers must responed to a fully anonymous GET operation
 	// with pertinent info
-	Atlas::Objects::Operation::Get gt = 
-		Atlas::Objects::Operation::Get::Instantiate();
-	
+	Atlas::Objects::Operation::Get gt;
 	gt.setSerialno(getNewSerialno());
 	
 	// send code from Connection

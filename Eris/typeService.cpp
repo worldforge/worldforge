@@ -237,9 +237,7 @@ void TypeService::sendInfoRequest(const std::string &id)
 	if (!_inited)
 		return;
 	
-	Atlas::Objects::Operation::Get get = 
-			Atlas::Objects::Operation::Get::Instantiate();
-		
+	Atlas::Objects::Operation::Get get;
 	Atlas::Message::Element::MapType args;
 	args["id"] = id;
 	get.setArgs(Atlas::Message::Element::ListType(1, args));

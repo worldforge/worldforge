@@ -22,7 +22,7 @@ public:
 	/// virtual interface for invoking the dispatcher; causes the signal to emit
 	virtual bool dispatch(DispatchContextDeque &dq)
 	{
-		T object = T::Instantiate();
+		T object;
 		Atlas::Message::Element::MapType::const_iterator I = dq.front().asMap().begin();
 		
 		for (; I != dq.front().asMap().end(); ++I)
@@ -80,13 +80,13 @@ public:
 	{
 		DispatchContextDeque::iterator Q = dq.begin();
 		
-		S object = S::Instantiate();
+		S object;
 		Atlas::Message::Element::MapType::const_iterator I = Q->asMap().begin();
 		
 		for (; I != Q->asMap().end(); ++I)
         		object.setAttr(I->first, I->second);
 		++Q;
-		T parent = T::Instantiate();
+		T parent;
 		I = Q->asMap().begin();
 		for (; I != Q->asMap().end(); ++I)
         		parent.setAttr(I->first, I->second);

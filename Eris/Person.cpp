@@ -37,9 +37,7 @@ void Person::msg(const std::string &msg)
 	// FIXME - provide some feed-back here
 	return;
 	
-    Atlas::Objects::Operation::Talk t = 
-	Atlas::Objects::Operation::Talk::Instantiate();
-	
+    Atlas::Objects::Operation::Talk t;
     Atlas::Message::Element::MapType speech;
     speech["say"] = msg;
     //speech["loc"] =   no location for private chat

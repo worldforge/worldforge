@@ -102,16 +102,14 @@ void Player::createAccount(const std::string &uname,
 		throw InvalidOperation("action in progress (" + _currentAction + ")");
 
 	// need option to create an admin object here
-	Atlas::Objects::Entity::Player account = 
-   		Atlas::Objects::Entity::Player::Instantiate();
+	Atlas::Objects::Entity::Player account;
  	account.setId(uname);	// FIXME - I think this should be deprectaed in all of Atlas
  	account.setPassword(pwd);
 	account.setName(name);
 	account.setAttr("username", uname);
 	
  	Atlas::Message::Element::ListType args(1,account.asObject());
-	Atlas::Objects::Operation::Create c = 
-  		Atlas::Objects::Operation::Create::Instantiate();
+	Atlas::Objects::Operation::Create c;
   	
 	c.setSerialno(getNewSerialno());
  	c.setArgs(args);
@@ -145,8 +143,7 @@ void Player::logout()
 		return;
     }
     
-    Atlas::Objects::Operation::Logout l = 
-	    Atlas::Objects::Operation::Logout::Instantiate();
+    Atlas::Objects::Operation::Logout l;
     l.setId(_account);
     l.setSerialno(getNewSerialno());
     l.setFrom(_account);
@@ -185,52 +182,50 @@ void Player::refreshCharacterInfo()
     }
 	
     if (_charIds.empty()) {
-		// handle the case where there are no characters; we should still emit the signal
-		GotAllCharacters.emit();
-		return;
+        // handle the case where there are no characters; we should still emit the signal
+        GotAllCharacters.emit();
+        return;
     }
     
     for (StringList::iterator I=_charIds.begin(); I!=_charIds.end(); ++I) {
-		// send the look
-		Atlas::Objects::Operation::Look lk =
-			Atlas::Objects::Operation::Look::Instantiate();
-		
-		AtlasMapType args;
-		args["id"] = *I;
-		lk.setArgs(AtlasListType(1, args));
-		lk.setFrom(_lobby->getAccountID());
-		lk.setTo(*I);
-		lk.setSerialno(getNewSerialno());
-		
-		_con->send(lk);
+        // send the look
+        Atlas::Objects::Operation::Look lk;
+        
+        AtlasMapType args;
+        args["id"] = *I;
+        lk.setArgs(AtlasListType(1, args));
+        lk.setFrom(_lobby->getAccountID());
+        lk.setTo(*I);
+        lk.setSerialno(getNewSerialno());
+        
+        _con->send(lk);
     }
 }
 
 Avatar* Player::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 {
-	if (!_lobby || _lobby->getAccountID().empty())
-		throw InvalidOperation("no account exists!");
+    if (!_lobby || _lobby->getAccountID().empty())
+            throw InvalidOperation("no account exists!");
 
-	if (!_con->isConnected())
-		throw InvalidOperation("Not connected to server");
+    if (!_con->isConnected())
+            throw InvalidOperation("Not connected to server");
 
-	if (ent.getName().empty())
-		throw InvalidOperation("Character unnamed");
+    if (ent.getName().empty())
+            throw InvalidOperation("Character unnamed");
 
-	Atlas::Objects::Operation::Create c = 
-		Atlas::Objects::Operation::Create::Instantiate();
-	Atlas::Message::Element::ListType args(1,ent.asObject());
+    Atlas::Objects::Operation::Create c;
+    Atlas::Message::Element::ListType args(1,ent.asObject());
 
-	c.setArgs(args);
-	c.setFrom(_lobby->getAccountID());
- 	c.setSerialno(getNewSerialno());
+    c.setArgs(args);
+    c.setFrom(_lobby->getAccountID());
+    c.setSerialno(getNewSerialno());
 
-	World* world = new World(this, _con);
-	Avatar* avatar = world->createAvatar(c.getSerialno());
+    World* world = new World(this, _con);
+    Avatar* avatar = world->createAvatar(c.getSerialno());
 
-	_con->send(c);
+    _con->send(c);
 
-	return avatar;
+    return avatar;
 }
 
 void Player::createCharacter()
@@ -250,8 +245,8 @@ void Player::createCharacter()
 
 void Player::createCharacterHandler(long serialno)
 {
-	if(serialno)
-		NewCharacter((new World(this, _con))->createAvatar(serialno));
+    if (serialno)
+        NewCharacter((new World(this, _con))->createAvatar(serialno));
 }
 
 Avatar* Player::takeCharacter(const std::string &id)
@@ -263,8 +258,7 @@ Avatar* Player::takeCharacter(const std::string &id)
 	if (!_con->isConnected())
 		throw InvalidOperation("Not connected to server");
 	
-	Atlas::Objects::Operation::Look l = 
-		Atlas::Objects::Operation::Look::Instantiate();
+	Atlas::Objects::Operation::Look l;
  
 	l.setFrom(id);  
 	Atlas::Message::Element::MapType what;
@@ -283,34 +277,31 @@ Avatar* Player::takeCharacter(const std::string &id)
 
 void Player::internalLogin(const std::string &uname, const std::string &pwd)
 {
-	Atlas::Objects::Entity::Account account = 
-		Atlas::Objects::Entity::Account::Instantiate();
-	account.setId(uname);
- 	account.setPassword(pwd);
-	account.setAttr("username", uname);
+    Atlas::Objects::Entity::Account account;
+    account.setId(uname);
+    account.setPassword(pwd);
+    account.setAttr("username", uname);
 
- 	Atlas::Objects::Operation::Login l = 
-   		Atlas::Objects::Operation::Login::Instantiate();
- 	Atlas::Message::Element::ListType args(1,account.asObject());
-  	l.setArgs(args);
-	l.setSerialno(getNewSerialno());
-	
-	_con->send(l);
-	
-	// setup error tracking
-	_currentAction = "login";
-	_currentSerial = l.getSerialno();
+    Atlas::Objects::Operation::Login l;
+    Atlas::Message::Element::ListType args(1,account.asObject());
+    l.setArgs(args);
+    l.setSerialno(getNewSerialno());
+    
+    _con->send(l);
+    
+    // setup error tracking
+    _currentAction = "login";
+    _currentSerial = l.getSerialno();
 }
 
 void Player::internalLogout(bool clean)
 {
     _currentAction = "";
     if (_logoutTimeout)
-		delete _logoutTimeout;
+        delete _logoutTimeout;
 	
-	_con->disconnect();
-	
-	LogoutComplete.emit(clean);
+    _con->disconnect();
+    LogoutComplete.emit(clean);
 }
 
 const std::string& Player::getAccountID() const

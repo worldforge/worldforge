@@ -368,9 +368,7 @@ void Meta::listReq(int base)
 void Meta::objectArrived(const Atlas::Message::Element &msg)
 {	
 	// build an info op (quick hack)
-	Atlas::Objects::Operation::Info ifo = 
-		Atlas::Objects::Operation::Info::Instantiate();
-	
+	Atlas::Objects::Operation::Info ifo;
 	Atlas::Message::Element::MapType::const_iterator I = msg.asMap().begin();
 	for (; I != msg.asMap().end(); ++I)
         	ifo.setAttr(I->first, I->second);
@@ -395,8 +393,7 @@ void Meta::objectArrived(const Atlas::Message::Element &msg)
 	}
 	
 	// extract the server object
-	Atlas::Objects::Entity::RootEntity svr =
-		Atlas::Objects::Entity::RootEntity::Instantiate();
+	Atlas::Objects::Entity::RootEntity svr;
 	
 	Atlas::Message::Element::MapType m = getArg(ifo, 0).asMap();
 	for (Atlas::Message::Element::MapType::iterator I=m.begin() ; I != m.end(); ++I)

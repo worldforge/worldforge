@@ -1,3 +1,8 @@
+Thursday, 22nd January 2004, James Turner <james@worldforge.org>
+
+    * Remove use of deprecated ::Instantiate() calls
+    * Require Atlas-C++ 0.4.93 (latest transitional)
+
 Thursday, 22nd January 2004, Al Riddoch <alriddoch@zepler.org>
 
 	* Eris/typeService.cpp: Update type service to use Atlas-C++

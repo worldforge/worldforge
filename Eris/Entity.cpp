@@ -412,16 +412,14 @@ void Entity::setContainerById(const std::string &id)
 		} else {
 			// setup a redispatch once we have the container
 			// sythesises a set, with just the container.
-			Atlas::Objects::Operation::Set setc = 
-				Atlas::Objects::Operation::Set::Instantiate();
+			Atlas::Objects::Operation::Set setc;
 				
 			Atlas::Message::Element::MapType args;
 			args["loc"] = id;
 			setc.setArgs(Atlas::Message::Element::ListType(1,args));
 			setc.setTo(_id);
 			
-			Atlas::Objects::Operation::Sight ssc =
-				Atlas::Objects::Operation::Sight::Instantiate();
+			Atlas::Objects::Operation::Sight ssc;
 			ssc.setArgs(Atlas::Message::Element::ListType(1, setc.asObject()));
 			ssc.setTo(_world->getFocusedEntityID());
 			ssc.setSerialno(getNewSerialno());

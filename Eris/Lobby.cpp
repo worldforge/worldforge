@@ -75,7 +75,7 @@ Room* Lobby::join(const std::string &roomID)
 	if (!_con->isConnected())
 		throw InvalidOperation("Not connected to server");
 		
-	Operation::Move join = Operation::Move::Instantiate();
+	Operation::Move join;
 	join.setFrom(_account);
 	join.setSerialno(getNewSerialno());
 	
@@ -212,8 +212,7 @@ void Lobby::look(const std::string &id)
 		// FIXME - handle this more elegantly?
 		return;
 	
-	Operation::Look look = 
-  		Operation::Look::Instantiate();
+	Operation::Look look;
 
 	if(!id.empty()) {
 		Atlas::Message::Element::MapType what;

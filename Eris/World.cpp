@@ -139,9 +139,7 @@ void World::look(const std::string &id)
 	// FIXME - buffer these ? a somewhat risky strategy...
 	if (!_con->isConnected()) return;
 		
-	Atlas::Objects::Operation::Look look =
-		Atlas::Objects::Operation::Look::Instantiate();
-
+	Atlas::Objects::Operation::Look look;
 	if (!id.empty()) {
 		Atlas::Message::Element::MapType what;
 		what["id"] = id;
@@ -410,10 +408,8 @@ void World::recvSightObject(const Atlas::Objects::Operation::Sight &sight,
 void World::recvSightCreate(const Atlas::Objects::Operation::Create &cr,
 	const Atlas::Objects::Entity::GameEntity &ge)
 {	
-	Atlas::Objects::Operation::Sight st = 
-		Atlas::Objects::Operation::Sight::Instantiate();
-	
-	st.setFrom(cr.getFrom());
+	Atlas::Objects::Operation::Sight st;
+        st.setFrom(cr.getFrom());
 	_pendingInitialSight.insert(ge.getId());
     
 	recvSightObject(st, ge);
