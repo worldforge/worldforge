@@ -1,9 +1,9 @@
 #ifndef ERIS_POLL_DEFAULT_H
 #define ERIS_POLL_DEFAULT_H 
 
-#include <map>
-
 #include <Eris/Poll.h>
+
+#include <map>
 
 namespace Eris {
 

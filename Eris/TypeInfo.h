@@ -1,10 +1,12 @@
 #ifndef ERIS_TYPE_INFO_H
 #define ERIS_TYPE_INFO_H
 
-#include <set>
-#include <sigc++/object.h>
 #include <Eris/Types.h>
 #include <Eris/typeService.h>
+
+#include <sigc++/object.h>
+
+#include <set>
 
 namespace Atlas { namespace Objects {
 	class Root;

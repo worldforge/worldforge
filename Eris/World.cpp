@@ -2,38 +2,6 @@
 	#include "config.h"
 #endif
 
-#include <sigc++/object.h>
-#include <sigc++/object_slot.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
-#include <algorithm>
-#include <float.h>
-
-// various atlas headers we need
-#include <Atlas/Bridge.h>
-#include <Atlas/EncoderBase.h>
-#include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Encoder.h>
-
-
-#include <Atlas/Objects/Entity/RootEntity.h>
-#include <Atlas/Objects/Entity/GameEntity.h>
-
-#include <Atlas/Objects/Operation/Sight.h>
-#include <Atlas/Objects/Operation/Create.h>
-#include <Atlas/Objects/Operation/Look.h>
-#include <Atlas/Objects/Operation/Set.h>
-#include <Atlas/Objects/Operation/Delete.h>
-#include <Atlas/Objects/Operation/Info.h>
-#include <Atlas/Objects/Operation/Talk.h>
-#include <Atlas/Objects/Operation/Appearance.h>
-#include <Atlas/Objects/Operation/Disappearance.h>
-#include <Atlas/Objects/Operation/Sound.h>
-#include <Atlas/Objects/Operation/Move.h>
-
 #include <Eris/World.h>
 #include <Eris/Entity.h>
 #include <Eris/Connection.h>
@@ -50,6 +18,32 @@
 #include <Eris/OpDispatcher.h>
 #include <Eris/TypeDispatcher.h>
 #include <Eris/IdDispatcher.h>
+
+// various atlas headers we need
+#include <Atlas/EncoderBase.h>
+#include <Atlas/Objects/Encoder.h>
+
+#include <Atlas/Objects/Entity/RootEntity.h>
+#include <Atlas/Objects/Entity/GameEntity.h>
+
+#include <Atlas/Objects/Operation/Sight.h>
+#include <Atlas/Objects/Operation/Create.h>
+#include <Atlas/Objects/Operation/Look.h>
+#include <Atlas/Objects/Operation/Set.h>
+#include <Atlas/Objects/Operation/Delete.h>
+#include <Atlas/Objects/Operation/Info.h>
+#include <Atlas/Objects/Operation/Talk.h>
+#include <Atlas/Objects/Operation/Appearance.h>
+#include <Atlas/Objects/Operation/Disappearance.h>
+#include <Atlas/Objects/Operation/Sound.h>
+#include <Atlas/Objects/Operation/Move.h>
+
+#include <sigc++/object.h>
+#include <sigc++/object_slot.h>
+#include <sigc++/signal.h>
+
+#include <algorithm>
+#include <float.h>
 
 //using namespace Atlas::Objects;
 typedef Atlas::Message::Element::ListType AtlasListType;

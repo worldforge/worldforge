@@ -1,13 +1,13 @@
 #ifndef ERIS_DISPATCH_H
 #define ERIS_DISPATCH_H
 
-#include <map>	
+#include <Eris/Types.h>
+
+#include <map>
 #include <deque>
 #include <list>
 
-#include <Atlas/Message/Element.h>
-
-#include <Eris/Types.h>
+namespace Atlas { namespace Message { class Element; } }
 
 namespace Eris {
 

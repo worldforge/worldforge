@@ -1,10 +1,11 @@
 #ifndef ERIS_UTILS_H
 #define ERIS_UTILS_H
 
-#include <Atlas/Message/Element.h>
-#include <Atlas/Objects/Operation/RootOperation.h>
-
 #include <Eris/Types.h>
+
+namespace Atlas {
+  namespace Objects { namespace Operation { class RootOperation; } }
+}
 
 namespace Eris
 {

@@ -1,11 +1,15 @@
 #ifndef ERIS_AVATAR_H
 #define ERIS_AVATAR_H
 
-#include <assert.h>
+#include <Eris/Types.h>
+
+#include <sigc++/object.h>
+
 #include <string>
 #include <map>
 #include <vector>
-#include <sigc++/object.h>
+
+#include <cassert>
 
 namespace Atlas {
 	namespace Objects {
@@ -18,8 +22,6 @@ namespace Atlas {
 		}
 	}
 }
-
-#include <Eris/Types.h>
 
 namespace Eris
 {

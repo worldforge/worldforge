@@ -1,6 +1,8 @@
 #ifndef ERIS_ROOM_H
 #define ERIS_ROOM_H
 
+#include <Eris/Types.h>
+
 #include <sigc++/object.h>
 #include <sigc++/object_slot.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
@@ -9,20 +11,17 @@
 #include <sigc++/signal.h>
 #endif
 
-#include <Atlas/Objects/Entity/RootEntity.h>
-#include <Atlas/Objects/Operation/Talk.h>
-#include <Atlas/Objects/Operation/Appearance.h>
-#include <Atlas/Objects/Operation/Disappearance.h>
-
 namespace Atlas { namespace Objects {
-
 	namespace Operation {
 		class Imaginary;
+		class Talk;
+		class Appearance;
+		class Disappearance;
 	}
-	
+	namespace Entity {
+		class RootEntity;
+	}
 }}
-
-#include <Eris/Types.h>
 
 namespace Eris
 {

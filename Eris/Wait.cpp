@@ -2,23 +2,21 @@
 	#include "config.h"
 #endif
 
-#include <assert.h>
-#include <sigc++/object.h>
-#include <sigc++/object_slot.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
-#include <Atlas/Objects/Root.h>
+#include <Eris/Wait.h>
 
 #include <Eris/atlas_utils.h>
 #include <Eris/Utils.h>
-
-#include <Eris/Wait.h>
 #include <Eris/Connection.h>
 #include <Eris/Dispatcher.h>
 #include <Eris/SignalDispatcher.h>
+
+#include <Atlas/Objects/Root.h>
+
+#include <sigc++/object.h>
+#include <sigc++/object_slot.h>
+#include <sigc++/signal.h>
+
+#include <cassert>
 
 namespace Eris {
 

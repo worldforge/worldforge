@@ -2,12 +2,12 @@
 	#include "config.h"
 #endif
 
-#include <fstream>
+#include <Eris/DebugDispatcher.h>
 
 #include <Atlas/Codecs/XML.h>
 #include <Atlas/Message/Encoder.h>
 
-#include <Eris/DebugDispatcher.h>
+#include <fstream>
 
 namespace Eris
 {

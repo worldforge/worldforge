@@ -6,6 +6,9 @@
 #include <Eris/Lobby.h>
 #include <Eris/Utils.h>
 
+#include <Atlas/Objects/Entity/Account.h>
+#include <Atlas/Objects/Operation/Talk.h>
+
 namespace Eris
 {
 	

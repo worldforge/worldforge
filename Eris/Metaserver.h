@@ -3,6 +3,18 @@
 #ifndef ERIS_METASERVER_H
 #define ERIS_METASERVER_H
 
+#include <Eris/Types.h>
+#include <Eris/ServerInfo.h>
+
+#include <Atlas/Message/DecoderBase.h>
+
+#include <sigc++/object.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
+#include <sigc++/basic_signal.h>
+#else
+#include <sigc++/signal.h>
+#endif
+
 #ifndef __WIN32__
 // pull in uint32_t on POSIX - is this generic?!
 #include <stdint.h>
@@ -18,22 +30,6 @@ typedef unsigned int uint32_t;
 #endif  // _STDINT_H_
 
 #endif // __WIN32__
-
-
-
-#include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/basic_signal.h>
-#else
-#include <sigc++/signal.h>
-#endif
-
-#include <Atlas/Message/DecoderBase.h>
-#include <Atlas/Objects/Operation/Info.h>
-#include <Atlas/Objects/Entity/RootEntity.h>
-
-#include <Eris/Types.h>
-#include <Eris/ServerInfo.h>
 
 // Forward decls
 class udp_socket_stream;

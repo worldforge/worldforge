@@ -1,6 +1,16 @@
 #ifndef ERIS_ENTITY_H
 #define ERIS_ENTITY_H
 
+// local headers
+#include <Eris/SignalDispatcher.h>
+
+#include <Atlas/Message/Element.h>
+
+#include <wfmath/point.h>
+#include <wfmath/vector.h>
+#include <wfmath/axisbox.h>
+#include <wfmath/quaternion.h>
+
 // system headers
 #include <sigc++/object.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
@@ -8,8 +18,6 @@
 #else
 #include <sigc++/signal.h>
 #endif
-
-#include <Atlas/Message/Element.h>
 
 namespace Atlas {
 	namespace Objects {
@@ -26,15 +34,6 @@ namespace Atlas {
 		}
 	}
 }
-
-#include <wfmath/point.h>
-#include <wfmath/vector.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/quaternion.h>
-
-// local headers
-#include <Eris/Types.h>
-#include <Eris/SignalDispatcher.h>
 
 
 namespace Eris {

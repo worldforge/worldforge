@@ -3,8 +3,11 @@
 #endif
 
 #include <Eris/ServerInfo.h>
+
 #include <Eris/Utils.h>
 #include <Eris/Log.h>
+
+#include <Atlas/Objects/Entity/RootEntity.h>
 
 namespace Eris
 {

@@ -1,13 +1,15 @@
 #ifndef ERIS_DEBUG_DISPATCH_H
 #define ERIS_DEBUG_DISPATCH_H
 
+#include <Eris/Dispatcher.h>
+
 #include <iostream>
 #include <fstream>
 
-#include <Atlas/Codec.h>
-#include <Eris/Dispatcher.h>
-
-namespace Atlas { namespace Message { class Encoder; }}
+namespace Atlas {
+  namespace Message { class Encoder; }
+  template <class Stream> class Codec;
+}
 
 namespace Eris
 {

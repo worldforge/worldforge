@@ -1,16 +1,6 @@
 #ifndef ERIS_TYPES_H
 #define ERIS_TYPES_H
 
-// system headers
-#include <vector>
-#include <string>
-#include <list>
-#include <set>
-#include <deque>
-
-#include <stdexcept>
-
-#include <Atlas/Message/Element.h>
 #include <Atlas/Objects/Root.h>
 
 #include <wfmath/vector.h>
@@ -19,13 +9,21 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/stream.h>
 
-
 #include <sigc++/object.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/basic_signal.h>
 #else
 #include <sigc++/signal.h>
 #endif
+
+// system headers
+#include <vector>
+#include <string>
+#include <list>
+#include <set>
+#include <deque>
+
+#include <stdexcept>
 
 namespace Eris
 {

@@ -2,27 +2,10 @@
 	#include "config.h"
 #endif
 
-#include <assert.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <algorithm>
-
-#include <skstream/skstream.h>
-#include <sigc++/bind.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
-
-#include <Atlas/Net/Stream.h>
-#include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Encoder.h>
-#include <Atlas/Message/Encoder.h>
+#include <Eris/Connection.h>
 
 #include <Eris/atlas_utils.h>
 
-#include <Eris/Connection.h>
 #include <Eris/Dispatcher.h>
 #include <Eris/Wait.h>
 #include <Eris/Timeout.h>
@@ -38,6 +21,27 @@
 #include <Eris/EncapDispatcher.h>
 
 #include <Eris/Lobby.h>
+
+#include <Atlas/Net/Stream.h>
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/Encoder.h>
+#include <Atlas/Message/Encoder.h>
+#include <Atlas/Objects/Operation/RootOperation.h>
+
+#include <skstream/skstream.h>
+
+#include <sigc++/bind.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
+#include <sigc++/signal_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
+
+#include <cassert>
+
+#include <stdarg.h>
+#include <stdio.h>
+#include <algorithm>
 
 namespace Eris {
 

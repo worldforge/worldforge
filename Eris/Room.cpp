@@ -2,18 +2,6 @@
 	#include "config.h"
 #endif
 
-#include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
-#include <assert.h>
-
-#include <Atlas/Objects/Operation/Look.h>
-#include <Atlas/Objects/Operation/Move.h>
-#include <Atlas/Objects/Operation/Imaginary.h>
-
 #include <Eris/Room.h>
 #include <Eris/Lobby.h>
 #include <Eris/Connection.h>
@@ -27,6 +15,23 @@
 #include <Eris/EncapDispatcher.h>
 #include <Eris/IdDispatcher.h>
 #include <Eris/ArgumentDispatcher.h>
+
+#include <Atlas/Objects/Entity/RootEntity.h>
+
+#include <Atlas/Objects/Operation/Appearance.h>
+#include <Atlas/Objects/Operation/Disappearance.h>
+#include <Atlas/Objects/Operation/Look.h>
+#include <Atlas/Objects/Operation/Move.h>
+#include <Atlas/Objects/Operation/Imaginary.h>
+#include <Atlas/Objects/Operation/Talk.h>
+
+#include <sigc++/object.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
+#include <sigc++/signal_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
+#include <cassert>
 
 using namespace Atlas;
 

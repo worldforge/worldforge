@@ -2,16 +2,18 @@
 	#include "config.h"
 #endif
 
-#include <fstream>
-#include <string>
-#include <sigc++/object_slot.h>
-
 #include <Eris/typeService.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/Log.h>
 #include <Eris/Connection.h>
 #include <Eris/Utils.h>
 #include <Eris/atlas_utils.h>
+
+#include <Eris/TypeDispatcher.h>
+#include <Eris/EncapDispatcher.h>
+#include <Eris/SignalDispatcher.h>
+#include <Eris/OpDispatcher.h>
+#include <Eris/ClassDispatcher.h>
 
 #include <Atlas/Objects/Operation/Info.h>
 #include <Atlas/Objects/Operation/Get.h>
@@ -20,11 +22,10 @@
 #include <Atlas/Message/QueuedDecoder.h>
 #include <Atlas/Objects/Entity/RootEntity.h>
 
-#include <Eris/TypeDispatcher.h>
-#include <Eris/EncapDispatcher.h>
-#include <Eris/SignalDispatcher.h>
-#include <Eris/OpDispatcher.h>
-#include <Eris/ClassDispatcher.h>
+#include <sigc++/object_slot.h>
+
+#include <fstream>
+#include <string>
 
 using namespace Atlas;
 

@@ -1,18 +1,26 @@
 #ifndef ERIS_CONNECTION_H
 #define ERIS_CONNECTION_H
 
-#include <deque>
-#include <Atlas/Message/DecoderBase.h>
-#include <Atlas/Objects/Operation/RootOperation.h>
-
 #include <Eris/BaseConnection.h>
 #include <Eris/Types.h>
+
+#include <Atlas/Message/DecoderBase.h>
+
+#include <deque>
 
 /** Every Eris class and type lives inside the Eris namespace; certain utility functions live in the
 Util namespace, since they may be moved to a generic WorldForge foundation library in the future.*/
 
 // Forward declaration of the skstream type
 class basic_socket_stream;
+
+namespace Atlas {
+  namespace Objects {
+    namespace Operation {
+      class RootOperation;
+    }
+  }
+}
 
 namespace Eris
 {

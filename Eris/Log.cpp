@@ -2,7 +2,9 @@
     #include "config.h"
 #endif
 
-#include <assert.h>
+#include <Eris/Log.h>
+
+#include <cassert>
 #include <stdarg.h>
 #include <stdio.h>
 #include <algorithm>
@@ -15,8 +17,6 @@
 #endif
 
 #endif // __WIN32__
-
-#include <Eris/Log.h>
 
 namespace Eris
 {

@@ -2,7 +2,12 @@
 #define ERIS_PROPERTY_H
 
 #include <sigc++/object.h>
-#include <Atlas/Message/Element.h>
+
+namespace Atlas {
+  namespace Message {
+    class Element;
+  }
+}
 
 namespace Eris
 {

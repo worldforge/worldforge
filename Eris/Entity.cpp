@@ -2,10 +2,16 @@
 	#include "config.h"
 #endif
 
-#include <algorithm>
-#include <assert.h>
-#include <set> 
-#include <cmath>
+#include <Eris/Entity.h>
+#include <Eris/World.h>
+#include <Eris/Connection.h>
+#include <Eris/Utils.h>
+#include <Eris/Wait.h>
+#include <Eris/Property.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/OpDispatcher.h>
+#include <Eris/IdDispatcher.h>
+#include <Eris/Log.h>
 
 #include <Atlas/Objects/Entity/RootEntity.h>
 #include <Atlas/Objects/Entity/GameEntity.h>
@@ -17,16 +23,11 @@
 
 #include <wfmath/atlasconv.h>
 
-#include <Eris/Entity.h>
-#include <Eris/World.h>
-#include <Eris/Connection.h>
-#include <Eris/Utils.h>
-#include <Eris/Wait.h>
-#include <Eris/Property.h>
-#include <Eris/TypeInfo.h>
-#include <Eris/OpDispatcher.h>
-#include <Eris/IdDispatcher.h>
-#include <Eris/Log.h>
+#include <algorithm>
+#include <set> 
+#include <cmath>
+
+#include <cassert>
 
 using namespace Atlas::Message;
 

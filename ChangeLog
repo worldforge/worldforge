@@ -1,3 +1,8 @@
+Monday, 19th January 2004, Al Riddoch <alriddoch@zepler.org>
+
+	* Reorder includes, and elimate unnecessary includes by using
+	  forward declarations throughout.
+
 Sunday, 18th January, Ron Steinke <rsteinke@w-link.net>
 
 	* Eris/Avatar.*: Renamed the move() functions to

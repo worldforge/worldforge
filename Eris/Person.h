@@ -1,9 +1,13 @@
 #ifndef ERIS_PERSON_H
 #define ERIS_PERSON_H
 
-#include <Atlas/Objects/Entity/Account.h>
+#include <string>
 
-#include <Eris/Types.h>
+namespace Atlas {
+  namespace Objects {
+    namespace Entity { class Account; }
+  }
+}
 
 namespace Eris
 {
@@ -13,7 +17,7 @@ class Lobby;
 /** An Out-of-Game Person (found in a Room / Lobby)	As more person data becomes available,
 this class will be extended, for example to return nicknames, location, the choosen 'face' graphic.
 */
-class Person {	
+class Person {
 public:
     /// create a person from sight
     Person(Lobby *l, const Atlas::Objects::Entity::Account &acc);

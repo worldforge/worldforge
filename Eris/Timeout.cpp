@@ -4,10 +4,9 @@
 
 #include <Eris/Types.h>
 #include <Eris/Timeout.h>
+#include <Eris/Poll.h>
 
 #include <limits.h>
-
-#include <Eris/Poll.h>
 
 using namespace Time;
 

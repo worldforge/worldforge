@@ -2,6 +2,13 @@
 	#include "config.h"
 #endif
 
+#include <Eris/ClassDispatcher.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/Wait.h>
+#include <Eris/Utils.h>
+#include <Eris/Connection.h>
+#include <Eris/Log.h>
+
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
@@ -10,14 +17,7 @@
 #include <sigc++/signal.h>
 #endif
 
-#include <assert.h>
-
-#include <Eris/ClassDispatcher.h>
-#include <Eris/TypeInfo.h>
-#include <Eris/Wait.h>
-#include <Eris/Utils.h>
-#include <Eris/Connection.h>
-#include <Eris/Log.h>
+#include <cassert>
 
 namespace Eris
 {

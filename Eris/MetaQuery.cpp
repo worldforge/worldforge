@@ -2,24 +2,22 @@
 	#include "config.h"
 #endif
 
-#include <assert.h>
-#include <skstream/skstream.h>
-#include <sigc++/bind.h>
-#include <sigc++/object_slot.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
-
-#include <Atlas/Objects/Operation/Get.h>
-#include <Atlas/Objects/Encoder.h>
-
 #include <Eris/Metaserver.h>
 #include <Eris/MetaQuery.h>
 #include <Eris/Utils.h>
 #include <Eris/Timeout.h>
 #include <Eris/Log.h>
+
+#include <Atlas/Objects/Operation/Get.h>
+#include <Atlas/Objects/Encoder.h>
+
+#include <skstream/skstream.h>
+
+#include <sigc++/bind.h>
+#include <sigc++/object_slot.h>
+#include <sigc++/signal.h>
+
+#include <cassert>
 
 namespace Eris
 {

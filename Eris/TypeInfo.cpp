@@ -2,8 +2,12 @@
 	#include "config.h"
 #endif
 
-#include <assert.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/Utils.h>
+#include <Eris/atlas_utils.h>
+#include <Eris/Log.h>
 
+#include <Atlas/Objects/Root.h>
 
 #include <sigc++/object.h>
 #include <sigc++/object_slot.h>
@@ -13,13 +17,7 @@
 #include <sigc++/signal.h>
 #endif
 
-
-#include <Atlas/Objects/Root.h>
-
-#include <Eris/TypeInfo.h>
-#include <Eris/Utils.h>
-#include <Eris/atlas_utils.h>
-#include <Eris/Log.h>
+#include <cassert>
 
 using namespace Atlas;
 

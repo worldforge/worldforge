@@ -2,17 +2,6 @@
 	#include "config.h"
 #endif
 
-#include <assert.h>
-#include <cstdio>
-#include <skstream/skstream.h>
-#include <sigc++/bind.h>
-#include <sigc++/object_slot.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
-
 #include <Eris/Metaserver.h>
 #include <Eris/MetaQuery.h>
 #include <Eris/Utils.h>
@@ -21,6 +10,22 @@
 #include <Eris/Poll.h>
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
+
+#include <Atlas/Objects/Operation/Info.h>
+#include <Atlas/Objects/Entity/RootEntity.h>
+
+#include <skstream/skstream.h>
+
+#include <sigc++/bind.h>
+#include <sigc++/object_slot.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
+#include <sigc++/signal_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
+
+#include <cassert>
+#include <cstdio>
 
 #ifdef __WIN32__
 

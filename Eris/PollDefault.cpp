@@ -1,12 +1,12 @@
-#include <skstream/skstream.h>
-
-#include <sigc++/object_slot.h>
-
 #include <Eris/Types.h>
 
 #include <Eris/PollDefault.h>
 #include <Eris/Timeout.h>
 #include <Eris/Log.h>
+
+#include <skstream/skstream.h>
+
+#include <sigc++/object_slot.h>
 
 bool Eris::Poll::new_timeout_ = false;
 

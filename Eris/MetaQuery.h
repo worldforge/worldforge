@@ -5,6 +5,8 @@
 #include <Eris/Timestamp.h>
 #include <Eris/Poll.h>
 
+#include <skstream/skstream.h>
+
 namespace Eris {
 
 class Meta;	

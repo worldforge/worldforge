@@ -1,8 +1,9 @@
 #ifndef ERIS_WAIT_H
 #define ERIS_WAIT_H
 
-#include <sigc++/object.h>
 #include <Eris/Types.h>
+
+#include <sigc++/object.h>
 
 namespace Atlas { namespace Objects {
 	class Root;

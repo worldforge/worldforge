@@ -1,13 +1,13 @@
 #ifndef ERIS_INVISIBLE_ENTITY_CACHE_H
 #define ERIS_INVISIBLE_ENTITY_CACHE_H
 
-#include <assert.h>
-#include <deque>
-#include <set>
-
 #include <Eris/Timestamp.h>
 #include <Eris/Log.h>
 #include <Eris/Entity.h>
+
+#include <cassert>
+#include <deque>
+#include <set>
 
 namespace Eris {
 

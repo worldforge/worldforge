@@ -1,7 +1,13 @@
 #ifndef ERIS_SERVER_INFO_H
 #define ERIS_SERVER_INFO_H
 
-#include <Atlas/Objects/Entity/RootEntity.h>
+#include <string>
+
+namespace Atlas {
+  namespace Objects {
+    namespace Entity { class RootEntity; }
+  }
+}
 
 namespace Eris {
 	

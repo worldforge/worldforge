@@ -1,6 +1,10 @@
 #ifndef ERIS_LOBBY_H
 #define ERIS_LOBBY_H
 
+#include <Eris/Types.h>
+#include <Eris/Connection.h>
+#include <Eris/Room.h>
+
 #include <sigc++/object.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/basic_signal.h>
@@ -8,15 +12,21 @@
 #include <sigc++/signal.h>
 #endif
 
-#include <Atlas/Objects/Entity/Player.h>
-#include <Atlas/Objects/Operation/Info.h>
-
-#include <Eris/Types.h>
-#include <Eris/Connection.h>
-#include <Eris/Room.h>
-
 // forward decleration of test cases
 class TestLobby;
+
+namespace Atlas {
+  namespace Objects {
+    namespace Entity {
+      class Account;
+      class Player;
+    }
+    namespace Operation {
+      class Create;
+      class Info;
+    }
+  }
+}
 
 namespace Eris
 {

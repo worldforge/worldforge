@@ -2,28 +2,6 @@
 	#include "config.h"
 #endif
 
-#include <sigc++/object.h>
-#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
-#include <sigc++/signal_system.h>
-#else
-#include <sigc++/signal.h>
-#endif
-#include <algorithm>
-#include <assert.h>
-
-// various atlas headers we need
-#include <Atlas/Bridge.h>
-#include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Encoder.h>
-
-//#include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Entity/Account.h>
-
-#include <Atlas/Objects/Operation/Login.h>
-#include <Atlas/Objects/Operation/Create.h>
-#include <Atlas/Objects/Operation/Logout.h>
-#include <Atlas/Objects/Operation/Look.h>
-
 #include <Eris/Player.h>
 #include <Eris/Lobby.h>
 #include <Eris/World.h>
@@ -32,6 +10,27 @@
 #include <Eris/ClassDispatcher.h>
 #include <Eris/Utils.h>
 #include <Eris/Log.h>
+
+// various atlas headers we need
+#include <Atlas/Bridge.h>
+#include <Atlas/Objects/Encoder.h>
+#include <Atlas/Objects/Entity/Player.h>
+#include <Atlas/Objects/Entity/GameEntity.h>
+
+#include <Atlas/Objects/Operation/Login.h>
+#include <Atlas/Objects/Operation/Create.h>
+#include <Atlas/Objects/Operation/Logout.h>
+#include <Atlas/Objects/Operation/Look.h>
+#include <Atlas/Objects/Operation/Error.h>
+
+#include <sigc++/object.h>
+#if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
+#include <sigc++/signal_system.h>
+#else
+#include <sigc++/signal.h>
+#endif
+#include <algorithm>
+#include <cassert>
 
 typedef Atlas::Message::Element::ListType AtlasListType;
 typedef Atlas::Message::Element::MapType AtlasMapType;

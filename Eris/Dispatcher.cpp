@@ -2,10 +2,6 @@
 	#include "config.h"
 #endif
 
-#include <stdio.h>
-#include <assert.h>
-#include <Atlas/Message/Element.h>
-
 #include <Eris/Dispatcher.h>
 #include <Eris/Utils.h>
 #include <Eris/ClassDispatcher.h>
@@ -15,6 +11,11 @@
 #include <Eris/IdDispatcher.h>
 #include <Eris/Connection.h>
 #include <Eris/Log.h>
+
+#include <Atlas/Message/Element.h>
+
+#include <stdio.h>
+#include <cassert>
 
 using namespace Atlas::Message;
 

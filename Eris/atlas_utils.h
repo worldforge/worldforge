@@ -1,11 +1,10 @@
-#ifndef ATLAS_CAST_H
-#define ATLAS_CAST_H
+#ifndef ERIS_ATLAS_UTILS_H
+#define ERIS_ATLAS_UTILS_H
+
+#include <Atlas/Objects/Root.h>
 
 #include <stdexcept>
 #include <cassert>
-
-#include <Atlas/Message/Element.h>
-#include <Atlas/Objects/Root.h>
 
 namespace Atlas {
 

@@ -2,20 +2,23 @@
 	#include "config.h"
 #endif
 
-#include <assert.h>		
-#include <skstream/skstream.h>
-#include <stdio.h>
+#include <Eris/BaseConnection.h>
 
+#include <Eris/Timeout.h>
+#include <Eris/Poll.h>
+#include <Eris/Log.h>
+
+#include <Atlas/Codec.h>
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/Encoder.h>
 
-#include <Eris/BaseConnection.h>
-//#include "Connection.h"
-#include <Eris/Timeout.h>
-#include <Eris/Poll.h>
-#include <Eris/Log.h>
+#include <skstream/skstream.h>
+
+#include <stdio.h>
+
+#include <cassert>
 
 namespace Eris {
 	

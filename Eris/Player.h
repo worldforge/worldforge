@@ -1,6 +1,9 @@
 #ifndef ERIS_PLAYER_H
 #define ERIS_PLAYER_H
 
+#include <Eris/Types.h>
+#include <Eris/Timeout.h>
+
 #include <sigc++/object.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
 #include <sigc++/basic_signal.h>
@@ -8,13 +11,18 @@
 #include <sigc++/signal.h>
 #endif
 
-#include <Atlas/Objects/Entity/GameEntity.h>
-#include <Atlas/Objects/Operation/Error.h>
-#include <Atlas/Objects/Operation/Logout.h>
-#include <Atlas/Objects/Entity/Player.h>
-
-#include <Eris/Types.h>
-#include <Eris/Timeout.h>
+namespace Atlas {
+  namespace Objects {
+    namespace Operation {
+      class Error;
+      class Logout;
+    }
+    namespace Entity {
+      class GameEntity;
+      class Player;
+    }
+  }
+}
 
 namespace Eris
 {

@@ -1,9 +1,7 @@
 #ifndef ERIS_UI_FACTORY_H
 #define ERIS_UI_FACTORY_H
 
-#include <map>
-#include <list>
-#include <cassert>
+#include <Atlas/Message/Element.h>
 
 #include <sigc++/object.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
@@ -12,7 +10,9 @@
 #include <sigc++/signal.h>
 #endif
 
-#include <Atlas/Message/Element.h>
+#include <map>
+#include <list>
+#include <cassert>
 
 namespace Atlas {
   namespace Objects {

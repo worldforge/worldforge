@@ -1,9 +1,7 @@
 #ifndef ERIS_BASE_CONNECTION_H
 #define ERIS_BASE_CONNECTION_H
 
-#include <iostream>
-#include <Atlas/Message/Element.h>
-#include <Atlas/Codec.h>
+#include <Eris/Types.h>
 
 #include <sigc++/object.h>
 #if SIGC_MAJOR_VERSION == 1 && SIGC_MINOR_VERSION == 0
@@ -12,10 +10,11 @@
 #include <sigc++/signal.h>
 #endif
 
-#include <Eris/Types.h>
+#include <iostream>
 
 // Forward declarations
 namespace Atlas {
+	template <class Stream> class Codec;
 	namespace Objects { class Encoder; }
 	namespace Net { class StreamConnect; }
 	namespace Message { class Encoder; }
