@@ -1,14 +1,12 @@
 %define name @PACKAGE@
 %define version @VERSION@
 %define release 1
-%define serial 1
 %define libsuffix @VARCONF_LIB_SUFFIX@
 
 Summary: A config handling library.
 Name: %{name}
 Version: %{version}
 Release: %{release}
-Serial: %{serial}
 Copyright: LGPL
 Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz

@@ -1,4 +1,10 @@
 ChangeLog for varconf
+Friday, 19th December, 2003, Al Riddoch <alriddoch@zepler.org>
+	* Use AC_CANONICAL_SYSTEM macro
+	* Remove Serial from rpm spec as it is not required, and messes up
+	  deps.
+	* Increment version to 0.6.1, interface version 2.0.0 and release.
+
 Saturday, 22nd November, 2003, Al Riddoch <alriddoch@zepler.org>
 	* varconf/variable.h, varconf/variable.cpp: Make operator std::string()
 	  const, so it can be used on a const object.
