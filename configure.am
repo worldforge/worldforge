@@ -1,6 +1,6 @@
 <package>
     <name>Atlas</name>
-    <version>0.2.0</version>
+    <version>0.3.7</version>
     <desc></desc>
     <generate id="config" name="config.h"/>
     <require id="libtool"/>
