@@ -260,6 +260,7 @@ template<> inline Point<3>::Point(CoordType x, CoordType y, CoordType z)
   m_elem[2] = z;
 }
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> Point<2>& Point<2>::polar(CoordType r, CoordType theta);
 template<> void Point<2>::asPolar(CoordType& r, CoordType& theta) const;
 
@@ -271,6 +272,7 @@ template<> Point<3>& Point<3>::spherical(CoordType r, CoordType theta,
 					 CoordType phi);
 template<> void Point<3>::asSpherical(CoordType& r, CoordType& theta,
 				      CoordType& phi) const;
+#endif
 
 } // namespace WFMath
 

@@ -29,6 +29,7 @@
 
 using namespace WFMath;
 
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<2>& WFMath::Point<2>::polar(CoordType r, CoordType theta)
 {
@@ -86,3 +87,4 @@ void WFMath::Point<3>::asSpherical(CoordType& r, CoordType& theta,
   theta = d[1];
   phi = d[2];
 }
+#endif

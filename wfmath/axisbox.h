@@ -49,11 +49,13 @@ std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& m);
 template<const int dim>
 std::istream& operator>>(std::istream& is, AxisBox<dim>& m);
 
+#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 template<const int dim, template<class> class container>
 AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c);
 
 template<const int dim, template<class> class container>
 AxisBox<dim> BoundingBox(const container<Point<dim> >& c);
+#endif
 
 /// A dim dimensional axis-aligned box
 template<const int dim>

@@ -316,7 +316,7 @@ RotMatrix<dim>& RotMatrix<dim>::identity()
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      m_elem[i][j] = (i == j) ? 1 : 0;
+      m_elem[i][j] = (CoordType) ((i == j) ? 1 : 0);
 
   m_flip = false;
 
@@ -392,8 +392,8 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
   // + Dot(vperp, vin) * (a similar term). From this, we find
   // the matrix components.
 
-  CoordType mag_prod = sqrt(v1_sqr_mag * vperp_sqr_mag);
-  CoordType ctheta = cos(theta), stheta = sin(theta);
+  CoordType mag_prod = (CoordType) sqrt(v1_sqr_mag * vperp_sqr_mag);
+  CoordType ctheta = (CoordType) cos(theta), stheta = (CoordType) sin(theta);
 
   identity(); // Initialize to identity matrix
 
@@ -471,8 +471,6 @@ RotMatrix<3>& _NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion&
 template<>
 RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, CoordType theta)
 {
-  assert(dim == 3);
-
   return _NCFS_RotMatrix3_rotation(*this, axis, theta);
 }
 #endif

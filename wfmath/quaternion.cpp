@@ -111,8 +111,8 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
   // check the diagonal
   if (tr > 0.0) {
     s = (CoordType) sqrt (tr + 1.0);
-    m_w = (CoordType) s / 2.0;
-    s = (CoordType) 0.5 / s;
+    m_w = (CoordType) (s / 2.0);
+    s = (CoordType) (0.5 / s);
 
     m_vec[0] = (m_ref.elem(2, 1) - m_ref.elem(1, 2)) * s;
     m_vec[1] = (m_ref.elem(0, 2) - m_ref.elem(2, 0)) * s;
@@ -127,10 +127,10 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     int j = nxt[i], k = nxt[j];
 
     s = (CoordType) sqrt (1.0 + m_ref.elem(i, i) - m_ref.elem(j, j) - m_ref.elem(k, k));
-    m_vec[i] = (CoordType) s * 0.5;
+    m_vec[i] = (CoordType) (s * 0.5);
 
     assert("sqrt() returns positive" && s > 0.0);
-    s = 0.5 / (CoordType) s;
+    s = (CoordType) (0.5 / s);
 
     m_w = (m_ref.elem(k, j) - m_ref.elem(j, k)) * s;
     m_vec[j] = (m_ref.elem(i, j) + m_ref.elem(j, i)) * s;

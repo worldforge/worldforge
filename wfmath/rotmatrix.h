@@ -115,7 +115,7 @@ class RotMatrix {
   Vector<dim> column(const int i) const;
 
   CoordType trace() const;
-  CoordType determinant() const {return m_flip ? -1 : 1;}
+  CoordType determinant() const {return (CoordType) (m_flip ? -1 : 1);}
   RotMatrix inverse() const;
 
   friend RotMatrix Prod<dim>	   (const RotMatrix& m1, const RotMatrix& m2);
