@@ -1,3 +1,10 @@
+Tuesday, 5st November, Ron Steinke
+
+	* Got Avatar working properly with OpRefnoDispatcher,
+	  and changed existing references in the code to the
+	  op:ig:foo dispatcher to use the appropriate per-World
+	  dispatcher id. Taking/creating characters works again.
+
 Sunday, 3rd November, Al Riddoch
 
 	* configure.in: Clean up, and disable static by default.

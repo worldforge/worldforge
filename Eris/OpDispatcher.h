@@ -39,8 +39,8 @@ protected:
 class OpRefnoDispatcher : public StdBranchDispatcher
 {
 public:	
-	OpRefnoDispatcher(const std::string &nm, long refno) :
-		StdBranchDispatcher(nm), _refno(refno)
+	OpRefnoDispatcher(const std::string &nm, long refno, unsigned depth = 0) :
+		StdBranchDispatcher(nm), _refno(refno), _depth(depth)
 	{;}
 	
 	virtual ~OpRefnoDispatcher() {;}
@@ -48,6 +48,7 @@ public:
 	virtual bool dispatch(DispatchContextDeque &dq);
 protected:
 	const long _refno;
+	const unsigned _depth;
 };
 
 }

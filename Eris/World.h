@@ -96,6 +96,8 @@ public:
 	/** get the id of the focused entity. This should be identical to doing getFocusedEntity()->getID(),
 	except that is value is valid before World.Entered is emitted. */
 	std::string getFocusedEntityID();
+
+	const std::string& getDispatcherID() const {return _igID;}
 	
 // factories
 	/** Register an entity factory with the world. Any new entities that the
@@ -207,7 +209,12 @@ protected:
 	void netConnect();
 	
 	/// ID of the playing character (usually the same as the focused entity's ID)
-	std::string _characterID;	
+	std::string _characterID;
+	/// String to register dispatchers under
+	/**
+	 * this can't change, even if _characterID does
+	 **/
+	std::string _igID;
 	Connection* _con;	///< The underlying connection
 	Player* _player;	///< The Player object (future : list)
 	bool _initialEntry; ///< Set if World.Entered needs to be emitted

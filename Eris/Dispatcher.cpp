@@ -225,8 +225,13 @@ bool OpToDispatcher::dispatch(DispatchContextDeque &dq)
 
 bool OpRefnoDispatcher::dispatch(DispatchContextDeque &dq)
 {
-	assert(dq.front().IsMap());
-	const Atlas::Message::Object::MapType &map = dq.front().AsMap();
+	DispatchContextDeque::const_iterator item = dq.begin();
+	for(unsigned i = 0; i < _depth; ++i)
+		if(++item == dq.end())
+			return false;
+
+	assert(item->IsMap());
+	const Atlas::Message::Object::MapType &map = item->AsMap();
 	Atlas::Message::Object::MapType::const_iterator I = map.find("refno");
 	if(I == map.end()) {
 		std::string warning = "Op without a refno, keys are:";

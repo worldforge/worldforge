@@ -49,7 +49,7 @@ Avatar::Avatar(World* world, long refno, const std::string& character_id)
     Dispatcher *d = _world->getConnection()->getDispatcherByPath("op:info");
     assert(d);
     d = d->addSubdispatch(ClassDispatcher::newAnonymous(_world->getConnection()));
-    d = d->addSubdispatch(new OpRefnoDispatcher(_dispatch_id, refno), "game_entity");
+    d = d->addSubdispatch(new OpRefnoDispatcher(_dispatch_id, refno, 1), "game_entity");
     d->addSubdispatch( new SignalDispatcher2<Atlas::Objects::Operation::Info, 
     	Atlas::Objects::Entity::GameEntity>(
     	"character", SigC::slot(*this, &Avatar::recvInfoCharacter))

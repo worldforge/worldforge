@@ -275,10 +275,12 @@ void  World::registerCallbacks()
 	// build the root of the in-game dispatch tree; notably a selector on the character ID
 	// the filter out anything not in-game; followed by 'sight' and 'sound' decoders, with
 	// child entity / operation selectors on those.
+
+	// we will need this to be able to manipulate dispatchers later
+	_igID = get_ig_dispatch_id(_characterID);
 	
 	Dispatcher *d = _con->getDispatcherByPath("op");
-	Dispatcher *igd = d->addSubdispatch(new OpToDispatcher(
-		get_ig_dispatch_id(_characterID), _characterID));
+	Dispatcher *igd = d->addSubdispatch(new OpToDispatcher(_igID, _characterID));
 	
 	Dispatcher *igclass = igd->addSubdispatch(ClassDispatcher::newAnonymous(_con));
 	Dispatcher *sightd = igclass->addSubdispatch(new EncapDispatcher("sight"), "sight");
@@ -487,7 +489,7 @@ void World::recvSoundTalk(const Atlas::Objects::Operation::Sound &snd,
 			// FIXME - ensure name uniqueness
 			std::string nm = "talk_" /* + snd.GetSerialno() */ ;
 			new WaitForDispatch(snd, 
-				"op:ig:sight:entity", 
+				"op:" + _igID + ":sight:entity", 
 				new IdDispatcher(nm, snd.GetFrom()),
 				_con
 			); 

@@ -64,6 +64,7 @@ WaitForDispatch::WaitForDispatch(const Atlas::Objects::Root &obj,
 	_dsp(dsp)
 {
 	Dispatcher *pr = conn->getDispatcherByPath(ppath);
+	assert(pr);
 	pr->addSubdispatch( dsp );
 	dsp->addSubdispatch(new SignalDispatcher0("sig", SigC::slot(*this, &WaitForBase::fire)));
 }

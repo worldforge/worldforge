@@ -430,10 +430,13 @@ void Entity::setContainerById(const std::string &id)
 			// if we received sets/creates/sights in rapid sucession, this can happen, and is
 			// very, very bad
 			std::string setid("set_container_" + _id);
+			std::string dispatch_id = "op:" + _world->getDispatcherID()
+				+ ":sight:entity";
+
 			_world->getConnection()->removeIfDispatcherByPath(
-				"op:ig:sight:entity", setid);
+				dispatch_id, setid);
 			
-			new WaitForDispatch(ssc, "op:ig:sight:entity", 
+			new WaitForDispatch(ssc, dispatch_id, 
 				new IdDispatcher(setid, id), _world->getConnection());
 		}
 	} // of new container is valid
