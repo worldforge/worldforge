@@ -8,12 +8,12 @@
 
 #include "Arg.h"
 
-Arg::Arg(const string& name, const AObject& val)
+Arg::Arg(const string& name, const Object& val)
  : m_name(name), m_val(val)
 {
 }
 
-Arg::Arg(const AObject& val)
+Arg::Arg(const Object& val)
  : m_name(""), m_val(val)
 {
 }
@@ -23,48 +23,48 @@ const string& Arg::getName() const
     return m_name;
 }
     
-const AObject& Arg::getVal() const
+const Object& Arg::getVal() const
 {
     return m_val;
 }
 
 Arg* A(const string& id, const string& value)
 {
-    return new Arg(id, AObject(value));
+    return new Arg(id, Object(value));
 }
 
 Arg* A(const string& id, long value)
 {
-    return new Arg(id, AObject(value));
+    return new Arg(id, Object(value));
 }
 
 Arg* A(const string& id, double value)
 {
-    return new Arg(id, AObject(value));
+    return new Arg(id, Object(value));
 }
 
-Arg* A(const string& id, const AObject& value)
+Arg* A(const string& id, const Object& value)
 {
-    return new Arg(id, AObject(value));
+    return new Arg(id, Object(value));
 }
 
 Arg* A(const string& value)
 {
-    return new Arg(AObject(value));
+    return new Arg(Object(value));
 }
 
 Arg* A(long value)
 {
-    return new Arg(AObject(value));
+    return new Arg(Object(value));
 }
 
 Arg* A(double value)
 {
-    return new Arg(AObject(value));
+    return new Arg(Object(value));
 }
 
-Arg* A(const AObject& value)
+Arg* A(const Object& value)
 {
-    return new Arg(AObject(value));
+    return new Arg(Object(value));
 }
 

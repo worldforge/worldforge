@@ -11,7 +11,7 @@
 #ifdef _MSC_VER
 #include <iostream>
 #endif
-void AUserClient::gotMsg(const AObject& msg)
+void AUserClient::gotMsg(const Object& msg)
 {
     long refno;
     msg.get("refno", refno, 0);
@@ -23,18 +23,18 @@ void AUserClient::gotMsg(const AObject& msg)
     // Lookup message handlers and call them
     list< pair<string, fptr_abstract*> >::iterator I;
     bool found = false;
-    AObject parent; string msgOp;
+    Object parent; string msgOp;
     msg.get("parent", parent);
-    AObject msgOpObj;
+    Object msgOpObj;
     parent.get(0, msgOpObj);
-    msgOp=msgOpObj.getURIPath().asString();
+    msgOp=msgOpObj.asString();
     for (I = m_msghandlers.begin(); I != m_msghandlers.end(); I++) {
         if ((*I).first == msgOp) {
             (*I).second->use(msg);
             found = true;
         }
     }
-    list< pair<string, void(*)(const AObject&)> >::iterator J;
+    list< pair<string, void(*)(const Object&)> >::iterator J;
     for (J = m_msghandlers_simp.begin(); J != m_msghandlers_simp.end(); J++) {
         if ((*J).first == msgOp) {
             (*(*J).second)(msg);
@@ -45,7 +45,7 @@ void AUserClient::gotMsg(const AObject& msg)
 }
 
 
-AObject AUserClient::call(const AObject& msg)
+Object AUserClient::call(const Object& msg)
 {
     msg.get("serialno", m_serialno);
     sendMsg(msg);
@@ -55,15 +55,15 @@ AObject AUserClient::call(const AObject& msg)
     return m_reply;
 }
 /*
-void AUserClient::addMsgHandler(const string& type, void(*hdl)(const AObject&))
+void AUserClient::addMsgHandler(const string& type, void(*hdl)(const Object&))
 {
     m_msghandlers_simp.insert(m_msghandlers_simp.end(),
             pair<string, void(*)(const AObject&)>(type, hdl));
 }
 
-void AUserClient::remMsgHandler(const string& type, void(*hdl)(const AObject&))
+void AUserClient::remMsgHandler(const string& type, void(*hdl)(const Object&))
 {
-    list< pair<string, void(*)(const AObject&)> >::iterator I;
+    list< pair<string, void(*)(const Object&)> >::iterator I;
     bool quit = false;
     for (I = m_msghandlers_simp.begin(); I != m_msghandlers_simp.end()
                                          && !quit; I++) {
@@ -74,7 +74,7 @@ void AUserClient::remMsgHandler(const string& type, void(*hdl)(const AObject&))
     }
 }
 */
-AObject AUserClient::createOperation(const string& id, Arg* args ...)
+Object AUserClient::createOperation(const string& id, Arg* args ...)
 {
   //example result:
   // <obj>
@@ -88,14 +88,14 @@ AObject AUserClient::createOperation(const string& id, Arg* args ...)
   //         </list>
   //     </map>
   // </obj>
-    AObject op;
+    Object op;
     op.set("abstract_type", "operation");
-    AObject parent = AObject::mkURIList(0);
+    Object parent(List);
     parent.append(id);
     op.set("parent", parent);
     op.set("serialno", m_nextserialno++);
 
-    AObject arglist = AObject::mkList(0);
+    Object arglist = Object::mkList(0);
 
     va_list ap;
     va_start(ap, args);
@@ -118,9 +118,9 @@ AObject AUserClient::createOperation(const string& id, Arg* args ...)
     return op;
 }
 
-AObject AUserClient::createEntity(Arg* args ...)
+Object AUserClient::createEntity(Arg* args ...)
 {
-    AObject ent;
+    Object ent;
     
     va_list ap;
     va_start(ap, args);
@@ -140,9 +140,9 @@ AObject AUserClient::createEntity(Arg* args ...)
     return ent;
 }
 
-AObject AUserClient::setCharacterArgs(const string& id, Arg* args ...)
+Object AUserClient::setCharacterArgs(const string& id, Arg* args ...)
 {
-    AObject ent = createEntity(A("id",id), AEND);
+    Object ent = createEntity(A("id",id), AEND);
     
     va_list ap;
     va_start(ap, args);
@@ -159,30 +159,29 @@ AObject AUserClient::setCharacterArgs(const string& id, Arg* args ...)
 
     va_end(ap);
     
-    AObject op = createOperation("set", A(ent), A("from", id), AEND);
+    Object op = createOperation("set", A(ent), A("from", id), AEND);
     return call(op);
 }
 
-int AUserClient::parseOperation1Argument(const AObject &op, string method, AObject &arg0)
+int AUserClient::parseOperation1Argument(const Object &op, string method, Object &arg0)
 {
-  AObject parent, args;
+  Object parent, args;
   string abstract_type, emptyString="";
   op.get("abstract_type",abstract_type,emptyString);
   if(abstract_type!="operation") return 0;
   op.get("parent",parent);
-  AObject opMethodObj;
-  parent.get(0,opMethodObj);
+  Object opMethodObj;
   string opMethod;
-  opMethodObj.getPath(opMethod);
+  parent.get(0,opMethod);
   if(method!=opMethod) return 0;
   op.get("args",args);
   args.get(0,arg0);
   return 1;
 }
 
-void AUserClient::displayError(ostream& out, const AObject &op, string ourMsg)
+void AUserClient::displayError(ostream& out, const Object &op, string ourMsg)
 {
-  AObject args, arg0;
+  Object args, arg0;
   out<<ourMsg;
   op.get("args",args);
   args.get(0,arg0);

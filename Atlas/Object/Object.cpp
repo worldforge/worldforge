@@ -5,6 +5,15 @@
 namespace Atlas
 {
 
+void	Object::walkTree(int nest, string name, const Object& list)
+{
+}
+
+void	Object::dump(const Object& msg)
+{
+}
+
+
 /** (List) insert an Object at this index */
 bool    Object::insert(size_t ndx, const Object& val)
 {

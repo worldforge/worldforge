@@ -31,16 +31,11 @@ public:
 	int	rc:12;	// refcount
 	int	rt:4;	// data type
 
-	Variant()					{ rc=1; rt = None; }
+	Variant()	{ rc=1; rt = None; }
 virtual	~Variant();
 
 	void	incref()	{ rc++; }
-	void	decref()
-	{
-		if (--rc > 0) return;
-		delete this;
-	}
-
+	void	decref();
 };
 
 class VNum: public Variant
@@ -149,7 +144,7 @@ public:
 
 	varmap		vm;
 
-	VMap()		{}
+	VMap()		{ rc=1; rt=Map; }
 	~VMap()		{ delmap(); }
 
 	void	delmap()
@@ -188,8 +183,8 @@ public:
 
 	varvec		vv;
 
-	VVec()			{}
-	VVec(int sz)	{ vv.reserve(sz); }
+	VVec()			{ rc=1; rt=List; }
+	VVec(int sz)	{ rc=1; rt=List; vv.reserve(sz); }
 	~VVec()			{ delvec(); }
 
 	void	delvec()

@@ -16,17 +16,19 @@ using namespace std;
 
 #include "../Net/Net.h"
 
+using namespace Atlas;
+
 #include "Arg.h"
 
 class fptr_abstract {
 public:
-    virtual void use(const AObject& msg) = 0;
+    virtual void use(const Object& msg) = 0;
 };
 
 template<class T>
 class fptr : public fptr_abstract {
 private:
-    typedef void (T::*ptr_t)(const AObject&);
+    typedef void (T::*ptr_t)(const Object&);
     T& m_obj;
     ptr_t m_ptr;
 public:
@@ -35,7 +37,7 @@ public:
     {
     }
 
-    void use(const AObject& msg)
+    void use(const Object& msg)
     {
         (m_obj.*m_ptr)(msg);
     }
@@ -45,23 +47,23 @@ public:
 };
 
 
-class AUserClient : public AClient{
+class AUserClient : public Client{
 public:
     
-    AUserClient(ASocket* socket, ACodec* codec) : AClient(socket, codec),
+    AUserClient(Socket* socket, Codec* codec) : Client(socket, codec),
                                         m_serialno(0), m_nextserialno(1) { }
-    virtual void gotMsg(const AObject& msg);
+    virtual void gotMsg(const Object& msg);
     
-    virtual AObject call(const AObject& msg);
+    virtual Object call(const Object& msg);
 
-    template<class T> void addMsgHandler(const string& type, T& obj, void(T::*handler)(const AObject&))
+    template<class T> void addMsgHandler(const string& type, T& obj, void(T::*handler)(const Object&))
 	{
 		m_msghandlers.insert(m_msghandlers.end(),
 			   pair<string, fptr_abstract*>(type, new fptr<T>(obj, handler)));
 
 	}
     
-	template<class T> void remMsgHandler(const string& type, T& obj, void(T::*handler)(const AObject&))
+	template<class T> void remMsgHandler(const string& type, T& obj, void(T::*handler)(const Object&))
 	{
 		list< pair<string, fptr_abstract*> >::iterator I;
 		bool quit = false;
@@ -77,22 +79,22 @@ public:
 	}
 										 
 
-    AObject createOperation(const string& id, Arg* args ...);
-    AObject createEntity(Arg* args ...);
+    Object createOperation(const string& id, Arg* args ...);
+    Object createEntity(Arg* args ...);
 
-    AObject setCharacterArgs(const string& id, Arg* args ...);
+    Object setCharacterArgs(const string& id, Arg* args ...);
 
-    int parseOperation1Argument(const AObject &op, string method, AObject &arg0);
-    void displayError(ostream& out, const AObject &op, string ourMsg);
+    int parseOperation1Argument(const Object &op, string method, Object &arg0);
+    void displayError(ostream& out, const Object &op, string ourMsg);
     
 private:
 
     long m_serialno;
     long m_nextserialno;
 
-    AObject m_reply;
+    Object m_reply;
     list< pair<string, fptr_abstract*> > m_msghandlers;
-    list< pair<string, void(*)(const AObject&)> > m_msghandlers_simp;
+    list< pair<string, void(*)(const Object&)> > m_msghandlers_simp;
 };
 
 #endif

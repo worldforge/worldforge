@@ -14,21 +14,23 @@ using namespace std;
 
 #include "../Object/Object.h"
 
+using namespace Atlas;
+
 class Arg // Container for an attribute argument
 {
 public:
-    Arg(const string& name, const AObject& val);
+    Arg(const string& name, const Object& val);
 
-    Arg(const AObject& val);
+    Arg(const Object& val);
 
     const string& getName() const;
     
-    const AObject& getVal() const;
+    const Object& getVal() const;
 
 protected:
     string m_name;
     
-    AObject m_val;
+    Object m_val;
 
 private:
     Arg();
@@ -39,10 +41,10 @@ private:
 Arg* A(const string& id, const string& value);
 Arg* A(const string& id, long value);
 Arg* A(const string& id, double value);
-Arg* A(const string& id, const AObject& value);
+Arg* A(const string& id, const Object& value);
 Arg* A(const string& value);
 Arg* A(long value);
 Arg* A(double value);
-Arg* A(const AObject& value);
+Arg* A(const Object& value);
 
 #endif
