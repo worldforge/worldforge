@@ -119,6 +119,60 @@ class AttributeInfo:
             res = res + indent + '    Atlas::Message::Encoder e(b);\n'
             res = res + indent + '    e.mapElementMapItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
+        elif self.type == "string_list":
+            res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
+            res = res + indent + '    const std::list<std::string> & l = get%s();\n' \
+                  % (self.cname)
+            res = res + indent + '    std::list<std::string>::const_iterator I = l.begin();\n'
+            res = res + indent + '    for(; I != l.end(); ++I) {\n'
+            res = res + indent + '        b.listStringItem(*I);\n'
+            res = res + indent + '    }\n'
+            res = res + indent + '    b.listEnd();\n'
+        elif self.type == "int_list":
+            res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
+            res = res + indent + '    const std::list<std::string> & l = get%s();\n' \
+                  % (self.cname)
+            res = res + indent + '    std::list<std::string>::const_iterator I = l.begin();\n'
+            res = res + indent + '    for(; I != l.end(); ++I) {\n'
+            res = res + indent + '        b.listIntItem(*I);\n'
+            res = res + indent + '    }\n'
+            res = res + indent + '    b.listEnd();\n'
+        elif self.type == "float_list":
+            res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
+            res = res + indent + '    const std::list<double> & l = get%s();\n' \
+                  % (self.cname)
+            res = res + indent + '    std::list<double>::const_iterator I = l.begin();\n'
+            res = res + indent + '    for(; I != l.end(); ++I) {\n'
+            res = res + indent + '        b.listFloatItem(*I);\n'
+            res = res + indent + '    }\n'
+            res = res + indent + '    b.listEnd();\n'
+        elif self.type == "string_list_length":
+            res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
+            res = res + indent + '    const std::vector<std::string> & v = get%s();\n' \
+                  % (self.cname)
+            res = res + indent + '    std::vector<std::string>::const_iterator I = v.begin();\n'
+            res = res + indent + '    for(; I != v.end(); ++I) {\n'
+            res = res + indent + '        b.listStringItem(*I);\n'
+            res = res + indent + '    }\n'
+            res = res + indent + '    b.listEnd();\n'
+        elif self.type == "int_list_length":
+            res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
+            res = res + indent + '    const std::vector<std::string> & v = get%s();\n' \
+                  % (self.cname)
+            res = res + indent + '    std::vector<std::string>::const_iterator I = v.begin();\n'
+            res = res + indent + '    for(; I != v.end(); ++I) {\n'
+            res = res + indent + '        b.listIntItem(*I);\n'
+            res = res + indent + '    }\n'
+            res = res + indent + '    b.listEnd();\n'
+        elif self.type == "float_list_length":
+            res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
+            res = res + indent + '    const std::vector<double> & v = get%s();\n' \
+                  % (self.cname)
+            res = res + indent + '    std::vector<double>::const_iterator I = v.begin();\n'
+            res = res + indent + '    for(; I != v.end(); ++I) {\n'
+            res = res + indent + '        b.listFloatItem(*I);\n'
+            res = res + indent + '    }\n'
+            res = res + indent + '    b.listEnd();\n'
         else:
             res = res + indent + '    Atlas::Message::Encoder e(b);\n'
             res = res + indent + '    e.mapElementListItem("%s", get%s%s());\n' \

@@ -1,11 +1,5 @@
 New TODO by Al Riddoch
 
-See whether we can re-work EncoderBase so that we avoid the little stub
-functions that just pass straight through to the bridge. It may also be
-possible to eliminate the virtualisation in the Encoder classes.
-
-Avoid double copy when encoding parents attribute of Root.
-
 There is some inefficient copying going on in the way args are encoded.
 
 Note that most people are not interested in the Objects::Decoder also
@@ -24,10 +18,6 @@ order and priority of tasks, and make my own notes.
 Write a very fast binary codec, with a name derived from our architecture.
 
 Make the code for adding new decoder methods templaty so we can ovoid nasty casting.
-
-Generally speaking it seems having virtual methods with the same names
-is not all that good a trick. It causes methods to get hidden when only
-some are overridden in a subclass.
 
 Write codecs, connectors and acceptors for datagram based communication,
 specialising Codec<> template using an abstract datagram class interface.

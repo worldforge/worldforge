@@ -1,5 +1,11 @@
 2003-04-14  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/AttributeInfo.py: Add explicit send members for
+	  the more complex sequence types, to avoid having
+	  to use a Message::Encoder.
+
+2003-04-14  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/EncoderBase.cpp, Atlas/EncoderBase.h,
 	  Atlas/Message/MEncoder.cpp, Atlas/Message/MEncoder.h,
 	  Atlas/Objects/AttributeInfo.py, Atlas/Objects/BaseObject.cpp,
