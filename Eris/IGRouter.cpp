@@ -35,6 +35,12 @@ IGRouter::~IGRouter()
 
 Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 {
+    if (!op->isDefaultSeconds())
+    {
+        // grab out world time
+        m_avatar->updateWorldTime(op->getSeconds());
+    }
+    
     const std::vector<Root>& args = op->getArgs();
     
     Sight sight = smart_dynamic_cast<Sight>(op);

@@ -1,21 +1,29 @@
-#ifndef TEST_UTILS_H
-#define TEST_UTILS_H
+#ifndef ERIS_TEST_UTILS_H
+#define ERIS_TEST_UTILS_H
 
-std::string getType(const Atlas::Message::Element &obj);
+#include <exception>
+#include <string>
 
-const Atlas::Message::Element
-getArg(const Atlas::Message::Element &op, unsigned int i);	
-
-/// assume that args[0] is a map, and then lookup the named value
-const Atlas::Message::Element
-getArg(const Atlas::Message::Element &op, const std::string &nm);
-
-bool hasArg(const Atlas::Message::Element &op, const std::string &nm);	
-
-const Atlas::Message::Element&
-getMember(const Atlas::Message::Element &obj, unsigned int i);	
-
-const Atlas::Message::Element&
-getMember(const Atlas::Message::Element &obj, const std::string &nm);
+class TestFailure : public std::exception
+{
+public:
+    TestFailure(const std::string& what) : 
+        m_what(what)
+    {
+        ;
+    }
+    
+    ~TestFailure() throw()
+    {
+        ;
+    }
+    
+    virtual const char* what() const throw()
+    {
+        return m_what.c_str();
+    }
+private:
+    std::string m_what;
+};
 
 #endif

@@ -4,6 +4,8 @@
 
 #include "clientConnection.h"
 #include "stubServer.h"
+#include "objectSummary.h"
+#include "testUtils.h"
 
 #include <Eris/logStream.h>
 #include <Eris/Exceptions.h>
@@ -17,7 +19,7 @@ using namespace Atlas::Objects::Operation;
 using namespace Eris;
 using Atlas::Objects::Entity::RootEntity;
 
-typedef Atlas::Objects::Entity::Account AtlasAccount;
+typedef Atlas::Objects::Entity::Player AtlasPlayer;
 
 ClientConnection::ClientConnection(StubServer* ss, int socket) :
     m_stream(socket),
@@ -26,6 +28,7 @@ ClientConnection::ClientConnection(StubServer* ss, int socket) :
     m_encoder(NULL)
 {
     m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", m_stream, this);
+    m_acceptor->poll(false);
 }
 
 ClientConnection::~ClientConnection()
@@ -37,8 +40,6 @@ ClientConnection::~ClientConnection()
 
 void ClientConnection::poll()
 {
-    if (!m_stream.isReady()) return;
-
     if (m_acceptor)
     {
         negotiate();
@@ -46,6 +47,7 @@ void ClientConnection::poll()
     else
     {
         m_codec->poll();
+        
         while (!m_objDeque.empty())
         {
             RootOperation op = smart_dynamic_cast<RootOperation>(m_objDeque.front());
@@ -72,15 +74,15 @@ void ClientConnection::negotiate()
     m_acceptor->poll(); 
     
     switch (m_acceptor->getState()) {
-    case Atlas::Negotiate::IN_PROGRESS:
+    case Atlas::Net::StreamAccept::IN_PROGRESS:
         break;
 
-    case Atlas::Negotiate::FAILED:
+    case Atlas::Net::StreamAccept::FAILED:
         error() << "ClientConnection got Atlas negotiation failure";
         fail();
         break;
 
-    case Atlas::Negotiate::SUCCEEDED:
+    case Atlas::Net::StreamAccept::SUCCEEDED:
         m_codec = m_acceptor->getCodec();
         m_encoder = new Atlas::Objects::ObjectsEncoder(*m_codec);
         m_codec->streamBegin();
@@ -103,34 +105,47 @@ void ClientConnection::objectArrived(const Root& obj)
 // dispatch / decode logic
 
 void ClientConnection::dispatch(const RootOperation& op)
-{
+{    
     const std::vector<Root>& args = op->getArgs();
     
-    if (m_account.empty())
-    {
-        // not logged in yet
-        Login login = smart_dynamic_cast<Login>(op);
-        if (login.isValid())
+    if (op->getFrom().empty())
+    {        
+        if (m_account.empty())
         {
-            processLogin(login);
+            // not logged in yet
+            Login login = smart_dynamic_cast<Login>(op);
+            if (login.isValid())
+            {
+                processLogin(login);
+                return;
+            }
+       
+            Create cr = smart_dynamic_cast<Create>(op);
+            if (cr.isValid())
+            {
+                assert(!args.empty());
+                processAccountCreate(cr);
+                return;
+            }
+        }
+        
+        Get get = smart_dynamic_cast<Get>(op);
+        if (get.isValid())
+        {
+            processAnonymousGet(get);
             return;
         }
-   
-        Create cr = smart_dynamic_cast<Create>(op);
-        if (cr.isValid())
-        {
-            assert(!args.empty());
-            processAccountCreate(cr);
-            return;
-        }
+        
+        throw TestFailure("got anonymous op I couldn't dispatch");
     }
-
+    
     if (op->getFrom() == m_account)
     {
-       // .. OOG ops ....
+        dispatchOOG(op);
+        return;
     }
     
-    
+    debug() << "totally failed to handle operation " << objectSummary(op);
 }
 
 void ClientConnection::dispatchOOG(const RootOperation& op)
@@ -173,24 +188,25 @@ void ClientConnection::processLogin(const Login& login)
         throw InvalidOperation("got bad LOGIN op");
     
     std::string username = args.front()->getAttr("username").asString();
-    if (!m_server->m_accounts.count(username))
+    
+    AccountMap::const_iterator A = m_server->findAccountByUsername(username);
+    if (A  == m_server->m_accounts.end())
     {
         sendError("unknown account: " + username, login);
         return;
     }
     
-    AtlasAccount acc = m_server->m_accounts[username];
-    if (acc->getAttr("password") != args.front()->getAttr("password"))
+    if (A->second->getPassword() != args.front()->getAttr("password").asString())
     {
         sendError("bad password", login);
         return;
     }
     
     // update the really important member variable
-    m_account = acc->getId();
+    m_account = A->second->getId();
     
     Info loginInfo;
-    loginInfo->setArgs1(acc);
+    loginInfo->setArgs1(A->second);
     loginInfo->setTo(m_account);
     loginInfo->setRefno(login->getSerialno());
     send(loginInfo);
@@ -203,7 +219,7 @@ void ClientConnection::processAccountCreate(const Create& cr)
 
     // check for duplicate username
 
-    AtlasAccount acc;
+    AtlasPlayer acc;
     
     
     m_server->m_accounts[acc->getId()] = acc;
@@ -275,6 +291,26 @@ void ClientConnection::processOOGLook(const Look& lk)
     send(st);
 }
 
+void ClientConnection::processAnonymousGet(const Get& get)
+{
+    const std::vector<Root>& args = get->getArgs();
+    if (args.empty())
+    {
+        debug() << "handle server queries";
+    } else {
+        std::string typeName = args.front()->getId();
+        debug() << "got a type query for '" << typeName << "', I think";
+        if (m_server->m_types.count(typeName))
+        {
+            Info typeInfo;
+            typeInfo->setArgs1(m_server->m_types[typeName]);
+            typeInfo->setRefno(get->getSerialno());
+            send(typeInfo);
+        } else
+            sendError("unknown type " + typeName, get);
+    }
+}
+
 #pragma mark -
 
 void ClientConnection::sendError(const std::string& msg, const RootOperation& op)
@@ -294,8 +330,17 @@ void ClientConnection::sendError(const std::string& msg, const RootOperation& op
     send(errOp);
 }
 
+void ClientConnection::send(const Root& obj)
+{
+    m_encoder->streamObjectsMessage(obj);
+    m_stream << std::flush;
+}
+
 bool ClientConnection::entityIsCharacter(const std::string& id)
 {
-
-
+    assert(!m_account.empty());
+    AtlasPlayer p = m_server->m_accounts[m_account];
+    StringSet characters(p->getCharacters().begin(),  p->getCharacters().end());
+    
+    return characters.count(id);
 }

@@ -18,7 +18,7 @@ Eris TODO
 - update metaserver to API agreed with Al
 - add world time support to igRouter / Avatar
 
-- register types with the Atlas objects factory when they're loaded
+- Talk handlers (and others) on the recipient, i.e a Hear(const Sound&) on Avatar
 
 Longer Term TODO
 

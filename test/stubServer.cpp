@@ -7,6 +7,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/logStream.h>
 #include <Atlas/Objects/Operation.h>
+#include <skstream/skpoll.h>
 
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
@@ -14,7 +15,11 @@ using namespace Atlas::Objects::Operation;
 using namespace Eris;
 using Atlas::Objects::Entity::RootEntity;
 typedef Atlas::Message::ListType AtlasListType;
-typedef Atlas::Objects::Entity::Account AtlasAccount;
+typedef Atlas::Objects::Entity::Player AtlasPlayer;
+
+typedef std::list<std::string> StringList;
+
+using Atlas::Objects::Entity::GameEntity;
 
 StubServer::StubServer(short port) :
     m_serverSocket(port)
@@ -33,8 +38,18 @@ StubServer::StubServer(short port) :
     const int reuseFlag = 1;
     ::setsockopt(m_serverSocket.getSocket(), SOL_SOCKET, SO_REUSEADDR, 
             &reuseFlag, sizeof(reuseFlag));
-
-    debug() << "stub server listening";
+            
+    setupTestAccounts();
+    
+    RootEntity lobby;
+    std::list<std::string> parents(1, "room");
+    lobby->setParents(parents);
+    lobby->setId("_lobby");
+    lobby->setAttr("people", AtlasListType());
+    lobby->setAttr("topic", "Welcome to Stub World");
+    lobby->setName("Lobby");
+    
+    m_rooms[lobby->getId()] = lobby;
 }
 
 StubServer::~StubServer()
@@ -46,24 +61,55 @@ StubServer::~StubServer()
 
 void StubServer::setupTestAccounts()
 {
-    AtlasAccount accA;
+    AtlasPlayer accA;
     accA->setId("_23_account_A");
     accA->setAttr("username", "account_A");
-    accA->setAttr("password", "pumpkin");
-    
+    accA->setPassword("pumpkin");
+    accA->setObjtype("obj");
+    std::list<std::string> parents(1, "player");
+    accA->setParents(parents);
     m_accounts[accA->getId()] = accA;
+    
+    AtlasPlayer accB;
+    accB->setId("_24_account_B");
+    accB->setAttr("username", "account_B");
+    accB->setPassword("sweede");
+    accB->setObjtype("obj");
+    accB->setParents(parents);
+    
+    StringList& characters = accB->modifyCharacters();
+    characters.push_back("acc_b_character");
+
+    m_accounts[accB->getId()] = accB;
+    
+    GameEntity avatarB0;
+    avatarB0->setName("Joe Blow");
+    avatarB0->setId("acc_b_character");
+    avatarB0->setObjtype("obj");
+    avatarB0->setParents(StringList(1, "game_entity"));
+    m_world[avatarB0->getId()] = avatarB0;
 }
 
 void StubServer::run()
 {
     if (m_serverSocket.can_accept())
     {
-        debug() << "stub server accepting connection";
         m_clients.push_back(new ClientConnection(this, m_serverSocket.accept()));
     }
     
+    basic_socket_poll::socket_map clientSockets;
+    
     for (unsigned int C=0; C < m_clients.size(); ++C)
-        m_clients[C]->poll();
+        clientSockets[m_clients[C]->getStream()] = basic_socket_poll::READ;
+        
+    basic_socket_poll poller;
+    poller.poll(clientSockets);
+    
+    for (unsigned int C=0; C < m_clients.size(); ++C)
+    {
+        if (poller.isReady(m_clients[C]->getStream()))
+            m_clients[C]->poll();
+    }
 }
 
 /*
@@ -118,6 +164,16 @@ ClientConnection* StubServer::getConnectionForAccount(const std::string& accId)
         if (m_clients[C]->getAccount() == accId) return m_clients[C];
         
     return NULL;
+}
+
+AccountMap::const_iterator StubServer::findAccountByUsername(const std::string &uname)
+{
+    for (AccountMap::const_iterator A=m_accounts.begin(); A != m_accounts.end(); ++A)
+    {
+        if (A->second->getAttr("username").asString() == uname) return A;
+    }
+    
+    return m_accounts.end();
 }
 
 #pragma mark -
@@ -217,4 +273,24 @@ void StubServer::talkInRoom(const Talk& tk, const std::string& room)
         snd->setTo(*M);
         con->send(snd);
     }
+}
+
+#pragma mark - 
+
+void StubServer::subclassType(const std::string& base, const std::string& derivedName)
+{
+    assert(m_types.count(base));
+    assert(m_types.count(derivedName) == 0);
+    
+    AtlasTypeMap::iterator T = m_types.find(base);
+    
+    StringSet baseChildren(T->second->getChildren().begin(), T->second->getChildren().end());
+    assert(baseChildren.count(derivedName) == 0);
+    
+    T->second->modifyChildren().push_back(derivedName);
+    Root derived = T->second;
+    derived->setParents(StringList(1, base));
+    derived->setId(derivedName);
+    
+    m_types[derivedName] = derived;
 }

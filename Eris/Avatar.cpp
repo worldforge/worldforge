@@ -231,4 +231,14 @@ Connection* Avatar::getConnection() const
     return m_account->getConnection();
 }
 
+WFMath::TimeStamp Avatar::getWorldTime()
+{
+    return WFMath::TimeStamp::now() + m_worldTimeOffset;
+}
+
+void Avatar::updateWorldTime(double seconds)
+{
+
+}
+
 } // of namespace Eris

@@ -7,6 +7,7 @@
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
 #include <wfmath/quaternion.h>
+#include <wfmath/timestamp.h>
 
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
@@ -46,6 +47,9 @@ public:
 
     Connection* getConnection() const;
 
+    /** get the current local approximation of world time. */
+    WFMath::TimeStamp getWorldTime();
+
 	/// Drop an object in the Avatar's inventory at the given location
 	void drop(Entity*, const WFMath::Point<3>& pos, const std::string& loc);
 	/// Drop an object in the Avatar's inventory at the Avatar's feet
@@ -84,6 +88,9 @@ public:
     /// An object was removed from the inventory
     SigC::Signal1<void,Entity*> InvRemoved;
         
+    /** emitted when this Avatar hears something. Passes the source of
+    the sound, and the operation that was heard, for example a Talk. */
+    SigC::Signal2<void, Entity*, const Atlas::Objects::Operation::RootOperation&> Hear;
 protected:
     friend class Player;
     
@@ -93,14 +100,23 @@ protected:
     Avatar(Player* pl);
     
     friend class AccountRouter;
+    friend class IGRouter;
     
     void setEntity(const Atlas::Objects::Entity::GameEntity& gent);
+    
+    /** called by the IG router for each op it sees with a valid 'seconds'
+    attribute set. We use this to synchronize the local world time up. */
+    void updateWorldTime(double t);
 private:
     
     Player* m_account;
     
     std::string m_entityId;
     EntityPtr m_entity;
+    /** records the current difference between system time and world's time
+    (currently, usually the server uptime). This is likely to change when
+    we support more advanced horology. */
+    WFMath::TimeDiff m_worldTimeOffset; 
     
     IGRouter* m_router;
     View* m_view;

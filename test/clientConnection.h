@@ -18,6 +18,11 @@ public:
     
     void poll();
     
+    basic_socket* getStream()
+    {
+        return &m_stream;
+    }
+    
     const std::string& getAccount() const 
     { return m_account; }
     
@@ -38,6 +43,7 @@ private:
     void processLogin(const Atlas::Objects::Operation::Login& login);
     void processAccountCreate(const Atlas::Objects::Operation::Create& cr);
     void processOOGLook(const Atlas::Objects::Operation::Look& lk);
+    void processAnonymousGet(const Atlas::Objects::Operation::Get& get);
     
     void sendError(const std::string& msg, const Atlas::Objects::Operation::RootOperation& op);
     

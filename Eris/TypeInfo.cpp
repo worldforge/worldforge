@@ -8,6 +8,8 @@
 
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/objectFactory.h>
 
 #include <cassert>
 
@@ -128,6 +130,11 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
         (*C)->addAncestor(tp);
 }
 
+Atlas::Objects::Root gameEntityFactory()
+{
+    return Atlas::Objects::Entity::GameEntity();
+}
+
 void TypeInfo::validateBind()
 {
     if (m_bound) return;
@@ -137,8 +144,15 @@ void TypeInfo::validateBind()
         if (!(*P)->isBound()) return;
 	
     m_bound = true;
+    
+    if (!Atlas::Objects::objectFactory.hasFactory(m_name))
+    {
+        debug() << "registering Atlas factory for newly bound type " << m_name;
+        Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
+    }
+    
     Bound.emit();
-		
+        
     for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C)
         (*C)->validateBind();
 }

@@ -6,6 +6,7 @@
 #include <set>
 
 #include <skstream/skserver.h>
+
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/Entity.h>
@@ -13,6 +14,8 @@
 class ClientConnection;
 
 typedef std::set<std::string> StringSet;
+
+typedef std::map<std::string, Atlas::Objects::Entity::Player> AccountMap;
 
 class StubServer
 { 
@@ -25,6 +28,8 @@ public:
     void setupTestAccounts();
 
     ClientConnection* getConnectionForAccount(const std::string& accId);
+    
+    AccountMap::const_iterator findAccountByUsername(const std::string &uname);
 private:
     void joinRoom(const std::string& acc, const std::string& room);
     void partRoom(const std::string& acc, const std::string& room);
@@ -32,13 +37,14 @@ private:
     
     StringSet peopleInRoom(const std::string& room);
     
+    void subclassType(const std::string& base, const std::string& derivedName);
+    
     tcp_socket_server m_serverSocket;
 
     friend class ClientConnection;
     
     std::vector<ClientConnection*> m_clients;
     
-    typedef std::map<std::string, Atlas::Objects::Entity::Account> AccountMap;
     AccountMap m_accounts;
 
     typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> EntityMap;
@@ -46,6 +52,9 @@ private:
     
     typedef std::map<std::string, Atlas::Objects::Entity::RootEntity> RoomMap;
     RoomMap m_rooms;
+    
+    typedef std::map<std::string, Atlas::Objects::Root> AtlasTypeMap;
+    AtlasTypeMap m_types;
 };
 
 #endif

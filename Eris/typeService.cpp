@@ -50,9 +50,7 @@ void TypeService::init()
 {
     assert(!m_inited);
     m_inited = true;
-    
-    debug() << "initializing type service";
-    
+        
     // build the root node, install into the global map and kick off the GET
     getTypeByName("root");
 	
@@ -201,6 +199,8 @@ void TypeService::sendRequest(const std::string &id)
     // stop premature requests (before the connection is available); when TypeInfo::init
     // is called, the requests will be re-issued manually
     if (!m_inited) return;
+    
+    debug() << "requesting type " << id;
     
     Root what;
     what->setId(id);

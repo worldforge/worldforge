@@ -151,6 +151,8 @@ private:
     IdRouterMap m_fromRouters;
     
     int m_lock;
+    
+    Atlas::Objects::ObjectsEncoder* m_debugRecvEncoder;
 };
 
 /// operation serial number sequencing

@@ -17,6 +17,8 @@
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
 
+#include <Atlas/Codecs/Bach.h>
+
 #include <cassert>
 #include <algorithm>
 
@@ -25,6 +27,8 @@ using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
+
+
 
 Connection::Connection(const std::string &cnm, bool dbg, Router* dr) :
     BaseConnection(cnm, "game_", this),
@@ -174,6 +178,14 @@ void Connection::unlock()
 
 void Connection::objectArrived(const Root& obj)
 {
+    std::stringstream debugStream;
+    Atlas::Codecs::Bach debugCodec(debugStream, NULL);
+    Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
+    debugEncoder.streamObjectsMessage(obj);
+    debugStream << std::flush;
+
+    std::cout << "recieved:" << debugStream.str() << std::endl;
+
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     m_opDeque.push_back(op);
 }

@@ -20,7 +20,7 @@
 using Atlas::Objects::Root;
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Entity::GameEntity;
-typedef Atlas::Objects::Entity::Account AtlasAccount;
+typedef Atlas::Objects::Entity::Player AtlasPlayer;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
@@ -51,32 +51,32 @@ public:
 
     virtual RouterResult handleOperation(const RootOperation& op)
     {
-        if (op->instanceOf(INFO_NO))
-            return handleInfo(smart_dynamic_cast<Info>(op));
-        
-    // logout
+         // errors
+        if (op->instanceOf(ERROR_NO))
+        {
+            debug() << "player recived an error";
+            if (m_player->isLoggedIn())
+            {
+                warning() << "Player got error op while logged in";
+            } else {
+                m_player->loginError(smart_dynamic_cast<Error>(op));
+                return HANDLED;
+            }
+        }
+
+        // logout
         if (op->instanceOf(LOGOUT_NO))
         {
             m_player->internalLogout(false);
             return HANDLED;
         }
-            
-    // errors
-        if (op->instanceOf(ERROR_NO))
-        {
-            if (m_player->isLoggedIn())
-            {
-                warning() << "Player got error op while logged in";
-            } else
-                m_player->loginError(smart_dynamic_cast<Error>(op));
-        }
-        
+           
     // only-when connected ops
         if (m_player->isLoggedIn() && (op->getTo() == m_player->getID()))
         {
             // character looks
             if (op->instanceOf(SIGHT_NO))
-            {
+            {            
                 const std::vector<Root>& args = op->getArgs();
                 assert(!args.empty());
                 GameEntity character = smart_dynamic_cast<GameEntity>(args.front());
@@ -88,6 +88,9 @@ public:
             }
         }
         
+        if (op->instanceOf(INFO_NO))
+            return handleInfo(smart_dynamic_cast<Info>(op));
+            
         return IGNORED;
     }
 
@@ -101,8 +104,9 @@ private:
             throw InvalidOperation("Account got INFO() with no arguments");
             
         if (info->getRefno() == m_loginRefno)
-        {
-            AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
+        {            
+            AtlasPlayer acc = smart_dynamic_cast<AtlasPlayer>(args.front());
+            assert(acc.isValid());
             m_player->loginComplete(acc);
             return HANDLED;
         }
@@ -181,10 +185,10 @@ void Player::createAccount(const std::string &uname,
     }
 
     m_status = LOGGING_IN;
-    
+
 // okay, build and send the create(account) op
-    AtlasAccount account;
-    account->setAttr("password", pwd);
+    AtlasPlayer account;
+    account->setPassword(pwd);
     account->setName(fullName);
     account->setAttr("username", uname);
     
@@ -337,10 +341,11 @@ Avatar* Player::takeCharacter(const std::string &id)
 void Player::internalLogin(const std::string &uname, const std::string &pwd)
 {
     assert(m_status == DISCONNECTED);
+    m_status = LOGGING_IN;
     m_username = uname; // store for posterity
 
-    AtlasAccount account;
-    account->setAttr("password", pwd);
+    AtlasPlayer account;
+    account->setPassword(pwd);
     account->setAttr("username", uname);
 
     Login l;
@@ -373,7 +378,7 @@ void Player::internalLogout(bool clean)
     LogoutComplete.emit(clean);
 }
 
-void Player::loginComplete(const AtlasAccount &p)
+void Player::loginComplete(const AtlasPlayer &p)
 {
     if (m_status != LOGGING_IN)
         error() << "got loginComplete, but not currently logging in!";
@@ -385,12 +390,7 @@ void Player::loginComplete(const AtlasAccount &p)
     m_accountId = p->getId();
     debug() << "login, account ID is " << m_accountId;
     
-// extract character IDs, and turn from a list into a set
-    m_characterIds.clear();
-    const Atlas::Message::ListType& cs = p->getAttr("characters").asList();
-    for (Atlas::Message::ListType::const_iterator I=cs.begin(); I != cs.end(); ++I)
-        m_characterIds.insert(I->asString());
-    
+    m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
     // notify an people watching us 
     LoginSuccess.emit();
       
