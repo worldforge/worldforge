@@ -71,8 +71,8 @@ public:
     
 private:
 
-    int m_serialno;
-    int m_nextserialno;
+    long m_serialno;
+    long m_nextserialno;
 
     AObject m_reply;
     multimap<string, fptr_abstract*> m_msghandlers;

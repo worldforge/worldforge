@@ -10,7 +10,7 @@
 
 void AUserClient::gotMsg(const AObject& msg)
 {
-    int refno;
+    long refno;
     msg.get("refno", refno, 0);
     if((m_serialno) && (refno == m_serialno)) {
         m_reply = msg;

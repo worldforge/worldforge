@@ -15,6 +15,6 @@ EXE_EXT        =
 incDirs        =       -I/usr/local/include/python1.5 $(STDINCS)
 #incDirs        =       -I/usr/include/python1.5 $(STDINCS)
 libDirs        =       $(STDLIBS)
-LIBS           =       -lstdc++ -lpython1.5 -lAtlas -ldl
+LIBS           =       -lstdc++ -lAtlas -lpython1.5 -ldl
 
 include Makefile.common
