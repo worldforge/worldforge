@@ -6,7 +6,10 @@
 
 #include "Encoder.h"
 
-#include <stdio.h>
+#include <cstdarg>
+#include <cstdio>
+
+using std::string;
 
 namespace Atlas
 {
