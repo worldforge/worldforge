@@ -3,17 +3,23 @@
 #endif
 
 #include <Atlas/Objects/Entity/Player.h>
+#include <Atlas/Objects/Operation/Sound.h>
 #include <sigc++/bind.h>
 #include <sigc++/signal_system.h>
 
 #include "Utils.h"
 #include "testLobby.h"
 
+
 using namespace Atlas;
+
+using namespace Atlas::Objects;
 
 void callback_loggedIn(const Objects::Entity::Player &acc, bool &flag);
 void callback_roomChanged(const Eris::StringSet &attrs, bool &flag);
 void callback_roomEntered(Eris::Room *r, bool &flag);
+
+void callback_privateChat(const std::string &src, const std::string &msg);
 
 TestLobby::TestLobby() :
     test_lobby(NULL)
@@ -156,10 +162,10 @@ void TestLobby::testPrivateChat()
     snd.SetFrom("test_acc2");
     snd.SetArgs(Message::Object::ListType(1, tk));
     
-    test_lobby->PrivateChat.connect(SigC::slot(&callback_privateChat));
+    test_lobby->PrivateTalk.connect(SigC::slot(&callback_privateChat));
 }
 
-void callback_privateChat(Eris::Person *src, const std::string &msg)
+void callback_privateChat(const std::string &src, const std::string &msg)
 {
     CPPUNIT_ASSERT(msg == "sample_private_chat");
 }

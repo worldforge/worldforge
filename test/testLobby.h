@@ -19,10 +19,12 @@ public:
 
     void testEntry();
     void testRoomCreate();
-    
+    void testPrivateChat();
+
     virtual void setUp();
     virtual void tearDown();
 protected:
+
     Eris::Lobby *test_lobby;
     StubConnection *con;
 };
