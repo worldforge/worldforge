@@ -6,7 +6,7 @@
         email           : sdt@gmx.net
 */
 
-#include "AtlasUserClient.h"
+#include "UserClient.h"
 
 void AUserClient::gotMsg(const AObject& msg)
 {

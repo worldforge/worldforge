@@ -12,7 +12,7 @@
 #include <string>
 using namespace std;
 
-#include <AtlasObject.h>
+#include "../Object/Object.h"
 
 class Arg // Container for an attribute argument
 {
