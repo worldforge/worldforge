@@ -1,0 +1,103 @@
+Saturday, August 04 2001, James Turner
+
+	* Handle sparse rooms without throwing an exceptions;
+	  checks that the 'people' and 'rooms' list exist
+	  before attempting to extract them.
+	* Fixed file line endings
+
+Sunday, July 29 2001, James Turner
+
+	* Added redispatch (re-post) support; needs testing
+	  and documentation but the basics are there and
+	  quite clean.
+	* Added RecapDsiaptcher and IdDispatcher
+	* Instance() singleton accessor on Eris::Connection
+	* Sythetic appearance generation as required
+	* Fixed dispatcher setup for sound(talk)
+	* In-game works, with some bug (5 copies of messages!)
+
+Friday, July 27 2001, James Turner
+
+	* Renamed methods to leadingLowerCase style, as requested
+	  by Al Riddoch.
+	* Added std:: prefix to lots of things to make GCC 3.0
+	  happier. Doubtless some remain.
+	* Fixed context dispatch stack handling when backtracking
+	  occurs (wasn't correclty popping encapsulated objects)
+
+Thursday, July 26 2001, James Turner
+
+	* Added Meta-server status codes
+	* Added 'Failure' signal to Meta
+	* Much improved meta-server error handling in general
+
+Wednesday, July 25 2001, James Turner
+
+	* Changed Dispatcher interface to support passing
+ 	  multiple objects down the tree. This enables 'context'
+	  to be maintained, i.e encapsualting objects are not
+	  discarded.
+	* Added SignalDispatcher2, which binds to both the curent
+	  top of the context stack, and it's parent. In theorey,
+	  SignalDispatcher3/4 etc could be provided, but this is
+	  unlikely to occurr much in practice.
+	* Bumped version to 0.1.3
+	* Handle Stage RIM Chat bug where ID of certain objects 
+	  is not set in SIGHTs (use TO attribute of SIGHT op)
+
+Sunday, July 22 2001, James Turner
+
+	* Fixed player to correctly register 'LoggedIn' signal
+	  on Lobby, which was getting ignored.
+	* Implemented Connection::RemoveDispatcherByPath
+
+Saturday, July 21 2001, James Turner
+
+	* Fixed Lobby::Join to match silence-py behaviour
+	* Added 'Leave' (part) operation to Room, and made the
+	  destructor call it when appropriate.
+	* Hacking charatcer creation, still being strange
+
+Sunday, July 15 2001, James Turner
+
+	* Meta-server code now seems to work, but:
+	* Rebuilt the query code to build and return ServerInfo objects
+	* Handle Cyphesis-style anonymous GET replies (no refno set)
+
+Wednesday, July 04 2001, James Turner
+
+	* More reconnection work
+	* Correctly handle NULL stamps (assume unstamped)
+	* Bumped version to 0.1.2
+
+Tuesday, July 03 2001, James Turner
+
+	* Added reconnection support to Connection
+	* Changes to World to support reconnection
+	* Correctly validate the entity stamp when processing
+		APPEARANCE ops.
+	* Added GetStamp() accessor to Entity
+	* Set serial number on most out-going ops	
+
+Monday, July 02 2001, James Turner
+
+	* Added meta-system; needs some work
+
+Wednesday, June 27 2001, James Turner
+	
+	* Re-factored connection into an underlying layer (BasicConnection)
+	and a public wrapper (Connection); this is to permit Meta-system
+	queries using a light-weight connection system.
+	* Add Appear / Disappear / Entered signals to World
+
+Tuesday, June 26 2001, James Turner
+
+	* Updated configure.in to test for skstream header / library
+	* Updated configure.in to test for Atlas headers and libraries
+	* OOG System appears to be working with preliminary code in Stage
+	* Appear / Disappear handled correctly
+	* Generates correct OOG Talk ops
+	* Preliminary support for IG operation
+	
+Friday, June 15 2001, James Turner
+Created initial change-log becuase automake requires it

@@ -1,0 +1,31 @@
+#ifndef ERIS_DEBUG_DISPATCH_H
+#define ERIS_DEBUG_DISPATCH_H
+
+#include <iostream>
+#include <fstream>
+
+#include <Atlas/Codec.h>
+#include "Dispatcher.h"
+
+namespace Atlas { namespace Message { class Encoder; }}
+
+namespace Eris
+{
+
+class DebugDispatcher : public Dispatcher
+{
+public:
+	DebugDispatcher(const std::string &logFile);	
+	virtual ~DebugDispatcher();
+
+	virtual bool dispatch(DispatchContextDeque &dq);
+
+protected:
+	Atlas::Codec<iostream> *_codec;
+	Atlas::Message::Encoder *_enc;
+	std::fstream _log;
+};
+	
+}; // of namespace Eris
+
+#endif

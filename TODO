@@ -1,0 +1,20 @@
+Eris TODO
+
+Clean up the exception heriarchy
+	- really fatal stuff (Eris::Fatal)
+	- runtime failure (Eris::Runtime)
+	- network / connection failure 
+		? signals !?
+		
+	- Atlas spec failure (Eris::Illegal)
+	
+Support admin accounts?	
+
+Handle network disconnects and reconnects better
+Timeouts on all Atlas ops (and heart-beats)
+
+Correctly allow externally driven socket notifications (e.g
+from Gtk+ socket callbacks); this is platform specific
+and must be #ifdef-ed of course
+
+Handle the 'uptime' attribute of 'Server' objects (the thing returned by anonymous GETs on game servers); need to find out format (string / int) and scale.

@@ -1,0 +1,143 @@
+
+#ifndef ERIS_CONNECTION_H
+#define ERIS_CONNECTION_H
+
+#include <deque>
+#include <Atlas/Message/DecoderBase.h>
+
+#include "BaseConnection.h"
+#include "Types.h"
+
+namespace Eris
+{
+	
+// Foward declerations
+class Dispatcher;
+class RepostDispatcher;
+	
+class NeedsRedispatch : public std::exception
+{
+public:
+	NeedsRedispatch(const std::string &p, Dispatcher *d) :
+		_parentPath(p), _dispatch(d) {;}
+
+	std::string _parentPath;
+	Dispatcher* _dispatch;
+};
+
+typedef std::list<RepostDispatcher*> RepostList;
+
+/// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
+/** Connection tracks the life-time of a client-server session; note this may extend beyond
+a single TCP connection, if re-connections occur. */
+
+class Connection : 
+	public BaseConnection,
+	public Atlas::Message::DecoderBase
+{
+public:
+	/// Create an unconnected instance
+	/** Create a new connection, with the client-name  string specified. The client-name
+	is sent during Atlas negotiation of the connection. */
+	Connection(const std::string &cnm);	
+	virtual ~Connection();
+
+	static Connection* Instance();
+
+	/// Open the connection to the specfied server
+	/// @param host The host (or dotted-decimal IP) to connect to
+	/// @param port The server port; defaults to 6767, the WorldForge standard
+	/** If the underlying socket cannot be opened,  Connect will throw an
+	exception immediately. Providing the basic connection is established,
+	other  failures will be reported via the Failure signal. */
+	virtual void connect(const std::string &host, short port = 6767);
+
+	/// Reconnect to the server after a connection is dropped or lost
+	/** This will attempt reconnection to the server, providing a connection
+	was completely established sucessfully before the error occurred. Otherwise,
+	an exception will be thrown. This is prevent Reconnect being called on
+	an invalid host, for example. */
+	void reconnect();
+
+	/// Initiate disconnection from the server
+	void disconnect();
+
+	/// clients must call this frequently enough to service the connection
+	/** this function reads data from the network (if available), and dispatches
+	complete messages. Thus, it should be called frequently, such as from
+	the client's main event loop. It will return very quickly if no data
+	is waiting to be read */
+	void poll();
+
+	/// get the root dispatcher for incoming messages
+	Dispatcher* getDispatcher() const
+	{ return _rootDispatch; }
+	
+	/// Navigate to a specific item in the dispatcher tree using names seperated by ':'
+	/** Note that an invalid path specification will cause an exception to be thrown. To
+	access the root node, pass either an empty path or ":"; this is identical to calling
+	GetDispatcher(). */
+	Dispatcher* getDispatcherByPath(const std::string &path) const;
+	void removeDispatcherByPath(const std::string &stem, const std::string &n);
+	
+	/// Transmit an Atlas::Objects instance to the server
+	/** If the connection is not fully connected, an exception will
+	be thrown. To correctly handle disconnection, callers should
+	therefore validate the connection using IsConnected first */
+	void send(const Atlas::Objects::Root &obj);
+	
+	/// transmit an Atlas::Message::Object to the server
+	/** The same comments regarding connection status and
+	disconnect operation apply as above */
+	void send(const Atlas::Message::Object &msg);
+
+	void postForDispatch(RepostDispatcher *rp);
+	
+	/// Emitted when the disconnection process is initiated
+	SigC::Signal0<bool> Disconnecting;
+	
+	/** Emitted when a non-fatal error occurs; these are nearly always network
+	related, such as connections being lost, or host names not found. The
+	connection will be placed into the DISCONNECTED state after the signal
+	is emitted; thus the current state (when the failure occured) is still valid
+	during the callback */
+	SigC::Signal1<void, string> Failure;
+	
+	/// indicates a status change on the connection
+	/** emitted when the connection status changes; This will often
+	correspond to the emission of a more specific signal (such as Connected),
+	which should be used where available. */
+	SigC::Signal1<void, Status> StatusChanged;
+
+protected:
+	/// update the connection status (and emit the appropriate signal)
+	/// @param sc The new status of the connection
+	virtual void setStatus(Status sc);
+	
+	/// the Atlas::Message::Decoder mandated over-ride
+	/** ObjectArrived is the entry point for all data from the server into the client;
+	notably, the message is forwarded to the root of the dispatcher tree and thus
+	disseminated to all matching nodes.*/
+	virtual void ObjectArrived(const Atlas::Message::Object& obj);
+
+	/// Process failures (to track when reconnection should be permitted)
+	virtual void handleFailure(const std::string &msg);
+
+	Dispatcher* _rootDispatch;	///< the root of the dispatch tree
+
+	RepostList _postQueue;	
+
+	/// hostname of the server (for reconnection)
+	/** This is cleared if connection fails during establishment (i.e CONNECTING
+	and NEGOTIATE states), to indicate that re-connection is not possible. */
+	std::string _host;
+	short _port;		///< port of the server
+	
+	// static singleton instance
+	static Connection* _theConnection;
+};
+		
+}
+
+#endif
+

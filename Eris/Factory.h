@@ -1,0 +1,41 @@
+#ifndef ERIS_FACTORY_H
+#define ERIS_FACTORY_H
+
+#include <list>
+#include <Atlas/Objects/Entity/GameEntity.h>
+#include "Types.h"
+
+namespace Eris {
+
+// forward decls	
+class Entity;
+
+/// Factory is used to allow custom entity creation by client libraries
+class Factory
+{
+public:	
+	/// Accept is called by the world to test if this factory can instantiate the specified object
+	/** Accept is called when an entity must be constructed; this will be called every time
+	an object is created, so avoid lengthy processing if possible. */
+
+	//virtual bool Accept(const Atlas::Message::Object &o) = 0;
+	virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge) = 0;
+
+	/// create whatever entity the client desires
+	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge) = 0;
+	//virtual EntityPtr Instantiate(const Atlas::Message::Object &o) = 0;
+};
+
+typedef std::list<Factory*> FactoryList;
+
+class StdFactory : public Factory
+{
+public:
+	virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge);
+	virtual EntityPtr instantiate(const Atlas::Objects::Entity::GameEntity &ge);
+};
+	
+
+} // of namespace
+
+#endif
