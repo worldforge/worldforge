@@ -1,3 +1,9 @@
+Wednesday, April 17 2002, Ron Steinke
+
+	* Changed Time::Stamp from a typedef'd struct to a full
+	  class, operator-(const Stamp&, const Stamp&) is now
+	  recognized properly
+
 Monday, April 15 2002, James Turner
 
 	* Unit tests! Configure with --enable-cppunit, and do
