@@ -1,3 +1,12 @@
+Sunday, September 1, Ron Steinke
+
+	* Enhanced locking in Connection to prevent a segfault when
+	  Connection::disconnect() is called inside a signal emitted
+	  by BaseConnection::recv() (e.g. Player::LogoutComplete)
+	* Added a lock in PollDefault::poll() to prevent reentrancy,
+	  so we catch it sooner instead of hitting an assert()
+	  in Dispatcher
+
 Wednesday, August 28th, James Turner
 
 	* Fix a bug (found by Simon) in Connection::gotData, introduced

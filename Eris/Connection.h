@@ -187,6 +187,9 @@ private:
 
 	TypeInfoEngine *_ti_engine;
 	Lobby *_lobby;
+
+	bool _need_disconnect;
+	void do_disconnect();
 };
 
 } // of Eris namespace

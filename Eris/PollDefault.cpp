@@ -110,6 +110,11 @@ void PollDefault::poll(unsigned long timeout)
   // of poll, and that's a good thing.
   PollDefault &inst = dynamic_cast<PollDefault&>(Poll::instance());
 
+  // Prevent reentrancy
+  static bool already_polling = false;
+  assert(!already_polling);
+  already_polling = true;
+
   unsigned long wait_time = 0;
   inst.new_timeout_ = false;
 
@@ -128,6 +133,10 @@ void PollDefault::poll(unsigned long timeout)
 
   inst.doPoll(timeout);
   Timeout::pollAll();
+
+  // We're done, turn off the reentrancy prevention flag
+  assert(already_polling);
+  already_polling = false;
 }
 
 void PollDefault::addStream(const basic_socket_stream* str, Check c)
