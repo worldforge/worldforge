@@ -65,6 +65,9 @@ public:
     AObject createEntity(Arg* args ...);
 
     AObject setCharacterArgs(const string& id, Arg* args ...);
+
+    int parseOperation1Argument(AObject &op, string method, AObject &arg0);
+    void displayError(ostream& out, AObject &op, string ourMsg);
     
 private:
 

@@ -73,6 +73,18 @@ void AUserClient::remMsgHandler(const string& type, void(*hdl)(const AObject&))
 
 AObject AUserClient::createOperation(const string& id, Arg* args ...)
 {
+  //example result:
+  // <obj>
+  //     <map>
+  //         <string name="abstract_type">operation</string>
+  //         <list name="parent">
+  //             <string>login</string>
+  //         </list>
+  //         <int name="serialno">1</int>
+  //         <list name="args">
+  //         </list>
+  //     </map>
+  // </obj>
     AObject op;
     op.set("abstract_type", "operation");
     AObject parent = AObject::mkURIList(0);
@@ -192,3 +204,29 @@ AObject AUserClient::setCharacterArgs(const string& id, Arg* args ...)
     AObject op = createOperation("set", A(ent), A("from", id), AEND);
     return call(op);
 }
+
+int AUserClient::parseOperation1Argument(AObject &op, string method, AObject &arg0)
+{
+  AObject parent, args;
+  op.get("parent",parent);
+  AObject opMethodObj;
+  parent.get(0,opMethodObj);
+  string opMethod;
+  opMethodObj.getPath(opMethod);
+  if(method!=opMethod) return 0;
+  op.get("args",args);
+  args.get(0,arg0);
+  return 1;
+}
+
+void AUserClient::displayError(ostream& out, AObject &op, string ourMsg)
+{
+  AObject args, arg0;
+  out<<ourMsg;
+  op.get("args",args);
+  args.get(0,arg0);
+  string message,defMessage="Unknown Error";
+  arg0.get("message",message,defMessage);
+  out<<message<<endl;
+}
+
