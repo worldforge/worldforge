@@ -1,3 +1,11 @@
+2003-07-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TerrainMod.h, Mercator/TerrainMod_impl.h,
+	  Mercator/TerrainMod.cpp: Move definition of virtual
+	  methods out of the headers, as they can't be inlined.
+
+	* tests/testTerrainMod.cpp: Add unit test for terrain mods.
+
 2003-07-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Buffer.cpp, Mercator/Buffer.h: Add accessor operators so

@@ -29,9 +29,9 @@ class ShapeTerrainMod : public TerrainMod
 {
 public:
     ShapeTerrainMod(const Shape &s) : m_shape(s) {}
-    virtual ~ShapeTerrainMod() {}
+    virtual ~ShapeTerrainMod(); // {}
     
-    virtual WFMath::AxisBox<2> bbox() const { return m_shape.boundingBox(); }
+    virtual WFMath::AxisBox<2> bbox() const; // { return m_shape.boundingBox(); }
     
 protected:
     Shape m_shape;
@@ -47,20 +47,13 @@ public:
     LevelTerrainMod(float level, const Shape &s) 
         : ShapeTerrainMod<Shape>(s), m_level(level) {}
     
-    virtual ~LevelTerrainMod() {}
+    virtual ~LevelTerrainMod();
     
-    virtual void apply(float &point, int x, int y) const {
-        if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
-            point = m_level;
-        }
-    }
-
-    virtual TerrainMod *clone() const {
-        return new LevelTerrainMod<Shape>(m_level, m_shape);
-    }
+    virtual void apply(float &point, int x, int y) const;
+    virtual TerrainMod *clone() const;
 
 private:
-    LevelTerrainMod(LevelTerrainMod&) {}
+    LevelTerrainMod(LevelTerrainMod&); // {}
     
 protected:
     float m_level;
@@ -76,17 +69,10 @@ public:
     AdjustTerrainMod(float dist, const Shape &s) 
         : ShapeTerrainMod<Shape>(s), m_dist(dist) {}
     
-    virtual ~AdjustTerrainMod() {}
+    virtual ~AdjustTerrainMod();
     
-    virtual void apply(float &point, int x, int y) const {
-        if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
-            point += m_dist;
-        }
-    }
-    
-    virtual TerrainMod *clone() const {
-        return new AdjustTerrainMod<Shape>(m_dist, m_shape);
-    }
+    virtual void apply(float &point, int x, int y) const;
+    virtual TerrainMod *clone() const;
 
 private:
     AdjustTerrainMod(AdjustTerrainMod&) {}
@@ -105,18 +91,10 @@ public:
     SlopeTerrainMod(float level, float dx, float dy, const Shape &s) 
         : ShapeTerrainMod<Shape>(s), m_level(level), m_dx(dx), m_dy(dy) {}
     
-    virtual ~SlopeTerrainMod() {}
+    virtual ~SlopeTerrainMod();
     
-    virtual void apply(float &point, int x, int y) const {
-        if (Contains(m_shape,WFMath::Point<2>(x,y),true)) {
-            point = m_level + (m_shape.getCenter()[0] - x) * m_dx 
-                            + (m_shape.getCenter()[1] - y) * m_dy;
-        }
-    }
-    
-    virtual TerrainMod *clone() const {
-        return new SlopeTerrainMod<Shape>(m_level, m_dx, m_dy, m_shape);
-    }
+    virtual void apply(float &point, int x, int y) const;
+    virtual TerrainMod *clone() const;
 
 private:
     SlopeTerrainMod(SlopeTerrainMod&) {}
@@ -137,26 +115,11 @@ public:
                );
     }
     
-    virtual ~CraterTerrainMod() {}
+    virtual ~CraterTerrainMod(); // {}
     
-    virtual WFMath::AxisBox<2> bbox() const { 
-        return ab;
-    }
-
-    virtual void apply(float &point, int x, int y) const {
-        if (Contains(m_shape,WFMath::Point<3>(x,y,point),true)) {
-            float d = m_shape.radius() * m_shape.radius() -
-                      (m_shape.getCenter()[0] - x) * (m_shape.getCenter()[0] - x) -
-                      (m_shape.getCenter()[1] - y) * (m_shape.getCenter()[1] - y); 
-
-            if (d >= 0.0)
-                point = m_shape.getCenter()[2] - sqrt(d);
-        }
-    }
-    
-    virtual TerrainMod *clone() const {
-        return new CraterTerrainMod(m_shape);
-    }
+    virtual WFMath::AxisBox<2> bbox() const;
+    virtual void apply(float &point, int x, int y) const; 
+    virtual TerrainMod *clone() const;
 
 private:
     CraterTerrainMod(CraterTerrainMod&) {}

@@ -8,6 +8,7 @@ libmercator_0_2_la_SOURCES = \
 	Mercator.cpp \
 	Matrix.cpp \
 	Terrain.cpp \
+	TerrainMod.cpp \
 	Segment.cpp \
 	Buffer.cpp \
 	Shader.cpp \
@@ -24,6 +25,7 @@ libmercator_HEADERS = \
 	Matrix.h \
 	Terrain.h \
 	TerrainMod.h \
+	TerrainMod_impl.h \
 	BasePoint.h \
 	Segment.h \
 	Buffer.h \
