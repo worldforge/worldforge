@@ -1,5 +1,9 @@
 2004-07-31  Al Riddoch  <alriddoch@zepler.org>
 
+	* Increment version to 0.5.90.
+
+2004-07-31  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/gen_cpp.py: Clear extra attributes of objects in pool
 	  when the object is reused.
 
