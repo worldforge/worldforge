@@ -7,6 +7,10 @@ dnl Initialise automake
 AM_INIT_AUTOMAKE("Atlas", "0.2.0")
 AM_CONFIG_HEADER(config.h)
 
+dnl Test for GNU libtool
+
+AM_PROG_LIBTOOL
+
 dnl Test for C++ Language
 
 
@@ -276,9 +280,23 @@ AC_CHECK_HEADERS(vector)
 
 AC_LANG_RESTORE
 
-dnl Test for GNU libtool
+dnl Test for Library for type safe C++ callbacks
 
-AM_PROG_LIBTOOL
+AC_ARG_WITH(sigc++,
+[  --with-sigc++=DIR       Library for type safe C++ callbacks (optional)],
+[with_sigcpp="$withval"],
+[with_sigcpp=""])
+
+ac_save_CFLAGS="$CFLAGS"
+ac_save_LIBS="$LIBS"
+CFLAGS="$CFLAGS -I$with_sigc++/include"
+LIBS="$LIBS -L$with_sigc++/lib"
+
+AC_CHECK_LIB(sigc, main)
+
+
+CFLAGS="$ac_save_CFLAGS"
+LIBS="$ac_save_LIBS"
 
 dnl Test for gzip compression library
 
