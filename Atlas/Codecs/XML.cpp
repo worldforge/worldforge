@@ -39,153 +39,103 @@ namespace
 
 void XML::MessageBegin()
 {
+    socket->Send("<obj>");
 }
 
 void XML::MessageEnd()
 {
+    socket->Send("</obj>");
 }
 
 void XML::ListBegin(const std::string& name)
 {
+    socket->Send("<list name=\"");
+    socket->Send(name);
+    socket->Send("\">");
 }
 
 void XML::MapBegin(const std::string& name)
 {
+    socket->Send("<map name=\"");
+    socket->Send(name);
+    socket->Send("\">");
 }
 
-void XML::Item(const std::string& name, int)
+void XML::Item(const std::string& name, int data)
 {
+    socket->Send("<int name=\"");
+    socket->Send(name);
+    socket->Send("\">");
+    // FIXME send the int here
+    socket->Send("</int>");
 }
 
-void XML::Item(const std::string& name, float)
+void XML::Item(const std::string& name, float data)
 {
+    socket->Send("<float name=\"");
+    socket->Send(name);
+    socket->Send("\">");
+    // FIXME send the float here
+    socket->Send("</float>");
 }
 
-void XML::Item(const std::string& name, const std::string&)
+void XML::Item(const std::string& name, const std::string& data)
 {
+    socket->Send("<string name=\"");
+    socket->Send(name);
+    socket->Send("\">");
+    socket->Send(data);
+    socket->Send("</string>");
 }
 
-void XML::Item(const std::string& name, const Atlas::Object&)
+void XML::Item(const std::string& name, const Atlas::Object& data)
 {
+    // FIXME recurse through object and send it
 }
 
 void XML::ListEnd()
 {
+    socket->Send("</list>");
 }
 
 void XML::ListBegin()
 {
+    socket->Send("<list>");
 }
 
 void XML::MapBegin()
 {
+    socket->Send("<map>");
 }
 
-void XML::Item(int)
+void XML::Item(int data)
 {
+    socket->Send("<int>");
+    // FIXME send data
+    socket->Send("</int>");
 }
 
-void XML::Item(float)
+void XML::Item(float data)
 {
+    socket->Send("<float>");
+    // FIXME send data
+    socket->Send("</float>");
 }
 
-void XML::Item(const std::string&)
+void XML::Item(const std::string& data)
 {
+    socket->Send("<string>");
+    socket->Send(data);
+    socket->Send("</string>");
 }
 
-void XML::Item(const Atlas::Object&)
+void XML::Item(const Atlas::Object& data)
 {
+    // FIXME recurse through object and send it
 }
 
 void XML::MapEnd()
 {
+    socket->Send("</map>");
 }
 
-/*
-void Atlas::Codecs::XML::BeginList()
-{
-    output("<list>");
-}
-
-void Atlas::Codecs::XML::BeginList(const std::string& name)
-{
-    output("<list name=\"" + name + "\">");
-}
-
-void Atlas::Codecs::XML::EndList()
-{
-    output("</list>");
-}
-
-void Atlas::Codecs::XML::BeginMap()
-{
-    output("<map>");
-}
-
-void Atlas::Codecs::XML::BeginMap(const std::string& name)
-{
-    output("<map name=\"" + name + "\">");
-}
-
-void Atlas::Codecs::XML::EndMap()
-{
-    output("</map>");
-}
-
-void Atlas::Codecs::XML::Send(int i)
-{
-    ostrstream buffer;
-    buffer << "<int>" << i << "</int>";
-    output(buffer.str());
-    buffer.freeze(0);
-}
-
-void Atlas::Codecs::XML::Send(float f)
-{
-    ostrstream buffer;
-    buffer << "<float>" << f << "</float>";
-    output(buffer.str());
-    buffer.freeze(0);
-}
-
-void Atlas::Codecs::XML::Send(const std::string& s)
-{
-    ostrstream buffer;
-    buffer << "<string>" << s << "</string>";
-    output(buffer.str());
-    buffer.freeze(0);
-}
-
-void Atlas::Codecs::XML::Send(const Atlas::Object& obj)
-{
-
-}
-
-void Atlas::Codecs::XML::Send(const std::string& name, int i)
-{
-    ostrstream buffer;
-    buffer << "<int name=\"" << name << "\">" << i << "</int>";
-    output(buffer.str());
-    buffer.freeze(0);
-}
-
-void Atlas::Codecs::XML::Send(const std::string& name, float f)
-{
-    ostrstream buffer;
-    buffer << "<float name=\"" << name << "\">" << f << "</int>";
-    output(buffer.str());
-    buffer.freeze(0);
-}
-
-void Atlas::Codecs::XML::Send(const std::string& name, const std::string& s)
-{
-    ostrstream buffer;
-    buffer << "<string name=\"" << name << "\">" << s << "</int>";
-    output(buffer.str());
-    buffer.freeze(0);
-}
-
-void Atlas::Codecs::XML::Send(const std::string& name, const Atlas::Object& obj)
-{
-}
-*/
