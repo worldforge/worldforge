@@ -1,3 +1,7 @@
+2003-07-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h: Add storage and accessors for shaders.
+
 2003-07-21  Al Riddoch  <alriddoch@zepler.org>
 
 	* Tweak configure.in to be a little more compatable with older

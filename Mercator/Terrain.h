@@ -9,11 +9,13 @@
 #include <Mercator/BasePoint.h>
 
 #include <map>
+#include <list>
 #include <cmath>
 
 namespace Mercator {
 
 class Segment;
+class Shader;
 class TerrainMod;
 
 class Terrain {
@@ -23,12 +25,13 @@ class Terrain {
 
     typedef std::map<int, Pointcolumn > Pointstore;
     typedef std::map<int, Segmentcolumn > Segmentstore;
-
+    typedef std::list<Shader *> Shaderstore;
   private:
     const int m_res;
 
     Pointstore m_basePoints;
     Segmentstore m_segments;
+    Shaderstore m_shaders;
   public:
     static const float defaultLevel = 8;
     explicit Terrain(unsigned int resolution = defaultResolution);
@@ -64,6 +67,14 @@ class Terrain {
         return m_basePoints;
     }
     
+    const Shaderstore & getShaders() const {
+        return m_shaders;
+    }
+
+    void addShader(Shader * t) {
+        m_shaders.push_back(t);
+    }
+
     void addMod(const TerrainMod &t);
 };
 
