@@ -38,7 +38,7 @@ void AUserClient::gotMsg(const AObject& msg)
             found = true;
         }
     }
-    if (!found) cerr << "Warning, could not find handler for message!\n";
+    if (!found) cerr << "Warning, could not find handler for message of type "+msgOp+"!\n";
 }
 
 
