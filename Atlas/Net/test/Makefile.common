@@ -1,41 +1,12 @@
 # Targets follow ---------------------------------
 
-TARGETS = $(OUTDIR)/libAtlasNet.a \
+TARGETS = \
 	$(OUTDIR)/CodecBench$(EXE_EXT) \
 	$(OUTDIR)/SocketTest$(EXE_EXT) \
 	$(OUTDIR)/XMLTest$(EXE_EXT) \
 	$(OUTDIR)/PackedAsciiTest$(EXE_EXT) \
 	$(OUTDIR)/EchoTest$(EXE_EXT) \
 	$(OUTDIR)/CopyTest$(EXE_EXT) \
-
-LIBOBJS = \
-	$(OUTDIR)/Types.o \
-	$(OUTDIR)/Net.o \
-	$(OUTDIR)/URI.o \
-	$(OUTDIR)/URIList.o \
-	$(OUTDIR)/IntList.o \
-	$(OUTDIR)/LongList.o \
-	$(OUTDIR)/FloatList.o \
-	$(OUTDIR)/StringList.o \
-	$(OUTDIR)/Codec.o \
-	$(OUTDIR)/PackedAsciiDecoder.o \
-	$(OUTDIR)/PackedAsciiEncoder.o \
-	$(OUTDIR)/PackedAsciiProtocol.o \
-	$(OUTDIR)/XMLDecoder.o \
-	$(OUTDIR)/XMLEncoder.o \
-	$(OUTDIR)/XMLProtocol.o \
-	$(OUTDIR)/Protocol.o \
-	$(OUTDIR)/ProtocolDecoder.o \
-	$(OUTDIR)/ProtocolEncoder.o \
-	$(OUTDIR)/TCPSocket.o \
-	$(OUTDIR)/Socket.o \
-	$(OUTDIR)/Server.o \
-	$(OUTDIR)/Client.o \
-	$(OUTDIR)/Object.o \
-	$(OUTDIR)/Debug.o \
-	$(OUTDIR)/Compressor.o \
-
-
 
 all:		$(TARGETS)
 
@@ -55,9 +26,6 @@ cleanall:	cleanobjs cleanbin
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 # Target rules follow -----------------------------
-
-$(OUTDIR)/libAtlasNet.a: $(LIBOBJS)
-	$(AR) -r $(OUTDIR)/libAtlasNet.a $(LIBOBJS) 
 
 $(OUTDIR)/PackedAsciiTest$(EXE_EXT): $(OUTDIR)/PackedAsciiTest.o $(OUTDIR)/libAtlas.a
 	$(CCC) -o $(OUTDIR)/PackedAsciiTest$(EXE_EXT) $(OUTDIR)/PackedAsciiTest.o $(incDirs) $(libDirs) $(LIBS)
@@ -79,141 +47,22 @@ $(OUTDIR)/CopyTest$(EXE_EXT): $(OUTDIR)/CopyTest.o $(OUTDIR)/libAtlas.a
 
 # Dependency rules follow -----------------------------
 
-$(OUTDIR)/Object.o: Object.cpp Object.h Debug.h
+$(OUTDIR)/CodecBench.o: CodecBench.cpp CodecBench.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Codec.o: Codec.cpp Codec.h Debug.h Object.h \
-	Protocol.h ProtocolEncoder.h ProtocolDecoder.h
+$(OUTDIR)/PackedAsciiTest.o: PackedAsciiTest.cpp PackedAsciiTest.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Client.o: Client.cpp Client.h Codec.h Debug.h \
-	Object.h Protocol.h ProtocolEncoder.h \
-	ProtocolDecoder.h Socket.h
+$(OUTDIR)/SocketTest.o: SocketTest.cpp SocketTest.h 
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Debug.o: Debug.cpp Debug.h
+$(OUTDIR)/XMLTest.o: XMLTest.cpp XMLTest.h 
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/PackedAsciiDecoder.o: PackedAsciiDecoder.cpp Object.h \
-	Debug.h Protocol.h ProtocolEncoder.h \
-	ProtocolDecoder.h PackedAsciiDecoder.h
+$(OUTDIR)/EchoTest.o: EchoTest.cpp EchoTest.h 
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/PackedAsciiEncoder.o: PackedAsciiEncoder.cpp \
-	PackedAsciiEncoder.h Object.h Debug.h \
-	ProtocolEncoder.h
+$(OUTDIR)/CopyTest.o: CopyTest.cpp CopyTest.h 
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/PackedAsciiProtocol.o: PackedAsciiProtocol.cpp \
-	Protocol.h ProtocolEncoder.h Object.h Debug.h \
-	ProtocolDecoder.h PackedAsciiProtocol.h \
-	PackedAsciiEncoder.h PackedAsciiDecoder.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Protocol.o: Protocol.cpp Protocol.h \
-	ProtocolEncoder.h Object.h Debug.h \
-	ProtocolDecoder.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/ProtocolDecoder.o: ProtocolDecoder.cpp \
-	ProtocolDecoder.h Object.h Debug.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/ProtocolEncoder.o: ProtocolEncoder.cpp \
-	ProtocolEncoder.h Object.h Debug.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Server.o: Server.cpp Server.h Socket.h \
-	Client.h Codec.h Debug.h Object.h Protocol.h \
-	ProtocolEncoder.h ProtocolDecoder.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Socket.o: Socket.cpp Socket.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/TCPSocket.o: TCPSocket.cpp TCPSocket.h Socket.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/XMLDecoder.o: XMLDecoder.cpp Object.h Debug.h \
-	Protocol.h ProtocolEncoder.h ProtocolDecoder.h \
-	XMLDecoder.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/XMLEncoder.o: XMLEncoder.cpp XMLEncoder.h Object.h \
-	Debug.h ProtocolEncoder.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/XMLProtocol.o: XMLProtocol.cpp Protocol.h \
-	ProtocolEncoder.h Object.h Debug.h \
-	ProtocolDecoder.h XMLProtocol.h XMLEncoder.h \
-	XMLDecoder.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Compressor.o: Compressor.cpp Compressor.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/ChatClient.o: ChatClient.cpp ChatClient.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/ChatServer.o: ChatServer.cpp SocketTest.h Socket.h \
-	TCPSocket.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/CodecBench.o: CodecBench.cpp Codec.h Debug.h Object.h \
-	Protocol.h ProtocolEncoder.h ProtocolDecoder.h \
-	XMLProtocol.h XMLEncoder.h XMLDecoder.h \
-	PackedAsciiProtocol.h PackedAsciiEncoder.h \
-	PackedAsciiDecoder.h CodecBench.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/PackedAsciiTest.o: PackedAsciiTest.cpp Codec.h Debug.h \
-	Object.h Protocol.h ProtocolEncoder.h \
-	ProtocolDecoder.h PackedAsciiProtocol.h \
-	PackedAsciiEncoder.h PackedAsciiDecoder.h PackedAsciiTest.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/SocketTest.o: SocketTest.cpp SocketTest.h Socket.h \
-	TCPSocket.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/XMLTest.o: XMLTest.cpp XMLTest.h Object.h Debug.h \
-	Codec.h Protocol.h ProtocolEncoder.h \
-	ProtocolDecoder.h XMLProtocol.h XMLEncoder.h \
-	XMLDecoder.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/EchoTest.o: EchoTest.cpp EchoTest.h Client.h Codec.h \
-	Debug.h Object.h Protocol.h ProtocolEncoder.h \
-	ProtocolDecoder.h Socket.h Compressor.h \
-	PackedAsciiProtocol.h PackedAsciiEncoder.h \
-	PackedAsciiDecoder.h TCPSocket.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/CopyTest.o: CopyTest.cpp CopyTest.h Debug.h Object.h 
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/URI.o: URI.c URI.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/URIList.o: URIList.c URIList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/IntList.o: IntList.c IntList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/LongList.o: LongList.c LongList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/FloatList.o: FloatList.c FloatList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/StringList.o: StringList.c StringList.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Transport.o: Transport.cpp Transport.h
-	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
-
-$(OUTDIR)/Types.o: Types.c Transport.h
-	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 

@@ -4,8 +4,8 @@ CCC		=	g++
 CC		=	gcc
 AR		=	ar
 RANLIB		=	ranlib
-STDLIBS		=	-L$(OUTDIR)
-STDINCS		=	-I.
+STDLIBS		=	-L../$(OUTDIR)
+STDINCS		=	-I. -I..
 C_FLAGS		=	-g -D_ADebug_ -Wall -fvtable-thunks
 
 OUTDIR          =	win32

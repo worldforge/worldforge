@@ -146,10 +146,10 @@ $(OUTDIR)/FloatList.o: FloatList.c FloatList.h
 $(OUTDIR)/StringList.o: StringList.c StringList.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Net.o: Net.cpp Transport.h
+$(OUTDIR)/Net.o: Net.cpp Net.h
 	$(CCC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
-$(OUTDIR)/Types.o: Types.c Transport.h
+$(OUTDIR)/Types.o: Types.c Net.h
 	$(CC) $(C_FLAGS) -c -o $@ $< $(incDirs)
 
 
