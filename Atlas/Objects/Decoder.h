@@ -47,48 +47,51 @@ namespace Atlas { namespace Objects {
 
 class Decoder : public Atlas::Message::DecoderBase
 {
+public:
+    virtual ~Decoder();
+
 protected:
     virtual void ObjectArrived(const Atlas::Message::Object&);
 
-    virtual void UnknownObjectArrived(const Atlas::Message::Object&) = 0;
+    virtual void UnknownObjectArrived(const Atlas::Message::Object&) { }
 
-    virtual void ObjectArrived(const Root&) = 0;
+    virtual void ObjectArrived(const Root&) { }
 
-    virtual void ObjectArrived(const Entity::Account&) = 0;
-    virtual void ObjectArrived(const Entity::Admin&) = 0;
-    virtual void ObjectArrived(const Entity::AdminEntity&) = 0;
-    virtual void ObjectArrived(const Entity::Game&) = 0;
-    virtual void ObjectArrived(const Entity::Player&) = 0;
-    virtual void ObjectArrived(const Entity::RootEntity&) = 0;
+    virtual void ObjectArrived(const Entity::Account&) { }
+    virtual void ObjectArrived(const Entity::Admin&) { }
+    virtual void ObjectArrived(const Entity::AdminEntity&) { }
+    virtual void ObjectArrived(const Entity::Game&) { }
+    virtual void ObjectArrived(const Entity::Player&) { }
+    virtual void ObjectArrived(const Entity::RootEntity&) { }
 
-    virtual void ObjectArrived(const Operation::Action&) = 0;
-    virtual void ObjectArrived(const Operation::Appearance&) = 0;
-    virtual void ObjectArrived(const Operation::Combine&) = 0;
-    virtual void ObjectArrived(const Operation::Communicate&) = 0;
-    virtual void ObjectArrived(const Operation::Create&) = 0;
-    virtual void ObjectArrived(const Operation::Delete&) = 0;
-    virtual void ObjectArrived(const Operation::Disappearance&) = 0;
-    virtual void ObjectArrived(const Operation::Divide&) = 0;
-    virtual void ObjectArrived(const Operation::Error&) = 0;
-    virtual void ObjectArrived(const Operation::Feel&) = 0;
-    virtual void ObjectArrived(const Operation::Get&) = 0;
-    virtual void ObjectArrived(const Operation::Imaginary&) = 0;
-    virtual void ObjectArrived(const Operation::Info&) = 0;
-    virtual void ObjectArrived(const Operation::Listen&) = 0;
-    virtual void ObjectArrived(const Operation::Login&) = 0;
-    virtual void ObjectArrived(const Operation::Logout&) = 0;
-    virtual void ObjectArrived(const Operation::Look&) = 0;
-    virtual void ObjectArrived(const Operation::Move&) = 0;
-    virtual void ObjectArrived(const Operation::Perceive&) = 0;
-    virtual void ObjectArrived(const Operation::Perception&) = 0;
-    virtual void ObjectArrived(const Operation::RootOperation&) = 0;
-    virtual void ObjectArrived(const Operation::Set&) = 0;
-    virtual void ObjectArrived(const Operation::Sight&) = 0;
-    virtual void ObjectArrived(const Operation::Smell&) = 0;
-    virtual void ObjectArrived(const Operation::Sniff&) = 0;
-    virtual void ObjectArrived(const Operation::Sound&) = 0;
-    virtual void ObjectArrived(const Operation::Talk&) = 0;
-    virtual void ObjectArrived(const Operation::Touch&) = 0;
+    virtual void ObjectArrived(const Operation::Action&) { }
+    virtual void ObjectArrived(const Operation::Appearance&) { }
+    virtual void ObjectArrived(const Operation::Combine&) { }
+    virtual void ObjectArrived(const Operation::Communicate&) { }
+    virtual void ObjectArrived(const Operation::Create&) { }
+    virtual void ObjectArrived(const Operation::Delete&) { }
+    virtual void ObjectArrived(const Operation::Disappearance&) { }
+    virtual void ObjectArrived(const Operation::Divide&) { }
+    virtual void ObjectArrived(const Operation::Error&) { }
+    virtual void ObjectArrived(const Operation::Feel&) { }
+    virtual void ObjectArrived(const Operation::Get&) { }
+    virtual void ObjectArrived(const Operation::Imaginary&) { }
+    virtual void ObjectArrived(const Operation::Info&) { }
+    virtual void ObjectArrived(const Operation::Listen&) { }
+    virtual void ObjectArrived(const Operation::Login&) { }
+    virtual void ObjectArrived(const Operation::Logout&) { }
+    virtual void ObjectArrived(const Operation::Look&) { }
+    virtual void ObjectArrived(const Operation::Move&) { }
+    virtual void ObjectArrived(const Operation::Perceive&) { }
+    virtual void ObjectArrived(const Operation::Perception&) { }
+    virtual void ObjectArrived(const Operation::RootOperation&) { }
+    virtual void ObjectArrived(const Operation::Set&) { }
+    virtual void ObjectArrived(const Operation::Sight&) { }
+    virtual void ObjectArrived(const Operation::Smell&) { }
+    virtual void ObjectArrived(const Operation::Sniff&) { }
+    virtual void ObjectArrived(const Operation::Sound&) { }
+    virtual void ObjectArrived(const Operation::Talk&) { }
+    virtual void ObjectArrived(const Operation::Touch&) { }
     
 };
 

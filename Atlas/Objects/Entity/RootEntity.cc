@@ -22,16 +22,16 @@ Object RootEntity::GetAttr(const string& name) const
     GETATTR(loc)
     GETATTR(pos)
     GETATTR(velocity)
-    return Root::Get(name);
+    return Root::GetAttr(name);
 }
 
-void RootEntity::SetAttr(const string& name, const Object& obj)
+void RootEntity::SetAttr(const string& name, const Object& object)
 {
     SETATTR(loc, String)
     SETATTR(pos, List)
     SETATTR(velocity, List)
 
-    Root::Set(name, obj);
+    Root::SetAttr(name, object);
 }
 
 bool RootEntity::HasAttr(const string& name) const
@@ -40,7 +40,7 @@ bool RootEntity::HasAttr(const string& name) const
     HASATTR(pos)
     HASATTR(velocity)
 
-    return Root::Has(name);
+    return Root::HasAttr(name);
 }
 
 IMPL_METHODS(RootEntity, string, loc)

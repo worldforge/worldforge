@@ -18,6 +18,10 @@ using namespace std;
 
 namespace Atlas { namespace Objects {
 
+Decoder::~Decoder()
+{
+}
+
 void Decoder::ObjectArrived(const Object& o)
 {
     if (!o.Is(Object::Map)) return;
