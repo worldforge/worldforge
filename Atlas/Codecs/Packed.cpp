@@ -119,6 +119,7 @@ namespace
 Packed::Packed(const Codec<iostream>::Parameters& p) :
     socket(p.stream), bridge(p.bridge)
 {
+    state.push(PARSE_STREAM);
 }
 
 void Packed::ParseStream(char next)
@@ -427,7 +428,7 @@ void Packed::ParseName(char next)
 
 void Packed::Poll()
 {
-    while (socket.rdbuf()->in_avail()  /* || socket.rdbuf()->showmanyc() */)
+    while (socket.rdbuf()->in_avail() || socket.rdbuf()->showmanyc())
     {
 	char next = socket.get();
 
