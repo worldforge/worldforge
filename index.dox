@@ -8,7 +8,7 @@ Atlas-C++ is the current C++ implementation of the Atlas protocol, a
 communications layer designed to be used in the WorldForge MMORPG gaming
 system.
 
-To come: the Atlas-C++ tutorial...
+@ref tutorial_index "The Atlas-C++ Tutorial"
 
 <H2>Links</H2>
 
