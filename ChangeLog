@@ -1,3 +1,7 @@
+Thursday, March 7, 2002		Ron Steinke <rsteinke@w-link.net>
+
+	* Fixed error in configure check for sstream vs. strstream
+
 Wednesday, March 6, 2002	Ron Steinke <rsteinke@w-link.net>
 
 	* Merged in Grimicus' patch to add wfmath-config
