@@ -1,5 +1,9 @@
 Sunday, 3rd November, Al Riddoch
 
+	* configure.in: Clean up, and disable static by default.
+
+Sunday, 3rd November, Al Riddoch
+
 	* Add rpm spec.
 
 Friday, 1st November, Al Riddoch
