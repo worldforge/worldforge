@@ -5,6 +5,19 @@
 #ifndef ATLAS_FILTER_H
 #define ATLAS_FILTER_H
 
+#include "../config.h"
+
+#include <string>
+
+#ifdef HAVE_STREAMBUF
+#include <streambuf>
+#else
+#include <streambuf.h>
+#endif
+
+#include <cstring>
+// for memcpy
+
 #include "Factory.h"
 
 namespace Atlas {
@@ -89,6 +102,104 @@ class Filter
     Filter* next;
 };
 
+#ifdef HAVE_STREAMBUF
+class filterbuf : public std::streambuf {
+#else
+typedef int int_type;
+
+class filterbuf : public streambuf {
+#endif
+public:
+
+  filterbuf(std::streambuf& buffer,
+            Filter& filter)
+   : m_streamBuffer(buffer), m_filter(filter)
+  {
+    setp(m_outBuffer, m_outBuffer + (m_outBufferSize - 1));
+    setg(m_inBuffer + m_inPutback, m_inBuffer + m_inPutback,
+         m_inBuffer + m_inPutback);
+  }
+  
+  virtual ~filterbuf()
+  {
+    sync();
+  }
+  
+protected:
+  static const int m_outBufferSize = 10;
+  char m_outBuffer[m_outBufferSize];
+
+  static const int m_inBufferSize = 10;
+  static const int m_inPutback = 4;
+  char m_inBuffer[m_inBufferSize];
+
+  int flushOutBuffer()
+  {
+    int num = pptr() - pbase();
+    std::string encoded = m_filter.encode(std::string(pbase(), pptr()));
+    m_streamBuffer.sputn(encoded.c_str(), encoded.size());
+    pbump(-num);
+    return num;
+  }  
+  
+  virtual int_type overflow(int_type c)
+  {
+    if (c != EOF) {
+      *pptr() = c;
+      pbump(1);
+    }
+    if (flushOutBuffer() == EOF) return EOF;
+    return c;
+  }
+
+  virtual int_type underflow()
+  {
+    if (gptr() < egptr()) return *gptr();
+    
+    int numPutback = gptr() - eback();
+
+    if (numPutback > m_inPutback) numPutback = m_inPutback;
+
+    std::memcpy(m_outBuffer + (m_inPutback - numPutback),
+                gptr() - numPutback,
+                numPutback);
+
+    int num;
+
+    //     FIXME
+    // Here we need to actually
+    //  * get data from m_streamBuffer
+    //  * encode it with m_filter
+    //  * put _that_ into the buffer
+    //
+    // Currently it just fetches it and places it straight in the
+    // buffer.
+    // The problem is the limited size of the buffer with the
+    // Filter::decode operation not having any kind of size
+    // limitation.
+    num = m_streamBuffer.sgetn(m_inBuffer + m_inPutback,
+                               m_inBufferSize - m_inPutback);
+    if (num <= 0) return EOF;
+
+    setg(m_inBuffer + (m_inPutback - numPutback),
+         m_inBuffer + m_inPutback,
+         m_inBuffer + m_inPutback + num);
+
+    return *gptr();
+  }
+  
+  virtual int sync()
+  {
+    if (flushOutBuffer() == EOF) return -1;
+    return 0;
+  }
+  
+private:
+
+  std::streambuf& m_streamBuffer;
+  Filter& m_filter;
+};
+ 
 } // Atlas namespace
 
 #endif
