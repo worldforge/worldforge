@@ -1,2 +1,0 @@
-AtlasClient::doPoll() stucks waiting
-and when you press ctrl-c it segfaults
