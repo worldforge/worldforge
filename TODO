@@ -3,6 +3,11 @@ TODO list for Atlas-C++:
 Items are written up by those who they are assigned to, unless otherwise noted
 (using " -- ").
 
+TODO in the 0.5 devel series
+
+ - ensure that the Objects code uses member construction efficiently, as
+     was done in 0.4.2
+
 TODO items for anybody who wants to do them:
 
  - add input filtering to Atlas::filterbuf -- sdt

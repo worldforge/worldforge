@@ -6,7 +6,5 @@
 
 namespace Atlas { namespace Message {
 
-void * Object::freeList = NULL;
-
 } } //namespace Atlas::Message
 

@@ -32,14 +32,14 @@ void Bzip2::begin()
     outgoing.bzfree = NULL;
     outgoing.opaque = NULL;
   
-    bzCompressInit(&outgoing, BS100K, 0, WORKFACTOR);
-    bzDecompressInit(&incoming, 0, 0);
+    BZ2_bzCompressInit(&outgoing, BS100K, 0, WORKFACTOR);
+    BZ2_bzDecompressInit(&incoming, 0, 0);
 }
   
 void Bzip2::end()
 {
-    bzCompressEnd(&outgoing);
-    bzDecompressEnd(&incoming);
+    BZ2_bzCompressEnd(&outgoing);
+    BZ2_bzDecompressEnd(&incoming);
 }
     
 std::string Bzip2::encode(const std::string& data)
@@ -57,7 +57,7 @@ std::string Bzip2::encode(const std::string& data)
 	outgoing.next_out = buf;
 	outgoing.avail_out = sizeof(buf);
 	  
-	status = bzCompress(&outgoing, BZ_FLUSH);
+	status = BZ2_bzCompress(&outgoing, BZ_FLUSH);
 	  
 	ASSERT(status == BZ_OK); // not sure about this - it may be
                              // status != BZ_SEQUENCE_ERROR
@@ -84,7 +84,7 @@ std::string Bzip2::decode(const std::string& data)
 	incoming.next_out = buf;
 	incoming.avail_out = sizeof(buf);
 	  
-	status = bzDecompress(&incoming);
+	status = BZ2_bzDecompress(&incoming);
 	  
 	ASSERT(status == BZ_OK);
     

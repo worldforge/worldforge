@@ -1,3 +1,21 @@
+2001-07-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Message/Object.h, src/Message/Object.cpp: Removed buggy and
+	  largely unused memory pool code.
+
+	* src/Objects/loadDefaults.cpp: Removed double use of find()
+	  method, and re-styled code to fit in with the rest of Atlas-C++.
+
+	* src/Net/Stream.cpp: Switched negotiation code over to picking
+	  Packed by default.
+
+	* src/Filters/Bzip2.cpp: Modified code to use latest Bzip2 API.
+
+	* src/Codecs/Packed.cpp: Fixed beginning and ending of stream,
+	  which does not have an encoding in Packed.
+
+	* NEWS, HACKING: updated.
+
 2001-05-06  Al Riddoch  <alriddoch@zepler.org>
 
         * src/Message/Object.cpp: Added true cpp file so that class static

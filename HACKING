@@ -42,9 +42,6 @@ Write a change log entry for every change you check in. Make sure you
 use standard ChangeLog format. Look in the current ChangeLog for
 examples of this.
 
-Written by Stefanus Du Toit <sjdutoit@uwaterloo.ca> on 2001-01-14.
-Last updated by Stefanus Du Toit <sjdutoit@uwaterloo.ca> on 2001-01-23.
-
 V   On CVS:
 
 There shall be the following tags:
@@ -92,3 +89,8 @@ times. Use is also discouraged in programs which use Atlas-C++, and
 in any C++ program. No additional use should be made of the
 "using namespace ..." directive should be made in branch before 0.5.x, and
 its use may be phased out in these branches eventually.
+
+Written by Stefanus Du Toit <sjdutoit@uwaterloo.ca> on 2001-01-14.
+Added to by Alistair Riddoch <alriddoch@zepler.org> on 2001-05-11.
+Last updated by Alistair Riddoch <alriddoch@zepler.org> on 2001-05-11.
+

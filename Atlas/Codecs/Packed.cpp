@@ -320,6 +320,7 @@ void Packed::poll(bool can_read)
 
 void Packed::streamBegin()
 {
+    bridge->streamBegin();
 }
 
 void Packed::streamMessage(const Map&)
@@ -329,6 +330,7 @@ void Packed::streamMessage(const Map&)
 
 void Packed::streamEnd()
 {
+    bridge->streamEnd();
 }
 
 void Packed::mapItem(const std::string& name, const Map&)

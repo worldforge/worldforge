@@ -173,8 +173,8 @@ Atlas::Negotiate<std::iostream>::State Atlas::Net::StreamConnect::getState()
 
 Atlas::Codec<std::iostream>* Atlas::Net::StreamConnect::getCodec()
 {
-    if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }
     if (m_canPacked) { return new Atlas::Codecs::Packed(socket, bridge); }
+    if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }
     return NULL; // throw exception?
 }
 
@@ -268,8 +268,8 @@ void Atlas::Net::StreamAccept::poll(bool can_read = true)
 
         if (state == SERVER_CODECS)
         {
-            if (m_canXML) { socket << "IWILL XML\n"; }
-            else if (m_canPacked) { socket << "IWILL Packed\n"; }
+            if (m_canPacked) { socket << "IWILL Packed\n"; }
+            else if (m_canXML) { socket << "IWILL XML\n"; }
             socket << endl;
             state++;
         }
@@ -321,8 +321,8 @@ Atlas::Codec<std::iostream>* Atlas::Net::StreamAccept::getCodec()
       // would deallocate? erk. -- sdt 2001-01-05
         //return (*outCodecs.begin())-> \
                 //New(Codec<std::iostream>::Parameters(socket,bridge));
-    if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }
     if (m_canPacked) { return new Atlas::Codecs::Packed(socket, bridge); }
+    if (m_canXML) { return new Atlas::Codecs::XML(socket, bridge); }
     return NULL; // throw exception?
 }
 

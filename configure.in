@@ -4,7 +4,7 @@ AC_INIT()
 
 dnl Initialise automake
 
-AM_INIT_AUTOMAKE("Atlas-C++", "0.5.0")
+AM_INIT_AUTOMAKE("Atlas-C++", "0.5.0.1")
 AM_CONFIG_HEADER(config.h)
 
 dnl Test for GNU libtool
@@ -17,6 +17,8 @@ dnl Test for C++ Language
 dnl Test for C++ compiler
 
 AC_PROG_CXX
+
+CXXFLAGS='-Wall -g'
 
 dnl Test for ANSI standard language features
 

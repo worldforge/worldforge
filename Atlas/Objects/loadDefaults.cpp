@@ -73,12 +73,13 @@ Atlas::Message::Object LoadDefaultsDecoder::getMessageObject(const std::string& 
 
 void LoadDefaultsDecoder::objectArrived(const Atlas::Message::Object& o)
 {
-    if (!o.isMap()) return;
-    if (o.asMap().find("id") == o.asMap().end())
-        { unknownObjectArrived(o); return; }
+    MessageObjectMap::const_iterator I = o.asMap().find("id");
+    if (I == o.asMap().end()) {
+        unknownObjectArrived(o);
+        return;
+    }
     
-    std::string
-        id((*o.asMap().find("id")).second.asString());
+    std::string id(I->second.asString());
     m_objects[id] = o;
 }
 
@@ -87,11 +88,9 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
                                         set<std::string> used_attributes)
 {
     Atlas::Message::Object::MapType::const_iterator I;
-    for (I = mobj.asMap().begin();
-         I != mobj.asMap().end();
-         I++) {
+    for (I = mobj.asMap().begin(); I != mobj.asMap().end(); I++) {
         set<std::string>::const_iterator attr_found = 
-            used_attributes.find(I->first);
+                               used_attributes.find(I->first);
         if(attr_found == used_attributes.end()) {
             //cout<<"    -->"<<I->first<<endl;
             obj->setAttr(I->first, I->second);
