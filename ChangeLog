@@ -1,3 +1,7 @@
+2004-05-05  Al Riddoch  <alriddoch@zepler.org>
+
+* Enable running the test on "make check"
+
 2004-05-03  James Turner  <james@worldforge.org>
 
 * Add an EntitySeen signal to View, fired whenever a new Entity instance
