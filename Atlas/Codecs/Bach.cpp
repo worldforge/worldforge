@@ -166,8 +166,8 @@ void Bach::parseInt(char next)
     {
     case '[':
     case ']':
-    case '(':
-    case ')':
+    case '{':
+    case '}':
     case ',':
         m_socket.putback(next);
         m_state.pop();
@@ -228,8 +228,8 @@ void Bach::parseFloat(char next)
     {
     case '[':
     case ']':
-    case '(':
-    case ')':
+    case '{':
+    case '}':
     case ',':
         m_socket.putback(next);
         m_state.pop();
