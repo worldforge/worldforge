@@ -17,3 +17,4 @@ libtool
 ltmain.sh
 eris.dox
 eris-config
+eris.spec

@@ -118,4 +118,5 @@ src/Makefile
 test/Makefile
 eris.dox
 eris-config
+eris.spec
 ])

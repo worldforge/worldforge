@@ -1,0 +1,59 @@
+%define name       @PACKAGE@
+%define version	   @VERSION@
+%define release    1
+%define serial     1
+%define prefix     /usr
+
+Summary:           A WorldForge client library.
+Name:              %{name} 
+Version:           %{version} 
+Release:           %{release}
+Serial:            %{serial}
+Copyright:         GPL
+Group:             System Environment/Libraries
+Source:            %{name}-%{version}.tar.gz
+BuildRoot:         /var/tmp/%{name}-%{version}-buildroot
+Requires:          Atlas-C++ >= 0.4.4 skstream > 0.2 libstdc++
+BuildRequires:     Atlas-C++-devel >= 0.4.4 skstream-devel > 0.2 libstdc++-devel >= 2.95.2
+
+%description
+Eris is designed to simplify client development (and avoid repeating the same
+work several times), by providing a common system to deal with the back end
+tasks.
+
+%package devel
+Summary:           A WorldForge client library headers and static libs.
+Group:             Development/Libraries
+Requires:          %{name} = %{version}
+
+%description devel
+Eris is designed to simplify client development (and avoid repeating the same
+work several times), by providing a common system to deal with the back end
+tasks.
+
+%prep
+%setup
+
+%build
+CXXFLAGS=$RPM_OPT_FLAGS ./configure --prefix=%{prefix} --enable-static=yes
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make prefix=$RPM_BUILD_ROOT%{prefix} install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{prefix}/lib/liberis.so.*
+%doc AUTHORS COPYING NEWS README
+
+%files devel
+%defattr(-,root,root)
+%{prefix}/bin/eris-config
+%{prefix}/include/eris
+%{prefix}/lib/liberis.a
+%{prefix}/lib/liberis.so
+%{prefix}/share/aclocal/eris.m4

@@ -1,3 +1,7 @@
+Sunday, 3rd November, Al Riddoch
+
+	* Add rpm spec.
+
 Friday, 1st November, Al Riddoch
 
 	* src/World.cpp: Fix calls to SigC::slot so it is sigc++ 1.2
