@@ -45,9 +45,9 @@ PKG_CHECK_MODULES(ATLAS, atlascpp-0.4 >= 0.4.5,
 
 if test $found_atlas == no; then
 	AC_MSG_NOTICE([
-*** stable libAtlas >= 0.4.5 not found -- conversion tests will not be built
-*** The STABLE release version of atlas can be found at:
-*** ftp://ftp.worldforge.org/pub/worldforge/libs/Atlas-C++/Atlas-C++-0.4.6.tar.bz2])
+*** stable libAtlas >= 0.4.5 not found -- tests of Atlas <-> wfmath
+*** type conversion code stubs will not be built,
+*** if you don't know what Atlas is, this message does not apply to you])
 fi
 
 AM_CONDITIONAL(HAVE_ATLAS, test $found_atlas == yes)

@@ -1,3 +1,12 @@
+Sunday, May 4th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* Toned down chuck's more explicit message for the
+	  failure of the configure check for Atlas. Anyone
+	  who doesn't know what Atlas is isn't going to care
+	  about the Atlas::Message::Object encoding code
+	  stubs, and it's best not to make them think they
+	  need to download another library if they don't have to.
+
 Thursday, May 1st, 2003   Ron Steinke <rsteinke@w-link.net>
 
 	* Changed configure.in to configure.ac, since
