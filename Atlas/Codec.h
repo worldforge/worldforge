@@ -29,19 +29,17 @@ two integers to represent the cpu speed and bandwidth that the codec uses.
 However, the scale of these values is not yet decided upon. FIXME
 
 @see Bridge
+@see Task
 @see Factory
 @see Negotiate
 */
 
 template <class Stream>
-class Codec : public Bridge
+class Codec : public Bridge, public Task
 {
     public:
 
     virtual ~Codec() { }
-
-    virtual void Poll() = 0;
-    virtual void Run() = 0;
 
     class Metrics
     {

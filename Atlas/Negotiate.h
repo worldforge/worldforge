@@ -21,7 +21,7 @@ along with the name of sender and a Socket
 */
 
 template <typename Stream>
-class Negotiate
+class Negotiate : public Task
 {
     public:
 
@@ -32,9 +32,7 @@ class Negotiate
 	FAILED,
     };
 
-    virtual State Poll() = 0;
-    virtual State Run() = 0;
-
+    virtual State GetState() = 0;
     virtual Connection<Stream> GetConnection() = 0;
 };
 
