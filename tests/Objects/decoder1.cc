@@ -1,10 +1,12 @@
 #include "../../src/Objects/Decoder.h"
+#include "../../src/Objects/LoadDefaults.h"
 
 using namespace Atlas;
 
 bool root_arrived = false;
 bool look_arrived = false;
 bool acct_arrived = false;
+bool unknown_arrived = false;
 
 class TestDecoder : public Objects::Decoder
 {
@@ -25,10 +27,23 @@ protected:
     {
         acct_arrived = true;
     }
+
+    virtual void UnknownObjectArrived(const Atlas::Message::Object&) {
+        unknown_arrived = true;
+    }
 };
+
+#include "../../src/Codecs/XML.cpp"
 
 int main(int argc, char** argv)
 {
+    try {
+        Objects::LoadDefaults("../../../../protocols/atlas/spec/atlas.xml");
+    } catch(Objects::DefaultLoadingException e) {
+        cout << "DefaultLoadingException: "
+             << e.msg << endl;
+        return 1;
+    }
     TestDecoder t;
     t.StreamBegin();
     t.StreamMessage(Bridge::MapBegin);
@@ -47,4 +62,5 @@ int main(int argc, char** argv)
     assert(root_arrived);
     assert(look_arrived);
     assert(!acct_arrived);
+    assert(!unknown_arrived);
 }

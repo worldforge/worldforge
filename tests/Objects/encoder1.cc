@@ -2,6 +2,7 @@
 #include "../../src/Objects/Root.h"
 #include "../../src/Objects/Encoder.h"
 #include "../../src/Message/DecoderBase.h"
+#include "../../src/Objects/LoadDefaults.h"
 
 using namespace std;
 using namespace Atlas;
@@ -19,13 +20,22 @@ protected:
     }
 };
 
+#include "../../src/Codecs/XML.cpp"
+
 int main(int argc, char** argv)
 {
+    try {
+        Objects::LoadDefaults("../../../../protocols/atlas/spec/atlas.xml");
+    } catch(Objects::DefaultLoadingException e) {
+        cout << "DefaultLoadingException: "
+             << e.msg << endl;
+        return 1;
+    }
     RootDecoder rd;
     Objects::Encoder re(&rd);
 
     rd.StreamBegin(); // important, otherwise we'll segfault!
-    Objects::RootInstance root_inst;
+    Objects::Root root_inst;
     root_inst->SetAttr("id", string("root_instantiation"));
     re.StreamMessage((Objects::Root&)root_inst);
     rd.StreamEnd();
