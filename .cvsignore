@@ -21,3 +21,6 @@ Makefile.in
 stamp-h
 stamp-h[0-9]*
 stamp-h.in
+build
+.DS_Store
+

@@ -1,5 +1,12 @@
 2004-07-18  James Turner  <james@worldforge.org>
 
+	* test/tests.cpp: send the stub server child process a SIGTERM, so it
+	  goes away cleanly when the tests are done.
+	
+	* Lots of cvsignore tweaks, mostly for OS-X specific cruft.
+
+2004-07-18  James Turner  <james@worldforge.org>
+
 	* Eris/Entity.cpp: fix a typo in my previous change, oops.
 	* Eris/Log.cpp, Eris/LogStream.h: make logStreams respect the log level
 	  setting.

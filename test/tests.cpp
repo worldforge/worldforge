@@ -20,6 +20,7 @@
 #include <Eris/Log.h>
 
 #include <sys/wait.h>
+#include <signal.h>
 
 using namespace Eris;
 using std::endl;
@@ -247,11 +248,12 @@ void testCharActivate()
     assert(v->getTopLevel()->hasChild("_hut_01"));
     
     delete av;
+    cout << "completed charatcer activation test" << endl;
 }
 
 int main(int argc, char **argv)
 {
-    Eris::setLogLevel(LOG_WARNING);
+    Eris::setLogLevel(LOG_DEBUG);
     Eris::Logged.connect(SigC::slot(&erisLog));
 
     pid_t childPid = fork();
@@ -281,7 +283,8 @@ int main(int argc, char **argv)
 
         cout << "all tests passed" << endl;
         // tell the stub server to shutdown
-
+        kill(childPid, 9);
+        
         int childStatus;
         waitpid(childPid, &childStatus, 0);
         return EXIT_SUCCESS; // tests passed okay

@@ -5,3 +5,4 @@ Makefile.in
 testEris
 metaquery
 *atlas-*log
+.DS_Store
