@@ -5,6 +5,10 @@
 #ifndef ATLAS_NET_STREAM_H
 #define ATLAS_NET_STREAM_H
 
+#include <iosfwd>
+#include <string>
+#include <list>
+
 #include "../Negotiate.h"
 #include "../Filter.h"
 
@@ -44,7 +48,7 @@ class StreamConnect : public Atlas::Negotiate
 {
     public:
 
-    StreamConnect(const std::string& name, iostream&, Atlas::Bridge*);
+    StreamConnect(const std::string& name, std::iostream&, Atlas::Bridge*);
 
     virtual ~StreamConnect() {}
 
@@ -70,7 +74,7 @@ class StreamConnect : public Atlas::Negotiate
 
     std::string outName;
     std::string inName;
-    iostream& socket;
+    std::iostream& socket;
     Atlas::Bridge* bridge;
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;
@@ -95,7 +99,7 @@ class StreamAccept : public Atlas::Negotiate
 {
     public:
 
-    StreamAccept(const std::string& name, iostream&, Atlas::Bridge*);
+    StreamAccept(const std::string& name, std::iostream&, Atlas::Bridge*);
 
     virtual ~StreamAccept() {}
 
@@ -121,7 +125,7 @@ class StreamAccept : public Atlas::Negotiate
 
     std::string outName;
     std::string inName;
-    iostream& socket;
+    std::iostream& socket;
     Atlas::Bridge* bridge;
     std::list<std::string> inCodecs;
     std::list<std::string> inFilters;

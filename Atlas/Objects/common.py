@@ -28,13 +28,13 @@ cpp_type = {'map' : 'Atlas::Object::MapType',
             'string' : 'std::string',
             'int' : 'int',
             'float' : 'double',
-            'RootList' : 'vector<Root>',
-            'string_list' : 'list<std::string>',
-            'int_list' : 'list<int>',
-            'float_list' : 'list<double>',
-            'string_list_length' : 'vector<std::string>',
-            'int_list_length' : 'vector<int>',
-            'float_list_length' : 'vector<double>'}
+            'RootList' : 'std::vector<Root>',
+            'string_list' : 'std::list<std::string>',
+            'int_list' : 'std::list<int>',
+            'float_list' : 'std::list<double>',
+            'string_list_length' : 'std::vector<std::string>',
+            'int_list_length' : 'std::vector<int>',
+            'float_list_length' : 'std::vector<double>'}
 
 # Const references
 cpp_param_type = {'map' : 'const ' + cpp_type['map'] + '&',

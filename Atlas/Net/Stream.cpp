@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day, Dmitry Derevyanko
 
+#include <iostream>
+
 #include "Stream.h"
 
 using namespace std;

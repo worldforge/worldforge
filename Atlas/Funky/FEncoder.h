@@ -93,7 +93,7 @@ template<class B, class T> class EncMapValue;
 template<class B, class T>
 class EncMapValue {
 public:
-    EncMapValue(B& b, const string& name) : b(b), name(name) { }
+    EncMapValue(B& b, const std::string& name) : b(b), name(name) { }
     
     /// Begin a map.
     EncMap<B, T> operator<<(const BeginMap&)
@@ -124,7 +124,7 @@ public:
     }
 
     /// Send a string value.
-    T operator<<(const string& s)
+    T operator<<(const std::string& s)
     {
         b.mapItem(name, s);
         return T(b);
@@ -142,7 +142,7 @@ protected:
     /// The bridge or encoder that is written to.
     B& b;
     /// The name of this item
-    string name;
+    std::string name;
 };
 
 /** Encoder in Map state
@@ -156,7 +156,7 @@ public:
     EncMap(B& b) : b(b) { }
 
     /// Start a value with its name
-    EncMapValue< B, EncMap<B, T> > operator<<(const string& name)
+    EncMapValue< B, EncMap<B, T> > operator<<(const std::string& name)
     {
         return EncMapValue< B, EncMap<B, T> >(b, name);
     }

@@ -154,7 +154,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
 
     def hasattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("bool %s::hasAttr(const string& name) const\n"
+        self.write("bool %s::hasAttr(const std::string& name) const\n"
                         % classname)
         self.write("{\n")
         for attr in statics:
@@ -166,7 +166,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
     def getattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
         self.write("Object %s::getAttr" % classname)
-        self.write("(const string& name) const\n")
+        self.write("(const std::string& name) const\n")
         self.write("    throw (NoSuchAttrException)\n")
         self.write("{\n")
         for attr in statics:
@@ -178,7 +178,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
     def setattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
         self.write("void %s::setAttr" % classname)
-        self.write("(const string& name, const Object& attr)\n")
+        self.write("(const std::string& name, const Object& attr)\n")
         self.write("{\n")
         for attr in statics:
             self.write(attr.setattr_im())
@@ -188,7 +188,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder):
 
     def remattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
-        self.write("void %s::removeAttr(const string& name)\n"
+        self.write("void %s::removeAttr(const std::string& name)\n"
                         % classname)
         self.write("{\n")
         for attr in statics:

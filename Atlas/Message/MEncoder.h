@@ -5,6 +5,7 @@
 #ifndef ATLAS_MESSAGE_ENCODER_H
 #define ATLAS_MESSAGE_ENCODER_H
 
+#include <string>
 #include "../EncoderBase.h"
 #include "../Bridge.h"
 #include "Object.h"
@@ -31,7 +32,7 @@ public:
     /// Send a message (must be a map!) in stream state.
     virtual void streamMessage(const Object& obj);
     /// Send an object as a map item.
-    virtual void mapItem(const string&, const Object&);
+    virtual void mapItem(const std::string&, const Object&);
     /// Send an object as a list item.
     virtual void listItem(const Object&);
 };

@@ -16,7 +16,7 @@ public:
     std::string msg;
 };
 
-void loadDefaults(const string& filename);
+void loadDefaults(const std::string& filename);
 
 } // namespace Atlas
 #endif

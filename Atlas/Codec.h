@@ -5,6 +5,7 @@
 #ifndef ATLAS_CODEC_H
 #define ATLAS_CODEC_H
 
+#include <iosfwd>
 #include "Bridge.h"
 #include "Task.h"
 #include "Factory.h"
@@ -49,10 +50,10 @@ class Codec : public Bridge, public Task
 
     struct Parameters
     {
-        iostream& stream;
+        std::iostream& stream;
 	Bridge* bridge;
 
-        Parameters(iostream& stream, Bridge* bridge) 
+        Parameters(std::iostream& stream, Bridge* bridge) 
            : stream(stream), bridge(bridge) { }
     };
 

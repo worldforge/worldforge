@@ -21,20 +21,20 @@ public:
 };
 
 typedef Root (*FactoryMethod)();
-typedef map<const std::string, FactoryMethod> FactoryMap;
+typedef std::map<const std::string, FactoryMethod> FactoryMap;
 
 class Factories 
 {
 public:
     bool hasFactory(const std::string& name);
     Root createObject(const std::string& name);
-    list<std::string> getKeys();
+    std::list<std::string> getKeys();
     void addFactory(const std::string& name, FactoryMethod method);
 private:
     FactoryMap m_factories;
 };
     
-extern map<const std::string, Root> objectDefinitions;
+extern std::map<const std::string, Root> objectDefinitions;
 extern Factories objectFactory;
 //extern Factories objectInstanceFactory;
 

@@ -5,6 +5,7 @@
 #include "Utility.h"
 #include "../Codec.h"
 
+#include <iostream>
 #include <stack>
 
 using namespace std;

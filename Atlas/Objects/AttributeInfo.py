@@ -134,7 +134,7 @@ class AttributeInfo:
             if sub.type == "list" or sub.type == "map":
                 res = res + "%s_%s" % (name, sub.name)
             elif sub.type == "string":
-                res = res + 'string("%s")' % sub.value
+                res = res + 'std::string("%s")' % sub.value
             else:
                 res = res + "%s" % sub.value
             res = res + ");\n"
@@ -154,7 +154,7 @@ class AttributeInfo:
             if sub_type == "list" or sub_type == "map":
                 res = res + "%s_%d" % (name, i)
             elif sub_type == "string":
-                res = res + 'string("%s")' % sub
+                res = res + 'std::string("%s")' % sub
             else:
                 res = res + '%s' % sub
             res = res + ");\n"
@@ -169,7 +169,7 @@ class AttributeInfo:
             res = res + self.default_map(self.name, self)
         res = res + '        set' + self.cname + '('
         if self.type == "string":
-            res = res + 'string("' + self.value + '")'
+            res = res + 'std::string("' + self.value + '")'
         elif self.type == "list" or self.type == "map":
             res = res + self.name
         else:
@@ -257,7 +257,7 @@ class TypedList(AttributeInfo):
         element_type = string.split(type,"_")[0]
         self.cpp_element_type = cpp_type[element_type]
         if element_type == "string":
-            self.cpp_element_type_begin = "string("
+            self.cpp_element_type_begin = "std::string("
             self.cpp_element_type_end = ")"
         else:
             self.cpp_element_type_begin = ""

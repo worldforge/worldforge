@@ -20,7 +20,7 @@
 #include <algorithm>
 
 /// Convert an ASCII char to its hexadecimal value
-inline const string charToHex(char c)
+inline const std::string charToHex(char c)
 {
     char hex[3];
 #ifdef __MINGW32__
@@ -33,7 +33,7 @@ inline const string charToHex(char c)
 }
 
 /// Convert a string with a hexadecimal value (2 characters) to an ASCII char
-inline char hexToChar(const string& hex)
+inline char hexToChar(const std::string& hex)
 {
     int c;
     sscanf(hex.c_str(), "%x", &c);
@@ -49,9 +49,12 @@ inline char hexToChar(const string& hex)
  * @param message The message that is to be escaped.
  * @see hexDecode
  */
-inline const string hexEncodeWithPrefix(const string& prefix, const string& special,
-        const string& message)
+inline const std::string hexEncodeWithPrefix(const std::string&
+                                             prefix,
+                                             const std::string& special,
+                                             const std::string& message)
 {
+    using std::string;
     string encoded;
 
     for (string::const_iterator i = message.begin(); i != message.end(); ++i)
@@ -81,8 +84,11 @@ inline const string hexEncodeWithPrefix(const string& prefix, const string& spec
  * @param prefix The string that is followed by the escaped characters
  * @param message The escaped message.
  */
-inline const string hexDecodeWithPrefix(const string& prefix, const string& message)
+inline const std::string hexDecodeWithPrefix(const std::string&
+                                             prefix,
+                                             const std::string& message)
 {
+    using std::string;
     string newMessage;
     string curFragment;
     

@@ -2,6 +2,8 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
+#include <iostream>
+
 #include "Utility.h"
 #include "../Codec.h"
 
