@@ -58,4 +58,10 @@ void Account::RemoveAttr(const string& name)
     AdminEntity::RemoveAttr(name);
 }
 
+void Account::SendContents(Bridge* b)
+{
+    SendPassword(b);
+    AdminEntity::SendContents(b);
+}
+
 } } } // namespace Atlas::Objects::Entity

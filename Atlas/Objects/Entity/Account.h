@@ -31,6 +31,8 @@ public:
                          const Atlas::Message::Object& attr);
     virtual void RemoveAttr(const std::string& name);
 
+    virtual void SendContents(Atlas::Bridge* b);
+
     inline void SetPassword(const std::string& val);
 
     inline const std::string& GetPassword() const;

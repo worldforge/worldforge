@@ -95,4 +95,17 @@ void RootOperation::RemoveAttr(const string& name)
     Root::RemoveAttr(name);
 }
 
+void RootOperation::SendContents(Bridge* b)
+{
+    SendSerialno(b);
+    SendRefno(b);
+    SendFrom(b);
+    SendTo(b);
+    SendSeconds(b);
+    SendFutureSeconds(b);
+    SendTimeString(b);
+    SendArgs(b);
+    Root::SendContents(b);
+}
+
 } } } // namespace Atlas::Objects::Operation

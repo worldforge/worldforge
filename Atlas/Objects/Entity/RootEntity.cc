@@ -88,4 +88,14 @@ void RootEntity::RemoveAttr(const string& name)
     Root::RemoveAttr(name);
 }
 
+void RootEntity::SendContents(Bridge* b)
+{
+    SendLoc(b);
+    SendPos(b);
+    SendVelocity(b);
+    SendContains(b);
+    SendStampContains(b);
+    Root::SendContents(b);
+}
+
 } } } // namespace Atlas::Objects::Entity

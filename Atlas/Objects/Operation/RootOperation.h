@@ -35,6 +35,8 @@ public:
                          const Atlas::Message::Object& attr);
     virtual void RemoveAttr(const std::string& name);
 
+    virtual void SendContents(Atlas::Bridge* b);
+
     inline void SetSerialno(int val);
     inline void SetRefno(int val);
     inline void SetFrom(const std::string& val);

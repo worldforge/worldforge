@@ -31,6 +31,8 @@ public:
                          const Atlas::Message::Object& attr);
     virtual void RemoveAttr(const std::string& name);
 
+    virtual void SendContents(Atlas::Bridge* b);
+
     inline void SetCharacters(const Atlas::Message::Object::ListType& val);
 
     inline const Atlas::Message::Object::ListType& GetCharacters() const;

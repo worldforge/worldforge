@@ -59,4 +59,10 @@ void Player::RemoveAttr(const string& name)
     Account::RemoveAttr(name);
 }
 
+void Player::SendContents(Bridge* b)
+{
+    SendCharacters(b);
+    Account::SendContents(b);
+}
+
 } } } // namespace Atlas::Objects::Entity
