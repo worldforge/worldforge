@@ -1,3 +1,13 @@
+Wednesday, 14th December, Al Riddoch
+
+	* src/Dispatcher.cpp: Take reference to StdBranchDispatcher before
+	  calling its subdispatchers so it doesn't get deleted before its
+	  finished. Fix use of iterators.
+
+	* src/Dispatcher.h, src/Connection.cpp: Make reference handling
+	  methods public, and make connection hold a reference to the
+	  root dispatcher so it doesn't get deleted.
+
 Wednesday, 12th December, Al Riddoch
 
 	* src/Avatar.cpp: Fix initialisation of val.

@@ -144,8 +144,15 @@ Dispatcher* StdBranchDispatcher::getSubdispatch(const std::string &nm)
 
 bool StdBranchDispatcher::subdispatch(DispatchContextDeque &dq)
 {
-    for (DispatcherDict::iterator d = _subs.begin(); d!=_subs.end(); ++d)
-	if (d->second && (d->second->dispatch(dq))) return true;
+    addRef();
+    for (DispatcherDict::const_iterator d = _subs.begin(); d!=_subs.end(); ++d)
+	if (d->second) {
+           if (d->second->dispatch(dq)) {
+               decRef();
+               return true;
+           }
+        }
+    decRef();
 	
     return false;		
 }
@@ -230,8 +237,8 @@ bool OpRefnoDispatcher::dispatch(DispatchContextDeque &dq)
 		if(++item == dq.end())
 			return false;
 
-	assert(item->IsMap());
-	const Atlas::Message::Object::MapType &map = item->AsMap();
+	assert((*item).IsMap());
+	const Atlas::Message::Object::MapType &map = (*item).AsMap();
 	Atlas::Message::Object::MapType::const_iterator I = map.find("refno");
 	if(I == map.end()) {
 		std::string warning = "Op without a refno, keys are:";

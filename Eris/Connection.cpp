@@ -66,6 +66,7 @@ Connection::Connection(const std::string &cnm, bool dbg) :
 	
 	// build the initial dispatch hierarchy
 	_rootDispatch = new StdBranchDispatcher("root");
+        _rootDispatch->addRef();
 		
 	Dispatcher *opd = new TypeDispatcher("op", "op");
 	_rootDispatch->addSubdispatch(opd);
@@ -94,7 +95,7 @@ Connection::~Connection()
 	_theConnection = NULL;
     delete _lobby;
     delete _ti_engine;
-    delete _rootDispatch;
+    _rootDispatch->decRef();
     if (_debug) {
       delete dd; dd = NULL;
       delete sdd; sdd = NULL;

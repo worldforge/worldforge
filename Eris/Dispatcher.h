@@ -56,7 +56,7 @@ protected:
 	virtual void purge() = 0;
 	
 	const std::string _name;
-
+public:
 	void addRef()
 	{++_refcount;}
 	
