@@ -42,6 +42,8 @@ class Segment {
     float * m_points;
     /// Pointer to buffer containing normals for height points
     float * m_normals;
+    /// Pointer to buffer containing vertices
+    float * m_vertices;
     /// Maximum height of any point in this segment
     float m_max;
     /// Minimum height of any point in this segment
@@ -50,8 +52,10 @@ class Segment {
     bool m_validPt;
     /// Flag indicating whether the normals of this segment is valid
     bool m_validNorm;
+    /// Flag indicating whether the vertices of this segment are valid
+    bool m_validVert;
     /// Flag indicating whether the surfaces of this segment are valid
-    bool m_validSurfaces;
+    bool m_validSurf;
 
     /// Store of surfaces which can be rendered on this terrain
     Surfacestore m_surfaces;
@@ -59,6 +63,8 @@ class Segment {
     void invalidate() {
         m_validPt = false;
         m_validNorm = false;
+        m_validVert = false;
+        m_validSurf = false;
     }
   public:
     explicit Segment(unsigned int resolution = defaultResolution);
@@ -74,6 +80,14 @@ class Segment {
 
     const bool isValid() {
         return m_validPt;
+    }
+
+    const bool isVertexCacheValid() {
+        return m_validVert;
+    }
+
+    void setVertexCacheValid(bool f = true) {
+        m_validVert = true;
     }
 
     void setRef(int x, int y) {
@@ -116,6 +130,18 @@ class Segment {
 
     float * getNormals() {
         return m_normals;
+    }
+
+    const float * getVertexCache() const {
+        return m_vertices;
+    }
+
+    float * getVertexCache() {
+        return m_vertices;
+    }
+
+    float * setVertexCache(float * v) {
+        return m_vertices = v;
     }
 
     float get(int x, int y) const {
