@@ -2,9 +2,9 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2001 Stefanus Du Toit
 
-#include <iostream>
-
 #include "Codec.h"
+
+#include <iostream>
 #include "Codec_impl.h"
 
 namespace Atlas {
