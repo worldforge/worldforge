@@ -142,3 +142,24 @@ void callback_roomEntered(Eris::Room *r, bool &flag)
     CPPUNIT_ASSERT(r->getID() == "new_room_id");
     flag = true;
 }
+
+void TestLobby::testPrivateChat()
+{
+    // log it in
+    
+    Operation::Sound snd = Operation::Sound::Instantiate();
+    
+    Message::Object::MapType tk;
+    tk[""] = "sample_private_chat";
+    
+    snd.SetTo("test_acc1");
+    snd.SetFrom("test_acc2");
+    snd.SetArgs(Message::Object::ListType(1, tk));
+    
+    test_lobby->PrivateChat.connect(SigC::slot(&callback_privateChat));
+}
+
+void callback_privateChat(Eris::Person *src, const std::string &msg)
+{
+    CPPUNIT_ASSERT(msg == "sample_private_chat");
+}

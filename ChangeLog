@@ -1,3 +1,10 @@
+Wednesday, May 15, James Turner
+
+	* Added implemention of missing getServerCount to the Metaserver
+	* Fixed the Meta update code to emit CompletedServerList after
+	  the last active query is deleted. [Thanks to Xmp for catching
+	  both issues, which no one has touched before]
+
 Tuesday, May 14, Al Riddoch
 
 	* src/Player.cpp: Ensure that USERNAME is provided for logins.

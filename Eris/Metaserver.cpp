@@ -141,6 +141,12 @@ ServerList Meta::getGameServerList()
 	return ret;
 }
 		
+int Meta::getGameServerCount()
+{
+    if (_status == INVALID) return 0;
+    return _gameServers.size();
+}
+
 void Meta::gotData(PollData &data)
 {
     bool got_one = false;
@@ -174,15 +180,21 @@ void Meta::gotData(PollData &data)
 
 	// clean up old quereis
 	while (!_deleteQueries.empty()) {
-		delete _deleteQueries.front();
-		_activeQueries.remove(_deleteQueries.front());
-		_deleteQueries.pop_front();
+	    MetaQuery *qr = _deleteQueries.front();
+	    _activeQueries.remove(qr);
+	    delete qr;
+	    _deleteQueries.pop_front();
 	}
 	
 	// start pending queries as slots become available
 	while (!_pendingQueries.empty() && (_activeQueries.size() < _maxActiveQueries)) {
 		queryServer(_pendingQueries.front());
 		_pendingQueries.pop_front();
+	}
+	
+	if (_activeQueries.empty()) {
+	    // we're all done, emit the signal
+	    CompletedServerList.emit();
 	}
 }
 
