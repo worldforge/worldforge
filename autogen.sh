@@ -43,7 +43,7 @@ echo autoconf...
 autoconf
 
 if test "x$NOCONFIGURE" = "x" ; then
-    ./configure $@
+    ./configure --enable-maintainer-mode --enable-debug $@
 fi
 
 exit 0
