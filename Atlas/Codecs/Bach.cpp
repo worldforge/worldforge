@@ -40,16 +40,11 @@ void Bach::parseStream(char next)
         m_state.push(PARSE_MAP_BEGIN);
         break;
 
-    case ',':
-    case EOF:
-        break;
-
     case ']':
         m_bridge->streamEnd();
         break;
 
     default:
-        cout << "parseStream: unexpected character : " << next << endl;
         // FIXME signal error here
         // unexpected character
         break;
@@ -68,6 +63,7 @@ void Bach::parseMap(char next)
         break;
 
     case ',':
+    case ' ':
         break;
 
     default:
@@ -112,6 +108,7 @@ void Bach::parseList(char next)
         break;
 
     case ',':
+    case ' ':
         break;
 
     case '1':
@@ -410,21 +407,38 @@ void Bach::parseName(char next)
 void Bach::poll(bool can_read)
 {
     if (!can_read) return;
+
+    bool comment = false;
+
     do
     {
 	char next = (char) m_socket.get();
 
-        DEBUG(cout << "Character: " << next << "   ";)
+        if (comment)
+        {
+            if (next=='\n')
+                comment = false;
+
+            continue;
+        }
 
         switch(next)
         {
+        case '#':
+            comment = true;
+            continue;
+            break;
+
         case '\n':
+        case '\r':
             continue;
             break;
 
         default:
             break;
         }
+
+        DEBUG(cout << "Character: " << next << " (" << (int)(unsigned char)next << ")   ";)
 
         switch (m_state.top())
 	{
