@@ -1,6 +1,8 @@
 ChangeLog for varconf
 2004-06-06  Al Riddoch  <alriddoch@zepler.org>
 
+	* Fix invocation of configure in rpm spec.
+
 	* Fix devel dependencies in rpm spec.
 
 Tuesday, 10th December, 2004, Kai Blin <blin@gmx.net>
