@@ -3,6 +3,14 @@ AC_INIT(.)
 AM_INIT_AUTOMAKE("Atlas", "0.1.0")
 AM_CONFIG_HEADER(config.h)
 
+dnl Test for c:
+
+AC_PROG_CC
+
+dnl Test for c++:
+
+AC_PROG_CXX
+
 AC_OUTPUT([
 	Makefile
 	Bus/Makefile
