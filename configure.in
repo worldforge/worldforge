@@ -84,7 +84,7 @@ AM_PATH_WFMATH(0.2.6,[
 AC_LANG_RESTORE
 
 AC_ARG_ENABLE(python, 
-[  --enable-python         Enable building of Pythin bindings
+[  --enable-python         Enable building of Python bindings
 ],
 	enable_python=no
 )
