@@ -26,9 +26,12 @@ class Bridge
 {
     public:
     
-    class Map { } static mapBegin;
-    class List { } static listBegin;
-
+    class Map { };
+    class List { };
+    
+     static Map mapBegin;
+     static List listBegin;
+      
     // Interface for stream context
 
     virtual void streamBegin() = 0;
