@@ -14,6 +14,7 @@
 //#include "Connection.h"
 #include "Timeout.h"
 #include "Poll.h"
+#include "Log.h"
 
 namespace Eris {
 	
@@ -61,6 +62,7 @@ void BaseConnection::connect(const std::string &host, short port)
     _stream->open(host, port, true);
 
     Poll::instance().addStream(_stream, Poll::WRITE);
+    log(LOG_DEBUG, "Stream added to poller");
 }
 
 void BaseConnection::hardDisconnect(bool emit)
@@ -153,13 +155,20 @@ void BaseConnection::nonblockingConnect()
 void BaseConnection::pollNegotiation()
 {
 	if (!_sc || (_status != NEGOTIATE))
+	  {
+	    log(LOG_DEBUG, "pollNegotiation: unexpected connection status");
+
 		throw InvalidOperation("pollNegotiation: unexpected connection status");
+	  }
 	
 	_sc->Poll();
 	if (_sc->GetState() == Atlas::Negotiate<std::iostream>::IN_PROGRESS)
+	  {
 	    return;
+	  }
 	
 	if (_sc->GetState() == Atlas::Negotiate<std::iostream>::SUCCEEDED) {
+	    log(LOG_DEBUG, "Negotiation Success");
 	    _codec = _sc->GetCodec();
 	    _encode = new Atlas::Objects::Encoder(_codec);
 	    _codec->StreamBegin();
