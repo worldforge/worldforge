@@ -8,7 +8,7 @@
 
 namespace Atlas { namespace Codecs {
 
-Packed::Packed(std::iostream& s, Atlas::Bridge* b)
+Packed::Packed(std::iostream& s, Atlas::Bridge & b)
   : m_socket(s), m_bridge(b)
 {
     m_state.push(PARSE_STREAM);
@@ -19,7 +19,7 @@ void Packed::parseStream(char next)
     switch (next)
     {
 	case '[':
-	    m_bridge->streamMessage();
+	    m_bridge.streamMessage();
 	    m_state.push(PARSE_MAP);
 	break;
 
@@ -35,7 +35,7 @@ void Packed::parseMap(char next)
     switch (next)
     {
 	case ']':
-	    m_bridge->mapEnd();
+	    m_bridge.mapEnd();
 	    m_state.pop();
 	break;
 
@@ -78,17 +78,17 @@ void Packed::parseList(char next)
     switch (next)
     {
 	case ')':
-	    m_bridge->listEnd();
+	    m_bridge.listEnd();
 	    m_state.pop();
 	break;
 
 	case '[':
-	    m_bridge->listMapItem();
+	    m_bridge.listMapItem();
 	    m_state.push(PARSE_MAP);
 	break;
 
 	case '(':
-	    m_bridge->listListItem();
+	    m_bridge.listListItem();
 	    m_state.push(PARSE_LIST);
 	break;
 
@@ -113,7 +113,7 @@ void Packed::parseList(char next)
 
 void Packed::parseMapBegin(char next)
 {
-    m_bridge->mapMapItem(hexDecode(m_name));
+    m_bridge.mapMapItem(hexDecode(m_name));
     m_socket.putback(next);
     m_state.pop();
     m_name.erase();
@@ -121,7 +121,7 @@ void Packed::parseMapBegin(char next)
 
 void Packed::parseListBegin(char next)
 {
-    m_bridge->mapListItem(hexDecode(m_name));
+    m_bridge.mapListItem(hexDecode(m_name));
     m_socket.putback(next);
     m_state.pop();
     m_name.erase();
@@ -142,12 +142,12 @@ void Packed::parseInt(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge->mapIntItem(hexDecode(m_name), atol(m_data.c_str()));
+		m_bridge.mapIntItem(hexDecode(m_name), atol(m_data.c_str()));
 		m_name.erase();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge->listIntItem(atol(m_data.c_str()));
+		m_bridge.listIntItem(atol(m_data.c_str()));
 	    }
 	    else
 	    {
@@ -193,12 +193,12 @@ void Packed::parseFloat(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge->mapFloatItem(hexDecode(m_name), atof(m_data.c_str()));
+		m_bridge.mapFloatItem(hexDecode(m_name), atof(m_data.c_str()));
 		m_name.erase();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge->listFloatItem(atof(m_data.c_str()));
+		m_bridge.listFloatItem(atof(m_data.c_str()));
 	    }
 	    else
 	    {
@@ -247,12 +247,12 @@ void Packed::parseString(char next)
 	    m_state.pop();
 	    if (m_state.top() == PARSE_MAP)
 	    {
-		m_bridge->mapStringItem(hexDecode(m_name), hexDecode(m_data));
+		m_bridge.mapStringItem(hexDecode(m_name), hexDecode(m_data));
 		m_name.erase();
 	    }
 	    else if (m_state.top() == PARSE_LIST)
 	    {
-		m_bridge->listStringItem(hexDecode(m_data));
+		m_bridge.listStringItem(hexDecode(m_data));
 	    }
 	    else
 	    {
@@ -322,7 +322,7 @@ void Packed::poll(bool can_read)
 
 void Packed::streamBegin()
 {
-    m_bridge->streamBegin();
+    m_bridge.streamBegin();
 }
 
 void Packed::streamMessage()
@@ -332,7 +332,7 @@ void Packed::streamMessage()
 
 void Packed::streamEnd()
 {
-    m_bridge->streamEnd();
+    m_bridge.streamEnd();
 }
 
 void Packed::mapMapItem(const std::string& name)

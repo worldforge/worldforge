@@ -1,6 +1,7 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
-// Copyright 2000-2001 Aloril.
+// Copyright 2000-2001 Aloril,
+// Copyright 2004 Alistair Riddoch
 
 #include <Atlas/Objects/loadDefaults.h>
 
@@ -40,8 +41,8 @@ class LoadDefaultsDecoder : public Atlas::Message::DecoderBase
 
 LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
 {
-    std::ifstream stream;
-    stream.open(filename.c_str());
+    std::fstream stream;
+    stream.open(filename.c_str(), std::ios::in);
     if (!stream) {
         throw DefaultLoadingException("Failed to open file " + filename);
     }
@@ -57,7 +58,7 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
     //if((*i)->getName() == "XML")
       //codec = (*i)->New(Codec<std::iostream>::Parameters((iostream&)stream, this));
   //end of replace
-    Atlas::Codec *codec = new Atlas::Codecs::XML((std::iostream&)stream, this);
+    Atlas::Codec *codec = new Atlas::Codecs::XML(stream, *this);
 
     if (!codec) {
         throw DefaultLoadingException("XML codec not found");

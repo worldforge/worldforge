@@ -18,7 +18,9 @@
 
 namespace Atlas {
 
-/** The Atlas Objects namespace */
+/// The Atlas high level Objects namespace.
+///
+/// This namespace contains classes used to handle high level Atlas data.
 namespace Objects {
 
 /** An exception indicating the requested attribute does not exist.

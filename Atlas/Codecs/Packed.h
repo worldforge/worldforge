@@ -38,7 +38,7 @@ class Packed : public Codec
 {
 public:
     
-    Packed(std::iostream& s, Atlas::Bridge* b);
+    Packed(std::iostream& s, Atlas::Bridge & b);
 
     virtual void poll(bool can_read = true);
 
@@ -63,7 +63,7 @@ public:
 protected:
     
     std::iostream& m_socket;
-    Bridge* m_bridge;
+    Bridge & m_bridge;
 
     enum State
     {

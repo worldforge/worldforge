@@ -92,7 +92,7 @@ void NegotiateHelper::put(std::string &buf, const std::string & header)
 }
 
 StreamConnect::StreamConnect(const std::string& name, std::iostream& s,
-Bridge* bridge) :
+Bridge& bridge) :
   m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
   m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
   m_canPacked(true), m_canXML(true), m_canBach(true),m_canGzip(true), m_canBzip2(true)
@@ -187,6 +187,7 @@ Atlas::Negotiate::State StreamConnect::getState()
     return FAILED;
 }
 
+/// FIXME We should pass in the Bridge here, not at construction time.
 Atlas::Codec * StreamConnect::getCodec()
 {
     if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_bridge); }
@@ -245,7 +246,7 @@ StreamAccept::~StreamAccept()
 }
 
 StreamAccept::StreamAccept(const std::string& name, std::iostream& s,
-Bridge* bridge) :
+Bridge& bridge) :
   m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
   m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
   m_canPacked(false), m_canXML(false), m_canGzip(false), m_canBzip2(false)
@@ -342,6 +343,7 @@ Atlas::Negotiate::State StreamAccept::getState()
     return FAILED;
 }
 
+/// FIXME We should pass in the Bridge here, not at construction time.
 Atlas::Codec * StreamAccept::getCodec()
 {
       // XXX XXX XXX XXX

@@ -20,7 +20,7 @@ class Bach : public Codec
 {
   public:
 
-    Bach(std::iostream& s, Atlas::Bridge* b);
+    Bach(std::iostream& s, Atlas::Bridge & b);
 
     virtual void poll(bool can_read = true);
 
@@ -45,7 +45,7 @@ class Bach : public Codec
   protected:
 
     std::iostream& m_socket;
-    Bridge* m_bridge;
+    Bridge & m_bridge;
     bool m_comma, m_stringmode;
     int m_linenum;
 

@@ -15,6 +15,9 @@ namespace Atlas {
 
 class Bridge;
 
+/// The Atlas network communication namespace.
+///
+/// This namespace contains classes to handle establishing network connections.
 namespace Net {
 
 /** Negotiation of codecs and filters for an Atlas connection
@@ -43,12 +46,18 @@ along with the name of sender and a Socket
 
   };
 
-/// \brief Negotiation of clients building a connection to a remote system.
+/// Negotiation of clients building a connection to a remote system.
+///
+/// Used once a stream connection has been established to the server.
+/// This class offers the server a list of Atlas::Codec types that the
+/// client can understand, and then listens for the servers decision.
+/// Once the server has told the client which Atlas::Codec to use,
+/// negotiation is flagged as complete, and this object can be deleted.
 class StreamConnect : public Atlas::Negotiate
 {
     public:
 
-    StreamConnect(const std::string& name, std::iostream&, Atlas::Bridge*);
+    StreamConnect(const std::string& name, std::iostream&, Atlas::Bridge&);
 
     virtual ~StreamConnect();
 
@@ -75,7 +84,7 @@ class StreamConnect : public Atlas::Negotiate
     std::string m_outName;
     std::string m_inName;
     std::iostream& m_socket;
-    Atlas::Bridge* m_bridge;
+    Atlas::Bridge& m_bridge;
     std::list<std::string> m_inCodecs;
     std::list<std::string> m_inFilters;
   
@@ -97,12 +106,19 @@ class StreamConnect : public Atlas::Negotiate
     bool m_canBzip2;
 };
  
-/// \brief Negotiation of servers accepting a connection from a remote system.
+/// Negotiation of servers accepting a connection from a remote system.
+///
+/// Used once a stream connection has been established by a client.
+/// This class listens to the list of Atlas::Codec types that the
+/// client offers, and then responds with the name of the Atlas::Codec
+/// which it thinks is most suitable.
+/// Once the server has told the client which Atlas::Codec to use,
+/// negotiation is flagged as complete, and this object can be deleted.
 class StreamAccept : public Atlas::Negotiate
 {
     public:
 
-    StreamAccept(const std::string& name, std::iostream&, Atlas::Bridge*);
+    StreamAccept(const std::string& name, std::iostream&, Atlas::Bridge&);
 
     virtual ~StreamAccept();
 
@@ -129,7 +145,7 @@ class StreamAccept : public Atlas::Negotiate
     std::string m_outName;
     std::string m_inName;
     std::iostream& m_socket;
-    Atlas::Bridge* m_bridge;
+    Atlas::Bridge& m_bridge;
     std::list<std::string> m_inCodecs;
     std::list<std::string> m_inFilters;
   

@@ -43,7 +43,7 @@ std::string object2String(const Root& obj)
     DebugBridge bridge;
     std::stringstream stream;
     Atlas::Codec *codec;
-    codec = new Atlas::Codecs::XML(stream, &bridge);
+    codec = new Atlas::Codecs::XML(stream, bridge);
     assert(codec);
     codec->streamBegin();
     Atlas::Objects::ObjectsEncoder eno(*codec);
@@ -117,8 +117,8 @@ void testXML()
     //DebugBridge bridge;
     TestDecoder bridge;
 #if USE_FILE
-    ifstream stream;
-    stream.open("../../../../protocols/atlas/spec/atlas.xml");
+    fstream stream;
+    stream.open("../../../../protocols/atlas/spec/atlas.xml", std::ios::in);
     assert(!!stream);
 #else
     std::stringstream stream;
@@ -154,9 +154,9 @@ void testXML()
 
     Atlas::Codec *codec;
 #if USE_XML
-    codec = new Atlas::Codecs::XML((std::iostream&)stream, &bridge);
+    codec = new Atlas::Codecs::XML((std::iostream&)stream, bridge);
 #else
-    codec = new Atlas::Codecs::Packed(stream, &bridge);
+    codec = new Atlas::Codecs::Packed(stream, bridge);
 #endif
     assert(codec);
 

@@ -1,3 +1,13 @@
+2004-08-09  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Bach.h, Atlas/Codecs/Packed.cpp,
+	  Atlas/Codecs/Packed.h, Atlas/Codecs/XML.cpp, Atlas/Codecs/XML.h,
+	  Atlas/Net/Stream.cpp, Atlas/Net/Stream.h, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/loadDefaults.cpp, Atlas/Utilities/atlas_convert.cpp,
+	  tests/Objects/objects2.cpp: Convert pointer to decode Bridge
+	  in codecs and negotiation code to a reference for cleaner looking
+	  code.
+
 2004-08-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Bridge.h, Atlas/Exception.cpp, Atlas/Exception.h:

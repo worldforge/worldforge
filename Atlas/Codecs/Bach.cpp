@@ -12,7 +12,7 @@ static const bool debug_flag = false;
 
 namespace Atlas { namespace Codecs {
 
-Bach::Bach(std::iostream& s, Atlas::Bridge* b)
+Bach::Bach(std::iostream& s, Atlas::Bridge & b)
     : m_socket(s)
     , m_bridge(b)
     , m_comma(false)
@@ -28,7 +28,7 @@ void Bach::parseInit(char next)
 
     if (next=='[')
     {
-        m_bridge->streamBegin();
+        m_bridge.streamBegin();
         m_state.push(PARSE_STREAM);
     }
 }
@@ -40,12 +40,12 @@ void Bach::parseStream(char next)
     switch (next)
     {
     case '{':
-        m_bridge->streamMessage();
+        m_bridge.streamMessage();
         m_state.push(PARSE_MAP);
         break;
 
     case ']':
-        m_bridge->streamEnd();
+        m_bridge.streamEnd();
         break;
 
     default:
@@ -60,7 +60,7 @@ void Bach::parseMap(char next)
     switch (next)
     {
     case '}':
-        m_bridge->mapEnd();
+        m_bridge.mapEnd();
         m_state.pop();
         break;
 
@@ -97,17 +97,17 @@ void Bach::parseList(char next)
     switch (next)
     {
     case ']':
-        m_bridge->listEnd();
+        m_bridge.listEnd();
         m_state.pop();
         break;
 
     case '{':
-        m_bridge->listMapItem();
+        m_bridge.listMapItem();
         m_state.push(PARSE_MAP);
         break;
 
     case '[':
-        m_bridge->listListItem();
+        m_bridge.listListItem();
         m_state.push(PARSE_LIST);
         break;
 
@@ -158,13 +158,13 @@ void Bach::parseInt(char next)
         {
             ATLAS_DEBUG(std::cout << "Int: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge->mapIntItem(decodeString(m_name), atol(m_data.c_str()));
+            m_bridge.mapIntItem(decodeString(m_name), atol(m_data.c_str()));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "Int: " << m_data << std::endl;)
 
-            m_bridge->listIntItem(atol(m_data.c_str()));
+            m_bridge.listIntItem(atol(m_data.c_str()));
         }
         else
         {
@@ -220,13 +220,13 @@ void Bach::parseFloat(char next)
         {
             ATLAS_DEBUG(std::cout << "Float: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge->mapFloatItem(decodeString(m_name), atof(m_data.c_str()));
+            m_bridge.mapFloatItem(decodeString(m_name), atof(m_data.c_str()));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "Float: " << m_data << std::endl;)
 
-            m_bridge->listFloatItem(atof(m_data.c_str()));
+            m_bridge.listFloatItem(atof(m_data.c_str()));
         }
         else
         {
@@ -272,13 +272,13 @@ void Bach::parseString(char next)
         {
             ATLAS_DEBUG(std::cout << "String: " << m_name << ": " << m_data << std::endl;)
 
-            m_bridge->mapStringItem(decodeString(m_name), decodeString(m_data));
+            m_bridge.mapStringItem(decodeString(m_name), decodeString(m_data));
         }
         else if (m_state.top() == PARSE_LIST)
         {
             ATLAS_DEBUG(std::cout << "String: " << m_data << std::endl;)
 
-            m_bridge->listStringItem(decodeString(m_data));
+            m_bridge.listStringItem(decodeString(m_data));
         }
         else
         {
@@ -326,12 +326,12 @@ void Bach::parseData(char next)
         switch (m_state.top())
         {
         case PARSE_MAP:
-            m_bridge->mapMapItem(decodeString(m_name));
+            m_bridge.mapMapItem(decodeString(m_name));
             m_name.erase();
             break;
 
         case PARSE_LIST:
-            m_bridge->listMapItem();
+            m_bridge.listMapItem();
             break;
 
         default:
@@ -348,12 +348,12 @@ void Bach::parseData(char next)
         switch (m_state.top())
         {
         case PARSE_MAP:
-            m_bridge->mapListItem(decodeString(m_name));
+            m_bridge.mapListItem(decodeString(m_name));
             m_name.erase();
             break;
 
         case PARSE_LIST:
-            m_bridge->listListItem();
+            m_bridge.listListItem();
             break;
 
         default:

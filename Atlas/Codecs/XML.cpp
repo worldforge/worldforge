@@ -8,7 +8,7 @@
 
 namespace Atlas { namespace Codecs {
     
-XML::XML(std::iostream& s, Atlas::Bridge* b)
+XML::XML(std::iostream& s, Atlas::Bridge & b)
     : m_socket(s), m_bridge(b)
 {
     m_token = TOKEN_DATA;
@@ -121,7 +121,7 @@ void XML::parseStartTag()
 	case PARSE_NOTHING:
 	    if (m_tag == "atlas")
 	    {
-		m_bridge->streamBegin();
+		m_bridge.streamBegin();
 		m_state.push(PARSE_STREAM);
 	    }
 	    else
@@ -134,7 +134,7 @@ void XML::parseStartTag()
 	case PARSE_STREAM:
 	    if (m_tag == "map")
 	    {
-		m_bridge->streamMessage();
+		m_bridge.streamMessage();
 		m_state.push(PARSE_MAP);
 	    }
 	    else
@@ -147,12 +147,12 @@ void XML::parseStartTag()
         case PARSE_MAP:
 	    if (m_tag == "map")
 	    {
-		m_bridge->mapMapItem(m_name);
+		m_bridge.mapMapItem(m_name);
 		m_state.push(PARSE_MAP);
 	    }
 	    else if (m_tag == "list")
 	    {
-		m_bridge->mapListItem(m_name);
+		m_bridge.mapListItem(m_name);
 		m_state.push(PARSE_LIST);
 	    }
 	    else if (m_tag == "int")
@@ -177,12 +177,12 @@ void XML::parseStartTag()
         case PARSE_LIST:
 	    if (m_tag == "map")
 	    {
-		m_bridge->listMapItem();
+		m_bridge.listMapItem();
 		m_state.push(PARSE_MAP);
 	    }
 	    else if (m_tag == "list")
 	    {
-		m_bridge->listListItem();
+		m_bridge.listListItem();
 		m_state.push(PARSE_LIST);
 	    }
 	    else if (m_tag == "int")
@@ -225,7 +225,7 @@ void XML::parseEndTag()
 	case PARSE_STREAM:
 	    if (m_tag == "atlas")
 	    {
-		m_bridge->streamEnd();
+		m_bridge.streamEnd();
 		m_state.pop();
 	    }
 	    else
@@ -238,7 +238,7 @@ void XML::parseEndTag()
         case PARSE_MAP:
 	    if (m_tag == "map")
 	    {
-		m_bridge->mapEnd();
+		m_bridge.mapEnd();
 		m_state.pop();
 	    }
 	    else
@@ -251,7 +251,7 @@ void XML::parseEndTag()
         case PARSE_LIST:
 	    if (m_tag == "list")
 	    {
-		m_bridge->listEnd();
+		m_bridge.listEnd();
 		m_state.pop();
 	    }
 	    else
@@ -267,11 +267,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge->mapIntItem(m_name, atol(m_data.top().c_str()));
+		    m_bridge.mapIntItem(m_name, atol(m_data.top().c_str()));
 		}
 		else
 		{
-		    m_bridge->listIntItem(atol(m_data.top().c_str()));
+		    m_bridge.listIntItem(atol(m_data.top().c_str()));
 		}
 	    }
 	    else
@@ -287,11 +287,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge->mapFloatItem(m_name, atof(m_data.top().c_str()));
+		    m_bridge.mapFloatItem(m_name, atof(m_data.top().c_str()));
 		}
 		else
 		{
-		    m_bridge->listFloatItem(atof(m_data.top().c_str()));
+		    m_bridge.listFloatItem(atof(m_data.top().c_str()));
 		}
 	    }
 	    else
@@ -307,11 +307,11 @@ void XML::parseEndTag()
 		m_state.pop();
 		if (m_state.top() == PARSE_MAP)
 		{
-		    m_bridge->mapStringItem(m_name, m_data.top());
+		    m_bridge.mapStringItem(m_name, m_data.top());
 		}
 		else
 		{
-		    m_bridge->listStringItem(m_data.top());
+		    m_bridge.listStringItem(m_data.top());
 		}
 	    }
 	    else

@@ -1,5 +1,12 @@
 New TODO by Al Riddoch
 
+Note that Atlas::Message::Element segfaults of a map is set to be a member
+of itself.
+
+Don't pass Bridge to StreamFoo at construction time. Its not required until
+getCodec() time. Make it an argument of getCodec(). Bridge passed to Codec
+should be a reference rather than a pointer.
+
 Fix all use of if (..) .. to always use { } in Root.h etc.
 
 Make sure parents and objtype are not sent if they are empty.
