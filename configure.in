@@ -332,6 +332,14 @@ AC_CHECK_HEADERS(bzlib.h)
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
 
+SYSTEM_LIBS="$SYSTEM_LIBS -lm"
+ATLAS_CFLAGS=""
+ATLAS_LIBS="-lAtlasObjects -lAtlasNet -lAtlas -lAtlasCodecs -lAtlasMessage -lAtlas"
+
+AC_SUBST(ATLAS_CFLAGS)
+AC_SUBST(ATLAS_LIBS)
+AC_SUBST(SYSTEM_LIBS)
+
 dnl Generate files
 
 AC_OUTPUT([
