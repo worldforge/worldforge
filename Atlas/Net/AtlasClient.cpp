@@ -37,12 +37,14 @@ SOCKET AClient::getSock()
 	return csock->getSock();
 }
 
-void AClient::canRead()
+int AClient::canRead()
 {
 	int	len;
 	string	buf;
 
 	len = csock->recv(buf);
+	if (len < 1) return 0;	// AServer will call gotErrs
+
 	if (cmprs) buf = cmprs->decode(buf);
 	DebugMsg1(5,"ISTREAM = %s\n", buf.c_str());
 	codec->feedStream(buf);
@@ -51,17 +53,21 @@ void AClient::canRead()
 		gotMsg(codec->getMessage());
 		codec->freeMessage();
 	}
+	return 1;
 }
 
-void AClient::canSend()
+int AClient::canSend()
 {
+	return 1;
 }
 
-void AClient::gotErrs()
+int AClient::gotErrs()
 {
 	// errors are assumed to be a disconnect, propogate to subclasses
+	DebugMsg1(0,"[AClient] SOCKET ERRORS ON %li", (long)csock->getSock());
 	csock->close();
 	gotDisconnect();
+	return 1;
 }
 
 void AClient::doPoll()

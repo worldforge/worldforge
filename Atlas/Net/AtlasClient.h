@@ -39,9 +39,11 @@ public:
 
 	SOCKET		getSock();
 
-	void		canRead();
-	void		canSend();
-	void		gotErrs();
+	// all of these functions return 0 on errors, 1 if ok
+	int		canRead();
+	int		canSend();
+	int		gotErrs();
+
 	void		doPoll();
 
 	void		sendMsg(const AObject& msg);

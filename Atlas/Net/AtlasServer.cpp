@@ -41,17 +41,28 @@ int AServer::poll(long usec)
 	fd_set	xsend = fdsend;
 	fd_set	xerrs = fderrs;
 
-	select(0,&xread,&xsend,&xerrs,&tm);
+	select(FD_SETSIZE,&xread,&xsend,&xerrs,&tm);
 
 	for (i=0; i<FD_SETSIZE; i++) 
-	if (i != slsock)
+	if (i != slsock && csock[i] != NULL)
 	{
-		if (FD_ISSET(i,&xread)) csock[i]->canRead();
-		if (FD_ISSET(i,&xsend)) csock[i]->canSend();
+		if (FD_ISSET(i,&xread)) {
+			if (!csock[i]->canRead()) {
+				// got an error from the client code
+				FD_SET(i,&xerrs);
+			}
+		}
+		if (FD_ISSET(i,&xsend)) {
+			if (!csock[i]->canSend()) {
+				// got an error from the client code
+				FD_SET(i,&xerrs);
+			}
+		}
 		if (FD_ISSET(i,&xerrs)) {
-			csock[i]->gotErrs();
-			delClientSend(csock[i]);
+			DebugMsg1(0,"[AServer] SOCKET ERRORS ON %li", (long)i);
 			delClient(csock[i]);
+			csock[i]->gotErrs();
+			csock[i] == NULL;
 		}
 	}
 	if (FD_ISSET(slsock, &xread)) return 1;
@@ -81,10 +92,9 @@ int AServer::delClient(AClient* client)
 	SOCKET sock = client->getSock();
 
 	if (csock[sock] == NULL) return 0;
-	csock[sock] = NULL;
-	FD_CLR(sock,&fdread);
-	FD_CLR(sock,&fdsend);
-	FD_CLR(sock,&fderrs);
+	while (FD_ISSET(sock,&fdread)) FD_CLR(sock,&fdread);
+	while (FD_ISSET(sock,&fdsend)) FD_CLR(sock,&fdsend);
+	while (FD_ISSET(sock,&fderrs)) FD_CLR(sock,&fderrs);
 	return 1;
 }
 
