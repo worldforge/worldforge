@@ -885,7 +885,7 @@ void AObject::walkTree(int nest, string name, const AObject& list)
 	}
 	if (list.isInt()) {
 		DebugMsg3(0,"%s<int%s>%li</int>",
-			pre.c_str(), nam.c_str(),list.asLong()
+			pre.c_str(), nam.c_str(),list.asInt()
 		);
 	}
 	if (list.isLong()) {

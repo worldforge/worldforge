@@ -8,6 +8,7 @@
 
 #include "XMLTest.h"
 
+#include <AtlasTransport.h>
 #include <string.h>
 #include <stdio.h>
 
@@ -128,7 +129,7 @@ void XMLTest::execute()
 {
 	string msg;
 
-	Py_Initialize();
+	initAtlasTransport();
 
         AProtocol* prot = new AXMLProtocol();
 

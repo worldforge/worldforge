@@ -6,8 +6,8 @@ AR     	=	ar
 RANLIB	=	ranlib
 STDLIBS	=	-L$(OUTDIR)
 STDINCS	=	-I.
-#C_FLAGS	=	-g -D_ADebug_ -Wall
-C_FLAGS	=	-g -Wall
+C_FLAGS	=	-g -D_ADebug_ -Wall
+#C_FLAGS	=	-g -Wall
 #C_FLAGS	=	-O3 -Wall
 MK_DEP	=	$(CC) $(C_FLAGS) $(incDirs) -MM
 
