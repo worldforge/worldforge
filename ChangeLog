@@ -1,5 +1,9 @@
 2004-10-12  James Turner  <james@worldforge.org>
 
+	* Removing long-dead files from the time before pkg-config
+
+2004-10-12  James Turner  <james@worldforge.org>
+
 	* tests/agent.cpp: Use new Atlas-C++ 0.6 'copy' functionality to make LOOK
 	  filtering correct.
 	  
