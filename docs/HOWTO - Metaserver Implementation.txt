@@ -1,0 +1,69 @@
+HOWTO: Implementing a Metaserver query using ERIS
+
+Implementing a metaserver query is one of the more simple uses of ERIS. It
+only involves the use of one class to do the query (Eris::Meta) and two others
+to store the data you get back from the metaserver.
+
+------------
+- STEP ONE -
+------------
+
+Creating your metaserver class.
+
+To create our lovely new metaserver connection we create a copy of Eris::Meta using
+the following constructor:
+Meta (const std::string &cnm, const std::string &msv, unsigned int maxQueries)
+cnm - The name of your client that you are using to query the metaserver. IE "Dime".
+msv - The hostname of the metaserver you are connecting to.
+maxQueries - The maximum number of simultainious queries allowed.  Usually 1.
+
+------------
+- STEP TWO -
+------------
+
+Connecting your handlers
+
+In ERIS important events that it wants to callback you on are handled by SigC++ Signals.
+
+Example
+{
+Eris::Meta msrv("dime","metaserver.worldforge.org", 1);
+
+msrv.RecievedServerInfo.connect(SigC::slot(*this, &myHandlerFunction));
+}
+
+GotServerCount  Emitted once the size of the server list is known. Connected to
+		a function of return type void accepting in as it's argument.	       
+
+ReceivedServerInfo  Emitted when information about a server is received.  Connected to
+		    a function of return type void and accepting ServerInfo as it's argument.
+
+CompletedServerList  Emitted when the entire server list has been refreshed. Connected to a
+		     function of return type void accepting no arguments.
+
+Failure  Indicates a failure (usually network related) has occurred. The server list will be
+	 cleared, and the status set to INVALID.  Connected to a function of return type void
+	 accepting string as an argument.
+
+--------------
+- STEP THREE -
+--------------
+
+Write your handlers and link them into your gui.  You can call Eris::Meta::Refresh() to
+refresh the list and Eris::Meta::Cancel() to abort a query.
+
+-------------
+- STEP FOUR -
+-------------
+
+Add a call to the eris polling system into your main application loop.  It will only poll meta
+when a query is in progress.
+
+eg.
+Eris::PollDefault::poll();
+
+========
+= DONE =
+========
+
+That's about it.  Don't forget to add the libraries for eris to your lib linking list.
