@@ -17,3 +17,5 @@ stamp-h*
 wfmath.spec
 wfmath-0.3.pc
 wfmath-*.tar.gz
+build
+.DS_Store
