@@ -1,3 +1,21 @@
+2004-03-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/objects2.cpp: Fix use of std namespace.
+
+	* benchmark/Objects3_Move.cpp: Fix use of std::cout instead
+	  of std::endl.
+
+	* benchmark/Objects3_Move.cpp, tests/Objects/decoder1.cpp,
+	  tests/Objects/encoder1.cpp, tests/Objects/objects1.cpp,
+	  tests/Objects/objects2.cpp: Don't bail out if xml file
+	  can't be loaded, as defaults are now already set.
+
+	* benchmark/timer.h: Ensure this file is included in the
+	  distribution.
+
+	* Atlas/Version.h: Add new header with API version as defines
+	  and static variables.
+
 2004-02-27  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py:

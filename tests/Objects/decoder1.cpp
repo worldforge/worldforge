@@ -45,7 +45,6 @@ int main(int argc, char** argv)
     } catch(Atlas::Objects::DefaultLoadingException e) {
 	std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
-        return 1;
     }
     TestDecoder t;
     t.streamBegin();

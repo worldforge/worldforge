@@ -11,7 +11,6 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Move;
 using Atlas::Objects::Operation::Sight;
 using Atlas::Objects::Entity::GameEntity;
-using namespace std;
 
 //#define DEBUG 0
 #if DEBUG
@@ -30,16 +29,16 @@ class NPC
 public:
   NPC() : id("123") {x=y=z = vx=vy=vz = 0.0;}
   Sight move(Move &op);
-  string getId() {return id;}
+  std::string getId() {return id;}
 private:
-  string id;
+  std::string id;
   double x,y,z;
   double vx,vy,vz;
 };
 
 Sight NPC::move(Move &op)
 {
-    const vector<double>& new_vel = 
+    const std::vector<double>& new_vel = 
         ((GameEntity&)op->getArgs()[0])->
         getVelocity();
     vx = new_vel[0];
@@ -80,9 +79,8 @@ int main(int argc, char** argv)
     try {
         Atlas::Objects::loadDefaults("../../../protocols/atlas/spec/atlas.xml");
     } catch(Atlas::Objects::DefaultLoadingException e) {
-        cout << "DefaultLoadingException: "
-             << e.getDescription() << endl;
-        return 1;
+        std::cout << "DefaultLoadingException: "
+             << e.getDescription() << std::endl;
     }
     double i;
     TIME_ON
@@ -98,13 +96,13 @@ int main(int argc, char** argv)
         human->modifyVelocity()[1] = i-1.0;
         human->modifyVelocity()[2] = i+1.0;
 //        Object::ListType foo = human->getVelocity();
-//        cout<<foo.size()<<":"<<foo.front().asFloat()<<","<<foo.back().asFloat()<<endl;
+//        std::cout<<foo.size()<<":"<<foo.front().asFloat()<<","<<foo.back().asFloat()<<std::endl;
 
         //move:
         Move move;
         move->setArgs1((Root&)human);
 //        Object::MapType ent = move.getArgs().front().asMap();
-//        cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<endl;
+//        std::cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<std::endl;
 
         //sight:
         Sight sight;
@@ -114,7 +112,7 @@ int main(int argc, char** argv)
         sight->setArgs1((Root&)move);
 //        Object::MapType ent = sight.getArgs().front().asMap()
 //          ["args"].asList().front().asMap();
-//        cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<endl;
+//        std::cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<std::endl;
     }
     TIME_OFF("Plain creating of sight operation");
     NPC npc1;
@@ -135,7 +133,7 @@ int main(int argc, char** argv)
         move->setArgs1((Root&)human);
 
         Sight res_sight = npc1.move(move);
-        const vector<double>& new_pos = 
+        const std::vector<double>& new_pos = 
             ((GameEntity&)
                ((Move&)res_sight->getArgs()[0])
              ->getArgs()[0])->
@@ -145,6 +143,6 @@ int main(int argc, char** argv)
         z = new_pos[2];
     }
     TIME_OFF("NPC movements");
-    cout<<"Resulting position: ("<<x<<","<<y<<","<<z<<")"<<endl;
+    std::cout<<"Resulting position: ("<<x<<","<<y<<","<<z<<")"<<std::endl;
     return 0;
 }

@@ -59,24 +59,24 @@ protected:
     virtual void objectRootArrived(const Root& r)
     {
 //        assert(r->getAttr("id").asString() == "root_instance");
-      std::cout << "got Root! " << object2String(r) << std::cout;
+      std::cout << "got Root! " << object2String(r) << std::endl;
     }
 
     virtual void objectLoginArrived(const Login& r)
     {
-        std::cout << "got Account!" << std::cout;
+        std::cout << "got Account!" << std::endl;
 //        assert(r->getAttr("id").asString() == "root_instance");
     }
 
     virtual void objectLookArrived(const Look& l)
     {
 //        assert(l->getAttr("id").asString() == "look_instance");
-        std::cout << "got Look!" << std::cout;
+        std::cout << "got Look!" << std::endl;
     }
 
     virtual void objectAccountArrived(const Account &a)
     {
-        std::cout << "got Account!" << std::cout;
+        std::cout << "got Account!" << std::endl;
     }
 };
 
@@ -102,8 +102,8 @@ void testXML()
 //    BaseObjectData *bod = alloc_entity();
     //Root human2(bod);
     Root human2 = (Root&)RootEntity::factory();
-    std::cout<<"human.id="<<human->getId()<<std::cout;
-    std::cout<<"human2.id="<<human2->getId()<<std::cout;
+    std::cout<<"human.id="<<human->getId()<<std::endl;
+    std::cout<<"human2.id="<<human2->getId()<<std::endl;
 #if 0
     typedef std::list<Atlas::Factory<Atlas::Codec >*> FactoryCodecs;
     FactoryCodecs *myCodecs = &Factory<Codec >::factories();
@@ -111,7 +111,7 @@ void testXML()
     std::cout<<"myCodecs: "<<myCodecs->size();
     for (i = myCodecs->begin(); i != myCodecs->end(); ++i)
         std::cout<<":"<<(*i)->getName();
-    std::cout<<std::cout;
+    std::cout<<std::endl;
 #endif
 
     //DebugBridge bridge;
@@ -129,7 +129,7 @@ void testXML()
 //     Atlas::Codec *codec = NULL;
 //     for(codec_i = myCodecs->begin(); codec_i != myCodecs->end(); ++codec_i)
 //     {
-//         std::cout<<(*codec_i)->getName()<<std::cout;
+//         std::cout<<(*codec_i)->getName()<<std::endl;
 //         if ((*codec_i)->getName() == "XML") {
 //             codec = (*codec_i)->New(Codec::Parameters(stream, &bridge));
 //         }
@@ -163,7 +163,7 @@ void testXML()
 #if USE_FILE
     while(stream) {
       codec->poll();
-      //std::cout<<"--------"<<std::cout;
+      //std::cout<<"--------"<<std::endl;
     }
 #else
     codec->streamBegin();
@@ -180,7 +180,7 @@ void testXML()
 //    en.streamObjectsMessage(human->asObject());
 
     codec->streamEnd();
-    std::cout<<std::cout<<stream.str()<<std::cout;
+    std::cout<<std::endl<<stream.str()<<std::endl;
     //[$from=bar(args=[$id=foo])][$id=foo]
     //<atlas><map><std::string name="from">bar</std::string><list name="args"><map><std::string name="id">foo</std::string></map></list></map><map><std::string name="id">foo</std::string></map></atlas>
 #endif
@@ -211,8 +211,8 @@ void testValues()
     assert(l->getId()=="");
     assert(l->getParents().front()=="login");
     assert(l->getObjtype()=="op");
-    // std::cout<<std::cout<<"account.long_description: "
-        // <<l->getArgs()[0]->getLongDescription()<<std::cout;
+    // std::cout<<std::endl<<"account.long_description: "
+        // <<l->getArgs()[0]->getLongDescription()<<std::endl;
     
     {
     Atlas::Message::MapType mobj;
@@ -352,17 +352,17 @@ void test()
     std::vector<RootEntity> ent_vec(10);
 
     for(int i=0; i<10; i++) {
-        DEBUG_PRINT(std::cout<<std::cout<<"round:"<<i<<std::cout);
+        DEBUG_PRINT(std::cout<<std::endl<<"round:"<<i<<std::endl);
         RootEntity human;
 
         //check for empty default:
-        DEBUG_PRINT(std::cout<<"empty ok?"<<std::cout);
+        DEBUG_PRINT(std::cout<<"empty ok?"<<std::endl);
         Atlas::Message::ListType empty = human->getVelocityAsList();
         if(i==0) check_float_list3(empty, 0.0, 0.0, 0.0);
         else check_float_list3(empty, 0.0, y2, 0.0);
         
         //check after setting it
-        DEBUG_PRINT(std::cout<<"setting ok?"<<std::cout);
+        DEBUG_PRINT(std::cout<<"setting ok?"<<std::endl);
         Atlas::Message::ListType velocity;
         velocity.push_back(x1);
         velocity.push_back(y1);
@@ -372,21 +372,21 @@ void test()
         Atlas::Message::ListType foo = human->getVelocityAsList();
         check_float_list3(foo, x1, y1, z1);
 
-        DEBUG_PRINT(std::cout<<"changing it?"<<std::cout);
+        DEBUG_PRINT(std::cout<<"changing it?"<<std::endl);
         std::vector<double> &foo2 = human->modifyVelocity();
         *foo2.begin() = x2;
         check_float_list3(human->getVelocityAsList(), x2, y1, z1);
 
-        DEBUG_PRINT(std::cout<<"check change result?"<<std::cout);
+        DEBUG_PRINT(std::cout<<"check change result?"<<std::endl);
         foo = human->getVelocityAsList();
         check_float_list3(foo, x2, y1, z1);
         
-        DEBUG_PRINT(std::cout<<"std::vector of entities?"<<std::cout);
+        DEBUG_PRINT(std::cout<<"std::vector of entities?"<<std::endl);
         const Atlas::Message::ListType &ent_velocity = ent_vec[i]->getVelocityAsList();
         if(i==0) check_float_list3(ent_velocity, 0.0, 0.0, 0.0);
         else check_float_list3(ent_velocity, 0.0, y2, 0.0);
 
-        DEBUG_PRINT(std::cout<<"base?"<<std::cout);
+        DEBUG_PRINT(std::cout<<"base?"<<std::endl);
         RootEntity base_entity = human.getDefaultObject();
         std::vector<double> &base = base_entity->modifyVelocity();
         base[1] = y2;
@@ -404,13 +404,13 @@ void test()
         sight_op->setArgs(sight_args);
         
         //test 
-        DEBUG_PRINT(std::cout<<"get move_op?"<<std::cout);
+        DEBUG_PRINT(std::cout<<"get move_op?"<<std::endl);
         const std::vector<Root>& test_args = sight_op->getArgs();
         assert(test_args.size() == 1);
         RootOperation test_op = 
             (RootOperation&)test_args[0];
         
-        DEBUG_PRINT(std::cout<<"get human_ent?"<<std::cout);
+        DEBUG_PRINT(std::cout<<"get human_ent?"<<std::endl);
         const std::vector<Root>& test_args2 = test_op->getArgs();
         assert(test_args2.size() == 1);
         RootEntity test_ent =
@@ -433,8 +433,7 @@ int main()
 	Atlas::Objects::loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
     } catch(Atlas::Objects::DefaultLoadingException e) {
         std::cout << "DefaultLoadingException: "
-             << e.getDescription() << std::cout;
-        return 1;
+             << e.getDescription() << std::endl;
     }
     testXML();
     testValues();

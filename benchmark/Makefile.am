@@ -13,16 +13,16 @@ LDADD  = -L$(top_builddir)/Atlas/ -L$(top_builddir)/Atlas/Codecs/ \
 LIBS = -lAtlasObjects-0.6 -lAtlasNet-0.6 -lAtlas-0.6 -lAtlasCodecs-0.6 \
        -lAtlasFilters-0.6 -lAtlasMessage-0.6 -lAtlas-0.6 $(OTHER_LIBS)
 
-Message_Move_SOURCES = Message_Move.cpp
+Message_Move_SOURCES = Message_Move.cpp timer.h
 
-#Objects_Move_SOURCES = Objects_Move.cc
+#Objects_Move_SOURCES = Objects_Move.cc timer.h
 
-#Objects2_Move_SOURCES = Objects2_Move.cpp
+#Objects2_Move_SOURCES = Objects2_Move.cpp timer.h
 
-Objects3_Move_SOURCES = Objects3_Move.cpp
+Objects3_Move_SOURCES = Objects3_Move.cpp timer.h
 
-Call_Move_SOURCES = Call_Move.cpp
+Call_Move_SOURCES = Call_Move.cpp timer.h
 
-Static_Move_SOURCES = Static_Move.cpp
+Static_Move_SOURCES = Static_Move.cpp timer.h
 
-SmartPtr_Move_SOURCES = SmartPtr_Move.cpp
+SmartPtr_Move_SOURCES = SmartPtr_Move.cpp timer.h
