@@ -35,7 +35,15 @@
 #define snprintf _snprintf
 #endif
 
-extern char **environ;
+extern char** environ;
+
+// on OS-X, the CRT doesn't expose the environ symbol. The following
+// code (found on Google) provides a value to link against, and a
+// further tweak in getEnv gets the actual value using _NS evil.
+#if defined(__APPLE__)
+    #include <crt_externs.h>
+    char **environ = NULL;
+#endif
 
 using namespace SigC;
 
@@ -254,6 +262,11 @@ void Config::getEnv( const std::string& prefix)
   std::string name = "", value = "", section = "", env = "";
   size_t eq_pos = 0;
 
+#if defined(__APPLE__)
+  if (environ == NULL)
+      environ = *_NSGetEnviron();
+#endif
+  
   for ( size_t i = 0; environ[i] != NULL; i++) {
     env = environ[i];
 

@@ -1,4 +1,14 @@
 ChangeLog for varconf
+
+Sunday, 19th October, 2003, James Turner <james@worldforge.org>
+	* Add ProjectBuilder project, which current relies on a
+	  SigC++ 1.2 framework which I'll make available on
+	  FTP if people poke me (it requires some source modifications)
+	* Add __APPLE__ specific code to config.cpp, to deal with the
+	  fact the C runtime doesn't export the 'environ' symbol to
+	  dylibs (i.e, a framework build). The fix comes from Tcl, by
+	  way of guile, and Google.
+
 Saturday, 20th September, 2003, Ron Steinke <rsteinke@w-link.net>
 	* Workaround for buggy win32 atof().
 
