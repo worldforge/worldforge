@@ -2,26 +2,31 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day, Dmitry Derevyanko
 
+#include "Stream.h"
+
 #include <iostream>
 
 #include "../Codecs/XML.h"
 #include "../Codecs/Packed.h"
-#include "Stream.h"
 
-std::string get_line(std::string &s, char ch)
+/*%TODO(Jesse,Atlas,Stream)
+* It's bad style to test for a negative with std::string::find.
+* Compare the return value with std::string::npos instead.
+*/
+static std::string get_line(std::string &s, char ch)
 {
   std::string out;
-  int n = s.find(ch);
+  int n = (int) s.find(ch);
   if(n > 0) 
     {
-      out.assign(s, 0, n);
-      s.erase(0, n+1);
+      out.assign(s, 0, (unsigned long) n);
+      s.erase(0, n+1UL);
     }
 
   return out;
 }
 
-std::string get_line(std::string &s1, char ch, std::string &s2)
+static std::string get_line(std::string &s1, char ch, std::string &s2)
 {
   s2 = get_line(s1, ch);
 
@@ -89,7 +94,7 @@ Bridge* bridge) :
 {
 }
 
-void Atlas::Net::StreamConnect::poll(bool can_read = true)
+void Atlas::Net::StreamConnect::poll(bool can_read)
 {
     std::cout << "** Client(" << state << ") : " << std::endl;
 
@@ -97,7 +102,7 @@ void Atlas::Net::StreamConnect::poll(bool can_read = true)
 
     do
     {
-        if (can_read || socket.rdbuf()->in_avail()) buf += socket.get();
+        if (can_read || socket.rdbuf()->in_avail()) buf += (char) socket.get();
 
     if(state == SERVER_GREETING)
     {
@@ -230,7 +235,7 @@ Bridge* bridge) :
 {
 }
 
-void Atlas::Net::StreamAccept::poll(bool can_read = true)
+void Atlas::Net::StreamAccept::poll(bool can_read)
 {
     std::cout << "** Server(" << state << ") : " << std::endl;
 
@@ -246,7 +251,7 @@ void Atlas::Net::StreamAccept::poll(bool can_read = true)
 
     do
     {
-        if (can_read || socket.rdbuf()->in_avail()) buf += socket.get();
+        if (can_read || socket.rdbuf()->in_avail()) buf += (char) socket.get();
 
         if (state == CLIENT_GREETING)
         {
