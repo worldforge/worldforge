@@ -5,6 +5,7 @@
 #ifndef ATLAS_OBJECTS_BASEOBJECT_H
 #define ATLAS_OBJECTS_BASEOBJECT_H
 
+#include <assert.h>
 #include <map>
 #include <list>
 #include <string>
@@ -25,7 +26,7 @@ class NoSuchAttrException : public Atlas::Exception
   public:
     NoSuchAttrException(const std::string& name) :
              Atlas::Exception("No such attribute"), name(name) {}
-    const string & getName() {
+    const std::string & getName() const {
         return name;
     }
 };
@@ -77,7 +78,7 @@ public:
     //move to protected once SmartPtr <-> BaseObject order established
     inline void incRef();
     inline void decRef();
-    static BaseObjectData *alloc() {assert(0);} //not callable
+    static BaseObjectData *alloc() {assert(0); return NULL;} //not callable
     virtual void free() = 0;
 protected:
     int m_class_no; //each class has different enum
