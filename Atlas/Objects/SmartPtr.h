@@ -25,6 +25,13 @@ public:
         ptr = (T*)a_ptr;
         incRef();
     }
+    template<class oldType>
+    explicit SmartPtr(const SmartPtr<oldType>& a) {
+	ptr = dynamic_cast<T>(a.ptr);
+	if (ptr == NULL) {
+	    // FIXME throw something
+	}
+    }
     ~SmartPtr() { 
         decRef();
     }
@@ -35,6 +42,10 @@ public:
             incRef();
         }
         return *this;
+    }
+    template<class newType>
+    operator SmartPtr<newType>() const {
+	return SmartPtr<newType>(ptr);
     }
     T& operator*() { 
         return *ptr;

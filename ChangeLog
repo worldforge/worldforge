@@ -1,3 +1,8 @@
+2001-11-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* src/Objects/SmartPtr.h: Added member templates for type
+	  conversion up and down the tree.
+
 2001-11-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* src/Exception.h, src/Objects/BaseObject.h,
