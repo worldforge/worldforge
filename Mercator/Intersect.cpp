@@ -4,13 +4,13 @@
 namespace Mercator {
 //floor and ceil functions that return d-1 and d+1
 //respectively if d is integral
-float gridceil(float d) 
+static float gridceil(float d) 
 {
     float c = ceil(d);
     return (c==d) ? c+1.0f : c;
 }
 
-float gridfloor(float d) 
+static float gridfloor(float d) 
 {
     float c = floor(d);
     return (c==d) ? c-1.0f : c;
@@ -91,7 +91,7 @@ float HOT(const Terrain &t, const WFMath::Point<3> &pt)
 }
 
 //helper function for ray terrain intersection
-bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y, 
+static bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y, 
                    const WFMath::Vector<3> &nDir, float dirLen,
                    const WFMath::Point<3> &sPt, WFMath::Point<3> &intersection,
                    WFMath::Vector<3> &normal, float &par)
@@ -111,6 +111,7 @@ bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y,
     //
     // if they both still intersect, then we choose the earlier intersection
     
+   
     //intersection points for top and bottom triangles
     WFMath::Point<3> topInt, botInt;
     
@@ -124,7 +125,7 @@ bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y,
     topNormal.normalize();
     float t = Dot(nDir, topNormal);
 
-    float topP;
+    float topP=0.0;
 
     if ((t > 1e-7) || (t < -1e-7)) {
         topP = - (Dot((sPt-WFMath::Point<3>(0.,0.,0.)), topNormal) 
@@ -143,7 +144,7 @@ bool cellIntersect(float h1, float h2, float h3, float h4, float X, float Y,
     WFMath::Vector<3> botNormal(h1-h4, h4-h3, 1.0);
     botNormal.normalize();
     float b = Dot(nDir, botNormal);
-    float botP;
+    float botP=0.0;
 
     if ((b > 1e-7) || (b < -1e-7)) {
         botP = - (Dot((sPt-WFMath::Point<3>(0.,0.,0.)), botNormal) 
@@ -208,7 +209,11 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
     //FIXME handle height point getting in a more optimal way
     //FIXME early reject for vertical ray
 
-    float paraX, paraY; //used to store the parametric gap between grid crossings 
+
+    // check if startpoint is below ground
+    if (HOT(t, sPt) < 0.0) return true;
+    
+    float paraX=0.0, paraY=0.0; //used to store the parametric gap between grid crossings 
     float pX, pY; //the accumulators for the parametrics as we traverse the ray
     float h1,h2,h3,h4,height;
 
@@ -216,7 +221,6 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
     WFMath::Vector<3> nDir(dir);
     nDir.normalize();
     float dirLen = dir.mag();
-    
     
     //work out where the ray first crosses an X grid line
     if (dir[0] != 0.0f) {
