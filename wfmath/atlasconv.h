@@ -153,6 +153,7 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
   m_w /= norm;
 
   m_valid = true;
+  m_vec.setValid();
 }
 
 inline AtlasOutType Quaternion::toAtlas() const

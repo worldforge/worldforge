@@ -57,7 +57,8 @@ class Quaternion
    **/
   Quaternion (const Vector<3>& axis) {rotation(axis);} // angle == axis.mag()
   /// Construct a copy of a Quaternion
-  Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec), m_valid(p.m_valid) {}
+  Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec),
+				     m_valid(p.m_valid), m_age(p.m_age) {}
   /// Construct a Quaternion from an Atlas::Message::Object
   explicit Quaternion (const AtlasInType& a) {fromAtlas(a);}
 
@@ -72,7 +73,7 @@ class Quaternion
   void fromAtlas(const AtlasInType& a);
 
   Quaternion& operator= (const Quaternion& rhs)
-	{m_w = rhs.m_w; m_vec = rhs.m_vec; m_valid = rhs.m_valid; return *this;}
+	{m_w = rhs.m_w; m_vec = rhs.m_vec; m_valid = rhs.m_valid; m_age = rhs.m_age; return *this;}
 
   // This regards q and -1*q as equal, since they give the
   // same RotMatrix<3>
@@ -84,7 +85,7 @@ class Quaternion
   bool isValid() const {return m_valid;}
 
   /// Set the Quaternion to the identity rotation
-  Quaternion& identity() {m_w = 1; m_vec.zero(); m_valid = true; return *this;} // Set to null rotation
+  Quaternion& identity() {m_w = 1; m_vec.zero(); m_valid = true; m_age = 0; return *this;} // Set to null rotation
 
   // Operators
 
@@ -142,11 +143,16 @@ class Quaternion
   /// returns the Vector (x, y, z) part of the quaternion
   const Vector<3>& vector() const	{return m_vec;}
 
+  /// normalize to remove accumulated round-off error
+  void normalize();
+
  private:
-  Quaternion(bool valid) : m_valid(valid) {}
+  Quaternion(bool valid) : m_valid(valid), m_age(1) {}
+  void checkNormalization() {if(m_age >= WFMATH_MAX_NORM_AGE && m_valid) normalize();}
   CoordType m_w;
   Vector<3> m_vec;
   bool m_valid;
+  unsigned m_age;
 };
 
 } // namespace WFMath

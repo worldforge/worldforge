@@ -196,6 +196,9 @@ class RotMatrix {
    **/
   RotMatrix& mirror();
 
+  /// normalize to remove accumulated round-off error
+  void normalize();
+
   // 2D/3D stuff
 
   /// 3D only: Construct a RotMatrix from a Quaternion
@@ -246,9 +249,11 @@ class RotMatrix {
   CoordType m_elem[dim][dim];
   bool m_flip; // True if the matrix is parity odd
   bool m_valid;
+  unsigned m_age;
 
   // Backend to setVals() above, also used in fromStream()
   bool _setVals(CoordType *vals, double precision = WFMATH_EPSILON);
+  void checkNormalization() {if(m_age >= WFMATH_MAX_NORM_AGE && m_valid) normalize();}
 };
 
 } // namespace WFMath

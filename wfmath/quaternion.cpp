@@ -34,7 +34,7 @@
 using namespace WFMath;
 
 Quaternion::Quaternion (CoordType w_in, CoordType x_in, CoordType y_in, CoordType z_in)
-	: m_valid(true)
+	: m_valid(true), m_age(1)
 {
   CoordType norm = (CoordType) sqrt(w_in*w_in + x_in*x_in + y_in*y_in + z_in*z_in);
 
@@ -86,6 +86,8 @@ Quaternion Quaternion::operator* (const Quaternion& rhs) const
   Quaternion out;
 
   out.m_valid = m_valid && rhs.m_valid;
+  out.m_age = m_age + rhs.m_age;
+  out.checkNormalization();
 
   out.m_w = m_w * rhs.m_w - Dot(m_vec, rhs.m_vec);
   out.m_vec = m_w * rhs.m_vec + rhs.m_w * m_vec - Cross(m_vec, rhs.m_vec);
@@ -98,6 +100,8 @@ Quaternion Quaternion::operator/ (const Quaternion& rhs) const
   Quaternion out;
 
   out.m_valid = m_valid && rhs.m_valid;
+  out.m_age = m_age + rhs.m_age;
+  out.checkNormalization();
 
   out.m_w = m_w * rhs.m_w + Dot(m_vec, rhs.m_vec);
   out.m_vec = rhs.m_w * m_vec - m_w * rhs.m_vec + Cross(m_vec, rhs.m_vec);
@@ -111,6 +115,7 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
   bool not_flip = !m.parity();
 
   m_valid = m.isValid();
+  m_vec.setValid(m.isValid());
 
   if(!not_flip)
     m_tmp = Prod(m, RotMatrix<3>().mirrorX());
@@ -150,6 +155,8 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
     m_vec[k] = -(m_ref.elem(i, k) + m_ref.elem(k, i)) * s;
   }
 
+  normalize();
+
   return not_flip;
 }
 
@@ -158,6 +165,7 @@ Quaternion Quaternion::inverse() const
   Quaternion q(m_valid);
   q.m_w = m_w;
   q.m_vec = -m_vec;
+  q.m_age = m_age; // no multiplication was done, so roundoff error does not increase
   return q;
 }
 
@@ -169,8 +177,10 @@ Quaternion& Quaternion::rotation(int axis, CoordType angle)
   for(int i = 0; i < 3; ++i)
     // Note sin() only called once
     m_vec[i] = (i == axis) ? (CoordType) sin(half_angle) : 0;
+  m_vec.setValid();
 
   m_valid = true;
+  m_age = 1;
 
   return *this;
 }
@@ -183,6 +193,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, CoordType angle)
   m_vec = axis * (CoordType) (sin(half_angle) / axis.mag());
 
   m_valid = axis.isValid();
+  m_age = 1;
 
   return *this;
 }
@@ -196,6 +207,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis)
   m_vec = axis * (CoordType) (sin(half_angle) / mag);
 
   m_valid = axis.isValid();
+  m_age = 1;
 
   return *this;
 }
@@ -218,6 +230,19 @@ Quaternion& Quaternion::rotation(const Vector<3>& from, const Vector<3>& to)
   m_vec = Cross(from, to) / (2 * mag_prod * m_w);
 
   m_valid = from.isValid() && to.isValid();
+  m_age = 1;
 
   return *this;
+}
+
+void Quaternion::normalize()
+{
+  // Assume that we're not too far off, and compute the norm
+  // only to linear order in the difference from 1.
+  // If q.sqrMag() = 1 + x, q.mag() = 1 + x/2 = (q.SqrMag() + 1)/2
+  // to linear order.
+  CoordType norm = (m_w * m_w + m_vec.sqrMag() + 1)/2;
+  m_w /= norm;
+  m_vec /= norm;
+  m_age = 1;
 }

@@ -31,7 +31,6 @@
 using namespace WFMath;
 
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
-static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
 
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
@@ -66,6 +65,7 @@ void WFMath::_NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& 
   m_elem[2][1] = 2 * (yz - wvec[0]);
 
   m_flip = !not_flip;
+  normalize();
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   if(!not_flip)
     *this = Prod(*this, RotMatrix<3>().mirror(0));
@@ -236,8 +236,9 @@ bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 
     for(int i = 0; i < size; ++i) {
       for(int j = 0; j < size; ++j) {
-        CoordType delta = (vals[i*size+j] - buf2[i*size+j]) / 2;
-        vals[i*size+j] -= delta;
+        CoordType& elem = vals[i*size+j];
+        elem += buf2[i*size+j];
+        elem /= 2;
       }
     }
 
@@ -302,7 +303,7 @@ static CoordType _MatrixDeterminantImpl(const int size, CoordType* m)
   return out;
 }
 
-static bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
+bool WFMath::_MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
 {
   // Invert using row operations. First, make m upper triangular,
   // with 1's on the diagonal

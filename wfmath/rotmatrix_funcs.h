@@ -35,7 +35,7 @@ namespace WFMath {
 
 template<const int dim>
 inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
-	: m_flip(m.m_flip), m_valid(m.m_valid)
+	: m_flip(m.m_flip), m_valid(m.m_valid), m_age(1)
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
@@ -51,6 +51,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
 
   m_flip = m.m_flip;
   m_valid = m.m_valid;
+  m_age = m.m_age;
 
   return *this;
 }
@@ -95,6 +96,8 @@ inline RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 
   out.m_flip = (m1.m_flip != m2.m_flip); // XOR
   out.m_valid = m1.m_valid && m2.m_valid;
+  out.m_age = m1.m_age + m2.m_age;
+  out.checkNormalization();
 
   return out;
 }
@@ -115,6 +118,8 @@ inline RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2
 
   out.m_flip = (m1.m_flip != m2.m_flip); // XOR
   out.m_valid = m1.m_valid && m2.m_valid;
+  out.m_age = m1.m_age + m2.m_age;
+  out.checkNormalization();
 
   return out;
 }
@@ -135,6 +140,8 @@ inline RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2
 
   out.m_flip = (m1.m_flip != m2.m_flip); // XOR
   out.m_valid = m1.m_valid && m2.m_valid;
+  out.m_age = m1.m_age + m2.m_age;
+  out.checkNormalization();
 
   return out;
 }
@@ -155,6 +162,8 @@ inline RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>&
 
   out.m_flip = (m1.m_flip != m2.m_flip); // XOR
   out.m_valid = m1.m_valid && m2.m_valid;
+  out.m_age = m1.m_age + m2.m_age;
+  out.checkNormalization();
 
   return out;
 }
@@ -270,6 +279,7 @@ inline bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
 
   m_flip = flip;
   m_valid = true;
+  m_age = 1;
 
   return true;
 }
@@ -309,7 +319,9 @@ inline RotMatrix<dim> RotMatrix<dim>::inverse() const
     for(int j = 0; j < dim; ++j)
       m.m_elem[j][i] = m_elem[i][j];
 
+  m.m_flip = m_flip;
   m.m_valid = m_valid;
+  m.m_age = m_age + 1;
 
   return m;
 }
@@ -323,6 +335,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::identity()
 
   m_flip = false;
   m_valid = true;
+  m_age = 0; // 1 and 0 are exact, no roundoff error
 
   return *this;
 }
@@ -330,9 +343,9 @@ inline RotMatrix<dim>& RotMatrix<dim>::identity()
 template<const int dim>
 inline CoordType RotMatrix<dim>::trace() const
 {
-  CoordType out = dim ? m_elem[0][0] : 0;
+  CoordType out = 0;
 
-  for(int i = 1; i < dim; ++i)
+  for(int i = 0; i < dim; ++i)
     out += m_elem[i][i];
 
   return out;
@@ -367,6 +380,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
 
   m_flip = false;
   m_valid = true;
+  m_age = 1;
 
   return *this;
 }
@@ -410,6 +424,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 
   m_flip = false;
   m_valid = true;
+  m_age = 1;
 
   return *this;
 }
@@ -433,8 +448,14 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
   if(ctheta_plus_1 < WFMATH_EPSILON) {
     // 180 degree rotation, rotation plane indeterminate
     if(dim == 2) { // special case, only one rotation plane possible
-      m_elem[0][0] = m_elem[1][1] = -1;
-      m_elem[0][1] = m_elem[1][0] = 0;
+      m_elem[0][0] = m_elem[1][1] = ctheta_plus_1 - 1;
+      CoordType sin_theta = sqrt(2 * ctheta_plus_1); // to leading order
+      bool direction = ((to[0] * from[1] - to[1] * from[0]) >= 0);
+      m_elem[0][1] = direction ?  sin_theta : -sin_theta;
+      m_elem[1][0] = -m_elem[0][1];
+      m_flip = false;
+      m_valid = true;
+      m_age = 1;
       return *this;
     }
     throw ColinearVectors<dim>(from, to);
@@ -465,6 +486,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
 
   m_flip = false;
   m_valid = true;
+  m_age = 1;
 
   return *this;
 }
@@ -515,7 +537,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
   identity();
   m_elem[i][i] = -1;
   m_flip = true;
-  m_valid = true;
+  // m_valid and m_age already set correctly
 
   return *this;
 }
@@ -544,6 +566,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
 
   m_flip = true;
   m_valid = true;
+  m_age = 1;
 
   return *this;
 }
@@ -557,8 +580,41 @@ inline RotMatrix<dim>& RotMatrix<dim>::mirror()
 
   m_flip = dim%2;
   m_valid = true;
+  m_age = 0; // -1 and 0 are exact, no roundoff error
+
 
   return *this;
+}
+
+bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
+
+template<const int dim>
+inline void RotMatrix<dim>::normalize()
+{
+  // average the matrix with it's inverse transpose,
+  // that will clean up the error to linear order
+
+  CoordType buf1[dim*dim], buf2[dim*dim]; 
+
+  for(int i = 0; i < dim; ++i) {
+    for(int j = 0; j < dim; ++j) {
+      buf1[j*dim + i] = m_elem[i][j];
+      buf2[j*dim + i] = (CoordType)((i == j) ? 1 : 0);
+    }
+  }
+
+  bool success = _MatrixInverseImpl(dim, buf1, buf2);
+  assert(success); // matrix can't be degenerate
+
+  for(int i = 0; i < dim; ++i) {
+    for(int j = 0; j < dim; ++j) {
+      CoordType& elem = m_elem[i][j];
+      elem += buf2[i*dim + j];
+      elem /= 2;
+    }
+  }
+
+  m_age = 1;
 }
 
 } // namespace WFMath

@@ -1,3 +1,18 @@
+Sunday, October 26th, 2003   Ron Steinke <rsteinke@w-link.net>
+
+	* wfmath/quaternion.cpp, wfmath/atlasconv.h: Set validity
+	  of vector component of Quaternion in three other places
+	  we'd missed.
+	* wfmath/rotmatrix*, wfmath/quaternion*: Added roundoff aging
+	  code. As we do many floating point calculations, RotMatrix
+	  and Quaternion will tend to drift from their respective
+	  normalizations due to roundoff error. The new code adds
+	  an m_age, which keeps track of how many computations ago
+	  they were normalized, and automatically renomalizes them
+	  after a given number of computations. Because we know that
+	  they're still close to being normalized, the renormalization
+	  code is linearized, so it's not too horrible as a speed hit.
+
 Sunday, October 26th, 2003   Al Riddoch <alriddoch@zepler.org>
 
 	* wfmath/quaternion.cpp: Ensure vector component is valid when
