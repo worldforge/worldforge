@@ -1,4 +1,10 @@
 ChangeLog for varconf
+2004-10-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Add configure check for sigc++ 2.0, make the pkgconfig file
+	  conflict with packages which require the other version of
+	  sigc++, and update rpm spec so it works with either.
+
 2004-09-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* Move to configure.ac, adding in checks for sigc++-2.0 if

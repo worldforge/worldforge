@@ -10,27 +10,27 @@ Release: %{release}
 Copyright: LGPL
 Group: System Environment/Libraries
 Source: %{name}-%{version}.tar.gz
-Requires: libsigc++ >= @MIN_SIGC_VERSION@ libstdc++
+Requires: libsigc++ libstdc++
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-BuildRequires: libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel >= 2.95.2
+BuildRequires: libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel
 
 %description
 @VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE
 server. @VARCONF_PACKAGE@ can parse configuration files, command-line arguments
 and environment variables. It supports callbacks through libsigc++
-@MIN_SIGC_VERSION@ or greater and can store configuration data in configuration
+1.2.x or 2.0.x and can store configuration data in configuration
 objects or one global configuration instance.
 
 %package devel
 Summary: A config handling library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version} libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel >= 2.95.2
+Requires: %{name} = %{version} libsigc++-devel libstdc++-devel
 
 %description devel
 @VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE
 server. @VARCONF_PACKAGE@ can parse configuration files, command-line arguments
 and environment variables. It supports callbacks through libsigc++
-@MIN_SIGC_VERSION@ or greater and can store configuration data in configuration
+1.2.x or 2.0.x and can store configuration data in configuration
 objects or one global configuration instance.
 
 %prep
