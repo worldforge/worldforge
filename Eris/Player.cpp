@@ -61,6 +61,7 @@ Player::Player(Connection *con) :
 	));
 
 	d = _con->getDispatcherByPath("op");
+	d = d->addSubdispatch(ClassDispatcher::newAnonymous(_con));
 	d->addSubdispatch(new SignalDispatcher<Operation::Logout>("logout",
 		SigC::slot(*this, &Player::recvRemoteLogout)), "logout");
 	

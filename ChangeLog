@@ -1,4 +1,16 @@
-Monday, 9th August, Al Riddoch <alriddoch@zepler.org>
+Monday, 11th August, James Turner <james@worldforge.org>
+
+	* Fix a dumb bug I introduced in June, in handling server-
+	  commaned LOGOUTs. Essentially, I failed to pickup the
+	  anonymous ClassDispatcher below :op:, and hence was
+	  dispatching Player::recvRemoteLogout for every op
+	  recived. Solution is too create an anonymous ClassDispatcher
+	  ourselves, pending a re-think of anonymous dispatchers
+	  at some point in the future.
+	  
+	  Thanks to Al Riddoch for the catch.
+
+Monday, 11th August, Al Riddoch <alriddoch@zepler.org>
 
 	* Eris/PollDefault.cpp, Eris/PollDefault.h: Fix more incorrect mangling
 	  of Poll by conversion script.
