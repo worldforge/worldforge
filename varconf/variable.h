@@ -54,6 +54,8 @@ public:
 
   friend std::ostream& operator<<( std::ostream& out, const VarBase& v);
   friend bool operator ==( const VarBase& one, const VarBase& two);
+  friend bool operator !=( const VarBase& one, const VarBase& two)
+	{return !(one == two);}
 
   virtual VarBase& operator=( const VarBase& c);
   virtual VarBase& operator=( const bool b);
@@ -153,6 +155,8 @@ public:
 	{return (out << v.elem());}
   friend bool operator ==( const Variable& one, const Variable& two)
 	{return (one.elem() == two.elem());}
+  friend bool operator !=( const Variable& one, const Variable& two)
+	{return (one.elem() != two.elem());}
 
   Variable& operator=( const Variable& c);
   Variable& operator=( VarBase* vb);

@@ -353,7 +353,7 @@ bool operator ==( const VarArray& one, const VarArray& two)
   VarArray::const_iterator i1, i2;
 
   for(i1 = one.begin(), i2 = two.begin(); i1 != one.end(); ++i1, ++i2)
-    if(*i1 != *i2)
+    if(i1->elem() != i2->elem())
       return false;
 
   return true;
