@@ -11,7 +11,7 @@ namespace Atlas { namespace Objects {
 namespace Eris
 {
 
-// forward declerations
+// Forward declarations
 class Dispatcher;
 	
 class WaitForBase : public SigC::Object

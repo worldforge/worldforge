@@ -11,13 +11,13 @@
 /** Every Eris class and type lives inside the Eris namespace; certain utility functions live in the
 Util namespace, since they may be moved to a generic WorldForge foundation library in the future.*/
 
-// forward decleration of the skstrem type
+// Forward declaration of the skstream type
 class basic_socket_stream;
 
 namespace Eris
 {
 	
-// Foward declerations
+// Forward declarations
 class Dispatcher;
 class WaitForBase;
 class Timeout;
@@ -64,7 +64,7 @@ public:
 	/** this function reads data from the network  and dispatches
 	complete messages. Note the behaviour has changed since earlier versions of
 	Eris; formerly it called select() internally to check for data (and hence was guranteed
-	to be non-blocking. WIth the addition of the Poll interface and PollDefault implementation,
+	to be non-blocking. With the addition of the Poll interface and PollDefault implementation,
 	this call will now block if no data is pending on the connection.*/
 	//void poll();
 

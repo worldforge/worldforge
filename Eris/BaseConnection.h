@@ -10,20 +10,20 @@
 
 #include "Types.h"
 
-// Forward declerations
+// Forward declarations
 namespace Atlas {
 	namespace Objects { class Encoder; }
 	namespace Net { class StreamConnect; }
 	namespace Message { class Encoder; }
 }	
 
-// forward decleration of the skstrem type
+// Forward declaration of the skstream type
 class tcp_socket_stream;
 
 namespace Eris
 {
 
-// forward declerations 
+// Forward declarations 
 class Timeout;	
 	
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system

@@ -84,8 +84,8 @@ Meta::~Meta()
     for (MetaQueryList::iterator Q=_activeQueries.begin(); Q!=_activeQueries.end();++Q)
 	delete *Q;
 	
-	if (_timeout)
-		delete _timeout;
+    if (_timeout)
+      delete _timeout;
 }
 
 void Meta::queryServer(const std::string &ip)

@@ -38,7 +38,7 @@ namespace Atlas {
 
 namespace Eris {
 
-// forward declerations	
+// Forward declarations	
 class Connection;
 class Player;
 class Factory;
