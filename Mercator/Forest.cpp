@@ -11,6 +11,7 @@
 #include <Mercator/Plant.h>
 
 #include <wfmath/MersenneTwister.h>
+#include <wfmath/intersect.h>
 
 #include <iostream>
 #include <cmath>
@@ -41,9 +42,9 @@ void Forest::areaFromBBox()
 
     m_area.clear();
     m_area.addCorner(0, lc);
-    m_area.addCorner(1, WFMath::Point<2>(lc.x(), hc.y()));
-    m_area.addCorner(2, hc);
-    m_area.addCorner(2, WFMath::Point<2>(hc.x(), lc.y()));
+    m_area.addCorner(0, WFMath::Point<2>(lc.x(), hc.y()));
+    m_area.addCorner(0, hc);
+    m_area.addCorner(0, WFMath::Point<2>(hc.x(), lc.y()));
 }
 
 void Forest::bBoxFromArea()
@@ -107,8 +108,8 @@ void Forest::populate()
     for(int j = ly; j < hy; ++j) {
         for(int i = lx; i < hx; ++i) {
             double prob=m_randCache(i,j);
-
             if (prob < plant_chance) {
+                if (!Contains(m_area,WFMath::Point<2>(i,j),false)) continue;
 //                std::cout << "Plant at [" << i << ", " << j << "]"
 //                          << std::endl << std::flush;
                 rng.seed((int)(prob / plant_chance * 123456)); //this is a bit of a hack

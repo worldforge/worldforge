@@ -1,3 +1,8 @@
+2004-02-07  Damien McGinnes <mcginnes at netspeed dot com.au>
+
+	* Mercator/Forest.cpp: fixed 'bbox to polygon' calc;
+	  also test inside polygon during populate.
+
 2004-02-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/testForest.cpp: Update tests to use new accessors
