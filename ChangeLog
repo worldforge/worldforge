@@ -6,6 +6,7 @@
 	    automike with a C++ check for this.
 	* configure.in: regenerated from new configure.am.
 	* TODO: updated todo list.
+	* src/Net/Stream.h: identified a problem. Look for XXX.
 
 2001-01-04  Stefanus Du Toit  <sjdutoit@uwaterloo.ca>
 

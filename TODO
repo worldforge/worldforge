@@ -7,6 +7,7 @@ TODO items for anybody who wants to do them:
 
  - add input filtering to Atlas::filterbuf -- sdt
  - make use of Atlas::filterbuf -- sdt
+     look for XXX in src/Net/Stream.cpp -- sdt
  - finish tutorial -- sdt
  - rewrite negotiate [0.3.[9|10] / 0.4.0 ] -- sdt
  - add docs to: [0.4.0]

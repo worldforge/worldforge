@@ -326,6 +326,12 @@ Atlas::Codec* Atlas::StreamAccept::getCodec()
 {
     if (! outCodecs.empty ())
     {
+      // XXX XXX XXX XXX
+      // should pass an appropriate filterbuf here instead of socket,
+      // if we found a filter of course.
+      // this poses the problem of the filter being passed by
+      // reference, so we'd have to allocate on the heap, but then who
+      // would deallocate? erk. -- sdt 2001-01-05
         return (*outCodecs.begin())-> \
                 New(Codec::Parameters(socket,bridge));
     }
