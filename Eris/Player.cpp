@@ -167,6 +167,11 @@ void Player::refreshCharacterInfo()
 	throw InvalidOperation("Not connected to server");
 	
     _characters.clear();
+
+    if (_charIds.empty()) {
+        GotAllCharacters.emit();
+        return;
+    }
 	
     for (StringList::iterator I=_charIds.begin(); I!=_charIds.end(); ++I) {
 	// send the look
