@@ -240,7 +240,8 @@ bool mapTest() {
         Object foobar = bar2.keys();
         check( foobar.length() == 4 );
 
-/*
+
+        /*
         println( "Out of bounds ndx check on key list" );
         for ( int i = -10 ; i < 10; ++i) {
             if ( ( i < 0) || ( i > 3 ) ) {
@@ -253,7 +254,9 @@ bool mapTest() {
                 println( sval );
             }
         }
-*/
+        */
+        // out of bound calls on list are broken,this shows it up
+        // the code above is the proper check for correct behaviour
         println( "Out of bounds ndx check on key list" );
         for ( int i = -10 ; i < 10; ++i) {
             sval = "";
