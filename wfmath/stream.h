@@ -35,29 +35,53 @@
 #include <wfmath/segment.h>
 #include <wfmath/rotbox.h>
 #include <wfmath/polygon.h>
+#include <wfmath/error.h>
 #include <string>
 #include <iostream>
-#include <sstream>
+//#include <sstream>
 #include <list> // For Polygon<>::operator>>()
 
 namespace WFMath {
 
+// sstream vs. strstream compatibility wrapper
+
+// wraps ostringstream/ostrstream, could do this more simply if
+// both inherit virtually from ostream, not sure they do
+class _StreamToString {
+ public:
+  virtual ~_StreamToString() {}
+  virtual std::ostream& stream() = 0;
+  // Note that for strstream this freezes the buffer.
+  virtual std::string string() const = 0;
+};
+// same thing for istringstream/istrstream
+class _StreamFromString {
+ public:
+  virtual ~_StreamFromString() {}
+  virtual std::istream& stream() = 0;
+};
+
+_StreamToString* _GetStreamToString();
+_StreamFromString* _GetStreamFromString(const std::string& s);
+
 template<class C>
 std::string ToString(const C& c, unsigned int precision = 6)
 {
-  std::ostringstream ost;
-  ost.precision(precision);
-  ost << c;
-  return ost.str();
+  _StreamToString *ost = _GetStreamToString();
+  ost->stream().precision(precision);
+  ost->stream() << c;
+  std::string s = ost->string();
+  delete ost;
+  return s;
 }
 
 template<class C>
-bool FromString(C& c, const std::string& s, unsigned int precision = 6)
+void FromString(C& c, const std::string& s, unsigned int precision = 6)
 {
-  std::istringstream ist(s);
-  ist.precision(precision);
-  ist >> c;
-  return ist;
+  _StreamFromString *ist = _GetStreamFromString(s);
+  ist->stream().precision(precision);
+  ist->stream() >> c;
+  delete ist;
 }
 
 void _ReadCoordList(std::istream& is, CoordType* d, const int num);
@@ -98,25 +122,19 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
   char next;
 
   is >> next;
-  if(next != '(') {
-    is.setstate(std::istream::failbit);
-    return is;
-  }
+  if(next != '(')
+    throw ParseError();
 
   for(int i = 0; i < dim; ++i) {
     _ReadCoordList(is, d + i * dim, dim);
-    if(!is)
-      return is;
     is >> next;
     char want = (i == dim - 1) ? ')' : ',';
-    if(next != want) {
-      is.setstate(std::istream::failbit);
-      return is;
-    }
+    if(next != want)
+      throw ParseError();
   }
 
   if(!m._setVals(d, FloatMax(WFMATH_EPSILON, _GetEpsilon(is))))
-    is.setstate(std::istream::failbit);
+    throw ParseError();
 
   return is;
 }
@@ -147,18 +165,12 @@ std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
   char next;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
   is >> a.m_low;
-  if(!is)
-    return is;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
@@ -180,18 +192,12 @@ std::istream& operator>>(std::istream& is, Ball<dim>& b)
   char next;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
   is >> b.m_center;
-  if(!is)
-    return is;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
@@ -212,18 +218,12 @@ std::istream& operator>>(std::istream& is, Segment<dim>& s)
   char next;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
   is >> s.m_p1;
-  if(!is)
-    return is;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
@@ -246,28 +246,18 @@ std::istream& operator>>(std::istream& is, RotBox<dim>& r)
   char next;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
   is >> r.m_corner0;
-  if(!is)
-    return is;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
   is >> r.m_size;
-  if(!is)
-    return is;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '=');
 
@@ -315,13 +305,9 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
   // Read in the points
 
   do {
-    if(!is)
-      return is;
     is >> next;
     if(next == '<') { // empty polygon
        do {
-         if(!is)
-           return is;
          is >> next;
        } while(next != '>');
        return is;
@@ -330,16 +316,12 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 
   while(true) {
     is >> read.pd;
-    if(!is)
-      return is;
     read_list.push_back(read);
     is >> next;
     if(next == ')')
       break;
-    if(next != ',') {
-      is.setstate(std::istream::failbit);
-      return is;
-    }
+    if(next != ',')
+      throw ParseError();
   }
 
   // Convert to internal format. Be careful about the order points are
@@ -414,9 +396,8 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
         continue;
       succ = r.m_orient.expand(i->pd, i->p2, epsilon);
       if(!succ) {
-        is.setstate(std::istream::failbit);
         r.clear();
-        return is;
+        throw ParseError();
       }
     }
   }

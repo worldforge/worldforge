@@ -69,10 +69,7 @@ void test_rotmatrix(const RotMatrix<dim>& m)
 
   RotMatrix<dim> str_m;
 
-  if(!FromString(str_m, s_mat)) {
-    cout << "Could not convert string back into matrix" << std::endl;
-    exit(-1);
-  }
+  FromString(str_m, s_mat);
 
 //  cout << "After conversion through a string, the matrix is " << str_m << std::endl;
 

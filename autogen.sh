@@ -64,8 +64,8 @@ aclocalinclude="$ACLOCAL_FLAGS"
 
 echo "Running aclocal $aclocalinclude ..."
 aclocal $aclocalinclude
-#echo "Running autoheader..."
-#autoheader
+echo "Running autoheader..."
+autoheader
 
 echo "Running automake --gnu $am_opt ..."
 automake --add-missing --gnu $am_opt

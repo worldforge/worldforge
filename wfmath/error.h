@@ -41,6 +41,10 @@ struct ColinearVectors : virtual public std::exception {
   Vector<dim> v1, v2;
 };
 
+struct ParseError : virtual public std::exception {
+  virtual ~ParseError() throw () { }
+};
+
 } // namespace WFMath
 
 #endif // WFMATH_ERROR_H

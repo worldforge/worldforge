@@ -26,7 +26,72 @@
 #include "stream.h"
 #include "quaternion.h"
 
+#include "config.h"
+
 using namespace WFMath;
+
+#ifdef HAVE_SSTREAM
+
+#include <sstream>
+
+class _StreamToStringImpl : public _StreamToString {
+ public:
+  virtual ~_StreamToStringImpl() {}
+  virtual std::ostream& stream() {return m_ost;}
+  virtual std::string string() const {return m_ost.str();}
+
+ private:
+  std::ostringstream m_ost;
+};
+
+class _StreamFromStringImpl : public _StreamFromString {
+ public:
+  _StreamFromStringImpl(const std::string& s) : m_ist(s) {}
+  virtual ~_StreamFromStringImpl() {}
+  virtual std::istream& stream() {return m_ist;}
+
+ private:
+  std::istringstream m_ist;
+};
+
+#elif defined(HAVE_STRSTREAM)
+
+#include <strstream>
+
+class _StreamToStringImpl : public _StreamToString {
+ public:
+  virtual ~_StreamToStringImpl() {m_ost.freeze(false);}
+  virtual std::ostream& stream() {return m_ost;}
+  virtual std::string string() const {return m_ost.str();}
+
+ private:
+  std::ostrstream m_ost;
+};
+
+class _StreamFromStringImpl : public _StreamFromString {
+ public:
+  _StreamFromStringImpl(const std::string& s) : m_ist(s.c_str()) {}
+  virtual ~_StreamFromStringImpl() {}
+  virtual std::istream& stream() {return m_ist;}
+
+ private:
+  std::istrstream m_ist;
+};
+
+
+#else
+#error "Neither sstream or strstring is present, configure should have failed"
+#endif
+
+_StreamToString* WFMath::_GetStreamToString()
+{
+  return new _StreamToStringImpl();
+}
+
+_StreamFromString* WFMath::_GetStreamFromString(const std::string& s)
+{
+  return new _StreamFromStringImpl(s);
+}
 
 void WFMath::_WriteCoordList(std::ostream& os, const CoordType* d, const int num)
 {
@@ -42,18 +107,14 @@ void WFMath::_ReadCoordList(std::istream& is, CoordType* d, const int num)
 
   is >> next;
 
-  if(next != '(') {
-    is.setstate(std::istream::failbit);
-    return;
-  }
+  if(next != '(')
+    throw ParseError();
 
   for(int i = 0; i < num; ++i) {
     is >> d[i] >> next;
     char want = (i == num - 1) ? ')' : ',';
-    if(next != want) {
-      is.setstate(std::istream::failbit);
-      return;
-    }
+    if(next != want)
+      throw ParseError();
   }
 }
 
@@ -100,13 +161,9 @@ std::istream& operator>>(std::istream& is, Polygon<2>& r)
   r.m_points.clear();
 
   do {
-    if(!is)
-      return is;
     is >> next;
     if(next == '<') { // empty polygon
        do {
-         if(!is)
-           return is;
          is >> next;
        } while(next != '>');
        return is;
@@ -115,16 +172,12 @@ std::istream& operator>>(std::istream& is, Polygon<2>& r)
 
   while(true) {
     is >> p;
-    if(!is)
-      return is;
     r.m_points.push_back(p);
     is >> next;
     if(next == ')')
       return is;
-    if(next != ',') {
-      is.setstate(std::istream::failbit);
-      return is;
-    }
+    if(next != ',')
+      throw ParseError();
   }
 }
 
@@ -138,31 +191,18 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
   char next;
 
   do {
-    if(!is)
-      return is;
     is >> next;
   } while(next != '(');
 
   is >> q.m_w;
-  if(!is)
-    return is;
 
   is >> next;
-  if(next != ',') {
-    is.setstate(std::istream::failbit);
-    return is;
-  }
+  if(next != ',')
+    throw ParseError();
 
   is >> q.m_vec;
-  if(!is)
-    return is;
 
   CoordType norm = q.m_w * q.m_w + q.m_vec.sqrMag();
-
-  if(!Equal(norm, 1, _GetEpsilon(is))) {
-    is.setstate(std::istream::failbit);
-    return is;
-  }
 
   norm = sqrt(norm);
   q.m_w /= norm;
@@ -170,7 +210,7 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
 
   is >> next;
   if(next != ')')
-    is.setstate(std::istream::failbit);
+    throw ParseError();
 
   return is;
 }

@@ -46,7 +46,7 @@ void test_general(const C& c)
 
   std::string s = ToString(c); // Uses operator<<() implicitly
   C c3;
-  assert(FromString(c3, s)); // Uses operator>>() implicitly
+  FromString(c3, s); // Uses operator>>() implicitly
   // We lose precision in string conversion
   assert(Equal(c3, c, FloatMax(WFMATH_EPSILON, 1e-5)));
 }
