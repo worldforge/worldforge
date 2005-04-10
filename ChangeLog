@@ -1,3 +1,8 @@
+2005-04-10  James Turner  <james@worldforge.org>
+
+	* configure.ac: bump version to 1.3.4, so clients can test for new
+	  Connection API.
+
 2005-04-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Response.cpp: Re-order initialisation from an iterator to before

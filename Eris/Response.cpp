@@ -28,7 +28,6 @@ bool ResponseTracker::handleOp(const RootOperation& op)
 
 // order here is important, so the responseReceived can re-await the op
     ResponseBase* resp = it->second;
-
     m_pending.erase(it);
 
     resp->responseReceived(op);
