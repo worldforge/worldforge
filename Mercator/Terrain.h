@@ -44,6 +44,8 @@ class Terrain {
     /// \brief STL list of Shader pointers.
     typedef std::list<Shader *> Shaderstore;
 
+    typedef std::multimap<int, Area *> Areastore;
+
     /// \brief value provided for no flags set.
     static const unsigned int DEFAULT = 0x0000;
     /// \brief set if shaders are going to be used on this terrain.
@@ -62,6 +64,8 @@ class Terrain {
     Segmentstore m_segments;
     /// \brief List of shaders to be applied to terrain.
     Shaderstore m_shaders;
+  
+    Areastore m_areas;
   
     void addSurfaces(Segment &);
     void shadeSurfaces(Segment &);

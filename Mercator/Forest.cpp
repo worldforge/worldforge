@@ -9,8 +9,8 @@
 #include "iround.h"
 
 #include <Mercator/Forest.h>
-
 #include <Mercator/Plant.h>
+#include <Mercator/Area.h>
 
 #include <wfmath/MersenneTwister.h>
 #include <wfmath/intersect.h>
@@ -22,7 +22,9 @@ namespace Mercator {
 
 
 /// \brief Construct a new forest with the given seed.
-Forest::Forest(unsigned long seed) : m_seed(seed), 
+Forest::Forest(unsigned long seed) : 
+    m_area(NULL),
+    m_seed(seed), 
     m_randCache(seed, new ZeroSpiralOrdering())
 {
 }
@@ -35,47 +37,9 @@ Forest::~Forest()
 {
 }
 
-/// Calculate the convex polygon described by an axis aligned box.
-void Forest::areaFromBBox()
-{
-    const WFMath::Point<2> & lc = m_bbox.lowCorner();
-    const WFMath::Point<2> & hc = m_bbox.highCorner();
-
-    m_area.clear();
-    m_area.addCorner(0, lc);
-    m_area.addCorner(0, WFMath::Point<2>(lc.x(), hc.y()));
-    m_area.addCorner(0, hc);
-    m_area.addCorner(0, WFMath::Point<2>(hc.x(), lc.y()));
-}
-
-/// Calculate axis aligned box the bounds the convex polygon.
-void Forest::bBoxFromArea()
-{
-}
-
-/// Define the area of the forest in terms of an axis aligned rectangle.
-void Forest::setArea(const WFMath::AxisBox<2> & area)
-{
-    m_bbox = area;
-    areaFromBBox();
-}
-
-/// Define the area of the forest as a convex polygon.
-void Forest::setArea(const WFMath::Polygon<2> & area)
+void Forest::setArea(Area* area)
 {
     m_area = area;
-}
-
-/// Define the area of the forest in terms of an axis aligned box.
-/// @param vol an axis aligned box a section of which defines the area of the
-/// forest.
-void Forest::setVolume(const WFMath::AxisBox<3> & vol)
-{
-    m_bbox = WFMath::AxisBox<2>(WFMath::Point<2>(vol.lowCorner().x(),
-                                                 vol.lowCorner().y()),
-                                WFMath::Point<2>(vol.highCorner().x(),
-                                                 vol.highCorner().y()));
-    areaFromBBox();
 }
 
 static const float plant_chance = 0.04;
@@ -104,23 +68,24 @@ static const float plant_height_range = 20;
 /// height, displacement and orientation are calculated.
 void Forest::populate()
 {
-    if (!m_bbox.isValid()) {
-        return;
-    }
+    if (!m_area) return;
+    WFMath::AxisBox<2> bbox(m_area->bbox());
+    
     // Fill the plant store with plants.
     m_plants.clear();
     WFMath::MTRand rng;
 
-    int lx = I_ROUND(m_bbox.lowCorner().x()),
-        ly = I_ROUND(m_bbox.lowCorner().y()),
-        hx = I_ROUND(m_bbox.highCorner().x()),
-        hy = I_ROUND(m_bbox.highCorner().y());
+    int lx = I_ROUND(bbox.lowCorner().x()),
+        ly = I_ROUND(bbox.lowCorner().y()),
+        hx = I_ROUND(bbox.highCorner().x()),
+        hy = I_ROUND(bbox.highCorner().y());
 
     for(int j = ly; j < hy; ++j) {
         for(int i = lx; i < hx; ++i) {
             double prob=m_randCache(i,j);
             if (prob < plant_chance) {
-                if (!Contains(m_area,WFMath::Point<2>(i,j),false)) continue;
+                if (!m_area->contains(i,j)) continue;
+                
 //                std::cout << "Plant at [" << i << ", " << j << "]"
 //                          << std::endl << std::flush;
                 rng.seed((int)(prob / plant_chance * 123456)); //this is a bit of a hack

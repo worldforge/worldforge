@@ -1,3 +1,16 @@
+2005-04-10 James Turner <james@worldforge.org>
+
+	* Mercator/Forrest.cpp, Mercator/Forrest.h: make Forrest objects own
+	  an area, replacing their own Box + Polygon storage, which was
+	  only partially supported.
+	  
+	* tests/testForrest.cpp: update for changed Forrest API
+	
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: make Terrain track a list
+	  of areas, and install them on newly created segments if required.
+	  Necessary to allow Areas to be defined prior to segments they
+	  may intersect.
+
 2005-04-05 James Turner <james@worldforge.org>
 
 	* Mercator/AreaShader.cpp, Mercator/Area.cpp: remove #pragmas I

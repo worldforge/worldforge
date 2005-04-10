@@ -15,6 +15,7 @@
 namespace Mercator {
 
 class Plant;
+class Area;
 
 /// \brief This is the core class for any area to be populated with vegetation.
 ///
@@ -34,10 +35,8 @@ class Forest {
     /// which can be efficiently queried and scanned using STL iterators.
     typedef std::map<int, PlantColumn> PlantStore;
   private:
-    /// Axis aligned rectangle which bounds the area covered by the forest.
-    WFMath::AxisBox<2> m_bbox;
-    /// Convex polygon defining the boundary of the forest.
-    WFMath::Polygon<2> m_area;
+    Area* m_area;
+    
     /// 2D spatial container with all the vegetation instances in.
     PlantStore m_plants;
     /// Seed value used to initialise the random number generator.
@@ -45,21 +44,12 @@ class Forest {
     /// Cache for optimising random number generation.
     RandCache m_randCache;
 
-    void areaFromBBox();
-    void bBoxFromArea();
   public:
     explicit Forest(unsigned long seed = 0);
     ~Forest();
 
-    /// \brief Accessor for bounding rectangle.
-    /// @return A const reference to the rectangle.
-    const WFMath::AxisBox<2> & getBBox() const {
-        return m_bbox;
-    }
-
     /// \brief Accessor for polygonal area.
-    /// @return A const reference to the polygon.
-    const WFMath::Polygon<2> & getArea() const {
+    Area* getArea() const {
         return m_area;
     }
 
@@ -69,9 +59,7 @@ class Forest {
         return m_plants;
     }
 
-    void setArea(const WFMath::AxisBox<2> & area);
-    void setArea(const WFMath::Polygon<2> & area);
-    void setVolume(const WFMath::AxisBox<3> &);
+    void setArea(Area* a);
 
     void populate();
 };

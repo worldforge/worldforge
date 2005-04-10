@@ -229,6 +229,11 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 if (isShaded()) {
                     addSurfaces(*s);
                 }
+                
+                for (Areastore::iterator a=m_areas.begin(); a != m_areas.end(); ++a) {
+                    if (a->second->checkIntersects(*s)) s->addArea(a->second);
+                }
+                
                 m_segments[i][j] = s;
                 continue;
             }
@@ -287,6 +292,8 @@ void Terrain::addMod(const TerrainMod &t) {
 
 void Terrain::addArea(Area* area)
 {
+    m_areas.insert(Areastore::value_type(area->getLayer(), area));
+
     int lx=(int)floor((area->bbox().lowCorner()[0] - 1) / m_res);
     int ly=(int)floor((area->bbox().lowCorner()[1] - 1) / m_res);
     int hx=(int)ceil((area->bbox().highCorner()[0] + 1) / m_res);

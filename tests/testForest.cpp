@@ -4,10 +4,13 @@
 
 #include <Mercator/Forest.h>
 #include <Mercator/Plant.h>
+#include <Mercator/Area.h>
 
 #include <iostream>
 
 #include <cassert>
+
+typedef WFMath::Point<2> Point2;
 
 int main()
 {
@@ -20,12 +23,25 @@ int main()
         // Forest has zero area, so even when populated it is empty
         assert(forest.getPlants().empty());
 
-        assert(!forest.getBBox().isValid());
-        assert(forest.getArea().isValid());
-        forest.setArea(WFMath::AxisBox<2>(WFMath::Point<2>(-5, -5),
-                                          WFMath::Point<2>(5, 5)));
-        assert(forest.getBBox().isValid());
-        assert(forest.getArea().isValid());
+        Mercator::Area* ar = new Mercator::Area(1, false);
+        WFMath::Polygon<2> p;
+        
+        p.addCorner(p.numCorners(), Point2(5, 8));
+        p.addCorner(p.numCorners(), Point2(40, -1));
+        p.addCorner(p.numCorners(), Point2(45, 16));
+        p.addCorner(p.numCorners(), Point2(30, 28));
+        p.addCorner(p.numCorners(), Point2(-2, 26));
+        p.addCorner(p.numCorners(), Point2(1, 5));
+        
+        ar->setShape(p);
+        forest.setArea(ar);
+
+    //    assert(!forest.getBBox().isValid());
+    //    assert(forest.getArea().isValid());
+     //   forest.setArea(WFMath::AxisBox<2>(WFMath::Point<2>(-5, -5),
+    //                                      WFMath::Point<2>(5, 5)));
+ //       assert(forest.getBBox().isValid());
+  //      assert(forest.getArea().isValid());
 
         forest.populate();
         // Forest should now contain some plants
