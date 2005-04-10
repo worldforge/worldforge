@@ -34,9 +34,14 @@ public:
         return m_hole;
     }
     
-    WFMath::AxisBox<2> bbox() const
+    const WFMath::AxisBox<2> & bbox() const
     {
         return m_box;
+    }
+
+    const WFMath::Polygon<2> & shape() const
+    {
+        return m_shape;
     }
     
     /**

@@ -1,3 +1,11 @@
+2005-04-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Area.h: Fix bbox() accessor to return by reference, and
+	  add an accessor for the area polygon.
+
+	* configure.ac: Bump version to 0.2.2, so apps can test for new
+	  Forest and Area API.
+
 2005-04-10 James Turner <james@worldforge.org>
 
 	* Mercator/Forrest.cpp, Mercator/Forrest.h: make Forrest objects own
