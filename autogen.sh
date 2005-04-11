@@ -41,7 +41,7 @@ echo autoconf...
 autoconf
 
 if test "x$NOCONFIGURE" = "x" ; then
-    CONFIGUREFLAGS="--enable-maintainer-mode=yes --enable-debug=yes $@"
+    CONFIGUREFLAGS="--enable-debug=yes $@"
     echo Running: configure $CONFIGUREFLAGS
     ./configure $CONFIGUREFLAGS
 fi
