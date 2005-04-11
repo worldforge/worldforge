@@ -1,14 +1,10 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(wfmath/wfmath.h)
 
-WFMATH_MAJOR=0
-WFMATH_MINOR=3
-WFMATH_MICRO=3
-WFMATH_VERSION=$WFMATH_MAJOR.$WFMATH_MINOR.$WFMATH_MICRO
+WFMATH_VERSION=0.3.4
 
-AC_SUBST(WFMATH_MAJOR)
-AC_SUBST(WFMATH_MINOR)
-AC_SUBST(WFMATH_MICRO)
+AC_INIT(wfmath, $WFMATH_VERSION)
+AC_CONFIG_SRCDIR([wfmath/wfmath.h])
+
 AC_SUBST(WFMATH_VERSION)
 
 dnl versioning info for libtool
@@ -22,13 +18,15 @@ AC_SUBST(WFMATH_CURRENT)
 AC_SUBST(WFMATH_VERSION_INFO)
 AC_SUBST(WFMATH_VERSION_NO)
 
-AM_INIT_AUTOMAKE(wfmath, $WFMATH_VERSION)
+AM_INIT_AUTOMAKE([dist-bzip2])
 AM_CONFIG_HEADER(config.h)
 
 dnl Checks for programs.
-AC_PROG_CXX
+
 AM_DISABLE_STATIC
 AM_PROG_LIBTOOL
+
+AC_PROG_CXX
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
