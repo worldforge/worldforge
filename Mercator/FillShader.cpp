@@ -17,7 +17,7 @@ FillShader::~FillShader()
 {
 }
 
-bool FillShader::checkIntersect(Surface & s) const
+bool FillShader::checkIntersect(const Segment &) const
 {
     return true;
 }

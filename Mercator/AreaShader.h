@@ -19,7 +19,7 @@ public:
     
     virtual void shade(Surface &s) const;
     
-    virtual bool checkIntersect(Surface &) const;
+    virtual bool checkIntersect(const Segment &) const;
 private:
     /// helper to shader a single area into the surface
     void shadeArea(Surface& s, const Area* const s) const;

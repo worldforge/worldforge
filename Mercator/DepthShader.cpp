@@ -26,9 +26,9 @@ DepthShader::~DepthShader()
 {
 }
 
-bool DepthShader::checkIntersect(Surface & s) const
+bool DepthShader::checkIntersect(const Segment & s) const
 {
-    if (s.m_segment.getMin() < m_waterLevel) {
+    if (s.getMin() < m_waterLevel) {
         return true;
     } else {
         return false;

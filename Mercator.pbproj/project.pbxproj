@@ -5,6 +5,18 @@
 	};
 	objectVersion = 39;
 	objects = {
+		C40792FE080B3D84009D3620 = {
+			containerPortal = C48581B70552EE7C00A800CF;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = C49891BF080A7A5800C7CBBF;
+			remoteInfo = timeSeg;
+		};
+		C40792FF080B3D84009D3620 = {
+			isa = PBXTargetDependency;
+			target = C49891BF080A7A5800C7CBBF;
+			targetProxy = C40792FE080B3D84009D3620;
+		};
 		C4480FF50664E0D100BF4BBF = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -1092,6 +1104,7 @@
 				C485B2AF05B74704002F2D80,
 				C485B2B105B74704002F2D80,
 				C474460A07DFBBB700AD4413,
+				C40792FF080B3D84009D3620,
 			);
 			isa = PBXAggregateTarget;
 			name = Tests;

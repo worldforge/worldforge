@@ -32,7 +32,7 @@ class Area;
 class Segment {
   public:
     /// STL list of pointers to Surface objects.
-    typedef std::list<Surface *> Surfacestore;
+    typedef std::map<int, Surface *> Surfacestore;
     
     typedef std::multimap<int, Area *> Areastore;
   private:

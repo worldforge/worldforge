@@ -33,10 +33,10 @@ inline ColorT GrassShader::slopeToAlpha(float height, float slope) const
     }
 }
 
-bool GrassShader::checkIntersect(Surface & s) const
+bool GrassShader::checkIntersect(const Segment & s) const
 {
-    if ((s.m_segment.getMin() < m_highThreshold) &&
-        (s.m_segment.getMax() > m_lowThreshold)) {
+    if ((s.getMin() < m_highThreshold) &&
+        (s.getMax() > m_lowThreshold)) {
         return true;
     } else {
         return false;

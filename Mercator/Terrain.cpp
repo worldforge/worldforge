@@ -50,19 +50,23 @@ Terrain::~Terrain()
     }
 }
 
-void Terrain::addShader(Shader * t)
+void Terrain::addShader(Shader * t, int id)
 {
-    m_shaders.push_back(t);
+    if (m_shaders.count(id)) {
+        std::cerr << "WARNING: duplicate use of shader ID " << id << std::endl;
+    }
+    
+    m_shaders[id] = t;
     
     for (Segmentstore::iterator I = m_segments.begin(); 
          I!=m_segments.end(); ++I) {
         for (Segmentcolumn::iterator J = I->second.begin(); 
              J != I->second.end(); ++J) {
             Segment *seg=J->second;
-            //if (!t->checkIntersect(*seg)) continue;
+            if (!t->checkIntersect(*seg)) continue;
             
             Segment::Surfacestore & sss = seg->getSurfaces();
-            sss.push_back(t->newSurface(*seg));
+            sss[id] = t->newSurface(*seg);
         }
     }
 }
@@ -87,9 +91,9 @@ void Terrain::addSurfaces(Segment & seg)
     Shaderstore::const_iterator I = m_shaders.begin();
     for (; I != m_shaders.end(); ++I) {
         // shader doesn't touch this segment, skip
-       // if (!(*I)->checkIntersect(seg)) continue;
+       if (!I->second->checkIntersect(seg)) continue;
         
-        sss.push_back((*I)->newSurface(seg));
+        sss[I->first] = I->second->newSurface(seg);
     }
 }
 

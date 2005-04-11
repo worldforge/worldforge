@@ -140,7 +140,7 @@ void Segment::invalidate(bool points)
     }
     Segment::Surfacestore::const_iterator I = m_surfaces.begin();
     for(; I != m_surfaces.end(); ++I) {
-        (*I)->invalidate();
+        I->second->invalidate();
     }
 }
 
@@ -238,7 +238,7 @@ void Segment::populateSurfaces()
 {
     Surfacestore::const_iterator I = m_surfaces.begin();
     for (; I != m_surfaces.end(); ++I) {
-        (*I)->populate();
+        I->second->populate();
     }
 }
 

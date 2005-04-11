@@ -1,6 +1,30 @@
-2005-04-11  Al Riddoch  <alriddoch@zepler.org>
+2005-04-12 James Turner <james@worldforge.org>
 
-	* configure.ac: Bring autoconf usage up to date.
+	* Mercator/Shader.h: change checkIntersects to work on Segments
+	  (as the comments suggest it originally did).
+	  
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: when adding a shader,
+	  clients must now specify a unique integer ID, which is used
+	  to identify the shader in a Segment's surfacestore. As a result,
+	  the Shaderstore is now a std::map<>. When adding shaders to
+	  a Segment, checkIntersects is now used to only add shaders which
+	  affect the segment.
+	  
+	* Mercator/Segment.cpp, Mercator/Segment.h: change Surfacestore to
+	  be sparse, implement as a map, where the index value is the ID of
+	  the shader which generated the surface.
+	  
+	* Mercator/AreaShader.cpp, Mercator/AreaShader.h, 
+	  Mercator/DepthShader.h, Mercator/DepthShader.cpp,
+	  Mercator/FillShader.cpp, Mercator/FillShader.h,
+	  Mercator/GrassShader.cpp, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  update the revised shader API. In all cases the only change is
+	  removed a level of indirection, since every implementation of
+	  checkIntersect simply called 's.m_segment' to do useful work.
+	  
+	* tests/testArea.cpp, tests/testTerrain.cpp: update tests for new
+	  shader API.
 
 2005-04-11 James Turner <james@worldforge.org>
 

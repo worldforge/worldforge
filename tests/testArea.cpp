@@ -55,7 +55,7 @@ void testAreaShader()
     Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
     
     Mercator::AreaShader* ashade = new Mercator::AreaShader(1);
-    terrain.addShader(ashade);
+    terrain.addShader(ashade, 0);
     
     terrain.setBasePoint(0, 0, -1);
     terrain.setBasePoint(0, 1, 8);
@@ -71,12 +71,12 @@ void testAreaShader()
     assert(a1->checkIntersects(*seg));
     
     seg->populateSurfaces();
-    writePGMForSurface("test1.pgm", seg->getSize(), seg->getSurfaces().front());
+    writePGMForSurface("test1.pgm", seg->getSize(), seg->getSurfaces()[0]);
     
     
     seg = terrain.getSegment(1,0);    
     seg->populateSurfaces();
-    writePGMForSurface("test2.pgm", seg->getSize(), seg->getSurfaces().front());
+    writePGMForSurface("test2.pgm", seg->getSize(), seg->getSurfaces()[0]);
 }
 
 int main(int argc, char* argv[])
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
     Mercator::Terrain terrain(Mercator::Terrain::SHADED, 8);
 
     Mercator::AreaShader* ashade = new Mercator::AreaShader(1);
-    terrain.addShader(ashade);
+    terrain.addShader(ashade, 0);
     
     terrain.setBasePoint(-2, -1, 5);
     terrain.setBasePoint(-2, 0, 2);

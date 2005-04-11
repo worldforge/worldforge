@@ -17,9 +17,9 @@ HighShader::~HighShader()
 {
 }
 
-bool HighShader::checkIntersect(Surface & s) const
+bool HighShader::checkIntersect(const Segment & s) const
 {
-    if (s.m_segment.getMax() > m_threshold) {
+    if (s.getMax() > m_threshold) {
         return true;
     } else {
         return false;
@@ -58,9 +58,9 @@ LowShader::~LowShader()
 {
 }
 
-bool LowShader::checkIntersect(Surface & s) const
+bool LowShader::checkIntersect(const Segment & s) const
 {
-    if (s.m_segment.getMin() < m_threshold) {
+    if (s.getMin() < m_threshold) {
         return true;
     } else {
         return false;
@@ -100,10 +100,10 @@ BandShader::~BandShader()
 {
 }
 
-bool BandShader::checkIntersect(Surface & s) const
+bool BandShader::checkIntersect(const Segment & s) const
 {
-    if ((s.m_segment.getMin() < m_highThreshold) &&
-        (s.m_segment.getMax() > m_lowThreshold)) {
+    if ((s.getMin() < m_highThreshold) &&
+        (s.getMax() > m_lowThreshold)) {
         return true;
     } else {
         return false;

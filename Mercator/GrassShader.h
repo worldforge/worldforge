@@ -39,7 +39,7 @@ class GrassShader : public Shader {
                          float cutoff = 1.f, float intercept = 2.f);
     virtual ~GrassShader();
 
-    virtual bool checkIntersect(Surface &) const;
+    virtual bool checkIntersect(const Segment &) const;
     virtual void shade(Surface &) const;
 };
 

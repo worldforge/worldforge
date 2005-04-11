@@ -42,7 +42,7 @@ class Terrain {
     typedef std::map<int, Segmentcolumn > Segmentstore;
 
     /// \brief STL list of Shader pointers.
-    typedef std::list<Shader *> Shaderstore;
+    typedef std::map<int, Shader *> Shaderstore;
 
     typedef std::multimap<int, Area *> Areastore;
 
@@ -128,7 +128,7 @@ class Terrain {
     }
 
     /// \brief Add a new Shader to the list for this terrain.
-    void addShader(Shader * t);
+    void addShader(Shader * t, int id);
     
     void addMod(const TerrainMod &t);
     
