@@ -284,6 +284,7 @@
 				C485B29605B74694002F2D80,
 				C47445FF07DFBB8800AD4413,
 				C485B2A205B746EF002F2D80,
+				C49891BF080A7A5800C7CBBF,
 			);
 		};
 		C48581BF0552EE8700A800CF = {
@@ -297,6 +298,7 @@
 				C485B29305B74647002F2D80,
 				C485B29D05B74694002F2D80,
 				C474460707DFBB8800AD4413,
+				C49891C7080A7A5800C7CBBF,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1779,6 +1781,105 @@
 			path = Mercator.framework;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C49891BF080A7A5800C7CBBF = {
+			buildPhases = (
+				C49891C1080A7A5800C7CBBF,
+				C49891C2080A7A5800C7CBBF,
+				C49891C4080A7A5800C7CBBF,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/jmt/Worldforge/forge/libs/wfmath/build;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = timeSeg;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = YES;
+			};
+			dependencies = (
+				C49891C0080A7A5800C7CBBF,
+			);
+			isa = PBXNativeTarget;
+			name = timeSeg;
+			productName = testTerrainMod;
+			productReference = C49891C7080A7A5800C7CBBF;
+			productType = "com.apple.product-type.tool";
+		};
+		C49891C0080A7A5800C7CBBF = {
+			isa = PBXTargetDependency;
+			target = C496A1350576AD7D005225FB;
+			targetProxy = C48D3E150577797B006979E1;
+		};
+		C49891C1080A7A5800C7CBBF = {
+			buildActionMask = 2147483647;
+			files = (
+				C49891CB080A7A7F00C7CBBF,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C49891C2080A7A5800C7CBBF = {
+			buildActionMask = 2147483647;
+			files = (
+				C49891C9080A7A7800C7CBBF,
+				C49891CA080A7A7E00C7CBBF,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C49891C4080A7A5800C7CBBF = {
+			buildActionMask = 2147483647;
+			files = (
+				C49891C5080A7A5800C7CBBF,
+				C49891C6080A7A5800C7CBBF,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C49891C5080A7A5800C7CBBF = {
+			fileRef = C4480FF50664E0D100BF4BBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C49891C6080A7A5800C7CBBF = {
+			fileRef = C496A1590576AD7E005225FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C49891C7080A7A5800C7CBBF = {
+			explicitFileType = "compiled.mach-o.executable";
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = timeSeg;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C49891C9080A7A7800C7CBBF = {
+			fileRef = C48D3DBF05774E19006979E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C49891CA080A7A7E00C7CBBF = {
+			fileRef = C48D3DC005774E19006979E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C49891CB080A7A7F00C7CBBF = {
+			fileRef = C48D3DC105774E19006979E1;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 	};
 	rootObject = C48581B70552EE7C00A800CF;

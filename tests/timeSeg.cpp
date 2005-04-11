@@ -6,8 +6,11 @@
 #include <Mercator/Segment.h>
 #include <Mercator/Intersect.h>
 #include <Mercator/Forest.h>
+#include <Mercator/Area.h>
 #include "util_timer.h"
 #include <iostream>
+
+typedef WFMath::Point<2> Point2;
 
 int main()
 {
@@ -38,8 +41,16 @@ int main()
  
 
     Mercator::Forest forest(4249162ul);
-    forest.setArea(WFMath::AxisBox<2>(WFMath::Point<2>(-50, -50),
-                                      WFMath::Point<2>(50, 50)));
+    WFMath::Polygon<2> p;
+    p.addCorner(p.numCorners(), Point2(-50, -50));
+    p.addCorner(p.numCorners(), Point2(50, -50));
+    p.addCorner(p.numCorners(), Point2(50, 50));
+    p.addCorner(p.numCorners(), Point2(-50, 50));    
+    
+    Mercator::Area* ar = new Mercator::Area(1, false);
+    ar->setShape(p);
+    forest.setArea(ar);
+    
     time.start();
     for (int q=0;q<10;q++) {   
         forest.populate();
@@ -48,8 +59,16 @@ int main()
 
     std::cout << "time per 100x100 forest = "<< (time.interval()*100.0) << " ms" << std::endl;
 
-    forest.setArea(WFMath::AxisBox<2>(WFMath::Point<2>(-100, -100),
-                                      WFMath::Point<2>(100, 100)));
+    p.clear();
+    p.addCorner(p.numCorners(), Point2(-100, -100));
+    p.addCorner(p.numCorners(), Point2(100, -100));
+    p.addCorner(p.numCorners(), Point2(100, 100));
+    p.addCorner(p.numCorners(), Point2(-100, 100));    
+    
+    ar = new Mercator::Area(1, false);
+    ar->setShape(p);
+    forest.setArea(ar);
+    
     time.start();
     for (int q=0;q<10;q++) {   
         forest.populate();
