@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT()
+AC_INIT(mercator, 0.2.2)
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 
 dnl Detect the canonical host and target environment
@@ -9,12 +9,7 @@ AC_CANONICAL_SYSTEM
 
 dnl Initialise automake
 
-MERCATOR_MAJOR=0
-MERCATOR_MINOR=2
-MERCATOR_MICRO=2
-MERCATOR_VERSION=$MERCATOR_MAJOR.$MERCATOR_MINOR.$MERCATOR_MICRO
-
-AM_INIT_AUTOMAKE(mercator, $MERCATOR_VERSION)
+AM_INIT_AUTOMAKE([dist-bzip2])
 AM_CONFIG_HEADER(config.h)
 
 dnl versioning info for libtool

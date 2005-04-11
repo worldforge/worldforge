@@ -1,7 +1,10 @@
+2005-04-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Bring autoconf usage up to date.
+
 2005-04-11 James Turner <james@worldforge.org>
 
 	* tests/timeSeg.cpp: fix up for changes to Forest API.
-
 
 2005-04-10  Al Riddoch  <alriddoch@zepler.org>
 
