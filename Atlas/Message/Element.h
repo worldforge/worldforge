@@ -67,11 +67,7 @@ public:
         TYPE_LIST
     };
 
-#ifdef ATLAS_ELEMENT_TYPEDEF_PRIVATE
 private:
-#else
-#warning Atlas::Message::Element::FooType typedefs will become private before 0.6.0
-#endif
     // These are now legacy typedefs. New code should use the
     // Atlas::Message::*Type versions.
     typedef Atlas::Message::IntType IntType;
@@ -81,7 +77,6 @@ private:
     typedef Atlas::Message::MapType MapType;
     typedef Atlas::Message::ListType ListType;
 
-private:
     /// Clear all values.
     void clear(Type new_type = TYPE_NONE);
 

@@ -1,3 +1,13 @@
+2005-04-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Element.h, configure.ac: Make Atlas::Message::Element
+	  typedefs private permanently.
+
+	* Atlas/Formatter.cpp, Atlas/Formatter.h, Atlas/Makefile.am: New
+	  class that acts as an adaptor to a Bridge and a stream, outputing
+	  formatting characters to the stream as messages are passed through
+	  it.
+
 2005-03-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Bridge.h, Atlas/Bridge.cpp,

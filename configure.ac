@@ -36,12 +36,12 @@ AC_ARG_ENABLE(debug,
     [  --enable-debug          enable debug information [default=no]],
     [
         if test "$enableval" = "yes"; then
-            CXXFLAGS="$CXXFLAGS -Wall -Werror -DATLAS_ELEMENT_TYPEDEF_PRIVATE -DDEBUG"
+            CXXFLAGS="$CXXFLAGS -Wall -Werror -DDEBUG"
         else
-            CXXFLAGS="$CXXFLAGS -Wall -Werror -DATLAS_ELEMENT_TYPEDEF_PRIVATE -DNDEBUG"
+            CXXFLAGS="$CXXFLAGS -Wall -Werror -DNDEBUG"
         fi
     ],[
-        CXXFLAGS="$CXXFLAGS -Wall -Werror -DATLAS_ELEMENT_TYPEDEF_PRIVATE -DNDEBUG"
+        CXXFLAGS="$CXXFLAGS -Wall -Werror -DNDEBUG"
     ]
 )
 
