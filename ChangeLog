@@ -1,3 +1,12 @@
+2005-04-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Formatter.h, Atlas/Formatter.cpp: Implement simple formatting
+	  and add an API for specifying the indent spacing.
+
+	* Atlas/Utilities/atlas_convert.cpp: Clean up command line processing,
+	  handle codec options better, and add options to control formatting
+	  if required.
+
 2005-04-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Message/Element.h, configure.ac: Make Atlas::Message::Element

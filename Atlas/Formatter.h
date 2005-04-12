@@ -42,11 +42,16 @@ class Formatter : public Bridge
     virtual void listStringItem(const std::string&);
     virtual void listEnd();
 
+    void setSpacing(int s) {
+        m_spacing = s;
+    }
+
   protected:
 
     std::iostream & m_stream;
     Bridge & m_bridge;
     int m_indent;
+    int m_spacing;
 };
 
 } // Atlas namespace

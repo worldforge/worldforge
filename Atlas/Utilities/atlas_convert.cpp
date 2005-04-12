@@ -9,9 +9,13 @@
 #include <Atlas/Message/QueuedDecoder.h>
 #include <Atlas/Message/MEncoder.h>
 #include <Atlas/Message/Element.h>
+#include <Atlas/Formatter.h>
 
 #include <fstream>
 #include <iostream>
+
+int option_format = 0;
+int option_spacing = -1;
 
 Atlas::Codec * getCodec(std::string type, std::iostream &stream, Atlas::Message::DecoderBase& decoder)
 {
@@ -32,30 +36,54 @@ Atlas::Codec * getCodec(std::string type, std::iostream &stream, Atlas::Message:
     }
 }
 
-void convert(std::string file_in, std::string codec_in, std::string file_out, std::string codec_out)
+int convert(const std::string & file_in, const std::string & codec_in,
+            const std::string & file_out, const std::string & codec_out)
 {
-    std::cout << "CONVERT " << codec_in << " to " << codec_out << std::endl;
+    std::cout << "Convert " << codec_in << " to " << codec_out << std::endl;
 
-    std::filebuf fb_in, fb_out;
+    std::fstream in, out;
 
-    fb_in.open( file_in.c_str(), std::ios::in );
-    fb_out.open( file_out.c_str(), std::ios::out );
+    in.open( file_in.c_str(), std::ios::in );
 
-    std::iostream in( &fb_in );
-    std::iostream out( &fb_out );
+    if (!in.is_open()) {
+        std::cerr << "Unable to open " << file_in << " for input"
+                  << std::endl << std::flush;
+        return 1;
+    }
+
+    out.open( file_out.c_str(), std::ios::out );
+
+    if (!out.is_open()) {
+        std::cerr << "Unable to open " << file_out << " for output"
+                  << std::endl << std::flush;
+        return 1;
+    }
 
     std::cout << "Reading... ";
 
     Atlas::Message::QueuedDecoder decoder;
     Atlas::Codec *inCodec = getCodec(codec_in, in, decoder);
-    while (!in.eof())
+    while (!in.eof()) {
         inCodec->poll(true);
+    }
 
     std::cout << "done." << std::endl;
     std::cout << "Writing... ";
 
-    Atlas::Codec *outCodec = getCodec(codec_out, out, decoder);
-    Atlas::Message::Encoder encoder(*outCodec);
+    Atlas::Codec * outCodec = getCodec(codec_out, out, decoder);
+    Atlas::Bridge * bridge;
+
+    if (option_format) {
+        Atlas::Formatter * format;
+        bridge = format = new Atlas::Formatter(out, *outCodec);
+        if (option_spacing != -1) {
+            format->setSpacing(option_spacing);
+        }
+    } else {
+        bridge = outCodec;
+    }
+
+    Atlas::Message::Encoder encoder(*bridge);
     encoder.streamBegin();
     while (decoder.queueSize() > 0 ) {
         Atlas::Message::MapType msg(decoder.popMessage());
@@ -65,103 +93,52 @@ void convert(std::string file_in, std::string codec_in, std::string file_out, st
 
     std::cout << "done." << std::endl;
 
-    fb_out.close();
-    fb_in.close();
+    out.close();
+    in.close();
+
+    return 0;
+}
+
+void usage(const char * program)
+{
+    std::cout << "usage: " << program
+              << " [-i infile] [-o outfile] <input file> <output file>"
+              << std::endl;
+    std::cout << "Supported Codecs: XML Back Packed"
+              << std::endl << std::flush;
+    return;
 }
 
 int main( int argc, char** argv )
 {
-    // parse command line here
-    if (argc!=4)
-    {
-        std::cout << "usage: atlas_convert <OPTION> <input file> <output file>" << std::endl << std::endl;
-        std::cout << "options: --xml2bach" << std::endl;
-        std::cout << "         --xml2packed" << std::endl;
-        std::cout << "         --xml2binary" << std::endl;
-        std::cout << "         --bach2xml" << std::endl;
-        std::cout << "         --bach2packed" << std::endl;
-        std::cout << "         --bach2binary" << std::endl;
-        std::cout << "         --packed2xml" << std::endl;
-        std::cout << "         --packed2bach" << std::endl;
-        std::cout << "         --packed2binary" << std::endl;
-        std::cout << "         --binary2xml" << std::endl;
-        std::cout << "         --binary2bach" << std::endl;
-        std::cout << "         --binary2packed" << std::endl;
-        return 0;
+    std::string codec_in("XML"),
+                codec_out("Bach");
+
+    while (1) {
+        int c = getopt(argc, argv, "fs:i:o:");
+        if (c == -1) {
+            break;
+        } else if (c == 'f') {
+            option_format = 1;
+        } else if (c == 's') {
+            option_spacing = strtol(optarg, NULL, 0);
+        } else if (c == 'i') {
+            codec_in = optarg;
+        } else if (c == 'o') {
+            codec_out = optarg;
+        }
     }
 
-    std::string file_in(argv[2]);
-    std::string file_out(argv[3]);
-    std::string codec_in, codec_out ;
-
-    for (int i = 0; i < 3; i++)
-    {
-        std::string temp(argv[i]);
-
-        if (temp=="--xml2bach")
-        {
-            codec_in = "XML";
-            codec_out= "Bach";
-        }
-        else if (temp=="--xml2packed")
-        {
-            codec_in = "XML";
-            codec_out = "Packed";
-        }
-        else if (temp=="--xml2binary")
-        {
-            codec_in = "XML";
-            codec_out = "Binary";
-        }
-        else if (temp=="--bach2xml")
-        {
-            codec_in = "Bach";
-            codec_out = "XML";
-        }
-        else if (temp=="--bach2packed")
-        {
-            codec_in = "Bach";
-            codec_out = "Packed";
-        }
-        else if (temp=="--bach2binary")
-        {
-            codec_in = "Bach";
-            codec_out = "Binary";
-        }
-        else if (temp=="--packed2xml")
-        {
-            codec_in = "Packed";
-            codec_out = "XML";
-        }
-        else if (temp=="--packed2bach")
-        {
-            codec_in = "Packed";
-            codec_out = "Bach";
-        }
-        else if (temp=="--packed2binary")
-        {
-            codec_in = "Packed";
-            codec_out = "Binary";
-        }
-        else if (temp=="--binary2xml")
-        {
-            codec_in = "Binary";
-            codec_out = "XML";
-        }
-        else if (temp=="--binary2bach")
-        {
-            codec_in = "Binary";
-            codec_out = "Bach";
-        }
-        else if (temp=="--binary2packed")
-        {
-            codec_in = "Binary";
-            codec_out = "Packed";
-        }
+    if ((argc - optind) != 2) {
+        usage(argv[0]);
+        return 1;
     }
+
+    std::string file_in(argv[argc - 2]);
+    std::string file_out(argv[argc - 1]);
+
+    std::cout << "Reading from " << file_in << " to " << file_out << std::endl << std::flush;
 
     // convert file
-    convert(file_in, codec_in, file_out, codec_out);
-
-    return 0;
+    return convert(file_in, codec_in, file_out, codec_out);
 }
