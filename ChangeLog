@@ -1,3 +1,8 @@
+2005-04-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.cpp, Mercator/Segment.cpp: Fix use of iterators
+	  in for loops to be more efficient.
+
 2005-04-12 James Turner <james@worldforge.org>
 
 	* Mercator/Terrain.cpp: formatting / style changes to appease the
