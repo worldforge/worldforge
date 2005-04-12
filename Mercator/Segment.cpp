@@ -140,6 +140,12 @@ void Segment::invalidate(bool points)
         delete [] m_normals;
         m_normals = 0;
     }
+
+    invalidateSurfaces();
+}
+
+void Segment::invalidateSurfaces()
+{
     Segment::Surfacestore::const_iterator I = m_surfaces.begin();
     Segment::Surfacestore::const_iterator Iend = m_surfaces.end();
     for(; I != Iend; ++I) {
@@ -591,6 +597,7 @@ void Segment::applyMod(TerrainMod *t)
 void Segment::addArea(Area* ar)
 {
     m_areas.insert(Areastore::value_type(ar->getLayer(), ar));
+    invalidateSurfaces();
 }
 
 WFMath::AxisBox<2> Segment::getBox() const

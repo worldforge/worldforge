@@ -197,6 +197,8 @@ class Segment {
 
     void applyMod(TerrainMod *t);
 
+    void invalidateSurfaces();
+
     /// \brief List of TerrainMod objects that are applied to this Segment.
     ModList m_modList;
 

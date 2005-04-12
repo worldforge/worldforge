@@ -189,31 +189,9 @@ WFMath::Polygon<2> Area::clipToSegment(Segment& s) const
     WFMath::AxisBox<2> segBox(s.getBox());
     WFMath::Polygon<2> clipped = sutherlandHodgmanKernel(m_shape, TopClip(segBox.lowCorner().y()));
     
- //   std::cout << "top clipped: y=" << segBox.lowCorner().y() << std::endl;
- //   for (unsigned int i=0; i<clipped.numCorners(); ++i) {
-  //      std::cout << '\t' << clipped[i] << std::endl;
- //   }
-  
     clipped = sutherlandHodgmanKernel(clipped, BottomClip(segBox.highCorner().y()));
-    
- //   std::cout << "bottom clipped: y=" << segBox.highCorner().y() << std::endl;
-//    for (unsigned int i=0; i<clipped.numCorners(); ++i) {
- //       std::cout << '\t' << clipped[i] << std::endl;
-  //  }
-  
     clipped = sutherlandHodgmanKernel(clipped, LeftClip(segBox.lowCorner().x()));
-    
-  //  std::cout << "left clipped: x=" << segBox.lowCorner().x() << std::endl;
-  //  for (unsigned int i=0; i<clipped.numCorners(); ++i) {
-   //     std::cout << '\t' << clipped[i] << std::endl;
-  //  }
-    
     clipped = sutherlandHodgmanKernel(clipped, RightClip(segBox.highCorner().x()));
-    
- //   std::cout << "right clipped: x=" << segBox.highCorner().x() << std::endl;
- //   for (unsigned int i=0; i<clipped.numCorners(); ++i) {
- //       std::cout << '\t' << clipped[i] << std::endl;
-  //  }
     
     return clipped;
 }
@@ -222,6 +200,5 @@ bool Area::checkIntersects(const Segment& s) const
 {
     return WFMath::Intersect(m_shape, s.getBox(), false);
 }
-
 
 } // of namespace

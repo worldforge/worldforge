@@ -1,3 +1,18 @@
+2005-04-12 James Turner <james@worldforge.org>
+
+	* Mercator/Terrain.cpp: when adding an area to a segment, check if
+	  any shaders now intersect the segment, and if so, add a surface for
+	  them.
+	  
+	* Mercator/Terrain.cpp: re-order Segment building code in setBasePoint,
+	  so areas are added before surfaces.
+	  
+	* Mercator/Segment.cpp, Mercator/Segment.h: factor segment invalidation
+	  into a helper method, and invalidate segments when an Area is added
+	  to a Segment.
+
+	* Mercator/Area.cpp: remove debug code.
+
 2005-04-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/testShader.cpp: Check if a shader being tested intersects with

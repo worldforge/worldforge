@@ -177,7 +177,7 @@ AreaShader::AreaShader(int layer) :
 bool AreaShader::checkIntersect(const Segment& s) const
 {
     const Segment::Areastore& areas(s.getAreas());
-    return areas.count(m_layer);
+    return (areas.count(m_layer) > 0);
 }
 
 void AreaShader::shade(Surface &s) const

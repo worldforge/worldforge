@@ -236,9 +236,6 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                     }
                 }
                 s->setMinMax(min, max);
-                if (isShaded()) {
-                    addSurfaces(*s);
-                }
                 
                 Areastore::iterator I = m_areas.begin();
                 Areastore::iterator Iend = m_areas.end();
@@ -246,6 +243,11 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                     if (I->second->checkIntersects(*s)) {
                         s->addArea(I->second);
                     }
+                }
+
+                // apply shaders last, after all other data is in place
+                if (isShaded()) {
+                    addSurfaces(*s);
                 }
                 
                 m_segments[i][j] = s;
@@ -325,6 +327,24 @@ void Terrain::addArea(Area* area)
             if (area->checkIntersects(*s)) {
                 s->addArea(area);
             }
+            
+            Segment::Surfacestore& sss(s->getSurfaces());
+            Shaderstore::const_iterator I = m_shaders.begin();
+            Shaderstore::const_iterator Iend = m_shaders.end();
+            for (; I != Iend; ++I) {
+                if (sss.count(I->first)) {
+                    // segment already has a surface for this shader
+                    continue;
+                }
+                
+                // shader doesn't touch this segment, skip
+                if (!I->second->checkIntersect(*s)) {
+                    continue;
+                }
+        
+                sss[I->first] = I->second->newSurface(*s);
+            }
+    
         } // of y loop
     } // of x loop
 
