@@ -115,7 +115,9 @@ void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
     fill2d(m_controlPoints(0, 0), m_controlPoints(1, 0), 
            m_controlPoints(1, 1), m_controlPoints(0, 1));
 
-    for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
+    ModList::iterator I = m_modList.begin();
+    ModList::iterator Iend = m_modList.end();
+    for (; I != Iend; ++I) {
         applyMod(*I);
     }
 }
@@ -139,7 +141,8 @@ void Segment::invalidate(bool points)
         m_normals = 0;
     }
     Segment::Surfacestore::const_iterator I = m_surfaces.begin();
-    for(; I != m_surfaces.end(); ++I) {
+    Segment::Surfacestore::const_iterator Iend = m_surfaces.end();
+    for(; I != Iend; ++I) {
         I->second->invalidate();
     }
 }
@@ -237,7 +240,9 @@ void Segment::populateNormals()
 void Segment::populateSurfaces()
 {
     Surfacestore::const_iterator I = m_surfaces.begin();
-    for (; I != m_surfaces.end(); ++I) {
+    Surfacestore::const_iterator Iend = m_surfaces.end();
+
+    for (; I != Iend; ++I) {
         I->second->populate();
     }
 }
@@ -551,7 +556,9 @@ void Segment::addMod(TerrainMod *t)
 void Segment::clearMods() 
 {
     if (m_modList.size()) {
-        for (ModList::iterator I=m_modList.begin(); I!=m_modList.end(); ++I) {
+        ModList::iterator I = m_modList.begin();
+        ModList::iterator Iend = m_modList.end();
+        for (; I != Iend; ++I) {
             delete(*I);
         }
         m_modList.clear();

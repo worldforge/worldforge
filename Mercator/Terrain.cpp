@@ -92,7 +92,8 @@ void Terrain::addSurfaces(Segment & seg)
     }
     
     Shaderstore::const_iterator I = m_shaders.begin();
-    for (; I != m_shaders.end(); ++I) {
+    Shaderstore::const_iterator Iend = m_shaders.end();
+    for (; I != Iend; ++I) {
         // shader doesn't touch this segment, skip
         if (!I->second->checkIntersect(seg)) {
             continue;
@@ -239,9 +240,11 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                     addSurfaces(*s);
                 }
                 
-                for (Areastore::iterator a=m_areas.begin(); a != m_areas.end(); ++a) {
-                    if (a->second->checkIntersects(*s)) {
-                        s->addArea(a->second);
+                Areastore::iterator I = m_areas.begin();
+                Areastore::iterator Iend = m_areas.end();
+                for (; I != Iend; ++I) {
+                    if (I->second->checkIntersects(*s)) {
+                        s->addArea(I->second);
                     }
                 }
                 
