@@ -21,7 +21,9 @@ int shadeTest(Mercator::Segment & segment)
         return 1;
     }
 
-    surface.populate();
+    if (shader.checkIntersect(segment)) {
+        surface.populate();
+    }
     return 0;
 }
 

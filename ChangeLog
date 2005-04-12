@@ -1,5 +1,10 @@
 2005-04-12  Al Riddoch  <alriddoch@zepler.org>
 
+	* tests/testShader.cpp: Check if a shader being tested intersects with
+	  a given Segment before attempting to populate it.
+
+2005-04-12  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Terrain.cpp, Mercator/Segment.cpp: Fix use of iterators
 	  in for loops to be more efficient.
 
