@@ -63,7 +63,9 @@ void Terrain::addShader(Shader * t, int id)
         for (Segmentcolumn::iterator J = I->second.begin(); 
              J != I->second.end(); ++J) {
             Segment *seg=J->second;
-            if (!t->checkIntersect(*seg)) continue;
+            if (!t->checkIntersect(*seg)) {
+                continue;
+            }
             
             Segment::Surfacestore & sss = seg->getSurfaces();
             sss[id] = t->newSurface(*seg);
@@ -88,10 +90,13 @@ void Terrain::addSurfaces(Segment & seg)
                   << std::endl << std::flush;
         sss.clear();
     }
+    
     Shaderstore::const_iterator I = m_shaders.begin();
     for (; I != m_shaders.end(); ++I) {
         // shader doesn't touch this segment, skip
-       if (!I->second->checkIntersect(seg)) continue;
+        if (!I->second->checkIntersect(seg)) {
+            continue;
+        }
         
         sss[I->first] = I->second->newSurface(seg);
     }
@@ -235,7 +240,9 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 }
                 
                 for (Areastore::iterator a=m_areas.begin(); a != m_areas.end(); ++a) {
-                    if (a->second->checkIntersects(*s)) s->addArea(a->second);
+                    if (a->second->checkIntersects(*s)) {
+                        s->addArea(a->second);
+                    }
                 }
                 
                 m_segments[i][j] = s;
@@ -289,9 +296,11 @@ void Terrain::addMod(const TerrainMod &t) {
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
-            if (s) s->addMod(t.clone());
-        }
-    }
+            if (s) {
+                s->addMod(t.clone());
+            }
+        } // of y loop
+    } // of x loop
 }
 
 void Terrain::addArea(Area* area)
@@ -306,12 +315,15 @@ void Terrain::addArea(Area* area)
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
-            if (!s) continue;
+            if (!s) {
+                continue;
+            }
             
-            if (area->checkIntersects(*s))
+            if (area->checkIntersects(*s)) {
                 s->addArea(area);
-        }
-    }
+            }
+        } // of y loop
+    } // of x loop
 
 }
 

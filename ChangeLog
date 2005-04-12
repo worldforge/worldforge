@@ -1,5 +1,10 @@
 2005-04-12 James Turner <james@worldforge.org>
 
+	* Mercator/Terrain.cpp: formatting / style changes to appease the
+	  great dark lord of Soton.
+
+2005-04-12 James Turner <james@worldforge.org>
+
 	* Mercator/Shader.h: change checkIntersects to work on Segments
 	  (as the comments suggest it originally did).
 	  
