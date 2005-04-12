@@ -1,11 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
-WFMATH_VERSION=0.3.4
-
-AC_INIT(wfmath, $WFMATH_VERSION)
+AC_INIT(wfmath, 0.3.4)
 AC_CONFIG_SRCDIR([wfmath/wfmath.h])
-
-AC_SUBST(WFMATH_VERSION)
 
 dnl versioning info for libtool
 WFMATH_CURRENT=3

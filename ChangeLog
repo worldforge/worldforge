@@ -1,3 +1,10 @@
+2005-04-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Fix a bug in initialising the version to a non-literal.
+
+	* doc/Doxyfile.in: Use VERSION instead of WFMATH_VERSION as intended by
+	  autoconf.
+
 2005-04-11  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Increment version to 0.3.4 for release, and clean
