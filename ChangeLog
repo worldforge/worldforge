@@ -1,3 +1,14 @@
+2005-04-17  James Turner  <james@worldforge.org>
+
+	* Eris/BaseConnection.cpp: remove streamEnd() call from hardDisconnect,
+	  since it is unecessary.
+	  
+	* Eris/Connection.cpp: in the dtor, explicitly bring down the connection
+	  while our vtable is still valid, to avoid pure virtual calls.
+	  
+	* test/commander.cpp: change how sight broadcasts are decoded, to avoid
+	  ambiguity.
+
 2005-04-17  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Avatar.cpp: Initialise world time offset to zero.

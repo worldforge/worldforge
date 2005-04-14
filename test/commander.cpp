@@ -151,10 +151,9 @@ void Commander::dispatch(const RootOperation& op)
     
     Sight st = smart_dynamic_cast<Sight>(op);
     if (st.isValid()) {
-        std::vector<Root> args(op->getArgs());
-        assert(!args.empty());
-        
-        if (snd->hasAttr("broadcast")) {
+        if (st->hasAttr("broadcast")) {
+            std::vector<Root> args(op->getArgs());
+            assert(!args.empty());
             Agent::broadcastSight(smart_dynamic_cast<RootOperation>(args.front()));
         }
     }

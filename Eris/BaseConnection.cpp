@@ -78,9 +78,6 @@ void BaseConnection::hardDisconnect(bool emit)
     } else {
 		// okay, tear it down
 		if ((_status == CONNECTED) || (_status == DISCONNECTING)){
-			m_codec->streamEnd();
-			(*_stream) << std::flush;
-			
 			delete m_codec;
 			delete _encode;
 		} else if (_status == NEGOTIATE) {

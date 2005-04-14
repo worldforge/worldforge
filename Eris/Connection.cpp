@@ -44,12 +44,15 @@ Connection::Connection(const std::string &cnm, const std::string& host, short po
     m_info(""),
     m_responder(new ResponseTracker)
 {	
-    // SigC::slot(*this, &Account::handleLoginTimeout)
     Poll::instance().Ready.connect(SigC::slot(*this, &Connection::gotData));
 }
 	
 Connection::~Connection()
 {
+    // ensure we emit this before our vtable goes down, since we are the
+    // Bridge on the underlying Atlas codec, and otherwise we might get
+    // a pure virtual method call
+    hardDisconnect(true);
 }
 
 int Connection::connect()
