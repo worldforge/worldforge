@@ -1,10 +1,15 @@
-2005-04-17  James Turner  <james@worldforge.org>
+2005-04-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/controller.cpp: Add newline to end of file. Congrats James,
+	  next time should be a gold star.
+
+2005-04-14  James Turner  <james@worldforge.org>
 
     * test/tests.cpp: add in talk/Say test
     
     * test/agent.cpp: make broadcast routines set FROM on percept op.
 
-2005-04-17  James Turner  <james@worldforge.org>
+2005-04-14  James Turner  <james@worldforge.org>
 
 	* Eris/BaseConnection.cpp: remove streamEnd() call from hardDisconnect,
 	  since it is unecessary.
@@ -15,11 +20,11 @@
 	* test/commander.cpp: change how sight broadcasts are decoded, to avoid
 	  ambiguity.
 
-2005-04-17  Al Riddoch  <alriddoch@zepler.org>
+2005-04-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Avatar.cpp: Initialise world time offset to zero.
 
-2005-04-17  Al Riddoch  <alriddoch@zepler.org>
+2005-04-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/commander.cpp: Add smart dynamic casts when handling operation
 	  arguments as necessary.
