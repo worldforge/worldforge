@@ -1,9 +1,15 @@
+2005-04-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/commander.cpp: Add smart dynamic casts when handling operation
+	  arguments as necessary.
+
 2005-04-14  James Turner  <james@worldforge.org>
 
-    * Eris/Entity.cpp, Eris/Entity.h, Eris/EntityRouter.cpp: changes to
-      handle sound(action) broadcasts, consume the op and trigger a virtual /
-      signal pair on Entity. The virtual method is called onSoundAction, the
-      signal is called 'Noise' - better names would be appreciated.
+	* Eris/Entity.cpp, Eris/Entity.h, Eris/EntityRouter.cpp: changes to
+	  handle sound(action) broadcasts, consume the op and trigger a
+	  virtual / signal pair on Entity. The virtual method is called
+	  onSoundAction, the signal is called 'Noise' - better names would be
+	  appreciated.
 
 	* tests/tests.cpp: add tests for hearing speech and other sound of other
 	  actions.

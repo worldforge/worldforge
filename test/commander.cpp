@@ -145,7 +145,7 @@ void Commander::dispatch(const RootOperation& op)
         assert(!args.empty());
         
         if (snd->hasAttr("broadcast")) {
-            Agent::broadcastSound(args.front());
+            Agent::broadcastSound(smart_dynamic_cast<RootOperation>(args.front()));
         }
     }
     
@@ -155,7 +155,7 @@ void Commander::dispatch(const RootOperation& op)
         assert(!args.empty());
         
         if (snd->hasAttr("broadcast")) {
-            Agent::broadcastSight(args.front());
+            Agent::broadcastSight(smart_dynamic_cast<RootOperation>(args.front()));
         }
     }
     
