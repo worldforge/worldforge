@@ -47,8 +47,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
         if (talk.isValid())
         {
             const std::vector<Root>& args = talk->getArgs();
-            if (args.empty())
-            {
+            if (args.empty()) {
                 error() << "entity " << m_entity->getId() << " got sound(talk) with no args";
                 return IGNORED;
             }
@@ -57,6 +56,8 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
             return HANDLED;
         } else if (args.front()->instanceOf(ACTION_NO)) {
             // sound of action
+            m_entity->onSoundAction(args.front());
+            return HANDLED;
         } else
             debug() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << snd;
         

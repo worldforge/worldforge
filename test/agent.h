@@ -22,7 +22,8 @@ public:
     static void setEntityVisibleForFutureAgent(const std::string& eid, const std::string& agentId);
 
     static void broadcastSight(const Atlas::Objects::Operation::RootOperation& op);
-
+    static void broadcastSound(const Atlas::Objects::Operation::RootOperation& op);
+    
 private:
     void processLook(const Atlas::Objects::Operation::Look& op);
 

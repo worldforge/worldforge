@@ -306,8 +306,8 @@ void Connection::handleServerInfo(const RootOperation& op)
 void Connection::onConnect()
 {
     BaseConnection::onConnect();
-    m_typeService->init();
-    m_info = ServerInfo(_host);
+   // m_typeService->init();
+  //  m_info = ServerInfo(_host);
 }
 
 void Connection::onDisconnectTimeout()

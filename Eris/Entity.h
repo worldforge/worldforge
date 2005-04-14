@@ -204,6 +204,13 @@ public:
     */
     SigC::Signal1<void, const Atlas::Objects::Root&> Acted;
     
+    /**
+    Emitted when this entity performs an action which causes a noise. This
+    may happen alongside the sight of the action, or not, depending on the
+    distance to the entity and so on.
+    */
+    SigC::Signal1<void, const Atlas::Objects::Root&> Noise;
+    
     SigC::Signal1<void, bool> VisibilityChanged;
         
 protected:	        
@@ -245,6 +252,12 @@ protected:
     Default implementation emits the Action signal.
     */
     virtual void onAction(const Atlas::Objects::Root& act);
+
+    /**
+    Over-rideable hook when this entity is heard performing an action.
+    Default implementation emits the Noise signal.
+    */
+    virtual void onSoundAction(const Atlas::Objects::Root& act);
 
     /**
     Over-rideable hook when this entity is seen to emit an imginary op.

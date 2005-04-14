@@ -118,6 +118,17 @@ void Agent::broadcastSight(const RootOperation& op)
     }
 }
 
+void Agent::broadcastSound(const RootOperation& op)
+{
+    Sound snd;
+    snd->setArgs1(op);
+    
+    for (AgentSet::iterator it=static_allAgents.begin(); it != static_allAgents.end(); ++it) {
+        snd->setTo((*it)->m_character);
+        (*it)->m_con->send(snd);
+    }
+}
+
 #pragma mark -
 
 void Agent::processLook(const Look& look)

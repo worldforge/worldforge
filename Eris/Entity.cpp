@@ -217,6 +217,11 @@ void Entity::onAction(const Atlas::Objects::Root& arg)
     Acted.emit(arg);
 }
 
+void Entity::onSoundAction(const Atlas::Objects::Root& arg)
+{
+    Noise.emit(arg);
+}
+
 void Entity::onImaginary(const Atlas::Objects::Root& arg)
 {
     if (arg->hasAttr("description"))

@@ -5,6 +5,30 @@
 	};
 	objectVersion = 39;
 	objects = {
+		C40F5708080EB832000F8813 = {
+			fileRef = C4BD5A0606AAA15D0039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C40F5709080EB832000F8813 = {
+			fileRef = C4BD59C806AAA0F20039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C40F570A080EB832000F8813 = {
+			fileRef = C4BD59F606AAA1330039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C40F570B080EB832000F8813 = {
+			fileRef = C4BD59CA06AAA1250039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C437AF410562987C00ACFA1E = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -116,6 +140,7 @@
 			buildRules = (
 			);
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge/forge/libs/Atlas-C++/build /Users/jmt/Worldforge/forge/libs/skstream/build /Users/jmt/Worldforge/forge/libs/wfmath/build";
 				GCC_PREPROCESSOR_DEFINITIONS = ATLAS_ELEMENT_TYPEDEF_PRIVATE;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
@@ -194,7 +219,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				ZERO_LINK = YES;
+				ZERO_LINK = NO;
 			};
 			isa = PBXBuildStyle;
 			name = Development;
@@ -825,7 +850,6 @@
 				FRAMEWORK_VERSION = B;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
-				GCC_PREPROCESSOR_DEFINITIONS = ATLAS_ELEMENT_TYPEDEF_PRIVATE;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = "@executable_path/../Frameworks";
@@ -1688,6 +1712,10 @@
 		C4E7DFC90606732B00721E8D = {
 			buildActionMask = 2147483647;
 			files = (
+				C40F5708080EB832000F8813,
+				C40F5709080EB832000F8813,
+				C40F570A080EB832000F8813,
+				C40F570B080EB832000F8813,
 				C4E7DFFF0606733700721E8D,
 			);
 			isa = PBXFrameworksBuildPhase;

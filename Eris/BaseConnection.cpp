@@ -121,11 +121,11 @@ void BaseConnection::recv()
 		case NEGOTIATE:
                     pollNegotiation();
                     break;
-		
+/*		
 		case CONNECTED:
 		case DISCONNECTING:
                     m_codec->poll();
-                    break;
+                    break; */
 		default:
 			throw InvalidOperation("Unexpected connection status in poll()");
 		}	

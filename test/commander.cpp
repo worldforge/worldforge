@@ -138,6 +138,27 @@ void Commander::dispatch(const RootOperation& op)
         Agent::broadcastSight(op);
     }
     
+    Sound snd = smart_dynamic_cast<Sound>(op);
+    if (snd.isValid()) {
+        
+        std::vector<Root> args(op->getArgs());
+        assert(!args.empty());
+        
+        if (snd->hasAttr("broadcast")) {
+            Agent::broadcastSound(args.front());
+        }
+    }
+    
+    Sight st = smart_dynamic_cast<Sight>(op);
+    if (st.isValid()) {
+        std::vector<Root> args(op->getArgs());
+        assert(!args.empty());
+        
+        if (snd->hasAttr("broadcast")) {
+            Agent::broadcastSight(args.front());
+        }
+    }
+    
     Set s = smart_dynamic_cast<Set>(op);
     if (s.isValid()) {
         

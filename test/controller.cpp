@@ -117,3 +117,21 @@ void Controller::movePos(const std::string& eid, const WFMath::Point<3>& pos)
 {
     
 }
+
+ void Controller::broadcastSoundFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op)
+ {
+    Sound snd;
+    snd->setFrom(e);
+    snd->setAttr("broadcast", 1);
+    snd->setArgs1(op);
+    send(snd);
+ }
+
+ void Controller::broadcastSightFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op)
+ {
+    Sight st;
+    st->setFrom(e);
+    st->setAttr("broadcast", 1);
+    st->setArgs1(op);
+    send(st);
+ }

@@ -28,6 +28,10 @@ public:
     
     /** generalised attribute modification interface */
     void setAttr(const std::string& eid, const std::string& attr, const Atlas::Message::Element v); 
+    
+    void broadcastSoundFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op);
+    void broadcastSightFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op);
+
 protected:
     virtual void objectArrived(const Atlas::Objects::Root& obj);
     

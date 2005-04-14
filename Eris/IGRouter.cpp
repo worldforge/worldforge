@@ -127,15 +127,15 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
     {
         for (unsigned int A=0; A < args.size(); ++A) {
             Entity* ent = m_view->getEntity(args[A]->getId());
-            if (!ent)
-            {
-                if (m_view->isPending(args[A]->getId()))
-                    warning() << "got SET with updates for pending entity " << args[A]->getId();
+            if (!ent) {
+                if (m_view->isPending(args[A]->getId())) 
+                    debug() << "got SET with updates for pending entity " << args[A]->getId();
                 else
                     error() << " got SET for completely unknown entity " << args[A]->getId();
                 continue; // we don't have it, ignore
             }
             
+            debug() << "processing set for entity " << ent;
             ent->setFromRoot(args[A]);
         }
         return HANDLED;
@@ -151,10 +151,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
         }
         
         Entity* ent = m_view->getEntity(op->getFrom());
-        if (ent)
-            ent->onAction(args.front());
-        else
-            warning() << "ignoring action for pending entity " << op->getFrom();
+        if (ent)  ent->onAction(args.front());
         
         return HANDLED;
     }
