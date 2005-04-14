@@ -169,7 +169,10 @@ void Commander::dispatch(const RootOperation& op)
             Root::const_iterator I = args[A]->begin();
             
             for (; I != args[A]->end(); ++I) {
-                if (I->first == "id") continue;
+                if ((I->first == "id") || (I->first == "parents") || (I->first == "objtype")) {
+                    continue;
+                }
+                
                 assert(I->first != "loc");
                 entity->setAttr(I->first, I->second);
             }

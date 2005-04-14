@@ -19,6 +19,7 @@
 #include <sigc++/object.h>
 #include <Eris/LogStream.h>
 #include <Eris/Log.h>
+#include <Atlas/Objects/Operation.h>
 
 #include <signal.h>
 #include <sys/socket.h>
@@ -519,6 +520,94 @@ void testSet(Controller& ctl)
     assert(table->numContained() == 1);
 }
 
+class WaitForSay : public SigC::Object
+{
+public:
+    WaitForSay(Eris::Entity* e, const std::string& what) : 
+        m_what(what),
+        m_heard(false)
+    {
+        e->Say.connect(SigC::slot(*this, &WaitForSay::onSay));
+    }
+    
+    void run()
+    {
+        while (!m_heard) Eris::PollDefault::poll();
+    }
+private:
+    void onSay(const std::string& what)
+    {
+        if (what == m_what) m_heard = true;
+    }
+
+    std::string m_what;
+    bool m_heard;
+};
+
+void testTalk(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    
+    {
+        WaitForAppearance wf(av->getView(), "_table_1");
+        wf.waitFor("_vase_1");
+        wf.run();
+    }
+    
+    Eris::Entity* vase = av->getView()->getEntity("_vase_1");
+    WaitForSay wfs(vase, "cut yourself.");
+    
+    {
+        Atlas::Objects::Operation::Talk t;
+        Atlas::Objects::Root what;
+        what->setAttr("say", "cut yourself.");
+        t->setArgs1(what);
+        t->setFrom("_vase_1");    
+        ctl.broadcastSoundFrom("_vase_1", t);
+    }
+    
+    wfs.run();
+}
+
+
+void testSeeMove(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_table_1");
+        wf.waitFor("_vase_1");
+        wf.run();
+    }
+    
+    SignalCounter0 moved;
+    Eris::Entity* vase = av->getView()->getEntity("_vase_1");
+    vase->Moved.connect(SigC::slot(moved, &SignalCounter0::fired));
+    
+    Atlas::Objects::Operation::Move mv;
+    mv->setFrom(vase->getId());
+    Atlas::Objects::Root args;
+    args->setAttr("id", vase->getId());
+    //args->setAttr("pos", );
+    mv->setArgs1(args);
+    
+    ctl.broadcastSightFrom(vase->getId(), mv);
+    
+    while (!moved.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+  //  assert(vase->getPos() == );
+}
 
 int main(int argc, char **argv)
 {
@@ -549,6 +638,7 @@ int main(int argc, char **argv)
             
             testAppearance(ctl);
             testSet(ctl);
+            testTalk(ctl);
             
         }
         catch (TestFailure& tfexp)

@@ -111,6 +111,7 @@ void Agent::broadcastSight(const RootOperation& op)
 {
     Sight st;
     st->setArgs1(op);
+    st->setFrom(op->getFrom());
     
     for (AgentSet::iterator it=static_allAgents.begin(); it != static_allAgents.end(); ++it) {
         st->setTo((*it)->m_character);
@@ -122,6 +123,7 @@ void Agent::broadcastSound(const RootOperation& op)
 {
     Sound snd;
     snd->setArgs1(op);
+    snd->setFrom(op->getFrom());
     
     for (AgentSet::iterator it=static_allAgents.begin(); it != static_allAgents.end(); ++it) {
         snd->setTo((*it)->m_character);

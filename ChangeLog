@@ -1,5 +1,11 @@
 2005-04-17  James Turner  <james@worldforge.org>
 
+    * test/tests.cpp: add in talk/Say test
+    
+    * test/agent.cpp: make broadcast routines set FROM on percept op.
+
+2005-04-17  James Turner  <james@worldforge.org>
+
 	* Eris/BaseConnection.cpp: remove streamEnd() call from hardDisconnect,
 	  since it is unecessary.
 	  
