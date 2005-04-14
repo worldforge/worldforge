@@ -27,7 +27,8 @@ namespace Eris
 Avatar::Avatar(Account* pl, const std::string& entId) : 
     m_account(pl),
     m_entityId(entId),
-    m_entity(NULL)
+    m_entity(NULL),
+    m_worldTimeOffset(0)
 {
     m_view = new View(this);
     m_entityAppearanceCon = m_view->Appearance.connect(SigC::slot(*this, &Avatar::onEntityAppear));

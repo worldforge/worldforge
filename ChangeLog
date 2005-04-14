@@ -1,5 +1,9 @@
 2005-04-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* Eris/Avatar.cpp: Initialise world time offset to zero.
+
+2005-04-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/commander.cpp: Add smart dynamic casts when handling operation
 	  arguments as necessary.
 
