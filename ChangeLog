@@ -1,3 +1,12 @@
+2005-04-15  James Turner  <james@worldforge.org>
+
+    * test/tests.cpp, tests/commander.cpp, tests/controller.cpp: add tests for 
+      sight of move ops, and fix bugs in handling of move ops by the stub
+      server.
+      
+    * Eris/IGRouter.cpp, Eris/View.cpp, Eris/Entity.cpp, Eris/Connection.cpp:
+      remove debug output which is no longer required.
+
 2005-04-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/controller.cpp: Add newline to end of file. Congrats James,

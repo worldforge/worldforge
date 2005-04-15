@@ -20,6 +20,7 @@ using std::cout;
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Root;
 
 Controller::Controller(int fd) :
     m_stream(fd)
@@ -107,15 +108,22 @@ void Controller::moveLocation(const std::string& eid, const std::string& loc, co
     Move mv;
     RootEntity arg;
     arg->setLoc(loc);
-  //  arg->setPosAsList(pos.toAtlas().asList());
+    arg->setAttr("pos", pos.toAtlas());
     mv->setTo(eid);
+    mv->setFrom(eid);
     mv->setArgs1(arg);
     send(mv);
 }
 
 void Controller::movePos(const std::string& eid, const WFMath::Point<3>& pos)
 {
-    
+    Move mv;
+    Root arg;
+    arg->setAttr("pos", pos.toAtlas());
+    mv->setTo(eid);
+    mv->setFrom(eid);
+    mv->setArgs1(arg);
+    send(mv);
 }
 
  void Controller::broadcastSoundFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op)

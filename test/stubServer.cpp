@@ -311,9 +311,7 @@ void StubServer::joinRoom(const std::string& acc, const std::string& room)
     StringSet members = peopleInRoom(room);
     if (members.count(acc))
         throw InvalidOperation("duplicate join of room " + room + " by " + acc);
-    
-    debug() << "account " << acc << " joining room " << room;
-    
+        
     Appearance app;
     app->setFrom(room);
 

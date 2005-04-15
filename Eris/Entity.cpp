@@ -346,7 +346,7 @@ void Entity::setLocationFromAtlas(const std::string& locId)
     Entity* newLocation = m_view->getEntity(locId);
     if (!newLocation)
     {
-        debug() << "placing entity " << this << "(" << m_id << ") in limbo till we get " << locId;
+        //debug() << "placing entity " << this << "(" << m_id << ") in limbo till we get " << locId;
         m_view->getEntityFromServer(locId);
         
         m_limbo = true;

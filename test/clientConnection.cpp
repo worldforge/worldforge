@@ -296,18 +296,11 @@ void ClientConnection::processOOGLook(const Look& lk)
 {
     const std::vector<Root>& args = lk->getArgs();
     std::string lookTarget;
-        
-    debug() << "client con processing OOG look";
-        
-    if (args.empty())
-    {
-        debug() << "stub server got anonymous OOG look";
+                
+    if (args.empty()) {
         lookTarget = "_lobby";
-    }
-    else
-    {
+    } else {
         lookTarget = args.front()->getId();
-        debug() << "stub server got OOG look at " << lookTarget;
     }
     
     RootEntity thing;

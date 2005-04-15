@@ -244,7 +244,7 @@ void View::getEntityFromServer(const std::string& eid)
 
 void View::setTopLevelEntity(Entity* newTopLevel)
 {
-    debug() << "setting new top-level entity to " << newTopLevel->getId();
+    //debug() << "setting new top-level entity to " << newTopLevel->getId();
 
     if (m_topLevel) {
         if (newTopLevel == m_topLevel) return; // no change!

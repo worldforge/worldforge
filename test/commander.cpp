@@ -134,7 +134,6 @@ void Commander::dispatch(const RootOperation& op)
             ent->setPosAsList(args.front()->getAttr("pos").asList());
             
         // handle velocity changes
-        
         Agent::broadcastSight(op);
     }
     

@@ -33,6 +33,8 @@ typedef std::auto_ptr<Eris::Connection> AutoConnection;
 typedef std::auto_ptr<Eris::Account> AutoAccount;
 typedef std::auto_ptr<Eris::Avatar> AutoAvatar;
 
+typedef WFMath::Point<3> Point3;
+
 class SignalCounter0 : public SigC::Object
 {
 public:
@@ -582,6 +584,10 @@ void testSeeMove(Controller& ctl)
     AutoConnection con = stdConnect();
     AutoAccount acc = stdLogin("account_B", "sweede", con.get());
     
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
     AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
     {
         WaitForAppearance wf(av->getView(), "_table_1");
@@ -593,20 +599,16 @@ void testSeeMove(Controller& ctl)
     Eris::Entity* vase = av->getView()->getEntity("_vase_1");
     vase->Moved.connect(SigC::slot(moved, &SignalCounter0::fired));
     
-    Atlas::Objects::Operation::Move mv;
-    mv->setFrom(vase->getId());
-    Atlas::Objects::Root args;
-    args->setAttr("id", vase->getId());
-    //args->setAttr("pos", );
-    mv->setArgs1(args);
-    
-    ctl.broadcastSightFrom(vase->getId(), mv);
-    
+ //   assert(vase->getPosition() == Point3(1.0, 2.0, 3.0));
+
+    Point3 newPos(-2, -5, 1);
+    ctl.movePos(vase->getId(), newPos);
+      
     while (!moved.fireCount()) {
         Eris::PollDefault::poll();
     }
     
-  //  assert(vase->getPos() == );
+    assert(vase->getPosition() == newPos);
 }
 
 int main(int argc, char **argv)
@@ -639,7 +641,7 @@ int main(int argc, char **argv)
             testAppearance(ctl);
             testSet(ctl);
             testTalk(ctl);
-            
+            testSeeMove(ctl);
         }
         catch (TestFailure& tfexp)
         {
