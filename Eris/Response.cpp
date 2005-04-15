@@ -7,7 +7,9 @@ using namespace Atlas::Objects::Operation;
 namespace Eris
 {
 
-
+ResponseBase::~ResponseBase()
+{
+}
 
 void ResponseTracker::await(int serialno, ResponseBase* resp)
 {

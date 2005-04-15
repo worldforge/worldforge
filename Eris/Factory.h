@@ -14,6 +14,7 @@ class TypeInfo;
 class Factory
 {
 public:	
+    virtual ~Factory();
     /// Accept is called by the world to test if this factory can instantiate the specified object
     /** Accept is called when an entity must be constructed; this will be called every time
     an object is created, so avoid lengthy processing if possible. */

@@ -15,6 +15,7 @@ public:
         HANDLED,
         WILL_REDISPATCH
     } RouterResult;
+    virtual ~Router();
 
     virtual RouterResult handleObject(const Atlas::Objects::Root& obj);
 

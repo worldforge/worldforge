@@ -46,6 +46,10 @@ static std::auto_ptr<PriorityFactorySet> global_factorySet;
 
 #pragma mark -
 
+Factory::~Factory()
+{
+}
+
 Entity* Factory::createEntity(const GameEntity& gent, View* view)
 {
     // this next line is a weird tribute to encapsulation...

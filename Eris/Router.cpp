@@ -17,6 +17,10 @@ using Atlas::Objects::Entity::RootEntity;
 namespace Eris
 {
 
+Router::~Router()
+{
+}
+
 Router::RouterResult Router::handleObject(const Root& obj)
 {
     if (obj->instanceOf(Atlas::Objects::Operation::ROOT_OPERATION_NO))

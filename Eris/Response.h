@@ -10,6 +10,7 @@ namespace Eris
 class ResponseBase
 {
 public:
+    virtual ~ResponseBase();
     virtual void responseReceived(const Atlas::Objects::Operation::RootOperation& op) = 0;
 };
 

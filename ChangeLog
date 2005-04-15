@@ -1,3 +1,9 @@
+2005-04-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Factory.cpp, Eris/Factory.h, Eris/Response.cpp, Eris/Response.h,
+	  Eris/Router.cpp, Eris/Router.h: Add virtual destructors to classes
+	  that need them.
+
 2005-04-15  James Turner  <james@worldforge.org>
 
     * test/tests.cpp, tests/commander.cpp, tests/controller.cpp: add tests for 
