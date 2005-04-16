@@ -13,7 +13,7 @@ URL: http://www.worldforge.org/dev/eng/libraries/atlas_cpp
 Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
-Source: %{name}-%{version}.tar.gz
+Source: %{name}-%{version}.tar.bz2
 Requires: libstdc++
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires: libstdc++-devel
@@ -39,7 +39,7 @@ clients or servers.
 %setup -q
 
 %build
-%configure --enable-static
+CXXFLAGS=$RPM_OPT_FLAGS %configure --enable-static
 make
 
 %install
@@ -52,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_libdir}/lib*.so.*
-%doc README COPYING AUTHORS THANKS NEWS ChangeLog TODO HACKING ROADMAP
+%doc AUTHORS COPYING NEWS README THANKS ChangeLog TODO HACKING ROADMAP
 
 %files devel
 %defattr(-,root,root)
@@ -60,4 +60,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.la
 %{_libdir}/lib*.a
 %{_libdir}/pkgconfig/*
-%{_includedir}/%{name}%{libsuffix}
+%{_includedir}/*

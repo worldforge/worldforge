@@ -1,5 +1,10 @@
 2005-04-16  Al Riddoch  <alriddoch@zepler.org>
 
+	* atlas-cpp.spec.in: rpm spec cleanups, including using system
+	  defined compiler optimisations.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
 	* configure.ac: Remove some obsolete code relating to version.
 
 2005-04-16  Al Riddoch  <alriddoch@zepler.org>
