@@ -10,8 +10,6 @@ AC_CANONICAL_SYSTEM
 
 dnl Initialise automake
 
-VERSION=0.5.92
-
 AM_INIT_AUTOMAKE([dist-bzip2 check-news])
 
 dnl Initialise automake
