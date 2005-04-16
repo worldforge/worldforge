@@ -1,3 +1,13 @@
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* tutorial/example/DebugBridge.h, tutorial/example/configure.ac,
+	  tutorial/example/simple_client.cpp,
+	  tutorial/example/simple_server.cpp: Bring the tutorial code up to
+	  date.
+
+	* configure.ac: Make the autoconf macros a little cleaner, and
+	  increment version for release.
+
 2005-04-13  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Formatter.h, Atlas/Formatter.cpp: Implement simple formatting

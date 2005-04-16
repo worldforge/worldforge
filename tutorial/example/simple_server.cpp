@@ -7,56 +7,53 @@
  * This file is covered by the GNU Free Documentation License.
  */
 
-// cout, cerr
-#include <iostream>
-// isockinet, iosockinet - the iostream socket classes
-#include <sockinet.h>
-// Atlas negotiation
-#include <Atlas/Net/Stream.h>
 // The DebugBridge
 #include "DebugBridge.h"
+// Atlas negotiation
+#include <Atlas/Net/Stream.h>
+#include <Atlas/Codec.h>
+// tcp_socket_server, tcp_socket_stream - the iostream socket classes
+#include <skstream/skserver.h>
+// cout, cerr
+#include <iostream>
 
 int main(int argc, char** argv)
 {
     // This socket accepts connections
-    isockinet listener(sockbuf::sock_stream);
+    tcp_socket_server listener;
     
     // Bind the socket. 0.0.0.0 accepts on any incoming address
-    listener->bind("0.0.0.0", 6767);
-    std::cout << "Bound to " << listener->localhost() << ":"
-                             << listener->localport() << endl;
-    
-    // Listen for clients
-    listener->listen();
-    std::cout << "Listening... " << flush;
+    listener.open(6767);
+    std::cout << "Bound to " << 6767 << std::endl;
+    std::cout << "Listening... " << std::flush;
 
     // This blocks until a client connects
-    iosockinet client(listener->accept());
-    std::cout << "accepted client connection!" << endl;
+    tcp_socket_stream client(listener.accept());
+    std::cout << "accepted client connection!" << std::endl;
 
     // The DebugBridge puts all that comes through the codec on cout
     DebugBridge bridge;
     // Do server negotiation for Atlas with the new client
-    Atlas::Net::StreamAccept accepter("simple_server", client, &bridge);
+    Atlas::Net::StreamAccept accepter("simple_server", client, bridge);
 
-    std::cout << "Negotiating.... " << flush;
+    std::cout << "Negotiating.... " << std::flush;
     // accepter.Poll() does all the negotiation
     while (accepter.getState() == Atlas::Net::StreamAccept::IN_PROGRESS) {
         accepter.poll();
     }
-    std::cout << "done." << endl;
+    std::cout << "done." << std::endl;
 
     // Check the negotiation state to see whether it was successful
     if (accepter.getState() == Atlas::Net::StreamAccept::FAILED) {
-        cerr << "Negotiation failed." << endl;
+        std::cerr << "Negotiation failed." << std::endl;
         return 2;
     }
     // Negotiation was successful! 
 
     // Get the codec that negotation established
-    Atlas::Codec<std::iostream>* codec = accepter.getCodec();
+    Atlas::Codec * codec = accepter.getCodec();
 
-    std::cout << "Polling client..." << endl;
+    std::cout << "Polling client..." << std::endl;
     
     // iosockinet::operator bool() returns false once a connection closes
     while (client) {
@@ -66,7 +63,7 @@ int main(int argc, char** argv)
 
     // The connection closed
     
-    std::cout << "Client exited." << endl;
+    std::cout << "Client exited." << std::endl;
 
     return 0;
 }

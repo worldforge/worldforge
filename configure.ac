@@ -1,9 +1,8 @@
 dnl Initialise autoconf
 
-
-AC_INIT()
+AC_INIT(Atlas-C++, 0.5.93)
 AC_CONFIG_SRCDIR([Atlas/Bridge.cpp])
-AM_CONFIG_HEADER(config.h)
+AC_CONFIG_HEADERS([config.h])
 
 dnl Detect the canonical host and target environment
 
@@ -13,14 +12,12 @@ dnl Initialise automake
 
 VERSION=0.5.92
 
-AM_INIT_AUTOMAKE("Atlas-C++", $VERSION)
+AM_INIT_AUTOMAKE([dist-bzip2 check-news])
 
 dnl Initialise automake
 
-ATLAS_VERSION=$VERSION
 INTERFACE_VERSION='-version-info 0:0:0'
 
-AC_SUBST(ATLAS_VERSION)
 AC_SUBST(INTERFACE_VERSION)
 
 dnl Test for GNU libtool
@@ -45,8 +42,7 @@ AC_ARG_ENABLE(debug,
     ]
 )
 
-AC_LANG_CPLUSPLUS
-AC_REQUIRE_CPP
+AC_LANG(C++)
 
 dnl Test for C++ Standard Library
 
