@@ -1,5 +1,9 @@
 2005-04-16  Al Riddoch  <alriddoch@zepler.org>
 
+	* configure.ac: Update AC_INIT args to tarball name is set correctly.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
 	* tutorial/example/DebugBridge.h, tutorial/example/configure.ac,
 	  tutorial/example/simple_client.cpp,
 	  tutorial/example/simple_server.cpp: Bring the tutorial code up to
