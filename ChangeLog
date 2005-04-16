@@ -1,5 +1,9 @@
 2005-04-16  Al Riddoch  <alriddoch@zepler.org>
 
+	* atlas-cpp.spec.in: Include the atlas-convert tool in the rpm spec.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
 	* atlas-cpp.spec.in: rpm spec cleanups, including using system
 	  defined compiler optimisations.
 
