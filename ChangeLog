@@ -1,5 +1,10 @@
 2005-04-16  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/gen_cpp.py: Make some local veriable in the C++ iterate
+	  method static for efficiency.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
 	* configure.ac: Update AC_INIT args to tarball name is set correctly.
 
 2005-04-16  Al Riddoch  <alriddoch@zepler.org>

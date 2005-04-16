@@ -390,11 +390,11 @@ void %(classname)s::free()
         return;
     }
 
-    const char *attr_list[] = {""" % vars()) #"for xemacs syntax highlighting
+    static const char *attr_list[] = {""" % vars()) #"for xemacs syntax highlighting
         for attr in statics:
             self.write('"%s",' % attr.name)
         self.write("""};
-    const unsigned n_attr = sizeof(attr_list) / sizeof(const char*);
+    static const unsigned n_attr = sizeof(attr_list) / sizeof(const char*);
 
     unsigned next_attr = n_attr; // so we chain to the parent if we don't find attr
 
