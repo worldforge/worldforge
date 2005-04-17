@@ -144,13 +144,9 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
     // such as create or divide
     Action act = smart_dynamic_cast<Action>(op);
     if (act.isValid()) {
-        if (args.empty()) {
-            error() << "entity " << op->getFrom() << " sent action with no args: " << op;
-            return IGNORED;
-        }
         
         Entity* ent = m_view->getEntity(op->getFrom());
-        if (ent)  ent->onAction(args.front());
+        if (ent) ent->onAction(act);
         
         return HANDLED;
     }

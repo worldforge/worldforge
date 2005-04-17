@@ -135,6 +135,7 @@ void StubServer::setupTestAccounts()
     defineEntity("_potato_2", "potato", "_field_01", "Po-tae-toes!");
 
     defineEntity("_hut_01", "building", "_world", "A hut");
+    defineEntity("_hut_02", "building", "_world", "Another hut");
     defineEntity("acc_b_character", "settler", "_hut_01", "Joe Blow");
     
     defineEntity("_table_1", "thing", "_hut_01", "An old table");

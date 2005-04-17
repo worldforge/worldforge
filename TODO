@@ -1,7 +1,24 @@
 Eris TODO
 
-addAncestor() gets into a tight loop which suggests that a type lists itself
-as a child. We need to be invulnerable to this.
+BUGS
+
+ - addAncestor() gets into a tight loop which suggests that a type lists itself
+   as a child. We need to be invulnerable to this.
+
+1.3.5 TODO
+
+ - calendars
+ 
+ - custom routers
+ 	- run first, but can't consume ops
+ 
+ - view owns factories, and cleans them up
+ 
+ - account owns avatars
+ 	getAvatarForActiveCharacter();
+ 	
+- add more helpers for common client actions on Avatar. For example
+  use and emote, to go with say and touch.   
 
 1.3 TODO
 
@@ -12,12 +29,7 @@ as a child. We need to be invulnerable to this.
   map<serialno, Room*> m_pendingSightCreates on lobby makes this work.
   yech.
 
-- add more helpers for common client actions on Avatar. For example
-  use and emote, to go with say and touch.  
-
 - Go over the Poll api, see if work can be delegated to skstream or not
-
-- Talk handlers (and others) on the recipient, i.e a Hear(const Sound&) on Avatar
 
 Longer Term TODO
 

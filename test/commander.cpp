@@ -135,6 +135,7 @@ void Commander::dispatch(const RootOperation& op)
             
         // handle velocity changes
         Agent::broadcastSight(op);
+        return;
     }
     
     Sound snd = smart_dynamic_cast<Sound>(op);

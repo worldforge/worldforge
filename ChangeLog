@@ -1,3 +1,14 @@
+2005-04-17  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp, Eris/Entity.h, Eris/EntityRouter.cpp: make onAction /
+	  Acted pass the full Atlas::Objects::Operation::Action, instead of just
+	  it's arg.
+	  
+	* Eris/Connection.cpp: remove debug output.
+	  
+	* test/tests.cpp: add test of basic location change and sight of an
+	  action.
+
 2005-04-15  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Factory.cpp, Eris/Factory.h, Eris/Response.cpp, Eris/Response.h,

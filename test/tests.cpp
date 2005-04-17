@@ -20,6 +20,9 @@
 #include <Eris/LogStream.h>
 #include <Eris/Log.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Codecs/Bach.h>
+#include <Atlas/Objects/Encoder.h>
+#include <Atlas/Message/MEncoder.h>
 
 #include <signal.h>
 #include <sys/socket.h>
@@ -71,6 +74,68 @@ public:
     
 private:
     int m_count;
+};
+
+template <class P0>
+class SignalRecorder1 : public SigC::Object
+{
+public:
+    SignalRecorder1() :
+        m_count(0)
+    {;}
+    
+    void fired(P0 m)
+    {
+        ++m_count;
+        m_lastArg0 = m;
+    }
+    
+    int fireCount() const
+    { return m_count; }
+    
+    P0 lastArg0() const
+    {
+        return m_lastArg0;
+    }
+    
+private:
+    int m_count;
+    P0 m_lastArg0;
+};
+
+template <class P0>
+class SignalRecorderRef1 : public SigC::Object
+{
+public:
+    SignalRecorderRef1() :
+        m_count(0)
+    {;}
+    
+    void fired(const P0& m)
+    {
+        ++m_count;
+        m_lastArg0 = m;
+    }
+    
+    int fireCount() const
+    { return m_count; }
+    
+    P0 lastArg0() const
+    {
+        return m_lastArg0;
+    }
+    
+private:
+    int m_count;
+    P0 m_lastArg0;
+};
+
+class DummyDecoder : public Atlas::Objects::ObjectsDecoder
+{
+protected:
+    void objectArrived(const Atlas::Objects::Root&)
+    {
+    }
 };
 
 void erisLog(Eris::LogLevel level, const std::string& msg)
@@ -181,7 +246,9 @@ private:
     
     void failure(const std::string& msg)
     {
-        std::cerr << "failure getting an avatar: " << msg << endl;
+        if (msg != "deliberate") {
+            std::cerr << "failure getting an avatar: " << msg << endl;
+        }
         m_waiting = false;
         m_failed = true;
     }
@@ -206,7 +273,6 @@ public:
     {
         Eris::Entity* e = m_view->getEntity(eid);
         if (e && e->isVisible()) {
-            cerr << "wait on already visible entity " << eid << endl;
             return;
         }
         
@@ -611,6 +677,74 @@ void testSeeMove(Controller& ctl)
     assert(vase->getPosition() == newPos);
 }
 
+void testLocationChange(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_vase_1");
+        wf.run();
+    }
+    
+    SignalCounter0 moved;
+    SignalRecorder1<Eris::Entity*> locChanged;
+    
+    Eris::Entity* vase = av->getView()->getEntity("_vase_1");
+    Eris::Entity* hut = av->getView()->getEntity("_hut_01");
+    Eris::Entity* table = av->getView()->getEntity("_table_1");
+    
+    vase->Moved.connect(SigC::slot(moved, &SignalCounter0::fired));
+    vase->LocationChanged.connect(SigC::slot(locChanged, &SignalRecorder1<Eris::Entity*>::fired));
+    
+    Point3 newPos(1, -2, -1);
+    ctl.moveLocation(vase->getId(), "_hut_01", newPos);
+      
+    while (!moved.fireCount() && !locChanged.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(locChanged.lastArg0() == table);
+    assert(vase->getPosition() == newPos);
+    assert(vase->getLocation() == hut);
+}
+
+void testSightAction(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_vase_1");
+        wf.run();
+    }
+
+    SignalRecorderRef1<Atlas::Objects::Operation::Action> action;
+    Eris::Entity* vase = av->getView()->getEntity("_vase_1");
+    vase->Acted.connect(SigC::slot(action, 
+        &SignalRecorderRef1<Atlas::Objects::Operation::Action>::fired));
+    
+    Atlas::Objects::Operation::Touch t;
+    t->setFrom(vase->getId());
+    ctl.broadcastSightFrom(vase->getId(), t);
+    
+    while (!action.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(action.lastArg0()->asMessage() == t->asMessage());
+}
+
 int main(int argc, char **argv)
 {
     int sockets[2];
@@ -642,6 +776,8 @@ int main(int argc, char **argv)
             testSet(ctl);
             testTalk(ctl);
             testSeeMove(ctl);
+            testLocationChange(ctl);
+            testSightAction(ctl);
         }
         catch (TestFailure& tfexp)
         {

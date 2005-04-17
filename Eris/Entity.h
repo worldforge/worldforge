@@ -202,7 +202,7 @@ public:
     action is passed as the signal argument. For examples of action
     arguments, see some documentation that probably isn't written yet.
     */
-    SigC::Signal1<void, const Atlas::Objects::Root&> Acted;
+    SigC::Signal1<void, const Atlas::Objects::Operation::Action&> Acted;
     
     /**
     Emitted when this entity performs an action which causes a noise. This
@@ -251,7 +251,7 @@ protected:
     Over-rideable hook when this entity is seen to perform an action.
     Default implementation emits the Action signal.
     */
-    virtual void onAction(const Atlas::Objects::Root& act);
+    virtual void onAction(const Atlas::Objects::Operation::Action& act);
 
     /**
     Over-rideable hook when this entity is heard performing an action.

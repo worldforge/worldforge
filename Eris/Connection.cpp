@@ -82,7 +82,6 @@ int Connection::disconnect()
     Disconnecting.emit();
 
     if (m_lock == 0) {
-        debug() << "no locks, doing immediate disconnection";
         hardDisconnect(true);
         return 0;
     }

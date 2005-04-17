@@ -197,7 +197,6 @@ void Entity::onTalk(const Root& talkArgs)
         return;
     }
     
-    debug() << "entity " << m_id << " said " << talkArgs->getAttr("say").asString();
     // just emit the signal
     Say.emit(talkArgs->getAttr("say").asString());
 }
@@ -212,7 +211,7 @@ void Entity::onMoved()
     Moved.emit();
 }
 
-void Entity::onAction(const Atlas::Objects::Root& arg)
+void Entity::onAction(const Atlas::Objects::Operation::Action& arg)
 {
     Acted.emit(arg);
 }

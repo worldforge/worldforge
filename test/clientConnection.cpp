@@ -277,10 +277,6 @@ void ClientConnection::processAccountCreate(const Create& cr)
     
     m_account = std::string("_") + acc->getUsername() + "_123";
     acc->setId(m_account);
-    debug() << "new account username=" << acc->getUsername()
-        << ", ID=" << m_account;
-        
-    acc->setId(m_account);
     m_server->m_accounts[m_account] = acc;
     
     Info createInfo;
@@ -395,7 +391,7 @@ void ClientConnection::activateCharacter(const std::string& charId, const RootOp
 {
     // special magic testing IDs
     if (charId == "_fail_") {
-        sendError("deliberately failed activation", op);
+        sendError("deliberate", op);
         return;
     }
 
