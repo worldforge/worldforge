@@ -1,5 +1,14 @@
 2005-04-17  James Turner  <james@worldforge.org>
 
+	* Eris/Account.cpp: re-order code in loginError so loadtool works -
+	  re-set status before emitting the signal, so slots which call login /
+	  createAccount work as expected.
+	 
+	* Eris/Entity.cpp, Eris/Avatar.h, Eris/Avatar.cpp: make the Heard signal
+	  on Avatar work.
+
+2005-04-17  James Turner  <james@worldforge.org>
+
 	* Eris/Entity.cpp, Eris/Entity.h, Eris/EntityRouter.cpp: make onAction /
 	  Acted pass the full Atlas::Objects::Operation::Action, instead of just
 	  it's arg.

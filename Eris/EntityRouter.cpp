@@ -56,7 +56,8 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
             return HANDLED;
         } else if (args.front()->instanceOf(ACTION_NO)) {
             // sound of action
-            m_entity->onSoundAction(args.front());
+            Action act = smart_dynamic_cast<Talk>(args.front());
+            m_entity->onSoundAction(act);
             return HANDLED;
         } else
             debug() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << snd;

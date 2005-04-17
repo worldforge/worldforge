@@ -364,11 +364,13 @@ void Account::loginError(const Error& err)
         
     const std::vector<Root>& args = err->getArgs();
     std::string msg = args[0]->getAttr("message").asString();
-    warning() << "got login error: " << msg;
-    LoginFailure.emit(msg);
     
+    // update state before emitting signal
     m_status = DISCONNECTED;
     m_timeout.reset();
+    
+    warning() << "got login error: " << msg;
+    LoginFailure.emit(msg);
 }
 
 void Account::handleLoginTimeout()

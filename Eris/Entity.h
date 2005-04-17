@@ -257,7 +257,7 @@ protected:
     Over-rideable hook when this entity is heard performing an action.
     Default implementation emits the Noise signal.
     */
-    virtual void onSoundAction(const Atlas::Objects::Root& act);
+    virtual void onSoundAction(const Atlas::Objects::Operation::RootOperation& op);
 
     /**
     Over-rideable hook when this entity is seen to emit an imginary op.

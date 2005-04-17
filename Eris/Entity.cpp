@@ -9,6 +9,7 @@
 #include <Eris/EntityRouter.h>
 #include <Eris/View.h>
 #include <Eris/Exceptions.h>
+#include <Eris/Avatar.h>
 
 #include <wfmath/atlasconv.h>
 #include <Atlas/Objects/Entity.h>
@@ -216,9 +217,11 @@ void Entity::onAction(const Atlas::Objects::Operation::Action& arg)
     Acted.emit(arg);
 }
 
-void Entity::onSoundAction(const Atlas::Objects::Root& arg)
+void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op)
 {
-    Noise.emit(arg);
+    Noise.emit(op);
+    
+    m_view->getAvatar()->Hear.emit(this, op);
 }
 
 void Entity::onImaginary(const Atlas::Objects::Root& arg)
