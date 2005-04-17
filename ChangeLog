@@ -1,5 +1,10 @@
 2005-04-16  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/gen_cpp.py: Force parents and objtype to be included
+	  when converting an Objects instance to a Message instance.
+
+2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+
 	* Release 0.5.93, Interface version 0.
 
 2005-04-16  Al Riddoch  <alriddoch@zepler.org>

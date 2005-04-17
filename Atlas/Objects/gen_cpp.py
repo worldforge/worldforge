@@ -266,8 +266,9 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         parent = self.get_cpp_parent(obj)
         self.write("    %s::addToMessage(m);\n" % parent)
         for attr in statics:
-            self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
-            self.write('        m["%s"] = Element(get%s%s());\n' % \
+            if attr.name not in ["parents", "objtype"]:
+                self.write('    if(m_attrFlags & %s)\n    ' % attr.flag_name)
+            self.write('    m["%s"] = Element(get%s%s());\n' % \
                     (attr.name, attr.cname, attr.as_object))
         self.write('    return;\n')
         self.write("}\n\n")
