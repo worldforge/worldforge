@@ -1,5 +1,9 @@
 2005-04-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* Release 1.3.4, Interface version 3.
+
+2005-04-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* configure.ac: Increment interface version correctly.
 
 2005-04-17  James Turner  <james@worldforge.org>
