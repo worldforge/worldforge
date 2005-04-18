@@ -17,7 +17,7 @@ dnl further down. If we link against sigc++ 1.2, then this should be
 dnl N, if we link against sigc++ 2.0 it should be N+1. If you change
 dnl this because of API changes, it needs to be incremented by
 dnl 2, and the changes made to the values assigned in the sigc++ check.
-ERIS_CURRENT=2
+ERIS_CURRENT=3
 ERIS_REVISION=0
 ERIS_AGE=0
 
