@@ -103,26 +103,34 @@ class AttributeInfo:
             indent = ""
 
         if self.type == "int":
-            res = res + indent + '    b.mapIntItem("%s", get%s%s());\n' \
-                  % (self.name, self.cname, self.as_object)
+            res = res + indent + '    b.mapIntItem("%s", attr_%s);\n' \
+                  % (self.name, self.name)
         elif self.type == "float":
-            res = res + indent + '    b.mapFloatItem("%s", get%s%s());\n' \
-                  % (self.name, self.cname, self.as_object)
+            res = res + indent + '    b.mapFloatItem("%s", attr_%s);\n' \
+                  % (self.name, self.name)
         elif self.type == "string":
-            res = res + indent + '    b.mapStringItem("%s", get%s%s());\n' \
-                  % (self.name, self.cname, self.as_object)
+            if self.name == "objtype":
+                res = res + indent + '    b.mapStringItem("%s", get%s());\n' \
+                      % (self.name, self.cname)
+            else:
+                res = res + indent + '    b.mapStringItem("%s", attr_%s);\n' \
+                      % (self.name, self.name)
         elif self.type == "list":
             res = res + indent + '    Atlas::Message::Encoder e(b);\n'
-            res = res + indent + '    e.mapElementListItem("%s", get%s%s());\n' \
-                  % (self.name, self.cname, self.as_object)
+            res = res + indent + '    e.mapElementListItem("%s", attr_%s);\n' \
+                  % (self.name, self.name)
         elif self.type == "map":
             res = res + indent + '    Atlas::Message::Encoder e(b);\n'
-            res = res + indent + '    e.mapElementMapItem("%s", get%s%s());\n' \
-                  % (self.name, self.cname, self.as_object)
+            res = res + indent + '    e.mapElementMapItem("%s", attr_%s);\n' \
+                  % (self.name, self.name)
         elif self.type == "string_list":
             res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
-            res = res + indent + '    const std::list<std::string> & l = get%s();\n' \
-                  % (self.cname)
+            if self.name == "parents":
+                res = res + indent + '    const std::list<std::string> & l = get%s();\n' \
+                      % (self.cname)
+            else:
+                res = res + indent + '    const std::list<std::string> & l = attr_%s;\n' \
+                      % (self.name)
             res = res + indent + '    std::list<std::string>::const_iterator I = l.begin();\n'
             res = res + indent + '    for(; I != l.end(); ++I) {\n'
             res = res + indent + '        b.listStringItem(*I);\n'
@@ -130,8 +138,8 @@ class AttributeInfo:
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "int_list":
             res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
-            res = res + indent + '    const std::list<std::string> & l = get%s();\n' \
-                  % (self.cname)
+            res = res + indent + '    const std::list<std::string> & l = attr_%s;\n' \
+                  % (self.name)
             res = res + indent + '    std::list<std::string>::const_iterator I = l.begin();\n'
             res = res + indent + '    for(; I != l.end(); ++I) {\n'
             res = res + indent + '        b.listIntItem(*I);\n'
@@ -139,8 +147,8 @@ class AttributeInfo:
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "float_list":
             res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
-            res = res + indent + '    const std::list<double> & l = get%s();\n' \
-                  % (self.cname)
+            res = res + indent + '    const std::list<double> & l = attr_%s;\n' \
+                  % (self.name)
             res = res + indent + '    std::list<double>::const_iterator I = l.begin();\n'
             res = res + indent + '    for(; I != l.end(); ++I) {\n'
             res = res + indent + '        b.listFloatItem(*I);\n'
@@ -148,8 +156,8 @@ class AttributeInfo:
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "string_list_length":
             res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
-            res = res + indent + '    const std::vector<std::string> & v = get%s();\n' \
-                  % (self.cname)
+            res = res + indent + '    const std::vector<std::string> & v = attr_%s;\n' \
+                  % (self.name)
             res = res + indent + '    std::vector<std::string>::const_iterator I = v.begin();\n'
             res = res + indent + '    for(; I != v.end(); ++I) {\n'
             res = res + indent + '        b.listStringItem(*I);\n'
@@ -157,8 +165,8 @@ class AttributeInfo:
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "int_list_length":
             res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
-            res = res + indent + '    const std::vector<std::string> & v = get%s();\n' \
-                  % (self.cname)
+            res = res + indent + '    const std::vector<std::string> & v = attr_%s;\n' \
+                  % (self.name)
             res = res + indent + '    std::vector<std::string>::const_iterator I = v.begin();\n'
             res = res + indent + '    for(; I != v.end(); ++I) {\n'
             res = res + indent + '        b.listIntItem(*I);\n'
@@ -166,8 +174,8 @@ class AttributeInfo:
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "float_list_length":
             res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
-            res = res + indent + '    const std::vector<double> & v = get%s();\n' \
-                  % (self.cname)
+            res = res + indent + '    const std::vector<double> & v = attr_%s;\n' \
+                  % (self.name)
             res = res + indent + '    std::vector<double>::const_iterator I = v.begin();\n'
             res = res + indent + '    for(; I != v.end(); ++I) {\n'
             res = res + indent + '        b.listFloatItem(*I);\n'
@@ -175,8 +183,8 @@ class AttributeInfo:
             res = res + indent + '    b.listEnd();\n'
         elif self.type == "RootList":
             res = res + indent + '    b.mapListItem("%s");\n' % (self.name)
-            res = res + indent + '    const std::vector<Root> & v = get%s();\n' \
-                  % (self.cname)
+            res = res + indent + '    const std::vector<Root> & v = attr_%s;\n' \
+                  % (self.name)
             res = res + indent + '    std::vector<Root>::const_iterator I = v.begin();\n'
             res = res + indent + '    for (; I != v.end(); ++I) {\n'
             res = res + indent + '       b.listMapItem();\n'
@@ -199,11 +207,15 @@ class AttributeInfo:
             return '        %s = %s;\n' \
                     % (var, self.value)
         elif self.type == "string":
+            if classname == 'AnonymousData' and self.name == 'objtype':
+                return ''
             if len(self.value) == 0:
                 return ''
             return '        %s = "%s";\n' \
                     % (var, self.value)
         elif self.type == "string_list_length" or self.type == "string_list":
+            if classname == 'AnonymousData' and self.name == 'parents':
+                return ''
             if len(self.value) == 0:
                 return ''
             elif len(self.value) == 1:

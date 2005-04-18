@@ -1,4 +1,16 @@
-2005-04-16  Al Riddoch  <alriddoch@zepler.org>
+2005-04-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py: Improve the efficiency of addToMessage()
+	  by avoiding a call to getFoo() when we already have checked the
+	  flag.
+
+	* Atlas/Objects/AttributeInfo.py: Improve the efficiency of
+	  sendFoo() by avoiding a call to getFoo() when we already have
+	  checked the flag.
+
+	* configure.ac: Increment the version for a bugfix release.
+
+2005-04-17  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/gen_cpp.py: Force parents and objtype to be included
 	  when converting an Objects instance to a Message instance.

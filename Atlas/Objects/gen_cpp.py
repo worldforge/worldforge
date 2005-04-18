@@ -267,9 +267,32 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         self.write("    %s::addToMessage(m);\n" % parent)
         for attr in statics:
             if attr.name not in ["parents", "objtype"]:
-                self.write('    if(m_attrFlags & %s)\n    ' % attr.flag_name)
-            self.write('    m["%s"] = Element(get%s%s());\n' % \
-                    (attr.name, attr.cname, attr.as_object))
+                self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
+                # If we can get the attribute without having to check the
+                # flag twice, do it.
+                if attr.as_object:
+                    self.write('        m["%s"] = Element(get%s%s());\n' % \
+                           (attr.name, attr.cname, attr.as_object))
+                else:
+                    self.write('        m["%s"] = Element(attr_%s);\n' % \
+                           (attr.name, attr.name))
+            else:
+                # This code only handles "parents" and "objtype", both
+                # of which can be checked with .empty().
+                if attr.as_object:
+                    self.write('    %s l_attr_%s = get%s%s();\n' % \
+                        (attr.cpp_param_type_as_object, attr.name, attr.cname, attr.as_object))
+                    self.write('    if (!l_attr_%s.empty())\n' % \
+                        (attr.name))
+                    self.write('        m["%s"] = Element(l_attr_%s);\n' % \
+                        (attr.name, attr.name))
+                else:
+                    self.write('    %s l_attr_%s = get%s();\n' % \
+                        (attr.cpp_param_type, attr.name, attr.cname))
+                    self.write('    if (!l_attr_%s.empty())\n' % \
+                        (attr.name))
+                    self.write('        m["%s"] = Element(l_attr_%s);\n' % \
+                        (attr.name, attr.name))
         self.write('    return;\n')
         self.write("}\n\n")
 
@@ -438,7 +461,7 @@ void %(classname)s::free()
             self.write('#include <Atlas/Objects/BaseObject.h>\n\n')
             self.write('#include <Atlas/Message/Element.h>\n\n')
         else:
-            self.write('#include <Atlas/Objects/SmartPtr.h>\n')
+            self.write('#include <Atlas/Objects/SmartPtr.h>\n\n')
         if obj.id=="root_operation":
             self.write('#include <Atlas/Objects/objectFactory.h>\n\n')
         self.ns_open(self.base_list)
