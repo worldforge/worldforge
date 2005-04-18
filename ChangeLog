@@ -1,5 +1,9 @@
 2005-04-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* Release 0.5.94, Interface version 0.
+
+2005-04-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Utilities/atlas_convert.cpp: Add header required for getopt
 	  by some systems.
 
