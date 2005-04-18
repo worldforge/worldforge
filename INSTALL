@@ -1,95 +1,88 @@
-These are instructions to help build Eris, the WorldForge client-side
-entity framework. For a more complete discussion of the functions
-and goals of Eris, please see the README file, which should be in
-the same directory as this document.
+These are instructions to help build Eris, the WorldForge client-side entity
+framework. For a more complete discussion of the functions and goals of Eris,
+please see the README file, which should be in the same directory as this
+document.
 
-The AUTHORS file lists people who can help you if you run into
-problems; otherwise you can try the WorldForge mailing lists (note
-you must be subscribed to post) or IRC at irc.worldforge.org,
-in channels #coders and #eris.
+The AUTHORS file lists people who can help you if you run into problems;
+otherwise you can try the WorldForge mailing lists (note you must be
+subscribed to post) or IRC at irc.worldforge.org, in channels #coders and
+#eris.
 
-Linux / *inx
+Linux / Unix
 
-You need to have Atlas-C++, skstream, wfmath  and libsigc++ to build
-Eris. In addition it is assumed you have an up-to-date C++ compiler
-and STL implementation (GCC 2.95 is the lowest tested version,
-GG 2.91 will probably not work). If you find other compilers that
-work or fail, please let me (James) know.
+You need to have Atlas-C++, skstream, wfmath  and libsigc++ to build Eris. In
+addition it is assumed you have an up-to-date C++ compiler and STL
+implementation. If you find other compilers that work or fail, please let me
+(James) know.
 
-Atlas-C++, skstream and WFMath are available as tarballs (and
-possibly compiled packages, depending on your system) from
-ftp.worldforge.org. The Eris configure script will test for the
-appropriate minimum versions. Note that officially released tarballs
-will only require released versions of the dependant libraries,
-but at times the CVS version will depend on unstable (i.e from CVS)
-libraries.
+Atlas-C++, skstream and WFMath are available as tarballs (and possibly
+compiled packages, depending on your system) from ftp.worldforge.org. The Eris
+configure script will test for the appropriate minimum versions. Note that
+officially released tarballs will only require released versions of the
+dependant libraries, but at times the CVS version will depend on unstable (i.e
+from CVS) libraries.
 
-libSigC++ is included with some distributions, but most
-people will need to install from a tarball or package. As a
-convenience, we provide source and binary rpms from various
-current distributions in the 'third-party' directory on
-ftp.worldforge.org. Otherwise get the library in your preferred
-format from:
+libSigC++ is available for almost all distributions, though possibly in the
+set of additional or extra packages. As a convenience, we provide source and
+binary rpms from various current distributions in the 'third-party' directory
+on ftp.worldforge.org. Otherwise get the library in your preferred format
+from:
 
-	 http://libsigc.sourceforge.net/
+http://libsigc.sourceforge.net/
 
-Due to variations in the C++ ABI, do NOT use a binary version
-compiled for a distribution other than your own; you may be able
-to compile code but then fail at link-time or run-time with
-very unpleasant errors. This includes differences in the C library
-version, the compiler itself, and the standard C++ library.  You 
-can test your installation by running the following command from a shell:
+Due to variations in the C++ ABI, do NOT use a binary version compiled for a
+distribution other than your own; you may be able to compile code but then
+fail at link-time or run-time with very unpleasant errors. This includes
+differences in the C library version, the compiler itself, and the standard
+C++ library.  You can test your installation by running the following command
+from a shell:
 
-	pkg-config --modversion sigc++-1.2
+pkg-config --modversion sigc++-2.0
 
-This should print out the libSigC++ version number; if pkg-config
-reports that the sigc package is unknown, you are probably missing
-the development package, or if you installed from source, installed
-to some location that pkg-config doesn't know about (you may need
-to set the PKGCONFIG_PATH environment variable)
+This should print out the libSigC++ version number; if pkg-config reports that
+the sigc package is unknown, you are probably missing the development package,
+or if you installed from source, installed to some location that pkg-config
+doesn't know about (you may need to set the PKGCONFIG_PATH environment
+variable)
 
-If Gtk-2.x is detected, Eris will build a Poll implementation that
-integrated directly with the Gtk mainloop, so if you are planning
-to work on a Gtk-2 based client, make sure Gtk-2 is installed before
-you build Eris.
+If Gtk-2.x is detected, Eris will build a Poll implementation that integrated
+directly with the Gtk mainloop, so if you are planning to work on a Gtk-2
+based client, make sure Gtk-2 is installed before you build Eris.
 
-Once these pre-requisites are satisfied, you can proceed with
-compiling Eris.  This should be a standard 'configure; make;
-make install'. At present there are no special arguments,
-but verify everything goes okay. If you get errors about libraries
-not being found, and you believe they are installed, do NOT hack
-around the problem in configure. Verify that you have the correct
-development packages installed and that pkg-config has located
-the configuration files for each library. Also make sure you've
-run ldconfig if you just installed the libraries form source,
-otherwise the test programs configure tries to compile won't work.
+Once these pre-requisites are satisfied, you can proceed with compiling Eris.
+This should be a standard 'configure; make; make install'. At present there
+are no special arguments, but verify everything goes okay. If you get errors
+about libraries not being found, and you believe they are installed, do NOT
+hack around the problem in configure. Verify that you have the correct
+development packages installed and that pkg-config has located the
+configuration files for each library. Also make sure you've run ldconfig if
+you just installed the libraries form source, otherwise the test programs
+configure tries to compile won't work.
 
-Assuming configure is successful, simply 'make' and 'make
-install'. That's it. If you get compilation errors, please get
-in touch with the maintainers. In order to test that everything
-worked, try compiling one of the clients that uses Eris (listed in
-the README)
+Assuming configure is successful, simply 'make' and 'make install'. You can
+also run 'make check' to build and run the unit-tests, which should print out
+some debug output followed by 'all tests passed'. If the tests fail, or you
+get compilation errors, please get in touch with the maintainers.
 
-If you have Doxygen installed, executing 'make doc' will build
-the documentation; at present only HTML is built. Edit eris.dox to
-change the output formats / styles. If you find errors or omissions
-in the documentation, please let me (James) know.
+If you have Doxygen installed, executing 'make doc' will build the
+documentation; at present only HTML is built. Edit eris.dox to change the
+output formats / styles. If you find errors or omissions in the documentation,
+please let me (James) know.
 
 MSVC
 
-This might work, though you'll need to link libSigc++ statically. Using
-VC .NET may help, since the C++ compiler is greatly improved. If you
-try to compile using MSVC, please let me know, whatever the outcome,
-so I can update this section
+This might work, though you'll need to link libSigc++ statically. Using VC
+.NET may help, since the C++ compiler is greatly improved. If you try to
+compile using MSVC, please let me know, whatever the outcome, so I can update
+this section
 
 OS-X / XCode
 
-A autoconf based build will work fine, assuming you have pkg-config and
-the like available (for example, from Fink). Fink may also provide a
-libSigc++ package in the future, though right now you need to install
-that from a tarball.
+A autoconf based build will work fine, assuming you have pkg-config and the
+like available (for example, from Fink). Fink also provides a libSigc++
+package.
 
 The easier way, on OS-X, is to use the XCode project to build an Eris
-framework. If you choose to persue this approach, be aware you need
-to build all the WorldForge libs as frameworks too : this requires some
-setup, but works very well once it's done.
+framework. If you choose to persue this approach, be aware you need to build
+all the WorldForge libs as frameworks too : this requires some setup, but
+works very well once it's done.

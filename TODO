@@ -5,17 +5,32 @@ BUGS
  - addAncestor() gets into a tight loop which suggests that a type lists itself
    as a child. We need to be invulnerable to this.
 
+Test Cases
+
+- sound of action
+- hear on Avatar
+- Say on Avatar?
+
+- cycle character through create, unsubscribe and re-take on a single
+  account
+
 1.3.5 TODO
 
- - calendars
+ - calendars: look at the code from sear.
  
  - custom routers
  	- run first, but can't consume ops
- 
- - view owns factories, and cleans them up
+ 	- attached on Connection, or on the 'owning' router?
+ 	- Conenction seems more robust. re-structure how routers are tracked,
+ 	  possibly?
+ 	
+ - view owns factories, and cleans them up. Warn if registering a factory
+   after entities are created? Or add a pre-flight signal with the same data,
+   to allow people to register a factory?
  
  - account owns avatars
  	getAvatarForActiveCharacter();
+ 	account logout shuts down characters too
  	
 - add more helpers for common client actions on Avatar. For example
   use and emote, to go with say and touch.   

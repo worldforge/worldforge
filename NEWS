@@ -1,3 +1,20 @@
+2005-04-18
+
+This is the fourth unstable release of Eris 1.3, which will become Eris 1.4 in
+the distant future. In this release, various API improvements have taken
+place - the current server can be queried for it's information easily, the
+lifetime of Eris::Connection has been made explicit, and other minor changes.
+
+Internally, some of the complex router logic has been replaced with a new
+Responder system which handles most operations that naturally fit a request /
+respone idiom. The tests cases have been extended, and should now work reliably
+on all platforms, and many bugs have been fixed.
+
+As with previous 1.3 releases, the API is not yet frozen, with some minor
+changes planned after this release. All such changes should be minor and
+localised. Feedback on the API, feature requests and bug reports are all
+welcomed.
+
 2005-01-08
 
 This is the second unstable release of the current development work that will
