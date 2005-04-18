@@ -61,7 +61,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0,
 
 
 # check for all the WorldForge libs we use
-PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 >= 0.5.91 wfmath-0.3 >= 0.3.2,
+PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 >= 0.5.94 wfmath-0.3 >= 0.3.2,
     [
         CXXFLAGS="$CXXFLAGS $WF_CFLAGS"
         LDFLAGS="$LDFLAGS $WF_LIBS"
