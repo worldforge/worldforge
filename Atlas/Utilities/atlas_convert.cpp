@@ -14,6 +14,8 @@
 #include <fstream>
 #include <iostream>
 
+#include <unistd.h>
+
 int option_format = 0;
 int option_spacing = -1;
 

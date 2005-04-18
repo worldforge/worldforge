@@ -1,5 +1,10 @@
 2005-04-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Utilities/atlas_convert.cpp: Add header required for getopt
+	  by some systems.
+
+2005-04-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/gen_cpp.py: Improve the efficiency of addToMessage()
 	  by avoiding a call to getFoo() when we already have checked the
 	  flag.
