@@ -1,3 +1,7 @@
+2005-04-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment interface version.
+
 2005-04-17  James Turner  <james@worldforge.org>
 
 	* Eris/Account.cpp: re-order code in loginError so loadtool works -
