@@ -1,5 +1,7 @@
 
-check_PROGRAMS = Objects3_Move Call_Move Message_Move Static_Move
+check_PROGRAMS = Objects_asMessage Objects3_Move Call_Move Message_Move \
+                 Static_Move
+                 
 EXTRA_PROGRAMS = SmartPtr_Move
 
 TESTS = $(check_PROGRAMS)
@@ -26,3 +28,5 @@ Call_Move_SOURCES = Call_Move.cpp timer.h
 Static_Move_SOURCES = Static_Move.cpp timer.h
 
 SmartPtr_Move_SOURCES = SmartPtr_Move.cpp timer.h
+
+Objects_asMessage_SOURCES = Objects_asMessage.cpp timer.h

@@ -1,3 +1,12 @@
+2005-04-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Objects_asMessage.cpp: New benchmark for converting
+	  Objects into Messages.
+
+	* Atlas/Objects/gen_cpp.py: Remove explicit Element constructor
+	  when converting Objects to Messages as operator= means that it
+	  is not required.
+
 2005-04-18  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.5.94, Interface version 0.

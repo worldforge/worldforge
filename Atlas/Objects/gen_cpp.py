@@ -254,7 +254,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         self.write("    MapType m = %s::asMessage();\n" % parent)
         for attr in statics:
             self.write('    if(m_attrFlags & %s)\n' % attr.flag_name)
-            self.write('        m["%s"] = Element(get%s%s());\n' % \
+            self.write('        m["%s"] = get%s%s();\n' % \
                     (attr.name, attr.cname, attr.as_object))
         self.write('    return m;\n')
         self.write("}\n\n")
@@ -271,10 +271,10 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                 # If we can get the attribute without having to check the
                 # flag twice, do it.
                 if attr.as_object:
-                    self.write('        m["%s"] = Element(get%s%s());\n' % \
+                    self.write('        m["%s"] = get%s%s();\n' % \
                            (attr.name, attr.cname, attr.as_object))
                 else:
-                    self.write('        m["%s"] = Element(attr_%s);\n' % \
+                    self.write('        m["%s"] = attr_%s;\n' % \
                            (attr.name, attr.name))
             else:
                 # This code only handles "parents" and "objtype", both
@@ -284,14 +284,14 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                         (attr.cpp_param_type_as_object, attr.name, attr.cname, attr.as_object))
                     self.write('    if (!l_attr_%s.empty())\n' % \
                         (attr.name))
-                    self.write('        m["%s"] = Element(l_attr_%s);\n' % \
+                    self.write('        m["%s"] = l_attr_%s;\n' % \
                         (attr.name, attr.name))
                 else:
                     self.write('    %s l_attr_%s = get%s();\n' % \
                         (attr.cpp_param_type, attr.name, attr.cname))
                     self.write('    if (!l_attr_%s.empty())\n' % \
                         (attr.name))
-                    self.write('        m["%s"] = Element(l_attr_%s);\n' % \
+                    self.write('        m["%s"] = l_attr_%s;\n' % \
                         (attr.name, attr.name))
         self.write('    return;\n')
         self.write("}\n\n")

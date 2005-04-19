@@ -3,6 +3,7 @@ Makefile.in
 Makefile
 .deps
 .libs
+Objects_asMessage
 Objects_Move
 Objects2_Move
 Objects3_Move
