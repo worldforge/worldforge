@@ -1,8 +1,6 @@
 New TODO by Al Riddoch
 
-Make sure anonymous Objects don't add parents or objtype when converted to
-a message. Perhaps make them empty, and add empty checks to sendFoo()
-and addToMessage() in Root?
+Don't use explicit Element constructor when assigning to another Element.
 
 Note that Atlas::Message::Element segfaults of a map is set to be a member
 of itself.
