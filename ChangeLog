@@ -1,5 +1,12 @@
 2005-04-21  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/TileShader.h, Mercator/TileShader.cpp: Implement shading
+	  the tile buffer, and method required to add sub shaders.
+
+	* tests/testTileShader.cpp: Unit test for TileShader.
+
+2005-04-21  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Terrain.h: Fix documentation comment now that member
 	  has been changed.
 

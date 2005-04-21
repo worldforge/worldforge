@@ -21,6 +21,10 @@ class TileShader : public Shader {
     explicit TileShader();
     virtual ~TileShader();
 
+    void addShader(Shader * t, int id) {
+        m_subShaders[id] = t;
+    }
+
     virtual bool checkIntersect(const Segment &) const;
     virtual void shade(Surface &) const;
 };

@@ -22,15 +22,25 @@ bool TileShader::checkIntersect(const Segment & s) const
     return true;
 }
 
-void TileShader::shade(Surface & s) const
+void TileShader::shade(Surface & surface) const
 {
+    ColorT * sdata = surface.getData();
+    int sdata_len = surface.getSize() * surface.getSize();
+
     TileShader::Shaderstore::const_iterator I = m_subShaders.begin();
     TileShader::Shaderstore::const_iterator Iend = m_subShaders.end();
     for (; I != Iend; ++I) {
-        Surface * sf = I->second->newSurface(s.getSegment());
-        // shade it
-        // for each point, if its opaquish, stick its tile down
-        // need a mapping of subShader index to tile symbol
+        Surface * subs = I->second->newSurface(surface.getSegment());
+        I->second->shade(*subs);
+        ColorT * subsdata = subs->getData();
+        int channels = subs->getChannels();
+        
+        for (int i = 0; i < sdata_len; ++i) {
+            if (subsdata[i * channels + channels - 1] > 127) {
+                sdata[i] = I->first;
+            }
+        }
+        delete subs;
     }
 }
 
