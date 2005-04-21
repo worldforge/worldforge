@@ -1,5 +1,11 @@
 2005-04-21  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/TileShader.cpp: Fix shader so it allocates surface store
+	  before shading, and does not attempt to shade subsurfaces that will
+	  contain no data.
+
+2005-04-21  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/TileShader.h, Mercator/TileShader.cpp: Implement shading
 	  the tile buffer, and method required to add sub shaders.
 

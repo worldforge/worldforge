@@ -30,8 +30,11 @@ void TileShader::shade(Surface & surface) const
     TileShader::Shaderstore::const_iterator I = m_subShaders.begin();
     TileShader::Shaderstore::const_iterator Iend = m_subShaders.end();
     for (; I != Iend; ++I) {
+        if (!I->second->checkIntersect(surface.getSegment())) {
+            continue;
+        }
         Surface * subs = I->second->newSurface(surface.getSegment());
-        I->second->shade(*subs);
+        subs->populate();
         ColorT * subsdata = subs->getData();
         int channels = subs->getChannels();
         
