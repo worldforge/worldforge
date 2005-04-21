@@ -1,3 +1,12 @@
+2005-04-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Terrain.h: Fix documentation comment now that member
+	  has been changed.
+
+	* Mercator/TileShader.h, Mercator/TileShader.cpp:
+	  Starting point for new class to handle determining what the
+	  surface is made of.
+
 2005-04-12 James Turner <james@worldforge.org>
 
 	* Mercator/Terrain.cpp: when adding an area to a segment, check if

@@ -41,7 +41,7 @@ class Terrain {
     /// \brief STL map to store sparse array of Segment pointer columns.
     typedef std::map<int, Segmentcolumn > Segmentstore;
 
-    /// \brief STL list of Shader pointers.
+    /// \brief STL map to store sparse array of Shader pointers.
     typedef std::map<int, Shader *> Shaderstore;
 
     typedef std::multimap<int, Area *> Areastore;
