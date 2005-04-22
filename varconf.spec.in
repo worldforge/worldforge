@@ -14,7 +14,6 @@ Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
 Source: %{name}-%{version}.tar.gz
-Requires: libsigc++ libstdc++
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
 BuildRequires: libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel
 
@@ -28,7 +27,7 @@ objects or one global configuration instance.
 %package devel
 Summary: A config handling library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version} libsigc++-devel libstdc++-devel
+Requires: %{name} = %{version}
 
 %description devel
 @VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE

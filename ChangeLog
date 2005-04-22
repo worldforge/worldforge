@@ -1,3 +1,13 @@
+2005-04-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Clean up and modernise autoconf usage. Remove
+	  maintainer mode. Increment version in interface numbers ready
+	  for 0.6.3 release.
+
+	* varconf.spec.in: Remove requirements for sigc++ packages, as the
+	  package names vary and break the requirements in a really annoying
+	  way.
+
 2005-01-10  Simon Goodall  <simon@simongoodall.co.uk>
 
 	* varconf/config.cpp, varconf/Config.h: Make findItem, findSection and 

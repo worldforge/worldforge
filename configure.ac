@@ -3,6 +3,7 @@ dnl Process this file with autoconf to generate configure
 dnl Autoconf Initialization
 AC_INIT()
 AC_CONFIG_SRCDIR([varconf/variable.cpp])
+AC_CONFIG_HEADERS([config.h])
 
 dnl Detect the canonical host and target environment
 
@@ -10,11 +11,9 @@ AC_CANONICAL_SYSTEM
 
 dnl Information
 
-VARCONF_VERSION=0.6.2
+VARCONF_VERSION=0.6.3
 
 AM_INIT_AUTOMAKE(varconf, $VARCONF_VERSION)
-AM_CONFIG_HEADER(config.h)
-AM_MAINTAINER_MODE
 
 dnl versioning info for libtool
 dnl DO NOT CHANGE VARCONF_CURRENT HERE. See the checks for sigc++
@@ -22,7 +21,7 @@ dnl further down. If we link against sigc++ 1.2, then this should be
 dnl N, if we link against sigc++ 2.0 it should be N+1. If you change
 dnl this because of API changes, it needs to be incremented by
 dnl 2, and the changes made to the values assigned in the sigc++ check.
-VARCONF_CURRENT=2
+VARCONF_CURRENT=4
 VARCONF_REVISION=0
 VARCONF_AGE=0
 VARCONF_REQUIRES=""
@@ -66,7 +65,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
         VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-2.0"
         VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-1.2 < 2.0"
-        VARCONF_CURRENT=3
+        VARCONF_CURRENT=5
     ],
     [
         PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= $MIN_SIGC_VERSION,
@@ -75,7 +74,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
                 LDFLAGS="$LDFLAGS $SIGC_LIBS"
                 VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-1.2"
                 VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-2.0 > 1.9"
-                VARCONF_CURRENT=2
+                VARCONF_CURRENT=4
             ],
             [
                 AC_MSG_ERROR([Couldn't find sigc++ library!])
