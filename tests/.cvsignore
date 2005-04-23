@@ -9,6 +9,7 @@ testPhys
 testShader
 testTerrain
 testTerrainMod
+testTileShader
 timeSeg
 testPlant
 testForest

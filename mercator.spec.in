@@ -13,10 +13,9 @@ URL: http://www.worldforge.org/dev/eng/libraries/mercator
 Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
-Source: %{name}-%{version}.tar.gz
-Requires: wfmath >= 0.3.2 libstdc++
+Source: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-BuildRequires: wfmath-devel >= 0.3.2 libstdc++-devel
+BuildRequires: wfmath-devel >= 0.3.2
 
 %description
 Mercator is designed to handle terrain data.
@@ -24,7 +23,7 @@ Mercator is designed to handle terrain data.
 %package devel
 Summary: A WorldForge terrain library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version} wfmath-devel >= 0.3.2 libstdc++-devel
+Requires: %{name} = %{version} wfmath-devel >= 0.3.2
 
 %description devel
 Mercator is designed to handle terrain data.

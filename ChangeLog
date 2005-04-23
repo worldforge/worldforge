@@ -1,3 +1,8 @@
+2005-04-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* mercator.spec.in: Remove some unnecessary Requires lines from the
+	  rpm spec.
+
 2005-04-21  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/TileShader.cpp: Fix shader so it allocates surface store
