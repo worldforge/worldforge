@@ -15,7 +15,6 @@ Vendor: WorldForge
 Distribution: Mason
 Source: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-BuildRequires: libstdc++-devel
 
 %description
 @PACKAGE@ is a configuration system originally designed for the STAGE
@@ -53,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_libdir}/lib*.so.*
-%doc README COPYING AUTHORS THANKS NEWS ChangeLog TODO
+%doc AUTHORS COPYING NEWS README THANKS ChangeLog
 
 %files devel
 %defattr(-,root,root)
@@ -61,4 +60,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.la
 %{_libdir}/lib*.a
 %{_libdir}/pkgconfig/*
-%{_includedir}/%{name}%{libsuffix}
+%{_includedir}/*

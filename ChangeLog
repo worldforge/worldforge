@@ -1,5 +1,14 @@
 2005-04-23  Al Riddoch  <alriddoch@zepler.org>
 
+	* AUTHORS: Update AUTHORS file to reflect the current maintainers.
+
+	* NEWS: Add new item for 0.6.3 release.
+
+	* varconf.spec.in: Remove BuildRequires as it doesn't have any real
+	  requirements. Some cleanups.
+
+2005-04-23  Al Riddoch  <alriddoch@zepler.org>
+
 	* configure.ac, varconf-1.0.pc.in, varconf.spec.in: Remove
 	  VARCONF_PACKAGE and VARCONF_VERSION and use the standard
 	  PACAKGE and VERSION variables. Switch to bz2 compression for
