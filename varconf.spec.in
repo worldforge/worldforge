@@ -13,13 +13,13 @@ URL: http://www.worldforge.org/dev/eng/libraries/varconf
 Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
-Source: %{name}-%{version}.tar.gz
+Source: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-BuildRequires: libsigc++-devel >= @MIN_SIGC_VERSION@ libstdc++-devel
+BuildRequires: libstdc++-devel
 
 %description
-@VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE
-server. @VARCONF_PACKAGE@ can parse configuration files, command-line arguments
+@PACKAGE@ is a configuration system originally designed for the STAGE
+server. @PACKAGE@ can parse configuration files, command-line arguments
 and environment variables. It supports callbacks through libsigc++
 1.2.x or 2.0.x and can store configuration data in configuration
 objects or one global configuration instance.
@@ -30,8 +30,8 @@ Group: Development/Libraries
 Requires: %{name} = %{version}
 
 %description devel
-@VARCONF_PACKAGE@ is a configuration system originally designed for the STAGE
-server. @VARCONF_PACKAGE@ can parse configuration files, command-line arguments
+@PACKAGE@ is a configuration system originally designed for the STAGE
+server. @PACKAGE@ can parse configuration files, command-line arguments
 and environment variables. It supports callbacks through libsigc++
 1.2.x or 2.0.x and can store configuration data in configuration
 objects or one global configuration instance.

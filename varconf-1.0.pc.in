@@ -3,10 +3,10 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: @VARCONF_PACKAGE@
+Name: @PACKAGE@
 Description: A config handling library.
 Requires: @VARCONF_REQUIRES@
 Conflicts: @VARCONF_CONFLICTS@
-Version: @VARCONF_VERSION@
+Version: @VERSION@
 Libs: -L${libdir} @VARCONF_LIBS@
 Cflags: -I${includedir}/varconf@VARCONF_LIB_SUFFIX@

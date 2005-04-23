@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to generate configure
 
 dnl Autoconf Initialization
-AC_INIT()
+AC_INIT(varconf, 0.6.3)
 AC_CONFIG_SRCDIR([varconf/variable.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -11,9 +11,7 @@ AC_CANONICAL_SYSTEM
 
 dnl Information
 
-VARCONF_VERSION=0.6.3
-
-AM_INIT_AUTOMAKE(varconf, $VARCONF_VERSION)
+AM_INIT_AUTOMAKE([dist-bzip2 check-news])
 
 dnl versioning info for libtool
 dnl DO NOT CHANGE VARCONF_CURRENT HERE. See the checks for sigc++
@@ -28,7 +26,6 @@ VARCONF_REQUIRES=""
 VARCONF_CONFLICTS=""
 VARCONF_LIB_SUFFIX="-1.0"
 
-VARCONF_PACKAGE=varconf
 MIN_SIGC_VERSION=1.2.0
 
 dnl General Initialization
@@ -89,10 +86,8 @@ VARCONF_VERSION_INFO=$VARCONF_CURRENT:$VARCONF_REVISION:$VARCONF_AGE
 AC_SUBST(VARCONF_LIBS)
 AC_SUBST(VARCONF_REQUIRES)
 AC_SUBST(VARCONF_CONFLICTS)
-AC_SUBST(VARCONF_VERSION)
 AC_SUBST(VARCONF_VERSION_INFO)
 AC_SUBST(VARCONF_LIB_SUFFIX)
-AC_SUBST(VARCONF_PACKAGE)
 AC_SUBST(MIN_SIGC_VERSION)
 
 dnl Generate files                         
