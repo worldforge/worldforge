@@ -91,8 +91,13 @@ void TypeInfo::processTypeData(const Root &atype)
         const Atlas::Message::Element childElem(atype->getAttr("children"));
         const Atlas::Message::ListType & children(childElem.asList());
         
-        for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C)
+        for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C) {
+            TypeInfo* child = m_typeService->findTypeByName(C->asString());
+            // if the child was already known, don't add to unresolved
+            if (child && m_children.count(child)) continue;
+            
             m_unresolvedChildren.insert(C->asString());
+        }
     }
       
     validateBind();

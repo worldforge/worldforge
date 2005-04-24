@@ -31,7 +31,7 @@ public:
     void readAtlasSpec(const std::string &specfile);
 
     /** find the TypeInfo for the named type; this may involve a search, or a map lookup.
-     The returned TypeInfo	 node may not be bound, and the caller should verify this
+     The returned TypeInfo node may not be bound, and the caller should verify this
      before using the type. */
     TypeInfoPtr getTypeByName(const std::string &tynm);
 

@@ -290,9 +290,11 @@ void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
             return;
         }
                 
-        if (type->isBound()) 
-            throw InvalidAtlas(type->getName() + " is bound, but got anonymous Object", obj);
-
+        if (type->isBound()) {
+            warning() << type->getName() << " is bound, but got anonymous Object: " << obj;
+            return;
+        }
+        
         unbound.insert(type);
     }
 

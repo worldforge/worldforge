@@ -1,3 +1,12 @@
+2005-04-25  James Turner  <james@worldforge.org>
+
+    * Eris/TypeInfo.cpp: fix 'processTypeData' to not add existing children
+      to the unresolved set. Thanks to Erik again, he rocks.
+
+    * Eris/TypeService.cpp: make the type verifier more tolerant of wonky
+      objects (eg with parents unset but a valid objtype); warn instead of
+      throwing.
+
 2005-04-24  James Turner  <james@worldforge.org>
 
     * Eris/TypeInfo.cpp: in ::resolveChildren, copy the unresolved children
