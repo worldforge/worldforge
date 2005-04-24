@@ -65,11 +65,12 @@ void TypeInfo::resolveChildren()
         return;
     }
     
-    StringSet::const_iterator it;
-    for (it = m_unresolvedChildren.begin(); it != m_unresolvedChildren.end(); ++it)
+    StringSet uchildren(m_unresolvedChildren);
+    for (StringSet::const_iterator it = uchildren.begin(); it != uchildren.end(); ++it) {
         addChild(m_typeService->getTypeByName(*it));
-        
-    m_unresolvedChildren.clear();
+    }
+    
+    assert(m_unresolvedChildren.empty());
 }
 
 #pragma mark - 
