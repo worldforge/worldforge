@@ -100,7 +100,9 @@ class AttributeInfo:
             res = res + '    if(m_attrFlags & %s) {\n' % self.flag_name
             indent = "    "
         else:
-            indent = ""
+            res = res + '    if((m_attrFlags & %s) || !defaults_%s->attr_%s.empty()) {\n' \
+                  % (self.flag_name, classname, self.name)
+            indent = "    "
 
         if self.type == "int":
             res = res + indent + '    b.mapIntItem("%s", attr_%s);\n' \
@@ -196,8 +198,7 @@ class AttributeInfo:
             res = res + indent + '    Atlas::Message::Encoder e(b);\n'
             res = res + indent + '    e.mapElementListItem("%s", get%s%s());\n' \
                   % (self.name, self.cname, self.as_object)
-        if self.name not in ["parents", "objtype"]:
-            res = res + '    }\n'
+        res = res + '    }\n'
         return res + '}\n\n'
         
 

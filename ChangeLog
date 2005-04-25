@@ -1,3 +1,8 @@
+2005-04-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py: Don't encode objtype or parents
+	  of anonymous entities.
+
 2005-04-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* benchmark/Objects_asMessage.cpp: New benchmark for converting
