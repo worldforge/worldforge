@@ -146,6 +146,7 @@ void StubServer::setupTestAccounts()
     posl.push_back(3.0);
     getEntity("_table_1")->setPos(posl);
     defineEntity("_vase_1", "decoration", "_table_1", "A horrible vase");
+    getEntity("_table_1")->setName("George");
     
     defineEntity("_fail_", "settler", "_world", "Dummy");
 }

@@ -1,5 +1,16 @@
 2005-04-25  James Turner  <james@worldforge.org>
 
+	* Eris/Factory.cpp, Eris/Factory.h, Eris/View.cpp, Eris/View.h: make
+	  factories be owned by View, and hence have a well defined lifetime.
+	  View now has a 'registerFactory' method, which can be called at any
+	  time.
+
+	* test/tests.cpp, test/stubServer.cpp: update entities and test the
+	  setting status on an entity does not affect other attributes. This
+	  test is currently failing.
+
+2005-04-25  James Turner  <james@worldforge.org>
+
     * Eris/TypeInfo.cpp: fix 'processTypeData' to not add existing children
       to the unresolved set. Thanks to Erik again, he rocks.
 

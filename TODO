@@ -9,7 +9,8 @@ Test Cases
 
 - sound of action
 - hear on Avatar
-- Say on Avatar?
+- Avatar::place
+- picking
 
 - cycle character through create, unsubscribe and re-take on a single
   account
@@ -23,10 +24,6 @@ Test Cases
  	- attached on Connection, or on the 'owning' router?
  	- Conenction seems more robust. re-structure how routers are tracked,
  	  possibly?
- 	
- - view owns factories, and cleans them up. Warn if registering a factory
-   after entities are created? Or add a pre-flight signal with the same data,
-   to allow people to register a factory?
  
  - account owns avatars
  	getAvatarForActiveCharacter();

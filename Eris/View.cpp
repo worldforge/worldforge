@@ -5,10 +5,12 @@
 #include <Eris/View.h>
 #include <Eris/Entity.h>
 #include <Eris/LogStream.h>
-#include <Eris/Factory.h>
 #include <Eris/Connection.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
+#include <Eris/Factory.h>
+#include <Eris/TypeService.h>
+#include <Eris/TypeInfo.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -31,13 +33,19 @@ View::View(Avatar* av) :
 View::~View()
 {
     std::vector<Entity*> allEntities;
-    for (IdEntityMap::iterator E = m_contents.begin(); E != m_contents.end(); ++E)
+    for (IdEntityMap::iterator E = m_contents.begin(); E != m_contents.end(); ++E) {
         allEntities.push_back(E->second);
-        
-    for (unsigned int I=0; I < allEntities.size(); ++I) 
+    }
+    
+    for (unsigned int I=0; I < allEntities.size(); ++I)  {
         delete allEntities[I];
-        
+    }
+    
     assert(m_contents.empty());
+    
+    for (FactoryStore::iterator F=m_factories.begin(); F != m_factories.end(); ++F) {
+        delete *F;
+    }
 }
 
 Entity* View::getEntity(const std::string& eid) const
@@ -56,6 +64,11 @@ void View::setEntityVisible(Entity* ent, bool vis)
     } else {
         Disappearance.emit(ent);
     }
+}
+
+void View::registerFactory(Factory* f)
+{
+    m_factories.insert(f);
 }
 
 #pragma mark -
@@ -171,7 +184,7 @@ void View::sight(const GameEntity& gent)
 
 Entity* View::initialSight(const GameEntity& gent)
 {
-    Entity* ent = Factory::createEntity(gent, this);
+    Entity* ent = createEntity(gent);
     assert(m_contents.count(gent->getId()) == 0);
     m_contents[gent->getId()] = ent;
     ent->init(gent);
@@ -182,7 +195,7 @@ Entity* View::initialSight(const GameEntity& gent)
 
 void View::create(const GameEntity& gent)
 {
-    Entity* ent = Factory::createEntity(gent, this);
+    Entity* ent = createEntity(gent);
     assert(m_contents.count(gent->getId()) == 0);
     m_contents[gent->getId()] = ent;
     ent->init(gent);
@@ -211,6 +224,21 @@ void View::deleteEntity(const std::string& eid)
         } else
             warning() << "got delete for unknown entity " << eid;
     }
+}
+
+Entity* View::createEntity(const GameEntity& gent)
+{
+    TypeInfo* type = getConnection()->getTypeService()->getTypeForAtlas(gent);
+    assert(type->isBound());
+    
+    FactoryStore::const_iterator F = m_factories.begin();
+    for (; F != m_factories.end(); ++F) {
+        if ((*F)->accept(gent, type)) {
+            return (*F)->instantiate(gent, type, this);
+        }
+    }
+    
+    return new Eris::Entity(gent->getId(), type, this);
 }
 
 #pragma mark -

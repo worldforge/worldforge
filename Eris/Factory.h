@@ -28,9 +28,6 @@ public:
     get first chance to process a recieved Atlas entity. The default implementation
     returns one. */
     virtual int priority();
-    
-    static Entity* createEntity(const Atlas::Objects::Entity::GameEntity &ge, View* v);
-    static void registerFactory(Factory* f);
 };
 	
 } // of namespace Eris
