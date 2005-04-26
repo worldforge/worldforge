@@ -1,6 +1,6 @@
 
 check_PROGRAMS = Objects_asMessage Objects3_Move Call_Move Message_Move \
-                 Static_Move
+                 Static_Move Objects_iterator
                  
 EXTRA_PROGRAMS = SmartPtr_Move
 
@@ -30,3 +30,4 @@ Static_Move_SOURCES = Static_Move.cpp timer.h
 SmartPtr_Move_SOURCES = SmartPtr_Move.cpp timer.h
 
 Objects_asMessage_SOURCES = Objects_asMessage.cpp timer.h
+Objects_iterator_SOURCES = Objects_iterator.cpp timer.h

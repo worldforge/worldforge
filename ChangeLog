@@ -1,3 +1,8 @@
+2005-04-26  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Objects_iterator.cpp: New test and benchmark for Objects
+	  iterators.
+
 2005-04-25  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/AttributeInfo.py: Don't encode objtype or parents
