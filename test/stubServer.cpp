@@ -10,6 +10,7 @@
 #include <skstream/skpoll.h>
 #include "commander.h"
 #include <wfmath/point.h>
+#include <Atlas/Objects/objectFactory.h>
 
 #include <sys/wait.h>
 
@@ -88,6 +89,7 @@ StubServer::StubServer(short port, int cmdSocket) :
     subclassType("mammal", "pig");
     subclassType("game_entity", "seed");
     subclassType("seed", "potato");
+    subclassType("thing", "book");
 }
 
 StubServer::~StubServer()
@@ -391,6 +393,11 @@ void StubServer::talkInRoom(const Talk& tk, const std::string& room)
 
 #pragma mark -
 
+static Atlas::Objects::Root gameEntityFactory()
+{
+    return Atlas::Objects::Entity::GameEntity();
+}
+
 void StubServer::subclassType(const std::string& base, const std::string& derivedName)
 {
     assert(m_types.count(base));
@@ -409,6 +416,10 @@ void StubServer::subclassType(const std::string& base, const std::string& derive
     derived->setId(derivedName);
 
     m_types[derivedName] = derived;
+    
+    if(!Atlas::Objects::objectFactory.hasFactory(derivedName)) {
+        Atlas::Objects::objectFactory.addFactory(derivedName, &gameEntityFactory);
+    }
 }
 
 void StubServer::defineEntity(const std::string& id, const std::string& type, 

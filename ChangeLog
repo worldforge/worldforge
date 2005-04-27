@@ -1,3 +1,8 @@
+2005-04-27  James Turner  <james@worldforge.org>
+
+	* test/tests.cpp, test/commander.cpp, test/stubServer.h,
+	  test/stubServer.cpp: add a test for sight of entity creation. 
+
 2005-04-25  James Turner  <james@worldforge.org>
 
 	* Eris/Factory.cpp, Eris/Factory.h, Eris/View.cpp, Eris/View.h: make

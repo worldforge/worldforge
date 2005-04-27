@@ -56,6 +56,7 @@ private:
     
     friend class ClientConnection;
     friend class Agent;
+    friend class Commander;
     
     typedef std::vector<ClientConnection*> ConArray;
     ConArray m_clients;

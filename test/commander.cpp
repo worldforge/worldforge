@@ -112,6 +112,33 @@ void Commander::dispatch(const RootOperation& op)
         if (ag) ag->setEntityVisible(op->getTo(), false);
     }
     
+    Create cr = smart_dynamic_cast<Create>(op);
+    if (cr.isValid()) {
+        std::vector<Root> args(op->getArgs());
+        assert(!args.empty());
+        GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
+        assert(ent.isValid());
+        
+        static int idCounter = 900;
+        char buf[32];
+        snprintf(buf, 32, "_created_%d", ++idCounter);
+        std::string id(buf);
+        
+        ent->setId(id);
+        std::string loc = ent->getLoc();
+        assert(m_server->m_world.count(loc));
+        
+        StringList children(m_server->m_world[loc]->getContains());
+        children.push_back(id);
+        m_server->m_world[loc]->setContains(children);
+
+        m_server->m_world[id] = ent;
+        
+        Create bcr(cr);
+        bcr->setArgs1(ent);
+        Agent::broadcastSight(bcr);
+    }
+    
     Move mv = smart_dynamic_cast<Move>(op);
     if (mv.isValid()) {
         GameEntity ent = m_server->getEntity(op->getTo());
