@@ -55,6 +55,9 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         GameEntity gent = smart_dynamic_cast<GameEntity>(args.front());
         if (gent.isValid()) {
             TypeInfo* type = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+            
+            #warning The following code is necessary until Atlas objectFactory is tied to a decoder
+            
             if (!type->isBound()) {
                 TypeInfoSet unbound;
                 unbound.insert(type);
@@ -136,10 +139,12 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
         for (unsigned int A=0; A < args.size(); ++A) {
             Entity* ent = m_view->getEntity(args[A]->getId());
             if (!ent) {
-                if (m_view->isPending(args[A]->getId())) 
-                    debug() << "got SET with updates for pending entity " << args[A]->getId();
-                else
-                    error() << " got SET for completely unknown entity " << args[A]->getId();
+                if (m_view->isPending(args[A]->getId())) {
+                    /* no-op, we'll get the state later */
+                } else {
+                    warning() << " got SET for completely unknown entity " << args[A]->getId();
+                }
+                    
                 continue; // we don't have it, ignore
             }
             

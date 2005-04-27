@@ -55,12 +55,10 @@ Timeout::~Timeout()
         throw InvalidOperation("Corrupted timeout map - very bad!");
 }
 
-/*
-Timeout& Timeout::operator=(const Timeout &t)
+void Timeout::cancel()
 {
-	
+    _fired = true;
 }
-*/
 
 bool Timeout::isExpired() const
 {

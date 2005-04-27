@@ -1,3 +1,20 @@
+2005-04-28  James Turner  <james@worldforge.org>
+
+    * Eris/IGRouter.cpp: remove a debug() where a SET op is received for
+      pending entities, and change the message for unknown entities to be
+      a warning, instead of an error.
+      
+    * Eris/Connection.cpp: if Atlas logging is enabled, also log redispatches.
+
+    * Eris/Timeout.cpp: implement cancel() method
+    
+    * Eris/MetaQuery.cpp: fix a long-standing bug where the 'server failed
+      to respond' timeout wasn't cancelled when a sucessful response was
+      received. Thanks, Hagen.
+
+    * Eris/BaseConnection.cpp: make the connect timeout a lot longer,
+      20 seconds instead of 5.
+
 2005-04-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/IGRouter.cpp: Code workaround for types in Sight(Create)

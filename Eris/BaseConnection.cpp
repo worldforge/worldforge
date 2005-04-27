@@ -60,7 +60,7 @@ int BaseConnection::connect(const std::string &host, short port)
     _port = port;
     
     // start timeout
-    _timeout = new Timeout("connect_" + _id, this, 5000);
+    _timeout = new Timeout("connect_" + _id, this, 20 * 1000);
     _timeout->Expired.connect(SigC::slot(*this, &BaseConnection::onConnectTimeout));
 	
     setStatus(CONNECTING);

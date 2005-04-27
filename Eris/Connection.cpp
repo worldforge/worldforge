@@ -25,7 +25,7 @@
 #include <cassert>
 #include <algorithm>
 
-// #define ATLAS_LOG 1
+//#define ATLAS_LOG 1
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -327,6 +327,16 @@ void Connection::postForDispatch(const Root& obj)
     
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     m_opDeque.push_back(op);
+    
+#ifdef ATLAS_LOG
+    std::stringstream debugStream;
+    Atlas::Codecs::Bach debugCodec(debugStream, *this /* dummy */);
+    Atlas::Objects::ObjectsEncoder debugEncoder(debugCodec);
+    debugEncoder.streamObjectsMessage(obj);
+    debugStream << std::flush;
+
+    std::cout << "posted for re-dispatch:" << debugStream.str() << std::endl;
+#endif
 }
 
 void Connection::cleanupRedispatch(Redispatch* r)

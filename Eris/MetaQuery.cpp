@@ -92,6 +92,7 @@ void MetaQuery::setComplete()
 {
     assert(m_complete == false);
     m_complete = true;
+    _timeout->cancel();
 }
 
 } // of namsespace
