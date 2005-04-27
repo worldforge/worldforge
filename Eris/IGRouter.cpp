@@ -107,6 +107,14 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
         GameEntity gent = smart_dynamic_cast<GameEntity>(args.front());
         if (gent.isValid())
         {
+            TypeInfo* type = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+            if (!type->isBound()) {
+                TypeInfoSet unbound;
+                unbound.insert(type);
+                
+                new TypeBoundRedispatch(m_avatar->getConnection(), op, unbound);
+                return WILL_REDISPATCH;
+            }
             m_view->create(gent);
             return HANDLED;
         }

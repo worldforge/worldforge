@@ -1,3 +1,8 @@
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/IGRouter.cpp: Code workaround for types in Sight(Create)
+	  op handler that occurs in apps with multiple connectios.
+
 2005-04-27  James Turner  <james@worldforge.org>
 
 	* test/tests.cpp, test/commander.cpp, test/stubServer.h,
