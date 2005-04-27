@@ -33,7 +33,7 @@ class LoadDefaultsDecoder : public Atlas::Message::DecoderBase
     virtual void messageArrived(const MapType&);
   private:
     void setAttributes(Root &obj, //Root &obj_inst, 
-                       const Element& mobj, 
+                       const Element& melem, 
                        std::set<std::string> used_attributes);
     void fillDefaults();
     MessageElementMap m_objects;
@@ -97,11 +97,11 @@ void LoadDefaultsDecoder::messageArrived(const MapType& o)
 }
 
 void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst, 
-                                        const Element& mobj, 
+                                        const Element& melem, 
                                         std::set<std::string> used_attributes)
 {
     MapType::const_iterator I;
-    for (I = mobj.asMap().begin(); I != mobj.asMap().end(); I++) {
+    for (I = melem.asMap().begin(); I != melem.asMap().end(); I++) {
         std::set<std::string>::const_iterator attr_found = 
                                used_attributes.find(I->first);
         if (attr_found == used_attributes.end()) {
@@ -111,13 +111,13 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
         }
         used_attributes.insert(I->first);
     }
-    I = mobj.asMap().find("parents");
-    if (I != mobj.asMap().end()) {
+    I = melem.asMap().find("parents");
+    if (I != melem.asMap().end()) {
         for (ListType::const_iterator J = I->second.asList().begin();
              J != I->second.asList().end(); J++) {
             //cout<<"  >"<<J->asString()<<endl;
-            const Element & parent_mobj = getMessageElement(J->asString());
-            setAttributes(obj, /*obj_inst,*/ parent_mobj, used_attributes);
+            const Element & parent_melem = getMessageElement(J->asString());
+            setAttributes(obj, /*obj_inst,*/ parent_melem, used_attributes);
         }
     }
 }
@@ -130,19 +130,19 @@ void LoadDefaultsDecoder::fillDefaults()
         I++) {
         //cout<<(*I)<<endl;
         //get atlas.xml object
-        const Element & mobj = getMessageElement(*I);
+        const Element & melem = getMessageElement(*I);
         //get class instances
         Root obj = objectFactory.createObject(*I).getDefaultObject();
         //Root obj_inst = objectInstanceFactory.createObject(*I).getDefaultObject();
         //add attributes recursively
         std::set<std::string> used_attributes;
-        setAttributes(obj, /*obj_inst,*/ mobj, used_attributes);
+        setAttributes(obj, /*obj_inst,*/ melem, used_attributes);
 
         //add object definition
         Root obj_def = objectFactory.createObject(*I);
         obj_def->setObjtype(obj->getObjtype());
         MapType::const_iterator J;
-        for (J = mobj.asMap().begin(); J != mobj.asMap().end(); J++) {
+        for (J = melem.asMap().begin(); J != melem.asMap().end(); J++) {
             obj_def->setAttr(J->first, J->second);
         }
         objectDefinitions[obj_def->getId()] = obj_def;

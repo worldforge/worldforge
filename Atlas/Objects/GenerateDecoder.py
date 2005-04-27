@@ -54,13 +54,9 @@ protected:
     /// call right object*Arrived method
     virtual void objectArrived(const Root& obj) = 0;
 
+};
+
 """) #"for xemacs syntax highlighting
-        #for (obj, namespace) in objects:
-        #    id = obj.id
-        #    idc = classize(id)
-        #    self.write("    virtual void object%sArrived(const %s%s&) { }\n" %
-        #               (classize(obj.id), namespace, classize(obj.id)))
-        self.write("};\n\n")
         self.ns_close(self.base_list)
         self.footer(header_list)
         self.out.close()

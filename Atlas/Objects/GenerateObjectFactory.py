@@ -67,35 +67,19 @@ Root Factories::createObject(const std::string& name)
     }
 }
     
-std::list<std::string> Factories::getKeys()
-{
-    std::list<std::string> keys;
-    for (FactoryMap::const_iterator I = m_factories.begin();
-         I != m_factories.end(); I++) {
-        keys.push_back(I->first);
-    }
-    return keys;
-}
-    
-int Factories::addFactory(const std::string& name, FactoryMethod method)
-{
-    m_factories[name] = method;
-    return ++enumMax;
-}
-
-Root messageElement2ClassObject(const MapType & mobj)
+Root Factories::createObject(const MapType & msg_map)
 {
     Root obj;
 
     // is this instance of entity or operation?
-    MapType::const_iterator I = mobj.find("objtype");
+    MapType::const_iterator I = msg_map.find("objtype");
     bool is_instance = false;
-    if(I != mobj.end() && I->second.isString()) {
+    if(I != msg_map.end() && I->second.isString()) {
         const std::string & objtype = I->second.asString();
         if(objtype == "op" || objtype == "obj" || objtype == "object") {
             // get parent
-            I = mobj.find("parents");
-            if(I != mobj.end()) {
+            I = msg_map.find("parents");
+            if(I != msg_map.end()) {
                 const ListType & parents_lst = I->second.asList();
                 if(parents_lst.size()>=1 && parents_lst.front().isString()) {
                     const std::string & parent = parents_lst.front().asString();
@@ -113,10 +97,31 @@ Root messageElement2ClassObject(const MapType & mobj)
         // Should we really use factory? Why not just instantiate by hand?
         obj = objectFactory.createObject("anonymous");
     } // not instance
-    for (I = mobj.begin(); I != mobj.end(); I++) {
+    for (I = msg_map.begin(); I != msg_map.end(); I++) {
         obj->setAttr(I->first, I->second);
     }
     return obj;
+}
+
+std::list<std::string> Factories::getKeys()
+{
+    std::list<std::string> keys;
+    for (FactoryMap::const_iterator I = m_factories.begin();
+         I != m_factories.end(); I++) {
+        keys.push_back(I->first);
+    }
+    return keys;
+}
+    
+int Factories::addFactory(const std::string& name, FactoryMethod method)
+{
+    m_factories[name] = method;
+    return ++enumMax;
+}
+
+Root messageElement2ClassObject(const MapType & msg_map)
+{
+    return objectFactory.createObject(msg_map);
 }
 
 """) #"for xemacs syntax highlighting

@@ -1,3 +1,15 @@
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateDecoder.py: Cleanups.
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.h: Embed the code to convert a message
+	  into an Object into the Factories class, making the function
+	  just a stub.
+
+	* Atlas/Objects/loadDefaults.cpp: Fix some misleading variable names,
+	  left over from when we called everything an Object.
+
 2005-04-26  Al Riddoch  <alriddoch@zepler.org>
 
 	* benchmark/Objects_iterator.cpp: New test and benchmark for Objects
