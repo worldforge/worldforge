@@ -117,7 +117,7 @@ WieldData *WieldData::getDefaultObject()
 
 int main(int argc, char ** argv)
 {
-    WIELD_NO = Atlas::Objects::objectFactory.addFactory("wield",
+    WIELD_NO = Atlas::Objects::Factories::instance()->addFactory("wield",
                    (Atlas::Objects::FactoryMethod)&Wield::factory);
 
     Wield op;

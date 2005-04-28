@@ -32,7 +32,6 @@ NoSuchFactoryException::~NoSuchFactoryException() throw ()
 }
 
 std::map<const std::string, Root> objectDefinitions;
-Factories objectFactory;
 
 class AddFactories {
 public:
@@ -41,14 +40,23 @@ public:
 
 AddFactories::AddFactories()
 {
+    Factories * objectFactory = Factories::instance();
 """) #"for xemacs syntax highlighting
         for (obj, namespace) in objects:
             id = obj.id
             idc = classize(id)
             self.write("""
-    objectFactory.addFactory("%(id)s", &%(namespace)s%(idc)s::factory);
+    objectFactory->addFactory("%(id)s", &%(namespace)s%(idc)s::factory);
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""}
+
+Factories::Factories()
+{
+}
+
+Factories::Factories(const Factories & other) : m_factories(other.m_factories)
+{
+}
 
 bool Factories::hasFactory(const std::string& name)
 {
@@ -84,8 +92,8 @@ Root Factories::createObject(const MapType & msg_map)
                 if(parents_lst.size()>=1 && parents_lst.front().isString()) {
                     const std::string & parent = parents_lst.front().String();
                     // objtype and parent ok, try to create it:
-                    if(objectFactory.hasFactory(parent)) {
-                        obj = objectFactory.createObject(parent);
+                    if(hasFactory(parent)) {
+                        obj = createObject(parent);
                         is_instance = true;
                     } // got object
                     // FIXME We might want to do something different here.
@@ -95,7 +103,7 @@ Root Factories::createObject(const MapType & msg_map)
     } // has objtype attr
     if (!is_instance) {
         // Should we really use factory? Why not just instantiate by hand?
-        obj = objectFactory.createObject("anonymous");
+        obj = createObject("anonymous");
     } // not instance
     for (I = msg_map.begin(); I != Iend; I++) {
         obj->setAttr(I->first, I->second);
@@ -119,9 +127,19 @@ int Factories::addFactory(const std::string& name, FactoryMethod method)
     return ++enumMax;
 }
 
+Factories * Factories::instance()
+{
+    if (m_instance == 0) {
+        m_instance = new Factories;
+    }
+    return m_instance;
+}
+
+Factories * Factories::m_instance = 0;
+
 Root messageElement2ClassObject(const MapType & msg_map)
 {
-    return objectFactory.createObject(msg_map);
+    return Factories::instance()->createObject(msg_map);
 }
 
 """) #"for xemacs syntax highlighting

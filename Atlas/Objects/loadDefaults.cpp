@@ -124,7 +124,7 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
 
 void LoadDefaultsDecoder::fillDefaults()
 {
-    std::list<std::string> keys = objectFactory.getKeys();
+    std::list<std::string> keys = Factories::instance()->getKeys();
     for(std::list<std::string>::const_iterator I = keys.begin();
         I != keys.end();
         I++) {
@@ -132,14 +132,14 @@ void LoadDefaultsDecoder::fillDefaults()
         //get atlas.xml object
         const Element & melem = getMessageElement(*I);
         //get class instances
-        Root obj = objectFactory.createObject(*I).getDefaultObject();
+        Root obj = Factories::instance()->createObject(*I).getDefaultObject();
         //Root obj_inst = objectInstanceFactory.createObject(*I).getDefaultObject();
         //add attributes recursively
         std::set<std::string> used_attributes;
         setAttributes(obj, /*obj_inst,*/ melem, used_attributes);
 
         //add object definition
-        Root obj_def = objectFactory.createObject(*I);
+        Root obj_def = Factories::instance()->createObject(*I);
         obj_def->setObjtype(obj->getObjtype());
         MapType::const_iterator J;
         for (J = melem.asMap().begin(); J != melem.asMap().end(); J++) {

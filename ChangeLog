@@ -1,5 +1,16 @@
 2005-04-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/objectFactory.h,
+	  Atlas/Objects/GenerateObjectFactory.py: Make Factories an singleton
+	  and get rid of the static instance. Add constructors to ensure
+	  it can be copied correctly.
+
+	* Atlas/Objects/loadDefaults.cpp, tests/Objects/custom_ops.cpp:
+	  Convert code from using the static objectFactory to using
+	  the Factories::instance().
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/SmartPtr.h, Atlas/Objects/GenerateObjectFactory.py:
 	  Make the footprint of SmartPtr factory the same, and get rid
 	  of the nasty C cast from the factory code. Make conversion more
