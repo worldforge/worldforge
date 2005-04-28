@@ -1,5 +1,16 @@
 2005-04-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* Anonymous.cpp, Anonymous.h, Decoder.cpp, Decoder.h, Dispatcher.cpp,
+	  Dispatcher.h, Entity.h, ObjectsFwd.h, Operation.h, Root.cpp, Root.h,
+	  RootEntity.cpp, RootEntity.h, RootEntityChildren.cpp,
+	  RootOperation.cpp, RootOperation.h, RootOperationChildren1.cpp,
+	  RootOperationChildren2.cpp, RootOperationChildren3.cpp,
+	  RootOperationChildren4.cpp, RootOperationChildren5.cpp,
+	  flag.cpp, objectFactory.cpp: Check in generated files to make it
+	  easier for people to track latest changes.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/AttributeInfo.py: Fix the test on empty parents so
 	  it uses the defaults for the instance, not the defaults for the
 	  Root class.

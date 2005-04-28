@@ -1,0 +1,29 @@
+// This file may be redistributed and modified only under the terms of
+// the GNU Lesser General Public License (See COPYING for details).
+// Copyright 2000-2001 Stefanus Du Toit and Aloril.
+// Copyright 2001-2004 Al Riddoch.
+// Automatically generated using gen_cpp.py.
+
+#include <Atlas/Objects/Decoder.h>
+
+#include <Atlas/Objects/objectFactory.h>
+
+#include <Atlas/Objects/SmartPtr.h>
+
+namespace Atlas { namespace Objects { 
+
+ObjectsDecoder::~ObjectsDecoder()
+{
+}
+
+void ObjectsDecoder::messageArrived(const Atlas::Message::MapType& o)
+{
+    Root obj = messageElement2ClassObject(o);
+    objectArrived(obj);
+}
+
+void ObjectsDecoder::unknownMessageArrived(const Atlas::Message::Element&)
+{
+}
+
+} } // namespace Atlas::Objects
