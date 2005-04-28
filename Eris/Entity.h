@@ -100,11 +100,19 @@ public:
     /** Test if this entity has a non-zero velocity vector. */
     bool isMoving() const;
         
-    /** retrieve the predicted position of this entity, based on it's
-    velocity. If the entity is not moving, this is the same as calling
-    getPosition(). */
+    /**
+    Retrieve the predicted position of this entity, based on it's velocity and
+    acceleration. If the entity is not moving, this is the same as calling
+    getPosition().
+    */
     WFMath::Point<3> getPredictedPos() const;
-        
+    
+    /**
+    Retrieve the current predicted velocity of an entity. If the entity
+    is not moving, this is an <em>invalid</em> Vector.
+    */
+    WFMath::Vector<3> getPredictedVelocity() const;   
+    
     /** retreive this Entity's position in view coordinates. */
     WFMath::Point<3> getViewPosition() const;
 
@@ -115,7 +123,7 @@ public:
     {
         return m_velocity;
     }
-    
+
     WFMath::Quaternion getOrientation() const
     {
         return m_orientation;
@@ -324,7 +332,16 @@ private:
     appropriate signals. */
     void updateCalculatedVisibility(bool wasVisible);
     
-    void updatePredictedPosition(const WFMath::TimeStamp& t);
+  //  void updatePredictedPosition(const WFMath::TimeStamp& t);
+    
+    class DynamicState
+    {
+    public:
+        WFMath::Point<3> position;
+        WFMath::Vector<3> velocity;
+    };
+    
+    void updatePredictedState(const WFMath::TimeStamp& t);
     
     typedef std::map<std::string, Atlas::Message::Element> AttrMap;
     AttrMap m_attrs;
@@ -347,7 +364,9 @@ private:
     WFMath::Point<3> m_position;
     WFMath::Vector<3> m_velocity;
     WFMath::Quaternion m_orientation;    
-	WFMath::Point<3> m_predictedPosition;
+    WFMath::Vector<3> m_acc;
+    
+    DynamicState m_predicted;
     
 // extra state and state tracking things
     /** If greater than zero, we are doing a batched update. This supresses emission

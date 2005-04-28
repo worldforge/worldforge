@@ -195,7 +195,9 @@ void Room::sight(const RootEntity &room)
     m_name = room->getName();
     if (room->hasAttr("topic"))
         m_topic = room->getAttr("topic").asString();
-		
+    
+    m_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
+    
     if (room->hasAttr("people"))
     {
         const Atlas::Message::ListType& people = room->getAttr("people").asList();
@@ -258,7 +260,7 @@ void Room::appearance(const std::string& personId)
             Appearance.emit(this, person);
     } else {
         m_members[personId] = NULL; // we know the person is here, but that's all
-        m_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
+        // we'll find out more when we get the SightPerson signal from Lobby
     }
 }
 
@@ -281,21 +283,22 @@ void Room::notifyPersonSight(Person *p)
 {
     assert(p);
     IdPersonMap::iterator P = m_members.find(p->getAccount());
-    if (P == m_members.end())
-        return; // this could happen if we got appear and disappear before the SIGHT
+    // for the moment, all rooms get spammed with sights of people, to avoid
+    // the need for a counting / disconnect from SightPerson scheme
+    if (P == m_members.end()) return;
     
-    if (P->second != NULL) {
-        if (P->second != p) {
-            error() << "duplicate Person objects exist for account " << P->first;
-            return;
-        }
-    } else
+    if (P->second == NULL) {
         P->second = p;
         
-    if (m_entered)
-        Appearance.emit(this, p);
-    else
-        checkEntry();
+        if (m_entered)
+            Appearance.emit(this, p);
+        else
+            checkEntry();
+    } else {
+        // fairly meaningless case, but I'm paranoid
+        // could fire a 'changed' signal here, eg if they renamed?
+        assert (P->second != p);
+    }
 }
 
 void Room::checkEntry()

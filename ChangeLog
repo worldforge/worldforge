@@ -1,3 +1,15 @@
+2005-04-28  James Turner  <james@worldforge.org>
+
+    * Eris/Entity.cpp, Eris/Entity.h, Eris/View.cpp: support an 'accel'
+      attribue on MOVE operations, and use it do do better motion prediction.
+      
+    * Eris/Room.cpp: change how delayed sight of people is handled, to
+      avoid duplicate emission of the Appearance signals. This is a very old
+      bug, which was finally tracked down by Hagen.
+      
+    * test/stubServer.cpp: update the StubServer for the changes to Atlas
+      ObjectFactory.
+      
 2005-04-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/TypeInfo.cpp: Modify Atlas Factories usage to match modified

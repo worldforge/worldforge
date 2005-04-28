@@ -417,8 +417,9 @@ void StubServer::subclassType(const std::string& base, const std::string& derive
 
     m_types[derivedName] = derived;
     
-    if(!Atlas::Objects::objectFactory.hasFactory(derivedName)) {
-        Atlas::Objects::objectFactory.addFactory(derivedName, &gameEntityFactory);
+    Atlas::Objects::Factories * of = Atlas::Objects::Factories::instance();
+    if (!of->hasFactory(derivedName)) {
+        of->addFactory(derivedName, &gameEntityFactory);
     }
 }
 

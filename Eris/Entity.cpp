@@ -117,7 +117,12 @@ WFMath::Quaternion Entity::getViewOrientation() const
 
 WFMath::Point<3> Entity::getPredictedPos() const
 {
-    return (m_moving ? m_predictedPosition : m_position);
+    return (m_moving ? m_predicted.position : m_position);
+}
+
+WFMath::Vector<3> Entity::getPredictedVelocity() const
+{
+    return (m_moving ? m_predicted.velocity : WFMath::Vector<3>());
 }
 
 bool Entity::isMoving() const
@@ -125,12 +130,14 @@ bool Entity::isMoving() const
     return m_moving;
 }
 
-void Entity::updatePredictedPosition(const WFMath::TimeStamp& t)
+
+void Entity::updatePredictedState(const WFMath::TimeStamp& t)
 {
     assert(isMoving());
     
     double dt = (t - m_lastMoveTime).milliseconds() / 1000.0; 
-    m_predictedPosition = m_position + (m_velocity * dt);
+    m_predicted.velocity = m_velocity + (m_acc * dt);
+    m_predicted.position = m_position + (m_velocity * dt) + (m_acc * 0.5 * dt * dt);
 }
 
 #pragma mark -
@@ -157,7 +164,8 @@ void Entity::setFromRoot(const Root& obj)
             (A->first == "parents") ||
             (A->first == "pos") ||
             (A->first == "velocity") ||
-            (A->first == "mode"))
+            (A->first == "mode") ||
+            (A->first == "accel"))
         {
             continue; // never set these on a SET op
         }
@@ -187,6 +195,9 @@ void Entity::setPosAndVelocityFromAtlas(const Root& data)
     
     if (data->hasAttr("mode"))
         setAttr("mode", data->getAttr("mode"));
+    
+    if (data->hasAttr("accel"))
+        setAttr("accel", data->getAttr("accel"));
     
     endUpdate();
 }
@@ -236,7 +247,12 @@ void Entity::setMoving(bool inMotion)
     
     if (m_moving) m_view->removeFromPrediction(this);
     m_moving = inMotion;
-    if (m_moving) m_view->addToPrediction(this);
+    if (m_moving)
+    {
+        m_predicted.position = m_position;
+        m_predicted.velocity = m_velocity;
+        m_view->addToPrediction(this);
+    }
     
     Moving.emit(inMotion);
 }
@@ -278,10 +294,12 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
         return true;
     } else if (attr == "pos") {
         m_position.fromAtlas(v);
-        m_predictedPosition = m_position;
         return true;
     } else if (attr == "velocity") {
         m_velocity.fromAtlas(v);
+        return true;
+    } else if (attr == "accel") {
+        m_acc.fromAtlas(v);
         return true;
     } else if (attr == "orientation") {
         m_orientation.fromAtlas(v);
@@ -348,7 +366,6 @@ void Entity::setLocationFromAtlas(const std::string& locId)
     Entity* newLocation = m_view->getEntity(locId);
     if (!newLocation)
     {
-        //debug() << "placing entity " << this << "(" << m_id << ") in limbo till we get " << locId;
         m_view->getEntityFromServer(locId);
         
         m_limbo = true;

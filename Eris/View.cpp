@@ -79,7 +79,7 @@ void View::update()
     
     // run motion prediction for each moving entity
     for (EntitySet::iterator it=m_moving.begin(); it != m_moving.end(); ++it)
-        (*it)->updatePredictedPosition(t);
+        (*it)->updatePredictedState(t);
 }
 
 void View::addToPrediction(Entity* ent)
