@@ -12,13 +12,20 @@
 
 namespace Atlas { namespace Objects { 
 
+ObjectsDecoder::ObjectsDecoder(Factories * f) : m_factories(f)
+{
+    if (m_factories == 0) {
+        m_factories = Factories::instance();
+    }
+}
+
 ObjectsDecoder::~ObjectsDecoder()
 {
 }
 
 void ObjectsDecoder::messageArrived(const Atlas::Message::MapType& o)
 {
-    Root obj = messageElement2ClassObject(o);
+    Root obj = m_factories->createObject(o);
     objectArrived(obj);
 }
 

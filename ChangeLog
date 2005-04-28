@@ -1,5 +1,12 @@
 2005-04-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/Decoder.cpp, Atlas/Objects/Decoder.h,
+	  Atlas/Objects/GenerateDecoder.py: Modify decoder so it
+	  has a pointer to a Factories instance, which is by default the
+	  global shared instance.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* Anonymous.cpp, Anonymous.h, Decoder.cpp, Decoder.h, Dispatcher.cpp,
 	  Dispatcher.h, Entity.h, ObjectsFwd.h, Operation.h, Root.cpp, Root.h,
 	  RootEntity.cpp, RootEntity.h, RootEntityChildren.cpp,

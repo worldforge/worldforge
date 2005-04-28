@@ -29,6 +29,8 @@ template <class T> class SmartPtr;
 class RootData;
 typedef SmartPtr<RootData> Root;
 
+class Factories;
+
 /** Objects hierarchy decoder
  *
  * This decoder can be bound to a codec, will assemble incoming messages,
@@ -42,8 +44,15 @@ typedef SmartPtr<RootData> Root;
 class ObjectsDecoder : public Atlas::Message::DecoderBase
 {
 public:
+    /// Constructor.
+    explicit ObjectsDecoder(Factories * f = 0);
     /// Default destructor.
     virtual ~ObjectsDecoder();
+
+    /// Factories accessor
+    Factories * factories() const {
+        return m_factories;
+    }
 protected:
     /// Overridden by Objects::Decoder to retrieve the object.
     virtual void messageArrived(const Atlas::Message::MapType&);
@@ -54,6 +63,7 @@ protected:
     /// call right object*Arrived method
     virtual void objectArrived(const Root& obj) = 0;
 
+    Factories * m_factories;
 };
 
 """) #"for xemacs syntax highlighting
@@ -74,13 +84,20 @@ protected:
         self.write('\n#include <Atlas/Objects/SmartPtr.h>\n\n')
         self.ns_open(self.base_list)
         self.write("""
+ObjectsDecoder::ObjectsDecoder(Factories * f) : m_factories(f)
+{
+    if (m_factories == 0) {
+        m_factories = Factories::instance();
+    }
+}
+
 ObjectsDecoder::~ObjectsDecoder()
 {
 }
 
 void ObjectsDecoder::messageArrived(const Atlas::Message::MapType& o)
 {
-    Root obj = messageElement2ClassObject(o);
+    Root obj = m_factories->createObject(o);
     objectArrived(obj);
 }
 
