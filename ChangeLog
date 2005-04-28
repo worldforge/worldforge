@@ -1,5 +1,11 @@
 2005-04-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/AttributeInfo.py: Fix the test on empty parents so
+	  it uses the defaults for the instance, not the defaults for the
+	  Root class.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/objectFactory.h,
 	  Atlas/Objects/GenerateObjectFactory.py: Make Factories an singleton
 	  and get rid of the static instance. Add constructors to ensure

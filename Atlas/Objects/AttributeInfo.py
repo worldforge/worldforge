@@ -100,7 +100,7 @@ class AttributeInfo:
             res = res + '    if(m_attrFlags & %s) {\n' % self.flag_name
             indent = "    "
         else:
-            res = res + '    if((m_attrFlags & %s) || !defaults_%s->attr_%s.empty()) {\n' \
+            res = res + '    if((m_attrFlags & %s) || !((%s *)m_defaults)->attr_%s.empty()) {\n' \
                   % (self.flag_name, classname, self.name)
             indent = "    "
 
