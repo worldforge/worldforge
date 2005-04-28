@@ -80,7 +80,7 @@ ObjectsDecoder::~ObjectsDecoder()
 
 void ObjectsDecoder::messageArrived(const Atlas::Message::MapType& o)
 {
-    Root obj =  messageElement2ClassObject(o);
+    Root obj = messageElement2ClassObject(o);
     objectArrived(obj);
 }
 

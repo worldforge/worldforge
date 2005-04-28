@@ -9,6 +9,8 @@
 
 namespace Atlas { namespace Objects {
 
+class RootData;
+
 class NullSmartPtrDereference : public Atlas::Exception
 {
   public:
@@ -82,7 +84,7 @@ class SmartPtr
     {
         return SmartPtr(ptr->getDefaultObject());
     }
-    static SmartPtr<T> factory()
+    static SmartPtr<RootData> factory()
     {
         SmartPtr<T> obj;
         return obj;
