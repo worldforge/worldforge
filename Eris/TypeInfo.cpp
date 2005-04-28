@@ -197,15 +197,16 @@ void TypeInfo::validateBind()
 	
     m_bound = true;
      
-    if (!Atlas::Objects::objectFactory.hasFactory(m_name))
+    Atlas::Objects::Factories * of = Atlas::Objects::Factories::instance();
+    if (!of->hasFactory(m_name))
     {
         // identify the most accurate C++ base type and use as the factory
         if (isA(m_typeService->getTypeByName("game_entity"))) {
-            m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &gameEntityFactory);
+            m_atlasClassNo = of->addFactory(m_name, &gameEntityFactory);
         } else if (isA(m_typeService->getTypeByName("admin_entity"))) {
-            m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &adminEntityFactory);
+            m_atlasClassNo = of->addFactory(m_name, &adminEntityFactory);
         } else if (isA(m_typeService->getTypeByName("action"))) {
-            m_atlasClassNo = Atlas::Objects::objectFactory.addFactory(m_name, &actionFactory);
+            m_atlasClassNo = of->addFactory(m_name, &actionFactory);
         } else {
             // screwed
             error() << "type " << m_name <<  " doesn't inherit game_entity or admin_entity";

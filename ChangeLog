@@ -1,3 +1,8 @@
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/TypeInfo.cpp: Modify Atlas Factories usage to match modified
+	  Atlas-C++ API.
+
 2005-04-28  James Turner  <james@worldforge.org>
 
     * Eris/IGRouter.cpp: remove a debug() where a SET op is received for
