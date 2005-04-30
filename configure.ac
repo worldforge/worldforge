@@ -1,16 +1,16 @@
 dnl Initialise autoconf
 
-AC_INIT(mercator, 0.2.2)
+AC_INIT(mercator, 0.2.2, alriddoch@zepler.org)
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
+AC_CONFIG_HEADERS([config.h])
 
 dnl Detect the canonical host and target environment
 
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_HOST
 
 dnl Initialise automake
 
-AM_INIT_AUTOMAKE([dist-bzip2])
-AM_CONFIG_HEADER(config.h)
+AM_INIT_AUTOMAKE([dist-bzip2 check-news])
 
 dnl versioning info for libtool
 MERCATOR_CURRENT=2
@@ -22,13 +22,12 @@ MERCATOR_LIB_SUFFIX="-0.2"
 MERCATOR_LIBS="-lmercator$MERCATOR_LIB_SUFFIX"
 MERCATOR_REQUIRES=""
 
-AC_SUBST(MERCATOR_VERSION)
 AC_SUBST(MERCATOR_VERSION_INFO)
 
 dnl Test for GNU libtool
 
-AM_DISABLE_STATIC
-AM_PROG_LIBTOOL
+AC_DISABLE_STATIC
+AC_PROG_LIBTOOL
 
 AC_PROG_CXX
 
@@ -50,7 +49,7 @@ dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 AC_DEFINE(_XOPEN_SOURCE, 500, [This is XOpen source])
 AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 
-AC_LANG_PUSH(C++)
+AC_LANG(C++)
 
 dnl Check for float to int converters
 
@@ -67,8 +66,6 @@ PKG_CHECK_MODULES(WF, wfmath-0.3 >= 0.3.2,
         AC_MSG_ERROR(Couldn't find wfmath or wfmath or version is insufficent)
     ])
 
-AC_LANG_POP(C++)
-
 SYSTEM_LIBS=""
 MERCATOR_CFLAGS=""
 AC_SUBST(SYSTEM_LIBS)
@@ -77,10 +74,11 @@ AC_SUBST(MERCATOR_LIBS)
 AC_SUBST(MERCATOR_CFLAGS)
 AC_SUBST(MERCATOR_REQUIRES)
 
-AC_OUTPUT([
-Makefile
-Mercator/Makefile
-tests/Makefile
-mercator.spec
-mercator-0.2.pc
+AC_CONFIG_FILES([
+	Makefile
+	Mercator/Makefile
+	tests/Makefile
+	mercator.spec
+	mercator-0.2.pc
 ])
+AC_OUTPUT

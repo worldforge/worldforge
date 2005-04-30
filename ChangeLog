@@ -1,3 +1,12 @@
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Add a pending news item for the upcoming release.
+
+	* configure.ac: Update autoconf usage. Remove MERCATOR_VERSION.
+
+	* tests/Makefile.am: Add test*.pgm to the DISTCLEANFILES so that
+	  distcheck runs cleanly.
+
 2005-04-23  Al Riddoch  <alriddoch@zepler.org>
 
 	* mercator.spec.in: Remove some unnecessary Requires lines from the

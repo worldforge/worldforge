@@ -2,6 +2,8 @@ TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhy
 
 INCLUDES = -I$(top_srcdir)
 
+DISTCLEANFILES = test1.pgm test2.pgm
+
 check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG testArea testTileShader
 
 mercatortest_SOURCES = main.cpp
