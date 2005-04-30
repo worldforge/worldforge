@@ -1,13 +1,13 @@
 dnl Process this file with autoconf to generate configure
 
 dnl Autoconf Initialization
-AC_INIT(varconf, 0.6.3)
+AC_INIT(varconf, 0.6.3, alriddoch@zepler.org)
 AC_CONFIG_SRCDIR([varconf/variable.cpp])
 AC_CONFIG_HEADERS([config.h])
 
-dnl Detect the canonical host and target environment
+dnl Detect the canonical host environment
 
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_HOST
 
 dnl Information
 
@@ -32,8 +32,8 @@ dnl General Initialization
 
 dnl Test for GNU libtool
 
-AM_DISABLE_STATIC
-AM_PROG_LIBTOOL
+AC_DISABLE_STATIC
+AC_PROG_LIBTOOL
 
 dnl Test for C++ Language
 
@@ -53,7 +53,7 @@ AC_ARG_ENABLE(debug,
     ]
 )
 
-AC_LANG_PUSH(C++)
+AC_LANG(C++)
 
 dnl Test for libsigc++
 PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
@@ -78,8 +78,6 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
             ])
     ])
 
-AC_LANG_POP(C++)
-
 VARCONF_LIBS="-lvarconf$VARCONF_LIB_SUFFIX"
 VARCONF_VERSION_INFO=$VARCONF_CURRENT:$VARCONF_REVISION:$VARCONF_AGE
 
@@ -91,7 +89,7 @@ AC_SUBST(VARCONF_LIB_SUFFIX)
 AC_SUBST(MIN_SIGC_VERSION)
 
 dnl Generate files                         
-AC_OUTPUT([
+AC_CONFIG_FILES([
 	Makefile
 	varconf.spec
 	doc/Makefile
@@ -100,3 +98,4 @@ AC_OUTPUT([
 	varconf/Makefile
 	varconf-1.0.pc
 ])
+AC_OUTPUT

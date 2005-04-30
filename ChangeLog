@@ -1,3 +1,12 @@
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Include a bug report address, set cross-compile host
+	  correctly and clean up.
+
+2005-04-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.3. Interface version 4.0.0, or 5.0.0 with sigc++ 2.0.
+
 2005-04-23  Al Riddoch  <alriddoch@zepler.org>
 
 	* AUTHORS: Update AUTHORS file to reflect the current maintainers.
