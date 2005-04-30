@@ -1,15 +1,17 @@
-# Autoconf setup
-AC_INIT(eris, 1.3.4)
+dnl Autoconf setup
+
+AC_INIT(eris, 1.3.4, james@worldforge.org)
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
+AC_CONFIG_HEADERS([config.h])
 
-# Detect the canonical host and target environment
+dnl Detect the canonical host environment
+
 AC_CANONICAL_HOST
-AC_CANONICAL_TARGET
 
-# Automake setup
+dnl Automake setup
+
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER(config.h)
 
 dnl versioning info for libtool
 dnl DO NOT CHANGE ERIS_CURRENT HERE. See the checks for sigc++
@@ -23,14 +25,11 @@ ERIS_AGE=0
 
 ERIS_REQUIRES=""
 
-AC_PROG_CC
 AC_PROG_CXX
-AC_HEADER_STDC([])
-AM_DISABLE_STATIC
-AM_PROG_LIBTOOL
+AC_DISABLE_STATIC
+AC_PROG_LIBTOOL
 
 CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi"
-CPPFLAGS="$CPPFLAGS -DATLAS_ELEMENT_TYPEDEF_PRIVATE"
 
 dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 
@@ -60,7 +59,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0,
     ])
 
 
-# check for all the WorldForge libs we use
+dnl check for all the WorldForge libs we use
 PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 >= 0.5.94 wfmath-0.3 >= 0.3.2,
     [
         CXXFLAGS="$CXXFLAGS $WF_CFLAGS"

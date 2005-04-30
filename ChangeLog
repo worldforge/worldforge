@@ -1,3 +1,10 @@
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Replace # with dnl. Use modern versions of autoconf
+	  macros, and get rid of call to AC_CANONICAL_TARGET, AC_PROG_CC
+	  and AC_HEADER_STDC. No longer need to set
+	  ATLAS_ELEMENT_TYPEDEF_PRIVATE.
+
 2005-04-28  James Turner  <james@worldforge.org>
 
     * Eris/Entity.cpp, Eris/Entity.h, Eris/View.cpp: support an 'accel'
