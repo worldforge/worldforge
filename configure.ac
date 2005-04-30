@@ -131,7 +131,7 @@ AC_SUBST(OTHER_LIBS)
 
 dnl Generate files
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 	Makefile
 	Atlas/Makefile
 	Atlas/Codecs/Makefile
@@ -148,3 +148,4 @@ AC_OUTPUT([
 	atlas-cpp.spec
 	atlascpp-0.6.pc
 ])
+AC_OUTPUT
