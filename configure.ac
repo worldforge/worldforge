@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 
 AC_INIT(wfmath, 0.3.4)
 AC_CONFIG_SRCDIR([wfmath/wfmath.h])
-AC_CONFIG_HEADERS(config.h)
+AC_CONFIG_HEADERS([config.h])
 
 dnl versioning info for libtool
 WFMATH_CURRENT=3
