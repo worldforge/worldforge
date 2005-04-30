@@ -1,4 +1,4 @@
-AM_CXXFLAGS = -O2 -Wall
+AM_CXXFLAGS = -Wall
 INCLUDES = -I$(top_srcdir)
 EXTRA_DIST = bc_sloppy_mag_3
 

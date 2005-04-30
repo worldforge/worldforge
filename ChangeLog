@@ -1,3 +1,13 @@
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/Makefile.am: Don't force compilation with -O2. There are
+	  good reasons not to.
+
+	* configure.ac: Update autoconf usage.
+
+	* acinclude.m4: Remove unused AM_PATH_ATLAS, and add required
+	  pkg-config macro.
+
 2005-04-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Fix a bug in initialising the version to a non-literal.
