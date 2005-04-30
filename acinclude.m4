@@ -1,80 +1,56 @@
-dnl
-dnl AM_PATH_CPPUNIT([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
-dnl
-AC_DEFUN(AM_PATH_CPPUNIT,
-[
+dnl PKG_CHECK_MODULES(GSTUFF, gtk+-2.0 >= 1.3 glib = 1.3.4, action-if, action-not)
+dnl defines GSTUFF_LIBS, GSTUFF_CFLAGS, see pkg-config man page
+dnl also defines GSTUFF_PKG_ERRORS on error
+AC_DEFUN([PKG_CHECK_MODULES], [
+  succeeded=no
 
-AC_ARG_WITH(cppunit-prefix,[  --with-cppunit-prefix=PFX   Prefix where CppUnit is installed (optional)],
-            cppunit_config_prefix="$withval", cppunit_config_prefix="")
-AC_ARG_WITH(cppunit-exec-prefix,[  --with-cppunit-exec-prefix=PFX  Exec prefix where CppUnit is installed (optional)],
-            cppunit_config_exec_prefix="$withval", cppunit_config_exec_prefix="")
+  if test -z "$PKG_CONFIG"; then
+    AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+  fi
 
-  if test x$cppunit_config_exec_prefix != x ; then
-     cppunit_config_args="$cppunit_config_args --exec-prefix=$cppunit_config_exec_prefix"
-     if test x${CPPUNIT_CONFIG+set} != xset ; then
-        CPPUNIT_CONFIG=$cppunit_config_exec_prefix/bin/cppunit-config
+  if test "$PKG_CONFIG" = "no" ; then
+     echo "*** The pkg-config script could not be found. Make sure it is"
+     echo "*** in your path, or set the PKG_CONFIG environment variable"
+     echo "*** to the full path to pkg-config."
+     echo "*** Or see http://www.freedesktop.org/software/pkgconfig to get pkg-config."
+  else
+     PKG_CONFIG_MIN_VERSION=0.9.0
+     if $PKG_CONFIG --atleast-pkgconfig-version $PKG_CONFIG_MIN_VERSION; then
+        AC_MSG_CHECKING(for $2)
+
+        if $PKG_CONFIG --exists "$2" ; then
+            AC_MSG_RESULT(yes)
+            succeeded=yes
+
+            AC_MSG_CHECKING($1_CFLAGS)
+            $1_CFLAGS=`$PKG_CONFIG --cflags "$2"`
+            AC_MSG_RESULT($$1_CFLAGS)
+
+            AC_MSG_CHECKING($1_LIBS)
+            $1_LIBS=`$PKG_CONFIG --libs "$2"`
+            AC_MSG_RESULT($$1_LIBS)
+        else
+            $1_CFLAGS=""
+            $1_LIBS=""
+            ## If we have a custom action on failure, don't print errors, but 
+            ## do set a variable so people can do so.
+            $1_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "$2"`
+            ifelse([$4], ,echo $$1_PKG_ERRORS,)
+        fi
+
+        AC_SUBST($1_CFLAGS)
+        AC_SUBST($1_LIBS)
+     else
+        echo "*** Your version of pkg-config is too old. You need version $PKG_CONFIG_MIN_VERSION or newer."
+        echo "*** See http://www.freedesktop.org/software/pkgconfig"
      fi
   fi
-  if test x$cppunit_config_prefix != x ; then
-     cppunit_config_args="$cppunit_config_args --prefix=$cppunit_config_prefix"
-     if test x${CPPUNIT_CONFIG+set} != xset ; then
-        CPPUNIT_CONFIG=$cppunit_config_prefix/bin/cppunit-config
-     fi
-  fi
 
-  AC_PATH_PROG(CPPUNIT_CONFIG, cppunit-config, no)
-  cppunit_version_min=$1
-
-  AC_MSG_CHECKING(for Cppunit - version >= $cppunit_version_min)
-  no_cppunit=""
-  if test "$CPPUNIT_CONFIG" = "no" ; then
-    no_cppunit=yes
-  else
-    CPPUNIT_CFLAGS=`$CPPUNIT_CONFIG --cflags`
-    CPPUNIT_LIBS=`$CPPUNIT_CONFIG --libs`
-    cppunit_version=`$CPPUNIT_CONFIG --version`
-
-    cppunit_major_version=`echo $cppunit_version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
-    cppunit_minor_version=`echo $cppunit_version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
-    cppunit_micro_version=`echo $cppunit_version | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
-
-    cppunit_major_min=`echo $cppunit_version_min | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
-    cppunit_minor_min=`echo $cppunit_version_min | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\2/'`
-    cppunit_micro_min=`echo $cppunit_version_min | \
-           sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\3/'`
-
-    cppunit_version_proper=`expr \
-        $cppunit_major_version \> $cppunit_major_min \| \
-        $cppunit_major_version \= $cppunit_major_min \& \
-        $cppunit_minor_version \> $cppunit_minor_min \| \
-        $cppunit_major_version \= $cppunit_major_min \& \
-        $cppunit_minor_version \= $cppunit_minor_min \& \
-        $cppunit_micro_version \>= $cppunit_micro_min `
-
-    if test "$cppunit_version_proper" = "1" ; then
-      AC_MSG_RESULT([$cppunit_major_version.$cppunit_minor_version.$cppunit_micro_version])
-    else
-      AC_MSG_RESULT(no)
-      no_cppunit=yes
-    fi
-  fi
-
-  if test "x$no_cppunit" = x ; then
-     ifelse([$2], , :, [$2])     
-  else
-     CPPUNIT_CFLAGS=""
-     CPPUNIT_LIBS=""
+  if test $succeeded = yes; then
      ifelse([$3], , :, [$3])
+  else
+     ifelse([$4], , AC_MSG_ERROR([Library requirements ($2) not met; consider adjusting the PKG_CONFIG_PATH environment variable if your libraries are in a nonstandard prefix so pkg-config can find them.]), [$4])
   fi
-
-  AC_SUBST(CPPUNIT_CFLAGS)
-  AC_SUBST(CPPUNIT_LIBS)
 ])
-
 
 

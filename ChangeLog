@@ -1,5 +1,10 @@
 2005-04-30  Al Riddoch  <alriddoch@zepler.org>
 
+	* acinclude.m4: Remove unused CPPUnit macro, and add required
+	  pkg-config macro.
+
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
 	* NEWS: Add a pending news item for the upcoming release.
 
 	* configure.ac: Update autoconf usage. Remove MERCATOR_VERSION.
