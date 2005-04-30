@@ -1,12 +1,12 @@
 dnl Initialise autoconf
 
-AC_INIT(Atlas-C++, 0.5.94, alriddoch@zepler.org, Atlas-C++)
+AC_INIT(Atlas-C++, 0.5.95, alriddoch@zepler.org, Atlas-C++)
 AC_CONFIG_SRCDIR([Atlas/Bridge.cpp])
 AC_CONFIG_HEADERS([config.h])
 
-dnl Detect the canonical host and target environment
+dnl Detect the canonical host environment
 
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_HOST
 
 dnl Initialise automake
 
@@ -20,8 +20,8 @@ AC_SUBST(INTERFACE_VERSION)
 
 dnl Test for GNU libtool
 
-AM_DISABLE_STATIC
-AM_PROG_LIBTOOL
+AC_DISABLE_STATIC
+AC_PROG_LIBTOOL
 
 dnl Test for C++ compiler
 
@@ -41,10 +41,6 @@ AC_ARG_ENABLE(debug,
 )
 
 AC_LANG(C++)
-
-dnl Test for C++ Standard Library
-
-AC_LANG_PUSH(C++)
 
 dnl Test for <cassert> header file
 
@@ -121,8 +117,6 @@ AC_CHECK_HEADERS(bzlib.h)
 
 CFLAGS="$ac_save_CFLAGS"
 LIBS="$ac_save_LIBS"
-
-AC_LANG_POP(C++)
 
 SYSTEM_LIBS="$SYSTEM_LIBS -lm"
 ATLAS_CFLAGS=""

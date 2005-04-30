@@ -1,5 +1,10 @@
 2005-04-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* configure.ac: Increment version to 0.5.95 as the API has now
+	  changed. Many cleanups.
+
+2005-04-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/Decoder.cpp, Atlas/Objects/Decoder.h,
 	  Atlas/Objects/GenerateDecoder.py: Modify decoder so it
 	  has a pointer to a Factories instance, which is by default the
