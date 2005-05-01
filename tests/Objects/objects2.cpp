@@ -4,7 +4,7 @@
 #include <Atlas/Objects/Dispatcher.h>
 #include <Atlas/Objects/loadDefaults.h>
 //#include "../../src/Net/Stream.h"
-#include "../../tutorial/DebugBridge.h"
+#include "DebugBridge.h"
 
 #define DEBUG_PRINT(foo) //foo;
 

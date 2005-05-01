@@ -1,3 +1,15 @@
+2005-05-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Update NEWS from transitional branch.
+
+	* tests/Objects/Makefile.am, tests/Objects/objects2.cpp,
+	  tests/Objects/DebugBridge.h: Include required DebugBridge
+	  class in the tests dir.
+
+	* tutorial/Makefile.am, tutorial/example/COPYING,
+	  tutorial/example/autogen.sh: Include the tutorial example in
+	  the distribution.
+
 2005-04-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Increment version to 0.5.95 as the API has now

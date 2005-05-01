@@ -17,7 +17,7 @@ custom_ops_SOURCES = custom_ops.cpp
 
 objects1_SOURCES = objects1.cpp
 
-objects2_SOURCES = objects2.cpp
+objects2_SOURCES = objects2.cpp DebugBridge.h
 
 encoder1_SOURCES = encoder1.cpp
 

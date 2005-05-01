@@ -15,4 +15,8 @@
 
 EXTRA_DIST = \
 	building.dox index.dox message.dox \
-	objects.dox preamble.dox simple.dox
+	objects.dox preamble.dox simple.dox \
+	example/AUTHORS example/autogen.sh example/ChangeLog \
+	example/configure.ac example/COPYING example/DebugBridge.h \
+	example/INSTALL example/Makefile.am example/NEWS \
+	example/README example/simple_client.cpp example/simple_server.cpp

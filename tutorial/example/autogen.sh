@@ -30,7 +30,7 @@ echo automake...
     exit 1
 }
 
-automake --add-missing --copy --gnu
+automake --add-missing --copy
 
 echo autoconf...
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
