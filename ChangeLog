@@ -1,3 +1,9 @@
+2005-05-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Makefile.am, Atlas/Objects/flag.cpp: Store the
+	  date in flag.cpp to make sure its modified mtime gets commited
+	  to cvs each time it is updated.
+
 2005-05-01  Al Riddoch  <alriddoch@zepler.org>
 
 	* NEWS: Update NEWS from transitional branch.

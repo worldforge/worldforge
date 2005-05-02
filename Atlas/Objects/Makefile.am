@@ -36,7 +36,7 @@ $(REAL_GENERATED_CPP) $(GENERATED_H):
 	fi
 
 flag.cpp: $(PY_SOURCES)
-	python gen_cpp.py && touch flag.cpp
+	python gen_cpp.py && (echo /\* ; date ; echo \*/) > flag.cpp
 
 libAtlasObjectsincludedir = $(includedir)/Atlas-C++-0.6/Atlas/Objects
 
