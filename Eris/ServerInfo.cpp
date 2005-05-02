@@ -14,6 +14,17 @@ using Atlas::Objects::Entity::RootEntity;
 namespace Eris
 {
 
+ServerInfo::ServerInfo() :
+    m_status(INVALID)
+{
+    _ping = -1;
+    _name = "-";
+    _ruleset = "-";
+    _server = "";
+    _clients = 0;
+    _uptime = 0;
+}
+
 ServerInfo::ServerInfo(const std::string &host) :
     m_status(INVALID),
     _host(host)

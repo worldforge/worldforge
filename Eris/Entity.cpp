@@ -136,8 +136,14 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t)
     assert(isMoving());
     
     double dt = (t - m_lastMoveTime).milliseconds() / 1000.0; 
-    m_predicted.velocity = m_velocity + (m_acc * dt);
-    m_predicted.position = m_position + (m_velocity * dt) + (m_acc * 0.5 * dt * dt);
+    
+    if (m_acc.isValid()) {
+        m_predicted.velocity = m_velocity + (m_acc * dt);
+        m_predicted.position = m_position + (m_velocity * dt) + (m_acc * 0.5 * dt * dt);
+    } else {
+        m_predicted.velocity = m_velocity;
+        m_predicted.position = m_position + (m_velocity * dt);
+    }
 }
 
 #pragma mark -

@@ -41,7 +41,7 @@ Connection::Connection(const std::string &cnm, const std::string& host, short po
     m_typeService(new TypeService(this)),
     m_defaultRouter(NULL),
     m_lock(0),
-    m_info(""),
+    m_info(host),
     m_responder(new ResponseTracker)
 {	
     Poll::instance().Ready.connect(SigC::slot(*this, &Connection::gotData));

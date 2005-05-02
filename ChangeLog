@@ -1,3 +1,14 @@
+2005-05-02  James Turner  <james@worldforge.org>
+
+    * Eris/Entity.cpp: updatePredictedState: handle the case where no
+      acceleration value has been defined.
+      
+    * Eris/ServerInfo.h, Eris/ServerInfo.cpp: make the default constructor
+      public, so Connection::getServerInfo is usable.
+
+    * Eris/Connection.cpp: intialise the server info host name since it's
+      now known in time.
+
 2005-04-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Replace # with dnl. Use modern versions of autoconf

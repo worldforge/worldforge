@@ -23,7 +23,8 @@ public:
     
     void moveLocation(const std::string& eid, const std::string& loc, const WFMath::Point<3>& pos);
     void movePos(const std::string& eid, const WFMath::Point<3>& pos);
-
+    void moveVelocity(const std::string& eid, const WFMath::Vector<3>& vel);
+    
     void create(const Atlas::Objects::Entity::GameEntity& ent);
     
     /** generalised attribute modification interface */

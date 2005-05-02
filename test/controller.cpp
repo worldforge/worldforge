@@ -126,6 +126,17 @@ void Controller::movePos(const std::string& eid, const WFMath::Point<3>& pos)
     send(mv);
 }
 
+void Controller::moveVelocity(const std::string& eid, const WFMath::Vector<3>& vel)
+{
+    Move mv;
+    Root arg;
+    arg->setAttr("velocity", vel.toAtlas());
+    mv->setTo(eid);
+    mv->setFrom(eid);
+    mv->setArgs1(arg);
+    send(mv);
+}
+
  void Controller::broadcastSoundFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op)
  {
     Sound snd;

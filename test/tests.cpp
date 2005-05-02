@@ -788,6 +788,49 @@ void testSightCreate(Controller& ctl)
 }
 
 
+void testMovement(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    ctl.setEntityVisibleToAvatar("_ball", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_ball");
+        wf.run();
+    }
+
+    Eris::Entity* ball = av->getView()->getEntity("_ball");
+    assert(!ball->isMoving());
+    
+    WFMath::Vector<3> vel(2, 3, 0);
+    ctl.moveVelocity("_ball", vel);
+    
+    SignalRecorder1<bool> moving;
+    ball->Moving.connect(SigC::slot(moving, &SignalRecorder1<bool>::fired));
+    
+    while (!moving.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(ball->getVelocity() == vel);
+    
+    /*
+    
+    run loop 50 times
+    {
+        each 0.1 of a second, do view::update prediction
+        check predicted pos is close to locally predicted.
+    }
+    
+    send stop
+    
+    check moving goes false, check final pos is 'exact' match, etc
+ 
+    */
+}
+
 int main(int argc, char **argv)
 {
     int sockets[2];
@@ -822,6 +865,7 @@ int main(int argc, char **argv)
             testSeeMove(ctl);
             testLocationChange(ctl);
             testSightAction(ctl);
+            testMovement(ctl);
         }
         catch (TestFailure& tfexp)
         {

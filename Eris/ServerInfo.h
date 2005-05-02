@@ -20,6 +20,8 @@ value.
 class ServerInfo
 {
 public:
+    ServerInfo();
+    
     typedef enum {
         INVALID,
         QUERYING,

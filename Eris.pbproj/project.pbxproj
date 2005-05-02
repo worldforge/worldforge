@@ -1417,7 +1417,7 @@
 				PRODUCT_NAME = metaQuery;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wall";
-				ZERO_LINK = NO;
+				ZERO_LINK = YES;
 			};
 			dependencies = (
 				C4AD293E05FA548700AFB402,
