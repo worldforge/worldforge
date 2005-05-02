@@ -1,3 +1,13 @@
+2005-05-03  James Turner  <james@worldforge.org>
+
+	* Eris/Account.cpp: clean up how login timeouts are handled, so tests
+	  pass on Mac (and valgrind should warn about one less thing, I think).
+	  
+	* Eris/Meta.cpp, Eris/Meta.h: make Meta's timeout be an auto-ptr, and
+	  clean up the usage generally, to hopefully make it more robust.
+
+	* Eris/DeleteLater.h: add missing include guards. Ooops.
+
 2005-05-02  James Turner  <james@worldforge.org>
 
     * Eris/Entity.cpp: updatePredictedState: handle the case where no

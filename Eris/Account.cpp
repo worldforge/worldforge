@@ -9,6 +9,7 @@
 #include <Eris/Avatar.h>
 #include <Eris/Router.h>
 #include <Eris/Response.h>
+#include <Eris/DeleteLater.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -378,7 +379,7 @@ void Account::handleLoginTimeout()
     warning() << "login / account creation timed out waiting for response";
     
     m_status = DISCONNECTED;
-    m_timeout.reset();
+    deleteLater(m_timeout.release());
     
     LoginFailure.emit("timed out waiting for server response");
 }
@@ -471,7 +472,7 @@ void Account::handleLogoutTimeout()
     error() << "LOGOUT timed out waiting for response";
     
     m_status = DISCONNECTED;
-    m_timeout.reset();
+    deleteLater(m_timeout.release());
     
     LogoutComplete.emit(false);
 }

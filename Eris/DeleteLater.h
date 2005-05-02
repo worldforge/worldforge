@@ -1,5 +1,5 @@
-
-
+#ifndef ERIS_DELETE_LATER_H
+#define ERIS_DELETE_LATER_H
 
 namespace Eris
 {
@@ -36,3 +36,5 @@ void deleteLater(T* ins)
 }
 
 } // of namespace
+
+#endif ERIS_DELETE_LATER_H

@@ -51,8 +51,8 @@ Timeout::Timeout(const std::string &label, void* inst, unsigned long milli) :
 
 Timeout::~Timeout()
 {
-    if(!_allTimeouts.erase(_label))
-        throw InvalidOperation("Corrupted timeout map - very bad!");
+    assert(_allTimeouts.count(_label) == 1);
+    _allTimeouts.erase(_label);
 }
 
 void Timeout::cancel()

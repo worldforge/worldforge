@@ -55,8 +55,7 @@ Meta::Meta(const std::string& metaServer, unsigned int maxQueries) :
     m_status(INVALID),
     m_metaHost(metaServer),
     m_maxActiveQueries(maxQueries),
-    m_stream(NULL),
-    m_timeout(NULL)
+    m_stream(NULL)
 {
     Poll::instance().Ready.connect(SigC::slot(*this, &Meta::gotData));
 }
@@ -66,8 +65,9 @@ Meta::~Meta()
     disconnect();
       
     // delete any outstanding queries
-    for (QuerySet::const_iterator Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q)
+    for (QuerySet::const_iterator Q = m_activeQueries.begin(); Q != m_activeQueries.end(); ++Q) {
         delete *Q;
+    }
 }
 
 /*
@@ -195,7 +195,7 @@ void Meta::connect()
     
     // check for meta-server timeouts; this is going to be
     // fairly common as long as the protocol is UDP, I think
-    m_timeout = new Timeout("meta_ckeepalive_"+m_metaHost, this, 8000);
+    m_timeout.reset( new Timeout("meta_ckeepalive_"+m_metaHost, this, 8000) );
     m_timeout->Expired.connect(SigC::slot(*this, &Meta::metaTimeout));
 }
 
@@ -208,11 +208,7 @@ void Meta::disconnect()
         m_stream = NULL;
     }
     
-    if (m_timeout)
-    {
-        delete m_timeout;
-        m_timeout = NULL;
-    }
+    m_timeout.reset();
 }
 
 void Meta::gotData(PollData &data)
@@ -328,11 +324,7 @@ void Meta::processCmd()
         
         (*m_stream) << std::string(_data, dsz) << std::flush;
         
-        // clear the handshake timeout, so listReq can start it's own.
-        delete m_timeout;
-        m_timeout = NULL;
-		
-        debug() << "processed HANDSHAKE, sending list request";
+        m_timeout.reset();
         // send the initial list request
         listReq(0);
     } break;
@@ -343,12 +335,11 @@ void Meta::processCmd()
         unpack_uint32(_packed, _dataPtr);
         setupRecvData(_packed, LIST_RESP2);
 		
-        debug() << "processed LIST_RESP";
         // allow progress bars to setup, etc, etc
         CompletedServerList.emit(_totalServers);
         
         assert(m_gameServers.empty());
-	m_gameServers.reserve(_totalServers);
+        m_gameServers.reserve(_totalServers);
     } break;
 	
     case LIST_RESP2: {
@@ -368,7 +359,6 @@ void Meta::processCmd()
             
             // FIXME  - decide whther a reverse name lookup is necessary here or not
             m_gameServers.push_back(ServerInfo(buf));
-            debug() << "queueing game server " << buf << " for query";
             // is always querying a good idea?
             internalQuery(m_gameServers.size() - 1);
         }
@@ -376,7 +366,6 @@ void Meta::processCmd()
         if (m_gameServers.size() < _totalServers)
         {
             // request some more
-            debug() << "in LIST_RESP2, issuing request for next block";
             listReq(m_gameServers.size());
         } else {
             m_status = VALID;
@@ -400,11 +389,11 @@ void Meta::listReq(int base)
     (*m_stream) << std::string(_data, dsz) << std::flush;
     setupRecvCmd();
     
-    if (m_timeout)
+    if (m_timeout.get())
         m_timeout->reset(5000);
     else
     {
-        m_timeout = new Timeout("meta_list_req", this, 8000);
+        m_timeout.reset( new Timeout("meta_list_req", this, 8000) );
         m_timeout->Expired.connect(SigC::slot(*this, &Meta::metaTimeout));
     }
 }
@@ -518,6 +507,9 @@ void Meta::doFailure(const std::string &msg)
 
 void Meta::metaTimeout()
 {
+    // cancel calls disconnect, which will kill upfront without this
+    deleteLater(m_timeout.release());
+    
     // might want different behaviour in the future, I suppose
     doFailure("Connection to the meta-server timed out");
 }

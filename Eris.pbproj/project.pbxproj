@@ -141,13 +141,10 @@
 			);
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge/forge/libs/Atlas-C++/build /Users/jmt/Worldforge/forge/libs/skstream/build /Users/jmt/Worldforge/forge/libs/wfmath/build";
-				GCC_PREPROCESSOR_DEFINITIONS = ATLAS_ELEMENT_TYPEDEF_PRIVATE;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = tests;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wall";
@@ -1407,17 +1404,15 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "../wfmath/build ../skstream/build ../Atlas-C++/build";
+				FRAMEWORK_SEARCH_PATHS = "/Users/jmt/Worldforge/forge/libs/Atlas-C++/build /Users/jmt/Worldforge/forge/libs/skstream/build /Users/jmt/Worldforge/forge/libs/wfmath/build";
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INSTALL_PATH = /usr/local/bin;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = metaQuery;
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wall";
-				ZERO_LINK = YES;
 			};
 			dependencies = (
 				C4AD293E05FA548700AFB402,

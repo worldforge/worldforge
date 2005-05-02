@@ -865,7 +865,7 @@ int main(int argc, char **argv)
             testSeeMove(ctl);
             testLocationChange(ctl);
             testSightAction(ctl);
-            testMovement(ctl);
+            testMovement(ctl); 
         }
         catch (TestFailure& tfexp)
         {
