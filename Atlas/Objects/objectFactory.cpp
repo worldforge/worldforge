@@ -132,7 +132,7 @@ Root Factories::createObject(const std::string& name)
     
 Root Factories::createObject(const MapType & msg_map)
 {
-    Root obj;
+    Root obj(0);
 
     // is this instance of entity or operation?
     MapType::const_iterator I = msg_map.find("objtype");

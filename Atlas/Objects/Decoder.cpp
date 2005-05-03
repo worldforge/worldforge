@@ -29,8 +29,4 @@ void ObjectsDecoder::messageArrived(const Atlas::Message::MapType& o)
     objectArrived(obj);
 }
 
-void ObjectsDecoder::unknownMessageArrived(const Atlas::Message::Element&)
-{
-}
-
 } } // namespace Atlas::Objects

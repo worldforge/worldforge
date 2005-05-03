@@ -1,3 +1,14 @@
+2005-05-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp: When creating a new object,
+	  initialise the SmartPtr to 0 to start with, for efficiency
+	  and to be sure we really have got a new object.
+
+	* Atlas/Objects/GenerateDecoder.py, Atlas/Objects/Decoder.h,
+	  Atlas/Objects/Decoder.cpp: Remove unknownMessageArrived()
+	  as it was never called.
+
 2005-05-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/Makefile.am, Atlas/Objects/flag.cpp: Store the

@@ -41,11 +41,8 @@ public:
         return m_factories;
     }
 protected:
-    /// Overridden by Objects::Decoder to retrieve the object.
+    /// Overridden by to retrieve the message from DecoderBase.
     virtual void messageArrived(const Atlas::Message::MapType&);
-
-    /// An unknown object has arrived.
-    virtual void unknownMessageArrived(const Atlas::Message::Element&);
 
     /// call right object*Arrived method
     virtual void objectArrived(const Root& obj) = 0;
