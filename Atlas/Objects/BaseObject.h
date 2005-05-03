@@ -92,6 +92,8 @@ public:
     
     /// Check whether the attribute "name" exists.
     bool hasAttr(const std::string& name) const;
+    /// Check whether the attribute "name" exists.
+    bool hasAttrFlag(int flag) const;
     /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
     /// not exist.
     virtual const Atlas::Message::Element getAttr(const std::string& name)

@@ -1,5 +1,11 @@
 2005-05-03  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/BaseObject.h, Atlas/Objects/BaseObject.cpp:
+	  Provide hasAttrFlag() method to check whether a known
+	  hard coded attribute has been set.
+
+2005-05-03  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/GenerateObjectFactory.py,
 	  Atlas/Objects/objectFactory.cpp: When creating a new object,
 	  initialise the SmartPtr to 0 to start with, for efficiency

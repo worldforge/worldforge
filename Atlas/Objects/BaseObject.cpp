@@ -28,6 +28,11 @@ bool BaseObjectData::hasAttr(const std::string& name) const
     return (getAttrClass(name) >= 0) || (m_attributes.find(name) != m_attributes.end());
 }
 
+bool BaseObjectData::hasAttrFlag(int flag) const
+{
+    return m_attrFlags & flag;
+}
+
 const Element BaseObjectData::getAttr(const std::string& name) const
     throw (NoSuchAttrException) 
 {
