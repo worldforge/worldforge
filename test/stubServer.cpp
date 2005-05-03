@@ -81,6 +81,9 @@ StubServer::StubServer(short port, int cmdSocket) :
     m_types["root_operation"] = rootOpType;
     
     subclassType("root_entity", "game_entity");
+    subclassType("root_entity", "admin_entity");
+    subclassType("admin_entity", "server");
+    
     subclassType("game_entity", "settler");
     subclassType("game_entity", "mammal");
     subclassType("game_entity", "building");

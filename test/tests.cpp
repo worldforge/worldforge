@@ -831,6 +831,30 @@ void testMovement(Controller& ctl)
     */
 }
 
+void testServerInfo()
+{
+    AutoConnection con = stdConnect();
+    
+    Eris::ServerInfo sinfo;
+    con->getServerInfo(sinfo);
+    assert(sinfo.getStatus() == Eris::ServerInfo::INVALID);
+    
+    SignalCounter0 counter;
+    con->GotServerInfo.connect(SigC::slot(counter, &SignalCounter0::fired));
+    
+    con->refreshServerInfo();
+    
+    while (!counter.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+    con->getServerInfo(sinfo);
+    assert(sinfo.getStatus() == Eris::ServerInfo::VALID);
+    assert(sinfo.getHostname() == "localhost");
+    assert(sinfo.getServername() == "Bob's StubServer");
+    assert(sinfo.getRuleset() == "stub-world");
+}
+
 int main(int argc, char **argv)
 {
     int sockets[2];
@@ -857,6 +881,7 @@ int main(int argc, char **argv)
             testAccountCharacters();
             testCharActivate(ctl);
             testBadTake();
+            testServerInfo();
             
             testAppearance(ctl);
             testSightCreate(ctl);

@@ -1,3 +1,10 @@
+2005-05-03  James Turner  <james@worldforge.org>
+
+    * Eris/Connection.cpp: actually process server info responses on Connection,
+      so it's possible the ::getServerInfo might return useful data.
+      
+    * test/tests.cpp: add a test for getting the server info
+    
 2005-04-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/DeleteLater.h: Make annotation after close of header guard

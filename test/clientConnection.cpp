@@ -372,7 +372,21 @@ void ClientConnection::processAnonymousGet(const Get& get)
     const std::vector<Root>& args = get->getArgs();
     if (args.empty())
     {
-        debug() << "handle server queries";
+        Info serverInfo;
+        RootEntity svObj;
+        
+        Atlas::Message::ListType prs;
+        prs.push_back("server");
+        svObj->setParentsAsList(prs);
+        
+        svObj->setName("Bob's StubServer");
+        svObj->setAttr("server", "stubserver");
+        svObj->setAttr("ruleset", "stub-world");
+        svObj->setAttr("uptime", 666.0);
+        svObj->setAttr("clients", 42);
+        
+        serverInfo->setArgs1(svObj);
+        send(serverInfo);
     } else {
         std::string typeName = args.front()->getId();
 

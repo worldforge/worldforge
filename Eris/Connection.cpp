@@ -266,6 +266,12 @@ void Connection::dispatchOp(const RootOperation& op)
     } else if (!anonymous && !m_toRouters.empty())
         warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
             
+// special-case, server info refreshes are handled here directly
+    if (op->instanceOf(INFO_NO) && anonymous) {
+        handleServerInfo(op);
+        return;
+    }
+            
 // go to the default router
     rr = m_defaultRouter->handleOperation(op);
     if (rr != Router::HANDLED)
