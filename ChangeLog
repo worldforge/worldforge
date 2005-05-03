@@ -1,3 +1,8 @@
+2005-04-30  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/DeleteLater.h: Make annotation after close of header guard
+	  into a comment.
+
 2005-05-03  James Turner  <james@worldforge.org>
 
 	* Eris/Account.cpp: clean up how login timeouts are handled, so tests

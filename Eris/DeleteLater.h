@@ -37,4 +37,4 @@ void deleteLater(T* ins)
 
 } // of namespace
 
-#endif ERIS_DELETE_LATER_H
+#endif // ERIS_DELETE_LATER_H
