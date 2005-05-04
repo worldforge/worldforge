@@ -1,3 +1,9 @@
+2005-05-04  Hagen Moebius  <hagen.moebius@starschiffchen.de>
+
+	* bindings/polls/glib/PollGlib.h, bindings/polls/glib/PollGlibFD.h,
+	  bindings/polls/glib/PollGlibSource.h: Removed compatibility with glib
+	  versions < 1.3.
+
 2005-05-03  James Turner  <james@worldforge.org>
 
     * Eris/Connection.cpp: actually process server info responses on Connection,

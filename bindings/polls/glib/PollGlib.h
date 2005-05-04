@@ -1,7 +1,6 @@
 #ifndef ERIS_POLL_GLIB_H
 #define ERIS_POLL_GLIB_H
 
-#include <Eris/PollGlibVersion.h>
 #include <Eris/PollGlibFD.h>
 #include <Eris/PollGlibSource.h>
 #include <Eris/Exceptions.h>
@@ -11,16 +10,13 @@
 #include <Eris/Types.h>
 #include <Eris/Timeout.h>
 
-namespace Eris {
+namespace Eris
+{
 
 class PollGlib : public Eris::Poll, public Eris::PollData, public PollGlibSource
 {
 public:
-#ifdef ERIS_POLL_GLIB_2_0
   PollGlib(GMainContext *con = 0) : PollGlibSource(con), _wait_time(0) {}
-#else
-  PollGlib() : _wait_time(0) {}
-#endif
   virtual ~PollGlib()
   {
     for(StreamMap::iterator I = _streams.begin(); I != _streams.end(); ++I)
@@ -34,11 +30,7 @@ public:
 
     gushort events = getEvents(check);
 
-#ifdef ERIS_POLL_GLIB_2_0
     PollGlibFD* fd = new PollGlibFD(source(), str, events);
-#else
-    PollGlibFD* fd = new PollGlibFD(str, events);
-#endif
 
     if(!_streams.insert(StreamMap::value_type(str, fd)).second) {
       delete fd;
