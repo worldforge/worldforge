@@ -74,6 +74,16 @@ class Segment {
         return m_size;
     }
 
+    /// \brief Accessor for Global x reference of this segment
+    const int getXRef() const {
+        return m_xRef;
+    }
+
+    /// \brief Accessor for Global y reference of this segment
+    const int getYRef() const {
+        return m_yRef;
+    }
+
     /// \brief Check whether this Segment contains valid point data.
     ///
     /// @return true if this Segment is valid, false otherwise.
