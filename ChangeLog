@@ -1,3 +1,9 @@
+2005-05-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* NEWS: Update for upcoming release.
+
+	* atlas-cpp.spec.in: Tweak BuildRoot to match fedora guidelines.
+
 2005-05-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/BaseObject.h, Atlas/Objects/BaseObject.cpp:
