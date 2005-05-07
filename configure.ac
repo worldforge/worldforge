@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT(eris, 1.3.4, james@worldforge.org)
+AC_INIT(eris, 1.3.5, james@worldforge.org)
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -19,7 +19,7 @@ dnl further down. If we link against sigc++ 1.2, then this should be
 dnl N, if we link against sigc++ 2.0 it should be N+1. If you change
 dnl this because of API changes, it needs to be incremented by
 dnl 2, and the changes made to the values assigned in the sigc++ check.
-ERIS_CURRENT=3
+ERIS_CURRENT=5
 ERIS_REVISION=0
 ERIS_AGE=0
 
@@ -43,7 +43,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0,
         CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
         ERIS_REQUIRES="$ERIS_REQUIRES sigc++-2.0"
-        ERIS_CURRENT=4
+        ERIS_CURRENT=6
     ],
     [
         PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
@@ -51,7 +51,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0,
                 CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
                 LDFLAGS="$LDFLAGS $SIGC_LIBS"
                 ERIS_REQUIRES="$ERIS_REQUIRES sigc++-1.2"
-                ERIS_CURRENT=3
+                ERIS_CURRENT=5
             ],
             [
                 AC_MSG_ERROR([Couldn't find sigc++ library!])

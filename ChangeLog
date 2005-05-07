@@ -1,3 +1,8 @@
+2005-05-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version and interface version so that clients
+	  can depend on the current API.
+
 2005-05-04  Hagen Moebius  <hagen.moebius@starschiffchen.de>
 
 	* bindings/polls/glib/PollGlib.h, bindings/polls/glib/PollGlibFD.h,
