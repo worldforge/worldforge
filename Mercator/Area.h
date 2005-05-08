@@ -49,7 +49,7 @@ public:
     */
     bool checkIntersects(const Segment& s) const;
 
-    WFMath::Polygon<2> clipToSegment(Segment& s) const;
+    WFMath::Polygon<2> clipToSegment(const Segment& s) const;
 private:
 
     int m_layer;

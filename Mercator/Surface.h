@@ -22,7 +22,7 @@ class Surface : public Buffer<ColorT> {
   public:
     const Shader & m_shader;
 
-    explicit Surface(Segment & segment, const Shader & shader,
+    explicit Surface(const Segment & segment, const Shader & shader,
                      bool colors = true, bool alpha = true);
     virtual ~Surface();
 

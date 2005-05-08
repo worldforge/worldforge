@@ -14,14 +14,14 @@ class Segment;
 template<typename DataType>
 class Buffer {
   public:
-    Segment & m_segment;
+    const Segment & m_segment;
   private:
     const unsigned int m_channels;
     const unsigned int m_size;
     DataType * m_data;
 
   public:
-    explicit Buffer(Segment & segment, unsigned int channels = 4);
+    explicit Buffer(const Segment & segment, unsigned int channels = 4);
     virtual ~Buffer();
 
     DataType & operator()(unsigned int x,unsigned int y,unsigned int channel) {
@@ -36,7 +36,7 @@ class Buffer {
         return m_data[(y * m_size + x) * m_channels + channel];
     }
     
-    Segment & getSegment() const {
+    const Segment & getSegment() const {
         return m_segment;
     }
 

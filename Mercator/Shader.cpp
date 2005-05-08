@@ -26,7 +26,7 @@ Shader::~Shader()
 ///
 /// Called by terrain when creating a new Segment to add the necessary
 /// Surface objects to that Segment.
-Surface * Shader::newSurface(Segment & segment) const
+Surface * Shader::newSurface(const Segment & segment) const
 {
     return new Surface(segment, *this, m_color, m_alpha);
 }

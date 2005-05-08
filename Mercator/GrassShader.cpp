@@ -48,7 +48,7 @@ void GrassShader::shade(Surface & s) const
     unsigned int channels = s.getChannels();
     assert(channels > 0);
     unsigned int chanAlpha = channels - 1;
-    Segment & seg = s.getSegment();
+    const Segment & seg = s.getSegment();
     ColorT * data = s.getData();
     const float * height_data = seg.getPoints();
     if (height_data == 0) {

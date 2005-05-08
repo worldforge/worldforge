@@ -181,7 +181,7 @@ bool Area::contains(double x, double y) const
     return WFMath::Contains(m_shape, Point2(x,y), false);
 }
 
-WFMath::Polygon<2> Area::clipToSegment(Segment& s) const
+WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const
 {
     // box reject
     if (!checkIntersects(s)) return WFMath::Polygon<2>();

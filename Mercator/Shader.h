@@ -44,7 +44,7 @@ class Shader {
         return m_alpha;
     }
 
-    Surface * newSurface(Segment &) const;
+    Surface * newSurface(const Segment &) const;
 
     /// \brief Check whether this Shader has any effect on the given Segment.
     ///

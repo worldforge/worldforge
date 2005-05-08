@@ -1,5 +1,13 @@
 2005-05-05  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Area.cpp, Mercator/Area.h, Mercator/Buffer.h,
+	  Mercator/Buffer_impl.h, Mercator/GrassShader.cpp,
+	  Mercator/Shader.cpp, Mercator/Shader.h, Mercator/Surface.cpp,
+	  Mercator/Surface.h: Surfaces now have a const reference to Segment
+	  so they can't modify the Segment data.
+
+2005-05-05  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Segment.h: Add accessor for segment position on the
 	  basepoint grid.
 
