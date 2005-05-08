@@ -182,6 +182,12 @@ bool AreaShader::checkIntersect(const Segment& s) const
 
 void AreaShader::shade(Surface &s) const
 {
+    ColorT * data = s.getData();
+    unsigned int size = s.getSegment().getSize();
+
+    unsigned int buflen = size * size;
+    for (unsigned int i = 0; i < buflen; ++i) data[i] = 0;
+
     const Segment::Areastore& areas(s.m_segment.getAreas());
     Segment::Areastore::const_iterator it = areas.lower_bound(m_layer);
     Segment::Areastore::const_iterator itend = areas.upper_bound(m_layer);
