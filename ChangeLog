@@ -1,3 +1,14 @@
+2005-05-08 James Turner <james@worldforge.org>
+
+    * Mercator/Terrain.cpp: when adding an area, if the segment already has
+      a shader for the area's layer, mark the surface as invalid.
+
+    * Mercator/Segment.h, Mercator/Segment.cpp: rename 'getBox' to 'getRect',
+      and make a real 'getBox' that returns an AxisBox<3>, where the z values
+      are defined by the min and max height of the segment.
+      
+    * Mercator/AreaShader.cpp: update for the changed Segment API
+
 2005-05-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Area.cpp, Mercator/Area.h, Mercator/Buffer.h,

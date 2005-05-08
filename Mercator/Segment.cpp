@@ -600,11 +600,18 @@ void Segment::addArea(Area* ar)
     invalidateSurfaces();
 }
 
-WFMath::AxisBox<2> Segment::getBox() const
+WFMath::AxisBox<2> Segment::getRect() const
 {
     WFMath::Point<2> lp(m_xRef * m_res, m_yRef * m_res), 
         hp(lp.x() + m_res, lp.y() + m_res);
     return WFMath::AxisBox<2>(lp, hp);
+}
+
+WFMath::AxisBox<3> Segment::getBox() const
+{
+    WFMath::Point<3> lp(m_xRef * m_res, m_yRef * m_res, m_min), 
+        hp(lp.x() + m_res, lp.y() + m_res, m_max);
+    return WFMath::AxisBox<3>(lp, hp);
 }
 
 } // namespace Mercator

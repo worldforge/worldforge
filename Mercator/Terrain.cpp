@@ -15,6 +15,7 @@
 #include <Mercator/TerrainMod.h>
 #include <Mercator/Shader.h>
 #include <Mercator/Area.h>
+#include <Mercator/Surface.h>
 
 #include <iostream>
 
@@ -333,7 +334,9 @@ void Terrain::addArea(Area* area)
             Shaderstore::const_iterator Iend = m_shaders.end();
             for (; I != Iend; ++I) {
                 if (sss.count(I->first)) {
-                    // segment already has a surface for this shader
+                    // segment already has a surface for this shader, mark it
+                    // for re-generation
+                    sss[I->first]->invalidate();
                     continue;
                 }
                 

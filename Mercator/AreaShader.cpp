@@ -202,7 +202,7 @@ void AreaShader::shadeArea(Surface& s, const Area* const ar) const
     
     if (clipped.numCorners() == 0) return;
  
-    Point2 segOrigin = s.m_segment.getBox().lowCorner();
+    Point2 segOrigin = s.m_segment.getRect().lowCorner();
     clipped.shift(Point2(0,0) - segOrigin);
     scanConvert(clipped, s);
 }

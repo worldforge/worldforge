@@ -171,7 +171,10 @@ class Segment {
     float getMin() const { return m_min; }
 
     /// \brief The 2d area covered by this segment
-    WFMath::AxisBox<2> getBox() const;
+    WFMath::AxisBox<2> getRect() const;
+
+    /// \brief The 3d box covered by this segment
+    WFMath::AxisBox<3> getBox() const;
 
     void addMod(TerrainMod *t);
     void clearMods();

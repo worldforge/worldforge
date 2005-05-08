@@ -186,7 +186,7 @@ WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const
     // box reject
     if (!checkIntersects(s)) return WFMath::Polygon<2>();
     
-    WFMath::AxisBox<2> segBox(s.getBox());
+    WFMath::AxisBox<2> segBox(s.getRect());
     WFMath::Polygon<2> clipped = sutherlandHodgmanKernel(m_shape, TopClip(segBox.lowCorner().y()));
     
     clipped = sutherlandHodgmanKernel(clipped, BottomClip(segBox.highCorner().y()));
@@ -198,7 +198,7 @@ WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const
 
 bool Area::checkIntersects(const Segment& s) const
 {
-    return WFMath::Intersect(m_shape, s.getBox(), false);
+    return WFMath::Intersect(m_shape, s.getRect(), false);
 }
 
 } // of namespace
