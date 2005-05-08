@@ -1,5 +1,12 @@
 2005-05-07  Al Riddoch  <alriddoch@zepler.org>
 
+	* configure.ac: Make a .bz2 tarball as well as a .gz one for
+	  distribution.
+
+	* eris.spec.in: Clean up and harmonise.
+
+2005-05-07  Al Riddoch  <alriddoch@zepler.org>
+
 	* configure.ac: Increment version and interface version so that clients
 	  can depend on the current API.
 

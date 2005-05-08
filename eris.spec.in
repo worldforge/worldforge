@@ -13,10 +13,10 @@ URL: http://www.worldforge.org/dev/eng/libraries/eris
 Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
-Source: %{name}-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-Requires: Atlas-C++ >= 0.5.91 wfmath >= 0.3.2 skstream > 0.3
-BuildRequires: Atlas-C++-devel >= 0.5.91 wfmath-devel >= 0.3.2 skstream-devel > 0.3
+Source: %{name}-%{version}.tar.bz2
+Requires: Atlas-C++ >= 0.5.95
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires: Atlas-C++-devel >= 0.5.95 wfmath-devel >= 0.3.2 skstream-devel > 0.3
 Obsoletes: eris-poll-glib
 
 %description
@@ -35,7 +35,7 @@ work several times), by providing a common system to deal with the back end
 tasks.
 
 %prep
-%setup
+%setup -q
 
 %build
 CXXFLAGS=$RPM_OPT_FLAGS %configure --enable-static
@@ -58,5 +58,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 %{_libdir}/lib*.a
-%{_libdir}/pkgconfig/eris%{libsuffix}.pc
-%{_includedir}/Eris%{libsuffix}
+%{_libdir}/pkgconfig/*
+%{_includedir}/*

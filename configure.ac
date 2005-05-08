@@ -11,7 +11,7 @@ AC_CANONICAL_HOST
 
 dnl Automake setup
 
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([dist-bzip2])
 
 dnl versioning info for libtool
 dnl DO NOT CHANGE ERIS_CURRENT HERE. See the checks for sigc++
