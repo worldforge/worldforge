@@ -86,6 +86,7 @@ void dumpToHTML(const Eris::Meta& meta)
         switch (sv.getStatus())
         {
         case Eris::ServerInfo::VALID:
+            cout << "Server: " << sv.getServer() << " " << sv.getVersion() << " (builddate " << sv.getBuildDate() << ")<br/>" << endl;
             cout << "Ruleset: " << sv.getRuleset() << "<br/>" << endl;
             cout << "Up: " << sv.getUptime() << " ("  << sv.getPing() << " ping)<br/>" << endl;
             cout << "Clients: " << sv.getNumClients() << endl;

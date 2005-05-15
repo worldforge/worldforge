@@ -45,6 +45,8 @@ void ServerInfo::processServer(const RootEntity &svr)
     _clients = svr->getAttr("clients").asInt();
     _server = svr->getAttr("server").asString();
     _uptime = svr->getAttr("uptime").asFloat();
+    m_version = svr->getAttr("version").asString();
+    m_buildDate = svr->getAttr("builddate").asString();
 }
 
 void ServerInfo::setPing(int p)

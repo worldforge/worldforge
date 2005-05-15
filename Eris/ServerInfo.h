@@ -52,6 +52,14 @@ public:
     /// the server program name, i.e 'stage' or 'cyphesis'
     const std::string& getServer() const
     { return _server; }
+
+    /// the server program version, as a free text string
+    const std::string& getVersion() const
+    { return m_version; }
+
+    /// the server program build-date, as a free text string
+    const std::string& getBuildDate() const
+    { return m_buildDate; }
     
     /// the number of clients currently connected to the server
     int getNumClients() const
@@ -94,6 +102,9 @@ private:
     int _ping;			///< Estimated round-trip-time (ping) in milliseconds
     
     double _uptime;		///< Server uptime in seconds
+    
+    std::string m_version,
+        m_buildDate;
 };
 
 } // of namespace Eris

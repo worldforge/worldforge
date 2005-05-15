@@ -1,3 +1,11 @@
+2005-05-15  James Turner  <james@worldforge.org>
+
+	* Eris/ServerInfo.cpp, Eris/ServerInfo.h: augment ServerInfo to expose the
+	  the version and build-date information if the server provides it.
+	  
+	* test/metaquery.cpp: in HTML mode, output the server program name,
+	  version and build date.
+
 2005-05-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 1.3.5, Interface version 5.

@@ -1452,6 +1452,10 @@
 		C4AD294705FA58E400AFB402 = {
 			buildActionMask = 2147483647;
 			files = (
+				C4F0C5900837FB4800C9FB48,
+				C4F0C5910837FB4800C9FB48,
+				C4F0C5920837FB4800C9FB48,
+				C4F0C5930837FB4800C9FB48,
 				C4AD294905FA58E900AFB402,
 			);
 			isa = PBXFrameworksBuildPhase;
@@ -1759,6 +1763,30 @@
 		};
 		C4E8F39807B6DDA500981FB2 = {
 			fileRef = C4E8F39607B6DDA500981FB2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4F0C5900837FB4800C9FB48 = {
+			fileRef = C4BD5A0606AAA15D0039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4F0C5910837FB4800C9FB48 = {
+			fileRef = C4BD59C806AAA0F20039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4F0C5920837FB4800C9FB48 = {
+			fileRef = C4BD59F606AAA1330039CF5E;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C4F0C5930837FB4800C9FB48 = {
+			fileRef = C4BD59CA06AAA1250039CF5E;
 			isa = PBXBuildFile;
 			settings = {
 			};
