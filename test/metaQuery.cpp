@@ -51,6 +51,7 @@ void dumpToScreen(const Eris::Meta& meta)
         switch (sv.getStatus())
         {
         case Eris::ServerInfo::VALID:
+            cout << "\tserver: " << sv.getServer() << " " << sv.getVersion() << " (builddate " << sv.getBuildDate() << ")<br/>" << endl;
             cout << "\truleset:" << sv.getRuleset() << endl;
             cout << "\tuptime:" << sv.getUptime() << endl;
             cout << "\tping:" << sv.getPing() << endl;

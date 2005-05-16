@@ -1,3 +1,10 @@
+2005-05-16  James Turner  <james@worldforge.org>
+
+	* Eris/ServerInfo.cpp: don't mandate the existence of build-date or
+	  version fields for the moment.
+	  
+	* test/metaquery.cpp: include version and build date in plain-text mode
+
 2005-05-15  James Turner  <james@worldforge.org>
 
 	* Eris/ServerInfo.cpp, Eris/ServerInfo.h: augment ServerInfo to expose the
