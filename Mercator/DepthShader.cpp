@@ -22,6 +22,11 @@ DepthShader::DepthShader(float waterLevel, float murkyDepth) :
 {
 }
 
+DepthShader::DepthShader(const Parameters & params)
+{
+    // FIXME Read the values from the params list
+}
+
 DepthShader::~DepthShader()
 {
 }

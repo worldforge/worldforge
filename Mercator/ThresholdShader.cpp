@@ -13,6 +13,11 @@ HighShader::HighShader(float threshold) : m_threshold(threshold)
 {
 }
 
+HighShader::HighShader(const Parameters & params)
+{
+    // FIXME Read the values from the params list
+}
+
 HighShader::~HighShader()
 {
 }
@@ -52,6 +57,11 @@ void HighShader::shade(Surface & s) const
 
 LowShader::LowShader(float threshold) : m_threshold(threshold)
 {
+}
+
+LowShader::LowShader(const Parameters & params)
+{
+    // FIXME Read the values from the params list
 }
 
 LowShader::~LowShader()
@@ -94,6 +104,11 @@ void LowShader::shade(Surface & s) const
 BandShader::BandShader(float lowThreshold, float highThreshold) : 
     m_lowThreshold(lowThreshold), m_highThreshold(highThreshold)
 {
+}
+
+BandShader::BandShader(const Parameters & params)
+{
+    // FIXME Read the values from the params list
 }
 
 BandShader::~BandShader()

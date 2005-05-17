@@ -5,6 +5,9 @@
 #ifndef MERCATOR_SHADER_H
 #define MERCATOR_SHADER_H
 
+#include <string>
+#include <map>
+
 namespace Mercator {
 
 class Surface;
@@ -55,6 +58,8 @@ class Shader {
 
     /// \brief Populate a Surface with data.
     virtual void shade(Surface &) const = 0;
+
+    typedef std::map<std::string, float> Parameters;
 };
 
 } // namespace Mercator

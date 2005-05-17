@@ -15,6 +15,12 @@ TileShader::TileShader()
 
 TileShader::~TileShader()
 {
+    Shaderstore::const_iterator I = m_subShaders.begin();
+    Shaderstore::const_iterator Iend = m_subShaders.end();
+    for (; I != Iend; ++I) {
+        assert(I->second != 0);
+        delete I->second;
+    }
 }
 
 bool TileShader::checkIntersect(const Segment & s) const

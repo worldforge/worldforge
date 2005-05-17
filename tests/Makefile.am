@@ -1,10 +1,10 @@
-TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG testArea testTileShader
+TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG testArea testTileShader testShaderFactory
 
 INCLUDES = -I$(top_srcdir)
 
 DISTCLEANFILES = test1.pgm test2.pgm
 
-check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG testArea testTileShader
+check_PROGRAMS = mercatortest testTerrain testShader testTerrainMod testIntersect testPhys timeSeg testPlant testForest testQRNG testArea testTileShader testShaderFactory
 
 mercatortest_SOURCES = main.cpp
 mercatortest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
@@ -40,4 +40,7 @@ testArea_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testTileShader_SOURCES = testTileShader.cpp
 testTileShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+
+testShaderFactory_SOURCES = testShaderFactory.cpp
+testShaderFactory_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 

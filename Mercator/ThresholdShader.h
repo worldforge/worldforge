@@ -14,6 +14,7 @@ class HighShader : public Shader {
     float m_threshold;
   public:
     explicit HighShader(float threshold = 1.f);
+    explicit HighShader(const Parameters & params);
     virtual ~HighShader();
 
     virtual bool checkIntersect(const Segment &) const;
@@ -25,6 +26,7 @@ class LowShader : public Shader {
     float m_threshold;
   public:
     explicit LowShader(float threshold = -1.f);
+    explicit LowShader(const Parameters & params);
     virtual ~LowShader();
 
     virtual bool checkIntersect(const Segment &) const;
@@ -37,6 +39,7 @@ class BandShader : public Shader {
     float m_highThreshold;
   public:
     explicit BandShader(float lowThreshold = -1.f, float highThreshold = 1.f);
+    explicit BandShader(const Parameters & params);
     virtual ~BandShader();
 
     virtual bool checkIntersect(const Segment &) const;

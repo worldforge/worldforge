@@ -12,6 +12,7 @@ namespace Mercator {
 class FillShader : public Shader {
   public:
     explicit FillShader();
+    explicit FillShader(const Parameters & params);
     virtual ~FillShader();
 
     virtual bool checkIntersect(const Segment &) const;

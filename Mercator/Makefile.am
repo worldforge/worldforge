@@ -19,6 +19,7 @@ libmercator_0_2_la_SOURCES = \
 	DepthShader.cpp \
 	GrassShader.cpp \
 	TileShader.cpp \
+	ShaderFactory.cpp \
 	Intersect.cpp \
 	Surface.cpp \
 	Plant.cpp \
@@ -43,6 +44,8 @@ libmercator_HEADERS = \
 	DepthShader.h \
 	GrassShader.h \
 	TileShader.h \
+	ShaderFactory.h \
+	ShaderFactory_impl.h \
 	Intersect.h \
 	Surface.h \
 	Plant.h \

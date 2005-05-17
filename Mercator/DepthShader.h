@@ -15,6 +15,7 @@ class DepthShader : public Shader {
     float m_murkyDepth;
   public:
     explicit DepthShader(float waterLevel = 0.f, float murkyDepth = -64.f);
+    explicit DepthShader(const Parameters & params);
     virtual ~DepthShader();
 
     virtual bool checkIntersect(const Segment &) const;

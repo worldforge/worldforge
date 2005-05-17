@@ -37,6 +37,7 @@ class GrassShader : public Shader {
   public:
     explicit GrassShader(float lowThreshold = 1.f, float highThreshold = 20.f,
                          float cutoff = 1.f, float intercept = 2.f);
+    explicit GrassShader(const Parameters & params);
     virtual ~GrassShader();
 
     virtual bool checkIntersect(const Segment &) const;

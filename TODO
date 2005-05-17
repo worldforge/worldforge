@@ -1,5 +1,7 @@
 Think carefully about whether Surface needs a writable reference to Segment.
 
+* Implement the constructors which take a Shader::Paramters.
+
 * How about a class for handling building sections of arbitrary size.
   Uses quasi random techniques to define the pattern of building elements,
   with hopefully an efficient way to render.

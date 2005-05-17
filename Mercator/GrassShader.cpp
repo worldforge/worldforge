@@ -16,6 +16,11 @@ GrassShader::GrassShader(float lowThreshold, float highThreshold,
 {
 }
 
+GrassShader::GrassShader(const Parameters & params)
+{
+    // FIXME Read the values from the params list
+}
+
 GrassShader::~GrassShader()
 {
 }
