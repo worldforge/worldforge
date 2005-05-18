@@ -1,3 +1,12 @@
+2005-05-18  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp, Eris/Entity.h: re-factor how Entity processes attribute
+	  data, to make integration-by-subclassing easier. Make nativeAttrChanged
+	  private, and add a virtual 'onAttrChanged' hook, which is a no-op by
+	  default. This avoids forcing clients to monitor and decode the
+	  'Changed' signal (which is complex) if they track many attributes.
+	  Also make setAttr private, to avoid abuse by clients.
+
 2005-05-16  James Turner  <james@worldforge.org>
 
 	* Eris/ServerInfo.cpp: don't mandate the existence of build-date or

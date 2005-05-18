@@ -232,13 +232,7 @@ protected:
     */
     virtual void onTalk(const Atlas::Objects::Root& obj);
 
-    void setAttr(const std::string &p, const Atlas::Message::Element &v);	
-
-    /** over-rideable method to map Atlas attributes to natively
-    stored properties. Return true if you handle the attribute, false other-
-    wise. Always call you base classe's implemention if you override this!.
-    */
-    virtual bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
+    virtual void onAttrChanged(const std::string& attr, const Atlas::Message::Element &v);
 	
     virtual void onLocationChanged(Entity* oldLoc);
     
@@ -250,10 +244,6 @@ protected:
     entity changed. The default implementation emits the VisiblityChanged
     signal. */
     virtual void onVisibilityChanged(bool vis);
-                
-    void beginUpdate();
-    void addToUpdate(const std::string& attr);
-    void endUpdate();
 
     /**
     Over-rideable hook when this entity is seen to perform an action.
@@ -309,6 +299,17 @@ private:
     /** the View calls this to change local entity visibility. No one else
     should be calling it!*/
     void setVisible(bool vis);
+    
+    void setAttr(const std::string &p, const Atlas::Message::Element &v);	
+        
+    /**  map Atlas attributes to natively
+    stored properties.
+    */
+    bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
+    
+    void beginUpdate();
+    void addToUpdate(const std::string& attr);
+    void endUpdate();
     
     /** setLocation is the core of the entity hierarchy maintenance logic.
     We make setting location the 'fixup' action; addChild / removeChild are

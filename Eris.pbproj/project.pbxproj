@@ -908,6 +908,7 @@
 				C438300F06BEFECA0092C3C7,
 				C4C5505407A6D43B00F59ED4,
 				C4E8F39807B6DDA500981FB2,
+				C4B9D68A083A838800D846FC,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1523,6 +1524,21 @@
 			settings = {
 			};
 		};
+		C4B9D689083A838800D846FC = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = Calendar.h;
+			path = Eris/Calendar.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C4B9D68A083A838800D846FC = {
+			fileRef = C4B9D689083A838800D846FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C4BB15920544A6C100A800CF = {
 			children = (
 				C4E8F39507B6DDA500981FB2,
@@ -1553,6 +1569,7 @@
 				C43FBD7F054315F4008FC2ED,
 				C45D31A4063C4795001112F7,
 				C4E5CD46064CFFAF00EF7326,
+				C4B9D689083A838800D846FC,
 			);
 			isa = PBXGroup;
 			name = Source;

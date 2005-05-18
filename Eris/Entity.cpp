@@ -282,12 +282,13 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     nativeAttrChanged(attr, val);
     m_attrs[attr] = val;
 
+    onAttrChanged(attr, val);
+
     // fire observers
     if (m_observers.count(attr)) m_observers[attr].emit(attr, val);
 
     addToUpdate(attr);
     endUpdate();
-
 }
 
 bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
@@ -322,6 +323,11 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
     }
 
     return false; // not a native property
+}
+
+void Entity::onAttrChanged(const std::string&, const Element&)
+{
+    // no-op by default
 }
 
 void Entity::beginUpdate()
