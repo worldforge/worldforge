@@ -1,5 +1,10 @@
 2005-05-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* tests/testWFMath.cpp, tests/Makefile.am: Add a test for wfmath
+	  Intersect functions.
+
+2005-05-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* tests/testShaderFactory.cpp: Forgot to add test.
 
 2005-05-17  Al Riddoch  <alriddoch@zepler.org>
