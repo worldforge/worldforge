@@ -33,35 +33,51 @@ int main()
 
     if (WFMath::Intersect(p1, p2, true)) {
         std::cout << "p1 and p2 intersect propper" << std::endl << std::flush;
+    } else {
+        std::cout << "p1 and p2 don't itersect" << std::endl << std::flush;
     }
 
     if (WFMath::Intersect(p1, p2, true)) {
         std::cout << "p1 and p2 intersect propper" << std::endl << std::flush;
+    } else {
+        std::cout << "p1 and p2 don't itersect" << std::endl << std::flush;
     }
 
     if (WFMath::Intersect(p1, p3, true)) {
         std::cout << "p1 and p3 intersect propper" << std::endl << std::flush;
+    } else {
+        std::cout << "p1 and p3 don't itersect" << std::endl << std::flush;
     }
 
     if (WFMath::Intersect(p1, p4, true)) {
         std::cout << "p1 and p4 intersect propper" << std::endl << std::flush;
+    } else {
+        std::cout << "p1 and p4 don't itersect" << std::endl << std::flush;
     }
 
 
-    if (WFMath::Intersect(p1, box1, true)) {
-        std::cout << "p1 and p2 intersect propper" << std::endl << std::flush;
+    if (WFMath::Intersect(p1, box1, false)) {
+        std::cout << "p1 and box1 intersect propper" << std::endl << std::flush;
+    } else {
+        std::cout << "p1 and box1 don't itersect" << std::endl << std::flush;
     }
 
-    if (WFMath::Intersect(p2, box1, true)) {
-        std::cout << "p1 and p2 intersect propper" << std::endl << std::flush;
+    if (WFMath::Intersect(p2, box1, false)) {
+        std::cout << "p2 and box1 intersect propper" << std::endl << std::flush;
+    } else {
+        std::cout << "p2 and box1 don't itersect" << std::endl << std::flush;
     }
 
-    if (WFMath::Intersect(p3, box1, true)) {
-        std::cout << "p1 and p3 intersect propper" << std::endl << std::flush;
+    if (WFMath::Intersect(p3, box1, false)) {
+        std::cout << "p3 and box1 intersect propper" << std::endl << std::flush;
+    } else {
+        std::cout << "p3 and box1 don't itersect" << std::endl << std::flush;
     }
 
-    if (WFMath::Intersect(p4, box1, true)) {
-        std::cout << "p1 and p4 intersect propper" << std::endl << std::flush;
+    if (WFMath::Intersect(p4, box1, false)) {
+        std::cout << "p4 and box1 intersect propper" << std::endl << std::flush;
+    } else {
+        std::cout << "p4 and box1 don't itersect" << std::endl << std::flush;
     }
 
 }
