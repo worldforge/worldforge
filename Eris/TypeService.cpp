@@ -67,18 +67,15 @@ void TypeService::init()
     // every type already in the map delayed it's sendInfoRequest becuase we weren't inited;
     // go through and fix them now. This allows static construction (or early construction) of
     // things like ClassDispatchers in a moderately controlled fashion.
-    for (TypeInfoMap::iterator T=m_types.begin(); T!=m_types.end(); ++T)
-    {
-        if (!T->second->isBound()) 
-            sendRequest(T->second->getName());
+    for (TypeInfoMap::iterator T=m_types.begin(); T!=m_types.end(); ++T) {
+        if (!T->second->isBound()) sendRequest(T->second->getName());
     }
 }
 
 TypeInfoPtr TypeService::findTypeByName(const std::string &id)
 {
     TypeInfoMap::iterator T = m_types.find(id);
-    if (T != m_types.end())
-        return T->second;
+    if (T != m_types.end()) return T->second;
 	
     return NULL;
 }
@@ -86,16 +83,8 @@ TypeInfoPtr TypeService::findTypeByName(const std::string &id)
 TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 {
     TypeInfoMap::iterator T = m_types.find(id);
-    if (T != m_types.end()) {
-        return T->second;
-    }
-    
-    if (m_badTypes.count(id))
-    {
-        error() << "did getTypeByName for bad type " << id;
-        return NULL;
-    }
-    
+    if (T != m_types.end()) return T->second;
+       
 // not found, do some work
     /// @todo Verify the id is not in the authorative invalid ID list
     TypeInfoPtr node = new TypeInfo(id, this);
@@ -122,7 +111,13 @@ TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 
 void TypeService::handleOperation(const RootOperation& op)
 {
-    if (op->instanceOf(INFO_NO)) {
+    if (op->instanceOf(ERROR_NO)) {
+        const std::vector<Root>& args(op->getArgs());
+        Get request = smart_dynamic_cast<Get>(args[1]);
+        if (!request.isValid()) throw InvalidOperation("TypeService got ERROR whose arg is not GET");
+        
+        recvError(request);
+    } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args(op->getArgs());
         std::string objType = args.front()->getObjtype();
         
@@ -132,15 +127,9 @@ void TypeService::handleOperation(const RootOperation& op)
         {
             recvTypeInfo(args.front());
         }
-    } else if (op->instanceOf(ERROR_NO)) {
-        const std::vector<Root>& args(op->getArgs());
-        Get request = smart_dynamic_cast<Get>(args[1]);
-        if (!request.isValid())
-            throw InvalidOperation("TypeService got ERROR whose arg is not GET");
-        
-        recvError(request);
-    } else
+    } else {
         error() << "type service got op that wasn't info or error";
+    }
 }
 
 void TypeService::recvTypeInfo(const Root &atype)
@@ -181,16 +170,14 @@ void TypeService::recvError(const Get& get)
     Root request = args.front();
 
     TypeInfoMap::iterator T = m_types.find(request->getId());
-    if (T == m_types.end())
-    {
+    if (T == m_types.end()) {
         // what the fuck? getting out of here...
         throw InvalidOperation("got ERROR(GET()) with request for unknown type: " + request->getId());
     }
     
-    error() << " got error from server looking up type " << request->getId();
+    debug() << "type " << request->getId() << " undefined on server";
     BadType.emit(T->second);
-    
-    m_badTypes.insert(request->getId());
+
     delete T->second;
     m_types.erase(T);
 }

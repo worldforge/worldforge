@@ -1,3 +1,14 @@
+2005-05-20  James Turner  <james@worldforge.org>
+
+	* Eris/TypeService.h, Eris/TypeService.cpp: remove the badTypes system
+	  for recording invalid types, because it relied upon the false
+	  assumption that the set of server types was constant over a Connection
+	  lifetime (more fool me!)
+	  
+	* Eris/TypeService.cpp: re-ordered decoding of ERROR vs INFO responses to
+	  type lookups, so ERROR case actually gets run. Thanks to Hagen for the
+	  catch.
+
 2005-05-18  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp, Eris/Entity.h: re-factor how Entity processes attribute

@@ -92,7 +92,6 @@ public:
     Connection* m_con;
     bool m_inited;
 
-    StringSet m_badTypes;
     TypeInfoPtr m_anonymousType;
 };
 
