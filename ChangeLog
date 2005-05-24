@@ -1,3 +1,8 @@
+2005-05-24  James Turner  <james@worldforge.org>
+
+	* Mercator/Area.cpp: fix ::checkIntersect to handle the case where
+	  the Area is fully contained by a segment.
+
 2005-05-18  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/testWFMath.cpp: Clear up some of the reporting.

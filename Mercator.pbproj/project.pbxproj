@@ -17,6 +17,123 @@
 			target = C49891BF080A7A5800C7CBBF;
 			targetProxy = C40792FE080B3D84009D3620;
 		};
+		C43D67A9084295940092D0A6 = {
+			buildPhases = (
+				C43D67AB084295940092D0A6,
+				C43D67AC084295940092D0A6,
+				C43D67AE084295940092D0A6,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = /Users/jmt/Worldforge/forge/libs/wfmath/build;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = testwfmath;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = YES;
+			};
+			dependencies = (
+				C43D67AA084295940092D0A6,
+			);
+			isa = PBXNativeTarget;
+			name = testWFMath;
+			productName = testTerrainMod;
+			productReference = C43D67B1084295940092D0A6;
+			productType = "com.apple.product-type.tool";
+		};
+		C43D67AA084295940092D0A6 = {
+			isa = PBXTargetDependency;
+			target = C496A1350576AD7D005225FB;
+			targetProxy = C48D3E150577797B006979E1;
+		};
+		C43D67AB084295940092D0A6 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C43D67AC084295940092D0A6 = {
+			buildActionMask = 2147483647;
+			files = (
+				C43D67C0084295C20092D0A6,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C43D67AE084295940092D0A6 = {
+			buildActionMask = 2147483647;
+			files = (
+				C43D67AF084295940092D0A6,
+				C43D67B0084295940092D0A6,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C43D67AF084295940092D0A6 = {
+			fileRef = C4480FF50664E0D100BF4BBF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C43D67B0084295940092D0A6 = {
+			fileRef = C496A1590576AD7E005225FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C43D67B1084295940092D0A6 = {
+			explicitFileType = "compiled.mach-o.executable";
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = testwfmath;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C43D67B9084295C20092D0A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testCache.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C43D67BA084295C20092D0A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testShaderFactory.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C43D67BB084295C20092D0A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testTileShader.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C43D67BC084295C20092D0A6 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = testWFMath.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C43D67C0084295C20092D0A6 = {
+			fileRef = C43D67BC084295C20092D0A6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C4480FF50664E0D100BF4BBF = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -297,6 +414,7 @@
 				C47445FF07DFBB8800AD4413,
 				C485B2A205B746EF002F2D80,
 				C49891BF080A7A5800C7CBBF,
+				C43D67A9084295940092D0A6,
 			);
 		};
 		C48581BF0552EE8700A800CF = {
@@ -311,6 +429,7 @@
 				C485B29D05B74694002F2D80,
 				C474460707DFBB8800AD4413,
 				C49891C7080A7A5800C7CBBF,
+				C43D67B1084295940092D0A6,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -1256,6 +1375,10 @@
 		};
 		C48D3DB605774E19006979E1 = {
 			children = (
+				C43D67B9084295C20092D0A6,
+				C43D67BA084295C20092D0A6,
+				C43D67BB084295C20092D0A6,
+				C43D67BC084295C20092D0A6,
 				C47445FB07DFBB8400AD4413,
 				C485B26B05B74569002F2D80,
 				C485B26C05B74569002F2D80,
