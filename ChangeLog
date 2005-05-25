@@ -1,3 +1,7 @@
+2005-05-25  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.h: add an accesor for the Entity's owning View
+
 2005-05-20  James Turner  <james@worldforge.org>
 
 	* Eris/TypeService.h, Eris/TypeService.cpp: remove the badTypes system

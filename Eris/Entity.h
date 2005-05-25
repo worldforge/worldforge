@@ -86,6 +86,11 @@ public:
         return m_type;
     }
     
+    View* getView() const
+    {
+        return m_view;
+    }
+    
     /** the containing entity, or null if this is a top-level visible entity. */
     Entity* getLocation() const
     {
