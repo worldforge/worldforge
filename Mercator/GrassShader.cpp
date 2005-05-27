@@ -9,6 +9,11 @@
 
 namespace Mercator {
 
+const std::string GrassShader::lowThreshold("lowThreshold");
+const std::string GrassShader::highThreshold("highThreshold");
+const std::string GrassShader::cutoff("cutoff");
+const std::string GrassShader::intercept("intercept");
+
 GrassShader::GrassShader(float lowThreshold, float highThreshold,
                          float cutoff, float intercept) :
              m_lowThreshold(lowThreshold), m_highThreshold(highThreshold),

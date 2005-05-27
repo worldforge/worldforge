@@ -1,5 +1,9 @@
 2005-05-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/GrassShader.cpp: Added missing static variable definitions.
+
+2005-05-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* configure.ac: Increment version for dependency handling.
 
 	* Mercator/DepthShader.h, Mercator/GrassShader.h,
