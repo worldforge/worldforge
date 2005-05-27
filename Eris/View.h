@@ -6,6 +6,7 @@
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <sigc++/object.h>
 #include <sigc++/signal.h>
+#include <sigc++/slot.h>
 #include <map>
 
 namespace Eris
@@ -53,6 +54,14 @@ public:
     Register an Entity Factory with this view
     */
     void registerFactory(Factory*);
+
+    typedef SigC::Slot1<void, Entity*> EntitySightSlot;
+
+    /**
+    Conenct up a slot to be fired when an Entity with the specified ID is seen.
+    If the entity is already visible, this is a no-op (and will log an error)
+    */
+    void notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot);
 
     /** emitted whenever the View creates a new Entity instance. This signal
     is emitted once the entity has been fully bound into the View */
@@ -126,7 +135,14 @@ private:
     typedef std::map<std::string, SightAction> PendingSightMap;
     PendingSightMap m_pending;
     
+          
+    typedef SigC::Signal1<void, Entity*> EntitySightSignal;
+        
+    typedef std::map<std::string, EntitySightSignal> NotifySightMap;
+    NotifySightMap m_notifySights;
+    
     typedef std::set<Entity*> EntitySet;
+    
     /** all the entities in the view which are moving, so they can be
     motion predicted. */
     EntitySet m_moving;

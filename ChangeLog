@@ -1,3 +1,8 @@
+2005-05-26  James Turner  <james@worldforge.org>
+
+	* Eris/View.h, Eris/View.cpp: add support for emitting a notification
+	  signal when an Entity is seen.
+
 2005-05-25  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.h: add an accesor for the Entity's owning View

@@ -71,6 +71,17 @@ void View::registerFactory(Factory* f)
     m_factories.insert(f);
 }
 
+void View::notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot)
+{
+    if (m_contents.count(eid)) {
+        error() << "notifyWhenEntitySeen: entity " << eid << " already in View";
+        return;
+    }
+    
+    m_notifySights[eid].connect(slot);
+    getEntityFromServer(eid);
+}
+
 #pragma mark -
 
 void View::update()
@@ -190,6 +201,13 @@ Entity* View::initialSight(const GameEntity& gent)
     ent->init(gent);
     
     InitialSightEntity.emit(ent);
+ 
+    NotifySightMap::iterator it = m_notifySights.find(gent->getId());
+    if (it != m_notifySights.end()) {
+        it->second.emit(ent);
+        m_notifySights.erase(it);
+    }
+    
     return ent;
 }
 
