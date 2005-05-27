@@ -18,7 +18,24 @@ GrassShader::GrassShader(float lowThreshold, float highThreshold,
 
 GrassShader::GrassShader(const Parameters & params)
 {
-    // FIXME Read the values from the params list
+    Parameters::const_iterator I = params.find(lowThreshold);
+    Parameters::const_iterator Iend = params.end();
+    if (I != Iend) {
+        m_lowThreshold = I->second;
+    }
+    I = params.find(highThreshold);
+    if (I != Iend) {
+        m_highThreshold = I->second;
+    }
+    I = params.find(cutoff);
+    if (I != Iend) {
+        m_cutoff = I->second;
+    }
+    I = params.find(intercept);
+    if (I != Iend) {
+        m_intercept = I->second;
+    }
+
 }
 
 GrassShader::~GrassShader()

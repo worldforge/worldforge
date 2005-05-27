@@ -14,6 +14,9 @@ class DepthShader : public Shader {
     float m_waterLevel;
     float m_murkyDepth;
   public:
+    static const std::string waterLevel;
+    static const std::string murkyDepth;
+
     explicit DepthShader(float waterLevel = 0.f, float murkyDepth = -64.f);
     explicit DepthShader(const Parameters & params);
     virtual ~DepthShader();

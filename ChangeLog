@@ -1,3 +1,17 @@
+2005-05-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version for dependency handling.
+
+	* Mercator/DepthShader.h, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.h: Add static string variable declarations
+	  for parameter names for shaders that take parameters. Provide a more
+	  in depth explanation of the algorithm used by GrassShader.
+
+	* Mercator/DepthShader.cpp, Mercator/FillShader.cpp,
+	  Mercator/GrassShader.cpp, Mercator/ThresholdShader.cpp:
+	  Implement the code in the Parameters version of the constructor
+	  to set the parameters of the shader by named values.
+
 2005-05-24  James Turner  <james@worldforge.org>
 
 	* Mercator/Area.cpp: fix ::checkIntersect to handle the case where

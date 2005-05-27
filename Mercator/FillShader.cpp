@@ -15,7 +15,6 @@ FillShader::FillShader()
 
 FillShader::FillShader(const Parameters & params)
 {
-    // FIXME Read the values from the params list
 }
 
 FillShader::~FillShader()

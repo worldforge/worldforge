@@ -9,13 +9,19 @@
 
 namespace Mercator {
 
+const std::string HighShader::threshold("threshold");
+
 HighShader::HighShader(float threshold) : m_threshold(threshold)
 {
 }
 
 HighShader::HighShader(const Parameters & params)
 {
-    // FIXME Read the values from the params list
+    Parameters::const_iterator I = params.find(threshold);
+    Parameters::const_iterator Iend = params.end();
+    if (I != Iend) {
+        m_threshold = I->second;
+    }
 }
 
 HighShader::~HighShader()
@@ -55,13 +61,19 @@ void HighShader::shade(Surface & s) const
     }
 }
 
+const std::string LowShader::threshold("threshold");
+
 LowShader::LowShader(float threshold) : m_threshold(threshold)
 {
 }
 
 LowShader::LowShader(const Parameters & params)
 {
-    // FIXME Read the values from the params list
+    Parameters::const_iterator I = params.find(threshold);
+    Parameters::const_iterator Iend = params.end();
+    if (I != Iend) {
+        m_threshold = I->second;
+    }
 }
 
 LowShader::~LowShader()
@@ -101,14 +113,25 @@ void LowShader::shade(Surface & s) const
     }
 }
 
-BandShader::BandShader(float lowThreshold, float highThreshold) : 
-    m_lowThreshold(lowThreshold), m_highThreshold(highThreshold)
+const std::string BandShader::lowThreshold("lowThreshold");
+const std::string BandShader::highThreshold("highThreshold");
+
+BandShader::BandShader(float low_threshold, float high_threshold) : 
+    m_lowThreshold(low_threshold), m_highThreshold(high_threshold)
 {
 }
 
 BandShader::BandShader(const Parameters & params)
 {
-    // FIXME Read the values from the params list
+    Parameters::const_iterator I = params.find(lowThreshold);
+    Parameters::const_iterator Iend = params.end();
+    if (I != Iend) {
+        m_lowThreshold = I->second;
+    }
+    I = params.find(highThreshold);
+    if (I != Iend) {
+        m_highThreshold = I->second;
+    }
 }
 
 BandShader::~BandShader()

@@ -13,6 +13,8 @@ class HighShader : public Shader {
   private:
     float m_threshold;
   public:
+    static const std::string threshold;
+
     explicit HighShader(float threshold = 1.f);
     explicit HighShader(const Parameters & params);
     virtual ~HighShader();
@@ -25,6 +27,8 @@ class LowShader : public Shader {
   private:
     float m_threshold;
   public:
+    static const std::string threshold;
+
     explicit LowShader(float threshold = -1.f);
     explicit LowShader(const Parameters & params);
     virtual ~LowShader();
@@ -38,7 +42,10 @@ class BandShader : public Shader {
     float m_lowThreshold;
     float m_highThreshold;
   public:
-    explicit BandShader(float lowThreshold = -1.f, float highThreshold = 1.f);
+    static const std::string lowThreshold;
+    static const std::string highThreshold;
+
+    explicit BandShader(float low_threshold = -1.f, float high_threshold = 1.f);
     explicit BandShader(const Parameters & params);
     virtual ~BandShader();
 
