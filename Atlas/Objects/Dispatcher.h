@@ -85,6 +85,8 @@ protected:
     virtual void objectSetArrived(const Operation::Set&) { }
     /// Override this to get called when a Move object arrives.
     virtual void objectMoveArrived(const Operation::Move&) { }
+    /// Override this to get called when a Wield object arrives.
+    virtual void objectWieldArrived(const Operation::Wield&) { }
     /// Override this to get called when a Get object arrives.
     virtual void objectGetArrived(const Operation::Get&) { }
     /// Override this to get called when a Perceive object arrives.
@@ -103,6 +105,8 @@ protected:
     virtual void objectLogoutArrived(const Operation::Logout&) { }
     /// Override this to get called when a Imaginary object arrives.
     virtual void objectImaginaryArrived(const Operation::Imaginary&) { }
+    /// Override this to get called when a Use object arrives.
+    virtual void objectUseArrived(const Operation::Use&) { }
     /// Override this to get called when a Info object arrives.
     virtual void objectInfoArrived(const Operation::Info&) { }
     /// Override this to get called when a Perception object arrives.

@@ -106,6 +106,11 @@ namespace Operation {
 }
 
 namespace Operation {
+    class WieldData;
+    typedef SmartPtr<WieldData> Wield;
+}
+
+namespace Operation {
     class GetData;
     typedef SmartPtr<GetData> Get;
 }
@@ -148,6 +153,11 @@ namespace Operation {
 namespace Operation {
     class ImaginaryData;
     typedef SmartPtr<ImaginaryData> Imaginary;
+}
+
+namespace Operation {
+    class UseData;
+    typedef SmartPtr<UseData> Use;
 }
 
 namespace Operation {

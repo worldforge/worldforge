@@ -79,6 +79,9 @@ void Dispatcher::dispatchObject(const Root& obj)
     case Operation::MOVE_NO:
         objectMoveArrived(smart_dynamic_cast<Operation::Move>(obj));
         break;
+    case Operation::WIELD_NO:
+        objectWieldArrived(smart_dynamic_cast<Operation::Wield>(obj));
+        break;
     case Operation::GET_NO:
         objectGetArrived(smart_dynamic_cast<Operation::Get>(obj));
         break;
@@ -105,6 +108,9 @@ void Dispatcher::dispatchObject(const Root& obj)
         break;
     case Operation::IMAGINARY_NO:
         objectImaginaryArrived(smart_dynamic_cast<Operation::Imaginary>(obj));
+        break;
+    case Operation::USE_NO:
+        objectUseArrived(smart_dynamic_cast<Operation::Use>(obj));
         break;
     case Operation::INFO_NO:
         objectInfoArrived(smart_dynamic_cast<Operation::Info>(obj));

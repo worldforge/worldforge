@@ -11,6 +11,128 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+DisappearanceData::~DisappearanceData()
+{
+}
+
+DisappearanceData * DisappearanceData::copy() const
+{
+    DisappearanceData * copied = DisappearanceData::alloc();
+    *copied = *this;
+    return copied;
+}
+
+bool DisappearanceData::instanceOf(int classNo) const
+{
+    if(DISAPPEARANCE_NO == classNo) return true;
+    return SightData::instanceOf(classNo);
+}
+
+//freelist related methods specific to this class
+DisappearanceData *DisappearanceData::defaults_DisappearanceData = 0;
+DisappearanceData *DisappearanceData::begin_DisappearanceData = 0;
+
+DisappearanceData *DisappearanceData::alloc()
+{
+    if(begin_DisappearanceData) {
+        DisappearanceData *res = begin_DisappearanceData;
+        assert( res->m_refCount == 0 );
+        res->m_attrFlags = 0;
+        res->m_attributes.clear();
+        begin_DisappearanceData = (DisappearanceData *)begin_DisappearanceData->m_next;
+        return res;
+    }
+    return new DisappearanceData(DisappearanceData::getDefaultObjectInstance());
+}
+
+void DisappearanceData::free()
+{
+    m_next = begin_DisappearanceData;
+    begin_DisappearanceData = this;
+}
+
+
+DisappearanceData *DisappearanceData::getDefaultObjectInstance()
+{
+    if (defaults_DisappearanceData == 0) {
+        defaults_DisappearanceData = new DisappearanceData;
+        defaults_DisappearanceData->attr_objtype = "op";
+        defaults_DisappearanceData->attr_serialno = 0;
+        defaults_DisappearanceData->attr_refno = 0;
+        defaults_DisappearanceData->attr_seconds = 0.0;
+        defaults_DisappearanceData->attr_future_seconds = 0.0;
+        defaults_DisappearanceData->attr_stamp = 0.0;
+        defaults_DisappearanceData->attr_parents = std::list<std::string>(1, "disappearance");
+    }
+    return defaults_DisappearanceData;
+}
+
+DisappearanceData *DisappearanceData::getDefaultObject()
+{
+    return DisappearanceData::getDefaultObjectInstance();
+}
+
+SoundData::~SoundData()
+{
+}
+
+SoundData * SoundData::copy() const
+{
+    SoundData * copied = SoundData::alloc();
+    *copied = *this;
+    return copied;
+}
+
+bool SoundData::instanceOf(int classNo) const
+{
+    if(SOUND_NO == classNo) return true;
+    return PerceptionData::instanceOf(classNo);
+}
+
+//freelist related methods specific to this class
+SoundData *SoundData::defaults_SoundData = 0;
+SoundData *SoundData::begin_SoundData = 0;
+
+SoundData *SoundData::alloc()
+{
+    if(begin_SoundData) {
+        SoundData *res = begin_SoundData;
+        assert( res->m_refCount == 0 );
+        res->m_attrFlags = 0;
+        res->m_attributes.clear();
+        begin_SoundData = (SoundData *)begin_SoundData->m_next;
+        return res;
+    }
+    return new SoundData(SoundData::getDefaultObjectInstance());
+}
+
+void SoundData::free()
+{
+    m_next = begin_SoundData;
+    begin_SoundData = this;
+}
+
+
+SoundData *SoundData::getDefaultObjectInstance()
+{
+    if (defaults_SoundData == 0) {
+        defaults_SoundData = new SoundData;
+        defaults_SoundData->attr_objtype = "op";
+        defaults_SoundData->attr_serialno = 0;
+        defaults_SoundData->attr_refno = 0;
+        defaults_SoundData->attr_seconds = 0.0;
+        defaults_SoundData->attr_future_seconds = 0.0;
+        defaults_SoundData->attr_stamp = 0.0;
+        defaults_SoundData->attr_parents = std::list<std::string>(1, "sound");
+    }
+    return defaults_SoundData;
+}
+
+SoundData *SoundData::getDefaultObject()
+{
+    return SoundData::getDefaultObjectInstance();
+}
+
 SmellData::~SmellData()
 {
 }

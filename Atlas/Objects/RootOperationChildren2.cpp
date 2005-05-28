@@ -194,6 +194,67 @@ MoveData *MoveData::getDefaultObject()
     return MoveData::getDefaultObjectInstance();
 }
 
+WieldData::~WieldData()
+{
+}
+
+WieldData * WieldData::copy() const
+{
+    WieldData * copied = WieldData::alloc();
+    *copied = *this;
+    return copied;
+}
+
+bool WieldData::instanceOf(int classNo) const
+{
+    if(WIELD_NO == classNo) return true;
+    return SetData::instanceOf(classNo);
+}
+
+//freelist related methods specific to this class
+WieldData *WieldData::defaults_WieldData = 0;
+WieldData *WieldData::begin_WieldData = 0;
+
+WieldData *WieldData::alloc()
+{
+    if(begin_WieldData) {
+        WieldData *res = begin_WieldData;
+        assert( res->m_refCount == 0 );
+        res->m_attrFlags = 0;
+        res->m_attributes.clear();
+        begin_WieldData = (WieldData *)begin_WieldData->m_next;
+        return res;
+    }
+    return new WieldData(WieldData::getDefaultObjectInstance());
+}
+
+void WieldData::free()
+{
+    m_next = begin_WieldData;
+    begin_WieldData = this;
+}
+
+
+WieldData *WieldData::getDefaultObjectInstance()
+{
+    if (defaults_WieldData == 0) {
+        defaults_WieldData = new WieldData;
+        defaults_WieldData->attr_objtype = "op";
+        defaults_WieldData->attr_serialno = 0;
+        defaults_WieldData->attr_refno = 0;
+        defaults_WieldData->attr_seconds = 0.0;
+        defaults_WieldData->attr_future_seconds = 0.0;
+        defaults_WieldData->attr_stamp = 0.0;
+        defaults_WieldData->attr_parents = std::list<std::string>(1, "wield");
+    }
+    return defaults_WieldData;
+}
+
+WieldData *WieldData::getDefaultObject()
+{
+    return WieldData::getDefaultObjectInstance();
+}
+
 GetData::~GetData()
 {
 }
@@ -314,67 +375,6 @@ PerceiveData *PerceiveData::getDefaultObjectInstance()
 PerceiveData *PerceiveData::getDefaultObject()
 {
     return PerceiveData::getDefaultObjectInstance();
-}
-
-LookData::~LookData()
-{
-}
-
-LookData * LookData::copy() const
-{
-    LookData * copied = LookData::alloc();
-    *copied = *this;
-    return copied;
-}
-
-bool LookData::instanceOf(int classNo) const
-{
-    if(LOOK_NO == classNo) return true;
-    return PerceiveData::instanceOf(classNo);
-}
-
-//freelist related methods specific to this class
-LookData *LookData::defaults_LookData = 0;
-LookData *LookData::begin_LookData = 0;
-
-LookData *LookData::alloc()
-{
-    if(begin_LookData) {
-        LookData *res = begin_LookData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_LookData = (LookData *)begin_LookData->m_next;
-        return res;
-    }
-    return new LookData(LookData::getDefaultObjectInstance());
-}
-
-void LookData::free()
-{
-    m_next = begin_LookData;
-    begin_LookData = this;
-}
-
-
-LookData *LookData::getDefaultObjectInstance()
-{
-    if (defaults_LookData == 0) {
-        defaults_LookData = new LookData;
-        defaults_LookData->attr_objtype = "op";
-        defaults_LookData->attr_serialno = 0;
-        defaults_LookData->attr_refno = 0;
-        defaults_LookData->attr_seconds = 0.0;
-        defaults_LookData->attr_future_seconds = 0.0;
-        defaults_LookData->attr_stamp = 0.0;
-        defaults_LookData->attr_parents = std::list<std::string>(1, "look");
-    }
-    return defaults_LookData;
-}
-
-LookData *LookData::getDefaultObject()
-{
-    return LookData::getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

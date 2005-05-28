@@ -11,6 +11,67 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+LookData::~LookData()
+{
+}
+
+LookData * LookData::copy() const
+{
+    LookData * copied = LookData::alloc();
+    *copied = *this;
+    return copied;
+}
+
+bool LookData::instanceOf(int classNo) const
+{
+    if(LOOK_NO == classNo) return true;
+    return PerceiveData::instanceOf(classNo);
+}
+
+//freelist related methods specific to this class
+LookData *LookData::defaults_LookData = 0;
+LookData *LookData::begin_LookData = 0;
+
+LookData *LookData::alloc()
+{
+    if(begin_LookData) {
+        LookData *res = begin_LookData;
+        assert( res->m_refCount == 0 );
+        res->m_attrFlags = 0;
+        res->m_attributes.clear();
+        begin_LookData = (LookData *)begin_LookData->m_next;
+        return res;
+    }
+    return new LookData(LookData::getDefaultObjectInstance());
+}
+
+void LookData::free()
+{
+    m_next = begin_LookData;
+    begin_LookData = this;
+}
+
+
+LookData *LookData::getDefaultObjectInstance()
+{
+    if (defaults_LookData == 0) {
+        defaults_LookData = new LookData;
+        defaults_LookData->attr_objtype = "op";
+        defaults_LookData->attr_serialno = 0;
+        defaults_LookData->attr_refno = 0;
+        defaults_LookData->attr_seconds = 0.0;
+        defaults_LookData->attr_future_seconds = 0.0;
+        defaults_LookData->attr_stamp = 0.0;
+        defaults_LookData->attr_parents = std::list<std::string>(1, "look");
+    }
+    return defaults_LookData;
+}
+
+LookData *LookData::getDefaultObject()
+{
+    return LookData::getDefaultObjectInstance();
+}
+
 ListenData::~ListenData()
 {
 }
@@ -314,67 +375,6 @@ LogoutData *LogoutData::getDefaultObjectInstance()
 LogoutData *LogoutData::getDefaultObject()
 {
     return LogoutData::getDefaultObjectInstance();
-}
-
-ImaginaryData::~ImaginaryData()
-{
-}
-
-ImaginaryData * ImaginaryData::copy() const
-{
-    ImaginaryData * copied = ImaginaryData::alloc();
-    *copied = *this;
-    return copied;
-}
-
-bool ImaginaryData::instanceOf(int classNo) const
-{
-    if(IMAGINARY_NO == classNo) return true;
-    return ActionData::instanceOf(classNo);
-}
-
-//freelist related methods specific to this class
-ImaginaryData *ImaginaryData::defaults_ImaginaryData = 0;
-ImaginaryData *ImaginaryData::begin_ImaginaryData = 0;
-
-ImaginaryData *ImaginaryData::alloc()
-{
-    if(begin_ImaginaryData) {
-        ImaginaryData *res = begin_ImaginaryData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_ImaginaryData = (ImaginaryData *)begin_ImaginaryData->m_next;
-        return res;
-    }
-    return new ImaginaryData(ImaginaryData::getDefaultObjectInstance());
-}
-
-void ImaginaryData::free()
-{
-    m_next = begin_ImaginaryData;
-    begin_ImaginaryData = this;
-}
-
-
-ImaginaryData *ImaginaryData::getDefaultObjectInstance()
-{
-    if (defaults_ImaginaryData == 0) {
-        defaults_ImaginaryData = new ImaginaryData;
-        defaults_ImaginaryData->attr_objtype = "op";
-        defaults_ImaginaryData->attr_serialno = 0;
-        defaults_ImaginaryData->attr_refno = 0;
-        defaults_ImaginaryData->attr_seconds = 0.0;
-        defaults_ImaginaryData->attr_future_seconds = 0.0;
-        defaults_ImaginaryData->attr_stamp = 0.0;
-        defaults_ImaginaryData->attr_parents = std::list<std::string>(1, "imaginary");
-    }
-    return defaults_ImaginaryData;
-}
-
-ImaginaryData *ImaginaryData::getDefaultObject()
-{
-    return ImaginaryData::getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

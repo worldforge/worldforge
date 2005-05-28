@@ -10,7 +10,7 @@
 
 namespace Atlas { namespace Objects { 
 
-int enumMax = 38;
+int enumMax = 40;
 
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
@@ -67,6 +67,8 @@ AddFactories::AddFactories()
 
     objectFactory->addFactory("move", &factory<Operation::MoveData>);
 
+    objectFactory->addFactory("wield", &factory<Operation::WieldData>);
+
     objectFactory->addFactory("get", &factory<Operation::GetData>);
 
     objectFactory->addFactory("perceive", &factory<Operation::PerceiveData>);
@@ -84,6 +86,8 @@ AddFactories::AddFactories()
     objectFactory->addFactory("logout", &factory<Operation::LogoutData>);
 
     objectFactory->addFactory("imaginary", &factory<Operation::ImaginaryData>);
+
+    objectFactory->addFactory("use", &factory<Operation::UseData>);
 
     objectFactory->addFactory("info", &factory<Operation::InfoData>);
 
