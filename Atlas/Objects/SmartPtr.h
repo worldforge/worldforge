@@ -1,6 +1,7 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Aloril
+// Copyright (C) 2000-2005 Al Riddoch
 
 #ifndef ATLAS_OBJECTS_SMARTPTR_H
 #define ATLAS_OBJECTS_SMARTPTR_H
@@ -8,8 +9,6 @@
 #include <Atlas/Exception.h>
 
 namespace Atlas { namespace Objects {
-
-class RootData;
 
 class NullSmartPtrDereference : public Atlas::Exception
 {
@@ -83,11 +82,6 @@ class SmartPtr
     SmartPtr<T> getDefaultObject() const
     {
         return SmartPtr(ptr->getDefaultObject());
-    }
-    static SmartPtr<RootData> factory()
-    {
-        SmartPtr<T> obj;
-        return obj;
     }
     // If you want to make these protected, please ensure that the
     // detructor is made virtual to ensure your new class bahaves

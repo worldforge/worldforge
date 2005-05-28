@@ -101,7 +101,7 @@ void testXML()
 //    alloc_func alloc_entity = &Entity::RootEntityDataInstance::alloc;
 //    BaseObjectData *bod = alloc_entity();
     //Root human2(bod);
-    Root human2 = RootEntity::factory();
+    Root human2 = Atlas::Objects::factory<Atlas::Objects::Entity::RootEntityData>();
     std::cout<<"human.id="<<human->getId()<<std::endl;
     std::cout<<"human2.id="<<human2->getId()<<std::endl;
 #if 0

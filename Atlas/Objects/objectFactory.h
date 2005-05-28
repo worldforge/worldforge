@@ -7,6 +7,7 @@
 #define ATLAS_OBJECTS_OBJECTFACTORY_H
 
 #include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/SmartPtr.h>
 
 #include <string>
 #include <list>
@@ -26,6 +27,13 @@ class NoSuchFactoryException : public Atlas::Exception
         return name;
     }
 };
+
+template <class T>
+static SmartPtr<RootData> factory()
+{
+    SmartPtr<T> obj;
+    return obj;
+}
 
 typedef Root (*FactoryMethod)();
 typedef std::map<const std::string, FactoryMethod> FactoryMap;

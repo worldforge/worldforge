@@ -46,7 +46,7 @@ AddFactories::AddFactories()
             id = obj.id
             idc = classize(id)
             self.write("""
-    objectFactory->addFactory("%(id)s", &%(namespace)s%(idc)s::factory);
+    objectFactory->addFactory("%(id)s", &factory<%(namespace)s%(idc)sData>);
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""}
 

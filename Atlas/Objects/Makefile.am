@@ -5,7 +5,7 @@ lib_LTLIBRARIES = libAtlasObjects-0.6.la
 
 libAtlasObjects_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
 
-REAL_GENERATED_CPP = Root.cpp Decoder.cpp Dispatcher.cpp \
+REAL_GENERATED_CPP = Root.cpp Decoder.cpp Dispatcher.cpp objectFactory.cpp \
 	RootEntity.cpp RootEntityChildren.cpp \
 	RootOperation.cpp RootOperationChildren1.cpp \
 	RootOperationChildren2.cpp RootOperationChildren3.cpp \
@@ -21,7 +21,7 @@ GENERATED_H = Root.h Decoder.h Dispatcher.h ObjectsFwd.h \
 
 libAtlasObjects_0_6_la_SOURCES = \
 	gen_cpp.py BaseObject.cpp SmartPtr.cpp Encoder.cpp \
-	loadDefaults.cpp objectFactory.cpp \
+	loadDefaults.cpp \
 	$(GENERATED_CPP)
 
 BUILT_SOURCES = $(GENERATED_CPP) $(GENERATED_H)

@@ -1,3 +1,21 @@
+2005-05-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Makefile.am: Move objectFactory.cpp into the generated
+	  sources section as it should be.
+
+	* Atlas/Objects/SmartPtr.h: Remove the factory() method as it clutters
+	  the API, and causes a problem with gcc 4.
+
+	* Atlas/Objects/objectFactory.cpp, Atlas/Objects/objectFactory.h,
+	  Atlas/Objects/GenerateObjectFactory.py: Use an inlined template
+	  factory function rather than the one removed from SmartPtr.
+
+	* tests/Objects/custom_ops.cpp: Update the code demonstrating how
+	  to create and install custom op types.
+
+	* tests/Objects/objects2.cpp: Modify code that tested using factory
+	  method to create instances.
+
 2005-05-07  Al Riddoch  <alriddoch@zepler.org>
 
 	* NEWS: Update for upcoming release.

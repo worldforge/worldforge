@@ -31,79 +31,79 @@ AddFactories::AddFactories()
 {
     Factories * objectFactory = Factories::instance();
 
-    objectFactory->addFactory("root", &Root::factory);
+    objectFactory->addFactory("root", &factory<RootData>);
 
-    objectFactory->addFactory("root_entity", &Entity::RootEntity::factory);
+    objectFactory->addFactory("root_entity", &factory<Entity::RootEntityData>);
 
-    objectFactory->addFactory("admin_entity", &Entity::AdminEntity::factory);
+    objectFactory->addFactory("admin_entity", &factory<Entity::AdminEntityData>);
 
-    objectFactory->addFactory("account", &Entity::Account::factory);
+    objectFactory->addFactory("account", &factory<Entity::AccountData>);
 
-    objectFactory->addFactory("player", &Entity::Player::factory);
+    objectFactory->addFactory("player", &factory<Entity::PlayerData>);
 
-    objectFactory->addFactory("admin", &Entity::Admin::factory);
+    objectFactory->addFactory("admin", &factory<Entity::AdminData>);
 
-    objectFactory->addFactory("game", &Entity::Game::factory);
+    objectFactory->addFactory("game", &factory<Entity::GameData>);
 
-    objectFactory->addFactory("game_entity", &Entity::GameEntity::factory);
+    objectFactory->addFactory("game_entity", &factory<Entity::GameEntityData>);
 
-    objectFactory->addFactory("root_operation", &Operation::RootOperation::factory);
+    objectFactory->addFactory("root_operation", &factory<Operation::RootOperationData>);
 
-    objectFactory->addFactory("action", &Operation::Action::factory);
+    objectFactory->addFactory("action", &factory<Operation::ActionData>);
 
-    objectFactory->addFactory("create", &Operation::Create::factory);
+    objectFactory->addFactory("create", &factory<Operation::CreateData>);
 
-    objectFactory->addFactory("combine", &Operation::Combine::factory);
+    objectFactory->addFactory("combine", &factory<Operation::CombineData>);
 
-    objectFactory->addFactory("divide", &Operation::Divide::factory);
+    objectFactory->addFactory("divide", &factory<Operation::DivideData>);
 
-    objectFactory->addFactory("communicate", &Operation::Communicate::factory);
+    objectFactory->addFactory("communicate", &factory<Operation::CommunicateData>);
 
-    objectFactory->addFactory("talk", &Operation::Talk::factory);
+    objectFactory->addFactory("talk", &factory<Operation::TalkData>);
 
-    objectFactory->addFactory("delete", &Operation::Delete::factory);
+    objectFactory->addFactory("delete", &factory<Operation::DeleteData>);
 
-    objectFactory->addFactory("set", &Operation::Set::factory);
+    objectFactory->addFactory("set", &factory<Operation::SetData>);
 
-    objectFactory->addFactory("move", &Operation::Move::factory);
+    objectFactory->addFactory("move", &factory<Operation::MoveData>);
 
-    objectFactory->addFactory("get", &Operation::Get::factory);
+    objectFactory->addFactory("get", &factory<Operation::GetData>);
 
-    objectFactory->addFactory("perceive", &Operation::Perceive::factory);
+    objectFactory->addFactory("perceive", &factory<Operation::PerceiveData>);
 
-    objectFactory->addFactory("look", &Operation::Look::factory);
+    objectFactory->addFactory("look", &factory<Operation::LookData>);
 
-    objectFactory->addFactory("listen", &Operation::Listen::factory);
+    objectFactory->addFactory("listen", &factory<Operation::ListenData>);
 
-    objectFactory->addFactory("sniff", &Operation::Sniff::factory);
+    objectFactory->addFactory("sniff", &factory<Operation::SniffData>);
 
-    objectFactory->addFactory("touch", &Operation::Touch::factory);
+    objectFactory->addFactory("touch", &factory<Operation::TouchData>);
 
-    objectFactory->addFactory("login", &Operation::Login::factory);
+    objectFactory->addFactory("login", &factory<Operation::LoginData>);
 
-    objectFactory->addFactory("logout", &Operation::Logout::factory);
+    objectFactory->addFactory("logout", &factory<Operation::LogoutData>);
 
-    objectFactory->addFactory("imaginary", &Operation::Imaginary::factory);
+    objectFactory->addFactory("imaginary", &factory<Operation::ImaginaryData>);
 
-    objectFactory->addFactory("info", &Operation::Info::factory);
+    objectFactory->addFactory("info", &factory<Operation::InfoData>);
 
-    objectFactory->addFactory("perception", &Operation::Perception::factory);
+    objectFactory->addFactory("perception", &factory<Operation::PerceptionData>);
 
-    objectFactory->addFactory("sight", &Operation::Sight::factory);
+    objectFactory->addFactory("sight", &factory<Operation::SightData>);
 
-    objectFactory->addFactory("appearance", &Operation::Appearance::factory);
+    objectFactory->addFactory("appearance", &factory<Operation::AppearanceData>);
 
-    objectFactory->addFactory("disappearance", &Operation::Disappearance::factory);
+    objectFactory->addFactory("disappearance", &factory<Operation::DisappearanceData>);
 
-    objectFactory->addFactory("sound", &Operation::Sound::factory);
+    objectFactory->addFactory("sound", &factory<Operation::SoundData>);
 
-    objectFactory->addFactory("smell", &Operation::Smell::factory);
+    objectFactory->addFactory("smell", &factory<Operation::SmellData>);
 
-    objectFactory->addFactory("feel", &Operation::Feel::factory);
+    objectFactory->addFactory("feel", &factory<Operation::FeelData>);
 
-    objectFactory->addFactory("error", &Operation::Error::factory);
+    objectFactory->addFactory("error", &factory<Operation::ErrorData>);
 
-    objectFactory->addFactory("anonymous", &Entity::Anonymous::factory);
+    objectFactory->addFactory("anonymous", &factory<Entity::AnonymousData>);
 }
 
 Factories::Factories()
