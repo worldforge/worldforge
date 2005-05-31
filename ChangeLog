@@ -1,5 +1,9 @@
 2005-05-31  James Turner  <james@worldforge.org>
 
+	* Eris/Avatar.cpp, Eris/Avatar.h: actually make the last commit correct.
+
+2005-05-31  James Turner  <james@worldforge.org>
+
 	* Eris/Avatar.cpp, Eris/Avatar.h: use a different (and hopefully correct)
 	  method to interpolate server time values for the client. getWorldTime
 	  should now work as advertised.

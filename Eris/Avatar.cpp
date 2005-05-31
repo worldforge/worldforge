@@ -27,7 +27,7 @@ namespace Eris
 Avatar::Avatar(Account* pl, const std::string& entId) : 
     m_account(pl),
     m_entityId(entId),
-    m_entity(NULL)
+    m_entity(NULL),
     m_stampAtLastOp(TimeStamp::now()),
     m_lastOpTime(0.0)
 {
@@ -220,9 +220,9 @@ Connection* Avatar::getConnection() const
     return m_account->getConnection();
 }
 
-WFMath::TimeStamp Avatar::getWorldTime()
+double Avatar::getWorldTime()
 {
-    TimeDiff deltaT = TimeStamp::now() - m_stampAtLastOp;
+    WFMath::TimeDiff deltaT = TimeStamp::now() - m_stampAtLastOp;
     return m_lastOpTime + (deltaT.milliseconds() / 1000.0);
 }
 
