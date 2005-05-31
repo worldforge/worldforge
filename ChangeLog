@@ -1,4 +1,10 @@
-2005-05-26  James Turner  <james@worldforge.org>
+2005-05-31  James Turner  <james@worldforge.org>
+
+	* Eris/Avatar.cpp, Eris/Avatar.h: use a different (and hopefully correct)
+	  method to interpolate server time values for the client. getWorldTime
+	  should now work as advertised.
+
+2005-05-27  James Turner  <james@worldforge.org>
 
 	* Eris/View.h, Eris/View.cpp: add support for emitting a notification
 	  signal when an Entity is seen.

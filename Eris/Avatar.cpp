@@ -27,8 +27,9 @@ namespace Eris
 Avatar::Avatar(Account* pl, const std::string& entId) : 
     m_account(pl),
     m_entityId(entId),
-    m_entity(NULL),
-    m_worldTimeOffset(0)
+    m_entity(NULL)
+    m_stampAtLastOp(TimeStamp::now()),
+    m_lastOpTime(0.0)
 {
     m_view = new View(this);
     m_entityAppearanceCon = m_view->Appearance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
@@ -221,12 +222,14 @@ Connection* Avatar::getConnection() const
 
 WFMath::TimeStamp Avatar::getWorldTime()
 {
-    return TimeStamp::now() + m_worldTimeOffset;
+    TimeDiff deltaT = TimeStamp::now() - m_stampAtLastOp;
+    return m_lastOpTime + (deltaT.milliseconds() / 1000.0);
 }
 
 void Avatar::updateWorldTime(double seconds)
 {
-   // m_worldTimeOffset = TimeStamp(seconds, 0) - TimeStamp::now();
+    m_stampAtLastOp = TimeStamp::now();
+    m_lastOpTime = seconds;
 }
 
 } // of namespace Eris

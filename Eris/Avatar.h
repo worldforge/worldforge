@@ -49,7 +49,7 @@ public:
     Connection* getConnection() const;
 
     /** get the current local approximation of world time. */
-    WFMath::TimeStamp getWorldTime();
+    double getWorldTime();
 
 	/// Drop an object in the Avatar's inventory at the given location
 	void drop(Entity*, const WFMath::Point<3>& pos, const std::string& loc);
@@ -125,10 +125,9 @@ private:
     
     std::string m_entityId;
     EntityPtr m_entity;
-    /** records the current difference between system time and world's time
-    (currently, usually the server uptime). This is likely to change when
-    we support more advanced horology. */
-    WFMath::TimeDiff m_worldTimeOffset; 
+    
+    WFMath::TimeStamp m_stampAtLastOp; 
+    double m_lastOpTime;
 
     IGRouter* m_router;
     View* m_view;
