@@ -4,6 +4,7 @@
 #include <Eris/ServerInfo.h>
 
 #include <iostream>
+#include <vector>
 #include <sigc++/slot.h>
 
 using std::endl;
@@ -15,23 +16,23 @@ bool queryDone = false,
 
 void erisLog(Eris::LogLevel, const std::string& msg)
 {
-    cout << "ERIS: " << msg << endl;
+    cerr << "ERIS: " << msg << endl;
 }
 
 void gotServerList(int count)
 {
-    cout << "metaserver knows about " << count << " servers." << endl;
+    cerr << "metaserver knows about " << count << " servers." << endl;
 }
 
 void gotServer(const Eris::ServerInfo& info)
 {
-    cout << "got info for server: " << info.getServername() << '/'
+    cerr << "got info for server: " << info.getServername() << '/'
         << info.getHostname() << endl;
 }
 
 void queriesDone()
 {
-    cout << "query complete" << endl;
+    cerr << "query complete" << endl;
     queryDone = true;
 }
 
@@ -51,7 +52,7 @@ void dumpToScreen(const Eris::Meta& meta)
         switch (sv.getStatus())
         {
         case Eris::ServerInfo::VALID:
-            cout << "\tserver: " << sv.getServer() << " " << sv.getVersion() << " (builddate " << sv.getBuildDate() << ")<br/>" << endl;
+            cout << "\tserver: " << sv.getServer() << " " << sv.getVersion() << " (builddate " << sv.getBuildDate() << ")" << endl;
             cout << "\truleset:" << sv.getRuleset() << endl;
             cout << "\tuptime:" << sv.getUptime() << endl;
             cout << "\tping:" << sv.getPing() << endl;
@@ -70,6 +71,40 @@ void dumpToScreen(const Eris::Meta& meta)
             cout << "Query failed" << endl;
         }
     } // of server iteration
+}
+
+void dumpToXML(const Eris::Meta & meta)
+{
+    cout << "<metaquery>" << endl;
+    for(unsigned int S=0; S < meta.getGameServerCount(); ++S)
+    {
+        const Eris::ServerInfo& sv = meta.getInfoForServer(S);
+        
+        cout << "<server status=\"";
+        switch (sv.getStatus())
+        {
+        case Eris::ServerInfo::VALID: cout << "valid"; break;
+        case Eris::ServerInfo::TIMEOUT: cout << "timeout"; break;
+        case Eris::ServerInfo::QUERYING: cout << "querying"; break;
+        default: cout << "failed";
+        }
+        cout << "\">" << endl;
+        cout << "<address>" << sv.getHostname() << "</address>" << endl;
+        if(sv.getStatus() == Eris::ServerInfo::VALID)
+        {
+            cout << "<status>valid</status>" << endl;
+            cout << "<name>" << sv.getServername() << "</name>" << endl;
+            cout << "<servertype>" << sv.getServer() << "</servertype>" << endl;
+            cout << "<ruleset>" << sv.getRuleset() << "</ruleset>" << endl;
+            cout << "<uptime>" << sv.getUptime() << "</uptime>" << endl;
+            cout << "<ping>" << sv.getPing() << "</ping>" << endl;
+            cout << "<clients>" << sv.getNumClients() << "</clients>" << endl;
+			cout << "<builddate>" << sv.getBuildDate() << "</builddate>" << endl;
+			cout << "<version>" << sv.getVersion() << "</version>" << endl;
+        }
+        cout << "</server>" << endl;
+    } // of server iteration
+    cout << "</metaquery>" << endl;
 }
 
 void dumpToHTML(const Eris::Meta& meta)
@@ -114,23 +149,27 @@ void dumpToHTML(const Eris::Meta& meta)
 
 int main(int argc, char* argv[])
 {
+    std::string metaServer = "metaserver.worldforge.org";
+    std::vector< std::string > args(argv, argv + argc);
+    void (* dumper)(const Eris::Meta &) = dumpToScreen;
+    
     Eris::setLogLevel(Eris::LOG_DEBUG);
     Eris::Logged.connect(SigC::slot(&erisLog));
-
-    bool htmlDump = false;
     
-    std::string metaServer = "metaserver.worldforge.org";
-    if (argc > 1)
+    if(args.size() > 1)
     {
-       if (strcmp(argv[1], "--html") == 0)
-           htmlDump = true;
-       else
-       {
-         metaServer = argv[1];
-
-         if ((argc > 2) && (strcmp(argv[2], "--html") == 0))
-             htmlDump = true;
-       }
+        if(args[1].substr(0, 2) != "--")
+        {
+            metaServer = argv[1];
+        }
+        if(find(args.begin(), args.end(), "--html") != args.end())
+        {
+            dumper = dumpToHTML;
+        }
+        else if(find(args.begin(), args.end(), "--xml") != args.end())
+        {
+            dumper = dumpToXML;
+        }
     }
     
     // maximum of 5 simultaneous queries
@@ -140,7 +179,7 @@ int main(int argc, char* argv[])
     meta.ReceivedServerInfo.connect(SigC::slot(&gotServer));
     meta.Failure.connect(SigC::slot(&queryFailed));
     
-    cout << "querying " << metaServer << endl;
+    cerr << "querying " << metaServer << endl;
     meta.refresh();
     
     while (!queryDone && !failure)
@@ -153,12 +192,9 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
     
-    cout << "final list contains " << meta.getGameServerCount() << " servers." << endl;
+    cerr << "final list contains " << meta.getGameServerCount() << " servers." << endl;
   
-    if (htmlDump == true)
-        dumpToHTML(meta);
-    else
-        dumpToScreen(meta);
+    dumper(meta);
     
     return EXIT_SUCCESS;
 }

@@ -1,3 +1,13 @@
+2005-06-01  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
+	* test/metaquery.cpp: Added the option to output all server information
+	  in xml format with a very simple doctype. Also fixed a small bug with
+	  a <br/> in plain text output. all logging and inforamtion output goes
+	  to stderr now, only the server data is sent to stdout.
+	* Eris/TypeService.cpp: Added a class commentary so doxygen generates
+	  the class page which contains all the documentation that this class
+	  already has.
+
 2005-05-31  James Turner  <james@worldforge.org>
 
 	* Eris/Avatar.cpp, Eris/Avatar.h: actually make the last commit correct.

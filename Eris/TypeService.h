@@ -19,6 +19,9 @@ class TypeInfo;
 typedef TypeInfo* TypeInfoPtr;
 typedef std::set<TypeInfoPtr> TypeInfoSet;
 
+/**
+ * A service class querying and caching types.
+ **/
 class TypeService : virtual public SigC::Object
 {
 public:
