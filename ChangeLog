@@ -1,3 +1,19 @@
+2005-06-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h,
+	  Mercator/GrassShader.cpp, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  Rename static variables that hold parameter key strings
+	  to be prefixed with key_. Add static variables to hold the
+	  default values of parameters. Make sure the default values
+	  of parameters are set in the constructor that takes named
+	  paramters. Add accessors for all shader parameters.
+
+	* tests/testShaderFactory.cpp: Add code to test whether shaders
+	  correctly  set their paramaters when passes in as named paramters.
+	  Includes check to make sure parameters all default to the right
+	  value.
+
 2005-05-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/GrassShader.cpp: Added missing static variable definitions.

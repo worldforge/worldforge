@@ -14,12 +14,19 @@ class DepthShader : public Shader {
     float m_waterLevel;
     float m_murkyDepth;
   public:
-    static const std::string waterLevel;
-    static const std::string murkyDepth;
+    static const std::string key_waterLevel;
+    static const std::string key_murkyDepth;
 
-    explicit DepthShader(float waterLevel = 0.f, float murkyDepth = -64.f);
+    static const float default_waterLevel = 0.f;
+    static const float default_murkyDepth = -64.f;
+
+    explicit DepthShader(float waterLevel = default_waterLevel,
+                         float murkyDepth = default_murkyDepth);
     explicit DepthShader(const Parameters & params);
     virtual ~DepthShader();
+
+    const float waterLevel() const { return m_waterLevel; }
+    const float murkyDepth() const { return m_murkyDepth; }
 
     virtual bool checkIntersect(const Segment &) const;
     virtual void shade(Surface &) const;

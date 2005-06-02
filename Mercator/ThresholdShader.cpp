@@ -9,15 +9,15 @@
 
 namespace Mercator {
 
-const std::string HighShader::threshold("threshold");
+const std::string HighShader::key_threshold("threshold");
 
 HighShader::HighShader(float threshold) : m_threshold(threshold)
 {
 }
 
-HighShader::HighShader(const Parameters & params)
+HighShader::HighShader(const Parameters & params) : m_threshold(default_threshold)
 {
-    Parameters::const_iterator I = params.find(threshold);
+    Parameters::const_iterator I = params.find(key_threshold);
     Parameters::const_iterator Iend = params.end();
     if (I != Iend) {
         m_threshold = I->second;
@@ -61,15 +61,15 @@ void HighShader::shade(Surface & s) const
     }
 }
 
-const std::string LowShader::threshold("threshold");
+const std::string LowShader::key_threshold("threshold");
 
 LowShader::LowShader(float threshold) : m_threshold(threshold)
 {
 }
 
-LowShader::LowShader(const Parameters & params)
+LowShader::LowShader(const Parameters & params) : m_threshold(default_threshold)
 {
-    Parameters::const_iterator I = params.find(threshold);
+    Parameters::const_iterator I = params.find(key_threshold);
     Parameters::const_iterator Iend = params.end();
     if (I != Iend) {
         m_threshold = I->second;
@@ -113,22 +113,23 @@ void LowShader::shade(Surface & s) const
     }
 }
 
-const std::string BandShader::lowThreshold("lowThreshold");
-const std::string BandShader::highThreshold("highThreshold");
+const std::string BandShader::key_lowThreshold("lowThreshold");
+const std::string BandShader::key_highThreshold("highThreshold");
 
 BandShader::BandShader(float low_threshold, float high_threshold) : 
     m_lowThreshold(low_threshold), m_highThreshold(high_threshold)
 {
 }
 
-BandShader::BandShader(const Parameters & params)
+BandShader::BandShader(const Parameters & params) :
+    m_lowThreshold(default_lowThreshold), m_highThreshold(default_highThreshold)
 {
-    Parameters::const_iterator I = params.find(lowThreshold);
+    Parameters::const_iterator I = params.find(key_lowThreshold);
     Parameters::const_iterator Iend = params.end();
     if (I != Iend) {
         m_lowThreshold = I->second;
     }
-    I = params.find(highThreshold);
+    I = params.find(key_highThreshold);
     if (I != Iend) {
         m_highThreshold = I->second;
     }

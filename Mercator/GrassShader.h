@@ -48,15 +48,27 @@ class GrassShader : public Shader {
 
     ColorT slopeToAlpha(float height, float slope) const;
   public:
-    static const std::string lowThreshold;
-    static const std::string highThreshold;
-    static const std::string cutoff;
-    static const std::string intercept;
+    static const std::string key_lowThreshold;
+    static const std::string key_highThreshold;
+    static const std::string key_cutoff;
+    static const std::string key_intercept;
 
-    explicit GrassShader(float lowThreshold = 1.f, float highThreshold = 20.f,
-                         float cutoff = 1.f, float intercept = 2.f);
+    static const float default_lowThreshold = 1.f;
+    static const float default_highThreshold = 20.f;
+    static const float default_cutoff = 1.f;
+    static const float default_intercept = 2.f;
+
+    explicit GrassShader(float lowThreshold = default_lowThreshold,
+                         float highThreshold = default_highThreshold,
+                         float cutoff = default_cutoff,
+                         float intercept = default_intercept);
     explicit GrassShader(const Parameters & params);
     virtual ~GrassShader();
+
+    const float lowThreshold() const { return m_lowThreshold; }
+    const float highThreshold() const { return m_highThreshold; }
+    const float cutoff() const { return m_cutoff; }
+    const float intercept() const { return m_intercept; }
 
     virtual bool checkIntersect(const Segment &) const;
     virtual void shade(Surface &) const;

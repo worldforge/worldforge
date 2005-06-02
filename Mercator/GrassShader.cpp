@@ -9,10 +9,10 @@
 
 namespace Mercator {
 
-const std::string GrassShader::lowThreshold("lowThreshold");
-const std::string GrassShader::highThreshold("highThreshold");
-const std::string GrassShader::cutoff("cutoff");
-const std::string GrassShader::intercept("intercept");
+const std::string GrassShader::key_lowThreshold("lowThreshold");
+const std::string GrassShader::key_highThreshold("highThreshold");
+const std::string GrassShader::key_cutoff("cutoff");
+const std::string GrassShader::key_intercept("intercept");
 
 GrassShader::GrassShader(float lowThreshold, float highThreshold,
                          float cutoff, float intercept) :
@@ -21,22 +21,26 @@ GrassShader::GrassShader(float lowThreshold, float highThreshold,
 {
 }
 
-GrassShader::GrassShader(const Parameters & params)
+GrassShader::GrassShader(const Parameters & params) :
+             m_lowThreshold(default_lowThreshold),
+             m_highThreshold(default_highThreshold),
+             m_cutoff(default_cutoff),
+             m_intercept(default_intercept)
 {
-    Parameters::const_iterator I = params.find(lowThreshold);
+    Parameters::const_iterator I = params.find(key_lowThreshold);
     Parameters::const_iterator Iend = params.end();
     if (I != Iend) {
         m_lowThreshold = I->second;
     }
-    I = params.find(highThreshold);
+    I = params.find(key_highThreshold);
     if (I != Iend) {
         m_highThreshold = I->second;
     }
-    I = params.find(cutoff);
+    I = params.find(key_cutoff);
     if (I != Iend) {
         m_cutoff = I->second;
     }
-    I = params.find(intercept);
+    I = params.find(key_intercept);
     if (I != Iend) {
         m_intercept = I->second;
     }
