@@ -163,7 +163,11 @@ void Entity::setFromRoot(const Root& obj)
 {	
     beginUpdate();
     
-    for (Atlas::Objects::RootData::const_iterator A = obj->begin(); A != obj->end(); ++A) {
+    Atlas::Message::MapType attrs;
+    obj->addToMessage(attrs);
+    Atlas::Message::MapType::const_iterator A;
+    
+    for (A = attrs.begin(); A != attrs.end(); ++A) {
         if ((A->first == "id") || 
             (A->first == "loc") || 
             (A->first == "contains") ||

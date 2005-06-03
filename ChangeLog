@@ -1,3 +1,9 @@
+2005-06-03  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp: when setting attribute data from an Atlas::Object,
+	  convert via a Message::Element, to avoid problems with Objects
+	  iterators. Should fix problems with names getting reset to empty.
+
 2005-06-01  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
 	* test/metaquery.cpp: Added the option to output all server information
