@@ -11,6 +11,7 @@ namespace Eris
 	
 class Connection;
 class Avatar;
+class AccountRouter;
 
 /** Type used to return available characters */
 typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> CharacterMap;

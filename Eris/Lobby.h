@@ -9,6 +9,7 @@ namespace Eris
 class Account;
 class Person;
 class Connection;
+class OOGRouter;
 
 /**
 Lobby is the Out-of-Game session object, valid from connection to the server

@@ -1,3 +1,8 @@
+2005-06-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Account.h, Eris/Lobby.h: Add some forward declarations as it
+	  seems friend declarations no longer imply forward declarations.
+
 2005-06-03  James Turner  <james@worldforge.org>
 
 	* Eris/Entity.cpp: when setting attribute data from an Atlas::Object,
