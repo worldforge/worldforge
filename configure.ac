@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT(eris, 1.3.5, james@worldforge.org)
+AC_INIT(eris, 1.3.6, james@worldforge.org)
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -38,7 +38,7 @@ AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 
 AC_LANG_PUSH(C++)
 
-PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0,
+PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= 2.0.9,
     [
         CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
