@@ -1,3 +1,10 @@
+2005-06-07  James Turner  <james@worldforge.org>
+
+	* Eris/Types.h: add in a Result enum.
+	
+	* Eris/Account.cpp, Eris/Account.h: return slightly-useful result values
+	  from many methods on Account.
+
 2005-06-06  James Turner  <james@worldforge.org>
 
 	* configure.ac: require SigC++ 2.0.9 (if using the 2.0 series), since

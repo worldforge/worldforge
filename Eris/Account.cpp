@@ -80,30 +80,27 @@ Account::~Account()
     delete m_router;
 }
 
-void Account::login(const std::string &uname, const std::string &password)
+Result Account::login(const std::string &uname, const std::string &password)
 {
     if (!m_con->isConnected()) {
         error() << "called login on unconnected Connection";
-        return;
+        return NOT_CONNECTED;
     }
     
     if (m_status != DISCONNECTED) {
         error() << "called login, but state is not currently disconnected";
-        return;
+        return ALREADY_LOGGED_IN;
     }
         	
-    internalLogin(uname, password);
+    return internalLogin(uname, password);
 }
 
-void Account::createAccount(const std::string &uname, 
+Result Account::createAccount(const std::string &uname, 
 	const std::string &fullName,
 	const std::string &pwd)
 {
-    if (!m_con->isConnected() || (m_status != DISCONNECTED))
-    {
-        error() << "called createAccount on unconnected Connection / already logged-in Account";
-        return;
-    }
+    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (m_status != DISCONNECTED) return ALREADY_LOGGED_IN;
 
     m_status = LOGGING_IN;
 
@@ -126,13 +123,20 @@ void Account::createAccount(const std::string &uname,
     
     m_timeout.reset(new Timeout("login", this, 5000));
     m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLoginTimeout));
+    
+    return NO_ERR;
 }
 
-void Account::logout()
+Result Account::logout()
 {
-    if (!m_con->isConnected() || (m_status != LOGGED_IN)) {
-        error() << "called logout on bad connection / unconnected Account, ignoring";
-        return;
+    if (!m_con->isConnected()) {
+        error() << "called logout on bad connection ignoring";
+        return NOT_CONNECTED;
+    }
+    
+    if (m_status != LOGGED_IN) {
+        error() << "called logout on non-logged-in Account";
+        return NOT_LOGGED_IN;
     }
     
     m_status = LOGGING_OUT;
@@ -147,6 +151,8 @@ void Account::logout()
 	
     m_timeout.reset(new Timeout("logout", this, 5000));
     m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLogoutTimeout));
+    
+    return NO_ERR;
 }
 
 const CharacterMap& Account::getCharacters()
@@ -160,23 +166,20 @@ const CharacterMap& Account::getCharacters()
     return _characters;
 }
 
-void Account::refreshCharacterInfo()
+Result Account::refreshCharacterInfo()
 {
-    if (!m_con->isConnected() || (m_status != LOGGED_IN))
-    {
-        error() << "called refreshCharacterInfo on unconnected Account, ignoring";
-        return;
-    }    
+    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (m_status != LOGGED_IN) return NOT_LOGGED_IN;
     
-    if (m_doingCharacterRefresh)
-        return; // silently ignore overlapping refreshes
+    // silently ignore overlapping refreshes
+    if (m_doingCharacterRefresh) return NO_ERR;
         
     _characters.clear();
 
     if (m_characterIds.empty())
     {
         GotAllCharacters.emit(); // we must emit the done signal
-        return;
+        return NO_ERR;
     }
     
 // okay, now we know we have at least one character to lookup, set the flag
@@ -194,16 +197,21 @@ void Account::refreshCharacterInfo()
         m_con->getResponder()->await(lk->getSerialno(), this, &Account::sightCharacter);
         m_con->send(lk);
     }
+    
+    return NO_ERR;
 }
 
-void Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
+Result Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
 {
-    if (!m_con->isConnected() || (m_status != LOGGED_IN)) {
-        if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR))
+    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (m_status != LOGGED_IN) {
+        if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
             error() << "duplicate char creation / take";
-        else
+            return DUPLICATE_LOGIN;
+        } else {
             error() << "called createCharacter on unconnected Account, ignoring";
-        return;
+            return NOT_LOGGED_IN;
+        }
     }    
 
     Create c;    
@@ -214,6 +222,7 @@ void Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
     
     m_con->getResponder()->await(c->getSerialno(), this, &Account::avatarResponse);
     m_status = CREATING_CHAR;
+    return NO_ERR;
 }
 
 /*
@@ -239,19 +248,22 @@ void Account::createCharacterHandler(long serialno)
 }
 */
 
-void Account::takeCharacter(const std::string &id)
+Result Account::takeCharacter(const std::string &id)
 {
     if (m_characterIds.count(id) == 0) {
         error() << "Character '" << id << "' not owned by Account " << m_username;
-        return;
+        return BAD_CHARACTER_ID;
     }
 	
-    if (!m_con->isConnected() || (m_status != LOGGED_IN)) {
-        if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR))
+    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (m_status != LOGGED_IN) {
+        if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
             error() << "duplicate char creation / take";
-        else
+            return DUPLICATE_LOGIN;
+        } else {
             error() << "called createCharacter on unconnected Account, ignoring";
-        return;
+            return NOT_LOGGED_IN;
+        }
     } 
         
     Root what;
@@ -265,6 +277,7 @@ void Account::takeCharacter(const std::string &id)
 
     m_con->getResponder()->await(l->getSerialno(), this, &Account::avatarResponse);
     m_status = TAKING_CHAR;
+    return NO_ERR;
 }
 
 bool Account::isLoggedIn() const
@@ -275,7 +288,7 @@ bool Account::isLoggedIn() const
     
 #pragma mark -
 
-void Account::internalLogin(const std::string &uname, const std::string &pwd)
+Result Account::internalLogin(const std::string &uname, const std::string &pwd)
 {
     assert(m_status == DISCONNECTED);
         
@@ -294,6 +307,8 @@ void Account::internalLogin(const std::string &uname, const std::string &pwd)
     
     m_timeout.reset(new Timeout("login", this, 5000));
     m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLoginTimeout));
+    
+    return NO_ERR;
 }
 
 void Account::logoutResponse(const RootOperation& op)

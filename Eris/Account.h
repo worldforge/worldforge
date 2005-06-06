@@ -48,7 +48,7 @@ public:
     @param uname The username of the account
     @param pwd The correct password for the account
     */
-    void login(const std::string &uname, const std::string &pwd);
+    Result login(const std::string &uname, const std::string &pwd);
 
     /// Attempt to create a new account on the server and log into it.
     /* Create a new account on the server, if possible.
@@ -61,8 +61,7 @@ public:
     @param pwd The plaintext password for the new account
     */
 
-
-    void createAccount(const std::string &uname,
+    Result createAccount(const std::string &uname,
         const std::string &fullName,
         const std::string &pwd);
 	
@@ -70,7 +69,7 @@ public:
     /** Initiate a clean disconnection from the server. The LogoutComplete
     signal will be emitted when the process completes. Calling this on an Account
     which is not logged in will produce an error. */
-    void logout();
+    Result logout();
 
     /// Check if the account is logged in.
     /** Many operations will produce errors if the account is not logged in. */
@@ -91,7 +90,7 @@ public:
     Alternatively, you can display the UI immediatley, and add character entries
     based on the GotCharacterInfo signal, which will be emitted once for each character. 
     */
-    void refreshCharacterInfo();
+    Result refreshCharacterInfo();
 
     /// Enter the game using an existing character
     /**
@@ -99,10 +98,10 @@ public:
     @result The Avatar that represents the character. Note ownership of this passes to
         the caller.
     */
-    void takeCharacter(const std::string &id);
+    Result takeCharacter(const std::string &id);
 
     /// enter the game using a new character
-    void createCharacter(const Atlas::Objects::Entity::GameEntity &character);
+    Result createCharacter(const Atlas::Objects::Entity::GameEntity &character);
 
 	/// pop up the game's character creation dialog, if present
 	//void createCharacter();
@@ -168,7 +167,7 @@ protected:
     void loginComplete(const Atlas::Objects::Entity::Account &p);
     void loginError(const Atlas::Objects::Operation::Error& err);
 
-    void internalLogin(const std::string &unm, const std::string &pwd);
+    Result internalLogin(const std::string &unm, const std::string &pwd);
     void internalLogout(bool clean);
 
 	/// Callback for network re-establishment

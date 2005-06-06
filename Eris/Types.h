@@ -20,6 +20,21 @@ typedef std::list<Atlas::Message::Element> MessageList;
 class Entity;
 typedef Entity* EntityPtr;
 
+/**
+Result codes returned from various methods.
+*/
+typedef enum
+{
+    NO_ERR = 0,
+    NOT_CONNECTED,
+    /// Occurs when performing an operation that requires a valid server login
+    NOT_LOGGED_IN,
+    /// Occurs when trying to log in to an Account which is already logged in
+    ALREADY_LOGGED_IN,
+    DUPLICATE_LOGIN,
+    BAD_CHARACTER_ID
+} Result;
+
 }
 
 #endif
