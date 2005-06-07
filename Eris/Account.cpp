@@ -207,7 +207,7 @@ Result Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
     if (m_status != LOGGED_IN) {
         if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
             error() << "duplicate char creation / take";
-            return DUPLICATE_LOGIN;
+            return DUPLICATE_CHAR_ACTIVE;
         } else {
             error() << "called createCharacter on unconnected Account, ignoring";
             return NOT_LOGGED_IN;
@@ -259,7 +259,7 @@ Result Account::takeCharacter(const std::string &id)
     if (m_status != LOGGED_IN) {
         if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
             error() << "duplicate char creation / take";
-            return DUPLICATE_LOGIN;
+            return DUPLICATE_CHAR_ACTIVE;
         } else {
             error() << "called createCharacter on unconnected Account, ignoring";
             return NOT_LOGGED_IN;

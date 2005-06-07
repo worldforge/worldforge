@@ -1,3 +1,8 @@
+2005-06-07  Simon Goodall  <simon@simongoodall.co.uk>
+
+	* Eris/Types.h, Eris/Account.cpp: Rename DUPPLICATE_LOGIN to
+	  DUPLICATE_CHAR_ACTIVE to make more sense.
+
 2005-06-07  James Turner  <james@worldforge.org>
 
 	* Eris/Types.h: add in a Result enum.

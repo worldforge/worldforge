@@ -31,7 +31,7 @@ typedef enum
     NOT_LOGGED_IN,
     /// Occurs when trying to log in to an Account which is already logged in
     ALREADY_LOGGED_IN,
-    DUPLICATE_LOGIN,
+    DUPLICATE_CHAR_ACTIVE,
     BAD_CHARACTER_ID
 } Result;
 
