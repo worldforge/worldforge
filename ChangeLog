@@ -1,3 +1,8 @@
+2005-06-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Tweak sigc++ test to make sure we don't get 2.0.8
+	  which is buggy.
+
 2005-06-07  Simon Goodall  <simon@simongoodall.co.uk>
 
 	* Eris/Types.h, Eris/Account.cpp: Rename DUPPLICATE_LOGIN to
