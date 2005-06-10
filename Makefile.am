@@ -1,5 +1,5 @@
 
-SUBDIRS = Atlas tests tutorial benchmark
+SUBDIRS = Atlas tests tools tutorial benchmark
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = atlascpp-0.6.pc

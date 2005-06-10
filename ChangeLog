@@ -1,3 +1,12 @@
+2005-06-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Makefile.am, configure.ac, Atlas/Makefile.am,
+	  Atlas/Utilities/Makefile.am, Atlas/Utilities/atlas_convert.cpp,
+	  tools/Makefile.am, tools/atlas_convert.cpp: Move atlas_convert
+	  out of the library tree into a tools directory of its own.
+
+	* atlas-cpp.spec.in: Remove dependency on libstdc++ package.
+
 2005-05-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/Anonymous.h, Atlas/Objects/Dispatcher.cpp,

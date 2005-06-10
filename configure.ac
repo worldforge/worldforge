@@ -140,9 +140,9 @@ AC_CONFIG_FILES([
 	Atlas/Message/Makefile
 	Atlas/Net/Makefile
 	Atlas/Objects/Makefile
-	Atlas/Utilities/Makefile
 	tests/Makefile
 	tests/Objects/Makefile
+	tools/Makefile
 	benchmark/Makefile
 	tutorial/Makefile
 	atlas-cpp.spec
