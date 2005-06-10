@@ -1,5 +1,11 @@
 2005-06-10  Al Riddoch  <alriddoch@zepler.org>
 
+	* configure.ac, NEWS: Increment version to 0.5.96, add news entry.
+
+	* Release 0.5.95, Interface version 0.
+
+2005-06-10  Al Riddoch  <alriddoch@zepler.org>
+
 	* Makefile.am, configure.ac, Atlas/Makefile.am,
 	  Atlas/Utilities/Makefile.am, Atlas/Utilities/atlas_convert.cpp,
 	  tools/Makefile.am, tools/atlas_convert.cpp: Move atlas_convert
