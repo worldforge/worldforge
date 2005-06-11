@@ -1,3 +1,11 @@
+2005-06-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath.spec.in: Minor changes to spec.
+
+	* NEWS: Update NEWS.
+
+	* Release 0.3.4
+
 2005-04-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* wfmath/Makefile.am: Don't force compilation with -O2. There are
@@ -36,7 +44,7 @@ Saturday, October 9th, 2004   Ron Steinke <rsteinke@w-link.net>
 
 	* Added missing 'inline' keywords in int_to_string.h.
 
-2004-06-06  Al Riddoch  <alriddoch@zepler.org>
+2004-07-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* Minor update to the rpm spec. No need to re-spin the release.
 

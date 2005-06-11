@@ -13,10 +13,8 @@ URL: http://www.worldforge.org/dev/eng/libraries/wfmath
 Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
-Source: %{name}-%{version}.tar.gz
-Requires: libstdc++
-BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
-BuildRequires: libstdc++-devel >= 2.95.2
+Source: %{name}-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 This is the WorldForge math library. The primary focus of %{name} is
