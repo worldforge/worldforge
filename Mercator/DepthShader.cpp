@@ -20,6 +20,10 @@ namespace Mercator {
 const std::string DepthShader::key_waterLevel("waterLevel");
 const std::string DepthShader::key_murkyDepth("murkyDepth");
 
+const float DepthShader::default_waterLevel = 0.f;
+const float DepthShader::default_murkyDepth = -64.f;
+
+
 DepthShader::DepthShader(float waterLevel, float murkyDepth) : 
              m_waterLevel(waterLevel), m_murkyDepth(murkyDepth)
 {

@@ -11,6 +11,8 @@ namespace Mercator {
 
 const std::string HighShader::key_threshold("threshold");
 
+const float HighShader::default_threshold = 1.f;
+
 HighShader::HighShader(float threshold) : m_threshold(threshold)
 {
 }
@@ -62,6 +64,8 @@ void HighShader::shade(Surface & s) const
 }
 
 const std::string LowShader::key_threshold("threshold");
+
+const float LowShader::default_threshold = -1.f;
 
 LowShader::LowShader(float threshold) : m_threshold(threshold)
 {
@@ -115,6 +119,9 @@ void LowShader::shade(Surface & s) const
 
 const std::string BandShader::key_lowThreshold("lowThreshold");
 const std::string BandShader::key_highThreshold("highThreshold");
+
+const float BandShader::default_lowThreshold = -1.f;
+const float BandShader::default_highThreshold = 1.f;
 
 BandShader::BandShader(float low_threshold, float high_threshold) : 
     m_lowThreshold(low_threshold), m_highThreshold(high_threshold)

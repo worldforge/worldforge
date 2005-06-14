@@ -1,3 +1,11 @@
+2005-06-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/DepthShader.cpp, Mercator/DepthShader.h,
+	  Mercator/GrassShader.cpp, Mercator/GrassShader.h,
+	  Mercator/ThresholdShader.cpp, Mercator/ThresholdShader.h:
+	  Move static variable definitions into the cpp files, as gcc 4
+	  isn't happy otherwise.
+
 2005-06-11  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Increment interface version.

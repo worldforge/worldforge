@@ -15,7 +15,7 @@ class HighShader : public Shader {
   public:
     static const std::string key_threshold;
 
-    static const float default_threshold = 1.f;
+    static const float default_threshold;
 
     explicit HighShader(float threshold = default_threshold);
     explicit HighShader(const Parameters & params);
@@ -33,7 +33,7 @@ class LowShader : public Shader {
   public:
     static const std::string key_threshold;
 
-    static const float default_threshold = -1.f;
+    static const float default_threshold;
 
     explicit LowShader(float threshold = default_threshold);
     explicit LowShader(const Parameters & params);
@@ -53,8 +53,8 @@ class BandShader : public Shader {
     static const std::string key_lowThreshold;
     static const std::string key_highThreshold;
 
-    static const float default_lowThreshold = -1.f;
-    static const float default_highThreshold = 1.f;
+    static const float default_lowThreshold;
+    static const float default_highThreshold;
 
     explicit BandShader(float low_threshold = default_lowThreshold,
                         float high_threshold = default_highThreshold);

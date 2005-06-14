@@ -17,8 +17,8 @@ class DepthShader : public Shader {
     static const std::string key_waterLevel;
     static const std::string key_murkyDepth;
 
-    static const float default_waterLevel = 0.f;
-    static const float default_murkyDepth = -64.f;
+    static const float default_waterLevel;
+    static const float default_murkyDepth;
 
     explicit DepthShader(float waterLevel = default_waterLevel,
                          float murkyDepth = default_murkyDepth);

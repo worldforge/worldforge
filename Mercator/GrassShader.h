@@ -53,10 +53,10 @@ class GrassShader : public Shader {
     static const std::string key_cutoff;
     static const std::string key_intercept;
 
-    static const float default_lowThreshold = 1.f;
-    static const float default_highThreshold = 20.f;
-    static const float default_cutoff = 1.f;
-    static const float default_intercept = 2.f;
+    static const float default_lowThreshold;
+    static const float default_highThreshold;
+    static const float default_cutoff;
+    static const float default_intercept;
 
     explicit GrassShader(float lowThreshold = default_lowThreshold,
                          float highThreshold = default_highThreshold,

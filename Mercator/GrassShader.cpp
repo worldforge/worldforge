@@ -14,6 +14,11 @@ const std::string GrassShader::key_highThreshold("highThreshold");
 const std::string GrassShader::key_cutoff("cutoff");
 const std::string GrassShader::key_intercept("intercept");
 
+const float GrassShader::default_lowThreshold = 1.f;
+const float GrassShader::default_highThreshold = 20.f;
+const float GrassShader::default_cutoff = 1.f;
+const float GrassShader::default_intercept = 2.f;
+
 GrassShader::GrassShader(float lowThreshold, float highThreshold,
                          float cutoff, float intercept) :
              m_lowThreshold(lowThreshold), m_highThreshold(highThreshold),
