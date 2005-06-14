@@ -136,12 +136,6 @@ Factories * Factories::instance()
 }
 
 Factories * Factories::m_instance = 0;
-
-Root messageElement2ClassObject(const MapType & msg_map)
-{
-    return Factories::instance()->createObject(msg_map);
-}
-
 """) #"for xemacs syntax highlighting
             
         self.ns_close(self.base_list)

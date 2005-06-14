@@ -58,8 +58,6 @@ private:
     
 extern std::map<const std::string, Root> objectDefinitions;
 
-Root messageElement2ClassObject(const Atlas::Message::MapType & msg);
-
 } } // namespace Atlas::Objects
 
 #endif // ATLAS_OBJECTS_OBJECTFACTORY_H

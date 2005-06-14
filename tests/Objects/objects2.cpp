@@ -221,7 +221,7 @@ void testValues()
     mobj["parents"] = parents;
     mobj["name"] = std::string("foo");
     mobj["objtype"] = std::string("op");
-    Root obj = Atlas::Objects::messageElement2ClassObject(mobj);
+    Root obj = Atlas::Objects::Factories::instance()->createObject(mobj);
     assert(obj->getClassNo() == Atlas::Objects::Entity::ACCOUNT_NO);
     assert(obj->getId() == "");
     assert(obj->isDefaultId() == true);
@@ -254,7 +254,7 @@ void testValues()
 
     {
     Atlas::Message::MapType mobj;
-    Root obj = Atlas::Objects::messageElement2ClassObject(mobj);
+    Root obj = Atlas::Objects::Factories::instance()->createObject(mobj);
     assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "");
     assert(obj->getName() == "");
@@ -270,7 +270,7 @@ void testValues()
     Atlas::Message::ListType parents;
     parents.push_back(std::string("account"));
     mobj["parents"] = parents;
-    Root obj = Atlas::Objects::messageElement2ClassObject(mobj);
+    Root obj = Atlas::Objects::Factories::instance()->createObject(mobj);
     assert(obj->getClassNo() == Atlas::Objects::Entity::ANONYMOUS_NO);
     assert(obj->getId() == "bar");
     assert(obj->getName() == "foo");
@@ -298,7 +298,7 @@ void testValues()
     mcreate["args"] = args;
     mcreate["objtype"] = "op";
 
-    Create op = Atlas::Objects::smart_dynamic_cast<Create>(Atlas::Objects::messageElement2ClassObject(mcreate));
+    Create op = Atlas::Objects::smart_dynamic_cast<Create>(Atlas::Objects::Factories::instance()->createObject(mcreate));
     assert(op->getClassNo() == Atlas::Objects::Operation::CREATE_NO);
     assert(op->instanceOf(Atlas::Objects::Operation::CREATE_NO));
     assert(op->instanceOf(Atlas::Objects::Operation::ACTION_NO));

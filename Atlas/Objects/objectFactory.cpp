@@ -196,10 +196,4 @@ Factories * Factories::instance()
 }
 
 Factories * Factories::m_instance = 0;
-
-Root messageElement2ClassObject(const MapType & msg_map)
-{
-    return Factories::instance()->createObject(msg_map);
-}
-
 } } // namespace Atlas::Objects

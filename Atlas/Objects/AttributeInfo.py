@@ -343,7 +343,7 @@ class ArgsRootList(AttributeInfo):
         I++)
     {
         if (I->isMap()) {
-            attr_%(name)s.push_back(messageElement2ClassObject(I->asMap()));
+            attr_%(name)s.push_back(Factories::instance()->createObject(I->asMap()));
         }
     }
 }

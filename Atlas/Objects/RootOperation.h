@@ -256,7 +256,7 @@ void RootOperationData::setArgsAsList(const Atlas::Message::ListType& val)
         I++)
     {
         if (I->isMap()) {
-            attr_args.push_back(messageElement2ClassObject(I->asMap()));
+            attr_args.push_back(Factories::instance()->createObject(I->asMap()));
         }
     }
 }
