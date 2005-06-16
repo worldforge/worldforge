@@ -1,3 +1,11 @@
+2005-06-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version number.
+
+	* NEWS: Update news.
+
+	* Releases 0.2.4
+
 2005-06-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/DepthShader.cpp, Mercator/DepthShader.h,
