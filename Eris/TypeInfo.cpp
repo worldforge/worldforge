@@ -209,7 +209,8 @@ void TypeInfo::validateBind()
             m_atlasClassNo = of->addFactory(m_name, &actionFactory);
         } else {
             // screwed
-            error() << "type " << m_name <<  " doesn't inherit game_entity or admin_entity";
+            error() << "type " << m_name <<  " doesn't inherit a supported base type " 
+                << "(game_entity, admin_entity, action)";
             for (TypeInfoSet::iterator P=m_ancestors.begin(); P!=m_ancestors.end();++P)
                 debug() << m_name << " has ancestor " << (*P)->getName() << " @ " << *P;
         }

@@ -118,11 +118,8 @@ void View::appear(const std::string& eid, float stamp)
         return; // everything else will be done once the SIGHT arrives
     }
 
-    if (ent->isVisible()) {
-        error() << "server sent an appearance for entity " << eid << " which thinks it is already visible.";
-        return;
-    }
-
+    if (ent->isVisible()) return;
+    
     if ((stamp == 0) || (stamp > ent->getStamp())) {
         if (isPending(eid)) {
             m_pending[eid] = SACTION_APPEAR;

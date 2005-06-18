@@ -1,3 +1,10 @@
+2005-06-19  James Turner  <james@worldforge.org>
+
+	* Eris/View.cpp: be more tolerant of duplicate appears (they are silent
+	  now). Note the actual observered behaviour should be unchanged.
+	  
+	* Eris/TypeInfo.cpp: improved warning when a strange op is recieved.
+
 2005-06-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 1.3.6, Interface version 7.
