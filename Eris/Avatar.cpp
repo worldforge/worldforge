@@ -15,10 +15,12 @@
 #include <sigc++/object_slot.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Anonymous.h>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::Entity::Anonymous;
 using WFMath::TimeStamp;
 
 namespace Eris
@@ -56,7 +58,7 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc
     Move moveOp;
     moveOp->setFrom(m_entityId);
 
-    GameEntity what;
+    Anonymous what;
     what->setLoc(loc);
     Atlas::Message::Element apos(pos.toAtlas());
     what->setPosAsList(apos.asList());
@@ -76,7 +78,7 @@ void Avatar::take(Entity* e)
     Move moveOp;
     moveOp->setFrom(m_entityId);
 
-    GameEntity what;
+    Anonymous what;
     what->setLoc(m_entityId);
     
     std::vector<double> p(3, 0.0);
@@ -114,7 +116,7 @@ void Avatar::say(const std::string& msg)
 
 void Avatar::moveToPoint(const WFMath::Point<3>& pos)
 {
-    GameEntity what;
+    Anonymous what;
     what->setLoc(m_entity->getLocation()->getId());
     what->setId(m_entityId);
     what->setAttr("pos", pos.toAtlas());
@@ -176,7 +178,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quatern
 
 void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
 {
-    GameEntity what;
+    Anonymous what;
     what->setLoc(container->getId());
     what->setAttr("pos", pos.toAtlas());
    // what->setVelocityAsList( .... zero ... );

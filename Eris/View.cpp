@@ -227,13 +227,31 @@ void View::deleteEntity(const std::string& eid)
 {
     Entity* ent = getEntity(eid);
     if (ent) {
-         // force a disappear if one hasn't already happened
+        // copy the child array, since setLocation will modify it
+        EntityArray contents;
+        for (unsigned int c=0; c < ent->numContained(); ++c) {
+            contents.push_back(ent->getContained(c));
+        }
+        
+        while (!contents.empty()) {
+            debug() << "re-parenting child of deleted";
+            Entity* child = contents.back();
+            child->setLocation(ent->getLocation());
+            
+            WFMath::Point<3> newPos = ent->toLocationCoords(child->getPosition());
+            WFMath::Quaternion newOrient = ent->getOrientation() * child->getOrientation();
+            child->m_position = newPos;
+            child->m_orientation = newOrient;
+            
+            contents.pop_back();
+        }
+
+        // force a disappear if one hasn't already happened
         ent->setVisible(false); // redundant?
         EntityDeleted.emit(ent);
         delete ent; // actually kill it off
     } else {
-        if (isPending(eid))
-        {
+        if (isPending(eid)) {
             debug() << "got delete for pending entity, argh";
             m_pending[eid] = SACTION_DISCARD;
         } else

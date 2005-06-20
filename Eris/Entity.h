@@ -337,9 +337,7 @@ private:
     /** recursively update the real visiblity of this entity, and fire
     appropriate signals. */
     void updateCalculatedVisibility(bool wasVisible);
-    
-  //  void updatePredictedPosition(const WFMath::TimeStamp& t);
-    
+        
     class DynamicState
     {
     public:

@@ -54,12 +54,7 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
 
 Entity::~Entity()
 {    
-    while (!m_contents.empty()) {
-        Entity* child = m_contents.front();
-        child->setLocation(NULL);
-        child->m_limbo = true;
-    }
-    
+    while (!m_contents.empty()) delete m_contents.back();    
     setLocation(NULL);
     
     m_view->getConnection()->unregisterRouterForFrom(m_router, m_id);
