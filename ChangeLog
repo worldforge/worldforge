@@ -1,3 +1,11 @@
+2005-06-21  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
+	* test/metaQuery.cpp: Added human readable times to metaquery output.
+	  If not specified otherwise (with --exact parameter) metaquery will
+	  now print times in strict dotted decimal with precision of one digit
+	  after the dot based on the highest available time unit out of
+	  seconds, minutes, hours, days and weeks.
+
 2005-06-20  James Turner  <james@worldforge.org>
 
 	* Eris/Avatar.cpp: use Anonymous instead of GameEntity for arguments

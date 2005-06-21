@@ -3,7 +3,9 @@
 #include <Eris/PollDefault.h>
 #include <Eris/ServerInfo.h>
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <sigc++/slot.h>
 
@@ -12,7 +14,8 @@ using std::cout;
 using std::cerr;
 
 bool queryDone = false,
-    failure = false;
+    failure = false,
+	exactTime = false;
 
 void erisLog(Eris::LogLevel, const std::string& msg)
 {
@@ -42,6 +45,27 @@ void queryFailed(const std::string& msg)
     failure = true;
 }
 
+std::string timeFormat(double time)
+{
+	std::string times[] = { "secs", "mins", "hours", "days", "weeks" };
+	int precs[] = { 0, 1, 1, 2, 2, 2 };
+	int divi = 0;
+	std::stringstream result;
+	
+	if(exactTime == false)
+	{
+		int divs[] = { 60, 60, 24, 7, 0 };
+		
+		while((divs[divi] > 0) && (time > divs[divi]))
+		{
+			time /= divs[divi++];
+		}
+	}
+	result << std::fixed << std::setprecision(precs[divi]) << time << ' ' << times[divi];
+	
+	return result.str();
+}
+
 void dumpToScreen(const Eris::Meta& meta)
 {
     for (unsigned int S=0; S < meta.getGameServerCount(); ++S)
@@ -54,7 +78,7 @@ void dumpToScreen(const Eris::Meta& meta)
         case Eris::ServerInfo::VALID:
             cout << "\tserver: " << sv.getServer() << " " << sv.getVersion() << " (builddate " << sv.getBuildDate() << ")" << endl;
             cout << "\truleset:" << sv.getRuleset() << endl;
-            cout << "\tuptime:" << sv.getUptime() << endl;
+            cout << "\tuptime:" << timeFormat(sv.getUptime()) << endl;
             cout << "\tping:" << sv.getPing() << endl;
             cout << "\tconnected clients:" << sv.getNumClients() << endl;
             break;
@@ -96,7 +120,7 @@ void dumpToXML(const Eris::Meta & meta)
             cout << "<name>" << sv.getServername() << "</name>" << endl;
             cout << "<servertype>" << sv.getServer() << "</servertype>" << endl;
             cout << "<ruleset>" << sv.getRuleset() << "</ruleset>" << endl;
-            cout << "<uptime>" << sv.getUptime() << "</uptime>" << endl;
+            cout << "<uptime>" << timeFormat(sv.getUptime()) << "</uptime>" << endl;
             cout << "<ping>" << sv.getPing() << "</ping>" << endl;
             cout << "<clients>" << sv.getNumClients() << "</clients>" << endl;
 			cout << "<builddate>" << sv.getBuildDate() << "</builddate>" << endl;
@@ -124,7 +148,7 @@ void dumpToHTML(const Eris::Meta& meta)
         case Eris::ServerInfo::VALID:
             cout << "Server: " << sv.getServer() << " " << sv.getVersion() << " (builddate " << sv.getBuildDate() << ")<br/>" << endl;
             cout << "Ruleset: " << sv.getRuleset() << "<br/>" << endl;
-            cout << "Up: " << sv.getUptime() << " ("  << sv.getPing() << " ping)<br/>" << endl;
+            cout << "Up: " << timeFormat(sv.getUptime()) << " ("  << sv.getPing() << " ping)<br/>" << endl;
             cout << "Clients: " << sv.getNumClients() << endl;
             break;
             
@@ -170,6 +194,10 @@ int main(int argc, char* argv[])
         {
             dumper = dumpToXML;
         }
+		if(find(args.begin(), args.end(), "--exact") != args.end())
+		{
+			exactTime = true;
+		}
     }
     
     // maximum of 5 simultaneous queries
