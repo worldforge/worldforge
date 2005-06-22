@@ -1,3 +1,7 @@
+2005-06-21  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
+	* Eris/TypeService.cpp: Fixed an obsolete function call.
+
 2005-06-22  James Turner  <james@worldforge.org>
 
 	* Eris/PollDefault.cpp: change an exception throw, if select() fails,

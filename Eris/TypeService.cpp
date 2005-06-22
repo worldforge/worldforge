@@ -310,7 +310,7 @@ void TypeService::verifyOpArguments(const Root& obj, TypeInfoSet& unbound)
     
         Atlas::Message::ListType::const_iterator A;
         for  (A = args.asList().begin(); A != args.asList().end(); ++A) {
-            Root argObj = Atlas::Objects::messageElement2ClassObject(A->asMap());
+            Root argObj = Atlas::Objects::Factories::instance()->createObject(A->asMap());
             innerVerifyType(argObj, unbound);
         }
     }
