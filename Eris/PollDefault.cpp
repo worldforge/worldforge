@@ -4,6 +4,7 @@
 #include <Eris/Timeout.h>
 #include <Eris/Exceptions.h>
 #include <Eris/DeleteLater.h>
+#include <Eris/Log.h>
 
 #include <skstream/skstream.h>
 
@@ -76,10 +77,10 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 
 	struct timeval timeout = {msec_timeout / 1000, (msec_timeout % 1000) * 1000};
 	int retval = select(maxfd+1, &reading, &writing, NULL, &timeout);
-	if (retval < 0)
-		// FIXME - is an error from select fatal or not? At present I think yes,
-		// but I'm sort of open to persuasion on this matter.
-		throw InvalidOperation("Error at PollDefault::Poll() doing select()");
+	if (retval < 0) {
+        warning() << "select() returned error: " << retval;
+        got_data = false;
+    }
 
 	got_data = (retval != 0);
 }
