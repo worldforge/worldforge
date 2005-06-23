@@ -1,3 +1,7 @@
+2005-06-23  Erik Hjortsberg  <erik@katastrof.nu>
+
+	* Eris/Entity.h: added const accessor for the attributes
+
 2005-06-23  James Turner  <james@worldforge.org>
 
 	* Eris/Timeout.cpp: update the _fired flag before emitting the timeout

@@ -42,6 +42,8 @@ or creating peer clases and attaching them to the signals.
 class Entity : virtual public SigC::Object
 {
 public:	
+    typedef std::map<std::string, Atlas::Message::Element> AttrMap;
+    
     explicit Entity(const std::string& id, TypeInfo* ty, View* vw);
     virtual ~Entity();
 
@@ -101,6 +103,8 @@ public:
     {
         return m_position;
     }
+    
+    inline const AttrMap& getAttributes() const {return m_attrs;}
     
     /** Test if this entity has a non-zero velocity vector. */
     bool isMoving() const;
@@ -347,7 +351,6 @@ private:
     
     void updatePredictedState(const WFMath::TimeStamp& t);
     
-    typedef std::map<std::string, Atlas::Message::Element> AttrMap;
     AttrMap m_attrs;
     
     TypeInfo* m_type;
