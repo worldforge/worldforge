@@ -1,4 +1,10 @@
-2005-06-21  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+2005-06-23  James Turner  <james@worldforge.org>
+
+	* Eris/Timeout.cpp: update the _fired flag before emitting the timeout
+	  expired signal, so re-setting the Timeout inside the exprired slot
+	  works. (Sear needs this)
+
+2005-06-22  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
 	* Eris/TypeService.cpp: Fixed an obsolete function call.
 

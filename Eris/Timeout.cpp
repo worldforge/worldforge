@@ -71,9 +71,9 @@ TimeDiff Timeout::poll(const TimeStamp &t)
     {
         TimeDiff delta = _due - t;
         if (delta > TD_ZERO) return delta; // not finished yet
-            
-        Expired();	// invoke the signal
+        
         _fired = true;
+        Expired();	// invoke the signal
     }
 
     return TD_MAX; // Doesn't need to be called again
