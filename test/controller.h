@@ -13,7 +13,7 @@ namespace Eris { class Avatar; }
 class Controller : public Atlas::Objects::ObjectsDecoder
 {
 public:
-    Controller(int fd);
+    Controller(const char* pipe);
     
     void setEntityVisibleToAvatar(const std::string& eid, Eris::Avatar* av);
     void setEntityVisibleToAvatar(const std::string& eid, const std::string& charId);
@@ -39,7 +39,7 @@ protected:
 private:
     void send(const Atlas::Objects::Root &obj);
     
-    tcp_socket_stream m_stream;
+    unix_socket_stream m_stream;
 
     Atlas::Objects::ObjectsEncoder* m_encode;
     Atlas::Codec* m_codec;

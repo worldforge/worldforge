@@ -22,8 +22,8 @@ using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Root;
 
-Controller::Controller(int fd) :
-    m_stream(fd)
+Controller::Controller(const char* pipe) :
+    m_stream(pipe)
 {
     assert(m_stream.is_open());
     

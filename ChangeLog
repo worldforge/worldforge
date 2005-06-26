@@ -1,3 +1,13 @@
+2005-06-27  James Turner  <james@worldforge.org>
+
+    * Eris/View.cpp: fix View destructor for changed Entity deletion
+      model, fixes unit tests.
+    
+    * test/tests.cpp, test/controller.cpp, test/controller.h,
+      test/stubServer.cpp, test/stubServer.h: re-factor test harness so
+      the code can be run as two separate processes, which greatly facilitates
+      debugging the client code.
+
 2005-06-23  Erik Hjortsberg  <erik@katastrof.nu>
 
 	* Eris/Entity.h: added const accessor for the attributes

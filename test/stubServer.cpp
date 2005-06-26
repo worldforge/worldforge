@@ -29,7 +29,7 @@ typedef std::list<std::string> StringList;
 
 using Atlas::Objects::Entity::GameEntity;
 
-StubServer::StubServer(short port, int cmdSocket) :
+StubServer::StubServer(short port) :
     m_serverSocket(port)
 {
     if (!m_serverSocket.is_open())
@@ -47,7 +47,10 @@ StubServer::StubServer(short port, int cmdSocket) :
     ::setsockopt(m_serverSocket.getSocket(), SOL_SOCKET, SO_REUSEADDR,
             &reuseFlag, sizeof(reuseFlag));
     
-    m_command = std::auto_ptr<Commander>(new Commander(this, cmdSocket));
+    ::unlink("/tmp/eris-test");
+    m_commandSocket.open("/tmp/eris-test");
+    if (!m_commandSocket.is_open())
+        throw InvalidOperation("unable to open command socket");
     
     setupTestAccounts();
 
@@ -163,9 +166,13 @@ int StubServer::run(pid_t child)
 {
     while (true) {
     
-        if (m_serverSocket.can_accept())
-        {
+        if (m_serverSocket.can_accept()) {
             m_clients.push_back(new ClientConnection(this, m_serverSocket.accept()));
+        }
+        
+        if (m_commandSocket.can_accept()) {
+            cout << "accepting on command socket" << endl;
+            m_command.reset(new Commander(this, m_commandSocket.accept()));
         }
         
         basic_socket_poll::socket_map clientSockets;
@@ -177,8 +184,10 @@ int StubServer::run(pid_t child)
             clientSockets[m_clients[C]->getStream()] = POLL_MASK;
         
         // and include the command socket
-        clientSockets[m_command->getStream()] = POLL_MASK;
-
+        if (m_command.get()) {
+            clientSockets[m_command->getStream()] = POLL_MASK;
+        }
+        
         basic_socket_poll poller;
         poller.poll(clientSockets, 50); // 50 milliseconds wait
 
@@ -204,20 +213,24 @@ int StubServer::run(pid_t child)
                 ++C;
         }
     
-        if (poller.isReady(m_command->getStream())) m_command->recv();
-
-        int childStatus;
-        int result = waitpid(child, &childStatus, WNOHANG);
-        if (result == child) {
-            
-            if (WIFEXITED(childStatus)) return WEXITSTATUS(childStatus);
-            
-            std::cerr << "child got bad exit status" << endl;
-            // child died for some other reason (SIGTERM, SIGABRT, core-dump, etc)
-            return EXIT_FAILURE;
+        if (m_command.get() && poller.isReady(m_command->getStream())) {
+            m_command->recv();
         }
         
-        if (result == -1) return EXIT_FAILURE; // waidpid() failed        
+        if (child > 0) {
+            int childStatus;
+            int result = waitpid(child, &childStatus, WNOHANG);
+            if (result == child) {
+                
+                if (WIFEXITED(childStatus)) return WEXITSTATUS(childStatus);
+                
+                std::cerr << "child got bad exit status" << endl;
+                // child died for some other reason (SIGTERM, SIGABRT, core-dump, etc)
+                return EXIT_FAILURE;
+            }
+            
+            if (result == -1) return EXIT_FAILURE; // waidpid() failed
+        }
     } // of stub server main loop
     
     return EXIT_SUCCESS; // never reached

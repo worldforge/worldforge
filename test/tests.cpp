@@ -590,8 +590,7 @@ void testSet(Controller& ctl)
     assert(table->getPosition() == WFMath::Point<3>(1.0, 2.0, 3.0));
     assert(table->numContained() == 1);
     
-    #warning renable this test once Atlas iterators are fixed
-    //assert(table->getName() == "George");
+    assert(table->getName() == "George");
 }
 
 class WaitForSay : public SigC::Object
@@ -855,65 +854,97 @@ void testServerInfo()
     assert(sinfo.getRuleset() == "stub-world");
 }
 
-int main(int argc, char **argv)
+int runTests(Controller& ctl)
 {
-    int sockets[2];
-    int err = socketpair(AF_UNIX, SOCK_STREAM, 0, sockets);
-    if (err != 0) {
-        cerr << "unable to create socket-pair" << endl;
+    try {    
+        testLogin();
+        testBadLogin();
+        testBadLogin2();
+        testAccCreate();
+        testLogout();
+        testAccountCharacters();
+        testCharActivate(ctl);
+        testBadTake();
+        testServerInfo();
+        
+        testAppearance(ctl);
+        testSightCreate(ctl);
+        testSet(ctl);
+        testTalk(ctl);
+        testSeeMove(ctl);
+        testLocationChange(ctl);
+        testSightAction(ctl);
+        testMovement(ctl); 
+    }
+    catch (TestFailure& tfexp)
+    {
+        cout << "tests failed: " << tfexp.what() << endl;
         return EXIT_FAILURE;
     }
-    
+    catch (std::exception& except)
+    {
+        cout << "caught general exception: " << except.what() << endl;
+        return EXIT_FAILURE;
+    }
+
+    cout << "all tests passed" << endl;
+    return EXIT_SUCCESS;
+}
+
+int forkAndRunBoth(int argc, char* argv[])
+{
     pid_t childPid = fork();
     if (childPid == 0)
     {
-        Controller ctl(sockets[1]);
+        sleep(1);
+        Controller ctl("/tmp/eris-test");
         
         Eris::setLogLevel(LOG_DEBUG);
         Eris::Logged.connect(SigC::slot(&erisLog));
     
-        try {    
-            testLogin();
-            testBadLogin();
-            testBadLogin2();
-            testAccCreate();
-            testLogout();
-            testAccountCharacters();
-            testCharActivate(ctl);
-            testBadTake();
-            testServerInfo();
-            
-            testAppearance(ctl);
-            testSightCreate(ctl);
-            testSet(ctl);
-            testTalk(ctl);
-            testSeeMove(ctl);
-            testLocationChange(ctl);
-            testSightAction(ctl);
-            testMovement(ctl); 
-        }
-        catch (TestFailure& tfexp)
-        {
-            cout << "tests failed: " << tfexp.what() << endl;
-            return EXIT_FAILURE;
-        }
-        catch (std::exception& except)
-        {
-            cout << "caught general exception: " << except.what() << endl;
-            return EXIT_FAILURE;
-        }
-
-        cout << "all tests passed" << endl;
-        return EXIT_SUCCESS;
+        return runTests(ctl);
     } else {
-        sleep(1);
-        
         Eris::setLogLevel(LOG_DEBUG);
         Eris::Logged.connect(SigC::slot(&erisLog));
         
-        StubServer stub(7450, sockets[0]);
+        StubServer stub(7450);
         return stub.run(childPid);
     }
+}
+
+int runServer(int argc, char* argv[])
+{    
+    Eris::setLogLevel(LOG_DEBUG);
+    Eris::Logged.connect(SigC::slot(&erisLog));
+    
+    StubServer stub(7450);
+    return stub.run(0);
+
+}
+
+int runClient(int argc, char* argv[])
+{    
+    Controller ctl("/tmp/eris-test");
+        
+    Eris::setLogLevel(LOG_DEBUG);
+    Eris::Logged.connect(SigC::slot(&erisLog));
+
+    return runTests(ctl);
+}
+
+int main(int argc, char **argv)
+{
+    if (argc > 1) {
+        if (!strcmp(argv[1], "--server")) return runServer(argc, argv);
+        if (!strcmp(argv[1], "--client")) return runClient(argc, argv);
+        
+        if (strcmp(argv[1], "--both")) {
+            cerr << "unrecognized test mode: " << argv[1] << endl;
+            return EXIT_FAILURE;
+        }
+    }
+
+    return forkAndRunBoth(argc, argv);
 }
 
 

@@ -7,6 +7,7 @@
 #include <memory>
 
 #include <skstream/skserver.h>
+#include <skstream/skserver_unix.h>
 
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -23,7 +24,7 @@ typedef std::map<std::string, Atlas::Objects::Entity::Account> AccountMap;
 class StubServer
 { 
 public:
-    StubServer(short port, int commandSocket);
+    StubServer(short port);
     ~StubServer();
 
     int run(pid_t childPid);	// run the server until the child exists, return a process result
@@ -72,6 +73,7 @@ private:
     typedef std::map<std::string, Atlas::Objects::Root> AtlasTypeMap;
     AtlasTypeMap m_types;
     
+    unix_socket_server m_commandSocket;
     std::auto_ptr<Commander> m_command;
 };
 

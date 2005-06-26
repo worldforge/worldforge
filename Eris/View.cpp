@@ -32,15 +32,8 @@ View::View(Avatar* av) :
 
 View::~View()
 {
-    std::vector<Entity*> allEntities;
-    for (IdEntityMap::iterator E = m_contents.begin(); E != m_contents.end(); ++E) {
-        allEntities.push_back(E->second);
-    }
-    
-    for (unsigned int I=0; I < allEntities.size(); ++I)  {
-        delete allEntities[I];
-    }
-    
+    // cascaded delete of all entities, is the hope
+    delete m_topLevel;
     assert(m_contents.empty());
     
     for (FactoryStore::iterator F=m_factories.begin(); F != m_factories.end(); ++F) {
