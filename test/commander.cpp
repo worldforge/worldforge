@@ -139,6 +139,18 @@ void Commander::dispatch(const RootOperation& op)
         Agent::broadcastSight(bcr);
     }
     
+    Delete del = smart_dynamic_cast<Delete>(op);
+    if (del.isValid()) {
+        std::vector<Root> args(op->getArgs());
+        assert(!args.empty());
+        
+        std::string id = args.front()->getId();
+        assert(m_server->m_world.count(id));
+        m_server->m_world.erase(id);
+        
+        Agent::broadcastSight(op);
+    }
+    
     Move mv = smart_dynamic_cast<Move>(op);
     if (mv.isValid()) {
         GameEntity ent = m_server->getEntity(op->getTo());

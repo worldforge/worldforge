@@ -227,7 +227,6 @@ void View::deleteEntity(const std::string& eid)
         }
         
         while (!contents.empty()) {
-            debug() << "re-parenting child of deleted";
             Entity* child = contents.back();
             child->setLocation(ent->getLocation());
             

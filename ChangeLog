@@ -1,5 +1,16 @@
 2005-06-27  James Turner  <james@worldforge.org>
 
+    * Eris/View.cpp, test/subServer.cpp: remove some debug output
+
+    * test/tests.cpp, test/controller.cpp, test/controller.h,
+      test/commander.cpp: add a test for sight(delete) of entity, including
+      correct re-parenting of children up the tree.
+    
+    * test/stubServer.cpp, test/stubServer.h, test/clientConnection.cpp: reset
+      the test world state on each client connection.
+      
+2005-06-26  James Turner  <james@worldforge.org>
+
     * Eris/View.cpp: fix View destructor for changed Entity deletion
       model, fixes unit tests.
     

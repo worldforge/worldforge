@@ -53,7 +53,8 @@ StubServer::StubServer(short port) :
         throw InvalidOperation("unable to open command socket");
     
     setupTestAccounts();
-
+    resetWorld();
+        
     RootEntity lobby;
     std::list<std::string> parents(1, "room");
     lobby->setParents(parents);
@@ -129,7 +130,12 @@ void StubServer::setupTestAccounts()
     characters.push_back("_fail_");
     
     m_accounts[accB->getId()] = accB;
+}
 
+void StubServer::resetWorld()
+{
+    m_world.clear();
+    
     GameEntity world;
     world->setId("_world");
     world->setObjtype("obj");
@@ -156,7 +162,15 @@ void StubServer::setupTestAccounts()
     posl.push_back(2.0);
     posl.push_back(3.0);
     getEntity("_table_1")->setPos(posl);
+    
     defineEntity("_vase_1", "decoration", "_table_1", "A horrible vase");
+    posl.clear();
+    // WFMath::Point<3>(1.0, 2.0, 3.0)
+    posl.push_back(50.0);
+    posl.push_back(40.0);
+    posl.push_back(0.0);
+    getEntity("_vase_1")->setPos(posl);
+    
     getEntity("_table_1")->setName("George");
     
     defineEntity("_fail_", "settler", "_world", "Dummy");
@@ -171,7 +185,6 @@ int StubServer::run(pid_t child)
         }
         
         if (m_commandSocket.can_accept()) {
-            cout << "accepting on command socket" << endl;
             m_command.reset(new Commander(this, m_commandSocket.accept()));
         }
         

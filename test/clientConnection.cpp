@@ -252,6 +252,7 @@ void ClientConnection::processLogin(const Login& login)
     send(loginInfo);
     
     m_server->joinRoom(m_account, "_lobby");
+    m_server->resetWorld();
 }
 
 void ClientConnection::processAccountCreate(const Create& cr)
@@ -286,6 +287,7 @@ void ClientConnection::processAccountCreate(const Create& cr)
     send(createInfo);
     
     m_server->joinRoom(m_account, "_lobby");
+    m_server->resetWorld();
 }
 
 void ClientConnection::processOOGLook(const Look& lk)

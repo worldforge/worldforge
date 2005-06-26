@@ -15,9 +15,18 @@ Test Cases
 - cycle character through create, unsubscribe and re-take on a single
   account
 
-1.3.5 TODO
+1.3 TODO
 
- - calendars: look at the code from sear.
+- room creation / binding
+  room creation seems okay, the only reason for the pending crap is so
+  we can hold the Room object around.
+  
+  map<serialno, Room*> m_pendingSightCreates on lobby makes this work.
+  yech.
+
+- Go over the Poll api, see if work can be delegated to skstream or not
+
+- calendars: look at the code from sear.
  
  - custom routers
  	- run first, but can't consume ops
@@ -31,18 +40,7 @@ Test Cases
  	
 - add more helpers for common client actions on Avatar. For example
   use and emote, to go with say and touch.   
-
-1.3 TODO
-
-- room creation / binding
-  room creation seems okay, the only reason for the pending crap is so
-  we can hold the Room object around.
   
-  map<serialno, Room*> m_pendingSightCreates on lobby makes this work.
-  yech.
-
-- Go over the Poll api, see if work can be delegated to skstream or not
-
 Longer Term TODO
 
 - UI backend stuff

@@ -39,6 +39,7 @@ public:
     
     Atlas::Objects::Entity::GameEntity getEntity(const std::string& eid) const;
     
+    void resetWorld();
 private:
     void joinRoom(const std::string& acc, const std::string& room);
     void partRoom(const std::string& acc, const std::string& room);

@@ -26,6 +26,7 @@ public:
     void moveVelocity(const std::string& eid, const WFMath::Vector<3>& vel);
     
     void create(const Atlas::Objects::Entity::GameEntity& ent);
+    void deleteEntity(const std::string& eid);
     
     /** generalised attribute modification interface */
     void setAttr(const std::string& eid, const std::string& attr, const Atlas::Message::Element v); 

@@ -11,6 +11,7 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Anonymous.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
 #include <wfmath/atlasconv.h>
@@ -21,6 +22,7 @@ using std::cout;
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Root;
+using Atlas::Objects::Entity::Anonymous;
 
 Controller::Controller(const char* pipe) :
     m_stream(pipe)
@@ -101,6 +103,15 @@ void Controller::create(const Atlas::Objects::Entity::GameEntity& ent)
     Create c;
     c->setArgs1(ent);
     send(c);
+}
+
+void Controller::deleteEntity(const std::string& eid)
+{
+    Delete d;
+    Anonymous args;
+    args->setId(eid);
+    d->setArgs1(args);
+    send(d);
 }
 
 void Controller::moveLocation(const std::string& eid, const std::string& loc, const WFMath::Point<3>& pos)

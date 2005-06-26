@@ -786,6 +786,65 @@ void testSightCreate(Controller& ctl)
     assert(created.lastArg0()->valueOfAttr("foob") == (long int) 42);
 }
 
+class EntityDeleteWatcher : public SigC::Object
+{
+public:
+    EntityDeleteWatcher(Eris::Entity* e) :
+        m_ent(e),
+        m_originalLoc(e->getLocation()),
+        m_fired(false)
+    { }
+    
+    void onEntityDelete(Eris::Entity* e)
+    {
+        assert(e == m_ent);
+        assert(e->getLocation() == m_originalLoc);
+        m_fired = true;
+    }
+    
+    bool fired() const
+    { return m_fired; }
+    
+private:
+    Eris::Entity* m_ent;
+    Eris::Entity* m_originalLoc;
+    bool m_fired;
+};
+
+void testSightDelete(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_vase_1");
+        wf.run();
+    }
+
+    Eris::Entity* vase = av->getView()->getEntity("_vase_1");
+    Eris::Entity* table = av->getView()->getEntity("_table_1");
+    
+    EntityDeleteWatcher dw(table);
+    av->getView()->EntityDeleted.connect(SigC::slot(dw, 
+        &EntityDeleteWatcher::onEntityDelete));
+    
+    assert(vase->getLocation() == table);
+    assert(vase->getPosition() == Point3(50, 40, 0));
+    
+    ctl.deleteEntity("_table_1");
+    
+    while (!dw.fired()) Eris::PollDefault::poll();
+    
+    
+    assert(vase->getLocation() == av->getView()->getEntity("_hut_01"));
+    assert(vase->getPosition() == Point3(51, 42, 3));
+}
+
 
 void testMovement(Controller& ctl)
 {
@@ -874,6 +933,7 @@ int runTests(Controller& ctl)
         testSeeMove(ctl);
         testLocationChange(ctl);
         testSightAction(ctl);
+        testSightDelete(ctl);
         testMovement(ctl); 
     }
     catch (TestFailure& tfexp)
