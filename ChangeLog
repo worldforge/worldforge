@@ -1,5 +1,9 @@
 2005-06-27  James Turner  <james@worldforge.org>
 
+    * configure.ac: increment version for release.
+
+2005-06-27  James Turner  <james@worldforge.org>
+
     * Eris/View.cpp, test/subServer.cpp: remove some debug output
 
     * test/tests.cpp, test/controller.cpp, test/controller.h,
