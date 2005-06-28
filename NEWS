@@ -1,3 +1,17 @@
+2005-06-28
+
+Eris 1.3.7 has been released, with many bugs discovered at LinuxTag 2005 fixed.
+This release also includes updates to the unit-test harness, which now uses
+Unix pipes instead of socket-pairs for out-of-band control.
+
+Hagen has further improved the output of the metaQuery tool, to display server
+uptime in a human-meaningful way, and this version is now in use on the
+'Active Servers' section of the website.
+
+This is a development release, as the API will change prior to the final
+release of Eris 1.4.0. However, any changes should be minor and easy to
+incorporate into clients - testing is recommended and appreciated.
+
 2005-04-18
 
 This is the fourth unstable release of Eris 1.3, which will become Eris 1.4 in

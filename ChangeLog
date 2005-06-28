@@ -1,5 +1,9 @@
 2005-06-28  James Turner  <james@worldforge.org>
 
+	* Release 1.3.7, Interface version 7. 
+
+2005-06-28  James Turner  <james@worldforge.org>
+
     * test/stubServer.cpp: unlink the pipe file on deletion, so we don't leave
       it hanging around.
 
