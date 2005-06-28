@@ -102,7 +102,7 @@ StubServer::StubServer(short port) :
 
 StubServer::~StubServer()
 {
-
+    ::unlink("/tmp/eris-test");
 }
 
 #pragma mark -
