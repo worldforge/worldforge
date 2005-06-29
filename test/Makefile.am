@@ -10,7 +10,11 @@ testEris_SOURCES = tests.cpp \
     commander.cpp commander.h \
     controller.cpp controller.h \
     testUtils.h \
-    objectSummary.h
+    objectSummary.h \
+    netTests.cpp netTests.h \
+    setupHelpers.cpp setupHelpers.h \
+    signalHelpers.h \
+    testOutOfGame.cpp testOutOfGame.h
 
 testEris_LDADD = $(top_builddir)/Eris/liberis-1.3.la
 

@@ -61,8 +61,8 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 	for(_iter I = str2->begin(); I != str2->end(); ++I) {
 #endif
 		SOCKET_TYPE fd = I->first->getSocket();
-		if(fd == INVALID_SOCKET)
-                	continue;
+		if(fd == INVALID_SOCKET) continue;
+        
 		got_data = true;
 		if(I->second & Poll::READ)
 			FD_SET(fd, &reading);
@@ -72,8 +72,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 			maxfd = fd;
 	}
 
-	if(!got_data)
-		return;
+	if (!got_data) return;
 
 	struct timeval timeout = {msec_timeout / 1000, (msec_timeout % 1000) * 1000};
 	int retval = select(maxfd+1, &reading, &writing, NULL, &timeout);

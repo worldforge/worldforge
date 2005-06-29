@@ -1,15 +1,5 @@
 test cases
 
-create an account
- - ensure logged in signal fires
- - ensure account data matches
- 
-login to account
- 
-login to bad account / bad password
- - ensure error is fired, and 
- 
- 
  check for an anonymous OOG look on login, send empty lobby
  check for OOG entry
  
@@ -37,17 +27,6 @@ login to bad account / bad password
  	toggle option for batching on agent, and re-run test?
  	yes, that's a good idea.
  
- ---- entity deletes -----
- 
-  check disapperance fires too
-  check it gets deleted -- when?
-  check state (eg location) after delete
- 
- ---- container deletes ------
- 
-  as above, check contents disappear as well
- 
- 
- ---- creation checks ------
- 
+
+
  

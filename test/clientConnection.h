@@ -43,6 +43,8 @@ public:
     virtual void objectArrived(const Atlas::Objects::Root& obj);
 
     void sendError(const std::string& msg, const Atlas::Objects::Operation::RootOperation& op);
+    
+    void shutdown();
 private:
     void negotiate();
     void fail();

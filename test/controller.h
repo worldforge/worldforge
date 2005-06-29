@@ -34,6 +34,7 @@ public:
     void broadcastSoundFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op);
     void broadcastSightFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op);
 
+    void command(const std::string& cid, const std::string& acc);
 protected:
     virtual void objectArrived(const Atlas::Objects::Root& obj);
     

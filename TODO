@@ -12,6 +12,8 @@ Test Cases
 - Avatar::place
 - picking
 
+- simulate a server shutdown (call shutdown() on the client socket)
+
 - cycle character through create, unsubscribe and re-take on a single
   account
 

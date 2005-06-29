@@ -27,6 +27,12 @@ using std::cout;
 
 typedef std::list<std::string> StringList;
 
+static Atlas::Objects::Root actionFactory()
+{
+    return Atlas::Objects::Operation::Action();
+}
+
+
 using Atlas::Objects::Entity::GameEntity;
 
 StubServer::StubServer(short port) :
@@ -98,6 +104,11 @@ StubServer::StubServer(short port) :
     subclassType("seed", "potato");
     subclassType("thing", "book");
     subclassType("thing", "ball");
+    
+    if (!Atlas::Objects::Factories::instance()->hasFactory("command"))
+    {
+        Atlas::Objects::Factories::instance()->addFactory("command", actionFactory);
+    }
 }
 
 StubServer::~StubServer()

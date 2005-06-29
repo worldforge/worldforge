@@ -8,6 +8,10 @@
 #include "stubServer.h"
 #include "testUtils.h"
 #include "controller.h"
+#include "signalHelpers.h"
+#include "setupHelpers.h"
+#include "testOutOfGame.h"
+#include "netTests.h"
 
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
@@ -27,6 +31,8 @@
 #include <signal.h>
 #include <sys/socket.h>
 
+
+
 using namespace Eris;
 using std::endl;
 using std::cout;
@@ -34,103 +40,7 @@ using std::cerr;
 
 using Atlas::Objects::Entity::GameEntity;
 
-typedef std::auto_ptr<Eris::Connection> AutoConnection;
-typedef std::auto_ptr<Eris::Account> AutoAccount;
-typedef std::auto_ptr<Eris::Avatar> AutoAvatar;
-
 typedef WFMath::Point<3> Point3;
-
-class SignalCounter0 : public SigC::Object
-{
-public:
-    SignalCounter0() :
-        m_count(0)
-    {;}
-    
-    void fired()
-    {
-        ++m_count;
-    }
-    
-    int fireCount() const
-    { return m_count; }
-private:
-    int m_count;
-};
-
-template <class P0>
-class SignalCounter1 : public SigC::Object
-{
-public:
-    SignalCounter1() :
-        m_count(0)
-    {;}
-    
-    void fired(P0)
-    {
-        ++m_count;
-    }
-    
-    int fireCount() const
-    { return m_count; }
-    
-private:
-    int m_count;
-};
-
-template <class P0>
-class SignalRecorder1 : public SigC::Object
-{
-public:
-    SignalRecorder1() :
-        m_count(0)
-    {;}
-    
-    void fired(P0 m)
-    {
-        ++m_count;
-        m_lastArg0 = m;
-    }
-    
-    int fireCount() const
-    { return m_count; }
-    
-    P0 lastArg0() const
-    {
-        return m_lastArg0;
-    }
-    
-private:
-    int m_count;
-    P0 m_lastArg0;
-};
-
-template <class P0>
-class SignalRecorderRef1 : public SigC::Object
-{
-public:
-    SignalRecorderRef1() :
-        m_count(0)
-    {;}
-    
-    void fired(const P0& m)
-    {
-        ++m_count;
-        m_lastArg0 = m;
-    }
-    
-    int fireCount() const
-    { return m_count; }
-    
-    P0 lastArg0() const
-    {
-        return m_lastArg0;
-    }
-    
-private:
-    int m_count;
-    P0 m_lastArg0;
-};
 
 class DummyDecoder : public Atlas::Objects::ObjectsDecoder
 {
@@ -154,112 +64,6 @@ void erisLog(Eris::LogLevel level, const std::string& msg)
        return;
     }
 }
-
-AutoConnection stdConnect()
-{
-    AutoConnection con(new Eris::Connection("eris-test", "localhost", 7450, false));
-    SignalCounter0 connectCount;
-    con->Connected.connect(SigC::slot(connectCount, &SignalCounter0::fired));
-    
-    SignalCounter1<const std::string&> fail;
-    con->Failure.connect(SigC::slot(fail, &SignalCounter1<const std::string&>::fired));
-    
-    con->connect();
-    
-    while (!connectCount.fireCount() && !fail.fireCount())
-    {
-        Eris::PollDefault::poll();
-    }
-    
-    assert(con->isConnected());
-    return con;
-}
-
-AutoAccount stdLogin(const std::string& uname, const std::string& pwd, Eris::Connection* con)
-{
-    AutoAccount player(new Eris::Account(con));
-    
-    SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
-   
-    SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
-    
-    player->login(uname, pwd);
-
-    while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
-    {
-        Eris::PollDefault::poll();
-    }
-    
-    assert(loginErrorCounter.fireCount() == 0);
-    return player;
-}
-
-class AvatarGetter : public SigC::Object
-{
-public:
-    AvatarGetter(Eris::Account* acc) : 
-        m_acc(acc),
-        m_expectFail(false),
-        m_failed(false)
-    {
-        m_acc->AvatarSuccess.connect(SigC::slot(*this, &AvatarGetter::success));
-        m_acc->AvatarFailure.connect(SigC::slot(*this, &AvatarGetter::failure));
-    }
-    
-    void expectFailure()
-    {
-        m_expectFail = true;
-    }
-    
-    AutoAvatar take(const std::string& charId)
-    {        
-        m_waiting = true;
-        m_failed = false;
-        
-        m_acc->takeCharacter(charId);
-        
-        while (m_waiting) Eris::PollDefault::poll();
-        
-        // we wanted to fail, bail out now
-        if (m_failed && m_expectFail) return AutoAvatar();
-        
-        assert(m_av->getEntity() == NULL); // shouldn't have the entity yet
-        assert(m_av->getId() == charId); // but should have it's ID
-    
-        SignalCounter1<Entity*> gotChar;
-        m_av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Entity*>::fired));
-    
-        while (gotChar.fireCount() == 0) Eris::PollDefault::poll();
-    
-        assert(m_av->getEntity());
-        assert(m_av->getEntity()->getId() == charId);
-
-        return m_av;
-    }
-    
-private:
-    void success(Avatar* av)
-    {
-        m_av.reset(av);
-        m_waiting = false;
-    }
-    
-    void failure(const std::string& msg)
-    {
-        if (msg != "deliberate") {
-            std::cerr << "failure getting an avatar: " << msg << endl;
-        }
-        m_waiting = false;
-        m_failed = true;
-    }
-
-    bool m_waiting;
-    Eris::Account* m_acc;
-    AutoAvatar m_av;
-    bool m_expectFail, m_failed;
-};
 
 class WaitForAppearance : public SigC::Object
 {
@@ -360,134 +164,6 @@ private:
     
 #pragma mark -
 
-void testLogin()
-{
-    AutoConnection con = stdConnect();
-    AutoAccount player(new Eris::Account(con.get()));
-    
-    SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
-   
-    SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
-    
-    player->login("account_A", "pumpkin");
-
-    while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
-    {
-        Eris::PollDefault::poll();
-    }
-    
-    assert(loginErrorCounter.fireCount() == 0);
-    
-    assert(player->getId() == "_23_account_A");
-    assert(player->isLoggedIn());
-}
-
-void testBadLogin()
-{
-    AutoConnection con = stdConnect();
-    AutoAccount player(new Eris::Account(con.get()));
-    
-    SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
-   
-    SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
-    
-    player->login("account_B", "zark!!!!ojijiksapumpkin");
-
-    while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
-    {
-        Eris::PollDefault::poll();
-    }
-    
-    assert(loginErrorCounter.fireCount() == 1);
-    assert(loginCount.fireCount() == 0);
-    assert(!player->isLoggedIn());
-}
-
-void testBadLogin2()
-{
-    AutoConnection con = stdConnect();
-    AutoAccount player(new Eris::Account(con.get()));
-    
-    SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
-   
-    SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
-    
-    player->login("_timeout_", "foo");
-
-    while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
-    {
-        Eris::PollDefault::poll();
-    }
-    
-    assert(loginErrorCounter.fireCount() == 1);
-    assert(loginCount.fireCount() == 0);
-    assert(!player->isLoggedIn());
-}
-
-void testAccCreate()
-{
-    AutoConnection con = stdConnect();
-    AutoAccount player(new Eris::Account(con.get()));
-    
-    SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
-
-    SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
-    
-    player->createAccount("account_C", "John Doe", "lemon");
-
-    while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
-    {
-        Eris::PollDefault::poll();
-    }
-    
-    assert(loginErrorCounter.fireCount() == 0);
-    
-    assert(player->getUsername() == "account_C");
-    assert(player->isLoggedIn());
-}
-
-void testAccountCharacters()
-{
-    AutoConnection con = stdConnect();
-    AutoAccount player = stdLogin("account_B", "sweede", con.get());
-
-    SignalCounter0 gotChars;
-    player->GotAllCharacters.connect(SigC::slot(gotChars, &SignalCounter0::fired));
-    player->refreshCharacterInfo();
-    
-    while (gotChars.fireCount() == 0)
-    {
-        Eris::PollDefault::poll();
-    }
-    
-    const CharacterMap& chars = player->getCharacters();
-    CharacterMap::const_iterator C = chars.find("acc_b_character");
-    assert(C != chars.end());
-    assert(C->second->getName() == "Joe Blow");
-}
-
-void testLogout()
-{
-    AutoConnection con = stdConnect();
-    AutoAccount player = stdLogin("account_C", "lemon", con.get());
-    
-    SignalCounter1<bool> gotLogout;
-    player->LogoutComplete.connect(SigC::slot(gotLogout, &SignalCounter1<bool>::fired));
-    player->logout();
-    
-    while (gotLogout.fireCount() == 0) Eris::PollDefault::poll();
-    
-    assert(!player->isLoggedIn());
-}
-
 void testCharActivate(Controller& ctl)
 {
     AutoConnection con = stdConnect();
@@ -501,17 +177,6 @@ void testCharActivate(Controller& ctl)
     
     assert(v->getTopLevel()->hasChild("_hut_01"));
     assert(!v->getTopLevel()->hasChild("_field_01")); // not yet
-}
-
-void testBadTake()
-{
-    AutoConnection con = stdConnect();
-    AutoAccount player = stdLogin("account_B", "sweede", con.get());
-    
-    AvatarGetter g(player.get());
-    g.expectFailure();
-    AutoAvatar av2 = g.take("_fail_");
-    assert(av2.get() == NULL);
 }
 
 void testAppearance(Controller& ctl)
@@ -889,43 +554,21 @@ void testMovement(Controller& ctl)
     */
 }
 
-void testServerInfo()
-{
-    AutoConnection con = stdConnect();
-    
-    Eris::ServerInfo sinfo;
-    con->getServerInfo(sinfo);
-    assert(sinfo.getStatus() == Eris::ServerInfo::INVALID);
-    
-    SignalCounter0 counter;
-    con->GotServerInfo.connect(SigC::slot(counter, &SignalCounter0::fired));
-    
-    con->refreshServerInfo();
-    
-    while (!counter.fireCount()) {
-        Eris::PollDefault::poll();
-    }
-    
-    con->getServerInfo(sinfo);
-    assert(sinfo.getStatus() == Eris::ServerInfo::VALID);
-    assert(sinfo.getHostname() == "localhost");
-    assert(sinfo.getServername() == "Bob's StubServer");
-    assert(sinfo.getRuleset() == "stub-world");
-}
-
 int runTests(Controller& ctl)
 {
-    try {    
+    try {
         testLogin();
         testBadLogin();
         testBadLogin2();
         testAccCreate();
         testLogout();
         testAccountCharacters();
-        testCharActivate(ctl);
         testBadTake();
         testServerInfo();
-        
+    
+        testServerSocketShutdown(ctl);
+    
+        testCharActivate(ctl);
         testAppearance(ctl);
         testSightCreate(ctl);
         testSet(ctl);

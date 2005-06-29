@@ -5,6 +5,7 @@
 #include "commander.h"
 #include "stubServer.h"
 #include "agent.h"
+#include "clientConnection.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Eris/Exceptions.h>
@@ -218,5 +219,21 @@ void Commander::dispatch(const RootOperation& op)
         }
 
         Agent::broadcastSight(s);
+    }
+    
+    Action act = smart_dynamic_cast<Action>(op);
+    if (act.isValid()) {
+        std::vector<Root> args(op->getArgs());
+        
+        if (act->getParents().front() == "command") {
+            std::string cid = args[0]->getAttr("cid").asString();
+            
+            if (cid == "socket-shutdown") {
+                std::string acc = args[0]->getAttr("acc").asString();
+                ClientConnection* cc = m_server->getConnectionForAccount(acc);
+                assert(cc);
+                cc->shutdown();
+            }
+        }
     }
 }

@@ -83,6 +83,11 @@ Agent* ClientConnection::findAgentForEntity(const std::string& eid) const
     return NULL;
 }
 
+void ClientConnection::shutdown()
+{
+    m_stream.shutdown();
+}
+
 #pragma mark -
 // basic Atlas connection / stream stuff
 

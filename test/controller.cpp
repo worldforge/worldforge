@@ -165,3 +165,18 @@ void Controller::moveVelocity(const std::string& eid, const WFMath::Vector<3>& v
     st->setArgs1(op);
     send(st);
  }
+ 
+ void Controller::command(const std::string& cid, const std::string& acc)
+ {
+    Action cmd;
+    std::list<std::string> pl;
+    pl.push_back("command");
+    cmd->setParents(pl);
+    
+    Root arg;
+    arg->setAttr("cid", cid);
+    arg->setAttr("acc", acc);
+    cmd->setArgs1(arg);
+    send(cmd);
+ }
+ 

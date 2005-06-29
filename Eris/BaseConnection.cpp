@@ -73,28 +73,28 @@ int BaseConnection::connect(const std::string &host, short port)
 
 void BaseConnection::hardDisconnect(bool emit)
 {
-    if (!_stream) {
-        warning() << "in baseConnection::hardDisconnect with a NULL stream!";
-    } else {
-		// okay, tear it down
-		if ((_status == CONNECTED) || (_status == DISCONNECTING)){
-			delete m_codec;
-			delete _encode;
-		} else if (_status == NEGOTIATE) {
-			delete _sc;
-			_sc = NULL;
-		} else if (_status == CONNECTING){
-			// nothing to be done, but can happen
-		} else
-			throw InvalidOperation("Bad connection state for disconnection");
-		
-		deleteLater(_timeout);
-		_timeout = NULL;
-		
-		Poll::instance().removeStream(_stream);
-		delete _stream;
-		_stream = NULL;
-	}
+    if (_status == DISCONNECTED) return;
+    
+    assert(_stream);
+    
+    // okay, tear it down
+    if ((_status == CONNECTED) || (_status == DISCONNECTING)){
+        delete m_codec;
+        delete _encode;
+    } else if (_status == NEGOTIATE) {
+        delete _sc;
+        _sc = NULL;
+    } else if (_status == CONNECTING) {
+        // nothing to be done, but can happen
+    } else
+        throw InvalidOperation("Bad connection state for disconnection");
+    
+    deleteLater(_timeout);
+    _timeout = NULL;
+    
+    Poll::instance().removeStream(_stream);
+    delete _stream;
+    _stream = NULL;
 
     setStatus(DISCONNECTED);
     if (emit) Disconnected.emit();
@@ -106,8 +106,8 @@ void BaseConnection::recv()
 	assert(_status != DISCONNECTED);
 	assert(_stream);
 	
-	if (_stream->getSocket() == INVALID_SOCKET) {
-		handleFailure("Connection stream closed unexpectedly");
+	if (_stream->fail()) {
+		handleFailure("Connection stream failed");
 		hardDisconnect(false);
 	} else {
 		switch (_status) {
