@@ -78,6 +78,9 @@ public:
 	/// Place an entity inside another one
 	void place(Entity*, Entity* container, const WFMath::Point<3>& pos
 		= WFMath::Point<3>(0, 0, 0));
+	
+	/// Wield an entity which is inside the Avatar's inventory
+	void wield(Entity * entity);
     
     /**
     Emitted when the character entity of this Avatar is valid (and presumably,

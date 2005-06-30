@@ -53,7 +53,7 @@ Avatar::~Avatar()
 void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc)
 {
     if (e->getLocation() != m_entity)
-        throw InvalidOperation("Can't drop an Entity which is not held by the character");
+        error() << "Can't drop an Entity which is not held by the character";
 
     Move moveOp;
     moveOp->setFrom(m_entityId);
@@ -95,7 +95,7 @@ void Avatar::touch(Entity* e)
     Touch touchOp;
     touchOp->setFrom(m_entityId);
     
-    Root what;
+    Anonymous what;
     what->setId(e->getId());
     touchOp->setArgs1(what);
 
@@ -189,6 +189,25 @@ void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
     moveOp->setArgs1(what);
 
     getConnection()->send(moveOp);
+}
+
+void Avatar::wield(Entity * entity)
+{
+	if(entity->getLocation() != m_entity)
+	{
+		error() << "Can't wield an Entity which is not located in the avatar.";
+	}
+	
+	Anonymous arguments;
+	
+	arguments->setId(entity->getId());
+	
+	Wield wield;
+	
+	wield->setFrom(m_entityId);
+	wield->setArgs1(arguments);
+	
+	getConnection()->send(wield);
 }
 
 #pragma mark -

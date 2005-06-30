@@ -1,5 +1,13 @@
 2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
+	* Eris/Entity.h, Eris/Entity.cpp: Added wield() which will send a WIELD
+	  operation for a specified entity from the avatar's inventory to the
+	  server.
+	  Replaced a throw with error() output.
+	  Replaced a Root by Anonymous.
+
+2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
 	* Eris/Entity.h, Make getPosition(), getOrientation() and getBBox()
 	  return const references to the private member values. Add
 	  documentation on the fly.
