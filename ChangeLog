@@ -1,3 +1,9 @@
+2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
+	* Eris/Entity.h, Eris/Avatar.h: Added some documentation.
+	* Eris/Entity.cpp: In getViewPosition() it is necessary to explicitely
+	  initialize the quarternion with identity().
+
 2005-06-29  James Turner  <james@worldforge.org>
 
 	* Eris/BaseConnection.cpp: detect stream failures in a more reliable way,

@@ -26,6 +26,7 @@ class IGRouter;
 class View;
 class Connection;
 
+/** The players avatar representation. **/
 class Avatar : virtual public SigC::Object
 {
 public:

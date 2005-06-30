@@ -98,7 +98,8 @@ public:
     {
         return m_location;
     }
-
+	
+	/** Returns the Entity's position inside it's parent in the parent's local system coordinates. **/
     WFMath::Point<3> getPosition() const
     {
         return m_position;
@@ -137,7 +138,8 @@ public:
     {
         return m_orientation;
     }
-
+	
+	/** Returns the entity's bounding box in the entity's local system coordinates. **/
     WFMath::AxisBox<3> getBBox() const {
         return m_bbox;
     }
