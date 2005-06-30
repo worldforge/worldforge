@@ -128,21 +128,24 @@ public:
 
     /** retreive this Entity's orientation in view coordinates. */
     WFMath::Quaternion getViewOrientation() const;
-    
-    WFMath::Vector<3> getVelocity() const
-    {
-        return m_velocity;
-    }
-
-    WFMath::Quaternion getOrientation() const
-    {
-        return m_orientation;
-    }
+	
+	/** Returns the entity's velocity as last set explicitely. **/
+	const WFMath::Vector< 3 > & getVelocity(void) const
+	{
+		return m_velocity;
+	}
+	
+	/** Returns the entity's orientation as last set explicitely. **/
+	const WFMath::Quaternion & getOrientation(void) const
+	{
+		return m_orientation;
+	}
 	
 	/** Returns the entity's bounding box in the entity's local system coordinates. **/
-    WFMath::AxisBox<3> getBBox() const {
-        return m_bbox;
-    }
+	const WFMath::AxisBox< 3 > & getBBox(void) const
+	{
+		return m_bbox;
+	}
 
     bool hasBBox() const
     {

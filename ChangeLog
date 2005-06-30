@@ -1,5 +1,11 @@
 2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
+	* Eris/Entity.h, Make getPosition(), getOrientation() and getBBox()
+	  return const references to the private member values. Add
+	  documentation on the fly.
+
+2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
 	* Eris/Entity.h, Eris/Avatar.h: Added some documentation.
 	* Eris/Entity.cpp: In getViewPosition() it is necessary to explicitely
 	  initialize the quarternion with identity().
