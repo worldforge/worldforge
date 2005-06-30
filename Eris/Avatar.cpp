@@ -52,8 +52,12 @@ Avatar::~Avatar()
 
 void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc)
 {
-    if (e->getLocation() != m_entity)
-        error() << "Can't drop an Entity which is not held by the character";
+    if(e->getLocation() != m_entity)
+	{
+		error() << "Can't drop an Entity which is not held by the character";
+		
+		return;
+	}
 
     Move moveOp;
     moveOp->setFrom(m_entityId);
@@ -196,6 +200,8 @@ void Avatar::wield(Entity * entity)
 	if(entity->getLocation() != m_entity)
 	{
 		error() << "Can't wield an Entity which is not located in the avatar.";
+		
+		return;
 	}
 	
 	Anonymous arguments;

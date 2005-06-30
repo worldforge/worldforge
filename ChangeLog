@@ -1,6 +1,12 @@
 2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
-	* Eris/Entity.h, Eris/Entity.cpp: Added wield() which will send a WIELD
+	* Eris/Avatar.cpp: Made an error. Since throw exits and error() output
+	  does not we need to return explicitely.
+	* ChangeLog: Fixed from file names.
+
+2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
+	* Eris/Avatar.h, Eris/Avatar.cpp: Added wield() which will send a WIELD
 	  operation for a specified entity from the avatar's inventory to the
 	  server.
 	  Replaced a throw with error() output.
