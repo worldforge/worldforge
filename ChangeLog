@@ -1,5 +1,11 @@
 2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
+	* bindings/polls/glib/PollGlib.h: Added support for timeouts. This is
+	  work in progress as it currently leaves the application in busy wait
+	  during meta queries. Input appreciated.
+
+2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
 	* Eris/Avatar.cpp: Made an error. Since throw exits and error() output
 	  does not we need to return explicitely.
 	* ChangeLog: Fixed from file names.

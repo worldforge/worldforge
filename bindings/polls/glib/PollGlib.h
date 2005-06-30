@@ -1,12 +1,13 @@
 #ifndef ERIS_POLL_GLIB_H
 #define ERIS_POLL_GLIB_H
 
+#include <map>
+
+#include <Eris/DeleteLater.h>
+#include <Eris/Exceptions.h>
+#include <Eris/Poll.h>
 #include <Eris/PollGlibFD.h>
 #include <Eris/PollGlibSource.h>
-#include <Eris/Exceptions.h>
-
-#include <map>
-#include <Eris/Poll.h>
 #include <Eris/Types.h>
 #include <Eris/Timeout.h>
 
@@ -16,7 +17,21 @@ namespace Eris
 class PollGlib : public Eris::Poll, public Eris::PollData, public PollGlibSource
 {
 public:
-  PollGlib(GMainContext *con = 0) : PollGlibSource(con), _wait_time(0) {}
+	PollGlib(GMainContext * pMainContext = 0) :
+		PollGlibSource(pMainContext),
+		_wait_time(-1)
+	{
+		g_timeout_add(250, (GSourceFunc)(bTimeoutCallback), this);
+	}
+	
+	static gboolean bTimeoutCallback(PollGlib * pPoller)
+	{
+		pPoller->_wait_time = Eris::Timeout::pollAll();
+		execDeleteLaters();
+		
+		return TRUE;
+	}
+  
   virtual ~PollGlib()
   {
     for(StreamMap::iterator I = _streams.begin(); I != _streams.end(); ++I)
