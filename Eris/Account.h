@@ -1,6 +1,8 @@
 #ifndef ERIS_PLAYER_H
 #define ERIS_PLAYER_H
 
+#include <vector>
+
 #include <Eris/Types.h>
 #include <Eris/Timeout.h>
 #include <sigc++/object.h>
@@ -74,6 +76,9 @@ public:
     /// Check if the account is logged in.
     /** Many operations will produce errors if the account is not logged in. */
     bool isLoggedIn() const;
+	
+	/// Returns a container of character types that the client is allowed to create.
+	const std::vector< std::string > & getCharacterTypes(void) const;
     
     /// Get the characters owned by this account.
     /**
@@ -206,6 +211,7 @@ private:
     std::string m_username;	///< The player's username ( != account object's ID)
     std::string m_pass;
     
+	std::vector< std::string > m_characterTypes;
     CharacterMap _characters;	///< characters belonging to this player
     StringSet m_characterIds;
     bool m_doingCharacterRefresh; ///< set if we're refreshing character data

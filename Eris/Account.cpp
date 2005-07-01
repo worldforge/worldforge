@@ -155,6 +155,11 @@ Result Account::logout()
     return NO_ERR;
 }
 
+const std::vector< std::string > & Account::getCharacterTypes(void) const
+{
+	return m_characterTypes;
+}
+
 const CharacterMap& Account::getCharacters()
 {
     if (m_status != LOGGED_IN)
@@ -364,6 +369,35 @@ void Account::loginComplete(const AtlasAccount &p)
     m_status = LOGGED_IN;
     m_accountId = p->getId();
     
+	if(p->hasAttr("character_types") == true)
+	{
+		Atlas::Message::Element CharacterTypes(p->getAttr("character_types"));
+		
+		if(CharacterTypes.isList() == true)
+		{
+			const Atlas::Message::ListType & CharacterTypesList(CharacterTypes.asList());
+			Atlas::Message::ListType::const_iterator iCharacterType(CharacterTypesList.begin());
+			Atlas::Message::ListType::const_iterator iEnd(CharacterTypesList.end());
+			
+			m_characterTypes.reserve(CharacterTypesList.size());
+			while(iCharacterType != iEnd)
+			{
+				if(iCharacterType->isString() == true)
+				{
+					m_characterTypes.push_back(iCharacterType->asString());
+				}
+				else
+				{
+					error() << "An element of the \"character_types\" list is not a String.";
+				}
+				++iCharacterType;
+			}
+		}
+		else
+		{
+			error() << "Account has attribute \"character_types\" which is not of type List.";
+		}
+	}
     m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
     // notify an people watching us 
     LoginSuccess.emit();

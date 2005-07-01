@@ -1,5 +1,14 @@
 2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
+	* Eris/Account.cpp, Eris/Account.h: Added a member and an accessor
+	  function for character types supported by the server. On completed
+	  login the server's response carrys a list of character types that
+	  users are allowed to create.
+	  You should use this vector of type names to offer a number of valid
+	  choices to your users instead of an empty type field.
+
+2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
 	* bindings/polls/glib/PollGlib.h: Added support for timeouts. This is
 	  work in progress as it currently leaves the application in busy wait
 	  during meta queries. Input appreciated.
