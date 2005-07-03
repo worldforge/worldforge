@@ -1,5 +1,10 @@
 2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
+	* Eris/Avatar.cpp: Added the id of the avatar's entity to the move op
+	  in moveInDirection() so the cyphesis accepts the operation.
+
+2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
 	* Eris/Account.cpp, Eris/Account.h: Added a member and an accessor
 	  function for character types supported by the server. On completed
 	  login the server's response carrys a list of character types that

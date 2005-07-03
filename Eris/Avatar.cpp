@@ -138,6 +138,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
     
     Root arg;
     //arg->setAttr("location", m_entity->getLocation()->getId());
+	arg->setId(m_entityId);
     arg->setAttr("velocity", vel.toAtlas());
 
     WFMath::CoordType sqr_mag = vel.sqrMag();
