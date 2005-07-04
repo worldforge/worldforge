@@ -273,9 +273,13 @@ public:
         while (!m_heard) Eris::PollDefault::poll();
     }
 private:
-    void onSay(const std::string& what)
+    void onSay(const Atlas::Objects::Root & what)
     {
-        if (what == m_what) m_heard = true;
+		assert(what->hasAttr("say"));
+		assert(what->getAttr("say").isString());
+		assert(what->getAttr("say").asString() == m_what);
+		
+		m_heard = true;
     }
 
     std::string m_what;

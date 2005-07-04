@@ -210,8 +210,18 @@ public:
     'inMotion' method. */
     SigC::Signal1<void, bool> Moving;
 
-    /** Emitted with this entity speaks. In the future langauge may be specified */
-    SigC::Signal1<void, const std::string&> Say;
+    /**
+	 * @brief Emitted with the entity speaks.
+	 * 
+	 * The argument contains attributes that make up the content of the Say
+	 * operation.
+	 * - Attribute "say" which is of type string and contains the text that
+	 *   this entity said.
+	 * - Attrubute "responses" which is a list of strings. When conversing
+	 *   with NPCs this list is used to give the client a clue about
+	 *   possible answers the NPCs understand.
+	 **/
+    sigc::signal< void, const Atlas::Objects::Root & > Say;
 	
     /**
     Emitted when this entity emits an imgainary operation (also known as

@@ -211,13 +211,8 @@ void Entity::setPosAndVelocityFromAtlas(const Root& data)
 
 void Entity::onTalk(const Root& talkArgs)
 {
-    if (!talkArgs->hasAttr("say")) {
-        error() << "entity " << m_id << " got talk with no 'say' argument";
-        return;
-    }
-    
     // just emit the signal
-    Say.emit(talkArgs->getAttr("say").asString());
+    Say.emit(talkArgs);
 }
 
 void Entity::onLocationChanged(Entity* oldLoc)

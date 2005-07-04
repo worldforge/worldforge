@@ -1,5 +1,17 @@
 2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
+	* Eris/Entity.h, Eris/Entity.cpp: In order to be able to process the
+	  available responses the argument of the Say signal now is the Atlas
+	  object passed with the Talk operation. Added a bit of documentation
+	  on how to get the text and the responses. Prior to this the "say"
+	  attribute on the Root object was tested for existence and type. This
+	  is not the case anymore. In order to be safe you should test this in
+	  the clients.
+	* test/tests.cpp: Modified accordingly. Testing for existence and type
+	  of the arguments now.
+
+2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
 	* Eris/Avatar.cpp: Added the id of the avatar's entity to the move op
 	  in moveInDirection() so the cyphesis accepts the operation.
 
