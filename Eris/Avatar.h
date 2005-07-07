@@ -81,6 +81,19 @@ public:
 	
 	/// Wield an entity which is inside the Avatar's inventory
 	void wield(Entity * entity);
+	
+    /**
+	 * @brief Use the currently wielded entity (tool) on another entity.
+	 * @param entity A pointer to the entity you wish to use your tool on.
+	 * @param position A position where you perform the operation.
+	 * 
+	 * If @a position is invalid the "pos" parameter will not be set on the USE operation.
+	 * 
+	 * @sa WFMath::Point< 3 >::Point(), WFMath::Point< 3 >::setValid(), WFMath::Point< 3 >::isValid()
+	 * 
+	 * @todo This needs another parameter specifying what operation of the tool is going to be used.
+	 **/
+	void useOn(Entity * entity, const WFMath::Point< 3 > & position);
     
     /**
     Emitted when the character entity of this Avatar is valid (and presumably,

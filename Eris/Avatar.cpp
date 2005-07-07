@@ -217,6 +217,27 @@ void Avatar::wield(Entity * entity)
 	getConnection()->send(wield);
 }
 
+void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position)
+{
+	Anonymous arguments;
+	
+	arguments->setId(entity->getId());
+	arguments->setObjtype("obj");
+	if(position.isValid() == true)
+	{
+		arguments->modifyPos().resize(0);
+		arguments->modifyPos().reserve(3);
+		arguments->modifyPos().assign(position.elements(), position.elements() + 3);
+	}
+	
+	Use use;
+	
+	use->setFrom(m_entityId);
+	use->setArgs1(arguments);
+	
+	getConnection()->send(use);
+}
+
 #pragma mark -
 
 void Avatar::onEntityAppear(Entity* ent)

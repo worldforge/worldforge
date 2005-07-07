@@ -1,3 +1,9 @@
+2005-07-07  Hagen Möbius  <hagen.moebius@starschiffchen.de>
+
+	* Eris/Avatar.h, Eris/Avatar.cpp: Added useOn() which will send a USE
+	  operation to the server.
+	* TODO: Added an item about non-default operations in onUse().
+
 2005-06-30  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
 	* Eris/Entity.h, Eris/Entity.cpp: In order to be able to process the
