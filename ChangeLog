@@ -1,3 +1,8 @@
+2005-07-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/BasePoint.h: Re-order "const static" to "static const"
+	  to eliminate some warnings.
+
 2005-06-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Increment version number.
