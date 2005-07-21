@@ -31,7 +31,7 @@
 	  Atlas/Objects/RootOperationChildren4.cpp,
 	  Atlas/Objects/RootOperationChildren5.cpp,
 	  Atlas/Objects/flag.cpp, Atlas/Objects/objectFactory.cpp:
-	  Re-generate objects included new Wield and Touch ops from
+	  Re-generate objects included new Wield and Use ops from
 	  the updated spec.
 
 2005-05-28  Al Riddoch  <alriddoch@zepler.org>
