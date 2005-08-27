@@ -212,6 +212,14 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         parent = self.get_cpp_parent(obj)
         self.write("    return %s::getAttr(name);\n" % parent)
         self.write("}\n\n")
+        self.write("int %s::getAttr" % classname)
+        self.write("(const std::string& name, Element & attr) const\n")
+        self.write("{\n")
+        for attr in statics:
+            self.write(attr.getattr_im2())
+        parent = self.get_cpp_parent(obj)
+        self.write("    return %s::getAttr(name, attr);\n" % parent)
+        self.write("}\n\n")
 
     def setattr_im(self, obj, statics):
         classname = classize(obj.id, data=1)
@@ -514,11 +522,17 @@ void %(classname)s::free()
         if len(static_attrs) > 0:
             #generic access/etc.. methods
             self.doc(4, 'Retrieve the attribute "name". Throws ' \
-                       +'NoSuchAttrException if it does')
+                      + 'NoSuchAttrException if it does')
             self.doc(4, 'not exist.')
             self.write("    virtual const Atlas::Message::Element getAttr(")
             self.write("const std::string& name)\n")
             self.write("            const throw (NoSuchAttrException);\n")
+            self.doc(4, 'Retrieve the attribute "name". Return ' \
+                      + 'non-zero if it does')
+            self.doc(4, 'not exist.')
+            self.write("    virtual int getAttr(")
+            self.write("const std::string& name, ")
+            self.write("Atlas::Message::Element & attr) const;\n")
             self.doc(4, 'Set the attribute "name" to the value given by' \
                       + '"attr"')
             self.write("    virtual void setAttr(const std::string& name,\n")

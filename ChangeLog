@@ -1,5 +1,18 @@
 2005-06-14  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/Anonymous.h, Atlas/Objects/Dispatcher.cpp,
+	  Atlas/Objects/Dispatcher.h, Atlas/Objects/ObjectsFwd.h,
+	  Atlas/Objects/Operation.h, Atlas/Objects/RootOperationChildren2.cpp,
+	  Atlas/Objects/RootOperationChildren3.cpp,
+	  Atlas/Objects/RootOperationChildren4.cpp,
+	  Atlas/Objects/RootOperationChildren5.cpp,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/objectFactory.cpp:
+	  Re-generate sources with updated spec, to include Affect operation.
+	  Add new Objects getAttr method version, which avoids return by
+	  value.
+
+2005-06-14  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/AttributeInfo.py,
 	  Atlas/Objects/GenerateObjectFactory.py,
 	  Atlas/Objects/RootOperation.h, Atlas/Objects/flag.cpp,

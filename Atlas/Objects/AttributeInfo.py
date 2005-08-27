@@ -310,6 +310,10 @@ class AttributeInfo:
         return '    if (name == "%(name)s") return get%(cname)s%(as_object)s();\n' \
                % self.__dict__
 
+    def getattr_im2(self):
+        return '    if (name == "%(name)s") { attr = get%(cname)s%(as_object)s(); return 0; }\n' \
+               % self.__dict__
+
     def setattr_im(self):
         return '    if (name == "%(name)s") { set%(cname)s%(as_object)s(attr.as%(ctype_as_object)s()); return; }\n' % self.__dict__
 

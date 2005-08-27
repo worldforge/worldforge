@@ -36,6 +36,18 @@ const Element RootOperationData::getAttr(const std::string& name) const
     return RootData::getAttr(name);
 }
 
+int RootOperationData::getAttr(const std::string& name, Element & attr) const
+{
+    if (name == "serialno") { attr = getSerialno(); return 0; }
+    if (name == "refno") { attr = getRefno(); return 0; }
+    if (name == "from") { attr = getFrom(); return 0; }
+    if (name == "to") { attr = getTo(); return 0; }
+    if (name == "seconds") { attr = getSeconds(); return 0; }
+    if (name == "future_seconds") { attr = getFutureSeconds(); return 0; }
+    if (name == "args") { attr = getArgsAsList(); return 0; }
+    return RootData::getAttr(name, attr);
+}
+
 void RootOperationData::setAttr(const std::string& name, const Element& attr)
 {
     if (name == "serialno") { setSerialno(attr.asInt()); return; }

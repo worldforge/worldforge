@@ -32,6 +32,16 @@ const Element RootEntityData::getAttr(const std::string& name) const
     return RootData::getAttr(name);
 }
 
+int RootEntityData::getAttr(const std::string& name, Element & attr) const
+{
+    if (name == "loc") { attr = getLoc(); return 0; }
+    if (name == "pos") { attr = getPosAsList(); return 0; }
+    if (name == "velocity") { attr = getVelocityAsList(); return 0; }
+    if (name == "contains") { attr = getContainsAsList(); return 0; }
+    if (name == "stamp_contains") { attr = getStampContains(); return 0; }
+    return RootData::getAttr(name, attr);
+}
+
 void RootEntityData::setAttr(const std::string& name, const Element& attr)
 {
     if (name == "loc") { setLoc(attr.asString()); return; }

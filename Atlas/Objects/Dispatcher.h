@@ -83,6 +83,8 @@ protected:
     virtual void objectDeleteArrived(const Operation::Delete&) { }
     /// Override this to get called when a Set object arrives.
     virtual void objectSetArrived(const Operation::Set&) { }
+    /// Override this to get called when a Affect object arrives.
+    virtual void objectAffectArrived(const Operation::Affect&) { }
     /// Override this to get called when a Move object arrives.
     virtual void objectMoveArrived(const Operation::Move&) { }
     /// Override this to get called when a Wield object arrives.

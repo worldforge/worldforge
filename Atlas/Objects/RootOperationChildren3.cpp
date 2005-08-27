@@ -11,6 +11,67 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+PerceiveData::~PerceiveData()
+{
+}
+
+PerceiveData * PerceiveData::copy() const
+{
+    PerceiveData * copied = PerceiveData::alloc();
+    *copied = *this;
+    return copied;
+}
+
+bool PerceiveData::instanceOf(int classNo) const
+{
+    if(PERCEIVE_NO == classNo) return true;
+    return GetData::instanceOf(classNo);
+}
+
+//freelist related methods specific to this class
+PerceiveData *PerceiveData::defaults_PerceiveData = 0;
+PerceiveData *PerceiveData::begin_PerceiveData = 0;
+
+PerceiveData *PerceiveData::alloc()
+{
+    if(begin_PerceiveData) {
+        PerceiveData *res = begin_PerceiveData;
+        assert( res->m_refCount == 0 );
+        res->m_attrFlags = 0;
+        res->m_attributes.clear();
+        begin_PerceiveData = (PerceiveData *)begin_PerceiveData->m_next;
+        return res;
+    }
+    return new PerceiveData(PerceiveData::getDefaultObjectInstance());
+}
+
+void PerceiveData::free()
+{
+    m_next = begin_PerceiveData;
+    begin_PerceiveData = this;
+}
+
+
+PerceiveData *PerceiveData::getDefaultObjectInstance()
+{
+    if (defaults_PerceiveData == 0) {
+        defaults_PerceiveData = new PerceiveData;
+        defaults_PerceiveData->attr_objtype = "op";
+        defaults_PerceiveData->attr_serialno = 0;
+        defaults_PerceiveData->attr_refno = 0;
+        defaults_PerceiveData->attr_seconds = 0.0;
+        defaults_PerceiveData->attr_future_seconds = 0.0;
+        defaults_PerceiveData->attr_stamp = 0.0;
+        defaults_PerceiveData->attr_parents = std::list<std::string>(1, "perceive");
+    }
+    return defaults_PerceiveData;
+}
+
+PerceiveData *PerceiveData::getDefaultObject()
+{
+    return PerceiveData::getDefaultObjectInstance();
+}
+
 LookData::~LookData()
 {
 }
@@ -314,67 +375,6 @@ LoginData *LoginData::getDefaultObjectInstance()
 LoginData *LoginData::getDefaultObject()
 {
     return LoginData::getDefaultObjectInstance();
-}
-
-LogoutData::~LogoutData()
-{
-}
-
-LogoutData * LogoutData::copy() const
-{
-    LogoutData * copied = LogoutData::alloc();
-    *copied = *this;
-    return copied;
-}
-
-bool LogoutData::instanceOf(int classNo) const
-{
-    if(LOGOUT_NO == classNo) return true;
-    return LoginData::instanceOf(classNo);
-}
-
-//freelist related methods specific to this class
-LogoutData *LogoutData::defaults_LogoutData = 0;
-LogoutData *LogoutData::begin_LogoutData = 0;
-
-LogoutData *LogoutData::alloc()
-{
-    if(begin_LogoutData) {
-        LogoutData *res = begin_LogoutData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_LogoutData = (LogoutData *)begin_LogoutData->m_next;
-        return res;
-    }
-    return new LogoutData(LogoutData::getDefaultObjectInstance());
-}
-
-void LogoutData::free()
-{
-    m_next = begin_LogoutData;
-    begin_LogoutData = this;
-}
-
-
-LogoutData *LogoutData::getDefaultObjectInstance()
-{
-    if (defaults_LogoutData == 0) {
-        defaults_LogoutData = new LogoutData;
-        defaults_LogoutData->attr_objtype = "op";
-        defaults_LogoutData->attr_serialno = 0;
-        defaults_LogoutData->attr_refno = 0;
-        defaults_LogoutData->attr_seconds = 0.0;
-        defaults_LogoutData->attr_future_seconds = 0.0;
-        defaults_LogoutData->attr_stamp = 0.0;
-        defaults_LogoutData->attr_parents = std::list<std::string>(1, "logout");
-    }
-    return defaults_LogoutData;
-}
-
-LogoutData *LogoutData::getDefaultObject()
-{
-    return LogoutData::getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

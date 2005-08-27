@@ -76,6 +76,9 @@ void Dispatcher::dispatchObject(const Root& obj)
     case Operation::SET_NO:
         objectSetArrived(smart_dynamic_cast<Operation::Set>(obj));
         break;
+    case Operation::AFFECT_NO:
+        objectAffectArrived(smart_dynamic_cast<Operation::Affect>(obj));
+        break;
     case Operation::MOVE_NO:
         objectMoveArrived(smart_dynamic_cast<Operation::Move>(obj));
         break;

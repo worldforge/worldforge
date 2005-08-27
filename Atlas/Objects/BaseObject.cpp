@@ -36,11 +36,19 @@ bool BaseObjectData::hasAttrFlag(int flag) const
 const Element BaseObjectData::getAttr(const std::string& name) const
     throw (NoSuchAttrException) 
 {
+    Element attr;
+    getAttr(name, attr);
+    return attr;
+}
+
+int BaseObjectData::getAttr(const std::string& name, Element & attr) const
+{
     MapType::const_iterator I = m_attributes.find(name);
     if (I == m_attributes.end()) {
-        throw NoSuchAttrException(name);
+        return -1;
     }
-    return (I->second);
+    attr = I->second;
+    return 0;
 }
 
 void BaseObjectData::setAttr(const std::string& name, const Element& attr)

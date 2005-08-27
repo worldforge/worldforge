@@ -21,7 +21,7 @@ Later in hierarchy tree objtype changes to 'object' when actual game objects are
 class AnonymousData;
 typedef SmartPtr<AnonymousData> Anonymous;
 
-static const int ANONYMOUS_NO = 39;
+static const int ANONYMOUS_NO = 40;
 
 /// \brief Starting point for entity hierarchy.
 ///

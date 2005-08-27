@@ -11,6 +11,67 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+LogoutData::~LogoutData()
+{
+}
+
+LogoutData * LogoutData::copy() const
+{
+    LogoutData * copied = LogoutData::alloc();
+    *copied = *this;
+    return copied;
+}
+
+bool LogoutData::instanceOf(int classNo) const
+{
+    if(LOGOUT_NO == classNo) return true;
+    return LoginData::instanceOf(classNo);
+}
+
+//freelist related methods specific to this class
+LogoutData *LogoutData::defaults_LogoutData = 0;
+LogoutData *LogoutData::begin_LogoutData = 0;
+
+LogoutData *LogoutData::alloc()
+{
+    if(begin_LogoutData) {
+        LogoutData *res = begin_LogoutData;
+        assert( res->m_refCount == 0 );
+        res->m_attrFlags = 0;
+        res->m_attributes.clear();
+        begin_LogoutData = (LogoutData *)begin_LogoutData->m_next;
+        return res;
+    }
+    return new LogoutData(LogoutData::getDefaultObjectInstance());
+}
+
+void LogoutData::free()
+{
+    m_next = begin_LogoutData;
+    begin_LogoutData = this;
+}
+
+
+LogoutData *LogoutData::getDefaultObjectInstance()
+{
+    if (defaults_LogoutData == 0) {
+        defaults_LogoutData = new LogoutData;
+        defaults_LogoutData->attr_objtype = "op";
+        defaults_LogoutData->attr_serialno = 0;
+        defaults_LogoutData->attr_refno = 0;
+        defaults_LogoutData->attr_seconds = 0.0;
+        defaults_LogoutData->attr_future_seconds = 0.0;
+        defaults_LogoutData->attr_stamp = 0.0;
+        defaults_LogoutData->attr_parents = std::list<std::string>(1, "logout");
+    }
+    return defaults_LogoutData;
+}
+
+LogoutData *LogoutData::getDefaultObject()
+{
+    return LogoutData::getDefaultObjectInstance();
+}
+
 ImaginaryData::~ImaginaryData()
 {
 }
@@ -314,67 +375,6 @@ SightData *SightData::getDefaultObjectInstance()
 SightData *SightData::getDefaultObject()
 {
     return SightData::getDefaultObjectInstance();
-}
-
-AppearanceData::~AppearanceData()
-{
-}
-
-AppearanceData * AppearanceData::copy() const
-{
-    AppearanceData * copied = AppearanceData::alloc();
-    *copied = *this;
-    return copied;
-}
-
-bool AppearanceData::instanceOf(int classNo) const
-{
-    if(APPEARANCE_NO == classNo) return true;
-    return SightData::instanceOf(classNo);
-}
-
-//freelist related methods specific to this class
-AppearanceData *AppearanceData::defaults_AppearanceData = 0;
-AppearanceData *AppearanceData::begin_AppearanceData = 0;
-
-AppearanceData *AppearanceData::alloc()
-{
-    if(begin_AppearanceData) {
-        AppearanceData *res = begin_AppearanceData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_AppearanceData = (AppearanceData *)begin_AppearanceData->m_next;
-        return res;
-    }
-    return new AppearanceData(AppearanceData::getDefaultObjectInstance());
-}
-
-void AppearanceData::free()
-{
-    m_next = begin_AppearanceData;
-    begin_AppearanceData = this;
-}
-
-
-AppearanceData *AppearanceData::getDefaultObjectInstance()
-{
-    if (defaults_AppearanceData == 0) {
-        defaults_AppearanceData = new AppearanceData;
-        defaults_AppearanceData->attr_objtype = "op";
-        defaults_AppearanceData->attr_serialno = 0;
-        defaults_AppearanceData->attr_refno = 0;
-        defaults_AppearanceData->attr_seconds = 0.0;
-        defaults_AppearanceData->attr_future_seconds = 0.0;
-        defaults_AppearanceData->attr_stamp = 0.0;
-        defaults_AppearanceData->attr_parents = std::list<std::string>(1, "appearance");
-    }
-    return defaults_AppearanceData;
-}
-
-AppearanceData *AppearanceData::getDefaultObject()
-{
-    return AppearanceData::getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

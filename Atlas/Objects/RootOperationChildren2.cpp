@@ -133,6 +133,67 @@ SetData *SetData::getDefaultObject()
     return SetData::getDefaultObjectInstance();
 }
 
+AffectData::~AffectData()
+{
+}
+
+AffectData * AffectData::copy() const
+{
+    AffectData * copied = AffectData::alloc();
+    *copied = *this;
+    return copied;
+}
+
+bool AffectData::instanceOf(int classNo) const
+{
+    if(AFFECT_NO == classNo) return true;
+    return SetData::instanceOf(classNo);
+}
+
+//freelist related methods specific to this class
+AffectData *AffectData::defaults_AffectData = 0;
+AffectData *AffectData::begin_AffectData = 0;
+
+AffectData *AffectData::alloc()
+{
+    if(begin_AffectData) {
+        AffectData *res = begin_AffectData;
+        assert( res->m_refCount == 0 );
+        res->m_attrFlags = 0;
+        res->m_attributes.clear();
+        begin_AffectData = (AffectData *)begin_AffectData->m_next;
+        return res;
+    }
+    return new AffectData(AffectData::getDefaultObjectInstance());
+}
+
+void AffectData::free()
+{
+    m_next = begin_AffectData;
+    begin_AffectData = this;
+}
+
+
+AffectData *AffectData::getDefaultObjectInstance()
+{
+    if (defaults_AffectData == 0) {
+        defaults_AffectData = new AffectData;
+        defaults_AffectData->attr_objtype = "op";
+        defaults_AffectData->attr_serialno = 0;
+        defaults_AffectData->attr_refno = 0;
+        defaults_AffectData->attr_seconds = 0.0;
+        defaults_AffectData->attr_future_seconds = 0.0;
+        defaults_AffectData->attr_stamp = 0.0;
+        defaults_AffectData->attr_parents = std::list<std::string>(1, "affect");
+    }
+    return defaults_AffectData;
+}
+
+AffectData *AffectData::getDefaultObject()
+{
+    return AffectData::getDefaultObjectInstance();
+}
+
 MoveData::~MoveData()
 {
 }
@@ -314,67 +375,6 @@ GetData *GetData::getDefaultObjectInstance()
 GetData *GetData::getDefaultObject()
 {
     return GetData::getDefaultObjectInstance();
-}
-
-PerceiveData::~PerceiveData()
-{
-}
-
-PerceiveData * PerceiveData::copy() const
-{
-    PerceiveData * copied = PerceiveData::alloc();
-    *copied = *this;
-    return copied;
-}
-
-bool PerceiveData::instanceOf(int classNo) const
-{
-    if(PERCEIVE_NO == classNo) return true;
-    return GetData::instanceOf(classNo);
-}
-
-//freelist related methods specific to this class
-PerceiveData *PerceiveData::defaults_PerceiveData = 0;
-PerceiveData *PerceiveData::begin_PerceiveData = 0;
-
-PerceiveData *PerceiveData::alloc()
-{
-    if(begin_PerceiveData) {
-        PerceiveData *res = begin_PerceiveData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_PerceiveData = (PerceiveData *)begin_PerceiveData->m_next;
-        return res;
-    }
-    return new PerceiveData(PerceiveData::getDefaultObjectInstance());
-}
-
-void PerceiveData::free()
-{
-    m_next = begin_PerceiveData;
-    begin_PerceiveData = this;
-}
-
-
-PerceiveData *PerceiveData::getDefaultObjectInstance()
-{
-    if (defaults_PerceiveData == 0) {
-        defaults_PerceiveData = new PerceiveData;
-        defaults_PerceiveData->attr_objtype = "op";
-        defaults_PerceiveData->attr_serialno = 0;
-        defaults_PerceiveData->attr_refno = 0;
-        defaults_PerceiveData->attr_seconds = 0.0;
-        defaults_PerceiveData->attr_future_seconds = 0.0;
-        defaults_PerceiveData->attr_stamp = 0.0;
-        defaults_PerceiveData->attr_parents = std::list<std::string>(1, "perceive");
-    }
-    return defaults_PerceiveData;
-}
-
-PerceiveData *PerceiveData::getDefaultObject()
-{
-    return PerceiveData::getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation
