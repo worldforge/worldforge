@@ -24,6 +24,7 @@
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris
@@ -153,7 +154,7 @@ void TypeService::sendRequest(const std::string &id)
     // is called, the requests will be re-issued manually
     if (!m_inited) return;
         
-    Root what;
+    Anonymous what;
     what->setId(id);
     
     Get get;
@@ -167,7 +168,7 @@ void TypeService::sendRequest(const std::string &id)
 void TypeService::recvError(const Get& get)
 {
     const std::vector<Root>& args = get->getArgs();
-    Root request = args.front();
+    const Root & request = args.front();
 
     TypeInfoMap::iterator T = m_types.find(request->getId());
     if (T == m_types.end()) {

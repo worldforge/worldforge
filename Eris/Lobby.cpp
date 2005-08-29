@@ -24,6 +24,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::smart_static_cast;
 using Atlas::Objects::smart_dynamic_cast;
 using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Entity::Anonymous;
 
 namespace Eris {
 
@@ -146,7 +147,7 @@ void Lobby::look(const std::string &id)
     look->setSerialno(getNewSerialno());
     
     if (!id.empty()) {
-        Root what;
+        Anonymous what;
         what->setId(id);
         look->setArgs1(what);
     }
@@ -165,7 +166,7 @@ Room* Lobby::join(const std::string& roomId)
         return NULL;
     }
 	
-    Root what;
+    Anonymous what;
     what->setAttr("loc", roomId);
     what->setAttr("mode", "join");
 

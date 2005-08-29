@@ -76,7 +76,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
     if (mv.isValid()) {
         // sight of move, we handle as a specialization of set.
         assert(!args.empty());
-        Root arg = args.front();
+        const Root & arg = args.front();
         
         // break out LOC, which MOVE ops are allowed to update
         if (arg->hasAttr("loc"))

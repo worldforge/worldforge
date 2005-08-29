@@ -1,3 +1,12 @@
+2005-08-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Account.cpp, Eris/Avatar.cpp, Eris/Lobby.cpp, Eris/Person.cpp,
+	  Eris/Room.cpp, Eris/TypeService.cpp: Use Anonymous for op arguments
+	  so they don't have parents unnecessarily.
+
+	* Eris/EntityRouter.cpp, Eris/TypeService.cpp: Use const references
+	  on arguments for a slight efficiency improvement.
+
 2005-07-07  Hagen Möbius  <hagen.moebius@starschiffchen.de>
 
 	* Eris/Avatar.h, Eris/Avatar.cpp: Added useOn() which will send a USE

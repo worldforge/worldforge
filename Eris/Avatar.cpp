@@ -110,7 +110,7 @@ void Avatar::say(const std::string& msg)
 {
     Talk t;
 
-    Root what;
+    Anonymous what;
     what->setAttr("say", msg);
     t->setArgs1(what);
     t->setFrom(m_entityId);
@@ -136,9 +136,9 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
 {
     const double MIN_VELOCITY = 1e-3;
     
-    Root arg;
+    Anonymous arg;
     //arg->setAttr("location", m_entity->getLocation()->getId());
-	arg->setId(m_entityId);
+    arg->setId(m_entityId);
     arg->setAttr("velocity", vel.toAtlas());
 
     WFMath::CoordType sqr_mag = vel.sqrMag();
@@ -168,7 +168,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
 
 void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quaternion& orient)
 {
-    Root arg;
+    Anonymous arg;
    // arg->setAttr("location", m_entity->getLocation()->getId());
     arg->setAttr("velocity", vel.toAtlas());
     arg->setAttr("orientation", orient.toAtlas());

@@ -10,10 +10,12 @@
 #include <Eris/Account.h>
 
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
 
 typedef Atlas::Objects::Entity::Account AtlasAccount;
 using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::Root;
 
 namespace Eris
@@ -49,7 +51,7 @@ void Person::msg(const std::string &msg)
         return;
     }
 	
-    Root speech;
+    Anonymous speech;
     speech->setAttr("say",msg);
 	
     Talk t;

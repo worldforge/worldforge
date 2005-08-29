@@ -271,7 +271,7 @@ Result Account::takeCharacter(const std::string &id)
         }
     } 
         
-    Root what;
+    Anonymous what;
     what->setId(id);
     
     Look l;

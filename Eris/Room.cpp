@@ -13,13 +13,14 @@
 #include <sigc++/object_slot.h>
 
 #include <Atlas/Objects/Operation.h>
-#include <Atlas/Objects/RootEntity.h>
+#include <Atlas/Objects/Anonymous.h>
 
 #include <cassert>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Entity::Anonymous;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris
@@ -51,7 +52,7 @@ void Room::say(const std::string &tk)
         return;
     }
 	
-    Root speech;
+    Anonymous speech;
     speech->setAttr("say", tk);
     speech->setAttr("loc", m_roomId);
 	
@@ -74,7 +75,7 @@ void Room::emote(const std::string &em)
 	
     Imaginary im;
 	
-    Root emote;
+    Anonymous emote;
     emote->setId("emote");
     emote->setAttr("loc", m_roomId);
     emote->setAttr("description", em);
@@ -99,7 +100,7 @@ void Room::leave()
     part->setFrom(m_lobby->getAccount()->getId());
     part->setSerialno(getNewSerialno());
     
-    Root args;
+    Anonymous args;
     args->setAttr("loc", m_roomId);
     args->setAttr("mode", "part");
     part->setArgs1(args);
