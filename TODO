@@ -1,5 +1,7 @@
 New TODO by Al Riddoch
 
+Make sure objects deep copy really copies arguments of ops.
+
 hasAttr currently returns true if a hardcoded attribute is not really set.
 Needs fixing - very counterintuitive.
 
