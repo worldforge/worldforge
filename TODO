@@ -1,5 +1,8 @@
 New TODO by Al Riddoch
 
+hasAttr currently returns true if a hardcoded attribute is not really set.
+Needs fixing - very counterintuitive.
+
 Add setParents1()
 
 Don't use explicit Element constructor when assigning to another Element.

@@ -194,8 +194,8 @@ void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
         I != val.end();
         I++)
     {
-        if((*I).isFloat()) {
-            attr_pos.push_back((*I).asFloat());
+        if((*I).isNum()) {
+            attr_pos.push_back((*I).asNum());
         }
     }
 }
@@ -215,8 +215,8 @@ void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& val)
         I != val.end();
         I++)
     {
-        if((*I).isFloat()) {
-            attr_velocity.push_back((*I).asFloat());
+        if((*I).isNum()) {
+            attr_velocity.push_back((*I).asNum());
         }
     }
 }

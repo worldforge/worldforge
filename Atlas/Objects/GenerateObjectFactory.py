@@ -68,7 +68,7 @@ Root Factories::createObject(const std::string& name)
 {
     FactoryMap::const_iterator I = m_factories.find(name);
     if (I == m_factories.end()) {
-        throw NoSuchFactoryException(name);
+        return Root(0);
     } else {
         return (*I).second();
     }

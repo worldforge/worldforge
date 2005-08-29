@@ -404,6 +404,8 @@ class TypedList(AttributeInfo):
             self.cpp_element_type_begin = ""
             self.cpp_element_type_end = ""
         self.element_type_as_object = classize(element_type)
+        if self.element_type_as_object == "Float":
+            self.element_type_as_object = "Num"
 
     def inline_set(self, classname):
         return AttributeInfo.inline_set(self, classname) + \

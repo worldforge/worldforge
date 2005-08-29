@@ -1,4 +1,13 @@
-2005-06-14  Al Riddoch  <alriddoch@zepler.org>
+2005-08-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/RootEntity.h:
+	  Accept integers when floats are required.
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp: Return a null smart pointer when
+	  no class exists, rather than throwing.
+
+2005-08-27  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/Anonymous.h, Atlas/Objects/Dispatcher.cpp,
 	  Atlas/Objects/Dispatcher.h, Atlas/Objects/ObjectsFwd.h,
