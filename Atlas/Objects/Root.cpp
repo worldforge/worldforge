@@ -21,25 +21,14 @@ int RootData::getAttrClass(const std::string& name) const
     return BaseObjectData::getAttrClass(name);
 }
 
-const Element RootData::getAttr(const std::string& name) const
-    throw (NoSuchAttrException)
-{
-    if (name == "id") return getId();
-    if (name == "parents") return getParentsAsList();
-    if (name == "stamp") return getStamp();
-    if (name == "objtype") return getObjtype();
-    if (name == "name") return getName();
-    return BaseObjectData::getAttr(name);
-}
-
-int RootData::getAttr(const std::string& name, Element & attr) const
+int RootData::copyAttr(const std::string& name, Element & attr) const
 {
     if (name == "id") { attr = getId(); return 0; }
     if (name == "parents") { attr = getParentsAsList(); return 0; }
     if (name == "stamp") { attr = getStamp(); return 0; }
     if (name == "objtype") { attr = getObjtype(); return 0; }
     if (name == "name") { attr = getName(); return 0; }
-    return BaseObjectData::getAttr(name, attr);
+    return BaseObjectData::copyAttr(name, attr);
 }
 
 void RootData::setAttr(const std::string& name, const Element& attr)

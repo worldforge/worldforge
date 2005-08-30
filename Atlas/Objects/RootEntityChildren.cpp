@@ -85,21 +85,12 @@ int AccountData::getAttrClass(const std::string& name) const
     return AdminEntityData::getAttrClass(name);
 }
 
-const Element AccountData::getAttr(const std::string& name) const
-    throw (NoSuchAttrException)
-{
-    if (name == "username") return getUsername();
-    if (name == "password") return getPassword();
-    if (name == "characters") return getCharactersAsList();
-    return AdminEntityData::getAttr(name);
-}
-
-int AccountData::getAttr(const std::string& name, Element & attr) const
+int AccountData::copyAttr(const std::string& name, Element & attr) const
 {
     if (name == "username") { attr = getUsername(); return 0; }
     if (name == "password") { attr = getPassword(); return 0; }
     if (name == "characters") { attr = getCharactersAsList(); return 0; }
-    return AdminEntityData::getAttr(name, attr);
+    return AdminEntityData::copyAttr(name, attr);
 }
 
 void AccountData::setAttr(const std::string& name, const Element& attr)

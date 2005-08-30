@@ -23,20 +23,7 @@ int RootOperationData::getAttrClass(const std::string& name) const
     return RootData::getAttrClass(name);
 }
 
-const Element RootOperationData::getAttr(const std::string& name) const
-    throw (NoSuchAttrException)
-{
-    if (name == "serialno") return getSerialno();
-    if (name == "refno") return getRefno();
-    if (name == "from") return getFrom();
-    if (name == "to") return getTo();
-    if (name == "seconds") return getSeconds();
-    if (name == "future_seconds") return getFutureSeconds();
-    if (name == "args") return getArgsAsList();
-    return RootData::getAttr(name);
-}
-
-int RootOperationData::getAttr(const std::string& name, Element & attr) const
+int RootOperationData::copyAttr(const std::string& name, Element & attr) const
 {
     if (name == "serialno") { attr = getSerialno(); return 0; }
     if (name == "refno") { attr = getRefno(); return 0; }
@@ -45,7 +32,7 @@ int RootOperationData::getAttr(const std::string& name, Element & attr) const
     if (name == "seconds") { attr = getSeconds(); return 0; }
     if (name == "future_seconds") { attr = getFutureSeconds(); return 0; }
     if (name == "args") { attr = getArgsAsList(); return 0; }
-    return RootData::getAttr(name, attr);
+    return RootData::copyAttr(name, attr);
 }
 
 void RootOperationData::setAttr(const std::string& name, const Element& attr)

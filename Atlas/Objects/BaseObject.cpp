@@ -37,16 +37,18 @@ const Element BaseObjectData::getAttr(const std::string& name) const
     throw (NoSuchAttrException) 
 {
     Element attr;
-    getAttr(name, attr);
+    if (copyAttr(name, attr) != 0) {
+        throw NoSuchAttrException(name);
+    }
     return attr;
 }
 
-int BaseObjectData::getAttr(const std::string& name, Element & attr) const
+int BaseObjectData::copyAttr(const std::string& name, Element & attr) const
 {
     MapType::const_iterator I = m_attributes.find(name);
     if (I == m_attributes.end()) {
         return -1;
-    }
+    };
     attr = I->second;
     return 0;
 }

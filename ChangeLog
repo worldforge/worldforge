@@ -1,3 +1,18 @@
+2005-08-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* TODO: Add a bunch more TODO items.
+
+	* Atlas/Objects/BaseObject.h, Atlas/Objects/BaseObject.cpp,
+	  Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/Entity.h, Atlas/Objects/Root.cpp,
+	  Atlas/Objects/Root.h, Atlas/Objects/RootEntity.cpp,
+	  Atlas/Objects/RootEntity.h, Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, Atlas/Objects/RootOperation.h:
+	  Make getAttr(string) non-virtual, and remove overriding
+	  implementations, as all the work is now done by
+	  getAttr(string, value). Rename getAttr(string, value) to
+	  copyAttr(...) to avoid masking.
+
 2005-08-29  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/RootEntity.h:

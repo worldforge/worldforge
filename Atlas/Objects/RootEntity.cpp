@@ -21,25 +21,14 @@ int RootEntityData::getAttrClass(const std::string& name) const
     return RootData::getAttrClass(name);
 }
 
-const Element RootEntityData::getAttr(const std::string& name) const
-    throw (NoSuchAttrException)
-{
-    if (name == "loc") return getLoc();
-    if (name == "pos") return getPosAsList();
-    if (name == "velocity") return getVelocityAsList();
-    if (name == "contains") return getContainsAsList();
-    if (name == "stamp_contains") return getStampContains();
-    return RootData::getAttr(name);
-}
-
-int RootEntityData::getAttr(const std::string& name, Element & attr) const
+int RootEntityData::copyAttr(const std::string& name, Element & attr) const
 {
     if (name == "loc") { attr = getLoc(); return 0; }
     if (name == "pos") { attr = getPosAsList(); return 0; }
     if (name == "velocity") { attr = getVelocityAsList(); return 0; }
     if (name == "contains") { attr = getContainsAsList(); return 0; }
     if (name == "stamp_contains") { attr = getStampContains(); return 0; }
-    return RootData::getAttr(name, attr);
+    return RootData::copyAttr(name, attr);
 }
 
 void RootEntityData::setAttr(const std::string& name, const Element& attr)

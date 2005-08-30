@@ -56,13 +56,9 @@ public:
     /// Is this instance of some class?
     virtual bool instanceOf(int classNo) const;
 
-    /// Retrieve the attribute "name". Throws NoSuchAttrException if it does
-    /// not exist.
-    virtual const Atlas::Message::Element getAttr(const std::string& name)
-            const throw (NoSuchAttrException);
     /// Retrieve the attribute "name". Return non-zero if it does
     /// not exist.
-    virtual int getAttr(const std::string& name, Atlas::Message::Element & attr) const;
+    virtual int copyAttr(const std::string& name, Atlas::Message::Element & attr) const;
     /// Set the attribute "name" to the value given by"attr"
     virtual void setAttr(const std::string& name,
                          const Atlas::Message::Element& attr);
