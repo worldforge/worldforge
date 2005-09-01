@@ -140,6 +140,8 @@ public:
 protected:
     /// Find the class which contains the attribute "name".
     virtual int getAttrClass(const std::string& name)const;
+    /// Find the flag for the attribute "name".
+    virtual int getAttrFlag(const std::string& name)const;
     /// Serial number.
     long attr_serialno;
     /// Reference to serial number.
@@ -191,6 +193,8 @@ public:
 private:
     static RootOperationData *defaults_RootOperationData;
     static RootOperationData *begin_RootOperationData;
+
+    static std::map<std::string, int> attr_flags_RootOperationData;
 };
 
 //

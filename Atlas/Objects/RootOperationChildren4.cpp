@@ -63,6 +63,7 @@ LogoutData *LogoutData::getDefaultObjectInstance()
         defaults_LogoutData->attr_future_seconds = 0.0;
         defaults_LogoutData->attr_stamp = 0.0;
         defaults_LogoutData->attr_parents = std::list<std::string>(1, "logout");
+        LoginData::getDefaultObjectInstance();
     }
     return defaults_LogoutData;
 }
@@ -124,6 +125,7 @@ ImaginaryData *ImaginaryData::getDefaultObjectInstance()
         defaults_ImaginaryData->attr_future_seconds = 0.0;
         defaults_ImaginaryData->attr_stamp = 0.0;
         defaults_ImaginaryData->attr_parents = std::list<std::string>(1, "imaginary");
+        ActionData::getDefaultObjectInstance();
     }
     return defaults_ImaginaryData;
 }
@@ -185,6 +187,7 @@ UseData *UseData::getDefaultObjectInstance()
         defaults_UseData->attr_future_seconds = 0.0;
         defaults_UseData->attr_stamp = 0.0;
         defaults_UseData->attr_parents = std::list<std::string>(1, "use");
+        ActionData::getDefaultObjectInstance();
     }
     return defaults_UseData;
 }
@@ -246,6 +249,7 @@ InfoData *InfoData::getDefaultObjectInstance()
         defaults_InfoData->attr_future_seconds = 0.0;
         defaults_InfoData->attr_stamp = 0.0;
         defaults_InfoData->attr_parents = std::list<std::string>(1, "info");
+        RootOperationData::getDefaultObjectInstance();
     }
     return defaults_InfoData;
 }
@@ -307,6 +311,7 @@ PerceptionData *PerceptionData::getDefaultObjectInstance()
         defaults_PerceptionData->attr_future_seconds = 0.0;
         defaults_PerceptionData->attr_stamp = 0.0;
         defaults_PerceptionData->attr_parents = std::list<std::string>(1, "perception");
+        InfoData::getDefaultObjectInstance();
     }
     return defaults_PerceptionData;
 }
@@ -368,6 +373,7 @@ SightData *SightData::getDefaultObjectInstance()
         defaults_SightData->attr_future_seconds = 0.0;
         defaults_SightData->attr_stamp = 0.0;
         defaults_SightData->attr_parents = std::list<std::string>(1, "sight");
+        PerceptionData::getDefaultObjectInstance();
     }
     return defaults_SightData;
 }

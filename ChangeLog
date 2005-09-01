@@ -1,5 +1,27 @@
 2005-08-31  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/Entity.h, Atlas/Objects/Root.cpp, Atlas/Objects/Root.h,
+	  Atlas/Objects/RootEntity.cpp, Atlas/Objects/RootEntity.h,
+	  Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, Atlas/Objects/RootOperation.h,
+	  Atlas/Objects/Anonymous.cpp, Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperationChildren1.cpp,
+	  Atlas/Objects/RootOperationChildren2.cpp,
+	  Atlas/Objects/RootOperationChildren3.cpp,
+	  Atlas/Objects/RootOperationChildren4.cpp,
+	  Atlas/Objects/RootOperationChildren5.cpp:
+	  Add protected getAttrFlag() virtual method to all objects
+	  classes with static attributes, which returns the flag for a
+	  given attribute name string. Re-implement getAttrClass using
+	  getAttrFlag so it is more efficient. Use it to implement hasAttr
+	  more efficiently, and correctly.
+
+	* tests/Objects/attributes.cpp: New check for hasAttr.
+
+2005-08-31  Al Riddoch  <alriddoch@zepler.org>
+
 	* TODO: Add a bunch more TODO items.
 
 	* Atlas/Objects/BaseObject.h, Atlas/Objects/BaseObject.cpp,

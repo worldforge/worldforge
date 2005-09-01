@@ -13,14 +13,19 @@ namespace Atlas { namespace Objects { namespace Operation {
 
 int RootOperationData::getAttrClass(const std::string& name) const
 {
-    if (name == "serialno") return ROOT_OPERATION_NO;
-    if (name == "refno") return ROOT_OPERATION_NO;
-    if (name == "from") return ROOT_OPERATION_NO;
-    if (name == "to") return ROOT_OPERATION_NO;
-    if (name == "seconds") return ROOT_OPERATION_NO;
-    if (name == "future_seconds") return ROOT_OPERATION_NO;
-    if (name == "args") return ROOT_OPERATION_NO;
+    if (attr_flags_RootOperationData.find(name) != attr_flags_RootOperationData.end()) {
+        return ROOT_OPERATION_NO;
+    }
     return RootData::getAttrClass(name);
+}
+
+int RootOperationData::getAttrFlag(const std::string& name) const
+{
+    std::map<std::string, int>::const_iterator I = attr_flags_RootOperationData.find(name);
+    if (I != attr_flags_RootOperationData.end()) {
+        return I->second;
+    }
+    return RootData::getAttrFlag(name);
 }
 
 int RootOperationData::copyAttr(const std::string& name, Element & attr) const
@@ -230,6 +235,7 @@ void RootOperationData::free()
     begin_RootOperationData = this;
 }
 
+std::map<std::string, int> RootOperationData::attr_flags_RootOperationData;
 
 RootOperationData *RootOperationData::getDefaultObjectInstance()
 {
@@ -242,6 +248,14 @@ RootOperationData *RootOperationData::getDefaultObjectInstance()
         defaults_RootOperationData->attr_future_seconds = 0.0;
         defaults_RootOperationData->attr_stamp = 0.0;
         defaults_RootOperationData->attr_parents = std::list<std::string>(1, "root_operation");
+        attr_flags_RootOperationData["serialno"] = SERIALNO_FLAG;
+        attr_flags_RootOperationData["refno"] = REFNO_FLAG;
+        attr_flags_RootOperationData["from"] = FROM_FLAG;
+        attr_flags_RootOperationData["to"] = TO_FLAG;
+        attr_flags_RootOperationData["seconds"] = SECONDS_FLAG;
+        attr_flags_RootOperationData["future_seconds"] = FUTURE_SECONDS_FLAG;
+        attr_flags_RootOperationData["args"] = ARGS_FLAG;
+        RootData::getDefaultObjectInstance();
     }
     return defaults_RootOperationData;
 }

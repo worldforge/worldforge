@@ -156,6 +156,8 @@ public:
 protected:
     /// Find the class which contains the attribute "name".
     virtual int getAttrClass(const std::string& name)const;
+    /// Find the flag for the attribute "name".
+    virtual int getAttrFlag(const std::string& name)const;
     /// Username for account usually
     std::string attr_username;
     /// Password for account usually
@@ -191,6 +193,8 @@ public:
 private:
     static AccountData *defaults_AccountData;
     static AccountData *begin_AccountData;
+
+    static std::map<std::string, int> attr_flags_AccountData;
 };
 
 //

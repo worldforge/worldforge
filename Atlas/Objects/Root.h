@@ -116,6 +116,8 @@ public:
 protected:
     /// Find the class which contains the attribute "name".
     virtual int getAttrClass(const std::string& name)const;
+    /// Find the flag for the attribute "name".
+    virtual int getAttrFlag(const std::string& name)const;
     /// Id of object
     std::string attr_id;
     /// List of objects this inherits attributes from.
@@ -159,6 +161,8 @@ public:
 private:
     static RootData *defaults_RootData;
     static RootData *begin_RootData;
+
+    static std::map<std::string, int> attr_flags_RootData;
 };
 
 //

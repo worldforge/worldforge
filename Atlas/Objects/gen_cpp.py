@@ -188,17 +188,40 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         for attr in defaults:
             self.write(attr.default_assign(classname))
 
+    def static_attr_flag_inserts(self, obj, static_attrs):
+        classname = classize(obj.id, data=1)
+        for attr in static_attrs:
+            self.write("        attr_flags_%s[\"%s\"] = %s;\n" % (classname, attr.name, attr.flag_name)) #"for xamacs syntax highlighting
+
     def getattrclass_im(self, obj, statics):
         classname = classize(obj.id, data=1)
         serialno_name = string.upper(obj.id) + "_NO"
         self.write("int %s::getAttrClass(const std::string& name) const\n"
                         % classname)
         self.write("{\n")
-        for attr in statics:
-            self.write('    if (name == "%s")' % attr.name)
-            self.write(' return %s;\n' % serialno_name)
+        # for attr in statics:
+        #     self.write('    if (name == "%s")' % attr.name)
+        #     self.write(' return %s;\n' % serialno_name)
+        self.write("""    if (attr_flags_%s.find(name) != attr_flags_%s.end()) {
+        return %s;
+    }
+""" % (classname, classname, serialno_name))
         parent = self.get_cpp_parent(obj)
         self.write("    return %s::getAttrClass(name);\n" % parent)
+        self.write("}\n\n")
+
+    def getattrflag_im(self, obj):
+        classname = classize(obj.id, data=1)
+        self.write("int %s::getAttrFlag(const std::string& name) const\n"
+                        % classname)
+        self.write("{\n")
+        self.write("""    std::map<std::string, int>::const_iterator I = attr_flags_%s.find(name);
+    if (I != attr_flags_%s.end()) {
+        return I->second;
+    }
+""" % (classname, classname))
+        parent = self.get_cpp_parent(obj)
+        self.write("    return %s::getAttrFlag(name);\n" % parent)
         self.write("}\n\n")
 
     def getattr_im(self, obj, statics):
@@ -364,7 +387,7 @@ void %(classname)s::free()
 
 """ % vars()) #"for xemacs syntax highlighting
 
-    def default_object_im(self, obj, default_attrs):
+    def default_object_im(self, obj, default_attrs, static_attrs):
         classname = self.classname
         self.write("""
 %(classname)s *%(classname)s::getDefaultObjectInstance()
@@ -373,6 +396,10 @@ void %(classname)s::free()
         defaults_%(classname)s = new %(classname)s;
 """ % vars()) #"for xemacs syntax highlighting
         self.static_default_assigns(obj, default_attrs)
+        if len(static_attrs) > 0:
+            self.static_attr_flag_inserts(obj, static_attrs)
+        if len(obj.parents) > 0:
+            self.write("        %s::getDefaultObjectInstance();\n" % (classize(obj.parents[0], data=1)))
         self.write("""    }
     return defaults_%(classname)s;
 }
@@ -570,6 +597,10 @@ void %(classname)s::free()
             self.write("    virtual int getAttrClass(const std::string& name)"\
                            + "const;\n")
 
+            self.doc(4, 'Find the flag for the attribute "name".')
+            self.write("    virtual int getAttrFlag(const std::string& name)"\
+                           + "const;\n")
+
             for attr in static_attrs:
                 if self.objects.has_key(attr.name):
                     attr_object = self.objects[attr.name]
@@ -591,6 +622,10 @@ void %(classname)s::free()
             self.write(";\n")
 
         self.freelist_if()
+        if len(static_attrs) > 0:
+            self.write("""
+    static std::map<std::string, int> attr_flags_%s;
+""" % (self.classname)) #"for xemacs syntax highlighting
         self.write("};\n\n")
 
         #inst# self.instance_if(obj)
@@ -632,6 +667,7 @@ void %(classname)s::free()
         if len(static_attrs) > 0:
             #self.constructors_im(obj)
             self.getattrclass_im(obj, static_attrs)
+            self.getattrflag_im(obj)
             self.getattr_im(obj, static_attrs)
             self.setattr_im(obj, static_attrs)
             self.remattr_im(obj, static_attrs)
@@ -644,7 +680,10 @@ void %(classname)s::free()
         self.copy_im(obj)
         self.instanceof_im(obj)
         self.freelist_im()
-        self.default_object_im(obj, default_attrs)
+        if len(static_attrs) > 0:
+            self.write("std::map<std::string, int> %s::attr_flags_%s;\n"
+                       % (self.classname, self.classname))
+        self.default_object_im(obj, default_attrs, static_attrs)
 
         #inst# self.instance_im()
         

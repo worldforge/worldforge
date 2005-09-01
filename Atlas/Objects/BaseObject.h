@@ -276,6 +276,9 @@ protected:
     /// Find the class which contains the attribute "name".
     virtual int getAttrClass(const std::string& name) const;
 
+    /// Find the flag for the attribute "name".
+    virtual int getAttrFlag(const std::string& name) const;
+
     /// Iterate over the attributes of this instance.
     virtual void iterate(int& current_class, std::string& attr) const;
 

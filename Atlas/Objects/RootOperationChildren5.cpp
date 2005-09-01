@@ -63,6 +63,7 @@ AppearanceData *AppearanceData::getDefaultObjectInstance()
         defaults_AppearanceData->attr_future_seconds = 0.0;
         defaults_AppearanceData->attr_stamp = 0.0;
         defaults_AppearanceData->attr_parents = std::list<std::string>(1, "appearance");
+        SightData::getDefaultObjectInstance();
     }
     return defaults_AppearanceData;
 }
@@ -124,6 +125,7 @@ DisappearanceData *DisappearanceData::getDefaultObjectInstance()
         defaults_DisappearanceData->attr_future_seconds = 0.0;
         defaults_DisappearanceData->attr_stamp = 0.0;
         defaults_DisappearanceData->attr_parents = std::list<std::string>(1, "disappearance");
+        SightData::getDefaultObjectInstance();
     }
     return defaults_DisappearanceData;
 }
@@ -185,6 +187,7 @@ SoundData *SoundData::getDefaultObjectInstance()
         defaults_SoundData->attr_future_seconds = 0.0;
         defaults_SoundData->attr_stamp = 0.0;
         defaults_SoundData->attr_parents = std::list<std::string>(1, "sound");
+        PerceptionData::getDefaultObjectInstance();
     }
     return defaults_SoundData;
 }
@@ -246,6 +249,7 @@ SmellData *SmellData::getDefaultObjectInstance()
         defaults_SmellData->attr_future_seconds = 0.0;
         defaults_SmellData->attr_stamp = 0.0;
         defaults_SmellData->attr_parents = std::list<std::string>(1, "smell");
+        PerceptionData::getDefaultObjectInstance();
     }
     return defaults_SmellData;
 }
@@ -307,6 +311,7 @@ FeelData *FeelData::getDefaultObjectInstance()
         defaults_FeelData->attr_future_seconds = 0.0;
         defaults_FeelData->attr_stamp = 0.0;
         defaults_FeelData->attr_parents = std::list<std::string>(1, "feel");
+        PerceptionData::getDefaultObjectInstance();
     }
     return defaults_FeelData;
 }
@@ -368,6 +373,7 @@ ErrorData *ErrorData::getDefaultObjectInstance()
         defaults_ErrorData->attr_future_seconds = 0.0;
         defaults_ErrorData->attr_stamp = 0.0;
         defaults_ErrorData->attr_parents = std::list<std::string>(1, "error");
+        InfoData::getDefaultObjectInstance();
     }
     return defaults_ErrorData;
 }

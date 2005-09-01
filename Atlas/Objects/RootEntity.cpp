@@ -13,12 +13,19 @@ namespace Atlas { namespace Objects { namespace Entity {
 
 int RootEntityData::getAttrClass(const std::string& name) const
 {
-    if (name == "loc") return ROOT_ENTITY_NO;
-    if (name == "pos") return ROOT_ENTITY_NO;
-    if (name == "velocity") return ROOT_ENTITY_NO;
-    if (name == "contains") return ROOT_ENTITY_NO;
-    if (name == "stamp_contains") return ROOT_ENTITY_NO;
+    if (attr_flags_RootEntityData.find(name) != attr_flags_RootEntityData.end()) {
+        return ROOT_ENTITY_NO;
+    }
     return RootData::getAttrClass(name);
+}
+
+int RootEntityData::getAttrFlag(const std::string& name) const
+{
+    std::map<std::string, int>::const_iterator I = attr_flags_RootEntityData.find(name);
+    if (I != attr_flags_RootEntityData.end()) {
+        return I->second;
+    }
+    return RootData::getAttrFlag(name);
 }
 
 int RootEntityData::copyAttr(const std::string& name, Element & attr) const
@@ -210,6 +217,7 @@ void RootEntityData::free()
     begin_RootEntityData = this;
 }
 
+std::map<std::string, int> RootEntityData::attr_flags_RootEntityData;
 
 RootEntityData *RootEntityData::getDefaultObjectInstance()
 {
@@ -227,6 +235,12 @@ RootEntityData *RootEntityData::getDefaultObjectInstance()
         defaults_RootEntityData->attr_stamp_contains = 0.0;
         defaults_RootEntityData->attr_stamp = 0.0;
         defaults_RootEntityData->attr_parents = std::list<std::string>(1, "root_entity");
+        attr_flags_RootEntityData["loc"] = LOC_FLAG;
+        attr_flags_RootEntityData["pos"] = POS_FLAG;
+        attr_flags_RootEntityData["velocity"] = VELOCITY_FLAG;
+        attr_flags_RootEntityData["contains"] = CONTAINS_FLAG;
+        attr_flags_RootEntityData["stamp_contains"] = STAMP_CONTAINS_FLAG;
+        RootData::getDefaultObjectInstance();
     }
     return defaults_RootEntityData;
 }

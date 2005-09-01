@@ -63,6 +63,7 @@ DeleteData *DeleteData::getDefaultObjectInstance()
         defaults_DeleteData->attr_future_seconds = 0.0;
         defaults_DeleteData->attr_stamp = 0.0;
         defaults_DeleteData->attr_parents = std::list<std::string>(1, "delete");
+        ActionData::getDefaultObjectInstance();
     }
     return defaults_DeleteData;
 }
@@ -124,6 +125,7 @@ SetData *SetData::getDefaultObjectInstance()
         defaults_SetData->attr_future_seconds = 0.0;
         defaults_SetData->attr_stamp = 0.0;
         defaults_SetData->attr_parents = std::list<std::string>(1, "set");
+        ActionData::getDefaultObjectInstance();
     }
     return defaults_SetData;
 }
@@ -185,6 +187,7 @@ AffectData *AffectData::getDefaultObjectInstance()
         defaults_AffectData->attr_future_seconds = 0.0;
         defaults_AffectData->attr_stamp = 0.0;
         defaults_AffectData->attr_parents = std::list<std::string>(1, "affect");
+        SetData::getDefaultObjectInstance();
     }
     return defaults_AffectData;
 }
@@ -246,6 +249,7 @@ MoveData *MoveData::getDefaultObjectInstance()
         defaults_MoveData->attr_future_seconds = 0.0;
         defaults_MoveData->attr_stamp = 0.0;
         defaults_MoveData->attr_parents = std::list<std::string>(1, "move");
+        SetData::getDefaultObjectInstance();
     }
     return defaults_MoveData;
 }
@@ -307,6 +311,7 @@ WieldData *WieldData::getDefaultObjectInstance()
         defaults_WieldData->attr_future_seconds = 0.0;
         defaults_WieldData->attr_stamp = 0.0;
         defaults_WieldData->attr_parents = std::list<std::string>(1, "wield");
+        SetData::getDefaultObjectInstance();
     }
     return defaults_WieldData;
 }
@@ -368,6 +373,7 @@ GetData *GetData::getDefaultObjectInstance()
         defaults_GetData->attr_future_seconds = 0.0;
         defaults_GetData->attr_stamp = 0.0;
         defaults_GetData->attr_parents = std::list<std::string>(1, "get");
+        ActionData::getDefaultObjectInstance();
     }
     return defaults_GetData;
 }

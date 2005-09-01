@@ -68,6 +68,7 @@ AdminEntityData *AdminEntityData::getDefaultObjectInstance()
         defaults_AdminEntityData->attr_stamp_contains = 0.0;
         defaults_AdminEntityData->attr_stamp = 0.0;
         defaults_AdminEntityData->attr_parents = std::list<std::string>(1, "admin_entity");
+        RootEntityData::getDefaultObjectInstance();
     }
     return defaults_AdminEntityData;
 }
@@ -79,10 +80,19 @@ AdminEntityData *AdminEntityData::getDefaultObject()
 
 int AccountData::getAttrClass(const std::string& name) const
 {
-    if (name == "username") return ACCOUNT_NO;
-    if (name == "password") return ACCOUNT_NO;
-    if (name == "characters") return ACCOUNT_NO;
+    if (attr_flags_AccountData.find(name) != attr_flags_AccountData.end()) {
+        return ACCOUNT_NO;
+    }
     return AdminEntityData::getAttrClass(name);
+}
+
+int AccountData::getAttrFlag(const std::string& name) const
+{
+    std::map<std::string, int>::const_iterator I = attr_flags_AccountData.find(name);
+    if (I != attr_flags_AccountData.end()) {
+        return I->second;
+    }
+    return AdminEntityData::getAttrFlag(name);
 }
 
 int AccountData::copyAttr(const std::string& name, Element & attr) const
@@ -234,6 +244,7 @@ void AccountData::free()
     begin_AccountData = this;
 }
 
+std::map<std::string, int> AccountData::attr_flags_AccountData;
 
 AccountData *AccountData::getDefaultObjectInstance()
 {
@@ -251,6 +262,10 @@ AccountData *AccountData::getDefaultObjectInstance()
         defaults_AccountData->attr_stamp_contains = 0.0;
         defaults_AccountData->attr_stamp = 0.0;
         defaults_AccountData->attr_parents = std::list<std::string>(1, "account");
+        attr_flags_AccountData["username"] = USERNAME_FLAG;
+        attr_flags_AccountData["password"] = PASSWORD_FLAG;
+        attr_flags_AccountData["characters"] = CHARACTERS_FLAG;
+        AdminEntityData::getDefaultObjectInstance();
     }
     return defaults_AccountData;
 }
@@ -317,6 +332,7 @@ PlayerData *PlayerData::getDefaultObjectInstance()
         defaults_PlayerData->attr_stamp_contains = 0.0;
         defaults_PlayerData->attr_stamp = 0.0;
         defaults_PlayerData->attr_parents = std::list<std::string>(1, "player");
+        AccountData::getDefaultObjectInstance();
     }
     return defaults_PlayerData;
 }
@@ -383,6 +399,7 @@ AdminData *AdminData::getDefaultObjectInstance()
         defaults_AdminData->attr_stamp_contains = 0.0;
         defaults_AdminData->attr_stamp = 0.0;
         defaults_AdminData->attr_parents = std::list<std::string>(1, "admin");
+        AccountData::getDefaultObjectInstance();
     }
     return defaults_AdminData;
 }
@@ -449,6 +466,7 @@ GameData *GameData::getDefaultObjectInstance()
         defaults_GameData->attr_stamp_contains = 0.0;
         defaults_GameData->attr_stamp = 0.0;
         defaults_GameData->attr_parents = std::list<std::string>(1, "game");
+        AdminEntityData::getDefaultObjectInstance();
     }
     return defaults_GameData;
 }
@@ -515,6 +533,7 @@ GameEntityData *GameEntityData::getDefaultObjectInstance()
         defaults_GameEntityData->attr_stamp_contains = 0.0;
         defaults_GameEntityData->attr_stamp = 0.0;
         defaults_GameEntityData->attr_parents = std::list<std::string>(1, "game_entity");
+        RootEntityData::getDefaultObjectInstance();
     }
     return defaults_GameEntityData;
 }

@@ -63,6 +63,7 @@ PerceiveData *PerceiveData::getDefaultObjectInstance()
         defaults_PerceiveData->attr_future_seconds = 0.0;
         defaults_PerceiveData->attr_stamp = 0.0;
         defaults_PerceiveData->attr_parents = std::list<std::string>(1, "perceive");
+        GetData::getDefaultObjectInstance();
     }
     return defaults_PerceiveData;
 }
@@ -124,6 +125,7 @@ LookData *LookData::getDefaultObjectInstance()
         defaults_LookData->attr_future_seconds = 0.0;
         defaults_LookData->attr_stamp = 0.0;
         defaults_LookData->attr_parents = std::list<std::string>(1, "look");
+        PerceiveData::getDefaultObjectInstance();
     }
     return defaults_LookData;
 }
@@ -185,6 +187,7 @@ ListenData *ListenData::getDefaultObjectInstance()
         defaults_ListenData->attr_future_seconds = 0.0;
         defaults_ListenData->attr_stamp = 0.0;
         defaults_ListenData->attr_parents = std::list<std::string>(1, "listen");
+        PerceiveData::getDefaultObjectInstance();
     }
     return defaults_ListenData;
 }
@@ -246,6 +249,7 @@ SniffData *SniffData::getDefaultObjectInstance()
         defaults_SniffData->attr_future_seconds = 0.0;
         defaults_SniffData->attr_stamp = 0.0;
         defaults_SniffData->attr_parents = std::list<std::string>(1, "sniff");
+        PerceiveData::getDefaultObjectInstance();
     }
     return defaults_SniffData;
 }
@@ -307,6 +311,7 @@ TouchData *TouchData::getDefaultObjectInstance()
         defaults_TouchData->attr_future_seconds = 0.0;
         defaults_TouchData->attr_stamp = 0.0;
         defaults_TouchData->attr_parents = std::list<std::string>(1, "touch");
+        PerceiveData::getDefaultObjectInstance();
     }
     return defaults_TouchData;
 }
@@ -368,6 +373,7 @@ LoginData *LoginData::getDefaultObjectInstance()
         defaults_LoginData->attr_future_seconds = 0.0;
         defaults_LoginData->attr_stamp = 0.0;
         defaults_LoginData->attr_parents = std::list<std::string>(1, "login");
+        GetData::getDefaultObjectInstance();
     }
     return defaults_LoginData;
 }

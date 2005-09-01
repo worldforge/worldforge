@@ -63,6 +63,7 @@ ActionData *ActionData::getDefaultObjectInstance()
         defaults_ActionData->attr_future_seconds = 0.0;
         defaults_ActionData->attr_stamp = 0.0;
         defaults_ActionData->attr_parents = std::list<std::string>(1, "action");
+        RootOperationData::getDefaultObjectInstance();
     }
     return defaults_ActionData;
 }
@@ -124,6 +125,7 @@ CreateData *CreateData::getDefaultObjectInstance()
         defaults_CreateData->attr_future_seconds = 0.0;
         defaults_CreateData->attr_stamp = 0.0;
         defaults_CreateData->attr_parents = std::list<std::string>(1, "create");
+        ActionData::getDefaultObjectInstance();
     }
     return defaults_CreateData;
 }
@@ -185,6 +187,7 @@ CombineData *CombineData::getDefaultObjectInstance()
         defaults_CombineData->attr_future_seconds = 0.0;
         defaults_CombineData->attr_stamp = 0.0;
         defaults_CombineData->attr_parents = std::list<std::string>(1, "combine");
+        CreateData::getDefaultObjectInstance();
     }
     return defaults_CombineData;
 }
@@ -246,6 +249,7 @@ DivideData *DivideData::getDefaultObjectInstance()
         defaults_DivideData->attr_future_seconds = 0.0;
         defaults_DivideData->attr_stamp = 0.0;
         defaults_DivideData->attr_parents = std::list<std::string>(1, "divide");
+        CreateData::getDefaultObjectInstance();
     }
     return defaults_DivideData;
 }
@@ -307,6 +311,7 @@ CommunicateData *CommunicateData::getDefaultObjectInstance()
         defaults_CommunicateData->attr_future_seconds = 0.0;
         defaults_CommunicateData->attr_stamp = 0.0;
         defaults_CommunicateData->attr_parents = std::list<std::string>(1, "communicate");
+        CreateData::getDefaultObjectInstance();
     }
     return defaults_CommunicateData;
 }
@@ -368,6 +373,7 @@ TalkData *TalkData::getDefaultObjectInstance()
         defaults_TalkData->attr_future_seconds = 0.0;
         defaults_TalkData->attr_stamp = 0.0;
         defaults_TalkData->attr_parents = std::list<std::string>(1, "talk");
+        CommunicateData::getDefaultObjectInstance();
     }
     return defaults_TalkData;
 }

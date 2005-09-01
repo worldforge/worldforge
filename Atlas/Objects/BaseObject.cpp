@@ -25,7 +25,12 @@ bool BaseObjectData::instanceOf(int classNo) const
 
 bool BaseObjectData::hasAttr(const std::string& name) const
 {
-    return (getAttrClass(name) >= 0) || (m_attributes.find(name) != m_attributes.end());
+    int flag = getAttrFlag(name);
+    if (flag >= 0) {
+        return m_attrFlags & flag;
+    } else {
+        return (m_attributes.find(name) != m_attributes.end());
+    }
 }
 
 bool BaseObjectData::hasAttrFlag(int flag) const
@@ -88,6 +93,11 @@ void BaseObjectData::sendContents(Bridge & b) const
 }
 
 int BaseObjectData::getAttrClass(const std::string& name) const
+{
+    return -1;
+}
+
+int BaseObjectData::getAttrFlag(const std::string& name) const
 {
     return -1;
 }

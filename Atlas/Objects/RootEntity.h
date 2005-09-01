@@ -119,6 +119,8 @@ public:
 protected:
     /// Find the class which contains the attribute "name".
     virtual int getAttrClass(const std::string& name)const;
+    /// Find the flag for the attribute "name".
+    virtual int getAttrFlag(const std::string& name)const;
     /// Reference object for coordinates (location).
     std::string attr_loc;
     /// Position coordinates, usually world is 3D
@@ -162,6 +164,8 @@ public:
 private:
     static RootEntityData *defaults_RootEntityData;
     static RootEntityData *begin_RootEntityData;
+
+    static std::map<std::string, int> attr_flags_RootEntityData;
 };
 
 //

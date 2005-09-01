@@ -66,6 +66,7 @@ AnonymousData *AnonymousData::getDefaultObjectInstance()
         defaults_AnonymousData->attr_velocity.push_back(0.0);
         defaults_AnonymousData->attr_stamp_contains = 0.0;
         defaults_AnonymousData->attr_stamp = 0.0;
+        RootEntityData::getDefaultObjectInstance();
     }
     return defaults_AnonymousData;
 }
