@@ -145,6 +145,9 @@ void Dispatcher::dispatchObject(const Root& obj)
     case Entity::ANONYMOUS_NO:
         objectAnonymousArrived(smart_dynamic_cast<Entity::Anonymous>(obj));
         break;
+    case Operation::GENERIC_NO:
+        objectGenericArrived(smart_dynamic_cast<Operation::Generic>(obj));
+        break;
     default:
         methodMap_t::const_iterator I = m_methods.find(obj->getClassNo());
         if (I != m_methods.end()) {

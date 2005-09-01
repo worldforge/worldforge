@@ -129,6 +129,8 @@ protected:
     virtual void objectErrorArrived(const Operation::Error&) { }
     /// Override this to get called when a Anonymous object arrives.
     virtual void objectAnonymousArrived(const Entity::Anonymous&) { }
+    /// Override this to get called when a Generic object arrives.
+    virtual void objectGenericArrived(const Operation::Generic&) { }
 };
 
 } } // namespace Atlas::Objects

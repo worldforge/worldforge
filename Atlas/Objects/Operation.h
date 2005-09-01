@@ -8,6 +8,7 @@
 #define ATLAS_OBJECTS_OPERATION_OPERATION_H
 
 #include <Atlas/Objects/RootOperation.h>
+#include <Atlas/Objects/Generic.h>
 
 
 namespace Atlas { namespace Objects { namespace Operation { 

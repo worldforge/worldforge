@@ -1,7 +1,5 @@
 New TODO by Al Riddoch
 
-getAttr(string) no longer needs to be virtual
-
 Create an equivalent for Anonymous which inherits from RootOperation.
 Can be used in objectFactory when there is no factory, but objtype is op.
 This may also solve the messy problem with custom op types.

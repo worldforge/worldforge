@@ -748,6 +748,8 @@ public:
         self.write('#include <Atlas/Objects/%s.h>\n' % self.classname_pointer)
         if obj.id == "root_entity":
             self.write('#include <Atlas/Objects/Anonymous.h>\n')
+        if obj.id == "root_operation":
+            self.write('#include <Atlas/Objects/Generic.h>\n')
         self.write("\n\n")
         self.ns_open(self.base_list)
         self.for_progeny(self.progeny, self.interface)
@@ -810,6 +812,7 @@ if __name__=="__main__":
         objects[obj.id] = obj
     find_parents_children_objects(objects)
     objects["anonymous"] = Object(id="anonymous", parents=[objects["root_entity"]])
+    objects["generic"] = Object(id="generic", parents=[objects["root_operation"]])
 
     print "Loaded atlas.xml"
 
@@ -824,7 +827,8 @@ if __name__=="__main__":
                 ("root", ".", []),
                 ("root_entity", "Entity", ["entity.def"]),
                 ("root_operation", "Operation", ["operation.def"]),
-                ("anonymous", "Entity", [])):
+                ("anonymous", "Entity", []),
+                ("generic", "Operation", [])):
         object_enum = object_enum + 1
         gen_code = GenerateCC(objects, outdir) #, object_enum)
         all_objects = all_objects + gen_code(objects[name], class_only_files)

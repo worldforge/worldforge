@@ -215,6 +215,11 @@ namespace Entity {
     typedef SmartPtr<AnonymousData> Anonymous;
 }
 
+namespace Operation {
+    class GenericData;
+    typedef SmartPtr<GenericData> Generic;
+}
+
 } } // namespace Atlas::Objects
 
 #endif // ATLAS_OBJECTS_OBJECTS_FWD_H

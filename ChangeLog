@@ -1,4 +1,13 @@
-2005-08-31  Al Riddoch  <alriddoch@zepler.org>
+2005-09-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/Generic.cpp, Atlas/Objects/Generic.h,
+	  Atlas/Objects/gen_cpp.py, Atlas/Objects/AttributeInfo.py,
+	  Atlas/Objects/Dispatcher.cpp, Atlas/Objects/ObjectsFwd.h,
+	  Atlas/Objects/Operation.h, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/objectFactory.cpp: Add new generic operation
+	  class, to be used for custom operations generated on the fly.
+
+2005-09-01  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
 	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h,
