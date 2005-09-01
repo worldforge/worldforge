@@ -379,9 +379,9 @@ void Entity::setLocationFromAtlas(const std::string& locId)
         m_limbo = true;
         setVisible(false); // fire disappearance, VisChanged if necessary
         
-        if (m_location)
-            removeFromLocation();
+        if (m_location) removeFromLocation();
         m_location = NULL;
+        assert(m_visible == false);
         return;
     }
     
@@ -391,12 +391,11 @@ void Entity::setLocationFromAtlas(const std::string& locId)
 void Entity::setLocation(Entity* newLocation)
 {
     if (newLocation == m_location) return;
-    
-    if (m_location) removeFromLocation();
-    
+        
 // do the actual member updating
     bool wasVisible = isVisible();
-    
+    if (m_location) removeFromLocation();
+        
     Entity* oldLocation = m_location;
     m_location = newLocation;
     
@@ -456,6 +455,7 @@ void Entity::setContentsFromAtlas(const StringList& contents)
             }
             
             if (child->m_limbo) {
+                assert(child->m_visible == false);
                 child->m_limbo = false;
             } else if (child->isVisible()) {
                 // server has gone mad, it has a location, and it's visible
@@ -515,9 +515,13 @@ void Entity::removeChild(Entity* e)
 
 void Entity::setVisible(bool vis)
 {
+    // force visibility to false if in limbo; necessary for the character entity,
+    // which otherwise gets double appearances on activation
+    if (m_limbo) vis = false;
+    
     bool wasVisible = isVisible(); // store before we update m_visible
     m_visible = vis;
-    
+
     updateCalculatedVisibility(wasVisible);
 }
 

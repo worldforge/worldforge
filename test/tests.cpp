@@ -12,6 +12,7 @@
 #include "setupHelpers.h"
 #include "testOutOfGame.h"
 #include "netTests.h"
+#include "viewTest.h"
 
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
@@ -64,75 +65,6 @@ void erisLog(Eris::LogLevel level, const std::string& msg)
        return;
     }
 }
-
-class WaitForAppearance : public SigC::Object
-{
-public:
-    WaitForAppearance(Eris::View* v, const std::string& eid) : 
-        m_view(v)
-    {
-        waitFor(eid);
-        v->Appearance.connect(SigC::slot(*this, &WaitForAppearance::onAppear));
-    }
-    
-    void waitFor(const std::string& eid)
-    {
-        Eris::Entity* e = m_view->getEntity(eid);
-        if (e && e->isVisible()) {
-            return;
-        }
-        
-        m_waiting.insert(eid);
-    }
-    
-    void run()
-    {
-        while (!m_waiting.empty()) Eris::PollDefault::poll();
-    }
-private:
-    void onAppear(Eris::Entity* e)
-    {
-        m_waiting.erase(e->getId());
-    }
-    
-    Eris::View* m_view;
-    std::set<std::string> m_waiting;
-};
-
-class WaitForDisappearance : public SigC::Object
-{
-public:
-    WaitForDisappearance(Eris::View* v, const std::string& eid) : 
-        m_view(v)
-    {
-        waitFor(eid);
-        v->Disappearance.connect(SigC::slot(*this, &WaitForDisappearance::onDisappear));
-    }
-    
-    void waitFor(const std::string& eid)
-    {
-        Eris::Entity* e = m_view->getEntity(eid);
-        if (!e || !e->isVisible()) {
-            cerr << "wait on invisible entity " << eid << endl;
-            return;
-        }
-        
-        m_waiting.insert(eid);
-    }
-    
-    void run()
-    {
-        while (!m_waiting.empty()) Eris::PollDefault::poll();
-    }
-private:
-    void onDisappear(Eris::Entity* e)
-    {
-        m_waiting.erase(e->getId());
-    }
-    
-    Eris::View* m_view;
-    std::set<std::string> m_waiting;
-};
     
 class AttributeTracker : public SigC::Object
 {
@@ -177,46 +109,6 @@ void testCharActivate(Controller& ctl)
     
     assert(v->getTopLevel()->hasChild("_hut_01"));
     assert(!v->getTopLevel()->hasChild("_field_01")); // not yet
-}
-
-void testAppearance(Controller& ctl)
-{
-    AutoConnection con = stdConnect();
-    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
-    
-    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
-    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
-    
-    Eris::View* v = av->getView();
-    
-    ctl.setEntityVisibleToAvatar("_potato_2", av.get());
-    ctl.setEntityVisibleToAvatar("_pig_01", av.get());
-    ctl.setEntityVisibleToAvatar("_field_01", av.get());
-        
-    {
-        WaitForAppearance wf(v, "_field_01");
-        wf.waitFor("_pig_01");
-        wf.waitFor("_potato_2");
-        wf.run();
-    }
-    
-    ctl.setEntityInvisibleToAvatar("_field_01", av.get());
-    WaitForDisappearance df(v, "_field_01");
-    df.waitFor("_pig_01");
-    df.waitFor("_potato_2");
-    
-    df.run();
-    
-    ctl.setEntityVisibleToAvatar("_potato_1", av.get());
-    //
-    ctl.setEntityVisibleToAvatar("_pig_02", av.get());
-    ctl.setEntityVisibleToAvatar("_field_01", av.get());
-    
-    {
-        WaitForAppearance af2(v, "_field_01");
-        af2.waitFor("_potato_1");
-        af2.run();
-    }
 }
 
 void testSet(Controller& ctl)
@@ -582,6 +474,8 @@ int runTests(Controller& ctl)
         testSightAction(ctl);
         testSightDelete(ctl);
         testMovement(ctl); 
+        
+        testCharacterInitialVis(ctl);
     }
     catch (TestFailure& tfexp)
     {

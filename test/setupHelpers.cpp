@@ -50,7 +50,8 @@ AutoAccount stdLogin(const std::string& uname, const std::string& pwd, Eris::Con
 AvatarGetter::AvatarGetter(Eris::Account* acc) : 
     m_acc(acc),
     m_expectFail(false),
-    m_failed(false)
+    m_failed(false),
+    m_earlyReturn(false)
 {
     m_acc->AvatarSuccess.connect(SigC::slot(*this, &AvatarGetter::success));
     m_acc->AvatarFailure.connect(SigC::slot(*this, &AvatarGetter::failure));
@@ -70,6 +71,8 @@ AutoAvatar AvatarGetter::take(const std::string& charId)
     
     assert(m_av->getEntity() == NULL); // shouldn't have the entity yet
     assert(m_av->getId() == charId); // but should have it's ID
+
+    if (m_earlyReturn) return m_av;
 
     SignalCounter1<Eris::Entity*> gotChar;
     m_av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Eris::Entity*>::fired));

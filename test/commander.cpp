@@ -38,7 +38,7 @@ Commander::~Commander()
 
 void Commander::recv()
 {
-    if (m_channel.fail()) return;
+    if (m_channel.eof()) return;
         
     if (m_acceptor)
         negotiate();

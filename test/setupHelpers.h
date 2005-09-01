@@ -26,6 +26,11 @@ public:
         m_expectFail = true;
     }
     
+    void returnOnSuccess()
+    {
+        m_earlyReturn = true;
+    }
+    
     AutoAvatar take(const std::string& charId);    
 private:
     void success(Eris::Avatar* av);    
@@ -35,6 +40,7 @@ private:
     Eris::Account* m_acc;
     AutoAvatar m_av;
     bool m_expectFail, m_failed;
+    bool m_earlyReturn;
 };
 
 #endif // of TEST_SETUP_HELPERS_H

@@ -454,8 +454,17 @@ void Account::avatarResponse(const RootOperation& op)
         Avatar* av = new Avatar(this, ent->getId());
         AvatarSuccess.emit(av);
         m_status = Account::LOGGED_IN;
+        
+        assert(m_activeCharacters.count(av->getId()) == 0);
+        m_activeCharacters[av->getId()] = av;
     } else 
         warning() << "received malformed login response";
+}
+
+void Account::deactivateCharacter(Avatar* av)
+{
+    assert(m_activeCharacters.count(av->getId()) == 1);
+    m_activeCharacters.erase(av->getId());
 }
 
 void Account::sightCharacter(const RootOperation& op)

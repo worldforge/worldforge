@@ -106,7 +106,7 @@ void BaseConnection::recv()
 	assert(_status != DISCONNECTED);
 	assert(_stream);
 	
-	if (_stream->fail()) {
+	if (_stream->eof()) {
 		handleFailure("Connection stream failed");
 		hardDisconnect(false);
 	} else {
@@ -116,13 +116,13 @@ void BaseConnection::recv()
 		    break;
 
 		case NEGOTIATE:
-                    pollNegotiation();
-                    break;
+            pollNegotiation();
+            break;
 
 		case CONNECTED:
 		case DISCONNECTING:
-                    m_codec->poll();
-                    break;
+            m_codec->poll();
+            break;
 		default:
 			throw InvalidOperation("Unexpected connection status in poll()");
 		}	

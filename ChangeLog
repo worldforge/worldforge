@@ -1,3 +1,24 @@
+2005-09-01  James Turner  <james@worldforge.org>
+
+    * Eris/Account.h, Eris/Account.cpp, Eris/Avatar.cpp: make Account
+      explicitly track Avatars, and make the mapping from character ID to
+      avatar instance available. This allows for an 'isActive' query of
+      a character.
+      
+    * Eris/Connection.cpp, Eris/BaseConnection.cpp: prefer eof() to fail() on 
+      skstreams, in the hope of dealing with socket errors better.
+      
+    * test/commander.cpp, test/clientConnection.cpp
+
+    * Eris/Entity.cpp: formatting changes
+    
+    * Eris/Entity.cpp: ignore setVisible(true) when the entity is in limbo;
+      this fixes the spurious apperanced and disappearance of the character
+      entity when activating.
+    
+    * test/viewTest.cpp, test/viewTest.h: factor some of the in-game tests
+      into a seperate file.
+
 2005-08-29  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Account.cpp, Eris/Avatar.cpp, Eris/Lobby.cpp, Eris/Person.cpp,

@@ -46,7 +46,7 @@ ClientConnection::~ClientConnection()
 
 void ClientConnection::poll()
 {
-    if (m_stream.fail()) {
+    if (m_stream.eof()) {
         fail();
         return;
     }

@@ -44,6 +44,8 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
 
 Avatar::~Avatar()
 {
+    m_account->deactivateCharacter(this);
+    
     delete m_router;
     delete m_view;
 }
@@ -223,12 +225,7 @@ void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position)
 	
 	arguments->setId(entity->getId());
 	arguments->setObjtype("obj");
-	if(position.isValid() == true)
-	{
-		arguments->modifyPos().resize(0);
-		arguments->modifyPos().reserve(3);
-		arguments->modifyPos().assign(position.elements(), position.elements() + 3);
-	}
+	if (position.isValid()) arguments->setAttr("pos", position.toAtlas());
 	
 	Use use;
 	

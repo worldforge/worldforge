@@ -126,6 +126,12 @@ void Connection::send(const Atlas::Objects::Root &obj)
         return;
     }
 
+    if (_stream->eof()) {
+        handleFailure("Connection::send: stream failed");
+		hardDisconnect(false);
+        return;
+    }
+
 #ifdef ATLAS_LOG	
     std::stringstream debugStream;
     
@@ -136,7 +142,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
 
     std::cout << "sending:" << debugStream.str() << std::endl;
 #endif
-        
+    
     _encode->streamObjectsMessage(obj);
     (*_stream) << std::flush;
 }

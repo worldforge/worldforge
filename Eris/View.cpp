@@ -179,8 +179,9 @@ void View::sight(const GameEntity& gent)
     
     ent->setVisible(visible);
     
-    if (gent->isDefaultLoc()) // new top level entity
+    if (gent->isDefaultLoc()) { // new top level entity
         setTopLevelEntity(ent);
+    }
 }
 
 Entity* View::initialSight(const GameEntity& gent)

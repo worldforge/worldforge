@@ -18,6 +18,8 @@ class AccountRouter;
 /** Type used to return available characters */
 typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> CharacterMap;
 
+typedef std::map<std::string, Avatar*> ActiveCharacterMap;
+
 /// Encapsulates all the state of an Atlas Account, and methods that operation on that state
 
 /** An Account object represents the encapsulation of a server account, and it's binding to a character in the
@@ -114,7 +116,8 @@ public:
 	///  returns true if the game has defined a character creation dialog
 	bool canCreateCharacter() {return false;}
 
-    
+    const ActiveCharacterMap& getActiveCharacters() const
+    { return m_activeCharacters; }
 
     /// returns the account ID if logged in
     const std::string& getId() const
@@ -166,6 +169,7 @@ public:
 
 protected:
     friend class AccountRouter;
+    friend class Avatar; // so avatar can call deactivateCharacter
     
     void sightCharacter(const Atlas::Objects::Operation::RootOperation& op);
     
@@ -202,6 +206,7 @@ protected:
         CREATING_CHAR       ///< send a character CREATE op, awaiting INFO response
     } Status;
         
+    void deactivateCharacter(Avatar* av);
 private:
     Connection* m_con;	///< underlying connection instance
     Status m_status;    ///< what the Player is currently doing
@@ -216,6 +221,7 @@ private:
     StringSet m_characterIds;
     bool m_doingCharacterRefresh; ///< set if we're refreshing character data
     
+    ActiveCharacterMap m_activeCharacters;
     std::auto_ptr<Timeout> m_timeout;
 };
 	
