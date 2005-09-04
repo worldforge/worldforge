@@ -194,7 +194,7 @@ private:
     static AccountData *defaults_AccountData;
     static AccountData *begin_AccountData;
 
-    static std::map<std::string, int> attr_flags_AccountData;
+    static std::map<std::string, int> * attr_flags_AccountData;
 };
 
 //

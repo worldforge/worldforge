@@ -101,7 +101,7 @@ void testXML()
 //    alloc_func alloc_entity = &Entity::RootEntityDataInstance::alloc;
 //    BaseObjectData *bod = alloc_entity();
     //Root human2(bod);
-    Root human2 = Atlas::Objects::factory<Atlas::Objects::Entity::RootEntityData>();
+    Root human2 = Atlas::Objects::factory<Atlas::Objects::Entity::RootEntityData>("root_enitty", Atlas::Objects::Entity::RootEntity()->getClassNo());
     std::cout<<"human.id="<<human->getId()<<std::endl;
     std::cout<<"human2.id="<<human2->getId()<<std::endl;
 #if 0
@@ -334,7 +334,7 @@ void testValues()
 #endif
     assert(op_arg->hasAttr("name"));
     assert(!op_arg->hasAttr("foo"));
-    assert(op_arg->hasAttr("pos"));
+    assert(!op_arg->hasAttr("pos"));
     assert(!op_arg->isDefaultName());
     assert(op_arg->isDefaultPos());
     }

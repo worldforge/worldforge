@@ -80,7 +80,7 @@ AdminEntityData *AdminEntityData::getDefaultObject()
 
 int AccountData::getAttrClass(const std::string& name) const
 {
-    if (attr_flags_AccountData.find(name) != attr_flags_AccountData.end()) {
+    if (attr_flags_AccountData->find(name) != attr_flags_AccountData->end()) {
         return ACCOUNT_NO;
     }
     return AdminEntityData::getAttrClass(name);
@@ -88,8 +88,8 @@ int AccountData::getAttrClass(const std::string& name) const
 
 int AccountData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = attr_flags_AccountData.find(name);
-    if (I != attr_flags_AccountData.end()) {
+    std::map<std::string, int>::const_iterator I = attr_flags_AccountData->find(name);
+    if (I != attr_flags_AccountData->end()) {
         return I->second;
     }
     return AdminEntityData::getAttrFlag(name);
@@ -244,7 +244,7 @@ void AccountData::free()
     begin_AccountData = this;
 }
 
-std::map<std::string, int> AccountData::attr_flags_AccountData;
+std::map<std::string, int> * AccountData::attr_flags_AccountData = 0;
 
 AccountData *AccountData::getDefaultObjectInstance()
 {
@@ -262,9 +262,10 @@ AccountData *AccountData::getDefaultObjectInstance()
         defaults_AccountData->attr_stamp_contains = 0.0;
         defaults_AccountData->attr_stamp = 0.0;
         defaults_AccountData->attr_parents = std::list<std::string>(1, "account");
-        attr_flags_AccountData["username"] = USERNAME_FLAG;
-        attr_flags_AccountData["password"] = PASSWORD_FLAG;
-        attr_flags_AccountData["characters"] = CHARACTERS_FLAG;
+        attr_flags_AccountData = new std::map<std::string, int>;
+        (*attr_flags_AccountData)["username"] = USERNAME_FLAG;
+        (*attr_flags_AccountData)["password"] = PASSWORD_FLAG;
+        (*attr_flags_AccountData)["characters"] = CHARACTERS_FLAG;
         AdminEntityData::getDefaultObjectInstance();
     }
     return defaults_AccountData;

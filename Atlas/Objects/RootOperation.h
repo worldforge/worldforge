@@ -194,7 +194,7 @@ private:
     static RootOperationData *defaults_RootOperationData;
     static RootOperationData *begin_RootOperationData;
 
-    static std::map<std::string, int> attr_flags_RootOperationData;
+    static std::map<std::string, int> * attr_flags_RootOperationData;
 };
 
 //

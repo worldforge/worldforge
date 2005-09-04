@@ -46,7 +46,7 @@ AddFactories::AddFactories()
             id = obj.id
             idc = classize(id)
             self.write("""
-    objectFactory->addFactory("%(id)s", &factory<%(namespace)s%(idc)sData>);
+    objectFactory->addFactory("%(id)s", &factory<%(namespace)s%(idc)sData>, %(namespace)s%(idc)s()->getClassNo());
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""}
 
@@ -70,7 +70,7 @@ Root Factories::createObject(const std::string& name)
     if (I == m_factories.end()) {
         return Root(0);
     } else {
-        return (*I).second();
+        return (*I).second.first(name, (*I).second.second);
     }
 }
     
@@ -121,10 +121,16 @@ std::list<std::string> Factories::getKeys()
     return keys;
 }
     
+void Factories::addFactory(const std::string& name, FactoryMethod method, int classno)
+{
+    m_factories[name] = std::make_pair(method, classno);
+}
+
 int Factories::addFactory(const std::string& name, FactoryMethod method)
 {
-    m_factories[name] = method;
-    return ++enumMax;
+    int classno = ++enumMax;
+    m_factories[name] = std::make_pair(method, classno);
+    return classno;
 }
 
 Factories * Factories::instance()

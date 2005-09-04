@@ -162,7 +162,7 @@ private:
     static RootData *defaults_RootData;
     static RootData *begin_RootData;
 
-    static std::map<std::string, int> attr_flags_RootData;
+    static std::map<std::string, int> * attr_flags_RootData;
 };
 
 //

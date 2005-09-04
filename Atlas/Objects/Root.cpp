@@ -13,7 +13,7 @@ namespace Atlas { namespace Objects {
 
 int RootData::getAttrClass(const std::string& name) const
 {
-    if (attr_flags_RootData.find(name) != attr_flags_RootData.end()) {
+    if (attr_flags_RootData->find(name) != attr_flags_RootData->end()) {
         return ROOT_NO;
     }
     return BaseObjectData::getAttrClass(name);
@@ -21,8 +21,8 @@ int RootData::getAttrClass(const std::string& name) const
 
 int RootData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = attr_flags_RootData.find(name);
-    if (I != attr_flags_RootData.end()) {
+    std::map<std::string, int>::const_iterator I = attr_flags_RootData->find(name);
+    if (I != attr_flags_RootData->end()) {
         return I->second;
     }
     return BaseObjectData::getAttrFlag(name);
@@ -207,7 +207,7 @@ void RootData::free()
     begin_RootData = this;
 }
 
-std::map<std::string, int> RootData::attr_flags_RootData;
+std::map<std::string, int> * RootData::attr_flags_RootData = 0;
 
 RootData *RootData::getDefaultObjectInstance()
 {
@@ -216,11 +216,12 @@ RootData *RootData::getDefaultObjectInstance()
         defaults_RootData->attr_stamp = 0.0;
         defaults_RootData->attr_objtype = "obj";
         defaults_RootData->attr_parents = std::list<std::string>(1, "root");
-        attr_flags_RootData["id"] = ID_FLAG;
-        attr_flags_RootData["parents"] = PARENTS_FLAG;
-        attr_flags_RootData["stamp"] = STAMP_FLAG;
-        attr_flags_RootData["objtype"] = OBJTYPE_FLAG;
-        attr_flags_RootData["name"] = NAME_FLAG;
+        attr_flags_RootData = new std::map<std::string, int>;
+        (*attr_flags_RootData)["id"] = ID_FLAG;
+        (*attr_flags_RootData)["parents"] = PARENTS_FLAG;
+        (*attr_flags_RootData)["stamp"] = STAMP_FLAG;
+        (*attr_flags_RootData)["objtype"] = OBJTYPE_FLAG;
+        (*attr_flags_RootData)["name"] = NAME_FLAG;
     }
     return defaults_RootData;
 }

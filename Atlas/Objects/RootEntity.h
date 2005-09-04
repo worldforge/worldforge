@@ -165,7 +165,7 @@ private:
     static RootEntityData *defaults_RootEntityData;
     static RootEntityData *begin_RootEntityData;
 
-    static std::map<std::string, int> attr_flags_RootEntityData;
+    static std::map<std::string, int> * attr_flags_RootEntityData;
 };
 
 //

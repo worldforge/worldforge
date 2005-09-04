@@ -190,8 +190,9 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
 
     def static_attr_flag_inserts(self, obj, static_attrs):
         classname = classize(obj.id, data=1)
+        self.write("        attr_flags_%s = new std::map<std::string, int>;\n" % (classname))
         for attr in static_attrs:
-            self.write("        attr_flags_%s[\"%s\"] = %s;\n" % (classname, attr.name, attr.flag_name)) #"for xamacs syntax highlighting
+            self.write("        (*attr_flags_%s)[\"%s\"] = %s;\n" % (classname, attr.name, attr.flag_name)) #"for xamacs syntax highlighting
 
     def getattrclass_im(self, obj, statics):
         classname = classize(obj.id, data=1)
@@ -202,7 +203,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         # for attr in statics:
         #     self.write('    if (name == "%s")' % attr.name)
         #     self.write(' return %s;\n' % serialno_name)
-        self.write("""    if (attr_flags_%s.find(name) != attr_flags_%s.end()) {
+        self.write("""    if (attr_flags_%s->find(name) != attr_flags_%s->end()) {
         return %s;
     }
 """ % (classname, classname, serialno_name))
@@ -215,8 +216,8 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         self.write("int %s::getAttrFlag(const std::string& name) const\n"
                         % classname)
         self.write("{\n")
-        self.write("""    std::map<std::string, int>::const_iterator I = attr_flags_%s.find(name);
-    if (I != attr_flags_%s.end()) {
+        self.write("""    std::map<std::string, int>::const_iterator I = attr_flags_%s->find(name);
+    if (I != attr_flags_%s->end()) {
         return I->second;
     }
 """ % (classname, classname))
@@ -624,7 +625,7 @@ void %(classname)s::free()
         self.freelist_if()
         if len(static_attrs) > 0:
             self.write("""
-    static std::map<std::string, int> attr_flags_%s;
+    static std::map<std::string, int> * attr_flags_%s;
 """ % (self.classname)) #"for xemacs syntax highlighting
         self.write("};\n\n")
 
@@ -681,7 +682,7 @@ void %(classname)s::free()
         self.instanceof_im(obj)
         self.freelist_im()
         if len(static_attrs) > 0:
-            self.write("std::map<std::string, int> %s::attr_flags_%s;\n"
+            self.write("std::map<std::string, int> * %s::attr_flags_%s = 0;\n"
                        % (self.classname, self.classname))
         self.default_object_im(obj, default_attrs, static_attrs)
 

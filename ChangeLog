@@ -1,3 +1,26 @@
+2005-09-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/Entity.h, Atlas/Objects/Root.cpp, Atlas/Objects/Root.h,
+	  Atlas/Objects/RootEntity.cpp, Atlas/Objects/RootEntity.h,
+	  Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, 
+	  Make attr_flags_* into pointers, to avoid construction order
+	  problems with static variables.
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp, Atlas/Objects/objectFactory.h
+	  Add class name and number as parameters to factory method, to
+	  make it easier to support soft operation and entity classes.
+	  Hard classes are now added using a protected version of addClass
+	  which passes in the class number.
+
+	* Atlas/Objects/loadDefaults.cpp: Add information about "generic"
+	  so that there is no conflict with the spec file.
+
+	* tests/Objects/objects2.cpp: Update factory test for modified args.
+	  An entity no longer has pos attribute, unless it has been set.
+
 2005-09-01  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/Generic.cpp, Atlas/Objects/Generic.h,

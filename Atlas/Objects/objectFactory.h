@@ -29,18 +29,20 @@ class NoSuchFactoryException : public Atlas::Exception
 };
 
 template <class T>
-static SmartPtr<RootData> factory()
+static SmartPtr<RootData> factory(const std::string &, int)
 {
     SmartPtr<T> obj;
     return obj;
 }
 
-typedef Root (*FactoryMethod)();
-typedef std::map<const std::string, FactoryMethod> FactoryMap;
+typedef Root (*FactoryMethod)(const std::string &, int);
+typedef std::map<const std::string, std::pair<FactoryMethod, int> > FactoryMap;
 
 class Factories 
 {
 public:
+    friend class AddFactories;
+
     Factories();
     explicit Factories(const Factories &);
 
@@ -54,6 +56,8 @@ public:
 private:
     FactoryMap m_factories;
     static Factories * m_instance;
+
+    void addFactory(const std::string& name, FactoryMethod method, int classno);
 };
     
 extern std::map<const std::string, Root> objectDefinitions;

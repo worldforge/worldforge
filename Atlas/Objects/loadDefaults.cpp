@@ -1,7 +1,7 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Aloril,
-// Copyright 2004 Alistair Riddoch
+// Copyright 2004-2005 Alistair Riddoch
 
 #include <Atlas/Objects/loadDefaults.h>
 
@@ -72,6 +72,8 @@ LoadDefaultsDecoder::LoadDefaultsDecoder(const std::string& filename)
   
     MapType anonymous_obj;
     m_objects["anonymous"] = anonymous_obj;
+    MapType generic_obj;
+    m_objects["generic"] = generic_obj;
     fillDefaults();
 }
 
