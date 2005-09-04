@@ -172,17 +172,17 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
         (*C)->addAncestor(tp);
 }
 
-static Atlas::Objects::Root gameEntityFactory()
+static Atlas::Objects::Root gameEntityFactory(const std::string &, int)
 {
     return Atlas::Objects::Entity::GameEntity();
 }
 
-static Atlas::Objects::Root adminEntityFactory()
+static Atlas::Objects::Root adminEntityFactory(const std::string &, int)
 {
     return Atlas::Objects::Entity::AdminEntity();
 }
 
-static Atlas::Objects::Root actionFactory()
+static Atlas::Objects::Root actionFactory(const std::string &, int)
 {
     return Atlas::Objects::Operation::Action();
 }
