@@ -27,7 +27,7 @@ using std::cout;
 
 typedef std::list<std::string> StringList;
 
-static Atlas::Objects::Root actionFactory()
+static Atlas::Objects::Root actionFactory(const std::string &, int)
 {
     return Atlas::Objects::Operation::Action();
 }
@@ -436,7 +436,7 @@ void StubServer::talkInRoom(const Talk& tk, const std::string& room)
 
 #pragma mark -
 
-static Atlas::Objects::Root gameEntityFactory()
+static Atlas::Objects::Root gameEntityFactory(const std::string &, int)
 {
     return Atlas::Objects::Entity::GameEntity();
 }

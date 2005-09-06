@@ -1,3 +1,8 @@
+2005-09-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/stubServer.cpp: Update factory method parameters to
+	  match that expected by the Atlas-C++ object factory.
+
 2005-09-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/TypeInfo.cpp: Update factory method parameters to
