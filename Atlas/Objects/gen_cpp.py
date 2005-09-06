@@ -420,6 +420,15 @@ void %(classname)s::free()
 
 """ % vars()) #"for xemacs syntax highlighting
 
+    def settype_im(self, obj):
+        classname = self.classname
+        self.write("""void %(classname)s::setType(const std::string & name, int no)
+{
+    setParents(std::list<std::string>(1, name));
+    m_class_no = no;
+}
+
+""" % vars()) #"for xemacs syntax highlighting
     def copy_im(self, obj):
         self.write("""%s * %s::copy() const
 {
@@ -542,6 +551,9 @@ void %(classname)s::free()
         self.write("    virtual ~" + self.classname + "();\n")
         self.write("\n")
         self.write("public:\n")
+        if obj.id in ['anonymous', 'generic']:
+            self.doc(4, 'Set the type of this object.')
+            self.write("    void setType(const std::string &, int);\n\n")
         self.doc(4, 'Copy this object.')
         self.write("    virtual %s * copy() const;\n" % (self.classname))
         self.write("\n")
@@ -678,6 +690,8 @@ void %(classname)s::free()
             self.addtoobject_im(obj, static_attrs)
             self.iterate_im(obj, static_attrs)
         self.destructor_im(obj)
+        if obj.id in ['anonymous', 'generic']:
+            self.settype_im(obj)
         self.copy_im(obj)
         self.instanceof_im(obj)
         self.freelist_im()

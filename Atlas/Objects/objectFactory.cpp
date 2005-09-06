@@ -6,7 +6,10 @@
 
 #include <Atlas/Objects/objectFactory.h>
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Operation.h>
+
+#include <Atlas/Objects/Generic.h>
 
 namespace Atlas { namespace Objects { 
 
@@ -18,6 +21,20 @@ using Atlas::Message::MapType;
 
 NoSuchFactoryException::~NoSuchFactoryException() throw ()
 {
+}
+
+SmartPtr<RootData> generic_factory(const std::string & name, int no)
+{
+    Operation::Generic obj;
+    obj->setType(name, no);
+    return obj;
+}
+
+SmartPtr<RootData> anonymous_factory(const std::string & name, int no)
+{
+    Entity::Anonymous obj;
+    obj->setType(name, no);
+    return obj;
 }
 
 std::map<const std::string, Root> objectDefinitions;

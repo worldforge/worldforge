@@ -48,6 +48,9 @@ protected:
     virtual ~GenericData();
 
 public:
+    /// Set the type of this object.
+    void setType(const std::string &, int);
+
     /// Copy this object.
     virtual GenericData * copy() const;
 

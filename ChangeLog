@@ -1,3 +1,19 @@
+2005-09-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/Anonymous.cpp, Atlas/Objects/Anonymous.h,
+	  Atlas/Objects/Generic.cpp, Atlas/Objects/Generic.h:
+	  Add setType() method to Anonymous entities and Generic
+	  operations which allows the parents and class number to
+	  be set simultaneously.
+
+	* Atlas/Objects/GenerateObjectFactory.py,
+	  Atlas/Objects/objectFactory.cpp,
+	  Atlas/Objects/objectFactory.h: Create factory methods for
+	  Anonymous entities and Generic operations which set the
+	  type and class no using above method, allowing the
+	  Factories to be extended with soft types.
+
 2005-09-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,

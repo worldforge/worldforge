@@ -40,6 +40,9 @@ protected:
     virtual ~AnonymousData();
 
 public:
+    /// Set the type of this object.
+    void setType(const std::string &, int);
+
     /// Copy this object.
     virtual AnonymousData * copy() const;
 

@@ -17,7 +17,9 @@ class GenerateObjectFactory:
         self.write(copyright_template % ("Aloril", "Al Riddoch"))
         self.write('\n#include <Atlas/Objects/objectFactory.h>\n')
         self.write('#include <Atlas/Objects/Entity.h>\n')
+        self.write('#include <Atlas/Objects/Anonymous.h>\n')
         self.write('#include <Atlas/Objects/Operation.h>\n\n')
+        self.write('#include <Atlas/Objects/Generic.h>\n\n')
         self.ns_open(self.base_list)
         self.write('\nint enumMax = ')
         self.write(str(max_class_no))
@@ -29,6 +31,20 @@ using Atlas::Message::MapType;
 
 NoSuchFactoryException::~NoSuchFactoryException() throw ()
 {
+}
+
+SmartPtr<RootData> generic_factory(const std::string & name, int no)
+{
+    Operation::Generic obj;
+    obj->setType(name, no);
+    return obj;
+}
+
+SmartPtr<RootData> anonymous_factory(const std::string & name, int no)
+{
+    Entity::Anonymous obj;
+    obj->setType(name, no);
+    return obj;
 }
 
 std::map<const std::string, Root> objectDefinitions;

@@ -15,6 +15,12 @@ GenericData::~GenericData()
 {
 }
 
+void GenericData::setType(const std::string & name, int no)
+{
+    setParents(std::list<std::string>(1, name));
+    m_class_no = no;
+}
+
 GenericData * GenericData::copy() const
 {
     GenericData * copied = GenericData::alloc();

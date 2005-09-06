@@ -35,6 +35,9 @@ static SmartPtr<RootData> factory(const std::string &, int)
     return obj;
 }
 
+SmartPtr<RootData> generic_factory(const std::string & name, int no);
+SmartPtr<RootData> anonymous_factory(const std::string & name, int no);
+
 typedef Root (*FactoryMethod)(const std::string &, int);
 typedef std::map<const std::string, std::pair<FactoryMethod, int> > FactoryMap;
 
