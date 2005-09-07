@@ -173,10 +173,17 @@ Root Factories::createObject(const MapType & msg_map)
                 if(parents_lst.size()>=1 && parents_lst.front().isString()) {
                     const std::string & parent = parents_lst.front().String();
                     // objtype and parent ok, try to create it:
-                    if(hasFactory(parent)) {
-                        obj = createObject(parent);
-                        is_instance = true;
-                    } // got object
+                    FactoryMap::const_iterator I = m_factories.find(parent);
+                    if (I != m_factories.end()) {
+                        obj = I->second.first(parent, I->second.second);
+                    } else {
+                        if (objtype == "op") {
+                            obj = Atlas::Objects::Operation::Generic();
+                        } else {
+                            obj = Atlas::Objects::Entity::Anonymous();
+                        }
+                    }
+                    is_instance = true;
                     // FIXME We might want to do something different here.
                 } // parent list ok?
             } // has parent attr?
@@ -184,7 +191,7 @@ Root Factories::createObject(const MapType & msg_map)
     } // has objtype attr
     if (!is_instance) {
         // Should we really use factory? Why not just instantiate by hand?
-        obj = createObject("anonymous");
+        obj = Atlas::Objects::Entity::Anonymous();
     } // not instance
     for (I = msg_map.begin(); I != Iend; I++) {
         obj->setAttr(I->first, I->second);

@@ -1,3 +1,12 @@
+2005-09-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/flag.cpp,
+	  Atlas/Objects/objectFactory.cpp: Modify factory to avoid double
+	  lookup in factories, create a Generic operation when objtype is
+	  op but parents are not in factories map, and create Anonymous
+	  entities directly rather than looking up "anonymous" in the
+	  factories.
+
 2005-09-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/gen_cpp.py, Atlas/Objects/flag.cpp,
