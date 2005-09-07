@@ -456,6 +456,8 @@ public:
         return *(l = l->makeUnique());
     }
 
+    static const char * typeName(Type);
+
 protected:
 
     template<class C>

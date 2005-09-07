@@ -115,5 +115,19 @@ bool Element::operator==(const Element& o) const
     return false;
 }
 
+const char * Element::typeName(Type ot)
+{
+    switch (ot) {
+        case TYPE_NONE: return "none";
+        case TYPE_INT: return "int";
+        case TYPE_FLOAT: return "float";
+        case TYPE_PTR: return "pointer";
+        case TYPE_STRING: return "string";
+        case TYPE_MAP: return "map";
+        case TYPE_LIST: return "list";
+    }
+    return "UNKNOWN";
+}
+
 } } //namespace Atlas::Message
 

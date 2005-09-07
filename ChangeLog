@@ -1,5 +1,11 @@
 2005-09-07  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Message/Element.h, Atlas/Message/Element.cpp:
+	  Add static typeName() method which provides a char * representation
+	  of an Element type.
+
+2005-09-07  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/flag.cpp,
 	  Atlas/Objects/objectFactory.cpp: Modify factory to avoid double
 	  lookup in factories, create a Generic operation when objtype is
