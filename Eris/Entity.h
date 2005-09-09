@@ -221,7 +221,7 @@ public:
 	 *   with NPCs this list is used to give the client a clue about
 	 *   possible answers the NPCs understand.
 	 **/
-    sigc::signal< void, const Atlas::Objects::Root & > Say;
+    SigC::Signal1< void, const Atlas::Objects::Root & > Say;
 	
     /**
     Emitted when this entity emits an imgainary operation (also known as

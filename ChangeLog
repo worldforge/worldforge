@@ -1,3 +1,8 @@
+2005-09-09  Simon Goodall  <simon@simongoodall.co.uk>
+
+	* Eris/Enity.h: Change sigc::signal to SigC::Signal1 on Say object so it
+	  compiles
+
 2005-09-06  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/stubServer.cpp: Update factory method parameters to
