@@ -19,6 +19,7 @@ PerceiveData * PerceiveData::copy() const
 {
     PerceiveData * copied = PerceiveData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -81,6 +82,7 @@ LookData * LookData::copy() const
 {
     LookData * copied = LookData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -143,6 +145,7 @@ ListenData * ListenData::copy() const
 {
     ListenData * copied = ListenData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -205,6 +208,7 @@ SniffData * SniffData::copy() const
 {
     SniffData * copied = SniffData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -267,6 +271,7 @@ TouchData * TouchData::copy() const
 {
     TouchData * copied = TouchData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -329,6 +334,7 @@ LoginData * LoginData::copy() const
 {
     LoginData * copied = LoginData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

@@ -77,7 +77,9 @@ class SmartPtr
     }
     SmartPtr<T> copy() const
     {
-        return SmartPtr(ptr->copy());
+        SmartPtr<T> ret = SmartPtr(ptr->copy());
+        ret.decRef();
+        return ret;
     }
     SmartPtr<T> getDefaultObject() const
     {

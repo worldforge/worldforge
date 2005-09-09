@@ -48,87 +48,87 @@ AddFactories::AddFactories()
 {
     Factories * objectFactory = Factories::instance();
 
-    objectFactory->addFactory("root", &factory<RootData>, Root()->getClassNo());
+    objectFactory->addFactory("root", &factory<RootData>, ROOT_NO);
 
-    objectFactory->addFactory("root_entity", &factory<Entity::RootEntityData>, Entity::RootEntity()->getClassNo());
+    objectFactory->addFactory("root_entity", &factory<Entity::RootEntityData>, Entity::ROOT_ENTITY_NO);
 
-    objectFactory->addFactory("admin_entity", &factory<Entity::AdminEntityData>, Entity::AdminEntity()->getClassNo());
+    objectFactory->addFactory("admin_entity", &factory<Entity::AdminEntityData>, Entity::ADMIN_ENTITY_NO);
 
-    objectFactory->addFactory("account", &factory<Entity::AccountData>, Entity::Account()->getClassNo());
+    objectFactory->addFactory("account", &factory<Entity::AccountData>, Entity::ACCOUNT_NO);
 
-    objectFactory->addFactory("player", &factory<Entity::PlayerData>, Entity::Player()->getClassNo());
+    objectFactory->addFactory("player", &factory<Entity::PlayerData>, Entity::PLAYER_NO);
 
-    objectFactory->addFactory("admin", &factory<Entity::AdminData>, Entity::Admin()->getClassNo());
+    objectFactory->addFactory("admin", &factory<Entity::AdminData>, Entity::ADMIN_NO);
 
-    objectFactory->addFactory("game", &factory<Entity::GameData>, Entity::Game()->getClassNo());
+    objectFactory->addFactory("game", &factory<Entity::GameData>, Entity::GAME_NO);
 
-    objectFactory->addFactory("game_entity", &factory<Entity::GameEntityData>, Entity::GameEntity()->getClassNo());
+    objectFactory->addFactory("game_entity", &factory<Entity::GameEntityData>, Entity::GAME_ENTITY_NO);
 
-    objectFactory->addFactory("root_operation", &factory<Operation::RootOperationData>, Operation::RootOperation()->getClassNo());
+    objectFactory->addFactory("root_operation", &factory<Operation::RootOperationData>, Operation::ROOT_OPERATION_NO);
 
-    objectFactory->addFactory("action", &factory<Operation::ActionData>, Operation::Action()->getClassNo());
+    objectFactory->addFactory("action", &factory<Operation::ActionData>, Operation::ACTION_NO);
 
-    objectFactory->addFactory("create", &factory<Operation::CreateData>, Operation::Create()->getClassNo());
+    objectFactory->addFactory("create", &factory<Operation::CreateData>, Operation::CREATE_NO);
 
-    objectFactory->addFactory("combine", &factory<Operation::CombineData>, Operation::Combine()->getClassNo());
+    objectFactory->addFactory("combine", &factory<Operation::CombineData>, Operation::COMBINE_NO);
 
-    objectFactory->addFactory("divide", &factory<Operation::DivideData>, Operation::Divide()->getClassNo());
+    objectFactory->addFactory("divide", &factory<Operation::DivideData>, Operation::DIVIDE_NO);
 
-    objectFactory->addFactory("communicate", &factory<Operation::CommunicateData>, Operation::Communicate()->getClassNo());
+    objectFactory->addFactory("communicate", &factory<Operation::CommunicateData>, Operation::COMMUNICATE_NO);
 
-    objectFactory->addFactory("talk", &factory<Operation::TalkData>, Operation::Talk()->getClassNo());
+    objectFactory->addFactory("talk", &factory<Operation::TalkData>, Operation::TALK_NO);
 
-    objectFactory->addFactory("delete", &factory<Operation::DeleteData>, Operation::Delete()->getClassNo());
+    objectFactory->addFactory("delete", &factory<Operation::DeleteData>, Operation::DELETE_NO);
 
-    objectFactory->addFactory("set", &factory<Operation::SetData>, Operation::Set()->getClassNo());
+    objectFactory->addFactory("set", &factory<Operation::SetData>, Operation::SET_NO);
 
-    objectFactory->addFactory("affect", &factory<Operation::AffectData>, Operation::Affect()->getClassNo());
+    objectFactory->addFactory("affect", &factory<Operation::AffectData>, Operation::AFFECT_NO);
 
-    objectFactory->addFactory("move", &factory<Operation::MoveData>, Operation::Move()->getClassNo());
+    objectFactory->addFactory("move", &factory<Operation::MoveData>, Operation::MOVE_NO);
 
-    objectFactory->addFactory("wield", &factory<Operation::WieldData>, Operation::Wield()->getClassNo());
+    objectFactory->addFactory("wield", &factory<Operation::WieldData>, Operation::WIELD_NO);
 
-    objectFactory->addFactory("get", &factory<Operation::GetData>, Operation::Get()->getClassNo());
+    objectFactory->addFactory("get", &factory<Operation::GetData>, Operation::GET_NO);
 
-    objectFactory->addFactory("perceive", &factory<Operation::PerceiveData>, Operation::Perceive()->getClassNo());
+    objectFactory->addFactory("perceive", &factory<Operation::PerceiveData>, Operation::PERCEIVE_NO);
 
-    objectFactory->addFactory("look", &factory<Operation::LookData>, Operation::Look()->getClassNo());
+    objectFactory->addFactory("look", &factory<Operation::LookData>, Operation::LOOK_NO);
 
-    objectFactory->addFactory("listen", &factory<Operation::ListenData>, Operation::Listen()->getClassNo());
+    objectFactory->addFactory("listen", &factory<Operation::ListenData>, Operation::LISTEN_NO);
 
-    objectFactory->addFactory("sniff", &factory<Operation::SniffData>, Operation::Sniff()->getClassNo());
+    objectFactory->addFactory("sniff", &factory<Operation::SniffData>, Operation::SNIFF_NO);
 
-    objectFactory->addFactory("touch", &factory<Operation::TouchData>, Operation::Touch()->getClassNo());
+    objectFactory->addFactory("touch", &factory<Operation::TouchData>, Operation::TOUCH_NO);
 
-    objectFactory->addFactory("login", &factory<Operation::LoginData>, Operation::Login()->getClassNo());
+    objectFactory->addFactory("login", &factory<Operation::LoginData>, Operation::LOGIN_NO);
 
-    objectFactory->addFactory("logout", &factory<Operation::LogoutData>, Operation::Logout()->getClassNo());
+    objectFactory->addFactory("logout", &factory<Operation::LogoutData>, Operation::LOGOUT_NO);
 
-    objectFactory->addFactory("imaginary", &factory<Operation::ImaginaryData>, Operation::Imaginary()->getClassNo());
+    objectFactory->addFactory("imaginary", &factory<Operation::ImaginaryData>, Operation::IMAGINARY_NO);
 
-    objectFactory->addFactory("use", &factory<Operation::UseData>, Operation::Use()->getClassNo());
+    objectFactory->addFactory("use", &factory<Operation::UseData>, Operation::USE_NO);
 
-    objectFactory->addFactory("info", &factory<Operation::InfoData>, Operation::Info()->getClassNo());
+    objectFactory->addFactory("info", &factory<Operation::InfoData>, Operation::INFO_NO);
 
-    objectFactory->addFactory("perception", &factory<Operation::PerceptionData>, Operation::Perception()->getClassNo());
+    objectFactory->addFactory("perception", &factory<Operation::PerceptionData>, Operation::PERCEPTION_NO);
 
-    objectFactory->addFactory("sight", &factory<Operation::SightData>, Operation::Sight()->getClassNo());
+    objectFactory->addFactory("sight", &factory<Operation::SightData>, Operation::SIGHT_NO);
 
-    objectFactory->addFactory("appearance", &factory<Operation::AppearanceData>, Operation::Appearance()->getClassNo());
+    objectFactory->addFactory("appearance", &factory<Operation::AppearanceData>, Operation::APPEARANCE_NO);
 
-    objectFactory->addFactory("disappearance", &factory<Operation::DisappearanceData>, Operation::Disappearance()->getClassNo());
+    objectFactory->addFactory("disappearance", &factory<Operation::DisappearanceData>, Operation::DISAPPEARANCE_NO);
 
-    objectFactory->addFactory("sound", &factory<Operation::SoundData>, Operation::Sound()->getClassNo());
+    objectFactory->addFactory("sound", &factory<Operation::SoundData>, Operation::SOUND_NO);
 
-    objectFactory->addFactory("smell", &factory<Operation::SmellData>, Operation::Smell()->getClassNo());
+    objectFactory->addFactory("smell", &factory<Operation::SmellData>, Operation::SMELL_NO);
 
-    objectFactory->addFactory("feel", &factory<Operation::FeelData>, Operation::Feel()->getClassNo());
+    objectFactory->addFactory("feel", &factory<Operation::FeelData>, Operation::FEEL_NO);
 
-    objectFactory->addFactory("error", &factory<Operation::ErrorData>, Operation::Error()->getClassNo());
+    objectFactory->addFactory("error", &factory<Operation::ErrorData>, Operation::ERROR_NO);
 
-    objectFactory->addFactory("anonymous", &factory<Entity::AnonymousData>, Entity::Anonymous()->getClassNo());
+    objectFactory->addFactory("anonymous", &factory<Entity::AnonymousData>, Entity::ANONYMOUS_NO);
 
-    objectFactory->addFactory("generic", &factory<Operation::GenericData>, Operation::Generic()->getClassNo());
+    objectFactory->addFactory("generic", &factory<Operation::GenericData>, Operation::GENERIC_NO);
 }
 
 Factories::Factories()

@@ -19,6 +19,7 @@ LogoutData * LogoutData::copy() const
 {
     LogoutData * copied = LogoutData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -81,6 +82,7 @@ ImaginaryData * ImaginaryData::copy() const
 {
     ImaginaryData * copied = ImaginaryData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -143,6 +145,7 @@ UseData * UseData::copy() const
 {
     UseData * copied = UseData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -205,6 +208,7 @@ InfoData * InfoData::copy() const
 {
     InfoData * copied = InfoData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -267,6 +271,7 @@ PerceptionData * PerceptionData::copy() const
 {
     PerceptionData * copied = PerceptionData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -329,6 +334,7 @@ SightData * SightData::copy() const
 {
     SightData * copied = SightData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

@@ -25,6 +25,7 @@ GenericData * GenericData::copy() const
 {
     GenericData * copied = GenericData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

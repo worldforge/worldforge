@@ -19,6 +19,7 @@ AppearanceData * AppearanceData::copy() const
 {
     AppearanceData * copied = AppearanceData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -81,6 +82,7 @@ DisappearanceData * DisappearanceData::copy() const
 {
     DisappearanceData * copied = DisappearanceData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -143,6 +145,7 @@ SoundData * SoundData::copy() const
 {
     SoundData * copied = SoundData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -205,6 +208,7 @@ SmellData * SmellData::copy() const
 {
     SmellData * copied = SmellData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -267,6 +271,7 @@ FeelData * FeelData::copy() const
 {
     FeelData * copied = FeelData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -329,6 +334,7 @@ ErrorData * ErrorData::copy() const
 {
     ErrorData * copied = ErrorData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

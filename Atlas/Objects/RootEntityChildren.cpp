@@ -19,6 +19,7 @@ AdminEntityData * AdminEntityData::copy() const
 {
     AdminEntityData * copied = AdminEntityData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -212,6 +213,7 @@ AccountData * AccountData::copy() const
 {
     AccountData * copied = AccountData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -284,6 +286,7 @@ PlayerData * PlayerData::copy() const
 {
     PlayerData * copied = PlayerData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -351,6 +354,7 @@ AdminData * AdminData::copy() const
 {
     AdminData * copied = AdminData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -418,6 +422,7 @@ GameData * GameData::copy() const
 {
     GameData * copied = GameData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -485,6 +490,7 @@ GameEntityData * GameEntityData::copy() const
 {
     GameEntityData * copied = GameEntityData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

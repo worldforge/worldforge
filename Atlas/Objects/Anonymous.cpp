@@ -25,6 +25,7 @@ AnonymousData * AnonymousData::copy() const
 {
     AnonymousData * copied = AnonymousData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

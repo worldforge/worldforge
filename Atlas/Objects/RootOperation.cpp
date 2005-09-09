@@ -203,6 +203,7 @@ RootOperationData * RootOperationData::copy() const
 {
     RootOperationData * copied = RootOperationData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

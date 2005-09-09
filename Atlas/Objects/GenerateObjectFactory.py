@@ -61,8 +61,9 @@ AddFactories::AddFactories()
         for (obj, namespace) in objects:
             id = obj.id
             idc = classize(id)
+            idu = string.upper(id)
             self.write("""
-    objectFactory->addFactory("%(id)s", &factory<%(namespace)s%(idc)sData>, %(namespace)s%(idc)s()->getClassNo());
+    objectFactory->addFactory("%(id)s", &factory<%(namespace)s%(idc)sData>, %(namespace)s%(idu)s_NO);
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""}
 

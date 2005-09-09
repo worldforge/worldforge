@@ -175,6 +175,7 @@ RootData * RootData::copy() const
 {
     RootData * copied = RootData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

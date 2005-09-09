@@ -434,6 +434,7 @@ void %(classname)s::free()
 {
     %s * copied = %s::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

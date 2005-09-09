@@ -19,6 +19,7 @@ DeleteData * DeleteData::copy() const
 {
     DeleteData * copied = DeleteData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -81,6 +82,7 @@ SetData * SetData::copy() const
 {
     SetData * copied = SetData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -143,6 +145,7 @@ AffectData * AffectData::copy() const
 {
     AffectData * copied = AffectData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -205,6 +208,7 @@ MoveData * MoveData::copy() const
 {
     MoveData * copied = MoveData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -267,6 +271,7 @@ WieldData * WieldData::copy() const
 {
     WieldData * copied = WieldData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -329,6 +334,7 @@ GetData * GetData::copy() const
 {
     GetData * copied = GetData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

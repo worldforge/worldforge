@@ -19,6 +19,7 @@ ActionData * ActionData::copy() const
 {
     ActionData * copied = ActionData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -81,6 +82,7 @@ CreateData * CreateData::copy() const
 {
     CreateData * copied = CreateData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -143,6 +145,7 @@ CombineData * CombineData::copy() const
 {
     CombineData * copied = CombineData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -205,6 +208,7 @@ DivideData * DivideData::copy() const
 {
     DivideData * copied = DivideData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -267,6 +271,7 @@ CommunicateData * CommunicateData::copy() const
 {
     CommunicateData * copied = CommunicateData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
@@ -329,6 +334,7 @@ TalkData * TalkData::copy() const
 {
     TalkData * copied = TalkData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 

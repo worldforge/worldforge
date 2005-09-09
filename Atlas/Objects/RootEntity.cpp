@@ -185,6 +185,7 @@ RootEntityData * RootEntityData::copy() const
 {
     RootEntityData * copied = RootEntityData::alloc();
     *copied = *this;
+    copied->m_refCount = 0;
     return copied;
 }
 
