@@ -1,5 +1,13 @@
 2005-09-09  Al Riddoch  <alriddoch@zepler.org>
 
+	* configure.ac: Increment to 0.5.97 for release soon.
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/Generic.cpp,
+	  Atlas/Objects/flag.cpp: Ensure that objtype is set on
+	  generic ops, to ensure they get decoded right.
+
+2005-09-09  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Objects/GenerateObjectFactory.py,
 	  Atlas/Objects/objectFactory.cpp: Use class numbers directly
 	  rather than instantiating an object to retrieve it.

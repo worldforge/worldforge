@@ -208,7 +208,7 @@ class AttributeInfo:
             return '        %s = %s;\n' \
                     % (var, self.value)
         elif self.type == "string":
-            if classname in ['AnonymousData', 'GenericData'] and self.name == 'objtype':
+            if classname in ['AnonymousData'] and self.name == 'objtype':
                 return ''
             if len(self.value) == 0:
                 return ''

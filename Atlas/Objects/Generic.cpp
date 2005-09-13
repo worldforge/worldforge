@@ -63,6 +63,7 @@ GenericData *GenericData::getDefaultObjectInstance()
 {
     if (defaults_GenericData == 0) {
         defaults_GenericData = new GenericData;
+        defaults_GenericData->attr_objtype = "op";
         defaults_GenericData->attr_serialno = 0;
         defaults_GenericData->attr_refno = 0;
         defaults_GenericData->attr_seconds = 0.0;
