@@ -1,4 +1,11 @@
-2005-09-09  Al Riddoch  <alriddoch@zepler.org>
+2005-09-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Utility.h: Ensure that the value of sscanf is not
+	  ignored.
+
+	* Release 0.5.97, Interface version 0.
+
+2005-09-13  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Increment to 0.5.97 for release soon.
 
@@ -163,7 +170,7 @@
 
 	* configure.ac, NEWS: Increment version to 0.5.96, add news entry.
 
-	* Release 0.5.95, Interface version 0.
+	* Release 0.5.96, Interface version 0.
 
 2005-06-10  Al Riddoch  <alriddoch@zepler.org>
 

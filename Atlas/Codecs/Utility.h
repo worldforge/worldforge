@@ -38,8 +38,11 @@ inline const std::string charToHex(char c)
 inline char hexToChar(const std::string& hex)
 {
     int c;
-    sscanf(hex.c_str(), "%x", &c);
-    return (char) c;
+    if (sscanf(hex.c_str(), "%x", &c) == 1) {
+        return (char) c;
+    } else {
+        return (char) 0;
+    }
 }
 
 /** Escape a string by converting certain characters to their hexadecimal
