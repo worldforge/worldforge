@@ -1,3 +1,7 @@
+2005-09-20  James Turner  <james@worldforge.org>
+
+	* Eris.xcodeproj/project.pbproj: XCode 2.1 build system
+
 2005-09-09  Simon Goodall  <simon@simongoodall.co.uk>
 
 	* Eris/Enity.h: Change sigc::signal to SigC::Signal1 on Say object so it
