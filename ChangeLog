@@ -1,3 +1,9 @@
+2005-09-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/atlasconv.h: If a quaternion is initialised with values
+	  which would make it normalise with division by zero, mark
+	  as invalid and return.
+
 2005-06-11  Al Riddoch  <alriddoch@zepler.org>
 
 	* wfmath.spec.in: Minor changes to spec.

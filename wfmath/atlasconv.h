@@ -154,6 +154,12 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
 
   CoordType norm = sqrt(m_w * m_w + m_vec.sqrMag());
 
+  if (norm <= WFMATH_EPSILON) {
+    m_valid = false;
+    m_vec.setValid(false);
+    return;
+  }
+
   m_vec /= norm;
   m_w /= norm;
 
