@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT(Atlas-C++, 0.5.97, alriddoch@zepler.org, Atlas-C++)
+AC_INIT(Atlas-C++, 0.5.98, alriddoch@zepler.org, Atlas-C++)
 AC_CONFIG_SRCDIR([Atlas/Bridge.cpp])
 AC_CONFIG_HEADERS([config.h])
 

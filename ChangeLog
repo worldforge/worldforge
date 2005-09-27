@@ -1,3 +1,13 @@
+2005-09-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Makefile.am: Remove headers from source list, as they
+	  are already in header list.
+
+	* atlas-cpp.spec.in: Add branch version to rpm name to make it easier
+	  to have two branches installed in parallel.
+
+	* configure.ac: Increment to 0.5.98 for release soon.
+
 2005-09-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Codecs/Utility.h: Ensure that the value of sscanf is not
