@@ -1,5 +1,7 @@
 New TODO by Al Riddoch
 
+Cut down inlining from Codecs/Utility.h as functions are too large.
+
 Create an equivalent for Anonymous which inherits from RootOperation.
 Can be used in objectFactory when there is no factory, but objtype is op.
 This may also solve the messy problem with custom op types.
