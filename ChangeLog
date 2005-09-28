@@ -1,3 +1,9 @@
+2005-09-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Utility.cpp, Atlas/Codecs/Utility.h: Move two big
+	  inlined functions into a .cpp file, as its too big to be inlined
+	  efficiently.
+
 2005-09-27  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Codecs/Makefile.am: Remove headers from source list, as they
