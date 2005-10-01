@@ -153,7 +153,7 @@ void Entity::sight(const GameEntity &ge)
     setContentsFromAtlas(ge->getContains());
     setPosAndVelocityFromAtlas(ge);
     
-    setFromRoot(smart_static_cast<Root>(ge));
+    setFromRoot(ge);
 }
 
 void Entity::setFromRoot(const Root& obj)
@@ -355,7 +355,8 @@ void Entity::endUpdate()
         {
             m_lastMoveTime = TimeStamp::now();
             
-            bool nowMoving = (getVelocity().sqrMag() > 1e-3);
+            const WFMath::Vector<3> & velocity = getVelocity();
+            bool nowMoving = (velocity.isValid() && (velocity.sqrMag() > 1e-3));
             if (nowMoving != m_moving) setMoving(nowMoving);
             
             onMoved();

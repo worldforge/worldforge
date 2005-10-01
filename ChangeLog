@@ -1,3 +1,8 @@
+2005-10-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Entity.cpp: Remove an unnecessary static cast. Check the
+	  velocity vector is valid before checking its magnitude.
+
 2005-09-20  James Turner  <james@worldforge.org>
 
 	* Eris.xcodeproj/project.pbproj: XCode 2.1 build system
