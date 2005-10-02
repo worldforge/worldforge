@@ -1,5 +1,10 @@
 2005-10-02  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/clientConnection.cpp, test/commander.cpp, test/controller.cpp:
+	  Update to use new Negotiate API in Atlas-C++.
+
+2005-10-02  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/BaseConnection.cpp: Update to use new Negotiate API
 	  in Atlas-C++.
 

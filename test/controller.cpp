@@ -30,8 +30,7 @@ Controller::Controller(const char* pipe) :
     assert(m_stream.is_open());
     
 // force synchrous negotation now
-    Atlas::Bridge* br = this;
-    Atlas::Net::StreamConnect sc("eristest_oob", m_stream, *br);
+    Atlas::Net::StreamConnect sc("eristest_oob", m_stream);
     
     // spin (and block) while we negotiate
     do { sc.poll(); } while (sc.getState() == Atlas::Net::StreamConnect::IN_PROGRESS);
@@ -41,7 +40,8 @@ Controller::Controller(const char* pipe) :
             
     assert(sc.getState() == Atlas::Net::StreamConnect::SUCCEEDED);
     
-    m_codec = sc.getCodec();
+    Atlas::Bridge* br = this;
+    m_codec = sc.getCodec(*br);
     m_encode = new Atlas::Objects::ObjectsEncoder(*m_codec);
     m_codec->streamBegin();
 }

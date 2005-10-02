@@ -26,7 +26,7 @@ Commander::Commander(StubServer* stub, int fd) :
     m_server(stub),
     m_channel(fd)
 {
-    m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", m_channel, *this);
+    m_acceptor = new Atlas::Net::StreamAccept("Eris Stub Server", m_channel);
     m_acceptor->poll(false);
 }
 
@@ -77,7 +77,7 @@ void Commander::negotiate()
         break;
 
     case Atlas::Net::StreamAccept::SUCCEEDED:
-        m_codec = m_acceptor->getCodec();
+        m_codec = m_acceptor->getCodec(*this);
         m_encoder = new Atlas::Objects::ObjectsEncoder(*m_codec);
         m_codec->streamBegin();
                 
