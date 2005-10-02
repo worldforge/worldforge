@@ -156,7 +156,7 @@ void BaseConnection::nonblockingConnect()
     _timeout = new Timeout("negotiate_" + _id, this, 5000);
     _timeout->Expired.connect(SigC::slot(*this, &BaseConnection::onNegotiateTimeout));
 
-    _sc = new Atlas::Net::StreamConnect(_clientName, *_stream, *_bridge);
+    _sc = new Atlas::Net::StreamConnect(_clientName, *_stream);
     setStatus(NEGOTIATE);
 }
 
@@ -174,7 +174,7 @@ void BaseConnection::pollNegotiation()
 	
     if (_sc->getState() == Atlas::Net::StreamConnect::SUCCEEDED)
     {
-        m_codec = _sc->getCodec();
+        m_codec = _sc->getCodec(*_bridge);
         _encode = new Atlas::Objects::ObjectsEncoder(*m_codec);
         m_codec->streamBegin();
         // clean up
