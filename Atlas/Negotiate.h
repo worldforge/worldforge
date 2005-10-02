@@ -7,6 +7,7 @@
 
 namespace Atlas {
 
+class Bridge;
 class Codec;
 
 /** Negotiation of codecs and filters for an Atlas connection
@@ -33,7 +34,7 @@ class Negotiate
     };
 
     virtual State getState() = 0;
-    virtual Codec * getCodec() = 0;
+    virtual Codec * getCodec(Bridge &) = 0;
     virtual void poll(bool can_get = true) = 0;
 };
 

@@ -52,7 +52,7 @@ int main(int argc, char** argv)
     // The DebugBridge puts all that comes through the codec on cout
     DebugBridge bridge;
     // Do client negotiation with the server
-    Atlas::Net::StreamConnect conn("simple_client", connection, bridge);
+    Atlas::Net::StreamConnect conn("simple_client", connection);
 
     std::cout << "Negotiating... " << std::flush;
     // conn.poll() does all the negotiation
@@ -69,7 +69,7 @@ int main(int argc, char** argv)
     // Negotiation was successful
 
     // Get the codec that negotiation established
-    Atlas::Codec * codec = conn.getCodec();
+    Atlas::Codec * codec = conn.getCodec(bridge);
 
     // This should always be sent at the beginning of a session
     codec->streamBegin();

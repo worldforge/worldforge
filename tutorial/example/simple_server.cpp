@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     // The DebugBridge puts all that comes through the codec on cout
     DebugBridge bridge;
     // Do server negotiation for Atlas with the new client
-    Atlas::Net::StreamAccept accepter("simple_server", client, bridge);
+    Atlas::Net::StreamAccept accepter("simple_server", client);
 
     std::cout << "Negotiating.... " << std::flush;
     // accepter.Poll() does all the negotiation
@@ -51,7 +51,7 @@ int main(int argc, char** argv)
     // Negotiation was successful! 
 
     // Get the codec that negotation established
-    Atlas::Codec * codec = accepter.getCodec();
+    Atlas::Codec * codec = accepter.getCodec(bridge);
 
     std::cout << "Polling client..." << std::endl;
     

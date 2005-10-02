@@ -91,9 +91,8 @@ void NegotiateHelper::put(std::string &buf, const std::string & header)
   buf += "\n";
 }
 
-StreamConnect::StreamConnect(const std::string& name, std::iostream& s,
-Bridge& bridge) :
-  m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
+StreamConnect::StreamConnect(const std::string& name, std::iostream& s) :
+  m_state(SERVER_GREETING), m_outName(name), m_socket(s),
   m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
   m_canPacked(true), m_canXML(true), m_canBach(true),m_canGzip(true), m_canBzip2(true)
 {
@@ -188,12 +187,12 @@ Atlas::Negotiate::State StreamConnect::getState()
 }
 
 /// FIXME We should pass in the Bridge here, not at construction time.
-Atlas::Codec * StreamConnect::getCodec()
+Atlas::Codec * StreamConnect::getCodec(Atlas::Bridge & bridge)
 {
-    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_bridge); }
-    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_bridge); }
-    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, m_bridge); }
-    return NULL; // throw exception?
+    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, bridge); }
+    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, bridge); }
+    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, bridge); }
+    return NULL;
 }
 
 void StreamConnect::processServerCodecs()
@@ -245,9 +244,8 @@ StreamAccept::~StreamAccept()
 {
 }
 
-StreamAccept::StreamAccept(const std::string& name, std::iostream& s,
-Bridge& bridge) :
-  m_state(SERVER_GREETING), m_outName(name), m_socket(s), m_bridge(bridge),
+StreamAccept::StreamAccept(const std::string& name, std::iostream& s) :
+  m_state(SERVER_GREETING), m_outName(name), m_socket(s),
   m_codecHelper(m_inCodecs), m_filterHelper(m_inFilters),
   m_canPacked(false), m_canXML(false), m_canGzip(false), m_canBzip2(false)
 {
@@ -344,7 +342,7 @@ Atlas::Negotiate::State StreamAccept::getState()
 }
 
 /// FIXME We should pass in the Bridge here, not at construction time.
-Atlas::Codec * StreamAccept::getCodec()
+Atlas::Codec * StreamAccept::getCodec(Atlas::Bridge & bridge)
 {
       // XXX XXX XXX XXX
       // should pass an appropriate filterbuf here instead of socket,
@@ -354,10 +352,10 @@ Atlas::Codec * StreamAccept::getCodec()
       // would deallocate? erk. -- sdt 2001-01-05
         //return (*outCodecs.begin())-> 
                 //New(Codec<std::iostream>::Parameters(m_socket,bridge));
-    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, m_bridge); }
-    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, m_bridge); }
-    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, m_bridge); }
-    return NULL; // throw exception?
+    if (m_canPacked) { return new Atlas::Codecs::Packed(m_socket, bridge); }
+    if (m_canXML) { return new Atlas::Codecs::XML(m_socket, bridge); }
+    if (m_canBach) { return new Atlas::Codecs::Bach(m_socket, bridge); }
+    return NULL;
 }
 
 #if 0

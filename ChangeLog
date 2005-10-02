@@ -1,3 +1,17 @@
+2005-10-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Negotiate.h, Atlas/Net/Stream.cpp, Atlas/Net/Stream.h:
+	  Modify the Negotiate interface so the decoder Bridge reference
+	  is passed in to getCodec() instead of the Stream constructor.
+	  This gives developers more freedom when designing code that
+	  use this API.
+
+	* tutorial/example/simple_client.cpp,
+	  tutorial/example/simple_server.cpp: Update tutorials to use the
+	  new API.
+
+	* Release 0.5.98, Interface version 0.
+
 2005-09-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Codecs/Utility.cpp, Atlas/Codecs/Utility.h: Move two big
