@@ -1,3 +1,8 @@
+2005-10-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/Makefile.am: Disable running the test as it currently does
+	  not terminate.
+
 2005-10-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/clientConnection.cpp, test/commander.cpp, test/controller.cpp:
