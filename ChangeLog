@@ -1,3 +1,8 @@
+2005-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Add nostdinc option, to get rid of unnecessary
+	  -I options on the compile commandlines.
+
 2005-10-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Negotiate.h, Atlas/Net/Stream.cpp, Atlas/Net/Stream.h:
