@@ -126,7 +126,7 @@ void Connection::send(const Atlas::Objects::Root &obj)
         return;
     }
 
-    if (_stream->eof()) {
+    if (_stream->eof() || _stream->fail()) {
         handleFailure("Connection::send: stream failed");
 		hardDisconnect(false);
         return;

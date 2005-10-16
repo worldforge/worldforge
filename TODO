@@ -1,5 +1,10 @@
 Eris TODO
 
+Optimisations
+
+ - replace a call to map::count followed by map::operation[] with a call to
+   find, as its twice as efficient.
+
 BUGS
 
  - addAncestor() gets into a tight loop which suggests that a type lists itself

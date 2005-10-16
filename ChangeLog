@@ -1,3 +1,9 @@
+2005-10-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/BaseConnection.cpp, Eris/Connection.cpp: Check for fail()
+	  in addition to eof() when testing whether streams are still
+	  usable.
+
 2005-10-05  Al Riddoch  <alriddoch@zepler.org>
 
 	* eris.spec.in: Update spec for renamed Atlas-C++ rpms.

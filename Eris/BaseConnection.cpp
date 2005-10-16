@@ -106,7 +106,7 @@ void BaseConnection::recv()
 	assert(_status != DISCONNECTED);
 	assert(_stream);
 	
-	if (_stream->eof()) {
+	if (_stream->eof() || _stream->fail()) {
 		handleFailure("Connection stream failed");
 		hardDisconnect(false);
 	} else {
