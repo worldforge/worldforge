@@ -1,3 +1,9 @@
+2005-10-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Packed.cpp Atlas/Codecs/XML.cpp:
+	  Modify poll() method so it does not get stuck in a tight loop
+	  if stream fails with data in the buffer.
+
 2005-10-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Add nostdinc option, to get rid of unnecessary

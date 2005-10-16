@@ -302,7 +302,11 @@ void Packed::poll(bool can_read)
     if (!can_read) return;
     do
     {
-	char next = (char) m_socket.get();
+	int next = m_socket.get();
+
+	if (next == std::iostream::traits_type::eof()) {
+	    return;
+	}
 
 	switch (m_state.top())
 	{

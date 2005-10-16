@@ -438,8 +438,11 @@ void Bach::poll(bool can_read)
 
     do
     {
-	char next = (char) m_socket.get();
+	int next = m_socket.get();
 
+	if (next == std::iostream::traits_type::eof()) {
+	    return;
+	}
         // check for comment character here, so we don't have
         // to do it in every section
 
