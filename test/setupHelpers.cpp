@@ -5,6 +5,13 @@
 #include <Eris/Entity.h>
 #include <sigc++/object_slot.h>
 #include <iostream>
+#include <wfmath/timestamp.h>
+
+using WFMath::TimeStamp;
+using WFMath::TimeDiff;
+
+using std::cout;
+using std::endl;
 
 AutoConnection stdConnect()
 {
@@ -77,8 +84,14 @@ AutoAvatar AvatarGetter::take(const std::string& charId)
     SignalCounter1<Eris::Entity*> gotChar;
     m_av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Eris::Entity*>::fired));
 
-    while (gotChar.fireCount() == 0) Eris::PollDefault::poll();
-
+    TimeStamp end = TimeStamp::now() + TimeDiff(2 * 1000);
+    
+    while ((gotChar.fireCount() == 0) && (TimeStamp::now() < end)) {
+        Eris::PollDefault::poll();
+    }
+    
+    if (gotChar.fireCount() == 0) cout << "timed-out waiting to go in-game" << endl;
+    
     assert(m_av->getEntity());
     assert(m_av->getEntity()->getId() == charId);
 

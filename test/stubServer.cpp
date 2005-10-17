@@ -4,6 +4,8 @@
 
 #include "stubServer.h"
 #include "clientConnection.h"
+#include "agent.h"
+
 #include <Eris/Exceptions.h>
 #include <Eris/LogStream.h>
 #include <Atlas/Objects/Operation.h>
@@ -104,6 +106,7 @@ StubServer::StubServer(short port) :
     subclassType("seed", "potato");
     subclassType("thing", "book");
     subclassType("thing", "ball");
+    subclassType("thing", "oak");
     
     if (!Atlas::Objects::Factories::instance()->hasFactory("command"))
     {
@@ -185,6 +188,18 @@ void StubServer::resetWorld()
     getEntity("_table_1")->setName("George");
     
     defineEntity("_fail_", "settler", "_world", "Dummy");
+}
+
+void StubServer::addManyObjects(const std::string& agent)
+{
+    char oid[64];
+    
+    for (unsigned int i=0; i < 300; ++i) {
+        ::snprintf(oid, 64, "_oak%d", i + 1);
+        defineEntity(oid, "oak", "_world", "An oak");
+        
+        Agent::setEntityVisibleForFutureAgent(oid, agent);
+    }
 }
 
 int StubServer::run(pid_t child)

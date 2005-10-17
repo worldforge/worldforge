@@ -25,7 +25,8 @@ namespace Eris
 
 View::View(Avatar* av) :
     m_owner(av),
-    m_topLevel(NULL)
+    m_topLevel(NULL),
+    m_maxPendingCount(10)
 {
     
 }
@@ -182,6 +183,13 @@ void View::sight(const GameEntity& gent)
     if (gent->isDefaultLoc()) { // new top level entity
         setTopLevelEntity(ent);
     }
+    
+// issue the next LOOK of there's a queue. (Note we should stay below the
+// max count since we erased an item from the pending map above)
+    if (!m_lookQueue.empty()) {
+        sendLookAt(m_lookQueue.front());
+        m_lookQueue.pop_front();
+    }
 }
 
 Entity* View::initialSight(const GameEntity& gent)
@@ -283,23 +291,59 @@ void View::getEntityFromServer(const std::string& eid)
 {
     if (isPending(eid)) return;
     
+    // don't apply pending queue cap for anoynmous LOOKs
+    if (!eid.empty() && (m_pending.size() >= m_maxPendingCount)) {
+        m_lookQueue.push_back(eid);
+        m_pending[eid] = SACTION_QUEUED;
+        return;
+    }
+    
+    sendLookAt(eid);
+}
+
+void View::sendLookAt(const std::string& eid)
+{
     Look look;
     if (!eid.empty()) {
-        m_pending[eid] = SACTION_APPEAR;
+        if (m_pending.count(eid)) {
+            switch (m_pending[eid])
+            {
+            case SACTION_QUEUED:
+                // flip over to default (APPEAR) as normal
+                m_pending[eid] = SACTION_APPEAR; break;
+                
+            case SACTION_DISCARD:
+            case SACTION_HIDE:
+                if (m_notifySights.count(eid) == 0) {
+                    // no-one cares, don't bother to look
+                    m_pending.erase(eid);
+                    return;
+                } // else someone <em>does</em> care, so let's do the look, but
+                  // keep SightAction unchanged so it discards / is hidden as
+                  // expected.
+                break;
+                
+            default:
+                // broken state handling logic
+                assert(false);
+            }
+        } else {
+            // no previous entry, default to APPEAR
+            m_pending[eid] = SACTION_APPEAR;
+        }
+        
+        // pending map is in the right state, build up the args now
         Root what;
         what->setId(eid);
         look->setArgs1(what);
     }
     
     look->setFrom(m_owner->getId());
-    
     getConnection()->send(look);
 }
 
 void View::setTopLevelEntity(Entity* newTopLevel)
 {
-    //debug() << "setting new top-level entity to " << newTopLevel->getId();
-
     if (m_topLevel) {
         if (newTopLevel == m_topLevel) return; // no change!
         
@@ -318,6 +362,14 @@ void View::entityDeleted(Entity* ent)
 {
     assert(m_contents.count(ent->getId()));
     m_contents.erase(ent->getId());
+}
+
+void View::dumpLookQueue()
+{
+    debug() << "look queue:";
+    for (unsigned int i=0; i < m_lookQueue.size(); ++i) {
+        debug() << "\t" << m_lookQueue[i];
+    }
 }
 
 } // of namespace Eris

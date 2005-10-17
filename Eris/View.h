@@ -8,6 +8,7 @@
 #include <sigc++/signal.h>
 #include <sigc++/slot.h>
 #include <map>
+#include <deque>
 
 namespace Eris
 {
@@ -77,6 +78,8 @@ public:
     /// emitted when the TLVE changes
     SigC::Signal0<void> TopLevelEntityChanged;
 
+    void dumpLookQueue();
+
 protected:
     // the router passes various relevant things to us directly
     friend class IGRouter;
@@ -113,6 +116,13 @@ private:
 
     Entity* createEntity(const Atlas::Objects::Entity::GameEntity&);
 
+    /**
+    Issue a LOOK operation for the specified entity ID. The id may be
+    empty for an anonymous look. The pending sight map will be updated
+    with the appropriate information.
+    */
+    void sendLookAt(const std::string& eid);
+
     typedef std::map<std::string, Entity*> IdEntityMap;
 
     Avatar* m_owner;
@@ -129,12 +139,16 @@ private:
         SACTION_INVALID,
         SACTION_APPEAR,
         SACTION_HIDE,
-        SACTION_DISCARD
+        SACTION_DISCARD,
+        SACTION_QUEUED
     } SightAction;
 
     typedef std::map<std::string, SightAction> PendingSightMap;
     PendingSightMap m_pending;
     
+    std::deque<std::string> m_lookQueue;
+          
+    unsigned int m_maxPendingCount;
           
     typedef SigC::Signal1<void, Entity*> EntitySightSignal;
         

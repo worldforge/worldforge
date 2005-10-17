@@ -233,7 +233,11 @@ void Commander::dispatch(const RootOperation& op)
                 ClientConnection* cc = m_server->getConnectionForAccount(acc);
                 assert(cc);
                 cc->shutdown();
+            } else if (cid == "add-many-objects") {
+                m_server->addManyObjects(args[0]->getAttr("acc").asString());
+            } else {
+                std::cerr << "unknown command " << cid << std::endl;
             }
-        }
-    }
+        } // of command action case
+    } // of action case
 }

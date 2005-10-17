@@ -131,42 +131,42 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = C4E4B0260876989B00E0869F /* wfmath.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = C4C5690D055AF2C400944C0F /* wfmath */;
+			remoteGlobalIDString = C4C5690D055AF2C400944C0F;
 			remoteInfo = wfmath;
 		};
 		C45BA20908C5912200FCB602 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C4E4B0430876989E00E0869F /* Atlas.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = C4C5683A055AEFDB00944C0F /* Atlas */;
+			remoteGlobalIDString = C4C5683A055AEFDB00944C0F;
 			remoteInfo = Atlas;
 		};
 		C45BA20B08C5912200FCB602 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C4E4B0190876989500E0869F /* Skstream.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = C4C568AC055AF1D600944C0F /* skstream */;
+			remoteGlobalIDString = C4C568AC055AF1D600944C0F;
 			remoteInfo = skstream;
 		};
 		C45BA21408C5917B00FCB602 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C4E4B0260876989B00E0869F /* wfmath.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = C4C5690D055AF2C400944C0F /* wfmath */;
+			remoteGlobalIDString = C4C5690D055AF2C400944C0F;
 			remoteInfo = wfmath;
 		};
 		C45BA21608C5917B00FCB602 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C4E4B0430876989E00E0869F /* Atlas.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = C4C5683A055AEFDB00944C0F /* Atlas */;
+			remoteGlobalIDString = C4C5683A055AEFDB00944C0F;
 			remoteInfo = Atlas;
 		};
 		C45BA21808C5917B00FCB602 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C4E4B0190876989500E0869F /* Skstream.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = C4C568AC055AF1D600944C0F /* skstream */;
+			remoteGlobalIDString = C4C568AC055AF1D600944C0F;
 			remoteInfo = skstream;
 		};
 		C4AD293D05FA548700AFB402 /* PBXContainerItemProxy */ = {

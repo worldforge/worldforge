@@ -1,3 +1,20 @@
+2005-10-17  James Turner  <james@worldforge.org>
+
+	* Eris/View.cpp, Eris/View.h: add in throttling of the rate at which
+	  we request entities from the server (LOOKs). For the moment a very
+	  crude metric is used to control the throttle, this can and will be
+	  tuned (potentially dynamically).
+
+	* test/setupHelpers.cpp: add a timeout to the AvatarGetter, in case
+	  the entity fails to take for some reason.
+	  
+	* test/stubServer.cpp, test/stubServer.h, test/commander.cpp: add
+	  a test command which adds a large number of entities to the world
+	  
+	* test/tests.cpp, test/viewTest.cpp, test/viewTest.h: add a test of
+	  the look queue code, by entering a world with a large number of
+	  entities visible. Also add a timeout to the WaitForAppearance helper.
+
 2005-10-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/BaseConnection.cpp, Eris/Connection.cpp: Check for fail()

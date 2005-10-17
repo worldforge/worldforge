@@ -12,8 +12,13 @@
 #include <sigc++/object_slot.h>
 #include <sigc++/object.h>
 
+#include <wfmath/timestamp.h>
+
 using std::cout;
 using std::endl;
+
+using WFMath::TimeStamp;
+using WFMath::TimeDiff;
 
 class ViewObserver : public SigC::Object
 {
@@ -90,7 +95,19 @@ void WaitForAppearance::waitFor(const std::string& eid)
 
 void WaitForAppearance::run()
 {
-    while (!m_waiting.empty()) Eris::PollDefault::poll();
+    TimeStamp end = TimeStamp::now() + TimeDiff(5 * 1000);
+    
+    while (!m_waiting.empty() && (TimeStamp::now() < end)) {
+        Eris::PollDefault::poll();
+    }
+    
+    if (!m_waiting.empty()) {
+        cout << "timed out waiting for:" << endl;
+        std::set<std::string>::const_iterator it;
+        for (it = m_waiting.begin(); it != m_waiting.end(); ++it) {
+            cout << "\t" << *it << endl;
+        }
+    }
 }
 
 void WaitForAppearance::onAppear(Eris::Entity* e)
@@ -158,7 +175,8 @@ void testAppearance(Controller& ctl)
     AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
     
     Eris::View* v = av->getView();
-    
+
+    ctl.setEntityVisibleToAvatar("_potato_1", av.get());    
     ctl.setEntityVisibleToAvatar("_potato_2", av.get());
     ctl.setEntityVisibleToAvatar("_pig_01", av.get());
     ctl.setEntityVisibleToAvatar("_field_01", av.get());
@@ -186,5 +204,22 @@ void testAppearance(Controller& ctl)
         WaitForAppearance af2(v, "_field_01");
         af2.waitFor("_potato_1");
         af2.run();
+    }
+}
+
+void testLookQueue(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+        
+    ctl.command("add-many-objects", "acc_b_character");
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    
+    Eris::View* v = av->getView();
+    
+    {
+        WaitForAppearance wf(v, "_oak300");
+        wf.run();
     }
 }

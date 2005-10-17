@@ -476,6 +476,7 @@ int runTests(Controller& ctl)
         testMovement(ctl); 
         
         testCharacterInitialVis(ctl);
+        testLookQueue(ctl);
     }
     catch (TestFailure& tfexp)
     {
