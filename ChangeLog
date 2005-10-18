@@ -1,3 +1,12 @@
+2005-10-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Filters/Makefile.am: Add -Itop_buildir to ensure config.h
+	  is accessible from out of tree builds.
+
+	* configure.ac: Increment version to 0.6.0rc1, interface version 1.
+
+	* NEWS: Update news.
+
 2005-10-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Packed.cpp Atlas/Codecs/XML.cpp:
