@@ -295,10 +295,10 @@ void testSightAction(Controller& ctl)
         wf.run();
     }
 
-    SignalRecorderRef1<Atlas::Objects::Operation::Action> action;
+    SignalRecorderRef1<Atlas::Objects::Operation::RootOperation> action;
     Eris::Entity* vase = av->getView()->getEntity("_vase_1");
     vase->Acted.connect(SigC::slot(action, 
-        &SignalRecorderRef1<Atlas::Objects::Operation::Action>::fired));
+        &SignalRecorderRef1<Atlas::Objects::Operation::RootOperation>::fired));
     
     Atlas::Objects::Operation::Touch t;
     t->setFrom(vase->getId());
@@ -309,6 +309,23 @@ void testSightAction(Controller& ctl)
     }
     
     assert(action.lastArg0()->asMessage() == t->asMessage());
+// same again, but with a non-built-in op type    
+    {
+        Atlas::Objects::Operation::Action parry;
+        parry->setFrom(vase->getId());
+        StringList prs;
+        prs.push_back("parry");
+        parry->setParents(prs);
+        
+        action.reset();
+        ctl.broadcastSightFrom(vase->getId(), parry);
+        
+        while (!action.fireCount()) {
+            Eris::PollDefault::poll();
+        }
+        
+        assert(action.lastArg0()->asMessage() == parry->asMessage());
+    }
 }
 
 void testSightCreate(Controller& ctl)

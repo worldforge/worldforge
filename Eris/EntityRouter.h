@@ -4,6 +4,7 @@ namespace Eris
 {
 
 class Entity;
+class TypeService;
 
 class EntityRouter : public Router
 {
@@ -16,6 +17,8 @@ protected:
     
 private:
     RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation&);
+    
+    TypeService* typeService();
     
     Entity* m_entity;
 };

@@ -225,7 +225,7 @@ void Entity::onMoved()
     Moved.emit();
 }
 
-void Entity::onAction(const Atlas::Objects::Operation::Action& arg)
+void Entity::onAction(const Atlas::Objects::Operation::RootOperation& arg)
 {
     Acted.emit(arg);
 }

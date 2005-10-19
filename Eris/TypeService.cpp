@@ -46,9 +46,13 @@ TypeService::TypeService(Connection *con) :
     defineBuiltin("login", m_types["get"]);
     
     defineBuiltin("info", m_types["root_operation"]);
+    defineBuiltin("error", m_types["info"]);
     defineBuiltin("create", m_types["action"]);
     defineBuiltin("communicate", m_types["create"]);
     defineBuiltin("talk", m_types["communicate"]);
+    
+    defineBuiltin("perception", m_types["info"]);
+    defineBuiltin("sight", m_types["perception"]);
     
     defineBuiltin("root_entity", m_types["root"]);
     defineBuiltin("admin_entity", m_types["root_entity"]);
@@ -243,14 +247,14 @@ bool TypeService::verifyObjectTypes(const Root& obj)
         innerVerifyType(obj, unbound);
         
         if (unbound.empty()) return true;
-     /*   
+   /*     
         std::string types;
         for (TypeInfoSet::iterator it=unbound.begin(); it!=unbound.end();++it) {
             if (!types.empty()) types.append(", ");
             types.append((*it)->getName());
         }
         debug() << "type verify failed, need [" << types << "]";
-     */   
+   */     
         new TypeBoundRedispatch(m_con, obj, unbound);
     }
     catch (InvalidAtlas& inva) {
@@ -284,10 +288,12 @@ void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
         }
         
         unbound.insert(type);
+    } else {
+        TypeInfo* type = getTypeForAtlas(obj);
+        if (!type->isBound()) unbound.insert(type);
     }
 
-    if (obj->getObjtype() == "op")
-        verifyOpArguments(obj, unbound);
+    if (obj->getObjtype() == "op") verifyOpArguments(obj, unbound);
 }
 
 void TypeService::verifyOpArguments(const Root& obj, TypeInfoSet& unbound)

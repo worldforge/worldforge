@@ -323,6 +323,12 @@ void View::sendLookAt(const std::string& eid)
                   // expected.
                 break;
                 
+            case SACTION_APPEAR:
+                // this can happen if a queued entity disappears and then
+                // re-appears, all while in the look queue. we can safely fall
+                // through.
+                break;
+                
             default:
                 // broken state handling logic
                 assert(false);

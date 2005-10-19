@@ -27,6 +27,7 @@ IGRouter::IGRouter(Avatar* av) :
     m_view(av->getView())
 {
     m_avatar->getConnection()->registerRouterForTo(this, m_avatar->getId());
+    m_actionType = m_avatar->getConnection()->getTypeService()->getTypeByName("action");
 }
 
 IGRouter::~IGRouter()
@@ -45,8 +46,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     
     const std::vector<Root>& args = op->getArgs();
 
-    Sight sight = smart_dynamic_cast<Sight>(op);
-    if (sight.isValid()) {
+    if (op->getClassNo() == SIGHT_NO) {
         assert(!args.empty());
         RootOperation sop = smart_dynamic_cast<RootOperation>(args.front());
         if (sop.isValid()) return handleSightOp(sop);
@@ -72,8 +72,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 
     }
     
-    Appearance appear = smart_dynamic_cast<Appearance>(op);
-    if (appear.isValid())
+    if (op->getClassNo() == APPEARANCE_NO)
     {
         for (unsigned int A=0; A < args.size(); ++A)
         {
@@ -87,8 +86,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         return HANDLED;
     }
     
-    Disappearance disappear = smart_dynamic_cast<Disappearance>(op);
-    if (disappear.isValid())
+    if (op->getClassNo() == DISAPPEARANCE_NO)
     {
         for (unsigned int A=0; A < args.size(); ++A)
             m_view->disappear(args[A]->getId());
@@ -103,8 +101,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
 {
     const std::vector<Root>& args = op->getArgs();
 
-    Create cr = smart_dynamic_cast<Create>(op);
-    if (cr.isValid())
+    if (op->getClassNo() == CREATE_NO)
     {
         assert(!args.empty());
         GameEntity gent = smart_dynamic_cast<GameEntity>(args.front());
@@ -123,8 +120,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
         }
     }
     
-    Delete del = smart_dynamic_cast<Delete>(op);
-    if (del.isValid())
+    if (op->getClassNo() == DELETE_NO)
     {
         assert(!args.empty());
         m_view->deleteEntity(args.front()->getId());
@@ -133,8 +129,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
     
     // becuase a SET op can potentially (legally) update multiple entities,
     // we decode it here, not in the entity router
-    Set setOp = smart_dynamic_cast<Set>(op);
-    if (setOp.isValid())
+    if (op->getClassNo() == SET_NO)
     {
         for (unsigned int A=0; A < args.size(); ++A) {
             Entity* ent = m_view->getEntity(args[A]->getId());
@@ -155,15 +150,16 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
     
     // we have to handle generic 'actions' late, to avoid trapping interesting
     // such as create or divide
-    Action act = smart_dynamic_cast<Action>(op);
-    if (act.isValid()) {
+    TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(op);
+    assert(ty->isBound());
+    
+    if (ty->isA(m_actionType)) {
         
         Entity* ent = m_view->getEntity(op->getFrom());
-        if (ent) ent->onAction(act);
+        if (ent) ent->onAction(op);
         
         return HANDLED;
     }
-
     
     return IGNORED;
 }

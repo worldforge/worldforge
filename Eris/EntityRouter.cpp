@@ -5,6 +5,11 @@
 #include <Eris/EntityRouter.h>
 #include <Eris/LogStream.h>
 #include <Eris/Entity.h>
+#include <Eris/TypeService.h>
+#include <Eris/Avatar.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/View.h>
+#include <Eris/Connection.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -34,34 +39,39 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
     
     // note it's important we match exactly on sight here, and not deried ops
     // like appearance and disappearance
-    if (op->getClassNo() == Atlas::Objects::Operation::SIGHT_NO) {
+    if (op->getClassNo() == SIGHT_NO) {
         assert(!args.empty());
         RootOperation sop = smart_dynamic_cast<RootOperation>(args.front());
         if (sop.isValid()) return handleSightOp(sop);
     }
     
-    Sound snd = smart_dynamic_cast<Sound>(op);
-    if (snd.isValid()) {
+    if (op->getClassNo() == SOUND_NO) {
         assert(!args.empty());
-        Talk talk = smart_dynamic_cast<Talk>(args.front());
-        if (talk.isValid())
+        if (args.front()->getClassNo() == TALK_NO)
         {
-            const std::vector<Root>& args = talk->getArgs();
-            if (args.empty()) {
+            RootOperation talk = smart_dynamic_cast<RootOperation>(args.front());
+            const std::vector<Root>& talkArgs = talk->getArgs();
+            if (talkArgs.empty()) {
                 error() << "entity " << m_entity->getId() << " got sound(talk) with no args";
                 return IGNORED;
             }
             
-            m_entity->onTalk(args.front());
+            m_entity->onTalk(talkArgs.front());
             return HANDLED;
-        } else if (args.front()->instanceOf(ACTION_NO)) {
+        } 
+        
+        TypeInfo* ty = typeService()->getTypeForAtlas(args.front());
+        assert(ty->isBound());
+        
+        if (ty->isA(typeService()->getTypeByName("action")))
+        {
             // sound of action
-            Action act = smart_dynamic_cast<Talk>(args.front());
+            RootOperation act = smart_dynamic_cast<RootOperation>(args.front());
             m_entity->onSoundAction(act);
             return HANDLED;
-        } else
-            debug() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << snd;
+        }
         
+        debug() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
         // other sounds !
     }
 
@@ -72,8 +82,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 {
     const std::vector<Root>& args = op->getArgs();
     
-    Move mv = smart_dynamic_cast<Move>(op);
-    if (mv.isValid()) {
+    if (op->getClassNo() == MOVE_NO) {
         // sight of move, we handle as a specialization of set.
         assert(!args.empty());
         const Root & arg = args.front();
@@ -86,8 +95,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
         return HANDLED;
     }
     
-    Imaginary imag = smart_dynamic_cast<Imaginary>(op);
-    if (imag.isValid()) {
+    if (op->instanceOf(IMAGINARY_NO)) {
         if (args.empty())
             error() << "entity " << m_entity->getId() << " sent imaginary with no args: " << op;
         else
@@ -100,5 +108,11 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
 
     return IGNORED;
 }
+
+TypeService* EntityRouter::typeService()
+{
+    return m_entity->getView()->getAvatar()->getConnection()->getTypeService();
+}
+
 
 } // of namespace Eris

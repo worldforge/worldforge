@@ -37,8 +37,7 @@ TypeInfo::TypeInfo(const Root &atype, TypeService *ts) :
     m_moveCount(0),
     m_typeService(ts)
 {
-    if (m_name == "root")
-        m_bound = true; // root node is always bound
+    if (m_name == "root") m_bound = true; // root node is always bound
 
     processTypeData(atype);
 }

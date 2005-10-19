@@ -8,6 +8,7 @@ namespace Eris {
 // forward decls
 class Avatar;
 class View;
+class TypeInfo;
 
 class IGRouter : public Router
 {
@@ -23,6 +24,7 @@ private:
 
     Avatar* m_avatar;
     View* m_view;
+    TypeInfo* m_actionType;
 };
 
 } // of namespace Eris

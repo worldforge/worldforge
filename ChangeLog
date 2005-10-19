@@ -1,3 +1,22 @@
+2005-10-19  James Turner  <james@worldforge.org>
+
+	* Eris/View.cpp: deal with the scenario where a look-queued entity
+	  disappears and then re-appears prior to the LOOK being issued.
+	  
+	* Eris/IGRouter.cpp, Eris/EntityRouter.cpp, Eris/IGRouter.h,
+	  Eris/EntityRouter.h, Eris/Account.cpp: switching to using classNos for 
+	  most decoding, and use TypeInfos in a few critical places. This replaces
+	  many uses of smart_dynamic_cast.
+	  
+	* Eris/TypeService.cpp: make verification more robust, by ensuring the
+	  local TypeInfo node is fully bound.
+
+	* test/signalHelpers.h, test/tests.cpp: extend the action tests to
+	  try with a custom op type.
+
+	* test/stubServer.cpp: expand the type heirarchy on the stub server, so
+	  it correctly satisifies all type requests from Eris.
+
 2005-10-17  James Turner  <james@worldforge.org>
 
 	* Eris/View.cpp, Eris/View.h: add in throttling of the rate at which

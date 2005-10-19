@@ -92,10 +92,34 @@ StubServer::StubServer(short port) :
     rootOpType->setParents(parents);
     m_types["root_operation"] = rootOpType;
     
+    subclassType("root_operation", "action");
+    subclassType("action", "touch");
+    subclassType("action", "set");
+    subclassType("set", "move");
+    
+    subclassType("action", "create");
+    subclassType("action", "delete");
+    
+    subclassType("action", "combat");
+    subclassType("combat", "parry");
+    
+    subclassType("root_operation","info");
+    subclassType("info", "login");
+    subclassType("login", "logout");
+    
+    subclassType("info", "perception");
+    subclassType("perception", "sight");
+    subclassType("sight", "appearance");
+    subclassType("sight", "disappearance");
+    
+    subclassType("perception", "sound");
+    
     subclassType("root_entity", "game_entity");
     subclassType("root_entity", "admin_entity");
     subclassType("admin_entity", "server");
-    
+    subclassType("admin_entity", "account");
+    subclassType("account", "player");
+            
     subclassType("game_entity", "settler");
     subclassType("game_entity", "mammal");
     subclassType("game_entity", "building");
@@ -477,7 +501,11 @@ void StubServer::subclassType(const std::string& base, const std::string& derive
     
     Atlas::Objects::Factories * of = Atlas::Objects::Factories::instance();
     if (!of->hasFactory(derivedName)) {
-        of->addFactory(derivedName, &gameEntityFactory);
+        if (T->second->getObjtype() == "op_definition") {
+            of->addFactory(derivedName, &actionFactory);
+        } else {
+            of->addFactory(derivedName, &gameEntityFactory);
+        }
     }
 }
 

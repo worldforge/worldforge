@@ -46,7 +46,7 @@ public:
     virtual RouterResult handleOperation(const RootOperation& op)
     {
         // logout
-        if (op->instanceOf(LOGOUT_NO)) {
+        if (op->getClassNo() == LOGOUT_NO) {
             debug() << "Account reciev forced logout from server";
             m_account->internalLogout(false);
             return HANDLED;
