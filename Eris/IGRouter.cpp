@@ -17,7 +17,7 @@
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
-using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
@@ -48,80 +48,69 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
 
     if (op->getClassNo() == SIGHT_NO) {
         assert(!args.empty());
-        RootOperation sop = smart_dynamic_cast<RootOperation>(args.front());
-        if (sop.isValid()) return handleSightOp(sop);
+        if (args.front()->instanceOf(ROOT_OPERATION_NO)) return handleSightOp(op);
         
         // initial sight of entities
-        GameEntity gent = smart_dynamic_cast<GameEntity>(args.front());
+        RootEntity gent = smart_dynamic_cast<RootEntity>(args.front());
         if (gent.isValid()) {
-            TypeInfo* type = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
-            
-            #warning The following code is necessary until Atlas objectFactory is tied to a decoder
-            
-            if (!type->isBound()) {
-                TypeInfoSet unbound;
-                unbound.insert(type);
-                
-                new TypeBoundRedispatch(m_avatar->getConnection(), op, unbound);
+            // View needs a bound TypeInfo for the entity
+            TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+            if (!ty->isBound()) {
+                new TypeBoundRedispatch(m_avatar->getConnection(), op, ty);
                 return WILL_REDISPATCH;
             }
-    
+
             m_view->sight(gent);
             return HANDLED;
         }
-
     }
     
-    if (op->getClassNo() == APPEARANCE_NO)
-    {
-        for (unsigned int A=0; A < args.size(); ++A)
-        {
+    if (op->getClassNo() == APPEARANCE_NO) {
+        for (unsigned int A=0; A < args.size(); ++A) {
             float stamp = -1;
-            if (args[A]->hasAttr("stamp"))
+            if (args[A]->hasAttr("stamp")) {
                 stamp = args[A]->getAttr("stamp").asFloat();
-                
+            }
+            
             m_view->appear(args[A]->getId(), stamp);
         }
         
         return HANDLED;
     }
     
-    if (op->getClassNo() == DISAPPEARANCE_NO)
-    {
-        for (unsigned int A=0; A < args.size(); ++A)
+    if (op->getClassNo() == DISAPPEARANCE_NO) {
+        for (unsigned int A=0; A < args.size(); ++A) {
             m_view->disappear(args[A]->getId());
-            
+        }
+        
         return HANDLED;
     }
     
     return IGNORED;
 }
 
-Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
+Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
 {
+    RootOperation op = smart_dynamic_cast<RootOperation>(sightOp->getArgs().front());
     const std::vector<Root>& args = op->getArgs();
 
-    if (op->getClassNo() == CREATE_NO)
-    {
+    if (op->getClassNo() == CREATE_NO) {
         assert(!args.empty());
-        GameEntity gent = smart_dynamic_cast<GameEntity>(args.front());
-        if (gent.isValid())
-        {
-            TypeInfo* type = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
-            if (!type->isBound()) {
-                TypeInfoSet unbound;
-                unbound.insert(type);
-                
-                new TypeBoundRedispatch(m_avatar->getConnection(), op, unbound);
+        RootEntity gent = smart_dynamic_cast<RootEntity>(args.front());
+        if (gent.isValid()) {
+            // View needs a bound TypeInfo for the entity
+            TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(gent);
+            if (!ty->isBound()) {
+                new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
                 return WILL_REDISPATCH;
             }
+    
             m_view->create(gent);
             return HANDLED;
         }
     }
     
-    if (op->getClassNo() == DELETE_NO)
-    {
+    if (op->getClassNo() == DELETE_NO) {
         assert(!args.empty());
         m_view->deleteEntity(args.front()->getId());
         return HANDLED;
@@ -129,8 +118,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
     
     // becuase a SET op can potentially (legally) update multiple entities,
     // we decode it here, not in the entity router
-    if (op->getClassNo() == SET_NO)
-    {
+    if (op->getClassNo() == SET_NO) {
         for (unsigned int A=0; A < args.size(); ++A) {
             Entity* ent = m_view->getEntity(args[A]->getId());
             if (!ent) {
@@ -151,7 +139,10 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& op)
     // we have to handle generic 'actions' late, to avoid trapping interesting
     // such as create or divide
     TypeInfo* ty = m_avatar->getConnection()->getTypeService()->getTypeForAtlas(op);
-    assert(ty->isBound());
+    if (!ty->isBound()) {
+        new TypeBoundRedispatch(m_avatar->getConnection(), sightOp, ty);
+        return WILL_REDISPATCH;
+    }
     
     if (ty->isA(m_actionType)) {
         

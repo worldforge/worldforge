@@ -97,6 +97,38 @@ AutoAvatar AvatarGetter::take(const std::string& charId)
 
     return m_av;
 }
+
+AutoAvatar AvatarGetter::create(const Atlas::Objects::Entity::RootEntity& charEnt)
+{        
+    m_waiting = true;
+    m_failed = false;
+    
+    m_acc->createCharacter(charEnt);
+    
+    while (m_waiting) Eris::PollDefault::poll();
+    
+    // we wanted to fail, bail out now
+    if (m_failed && m_expectFail) return AutoAvatar();
+    
+    assert(m_av->getEntity() == NULL); // shouldn't have the entity yet
+
+    if (m_earlyReturn) return m_av;
+
+    SignalCounter1<Eris::Entity*> gotChar;
+    m_av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Eris::Entity*>::fired));
+
+    TimeStamp end = TimeStamp::now() + TimeDiff(2 * 1000);
+    
+    while ((gotChar.fireCount() == 0) && (TimeStamp::now() < end)) {
+        Eris::PollDefault::poll();
+    }
+    
+    if (gotChar.fireCount() == 0) cout << "timed-out waiting to go in-game" << endl;
+    
+    assert(m_av->getEntity());
+
+    return m_av;
+}
     
 void AvatarGetter::success(Eris::Avatar* av)
 {

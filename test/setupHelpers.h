@@ -31,7 +31,9 @@ public:
         m_earlyReturn = true;
     }
     
-    AutoAvatar take(const std::string& charId);    
+    AutoAvatar take(const std::string& charId);
+    AutoAvatar create(const Atlas::Objects::Entity::RootEntity& charEnt);
+    
 private:
     void success(Eris::Avatar* av);    
     void failure(const std::string& msg);

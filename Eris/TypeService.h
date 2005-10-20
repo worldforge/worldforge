@@ -5,7 +5,6 @@
 #include <sigc++/signal.h>
 
 #include <Eris/Types.h>
-#include <Atlas/Objects/Decoder.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 
 #include <map>
@@ -30,9 +29,6 @@ public:
 
     void init();
 
-    /// load the core Atlas::Objects specification from the named file
-    void readAtlasSpec(const std::string &specfile);
-
     /** find the TypeInfo for the named type; this may involve a search, or a map lookup.
      The returned TypeInfo node may not be bound, and the caller should verify this
      before using the type. */
@@ -55,37 +51,16 @@ public:
 
     void handleOperation(const Atlas::Objects::Operation::RootOperation&);
 
-    bool verifyObjectTypes(const Atlas::Objects::Root& obj);
-
  private:
-    /** helper class to parse definitions out of the spec file */
-    class SpecDecoder : public Atlas::Objects::ObjectsDecoder
-    {
-    public:
-        SpecDecoder(TypeService* ts);
-    protected:
-        virtual void objectArrived(const Atlas::Objects::Root& obj);
-
-    private:
-        TypeService* m_typeService;
-    };
-
     /** request the information about a type from the server.
     @param id The ID of the type to lookup
     */
     void sendRequest(const std::string& id);
-
-    /// build a TypeInfo object if necessary, and add it to the database
-    void registerLocalType(const Atlas::Objects::Root &def);
-
     void recvTypeInfo(const Atlas::Objects::Root &atype);
     void recvError(const Atlas::Objects::Operation::Get& get);
 
     TypeInfoPtr defineBuiltin(const std::string& name, TypeInfoPtr parent);
 
-    void innerVerifyType(const Atlas::Objects::Root& obj, TypeInfoSet& unbound);
-    void verifyOpArguments(const Atlas::Objects::Root& obj, TypeInfoSet& unbound);
-    
     typedef std::map<std::string, TypeInfoPtr> TypeInfoMap;
     /** The easy bit : a simple map from 'string-id' (e.g 'look' or 'farmer')
     to the corresponding TypeInfo instance. This could be a hash_map in the

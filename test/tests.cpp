@@ -39,7 +39,7 @@ using std::endl;
 using std::cout;
 using std::cerr;
 
-using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::Entity::RootEntity;
 
 typedef WFMath::Point<3> Point3;
 
@@ -109,6 +109,43 @@ void testCharActivate(Controller& ctl)
     
     assert(v->getTopLevel()->hasChild("_hut_01"));
     assert(!v->getTopLevel()->hasChild("_field_01")); // not yet
+}
+
+void testCharCreate()
+{
+    AutoConnection con = stdConnect();
+    AutoAccount player = stdLogin("account_A", "pumpkin", con.get());
+    
+    RootEntity charEnt;
+    StringList prs;
+    prs.push_back("settler");
+    charEnt->setParents(prs);
+    charEnt->setName("Fruitfucker");
+    charEnt->setAttr("foo", 42);
+    
+    AutoAvatar av = AvatarGetter(player.get()).create(charEnt);
+    
+    assert(av->getEntity()->getName() == "Fruitfucker");
+    assert(av->getEntity()->valueOfAttr("foo").asInt() == 42);
+    
+    assert(player->getActiveCharacters().count(av->getId()) == 1);
+}
+
+void testBadCreate()
+{
+    AutoConnection con = stdConnect();
+    AutoAccount player = stdLogin("account_A", "pumpkin", con.get());
+    
+    AvatarGetter g(player.get());
+    g.expectFailure();
+    
+    RootEntity charEnt;
+    StringList prs;
+    prs.push_back("__fail__");
+    charEnt->setParents(prs);
+    
+    AutoAvatar av2 = g.create(charEnt);
+    assert(av2.get() == NULL);
 }
 
 void testSet(Controller& ctl)
@@ -347,7 +384,7 @@ void testSightCreate(Controller& ctl)
     av->getView()->EntityCreated.connect(SigC::slot(created, 
         &SignalRecorder1<Eris::Entity*>::fired));
     
-    GameEntity gent;
+    RootEntity gent;
     Atlas::Message::ListType prs;
     prs.push_back("book");
     gent->setParentsAsList(prs);
@@ -482,6 +519,9 @@ int runTests(Controller& ctl)
         testServerSocketShutdown(ctl);
     
         testCharActivate(ctl);
+        testCharCreate();
+        testBadCreate();
+        
         testAppearance(ctl);
         testSightCreate(ctl);
         testSet(ctl);

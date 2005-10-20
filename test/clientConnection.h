@@ -58,6 +58,7 @@ private:
     void processAnonymousGet(const Atlas::Objects::Operation::Get& get);
     void processTalk(const Atlas::Objects::Operation::Talk& tk);
     
+    void createCharacter(const Atlas::Objects::Operation::RootOperation& op);
     void activateCharacter(const std::string& charId, const Atlas::Objects::Operation::RootOperation& op);
     
     void processIG(const Atlas::Objects::Operation::RootOperation& op);

@@ -37,7 +37,7 @@ public:
     
     Agent* findAgentForEntity(const std::string& eid);
     
-    Atlas::Objects::Entity::GameEntity getEntity(const std::string& eid) const;
+    Atlas::Objects::Entity::RootEntity getEntity(const std::string& eid) const;
     
     void resetWorld();
     void addManyObjects(const std::string& );
@@ -66,7 +66,7 @@ private:
     
     AccountMap m_accounts;
     
-    typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> EntityMap;
+    typedef std::map<std::string, Atlas::Objects::Entity::RootEntity> EntityMap;
     EntityMap m_world;
     
     typedef std::map<std::string, Atlas::Objects::Entity::RootEntity> RoomMap;

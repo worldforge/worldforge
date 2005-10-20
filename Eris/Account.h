@@ -16,7 +16,7 @@ class Avatar;
 class AccountRouter;
 
 /** Type used to return available characters */
-typedef std::map<std::string, Atlas::Objects::Entity::GameEntity> CharacterMap;
+typedef std::map<std::string, Atlas::Objects::Entity::RootEntity> CharacterMap;
 
 typedef std::map<std::string, Avatar*> ActiveCharacterMap;
 
@@ -108,7 +108,7 @@ public:
     Result takeCharacter(const std::string &id);
 
     /// enter the game using a new character
-    Result createCharacter(const Atlas::Objects::Entity::GameEntity &character);
+    Result createCharacter(const Atlas::Objects::Entity::RootEntity &character);
 
 	/// pop up the game's character creation dialog, if present
 	//void createCharacter();
@@ -137,7 +137,7 @@ public:
 
 // signals
     /// emitted when a character has been retrived from the server
-    SigC::Signal1<void, const Atlas::Objects::Entity::GameEntity&> GotCharacterInfo;
+    SigC::Signal1<void, const Atlas::Objects::Entity::RootEntity&> GotCharacterInfo;
     
     /// emitted when the entire character list had been updated
     SigC::Signal0<void> GotAllCharacters;

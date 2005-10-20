@@ -98,7 +98,7 @@ void Controller::setAttr(const std::string& eid, const std::string& attr, const 
     send(s);
 }
 
-void Controller::create(const Atlas::Objects::Entity::GameEntity& ent)
+void Controller::create(const Atlas::Objects::Entity::RootEntity& ent)
 {
     Create c;
     c->setArgs1(ent);

@@ -16,6 +16,7 @@
 #include <skstream/skstream.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/objectFactory.h>
 #include <Atlas/Objects/Entity.h>
 #include <sigc++/bind.h>
 #include <sigc++/object_slot.h>
@@ -25,7 +26,7 @@
 #include <cassert>
 #include <algorithm>
 
-//#define ATLAS_LOG 1
+// #define ATLAS_LOG 1
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -238,9 +239,7 @@ void Connection::objectArrived(const Root& obj)
     debugStream << std::flush;
 
     std::cout << "recieved:" << debugStream.str() << std::endl;
-#endif
-    if (!m_typeService->verifyObjectTypes(obj)) return;
-    
+#endif    
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     if (op.isValid()) {
         m_opDeque.push_back(op);
@@ -259,19 +258,18 @@ void Connection::dispatchOp(const RootOperation& op)
     IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
     if (R != m_fromRouters.end()) {
         rr = R->second->handleOperation(op);
-        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH))
-            return;
+        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
     }
     
 // locate a router based on the op's TO value
     R = m_toRouters.find(op->getTo());
     if (R != m_toRouters.end()) {
         rr = R->second->handleOperation(op);
-        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH))
-            return;
-    } else if (!anonymous && !m_toRouters.empty())
+        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+    } else if (!anonymous && !m_toRouters.empty()) {
         warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
-            
+    }
+    
 // special-case, server info refreshes are handled here directly
     if (op->instanceOf(INFO_NO) && anonymous) {
         handleServerInfo(op);
@@ -280,16 +278,13 @@ void Connection::dispatchOp(const RootOperation& op)
             
 // go to the default router
     rr = m_defaultRouter->handleOperation(op);
-    if (rr != Router::HANDLED)
-        warning() << "no-one handled op:" << op;
+    if (rr != Router::HANDLED) warning() << "no-one handled op:" << op;
 }
 
 
 void Connection::setStatus(Status ns)
 {
-	if (_status != ns) {
-		StatusChanged.emit(ns);
-	}
+	if (_status != ns) StatusChanged.emit(ns);
 	_status = ns;
 }
 
@@ -332,12 +327,8 @@ void Connection::onDisconnectTimeout()
 
 void Connection::postForDispatch(const Root& obj)
 {
-    if (!m_typeService->verifyObjectTypes(obj)) {
-        debug() << "amazingly, re-dispatched object failed to verify!";
-        return;
-    }
-    
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
+    assert(op.isValid());
     m_opDeque.push_back(op);
     
 #ifdef ATLAS_LOG

@@ -7,19 +7,15 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/Log.h>
 #include <Eris/Connection.h>
-#include <Eris/TypeBoundRedispatch.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Response.h>
 
-#include <Atlas/Codecs/XML.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
 #include <Atlas/Objects/RootOperation.h>
 #include <Atlas/Objects/Anonymous.h>
 
 #include <sigc++/object_slot.h>
-
-#include <fstream>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -187,45 +183,6 @@ void TypeService::recvError(const Get& get)
     m_types.erase(T);
 }
 
-#pragma mark -
-
-TypeService::SpecDecoder::SpecDecoder(TypeService* ts) :
-    m_typeService(ts)
-{
-}
-        
-void TypeService::SpecDecoder::objectArrived(const Root& def)
-{
-    m_typeService->registerLocalType(def);
-}
-
-void TypeService::readAtlasSpec(const std::string &specfile)
-{
-    std::fstream specStream(specfile.c_str(), std::ios::in);
-    if(!specStream.is_open())
-    {
-        warning() << "Unable to open Atlas spec file " << specfile
-            << ", will obtain all type data from the server";
-        return;
-    }
- 
-    debug() << "Found Atlas type data in '" << specfile << "', using for initial type info";
-    
-    SpecDecoder decode(this);
-    Atlas::Codecs::XML specXMLCodec(specStream, decode);
-    while (!specStream.eof())
-        specXMLCodec.poll(true);
-}
-
-void TypeService::registerLocalType(const Root &def)
-{
-    TypeInfoMap::iterator T = m_types.find(def->getId());
-    if (T != m_types.end())
-        T->second->processTypeData(def);
-    else
-        m_types[def->getId()] = new TypeInfo(def, this);
-}
-
 TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent)
 {
     assert(m_types.count(name) == 0);
@@ -238,89 +195,6 @@ TypeInfoPtr TypeService::defineBuiltin(const std::string& name, TypeInfo* parent
     
     assert(type->isBound());
     return type;
-}
-
-bool TypeService::verifyObjectTypes(const Root& obj)
-{
-    try {
-        TypeInfoSet unbound;
-        innerVerifyType(obj, unbound);
-        
-        if (unbound.empty()) return true;
-   /*     
-        std::string types;
-        for (TypeInfoSet::iterator it=unbound.begin(); it!=unbound.end();++it) {
-            if (!types.empty()) types.append(", ");
-            types.append((*it)->getName());
-        }
-        debug() << "type verify failed, need [" << types << "]";
-   */     
-        new TypeBoundRedispatch(m_con, obj, unbound);
-    }
-    catch (InvalidAtlas& inva) {
-        error() << "got malformed atlas: " << inva._msg;
-        error() << "bad obj: " << obj;
-    }
-    
-    return false;
-}
-
-void TypeService::innerVerifyType(const Root& obj, TypeInfoSet& unbound)
-{
-    int classNo = obj->getClassNo();
-    if (classNo == Atlas::Objects::Entity::ANONYMOUS_NO)
-    {
-        // if no objtype or parents, it's just plain : we're done
-        if (obj->isDefaultObjtype() && obj->isDefaultParents()) return;
-        
-        // don't try this on type data
-        if ((obj->getObjtype() == "class") || (obj->getObjtype() == "op_definition")) return;
-        
-        TypeInfo* type = getTypeForAtlas(obj);
-        if (type == m_anonymousType) {
-            warning() << "recieved anonymous object with objtype/parents set: " << obj;
-            return;
-        }
-                
-        if (type->isBound()) {
-            warning() << type->getName() << " is bound, but got anonymous Object: " << obj;
-            return;
-        }
-        
-        unbound.insert(type);
-    } else {
-        TypeInfo* type = getTypeForAtlas(obj);
-        if (!type->isBound()) unbound.insert(type);
-    }
-
-    if (obj->getObjtype() == "op") verifyOpArguments(obj, unbound);
-}
-
-void TypeService::verifyOpArguments(const Root& obj, TypeInfoSet& unbound)
-{
-    /*
-    Two different cases for verifying op arguments; one where the op
-    itself was bound, and hence has the args decoded, and another for
-    the case where the op type was unknown, and hence we only have
-    Message::Elements. 
-    */
-    if (obj->instanceOf(Atlas::Objects::Operation::ROOT_OPERATION_NO)) {
-        RootOperation op = smart_dynamic_cast<RootOperation>(obj);
-        assert(op.isValid());
-        const std::vector<Root>& args = op->getArgs();
-        
-        for  (std::vector<Root>::const_iterator A=args.begin(); A != args.end(); ++A)
-            innerVerifyType(*A, unbound);
-    } else {
-        Atlas::Message::Element args = obj->getAttr("args");
-        assert(args.isList());
-    
-        Atlas::Message::ListType::const_iterator A;
-        for  (A = args.asList().begin(); A != args.asList().end(); ++A) {
-            Root argObj = Atlas::Objects::Factories::instance()->createObject(A->asMap());
-            innerVerifyType(argObj, unbound);
-        }
-    }
 }
 
 } // of namespace Eris

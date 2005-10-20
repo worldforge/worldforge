@@ -22,7 +22,7 @@
 
 using Atlas::Objects::Root;
 using namespace Atlas::Objects::Operation;
-using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
 typedef Atlas::Objects::Entity::Account AtlasAccount;
 using Atlas::Objects::smart_dynamic_cast;
@@ -206,7 +206,7 @@ Result Account::refreshCharacterInfo()
     return NO_ERR;
 }
 
-Result Account::createCharacter(const Atlas::Objects::Entity::GameEntity &ent)
+Result Account::createCharacter(const Atlas::Objects::Entity::RootEntity &ent)
 {
     if (!m_con->isConnected()) return NOT_CONNECTED;
     if (m_status != LOGGED_IN) {
@@ -355,7 +355,7 @@ void Account::loginResponse(const RootOperation& op)
         const std::vector<Root>& args = op->getArgs();
         loginComplete(smart_dynamic_cast<AtlasAccount>(args.front()));
     } else
-        warning() << "received malformed login response";
+        warning() << "received malformed login response: " << op->getClassNo();
 }
 
 void Account::loginComplete(const AtlasAccount &p)
@@ -445,7 +445,7 @@ void Account::avatarResponse(const RootOperation& op)
     } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args = op->getArgs();
    
-        GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
+        RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
         if (!ent.isValid()) {
             warning() << "malformed character create/take response";
             return;
@@ -458,7 +458,7 @@ void Account::avatarResponse(const RootOperation& op)
         assert(m_activeCharacters.count(av->getId()) == 0);
         m_activeCharacters[av->getId()] = av;
     } else 
-        warning() << "received malformed login response";
+        warning() << "received malformed avatar take response";
 }
 
 void Account::deactivateCharacter(Avatar* av)
@@ -476,7 +476,7 @@ void Account::sightCharacter(const RootOperation& op)
     
     const std::vector<Root>& args = op->getArgs();
     assert(!args.empty());
-    GameEntity ge = smart_dynamic_cast<GameEntity>(args.front());
+    RootEntity ge = smart_dynamic_cast<RootEntity>(args.front());
     assert(ge.isValid());
 
     CharacterMap::iterator C = _characters.find(ge->getId());

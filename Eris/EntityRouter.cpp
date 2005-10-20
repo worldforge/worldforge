@@ -10,13 +10,13 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/View.h>
 #include <Eris/Connection.h>
+#include <Eris/TypeBoundRedispatch.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
-using Atlas::Objects::Entity::GameEntity;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
@@ -61,8 +61,11 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
         } 
         
         TypeInfo* ty = typeService()->getTypeForAtlas(args.front());
-        assert(ty->isBound());
-        
+        if (!ty->isBound()) {
+            new TypeBoundRedispatch(m_entity->getView()->getAvatar()->getConnection(), op, ty);
+            return WILL_REDISPATCH;
+        }
+    
         if (ty->isA(typeService()->getTypeByName("action")))
         {
             // sound of action
@@ -88,8 +91,9 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
         const Root & arg = args.front();
         
         // break out LOC, which MOVE ops are allowed to update
-        if (arg->hasAttr("loc"))
+        if (arg->hasAttr("loc")) {
             m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
+        }
         
         m_entity->setPosAndVelocityFromAtlas(arg);
         return HANDLED;

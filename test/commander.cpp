@@ -117,7 +117,7 @@ void Commander::dispatch(const RootOperation& op)
     if (cr.isValid()) {
         std::vector<Root> args(op->getArgs());
         assert(!args.empty());
-        GameEntity ent = smart_dynamic_cast<GameEntity>(args.front());
+        RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
         assert(ent.isValid());
         
         static int idCounter = 900;
@@ -154,14 +154,14 @@ void Commander::dispatch(const RootOperation& op)
     
     Move mv = smart_dynamic_cast<Move>(op);
     if (mv.isValid()) {
-        GameEntity ent = m_server->getEntity(op->getTo());
+        RootEntity ent = m_server->getEntity(op->getTo());
         
         std::vector<Root> args(op->getArgs());
         
         if (args.front()->hasAttr("loc")) {
             std::string newLocId = args.front()->getAttr("loc").asString();
             
-            GameEntity oldLoc = m_server->getEntity(ent->getLoc()),
+            RootEntity oldLoc = m_server->getEntity(ent->getLoc()),
                 newLoc = m_server->getEntity(newLocId);
             
             ent->setLoc(newLocId);
@@ -205,7 +205,7 @@ void Commander::dispatch(const RootOperation& op)
         for (unsigned int A=0; A < args.size(); ++A) {
             std::string eid = args[A]->getId();
         
-            GameEntity entity = m_server->getEntity(eid);
+            RootEntity entity = m_server->getEntity(eid);
             Root::const_iterator I = args[A]->begin();
             
             for (; I != args[A]->end(); ++I) {

@@ -217,6 +217,19 @@ void ClientConnection::dispatchOOG(const RootOperation& op)
         return;
     }
     
+    case CREATE_NO: {
+        const StringList& arg0Parents(op->getArgs().front()->getParents());
+        if (arg0Parents.front() == "__fail__") {
+            sendError("bad type for char creation", op);
+            return;
+        }
+        
+        if (arg0Parents.front() == "settler") {
+            createCharacter(op);
+            return;
+        }
+    }
+    
     default:
         error() << "clientConnection failed to handle OOG op";
     } // of classNo switch
@@ -435,6 +448,36 @@ void ClientConnection::activateCharacter(const std::string& charId, const RootOp
     
     send(info);
     ag->processOp(op); // process as normal
+}
+
+void ClientConnection::createCharacter(const RootOperation& op)
+{
+    static unsigned int charCounter = 0;
+    char charId[64];
+    ::snprintf(charId, 64, "_customChar_%d", ++charCounter);
+    
+    RootEntity ent = smart_dynamic_cast<RootEntity>(op->getArgs().front());
+    
+    ent->setId(charId);
+    ent->setLoc("_world");
+    m_server->m_world[charId] = ent;
+
+    StringList children(m_server->m_world["_world"]->getContains());
+    children.push_back(charId);
+    m_server->m_world["_world"]->setContains(children);
+
+    Agent* ag = new Agent(this, charId);
+    ag->setEntityVisible(charId, true);
+    
+    m_agents[charId] = ag;
+    
+    Info info;
+    info->setArgs1(m_server->m_world[charId]);
+    info->setFrom(charId);
+    info->setTo(m_account); // I *think* this is right
+    info->setRefno(op->getSerialno());
+    
+    send(info);
 }
 
 #pragma mark -

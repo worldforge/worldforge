@@ -23,7 +23,7 @@
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
-using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::Entity::RootEntity;
 using Atlas::Message::Element;
 using Atlas::Objects::smart_static_cast;
 using Atlas::Objects::smart_dynamic_cast;
@@ -62,7 +62,7 @@ Entity::~Entity()
     delete m_router;
 }
 
-void Entity::init(const GameEntity& ge)
+void Entity::init(const RootEntity& ge)
 {
     // setup initial state
     sight(ge);
@@ -145,7 +145,7 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t)
 
 #pragma mark -
 
-void Entity::sight(const GameEntity &ge)
+void Entity::sight(const RootEntity &ge)
 {    
     if (!ge->isDefaultLoc())
         setLocationFromAtlas(ge->getLoc());

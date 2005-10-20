@@ -167,23 +167,9 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
     m_ancestors.insert(parentAncestors.begin(), parentAncestors.end());
 	
     // tell all our childen!
-    for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C)
+    for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C) {
         (*C)->addAncestor(tp);
-}
-
-static Atlas::Objects::Root gameEntityFactory(const std::string &, int)
-{
-    return Atlas::Objects::Entity::GameEntity();
-}
-
-static Atlas::Objects::Root adminEntityFactory(const std::string &, int)
-{
-    return Atlas::Objects::Entity::AdminEntity();
-}
-
-static Atlas::Objects::Root actionFactory(const std::string &, int)
-{
-    return Atlas::Objects::Operation::Action();
+    }
 }
 
 void TypeInfo::validateBind()
@@ -191,35 +177,18 @@ void TypeInfo::validateBind()
     if (m_bound) return;
 	
     // check all our parents
-    for (TypeInfoSet::iterator P=m_parents.begin(); P!=m_parents.end();++P)
+    for (TypeInfoSet::iterator P=m_parents.begin(); P!=m_parents.end();++P) {
         if (!(*P)->isBound()) return;
-	
-    m_bound = true;
-     
-    Atlas::Objects::Factories * of = Atlas::Objects::Factories::instance();
-    if (!of->hasFactory(m_name))
-    {
-        // identify the most accurate C++ base type and use as the factory
-        if (isA(m_typeService->getTypeByName("game_entity"))) {
-            m_atlasClassNo = of->addFactory(m_name, &gameEntityFactory);
-        } else if (isA(m_typeService->getTypeByName("admin_entity"))) {
-            m_atlasClassNo = of->addFactory(m_name, &adminEntityFactory);
-        } else if (isA(m_typeService->getTypeByName("action"))) {
-            m_atlasClassNo = of->addFactory(m_name, &actionFactory);
-        } else {
-            // screwed
-            error() << "type " << m_name <<  " doesn't inherit a supported base type " 
-                << "(game_entity, admin_entity, action)";
-            for (TypeInfoSet::iterator P=m_ancestors.begin(); P!=m_ancestors.end();++P)
-                debug() << m_name << " has ancestor " << (*P)->getName() << " @ " << *P;
-        }
-    }
+	}
     
+    m_bound = true;
+         
     Bound.emit(this);
     m_typeService->BoundType.emit(this);
     
-    for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C)
+    for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C) {
         (*C)->validateBind();
+    }
 }
 
 } // of namespace Eris

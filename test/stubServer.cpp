@@ -35,7 +35,7 @@ static Atlas::Objects::Root actionFactory(const std::string &, int)
 }
 
 
-using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::Entity::RootEntity;
 
 StubServer::StubServer(short port) :
     m_serverSocket(port)
@@ -174,7 +174,7 @@ void StubServer::resetWorld()
 {
     m_world.clear();
     
-    GameEntity world;
+    RootEntity world;
     world->setId("_world");
     world->setObjtype("obj");
     world->setParents(StringList(1, "game_entity"));
@@ -475,9 +475,9 @@ void StubServer::talkInRoom(const Talk& tk, const std::string& room)
 
 #pragma mark -
 
-static Atlas::Objects::Root gameEntityFactory(const std::string &, int)
+static Atlas::Objects::Root entityFactory(const std::string &, int)
 {
-    return Atlas::Objects::Entity::GameEntity();
+    return Atlas::Objects::Entity::RootEntity();
 }
 
 void StubServer::subclassType(const std::string& base, const std::string& derivedName)
@@ -504,7 +504,7 @@ void StubServer::subclassType(const std::string& base, const std::string& derive
         if (T->second->getObjtype() == "op_definition") {
             of->addFactory(derivedName, &actionFactory);
         } else {
-            of->addFactory(derivedName, &gameEntityFactory);
+            of->addFactory(derivedName, &entityFactory);
         }
     }
 }
@@ -512,7 +512,7 @@ void StubServer::subclassType(const std::string& base, const std::string& derive
 void StubServer::defineEntity(const std::string& id, const std::string& type, 
     const std::string& loc, const std::string& nm)
 {
-    GameEntity e;
+    RootEntity e;
     e->setName(nm);
     e->setId(id);
     e->setObjtype("obj");
@@ -527,10 +527,10 @@ void StubServer::defineEntity(const std::string& id, const std::string& type,
     }
 }
 
-GameEntity StubServer::getEntity(const std::string& eid) const
+RootEntity StubServer::getEntity(const std::string& eid) const
 {
     EntityMap::const_iterator I = m_world.find(eid);
-    if (I == m_world.end()) return GameEntity();
+    if (I == m_world.end()) return RootEntity();
     
     return I->second;
 }

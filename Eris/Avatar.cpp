@@ -19,7 +19,6 @@
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
-using Atlas::Objects::Entity::GameEntity;
 using Atlas::Objects::Entity::Anonymous;
 using WFMath::TimeStamp;
 

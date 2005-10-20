@@ -88,8 +88,8 @@ protected:
     
     void appear(const std::string& eid, float stamp);
     void disappear(const std::string& eid);
-    void sight(const Atlas::Objects::Entity::GameEntity& ge);
-    void create(const Atlas::Objects::Entity::GameEntity& ge);
+    void sight(const Atlas::Objects::Entity::RootEntity& ge);
+    void create(const Atlas::Objects::Entity::RootEntity& ge);
     void deleteEntity(const std::string& eid);
 
     void setEntityVisible(Entity* ent, bool vis);
@@ -106,7 +106,7 @@ protected:
     void entityDeleted(Entity* ent);
 
 private:
-    Entity* initialSight(const Atlas::Objects::Entity::GameEntity& ge);
+    Entity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
 
     Connection* getConnection() const;
     void getEntityFromServer(const std::string& eid);
@@ -114,7 +114,7 @@ private:
     /** helper to update the top-level entity, fire signals, etc */
     void setTopLevelEntity(Entity* newTopLevel);
 
-    Entity* createEntity(const Atlas::Objects::Entity::GameEntity&);
+    Entity* createEntity(const Atlas::Objects::Entity::RootEntity&);
 
     /**
     Issue a LOOK operation for the specified entity ID. The id may be

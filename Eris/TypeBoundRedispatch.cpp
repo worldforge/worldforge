@@ -8,7 +8,6 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/LogStream.h>
 
-#include <Atlas/Objects/Decoder.h>
 #include <Atlas/Objects/Operation.h>
 #include <sigc++/object_slot.h>
 
@@ -20,20 +19,20 @@ using Atlas::Objects::smart_dynamic_cast;
 namespace Eris
 {
 
-/** recoder is a tempory Atlas bridge / decoder / factory stack we 
- create when the redispatch fires. By sending our original decoded data
- back over the bridge, we run the objects factory on the 'original' data
- sent over the wire, and hopefully build new and better objects. */
-class Recoder : public Atlas::Objects::ObjectsDecoder
+
+TypeBoundRedispatch::TypeBoundRedispatch(Connection* con, 
+        const Root& obj, 
+        TypeInfo* unbound) :
+    Redispatch(con, obj),
+    m_con(con)
 {
-public:
-    Root m_recoded;
-protected:
-    void objectArrived(const Root& obj)
-    {
-        m_recoded = obj;
-    }
-};
+    m_unbound.insert(unbound);
+    
+    assert(unbound->isBound() == false);
+    unbound->Bound.connect(SigC::slot(*this, &TypeBoundRedispatch::onBound));
+    
+    con->getTypeService()->BadType.connect(SigC::slot(*this, &TypeBoundRedispatch::onBadType));
+}
 
 TypeBoundRedispatch::TypeBoundRedispatch(Connection* con, 
         const Root& obj, 
@@ -55,16 +54,7 @@ void TypeBoundRedispatch::onBound(TypeInfo* bound)
     assert(m_unbound.count(bound));
     m_unbound.erase(bound);
     
-    if (m_unbound.empty()) {
-        Recoder r;
-        r.streamBegin();
-        r.streamMessage();
-        m_obj->sendContents(r);
-        r.mapEnd();
-    
-        assert(!r.m_recoded->isDefaultObjtype());
-        postModified(r.m_recoded);
-    }
+    if (m_unbound.empty()) post();
 }
 
 void TypeBoundRedispatch::onBadType(TypeInfo* bad)

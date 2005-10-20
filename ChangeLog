@@ -1,3 +1,20 @@
+2005-10-20  James Turner  <james@worldforge.org>
+
+	* Eris/View.cpp, Eris/View.h, Eris/Account.cpp, Eris/Account.h,
+	  Eris/Avatar.cpp, Eris/Connection.cpp, Eris/Entity.h, Eris/Entity.cpp, 
+	  Eris/EntityRouter.cpp, Eris/Factory.h, Eris/IGRouter.cpp,
+	  Eris/TypeBoundRedispatch.cpp, Eris/TypeBoundRedispatch.h, 
+	  Eris/TypeInfo.cpp, Eris/TypeService.cpp, Eris/TypeService.h:
+	  switch to using RootOperation / RootEntity exclusively, and hence
+	  avoid installing any custom factories at all.
+	  
+	* test/agent.cpp, test/clientConnection.cpp, test/clientConnection.h,
+	  test/commander.cpp, test/controller.cpp, test/controller.h, 
+	  test/setupHelpers.cpp, test/setupHelpers.h, test/tests.cpp,
+	  test/stubServer.cpp, test/stubServer.h:
+	  Add tests for creating a character and for attempting
+	  character creation with an invalid type.
+
 2005-10-19  James Turner  <james@worldforge.org>
 
 	* Eris/View.cpp: deal with the scenario where a look-queued entity

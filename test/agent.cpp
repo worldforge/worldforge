@@ -19,7 +19,6 @@ using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;
 using namespace Eris;
 using Atlas::Objects::Entity::RootEntity;
-using Atlas::Objects::Entity::GameEntity;
 
 using std::endl;
 using std::cout;
@@ -158,7 +157,7 @@ void Agent::processLook(const Look& look)
 
     typedef std::list<std::string> StringList;
 
-    GameEntity ge = m_server->m_world[lookTarget].copy();
+    RootEntity ge = m_server->m_world[lookTarget].copy();
     StringList contents = ge->getContains();
     
     // prune based on visibility

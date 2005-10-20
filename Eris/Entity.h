@@ -249,7 +249,7 @@ protected:
     /** over-rideable initialisation helper. When subclassing, if you
     over-ride this method, take care to call the base implementation, or
     unfortunate things will happen. */
-    virtual void init(const Atlas::Objects::Entity::GameEntity &ge);
+    virtual void init(const Atlas::Objects::Entity::RootEntity &ge);
     
     /** process TALK data - default implementation emits the Say signal.
     @param obj The TALK operation arguments
@@ -317,7 +317,7 @@ private:
     
     void setPosAndVelocityFromAtlas(const Atlas::Objects::Root& data);
     
-    void sight(const Atlas::Objects::Entity::GameEntity& gent);
+    void sight(const Atlas::Objects::Entity::RootEntity& gent);
     void setFromRoot(const Atlas::Objects::Root& obj);
     
     /** the View calls this to change local entity visibility. No one else

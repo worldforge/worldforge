@@ -25,7 +25,7 @@ public:
     void movePos(const std::string& eid, const WFMath::Point<3>& pos);
     void moveVelocity(const std::string& eid, const WFMath::Vector<3>& vel);
     
-    void create(const Atlas::Objects::Entity::GameEntity& ent);
+    void create(const Atlas::Objects::Entity::RootEntity& ent);
     void deleteEntity(const std::string& eid);
     
     /** generalised attribute modification interface */

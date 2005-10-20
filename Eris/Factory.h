@@ -19,10 +19,10 @@ public:
     /** Accept is called when an entity must be constructed; this will be called every time
     an object is created, so avoid lengthy processing if possible. */
 
-    virtual bool accept(const Atlas::Objects::Entity::GameEntity &ge, TypeInfo* type) = 0;
+    virtual bool accept(const Atlas::Objects::Entity::RootEntity &ge, TypeInfo* type) = 0;
 
     /// create whatever entity the client desires
-    virtual Entity* instantiate(const Atlas::Objects::Entity::GameEntity &ge, TypeInfo* type, View* v) = 0;
+    virtual Entity* instantiate(const Atlas::Objects::Entity::RootEntity &ge, TypeInfo* type, View* v) = 0;
     
     /** retrieve this factory's priority level; higher priority factories
     get first chance to process a recieved Atlas entity. The default implementation

@@ -17,7 +17,7 @@
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
-using Atlas::Objects::Entity::GameEntity;
+using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris
@@ -140,7 +140,7 @@ void View::disappear(const std::string& eid)
     }
 }
 
-void View::sight(const GameEntity& gent)
+void View::sight(const RootEntity& gent)
 {
     bool visible = true;
     std::string eid = gent->getId();
@@ -192,7 +192,7 @@ void View::sight(const GameEntity& gent)
     }
 }
 
-Entity* View::initialSight(const GameEntity& gent)
+Entity* View::initialSight(const RootEntity& gent)
 {
     Entity* ent = createEntity(gent);
     assert(m_contents.count(gent->getId()) == 0);
@@ -210,15 +210,14 @@ Entity* View::initialSight(const GameEntity& gent)
     return ent;
 }
 
-void View::create(const GameEntity& gent)
+void View::create(const RootEntity& gent)
 {
     Entity* ent = createEntity(gent);
     assert(m_contents.count(gent->getId()) == 0);
     m_contents[gent->getId()] = ent;
     ent->init(gent);
     
-    if (gent->isDefaultLoc())
-        setTopLevelEntity(ent);
+    if (gent->isDefaultLoc()) setTopLevelEntity(ent);
 
     InitialSightEntity.emit(ent);
     ent->setVisible(true);
@@ -260,7 +259,7 @@ void View::deleteEntity(const std::string& eid)
     }
 }
 
-Entity* View::createEntity(const GameEntity& gent)
+Entity* View::createEntity(const RootEntity& gent)
 {
     TypeInfo* type = getConnection()->getTypeService()->getTypeForAtlas(gent);
     assert(type->isBound());
