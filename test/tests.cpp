@@ -504,6 +504,45 @@ void testMovement(Controller& ctl)
     */
 }
 
+void testEmote(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_vase_1");
+        wf.run();
+    }
+
+    Atlas::Objects::Operation::Imaginary imag;
+    
+    Atlas::Objects::Entity::Anonymous em;
+    em->setId("emote");
+    em->setAttr("description", "I wish I was a teapot");
+    
+    imag->setArgs1(em);
+    imag->setFrom("_vase_1");
+    imag->setSerialno(getNewSerialno());
+    
+    SignalRecorderRef1<std::string> emote;
+    
+    Eris::Entity* vase = av->getView()->getEntity("_vase_1");
+    vase->Emote.connect(SigC::slot(emote, &SignalRecorderRef1<std::string>::fired));
+    
+    ctl.broadcastSightFrom("_vase_1", imag);
+
+    while (!emote.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(emote.lastArg0() == "I wish I was a teapot");   
+}
+
 int runTests(Controller& ctl)
 {
     try {
@@ -534,6 +573,7 @@ int runTests(Controller& ctl)
         
         testCharacterInitialVis(ctl);
         testLookQueue(ctl);
+        testEmote(ctl);
     }
     catch (TestFailure& tfexp)
     {

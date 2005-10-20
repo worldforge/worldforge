@@ -119,6 +119,21 @@ void Avatar::say(const std::string& msg)
     getConnection()->send(t);
 }
 
+void Avatar::emote(const std::string &em)
+{
+    Imaginary im;
+	
+    Anonymous emote;
+    emote->setId("emote");
+    emote->setAttr("description", em);
+    
+    im->setArgs1(emote);
+    im->setFrom(m_entityId);
+    im->setSerialno(getNewSerialno());
+	
+    getConnection()->send(im);
+}
+
 void Avatar::moveToPoint(const WFMath::Point<3>& pos)
 {
     Anonymous what;

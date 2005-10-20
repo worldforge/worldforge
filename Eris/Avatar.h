@@ -65,7 +65,10 @@ public:
 
 	/// Say something (in-game)
 	void say(const std::string&);
-
+    
+    /// Emote something (in-game)
+    void emote(const std::string&);
+    
 	/// Have the character move towards a position
 	void moveToPoint(const WFMath::Point<3>&);
 

@@ -1,5 +1,11 @@
 2005-10-20  James Turner  <james@worldforge.org>
 
+	* Eris/Avatar.cpp, Eris/Avatar.h: add support sending in-game emotes
+	
+	* test/tests.cpp: add a test for receiving an in-game emote
+
+2005-10-20  James Turner  <james@worldforge.org>
+
 	* Eris/View.cpp, Eris/View.h, Eris/Account.cpp, Eris/Account.h,
 	  Eris/Avatar.cpp, Eris/Connection.cpp, Eris/Entity.h, Eris/Entity.cpp, 
 	  Eris/EntityRouter.cpp, Eris/Factory.h, Eris/IGRouter.cpp,
