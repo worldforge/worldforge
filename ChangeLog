@@ -1,3 +1,7 @@
+2005-10-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.0rc1, Interface version 1.
+
 2005-10-18  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Filters/Makefile.am: Add -Itop_buildir to ensure config.h
