@@ -123,6 +123,8 @@ private:
     */
     void sendLookAt(const std::string& eid);
 
+    void eraseFromLookQueue(const std::string& eid);
+
     typedef std::map<std::string, Entity*> IdEntityMap;
 
     Avatar* m_owner;

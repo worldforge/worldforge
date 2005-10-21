@@ -161,6 +161,11 @@ void View::sight(const RootEntity& gent)
             visible = false;
             break;
 
+        case SACTION_QUEUED:
+            error() << "got sight of queued entity " << eid << " somehow";
+            eraseFromLookQueue(eid);
+            break;
+    
         default:
             throw InvalidOperation("got bad pending action for entity");
         }
@@ -375,6 +380,19 @@ void View::dumpLookQueue()
     for (unsigned int i=0; i < m_lookQueue.size(); ++i) {
         debug() << "\t" << m_lookQueue[i];
     }
+}
+
+void View::eraseFromLookQueue(const std::string& eid)
+{
+    std::deque<std::string>::iterator it;
+    for (it = m_lookQueue.begin(); it != m_lookQueue.end(); ++it) {
+        if (*it == eid) {
+            m_lookQueue.erase(it);
+            return;
+        }
+    }
+    
+    error() << "entity " << eid << " not present in the look queue";
 }
 
 } // of namespace Eris

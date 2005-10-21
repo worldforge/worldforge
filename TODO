@@ -42,13 +42,6 @@ Test Cases
  	- attached on Connection, or on the 'owning' router?
  	- Conenction seems more robust. re-structure how routers are tracked,
  	  possibly?
- 
- - account owns avatars
- 	getAvatarForActiveCharacter();
- 	account logout shuts down characters too
- 	
-- add more helpers for common client actions on Avatar. For example
-  use and emote, to go with say and touch.   
   
 Longer Term TODO
 
