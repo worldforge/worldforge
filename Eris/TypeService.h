@@ -69,8 +69,6 @@ public:
 
     Connection* m_con;
     bool m_inited;
-
-    TypeInfoPtr m_anonymousType;
 };
 
 } // of namespace Eris

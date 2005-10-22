@@ -31,8 +31,7 @@
 
 #include <signal.h>
 #include <sys/socket.h>
-
-
+#include <wfmath/atlasconv.h>
 
 using namespace Eris;
 using std::endl;
@@ -40,6 +39,8 @@ using std::cout;
 using std::cerr;
 
 using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Root;
+using Atlas::Objects::Operation::Move;
 
 typedef WFMath::Point<3> Point3;
 
@@ -305,7 +306,7 @@ void testLocationChange(Controller& ctl)
     vase->Moved.connect(SigC::slot(moved, &SignalCounter0::fired));
     vase->LocationChanged.connect(SigC::slot(locChanged, &SignalRecorder1<Eris::Entity*>::fired));
     
-    Point3 newPos(1, -2, -1);
+    Point3 newPos(30, -19, 8);
     ctl.moveLocation(vase->getId(), "_hut_01", newPos);
       
     while (!moved.fireCount() && !locChanged.fireCount()) {
@@ -315,6 +316,46 @@ void testLocationChange(Controller& ctl)
     assert(locChanged.lastArg0() == table);
     assert(vase->getPosition() == newPos);
     assert(vase->getLocation() == hut);
+}
+
+void testSeeMoveWithUpdates(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_table_1");
+        wf.waitFor("_vase_1");
+        wf.run();
+    }
+    
+    SignalCounter0 moved;
+    Eris::Entity* vase = av->getView()->getEntity("_vase_1");
+    vase->Moved.connect(SigC::slot(moved, &SignalCounter0::fired));
+    assert(vase->valueOfAttr("stamina").asInt() == 105);
+    
+    Point3 newPos(-2, -5, 1);
+    
+    Move mv;
+    Root arg;
+    arg->setAttr("pos", newPos.toAtlas());
+    arg->setAttr("stamina", 100);
+    mv->setArgs1(arg);
+        
+    ctl.move(vase->getId(), mv);
+      
+    while (!moved.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(vase->getPosition() == newPos);
+    assert(vase->valueOfAttr("stamina").asInt() == 100);
+    
 }
 
 void testSightAction(Controller& ctl)
@@ -566,6 +607,7 @@ int runTests(Controller& ctl)
         testSet(ctl);
         testTalk(ctl);
         testSeeMove(ctl);
+        testSeeMoveWithUpdates(ctl);
         testLocationChange(ctl);
         testSightAction(ctl);
         testSightDelete(ctl);

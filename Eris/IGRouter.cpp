@@ -131,7 +131,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
                 continue; // we don't have it, ignore
             }
             
-            ent->setFromRoot(args[A]);
+            ent->setFromRoot(args[A], false);
         }
         return HANDLED;
     }

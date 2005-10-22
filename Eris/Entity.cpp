@@ -147,36 +147,27 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t)
 
 void Entity::sight(const RootEntity &ge)
 {    
-    if (!ge->isDefaultLoc())
-        setLocationFromAtlas(ge->getLoc());
+    if (!ge->isDefaultLoc()) setLocationFromAtlas(ge->getLoc());
     
-    setContentsFromAtlas(ge->getContains());
-    setPosAndVelocityFromAtlas(ge);
-    
-    setFromRoot(ge);
+    setContentsFromAtlas(ge->getContains());    
+    setFromRoot(ge, true);
 }
 
-void Entity::setFromRoot(const Root& obj)
+void Entity::setFromRoot(const Root& obj, bool allowMove)
 {	
     beginUpdate();
     
     Atlas::Message::MapType attrs;
     obj->addToMessage(attrs);
-    Atlas::Message::MapType::const_iterator A;
+    Atlas::Message::MapType::iterator A;
+    
+    attrs.erase("loc");
+    attrs.erase("id");
+    attrs.erase("contains");
+    
+    if (!allowMove) filterMoveAttrs(attrs);
     
     for (A = attrs.begin(); A != attrs.end(); ++A) {
-        if ((A->first == "id") || 
-            (A->first == "loc") || 
-            (A->first == "contains") ||
-            (A->first == "parents") ||
-            (A->first == "pos") ||
-            (A->first == "velocity") ||
-            (A->first == "mode") ||
-            (A->first == "accel"))
-        {
-            continue; // never set these on a SET op
-        }
-        
         // see if the value in the sight matches the exsiting value
         AttrMap::iterator I = m_attrs.find(A->first);
         if ((I != m_attrs.end()) && (I->second == A->second)) continue;
@@ -187,26 +178,13 @@ void Entity::setFromRoot(const Root& obj)
     endUpdate();
 }
 
-void Entity::setPosAndVelocityFromAtlas(const Root& data)
+void Entity::filterMoveAttrs(Atlas::Message::MapType& attrs) const
 {
-    beginUpdate();
-    
-    if (data->hasAttr("pos"))
-        setAttr("pos", data->getAttr("pos"));
-    
-    if (data->hasAttr("velocity"))
-        setAttr("velocity", data->getAttr("velocity"));
-    
-    if (data->hasAttr("orientation"))
-        setAttr("orientation", data->getAttr("orientation"));
-    
-    if (data->hasAttr("mode"))
-        setAttr("mode", data->getAttr("mode"));
-    
-    if (data->hasAttr("accel"))
-        setAttr("accel", data->getAttr("accel"));
-    
-    endUpdate();
+    attrs.erase("pos");
+    attrs.erase("mode");
+    attrs.erase("velocity");
+    attrs.erase("orientation");
+    attrs.erase("accel");
 }
 
 void Entity::onTalk(const Root& talkArgs)
@@ -239,8 +217,9 @@ void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op)
 
 void Entity::onImaginary(const Atlas::Objects::Root& arg)
 {
-    if (arg->hasAttr("description"))
+    if (arg->hasAttr("description")) {
         Emote.emit(arg->getAttr("description").asString());
+    }
 }
 
 void Entity::setMoving(bool inMotion)
@@ -249,8 +228,7 @@ void Entity::setMoving(bool inMotion)
     
     if (m_moving) m_view->removeFromPrediction(this);
     m_moving = inMotion;
-    if (m_moving)
-    {
+    if (m_moving) {
         m_predicted.position = m_position;
         m_predicted.velocity = m_velocity;
         m_view->addToPrediction(this);
@@ -289,6 +267,10 @@ void Entity::setAttr(const std::string &attr, const Element &val)
 
 bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
 {
+    // in the future, hash these names to a compile-time integer index, and
+    // make this a switch statement. The same indice could also be used
+    // in endUpdate
+    
     if (attr == "name") {
         m_name = v.asString();
         return true;

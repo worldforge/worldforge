@@ -148,6 +148,14 @@ void Controller::moveVelocity(const std::string& eid, const WFMath::Vector<3>& v
     send(mv);
 }
 
+void Controller::move(const std::string& eid, const Atlas::Objects::Operation::RootOperation& op)
+{
+    op->setTo(eid);
+    op->setFrom(eid);
+    send(op);
+}
+
+
  void Controller::broadcastSoundFrom(const std::string& e, const Atlas::Objects::Operation::RootOperation& op)
  {
     Sound snd;

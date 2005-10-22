@@ -95,7 +95,7 @@ Router::RouterResult EntityRouter::handleSightOp(const RootOperation& op)
             m_entity->setLocationFromAtlas(arg->getAttr("loc").asString());
         }
         
-        m_entity->setPosAndVelocityFromAtlas(arg);
+        m_entity->setFromRoot(arg, true /* movement allowed */);
         return HANDLED;
     }
     

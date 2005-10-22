@@ -80,6 +80,14 @@ public:
 
     void dumpLookQueue();
 
+    /**
+    Retrieve the current look queue size, for debugging / statistics purposes.
+    Eg, this could be displayed as a bar-chart on screen in a client (optionally)
+    */
+    unsigned int lookQueueSize() const
+    {
+        return m_lookQueue.size();
+    }
 protected:
     // the router passes various relevant things to us directly
     friend class IGRouter;

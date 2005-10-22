@@ -31,8 +31,7 @@ TypeService::TypeService(Connection *con) :
     m_inited(false)
 {
     defineBuiltin("root", NULL);
-    m_anonymousType = defineBuiltin("anonymous", NULL);
-    
+ /*   
     defineBuiltin("root_operation", m_types["root"]);
     defineBuiltin("action", m_types["root_operation"]);
     defineBuiltin("get", m_types["action"]);
@@ -54,6 +53,7 @@ TypeService::TypeService(Connection *con) :
     defineBuiltin("admin_entity", m_types["root_entity"]);
     defineBuiltin("account", m_types["admin_entity"]);
     defineBuiltin("game_entity", m_types["root_entity"]);
+    */
 }
 
 TypeService::~TypeService()

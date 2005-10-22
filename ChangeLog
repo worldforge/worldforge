@@ -1,3 +1,23 @@
+2005-10-22  James Turner  <james@worldforge.org>
+
+	* Eris/Entity.cpp, Eris/Entity.h: change how state updates (move, set)
+	  are processed, so Move ops can update arbitrary attributes.
+	  
+	* Eris/EntityRouter.cpp, Eris/IGRouter.cpp: changes for revised Entity
+	  state update API.
+	  
+	* Eris/View.h: add an accessor for querying the current size of the 
+	  pending look queue - this provides a crude estimation of the connection
+	  lag.
+	  
+	* Eris/TypeService.cpp, Eris/TypeService.h: decimate the size of the
+	  builtin type tree, since it is no longer needed early in connection to
+	  a server.
+	  
+	* test/tests.cpp, test/stubServer.cpp, test/controller.h,
+	  test/controller.cpp: add a test for a move operation updating ad-hoc
+	  entity state.
+
 2005-10-21  James Turner  <james@worldforge.org>
 
 	* Eris/View.h, Eris/View.cpp: make the state handling in sight() more

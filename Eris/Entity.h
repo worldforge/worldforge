@@ -314,11 +314,18 @@ private:
     /** update the entity's location based on Atlas data. This is used by
     the MOVE handler to update the location information. */
     void setLocationFromAtlas(const std::string& locId);
-    
-    void setPosAndVelocityFromAtlas(const Atlas::Objects::Root& data);
-    
+      
+    /**
+    Fully initialise all entity state based on a RootEntity, including
+    location and contents.
+    */
     void sight(const Atlas::Objects::Entity::RootEntity& gent);
-    void setFromRoot(const Atlas::Objects::Root& obj);
+    
+    /**
+    Initialise all simple state from a Root. This excludes location and
+    contents, and may optionally exclude all attributes related to motion.
+    */
+    void setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion);
     
     /** the View calls this to change local entity visibility. No one else
     should be calling it!*/
@@ -326,8 +333,9 @@ private:
     
     void setAttr(const std::string &p, const Atlas::Message::Element &v);	
         
-    /**  map Atlas attributes to natively
-    stored properties.
+    /** 
+    Map Atlas attributes to natively stored properties. Should be changed to
+    use an integer hash in the future, since this called frequently.
     */
     bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
     
@@ -344,6 +352,12 @@ private:
     /// location if it's not available right now
     void setContentsFromAtlas(const StringList& contents);
     
+    /**
+    Remove from a map all items whose key is a movement related attribute,
+    eg position or velocity
+    */
+    void filterMoveAttrs(Atlas::Message::MapType& attrs) const;
+
     typedef std::map<std::string, Entity*> IdEntityMap;
     void buildEntityDictFromContents(IdEntityMap& dict);
     

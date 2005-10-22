@@ -208,6 +208,7 @@ void StubServer::resetWorld()
     posl.push_back(40.0);
     posl.push_back(0.0);
     getEntity("_vase_1")->setPos(posl);
+    getEntity("_vase_1")->setAttr("stamina", 105);
     
     getEntity("_table_1")->setName("George");
     

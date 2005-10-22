@@ -24,6 +24,7 @@ public:
     void moveLocation(const std::string& eid, const std::string& loc, const WFMath::Point<3>& pos);
     void movePos(const std::string& eid, const WFMath::Point<3>& pos);
     void moveVelocity(const std::string& eid, const WFMath::Vector<3>& vel);
+    void move(const std::string& eid, const Atlas::Objects::Operation::RootOperation& op);
     
     void create(const Atlas::Objects::Entity::RootEntity& ent);
     void deleteEntity(const std::string& eid);
