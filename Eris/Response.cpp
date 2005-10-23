@@ -25,6 +25,7 @@ bool ResponseTracker::handleOp(const RootOperation& op)
     if (it == m_pending.end()) {
         warning() << "received op with valid refno (" << op->getRefno() << 
             ") but no response is registered";
+        debug() << "op=\n" << op;
         return false;
     }
 
@@ -32,10 +33,15 @@ bool ResponseTracker::handleOp(const RootOperation& op)
     ResponseBase* resp = it->second;
     m_pending.erase(it);
 
-    resp->responseReceived(op);
+    bool result = resp->responseReceived(op);
     delete resp;
 
-    return true;
+    return result;
+}
+
+bool NullResponse::responseReceived(const Atlas::Objects::Operation::RootOperation&)
+{
+    //debug() << "nullresponse, ignoring op with refno " << op->getRefno();
 }
 
 } // of namespace

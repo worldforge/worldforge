@@ -457,6 +457,9 @@ void Account::avatarResponse(const RootOperation& op)
         
         assert(m_activeCharacters.count(av->getId()) == 0);
         m_activeCharacters[av->getId()] = av;
+        
+        // expect another op with the same refno
+        m_con->getResponder()->ignore(op->getRefno());
     } else 
         warning() << "received malformed avatar take response";
 }

@@ -11,9 +11,19 @@ class ResponseBase
 {
 public:
     virtual ~ResponseBase();
-    virtual void responseReceived(const Atlas::Objects::Operation::RootOperation& op) = 0;
+    
+    /**
+    Process a response. Return true if the operation was handled, and false
+    if it should be processed by the router system as normal.
+    */
+    virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation& op) = 0;
 };
 
+class NullResponse : public ResponseBase
+{
+public:
+    virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation&);
+};
 
 template <class T>
 class MemberResponse : public ResponseBase
@@ -27,9 +37,10 @@ public:
 	{
 	}
 	
-	virtual void responseReceived(const Atlas::Objects::Operation::RootOperation& op)
+	virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation& op)
 	{
 		(m_object->*m_func)(op);
+        return true;
 	}
 
 private:
@@ -46,6 +57,11 @@ public:
     void await(int serial, T* ins, void (T::*method)(const Atlas::Objects::Operation::RootOperation& op) )
     {
         await(serial, new MemberResponse<T>(ins, method));
+    }
+    
+    void ignore(int serial)
+    {
+        await(serial, new NullResponse());
     }
     
     bool handleOp(const Atlas::Objects::Operation::RootOperation& op);
