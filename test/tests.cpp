@@ -406,6 +406,54 @@ void testSightAction(Controller& ctl)
     }
 }
 
+void testSoundAction(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_table_1");
+        wf.run();
+    }
+
+    SignalRecorderRef1<Atlas::Objects::Root> heard;
+    Eris::Entity* table = av->getView()->getEntity("_table_1");
+    table->Noise.connect(SigC::slot(heard, 
+        &SignalRecorderRef1<Atlas::Objects::Root>::fired));
+    
+    Atlas::Objects::Operation::Touch t;
+    t->setFrom(table->getId());
+    ctl.broadcastSoundFrom(table->getId(), t);
+    
+    while (!heard.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(heard.lastArg0()->asMessage() == t->asMessage());
+// same again, but with a non-built-in op type    
+    {
+        Atlas::Objects::Operation::Action parry;
+        parry->setFrom(table->getId());
+        StringList prs;
+        prs.push_back("parry");
+        parry->setParents(prs);
+        
+        heard.reset();
+        ctl.broadcastSoundFrom(table->getId(), parry);
+        
+        while (!heard.fireCount()) {
+            Eris::PollDefault::poll();
+        }
+        
+        assert(heard.lastArg0()->asMessage() == parry->asMessage());
+    }
+}
+
+
 void testSightCreate(Controller& ctl)
 {
     AutoConnection con = stdConnect();
@@ -611,6 +659,7 @@ int runTests(Controller& ctl)
         testLocationChange(ctl);
         testSightAction(ctl);
         testSightDelete(ctl);
+        testSoundAction(ctl);
         testMovement(ctl); 
         
         testCharacterInitialVis(ctl);

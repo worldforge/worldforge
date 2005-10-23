@@ -1,5 +1,12 @@
 2005-10-23  James Turner  <james@worldforge.org>
 
+	* test/tests.cpp: add a test for entity processing
+	  sound of actions
+
+	* test/agent.cpp: silence some silly test output
+	
+2005-10-23  James Turner  <james@worldforge.org>
+
 	* Eris/Account.cpp, Eris/Response.cpp, Eris/Response.h: Add a new response
 	  type, ignore, and use this to stop the warning about an op with a valid
 	  refno being unhandled when activating a character. Makes the unit-tests

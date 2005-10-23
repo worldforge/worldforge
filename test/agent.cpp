@@ -151,7 +151,7 @@ void Agent::processLook(const Look& look)
     }
     
     if (!isVisible(lookTarget)) {
-        std::cout << "agent got look at invsible entity ID: " << lookTarget << std::endl;
+        std::cout << "agent for " << m_character << " got look at invsible entity ID: " << lookTarget << std::endl;
         return;
     }
 
@@ -182,6 +182,7 @@ void Agent::processLook(const Look& look)
 bool Agent::isVisible(const std::string& lookTarget) const
 {
     if (lookTarget == "_world") return true; // base-case, should be TLVE
+    if (lookTarget == m_character) return true;
     
     if (m_visible.count(lookTarget) == 0) return false;
     
