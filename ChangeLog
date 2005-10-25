@@ -1,7 +1,12 @@
+2005-10-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/Makefile.am: Re-enable running tests, as they now seem to
+	  complete.
+
 2005-10-23  James Turner  <james@worldforge.org>
 
 	* configure.ac: update version number for 1.3.9 release
-	
+
 2005-10-23  James Turner  <james@worldforge.org>
 
 	* test/tests.cpp: add a test for entity processing
