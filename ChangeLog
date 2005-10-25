@@ -1,5 +1,9 @@
 2005-10-25  Al Riddoch  <alriddoch@zepler.org>
 
+	* Release 1.3.9, Interface version 9.
+
+2005-10-25  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Makefile.am: Re-enable running tests, as they now seem to
 	  complete.
 
