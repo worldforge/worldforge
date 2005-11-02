@@ -105,8 +105,10 @@ public:
     /// Set the attribute "name" to the value given by "attr".
     virtual void setAttr(const std::string& name,
                          const Atlas::Message::Element& attr);
-    /// Remove the attribute "name". This will not work for static attributes.
+    /// Remove the attribute "name".
     virtual void removeAttr(const std::string& name);
+    /// Remove the attribute "name".
+    virtual void removeAttrFlag(int flag);
 
     /// Convert this object to a Object. This is now legacy, and implemented
     /// using addToMessage.

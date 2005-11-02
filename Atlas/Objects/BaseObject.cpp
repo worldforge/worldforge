@@ -65,7 +65,17 @@ void BaseObjectData::setAttr(const std::string& name, const Element& attr)
 
 void BaseObjectData::removeAttr(const std::string& name)
 {
-    m_attributes.erase(name);
+    int flag = getAttrFlag(name);
+    if (flag >= 0) {
+        removeAttrFlag(flag);
+    } else {
+        m_attributes.erase(name);
+    }
+}
+
+void BaseObjectData::removeAttrFlag(int flag)
+{
+    m_attrFlags &= ~flag;
 }
 
 const MapType BaseObjectData::asMessage() const

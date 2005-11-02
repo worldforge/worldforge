@@ -1,3 +1,14 @@
+2005-11-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Bach.h, Atlas/Codecs/Bach.cpp: Pass strings by
+	  const reference, not by value.
+
+	* Atlas/Objects/BaseObject.h, Atlas/Objects/BaseObject.cpp: Add
+	  removeAttrFlag, to efficiently remove static attrs. Make removeAttr
+	  work for static attrs, as well as dynamic attrs.
+
+	* tests/Objects/flags.cpp: Add a test for removeAttr methods.
+
 2005-10-20  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.6.0rc1, Interface version 1.

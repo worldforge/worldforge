@@ -485,25 +485,26 @@ void Bach::poll(bool can_read)
     while (m_socket.rdbuf()->in_avail() > 0);
 }
 
-const std::string Bach::decodeString(std::string toDecode)
+const std::string Bach::decodeString(const std::string & toDecode)
 {
     std::string::size_type pos = 0;
+    std::string to_decode(toDecode);
 
-    while((pos = toDecode.find( "\\\"", pos )) != std::string::npos)
-          toDecode.replace(pos, 2, 1, '\"');
+    while((pos = to_decode.find( "\\\"", pos )) != std::string::npos)
+          to_decode.replace(pos, 2, 1, '\"');
 
     pos = 0;
 
-    while((pos = toDecode.find( "\\\\", pos)) != std::string::npos)
-          toDecode.replace(pos, 2, 1, '\\');
+    while((pos = to_decode.find( "\\\\", pos)) != std::string::npos)
+          to_decode.replace(pos, 2, 1, '\\');
 
-    return toDecode;
+    return to_decode;
 }
 
-const std::string Bach::encodeString(std::string toEncode)
+const std::string Bach::encodeString(const std::string & toEncode)
 {
     std::string encoded;
-    std::string::iterator it;
+    std::string::const_iterator it;
 
     for (it = toEncode.begin(); it != toEncode.end(); it++)
     {
@@ -518,7 +519,7 @@ const std::string Bach::encodeString(std::string toEncode)
     return encoded;
 }
 
-void Bach::writeIntItem(std::string name, long data)
+void Bach::writeIntItem(const std::string & name, long data)
 {
     if( m_comma )
 	m_socket << ",";
@@ -529,7 +530,7 @@ void Bach::writeIntItem(std::string name, long data)
     m_socket << data;
 }
 
-void Bach::writeFloatItem(std::string name, double data)
+void Bach::writeFloatItem(const std::string & name, double data)
 {
     if( m_comma )
 	m_socket << ",";
@@ -540,7 +541,7 @@ void Bach::writeFloatItem(std::string name, double data)
     m_socket << data;
 }
 
-void Bach::writeStringItem(std::string name, std::string data)
+void Bach::writeStringItem(const std::string & name, const std::string & data)
 {
     if( m_comma )
 	m_socket << ",";
@@ -551,7 +552,7 @@ void Bach::writeStringItem(std::string name, std::string data)
     m_socket << "\"" << encodeString( data ) << "\"";
 }
 
-void Bach::writeLine(std::string line, bool endline, bool endtag)
+void Bach::writeLine(const std::string & line, bool endline, bool endtag)
 {
     if (m_comma && !endtag)
 	m_socket << ",";

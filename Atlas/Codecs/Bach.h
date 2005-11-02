@@ -83,13 +83,13 @@ class Bach : public Codec
     inline void parseName(char);
     inline void parseComment(char);
 
-    inline const std::string encodeString(std::string);
-    inline const std::string decodeString(std::string);
+    inline const std::string encodeString(const std::string &);
+    inline const std::string decodeString(const std::string &);
 
-    void writeIntItem(std::string,long);
-    void writeFloatItem(std::string,double);
-    void writeStringItem(std::string,std::string);
-    void writeLine(std::string,bool=true,bool=false);
+    void writeIntItem(const std::string &,long);
+    void writeFloatItem(const std::string &,double);
+    void writeStringItem(const std::string &,const std::string &);
+    void writeLine(const std::string &,bool=true,bool=false);
 };
 
 } } // namespace Atlas::Codecs
