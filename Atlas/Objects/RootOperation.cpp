@@ -11,6 +11,14 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+const std::string SERIALNO_ATTR = "serialno";
+const std::string REFNO_ATTR = "refno";
+const std::string FROM_ATTR = "from";
+const std::string TO_ATTR = "to";
+const std::string SECONDS_ATTR = "seconds";
+const std::string FUTURE_SECONDS_ATTR = "future_seconds";
+const std::string ARGS_ATTR = "args";
+
 int RootOperationData::getAttrClass(const std::string& name) const
 {
     if (attr_flags_RootOperationData->find(name) != attr_flags_RootOperationData->end()) {
@@ -30,43 +38,43 @@ int RootOperationData::getAttrFlag(const std::string& name) const
 
 int RootOperationData::copyAttr(const std::string& name, Element & attr) const
 {
-    if (name == "serialno") { attr = getSerialno(); return 0; }
-    if (name == "refno") { attr = getRefno(); return 0; }
-    if (name == "from") { attr = getFrom(); return 0; }
-    if (name == "to") { attr = getTo(); return 0; }
-    if (name == "seconds") { attr = getSeconds(); return 0; }
-    if (name == "future_seconds") { attr = getFutureSeconds(); return 0; }
-    if (name == "args") { attr = getArgsAsList(); return 0; }
+    if (name == SERIALNO_ATTR) { attr = getSerialno(); return 0; }
+    if (name == REFNO_ATTR) { attr = getRefno(); return 0; }
+    if (name == FROM_ATTR) { attr = getFrom(); return 0; }
+    if (name == TO_ATTR) { attr = getTo(); return 0; }
+    if (name == SECONDS_ATTR) { attr = getSeconds(); return 0; }
+    if (name == FUTURE_SECONDS_ATTR) { attr = getFutureSeconds(); return 0; }
+    if (name == ARGS_ATTR) { attr = getArgsAsList(); return 0; }
     return RootData::copyAttr(name, attr);
 }
 
 void RootOperationData::setAttr(const std::string& name, const Element& attr)
 {
-    if (name == "serialno") { setSerialno(attr.asInt()); return; }
-    if (name == "refno") { setRefno(attr.asInt()); return; }
-    if (name == "from") { setFrom(attr.asString()); return; }
-    if (name == "to") { setTo(attr.asString()); return; }
-    if (name == "seconds") { setSeconds(attr.asFloat()); return; }
-    if (name == "future_seconds") { setFutureSeconds(attr.asFloat()); return; }
-    if (name == "args") { setArgsAsList(attr.asList()); return; }
+    if (name == SERIALNO_ATTR) { setSerialno(attr.asInt()); return; }
+    if (name == REFNO_ATTR) { setRefno(attr.asInt()); return; }
+    if (name == FROM_ATTR) { setFrom(attr.asString()); return; }
+    if (name == TO_ATTR) { setTo(attr.asString()); return; }
+    if (name == SECONDS_ATTR) { setSeconds(attr.asFloat()); return; }
+    if (name == FUTURE_SECONDS_ATTR) { setFutureSeconds(attr.asFloat()); return; }
+    if (name == ARGS_ATTR) { setArgsAsList(attr.asList()); return; }
     RootData::setAttr(name, attr);
 }
 
 void RootOperationData::removeAttr(const std::string& name)
 {
-    if (name == "serialno")
+    if (name == SERIALNO_ATTR)
         { m_attrFlags &= ~SERIALNO_FLAG; return;}
-    if (name == "refno")
+    if (name == REFNO_ATTR)
         { m_attrFlags &= ~REFNO_FLAG; return;}
-    if (name == "from")
+    if (name == FROM_ATTR)
         { m_attrFlags &= ~FROM_FLAG; return;}
-    if (name == "to")
+    if (name == TO_ATTR)
         { m_attrFlags &= ~TO_FLAG; return;}
-    if (name == "seconds")
+    if (name == SECONDS_ATTR)
         { m_attrFlags &= ~SECONDS_FLAG; return;}
-    if (name == "future_seconds")
+    if (name == FUTURE_SECONDS_ATTR)
         { m_attrFlags &= ~FUTURE_SECONDS_FLAG; return;}
-    if (name == "args")
+    if (name == ARGS_ATTR)
         { m_attrFlags &= ~ARGS_FLAG; return;}
     RootData::removeAttr(name);
 }
@@ -74,49 +82,49 @@ void RootOperationData::removeAttr(const std::string& name)
 inline void RootOperationData::sendSerialno(Atlas::Bridge & b) const
 {
     if(m_attrFlags & SERIALNO_FLAG) {
-        b.mapIntItem("serialno", attr_serialno);
+        b.mapIntItem(SERIALNO_ATTR, attr_serialno);
     }
 }
 
 inline void RootOperationData::sendRefno(Atlas::Bridge & b) const
 {
     if(m_attrFlags & REFNO_FLAG) {
-        b.mapIntItem("refno", attr_refno);
+        b.mapIntItem(REFNO_ATTR, attr_refno);
     }
 }
 
 inline void RootOperationData::sendFrom(Atlas::Bridge & b) const
 {
     if(m_attrFlags & FROM_FLAG) {
-        b.mapStringItem("from", attr_from);
+        b.mapStringItem(FROM_ATTR, attr_from);
     }
 }
 
 inline void RootOperationData::sendTo(Atlas::Bridge & b) const
 {
     if(m_attrFlags & TO_FLAG) {
-        b.mapStringItem("to", attr_to);
+        b.mapStringItem(TO_ATTR, attr_to);
     }
 }
 
 inline void RootOperationData::sendSeconds(Atlas::Bridge & b) const
 {
     if(m_attrFlags & SECONDS_FLAG) {
-        b.mapFloatItem("seconds", attr_seconds);
+        b.mapFloatItem(SECONDS_ATTR, attr_seconds);
     }
 }
 
 inline void RootOperationData::sendFutureSeconds(Atlas::Bridge & b) const
 {
     if(m_attrFlags & FUTURE_SECONDS_FLAG) {
-        b.mapFloatItem("future_seconds", attr_future_seconds);
+        b.mapFloatItem(FUTURE_SECONDS_ATTR, attr_future_seconds);
     }
 }
 
 inline void RootOperationData::sendArgs(Atlas::Bridge & b) const
 {
     if(m_attrFlags & ARGS_FLAG) {
-        b.mapListItem("args");
+        b.mapListItem(ARGS_ATTR);
         const std::vector<Root> & v = attr_args;
         std::vector<Root>::const_iterator I = v.begin();
         for (; I != v.end(); ++I) {
@@ -144,19 +152,19 @@ void RootOperationData::addToMessage(MapType & m) const
 {
     RootData::addToMessage(m);
     if(m_attrFlags & SERIALNO_FLAG)
-        m["serialno"] = attr_serialno;
+        m[SERIALNO_ATTR] = attr_serialno;
     if(m_attrFlags & REFNO_FLAG)
-        m["refno"] = attr_refno;
+        m[REFNO_ATTR] = attr_refno;
     if(m_attrFlags & FROM_FLAG)
-        m["from"] = attr_from;
+        m[FROM_ATTR] = attr_from;
     if(m_attrFlags & TO_FLAG)
-        m["to"] = attr_to;
+        m[TO_ATTR] = attr_to;
     if(m_attrFlags & SECONDS_FLAG)
-        m["seconds"] = attr_seconds;
+        m[SECONDS_ATTR] = attr_seconds;
     if(m_attrFlags & FUTURE_SECONDS_FLAG)
-        m["future_seconds"] = attr_future_seconds;
+        m[FUTURE_SECONDS_ATTR] = attr_future_seconds;
     if(m_attrFlags & ARGS_FLAG)
-        m["args"] = getArgsAsList();
+        m[ARGS_ATTR] = getArgsAsList();
     return;
 }
 
@@ -250,13 +258,13 @@ RootOperationData *RootOperationData::getDefaultObjectInstance()
         defaults_RootOperationData->attr_stamp = 0.0;
         defaults_RootOperationData->attr_parents = std::list<std::string>(1, "root_operation");
         attr_flags_RootOperationData = new std::map<std::string, int>;
-        (*attr_flags_RootOperationData)["serialno"] = SERIALNO_FLAG;
-        (*attr_flags_RootOperationData)["refno"] = REFNO_FLAG;
-        (*attr_flags_RootOperationData)["from"] = FROM_FLAG;
-        (*attr_flags_RootOperationData)["to"] = TO_FLAG;
-        (*attr_flags_RootOperationData)["seconds"] = SECONDS_FLAG;
-        (*attr_flags_RootOperationData)["future_seconds"] = FUTURE_SECONDS_FLAG;
-        (*attr_flags_RootOperationData)["args"] = ARGS_FLAG;
+        (*attr_flags_RootOperationData)[SERIALNO_ATTR] = SERIALNO_FLAG;
+        (*attr_flags_RootOperationData)[REFNO_ATTR] = REFNO_FLAG;
+        (*attr_flags_RootOperationData)[FROM_ATTR] = FROM_FLAG;
+        (*attr_flags_RootOperationData)[TO_ATTR] = TO_FLAG;
+        (*attr_flags_RootOperationData)[SECONDS_ATTR] = SECONDS_FLAG;
+        (*attr_flags_RootOperationData)[FUTURE_SECONDS_ATTR] = FUTURE_SECONDS_FLAG;
+        (*attr_flags_RootOperationData)[ARGS_ATTR] = ARGS_FLAG;
         RootData::getDefaultObjectInstance();
     }
     return defaults_RootOperationData;

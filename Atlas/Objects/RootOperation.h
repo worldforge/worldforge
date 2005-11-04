@@ -198,10 +198,23 @@ private:
 };
 
 //
+// Attribute name strings follow.
+//
+
+extern const std::string SERIALNO_ATTR;
+extern const std::string REFNO_ATTR;
+extern const std::string FROM_ATTR;
+extern const std::string TO_ATTR;
+extern const std::string SECONDS_ATTR;
+extern const std::string FUTURE_SECONDS_ATTR;
+extern const std::string ARGS_ATTR;
+
+//
 // Inlined member functions follow.
 //
 
 const int SERIALNO_FLAG = 1 << 14;
+
 void RootOperationData::setSerialno(long val)
 {
     attr_serialno = val;
@@ -209,6 +222,7 @@ void RootOperationData::setSerialno(long val)
 }
 
 const int REFNO_FLAG = 1 << 15;
+
 void RootOperationData::setRefno(long val)
 {
     attr_refno = val;
@@ -216,6 +230,7 @@ void RootOperationData::setRefno(long val)
 }
 
 const int FROM_FLAG = 1 << 16;
+
 void RootOperationData::setFrom(const std::string& val)
 {
     attr_from = val;
@@ -223,6 +238,7 @@ void RootOperationData::setFrom(const std::string& val)
 }
 
 const int TO_FLAG = 1 << 17;
+
 void RootOperationData::setTo(const std::string& val)
 {
     attr_to = val;
@@ -230,6 +246,7 @@ void RootOperationData::setTo(const std::string& val)
 }
 
 const int SECONDS_FLAG = 1 << 18;
+
 void RootOperationData::setSeconds(double val)
 {
     attr_seconds = val;
@@ -237,6 +254,7 @@ void RootOperationData::setSeconds(double val)
 }
 
 const int FUTURE_SECONDS_FLAG = 1 << 19;
+
 void RootOperationData::setFutureSeconds(double val)
 {
     attr_future_seconds = val;
@@ -244,6 +262,7 @@ void RootOperationData::setFutureSeconds(double val)
 }
 
 const int ARGS_FLAG = 1 << 20;
+
 void RootOperationData::setArgs(const std::vector<Root>& val)
 {
     attr_args = val;

@@ -11,6 +11,12 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { 
 
+const std::string ID_ATTR = "id";
+const std::string PARENTS_ATTR = "parents";
+const std::string STAMP_ATTR = "stamp";
+const std::string OBJTYPE_ATTR = "objtype";
+const std::string NAME_ATTR = "name";
+
 int RootData::getAttrClass(const std::string& name) const
 {
     if (attr_flags_RootData->find(name) != attr_flags_RootData->end()) {
@@ -30,35 +36,35 @@ int RootData::getAttrFlag(const std::string& name) const
 
 int RootData::copyAttr(const std::string& name, Element & attr) const
 {
-    if (name == "id") { attr = getId(); return 0; }
-    if (name == "parents") { attr = getParentsAsList(); return 0; }
-    if (name == "stamp") { attr = getStamp(); return 0; }
-    if (name == "objtype") { attr = getObjtype(); return 0; }
-    if (name == "name") { attr = getName(); return 0; }
+    if (name == ID_ATTR) { attr = getId(); return 0; }
+    if (name == PARENTS_ATTR) { attr = getParentsAsList(); return 0; }
+    if (name == STAMP_ATTR) { attr = getStamp(); return 0; }
+    if (name == OBJTYPE_ATTR) { attr = getObjtype(); return 0; }
+    if (name == NAME_ATTR) { attr = getName(); return 0; }
     return BaseObjectData::copyAttr(name, attr);
 }
 
 void RootData::setAttr(const std::string& name, const Element& attr)
 {
-    if (name == "id") { setId(attr.asString()); return; }
-    if (name == "parents") { setParentsAsList(attr.asList()); return; }
-    if (name == "stamp") { setStamp(attr.asFloat()); return; }
-    if (name == "objtype") { setObjtype(attr.asString()); return; }
-    if (name == "name") { setName(attr.asString()); return; }
+    if (name == ID_ATTR) { setId(attr.asString()); return; }
+    if (name == PARENTS_ATTR) { setParentsAsList(attr.asList()); return; }
+    if (name == STAMP_ATTR) { setStamp(attr.asFloat()); return; }
+    if (name == OBJTYPE_ATTR) { setObjtype(attr.asString()); return; }
+    if (name == NAME_ATTR) { setName(attr.asString()); return; }
     BaseObjectData::setAttr(name, attr);
 }
 
 void RootData::removeAttr(const std::string& name)
 {
-    if (name == "id")
+    if (name == ID_ATTR)
         { m_attrFlags &= ~ID_FLAG; return;}
-    if (name == "parents")
+    if (name == PARENTS_ATTR)
         { m_attrFlags &= ~PARENTS_FLAG; return;}
-    if (name == "stamp")
+    if (name == STAMP_ATTR)
         { m_attrFlags &= ~STAMP_FLAG; return;}
-    if (name == "objtype")
+    if (name == OBJTYPE_ATTR)
         { m_attrFlags &= ~OBJTYPE_FLAG; return;}
-    if (name == "name")
+    if (name == NAME_ATTR)
         { m_attrFlags &= ~NAME_FLAG; return;}
     BaseObjectData::removeAttr(name);
 }
@@ -66,14 +72,14 @@ void RootData::removeAttr(const std::string& name)
 inline void RootData::sendId(Atlas::Bridge & b) const
 {
     if(m_attrFlags & ID_FLAG) {
-        b.mapStringItem("id", attr_id);
+        b.mapStringItem(ID_ATTR, attr_id);
     }
 }
 
 inline void RootData::sendParents(Atlas::Bridge & b) const
 {
     if((m_attrFlags & PARENTS_FLAG) || !((RootData *)m_defaults)->attr_parents.empty()) {
-        b.mapListItem("parents");
+        b.mapListItem(PARENTS_ATTR);
         const std::list<std::string> & l = getParents();
         std::list<std::string>::const_iterator I = l.begin();
         for(; I != l.end(); ++I) {
@@ -86,21 +92,21 @@ inline void RootData::sendParents(Atlas::Bridge & b) const
 inline void RootData::sendStamp(Atlas::Bridge & b) const
 {
     if(m_attrFlags & STAMP_FLAG) {
-        b.mapFloatItem("stamp", attr_stamp);
+        b.mapFloatItem(STAMP_ATTR, attr_stamp);
     }
 }
 
 inline void RootData::sendObjtype(Atlas::Bridge & b) const
 {
     if((m_attrFlags & OBJTYPE_FLAG) || !((RootData *)m_defaults)->attr_objtype.empty()) {
-        b.mapStringItem("objtype", getObjtype());
+        b.mapStringItem(OBJTYPE_ATTR, getObjtype());
     }
 }
 
 inline void RootData::sendName(Atlas::Bridge & b) const
 {
     if(m_attrFlags & NAME_FLAG) {
-        b.mapStringItem("name", attr_name);
+        b.mapStringItem(NAME_ATTR, attr_name);
     }
 }
 
@@ -118,17 +124,17 @@ void RootData::addToMessage(MapType & m) const
 {
     BaseObjectData::addToMessage(m);
     if(m_attrFlags & ID_FLAG)
-        m["id"] = attr_id;
+        m[ID_ATTR] = attr_id;
     const Atlas::Message::ListType l_attr_parents = getParentsAsList();
     if (!l_attr_parents.empty())
-        m["parents"] = l_attr_parents;
+        m[PARENTS_ATTR] = l_attr_parents;
     if(m_attrFlags & STAMP_FLAG)
-        m["stamp"] = attr_stamp;
+        m[STAMP_ATTR] = attr_stamp;
     const std::string& l_attr_objtype = getObjtype();
     if (!l_attr_objtype.empty())
-        m["objtype"] = l_attr_objtype;
+        m[OBJTYPE_ATTR] = l_attr_objtype;
     if(m_attrFlags & NAME_FLAG)
-        m["name"] = attr_name;
+        m[NAME_ATTR] = attr_name;
     return;
 }
 
@@ -218,11 +224,11 @@ RootData *RootData::getDefaultObjectInstance()
         defaults_RootData->attr_objtype = "obj";
         defaults_RootData->attr_parents = std::list<std::string>(1, "root");
         attr_flags_RootData = new std::map<std::string, int>;
-        (*attr_flags_RootData)["id"] = ID_FLAG;
-        (*attr_flags_RootData)["parents"] = PARENTS_FLAG;
-        (*attr_flags_RootData)["stamp"] = STAMP_FLAG;
-        (*attr_flags_RootData)["objtype"] = OBJTYPE_FLAG;
-        (*attr_flags_RootData)["name"] = NAME_FLAG;
+        (*attr_flags_RootData)[ID_ATTR] = ID_FLAG;
+        (*attr_flags_RootData)[PARENTS_ATTR] = PARENTS_FLAG;
+        (*attr_flags_RootData)[STAMP_ATTR] = STAMP_FLAG;
+        (*attr_flags_RootData)[OBJTYPE_ATTR] = OBJTYPE_FLAG;
+        (*attr_flags_RootData)[NAME_ATTR] = NAME_FLAG;
     }
     return defaults_RootData;
 }

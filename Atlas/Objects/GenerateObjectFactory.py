@@ -96,14 +96,14 @@ Root Factories::createObject(const MapType & msg_map)
     Root obj(0);
 
     // is this instance of entity or operation?
-    MapType::const_iterator I = msg_map.find("objtype");
+    MapType::const_iterator I = msg_map.find(Atlas::Objects::OBJTYPE_ATTR);
     MapType::const_iterator Iend = msg_map.end();
     bool is_instance = false;
     if(I != Iend && I->second.isString()) {
         const std::string & objtype = I->second.String();
         if(objtype == "op" || objtype == "obj" || objtype == "object") {
             // get parent
-            I = msg_map.find("parents");
+            I = msg_map.find(Atlas::Objects::PARENTS_ATTR);
             if(I != Iend && I->second.isList()) {
                 const ListType & parents_lst = I->second.List();
                 if(parents_lst.size()>=1 && parents_lst.front().isString()) {

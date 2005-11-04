@@ -13,11 +13,7 @@ using Atlas::Objects::Operation::Sight;
 using Atlas::Objects::Entity::GameEntity;
 
 //#define DEBUG 0
-#if DEBUG
-#define MAX_ITER 10.0
-#else
 #define MAX_ITER 10000000.0
-#endif
 
 #define USE_STRING 1
 

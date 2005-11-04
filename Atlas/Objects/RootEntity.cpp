@@ -11,6 +11,12 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Entity { 
 
+const std::string LOC_ATTR = "loc";
+const std::string POS_ATTR = "pos";
+const std::string VELOCITY_ATTR = "velocity";
+const std::string CONTAINS_ATTR = "contains";
+const std::string STAMP_CONTAINS_ATTR = "stamp_contains";
+
 int RootEntityData::getAttrClass(const std::string& name) const
 {
     if (attr_flags_RootEntityData->find(name) != attr_flags_RootEntityData->end()) {
@@ -30,35 +36,35 @@ int RootEntityData::getAttrFlag(const std::string& name) const
 
 int RootEntityData::copyAttr(const std::string& name, Element & attr) const
 {
-    if (name == "loc") { attr = getLoc(); return 0; }
-    if (name == "pos") { attr = getPosAsList(); return 0; }
-    if (name == "velocity") { attr = getVelocityAsList(); return 0; }
-    if (name == "contains") { attr = getContainsAsList(); return 0; }
-    if (name == "stamp_contains") { attr = getStampContains(); return 0; }
+    if (name == LOC_ATTR) { attr = getLoc(); return 0; }
+    if (name == POS_ATTR) { attr = getPosAsList(); return 0; }
+    if (name == VELOCITY_ATTR) { attr = getVelocityAsList(); return 0; }
+    if (name == CONTAINS_ATTR) { attr = getContainsAsList(); return 0; }
+    if (name == STAMP_CONTAINS_ATTR) { attr = getStampContains(); return 0; }
     return RootData::copyAttr(name, attr);
 }
 
 void RootEntityData::setAttr(const std::string& name, const Element& attr)
 {
-    if (name == "loc") { setLoc(attr.asString()); return; }
-    if (name == "pos") { setPosAsList(attr.asList()); return; }
-    if (name == "velocity") { setVelocityAsList(attr.asList()); return; }
-    if (name == "contains") { setContainsAsList(attr.asList()); return; }
-    if (name == "stamp_contains") { setStampContains(attr.asFloat()); return; }
+    if (name == LOC_ATTR) { setLoc(attr.asString()); return; }
+    if (name == POS_ATTR) { setPosAsList(attr.asList()); return; }
+    if (name == VELOCITY_ATTR) { setVelocityAsList(attr.asList()); return; }
+    if (name == CONTAINS_ATTR) { setContainsAsList(attr.asList()); return; }
+    if (name == STAMP_CONTAINS_ATTR) { setStampContains(attr.asFloat()); return; }
     RootData::setAttr(name, attr);
 }
 
 void RootEntityData::removeAttr(const std::string& name)
 {
-    if (name == "loc")
+    if (name == LOC_ATTR)
         { m_attrFlags &= ~LOC_FLAG; return;}
-    if (name == "pos")
+    if (name == POS_ATTR)
         { m_attrFlags &= ~POS_FLAG; return;}
-    if (name == "velocity")
+    if (name == VELOCITY_ATTR)
         { m_attrFlags &= ~VELOCITY_FLAG; return;}
-    if (name == "contains")
+    if (name == CONTAINS_ATTR)
         { m_attrFlags &= ~CONTAINS_FLAG; return;}
-    if (name == "stamp_contains")
+    if (name == STAMP_CONTAINS_ATTR)
         { m_attrFlags &= ~STAMP_CONTAINS_FLAG; return;}
     RootData::removeAttr(name);
 }
@@ -66,14 +72,14 @@ void RootEntityData::removeAttr(const std::string& name)
 inline void RootEntityData::sendLoc(Atlas::Bridge & b) const
 {
     if(m_attrFlags & LOC_FLAG) {
-        b.mapStringItem("loc", attr_loc);
+        b.mapStringItem(LOC_ATTR, attr_loc);
     }
 }
 
 inline void RootEntityData::sendPos(Atlas::Bridge & b) const
 {
     if(m_attrFlags & POS_FLAG) {
-        b.mapListItem("pos");
+        b.mapListItem(POS_ATTR);
         const std::vector<double> & v = attr_pos;
         std::vector<double>::const_iterator I = v.begin();
         for(; I != v.end(); ++I) {
@@ -86,7 +92,7 @@ inline void RootEntityData::sendPos(Atlas::Bridge & b) const
 inline void RootEntityData::sendVelocity(Atlas::Bridge & b) const
 {
     if(m_attrFlags & VELOCITY_FLAG) {
-        b.mapListItem("velocity");
+        b.mapListItem(VELOCITY_ATTR);
         const std::vector<double> & v = attr_velocity;
         std::vector<double>::const_iterator I = v.begin();
         for(; I != v.end(); ++I) {
@@ -99,7 +105,7 @@ inline void RootEntityData::sendVelocity(Atlas::Bridge & b) const
 inline void RootEntityData::sendContains(Atlas::Bridge & b) const
 {
     if(m_attrFlags & CONTAINS_FLAG) {
-        b.mapListItem("contains");
+        b.mapListItem(CONTAINS_ATTR);
         const std::list<std::string> & l = attr_contains;
         std::list<std::string>::const_iterator I = l.begin();
         for(; I != l.end(); ++I) {
@@ -112,7 +118,7 @@ inline void RootEntityData::sendContains(Atlas::Bridge & b) const
 inline void RootEntityData::sendStampContains(Atlas::Bridge & b) const
 {
     if(m_attrFlags & STAMP_CONTAINS_FLAG) {
-        b.mapFloatItem("stamp_contains", attr_stamp_contains);
+        b.mapFloatItem(STAMP_CONTAINS_ATTR, attr_stamp_contains);
     }
 }
 
@@ -130,15 +136,15 @@ void RootEntityData::addToMessage(MapType & m) const
 {
     RootData::addToMessage(m);
     if(m_attrFlags & LOC_FLAG)
-        m["loc"] = attr_loc;
+        m[LOC_ATTR] = attr_loc;
     if(m_attrFlags & POS_FLAG)
-        m["pos"] = getPosAsList();
+        m[POS_ATTR] = getPosAsList();
     if(m_attrFlags & VELOCITY_FLAG)
-        m["velocity"] = getVelocityAsList();
+        m[VELOCITY_ATTR] = getVelocityAsList();
     if(m_attrFlags & CONTAINS_FLAG)
-        m["contains"] = getContainsAsList();
+        m[CONTAINS_ATTR] = getContainsAsList();
     if(m_attrFlags & STAMP_CONTAINS_FLAG)
-        m["stamp_contains"] = attr_stamp_contains;
+        m[STAMP_CONTAINS_ATTR] = attr_stamp_contains;
     return;
 }
 
@@ -237,11 +243,11 @@ RootEntityData *RootEntityData::getDefaultObjectInstance()
         defaults_RootEntityData->attr_stamp = 0.0;
         defaults_RootEntityData->attr_parents = std::list<std::string>(1, "root_entity");
         attr_flags_RootEntityData = new std::map<std::string, int>;
-        (*attr_flags_RootEntityData)["loc"] = LOC_FLAG;
-        (*attr_flags_RootEntityData)["pos"] = POS_FLAG;
-        (*attr_flags_RootEntityData)["velocity"] = VELOCITY_FLAG;
-        (*attr_flags_RootEntityData)["contains"] = CONTAINS_FLAG;
-        (*attr_flags_RootEntityData)["stamp_contains"] = STAMP_CONTAINS_FLAG;
+        (*attr_flags_RootEntityData)[LOC_ATTR] = LOC_FLAG;
+        (*attr_flags_RootEntityData)[POS_ATTR] = POS_FLAG;
+        (*attr_flags_RootEntityData)[VELOCITY_ATTR] = VELOCITY_FLAG;
+        (*attr_flags_RootEntityData)[CONTAINS_ATTR] = CONTAINS_FLAG;
+        (*attr_flags_RootEntityData)[STAMP_CONTAINS_ATTR] = STAMP_CONTAINS_FLAG;
         RootData::getDefaultObjectInstance();
     }
     return defaults_RootEntityData;

@@ -1,5 +1,7 @@
 New TODO by Al Riddoch
 
+Get rid of overridden removeAttr, as the base class handles this now.
+
 Cut down inlining from Codecs/Utility.h as functions are too large.
 
 Create an equivalent for Anonymous which inherits from RootOperation.

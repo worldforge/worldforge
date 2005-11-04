@@ -79,6 +79,10 @@ AdminEntityData *AdminEntityData::getDefaultObject()
     return AdminEntityData::getDefaultObjectInstance();
 }
 
+const std::string USERNAME_ATTR = "username";
+const std::string PASSWORD_ATTR = "password";
+const std::string CHARACTERS_ATTR = "characters";
+
 int AccountData::getAttrClass(const std::string& name) const
 {
     if (attr_flags_AccountData->find(name) != attr_flags_AccountData->end()) {
@@ -98,27 +102,27 @@ int AccountData::getAttrFlag(const std::string& name) const
 
 int AccountData::copyAttr(const std::string& name, Element & attr) const
 {
-    if (name == "username") { attr = getUsername(); return 0; }
-    if (name == "password") { attr = getPassword(); return 0; }
-    if (name == "characters") { attr = getCharactersAsList(); return 0; }
+    if (name == USERNAME_ATTR) { attr = getUsername(); return 0; }
+    if (name == PASSWORD_ATTR) { attr = getPassword(); return 0; }
+    if (name == CHARACTERS_ATTR) { attr = getCharactersAsList(); return 0; }
     return AdminEntityData::copyAttr(name, attr);
 }
 
 void AccountData::setAttr(const std::string& name, const Element& attr)
 {
-    if (name == "username") { setUsername(attr.asString()); return; }
-    if (name == "password") { setPassword(attr.asString()); return; }
-    if (name == "characters") { setCharactersAsList(attr.asList()); return; }
+    if (name == USERNAME_ATTR) { setUsername(attr.asString()); return; }
+    if (name == PASSWORD_ATTR) { setPassword(attr.asString()); return; }
+    if (name == CHARACTERS_ATTR) { setCharactersAsList(attr.asList()); return; }
     AdminEntityData::setAttr(name, attr);
 }
 
 void AccountData::removeAttr(const std::string& name)
 {
-    if (name == "username")
+    if (name == USERNAME_ATTR)
         { m_attrFlags &= ~USERNAME_FLAG; return;}
-    if (name == "password")
+    if (name == PASSWORD_ATTR)
         { m_attrFlags &= ~PASSWORD_FLAG; return;}
-    if (name == "characters")
+    if (name == CHARACTERS_ATTR)
         { m_attrFlags &= ~CHARACTERS_FLAG; return;}
     AdminEntityData::removeAttr(name);
 }
@@ -126,21 +130,21 @@ void AccountData::removeAttr(const std::string& name)
 inline void AccountData::sendUsername(Atlas::Bridge & b) const
 {
     if(m_attrFlags & USERNAME_FLAG) {
-        b.mapStringItem("username", attr_username);
+        b.mapStringItem(USERNAME_ATTR, attr_username);
     }
 }
 
 inline void AccountData::sendPassword(Atlas::Bridge & b) const
 {
     if(m_attrFlags & PASSWORD_FLAG) {
-        b.mapStringItem("password", attr_password);
+        b.mapStringItem(PASSWORD_ATTR, attr_password);
     }
 }
 
 inline void AccountData::sendCharacters(Atlas::Bridge & b) const
 {
     if(m_attrFlags & CHARACTERS_FLAG) {
-        b.mapListItem("characters");
+        b.mapListItem(CHARACTERS_ATTR);
         const std::list<std::string> & l = attr_characters;
         std::list<std::string>::const_iterator I = l.begin();
         for(; I != l.end(); ++I) {
@@ -162,11 +166,11 @@ void AccountData::addToMessage(MapType & m) const
 {
     AdminEntityData::addToMessage(m);
     if(m_attrFlags & USERNAME_FLAG)
-        m["username"] = attr_username;
+        m[USERNAME_ATTR] = attr_username;
     if(m_attrFlags & PASSWORD_FLAG)
-        m["password"] = attr_password;
+        m[PASSWORD_ATTR] = attr_password;
     if(m_attrFlags & CHARACTERS_FLAG)
-        m["characters"] = getCharactersAsList();
+        m[CHARACTERS_ATTR] = getCharactersAsList();
     return;
 }
 
@@ -265,9 +269,9 @@ AccountData *AccountData::getDefaultObjectInstance()
         defaults_AccountData->attr_stamp = 0.0;
         defaults_AccountData->attr_parents = std::list<std::string>(1, "account");
         attr_flags_AccountData = new std::map<std::string, int>;
-        (*attr_flags_AccountData)["username"] = USERNAME_FLAG;
-        (*attr_flags_AccountData)["password"] = PASSWORD_FLAG;
-        (*attr_flags_AccountData)["characters"] = CHARACTERS_FLAG;
+        (*attr_flags_AccountData)[USERNAME_ATTR] = USERNAME_FLAG;
+        (*attr_flags_AccountData)[PASSWORD_ATTR] = PASSWORD_FLAG;
+        (*attr_flags_AccountData)[CHARACTERS_ATTR] = CHARACTERS_FLAG;
         AdminEntityData::getDefaultObjectInstance();
     }
     return defaults_AccountData;

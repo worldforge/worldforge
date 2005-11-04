@@ -113,7 +113,7 @@ void LoadDefaultsDecoder::setAttributes(Root &obj, //Root &obj_inst,
         }
         used_attributes.insert(I->first);
     }
-    I = melem.asMap().find("parents");
+    I = melem.asMap().find(Atlas::Objects::PARENTS_ATTR);
     if (I != melem.asMap().end()) {
         for (ListType::const_iterator J = I->second.asList().begin();
              J != I->second.asList().end(); J++) {

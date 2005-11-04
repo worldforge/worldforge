@@ -161,11 +161,17 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
     }
 """ % vars()) #"for xemacs syntax highlighting
 
+    def attribute_names_if(self, obj, statics):
+        for attr in statics:
+            self.write("extern const std::string %s;\n" % (attr.attr_name))
+        self.write("\n")
+
     def static_inline_sets(self, obj, statics):
         classname = classize(obj.id, data=1)
         for attr in statics:
             self.write("const int %s = 1 << %i;\n" %
                        (attr.flag_name, attr.enum))
+            self.write("\n")
             self.write(attr.inline_set(classname))
 
     def static_inline_gets(self, obj, statics):
@@ -192,7 +198,13 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         classname = classize(obj.id, data=1)
         self.write("        attr_flags_%s = new std::map<std::string, int>;\n" % (classname))
         for attr in static_attrs:
-            self.write("        (*attr_flags_%s)[\"%s\"] = %s;\n" % (classname, attr.name, attr.flag_name)) #"for xamacs syntax highlighting
+            self.write("        (*attr_flags_%s)[%s] = %s;\n" % (classname, attr.attr_name, attr.flag_name)) #"for xamacs syntax highlighting
+
+    def attribute_names_im(self, obj, statics):
+        for attr in statics:
+            self.write("const std::string %s = \"%s\";\n" %
+                       (attr.attr_name, attr.name))
+        self.write("\n")
 
     def getattrclass_im(self, obj, statics):
         classname = classize(obj.id, data=1)
@@ -264,7 +276,7 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                         % classname)
         self.write("{\n")
         for attr in statics:
-            self.write('    if (name == "%s")\n' % attr.name)
+            self.write('    if (name == %s)\n' % attr.attr_name)
             self.write('        { m_attrFlags &= ~%s; return;}\n' % attr.flag_name)
         parent = self.get_cpp_parent(obj)
         self.write("    %s::removeAttr(name);\n" % parent)
@@ -305,11 +317,11 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                 # If we can get the attribute without having to check the
                 # flag twice, do it.
                 if attr.as_object:
-                    self.write('        m["%s"] = get%s%s();\n' % \
-                           (attr.name, attr.cname, attr.as_object))
+                    self.write('        m[%s] = get%s%s();\n' % \
+                           (attr.attr_name, attr.cname, attr.as_object))
                 else:
-                    self.write('        m["%s"] = attr_%s;\n' % \
-                           (attr.name, attr.name))
+                    self.write('        m[%s] = attr_%s;\n' % \
+                           (attr.attr_name, attr.name))
             else:
                 # This code only handles "parents" and "objtype", both
                 # of which can be checked with .empty().
@@ -318,15 +330,15 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
                         (attr.cpp_param_type_as_object, attr.name, attr.cname, attr.as_object))
                     self.write('    if (!l_attr_%s.empty())\n' % \
                         (attr.name))
-                    self.write('        m["%s"] = l_attr_%s;\n' % \
-                        (attr.name, attr.name))
+                    self.write('        m[%s] = l_attr_%s;\n' % \
+                        (attr.attr_name, attr.name))
                 else:
                     self.write('    %s l_attr_%s = get%s();\n' % \
                         (attr.cpp_param_type, attr.name, attr.cname))
                     self.write('    if (!l_attr_%s.empty())\n' % \
                         (attr.name))
-                    self.write('        m["%s"] = l_attr_%s;\n' % \
-                        (attr.name, attr.name))
+                    self.write('        m[%s] = l_attr_%s;\n' % \
+                        (attr.attr_name, attr.name))
         self.write('    return;\n')
         self.write("}\n\n")
 
@@ -645,6 +657,8 @@ void %(classname)s::free()
         #inst# self.instance_if(obj)
 
         if len(static_attrs) > 0:
+            self.write('//\n// Attribute name strings follow.\n//\n\n')
+            self.attribute_names_if(obj, static_attrs)
             self.write('//\n// Inlined member functions follow.\n//\n\n')
             self.static_inline_sets(obj, static_attrs)
             self.static_inline_gets(obj, static_attrs)
@@ -679,6 +693,7 @@ void %(classname)s::free()
 
     def implementation(self, obj, static_attrs=[], default_attrs=[]):
         if len(static_attrs) > 0:
+            self.attribute_names_im(obj, static_attrs)
             #self.constructors_im(obj)
             self.getattrclass_im(obj, static_attrs)
             self.getattrflag_im(obj)

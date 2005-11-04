@@ -169,10 +169,21 @@ private:
 };
 
 //
+// Attribute name strings follow.
+//
+
+extern const std::string LOC_ATTR;
+extern const std::string POS_ATTR;
+extern const std::string VELOCITY_ATTR;
+extern const std::string CONTAINS_ATTR;
+extern const std::string STAMP_CONTAINS_ATTR;
+
+//
 // Inlined member functions follow.
 //
 
 const int LOC_FLAG = 1 << 6;
+
 void RootEntityData::setLoc(const std::string& val)
 {
     attr_loc = val;
@@ -180,6 +191,7 @@ void RootEntityData::setLoc(const std::string& val)
 }
 
 const int POS_FLAG = 1 << 7;
+
 void RootEntityData::setPos(const std::vector<double>& val)
 {
     attr_pos = val;
@@ -201,6 +213,7 @@ void RootEntityData::setPosAsList(const Atlas::Message::ListType& val)
 }
 
 const int VELOCITY_FLAG = 1 << 8;
+
 void RootEntityData::setVelocity(const std::vector<double>& val)
 {
     attr_velocity = val;
@@ -222,6 +235,7 @@ void RootEntityData::setVelocityAsList(const Atlas::Message::ListType& val)
 }
 
 const int CONTAINS_FLAG = 1 << 9;
+
 void RootEntityData::setContains(const std::list<std::string>& val)
 {
     attr_contains = val;
@@ -243,6 +257,7 @@ void RootEntityData::setContainsAsList(const Atlas::Message::ListType& val)
 }
 
 const int STAMP_CONTAINS_FLAG = 1 << 10;
+
 void RootEntityData::setStampContains(double val)
 {
     attr_stamp_contains = val;

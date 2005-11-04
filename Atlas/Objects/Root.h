@@ -166,10 +166,21 @@ private:
 };
 
 //
+// Attribute name strings follow.
+//
+
+extern const std::string ID_ATTR;
+extern const std::string PARENTS_ATTR;
+extern const std::string STAMP_ATTR;
+extern const std::string OBJTYPE_ATTR;
+extern const std::string NAME_ATTR;
+
+//
 // Inlined member functions follow.
 //
 
 const int ID_FLAG = 1 << 1;
+
 void RootData::setId(const std::string& val)
 {
     attr_id = val;
@@ -177,6 +188,7 @@ void RootData::setId(const std::string& val)
 }
 
 const int PARENTS_FLAG = 1 << 2;
+
 void RootData::setParents(const std::list<std::string>& val)
 {
     attr_parents = val;
@@ -198,6 +210,7 @@ void RootData::setParentsAsList(const Atlas::Message::ListType& val)
 }
 
 const int STAMP_FLAG = 1 << 3;
+
 void RootData::setStamp(double val)
 {
     attr_stamp = val;
@@ -205,6 +218,7 @@ void RootData::setStamp(double val)
 }
 
 const int OBJTYPE_FLAG = 1 << 4;
+
 void RootData::setObjtype(const std::string& val)
 {
     attr_objtype = val;
@@ -212,6 +226,7 @@ void RootData::setObjtype(const std::string& val)
 }
 
 const int NAME_FLAG = 1 << 5;
+
 void RootData::setName(const std::string& val)
 {
     attr_name = val;

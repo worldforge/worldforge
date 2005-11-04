@@ -198,10 +198,19 @@ private:
 };
 
 //
+// Attribute name strings follow.
+//
+
+extern const std::string USERNAME_ATTR;
+extern const std::string PASSWORD_ATTR;
+extern const std::string CHARACTERS_ATTR;
+
+//
 // Inlined member functions follow.
 //
 
 const int USERNAME_FLAG = 1 << 11;
+
 void AccountData::setUsername(const std::string& val)
 {
     attr_username = val;
@@ -209,6 +218,7 @@ void AccountData::setUsername(const std::string& val)
 }
 
 const int PASSWORD_FLAG = 1 << 12;
+
 void AccountData::setPassword(const std::string& val)
 {
     attr_password = val;
@@ -216,6 +226,7 @@ void AccountData::setPassword(const std::string& val)
 }
 
 const int CHARACTERS_FLAG = 1 << 13;
+
 void AccountData::setCharacters(const std::list<std::string>& val)
 {
     attr_characters = val;

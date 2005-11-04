@@ -1,3 +1,23 @@
+2005-11-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/AttributeInfo.py,
+	  Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/gen_cpp.py:
+	  Modify generated code to have a string variable for each
+	  standard Atlas attribute name, so that we can easily avoid
+	  constructing a string from a char * every time the code runs.
+	  Use these variables instead of char arrays whenever possible.
+
+	* Atlas/Objects/Entity.h, Atlas/Objects/Root.cpp,
+	  Atlas/Objects/Root.h, Atlas/Objects/RootEntity.cpp,
+	  Atlas/Objects/RootEntity.h, Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, Atlas/Objects/RootOperation.h,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/loadDefaults.cpp,
+	  Atlas/Objects/objectFactory.cpp: Re-generate code with
+	  new features.
+
+	* benchmark/Objects3_Move.cpp: Fix the number of iterations of the
+	  test to be long enough for a sane performance measurement.
+
 2005-11-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Codecs/Bach.h, Atlas/Codecs/Bach.cpp: Pass strings by
