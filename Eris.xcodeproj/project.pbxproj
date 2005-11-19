@@ -811,16 +811,16 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = C4E4B1D10876A09500E0869F /* Products */;
-					ProjectRef = C4E4B0260876989B00E0869F /* wfmath.xcodeproj */;
-				},
-				{
 					ProductGroup = C4E4B1C90876A09500E0869F /* Products */;
 					ProjectRef = C4E4B0430876989E00E0869F /* Atlas.xcodeproj */;
 				},
 				{
 					ProductGroup = C4E4B18708769EC700E0869F /* Products */;
 					ProjectRef = C4E4B0190876989500E0869F /* Skstream.xcodeproj */;
+				},
+				{
+					ProductGroup = C4E4B1D10876A09500E0869F /* Products */;
+					ProjectRef = C4E4B0260876989B00E0869F /* wfmath.xcodeproj */;
 				},
 			);
 			targets = (

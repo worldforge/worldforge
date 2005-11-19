@@ -29,6 +29,9 @@ private:
 
     bool isVisible(const std::string& eid) const;
 
+    std::string randomVisibleEntity() const;
+    std::string randomInvisibleEntity() const;
+    
     const std::string m_character;
     ClientConnection* m_con;
     StubServer* m_server;

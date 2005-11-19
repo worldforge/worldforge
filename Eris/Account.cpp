@@ -409,9 +409,10 @@ void Account::loginComplete(const AtlasAccount &p)
 void Account::loginError(const Error& err)
 {
     assert(err.isValid());
-    if (m_status != LOGGING_IN)
+    if (m_status != LOGGING_IN) {
         error() << "got loginError while not logging in";
-        
+    }
+    
     const std::vector<Root>& args = err->getArgs();
     std::string msg = args[0]->getAttr("message").asString();
     
@@ -419,14 +420,11 @@ void Account::loginError(const Error& err)
     m_status = DISCONNECTED;
     m_timeout.reset();
     
-    warning() << "got login error: " << msg;
     LoginFailure.emit(msg);
 }
 
 void Account::handleLoginTimeout()
 {
-    warning() << "login / account creation timed out waiting for response";
-    
     m_status = DISCONNECTED;
     deleteLater(m_timeout.release());
     

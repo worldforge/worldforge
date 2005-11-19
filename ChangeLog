@@ -1,3 +1,22 @@
+2005-11-19  James Turner  <james@worldforge.org>
+
+	* Eris/Type.h, Eris/Type.cpp: add a helper method to perform the copy/merge
+	  behaviour choosen for combining incoming values in SET operations with
+	  the existing data.
+	  
+	* Eris/Entity.cpp: use the new copy/merge function to set attribute state.
+	  This should permit incremental updating of large attributes, eg 'terrain',
+	  from the server.
+
+	* Eris/View.cpp: make an assert more specific; avoid a failure if the View
+	  is deleted before the top-level entity is registered.
+	  
+	* Eris/Account.cpp: don't log warning messages for server-side errors to the
+	  console - just pass them up to the client.
+	  
+	* test/agent.cpp, test/agent.h: work-in-progress code towards spamming the
+	  the test-harness with a large number of ops.
+	  
 2005-10-25  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 1.3.9, Interface version 9.

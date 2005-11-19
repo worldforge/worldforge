@@ -253,13 +253,14 @@ void Entity::setAttr(const std::string &attr, const Element &val)
 {
     beginUpdate();
 
-    nativeAttrChanged(attr, val);
-    m_attrs[attr] = val;
-
-    onAttrChanged(attr, val);
+    Element& target = m_attrs[attr];
+    mergeOrCopyElement(val, target);
+    nativeAttrChanged(attr, target);
+        
+    onAttrChanged(attr, target);
 
     // fire observers
-    if (m_observers.count(attr)) m_observers[attr].emit(attr, val);
+    if (m_observers.count(attr)) m_observers[attr].emit(attr, target);
 
     addToUpdate(attr);
     endUpdate();

@@ -189,3 +189,118 @@ bool Agent::isVisible(const std::string& lookTarget) const
     std::string locId = m_server->m_world[lookTarget]->getLoc();
     return isVisible(locId); // recurse up
 }
+
+#pragma mark -
+
+const char* strings[] = {
+    "stilton",
+    "emmental",
+    "tenten",
+    "wendslydale",
+    "cheddar",
+    "edam",
+    "gouda",
+    "brie",
+    "jarlsberg",
+    "canadian extra mature cheddar"
+};
+
+Atlas::Message::Element randomValue()
+{
+    switch (random() % 3) {
+    case 0: return Atlas::Message::Element(random() % 10000);
+    case 1: return Atlas::Message::Element(drand48() * 1e6);
+    case 2: return Atlas::Message::Element(strings[random() % 10]);
+    }
+    
+    return Atlas::Message::Element();
+}
+
+/*
+void Agent::spam(unsigned int opsToSend)
+{
+    while (opsToSend--) {
+          }
+}
+
+const char* names[] = {
+    "foo",
+    "bar",
+    "wibble",
+    "stamina",
+    "taupe",
+    "mana",
+    "effervesence",
+    "personality",
+    "moxie",
+    "mojo"
+};
+
+RootOperation Agent::generateRandomOp()
+{
+    switch (opType) {
+    case MOVE: {
+            Move mv;
+            mv->setFrom(randomVisibleEntity());
+            Root arg;
+            std::vector
+            arg->setAttr("pos");
+            
+            // some % of the time, change a loc 
+            arg->setAttr("loc", randomVisibleEntity());
+            
+            Sight;
+            sight->setArgs1(mv);
+            return sight;
+        }
+        
+    case SET:
+        Set st;
+        st->setFrom(randomVisibleEntity());
+        Root arg;
+        arg->setId(st->getFrom());
+        
+        unsigned int attrCount = random() % 10;
+        while (--attrCount) arg->setAttr(names[attrCount], randomValue());
+        st->setArgs1(arg);
+                
+        broadcastSight(st);
+        break;
+        
+    case APPEAR:
+        setEntityVisible(randomInvisibleEntity(), true);
+        break;
+        
+    case DISAPPEAR:
+        setEntityVisible(randomVisibleEntity(), false);
+        break;
+    } // of switch
+}
+*/
+
+std::string Agent::randomVisibleEntity() const
+{
+    while (true) {
+        unsigned index = random() % m_visible.size();
+        EntityIdSet::const_iterator it = m_visible.begin();
+        while (--index) ++it; // yech
+        
+        if (*it == "_world") continue;
+        if (*it == m_character) continue;
+        
+        // check proper visibility (i.e parent chain)
+        if (isVisible(*it)) return *it;
+    }
+}
+
+std::string Agent::randomInvisibleEntity() const
+{
+    while (true) {
+        StubServer::EntityMap::const_iterator it = m_server->m_world.begin();
+        unsigned int index = random() % m_server->m_world.size();
+        while (--index) ++it;
+        
+        if (!isVisible(it->first)) return it->first;
+    }
+}
+

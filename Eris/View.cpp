@@ -33,9 +33,13 @@ View::View(Avatar* av) :
 
 View::~View()
 {
-    // cascaded delete of all entities, is the hope
-    delete m_topLevel;
-    assert(m_contents.empty());
+    if (m_topLevel) {
+        delete m_topLevel;
+        assert(m_contents.empty());
+    }
+    // note that errors that occurr very early during world entry, may
+    // cause a view to be deleted with no top-level entity; in that case we
+    // leak a few entities here.
     
     for (FactoryStore::iterator F=m_factories.begin(); F != m_factories.end(); ++F) {
         delete *F;
