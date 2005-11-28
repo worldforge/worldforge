@@ -66,8 +66,7 @@ Account::Account(Connection *con) :
     m_status(DISCONNECTED),
     m_doingCharacterRefresh(false)
 {
-    if (!m_con)
-        throw InvalidOperation("invalid Connection passed to Account");
+    if (!m_con) throw InvalidOperation("invalid Connection passed to Account");
 
     m_router = new AccountRouter(this);
 
@@ -77,6 +76,14 @@ Account::Account(Connection *con) :
 
 Account::~Account()
 {
+    ActiveCharacterMap::iterator it;
+    for (it = m_activeCharacters.begin(); it != m_activeCharacters.end(); )
+    {
+        ActiveCharacterMap::iterator cur = it++;
+        // cur gets invalidated by deactivateCharacter
+        delete cur->second;
+    }
+
     delete m_router;
 }
 

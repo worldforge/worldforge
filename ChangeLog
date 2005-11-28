@@ -1,3 +1,8 @@
+2005-11-28  James Turner  <james@worldforge.org>
+
+    * Eris/Account.cpp: delete all remaining active avatars when destructing
+      an account.
+
 2005-11-19  James Turner  <james@worldforge.org>
 
 	* Eris/Type.h, Eris/Type.cpp: add a helper method to perform the copy/merge

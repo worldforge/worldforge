@@ -280,7 +280,8 @@ RootOperation Agent::generateRandomOp()
 
 std::string Agent::randomVisibleEntity() const
 {
-    while (true) {
+    unsigned int tries = 100;
+    while (--tries) {
         unsigned index = random() % m_visible.size();
         EntityIdSet::const_iterator it = m_visible.begin();
         while (--index) ++it; // yech
@@ -291,16 +292,21 @@ std::string Agent::randomVisibleEntity() const
         // check proper visibility (i.e parent chain)
         if (isVisible(*it)) return *it;
     }
+    
+    return std::string();
 }
 
 std::string Agent::randomInvisibleEntity() const
 {
-    while (true) {
+    unsigned int tries = 100;
+    while (--tries) {
         StubServer::EntityMap::const_iterator it = m_server->m_world.begin();
         unsigned int index = random() % m_server->m_world.size();
         while (--index) ++it;
         
         if (!isVisible(it->first)) return it->first;
     }
+    
+    return std::string();
 }
 
