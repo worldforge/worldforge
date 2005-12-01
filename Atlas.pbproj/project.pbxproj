@@ -5,20 +5,6 @@
 	};
 	objectVersion = 39;
 	objects = {
-		C44E342505D86244005C5DF9 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			isa = PBXShellScriptBuildPhase;
-			outputPaths = (
-				"",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cd Atlas/Objects\npython gen_cpp.py\n";
-		};
 		C44E342605D863C0005C5DF9 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -30,6 +16,7 @@
 				C44E343105D86664005C5DF9,
 				C44E343205D8666A005C5DF9,
 				C44E356905D96CE3005C5DF9,
+				C45EDA81080C52550012E95D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,6 +101,51 @@
 				);
 			};
 		};
+		C45EDA7E080C52550012E95D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Formatter.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45EDA7F080C52550012E95D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = Formatter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45EDA80080C52550012E95D = {
+			fileRef = C45EDA7E080C52550012E95D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C45EDA81080C52550012E95D = {
+			fileRef = C45EDA7F080C52550012E95D;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		C45EDA83080C52E60012E95D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = Negotiate.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45EDA84080C52E60012E95D = {
+			fileRef = C45EDA83080C52E60012E95D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		C491F5A00549533F00A800CF = {
 			children = (
 				C491F6A005499CF300A800CF,
@@ -125,8 +157,6 @@
 			sourceTree = "<group>";
 		};
 		C491F5A20549533F00A800CF = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -139,8 +169,6 @@
 			name = Development;
 		};
 		C491F5A30549533F00A800CF = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -884,6 +912,9 @@
 		};
 		C491F69F05499BF800A800CF = {
 			children = (
+				C45EDA83080C52E60012E95D,
+				C45EDA7E080C52550012E95D,
+				C45EDA7F080C52550012E95D,
 				C44E342805D86467005C5DF9,
 				C491F5CE0549539C00A800CF,
 				C491F5FB054953C000A800CF,
@@ -925,9 +956,9 @@
 		};
 		C491F6A105499D1500A800CF = {
 			isa = PBXFileReference;
-			lastKnownFileType = archive.ar;
-			name = libbz2.a;
-			path = /usr/lib/libbz2.a;
+			lastKnownFileType = "compiled.mach-o.dylib";
+			name = libbz2.1.0.2.dylib;
+			path = /usr/lib/libbz2.1.0.2.dylib;
 			refType = 0;
 			sourceTree = "<absolute>";
 		};
@@ -949,14 +980,13 @@
 		};
 		C4C5683A055AEFDB00944C0F = {
 			buildPhases = (
+				C4C56866055AEFDB00944C0F,
 				C44E342605D863C0005C5DF9,
-				C44E342505D86244005C5DF9,
 				C4C56846055AEFDB00944C0F,
 				C4C5684B055AEFDB00944C0F,
 				C4C5684E055AEFDB00944C0F,
 				C4C56851055AEFDB00944C0F,
 				C4C56857055AEFDB00944C0F,
-				C4C56866055AEFDB00944C0F,
 				C4C56888055AEFDB00944C0F,
 			);
 			buildRules = (
@@ -966,13 +996,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 3;
 				DYLIB_CURRENT_VERSION = 3;
 				FRAMEWORK_VERSION = C;
-				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_BZLIB_H HAVE_ZLIB_H HAVE_LIBZ HAVE_LIBBZ2 ATLAS_ELEMENT_TYPEDEF_PRIVATE";
+				GCC_PREPROCESSOR_DEFINITIONS = "HAVE_BZLIB_H HAVE_ZLIB_H HAVE_LIBZ HAVE_LIBBZ2";
 				HEADER_SEARCH_PATHS = .;
-				INSTALL_PATH = /Users/jmt/Library/Frameworks;
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				OTHER_LDFLAGS = "-seg1addr 0x20000000";
-				PRIVATE_HEADERS_FOLDER_PATH = Atlas.framework/PrivateHeaders;
 				PRODUCT_NAME = Atlas;
-				PUBLIC_HEADERS_FOLDER_PATH = Atlas.framework/Headers;
 				WARNING_CFLAGS = "-Wall";
 			};
 			dependencies = (
@@ -986,8 +1014,8 @@
 		};
 		C4C56846055AEFDB00944C0F = {
 			buildActionMask = 2147483647;
-			dstPath = Headers/Codecs;
-			dstSubfolderSpec = 1;
+			dstPath = "$(PUBLIC_HEADERS_FOLDER_PATH)/Codecs";
+			dstSubfolderSpec = 16;
 			files = (
 				C4C56847055AEFDB00944C0F,
 				C4C56848055AEFDB00944C0F,
@@ -1023,8 +1051,8 @@
 		};
 		C4C5684B055AEFDB00944C0F = {
 			buildActionMask = 2147483647;
-			dstPath = Headers/Filters;
-			dstSubfolderSpec = 1;
+			dstPath = "$(PUBLIC_HEADERS_FOLDER_PATH)/Filters";
+			dstSubfolderSpec = 16;
 			files = (
 				C4C5684C055AEFDB00944C0F,
 				C4C5684D055AEFDB00944C0F,
@@ -1046,8 +1074,8 @@
 		};
 		C4C5684E055AEFDB00944C0F = {
 			buildActionMask = 2147483647;
-			dstPath = Headers/Net;
-			dstSubfolderSpec = 1;
+			dstPath = "$(PUBLIC_HEADERS_FOLDER_PATH)/Net";
+			dstSubfolderSpec = 16;
 			files = (
 				C4C5684F055AEFDB00944C0F,
 				C4C56850055AEFDB00944C0F,
@@ -1069,8 +1097,8 @@
 		};
 		C4C56851055AEFDB00944C0F = {
 			buildActionMask = 2147483647;
-			dstPath = Headers/Message;
-			dstSubfolderSpec = 1;
+			dstPath = "$(PUBLIC_HEADERS_FOLDER_PATH)/Message";
+			dstSubfolderSpec = 16;
 			files = (
 				C4C56852055AEFDB00944C0F,
 				C4C56853055AEFDB00944C0F,
@@ -1113,8 +1141,8 @@
 		};
 		C4C56857055AEFDB00944C0F = {
 			buildActionMask = 2147483647;
-			dstPath = Headers/Objects;
-			dstSubfolderSpec = 1;
+			dstPath = "$(PUBLIC_HEADERS_FOLDER_PATH)/Objects";
+			dstSubfolderSpec = 16;
 			files = (
 				C4C56858055AEFDB00944C0F,
 				C4C56859055AEFDB00944C0F,
@@ -1233,7 +1261,6 @@
 				C4C56870055AEFDB00944C0F,
 				C4C56871055AEFDB00944C0F,
 				C4C56872055AEFDB00944C0F,
-				C4C56873055AEFDB00944C0F,
 				C4C56874055AEFDB00944C0F,
 				C4C56875055AEFDB00944C0F,
 				C4C56876055AEFDB00944C0F,
@@ -1254,6 +1281,8 @@
 				C4C56885055AEFDB00944C0F,
 				C4C56886055AEFDB00944C0F,
 				C4C56887055AEFDB00944C0F,
+				C45EDA80080C52550012E95D,
+				C45EDA84080C52E60012E95D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1326,12 +1355,6 @@
 		};
 		C4C56872055AEFDB00944C0F = {
 			fileRef = C491F5EE054953C000A800CF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C4C56873055AEFDB00944C0F = {
-			fileRef = C491F5F2054953C000A800CF;
 			isa = PBXBuildFile;
 			settings = {
 			};

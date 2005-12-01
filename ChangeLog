@@ -1,3 +1,8 @@
+2005-12-01  James Turner  <james@worldforge.org>
+
+	* Add X-Code 2.0 project file (ProjectBuilder project will be deleted
+	  shortly).
+
 2005-11-20  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.6.0rc2, Interface version 1.
