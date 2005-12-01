@@ -54,6 +54,8 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
 
 Entity::~Entity()
 {    
+    if (m_moving) m_view->removeFromPrediction(this);
+    
     while (!m_contents.empty()) delete m_contents.back();    
     setLocation(NULL);
     

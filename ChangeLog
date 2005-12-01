@@ -1,3 +1,8 @@
+2005-12-01  James Turner  <james@worldforge.org>
+
+    * Eris/Entity.cpp: unregister a moving entity from the View upon deletion;
+      should fix a crash reported by Al.
+      
 2005-11-28  James Turner  <james@worldforge.org>
 
     * Eris/Account.cpp: delete all remaining active avatars when destructing
