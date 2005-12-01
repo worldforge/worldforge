@@ -1,5 +1,10 @@
 2005-12-01  James Turner  <james@worldforge.org>
 
+    * Eris/Entity.cpp: don't assert if sight(create) is received after an
+      entity is already in the View: just log a warning and emit the signal.
+      
+2005-12-01  James Turner  <james@worldforge.org>
+
     * Eris/Entity.cpp: unregister a moving entity from the View upon deletion;
       should fix a crash reported by Al.
       

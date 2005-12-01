@@ -221,8 +221,14 @@ Entity* View::initialSight(const RootEntity& gent)
 
 void View::create(const RootEntity& gent)
 {
+    if (m_contents.count(gent->getId()))
+    {
+        warning() << "recieved create of " << gent->getId() << " which is already in the View";
+        EntityCreated.emit( m_contents[gent->getId()] ); // is this wise?
+        return;
+    }
+    
     Entity* ent = createEntity(gent);
-    assert(m_contents.count(gent->getId()) == 0);
     m_contents[gent->getId()] = ent;
     ent->init(gent);
     
