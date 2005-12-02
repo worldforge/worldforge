@@ -1,3 +1,8 @@
+2005-12-02  James Turner  <james@worldforge.org>
+
+	* Add X-Code 2.0 project file (ProjectBuilder project will be deleted
+	  shortly).
+	  
 2005-07-13  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/BasePoint.h: Re-order "const static" to "static const"
