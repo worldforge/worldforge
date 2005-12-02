@@ -17,8 +17,6 @@
 			sourceTree = "<group>";
 		};
 		C4337F7103CE4905000063C9 = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -31,8 +29,6 @@
 			name = Development;
 		};
 		C4337F7203CE4905000063C9 = {
-			buildRules = (
-			);
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -831,7 +827,6 @@
 			isa = PBXBuildFile;
 			settings = {
 				ATTRIBUTES = (
-					Public,
 				);
 			};
 		};
