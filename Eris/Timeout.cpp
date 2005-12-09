@@ -41,9 +41,10 @@ Timeout::Timeout(const std::string &label, void* inst, unsigned long milli) :
 	_label(label, inst),
 	_fired(false)
 {
-    if (_allTimeouts.count(_label))
+    if (_allTimeouts.count(_label)) {
         throw InvalidOperation("Duplicate label '" + label + "' for timeout attached to instace");
-       
+    }
+    
     _allTimeouts.insert(TimeoutMap::value_type(_label, this));
     _due = TimeStamp::now() + milli;
     Poll::newTimeout();

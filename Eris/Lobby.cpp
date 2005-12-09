@@ -293,10 +293,13 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
     
     if (args.front()->hasAttr("loc")) {
         std::string loc = args.front()->getAttr("loc").asString();
-        if (m_rooms.count(loc)) {
-            m_rooms[loc]->handleSoundTalk(P->second, speech);
-        } else
-            error() << "lobby got sound(talk) with unknown loc: " << loc;
+        IdRoomMap::const_iterator room = m_rooms.find(loc);
+        
+        if (room != m_rooms.end()) {
+            room->second->handleSoundTalk(P->second, speech);
+        } else {
+            warning() << "lobby got sound(talk) with unknown loc: " << loc;
+        }
     } else {
         // no location, hence assume it's one-to-one chat
         PrivateTalk.emit(P->second, speech);
@@ -313,10 +316,12 @@ void Lobby::recvAppearance(const Atlas::Objects::Root& obj)
     }
     
     std::string loc = obj->getAttr("loc").asString();
-    if (m_rooms.count(loc)) {
-        m_rooms[loc]->appearance(obj->getId());
+    IdRoomMap::const_iterator room = m_rooms.find(loc);
+        
+    if (room != m_rooms.end()) {
+        room->second->appearance(obj->getId());
     } else
-        error() << "lobby got appearance with unknown loc: " << loc;
+        warning() << "lobby got appearance with unknown loc: " << loc;
 }
 
 Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
@@ -346,8 +351,10 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 
     if (args.front()->hasAttr("loc")) {
         std::string loc = args.front()->getAttr("loc").asString();
-        if (m_rooms.count(loc)) {
-            m_rooms[loc]->handleEmote(P->second, description);
+        IdRoomMap::const_iterator room = m_rooms.find(loc);
+        
+        if (room != m_rooms.end()) {
+            room->second->handleEmote(P->second, description);
         } else
             error() << "lobby got sight(imaginary) with unknown loc: " << loc;
     } else
@@ -365,8 +372,10 @@ void Lobby::recvDisappearance(const Atlas::Objects::Root& obj)
     }
     
     std::string loc = obj->getAttr("loc").asString();
-    if (m_rooms.count(loc)) {
-        m_rooms[loc]->disappearance(obj->getId());
+    IdRoomMap::const_iterator room = m_rooms.find(loc);
+        
+    if (room != m_rooms.end()) {
+        room->second->disappearance(obj->getId());
     } else
         error() << "lobby got disappearance with unknown loc: " << loc;
 }

@@ -148,17 +148,18 @@ void View::sight(const RootEntity& gent)
 {
     bool visible = true;
     std::string eid = gent->getId();
+    PendingSightMap::iterator pending = m_pending.find(eid);
     
 // examine the pending map, to see what we should do with this entity
-    if (m_pending.count(eid)) {
-        switch (m_pending[eid])
+    if (pending != m_pending.end()) {
+        switch (pending->second)
         {
         case SACTION_APPEAR:
             visible = true;
             break;
 
         case SACTION_DISCARD:
-            m_pending.erase(eid);
+            m_pending.erase(pending);
             return;
 
         case SACTION_HIDE:
@@ -174,7 +175,7 @@ void View::sight(const RootEntity& gent)
             throw InvalidOperation("got bad pending action for entity");
         }
     
-         m_pending.erase(eid);
+         m_pending.erase(pending);
     }
     
 // if we got this far, go ahead and build / update it
@@ -319,18 +320,19 @@ void View::sendLookAt(const std::string& eid)
 {
     Look look;
     if (!eid.empty()) {
-        if (m_pending.count(eid)) {
-            switch (m_pending[eid])
+        PendingSightMap::iterator pending = m_pending.find(eid);
+        if (pending != m_pending.end()) {
+            switch (pending->second)
             {
             case SACTION_QUEUED:
                 // flip over to default (APPEAR) as normal
-                m_pending[eid] = SACTION_APPEAR; break;
+                pending->second = SACTION_APPEAR; break;
                 
             case SACTION_DISCARD:
             case SACTION_HIDE:
                 if (m_notifySights.count(eid) == 0) {
                     // no-one cares, don't bother to look
-                    m_pending.erase(eid);
+                    m_pending.erase(pending);
                     return;
                 } // else someone <em>does</em> care, so let's do the look, but
                   // keep SightAction unchanged so it discards / is hidden as
@@ -349,7 +351,7 @@ void View::sendLookAt(const std::string& eid)
             }
         } else {
             // no previous entry, default to APPEAR
-            m_pending[eid] = SACTION_APPEAR;
+            m_pending.insert(pending, std::make_pair(eid, SACTION_APPEAR));
         }
         
         // pending map is in the right state, build up the args now

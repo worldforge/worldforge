@@ -1,3 +1,9 @@
+2005-12-09  James Turner  <james@worldforge.org>
+
+    * Eris/Entity.cpp, Eris/View.cpp, Eris/Timeout.cpp, Eris/Lobby.cpp: 
+      replace many occurences of foo.count(x) followed by foo[x] with
+      iterator = foo.find(x), which is half the work.
+
 2005-12-01  James Turner  <james@worldforge.org>
 
     * Eris/Entity.cpp: don't assert if sight(create) is received after an
