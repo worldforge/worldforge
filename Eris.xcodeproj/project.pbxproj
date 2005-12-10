@@ -89,6 +89,8 @@
 		C4BD59C906AAA0F20039CF5E /* sigc++.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4BD59C806AAA0F20039CF5E /* sigc++.framework */; };
 		C4C5505307A6D43B00F59ED4 /* DeleteLater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C4C5505107A6D43B00F59ED4 /* DeleteLater.cpp */; };
 		C4C5505407A6D43B00F59ED4 /* DeleteLater.h in Headers */ = {isa = PBXBuildFile; fileRef = C4C5505207A6D43B00F59ED4 /* DeleteLater.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C4D586A9094AF2880069B5C7 /* EntityRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C4D586A8094AF2880069B5C7 /* EntityRef.cpp */; };
+		C4D586AB094AF2940069B5C7 /* EntityRef.h in Headers */ = {isa = PBXBuildFile; fileRef = C4D586AA094AF2940069B5C7 /* EntityRef.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C4E4B2000876A16400E0869F /* Atlas.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E4B1CE0876A09500E0869F /* Atlas.framework */; };
 		C4E4B2060876A17300E0869F /* wfmath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E4B1DC0876A09500E0869F /* wfmath.framework */; };
 		C4E4B2070876A17500E0869F /* skstream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E4B18C08769EC700E0869F /* skstream.framework */; };
@@ -370,6 +372,8 @@
 		C4BD59C806AAA0F20039CF5E /* sigc++.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sigc++.framework"; path = "/Library/Frameworks/sigc++.framework"; sourceTree = "<absolute>"; };
 		C4C5505107A6D43B00F59ED4 /* DeleteLater.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = DeleteLater.cpp; path = Eris/DeleteLater.cpp; sourceTree = "<group>"; };
 		C4C5505207A6D43B00F59ED4 /* DeleteLater.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = DeleteLater.h; sourceTree = "<group>"; };
+		C4D586A8094AF2880069B5C7 /* EntityRef.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = EntityRef.cpp; path = Eris/EntityRef.cpp; sourceTree = "<group>"; };
+		C4D586AA094AF2940069B5C7 /* EntityRef.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EntityRef.h; sourceTree = "<group>"; };
 		C4E4B0190876989500E0869F /* Skstream.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Skstream.xcodeproj; path = ../skstream/Skstream.xcodeproj; sourceTree = SOURCE_ROOT; };
 		C4E4B0260876989B00E0869F /* wfmath.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = wfmath.xcodeproj; path = ../wfmath/wfmath.xcodeproj; sourceTree = SOURCE_ROOT; };
 		C4E4B0430876989E00E0869F /* Atlas.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Atlas.xcodeproj; path = "../Atlas-C++/Atlas.xcodeproj"; sourceTree = SOURCE_ROOT; };
@@ -442,6 +446,7 @@
 		C43FBCF2054315F2008FC2ED /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				C4D586AA094AF2940069B5C7 /* EntityRef.h */,
 				C4B9D689083A838800D846FC /* Calendar.h */,
 				C4E8F39607B6DDA500981FB2 /* Response.h */,
 				C4C5505207A6D43B00F59ED4 /* DeleteLater.h */,
@@ -535,6 +540,7 @@
 		C4BB15920544A6C100A800CF /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C4D586A8094AF2880069B5C7 /* EntityRef.cpp */,
 				C4E8F39507B6DDA500981FB2 /* Response.cpp */,
 				C4C5505107A6D43B00F59ED4 /* DeleteLater.cpp */,
 				C438300C06BEFECA0092C3C7 /* Account.cpp */,
@@ -657,6 +663,7 @@
 				C4C5505407A6D43B00F59ED4 /* DeleteLater.h in Headers */,
 				C4E8F39807B6DDA500981FB2 /* Response.h in Headers */,
 				C4B9D68A083A838800D846FC /* Calendar.h in Headers */,
+				C4D586AB094AF2940069B5C7 /* EntityRef.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -960,6 +967,7 @@
 				C438300E06BEFECA0092C3C7 /* Account.cpp in Sources */,
 				C4C5505307A6D43B00F59ED4 /* DeleteLater.cpp in Sources */,
 				C4E8F39707B6DDA500981FB2 /* Response.cpp in Sources */,
+				C4D586A9094AF2880069B5C7 /* EntityRef.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

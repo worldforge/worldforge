@@ -41,6 +41,7 @@ liberis_1_3_la_SOURCES = \
 	TypeBoundRedispatch.cpp \
 	DeleteLater.cpp \
 	Response.cpp \
+	EntityRef.cpp \
 	$(ATLAS_JANUS_CPP)
 
 liberisdir = $(includedir)/Eris-1.3/Eris
@@ -76,5 +77,6 @@ liberis_HEADERS = \
 	TypeBoundRedispatch.h \
 	DeleteLater.h \
 	Response.h \
+	EntityRef.h \
 	$(ATLAS_JANUS_H)
 

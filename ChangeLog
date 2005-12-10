@@ -1,3 +1,14 @@
+2005-12-10  James Turner  <james@worldforge.org>
+
+	* Eris/EntityRef.cpp, Eris/EntityRef.h, Eris/Makefile.am: add a smart-
+	  pointer for Entities, which clears itself when they are deleted,
+	  and updates itself when they are retrieved from the server
+	  dynamically.
+	  
+	* Eris/Entity.h, Eris/Entity.cpp: emit a signal on deletion
+	
+	* Eris/View.h: doxygen comment tweaks
+
 2005-12-09  James Turner  <james@worldforge.org>
 
     * Eris/Entity.cpp, Eris/View.cpp, Eris/Timeout.cpp, Eris/Lobby.cpp: 

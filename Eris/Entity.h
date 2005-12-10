@@ -244,7 +244,13 @@ public:
     SigC::Signal1<void, const Atlas::Objects::Root&> Noise;
     
     SigC::Signal1<void, bool> VisibilityChanged;
-        
+    
+    /**
+    Emitted prior to deletion. Note that entity instances may be deleted for
+    different reasons - passing out of the view, being deleted on the server,
+    or during disconnection. This signal is emitted regardless.
+    */
+    SigC::Signal0<void> BeingDeleted;
 protected:	        
     /** over-rideable initialisation helper. When subclassing, if you
     over-ride this method, take care to call the base implementation, or

@@ -70,6 +70,8 @@ public:
 
     /** emitted when a SIGHT(CREATE) op is recieved for an entity */
     SigC::Signal1<void, Entity*> EntityCreated;
+    
+    /** emitted when a SIGHT(DELETE) op is recieved for an entity */
     SigC::Signal1<void, Entity*> EntityDeleted;
     
     SigC::Signal1<void, Entity*> Appearance;
