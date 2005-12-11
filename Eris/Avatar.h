@@ -3,6 +3,7 @@
 
 #include <Eris/Types.h>
 #include <Atlas/Objects/ObjectsFwd.h>
+#include <Eris/EntityRef.h>
 
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
@@ -89,14 +90,23 @@ public:
 	 * @brief Use the currently wielded entity (tool) on another entity.
 	 * @param entity A pointer to the entity you wish to use your tool on.
 	 * @param position A position where you perform the operation.
+     * @param op The operation of the tool to perform, or an empty string to use the default.
 	 * 
 	 * If @a position is invalid the "pos" parameter will not be set on the USE operation.
 	 * 
 	 * @sa WFMath::Point< 3 >::Point(), WFMath::Point< 3 >::setValid(), WFMath::Point< 3 >::isValid()
-	 * 
-	 * @todo This needs another parameter specifying what operation of the tool is going to be used.
-	 **/
-	void useOn(Entity * entity, const WFMath::Point< 3 > & position);
+     **/
+	void useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& op);
+    
+    /**
+    @brief Get a list of operations supported by the currently wielded entity (tool)
+    If no entity is wielded, or the entity does no provide an operations list,
+    this will return an empty array.
+    */
+    const TypeInfoArray& getUseOperationsForWielded() const
+    {
+        return m_useOps;
+    }
     
     /**
     Emitted when the character entity of this Avatar is valid (and presumably,
@@ -141,6 +151,9 @@ private:
     void onCharacterChildAdded(Entity* child);
     void onCharacterChildRemoved(Entity* child);
     
+    void onCharacterWield(const std::string&, const Atlas::Message::Element&);
+    void onWieldedChanged();
+    
     Account* m_account;
     
     std::string m_entityId;
@@ -151,7 +164,10 @@ private:
 
     IGRouter* m_router;
     View* m_view;
-
+    TypeInfoArray m_useOps;
+    
+    EntityRef m_wielded;
+    
     SigC::Connection m_entityAppearanceCon;
 };
 

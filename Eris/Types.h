@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include <set>
+#include <vector>
 
 namespace Atlas { namespace Message { class Element; } }
 
@@ -19,6 +20,15 @@ typedef std::list<Atlas::Message::Element> MessageList;
 // Forward Decls
 class Entity;
 typedef Entity* EntityPtr;
+
+// lots of forward decleratrions	
+class TypeInfo;
+class TypeService;
+class Connection;
+
+typedef TypeInfo* TypeInfoPtr;
+typedef std::set<TypeInfoPtr> TypeInfoSet;
+typedef std::vector<TypeInfoPtr> TypeInfoArray;
 
 /**
 Result codes returned from various methods.

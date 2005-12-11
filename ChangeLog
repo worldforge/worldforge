@@ -1,3 +1,12 @@
+2005-12-11  James Turner  <james@worldforge.org>
+
+	* Eris/Types.h, Eris/TypeInfo.h: move forward declarations for TypeInfo and
+	  related containers to a single place.
+
+	* Eris/Avatar.cpp, Eris/Avatar.h: provide a way to query the operations
+	  supported by the currently wielded entity (tool) from the Avatar. Extend
+      the useOn method to allow the tool operation to be explicitly specified.
+
 2005-12-10  James Turner  <james@worldforge.org>
 
 	* Eris/EntityRef.cpp, Eris/EntityRef.h, Eris/Makefile.am: add a smart-

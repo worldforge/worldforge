@@ -10,14 +10,6 @@
 
 namespace Eris {	
 
-// lots of forward decleratrions	
-class TypeInfo;
-class TypeService;
-class Connection;
-
-typedef TypeInfo* TypeInfoPtr;
-typedef std::set<TypeInfoPtr> TypeInfoSet;
-
 /** The representation of an Atlas type (i.e a class or operation definition). This class
 supports efficent inheritance queries, and traversal of the type hierarchy. Atlas types
 have a unique ID, and types can be retrieved using this value. Where an Atlas::Objects instance,

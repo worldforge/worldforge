@@ -10,6 +10,7 @@
 #include <Eris/IGRouter.h>
 #include <Eris/Account.h>
 #include <Eris/Exceptions.h>
+#include <Eris/TypeService.h>
 
 #include <wfmath/atlasconv.h>
 #include <sigc++/object_slot.h>
@@ -21,6 +22,7 @@ using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using WFMath::TimeStamp;
+using namespace Atlas::Message;
 
 namespace Eris
 {
@@ -39,6 +41,8 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
 
     m_view->getEntityFromServer("");
     m_view->getEntity(m_entityId);
+    
+    m_wielded.Changed.connect(sigc::mem_fun(this, &Avatar::onWieldedChanged));
 }
 
 Avatar::~Avatar()
@@ -233,19 +237,32 @@ void Avatar::wield(Entity * entity)
 	getConnection()->send(wield);
 }
 
-void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position)
+void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& opType)
 {
-	Anonymous arguments;
+    Anonymous arguments;
 	
 	arguments->setId(entity->getId());
 	arguments->setObjtype("obj");
 	if (position.isValid()) arguments->setAttr("pos", position.toAtlas());
-	
-	Use use;
-	
+    
+    Use use;
 	use->setFrom(m_entityId);
-	use->setArgs1(arguments);
 	
+    
+    if (opType.empty())
+    {
+        use->setArgs1(arguments);
+    } else {
+        RootOperation op;
+        StringList prs;
+        prs.push_back(opType);
+        op->setParents(prs);
+        op->setArgs1(arguments);
+        op->setFrom(m_entityId);
+        
+        use->setArgs1(op);
+    }
+    
 	getConnection()->send(use);
 }
 
@@ -260,6 +277,8 @@ void Avatar::onEntityAppear(Entity* ent)
         ent->ChildAdded.connect(SigC::slot(*this, &Avatar::onCharacterChildAdded));
         ent->ChildRemoved.connect(SigC::slot(*this, &Avatar::onCharacterChildRemoved));
         
+        ent->observe("right_hand_wield", SigC::slot(*this, &Avatar::onCharacterWield));
+        
         GotCharacterEntity.emit(ent);
         m_entityAppearanceCon.disconnect(); // stop listenting to View::Appearance
     }
@@ -273,6 +292,22 @@ void Avatar::onCharacterChildAdded(Entity* child)
 void Avatar::onCharacterChildRemoved(Entity* child)
 {
     InvRemoved.emit(child);
+}
+
+void Avatar::onCharacterWield(const std::string& s, const Atlas::Message::Element& val)
+{
+    if (s != "right_hand_wield") {
+        warning() << "got wield for strange slot";
+        return;
+    }
+    
+    if (!val.isString()) {
+        warning() << "got malformed wield value";
+        return;
+    }
+    
+    m_wielded = EntityRef(m_view, val.asString());
+    onWieldedChanged();
 }
 
 Connection* Avatar::getConnection() const
@@ -290,6 +325,36 @@ void Avatar::updateWorldTime(double seconds)
 {
     m_stampAtLastOp = TimeStamp::now();
     m_lastOpTime = seconds;
+}
+
+void Avatar::onWieldedChanged()
+{
+    m_useOps.clear();
+    
+    if (!m_wielded) return;
+    if (!m_wielded->hasAttr("operations")) return;
+    
+    const Element& ops = m_wielded->valueOfAttr("operations");
+    if (!ops.isList()) {
+        warning() << "entity " << m_wielded->getId() << 
+            " has operations attr which is not a list";
+        return;
+    } 
+    
+    const ListType& opsl(ops.asList());
+    m_useOps.reserve(opsl.size());
+    TypeService* ts = getConnection()->getTypeService();
+    
+    for (ListType::const_iterator i=opsl.begin(); i!=opsl.end(); ++i)
+    {
+        if (!i->isString())
+        {
+            warning() << "ignoring malformed operations list item";
+            continue;
+        }
+    
+        m_useOps.push_back(ts->getTypeByName(i->asString()));
+    }
 }
 
 } // of namespace Eris
