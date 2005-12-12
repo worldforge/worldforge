@@ -83,9 +83,9 @@ public:
 
   virtual ~Item();
 
-  Item& operator=(const Item& i);
+  Item& operator=(const Item & i);
 
-  void assign(const Variable &v);
+  void assign(const Variable & v, Scope scope);
 
 protected:
 

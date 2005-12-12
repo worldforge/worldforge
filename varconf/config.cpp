@@ -77,8 +77,7 @@ namespace {
   {
     if (c=='\n') return C_EOL;
     if (isspace(c)) return C_SPACE;
-    if (((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z'))) 
-      return C_ALPHA;
+    if ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z')) return C_ALPHA;
     if (isdigit(c)) return C_NUMERIC;
     if ((c == '-') || (c == '_')) return C_DASH;
     if (c == '=') return C_EQ;
@@ -103,15 +102,15 @@ Config* Config::inst()
   return m_instance;
 }
 
-Config::Config(const Config& conf)
+Config::Config(const Config & conf)
 {
   m_conf = conf.m_conf;
   m_par_lookup = conf.m_par_lookup;
 }
 
-std::ostream& operator <<(std::ostream& out, Config& conf)
+std::ostream & operator <<(std::ostream & out, Config & conf)
 {
-  if (!conf.writeToStream(out)) {
+  if (!conf.writeToStream(out, USER)) {
     conf.sige.emit("\nVarconf Error: error while trying to write "
                     "configuration data to output stream.\n");
   }
@@ -119,10 +118,10 @@ std::ostream& operator <<(std::ostream& out, Config& conf)
   return out;
 }
 
-std::istream& operator >>(std::istream& in, Config& conf)
+std::istream & operator >>(std::istream & in, Config & conf)
 {
   try {
-    conf.parseStream(in);
+    conf.parseStream(in, USER);
   }
   catch (ParseError p) {
     char buf[1024];
@@ -135,7 +134,7 @@ std::istream& operator >>(std::istream& in, Config& conf)
   return in;
 } 
 
-bool operator ==(const Config& one, const Config& two)
+bool operator ==(const Config & one, const Config & two)
 {
   if (one.m_conf == two.m_conf && one.m_par_lookup == two.m_par_lookup) {
     return true;
@@ -144,7 +143,7 @@ bool operator ==(const Config& one, const Config& two)
   }
 }
 
-void Config::clean(std::string& str)
+void Config::clean(std::string & str)
 {
   ctype_t c;
 
@@ -159,7 +158,7 @@ void Config::clean(std::string& str)
   } 
 }
 
-bool Config::erase(const std::string& section, const std::string& key)
+bool Config::erase(const std::string & section, const std::string & key)
 {
   if (find(section)) {
     if (key == "") {
@@ -174,7 +173,7 @@ bool Config::erase(const std::string& section, const std::string& key)
   return false;
 }
 
-bool Config::find(const std::string& section, const std::string& key) const
+bool Config::find(const std::string & section, const std::string & key) const
 {
   conf_map::const_iterator I = m_conf.find(section);
   if (I != m_conf.end()) {
@@ -191,17 +190,17 @@ bool Config::find(const std::string& section, const std::string& key) const
   return false;
 }
 
-bool Config::findSection(const std::string& section) const
+bool Config::findSection(const std::string & section) const
 {
   return find(section);
 }
 
-bool Config::findItem(const std::string& section, const std::string& key) const
+bool Config::findItem(const std::string & section, const std::string & key) const
 {
   return find(section, key);
 }
 
-int Config::getCmdline(int argc, char** argv)
+int Config::getCmdline(int argc, char** argv, Scope scope)
 {
   int optind = 1;
 
@@ -265,14 +264,14 @@ int Config::getCmdline(int argc, char** argv)
     }
 
     if (!name.empty()) {
-      setItem(section, name, value);
+      setItem(section, name, value, scope);
       optind = i + 1;
     }
   }
   return optind;
 }
 
-void Config::getEnv(const std::string& prefix)
+void Config::getEnv(const std::string & prefix, Scope scope)
 {
   std::string name = "", value = "", section = "", env = "";
   size_t eq_pos = 0;
@@ -297,7 +296,7 @@ void Config::getEnv(const std::string& prefix)
         value = "";
       }   
       
-      setItem(section, name, value);
+      setItem(section, name, value, scope);
     }
   }
 }
@@ -307,12 +306,19 @@ const sec_map & Config::getSection(const std::string & section)
   return m_conf[section];
 }
 
-Variable Config::getItem(const std::string& section, const std::string& key)
+Variable Config::getItem(const std::string & section, const std::string & key) const
 {
-  return (m_conf[section])[key];
+  conf_map::const_iterator I = m_conf.find(section);
+  if (I != m_conf.end()) {
+    std::map<std::string, Variable>::const_iterator J = I->second.find(key);
+    if (J != I->second.end()) {
+      return J->second;
+    }
+  }
+  return Variable();
 }
 
-void Config::parseStream(std::istream& in) throw (ParseError)
+void Config::parseStream(std::istream & in, Scope scope) throw (ParseError)
 {
   char c; 
   bool escaped = false;
@@ -425,15 +431,15 @@ void Config::parseStream(std::istream& in) throw (ParseError)
             throw ParseError("value", (int) line, (int) col);
           case C_SPACE:
             state = S_EXPECT_EOL;
-            setItem(section, name, value);
+            setItem(section, name, value, scope);
             break;
           case C_EOL:
             state = S_EXPECT_NAME;
-            setItem(section, name, value);
+            setItem(section, name, value, scope);
             break;
           case C_HASH:
             state = S_COMMENT;
-            setItem(section, name, value);
+            setItem(section, name, value, scope);
             break;
           default:
             value += c;
@@ -448,7 +454,7 @@ void Config::parseStream(std::istream& in) throw (ParseError)
           switch (ctype(c)) {
             case C_QUOTE:
               state = S_EXPECT_EOL;
-              setItem(section, name, value);
+              setItem(section, name, value, scope);
               break;
             case C_ESCAPE:
               escaped = true;
@@ -488,11 +494,11 @@ void Config::parseStream(std::istream& in) throw (ParseError)
   }
 
   if (state == S_VALUE) {
-    setItem(section, name, value);
+    setItem(section, name, value, scope);
   }
 }
 
-bool Config::readFromFile(const std::string& filename)
+bool Config::readFromFile(const std::string & filename, Scope scope)
 {
   std::ifstream fin(filename.c_str());
   
@@ -506,7 +512,7 @@ bool Config::readFromFile(const std::string& filename)
   }
 
   try {
-    parseStream(fin);
+    parseStream(fin, scope);
   }
   catch (ParseError p) {
     char buf[1024];
@@ -520,7 +526,10 @@ bool Config::readFromFile(const std::string& filename)
   return true;
 }
 
-void Config::setItem(const std::string& section, const std::string& key, const Variable& item)
+void Config::setItem(const std::string & section,
+                     const std::string & key,
+                     const Variable & item,
+                     Scope scope)
 {
   if (key.empty()) {
     char buf[1024];
@@ -535,6 +544,7 @@ void Config::setItem(const std::string& section, const std::string& key, const V
     clean(sec_clean);
     clean(key_clean);
 
+    item->setScope(scope);
     (m_conf[sec_clean])[key_clean] = item;
  
     sig.emit(); 
@@ -543,12 +553,12 @@ void Config::setItem(const std::string& section, const std::string& key, const V
   }
 }
 
-void Config::setParameterLookup(char s_name, const std::string& l_name, bool value)
+void Config::setParameterLookup(char s_name, const std::string & l_name, bool value)
 {
     m_par_lookup[s_name] = std::pair<std::string, bool>(l_name, value);  
 }
 
-bool Config::writeToFile(const std::string& filename)
+bool Config::writeToFile(const std::string & filename, Scope scope_mask)
 {
   std::ofstream fout(filename.c_str());
 
@@ -561,19 +571,22 @@ bool Config::writeToFile(const std::string& filename)
     return false;
   }
 
-  return writeToStream(fout);
+  return writeToStream(fout, scope_mask);
 }
 
-bool Config::writeToStream(std::ostream& out)
+bool Config::writeToStream(std::ostream & out, Scope scope_mask)
 {
   conf_map::iterator I;
   sec_map::iterator J;
  
   for (I = m_conf.begin(); I != m_conf.end(); I++) {
     out << std::endl << "[" << (*I).first << "]\n\n";
-    
-    for (J = (*I).second.begin(); J != (*I).second.end(); J++) 
-      out << (*J).first << " = \"" << (*J).second << "\"\n";
+
+    for (J = (*I).second.begin(); J != (*I).second.end(); J++) {
+      if (J->second->scope() & scope_mask) {
+        out << (*J).first << " = \"" << (*J).second << "\"\n";
+      }
+    }
   }
   
   return true;

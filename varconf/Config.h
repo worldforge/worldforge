@@ -51,65 +51,67 @@ public:
 
   // New Config object, but deep-copies the m_conf and m_par_lookup of existing,
   // passed Config object.
-  Config(const Config& conf);
+  Config(const Config & conf);
 
   virtual ~Config() {if(m_instance == this) m_instance = 0;}
 
-  friend std::ostream& operator <<(std::ostream& out, Config& conf);
-  friend std::istream& operator >>(std::istream& in, Config& conf);
-  friend bool operator ==(const Config& one, const Config& two);
+  friend std::ostream & operator <<(std::ostream & out, Config & conf);
+  friend std::istream & operator >>(std::istream & in, Config & conf);
+  friend bool operator ==(const Config & one, const Config & two);
 
   // Converts all nonalphanumeric characters in str except ``-'' and ``_'' to
   // ``_''; converts caps in str to lower-case.
-  void clean(std::string& str);
+  void clean(std::string & str);
 
   // Returns true if specified key exists under specified section.
-  bool find(const std::string& section, const std::string& key = "") const;
+  bool find(const std::string & section, const std::string & key = "") const;
 
   // Returns true if specified key exists under specified section and is
   // successfully deleted.
-  bool erase(const std::string& section, const std::string& key = ""); 
+  bool erase(const std::string & section, const std::string & key = ""); 
 
   // Writes to the specified output stream.
   // Why isn't this protected?
-  bool writeToStream(std::ostream& out);
+  bool writeToStream(std::ostream & out, Scope scope_mask);
 
   // Gets, sets conf info based on options passed via command line.
-  int getCmdline(int argc, char** argv);
+  int getCmdline(int argc, char** argv, Scope scope = INSTANCE);
 
   // Gets, stores a name/value pair from the environment variable with 
   // name == prefix.
   // prefix is case-sensitive!
-  void getEnv(const std::string& prefix); 
+  void getEnv(const std::string & prefix, Scope scope = INSTANCE); 
 
   // Writes conf map to specified file.
-  bool writeToFile(const std::string& filename);
+  bool writeToFile(const std::string & filename,
+                   Scope scopeMask = (Scope)(GLOBAL | USER | INSTANCE));
 
   // Reads contents of specified file and set into conf map.
-  bool readFromFile(const std::string& filename);
+  bool readFromFile(const std::string & filename, Scope scope = USER);
 
   // Ensures specified filestream is properly formatted.
   // Why isn't this protected?
-  void parseStream(std::istream& in) throw (ParseError);
+  void parseStream(std::istream & in, Scope scope) throw (ParseError);
 
   // Wrapper for find(section)
-  bool findSection(const std::string& section) const;
+  bool findSection(const std::string & section) const;
 
   // Wrapper for find(section, key)
-  bool findItem(const std::string& section, const std::string& key) const;
+  bool findItem(const std::string & section, const std::string & key) const;
 
   // Returns value of specified section.
-  const sec_map & getSection(const std::string& section);
-
+  const sec_map & getSection(const std::string & section);
+ 
   // Returns value of specified key under specified section.
-  Variable getItem(const std::string& section, const std::string& key);
+  Variable getItem(const std::string & section, const std::string & key) const;
 
+  // Set the short name for a given long name to be used with short args.
   void setParameterLookup(char s_name, const std::string & l_name,
                           bool value = false); 
 
   // If key isn't null, clean() section and key and set variable.
-  void setItem(const std::string& section, const std::string & key,
-               const Variable& item); 
+  void setItem(const std::string & section, const std::string & key,
+               const Variable & item, Scope scope); 
  
   SigC::Signal0<void> sig;
   SigC::Signal1<void, const char*> sige;

@@ -19,7 +19,7 @@ dnl further down. If we link against sigc++ 1.2, then this should be
 dnl N, if we link against sigc++ 2.0 it should be N+1. If you change
 dnl this because of API changes, it needs to be incremented by
 dnl 2, and the changes made to the values assigned in the sigc++ check.
-VARCONF_CURRENT=4
+VARCONF_CURRENT=6
 VARCONF_REVISION=0
 VARCONF_AGE=0
 VARCONF_REQUIRES=""
@@ -62,7 +62,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
         VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-2.0"
         VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-1.2 < 2.0"
-        VARCONF_CURRENT=5
+        VARCONF_CURRENT=7
     ],
     [
         PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= $MIN_SIGC_VERSION,
@@ -71,7 +71,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
                 LDFLAGS="$LDFLAGS $SIGC_LIBS"
                 VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-1.2"
                 VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-2.0 > 1.9"
-                VARCONF_CURRENT=4
+                VARCONF_CURRENT=6
             ],
             [
                 AC_MSG_ERROR([Couldn't find sigc++ library!])

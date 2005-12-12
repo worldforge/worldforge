@@ -47,7 +47,7 @@ namespace varconf {
 VarBase::VarBase()
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(false), m_val_bool(false), m_val_int(0), m_val_double(0.0),
-   m_val("")
+   m_val(""), m_scope(GLOBAL)
 {
 }
 
@@ -55,20 +55,22 @@ VarBase::VarBase(const VarBase& c)
  : m_have_bool(c.m_have_bool), m_have_int(c.m_have_int),
    m_have_double(c.m_have_double), m_have_string(c.m_have_string),
    m_val_bool(c.m_val_bool), m_val_int(c.m_val_int),
-   m_val_double(c.m_val_double), m_val(c.m_val)
+   m_val_double(c.m_val_double), m_val(c.m_val), m_scope(GLOBAL)
 {
 }
 
 VarBase::VarBase(const bool b)
  : m_have_bool(true), m_have_int(false), m_have_double(false),
-   m_have_string(true), m_val_bool(b), m_val_int(0), m_val_double(0.0)
+   m_have_string(true), m_val_bool(b), m_val_int(0), m_val_double(0.0),
+   m_scope(GLOBAL)
 {
   m_val = (b ? "true" : "false");
 }
 
 VarBase::VarBase(const int i)
  : m_have_bool(false), m_have_int(true), m_have_double(false),
-   m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0)
+   m_have_string(true), m_val_bool(false), m_val_int(i), m_val_double(0.0),
+   m_scope(GLOBAL)
 {
   char buf[1024];
   snprintf(buf, 1024, "%d", i);
@@ -77,7 +79,8 @@ VarBase::VarBase(const int i)
 
 VarBase::VarBase(const double d)
  : m_have_bool(false), m_have_int(false), m_have_double(true),
-   m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d)
+   m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(d),
+   m_scope(GLOBAL)
 {
   char buf[1024];
   snprintf(buf, 1024, "%lf", d);
@@ -87,14 +90,14 @@ VarBase::VarBase(const double d)
 VarBase::VarBase(const std::string& s)
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
-   m_val(s)
+   m_val(s), m_scope(GLOBAL)
 {
 }
 
 VarBase::VarBase(const char* s)
  : m_have_bool(false), m_have_int(false), m_have_double(false),
    m_have_string(true), m_val_bool(false), m_val_int(0), m_val_double(0.0),
-   m_val(s)
+   m_val(s), m_scope(GLOBAL)
 {
 }
 
@@ -122,6 +125,7 @@ bool operator ==( const VarBase& one, const VarBase& two)
        one.m_val_double == two.m_val_double &&
        one.m_val == two.m_val)
     return true;
+  // scope is explicitly excluded as its nothing to do with value comparisons
  
   return false;
 }
@@ -133,6 +137,7 @@ VarBase& VarBase::operator=( const VarBase& c)
   m_have_double = c.m_have_double; m_have_string = c.m_have_string;
   m_val_bool = c.m_val_bool; m_val_int = c.m_val_int;
   m_val_double = c.m_val_double; m_val = c.m_val;
+  m_scope = c.m_scope;
   return (*this);
 }
 
@@ -142,6 +147,7 @@ VarBase& VarBase::operator=(const bool b)
   m_have_double = false; m_have_string = true;
   m_val_bool = b; m_val_int = 0;
   m_val_double = 0.0; m_val = (b ? "true" : "false");
+  m_scope = INSTANCE;
   return (*this);
 }
 
@@ -153,6 +159,7 @@ VarBase& VarBase::operator=(const int i)
   m_val_double = 0.0;
   char buf[1024]; snprintf(buf, 1024, "%d", i);
   m_val = buf;
+  m_scope = INSTANCE;
   return (*this);
 }
 
@@ -164,6 +171,7 @@ VarBase& VarBase::operator=(const double d)
   m_val_double = d;
   char buf[1024]; snprintf(buf, 1024, "%lf", d);
   m_val = buf;
+  m_scope = INSTANCE;
   return (*this);
 }
 
@@ -173,6 +181,7 @@ VarBase& VarBase::operator=(const std::string& s)
   m_have_double = false; m_have_string = true;
   m_val_bool = false; m_val_int = 0;
   m_val_double = 0.0; m_val = s;
+  m_scope = INSTANCE;
   return (*this);
 }
 
@@ -182,6 +191,7 @@ VarBase& VarBase::operator=(const char* s)
   m_have_double = false; m_have_string = true;
   m_val_bool = false; m_val_int = 0;
   m_val_double = 0.0; m_val = s;
+  m_scope = INSTANCE;
   return (*this);
 }
 

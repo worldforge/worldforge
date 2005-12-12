@@ -87,9 +87,9 @@ Item& Item::operator=(const Item& i)
   return *this;
 }
 
-void Item::assign(const Variable& v)
+void Item::assign(const Variable & v, Scope scope)
 {
-  Config::inst()->setItem(m_section, m_key, v);
+  Config::inst()->setItem(m_section, m_key, v, scope);
 }
 
 void Item::set_val()

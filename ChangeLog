@@ -1,3 +1,16 @@
+2005-12-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/variable.h, varconf/variable.cpp,
+	  varconf/dyntypes.h, varconf/dyntypes.cpp,
+	  varconf/Config.h, varconf/config.cpp: Add scope to settings to
+	  make it easier to manage user and commandline settings
+	  separatly from each other.
+
+	* tests/conftest.cpp: Add testing for the scoping mods.
+
+	* varconf/config.h: New header which just include Config.h.
+	  Config.h will be deprecaed soon.
+
 2005-04-30  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Include a bug report address, set cross-compile host

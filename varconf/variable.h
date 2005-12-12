@@ -35,6 +35,11 @@
 
 namespace varconf {
 
+typedef enum { GLOBAL           = 0x1 << 0,
+               USER             = 0x1 << 1,
+               INSTANCE         = 0x1 << 2
+} Scope;
+
 class VarBase : virtual public SigC::Object {
 public:
   VarBase();
@@ -69,6 +74,9 @@ public:
   virtual bool is_double();
   virtual bool is_string();
 
+  const Scope scope() const { return m_scope; }
+
+  void setScope(Scope s) { m_scope = s; }
 private:
   bool m_have_bool;
   bool m_have_int;
@@ -79,6 +87,9 @@ private:
   int m_val_int;
   double m_val_double;
   std::string m_val;
+
+protected:
+  Scope m_scope;
 };
 
 // The next two classes manage a reference count to
