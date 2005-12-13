@@ -99,6 +99,12 @@ public:
 	void useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& op);
     
     /**
+    @brief Attach the specified entity
+    @param entity The entity to be attacked
+    */
+    void attack(Entity* entity);
+    
+    /**
     @brief Get a list of operations supported by the currently wielded entity (tool)
     If no entity is wielded, or the entity does no provide an operations list,
     this will return an empty array.

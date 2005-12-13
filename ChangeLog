@@ -1,3 +1,12 @@
+2005-12-13  James Turner  <james@worldforge.org>
+
+	* Eris/Operations.cpp, Eris/Operations.h: copy the extended Atlas operations
+	  definitions over from sear - only the attack operation for the moment.
+	  
+	* Eris/Avatar.cpp, Eris/Avatar.h: add support for issuing attack operations
+	  via the Avatar. Note that combat in still being prototyped at the server,
+	  Atlas and rule level, so this support may be removed or replaced.
+
 2005-12-11  James Turner  <james@worldforge.org>
 
 	* Eris/Types.h, Eris/TypeInfo.h: move forward declarations for TypeInfo and

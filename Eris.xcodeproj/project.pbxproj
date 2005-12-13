@@ -79,6 +79,8 @@
 		C48F3CBA0885C55700F81C77 /* viewTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C48F3CB90885C55700F81C77 /* viewTest.cpp */; };
 		C49E621F060B46740054632A /* objectSummary.h in Headers */ = {isa = PBXBuildFile; fileRef = C49E621E060B46740054632A /* objectSummary.h */; };
 		C49E6224060B4FD80054632A /* testUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C49E6223060B4FD80054632A /* testUtils.h */; };
+		C49FF8BC094F68130073E0F8 /* Operations.h in Headers */ = {isa = PBXBuildFile; fileRef = C49FF8BB094F68130073E0F8 /* Operations.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C49FF8BE094F68270073E0F8 /* Operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C49FF8BD094F68270073E0F8 /* Operations.cpp */; };
 		C4AD293F05FA549000AFB402 /* metaQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C4AD293505FA53EA00AFB402 /* metaQuery.cpp */; };
 		C4AD294905FA58E900AFB402 /* Eris.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C45DC4310562F83D00D8F8F4 /* Eris.framework */; };
 		C4ADF6A4064ECA7D0074F881 /* commander.h in Headers */ = {isa = PBXBuildFile; fileRef = C4ADF6A3064ECA7D0074F881 /* commander.h */; };
@@ -359,6 +361,8 @@
 		C48F3CB90885C55700F81C77 /* viewTest.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = viewTest.cpp; sourceTree = "<group>"; };
 		C49E621E060B46740054632A /* objectSummary.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = objectSummary.h; sourceTree = "<group>"; };
 		C49E6223060B4FD80054632A /* testUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = testUtils.h; path = test/testUtils.h; sourceTree = SOURCE_ROOT; };
+		C49FF8BB094F68130073E0F8 /* Operations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Operations.h; sourceTree = "<group>"; };
+		C49FF8BD094F68270073E0F8 /* Operations.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Operations.cpp; path = Eris/Operations.cpp; sourceTree = "<group>"; };
 		C4AD291F05FA259900AFB402 /* stubServer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = stubServer.cpp; sourceTree = "<group>"; };
 		C4AD292005FA259900AFB402 /* stubServer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = stubServer.h; sourceTree = "<group>"; };
 		C4AD293205FA32BD00AFB402 /* Testcases */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = Testcases; path = docs/Testcases; sourceTree = SOURCE_ROOT; };
@@ -446,6 +450,7 @@
 		C43FBCF2054315F2008FC2ED /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				C49FF8BB094F68130073E0F8 /* Operations.h */,
 				C4D586AA094AF2940069B5C7 /* EntityRef.h */,
 				C4B9D689083A838800D846FC /* Calendar.h */,
 				C4E8F39607B6DDA500981FB2 /* Response.h */,
@@ -540,6 +545,7 @@
 		C4BB15920544A6C100A800CF /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C49FF8BD094F68270073E0F8 /* Operations.cpp */,
 				C4D586A8094AF2880069B5C7 /* EntityRef.cpp */,
 				C4E8F39507B6DDA500981FB2 /* Response.cpp */,
 				C4C5505107A6D43B00F59ED4 /* DeleteLater.cpp */,
@@ -664,6 +670,7 @@
 				C4E8F39807B6DDA500981FB2 /* Response.h in Headers */,
 				C4B9D68A083A838800D846FC /* Calendar.h in Headers */,
 				C4D586AB094AF2940069B5C7 /* EntityRef.h in Headers */,
+				C49FF8BC094F68130073E0F8 /* Operations.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -968,6 +975,7 @@
 				C4C5505307A6D43B00F59ED4 /* DeleteLater.cpp in Sources */,
 				C4E8F39707B6DDA500981FB2 /* Response.cpp in Sources */,
 				C4D586A9094AF2880069B5C7 /* EntityRef.cpp in Sources */,
+				C49FF8BE094F68270073E0F8 /* Operations.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

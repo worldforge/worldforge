@@ -11,6 +11,7 @@
 #include <Eris/Account.h>
 #include <Eris/Exceptions.h>
 #include <Eris/TypeService.h>
+#include <Eris/Operations.h>
 
 #include <wfmath/atlasconv.h>
 #include <sigc++/object_slot.h>
@@ -264,6 +265,19 @@ void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const s
     }
     
 	getConnection()->send(use);
+}
+
+void Avatar::attack(Entity* entity)
+{
+    assert(entity);
+    Attack attackOp;
+    attackOp->setFrom(m_entityId);
+    
+    Anonymous what;
+    what->setId(entity->getId());
+    attackOp->setArgs1(what);
+
+    getConnection()->send(attackOp);
 }
 
 #pragma mark -
