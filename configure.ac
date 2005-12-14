@@ -45,19 +45,7 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 != 2.0.8,
         ERIS_REQUIRES="$ERIS_REQUIRES sigc++-2.0"
         ERIS_CURRENT=10
     ],
-    [
-        PKG_CHECK_MODULES(SIGC, sigc++-1.2 >= 1.2,
-            [
-                CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
-                LDFLAGS="$LDFLAGS $SIGC_LIBS"
-                ERIS_REQUIRES="$ERIS_REQUIRES sigc++-1.2"
-                ERIS_CURRENT=9
-            ],
-            [
-                AC_MSG_ERROR([Couldn't find sigc++ library!])
-            ])
-    ])
-
+    AC_MSG_ERROR([Couldn't find sigc++ library!]))
 
 dnl check for all the WorldForge libs we use
 PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 >= 0.5.94 wfmath-0.3 >= 0.3.2,

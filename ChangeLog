@@ -1,5 +1,10 @@
 2005-12-14  James Turner  <james@worldforge.org>
 
+	* configure.ac: remove support sigc++ 1.2.x, since recent versions of 2.0
+	  support all the compilers we require. 
+
+2005-12-14  James Turner  <james@worldforge.org>
+
 	* Eris/Operations.cpp: fix case-sensitivity of #include directive, caught
 	  by Simon.
 
