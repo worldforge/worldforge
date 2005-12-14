@@ -4,7 +4,7 @@
 #include <Eris/Types.h>
 #include <Eris/TypeService.h>
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 
 #include <set>
 
@@ -25,7 +25,7 @@ necessary type data has become available, without intervention by the client. Ho
 routines may throw the 'OperationBlocked' exception, which must be forward to the Connection
 instance for handling.
 */
-class TypeInfo : virtual public SigC::Object
+class TypeInfo : virtual public sigc::trackable
 {
 public:	
     /** Test whether this type inherits (directly or indirectly) from the specific class. If this

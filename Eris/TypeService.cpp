@@ -15,8 +15,6 @@
 #include <Atlas/Objects/RootOperation.h>
 #include <Atlas/Objects/Anonymous.h>
 
-#include <sigc++/object_slot.h>
-
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;

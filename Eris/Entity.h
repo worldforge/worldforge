@@ -13,7 +13,7 @@
 #include <wfmath/quaternion.h>
 #include <wfmath/timestamp.h>
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/slot.h>
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
@@ -39,7 +39,7 @@ integration strategies; either subclassing and over-riding virtual functions,
 or creating peer clases and attaching them to the signals.
 */
 
-class Entity : virtual public SigC::Object
+class Entity : virtual public sigc::trackable
 {
 public:	
     typedef std::map<std::string, Atlas::Message::Element> AttrMap;
@@ -59,11 +59,11 @@ public:
         
     bool hasAttr(const std::string &p) const;
 
-    typedef SigC::Slot2<void, const std::string&, const Atlas::Message::Element&> AttrChangedSlot;
+    typedef sigc::slot<void, const std::string&, const Atlas::Message::Element&> AttrChangedSlot;
 
     /** setup an observer so that the specified slot is fired when the
     named attribue's value changes */
-    SigC::Connection observe(const std::string& attr, const AttrChangedSlot& aslot);
+    sigc::connection observe(const std::string& attr, const AttrChangedSlot& aslot);
 
 // accesors
     /// retrieve the unique entity ID
@@ -187,28 +187,28 @@ public:
     }
 	
 // Signals
-    SigC::Signal1<void, Entity*> ChildAdded;
-    SigC::Signal1<void, Entity*> ChildRemoved;
+    sigc::signal<void, Entity*> ChildAdded;
+    sigc::signal<void, Entity*> ChildRemoved;
     
     /// Signal that the entity's container changed
     /** emitted when our location changes. First argument is the entity,
     second is the old location. The new location can be found via getLocation.
     Note either the old or new location might be NULL.
     */
-    SigC::Signal1<void, Entity*> LocationChanged;
+    sigc::signal<void, Entity*> LocationChanged;
 
     /** Emitted when one or more attributes change. The arguments are the
     Entity which changed, and a set of attribute IDs which were modified. */
-    SigC::Signal1<void, const StringSet&> Changed;
+    sigc::signal<void, const StringSet&> Changed;
 
     /** Emitted when then entity's position, orientation or velocity change.
     Argument is the entity that moved, so you can bind the same slot to
     multiple entities if desired. */
-    SigC::Signal0<void> Moved;
+    sigc::signal<void> Moved;
 
     /** Emitted when an entity starts or stops moving (as determined by the
     'inMotion' method. */
-    SigC::Signal1<void, bool> Moving;
+    sigc::signal<void, bool> Moving;
 
     /**
 	 * @brief Emitted with the entity speaks.
@@ -221,36 +221,36 @@ public:
 	 *   with NPCs this list is used to give the client a clue about
 	 *   possible answers the NPCs understand.
 	 **/
-    SigC::Signal1< void, const Atlas::Objects::Root & > Say;
+    sigc::signal< void, const Atlas::Objects::Root & > Say;
 	
     /**
     Emitted when this entity emits an imgainary operation (also known as
     an emote. This is used for debugging, but not much else. 
     */
-    SigC::Signal1<void, const std::string&> Emote;
+    sigc::signal<void, const std::string&> Emote;
     
     /**
     Emitted when this entity performs an action. The argument to the
     action is passed as the signal argument. For examples of action
     arguments, see some documentation that probably isn't written yet.
     */
-    SigC::Signal1<void, const Atlas::Objects::Operation::RootOperation&> Acted;
+    sigc::signal<void, const Atlas::Objects::Operation::RootOperation&> Acted;
     
     /**
     Emitted when this entity performs an action which causes a noise. This
     may happen alongside the sight of the action, or not, depending on the
     distance to the entity and so on.
     */
-    SigC::Signal1<void, const Atlas::Objects::Root&> Noise;
+    sigc::signal<void, const Atlas::Objects::Root&> Noise;
     
-    SigC::Signal1<void, bool> VisibilityChanged;
+    sigc::signal<void, bool> VisibilityChanged;
     
     /**
     Emitted prior to deletion. Note that entity instances may be deleted for
     different reasons - passing out of the view, being deleted on the server,
     or during disconnection. This signal is emitted regardless.
     */
-    SigC::Signal0<void> BeingDeleted;
+    sigc::signal<void> BeingDeleted;
 protected:	        
     /** over-rideable initialisation helper. When subclassing, if you
     over-ride this method, take care to call the base implementation, or
@@ -422,7 +422,7 @@ private:
     was changed. */
     StringSet m_modifiedAttrs;
         
-    typedef SigC::Signal2<void, const std::string&, const Atlas::Message::Element&> AttrChangedSignal;
+    typedef sigc::signal<void, const std::string&, const Atlas::Message::Element&> AttrChangedSignal;
         
     typedef std::map<std::string, AttrChangedSignal> ObserverMap;
     ObserverMap m_observers;

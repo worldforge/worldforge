@@ -4,7 +4,7 @@
 #include <Eris/Types.h>
 #include <Eris/Factory.h>
 #include <Atlas/Objects/ObjectsFwd.h>
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 #include <sigc++/slot.h>
 #include <map>
@@ -24,7 +24,7 @@ class Connection;
  entities being destroyed or disappearing very soon after appearance, and
  before the initial SIGHT is recived)
  */
-class View : public SigC::Object
+class View : public sigc::trackable
 {
 public:
     View(Avatar* av);
@@ -141,7 +141,7 @@ private:
     IdEntityMap m_contents;
     Entity* m_topLevel; ///< the top-level visible entity for this view
 
-    SigC::Signal1<void, Entity*> InitialSightEntity;
+    sigc::signal<void, Entity*> InitialSightEntity;
 
     /** enum describing what action to take when sight of an entity
     arrives. This allows us to handle intervening disappears or
@@ -162,7 +162,7 @@ private:
           
     unsigned int m_maxPendingCount;
           
-    typedef SigC::Signal1<void, Entity*> EntitySightSignal;
+    typedef sigc::signal<void, Entity*> EntitySightSignal;
         
     typedef std::map<std::string, EntitySightSignal> NotifySightMap;
     NotifySightMap m_notifySights;

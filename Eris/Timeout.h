@@ -3,7 +3,7 @@
 
 #include <wfmath/timestamp.h>
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
 #include <map>
@@ -12,7 +12,7 @@
 namespace Eris {
 
 /** Timeout  */
-class Timeout : virtual public SigC::Object
+class Timeout : virtual public sigc::trackable
 {
 public:
 
@@ -53,7 +53,7 @@ public:
 	bool isExpired() const;
 
 	/** The timeout signal */
-	SigC::Signal0<void> Expired;
+	sigc::signal<void> Expired;
 
 	///////////////////////////////////////////////////////////////////////////////
 

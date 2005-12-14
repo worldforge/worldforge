@@ -1,7 +1,7 @@
 #ifndef ERIS_TYPE_SERVICE_H
 #define ERIS_TYPE_SERVICE_H
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
 #include <Eris/Types.h>
@@ -21,7 +21,7 @@ typedef std::set<TypeInfoPtr> TypeInfoSet;
 /**
  * A service class querying and caching types.
  **/
-class TypeService : virtual public SigC::Object
+class TypeService : virtual public sigc::trackable
 {
 public:
     TypeService(Connection *con);
@@ -42,10 +42,10 @@ public:
     TypeInfoPtr findTypeByName(const std::string &tynm);
 
     /** emitted when a new type is available and bound to it's parents */
-    SigC::Signal1<void, TypeInfoPtr> BoundType;
+    sigc::signal<void, TypeInfoPtr> BoundType;
 
     /** emitted when a type is confirmed as being undefined */
-    SigC::Signal1<void, TypeInfoPtr> BadType;
+    sigc::signal<void, TypeInfoPtr> BadType;
 
     void listUnbound();
 
