@@ -15,7 +15,7 @@
 #include <Atlas/Objects/Encoder.h>
 
 #include <skstream/skstream.h>
-#include <sigc++/object_slot.h>
+#include <sigc++/slot.h>
 
 #include <sstream>
 #include <cassert>
@@ -61,7 +61,7 @@ int BaseConnection::connect(const std::string &host, short port)
     
     // start timeout
     _timeout = new Timeout("connect_" + _id, this, 20 * 1000);
-    _timeout->Expired.connect(SigC::slot(*this, &BaseConnection::onConnectTimeout));
+    _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onConnectTimeout));
 	
     setStatus(CONNECTING);
 
@@ -154,7 +154,7 @@ void BaseConnection::nonblockingConnect()
     // negotiation timeout
     delete _timeout;
     _timeout = new Timeout("negotiate_" + _id, this, 5000);
-    _timeout->Expired.connect(SigC::slot(*this, &BaseConnection::onNegotiateTimeout));
+    _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onNegotiateTimeout));
 
     _sc = new Atlas::Net::StreamConnect(_clientName, *_stream);
     setStatus(NEGOTIATE);

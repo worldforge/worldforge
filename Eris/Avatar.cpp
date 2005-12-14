@@ -14,7 +14,8 @@
 #include <Eris/Operations.h>
 
 #include <wfmath/atlasconv.h>
-#include <sigc++/object_slot.h>
+#include <sigc++/slot.h>
+
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -36,7 +37,7 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
     m_lastOpTime(0.0)
 {
     m_view = new View(this);
-    m_entityAppearanceCon = m_view->Appearance.connect(SigC::slot(*this, &Avatar::onEntityAppear));
+    m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
     
     m_router = new IGRouter(this);
 
@@ -288,10 +289,10 @@ void Avatar::onEntityAppear(Entity* ent)
         assert(m_entity == NULL);
         m_entity = ent;
         
-        ent->ChildAdded.connect(SigC::slot(*this, &Avatar::onCharacterChildAdded));
-        ent->ChildRemoved.connect(SigC::slot(*this, &Avatar::onCharacterChildRemoved));
+        ent->ChildAdded.connect(sigc::mem_fun(this, &Avatar::onCharacterChildAdded));
+        ent->ChildRemoved.connect(sigc::mem_fun(this, &Avatar::onCharacterChildRemoved));
         
-        ent->observe("right_hand_wield", SigC::slot(*this, &Avatar::onCharacterWield));
+        ent->observe("right_hand_wield", sigc::mem_fun(this, &Avatar::onCharacterWield));
         
         GotCharacterEntity.emit(ent);
         m_entityAppearanceCon.disconnect(); // stop listenting to View::Appearance

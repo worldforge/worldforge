@@ -6,7 +6,7 @@
 #include <vector>
 #include <map>
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
 namespace Eris
@@ -20,7 +20,7 @@ class Lobby;
 Rooms. Generally rooms corespond to chanels in IRC, and the interface and commands should
 be clear if you are familiar with that medium. 
 */
-class Room : public SigC::Object, public Router
+class Room : public sigc::trackable, public Router
 {
 public:	
     virtual ~Room();
@@ -74,22 +74,22 @@ public:
 // signals
     /** Emitted when entry into the room (after a Join) is complete, i.e the user list has been
     transferred and resolved. */
-    SigC::Signal1<void, Room*> Entered;
+    sigc::signal<void, Room*> Entered;
     
     /** The primary talk callback. The arguments are the source room, the person
     talking, and the message itself */
-    SigC::Signal3<void, Room*, Person*, const std::string&> Speech;
+    sigc::signal<void, Room*, Person*, const std::string&> Speech;
     
     /** Emote (/me) callback. The arguments are identical to those for Talk above */
-    SigC::Signal3<void, Room*, Person*, const std::string&> Emote;
+    sigc::signal<void, Room*, Person*, const std::string&> Emote;
 	
     /** Emitted when a person enters the room; argument is the account ID. Note that
     Appearance is not generated for the local player when entering/leaving; use the
     Entered signal instead. */
-    SigC::Signal2<void, Room*, Person*> Appearance;
+    sigc::signal<void, Room*, Person*> Appearance;
     
     /// Similarly, emitted when the specifed person leaves the room
-    SigC::Signal2<void, Room*, Person*> Disappearance;
+    sigc::signal<void, Room*, Person*> Disappearance;
 	
 	
 protected:

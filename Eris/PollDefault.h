@@ -3,13 +3,13 @@
 
 #include <Eris/Poll.h>
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 
 #include <map>
 
 namespace Eris {
 
-class PollDefault : public Poll, virtual public SigC::Object
+class PollDefault : public Poll, virtual public sigc::trackable
 {
 public:
 	PollDefault() {}

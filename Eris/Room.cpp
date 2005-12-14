@@ -10,7 +10,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/Account.h>
 
-#include <sigc++/object_slot.h>
+#include <sigc++/slot.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -197,7 +197,7 @@ void Room::sight(const RootEntity &room)
     if (room->hasAttr("topic"))
         m_topic = room->getAttr("topic").asString();
     
-    m_lobby->SightPerson.connect(SigC::slot(*this, &Room::notifyPersonSight));
+    m_lobby->SightPerson.connect(sigc::mem_fun(this, &Room::notifyPersonSight));
     
     if (room->hasAttr("people"))
     {

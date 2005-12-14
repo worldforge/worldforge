@@ -1,7 +1,7 @@
 #ifndef ERIS_REDISPATCH_H
 #define ERIS_REDISPATCH_H
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/Operation.h>
 
@@ -11,7 +11,7 @@ namespace Eris
 // forward decls
 class Connection;
 
-class Redispatch : public SigC::Object
+class Redispatch : public sigc::trackable
 {
 protected:
     Redispatch(Connection* con, const Atlas::Objects::Root& obj) :

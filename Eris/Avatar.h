@@ -10,7 +10,7 @@
 #include <wfmath/quaternion.h>
 #include <wfmath/timestamp.h>
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
 
@@ -28,7 +28,7 @@ class View;
 class Connection;
 
 /** The players avatar representation. **/
-class Avatar : virtual public SigC::Object
+class Avatar : virtual public sigc::trackable
 {
 public:
     virtual ~Avatar();
@@ -120,7 +120,7 @@ public:
     A client might wish to show some kind of 'busy' animation, eg an hour-glass,
     while waiting for this signal.
     */
-    SigC::Signal1<void, Entity*> GotCharacterEntity;
+    sigc::signal<void, Entity*> GotCharacterEntity;
 
 // These two signals just transmit the Entity's
     // AddedMember and RemovedMember signals, but
@@ -129,13 +129,13 @@ public:
     // for the Entity to be created.
 
     /// An object was added to the inventory
-    SigC::Signal1<void,Entity*> InvAdded;
+    sigc::signal<void,Entity*> InvAdded;
     /// An object was removed from the inventory
-    SigC::Signal1<void,Entity*> InvRemoved;
+    sigc::signal<void,Entity*> InvRemoved;
         
     /** emitted when this Avatar hears something. Passes the source of
     the sound, and the operation that was heard, for example a Talk. */
-    SigC::Signal2<void, Entity*, const Atlas::Objects::Operation::RootOperation&> Hear;
+    sigc::signal<void, Entity*, const Atlas::Objects::Operation::RootOperation&> Hear;
 protected:
     friend class Account;
     
@@ -174,7 +174,7 @@ private:
     
     EntityRef m_wielded;
     
-    SigC::Connection m_entityAppearanceCon;
+    sigc::connection m_entityAppearanceCon;
 };
 
 } // of namespace Eris

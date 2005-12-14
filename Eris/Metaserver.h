@@ -8,7 +8,7 @@
 
 #include <Atlas/Objects/Decoder.h>
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
 #ifndef __WIN32__
@@ -60,7 +60,7 @@ const int DATA_BUFFER_SIZE = 4096;
 typedef std::list<ServerInfo> ServerList;
 
 /// Meta encapsulates the meta-game system, including the meta-server protocol and queries
-class Meta : virtual public SigC::Object,
+class Meta : virtual public sigc::trackable,
 		public Atlas::Objects::ObjectsDecoder
 {
 public:

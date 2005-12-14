@@ -38,7 +38,7 @@ public:
 
 	static void newTimeout() {new_timeout_ = true;}
 
-    SigC::Signal1<void, PollData&> Ready;
+    sigc::signal<void, PollData&> Ready;
 private:
 	Poll(const Poll&);
 	static Poll *_inst;

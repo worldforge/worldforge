@@ -1,7 +1,7 @@
 #ifndef ERIS_BASE_CONNECTION_H
 #define ERIS_BASE_CONNECTION_H
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
 #include <iostream>
@@ -24,7 +24,7 @@ namespace Eris
 class Timeout;	
 	
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
-class BaseConnection : virtual public SigC::Object
+class BaseConnection : virtual public sigc::trackable
 {
 public:
     /// destructor, will perform a hard disconnect if necessary
@@ -61,10 +61,10 @@ public:
     int getFileDescriptor();
     
     /// sent on successful negotiation of a game server connection
-    SigC::Signal0<void> Connected;
+    sigc::signal<void> Connected;
     
     /// final disconnect (or hard disocnnect) notifcation
-    SigC::Signal0<void> Disconnected;
+    sigc::signal<void> Disconnected;
 protected:
     /// create an unconnected instance
     /** Create a new connection, with the client-name  string specified. The client-name

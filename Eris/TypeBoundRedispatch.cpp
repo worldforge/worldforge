@@ -9,7 +9,7 @@
 #include <Eris/LogStream.h>
 
 #include <Atlas/Objects/Operation.h>
-#include <sigc++/object_slot.h>
+#include <sigc++/slot.h>
 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
@@ -29,9 +29,9 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
     m_unbound.insert(unbound);
     
     assert(unbound->isBound() == false);
-    unbound->Bound.connect(SigC::slot(*this, &TypeBoundRedispatch::onBound));
+    unbound->Bound.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBound));
     
-    con->getTypeService()->BadType.connect(SigC::slot(*this, &TypeBoundRedispatch::onBadType));
+    con->getTypeService()->BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
 }
 
 TypeBoundRedispatch::TypeBoundRedispatch(Connection* con, 
@@ -43,10 +43,10 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
 {
     for (TypeInfoSet::const_iterator U=m_unbound.begin(); U != m_unbound.end(); ++U) {
         assert((*U)->isBound() == false);
-        (*U)->Bound.connect(SigC::slot(*this, &TypeBoundRedispatch::onBound));
+        (*U)->Bound.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBound));
     }
     
-    con->getTypeService()->BadType.connect(SigC::slot(*this, &TypeBoundRedispatch::onBadType));
+    con->getTypeService()->BadType.connect(sigc::mem_fun(this, &TypeBoundRedispatch::onBadType));
 }
     
 void TypeBoundRedispatch::onBound(TypeInfo* bound)

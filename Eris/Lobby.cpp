@@ -9,7 +9,7 @@
 #include <Eris/Account.h>
 #include <Eris/Redispatch.h>
 
-#include <sigc++/object_slot.h>
+#include <sigc++/slot.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -117,9 +117,9 @@ Lobby::Lobby(Account* a) :
     if (m_account->isLoggedIn())
         onLoggedIn();
     else
-        m_account->LoginSuccess.connect(SigC::slot(*this, &Lobby::onLoggedIn));
+        m_account->LoginSuccess.connect(sigc::mem_fun(this, &Lobby::onLoggedIn));
         
-    m_account->LogoutComplete.connect(SigC::slot(*this, &Lobby::onLogout));
+    m_account->LogoutComplete.connect(sigc::mem_fun(this, &Lobby::onLogout));
 }
 	
 Lobby::~Lobby()
@@ -278,7 +278,7 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
         sight->setTo(getAccount()->getId());
         
         SightPersonRedispatch *spr = new SightPersonRedispatch(getConnection(), tk->getFrom(), sight);
-        SightPerson.connect(SigC::slot(*spr, &SightPersonRedispatch::onSightPerson));
+        SightPerson.connect(sigc::mem_fun(spr, &SightPersonRedispatch::onSightPerson));
         
         return WILL_REDISPATCH;
     }
@@ -344,7 +344,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
         sight->setTo(getAccount()->getId());
         
         SightPersonRedispatch *spr = new SightPersonRedispatch(getConnection(), im->getFrom(), sight);
-        SightPerson.connect(SigC::slot(*spr, &SightPersonRedispatch::onSightPerson));
+        SightPerson.connect(sigc::mem_fun(spr, &SightPersonRedispatch::onSightPerson));
         
         return WILL_REDISPATCH;
     }

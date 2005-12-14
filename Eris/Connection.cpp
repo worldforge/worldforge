@@ -19,7 +19,6 @@
 #include <Atlas/Objects/objectFactory.h>
 #include <Atlas/Objects/Entity.h>
 #include <sigc++/bind.h>
-#include <sigc++/object_slot.h>
 
 #include <Atlas/Codecs/Bach.h>
 
@@ -45,7 +44,7 @@ Connection::Connection(const std::string &cnm, const std::string& host, short po
     m_info(host),
     m_responder(new ResponseTracker)
 {	
-    Poll::instance().Ready.connect(SigC::slot(*this, &Connection::gotData));
+    Poll::instance().Ready.connect(sigc::mem_fun(this, &Connection::gotData));
 }
 	
 Connection::~Connection()
@@ -90,7 +89,7 @@ int Connection::disconnect()
     // fell through, so someone has locked =>
     // start a disconnect timeout
     _timeout = new Eris::Timeout("disconnect_" + _host, this, 5000);
-    _timeout->Expired.connect(SigC::slot(*this, &Connection::onDisconnectTimeout));
+    _timeout->Expired.connect(sigc::mem_fun(this, &Connection::onDisconnectTimeout));
     return 0;
 }
    

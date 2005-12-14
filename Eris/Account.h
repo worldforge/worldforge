@@ -5,7 +5,7 @@
 
 #include <Eris/Types.h>
 #include <Eris/Timeout.h>
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 
 namespace Eris
@@ -29,7 +29,7 @@ configurations of interface, proxies and so forth.
 Account is also the mechanism by which Lobby and Avatars objects are made available to the client,
 in response to login / create operations */
 
-class Account : virtual public SigC::Object
+class Account : virtual public sigc::trackable
 {
 public:
     /// Create a new Account associated with a Connection object
@@ -137,35 +137,35 @@ public:
 
 // signals
     /// emitted when a character has been retrived from the server
-    SigC::Signal1<void, const Atlas::Objects::Entity::RootEntity&> GotCharacterInfo;
+    sigc::signal<void, const Atlas::Objects::Entity::RootEntity&> GotCharacterInfo;
     
     /// emitted when the entire character list had been updated
-    SigC::Signal0<void> GotAllCharacters;
+    sigc::signal<void> GotAllCharacters;
     
     ///  Emitted when a server-side error occurs during account creation / login.
     /**
     The argument is an error message from the server - hopefully this will 
     become something more useful such as an enum code, in the future.
     */
-    SigC::Signal1<void, const std::string &> LoginFailure;
+    sigc::signal<void, const std::string &> LoginFailure;
     
     /** Emitted when login or character creation is successful. */
-    SigC::Signal0<void> LoginSuccess;
+    sigc::signal<void> LoginSuccess;
     
     /// Emitted when a logout completes
     /** Depending on whether the logout completed with a positive server
     acknowledgement or just timedout, the argument will be either true
     (success, clean logout) or false (failure, timeout or other problem)
     */
-    SigC::Signal1<void, bool> LogoutComplete;
+    sigc::signal<void, bool> LogoutComplete;
 
     /**
     Emitted when creating a character or taking an existing one
     succeeds.
     */
-    SigC::Signal1<void, Avatar*> AvatarSuccess;
+    sigc::signal<void, Avatar*> AvatarSuccess;
 
-    SigC::Signal1<void, const std::string &> AvatarFailure;
+    sigc::signal<void, const std::string &> AvatarFailure;
 
 protected:
     friend class AccountRouter;

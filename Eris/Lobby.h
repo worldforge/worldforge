@@ -56,14 +56,14 @@ public:
 
 // callbacks
     /// Emitted when sight of a person is received
-    SigC::Signal1<void, Person*> SightPerson;
+    sigc::signal<void, Person*> SightPerson;
     
     /**
     Emitted when some person sends a private (one-to-one) chat message
     to the client's account. The first argument is the sender, which will
     always be a valid Person object, and the second is the message text.
     */
-    SigC::Signal2<void, Person*, const std::string&> PrivateTalk;
+    sigc::signal<void, Person*, const std::string&> PrivateTalk;
 	
 protected:
     friend class Room;

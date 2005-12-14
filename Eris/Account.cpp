@@ -15,8 +15,6 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
 
-#include <sigc++/object_slot.h>
-
 #include <algorithm>
 #include <cassert>
 
@@ -70,8 +68,8 @@ Account::Account(Connection *con) :
 
     m_router = new AccountRouter(this);
 
-    m_con->Connected.connect(SigC::slot(*this, &Account::netConnected));
-    m_con->Failure.connect(SigC::slot(*this, &Account::netFailure));
+    m_con->Connected.connect(sigc::mem_fun(this, &Account::netConnected));
+    m_con->Failure.connect(sigc::mem_fun(this, &Account::netFailure));
 }	
 
 Account::~Account()
@@ -129,7 +127,7 @@ Result Account::createAccount(const std::string &uname,
     m_pass = pwd;
     
     m_timeout.reset(new Timeout("login", this, 5000));
-    m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLoginTimeout));
+    m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLoginTimeout));
     
     return NO_ERR;
 }
@@ -157,7 +155,7 @@ Result Account::logout()
     m_con->send(l);
 	
     m_timeout.reset(new Timeout("logout", this, 5000));
-    m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLogoutTimeout));
+    m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLogoutTimeout));
     
     return NO_ERR;
 }
@@ -318,7 +316,7 @@ Result Account::internalLogin(const std::string &uname, const std::string &pwd)
     m_con->send(l);
     
     m_timeout.reset(new Timeout("login", this, 5000));
-    m_timeout->Expired.connect(SigC::slot(*this, &Account::handleLoginTimeout));
+    m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLoginTimeout));
     
     return NO_ERR;
 }
@@ -409,7 +407,7 @@ void Account::loginComplete(const AtlasAccount &p)
     // notify an people watching us 
     LoginSuccess.emit();
       
-    m_con->Disconnecting.connect(SigC::slot(*this, &Account::netDisconnecting));
+    m_con->Disconnecting.connect(sigc::mem_fun(this, &Account::netDisconnecting));
     m_timeout.reset();
 }
 

@@ -1,5 +1,10 @@
 2005-12-14  James Turner  <james@worldforge.org>
 
+	* lots more sigc++ migration, everything inherits from trackable now,
+	  and mem_fun is preferred over object slots.
+
+2005-12-14  James Turner  <james@worldforge.org>
+
 	* Eris/Entity.h, Eris/Timeout.h, Eris/TypeInfo.h, Eris/TypeService.cpp,
 	  Eris/TypeService.h, Eris/View.h: switch to using sigc++ 2.0 types for
 	  many signals and slots, and change core Eris objects to inherit

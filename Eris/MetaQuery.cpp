@@ -13,7 +13,7 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Encoder.h>
 
-#include <sigc++/object_slot.h>
+#include <sigc++/slot.h>
 
 #include <cassert>
 
@@ -65,7 +65,7 @@ void MetaQuery::onConnect()
     }
     
     _timeout = new Timeout("metaquery_get_" + _host, this, 10000);
-    _timeout->Expired.connect(SigC::slot(*this, &MetaQuery::onQueryTimeout));
+    _timeout->Expired.connect(sigc::mem_fun(this, &MetaQuery::onQueryTimeout));
 }
 
 long MetaQuery::getElapsed()
