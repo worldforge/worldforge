@@ -43,6 +43,7 @@ liberis_1_3_la_SOURCES = \
 	Response.cpp \
 	EntityRef.cpp \
 	Operations.cpp \
+	Calendar.cpp \
 	$(ATLAS_JANUS_CPP)
 
 liberisdir = $(includedir)/Eris-1.3/Eris
@@ -80,5 +81,6 @@ liberis_HEADERS = \
 	Response.h \
 	EntityRef.h \
 	Operations.h \
+	Calendar.h \
 	$(ATLAS_JANUS_H)
 

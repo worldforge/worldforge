@@ -10,10 +10,12 @@
 namespace Eris
 {
 
-/** This is the Eris base for all exceptions; note it inherits from std::except,
+/**
+This is the Eris base for all exceptions; note it inherits from std::except,
 which isn't ideal. One option would be to refactor the various final
 exceptions so they inherit from the 'closest' ISO C++ exception, but it
-hardly seems worth it. */
+hardly seems worth it.
+*/
 class BaseException : public std::runtime_error
 {
 public:
@@ -35,6 +37,9 @@ class InvalidAtlas : public BaseException
 {
 public:
     InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj);
+    
+    InvalidAtlas(const std::string& msg, const Atlas::Message::Element& msg);
+    
     virtual ~InvalidAtlas() throw();
 private:
     Atlas::Objects::Root m_obj;

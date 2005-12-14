@@ -25,6 +25,7 @@ typedef Entity* EntityPtr;
 class TypeInfo;
 class TypeService;
 class Connection;
+class Avatar;
 
 typedef TypeInfo* TypeInfoPtr;
 typedef std::set<TypeInfoPtr> TypeInfoSet;

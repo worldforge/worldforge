@@ -23,6 +23,7 @@
 		C43FF7A308731933007A492C /* testOutOfGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C43FF7A208731933007A492C /* testOutOfGame.cpp */; };
 		C43FF7D208731BA2007A492C /* netTests.h in Headers */ = {isa = PBXBuildFile; fileRef = C43FF7D108731BA2007A492C /* netTests.h */; };
 		C44CB71B070A240C000DCC7E /* controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C44CB71A070A240C000DCC7E /* controller.cpp */; };
+		C45720220950CD8800BCD779 /* Calendar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C45720210950CD8800BCD779 /* Calendar.cpp */; };
 		C45BA22E08C5932500FCB602 /* wfmath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E4B1DC0876A09500E0869F /* wfmath.framework */; };
 		C45BA22F08C5932900FCB602 /* Atlas.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E4B1CE0876A09500E0869F /* Atlas.framework */; };
 		C45BA23008C5932F00FCB602 /* skstream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E4B18C08769EC700E0869F /* skstream.framework */; };
@@ -87,7 +88,7 @@
 		C4ADF6AD064ED5320074F881 /* commander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C4ADF6AC064ED5320074F881 /* commander.cpp */; };
 		C4ADF7D006457A3500D3CCAC /* agent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C4ADF7CF06457A3500D3CCAC /* agent.cpp */; };
 		C4ADF7D306457B6D00D3CCAC /* agent.h in Headers */ = {isa = PBXBuildFile; fileRef = C4ADF7D206457B6D00D3CCAC /* agent.h */; };
-		C4B9D68A083A838800D846FC /* Calendar.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B9D689083A838800D846FC /* Calendar.h */; };
+		C4B9D68A083A838800D846FC /* Calendar.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B9D689083A838800D846FC /* Calendar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C4BD59C906AAA0F20039CF5E /* sigc++.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4BD59C806AAA0F20039CF5E /* sigc++.framework */; };
 		C4C5505307A6D43B00F59ED4 /* DeleteLater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C4C5505107A6D43B00F59ED4 /* DeleteLater.cpp */; };
 		C4C5505407A6D43B00F59ED4 /* DeleteLater.h in Headers */ = {isa = PBXBuildFile; fileRef = C4C5505207A6D43B00F59ED4 /* DeleteLater.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -338,6 +339,7 @@
 		C43FF7A208731933007A492C /* testOutOfGame.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = testOutOfGame.cpp; sourceTree = "<group>"; };
 		C43FF7D108731BA2007A492C /* netTests.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = netTests.h; sourceTree = "<group>"; };
 		C44CB71A070A240C000DCC7E /* controller.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = controller.cpp; sourceTree = "<group>"; };
+		C45720210950CD8800BCD779 /* Calendar.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Calendar.cpp; path = Eris/Calendar.cpp; sourceTree = "<group>"; };
 		C45D3199063C4795001112F7 /* EntityRouter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = EntityRouter.cpp; path = Eris/EntityRouter.cpp; sourceTree = "<group>"; };
 		C45D319A063C4795001112F7 /* EntityRouter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EntityRouter.h; sourceTree = "<group>"; };
 		C45D319B063C4795001112F7 /* Factory.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Factory.cpp; path = Eris/Factory.cpp; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 		C4BB15920544A6C100A800CF /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C45720210950CD8800BCD779 /* Calendar.cpp */,
 				C49FF8BD094F68270073E0F8 /* Operations.cpp */,
 				C4D586A8094AF2880069B5C7 /* EntityRef.cpp */,
 				C4E8F39507B6DDA500981FB2 /* Response.cpp */,
@@ -976,6 +979,7 @@
 				C4E8F39707B6DDA500981FB2 /* Response.cpp in Sources */,
 				C4D586A9094AF2880069B5C7 /* EntityRef.cpp in Sources */,
 				C49FF8BE094F68270073E0F8 /* Operations.cpp in Sources */,
+				C45720220950CD8800BCD779 /* Calendar.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

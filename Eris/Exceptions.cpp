@@ -20,6 +20,11 @@ InvalidAtlas::InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& o
 {
 }
 
+InvalidAtlas::InvalidAtlas(const std::string& msg, const Atlas::Message::Element&) :
+    BaseException(msg)
+{
+}
+
 InvalidAtlas::~InvalidAtlas() throw()
 {
 }
