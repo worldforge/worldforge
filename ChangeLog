@@ -1,3 +1,13 @@
+2005-12-15  James Turner  <james@worldforge.org>
+
+	* Eris/Timeout.cpp, Eris/Timeout.h: simplify the Timeout class, removing
+	  the ability to identify and interact with timeouts by name, since it
+	  incurred a considerable overhead, and was unused by Eris and the clients.
+	  
+	* Eris/Connection.cpp, Eris/Connection.cpp, Eris/Metaserver.cpp,
+	  Eris/MetaQuery.cpp, Eris/Account.cpp, Eris/Account.h: updates for
+	  revised Timeout construction API.
+
 2005-12-14  James Turner  <james@worldforge.org>
 
 	* Eris/Exceptions.h, Eris/Exceptions.cpp: add an alternate constructor for

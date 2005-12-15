@@ -126,7 +126,7 @@ Result Account::createAccount(const std::string &uname,
     m_username = uname;
     m_pass = pwd;
     
-    m_timeout.reset(new Timeout("login", this, 5000));
+    m_timeout.reset(new Timeout(5000));
     m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLoginTimeout));
     
     return NO_ERR;
@@ -154,7 +154,7 @@ Result Account::logout()
     m_con->getResponder()->await(l->getSerialno(), this, &Account::logoutResponse);
     m_con->send(l);
 	
-    m_timeout.reset(new Timeout("logout", this, 5000));
+    m_timeout.reset(new Timeout(5000));
     m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLogoutTimeout));
     
     return NO_ERR;
@@ -315,7 +315,7 @@ Result Account::internalLogin(const std::string &uname, const std::string &pwd)
     m_con->getResponder()->await(l->getSerialno(), this, &Account::loginResponse);
     m_con->send(l);
     
-    m_timeout.reset(new Timeout("login", this, 5000));
+    m_timeout.reset(new Timeout(5000));
     m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLoginTimeout));
     
     return NO_ERR;

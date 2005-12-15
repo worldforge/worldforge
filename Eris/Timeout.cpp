@@ -9,6 +9,7 @@
 #include <Eris/LogStream.h>
 
 #include <limits.h>
+#include <set>
 
 using WFMath::TimeStamp;
 using WFMath::TimeDiff;
@@ -19,41 +20,21 @@ namespace Eris
 static TimeDiff TD_ZERO(0);
 static TimeDiff TD_MAX(ULONG_MAX);
 
-std::map<Timeout::Label, Timeout*> Timeout::_allTimeouts;
+typedef std::set<Timeout*> TimeoutSet;
+static TimeoutSet global_allTimeouts;
 	
-Timeout::Timeout(const std::string &label, unsigned long milli) :
-	_label(label),
+Timeout::Timeout(unsigned long milli) :
 	_fired(false)
 {
-	TimeoutMap::iterator T = _allTimeouts.find(_label);
-	if (T != _allTimeouts.end())
-	    throw InvalidOperation("Duplicate label '" + label + "' for timeout");
-       
-	_allTimeouts.insert(_allTimeouts.begin(),
-	    TimeoutMap::value_type(_label, this));
-	
-	_due = TimeStamp::now() + milli;
-
-	Poll::newTimeout();
-}
-
-Timeout::Timeout(const std::string &label, void* inst, unsigned long milli) :
-	_label(label, inst),
-	_fired(false)
-{
-    if (_allTimeouts.count(_label)) {
-        throw InvalidOperation("Duplicate label '" + label + "' for timeout attached to instace");
-    }
-    
-    _allTimeouts.insert(TimeoutMap::value_type(_label, this));
+	global_allTimeouts.insert(this);
     _due = TimeStamp::now() + milli;
-    Poll::newTimeout();
+	Poll::newTimeout();
 }
 
 Timeout::~Timeout()
 {
-    assert(_allTimeouts.count(_label) == 1);
-    _allTimeouts.erase(_label);
+    unsigned int erased = global_allTimeouts.erase(this);
+    assert(erased == 1);
 }
 
 void Timeout::cancel()
@@ -91,30 +72,19 @@ void Timeout::extend(unsigned long milli)
     _due += milli;
 }
 
-/*
-const Timeout* Timeout::findByName(const std::string &nm, void* inst)
-{
-	TimeoutMap::iterator T = _allTimeouts.find(Label(nm, inst));
-	if (T == _allTimeouts.end())
-		return NULL;
-	return T->second;
-}
-*/
-
 unsigned long Timeout::pollAll()
 {
     TimeStamp now = TimeStamp::now();
     TimeDiff wait = TD_MAX;
     
-    for (TimeoutMap::iterator T=_allTimeouts.begin(); T != _allTimeouts.end(); ++T)
+    TimeoutSet::iterator T=global_allTimeouts.begin();
+    for (; T != global_allTimeouts.end(); ++T)
     {
-        TimeDiff this_wait = T->second->poll(now);
-        if(this_wait < wait)
-            wait = this_wait;
+        TimeDiff this_wait = (*T)->poll(now);
+        if (this_wait < wait) wait = this_wait;
     }
     
     return wait.milliseconds();
 }
-
 
 }

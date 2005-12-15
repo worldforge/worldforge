@@ -2,6 +2,7 @@
 #define ERIS_PLAYER_H
 
 #include <vector>
+#include <map>
 
 #include <Eris/Types.h>
 #include <Eris/Timeout.h>
