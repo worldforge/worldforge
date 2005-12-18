@@ -20,7 +20,7 @@ protected:
     virtual RouterResult handleOperation(const Atlas::Objects::Operation::RootOperation& op);
 
 private:
-    RouterResult IGRouter::handleSightOp(const Atlas::Objects::Operation::RootOperation& op);
+    RouterResult handleSightOp(const Atlas::Objects::Operation::RootOperation& op);
 
     Avatar* m_avatar;
     View* m_view;

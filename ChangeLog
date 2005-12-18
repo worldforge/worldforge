@@ -1,3 +1,8 @@
+2005-12-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/IGRouter.h: Remove class qualifier from method as its not liked
+	  by some compilers.
+
 2005-12-15  James Turner  <james@worldforge.org>
 
 	* Eris/Timeout.cpp, Eris/Timeout.h: simplify the Timeout class, removing
