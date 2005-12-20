@@ -1,3 +1,18 @@
+2005-12-20  James Turner  <james@worldforge.org>
+
+	* Eris/IGRouter.cpp, Eris/View.cpp, Eris/View.h: add support for handling
+	  the Unseen response from cyphesis.
+	  
+	* Eris/Operations.cpp, Eris/Operations.h: add Unseen custom op
+	
+	* Eris/BaseConnection.cpp: register factories for Attack and Unseen with
+	  the global Factories instance.
+
+	* Eris/View.cpp, Eris/View.h: don't treat sight(create) as automatic
+	  appearance. This is work-in-progress, currently the emission of
+	  View::EntityCreated will be erratic, but no client relies on this for
+	  anything critical.
+
 2005-12-20  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/EntityRef.h: Add an explicit get() method to get direct

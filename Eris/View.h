@@ -19,10 +19,7 @@ class Connection;
 
 /** View encapsulates the set of entities currently visible to an Avatar,
  as well as those that have recently been seen. It recieves visibility-affecting
- ops from the IGRouter, and uses them to update it's state and emit signals.
- It makes it's best effort to be correct event when edge cases happen (eg,
- entities being destroyed or disappearing very soon after appearance, and
- before the initial SIGHT is recived)
+ ops from the IGRouter, and uses them to update its state and emit signals.
  */
 class View : public sigc::trackable
 {
@@ -30,6 +27,10 @@ public:
     View(Avatar* av);
     ~View();
 
+    /**
+    Retrieve an entity in the view by id. Returns NULL if no such entity exists
+    in the view.
+    */
     Entity* getEntity(const std::string& eid) const;
 
     Avatar* getAvatar() const
@@ -101,7 +102,8 @@ protected:
     void sight(const Atlas::Objects::Entity::RootEntity& ge);
     void create(const Atlas::Objects::Entity::RootEntity& ge);
     void deleteEntity(const std::string& eid);
-
+    void unseen(const std::string& eid);
+    
     void setEntityVisible(Entity* ent, bool vis);
 
     /// test if the specified entity ID is pending initial sight on the View
@@ -132,6 +134,12 @@ private:
     with the appropriate information.
     */
     void sendLookAt(const std::string& eid);
+    
+    /**
+    If the look queue is not empty, pop the first item and send a request
+    for it to the server.
+    */
+    void issueQueuedLook();
 
     void eraseFromLookQueue(const std::string& eid);
 
@@ -158,6 +166,13 @@ private:
     typedef std::map<std::string, SightAction> PendingSightMap;
     PendingSightMap m_pending;
     
+    /**
+    A queue of entities to be looked at, which have not yet be requested
+    from the server. The number of concurrent active LOOK requests is
+    capped to avoid network failures.
+    
+    @sa m_maxPendingCount
+    */
     std::deque<std::string> m_lookQueue;
           
     unsigned int m_maxPendingCount;

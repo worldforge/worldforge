@@ -11,6 +11,7 @@
 #include <Eris/TypeService.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/TypeBoundRedispatch.h>
+#include <Eris/Operations.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -84,6 +85,11 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         }
         
         return HANDLED;
+    }
+    
+    if (op->getClassNo() == UNSEEN_NO)
+    {
+        m_view->unseen(args.front()->getId());
     }
     
     return IGNORED;

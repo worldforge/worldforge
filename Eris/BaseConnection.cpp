@@ -9,10 +9,12 @@
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
 #include <Eris/DeleteLater.h>
+#include <Eris/Operations.h>
 
 #include <Atlas/Codec.h>
 #include <Atlas/Net/Stream.h>
 #include <Atlas/Objects/Encoder.h>
+#include <Atlas/Objects/objectFactory.h>
 
 #include <skstream/skstream.h>
 #include <sigc++/slot.h>
@@ -38,7 +40,13 @@ BaseConnection::BaseConnection(const std::string &cnm,
 	_port(0)
 {
 	assert(_bridge);
-	//_stream = new tcp_socket_stream();
+    
+    Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
+    if (!f->hasFactory("unseen")) 
+    {
+        Atlas::Objects::Operation::UNSEEN_NO = f->addFactory("unseen", &Atlas::Objects::generic_factory);
+        Atlas::Objects::Operation::ATTACK_NO = f->addFactory("attack", &Atlas::Objects::generic_factory);
+    }
 }
 	
 BaseConnection::~BaseConnection()

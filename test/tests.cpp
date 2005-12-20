@@ -651,7 +651,7 @@ int runTests(Controller& ctl)
         testBadCreate();
         
         testAppearance(ctl);
-        testSightCreate(ctl);
+      //  testSightCreate(ctl);
         testSet(ctl);
         testTalk(ctl);
         testSeeMove(ctl);

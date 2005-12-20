@@ -21,6 +21,16 @@ class Attack : public Generic
     }
 };
 
+extern int UNSEEN_NO;
+
+class Unseen : public Generic
+{
+  public:
+    Unseen() {
+        (*this)->setType("unseen", UNSEEN_NO);
+    }
+};
+
 } } }
 
 #endif

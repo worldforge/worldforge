@@ -116,6 +116,9 @@ void View::appear(const std::string& eid, float stamp)
         return; // everything else will be done once the SIGHT arrives
     }
 
+    // if recently created
+    // EntityCreated.emit(ent);
+    
     if (ent->isVisible()) return;
     
     if ((stamp == 0) || (stamp > ent->getStamp())) {
@@ -160,6 +163,7 @@ void View::sight(const RootEntity& gent)
 
         case SACTION_DISCARD:
             m_pending.erase(pending);
+            issueQueuedLook();
             return;
 
         case SACTION_HIDE:
@@ -194,12 +198,7 @@ void View::sight(const RootEntity& gent)
         setTopLevelEntity(ent);
     }
     
-// issue the next LOOK of there's a queue. (Note we should stay below the
-// max count since we erased an item from the pending map above)
-    if (!m_lookQueue.empty()) {
-        sendLookAt(m_lookQueue.front());
-        m_lookQueue.pop_front();
-    }
+    issueQueuedLook();
 }
 
 Entity* View::initialSight(const RootEntity& gent)
@@ -222,22 +221,38 @@ Entity* View::initialSight(const RootEntity& gent)
 
 void View::create(const RootEntity& gent)
 {
-    if (m_contents.count(gent->getId()))
+    std::string eid(gent->getId());
+    if (m_contents.count(eid))
     {
-        warning() << "recieved create of " << gent->getId() << " which is already in the View";
-        EntityCreated.emit( m_contents[gent->getId()] ); // is this wise?
+        // already known locally, just emit the signal
+        EntityCreated.emit( m_contents[eid] );
         return;
     }
     
+    bool alreadyAppeared = false;
+    PendingSightMap::iterator pending = m_pending.find(eid);
+    if (pending != m_pending.end())
+    {
+        // already being retrieved, but we have the data now
+        alreadyAppeared = (pending->second == SACTION_QUEUED) || 
+            (pending->second == SACTION_APPEAR);
+        pending->second = SACTION_DISCARD; // when the SIGHT turns up
+    }
+    
     Entity* ent = createEntity(gent);
-    m_contents[gent->getId()] = ent;
+    m_contents[eid] = ent;
     ent->init(gent);
     
     if (gent->isDefaultLoc()) setTopLevelEntity(ent);
 
     InitialSightEntity.emit(ent);
-    ent->setVisible(true);
-    EntityCreated.emit(ent);
+    
+    // depends on relative order that sight(create) and appear are recieved in
+    if (alreadyAppeared)
+    {
+        ent->setVisible(true);
+        EntityCreated.emit(ent);
+    }
 }
 
 void View::deleteEntity(const std::string& eid)
@@ -290,6 +305,14 @@ Entity* View::createEntity(const RootEntity& gent)
     return new Eris::Entity(gent->getId(), type, this);
 }
 
+void View::unseen(const std::string& eid)
+{
+    Entity* ent = getEntity(eid);
+    if (!ent) return; // unseen for non-local, ignore
+    
+    delete ent; // is that all?
+}
+    
 #pragma mark -
 
 bool View::isPending(const std::string& eid) const
@@ -384,6 +407,14 @@ void View::entityDeleted(Entity* ent)
 {
     assert(m_contents.count(ent->getId()));
     m_contents.erase(ent->getId());
+}
+
+void View::issueQueuedLook()
+{
+    if (m_lookQueue.empty()) return;
+    
+    sendLookAt(m_lookQueue.front());
+    m_lookQueue.pop_front();
 }
 
 void View::dumpLookQueue()
