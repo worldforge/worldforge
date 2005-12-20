@@ -62,7 +62,11 @@ public:
 	{
 		return m_inner;
 	}
-	
+
+	Entity* get() const
+	{
+		return m_inner;
+	}
     operator bool() const
 	{
 		return (m_inner != NULL);

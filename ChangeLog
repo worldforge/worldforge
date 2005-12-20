@@ -1,3 +1,8 @@
+2005-12-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/EntityRef.h: Add an explicit get() method to get direct
+	  access to the pointer.
+
 2005-12-18  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/IGRouter.h: Remove class qualifier from method as its not liked
