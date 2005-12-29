@@ -17,6 +17,7 @@ void testCharacterInitialVis(Controller&);
 void testAppearance(Controller& ctl);
 void testLookQueue(Controller& ctl);
 void testEntityCreation(Controller& ctl);
+void testUnseen(Controller& ctl);
 
 class WaitForAppearance : public SigC::Object
 {

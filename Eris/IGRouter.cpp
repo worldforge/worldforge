@@ -90,6 +90,7 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     if (op->getClassNo() == UNSEEN_NO)
     {
         m_view->unseen(args.front()->getId());
+        return HANDLED;
     }
     
     return IGNORED;

@@ -628,6 +628,7 @@ int runTests(Controller& ctl)
         testLookQueue(ctl);
         testEmote(ctl);
         testEntityCreation(ctl);
+        testUnseen(ctl);
     }
     catch (TestFailure& tfexp)
     {

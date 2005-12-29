@@ -1,4 +1,13 @@
 2005-12-29  James Turner  <james@worldforge.org>
+	  
+	* test/signalHelpers.h: add reset() method to more signal recorders.
+	
+	* test/viewTest.cpp, test/viewTest.h: added test for handlng Unseen
+	  operations.
+	  
+	* Eris/IGRouter.cpp: fixed handled of Unseen ops.
+	  
+2005-12-29  James Turner  <james@worldforge.org>
 
 	* Eris/Connection.h: allow the test harness to directly inject operations
 	  for dispatch - this simplifies many test cases.

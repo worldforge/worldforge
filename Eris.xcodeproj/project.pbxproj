@@ -378,6 +378,8 @@
 		C4ADF6AC064ED5320074F881 /* commander.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = commander.cpp; sourceTree = "<group>"; };
 		C4ADF7CF06457A3500D3CCAC /* agent.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = agent.cpp; sourceTree = "<group>"; };
 		C4ADF7D206457B6D00D3CCAC /* agent.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = agent.h; sourceTree = "<group>"; };
+		C4B1B01D0964068C00CE8BB7 /* avatarTest.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = avatarTest.cpp; sourceTree = "<group>"; };
+		C4B1B01E0964068C00CE8BB7 /* avatarTest.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = avatarTest.h; sourceTree = "<group>"; };
 		C4B9D689083A838800D846FC /* Calendar.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Calendar.h; sourceTree = "<group>"; };
 		C4BD59C806AAA0F20039CF5E /* sigc++.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sigc++.framework"; path = "/Library/Frameworks/sigc++.framework"; sourceTree = "<absolute>"; };
 		C4C5505107A6D43B00F59ED4 /* DeleteLater.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = DeleteLater.cpp; path = Eris/DeleteLater.cpp; sourceTree = "<group>"; };
@@ -523,6 +525,8 @@
 		C4AD291A05FA259900AFB402 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				C4B1B01D0964068C00CE8BB7 /* avatarTest.cpp */,
+				C4B1B01E0964068C00CE8BB7 /* avatarTest.h */,
 				C474C8C3096346C400540EFB /* testUtils.cpp */,
 				C474C8C4096346C400540EFB /* viewTest.h */,
 				C48F3CB90885C55700F81C77 /* viewTest.cpp */,

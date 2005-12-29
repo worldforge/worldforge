@@ -9,6 +9,8 @@
 #include <Eris/Entity.h>
 #include <Eris/View.h>
 #include <Eris/PollDefault.h>
+#include <Eris/Operations.h>
+
 #include <sigc++/object_slot.h>
 #include <sigc++/object.h>
 
@@ -227,44 +229,6 @@ void testLookQueue(Controller& ctl)
     }
 }
 
-/*
-void testSightCreate(Controller& ctl)
-{
-    AutoConnection con = stdConnect();
-    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
-    
-    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
-    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
-    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
-    
-    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
-    {
-        WaitForAppearance wf(av->getView(), "_vase_1");
-        wf.run();
-    }
-
-    SignalRecorder1<Eris::Entity*> created;
-    av->getView()->EntityCreated.connect(SigC::slot(created, 
-        &SignalRecorder1<Eris::Entity*>::fired));
-    
-    RootEntity gent;
-    Atlas::Message::ListType prs;
-    prs.push_back("book");
-    gent->setParentsAsList(prs);
-    gent->setName("The Lord of the Blings");
-    gent->setAttr("foob", 42);
-    gent->setLoc("_table_1");
-    ctl.create(gent);
-    
-    while (!created.fireCount()) {
-        Eris::PollDefault::poll();
-    }
-    
-    assert(created.lastArg0()->getName() == "The Lord of the Blings");
-    assert(created.lastArg0()->valueOfAttr("foob") == (long int) 42);
-}
-*/
-
 void testEntityCreation(Controller& ctl)
 {
     AutoConnection con = stdConnect();
@@ -343,6 +307,47 @@ void testEntityCreation(Controller& ctl)
     }
 
     */
+}
+
+void testUnseen(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    Eris::View* v = av->getView();
+    
+    ctl.setEntityVisibleToAvatar("_potato_1", av.get());    
+    ctl.setEntityVisibleToAvatar("_potato_2", av.get());
+    ctl.setEntityVisibleToAvatar("_pig_01", av.get());
+    ctl.setEntityVisibleToAvatar("_field_01", av.get());
+    
+    {
+        WaitForAppearance wf(v, "_field_01");
+        wf.waitFor("_potato_2");
+        wf.run();
+    }
+    
+    Eris::EntityRef potatoRef(v->getEntity("_potato_2"));
+    assert(potatoRef);
+    
+    Eris::TestInjector i(con.get());
+    SignalCounter0 potatoDeleted;
+    potatoRef->BeingDeleted.connect(SigC::slot(potatoDeleted, &SignalCounter0::fired));
+    
+    {
+        Atlas::Objects::Operation::Unseen un;
+        Atlas::Objects::Entity::Anonymous arg;
+        arg->setId("_potato_2"); 
+        un->setArgs1(arg);
+        un->setTo("acc_b_character");
+        
+        i.inject(un);
+        assert(potatoDeleted.fireCount() == 1);
+        assert(!potatoRef);
+    }
 }
 
 

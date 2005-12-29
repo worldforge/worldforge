@@ -131,6 +131,7 @@ StubServer::StubServer(short port) :
     subclassType("thing", "book");
     subclassType("thing", "ball");
     subclassType("thing", "oak");
+    subclassType("thing", "hammer");
     
     if (!Atlas::Objects::Factories::instance()->hasFactory("command"))
     {
@@ -192,6 +193,7 @@ void StubServer::resetWorld()
     defineEntity("acc_b_character", "settler", "_hut_01", "Joe Blow");
     
     defineEntity("_ball", "ball", "_hut_01", "A silly ball");
+    defineEntity("_hammer_1", "hammer", "_hut_01", "Hammer time!");
     
     defineEntity("_table_1", "thing", "_hut_01", "An old table");
     std::vector<double> posl;
