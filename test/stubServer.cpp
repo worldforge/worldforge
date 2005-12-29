@@ -253,7 +253,7 @@ int StubServer::run(pid_t child)
         }
         
         basic_socket_poll poller;
-        poller.poll(clientSockets, 50); // 50 milliseconds wait
+        poller.poll(clientSockets, 2); // 2 milliseconds wait
 
         for (ConArray::iterator C=m_clients.begin(); C != m_clients.end(); )
         {

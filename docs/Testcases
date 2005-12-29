@@ -28,5 +28,54 @@ test cases
  	yes, that's a good idea.
  
 
+-------------------------------
 
+
+
+class TestInjector
+{
+public:
+    TestInjector(Connection* )
+    
+    void inject(const RootOp&)
+    {
+        m_con->dispatch(op);
+    }
+    
+private:
+    Connection* m_con;
+};
+
+//////////
+
+create tests
+
+A)
+
+inject appearance (of unseen)
+    -> shouldn't emit appearance yet
+    
+inject entity create
+    -> verify emission of signals
+
+B)
+    
+inject entity create
+    -> verify nothing happens yet
+    
+inject appearance
+    -> should get both (soon)
+    
+////////////////////
+
+unseen result
+
+inject unseen for random entity
+    -> should get cleaned up.
+    
+inject unseen for wielded
+
+////////////////////////
+
+inject sight(delete) for wielded
  

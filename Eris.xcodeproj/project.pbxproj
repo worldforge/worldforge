@@ -77,6 +77,8 @@
 		C45DC4220562F83D00D8F8F4 /* Timeout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C43FBD6A054315F4008FC2ED /* Timeout.cpp */; };
 		C45DC4230562F83D00D8F8F4 /* TypeInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C43FBD73054315F4008FC2ED /* TypeInfo.cpp */; };
 		C45DC4240562F83D00D8F8F4 /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C43FBD77054315F4008FC2ED /* Types.cpp */; };
+		C474C8C5096346C400540EFB /* testUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C474C8C3096346C400540EFB /* testUtils.cpp */; };
+		C474C8C6096346C400540EFB /* viewTest.h in Headers */ = {isa = PBXBuildFile; fileRef = C474C8C4096346C400540EFB /* viewTest.h */; };
 		C48F3CBA0885C55700F81C77 /* viewTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C48F3CB90885C55700F81C77 /* viewTest.cpp */; };
 		C49E621F060B46740054632A /* objectSummary.h in Headers */ = {isa = PBXBuildFile; fileRef = C49E621E060B46740054632A /* objectSummary.h */; };
 		C49E6224060B4FD80054632A /* testUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C49E6223060B4FD80054632A /* testUtils.h */; };
@@ -358,6 +360,8 @@
 		C45DC7170564181900D8F8F4 /* ChangeLog */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = ChangeLog; sourceTree = "<group>"; };
 		C45DC7180564181900D8F8F4 /* README */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		C45DC7190564181900D8F8F4 /* TODO */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
+		C474C8C3096346C400540EFB /* testUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = testUtils.cpp; sourceTree = "<group>"; };
+		C474C8C4096346C400540EFB /* viewTest.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = viewTest.h; sourceTree = "<group>"; };
 		C47BF1800600F1DD00CC2146 /* clientConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = clientConnection.h; path = test/clientConnection.h; sourceTree = SOURCE_ROOT; };
 		C47BF18C0600F42E00CC2146 /* clientConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = clientConnection.cpp; sourceTree = "<group>"; };
 		C48F3CB90885C55700F81C77 /* viewTest.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = viewTest.cpp; sourceTree = "<group>"; };
@@ -519,6 +523,8 @@
 		C4AD291A05FA259900AFB402 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				C474C8C3096346C400540EFB /* testUtils.cpp */,
+				C474C8C4096346C400540EFB /* viewTest.h */,
 				C48F3CB90885C55700F81C77 /* viewTest.cpp */,
 				C4ADF7CF06457A3500D3CCAC /* agent.cpp */,
 				C4ADF7D206457B6D00D3CCAC /* agent.h */,
@@ -631,6 +637,7 @@
 				C43FF784087317CE007A492C /* setupHelpers.h in Headers */,
 				C43FF79C0873191F007A492C /* testOutOfGame.h in Headers */,
 				C43FF7D208731BA2007A492C /* netTests.h in Headers */,
+				C474C8C6096346C400540EFB /* viewTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -943,6 +950,7 @@
 				C43FF788087317E1007A492C /* setupHelpers.cpp in Sources */,
 				C43FF7A308731933007A492C /* testOutOfGame.cpp in Sources */,
 				C48F3CBA0885C55700F81C77 /* viewTest.cpp in Sources */,
+				C474C8C5096346C400540EFB /* testUtils.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

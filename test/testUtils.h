@@ -3,6 +3,12 @@
 
 #include <exception>
 #include <string>
+#include <Atlas/Objects/ObjectsFwd.h>
+
+namespace Eris
+{
+    class Connection;
+}
 
 class TestFailure : public std::exception
 {
@@ -25,5 +31,23 @@ public:
 private:
     std::string m_what;
 };
+
+namespace Eris
+{
+
+class TestInjector
+{
+public:
+    TestInjector(Connection* con) :
+        m_con(con)
+    {
+    }
+
+    void inject(const Atlas::Objects::Operation::RootOperation& op);
+private:
+    Connection* m_con;
+};
+
+}
 
 #endif

@@ -63,6 +63,10 @@ public:
         return m_lastArg0;
     }
     
+    void reset()
+    {
+        m_count = 0;
+    }
 private:
     int m_count;
     P0 m_lastArg0;

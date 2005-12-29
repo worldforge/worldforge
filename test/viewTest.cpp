@@ -12,6 +12,9 @@
 #include <sigc++/object_slot.h>
 #include <sigc++/object.h>
 
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Anonymous.h>
+#include <Atlas/Objects/Entity.h>
 #include <wfmath/timestamp.h>
 
 using std::cout;
@@ -223,3 +226,123 @@ void testLookQueue(Controller& ctl)
         wf.run();
     }
 }
+
+/*
+void testSightCreate(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    {
+        WaitForAppearance wf(av->getView(), "_vase_1");
+        wf.run();
+    }
+
+    SignalRecorder1<Eris::Entity*> created;
+    av->getView()->EntityCreated.connect(SigC::slot(created, 
+        &SignalRecorder1<Eris::Entity*>::fired));
+    
+    RootEntity gent;
+    Atlas::Message::ListType prs;
+    prs.push_back("book");
+    gent->setParentsAsList(prs);
+    gent->setName("The Lord of the Blings");
+    gent->setAttr("foob", 42);
+    gent->setLoc("_table_1");
+    ctl.create(gent);
+    
+    while (!created.fireCount()) {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(created.lastArg0()->getName() == "The Lord of the Blings");
+    assert(created.lastArg0()->valueOfAttr("foob") == (long int) 42);
+}
+*/
+
+void testEntityCreation(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    Eris::View* v = av->getView();
+    
+    Eris::TestInjector i(con.get());
+
+    SignalRecorder1<Eris::Entity*> created, appeared;
+    v->EntityCreated.connect(SigC::slot(created, &SignalRecorder1<Eris::Entity*>::fired));
+    v->Appearance.connect(SigC::slot(appeared, &SignalRecorder1<Eris::Entity*>::fired));
+    
+    {
+        Atlas::Objects::Operation::Appearance app;
+        app->setTo("acc_b_character");
+        Atlas::Objects::Entity::Anonymous arg;
+        arg->setId("magic_id_1"); 
+        app->setArgs1(arg);
+        
+        i.inject(app);
+        assert(created.fireCount() == 0);
+        assert(appeared.fireCount() == 0);
+    }
+    
+    {
+        Atlas::Objects::Operation::Create cr;
+        Atlas::Objects::Entity::GameEntity arg;
+        arg->setId("magic_id_1"); 
+        arg->setName("foom");
+        arg->setLoc("_hut_01");
+        cr->setArgs1(arg);
+        
+        Atlas::Objects::Operation::Sight st;
+        st->setTo("acc_b_character");
+        st->setArgs1(cr);
+        
+        i.inject(st);
+        assert(created.fireCount() == 1);
+        assert(appeared.fireCount() == 1);
+    }
+    
+    created.reset();
+    appeared.reset();
+    
+    {
+        Atlas::Objects::Operation::Create cr;
+        Atlas::Objects::Entity::GameEntity arg;
+        arg->setId("magic_id_2"); 
+        arg->setName("wibble");
+        arg->setLoc("_hut_01");
+        cr->setArgs1(arg);
+        
+        Atlas::Objects::Operation::Sight st;
+        st->setTo("acc_b_character");
+        st->setArgs1(cr);
+        
+        i.inject(st);
+        assert(created.fireCount() == 0);
+        assert(appeared.fireCount() == 0);
+    }
+
+    /*
+    {
+        Atlas::Objects::Operation::Appearance app;
+        app->setTo("acc_b_character");
+        Atlas::Objects::Entity::Anonymous arg;
+        arg->setId("magic_id_2"); 
+        app->setArgs1(arg);
+        
+        i.inject(app);
+        assert(created.fireCount() == 1);
+        assert(appeared.fireCount() == 1);
+    }
+
+    */
+}
+
+

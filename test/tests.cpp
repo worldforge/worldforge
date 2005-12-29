@@ -453,43 +453,6 @@ void testSoundAction(Controller& ctl)
     }
 }
 
-
-void testSightCreate(Controller& ctl)
-{
-    AutoConnection con = stdConnect();
-    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
-    
-    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
-    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
-    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
-    
-    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
-    {
-        WaitForAppearance wf(av->getView(), "_vase_1");
-        wf.run();
-    }
-
-    SignalRecorder1<Eris::Entity*> created;
-    av->getView()->EntityCreated.connect(SigC::slot(created, 
-        &SignalRecorder1<Eris::Entity*>::fired));
-    
-    RootEntity gent;
-    Atlas::Message::ListType prs;
-    prs.push_back("book");
-    gent->setParentsAsList(prs);
-    gent->setName("The Lord of the Blings");
-    gent->setAttr("foob", 42);
-    gent->setLoc("_table_1");
-    ctl.create(gent);
-    
-    while (!created.fireCount()) {
-        Eris::PollDefault::poll();
-    }
-    
-    assert(created.lastArg0()->getName() == "The Lord of the Blings");
-    assert(created.lastArg0()->valueOfAttr("foob") == (long int) 42);
-}
-
 class EntityDeleteWatcher : public SigC::Object
 {
 public:
@@ -651,7 +614,6 @@ int runTests(Controller& ctl)
         testBadCreate();
         
         testAppearance(ctl);
-      //  testSightCreate(ctl);
         testSet(ctl);
         testTalk(ctl);
         testSeeMove(ctl);
@@ -665,6 +627,7 @@ int runTests(Controller& ctl)
         testCharacterInitialVis(ctl);
         testLookQueue(ctl);
         testEmote(ctl);
+        testEntityCreation(ctl);
     }
     catch (TestFailure& tfexp)
     {
@@ -736,5 +699,3 @@ int main(int argc, char **argv)
 
     return forkAndRunBoth(argc, argv);
 }
-
-

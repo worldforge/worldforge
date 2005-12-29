@@ -27,6 +27,7 @@ class TypeService;
 class Router;
 class Redispatch;
 class ResponseTracker;
+class TestInjector;
 
 /// Underlying Atlas connection, providing a send interface, and receive (dispatch) system
 /** Connection tracks the life-time of a client-server session; note this may extend beyond
@@ -144,6 +145,7 @@ protected:
         
 private:
     friend class Redispatch;
+    friend class TestInjector;
     
     /** Inject a local operation into the dispatch queue. Used by the
     redispatch mechansim. */

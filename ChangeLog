@@ -1,3 +1,16 @@
+2005-12-29  James Turner  <james@worldforge.org>
+
+	* Eris/Connection.h: allow the test harness to directly inject operations
+	  for dispatch - this simplifies many test cases.
+	  
+	* test/signalHelpers.h: add reset() method to more signal recorders.
+	
+	* test/viewTest.cpp, test/viewTest.h: revised test for entity creation
+	  processing.
+	  
+	* test/testUtils.cpp, test/testUtils.h: add the injector helper to pass
+	  operations directly to an Eris::Connection.
+
 2005-12-20  James Turner  <james@worldforge.org>
 
 	* Eris/IGRouter.cpp, Eris/View.cpp, Eris/View.h: add support for handling
