@@ -69,15 +69,16 @@ void View::registerFactory(Factory* f)
     m_factories.insert(f);
 }
 
-void View::notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot)
+sigc::connection View::notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot)
 {
     if (m_contents.count(eid)) {
         error() << "notifyWhenEntitySeen: entity " << eid << " already in View";
-        return;
+        return sigc::connection();
     }
     
-    m_notifySights[eid].connect(slot);
+    sigc::connection c = m_notifySights[eid].connect(slot);
     getEntityFromServer(eid);
+    return c;
 }
 
 #pragma mark -

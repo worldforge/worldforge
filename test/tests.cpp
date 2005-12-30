@@ -13,6 +13,7 @@
 #include "testOutOfGame.h"
 #include "netTests.h"
 #include "viewTest.h"
+#include "avatarTest.h"
 
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
@@ -629,6 +630,9 @@ int runTests(Controller& ctl)
         testEmote(ctl);
         testEntityCreation(ctl);
         testUnseen(ctl);
+        
+        testWield(ctl);
+        testDeleteWielded(ctl);
     }
     catch (TestFailure& tfexp)
     {

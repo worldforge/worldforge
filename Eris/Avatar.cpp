@@ -322,7 +322,6 @@ void Avatar::onCharacterWield(const std::string& s, const Atlas::Message::Elemen
     }
     
     m_wielded = EntityRef(m_view, val.asString());
-    onWieldedChanged();
 }
 
 Connection* Avatar::getConnection() const
@@ -345,7 +344,7 @@ void Avatar::updateWorldTime(double seconds)
 void Avatar::onWieldedChanged()
 {
     m_useOps.clear();
-    
+
     if (!m_wielded) return;
     if (!m_wielded->hasAttr("operations")) return;
     

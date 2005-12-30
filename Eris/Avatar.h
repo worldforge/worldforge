@@ -53,6 +53,11 @@ public:
     /** get the current local approximation of world time. */
     double getWorldTime();
 
+    const EntityRef& getWielded() const
+    {
+        return m_wielded;
+    }
+
 	/// Drop an object in the Avatar's inventory at the given location
 	void drop(Entity*, const WFMath::Point<3>& pos, const std::string& loc);
 	/// Drop an object in the Avatar's inventory at the Avatar's feet

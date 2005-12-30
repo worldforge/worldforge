@@ -103,6 +103,9 @@ StubServer::StubServer(short port) :
     subclassType("action", "combat");
     subclassType("combat", "parry");
     
+    subclassType("action", "strike");
+    subclassType("action", "tap");
+    
     subclassType("root_operation","info");
     subclassType("info", "login");
     subclassType("login", "logout");
@@ -193,7 +196,12 @@ void StubServer::resetWorld()
     defineEntity("acc_b_character", "settler", "_hut_01", "Joe Blow");
     
     defineEntity("_ball", "ball", "_hut_01", "A silly ball");
-    defineEntity("_hammer_1", "hammer", "_hut_01", "Hammer time!");
+    defineEntity("_hammer_1", "hammer", "acc_b_character", "Hammer time!");
+    
+    Atlas::Message::ListType hammerOps;
+    hammerOps.push_back("strike");
+    hammerOps.push_back("tap");
+    getEntity("_hammer_1")->setAttr("operations", hammerOps);
     
     defineEntity("_table_1", "thing", "_hut_01", "An old table");
     std::vector<double> posl;

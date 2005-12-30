@@ -13,12 +13,14 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/RootOperation.h>
 #include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/Anonymous.h>
 
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;
 using namespace Eris;
 using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Entity::Anonymous;
 
 using std::endl;
 using std::cout;
@@ -58,6 +60,10 @@ void Agent::processOp(const RootOperation& op)
     {
     case LOOK_NO:
         processLook(smart_dynamic_cast<Look>(op));
+        return;
+        
+    case WIELD_NO:
+        processWield(op);
         return;
         
     default:
@@ -188,6 +194,23 @@ bool Agent::isVisible(const std::string& lookTarget) const
     
     std::string locId = m_server->m_world[lookTarget]->getLoc();
     return isVisible(locId); // recurse up
+}
+
+void Agent::processWield(const RootOperation& op)
+{
+    const std::vector<Root>& args = op->getArgs();
+    assert(!args.empty());
+    
+    m_server->m_world[m_character]->setAttr("right_hand_wield", args.front()->getId());
+    
+    Set setWield;
+    Anonymous setArgs;
+    setArgs->setId(m_character);
+    setArgs->setAttr("right_hand_wield", args.front()->getId());
+    setWield->setArgs1(setArgs);
+    setWield->setTo(m_character);
+    
+    broadcastSight(setWield);
 }
 
 #pragma mark -

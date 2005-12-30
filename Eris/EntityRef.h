@@ -2,7 +2,6 @@
 #define ERIS_ENTITY_REF_H
 
 #include <sigc++/trackable.h>
-#include <sigc++/connection.h>
 #include <sigc++/signal.h>
 
 namespace Eris
@@ -26,23 +25,10 @@ public:
 	{
 	}
 	
-	EntityRef(const EntityRef& ref) :
-		m_inner(ref.m_inner)
-	{
-		m_deleteSlot = ref.m_deleteSlot;
-		m_seenSlot = ref.m_seenSlot;
-	}
-	
-	EntityRef& operator=(const EntityRef& ref)
-	{	
-		bool changed = (m_inner != ref.m_inner);
-		m_inner = ref.m_inner;
-		m_deleteSlot = ref.m_deleteSlot;
-		m_seenSlot = ref.m_seenSlot;
-		if (changed) Changed.emit();
-		return *this;
-	}
-
+	EntityRef(const EntityRef& ref);
+    	
+	EntityRef& operator=(const EntityRef& ref);
+    
 	const Entity& operator*() const
 	{
 		return *m_inner;
@@ -67,6 +53,7 @@ public:
 	{
 		return m_inner;
 	}
+    
     operator bool() const
 	{
 		return (m_inner != NULL);
@@ -83,8 +70,6 @@ private:
 	void onEntitySeen(Entity* e);
 	
 	Entity* m_inner;
-	sigc::connection m_deleteSlot, 
-		m_seenSlot;
 };
 
 } // of namespace Eris

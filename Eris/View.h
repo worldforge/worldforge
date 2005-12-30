@@ -4,9 +4,12 @@
 #include <Eris/Types.h>
 #include <Eris/Factory.h>
 #include <Atlas/Objects/ObjectsFwd.h>
+
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 #include <sigc++/slot.h>
+#include <sigc++/connection.h>
+
 #include <map>
 #include <deque>
 
@@ -57,13 +60,13 @@ public:
     */
     void registerFactory(Factory*);
 
-    typedef SigC::Slot1<void, Entity*> EntitySightSlot;
+    typedef sigc::slot<void, Entity*> EntitySightSlot;
 
     /**
     Conenct up a slot to be fired when an Entity with the specified ID is seen.
     If the entity is already visible, this is a no-op (and will log an error)
     */
-    void notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot);
+    sigc::connection notifyWhenEntitySeen(const std::string& eid, const EntitySightSlot& slot);
 
     /** emitted whenever the View creates a new Entity instance. This signal
     is emitted once the entity has been fully bound into the View */
@@ -73,13 +76,13 @@ public:
     SigC::Signal1<void, Entity*> EntityCreated;
     
     /** emitted when a SIGHT(DELETE) op is recieved for an entity */
-    SigC::Signal1<void, Entity*> EntityDeleted;
+    sigc::signal<void, Entity*> EntityDeleted;
     
-    SigC::Signal1<void, Entity*> Appearance;
-    SigC::Signal1<void, Entity*> Disappearance;
+    sigc::signal<void, Entity*> Appearance;
+    sigc::signal<void, Entity*> Disappearance;
 
     /// emitted when the TLVE changes
-    SigC::Signal0<void> TopLevelEntityChanged;
+    sigc::signal<void> TopLevelEntityChanged;
 
     void dumpLookQueue();
 

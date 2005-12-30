@@ -1,3 +1,25 @@
+2005-12-30  James Turner  <james@worldforge.org>
+
+	* test/avatarTest.cpp, test/avatarTest.h, test/Makefile.am: add in
+	  new file for tests on Avatar - currently just relating to wield.
+	  
+	* test/agent.cpp, test/agent.h: process WIELD operations correctly.
+	
+	* test/stubServer.cpp: add a hammer tool to the world, with multiple
+	  supported operations.
+	  
+	* Eris/EntityRef.cpp, Eris/EntityRef.h: fix numerous issues with copying
+	  entity references, since copy semantics of sigc::connection are not
+	  what I thought they were.
+	  
+	* Eris/View.cpp, Eris/View.h: more sigc 2.0 migration work.
+
+	* Eris/Avatar.h: add an accessor for the currently wielded entity.
+	  Note this method will be changed or revised when support for multiple
+	  wields is added.
+	  
+	* Eris/Avatar.cpp: avoid calling onWieldedChanged twice in some cases.
+
 2005-12-29  James Turner  <james@worldforge.org>
 	  
 	* test/signalHelpers.h: add reset() method to more signal recorders.

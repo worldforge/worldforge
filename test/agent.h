@@ -26,6 +26,7 @@ public:
     
 private:
     void processLook(const Atlas::Objects::Operation::Look& op);
+    void processWield(const Atlas::Objects::Operation::RootOperation& op);
 
     bool isVisible(const std::string& eid) const;
 
