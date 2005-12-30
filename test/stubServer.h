@@ -55,6 +55,8 @@ private:
         const std::string& loc,
         const std::string& nm);
     
+    void initCalendarOn(Atlas::Objects::Entity::RootEntity& ent);
+    
     tcp_socket_server m_serverSocket;
     
     friend class ClientConnection;

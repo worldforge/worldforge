@@ -7,6 +7,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/View.h>
 #include <Eris/Entity.h>
+#include <Eris/Log.h>
 
 using namespace Atlas::Message;
 
@@ -34,11 +35,14 @@ void Calendar::topLevelEntityChanged()
     if (!tl || !tl->hasAttr("calendar")) return;
     
     m_calendarObserver = tl->observe("calendar", sigc::mem_fun(this, &Calendar::calendarAttrChanged));
+    
+    initFromCalendarAttr(tl->valueOfAttr("calendar").asMap());
 }
 
 void Calendar::calendarAttrChanged(const std::string&, const Element& value)
 {
     if (!value.isMap()) throw InvalidAtlas("malformed calendar data", value);
+    debug() << "initing calendar";
     initFromCalendarAttr(value.asMap());
 }
 
@@ -83,7 +87,7 @@ DateTime Calendar::now() const
     n.m_hours -= (n.m_dayOfMonth * m_hoursPerDay);
     
     n.m_month = n.m_dayOfMonth / m_daysPerMonth;
-    n.m_dayOfMonth = (n.m_month * m_daysPerMonth);
+    n.m_dayOfMonth -= (n.m_month * m_daysPerMonth);
     
     n.m_year = n.m_month / m_monthsPerYear;
     n.m_month -= (n.m_year * m_monthsPerYear);

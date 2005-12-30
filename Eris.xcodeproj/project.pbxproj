@@ -80,6 +80,8 @@
 		C474C8C5096346C400540EFB /* testUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C474C8C3096346C400540EFB /* testUtils.cpp */; };
 		C474C8C6096346C400540EFB /* viewTest.h in Headers */ = {isa = PBXBuildFile; fileRef = C474C8C4096346C400540EFB /* viewTest.h */; };
 		C48F3CBA0885C55700F81C77 /* viewTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C48F3CB90885C55700F81C77 /* viewTest.cpp */; };
+		C49A461A0965495A00F37E9B /* calendarTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C49A46180965495A00F37E9B /* calendarTest.cpp */; };
+		C49A461B0965495A00F37E9B /* calendarTest.h in Headers */ = {isa = PBXBuildFile; fileRef = C49A46190965495A00F37E9B /* calendarTest.h */; };
 		C49E621F060B46740054632A /* objectSummary.h in Headers */ = {isa = PBXBuildFile; fileRef = C49E621E060B46740054632A /* objectSummary.h */; };
 		C49E6224060B4FD80054632A /* testUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C49E6223060B4FD80054632A /* testUtils.h */; };
 		C49FF8BC094F68130073E0F8 /* Operations.h in Headers */ = {isa = PBXBuildFile; fileRef = C49FF8BB094F68130073E0F8 /* Operations.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -367,6 +369,8 @@
 		C47BF1800600F1DD00CC2146 /* clientConnection.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = clientConnection.h; path = test/clientConnection.h; sourceTree = SOURCE_ROOT; };
 		C47BF18C0600F42E00CC2146 /* clientConnection.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = clientConnection.cpp; sourceTree = "<group>"; };
 		C48F3CB90885C55700F81C77 /* viewTest.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = viewTest.cpp; sourceTree = "<group>"; };
+		C49A46180965495A00F37E9B /* calendarTest.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = calendarTest.cpp; sourceTree = "<group>"; };
+		C49A46190965495A00F37E9B /* calendarTest.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = calendarTest.h; sourceTree = "<group>"; };
 		C49E621E060B46740054632A /* objectSummary.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = objectSummary.h; sourceTree = "<group>"; };
 		C49E6223060B4FD80054632A /* testUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = testUtils.h; path = test/testUtils.h; sourceTree = SOURCE_ROOT; };
 		C49FF8BB094F68130073E0F8 /* Operations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Operations.h; sourceTree = "<group>"; };
@@ -527,6 +531,8 @@
 		C4AD291A05FA259900AFB402 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				C49A46180965495A00F37E9B /* calendarTest.cpp */,
+				C49A46190965495A00F37E9B /* calendarTest.h */,
 				C4B1B01D0964068C00CE8BB7 /* avatarTest.cpp */,
 				C4B1B01E0964068C00CE8BB7 /* avatarTest.h */,
 				C474C8C3096346C400540EFB /* testUtils.cpp */,
@@ -645,6 +651,7 @@
 				C43FF7D208731BA2007A492C /* netTests.h in Headers */,
 				C474C8C6096346C400540EFB /* viewTest.h in Headers */,
 				C4B1B0320964190C00CE8BB7 /* avatarTest.h in Headers */,
+				C49A461B0965495A00F37E9B /* calendarTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -959,6 +966,7 @@
 				C48F3CBA0885C55700F81C77 /* viewTest.cpp in Sources */,
 				C474C8C5096346C400540EFB /* testUtils.cpp in Sources */,
 				C4B1B0310964190B00CE8BB7 /* avatarTest.cpp in Sources */,
+				C49A461A0965495A00F37E9B /* calendarTest.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

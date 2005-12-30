@@ -14,6 +14,7 @@
 #include "netTests.h"
 #include "viewTest.h"
 #include "avatarTest.h"
+#include "calendarTest.h"
 
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
@@ -635,6 +636,7 @@ int runTests(Controller& ctl)
         testDeleteWielded(ctl);
         testHear(ctl);
         
+        testSimpleCalendar(ctl);
     }
     catch (TestFailure& tfexp)
     {

@@ -184,6 +184,8 @@ void StubServer::resetWorld()
     world->setParents(StringList(1, "game_entity"));
     m_world["_world"] = world;
     
+    initCalendarOn(world);
+    
     defineEntity("_field_01", "game_entity", "_world", "A field");
 
     defineEntity("_pig_01", "pig", "_field_01", "Piggy");
@@ -383,6 +385,18 @@ Agent* StubServer::findAgentForEntity(const std::string& eid)
     
     return NULL;
 
+}
+
+void StubServer::initCalendarOn(Atlas::Objects::Entity::RootEntity& ent)
+{
+    Atlas::Message::MapType cal;
+    cal["seconds_per_minute"] = 20;
+    cal["minutes_per_hour"] = 80;
+    cal["hours_per_day"] = 14;
+    cal["days_per_month"] = 42;
+    cal["months_per_year"] = 11;
+    
+    ent->setAttr("calendar", cal);
 }
 
 #pragma mark -
