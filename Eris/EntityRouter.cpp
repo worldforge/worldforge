@@ -50,13 +50,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
         if (args.front()->getClassNo() == TALK_NO)
         {
             RootOperation talk = smart_dynamic_cast<RootOperation>(args.front());
-            const std::vector<Root>& talkArgs = talk->getArgs();
-            if (talkArgs.empty()) {
-                error() << "entity " << m_entity->getId() << " got sound(talk) with no args";
-                return IGNORED;
-            }
-            
-            m_entity->onTalk(talkArgs.front());
+            m_entity->onTalk(talk);
             return HANDLED;
         } 
         

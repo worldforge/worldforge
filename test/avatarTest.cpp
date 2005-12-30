@@ -27,6 +27,10 @@
 using WFMath::TimeStamp;
 using WFMath::TimeDiff;
 
+using namespace Atlas::Objects::Operation;
+using Atlas::Objects::Entity::Anonymous;
+using Atlas::Objects::Root;
+
 void testWield(Controller& ctl)
 {
     AutoConnection con = stdConnect();
@@ -90,12 +94,12 @@ void testDeleteWielded(Controller& ctl)
     hammerRef->BeingDeleted.connect(SigC::slot(hammerDeleted, &SignalCounter0::fired));
     hammerRef.Changed.connect(SigC::slot(hammerRefChanged, &SignalCounter0::fired));
     {
-        Atlas::Objects::Operation::Delete del;
-        Atlas::Objects::Entity::Anonymous arg;
+        Delete del;
+        Anonymous arg;
         arg->setId("_hammer_1"); 
         del->setArgs1(arg);
         
-        Atlas::Objects::Operation::Sight st;
+        Sight st;
         st->setArgs1(del);
         st->setTo("acc_b_character");
         
@@ -106,4 +110,90 @@ void testDeleteWielded(Controller& ctl)
     assert(!hammerRef);
     assert(hammerRefChanged.fireCount());
     assert(!av->getWielded());
+}
+
+class Hearer : public sigc::trackable
+{
+public:
+    Hearer() :
+        m_count(0),
+        m_source(NULL)
+    {;}
+    
+    void fired(Eris::Entity* ent, const RootOperation& op)
+    {
+        ++m_count;
+        m_op = op;
+        m_source = ent;
+    }
+    
+    int fireCount() const
+    { return m_count; }
+    
+    const RootOperation argOp() const
+    {
+        return m_op;
+    }
+    
+    Eris::Entity* source() const
+    {
+        return m_source;
+    }
+    
+    void reset()
+    {
+        m_count = 0;
+    }
+private:
+    int m_count;
+    RootOperation m_op;
+    Eris::Entity* m_source;
+};
+
+
+void testHear(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_B", "sweede", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_table_1", "acc_b_character");
+    ctl.setEntityVisibleToAvatar("_vase_1", "acc_b_character");
+    
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_b_character");
+    Eris::View* v = av->getView();
+    {
+        WaitForAppearance wf(v, "_vase_1");
+        wf.run();
+    }
+    
+    Eris::TestInjector i(con.get());
+    Hearer heard;
+    
+    av->Hear.connect(SigC::slot(heard, &Hearer::fired));
+
+    {
+        Talk talk;
+        Atlas::Objects::Entity::Anonymous arg;
+        arg->setAttr("what", "shitcock!");
+        talk->setArgs1(arg);
+        talk->setFrom("_vase_1");
+        
+        Sound snd;
+        snd->setArgs1(talk);
+        snd->setTo("acc_b_character");
+        snd->setFrom("_vase_1");
+        
+        i.inject(snd);
+    }
+
+    assert(heard.fireCount());
+    RootOperation heardOp = heard.argOp();
+    assert(heardOp->getClassNo() == TALK_NO);
+    const std::vector<Root>& args = heardOp->getArgs();
+    
+    assert(args.front()->hasAttr("what"));
+    assert(args.front()->getAttr("what") == "shitcock!");
+    
+    assert(heard.source()->getId() == "_vase_1");
 }

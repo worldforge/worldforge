@@ -258,9 +258,9 @@ protected:
     virtual void init(const Atlas::Objects::Entity::RootEntity &ge);
     
     /** process TALK data - default implementation emits the Say signal.
-    @param obj The TALK operation arguments
+    @param talk The TALK operation
     */
-    virtual void onTalk(const Atlas::Objects::Root& obj);
+    virtual void onTalk(const Atlas::Objects::Operation::RootOperation& talk);
 
     virtual void onAttrChanged(const std::string& attr, const Atlas::Message::Element &v);
 	

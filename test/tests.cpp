@@ -633,6 +633,8 @@ int runTests(Controller& ctl)
         
         testWield(ctl);
         testDeleteWielded(ctl);
+        testHear(ctl);
+        
     }
     catch (TestFailure& tfexp)
     {

@@ -190,10 +190,18 @@ void Entity::filterMoveAttrs(Atlas::Message::MapType& attrs) const
     attrs.erase("accel");
 }
 
-void Entity::onTalk(const Root& talkArgs)
+void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk)
 {
-    // just emit the signal
-    Say.emit(talkArgs);
+    const std::vector<Root>& talkArgs = talk->getArgs();
+    if (talkArgs.empty())
+    {
+        warning() << "entity " << getId() << " got sound(talk) with no args";
+        return;
+    }
+
+    Say.emit(talkArgs.front());
+    Noise.emit(talk);
+    m_view->getAvatar()->Hear.emit(this, talk);
 }
 
 void Entity::onLocationChanged(Entity* oldLoc)
@@ -214,7 +222,6 @@ void Entity::onAction(const Atlas::Objects::Operation::RootOperation& arg)
 void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op)
 {
     Noise.emit(op);
-    
     m_view->getAvatar()->Hear.emit(this, op);
 }
 

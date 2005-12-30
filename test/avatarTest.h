@@ -6,4 +6,6 @@ class Controller;
 void testWield(Controller& ctl);
 void testDeleteWielded(Controller& ctl);
 
+void testHear(Controller& ctl);
+
 #endif

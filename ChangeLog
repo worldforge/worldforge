@@ -1,5 +1,14 @@
 2005-12-30  James Turner  <james@worldforge.org>
 
+	* test/avatarTest.cpp, test/avatarTest.h: add a test for the Heard signal
+	  on Avatar.
+	  
+	* Eris/Entity.cpp, Eris/Entity.h, Eris/EntityRouter.cpp: fix handling
+	  of sound(talk) ops, so the Entity::Noise and Avatar::Hear signals are
+	  emitted as expected. Yay for unit tests.
+
+2005-12-30  James Turner  <james@worldforge.org>
+
 	* test/avatarTest.cpp, test/avatarTest.h, test/Makefile.am: add in
 	  new file for tests on Avatar - currently just relating to wield.
 	  

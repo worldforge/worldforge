@@ -30,17 +30,7 @@ test cases
 
 -------------------------------
 
-
-////////////////////
-
-unseen result
-
-inject unseen for random entity
-    -> should get cleaned up.
     
 inject unseen for wielded
 
-////////////////////////
-
-inject sight(delete) for wielded
  
