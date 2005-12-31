@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT(eris, 1.3.9, james@worldforge.org)
+AC_INIT(eris, 1.3.10, james@worldforge.org)
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
