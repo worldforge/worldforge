@@ -52,7 +52,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_libdir}/lib*.so.*
-%doc AUTHORS COPYING NEWS README THANKS ChangeLog
+%doc COPYING
 
 %files devel
 %defattr(-,root,root)
@@ -61,3 +61,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.a
 %{_libdir}/pkgconfig/*
 %{_includedir}/*
+%doc AUTHORS NEWS README THANKS ChangeLog

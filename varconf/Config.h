@@ -111,7 +111,7 @@ public:
 
   // If key isn't null, clean() section and key and set variable.
   void setItem(const std::string & section, const std::string & key,
-               const Variable & item, Scope scope); 
+               const Variable & item, Scope scope = INSTANCE); 
  
   SigC::Signal0<void> sig;
   SigC::Signal1<void, const char*> sige;
