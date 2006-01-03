@@ -9,7 +9,7 @@ testEris_SOURCES = tests.cpp \
     agent.cpp agent.h \
     commander.cpp commander.h \
     controller.cpp controller.h \
-    testUtils.h \
+    testUtils.h testUtils.cpp \
     objectSummary.h \
     netTests.cpp netTests.h \
     setupHelpers.cpp setupHelpers.h \

@@ -1,5 +1,9 @@
 2006-01-03  James Turner  <james@worldforge.org>
 
+	* test/Makefile.am: fix building of tests with auto-tools
+
+2006-01-03  James Turner  <james@worldforge.org>
+
 	* Eris/Alarm.h: add some missing sigc++ includes that broke client
 	  compilation.
 
