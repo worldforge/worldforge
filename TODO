@@ -9,11 +9,7 @@ Optimisations
  
 BUGS
 
- - addAncestor() gets into a tight loop which suggests that a type lists itself
-   as a child. We need to be invulnerable to this.
-
- - entity sight(create) path shouldn't mark things visible. Need to track
-   newly created entities to regulate EntityCreated signal emission.
+- add bugs here
 
 Test Cases
 

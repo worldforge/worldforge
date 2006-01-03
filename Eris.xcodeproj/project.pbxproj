@@ -23,6 +23,8 @@
 		C43FF7A308731933007A492C /* testOutOfGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C43FF7A208731933007A492C /* testOutOfGame.cpp */; };
 		C43FF7D208731BA2007A492C /* netTests.h in Headers */ = {isa = PBXBuildFile; fileRef = C43FF7D108731BA2007A492C /* netTests.h */; };
 		C44CB71B070A240C000DCC7E /* controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C44CB71A070A240C000DCC7E /* controller.cpp */; };
+		C44EC502096AF42300A2750D /* Alarm.h in Headers */ = {isa = PBXBuildFile; fileRef = C44EC501096AF42300A2750D /* Alarm.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C44EC50A096AF51900A2750D /* Alarm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C44EC509096AF51900A2750D /* Alarm.cpp */; };
 		C45720220950CD8800BCD779 /* Calendar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C45720210950CD8800BCD779 /* Calendar.cpp */; };
 		C45BA22E08C5932500FCB602 /* wfmath.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E4B1DC0876A09500E0869F /* wfmath.framework */; };
 		C45BA22F08C5932900FCB602 /* Atlas.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4E4B1CE0876A09500E0869F /* Atlas.framework */; };
@@ -347,6 +349,8 @@
 		C43FF7A208731933007A492C /* testOutOfGame.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = testOutOfGame.cpp; sourceTree = "<group>"; };
 		C43FF7D108731BA2007A492C /* netTests.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = netTests.h; sourceTree = "<group>"; };
 		C44CB71A070A240C000DCC7E /* controller.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = controller.cpp; sourceTree = "<group>"; };
+		C44EC501096AF42300A2750D /* Alarm.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Alarm.h; path = Eris/Alarm.h; sourceTree = "<group>"; };
+		C44EC509096AF51900A2750D /* Alarm.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Alarm.cpp; path = Eris/Alarm.cpp; sourceTree = "<group>"; };
 		C45720210950CD8800BCD779 /* Calendar.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Calendar.cpp; path = Eris/Calendar.cpp; sourceTree = "<group>"; };
 		C45D3199063C4795001112F7 /* EntityRouter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = EntityRouter.cpp; path = Eris/EntityRouter.cpp; sourceTree = "<group>"; };
 		C45D319A063C4795001112F7 /* EntityRouter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EntityRouter.h; sourceTree = "<group>"; };
@@ -452,6 +456,7 @@
 				C43FBCF2054315F2008FC2ED /* Headers */,
 				C4AD291A05FA259900AFB402 /* test */,
 				C43FBCF1054315C5008FC2ED /* Products */,
+				C44EC501096AF42300A2750D /* Alarm.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -602,6 +607,7 @@
 				C45D31A4063C4795001112F7 /* View.cpp */,
 				C4E5CD46064CFFAF00EF7326 /* TypeBoundRedispatch.cpp */,
 				C49FE454096AB05C00F4F10C /* TimedEventService.cpp */,
+				C44EC509096AF51900A2750D /* Alarm.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -702,6 +708,7 @@
 				C4D586AB094AF2940069B5C7 /* EntityRef.h in Headers */,
 				C49FF8BC094F68130073E0F8 /* Operations.h in Headers */,
 				C49FE44E096AAEF800F4F10C /* TimedEventService.h in Headers */,
+				C44EC502096AF42300A2750D /* Alarm.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1012,6 +1019,7 @@
 				C49FF8BE094F68270073E0F8 /* Operations.cpp in Sources */,
 				C45720220950CD8800BCD779 /* Calendar.cpp in Sources */,
 				C49FE455096AB05C00F4F10C /* TimedEventService.cpp in Sources */,
+				C44EC50A096AF51900A2750D /* Alarm.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

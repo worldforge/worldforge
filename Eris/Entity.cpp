@@ -10,6 +10,7 @@
 #include <Eris/View.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
+#include <Eris/Alarm.h>
 
 #include <wfmath/atlasconv.h>
 #include <Atlas/Objects/Entity.h>
@@ -43,7 +44,8 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
     m_updateLevel(0),
     m_view(vw),
     m_hasBBox(false),
-    m_moving(false)
+    m_moving(false),
+    m_recentlyCreated(false)
 {
     assert(m_id.size() > 0);
     m_orientation.identity();
@@ -65,10 +67,16 @@ Entity::~Entity()
     delete m_router;
 }
 
-void Entity::init(const RootEntity& ge)
+void Entity::init(const RootEntity& ge, bool fromCreateOp)
 {
     // setup initial state
     sight(ge);
+    
+    if (fromCreateOp)
+    {
+        m_recentlyCreated = true;
+        new Alarm(5000, sigc::mem_fun(this, &Entity::createAlarmExpired));
+    }
 }
 
 #pragma mark -
@@ -563,6 +571,11 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
 void Entity::onVisibilityChanged(bool vis)
 {
     VisibilityChanged.emit(vis);
+}
+
+void Entity::createAlarmExpired()
+{
+    m_recentlyCreated = false;
 }
 
 } // of namespace 

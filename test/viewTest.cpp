@@ -293,7 +293,6 @@ void testEntityCreation(Controller& ctl)
         assert(appeared.fireCount() == 0);
     }
 
-    /*
     {
         Atlas::Objects::Operation::Appearance app;
         app->setTo("acc_b_character");
@@ -305,8 +304,6 @@ void testEntityCreation(Controller& ctl)
         assert(created.fireCount() == 1);
         assert(appeared.fireCount() == 1);
     }
-
-    */
 }
 
 void testUnseen(Controller& ctl)

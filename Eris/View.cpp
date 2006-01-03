@@ -117,8 +117,11 @@ void View::appear(const std::string& eid, float stamp)
         return; // everything else will be done once the SIGHT arrives
     }
 
-    // if recently created
-    // EntityCreated.emit(ent);
+    if (ent->m_recentlyCreated)
+    {
+        EntityCreated.emit(ent);
+        ent->m_recentlyCreated = false;
+    }
     
     if (ent->isVisible()) return;
     
@@ -207,7 +210,7 @@ Entity* View::initialSight(const RootEntity& gent)
     Entity* ent = createEntity(gent);
     assert(m_contents.count(gent->getId()) == 0);
     m_contents[gent->getId()] = ent;
-    ent->init(gent);
+    ent->init(gent, false);
     
     InitialSightEntity.emit(ent);
  
@@ -242,7 +245,7 @@ void View::create(const RootEntity& gent)
     
     Entity* ent = createEntity(gent);
     m_contents[eid] = ent;
-    ent->init(gent);
+    ent->init(gent, true);
     
     if (gent->isDefaultLoc()) setTopLevelEntity(ent);
 

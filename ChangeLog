@@ -1,5 +1,16 @@
 2006-01-03  James Turner  <james@worldforge.org>
 
+	* Eris/Alarm.cpp, Eris/Alarm.h, Eris/Makefile.am: add an Alarm class, like
+	  a timeout but always expires.
+	  
+	* Eris/Entity.cpp, Eris/View.cpp, Eris/Entity.h: use Alarm to make
+	  appearance followed by sight(create) emit the EntityCreated signal.
+
+	* test/viewTest.cpp: enable the final part of the entity create test,
+	  now the code is in place.
+
+2006-01-03  James Turner  <james@worldforge.org>
+
 	* Eris/Makefile.am, Eris/TimedEventService.cpp, Eris/TimedEventService.h:
 	  new generic code to handle timed events - this replaces most of the old
 	  Timeout code, and also enabled single-short timers.

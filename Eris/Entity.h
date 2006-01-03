@@ -255,7 +255,7 @@ protected:
     /** over-rideable initialisation helper. When subclassing, if you
     over-ride this method, take care to call the base implementation, or
     unfortunate things will happen. */
-    virtual void init(const Atlas::Objects::Entity::RootEntity &ge);
+    virtual void init(const Atlas::Objects::Entity::RootEntity &ge, bool fromCreateOp);
     
     /** process TALK data - default implementation emits the Say signal.
     @param talk The TALK operation
@@ -386,6 +386,8 @@ private:
     
     void updatePredictedState(const WFMath::TimeStamp& t);
     
+    void createAlarmExpired();
+    
     AttrMap m_attrs;
     
     TypeInfo* m_type;
@@ -436,6 +438,8 @@ private:
     
     WFMath::TimeStamp m_lastMoveTime;
     bool m_moving; ///< flag recording if this entity is current considered in-motion
+    
+    bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)
 };
 
 } // of namespace
