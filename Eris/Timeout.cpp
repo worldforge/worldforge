@@ -16,25 +16,17 @@ using WFMath::TimeDiff;
 
 namespace Eris
 {
-
-static TimeDiff TD_ZERO(0);
-static TimeDiff TD_MAX(ULONG_MAX);
-
-typedef std::set<Timeout*> TimeoutSet;
-static TimeoutSet global_allTimeouts;
 	
 Timeout::Timeout(unsigned long milli) :
 	_fired(false)
 {
-	global_allTimeouts.insert(this);
     _due = TimeStamp::now() + milli;
-	Poll::newTimeout();
+    TimedEventService::instance()->registerEvent(this);
 }
 
 Timeout::~Timeout()
 {
-    unsigned int erased = global_allTimeouts.erase(this);
-    assert(erased == 1);
+    if (!_fired) TimedEventService::instance()->unregisterEvent(this);
 }
 
 void Timeout::cancel()
@@ -47,24 +39,13 @@ bool Timeout::isExpired() const
     return (_due < TimeStamp::now());
 }
 
-TimeDiff Timeout::poll(const TimeStamp &t)
-{
-    if (!_fired)
-    {
-        TimeDiff delta = _due - t;
-        if (delta > TD_ZERO) return delta; // not finished yet
-        
-        _fired = true;
-        Expired();	// invoke the signal
-    }
-
-    return TD_MAX; // Doesn't need to be called again
-}
-
 void Timeout::reset(unsigned long milli)
 {
+    if (!_fired) TimedEventService::instance()->unregisterEvent(this);
+    
     _fired = false;
     _due = TimeStamp::now() + milli;
+    TimedEventService::instance()->registerEvent(this);
 }
 
 void Timeout::extend(unsigned long milli)
@@ -72,19 +53,10 @@ void Timeout::extend(unsigned long milli)
     _due += milli;
 }
 
-unsigned long Timeout::pollAll()
+void Timeout::expired()
 {
-    TimeStamp now = TimeStamp::now();
-    TimeDiff wait = TD_MAX;
-    
-    TimeoutSet::iterator T=global_allTimeouts.begin();
-    for (; T != global_allTimeouts.end(); ++T)
-    {
-        TimeDiff this_wait = (*T)->poll(now);
-        if (this_wait < wait) wait = this_wait;
-    }
-    
-    return wait.milliseconds();
+    _fired = true;
+    Expired();
 }
 
 }

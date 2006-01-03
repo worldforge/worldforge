@@ -84,6 +84,8 @@
 		C49A461B0965495A00F37E9B /* calendarTest.h in Headers */ = {isa = PBXBuildFile; fileRef = C49A46190965495A00F37E9B /* calendarTest.h */; };
 		C49E621F060B46740054632A /* objectSummary.h in Headers */ = {isa = PBXBuildFile; fileRef = C49E621E060B46740054632A /* objectSummary.h */; };
 		C49E6224060B4FD80054632A /* testUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C49E6223060B4FD80054632A /* testUtils.h */; };
+		C49FE44E096AAEF800F4F10C /* TimedEventService.h in Headers */ = {isa = PBXBuildFile; fileRef = C49FE44D096AAEF800F4F10C /* TimedEventService.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C49FE455096AB05C00F4F10C /* TimedEventService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C49FE454096AB05C00F4F10C /* TimedEventService.cpp */; };
 		C49FF8BC094F68130073E0F8 /* Operations.h in Headers */ = {isa = PBXBuildFile; fileRef = C49FF8BB094F68130073E0F8 /* Operations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C49FF8BE094F68270073E0F8 /* Operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C49FF8BD094F68270073E0F8 /* Operations.cpp */; };
 		C4AD293F05FA549000AFB402 /* metaQuery.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C4AD293505FA53EA00AFB402 /* metaQuery.cpp */; };
@@ -373,6 +375,8 @@
 		C49A46190965495A00F37E9B /* calendarTest.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = calendarTest.h; sourceTree = "<group>"; };
 		C49E621E060B46740054632A /* objectSummary.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = objectSummary.h; sourceTree = "<group>"; };
 		C49E6223060B4FD80054632A /* testUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = testUtils.h; path = test/testUtils.h; sourceTree = SOURCE_ROOT; };
+		C49FE44D096AAEF800F4F10C /* TimedEventService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = TimedEventService.h; sourceTree = "<group>"; };
+		C49FE454096AB05C00F4F10C /* TimedEventService.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = TimedEventService.cpp; path = Eris/TimedEventService.cpp; sourceTree = "<group>"; };
 		C49FF8BB094F68130073E0F8 /* Operations.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Operations.h; sourceTree = "<group>"; };
 		C49FF8BD094F68270073E0F8 /* Operations.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Operations.cpp; path = Eris/Operations.cpp; sourceTree = "<group>"; };
 		C4AD291F05FA259900AFB402 /* stubServer.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = stubServer.cpp; sourceTree = "<group>"; };
@@ -464,6 +468,7 @@
 		C43FBCF2054315F2008FC2ED /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				C49FE44D096AAEF800F4F10C /* TimedEventService.h */,
 				C49FF8BB094F68130073E0F8 /* Operations.h */,
 				C4D586AA094AF2940069B5C7 /* EntityRef.h */,
 				C4B9D689083A838800D846FC /* Calendar.h */,
@@ -596,6 +601,7 @@
 				C43FBD7F054315F4008FC2ED /* UIFactory.cpp */,
 				C45D31A4063C4795001112F7 /* View.cpp */,
 				C4E5CD46064CFFAF00EF7326 /* TypeBoundRedispatch.cpp */,
+				C49FE454096AB05C00F4F10C /* TimedEventService.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -695,6 +701,7 @@
 				C4B9D68A083A838800D846FC /* Calendar.h in Headers */,
 				C4D586AB094AF2940069B5C7 /* EntityRef.h in Headers */,
 				C49FF8BC094F68130073E0F8 /* Operations.h in Headers */,
+				C49FE44E096AAEF800F4F10C /* TimedEventService.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1004,6 +1011,7 @@
 				C4D586A9094AF2880069B5C7 /* EntityRef.cpp in Sources */,
 				C49FF8BE094F68270073E0F8 /* Operations.cpp in Sources */,
 				C45720220950CD8800BCD779 /* Calendar.cpp in Sources */,
+				C49FE455096AB05C00F4F10C /* TimedEventService.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

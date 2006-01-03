@@ -1,3 +1,15 @@
+2006-01-03  James Turner  <james@worldforge.org>
+
+	* Eris/Makefile.am, Eris/TimedEventService.cpp, Eris/TimedEventService.h:
+	  new generic code to handle timed events - this replaces most of the old
+	  Timeout code, and also enabled single-short timers.
+	  
+	* Eris/Timeout.cpp, Eris/Timeout.h: remove all the complex code in this
+	  class, since the critical work is now done by the TimedEventService.
+
+	* Eris/Poll.h, Eris/PollDefault.cpp: updates to work with the changes to
+	  timed events.
+
 2005-12-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Increment version so clients can be sure of getting

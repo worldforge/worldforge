@@ -44,6 +44,7 @@ liberis_1_3_la_SOURCES = \
 	EntityRef.cpp \
 	Operations.cpp \
 	Calendar.cpp \
+	TimedEventService.cpp \
 	$(ATLAS_JANUS_CPP)
 
 liberisdir = $(includedir)/Eris-1.3/Eris
@@ -82,5 +83,6 @@ liberis_HEADERS = \
 	EntityRef.h \
 	Operations.h \
 	Calendar.h \
+	TimedEventService.h \
 	$(ATLAS_JANUS_H)
 

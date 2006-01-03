@@ -1,10 +1,10 @@
 #include <Eris/Types.h>
 
 #include <Eris/PollDefault.h>
-#include <Eris/Timeout.h>
 #include <Eris/Exceptions.h>
 #include <Eris/DeleteLater.h>
 #include <Eris/Log.h>
+#include <Eris/TimedEventService.h>
 
 #include <skstream/skstream.h>
 
@@ -123,7 +123,7 @@ void PollDefault::poll(unsigned long timeout)
     while(wait_time < timeout) {
       inst.doPoll(wait_time);
       timeout -= wait_time;
-      wait_time = Timeout::pollAll();
+      wait_time = TimedEventService::instance()->tick();
       if(inst.new_timeout_) {
         // Added a timeout, the time until it must be called
         // may be shorter than wait_time
@@ -133,8 +133,7 @@ void PollDefault::poll(unsigned long timeout)
     }
 
     inst.doPoll(timeout);
-    Timeout::pollAll();
-
+    TimedEventService::instance()->tick();
     execDeleteLaters();
 
     // We're done, turn off the reentrancy prevention flag

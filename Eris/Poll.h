@@ -36,7 +36,7 @@ public:
 	static Poll& instance();
 	static void setInstance(Poll*);
 
-	static void newTimeout() {new_timeout_ = true;}
+	static void newTimedEvent() {new_timeout_ = true;}
 
     sigc::signal<void, PollData&> Ready;
 private:

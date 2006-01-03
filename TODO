@@ -35,9 +35,6 @@ Test Cases
   yech.
 
 - Go over the Poll api, see if work can be delegated to skstream or not
-
-- Deal with Unseen errors, by deleting the affected entity. Note this
-  may cause invalidation fun for clients.
      
  - custom routers
  	- run first, but can't consume ops
