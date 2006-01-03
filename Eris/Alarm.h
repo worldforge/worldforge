@@ -4,6 +4,8 @@
 #include <Eris/TimedEventService.h>
 
 #include <sigc++/trackable.h>
+#include <sigc++/slot.h>
+#include <sigc++/signal.h>
 
 namespace Eris
 {

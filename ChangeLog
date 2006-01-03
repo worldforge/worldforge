@@ -1,5 +1,10 @@
 2006-01-03  James Turner  <james@worldforge.org>
 
+	* Eris/Alarm.h: add some missing sigc++ includes that broke client
+	  compilation.
+
+2006-01-03  James Turner  <james@worldforge.org>
+
 	* Eris/Alarm.cpp, Eris/Alarm.h, Eris/Makefile.am: add an Alarm class, like
 	  a timeout but always expires.
 	  

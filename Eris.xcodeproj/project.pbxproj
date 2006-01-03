@@ -349,7 +349,7 @@
 		C43FF7A208731933007A492C /* testOutOfGame.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = testOutOfGame.cpp; sourceTree = "<group>"; };
 		C43FF7D108731BA2007A492C /* netTests.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = netTests.h; sourceTree = "<group>"; };
 		C44CB71A070A240C000DCC7E /* controller.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = controller.cpp; sourceTree = "<group>"; };
-		C44EC501096AF42300A2750D /* Alarm.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Alarm.h; path = Eris/Alarm.h; sourceTree = "<group>"; };
+		C44EC501096AF42300A2750D /* Alarm.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Alarm.h; sourceTree = "<group>"; };
 		C44EC509096AF51900A2750D /* Alarm.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Alarm.cpp; path = Eris/Alarm.cpp; sourceTree = "<group>"; };
 		C45720210950CD8800BCD779 /* Calendar.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Calendar.cpp; path = Eris/Calendar.cpp; sourceTree = "<group>"; };
 		C45D3199063C4795001112F7 /* EntityRouter.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = EntityRouter.cpp; path = Eris/EntityRouter.cpp; sourceTree = "<group>"; };
@@ -456,7 +456,6 @@
 				C43FBCF2054315F2008FC2ED /* Headers */,
 				C4AD291A05FA259900AFB402 /* test */,
 				C43FBCF1054315C5008FC2ED /* Products */,
-				C44EC501096AF42300A2750D /* Alarm.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -473,6 +472,7 @@
 		C43FBCF2054315F2008FC2ED /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				C44EC501096AF42300A2750D /* Alarm.h */,
 				C49FE44D096AAEF800F4F10C /* TimedEventService.h */,
 				C49FF8BB094F68130073E0F8 /* Operations.h */,
 				C4D586AA094AF2940069B5C7 /* EntityRef.h */,
