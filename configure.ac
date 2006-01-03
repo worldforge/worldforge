@@ -15,7 +15,7 @@ AC_SUBST(WFMATH_CURRENT)
 AC_SUBST(WFMATH_VERSION_INFO)
 AC_SUBST(WFMATH_VERSION_NO)
 
-AM_INIT_AUTOMAKE([dist-bzip2 check-news])
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
 dnl Checks for programs.
 
