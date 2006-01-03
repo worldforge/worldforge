@@ -1,3 +1,8 @@
+2006-01-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* atlas-cpp.spec.in: Move some of the doc files into the devel rpm, to
+	  trim down the size of the main library rpm.
+
 2005-12-01  James Turner  <james@worldforge.org>
 
 	* Add X-Code 2.0 project file (ProjectBuilder project will be deleted

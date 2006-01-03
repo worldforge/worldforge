@@ -51,7 +51,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %{_libdir}/lib*.so.*
-%doc AUTHORS COPYING NEWS README THANKS ChangeLog TODO HACKING ROADMAP
+%doc AUTHORS COPYING
 
 %files devel
 %defattr(-,root,root)
@@ -61,3 +61,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/lib*.a
 %{_libdir}/pkgconfig/*
 %{_includedir}/*
+%doc NEWS README THANKS ChangeLog TODO HACKING ROADMAP
