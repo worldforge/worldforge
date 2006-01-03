@@ -1,8 +1,15 @@
+2006-01-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac, Mercator/iround.h, Mercator/GrassShader.cpp,
+	  Mercator/Segment.cpp: Add macro for absolute value of floating
+	  point numbers. Check for fabsf() and fall back to fabs() on non
+	  C99 systems.
+
 2005-12-02  James Turner  <james@worldforge.org>
 
 	* Add X-Code 2.0 project file (ProjectBuilder project will be deleted
 	  shortly).
-	  
+
 2005-07-13  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/BasePoint.h: Re-order "const static" to "static const"

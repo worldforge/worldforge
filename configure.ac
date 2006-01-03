@@ -54,6 +54,7 @@ AC_LANG(C++)
 dnl Check for float to int converters
 
 AC_CHECK_FUNCS(lrintf rintf rint)
+AC_CHECK_FUNCS(fabsf)
 
 dnl Check for wfmath library
 PKG_CHECK_MODULES(WF, wfmath-0.3 >= 0.3.2,

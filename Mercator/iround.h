@@ -10,13 +10,19 @@
 #endif
 
 #ifdef HAVE_LRINTF
-    #define I_ROUND(x) (::lrintf(x)) 
+    #define I_ROUND(_x) (::lrintf(_x)) 
 #elif defined(HAVE_RINTF)
-    #define I_ROUND(x) ((int)::rintf(x)) 
+    #define I_ROUND(_x) ((int)::rintf(_x)) 
 #elif defined(HAVE_RINT)
-    #define I_ROUND(x) ((int)::rint(x)) 
+    #define I_ROUND(_x) ((int)::rint(_x)) 
 #else
-    #define I_ROUND(x) ((int)(x)) 
+    #define I_ROUND(_x) ((int)(_x)) 
+#endif
+
+#ifdef HAVE_FABSF
+    #define F_ABS(_x) (::fabsf(_x))
+#else
+    #define F_ABS(_x) (::fabs(_x))
 #endif
 
 #endif // MERCATOR_IROUND_H

@@ -2,6 +2,12 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include "iround.h"
+
 #include <Mercator/GrassShader.h>
 
 #include <Mercator/Segment.h>
@@ -108,30 +114,30 @@ void GrassShader::shade(Surface & s) const
 
     for (unsigned int i = 1; i < res; ++i) {
         float height = seg.get(i, 0);
-        float avgSlope = (fabsf(seg.get(i - 1, 0) - height) +
-                          fabsf(seg.get(i + 1, 0) - height)) / 2.f;
+        float avgSlope = (F_ABS(seg.get(i - 1, 0) - height) +
+                          F_ABS(seg.get(i + 1, 0) - height)) / 2.f;
         s(i, 0, chanAlpha) = slopeToAlpha(height, avgSlope);
 
         height = seg.get(i, res);
-        avgSlope = (fabsf(seg.get(i - 1, res) - height) +
-                    fabsf(seg.get(i + 1, res) - height)) / 2.f;
+        avgSlope = (F_ABS(seg.get(i - 1, res) - height) +
+                    F_ABS(seg.get(i + 1, res) - height)) / 2.f;
         s(i, res, chanAlpha) = slopeToAlpha(height, avgSlope);
 
         height = seg.get(0, i);
-        avgSlope = (fabsf(seg.get(0, i - 1) - height) +
-                    fabsf(seg.get(0, i + 1) - height)) / 2.f;
+        avgSlope = (F_ABS(seg.get(0, i - 1) - height) +
+                    F_ABS(seg.get(0, i + 1) - height)) / 2.f;
         s(0, i, chanAlpha) = slopeToAlpha(height, avgSlope);
 
         height = seg.get(res, i);
-        avgSlope = (fabsf(seg.get(res, i - 1) - height) +
-                    fabsf(seg.get(res, i + 1) - height)) / 2.f;
+        avgSlope = (F_ABS(seg.get(res, i - 1) - height) +
+                    F_ABS(seg.get(res, i + 1) - height)) / 2.f;
         s(res, i, chanAlpha) = slopeToAlpha(height, avgSlope);
         for (unsigned int j = 1; j < res; ++j) {
             height = seg.get(i, j);
-            avgSlope = (fabsf(seg.get(i + 1, j    ) - height) +
-                        fabsf(seg.get(i    , j + 1) - height) +
-                        fabsf(seg.get(i - 1, j    ) - height) +
-                        fabsf(seg.get(i    , j - 1) - height)) / 4.f;
+            avgSlope = (F_ABS(seg.get(i + 1, j    ) - height) +
+                        F_ABS(seg.get(i    , j + 1) - height) +
+                        F_ABS(seg.get(i - 1, j    ) - height) +
+                        F_ABS(seg.get(i    , j - 1) - height)) / 4.f;
             s(i, j, chanAlpha) = slopeToAlpha(height, avgSlope);
         }
     }
