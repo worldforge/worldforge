@@ -42,6 +42,7 @@ bool ResponseTracker::handleOp(const RootOperation& op)
 bool NullResponse::responseReceived(const Atlas::Objects::Operation::RootOperation&)
 {
     //debug() << "nullresponse, ignoring op with refno " << op->getRefno();
+    return false;
 }
 
 } // of namespace

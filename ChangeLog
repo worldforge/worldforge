@@ -1,5 +1,9 @@
 2006-01-03  James Turner  <james@worldforge.org>
 
+	* Eris/Response.cpp: fix a missing return identified by Al
+	
+2006-01-03  James Turner  <james@worldforge.org>
+
 	* test/Makefile.am: fix building of tests with auto-tools
 
 2006-01-03  James Turner  <james@worldforge.org>
