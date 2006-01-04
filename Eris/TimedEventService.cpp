@@ -54,7 +54,6 @@ unsigned long TimedEventService::tick()
 void TimedEventService::registerEvent(TimedEvent* te)
 {
     assert(te);
-    assert(te->due() >= TimeStamp::now()); // no silly buggers
     m_events.insert(te); // STL rocks, sometimes
     
     Poll::newTimedEvent(); // this could die?

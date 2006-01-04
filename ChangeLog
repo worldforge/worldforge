@@ -1,3 +1,7 @@
+2006-01-04  James Turner  <james@worldforge.org>
+
+	* Eris/TimedEventService.cpp: remove an over-zealous assert
+
 2006-01-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Increment interface version.
