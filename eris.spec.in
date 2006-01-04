@@ -14,7 +14,6 @@ Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
 Source: %{name}-%{version}.tar.bz2
-Requires: Atlas-C++06 >= 0.5.98
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: Atlas-C++06-devel >= 0.5.98 wfmath-devel >= 0.3.2 skstream-devel >= 0.3.5
 Obsoletes: eris-poll-glib
