@@ -1,5 +1,10 @@
 2006-01-04  James Turner  <james@worldforge.org>
 
+	* Eris/Timeout.cpp: fix a crash when timeouts are cancelled - need to
+	  unregister from the timed event service
+
+2006-01-04  James Turner  <james@worldforge.org>
+
 	* Eris/TimedEventService.cpp: remove an over-zealous assert
 
 2006-01-04  Al Riddoch  <alriddoch@zepler.org>
