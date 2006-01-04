@@ -26,7 +26,7 @@ objects or one global configuration instance.
 %package devel
 Summary: A config handling library headers and static libs.
 Group: Development/Libraries
-Requires: %{name} = %{version}
+Requires: %{name} = %{version} libsigc++20-devel
 
 %description devel
 @PACKAGE@ is a configuration system originally designed for the STAGE

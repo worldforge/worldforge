@@ -1,3 +1,9 @@
+2006-01-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Remove support for obsolete sigc++-1.2.
+
+	* varconf.spec.in: Add libsigc++20-devel to devel rpm.
+
 2006-01-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* varconf/Config.h: Make the default scope of setItem be INSTANCE,
