@@ -1,3 +1,10 @@
+2006-01-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment interface version.
+
+	* test/avatarTest.h, test/calendarTest.h: Add missing newlines to ends
+	  of files.
+
 2006-01-03  James Turner  <james@worldforge.org>
 
 	* Eris/Response.cpp: fix a missing return identified by Al

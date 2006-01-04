@@ -19,7 +19,7 @@ dnl further down. If we link against sigc++ 1.2, then this should be
 dnl N, if we link against sigc++ 2.0 it should be N+1. If you change
 dnl this because of API changes, it needs to be incremented by
 dnl 2, and the changes made to the values assigned in the sigc++ check.
-ERIS_CURRENT=9
+ERIS_CURRENT=11
 ERIS_REVISION=0
 ERIS_AGE=0
 
@@ -43,7 +43,6 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 != 2.0.8,
         CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
         ERIS_REQUIRES="$ERIS_REQUIRES sigc++-2.0"
-        ERIS_CURRENT=10
     ],
     AC_MSG_ERROR([Couldn't find sigc++ library!]))
 
