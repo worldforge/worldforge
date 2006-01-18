@@ -1,3 +1,14 @@
+2006-01-18  James Turner  <james@worldforge.org>
+
+	* Eris/Avatar.cpp, Eris/Avatar.h, Eris/Entity.h, Eris/Entity.cpp: move
+	  getUseOperations() function from Avatar to Entity, which client authors
+	  tell me is more natural.
+	  
+	* test/avatarTest.cpp: update wield test for revised API.
+
+	* Eris/Calendar.h: add extra accessor methods to Calendar, so Simon can
+	  calculate dusk and dawn shading as before.
+
 2005-01-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* eris.spec.in: Remove explicit dependency on Atlas-C++06, and let

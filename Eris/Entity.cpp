@@ -26,6 +26,7 @@ using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Message::Element;
+using Atlas::Message::ListType;
 using Atlas::Objects::smart_static_cast;
 using Atlas::Objects::smart_dynamic_cast;
 
@@ -125,7 +126,12 @@ WFMath::Quaternion Entity::getViewOrientation() const
 
 WFMath::Point<3> Entity::getPredictedPos() const
 {
-    return (m_moving ? m_predicted.position : m_position);
+    WFMath::Point<3> res = (m_moving ? m_predicted.position : m_position);
+ //   if (!res.isValid())
+ //   {
+ //       debug() << "invalid pos for entity " << m_id << ":" << m_name;
+ //   }
+    return res;
 }
 
 WFMath::Vector<3> Entity::getPredictedVelocity() const
@@ -137,7 +143,6 @@ bool Entity::isMoving() const
 {
     return m_moving;
 }
-
 
 void Entity::updatePredictedState(const WFMath::TimeStamp& t)
 {
@@ -152,6 +157,35 @@ void Entity::updatePredictedState(const WFMath::TimeStamp& t)
         m_predicted.velocity = m_velocity;
         m_predicted.position = m_position + (m_velocity * dt);
     }
+}
+
+TypeInfoArray Entity::getUseOperations() const
+{
+    AttrMap::const_iterator it = m_attrs.find("operations");
+    if (it == m_attrs.end()) return TypeInfoArray();
+    
+    if (!it->second.isList()) {
+        warning() << "entity " << m_id << " has operations attr which is not a list";
+        return TypeInfoArray();
+    } 
+    
+    const ListType& opsl(it->second.asList());
+    TypeInfoArray useOps;
+    useOps.reserve(opsl.size());
+    TypeService* ts = m_view->getAvatar()->getConnection()->getTypeService();
+    
+    for (ListType::const_iterator i=opsl.begin(); i!=opsl.end(); ++i)
+    {
+        if (!i->isString())
+        {
+            warning() << "ignoring malformed operations list item";
+            continue;
+        }
+    
+        useOps.push_back(ts->getTypeByName(i->asString()));
+    }
+    
+    return useOps;
 }
 
 #pragma mark -

@@ -29,6 +29,7 @@ public:
     unsigned int seconds() const { return m_seconds; }
     unsigned int minutes() const { return m_minutes; }
     unsigned int hours() const { return m_hours; }
+
 private:
 	friend class Calendar;
     
@@ -50,6 +51,9 @@ public:
     
     DateTime now() const;
     
+    unsigned int minutesPerHour() const { return m_minutesPerHour; }
+    unsigned int hoursPerDay() const { return m_hoursPerDay; }
+
 private:
     void topLevelEntityChanged();
     void calendarAttrChanged(const std::string&, const Atlas::Message::Element& value);

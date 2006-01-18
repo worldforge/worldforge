@@ -152,6 +152,13 @@ public:
         return m_hasBBox;
     }
     
+    /**
+    @brief Get a list of operations supported by this entity (tool)
+    If the entity does no provide an operations list, this will return an empty
+    array.
+    */
+    TypeInfoArray getUseOperations() const;
+    
     bool hasChild(const std::string& eid) const;
     
     /** determine if this entity is visible. */

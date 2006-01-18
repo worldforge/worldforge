@@ -48,7 +48,6 @@ void testWield(Controller& ctl)
     
     Eris::EntityRef hammerRef(v->getEntity("_hammer_1"));
     assert(hammerRef);
-    assert(av->getUseOperationsForWielded().empty());
     
     av->wield(hammerRef.get());
     
@@ -58,7 +57,7 @@ void testWield(Controller& ctl)
     }
     
     assert(av->getWielded()->getId() == "_hammer_1");
-    const Eris::TypeInfoArray& ops = av->getUseOperationsForWielded();
+    const Eris::TypeInfoArray& ops = av->getWielded()->getUseOperations();
     
     assert(ops[0]->getName() == "strike");
     assert(ops[1]->getName() == "tap");

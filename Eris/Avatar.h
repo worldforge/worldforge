@@ -110,16 +110,6 @@ public:
     void attack(Entity* entity);
     
     /**
-    @brief Get a list of operations supported by the currently wielded entity (tool)
-    If no entity is wielded, or the entity does no provide an operations list,
-    this will return an empty array.
-    */
-    const TypeInfoArray& getUseOperationsForWielded() const
-    {
-        return m_useOps;
-    }
-    
-    /**
     Emitted when the character entity of this Avatar is valid (and presumably,
     visible). This will happen some time after the InGame signal is emitted.
     A client might wish to show some kind of 'busy' animation, eg an hour-glass,

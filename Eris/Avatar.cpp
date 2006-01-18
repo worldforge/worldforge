@@ -43,8 +43,6 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
 
     m_view->getEntityFromServer("");
     m_view->getEntity(m_entityId);
-    
-    m_wielded.Changed.connect(sigc::mem_fun(this, &Avatar::onWieldedChanged));
 }
 
 Avatar::~Avatar()
@@ -228,11 +226,9 @@ void Avatar::wield(Entity * entity)
 	}
 	
 	Anonymous arguments;
-	
 	arguments->setId(entity->getId());
 	
 	Wield wield;
-	
 	wield->setFrom(m_entityId);
 	wield->setArgs1(arguments);
 	
@@ -339,36 +335,6 @@ void Avatar::updateWorldTime(double seconds)
 {
     m_stampAtLastOp = TimeStamp::now();
     m_lastOpTime = seconds;
-}
-
-void Avatar::onWieldedChanged()
-{
-    m_useOps.clear();
-
-    if (!m_wielded) return;
-    if (!m_wielded->hasAttr("operations")) return;
-    
-    const Element& ops = m_wielded->valueOfAttr("operations");
-    if (!ops.isList()) {
-        warning() << "entity " << m_wielded->getId() << 
-            " has operations attr which is not a list";
-        return;
-    } 
-    
-    const ListType& opsl(ops.asList());
-    m_useOps.reserve(opsl.size());
-    TypeService* ts = getConnection()->getTypeService();
-    
-    for (ListType::const_iterator i=opsl.begin(); i!=opsl.end(); ++i)
-    {
-        if (!i->isString())
-        {
-            warning() << "ignoring malformed operations list item";
-            continue;
-        }
-    
-        m_useOps.push_back(ts->getTypeByName(i->asString()));
-    }
 }
 
 } // of namespace Eris
