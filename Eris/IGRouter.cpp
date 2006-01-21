@@ -152,6 +152,10 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
     }
     
     if (ty->isA(m_actionType)) {
+        if (op->getFrom().empty()) {
+            warning() << "recieved op " << ty->getName() << " with FROM unset";
+            return IGNORED;
+        }
         
         Entity* ent = m_view->getEntity(op->getFrom());
         if (ent) ent->onAction(op);
