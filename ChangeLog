@@ -1,3 +1,11 @@
+2006-01-29  James Turner  <james@worldforge.org>
+
+	* Eris/Connection.cpp: catch Atlas exceptions which occur during dispatch,
+	  and emit an Eris error.
+	  
+	* Eris/Account.cpp: silence a warning when clients retrieve an incomplete
+	  character dictionary from the account.
+
 2006-01-21  James Turner  <james@worldforge.org>
 
 	* Eris/IGRouter.cpp: warn if a sight(action) is received with no FROM set,

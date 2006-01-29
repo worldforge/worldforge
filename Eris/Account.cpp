@@ -170,9 +170,6 @@ const CharacterMap& Account::getCharacters()
     if (m_status != LOGGED_IN)
         error() << "Not logged into an account : getCharacter returning empty dictionary";
     
-    if (m_doingCharacterRefresh)
-        warning() << "client retrieving partial / incomplete character dictionary";
-    
     return _characters;
 }
 

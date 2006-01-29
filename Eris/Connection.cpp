@@ -199,6 +199,8 @@ void Connection::unlock()
         {
         case DISCONNECTING:	
             debug() << "Connection unlocked in DISCONNECTING, closing socket";
+            debug() << "have " << m_opDeque.size() << " ops waiting";
+            m_opDeque.clear();
             hardDisconnect(true);
             break;
 
@@ -248,36 +250,41 @@ void Connection::objectArrived(const Root& obj)
 
 void Connection::dispatchOp(const RootOperation& op)
 {
-    Router::RouterResult rr;
-    bool anonymous = op->getTo().empty();
-    
-    if (m_responder->handleOp(op)) return;
-    
-// locate a router based on from
-    IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
-    if (R != m_fromRouters.end()) {
-        rr = R->second->handleOperation(op);
-        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+    try {
+        Router::RouterResult rr;
+        bool anonymous = op->getTo().empty();
+        
+        if (m_responder->handleOp(op)) return;
+        
+    // locate a router based on from
+        IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
+        if (R != m_fromRouters.end()) {
+            rr = R->second->handleOperation(op);
+            if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+        }
+        
+    // locate a router based on the op's TO value
+        R = m_toRouters.find(op->getTo());
+        if (R != m_toRouters.end()) {
+            rr = R->second->handleOperation(op);
+            if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+        } else if (!anonymous && !m_toRouters.empty()) {
+            warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
+        }
+        
+    // special-case, server info refreshes are handled here directly
+        if (op->instanceOf(INFO_NO) && anonymous) {
+            handleServerInfo(op);
+            return;
+        }
+                
+    // go to the default router
+        rr = m_defaultRouter->handleOperation(op);
+        if (rr != Router::HANDLED) warning() << "no-one handled op:" << op;
+    } catch (Atlas::Exception& ae) {
+        error() << "caught Atlas exception: " << ae.getDescription() <<
+            " while dispatching op:\n" << op;
     }
-    
-// locate a router based on the op's TO value
-    R = m_toRouters.find(op->getTo());
-    if (R != m_toRouters.end()) {
-        rr = R->second->handleOperation(op);
-        if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
-    } else if (!anonymous && !m_toRouters.empty()) {
-        warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
-    }
-    
-// special-case, server info refreshes are handled here directly
-    if (op->instanceOf(INFO_NO) && anonymous) {
-        handleServerInfo(op);
-        return;
-    }
-            
-// go to the default router
-    rr = m_defaultRouter->handleOperation(op);
-    if (rr != Router::HANDLED) warning() << "no-one handled op:" << op;
 }
 
 
