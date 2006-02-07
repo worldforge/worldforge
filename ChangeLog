@@ -1,3 +1,7 @@
+2006-02-07  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Minor update to autoconf syntax.
+
 2006-01-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* atlas-cpp.spec.in: Move some of the doc files into the devel rpm, to
