@@ -51,6 +51,7 @@ public:
     
     DateTime now() const;
     
+    unsigned int secondsPerMinute() const { return m_secondsPerMinute; }
     unsigned int minutesPerHour() const { return m_minutesPerHour; }
     unsigned int hoursPerDay() const { return m_hoursPerDay; }
 
