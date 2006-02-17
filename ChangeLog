@@ -1,3 +1,7 @@
+2006-01-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.4. Interface version 6.0.0.
+
 2006-01-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Remove support for obsolete sigc++-1.2.
