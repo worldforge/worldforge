@@ -29,7 +29,7 @@
 #include <varconf/parse_error.h>
 #include <varconf/variable.h>
 
-#include <sigc++/object.h>
+#include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
 #include <iostream>
@@ -42,7 +42,7 @@ typedef std::map< std::string, std::map< std::string, Variable > > conf_map;
 typedef std::map< char, std::pair<std::string, bool> > parameter_map;
 typedef std::map< std::string, Variable > sec_map;
 
-class Config : virtual public SigC::Object {
+class Config : virtual public sigc::trackable {
 public:
   // Allows use as a singleton, if desired.
   static Config* inst();
@@ -113,10 +113,10 @@ public:
   void setItem(const std::string & section, const std::string & key,
                const Variable & item, Scope scope = INSTANCE); 
  
-  SigC::Signal0<void> sig;
-  SigC::Signal1<void, const char*> sige;
-  SigC::Signal2<void, const std::string&, const std::string&> sigv; 
-  SigC::Signal3<void, const std::string&, const std::string&, Config&> sigsv;
+  sigc::signal<void> sig;
+  sigc::signal<void, const char*> sige;
+  sigc::signal<void, const std::string&, const std::string&> sigv; 
+  sigc::signal<void, const std::string&, const std::string&, Config&> sigsv;
   // libsigc++ signals; in order: standard callback signal, error signal,
   // verbose callback signal and "super-verbose" callback signal. 
 

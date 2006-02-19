@@ -26,8 +26,7 @@
 #ifndef VARCONF_VARIABLE_H
 #define VARCONF_VARIABLE_H
 
-#include <sigc++/object.h>
-#include <sigc++/signal.h>
+#include <sigc++/trackable.h>
 
 #include <string>
 #include <iostream>
@@ -40,7 +39,7 @@ typedef enum { GLOBAL           = 0x1 << 0,
                INSTANCE         = 0x1 << 2
 } Scope;
 
-class VarBase : virtual public SigC::Object {
+class VarBase : virtual public sigc::trackable {
 public:
   VarBase();
   VarBase(const VarBase& c);

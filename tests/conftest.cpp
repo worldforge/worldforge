@@ -22,8 +22,8 @@ int main( int argc, char ** argv)
 {
   varconf::Config config;
 
-  config.sige.connect( SigC::slot( error));
-  config.sigsv.connect( SigC::slot( callback));
+  config.sige.connect(sigc::ptr_fun(error));
+  config.sigsv.connect(sigc::ptr_fun(callback));
 
   config.setParameterLookup( 'f', "foo", true);
   config.setParameterLookup( 'b', "bar", false);

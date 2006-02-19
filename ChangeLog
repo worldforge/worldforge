@@ -1,3 +1,11 @@
+2006-02-19  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/Config.h, varconf/variable.h, tests/conftest.cpp:
+	  Update usage of sigc++ to the native 2.0 API rather than the
+	  deprecated compatability API. Eleminate the manual disconnection
+	  code for deleted objects, as this is now handled automatically by
+	  sigc::trackable.
+
 2006-01-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.6.4. Interface version 6.0.0.
