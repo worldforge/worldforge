@@ -1,7 +1,7 @@
 // This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 Stefanus Du Toit and Aloril.
-// Copyright 2001-2004 Al Riddoch.
+// Copyright 2001-2005 Alistair Riddoch.
 // Automatically generated using gen_cpp.py.
 
 #ifndef ATLAS_OBJECTS_OPERATION_GENERIC_H

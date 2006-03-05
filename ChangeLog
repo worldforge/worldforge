@@ -1,3 +1,30 @@
+2006-03-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version to 0.6.0.
+
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/GenerateDecoder.py,
+	  Atlas/Objects/GenerateDispatcher.py,
+	  Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/common.py,
+	  Atlas/Objects/gen_cpp.py: Update copyright dates in scripts, and
+	  in the generated code.
+
+	* Atlas/Objects/Anonymous.cpp, Atlas/Objects/Anonymous.h,
+	  Atlas/Objects/Decoder.cpp, Atlas/Objects/Decoder.h,
+	  Atlas/Objects/Dispatcher.cpp, Atlas/Objects/Dispatcher.h,
+	  Atlas/Objects/Entity.h, Atlas/Objects/Generic.cpp,
+	  Atlas/Objects/Generic.h, Atlas/Objects/ObjectsFwd.h,
+	  Atlas/Objects/Operation.h, Atlas/Objects/Root.cpp,
+	  Atlas/Objects/Root.h, Atlas/Objects/RootEntity.cpp,
+	  Atlas/Objects/RootEntity.h, Atlas/Objects/RootEntityChildren.cpp,
+	  Atlas/Objects/RootOperation.cpp, Atlas/Objects/RootOperation.h,
+	  Atlas/Objects/RootOperationChildren1.cpp,
+	  Atlas/Objects/RootOperationChildren2.cpp,
+	  Atlas/Objects/RootOperationChildren3.cpp,
+	  Atlas/Objects/RootOperationChildren4.cpp,
+	  Atlas/Objects/RootOperationChildren5.cpp,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/objectFactory.cpp:
+	  Re-generate code with updated copyright dates in.
+
 2006-02-07  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Minor update to autoconf syntax.

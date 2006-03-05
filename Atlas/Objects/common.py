@@ -1,6 +1,7 @@
 #This file is distributed under the terms of 
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
+#Copyright (C) 2001-2004 Alistair Riddoch
 
 import sys, os
 try:
@@ -19,11 +20,11 @@ copyright_template = \
 """// This file may be redistributed and modified only under the terms of
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright 2000-2001 %s.
-// Copyright 2001-2004 %s.
+// Copyright 2001-2005 %s.
 // Automatically generated using gen_cpp.py.
 """
 
-copyright = copyright_template % ("Stefanus Du Toit and Aloril", "Al Riddoch")
+copyright = copyright_template % ("Stefanus Du Toit and Aloril", "Alistair Riddoch")
 
 #objects that will have static attributes
 static_objects = ["root", "root_entity", "root_operation"]

@@ -2,6 +2,7 @@
 #This file is distributed under the terms of 
 #the GNU Lesser General Public license (See the file COPYING for details).
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
+#Copyright (C) 2001-2005 Alistair Riddoch
 
 from common import *
 from AttributeInfo import *
