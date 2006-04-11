@@ -1,3 +1,7 @@
+2006-04-11  Simon Goodall  <simon@simongoodall.co.uk>
+
+	* varconf/variable.cpp: Escape backslash characters.
+
 2006-02-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* varconf/Config.h, varconf/variable.h, tests/conftest.cpp:

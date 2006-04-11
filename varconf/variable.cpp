@@ -109,6 +109,7 @@ std::ostream& operator<<( std::ostream& out, const VarBase& v)
 {
     for (size_t i = 0; i < v.m_val.size(); i++) {
       if (v.m_val[i] == '"') out << '\\';
+      else if (v.m_val[i] == '\\') out << '\\';
       out << v.m_val[i];
     }
     return out;
