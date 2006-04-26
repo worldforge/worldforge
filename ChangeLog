@@ -1,7 +1,11 @@
+2006-04-26  James Turner  <james@worldforge.org>
+
+	* Eris/Avatar.cpp, Eris/Avatar.h: add ::useStop(), a helper to send an
+	  empty use operation, signifying that the current task should be halted.
+
 2006-02-16  Simon Goodall  <simon@simongoodall.co.uk>
 
 	* Eris/Calendar.h: Export secondsPerMinute();
-
 
 2006-01-29  James Turner  <james@worldforge.org>
 

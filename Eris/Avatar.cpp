@@ -277,6 +277,13 @@ void Avatar::attack(Entity* entity)
     getConnection()->send(attackOp);
 }
 
+void Avatar::useStop()
+{
+    Use use;
+	use->setFrom(m_entityId);
+    getConnection()->send(use);
+}
+
 #pragma mark -
 
 void Avatar::onEntityAppear(Entity* ent)

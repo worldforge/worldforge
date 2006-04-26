@@ -1113,7 +1113,7 @@
 			};
 			name = Development;
 		};
-		C4EBAF4908559CDF00872BBB /* Deployment */ = {
+		C4EBAF4908559CDF00872BBB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
@@ -1148,42 +1148,7 @@
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
 			};
-			name = Deployment;
-		};
-		C4EBAF4A08559CDF00872BBB /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DEPLOYMENT_LOCATION = NO;
-				DYLIB_COMPATIBILITY_VERSION = 2;
-				DYLIB_CURRENT_VERSION = 2;
-				FRAMEWORK_SEARCH_PATHS = (
-					../wfmath/build,
-					../skstream/build,
-					"../Atlas-C++/build",
-					"$(SRCROOT)/../../../../Library/Frameworks",
-				);
-				FRAMEWORK_VERSION = B;
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "";
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-seg1addr",
-					0x21000000,
-				);
-				OTHER_LIBTOOL_FLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRINCIPAL_CLASS = "";
-				PRODUCT_NAME = Eris;
-				SECTORDER_FLAGS = "";
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = "-Wall";
-				WRAPPER_EXTENSION = framework;
-				ZERO_LINK = NO;
-			};
-			name = Default;
+			name = Release;
 		};
 		C4EBAF4C08559CDF00872BBB /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -1210,7 +1175,7 @@
 			};
 			name = Development;
 		};
-		C4EBAF4D08559CDF00872BBB /* Deployment */ = {
+		C4EBAF4D08559CDF00872BBB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
@@ -1230,26 +1195,7 @@
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
 			};
-			name = Deployment;
-		};
-		C4EBAF4E08559CDF00872BBB /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"/Users/jmt/Worldforge/forge/libs/Atlas-C++/build",
-					/Users/jmt/Worldforge/forge/libs/skstream/build,
-					/Users/jmt/Worldforge/forge/libs/wfmath/build,
-				);
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = metaQuery;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wall";
-			};
-			name = Default;
+			name = Release;
 		};
 		C4EBAF5008559CDF00872BBB /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -1265,7 +1211,7 @@
 			};
 			name = Development;
 		};
-		C4EBAF5108559CDF00872BBB /* Deployment */ = {
+		C4EBAF5108559CDF00872BBB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
@@ -1284,25 +1230,7 @@
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
 			};
-			name = Deployment;
-		};
-		C4EBAF5208559CDF00872BBB /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"/Users/jmt/Worldforge/forge/libs/Atlas-C++/build",
-					/Users/jmt/Worldforge/forge/libs/skstream/build,
-					/Users/jmt/Worldforge/forge/libs/wfmath/build,
-				);
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = tests;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wall";
-			};
-			name = Default;
+			name = Release;
 		};
 		C4EBAF5408559CDF00872BBB /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -1310,17 +1238,11 @@
 			};
 			name = Development;
 		};
-		C4EBAF5508559CDF00872BBB /* Deployment */ = {
+		C4EBAF5508559CDF00872BBB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Deployment;
-		};
-		C4EBAF5608559CDF00872BBB /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = Default;
+			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
@@ -1329,41 +1251,37 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C4EBAF4808559CDF00872BBB /* Development */,
-				C4EBAF4908559CDF00872BBB /* Deployment */,
-				C4EBAF4A08559CDF00872BBB /* Default */,
+				C4EBAF4908559CDF00872BBB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		C4EBAF4B08559CDF00872BBB /* Build configuration list for PBXNativeTarget "metaQuery" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C4EBAF4C08559CDF00872BBB /* Development */,
-				C4EBAF4D08559CDF00872BBB /* Deployment */,
-				C4EBAF4E08559CDF00872BBB /* Default */,
+				C4EBAF4D08559CDF00872BBB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		C4EBAF4F08559CDF00872BBB /* Build configuration list for PBXNativeTarget "tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C4EBAF5008559CDF00872BBB /* Development */,
-				C4EBAF5108559CDF00872BBB /* Deployment */,
-				C4EBAF5208559CDF00872BBB /* Default */,
+				C4EBAF5108559CDF00872BBB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 		C4EBAF5308559CDF00872BBB /* Build configuration list for PBXProject "Eris" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C4EBAF5408559CDF00872BBB /* Development */,
-				C4EBAF5508559CDF00872BBB /* Deployment */,
-				C4EBAF5608559CDF00872BBB /* Default */,
+				C4EBAF5508559CDF00872BBB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
+			defaultConfigurationName = Development;
 		};
 /* End XCConfigurationList section */
 	};

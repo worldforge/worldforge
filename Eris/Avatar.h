@@ -110,6 +110,12 @@ public:
     void attack(Entity* entity);
     
     /**
+    @brief Stop the current task, if one is in progress. 
+    This could be either a useOn or attack.
+    */
+    void useStop();
+    
+    /**
     Emitted when the character entity of this Avatar is valid (and presumably,
     visible). This will happen some time after the InGame signal is emitted.
     A client might wish to show some kind of 'busy' animation, eg an hour-glass,
