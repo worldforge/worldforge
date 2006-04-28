@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		C40F5709080EB832000F8813 /* sigc++.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4BD59C806AAA0F20039CF5E /* sigc++.framework */; };
+		C413AD520A01847D008A3CA3 /* Task.h in Headers */ = {isa = PBXBuildFile; fileRef = C413AD510A01847D008A3CA3 /* Task.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C413AD540A018490008A3CA3 /* Task.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C413AD530A018490008A3CA3 /* Task.cpp */; };
 		C438300E06BEFECA0092C3C7 /* Account.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C438300C06BEFECA0092C3C7 /* Account.cpp */; };
 		C438300F06BEFECA0092C3C7 /* Account.h in Headers */ = {isa = PBXBuildFile; fileRef = C438300D06BEFECA0092C3C7 /* Account.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C43A91470604E066004FFDC2 /* tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C43A913E0604E02D004FFDC2 /* tests.cpp */; };
@@ -299,6 +301,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C413AD510A01847D008A3CA3 /* Task.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
+		C413AD530A018490008A3CA3 /* Task.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = Task.cpp; path = Eris/Task.cpp; sourceTree = "<group>"; };
 		C437AF410562987C00ACFA1E /* PollGlib.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PollGlib.h; path = bindings/polls/glib/PollGlib.h; sourceTree = SOURCE_ROOT; };
 		C437AF420562987C00ACFA1E /* PollGlibFD.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PollGlibFD.h; path = bindings/polls/glib/PollGlibFD.h; sourceTree = SOURCE_ROOT; };
 		C437AF430562987C00ACFA1E /* PollGlibSource.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PollGlibSource.h; path = bindings/polls/glib/PollGlibSource.h; sourceTree = SOURCE_ROOT; };
@@ -472,6 +476,7 @@
 		C43FBCF2054315F2008FC2ED /* Headers */ = {
 			isa = PBXGroup;
 			children = (
+				C413AD510A01847D008A3CA3 /* Task.h */,
 				C44EC501096AF42300A2750D /* Alarm.h */,
 				C49FE44D096AAEF800F4F10C /* TimedEventService.h */,
 				C49FF8BB094F68130073E0F8 /* Operations.h */,
@@ -575,6 +580,7 @@
 		C4BB15920544A6C100A800CF /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C413AD530A018490008A3CA3 /* Task.cpp */,
 				C45720210950CD8800BCD779 /* Calendar.cpp */,
 				C49FF8BD094F68270073E0F8 /* Operations.cpp */,
 				C4D586A8094AF2880069B5C7 /* EntityRef.cpp */,
@@ -709,6 +715,7 @@
 				C49FF8BC094F68130073E0F8 /* Operations.h in Headers */,
 				C49FE44E096AAEF800F4F10C /* TimedEventService.h in Headers */,
 				C44EC502096AF42300A2750D /* Alarm.h in Headers */,
+				C413AD520A01847D008A3CA3 /* Task.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1020,6 +1027,7 @@
 				C45720220950CD8800BCD779 /* Calendar.cpp in Sources */,
 				C49FE455096AB05C00F4F10C /* TimedEventService.cpp in Sources */,
 				C44EC50A096AF51900A2750D /* Alarm.cpp in Sources */,
+				C413AD540A018490008A3CA3 /* Task.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

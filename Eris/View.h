@@ -1,15 +1,19 @@
 #ifndef ERIS_VIEW_H
 #define ERIS_VIEW_H
 
+// WF
 #include <Eris/Types.h>
 #include <Eris/Factory.h>
 #include <Atlas/Objects/ObjectsFwd.h>
+#include <wfmath/timestamp.h>
 
+// sigc++
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 #include <sigc++/slot.h>
 #include <sigc++/connection.h>
 
+// std
 #include <map>
 #include <deque>
 
@@ -19,6 +23,7 @@ namespace Eris
 class Avatar;
 class Entity;
 class Connection;
+class Task;
 
 /** View encapsulates the set of entities currently visible to an Avatar,
  as well as those that have recently been seen. It recieves visibility-affecting
@@ -99,6 +104,7 @@ protected:
     friend class IGRouter;
     friend class Entity;
     friend class Avatar;
+    friend class Task;
     
     void appear(const std::string& eid, float stamp);
     void disappear(const std::string& eid);
@@ -120,6 +126,13 @@ protected:
     'EntityDeleted' signal - alternative naming suggestions appreciated. */
     void entityDeleted(Entity* ent);
 
+    /**
+    Method to register and unregister tasks with with view, so they can
+    have their progress updated automatically by update(). Only certain
+    tasks (those with linear progress) are handled this way, but all tasks
+    are submitted to this method.
+    */
+    void taskRateChanged(Task*);
 private:
     Entity* initialSight(const Atlas::Objects::Entity::RootEntity& ge);
 
@@ -151,7 +164,8 @@ private:
     Avatar* m_owner;
     IdEntityMap m_contents;
     Entity* m_topLevel; ///< the top-level visible entity for this view
-
+    WFMath::TimeStamp m_lastUpdateTime;
+    
     sigc::signal<void, Entity*> InitialSightEntity;
 
     /** enum describing what action to take when sight of an entity
@@ -202,6 +216,8 @@ private:
     
     typedef std::multiset<Factory*, FactoryOrdering> FactoryStore;
     FactoryStore m_factories;
+    
+    std::set<Task*> m_progressingTasks;
 };
 
 } // of namespace Eris

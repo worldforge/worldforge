@@ -11,6 +11,7 @@
 #include <Eris/Factory.h>
 #include <Eris/TypeService.h>
 #include <Eris/TypeInfo.h>
+#include <Eris/Task.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -90,6 +91,19 @@ void View::update()
     // run motion prediction for each moving entity
     for (EntitySet::iterator it=m_moving.begin(); it != m_moving.end(); ++it)
         (*it)->updatePredictedState(t);
+    
+    typedef std::set<Task*> TaskSet;
+    
+    // for first call to update, dt will be zero.
+    if (!m_lastUpdateTime.isValid()) m_lastUpdateTime = t;
+    WFMath::TimeDiff dt = t - m_lastUpdateTime;
+    
+    for (TaskSet::iterator it=m_progressingTasks.begin(); it != m_progressingTasks.end(); ++it)
+    {
+        (*it)->updatePredictedProgress(dt);
+    }
+    
+    m_lastUpdateTime = t;
 }
 
 void View::addToPrediction(Entity* ent)
@@ -104,6 +118,16 @@ void View::removeFromPrediction(Entity* ent)
     assert(ent->isMoving());
     assert(m_moving.count(ent) == 1);
     m_moving.erase(ent);
+}
+
+void View::taskRateChanged(Task* t)
+{
+    if (t->m_progressRate > 0.0)
+    {
+        m_progressingTasks.insert(t);
+    } else {
+        m_progressingTasks.erase(t);
+    }
 }
 
 #pragma mark -

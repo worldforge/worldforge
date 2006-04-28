@@ -11,6 +11,7 @@
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
 #include <Eris/Alarm.h>
+#include <Eris/Task.h>
 
 #include <wfmath/atlasconv.h>
 #include <Atlas/Objects/Entity.h>
@@ -27,6 +28,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Message::Element;
 using Atlas::Message::ListType;
+using Atlas::Message::MapType;
 using Atlas::Objects::smart_static_cast;
 using Atlas::Objects::smart_dynamic_cast;
 
@@ -353,6 +355,9 @@ bool Entity::nativeAttrChanged(const std::string& attr, const Element& v)
         return true;
     } else if ((attr == "loc") ||(attr == "contains")) {
         throw InvalidOperation("tried to set loc or contains via setProperty");
+    } else if (attr == "tasks") {
+        updateTasks(v);
+        return true;
     }
 
     return false; // not a native property
@@ -401,6 +406,84 @@ void Entity::endUpdate()
         
         m_modifiedAttrs.clear();
     }
+}
+
+static int findTaskByName(const TaskArray& a, const std::string& nm)
+{
+    for (unsigned int t=0; t < a.size(); ++t)
+    {
+        if (a[t]->name() == nm) return t;
+    }
+    
+    return -1;
+}
+
+void Entity::updateTasks(const Element& e)
+{
+    if (!e.isList()) return; // malformed
+    const ListType& taskList(e.asList());
+    
+    /*
+    Explanation:
+    
+    We take a copy of the current pointer-to-task array, clear out the 'real'
+    task array, and then walk the array defined by Atlas. For each pre-existing
+    task still specified in the Atlas data, we find the old task in the copied
+    array, re-add it to the main list, and NULL the entry in the copied list.
+    
+    At the end of iterating the Atlas data, any pointers still valid in the
+    copied list are dead, and can be deleted.
+    */
+    
+    TaskArray previousTasks(m_tasks);
+    m_tasks.clear();
+    
+    for (unsigned int t=0; t<taskList.size(); ++t)
+    {
+        const MapType& tkmap(taskList[t].asMap());
+        MapType::const_iterator it = tkmap.find("name");
+        if (it == tkmap.end())
+        {
+            error() << "task without name";
+            continue;
+        }
+        
+        int index = findTaskByName(previousTasks, it->second.asString());
+        Task *t;
+        
+        if (index < 0)
+        {   // not found, create a new one
+            t = new Task(this, it->second.asString());
+            TaskAdded.emit(t);
+        } else {
+            t = previousTasks[index];
+            previousTasks[index] = NULL;
+        }
+        
+        m_tasks.push_back(t);
+        t->updateFromAtlas(tkmap);
+    } // of Atlas-specified tasks iteration
+    
+    for (unsigned int d=0; d<previousTasks.size(); ++d)
+    {
+        if (!previousTasks[d]) continue;
+        
+        TaskRemoved(previousTasks[d]);
+        delete previousTasks[d];
+    } // of previous-task cleanup iteration
+}
+
+void Entity::removeTask(Task* t)
+{
+    TaskArray::iterator it = std::find(m_tasks.begin(), m_tasks.end(), t);
+    if (it == m_tasks.end())
+    {
+        error() << "unknown task " << t->name() << " on entity " << this;
+        return;
+    }
+    
+    m_tasks.erase(it);
+    TaskRemoved(t);
 }
 
 #pragma mark -

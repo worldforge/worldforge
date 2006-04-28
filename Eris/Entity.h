@@ -25,8 +25,10 @@ class Entity;
 class TypeInfo;
 class View;
 class EntityRouter;
+class Task;
 
 typedef std::vector<Entity*> EntityArray;
+typedef std::vector<Task*> TaskArray;
 
 /// Entity is a concrete (instanitable) class representing one game entity
 /** Entity encapsulates the state and tracking of one game entity; this includes
@@ -152,6 +154,9 @@ public:
         return m_hasBBox;
     }
     
+    const TaskArray& getTasks() const
+    { return m_tasks; }
+    
     /**
     @brief Get a list of operations supported by this entity (tool)
     If the entity does no provide an operations list, this will return an empty
@@ -258,6 +263,9 @@ public:
     or during disconnection. This signal is emitted regardless.
     */
     sigc::signal<void> BeingDeleted;
+    
+    sigc::signal<void, Task*> TaskAdded;
+    sigc::signal<void, Task*> TaskRemoved;
 protected:	        
     /** over-rideable initialisation helper. When subclassing, if you
     over-ride this method, take care to call the base implementation, or
@@ -323,6 +331,7 @@ private:
     friend class IGRouter;
     friend class View;
     friend class EntityRouter;
+    friend class Task;
     
     /** update the entity's location based on Atlas data. This is used by
     the MOVE handler to update the location information. */
@@ -379,6 +388,9 @@ private:
 
     void addToLocation();
     void removeFromLocation();
+
+    void updateTasks(const Atlas::Message::Element& e);
+    void removeTask(Task* t);
 
     /** recursively update the real visiblity of this entity, and fire
     appropriate signals. */
@@ -447,6 +459,8 @@ private:
     bool m_moving; ///< flag recording if this entity is current considered in-motion
     
     bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)
+    
+    TaskArray m_tasks;
 };
 
 } // of namespace

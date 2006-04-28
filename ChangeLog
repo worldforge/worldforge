@@ -1,3 +1,15 @@
+2006-04-28  James Turner  <james@worldforge.org>
+
+	* Eris/Task.cpp, Eris/Task.h: add in initial work on exposing Tasks to
+	  clients.
+	  
+	* Eris/View.h, Eris/View.cpp: for tasks with a defined progress rate,
+	  predict their progress during View::update(), as is already done for
+	  position prediction.
+	  
+	* Eris/Entity.cpp, Eris/Entity.h: process the 'tasks' atteribute if 
+	  present, and make an array of Task*s available on Entity.
+
 2006-04-26  James Turner  <james@worldforge.org>
 
 	* Eris/Avatar.cpp, Eris/Avatar.h: add ::useStop(), a helper to send an
