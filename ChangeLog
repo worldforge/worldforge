@@ -1,5 +1,9 @@
 2006-04-28  James Turner  <james@worldforge.org>
 
+	* Eris/Task.h: missing newline at end of file for Loooooooonix.
+
+2006-04-28  James Turner  <james@worldforge.org>
+
 	* Eris/Task.cpp, Eris/Task.h: add in initial work on exposing Tasks to
 	  clients.
 	  
