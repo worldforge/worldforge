@@ -23,6 +23,13 @@ Task::Task(Entity* owner, const std::string& nm) :
     
 }
 
+Task::~Task()
+{
+    m_progressRate = -1.0;
+    // force it to be un-registered
+    m_owner->getView()->taskRateChanged(this);
+}
+
 bool Task::isComplete() const
 {
     return (m_progress >= 1.0);
@@ -60,9 +67,12 @@ void Task::progressChanged()
 
 void Task::updatePredictedProgress(const WFMath::TimeDiff& dt)
 {
-    m_progress += m_progressRate * (dt.milliseconds() / 1000.0);
-    Progressed.emit();
+    if (isComplete()) return;
     
+    m_progress += m_progressRate * (dt.milliseconds() / 1000.0);
+    m_progress = std::min(m_progress, 1.0);
+    
+    Progressed.emit();
     // note we will never signal completion here, but instead we wait for
     // the server to notify us.
 }

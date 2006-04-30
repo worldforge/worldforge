@@ -17,6 +17,7 @@ class View;
 class Task : public sigc::trackable
 {
 public:
+    virtual ~Task();
     
     /**
     */
