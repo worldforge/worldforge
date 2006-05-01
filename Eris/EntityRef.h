@@ -64,6 +64,21 @@ public:
 		return (m_inner == NULL);
 	}
 
+    bool operator==(const EntityRef& e) const
+    {
+        return (m_inner == e.m_inner);
+    }
+
+    bool operator==(const Entity* e) const
+    {
+        return (m_inner == e);
+    }
+
+    bool operator<(const EntityRef& e) const
+    {
+        return (m_inner < e.m_inner);
+    }
+
 	sigc::signal0<void> Changed;
 private:
 	void onEntityDeleted();

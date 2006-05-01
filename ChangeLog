@@ -1,3 +1,7 @@
+2006-05-01  James Turner  <james@worldforge.org>
+
+	* Eris/EntityRef.h: add equality and ordering operators.
+
 2006-04-30  James Turner  <james@worldforge.org>
 
 	* Eris/Task.h, Eris/Task.cpp: when a task is deleted, force it to be
