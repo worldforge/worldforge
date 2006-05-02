@@ -88,7 +88,7 @@ void testAccCreate()
     SignalCounter1<const std::string&> loginErrorCounter;
     player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
     
-    player->createAccount("account_C", "John Doe", "lemon");
+    player->createAccount("account_D", "John Doe", "lemon");
 
     while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
     {
@@ -97,8 +97,28 @@ void testAccCreate()
     
     assert(loginErrorCounter.fireCount() == 0);
     
-    assert(player->getUsername() == "account_C");
+    assert(player->getUsername() == "account_D");
     assert(player->isLoggedIn());
+}
+
+void testDuplicateCreate()
+{
+    AutoConnection con = stdConnect();
+    AutoAccount player(new Eris::Account(con.get()));
+    
+    SignalCounter0 loginCount;
+    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
+
+    SignalCounter1<const std::string&> loginErrorCounter;
+    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+    player->createAccount("account_C", "John Doe", "lemon");
+
+    while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
+    {
+        Eris::PollDefault::poll();
+    }
+    
+    assert(loginErrorCounter.fireCount() == 1);
 }
 
 void testAccountCharacters()
@@ -124,7 +144,7 @@ void testAccountCharacters()
 void testLogout()
 {
     AutoConnection con = stdConnect();
-    AutoAccount player = stdLogin("account_C", "lemon", con.get());
+    AutoAccount player = stdLogin("account_C", "turnip", con.get());
     
     SignalCounter1<bool> gotLogout;
     player->LogoutComplete.connect(SigC::slot(gotLogout, &SignalCounter1<bool>::fired));

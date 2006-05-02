@@ -172,6 +172,18 @@ void StubServer::setupTestAccounts()
     characters.push_back("_fail_");
     
     m_accounts[accB->getId()] = accB;
+    
+    AtlasAccount accC;
+    accC->setId("_25_account_C");
+    accC->setUsername("account_C");
+    accC->setPassword("turnip");
+    accC->setObjtype("obj");
+    accC->setParents(parents);
+    
+    StringList& chars2 = accC->modifyCharacters();
+    chars2.push_back("acc_c_character");
+
+    m_accounts[accC->getId()] = accC;
 }
 
 void StubServer::resetWorld()
@@ -225,6 +237,14 @@ void StubServer::resetWorld()
     getEntity("_table_1")->setName("George");
     
     defineEntity("_fail_", "settler", "_world", "Dummy");
+    
+    defineEntity("acc_c_character", "settler", "_hut_01", "Spanky");
+    Atlas::Message::ListType tasks;
+    Atlas::Message::MapType task;
+    task["name"] = "logging";
+    task["progress"] = 0.2;
+    tasks.push_back(task);
+    getEntity("acc_c_character")->setAttr("tasks", tasks);
 }
 
 void StubServer::addManyObjects(const std::string& agent)

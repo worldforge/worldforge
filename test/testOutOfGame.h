@@ -9,6 +9,6 @@ void testLogout();
 void testAccountCharacters();
 void testBadTake();
 void testServerInfo();
-
+void testDuplicateCreate();
 
 #endif // of TEST_OOG_H

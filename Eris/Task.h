@@ -21,7 +21,7 @@ public:
     
     /**
     */
-    const std::string name() const
+    const std::string& name() const
     { return m_name; }
     
     /**

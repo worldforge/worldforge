@@ -608,7 +608,8 @@ int runTests(Controller& ctl)
         testAccountCharacters();
         testBadTake();
         testServerInfo();
-    
+        testDuplicateCreate();
+        
         testServerSocketShutdown(ctl);
     
         testCharActivate(ctl);
@@ -635,6 +636,7 @@ int runTests(Controller& ctl)
         testWield(ctl);
         testDeleteWielded(ctl);
         testHear(ctl);
+        testTasks(ctl);
         
         testSimpleCalendar(ctl);
     }

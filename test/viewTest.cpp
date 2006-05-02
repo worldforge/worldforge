@@ -10,6 +10,7 @@
 #include <Eris/View.h>
 #include <Eris/PollDefault.h>
 #include <Eris/Operations.h>
+#include <Eris/Task.h>
 
 #include <sigc++/object_slot.h>
 #include <sigc++/object.h>
@@ -345,6 +346,52 @@ void testUnseen(Controller& ctl)
         assert(potatoDeleted.fireCount() == 1);
         assert(!potatoRef);
     }
+}
+
+void testTasks(Controller& ctl)
+{
+    AutoConnection con = stdConnect();
+    AutoAccount acc = stdLogin("account_C", "turnip", con.get());
+    
+    ctl.setEntityVisibleToAvatar("_hut_01", "acc_c_character");
+    AutoAvatar av = AvatarGetter(acc.get()).take("acc_c_character");
+    
+    {
+        WaitForAppearance wf(av->getView(), "_hut_01");
+        wf.run();
+    }
+    
+    SignalRecorder1<Eris::Task*> taskAdded;
+    av->getEntity()->TaskAdded.connect(sigc::mem_fun(&taskAdded, &SignalRecorder1<Eris::Task*>::fired));
+    
+    Eris::TestInjector i(con.get());
+    {
+        Atlas::Objects::Operation::Set st;
+        Atlas::Objects::Entity::Anonymous arg;
+        arg->setId("acc_c_character");
+        Atlas::Message::ListType tasks;
+        Atlas::Message::MapType task;
+        task["name"] = "fishing";
+        task["progress"] = 0.5;
+        tasks.push_back(task);
+        arg->setAttr("tasks", tasks);
+        st->setArgs1(arg);
+        
+        Atlas::Objects::Operation::Sight sight;
+        sight->setTo("acc_c_character");
+        sight->setArgs1(st);
+        
+        i.inject(sight);
+        assert(taskAdded.fireCount() == 1);
+        assert(taskAdded.lastArg0()->name() == "fishing");
+        assert(taskAdded.lastArg0()->progress() == 0.5);
+        assert(taskAdded.lastArg0()->isComplete() == false);
+        
+        const Eris::TaskArray& etasks(av->getEntity()->getTasks());
+        assert(etasks.size() == 1);
+        assert(etasks[0]->name() == "fishing");
+    }
+    
 }
 
 

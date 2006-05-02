@@ -1,3 +1,15 @@
+2006-05-02  James Turner  <james@worldforge.org>
+
+	* Eris/Task.h: fix name() to return by reference, as intended; thanks
+	  Erik.
+
+	* test/viewTest.h, test/viewTest.cpp: add basic task test
+	
+	* test/testOutOfGame.cpp, test/testOutOfGame.h: add test for duplicate
+	  account creation.
+	  
+	* test/testCalendar.cpp: add crude calendar code test
+
 2006-05-01  James Turner  <james@worldforge.org>
 
 	* Eris/EntityRef.h: add equality and ordering operators.
