@@ -1,3 +1,8 @@
+2006-05-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Calendar.h: Remove Atlas include in favour of forward
+	  declarations.
+
 2006-05-02  James Turner  <james@worldforge.org>
 
 	* Eris/Task.h: fix name() to return by reference, as intended; thanks
@@ -68,12 +73,12 @@
 	* Eris/Calendar.h: add extra accessor methods to Calendar, so Simon can
 	  calculate dusk and dawn shading as before.
 
-2005-01-04  Al Riddoch  <alriddoch@zepler.org>
+2006-01-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* eris.spec.in: Remove explicit dependency on Atlas-C++06, and let
 	  automatic dependencies handle it.
 
-2005-01-04  Al Riddoch  <alriddoch@zepler.org>
+2006-01-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 1.3.10, Interface version 11.
 

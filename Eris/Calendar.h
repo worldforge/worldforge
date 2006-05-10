@@ -2,10 +2,19 @@
 #define ERIS_CALENDAR_H
 
 #include <Eris/Types.h>
-#include <Atlas/Message/Element.h>
 
 #include <sigc++/trackable.h>
 #include <sigc++/connection.h>
+
+#include <map>
+
+namespace Atlas
+{
+namespace Message
+{
+typedef std::map<std::string, Element> MapType;
+}
+}
 
 namespace Eris
 {
