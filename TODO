@@ -1,4 +1,5 @@
-New TODO by Al Riddoch
+Add IHEAR to negotiation, so that it is possible to negotiate various
+alternate transports include UDP, SCTP etc..
 
 Get rid of overridden removeAttr, as the base class handles this now.
 
