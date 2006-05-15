@@ -1,3 +1,8 @@
+2006-05-15  James Turner  <james@worldforge.org>
+
+	* Eris/Account.cpp: modify the Logout op sent from Account, to
+	  conform to the revised format.
+
 2006-05-15  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Connection.cpp: Avoid an issue with modifying a deque after

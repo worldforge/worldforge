@@ -147,9 +147,10 @@ Result Account::logout()
     m_status = LOGGING_OUT;
     
     Logout l;
-    l->setId(m_accountId);
+    Anonymous arg;
+    arg->setId(m_accountId);
+    l->setArgs1(arg);
     l->setSerialno(getNewSerialno());
-    l->setFrom(m_accountId);
     
     m_con->getResponder()->await(l->getSerialno(), this, &Account::logoutResponse);
     m_con->send(l);
