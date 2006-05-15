@@ -1,7 +1,10 @@
 Logic in StreamFoo::poll() is bogus. can_read does not mean that sockets
 can be read from many times, just once, so can_read should be checked outside
 the do loop, then inside a while check should be used to copy all bytes
-from the stream into m_buf at once. The codec stuff might be just as bad.
+from the stream into m_buf at once. This makes the do..while loop redundant.
+We can read all the bytes into the buffer straight away. The neogitaters
+are not byte based, but expect all available input to have been copied into
+the buffer.
 
 Add IHEAR to negotiation, so that it is possible to negotiate various
 alternate transports include UDP, SCTP etc..
