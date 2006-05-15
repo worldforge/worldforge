@@ -107,8 +107,9 @@ void Connection::gotData(PollData &data)
     
 // now dispatch recieved ops
     while (!m_opDeque.empty()) {
-        dispatchOp(m_opDeque.front());
+        RootOperation op = m_opDeque.front();
         m_opDeque.pop_front();
+        dispatchOp(op);
     }
     
 // finally, clean up any redispatches that fired (aka 'deleteLater')

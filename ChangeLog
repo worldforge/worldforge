@@ -1,3 +1,11 @@
+2006-05-15  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Connection.cpp: Avoid an issue with modifying a deque after
+	  it has been cleared.
+
+	* bindings/polls/glib/PollGlib.h: Update glib poll to handle
+	  changes in the timed event API.
+
 2006-05-10  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Calendar.h: Remove Atlas include in favour of forward

@@ -26,7 +26,7 @@ public:
 	
 	static gboolean bTimeoutCallback(PollGlib * pPoller)
 	{
-		pPoller->_wait_time = Eris::Timeout::pollAll();
+		pPoller->_wait_time = Eris::TimedEventService::instance()->tick();
 		execDeleteLaters();
 		
 		return TRUE;
@@ -106,7 +106,7 @@ protected:
     if(check())
       Ready.emit(*this);
 
-    unsigned long wait = Eris::Timeout::pollAll();
+    unsigned long wait = Eris::TimedEventService::instance()->tick();
 
     if(new_timeout_) {
       _wait_time = 0;
