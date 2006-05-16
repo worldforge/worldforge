@@ -364,9 +364,6 @@ void Account::internalLogout(bool clean)
     if (m_con->getStatus() == BaseConnection::DISCONNECTING) {
         m_con->unlock();
     } else {
-        // note this will cause netDisconnect to run, which is why we set
-        // status to DISCONNECT already
-        m_con->disconnect(); 
         LogoutComplete.emit(clean);
     }
 }
