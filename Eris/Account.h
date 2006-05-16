@@ -120,6 +120,12 @@ public:
     const ActiveCharacterMap& getActiveCharacters() const
     { return m_activeCharacters; }
 
+    /**
+    Request de-activation of a character. The 'AvatarDeactivated' signal will
+    be emitted when the deactivation completes.
+    */
+    Result deactivateCharacter(Avatar* av);
+
     /// returns the account ID if logged in
     const std::string& getId() const
     {
@@ -166,8 +172,18 @@ public:
     */
     sigc::signal<void, Avatar*> AvatarSuccess;
 
+    /**
+    Emitted when creating or taking a character fails for some reason.
+    String argument is the error messgae from the server.
+    */
     sigc::signal<void, const std::string &> AvatarFailure;
 
+    /**
+    Emitted when an active avatar is deactivated. Clients <em>must not</em>
+    refer to the Avatar or View objects after this signal is emitted (it is 
+    safe to access them in a slot connected to this signal)
+    */
+    sigc::signal<void, Avatar*> AvatarDeactivated;
 protected:
     friend class AccountRouter;
     friend class Avatar; // so avatar can call deactivateCharacter
@@ -190,6 +206,7 @@ protected:
     void loginResponse(const Atlas::Objects::Operation::RootOperation& op);
     void logoutResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarResponse(const Atlas::Objects::Operation::RootOperation& op);
+    void avatarLogoutResponse(const Atlas::Objects::Operation::RootOperation& op);
     
 	void handleLogoutTimeout();
 //	void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
@@ -207,7 +224,7 @@ protected:
         CREATING_CHAR       ///< send a character CREATE op, awaiting INFO response
     } Status;
         
-    void deactivateCharacter(Avatar* av);
+    void internalDeactivateCharacter(Avatar* av);
 private:
     Connection* m_con;	///< underlying connection instance
     Status m_status;    ///< what the Player is currently doing

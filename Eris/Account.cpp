@@ -288,6 +288,27 @@ Result Account::takeCharacter(const std::string &id)
     return NO_ERR;
 }
 
+Result Account::deactivateCharacter(Avatar* av)
+{
+    if (m_status != LOGGED_IN) {
+        error() << "called deactivateCharacter on Account not in logged-in state";
+        return NOT_LOGGED_IN;
+    }
+    
+    Logout l;
+    Anonymous arg;
+    arg->setId(av->getId());
+    l->setArgs1(arg);
+    l->setSerialno(getNewSerialno());
+    
+    m_con->getResponder()->await(l->getSerialno(), this, &Account::avatarLogoutResponse);
+    m_con->send(l);
+	
+    // does this need a timeout?
+    
+    return NO_ERR;
+}
+
 bool Account::isLoggedIn() const
 {
     return ((m_status == LOGGED_IN) || 
@@ -465,7 +486,7 @@ void Account::avatarResponse(const RootOperation& op)
         warning() << "received malformed avatar take response";
 }
 
-void Account::deactivateCharacter(Avatar* av)
+void Account::internalDeactivateCharacter(Avatar* av)
 {
     assert(m_activeCharacters.count(av->getId()) == 1);
     m_activeCharacters.erase(av->getId());
@@ -537,6 +558,39 @@ void Account::handleLogoutTimeout()
     deleteLater(m_timeout.release());
     
     LogoutComplete.emit(false);
+}
+
+void Account::avatarLogoutResponse(const RootOperation& op)
+{
+    if (!op->instanceOf(INFO_NO))
+        warning() << "received an avatar logout response that is not an INFO";
+        
+    const std::vector<Root>& args(op->getArgs());
+    
+    if (args.empty() || (args.front()->getClassNo() != LOGOUT_NO)) {
+        warning() << "argument of avatar logout INFO is not a logout op";
+        return;
+    }
+    
+    RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
+    const std::vector<Root>& args2(logout->getArgs());
+    assert(!args2.empty());
+    
+    std::string charId = args2.front()->getId();
+    debug() << "got logout for character " << charId;
+    
+    if (!m_characterIds.count(charId)) {
+        warning() << "character ID " << charId << " is unknown on account " << m_accountId;
+    }
+    
+    ActiveCharacterMap::iterator it = m_activeCharacters.find(charId);
+    if (it == m_activeCharacters.end()) {
+        warning() << "character ID " << charId << " does not crrespond to an active avatar.";
+        return;
+    }
+    
+    AvatarDeactivated.emit(it->second);
+    delete it->second; // will call back into internalDeactivateCharacter
 }
 
 } // of namespace Eris

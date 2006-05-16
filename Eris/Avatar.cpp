@@ -47,7 +47,7 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
 
 Avatar::~Avatar()
 {
-    m_account->deactivateCharacter(this);
+    m_account->internalDeactivateCharacter(this);
     
     delete m_router;
     delete m_view;
