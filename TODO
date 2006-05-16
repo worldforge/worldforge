@@ -10,6 +10,8 @@ Add IHEAR to negotiation, so that it is possible to negotiate various
 alternate transports include UDP, SCTP etc..
 
 Get rid of overridden removeAttr, as the base class handles this now.
+See if copyAttr and setAttr can be better handled this way.
+copyAttr returns 0 if attribute is hard coded, but not set.
 
 Cut down inlining from Codecs/Utility.h as functions are too large.
 

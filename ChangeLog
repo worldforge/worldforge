@@ -1,3 +1,8 @@
+2006-05-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Net/Stream.cpp: Fix strange logic in codec negotiation
+	  that ran the state machine for every byte.
+
 2006-04-19  Al Riddoch  <alriddoch@zepler.org>
 
 	* Release 0.6.0, Interface version 1.

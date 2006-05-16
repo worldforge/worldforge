@@ -104,13 +104,18 @@ StreamConnect::~StreamConnect()
 
 void StreamConnect::poll(bool can_read)
 {
-    Debug( std::cout << "** Client(" << m_state << ") : " << std::endl; );
+    Debug( std::cout << "** Client(" << m_state << ") : " << m_socket.rdbuf()->in_avail() << std::endl; );
 
     std::string out;
 
-    do
-    {
-        if (can_read || (m_socket.rdbuf()->in_avail() > 0)) m_buf += (char) m_socket.get();
+    if (can_read) {
+        // Cause the stream to read from its socket
+        m_socket.peek();
+    }
+
+    while (m_socket.rdbuf()->in_avail() > 0) {
+        m_buf += (char) m_socket.get();
+    }
 
     if(m_state == SERVER_GREETING)
     {
@@ -166,8 +171,6 @@ void StreamConnect::poll(bool can_read)
         }
     }
 #endif
-    }
-    while ((m_state != DONE) && (m_socket.rdbuf()->in_avail() > 0));
 }
 
 Atlas::Negotiate::State StreamConnect::getState()
@@ -266,61 +269,64 @@ void StreamAccept::poll(bool can_read)
         Debug( std::cout << "server now in state " << m_state << std::endl; );
     }
 
-    do
+    if (can_read) {
+        // Cause the stream to read from its socket
+        m_socket.peek();
+    }
+
+    while (m_socket.rdbuf()->in_avail() > 0) {
+        m_buf += (char) m_socket.get();
+    }
+
+    if (m_state == CLIENT_GREETING)
     {
-        if (can_read || (m_socket.rdbuf()->in_avail() > 0)) m_buf += (char) m_socket.get();
-
-        if (m_state == CLIENT_GREETING)
+        // get client greeting            
+        if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
         {
-            // get client greeting            
-            if (m_buf.size() > 0 && get_line(m_buf, '\n', m_inName) != "")
-            {
-                 Debug(std::cout << "client: " << m_inName << std::endl; );
-                m_state = CLIENT_CODECS;
-            }
+             Debug(std::cout << "client: " << m_inName << std::endl; );
+            m_state = CLIENT_CODECS;
         }
+    }
 
-        if (m_state == CLIENT_CODECS)
-        {            
-            if (m_codecHelper.get(m_buf, "ICAN"))
-            {
-                m_state = SERVER_CODECS;
-                Debug(std::cout << "server now in state " << m_state << std::endl;);
-            }
-            processClientCodecs();
+    if (m_state == CLIENT_CODECS)
+    {            
+        if (m_codecHelper.get(m_buf, "ICAN"))
+        {
+            m_state = SERVER_CODECS;
+            Debug(std::cout << "server now in state " << m_state << std::endl;);
         }
+        processClientCodecs();
+    }
 
-        if (m_state == SERVER_CODECS)
-        {        
-            if (m_canPacked) { m_socket << "IWILL Packed\n"; }
-            else if (m_canXML) { m_socket << "IWILL XML\n"; }
-            else if (m_canBach) { m_socket << "IWILL Bach\n"; }
-            m_socket << std::endl;
-            
-            m_state = DONE;
-        }
+    if (m_state == SERVER_CODECS)
+    {        
+        if (m_canPacked) { m_socket << "IWILL Packed\n"; }
+        else if (m_canXML) { m_socket << "IWILL XML\n"; }
+        else if (m_canBach) { m_socket << "IWILL Bach\n"; }
+        m_socket << std::endl;
+        
+        m_state = DONE;
+    }
 
 #if 0
-        if(m_state == CLIENT_FILTERS)
+    if(m_state == CLIENT_FILTERS)
+    {
+        if (m_filterHelper.get(m_buf, "ICAN"))
         {
-            if (m_filterHelper.get(m_buf, "ICAN"))
-            {
-                m_state++;
-            }
-            processClientFilters();
-        }
-
-        if (m_state == SERVER_FILTERS)
-        {
-            //No Filters until they actually work.
-            //if (m_canGzip) { m_socket << "IWILL Gzip\n"; }
-            //else if (m_canBzip2) { m_socket << "IWILL Bzip2\n"; }
-            m_socket << std::endl;
             m_state++;
         }
-#endif
+        processClientFilters();
     }
-    while ((m_state != DONE) && (m_socket.rdbuf()->in_avail() > 0));
+
+    if (m_state == SERVER_FILTERS)
+    {
+        //No Filters until they actually work.
+        //if (m_canGzip) { m_socket << "IWILL Gzip\n"; }
+        //else if (m_canBzip2) { m_socket << "IWILL Bzip2\n"; }
+        m_socket << std::endl;
+        m_state++;
+    }
+#endif
 }
 
 Atlas::Negotiate::State StreamAccept::getState()
