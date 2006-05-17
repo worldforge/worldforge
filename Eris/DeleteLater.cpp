@@ -1,10 +1,10 @@
 #include <Eris/DeleteLater.h>
-#include <vector>
+#include <deque>
 
 namespace Eris
 {
 
-static std::vector<BaseDeleteLater*> global_deleteLaterQueue;
+static std::deque<BaseDeleteLater*> global_deleteLaterQueue;
 
 BaseDeleteLater::~BaseDeleteLater()
 {
@@ -22,8 +22,8 @@ void execDeleteLaters()
         // other objects to be 'deleteLater'ed; we want to clean them up in
         // this same cycle, not leave the hanging around.
         
-        BaseDeleteLater* dl = global_deleteLaterQueue.back();
-        global_deleteLaterQueue.pop_back();
+        BaseDeleteLater* dl = global_deleteLaterQueue.front();
+        global_deleteLaterQueue.pop_front();
         delete dl;
     }
 }
