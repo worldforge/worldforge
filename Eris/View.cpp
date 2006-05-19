@@ -219,19 +219,19 @@ void View::sight(const RootEntity& gent)
         ent = initialSight(gent);
         EntitySeen.emit(ent);
     }
-    
-    ent->setVisible(visible);
-    
+        
     if (gent->isDefaultLoc()) { // new top level entity
         setTopLevelEntity(ent);
     }
     
+    ent->setVisible(visible);
     issueQueuedLook();
 }
 
 Entity* View::initialSight(const RootEntity& gent)
 {
     Entity* ent = createEntity(gent);
+    
     assert(m_contents.count(gent->getId()) == 0);
     m_contents[gent->getId()] = ent;
     ent->init(gent, false);
@@ -424,9 +424,7 @@ void View::setTopLevelEntity(Entity* newTopLevel)
             error() << "old top-level entity is visible, but has no location";
     }
 
-    assert(newTopLevel->isVisible());
     assert(newTopLevel->getLocation() == NULL);
-
     m_topLevel = newTopLevel;
     TopLevelEntityChanged.emit(); // fire the signal
 }

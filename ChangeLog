@@ -1,4 +1,10 @@
 2006-05-19  James Turner  <james@worldforge.org>
+	
+	* Eris/View.cpp: fix bug where the TLVE was unset when emitting
+	  Avatar::GotCharacterEntity (causing problems in sear). Re-order
+	  View::sight to set TLVE before computing entity visibility.
+
+2006-05-19  James Turner  <james@worldforge.org>
 
 	* Eris/Account.cpp: when account is deleted, and the connection is
 	  still live, send logout ops from the account and each active character.
