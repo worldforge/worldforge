@@ -78,10 +78,12 @@ Account::~Account()
     for (it = m_activeCharacters.begin(); it != m_activeCharacters.end(); )
     {
         ActiveCharacterMap::iterator cur = it++;
-        // cur gets invalidated by deactivateCharacter
+        deactivateCharacter(cur->second); // send logout op
+        // cur gets invalidated by innerDeactivateCharacter
         delete cur->second;
     }
 
+    if (isLoggedIn()) logout();
     delete m_router;
 }
 
@@ -138,6 +140,8 @@ Result Account::logout()
         error() << "called logout on bad connection ignoring";
         return NOT_CONNECTED;
     }
+    
+    if (m_status == LOGGING_OUT) return NO_ERR;
     
     if (m_status != LOGGED_IN) {
         error() << "called logout on non-logged-in Account";
