@@ -168,7 +168,7 @@ void View::disappear(const std::string& eid)
         ent->setVisible(false); // will ultimately cause disapeparances
     } else {
         if (isPending(eid)) {
-            debug() << "got disappearance for pending " << eid;
+            //debug() << "got disappearance for pending " << eid;
             m_pending[eid] = SACTION_HIDE;
         } else
             warning() << "got disappear for unknown entity " << eid;
@@ -311,7 +311,7 @@ void View::deleteEntity(const std::string& eid)
         delete ent; // actually kill it off
     } else {
         if (isPending(eid)) {
-            debug() << "got delete for pending entity, argh";
+            //debug() << "got delete for pending entity, argh";
             m_pending[eid] = SACTION_DISCARD;
         } else
             warning() << "got delete for unknown entity " << eid;

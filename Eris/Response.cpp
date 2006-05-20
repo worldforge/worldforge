@@ -25,7 +25,6 @@ bool ResponseTracker::handleOp(const RootOperation& op)
     if (it == m_pending.end()) {
         warning() << "received op with valid refno (" << op->getRefno() << 
             ") but no response is registered";
-        debug() << "op=\n" << op;
         return false;
     }
 

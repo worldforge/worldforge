@@ -68,7 +68,7 @@ Router::RouterResult EntityRouter::handleOperation(const RootOperation& op)
             return HANDLED;
         }
         
-        debug() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
+        warning() << "entity " << m_entity->getId() << " emitted sound with strange argument: " << op;
         // other sounds !
     }
 

@@ -174,7 +174,7 @@ void TypeService::recvError(const Get& get)
         throw InvalidOperation("got ERROR(GET()) with request for unknown type: " + request->getId());
     }
     
-    debug() << "type " << request->getId() << " undefined on server";
+    warning() << "type " << request->getId() << " undefined on server";
     BadType.emit(T->second);
 
     delete T->second;

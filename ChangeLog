@@ -1,3 +1,9 @@
+2006-05-20  James Turner  <james@worldforge.org>
+	
+	* strip out various debug() messages which occur in common code paths,
+	  since they are un-needed now, and incur a slight overhead even if
+	  not displayed.
+	
 2006-05-19  James Turner  <james@worldforge.org>
 	
 	* Eris/View.cpp: fix bug where the TLVE was unset when emitting

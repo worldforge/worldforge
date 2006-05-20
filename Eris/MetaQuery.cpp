@@ -43,8 +43,6 @@ MetaQuery::~MetaQuery()
 
 void MetaQuery::onConnect()
 {
-    debug() << "meta-query connection to " << _host;
-
     // servers must responed to a fully anonymous GET operation
     // with pertinent info
     Get gt;

@@ -287,9 +287,7 @@ void Meta::recv()
 }
 
 void Meta::recvCmd(uint32_t op)
-{
-    //debug() << "command " << op;
-    
+{    
     switch (op) {
     case HANDSHAKE:
         setupRecvData(1, HANDSHAKE);
@@ -519,14 +517,12 @@ void Meta::queryFailure(MetaQuery *q, const std::string &msg)
     // we do NOT emit a failure signal here (becuase that would probably cause the 
     // host app to pop up a dialog or something) since query failures are likely to
     // be very frequent.
-    debug() << "meta-query failure: " << msg;
     m_gameServers[q->getServerIndex()].m_status = ServerInfo::INVALID;
     q->setComplete();
 }
 
 void Meta::queryTimeout(MetaQuery *q)
 {
-    debug() << "meta-query timed out";
     m_gameServers[q->getServerIndex()].m_status = ServerInfo::TIMEOUT;
     deleteQuery(q);
 }

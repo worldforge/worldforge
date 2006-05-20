@@ -42,7 +42,6 @@ void Calendar::topLevelEntityChanged()
 void Calendar::calendarAttrChanged(const std::string&, const Element& value)
 {
     if (!value.isMap()) throw InvalidAtlas("malformed calendar data", value);
-    debug() << "initing calendar";
     initFromCalendarAttr(value.asMap());
 }
 

@@ -60,7 +60,7 @@ void TypeBoundRedispatch::onBound(TypeInfo* bound)
 void TypeBoundRedispatch::onBadType(TypeInfo* bad)
 {
     if (m_unbound.count(bad)) {
-        debug() << "TypeBoundRedispatch was waiting on bad type " << bad->getName(); 
+        warning() << "TypeBoundRedispatch was waiting on bad type " << bad->getName(); 
         fail();
     }
 }
