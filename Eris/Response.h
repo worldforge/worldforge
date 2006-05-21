@@ -40,6 +40,11 @@ public:
         obj->add_destroy_notify_callback(&m_object, &clearMemberResponse);
 	}
 	
+    ~MemberResponse()
+    {
+        if (m_object) m_object->remove_destroy_notify_callback(&m_object);
+    }
+    
 	virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation& op)
 	{
         if (m_object) (m_object->*m_func)(op);

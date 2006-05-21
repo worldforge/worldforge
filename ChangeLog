@@ -1,5 +1,11 @@
 2006-05-21  James Turner  <james@worldforge.org>
 
+	* Eris/Response.h: fix corruption issue related to previous change;
+	  if the response is destroyed normally, unregister the callback from
+	  the member object.
+
+2006-05-21  James Turner  <james@worldforge.org>
+
 	* Eris/Avatar.h, Eris/Avatar.h, Eris/Account.cpp: move deactivate 
 	  implementation to Avatar (Account::deactivateCharacter proxies). Also, 
 	  there is no longer a requirement for the Account to be in the logged-in 
