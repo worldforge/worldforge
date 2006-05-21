@@ -25,6 +25,8 @@ public:
     virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation&);
 };
 
+void* clearMemberResponse(void*);
+
 template <class T>
 class MemberResponse : public ResponseBase
 {
@@ -35,11 +37,12 @@ public:
 		m_object(obj),
 		m_func(method)
 	{
+        obj->add_destroy_notify_callback(&m_object, &clearMemberResponse);
 	}
 	
 	virtual bool responseReceived(const Atlas::Objects::Operation::RootOperation& op)
 	{
-		(m_object->*m_func)(op);
+        if (m_object) (m_object->*m_func)(op);
         return true;
 	}
 

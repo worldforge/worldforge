@@ -250,7 +250,7 @@ void Connection::objectArrived(const Root& obj)
 }
 
 void Connection::dispatchOp(const RootOperation& op)
-{
+{    
     try {
         Router::RouterResult rr;
         bool anonymous = op->getTo().empty();
@@ -280,7 +280,7 @@ void Connection::dispatchOp(const RootOperation& op)
         }
                 
     // go to the default router
-        rr = m_defaultRouter->handleOperation(op);
+        if (m_defaultRouter) rr = m_defaultRouter->handleOperation(op);
         if (rr != Router::HANDLED) warning() << "no-one handled op:" << op;
     } catch (Atlas::Exception& ae) {
         error() << "caught Atlas exception: " << ae.getDescription() <<

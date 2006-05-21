@@ -12,6 +12,8 @@
 #include <Eris/Exceptions.h>
 #include <Eris/TypeService.h>
 #include <Eris/Operations.h>
+#include <Eris/Response.h>
+#include <Eris/DeleteLater.h>
 
 #include <wfmath/atlasconv.h>
 #include <sigc++/slot.h>
@@ -25,6 +27,7 @@ using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;
 using WFMath::TimeStamp;
 using namespace Atlas::Message;
+using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris
 {
@@ -51,6 +54,18 @@ Avatar::~Avatar()
     
     delete m_router;
     delete m_view;
+}
+
+void Avatar::deactivate()
+{
+    Logout l;
+    Anonymous arg;
+    arg->setId(m_entityId);
+    l->setArgs1(arg);
+    l->setSerialno(getNewSerialno());
+    
+    getConnection()->getResponder()->await(l->getSerialno(), this, &Avatar::logoutResponse);
+    getConnection()->send(l);
 }
 
 #pragma mark -
@@ -343,5 +358,30 @@ void Avatar::updateWorldTime(double seconds)
     m_stampAtLastOp = TimeStamp::now();
     m_lastOpTime = seconds;
 }
+
+void Avatar::logoutResponse(const RootOperation& op)
+{
+    if (!op->instanceOf(INFO_NO))
+        warning() << "received an avatar logout response that is not an INFO";
+        
+    const std::vector<Root>& args(op->getArgs());
+    
+    if (args.empty() || (args.front()->getClassNo() != LOGOUT_NO)) {
+        warning() << "argument of avatar logout INFO is not a logout op";
+        return;
+    }
+    
+    RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
+    const std::vector<Root>& args2(logout->getArgs());
+    assert(!args2.empty());
+    
+    std::string charId = args2.front()->getId();
+    debug() << "got logout for character " << charId;
+    assert(charId == m_entityId);
+
+    m_account->AvatarDeactivated.emit(this);
+    deleteLater(this);
+}
+
 
 } // of namespace Eris

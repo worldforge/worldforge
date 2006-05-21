@@ -294,22 +294,7 @@ Result Account::takeCharacter(const std::string &id)
 
 Result Account::deactivateCharacter(Avatar* av)
 {
-    if (m_status != LOGGED_IN) {
-        error() << "called deactivateCharacter on Account not in logged-in state";
-        return NOT_LOGGED_IN;
-    }
-    
-    Logout l;
-    Anonymous arg;
-    arg->setId(av->getId());
-    l->setArgs1(arg);
-    l->setSerialno(getNewSerialno());
-    
-    m_con->getResponder()->await(l->getSerialno(), this, &Account::avatarLogoutResponse);
-    m_con->send(l);
-	
-    // does this need a timeout?
-    
+    av->deactivate();    
     return NO_ERR;
 }
 

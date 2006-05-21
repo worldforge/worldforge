@@ -44,4 +44,13 @@ bool NullResponse::responseReceived(const Atlas::Objects::Operation::RootOperati
     return false;
 }
 
+void* clearMemberResponse(void* d)
+{
+    debug() << "clearing out member response object";
+    
+    void** objectPointer = (void**) d;
+    *objectPointer = NULL;
+    return NULL;
+}
+
 } // of namespace

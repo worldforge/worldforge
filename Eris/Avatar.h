@@ -115,6 +115,8 @@ public:
     */
     void useStop();
     
+    void deactivate();
+    
     /**
     Emitted when the character entity of this Avatar is valid (and presumably,
     visible). This will happen some time after the InGame signal is emitted.
@@ -160,6 +162,8 @@ private:
     
     void onCharacterWield(const std::string&, const Atlas::Message::Element&);
     void onWieldedChanged();
+    
+    void logoutResponse(const Atlas::Objects::Operation::RootOperation&);
     
     Account* m_account;
     

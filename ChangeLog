@@ -1,3 +1,18 @@
+2006-05-21  James Turner  <james@worldforge.org>
+
+	* Eris/Avatar.h, Eris/Avatar.h, Eris/Account.cpp: move deactivate 
+	  implementation to Avatar (Account::deactivateCharacter proxies). Also, 
+	  there is no longer a requirement for the Account to be in the logged-in 
+	  state. This fixes Simon's crash.
+	  
+	* Eris/Connection.cpp: check the default router exists before dispatching
+	  to it (happens if Avatars are active when the account has been logged
+	  out)
+	  
+	* Eris/Response.cpp, Eris/Response.h: use the sigc::trackable behaviour
+	  to NULL of MemberResponse objects if the target object goes away before
+	  the response fires. This happens easily with the Avatar logout response.
+
 2006-05-20  James Turner  <james@worldforge.org>
 	
 	* strip out various debug() messages which occur in common code paths,
