@@ -1,3 +1,9 @@
+2006-06-07  James Turner  <james@worldforge.org>
+
+	* Eris/Account.cpp, Eris/Account.h: update to handle sight(account)
+	  operations from the server, allowing us to be notified of
+	  new characters, and potentially other changes in the future.
+
 2006-05-21  James Turner  <james@worldforge.org>
 
 	* Eris/Response.h: fix corruption issue related to previous change;

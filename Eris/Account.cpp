@@ -50,6 +50,12 @@ public:
             return HANDLED;
         }
   
+        if ((op->getClassNo() == SIGHT_NO) && (op->getTo() == m_account->getId()))
+        {
+            const std::vector<Root>& args = op->getArgs();
+            m_account->updateFromObject(smart_dynamic_cast<AtlasAccount>(args.front()));
+        }
+        
         return IGNORED;
     }
 
@@ -379,7 +385,20 @@ void Account::loginComplete(const AtlasAccount &p)
     m_status = LOGGED_IN;
     m_accountId = p->getId();
     
-	if(p->hasAttr("character_types") == true)
+    updateFromObject(p);
+    
+    // notify an people watching us 
+    LoginSuccess.emit();
+      
+    m_con->Disconnecting.connect(sigc::mem_fun(this, &Account::netDisconnecting));
+    m_timeout.reset();
+}
+
+void Account::updateFromObject(const AtlasAccount &p)
+{
+    m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
+    
+    if(p->hasAttr("character_types") == true)
 	{
 		Atlas::Message::Element CharacterTypes(p->getAttr("character_types"));
 		
@@ -408,12 +427,6 @@ void Account::loginComplete(const AtlasAccount &p)
 			error() << "Account has attribute \"character_types\" which is not of type List.";
 		}
 	}
-    m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
-    // notify an people watching us 
-    LoginSuccess.emit();
-      
-    m_con->Disconnecting.connect(sigc::mem_fun(this, &Account::netDisconnecting));
-    m_timeout.reset();
 }
 
 void Account::loginError(const Error& err)
