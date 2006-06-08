@@ -53,7 +53,13 @@ public:
         if ((op->getClassNo() == SIGHT_NO) && (op->getTo() == m_account->getId()))
         {
             const std::vector<Root>& args = op->getArgs();
-            m_account->updateFromObject(smart_dynamic_cast<AtlasAccount>(args.front()));
+            AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
+            m_account->updateFromObject(acc);
+            
+            // refresh character data if it changed
+            if (!acc->isDefaultCharacters()) m_account->refreshCharacterInfo();
+            
+            return HANDLED;
         }
         
         return IGNORED;
@@ -353,6 +359,7 @@ void Account::internalLogout(bool clean)
             error() << "got forced logout, but not currently logged in";
     }
     
+    m_con->unregisterRouterForTo(m_router, m_accountId);
     m_status = DISCONNECTED;
     m_timeout.reset();
     
@@ -385,6 +392,7 @@ void Account::loginComplete(const AtlasAccount &p)
     m_status = LOGGED_IN;
     m_accountId = p->getId();
     
+    m_con->registerRouterForTo(m_router, m_accountId);
     updateFromObject(p);
     
     // notify an people watching us 
