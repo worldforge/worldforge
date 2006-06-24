@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT(eris, 1.3.10, james@worldforge.org)
+AC_INIT(eris, 1.3.11, james@worldforge.org)
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -14,12 +14,7 @@ dnl Automake setup
 AM_INIT_AUTOMAKE([dist-bzip2])
 
 dnl versioning info for libtool
-dnl DO NOT CHANGE ERIS_CURRENT HERE. See the checks for sigc++
-dnl further down. If we link against sigc++ 1.2, then this should be
-dnl N, if we link against sigc++ 2.0 it should be N+1. If you change
-dnl this because of API changes, it needs to be incremented by
-dnl 2, and the changes made to the values assigned in the sigc++ check.
-ERIS_CURRENT=11
+ERIS_CURRENT=12
 ERIS_REVISION=0
 ERIS_AGE=0
 

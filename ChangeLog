@@ -1,3 +1,9 @@
+2006-06-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version for release soon, including
+	  interface version. Remove notes about complex interface versions
+	  required to handle supporting two versions of libsigc++.
+
 2006-06-08  James Turner  <james@worldforge.org>
 
 	* Eris/Account.cpp: make Account a to-router for it's own ID; this has not
