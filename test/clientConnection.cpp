@@ -166,6 +166,10 @@ void ClientConnection::dispatch(const RootOperation& op)
             return;
         }
         
+        if (op->getClassNo() == LOGOUT_NO) {
+            return;
+        }
+        
         throw TestFailure("got anonymous op I couldn't dispatch");
     }
     

@@ -1,3 +1,7 @@
+2006-06-25  James Turner  <james@worldforge.org>
+
+	* test/clientConnection.cpp: ignore LOGOUT ops, so that tests work again
+
 2006-06-25  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Connection.cpp: Initialise local variable to avoid
