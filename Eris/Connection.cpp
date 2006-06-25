@@ -252,7 +252,7 @@ void Connection::objectArrived(const Root& obj)
 void Connection::dispatchOp(const RootOperation& op)
 {    
     try {
-        Router::RouterResult rr;
+        Router::RouterResult rr = Router::IGNORED;
         bool anonymous = op->getTo().empty();
         
         if (m_responder->handleOp(op)) return;
