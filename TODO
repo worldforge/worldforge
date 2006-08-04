@@ -1,3 +1,6 @@
+Re-write operators so that for a given operator O, operatorO is implemented
+using operatorO= rather than the other way around which is inefficient.
+
 Add throw(ColinearVectors) to the appropriate vector and matrix
 	rotation functions
 Get rid of templates as template args, use ValueType for standard
