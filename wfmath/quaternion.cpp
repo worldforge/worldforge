@@ -180,6 +180,11 @@ Quaternion& Quaternion::rotate(const RotMatrix<3>& m)
 
 Quaternion& Quaternion::rotation(int axis, CoordType angle)
 {
+  if (axis < 0 || axis > 2) {
+    m_valid = false;
+    return *this;
+  }
+
   CoordType half_angle = angle / 2;
 
   m_w = (CoordType) cos(half_angle);
@@ -196,10 +201,16 @@ Quaternion& Quaternion::rotation(int axis, CoordType angle)
 
 Quaternion& Quaternion::rotation(const Vector<3>& axis, CoordType angle)
 {
+  CoordType axis_mag = axis.mag();
   CoordType half_angle = angle / 2;
 
+  if (axis_mag < WFMATH_EPSILON) {
+    m_valid = false;
+    return *this;
+  }
+
   m_w = (CoordType) cos(half_angle);
-  m_vec = axis * (CoordType) (sin(half_angle) / axis.mag());
+  m_vec = axis * (CoordType) (sin(half_angle) / axis_mag);
 
   m_valid = axis.isValid();
   m_age = 1;
@@ -209,11 +220,16 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, CoordType angle)
 
 Quaternion& Quaternion::rotation(const Vector<3>& axis)
 {
-  CoordType mag = axis.mag();
-  CoordType half_angle = mag / 2;
+  CoordType axis_mag = axis.mag();
+  CoordType half_angle = axis_mag / 2;
+
+  if (axis_mag < WFMATH_EPSILON) {
+    m_valid = false;
+    return *this;
+  }
 
   m_w = (CoordType) cos(half_angle);
-  m_vec = axis * (CoordType) (sin(half_angle) / mag);
+  m_vec = axis * (CoordType) (sin(half_angle) / axis_mag);
 
   m_valid = axis.isValid();
   m_age = 1;
@@ -225,6 +241,11 @@ Quaternion& Quaternion::rotation(const Vector<3>& from, const Vector<3>& to)
 {
   CoordType mag_prod = sqrt(from.sqrMag() * to.sqrMag());
   CoordType ctheta_plus_1 = Dot(from, to) / mag_prod + 1;
+
+  if (mag_prod < WFMATH_EPSILON) {
+    m_valid = false;
+    return *this;
+  }
 
   // antiparallel vectors
   if(ctheta_plus_1 < WFMATH_EPSILON) // same check as used in the RotMatrix function

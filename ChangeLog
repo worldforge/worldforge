@@ -1,8 +1,16 @@
+2006-08-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/quaternion.cpp: If a quaternion is initialised with values
+	  which would make it normalise with division by zero, or be
+	  initialised with NaN, mark as invalid and return.
+
+	* autogen.sh: Remove references to long removed mainainer mode.
+
 2005-12-02  James Turner  <james@worldforge.org>
 
 	* Add X-Code 2.0 project file (ProjectBuilder project will be deleted
 	  shortly).
-	  	  
+
 2005-09-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* wfmath/atlasconv.h: If a quaternion is initialised with values
