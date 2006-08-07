@@ -298,7 +298,7 @@ void Room::notifyPersonSight(Person *p)
     } else {
         // fairly meaningless case, but I'm paranoid
         // could fire a 'changed' signal here, eg if they renamed?
-        assert (P->second != p);
+        assert (P->second == p);
     }
 }
 
