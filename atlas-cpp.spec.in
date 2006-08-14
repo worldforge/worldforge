@@ -15,7 +15,6 @@ Vendor: WorldForge
 Distribution: Mason
 Source: Atlas-C++-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: libstdc++-devel
 
 %description
 This library implements the Atlas protocol, for use in client-server

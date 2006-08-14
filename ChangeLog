@@ -1,3 +1,8 @@
+2006-08-14  Al Riddoch  <alriddoch@zepler.org>
+
+	* atlas-cpp.spec.in: Remove BuildRequires, as all that is required
+	  is a C++ compiler.
+
 2006-05-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Net/Stream.cpp: Fix strange logic in codec negotiation
