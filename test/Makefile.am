@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir)
+INCLUDES = -I$(top_builddir) -I$(top_srcdir)
 
 check_PROGRAMS = testEris
 TESTS = $(check_PROGRAMS)

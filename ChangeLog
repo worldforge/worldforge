@@ -1,3 +1,11 @@
+2006-08-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* autogen.sh, configure.ac: Add --enable/disable-debug option, so
+	  asserts are built correctly for distribution.
+
+	* configure.ac, Eris/Makefile.am, test/Makefile.am: Cut down compiler
+	  commandline clutter a bit.
+
 2006-08-07  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Room.cpp: Fix logic of assert test so Lobby now works correctly.

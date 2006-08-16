@@ -11,7 +11,7 @@ AC_CANONICAL_HOST
 
 dnl Automake setup
 
-AM_INIT_AUTOMAKE([dist-bzip2])
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2])
 
 dnl versioning info for libtool
 ERIS_CURRENT=12
@@ -24,7 +24,19 @@ AC_PROG_CXX
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi"
+AC_ARG_ENABLE(debug,
+    [  --enable-debug          enable debug information [default=no]],
+    [
+        if test "$enableval" = "yes"; then
+            CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi -DDEBUG"
+        else
+            CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi -DNDEBUG"
+        fi
+    ],[
+        CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi -DNDEBUG"
+    ]
+)
+
 
 dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 
