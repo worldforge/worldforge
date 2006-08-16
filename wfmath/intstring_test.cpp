@@ -40,7 +40,7 @@ static void TestConvert()
     // random number, so we don't care. Large unsigned ints will
     // provide us negative numbers for testing.
     long val2 = (long) val;
-    assert(atoi(IntToString(val2).c_str()) == val2);
+    assert(atol(IntToString(val2).c_str()) == val2);
   }
 }
 

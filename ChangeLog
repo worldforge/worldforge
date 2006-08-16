@@ -1,3 +1,9 @@
+2006-08-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/intstring_test.cpp: Switch to using atol instead of
+	  atoi to ensure longs work on platforms where long is bigger
+	  than int.
+
 2006-08-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* wfmath/quaternion.cpp: If a quaternion is initialised with values
