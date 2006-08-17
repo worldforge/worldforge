@@ -1,21 +1,18 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(wfmath, 0.3.4)
-AC_CONFIG_SRCDIR([wfmath/wfmath.h])
+AC_INIT(wfmath, 0.3.5, alriddoch@zepler.org)
+AC_CONFIG_SRCDIR([wfmath/const.cpp])
 AC_CONFIG_HEADERS([config.h])
 
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
+
 dnl versioning info for libtool
-WFMATH_CURRENT=3
-WFMATH_REVISION=3
+WFMATH_CURRENT=4
+WFMATH_REVISION=0
 WFMATH_AGE=0
 WFMATH_VERSION_INFO=$WFMATH_CURRENT:$WFMATH_REVISION:$WFMATH_AGE
-WFMATH_VERSION_NO=$WFMATH_CURRENT.$WFMATH_AGE.$WFMATH_REVISION
 
-AC_SUBST(WFMATH_CURRENT)
 AC_SUBST(WFMATH_VERSION_INFO)
-AC_SUBST(WFMATH_VERSION_NO)
-
-AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
 dnl Checks for programs.
 
@@ -24,10 +21,22 @@ AC_PROG_LIBTOOL
 
 AC_PROG_CXX
 
+AC_ARG_ENABLE(debug,
+    [  --enable-debug          enable debug information [default=no]],
+    [
+        if test "$enableval" = "yes"; then
+            CXXFLAGS="$CXXFLAGS -Wall -DDEBUG"
+        else
+            CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
+        fi
+    ],[
+        CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
+    ]
+)
+
 dnl Checks for libraries.
 dnl Replace `main' with a function in -libs:
 SYSTEM_LIBS="-lm"
-WFMATH_CFLAGS=""
 WFMATH_LIB_SUFFIX="-0.3"
 WFMATH_LIBS="-lwfmath$WFMATH_LIB_SUFFIX"
 
@@ -59,7 +68,6 @@ if test $found_string_stream == no ; then
 fi
 
 AC_SUBST(SYSTEM_LIBS)
-AC_SUBST(WFMATH_CFLAGS)
 AC_SUBST(WFMATH_LIB_SUFFIX)
 AC_SUBST(WFMATH_LIBS)
 

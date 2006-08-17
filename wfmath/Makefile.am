@@ -1,5 +1,5 @@
-AM_CXXFLAGS = -Wall
 INCLUDES = -I$(top_builddir) -I$(top_srcdir)
+
 EXTRA_DIST = bc_sloppy_mag_3
 
 headerdir = $(includedir)/wfmath-0.3/wfmath

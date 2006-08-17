@@ -1,5 +1,15 @@
 2006-08-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* wfmath/Makefile.am: Remove useless AM_CXXFLAGS.
+
+	* configure.ac: Straighten out interface version numbers, remove
+	  unused substitutions, and add debug compiler flag support. Increment
+	  version for release.
+
+	* NEWS: Add provisional news item for release.
+
+2006-08-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* wfmath/point.h, wfmath/point_funcs.h, wfmath/quaternion.cpp,
 	  wfmath/quaternion.h, wfmath/vector.h, wfmath/vector_funcs.h:
 	  Re-order and reimplement some of the operators, so they
