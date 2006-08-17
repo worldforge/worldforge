@@ -1,3 +1,13 @@
+2006-08-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/point.h, wfmath/point_funcs.h, wfmath/quaternion.cpp,
+	  wfmath/quaternion.h, wfmath/vector.h, wfmath/vector_funcs.h:
+	  Re-order and reimplement some of the operators, so they
+	  are more efficient and in some cases cleaner.
+
+	* wfmath/quaternion_test.cpp: Output values for the results of
+	  test calculations to make them easier to debug when they fail.
+
 2006-08-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* wfmath/intstring_test.cpp: Switch to using atol instead of

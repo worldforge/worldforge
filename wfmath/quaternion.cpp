@@ -81,32 +81,30 @@ bool Quaternion::isEqualTo(const Quaternion &q, double epsilon) const
 // v.rotate(q1).rotate(q2) is the same as v.rotate(q1 * q2),
 // the same as with matrices
 
-Quaternion Quaternion::operator* (const Quaternion& rhs) const
+Quaternion& Quaternion::operator*= (const Quaternion& rhs)
 {
-  Quaternion out;
+  m_valid = m_valid && rhs.m_valid;
+  m_age = m_age + rhs.m_age;
+  checkNormalization();
 
-  out.m_valid = m_valid && rhs.m_valid;
-  out.m_age = m_age + rhs.m_age;
-  out.checkNormalization();
+  float old_w = m_w;
+  m_w = m_w * rhs.m_w - Dot(m_vec, rhs.m_vec);
+  m_vec = old_w * rhs.m_vec + rhs.m_w * m_vec - Cross(m_vec, rhs.m_vec);
 
-  out.m_w = m_w * rhs.m_w - Dot(m_vec, rhs.m_vec);
-  out.m_vec = m_w * rhs.m_vec + rhs.m_w * m_vec - Cross(m_vec, rhs.m_vec);
-
-  return out;
+  return *this;
 }
 
-Quaternion Quaternion::operator/ (const Quaternion& rhs) const
+Quaternion& Quaternion::operator/= (const Quaternion& rhs)
 {
-  Quaternion out;
+  m_valid = m_valid && rhs.m_valid;
+  m_age = m_age + rhs.m_age;
+  checkNormalization();
 
-  out.m_valid = m_valid && rhs.m_valid;
-  out.m_age = m_age + rhs.m_age;
-  out.checkNormalization();
+  float old_w = m_w;
+  m_w = m_w * rhs.m_w + Dot(m_vec, rhs.m_vec);
+  m_vec = rhs.m_w * m_vec - old_w * rhs.m_vec + Cross(m_vec, rhs.m_vec);
 
-  out.m_w = m_w * rhs.m_w + Dot(m_vec, rhs.m_vec);
-  out.m_vec = rhs.m_w * m_vec - m_w * rhs.m_vec + Cross(m_vec, rhs.m_vec);
-
-  return out;
+  return *this;
 }
 
 bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)

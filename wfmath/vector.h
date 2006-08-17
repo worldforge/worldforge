@@ -40,6 +40,15 @@ template<const int dim> class Point;
 class Quaternion;
 
 template<const int dim>
+Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2);
+template<const int dim>
+Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2);
+template<const int dim>
+Vector<dim>& operator*=(Vector<dim>& v, CoordType d);
+template<const int dim>
+Vector<dim>& operator/=(Vector<dim>& v, CoordType d);
+
+template<const int dim>
 Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2);
 template<const int dim>
 Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2);
@@ -51,15 +60,6 @@ template<const int dim>
 Vector<dim> operator*(const Vector<dim>& v, CoordType d);
 template<const int dim>
 Vector<dim> operator/(const Vector<dim>& v, CoordType d);
-
-template<const int dim>
-Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2);
-template<const int dim>
-Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2);
-template<const int dim>
-Vector<dim>& operator*=(Vector<dim>& v, CoordType d);
-template<const int dim>
-Vector<dim>& operator/=(Vector<dim>& v, CoordType d);
 
 template<const int dim>
 CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2);

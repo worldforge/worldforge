@@ -77,27 +77,22 @@ inline Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
 }
 
 template<const int dim>
-inline Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
+inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
 {
-  Point<dim> out;
+    for(int i = 0; i < dim; ++i)
+      p.m_elem[i] += rhs.m_elem[i];
 
-  for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = c.m_elem[i] + v.m_elem[i];
+    p.m_valid = p.m_valid && rhs.m_valid;
 
-  out.m_valid = c.m_valid && v.m_valid;
-
-  return out;
+    return p;
 }
 
 template<const int dim>
-inline Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
+inline Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
 {
-  Point<dim> out;
+  Point<dim> out(c);
 
-  for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = c.m_elem[i] - v.m_elem[i];
-
-  out.m_valid = c.m_valid && v.m_valid;
+  out += v;
 
   return out;
 }
@@ -105,12 +100,30 @@ inline Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
 template<const int dim>
 inline Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
 {
-  Point<dim> out;
+  Point<dim> out(c);
 
-  for(int i = 0; i < dim; ++i)
-    out.m_elem[i] = c.m_elem[i] + v.m_elem[i];
+  out += v;
 
-  out.m_valid = c.m_valid && v.m_valid;
+  return out;
+}
+
+template<const int dim>
+inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
+{
+    for(int i = 0; i < dim; ++i)
+      p.m_elem[i] -= rhs.m_elem[i];
+
+    p.m_valid = p.m_valid && rhs.m_valid;
+
+    return p;
+}
+
+template<const int dim>
+inline Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
+{
+  Point<dim> out(c);
+
+  out -= v;
 
   return out;
 }
@@ -128,28 +141,6 @@ inline Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
     m_valid = rhs.m_valid;
 
     return *this;
-}
-
-template<const int dim>
-inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
-{
-    for(int i = 0; i < dim; ++i)
-      p.m_elem[i] += rhs.m_elem[i];
-
-    p.m_valid = p.m_valid && rhs.m_valid;
-
-    return p;
-}
-
-template<const int dim>
-inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
-{
-    for(int i = 0; i < dim; ++i)
-      p.m_elem[i] -= rhs.m_elem[i];
-
-    p.m_valid = p.m_valid && rhs.m_valid;
-
-    return p;
 }
 
 template<const int dim>

@@ -39,18 +39,18 @@ template<const int dim> class Ball;
 template<const int dim> class RotBox;
 
 template<const int dim>
+Point<dim>& operator+=(Point<dim>& p, const Vector<dim>& v);
+template<const int dim>
+Point<dim>& operator-=(Point<dim>& p, const Vector<dim>& v);
+
+template<const int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
 template<const int dim>
 Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v);
 template<const int dim>
-Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v);
-template<const int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
-
 template<const int dim>
-Point<dim>& operator+=(Point<dim>& p, const Vector<dim>& v);
-template<const int dim>
-Point<dim>& operator-=(Point<dim>& p, const Vector<dim>& v);
+Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v);
 
 template<const int dim>
 CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2);

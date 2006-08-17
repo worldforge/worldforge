@@ -90,15 +90,21 @@ class Quaternion
   // Operators
 
   ///
-  Quaternion operator* (const Quaternion& rhs) const;
+  Quaternion& operator*= (const Quaternion& rhs);
   ///
-  Quaternion operator/ (const Quaternion& rhs) const;
+  Quaternion& operator/= (const Quaternion& rhs);
   ///
-  Quaternion& operator*= (const Quaternion& rhs)
-	{return *this = operator*(rhs);}
+  Quaternion operator* (const Quaternion& rhs) const {
+    Quaternion out(*this);
+    out *= rhs;
+    return out;
+  }
   ///
-  Quaternion& operator/= (const Quaternion& rhs)
-	{return *this = operator/(rhs);}
+  Quaternion operator/ (const Quaternion& rhs) const {
+    Quaternion out(*this);
+    out /= rhs;
+    return out;
+  }
 
   // Functions
 

@@ -44,6 +44,11 @@ void test_quaternion(const Quaternion& q)
 
   q2.identity();
 
+  std::cout << "q = " << q << std::endl;
+  std::cout << "q2 = " << q2 << std::endl;
+  std::cout << "q  * q2= " << q * q2 << std::endl;
+  std::cout << "q2 * q = " << q2 * q << std::endl;
+
   assert(q == q * q2);
   assert(q == q2 * q);
   assert(q == q / q2);
@@ -56,6 +61,8 @@ void test_quaternion(const Quaternion& q)
   assert(q * q2 == Quaternion().identity());
 
   q2 *= q;
+
+  std::cout << "q2 = " << q2 << std::endl;
 
   assert(q2 == Quaternion().identity());
 

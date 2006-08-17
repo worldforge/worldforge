@@ -67,84 +67,6 @@ inline bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
 }
 
 template <const int dim>
-inline Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
-{
-  Vector<dim> ans;
-
-  ans.m_valid = v1.m_valid && v2.m_valid;
-
-  for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = v1.m_elem[i] + v2.m_elem[i];
-
-  return ans;
-}
-
-template <const int dim>
-inline Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
-{
-  Vector<dim> ans;
-
-  ans.m_valid = v1.m_valid && v2.m_valid;
-
-  for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = v1.m_elem[i] - v2.m_elem[i];
-
-  return ans;
-}
-
-template <const int dim>
-inline Vector<dim> operator*(const Vector<dim>& v, CoordType d)
-{
-  Vector<dim> ans;
-
-  ans.m_valid = v.m_valid;
-
-  for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = v.m_elem[i] * d;
-
-  return ans;
-}
-
-template<const int dim>
-inline Vector<dim> operator*(CoordType d, const Vector<dim>& v)
-{
-  Vector<dim> ans;
-
-  ans.m_valid = v.m_valid;
-
-  for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = v.m_elem[i] * d;
-
-  return ans;
-}
-
-template <const int dim>
-inline Vector<dim> operator/(const Vector<dim>& v, CoordType d)
-{
-  Vector<dim> ans;
-
-  ans.m_valid = v.m_valid;
-
-  for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = v.m_elem[i] / d;
-
-  return ans;
-}
-
-template <const int dim>
-inline Vector<dim> operator-(const Vector<dim>& v)
-{
-  Vector<dim> ans;
-
-  ans.m_valid = v.m_valid;
-
-  for(int i = 0; i < dim; ++i)
-    ans.m_elem[i] = -v.m_elem[i];
-
-  return ans;
-}
-
-template <const int dim>
 inline Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   v1.m_valid = v1.m_valid && v2.m_valid;
@@ -182,6 +104,69 @@ inline Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
     v.m_elem[i] /= d;
 
   return v;
+}
+
+template <const int dim>
+inline Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  Vector<dim> ans(v1);
+
+  ans += v2;
+
+  return ans;
+}
+
+template <const int dim>
+inline Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
+{
+  Vector<dim> ans(v1);
+
+  ans -= v2;
+
+  return ans;
+}
+
+template <const int dim>
+inline Vector<dim> operator*(const Vector<dim>& v, CoordType d)
+{
+  Vector<dim> ans(v);
+
+  ans *= d;
+
+  return ans;
+}
+
+template<const int dim>
+inline Vector<dim> operator*(CoordType d, const Vector<dim>& v)
+{
+  Vector<dim> ans(v);
+
+  ans *= d;
+
+  return ans;
+}
+
+template <const int dim>
+inline Vector<dim> operator/(const Vector<dim>& v, CoordType d)
+{
+  Vector<dim> ans(v);
+
+  ans /= d;
+
+  return ans;
+}
+
+template <const int dim>
+inline Vector<dim> operator-(const Vector<dim>& v)
+{
+  Vector<dim> ans;
+
+  ans.m_valid = v.m_valid;
+
+  for(int i = 0; i < dim; ++i)
+    ans.m_elem[i] = -v.m_elem[i];
+
+  return ans;
 }
 
 template<const int dim>
