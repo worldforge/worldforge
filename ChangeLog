@@ -1,4 +1,4 @@
-2006-08-17  Al Riddoch  <alriddoch@zepler.org>
+2006-08-18  Al Riddoch  <alriddoch@zepler.org>
 
 	* autogen.sh: Get rid of non-functional --enable-compile-warnings
 	  flag, and enable debug by default when invoking configure from
