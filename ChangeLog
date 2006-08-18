@@ -1,5 +1,11 @@
 2006-08-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* NEWS: Update date on release news item.
+
+	* Release 0.3.5
+
+2006-08-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* autogen.sh: Get rid of non-functional --enable-compile-warnings
 	  flag, and enable debug by default when invoking configure from
 	  autogen.
