@@ -1,5 +1,11 @@
 2006-08-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* autogen.sh: Get rid of non-functional --enable-compile-warnings
+	  flag, and enable debug by default when invoking configure from
+	  autogen.
+
+2006-08-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* wfmath/Makefile.am: Remove useless AM_CXXFLAGS.
 
 	* configure.ac: Straighten out interface version numbers, remove
