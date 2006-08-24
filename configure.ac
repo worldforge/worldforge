@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT(mercator, 0.2.4, alriddoch@zepler.org)
+AC_INIT(mercator, 0.2.5, alriddoch@zepler.org)
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 AC_CONFIG_HEADERS([config.h])
 

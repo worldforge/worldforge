@@ -1,3 +1,11 @@
+2006-08-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version number.
+
+	* NEWS: Update news.
+
+	* Release 0.2.5
+
 2006-01-03  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac, Mercator/iround.h, Mercator/GrassShader.cpp,
