@@ -1,3 +1,8 @@
+2006-08-31  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/config.cpp: Avoid resetting an item if it is already set
+	  to the value given.
+
 2006-04-11  Simon Goodall  <simon@simongoodall.co.uk>
 
 	* varconf/variable.cpp: Escape backslash characters.

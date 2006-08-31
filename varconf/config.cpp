@@ -545,7 +545,11 @@ void Config::setItem(const std::string & section,
     clean(key_clean);
 
     item->setScope(scope);
-    (m_conf[sec_clean])[key_clean] = item;
+    std::map<std::string, Variable> & section_map = m_conf[sec_clean];
+    std::map<std::string, Variable>::const_iterator I = section_map.find(key_clean);
+    if (I == section_map.end() || I->second != item) {
+      section_map[key_clean] = item;
+    }
  
     sig.emit(); 
     sigv.emit(sec_clean, key_clean);
