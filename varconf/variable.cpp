@@ -117,14 +117,7 @@ std::ostream& operator<<( std::ostream& out, const VarBase& v)
 
 bool operator ==( const VarBase& one, const VarBase& two)
 {
-  if ( one.m_have_bool == two.m_have_bool &&
-       one.m_have_int == two.m_have_int &&
-       one.m_have_double == two.m_have_double &&
-       one.m_have_string == two.m_have_string &&
-       one.m_val_bool == two.m_val_bool &&
-       one.m_val_int == two.m_val_int &&
-       one.m_val_double == two.m_val_double &&
-       one.m_val == two.m_val)
+  if (one.m_val == two.m_val)
     return true;
   // scope is explicitly excluded as its nothing to do with value comparisons
  

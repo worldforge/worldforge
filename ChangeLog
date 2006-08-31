@@ -1,5 +1,9 @@
 2006-08-31  Al Riddoch  <alriddoch@zepler.org>
 
+	* varconf/variable.cpp: Simplify equality check.
+
+2006-08-31  Al Riddoch  <alriddoch@zepler.org>
+
 	* varconf/config.cpp: Avoid resetting an item if it is already set
 	  to the value given.
 
