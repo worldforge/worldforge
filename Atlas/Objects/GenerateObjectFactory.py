@@ -14,7 +14,7 @@ class GenerateObjectFactory:
         outfile = self.outdir + '/objectFactory.cpp'
         #print outfile
         self.out = open(outfile + ".tmp", "w")
-        self.write(copyright_template % ("Aloril", "Al Riddoch"))
+        self.write(copyright_template % ("Aloril", "Alistair Riddoch"))
         self.write('\n#include <Atlas/Objects/objectFactory.h>\n')
         self.write('#include <Atlas/Objects/Entity.h>\n')
         self.write('#include <Atlas/Objects/Anonymous.h>\n')

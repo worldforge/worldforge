@@ -1,3 +1,10 @@
+2006-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/GenerateObjectFactory.py: Tweak the copyright name.
+
+	* Atlas/Objects/flag.cpp, Atlas/Objects/objectFactory.cpp:
+	  Re-generate generated source.
+
 2006-08-14  Al Riddoch  <alriddoch@zepler.org>
 
 	* atlas-cpp.spec.in: Remove BuildRequires, as all that is required
