@@ -1,6 +1,7 @@
 /*
  *  parse_error.h - interface for parse error handling class.
  *  Copyright (C) 2001, Stefanus Du Toit, Joseph Zupko
+ *            (C) 2004 Alistair Riddoch
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public

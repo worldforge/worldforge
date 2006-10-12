@@ -1,6 +1,7 @@
 /*
  *  Config.h - interface for configuration class
  *  Copyright (C) 2001, Stefanus Du Toit, Joseph Zupko
+ *            (C) 2002-2006 Alistair Riddoch
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public

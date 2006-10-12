@@ -1,6 +1,7 @@
 /*
  *  dyntypes.cpp - implementation of the dynamically derived value container types.
  *  Copyright (C) 2001, Ron Steinke
+ *            (C) 2003-2006 Alistair Riddoch
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public

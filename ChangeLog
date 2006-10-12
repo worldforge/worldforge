@@ -1,3 +1,11 @@
+2006-10-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/Config.h, varconf/config.cpp, varconf/dynbase.cpp,
+	  varconf/dynbase.h, varconf/dyncmp.cpp, varconf/dyncmp.h,
+	  varconf/dyntypes.cpp, varconf/dyntypes.h, varconf/parse_error.cpp,
+	  varconf/parse_error.h, varconf/variable.cpp, varconf/variable.h:
+	  Update the copyright statements with current maintainer.
+
 2006-08-31  Al Riddoch  <alriddoch@zepler.org>
 
 	* varconf/variable.cpp: Simplify equality check.
