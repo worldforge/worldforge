@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT([Atlas-C++],[0.6.0],[alriddoch@zepler.org],[Atlas-C++])
+AC_INIT([Atlas-C++],[0.7.0],[alriddoch@zepler.org],[Atlas-C++])
 AC_CONFIG_SRCDIR([Atlas/Bridge.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -14,7 +14,7 @@ AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
 dnl Initialise automake
 
-INTERFACE_VERSION='-version-info 1:0:0'
+INTERFACE_VERSION='-version-info 0:0:0'
 
 AC_SUBST(INTERFACE_VERSION)
 

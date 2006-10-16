@@ -1,3 +1,10 @@
+2006-10-16  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Create a new unstable branch, 0.7.x
+
+	* README: Clean up the documentation, and update notes about
+	  current stable and development branch status.
+
 2006-10-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/GenerateObjectFactory.py: Tweak the copyright name.

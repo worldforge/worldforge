@@ -4,9 +4,8 @@ Welcome to Atlas-C++, the C++ reference implementation of the Atlas protocol.
 
 NOTE!:
 Many current programs use older version of Atlas-C++:
-Make fresh checkout to clean directory:
-cvs -z3 checkout -r atlas-cpp-0_3_10 forge/libs/Atlas-C++
-
+Use released version of Atlas-C++ for preference, unless you are working
+with development code that requires this series.
 
 This library implements the Atlas protocol, for use in client-server
 game applications.  This library is suitable for linking to either
@@ -14,11 +13,11 @@ clients or servers.
 
 VERSION
 
-This is Atlas-C++ 0.5.9x, the latest development version of Atlas-C++. The
-0.4.x branch will contain NO API CHANGES. The 0.5.9x branch is completely
+This is Atlas-C++ 0.7.x, the latest development version of Atlas-C++. The
+0.6.x branch will contain NO API CHANGES. The 0.7.x branch is completely
 experimental and may not be easy to track. Any changes affecting the API
-should go into 0.5.9x, as should any features which are not completely
-stable. 0.6.0 will be the next stable branch.
+should go into 0.7.x, as should any features which are not completely
+stable. 0.8.0 will be the next stable branch.
 
 SOCKET LIBRARIES
 
