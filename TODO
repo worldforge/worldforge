@@ -1,3 +1,6 @@
+Need to add to the codec interface so that we can verify codec is at
+stream level before and after building a datagram.
+
 Logic in StreamFoo::poll() is bogus. can_read does not mean that sockets
 can be read from many times, just once, so can_read should be checked outside
 the do loop, then inside a while check should be used to copy all bytes
