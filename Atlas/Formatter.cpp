@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2005 Alistair Riddoch
 
+// $Id$
+
 #include <Atlas/Formatter.h>
 
 #include <iostream>

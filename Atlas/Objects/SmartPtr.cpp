@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2003 Alistair Riddoch
 
+// $Id$
+
 #include <Atlas/Objects/SmartPtr.h>
 
 #include <Atlas/Message/Element.h>

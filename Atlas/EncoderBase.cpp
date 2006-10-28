@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2003 Stefanus Du Toit, Al Riddoch
 
+// $Id$
+
 #include <Atlas/EncoderBase.h>
 
 namespace Atlas {

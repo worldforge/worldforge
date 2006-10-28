@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2003 Al Riddoch
 
+// $Id$
+
 #include <Atlas/Exception.h>
 
 namespace Atlas {

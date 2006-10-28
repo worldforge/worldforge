@@ -2,6 +2,8 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit, Michael Day
 
+// $Id$
+
 /** @file Codecs/Utility.cpp
  * Various utility functions for codec implementation.
  *

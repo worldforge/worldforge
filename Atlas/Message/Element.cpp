@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2001 Stefanus Du Toit, Karsten-O. Laux
 
+// $Id$
+
 #include <Atlas/Message/Element.h>
 
 namespace Atlas { namespace Message {

@@ -1,5 +1,22 @@
 2006-10-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Bridge.cpp, Atlas/Codec.cpp, Atlas/EncoderBase.cpp,
+	  Atlas/Exception.cpp, Atlas/Factory.cpp, Atlas/Filter.cpp,
+	  Atlas/Formatter.cpp, Atlas/Negotiate.cpp, Atlas/Codecs/Bach.cpp,
+	  Atlas/Codecs/Packed.cpp, Atlas/Codecs/Utility.cpp,
+	  Atlas/Codecs/XML.cpp, Atlas/Codecs/XMLish.cpp,
+	  Atlas/Filters/Bzip2.cpp, Atlas/Filters/Gzip.cpp,
+	  Atlas/Funky/FEncoder.cpp, Atlas/Message/DecoderBase.cpp,
+	  Atlas/Message/Element.cpp, Atlas/Message/Layer.cpp,
+	  Atlas/Message/MEncoder.cpp, Atlas/Message/QueuedDecoder.cpp,
+	  Atlas/Net/Loopback.cpp, Atlas/Net/Stream.cpp,
+	  Atlas/Objects/BaseObject.cpp, Atlas/Objects/Encoder.cpp,
+	  Atlas/Objects/SmartPtr.cpp, Atlas/Objects/loadDefaults.cpp:
+	  Add RCS Id keywords to all non-generated bodies, for better
+	  version tracking.
+
+2006-10-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Bridge.h, Atlas/Codec.h, Atlas/Codec_impl.h, Atlas/Debug.h,
 	  Atlas/EncoderBase.h, Atlas/Exception.h, Atlas/Factory.h,
 	  Atlas/Filter.h, Atlas/Formatter.h, Atlas/Negotiate.h, Atlas/Task.h,

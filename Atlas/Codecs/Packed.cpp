@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2001 Stefanus Du Toit, Michael Day
 
+// $Id$
+
 #include <Atlas/Codecs/Packed.h>
 
 #include <iostream>

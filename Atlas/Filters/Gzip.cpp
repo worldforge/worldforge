@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Dmitry Derevyanko
 
+// $Id$
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif

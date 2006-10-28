@@ -3,6 +3,8 @@
 // Copyright 2000-2001 Aloril,
 // Copyright 2004-2005 Alistair Riddoch
 
+// $Id$
+
 #include <Atlas/Objects/loadDefaults.h>
 
 #include <Atlas/Objects/SmartPtr.h>

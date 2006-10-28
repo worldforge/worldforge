@@ -2,6 +2,8 @@
 // GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2002 Michael Koch <konqueror@gmx.de>
 
+// $Id$
+
 #include <Atlas/Codecs/Bach.h>
 
 #include <Atlas/Debug.h>
