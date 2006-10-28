@@ -5,6 +5,8 @@
 #just used to partition gen_cpp.py into files, 
 #not usable without GenerateCC class
 
+__revision__ = '$Id$'
+
 from common import *
 
 class GenerateForward:

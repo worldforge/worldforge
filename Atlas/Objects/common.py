@@ -3,6 +3,8 @@
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
 #Copyright (C) 2001-2004 Alistair Riddoch
 
+__revision__ = '$Id$'
+
 import sys, os
 try:
     import filecmp

@@ -1,5 +1,15 @@
 2006-10-28  Al Riddoch  <alriddoch@zepler.org>
 
+	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/GenerateDecoder.py,
+	  Atlas/Objects/GenerateDispatcher.py,
+	  Atlas/Objects/GenerateForward.py,
+	  Atlas/Objects/GenerateObjectFactory.py, Atlas/Objects/common.py,
+	  Atlas/Objects/flag.cpp, Atlas/Objects/gen_cpp.py:
+	  Add RCS Id keywords to all python code generators, for better
+	  version tracking.
+
+2006-10-28  Al Riddoch  <alriddoch@zepler.org>
+
 	* Atlas/Bridge.cpp, Atlas/Codec.cpp, Atlas/EncoderBase.cpp,
 	  Atlas/Exception.cpp, Atlas/Factory.cpp, Atlas/Filter.cpp,
 	  Atlas/Formatter.cpp, Atlas/Negotiate.cpp, Atlas/Codecs/Bach.cpp,

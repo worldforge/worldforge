@@ -4,6 +4,8 @@
 #Copyright (C) 2000 Stefanus Du Toit and Aloril
 #Copyright (C) 2001-2005 Alistair Riddoch
 
+__revision__ = '$Id$'
+
 from common import *
 from AttributeInfo import *
 from GenerateObjectFactory import GenerateObjectFactory
