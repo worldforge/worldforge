@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2004 Alistair Riddoch
 
+// $Id$
+
 #ifndef ATLAS_FORMATTER_H
 #define ATLAS_FORMATTER_H
 

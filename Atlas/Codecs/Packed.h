@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2001 Stefanus Du Toit, Michael Day
 
+// $Id$
+
 #ifndef ATLAS_CODECS_PACKED_H
 #define ATLAS_CODECS_PACKED_H
 

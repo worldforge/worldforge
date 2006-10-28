@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
 
+// $Id$
+
 // Much inspiration, the original idea and name suggestion by Mike Day.
 
 #ifndef ATLAS_FUNKY_ENCODER_H

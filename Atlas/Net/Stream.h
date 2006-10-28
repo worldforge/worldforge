@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2001 Michael Day, Dmitry Derevyanko, Stefanus Du Toit
 
+// $Id$
+
 #ifndef ATLAS_NET_STREAM_H
 #define ATLAS_NET_STREAM_H
 

@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Dmitry Derevyanko
 
+// $Id$
+
 #ifndef ATLAS_FILTERS_GZIP_H
 #define ATLAS_FILTERS_GZIP_H
 

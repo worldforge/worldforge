@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2001 Stefanus Du Toit, Karsten-O. Laux and Al Riddoch
 
+// $Id$
+
 #ifndef ATLAS_MESSAGE_ELEMENT_H
 #define ATLAS_MESSAGE_ELEMENT_H
 

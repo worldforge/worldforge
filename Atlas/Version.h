@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2004 Alistair Riddoch  <alriddoch@zepler.org>
 
+// $Id$
+
 #ifndef ATLAS_VERSION_H
 #define ATLAS_VERSION_H
 

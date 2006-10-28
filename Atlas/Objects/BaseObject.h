@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000-2004 Stefanus Du Toit, Aloril and Al Riddoch
 
+// $Id$
+
 #ifndef ATLAS_OBJECTS_BASEOBJECT_H
 #define ATLAS_OBJECTS_BASEOBJECT_H
 

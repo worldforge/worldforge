@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2001 Al Riddoch
 
+// $Id$
+
 #ifndef ATLAS_EXCEPTION_H
 #define ATLAS_EXCEPTION_H
 

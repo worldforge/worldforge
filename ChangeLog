@@ -1,3 +1,20 @@
+2006-10-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Bridge.h, Atlas/Codec.h, Atlas/Codec_impl.h, Atlas/Debug.h,
+	  Atlas/EncoderBase.h, Atlas/Exception.h, Atlas/Factory.h,
+	  Atlas/Filter.h, Atlas/Formatter.h, Atlas/Negotiate.h, Atlas/Task.h,
+	  Atlas/Version.h, Atlas/Codecs/Bach.h, Atlas/Codecs/Packed.h,
+	  Atlas/Codecs/Utility.h, Atlas/Codecs/XML.h, Atlas/Filters/Bzip2.h,
+	  Atlas/Filters/Gzip.h, Atlas/Funky/FEncoder.h,
+	  Atlas/Message/DecoderBase.h, Atlas/Message/Element.h,
+	  Atlas/Message/Layer.h, Atlas/Message/MEncoder.h,
+	  Atlas/Message/QueuedDecoder.h, Atlas/Net/Loopback.h,
+	  Atlas/Net/Stream.h, Atlas/Objects/BaseObject.h,
+	  Atlas/Objects/Encoder.h, Atlas/Objects/SmartPtr.h,
+	  Atlas/Objects/loadDefaults.h, Atlas/Objects/objectFactory.h:
+	  Add RCS Id keywords to all non-generated headers, for better
+	  version tracking.
+
 2006-10-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* configure.ac: Create a new unstable branch, 0.7.x

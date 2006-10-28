@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day, Stefanus Du Toit
 
+// $Id$
+
 #ifndef ATLAS_MESSAGE_LAYER_H
 #define ATLAS_MESSAGE_LAYER_H
 

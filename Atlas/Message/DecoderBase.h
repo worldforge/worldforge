@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Stefanus Du Toit
 
+// $Id$
+
 #ifndef ATLAS_MESSAGE_DECODERBASE_H
 #define ATLAS_MESSAGE_DECODERBASE_H
 

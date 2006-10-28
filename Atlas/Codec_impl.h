@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2001 Stefanus Du Toit
 
+// $Id$
+
 #ifndef ATLAS_CODEC_IMPL_H
 #define ATLAS_CODEC_IMPL_H
 

@@ -3,6 +3,8 @@
 // Copyright (C) 2000 Aloril
 // Copyright (C) 2000-2005 Al Riddoch
 
+// $Id$
+
 #ifndef ATLAS_OBJECTS_SMARTPTR_H
 #define ATLAS_OBJECTS_SMARTPTR_H
 

@@ -2,6 +2,8 @@
 // the GNU Lesser General Public License (See COPYING for details).
 // Copyright (C) 2000 Michael Day
 
+// $Id$
+
 #ifndef ATLAS_NET_LOOPBACK_H
 #define ATLAS_NET_LOOPBACK_H
 
