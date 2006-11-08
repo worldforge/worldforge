@@ -1,3 +1,10 @@
+2006-11-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/BaseConnection.cpp, Eris/BaseConnection.h,
+	  Eris/Connection.cpp, Eris/MetaQuery.cpp, Eris/MetaQuery.h,
+	  Eris/Metaserver.cpp: Re-order some includes which gave me some
+	  trouble building the code on MacOS.
+
 2006-08-16  Al Riddoch  <alriddoch@zepler.org>
 
 	* autogen.sh, configure.ac: Add --enable/disable-debug option, so

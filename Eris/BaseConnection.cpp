@@ -1,3 +1,5 @@
+#include <skstream/skstream.h>
+
 #ifdef HAVE_CONFIG_H
 	#include "config.h"
 #endif
@@ -16,7 +18,6 @@
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/objectFactory.h>
 
-#include <skstream/skstream.h>
 #include <sigc++/slot.h>
 
 #include <sstream>

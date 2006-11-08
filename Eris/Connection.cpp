@@ -1,3 +1,5 @@
+#include <skstream/skstream.h>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
@@ -13,7 +15,6 @@
 #include <Eris/Redispatch.h>
 #include <Eris/Response.h>
 
-#include <skstream/skstream.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/objectFactory.h>

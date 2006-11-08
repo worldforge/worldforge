@@ -1,15 +1,15 @@
 #ifndef ERIS_BASE_CONNECTION_H
 #define ERIS_BASE_CONNECTION_H
 
+#include <Atlas/Objects/ObjectsFwd.h>
+#include <Atlas/Net/Stream.h>
+
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
 #include <iostream>
 
 class tcp_socket_stream;
-
-#include <Atlas/Objects/ObjectsFwd.h>
-#include <Atlas/Net/Stream.h>
 
 namespace Atlas
 {

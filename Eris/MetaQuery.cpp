@@ -1,8 +1,8 @@
+#include <Eris/MetaQuery.h>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
-
-#include <Eris/MetaQuery.h>
 
 #include <Eris/Exceptions.h>
 #include <Eris/Metaserver.h>

@@ -1,10 +1,11 @@
+#include <Eris/MetaQuery.h>
+
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
 
 #include <Eris/Metaserver.h>
 
-#include <Eris/MetaQuery.h>
 #include <Eris/ServerInfo.h>
 #include <Eris/Timeout.h>
 #include <Eris/Poll.h>

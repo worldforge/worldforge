@@ -1,3 +1,5 @@
+#include <skstream/skstream.h>
+
 #ifndef ERIS_META_QUERY_H
 #define ERIS_META_QUERY_H
 
@@ -5,7 +7,6 @@
 #include <Eris/Poll.h>
 
 #include <wfmath/timestamp.h>
-#include <skstream/skstream.h>
 
 namespace Eris {
 
