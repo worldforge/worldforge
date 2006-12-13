@@ -1,3 +1,11 @@
+2006-12-13  Simon Goodall  <simon@simongoodall.co.uk>
+
+	* Eris/View.cpp: Fix case where a look queue item could be discarded
+	  during the send stage when the entity disappears without attempting to
+	  perform another look. This could eventually lead to no more looks
+	  being issued should the number of entities disappearing requiring
+	  looks was too big.
+
 2006-11-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/BaseConnection.cpp, Eris/BaseConnection.h,

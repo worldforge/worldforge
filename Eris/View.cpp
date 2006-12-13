@@ -384,6 +384,7 @@ void View::sendLookAt(const std::string& eid)
                 if (m_notifySights.count(eid) == 0) {
                     // no-one cares, don't bother to look
                     m_pending.erase(pending);
+                    issueQueuedLook();
                     return;
                 } // else someone <em>does</em> care, so let's do the look, but
                   // keep SightAction unchanged so it discards / is hidden as
@@ -438,9 +439,9 @@ void View::entityDeleted(Entity* ent)
 void View::issueQueuedLook()
 {
     if (m_lookQueue.empty()) return;
-    
-    sendLookAt(m_lookQueue.front());
+    std::string eid = m_lookQueue.front();
     m_lookQueue.pop_front();
+    sendLookAt(eid);
 }
 
 void View::dumpLookQueue()
