@@ -48,7 +48,8 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
     m_view(vw),
     m_hasBBox(false),
     m_moving(false),
-    m_recentlyCreated(false)
+    m_recentlyCreated(false),
+    m_initialised(true)
 {
     assert(m_id.size() > 0);
     m_orientation.identity();
@@ -58,16 +59,27 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
 }
 
 Entity::~Entity()
-{   
+{
+    assert(m_initialised == false);   
+}
+
+void Entity::shutdown()
+{
     BeingDeleted.emit();
     if (m_moving) m_view->removeFromPrediction(this);
     
-    while (!m_contents.empty()) delete m_contents.back();    
+    while (!m_contents.empty()) {
+      Entity *e = m_contents.back();
+      e->shutdown();
+      delete e;
+    }
     setLocation(NULL);
     
     m_view->getConnection()->unregisterRouterForFrom(m_router, m_id);
     m_view->entityDeleted(this); // remove ourselves from the View's content map
     delete m_router;
+
+    m_initialised = false;
 }
 
 void Entity::init(const RootEntity& ge, bool fromCreateOp)

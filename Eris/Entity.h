@@ -49,6 +49,8 @@ public:
     explicit Entity(const std::string& id, TypeInfo* ty, View* vw);
     virtual ~Entity();
 
+    virtual void shutdown();
+
 // heirarchy interface    
     unsigned int numContained() const {
         return m_contents.size();
@@ -461,6 +463,8 @@ private:
     bool m_recentlyCreated; ///< flag set if this entity was the subject of a sight(create)
     
     TaskArray m_tasks;
+
+    bool m_initialised;
 };
 
 } // of namespace

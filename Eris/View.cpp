@@ -35,6 +35,7 @@ View::View(Avatar* av) :
 View::~View()
 {
     if (m_topLevel) {
+        m_topLevel->shutdown();
         delete m_topLevel;
         assert(m_contents.empty());
     }
@@ -308,6 +309,7 @@ void View::deleteEntity(const std::string& eid)
         // force a disappear if one hasn't already happened
         ent->setVisible(false); // redundant?
         EntityDeleted.emit(ent);
+        ent->shutdown();
         delete ent; // actually kill it off
     } else {
         if (isPending(eid)) {
@@ -338,6 +340,7 @@ void View::unseen(const std::string& eid)
     Entity* ent = getEntity(eid);
     if (!ent) return; // unseen for non-local, ignore
     
+    ent->shutdown();
     delete ent; // is that all?
 }
     

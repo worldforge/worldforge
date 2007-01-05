@@ -1,3 +1,10 @@
+2007-01-05  Simon Goodall  <simon@simongoodall.co.uk>
+
+	* Eris/Entity.cpp, Eris/Entity.h, Eris/View.cpp: Move destructor code 
+	  into a new shutdown method. This should be called before an entity is
+	  deleted. This fixes a problem where the partially deleted entity is
+	  passed as an argurment to signals fired from the destructor.
+
 2006-12-13  Simon Goodall  <simon@simongoodall.co.uk>
 
 	* Eris/View.cpp: Fix case where a look queue item could be discarded
