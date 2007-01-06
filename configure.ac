@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT(eris, 1.3.11, james@worldforge.org)
+AC_INIT(eris, 1.3.12, james@worldforge.org)
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -14,7 +14,7 @@ dnl Automake setup
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2])
 
 dnl versioning info for libtool
-ERIS_CURRENT=12
+ERIS_CURRENT=13
 ERIS_REVISION=0
 ERIS_AGE=0
 
@@ -123,11 +123,6 @@ AC_ARG_ENABLE(janus,
   AC_LANG_POP(C++)
 ])
 AM_CONDITIONAL(HAVE_ATLAS_JANUS, test "x$have_atlas_janus" = "xyes")
-
-AC_SUBST(CFLAGS)
-AC_SUBST(CXXFLAGS)
-AC_SUBST(CPPFLAGS)
-AC_SUBST(LDFLAGS)
 
 ERIS_LIB_SUFFIX="-1.3"
 ERIS_LIBS="-leris$ERIS_LIB_SUFFIX -lm"

@@ -1,3 +1,8 @@
+2007-01-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version number and interface version.
+	  Remove some unnecessary substitutions.
+
 2007-01-05  Simon Goodall  <simon@simongoodall.co.uk>
 
 	* Eris/Entity.cpp, Eris/Entity.h, Eris/View.cpp: Move destructor code 
