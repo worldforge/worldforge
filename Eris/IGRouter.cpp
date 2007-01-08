@@ -152,7 +152,7 @@ Router::RouterResult IGRouter::handleSightOp(const RootOperation& sightOp)
     }
     
     if (ty->isA(m_actionType)) {
-        if (op->getFrom().empty()) {
+        if (op->isDefaultFrom()) {
             warning() << "recieved op " << ty->getName() << " with FROM unset";
             return IGNORED;
         }

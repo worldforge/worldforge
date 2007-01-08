@@ -268,6 +268,9 @@ private:
 
 Router::RouterResult Lobby::recvTalk(const Talk& tk)
 {
+    if (tk->isDefaultFrom()) {
+        return IGNORED;
+    }
     IdPersonMap::const_iterator P = m_people.find(tk->getFrom());
     if ((P == m_people.end()) || (P->second == NULL)) {
         getPerson(tk->getFrom()); // force a LOOK if necessary
@@ -334,6 +337,9 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
         
     std::string description = args.front()->getAttr("description").asString();
     
+    if (im->isDefaultFrom()) {
+        return IGNORED;
+    }
     IdPersonMap::const_iterator P = m_people.find(im->getFrom());
     if ((P == m_people.end()) || (P->second == NULL)) {
         getPerson(im->getFrom()); // force a LOOK if necessary

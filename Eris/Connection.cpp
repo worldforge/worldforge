@@ -254,24 +254,28 @@ void Connection::dispatchOp(const RootOperation& op)
 {    
     try {
         Router::RouterResult rr = Router::IGNORED;
-        bool anonymous = op->getTo().empty();
+        bool anonymous = op->isDefaultTo();
         
         if (m_responder->handleOp(op)) return;
         
     // locate a router based on from
-        IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
-        if (R != m_fromRouters.end()) {
-            rr = R->second->handleOperation(op);
-            if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+        if (!op->isDefaultFrom()) {
+            IdRouterMap::const_iterator R = m_fromRouters.find(op->getFrom());
+            if (R != m_fromRouters.end()) {
+                rr = R->second->handleOperation(op);
+                if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+            }
         }
         
     // locate a router based on the op's TO value
-        R = m_toRouters.find(op->getTo());
-        if (R != m_toRouters.end()) {
-            rr = R->second->handleOperation(op);
-            if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
-        } else if (!anonymous && !m_toRouters.empty()) {
-            warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
+        if (!anonymous) {
+            IdRouterMap::const_iterator R = m_toRouters.find(op->getTo());
+            if (R != m_toRouters.end()) {
+                rr = R->second->handleOperation(op);
+                if ((rr == Router::HANDLED) || (rr == Router::WILL_REDISPATCH)) return;
+            } else if (!m_toRouters.empty()) {
+                warning() << "recived op with TO=" << op->getTo() << ", but no router is registered for that id";
+            }
         }
         
     // special-case, server info refreshes are handled here directly
