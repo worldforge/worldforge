@@ -19,7 +19,7 @@ void ResponseTracker::await(int serialno, ResponseBase* resp)
 
 bool ResponseTracker::handleOp(const RootOperation& op)
 {
-    if (op->getRefno() == 0) return false; // invalid refno, not a response op
+    if (op->isDefaultRefno()) return false; // invalid refno, not a response op
     
     RefnoResponseMap::iterator it = m_pending.find(op->getRefno());
     if (it == m_pending.end()) {

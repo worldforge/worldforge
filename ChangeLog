@@ -1,4 +1,9 @@
+2007-01-09  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Response.cpp: More efficient and correct refno check.
+
 2007-01-08  Al Riddoch  <alriddoch@zepler.org>
+
 
 	* Eris/Connection.cpp, Eris/IGRouter.cpp, Eris/Lobby.cpp:
 	  Use more efficient checks on FROM and TO, and add more checks
