@@ -20,25 +20,19 @@ void mergeOrCopyElement(const Element& src, Element& dst)
     const MapType& srcMap(src.asMap());
     MapType& dstMap(dst.asMap());
     
-    MapType::iterator dit = dstMap.begin();
+    MapType::iterator dit;
     MapType::const_iterator sit = srcMap.begin();
+    MapType::const_iterator sitend = srcMap.end(); 
     
-    for (; sit != srcMap.end(); ++sit) {   
-        // advance destination to us / past us
-        while (dit->first < sit->first) ++dit;
-        if (dit == dstMap.end()) break;
-        
-        if (dit->first == sit->first) {
-            // exists in destination, merge
-            mergeOrCopyElement(sit->second, dit->second);
-        } else {
+    for (; sit != sitend; ++sit) { 
+        dit = dstMap.find(sit->first);
+        if (dit == dstMap.end()) {
             // only in source, insert
-            dstMap.insert(dit, *sit);
+            dstMap[sit->first] = sit->second;
+        } else {
+            mergeOrCopyElement(sit->second, dit->second);
         }
     } // of source map iteration
-    
-    // copy over remanining attrs
-    while (sit != srcMap.end()) dstMap.insert(dit, *sit++);
 }
 
 } // of namespace
