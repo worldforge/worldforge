@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to generate configure
 
 dnl Autoconf Initialization
-AC_INIT(varconf, 0.6.4, alriddoch@zepler.org)
+AC_INIT(varconf, 0.6.5, alriddoch@zepler.org)
 AC_CONFIG_SRCDIR([varconf/variable.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -11,17 +11,16 @@ AC_CANONICAL_HOST
 
 dnl Information
 
-AM_INIT_AUTOMAKE([dist-bzip2 check-news])
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
 dnl versioning info for libtool
 VARCONF_CURRENT=6
 VARCONF_REVISION=0
 VARCONF_AGE=0
 VARCONF_REQUIRES=""
-VARCONF_CONFLICTS=""
 VARCONF_LIB_SUFFIX="-1.0"
 
-MIN_SIGC_VERSION=1.2.0
+MIN_SIGC_VERSION=2.0.0
 
 dnl General Initialization
 
@@ -56,7 +55,6 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
         CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
         VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-2.0"
-        VARCONF_CONFLICTS="$VARCONF_CONFLICTS sigc++-1.2 < 2.0"
     ],
         AC_MSG_ERROR([Couldn't find sigc++ library!])
     ])
@@ -66,7 +64,6 @@ VARCONF_VERSION_INFO=$VARCONF_CURRENT:$VARCONF_REVISION:$VARCONF_AGE
 
 AC_SUBST(VARCONF_LIBS)
 AC_SUBST(VARCONF_REQUIRES)
-AC_SUBST(VARCONF_CONFLICTS)
 AC_SUBST(VARCONF_VERSION_INFO)
 AC_SUBST(VARCONF_LIB_SUFFIX)
 AC_SUBST(MIN_SIGC_VERSION)

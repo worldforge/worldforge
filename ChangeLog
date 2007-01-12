@@ -1,3 +1,10 @@
+2007-01-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* configure.ac: Increment version number. Remove conflicts, as
+	  we don't really have a conflict.
+
+	* varconf-1.0.pc.in: Don't conflict with earlier versions of sigc++.
+
 2006-10-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* varconf/Config.h, varconf/config.cpp, varconf/dynbase.cpp,

@@ -6,7 +6,6 @@ includedir=@includedir@
 Name: @PACKAGE@
 Description: A config handling library.
 Requires: @VARCONF_REQUIRES@
-Conflicts: @VARCONF_CONFLICTS@
 Version: @VERSION@
 Libs: -L${libdir} @VARCONF_LIBS@
 Cflags: -I${includedir}/varconf@VARCONF_LIB_SUFFIX@
