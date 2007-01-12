@@ -1,3 +1,7 @@
+2007-01-12  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Message/Makefile.am: Remove Layer.h from the distribution.
+
 2006-10-28  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Objects/AttributeInfo.py, Atlas/Objects/GenerateDecoder.py,

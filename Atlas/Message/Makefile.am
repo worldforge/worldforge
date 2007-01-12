@@ -11,4 +11,4 @@ libAtlasMessage_0_6_la_SOURCES = \
 libAtlasMessageincludedir = $(includedir)/Atlas-C++-0.6/Atlas/Message
 
 libAtlasMessageinclude_HEADERS = \
-	Element.h Layer.h MEncoder.h DecoderBase.h QueuedDecoder.h
+	Element.h MEncoder.h DecoderBase.h QueuedDecoder.h
