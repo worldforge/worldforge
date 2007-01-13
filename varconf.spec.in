@@ -14,14 +14,14 @@ Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
 Source: %{name}-%{version}.tar.bz2
-BuildRoot: %{_tmppath}/%{name}-%{version}-buildroot
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 @PACKAGE@ is a configuration system originally designed for the STAGE
 server. @PACKAGE@ can parse configuration files, command-line arguments
-and environment variables. It supports callbacks through libsigc++
-1.2.x or 2.0.x and can store configuration data in configuration
-objects or one global configuration instance.
+and environment variables. It supports callbacks through libsigc++ 2.0.x
+and can store configuration data in configuration objects or one global
+configuration instance.
 
 %package devel
 Summary: A config handling library headers and static libs.
@@ -31,9 +31,9 @@ Requires: %{name} = %{version} libsigc++20-devel
 %description devel
 @PACKAGE@ is a configuration system originally designed for the STAGE
 server. @PACKAGE@ can parse configuration files, command-line arguments
-and environment variables. It supports callbacks through libsigc++
-1.2.x or 2.0.x and can store configuration data in configuration
-objects or one global configuration instance.
+and environment variables. It supports callbacks through libsigc++ 2.0.x
+and can store configuration data in configuration objects or one global
+configuration instance.
 
 %prep
 %setup -q

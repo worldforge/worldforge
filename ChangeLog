@@ -1,5 +1,13 @@
 2007-01-13  Al Riddoch  <alriddoch@zepler.org>
 
+	* varconf.spec.in: Tweak the rpm spec a little.
+
+2007-01-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* Release 0.6.5. Interface version 6.0.0.
+
+2007-01-13  Al Riddoch  <alriddoch@zepler.org>
+
 	* tests/conftest.cpp: Add assert include missing from the test that
 	  uses assert.
 
