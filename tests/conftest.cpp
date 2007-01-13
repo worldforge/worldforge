@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 
+#include <cassert>
+
 void callback( const std::string & section,
                const std::string & key,
                varconf::Config & conf)
