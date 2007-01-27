@@ -37,7 +37,9 @@ View::~View()
     if (m_topLevel) {
         m_topLevel->shutdown();
         delete m_topLevel;
-        assert(m_contents.empty());
+        if (!m_contents.empty()) {
+            warning() << "top level entity is not empty on view destruction";
+        }
     }
     // note that errors that occurr very early during world entry, may
     // cause a view to be deleted with no top-level entity; in that case we

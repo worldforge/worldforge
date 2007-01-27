@@ -1,3 +1,9 @@
+2007-01-27  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/View.cpp: Replace an assert with a warning, to ensure that
+	  distributed versions of client run more cleanly while we debug this
+	  issue.
+
 2007-01-09  Simon Goodall  <simon@simongoodall.co.uk>
 
 	* Eris/Types.cpp: Re-write of the mergeOrCopyElement function making it
