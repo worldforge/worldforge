@@ -1,3 +1,11 @@
+2007-02-13  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/polygon_intersect.cpp, wfmath/polygon_intersect.h,
+	  wfmath/rotmatrix_funcs.h: When an assert is used to detect
+	  a bad condition in a function, ensure that in a production build
+	  where asserts are disabled, the function still returns a sane
+	  value, to avoid compiler warnings.
+
 2006-08-18  Al Riddoch  <alriddoch@zepler.org>
 
 	* NEWS: Update date on release news item.

@@ -484,6 +484,7 @@ bool WFMath::_PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2
       }
     default:
       assert(false);
+      return false;
   }
 }
 
@@ -538,6 +539,7 @@ bool WFMath::_PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
       }
     default:
       assert(false);
+      return false;
   }
 }
 

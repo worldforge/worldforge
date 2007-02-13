@@ -346,6 +346,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
       }
     default:
       assert(false);
+      return -1;
   }
 }
 

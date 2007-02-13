@@ -607,6 +607,9 @@ inline void RotMatrix<dim>::normalize()
 
   bool success = _MatrixInverseImpl(dim, buf1, buf2);
   assert(success); // matrix can't be degenerate
+  if (!success) {
+    return;
+  }
 
   for(int i = 0; i < dim; ++i) {
     for(int j = 0; j < dim; ++j) {
