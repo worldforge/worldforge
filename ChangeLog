@@ -1,3 +1,14 @@
+2007-04-01  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Packed.cpp, Atlas/Codecs/XML.cpp:
+	  Add C stdlib include to get atol. Not previously requires as some
+	  compilers included this inside the STL headers.
+
+	* Atlas/Net/Stream.cpp, Atlas/Codecs/Bach.cpp,
+	  Atlas/Codecs/Packed.cpp, Atlas/Codecs/XML.cpp:
+	  Re-code the parsing state machines for negotiation and codecs
+	  so they are more efficient.
+
 2007-01-12  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Message/Makefile.am: Remove Layer.h from the distribution.

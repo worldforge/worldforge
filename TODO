@@ -1,3 +1,9 @@
+In all codecs/negotiators:
+  peek()
+  rdbuf().in_avail() and cache result
+  rdbuf().sgetc() for each char
+  rdbuf().xsgetn() for many (in negotiators)
+
 Need to add to the codec interface so that we can verify codec is at
 stream level before and after building a datagram.
 
