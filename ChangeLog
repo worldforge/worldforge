@@ -1,3 +1,8 @@
+2007-04-25  Al Riddoch  <alriddoch@zepler.org>
+
+	* Atlas/Objects/BaseObject.h: Add accessor for attribute flags, to
+	  allow broader testing.
+
 2007-04-01  Al Riddoch  <alriddoch@zepler.org>
 
 	* Atlas/Codecs/Bach.cpp, Atlas/Codecs/Packed.cpp, Atlas/Codecs/XML.cpp:

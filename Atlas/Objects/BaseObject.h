@@ -87,6 +87,11 @@ public:
         return m_class_no;
     }
 
+    int getAttrFlags() const
+    {
+        return m_attrFlags;
+    }
+
     virtual BaseObjectData * copy() const = 0;
 
     /// Is this instance of some class?
