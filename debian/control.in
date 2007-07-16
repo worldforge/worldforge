@@ -1,0 +1,35 @@
+Source: @PACKAGE@
+Section: libs
+Priority: optional
+Maintainer: Al Riddoch <alriddoch@googlemail.com>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 0.00
+
+Package: libatlas-cpp@ATLAS_LIB_SUFFIX@-@ATLAS_CURRENT@
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: Any iostream socket library
+ @PACKAGE@ is an iostream based socket library in C++. It is based on
+ the Freesockets library, and has been packaged for use by WorldForge.
+
+Package: libatlas-cpp@ATLAS_LIB_SUFFIX@-dev
+Section: libdevel
+Architecture: any
+Depends: libatlas-cpp@ATLAS_LIB_SUFFIX@-@ATLAS_CURRENT@ (= ${Source-Version})
+Description: Any iostream socket library
+ @PACKAGE@ is an iostream based socket library in C++. It is based on
+ the Freesockets library, and has been packaged for use by WorldForge.
+ .
+ This package contains the development files.
+
+Package: libatlas-cpp@ATLAS_LIB_SUFFIX@-@ATLAS_CURRENT@-dbg
+Section: libdevel
+Architecture: any
+Depends: libatlas-cpp@ATLAS_LIB_SUFFIX@-@ATLAS_CURRENT@
+Description: Any iostream socket library
+ @PACKAGE@ is an iostream based socket library in C++. It is based on
+ the Freesockets library, and has been packaged for use by WorldForge.
+ .
+ This package contains the debug files.
+

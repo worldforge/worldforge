@@ -14,8 +14,10 @@ AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
 dnl Initialise automake
 
-INTERFACE_VERSION='-version-info 0:0:0'
+ATLAS_CURRENT=0
+INTERFACE_VERSION="-version-info $ATLAS_CURRENT:0:0"
 
+AC_SUBST(ATLAS_CURRENT)
 AC_SUBST(INTERFACE_VERSION)
 
 dnl Test for GNU libtool
@@ -147,5 +149,8 @@ AC_CONFIG_FILES([
 	tutorial/Makefile
 	atlas-cpp.spec
 	atlascpp-0.6.pc
+	debian/control
+	debian/rules
 ])
+AC_CONFIG_COMMANDS([rules], [chmod +x debian/rules])
 AC_OUTPUT
