@@ -1,3 +1,10 @@
+2007-07-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath/axisbox.h, wfmath/axisbox_funcs.h, wfmath/ball.h,
+	  wfmath/ball_funcs.h, wfmath/point.h, wfmath/point_funcs.h:
+	  Tighten up template specicialisations to deal with stricter
+	  rules in gcc 4.2.
+
 2007-02-13  Al Riddoch  <alriddoch@zepler.org>
 
 	* wfmath/polygon_intersect.cpp, wfmath/polygon_intersect.h,

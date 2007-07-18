@@ -157,15 +157,15 @@ inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
 }
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
-template<const int dim, template<class> class container,
-			template<class> class container2>
-Point<dim> Barycenter(const container<Point<dim> >& c,
-		      const container2<CoordType>& weights)
+template<const int dim, template<class, class> class container,
+			template<class, class> class container2>
+Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c,
+		      const container2<CoordType, std::allocator<CoordType> >& weights)
 {
   // FIXME become friend
 
-  typename container<Point<dim> >::const_iterator c_i = c.begin(), c_end = c.end();
-  typename container2<CoordType>::const_iterator w_i = weights.begin(),
+  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator c_i = c.begin(), c_end = c.end();
+  typename container2<CoordType, std::allocator<CoordType> >::const_iterator w_i = weights.begin(),
 						 w_end = weights.end();
 
   assert("nonempty list of points" && c_i != c_end);
@@ -201,12 +201,12 @@ Point<dim> Barycenter(const container<Point<dim> >& c,
   return out;
 }
 
-template<const int dim, template<class> class container>
-Point<dim> Barycenter(const container<Point<dim> >& c)
+template<const int dim, template<class, class> class container>
+Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
   // FIXME become friend
 
-  typename container<Point<dim> >::const_iterator i = c.begin(), end = c.end();
+  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(), end = c.end();
 
   assert("nonempty list of points" && i != end);
 

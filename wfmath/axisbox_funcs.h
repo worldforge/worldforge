@@ -137,12 +137,12 @@ inline Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
 
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
-template<const int dim, template<class> class container>
-AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c)
+template<const int dim, template<class, class> class container>
+AxisBox<dim> BoundingBox(const container<AxisBox<dim>, std::allocator<AxisBox<dim> > >& c)
 {
   // FIXME become friend
 
-  typename container<AxisBox<dim> >::const_iterator i = c.begin(), end = c.end();
+  typename container<AxisBox<dim>, std::allocator<AxisBox<dim> > >::const_iterator i = c.begin(), end = c.end();
 
   assert(i != end);
 
@@ -165,10 +165,10 @@ AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c)
   return AxisBox<dim>(low, high, true);
 }
 
-template<const int dim, template<class> class container>
-AxisBox<dim> BoundingBox(const container<Point<dim> >& c)
+template<const int dim, template<class, class> class container>
+AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
-  typename container<Point<dim> >::const_iterator i = c.begin(), end = c.end();
+  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(), end = c.end();
 
   assert(i != end);
 

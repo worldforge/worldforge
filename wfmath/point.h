@@ -63,8 +63,8 @@ CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// Find the center of a set of points, all weighted equally
-template<const int dim, template<class> class container>
-Point<dim> Barycenter(const container<Point<dim> >& c);
+template<const int dim, template<class, class> class container>
+Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 /// Find the center of a set of points with the given weights
 /**
  * If the number of points and the number of weights are not equal,
@@ -72,10 +72,10 @@ Point<dim> Barycenter(const container<Point<dim> >& c);
  * which is used, if there are more weights than points), must not
  * sum to zero.
  **/
-template<const int dim, template<class> class container,
-			template<class> class container2>
-Point<dim> Barycenter(const container<Point<dim> >& c,
-		      const container2<CoordType>& weights);
+template<const int dim, template<class, class> class container,
+			template<class, class> class container2>
+Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c,
+		      const container2<CoordType, std::allocator<CoordType> >& weights);
 #endif
 
 // This is used a couple of places in the library

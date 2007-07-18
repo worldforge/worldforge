@@ -60,13 +60,13 @@ AxisBox<dim> Ball<dim>::boundingBox() const
 }
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
-template<const int dim, template<class> class container>
-Ball<dim> BoundingSphere(const container<Point<dim> >& c)
+template<const int dim, template<class, class> class container>
+Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
   _miniball::Miniball<dim> m;
   _miniball::Wrapped_array<dim> w;
 
-  typename container<Point<dim> >::const_iterator i, end = c.end();
+  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i, end = c.end();
   bool valid = true;
 
   for(i = c.begin(); i != end; ++i) {
@@ -95,19 +95,19 @@ Ball<dim> BoundingSphere(const container<Point<dim> >& c)
   return Ball<dim>(center, sqrt(m.squared_radius()));
 }
 
-template<const int dim, template<class> class container>
-Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c)
+template<const int dim, template<class, class> class container>
+Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
   // This is based on the algorithm given by Jack Ritter
   // in Volume 2, Number 4 of Ray Tracing News
   // <http://www.acm.org/tog/resources/RTNews/html/rtnews7b.html>
 
-  typename container<Point<dim> >::const_iterator i = c.begin(),
+  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(),
 						end = c.end();
   assert(i != end);
 
   CoordType min[dim], max[dim];
-  typename container<Point<dim> >::const_iterator min_p[dim], max_p[dim];
+  typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator min_p[dim], max_p[dim];
   bool valid = i->isValid();
 
   for(int j = 0; j < dim; ++j) {

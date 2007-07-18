@@ -51,12 +51,12 @@ std::istream& operator>>(std::istream& is, AxisBox<dim>& m);
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// Get the axis-aligned bounding box for a set of boxes
-template<const int dim, template<class> class container>
-AxisBox<dim> BoundingBox(const container<AxisBox<dim> >& c);
+template<const int dim, template<class, class> class container>
+AxisBox<dim> BoundingBox(const container<AxisBox<dim>, std::allocator<AxisBox<dim> > >& c);
 
 /// Get the axis-aligned bounding box for a set of points
-template<const int dim, template<class> class container>
-AxisBox<dim> BoundingBox(const container<Point<dim> >& c);
+template<const int dim, template<class, class> class container>
+AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 #endif
 
 /// A dim dimensional axis-aligned box

@@ -41,11 +41,11 @@ template<const int dim> class Ball;
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// get the minimal bounding sphere for a set of points
-template<const int dim, template<class> class container>
-Ball<dim> BoundingSphere(const container<Point<dim> >& c);
+template<const int dim, template<class, class> class container>
+Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 /// get a bounding sphere for a set of points
-template<const int dim, template<class> class container>
-Ball<dim> BoundingSphereSloppy(const container<Point<dim> >& c);
+template<const int dim, template<class, class> class container>
+Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 #endif
 
 template<const int dim>
