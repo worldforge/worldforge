@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(wfmath, 0.3.5, alriddoch@zepler.org)
+AC_INIT(wfmath, 0.3.6, alriddoch@zepler.org)
 AC_CONFIG_SRCDIR([wfmath/const.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -49,7 +49,11 @@ PKG_CHECK_MODULES(ATLAS_0_4, atlascpp-0.4 >= 0.4.5,
 	dnl Don't add Atlas CFLAGS, LIBS, since Atlas is only used in
 	dnl conversion functions to Atlas::Message::Object. Anyone using
 	dnl those should already be using Atlas explicitly.
-	], found_atlas_0_4=no)
+	],
+	[
+		found_atlas_0_4=no
+		AC_MSG_RESULT([no])
+	])
 
 PKG_CHECK_MODULES(ATLAS_0_6, atlascpp-0.6 >= 0.5.0, 
 	[ found_atlas_0_6=yes

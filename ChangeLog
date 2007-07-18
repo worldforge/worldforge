@@ -1,5 +1,9 @@
 2007-07-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* configure.ac: Increment version number to 0.3.6
+
+2007-07-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* wfmath/axisbox.h, wfmath/axisbox_funcs.h, wfmath/ball.h,
 	  wfmath/ball_funcs.h, wfmath/point.h, wfmath/point_funcs.h:
 	  Tighten up template specicialisations to deal with stricter
