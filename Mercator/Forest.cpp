@@ -80,20 +80,40 @@ void Forest::populate()
         hx = I_ROUND(bbox.highCorner().x()),
         hy = I_ROUND(bbox.highCorner().y());
 
+    PlantSpecies::const_iterator I;
+    PlantSpecies::const_iterator Iend = m_species.end();
+
     for(int j = ly; j < hy; ++j) {
         for(int i = lx; i < hx; ++i) {
-            double prob=m_randCache(i,j);
-            if (prob < plant_chance) {
-                if (!m_area->contains(i,j)) continue;
+            if (!m_area->contains(i,j)) {
+                continue;
+            }
+            double prob = m_randCache(i,j);
+            I = m_species.begin();
+            for (; I != Iend; ++I) {
+                const Species & species = *I;
+                if (prob > species.m_probability) {
+                    prob -= species.m_probability;
+                    // Next species
+                    continue;
+                }
                 
 //                std::cout << "Plant at [" << i << ", " << j << "]"
 //                          << std::endl << std::flush;
-                rng.seed((int)(prob / plant_chance * 123456)); //this is a bit of a hack
+                //this is a bit of a hack
+                rng.seed((int)(prob / I->m_probability * 123456));
+
                 Plant & plant = m_plants[i][j];
-                plant.setHeight(rng() * plant_height_range + plant_min_height);
-                plant.setDisplacement(WFMath::Point<2>(rng() - 0.5f,
-                                                       rng() - 0.5f));
+                // plant.setHeight(rng() * plant_height_range + plant_min_height);
+                plant.setDisplacement(WFMath::Point<2>(
+                    (rng() - 0.5f) * species.m_deviation,
+                    (rng() - 0.5f) * species.m_deviation));
                 plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * WFMath::Pi));
+                Species::ParameterDict::const_iterator J = species.m_parameters.begin();
+                Species::ParameterDict::const_iterator Jend = species.m_parameters.end();
+                for (; J != Jend; ++J) {
+                    plant.setParameter(J->first, rng() * J->second.range + J->second.min);
+                }
             }
         }
     }

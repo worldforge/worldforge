@@ -17,6 +17,26 @@ namespace Mercator {
 class Plant;
 class Area;
 
+class SpeciesParameter {
+  public:
+    float min;
+    float range;
+};
+
+class Species {
+  public:
+    typedef std::map<std::string, SpeciesParameter> ParameterDict;
+
+    /// Probability that this species will occur at each grid node.
+    float m_probability;
+
+    /// Multiplyer for how deviated from the grid items should be.
+    float m_deviation;
+
+    /// Parameters
+    ParameterDict m_parameters;
+};
+
 /// \brief This is the core class for any area to be populated with vegetation.
 ///
 /// Each instance of vegetation is represented by the Plant class,
@@ -29,14 +49,19 @@ class Forest {
     ///
     /// Integer key is effectively used as an index.
     typedef std::map<int, Plant> PlantColumn;
+
     /// \brief STL map to store a sparse array of PlantColumn objects.
     ///
     /// The end effect is a sparse two dimensional array of plant objects
     /// which can be efficiently queried and scanned using STL iterators.
     typedef std::map<int, PlantColumn> PlantStore;
+
+    typedef std::vector<Species> PlantSpecies;
   private:
     Area* m_area;
     
+    /// List of species in this forest.
+    PlantSpecies m_species;
     /// 2D spatial container with all the vegetation instances in.
     PlantStore m_plants;
     /// Seed value used to initialise the random number generator.
@@ -51,6 +76,10 @@ class Forest {
     /// \brief Accessor for polygonal area.
     Area* getArea() const {
         return m_area;
+    }
+
+    PlantSpecies & species() {
+        return m_species;
     }
 
     /// \brief Accessor for container of vegetation.
