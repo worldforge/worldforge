@@ -17,6 +17,10 @@ namespace Mercator {
 class Plant;
 class Area;
 
+class SpeciesParameter;
+
+typedef std::map<std::string, SpeciesParameter> ParameterDict;
+
 class SpeciesParameter {
   public:
     float min;
@@ -25,8 +29,6 @@ class SpeciesParameter {
 
 class Species {
   public:
-    typedef std::map<std::string, SpeciesParameter> ParameterDict;
-
     /// Probability that this species will occur at each grid node.
     float m_probability;
 

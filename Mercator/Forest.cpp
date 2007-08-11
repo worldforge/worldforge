@@ -20,7 +20,6 @@
 
 namespace Mercator {
 
-
 /// \brief Construct a new forest with the given seed.
 Forest::Forest(unsigned long seed) : 
     m_area(NULL),
@@ -109,8 +108,8 @@ void Forest::populate()
                     (rng() - 0.5f) * species.m_deviation,
                     (rng() - 0.5f) * species.m_deviation));
                 plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * WFMath::Pi));
-                Species::ParameterDict::const_iterator J = species.m_parameters.begin();
-                Species::ParameterDict::const_iterator Jend = species.m_parameters.end();
+                ParameterDict::const_iterator J = species.m_parameters.begin();
+                ParameterDict::const_iterator Jend = species.m_parameters.end();
                 for (; J != Jend; ++J) {
                     plant.setParameter(J->first, rng() * J->second.range + J->second.min);
                 }

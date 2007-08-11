@@ -16,12 +16,20 @@ int main()
 {
     {
         Mercator::Forest forest(4249162ul);
+    }
+
+    {
+        Mercator::Forest forest(4249162ul);
+
+        Mercator::Forest::PlantSpecies & species = forest.species();
 
         // Forest is not yet populated
         assert(forest.getPlants().empty());
+        assert(species.empty());
         forest.populate();
         // Forest has zero area, so even when populated it is empty
         assert(forest.getPlants().empty());
+        assert(species.empty());
 
         Mercator::Area* ar = new Mercator::Area(1, false);
         WFMath::Polygon<2> p;
@@ -35,6 +43,18 @@ int main()
         
         ar->setShape(p);
         forest.setArea(ar);
+
+        forest.populate();
+        // Forest has no species, so even when populated it is empty
+        assert(forest.getPlants().empty());
+        assert(species.empty());
+
+        // TODO(alriddoch) Add some species.
+        Mercator::Species pine;
+        pine.m_probability = 0.04f;
+        pine.m_deviation = 1.f;
+
+        species.push_back(pine);
 
     //    assert(!forest.getBBox().isValid());
     //    assert(forest.getArea().isValid());
