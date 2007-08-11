@@ -1,4 +1,12 @@
-2006-08-10  Al Riddoch  <alriddoch@zepler.org>
+2006-08-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Forest.cpp: Ensure any subsequent species candidates
+	  are skipped once the species for a given node has been instanced.
+
+	* tests/testForest.cpp: Test the plant counts increase in the
+	  expected proportions as species are added.
+
+2006-08-11  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Forest.cpp, Mercator/Forest.h: Shuffle the namespacing
 	  around a little to make code less verbose and clearer.

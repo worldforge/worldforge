@@ -113,6 +113,7 @@ void Forest::populate()
                 for (; J != Jend; ++J) {
                     plant.setParameter(J->first, rng() * J->second.range + J->second.min);
                 }
+                break;
             }
         }
     }

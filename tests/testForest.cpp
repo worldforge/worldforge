@@ -12,10 +12,38 @@
 
 typedef WFMath::Point<2> Point2;
 
+void dumpPlants(const Mercator::Forest::PlantStore & ps)
+{
+    Mercator::Forest::PlantStore::const_iterator I = ps.begin();
+    for(; I != ps.end(); ++I) {
+        Mercator::Forest::PlantColumn::const_iterator J = I->second.begin();
+        for(; J != I->second.end(); ++J) {
+            const Mercator::Plant & p = J->second;
+            std::cout << "Query found plant at [" << I->first
+                      << ", " << J->first << "] with height "
+                      << p.getHeight();
+            std::cout << " displaced to "
+                      << (WFMath::Vector<2>(I->first, J->first) +
+                          p.getDisplacement())
+                      << std::endl << std::flush;
+        }
+    }
+}
+
+int countPlants(const Mercator::Forest::PlantStore & ps)
+{
+    int plant_count = 0;
+    Mercator::Forest::PlantStore::const_iterator I = ps.begin();
+    for(; I != ps.end(); ++I) {
+        plant_count += I->second.size();
+    }
+    return plant_count;
+}
+
 int main()
 {
     {
-        Mercator::Forest forest(4249162ul);
+        Mercator::Forest forest;
     }
 
     {
@@ -49,19 +77,13 @@ int main()
         assert(forest.getPlants().empty());
         assert(species.empty());
 
-        // TODO(alriddoch) Add some species.
-        Mercator::Species pine;
-        pine.m_probability = 0.04f;
-        pine.m_deviation = 1.f;
+        {
+            Mercator::Species pine;
+            pine.m_probability = 0.04;
+            pine.m_deviation = 1.f;
 
-        species.push_back(pine);
-
-    //    assert(!forest.getBBox().isValid());
-    //    assert(forest.getArea().isValid());
-     //   forest.setArea(WFMath::AxisBox<2>(WFMath::Point<2>(-5, -5),
-    //                                      WFMath::Point<2>(5, 5)));
- //       assert(forest.getBBox().isValid());
-  //      assert(forest.getArea().isValid());
+            species.push_back(pine);
+        }
 
         forest.populate();
         // Forest should now contain some plants
@@ -69,19 +91,27 @@ int main()
 
         const Mercator::Forest::PlantStore & ps = forest.getPlants();
 
-        Mercator::Forest::PlantStore::const_iterator I = ps.begin();
-        for(; I != ps.end(); ++I) {
-            Mercator::Forest::PlantColumn::const_iterator J = I->second.begin();
-            for(; J != I->second.end(); ++J) {
-                const Mercator::Plant & p = J->second;
-                std::cout << "Query found plant at [" << I->first
-                          << ", " << J->first << "] with height "
-                          << p.getHeight();
-                std::cout << " displaced to "
-                          << (WFMath::Vector<2>(I->first, J->first) +
-                              p.getDisplacement())
-                          << std::endl << std::flush;
-            }
+        dumpPlants(ps);
+
+        int plant_count = countPlants(ps);
+
+        {
+            Mercator::Species oak;
+            oak.m_probability = 0.02;
+            oak.m_deviation = 1.f;
+
+            species.push_back(oak);
         }
+
+        forest.populate();
+        // Forest should now contain some plants
+        assert(!forest.getPlants().empty());
+        assert(countPlants(ps) > plant_count);
+
+        dumpPlants(ps);
+
+        std::cout << countPlants(ps) << "," << plant_count
+                  << std::endl << std::flush;
+
     }
 }
