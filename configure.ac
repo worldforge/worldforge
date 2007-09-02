@@ -149,8 +149,8 @@ AC_CONFIG_FILES([
 	tutorial/Makefile
 	atlas-cpp.spec
 	atlascpp-0.6.pc
-	debian/control
-	debian/rules
 ])
-AC_CONFIG_COMMANDS([rules], [chmod +x debian/rules])
+dnl 	debian/control
+dnl 	debian/rules
+dnl AC_CONFIG_COMMANDS([rules], [chmod +x debian/rules])
 AC_OUTPUT
