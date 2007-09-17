@@ -58,8 +58,10 @@ class Forest {
     /// which can be efficiently queried and scanned using STL iterators.
     typedef std::map<int, PlantColumn> PlantStore;
 
+    /// STL vector of plant species in this forest.
     typedef std::vector<Species> PlantSpecies;
   private:
+    /// Area of terrain affected by the presence of this forest.
     Area* m_area;
     
     /// List of species in this forest.
@@ -80,6 +82,7 @@ class Forest {
         return m_area;
     }
 
+    /// Accessor for list of species in this forest.
     PlantSpecies & species() {
         return m_species;
     }

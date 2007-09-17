@@ -1,5 +1,13 @@
 2006-09-17  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Plant.h,
+	  Mercator/Segment.cpp, Mercator/Segment.h, Mercator/Shader.h,
+	  Mercator/Terrain.cpp, Mercator/Terrain.h, Mercator/TerrainMod.h:
+	  Add doxygen comments documenting all members that area currently
+	  reported as undocumented.
+
+2006-09-17  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/TerrainMod.h: Add some API documentation to the naughty
 	  undocumented classes.
 

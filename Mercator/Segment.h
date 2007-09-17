@@ -31,9 +31,10 @@ class Area;
 /// square area of terrain defined by four adjacent BasePoint objects.
 class Segment {
   public:
-    /// STL list of pointers to Surface objects.
+    /// STL map of pointers to Surface objects.
     typedef std::map<int, Surface *> Surfacestore;
     
+    /// STL multimap of pointers to Area objects affecting this segment.
     typedef std::multimap<int, Area *> Areastore;
   private:
     /// Distance between segments
@@ -179,11 +180,11 @@ class Segment {
     void addMod(TerrainMod *t);
     void clearMods();
     
+    /// \brief Accessor for multimap of Area objects.
     const Areastore& getAreas() const
     { return m_areas; }
     
     void addArea(Area* a);
-    void clearAreas();
   private:
     /// \brief Check a value against m_min and m_max and set one of them
     /// if appropriate.

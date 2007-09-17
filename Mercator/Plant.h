@@ -58,6 +58,7 @@ class Plant {
         m_height = h;
     }
 
+    /// Set a named parameter value for this plant.
     void setParameter(const std::string &, float) { }
 };
 

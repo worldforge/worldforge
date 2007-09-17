@@ -127,9 +127,7 @@ void Segment::populate() // const Matrix<2, 2, BasePoint> & base)
 /// This is called internally whenever changes occur that mean that the
 /// heightfield and surface normal data are no longer valid.
 /// If surface normal storage is deallocated, and if the points argument
-/// is true the heightfield storage is also deallocated. The
-/// Surface::invalidate() method is called for each surface associated with
-/// this Segment.
+/// is true the heightfield storage is also deallocated.
 void Segment::invalidate(bool points)
 {
     if (points && m_points != 0) {
@@ -144,6 +142,11 @@ void Segment::invalidate(bool points)
     invalidateSurfaces();
 }
 
+/// \brief Mark surfaces as stale.
+///
+/// This is called internally from Segment::invalidate() when changes occur
+/// that mean the surface data is no longer valid. The Surface::invalidate()
+/// method is called for each surface.
 void Segment::invalidateSurfaces()
 {
     Segment::Surfacestore::const_iterator I = m_surfaces.begin();
@@ -594,6 +597,11 @@ void Segment::applyMod(TerrainMod *t)
     invalidate(false);
 }
 
+/// \brief Add an area to those that affect this segment.
+///
+/// Call from Terrain when an Area is added which is found to intersect this
+/// segment.
+/// @param ar the area to be added.
 void Segment::addArea(Area* ar)
 {
     m_areas.insert(Areastore::value_type(ar->getLayer(), ar));

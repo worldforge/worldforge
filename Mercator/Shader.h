@@ -59,6 +59,7 @@ class Shader {
     /// \brief Populate a Surface with data.
     virtual void shade(Surface &) const = 0;
 
+    /// STL map of parameter values for a shader constructor.
     typedef std::map<std::string, float> Parameters;
 };
 

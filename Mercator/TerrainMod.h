@@ -18,13 +18,17 @@ class TerrainMod
 {
 public:
     virtual ~TerrainMod();
-    //apply this modifier on a terrain segment at x,y in local coordinates
-    //output is placed into point
+
+    /// \brief Apply this modifier on a terrain segment
+    ///
+    /// The segment is at x,y in local coordinates.
+    /// Output is placed into point.
     virtual void apply(float &point, int x, int y) const = 0;
 
-    //get the boundingbox of the modifier
+    /// \brief Get the boundingbox of the modifier.
     virtual WFMath::AxisBox<2> bbox() const = 0;
 
+    /// \brief Create a copy of this modifier.
     virtual TerrainMod *clone() const = 0;
 };
 
@@ -36,12 +40,16 @@ template <typename Shape>
 class ShapeTerrainMod : public TerrainMod
 {
 public:
+    /// \brief Constructor
+    ///
+    /// @param s shape of the modifier.
     ShapeTerrainMod(const Shape &s) : m_shape(s) {}
     virtual ~ShapeTerrainMod(); // {}
 
     virtual WFMath::AxisBox<2> bbox() const; // { return m_shape.boundingBox(); }
 
 protected:
+    /// \brief Shape of the modifier.
     Shape m_shape;
 };
 
@@ -53,7 +61,10 @@ template <typename Shape>
 class LevelTerrainMod : public ShapeTerrainMod<Shape>
 {
 public:
-
+    /// \brief Constructor
+    ///
+    /// @param level The height level of all points affected.
+    /// @param s shape of the modifier.
     LevelTerrainMod(float level, const Shape &s)
         : ShapeTerrainMod<Shape>(s), m_level(level) {}
 
@@ -63,9 +74,11 @@ public:
     virtual TerrainMod *clone() const;
 
 private:
+    /// \brief Copy constructor.
     LevelTerrainMod(LevelTerrainMod&); // {}
 
 protected:
+    /// \brief The height level of all points affected.
     float m_level;
 };
 
@@ -78,6 +91,10 @@ class AdjustTerrainMod : public ShapeTerrainMod<Shape>
 {
 public:
 
+    /// \brief Constructor
+    ///
+    /// @param dist adjustment to the height of all points affected.
+    /// @param s shape of the modifier.
     AdjustTerrainMod(float dist, const Shape &s)
         : ShapeTerrainMod<Shape>(s), m_dist(dist) {}
 
@@ -87,9 +104,11 @@ public:
     virtual TerrainMod *clone() const;
 
 private:
+    /// \brief Copy constructor.
     AdjustTerrainMod(AdjustTerrainMod&) {}
 
 protected:
+    /// \brief Adjustment to the height of all points affected.
     float m_dist;
 };
 
@@ -102,6 +121,12 @@ class SlopeTerrainMod : public ShapeTerrainMod<Shape>
 {
 public:
 
+    /// \brief Constructor
+    ///
+    /// @param level the height of the centre point.
+    /// @param dx the rate of change of the height along X.
+    /// @param dy the rate of change of the height along Y.
+    /// @param s shape of the modifier.
     SlopeTerrainMod(float level, float dx, float dy, const Shape &s)
         : ShapeTerrainMod<Shape>(s), m_level(level), m_dx(dx), m_dy(dy) {}
 
@@ -111,10 +136,16 @@ public:
     virtual TerrainMod *clone() const;
 
 private:
+    /// \brief Copy constructor.
     SlopeTerrainMod(SlopeTerrainMod&) {}
 
 protected:
-    float m_level, m_dx, m_dy;
+    /// \brief The height of the centre point.
+    float m_level;
+    /// \brief The rate of change of the height along X.
+    float m_dx;
+    /// \brief The rate of change of the height along Y.
+    float m_dy;
 };
 
 /// \brief Terrain modifier that defines a crater.
@@ -124,7 +155,9 @@ protected:
 class CraterTerrainMod : public TerrainMod
 {
 public:
-
+    /// \brief Constructor
+    ///
+    /// @param s Sphere that defines the shape of the crater.
     CraterTerrainMod(const WFMath::Ball<3> &s) : m_shape(s) {
         WFMath::AxisBox<3> bb=m_shape.boundingBox();
         ab = WFMath::AxisBox<2> (
@@ -140,9 +173,12 @@ public:
     virtual TerrainMod *clone() const;
 
 private:
+    /// \brief Copy constructor.
     CraterTerrainMod(CraterTerrainMod&) {}
 
+    /// \brief Sphere that defines the shape of the crater.
     WFMath::Ball<3> m_shape;
+    /// \brief Box containing this modification.
     WFMath::AxisBox<2> ab;
 
 };

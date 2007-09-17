@@ -51,6 +51,10 @@ Terrain::~Terrain()
     }
 }
 
+/// \brief Add a new Shader to the list for this terrain.
+///
+/// As each shader is added, surfaces are added to all existing segments
+/// to store the result of the shader.
 void Terrain::addShader(Shader * t, int id)
 {
     if (m_shaders.count(id)) {
@@ -309,6 +313,10 @@ void Terrain::addMod(const TerrainMod &t) {
     } // of x loop
 }
 
+/// \brief Add an area modifier to the terrain.
+///
+/// Add a new Area object to the terrain, which defines a modification
+/// to the surface.
 void Terrain::addArea(Area* area)
 {
     m_areas.insert(Areastore::value_type(area->getLayer(), area));

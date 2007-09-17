@@ -44,6 +44,7 @@ class Terrain {
     /// \brief STL map to store sparse array of Shader pointers.
     typedef std::map<int, Shader *> Shaderstore;
 
+    /// \brief STL multimap to store sparse array of area modifiers.
     typedef std::multimap<int, Area *> Areastore;
 
     /// \brief value provided for no flags set.
@@ -65,6 +66,7 @@ class Terrain {
     /// \brief List of shaders to be applied to terrain.
     Shaderstore m_shaders;
   
+    /// \brief List of areas modifiers to be applied to the terrain.
     Areastore m_areas;
   
     void addSurfaces(Segment &);
@@ -79,6 +81,7 @@ class Terrain {
   public:
     /// \brief Height value used when no data is available.
     static const float defaultLevel;
+
     explicit Terrain(unsigned int options = DEFAULT,
                      unsigned int resolution = defaultResolution);
     ~Terrain();

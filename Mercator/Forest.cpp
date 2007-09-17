@@ -36,6 +36,7 @@ Forest::~Forest()
 {
 }
 
+/// \brief Assign an area to this forest.
 void Forest::setArea(Area* area)
 {
     m_area = area;
