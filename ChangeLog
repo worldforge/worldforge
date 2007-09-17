@@ -1,3 +1,8 @@
+2006-09-17  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/TerrainMod.h: Add some API documentation to the naughty
+	  undocumented classes.
+
 2006-08-11  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Forest.cpp: Ensure any subsequent species candidates

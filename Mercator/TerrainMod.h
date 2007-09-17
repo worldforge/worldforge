@@ -11,6 +11,9 @@
 
 namespace Mercator {
 
+/// \brief Base class for modifiers to the procedurally generated terrain.
+///
+/// Anything that modifies the terrain implements this interface.
 class TerrainMod
 {
 public:
@@ -25,53 +28,61 @@ public:
     virtual TerrainMod *clone() const = 0;
 };
 
+/// \brief Terrain modifier which is defined by a shape variable.
+///
+/// This template extends TerrainMod by adding the ability to query the
+/// bounding box of the shape that defines this modification to the terrain.
 template <typename Shape>
 class ShapeTerrainMod : public TerrainMod
 {
 public:
     ShapeTerrainMod(const Shape &s) : m_shape(s) {}
     virtual ~ShapeTerrainMod(); // {}
-    
+
     virtual WFMath::AxisBox<2> bbox() const; // { return m_shape.boundingBox(); }
-    
+
 protected:
     Shape m_shape;
 };
 
 
-//this modifier sets all points inside the shape to the same altitude
+/// \brief Terrain modifier that defines an area of fixed height.
+///
+/// This modifier sets all points inside the shape to the same altitude
 template <typename Shape>
 class LevelTerrainMod : public ShapeTerrainMod<Shape>
 {
 public:
 
-    LevelTerrainMod(float level, const Shape &s) 
+    LevelTerrainMod(float level, const Shape &s)
         : ShapeTerrainMod<Shape>(s), m_level(level) {}
-    
+
     virtual ~LevelTerrainMod();
-    
+
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
 private:
     LevelTerrainMod(LevelTerrainMod&); // {}
-    
+
 protected:
     float m_level;
 };
 
-//this modifier changes the altitude of all points inside the shape
-//by the same amount
+/// \brief Terrain modifier that defines an area of adjusted height.
+///
+/// This modifier changes the altitude of all points inside the shape
+/// by the same amount.
 template <typename Shape>
 class AdjustTerrainMod : public ShapeTerrainMod<Shape>
 {
 public:
 
-    AdjustTerrainMod(float dist, const Shape &s) 
+    AdjustTerrainMod(float dist, const Shape &s)
         : ShapeTerrainMod<Shape>(s), m_dist(dist) {}
-    
+
     virtual ~AdjustTerrainMod();
-    
+
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
@@ -82,18 +93,20 @@ protected:
     float m_dist;
 };
 
-//this modifier creates a sloped area. The center point is
-//set to a level and all other points are set based on specified gradients
+/// \brief Terrain modifier that defines an area of sloped height.
+///
+/// This modifier creates a sloped area. The center point is set to a level
+/// and all other points are set based on specified gradients.
 template <typename Shape>
 class SlopeTerrainMod : public ShapeTerrainMod<Shape>
 {
 public:
 
-    SlopeTerrainMod(float level, float dx, float dy, const Shape &s) 
+    SlopeTerrainMod(float level, float dx, float dy, const Shape &s)
         : ShapeTerrainMod<Shape>(s), m_level(level), m_dx(dx), m_dy(dy) {}
-    
+
     virtual ~SlopeTerrainMod();
-    
+
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
@@ -103,7 +116,11 @@ private:
 protected:
     float m_level, m_dx, m_dy;
 };
-            
+
+/// \brief Terrain modifier that defines a crater.
+///
+/// This modifier creates an area where a sphere shaped volume has been
+/// subtracted from the terrain surface to create a spherical crater.
 class CraterTerrainMod : public TerrainMod
 {
 public:
@@ -115,11 +132,11 @@ public:
                     WFMath::Point<2>(bb.upperBound(0), bb.upperBound(1))
                );
     }
-    
+
     virtual ~CraterTerrainMod(); // {}
-    
+
     virtual WFMath::AxisBox<2> bbox() const;
-    virtual void apply(float &point, int x, int y) const; 
+    virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
 private:
@@ -129,7 +146,7 @@ private:
     WFMath::AxisBox<2> ab;
 
 };
- 
+
 } //namespace Mercator
 
 #endif // MERCATOR_TERRAIN_MOD_H
