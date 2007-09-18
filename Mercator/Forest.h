@@ -24,7 +24,9 @@ typedef std::map<std::string, SpeciesParameter> ParameterDict;
 /// \brief A set of constraints on a plant parameter.
 class SpeciesParameter {
   public:
+    /// \brief The minimum value a parameter should take.
     float min;
+    /// \brief The range of values a parameter should take.
     float range;
 };
 

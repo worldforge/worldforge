@@ -21,6 +21,7 @@ static const ColorT colorMin = 0;
 /// \brief Data store for terrain surface data.
 class Surface : public Buffer<ColorT> {
   public:
+    /// \brief The shader that populates this surface.
     const Shader & m_shader;
 
     explicit Surface(const Segment & segment, const Shader & shader,

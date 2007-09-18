@@ -1,5 +1,11 @@
 2006-09-18  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Area.cpp, Mercator/Forest.h, Mercator/Surface.cpp,
+	  Mercator/Surface.h, Mercator/TileShader.h: Add doc comments for
+	  some members.
+
+2006-09-18  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Area.cpp, Mercator/Area.h, Mercator/AreaShader.cpp,
 	  Mercator/AreaShader.h, Mercator/BasePoint.h, Mercator/Buffer.h,
 	  Mercator/DepthShader.h, Mercator/FillShader.h, Mercator/Forest.h,

@@ -23,11 +23,13 @@ class TileShader : public Shader {
     /// \brief STL map to store sparse array of Shader pointers.
     typedef std::map<int, Shader *> Shaderstore;
   private:
+    /// \brief Store of shaders which are agregated by this shader.
     Shaderstore m_subShaders;
   public:
     explicit TileShader();
     virtual ~TileShader();
 
+    /// \brief Add a shader to those agregated by the tile shader.
     void addShader(Shader * t, int id) {
         m_subShaders[id] = t;
     }

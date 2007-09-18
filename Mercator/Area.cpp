@@ -23,13 +23,25 @@ bool isZero(double d)
 class TopClip
 {
 public:
+    /// Constructor
+    ///
+    /// @param t top of y range
     TopClip(double t) : topY(t) { }
     
+    /// \brief Check a point is outside this clip.
+    ///
+    /// @param p point to be checked.
+    /// @return true if p is outside the clip.
     bool inside(const Point2& p) const
     {
         return p.y() >= topY;
     }
 
+    /// \brief Determine the point where a line crosses this clip.
+    ///
+    /// @param u one of of a line that crosses this clip
+    /// @param v one of of a line that crosses this clip
+    /// @return a point where the line cross this clip.
     Point2 clip(const Point2& u, const Point2& v) const
     {
         double dy = v.y() - u.y();
@@ -44,6 +56,7 @@ public:
         return Point2(u.x() + t * dx, topY);
     }
 private:
+    /// \brief Top of y range.
     double topY;
 };
 
@@ -51,13 +64,25 @@ private:
 class BottomClip
 {
 public:
+    /// Constructor
+    ///
+    /// @param t bottom of y range
     BottomClip(double t) : bottomY(t) { }
     
+    /// \brief Check a point is outside this clip.
+    ///
+    /// @param p point to be checked.
+    /// @return true if p is outside the clip.
     bool inside(const Point2& p) const
     {
         return p.y() < bottomY;
     }
 
+    /// \brief Determine the point where a line crosses this clip.
+    ///
+    /// @param u one of of a line that crosses this clip
+    /// @param v one of of a line that crosses this clip
+    /// @return a point where the line cross this clip.
     Point2 clip(const Point2& u, const Point2& v) const
     {
         double dy = v.y() - u.y();
@@ -68,6 +93,7 @@ public:
         return Point2(u.x() + t * dx, bottomY);
     }
 private:
+    /// \brief Bottom of y range.
     double bottomY;
 };
 
@@ -75,13 +101,25 @@ private:
 class LeftClip
 {
 public:
+    /// Constructor
+    ///
+    /// @param t left of x range.
     LeftClip(double t) : leftX(t) { }
     
+    /// \brief Check a point is outside this clip.
+    ///
+    /// @param p point to be checked.
+    /// @return true if p is outside the clip.
     bool inside(const Point2& p) const
     {
         return p.x() >= leftX;
     }
 
+    /// \brief Determine the point where a line crosses this clip.
+    ///
+    /// @param u one of of a line that crosses this clip
+    /// @param v one of of a line that crosses this clip
+    /// @return a point where the line cross this clip.
     Point2 clip(const Point2& u, const Point2& v) const
     {
         double dy = v.y() - u.y();
@@ -94,6 +132,7 @@ public:
         return Point2(leftX, u.y() + t * dy);
     }
 private:
+    /// \brief Left of x range.
     double leftX;
 };
 
@@ -101,13 +140,25 @@ private:
 class RightClip
 {
 public:
+    /// Constructor
+    ///
+    /// @param t right of x range.
     RightClip(double t) : rightX(t) { }
     
+    /// \brief Check a point is outside this clip.
+    ///
+    /// @param p point to be checked.
+    /// @return true if p is outside the clip.
     bool inside(const Point2& p) const
     {
         return p.x() < rightX;
     }
 
+    /// \brief Determine the point where a line crosses this clip.
+    ///
+    /// @param u one of of a line that crosses this clip
+    /// @param v one of of a line that crosses this clip
+    /// @return a point where the line cross this clip.
     Point2 clip(const Point2& u, const Point2& v) const
     {
         double dy = v.y() - u.y();
@@ -120,6 +171,7 @@ public:
         return Point2(rightX, u.y() + t * dy);
     }
 private:
+    /// \brief Right of x range.
     double rightX;
 };
 
