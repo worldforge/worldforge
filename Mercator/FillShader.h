@@ -9,6 +9,10 @@
 
 namespace Mercator {
 
+/// \brief Shader that fills the surface.
+///
+/// This shader is typically only used for the lowest possible layer,
+/// which is usually bed rock.
 class FillShader : public Shader {
   public:
     explicit FillShader();

@@ -9,6 +9,7 @@
 
 namespace Mercator {
 
+/// \brief Interface for shader factory objects.
 class iShaderFactory {
   protected:
     explicit iShaderFactory();
@@ -21,6 +22,7 @@ class iShaderFactory {
     virtual Shader * newShader(const Shader::Parameters &) const = 0;
 };
 
+/// \brief Factory template used to create ordinary shader objects.
 template <class T>
 class ShaderFactory : public iShaderFactory {
   public:
@@ -30,6 +32,10 @@ class ShaderFactory : public iShaderFactory {
     virtual Shader * newShader(const Shader::Parameters &) const;
 };
 
+/// \brief Class which manages all the shader factories available.
+///
+/// Requests for new shaders of a given type are passed here, and
+/// shader objects are returned.
 class ShaderFactories {
   private:
     typedef std::map<std::string, iShaderFactory *> FactoryMap;

@@ -21,12 +21,18 @@ class SpeciesParameter;
 
 typedef std::map<std::string, SpeciesParameter> ParameterDict;
 
+/// \brief A set of constraints on a plant parameter.
 class SpeciesParameter {
   public:
     float min;
     float range;
 };
 
+/// \brief Data about a species of plant in a Forest.
+///
+/// Species objects encapsulate all the data required to determine
+/// where instances of a given species occur, and how they are scattered
+/// in a Forest.
 class Species {
   public:
     /// Probability that this species will occur at each grid node.
@@ -35,7 +41,7 @@ class Species {
     /// Multiplyer for how deviated from the grid items should be.
     float m_deviation;
 
-    /// Parameters
+    /// Arbitrary parameters.
     ParameterDict m_parameters;
 };
 

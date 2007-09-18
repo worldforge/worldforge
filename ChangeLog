@@ -1,3 +1,13 @@
+2006-09-18  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Area.cpp, Mercator/Area.h, Mercator/AreaShader.cpp,
+	  Mercator/AreaShader.h, Mercator/BasePoint.h, Mercator/Buffer.h,
+	  Mercator/DepthShader.h, Mercator/FillShader.h, Mercator/Forest.h,
+	  Mercator/GrassShader.h, Mercator/RandCache.h, Mercator/Segment.cpp,
+	  Mercator/ShaderFactory.h, Mercator/Surface.h,
+	  Mercator/ThresholdShader.h, Mercator/TileShader.h: Add doc comments
+	  for all compounds and types. Many members now to be done.
+
 2006-09-17  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Forest.cpp, Mercator/Forest.h, Mercator/Plant.h,
@@ -8,7 +18,7 @@
 
 2006-09-17  Al Riddoch  <alriddoch@zepler.org>
 
-	* Mercator/TerrainMod.h: Add some API documentation to the naughty
+	c Mercator/TerrainMod.h: Add some API documentation to the naughty
 	  undocumented classes.
 
 2006-08-11  Al Riddoch  <alriddoch@zepler.org>

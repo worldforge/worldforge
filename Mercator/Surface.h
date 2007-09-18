@@ -18,6 +18,7 @@ typedef unsigned char ColorT;
 static const ColorT colorMax = UCHAR_MAX;
 static const ColorT colorMin = 0;
 
+/// \brief Data store for terrain surface data.
 class Surface : public Buffer<ColorT> {
   public:
     const Shader & m_shader;

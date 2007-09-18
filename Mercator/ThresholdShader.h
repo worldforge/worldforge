@@ -9,6 +9,7 @@
 
 namespace Mercator {
 
+/// \brief Surface shader that defines the surface above a given level.
 class HighShader : public Shader {
   private:
     float m_threshold;
@@ -27,6 +28,7 @@ class HighShader : public Shader {
     virtual void shade(Surface &) const;
 };
 
+/// \brief Surface shader that defines the surface below a given level.
 class LowShader : public Shader {
   private:
     float m_threshold;
@@ -45,6 +47,7 @@ class LowShader : public Shader {
     virtual void shade(Surface &) const;
 };
 
+/// \brief Surface shader that defines the surface between two levels.
 class BandShader : public Shader {
   private:
     float m_lowThreshold;

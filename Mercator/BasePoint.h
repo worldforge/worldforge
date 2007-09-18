@@ -9,6 +9,12 @@
 
 namespace Mercator { 
 
+/// \brief Point on the fundamental grid that is used as the basis for terrain.
+///
+/// The terrain is defined by a sparse grid of evenly spaced points, each of
+/// which is defined by an instance of this class. The most fundamental
+/// property of each point is its elevation stored as height. Additional
+/// parameters for roughness and falloff are often specified.
 class BasePoint {
   private:
     float m_height;

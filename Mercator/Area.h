@@ -13,6 +13,15 @@ namespace Mercator
 
 class Segment;
 
+/// \brief Region of terrain surface which is modified.
+///
+/// Objects of this class describe regions of the surface which have
+/// been changed. Which layers of the shaded terrain is affected by
+/// their layer number. For example, if they are below the snow layer
+/// then the snow shader will cover them where the area affected by
+/// snow intersects with the area, but the lower grass area will be
+/// overriden. In order to get the best effect it is important to
+/// select the layer carefully.
 class Area
 {
 public:

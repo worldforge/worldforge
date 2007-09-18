@@ -9,6 +9,13 @@
 
 namespace Mercator {
 
+/// \brief Shader to give the appearance of deep murky water.
+///
+/// Areas of terrain covered by water should be darker as less
+/// distinct as they get deeper. This shader adds a uniform alpha blended
+/// surface below water level which becomes more opaque as it gets deeper
+/// concealing the underlying appearance of the terrain from a viewer
+/// at the surface.
 class DepthShader : public Shader {
   private:
     float m_waterLevel;

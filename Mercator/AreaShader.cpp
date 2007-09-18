@@ -23,6 +23,7 @@ typedef WFMath::Vector<2> Vector2;
 
 const double ROW_HEIGHT = 1 / 4.0; // 4x over-sample
 
+/// \brief The edge of an area.
 class Edge
 {
 public: 
@@ -64,6 +65,7 @@ private:
     double m_inverseGradient;
 };
 
+/// \brief The edge at y of an area.
 class EdgeAtY
 {
 public:

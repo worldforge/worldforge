@@ -19,6 +19,7 @@ bool isZero(double d)
     return (fabs(d) < WFMATH_EPSILON);
 }
 
+/// \brief Helper to clip points to a given range.
 class TopClip
 {
 public:
@@ -46,6 +47,7 @@ private:
     double topY;
 };
 
+/// \brief Helper to clip points to a given range.
 class BottomClip
 {
 public:
@@ -69,6 +71,7 @@ private:
     double bottomY;
 };
 
+/// \brief Helper to clip points to a given range.
 class LeftClip
 {
 public:
@@ -94,6 +97,7 @@ private:
     double leftX;
 };
 
+/// \brief Helper to clip points to a given range.
 class RightClip
 {
 public:

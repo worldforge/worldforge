@@ -22,9 +22,8 @@
 
 namespace Mercator {
 
-// A couple of helper classes
-// These interpolate between points or across a quad
 
+/// \brief Helper to interpolate on a line.
 class LinInterp {
   private:
     int m_size;
@@ -45,6 +44,7 @@ class LinInterp {
     } 
 };
 
+/// \brief Helper to interpolate in a quad.
 class QuadInterp {
   private:
     int m_size;

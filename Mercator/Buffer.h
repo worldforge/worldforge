@@ -11,6 +11,7 @@ namespace Mercator {
 
 class Segment;
 
+/// \brief Template for managing buffers of data for a segment.
 template<typename DataType>
 class Buffer {
   public:

@@ -12,23 +12,40 @@
 // RandCache r(seed, new MyOrdering(args));
 // where MyOrdering is derived from RandCache::Ordering.
 
+/// \brief A cache of random values.
 class RandCache
 {
  public:
+  /// Unsigned 32bit integer
   typedef WFMath::MTRand::uint32 uint32;
+  /// Size type of std::vector.
   typedef std::vector<uint32>::size_type size_type;
 
+  /// \brief Interface to define the ordering of the random number cache.
   struct Ordering {
     virtual ~Ordering() {}
     virtual size_type operator()(int x, int y) = 0;
   };
 
+  /// \brief Constructor
+  ///
+  /// @param seed the random seed value for generated numbers.
+  /// @param o the ordering object that defines the sequence generated.
   RandCache(uint32 seed, Ordering* o) :
-	m_rand(seed), m_ordering(o) {}
+        m_rand(seed), m_ordering(o) {}
+  /// \brief Constructor
+  ///
+  /// @param seed the random seed block for generated numbers.
+  /// @param seed_len the length of the seed block.
+  /// @param o the ordering object that defines the sequence generated.
   RandCache(uint32* seed, uint32 seed_len, Ordering* o) :
-	m_rand(seed, seed_len), m_ordering(o) {}
+        m_rand(seed, seed_len), m_ordering(o) {}
   ~RandCache() {delete m_ordering;}
 
+  /// \brief Retrieve a random value associated with parameters
+  ///
+  /// @param x coordinate associated with value to be retrieved.
+  /// @param y coordinate associated with value to be retrieved.
   double operator()(int x, int y)
   {
     size_type cache_order = (*m_ordering)(x, y);
@@ -45,12 +62,15 @@ class RandCache
   }
 
  private:
+  /// \brief Source random number generator.
   WFMath::MTRand m_rand;
+  /// \brief Store for the cache of values.
   std::vector<uint32> m_cache;
+  /// \brief Ordering object that defines the ordering of the cache.
   Ordering* m_ordering;
 };
 
-//a spiral around 0,0
+/// \brief A spiral around 0,0
 class ZeroSpiralOrdering : public RandCache::Ordering
 {
 public:
@@ -71,7 +91,7 @@ public:
     }
 };
 
-//A spiral around x,y
+/// \brief A spiral around x,y
 class SpiralOrdering : public ZeroSpiralOrdering
 {
 private:

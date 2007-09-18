@@ -12,6 +12,7 @@ namespace Mercator
 
 class Area;
 
+/// \brief Shader for handling areas.
 class AreaShader : public Shader
 {
 public:
