@@ -38,10 +38,13 @@ class ShaderFactory : public iShaderFactory {
 /// shader objects are returned.
 class ShaderFactories {
   private:
+    /// \brief STL map of shader factory pointers.
     typedef std::map<std::string, iShaderFactory *> FactoryMap;
 
+    /// \brief Map of shader factory pointers keyed on type string.
     FactoryMap m_factories;
 
+    /// \brief Pointer to the singleton instance of ShaderFactories.
     static ShaderFactories * m_instance;
 
     ShaderFactories();

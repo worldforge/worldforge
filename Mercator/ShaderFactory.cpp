@@ -35,6 +35,9 @@ ShaderFactories::~ShaderFactories()
 {
 }
 
+/// \brief Construct a singleton instance if required.
+///
+/// @returns a reference to the instance.
 ShaderFactories & ShaderFactories::instance()
 {
     if (m_instance == 0) {
@@ -43,6 +46,7 @@ ShaderFactories & ShaderFactories::instance()
     return *m_instance;
 }
 
+/// \brief Delete the instance
 void ShaderFactories::del()
 {
     if (m_instance != 0) {
@@ -50,6 +54,11 @@ void ShaderFactories::del()
     }
 }
 
+/// \brief Create a shader of the specified type.
+///
+/// @param type a string giving the type of shader.
+/// @param params a map of the parameters for the shader
+/// @returns a pointer to the new shader object
 Shader * ShaderFactories::newShader(const std::string & type,
                                     const Shader::Parameters & params) const
 {

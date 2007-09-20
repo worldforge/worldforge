@@ -18,7 +18,13 @@ class HighShader : public Shader {
 
     static const float default_threshold;
 
+    /// \brief Constructor
+    ///
+    /// @param threshold level below which the shader renders.
     explicit HighShader(float threshold = default_threshold);
+    /// \brief Constructor
+    ///
+    /// @param params a map of parameters for the shader.
     explicit HighShader(const Parameters & params);
     virtual ~HighShader();
 
@@ -31,16 +37,24 @@ class HighShader : public Shader {
 /// \brief Surface shader that defines the surface below a given level.
 class LowShader : public Shader {
   private:
+    /// The level below which the shader renders.
     float m_threshold;
   public:
     static const std::string key_threshold;
 
     static const float default_threshold;
 
+    /// \brief Constructor
+    ///
+    /// @param threshold level below which the shader renders.
     explicit LowShader(float threshold = default_threshold);
+    /// \brief Constructor
+    ///
+    /// @param params a map of parameters for the shader.
     explicit LowShader(const Parameters & params);
     virtual ~LowShader();
 
+    /// Accessor for level below which the shader renders.
     const float threshold() const { return m_threshold; }
 
     virtual bool checkIntersect(const Segment &) const;
@@ -59,8 +73,15 @@ class BandShader : public Shader {
     static const float default_lowThreshold;
     static const float default_highThreshold;
 
+    /// \brief Constructor
+    ///
+    /// @param low_threshold level above which the shader renders.
+    /// @param high_threshold level below which the shader renders.
     explicit BandShader(float low_threshold = default_lowThreshold,
                         float high_threshold = default_highThreshold);
+    /// \brief Constructor
+    ///
+    /// @param params a map of parameters for the shader.
     explicit BandShader(const Parameters & params);
     virtual ~BandShader();
 

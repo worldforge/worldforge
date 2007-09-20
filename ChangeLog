@@ -1,3 +1,9 @@
+2006-09-20  Al Riddoch  <alriddoch@zepler.org>
+
+	* Mercator/Segment.cpp, Mercator/ShaderFactory.cpp,
+	  Mercator/ShaderFactory.h, Mercator/ThresholdShader.h: Add doc
+	  comments for some members.
+
 2006-09-18  Al Riddoch  <alriddoch@zepler.org>
 
 	* Mercator/Area.cpp, Mercator/Forest.h, Mercator/Surface.cpp,
