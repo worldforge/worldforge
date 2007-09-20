@@ -18,21 +18,36 @@ namespace Mercator {
 /// at the surface.
 class DepthShader : public Shader {
   private:
+    /// The level of the surface of the water.
     float m_waterLevel;
+    /// The depth at which the bottom becomes completely obscured.
     float m_murkyDepth;
   public:
+    /// Key string used when specifying the water level parameter.
     static const std::string key_waterLevel;
+    /// Key string used when specifying the murky depth parameter.
     static const std::string key_murkyDepth;
 
+    /// Default level of the surface of the water.
     static const float default_waterLevel;
+    /// Default depth at which the bottom becomes completely obscured.
     static const float default_murkyDepth;
 
+    /// \brief Constructor
+    ///
+    /// @param waterLevel level of the surface of the water.
+    /// @param murkyDepth depth at which the bottom becomes completely obscured.
     explicit DepthShader(float waterLevel = default_waterLevel,
                          float murkyDepth = default_murkyDepth);
+    /// \brief Constructor
+    ///
+    /// @param params a map of parameters for the shader.
     explicit DepthShader(const Parameters & params);
     virtual ~DepthShader();
 
+    /// Accessor for the level of the surface of the water.
     const float waterLevel() const { return m_waterLevel; }
+    /// Accessor for the depth at which the bottom becomes completely obscured.
     const float murkyDepth() const { return m_murkyDepth; }
 
     virtual bool checkIntersect(const Segment &) const;

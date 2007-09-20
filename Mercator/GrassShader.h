@@ -49,33 +49,64 @@ namespace Mercator {
 /// up to the height above which plants cannot grow.
 class GrassShader : public Shader {
   private:
+    /// The level above which the shader renders.
     float m_lowThreshold;
+    /// The level below which the shader renders.
     float m_highThreshold;
+    /// The slope below which grass is opaque.
     float m_cutoff;
+    /// The slope steeper than which no grass grows.
     float m_intercept;
 
+    /// \brief Determine the alpha value for grass for a given slope
+    ///
+    /// Determine the alpha value used when applying grass to the
+    /// terrain at a point with given height and average slope.
+    /// @param height the altitude of the specified point.
+    /// @param slope the steepness of the terrain at the specified point.
     ColorT slopeToAlpha(float height, float slope) const;
   public:
+    /// Key string used when specifying the low threshold parameter.
     static const std::string key_lowThreshold;
+    /// Key string used when specifying the high threshold parameter.
     static const std::string key_highThreshold;
+    /// Key string used when specifying the cutoff parameter.
     static const std::string key_cutoff;
+    /// Key string used when specifying the intercept parameter.
     static const std::string key_intercept;
 
+    /// Default level above which the shader renders.
     static const float default_lowThreshold;
+    /// Default level below which the shader renders.
     static const float default_highThreshold;
+    /// Default slope below which grass is opaque.
     static const float default_cutoff;
+    /// Default slope steeper than which no grass grows.
     static const float default_intercept;
 
+    /// \brief Constructor
+    ///
+    /// @param lowThreshold level above which the shader renders.
+    /// @param highThreshold level above which the shader renders.
+    /// @param cutoff slope below which grass is opaque.
+    /// @param intercept slope steeper than which no grass grows.
     explicit GrassShader(float lowThreshold = default_lowThreshold,
                          float highThreshold = default_highThreshold,
                          float cutoff = default_cutoff,
                          float intercept = default_intercept);
+    /// \brief Constructor
+    ///
+    /// @param params a map of parameters for the shader.
     explicit GrassShader(const Parameters & params);
     virtual ~GrassShader();
 
+    /// Accessor for level above which the shader renders.
     const float lowThreshold() const { return m_lowThreshold; }
+    /// Accessor for level below which the shader renders.
     const float highThreshold() const { return m_highThreshold; }
+    /// Accessor for slope below which grass is opaque.
     const float cutoff() const { return m_cutoff; }
+    /// Accessor for slope steeper than which no grass grows.
     const float intercept() const { return m_intercept; }
 
     virtual bool checkIntersect(const Segment &) const;

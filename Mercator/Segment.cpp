@@ -45,8 +45,8 @@ class LinInterp {
     /// \brief Constructor
     ///
     /// @param size length of the line.
-    /// @param e1 value at one end of the line.
-    /// @param e2 value at one end of the line.
+    /// @param l value at one end of the line.
+    /// @param h value at one end of the line.
     LinInterp(int size,float l, float h) : m_size(size), noCalc(false), 
               ep1(l/size), ep2(h/size) 
     {

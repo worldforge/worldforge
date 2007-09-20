@@ -24,6 +24,7 @@ class RandCache
   /// \brief Interface to define the ordering of the random number cache.
   struct Ordering {
     virtual ~Ordering() {}
+    /// \brief Determine the order.
     virtual size_type operator()(int x, int y) = 0;
   };
 

@@ -15,7 +15,11 @@ namespace Mercator {
 /// which is usually bed rock.
 class FillShader : public Shader {
   public:
+    /// \brief Constructor
     explicit FillShader();
+    /// \brief Constructor
+    ///
+    /// @param params a map of parameters for the shader.
     explicit FillShader(const Parameters & params);
     virtual ~FillShader();
 
