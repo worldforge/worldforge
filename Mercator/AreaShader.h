@@ -16,6 +16,9 @@ class Area;
 class AreaShader : public Shader
 {
 public:
+    /// \brief Constructor
+    ///
+    /// @param layer layer number.
     AreaShader(int layer);
     
     virtual void shade(Surface &s) const;
@@ -25,6 +28,7 @@ private:
     /// helper to shader a single area into the surface
     void shadeArea(Surface& s, const Area* const s) const;
     
+    /// The layer number.
     int m_layer;
 };
 

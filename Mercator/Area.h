@@ -25,29 +25,43 @@ class Segment;
 class Area
 {
 public:
-    Area(int l, bool hole);
+    /// \brief Constructor
+    ///
+    /// @param layer layer number.
+    /// @param hole flag indicating whether this is a hole.
+    Area(int layer, bool hole);
     
-    void setLayer(int l, bool hole);
+    /// \brief Set the layer number and flag indicating whether this is a hole.
+    ///
+    /// @param layer layer number.
+    /// @param hole flag indicating whether this is a hole.
+    void setLayer(int layer, bool hole);
 
+    /// Set the geometric shape of this area.
     void setShape(const WFMath::Polygon<2>& p);
 
+    /// Determine if a point is contained by the shape of this area.
     bool contains(double x, double y) const;
 
+    /// Accessor for the layer number.
     int getLayer() const
     {
         return m_layer;
     }
     
+    /// Accessor for the flag indicating whether this is a hole.
     bool isHole() const
     {
         return m_hole;
     }
     
+    /// Accessor for the bounding box of the geometric shape.
     const WFMath::AxisBox<2> & bbox() const
     {
         return m_box;
     }
 
+    /// Accessor for the geometric shape.
     const WFMath::Polygon<2> & shape() const
     {
         return m_shape;
@@ -58,12 +72,23 @@ public:
     */
     bool checkIntersects(const Segment& s) const;
 
+    /// \brief Clip the shape of this area to a given segment.
+    ///
+    /// Determines the intersection of the geometric shape of this area
+    /// with a square terrain segment, and returns the intersection as
+    /// a geometric shape.
+    /// @param s the segment that the shape should be clipped to.
+    /// @returns the shape of the intersection of this area with the segment.
     WFMath::Polygon<2> clipToSegment(const Segment& s) const;
 private:
 
+    /// The layer number.
     int m_layer;
+    /// A flag indicating whether this is a hole.
     bool m_hole;
+    /// The geometric shape.
     WFMath::Polygon<2> m_shape;
+    /// The bounding box of the geometric shape.
     WFMath::AxisBox<2> m_box;
 };
 

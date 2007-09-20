@@ -27,6 +27,10 @@ const double ROW_HEIGHT = 1 / 4.0; // 4x over-sample
 class Edge
 {
 public: 
+    /// \brief Constructor
+    ///
+    /// @param a one end of the line defining the edge.
+    /// @param b one end of the line defining the edge.
     Edge(const Point2& a, const Point2& b)
     {
         // horizontal segments should be discarded earlier
@@ -45,9 +49,16 @@ public:
         m_inverseGradient = m_seg.x() / m_seg.y();
     }
     
+    /// Accessor for the point describing the start of the edge.
     Point2 start() const { return m_start; }
+    /// Determine the point describing the end of the edge.
     Point2 end() const { return m_start + m_seg; }
     
+    /// \brief Determine the x coordinate at a given y coordinate.
+    ///
+    /// Calculate the x coordinate on the edge line where the y coordinate
+    /// is the value specified.
+    /// @param y the y coordinate where the calculation is required.
     double xValueAtY(double y) const
     {
         double x = m_start.x() + ((y - m_start.y()) * m_inverseGradient);
@@ -55,27 +66,39 @@ public:
         return x;
     }
     
+    /// \brief Compare the y coordinate of the start with another edge.
+    ///
+    /// This operator ensures that edges can be sorted, compares the y
+    /// y coordinate of the start of the edges.
     bool operator<(const Edge& other) const
     {
         return m_start.y() < other.m_start.y();
     }
 private:
+    /// The point describing the start of the edge.
     Point2 m_start;
+    /// The vector describing the edge from its start.
     Vector2 m_seg;
+    /// The inverse of the gradient of the line.
     double m_inverseGradient;
 };
 
-/// \brief The edge at y of an area.
+/// \brief The edge of an area parallel to the x axis.
 class EdgeAtY
 {
 public:
+    /// Constructor
+    ///
+    /// @param y coordinate on the y axis of the edge.
     EdgeAtY(double y) : m_y(y) {}
     
+    /// Determine which edge crosses this edge at a lower x coordinate.
     bool operator()(const Edge& u, const Edge& v) const
     {
         return u.xValueAtY(m_y) < v.xValueAtY(m_y);
     }
 private:
+    /// The coordinate on the y axis of the edge.
     double m_y;
 };
 

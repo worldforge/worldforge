@@ -96,8 +96,15 @@ public:
 class SpiralOrdering : public ZeroSpiralOrdering
 {
 private:
-    int m_x, m_y;
+    /// The centre x coordinate of the spiral.
+    int m_x;
+    /// The centre y coordinate of the spiral.
+    int m_y;
 public:
+    /// \brief Constructor
+    ///
+    /// @param x centre x coordinate of the spiral.
+    /// @param y centre y coordinate of the spiral.
     SpiralOrdering(int x, int y) : ZeroSpiralOrdering(), m_x(x), m_y(y) {}
     RandCache::size_type operator () (int x, int y) 
     {

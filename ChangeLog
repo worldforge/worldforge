@@ -1,5 +1,11 @@
 2006-09-20  Al Riddoch  <alriddoch@zepler.org>
 
+	* Mercator/Area.cpp, Mercator/Area.h, Mercator/AreaShader.cpp,
+	  Mercator/AreaShader.h, Mercator/BasePoint.h, Mercator/RandCache.h:
+	  Add doc comments for some members.
+
+2006-09-20  Al Riddoch  <alriddoch@zepler.org>
+
 	* Mercator/Buffer.h, Mercator/DepthShader.h, Mercator/FillShader.h,
 	  Mercator/GrassShader.h, Mercator/RandCache.h, Mercator/Segment.cpp,
 	  Mercator/ThresholdShader.h: Add doc comments for some members.
