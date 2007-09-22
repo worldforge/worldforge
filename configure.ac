@@ -43,6 +43,8 @@ dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 AC_DEFINE(_XOPEN_SOURCE, 500, [This is XOpen source])
 AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 
+PKG_PROG_PKG_CONFIG
+
 AC_LANG_PUSH(C++)
 
 PKG_CHECK_MODULES(SIGC, sigc++-2.0 != 2.0.8,
@@ -50,8 +52,17 @@ PKG_CHECK_MODULES(SIGC, sigc++-2.0 != 2.0.8,
         CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
         LDFLAGS="$LDFLAGS $SIGC_LIBS"
         ERIS_REQUIRES="$ERIS_REQUIRES sigc++-2.0"
-    ],
-    AC_MSG_ERROR([Couldn't find sigc++ library!]))
+    ],[
+        AC_MSG_RESULT([no])
+        AC_MSG_ERROR([
+Cannot find a valid version of the sigc++ library:
+$SIGC_PKG_ERRORS
+Perhaps you should add the directory containing the missing libraries to the
+PKG_CONFIG_PATH environment variable.
+Please see http://libsigc.sourceforge.net/ for details of how to download and
+install the library.])
+    ]
+)
 
 dnl check for all the WorldForge libs we use
 PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 >= 0.5.94 wfmath-0.3 >= 0.3.2,
@@ -59,8 +70,16 @@ PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 >= 0.5.94 wfmath-0.3 >= 0.3.2,
         CXXFLAGS="$CXXFLAGS $WF_CFLAGS"
         LDFLAGS="$LDFLAGS $WF_LIBS"
         ERIS_REQUIRES="$ERIS_REQUIRES skstream-0.3 atlascpp-0.6 wfmath-0.3"
-    ],
-    AC_MSG_ERROR(Couldn't find the required WorldForge libraries))
+    ],[
+        AC_MSG_RESULT([no])
+        AC_MSG_ERROR([
+Cannot find valid versions of required WorldForge libraries:
+$WF_PKG_ERRORS
+Perhaps you should add the directory containing the missing libraries to the
+PKG_CONFIG_PATH environment variable.
+Please see http://worldforge.org/dev/eng/libraries/eris for details of the libraries required and where to obtain them.])
+    ]
+)
 
 AC_LANG_POP(C++)
 
@@ -82,6 +101,7 @@ dnl perl and sucks in its CFLAGS and LIBS
 			enable_perl='no'
 		fi
 	],[
+		AC_MSG_RESULT(no)
 		AC_MSG_WARN(libsigcperl not found, not building perl bindings)
 		enable_perl='no'
 	])
@@ -93,13 +113,14 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
 	have_glib='yes'
     ],
     [
-        AM_PATH_GLIB(1.2.0,[
+	AM_PATH_GLIB(1.2.0,[
 		have_glib='yes'
-	        ],[
+		],[
+		AC_MSG_RESULT([no])
 		AC_MSG_WARN(Couldn't find glib, not building glib poll)
 		have_glib='no'
 		]
-        )
+	)
     ])
 AM_CONDITIONAL(HAVE_GLIB, test "x$have_glib" = "xyes")
 
