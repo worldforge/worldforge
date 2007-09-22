@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     assert((*look_inst->getAttr("parents").asList().begin()).asString() ==
             "look");
 
-    Account acct = (Account&)Atlas::Objects::objectDefinitions.find("account")->second;
+    Account acct = smart_dynamic_cast<Account>(objectDefinitions.find("account")->second);
     Account acct_inst;
     acct_inst->setAttr("id", std::string("account_instantiation"));
     assert(acct->getAttr("id").asString() == "account");

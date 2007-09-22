@@ -3,6 +3,11 @@
 	* tests/Objects/objects1.cpp: Remove a nasty C style cast that was
 	  causing warnings.
 
+2007-09-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* tests/Objects/objects1.cpp: Remove a nasty C style cast that was
+	  causing warnings.
+
 2007-09-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Makefile.am, configure.ac: Remove the debian directory from
