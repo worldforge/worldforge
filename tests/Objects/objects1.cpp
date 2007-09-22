@@ -8,6 +8,8 @@
 using Atlas::Objects::Root;
 using Atlas::Objects::Operation::Look;
 using Atlas::Objects::Entity::Account;
+using Atlas::Objects::smart_dynamic_cast;
+using Atlas::Objects::objectDefinitions;
 
 int main(int argc, char** argv)
 {
@@ -27,7 +29,7 @@ int main(int argc, char** argv)
     assert((*root_inst->getAttr("parents").asList().begin()).asString() ==
             "root");
 
-    Look look = (Look&)Atlas::Objects::objectDefinitions.find("look")->second;
+    Look look = smart_dynamic_cast<Look>(objectDefinitions.find("look")->second);
     Look look_inst;
     look_inst->setAttr("id", std::string("look_instantiation"));
     assert(look->getAttr("id").asString() == "look");
