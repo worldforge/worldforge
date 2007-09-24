@@ -88,7 +88,7 @@ void testXML()
     Move move_op;
     move_op->setFrom(std::string("bar"));
     std::vector<Root> move_args(1);
-    move_args[0] = (Root&)human;
+    move_args[0] = human;
     move_op->setArgs(move_args);
 
     Atlas::Message::ListType velocity;
@@ -144,7 +144,7 @@ void testXML()
     //list<Message::Object> args(1,account->asObject());
     //l->setArgsAsList(args);
     std::vector<Root> args(1);
-    args[0] = (Root&)account;
+    args[0] = account;
     l->setArgs(args);
     //coder->streamObjectsMessage((Root&)l);
 //<map><list name="args"><map><std::string name="id">al</strin
@@ -204,7 +204,7 @@ void testValues()
     Login l;
     account->setId("al");
     account->setAttr("password", std::string("ping"));
-    l->setArgs1((Root&)account);
+    l->setArgs1(account);
 
     // assert(l->getArgs()[0]->getLongDescription()=="Later in hierarchy tree objtype changes to 'object' when actual game objects are made.");
     // assert(l->getArgs()[0]->getDescription()=="Base class for accounts");
@@ -394,13 +394,13 @@ void test()
 
         RootOperation move_op;
         std::vector<Root> move_args(1);
-        move_args[0] = (Root&)human;
+        move_args[0] = human;
         move_op->setArgs(move_args);
 
         RootOperation sight_op;
         //sight_op->setFrom(humanent.asObjectPtr());
         std::vector<Root> sight_args(1);
-        sight_args[0] = (Root&)move_op;
+        sight_args[0] = move_op;
         sight_op->setArgs(sight_args);
         
         //test 
