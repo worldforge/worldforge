@@ -1,5 +1,9 @@
 2007-09-22  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/testUtils.cpp: Add the missing newline to the end.
+
+2007-09-22  Al Riddoch  <alriddoch@zepler.org>
+
 	* acinclude.m4: Update to a more recent version of the pkgconfig
 	  macros.
 
