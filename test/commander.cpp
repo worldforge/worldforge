@@ -236,7 +236,7 @@ void Commander::dispatch(const RootOperation& op)
             } else if (cid == "add-many-objects") {
                 m_server->addManyObjects(args[0]->getAttr("acc").asString());
             } else if (cid == "set-world-time") {
-                double t = args[0]->getAttr("seconds").asFloat();
+                /* double t = */ args[0]->getAttr("seconds").asFloat();
                 
             } else {
                 std::cerr << "unknown command " << cid << std::endl;
