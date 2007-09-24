@@ -12,7 +12,7 @@ check: perl-check
 
 dist-hook: perl-dist-hook
 
-install-hook: perl-install
+install-exec-hook: perl-install
 
 ## ************** Specific Modules ****************
 

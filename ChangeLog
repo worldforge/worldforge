@@ -1,3 +1,8 @@
+2007-09-24  Anders Petersson  <demitar@worldforge.org>
+
+	* bindings/Makefile.am: Switched from install-hook to
+	  install-exec-hook to satisfy recent automake.
+
 2007-09-24  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/commander.cpp: Remove an unused variable.
