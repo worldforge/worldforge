@@ -60,12 +60,12 @@ Sight NPC::move(Move &op)
     
     //move:
     Move move;
-    move->setArgs1((Root&)human);
+    move->setArgs1(human);
 
     //sight:
     Sight sight;
     sight->setFrom(getId());
-    sight->setArgs1((Root&)move);
+    sight->setArgs1(move);
     
     return sight;
 }
@@ -96,7 +96,7 @@ int main(int argc, char** argv)
 
         //move:
         Move move;
-        move->setArgs1((Root&)human);
+        move->setArgs1(human);
 //        Object::MapType ent = move.getArgs().front().asMap();
 //        std::cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<std::endl;
 
@@ -105,7 +105,7 @@ int main(int argc, char** argv)
 #if USE_STRING
         sight->setFrom("123");
 #endif
-        sight->setArgs1((Root&)move);
+        sight->setArgs1(move);
 //        Object::MapType ent = sight.getArgs().front().asMap()
 //          ["args"].asList().front().asMap();
 //        std::cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<std::endl;
@@ -126,7 +126,7 @@ int main(int argc, char** argv)
         
         //move:
         Move move;
-        move->setArgs1((Root&)human);
+        move->setArgs1(human);
 
         Sight res_sight = npc1.move(move);
         const std::vector<double>& new_pos = 

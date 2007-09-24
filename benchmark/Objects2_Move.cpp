@@ -63,7 +63,7 @@ SightInstance NPC::move(MoveInstance &op)
     MoveInstance move;
     //Move move = Move::Instantiate();
     vector<Root> move_args(1);
-    move_args[0] = (Root&)human;
+    move_args[0] = human;
     move->setArgs(move_args);
 
     //sight:
@@ -71,7 +71,7 @@ SightInstance NPC::move(MoveInstance &op)
     //Sight sight = Sight::Instantiate();
     sight->setFrom(getId());
     vector<Root> sight_args(1);
-    sight_args[0] = (Root&)move;
+    sight_args[0] = move;
     sight->setArgs(sight_args);
     
     return sight;
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
         //move:
         MoveInstance move;
         vector<Root> move_args(1);
-        move_args[0] = (Root&)human;
+        move_args[0] = human;
         move->setArgs(move_args);
 //        Object::MapType ent = move.getArgs().front().asMap();
 //        cout<<"vel0:"<<ent["velocity"].asList().front().asFloat()<<endl;
@@ -110,7 +110,7 @@ int main(int argc, char** argv)
         SightInstance sight;
         sight->setFrom("123");
         vector<Root> sight_args(1);
-        sight_args[0] = (Root&)move;
+        sight_args[0] = move;
         sight->setArgs(sight_args);
 //        Object::MapType ent = sight.getArgs().front().asMap()
 //          ["args"].asList().front().asMap();
@@ -133,7 +133,7 @@ int main(int argc, char** argv)
         //move:
         MoveInstance move;
         vector<Root> move_args(1);
-        move_args[0] = (Root&)human;
+        move_args[0] = human;
         move->setArgs(move_args);
 
         SightInstance res_sight = npc1.move(move);

@@ -1,3 +1,8 @@
+2007-09-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* benchmark/Objects2_Move.cpp, benchmark/Objects3_Move.cpp:
+	  Remove a nasty C style cast that was causing warnings.
+
 2007-09-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/Objects/objects2.cpp: Remove a nasty C style cast that was
