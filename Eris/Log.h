@@ -24,7 +24,7 @@ const LogLevel DEFAULT_LOG = LOG_WARNING;
 /** Emitted with logging information; client may handle as it see fit.
 There is room for considerable expansion of this feature; notably message
 classes (warning / info / debug). Any feedback greatly appreciated */
-extern SigC::Signal2<void, LogLevel, const std::string&> Logged;
+extern sigc::signal<void, LogLevel, const std::string&> Logged;
     
 /** set the logging level for all sucessive messages : this can be called at any time, so it is
 reasonable to bracket suspect calls in setLogLevel calls if you choose */

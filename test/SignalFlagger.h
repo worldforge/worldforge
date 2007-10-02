@@ -17,29 +17,19 @@
 
 // $Id$
 
+#ifndef ERIS_TEST_SIGNAL_FLAGGER_H
+#define ERIS_TEST_SIGNAL_FLAGGER_H
 
-#include <Eris/Log.h>
+class SignalFlagger {
+  protected:
+    bool m_emitted;
 
-#include <cassert>
+  public:
+    SignalFlagger() : m_emitted(false) { }
 
-int main()
-{
-    assert(Eris::getLogLevel() == Eris::DEFAULT_LOG);
+    void set() { m_emitted = true; }
 
-    Eris::setLogLevel(Eris::LOG_ERROR);
-    assert(Eris::getLogLevel() == Eris::LOG_ERROR);
+    bool flagged() const { return m_emitted; }
+};
 
-    Eris::setLogLevel(Eris::LOG_WARNING);
-    assert(Eris::getLogLevel() == Eris::LOG_WARNING);
-
-    Eris::setLogLevel(Eris::LOG_NOTICE);
-    assert(Eris::getLogLevel() == Eris::LOG_NOTICE);
-
-    Eris::setLogLevel(Eris::LOG_VERBOSE);
-    assert(Eris::getLogLevel() == Eris::LOG_VERBOSE);
-
-    Eris::setLogLevel(Eris::LOG_DEBUG);
-    assert(Eris::getLogLevel() == Eris::LOG_DEBUG);
-
-    return 0;
-}
+#endif // ERIS_TEST_SIGNAL_FLAGGER_H

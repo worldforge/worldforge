@@ -1,4 +1,21 @@
-2007-09-24  Al Riddoch  <alriddoch@zepler.org>
+2007-10-02  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Log.h, Eris/Log.cpp: Use the current sigc++ API rather than
+	  the deprecated compatability interface.
+
+	* Eris/BaseConnection.cpp: Initialise some member pointers to null,
+	  and add assert checks on them.
+
+	* test/SignalFlagger.h: Add a simple class to be used in tests
+	  to indicate if a sigc++ signal has emitted.
+
+	* test/Log_unittest.cpp: Add comprehensive coverage of the Log
+	  calls.
+
+	* test/BaseConnection_unittest.cpp: Add fairly complete coverage
+	  of BaseConnection.
+
+2007-10-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/metaQuery.cpp: Output uptime in more friendly terms.
 

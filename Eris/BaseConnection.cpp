@@ -30,7 +30,9 @@ namespace Eris {
 BaseConnection::BaseConnection(const std::string &cnm, 
 	const std::string &id,
 	Atlas::Bridge *br) :
+	_encode(NULL),
 	_sc(NULL),
+	m_codec(NULL),
 	_status(DISCONNECTED),
 	_id(id),
 	_stream(NULL),
@@ -88,9 +90,12 @@ void BaseConnection::hardDisconnect(bool emit)
     
     // okay, tear it down
     if ((_status == CONNECTED) || (_status == DISCONNECTING)){
+        assert(m_codec);
+        assert(_encode);
         delete m_codec;
         delete _encode;
     } else if (_status == NEGOTIATE) {
+        assert(_sc);
         delete _sc;
         _sc = NULL;
     } else if (_status == CONNECTING) {
