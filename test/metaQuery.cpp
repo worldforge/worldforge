@@ -47,23 +47,57 @@ void queryFailed(const std::string& msg)
 
 std::string timeFormat(double time)
 {
-	std::string times[] = { "secs", "mins", "hours", "days", "weeks" };
+	static const std::string times[] = { "secs", "mins", "hours", "days", "weeks" };
 	int precs[] = { 0, 1, 1, 2, 2, 2 };
 	int divi = 0;
 	std::stringstream result;
+	std::string timestring;
+	double orig = time;
 	
 	if(exactTime == false)
 	{
-		int divs[] = { 60, 60, 24, 7, 0 };
+		static const int divs[] = { 60, 60, 24, 7, 0 };
 		
+#if 0
 		while((divs[divi] > 0) && (time > divs[divi]))
 		{
+			std::stringstream division;
+			division << (int)time % divs[divi] << " "
+                                 << times[divi];
+			if (!timestring.empty()) {
+				timestring = ", " + timestring;
+			}
+			timestring = division.str() + timestring;
 			time /= divs[divi++];
 		}
+#else
+	if(exactTime == false) {
+		for (int i = 0; i < 5; ++i) {
+			std::stringstream division;
+			int interval;
+			if (i == 4) {
+				interval = (int)time;
+			} else {
+				interval = (int)time % divs[i];
+			}
+			if (interval != 0) {
+				division << interval << " " << times[i];
+				if (!timestring.empty()) {
+					timestring = ", " + timestring;
+				}
+				timestring = division.str() + timestring;
+			}
+			time /= divs[i];
+			if (time < 1) {
+				break;
+			}
+		}
 	}
-	result << std::fixed << std::setprecision(precs[divi]) << time << ' ' << times[divi];
+#endif
+	}
+	// result << std::fixed << std::setprecision(precs[divi]) << orig << "," << time << ' ' << times[divi];
 	
-	return result.str();
+	return timestring;
 }
 
 void dumpToScreen(const Eris::Meta& meta)

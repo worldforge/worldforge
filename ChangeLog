@@ -1,3 +1,10 @@
+2007-09-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/metaQuery.cpp: Output uptime in more friendly terms.
+
+	* test/Makefile.am: Add unit test stubs for all the headers in the
+	  library.
+
 2007-09-24  Anders Petersson  <demitar@worldforge.org>
 
 	* bindings/Makefile.am: Switched from install-hook to
