@@ -1,3 +1,12 @@
+2007-10-03  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/View.h, Eris/TypeInfo.h, Eris/PollDefault.h, Eris/Entity.cpp,
+	  Eris/Metaserver.h: Switch from the deprecated legacy compatability
+	  sigc++ API to the current interface.
+
+	* Eris/Account.cpp, Eris/Account.h: Clean up the whitespace and
+	  indenting.
+
 2007-10-02  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Log.h, Eris/Log.cpp: Use the current sigc++ API rather than

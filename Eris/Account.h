@@ -11,7 +11,7 @@
 
 namespace Eris
 {
-	
+
 class Connection;
 class Avatar;
 class AccountRouter;
@@ -36,20 +36,20 @@ public:
     /// Create a new Account associated with a Connection object
     /**
     Create a new Account object : currently only one is assumed, but multiple
-    Accounts might be supported in the future 
+    Accounts might be supported in the future
     @param con A valid (but not necessarily connected) Connection instance
     */
     Account(Connection *con);
-   
+
      ~Account();
 
     /// Login to the server using user-supplied account information
-    /** This is the basic way of logging into an existing account. Server-side 
+    /** This is the basic way of logging into an existing account. Server-side
     failures during the login process, such as the account being unknown
     or an incorrect password being supplied, will result in the 'LoginFailure' signal being
     emitted with some vaugely helpful error message, and an error code. The LoginSuccess
-    signal will be emitted upon sucessful completion of the login process. 
-    
+    signal will be emitted upon sucessful completion of the login process.
+
     @param uname The username of the account
     @param pwd The correct password for the account
     */
@@ -59,8 +59,8 @@ public:
     /* Create a new account on the server, if possible.
     Server-side failures, such as an account already existing with the specified
     username, will cause the 'LoginFailure' signal to be emitted with an error message
-    and a code. As for 'login', LoginSuccess wil be emitted if everything goes as plan. 
-   
+    and a code. As for 'login', LoginSuccess wil be emitted if everything goes as plan.
+
     @param uname The desired username of the account (eg 'ajr')
     @param fullName The real name of the user (e.g 'Al Riddoch')
     @param pwd The plaintext password for the new account
@@ -69,7 +69,7 @@ public:
     Result createAccount(const std::string &uname,
         const std::string &fullName,
         const std::string &pwd);
-	
+
     /// Request logout from the server.
     /** Initiate a clean disconnection from the server. The LogoutComplete
     signal will be emitted when the process completes. Calling this on an Account
@@ -79,10 +79,10 @@ public:
     /// Check if the account is logged in.
     /** Many operations will produce errors if the account is not logged in. */
     bool isLoggedIn() const;
-	
-	/// Returns a container of character types that the client is allowed to create.
-	const std::vector< std::string > & getCharacterTypes(void) const;
-    
+
+    /// Returns a container of character types that the client is allowed to create.
+    const std::vector< std::string > & getCharacterTypes(void) const;
+
     /// Get the characters owned by this account.
     /**
     Note you should call
@@ -94,9 +94,9 @@ public:
     /**
     Update the charcter list (based on changes to play). The intention here is
     that clients will call this method for some kind of'choose character' interface
-    or menu, and wait for the GotAllCharacters signal before displaying the list. 
+    or menu, and wait for the GotAllCharacters signal before displaying the list.
     Alternatively, you can display the UI immediatley, and add character entries
-    based on the GotCharacterInfo signal, which will be emitted once for each character. 
+    based on the GotCharacterInfo signal, which will be emitted once for each character.
     */
     Result refreshCharacterInfo();
 
@@ -111,11 +111,11 @@ public:
     /// enter the game using a new character
     Result createCharacter(const Atlas::Objects::Entity::RootEntity &character);
 
-	/// pop up the game's character creation dialog, if present
-	//void createCharacter();
+    /// pop up the game's character creation dialog, if present
+    //void createCharacter();
 
-	///  returns true if the game has defined a character creation dialog
-	bool canCreateCharacter() {return false;}
+    ///  returns true if the game has defined a character creation dialog
+    bool canCreateCharacter() {return false;}
 
     const ActiveCharacterMap& getActiveCharacters() const
     { return m_activeCharacters; }
@@ -137,7 +137,7 @@ public:
     { return m_username; }
 
     /// Access the underlying Connection for this account
-    Connection* getConnection() const 
+    Connection* getConnection() const
     {
         return m_con;
     }
@@ -145,20 +145,20 @@ public:
 // signals
     /// emitted when a character has been retrived from the server
     sigc::signal<void, const Atlas::Objects::Entity::RootEntity&> GotCharacterInfo;
-    
+
     /// emitted when the entire character list had been updated
     sigc::signal<void> GotAllCharacters;
-    
+
     ///  Emitted when a server-side error occurs during account creation / login.
     /**
-    The argument is an error message from the server - hopefully this will 
+    The argument is an error message from the server - hopefully this will
     become something more useful such as an enum code, in the future.
     */
     sigc::signal<void, const std::string &> LoginFailure;
-    
+
     /** Emitted when login or character creation is successful. */
     sigc::signal<void> LoginSuccess;
-    
+
     /// Emitted when a logout completes
     /** Depending on whether the logout completed with a positive server
     acknowledgement or just timedout, the argument will be either true
@@ -180,70 +180,70 @@ public:
 
     /**
     Emitted when an active avatar is deactivated. Clients <em>must not</em>
-    refer to the Avatar or View objects after this signal is emitted (it is 
+    refer to the Avatar or View objects after this signal is emitted (it is
     safe to access them in a slot connected to this signal)
     */
     sigc::signal<void, Avatar*> AvatarDeactivated;
 protected:
     friend class AccountRouter;
     friend class Avatar; // so avatar can call deactivateCharacter
-    
+
     void sightCharacter(const Atlas::Objects::Operation::RootOperation& op);
-    
+
     void loginComplete(const Atlas::Objects::Entity::Account &p);
     void loginError(const Atlas::Objects::Operation::Error& err);
 
     Result internalLogin(const std::string &unm, const std::string &pwd);
     void internalLogout(bool clean);
 
-	/// Callback for network re-establishment
-	void netConnected();
-	
-	/// help! the plug is being pulled!
-	bool netDisconnecting();
-	void netFailure(const std::string& msg);
+    /// Callback for network re-establishment
+    void netConnected();
+
+    /// help! the plug is being pulled!
+    bool netDisconnecting();
+    void netFailure(const std::string& msg);
 
     void loginResponse(const Atlas::Objects::Operation::RootOperation& op);
     void logoutResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarLogoutResponse(const Atlas::Objects::Operation::RootOperation& op);
-    
-	void handleLogoutTimeout();
-//	void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
+
+    void handleLogoutTimeout();
+//  void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);
 
     void handleLoginTimeout();
-    
+
     typedef enum
     {
         DISCONNECTED = 0,   ///< Default state, no server account active
         LOGGING_IN,         ///< Login sent, waiting for initial INFO response
         LOGGED_IN,          ///< Fully logged into a server-side account
         LOGGING_OUT,         ///< Sent a logout op, waiting for the INFO response
-        
+
         TAKING_CHAR,        ///< sent a LOOK op for a character, awaiting INFO response
         CREATING_CHAR       ///< send a character CREATE op, awaiting INFO response
     } Status;
-        
+
     void internalDeactivateCharacter(Avatar* av);
     void updateFromObject(const Atlas::Objects::Entity::Account &p);
 private:
-    Connection* m_con;	///< underlying connection instance
+    Connection* m_con;  ///< underlying connection instance
     Status m_status;    ///< what the Player is currently doing
     AccountRouter* m_router;
-    
-    std::string m_accountId;	///< the account ID
-    std::string m_username;	///< The player's username ( != account object's ID)
+
+    std::string m_accountId;    ///< the account ID
+    std::string m_username; ///< The player's username ( != account object's ID)
     std::string m_pass;
-    
-	std::vector< std::string > m_characterTypes;
-    CharacterMap _characters;	///< characters belonging to this player
+
+    std::vector< std::string > m_characterTypes;
+    CharacterMap _characters;   ///< characters belonging to this player
     StringSet m_characterIds;
     bool m_doingCharacterRefresh; ///< set if we're refreshing character data
-    
+
     ActiveCharacterMap m_activeCharacters;
     std::auto_ptr<Timeout> m_timeout;
 };
-	
+
 } // of namespace Eris
 
 #endif

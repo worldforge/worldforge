@@ -13,7 +13,7 @@ class PollDefault : public Poll, virtual public sigc::trackable
 {
 public:
 	PollDefault() {}
-//	PollDefault(const SigC::Slot0<bool> &s) : _prePoll(s) {}
+//	PollDefault(const sigc::slot<bool> &s) : _prePoll(s) {}
 	virtual ~PollDefault() {}
 
 	virtual void addStream(const basic_socket_stream*, Check);
@@ -29,7 +29,7 @@ private:
 
 	void doPoll(unsigned long timeout);
 
-//	SigC::Slot0<bool> _prePoll;
+//	sigc::slot<bool> _prePoll;
 };
 
 } // namespace Eris

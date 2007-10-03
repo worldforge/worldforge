@@ -75,10 +75,10 @@ public:
 
     /** emitted whenever the View creates a new Entity instance. This signal
     is emitted once the entity has been fully bound into the View */
-    SigC::Signal1<void, Entity*> EntitySeen;
+    sigc::signal<void, Entity*> EntitySeen;
 
     /** emitted when a SIGHT(CREATE) op is recieved for an entity */
-    SigC::Signal1<void, Entity*> EntityCreated;
+    sigc::signal<void, Entity*> EntityCreated;
     
     /** emitted when a SIGHT(DELETE) op is recieved for an entity */
     sigc::signal<void, Entity*> EntityDeleted;

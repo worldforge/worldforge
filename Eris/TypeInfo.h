@@ -90,7 +90,7 @@ protected:
 
     /** Emitted when the type is bound, i.e there is an unbroken graph of
     TypeInfo instances through every ancestor to the root object. */
-    SigC::Signal1<void, TypeInfo*> Bound;
+    sigc::signal<void, TypeInfo*> Bound;
     
 private:
     void addParent(TypeInfoPtr tp);

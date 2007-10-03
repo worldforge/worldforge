@@ -112,7 +112,7 @@ bool Entity::hasAttr(const std::string& attr) const
     return m_attrs.count(attr) > 0;
 }
 
-SigC::Connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
+sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
 {
     // sometimes, I realize how great SigC++ is
     return m_observers[attr].connect(slot);

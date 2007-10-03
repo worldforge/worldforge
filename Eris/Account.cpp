@@ -49,19 +49,19 @@ public:
             m_account->internalLogout(false);
             return HANDLED;
         }
-  
+
         if ((op->getClassNo() == SIGHT_NO) && (op->getTo() == m_account->getId()))
         {
             const std::vector<Root>& args = op->getArgs();
             AtlasAccount acc = smart_dynamic_cast<AtlasAccount>(args.front());
             m_account->updateFromObject(acc);
-            
+
             // refresh character data if it changed
             if (!acc->isDefaultCharacters()) m_account->refreshCharacterInfo();
-            
+
             return HANDLED;
         }
-        
+
         return IGNORED;
     }
 
@@ -82,7 +82,7 @@ Account::Account(Connection *con) :
 
     m_con->Connected.connect(sigc::mem_fun(this, &Account::netConnected));
     m_con->Failure.connect(sigc::mem_fun(this, &Account::netFailure));
-}	
+}
 
 Account::~Account()
 {
@@ -105,18 +105,18 @@ Result Account::login(const std::string &uname, const std::string &password)
         error() << "called login on unconnected Connection";
         return NOT_CONNECTED;
     }
-    
+
     if (m_status != DISCONNECTED) {
         error() << "called login, but state is not currently disconnected";
         return ALREADY_LOGGED_IN;
     }
-        	
+
     return internalLogin(uname, password);
 }
 
-Result Account::createAccount(const std::string &uname, 
-	const std::string &fullName,
-	const std::string &pwd)
+Result Account::createAccount(const std::string &uname,
+    const std::string &fullName,
+    const std::string &pwd)
 {
     if (!m_con->isConnected()) return NOT_CONNECTED;
     if (m_status != DISCONNECTED) return ALREADY_LOGGED_IN;
@@ -128,21 +128,21 @@ Result Account::createAccount(const std::string &uname,
     account->setPassword(pwd);
     account->setName(fullName);
     account->setUsername(uname);
-    
+
     Create c;
     c->setSerialno(getNewSerialno());
     c->setArgs1(account);
-    
+
     m_con->getResponder()->await(c->getSerialno(), this, &Account::loginResponse);
     m_con->send(c);
-	
+
 // store for re-logins
     m_username = uname;
     m_pass = pwd;
-    
+
     m_timeout.reset(new Timeout(5000));
     m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLoginTimeout));
-    
+
     return NO_ERR;
 }
 
@@ -152,41 +152,41 @@ Result Account::logout()
         error() << "called logout on bad connection ignoring";
         return NOT_CONNECTED;
     }
-    
+
     if (m_status == LOGGING_OUT) return NO_ERR;
-    
+
     if (m_status != LOGGED_IN) {
         error() << "called logout on non-logged-in Account";
         return NOT_LOGGED_IN;
     }
-    
+
     m_status = LOGGING_OUT;
-    
+
     Logout l;
     Anonymous arg;
     arg->setId(m_accountId);
     l->setArgs1(arg);
     l->setSerialno(getNewSerialno());
-    
+
     m_con->getResponder()->await(l->getSerialno(), this, &Account::logoutResponse);
     m_con->send(l);
-	
+
     m_timeout.reset(new Timeout(5000));
     m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLogoutTimeout));
-    
+
     return NO_ERR;
 }
 
 const std::vector< std::string > & Account::getCharacterTypes(void) const
 {
-	return m_characterTypes;
+    return m_characterTypes;
 }
 
 const CharacterMap& Account::getCharacters()
 {
     if (m_status != LOGGED_IN)
         error() << "Not logged into an account : getCharacter returning empty dictionary";
-    
+
     return _characters;
 }
 
@@ -194,10 +194,10 @@ Result Account::refreshCharacterInfo()
 {
     if (!m_con->isConnected()) return NOT_CONNECTED;
     if (m_status != LOGGED_IN) return NOT_LOGGED_IN;
-    
+
     // silently ignore overlapping refreshes
     if (m_doingCharacterRefresh) return NO_ERR;
-        
+
     _characters.clear();
 
     if (m_characterIds.empty())
@@ -205,14 +205,14 @@ Result Account::refreshCharacterInfo()
         GotAllCharacters.emit(); // we must emit the done signal
         return NO_ERR;
     }
-    
+
 // okay, now we know we have at least one character to lookup, set the flag
     m_doingCharacterRefresh = true;
-    
+
     Look lk;
     Anonymous obj;
     lk->setFrom(m_accountId);
-        
+
     for (StringSet::iterator I=m_characterIds.begin(); I!=m_characterIds.end(); ++I)
     {
         obj->setId(*I);
@@ -221,7 +221,7 @@ Result Account::refreshCharacterInfo()
         m_con->getResponder()->await(lk->getSerialno(), this, &Account::sightCharacter);
         m_con->send(lk);
     }
-    
+
     return NO_ERR;
 }
 
@@ -236,14 +236,14 @@ Result Account::createCharacter(const Atlas::Objects::Entity::RootEntity &ent)
             error() << "called createCharacter on unconnected Account, ignoring";
             return NOT_LOGGED_IN;
         }
-    }    
+    }
 
-    Create c;    
+    Create c;
     c->setArgs1(ent);
     c->setFrom(m_accountId);
     c->setSerialno(getNewSerialno());
     m_con->send(c);
-    
+
     m_con->getResponder()->await(c->getSerialno(), this, &Account::avatarResponse);
     m_status = CREATING_CHAR;
     return NO_ERR;
@@ -252,17 +252,17 @@ Result Account::createCharacter(const Atlas::Objects::Entity::RootEntity &ent)
 /*
 void Account::createCharacter()
 {
-	if (!_lobby || _lobby->getAccountID().empty())
-		throw InvalidOperation("no account exists!");
+    if (!_lobby || _lobby->getAccountID().empty())
+        throw InvalidOperation("no account exists!");
 
-	if (!_con->isConnected())
-		throw InvalidOperation("Not connected to server");
+    if (!_con->isConnected())
+        throw InvalidOperation("Not connected to server");
 
-	throw InvalidOperation("No UserInterface handler defined");
+    throw InvalidOperation("No UserInterface handler defined");
 
-	// FIXME look up the dialog, create the instance,
-	// hook in a slot to feed the serialno of any Create op
-	// the dialog passes back to createCharacterHandler()
+    // FIXME look up the dialog, create the instance,
+    // hook in a slot to feed the serialno of any Create op
+    // the dialog passes back to createCharacterHandler()
 }
 
 void Account::createCharacterHandler(long serialno)
@@ -278,7 +278,7 @@ Result Account::takeCharacter(const std::string &id)
         error() << "Character '" << id << "' not owned by Account " << m_username;
         return BAD_CHARACTER_ID;
     }
-	
+
     if (!m_con->isConnected()) return NOT_CONNECTED;
     if (m_status != LOGGED_IN) {
         if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
@@ -288,11 +288,11 @@ Result Account::takeCharacter(const std::string &id)
             error() << "called createCharacter on unconnected Account, ignoring";
             return NOT_LOGGED_IN;
         }
-    } 
-        
+    }
+
     Anonymous what;
     what->setId(id);
-    
+
     Look l;
     l->setFrom(id);  // should this be m_accountId?
     l->setArgs1(what);
@@ -306,22 +306,22 @@ Result Account::takeCharacter(const std::string &id)
 
 Result Account::deactivateCharacter(Avatar* av)
 {
-    av->deactivate();    
+    av->deactivate();
     return NO_ERR;
 }
 
 bool Account::isLoggedIn() const
 {
-    return ((m_status == LOGGED_IN) || 
+    return ((m_status == LOGGED_IN) ||
         (m_status == TAKING_CHAR) || (m_status == CREATING_CHAR));
 }
-    
+
 #pragma mark -
 
 Result Account::internalLogin(const std::string &uname, const std::string &pwd)
 {
     assert(m_status == DISCONNECTED);
-        
+
     m_status = LOGGING_IN;
     m_username = uname; // store for posterity
 
@@ -334,10 +334,10 @@ Result Account::internalLogin(const std::string &uname, const std::string &pwd)
     l->setSerialno(getNewSerialno());
     m_con->getResponder()->await(l->getSerialno(), this, &Account::loginResponse);
     m_con->send(l);
-    
+
     m_timeout.reset(new Timeout(5000));
     m_timeout->Expired.connect(sigc::mem_fun(this, &Account::handleLoginTimeout));
-    
+
     return NO_ERR;
 }
 
@@ -345,7 +345,7 @@ void Account::logoutResponse(const RootOperation& op)
 {
     if (!op->instanceOf(INFO_NO))
         warning() << "received a logout response that is not an INFO";
-        
+
     internalLogout(true);
 }
 
@@ -358,11 +358,11 @@ void Account::internalLogout(bool clean)
         if ((m_status != LOGGED_IN) && (m_status != TAKING_CHAR) && (m_status != CREATING_CHAR))
             error() << "got forced logout, but not currently logged in";
     }
-    
+
     m_con->unregisterRouterForTo(m_router, m_accountId);
     m_status = DISCONNECTED;
     m_timeout.reset();
-    
+
     if (m_con->getStatus() == BaseConnection::DISCONNECTING) {
         m_con->unlock();
     } else {
@@ -385,19 +385,19 @@ void Account::loginComplete(const AtlasAccount &p)
 {
     if (m_status != LOGGING_IN)
         error() << "got loginComplete, but not currently logging in!";
-        
+
     if (p->getUsername()  != m_username)
         error() << "missing or incorrect username on login INFO";
-        
+
     m_status = LOGGED_IN;
     m_accountId = p->getId();
-    
+
     m_con->registerRouterForTo(m_router, m_accountId);
     updateFromObject(p);
-    
-    // notify an people watching us 
+
+    // notify an people watching us
     LoginSuccess.emit();
-      
+
     m_con->Disconnecting.connect(sigc::mem_fun(this, &Account::netDisconnecting));
     m_timeout.reset();
 }
@@ -405,36 +405,36 @@ void Account::loginComplete(const AtlasAccount &p)
 void Account::updateFromObject(const AtlasAccount &p)
 {
     m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
-    
+
     if(p->hasAttr("character_types") == true)
-	{
-		Atlas::Message::Element CharacterTypes(p->getAttr("character_types"));
-		
-		if(CharacterTypes.isList() == true)
-		{
-			const Atlas::Message::ListType & CharacterTypesList(CharacterTypes.asList());
-			Atlas::Message::ListType::const_iterator iCharacterType(CharacterTypesList.begin());
-			Atlas::Message::ListType::const_iterator iEnd(CharacterTypesList.end());
-			
-			m_characterTypes.reserve(CharacterTypesList.size());
-			while(iCharacterType != iEnd)
-			{
-				if(iCharacterType->isString() == true)
-				{
-					m_characterTypes.push_back(iCharacterType->asString());
-				}
-				else
-				{
-					error() << "An element of the \"character_types\" list is not a String.";
-				}
-				++iCharacterType;
-			}
-		}
-		else
-		{
-			error() << "Account has attribute \"character_types\" which is not of type List.";
-		}
-	}
+    {
+        Atlas::Message::Element CharacterTypes(p->getAttr("character_types"));
+
+        if(CharacterTypes.isList() == true)
+        {
+            const Atlas::Message::ListType & CharacterTypesList(CharacterTypes.asList());
+            Atlas::Message::ListType::const_iterator iCharacterType(CharacterTypesList.begin());
+            Atlas::Message::ListType::const_iterator iEnd(CharacterTypesList.end());
+
+            m_characterTypes.reserve(CharacterTypesList.size());
+            while(iCharacterType != iEnd)
+            {
+                if(iCharacterType->isString() == true)
+                {
+                    m_characterTypes.push_back(iCharacterType->asString());
+                }
+                else
+                {
+                    error() << "An element of the \"character_types\" list is not a String.";
+                }
+                ++iCharacterType;
+            }
+        }
+        else
+        {
+            error() << "Account has attribute \"character_types\" which is not of type List.";
+        }
+    }
 }
 
 void Account::loginError(const Error& err)
@@ -443,14 +443,14 @@ void Account::loginError(const Error& err)
     if (m_status != LOGGING_IN) {
         error() << "got loginError while not logging in";
     }
-    
+
     const std::vector<Root>& args = err->getArgs();
     std::string msg = args[0]->getAttr("message").asString();
-    
+
     // update state before emitting signal
     m_status = DISCONNECTED;
     m_timeout.reset();
-    
+
     LoginFailure.emit(msg);
 }
 
@@ -458,7 +458,7 @@ void Account::handleLoginTimeout()
 {
     m_status = DISCONNECTED;
     deleteLater(m_timeout.release());
-    
+
     LoginFailure.emit("timed out waiting for server response");
 }
 
@@ -467,13 +467,13 @@ void Account::avatarResponse(const RootOperation& op)
     if (op->instanceOf(ERROR_NO)) {
         const std::vector<Root>& args = op->getArgs();
         std::string msg = args[0]->getAttr("message").asString();
-        
+
         // creating or taking a character failed for some reason
         AvatarFailure(msg);
         m_status = Account::LOGGED_IN;
     } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args = op->getArgs();
-   
+
         RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
         if (!ent.isValid()) {
             warning() << "malformed character create/take response";
@@ -483,13 +483,13 @@ void Account::avatarResponse(const RootOperation& op)
         Avatar* av = new Avatar(this, ent->getId());
         AvatarSuccess.emit(av);
         m_status = Account::LOGGED_IN;
-        
+
         assert(m_activeCharacters.count(av->getId()) == 0);
         m_activeCharacters[av->getId()] = av;
-        
+
         // expect another op with the same refno
         m_con->getResponder()->ignore(op->getRefno());
-    } else 
+    } else
         warning() << "received malformed avatar take response";
 }
 
@@ -505,7 +505,7 @@ void Account::sightCharacter(const RootOperation& op)
         error() << "got sight of character outside a refresh, ignoring";
         return;
     }
-    
+
     const std::vector<Root>& args = op->getArgs();
     assert(!args.empty());
     RootEntity ge = smart_dynamic_cast<RootEntity>(args.front());
@@ -516,11 +516,11 @@ void Account::sightCharacter(const RootOperation& op)
         error() << "duplicate sight of character " << ge->getId();
         return;
     }
-    
+
     // okay, we can now add it to our map
     _characters.insert(C, CharacterMap::value_type(ge->getId(), ge));
     GotCharacterInfo.emit(ge);
-    
+
     // check if we're done
     if (_characters.size() == m_characterIds.size()) {
         m_doingCharacterRefresh = false;
@@ -554,16 +554,16 @@ bool Account::netDisconnecting()
 
 void Account::netFailure(const std::string& /*msg*/)
 {
-  
+
 }
 
 void Account::handleLogoutTimeout()
 {
     error() << "LOGOUT timed out waiting for response";
-    
+
     m_status = DISCONNECTED;
     deleteLater(m_timeout.release());
-    
+
     LogoutComplete.emit(false);
 }
 
@@ -571,31 +571,31 @@ void Account::avatarLogoutResponse(const RootOperation& op)
 {
     if (!op->instanceOf(INFO_NO))
         warning() << "received an avatar logout response that is not an INFO";
-        
+
     const std::vector<Root>& args(op->getArgs());
-    
+
     if (args.empty() || (args.front()->getClassNo() != LOGOUT_NO)) {
         warning() << "argument of avatar logout INFO is not a logout op";
         return;
     }
-    
+
     RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
     const std::vector<Root>& args2(logout->getArgs());
     assert(!args2.empty());
-    
+
     std::string charId = args2.front()->getId();
     debug() << "got logout for character " << charId;
-    
+
     if (!m_characterIds.count(charId)) {
         warning() << "character ID " << charId << " is unknown on account " << m_accountId;
     }
-    
+
     ActiveCharacterMap::iterator it = m_activeCharacters.find(charId);
     if (it == m_activeCharacters.end()) {
         warning() << "character ID " << charId << " does not crrespond to an active avatar.";
         return;
     }
-    
+
     AvatarDeactivated.emit(it->second);
     delete it->second; // will call back into internalDeactivateCharacter
 }
