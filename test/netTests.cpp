@@ -16,7 +16,7 @@ void testServerSocketShutdown(Controller& ctl)
     AutoAvatar av = AvatarGetter(player.get()).take("acc_b_character");
  
     SignalRecorderRef1<std::string> conErr;
-    con->Failure.connect(SigC::slot(conErr, &SignalRecorderRef1<std::string>::fired));
+    con->Failure.connect(sigc::mem_fun(conErr, &SignalRecorderRef1<std::string>::fired));
     
     ctl.command("socket-shutdown", "_24_account_B");
     

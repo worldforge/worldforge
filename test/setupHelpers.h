@@ -5,8 +5,6 @@
 #include <Eris/Account.h>
 #include <Eris/Avatar.h>
 
-#include <sigc++/object.h>
-
 typedef std::auto_ptr<Eris::Connection> AutoConnection;
 typedef std::auto_ptr<Eris::Account> AutoAccount;
 typedef std::auto_ptr<Eris::Avatar> AutoAvatar;
@@ -16,7 +14,7 @@ AutoConnection stdConnect();
 AutoAccount stdLogin(const std::string& uname, 
                     const std::string& pwd, Eris::Connection* con);
 
-class AvatarGetter : public SigC::Object
+class AvatarGetter
 {
 public:
     AvatarGetter(Eris::Account* acc);

@@ -12,8 +12,7 @@
 #include <Eris/Operations.h>
 #include <Eris/Task.h>
 
-#include <sigc++/object_slot.h>
-#include <sigc++/object.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -26,13 +25,13 @@ using std::endl;
 using WFMath::TimeStamp;
 using WFMath::TimeDiff;
 
-class ViewObserver : public SigC::Object
+class ViewObserver
 {
 public:
     ViewObserver(Eris::View* v)
     {
-        v->Appearance.connect(SigC::slot(*this, &ViewObserver::onAppear));
-        v->Disappearance.connect(SigC::slot(*this, &ViewObserver::onDisappear));
+        v->Appearance.connect(sigc::mem_fun(*this, &ViewObserver::onAppear));
+        v->Disappearance.connect(sigc::mem_fun(*this, &ViewObserver::onDisappear));
     }
 
     int getAppearCount(Eris::Entity* e)
@@ -59,13 +58,13 @@ private:
         m_disappears;
 };
 
-class CharacterGetter : public SigC::Object
+class CharacterGetter
 {
 public:
     CharacterGetter(Eris::Avatar* av) :
         m_done(false)
     {
-        av->GotCharacterEntity.connect(SigC::slot(*this, &CharacterGetter::onGetCharacter));
+        av->GotCharacterEntity.connect(sigc::mem_fun(*this, &CharacterGetter::onGetCharacter));
     }
     
     void run()
@@ -86,7 +85,7 @@ WaitForAppearance::WaitForAppearance(Eris::View* v, const std::string& eid) :
     m_view(v)
 {
     waitFor(eid);
-    v->Appearance.connect(SigC::slot(*this, &WaitForAppearance::onAppear));
+    v->Appearance.connect(sigc::mem_fun(*this, &WaitForAppearance::onAppear));
 }
 
 void WaitForAppearance::waitFor(const std::string& eid)
@@ -126,7 +125,7 @@ WaitForDisappearance::WaitForDisappearance(Eris::View* v, const std::string& eid
     m_view(v)
 {
     waitFor(eid);
-    v->Disappearance.connect(SigC::slot(*this, &WaitForDisappearance::onDisappear));
+    v->Disappearance.connect(sigc::mem_fun(*this, &WaitForDisappearance::onDisappear));
 }
 
 void WaitForDisappearance::waitFor(const std::string& eid)
@@ -242,8 +241,8 @@ void testEntityCreation(Controller& ctl)
     Eris::TestInjector i(con.get());
 
     SignalRecorder1<Eris::Entity*> created, appeared;
-    v->EntityCreated.connect(SigC::slot(created, &SignalRecorder1<Eris::Entity*>::fired));
-    v->Appearance.connect(SigC::slot(appeared, &SignalRecorder1<Eris::Entity*>::fired));
+    v->EntityCreated.connect(sigc::mem_fun(created, &SignalRecorder1<Eris::Entity*>::fired));
+    v->Appearance.connect(sigc::mem_fun(appeared, &SignalRecorder1<Eris::Entity*>::fired));
     
     {
         Atlas::Objects::Operation::Appearance app;
@@ -333,7 +332,7 @@ void testUnseen(Controller& ctl)
     
     Eris::TestInjector i(con.get());
     SignalCounter0 potatoDeleted;
-    potatoRef->BeingDeleted.connect(SigC::slot(potatoDeleted, &SignalCounter0::fired));
+    potatoRef->BeingDeleted.connect(sigc::mem_fun(potatoDeleted, &SignalCounter0::fired));
     
     {
         Atlas::Objects::Operation::Unseen un;

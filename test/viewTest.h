@@ -1,7 +1,6 @@
 #ifndef VIEW_TEST_H
 #define VIEW_TEST_H
 
-#include <sigc++/object.h>
 #include <string>
 #include <set>
 
@@ -20,7 +19,7 @@ void testEntityCreation(Controller& ctl);
 void testUnseen(Controller& ctl);
 void testTasks(Controller& ctl);
 
-class WaitForAppearance : public SigC::Object
+class WaitForAppearance
 {
 public:
     WaitForAppearance(Eris::View* v, const std::string& eid);    
@@ -33,7 +32,7 @@ private:
     std::set<std::string> m_waiting;
 };
 
-class WaitForDisappearance : public SigC::Object
+class WaitForDisappearance
 {
 public:
     WaitForDisappearance(Eris::View* v, const std::string& eid);    

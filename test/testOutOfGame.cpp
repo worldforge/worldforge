@@ -1,7 +1,7 @@
 #include "testOutOfGame.h"
 #include "setupHelpers.h"
 #include "signalHelpers.h"
-#include <sigc++/object_slot.h>
+#include <sigc++/functors/mem_fun.h>
 #include <cassert>
 #include <Eris/PollDefault.h>
 #include <Eris/Entity.h>
@@ -13,10 +13,10 @@ void testLogin()
     AutoAccount player(new Eris::Account(con.get()));
     
     SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
+    player->LoginSuccess.connect(sigc::mem_fun(loginCount, &SignalCounter0::fired));
    
     SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+    player->LoginFailure.connect(sigc::mem_fun(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
     
     player->login("account_A", "pumpkin");
 
@@ -37,10 +37,10 @@ void testBadLogin()
     AutoAccount player(new Eris::Account(con.get()));
     
     SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
+    player->LoginSuccess.connect(sigc::mem_fun(loginCount, &SignalCounter0::fired));
    
     SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+    player->LoginFailure.connect(sigc::mem_fun(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
     
     player->login("account_B", "zark!!!!ojijiksapumpkin");
 
@@ -60,10 +60,10 @@ void testBadLogin2()
     AutoAccount player(new Eris::Account(con.get()));
     
     SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
+    player->LoginSuccess.connect(sigc::mem_fun(loginCount, &SignalCounter0::fired));
    
     SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+    player->LoginFailure.connect(sigc::mem_fun(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
     
     player->login("_timeout_", "foo");
 
@@ -83,10 +83,10 @@ void testAccCreate()
     AutoAccount player(new Eris::Account(con.get()));
     
     SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
+    player->LoginSuccess.connect(sigc::mem_fun(loginCount, &SignalCounter0::fired));
 
     SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+    player->LoginFailure.connect(sigc::mem_fun(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
     
     player->createAccount("account_D", "John Doe", "lemon");
 
@@ -107,10 +107,10 @@ void testDuplicateCreate()
     AutoAccount player(new Eris::Account(con.get()));
     
     SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
+    player->LoginSuccess.connect(sigc::mem_fun(loginCount, &SignalCounter0::fired));
 
     SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+    player->LoginFailure.connect(sigc::mem_fun(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
     player->createAccount("account_C", "John Doe", "lemon");
 
     while (!loginCount.fireCount() && !loginErrorCounter.fireCount())
@@ -127,7 +127,7 @@ void testAccountCharacters()
     AutoAccount player = stdLogin("account_B", "sweede", con.get());
 
     SignalCounter0 gotChars;
-    player->GotAllCharacters.connect(SigC::slot(gotChars, &SignalCounter0::fired));
+    player->GotAllCharacters.connect(sigc::mem_fun(gotChars, &SignalCounter0::fired));
     player->refreshCharacterInfo();
     
     while (gotChars.fireCount() == 0)
@@ -147,7 +147,7 @@ void testLogout()
     AutoAccount player = stdLogin("account_C", "turnip", con.get());
     
     SignalCounter1<bool> gotLogout;
-    player->LogoutComplete.connect(SigC::slot(gotLogout, &SignalCounter1<bool>::fired));
+    player->LogoutComplete.connect(sigc::mem_fun(gotLogout, &SignalCounter1<bool>::fired));
     player->logout();
     
     while (gotLogout.fireCount() == 0) Eris::PollDefault::poll();
@@ -175,7 +175,7 @@ void testServerInfo()
     assert(sinfo.getStatus() == Eris::ServerInfo::INVALID);
     
     SignalCounter0 counter;
-    con->GotServerInfo.connect(SigC::slot(counter, &SignalCounter0::fired));
+    con->GotServerInfo.connect(sigc::mem_fun(counter, &SignalCounter0::fired));
     
     con->refreshServerInfo();
     

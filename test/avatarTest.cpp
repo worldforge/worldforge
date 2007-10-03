@@ -15,8 +15,7 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/PollDefault.h>
 
-#include <sigc++/object_slot.h>
-#include <sigc++/object.h>
+#include <sigc++/functors/mem_fun.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Anonymous.h>
@@ -90,8 +89,8 @@ void testDeleteWielded(Controller& ctl)
     Eris::TestInjector i(con.get());
     SignalCounter0 hammerDeleted, hammerRefChanged;
     
-    hammerRef->BeingDeleted.connect(SigC::slot(hammerDeleted, &SignalCounter0::fired));
-    hammerRef.Changed.connect(SigC::slot(hammerRefChanged, &SignalCounter0::fired));
+    hammerRef->BeingDeleted.connect(sigc::mem_fun(hammerDeleted, &SignalCounter0::fired));
+    hammerRef.Changed.connect(sigc::mem_fun(hammerRefChanged, &SignalCounter0::fired));
     {
         Delete del;
         Anonymous arg;
@@ -169,7 +168,7 @@ void testHear(Controller& ctl)
     Eris::TestInjector i(con.get());
     Hearer heard;
     
-    av->Hear.connect(SigC::slot(heard, &Hearer::fired));
+    av->Hear.connect(sigc::mem_fun(heard, &Hearer::fired));
 
     {
         Talk talk;

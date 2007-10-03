@@ -1,9 +1,7 @@
 #ifndef TEST_SIGNAL_HELPERS_H
 #define TEST_SIGNAL_HELPERS_H
 
-#include <sigc++/object.h>
-
-class SignalCounter0 : public SigC::Object
+class SignalCounter0
 {
 public:
     SignalCounter0() :
@@ -27,7 +25,7 @@ private:
 };
 
 template <class P0>
-class SignalCounter1 : public SigC::Object
+class SignalCounter1
 {
 public:
     SignalCounter1() :
@@ -47,7 +45,7 @@ private:
 };
 
 template <class P0>
-class SignalRecorder1 : public SigC::Object
+class SignalRecorder1
 {
 public:
     SignalRecorder1() :
@@ -78,7 +76,7 @@ private:
 };
 
 template <class P0>
-class SignalRecorderRef1 : public SigC::Object
+class SignalRecorderRef1
 {
 public:
     SignalRecorderRef1() :

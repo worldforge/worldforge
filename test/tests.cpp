@@ -22,8 +22,7 @@
 #include <Eris/Entity.h>
 #include <Eris/View.h>
 #include <Eris/PollDefault.h>
-#include <sigc++/object_slot.h>
-#include <sigc++/object.h>
+#include <sigc++/functors/mem_fun.h>
 #include <Eris/LogStream.h>
 #include <Eris/Log.h>
 #include <Atlas/Objects/Operation.h>
@@ -69,7 +68,7 @@ void erisLog(Eris::LogLevel level, const std::string& msg)
     }
 }
     
-class AttributeTracker : public SigC::Object
+class AttributeTracker
 {
 public:
     void waitForChangeOf(Eris::Entity* e, const std::string& attr)
@@ -77,7 +76,7 @@ public:
         assert(e);
         m_changed = false;
         
-        e->observe(attr, SigC::slot(*this, &AttributeTracker::attrChange));
+        e->observe(attr, sigc::mem_fun(*this, &AttributeTracker::attrChange));
         while (!m_changed) Eris::PollDefault::poll();
     }
     
@@ -190,14 +189,14 @@ void testSet(Controller& ctl)
     assert(table->getName() == "George");
 }
 
-class WaitForSay : public SigC::Object
+class WaitForSay
 {
 public:
     WaitForSay(Eris::Entity* e, const std::string& what) : 
         m_what(what),
         m_heard(false)
     {
-        e->Say.connect(SigC::slot(*this, &WaitForSay::onSay));
+        e->Say.connect(sigc::mem_fun(*this, &WaitForSay::onSay));
     }
     
     void run()
@@ -269,7 +268,7 @@ void testSeeMove(Controller& ctl)
     
     SignalCounter0 moved;
     Eris::Entity* vase = av->getView()->getEntity("_vase_1");
-    vase->Moved.connect(SigC::slot(moved, &SignalCounter0::fired));
+    vase->Moved.connect(sigc::mem_fun(moved, &SignalCounter0::fired));
     
  //   assert(vase->getPosition() == Point3(1.0, 2.0, 3.0));
 
@@ -305,8 +304,8 @@ void testLocationChange(Controller& ctl)
     Eris::Entity* hut = av->getView()->getEntity("_hut_01");
     Eris::Entity* table = av->getView()->getEntity("_table_1");
     
-    vase->Moved.connect(SigC::slot(moved, &SignalCounter0::fired));
-    vase->LocationChanged.connect(SigC::slot(locChanged, &SignalRecorder1<Eris::Entity*>::fired));
+    vase->Moved.connect(sigc::mem_fun(moved, &SignalCounter0::fired));
+    vase->LocationChanged.connect(sigc::mem_fun(locChanged, &SignalRecorder1<Eris::Entity*>::fired));
     
     Point3 newPos(30, -19, 8);
     ctl.moveLocation(vase->getId(), "_hut_01", newPos);
@@ -338,7 +337,7 @@ void testSeeMoveWithUpdates(Controller& ctl)
     
     SignalCounter0 moved;
     Eris::Entity* vase = av->getView()->getEntity("_vase_1");
-    vase->Moved.connect(SigC::slot(moved, &SignalCounter0::fired));
+    vase->Moved.connect(sigc::mem_fun(moved, &SignalCounter0::fired));
     assert(vase->valueOfAttr("stamina").asInt() == 105);
     
     Point3 newPos(-2, -5, 1);
@@ -377,7 +376,7 @@ void testSightAction(Controller& ctl)
 
     SignalRecorderRef1<Atlas::Objects::Operation::RootOperation> action;
     Eris::Entity* vase = av->getView()->getEntity("_vase_1");
-    vase->Acted.connect(SigC::slot(action, 
+    vase->Acted.connect(sigc::mem_fun(action, 
         &SignalRecorderRef1<Atlas::Objects::Operation::RootOperation>::fired));
     
     Atlas::Objects::Operation::Touch t;
@@ -424,7 +423,7 @@ void testSoundAction(Controller& ctl)
 
     SignalRecorderRef1<Atlas::Objects::Root> heard;
     Eris::Entity* table = av->getView()->getEntity("_table_1");
-    table->Noise.connect(SigC::slot(heard, 
+    table->Noise.connect(sigc::mem_fun(heard, 
         &SignalRecorderRef1<Atlas::Objects::Root>::fired));
     
     Atlas::Objects::Operation::Touch t;
@@ -455,7 +454,7 @@ void testSoundAction(Controller& ctl)
     }
 }
 
-class EntityDeleteWatcher : public SigC::Object
+class EntityDeleteWatcher
 {
 public:
     EntityDeleteWatcher(Eris::Entity* e) :
@@ -499,7 +498,7 @@ void testSightDelete(Controller& ctl)
     Eris::Entity* table = av->getView()->getEntity("_table_1");
     
     EntityDeleteWatcher dw(table);
-    av->getView()->EntityDeleted.connect(SigC::slot(dw, 
+    av->getView()->EntityDeleted.connect(sigc::mem_fun(dw, 
         &EntityDeleteWatcher::onEntityDelete));
     
     assert(vase->getLocation() == table);
@@ -535,7 +534,7 @@ void testMovement(Controller& ctl)
     ctl.moveVelocity("_ball", vel);
     
     SignalRecorder1<bool> moving;
-    ball->Moving.connect(SigC::slot(moving, &SignalRecorder1<bool>::fired));
+    ball->Moving.connect(sigc::mem_fun(moving, &SignalRecorder1<bool>::fired));
     
     while (!moving.fireCount()) {
         Eris::PollDefault::poll();
@@ -586,7 +585,7 @@ void testEmote(Controller& ctl)
     SignalRecorderRef1<std::string> emote;
     
     Eris::Entity* vase = av->getView()->getEntity("_vase_1");
-    vase->Emote.connect(SigC::slot(emote, &SignalRecorderRef1<std::string>::fired));
+    vase->Emote.connect(sigc::mem_fun(emote, &SignalRecorderRef1<std::string>::fired));
     
     ctl.broadcastSightFrom("_vase_1", imag);
 
@@ -664,12 +663,12 @@ int forkAndRunBoth(int argc, char* argv[])
         Controller ctl("/tmp/eris-test");
         
         Eris::setLogLevel(LOG_DEBUG);
-        Eris::Logged.connect(SigC::slot(&erisLog));
+        Eris::Logged.connect(sigc::ptr_fun(&erisLog));
     
         return runTests(ctl);
     } else {
         Eris::setLogLevel(LOG_DEBUG);
-        Eris::Logged.connect(SigC::slot(&erisLog));
+        Eris::Logged.connect(sigc::ptr_fun(&erisLog));
         
         StubServer stub(7450);
         return stub.run(childPid);
@@ -679,7 +678,7 @@ int forkAndRunBoth(int argc, char* argv[])
 int runServer(int argc, char* argv[])
 {    
     Eris::setLogLevel(LOG_DEBUG);
-    Eris::Logged.connect(SigC::slot(&erisLog));
+    Eris::Logged.connect(sigc::ptr_fun(&erisLog));
     
     StubServer stub(7450);
     return stub.run(0);
@@ -691,7 +690,7 @@ int runClient(int argc, char* argv[])
     Controller ctl("/tmp/eris-test");
         
     Eris::setLogLevel(LOG_DEBUG);
-    Eris::Logged.connect(SigC::slot(&erisLog));
+    Eris::Logged.connect(sigc::ptr_fun(&erisLog));
 
     return runTests(ctl);
 }

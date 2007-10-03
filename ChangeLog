@@ -1,5 +1,16 @@
 2007-10-03  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Account_unittest.cpp: First stages of covering the Account
+	  class.
+
+	* test/avatarTest.cpp, test/metaQuery.cpp, test/netTests.cpp,
+	  test/setupHelpers.cpp, test/setupHelpers.h, test/signalHelpers.h,
+	  test/testOutOfGame.cpp, test/tests.cpp, test/viewTest.cpp,
+	  test/viewTest.h: Switch from the deprecated legacy compatability
+	  sigc++ API to the current interface.
+
+2007-10-03  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/View.h, Eris/TypeInfo.h, Eris/PollDefault.h, Eris/Entity.cpp,
 	  Eris/Metaserver.h: Switch from the deprecated legacy compatability
 	  sigc++ API to the current interface.

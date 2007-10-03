@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
-#include <sigc++/slot.h>
+#include <sigc++/functors/ptr_fun.h>
 
 using std::endl;
 using std::cout;
@@ -212,7 +212,7 @@ int main(int argc, char* argv[])
     void (* dumper)(const Eris::Meta &) = dumpToScreen;
     
     Eris::setLogLevel(Eris::LOG_DEBUG);
-    Eris::Logged.connect(SigC::slot(&erisLog));
+    Eris::Logged.connect(sigc::ptr_fun(&erisLog));
     
     if(args.size() > 1)
     {
@@ -236,10 +236,10 @@ int main(int argc, char* argv[])
     
     // maximum of 5 simultaneous queries
     Eris::Meta meta(metaServer, 5);
-    meta.CompletedServerList.connect(SigC::slot(&gotServerList));
-    meta.AllQueriesDone.connect(SigC::slot(&queriesDone));
-    meta.ReceivedServerInfo.connect(SigC::slot(&gotServer));
-    meta.Failure.connect(SigC::slot(&queryFailed));
+    meta.CompletedServerList.connect(sigc::ptr_fun(&gotServerList));
+    meta.AllQueriesDone.connect(sigc::ptr_fun(&queriesDone));
+    meta.ReceivedServerInfo.connect(sigc::ptr_fun(&gotServer));
+    meta.Failure.connect(sigc::ptr_fun(&queryFailed));
     
     cerr << "querying " << metaServer << endl;
     meta.refresh();

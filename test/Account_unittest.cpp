@@ -17,7 +17,74 @@
 
 // $Id$
 
+#include <Eris/Account.h>
+
+#include <Eris/Connection.h>
+#include <Eris/Exceptions.h>
+
 int main()
 {
+    // Test constructor
+    {
+        Eris::Connection * con = new Eris::Connection("name", "localhost",
+                                                      6767, true);
+
+        Eris::Account acc(con);
+    }
+    // Test constructor throws on a null connection.
+    {
+        try {
+            Eris::Account acc(0);
+            abort();
+        }
+        catch (Eris::InvalidOperation & eio) {
+        }
+    }
+    // Test getActiveCharacters()
+    {
+        Eris::Connection * con = new Eris::Connection("name", "localhost",
+                                                      6767, true);
+
+        Eris::Account acc(con);
+
+        const Eris::ActiveCharacterMap & acm = acc.getActiveCharacters();
+
+        assert(acm.empty());
+    }
+    // Test getId()
+    {
+        Eris::Connection * con = new Eris::Connection("name", "localhost",
+                                                      6767, true);
+
+        Eris::Account acc(con);
+
+        const std::string & id = acc.getId();
+
+        assert(id.empty());
+    }
+    // Test getUsername()
+    {
+        Eris::Connection * con = new Eris::Connection("name", "localhost",
+                                                      6767, true);
+
+        Eris::Account acc(con);
+
+        const std::string & username = acc.getUsername();
+
+        assert(username.empty());
+    }
+
+    // Test getConnection()
+    {
+        Eris::Connection * con = new Eris::Connection("name", "localhost",
+                                                      6767, true);
+
+        Eris::Account acc(con);
+
+        Eris::Connection * got_con = acc.getConnection();
+
+        assert(got_con == con);
+    }
+
     return 0;
 }

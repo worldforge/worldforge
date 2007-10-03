@@ -3,7 +3,7 @@
 #include <cassert>
 #include <Eris/PollDefault.h>
 #include <Eris/Entity.h>
-#include <sigc++/object_slot.h>
+#include <sigc++/functors/mem_fun.h>
 #include <iostream>
 #include <wfmath/timestamp.h>
 
@@ -17,10 +17,10 @@ AutoConnection stdConnect()
 {
     AutoConnection con(new Eris::Connection("eris-test", "localhost", 7450, false));
     SignalCounter0 connectCount;
-    con->Connected.connect(SigC::slot(connectCount, &SignalCounter0::fired));
+    con->Connected.connect(sigc::mem_fun(connectCount, &SignalCounter0::fired));
     
     SignalCounter1<const std::string&> fail;
-    con->Failure.connect(SigC::slot(fail, &SignalCounter1<const std::string&>::fired));
+    con->Failure.connect(sigc::mem_fun(fail, &SignalCounter1<const std::string&>::fired));
     
     con->connect();
     
@@ -38,10 +38,10 @@ AutoAccount stdLogin(const std::string& uname, const std::string& pwd, Eris::Con
     AutoAccount player(new Eris::Account(con));
     
     SignalCounter0 loginCount;
-    player->LoginSuccess.connect(SigC::slot(loginCount, &SignalCounter0::fired));
+    player->LoginSuccess.connect(sigc::mem_fun(loginCount, &SignalCounter0::fired));
    
     SignalCounter1<const std::string&> loginErrorCounter;
-    player->LoginFailure.connect(SigC::slot(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+    player->LoginFailure.connect(sigc::mem_fun(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
     
     player->login(uname, pwd);
 
@@ -60,8 +60,8 @@ AvatarGetter::AvatarGetter(Eris::Account* acc) :
     m_failed(false),
     m_earlyReturn(false)
 {
-    m_acc->AvatarSuccess.connect(SigC::slot(*this, &AvatarGetter::success));
-    m_acc->AvatarFailure.connect(SigC::slot(*this, &AvatarGetter::failure));
+    m_acc->AvatarSuccess.connect(sigc::mem_fun(*this, &AvatarGetter::success));
+    m_acc->AvatarFailure.connect(sigc::mem_fun(*this, &AvatarGetter::failure));
 }
     
 AutoAvatar AvatarGetter::take(const std::string& charId)
@@ -82,7 +82,7 @@ AutoAvatar AvatarGetter::take(const std::string& charId)
     if (m_earlyReturn) return m_av;
 
     SignalCounter1<Eris::Entity*> gotChar;
-    m_av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Eris::Entity*>::fired));
+    m_av->GotCharacterEntity.connect(sigc::mem_fun(gotChar, &SignalCounter1<Eris::Entity*>::fired));
 
     TimeStamp end = TimeStamp::now() + TimeDiff(2 * 1000);
     
@@ -115,7 +115,7 @@ AutoAvatar AvatarGetter::create(const Atlas::Objects::Entity::RootEntity& charEn
     if (m_earlyReturn) return m_av;
 
     SignalCounter1<Eris::Entity*> gotChar;
-    m_av->GotCharacterEntity.connect(SigC::slot(gotChar, &SignalCounter1<Eris::Entity*>::fired));
+    m_av->GotCharacterEntity.connect(sigc::mem_fun(gotChar, &SignalCounter1<Eris::Entity*>::fired));
 
     TimeStamp end = TimeStamp::now() + TimeDiff(2 * 1000);
     
