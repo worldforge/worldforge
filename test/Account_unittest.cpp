@@ -22,6 +22,17 @@
 #include <Eris/Connection.h>
 #include <Eris/Exceptions.h>
 
+class TestConnection : public Eris::Connection {
+  public:
+    TestConnection(const std::string & name, const std::string & host,
+                   short port, bool debug) :
+                   Eris::Connection(name, host, port, debug) { }
+
+    void test_setStatus(Eris::BaseConnection::Status sc) {
+        setStatus(sc);
+    }
+};
+
 int main()
 {
     // Test constructor
@@ -84,6 +95,30 @@ int main()
         Eris::Connection * got_con = acc.getConnection();
 
         assert(got_con == con);
+    }
+
+    // Test login()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        Eris::Account acc(con);
+
+        Eris::Result res =  acc.login("foo", "bar");
+        assert(res == Eris::NOT_CONNECTED);
+    }
+
+    // Test login()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        Eris::Account acc(con);
+
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+
+        Eris::Result res =  acc.login("foo", "bar");
+        assert(res == Eris::NOT_CONNECTED);
     }
 
     return 0;
