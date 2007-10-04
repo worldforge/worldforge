@@ -1,5 +1,10 @@
 2007-10-04  Al Riddoch  <alriddoch@zepler.org>
 
+	* Eris/Account.cpp: Be much more robust about handling error
+	  operations from the server in response to login.
+
+2007-10-04  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/BaseConnection_unittest.cpp: Hook up the logging system,
 	  so we see the output.
 

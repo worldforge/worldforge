@@ -444,8 +444,26 @@ void Account::loginError(const Error& err)
         error() << "got loginError while not logging in";
     }
 
+    std::string msg;
     const std::vector<Root>& args = err->getArgs();
-    std::string msg = args[0]->getAttr("message").asString();
+    if (args.empty()) {
+        error() << "got loginError error op from server without context";
+        msg = "Unknown error.";
+    } else {
+        const Root & arg = args.front();
+        Atlas::Message::Element msg;
+        if (arg->copyAttr("message", msg) != 0) {
+            error() << "got loginError error op from server without message";
+            msg = "Unknown error.";
+        } else {
+            if (!msg.isString()) {
+                error() << "got loginError error op from server with bad message";
+                msg = "Unknown error.";
+            } else {
+                msg = args[0]->getAttr("message").asString();
+            }
+        }
+    }
 
     // update state before emitting signal
     m_status = DISCONNECTED;
