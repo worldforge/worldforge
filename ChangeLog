@@ -1,5 +1,14 @@
 2007-10-04  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/BaseConnection_unittest.cpp: Hook up the logging system,
+	  so we see the output.
+
+	* test/Account_unittest.cpp: Hook up logging, and add coverage
+	  for refreshCharacterInfo, createCharacter, takeCharacter,
+	  isLoggedIn.
+
+2007-10-04  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Account_unittest.cpp: Add coverage for login(), logout() and
 	  createCharacter().
 

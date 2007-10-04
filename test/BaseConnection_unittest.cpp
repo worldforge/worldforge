@@ -19,6 +19,7 @@
 
 #include <Eris/BaseConnection.h>
 #include <Eris/Exceptions.h>
+#include <Eris/Log.h>
 
 #include "SignalFlagger.h"
 
@@ -84,8 +85,15 @@ class TestBaseConnection : public Eris::BaseConnection {
     }
 };
 
+static void writeLog(Eris::LogLevel, const std::string & msg)
+{
+    std::cerr << msg << std::endl << std::flush;
+}
+
 int main()
 {
+    Eris::Logged.connect(sigc::ptr_fun(writeLog));
+
     Atlas::Objects::Factories * f = Atlas::Objects::Factories::instance();
     assert(!f->hasFactory("unseen"));
 
