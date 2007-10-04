@@ -1,5 +1,10 @@
 2007-10-04  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Account_unittest.cpp: Add coverage for loginComplete,
+	  updateFromObject, loginError.
+
+2007-10-04  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/Account.cpp: Be much more robust about handling error
 	  operations from the server in response to login.
 

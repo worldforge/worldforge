@@ -26,6 +26,9 @@
 #include "SignalFlagger.h"
 
 #include <Atlas/Objects/Anonymous.h>
+#include <Atlas/Objects/Entity.h>
+
+#include <sigc++/adaptors/hide.h>
 
 class TestConnection : public Eris::Connection {
   public:
@@ -56,6 +59,18 @@ class TestAccount : public Eris::Account {
 
     void test_logoutResponse(const Atlas::Objects::Operation::RootOperation& op) {
         logoutResponse(op);
+    }
+
+    void test_loginComplete(const Atlas::Objects::Entity::Account &p) {
+        loginComplete(p);
+    }
+
+    void test_updateFromObject(const Atlas::Objects::Entity::Account &p) {
+        updateFromObject(p);
+    }
+
+    void test_loginError(const Atlas::Objects::Operation::Error& err) {
+        loginError(err);
     }
 
     static const Eris::Account::Status LOGGING_IN = Eris::Account::LOGGING_IN;
@@ -524,7 +539,128 @@ int main()
     }
 #endif
 
-    // NEXT loginComplete
+    // Test loginComplete() does nothing when not logged in.
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Entity::Account p;
+
+        p->setUsername("bob");
+
+        acc.test_loginComplete(p);
+    }
+
+    // Test loginComplete()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Entity::Account p;
+        SignalFlagger loginSuccess_checker;
+
+        p->setUsername("bob");
+        acc.LoginSuccess.connect(sigc::mem_fun(loginSuccess_checker,
+                                               &SignalFlagger::set));
+
+        acc.test_loginComplete(p);
+
+        assert(acc.isLoggedIn());
+        assert(loginSuccess_checker.flagged());
+        // FIXME Verify timeout has been cleared?
+    }
+
+    // Test updateFromObject() with a bad character list
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Entity::Account p;
+
+        p->setAttr("character_types", "non-list");
+
+        acc.test_updateFromObject(p);
+    }
+
+    // Test updateFromObject() with a character list with something bad in it
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Entity::Account p;
+
+        Atlas::Message::ListType character_types;
+        character_types.push_back(1);
+        character_types.push_back("string");
+
+        p->setAttr("character_types", character_types);
+
+        acc.test_updateFromObject(p);
+    }
+
+    // Test loginError() with no arg
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Error err;
+
+        acc.test_loginError(err);
+    }
+
+    // Test loginError() with empty arg
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Error err;
+        Atlas::Objects::Root err_arg;
+        err->setArgs1(err_arg);
+
+        acc.test_loginError(err);
+    }
+
+    // Test loginError() with arg that has non-string message
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Error err;
+        Atlas::Objects::Root err_arg;
+        err_arg->setAttr("message", 1);
+        err->setArgs1(err_arg);
+
+        acc.test_loginError(err);
+    }
+
+    // Test loginError() with arg that has non-string message
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Error err;
+        Atlas::Objects::Root err_arg;
+        SignalFlagger loginFailure_checker;
+
+        err_arg->setAttr("message", "Yur loginz, let me show you them.");
+        err->setArgs1(err_arg);
+        acc.LoginFailure.connect(sigc::hide(sigc::mem_fun(loginFailure_checker,
+                                                          &SignalFlagger::set)));
+
+        acc.test_loginError(err);
+
+        assert(loginFailure_checker.flagged());
+    }
+
+    // NEXT handleLoginTimeout
 
     return 0;
 }
