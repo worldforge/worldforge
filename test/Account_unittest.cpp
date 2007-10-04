@@ -33,6 +33,18 @@ class TestConnection : public Eris::Connection {
     }
 };
 
+class TestAccount : public Eris::Account {
+  public:
+    TestAccount(Eris::Connection * con) : Eris::Account(con) { }
+
+    void setup_setStatus(Eris::Account::Status s) {
+        m_status = s;
+    }
+
+    static const Eris::Account::Status LOGGING_IN = Eris::Account::LOGGING_IN;
+    static const Eris::Account::Status LOGGING_OUT = Eris::Account::LOGGING_OUT;
+};
+
 int main()
 {
     // Test constructor
@@ -97,7 +109,7 @@ int main()
         assert(got_con == con);
     }
 
-    // Test login()
+    // Test login() fails if not connected
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767, true);
@@ -108,18 +120,95 @@ int main()
         assert(res == Eris::NOT_CONNECTED);
     }
 
-    // Test login()
+    // Test login() fails if we fake connected and logged in
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767, true);
 
-        Eris::Account acc(con);
+        TestAccount acc(con);
 
         con->test_setStatus(Eris::BaseConnection::CONNECTED);
+        acc.setup_setStatus(TestAccount::LOGGING_IN);
 
         Eris::Result res =  acc.login("foo", "bar");
+        assert(res == Eris::ALREADY_LOGGED_IN);
+    }
+
+    // Test createAccount() fails if not connected
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        Eris::Account acc(con);
+
+        Eris::Result res =  acc.createAccount("foo", "bar", "baz");
         assert(res == Eris::NOT_CONNECTED);
     }
 
+    // Test createAccount() fails if we fake connected and logged in
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+        acc.setup_setStatus(TestAccount::LOGGING_IN);
+
+        Eris::Result res =  acc.createAccount("foo", "bar", "baz");
+        assert(res == Eris::ALREADY_LOGGED_IN);
+    }
+    // FIXME Cover the rest of createAccount once we can fake connections.
+
+    // Test logout() fails if not connected.
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        Eris::Result res =  acc.logout();
+        assert(res == Eris::NOT_CONNECTED);
+    }
+    
+    // Test logout() does nothing if we fake connected, and logging out.
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+        acc.setup_setStatus(TestAccount::LOGGING_OUT);
+
+        Eris::Result res =  acc.logout();
+        assert(res == Eris::NO_ERR);
+    }
+    
+    // Test logout() fails if we are fake connected but not logged in.
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+
+        Eris::Result res =  acc.logout();
+        assert(res == Eris::NOT_LOGGED_IN);
+    }
+    // FIXME Cover the rest of logout once we can fake connections.
+    
+    // Test getCharacters()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        const Eris::CharacterMap & ecm = acc.getCharacters();
+
+        assert(ecm.empty());
+    }
+
+    NEXT refreshCharacterInfo, much like login() tests.
     return 0;
 }

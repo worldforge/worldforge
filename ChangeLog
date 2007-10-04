@@ -1,5 +1,10 @@
 2007-10-04  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Account_unittest.cpp: Add coverage for login(), logout() and
+	  createCharacter().
+
+2007-10-04  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Makefile.am: Add specific SOURCES lines for all the single
 	  file tests, for the benefit of some more retarded versions of
 	  automake.
