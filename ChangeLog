@@ -1,4 +1,10 @@
-2007-10-03  Al Riddoch  <alriddoch@zepler.org>
+2007-10-04  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/Makefile.am: Add specific SOURCES lines for all the single
+	  file tests, for the benefit of some more retarded versions of
+	  automake.
+
+2007-10-04  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Account.h: Switch private member variables to protected,
 	  so they can be manipulated for testing.

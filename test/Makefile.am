@@ -1,6 +1,8 @@
 INCLUDES = -I$(top_builddir) -I$(top_srcdir)
 
-check_PROGRAMS = testEris Entity_unittest Account_unittest Alarm_unittest \
+noinst_PROGRAMS  = metaquery
+
+check_PROGRAMS = Entity_unittest Account_unittest Alarm_unittest \
                  Avatar_unittest BaseConnection_unittest Calendar_unittest \
                  Connection_unittest DeleteLater_unittest Entity_unittest \
                  EntityRef_unittest EntityRouter_unittest Exceptions_unittest \
@@ -12,7 +14,7 @@ check_PROGRAMS = testEris Entity_unittest Account_unittest Alarm_unittest \
                  ServerInfo_unittest Task_unittest TimedEventService_unittest \
                  Timeout_unittest TypeBoundRedispatch_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
-                 UIFactory_unittest View_unittest
+                 UIFactory_unittest View_unittest testEris
 TESTS = $(check_PROGRAMS)
 
 testEris_SOURCES = tests.cpp \
@@ -33,8 +35,41 @@ testEris_SOURCES = tests.cpp \
 
 LDADD = $(top_builddir)/Eris/liberis-1.3.la
 
-noinst_PROGRAMS  = metaquery
-
 metaquery_SOURCES = metaQuery.cpp
-metaquery_LDADD = $(top_builddir)/Eris/liberis-1.3.la
 
+Account_unittest_SOURCES = Account_unittest.cpp
+Alarm_unittest_SOURCES = Alarm_unittest.cpp
+Avatar_unittest_SOURCES = Avatar_unittest.cpp
+BaseConnection_unittest_SOURCES = BaseConnection_unittest.cpp
+Calendar_unittest_SOURCES = Calendar_unittest.cpp
+Connection_unittest_SOURCES = Connection_unittest.cpp
+DeleteLater_unittest_SOURCES = DeleteLater_unittest.cpp
+EntityRef_unittest_SOURCES = EntityRef_unittest.cpp
+EntityRouter_unittest_SOURCES = EntityRouter_unittest.cpp
+Entity_unittest_SOURCES = Entity_unittest.cpp
+Exceptions_unittest_SOURCES = Exceptions_unittest.cpp
+Factory_unittest_SOURCES = Factory_unittest.cpp
+IGRouter_unittest_SOURCES = IGRouter_unittest.cpp
+Lobby_unittest_SOURCES = Lobby_unittest.cpp
+LogStream_unittest_SOURCES = LogStream_unittest.cpp
+Log_unittest_SOURCES = Log_unittest.cpp
+MetaQuery_unittest_SOURCES = MetaQuery_unittest.cpp
+Metaserver_unittest_SOURCES = Metaserver_unittest.cpp
+Operations_unittest_SOURCES = Operations_unittest.cpp
+Person_unittest_SOURCES = Person_unittest.cpp
+PollDefault_unittest_SOURCES = PollDefault_unittest.cpp
+Poll_unittest_SOURCES = Poll_unittest.cpp
+Redispatch_unittest_SOURCES = Redispatch_unittest.cpp
+Response_unittest_SOURCES = Response_unittest.cpp
+Room_unittest_SOURCES = Room_unittest.cpp
+Router_unittest_SOURCES = Router_unittest.cpp
+ServerInfo_unittest_SOURCES = ServerInfo_unittest.cpp
+Task_unittest_SOURCES = Task_unittest.cpp
+TimedEventService_unittest_SOURCES = TimedEventService_unittest.cpp
+Timeout_unittest_SOURCES = Timeout_unittest.cpp
+TypeBoundRedispatch_unittest_SOURCES = TypeBoundRedispatch_unittest.cpp
+TypeInfo_unittest_SOURCES = TypeInfo_unittest.cpp
+TypeService_unittest_SOURCES = TypeService_unittest.cpp
+Types_unittest_SOURCES = Types_unittest.cpp
+UIFactory_unittest_SOURCES = UIFactory_unittest.cpp
+View_unittest_SOURCES = View_unittest.cpp
