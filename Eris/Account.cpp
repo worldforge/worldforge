@@ -437,6 +437,31 @@ void Account::updateFromObject(const AtlasAccount &p)
     }
 }
 
+std::string getErrorMessage(const RootOperation & err)
+{
+    std::string msg;
+    const std::vector<Root>& args = err->getArgs();
+    if (args.empty()) {
+        error() << "got Error error op from server without args";
+        msg = "Unknown error.";
+    } else {
+        const Root & arg = args.front();
+        Atlas::Message::Element message;
+        if (arg->copyAttr("message", message) != 0) {
+            error() << "got Error error op from server without message";
+            msg = "Unknown error.";
+        } else {
+            if (!message.isString()) {
+                error() << "got Error error op from server with bad message";
+                msg = "Unknown error.";
+            } else {
+                msg = message.String();
+            }
+        }
+    }
+    return msg;
+}
+
 void Account::loginError(const Error& err)
 {
     assert(err.isValid());
@@ -444,26 +469,7 @@ void Account::loginError(const Error& err)
         error() << "got loginError while not logging in";
     }
 
-    std::string msg;
-    const std::vector<Root>& args = err->getArgs();
-    if (args.empty()) {
-        error() << "got loginError error op from server without context";
-        msg = "Unknown error.";
-    } else {
-        const Root & arg = args.front();
-        Atlas::Message::Element msg;
-        if (arg->copyAttr("message", msg) != 0) {
-            error() << "got loginError error op from server without message";
-            msg = "Unknown error.";
-        } else {
-            if (!msg.isString()) {
-                error() << "got loginError error op from server with bad message";
-                msg = "Unknown error.";
-            } else {
-                msg = args[0]->getAttr("message").asString();
-            }
-        }
-    }
+    std::string msg = getErrorMessage(err);
 
     // update state before emitting signal
     m_status = DISCONNECTED;
@@ -483,8 +489,7 @@ void Account::handleLoginTimeout()
 void Account::avatarResponse(const RootOperation& op)
 {
     if (op->instanceOf(ERROR_NO)) {
-        const std::vector<Root>& args = op->getArgs();
-        std::string msg = args[0]->getAttr("message").asString();
+        std::string msg = getErrorMessage(op);
 
         // creating or taking a character failed for some reason
         AvatarFailure(msg);
