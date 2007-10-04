@@ -1,5 +1,10 @@
 2007-10-04  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Account_unittest.cpp: Add coverage for handleLoginTimeout,
+	  and avatarResponse().
+
+2007-10-04  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/Account.cpp: Add a new local function to extract an error
 	  message safely and cleanly from an error operation. Make use of
 	  it in some places.

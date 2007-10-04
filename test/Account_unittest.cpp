@@ -73,6 +73,14 @@ class TestAccount : public Eris::Account {
         loginError(err);
     }
 
+    void test_handleLoginTimeout() {
+        handleLoginTimeout();
+    }
+
+    void test_avatarResponse(const Atlas::Objects::Operation::RootOperation& op) {
+        avatarResponse(op);
+    }
+
     static const Eris::Account::Status LOGGING_IN = Eris::Account::LOGGING_IN;
     static const Eris::Account::Status LOGGED_IN = Eris::Account::LOGGED_IN;
     static const Eris::Account::Status LOGGING_OUT = Eris::Account::LOGGING_OUT;
@@ -660,7 +668,33 @@ int main()
         assert(loginFailure_checker.flagged());
     }
 
-    // NEXT handleLoginTimeout
+    // Test handleLoginTimeout()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger loginFailure_checker;
+
+        acc.LoginFailure.connect(sigc::hide(sigc::mem_fun(loginFailure_checker,
+                                                          &SignalFlagger::set)));
+
+        acc.test_handleLoginTimeout();
+
+        assert(loginFailure_checker.flagged());
+    }
+
+    // Test avatarResponse()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Error op;
+
+        acc.test_avatarResponse(op);
+    }
+    // NEXT more coverage, but no need to full flush out the error message shite
 
     return 0;
 }
