@@ -1,5 +1,10 @@
 2007-10-03  Al Riddoch  <alriddoch@zepler.org>
 
+	* Eris/Account.h: Switch private member variables to protected,
+	  so they can be manipulated for testing.
+
+2007-10-03  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Account_unittest.cpp: First stages of covering the Account
 	  class.
 

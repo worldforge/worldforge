@@ -226,7 +226,7 @@ protected:
 
     void internalDeactivateCharacter(Avatar* av);
     void updateFromObject(const Atlas::Objects::Entity::Account &p);
-private:
+
     Connection* m_con;  ///< underlying connection instance
     Status m_status;    ///< what the Player is currently doing
     AccountRouter* m_router;
