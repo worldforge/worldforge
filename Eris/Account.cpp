@@ -517,7 +517,7 @@ void Account::avatarResponse(const RootOperation& op)
         // expect another op with the same refno
         m_con->getResponder()->ignore(op->getRefno());
     } else
-        warning() << "received malformed avatar take response";
+        warning() << "received incorrect avatar create/take response";
 }
 
 void Account::internalDeactivateCharacter(Avatar* av)
