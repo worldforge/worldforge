@@ -17,7 +17,18 @@
 
 // $Id$
 
+#include <Eris/Log.h>
+
+#include <iostream>
+
+static void writeLog(Eris::LogLevel, const std::string & msg)
+{
+    std::cerr << msg << std::endl << std::flush;
+}
+
 int main()
 {
+    Eris::Logged.connect(sigc::ptr_fun(writeLog));
+
     return 0;
 }

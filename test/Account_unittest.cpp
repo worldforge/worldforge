@@ -20,6 +20,7 @@
 #include <Eris/Account.h>
 
 #include <Eris/Connection.h>
+#include <Eris/Avatar.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Log.h>
 
@@ -57,6 +58,14 @@ class TestAccount : public Eris::Account {
         m_characterIds.insert(id);
     }
 
+    void setup_insertActiveCharacters(Eris::Avatar * ea) {
+        m_activeCharacters.insert(std::make_pair(ea->getId(), ea));
+    }
+
+    Eris::Account::Status query_getStatus() const {
+        return m_status;
+    }
+
     void test_logoutResponse(const Atlas::Objects::Operation::RootOperation& op) {
         logoutResponse(op);
     }
@@ -81,11 +90,22 @@ class TestAccount : public Eris::Account {
         avatarResponse(op);
     }
 
+    void test_internalDeactivateCharacter(Eris::Avatar * ea) {
+        internalDeactivateCharacter(ea);
+    }
+
+    static const Eris::Account::Status DISCONNECTED = Eris::Account::DISCONNECTED;
     static const Eris::Account::Status LOGGING_IN = Eris::Account::LOGGING_IN;
     static const Eris::Account::Status LOGGED_IN = Eris::Account::LOGGED_IN;
     static const Eris::Account::Status LOGGING_OUT = Eris::Account::LOGGING_OUT;
     static const Eris::Account::Status CREATING_CHAR = Eris::Account::CREATING_CHAR;
     static const Eris::Account::Status TAKING_CHAR = Eris::Account::TAKING_CHAR;
+};
+
+class TestAvatar : public Eris::Avatar {
+  public:
+    TestAvatar(Eris::Account * ac, const std::string & ent_id) :
+               Eris::Avatar(ac, ent_id) { }
 };
 
 static void writeLog(Eris::LogLevel, const std::string & msg)
@@ -698,6 +718,9 @@ int main()
 
         acc.test_avatarResponse(op);
         assert(avatarFailure_checker.flagged());
+        assert(acc.query_getStatus() == TestAccount::LOGGED_IN);
+
+        acc.setup_setStatus(TestAccount::DISCONNECTED);
     }
 
     // Test avatarResponse() Info op with no arg
@@ -714,6 +737,7 @@ int main()
 
         acc.test_avatarResponse(op);
         assert(!avatarSuccess_checker.flagged());
+        assert(acc.query_getStatus() == TestAccount::DISCONNECTED);
     }
 
     // Test avatarResponse() Info op with non-entity arg
@@ -732,7 +756,93 @@ int main()
 
         acc.test_avatarResponse(op);
         assert(!avatarSuccess_checker.flagged());
+        assert(acc.query_getStatus() == TestAccount::DISCONNECTED);
     }
 
+    // Test avatarResponse() Info op with entity arg
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Entity::Anonymous info_arg;
+        SignalFlagger avatarSuccess_checker;
+
+        op->setArgs1(info_arg);
+        acc.AvatarSuccess.connect(sigc::hide(sigc::mem_fun(avatarSuccess_checker,
+                                                           &SignalFlagger::set)));
+
+        acc.test_avatarResponse(op);
+        assert(avatarSuccess_checker.flagged());
+        assert(acc.query_getStatus() == TestAccount::LOGGED_IN);
+
+        acc.setup_setStatus(TestAccount::DISCONNECTED);
+    }
+
+    // Test avatarResponse() Get (not info or error) op with entity arg
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Get op; // Arbitrary not Info or Error
+        Atlas::Objects::Entity::Anonymous info_arg;
+        SignalFlagger avatarSuccess_checker;
+
+        op->setArgs1(info_arg);
+        acc.AvatarSuccess.connect(sigc::hide(sigc::mem_fun(avatarSuccess_checker,
+                                                           &SignalFlagger::set)));
+
+        acc.test_avatarResponse(op);
+        assert(!avatarSuccess_checker.flagged());
+        assert(acc.query_getStatus() == TestAccount::DISCONNECTED);
+    }
+
+    // Test internalDeactivateCharacter() indirectly
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(&acc, fake_char_id);
+
+        acc.setup_insertActiveCharacters(ea);
+
+        assert(!acc.getActiveCharacters().empty());
+
+        // Eris::Avatar destructor calls
+        // Eris::Account::internalDeactivateCharacter
+        delete ea;
+
+        assert(acc.getActiveCharacters().empty());
+    }
+
+    // Test internalDeactivateCharacter() directly
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(&acc, fake_char_id);
+
+        acc.setup_insertActiveCharacters(ea);
+
+        assert(!acc.getActiveCharacters().empty());
+
+        acc.test_internalDeactivateCharacter(ea);
+
+        assert(acc.getActiveCharacters().empty());
+    }
+
+    // NEXT Test sightCharacter()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+    }
     return 0;
 }
