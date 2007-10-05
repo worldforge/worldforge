@@ -496,6 +496,10 @@ void Account::avatarResponse(const RootOperation& op)
         m_status = Account::LOGGED_IN;
     } else if (op->instanceOf(INFO_NO)) {
         const std::vector<Root>& args = op->getArgs();
+        if (args.empty()) {
+            warning() << "no args character create/take response";
+            return;
+        }
 
         RootEntity ent = smart_dynamic_cast<RootEntity>(args.front());
         if (!ent.isValid()) {
