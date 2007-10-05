@@ -1,4 +1,8 @@
-2007-10-04  Al Riddoch  <alriddoch@zepler.org>
+2007-10-05  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/Account_unittest.cpp: Cover more of avatarResponse().
+
+2007-10-05  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Account.cpp: Add more checking to the info response to an
 	  avatar create or take request.

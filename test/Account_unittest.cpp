@@ -684,17 +684,55 @@ int main()
         assert(loginFailure_checker.flagged());
     }
 
-    // Test avatarResponse()
+    // Test avatarResponse() Error op
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767, true);
 
         TestAccount acc(con);
         Atlas::Objects::Operation::Error op;
+        SignalFlagger avatarFailure_checker;
+
+        acc.AvatarFailure.connect(sigc::hide(sigc::mem_fun(avatarFailure_checker,
+                                                           &SignalFlagger::set)));
 
         acc.test_avatarResponse(op);
+        assert(avatarFailure_checker.flagged());
     }
-    // NEXT more coverage, but no need to full flush out the error message shite
+
+    // Test avatarResponse() Info op with no arg
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Info op;
+        SignalFlagger avatarSuccess_checker;
+
+        acc.AvatarSuccess.connect(sigc::hide(sigc::mem_fun(avatarSuccess_checker,
+                                                           &SignalFlagger::set)));
+
+        acc.test_avatarResponse(op);
+        assert(!avatarSuccess_checker.flagged());
+    }
+
+    // Test avatarResponse() Info op with non-entity arg
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Root bad_arg;
+        SignalFlagger avatarSuccess_checker;
+
+        op->setArgs1(bad_arg);
+        acc.AvatarSuccess.connect(sigc::hide(sigc::mem_fun(avatarSuccess_checker,
+                                                           &SignalFlagger::set)));
+
+        acc.test_avatarResponse(op);
+        assert(!avatarSuccess_checker.flagged());
+    }
 
     return 0;
 }
