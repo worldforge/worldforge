@@ -1,3 +1,8 @@
+2007-10-06  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Account.cpp: Add better checking to functions which handle
+	  sight of character and response to avatar logout from server.
+
 2007-10-05  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/Account_unittest.cpp: Cover the rest of avatarResponse(), and

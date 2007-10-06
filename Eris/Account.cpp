@@ -534,9 +534,16 @@ void Account::sightCharacter(const RootOperation& op)
     }
 
     const std::vector<Root>& args = op->getArgs();
-    assert(!args.empty());
+    if (args.empty()) {
+        error() << "got sight of character with no args";
+        return;
+    }
+
     RootEntity ge = smart_dynamic_cast<RootEntity>(args.front());
-    assert(ge.isValid());
+    if (!ge.isValid()) {
+        error() << "got sight of character with malformed args";
+        return;
+    }
 
     CharacterMap::iterator C = _characters.find(ge->getId());
     if (C != _characters.end()) {
@@ -596,8 +603,10 @@ void Account::handleLogoutTimeout()
 
 void Account::avatarLogoutResponse(const RootOperation& op)
 {
-    if (!op->instanceOf(INFO_NO))
+    if (!op->instanceOf(INFO_NO)) {
         warning() << "received an avatar logout response that is not an INFO";
+        return;
+    }
 
     const std::vector<Root>& args(op->getArgs());
 
@@ -608,7 +617,10 @@ void Account::avatarLogoutResponse(const RootOperation& op)
 
     RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
     const std::vector<Root>& args2(logout->getArgs());
-    assert(!args2.empty());
+    if (args2.empty()) {
+        warning() << "argument of avatar logout INFO is logout without args";
+        return;
+    }
 
     std::string charId = args2.front()->getId();
     debug() << "got logout for character " << charId;
