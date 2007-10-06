@@ -62,6 +62,14 @@ class TestAccount : public Eris::Account {
         m_activeCharacters.insert(std::make_pair(ea->getId(), ea));
     }
 
+    void setup_setUsername(const std::string & u) {
+        m_username = u;
+    }
+
+    void setup_setPassword(const std::string & p) {
+        m_pass = p;
+    }
+
     Eris::Account::Status query_getStatus() const {
         return m_status;
     }
@@ -94,6 +102,30 @@ class TestAccount : public Eris::Account {
         internalDeactivateCharacter(ea);
     }
 
+    void test_sightCharacter(const Atlas::Objects::Operation::RootOperation& op) {
+        sightCharacter(op);
+    }
+
+    void test_netConnected() {
+        netConnected();
+    }
+
+    bool test_netDisconnecting() {
+        return netDisconnecting();
+    }
+
+    void test_netFailure(const std::string & msg) {
+        netFailure(msg);
+    }
+
+    void test_handleLogoutTimeout() {
+        handleLogoutTimeout();
+    }
+
+    void test_avatarLogoutResponse(const Atlas::Objects::Operation::RootOperation& op) {
+        avatarLogoutResponse(op);
+    }
+
     static const Eris::Account::Status DISCONNECTED = Eris::Account::DISCONNECTED;
     static const Eris::Account::Status LOGGING_IN = Eris::Account::LOGGING_IN;
     static const Eris::Account::Status LOGGED_IN = Eris::Account::LOGGED_IN;
@@ -116,6 +148,7 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
 int main()
 {
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
+    Eris::setLogLevel(Eris::LOG_DEBUG);
 
     // Test constructor
     {
@@ -837,12 +870,324 @@ int main()
         assert(acc.getActiveCharacters().empty());
     }
 
-    // NEXT Test sightCharacter()
+    // Test sightCharacter() with empty sight
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767, true);
 
         TestAccount acc(con);
+        Atlas::Objects::Operation::Sight sight;
+        SignalFlagger gotCharacterInfo_checker;
+
+        acc.setup_setDoingCharacterRefresh(true);
+        acc.GotCharacterInfo.connect(sigc::hide(sigc::mem_fun(gotCharacterInfo_checker,
+                                                   &SignalFlagger::set)));
+
+        acc.test_sightCharacter(sight);
+
+        assert(!gotCharacterInfo_checker.flagged());
     }
+
+    // Test sightCharacter() with Sight with bad args
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Sight sight;
+        Atlas::Objects::Root bad_arg;
+        SignalFlagger gotCharacterInfo_checker;
+
+        acc.setup_setDoingCharacterRefresh(true);
+        acc.GotCharacterInfo.connect(sigc::hide(sigc::mem_fun(gotCharacterInfo_checker,
+                                                   &SignalFlagger::set)));
+        sight->setArgs1(bad_arg);
+
+        acc.test_sightCharacter(sight);
+
+        assert(!gotCharacterInfo_checker.flagged());
+    }
+
+    // Test sightCharacter() with Sight with valid args
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Sight sight;
+        Atlas::Objects::Entity::Anonymous sight_arg;
+        SignalFlagger gotCharacterInfo_checker, gotAllCharacters_checker;
+
+        acc.setup_setDoingCharacterRefresh(true);
+        acc.GotCharacterInfo.connect(sigc::hide(sigc::mem_fun(gotCharacterInfo_checker,
+                                                   &SignalFlagger::set)));
+        acc.GotAllCharacters.connect(sigc::mem_fun(gotAllCharacters_checker,
+                                                   &SignalFlagger::set));
+        sight->setArgs1(sight_arg);
+        acc.setup_fakeCharacter("1");
+
+        acc.test_sightCharacter(sight);
+
+        assert(gotCharacterInfo_checker.flagged());
+        assert(gotAllCharacters_checker.flagged());
+    }
+
+    // Test sightCharacter() with Sight with valid args, but one character reamining
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Operation::Sight sight;
+        Atlas::Objects::Entity::Anonymous sight_arg;
+        SignalFlagger gotCharacterInfo_checker, gotAllCharacters_checker;
+
+        acc.setup_setDoingCharacterRefresh(true);
+        acc.GotCharacterInfo.connect(sigc::hide(sigc::mem_fun(gotCharacterInfo_checker,
+                                                   &SignalFlagger::set)));
+        acc.GotAllCharacters.connect(sigc::mem_fun(gotAllCharacters_checker,
+                                                   &SignalFlagger::set));
+        sight->setArgs1(sight_arg);
+        acc.setup_fakeCharacter("1");
+        acc.setup_fakeCharacter("2");
+
+        acc.test_sightCharacter(sight);
+
+        assert(gotCharacterInfo_checker.flagged());
+        assert(!gotAllCharacters_checker.flagged());
+    }
+
+    // Test netConnected() Does nothing with an empty password
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        acc.test_netConnected();
+    }
+
+    // Test netConnected() Does nothing with valid username and password,
+    // but not DISCONNECTED
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        acc.setup_setUsername("foo");
+        acc.setup_setPassword("foo");
+        acc.setup_setStatus(TestAccount::LOGGING_IN);
+
+        acc.test_netConnected();
+    }
+    // FIXME Cover calling internalLogin() from netConnected, once we can fake
+    // connections
+
+    // Test netDisconnecting() when account is not logged in.
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        bool res = acc.test_netDisconnecting();
+
+        assert(res);
+    }
+
+    // Test netDisconnecting() when account is logged in, but connection is
+    // disconnected.
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        acc.setup_setStatus(TestAccount::LOGGED_IN);
+
+        // The fact that the connection is not really connected will be
+        // caught in Account::logout() safely.
+        bool res = acc.test_netDisconnecting();
+
+        assert(!res);
+
+        acc.setup_setStatus(TestAccount::DISCONNECTED);
+    }
+
+    // Test netFailure()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        acc.test_netFailure("foo");
+    }
+
+    // Test handleLogoutTimeout()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger logoutComplete_checker;
+
+        acc.setup_setStatus(TestAccount::LOGGED_IN);
+        acc.LogoutComplete.connect(sigc::hide(sigc::mem_fun(logoutComplete_checker, &SignalFlagger::set)));
+
+        acc.test_handleLogoutTimeout();
+
+        assert(acc.query_getStatus() == TestAccount::DISCONNECTED);
+        assert(logoutComplete_checker.flagged());
+    }
+
+    // Test avatarLogoutResponse() with non Info operation
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger avatarDeactivated_checker;
+        Atlas::Objects::Operation::Get op;
+
+        acc.AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated_checker, &SignalFlagger::set)));
+
+        acc.test_avatarLogoutResponse(op);
+
+        assert(!avatarDeactivated_checker.flagged());
+    }
+
+    // Test avatarLogoutResponse() with Info operation
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger avatarDeactivated_checker;
+        Atlas::Objects::Operation::Info op;
+
+        acc.AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated_checker, &SignalFlagger::set)));
+
+        acc.test_avatarLogoutResponse(op);
+
+        assert(!avatarDeactivated_checker.flagged());
+    }
+
+    // Test avatarLogoutResponse() with Info operation with bad args
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger avatarDeactivated_checker;
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Root bad_arg;
+        op->setArgs1(bad_arg);
+
+        acc.AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated_checker, &SignalFlagger::set)));
+
+        acc.test_avatarLogoutResponse(op);
+
+        assert(!avatarDeactivated_checker.flagged());
+    }
+
+    // Test avatarLogoutResponse() with Info operation with logout args, which
+    // have no args
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger avatarDeactivated_checker;
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Operation::Logout info_arg;
+
+        op->setArgs1(info_arg);
+
+        acc.AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated_checker, &SignalFlagger::set)));
+
+        acc.test_avatarLogoutResponse(op);
+
+        assert(!avatarDeactivated_checker.flagged());
+    }
+
+    // Test avatarLogoutResponse() with Info operation with completely well
+    // formed args for an ID which does not exist
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger avatarDeactivated_checker;
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Operation::Logout info_arg;
+        Atlas::Objects::Entity::Anonymous logout_arg;
+        std::string fake_char_id("1");
+
+        op->setArgs1(info_arg);
+        info_arg->setArgs1(logout_arg);
+        logout_arg->setId(fake_char_id);
+
+        acc.AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated_checker, &SignalFlagger::set)));
+
+        acc.test_avatarLogoutResponse(op);
+
+        assert(!avatarDeactivated_checker.flagged());
+    }
+
+    // Test avatarLogoutResponse() with Info operation with completely well
+    // formed args for an ID which is one of our characters, but not currently
+    // active
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger avatarDeactivated_checker;
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Operation::Logout info_arg;
+        Atlas::Objects::Entity::Anonymous logout_arg;
+        std::string fake_char_id("1");
+
+        op->setArgs1(info_arg);
+        info_arg->setArgs1(logout_arg);
+        logout_arg->setId(fake_char_id);
+        acc.setup_fakeCharacter(fake_char_id);
+        acc.AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated_checker, &SignalFlagger::set)));
+
+        acc.test_avatarLogoutResponse(op);
+
+        assert(!avatarDeactivated_checker.flagged());
+    }
+
+    // Test avatarLogoutResponse() with Info operation with completely well
+    // formed args for an ID which is one of our characters, and currently
+    // active
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger avatarDeactivated_checker;
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Operation::Logout info_arg;
+        Atlas::Objects::Entity::Anonymous logout_arg;
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(&acc, fake_char_id);
+
+        op->setArgs1(info_arg);
+        info_arg->setArgs1(logout_arg);
+        logout_arg->setId(fake_char_id);
+        acc.setup_fakeCharacter(fake_char_id);
+        acc.setup_insertActiveCharacters(ea);
+        acc.AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated_checker, &SignalFlagger::set)));
+
+        acc.test_avatarLogoutResponse(op);
+
+        assert(avatarDeactivated_checker.flagged());
+    }
+
+
     return 0;
 }

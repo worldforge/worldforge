@@ -1,5 +1,12 @@
 2007-10-06  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Account_unittest.cpp: Add coverage for sightCharacter(),
+	  netConnected(), netDisconnecting(), netFailure(),
+	  handleLogoutTimeout() and avatarLogoutResponse(). First pass at
+	  coverage of this class is now complete.
+
+2007-10-06  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/Account.cpp: Add better checking to functions which handle
 	  sight of character and response to avatar logout from server.
 
