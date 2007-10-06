@@ -1,5 +1,12 @@
 2007-10-06  Al Riddoch  <alriddoch@zepler.org>
 
+	* Eris/Log.h, Eris/Avatar.h: Clean up white spacing.
+
+	* Eris/Avatar.h: Make all private members protected for testing.
+	  Change getId() to returning a const string reference.
+
+2007-10-06  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Alarm_unittest.cpp: Add full coverage of Alarm.
 
 2007-10-06  Al Riddoch  <alriddoch@zepler.org>

@@ -11,11 +11,11 @@ namespace Eris
 /** Logging level : setting a higher level will automaticaly pull in the lower
  levels (i.e NOTICE implies ERROR and WARNING) */
 typedef enum {
-	LOG_ERROR = 0,	///< serious failure indications
-	LOG_WARNING,	///< something is amiss, but probably okay to continue
-	LOG_NOTICE,		///< general information
-	LOG_VERBOSE,	///< <i>lots</i> of information, about every recieved operation, for example
-	LOG_DEBUG		///< excessive amounts of stuff
+    LOG_ERROR = 0,  ///< serious failure indications
+    LOG_WARNING,    ///< something is amiss, but probably okay to continue
+    LOG_NOTICE,     ///< general information
+    LOG_VERBOSE,    ///< <i>lots</i> of information, about every recieved operation, for example
+    LOG_DEBUG       ///< excessive amounts of stuff
 } LogLevel;
 
 /// the default logging level for a new connection

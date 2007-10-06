@@ -32,7 +32,7 @@ using Atlas::Objects::smart_dynamic_cast;
 namespace Eris
 {
 
-Avatar::Avatar(Account* pl, const std::string& entId) : 
+Avatar::Avatar(Account* pl, const std::string& entId) :
     m_account(pl),
     m_entityId(entId),
     m_entity(NULL),
@@ -41,7 +41,7 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
 {
     m_view = new View(this);
     m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
-    
+
     m_router = new IGRouter(this);
 
     m_view->getEntityFromServer("");
@@ -51,7 +51,7 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
 Avatar::~Avatar()
 {
     m_account->internalDeactivateCharacter(this);
-    
+
     delete m_router;
     delete m_view;
 }
@@ -63,7 +63,7 @@ void Avatar::deactivate()
     arg->setId(m_entityId);
     l->setArgs1(arg);
     l->setSerialno(getNewSerialno());
-    
+
     getConnection()->getResponder()->await(l->getSerialno(), this, &Avatar::logoutResponse);
     getConnection()->send(l);
 }
@@ -73,11 +73,11 @@ void Avatar::deactivate()
 void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc)
 {
     if(e->getLocation() != m_entity)
-	{
-		error() << "Can't drop an Entity which is not held by the character";
-		
-		return;
-	}
+    {
+        error() << "Can't drop an Entity which is not held by the character";
+
+        return;
+    }
 
     Move moveOp;
     moveOp->setFrom(m_entityId);
@@ -104,10 +104,10 @@ void Avatar::take(Entity* e)
 
     Anonymous what;
     what->setLoc(m_entityId);
-    
+
     std::vector<double> p(3, 0.0);
     what->setPos(p); // cyphesis is rejecting move ops with no pos set
-    
+
     what->setId(e->getId());
     moveOp->setArgs1(what);
 
@@ -118,7 +118,7 @@ void Avatar::touch(Entity* e)
 {
     Touch touchOp;
     touchOp->setFrom(m_entityId);
-    
+
     Anonymous what;
     what->setId(e->getId());
     touchOp->setArgs1(what);
@@ -134,22 +134,22 @@ void Avatar::say(const std::string& msg)
     what->setAttr("say", msg);
     t->setArgs1(what);
     t->setFrom(m_entityId);
-    
+
     getConnection()->send(t);
 }
 
 void Avatar::emote(const std::string &em)
 {
     Imaginary im;
-	
+
     Anonymous emote;
     emote->setId("emote");
     emote->setAttr("description", em);
-    
+
     im->setArgs1(emote);
     im->setFrom(m_entityId);
     im->setSerialno(getNewSerialno());
-	
+
     getConnection()->send(im);
 }
 
@@ -159,7 +159,7 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos)
     what->setLoc(m_entity->getLocation()->getId());
     what->setId(m_entityId);
     what->setAttr("pos", pos.toAtlas());
-    
+
     Move moveOp;
     moveOp->setFrom(m_entityId);
     moveOp->setArgs1(what);
@@ -170,7 +170,7 @@ void Avatar::moveToPoint(const WFMath::Point<3>& pos)
 void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
 {
     const double MIN_VELOCITY = 1e-3;
-    
+
     Anonymous arg;
     //arg->setAttr("location", m_entity->getLocation()->getId());
     arg->setId(m_entityId);
@@ -190,7 +190,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
             // then get the angle away from the plane
             q = WFMath::Quaternion(1, -asin(vel[2] / sqrt(plane_sqr_mag))) * q;
         }
-	
+
         arg->setAttr("orientation", q.toAtlas());
     }
 
@@ -233,35 +233,35 @@ void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
 
 void Avatar::wield(Entity * entity)
 {
-	if(entity->getLocation() != m_entity)
-	{
-		error() << "Can't wield an Entity which is not located in the avatar.";
-		
-		return;
-	}
-	
-	Anonymous arguments;
-	arguments->setId(entity->getId());
-	
-	Wield wield;
-	wield->setFrom(m_entityId);
-	wield->setArgs1(arguments);
-	
-	getConnection()->send(wield);
+    if(entity->getLocation() != m_entity)
+    {
+        error() << "Can't wield an Entity which is not located in the avatar.";
+
+        return;
+    }
+
+    Anonymous arguments;
+    arguments->setId(entity->getId());
+
+    Wield wield;
+    wield->setFrom(m_entityId);
+    wield->setArgs1(arguments);
+
+    getConnection()->send(wield);
 }
 
 void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const std::string& opType)
 {
     Anonymous arguments;
-	
-	arguments->setId(entity->getId());
-	arguments->setObjtype("obj");
-	if (position.isValid()) arguments->setAttr("pos", position.toAtlas());
-    
+
+    arguments->setId(entity->getId());
+    arguments->setObjtype("obj");
+    if (position.isValid()) arguments->setAttr("pos", position.toAtlas());
+
     Use use;
-	use->setFrom(m_entityId);
-	
-    
+    use->setFrom(m_entityId);
+
+
     if (opType.empty())
     {
         use->setArgs1(arguments);
@@ -272,11 +272,11 @@ void Avatar::useOn(Entity * entity, const WFMath::Point< 3 > & position, const s
         op->setParents(prs);
         op->setArgs1(arguments);
         op->setFrom(m_entityId);
-        
+
         use->setArgs1(op);
     }
-    
-	getConnection()->send(use);
+
+    getConnection()->send(use);
 }
 
 void Avatar::attack(Entity* entity)
@@ -284,7 +284,7 @@ void Avatar::attack(Entity* entity)
     assert(entity);
     Attack attackOp;
     attackOp->setFrom(m_entityId);
-    
+
     Anonymous what;
     what->setId(entity->getId());
     attackOp->setArgs1(what);
@@ -295,7 +295,7 @@ void Avatar::attack(Entity* entity)
 void Avatar::useStop()
 {
     Use use;
-	use->setFrom(m_entityId);
+    use->setFrom(m_entityId);
     getConnection()->send(use);
 }
 
@@ -306,12 +306,12 @@ void Avatar::onEntityAppear(Entity* ent)
     if (ent->getId() == m_entityId) {
         assert(m_entity == NULL);
         m_entity = ent;
-        
+
         ent->ChildAdded.connect(sigc::mem_fun(this, &Avatar::onCharacterChildAdded));
         ent->ChildRemoved.connect(sigc::mem_fun(this, &Avatar::onCharacterChildRemoved));
-        
+
         ent->observe("right_hand_wield", sigc::mem_fun(this, &Avatar::onCharacterWield));
-        
+
         GotCharacterEntity.emit(ent);
         m_entityAppearanceCon.disconnect(); // stop listenting to View::Appearance
     }
@@ -333,12 +333,12 @@ void Avatar::onCharacterWield(const std::string& s, const Atlas::Message::Elemen
         warning() << "got wield for strange slot";
         return;
     }
-    
+
     if (!val.isString()) {
         warning() << "got malformed wield value";
         return;
     }
-    
+
     m_wielded = EntityRef(m_view, val.asString());
 }
 
@@ -363,18 +363,18 @@ void Avatar::logoutResponse(const RootOperation& op)
 {
     if (!op->instanceOf(INFO_NO))
         warning() << "received an avatar logout response that is not an INFO";
-        
+
     const std::vector<Root>& args(op->getArgs());
-    
+
     if (args.empty() || (args.front()->getClassNo() != LOGOUT_NO)) {
         warning() << "argument of avatar logout INFO is not a logout op";
         return;
     }
-    
+
     RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
     const std::vector<Root>& args2(logout->getArgs());
     assert(!args2.empty());
-    
+
     std::string charId = args2.front()->getId();
     debug() << "got logout for character " << charId;
     assert(charId == m_entityId);

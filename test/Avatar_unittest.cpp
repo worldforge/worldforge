@@ -17,7 +17,40 @@
 
 // $Id$
 
+#include <Eris/Avatar.h>
+
+#include <Eris/Connection.h>
+#include <Eris/Account.h>
+#include <Eris/Log.h>
+
+#include <iostream>
+
+static void writeLog(Eris::LogLevel, const std::string & msg)
+{       
+    std::cerr << msg << std::endl << std::flush;
+}
+
+class TestAvatar : public Eris::Avatar {
+  public:
+    TestAvatar(Eris::Account * ac, const std::string & ent_id) :
+               Eris::Avatar(ac, ent_id) { }
+};
+
+
 int main()
 {
+    Eris::Logged.connect(sigc::ptr_fun(writeLog));
+    Eris::setLogLevel(Eris::LOG_DEBUG);
+
+    {
+        Eris::Connection * con = new Eris::Connection("name", "localhost",
+                                                      6767, true);
+
+        Eris::Account * acc = new Eris::Account(con);
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(acc, fake_char_id);
+    }
+
+
     return 0;
 }

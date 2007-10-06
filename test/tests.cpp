@@ -2,9 +2,6 @@
     #include "config.h"
 #endif
 
-#include <cstdio>
-#include <memory>
-
 #include "stubServer.h"
 #include "testUtils.h"
 #include "controller.h"
@@ -29,6 +26,9 @@
 #include <Atlas/Codecs/Bach.h>
 #include <Atlas/Objects/Encoder.h>
 #include <Atlas/Message/MEncoder.h>
+
+#include <cstdio>
+#include <memory>
 
 #include <signal.h>
 #include <sys/socket.h>
