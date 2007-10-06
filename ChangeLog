@@ -1,5 +1,9 @@
 2007-10-06  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Alarm_unittest.cpp: Add full coverage of Alarm.
+
+2007-10-06  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Account_unittest.cpp: Add coverage for sightCharacter(),
 	  netConnected(), netDisconnecting(), netFailure(),
 	  handleLogoutTimeout() and avatarLogoutResponse(). First pass at

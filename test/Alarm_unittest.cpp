@@ -17,7 +17,11 @@
 
 // $Id$
 
+#include <Eris/Alarm.h>
+
 #include <Eris/Log.h>
+
+#include "SignalFlagger.h"
 
 #include <iostream>
 
@@ -29,6 +33,35 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
 int main()
 {
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
+    Eris::setLogLevel(Eris::LOG_DEBUG);
+
+    // Test constructor
+    {
+        SignalFlagger expired_checker;
+        Eris::Alarm alm(1000, sigc::mem_fun(expired_checker, &SignalFlagger::set));
+
+        assert(!expired_checker.flagged());
+    }
+
+    // Test due()
+    {
+        SignalFlagger expired_checker;
+        Eris::Alarm alm(1000, sigc::mem_fun(expired_checker, &SignalFlagger::set));
+
+        alm.due();
+
+        assert(!expired_checker.flagged());
+    }
+
+    // Test expired()
+    {
+        SignalFlagger expired_checker;
+        Eris::Alarm alm(1000, sigc::mem_fun(expired_checker, &SignalFlagger::set));
+
+        alm.expired();
+
+        assert(expired_checker.flagged());
+    }
 
     return 0;
 }
