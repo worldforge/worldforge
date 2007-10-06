@@ -23,12 +23,30 @@
 #include <Eris/Account.h>
 #include <Eris/Log.h>
 
+#include <Atlas/Objects/SmartPtr.h>
+
 #include <iostream>
 
-static void writeLog(Eris::LogLevel, const std::string & msg)
-{       
-    std::cerr << msg << std::endl << std::flush;
-}
+class TestConnection : public Eris::Connection {
+  public:
+    TestConnection(const std::string & name, const std::string & host,
+                   short port, bool debug) :
+                   Eris::Connection(name, host, port, debug) { }
+
+    virtual void send(const Atlas::Objects::Root &obj) {
+        std::cout << "Sending " << obj->getParents().front()
+                  << std::endl << std::flush;
+    }
+};
+
+class TestAccount : public Eris::Account {
+  public:
+    TestAccount(Eris::Connection * con) : Eris::Account(con) { }
+
+    void setup_insertActiveCharacters(Eris::Avatar * ea) {
+        m_activeCharacters.insert(std::make_pair(ea->getId(), ea));
+    }
+};
 
 class TestAvatar : public Eris::Avatar {
   public:
@@ -36,21 +54,55 @@ class TestAvatar : public Eris::Avatar {
                Eris::Avatar(ac, ent_id) { }
 };
 
+static void writeLog(Eris::LogLevel, const std::string & msg)
+{       
+    std::cerr << msg << std::endl << std::flush;
+}
 
 int main()
 {
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
 
+    // Test constructor
     {
-        Eris::Connection * con = new Eris::Connection("name", "localhost",
-                                                      6767, true);
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
 
-        Eris::Account * acc = new Eris::Account(con);
+        Eris::Account * acc = new TestAccount(con);
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(acc, fake_char_id);
+        new TestAvatar(acc, fake_char_id);
     }
 
+    // Test destructor
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        TestAccount * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(acc, fake_char_id);
+
+        // The account must know about this Avatar, as avatar removes itself
+        // from account on destruction.
+        acc->setup_insertActiveCharacters(ea);
+
+        delete ea;
+    }
+
+    // Test deactivate()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(acc, fake_char_id);
+
+        ea->deactivate();
+    }
+
+    
 
     return 0;
 }
