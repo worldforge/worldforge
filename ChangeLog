@@ -1,9 +1,14 @@
 2007-10-06  Al Riddoch  <alriddoch@zepler.org>
 
-	* Eris/Log.h, Eris/Avatar.h: Clean up white spacing.
+	* Eris/Log.h, Eris/Avatar.h, Eris/Avatar.cpp: Clean up white spacing.
 
 	* Eris/Avatar.h: Make all private members protected for testing.
 	  Change getId() to returning a const string reference.
+
+	* test/Avatar_unittest.cpp: Start covering Avatar.
+
+	* test/tests.cpp: Start trying to get this to compile again on the
+	  Mac.
 
 2007-10-06  Al Riddoch  <alriddoch@zepler.org>
 
