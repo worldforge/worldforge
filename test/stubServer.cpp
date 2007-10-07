@@ -318,7 +318,15 @@ int StubServer::run(pid_t child)
             int result = waitpid(child, &childStatus, WNOHANG);
             if (result == child) {
                 
-                if (WIFEXITED(childStatus)) return WEXITSTATUS(childStatus);
+                if (WIFEXITED(childStatus)) {
+                    return WEXITSTATUS(childStatus);
+                }
+
+                if (WIFSIGNALED(childStatus)) {
+                    std::cerr << "child died with signal "
+                              << WTERMSIG(childStatus)
+                              << std::endl << std::flush;
+                }
                 
                 std::cerr << "child got bad exit status" << endl;
                 // child died for some other reason (SIGTERM, SIGABRT, core-dump, etc)

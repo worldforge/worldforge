@@ -1,3 +1,8 @@
+2007-10-07  Al Riddoch  <alriddoch@zepler.org>
+
+        * test/stubServer.cpp: Provide more verbose details about why the
+	  child process died.
+
 2007-10-06  Al Riddoch  <alriddoch@zepler.org>
 
         * test/Avatar_unittest.cpp: Cover destructor and deactivate().
