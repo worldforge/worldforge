@@ -1,5 +1,10 @@
 2007-10-08  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Avatar_unittest.cpp: Cover drop(), take(), touch(), say(),
+	  moveToPoint(), moveInDirection().
+
+2007-10-08  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/Entity.h: Make all private members protected for testing.
 
 2007-10-07  Al Riddoch  <alriddoch@zepler.org>
