@@ -329,7 +329,7 @@ protected:
     */
     virtual void onChildRemoved(Entity* child);
 
-private:
+protected:
     friend class IGRouter;
     friend class View;
     friend class EntityRouter;

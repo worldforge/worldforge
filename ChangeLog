@@ -1,3 +1,7 @@
+2007-10-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Entity.h: Make all private members protected for testing.
+
 2007-10-07  Al Riddoch  <alriddoch@zepler.org>
 
         * test/stubServer.cpp: Provide more verbose details about why the
