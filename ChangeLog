@@ -1,3 +1,8 @@
+2007-10-09  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/clientConnection.cpp, test/stubServer.cpp: Re-order headers
+	  for OSX.
+
 2007-10-08  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/Avatar_unittest.cpp: Cover drop(), take(), touch(), say(),
