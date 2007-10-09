@@ -264,7 +264,43 @@ int main()
         ea->moveToPoint(WFMath::Point<3>(3,4,5));
     }
     
-    // Test moveInDirection()
+    // Test moveInDirection() with zero velocity
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+
+        ea->moveInDirection(WFMath::Vector<3>(0,0,0));
+    }
+    
+    // Test moveInDirection() with vertical velocity
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+
+        ea->moveInDirection(WFMath::Vector<3>(0,0,5));
+    }
+    
+    // Test moveInDirection() with high velocity
     {
         Eris::Connection * con = new TestConnection("name", "localhost",
                                                     6767, true);
@@ -284,5 +320,201 @@ int main()
     
     // FIXME test the conditionals in moveInDirection()
 
+    // Test moveInDirection()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+
+        ea->moveInDirection(WFMath::Vector<3>(3,4,5), WFMath::Quaternion());
+    }
+    
+    // Test place() of something
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        TestEntity * inv_ent = new TestEntity("2", 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(wrld_ent);
+
+        ea->place(inv_ent, wrld_ent, WFMath::Point<3>(1,2,3));
+    }
+    
+    // Test wield() of something not in inventory
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        TestEntity * inv_ent = new TestEntity("2", 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(wrld_ent);
+
+        ea->wield(inv_ent);
+    }
+    
+    // Test wield() of something in inventory
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        TestEntity * inv_ent = new TestEntity("2", 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(char_ent);
+
+        ea->wield(inv_ent);
+    }
+    
+    // Test useOn() of something in inventory
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        TestEntity * inv_ent = new TestEntity("2", 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(char_ent);
+
+        ea->useOn(inv_ent, WFMath::Point<3>(), std::string());
+    }
+    
+    // Test useOn() of something in inventory
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        TestEntity * inv_ent = new TestEntity("2", 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(char_ent);
+
+        ea->useOn(inv_ent, WFMath::Point<3>(1,1,1), std::string());
+    }
+    
+    // Test useOn() with a position
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        TestEntity * inv_ent = new TestEntity("2", 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(char_ent);
+
+        ea->useOn(inv_ent, WFMath::Point<3>(1,1,1), std::string());
+    }
+    
+    // Test useOn() with a pos and target
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        TestEntity * inv_ent = new TestEntity("2", 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(char_ent);
+
+        ea->useOn(inv_ent, WFMath::Point<3>(1,1,1), "0");
+    }
+    
+    // Test attack()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        TestEntity * other_ent = new TestEntity("2", 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        other_ent->setup_setLocation(wrld_ent);
+
+        ea->attack(other_ent);
+    }
+    
+    // Test useStop()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * wrld_ent = new TestEntity("0", 0, vw);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+
+        ea->useStop();
+    }
+    
     return 0;
 }

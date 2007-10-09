@@ -1,5 +1,10 @@
 2007-10-09  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Avatar_unittest.cpp: Cover moveInDirection(),
+	  place(), wield(), useOn(), attack() and useStop().
+
+2007-10-09  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/agent.cpp, test/commander.cpp, test/controller.cpp,
 	  test/tests.cpp: Re-order headers for OSX.
 
