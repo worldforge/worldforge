@@ -1,5 +1,9 @@
 2007-10-10  Al Riddoch  <alriddoch@zepler.org>
 
+	* Eris/Calendar.cpp: Add an assert to ensure the avatar has a view.
+
+2007-10-10  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Avatar_unittest.cpp: Don't create a new view explicitly for
 	  each avatar, it is done in the constructor.
 

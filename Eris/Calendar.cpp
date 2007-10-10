@@ -22,6 +22,8 @@ Calendar::Calendar(Avatar* av) :
     m_minutesPerHour(0),
     m_secondsPerMinute(0)
 {
+    assert(av->getView() != NULL);
+
     av->getView()->TopLevelEntityChanged.connect(
         sigc::mem_fun(this, &Calendar::topLevelEntityChanged));
     // hook up right now if currently valid
