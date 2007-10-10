@@ -1,3 +1,7 @@
+2007-10-11  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Calendar.h: Make private members protected for testing.
+
 2007-10-10  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Calendar.cpp: Add an assert to ensure the avatar has a view.

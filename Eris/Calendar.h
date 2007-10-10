@@ -64,7 +64,7 @@ public:
     unsigned int minutesPerHour() const { return m_minutesPerHour; }
     unsigned int hoursPerDay() const { return m_hoursPerDay; }
 
-private:
+protected:
     void topLevelEntityChanged();
     void calendarAttrChanged(const std::string&, const Atlas::Message::Element& value);
 
