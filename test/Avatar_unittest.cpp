@@ -25,7 +25,12 @@
 #include <Eris/View.h>
 #include <Eris/Log.h>
 
+#include "SignalFlagger.h"
+
+#include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/SmartPtr.h>
+
+#include <sigc++/adaptors/hide.h>
 
 #include <iostream>
 
@@ -58,6 +63,31 @@ class TestAvatar : public Eris::Avatar {
     void setup_setEntity(Eris::Entity * ent) {
         m_entity = ent;
         m_entityId = ent->getId();
+    }
+
+    void test_onEntityAppear(Eris::Entity * ent) {
+        onEntityAppear(ent);
+    }
+
+    void test_onCharacterChildAdded(Eris::Entity * ent) {
+        onCharacterChildAdded(ent);
+    }
+
+    void test_onCharacterChildRemoved(Eris::Entity * ent) {
+        onCharacterChildRemoved(ent);
+    }
+
+    void test_onCharacterWield(const std::string & s,
+                               const Atlas::Message::Element & val) {
+        onCharacterWield(s, val);
+    }
+
+    void test_updateWorldTime(double seconds) {
+        updateWorldTime(seconds);
+    }
+
+    void test_logoutResponse(const Atlas::Objects::Operation::RootOperation & op) {
+        logoutResponse(op);
     }
 };
 
@@ -516,5 +546,279 @@ int main()
         ea->useStop();
     }
     
+    // Test onEntityAppear() for avatar entity
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, vw);
+        SignalFlagger gotCharacterEntity;
+
+        ea->GotCharacterEntity.connect(sigc::hide(sigc::mem_fun(gotCharacterEntity, &SignalFlagger::set)));
+
+        ea->test_onEntityAppear(char_ent);
+
+        assert(ea->getEntity() == char_ent);
+        assert(gotCharacterEntity.flagged());
+    }
+    
+    // Test onEntityAppear() for a different entity
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * char_ent = new TestEntity("2", 0, vw);
+        SignalFlagger gotCharacterEntity;
+
+        ea->GotCharacterEntity.connect(sigc::hide(sigc::mem_fun(gotCharacterEntity, &SignalFlagger::set)));
+
+        ea->test_onEntityAppear(char_ent);
+
+        assert(ea->getEntity() != char_ent);
+        assert(!gotCharacterEntity.flagged());
+    }
+    
+    // Test onCharacterChildAdded()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * ent = new TestEntity("2", 0, vw);
+        SignalFlagger invAdded;
+
+        ea->InvAdded.connect(sigc::hide(sigc::mem_fun(invAdded, &SignalFlagger::set)));
+
+        ea->test_onCharacterChildAdded(ent);
+
+        assert(invAdded.flagged());
+    }
+    
+    // Test onCharacterChildRemoved()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Eris::View * vw = new Eris::View(ea);
+        TestEntity * ent = new TestEntity("2", 0, vw);
+        SignalFlagger invRemoved;
+
+        ea->InvRemoved.connect(sigc::hide(sigc::mem_fun(invRemoved, &SignalFlagger::set)));
+
+        ea->test_onCharacterChildRemoved(ent);
+
+        assert(invRemoved.flagged());
+    }
+    
+    // Test onCharacterWield() for an unknown slot
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+
+        ea->test_onCharacterWield("foo", "1");
+    }
+    
+    // Test onCharacterWield() with a non string ID.
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+
+        ea->test_onCharacterWield("right_hand_wield", 1);
+    }
+    
+    // Test onCharacterWield() with a non string ID.
+    // It is currently very hard to simulate the entity being in the view.
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Eris::View * vw = new Eris::View(ea);
+        new TestEntity("2", 0, vw);
+
+        ea->test_onCharacterWield("right_hand_wield", "2");
+    }
+    
+    // Test getConnection()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+
+        assert(ea->getConnection() == con);
+    }
+
+    // Test getWorldTime()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+
+        ea->getWorldTime();
+    }
+
+    // Test updateWorldTime()
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+
+        ea->test_updateWorldTime(100.0);
+    }
+
+    // Test logoutResponse() with a non-info operation
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Atlas::Objects::Operation::Get op;
+        SignalFlagger avatarDeactivated;
+
+        acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
+
+        ea->test_logoutResponse(op);
+
+        assert(!avatarDeactivated.flagged());
+    }
+
+    // Test logoutResponse() with an empty info operation
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Atlas::Objects::Operation::Info op;
+        SignalFlagger avatarDeactivated;
+
+        acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
+
+        ea->test_logoutResponse(op);
+
+        assert(!avatarDeactivated.flagged());
+    }
+
+    // Test logoutResponse() with an info operation with bad arg
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Root bad_arg;
+        SignalFlagger avatarDeactivated;
+
+        acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
+        op->setArgs1(bad_arg);
+
+        ea->test_logoutResponse(op);
+
+        assert(!avatarDeactivated.flagged());
+    }
+
+    // Test logoutResponse() with an empty info logout operation
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Operation::Logout logout;
+        SignalFlagger avatarDeactivated;
+
+        acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
+        op->setArgs1(logout);
+
+        ea->test_logoutResponse(op);
+
+        assert(!avatarDeactivated.flagged());
+    }
+
+    // Test logoutResponse() with a non-empty info logout operation
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Operation::Logout logout;
+        Atlas::Objects::Root logout_arg;
+        SignalFlagger avatarDeactivated;
+
+        acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
+        op->setArgs1(logout);
+        logout->setArgs1(logout_arg);
+
+        ea->test_logoutResponse(op);
+
+        assert(!avatarDeactivated.flagged());
+    }
+
+    // Test logoutResponse() with a non-empty info logout operation
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        Atlas::Objects::Operation::Info op;
+        Atlas::Objects::Operation::Logout logout;
+        Atlas::Objects::Root logout_arg;
+        SignalFlagger avatarDeactivated;
+
+        acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
+        op->setArgs1(logout);
+        logout->setArgs1(logout_arg);
+        logout_arg->setId(fake_id);
+
+        ea->test_logoutResponse(op);
+
+        assert(avatarDeactivated.flagged());
+    }
+
     return 0;
 }
