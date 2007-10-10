@@ -38,13 +38,13 @@ void Calendar::topLevelEntityChanged()
 
     m_calendarObserver = tl->observe("calendar", sigc::mem_fun(this, &Calendar::calendarAttrChanged));
 
-    initFromCalendarAttr(tl->valueOfAttr("calendar").asMap());
+    calendarAttrChanged("calendar", tl->valueOfAttr("calendar"));
 }
 
 void Calendar::calendarAttrChanged(const std::string&, const Element& value)
 {
     if (!value.isMap()) throw InvalidAtlas("malformed calendar data", value);
-    initFromCalendarAttr(value.asMap());
+    initFromCalendarAttr(value.Map());
 }
 
 void Calendar::initFromCalendarAttr(const MapType& cal)
