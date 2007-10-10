@@ -1,3 +1,7 @@
+2007-10-10  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Avatar.cpp: Toughen up operation checking in logoutResponse().
+
 2007-10-09  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/Avatar_unittest.cpp: Cover moveInDirection(),

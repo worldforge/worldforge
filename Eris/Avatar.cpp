@@ -361,8 +361,10 @@ void Avatar::updateWorldTime(double seconds)
 
 void Avatar::logoutResponse(const RootOperation& op)
 {
-    if (!op->instanceOf(INFO_NO))
+    if (!op->instanceOf(INFO_NO)) {
         warning() << "received an avatar logout response that is not an INFO";
+        return;
+    }
 
     const std::vector<Root>& args(op->getArgs());
 
@@ -373,11 +375,18 @@ void Avatar::logoutResponse(const RootOperation& op)
 
     RootOperation logout = smart_dynamic_cast<RootOperation>(args.front());
     const std::vector<Root>& args2(logout->getArgs());
-    assert(!args2.empty());
+    if (args2.empty()) {
+        warning() << "argment of avatar INFO(LOGOUT) is empty";
+        return;
+    }
 
     std::string charId = args2.front()->getId();
     debug() << "got logout for character " << charId;
-    assert(charId == m_entityId);
+    if (charId != m_entityId) {
+        error() << "got logout for character " << charId
+                << " that is not this avatar " << m_entityId;
+        return;
+    }
 
     m_account->AvatarDeactivated.emit(this);
     deleteLater(this);
