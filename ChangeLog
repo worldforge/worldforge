@@ -1,5 +1,10 @@
 2007-10-11  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Calendar_unittest.cpp: Cover all of DateTime and
+	  topLevelEntityChanged() of Calendar.
+
+2007-10-11  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/Avatar.cpp Eris/Avatar.h, Eris/Calendar.cpp, Eris/Calendar.h,
 	  Eris/Entity.cpp, Eris/Entity.h: Clean up the notification API
 	  for attribute changes. If code requires extra data, it can use
