@@ -327,13 +327,8 @@ void Avatar::onCharacterChildRemoved(Entity* child)
     InvRemoved.emit(child);
 }
 
-void Avatar::onCharacterWield(const std::string& s, const Atlas::Message::Element& val)
+void Avatar::onCharacterWield(const Atlas::Message::Element& val)
 {
-    if (s != "right_hand_wield") {
-        warning() << "got wield for strange slot";
-        return;
-    }
-
     if (!val.isString()) {
         warning() << "got malformed wield value";
         return;

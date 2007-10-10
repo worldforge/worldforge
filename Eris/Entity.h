@@ -63,7 +63,7 @@ public:
         
     bool hasAttr(const std::string &p) const;
 
-    typedef sigc::slot<void, const std::string&, const Atlas::Message::Element&> AttrChangedSlot;
+    typedef sigc::slot<void, const Atlas::Message::Element&> AttrChangedSlot;
 
     /** setup an observer so that the specified slot is fired when the
     named attribue's value changes */
@@ -445,7 +445,7 @@ protected:
     was changed. */
     StringSet m_modifiedAttrs;
         
-    typedef sigc::signal<void, const std::string&, const Atlas::Message::Element&> AttrChangedSignal;
+    typedef sigc::signal<void, const Atlas::Message::Element&> AttrChangedSignal;
         
     typedef std::map<std::string, AttrChangedSignal> ObserverMap;
     ObserverMap m_observers;

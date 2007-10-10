@@ -328,7 +328,7 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     // fire observers
     
     ObserverMap::const_iterator obs = m_observers.find(attr);
-    if (obs != m_observers.end()) obs->second.emit(attr, target);
+    if (obs != m_observers.end()) obs->second.emit(target);
 
     addToUpdate(attr);
     endUpdate();

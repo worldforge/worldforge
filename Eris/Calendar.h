@@ -66,7 +66,7 @@ public:
 
 protected:
     void topLevelEntityChanged();
-    void calendarAttrChanged(const std::string&, const Atlas::Message::Element& value);
+    void calendarAttrChanged(const Atlas::Message::Element& value);
 
     void initFromCalendarAttr(const Atlas::Message::MapType& cal);
 

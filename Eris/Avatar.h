@@ -160,7 +160,7 @@ protected:
     void onCharacterChildAdded(Entity* child);
     void onCharacterChildRemoved(Entity* child);
 
-    void onCharacterWield(const std::string&, const Atlas::Message::Element&);
+    void onCharacterWield(const Atlas::Message::Element&);
     void onWieldedChanged();
 
     void logoutResponse(const Atlas::Objects::Operation::RootOperation&);

@@ -1,5 +1,12 @@
 2007-10-11  Al Riddoch  <alriddoch@zepler.org>
 
+	* Eris/Avatar.cpp Eris/Avatar.h, Eris/Calendar.cpp, Eris/Calendar.h,
+	  Eris/Entity.cpp, Eris/Entity.h: Clean up the notification API
+	  for attribute changes. If code requires extra data, it can use
+	  sigc::bind for it.
+
+2007-10-11  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/Calendar.cpp: Check calendar property more carefully.
 
 2007-10-11  Al Riddoch  <alriddoch@zepler.org>
