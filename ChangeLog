@@ -1,5 +1,10 @@
 2007-10-10  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Avatar_unittest.cpp: Don't create a new view explicitly for
+	  each avatar, it is done in the constructor.
+
+2007-10-10  Al Riddoch  <alriddoch@zepler.org>
+
 	* Eris/Calendar.cpp, Eris/Calendar.h: Fix up formatting and whitespace
 	  use.
 
