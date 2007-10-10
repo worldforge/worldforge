@@ -19,5 +19,8 @@
 
 int main()
 {
+    Eris::Logged.connect(sigc::ptr_fun(writeLog));
+    Eris::setLogLevel(Eris::LOG_DEBUG);
+
     return 0;
 }

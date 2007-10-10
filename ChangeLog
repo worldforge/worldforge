@@ -1,5 +1,12 @@
 2007-10-10  Al Riddoch  <alriddoch@zepler.org>
 
+	* Eris/Calendar.cpp, Eris/Calendar.h: Fix up formatting and whitespace
+	  use.
+
+	* test/Calendar_unittest.cpp: Start work on Calendar unit test.
+
+2007-10-10  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Avatar_unittest.cpp: Cover the rest of Avatar. Coverage is now
 	  pretty much complete.
 
