@@ -22,6 +22,7 @@
 #include <Eris/View.h>
 #include <Eris/PollDefault.h>
 #include <sigc++/functors/mem_fun.h>
+#include <sigc++/adaptors/bind.h>
 #include <Eris/LogStream.h>
 #include <Eris/Log.h>
 #include <Atlas/Objects/Operation.h>
@@ -78,7 +79,7 @@ public:
         assert(e);
         m_changed = false;
         
-        e->observe(attr, sigc::mem_fun(*this, &AttributeTracker::attrChange));
+        e->observe(attr, sigc::bind(sigc::mem_fun(*this, &AttributeTracker::attrChange),attr));
         while (!m_changed) Eris::PollDefault::poll();
     }
     
@@ -86,7 +87,7 @@ public:
     { return m_value; }
     
 private:
-    void attrChange(const std::string& attr, const Atlas::Message::Element& v)
+    void attrChange(const Atlas::Message::Element& v, const std::string& attr)
     {
         m_name = attr;
         m_value = v;

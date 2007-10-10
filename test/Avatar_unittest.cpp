@@ -77,9 +77,8 @@ class TestAvatar : public Eris::Avatar {
         onCharacterChildRemoved(ent);
     }
 
-    void test_onCharacterWield(const std::string & s,
-                               const Atlas::Message::Element & val) {
-        onCharacterWield(s, val);
+    void test_onCharacterWield(const Atlas::Message::Element & val) {
+        onCharacterWield(val);
     }
 
     void test_updateWorldTime(double seconds) {
@@ -599,18 +598,6 @@ int main()
         assert(invRemoved.flagged());
     }
     
-    // Test onCharacterWield() for an unknown slot
-    {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
-
-        Eris::Account * acc = new TestAccount(con);
-        std::string fake_id("1");
-        TestAvatar * ea = new TestAvatar(acc, fake_id);
-
-        ea->test_onCharacterWield("foo", "1");
-    }
-    
     // Test onCharacterWield() with a non string ID.
     {
         Eris::Connection * con = new TestConnection("name", "localhost",
@@ -620,7 +607,7 @@ int main()
         std::string fake_id("1");
         TestAvatar * ea = new TestAvatar(acc, fake_id);
 
-        ea->test_onCharacterWield("right_hand_wield", 1);
+        ea->test_onCharacterWield(1);
     }
     
     // Test onCharacterWield() with a non string ID.
@@ -634,7 +621,7 @@ int main()
         TestAvatar * ea = new TestAvatar(acc, fake_id);
         new TestEntity("2", 0, ea->getView());
 
-        ea->test_onCharacterWield("right_hand_wield", "2");
+        ea->test_onCharacterWield("2");
     }
     
     // Test getConnection()

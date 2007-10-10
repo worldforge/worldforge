@@ -1,5 +1,10 @@
 2007-10-11  Al Riddoch  <alriddoch@zepler.org>
 
+	* test/Avatar_unittest.cpp, test/tests.cpp: Update for the new
+	  simpler observer API.
+
+2007-10-11  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Calendar_unittest.cpp: Cover all of DateTime and
 	  topLevelEntityChanged() of Calendar.
 
