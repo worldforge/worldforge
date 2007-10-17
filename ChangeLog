@@ -1,5 +1,11 @@
 2007-10-11  Al Riddoch  <alriddoch@zepler.org>
 
+        * test/Account_unittest.cpp: Override send() on TestConnection so
+	  code which calls it can be covered safely. Add coverage for some
+	  code which had been left because calling send() was unsafe.
+
+2007-10-11  Al Riddoch  <alriddoch@zepler.org>
+
 	* test/Avatar_unittest.cpp, test/tests.cpp: Update for the new
 	  simpler observer API.
 

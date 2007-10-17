@@ -40,6 +40,11 @@ class TestConnection : public Eris::Connection {
     void test_setStatus(Eris::BaseConnection::Status sc) {
         setStatus(sc);
     }
+
+    virtual void send(const Atlas::Objects::Root &obj) {
+        std::cout << "Sending " << obj->getParents().front()
+                  << std::endl << std::flush;
+    }
 };
 
 class TestAccount : public Eris::Account {
@@ -248,7 +253,7 @@ int main()
         assert(res == Eris::NOT_CONNECTED);
     }
 
-    // Test createAccount() fails if we fake connected and logged in
+    // Test createAccount() works if we fake connected.
     {
         TestConnection * con = new TestConnection("name", "localhost",
                                                   6767, true);
@@ -256,12 +261,10 @@ int main()
         TestAccount acc(con);
 
         con->test_setStatus(Eris::BaseConnection::CONNECTED);
-        acc.setup_setStatus(TestAccount::LOGGING_IN);
 
         Eris::Result res =  acc.createAccount("foo", "bar", "baz");
-        assert(res == Eris::ALREADY_LOGGED_IN);
+        assert(res == Eris::NO_ERR);
     }
-    // FIXME Cover the rest of createAccount once we can fake connections.
 
     // Test logout() fails if not connected.
     {
@@ -298,7 +301,19 @@ int main()
         Eris::Result res =  acc.logout();
         assert(res == Eris::NOT_LOGGED_IN);
     }
-    // FIXME Cover the rest of logout once we can fake connections.
+    
+    // Test logout() works if we are fake connected and logged in.
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+        acc.setup_setStatus(TestAccount::LOGGED_IN);
+
+        Eris::Result res =  acc.logout();
+        assert(res == Eris::NO_ERR);
+    }
     
     // Test getCharacters()
     {
@@ -380,8 +395,33 @@ int main()
         // to log out in the destructor.
         acc.setup_setStatus(TestAccount::LOGGING_OUT);
     }
-    // FIXME Cover the rest of refreshCharacterInfo once we can fake
-    // connections.
+
+    // Test refreshCharacterInfo() works if we fake connected and logged in,
+    // and have characters IDs.
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        SignalFlagger gotAllCharacters_checker;
+        std::string fake_char_id("1");
+
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+        acc.setup_setStatus(TestAccount::LOGGED_IN);
+        acc.GotAllCharacters.connect(sigc::mem_fun(gotAllCharacters_checker,
+                                                   &SignalFlagger::set));
+        acc.setup_fakeCharacter(fake_char_id);
+
+
+        assert(!gotAllCharacters_checker.flagged());
+        Eris::Result res =  acc.refreshCharacterInfo();
+        assert(res == Eris::NO_ERR);
+        assert(!gotAllCharacters_checker.flagged());
+
+        // Make sure it no longer thinks it is connected, so it does not try
+        // to log out in the destructor.
+        acc.setup_setStatus(TestAccount::LOGGING_OUT);
+    }
 
     // Test createCharacter() fails if not connected
     {
@@ -447,10 +487,21 @@ int main()
         Eris::Result res =  acc.createCharacter(ent);
         assert(res == Eris::NOT_LOGGED_IN);
     }
-    // FIXME Cover the rest of createCharacter once we can fake
-    // connections.
 
-    // FIXME Cover createCharacter() which is currently not finished.
+    // Test createCharacter() works if we fake connected and logged in
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        Atlas::Objects::Entity::Anonymous ent;
+
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+        acc.setup_setStatus(TestAccount::LOGGED_IN);
+
+        Eris::Result res =  acc.createCharacter(ent);
+        assert(res == Eris::NO_ERR);
+    }
 
     // Test takeCharacter() fails if ID is not a real character
     {
@@ -533,10 +584,39 @@ int main()
         // to log out in the destructor.
         acc.setup_setStatus(TestAccount::LOGGING_OUT);
     }
-    // FIXME Cover the rest of takeCharacter once we can fake
-    // connections.
 
-    // FIXME Cover deactivateCharacter once we can fake connections.
+    // Test takeCharacter() works if we fake connected and logged in
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        std::string fake_char_id("1");
+
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+        acc.setup_setStatus(TestAccount::LOGGED_IN);
+        acc.setup_fakeCharacter(fake_char_id);
+
+        Eris::Result res =  acc.takeCharacter(fake_char_id);
+        assert(res == Eris::NO_ERR);
+
+        // Make sure it no longer thinks it is connected, so it does not try
+        // to log out in the destructor.
+        acc.setup_setStatus(TestAccount::LOGGING_OUT);
+    }
+
+    // Test deactivateCharacter()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(&acc, fake_char_id);
+
+        Eris::Result res = acc.deactivateCharacter(ea);
+        assert(res == Eris::NO_ERR);
+    }
 
     // Test isLoggedIn()
     {
