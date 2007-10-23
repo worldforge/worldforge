@@ -1,6 +1,14 @@
+2007-10-23  Al Riddoch  <alriddoch@zepler.org>
+
+	* Eris/Connection.cpp, Eris/Connection.h: Fix up formatting and
+	  whitespace use.
+
+	* test/Connection_unittest.cpp: Add coverage for the first few
+	  functions.
+
 2007-10-11  Al Riddoch  <alriddoch@zepler.org>
 
-        * test/Account_unittest.cpp: Override send() on TestConnection so
+	* test/Account_unittest.cpp: Override send() on TestConnection so
 	  code which calls it can be covered safely. Add coverage for some
 	  code which had been left because calling send() was unsafe.
 

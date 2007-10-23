@@ -17,7 +17,45 @@
 
 // $Id$
 
+#include <Eris/Connection.h>
+
+#include <Eris/Log.h>
+
+static void writeLog(Eris::LogLevel, const std::string & msg)
+{       
+    std::cerr << msg << std::endl << std::flush;
+}
+
 int main()
 {
+    Eris::Logged.connect(sigc::ptr_fun(writeLog));
+    Eris::setLogLevel(Eris::LOG_DEBUG);
+
+    // Test constructor
+    {
+        new Eris::Connection("eristest", "localhost", 6767, true);
+    }
+
+    // Test destructor
+    {
+        delete new Eris::Connection("eristest", "localhost", 6767, true);
+    }
+
+    // Test getTypeService()
+    {
+        Eris::Connection c("eristest", "localhost", 6767, true);
+
+        assert(c.getTypeService() != 0);
+    }
+
+    // Test connect()
+    {
+        Eris::Connection c("eristest", "localhost", 6767, true);
+        
+        int ret = c.connect();
+
+        assert(ret == 0);
+    }
+
     return 0;
 }
