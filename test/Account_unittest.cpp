@@ -131,6 +131,10 @@ class TestAccount : public Eris::Account {
         avatarLogoutResponse(op);
     }
 
+    Eris::Result test_internalLogin(const std::string & u, const std::string & p) {
+        return internalLogin(u, p);
+    }
+
     static const Eris::Account::Status DISCONNECTED = Eris::Account::DISCONNECTED;
     static const Eris::Account::Status LOGGING_IN = Eris::Account::LOGGING_IN;
     static const Eris::Account::Status LOGGED_IN = Eris::Account::LOGGED_IN;
@@ -240,6 +244,19 @@ int main()
 
         Eris::Result res =  acc.login("foo", "bar");
         assert(res == Eris::ALREADY_LOGGED_IN);
+    }
+
+    // Test login() works if we fake connected
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        con->test_setStatus(Eris::BaseConnection::CONNECTED);
+
+        Eris::Result res =  acc.login("foo", "bar");
+        assert(res == Eris::NO_ERR);
     }
 
     // Test createAccount() fails if not connected
@@ -664,7 +681,17 @@ int main()
         assert(acc.isLoggedIn());
     }
 
-    // FIXME Cover internalLogin once we can fake connections.
+    // Test internalLogin()
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        Eris::Result res = acc.test_internalLogin("foo", "bar");
+
+        assert(res == Eris::NO_ERR);
+    }
 
     // FIXME Cover logoutResponse once we can fake connections.
 #if 0
@@ -679,6 +706,8 @@ int main()
         acc.test_logoutResponse(op);
     }
 #endif
+    // FIXME Cover internalLogout once we can fake connections.
+    // FIXME Cover loginResponse once we can fake connections.
 
     // Test loginComplete() does nothing when not logged in.
     {
@@ -1061,8 +1090,19 @@ int main()
 
         acc.test_netConnected();
     }
-    // FIXME Cover calling internalLogin() from netConnected, once we can fake
-    // connections
+
+    // Test netConnected() works with valid username and password,
+    {
+        TestConnection * con = new TestConnection("name", "localhost",
+                                                  6767, true);
+
+        TestAccount acc(con);
+
+        acc.setup_setUsername("foo");
+        acc.setup_setPassword("foo");
+
+        acc.test_netConnected();
+    }
 
     // Test netDisconnecting() when account is not logged in.
     {

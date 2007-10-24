@@ -1,3 +1,8 @@
+2007-10-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/Account_unittest.cpp: Cover a number of methods that could
+	  not be covered safely before Connection::send was overriden.
+
 2007-10-23  Al Riddoch  <alriddoch@zepler.org>
 
 	* Eris/Connection.cpp, Eris/Connection.h: Fix up formatting and
