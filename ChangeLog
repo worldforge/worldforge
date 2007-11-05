@@ -1,3 +1,18 @@
+2007-11-05  Al Riddoch  <alriddoch@googlemail.com>
+
+	* acinclude.m4: Update to the latest pkgconfig check macros.
+
+	* configure.ac: Use the latest pkgconfig macros, provide more useful
+	  error messages when libraries can't be found. Increment the version
+	  number for future release.
+
+	* NEWS: Add news to test distribution of latest version.
+
+	* AUTHORS: Update maintainers email address.
+
+	* mercator.spec.in: Disable dependencies, and use multiple CPU cores
+	  when building the rpm.
+
 2007-11-05  Al Riddoch  <alriddoch@zepler.org>
 
 	* tests/testForest.cpp: Add some more straightforward coverage.

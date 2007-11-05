@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT(mercator, 0.2.5, alriddoch@zepler.org)
+AC_INIT([mercator], [0.2.6], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -29,8 +29,6 @@ dnl Test for GNU libtool
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
-AC_PROG_CXX
-
 AC_ARG_ENABLE(debug,
     [  --enable-debug          enable debug information [default=no]],
     [
@@ -44,7 +42,7 @@ AC_ARG_ENABLE(debug,
     ]
 )
 
-dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
+dnl Make sure we've got sensible versions of the sources (eg to get lrintf)
 
 AC_DEFINE(_XOPEN_SOURCE, 500, [This is XOpen source])
 AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
@@ -53,8 +51,10 @@ AC_LANG(C++)
 
 dnl Check for float to int converters
 
-AC_CHECK_FUNCS(lrintf rintf rint)
-AC_CHECK_FUNCS(fabsf)
+AC_CHECK_FUNCS([lrintf rintf rint])
+AC_CHECK_FUNCS([fabsf])
+
+PKG_PROG_PKG_CONFIG
 
 dnl Check for wfmath library
 PKG_CHECK_MODULES(WF, wfmath-0.3 >= 0.3.2,
@@ -64,7 +64,13 @@ PKG_CHECK_MODULES(WF, wfmath-0.3 >= 0.3.2,
         MERCATOR_REQUIRES="$MERCATOR_REQUIRES wfmath-0.3"
     ],
     [
-        AC_MSG_ERROR(Couldn't find wfmath or wfmath or version is insufficent)
+        AC_MSG_ERROR([
+Cannot find valid versions of required WorldForge maths library, wfmath:
+$WF_PKG_ERRORS
+Perhaps you should add the directory containing the missing libraries to the
+PKG_CONFIG_PATH environment variable.
+Please see http://www.worldforge.org/dev/eng/libraries/mercator for details of
+the libraries required and where to obtain them.])
     ])
 
 SYSTEM_LIBS=""

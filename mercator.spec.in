@@ -32,8 +32,8 @@ Mercator is designed to handle terrain data.
 %setup -q
 
 %build
-CXXFLAGS=$RPM_OPT_FLAGS %configure --enable-static
-make
+CXXFLAGS=$RPM_OPT_FLAGS %configure --enable-static --disable-dependency-tracking
+make -j 3
 
 %install
 rm -rf $RPM_BUILD_ROOT
