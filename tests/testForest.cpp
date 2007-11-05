@@ -12,10 +12,10 @@
 
 typedef WFMath::Point<2> Point2;
 
-void dumpPlants(const Mercator::Forest::PlantStore & ps)
+void dumpPlants(const Mercator::Forest::PlantStore & plants)
 {
-    Mercator::Forest::PlantStore::const_iterator I = ps.begin();
-    for(; I != ps.end(); ++I) {
+    Mercator::Forest::PlantStore::const_iterator I = plants.begin();
+    for(; I != plants.end(); ++I) {
         Mercator::Forest::PlantColumn::const_iterator J = I->second.begin();
         for(; J != I->second.end(); ++J) {
             const Mercator::Plant & p = J->second;
@@ -30,11 +30,11 @@ void dumpPlants(const Mercator::Forest::PlantStore & ps)
     }
 }
 
-int countPlants(const Mercator::Forest::PlantStore & ps)
+int countPlants(const Mercator::Forest::PlantStore & plants)
 {
     int plant_count = 0;
-    Mercator::Forest::PlantStore::const_iterator I = ps.begin();
-    for(; I != ps.end(); ++I) {
+    Mercator::Forest::PlantStore::const_iterator I = plants.begin();
+    for(; I != plants.end(); ++I) {
         plant_count += I->second.size();
     }
     return plant_count;
@@ -42,8 +42,32 @@ int countPlants(const Mercator::Forest::PlantStore & ps)
 
 int main()
 {
+    // Test constructor
     {
-        Mercator::Forest forest;
+        Mercator::Forest mf;
+    }
+
+    // Test constructor
+    {
+        Mercator::Forest mf(23);
+    }
+
+    // Test getArea()
+    {
+        Mercator::Forest mf;
+
+        Mercator::Area * a = mf.getArea();
+
+        assert(a == 0);
+    }
+
+    // Test species()
+    {
+        Mercator::Forest mf;
+
+        Mercator::Forest::PlantSpecies & mps = mf.species();
+
+        assert(mps.empty());
     }
 
     {
@@ -51,12 +75,14 @@ int main()
 
         Mercator::Forest::PlantSpecies & species = forest.species();
 
+        const Mercator::Forest::PlantStore & plants = forest.getPlants();
+
         // Forest is not yet populated
-        assert(forest.getPlants().empty());
+        assert(plants.empty());
         assert(species.empty());
         forest.populate();
         // Forest has zero area, so even when populated it is empty
-        assert(forest.getPlants().empty());
+        assert(plants.empty());
         assert(species.empty());
 
         Mercator::Area* ar = new Mercator::Area(1, false);
@@ -74,7 +100,7 @@ int main()
 
         forest.populate();
         // Forest has no species, so even when populated it is empty
-        assert(forest.getPlants().empty());
+        assert(plants.empty());
         assert(species.empty());
 
         {
@@ -87,13 +113,11 @@ int main()
 
         forest.populate();
         // Forest should now contain some plants
-        assert(!forest.getPlants().empty());
+        assert(!plants.empty());
 
-        const Mercator::Forest::PlantStore & ps = forest.getPlants();
+        dumpPlants(plants);
 
-        dumpPlants(ps);
-
-        int plant_count = countPlants(ps);
+        int plant_count = countPlants(plants);
 
         {
             Mercator::Species oak;
@@ -105,12 +129,12 @@ int main()
 
         forest.populate();
         // Forest should now contain some plants
-        assert(!forest.getPlants().empty());
-        assert(countPlants(ps) > plant_count);
+        assert(!plants.empty());
+        assert(countPlants(plants) > plant_count);
 
-        dumpPlants(ps);
+        dumpPlants(plants);
 
-        std::cout << countPlants(ps) << "," << plant_count
+        std::cout << countPlants(plants) << "," << plant_count
                   << std::endl << std::flush;
 
     }
