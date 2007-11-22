@@ -1,3 +1,12 @@
+2007-11-22  Al Riddoch  <alriddoch@zepler.org>
+
+	* test/Makefile.am: Fix dependencies.
+
+	* Eris/Makefile.am: Strip out experimental Janus code.
+
+	* configure.ac: Increment version number, and remove checks for
+	  Janus.
+
 2007-10-24  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/Account_unittest.cpp: Cover a number of methods that could

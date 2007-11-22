@@ -4,14 +4,6 @@ lib_LTLIBRARIES = liberis-1.3.la
 
 liberis_1_3_la_LDFLAGS = -version-info @ERIS_VERSION_INFO@
 
-if HAVE_ATLAS_JANUS
-ATLAS_JANUS_CPP = UIFactory.cpp
-ATLAS_JANUS_H = UIFactory.h
-else
-ATLAS_JANUS_CPP =
-ATLAS_JANUS_H =
-endif
-
 liberis_1_3_la_SOURCES = \
 	Exceptions.cpp \
 	Entity.cpp \
@@ -46,8 +38,7 @@ liberis_1_3_la_SOURCES = \
 	Calendar.cpp \
 	TimedEventService.cpp \
 	Alarm.cpp \
-	Task.cpp \
-	$(ATLAS_JANUS_CPP)
+	Task.cpp
 
 liberisdir = $(includedir)/Eris-1.3/Eris
 
@@ -87,6 +78,4 @@ liberis_HEADERS = \
 	Calendar.h \
 	TimedEventService.h \
 	Alarm.h \
-	Task.h\
-	$(ATLAS_JANUS_H)
-
+	Task.h

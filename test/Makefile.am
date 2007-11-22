@@ -37,10 +37,10 @@ LDADD = $(top_builddir)/Eris/liberis-1.3.la
 
 metaquery_SOURCES = metaQuery.cpp
 
-Account_unittest_SOURCES = Account_unittest.cpp
-Alarm_unittest_SOURCES = Alarm_unittest.cpp
-Avatar_unittest_SOURCES = Avatar_unittest.cpp
-BaseConnection_unittest_SOURCES = BaseConnection_unittest.cpp
+Account_unittest_SOURCES = Account_unittest.cpp SignalFlagger.h
+Alarm_unittest_SOURCES = Alarm_unittest.cpp SignalFlagger.h
+Avatar_unittest_SOURCES = Avatar_unittest.cpp SignalFlagger.h
+BaseConnection_unittest_SOURCES = BaseConnection_unittest.cpp SignalFlagger.h
 Calendar_unittest_SOURCES = Calendar_unittest.cpp
 Connection_unittest_SOURCES = Connection_unittest.cpp
 DeleteLater_unittest_SOURCES = DeleteLater_unittest.cpp

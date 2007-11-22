@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT(eris, 1.3.12, james@worldforge.org)
+AC_INIT([eris], [1.3.13], [alriddoch@googlemail.com])
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -14,13 +14,12 @@ dnl Automake setup
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2])
 
 dnl versioning info for libtool
-ERIS_CURRENT=13
+ERIS_CURRENT=14
 ERIS_REVISION=0
 ERIS_AGE=0
 
 ERIS_REQUIRES=""
 
-AC_PROG_CXX
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
 
@@ -124,29 +123,8 @@ PKG_CHECK_MODULES(GLIB, glib-2.0 >= 2.0.0,
     ])
 AM_CONDITIONAL(HAVE_GLIB, test "x$have_glib" = "xyes")
 
-AC_ARG_ENABLE(janus,
-[  --enable-janus         Enable building of experimental Atlas UI extension
-],
-[
-  AC_LANG_PUSH(C++)
-  AC_MSG_CHECKING(for experimental Atlas UI extension)
-  AC_TRY_COMPILE([#include <Atlas/Objects/Entity/UIEntity.h>],[],
-      [
-	have_atlas_janus=yes
-	AC_DEFINE(HAVE_ATLAS_JANUS,[],["Experimental janus extension"])
-	AC_MSG_RESULT(yes)
-      ],
-      [
-	have_atlas_janus=no
-	AC_MSG_RESULT(no)
-      ]
-  )
-  AC_LANG_POP(C++)
-])
-AM_CONDITIONAL(HAVE_ATLAS_JANUS, test "x$have_atlas_janus" = "xyes")
-
 ERIS_LIB_SUFFIX="-1.3"
-ERIS_LIBS="-leris$ERIS_LIB_SUFFIX -lm"
+ERIS_LIBS="-leris$ERIS_LIB_SUFFIX"
 ERIS_VERSION_INFO=$ERIS_CURRENT:$ERIS_REVISION:$ERIS_AGE
 
 AC_SUBST(ERIS_LIB_SUFFIX)
