@@ -1,3 +1,8 @@
+2007-11-24  Al Riddoch  <alriddoch@zepler.org>
+
+	* wfmath.spec.in: Split static libraries out into their own
+	  package.
+
 2007-11-20  Al Riddoch  <alriddoch@zepler.org>
 
 	* wfmath/atlasconv.h: Initialise age when setting up Quaternion from

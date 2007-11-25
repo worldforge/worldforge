@@ -21,11 +21,20 @@ This is the WorldForge math library. The primary focus of %{name} is
 geometric objects.
 
 %package devel
-Summary: A math library headers and static libs.
+Summary: A math library headers.
 Group: Development/Libraries
 Requires: %{name} = %{version} libstdc++-devel >= 2.95.2
 
 %description devel
+This is the WorldForge math library. The primary focus of %{name} is
+geometric objects.
+
+%package static
+Summary: A math library static libraries.
+Group: Development/Libraries
+Requires: %{name}-devel = %{version}
+
+%description static
 This is the WorldForge math library. The primary focus of %{name} is
 geometric objects.
 
@@ -39,6 +48,7 @@ make
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
+rm -f $RPM_BUILD_ROOT/%{_libdir}/lib*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -51,7 +61,8 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %{_libdir}/lib*.so
-%{_libdir}/lib*.la
-%{_libdir}/lib*.a
 %{_libdir}/pkgconfig/*
 %{_includedir}/%{name}%{libsuffix}
+
+%files static
+%{_libdir}/lib*.a
