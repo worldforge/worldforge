@@ -1,5 +1,9 @@
 2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
 
+	* wfmath.spec.in: Create new sub package for generated documentation.
+
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
 	* configure.ac: Add support for cross compiling, and fix up the
 	  comments.
 

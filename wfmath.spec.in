@@ -38,12 +38,21 @@ Requires: %{name}-devel = %{version}
 This is the WorldForge math library. The primary focus of %{name} is
 geometric objects.
 
+%package docs
+Summary: A math library documentation.
+Group: Documentation
+
+%description docs
+This is the WorldForge math library. The primary focus of %{name} is
+geometric objects.
+
 %prep
 %setup -q
 
 %build
 CXXFLAGS=$RPM_OPT_FLAGS %configure --enable-static
 make
+make docs
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -66,3 +75,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files static
 %{_libdir}/lib*.a
+
+%files docs
+%doc doc/html/*

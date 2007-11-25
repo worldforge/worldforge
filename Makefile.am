@@ -5,5 +5,5 @@ EXTRA_DIST = TODO autogen.sh wfmath.pbproj/project.pbxproj wfmath.spec
 
 SUBDIRS = wfmath atlas doc
 
-doc:
-	cd doc && make doc
+docs:
+	cd doc && make docs
