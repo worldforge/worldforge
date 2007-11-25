@@ -1,5 +1,9 @@
 2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Release 0.3.7
+
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
 	* NEWS: Update date on release news item.
 
 	* acinclude.m4: Include the latest version of the pkgconfig macro.
