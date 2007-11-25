@@ -1,5 +1,10 @@
 2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
 
+	* configure.ac: Add support for cross compiling, and fix up the
+	  comments.
+
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Release 0.3.7
 
 2007-11-25  Al Riddoch  <alriddoch@googlemail.com>

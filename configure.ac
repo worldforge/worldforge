@@ -1,8 +1,14 @@
-dnl Process this file with autoconf to produce a configure script.
+dnl Autoconf setup
 
 AC_INIT([wfmath], [0.3.7], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([wfmath/const.cpp])
 AC_CONFIG_HEADERS([config.h])
+
+dnl Detect the canonical host environment
+
+AC_CANONICAL_HOST
+
+dnl Automake setup
 
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
