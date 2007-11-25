@@ -1,3 +1,11 @@
+2007-11-24  Al Riddoch  <alriddoch@googlemail.com>
+
+	* eris.spec.in: Break static libs out into their own package.
+	  Update contact email address. Fix name of Atlas-C++ package.
+	  Create now sub package for generated documentation.
+
+	* eris.dox.in: Do an automated update of the doxygen config.
+
 2007-11-22  Al Riddoch  <alriddoch@zepler.org>
 
 	* test/Makefile.am: Fix dependencies.

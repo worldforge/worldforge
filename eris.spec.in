@@ -10,12 +10,12 @@ Release: %{release}
 License: GPL
 Group: System Environment/Libraries
 URL: http://www.worldforge.org/dev/eng/libraries/eris
-Packager: Al Riddoch <alriddoch@zepler.org>
+Packager: Al Riddoch <alriddoch@googlemail.com>
 Vendor: WorldForge
 Distribution: Mason
 Source: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-BuildRequires: Atlas-C++06-devel >= 0.5.98 wfmath-devel >= 0.3.2 skstream-devel >= 0.3.5
+BuildRequires: atlascpp-devel >= 0.5.98 wfmath-devel >= 0.3.2 skstream-devel >= 0.3.5
 Obsoletes: eris-poll-glib
 
 %description
@@ -24,11 +24,30 @@ work several times), by providing a common system to deal with the back end
 tasks.
 
 %package devel
-Summary: A WorldForge client library headers and static libs.
+Summary: A WorldForge client library headers.
 Group: Development/Libraries
-Requires: %{name} = %{version} Atlas-C++06-devel wfmath-devel skstream-devel
+Requires: %{name} = %{version} atlascpp-devel wfmath-devel skstream-devel
 
 %description devel
+Eris is designed to simplify client development (and avoid repeating the same
+work several times), by providing a common system to deal with the back end
+tasks.
+
+%package static
+Summary: A WorldForge client library static libs.
+Group: Development/Libraries
+Requires: %{name} = %{version} atlascpp-devel wfmath-devel skstream-devel
+
+%description static
+Eris is designed to simplify client development (and avoid repeating the same
+work several times), by providing a common system to deal with the back end
+tasks.
+
+%package docs
+Summary: A WorldForge client library documentation.
+Group: Documentation
+
+%description docs
 Eris is designed to simplify client development (and avoid repeating the same
 work several times), by providing a common system to deal with the back end
 tasks.
@@ -39,10 +58,12 @@ tasks.
 %build
 CXXFLAGS=$RPM_OPT_FLAGS %configure --enable-static
 make
+make doc
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
+rm -f $RPM_BUILD_ROOT/%{_libdir}/lib*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,7 +76,11 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %{_libdir}/lib*.so
-%{_libdir}/lib*.la
-%{_libdir}/lib*.a
 %{_libdir}/pkgconfig/*
 %{_includedir}/*
+
+%files static
+%{_libdir}/lib*.a
+
+%files docs
+%doc docs/html/*
