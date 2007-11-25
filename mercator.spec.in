@@ -21,11 +21,26 @@ BuildRequires: wfmath-devel >= 0.3.2
 Mercator is designed to handle terrain data.
 
 %package devel
-Summary: A WorldForge terrain library headers and static libs.
+Summary: A WorldForge terrain library headers.
 Group: Development/Libraries
 Requires: %{name} = %{version} wfmath-devel >= 0.3.2
 
 %description devel
+Mercator is designed to handle terrain data.
+
+%package static
+Summary: A WorldForge terrain library static libs.
+Group: Development/Libraries
+Requires: %{name} = %{version} wfmath-static >= 0.3.2
+
+%description static
+Mercator is designed to handle terrain data.
+
+%package docs
+Summary: A WorldForge terrain library documentation.
+Group: Documentation
+
+%description docs
 Mercator is designed to handle terrain data.
 
 %prep
@@ -34,10 +49,12 @@ Mercator is designed to handle terrain data.
 %build
 CXXFLAGS=$RPM_OPT_FLAGS %configure --enable-static --disable-dependency-tracking
 make -j 3
+make docs
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall
+rm -f $RPM_BUILD_ROOT/%{_libdir}/lib*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,7 +67,13 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %{_libdir}/lib*.so
-%{_libdir}/lib*.la
-%{_libdir}/lib*.a
 %{_libdir}/pkgconfig/*
 %{_includedir}/*
+
+%files static
+%defattr(-,root,root)
+%{_libdir}/lib*.a
+
+%files docs
+%defattr(-,root,root)
+%doc doc/html/*

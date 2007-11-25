@@ -1,3 +1,10 @@
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* mercator.spec.in: Break out the static libraries into their own
+	  package. Add a new sub package for the documentation.
+
+	* Doxyfile: Do an automated update of the doxygen configuration.
+
 2007-11-05  Al Riddoch  <alriddoch@googlemail.com>
 
 	* acinclude.m4: Update to the latest pkgconfig check macros.
