@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(wfmath, 0.3.6, alriddoch@zepler.org)
+AC_INIT([wfmath], [0.3.7], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([wfmath/const.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -18,8 +18,6 @@ dnl Checks for programs.
 
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
-
-AC_PROG_CXX
 
 AC_ARG_ENABLE(debug,
     [  --enable-debug          enable debug information [default=no]],
@@ -44,25 +42,15 @@ AC_MSG_NOTICE([Ignore the Atlas checks, they're just used for building test code
 
 AC_LANG(C++)
 
-PKG_CHECK_MODULES(ATLAS_0_4, atlascpp-0.4 >= 0.4.5, 
-	[ found_atlas_0_4=yes
-	dnl Don't add Atlas CFLAGS, LIBS, since Atlas is only used in
-	dnl conversion functions to Atlas::Message::Object. Anyone using
-	dnl those should already be using Atlas explicitly.
-	],
-	[
-		found_atlas_0_4=no
-		AC_MSG_RESULT([no])
-	])
+PKG_PROG_PKG_CONFIG
 
-PKG_CHECK_MODULES(ATLAS_0_6, atlascpp-0.6 >= 0.5.0, 
+PKG_CHECK_MODULES(ATLAS_0_6, atlascpp-0.6 >= 0.6.0, 
 	[ found_atlas_0_6=yes
 	dnl Don't add Atlas CFLAGS, LIBS, since Atlas is only used in
 	dnl conversion functions to Atlas::Message::Object. Anyone using
 	dnl those should already be using Atlas explicitly.
 	], found_atlas_0_6=no)
 
-AM_CONDITIONAL(HAVE_ATLAS_0_4, test $found_atlas_0_4 == yes)
 AM_CONDITIONAL(HAVE_ATLAS_0_6, test $found_atlas_0_6 == yes)
 
 AC_CHECK_HEADERS(sstream strstream, [ found_string_stream=yes break ],

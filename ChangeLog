@@ -1,3 +1,16 @@
+2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* NEWS: Update date on release news item.
+
+	* acinclude.m4: Include the latest version of the pkgconfig macro.
+
+	* configure.ac: Increment version number, and use latest pkgconfig
+	  check syntax.
+
+	* AUTHORS, wfmath.spec.in: Update contact email addresses,
+
+	* atlas/Makefile.am: Remove Atlas-C++ 0.4 test programs.
+
 2007-11-24  Al Riddoch  <alriddoch@zepler.org>
 
 	* wfmath.spec.in: Split static libraries out into their own

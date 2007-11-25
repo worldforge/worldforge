@@ -10,7 +10,7 @@ Release: %{release}
 License: GPL
 Group: System Environment/Libraries
 URL: http://www.worldforge.org/dev/eng/libraries/wfmath
-Packager: Al Riddoch <alriddoch@zepler.org>
+Packager: Al Riddoch <alriddoch@googlemail.com>
 Vendor: WorldForge
 Distribution: Mason
 Source: %{name}-%{version}.tar.bz2
