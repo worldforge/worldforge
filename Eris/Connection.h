@@ -10,6 +10,7 @@
 
 #include <deque>
 #include <map>
+#include <memory>
 
 /** Every Eris class and type lives inside the Eris namespace; certain utility functions live in the
 Util namespace, since they may be moved to a generic WorldForge foundation library in the future.*/

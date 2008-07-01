@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 #include <sigc++/functors/ptr_fun.h>
 
 using std::endl;

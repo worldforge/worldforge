@@ -38,7 +38,7 @@ class InvalidAtlas : public BaseException
 public:
     InvalidAtlas(const std::string& msg, const Atlas::Objects::Root& obj);
     
-    InvalidAtlas(const std::string& msg, const Atlas::Message::Element& msg);
+    InvalidAtlas(const std::string& msg, const Atlas::Message::Element& el);
     
     virtual ~InvalidAtlas() throw();
 private:

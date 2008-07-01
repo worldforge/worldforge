@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 
 #include <Eris/Types.h>
 #include <Eris/Timeout.h>

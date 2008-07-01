@@ -10,6 +10,7 @@
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
+#include <memory>
 
 #ifndef __WIN32__
 // pull in uint32_t on POSIX - is this generic?!

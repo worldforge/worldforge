@@ -3,6 +3,7 @@
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
+#include <string>
 
 namespace Eris
 {

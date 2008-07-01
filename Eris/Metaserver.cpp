@@ -18,6 +18,7 @@
 
 #include <cassert>
 #include <cstdio>
+#include <cstring>
 
 #ifdef __WIN32__
 
