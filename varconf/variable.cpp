@@ -28,6 +28,7 @@
 
 #include <string>
 #include <cstdio>
+#include <cstdlib>
 
 #ifdef __WIN32__
 #include <tchar.h>
