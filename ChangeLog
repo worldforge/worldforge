@@ -1,3 +1,7 @@
+2008-06-01  Alexey Torkhov  <atorkhov@gmail.com>
+
+	* Fixing library to compile under GCC 4.3.
+
 2007-09-24  Al Riddoch  <alriddoch@zepler.org>
 
 	* benchmark/Objects2_Move.cpp, benchmark/Objects3_Move.cpp:
