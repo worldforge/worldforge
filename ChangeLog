@@ -1,3 +1,7 @@
+2008-06-01  Alexey Torkhov  <atorkhov@gmail.com>
+
+	* Fixing library to compile under GCC 4.3.
+
 2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
 
 	* mercator.spec.in: Break out the static libraries into their own
