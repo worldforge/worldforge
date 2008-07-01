@@ -5,6 +5,7 @@
 // $Id$
 
 #include <Atlas/Filter.h>
+#include <cstring>
 
 namespace Atlas {
 

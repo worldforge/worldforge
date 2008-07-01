@@ -13,6 +13,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <cstdlib>
 
 #include <unistd.h>
 
