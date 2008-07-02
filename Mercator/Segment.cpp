@@ -119,7 +119,7 @@ Segment::Segment(int x, int y, unsigned int resolution) :
 /// Generally it is not necessary to delete Segment objects from application
 /// code, as Segment instances are owned by the Terrain object.
 /// Storage allocated for heightfield and surface normals is implicitly
-/// deleted.
+/// deleted as well as all surfaces.
 Segment::~Segment()
 {
     clearMods();
@@ -129,6 +129,13 @@ Segment::~Segment()
     if (m_normals != 0) {
         delete [] m_normals;
     }
+    
+    Segment::Surfacestore::const_iterator I = m_surfaces.begin();
+    Segment::Surfacestore::const_iterator Iend = m_surfaces.end();
+    for(; I != Iend; ++I) {
+        delete I->second;
+    }
+    
 }
 
 /// \brief Populate the Segment with heightfield data.
