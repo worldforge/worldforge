@@ -292,16 +292,29 @@ Segment * Terrain::getSegment(int x, int y) const
 /// for storing the TerrainMod objects, so the apropriate Segment objects
 /// are found and the TerrainMode is passed to each in turn.
 /// @param t reference to the TerrainMod object to be applied.
-void Terrain::addMod(const TerrainMod &t) {
+void Terrain::addMod(const TerrainMod &t)
+{
 
     //work out which segments are overlapped by thus mod
     //note that the bbox is expanded by one grid unit because
     //segments share edges. this ensures a mod along an edge
     //will affect both segments.
-    int lx=(int)floor((t.bbox().lowCorner()[0] - 1) / m_res);
-    int ly=(int)floor((t.bbox().lowCorner()[1] - 1) / m_res);
-    int hx=(int)ceil((t.bbox().highCorner()[0] + 1) / m_res);
-    int hy=(int)ceil((t.bbox().highCorner()[1] + 1) / m_res);
+
+    WFMath::AxisBox<2> mod_box = t.bbox();
+
+    int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
+
+#if 0
+    std::cout << "box: " << mod_box << std::endl
+              << "lx: " << lx
+              << "ly: " << ly
+              << "hx: " << hx
+              << "hy: " << hy
+              << std::endl << std::flush;
+#endif // 0
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {

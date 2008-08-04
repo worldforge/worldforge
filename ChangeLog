@@ -1,3 +1,9 @@
+2008-08-04  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.cpp: Fix one of the more obvious gratuitous
+	  ineffeciencies. Use I_ROUND rather than integer casting.
+	  Add some debug code for debugging issues with modifiers.
+
 2008-07-02  Erik Hjortsberg <erik.hjortsberg@iteam.se>
 
 	* Mercator/Segment.cpp: Delete surfaces at shut down, else we'll have
