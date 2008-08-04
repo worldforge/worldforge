@@ -1,10 +1,13 @@
 2008-07-02  Erik Hjortsberg <erik.hjortsberg@iteam.se>
 
-	* Mercator/Segment.cpp: Delete surfaces at shut down, else we'll have a memory leak.
+	* Mercator/Segment.cpp: Delete surfaces at shut down, else we'll have
+	  a memory leak.
 
-2008-06-01  Alexey Torkhov  <atorkhov@gmail.com>
+2008-07-01  Alexey Torkhov  <atorkhov@gmail.com>
 
-	* Fixing library to compile under GCC 4.3.
+	* Mercator/RandCache.h, Mercator/AreaShader.h,
+	  Mercator/AreaShader.cpp: Add standard headers required by
+	  versions of GCC 4.3 or later.
 
 2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
 
