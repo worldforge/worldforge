@@ -1,3 +1,11 @@
+2008-08-07  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Segment.cpp: Fix applyMod() so it correctly calculates
+	  mod offset in segments other than 0,0.
+
+	* tests/testTerrainMod.cpp: Re-order setup of modified terrain
+	  in such an order that the modifiers actually have an effect.
+
 2008-08-04  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Mercator/Terrain.cpp: Fix one of the more obvious gratuitous

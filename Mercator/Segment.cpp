@@ -620,11 +620,11 @@ void Segment::applyMod(TerrainMod *t)
 {
     int lx,hx,ly,hy;
     WFMath::AxisBox<2> bbox=t->bbox();
-    bbox.shift(WFMath::Vector<2>(-m_xRef, -m_yRef));
+    bbox.shift(WFMath::Vector<2>(-m_xRef * m_res, -m_yRef * m_res));
     if (clipToSegment(bbox, lx, hx, ly, hy)) {
         for (int i=ly; i<=hy; i++) {
             for (int j=lx; j<=hx; j++) {
-                t->apply(m_points[i * m_size + j], j + m_xRef, i + m_yRef);
+                t->apply(m_points[i * m_size + j], j + m_xRef * m_res, i + m_yRef * m_res);
             }
         }
     }
