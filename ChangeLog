@@ -1,5 +1,10 @@
 2008-08-12  Al Riddoch  <alriddoch@googlemail.com>
 
+	* configure.ac: Increment the interface version as the API has
+	  changed.
+
+2008-08-12  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Mercator/Segment.cpp, Mercator/Segment.h,
 	  Mercator/Terrain.cpp, Mercator/Terrain.h:
 	  Add new interface to remove Area mods from the terrain.
