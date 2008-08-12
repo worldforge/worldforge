@@ -644,6 +644,19 @@ void Segment::addArea(Area* ar)
     invalidateSurfaces();
 }
 
+/// \brief Remove an area from those that affect this segment.
+void Segment::removeArea(Area* area)
+{
+    Areastore::iterator I = m_areas.lower_bound(area->getLayer());
+    Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
+    for (; I != Iend; ++I) {
+        if (I->second == area) {
+            m_areas.erase(I);
+        }
+    }
+    invalidateSurfaces();
+}
+
 WFMath::AxisBox<2> Segment::getRect() const
 {
     WFMath::Point<2> lp(m_xRef * m_res, m_yRef * m_res), 

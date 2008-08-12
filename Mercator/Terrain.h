@@ -136,6 +136,7 @@ class Terrain {
     void addMod(const TerrainMod &t);
     
     void addArea(Area* a);
+    void removeArea(Area* a);
 };
 
 } // namespace Mercator

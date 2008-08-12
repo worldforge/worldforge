@@ -125,10 +125,12 @@ int main(int argc, char* argv[])
     terrain.addArea(a1);
     
     Mercator::Segment* seg = terrain.getSegment(0,0);
+    assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
     
     seg = terrain.getSegment(1,0);
+    assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
     
@@ -137,6 +139,7 @@ int main(int argc, char* argv[])
     assert(clipped.isValid());
     
     seg = terrain.getSegment(-1,0);
+    assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
     
@@ -144,6 +147,7 @@ int main(int argc, char* argv[])
     assert(clipped.isValid());
     
     seg = terrain.getSegment(0,1);
+    assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
     
@@ -151,9 +155,28 @@ int main(int argc, char* argv[])
     assert(clipped.isValid());
 
     seg = terrain.getSegment(2,0);
+    assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
     assert(a1->checkIntersects(*seg) == false);
     
+    terrain.removeArea(a1);
+
+    seg = terrain.getSegment(0,0);
+    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().count(1) == 0);
+
+    seg = terrain.getSegment(1,0);
+    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().count(1) == 0);
+
+    seg = terrain.getSegment(-1,0);
+    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().count(1) == 0);
+
+    seg = terrain.getSegment(0,1);
+    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().count(1) == 0);
+
     testAreaShader();
     
     return EXIT_SUCCESS;

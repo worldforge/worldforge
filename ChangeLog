@@ -1,3 +1,11 @@
+2008-08-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Terrain.cpp, Mercator/Terrain.h:
+	  Add new interface to remove Area mods from the terrain.
+
+	* tests/testArea.cpp: Update the tests to cover removeArea().
+
 2008-08-07  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Mercator/Segment.cpp: Fix applyMod() so it correctly calculates

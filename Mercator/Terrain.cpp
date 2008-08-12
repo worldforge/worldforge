@@ -334,10 +334,10 @@ void Terrain::addArea(Area* area)
 {
     m_areas.insert(Areastore::value_type(area->getLayer(), area));
 
-    int lx=(int)floor((area->bbox().lowCorner()[0] - 1) / m_res);
-    int ly=(int)floor((area->bbox().lowCorner()[1] - 1) / m_res);
-    int hx=(int)ceil((area->bbox().highCorner()[0] + 1) / m_res);
-    int hy=(int)ceil((area->bbox().highCorner()[1] + 1) / m_res);
+    int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
@@ -372,6 +372,52 @@ void Terrain::addArea(Area* area)
         } // of y loop
     } // of x loop
 
+}
+
+/// \brief Remove an area modifier from the terrain.
+///
+/// Remove an existing Area object from the terrain, and mark all the
+/// affected terrain surfaces as invalid.
+void Terrain::removeArea(Area * area)
+{
+    Areastore::iterator I = m_areas.lower_bound(area->getLayer());
+    Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
+    for (; I != Iend; ++I) {
+        if (I->second == area) {
+            m_areas.erase(I);
+        }
+    }
+
+    int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (!s) {
+                continue;
+            }
+            
+            if (area->checkIntersects(*s)) {
+                s->removeArea(area);
+            }
+            
+            Segment::Surfacestore& sss(s->getSurfaces());
+            Shaderstore::const_iterator I = m_shaders.begin();
+            Shaderstore::const_iterator Iend = m_shaders.end();
+            for (; I != Iend; ++I) {
+                if (sss.count(I->first)) {
+                    // segment already has a surface for this shader, mark it
+                    // for re-generation
+                    sss[I->first]->invalidate();
+                    continue;
+                }
+            }
+    
+        } // of y loop
+    } // of x loop
 }
 
 } // namespace Mercator

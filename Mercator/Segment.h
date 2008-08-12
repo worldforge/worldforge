@@ -185,6 +185,7 @@ class Segment {
     { return m_areas; }
     
     void addArea(Area* a);
+    void removeArea(Area* a);
   private:
     /// \brief Check a value against m_min and m_max and set one of them
     /// if appropriate.
