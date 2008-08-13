@@ -588,10 +588,19 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
 /// the modification will be applied directly.
 void Segment::addMod(TerrainMod *t) 
 {
-    m_modList.push_back(t);
+    m_modList.insert(t);
     if (isValid()) {
         applyMod(t);
     }
+}
+
+/// \brief Remove a TerrainMod from this Segment.
+///
+/// Called from Terrain::removeMod().
+void Segment::removeMod(TerrainMod * tm)
+{
+    m_modList.erase(tm);
+    invalidate();
 }
 
 /// \brief Delete all the modifications applied to this Segment.
@@ -600,12 +609,7 @@ void Segment::addMod(TerrainMod *t)
 /// this function from the application.
 void Segment::clearMods() 
 {
-    if (m_modList.size()) {
-        ModList::iterator I = m_modList.begin();
-        ModList::iterator Iend = m_modList.end();
-        for (; I != Iend; ++I) {
-            delete(*I);
-        }
+    if (m_modList.size() != 0) {
         m_modList.clear();
         invalidate();
     }

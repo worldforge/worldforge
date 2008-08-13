@@ -12,7 +12,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/axisbox.h>
 
-#include <list>
+#include <set>
 #include <map>
 
 namespace Mercator {
@@ -20,7 +20,7 @@ namespace Mercator {
 class Terrain;
 class Surface;
 class TerrainMod;
-typedef std::list<TerrainMod *> ModList;
+typedef std::set<TerrainMod *> ModList;
 class Area;
 
 // This class will need to be reference counted if we want the code to
@@ -178,6 +178,7 @@ class Segment {
     WFMath::AxisBox<3> getBox() const;
 
     void addMod(TerrainMod *t);
+    void removeMod(TerrainMod *t);
     void clearMods();
     
     /// \brief Accessor for multimap of Area objects.

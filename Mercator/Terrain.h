@@ -11,6 +11,7 @@
 #include <wfmath/vector.h>
 
 #include <map>
+#include <set>
 #include <list>
 #include <cmath>
 
@@ -47,6 +48,9 @@ class Terrain {
     /// \brief STL multimap to store sparse array of area modifiers.
     typedef std::multimap<int, Area *> Areastore;
 
+    /// \brief STL set to store height modifiers.
+    typedef std::set<TerrainMod *> TerrainModstore;
+
     /// \brief value provided for no flags set.
     static const unsigned int DEFAULT = 0x0000;
     /// \brief set if shaders are going to be used on this terrain.
@@ -68,6 +72,9 @@ class Terrain {
   
     /// \brief List of areas modifiers to be applied to the terrain.
     Areastore m_areas;
+
+    /// \brief List of height modifiers to be applied to the terrain.
+    TerrainModstore m_mods;
   
     void addSurfaces(Segment &);
     void shadeSurfaces(Segment &);
@@ -133,9 +140,12 @@ class Terrain {
     /// \brief Add a new Shader to the list for this terrain.
     void addShader(Shader * t, int id);
     
-    void addMod(const TerrainMod &t);
+    TerrainMod * addMod(const TerrainMod &t);
+    void updateMod(TerrainMod * tm);
+    void removeMod(TerrainMod * tm);
     
     void addArea(Area* a);
+    void updateArea(Area* a);
     void removeArea(Area* a);
 };
 

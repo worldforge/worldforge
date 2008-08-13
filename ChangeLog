@@ -1,5 +1,18 @@
 2008-08-13  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Mercator/Segment.cpp, Mercator/Segment.h: Remove code that handled
+	  ownership of allocated terrain mods, as Terrain now owns them.
+	  Implement API for removing an individual TerrainMod. Convert
+	  storage over to a set for easy removal.
+
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add storage for terrain
+	  mods. Flesh out the API for mods and areas allowing them
+	  to be modified in place, and allowing mods to be removed.
+
+	* tests/testArea.cpp: Add test stub for removing terrain mods.
+
+2008-08-13  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Mercator/Terrain.cpp: Don't mess around with surface data
 	  for segments which don't intersect with a modifier.
 

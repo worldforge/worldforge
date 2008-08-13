@@ -292,7 +292,7 @@ Segment * Terrain::getSegment(int x, int y) const
 /// for storing the TerrainMod objects, so the apropriate Segment objects
 /// are found and the TerrainMode is passed to each in turn.
 /// @param t reference to the TerrainMod object to be applied.
-void Terrain::addMod(const TerrainMod &t)
+TerrainMod * Terrain::addMod(const TerrainMod &t)
 {
 
     //work out which segments are overlapped by thus mod
@@ -316,14 +316,57 @@ void Terrain::addMod(const TerrainMod &t)
               << std::endl << std::flush;
 #endif // 0
 
+    TerrainMod * mod = t.clone();
+
+    m_mods.insert(mod);
+
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
             if (s) {
-                s->addMod(t.clone());
+                s->addMod(mod);
             }
         } // of y loop
     } // of x loop
+
+    return mod;
+}
+
+void Terrain::updateMod(TerrainMod * tm)
+{
+#warning FIX it.
+}
+
+void Terrain::removeMod(TerrainMod * tm)
+{
+    WFMath::AxisBox<2> mod_box = tm->bbox();
+
+    int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
+
+#if 0
+    std::cout << "box: " << mod_box << std::endl
+              << "lx: " << lx
+              << "ly: " << ly
+              << "hx: " << hx
+              << "hy: " << hy
+              << std::endl << std::flush;
+#endif // 0
+
+    m_mods.erase(tm);
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (s) {
+                s->removeMod(tm);
+            }
+        } // of y loop
+    } // of x loop
+
+   
 }
 
 /// \brief Add an area modifier to the terrain.
@@ -374,6 +417,44 @@ void Terrain::addArea(Area* area)
         } // of y loop
     } // of x loop
 
+}
+
+/// \brief Apply changes to an area modifier to the terrain.
+void Terrain::updateArea(Area * area)
+{
+    int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (!s) {
+                continue;
+            }
+            
+            if (!area->checkIntersects(*s)) {
+                // If the mod was in this area, need to remove it, but we
+                // have no way to be sure whether it was.
+                s->removeArea(area);
+                continue;
+            }
+            
+            Segment::Surfacestore& sss(s->getSurfaces());
+            Shaderstore::const_iterator I = m_shaders.begin();
+            Shaderstore::const_iterator Iend = m_shaders.end();
+            for (; I != Iend; ++I) {
+                if (sss.count(I->first)) {
+                    // segment already has a surface for this shader, mark it
+                    // for re-generation
+                    sss[I->first]->invalidate();
+                    continue;
+                }
+            }
+    
+        } // of y loop
+    } // of x loop
 }
 
 /// \brief Remove an area modifier from the terrain.

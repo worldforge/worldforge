@@ -159,6 +159,12 @@ int main(int argc, char* argv[])
     assert(seg->getAreas().count(1) == 0);
     assert(a1->checkIntersects(*seg) == false);
     
+    // FIXME Modify the area.
+
+    terrain.updateArea(a1);
+
+    // FIXME Check the right changes have been made.
+
     terrain.removeArea(a1);
 
     seg = terrain.getSegment(0,0);
