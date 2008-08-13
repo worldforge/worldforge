@@ -346,9 +346,11 @@ void Terrain::addArea(Area* area)
                 continue;
             }
             
-            if (area->checkIntersects(*s)) {
-                s->addArea(area);
+            if (!area->checkIntersects(*s)) {
+                continue;
             }
+
+            s->addArea(area);
             
             Segment::Surfacestore& sss(s->getSurfaces());
             Shaderstore::const_iterator I = m_shaders.begin();
@@ -400,9 +402,11 @@ void Terrain::removeArea(Area * area)
                 continue;
             }
             
-            if (area->checkIntersects(*s)) {
-                s->removeArea(area);
+            if (!area->checkIntersects(*s)) {
+                continue;
             }
+
+            s->removeArea(area);
             
             Segment::Surfacestore& sss(s->getSurfaces());
             Shaderstore::const_iterator I = m_shaders.begin();

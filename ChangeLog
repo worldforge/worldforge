@@ -1,3 +1,8 @@
+2008-08-13  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.cpp: Don't mess around with surface data
+	  for segments which don't intersect with a modifier.
+
 2008-08-12  Al Riddoch  <alriddoch@googlemail.com>
 
 	* configure.ac: Increment the interface version as the API has
