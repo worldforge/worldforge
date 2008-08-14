@@ -300,7 +300,7 @@ TerrainMod * Terrain::addMod(const TerrainMod &t)
     //segments share edges. this ensures a mod along an edge
     //will affect both segments.
 
-    WFMath::AxisBox<2> mod_box = t.bbox();
+    Rect mod_box = t.bbox();
 
     int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
@@ -318,7 +318,7 @@ TerrainMod * Terrain::addMod(const TerrainMod &t)
 
     TerrainMod * mod = t.clone();
 
-    m_mods.insert(mod);
+    m_mods.insert(TerrainModstore::value_type(mod, mod_box));
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
@@ -332,14 +332,53 @@ TerrainMod * Terrain::addMod(const TerrainMod &t)
     return mod;
 }
 
-void Terrain::updateMod(TerrainMod * tm)
+void Terrain::updateMod(TerrainMod * mod)
 {
+    TerrainModstore::const_iterator I = m_mods.find(mod);
+
+    if (I == m_mods.end()) {
+        return;
+    }
+
+    const Rect & old_box = I->second;
+
+    int lx=I_ROUND(floor((old_box.lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((old_box.lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((old_box.highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((old_box.highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (s) {
+                s->removeMod(mod);
+            }
+        } // of y loop
+    } // of x loop
+
+    Rect mod_box = mod->bbox();
+
+    lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
+    ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
+    hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
+    hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (s) {
+                s->addMod(mod);
+            }
+        } // of y loop
+    } // of x loop
+
+    m_mods.insert(TerrainModstore::value_type(mod, mod_box));
 #warning FIX it.
 }
 
-void Terrain::removeMod(TerrainMod * tm)
+void Terrain::removeMod(TerrainMod * mod)
 {
-    WFMath::AxisBox<2> mod_box = tm->bbox();
+    WFMath::AxisBox<2> mod_box = mod->bbox();
 
     int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
@@ -355,13 +394,13 @@ void Terrain::removeMod(TerrainMod * tm)
               << std::endl << std::flush;
 #endif // 0
 
-    m_mods.erase(tm);
+    m_mods.erase(mod);
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
             if (s) {
-                s->removeMod(tm);
+                s->removeMod(mod);
             }
         } // of y loop
     } // of x loop
@@ -494,6 +533,9 @@ void Terrain::updateArea(Area * area)
             // surfaces, but Terrain::addArea above does stuff to surfaces.
         } // of y loop
     } // of x loop
+
+    m_areas.insert(Areastore::value_type(area, area->bbox()));
+#warning Do it first.
 }
 
 /// \brief Remove an area modifier from the terrain.

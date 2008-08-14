@@ -1,6 +1,14 @@
-2008-08-13  Al Riddoch  <alriddoch@googlemail.com>
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Mercator/Terrain.h: Accompany each stored mod with information
+	  about its bbox at the time it was added, so we can more effectively
+	  move it around.
+
+	* Mercator/Terrain.cpp: Implement moving mods around more effectively.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Terrain.h: Accompany each stored area with information
 	  about its bbox at the time it was added, so we can more effectively
 	  move it around.
 

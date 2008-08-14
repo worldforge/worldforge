@@ -49,11 +49,11 @@ class Terrain {
     /// \brief STL map to store sparse array of Shader pointers.
     typedef std::map<int, Shader *> Shaderstore;
 
-    /// \brief STL multimap to store sparse array of area modifiers.
+    /// \brief STL map to store area modifiers.
     typedef std::map<Area *, Rect> Areastore;
 
-    /// \brief STL set to store height modifiers.
-    typedef std::set<TerrainMod *> TerrainModstore;
+    /// \brief STL map to store height modifiers.
+    typedef std::map<TerrainMod *, Rect> TerrainModstore;
 
     /// \brief value provided for no flags set.
     static const unsigned int DEFAULT = 0x0000;
@@ -145,8 +145,8 @@ class Terrain {
     void addShader(Shader * t, int id);
     
     TerrainMod * addMod(const TerrainMod &t);
-    void updateMod(TerrainMod * tm);
-    void removeMod(TerrainMod * tm);
+    void updateMod(TerrainMod * mod);
+    void removeMod(TerrainMod * mod);
     
     void addArea(Area* a);
     void updateArea(Area* a);

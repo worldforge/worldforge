@@ -5,7 +5,7 @@ In Terrain::getHeightAndNormal, the calculation for values passed to
 Segment::get() needs to be checked. Its seems to result in strange values
 being passed.
 
-Add a mechanism to remove areas.
+Fix creation of a new Segment so it now adds applicable mods.
 
 Kick James repeatedly in the head for using .count() and [] to check then
 modify maps.
