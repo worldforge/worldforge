@@ -624,11 +624,11 @@ void Segment::applyMod(TerrainMod *t)
 {
     int lx,hx,ly,hy;
     WFMath::AxisBox<2> bbox=t->bbox();
-    bbox.shift(WFMath::Vector<2>(-m_xRef * m_res, -m_yRef * m_res));
+    bbox.shift(WFMath::Vector<2>(-m_xRef, -m_yRef));
     if (clipToSegment(bbox, lx, hx, ly, hy)) {
         for (int i=ly; i<=hy; i++) {
             for (int j=lx; j<=hx; j++) {
-                t->apply(m_points[i * m_size + j], j + m_xRef * m_res, i + m_yRef * m_res);
+                t->apply(m_points[i * m_size + j], j + m_xRef, i + m_yRef);
             }
         }
     }
@@ -663,14 +663,14 @@ void Segment::removeArea(Area* area)
 
 WFMath::AxisBox<2> Segment::getRect() const
 {
-    WFMath::Point<2> lp(m_xRef * m_res, m_yRef * m_res), 
+    WFMath::Point<2> lp(m_xRef, m_yRef), 
         hp(lp.x() + m_res, lp.y() + m_res);
     return WFMath::AxisBox<2>(lp, hp);
 }
 
 WFMath::AxisBox<3> Segment::getBox() const
 {
-    WFMath::Point<3> lp(m_xRef * m_res, m_yRef * m_res, m_min), 
+    WFMath::Point<3> lp(m_xRef, m_yRef, m_min), 
         hp(lp.x() + m_res, lp.y() + m_res, m_max);
     return WFMath::AxisBox<3>(lp, hp);
 }

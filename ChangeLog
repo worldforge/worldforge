@@ -1,5 +1,11 @@
 2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Mercator/Terrain.cpp, Mercator/Segment.cpp: Redefine the x and y
+	  reference for the terrain to be in world coords, not grid offset,
+	  to simplify the arithmetic considerably.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Mercator/Terrain.h: Accompany each stored mod with information
 	  about its bbox at the time it was added, so we can more effectively
 	  move it around.

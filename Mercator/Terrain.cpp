@@ -229,7 +229,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 if (!complete) {
                     continue;
                 }
-                s = new Segment(i, j, m_res);
+                s = new Segment(i * m_res, j * m_res, m_res);
                 Matrix<2, 2, BasePoint> & cp = s->getControlPoints();
                 float min = existingPoint[ri][rj].height();
                 float max = existingPoint[ri][rj].height();
