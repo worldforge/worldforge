@@ -245,8 +245,8 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 Areastore::iterator I = m_areas.begin();
                 Areastore::iterator Iend = m_areas.end();
                 for (; I != Iend; ++I) {
-                    if (I->second->checkIntersects(*s)) {
-                        s->addArea(I->second);
+                    if (I->first->checkIntersects(*s)) {
+                        s->addArea(I->first);
                     }
                 }
 
@@ -373,9 +373,9 @@ void Terrain::removeMod(TerrainMod * tm)
 ///
 /// Add a new Area object to the terrain, which defines a modification
 /// to the surface.
-void Terrain::addArea(Area* area)
+void Terrain::addArea(Area * area)
 {
-    m_areas.insert(Areastore::value_type(area->getLayer(), area));
+    m_areas.insert(Areastore::value_type(area, area->bbox()));
 
     int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
@@ -395,6 +395,8 @@ void Terrain::addArea(Area* area)
 
             s->addArea(area);
             
+            // Do we really need to do this? It looks like Segment::addArea
+            // already invalidates all surfaces.
             Segment::Surfacestore& sss(s->getSurfaces());
             Shaderstore::const_iterator I = m_shaders.begin();
             Shaderstore::const_iterator Iend = m_shaders.end();
@@ -422,10 +424,18 @@ void Terrain::addArea(Area* area)
 /// \brief Apply changes to an area modifier to the terrain.
 void Terrain::updateArea(Area * area)
 {
-    int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
+    Areastore::const_iterator I = m_areas.find(area);
+
+    if (I == m_areas.end()) {
+        return;
+    }
+
+    const Rect & old_box = I->second;
+
+    int lx=I_ROUND(floor((old_box.lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((old_box.lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((old_box.highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((old_box.highCorner()[1] + 1) / m_res));
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
@@ -441,6 +451,10 @@ void Terrain::updateArea(Area * area)
                 continue;
             }
             
+            // FIXME Check here whether the segment already has it?
+
+            // Do we really need to do this? It looks like Segment::removeArea
+            // already invalidates all surfaces.
             Segment::Surfacestore& sss(s->getSurfaces());
             Shaderstore::const_iterator I = m_shaders.begin();
             Shaderstore::const_iterator Iend = m_shaders.end();
@@ -455,6 +469,31 @@ void Terrain::updateArea(Area * area)
     
         } // of y loop
     } // of x loop
+
+    lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
+    ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
+    hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
+    hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (!s) {
+                continue;
+            }
+            
+            if (!area->checkIntersects(*s)) {
+                continue;
+            }
+
+            // FIXME Check here whether the segment already has it?
+            
+            s->addArea(area);
+    
+            // It looks like Segment::removeArea already invalidates all
+            // surfaces, but Terrain::addArea above does stuff to surfaces.
+        } // of y loop
+    } // of x loop
 }
 
 /// \brief Remove an area modifier from the terrain.
@@ -463,13 +502,7 @@ void Terrain::updateArea(Area * area)
 /// affected terrain surfaces as invalid.
 void Terrain::removeArea(Area * area)
 {
-    Areastore::iterator I = m_areas.lower_bound(area->getLayer());
-    Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
-    for (; I != Iend; ++I) {
-        if (I->second == area) {
-            m_areas.erase(I);
-        }
-    }
+    m_areas.erase(area);
 
     int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));

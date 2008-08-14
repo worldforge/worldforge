@@ -1,5 +1,14 @@
 2008-08-13  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Mercator/Terrain.h: Accompany each stored mod with information
+	  about its bbox at the time it was added, so we can more effectively
+	  move it around.
+
+	* Mercator/Terrain.cpp: Implement moving areas around more
+	  effectively.
+
+2008-08-13  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Mercator/Segment.cpp, Mercator/Segment.h: Remove code that handled
 	  ownership of allocated terrain mods, as Terrain now owns them.
 	  Implement API for removing an individual TerrainMod. Convert

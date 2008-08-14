@@ -9,6 +9,7 @@
 #include <Mercator/BasePoint.h>
 
 #include <wfmath/vector.h>
+#include <wfmath/axisbox.h>
 
 #include <map>
 #include <set>
@@ -32,6 +33,9 @@ class Area;
 /// - TerrainMods which modify the terrain data (delegated to Segment).
 class Terrain {
   public:
+    /// \brief Bounding box
+    typedef WFMath::AxisBox<2> Rect;
+
     /// \brief STL map to store sparse array of BasePoints.
     typedef std::map<int, BasePoint> Pointcolumn;
     /// \brief STL map to store sparse array of Segment pointers.
@@ -46,7 +50,7 @@ class Terrain {
     typedef std::map<int, Shader *> Shaderstore;
 
     /// \brief STL multimap to store sparse array of area modifiers.
-    typedef std::multimap<int, Area *> Areastore;
+    typedef std::map<Area *, Rect> Areastore;
 
     /// \brief STL set to store height modifiers.
     typedef std::set<TerrainMod *> TerrainModstore;
