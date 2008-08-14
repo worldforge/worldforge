@@ -1,6 +1,9 @@
 2008-06-01  Alexey Torkhov  <atorkhov@gmail.com>
 
-	* Fixing library to compile under GCC 4.3.
+	* Atlas/Filter.cpp: Add <cstring> include as required by GCC 4.3.
+
+	* tools/atlas_convert.cpp: Add <cstdlib> include as required by
+	  GCC 4.3.
 
 2007-09-24  Al Riddoch  <alriddoch@zepler.org>
 
