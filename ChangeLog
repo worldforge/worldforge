@@ -1,5 +1,10 @@
 2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Mercator/Terrain.cpp: When created a new Segment, apply existing
+	  mods now that we actually store them in the right place.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Mercator/Segment.cpp, Mercator/Segment.h: Make
 	  Segment::clipToSegment() public as it's useful, and const as
 	  it should be.

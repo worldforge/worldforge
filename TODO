@@ -5,12 +5,13 @@ In Terrain::getHeightAndNormal, the calculation for values passed to
 Segment::get() needs to be checked. Its seems to result in strange values
 being passed.
 
-Fix creation of a new Segment so it now adds applicable mods.
-
 Kick James repeatedly in the head for using .count() and [] to check then
 modify maps.
 
 Think carefully about whether Surface needs a writable reference to Segment.
+
+Add checks for making sure that mods get applied to segments as the segments
+are created.
 
 * Implement the constructors which take a Shader::Paramters.
 
