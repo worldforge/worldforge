@@ -161,6 +161,8 @@ class Segment {
 
     void getHeightAndNormal(float x, float y, float &h, 
                     WFMath::Vector<3> &normal) const;
+    bool clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &ly, int &hy) const;
+
 
     void populate();
     void populateNormals();
@@ -208,8 +210,6 @@ class Segment {
 
     float qRMD(float nn, float fn, float ff, float nf, 
                float roughness, float falloff, int depth) const;
-
-    bool clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx, int &ly, int &hy);
 
     void applyMod(TerrainMod *t);
 

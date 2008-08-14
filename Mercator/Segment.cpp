@@ -560,8 +560,8 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
 /// @param ly lower y coordinate of intersection area.
 /// @param hy upper y coordinate of intersection area.
 /// @return true if the box intersects with this Segment, false otherwise.
-bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox, int &lx, int &hx,
-                                                            int &ly, int &hy) 
+bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
+                            int &lx, int &hx, int &ly, int &hy) const
 {
     lx = I_ROUND(bbox.lowCorner()[0]); 
     if (lx > m_res) return false;

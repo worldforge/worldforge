@@ -1,5 +1,11 @@
 2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Mercator/Segment.cpp, Mercator/Segment.h: Make
+	  Segment::clipToSegment() public as it's useful, and const as
+	  it should be.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Mercator/Terrain.cpp, Mercator/Segment.cpp: Redefine the x and y
 	  reference for the terrain to be in world coords, not grid offset,
 	  to simplify the arithmetic considerably.
