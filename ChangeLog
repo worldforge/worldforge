@@ -1,5 +1,10 @@
 2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
 
+	* mercator.spec.in: Remove packager tag, as it should be
+	  set in the packagers macros.
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Mercator/Terrain.cpp: When created a new Segment, apply existing
 	  mods now that we actually store them in the right place.
 

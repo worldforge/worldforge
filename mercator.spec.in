@@ -10,7 +10,6 @@ Release: %{release}
 License: GPL
 Group: System Environment/Libraries
 URL: http://www.worldforge.org/dev/eng/libraries/mercator
-Packager: Al Riddoch <alriddoch@zepler.org>
 Vendor: WorldForge
 Distribution: Mason
 Source: %{name}-%{version}.tar.bz2
