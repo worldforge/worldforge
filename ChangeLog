@@ -1,5 +1,11 @@
 2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
 
+	* NEWS: Update news.
+
+	* Release 0.2.6
+
+2008-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
 	* mercator.spec.in: Remove packager tag, as it should be
 	  set in the packagers macros.
 
