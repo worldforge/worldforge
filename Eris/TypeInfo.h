@@ -7,6 +7,7 @@
 #include <sigc++/trackable.h>
 
 #include <set>
+#include <map>
 
 namespace Eris {	
 
@@ -72,6 +73,13 @@ public:
     {
          return m_parents;
     }
+    
+    /**
+    @brief Gets the default attributes for this entity type.
+    Note that the map returned does not include inherited attributes.
+    @returns An element map of the default attributes for this type.
+    */
+    inline const std::map<std::string, Atlas::Message::Element>& getAttributes() const;
 
 protected:
     friend class TypeService;
@@ -98,6 +106,13 @@ private:
 
     /** Recursive add to this node and every descendant the specified ancestor */
     void addAncestor(TypeInfoPtr tp);
+    
+    /** 
+    @brief Extracts default attributes from the supplied root object, and adds them to the m_attributes field.
+    Note that inherited (i..e those that belong to the parent entity type) attributes won't be extracted.
+    @param atype Root data for this entity type.
+    */
+    void extractDefaultAttributes(const Atlas::Objects::Root& atype);
         
     /** The TypeInfo nodes for types we inherit from directly */
     TypeInfoSet m_parents;
@@ -120,7 +135,16 @@ private:
     unsigned int m_moveCount;
     
     TypeService* m_typeService;
+    
+    /** The default attributes specified for this entity type.*/
+    std::map<std::string, Atlas::Message::Element> m_attributes;
 };
+
+const std::map<std::string, Atlas::Message::Element>& TypeInfo::getAttributes() const
+{
+    return m_attributes;
+}
+
 
 } // of Eris namespace
 

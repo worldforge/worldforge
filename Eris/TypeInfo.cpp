@@ -76,6 +76,7 @@ void TypeInfo::resolveChildren()
 
 void TypeInfo::processTypeData(const Root &atype)
 {
+
     if (atype->getId() != m_name) {
         error() << "mis-targeted INFO operation for " << atype->getId() << " arrived at " << m_name;
         return;
@@ -88,16 +89,22 @@ void TypeInfo::processTypeData(const Root &atype)
     if (atype->hasAttr("children"))
     {
         const Atlas::Message::Element childElem(atype->getAttr("children"));
-        const Atlas::Message::ListType & children(childElem.asList());
-        
-        for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C) {
-            TypeInfo* child = m_typeService->findTypeByName(C->asString());
-            // if the child was already known, don't add to unresolved
-            if (child && m_children.count(child)) continue;
-            
-            m_unresolvedChildren.insert(C->asString());
+        if (!childElem.isList()) {
+            warning() << "'children' element is not of list type when processing entity type " << m_name << ".";
+        } else {
+            const Atlas::Message::ListType & children(childElem.asList());
+
+            for (Atlas::Message::ListType::const_iterator C = children.begin(); C != children.end(); ++C) {
+                TypeInfo* child = m_typeService->findTypeByName(C->asString());
+                // if the child was already known, don't add to unresolved
+                if (child && m_children.count(child)) continue;
+
+                m_unresolvedChildren.insert(C->asString());
+            }
         }
     }
+    
+    extractDefaultAttributes(atype);
       
     validateBind();
 }
@@ -169,6 +176,38 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
     // tell all our childen!
     for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C) {
         (*C)->addAncestor(tp);
+    }
+}
+
+void TypeInfo::extractDefaultAttributes(const Atlas::Objects::Root& atype)
+{
+    ///See if there's any default attributes defined, and if so make a copy, accessable through "getAttributes()".
+    if (atype->hasAttr("attributes")) {
+        const Atlas::Message::Element attrsElement(atype->getAttr("attributes"));
+        if (!attrsElement.isMap()) {
+            warning() << "'attributes' element is not of map type when processing entity type " << m_name << ".";
+        } else {
+            const Atlas::Message::MapType& attrsMap(attrsElement.asMap());
+            for (Atlas::Message::MapType::const_iterator I = attrsMap.begin(); I != attrsMap.end(); ++I)
+            {
+                std::string attributeName(I->first);
+                if (I->second.isMap()) {
+                    const Atlas::Message::MapType& innerAttributeMap(I->second.asMap());
+                    Atlas::Message::MapType::const_iterator J = innerAttributeMap.find("default");
+                    if (J != innerAttributeMap.end()) {
+                        ///Only add the attribute if it's marked as publicly visible (will there ever be private attributes sent over the wire?).
+                        Atlas::Message::MapType::const_iterator visibilityI = innerAttributeMap.find("visibility");
+                        if (visibilityI != innerAttributeMap.end()) {
+                            if (visibilityI->second.isString()) {
+                                if (visibilityI->second.asString() == "public") {
+                                    m_attributes.insert(Atlas::Message::MapType::value_type(attributeName, J->second));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
