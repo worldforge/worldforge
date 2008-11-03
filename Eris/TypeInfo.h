@@ -4,6 +4,8 @@
 #include <Eris/Types.h>
 #include <Eris/TypeService.h>
 
+#include <Atlas/Message/Element.h>
+
 #include <sigc++/trackable.h>
 
 #include <set>
@@ -79,7 +81,7 @@ public:
     Note that the map returned does not include inherited attributes.
     @returns An element map of the default attributes for this type.
     */
-    inline const std::map<std::string, Atlas::Message::Element>& getAttributes() const;
+    inline const Atlas::Message::MapType& getAttributes() const;
 
 protected:
     friend class TypeService;
@@ -137,10 +139,10 @@ private:
     TypeService* m_typeService;
     
     /** The default attributes specified for this entity type.*/
-    std::map<std::string, Atlas::Message::Element> m_attributes;
+    Atlas::Message::MapType m_attributes;
 };
 
-const std::map<std::string, Atlas::Message::Element>& TypeInfo::getAttributes() const
+const Atlas::Message::MapType& TypeInfo::getAttributes() const
 {
     return m_attributes;
 }
