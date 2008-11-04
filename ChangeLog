@@ -1,3 +1,8 @@
+2008-11-04  Anders Petersson  <demitar@worldforge.org>
+
+	* configure.ac: Added AC_PROG_CXX to prevent a circular dependency in
+	  AC_CHECK_HEADERS(sstream strstream, ...)
+
 2007-11-25  Al Riddoch  <alriddoch@googlemail.com>
 
 	* wfmath.spec.in: Create new sub package for generated documentation.
