@@ -22,6 +22,7 @@ ERIS_REQUIRES=""
 
 AC_DISABLE_STATIC
 AC_PROG_LIBTOOL
+AC_PROG_CXX
 
 AC_ARG_ENABLE(debug,
     [  --enable-debug          enable debug information [default=no]],
