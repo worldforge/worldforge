@@ -12,5 +12,5 @@ libvarconf_1_0_la_SOURCES = \
 
 libvarconfincludedir = $(includedir)/varconf-1.0/varconf
 libvarconfinclude_HEADERS = \
-    Config.h config.h parse_error.h varconf.h variable.h \
+    config.h parse_error.h varconf.h variable.h \
     dynbase.h dyntypes.h dyncmp.h dynvar.h

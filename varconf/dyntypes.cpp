@@ -25,7 +25,7 @@
  */
  
 #include <varconf/dyntypes.h>
-#include <varconf/Config.h>
+#include <varconf/config.h>
 
 #include <string>
 
