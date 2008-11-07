@@ -1,3 +1,8 @@
+2008-11-07  Al Riddoch  <alriddoch@googlemail.com>
+
+	* test/BaseConnection_unittest.cpp: Add C includes required by more
+	  recent compilers.
+
 2008-11-04  Al Riddoch  <alriddoch@googlemail.com>
 
 	* configure.ac: Added AC_PROG_CXX as it is required to set up the

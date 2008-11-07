@@ -31,6 +31,8 @@
 
 #include <skstream/skstream.h>
 
+#include <cstdlib>
+
 #include <cassert>
 
 class TestBaseConnection : public Eris::BaseConnection {
