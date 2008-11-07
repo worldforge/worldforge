@@ -77,7 +77,8 @@ Cannot find valid versions of required WorldForge libraries:
 $WF_PKG_ERRORS
 Perhaps you should add the directory containing the missing libraries to the
 PKG_CONFIG_PATH environment variable.
-Please see http://worldforge.org/dev/eng/libraries/eris for details of the libraries required and where to obtain them.])
+Please see http://worldforge.org/dev/eng/libraries/eris for details of the
+libraries required and where to obtain them.])
     ]
 )
 
