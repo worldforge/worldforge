@@ -243,8 +243,8 @@ int Config::getCmdline(int argc, char** argv, Scope scope)
         name = ((*I).second).first;
         bool needs_value = ((*I).second).second;
 
-        if (needs_value && argv[i+1] != NULL && argv[i+1][0] != '-'
-                         && argv[i+1] != "") {
+        if (needs_value && (i+1) < argc && argv[i+1][0] != 0
+                        && argv[i+1][0] != '-') {
           value = argv[++i];
         } 
         else {

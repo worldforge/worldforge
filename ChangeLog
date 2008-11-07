@@ -1,5 +1,10 @@
 2008-11-07  Al Riddoch  <alriddoch@zepler.org>
 
+	* varconf/config.cpp: Fix really horribly broken code which was
+	  checking whether a char * was equal to "".
+
+2008-11-07  Al Riddoch  <alriddoch@zepler.org>
+
 	* varconf/config.h: Merge the old content of Config.h into the lower
 	  case file to get rid of the case clash on MacOS.
 
