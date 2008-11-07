@@ -1,3 +1,7 @@
+2008-11-07  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/intersect.h: Move parentheses to a more appropriate place.
+
 2008-11-04  Anders Petersson  <demitar@worldforge.org>
 
 	* configure.ac: Added AC_PROG_CXX to prevent a circular dependency in

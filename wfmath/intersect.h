@@ -347,7 +347,7 @@ bool Intersect(const Segment<dim>& s1, const Segment<dim>& s2, bool proper)
     return Contains(s1, s2.m_p1, proper) || Contains(s1, s2.m_p2, proper)
 	|| Contains(s2, s1.m_p1, proper) || Contains(s2, s1.m_p2, proper)
 	// Degenerate case (identical segments), nonzero length
-	|| proper && (s1.m_p1 != s1.m_p2)
+	|| (proper && s1.m_p1 != s1.m_p2)
           && ((s1.m_p1 == s2.m_p1 && s1.m_p2 == s2.m_p2)
               || (s1.m_p1 == s2.m_p2 && s1.m_p2 == s2.m_p1));
   }
