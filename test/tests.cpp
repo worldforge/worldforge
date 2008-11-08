@@ -31,6 +31,7 @@
 #include <Atlas/Message/MEncoder.h>
 
 #include <cstdio>
+#include <cstring>
 #include <memory>
 
 #include <signal.h>

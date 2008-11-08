@@ -16,6 +16,7 @@
 #include <wfmath/point.h>
 #include <Atlas/Objects/objectFactory.h>
 
+#include <cstdlib>
 #include <sys/wait.h>
 
 using Atlas::Objects::Root;
