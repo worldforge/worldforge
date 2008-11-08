@@ -78,9 +78,9 @@ namespace {
   {
     if (c=='\n') return C_EOL;
     if (isspace(c)) return C_SPACE;
-    if ((c >= 'a') && (c <= 'z') || (c >= 'A') && (c <= 'Z')) return C_ALPHA;
+    if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) return C_ALPHA;
     if (isdigit(c)) return C_NUMERIC;
-    if ((c == '-') || (c == '_')) return C_DASH;
+    if (c == '-' || c == '_') return C_DASH;
     if (c == '=') return C_EQ;
     if (c == '"') return C_QUOTE;
     if (c == '[') return C_SQUARE_OPEN;
@@ -205,7 +205,7 @@ int Config::getCmdline(int argc, char** argv, Scope scope)
 {
   int optind = 1;
 
-  for (size_t i = 1; i < (size_t)argc; i++) {
+  for (int i = 1; i < argc; i++) {
     if (argv[i][0] != '-' ) {
        continue;
     }

@@ -1,3 +1,8 @@
+2008-11-08  Al Riddoch  <alriddoch@zepler.org>
+
+	* varconf/config.cpp: Clean up parentheses. Change the type of an
+	  iterator to int, otherwise it causes warnings.
+
 2008-11-07  Al Riddoch  <alriddoch@zepler.org>
 
 	* varconf/config.cpp: Fix really horribly broken code which was
