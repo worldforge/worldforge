@@ -384,7 +384,7 @@ void Terrain::updateMod(TerrainMod * mod)
     } // of x loop
 
     m_mods.insert(TerrainModstore::value_type(mod, mod_box));
-#warning FIX it.
+    // FIXME FIX it.
 }
 
 void Terrain::removeMod(TerrainMod * mod)
@@ -546,7 +546,7 @@ void Terrain::updateArea(Area * area)
     } // of x loop
 
     m_areas.insert(Areastore::value_type(area, area->bbox()));
-#warning Do it first.
+    // FIXME Do it first.
 }
 
 /// \brief Remove an area modifier from the terrain.
