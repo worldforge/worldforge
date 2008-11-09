@@ -8,6 +8,11 @@
 
 #include <iostream>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#define DEBUG
+
 #include <cassert>
 
 typedef WFMath::Point<2> Point2;

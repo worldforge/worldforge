@@ -4,6 +4,11 @@
 
 #include <Mercator/Plant.h>
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#define DEBUG
+
 #include <cassert>
 
 int main()
