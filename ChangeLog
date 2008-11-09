@@ -1,3 +1,8 @@
+2008-11-09  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/intersect.h: Add another set of parentheses to make things
+	  clearer.
+
 2008-11-07  Al Riddoch  <alriddoch@googlemail.com>
 
 	* wfmath/intersect.h: Move parentheses to a more appropriate place.
