@@ -1,5 +1,10 @@
 2008-11-09  Al Riddoch  <alriddoch@googlemail.com>
 
+	* wfmath/polygon_intersect.h: Convery the warning about unfinished
+	  functionality to a big FIXME section.
+
+2008-11-09  Al Riddoch  <alriddoch@googlemail.com>
+
 	* wfmath/intersect.h: Add another set of parentheses to make things
 	  clearer.
 

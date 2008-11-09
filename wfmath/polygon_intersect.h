@@ -35,13 +35,10 @@
 #include <wfmath/polygon.h>
 #include <wfmath/intersect.h>
 
-#ifndef _MSC_VER
-#warning "The Intersect() and Contains() functions involving WFMath::Polygon<>"
-#warning "are still under development, and probably shouldn't be used yet."
-#else
-#pragma warning "The Intersect() and Contains() functions involving WFMath::Polygon<>"
-#pragma warning "are still under development, and probably shouldn't be used yet."
-#endif
+// FIXME Work is needed on this code. At very least the following notes
+// from the original author apply:
+// "The Intersect() and Contains() functions involving WFMath::Polygon<>"
+// "are still under development, and probably shouldn't be used yet."
 
 namespace WFMath {
 
