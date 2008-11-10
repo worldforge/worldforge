@@ -1,3 +1,9 @@
+2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/quaternion_test.cpp, wfmath/rotmatrix_test.cpp,
+	  wfmath/shape_test.cpp, wfmath/vector_test.cpp: Force debug mode
+	  before include <cassert>.
+
 2008-11-09  Al Riddoch  <alriddoch@googlemail.com>
 
 	* wfmath/polygon_intersect.h: Convery the warning about unfinished
