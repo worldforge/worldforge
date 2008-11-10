@@ -30,3 +30,12 @@ Schedule:
       interface will be removed, as will support for deprecated network
       formats in atlas_conv.h. This is also an appropriate time to make changes
       that break binary compatibility.
+
+alriddoch's TODO 2008-11-10
+
+Clean up const.h removing all includes that it itself does not use.
+
+<cmath>, <cassert> and <iosfwd> should go. Clean up the rest of the headers
+that turn out to need this, but completely get rid of asserts from the
+interface headers. This should reduce the cost of including these headers,
+and stop them from polluting the namespace.
