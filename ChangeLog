@@ -1,3 +1,8 @@
+2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
+
+	* tests/testForest.cpp, tests/testPlant.cpp: Fix a warning caused
+	  by defining DEBUG to force asserts in the tests.
+
 2008-11-09  Al Riddoch  <alriddoch@googlemail.com>
 
 	* tests/testForest.cpp, tests/testPlant.cpp: Force debug mode before
