@@ -23,6 +23,13 @@
 // Author: Ron Steinke
 // Created: 2002-1-24
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include "const.h"
 #include "probability.h"
 #include "shuffle.h"

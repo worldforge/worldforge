@@ -23,6 +23,13 @@
 // Author: Ron Steinke
 // Created: 2002-1-28
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include "int_to_string.h"
 #include "randgen.h"
 

@@ -1,5 +1,10 @@
 2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
 
+	* wfmath/intstring_test.cpp, wfmath/probability_test.cpp:
+	  Force debug mode before including <cassert>.
+
+2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
+
 	* wfmath/quaternion_test.cpp, wfmath/rotmatrix_test.cpp,
 	  wfmath/shape_test.cpp, wfmath/vector_test.cpp: Force debug mode
 	  before include <cassert>.
