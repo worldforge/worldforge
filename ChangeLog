@@ -1,3 +1,8 @@
+2008-11-11  Al Riddoch  <alriddoch@googlemail.com>
+
+	* test/metaQuery.cpp: Comment out some unused variables associated
+	  with some commented out code.
+
 2008-11-08  Al Riddoch  <alriddoch@googlemail.com>
 
 	* test/agent.cpp, test/stubServer.cpp, test/tests.cpp:

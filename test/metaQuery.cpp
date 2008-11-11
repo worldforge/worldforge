@@ -49,11 +49,11 @@ void queryFailed(const std::string& msg)
 std::string timeFormat(double time)
 {
 	static const std::string times[] = { "secs", "mins", "hours", "days", "weeks" };
-	int precs[] = { 0, 1, 1, 2, 2, 2 };
-	int divi = 0;
+	// int precs[] = { 0, 1, 1, 2, 2, 2 };
+	// int divi = 0;
 	std::stringstream result;
 	std::string timestring;
-	double orig = time;
+	// double orig = time;
 	
 	if(exactTime == false)
 	{
