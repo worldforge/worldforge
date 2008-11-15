@@ -1,3 +1,9 @@
+2008-11-15  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.7
+
+	* NEWS: Update date on release news item.
+
 2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
 
 	* wfmath/intstring_test.cpp, wfmath/probability_test.cpp:
