@@ -53,7 +53,7 @@ dnl Test for libsigc++
 PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
     [
         CPPFLAGS="$CPPFLAGS $SIGC_CFLAGS"
-        LDFLAGS="$LDFLAGS $SIGC_LIBS"
+        LIBS="$LIBS $SIGC_LIBS"
         VARCONF_REQUIRES="$VARCONF_REQUIRES sigc++-2.0"
     ],
         AC_MSG_ERROR([Couldn't find sigc++ library!])
