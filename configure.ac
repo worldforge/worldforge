@@ -50,7 +50,7 @@ AC_LANG_PUSH(C++)
 PKG_CHECK_MODULES(SIGC, sigc++-2.0 != 2.0.8,
     [
         CXXFLAGS="$CXXFLAGS $SIGC_CFLAGS"
-        LDFLAGS="$LDFLAGS $SIGC_LIBS"
+        LIBS="$LIBS $SIGC_LIBS"
         ERIS_REQUIRES="$ERIS_REQUIRES sigc++-2.0"
     ],[
         AC_MSG_RESULT([no])
@@ -68,7 +68,7 @@ dnl check for all the WorldForge libs we use
 PKG_CHECK_MODULES(WF, skstream-0.3 atlascpp-0.6 >= 0.5.94 wfmath-0.3 >= 0.3.2,
     [
         CXXFLAGS="$CXXFLAGS $WF_CFLAGS"
-        LDFLAGS="$LDFLAGS $WF_LIBS"
+        LIBS="$LIBS $WF_LIBS"
         ERIS_REQUIRES="$ERIS_REQUIRES skstream-0.3 atlascpp-0.6 wfmath-0.3"
     ],[
         AC_MSG_RESULT([no])

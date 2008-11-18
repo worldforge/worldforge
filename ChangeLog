@@ -1,3 +1,7 @@
+2008-11-18  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Use LIBS as it should be, not LDFLAGS.
+
 2008-11-11  Al Riddoch  <alriddoch@googlemail.com>
 
 	* test/metaQuery.cpp: Comment out some unused variables associated
