@@ -5,7 +5,7 @@ lib_LTLIBRARIES = libAtlasMessage-0.6.la
 
 libAtlasMessage_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
 
-libAtlasMessage_0_6_la_LIBADD = ../libAtlas-0.6.la
+libAtlasMessage_0_6_la_LIBADD = $(top_builddir)/Atlas/libAtlas-0.6.la
 
 libAtlasMessage_0_6_la_SOURCES = \
 	Element.cpp MEncoder.cpp DecoderBase.cpp QueuedDecoder.cpp
