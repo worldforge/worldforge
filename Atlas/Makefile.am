@@ -1,4 +1,4 @@
-SUBDIRS = Message Codecs Filters Net Objects Funky
+SUBDIRS = . Message Codecs Filters Net Objects Funky
 
 INCLUDES = -I$(top_srcdir)
 

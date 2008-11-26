@@ -1,3 +1,14 @@
+2008-11-26  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Atlas/Codecs/Makefile.am, Atlas/Filters/Makefile.am,
+	  Atlas/Message/Makefile.am, Atlas/Net/Makefile.am,
+	  Atlas/Objects/Makefile.am: Make the libraries link to the others
+	  they depend on so using them is easier and --as-needed can
+	  be used.
+
+	* Atlas/Makefile.am: Change the subdirectory build order so that
+	  the top level builds first.
+
 2008-06-01  Alexey Torkhov  <atorkhov@gmail.com>
 
 	* Atlas/Filter.cpp: Add <cstring> include as required by GCC 4.3.

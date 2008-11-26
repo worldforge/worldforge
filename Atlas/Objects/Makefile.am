@@ -5,6 +5,10 @@ lib_LTLIBRARIES = libAtlasObjects-0.6.la
 
 libAtlasObjects_0_6_la_LDFLAGS = $(INTERFACE_VERSION)
 
+libAtlasObjects_0_6_la_LIBADD = ../libAtlas-0.6.la \
+                                ../Message/libAtlasMessage-0.6.la \
+                                ../Codecs/libAtlasCodecs-0.6.la
+
 REAL_GENERATED_CPP = Root.cpp Decoder.cpp Dispatcher.cpp objectFactory.cpp \
 	RootEntity.cpp RootEntityChildren.cpp \
 	RootOperation.cpp RootOperationChildren1.cpp \
