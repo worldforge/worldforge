@@ -25,17 +25,18 @@
 
 #include<Atlas/Message/Element.h>
 #include "atlasconv.h"
+#include "stream.h"
 
 using namespace WFMath;
 
 template<class C>
 void atlas_test(const C& c)
 {
-//  cout << c << std::endl;
+  std::cout << c << std::endl;
   Atlas::Message::Element a = c.toAtlas();
   C out(a);
   assert(out.isValid());
-//  cout << out << std::endl;
+  std::cout << out << std::endl;
   // Only match to string precision
   assert(Equal(c, out, FloatMax(WFMATH_EPSILON,1e-5)));
 }
@@ -57,6 +58,12 @@ int main()
   
   Ball<3> ball(Point<3>(1, 2, 3), 10);
   atlas_test(ball);
+  
+  Polygon<2> poly;
+  poly.addCorner(0, WFMath::Point<2>(0, 0));
+  poly.addCorner(1, WFMath::Point<2>(10, 0));
+  poly.addCorner(2, WFMath::Point<2>(10, 10));
+  atlas_test(poly);
 
   return 0;
 }
