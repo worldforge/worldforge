@@ -112,6 +112,11 @@ int main()
 
   test_vector(v2);
   test_vector(v3);
+  
+  Vector<2> zero2 = Vector<2>::ZERO();
+  assert(zero2.x() == 0 && zero2.y() == 0);
+  Vector<3> zero3 = Vector<3>::ZERO();
+  assert(zero3.x() == 0 && zero3.y() == 0 && zero3.z() == 0);
 
   assert(v2.sloppyMag() / v2.mag() < Vector<2>::sloppyMagMax());
   assert(v3.sloppyMag() / v3.mag() < Vector<3>::sloppyMagMax());
