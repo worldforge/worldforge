@@ -318,6 +318,19 @@ inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 	throw _AtlasBadParse();
 }
 
+inline AtlasOutType Polygon<2>::toAtlas() const
+{
+	Atlas::Message::ListType points;
+	for (theConstIter I = m_points.begin(); I != m_points.end(); ++I) 
+	{
+		points.push_back(I->toAtlas());
+	}
+	Atlas::Message::MapType map;
+	map.insert(Atlas::Message::MapType::value_type("points", points));
+	return map;
+}
+
+
 template<const int dim>
 inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
 {
