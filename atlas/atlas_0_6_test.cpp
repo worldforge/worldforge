@@ -34,6 +34,7 @@ void atlas_test(const C& c)
 //  cout << c << std::endl;
   Atlas::Message::Element a = c.toAtlas();
   C out(a);
+  assert(out.isValid());
 //  cout << out << std::endl;
   // Only match to string precision
   assert(Equal(c, out, FloatMax(WFMATH_EPSILON,1e-5)));
