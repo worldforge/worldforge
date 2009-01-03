@@ -49,6 +49,7 @@ typedef Atlas::Message::WrongTypeException _AtlasBadParse;
 typedef Atlas::Message::Element _AtlasMessageType;
 typedef Atlas::Message::FloatType _AtlasFloatType;
 typedef Atlas::Message::ListType _AtlasListType;
+typedef Atlas::Message::MapType _AtlasMapType;
 
 inline bool _isNum(const _AtlasMessageType& a) {return a.isNum();}
 inline _AtlasFloatType _asNum(const _AtlasMessageType& a) {return a.asNum();}
@@ -64,6 +65,7 @@ struct _AtlasBadParse : public Atlas::Message::WrongTypeException,
 typedef Atlas::Message::Object _AtlasMessageType;
 typedef Atlas::Message::Object::FloatType _AtlasFloatType;
 typedef Atlas::Message::Object::ListType _AtlasListType;
+typedef Atlas::Message::Object::MapType _AtlasMapType;
 
 inline bool _isNum(const _AtlasMessageType& a) {return a.IsNum();}
 inline _AtlasMessageType::FloatType _asNum(const _AtlasMessageType& a) {return a.AsNum();}
@@ -95,6 +97,7 @@ class AtlasOutType
 {
  public:
   AtlasOutType(const _AtlasListType& l) : m_val(l) {}
+  AtlasOutType(const _AtlasMapType& l) : m_val(l) {}
   operator _AtlasMessageType&() {return m_val;}
   operator const _AtlasMessageType&() const {return m_val;}
  private:
@@ -269,6 +272,13 @@ inline void Ball<dim>::fromAtlas(const AtlasInType& a)
 	}
 }
 
+template<const int dim>
+inline AtlasOutType Ball<dim>::toAtlas() const
+{
+	Atlas::Message::MapType map;
+	map.insert(Atlas::Message::MapType::value_type("radius", _AtlasFloatType(m_radius)));
+	return map;
+}
 
 inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 {
