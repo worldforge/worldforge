@@ -369,51 +369,6 @@ inline AtlasOutType RotBox<dim>::toAtlas() const
 	return map;
 }
 
-
-class AtlasShapeParser
-{
-public:
-
-	enum ShapeTypes
-	{
-		ST_UNKNOWN,
-		ST_BALL,
-		ST_POLYGON,
-		ST_ROTBOX
-	};
-	
-	/**
-	 * @brief Parses the kind of shape expressed in the Atlas data.
-	 * Since the parseFromAtlas method requires that the caller specifies the kind of shape to create, you must know before you call that method what kind of shape it is that you will parse from the atlas data. This method will inspect the atlas data and try to identify the type of shape.
-	 * @param shapeElement The Atlas element containing the shape data.
-	 * @returns The shape type, or ST_UNKNOWN if no shape type could be identified.
-	 */
-	inline static ShapeTypes parseShapeTypeFromAtlas(const Atlas::Message::MapType& shapeElement);
-
-};
-
-
-inline AtlasShapeParser::ShapeTypes AtlasShapeParser::parseShapeTypeFromAtlas(const Atlas::Message::MapType& shapeElement)
-{
-	// Get shape's type
-	Atlas::Message::MapType::const_iterator type_I = shapeElement.find("type");
-	if (type_I != shapeElement.end()) {
-		const Atlas::Message::Element& shapeTypeElem(type_I->second);
-		if (shapeTypeElem.isString()) {
-			const std::string& shapeType = shapeTypeElem.asString();
-			if (shapeType == "ball") {
-				return ST_BALL;
-			} else if (shapeType == "polygon") {
-				return ST_POLYGON;
-			} else if (shapeType == "rotbox") {
-				return ST_ROTBOX;
-			}
-		}
-	}
-	return ST_UNKNOWN;
-}
-
-
 } // namespace WFMath
 
 #endif // WFMATH_ATLAS_CONV_H
