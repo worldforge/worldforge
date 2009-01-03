@@ -17,7 +17,7 @@ header_HEADERS = error.h const.h int_to_string.h \
 	rotbox.h rotbox_funcs.h \
 	polygon.h polygon_funcs.h polygon_intersect.h \
 	intersect_decls.h intersect.h \
-	wfmath.h stream.h atlasconv.h
+	wfmath.h stream.h atlasconv.h zero.h
 
 lib_LTLIBRARIES = libwfmath-0.3.la
 libwfmath_0_3_la_SOURCES = basis.h const.cpp stream.cpp int_to_string.cpp \
