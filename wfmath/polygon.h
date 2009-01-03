@@ -59,6 +59,12 @@ class Polygon<2>
   friend std::ostream& operator<< <2>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <2>(std::istream& is, Polygon& p);
 #endif
+  
+  /// Create an Atlas object from the box
+  AtlasOutType toAtlas() const;
+  /// Set the box's value to that given by an Atlas object
+  void fromAtlas(const AtlasInType& a);
+  
   Polygon& operator=(const Polygon& p)
 	{m_points = p.m_points; return *this;}
 

@@ -69,6 +69,11 @@ class RotBox
 
   ~RotBox() {}
 
+  /// Create an Atlas object from the box
+  AtlasOutType toAtlas() const;
+  /// Set the box's value to that given by an Atlas object
+  void fromAtlas(const AtlasInType& a);
+  
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotBox& r);
   friend std::istream& operator>> <dim>(std::istream& is, RotBox& r);
 

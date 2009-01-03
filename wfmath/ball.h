@@ -81,6 +81,11 @@ class Ball
   friend std::ostream& operator<< <dim>(std::ostream& os, const Ball& b);
   friend std::istream& operator>> <dim>(std::istream& is, Ball& b);
 
+  /// Create an Atlas object from the box
+  AtlasOutType toAtlas() const;
+  /// Set the box's value to that given by an Atlas object
+  void fromAtlas(const AtlasInType& a);
+  
   Ball& operator=(const Ball& b)
 	{m_radius = b.m_radius; m_center = b.m_center; return *this;}
 

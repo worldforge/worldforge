@@ -252,55 +252,81 @@ AtlasOutType AxisBox<dim>::toAtlas() const
   return a;
 }
 
-// template<>
-// void Ball<2>::fromAtlas(const AtlasInType& a)
-// {
-// 	
-// 	// Get sphere's radius
-// 	Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("radius");
-// 	if (shape_I != shapeElement.end()) {
-// 		const Atlas::Message::Element& shapeRadiusElem(shape_I->second);
-// 		if (shapeRadiusElem.isNum()) {
-// 			float shapeRadius = shapeRadiusElem.asNum();
-// 			// Make disc
-// 			WFMath::Point<2> pos_2d(pos.x(), pos.y());
-// 			*shape = new WFMath::Ball<2>(pos_2d, shapeRadius);
-// 		}
-// 	}
-// 
-// 
-// 
-//   if(!a.IsList())
-//     throw _AtlasBadParse();
-// 
-//   const _AtlasListType& list(a.AsList());
-// 
-//   switch(list.size()) {
-//     case dim:
-//       m_low.setToOrigin();
-//       m_high.fromAtlas(a);
-//       break;
-//     case (2 * dim):
-//       for(int i = 0; i < dim; ++i) {
-//         m_low[i] = _asNum(list[i]);
-//         m_high[i] = _asNum(list[i+dim]);
-//       }
-//       m_low.setValid();
-//       m_high.setValid();
-//       break;
-//     default:
-//       throw _AtlasBadParse();
-//   }
-// 
-//   for(int i = 0; i < dim; ++i) {
-//     if(m_low[i] > m_high[i]) { // spec may allow this?
-//       CoordType tmp = m_low[i];
-//       m_low[i] = m_high[i];
-//       m_high[i] = tmp;
-//     }
-//   }
-// }
+template<const int dim>
+void Ball<dim>::fromAtlas(const AtlasInType& a)
+{
+	const _AtlasMessageType& message(a);
+	if (message.isMap()) {
+		const Atlas::Message::MapType& shapeElement(message.asMap());
+		// Get sphere's radius
+		Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("radius");
+		if (shape_I != shapeElement.end()) {
+			const Atlas::Message::Element& shapeRadiusElem(shape_I->second);
+			if (shapeRadiusElem.isNum()) {
+				m_radius = shapeRadiusElem.asNum();
+			}
+		}
+	}
+}
 
+
+inline void Polygon<2>::fromAtlas(const AtlasInType& a)
+{
+	const _AtlasMessageType& message(a);
+	if (message.isMap()) {
+		const Atlas::Message::MapType& shapeElement(message.asMap());
+		Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
+		if ((it != shapeElement.end()) && it->second.isList()) {
+			const Atlas::Message::ListType& pointsData(it->second.asList());
+			
+			for (size_t p = 0; p < pointsData.size(); ++p) {
+				if (!pointsData[p].isList()) {
+					continue;
+				}
+				
+				const Atlas::Message::ListType& point(pointsData[p].asList());
+				if ((point.size() < 2) || !point[0].isNum() || !point[1].isNum()) {
+					continue;
+				}
+				
+				WFMath::Point<2> wpt(point[0].asNum(), point[1].asNum());
+				addCorner(numCorners(), wpt);
+			}
+			if (numCorners() > 2) {
+				return;
+			}
+		}
+	}
+	throw _AtlasBadParse();
+}
+
+template<const int dim>
+void RotBox<dim>::fromAtlas(const AtlasInType& a)
+{
+	const _AtlasMessageType& message(a);
+	if (message.isMap()) {
+		const Atlas::Message::MapType& shapeElement(message.asMap());
+		// Get rotbox's position
+		Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("point");
+		if (shape_I != shapeElement.end()) {
+			const Atlas::Message::Element& shapePointElem(shape_I->second);
+			WFMath::Point<dim> shapePoint;
+			shapePoint.fromAtlas(shapePointElem);
+			// Get rotbox's vector
+			shape_I = shapeElement.find("vector");
+			if (shape_I != shapeElement.end()) {
+				const Atlas::Message::Element& shapeVectorElem(shape_I->second);
+				WFMath::Vector<dim> shapeVector;
+				shapeVector.fromAtlas(shapeVectorElem);
+				m_corner0 = shapePoint;
+				m_size = shapeVector;
+				m_orient = WFMath::RotMatrix<dim>().identity(); //TODO: parse rotation matrix (is it needed?)
+				return;
+			}
+		}
+	}
+	throw _AtlasBadParse();
+}
 
 class AtlasShapeParser
 {
@@ -321,18 +347,6 @@ public:
 	 * @returns The shape type, or ST_UNKNOWN if no shape type could be identified.
 	 */
 	inline static ShapeTypes parseShapeTypeFromAtlas(const Atlas::Message::MapType& shapeElement);
-
-	/**
-	 * @brief Common method for parsing shape data from Atlas.
-	 * Since each different shape expects different Atlas data this is a templated method with specialized implementations for each available shape. If you call this and get error regarding missing implementations it probably means that there's no implementation for the type of shape you're calling it with.
-	 * Note that a new shape instance will be put on the heap if the parsing is successful, and it's up to the calling code to properly delete it when done.
-	 * @param shapeElement The atlas map element which contains the shape data. Often this is found with the key "shape" in the atlas data.
-	 * @param shape The resulting shape is meant to be put here, if successfully created. That means that a new shape instance will be created, and it's then up to the calling method to properly delete it, to avoid memory leaks.
-	 * @param pos An optional position. The shape will be positioned according to this.
-	 * @return True if the atlas data was successfully parsed and a shape was created.
-	 */
-	template <typename Shape, const int dim>
-	inline static bool parseFromAtlas(const Atlas::Message::MapType& shapeElement, Shape** shape, WFMath::Point<dim> pos);
 
 };
 
@@ -355,105 +369,6 @@ AtlasShapeParser::ShapeTypes AtlasShapeParser::parseShapeTypeFromAtlas(const Atl
 		}
 	}
 	return ST_UNKNOWN;
-}
-
-
-template<>
-bool AtlasShapeParser::parseFromAtlas<WFMath::Ball<2> >(const Atlas::Message::MapType& shapeElement, WFMath::Ball<2>** shape, WFMath::Point<2> pos)
-{
-	/// Get sphere's radius
-	Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("radius");
-	if (shape_I != shapeElement.end()) {
-		const Atlas::Message::Element& shapeRadiusElem(shape_I->second);
-		if (shapeRadiusElem.isNum()) {
-			float shapeRadius = shapeRadiusElem.asNum();
-			/// Make disc
-			*shape = new WFMath::Ball<2>(pos, shapeRadius);
-			return true;
-		}
-	}
-	return false;
-}
-
-template<>
-bool AtlasShapeParser::parseFromAtlas<WFMath::Ball<3> >(const Atlas::Message::MapType& shapeElement, WFMath::Ball<3>** shape, WFMath::Point<3> pos)
-{
-	/// Get sphere's radius
-	Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("radius");
-	if (shape_I != shapeElement.end()) {
-		const Atlas::Message::Element& shapeRadiusElem(shape_I->second);
-		if (shapeRadiusElem.isNum()) {
-			float shapeRadius = shapeRadiusElem.asNum();
-			/// Make ball
-			*shape = new WFMath::Ball<3>(pos, shapeRadius);
-			return true;
-		}
-	}
-	return false;
-}
-
-template<>
-bool AtlasShapeParser::parseFromAtlas<WFMath::RotBox<2> >(const Atlas::Message::MapType& shapeElement, WFMath::RotBox<2>** shape,  WFMath::Point<2> pos)
-{
-	// Get rotbox's position
-	Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("point");
-	if (shape_I != shapeElement.end()) {
-		const Atlas::Message::Element& shapePointElem(shape_I->second);
-		if (shapePointElem.isList()) {
-			const Atlas::Message::ListType & pointList = shapePointElem.asList();
-			if (pointList.size() > 1 && pointList[0].isNum() && pointList[1].isNum()) {
-				WFMath::Point<2> shapePoint(pointList[0].asNum(), pointList[1].asNum());
-				// Get rotbox's vector
-				shape_I = shapeElement.find("vector");
-				if (shape_I != shapeElement.end()) {
-					const Atlas::Message::Element& shapeVectorElem(shape_I->second);
-					if (shapeVectorElem.isList()) {
-						const Atlas::Message::ListType & vectorList = shapeVectorElem.asList();
-						if (vectorList.size() > 1 && vectorList[0].isNum() && vectorList[1].isNum()) {
-							///use the "point" as an offset
-							WFMath::Point<2> adjustedPos(pos.x() + shapePoint.x(), pos.y() + shapePoint.y());
-							WFMath::Vector<2> shapeVector(vectorList[0].asNum(), vectorList[1].asNum());
-							*shape = new WFMath::RotBox<2>(adjustedPos, shapeVector, WFMath::RotMatrix<2>().identity());
-							return true;
-						}
-					}
-				}
-			}
-		}
-	}
-	return false;
-}
-
-template<>
-bool AtlasShapeParser::parseFromAtlas<WFMath::Polygon<2> >(const Atlas::Message::MapType& shapeElement, WFMath::Polygon<2>** shape, WFMath::Point<2> pos)
-{
-	Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
-	if ((it != shapeElement.end()) && it->second.isList()) {
-		const Atlas::Message::ListType& pointsData(it->second.asList());
-		
-		WFMath::Polygon<2>* poly = new WFMath::Polygon<2>();
-		for (size_t p = 0; p < pointsData.size(); ++p) {
-			if (!pointsData[p].isList()) {
-				continue;
-			}
-			
-			const Atlas::Message::ListType& point(pointsData[p].asList());
-			if ((point.size() < 2) || !point[0].isNum() || !point[1].isNum()) {
-				continue;
-			}
-			
-			WFMath::Point<2> wpt(point[0].asNum(), point[1].asNum());
-			poly->addCorner(poly->numCorners(), wpt);
-		}
-		if (poly->numCorners() > 0) {
-			poly->shift(WFMath::Vector<2>(pos.x(), pos.y()));
-			*shape = poly;
-			return true;
-		}
-		///If we couldn't properly build a polygon, delete the one we've built so far before we return
-		delete poly;
-	}
-	return false;
 }
 
 
