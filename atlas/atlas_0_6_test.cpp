@@ -64,6 +64,9 @@ int main()
   poly.addCorner(1, WFMath::Point<2>(10, 0));
   poly.addCorner(2, WFMath::Point<2>(10, 10));
   atlas_test(poly);
+  
+  RotBox<2> rotbox(Point<2>(1, 2), Vector<2>(10, 20), RotMatrix<2>().identity());
+  atlas_test(rotbox);
 
   return 0;
 }

@@ -344,7 +344,7 @@ inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
 			WFMath::Point<dim> shapePoint;
 			shapePoint.fromAtlas(shapePointElem);
 			// Get rotbox's vector
-			shape_I = shapeElement.find("vector");
+			shape_I = shapeElement.find("size");
 			if (shape_I != shapeElement.end()) {
 				const Atlas::Message::Element& shapeVectorElem(shape_I->second);
 				WFMath::Vector<dim> shapeVector;
@@ -358,6 +358,17 @@ inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
 	}
 	throw _AtlasBadParse();
 }
+
+template<const int dim>
+inline AtlasOutType RotBox<dim>::toAtlas() const
+{
+	Atlas::Message::MapType map;
+	map.insert(Atlas::Message::MapType::value_type("point", m_corner0.toAtlas()));
+	map.insert(Atlas::Message::MapType::value_type("size", m_size.toAtlas()));
+	//TODO: also add the rotmatrix
+	return map;
+}
+
 
 class AtlasShapeParser
 {
