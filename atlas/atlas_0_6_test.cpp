@@ -53,6 +53,9 @@ int main()
   AxisBox<3> b1(Point<3>().setToOrigin(), p), b2(p, p + v);
   atlas_test(b1);
   atlas_test(b2);
+  
+  Ball<3> ball(Point<3>(0, 0, 0), 10);
+  atlas_test(ball);
 
   return 0;
 }
