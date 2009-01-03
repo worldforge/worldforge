@@ -63,5 +63,11 @@ int main()
   test_point(Point<2>(1, -1));
   test_point(Point<3>(1, -1, Sqrt2));
 
+  Point<2> zero2 = Point<2>::ZERO();
+  assert(zero2.x() == 0 && zero2.y() == 0);
+  Point<3> zero3 = Point<3>::ZERO();
+  assert(zero3.x() == 0 && zero3.y() == 0 && zero3.z() == 0);
+
+
   return 0;
 }
