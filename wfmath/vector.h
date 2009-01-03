@@ -31,6 +31,7 @@
 #define WFMATH_VECTOR_H
 
 #include <wfmath/const.h>
+#include <wfmath/zero.h>
 
 namespace WFMath {
 
@@ -117,6 +118,7 @@ std::istream& operator>>(std::istream& is, Vector<dim>& v);
  **/
 template<const int dim>
 class Vector {
+ friend class ZeroPrimitive<Point<dim> >;
  public:
   /// Construct an uninitialized vector
   Vector() : m_valid(false) {}
@@ -132,6 +134,15 @@ class Vector {
   	m_valid = true;
   }
 
+	/**
+	 * @brief Provides a global instance preset to zero.
+	 */
+	static const Vector<dim>& ZERO()
+	{
+		static ZeroPrimitive<Vector<dim> > zeroVector(dim);
+		return zeroVector.getShape();
+	}
+  
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
 
