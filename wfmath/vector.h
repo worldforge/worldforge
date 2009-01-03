@@ -118,7 +118,7 @@ std::istream& operator>>(std::istream& is, Vector<dim>& v);
  **/
 template<const int dim>
 class Vector {
- friend class ZeroPrimitive<Point<dim> >;
+ friend class ZeroPrimitive<Vector<dim> >;
  public:
   /// Construct an uninitialized vector
   Vector() : m_valid(false) {}
