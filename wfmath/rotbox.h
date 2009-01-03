@@ -66,6 +66,8 @@ class RotBox
   /// construct a copy of the box
   RotBox(const RotBox& b) : m_corner0(b.m_corner0), m_size(b.m_size),
 		m_orient(b.m_orient) {}
+  /// Construct a rotbox from an object passed by Atlas
+  explicit RotBox(const AtlasInType& a) {fromAtlas(a);}
 
   ~RotBox() {}
 

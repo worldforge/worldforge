@@ -124,6 +124,12 @@ class Vector {
   Vector(const Vector& v);
   /// Construct a vector from an object passed by Atlas
   explicit Vector(const AtlasInType& a) {fromAtlas(a);}
+  /// Construct a vector from a point.
+  explicit Vector(const Point<dim> point) {
+  	for (int i = 0; i < dim; ++i) {
+  		m_elem[i] = point.elements()[i];
+  	}
+  }
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);

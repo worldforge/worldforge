@@ -103,6 +103,12 @@ class Point
   Point (const Point& p);
   /// Construct a point from an object passed by Atlas
   explicit Point (const AtlasInType& a) {fromAtlas(a);}
+  /// Construct a point from a vector.
+  explicit Point(const Vector<dim> vector) {
+  	for (int i = 0; i < dim; ++i) {
+  		m_elem[i] = vector.elements()[i];
+  	}
+  }
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);

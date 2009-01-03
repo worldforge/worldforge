@@ -53,6 +53,8 @@ class Polygon<2>
  public:
   Polygon() {}
   Polygon(const Polygon& p) : m_points(p.m_points) {}
+  /// Construct a polygon from an object passed by Atlas
+  explicit Polygon(const AtlasInType& a) {fromAtlas(a);}
 
   ~Polygon() {}
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
