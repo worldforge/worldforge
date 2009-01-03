@@ -30,6 +30,7 @@
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
 #include <wfmath/quaternion.h>
+#include <wfmath/zero.h>
 
 namespace WFMath {
 
@@ -88,6 +89,8 @@ std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
 template<const int dim>
 std::istream& operator>>(std::istream& is, Point<dim>& m);
 
+
+
 /// A dim dimensional point
 /**
  * This class implements the full shape interface, as described in
@@ -96,6 +99,7 @@ std::istream& operator>>(std::istream& is, Point<dim>& m);
 template<const int dim>
 class Point
 {
+ friend class ZeroPrimitive<Point<dim> >;
  public:
   /// Construct an uninitialized point
   Point () : m_valid(false) {}
@@ -108,7 +112,17 @@ class Point
   	for (int i = 0; i < dim; ++i) {
   		m_elem[i] = vector.elements()[i];
   	}
+  	m_valid = true;
   }
+
+	/**
+	 * @brief Provides a global instance preset to zero.
+	 */
+	static const Point<dim>& ZERO()
+	{
+		static ZeroPrimitive<Point<dim> > zeroPoint(dim);
+		return zeroPoint.getShape();
+	}
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);
