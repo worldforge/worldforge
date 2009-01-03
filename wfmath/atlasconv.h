@@ -269,6 +269,13 @@ inline void Ball<dim>::fromAtlas(const AtlasInType& a)
 				m_radius = shapeRadiusElem.asNum();
 			}
 		}
+		Atlas::Message::MapType::const_iterator pos_I = shapeElement.find("position");
+		if (pos_I != shapeElement.end()) {
+			const Atlas::Message::Element& posElem(pos_I->second);
+			if (posElem.isList()) {
+				m_center.fromAtlas(posElem);
+			}
+		}
 	}
 }
 
@@ -277,6 +284,7 @@ inline AtlasOutType Ball<dim>::toAtlas() const
 {
 	Atlas::Message::MapType map;
 	map.insert(Atlas::Message::MapType::value_type("radius", _AtlasFloatType(m_radius)));
+	map.insert(Atlas::Message::MapType::value_type("position", m_center.toAtlas()));
 	return map;
 }
 
