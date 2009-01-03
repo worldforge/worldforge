@@ -129,6 +129,7 @@ class Vector {
   	for (int i = 0; i < dim; ++i) {
   		m_elem[i] = point.elements()[i];
   	}
+  	m_valid = true;
   }
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
