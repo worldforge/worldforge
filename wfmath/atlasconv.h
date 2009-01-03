@@ -196,7 +196,7 @@ inline AtlasOutType Point<dim>::toAtlas() const
 }
 
 template<const int dim>
-void AxisBox<dim>::fromAtlas(const AtlasInType& a)
+inline void AxisBox<dim>::fromAtlas(const AtlasInType& a)
 {
   if(!a.IsList())
     throw _AtlasBadParse();
@@ -230,7 +230,7 @@ void AxisBox<dim>::fromAtlas(const AtlasInType& a)
 }
 
 template<const int dim>
-AtlasOutType AxisBox<dim>::toAtlas() const
+inline AtlasOutType AxisBox<dim>::toAtlas() const
 {
   int i;
 
@@ -253,7 +253,7 @@ AtlasOutType AxisBox<dim>::toAtlas() const
 }
 
 template<const int dim>
-void Ball<dim>::fromAtlas(const AtlasInType& a)
+inline void Ball<dim>::fromAtlas(const AtlasInType& a)
 {
 	const _AtlasMessageType& message(a);
 	if (message.isMap()) {
@@ -301,7 +301,7 @@ inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 }
 
 template<const int dim>
-void RotBox<dim>::fromAtlas(const AtlasInType& a)
+inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
 {
 	const _AtlasMessageType& message(a);
 	if (message.isMap()) {
@@ -351,7 +351,7 @@ public:
 };
 
 
-AtlasShapeParser::ShapeTypes AtlasShapeParser::parseShapeTypeFromAtlas(const Atlas::Message::MapType& shapeElement)
+inline AtlasShapeParser::ShapeTypes AtlasShapeParser::parseShapeTypeFromAtlas(const Atlas::Message::MapType& shapeElement)
 {
 	// Get shape's type
 	Atlas::Message::MapType::const_iterator type_I = shapeElement.find("type");
