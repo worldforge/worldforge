@@ -1,5 +1,11 @@
 2009-01-04  Simon Goodall  <simon@worldforge.org>
 
+	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add a removeShader method
+	  to remove previously added shaders. Fix removeArea so that surfaces
+	  with no areas are removed.
+
+2009-01-04  Simon Goodall  <simon@worldforge.org>
+
 	* Mercator/Segment.cpp: Fix iterator erase logic in removeArea. Erase
 	  invalidates iterators.
 

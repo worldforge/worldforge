@@ -71,12 +71,39 @@ void Terrain::addShader(Shader * t, int id)
             if (!t->checkIntersect(*seg)) {
                 continue;
             }
-            
+
             Segment::Surfacestore & sss = seg->getSurfaces();
             sss[id] = t->newSurface(*seg);
         }
     }
 }
+
+/// \brief remove a Shader from the list for this terrain.
+///
+/// As each shader is removed, surfaces are removed from existing segments
+void Terrain::removeShader(Shader * t, int id)
+{
+
+    m_shaders.erase(m_shaders.find(id));
+
+    // Delete all surfaces for this shader
+    for (Segmentstore::iterator I = m_segments.begin();
+         I!=m_segments.end(); ++I) {
+        for (Segmentcolumn::iterator J = I->second.begin();
+             J != I->second.end(); ++J) {
+            Segment *seg=J->second;
+
+            Segment::Surfacestore & sss = seg->getSurfaces();
+            Segment::Surfacestore::iterator I = sss.find(id);
+            if (I != sss.end()) {
+                delete I->second;
+                sss.erase(I);
+            }
+        }
+    }
+}
+
+
 
 /// \brief Add the required Surface objects to a Segment.
 ///
@@ -574,16 +601,26 @@ void Terrain::removeArea(Area * area)
             }
 
             s->removeArea(area);
-            
-            Segment::Surfacestore& sss(s->getSurfaces());
+
+            Segment::Surfacestore& sss = s->getSurfaces();
             Shaderstore::const_iterator I = m_shaders.begin();
             Shaderstore::const_iterator Iend = m_shaders.end();
             for (; I != Iend; ++I) {
                 if (sss.count(I->first)) {
                     // segment already has a surface for this shader, mark it
                     // for re-generation
-                    sss[I->first]->invalidate();
-                    continue;
+                    Segment::Surfacestore::iterator II = sss.find(I->first);
+                    assert (II != sss.end());
+                    Surface *surface = II->second;
+                    surface->invalidate(); 
+
+                    // If the shader no longer intersects, then remove it
+                    // e.g. due to all areas for this shader being removed, 
+                    // then we need to remove the surface.
+                    if (I->second->checkIntersect(*s) == false) {
+                      sss.erase(II);
+                      delete surface;
+                    }
                 }
             }
     

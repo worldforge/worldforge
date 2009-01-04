@@ -143,6 +143,7 @@ class Terrain {
 
     /// \brief Add a new Shader to the list for this terrain.
     void addShader(Shader * t, int id);
+    void removeShader(Shader * t, int id);
     
     TerrainMod * addMod(const TerrainMod &t);
     void updateMod(TerrainMod * mod);
