@@ -653,9 +653,11 @@ void Segment::removeArea(Area* area)
 {
     Areastore::iterator I = m_areas.lower_bound(area->getLayer());
     Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
-    for (; I != Iend; ++I) {
-        if (I->second == area) {
-            m_areas.erase(I);
+    while (I != Iend) {
+        Areastore::iterator II = I;
+        ++I;
+        if (II->second == area) {
+            m_areas.erase(II);
         }
     }
     invalidateSurfaces();

@@ -1,3 +1,8 @@
+2009-01-04  Simon Goodall  <simon@worldforge.org>
+
+	* Mercator/Segment.cpp: Fix iterator erase logic in removeArea. Erase
+	  invalidates iterators.
+
 2008-11-10  Al Riddoch  <alriddoch@googlemail.com>
 
 	* tests/testForest.cpp, tests/testPlant.cpp: Fix a warning caused
