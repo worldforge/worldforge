@@ -57,10 +57,10 @@ template<const int dim>
 CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2);
 template<const int dim>
 CoordType Distance(const Point<dim>& p1, const Point<dim>& p2)
-	{return sqrt(SquaredDistance(p1, p2));}
+  {return sqrt(SquaredDistance(p1, p2));}
 template<const int dim>
 CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
-	{return (p1 - p2).sloppyMag();}
+  {return (p1 - p2).sloppyMag();}
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// Find the center of a set of points, all weighted equally
@@ -74,15 +74,15 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
  * sum to zero.
  **/
 template<const int dim, template<class, class> class container,
-			template<class, class> class container2>
+      template<class, class> class container2>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c,
-		      const container2<CoordType, std::allocator<CoordType> >& weights);
+          const container2<CoordType, std::allocator<CoordType> >& weights);
 #endif
 
 // This is used a couple of places in the library
 template<const int dim>
 Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2,
-		    CoordType dist = 0.5);
+        CoordType dist = 0.5);
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
@@ -109,20 +109,20 @@ class Point
   explicit Point (const AtlasInType& a) {fromAtlas(a);}
   /// Construct a point from a vector.
   explicit Point(const Vector<dim> vector) {
-  	for (int i = 0; i < dim; ++i) {
-  		m_elem[i] = vector.elements()[i];
-  	}
-  	m_valid = true;
+    for (int i = 0; i < dim; ++i) {
+      m_elem[i] = vector.elements()[i];
+    }
+    m_valid = true;
   }
 
-	/**
-	 * @brief Provides a global instance preset to zero.
-	 */
-	static const Point<dim>& ZERO()
-	{
-		static ZeroPrimitive<Point<dim> > zeroPoint(dim);
-		return zeroPoint.getShape();
-	}
+  /**
+   * @brief Provides a global instance preset to zero.
+   */
+  static const Point<dim>& ZERO()
+  {
+    static ZeroPrimitive<Point<dim> > zeroPoint(dim);
+    return zeroPoint.getShape();
+  }
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);
@@ -158,7 +158,7 @@ class Point
 
   /// Rotate about point p
   Point& rotate(const RotMatrix<dim>& m, const Point& p)
-	{return (*this = p + Prod(*this - p, m));}
+  {return (*this = p + Prod(*this - p, m));}
 
   // Functions so that Point<> has the generic shape interface
 
@@ -168,19 +168,19 @@ class Point
 
   Point shift(const Vector<dim>& v) {return *this += v;}
   Point moveCornerTo(const Point& p, int corner)
-	{assert(corner == 0); return operator=(p);}
+  {assert(corner == 0); return operator=(p);}
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
   Point& rotateCorner(const RotMatrix<dim>& m, int corner)
-	{assert(corner == 0); return *this;}
+  {assert(corner == 0); return *this;}
   Point& rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Point& rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   // 3D rotation functions
   Point<3>& rotate(const Quaternion& q, const Point<3>& p)
-	{return (*this = p + (*this - p).rotate(q));}
+  {return (*this = p + (*this - p).rotate(q));}
   Point<3>& rotateCorner(const Quaternion& q, int corner)
-	{assert(corner == 0); return *this;}
+  {assert(corner == 0); return *this;}
   Point<3>& rotateCenter(const Quaternion& q) {return *this;}
   Point<3>& rotatePoint(const Quaternion& q, const Point<3>& p) {return rotate(q, p);}
 
@@ -192,7 +192,7 @@ class Point
 
   Point toParentCoords(const Point& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-	{return origin + (*this - Point().setToOrigin()) * rotation;}
+  {return origin + (*this - Point().setToOrigin()) * rotation;}
   Point toParentCoords(const AxisBox<dim>& coords) const;
   Point toParentCoords(const RotBox<dim>& coords) const;
 
@@ -202,15 +202,15 @@ class Point
 
   Point toLocalCoords(const Point& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-	{return Point().setToOrigin() + rotation * (*this - origin);}
+  {return Point().setToOrigin() + rotation * (*this - origin);}
   Point toLocalCoords(const AxisBox<dim>& coords) const;
   Point toLocalCoords(const RotBox<dim>& coords) const;
 
   // 3D only
   Point<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-	{return origin + (*this - Point().setToOrigin()).rotate(rotation);}
+  {return origin + (*this - Point().setToOrigin()).rotate(rotation);}
   Point<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-	{return Point().setToOrigin() + (*this - origin).rotate(rotation.inverse());}
+  {return Point().setToOrigin() + (*this - origin).rotate(rotation.inverse());}
 
   // Member access
 

@@ -87,7 +87,7 @@ class AxisBox
   void fromAtlas(const AtlasInType& a);
 
   AxisBox& operator=(const AxisBox& a)
-	{m_low = a.m_low; m_high = a.m_high; return *this;}
+  {m_low = a.m_low; m_high = a.m_high; return *this;}
 
   bool isEqualTo(const AxisBox& b, double epsilon = WFMATH_EPSILON) const;
   bool operator==(const AxisBox& a) const	{return isEqualTo(a);}
@@ -118,16 +118,16 @@ class AxisBox
    * optimization primarily intended for use inside the library.
    **/
   AxisBox& setCorners(const Point<dim>& p1, const Point<dim>& p2,
-	bool ordered = false);
+  bool ordered = false);
 
   // Movement functions
 
   AxisBox& shift(const Vector<dim>& v)
-	{m_low += v; m_high += v; return *this;}
+  {m_low += v; m_high += v; return *this;}
   AxisBox& moveCornerTo(const Point<dim>& p, int corner)
-	{return shift(p - getCorner(corner));}
+  {return shift(p - getCorner(corner));}
   AxisBox& moveCenterTo(const Point<dim>& p)
-	{return shift(p - getCenter());}
+  {return shift(p - getCenter());}
 
   // No rotation functions, this shape can't rotate
 

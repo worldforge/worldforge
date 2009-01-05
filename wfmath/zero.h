@@ -41,10 +41,10 @@ An instance of Shape with zero values will be created at construction time.
 */
 ZeroPrimitive(int dim)
 {
-	for (int i = 0; i < dim; ++i) {
-		m_shape.m_elem[i] = 0;
-	}
-	m_shape.m_valid = true;
+  for (int i = 0; i < dim; ++i) {
+    m_shape.m_elem[i] = 0;
+  }
+  m_shape.m_valid = true;
 }
 
 /**

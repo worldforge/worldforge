@@ -128,20 +128,20 @@ class Vector {
   explicit Vector(const AtlasInType& a) {fromAtlas(a);}
   /// Construct a vector from a point.
   explicit Vector(const Point<dim> point) {
-  	for (int i = 0; i < dim; ++i) {
-  		m_elem[i] = point.elements()[i];
-  	}
-  	m_valid = true;
+    for (int i = 0; i < dim; ++i) {
+      m_elem[i] = point.elements()[i];
+    }
+    m_valid = true;
   }
 
-	/**
-	 * @brief Provides a global instance preset to zero.
-	 */
-	static const Vector<dim>& ZERO()
-	{
-		static ZeroPrimitive<Vector<dim> > zeroVector(dim);
-		return zeroVector.getShape();
-	}
+  /**
+   * @brief Provides a global instance preset to zero.
+   */
+  static const Vector<dim>& ZERO()
+  {
+    static ZeroPrimitive<Vector<dim> > zeroVector(dim);
+    return zeroVector.getShape();
+  }
   
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
@@ -190,9 +190,9 @@ class Vector {
 
   // documented outside the class definition
   friend Vector Prod<dim>	(const RotMatrix<dim>& m,
-				 const Vector& v);
+          const Vector& v);
   friend Vector InvProd<dim>	(const RotMatrix<dim>& m,
-				 const Vector& v);
+          const Vector& v);
 
   /// Get the i'th element of the vector
   CoordType operator[](const int i) const {assert(0 <= i && i < dim); return m_elem[i];}
@@ -224,20 +224,20 @@ class Vector {
   CoordType mag() const		{return (CoordType) sqrt(sqrMag());}
   /// Normalize a vector
   Vector& normalize(CoordType norm = 1.0)
-	{CoordType themag = mag(); assert(themag > 0); return (*this *= norm / themag);}
+  {CoordType themag = mag(); assert(themag > 0); return (*this *= norm / themag);}
 
   /// An approximation to the magnitude of a vector
   /**
-  * The sloppyMag() function gives a value between
-  * the true magnitude and sloppyMagMax multiplied by the
-  * true magnitude. sloppyNorm() uses sloppyMag() to normalize
-  * the vector. This is currently only implemented for
-  * dim = {1, 2, 3}. For all current implementations,
-  * sloppyMagMax is greater than or equal to one.
-  * The constant sloppyMagMaxSqrt is provided for those
-  * who want to most closely approximate the true magnitude,
-  * without caring whether it's too low or too high.
-  **/
+   * The sloppyMag() function gives a value between
+   * the true magnitude and sloppyMagMax multiplied by the
+   * true magnitude. sloppyNorm() uses sloppyMag() to normalize
+   * the vector. This is currently only implemented for
+   * dim = {1, 2, 3}. For all current implementations,
+   * sloppyMagMax is greater than or equal to one.
+   * The constant sloppyMagMaxSqrt is provided for those
+   * who want to most closely approximate the true magnitude,
+   * without caring whether it's too low or too high.
+   **/
   CoordType sloppyMag() const;
   /// Approximately normalize a vector
   /**
@@ -278,7 +278,7 @@ class Vector {
   Vector& mirror(const int i) {assert(0 <= i && i < dim); m_elem[i] *= -1; return *this;}
   /// Reflect a vector in the direction specified by v
   Vector& mirror(const Vector& v)
-	{return operator-=(2 * v * Dot(v, *this) / v.sqrMag());}
+  {return operator-=(2 * v * Dot(v, *this) / v.sqrMag());}
   /// Reflect a vector in all directions simultaneously.
   /**
    * This is a nice way to implement the parity operation if dim is odd.
@@ -353,7 +353,7 @@ class Vector {
 
   // FIXME make Cross() a friend function, and make this private
   double _scaleEpsilon(const Vector& v, double epsilon = WFMATH_EPSILON) const
-	{return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
+  {return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
 
   const CoordType* elements() const {return m_elem;}
 

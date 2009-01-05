@@ -57,7 +57,7 @@ inline _AtlasFloatType _asNum(const _AtlasMessageType& a) {return a.asNum();}
 #elif defined(ATLAS_MESSAGE_OBJECT_H)
 
 struct _AtlasBadParse : public Atlas::Message::WrongTypeException,
-			virtual public std::exception
+            virtual public std::exception
 {
   virtual ~_AtlasBadParse() throw() {}
 };
@@ -258,115 +258,115 @@ inline AtlasOutType AxisBox<dim>::toAtlas() const
 template<const int dim>
 inline void Ball<dim>::fromAtlas(const AtlasInType& a)
 {
-	const _AtlasMessageType& message(a);
-	if (message.isMap()) {
-		const Atlas::Message::MapType& shapeElement(message.asMap());
-		// Get sphere's radius
-		Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("radius");
-		if (shape_I != shapeElement.end()) {
-			const Atlas::Message::Element& shapeRadiusElem(shape_I->second);
-			if (shapeRadiusElem.isNum()) {
-				m_radius = shapeRadiusElem.asNum();
-			}
-		}
-		Atlas::Message::MapType::const_iterator pos_I = shapeElement.find("position");
-		if (pos_I != shapeElement.end()) {
-			const Atlas::Message::Element& posElem(pos_I->second);
-			if (posElem.isList()) {
-				m_center.fromAtlas(posElem);
-			}
-		}
-	}
+  const _AtlasMessageType& message(a);
+  if (message.isMap()) {
+    const Atlas::Message::MapType& shapeElement(message.asMap());
+    // Get sphere's radius
+    Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("radius");
+    if (shape_I != shapeElement.end()) {
+      const Atlas::Message::Element& shapeRadiusElem(shape_I->second);
+      if (shapeRadiusElem.isNum()) {
+        m_radius = shapeRadiusElem.asNum();
+      }
+    }
+    Atlas::Message::MapType::const_iterator pos_I = shapeElement.find("position");
+    if (pos_I != shapeElement.end()) {
+      const Atlas::Message::Element& posElem(pos_I->second);
+      if (posElem.isList()) {
+        m_center.fromAtlas(posElem);
+      }
+    }
+  }
 }
 
 template<const int dim>
 inline AtlasOutType Ball<dim>::toAtlas() const
 {
-	Atlas::Message::MapType map;
-	map.insert(Atlas::Message::MapType::value_type("radius", _AtlasFloatType(m_radius)));
-	map.insert(Atlas::Message::MapType::value_type("position", m_center.toAtlas()));
-	return map;
+  Atlas::Message::MapType map;
+  map.insert(Atlas::Message::MapType::value_type("radius", _AtlasFloatType(m_radius)));
+  map.insert(Atlas::Message::MapType::value_type("position", m_center.toAtlas()));
+  return map;
 }
 
 inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 {
-	const _AtlasMessageType& message(a);
-	if (message.isMap()) {
-		const Atlas::Message::MapType& shapeElement(message.asMap());
-		Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
-		if ((it != shapeElement.end()) && it->second.isList()) {
-			const Atlas::Message::ListType& pointsData(it->second.asList());
-			
-			for (size_t p = 0; p < pointsData.size(); ++p) {
-				if (!pointsData[p].isList()) {
-					continue;
-				}
-				
-				const Atlas::Message::ListType& point(pointsData[p].asList());
-				if ((point.size() < 2) || !point[0].isNum() || !point[1].isNum()) {
-					continue;
-				}
-				
-				WFMath::Point<2> wpt(point[0].asNum(), point[1].asNum());
-				addCorner(numCorners(), wpt);
-			}
-			if (numCorners() > 2) {
-				return;
-			}
-		}
-	}
-	throw _AtlasBadParse();
+  const _AtlasMessageType& message(a);
+  if (message.isMap()) {
+    const Atlas::Message::MapType& shapeElement(message.asMap());
+    Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
+    if ((it != shapeElement.end()) && it->second.isList()) {
+      const Atlas::Message::ListType& pointsData(it->second.asList());
+      
+      for (size_t p = 0; p < pointsData.size(); ++p) {
+        if (!pointsData[p].isList()) {
+          continue;
+        }
+        
+        const Atlas::Message::ListType& point(pointsData[p].asList());
+        if ((point.size() < 2) || !point[0].isNum() || !point[1].isNum()) {
+          continue;
+        }
+        
+        WFMath::Point<2> wpt(point[0].asNum(), point[1].asNum());
+        addCorner(numCorners(), wpt);
+      }
+      if (numCorners() > 2) {
+        return;
+      }
+    }
+  }
+  throw _AtlasBadParse();
 }
 
 inline AtlasOutType Polygon<2>::toAtlas() const
 {
-	Atlas::Message::ListType points;
-	for (theConstIter I = m_points.begin(); I != m_points.end(); ++I) 
-	{
-		points.push_back(I->toAtlas());
-	}
-	Atlas::Message::MapType map;
-	map.insert(Atlas::Message::MapType::value_type("points", points));
-	return map;
+  Atlas::Message::ListType points;
+  for (theConstIter I = m_points.begin(); I != m_points.end(); ++I) 
+  {
+    points.push_back(I->toAtlas());
+  }
+  Atlas::Message::MapType map;
+  map.insert(Atlas::Message::MapType::value_type("points", points));
+  return map;
 }
 
 
 template<const int dim>
 inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
 {
-	const _AtlasMessageType& message(a);
-	if (message.isMap()) {
-		const Atlas::Message::MapType& shapeElement(message.asMap());
-		// Get rotbox's position
-		Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("point");
-		if (shape_I != shapeElement.end()) {
-			const Atlas::Message::Element& shapePointElem(shape_I->second);
-			WFMath::Point<dim> shapePoint;
-			shapePoint.fromAtlas(shapePointElem);
-			// Get rotbox's vector
-			shape_I = shapeElement.find("size");
-			if (shape_I != shapeElement.end()) {
-				const Atlas::Message::Element& shapeVectorElem(shape_I->second);
-				WFMath::Vector<dim> shapeVector;
-				shapeVector.fromAtlas(shapeVectorElem);
-				m_corner0 = shapePoint;
-				m_size = shapeVector;
-				m_orient = WFMath::RotMatrix<dim>().identity(); //TODO: parse rotation matrix (is it needed?)
-				return;
-			}
-		}
-	}
-	throw _AtlasBadParse();
+  const _AtlasMessageType& message(a);
+  if (message.isMap()) {
+    const Atlas::Message::MapType& shapeElement(message.asMap());
+    // Get rotbox's position
+    Atlas::Message::MapType::const_iterator shape_I = shapeElement.find("point");
+    if (shape_I != shapeElement.end()) {
+      const Atlas::Message::Element& shapePointElem(shape_I->second);
+      WFMath::Point<dim> shapePoint;
+      shapePoint.fromAtlas(shapePointElem);
+      // Get rotbox's vector
+      shape_I = shapeElement.find("size");
+      if (shape_I != shapeElement.end()) {
+        const Atlas::Message::Element& shapeVectorElem(shape_I->second);
+        WFMath::Vector<dim> shapeVector;
+        shapeVector.fromAtlas(shapeVectorElem);
+        m_corner0 = shapePoint;
+        m_size = shapeVector;
+        m_orient = WFMath::RotMatrix<dim>().identity(); //TODO: parse rotation matrix (is it needed?)
+        return;
+      }
+    }
+  }
+  throw _AtlasBadParse();
 }
 
 template<const int dim>
 inline AtlasOutType RotBox<dim>::toAtlas() const
 {
-	Atlas::Message::MapType map;
-	map.insert(Atlas::Message::MapType::value_type("point", m_corner0.toAtlas()));
-	map.insert(Atlas::Message::MapType::value_type("size", m_size.toAtlas()));
-	//TODO: also add the rotmatrix
-	return map;
+  Atlas::Message::MapType map;
+  map.insert(Atlas::Message::MapType::value_type("point", m_corner0.toAtlas()));
+  map.insert(Atlas::Message::MapType::value_type("size", m_size.toAtlas()));
+  //TODO: also add the rotmatrix
+  return map;
 }
 
 } // namespace WFMath

@@ -61,11 +61,11 @@ class RotBox
    * the rotation of the box relative to the coordinate axes
    **/
   RotBox(const Point<dim>& p, const Vector<dim>& size,
-	 const RotMatrix<dim>& orientation) : m_corner0(p), m_size(size),
-		m_orient(orientation) {}
+  const RotMatrix<dim>& orientation) : m_corner0(p), m_size(size),
+    m_orient(orientation) {}
   /// construct a copy of the box
   RotBox(const RotBox& b) : m_corner0(b.m_corner0), m_size(b.m_size),
-		m_orient(b.m_orient) {}
+    m_orient(b.m_orient) {}
   /// Construct a rotbox from an object passed by Atlas
   explicit RotBox(const AtlasInType& a) {fromAtlas(a);}
 
@@ -75,7 +75,7 @@ class RotBox
   AtlasOutType toAtlas() const;
   /// Set the box's value to that given by an Atlas object
   void fromAtlas(const AtlasInType& a);
-  
+
   friend std::ostream& operator<< <dim>(std::ostream& os, const RotBox& r);
   friend std::istream& operator>> <dim>(std::istream& is, RotBox& r);
 
@@ -87,7 +87,7 @@ class RotBox
   bool operator!=(const RotBox& b) const	{return !isEqualTo(b);}
 
   bool isValid() const {return m_corner0.isValid() && m_size.isValid()
-	&& m_orient.isValid();}
+  && m_orient.isValid();}
 
   // Descriptive characteristics
 
@@ -111,44 +111,44 @@ class RotBox
   // Movement functions
 
   RotBox& shift(const Vector<dim>& v)
-	{m_corner0 += v; return *this;}
+  {m_corner0 += v; return *this;}
   RotBox& moveCornerTo(const Point<dim>& p, int corner)
-	{return shift(p - getCorner(corner));}
+  {return shift(p - getCorner(corner));}
   RotBox& moveCenterTo(const Point<dim>& p)
-	{return shift(p - getCenter());}
+  {return shift(p - getCenter());}
 
   RotBox& rotateCorner(const RotMatrix<dim>& m, int corner)
-	{rotatePoint(m, getCorner(corner)); return *this;}
+  {rotatePoint(m, getCorner(corner)); return *this;}
   RotBox& rotateCenter(const RotMatrix<dim>& m)
-	{rotatePoint(m, getCenter()); return *this;}
+  {rotatePoint(m, getCenter()); return *this;}
   RotBox& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
-	{m_orient = Prod(m_orient, m); m_corner0.rotate(m, p); return *this;}
+  {m_orient = Prod(m_orient, m); m_corner0.rotate(m, p); return *this;}
 
   // 3D rotation functions
   RotBox<3>& rotateCorner(const Quaternion& q, int corner)
-	{rotatePoint(q, getCorner(corner)); return *this;}
+  {rotatePoint(q, getCorner(corner)); return *this;}
   RotBox<3>& rotateCenter(const Quaternion& q)
-	{rotatePoint(q, getCenter()); return *this;}
+  {rotatePoint(q, getCenter()); return *this;}
   RotBox<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
-	{m_orient = m_orient.rotate(q); m_corner0.rotate(q, p); return *this;}
+  {m_orient = m_orient.rotate(q); m_corner0.rotate(q, p); return *this;}
 
   // Intersection functions
 
   AxisBox<dim> boundingBox() const;
   Ball<dim> boundingSphere() const
-	{return Ball<dim>(getCenter(), m_size.mag() / 2);}
+  {return Ball<dim>(getCenter(), m_size.mag() / 2);}
   Ball<dim> boundingSphereSloppy() const
-	{return Ball<dim>(getCenter(), m_size.sqrMag() / 2);}
+  {return Ball<dim>(getCenter(), m_size.sqrMag() / 2);}
 
   RotBox toParentCoords(const Point<dim>& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
         {return RotBox(m_corner0.toParentCoords(origin, rotation), m_size,
-		m_orient * rotation);}
+    m_orient * rotation);}
   RotBox toParentCoords(const AxisBox<dim>& coords) const
         {return RotBox(m_corner0.toParentCoords(coords), m_size, m_orient);}
   RotBox toParentCoords(const RotBox<dim>& coords) const
         {return RotBox(m_corner0.toParentCoords(coords), m_size,
-		m_orient * coords.m_orient);}
+    m_orient * coords.m_orient);}
 
   // toLocal is just like toParent, expect we reverse the order of
   // translation and rotation and use the opposite sense of the rotation
@@ -157,20 +157,20 @@ class RotBox
   RotBox toLocalCoords(const Point<dim>& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
         {return RotBox(m_corner0.toLocalCoords(origin, rotation), m_size,
-		rotation * m_orient);}
+    rotation * m_orient);}
   RotBox toLocalCoords(const AxisBox<dim>& coords) const
         {return RotBox(m_corner0.toLocalCoords(coords), m_size, m_orient);}
   RotBox toLocalCoords(const RotBox<dim>& coords) const
         {return RotBox(m_corner0.toLocalCoords(coords), m_size,
-		coords.m_orient * m_orient);}
+    coords.m_orient * m_orient);}
 
   // 3D only
   RotBox<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
         {return RotBox<3>(m_corner0.toParentCoords(origin, rotation), m_size,
-		m_orient.rotate(rotation));}
+    m_orient.rotate(rotation));}
   RotBox<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
         {return RotBox<3>(m_corner0.toLocalCoords(origin, rotation), m_size,
-		m_orient.rotate(rotation.inverse()));}
+    m_orient.rotate(rotation.inverse()));}
 
   friend bool Intersect<dim>(const RotBox& r, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const RotBox& r, bool proper);

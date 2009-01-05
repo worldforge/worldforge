@@ -68,7 +68,7 @@ class Polygon<2>
   void fromAtlas(const AtlasInType& a);
   
   Polygon& operator=(const Polygon& p)
-	{m_points = p.m_points; return *this;}
+  {m_points = p.m_points; return *this;}
 
   bool isEqualTo(const Polygon& p, double epsilon = WFMATH_EPSILON) const;
 
@@ -81,7 +81,7 @@ class Polygon<2>
 
   int numCorners() const {return m_points.size();}
   Point<2> getCorner(int i) const
-	{assert(i >= 0 && ((unsigned int) i) < m_points.size()); return m_points[i];}
+  {assert(i >= 0 && ((unsigned int) i) < m_points.size()); return m_points[i];}
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Point<2> getCenter() const {return Barycenter(m_points);}
 #endif
@@ -92,14 +92,14 @@ class Polygon<2>
 
   // Add before i'th corner, zero is beginning, numCorners() is end
   bool addCorner(int i, const Point<2>& p, double epsilon = WFMATH_EPSILON)
-	{m_points.insert(m_points.begin() + i, p); return true;}
+  {m_points.insert(m_points.begin() + i, p); return true;}
 
   // Remove the i'th corner
   void removeCorner(int i) {m_points.erase(m_points.begin() + i);}
 
   // Move the i'th corner to p
   bool moveCorner(int i, const Point<2>& p, double epsilon = WFMATH_EPSILON)
-	{m_points[i] = p; return true;}
+  {m_points[i] = p; return true;}
 
   // Remove all points
   void clear()	{m_points.clear();}
@@ -113,17 +113,17 @@ class Polygon<2>
 
   Polygon& shift(const Vector<2>& v);
   Polygon& moveCornerTo(const Point<2>& p, int corner)
-	{return shift(p - getCorner(corner));}
+  {return shift(p - getCorner(corner));}
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Polygon& moveCenterTo(const Point<2>& p)
-	{return shift(p - getCenter());}
+  {return shift(p - getCenter());}
 #endif
 
   Polygon& rotateCorner(const RotMatrix<2>& m, int corner)
-	{rotatePoint(m, getCorner(corner)); return *this;}
+  {rotatePoint(m, getCorner(corner)); return *this;}
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Polygon& rotateCenter(const RotMatrix<2>& m)
-	{rotatePoint(m, getCenter()); return *this;}
+  {rotatePoint(m, getCenter()); return *this;}
 #endif
   Polygon& rotatePoint(const RotMatrix<2>& m, const Point<2>& p);
 
@@ -171,7 +171,7 @@ class Polygon<2>
   friend bool Intersect<2>(const Polygon& p1, const Polygon& p2, bool proper);
   friend bool Contains<2>(const Polygon& outer, const Polygon& inner, bool proper);
 
- private:
+private:
   std::vector<Point<2> > m_points;
   typedef std::vector<Point<2> >::iterator theIter;
   typedef std::vector<Point<2> >::const_iterator theConstIter;
@@ -193,14 +193,14 @@ typedef enum {
 // used by _Poly2Orient
 class _Poly2Reorient
 {
- public:
+public:
   _Poly2Reorient(_Poly2ReorientType type, CoordType scale = 0.0)
-	: m_type(type), m_scale(scale) {}
+  : m_type(type), m_scale(scale) {}
   ~_Poly2Reorient() {}
 
   void reorient(Polygon<2>& poly, int skip = -1) const;
 
- private:
+private:
   _Poly2ReorientType m_type;
   CoordType m_scale;
 };
@@ -220,13 +220,13 @@ struct _Poly2OrientIntersectData {
 // the intersection
 template<const int dim>
 int  _Intersect(const _Poly2Orient<dim> &, const _Poly2Orient<dim> &,
-		_Poly2OrientIntersectData &);
+    _Poly2OrientIntersectData &);
 
 // Keep track of the orientation of a 2D polygon in dim dimensions
 template<const int dim>
 class _Poly2Orient
 {
- public:
+public:
   _Poly2Orient() {}
   _Poly2Orient(const _Poly2Orient& p)	{operator=(p);}
   ~_Poly2Orient() {}
@@ -258,14 +258,14 @@ class _Poly2Orient
 
   _Poly2Orient toParentCoords(const Point<dim>& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
-		p.m_axes[0] *= rotation; p.m_axes[1] *= rotation; return p;}
+  {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
+    p.m_axes[0] *= rotation; p.m_axes[1] *= rotation; return p;}
   _Poly2Orient toParentCoords(const AxisBox<dim>& coords) const
-	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords); return p;}
+  {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords); return p;}
   _Poly2Orient toParentCoords(const RotBox<dim>& coords) const
-	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords);
-		p.m_axes[0] *= coords.orientation();
-		p.m_axes[1] *= coords.orientation(); return p;}
+  {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords);
+    p.m_axes[0] *= coords.orientation();
+    p.m_axes[1] *= coords.orientation(); return p;}
 
   // toLocal is just like toParent, expect we reverse the order of
   // translation and rotation and use the opposite sense of the rotation
@@ -273,24 +273,24 @@ class _Poly2Orient
 
   _Poly2Orient toLocalCoords(const Point<dim>& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
-	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
-		p.m_axes[0] = rotation * p.m_axes[0];
-		p.m_axes[1] = rotation * p.m_axes[1]; return p;}
+  {_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
+    p.m_axes[0] = rotation * p.m_axes[0];
+    p.m_axes[1] = rotation * p.m_axes[1]; return p;}
   _Poly2Orient toLocalCoords(const AxisBox<dim>& coords) const
-	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords); return p;}
+  {_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords); return p;}
   _Poly2Orient toLocalCoords(const RotBox<dim>& coords) const
-	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords);
-		p.m_axes[0] = coords.orientation() * p.m_axes[0];
-		p.m_axes[1] = coords.orientation() * p.m_axes[1]; return p;}
+  {_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(coords);
+    p.m_axes[0] = coords.orientation() * p.m_axes[0];
+    p.m_axes[1] = coords.orientation() * p.m_axes[1]; return p;}
 
   // 3D only
   _Poly2Orient<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-	{_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
-		p.m_axes[0].rotate(rotation); p.m_axes[0].rotate(rotation); return p;}
+  {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
+    p.m_axes[0].rotate(rotation); p.m_axes[0].rotate(rotation); return p;}
   _Poly2Orient<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-	{_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
-		p.m_axes[0].rotate(rotation.inverse());
-		p.m_axes[0].rotate(rotation.inverse()); return p;}
+  {_Poly2Orient p(*this); p.m_origin = m_origin.toLocalCoords(origin, rotation);
+    p.m_axes[0].rotate(rotation.inverse());
+    p.m_axes[0].rotate(rotation.inverse()); return p;}
 
   // Gives the offset from pd to the space spanned by
   // the basis, and puts the nearest point in p2.
@@ -304,9 +304,9 @@ class _Poly2Orient
   bool checkIntersect(const AxisBox<dim>& b, Point<2>& p2, bool proper) const;
 
   friend int  _Intersect<dim>(const _Poly2Orient<dim> &, const _Poly2Orient<dim> &,
-			      _Poly2OrientIntersectData &);
+            _Poly2OrientIntersectData &);
 
- private:
+private:
   // special case of the above when both axes are valid
   bool checkIntersectPlane(const AxisBox<dim>& b, Point<2>& p2, bool proper) const;
 
@@ -318,7 +318,7 @@ class _Poly2Orient
 template<const int dim>
 class Polygon
 {
- public:
+public:
   Polygon() {}
   Polygon(const Polygon& p) : m_orient(p.m_orient), m_poly(p.m_poly) {}
 
@@ -328,7 +328,7 @@ class Polygon
   friend std::istream& operator>> <dim>(std::istream& is, Polygon& p);
 
   Polygon& operator=(const Polygon& p)
-	{m_orient = p.m_orient; m_poly = p.m_poly; return *this;}
+  {m_orient = p.m_orient; m_poly = p.m_poly; return *this;}
 
   bool isEqualTo(const Polygon& p2, double epsilon = WFMATH_EPSILON) const;
 
@@ -341,7 +341,7 @@ class Polygon
 
   int numCorners() const {return m_poly.numCorners();}
   Point<dim> getCorner(int i) const
-	{assert(i >= 0 && i < m_poly.numCorners()); return m_orient.convert(m_poly[i]);}
+  {assert(i >= 0 && i < m_poly.numCorners()); return m_orient.convert(m_poly[i]);}
   Point<dim> getCenter() const {return m_orient.convert(m_poly.getCenter());}
 
   // The failure of the following functions does not invalidate the
@@ -366,30 +366,30 @@ class Polygon
   // Movement functions
 
   Polygon& shift(const Vector<dim>& v)
-	{m_orient.shift(v); return *this;}
+  {m_orient.shift(v); return *this;}
   Polygon& moveCornerTo(const Point<dim>& p, int corner)
-	{return shift(p - getCorner(corner));}
+  {return shift(p - getCorner(corner));}
   Polygon& moveCenterTo(const Point<dim>& p)
-	{return shift(p - getCenter());}
+  {return shift(p - getCenter());}
 
   Polygon& rotateCorner(const RotMatrix<dim>& m, int corner)
-	{m_orient.rotate2(m, m_poly[corner]); return *this;}
+  {m_orient.rotate2(m, m_poly[corner]); return *this;}
   Polygon& rotateCenter(const RotMatrix<dim>& m)
-	{if(m_poly.numCorners() > 0)
-		m_orient.rotate2(m, m_poly.getCenter());
-	 return *this;}
+  {if(m_poly.numCorners() > 0)
+    m_orient.rotate2(m, m_poly.getCenter());
+  return *this;}
   Polygon& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
-	{m_orient.rotate(m, p); return *this;}
+  {m_orient.rotate(m, p); return *this;}
 
   // 3D rotation functions
   Polygon<3>& rotateCorner(const Quaternion& q, int corner)
-	{m_orient.rotate2(q, m_poly[corner]); return *this;}
+  {m_orient.rotate2(q, m_poly[corner]); return *this;}
   Polygon<3>& rotateCenter(const Quaternion& q)
-	{if(m_poly.numCorners() > 0)
-		m_orient.rotate2(q, m_poly.getCenter());
-	 return *this;}
+  {if(m_poly.numCorners() > 0)
+    m_orient.rotate2(q, m_poly.getCenter());
+  return *this;}
   Polygon<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
-	{m_orient.rotate(q, p); return *this;}
+  {m_orient.rotate(q, p); return *this;}
 
   // Intersection functions
 

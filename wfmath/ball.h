@@ -72,13 +72,13 @@ class Ball
   Ball() {}
   /// construct a ball with the given center and radius
   Ball(const Point<dim>& center, CoordType radius)
-	: m_center(center), m_radius(radius) {assert(radius >= 0);}
+  : m_center(center), m_radius(radius) {assert(radius >= 0);}
   /// construct a copy of a ball
   Ball(const Ball& b) : m_center(b.m_center), m_radius(b.m_radius) {}
   /// Construct a ball from an object passed by Atlas
   explicit Ball(const AtlasInType& a)
-	: m_center(Point<dim>::ZERO()), m_radius(0)
-	{fromAtlas(a);}
+  : m_center(Point<dim>::ZERO()), m_radius(0)
+  {fromAtlas(a);}
 
   ~Ball() {}
 
@@ -89,9 +89,9 @@ class Ball
   AtlasOutType toAtlas() const;
   /// Set the box's value to that given by an Atlas object
   void fromAtlas(const AtlasInType& a);
-  
+
   Ball& operator=(const Ball& b)
-	{m_radius = b.m_radius; m_center = b.m_center; return *this;}
+  {m_radius = b.m_radius; m_center = b.m_center; return *this;}
 
   bool isEqualTo(const Ball& b, double epsilon = WFMATH_EPSILON) const;
 
@@ -128,13 +128,13 @@ class Ball
   Ball& rotateCorner(const RotMatrix<dim>& m, int corner) {abort(); return *this;}
   Ball& rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Ball& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
-	{m_center.rotate(m, p); return *this;}
+  {m_center.rotate(m, p); return *this;}
 
   // 3D rotation function
   Ball<3>& rotateCorner(const Quaternion&, int corner) {abort(); return *this;}
   Ball<3>& rotateCenter(const Quaternion&) {return *this;}
   Ball<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
-	{m_center.rotate(q, p); return *this;}
+  {m_center.rotate(q, p); return *this;}
 
   // Intersection functions
 
