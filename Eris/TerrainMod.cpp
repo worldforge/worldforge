@@ -62,7 +62,7 @@ WFMath::Point<3> InnerTerrainMod::parsePosition(const Atlas::Message::MapType& m
 			pos.z() = height;
 		}
 	} else {
-		///Use the height of the terrain?
+		///Use the height of the terrain? If so we should need some kind of callback here (this code originated in Ember).
 // 		pos.z() = EmberOgre::getSingleton().getTerrainGenerator()->getHeight(TerrainPosition(pos.x(), pos.y()));
 		mod_I = modElement.find("heightoffset");
 		if (mod_I != modElement.end()) {
