@@ -35,7 +35,7 @@ namespace Eris
 {
 
 /**
- @brief Base class for the inner terrain mod implemtations.
+ @brief Base class for the inner terrain mod implementations.
  We keep this separate from the TerrainMod classes because of the way these classes interacts with templated WFMath structures.
  The parseShapeAtlasData() method can also be used externally as it's a static public.
  @author Erik Hjortsberg <erik.hjortsberg@iteam.se>

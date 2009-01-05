@@ -359,8 +359,14 @@ bool TerrainMod::parseMod()
                 mInnerMod = new InnerTerrainModAdjust(*this);
             } else  if (modType == "cratermod") {
                 mInnerMod = new InnerTerrainModCrater(*this);
-            }
+            } else {
+                error() << "'" << modType << "' isn't a recognized terrain mod type.";
+           }
+        } else {
+            error() << "Mod type must be a string value.";
         }
+    } else {
+        error() << "No type defined for terrain mod.";
     }
     if (mInnerMod) {
         if (mInnerMod->parseAtlasData(modMap)) {
