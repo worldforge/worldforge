@@ -38,7 +38,8 @@ liberis_1_3_la_SOURCES = \
 	Calendar.cpp \
 	TimedEventService.cpp \
 	Alarm.cpp \
-	Task.cpp
+	Task.cpp \
+	TerrainMod.cpp
 
 liberisdir = $(includedir)/Eris-1.3/Eris
 
@@ -78,4 +79,6 @@ liberis_HEADERS = \
 	Calendar.h \
 	TimedEventService.h \
 	Alarm.h \
-	Task.h
+	Task.h \
+	TerrainMod.h \
+	TerrainMod_impl.h
