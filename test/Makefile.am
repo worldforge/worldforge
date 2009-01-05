@@ -14,7 +14,7 @@ check_PROGRAMS = Entity_unittest Account_unittest Alarm_unittest \
                  ServerInfo_unittest Task_unittest TimedEventService_unittest \
                  Timeout_unittest TypeBoundRedispatch_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
-                 UIFactory_unittest View_unittest testEris
+                 UIFactory_unittest View_unittest testEris TerrainMod_unittest
 TESTS = $(check_PROGRAMS)
 
 testEris_SOURCES = tests.cpp \
@@ -73,3 +73,4 @@ TypeService_unittest_SOURCES = TypeService_unittest.cpp
 Types_unittest_SOURCES = Types_unittest.cpp
 UIFactory_unittest_SOURCES = UIFactory_unittest.cpp
 View_unittest_SOURCES = View_unittest.cpp
+TerrainMod_unittest_SOURCES = TerrainMod_unittest.cpp
