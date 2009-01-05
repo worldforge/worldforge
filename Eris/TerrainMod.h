@@ -310,13 +310,13 @@ public:
 	/**
 	 * @brief Dtor.
 	 */
-	~TerrainMod();
+	virtual ~TerrainMod();
 	
 	/**
 	 * @brief Sets up the observation of the entity, and parses the mod info, creating the initial mod instance.
 	 * @return True if the atlas data was conformant and successfully parsed.
 	 */
-	bool init();
+	virtual bool init();
 
 	/**
 	 *    @brief Used to retrieve a pointer to this modifier
@@ -324,22 +324,18 @@ public:
 	 */
 	inline Mercator::TerrainMod* getMod() const;
 
+	
 	/**
-	 *    @brief Used to set the pointer to this modifier
-	 * @param modifier The TerrainMod we need stored (usually returned from Terrain::addMod() )
+	 * @brief Emitted whenever the modifier is changed or moved.
+	 * Should be caught by a listener to apply the change to the terrain.
 	 */
-	inline void setMod(Mercator::TerrainMod* modifier);
+	sigc::signal<void> ModChanged;
 
 	/**
-	 * Emitted whenever the modifier is changed or moved.
+	 * @brief Emitted just before the entity owning this mod is deleted.
+	 * Should be caught by a listener to remove this mod from the terrain.
 	 */
-	sigc::signal<void, TerrainMod*> EventModChanged;
-
-	/**
-	 *Emitted just before the entity owning this mod is deleted.
-	 *Should be caught by TerrainGenerator to remove this mod from the terrain.
-	 */
-	sigc::signal<void, TerrainMod*> EventModDeleted;
+	sigc::signal<void> ModDeleted;
 	
 	/**
 	 * @brief Accessor for the entity to which this terrain mod belongs.
@@ -359,6 +355,17 @@ protected:
 	 */
 	Entity::AttrChangedSlot mAttrChangedSlot;
 
+	
+	/**
+	 * @brief Called before the ModChanged signal is emitted.
+	 */
+	virtual void onModChanged();
+	
+	/**
+	 * @brief Called before the ModDeleted signal is emitted.
+	 */
+	virtual void onModDeleted();
+	
 	/**
 	 * @brief Called whenever a modifier is changed and handles the update
 	 * @param attributeValue The new Atlas data for the terrain mod
@@ -380,14 +387,14 @@ protected:
 	 * @brief Sets up the previous three handler functions to be called when a change
 	 * is made to the entity holding the modifier. 
 	 */
-	void observeEntity();
+	virtual void observeEntity();
 
 	/**
 	 * @brief Parses the Atlas data for a modifier
 	 * @returns True if it was able to successfully create a Mercator::TerrainMod, False otherwise
 	 * All work specific to a certain kind of TerrainMod is handled by the functions below.
 	 */
-	bool parseMod();
+	virtual bool parseMod();
 
 	/**
 	 * @brief The inner terrain mod instance which holds the actual Mercator::TerrainMod instance and handles the parsing of it.

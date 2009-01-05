@@ -380,7 +380,7 @@ void TerrainMod::attributeChanged(const Atlas::Message::Element& attributeValue)
 	delete mInnerMod;
 	mInnerMod = 0;
 	if (parseMod()) {
-		EventModChanged(this);
+		onModChanged();
 	}
 }
 
@@ -389,13 +389,13 @@ void TerrainMod::entity_Moved()
 	delete mInnerMod;
 	mInnerMod = 0;
 	if (parseMod()) {
-		EventModChanged(this);
+		onModChanged();
 	}
 }
 
 void TerrainMod::entity_Deleted()
 {
-	EventModDeleted(this);
+	onModDeleted();
 	delete mInnerMod;
 }
 
@@ -415,5 +415,14 @@ Entity* TerrainMod::getEntity() const
 	return mEntity;
 }
 
+void TerrainMod::onModDeleted()
+{
+	ModDeleted.emit();
+}
+
+void TerrainMod::onModChanged()
+{
+	ModChanged.emit();
+}
 } // close Namespace Eris
 
