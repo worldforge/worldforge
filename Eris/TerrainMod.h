@@ -395,6 +395,13 @@ protected:
     * All work specific to a certain kind of TerrainMod is handled by the functions below.
     */
     virtual bool parseMod();
+    
+    /**
+     * @brief If an existing mod changes we need to reparse it. Call this method in those cases.
+     * If there's already an existing mod, that will be deleted. If the changes to the entity results in an invalid parsing, the Deleted signal will be emitted. If the parsing was successful however the Changed signal will be emitted.
+     */
+    virtual void reparseMod();
+    
 
     /**
     * @brief The inner terrain mod instance which holds the actual Mercator::TerrainMod instance and handles the parsing of it.

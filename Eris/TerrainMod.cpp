@@ -371,6 +371,7 @@ bool TerrainMod::parseMod()
         if (mInnerMod->parseAtlasData(modMap)) {
             return true;
         } else {
+            delete mInnerMod;
             return false;
         }
     }
@@ -379,22 +380,31 @@ bool TerrainMod::parseMod()
     return false;
 }
 
-void TerrainMod::attributeChanged(const Atlas::Message::Element& attributeValue)
+void TerrainMod::reparseMod()
 {
-    delete mInnerMod;
+    InnerTerrainMod* oldMod = mInnerMod;
     mInnerMod = 0;
     if (parseMod()) {
         onModChanged();
+    } else {
+        ///If the parsing failed and there was an old mod, we need to temporarily set the inner mod to the old one while we emit the deleted event.
+        if (oldMod) {
+            mInnerMod = oldMod;
+            onModDeleted();
+            mInnerMod = 0;
+        }
     }
+    delete oldMod;
+}
+
+void TerrainMod::attributeChanged(const Atlas::Message::Element& attributeValue)
+{
+    reparseMod();
 }
 
 void TerrainMod::entity_Moved()
 {
-    delete mInnerMod;
-    mInnerMod = 0;
-    if (parseMod()) {
-        onModChanged();
-    }
+    reparseMod();
 }
 
 void TerrainMod::entity_Deleted()
