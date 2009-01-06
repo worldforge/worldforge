@@ -321,7 +321,7 @@ bool TerrainMod::init(bool alwaysObserve)
 bool TerrainMod::parseMod()
 {
     if (!mEntity->hasAttr("terrainmod")) {
-        error() << "TerrainMod defined on entity with no terrainmod attribute";
+        ///Don't log anything since it's expected that instances of this can be attached to entities where not terrainmod is present.
         return false;
     }
 
