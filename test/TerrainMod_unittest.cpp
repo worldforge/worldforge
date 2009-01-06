@@ -132,6 +132,16 @@ int main()
         Atlas::Message::MapType craterMod1;
         craterMod1["type"] = Atlas::Message::Element("cratermod");
         
+        ElementStore slopeMods;
+        Atlas::Message::MapType slopeMod1;
+        slopeMod1["type"] = Atlas::Message::Element("slopemod");
+        Atlas::Message::ListType slopes;
+        slopes.push_back(10);
+        slopes.push_back(20);
+        slopeMod1["slopes"] = slopes;
+        slopeMods["1"] = slopeMod1;
+        
+        
         Atlas::Message::MapType shapeBall;
         shapeBall["radius"] = 15;
         shapeBall["type"] = "ball";
@@ -146,6 +156,8 @@ int main()
         shapePolygon["points"] = points;
         shapePolygon["type"] = "polygon";
         shapes["polygon"] = shapePolygon;
+        
+        shapes["empty"] = Atlas::Message::MapType();
         
         //no terrain mod info
         {
@@ -169,6 +181,7 @@ int main()
             
         }       
          
+        //test level mod
         for (ElementStore::iterator I = levelMods.begin(); I != levelMods.end(); ++I) {
             for (ElementStore::iterator J = shapes.begin(); J != shapes.end(); ++J) {
                 std::cout << "Testing level mod " << I->first << " with " << J->first << std::endl;
@@ -178,9 +191,15 @@ int main()
                 mod_ent->setup_setAttr("terrainmod", modElement);
                 
                 Eris::TerrainMod mod(mod_ent);
-                assert(mod.init());
+                if (J->first == "empty") {
+                    assert(!mod.init());
+                } else {
+                    assert(mod.init());
+                }
             }
         }        
+        
+        //test adjust mod
         for (ElementStore::iterator I = adjustMods.begin(); I != adjustMods.end(); ++I) {
             for (ElementStore::iterator J = shapes.begin(); J != shapes.end(); ++J) {
                 std::cout << "Testing adjust mod " << I->first << " with " << J->first << std::endl;
@@ -190,10 +209,33 @@ int main()
                 mod_ent->setup_setAttr("terrainmod", modElement);
                 
                 Eris::TerrainMod mod(mod_ent);
-                assert(mod.init());
+                if (J->first == "empty") {
+                    assert(!mod.init());
+                } else {
+                    assert(mod.init());
+                }
             }
         }
                 
+        //test slope mod
+        for (ElementStore::iterator I = slopeMods.begin(); I != slopeMods.end(); ++I) {
+            for (ElementStore::iterator J = shapes.begin(); J != shapes.end(); ++J) {
+                std::cout << "Testing slope mod " << I->first << " with " << J->first << std::endl;
+                Atlas::Message::Element modElement = I->second;
+                modElement.asMap()["shape"] = J->second;
+                TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
+                mod_ent->setup_setAttr("terrainmod", modElement);
+                
+                Eris::TerrainMod mod(mod_ent);
+                if (J->first == "empty") {
+                    assert(!mod.init());
+                } else {
+                    assert(mod.init());
+                }
+            }
+        }
+        
+        //test crater mod
         {
             Atlas::Message::MapType modElement = craterMod1;
             modElement["shape"] = shapeBall;
