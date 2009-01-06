@@ -30,8 +30,10 @@ class Task;
 typedef std::vector<Entity*> EntityArray;
 typedef std::vector<Task*> TaskArray;
 
-/// Entity is a concrete (instanitable) class representing one game entity
-/** Entity encapsulates the state and tracking of one game entity; this includes
+/** 
+@brief Entity is a concrete (instanitable) class representing one game entity
+
+Entity encapsulates the state and tracking of one game entity; this includes
 it's location in the containership tree (graph?), it's name and unique and id,
 and so on.
 
@@ -39,6 +41,8 @@ This class may be sub-classed by users (and those sub-classes built via
 a Factory), to allow specific functionality. This means there are two
 integration strategies; either subclassing and over-riding virtual functions,
 or creating peer clases and attaching them to the signals.
+
+@note If you handle entities manually, you must make sure to call shutdown() before the instance is deleted.
 */
 
 class Entity : virtual public sigc::trackable
@@ -49,9 +53,19 @@ public:
     explicit Entity(const std::string& id, TypeInfo* ty, View* vw);
     virtual ~Entity();
 
+    /**
+     * @brief Shuts down the entity. A call to this must be made before the entity is deleted.
+     * In normal operations, where Eris itself takes care of the entities, it will be called automatically.
+     * If you however manually handle instance of this in your code you must call it yourself.
+     */
     virtual void shutdown();
 
 // heirarchy interface    
+    /**
+     * @brief Gets the number of contained entities, i.e. entities that are direct children of this.
+     * The number returned is only for direct children, so the number of nested entities can be larger.
+     * @return 
+     */
     unsigned int numContained() const {
         return m_contents.size();
     }
@@ -59,23 +73,51 @@ public:
         return m_contents[index];
     }
 
+    /**
+     * @brief Gets the value of a named attribute.
+     * If no attribute by the specified name can be found an InvalidOperation exception will be thrown. Therefore always first call hasAttr to make sure that the attribute exists.
+     * @param attr The attribute name.
+     * @return A reference to the attribute by the specified name.
+     * @throws InvalidOperation If no attribute by the specified name can be found.
+     */
     const Atlas::Message::Element& valueOfAttr(const std::string& attr) const;
         
+    /**
+     * @brief Checks whether an attribute exists.
+     * @param p The name of the attribute.
+     * @return True if the attribute exists.
+     */
     bool hasAttr(const std::string &p) const;
 
+    /**
+     * @brief A slot which can be used for recieving attribute update signals.
+     */
     typedef sigc::slot<void, const Atlas::Message::Element&> AttrChangedSlot;
 
-    /** setup an observer so that the specified slot is fired when the
-    named attribue's value changes */
+    /**
+     * @brief Setup an observer so that the specified slot is fired when the named attribue's value changes 
+     * 
+     * @param attr The name of the attribute to observe.
+     * @param aslot The slot which will be fired when the attribute changes.
+     * @return The connection created.
+     */
     sigc::connection observe(const std::string& attr, const AttrChangedSlot& aslot);
 
 // accesors
-    /// retrieve the unique entity ID
+    /**
+     * @brief Retrieve the unique entity ID.
+     * @return The unique id of the entity.
+     */
     const std::string& getId() const
     {
         return m_id;
     }
     
+    /**
+     * @brief Gets the name of the entity.
+     * In contrast to getId() this is not unique, and doesn't even have to be set.
+     * @return The name of the entity.
+     */
     const std::string& getName() const
     {
         return m_name;
@@ -329,7 +371,6 @@ protected:
     */
     virtual void onChildRemoved(Entity* child);
 
-protected:
     friend class IGRouter;
     friend class View;
     friend class EntityRouter;
