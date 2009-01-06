@@ -194,7 +194,6 @@ bool InnerTerrainModLevel::parseAtlasData(const Atlas::Message::MapType& modElem
 {
     WFMath::Point<3> pos = parsePosition(modElement);
     // Get level
-    Atlas::Message::MapType::const_iterator mod_I = modElement.find("height");
     const Atlas::Message::Element* shapeMap(0);
     const std::string& shapeType = parseShape(modElement, &shapeMap);
     if (shapeMap) {
