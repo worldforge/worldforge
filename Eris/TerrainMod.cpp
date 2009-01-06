@@ -136,7 +136,7 @@ Mercator::TerrainMod* InnerTerrainModSlope::getModifier()
 
 bool InnerTerrainModSlope::parseAtlasData(const Atlas::Message::MapType& modElement)
 {
-    float dx, dy, level;
+    float dx, dy;
     // Get slopes
     Atlas::Message::MapType::const_iterator mod_I = modElement.find("slopes");
     if (mod_I != modElement.end()) {
@@ -154,15 +154,15 @@ bool InnerTerrainModSlope::parseAtlasData(const Atlas::Message::MapType& modElem
                         if (shapeType == "ball") {
                             InnerTerrainModSlope_impl<WFMath::Ball<2> >* modifierImpl = new InnerTerrainModSlope_impl<WFMath::Ball<2> >();
                             mModifier_impl = modifierImpl;
-                            return modifierImpl->createInstance(*shapeMap, pos, mTerrainMod.getEntity()->getOrientation(), level, dx, dy);
+                            return modifierImpl->createInstance(*shapeMap, pos, mTerrainMod.getEntity()->getOrientation(), pos.z(), dx, dy);
                         } else if (shapeType == "rotbox") {
                             InnerTerrainModSlope_impl<WFMath::RotBox<2> >* modifierImpl = new InnerTerrainModSlope_impl<WFMath::RotBox<2> >();
                             mModifier_impl = modifierImpl;
-                            return modifierImpl->createInstance(*shapeMap, pos, mTerrainMod.getEntity()->getOrientation(), level, dx, dy);
+                            return modifierImpl->createInstance(*shapeMap, pos, mTerrainMod.getEntity()->getOrientation(), pos.z(), dx, dy);
                         } else if (shapeType == "polygon") {
                             InnerTerrainModSlope_impl<WFMath::Polygon<2> >* modifierImpl = new InnerTerrainModSlope_impl<WFMath::Polygon<2> >();
                             mModifier_impl = modifierImpl;
-                            return modifierImpl->createInstance(*shapeMap, pos, mTerrainMod.getEntity()->getOrientation(), level, dx, dy);
+                            return modifierImpl->createInstance(*shapeMap, pos, mTerrainMod.getEntity()->getOrientation(), pos.z(), dx, dy);
                         }
                     }
                 }
@@ -309,10 +309,10 @@ TerrainMod::~TerrainMod()
 {
 }
 
-bool TerrainMod::init()
+bool TerrainMod::init(bool alwaysObserve)
 {
     bool successfulParsing = parseMod();
-    if (successfulParsing) {
+    if (successfulParsing || alwaysObserve) {
         observeEntity();
     }
     return successfulParsing;

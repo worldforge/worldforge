@@ -297,6 +297,7 @@ protected:
 @brief Wrapper class that envelopes a Mercator::TerrainMod.
 This class is mainly responsible for parsing atlas data and create or update an instance of Mercator::TerrainMod with the correct data.
 The actual application of the Mercator::TerrainMod to the terrain and the subsequent update of the rendering display (i.e. the Ogre terrain) is handled mainly by TerrainGenerator, which reacts to the events emitted by this class whenever a terrain mod changes or is moved.
+After you've created an instance of this you must call the init() method.
 */
 class TerrainMod
 {
@@ -313,10 +314,11 @@ public:
     virtual ~TerrainMod();
     
     /**
-    * @brief Sets up the observation of the entity, and parses the mod info, creating the initial mod instance.
-    * @return True if the atlas data was conformant and successfully parsed.
-    */
-    virtual bool init();
+     * @brief Sets up the observation of the entity, and parses the mod info, creating the initial mod instance.
+     * @param alwaysObserve If set to true, the observation of the entity will be set up even if the parsing failed. If false however, if there was an error during the parsing no observation will be set up. The calling code is then expected to delete this instance.
+     * @return True if the atlas data was conformant and successfully parsed.
+     */
+    virtual bool init(bool alwaysObserve = false);
 
     /**
     *    @brief Used to retrieve a pointer to this modifier
