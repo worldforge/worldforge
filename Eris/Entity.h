@@ -151,7 +151,23 @@ public:
         return m_position;
     }
     
-    inline const AttrMap& getAttributes() const {return m_attrs;}
+    /**
+     * @brief Gets all attributes defined for this entity.
+     * The collection of entities returned will include both local attributes as well as the defaults set in the TypeInfo (and all of its parents) of this entity.
+     * @note This is a rather expensive operation since it needs to iterate over all parent TypeInfo instances and build up a map, which is then returned by value. If you only want to get a single attribute you should instead use the valueOfAttr method.
+     * @see getInstanceAttributes() for a similiar method which only returns those attributes that are local to this entity.
+     * @return A map of the combined attributes of both this entity and all of it's TypeInfo parents.
+     */
+    const AttrMap getAttributes() const;
+    
+    /**
+     * @brief Gets all locally defined attributes.
+     * This will only return those attributes that are locally defined for this entity. In practice it will in most cases mean those attributes that have been changed by the defaults as defined in the TypeInfo instance.
+     * @note This will only return a subset of all attributes. If you need to iterate over all attributes you should instead use the getAttributes() method. If you only want the value of a specific attribute you should use the valueOfAttr method.
+     * @see getAttributes
+     * @return The locally defined attributes for the entity.
+     */
+    const AttrMap& getInstanceAttributes() const;
     
     /** Test if this entity has a non-zero velocity vector. */
     bool isMoving() const;
@@ -403,6 +419,15 @@ protected:
     use an integer hash in the future, since this called frequently.
     */
     bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
+    
+    
+    /**
+     * @brief Utility method for recursively filling a map of attributes from a TypeInfo instance.
+     * The method will recursively call itself to make sure that the topmost TypeInfo is used first. This makes sure that attributes are overwritten by newer values, if duplicates exists.
+     * @param attributes The map of attributes to fill.
+     * @param typeInfo The type info from which we will copy values, as well as its parents.
+     */
+    void fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeInfo) const;
     
     void beginUpdate();
     void addToUpdate(const std::string& attr);

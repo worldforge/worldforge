@@ -112,6 +112,30 @@ bool Entity::hasAttr(const std::string& attr) const
     return m_attrs.count(attr) > 0;
 }
 
+const Entity::AttrMap Entity::getAttributes() const
+{
+    ///Merge both the local attributes and the type default attributes.
+    AttrMap attributes;
+    for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
+        fillAttributesFromType(attributes, *I);
+    }
+    attributes.insert(m_attrs.begin(), m_attrs.end());
+}
+
+const Entity::AttrMap& Entity::getInstanceAttributes() const
+{
+    return m_attrs;
+}
+
+void Entity::fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeInfo) const
+{
+    ///Make sure to first walk to the top of the hierarcy before we start adding attributes.
+    for (TypeInfoSet::iterator I = typeInfo->getParents().begin(); I != typeInfo->getParents().end(); ++I) {
+        fillAttributesFromType(attributes, *I);
+    }
+    attributes.insert(typeInfo->getAttributes().begin(), typeInfo->getAttributes().end());
+}
+
 sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
 {
     // sometimes, I realize how great SigC++ is
