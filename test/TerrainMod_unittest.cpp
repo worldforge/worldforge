@@ -106,13 +106,31 @@ int main()
         ElementStore modTypes;
         ElementStore shapes;
         
+        ElementStore levelMods;
         Atlas::Message::MapType levelMod1;
         levelMod1["type"] = Atlas::Message::Element("levelmod");
+        levelMods["1"] = levelMod1;
         Atlas::Message::MapType levelMod2(levelMod1);
         levelMod2["height"] = 20;
-        
+        levelMods["2"] = levelMod2;
         Atlas::Message::MapType levelMod3(levelMod1);
         levelMod2["heightoffset"] = 30;
+        levelMods["3"] = levelMod3;
+        
+        
+        ElementStore adjustMods;
+        Atlas::Message::MapType adjustMod1;
+        adjustMod1["type"] = Atlas::Message::Element("adjustmod");
+        adjustMods["1"] = levelMod1;
+        Atlas::Message::MapType adjustMod2(adjustMod1);
+        adjustMod2["height"] = 20;
+        adjustMods["2"] = adjustMod2;
+        Atlas::Message::MapType adjustMod3(adjustMod1);
+        adjustMod2["heightoffset"] = 30;
+        adjustMods["3"] = adjustMod3;
+        
+        Atlas::Message::MapType craterMod1;
+        craterMod1["type"] = Atlas::Message::Element("cratermod");
         
         Atlas::Message::MapType shapeBall;
         shapeBall["radius"] = 15;
@@ -151,17 +169,42 @@ int main()
             
         }       
          
-        for (ElementStore::iterator I = shapes.begin(); I != shapes.end(); ++I) {
-            std::cout << "Testing level mod with " << I->first << std::endl;
-            Atlas::Message::MapType modElement = levelMod1;
-            modElement["shape"] = I->second;
+        for (ElementStore::iterator I = levelMods.begin(); I != levelMods.end(); ++I) {
+            for (ElementStore::iterator J = shapes.begin(); J != shapes.end(); ++J) {
+                std::cout << "Testing level mod " << I->first << " with " << J->first << std::endl;
+                Atlas::Message::Element modElement = I->second;
+                modElement.asMap()["shape"] = J->second;
+                TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
+                mod_ent->setup_setAttr("terrainmod", modElement);
+                
+                Eris::TerrainMod mod(mod_ent);
+                assert(mod.init());
+            }
+        }        
+        for (ElementStore::iterator I = adjustMods.begin(); I != adjustMods.end(); ++I) {
+            for (ElementStore::iterator J = shapes.begin(); J != shapes.end(); ++J) {
+                std::cout << "Testing adjust mod " << I->first << " with " << J->first << std::endl;
+                Atlas::Message::Element modElement = I->second;
+                modElement.asMap()["shape"] = J->second;
+                TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
+                mod_ent->setup_setAttr("terrainmod", modElement);
+                
+                Eris::TerrainMod mod(mod_ent);
+                assert(mod.init());
+            }
+        }
+                
+        {
+            Atlas::Message::MapType modElement = craterMod1;
+            modElement["shape"] = shapeBall;
             TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
             mod_ent->setup_setAttr("terrainmod", modElement);
             
             Eris::TerrainMod mod(mod_ent);
             assert(mod.init());
+            
         }
-        
+          
         
         
 //     TerrainMod tmod;
