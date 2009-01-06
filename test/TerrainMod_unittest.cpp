@@ -91,15 +91,16 @@ int main()
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
     {
-        Eris::Connection con("name", "localhost",
+        TestConnection con("name", "localhost",
                                                     6767, true);
 
-        Eris::Account acc(&con);
+        TestAccount acc(&con);
         
         std::string fake_char_id("1");
         TestAvatar ea(&acc, fake_char_id);
-        TestEntity char_ent(fake_char_id, 0, ea.getView());
-        ea.setup_setEntity(&char_ent);
+        acc.setup_insertActiveCharacters(&ea);
+        TestEntity* char_ent = new TestEntity(fake_char_id, 0, ea.getView());
+        ea.setup_setEntity(char_ent);
         
         typedef std::map<std::string, Atlas::Message::Element> ElementStore;
         ElementStore modTypes;
@@ -115,6 +116,7 @@ int main()
         
         Atlas::Message::MapType shapeBall;
         shapeBall["radius"] = 15;
+        shapeBall["type"] = "ball";
         shapes["ball"] = shapeBall;
         
         Atlas::Message::MapType shapePolygon;
@@ -124,30 +126,41 @@ int main()
         points.push_back(WFMath::Point<2>(10,10).toAtlas());
         points.push_back(WFMath::Point<2>(0,10).toAtlas());
         shapePolygon["points"] = points;
+        shapePolygon["type"] = "polygon";
         shapes["polygon"] = shapePolygon;
         
-        
+        //no terrain mod info
         {
             Atlas::Message::MapType emptyElement;
-            TestEntity mod_ent("2", 0, ea.getView());
-            mod_ent.setup_setAttr("terrainmod", emptyElement);
+            TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
+            mod_ent->setup_setAttr("terrainmod", emptyElement);
             
-            Eris::TerrainMod mod(&mod_ent);
+            Eris::TerrainMod mod(mod_ent);
             assert(!mod.init());
             
         }
         
-        for (ElementStore::iterator I = shapes.begin(); I != shapes.end(); ++I) {
+        //no shape
+        {
             Atlas::Message::MapType modElement = levelMod1;
-            levelMod1["shape"] = I->second;
-            TestEntity mod_ent("2", 0, ea.getView());
-            mod_ent.setup_setAttr("terrainmod", modElement);
+            TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
+            mod_ent->setup_setAttr("terrainmod", modElement);
             
-            Eris::TerrainMod mod(&mod_ent);
+            Eris::TerrainMod mod(mod_ent);
+            assert(!mod.init());
+            
+        }       
+         
+        for (ElementStore::iterator I = shapes.begin(); I != shapes.end(); ++I) {
+            std::cout << "Testing level mod with " << I->first << std::endl;
+            Atlas::Message::MapType modElement = levelMod1;
+            modElement["shape"] = I->second;
+            TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
+            mod_ent->setup_setAttr("terrainmod", modElement);
+            
+            Eris::TerrainMod mod(mod_ent);
             assert(mod.init());
         }
-        
-        
         
         
         
