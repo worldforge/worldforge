@@ -102,11 +102,13 @@ const Element& Entity::valueOfAttr(const std::string& attr) const
     AttrMap::const_iterator A = m_attrs.find(attr);
     if (A == m_attrs.end())
     {
-        ///it wasn't locally defines, now check with typeinfo
-        for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
-            const Element* element((*I)->getAttribute(attr));
-            if (element) {
-                return *element;
+        if (m_type) {
+            ///it wasn't locally defines, now check with typeinfo
+            for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
+                const Element* element((*I)->getAttribute(attr));
+                if (element) {
+                    return *element;
+                }
             }
         }
         error() << "did getAttr(" << attr << ") on entity " << m_id << " which has no such attr";
@@ -121,7 +123,7 @@ bool Entity::hasAttr(const std::string& attr) const
     ///first check with the instance attributes
     if (m_attrs.count(attr) > 0) {
         return true;
-    } else {
+    } else if (m_type) {
         ///it wasn't locally defines, now check with typeinfo
         for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
             if ((*I)->getAttribute(attr) != 0) {
@@ -136,10 +138,10 @@ const Entity::AttrMap Entity::getAttributes() const
 {
     ///Merge both the local attributes and the type default attributes.
     AttrMap attributes;
-    for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
-        fillAttributesFromType(attributes, *I);
-    }
     attributes.insert(m_attrs.begin(), m_attrs.end());
+    if (m_type) {
+        fillAttributesFromType(attributes, m_type);
+    }
 }
 
 const Entity::AttrMap& Entity::getInstanceAttributes() const
@@ -149,11 +151,11 @@ const Entity::AttrMap& Entity::getInstanceAttributes() const
 
 void Entity::fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeInfo) const
 {
-    ///Make sure to first walk to the top of the hierarcy before we start adding attributes.
+    attributes.insert(typeInfo->getAttributes().begin(), typeInfo->getAttributes().end());
+    ///Make sure to fill from the closest attributes first, as insert won't replace an existing value
     for (TypeInfoSet::iterator I = typeInfo->getParents().begin(); I != typeInfo->getParents().end(); ++I) {
         fillAttributesFromType(attributes, *I);
     }
-    attributes.insert(typeInfo->getAttributes().begin(), typeInfo->getAttributes().end());
 }
 
 sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
@@ -367,7 +369,7 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     ///Check whether the attribute already has been added to the instance attributes.
     const Element* typeElement(0);
     AttrMap::iterator A = m_attrs.find(attr);
-    if (A == m_attrs.end()) {
+    if (A == m_attrs.end() && m_type) {
         ///If the attribute hasn't been defined for this instance, see if there's a typeinfo default one
         for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
             typeElement = (*I)->getAttribute(attr);
@@ -380,9 +382,9 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     
     const Element* newElement(0);
     ///There was no preexisting attribute either in this instance or in the TypeInfo, just insert it.
-    if (A == m_attrs.end() || typeElement == 0) {
-        m_attrs.insert(AttrMap::value_type(attr, val));
-        newElement = &val;
+    if (A == m_attrs.end() && typeElement == 0) {
+        std::pair<AttrMap::iterator, bool> I = m_attrs.insert(AttrMap::value_type(attr, val));
+        newElement = &(I.first->second);
     } else {
         ///Create an instance specific attribute
         Element& target = m_attrs[attr];
