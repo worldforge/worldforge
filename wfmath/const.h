@@ -101,9 +101,8 @@ inline bool Equal(const C& c1, const C& c2, double epsilon = WFMATH_EPSILON)
 	{return c1.isEqualTo(c2, epsilon);}
 
 bool Equal(double x1, double x2, double epsilon = WFMATH_EPSILON);
-// Avoid template, make sure floats are cast to doubles.
-inline bool Equal(float x1, float x2, double epsilon = WFMATH_EPSILON)
-	{return Equal((double) x1, (double) x2, epsilon);}
+// Avoid template and expensive casts from float to doubles.
+bool Equal(float x1, float x2, double epsilon = WFMATH_EPSILON);
 
 // These let us avoid including <algorithm> for the sake of
 // std::max() and std::min().

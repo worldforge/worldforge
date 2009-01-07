@@ -23,6 +23,10 @@
 
 // Author: Ron Steinke
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <wfmath/const.h>
 
 #include <cmath>
@@ -57,6 +61,21 @@ bool WFMath::Equal(double x1, double x2, double epsilon)
     // scaled epsilon we'll consider the numbers to be equal.
 
     return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
+}
+
+bool WFMath::Equal(float x1, float x2, double epsilon)
+{
+    // Hack to get around nonstandard std:: namespacing in MSVC
+    using namespace std;
+
+    // If the difference between the numbers is smaller than the
+    // scaled epsilon we'll consider the numbers to be equal.
+
+#ifdef HAVE_FABSF
+    return fabsf(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
+#else // HAVE_FABSF
+    return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
+#endif // HAVE_FABSF
 }
 
 double WFMath::_ScaleEpsilon(double x1, double x2, double epsilon)
