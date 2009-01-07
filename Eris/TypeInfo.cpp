@@ -211,6 +211,75 @@ void TypeInfo::extractDefaultAttributes(const Atlas::Objects::Root& atype)
     }
 }
 
+
+const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attributeName) const
+{
+    static Atlas::Message::Element* emptyElement(0);
+    
+    ///first check with the local attributes
+    Atlas::Message::MapType::const_iterator A = m_attributes.find(attributeName);
+    if (A != m_attributes.end()) {
+        return &(A->second);
+    } else {
+        ///it wasn't locally defined check with the parents
+        for (TypeInfoSet::iterator I = getParents().begin(); I != getParents().end(); ++I) {
+            const Atlas::Message::Element* element((*I)->getAttribute(attributeName));
+            if (element) {
+                return element;
+            }
+        }
+    }
+    return emptyElement;
+}
+
+
+// bool TypeInfo::hasAttr(const std::string &p) const
+// {
+//     ///first check with the local attributes
+//     if (m_attrs.count(attr) > 0) {
+//         return true;
+//     } else {
+//         ///it wasn't locally defined check with the parents
+//         for (TypeInfoSet::iterator I = getParents().begin(); I != getParents().end(); ++I) {
+//             if ((*I)->hasAttr(p)) {
+//                 return true;
+//             }
+//         }
+//     }
+//     return false;
+// }
+// 
+// 
+// const Atlas::Message::Element& TypeInfo::valueOfAttr(const std::string& attr) const
+// {
+//     ///first check with the local attributes
+//     AttrMap::const_iterator A = m_attrs.find(attr);
+//     if (A == m_attributes.end())
+//     {
+//         ///it wasn't locally defined check with the parents
+//         for (TypeInfoSet::iterator I = getParents().begin(); I != getParents().end(); ++I) {
+//             if ((*I)->hasAttr(p)) {
+//                 return true;
+//             }
+//         }
+//     } else
+//         return A->second;
+//     
+//     
+//     if (m_attrs.count(attr) > 0) {
+//         return true;
+//     } else {
+//         ///it wasn't locally defined check with the parents
+//         for (TypeInfoSet::iterator I = getParents().begin(); I != getParents().end(); ++I) {
+//             if ((*I)->hasAttr(p)) {
+//                 return true;
+//             }
+//         }
+//     }
+//     return false;
+// }
+
+
 void TypeInfo::validateBind()
 {
     if (m_bound) return;

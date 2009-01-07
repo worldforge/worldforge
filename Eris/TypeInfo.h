@@ -83,6 +83,17 @@ public:
     */
     inline const Atlas::Message::MapType& getAttributes() const;
 
+
+    /**
+     * @brief Gets the value of the named attribute.
+     * This method will search through both this instance and all of its parents for the attribute by the specified name. If no attribute can be found a null pointer will be returned.
+     * @param attributeName The name of the attribute to search for.
+     * @note This method won't throw an exception if the attribute isn't found.
+     * @return A pointer to an Element instance, or a null pointer if no attribute could be found.
+     */
+    const Atlas::Message::Element* getAttribute(const std::string& attributeName) const;
+
+
 protected:
     friend class TypeService;
     friend class TypeBoundRedispatch;
