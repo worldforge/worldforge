@@ -36,6 +36,8 @@
 #include <iostream>
 #include <vector>
 
+#include <cassert>
+
 using namespace WFMath;
 
 const double fudge = 3000;

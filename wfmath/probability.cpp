@@ -23,7 +23,9 @@
 // Author: Ron Steinke
 // Created: 2002-1-23
 
-#include "probability.h"
+#include <wfmath/probability.h>
+
+#include <cassert>
 
 using namespace WFMath;
 

@@ -25,6 +25,8 @@
 
 #include "const.h"
 
+#include <cassert>
+
 using namespace WFMath;
 
 // TestEqual() directly stolen from Numbers.cpp in Willow (thanks, Jesse!)

@@ -27,9 +27,6 @@
 #define WFMATH_CONST_H
 
 #include <cfloat>
-// The next two aren't used in this file, but are used
-// everywhere else in the library.
-#include <cassert>
 #include <cmath>
 
 #ifdef _MSC_VER

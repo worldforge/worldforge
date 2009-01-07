@@ -33,6 +33,8 @@
 #include <wfmath/const.h>
 #include <wfmath/zero.h>
 
+#include <cassert>
+
 namespace WFMath {
 
 template<const int dim> class RotMatrix;

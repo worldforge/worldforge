@@ -36,6 +36,8 @@
 #include <climits>
 #include <cstdlib>
 
+#include <cassert>
+
 using namespace WFMath;
 
 static void TestConvert()
