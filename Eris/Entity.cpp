@@ -98,18 +98,38 @@ void Entity::init(const RootEntity& ge, bool fromCreateOp)
 
 const Element& Entity::valueOfAttr(const std::string& attr) const
 {
+    ///first check with the instance attributes
     AttrMap::const_iterator A = m_attrs.find(attr);
     if (A == m_attrs.end())
     {
+        ///it wasn't locally defines, now check with typeinfo
+        for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
+            const Element* element((*I)->getAttribute(attr));
+            if (element) {
+                return *element;
+            }
+        }
         error() << "did getAttr(" << attr << ") on entity " << m_id << " which has no such attr";
         throw InvalidOperation("no such attribute " + attr);
-    } else
+    } else {
         return A->second;
+    }
 }
 
 bool Entity::hasAttr(const std::string& attr) const
 {
-    return m_attrs.count(attr) > 0;
+    ///first check with the instance attributes
+    if (m_attrs.count(attr) > 0) {
+        return true;
+    } else {
+        ///it wasn't locally defines, now check with typeinfo
+        for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
+            if ((*I)->getAttribute(attr) != 0) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 const Entity::AttrMap Entity::getAttributes() const
