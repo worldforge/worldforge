@@ -44,9 +44,6 @@
   #endif
 #endif
 
-// Forward declarations for all classes
-#include <iosfwd>
-
 /// Generic library namespace
 namespace WFMath {
 

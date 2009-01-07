@@ -33,6 +33,8 @@
 #include <wfmath/const.h>
 #include <wfmath/zero.h>
 
+#include <iosfwd>
+
 #include <cassert>
 
 namespace WFMath {

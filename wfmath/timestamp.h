@@ -28,6 +28,7 @@
 
 #include <wfmath/const.h>
 #include <algorithm> // For std::pair
+#include <iosfwd>
 
 /** Timing related primitives in a portable fashion - note this is for interval / elapsed
 time measurement, not displaying a human readable time. */

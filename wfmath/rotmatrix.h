@@ -28,6 +28,8 @@
 
 #include <wfmath/const.h>
 
+#include <iosfwd>
+
 #include <cassert>
 
 namespace WFMath {
