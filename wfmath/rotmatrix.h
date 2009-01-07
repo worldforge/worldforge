@@ -30,8 +30,6 @@
 
 #include <iosfwd>
 
-#include <cassert>
-
 namespace WFMath {
 
 template<const int dim> class Vector;
@@ -116,8 +114,7 @@ class RotMatrix {
   RotMatrix& identity();
 
   /// get the (i, j) element of the matrix
-  CoordType elem(const int i, const int j) const
-	{assert(i >= 0 && j >= 0 && i < dim && j < dim); return m_elem[i][j];}
+  CoordType elem(const int i, const int j) const {return m_elem[i][j];}
 
   /// Set the values of the elements of the matrix
   /**

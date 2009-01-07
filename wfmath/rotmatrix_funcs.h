@@ -33,6 +33,8 @@
 
 #include <cmath>
 
+#include <cassert>
+
 namespace WFMath {
 
 template<const int dim>
