@@ -49,6 +49,8 @@ AC_MSG_NOTICE([Ignore the Atlas checks, they're just used for building test code
 
 AC_LANG(C++)
 
+AC_CHECK_FUNCS([fabsf])
+
 PKG_PROG_PKG_CONFIG
 
 PKG_CHECK_MODULES(ATLAS_0_6, atlascpp-0.6 >= 0.6.0, 
