@@ -362,17 +362,45 @@ void Entity::onChildRemoved(Entity* child)
 void Entity::setAttr(const std::string &attr, const Element &val)
 {
     beginUpdate();
-
-    Element& target = m_attrs[attr];
-    mergeOrCopyElement(val, target);
-    nativeAttrChanged(attr, target);
-        
-    onAttrChanged(attr, target);
+    
+    
+    ///Check whether the attribute already has been added to the instance attributes.
+    const Element* typeElement(0);
+    AttrMap::iterator A = m_attrs.find(attr);
+    if (A == m_attrs.end()) {
+        ///If the attribute hasn't been defined for this instance, see if there's a typeinfo default one
+        for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
+            typeElement = (*I)->getAttribute(attr);
+            if (typeElement) {
+                break;
+            }
+        }
+    }
+    
+    
+    const Element* newElement(0);
+    ///There was no preexisting attribute either in this instance or in the TypeInfo, just insert it.
+    if (A == m_attrs.end() || typeElement == 0) {
+        m_attrs.insert(AttrMap::value_type(attr, val));
+        newElement = &val;
+    } else {
+        ///Create an instance specific attribute
+        Element& target = m_attrs[attr];
+        newElement = &target;
+        ///If there already existed an instance attribute copy from that
+        if (A != m_attrs.end()) {
+            mergeOrCopyElement(val, target);
+        } else {
+            mergeOrCopyElement(*typeElement, target);
+        }
+    }
+    nativeAttrChanged(attr, *newElement);
+    onAttrChanged(attr, *newElement);
 
     // fire observers
     
     ObserverMap::const_iterator obs = m_observers.find(attr);
-    if (obs != m_observers.end()) obs->second.emit(target);
+    if (obs != m_observers.end()) obs->second.emit(*newElement);
 
     addToUpdate(attr);
     endUpdate();
