@@ -25,6 +25,8 @@
 
 #include <wfmath/const.h>
 
+#include <cmath>
+
 #include <cassert>
 
 // Implementation of IsFloatEqual() is borrowed from Jesse Jones (thanks!).

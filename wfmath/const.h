@@ -27,7 +27,6 @@
 #define WFMATH_CONST_H
 
 #include <cfloat>
-#include <cmath>
 
 #ifdef _MSC_VER
   #if _MSC_VER < 1300

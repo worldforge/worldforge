@@ -34,6 +34,8 @@
 #include <wfmath/rotmatrix.h>
 #include <wfmath/const.h>
 
+#include <cmath>
+
 namespace WFMath {
 
 template<const int dim>

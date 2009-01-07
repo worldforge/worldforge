@@ -28,6 +28,8 @@
 
 #include <wfmath/const.h>
 
+#include <cmath>
+
 namespace WFMath {
 
 // These are used internally in point.cpp and vector.cpp. This header

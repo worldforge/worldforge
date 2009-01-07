@@ -31,6 +31,8 @@
 #include <wfmath/error.h>
 #include <wfmath/const.h>
 
+#include <cmath>
+
 namespace WFMath {
 
 template<const int dim>
