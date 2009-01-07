@@ -35,8 +35,6 @@
 
 #include <iosfwd>
 
-#include <cassert>
-
 namespace WFMath {
 
 template<const int dim> class RotMatrix;
@@ -193,15 +191,13 @@ class Vector {
   friend Vector operator/<dim>(const Vector& v, CoordType d);
 
   // documented outside the class definition
-  friend Vector Prod<dim>	(const RotMatrix<dim>& m,
-          const Vector& v);
-  friend Vector InvProd<dim>	(const RotMatrix<dim>& m,
-          const Vector& v);
+  friend Vector Prod<dim>(const RotMatrix<dim>& m, const Vector& v);
+  friend Vector InvProd<dim>(const RotMatrix<dim>& m, const Vector& v);
 
   /// Get the i'th element of the vector
-  CoordType operator[](const int i) const {assert(0 <= i && i < dim); return m_elem[i];}
+  CoordType operator[](const int i) const {return m_elem[i];}
   /// Get the i'th element of the vector
-  CoordType& operator[](const int i)	  {assert(0 <= i && i < dim); return m_elem[i];}
+  CoordType& operator[](const int i)      {return m_elem[i];}
 
   /// Find the vector which gives the offset between two points
   friend Vector operator-<dim>(const Point<dim>& c1, const Point<dim>& c2);
@@ -228,7 +224,7 @@ class Vector {
   CoordType mag() const		{return (CoordType) sqrt(sqrMag());}
   /// Normalize a vector
   Vector& normalize(CoordType norm = 1.0)
-  {CoordType themag = mag(); assert(themag > 0); return (*this *= norm / themag);}
+  {CoordType themag = mag(); return (*this *= norm / themag);}
 
   /// An approximation to the magnitude of a vector
   /**
@@ -279,7 +275,7 @@ class Vector {
   // mirror image functions
 
   /// Reflect a vector in the direction of the i'th axis
-  Vector& mirror(const int i) {assert(0 <= i && i < dim); m_elem[i] *= -1; return *this;}
+  Vector& mirror(const int i) { m_elem[i] *= -1; return *this;}
   /// Reflect a vector in the direction specified by v
   Vector& mirror(const Vector& v)
   {return operator-=(2 * v * Dot(v, *this) / v.sqrMag());}
@@ -321,19 +317,18 @@ class Vector {
   // 2D/3D convienience
 
   /// Access the first component of a vector
-  CoordType x() const	{assert(dim > 0); return m_elem[0];}
+  CoordType x() const	{return m_elem[0];}
   /// Access the first component of a vector
-  CoordType& x()	{assert(dim > 0); return m_elem[0];}
+  CoordType& x()	{return m_elem[0];}
   /// Access the second component of a vector
-  CoordType y() const	{assert(dim > 1); return m_elem[1];}
+  CoordType y() const	{return m_elem[1];}
   /// Access the second component of a vector
-  CoordType& y()	{assert(dim > 1); return m_elem[1];}
+  CoordType& y()	{return m_elem[1];}
   /// Access the third component of a vector
-  CoordType z() const	{assert(dim > 2); return m_elem[2];}
+  CoordType z() const	{return m_elem[2];}
   /// Access the third component of a vector
-  CoordType& z()	{assert(dim > 2); return m_elem[2];}
+  CoordType& z()	{return m_elem[2];}
 
-  // Don't need asserts here, they're taken care of in the general function
   /// Flip the x component of a vector
   Vector& mirrorX()	{return mirror(0);}
   /// Flip the y component of a vector
