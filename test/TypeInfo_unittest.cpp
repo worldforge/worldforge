@@ -16,8 +16,181 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 // $Id$
+#include <Eris/Avatar.h>
+
+#include <Eris/Connection.h>
+#include <Eris/Account.h>
+#include <Eris/Entity.h>
+#include <Eris/View.h>
+#include <Eris/Log.h>
+#include <Eris/TerrainMod.h>
+#include <Eris/Exceptions.h>
+#include <Eris/TypeInfo.h>
+#include <Eris/TypeService.h>
+
+#include <Atlas/Objects/Anonymous.h>
+#include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
+
+#include <wfmath/atlasconv.h>
+
+using namespace Eris;
+using namespace Atlas::Objects::Operation;
+static void writeLog(Eris::LogLevel, const std::string & msg)
+{       
+    std::cerr << msg << std::endl << std::flush;
+}
+
+
+class TestConnection : public Eris::Connection {
+  public:
+    TestConnection(const std::string & name, const std::string & host,
+                   short port, bool debug) :
+                   Eris::Connection(name, host, port, debug) { }
+
+    virtual void send(const Atlas::Objects::Root &obj) {
+        std::cout << "Sending " << obj->getParents().front()
+                  << std::endl << std::flush;
+    }
+};
+
+class TestAccount : public Eris::Account {
+  public:
+    TestAccount(Eris::Connection * con) : Eris::Account(con) { }
+
+    void setup_insertActiveCharacters(Eris::Avatar * ea) {
+        m_activeCharacters.insert(std::make_pair(ea->getId(), ea));
+    }
+};
+
+class TestAvatar : public Eris::Avatar {
+  public:
+    TestAvatar(Eris::Account * ac, const std::string & ent_id) :
+               Eris::Avatar(ac, ent_id) { }
+
+    void setup_setEntity(Eris::Entity * ent) {
+        m_entity = ent;
+        m_entityId = ent->getId();
+    }
+};
+
+class TestEntity : public Eris::Entity {
+  public:
+    TestEntity(const std::string& id, Eris::TypeInfo* ty, Eris::View* vw) :
+               Eris::Entity(id, ty, vw) { }
+
+    void setup_setLocation(Eris::Entity * e) {
+        setLocation(e);
+    }
+    void setup_setAttr(const std::string &p, const Atlas::Message::Element &v)
+    {
+        setAttr(p, v);
+    }
+    
+};
+
+class TestTypeService : public Eris::TypeService{
+public:
+    TestTypeService(Eris::Connection *con) : Eris::TypeService(con)
+    {
+    }
+
+    Eris::TypeInfoPtr setup_DefineBuiltin(const std::string& name, TypeInfo* parent){
+        return Eris::TypeService::defineBuiltin(name, parent);
+    }
+    
+    void setup_recvTypeInfo(const Atlas::Objects::Root &atype)
+    {
+        Eris::TypeService::recvTypeInfo(atype);
+    }
+
+};
 
 int main()
 {
+    Eris::Logged.connect(sigc::ptr_fun(writeLog));
+    Eris::setLogLevel(Eris::LOG_DEBUG);
+    
+    TestConnection con("name", "localhost", 6767, true);
+
+    TestAccount acc(&con);
+    
+    std::string fake_char_id("1");
+    TestAvatar ea(&acc, fake_char_id);
+    acc.setup_insertActiveCharacters(&ea);
+    TestEntity* char_ent = new TestEntity(fake_char_id, 0, ea.getView());
+    ea.setup_setEntity(char_ent);
+    
+    TestTypeService typeService(&con);
+    
+    TypeInfoPtr rootType = typeService.getTypeByName("root");
+    assert(rootType);
+    
+    TypeInfoPtr level1Type = typeService.getTypeByName("level1Type");
+    assert(level1Type);
+    assert(!level1Type->isBound());
+    {
+        Info typeInfo;
+        typeInfo->setId("level1Type");
+        std::list<std::string> parents;
+        parents.push_back("root");
+        typeInfo->setParents(parents);
+        Atlas::Message::MapType attributes;
+        Atlas::Message::MapType level;
+        level["default"] = 1.0f;
+        level["visibility"] = "public";
+        attributes["level"] = level;
+        typeInfo->setAttr("attributes", attributes);
+        typeService.setup_recvTypeInfo(typeInfo);
+    }
+    assert(level1Type->isBound());
+    assert(level1Type->getAttributes().find("level") != level1Type->getAttributes().end());
+    assert(level1Type->getAttributes().find("level")->second.isNum());
+    assert(level1Type->getAttributes().find("level")->second.asNum() == 1.0f);
+    
+    
+    TypeInfoPtr level2Type = typeService.getTypeByName("level2Type");
+    assert(level2Type);
+    assert(!level2Type->isBound());
+    {
+        Info typeInfo;
+        typeInfo->setId("level2Type");
+        std::list<std::string> parents;
+        parents.push_back("level1Type");
+        typeInfo->setParents(parents);
+        Atlas::Message::MapType attributes;
+        Atlas::Message::MapType level;
+        level["default"] = 2.0f;
+        level["visibility"] = "public";
+        attributes["level"] = level;
+        typeInfo->setAttr("attributes", attributes);
+        typeService.setup_recvTypeInfo(typeInfo);
+    }
+    assert(level2Type->isBound());
+    assert(level2Type->getParents().size() > 0);
+    assert(*(level2Type->getParents().begin()) == level1Type);
+    
+    assert(level2Type->getAttributes().find("level") != level1Type->getAttributes().end());
+    assert(level2Type->getAttributes().find("level")->second.isNum());
+    assert(level2Type->getAttributes().find("level")->second.asNum() == 2.0f);
+    
+    {
+        TestEntity* ent = new TestEntity("2", level1Type, ea.getView());
+        assert(ent->hasAttr("level"));
+        assert(ent->valueOfAttr("level") == 1.0f);
+    }
+    
+    {
+        TestEntity* ent = new TestEntity("2", level2Type, ea.getView());
+        assert(ent->hasAttr("level"));
+        assert(ent->valueOfAttr("level") == 2.0f);
+        
+        ent->setup_setAttr("level", "entity");
+        assert(ent->valueOfAttr("level") == "entity");
+    }
+    
+    
+
+    
     return 0;
 }
