@@ -13,10 +13,11 @@
 
 namespace Eris {	
 
-/** The representation of an Atlas type (i.e a class or operation definition). This class
-supports efficent inheritance queries, and traversal of the type hierarchy. Atlas types
+/** 
+@brief The representation of an Atlas type (i.e a class or operation definition). 
+This class supports efficent inheritance queries, and traversal of the type hierarchy. Atlas types
 have a unique ID, and types can be retrieved using this value. Where an Atlas::Objects instance,
-or an Atlas::Message::Element representing an Atlas object is being examine, it is much more
+or an Atlas::Message::Element representing an Atlas object is being examined, it is much more
 efficent to use the 'getSafe' methods rather than extracting PARENTS[0] and calling findSafe.
 This is because the getSafe methods may take advantage of integer type codes stored in the
 object, which avoids a map lookup to locate the type.
@@ -31,25 +32,25 @@ instance for handling.
 class TypeInfo : virtual public sigc::trackable
 {
 public:	
-    /** Test whether this type inherits (directly or indirectly) from the specific class. If this
-    type is not bound, this may return false-negatives. */
+    /** 
+     * @brief Test whether this type inherits (directly or indirectly) from the specific class. If this type is not bound, this may return false-negatives. 
+     */
     bool isA(TypeInfoPtr ti);
 
-    /** Check the bound flag for this node; if false then recursivley check parents
-    until an authorative is found */
-    bool isBound() const
-    { return m_bound; }
+    /**
+     * @brief Check the bound flag for this node; if false then recursivley check parents until an authorative is found 
+     */
+    inline bool isBound() const;
 
     /**
-    Test if there are child types of the type, which have not yet been retrieved
-    from the server.
-    */
+     * @brief Test if there are child types of the type, which have not yet been retrieved from the server.
+     */
     bool hasUnresolvedChildren() const;
     
     /**
-    Retrive all child types from the server.
-    This will log an error and do nothing if no unresolved children exist.
-    */
+     * @brief Retrive all child types from the server.
+     * This will log an error and do nothing if no unresolved children exist.
+     */
     void resolveChildren();
     
 // operators
@@ -61,20 +62,19 @@ public:
 
 // accessors
     /// the unique type name (matches the Atlas type)
-    const std::string& getName() const
-    {
-        return m_name;
-    }
+    inline const std::string& getName() const;
     
-    const TypeInfoSet & getChildren() const
-    {
-        return m_children;
-    }
+    /**
+     * @brief Gets the currently resolved child TypeInfo instances.
+     * @return A set of child TypeInfo instances.
+     */
+    inline const TypeInfoSet & getChildren() const;
 
-    const TypeInfoSet & getParents() const 
-    {
-         return m_parents;
-    }
+    /**
+     * @brief Gets the currently resolved parent TypeInfo instances.
+     * @return A set of parent TypeInfo instances.
+     */
+    inline const TypeInfoSet & getParents() const;
     
     /**
     @brief Gets the default attributes for this entity type.
@@ -121,10 +121,10 @@ private:
     void addAncestor(TypeInfoPtr tp);
     
     /** 
-    @brief Extracts default attributes from the supplied root object, and adds them to the m_attributes field.
-    Note that inherited (i..e those that belong to the parent entity type) attributes won't be extracted.
-    @param atype Root data for this entity type.
-    */
+     * @brief Extracts default attributes from the supplied root object, and adds them to the m_attributes field.
+     * Note that inherited (i..e those that belong to the parent entity type) attributes won't be extracted.
+     * @param atype Root data for this entity type.
+     */
     void extractDefaultAttributes(const Atlas::Objects::Root& atype);
         
     /** The TypeInfo nodes for types we inherit from directly */
@@ -149,13 +149,33 @@ private:
     
     TypeService* m_typeService;
     
-    /** The default attributes specified for this entity type.*/
+    /** 
+     * @brief The default attributes specified for this entity type.
+     */
     Atlas::Message::MapType m_attributes;
 };
 
 const Atlas::Message::MapType& TypeInfo::getAttributes() const
 {
     return m_attributes;
+}
+
+bool TypeInfo::isBound() const
+{
+    return m_bound;
+}
+
+const std::string& TypeInfo::getName() const
+{
+    return m_name;
+}
+const TypeInfoSet & TypeInfo::getChildren() const
+{
+    return m_children;
+}
+const TypeInfoSet & TypeInfo::getParents() const 
+{
+        return m_parents;
 }
 
 
