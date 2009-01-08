@@ -170,7 +170,7 @@ int main()
     assert(level2Type->getParents().size() > 0);
     assert(*(level2Type->getParents().begin()) == level1Type);
     
-    assert(level2Type->getAttributes().find("level") != level1Type->getAttributes().end());
+    assert(level2Type->getAttributes().find("level") != level2Type->getAttributes().end());
     assert(level2Type->getAttributes().find("level")->second.isNum());
     assert(level2Type->getAttributes().find("level")->second.asNum() == 2.0f);
     
