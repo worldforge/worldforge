@@ -104,11 +104,9 @@ const Element& Entity::valueOfAttr(const std::string& attr) const
     {
         if (m_type) {
             ///it wasn't locally defines, now check with typeinfo
-            for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
-                const Element* element((*I)->getAttribute(attr));
-                if (element) {
-                    return *element;
-                }
+            const Element* element(m_type->getAttribute(attr));
+            if (element) {
+                return *element;
             }
         }
         error() << "did getAttr(" << attr << ") on entity " << m_id << " which has no such attr";
@@ -125,10 +123,8 @@ bool Entity::hasAttr(const std::string& attr) const
         return true;
     } else if (m_type) {
         ///it wasn't locally defines, now check with typeinfo
-        for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
-            if ((*I)->getAttribute(attr) != 0) {
-                return true;
-            }
+        if (m_type->getAttribute(attr) != 0) {
+            return true;
         }
     }
     return false;
@@ -371,12 +367,7 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     AttrMap::iterator A = m_attrs.find(attr);
     if (A == m_attrs.end() && m_type) {
         ///If the attribute hasn't been defined for this instance, see if there's a typeinfo default one
-        for (TypeInfoSet::iterator I = m_type->getParents().begin(); I != m_type->getParents().end(); ++I) {
-            typeElement = (*I)->getAttribute(attr);
-            if (typeElement) {
-                break;
-            }
-        }
+        typeElement = m_type->getAttribute(attr);
     }
     
     
