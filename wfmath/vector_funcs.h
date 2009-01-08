@@ -43,8 +43,9 @@ namespace WFMath {
 template<const int dim>
 inline Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
 {
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     m_elem[i] = v.m_elem[i];
+  }
 }
 
 template<const int dim>
@@ -52,8 +53,9 @@ inline Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 {
   m_valid = v.m_valid;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     m_elem[i] = v.m_elem[i];
+  }
 
   return *this;
 }
@@ -63,9 +65,11 @@ inline bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
 {
   double delta = _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);
 
-  for(int i = 0; i < dim; ++i)
-    if(fabs(m_elem[i] - v.m_elem[i]) > delta)
+  for(int i = 0; i < dim; ++i) {
+    if(fabs(m_elem[i] - v.m_elem[i]) > delta) {
       return false;
+    }
+  }
 
   return true;
 }
@@ -75,8 +79,9 @@ inline Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   v1.m_valid = v1.m_valid && v2.m_valid;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     v1.m_elem[i] += v2.m_elem[i];
+  }
 
   return v1;
 }
@@ -86,8 +91,9 @@ inline Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   v1.m_valid = v1.m_valid && v2.m_valid;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     v1.m_elem[i] -= v2.m_elem[i];
+  }
 
   return v1;
 }
@@ -95,8 +101,9 @@ inline Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 template <const int dim>
 inline Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
 {
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     v.m_elem[i] *= d;
+  }
 
   return v;
 }
@@ -104,8 +111,9 @@ inline Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
 template <const int dim>
 inline Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
 {
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     v.m_elem[i] /= d;
+  }
 
   return v;
 }
@@ -167,8 +175,9 @@ inline Vector<dim> operator-(const Vector<dim>& v)
 
   ans.m_valid = v.m_valid;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     ans.m_elem[i] = -v.m_elem[i];
+  }
 
   return ans;
 }
@@ -188,8 +197,9 @@ inline Vector<dim>& Vector<dim>::zero()
 {
   m_valid = true;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     m_elem[i] = 0;
+  }
 
   return *this;
 }
@@ -263,8 +273,9 @@ inline CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 
   CoordType ans = 0;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     ans += v1.m_elem[i] * v2.m_elem[i];
+  }
 
   return (fabs(ans) >= delta) ? ans : 0;
 }
@@ -274,9 +285,10 @@ inline CoordType Vector<dim>::sqrMag() const
 {
   CoordType ans = 0;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     // all terms > 0, no loss of precision through cancelation
     ans += m_elem[i] * m_elem[i];
+  }
 
   return ans;
 }
@@ -306,10 +318,12 @@ inline bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 
   for(int i = 0; i < dim; ++i) {
     double val1 = fabs(v1[i]), val2 = fabs(v2[i]);
-    if(val1 > max1)
+    if(val1 > max1) {
       max1 = val1;
-    if(val2 > max2)
+    }
+    if(val2 > max2) {
       max2 = val2;
+    }
   }
 
   // Need to scale by both, since Dot(v1, v2) goes like the product of the magnitudes
