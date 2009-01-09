@@ -29,7 +29,8 @@
 
 #include "const.h"
 #include "basis.h"
-#include "vector.h"
+#include "vector_funcs.h"
+#include "point.h"
 #include "quaternion.h"
 
 using namespace WFMath;
@@ -232,4 +233,36 @@ void WFMath::_NCFS_Vector3_asSpherical(CoordType *m_elem, CoordType& r,
   r = d[0];
   theta = d[1];
   phi = d[2];
+}
+
+namespace WFMath {
+
+template class Vector<3>;
+template class Vector<2>;
+
+template Vector<3>& operator-=(Vector<3>& v1, const Vector<3>& v2);
+template Vector<2>& operator-=(Vector<2>& v1, const Vector<2>& v2);
+
+template Vector<3>& operator+=(Vector<3>& v1, const Vector<3>& v2);
+template Vector<2>& operator+=(Vector<2>& v1, const Vector<2>& v2);
+
+template Vector<3>& operator*=(Vector<3>& v1, CoordType d);
+template Vector<2>& operator*=(Vector<2>& v1, CoordType d);
+
+template Vector<3>& operator/=(Vector<3>& v1, CoordType d);
+template Vector<2>& operator/=(Vector<2>& v1, CoordType d);
+
+template float Dot<2>(const Vector<2> &, const Vector<2> &);
+template float Angle<3>(const Vector<3> &, const Vector<3> &);
+
+template Vector<3> operator-<3>(const Vector<3> &);
+
+template Vector<2> operator*<2>(float, const Vector<2> &);
+template Vector<2> operator*<2>(const Vector<2> &, float);
+template Vector<2> operator/<2>(const Vector<2> &, float);
+template Vector<2> operator+<2>(const Vector<2> &, const Vector<2> &);
+
+template Vector<3> operator-<3>(const Vector<3> &, const Vector<3> &);
+template Vector<2> operator-<2>(const Vector<2> &, const Vector<2> &);
+
 }
