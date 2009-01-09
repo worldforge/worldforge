@@ -127,7 +127,7 @@ class Vector {
   /// Construct a copy of a vector
   Vector(const Vector& v);
   /// Construct a vector from an object passed by Atlas
-  explicit Vector(const AtlasInType& a) {fromAtlas(a);}
+  explicit Vector(const AtlasInType& a);
   /// Construct a vector from a point.
   explicit Vector(const Point<dim> point) {
     for (int i = 0; i < dim; ++i) {
@@ -278,7 +278,7 @@ class Vector {
   Vector& mirror(const int i) { m_elem[i] *= -1; return *this;}
   /// Reflect a vector in the direction specified by v
   Vector& mirror(const Vector& v)
-  {return operator-=(2 * v * Dot(v, *this) / v.sqrMag());}
+  {return operator-=(*this, 2 * v * Dot(v, *this) / v.sqrMag());}
   /// Reflect a vector in all directions simultaneously.
   /**
    * This is a nice way to implement the parity operation if dim is odd.
@@ -387,7 +387,5 @@ template<const int dim>
 bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2);
 
 } // namespace WFMath
-
-#include <wfmath/vector_funcs.h>
 
 #endif // WFMATH_VECTOR_H

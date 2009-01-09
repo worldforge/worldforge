@@ -41,7 +41,7 @@
 namespace WFMath {
 
 template<const int dim>
-inline Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
+Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
 {
   for(int i = 0; i < dim; ++i) {
     m_elem[i] = v.m_elem[i];
@@ -49,7 +49,7 @@ inline Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
 }
 
 template<const int dim>
-inline Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
+Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 {
   m_valid = v.m_valid;
 
@@ -61,7 +61,7 @@ inline Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 }
 
 template<const int dim>
-inline bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
+bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
 {
   double delta = _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);
 
@@ -75,7 +75,7 @@ inline bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
 }
 
 template <const int dim>
-inline Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
+Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   v1.m_valid = v1.m_valid && v2.m_valid;
 
@@ -87,7 +87,7 @@ inline Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-inline Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
+Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 {
   v1.m_valid = v1.m_valid && v2.m_valid;
 
@@ -99,7 +99,7 @@ inline Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-inline Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
+Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
 {
   for(int i = 0; i < dim; ++i) {
     v.m_elem[i] *= d;
@@ -109,7 +109,7 @@ inline Vector<dim>& operator*=(Vector<dim>& v, CoordType d)
 }
 
 template <const int dim>
-inline Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
+Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
 {
   for(int i = 0; i < dim; ++i) {
     v.m_elem[i] /= d;
@@ -119,7 +119,7 @@ inline Vector<dim>& operator/=(Vector<dim>& v, CoordType d)
 }
 
 template <const int dim>
-inline Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
+Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   Vector<dim> ans(v1);
 
@@ -129,7 +129,7 @@ inline Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-inline Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
+Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   Vector<dim> ans(v1);
 
@@ -139,7 +139,7 @@ inline Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template <const int dim>
-inline Vector<dim> operator*(const Vector<dim>& v, CoordType d)
+Vector<dim> operator*(const Vector<dim>& v, CoordType d)
 {
   Vector<dim> ans(v);
 
@@ -149,7 +149,7 @@ inline Vector<dim> operator*(const Vector<dim>& v, CoordType d)
 }
 
 template<const int dim>
-inline Vector<dim> operator*(CoordType d, const Vector<dim>& v)
+Vector<dim> operator*(CoordType d, const Vector<dim>& v)
 {
   Vector<dim> ans(v);
 
@@ -159,7 +159,7 @@ inline Vector<dim> operator*(CoordType d, const Vector<dim>& v)
 }
 
 template <const int dim>
-inline Vector<dim> operator/(const Vector<dim>& v, CoordType d)
+Vector<dim> operator/(const Vector<dim>& v, CoordType d)
 {
   Vector<dim> ans(v);
 
@@ -169,7 +169,7 @@ inline Vector<dim> operator/(const Vector<dim>& v, CoordType d)
 }
 
 template <const int dim>
-inline Vector<dim> operator-(const Vector<dim>& v)
+Vector<dim> operator-(const Vector<dim>& v)
 {
   Vector<dim> ans;
 
@@ -183,7 +183,7 @@ inline Vector<dim> operator-(const Vector<dim>& v)
 }
 
 template<const int dim>
-inline Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
+Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 {
   CoordType mag = sloppyMag();
 
@@ -193,7 +193,7 @@ inline Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 }
 
 template<const int dim>
-inline Vector<dim>& Vector<dim>::zero()
+Vector<dim>& Vector<dim>::zero()
 {
   m_valid = true;
 
@@ -205,7 +205,7 @@ inline Vector<dim>& Vector<dim>::zero()
 }
 
 template<const int dim>
-inline CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
+CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
 {
   // Adding numbers with large magnitude differences can cause
   // a loss of precision, but Dot() checks for this now
@@ -219,7 +219,7 @@ inline CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
 }
 
 template<const int dim>
-inline Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
+Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
 {
   assert(axis1 >= 0 && axis2 >= 0 && axis1 < dim && axis2 < dim && axis1 != axis2);
 
@@ -233,7 +233,7 @@ inline Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
 }
 
 template<const int dim>
-inline Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
+Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>& v2,
 				 CoordType theta)
 {
   RotMatrix<dim> m;
@@ -241,7 +241,7 @@ inline Vector<dim>& Vector<dim>::rotate(const Vector<dim>& v1, const Vector<dim>
 }
 
 template<const int dim>
-inline Vector<dim>& Vector<dim>::rotate(const RotMatrix<dim>& m)
+Vector<dim>& Vector<dim>::rotate(const RotMatrix<dim>& m)
 {
   return *this = Prod(*this, m);
 }
@@ -254,20 +254,20 @@ Vector<3>& _NCFS_Vector3_rotate(Vector<3>& v, const Vector<3>& axis, CoordType t
 Vector<3>& _NCFS_Vector3_rotate(Vector<3>& v, const Quaternion& q);
 
 template<>
-inline Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta)
+Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta)
 {
   return _NCFS_Vector3_rotate(*this, axis, theta);
 }
 
 template<>
-inline Vector<3>& Vector<3>::rotate(const Quaternion& q)
+Vector<3>& Vector<3>::rotate(const Quaternion& q)
 {
   return _NCFS_Vector3_rotate(*this, q);
 }
 #endif
 
 template<const int dim>
-inline CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
+CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   double delta = _ScaleEpsilon(v1.m_elem, v2.m_elem, dim);
 
@@ -281,7 +281,7 @@ inline CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template<const int dim>
-inline CoordType Vector<dim>::sqrMag() const
+CoordType Vector<dim>::sqrMag() const
 {
   CoordType ans = 0;
 
@@ -294,7 +294,7 @@ inline CoordType Vector<dim>::sqrMag() const
 }
 
 template<const int dim>
-inline bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir)
+bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir)
 {
   CoordType dot = Dot(v1, v2);
 
@@ -304,7 +304,7 @@ inline bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_di
 }
 
 template<const int dim>
-inline bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
+bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   bool same_dir;
 
@@ -312,7 +312,7 @@ inline bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template<const int dim>
-inline bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
+bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 {
   double max1 = 0, max2 = 0;
 
@@ -335,37 +335,37 @@ inline bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template<>
-inline const CoordType Vector<1>::sloppyMagMax()
+const CoordType Vector<1>::sloppyMagMax()
 {
   return (CoordType) 1;
 }
 
 template<>
-inline const CoordType Vector<2>::sloppyMagMax()
+const CoordType Vector<2>::sloppyMagMax()
 {
   return (CoordType) 1.082392200292393968799446410733;
 }
 
 template<>
-inline const CoordType Vector<3>::sloppyMagMax()
+const CoordType Vector<3>::sloppyMagMax()
 {
   return (CoordType) 1.145934719303161490541433900265;
 }
 
 template<>
-inline const CoordType Vector<1>::sloppyMagMaxSqrt()
+const CoordType Vector<1>::sloppyMagMaxSqrt()
 {
   return (CoordType) 1;
 }
 
 template<>
-inline const CoordType Vector<2>::sloppyMagMaxSqrt()
+const CoordType Vector<2>::sloppyMagMaxSqrt()
 {
   return (CoordType) 1.040380795811030899095785063701;
 }
 
 template<>
-inline const CoordType Vector<3>::sloppyMagMaxSqrt()
+const CoordType Vector<3>::sloppyMagMaxSqrt()
 {
   return (CoordType) 1.070483404496847625250328653179;
 }
@@ -415,7 +415,7 @@ CoordType _NCFS_Vector2_sloppyMag(CoordType *m_elem);
 CoordType _NCFS_Vector3_sloppyMag(CoordType *m_elem);
 
 template<>
-inline Vector<2>& Vector<2>::polar(CoordType r, CoordType theta)
+Vector<2>& Vector<2>::polar(CoordType r, CoordType theta)
 {
   _NCFS_Vector2_polar((CoordType*) m_elem, r, theta);
   m_valid = true;
@@ -423,13 +423,13 @@ inline Vector<2>& Vector<2>::polar(CoordType r, CoordType theta)
 }
 
 template<>
-inline void Vector<2>::asPolar(CoordType& r, CoordType& theta) const
+void Vector<2>::asPolar(CoordType& r, CoordType& theta) const
 {
   _NCFS_Vector2_asPolar((CoordType*) m_elem, r, theta);
 }
 
 template<>
-inline Vector<3>& Vector<3>::polar(CoordType r, CoordType theta, CoordType z)
+Vector<3>& Vector<3>::polar(CoordType r, CoordType theta, CoordType z)
 {
   _NCFS_Vector3_polar((CoordType*) m_elem, r, theta, z);
   m_valid = true;
@@ -437,13 +437,13 @@ inline Vector<3>& Vector<3>::polar(CoordType r, CoordType theta, CoordType z)
 }
 
 template<>
-inline void Vector<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
+void Vector<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
 {
   _NCFS_Vector3_asPolar((CoordType*) m_elem, r, theta, z);
 }
 
 template<>
-inline Vector<3>& Vector<3>::spherical(CoordType r, CoordType theta, CoordType phi)
+Vector<3>& Vector<3>::spherical(CoordType r, CoordType theta, CoordType phi)
 {
   _NCFS_Vector3_spherical((CoordType*) m_elem, r, theta, phi);
   m_valid = true;
@@ -451,42 +451,42 @@ inline Vector<3>& Vector<3>::spherical(CoordType r, CoordType theta, CoordType p
 }
 
 template<>
-inline void Vector<3>::asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const
+void Vector<3>::asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const
 {
   _NCFS_Vector3_asSpherical((CoordType*) m_elem, r, theta, phi);
 }
 
 template<>
-inline CoordType Vector<2>::sloppyMag() const
+CoordType Vector<2>::sloppyMag() const
 {
   return _NCFS_Vector2_sloppyMag((CoordType*) m_elem);
 }
 
 template<>
-inline CoordType Vector<3>::sloppyMag() const
+CoordType Vector<3>::sloppyMag() const
 {
   return _NCFS_Vector3_sloppyMag((CoordType*) m_elem);
 }
 #endif
 
-template<> inline CoordType Vector<1>::sloppyMag() const
+template<> CoordType Vector<1>::sloppyMag() const
 	{return (CoordType) fabs(m_elem[0]);}
 
-template<> inline Vector<2>::Vector(CoordType x, CoordType y) : m_valid(true)
+template<> Vector<2>::Vector(CoordType x, CoordType y) : m_valid(true)
 	{m_elem[0] = x; m_elem[1] = y;}
-template<> inline Vector<3>::Vector(CoordType x, CoordType y, CoordType z) : m_valid(true)
+template<> Vector<3>::Vector(CoordType x, CoordType y, CoordType z) : m_valid(true)
 	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
 
 // Don't need asserts here, they're taken care of in the general function
 
-template<> inline Vector<2>& Vector<2>::rotate(CoordType theta)
+template<> Vector<2>& Vector<2>::rotate(CoordType theta)
 	{return rotate(0, 1, theta);}
 
-template<> inline Vector<3>& Vector<3>::rotateX(CoordType theta)
+template<> Vector<3>& Vector<3>::rotateX(CoordType theta)
 	{return rotate(1, 2, theta);}
-template<> inline Vector<3>& Vector<3>::rotateY(CoordType theta)
+template<> Vector<3>& Vector<3>::rotateY(CoordType theta)
 	{return rotate(2, 0, theta);}
-template<> inline Vector<3>& Vector<3>::rotateZ(CoordType theta)
+template<> Vector<3>& Vector<3>::rotateZ(CoordType theta)
 	{return rotate(0, 1, theta);}
 
 
