@@ -36,15 +36,17 @@ namespace WFMath {
 template<const int dim>
 inline Point<dim>::Point(const Point<dim>& p) : m_valid(p.m_valid)
 {
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     m_elem[i] = p.m_elem[i];
+  }
 }
 
 template<const int dim>
 inline Point<dim>& Point<dim>::setToOrigin()
 {
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     m_elem[i] = 0;
+  }
 
   m_valid = true;
 
@@ -56,9 +58,11 @@ inline bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
 {
   CoordType delta = (CoordType) _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
 
-  for(int i = 0; i < dim; ++i)
-    if(fabs(m_elem[i] - p.m_elem[i]) > delta)
+  for(int i = 0; i < dim; ++i) {
+    if(fabs(m_elem[i] - p.m_elem[i]) > delta) {
       return false;
+    }
+  }
 
   return true;
 }
@@ -68,8 +72,9 @@ inline Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
 {
   Vector<dim> out;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     out.m_elem[i] = c1.m_elem[i] - c2.m_elem[i];
+  }
 
   out.m_valid = c1.m_valid && c2.m_valid;
 
@@ -79,8 +84,9 @@ inline Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
 template<const int dim>
 inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
 {
-    for(int i = 0; i < dim; ++i)
+    for(int i = 0; i < dim; ++i) {
       p.m_elem[i] += rhs.m_elem[i];
+    }
 
     p.m_valid = p.m_valid && rhs.m_valid;
 
@@ -110,8 +116,9 @@ inline Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
 template<const int dim>
 inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
 {
-    for(int i = 0; i < dim; ++i)
+    for(int i = 0; i < dim; ++i) {
       p.m_elem[i] -= rhs.m_elem[i];
+    }
 
     p.m_valid = p.m_valid && rhs.m_valid;
 
@@ -132,11 +139,13 @@ template<const int dim>
 inline Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
 {
     // Compare pointer addresses
-    if (this == &rhs)
-	return *this;
+    if (this == &rhs) {
+      return *this;
+    }
 
-    for(int i = 0; i < dim; ++i)
+    for(int i = 0; i < dim; ++i) {
       m_elem[i] = rhs.m_elem[i];
+    }
 
     m_valid = rhs.m_valid;
 
@@ -175,8 +184,9 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
 
   CoordType tot_weight = *w_i, max_weight = fabs(*w_i);
   Point<dim> out;
-  for(int j = 0; j < dim; ++j)
+  for(int j = 0; j < dim; ++j) {
     out[j] = (*c_i)[j] * *w_i;
+  }
 
   while(++c_i != c_end && ++w_i != w_end) {
     tot_weight += *w_i;
@@ -193,8 +203,9 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
   assert("sum of weights must be nonzero" && max_weight > 0
          && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
 
-  for(int j = 0; j < dim; ++j)
+  for(int j = 0; j < dim; ++j) {
     out[j] /= tot_weight;
+  }
 
   out.setValid(valid);
 
@@ -223,8 +234,9 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
       out[j] += (*i)[j];
   }
 
-  for(int j = 0; j < dim; ++j)
+  for(int j = 0; j < dim; ++j) {
     out[j] /= num_points;
+  }
 
   out.setValid(valid);
 
@@ -238,8 +250,9 @@ inline Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType
   Point<dim> out;
   CoordType conj_dist = 1 - dist;
 
-  for(int i = 0; i < dim; ++i)
+  for(int i = 0; i < dim; ++i) {
     out.m_elem[i] = p1.m_elem[i] * conj_dist + p2.m_elem[i] * dist;
+  }
 
   out.m_valid = p1.m_valid && p2.m_valid;
 
