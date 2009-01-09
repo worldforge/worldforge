@@ -27,8 +27,6 @@
 #define WFMATH_POINT_H
 
 #include <wfmath/const.h>
-#include <wfmath/vector.h>
-#include <wfmath/rotmatrix.h>
 #include <wfmath/quaternion.h>
 #include <wfmath/zero.h>
 
