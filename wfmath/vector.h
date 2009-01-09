@@ -37,11 +37,6 @@
 
 namespace WFMath {
 
-template<const int dim> class RotMatrix;
-template<const int dim> class Vector;
-template<const int dim> class Point;
-class Quaternion;
-
 template<const int dim>
 Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2);
 template<const int dim>

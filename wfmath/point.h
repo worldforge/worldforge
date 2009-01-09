@@ -34,11 +34,6 @@
 
 namespace WFMath {
 
-template<const int dim> class Point;
-template<const int dim> class AxisBox;
-template<const int dim> class Ball;
-template<const int dim> class RotBox;
-
 template<const int dim>
 Point<dim>& operator+=(Point<dim>& p, const Vector<dim>& v);
 template<const int dim>
