@@ -129,6 +129,12 @@ inline void _ArrayFromAtlas(CoordType* array, unsigned len, const AtlasInType& a
 }
 
 template<const int dim>
+inline Vector<dim>::Vector(const AtlasInType& a)
+{
+  fromAtlas(a);
+}
+
+template<const int dim>
 inline void Vector<dim>::fromAtlas(const AtlasInType& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
