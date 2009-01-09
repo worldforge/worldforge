@@ -192,6 +192,12 @@ inline AtlasOutType Quaternion::toAtlas() const
 }
 
 template<const int dim>
+inline Point<dim>::Point(const AtlasInType& a)
+{
+  fromAtlas(a);
+}
+
+template<const int dim>
 inline void Point<dim>::fromAtlas(const AtlasInType& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);

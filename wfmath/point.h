@@ -106,7 +106,7 @@ class Point
   /// Construct a copy of a point
   Point (const Point& p);
   /// Construct a point from an object passed by Atlas
-  explicit Point (const AtlasInType& a) {fromAtlas(a);}
+  explicit Point (const AtlasInType& a);
   /// Construct a point from a vector.
   explicit Point(const Vector<dim> vector) {
     for (int i = 0; i < dim; ++i) {
