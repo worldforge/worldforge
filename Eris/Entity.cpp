@@ -138,6 +138,7 @@ const Entity::AttrMap Entity::getAttributes() const
     if (m_type) {
         fillAttributesFromType(attributes, m_type);
     }
+    return attributes;
 }
 
 const Entity::AttrMap& Entity::getInstanceAttributes() const
