@@ -156,16 +156,16 @@ class Point
   // Functions so that Point<> has the generic shape interface
 
   int numCorners() const {return 1;}
-  Point<dim> getCorner(int i) const {assert(i == 0); return *this;}
+  Point<dim> getCorner(int i) const { return *this;}
   Point<dim> getCenter() const {return *this;}
 
   Point shift(const Vector<dim>& v) {return *this += v;}
   Point moveCornerTo(const Point& p, int corner)
-  {assert(corner == 0); return operator=(p);}
+  {return operator=(p);}
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
   Point& rotateCorner(const RotMatrix<dim>& m, int corner)
-  {assert(corner == 0); return *this;}
+  {return *this;}
   Point& rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Point& rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
@@ -205,9 +205,9 @@ class Point
   // Member access
 
   /// Access the i'th coordinate of the point
-  CoordType operator[](const int i) const {assert(i >= 0 && i < dim); return m_elem[i];}
+  CoordType operator[](const int i) const {return m_elem[i];}
   /// Access the i'th coordinate of the point
-  CoordType& operator[](const int i)	  {assert(i >= 0 && i < dim); return m_elem[i];}
+  CoordType& operator[](const int i)	  {return m_elem[i];}
 
   /// Get the square of the distance from p1 to p2
   friend CoordType SquaredDistance<dim>(const Point& p1, const Point& p2);
@@ -236,17 +236,17 @@ class Point
   // 2D/3D convienience
 
   /// access the first component of a point
-  CoordType x() const	{assert(dim > 0); return m_elem[0];}
+  CoordType x() const	{return m_elem[0];}
   /// access the first component of a point
-  CoordType& x()	{assert(dim > 0); return m_elem[0];}
+  CoordType& x()	{return m_elem[0];}
   /// access the second component of a point
-  CoordType y() const	{assert(dim > 1); return m_elem[1];}
+  CoordType y() const	{return m_elem[1];}
   /// access the second component of a point
-  CoordType& y()	{assert(dim > 1); return m_elem[1];}
+  CoordType& y()	{return m_elem[1];}
   /// access the third component of a point
-  CoordType z() const	{assert(dim > 2); return m_elem[2];}
+  CoordType z() const	{return m_elem[2];}
   /// access the third component of a point
-  CoordType& z()	{assert(dim > 2); return m_elem[2];}
+  CoordType& z()	{return m_elem[2];}
 
   /// 2D only: construct a vector from polar coordinates
   Point<2>& polar(CoordType r, CoordType theta);
