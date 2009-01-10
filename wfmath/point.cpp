@@ -25,7 +25,10 @@
 
 #include "const.h"
 #include "basis.h"
-#include "point.h"
+#include "point_funcs.h"
+
+#include <vector>
+#include <list>
 
 using namespace WFMath;
 
@@ -169,5 +172,20 @@ Point<3> _NCFS_Point3_toParentCoords(const Point<3>& origin
 
 template class Point<3>;
 template class Point<2>;
+
+template float SquaredDistance<3>(const Point<3> &, const Point<3> &);
+template float SquaredDistance<2>(const Point<2> &, const Point<2> &);
+
+template Point<3> Midpoint<3>(const Point<3> &, const Point<3> &, float);
+template Point<2> Midpoint<2>(const Point<2> &, const Point<2> &, float);
+
+template Point<3> Barycenter<3, std::vector>(const std::vector<Point<3> > &);
+template Point<3> Barycenter<3, std::vector, std::list>(const std::vector<Point<3> > &, const std::list<float> &);
+
+template Point<2> Barycenter<2, std::vector>(const std::vector<Point<2> > &);
+template Point<2> Barycenter<2, std::vector, std::list>(const std::vector<Point<2> > &, const std::list<float> &);
+
+template Point<3> operator-<3>(const Point<3> &, const Vector<3> &);
+template Point<2> operator-<2>(const Point<2> &, const Vector<2> &);
 
 } // namespace WFMath
