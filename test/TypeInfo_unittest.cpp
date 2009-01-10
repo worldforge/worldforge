@@ -34,6 +34,8 @@
 
 #include <wfmath/atlasconv.h>
 
+#include "signalHelpers.h"
+
 using namespace Eris;
 using namespace Atlas::Objects::Operation;
 static void writeLog(Eris::LogLevel, const std::string & msg)
@@ -204,9 +206,22 @@ int main()
     }
     
     
-//     SignalCounter1<const std::string&> loginErrorCounter;
-//     player->LoginFailure.connect(sigc::mem_fun(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
-
+     SignalCounter2<const std::string&, const Atlas::Message::Element&> level_1_Counter;
+     level1Type->AttributeChanges.connect(sigc::mem_fun(level_1_Counter, &SignalCounter2<const std::string&, const Atlas::Message::Element&>::fired));
+     SignalCounter2<const std::string&, const Atlas::Message::Element&> level_2_Counter;
+     level2Type->AttributeChanges.connect(sigc::mem_fun(level_2_Counter, &SignalCounter2<const std::string&, const Atlas::Message::Element&>::fired));
+     
+     ///In our first test, only the level 1 type should emit the attribute changes signal (since the level attribute is defined in the level 2 type also)
+     level1Type->setAttribute("level", 10);
+     assert(level_1_Counter.fireCount() == 1);
+     assert(level_2_Counter.fireCount() == 0);
+     
+     level_1_Counter.reset();
+     level_2_Counter.reset();
+     ///In our second test, both ot the types should emit the signal
+     level1Type->setAttribute("level1", 10);
+     assert(level_1_Counter.fireCount() == 1);
+     assert(level_2_Counter.fireCount() == 1);
     
 
     
