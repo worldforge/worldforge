@@ -259,13 +259,13 @@ inline Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType
   return out;
 }
 
-template<> inline Point<2>::Point(CoordType x, CoordType y) : m_valid(true)
+template<> Point<2>::Point(CoordType x, CoordType y) : m_valid(true)
 {
   m_elem[0] = x;
   m_elem[1] = y;
 }
 
-template<> inline Point<3>::Point(CoordType x, CoordType y, CoordType z) : m_valid(true)
+template<> Point<3>::Point(CoordType x, CoordType y, CoordType z) : m_valid(true)
 {
   m_elem[0] = x;
   m_elem[1] = y;
