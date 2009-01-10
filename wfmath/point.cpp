@@ -26,6 +26,7 @@
 #include "const.h"
 #include "basis.h"
 #include "point_funcs.h"
+#include "quaternion.h"
 
 #include <vector>
 #include <list>
