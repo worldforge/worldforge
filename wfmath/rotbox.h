@@ -33,6 +33,7 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
+#include <wfmath/quaternion.h>
 
 namespace WFMath {
 
