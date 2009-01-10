@@ -271,6 +271,4 @@ class Point
 
 } // namespace WFMath
 
-#include <wfmath/point_funcs.h>
-
 #endif  // WFMATH_POINT_H
