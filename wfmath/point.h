@@ -29,6 +29,9 @@
 #include <wfmath/const.h>
 #include <wfmath/zero.h>
 
+#include <memory>
+#include <iosfwd>
+
 namespace WFMath {
 
 template<const int dim>
