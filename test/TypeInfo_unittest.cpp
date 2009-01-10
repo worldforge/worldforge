@@ -140,6 +140,11 @@ int main()
         level["default"] = 1.0f;
         level["visibility"] = "public";
         attributes["level"] = level;
+        Atlas::Message::MapType level1;
+        level1["default"] = true;
+        level1["visibility"] = "public";
+        attributes["level1"] = level1;
+
         typeInfo->setAttr("attributes", attributes);
         typeService.setup_recvTypeInfo(typeInfo);
     }
@@ -147,6 +152,8 @@ int main()
     assert(level1Type->getAttributes().find("level") != level1Type->getAttributes().end());
     assert(level1Type->getAttributes().find("level")->second.isNum());
     assert(level1Type->getAttributes().find("level")->second.asNum() == 1.0f);
+    
+    assert(level1Type->getAttribute("level1") && *(level1Type->getAttribute("level1")) == Atlas::Message::Element(true));
     
     
     TypeInfoPtr level2Type = typeService.getTypeByName("level2Type");
@@ -163,6 +170,10 @@ int main()
         level["default"] = 2.0f;
         level["visibility"] = "public";
         attributes["level"] = level;
+        Atlas::Message::MapType level2;
+        level2["default"] = true;
+        level2["visibility"] = "public";
+        attributes["level2"] = level2;
         typeInfo->setAttr("attributes", attributes);
         typeService.setup_recvTypeInfo(typeInfo);
     }
@@ -173,6 +184,9 @@ int main()
     assert(level2Type->getAttributes().find("level") != level2Type->getAttributes().end());
     assert(level2Type->getAttributes().find("level")->second.isNum());
     assert(level2Type->getAttributes().find("level")->second.asNum() == 2.0f);
+    
+    assert(level2Type->getAttribute("level1") && *level2Type->getAttribute("level1") == Atlas::Message::Element(true));
+    assert(level2Type->getAttribute("level2") && *level2Type->getAttribute("level2") == Atlas::Message::Element(true));
     
     {
         TestEntity* ent = new TestEntity("2", level1Type, ea.getView());
@@ -189,6 +203,10 @@ int main()
         assert(ent->valueOfAttr("level") == "entity");
     }
     
+    
+//     SignalCounter1<const std::string&> loginErrorCounter;
+//     player->LoginFailure.connect(sigc::mem_fun(loginErrorCounter, &SignalCounter1<const std::string&>::fired));
+
     
 
     
