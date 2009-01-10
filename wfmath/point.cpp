@@ -120,3 +120,54 @@ void WFMath::_NCFS_Point3_asSpherical(CoordType *m_elem, CoordType& r,
   theta = d[1];
   phi = d[2];
 }
+
+namespace WFMath {
+
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+template<>
+Point<3>& Point<3>::rotate(const Quaternion& q, const Point<3>& p)
+#else
+Point<3>& _NCFS_Point3_rotate(Quaternion& q, const Point<3>& p)
+#endif
+{
+  return (*this = p + (*this - p).rotate(q));
+}
+
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+template<>
+Point<3>& Point<3>::rotatePoint(const Quaternion& q, const Point<3>& p)
+#else
+Point<3>& _NCFS_Point3_rotatePoint(Quaternion& q, const Point<3>& p)
+#endif
+{
+  return rotate(q, p);
+}
+
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+template<>
+Point<3> Point<3>::toLocalCoords(const Point<3>& origin,
+                                 const Quaternion& rotation) const
+#else
+Point<3> _NCFS_Point3_toLocalCoords(const Point<3>& origin
+                                    const Quaternion& rotation)
+#endif
+{
+  return Point().setToOrigin() + (*this - origin).rotate(rotation.inverse());
+}
+
+#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+template<>
+Point<3> Point<3>::toParentCoords(const Point<3>& origin,
+                                 const Quaternion& rotation) const
+#else
+Point<3> _NCFS_Point3_toParentCoords(const Point<3>& origin
+                                     const Quaternion& rotation)
+#endif
+{
+  return origin + (*this - Point().setToOrigin()).rotate(rotation);
+}
+
+template class Point<3>;
+template class Point<2>;
+
+} // namespace WFMath

@@ -170,12 +170,11 @@ class Point
   Point& rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   // 3D rotation functions
-  Point<3>& rotate(const Quaternion& q, const Point<3>& p)
-  {return (*this = p + (*this - p).rotate(q));}
-  Point<3>& rotateCorner(const Quaternion& q, int corner)
-  {assert(corner == 0); return *this;}
-  Point<3>& rotateCenter(const Quaternion& q) {return *this;}
-  Point<3>& rotatePoint(const Quaternion& q, const Point<3>& p) {return rotate(q, p);}
+  Point<3>& rotate(const Quaternion& q, const Point<3>& p);
+  Point& rotateCorner(const Quaternion& q, int corner)
+  { return *this;}
+  Point& rotateCenter(const Quaternion& q) {return *this;}
+  Point<3>& rotatePoint(const Quaternion& q, const Point<3>& p);
 
   // The implementations of these lie in axisbox_funcs.h and
   // ball_funcs.h, to reduce include dependencies
@@ -200,10 +199,8 @@ class Point
   Point toLocalCoords(const RotBox<dim>& coords) const;
 
   // 3D only
-  Point<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-  {return origin + (*this - Point().setToOrigin()).rotate(rotation);}
-  Point<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-  {return Point().setToOrigin() + (*this - origin).rotate(rotation.inverse());}
+  Point toParentCoords(const Point& origin, const Quaternion& rotation) const;
+  Point toLocalCoords(const Point& origin, const Quaternion& rotation) const;
 
   // Member access
 
