@@ -62,26 +62,26 @@ public:
 
 // accessors
     /// the unique type name (matches the Atlas type)
-    inline const std::string& getName() const;
+    const std::string& getName() const;
     
     /**
      * @brief Gets the currently resolved child TypeInfo instances.
      * @return A set of child TypeInfo instances.
      */
-    inline const TypeInfoSet & getChildren() const;
+    const TypeInfoSet & getChildren() const;
 
     /**
      * @brief Gets the currently resolved parent TypeInfo instances.
      * @return A set of parent TypeInfo instances.
      */
-    inline const TypeInfoSet & getParents() const;
+    const TypeInfoSet & getParents() const;
     
     /**
     @brief Gets the default attributes for this entity type.
     Note that the map returned does not include inherited attributes.
     @returns An element map of the default attributes for this type.
     */
-    inline const Atlas::Message::MapType& getAttributes() const;
+    const Atlas::Message::MapType& getAttributes() const;
 
 
     /**
@@ -155,25 +155,27 @@ private:
     Atlas::Message::MapType m_attributes;
 };
 
-const Atlas::Message::MapType& TypeInfo::getAttributes() const
+inline const Atlas::Message::MapType& TypeInfo::getAttributes() const
 {
     return m_attributes;
 }
 
-bool TypeInfo::isBound() const
+inline bool TypeInfo::isBound() const
 {
     return m_bound;
 }
 
-const std::string& TypeInfo::getName() const
+inline const std::string& TypeInfo::getName() const
 {
     return m_name;
 }
-const TypeInfoSet & TypeInfo::getChildren() const
+
+inline const TypeInfoSet & TypeInfo::getChildren() const
 {
     return m_children;
 }
-const TypeInfoSet & TypeInfo::getParents() const 
+
+inline const TypeInfoSet & TypeInfo::getParents() const 
 {
         return m_parents;
 }

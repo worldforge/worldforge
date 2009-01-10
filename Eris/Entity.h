@@ -66,12 +66,9 @@ public:
      * The number returned is only for direct children, so the number of nested entities can be larger.
      * @return 
      */
-    unsigned int numContained() const {
-        return m_contents.size();
-    }
-    Entity* getContained(unsigned int index) const {
-        return m_contents[index];
-    }
+    unsigned int numContained() const;
+    
+    Entity* getContained(unsigned int index) const;
 
     /**
      * @brief Gets the value of a named attribute.
@@ -108,48 +105,27 @@ public:
      * @brief Retrieve the unique entity ID.
      * @return The unique id of the entity.
      */
-    const std::string& getId() const
-    {
-        return m_id;
-    }
+    const std::string& getId() const;
     
     /**
      * @brief Gets the name of the entity.
      * In contrast to getId() this is not unique, and doesn't even have to be set.
      * @return The name of the entity.
      */
-    const std::string& getName() const
-    {
-        return m_name;
-    }
+    const std::string& getName() const;
 	
     /// access the current time-stamp of the entity
-    float getStamp() const
-    {
-        return m_stamp;
-    }
+    float getStamp() const;
 
-    TypeInfo* getType() const
-    {
-        return m_type;
-    }
+    TypeInfo* getType() const;
     
-    View* getView() const
-    {
-        return m_view;
-    }
+    View* getView() const;
     
     /** the containing entity, or null if this is a top-level visible entity. */
-    Entity* getLocation() const
-    {
-        return m_location;
-    }
+    Entity* getLocation() const;
 	
 	/** Returns the Entity's position inside it's parent in the parent's local system coordinates. **/
-    WFMath::Point<3> getPosition() const
-    {
-        return m_position;
-    }
+    WFMath::Point<3> getPosition() const;
     
     /**
      * @brief Gets all attributes defined for this entity.
@@ -183,39 +159,26 @@ public:
     Retrieve the current predicted velocity of an entity. If the entity
     is not moving, this is an <em>invalid</em> Vector.
     */
-    WFMath::Vector<3> getPredictedVelocity() const;   
+    WFMath::Vector<3> getPredictedVelocity() const;
     
     /** retreive this Entity's position in view coordinates. */
     WFMath::Point<3> getViewPosition() const;
 
     /** retreive this Entity's orientation in view coordinates. */
     WFMath::Quaternion getViewOrientation() const;
-	
-	/** Returns the entity's velocity as last set explicitely. **/
-	const WFMath::Vector< 3 > & getVelocity(void) const
-	{
-		return m_velocity;
-	}
-	
-	/** Returns the entity's orientation as last set explicitely. **/
-	const WFMath::Quaternion & getOrientation(void) const
-	{
-		return m_orientation;
-	}
-	
-	/** Returns the entity's bounding box in the entity's local system coordinates. **/
-	const WFMath::AxisBox< 3 > & getBBox(void) const
-	{
-		return m_bbox;
-	}
-
-    bool hasBBox() const
-    {
-        return m_hasBBox;
-    }
     
-    const TaskArray& getTasks() const
-    { return m_tasks; }
+    /** Returns the entity's velocity as last set explicitely. **/
+    const WFMath::Vector< 3 > & getVelocity(void) const;
+    
+    /** Returns the entity's orientation as last set explicitely. **/
+    const WFMath::Quaternion & getOrientation(void) const;
+    
+    /** Returns the entity's bounding box in the entity's local system coordinates. **/
+    const WFMath::AxisBox< 3 > & getBBox(void) const;
+
+    bool hasBBox() const;
+    
+    const TaskArray& getTasks() const;
     
     /**
     @brief Get a list of operations supported by this entity (tool)
@@ -231,16 +194,10 @@ public:
 
 // coordinate transformations
     template<class C>
-    C toLocationCoords(const C& c) const
-    {
-        return c.toParentCoords(getPredictedPos(), m_orientation);
-    }
+    C toLocationCoords(const C& c) const;
     
     template<class C>
-    C fromLocationCoords(const C& c) const
-    {
-        return c.toLocalCoords(getPredictedPos(), m_orientation);
-    }
+    C fromLocationCoords(const C& c) const;
     
     // A vector (e.g., the distance between two points, or
     // a velocity) gets rotated by a coordinate transformation,
@@ -248,15 +205,9 @@ public:
     // of the origin, so we handle it separately. We also
     // need to copy the vector before rotating, because
     // Vector::rotate() rotates it in place.
-    WFMath::Vector<3> toLocationCoords(const WFMath::Vector<3>& v) const
-    {
-        return WFMath::Vector<3>(v).rotate(m_orientation);
-    }
+    WFMath::Vector<3> toLocationCoords(const WFMath::Vector<3>& v) const;
     
-    WFMath::Vector<3> fromLocationCoords(const WFMath::Vector<3>& v) const
-    {
-        return WFMath::Vector<3>(v).rotate(m_orientation.inverse());
-    }
+    WFMath::Vector<3> fromLocationCoords(const WFMath::Vector<3>& v) const;
 	
 // Signals
     sigc::signal<void, Entity*> ChildAdded;
@@ -532,6 +483,100 @@ protected:
 
     bool m_initialised;
 };
+
+inline unsigned int Entity::numContained() const {
+    return m_contents.size();
+}
+
+inline Entity* Entity::getContained(unsigned int index) const {
+    return m_contents[index];
+}
+
+inline const std::string& Entity::getId() const
+{
+    return m_id;
+}
+
+inline const std::string& Entity::getName() const
+{
+    return m_name;
+}
+
+inline float Entity::getStamp() const
+{
+    return m_stamp;
+}
+
+inline TypeInfo* Entity::getType() const
+{
+    return m_type;
+}
+
+inline View* Entity::getView() const
+{
+    return m_view;
+}
+
+/** the containing entity, or null if this is a top-level visible entity. */
+inline Entity* Entity::getLocation() const
+{
+    return m_location;
+}
+
+/** Returns the Entity's position inside it's parent in the parent's local system coordinates. **/
+inline WFMath::Point<3> Entity::getPosition() const
+{
+    return m_position;
+}
+/** Returns the entity's velocity as last set explicitely. **/
+inline const WFMath::Vector< 3 > & Entity::getVelocity(void) const
+{
+    return m_velocity;
+}
+
+/** Returns the entity's orientation as last set explicitely. **/
+inline const WFMath::Quaternion & Entity::getOrientation(void) const
+{
+    return m_orientation;
+}
+
+/** Returns the entity's bounding box in the entity's local system coordinates. **/
+inline const WFMath::AxisBox< 3 > & Entity::getBBox(void) const
+{
+    return m_bbox;
+}
+
+inline bool Entity::hasBBox() const
+{
+    return m_hasBBox;
+}
+
+inline const TaskArray& Entity::getTasks() const
+{
+    return m_tasks; 
+}
+
+template<class C>
+inline C Entity::toLocationCoords(const C& c) const
+{
+    return c.toParentCoords(getPredictedPos(), m_orientation);
+}
+
+template<class C>
+inline C Entity::fromLocationCoords(const C& c) const
+{
+    return c.toLocalCoords(getPredictedPos(), m_orientation);
+}
+
+inline WFMath::Vector<3> Entity::toLocationCoords(const WFMath::Vector<3>& v) const
+{
+    return WFMath::Vector<3>(v).rotate(m_orientation);
+}
+
+inline WFMath::Vector<3> Entity::fromLocationCoords(const WFMath::Vector<3>& v) const
+{
+    return WFMath::Vector<3>(v).rotate(m_orientation.inverse());
+}
 
 } // of namespace
 
