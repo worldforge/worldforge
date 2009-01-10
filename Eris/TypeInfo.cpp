@@ -250,7 +250,7 @@ void TypeInfo::onAttributeChanges(const std::string& attributeName, const Atlas:
     ///Now go through all children, and only make them emit the event if they themselves doesn't have an attribute by this name (which thus overrides this).
     for (TypeInfoSet::iterator I = getChildren().begin(); I != getChildren().end(); ++I) {
         Atlas::Message::MapType::iterator J = (*I)->m_attributes.find(attributeName);
-        if (J == m_attributes.end()) {
+        if (J == (*I)->m_attributes.end()) {
             (*I)->onAttributeChanges(attributeName, element);
         }
     }
