@@ -232,7 +232,29 @@ const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attribu
     return emptyElement;
 }
 
+void TypeInfo::setAttribute(const std::string& attributeName, const Atlas::Message::Element& element)
+{
+    onAttributeChanges(attributeName, element);
+    Atlas::Message::MapType::iterator I = m_attributes.find(attributeName);
+    if (I == m_attributes.end()) {
+        m_attributes.insert(Atlas::Message::MapType::value_type(attributeName, element));
+    } else {
+        I->second = element;
+    }
+}
 
+
+void TypeInfo::onAttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element)
+{
+    AttributeChanges.emit(attributeName, element);
+    ///Now go through all children, and only make them emit the event if they themselves doesn't have an attribute by this name (which thus overrides this).
+    for (TypeInfoSet::iterator I = getChildren().begin(); I != getChildren().end(); ++I) {
+        Atlas::Message::MapType::iterator J = (*I)->m_attributes.find(attributeName);
+        if (J == m_attributes.end()) {
+            (*I)->onAttributeChanges(attributeName, element);
+        }
+    }
+}
 
 void TypeInfo::validateBind()
 {

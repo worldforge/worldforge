@@ -83,7 +83,6 @@ public:
     */
     const Atlas::Message::MapType& getAttributes() const;
 
-
     /**
      * @brief Gets the value of the named attribute.
      * This method will search through both this instance and all of its parents for the attribute by the specified name. If no attribute can be found a null pointer will be returned.
@@ -92,7 +91,21 @@ public:
      * @return A pointer to an Element instance, or a null pointer if no attribute could be found.
      */
     const Atlas::Message::Element* getAttribute(const std::string& attributeName) const;
-
+    
+    /**
+     * @brief Emitted before an attribute changes.
+     * The first parameter is the name of the attribute, and the second is the actual attribute.
+     */
+    sigc::signal<void, const std::string&, const Atlas::Message::Element&> AttributeChanges;
+    
+    
+    /**
+     * @brief Sets an attribute.
+     * @param attributeName The name of the attribute.
+     * @param element The new value of the attribute.
+     */
+    void setAttribute(const std::string& attributeName, const Atlas::Message::Element& element);
+    
 
 protected:
     friend class TypeService;
@@ -109,9 +122,19 @@ protected:
     /// process the INFO data
     void processTypeData(const Atlas::Objects::Root& atype);
 
-    /** Emitted when the type is bound, i.e there is an unbroken graph of
-    TypeInfo instances through every ancestor to the root object. */
+    /**
+     * @brief Emitted when the type is bound, i.e there is an unbroken graph of TypeInfo instances through every ancestor to the root object. 
+     */
     sigc::signal<void, TypeInfo*> Bound;
+    
+    
+    /**
+     * @brief Called before the AttributeChanges signal is emitted.
+     * This call is made before an attribute is changed. It will emit the AttributeChanges event first, and then go through all of the children, calling itself on them as long as the children themselves doesn't have an attribute by the same name defined.
+     * @param attributeName The name of the attribute which is being changed.
+     * @param element The new attribute value.
+     */
+    virtual void onAttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element);
     
 private:
     void addParent(TypeInfoPtr tp);
