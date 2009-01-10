@@ -27,7 +27,6 @@
 #define WFMATH_POINT_H
 
 #include <wfmath/const.h>
-#include <wfmath/quaternion.h>
 #include <wfmath/zero.h>
 
 namespace WFMath {
