@@ -56,6 +56,10 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
     
     m_router = new EntityRouter(this);
     m_view->getConnection()->registerRouterForFrom(m_router, m_id);
+    
+    if (m_type) {
+        m_type->AttributeChanges.connect(sigc::mem_fun(this, &Entity::typeInfo_AttributeChanges));
+    }
 }
 
 Entity::~Entity()
@@ -380,8 +384,8 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     } else {
         ///Create an instance specific attribute
         Element& target = m_attrs[attr];
-        newElement = &target;
         ///If there already existed an instance attribute copy from that
+        newElement = &target;
         if (A == m_attrs.end()) {
             ///Copy from the type info attribute
             target = *typeElement;
@@ -395,7 +399,9 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     // fire observers
     
     ObserverMap::const_iterator obs = m_observers.find(attr);
-    if (obs != m_observers.end()) obs->second.emit(*newElement);
+    if (obs != m_observers.end()) {
+        obs->second.emit(*newElement);
+    }
 
     addToUpdate(attr);
     endUpdate();
@@ -446,6 +452,33 @@ void Entity::onAttrChanged(const std::string&, const Element&)
 {
     // no-op by default
 }
+
+
+void Entity::typeInfo_AttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element)
+{
+    attrChangedFromTypeInfo(attributeName, element);
+}
+
+void Entity::attrChangedFromTypeInfo(const std::string& attributeName, const Atlas::Message::Element& element)
+{
+    ///Only fire the events if there's no attribute already defined for this entity
+    if (m_attrs.count(attributeName) == 0) {
+        beginUpdate();
+        nativeAttrChanged(attributeName, element);
+        onAttrChanged(attributeName, element);
+    
+        // fire observers
+        
+        ObserverMap::const_iterator obs = m_observers.find(attributeName);
+        if (obs != m_observers.end()) {
+            obs->second.emit(element);
+        }
+    
+        addToUpdate(attributeName);
+        endUpdate();
+    }
+}
+
 
 void Entity::beginUpdate()
 {

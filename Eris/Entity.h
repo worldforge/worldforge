@@ -405,6 +405,22 @@ protected:
     */
     bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
     
+    /**
+     * @brief Connected to the TypeInfo::AttributeChanges event.
+     * This will in turn call the attrChangedFromTypeInfo, which is overridable in a subclass if so desired.
+     * @param attributeName The name of the attribute which is to be changed.
+     * @param element The new element data.
+     */
+    void typeInfo_AttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element);
+    
+    /**
+     * @brief Called when an attribute has been changed in the TypeInfo for this entity.
+     * If the attribute doesn't have an instance value local to this entity the event will be processed just like a call to setAttr but without the attribute being saved in the map of instance attributes.
+     * @param attributeName The name of the attribute which is to be changed.
+     * @param element The new element data.
+     */
+    virtual void attrChangedFromTypeInfo(const std::string& attributeName, const Atlas::Message::Element& element);
+    
     
     /**
      * @brief Utility method for recursively filling a map of attributes from a TypeInfo instance.
