@@ -186,10 +186,19 @@ template Point<3> Barycenter<3, std::vector, std::list>(const std::vector<Point<
 template Point<2> Barycenter<2, std::vector>(const std::vector<Point<2> > &);
 template Point<2> Barycenter<2, std::vector, std::list>(const std::vector<Point<2> > &, const std::list<CoordType> &);
 
+template Vector<3> operator-<3>(const Point<3> &, const Point<3> &);
+template Vector<2> operator-<2>(const Point<2> &, const Point<2> &);
+
 template Point<3> operator-<3>(const Point<3> &, const Vector<3> &);
 template Point<2> operator-<2>(const Point<2> &, const Vector<2> &);
 
 template Point<3> operator+<3>(const Vector<3> &, const Point<3> &);
 template Point<2> operator+<2>(const Vector<2> &, const Point<2> &);
+
+template Point<3> operator+<3>(const Point<3> &, const Vector<3> &);
+template Point<2> operator+<2>(const Point<2> &, const Vector<2> &);
+
+template Point<3>& operator+=<3>(Point<3> &, const Vector<3> &);
+template Point<2>& operator+=<2>(Point<2> &, const Vector<2> &);
 
 } // namespace WFMath
