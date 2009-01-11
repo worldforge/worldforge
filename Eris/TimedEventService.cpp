@@ -1,5 +1,6 @@
 #include <Eris/TimedEventService.h>
 #include <Eris/Poll.h>
+#include <cassert>
 
 using WFMath::TimeStamp;
 using WFMath::TimeDiff;
