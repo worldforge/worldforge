@@ -203,6 +203,11 @@ int main()
         
         ent->setup_setAttr("level", "entity");
         assert(ent->valueOfAttr("level") == "entity");
+        
+        assert(!ent->getPosition().isValid());
+        
+        level1Type->setAttribute("pos", WFMath::Point<3>(1,2,3).toAtlas());
+        assert(ent->getPosition().isValid());
     }
     
     
