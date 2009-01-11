@@ -2,6 +2,8 @@
 #include <Eris/Poll.h>
 #include <cassert>
 
+#include <cassert>
+
 using WFMath::TimeStamp;
 using WFMath::TimeDiff;
 
