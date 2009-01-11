@@ -38,6 +38,21 @@
 	* wfmath/rotmatrix_funcs.h: Add cassert include back here as
 	  required.
 
+2009-01-05 Erik Hjortsberg <erik@worldforge.org>
+
+	* wfmath/atlasconv.h: Provide proper templated parsing methods for all 
+	current terrain mods and shapes.
+
+	* wfmath/zero.h: Add a helper class for holding zero values of points
+	and vectors.
+
+	* wfmath/ball.h, wfmath/polygon.h, wfmath/rotbox.h: Add toAtlas and 
+	fromAtlas methods, implemented in atlasconv.h. Also add contstructor
+	which takes Atlas data.
+
+	* wfmath/atlas_0_6_test.cpp: Added tests for parsing shapes from Atlas.
+
+
 2008-11-15  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Release 0.3.8
