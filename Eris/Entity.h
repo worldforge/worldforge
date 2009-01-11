@@ -31,7 +31,7 @@ typedef std::vector<Entity*> EntityArray;
 typedef std::vector<Task*> TaskArray;
 
 /** 
-@brief Entity is a concrete (instanitable) class representing one game entity
+@brief Entity is a concrete (instantiable) class representing one game entity
 
 Entity encapsulates the state and tracking of one game entity; this includes
 it's location in the containership tree (graph?), it's name and unique and id,
@@ -68,6 +68,11 @@ public:
      */
     unsigned int numContained() const;
     
+    /**
+     * @brief Gets the child entity at the specified index.
+     * @param index An index for the collection of child entities. This must be a valid index as no bounds checking will happen.
+     * @return A pointer to a child entity.
+     */
     Entity* getContained(unsigned int index) const;
 
     /**
@@ -114,17 +119,34 @@ public:
      */
     const std::string& getName() const;
 	
-    /// access the current time-stamp of the entity
+    /**
+     * @brief Access the current time-stamp of the entity.
+     * @return The current time stamp.
+     */
     float getStamp() const;
 
+    /**
+     * @brief Gets the type of this entity.
+     * @return The type of this entity. This can be null.
+     */
     TypeInfo* getType() const;
     
+    /**
+     * @brief Gets the view to which this entity belongs.
+     * @return The view to which this entity belongs.
+     */
     View* getView() const;
     
-    /** the containing entity, or null if this is a top-level visible entity. */
+    /**
+     * @brief The containing entity, or null if this is a top-level visible entity.
+     * @return The containing entity, or null.
+     */
     Entity* getLocation() const;
 	
-	/** Returns the Entity's position inside it's parent in the parent's local system coordinates. **/
+    /**
+     * @brief Returns the Entity's position inside it's parent in the parent's local system coordinates.
+     * @return The position of the entity in parent relative coords.
+     */
     WFMath::Point<3> getPosition() const;
     
     /**
@@ -145,20 +167,23 @@ public:
      */
     const AttrMap& getInstanceAttributes() const;
     
-    /** Test if this entity has a non-zero velocity vector. */
+    /**
+     * @brief Test if this entity has a non-zero velocity vector.
+     * @return True if the entity has a non-zero velocity.
+     */
     bool isMoving() const;
         
     /**
-    Retrieve the predicted position of this entity, based on it's velocity and
-    acceleration. If the entity is not moving, this is the same as calling
-    getPosition().
-    */
+     * @brief Retrieve the predicted position of this entity, based on it's velocity and acceleration.
+     * If the entity is not moving, this is the same as calling getPosition().
+     * @return The predicted position of the entity.
+     */
     WFMath::Point<3> getPredictedPos() const;
     
     /**
-    Retrieve the current predicted velocity of an entity. If the entity
-    is not moving, this is an <em>invalid</em> Vector.
-    */
+     * @brief Retrieve the current predicted velocity of an entity. If the entity is not moving, this is an <em>invalid</em> Vector.
+     * @return The predicted velocity of the entity.
+     */
     WFMath::Vector<3> getPredictedVelocity() const;
     
     /** retreive this Entity's position in view coordinates. */
@@ -176,8 +201,17 @@ public:
     /** Returns the entity's bounding box in the entity's local system coordinates. **/
     const WFMath::AxisBox< 3 > & getBBox(void) const;
 
+    /**
+     * @brief Returns true if the entity has a bounding box.
+     * Not all entities have bounding boxes, but those that are represented as physical objects in the world usually do.
+     * @return True if the entity has a bounding box.
+     */
     bool hasBBox() const;
     
+    /**
+     * @brief Gets the tasks associated with this entity.
+     * @return The tasks associated with this entity.
+     */
     const TaskArray& getTasks() const;
     
     /**
