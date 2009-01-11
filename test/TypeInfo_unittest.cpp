@@ -93,6 +93,12 @@ class TestEntity : public Eris::Entity {
         init(ge, fromCreateOp);
     }
     
+    void setup_setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion)
+    {
+        setFromRoot(obj, allowMotion);
+    }
+
+    
 };
 
 class TestTypeService : public Eris::TypeService{
@@ -221,6 +227,23 @@ int main()
         
         assert(ent->getVelocity().isValid());
         assert(ent->getVelocity() == WFMath::Vector<3>(3,2,1));
+        
+        {
+            Atlas::Objects::Entity::Anonymous what;
+            what->setId(ent->getId());
+            what->setAttr("velocity", WFMath::Vector<3>(30,20,10).toAtlas());
+            ent->setup_setFromRoot(what, true);
+        }
+        assert(ent->getVelocity() == WFMath::Vector<3>(30,20,10));
+        
+        {
+            Atlas::Objects::Entity::Anonymous what;
+            what->setId(ent->getId());
+            what->setAttr("foo", "bar");
+            ent->setup_setFromRoot(what, true);
+        }
+        ///Setting another attribute should not make the entity default to the type info attributes
+        assert(ent->getVelocity() == WFMath::Vector<3>(30,20,10));
     }
     
     
