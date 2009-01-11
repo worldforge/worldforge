@@ -1,3 +1,43 @@
+2009-01-11  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/zero.h: Add a new line to the end of zero.h.
+
+	* configure.ac: Check for fabsf.
+
+	* wfmath/atlasconv.h: Move inlined constructors into this file
+	  to ensure code that requires Atlas-C++ isn't linked by the main
+	  library.
+
+	* wfmath/const.cpp: Add a special float implementation of Equal
+	  to use more efficient underlying mechanism.
+
+	* wfmath/const.h: Add forward declarations for major classes.
+
+	* wfmath/point.cpp, wfmath/vector.cpp: Add specialisations of
+	  some previously inlined code to reduce dependency mess.
+	  Force instantation of templates so code is included in the
+	  library for things that should not be inlined.
+
+	* wfmath/point.h, wfmath/vector.h: Remove forward declarations
+	  and unnecessary includes. Strip out asserts as including cassert
+	  interferes with application code. Remove some messy inlined
+	  code and clean up the declaraions of 3D only methods. Don't
+	  force inclusaion of the _funcs.h headers which contains most
+	  of the implementation.
+
+	* wfmath/point_funcs.h, wfmath/vector_funcs.h: Clean up formatting
+	  and scoping. Remove inline from a number of methods.
+
+	* wfmath/quaternion.cpp: Use CoordType, not float.
+
+	* wfmath/rotbox.h: Include quaternion.h as required.
+
+	* wfmath/rotmatrix.h: Remove asserts as they interfere with
+	  application code.
+
+	* wfmath/rotmatrix_funcs.h: Add cassert include back here as
+	  required.
+
 2008-11-15  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Release 0.3.8
