@@ -87,7 +87,7 @@ Quaternion& Quaternion::operator*= (const Quaternion& rhs)
   m_age = m_age + rhs.m_age;
   checkNormalization();
 
-  float old_w = m_w;
+  CoordType old_w = m_w;
   m_w = m_w * rhs.m_w - Dot(m_vec, rhs.m_vec);
   m_vec = old_w * rhs.m_vec + rhs.m_w * m_vec - Cross(m_vec, rhs.m_vec);
 
@@ -100,7 +100,7 @@ Quaternion& Quaternion::operator/= (const Quaternion& rhs)
   m_age = m_age + rhs.m_age;
   checkNormalization();
 
-  float old_w = m_w;
+  CoordType old_w = m_w;
   m_w = m_w * rhs.m_w + Dot(m_vec, rhs.m_vec);
   m_vec = rhs.m_w * m_vec - old_w * rhs.m_vec + Cross(m_vec, rhs.m_vec);
 
