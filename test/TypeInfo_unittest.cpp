@@ -88,6 +88,10 @@ class TestEntity : public Eris::Entity {
     {
         setAttr(p, v);
     }
+    void setup_init(const Atlas::Objects::Entity::RootEntity &ge, bool fromCreateOp)
+    {
+        init(ge, fromCreateOp);
+    }
     
 };
 
@@ -179,7 +183,7 @@ int main()
         Atlas::Message::MapType velocity;
         velocity["default"] = WFMath::Vector<3>(3,2,1).toAtlas();
         velocity["visibility"] = "public";
-        attributes["level2"] = level2;
+        attributes["velocity"] = velocity;
         typeInfo->setAttr("attributes", attributes);
         typeService.setup_recvTypeInfo(typeInfo);
     }
@@ -196,12 +200,14 @@ int main()
     
     {
         TestEntity* ent = new TestEntity("2", level1Type, ea.getView());
+        ent->setup_init(Atlas::Objects::Entity::RootEntity(), false);
         assert(ent->hasAttr("level"));
         assert(ent->valueOfAttr("level") == 1.0f);
     }
     
     {
         TestEntity* ent = new TestEntity("2", level2Type, ea.getView());
+        ent->setup_init(Atlas::Objects::Entity::RootEntity(), false);
         assert(ent->hasAttr("level"));
         assert(ent->valueOfAttr("level") == 2.0f);
         
