@@ -267,6 +267,11 @@ void Entity::setFromRoot(const Root& obj, bool allowMove)
     obj->addToMessage(attrs);
     Atlas::Message::MapType::iterator A;
     
+    ///Fill with the default values from the type info
+    if (m_type) {
+        fillAttributesFromType(attrs, m_type);
+    }
+    
     attrs.erase("loc");
     attrs.erase("id");
     attrs.erase("contains");
