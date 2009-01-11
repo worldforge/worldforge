@@ -387,11 +387,14 @@ protected:
     */
     void sight(const Atlas::Objects::Entity::RootEntity& gent);
     
+
     /**
-    Initialise all simple state from a Root. This excludes location and
-    contents, and may optionally exclude all attributes related to motion.
-    */
-    void setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion);
+     * @brief Initialise all simple state from a Root. This excludes location and contents, and may optionally exclude all attributes related to motion.
+     * @param obj The atlas object containing the data.
+     * @param allowMotion If false, motion elements (position, velocity etc.) will be filtered out.
+     * @param includeTypeInfoAttributes If true, the default attributes of the type info will be used too. This is normally only desired when the entity is initially set up.
+     */
+    void setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion, bool includeTypeInfoAttributes = false);
     
     /** the View calls this to change local entity visibility. No one else
     should be calling it!*/

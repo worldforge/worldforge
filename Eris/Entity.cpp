@@ -256,10 +256,10 @@ void Entity::sight(const RootEntity &ge)
     if (!ge->isDefaultLoc()) setLocationFromAtlas(ge->getLoc());
     
     setContentsFromAtlas(ge->getContains());    
-    setFromRoot(ge, true);
+    setFromRoot(ge, true, true);
 }
 
-void Entity::setFromRoot(const Root& obj, bool allowMove)
+void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAttributes)
 {	
     beginUpdate();
     
@@ -268,7 +268,7 @@ void Entity::setFromRoot(const Root& obj, bool allowMove)
     Atlas::Message::MapType::iterator A;
     
     ///Fill with the default values from the type info
-    if (m_type) {
+    if (includeTypeInfoAttributes && m_type) {
         fillAttributesFromType(attrs, m_type);
     }
     
