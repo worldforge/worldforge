@@ -176,6 +176,10 @@ int main()
         level2["default"] = true;
         level2["visibility"] = "public";
         attributes["level2"] = level2;
+        Atlas::Message::MapType velocity;
+        velocity["default"] = WFMath::Vector<3>(3,2,1).toAtlas();
+        velocity["visibility"] = "public";
+        attributes["level2"] = level2;
         typeInfo->setAttr("attributes", attributes);
         typeService.setup_recvTypeInfo(typeInfo);
     }
@@ -208,6 +212,9 @@ int main()
         
         level1Type->setAttribute("pos", WFMath::Point<3>(1,2,3).toAtlas());
         assert(ent->getPosition().isValid());
+        
+        assert(ent->getVelocity().isValid());
+        assert(ent->getVelocity() == WFMath::Vector<3>(3,2,1));
     }
     
     
