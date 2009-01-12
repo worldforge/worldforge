@@ -211,6 +211,12 @@ inline AtlasOutType Point<dim>::toAtlas() const
 }
 
 template<const int dim>
+inline AxisBox<dim>::AxisBox(const AtlasInType& a)
+{
+  fromAtlas(a);
+}
+
+template<const int dim>
 inline void AxisBox<dim>::fromAtlas(const AtlasInType& a)
 {
   if(!a.IsList())
