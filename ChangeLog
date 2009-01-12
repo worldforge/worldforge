@@ -1,3 +1,20 @@
+2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/atlasconv.h: Move the inlined constructor from Atlas
+	  data here to keep it out of the library compiled code.
+
+	* wfmath/axisbox.cpp, wfmath/axisbox.h: Don't include all the code
+	  as inlined by default, and instead force instantiation of the
+	  templates in the library.
+
+	* wfmath/const.h: Fill out the set for forward declarations.
+
+	* wfmath/intersect_decls.h, wfmath/axisbox.h:
+	  Remove the now redundant forward declarations.
+
+	* wfmath/point.cpp: Include axisbox_funcs.h as it contains
+	  Point functions which require AxisBox.
+
 2009-01-11  Al Riddoch  <alriddoch@googlemail.com>
 
 	* wfmath/zero.h: Add a new line to the end of zero.h.
