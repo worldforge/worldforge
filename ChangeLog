@@ -1,5 +1,9 @@
 2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
 
+	* wfmath/axisbox.cpp, wfmath/axisbox.h: Fix a missing include.
+
+2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
+
 	* wfmath/atlasconv.h: Move the inlined constructor from Atlas
 	  data here to keep it out of the library compiled code.
 
