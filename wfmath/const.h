@@ -55,8 +55,10 @@ class AtlasOutType;
 template<const int dim> class AxisBox;
 template<const int dim> class Ball;
 template<const int dim> class Point;
+template<const int dim> class Polygon;
 template<const int dim> class RotBox;
 template<const int dim> class RotMatrix;
+template<const int dim> class Segment;
 template<const int dim> class Vector;
 class Quaternion;
 
