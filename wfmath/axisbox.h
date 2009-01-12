@@ -34,9 +34,6 @@
 
 namespace WFMath {
 
-template<const int dim> class AxisBox;
-template<const int dim> class Ball;
-
 template<const int dim>
 bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out);
 template<const int dim>
