@@ -32,6 +32,8 @@
 #include <wfmath/const.h>
 #include <wfmath/intersect_decls.h>
 
+#include <memory>
+
 namespace WFMath {
 
 template<const int dim>
