@@ -30,8 +30,6 @@
 #define WFMATH_AXIS_BOX_H
 
 #include <wfmath/const.h>
-#include <wfmath/vector.h>
-#include <wfmath/point.h>
 #include <wfmath/intersect_decls.h>
 
 namespace WFMath {
@@ -76,7 +74,7 @@ class AxisBox
   /// Construct a copy of a box
   AxisBox(const AxisBox& a) : m_low(a.m_low), m_high(a.m_high) {}
   /// Construct a box from an object passed by Atlas
-  explicit AxisBox(const AtlasInType& a) {fromAtlas(a);}
+  explicit AxisBox(const AtlasInType& a);
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const AxisBox& a);
   friend std::istream& operator>> <dim>(std::istream& is, AxisBox& a);
@@ -183,7 +181,5 @@ class AxisBox
 };
 
 } // namespace WFMath
-
-#include <wfmath/axisbox_funcs.h>
 
 #endif  // WFMATH_AXIS_BOX_H
