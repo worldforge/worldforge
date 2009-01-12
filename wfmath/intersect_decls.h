@@ -52,13 +52,6 @@ inline bool _GreaterEq(CoordType x1, CoordType x2, bool proper)
   return !proper ? x1 >= x2 : x1 > x2;
 }
 
-template<const int dim> class Point;
-template<const int dim> class AxisBox;
-template<const int dim> class Ball;
-template<const int dim> class Segment;
-template<const int dim> class RotBox;
-template<const int dim> class Polygon;
-
 template<const int dim>
 bool Intersect(const AxisBox<dim>& b, const Point<dim>& p, bool proper);
 template<const int dim>
