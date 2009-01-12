@@ -13,6 +13,8 @@
 #include <Mercator/Segment.h>
 #include <Mercator/Surface.h>
 
+#include <cmath>
+
 namespace Mercator {
 
 const std::string GrassShader::key_lowThreshold("lowThreshold");

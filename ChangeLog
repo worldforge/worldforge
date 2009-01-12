@@ -1,3 +1,7 @@
+2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/GrassShader.cpp: Add required <cmath> include.
+
 2009-01-04  Simon Goodall  <simon@worldforge.org>
 
 	* Mercator/Terrain.cpp, Mercator/Terrain.h: Add a removeShader method
