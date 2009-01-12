@@ -33,6 +33,7 @@
 #include <wfmath/intersect_decls.h>
 
 #include <memory>
+#include <iosfwd>
 
 namespace WFMath {
 
