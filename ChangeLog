@@ -1,3 +1,9 @@
+2009-01-26  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.3.9
+
+	* NEWS: Update date on release news item.
+
 2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
 
 	* wfmath/axisbox.cpp, wfmath/axisbox.h: Fix a missing include.
