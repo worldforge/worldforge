@@ -1,3 +1,18 @@
+2009-01-09  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Eris/TimedEventService.cpp: Include cassert. Don't depend on
+	  library headers providing it.
+
+2009-01-06  Erik Hjortsberg  <erik.hjortsberg@iteam.se>
+
+	* configure.ac: Bumped version and added a dependency on Mercator as
+	  we will now move the TerrainMod parsing code from Ember to here.
+
+	* Eris/TerrainMod.cpp, Eris/TerrainMod.h, Eris/TerrainMod_impl.h:
+	  Moved terrain mod parsing code from the Ember tree.
+
+	* Eris/TerrainMod_unittest.cpp: Added unit tests.
+
 2008-11-18  Al Riddoch  <alriddoch@googlemail.com>
 
 	* configure.ac: Use LIBS as it should be, not LDFLAGS.
