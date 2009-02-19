@@ -89,11 +89,22 @@ void BaseConnection::hardDisconnect(bool emit)
     assert(_stream);
     
     // okay, tear it down
-    if ((_status == CONNECTED) || (_status == DISCONNECTING)){
+    if (_status == CONNECTED) {
         assert(m_codec);
-        assert(_encode);
         delete m_codec;
+        m_codec = NULL;
+        assert(_encode);
         delete _encode;
+        _encode = NULL;
+    } else if (_status == DISCONNECTING) {
+        if (m_codec) {
+            delete m_codec;
+            m_codec = NULL;
+        }
+        if (_encode) {
+            delete _encode;
+            _encode = NULL;
+        }
     } else if (_status == NEGOTIATE) {
         assert(_sc);
         delete _sc;
