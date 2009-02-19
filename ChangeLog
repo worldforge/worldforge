@@ -1,3 +1,10 @@
+2009-01-19  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Use CPPFLAGS for flags for the pre-processor.
+	  Increment the interface version.
+
+	* eris.spec.in: Fix file ownership in the rpm spec.
+
 2009-01-09  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Eris/TimedEventService.cpp: Include cassert. Don't depend on
