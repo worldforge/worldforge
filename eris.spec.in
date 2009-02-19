@@ -80,7 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 
 %files static
+%defattr(-,root,root)
 %{_libdir}/lib*.a
 
 %files docs
+%defattr(-,root,root)
 %doc docs/html/*
