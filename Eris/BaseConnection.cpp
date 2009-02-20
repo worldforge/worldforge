@@ -97,6 +97,9 @@ void BaseConnection::hardDisconnect(bool emit)
         delete _encode;
         _encode = NULL;
     } else if (_status == DISCONNECTING) {
+        // Status can be disconnecting even if the conenction was
+        // never fully established, so we only delete if the objects
+        // are present.
         if (m_codec) {
             delete m_codec;
             m_codec = NULL;
