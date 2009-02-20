@@ -180,6 +180,7 @@ void BaseConnection::nonblockingConnect()
     Poll::instance().changeStream(_stream, Poll::READ);
 
     // negotiation timeout
+    assert(_timeout);
     delete _timeout;
     _timeout = new Timeout(5000);
     _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onNegotiateTimeout));
