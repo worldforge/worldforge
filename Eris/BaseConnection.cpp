@@ -1,7 +1,7 @@
 #include <skstream/skstream.h>
 
 #ifdef HAVE_CONFIG_H
-	#include "config.h"
+    #include "config.h"
 #endif
 
 #include <Eris/BaseConnection.h>
@@ -24,25 +24,25 @@
 #include <cassert>
 
 namespace Eris {
-	
-////////////////////////////////////////////////////////////////////////////////////////////////////////	
-	
+    
+////////////////////////////////////////////////////////////////////////////////////////////////////////    
+    
 BaseConnection::BaseConnection(const std::string &cnm, 
-	const std::string &id,
-	Atlas::Bridge *br) :
-	_encode(NULL),
-	_sc(NULL),
-	m_codec(NULL),
-	_status(DISCONNECTED),
-	_id(id),
-	_stream(NULL),
-	_clientName(cnm),
-	_bridge(br),
-	_timeout(NULL),
-	_host(""),
-	_port(0)
+    const std::string &id,
+    Atlas::Bridge *br) :
+    _encode(NULL),
+    _sc(NULL),
+    m_codec(NULL),
+    _status(DISCONNECTED),
+    _id(id),
+    _stream(NULL),
+    _clientName(cnm),
+    _bridge(br),
+    _timeout(NULL),
+    _host(""),
+    _port(0)
 {
-	assert(_bridge);
+    assert(_bridge);
     
     Atlas::Objects::Factories* f = Atlas::Objects::Factories::instance();
     if (!f->hasFactory("unseen")) 
@@ -51,7 +51,7 @@ BaseConnection::BaseConnection(const std::string &cnm,
         Atlas::Objects::Operation::ATTACK_NO = f->addFactory("attack", &Atlas::Objects::generic_factory);
     }
 }
-	
+    
 BaseConnection::~BaseConnection()
 {    
     if (_status != DISCONNECTED)
@@ -59,21 +59,21 @@ BaseConnection::~BaseConnection()
         hardDisconnect(true);
     }
 }
-	
+    
 int BaseConnection::connect(const std::string &host, short port)
 {
     if (_stream != NULL) {
         warning() << "in base connection :: connect, had existing stream, discarding it";
         hardDisconnect(true);
     }
-	
+    
     _host = host;
     _port = port;
     
     // start timeout
     _timeout = new Timeout(20 * 1000);
     _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onConnectTimeout));
-	
+    
     setStatus(CONNECTING);
 
     _stream = new tcp_socket_stream(host, port, true);
@@ -127,51 +127,51 @@ void BaseConnection::hardDisconnect(bool emit)
 
 void BaseConnection::recv()
 {
-	int err = 0;
-	assert(_status != DISCONNECTED);
-	assert(_stream);
-	
-	if (_stream->eof() || _stream->fail()) {
-		handleFailure("Connection stream failed");
-		hardDisconnect(false);
-	} else {
-		switch (_status) {
-		case CONNECTING:
-		    nonblockingConnect();
-		    break;
+    int err = 0;
+    assert(_status != DISCONNECTED);
+    assert(_stream);
+    
+    if (_stream->eof() || _stream->fail()) {
+        handleFailure("Connection stream failed");
+        hardDisconnect(false);
+    } else {
+        switch (_status) {
+        case CONNECTING:
+            nonblockingConnect();
+            break;
 
-		case NEGOTIATE:
+        case NEGOTIATE:
             pollNegotiation();
             break;
 
-		case CONNECTED:
-		case DISCONNECTING:
+        case CONNECTED:
+        case DISCONNECTING:
             m_codec->poll();
             break;
-		default:
-			throw InvalidOperation("Unexpected connection status in poll()");
-		}	
-	}
-	
-	// another paranoid check
-	if (_stream && (err = _stream->getLastError()) != 0) {
-		char msgBuf[128];
-		::snprintf(msgBuf, 128, "recv() got stream failure, error %d", _stream->getLastError());
-		handleFailure(msgBuf);
-		hardDisconnect(false);
-	}
-}		
+        default:
+            throw InvalidOperation("Unexpected connection status in poll()");
+        }    
+    }
+    
+    // another paranoid check
+    if (_stream && (err = _stream->getLastError()) != 0) {
+        char msgBuf[128];
+        ::snprintf(msgBuf, 128, "recv() got stream failure, error %d", _stream->getLastError());
+        handleFailure(msgBuf);
+        hardDisconnect(false);
+    }
+}        
 
 void BaseConnection::nonblockingConnect()
 {
-	assert(_stream);
+    assert(_stream);
     if (!_stream->isReady())
-		return;
+        return;
 
     if(!_stream->is_open()) {
-		handleFailure("Failed to connect to " + _host);
-		hardDisconnect(false);
-		return;
+        handleFailure("Failed to connect to " + _host);
+        hardDisconnect(false);
+        return;
     }
 
     Poll::instance().changeStream(_stream, Poll::READ);
@@ -191,12 +191,12 @@ void BaseConnection::pollNegotiation()
     {
         throw InvalidOperation("pollNegotiation: unexpected connection status");
     }
-	
+    
     _sc->poll();
     if (_sc->getState() == Atlas::Net::StreamConnect::IN_PROGRESS)
         // more negotiation to do once more netwrok data arrives
         return;
-	
+    
     if (_sc->getState() == Atlas::Net::StreamConnect::SUCCEEDED)
     {
         m_codec = _sc->getCodec(*_bridge);
@@ -205,10 +205,10 @@ void BaseConnection::pollNegotiation()
         // clean up
         delete _sc;
         _sc = NULL;
-	    
+        
         delete _timeout;
         _timeout = NULL;
-	    
+        
         setStatus(CONNECTED);
         onConnect();
     } else {
@@ -221,7 +221,7 @@ void BaseConnection::pollNegotiation()
 void BaseConnection::onConnect()
 {
     // tell anyone who cares with a signal
-    Connected.emit();	
+    Connected.emit();    
 }
 
 void BaseConnection::onConnectTimeout()
