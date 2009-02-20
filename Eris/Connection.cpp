@@ -73,6 +73,10 @@ int Connection::disconnect()
         return -1;
     }
 
+    // This assert means that this function will always return early below
+    // where m_lock is checked. m_lock seems to be used by Account to prevent
+    // disconnecting when something is pending.
+    // FIXME Look into this.
     assert(m_lock == 0);
 
     // this is a soft disconnect; it will give people a chance to do tear down and so on
