@@ -100,8 +100,9 @@ int Connection::disconnect()
 
 void Connection::gotData(PollData &data)
 {
-    if (!_stream || !data.isReady(_stream))
+    if (!_stream || !data.isReady(_stream)) {
         return;
+    }
 
     if (_status == DISCONNECTED) {
         error() << "Got data on a disconnected stream";
