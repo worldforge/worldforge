@@ -197,8 +197,10 @@ void BaseConnection::pollNegotiation()
     
     _sc->poll();
     if (_sc->getState() == Atlas::Net::StreamConnect::IN_PROGRESS)
+    {
         // more negotiation to do once more netwrok data arrives
         return;
+    }
     
     if (_sc->getState() == Atlas::Net::StreamConnect::SUCCEEDED)
     {
