@@ -126,8 +126,7 @@ void Connection::gotData(PollData &data)
 
 void Connection::send(const Atlas::Objects::Root &obj)
 {
-    if ((_status != CONNECTED) && (_status != DISCONNECTING))
-    {
+    if ((_status != CONNECTED) && (_status != DISCONNECTING)) {
         error() << "called send on closed connection";
         return;
     }
