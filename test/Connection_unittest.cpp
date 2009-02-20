@@ -26,6 +26,14 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
     std::cerr << msg << std::endl << std::flush;
 }
 
+class TestConnection : public Eris::Connection {
+  public:
+    TestConnection(const std::string &cnm, const std::string& host, short port, bool dbg) : Eris::Connection(cnm, host, port, dbg) {
+    }
+
+    virtual void testSetStatus(Status sc) { setStatus(sc); }
+};
+
 int main()
 {
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
@@ -55,6 +63,37 @@ int main()
         int ret = c.connect();
 
         assert(ret == 0);
+    }
+
+    // Test disconnect() when disconnected
+    {
+        TestConnection c("eristest", "localhost", 6767, true);
+
+        c.disconnect();
+    }
+
+    // Test disconnect() when disconnecting
+    {
+        TestConnection c("eristest", "localhost", 6767, true);
+
+        c.testSetStatus(Eris::BaseConnection::DISCONNECTING);
+
+        c.disconnect();
+
+        c.testSetStatus(Eris::BaseConnection::DISCONNECTED);
+    }
+
+    // Test disconnect() when connecting
+    {
+        TestConnection c("eristest", "localhost", 6767, true);
+
+        int ret = c.connect();
+
+        assert(c.getStatus() == Eris::BaseConnection::CONNECTING);
+
+        c.disconnect();
+
+        c.testSetStatus(Eris::BaseConnection::DISCONNECTED);
     }
 
     return 0;
