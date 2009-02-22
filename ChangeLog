@@ -1,3 +1,21 @@
+2009-01-22  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Eris/BaseConnection.cpp: Null pointers after they have been deleted,
+	  and don't assert that codec and encoder are there on a
+	  disconnecting connection. Clean out hard tabs.
+	  Add comments explaining why member deletes are conditional.
+	  Always use {} round if clauses especially if there are multiple
+	  lines. Assert a pointer is valid before deleting it.
+
+	* Eris/Connection.cpp: Add a comment about an assertion.
+	  Clean up a style inconsistency. Always use {} round if clauses.
+
+	* Eris/Connection.h: Make a private section protected to allow
+	  more testing.
+
+	* test/Connection_unittest.cpp: Add test coverage for Connection
+	  methods connect(), disconnect(), gotData() and send().
+
 2009-01-19  Al Riddoch  <alriddoch@googlemail.com>
 
 	* configure.ac: Use CPPFLAGS for flags for the pre-processor.
