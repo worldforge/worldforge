@@ -144,7 +144,6 @@ protected:
     const short _port;      ///< port of the server
     bool _debug;
 
-private:
     friend class Redispatch;
     friend class TestInjector;
 
