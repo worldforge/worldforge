@@ -20,6 +20,10 @@
 #include <Eris/Connection.h>
 
 #include <Eris/Log.h>
+#include <Eris/Poll.h>
+
+#include <Atlas/Objects/Root.h>
+#include <Atlas/Objects/SmartPtr.h>
 
 static void writeLog(Eris::LogLevel, const std::string & msg)
 {       
@@ -31,7 +35,13 @@ class TestConnection : public Eris::Connection {
     TestConnection(const std::string &cnm, const std::string& host, short port, bool dbg) : Eris::Connection(cnm, host, port, dbg) {
     }
 
-    virtual void testSetStatus(Status sc) { setStatus(sc); }
+    void testSetStatus(Status sc) { setStatus(sc); }
+
+    void testGotData(Eris::PollData & data) { gotData(data); }
+};
+
+class TestPollData : public Eris::PollData {
+    virtual bool isReady(const basic_socket_stream*) { return false; }
 };
 
 int main()
@@ -87,7 +97,7 @@ int main()
     {
         TestConnection c("eristest", "localhost", 6767, true);
 
-        int ret = c.connect();
+        c.connect();
 
         assert(c.getStatus() == Eris::BaseConnection::CONNECTING);
 
@@ -96,5 +106,24 @@ int main()
         c.testSetStatus(Eris::BaseConnection::DISCONNECTED);
     }
 
+    // Test gotData()
+    {
+        TestConnection c("eristest", "localhost", 6767, true);
+
+        TestPollData data;
+
+        c.testGotData(data);
+    }
+
+    // FIXME Not testing all the code paths through gotData()
+
+    // Test send()
+    {
+        TestConnection c("eristest", "localhost", 6767, true);
+
+        Atlas::Objects::Root obj;
+
+        c.send(obj);
+    }
     return 0;
 }
