@@ -1,3 +1,7 @@
+2009-01-23  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Clean up most of the headers.
+
 2009-01-23  Erik Hjortsberg  <erik.hjortsberg@iteam.se>
 
 	* Eris/Entity.cpp, Eris/Entity.h, Eris/TypeInfo.cpp, Eris/TypeInfo.h,
