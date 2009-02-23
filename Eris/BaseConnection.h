@@ -2,12 +2,9 @@
 #define ERIS_BASE_CONNECTION_H
 
 #include <Atlas/Objects/ObjectsFwd.h>
-#include <Atlas/Net/Stream.h>
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
-
-#include <iostream>
 
 class tcp_socket_stream;
 
@@ -15,6 +12,10 @@ namespace Atlas
 {
     class Bridge;
     class Codec;
+    namespace Net
+    {
+        class StreamConnect;
+    }
 }
 
 namespace Eris

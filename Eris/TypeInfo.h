@@ -4,14 +4,19 @@
 #include <Eris/Types.h>
 #include <Eris/TypeService.h>
 
-#include <Atlas/Message/Element.h>
-
 #include <sigc++/trackable.h>
 
-#include <set>
 #include <map>
+#include <string>
 
-namespace Eris {	
+namespace Atlas {
+    namespace Message {
+        class Element;
+        typedef std::map<std::string, Element> MapType;
+    }
+}
+
+namespace Eris {
 
 /** The representation of an Atlas type (i.e a class or operation definition). This class
 supports efficent inheritance queries, and traversal of the type hierarchy. Atlas types

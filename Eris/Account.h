@@ -1,14 +1,15 @@
 #ifndef ERIS_PLAYER_H
 #define ERIS_PLAYER_H
 
+#include <Eris/Types.h>
+
+#include <Atlas/Objects/ObjectsFwd.h>
+
+#include <sigc++/signal.h>
+
 #include <vector>
 #include <map>
 #include <memory>
-
-#include <Eris/Types.h>
-#include <Eris/Timeout.h>
-#include <sigc++/trackable.h>
-#include <Atlas/Objects/ObjectsFwd.h>
 
 namespace Eris
 {
@@ -16,6 +17,7 @@ namespace Eris
 class Connection;
 class Avatar;
 class AccountRouter;
+class Timeout;
 
 /** Type used to return available characters */
 typedef std::map<std::string, Atlas::Objects::Entity::RootEntity> CharacterMap;

@@ -2,9 +2,7 @@
 #define ERIS_ENTITY_H
 
 #include <Eris/Types.h>
-#include <Eris/Router.h>
 
-#include <Atlas/Message/Element.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 
 #include <wfmath/point.h>
@@ -18,6 +16,16 @@
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
 
+#include <map>
+#include <vector>
+
+namespace Atlas {
+    namespace Message {
+        class Element;
+        typedef std::map<std::string, Element> MapType;
+    }
+}
+
 namespace Eris {
 
 // Forward Declerations	
@@ -29,6 +37,7 @@ class Task;
 
 typedef std::vector<Entity*> EntityArray;
 typedef std::vector<Task*> TaskArray;
+typedef std::vector<TypeInfoPtr> TypeInfoArray;
 
 /// Entity is a concrete (instanitable) class representing one game entity
 /** Entity encapsulates the state and tracking of one game entity; this includes

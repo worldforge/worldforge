@@ -5,7 +5,6 @@
 #include <string>
 #include <list>
 #include <set>
-#include <vector>
 
 namespace Atlas { namespace Message { class Element; } }
 
@@ -28,8 +27,6 @@ class Connection;
 class Avatar;
 
 typedef TypeInfo* TypeInfoPtr;
-typedef std::set<TypeInfoPtr> TypeInfoSet;
-typedef std::vector<TypeInfoPtr> TypeInfoArray;
 
 /**
 Result codes returned from various methods.

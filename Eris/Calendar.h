@@ -1,17 +1,17 @@
 #ifndef ERIS_CALENDAR_H
 #define ERIS_CALENDAR_H
 
-#include <Eris/Types.h>
-
 #include <sigc++/trackable.h>
 #include <sigc++/connection.h>
 
 #include <map>
+#include <string>
 
 namespace Atlas
 {
 namespace Message
 {
+class Element;
 typedef std::map<std::string, Element> MapType;
 }
 }
@@ -19,6 +19,7 @@ typedef std::map<std::string, Element> MapType;
 namespace Eris
 {
 
+class Avatar;
 class Calendar;
 
 /**

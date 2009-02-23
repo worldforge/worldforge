@@ -1,9 +1,10 @@
 #ifndef ERIS_REDISPATCH_H
 #define ERIS_REDISPATCH_H
 
-#include <sigc++/trackable.h>
 #include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/SmartPtr.h>
+
+#include <sigc++/trackable.h>
 
 namespace Eris
 {

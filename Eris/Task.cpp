@@ -7,6 +7,8 @@
 #include <Eris/View.h>
 #include <Eris/Entity.h>
 
+#include <Atlas/Message/Element.h>
+
 #include <wfmath/timestamp.h>
 
 typedef Atlas::Message::MapType AtlasMapType;

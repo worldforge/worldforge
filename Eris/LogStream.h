@@ -1,9 +1,17 @@
 #ifndef ERIS_LOGSTREAM_H
 #define ERIS_LOGSTREAM_H
 
-#include <sstream>
 #include <Eris/Log.h>
-#include <Atlas/Objects/Root.h>
+
+#include <Atlas/Objects/ObjectsFwd.h>
+
+#include <sstream>
+
+namespace Atlas {
+    namespace Message {
+        class Element;
+    }
+}
 
 namespace Eris
 {

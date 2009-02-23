@@ -32,6 +32,8 @@
 #include <Eris/Log.h>
 #include <Eris/TerrainMod_impl.h>
 
+#include <Atlas/Message/Element.h>
+
 #include <wfmath/atlasconv.h>
 
 namespace Eris

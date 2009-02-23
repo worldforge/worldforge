@@ -10,6 +10,7 @@
 #include <Eris/Router.h>
 #include <Eris/Response.h>
 #include <Eris/DeleteLater.h>
+#include <Eris/Timeout.h>
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>

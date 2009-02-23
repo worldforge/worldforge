@@ -2,7 +2,6 @@
 #define ERIS_VIEW_H
 
 // WF
-#include <Eris/Types.h>
 #include <Eris/Factory.h>
 #include <Atlas/Objects/ObjectsFwd.h>
 #include <wfmath/timestamp.h>
@@ -14,8 +13,9 @@
 #include <sigc++/connection.h>
 
 // std
-#include <map>
 #include <deque>
+#include <map>
+#include <set>
 
 namespace Eris
 {

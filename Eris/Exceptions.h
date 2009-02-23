@@ -2,7 +2,7 @@
 #define ERIS_EXCEPTIONS_H
 
 #include <Atlas/Objects/Root.h>
-#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/SmartPtr.h>
 
 #include <string>
 #include <stdexcept>

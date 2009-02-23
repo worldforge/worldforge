@@ -2,7 +2,6 @@
 #define ERIS_CONNECTION_H
 
 #include <Eris/BaseConnection.h>
-#include <Eris/Types.h>
 #include <Eris/ServerInfo.h>
 
 #include <Atlas/Objects/Decoder.h>

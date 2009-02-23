@@ -1,8 +1,9 @@
 #ifndef ERIS_SERVER_INFO_H
 #define ERIS_SERVER_INFO_H
 
-#include <string>
 #include <Atlas/Objects/ObjectsFwd.h>
+
+#include <string>
 
 namespace Eris {
 	

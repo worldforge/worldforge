@@ -4,14 +4,22 @@
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
-#include <Eris/Types.h>
-#include <Atlas/Message/Element.h>
+#include <map>
+#include <string>
+
+namespace Atlas {
+    namespace Message {
+        class Element;
+        typedef std::map<std::string, Element> MapType;
+    }
+}
 
 namespace WFMath { class TimeDiff; }
 
 namespace Eris
 {
 
+class Entity;
 class View;
 
 class Task : public sigc::trackable

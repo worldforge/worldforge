@@ -1,13 +1,14 @@
 #ifndef ERIS_ROOM_H
 #define ERIS_ROOM_H
 
-#include <Eris/Types.h>
 #include <Eris/Router.h>
-#include <vector>
-#include <map>
 
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
+
+#include <vector>
+#include <map>
+#include <string>
 
 namespace Eris
 {

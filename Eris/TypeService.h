@@ -1,14 +1,14 @@
 #ifndef ERIS_TYPE_SERVICE_H
 #define ERIS_TYPE_SERVICE_H
 
+#include <Atlas/Objects/ObjectsFwd.h>
+
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
-#include <Eris/Types.h>
-#include <Atlas/Objects/ObjectsFwd.h>
-
 #include <map>
 #include <set>
+#include <string>
 
 namespace Eris {
 

@@ -2,8 +2,9 @@
 #define ERIS_AVATAR_H
 
 #include <Eris/Types.h>
-#include <Atlas/Objects/ObjectsFwd.h>
 #include <Eris/EntityRef.h>
+
+#include <Atlas/Objects/ObjectsFwd.h>
 
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
@@ -13,10 +14,6 @@
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
-
-#include <string>
-#include <map>
-#include <vector>
 
 namespace Eris
 {
@@ -175,7 +172,6 @@ protected:
 
     IGRouter* m_router;
     View* m_view;
-    TypeInfoArray m_useOps;
 
     EntityRef m_wielded;
 

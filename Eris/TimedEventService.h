@@ -2,7 +2,8 @@
 #define ERIS_TIMED_EVENT_SERVICE_H
 
 #include <wfmath/timestamp.h>
-#include <Eris/Types.h>
+
+#include <set>
 
 namespace Eris
 {
