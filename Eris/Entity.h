@@ -39,8 +39,10 @@ typedef std::vector<Entity*> EntityArray;
 typedef std::vector<Task*> TaskArray;
 typedef std::vector<TypeInfoPtr> TypeInfoArray;
 
-/// Entity is a concrete (instanitable) class representing one game entity
-/** Entity encapsulates the state and tracking of one game entity; this includes
+/** 
+@brief Entity is a concrete (instantiable) class representing one game entity
+
+Entity encapsulates the state and tracking of one game entity; this includes
 it's location in the containership tree (graph?), it's name and unique and id,
 and so on.
 
@@ -48,6 +50,8 @@ This class may be sub-classed by users (and those sub-classes built via
 a Factory), to allow specific functionality. This means there are two
 integration strategies; either subclassing and over-riding virtual functions,
 or creating peer clases and attaching them to the signals.
+
+@note If you handle entities manually, you must make sure to call shutdown() before the instance is deleted.
 */
 
 class Entity : virtual public sigc::trackable
@@ -58,115 +62,166 @@ public:
     explicit Entity(const std::string& id, TypeInfo* ty, View* vw);
     virtual ~Entity();
 
+    /**
+     * @brief Shuts down the entity. A call to this must be made before the entity is deleted.
+     * In normal operations, where Eris itself takes care of the entities, it will be called automatically.
+     * If you however manually handle instance of this in your code you must call it yourself.
+     */
     virtual void shutdown();
 
 // heirarchy interface    
-    unsigned int numContained() const {
-        return m_contents.size();
-    }
-    Entity* getContained(unsigned int index) const {
-        return m_contents[index];
-    }
+    /**
+     * @brief Gets the number of contained entities, i.e. entities that are direct children of this.
+     * The number returned is only for direct children, so the number of nested entities can be larger.
+     * @return 
+     */
+    unsigned int numContained() const;
+    
+    /**
+     * @brief Gets the child entity at the specified index.
+     * @param index An index for the collection of child entities. This must be a valid index as no bounds checking will happen.
+     * @return A pointer to a child entity.
+     */
+    Entity* getContained(unsigned int index) const;
 
+    /**
+     * @brief Gets the value of a named attribute.
+     * If no attribute by the specified name can be found an InvalidOperation exception will be thrown. Therefore always first call hasAttr to make sure that the attribute exists.
+     * @param attr The attribute name.
+     * @return A reference to the attribute by the specified name.
+     * @throws InvalidOperation If no attribute by the specified name can be found.
+     */
     const Atlas::Message::Element& valueOfAttr(const std::string& attr) const;
         
+    /**
+     * @brief Checks whether an attribute exists.
+     * @param p The name of the attribute.
+     * @return True if the attribute exists.
+     */
     bool hasAttr(const std::string &p) const;
 
+    /**
+     * @brief A slot which can be used for recieving attribute update signals.
+     */
     typedef sigc::slot<void, const Atlas::Message::Element&> AttrChangedSlot;
 
-    /** setup an observer so that the specified slot is fired when the
-    named attribue's value changes */
+    /**
+     * @brief Setup an observer so that the specified slot is fired when the named attribue's value changes 
+     * 
+     * @param attr The name of the attribute to observe.
+     * @param aslot The slot which will be fired when the attribute changes.
+     * @return The connection created.
+     */
     sigc::connection observe(const std::string& attr, const AttrChangedSlot& aslot);
 
 // accesors
-    /// retrieve the unique entity ID
-    const std::string& getId() const
-    {
-        return m_id;
-    }
+    /**
+     * @brief Retrieve the unique entity ID.
+     * @return The unique id of the entity.
+     */
+    const std::string& getId() const;
     
-    const std::string& getName() const
-    {
-        return m_name;
-    }
+    /**
+     * @brief Gets the name of the entity.
+     * In contrast to getId() this is not unique, and doesn't even have to be set.
+     * @return The name of the entity.
+     */
+    const std::string& getName() const;
 	
-    /// access the current time-stamp of the entity
-    float getStamp() const
-    {
-        return m_stamp;
-    }
+    /**
+     * @brief Access the current time-stamp of the entity.
+     * @return The current time stamp.
+     */
+    float getStamp() const;
 
-    TypeInfo* getType() const
-    {
-        return m_type;
-    }
+    /**
+     * @brief Gets the type of this entity.
+     * @return The type of this entity. This can be null.
+     */
+    TypeInfo* getType() const;
     
-    View* getView() const
-    {
-        return m_view;
-    }
+    /**
+     * @brief Gets the view to which this entity belongs.
+     * @return The view to which this entity belongs.
+     */
+    View* getView() const;
     
-    /** the containing entity, or null if this is a top-level visible entity. */
-    Entity* getLocation() const
-    {
-        return m_location;
-    }
+    /**
+     * @brief The containing entity, or null if this is a top-level visible entity.
+     * @return The containing entity, or null.
+     */
+    Entity* getLocation() const;
 	
-	/** Returns the Entity's position inside it's parent in the parent's local system coordinates. **/
-    WFMath::Point<3> getPosition() const
-    {
-        return m_position;
-    }
+    /**
+     * @brief Returns the Entity's position inside it's parent in the parent's local system coordinates.
+     * @return The position of the entity in parent relative coords.
+     */
+    WFMath::Point<3> getPosition() const;
     
-    inline const AttrMap& getAttributes() const {return m_attrs;}
+    /**
+     * @brief Gets all attributes defined for this entity.
+     * The collection of entities returned will include both local attributes as well as the defaults set in the TypeInfo (and all of its parents) of this entity.
+     * @note This is a rather expensive operation since it needs to iterate over all parent TypeInfo instances and build up a map, which is then returned by value. If you only want to get a single attribute you should instead use the valueOfAttr method.
+     * @see getInstanceAttributes() for a similiar method which only returns those attributes that are local to this entity.
+     * @return A map of the combined attributes of both this entity and all of it's TypeInfo parents.
+     */
+    const AttrMap getAttributes() const;
     
-    /** Test if this entity has a non-zero velocity vector. */
+    /**
+     * @brief Gets all locally defined attributes.
+     * This will only return those attributes that are locally defined for this entity. In practice it will in most cases mean those attributes that have been changed by the defaults as defined in the TypeInfo instance.
+     * @note This will only return a subset of all attributes. If you need to iterate over all attributes you should instead use the getAttributes() method. If you only want the value of a specific attribute you should use the valueOfAttr method.
+     * @see getAttributes
+     * @return The locally defined attributes for the entity.
+     */
+    const AttrMap& getInstanceAttributes() const;
+    
+    /**
+     * @brief Test if this entity has a non-zero velocity vector.
+     * @return True if the entity has a non-zero velocity.
+     */
     bool isMoving() const;
         
     /**
-    Retrieve the predicted position of this entity, based on it's velocity and
-    acceleration. If the entity is not moving, this is the same as calling
-    getPosition().
-    */
+     * @brief Retrieve the predicted position of this entity, based on it's velocity and acceleration.
+     * If the entity is not moving, this is the same as calling getPosition().
+     * @return The predicted position of the entity.
+     */
     WFMath::Point<3> getPredictedPos() const;
     
     /**
-    Retrieve the current predicted velocity of an entity. If the entity
-    is not moving, this is an <em>invalid</em> Vector.
-    */
-    WFMath::Vector<3> getPredictedVelocity() const;   
+     * @brief Retrieve the current predicted velocity of an entity. If the entity is not moving, this is an <em>invalid</em> Vector.
+     * @return The predicted velocity of the entity.
+     */
+    WFMath::Vector<3> getPredictedVelocity() const;
     
     /** retreive this Entity's position in view coordinates. */
     WFMath::Point<3> getViewPosition() const;
 
     /** retreive this Entity's orientation in view coordinates. */
     WFMath::Quaternion getViewOrientation() const;
-	
-	/** Returns the entity's velocity as last set explicitely. **/
-	const WFMath::Vector< 3 > & getVelocity(void) const
-	{
-		return m_velocity;
-	}
-	
-	/** Returns the entity's orientation as last set explicitely. **/
-	const WFMath::Quaternion & getOrientation(void) const
-	{
-		return m_orientation;
-	}
-	
-	/** Returns the entity's bounding box in the entity's local system coordinates. **/
-	const WFMath::AxisBox< 3 > & getBBox(void) const
-	{
-		return m_bbox;
-	}
-
-    bool hasBBox() const
-    {
-        return m_hasBBox;
-    }
     
-    const TaskArray& getTasks() const
-    { return m_tasks; }
+    /** Returns the entity's velocity as last set explicitely. **/
+    const WFMath::Vector< 3 > & getVelocity(void) const;
+    
+    /** Returns the entity's orientation as last set explicitely. **/
+    const WFMath::Quaternion & getOrientation(void) const;
+    
+    /** Returns the entity's bounding box in the entity's local system coordinates. **/
+    const WFMath::AxisBox< 3 > & getBBox(void) const;
+
+    /**
+     * @brief Returns true if the entity has a bounding box.
+     * Not all entities have bounding boxes, but those that are represented as physical objects in the world usually do.
+     * @return True if the entity has a bounding box.
+     */
+    bool hasBBox() const;
+    
+    /**
+     * @brief Gets the tasks associated with this entity.
+     * @return The tasks associated with this entity.
+     */
+    const TaskArray& getTasks() const;
     
     /**
     @brief Get a list of operations supported by this entity (tool)
@@ -182,16 +237,10 @@ public:
 
 // coordinate transformations
     template<class C>
-    C toLocationCoords(const C& c) const
-    {
-        return c.toParentCoords(getPredictedPos(), m_orientation);
-    }
+    C toLocationCoords(const C& c) const;
     
     template<class C>
-    C fromLocationCoords(const C& c) const
-    {
-        return c.toLocalCoords(getPredictedPos(), m_orientation);
-    }
+    C fromLocationCoords(const C& c) const;
     
     // A vector (e.g., the distance between two points, or
     // a velocity) gets rotated by a coordinate transformation,
@@ -199,15 +248,9 @@ public:
     // of the origin, so we handle it separately. We also
     // need to copy the vector before rotating, because
     // Vector::rotate() rotates it in place.
-    WFMath::Vector<3> toLocationCoords(const WFMath::Vector<3>& v) const
-    {
-        return WFMath::Vector<3>(v).rotate(m_orientation);
-    }
+    WFMath::Vector<3> toLocationCoords(const WFMath::Vector<3>& v) const;
     
-    WFMath::Vector<3> fromLocationCoords(const WFMath::Vector<3>& v) const
-    {
-        return WFMath::Vector<3>(v).rotate(m_orientation.inverse());
-    }
+    WFMath::Vector<3> fromLocationCoords(const WFMath::Vector<3>& v) const;
 	
 // Signals
     sigc::signal<void, Entity*> ChildAdded;
@@ -338,7 +381,6 @@ protected:
     */
     virtual void onChildRemoved(Entity* child);
 
-protected:
     friend class IGRouter;
     friend class View;
     friend class EntityRouter;
@@ -354,11 +396,14 @@ protected:
     */
     void sight(const Atlas::Objects::Entity::RootEntity& gent);
     
+
     /**
-    Initialise all simple state from a Root. This excludes location and
-    contents, and may optionally exclude all attributes related to motion.
-    */
-    void setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion);
+     * @brief Initialise all simple state from a Root. This excludes location and contents, and may optionally exclude all attributes related to motion.
+     * @param obj The atlas object containing the data.
+     * @param allowMotion If false, motion elements (position, velocity etc.) will be filtered out.
+     * @param includeTypeInfoAttributes If true, the default attributes of the type info will be used too. This is normally only desired when the entity is initially set up.
+     */
+    void setFromRoot(const Atlas::Objects::Root& obj, bool allowMotion, bool includeTypeInfoAttributes = false);
     
     /** the View calls this to change local entity visibility. No one else
     should be calling it!*/
@@ -371,6 +416,31 @@ protected:
     use an integer hash in the future, since this called frequently.
     */
     bool nativeAttrChanged(const std::string &p, const Atlas::Message::Element &v);
+    
+    /**
+     * @brief Connected to the TypeInfo::AttributeChanges event.
+     * This will in turn call the attrChangedFromTypeInfo, which is overridable in a subclass if so desired.
+     * @param attributeName The name of the attribute which is to be changed.
+     * @param element The new element data.
+     */
+    void typeInfo_AttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element);
+    
+    /**
+     * @brief Called when an attribute has been changed in the TypeInfo for this entity.
+     * If the attribute doesn't have an instance value local to this entity the event will be processed just like a call to setAttr but without the attribute being saved in the map of instance attributes.
+     * @param attributeName The name of the attribute which is to be changed.
+     * @param element The new element data.
+     */
+    virtual void attrChangedFromTypeInfo(const std::string& attributeName, const Atlas::Message::Element& element);
+    
+    
+    /**
+     * @brief Utility method for recursively filling a map of attributes from a TypeInfo instance.
+     * The method will recursively call itself to make sure that the topmost TypeInfo is used first. This makes sure that attributes are overwritten by newer values, if duplicates exists.
+     * @param attributes The map of attributes to fill.
+     * @param typeInfo The type info from which we will copy values, as well as its parents.
+     */
+    void fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeInfo) const;
     
     void beginUpdate();
     void addToUpdate(const std::string& attr);
@@ -475,6 +545,100 @@ protected:
 
     bool m_initialised;
 };
+
+inline unsigned int Entity::numContained() const {
+    return m_contents.size();
+}
+
+inline Entity* Entity::getContained(unsigned int index) const {
+    return m_contents[index];
+}
+
+inline const std::string& Entity::getId() const
+{
+    return m_id;
+}
+
+inline const std::string& Entity::getName() const
+{
+    return m_name;
+}
+
+inline float Entity::getStamp() const
+{
+    return m_stamp;
+}
+
+inline TypeInfo* Entity::getType() const
+{
+    return m_type;
+}
+
+inline View* Entity::getView() const
+{
+    return m_view;
+}
+
+/** the containing entity, or null if this is a top-level visible entity. */
+inline Entity* Entity::getLocation() const
+{
+    return m_location;
+}
+
+/** Returns the Entity's position inside it's parent in the parent's local system coordinates. **/
+inline WFMath::Point<3> Entity::getPosition() const
+{
+    return m_position;
+}
+/** Returns the entity's velocity as last set explicitely. **/
+inline const WFMath::Vector< 3 > & Entity::getVelocity(void) const
+{
+    return m_velocity;
+}
+
+/** Returns the entity's orientation as last set explicitely. **/
+inline const WFMath::Quaternion & Entity::getOrientation(void) const
+{
+    return m_orientation;
+}
+
+/** Returns the entity's bounding box in the entity's local system coordinates. **/
+inline const WFMath::AxisBox< 3 > & Entity::getBBox(void) const
+{
+    return m_bbox;
+}
+
+inline bool Entity::hasBBox() const
+{
+    return m_hasBBox;
+}
+
+inline const TaskArray& Entity::getTasks() const
+{
+    return m_tasks; 
+}
+
+template<class C>
+inline C Entity::toLocationCoords(const C& c) const
+{
+    return c.toParentCoords(getPredictedPos(), m_orientation);
+}
+
+template<class C>
+inline C Entity::fromLocationCoords(const C& c) const
+{
+    return c.toLocalCoords(getPredictedPos(), m_orientation);
+}
+
+inline WFMath::Vector<3> Entity::toLocationCoords(const WFMath::Vector<3>& v) const
+{
+    return WFMath::Vector<3>(v).rotate(m_orientation);
+}
+
+inline WFMath::Vector<3> Entity::fromLocationCoords(const WFMath::Vector<3>& v) const
+{
+    return WFMath::Vector<3>(v).rotate(m_orientation.inverse());
+}
 
 } // of namespace
 

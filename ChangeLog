@@ -1,3 +1,17 @@
+2009-01-23  Erik Hjortsberg  <erik.hjortsberg@iteam.se>
+
+	* Eris/Entity.cpp, Eris/Entity.h, Eris/TypeInfo.cpp, Eris/TypeInfo.h,
+	  Eris/TypeService.h: Modify the types to store default attribute
+	  data, and the Entity attributes interface to only store instance
+	  attributes, and use the types for defaults.
+
+	* Eris/TypeInfo_unittest.cpp, test/signalHelpers.h: Update tests.
+
+2009-01-23  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Eris/TerrainMod.cpp: Don't include Eris library headers using ""
+	  as this won't work on the Mac build.
+
 2009-01-22  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Eris/BaseConnection.cpp: Null pointers after they have been deleted,

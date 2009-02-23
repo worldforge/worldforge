@@ -20,30 +20,32 @@ public:
     {
         m_count = 0;
     }
-private:
+protected:
     int m_count;
 };
 
 template <class P0>
-class SignalCounter1
+class SignalCounter1 : public SignalCounter0
 {
 public:
-    SignalCounter1() :
-        m_count(0)
-    {;}
-    
+
     void fired(P0)
     {
         ++m_count;
     }
-    
-    int fireCount() const
-    { return m_count; }
-    
-private:
-    int m_count;
 };
 
+template <class P0, class P1>
+class SignalCounter2 : public SignalCounter0
+{
+public:
+
+    void fired(P0, P1)
+    {
+        ++m_count;
+    }
+
+};
 template <class P0>
 class SignalRecorder1
 {

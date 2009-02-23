@@ -56,6 +56,10 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
     
     m_router = new EntityRouter(this);
     m_view->getConnection()->registerRouterForFrom(m_router, m_id);
+    
+    if (m_type) {
+        m_type->AttributeChanges.connect(sigc::mem_fun(this, &Entity::typeInfo_AttributeChanges));
+    }
 }
 
 Entity::~Entity()
@@ -98,18 +102,61 @@ void Entity::init(const RootEntity& ge, bool fromCreateOp)
 
 const Element& Entity::valueOfAttr(const std::string& attr) const
 {
+    ///first check with the instance attributes
     AttrMap::const_iterator A = m_attrs.find(attr);
     if (A == m_attrs.end())
     {
+        if (m_type) {
+            ///it wasn't locally defines, now check with typeinfo
+            const Element* element(m_type->getAttribute(attr));
+            if (element) {
+                return *element;
+            }
+        }
         error() << "did getAttr(" << attr << ") on entity " << m_id << " which has no such attr";
         throw InvalidOperation("no such attribute " + attr);
-    } else
+    } else {
         return A->second;
+    }
 }
 
 bool Entity::hasAttr(const std::string& attr) const
 {
-    return m_attrs.count(attr) > 0;
+    ///first check with the instance attributes
+    if (m_attrs.count(attr) > 0) {
+        return true;
+    } else if (m_type) {
+        ///it wasn't locally defines, now check with typeinfo
+        if (m_type->getAttribute(attr) != 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const Entity::AttrMap Entity::getAttributes() const
+{
+    ///Merge both the local attributes and the type default attributes.
+    AttrMap attributes;
+    attributes.insert(m_attrs.begin(), m_attrs.end());
+    if (m_type) {
+        fillAttributesFromType(attributes, m_type);
+    }
+    return attributes;
+}
+
+const Entity::AttrMap& Entity::getInstanceAttributes() const
+{
+    return m_attrs;
+}
+
+void Entity::fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeInfo) const
+{
+    attributes.insert(typeInfo->getAttributes().begin(), typeInfo->getAttributes().end());
+    ///Make sure to fill from the closest attributes first, as insert won't replace an existing value
+    for (TypeInfoSet::iterator I = typeInfo->getParents().begin(); I != typeInfo->getParents().end(); ++I) {
+        fillAttributesFromType(attributes, *I);
+    }
 }
 
 sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
@@ -209,16 +256,21 @@ void Entity::sight(const RootEntity &ge)
     if (!ge->isDefaultLoc()) setLocationFromAtlas(ge->getLoc());
     
     setContentsFromAtlas(ge->getContains());    
-    setFromRoot(ge, true);
+    setFromRoot(ge, true, true);
 }
 
-void Entity::setFromRoot(const Root& obj, bool allowMove)
+void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAttributes)
 {	
     beginUpdate();
     
     Atlas::Message::MapType attrs;
     obj->addToMessage(attrs);
     Atlas::Message::MapType::iterator A;
+    
+    ///Fill with the default values from the type info
+    if (includeTypeInfoAttributes && m_type) {
+        fillAttributesFromType(attrs, m_type);
+    }
     
     attrs.erase("loc");
     attrs.erase("id");
@@ -318,17 +370,43 @@ void Entity::onChildRemoved(Entity* child)
 void Entity::setAttr(const std::string &attr, const Element &val)
 {
     beginUpdate();
-
-    Element& target = m_attrs[attr];
-    mergeOrCopyElement(val, target);
-    nativeAttrChanged(attr, target);
+    
+    
+    ///Check whether the attribute already has been added to the instance attributes.
+    const Element* typeElement(0);
+    AttrMap::iterator A = m_attrs.find(attr);
+    if (A == m_attrs.end() && m_type) {
+        ///If the attribute hasn't been defined for this instance, see if there's a typeinfo default one
+        typeElement = m_type->getAttribute(attr);
+    }
+    
+    
+    const Element* newElement(0);
+    ///There was no preexisting attribute either in this instance or in the TypeInfo, just insert it.
+    if (A == m_attrs.end() && typeElement == 0) {
+        std::pair<AttrMap::iterator, bool> I = m_attrs.insert(AttrMap::value_type(attr, val));
+        newElement = &(I.first->second);
+    } else {
+        ///Create an instance specific attribute
+        Element& target = m_attrs[attr];
+        ///If there already existed an instance attribute copy from that
+        newElement = &target;
+        if (A == m_attrs.end()) {
+            ///Copy from the type info attribute
+            target = *typeElement;
+        }
+        mergeOrCopyElement(val, target);
         
-    onAttrChanged(attr, target);
+    }
+    nativeAttrChanged(attr, *newElement);
+    onAttrChanged(attr, *newElement);
 
     // fire observers
     
     ObserverMap::const_iterator obs = m_observers.find(attr);
-    if (obs != m_observers.end()) obs->second.emit(target);
+    if (obs != m_observers.end()) {
+        obs->second.emit(*newElement);
+    }
 
     addToUpdate(attr);
     endUpdate();
@@ -379,6 +457,33 @@ void Entity::onAttrChanged(const std::string&, const Element&)
 {
     // no-op by default
 }
+
+
+void Entity::typeInfo_AttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element)
+{
+    attrChangedFromTypeInfo(attributeName, element);
+}
+
+void Entity::attrChangedFromTypeInfo(const std::string& attributeName, const Atlas::Message::Element& element)
+{
+    ///Only fire the events if there's no attribute already defined for this entity
+    if (m_attrs.count(attributeName) == 0) {
+        beginUpdate();
+        nativeAttrChanged(attributeName, element);
+        onAttrChanged(attributeName, element);
+    
+        // fire observers
+        
+        ObserverMap::const_iterator obs = m_observers.find(attributeName);
+        if (obs != m_observers.end()) {
+            obs->second.emit(element);
+        }
+    
+        addToUpdate(attributeName);
+        endUpdate();
+    }
+}
+
 
 void Entity::beginUpdate()
 {
