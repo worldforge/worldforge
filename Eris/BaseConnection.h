@@ -6,6 +6,8 @@
 #include <sigc++/trackable.h>
 #include <sigc++/signal.h>
 
+#include <string>
+
 class tcp_socket_stream;
 
 namespace Atlas
