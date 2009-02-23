@@ -51,7 +51,7 @@ public:
 
     void handleOperation(const Atlas::Objects::Operation::RootOperation&);
 
- private:
+ protected:
     /** request the information about a type from the server.
     @param id The ID of the type to lookup
     */

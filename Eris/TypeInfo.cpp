@@ -211,6 +211,51 @@ void TypeInfo::extractDefaultAttributes(const Atlas::Objects::Root& atype)
     }
 }
 
+
+const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attributeName) const
+{
+    static Atlas::Message::Element* emptyElement(0);
+    
+    ///first check with the local attributes
+    Atlas::Message::MapType::const_iterator A = m_attributes.find(attributeName);
+    if (A != m_attributes.end()) {
+        return &(A->second);
+    } else {
+        ///it wasn't locally defined check with the parents
+        for (TypeInfoSet::iterator I = getParents().begin(); I != getParents().end(); ++I) {
+            const Atlas::Message::Element* element((*I)->getAttribute(attributeName));
+            if (element) {
+                return element;
+            }
+        }
+    }
+    return emptyElement;
+}
+
+void TypeInfo::setAttribute(const std::string& attributeName, const Atlas::Message::Element& element)
+{
+    onAttributeChanges(attributeName, element);
+    Atlas::Message::MapType::iterator I = m_attributes.find(attributeName);
+    if (I == m_attributes.end()) {
+        m_attributes.insert(Atlas::Message::MapType::value_type(attributeName, element));
+    } else {
+        I->second = element;
+    }
+}
+
+
+void TypeInfo::onAttributeChanges(const std::string& attributeName, const Atlas::Message::Element& element)
+{
+    AttributeChanges.emit(attributeName, element);
+    ///Now go through all children, and only make them emit the event if they themselves doesn't have an attribute by this name (which thus overrides this).
+    for (TypeInfoSet::iterator I = getChildren().begin(); I != getChildren().end(); ++I) {
+        Atlas::Message::MapType::iterator J = (*I)->m_attributes.find(attributeName);
+        if (J == (*I)->m_attributes.end()) {
+            (*I)->onAttributeChanges(attributeName, element);
+        }
+    }
+}
+
 void TypeInfo::validateBind()
 {
     if (m_bound) return;

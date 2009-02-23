@@ -246,60 +246,6 @@ int main()
             assert(mod.init());
             
         }
-          
-        
-        
-//     TerrainMod tmod;
-        
-        
-        
-        
-//         modTypes["levelmod"] = Atlas::Message::Element("levelmod");
-//         modTypes["slopemod"] = Atlas::Message::Element("slopemod");
-//         modTypes["cratermod"] = Atlas::Message::Element("cratermod");
-//         modTypes["cratermod"] = Atlas::Message::Element("cratermod");
-//         
-//         std::stringstream ss;
-//         ss << "<map>\
-//         <string name=\"type\">levelmod</string>\
-//         <map name=\"shape\">
-//         <list name=\"default\">\
-//           <float>-0.2</float>
-//           <float>-0.1</float>
-//           <float>0</float>
-//           <float>0.2</float>
-//           <float>0.1</float>
-//           <float>0.3</float>
-//         </list>
-//         <string name="visibility">public</string>
-//         
-//         // Create objects
-//         Atlas::Message::QueuedDecoder decoder;
-//         Atlas::Codecs::XML codec(strStream, decoder);
-//         
-//         // Read whole stream into decoder queue
-//         while (!strStream.eof())
-//         {
-//             codec.poll();
-//         }
-//         
-//         // Read decoder queue
-//         while (decoder.queueSize() > 0)
-//         {
-//             Atlas::Message::MapType m = decoder.popMessage();
-//             return m;
-//         }
-//         
-//         
-//         std::string fake_char_id("1");
-//         TestAvatar * ea = new TestAvatar(acc, fake_char_id);
-//         TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
-//         
-// 
-//         ea->setup_setEntity(char_ent);
-// 
-//         ea->drop(inv_ent, WFMath::Point<3>(0,0,0), "3");
-    
     }
     return 0;
 }
