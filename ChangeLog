@@ -1,3 +1,8 @@
+2009-01-23  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Eris/TerrainMod.cpp: Don't include Eris library headers using ""
+	  as this won't work on the Mac build.
+
 2009-01-22  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Eris/BaseConnection.cpp: Null pointers after they have been deleted,
