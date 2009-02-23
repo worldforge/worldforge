@@ -130,7 +130,7 @@ protected:
     /**
      * @brief Emitted when the type is bound, i.e there is an unbroken graph of TypeInfo instances through every ancestor to the root object. 
      */
-    sigc::signal<void, TypeInfo*> Bound;
+    sigc::signal<void> Bound;
     
     
     /**

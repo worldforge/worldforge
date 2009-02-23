@@ -269,7 +269,7 @@ void TypeInfo::validateBind()
     
     m_bound = true;
          
-    Bound.emit(this);
+    Bound.emit();
     m_typeService->BoundType.emit(this);
     
     for (TypeInfoSet::const_iterator C=m_children.begin(); C!=m_children.end();++C) {
