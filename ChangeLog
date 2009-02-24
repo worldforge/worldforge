@@ -1,3 +1,11 @@
+2009-02-24  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Increment version.
+
+	* NEWS: Update news.
+
+	* Release 0.2.7, interface version 6
+
 2009-01-12  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Mercator/GrassShader.cpp: Add required <cmath> include.
