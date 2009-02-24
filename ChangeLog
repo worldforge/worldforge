@@ -1,5 +1,11 @@
 2009-01-23  Al Riddoch  <alriddoch@googlemail.com>
 
+	* test/Account_unittest.cpp, test/Alarm_unittest.cpp,
+	  test/Connection_unittest.cpp, test/TerrainMod_unittest.cpp,
+	  test/TypeInfo_unittest.cpp: Fix missing includes in the tests.
+
+2009-01-23  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Clean up most of the headers.
 
 2009-01-23  Erik Hjortsberg  <erik.hjortsberg@iteam.se>
