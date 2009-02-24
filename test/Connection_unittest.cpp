@@ -25,6 +25,8 @@
 #include <Atlas/Objects/Root.h>
 #include <Atlas/Objects/SmartPtr.h>
 
+#include <iostream>
+
 static void writeLog(Eris::LogLevel, const std::string & msg)
 {       
     std::cerr << msg << std::endl << std::flush;

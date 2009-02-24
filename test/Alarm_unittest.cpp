@@ -25,6 +25,8 @@
 
 #include <iostream>
 
+#include <cassert>
+
 static void writeLog(Eris::LogLevel, const std::string & msg)
 {
     std::cerr << msg << std::endl << std::flush;

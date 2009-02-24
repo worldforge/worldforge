@@ -28,8 +28,11 @@
 
 #include <Atlas/Objects/Anonymous.h>
 #include <Atlas/Objects/Entity.h>
+#include <Atlas/Objects/Operation.h>
 
 #include <sigc++/adaptors/hide.h>
+
+#include <iostream>
 
 class TestConnection : public Eris::Connection {
   public:

@@ -32,6 +32,8 @@
 
 #include <wfmath/atlasconv.h>
 
+#include <iostream>
+
 static void writeLog(Eris::LogLevel, const std::string & msg)
 {       
     std::cerr << msg << std::endl << std::flush;

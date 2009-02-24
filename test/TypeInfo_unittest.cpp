@@ -36,6 +36,8 @@
 
 #include "signalHelpers.h"
 
+#include <iostream>
+
 using namespace Eris;
 using namespace Atlas::Objects::Operation;
 static void writeLog(Eris::LogLevel, const std::string & msg)
