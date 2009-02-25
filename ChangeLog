@@ -1,3 +1,8 @@
+2009-02-25  Al Riddoch  <alriddoch@googlemail.com>
+
+	* mercator.spec.in: Add Packager tag. Fix the included docs to be
+	  consistent with other packages.
+
 2009-02-24  Al Riddoch  <alriddoch@googlemail.com>
 
 	* configure.ac: Increment version.
