@@ -1,3 +1,7 @@
+2009-02-28  Alexey Torkhov  <atorkhov@gmail.com>
+
+	* Atlas/Filter.cpp: Add <cstdio> include to have EOF defined.
+
 2008-11-26  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Atlas/Codecs/Makefile.am, Atlas/Filters/Makefile.am,

@@ -6,6 +6,7 @@
 
 #include <Atlas/Filter.h>
 #include <cstring>
+#include <cstdio>
 
 namespace Atlas {
 
