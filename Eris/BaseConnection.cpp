@@ -22,6 +22,7 @@
 
 #include <sstream>
 #include <cassert>
+#include <cstdio>
 
 namespace Eris {
     
