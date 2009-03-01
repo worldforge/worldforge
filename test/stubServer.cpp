@@ -17,6 +17,7 @@
 #include <Atlas/Objects/objectFactory.h>
 
 #include <cstdlib>
+#include <cstdio>
 #include <sys/wait.h>
 
 using Atlas::Objects::Root;

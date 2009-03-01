@@ -14,6 +14,8 @@
 #include <Eris/LogStream.h>
 #include <Atlas/Objects/Encoder.h>
 
+#include <cstdio>
+
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;

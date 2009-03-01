@@ -17,6 +17,8 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Codecs/Bach.h>
 
+#include <cstdio>
+
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;
