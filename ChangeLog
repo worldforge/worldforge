@@ -1,4 +1,4 @@
-2009-02-24  Al Riddoch  <alriddoch@googlemail.com>
+2009-03-02  Al Riddoch  <alriddoch@googlemail.com>
 
 	* configure.ac: Remove two defines which used to be required to
 	  get some C99 and other obscure C library functions. I can't find
