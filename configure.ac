@@ -40,8 +40,8 @@ AC_ARG_ENABLE(debug,
 
 dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 
-AC_DEFINE(_XOPEN_SOURCE, 500, [This is XOpen source])
-AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
+dnl AC_DEFINE(_XOPEN_SOURCE, 500, [This is XOpen source])
+dnl AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 
 PKG_PROG_PKG_CONFIG
 

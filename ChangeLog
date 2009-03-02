@@ -1,5 +1,11 @@
 2009-02-24  Al Riddoch  <alriddoch@googlemail.com>
 
+	* configure.ac: Remove two defines which used to be required to
+	  get some C99 and other obscure C library functions. I can't find
+	  any cases where these are required any more.
+
+2009-02-24  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Release 1.3.14, Interface version 15.
 
 2009-01-23  Al Riddoch  <alriddoch@googlemail.com>
