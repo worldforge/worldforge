@@ -1,3 +1,13 @@
+2009-03-23  Al Riddoch  <alriddoch@googlemail.com>
+
+	* configure.ac: Update the version to 0.6.6.
+
+	* NEWS: Update for release.
+
+	* varconf.spec.in: Fix the packager email address.
+
+	* Release 0.6.5. Interface version 6.0.0.
+
 2008-11-18  Al Riddoch  <alriddoch@googlemail.com>
 
 	* configure.ac: Use LIBS as it should be, not LDFLAGS.
