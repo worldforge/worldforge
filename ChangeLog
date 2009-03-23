@@ -6,7 +6,7 @@
 
 	* varconf.spec.in: Fix the packager email address.
 
-	* Release 0.6.5. Interface version 6.0.0.
+	* Release 0.6.6. Interface version 6.0.0.
 
 2008-11-18  Al Riddoch  <alriddoch@googlemail.com>
 
