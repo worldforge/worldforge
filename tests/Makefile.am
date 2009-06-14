@@ -1,6 +1,7 @@
 TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect \
         testPhys timeSeg testPlant testForest testQRNG testArea \
-        testTileShader testShaderFactory testWFMath testBuffer
+        testTileShader testShaderFactory testWFMath testBuffer \
+        testSegment
 
 INCLUDES = -I$(top_srcdir)
 
@@ -50,3 +51,6 @@ testWFMath_SOURCES = testWFMath.cpp
 
 testBuffer_SOURCES = testBuffer.cpp
 testBuffer_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+
+testSegment_SOURCES = testSegment.cpp
+testSegment_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
