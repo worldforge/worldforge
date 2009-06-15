@@ -9,6 +9,8 @@
 #include <Mercator/GrassShader.h>
 #include <Mercator/ThresholdShader.h>
 
+#include <cassert>
+
 namespace Mercator {
 
 iShaderFactory::iShaderFactory()

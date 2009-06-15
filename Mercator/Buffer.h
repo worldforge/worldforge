@@ -5,8 +5,6 @@
 #ifndef MERCATOR_BUFFER_H
 #define MERCATOR_BUFFER_H
 
-#include <cassert>
-
 namespace Mercator {
 
 class Segment;
@@ -39,7 +37,6 @@ class Buffer {
     /// in a given channel in this buffer.
     /// @return a reference to the value at the point requested.
     DataType & operator()(unsigned int x,unsigned int y,unsigned int channel) {
-        assert(m_data != 0);
         return m_data[(y * m_size + x) * m_channels + channel];
     }
 
@@ -51,7 +48,6 @@ class Buffer {
     const DataType & operator()(unsigned int x,
                                 unsigned int y,
                                 unsigned int channel) const {
-        assert(m_data != 0);
         return m_data[(y * m_size + x) * m_channels + channel];
     }
     
@@ -80,7 +76,6 @@ class Buffer {
     /// Allocate memory based on the size and number of channels required
     /// by the buffer.
     void allocate() {
-        assert(m_data == 0);
         m_data = new DataType[m_size * m_size * m_channels];
     }
 

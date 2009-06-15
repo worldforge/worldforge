@@ -15,6 +15,8 @@
 
 #include <cmath>
 
+#include <cassert>
+
 namespace Mercator {
 
 const std::string DepthShader::key_waterLevel("waterLevel");

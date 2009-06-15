@@ -15,6 +15,8 @@
 
 #include <cmath>
 
+#include <cassert>
+
 namespace Mercator {
 
 const std::string GrassShader::key_lowThreshold("lowThreshold");

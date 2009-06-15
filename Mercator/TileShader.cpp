@@ -7,6 +7,8 @@
 #include <Mercator/Segment.h>
 #include <Mercator/Surface.h>
 
+#include <cassert>
+
 namespace Mercator {
 
 TileShader::TileShader()
