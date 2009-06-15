@@ -1,7 +1,8 @@
 TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect \
         testPhys timeSeg testPlant testForest testQRNG testArea \
         testTileShader testShaderFactory testWFMath testBuffer \
-        testSegment testAreaShader testBasePoint testDepthShader
+        testSegment testAreaShader testBasePoint testDepthShader \
+        testFillShader
 
 INCLUDES = -I$(top_srcdir)
 
@@ -63,3 +64,6 @@ testBasePoint_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testDepthShader_SOURCES = testDepthShader.cpp
 testDepthShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+
+testFillShader_SOURCES = testFillShader.cpp
+testFillShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
