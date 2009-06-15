@@ -315,6 +315,20 @@ float Segment::qRMD(float nn, float fn, float ff, float nf,
     return ((nn+fn+ff+nf)/4.f) + randHalf() * roughness * heightDifference / (1.f+::pow(depth,falloff));
 }
 
+/// \brief Check a value against m_min and m_max and set one of them
+/// if appropriate.
+///
+/// Called by internal functions whenever a new data point is generated.
+inline void Segment::checkMaxMin(float h)
+{
+    if (h<m_min) {
+        m_min=h;
+    }
+    if (h>m_max) {
+        m_max=h;
+    }
+}
+
 /// \brief One dimensional midpoint displacement fractal.
 ///
 /// Size must be a power of 2.

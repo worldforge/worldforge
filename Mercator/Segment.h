@@ -190,18 +190,7 @@ class Segment {
     void addArea(Area* a);
     void removeArea(Area* a);
   private:
-    /// \brief Check a value against m_min and m_max and set one of them
-    /// if appropriate.
-    ///
-    /// Called by internal functions whenever a new data point is generated.
-    void checkMaxMin(float h) { 
-        if (h<m_min) {
-            m_min=h;
-        }
-        if (h>m_max) {
-            m_max=h;
-        }
-    } 
+    void checkMaxMin(float h);
 
     void fill1d(const BasePoint& l, const BasePoint &h, float *array) const;
 
