@@ -2,7 +2,7 @@ TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect \
         testPhys timeSeg testPlant testForest testQRNG testArea \
         testTileShader testShaderFactory testWFMath testBuffer \
         testSegment testAreaShader testBasePoint testDepthShader \
-        testFillShader testGrassShader
+        testFillShader testGrassShader testThresholdShader
 
 INCLUDES = -I$(top_srcdir)
 
@@ -70,3 +70,6 @@ testFillShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testGrassShader_SOURCES = testGrassShader.cpp
 testGrassShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+
+testThresholdShader_SOURCES = testThresholdShader.cpp
+testThresholdShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
