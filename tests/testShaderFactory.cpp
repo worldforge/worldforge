@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+#include <cassert>
+
 using Mercator::GrassShader;
 using Mercator::DepthShader;
 using Mercator::FillShader;
