@@ -13,6 +13,15 @@ TerrainMod::~TerrainMod()
 template class LevelTerrainMod<WFMath::Ball<2> >;
 template class LevelTerrainMod<WFMath::RotBox<2> >;
 
+CraterTerrainMod::CraterTerrainMod(const WFMath::Ball<3> &s) : m_shape(s)
+{
+    WFMath::AxisBox<3> bb=m_shape.boundingBox();
+    ab = WFMath::AxisBox<2> (
+                WFMath::Point<2>(bb.lowerBound(0), bb.lowerBound(1)),
+                WFMath::Point<2>(bb.upperBound(0), bb.upperBound(1))
+           );
+}
+
 CraterTerrainMod::~CraterTerrainMod()
 {
 }

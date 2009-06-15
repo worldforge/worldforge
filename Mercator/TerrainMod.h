@@ -158,13 +158,7 @@ public:
     /// \brief Constructor
     ///
     /// @param s Sphere that defines the shape of the crater.
-    CraterTerrainMod(const WFMath::Ball<3> &s) : m_shape(s) {
-        WFMath::AxisBox<3> bb=m_shape.boundingBox();
-        ab = WFMath::AxisBox<2> (
-                    WFMath::Point<2>(bb.lowerBound(0), bb.lowerBound(1)),
-                    WFMath::Point<2>(bb.upperBound(0), bb.upperBound(1))
-               );
-    }
+    CraterTerrainMod(const WFMath::Ball<3> &s);
 
     virtual ~CraterTerrainMod(); // {}
 
