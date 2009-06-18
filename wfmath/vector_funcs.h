@@ -49,6 +49,14 @@ Vector<dim>::Vector(const Vector<dim>& v) : m_valid(v.m_valid)
 }
 
 template<const int dim>
+Vector<dim>::Vector(const Point<dim>& p) : m_valid(p.isValid())
+{
+  for(int i = 0; i < dim; ++i) {
+    m_elem[i] = p.elements()[i];
+  }
+}
+
+template<const int dim>
 Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 {
   m_valid = v.m_valid;

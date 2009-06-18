@@ -124,12 +124,7 @@ class Vector {
   /// Construct a vector from an object passed by Atlas
   explicit Vector(const AtlasInType& a);
   /// Construct a vector from a point.
-  explicit Vector(const Point<dim> point) {
-    for (int i = 0; i < dim; ++i) {
-      m_elem[i] = point.elements()[i];
-    }
-    m_valid = true;
-  }
+  explicit Vector(const Point<dim>& point);
 
   /**
    * @brief Provides a global instance preset to zero.
