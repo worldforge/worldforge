@@ -1,8 +1,8 @@
-TESTS = mercatortest testTerrain testShader testTerrainMod testIntersect \
-        testPhys timeSeg testPlant testForest testQRNG testArea \
-        testTileShader testShaderFactory testWFMath testBuffer \
-        testSegment testAreaShader testBasePoint testDepthShader \
-        testFillShader testGrassShader testThresholdShader testMatrix
+TESTS = mercatortest Terraintest Shadertest TerrainModtest Intersecttest \
+        testPhys timeSeg Planttest Foresttest testQRNG Areatest \
+        TileShadertest ShaderFactorytest testWFMath Buffertest \
+        Segmenttest AreaShadertest BasePointtest DepthShadertest \
+        FillShadertest GrassShadertest ThresholdShadertest Matrixtest
 
 INCLUDES = -I$(top_srcdir)
 
@@ -13,17 +13,17 @@ check_PROGRAMS = $(TESTS)
 mercatortest_SOURCES = main.cpp
 mercatortest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testTerrain_SOURCES = testTerrain.cpp
-testTerrain_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Terraintest_SOURCES = Terraintest.cpp
+Terraintest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testShader_SOURCES = testShader.cpp
-testShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Shadertest_SOURCES = Shadertest.cpp
+Shadertest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testTerrainMod_SOURCES = testTerrainMod.cpp
-testTerrainMod_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+TerrainModtest_SOURCES = TerrainModtest.cpp
+TerrainModtest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testIntersect_SOURCES = testIntersect.cpp
-testIntersect_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Intersecttest_SOURCES = Intersecttest.cpp
+Intersecttest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testPhys_SOURCES = testPhys.cpp
 testPhys_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
@@ -31,48 +31,48 @@ testPhys_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 timeSeg_SOURCES = timeSeg.cpp util_timer.h util_timer.cpp
 timeSeg_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testPlant_SOURCES = testPlant.cpp
-testPlant_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Planttest_SOURCES = Planttest.cpp
+Planttest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testForest_SOURCES = testForest.cpp
-testForest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Foresttest_SOURCES = Foresttest.cpp
+Foresttest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testQRNG_SOURCES = testQRNG.cpp
 
-testArea_SOURCES = testArea.cpp
-testArea_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Areatest_SOURCES = Areatest.cpp
+Areatest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testTileShader_SOURCES = testTileShader.cpp
-testTileShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+TileShadertest_SOURCES = TileShadertest.cpp
+TileShadertest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testShaderFactory_SOURCES = testShaderFactory.cpp
-testShaderFactory_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+ShaderFactorytest_SOURCES = ShaderFactorytest.cpp
+ShaderFactorytest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
 testWFMath_SOURCES = testWFMath.cpp
 
-testBuffer_SOURCES = testBuffer.cpp
-testBuffer_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Buffertest_SOURCES = Buffertest.cpp
+Buffertest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testSegment_SOURCES = testSegment.cpp
-testSegment_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Segmenttest_SOURCES = Segmenttest.cpp
+Segmenttest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testAreaShader_SOURCES = testAreaShader.cpp
-testAreaShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+AreaShadertest_SOURCES = AreaShadertest.cpp
+AreaShadertest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testBasePoint_SOURCES = testBasePoint.cpp
-testBasePoint_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+BasePointtest_SOURCES = BasePointtest.cpp
+BasePointtest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testDepthShader_SOURCES = testDepthShader.cpp
-testDepthShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+DepthShadertest_SOURCES = DepthShadertest.cpp
+DepthShadertest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testFillShader_SOURCES = testFillShader.cpp
-testFillShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+FillShadertest_SOURCES = FillShadertest.cpp
+FillShadertest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testGrassShader_SOURCES = testGrassShader.cpp
-testGrassShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+GrassShadertest_SOURCES = GrassShadertest.cpp
+GrassShadertest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testThresholdShader_SOURCES = testThresholdShader.cpp
-testThresholdShader_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+ThresholdShadertest_SOURCES = ThresholdShadertest.cpp
+ThresholdShadertest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
 
-testMatrix_SOURCES = testMatrix.cpp
-testMatrix_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
+Matrixtest_SOURCES = Matrixtest.cpp
+Matrixtest_LDADD = -L$(top_builddir)/Mercator -lmercator-0.2
