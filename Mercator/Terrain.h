@@ -47,10 +47,10 @@ class Terrain {
     typedef std::map<int, Segmentcolumn > Segmentstore;
 
     /// \brief STL map to store sparse array of Shader pointers.
-    typedef std::map<int, Shader *> Shaderstore;
+    typedef std::map<int, const Shader *> Shaderstore;
 
     /// \brief STL map to store area modifiers.
-    typedef std::map<Area *, Rect> Areastore;
+    typedef std::map<const Area *, Rect> Areastore;
 
     /// \brief STL map to store height modifiers.
     typedef std::map<TerrainMod *, Rect> TerrainModstore;
@@ -142,16 +142,16 @@ class Terrain {
     }
 
     /// \brief Add a new Shader to the list for this terrain.
-    void addShader(Shader * t, int id);
-    void removeShader(Shader * t, int id);
+    void addShader(const Shader * t, int id);
+    void removeShader(const Shader * t, int id);
     
     TerrainMod * addMod(const TerrainMod &t);
     void updateMod(TerrainMod * mod);
     void removeMod(TerrainMod * mod);
     
-    void addArea(Area* a);
-    void updateArea(Area* a);
-    void removeArea(Area* a);
+    void addArea(const Area* a);
+    void updateArea(const Area* a);
+    void removeArea(const Area* a);
 };
 
 } // namespace Mercator

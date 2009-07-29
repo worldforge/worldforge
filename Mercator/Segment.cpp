@@ -656,14 +656,14 @@ void Segment::applyMod(TerrainMod *t)
 /// Call from Terrain when an Area is added which is found to intersect this
 /// segment.
 /// @param ar the area to be added.
-void Segment::addArea(Area* ar)
+void Segment::addArea(const Area* ar)
 {
     m_areas.insert(Areastore::value_type(ar->getLayer(), ar));
     invalidateSurfaces();
 }
 
 /// \brief Remove an area from those that affect this segment.
-void Segment::removeArea(Area* area)
+void Segment::removeArea(const Area* area)
 {
     Areastore::iterator I = m_areas.lower_bound(area->getLayer());
     Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());

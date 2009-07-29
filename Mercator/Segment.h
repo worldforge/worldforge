@@ -35,7 +35,7 @@ class Segment {
     typedef std::map<int, Surface *> Surfacestore;
     
     /// STL multimap of pointers to Area objects affecting this segment.
-    typedef std::multimap<int, Area *> Areastore;
+    typedef std::multimap<int, const Area *> Areastore;
   private:
     /// Distance between segments
     const int m_res;
@@ -187,8 +187,8 @@ class Segment {
     const Areastore& getAreas() const
     { return m_areas; }
     
-    void addArea(Area* a);
-    void removeArea(Area* a);
+    void addArea(const Area* a);
+    void removeArea(const Area* a);
   private:
     void checkMaxMin(float h);
 

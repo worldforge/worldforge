@@ -55,7 +55,7 @@ Terrain::~Terrain()
 ///
 /// As each shader is added, surfaces are added to all existing segments
 /// to store the result of the shader.
-void Terrain::addShader(Shader * t, int id)
+void Terrain::addShader(const Shader * t, int id)
 {
     if (m_shaders.count(id)) {
         std::cerr << "WARNING: duplicate use of shader ID " << id << std::endl;
@@ -81,7 +81,7 @@ void Terrain::addShader(Shader * t, int id)
 /// \brief remove a Shader from the list for this terrain.
 ///
 /// As each shader is removed, surfaces are removed from existing segments
-void Terrain::removeShader(Shader * t, int id)
+void Terrain::removeShader(const Shader * t, int id)
 {
 
     m_shaders.erase(m_shaders.find(id));
@@ -450,7 +450,7 @@ void Terrain::removeMod(TerrainMod * mod)
 ///
 /// Add a new Area object to the terrain, which defines a modification
 /// to the surface.
-void Terrain::addArea(Area * area)
+void Terrain::addArea(const Area * area)
 {
     m_areas.insert(Areastore::value_type(area, area->bbox()));
 
@@ -499,7 +499,7 @@ void Terrain::addArea(Area * area)
 }
 
 /// \brief Apply changes to an area modifier to the terrain.
-void Terrain::updateArea(Area * area)
+void Terrain::updateArea(const Area * area)
 {
     Areastore::const_iterator I = m_areas.find(area);
 
@@ -580,7 +580,7 @@ void Terrain::updateArea(Area * area)
 ///
 /// Remove an existing Area object from the terrain, and mark all the
 /// affected terrain surfaces as invalid.
-void Terrain::removeArea(Area * area)
+void Terrain::removeArea(const Area * area)
 {
     m_areas.erase(area);
 
