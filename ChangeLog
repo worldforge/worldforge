@@ -1,3 +1,14 @@
+2009-08-04  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/axisbox.h: Add writable accessors to the axisbox
+	  corner points.
+
+2009-06-18  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/point.h, wfmath/point_funcs.h,
+	  wfmath/vector.h, wfmath/vector_funcs.h: Fix copy constructors
+	  to take a reference, and don't inline the heavy loop.
+
 2009-01-26  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Release 0.3.9
