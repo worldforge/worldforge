@@ -78,6 +78,7 @@ AC_CONFIG_FILES([Makefile
 	doc/Makefile
 	doc/Doxyfile
 	wfmath.spec
+	mingw32-wfmath.spec
 	wfmath-0.3.pc
 ])
 AC_OUTPUT
