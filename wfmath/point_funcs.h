@@ -44,6 +44,14 @@ inline Point<dim>::Point(const Point<dim>& p) : m_valid(p.m_valid)
 }
 
 template<const int dim>
+inline Point<dim>::Point(const Vector<dim>& v) : m_valid(v.isValid())
+{
+  for(int i = 0; i < dim; ++i) {
+    m_elem[i] = v.elements()[i];
+  }
+}
+
+template<const int dim>
 inline Point<dim>& Point<dim>::setToOrigin()
 {
   for(int i = 0; i < dim; ++i) {

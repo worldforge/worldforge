@@ -100,9 +100,11 @@ class AxisBox
   Point<dim> getCenter() const {return Midpoint(m_low, m_high);}
 
   /// Get a reference to corner 0
-  const Point<dim>& lowCorner() const	{return m_low;}
+  const Point<dim>& lowCorner() const {return m_low;}
+  Point<dim>& lowCorner() {return m_low;}
   /// Get a reference to corner (2^dim)-1
-  const Point<dim>& highCorner() const	{return m_high;}
+  const Point<dim>& highCorner() const {return m_high;}
+  Point<dim>& highCorner() {return m_high;}
 
   /// Get the lower bound of the box on the i'th axis
   CoordType lowerBound(const int axis) const	{return m_low[axis];}
