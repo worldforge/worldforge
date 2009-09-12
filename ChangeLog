@@ -1,5 +1,9 @@
 2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
 
+	* configure.ac: Get the interface version right.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Atlas/Filters/Makefile.am:
 	  Use the right variable from configure for libraries.
 
