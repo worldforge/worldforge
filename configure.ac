@@ -148,6 +148,7 @@ AC_CONFIG_FILES([
 	benchmark/Makefile
 	tutorial/Makefile
 	atlas-cpp.spec
+	mingw32-atlas-cpp.spec
 	atlascpp-0.6.pc
 ])
 AC_OUTPUT

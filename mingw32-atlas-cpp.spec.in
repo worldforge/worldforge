@@ -1,0 +1,58 @@
+%define __strip %{_mingw32_strip}
+%define __objdump %{_mingw32_objdump}
+%define _use_internal_dependency_generator 0
+%define __find_requires %{_mingw32_findrequires}
+%define __find_provides %{_mingw32_findprovides}
+
+%define name mingw32-atlascpp
+%define version @VERSION@
+%define release 1
+%define libsuffix @ATLAS_LIB_SUFFIX@
+
+Summary: The Atlas protocol C++ implementation
+Name: %{name}
+Version: %{version}
+Release: %{release}
+License: LGPL
+Group: System Environment/Libraries
+URL: http://www.worldforge.org/dev/eng/libraries/atlas_cpp
+Packager: Al Riddoch <alriddoch@zepler.org>
+Vendor: WorldForge
+Distribution: Mason
+Source: Atlas-C++-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+BuildRequires:  mingw32-filesystem >= 49
+BuildRequires:  mingw32-gcc
+BuildRequires:  mingw32-binutils
+
+%description
+This library implements the Atlas protocol, for use in client-server
+game applications. It is the standard implementation used by games written
+by the WorldForge project. This library is suitable for linking to either
+clients or servers.
+
+%prep
+%setup -q -n Atlas-C++-%{version}
+
+%build
+%{_mingw32_configure} --enable-static --disable-shared
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+rm $RPM_BUILD_ROOT%{_mingw32_libdir}/lib*.la
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{_mingw32_libdir}/lib*.a
+%{_mingw32_libdir}/pkgconfig/*
+%{_mingw32_includedir}/*
+%{_mingw32_bindir}/*
+%doc AUTHORS COPYING
+
+# %doc NEWS README THANKS ChangeLog TODO HACKING ROADMAP

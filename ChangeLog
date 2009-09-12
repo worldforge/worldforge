@@ -1,5 +1,10 @@
 2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
 
+	* mingw32-atlas-cpp.spec.in, configure.ac: Add a spec file for
+	  building mingw32 version of the rpm.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
 	* NEWS: Update with news item from the stable branch.
 
 	* AUTHORS: Update maintainer email address.
