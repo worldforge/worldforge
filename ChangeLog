@@ -1,5 +1,11 @@
 2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
 
+	* NEWS: Update with news item from the stable branch.
+
+	* AUTHORS: Update maintainer email address.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Atlas/Filter.cpp: Use the C++ eof convention, rather than using
 	  EOF from a C header.
 
