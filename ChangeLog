@@ -1,3 +1,9 @@
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* atlas-cpp.spec.in: Catch up with changes in the stable branch.
+
+	* configure.ac: Re-sync with the stable branch.
+
 2009-02-28  Alexey Torkhov  <atorkhov@gmail.com>
 
 	* Atlas/Filter.cpp: Add <cstdio> include to have EOF defined.

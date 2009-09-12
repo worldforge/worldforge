@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT([Atlas-C++],[0.7.0],[alriddoch@zepler.org],[Atlas-C++])
+AC_INIT([Atlas-C++],[0.6.1],[alriddoch@googlemail.com],[Atlas-C++])
 AC_CONFIG_SRCDIR([Atlas/Bridge.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -150,7 +150,4 @@ AC_CONFIG_FILES([
 	atlas-cpp.spec
 	atlascpp-0.6.pc
 ])
-dnl 	debian/control
-dnl 	debian/rules
-dnl AC_CONFIG_COMMANDS([rules], [chmod +x debian/rules])
 AC_OUTPUT
