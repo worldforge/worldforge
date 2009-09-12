@@ -1,5 +1,10 @@
 2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h:
+	  Move the constructor out of the header, and clean it up a bit.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
 	* atlas-cpp.spec.in: Catch up with changes in the stable branch.
 
 	* configure.ac: Re-sync with the stable branch.

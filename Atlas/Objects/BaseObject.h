@@ -71,13 +71,7 @@ public:
     /// Initialises flags to zero, and stores a pointer to the reference
     /// object that provides default values for all attributes. Subclasses
     /// must pass in a pointer to their class specific reference object.
-    BaseObjectData(BaseObjectData *defaults) : 
-        m_class_no(BASE_OBJECT_NO), m_defaults(defaults)
-    {
-        if(defaults) m_attrFlags = 0;
-        else m_attrFlags = -1; //this is default object: all attributes here
-        m_refCount = 0;
-    }
+    BaseObjectData(BaseObjectData *defaults);
 
     virtual ~BaseObjectData();
 
