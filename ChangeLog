@@ -1,5 +1,10 @@
 2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Atlas/Filters/Makefile.am:
+	  Use the right variable from configure for libraries.
+
+2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Atlas/Objects/BaseObject.cpp, Atlas/Objects/BaseObject.h:
 	  Move the constructor out of the header, and clean it up a bit.
 
