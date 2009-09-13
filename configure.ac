@@ -72,6 +72,7 @@ dnl Generate files
 AC_CONFIG_FILES([
 	Makefile
 	varconf.spec
+	mingw32-varconf.spec
 	doc/Makefile
 	doc/old/Makefile
 	tests/Makefile

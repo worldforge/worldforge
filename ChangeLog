@@ -1,5 +1,12 @@
 2009-03-23  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Makefile.am: Don't install doc files. Just not needed.
+
+	* mingw32-varconf.spec.in, configure.ac: Add a spec file for windows
+	  build using mingw.
+
+2009-03-23  Al Riddoch  <alriddoch@googlemail.com>
+
 	* configure.ac: Update the version to 0.6.6.
 
 	* NEWS: Update for release.
