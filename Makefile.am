@@ -6,6 +6,3 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = varconf-1.0.pc
 
 EXTRA_DIST = autogen.sh varconf.spec.in varconf.spec
-
-docdir = $(datadir)/doc/varconf-$(VERSION)
-doc_DATA = README COPYING AUTHORS THANKS NEWS
