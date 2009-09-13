@@ -1,0 +1,53 @@
+%define __strip %{_mingw32_strip}
+%define __objdump %{_mingw32_objdump}
+%define _use_internal_dependency_generator 0
+%define __find_requires %{_mingw32_findrequires}
+%define __find_provides %{_mingw32_findprovides}
+
+%define name mingw32-@PACKAGE@
+%define version @VERSION@
+%define release 1
+%define libsuffix @MERCATOR_LIB_SUFFIX@
+
+Summary: A WorldForge terrain library.
+Name: %{name}
+Version: %{version}
+Release: %{release}
+License: GPL
+Group: System Environment/Libraries
+URL: http://www.worldforge.org/dev/eng/libraries/mercator
+Packager: Al Riddoch <alriddoch@googlemail.com>
+Vendor: WorldForge
+Distribution: Mason
+Source: mercator-%{version}.tar.bz2
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildArch: noarch
+BuildRequires:  mingw32-filesystem >= 49
+BuildRequires:  mingw32-gcc
+BuildRequires:  mingw32-binutils
+BuildRequires: mingw32-wfmath >= 0.3.2
+
+%description
+Mercator is designed to handle terrain data.
+
+%prep
+%setup -q -n mercator-%{version}
+
+%build
+PKG_CONFIG_LIBDIR=/usr/i686-pc-mingw32/sys-root/mingw/lib/pkgconfig \
+  %{_mingw32_configure} --enable-static --disable-shared
+make -j 3
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+rm -f $RPM_BUILD_ROOT/%{_mingw32_libdir}/lib*.la
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{_mingw32_libdir}/lib*.a
+%{_mingw32_libdir}/pkgconfig/*
+%{_mingw32_includedir}/Mercator%{libsuffix}

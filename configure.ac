@@ -87,6 +87,7 @@ AC_CONFIG_FILES([
 	Mercator/Makefile
 	tests/Makefile
 	mercator.spec
+	mingw32-mercator.spec
 	mercator-0.2.pc
 ])
 AC_OUTPUT
