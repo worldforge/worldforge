@@ -34,9 +34,11 @@
 #ifdef __WIN32__
 #include <tchar.h>
 #define snprintf _snprintf
-#endif
+#include <cstdlib>
+#else // __WIN32__
 
 extern char** environ;
+
 
 // on OS-X, the CRT doesn't expose the environ symbol. The following
 // code (found on Google) provides a value to link against, and a
@@ -45,6 +47,8 @@ extern char** environ;
     #include <crt_externs.h>
     char **environ = NULL;
 #endif
+
+#endif // __WIN32__
 
 namespace {
   enum state_t {

@@ -1,4 +1,9 @@
-2009-03-23  Al Riddoch  <alriddoch@googlemail.com>
+2009-09-19  Al Riddoch  <alriddoch@googlemail.com>
+
+	* varconf/config.cpp: Add support for the way environ is declared in
+	  mingw.
+
+2009-09-13  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Makefile.am: Don't install doc files. Just not needed.
 
