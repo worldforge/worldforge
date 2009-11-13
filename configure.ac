@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT([Atlas-C++],[0.6.1],[alriddoch@googlemail.com],[Atlas-C++])
+AC_INIT([Atlas-C++],[0.6.2],[alriddoch@googlemail.com],[Atlas-C++])
 AC_CONFIG_SRCDIR([Atlas/Bridge.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -43,34 +43,6 @@ AC_ARG_ENABLE(debug,
 )
 
 AC_LANG(C++)
-
-dnl Test for <cassert> header file
-
-AC_CHECK_HEADERS(cassert)
-
-dnl Test for <cstdio> header file
-
-AC_CHECK_HEADERS(cstdio)
-
-dnl Test for <iostream> header file
-
-AC_CHECK_HEADERS(iostream)
-
-dnl Test for <list> header file
-
-AC_CHECK_HEADERS(list)
-
-dnl Test for <map> header file
-
-AC_CHECK_HEADERS(map)
-
-dnl Test for <cstdlib> header file
-
-AC_CHECK_HEADERS(string)
-
-dnl Test for <vector> header file
-
-AC_CHECK_HEADERS(vector)
 
 OTHER_LIBS=
 
