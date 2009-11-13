@@ -1,3 +1,7 @@
+2009-11-13  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Release 0.6.2, Interface version 1.
+
 2009-09-12  Al Riddoch  <alriddoch@googlemail.com>
 
 	* mingw32-atlas-cpp.spec.in, configure.ac: Add a spec file for
