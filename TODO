@@ -1,3 +1,5 @@
+Purge objectDefinitions, and probably the defaults loading code.
+
 In all codecs/negotiators:
   peek()
   rdbuf().in_avail() and cache result
