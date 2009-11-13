@@ -10,7 +10,7 @@ Release: %{release}
 License: LGPL
 Group: System Environment/Libraries
 URL: http://www.worldforge.org/dev/eng/libraries/atlas_cpp
-Packager: Al Riddoch <alriddoch@zepler.org>
+Packager: Al Riddoch <alriddoch@googlemail.com>
 Vendor: WorldForge
 Distribution: Mason
 Source: Atlas-C++-%{version}.tar.bz2
