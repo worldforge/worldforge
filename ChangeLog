@@ -1,3 +1,7 @@
+2009-12-07  Simon Goodall  <simon@worldforge.org>
+
+	* varconf/Config.h: Update doc for readFromFile and writeToFile.
+
 2009-09-19  Al Riddoch  <alriddoch@googlemail.com>
 
 	* varconf/config.cpp: Add support for the way environ is declared in

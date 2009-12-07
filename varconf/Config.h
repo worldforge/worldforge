@@ -83,11 +83,12 @@ public:
   // prefix is case-sensitive!
   void getEnv(const std::string & prefix, Scope scope = INSTANCE); 
 
-  // Writes conf map to specified file.
+  // Writes conf map to specified file. Returns true on success.
   bool writeToFile(const std::string & filename,
                    Scope scopeMask = (Scope)(GLOBAL | USER | INSTANCE));
 
-  // Reads contents of specified file and set into conf map.
+  // Reads contents of specified file and set into conf map. Returns
+  // true on success.
   bool readFromFile(const std::string & filename, Scope scope = USER);
 
   // Ensures specified filestream is properly formatted.
