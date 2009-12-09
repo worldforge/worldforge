@@ -62,7 +62,7 @@ public:
 
   // Converts all nonalphanumeric characters in str except ``-'' and ``_'' to
   // ``_''; converts caps in str to lower-case.
-  void clean(std::string & str);
+  void clean(std::string & str) const;
 
   // Returns true if specified key exists under specified section.
   bool find(const std::string & section, const std::string & key = "") const;
@@ -73,7 +73,7 @@ public:
 
   // Writes to the specified output stream.
   // Why isn't this protected?
-  bool writeToStream(std::ostream & out, Scope scope_mask);
+  bool writeToStream(std::ostream & out, Scope scope_mask) const;
 
   // Gets, sets conf info based on options passed via command line.
   int getCmdline(int argc, char** argv, Scope scope = INSTANCE);
@@ -85,7 +85,7 @@ public:
 
   // Writes conf map to specified file. Returns true on success.
   bool writeToFile(const std::string & filename,
-                   Scope scopeMask = (Scope)(GLOBAL | USER | INSTANCE));
+                   Scope scopeMask = (Scope)(GLOBAL | USER | INSTANCE)) const;
 
   // Reads contents of specified file and set into conf map. Returns
   // true on success.

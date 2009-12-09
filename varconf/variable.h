@@ -64,28 +64,28 @@ public:
   virtual VarBase& operator=(const std::string& s);
   virtual VarBase& operator=(const char* s);
 
-  virtual operator bool();
-  virtual operator int();
-  virtual operator double();
+  virtual operator bool() const;
+  virtual operator int() const;
+  virtual operator double() const;
   virtual operator std::string() const;
 
-  virtual bool is_bool();
-  virtual bool is_int();
-  virtual bool is_double();
-  virtual bool is_string();
+  virtual bool is_bool() const;
+  virtual bool is_int() const;
+  virtual bool is_double() const;
+  virtual bool is_string() const;
 
   const Scope scope() const { return m_scope; }
 
   void setScope(Scope s) { m_scope = s; }
 private:
-  bool m_have_bool;
-  bool m_have_int;
-  bool m_have_double;
+  mutable bool m_have_bool;
+  mutable bool m_have_int;
+  mutable bool m_have_double;
   bool m_have_string;
 
-  bool m_val_bool;
-  int m_val_int;
-  double m_val_double;
+  mutable bool m_val_bool;
+  mutable int m_val_int;
+  mutable double m_val_double;
   std::string m_val;
 
 protected:
@@ -173,9 +173,9 @@ public:
   Variable& operator=(const char* s);
   Variable& operator=(const VarList& v);
 
-  operator bool()               {return bool(this->elem());}
-  operator int()                {return int(this->elem());}
-  operator double()             {return double(this->elem());}
+  operator bool() const         {return bool(this->elem());}
+  operator int() const          {return int(this->elem());}
+  operator double() const       {return double(this->elem());}
   operator std::string() const  {return std::string(this->elem());}
   VarList* array() const {return dynamic_cast<VarList*>(&this->elem());}
   Variable& operator[](const int i);
@@ -208,15 +208,15 @@ public:
   friend bool operator ==(const VarArray& one, const VarBase& two) {return false;}
   friend bool operator ==(const VarArray& one, const VarArray& two);
 
-  virtual operator bool();
-  virtual operator int();
-  virtual operator double();
+  virtual operator bool() const;
+  virtual operator int() const;
+  virtual operator double() const;
   virtual operator std::string() const;
 
-  virtual bool is_bool();
-  virtual bool is_int();
-  virtual bool is_double();
-  virtual bool is_string();
+  virtual bool is_bool() const;
+  virtual bool is_int() const;
+  virtual bool is_double() const;
+  virtual bool is_string() const;
 };
 
 } // namespace varconf

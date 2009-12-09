@@ -191,7 +191,7 @@ VarBase& VarBase::operator=(const char* s)
   return (*this);
 }
 
-VarBase::operator bool()
+VarBase::operator bool() const
 {
   if (!m_have_bool) {
     if ((m_val == "on") || (m_val == "1") || (m_val == "true") || (m_val ==
@@ -201,7 +201,7 @@ VarBase::operator bool()
   return m_val_bool;
 }
 
-VarBase::operator int()
+VarBase::operator int() const
 {
   if (!m_have_int) {
     m_val_int = atoi(m_val.c_str());
@@ -210,7 +210,7 @@ VarBase::operator int()
   return m_val_int;
 }
 
-VarBase::operator double()
+VarBase::operator double() const
 {
   if (!m_have_double) {
     m_val_double = atof(m_val.c_str());
@@ -224,7 +224,7 @@ VarBase::operator std::string() const
   return m_val;
 }
 
-bool VarBase::is_bool()
+bool VarBase::is_bool() const
 {
   if (!is_string()) return false;
   if ( (m_val == "on") || (m_val == "off")
@@ -235,7 +235,7 @@ bool VarBase::is_bool()
      ) return true; else return false;
 }
 
-bool VarBase::is_int()
+bool VarBase::is_int() const
 {
   if (!is_string()) return false;
   for (size_t i = 0; i < m_val.size(); i++) if (!isdigit(m_val[i]))
@@ -243,7 +243,7 @@ bool VarBase::is_int()
   return true;
 }
 
-bool VarBase::is_double()
+bool VarBase::is_double() const
 {
   if (!is_string()) return false;
 
@@ -257,7 +257,7 @@ bool VarBase::is_double()
   return p == m_val.c_str() + m_val.size();
 }
 
-bool VarBase::is_string()
+bool VarBase::is_string() const
 {
   return m_have_string;
 }
@@ -383,17 +383,17 @@ bool operator ==( const VarArray& one, const VarArray& two)
   return true;
 }
 
-VarArray::operator bool()
+VarArray::operator bool() const
 {
   return 0;
 }
 
-VarArray::operator int()
+VarArray::operator int() const
 {
   return 0;
 }
 
-VarArray::operator double()
+VarArray::operator double() const
 {
   return 0;
 }
@@ -404,22 +404,22 @@ VarArray::operator std::string() const
 }
 
 
-bool VarArray::is_bool()
+bool VarArray::is_bool() const
 {
   return false;
 }
 
-bool VarArray::is_int()
+bool VarArray::is_int() const
 {
   return false;
 }
 
-bool VarArray::is_double()
+bool VarArray::is_double() const
 {
   return false;
 }
 
-bool VarArray::is_string()
+bool VarArray::is_string() const
 {
   return false;
 }

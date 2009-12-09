@@ -1,3 +1,8 @@
+2009-12-09  Simon Goodall  <simon@worldforge.org>
+
+	* varconf/config.h, varconf/Config.h, varconf/config.cpp,
+	  varconf/variable.cpp, varconf/variable.h: Make various methods const.
+
 2009-12-07  Simon Goodall  <simon@worldforge.org>
 
 	* varconf/Config.h: Update doc for readFromFile and writeToFile.

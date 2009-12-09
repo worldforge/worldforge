@@ -148,7 +148,7 @@ bool operator ==(const Config & one, const Config & two)
   }
 }
 
-void Config::clean(std::string & str)
+void Config::clean(std::string & str) const
 {
   ctype_t c;
 
@@ -308,6 +308,8 @@ void Config::getEnv(const std::string & prefix, Scope scope)
 
 const sec_map & Config::getSection(const std::string & section)
 {
+  // TODO: This will create a new section in the config file. Is really the 
+  //  desired behaviour?
   return m_conf[section];
 }
 
@@ -567,7 +569,7 @@ void Config::setParameterLookup(char s_name, const std::string & l_name, bool va
     m_par_lookup[s_name] = std::pair<std::string, bool>(l_name, value);  
 }
 
-bool Config::writeToFile(const std::string & filename, Scope scope_mask)
+bool Config::writeToFile(const std::string & filename, Scope scope_mask) const
 {
   std::ofstream fout(filename.c_str());
 
@@ -583,10 +585,10 @@ bool Config::writeToFile(const std::string & filename, Scope scope_mask)
   return writeToStream(fout, scope_mask);
 }
 
-bool Config::writeToStream(std::ostream & out, Scope scope_mask)
+bool Config::writeToStream(std::ostream & out, Scope scope_mask) const
 {
-  conf_map::iterator I;
-  sec_map::iterator J;
+  conf_map::const_iterator I;
+  sec_map::const_iterator J;
  
   for (I = m_conf.begin(); I != m_conf.end(); I++) {
     out << std::endl << "[" << (*I).first << "]\n\n";
