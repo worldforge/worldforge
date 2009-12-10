@@ -223,7 +223,7 @@ To read from an input stream:
   config_object.parseStream( istream&);
 
   Note that this method may throw an error of type ParseError. 
-  See the ParseError.cc file or the ParseError.h file for more information.
+  See the parse_error.cpp file or the parse_error.h file for more information.
 
 
 To write to a file:

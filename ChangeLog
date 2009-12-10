@@ -1,5 +1,9 @@
 2009-12-10  Simon Goodall  <simon@worldforge.org>
 
+	* README: Point reader to parse_error.cpp/h rather than ParseError.cc/h
+
+2009-12-10  Simon Goodall  <simon@worldforge.org>
+
 	* varconf/Config.h: Remove deprecated header file.
 
 2009-12-09  Simon Goodall  <simon@worldforge.org>
