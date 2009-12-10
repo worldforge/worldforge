@@ -1,3 +1,7 @@
+2009-12-10  Simon Goodall  <simon@worldforge.org>
+
+	* varconf/Config.h: Remove deprecated header file.
+
 2009-12-09  Simon Goodall  <simon@worldforge.org>
 
 	* varconf/config.h, varconf/Config.h, varconf/config.cpp,
