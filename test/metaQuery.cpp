@@ -236,7 +236,7 @@ int main(int argc, char* argv[])
     }
     
     // maximum of 5 simultaneous queries
-    Eris::Meta meta(metaServer, 5);
+    Eris::Meta meta(metaServer, 20);
     meta.CompletedServerList.connect(sigc::ptr_fun(&gotServerList));
     meta.AllQueriesDone.connect(sigc::ptr_fun(&queriesDone));
     meta.ReceivedServerInfo.connect(sigc::ptr_fun(&gotServer));
