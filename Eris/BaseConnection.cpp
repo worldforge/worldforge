@@ -72,7 +72,7 @@ int BaseConnection::connect(const std::string &host, short port)
     _port = port;
     
     // start timeout
-    _timeout = new Timeout(20 * 1000);
+    _timeout = new Timeout(2 * 1000);
     _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onConnectTimeout));
     
     setStatus(CONNECTING);
