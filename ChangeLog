@@ -1,3 +1,9 @@
+2009-12-29  Al Riddoch  <alriddoch@googlemail.com>
+
+	* wfmath/int_to_string.cpp: Reduce the scope of some const variables.
+
+	* wfmath/vector.cpp: Add some template specialisations.
+
 2009-08-04  Al Riddoch  <alriddoch@googlemail.com>
 
 	* wfmath/axisbox.h: Add writable accessors to the axisbox
