@@ -257,7 +257,9 @@ template CoordType Angle<3>(const Vector<3> &, const Vector<3> &);
 
 template Vector<3> operator-<3>(const Vector<3> &);
 
+template Vector<3> operator*<3>(CoordType, const Vector<3> &);
 template Vector<2> operator*<2>(CoordType, const Vector<2> &);
+template Vector<3> operator*<3>(const Vector<3> &, CoordType);
 template Vector<2> operator*<2>(const Vector<2> &, CoordType);
 template Vector<2> operator/<2>(const Vector<2> &, CoordType);
 
