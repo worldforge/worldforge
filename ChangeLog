@@ -1,5 +1,9 @@
 2009-12-29  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Release 0.3.10
+
+2009-12-29  Al Riddoch  <alriddoch@googlemail.com>
+
 	* wfmath/int_to_string.cpp: Reduce the scope of some const variables.
 
 	* wfmath/vector.cpp: Add some template specialisations.

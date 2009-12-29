@@ -5,7 +5,7 @@
 %define __find_provides %{_mingw32_findprovides}
 
 %define name mingw32-wfmath
-%define version 0.3.9
+%define version 0.3.10
 %define release 1
 %define libsuffix -0.3
 
