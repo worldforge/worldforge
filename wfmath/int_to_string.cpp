@@ -24,8 +24,8 @@ static char* DoIntToString(unsigned long val, char* bufhead)
 }
 
 // note that all floating point math is done at compile time
-const double log_10_of_2 = 0.30102995664;
-const unsigned ul_max_digits = (unsigned)
+static const double log_10_of_2 = 0.30102995664;
+static const unsigned ul_max_digits = (unsigned)
 	(8 * sizeof(unsigned long) // number of bits
 	* log_10_of_2 // base 10 vs. base 2 digits
 	+ 1 // log(1) == 0, have to add one for leading digit
@@ -33,7 +33,7 @@ const unsigned ul_max_digits = (unsigned)
 
 std::string WFMath::IntToString(unsigned long val)
 {
-  const unsigned bufsize = ul_max_digits + 1; // add one for \0
+  static const unsigned bufsize = ul_max_digits + 1; // add one for \0
   char buffer[bufsize];
 
   return DoIntToString(val, buffer + bufsize);
@@ -59,7 +59,7 @@ static unsigned long SafeAbs(long val)
 
 std::string WFMath::IntToString(long val)
 {
-  const unsigned bufsize = ul_max_digits + 2; // one for \0, one for minus sign
+  static const unsigned bufsize = ul_max_digits + 2; // one for \0, one for minus sign
   char buffer[bufsize];
 
   char* bufhead = DoIntToString(SafeAbs(val), buffer + bufsize);
