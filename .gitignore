@@ -27,3 +27,18 @@ stamp-h1
 test/*_unittest
 test/metaquery
 test/testEris
+# Ignore objects and archives.
+*.[oa]
+# Ignore temporary files
+*~
+# Ignore vi swap files
+*.swp
+# Ignore desktop files
+.directory
+# ignore Eclipse project files
+.project
+.cproject
+.settings
+.cdtconfig*
+# KDevelop files
+*.kdev*
