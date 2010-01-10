@@ -11,6 +11,8 @@
 #include <Eris/Response.h>
 #include <Eris/DeleteLater.h>
 #include <Eris/Timeout.h>
+#include "SpawnPoint.h"
+#include "CharacterType.h"
 
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
@@ -409,7 +411,7 @@ void Account::updateFromObject(const AtlasAccount &p)
 
     if(p->hasAttr("character_types") == true)
     {
-        Atlas::Message::Element CharacterTypes(p->getAttr("character_types"));
+        const Atlas::Message::Element& CharacterTypes(p->getAttr("character_types"));
 
         if(CharacterTypes.isList() == true)
         {
@@ -434,6 +436,52 @@ void Account::updateFromObject(const AtlasAccount &p)
         else
         {
             error() << "Account has attribute \"character_types\" which is not of type List.";
+        }
+    }
+
+    if (p->hasAttr("spawns")) {
+        const Atlas::Message::Element& spawns(p->getAttr("spawns"));
+
+        if (spawns.isList()) {
+            const Atlas::Message::ListType & spawnsList(spawns.asList());
+            for (Atlas::Message::ListType::const_iterator I = spawnsList.begin(); I != spawnsList.end(); ++I) {
+                if (I->isMap()) {
+                    const Atlas::Message::MapType& spawnMap = I->asMap();
+                    Atlas::Message::MapType::const_iterator spawnNameI = spawnMap.find("name");
+                    if (spawnNameI != spawnMap.end()) {
+                        const Atlas::Message::Element& name(spawnNameI->second);
+                        if (name.isString()) {
+                            CharacterTypeStore characterTypes;
+                            Atlas::Message::MapType::const_iterator characterTypesI = spawnMap.find("character_types");
+
+                            if (characterTypesI != spawnMap.end()) {
+                                const Atlas::Message::Element& characterTypesElement(characterTypesI->second);
+                                if (characterTypesElement.isList()) {
+                                    const Atlas::Message::ListType & characterTypesList(characterTypesElement.asList());
+                                    for (Atlas::Message::ListType::const_iterator J = characterTypesList.begin(); J != characterTypesList.end(); ++J)
+                                    {
+                                        if (J->isString()) {
+                                            characterTypes.push_back(CharacterType(J->asString(), ""));
+                                        } else {
+                                            error() << "Character type is not of type string.";
+                                        }
+                                    }
+                                } else {
+                                    error() << "Character type element is not of type list.";
+                                }
+                            }
+                            SpawnPoint spawnPoint(name.asString(), characterTypes, "");
+                            m_spawnPoints.insert(SpawnPointMap::value_type(spawnPoint.getName(), spawnPoint));
+                        } else {
+                            error() << "Spawn name is not a string.";
+                        }
+                    } else {
+                        error() << "Spawn point has no name defined.";
+                    }
+                }
+            }
+        } else {
+            error() << "Account has attribute \"spawns\" which is not of type List.";
         }
     }
 }
@@ -632,7 +680,7 @@ void Account::avatarLogoutResponse(const RootOperation& op)
 
     ActiveCharacterMap::iterator it = m_activeCharacters.find(charId);
     if (it == m_activeCharacters.end()) {
-        warning() << "character ID " << charId << " does not crrespond to an active avatar.";
+        warning() << "character ID " << charId << " does not correspond to an active avatar.";
         return;
     }
 

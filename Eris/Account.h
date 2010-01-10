@@ -18,11 +18,17 @@ class Connection;
 class Avatar;
 class AccountRouter;
 class Timeout;
+class SpawnPoint;
 
 /** Type used to return available characters */
 typedef std::map<std::string, Atlas::Objects::Entity::RootEntity> CharacterMap;
 
 typedef std::map<std::string, Avatar*> ActiveCharacterMap;
+
+/**
+ * @brief A store of spawn points.
+ */
+typedef std::map<std::string, SpawnPoint> SpawnPointMap;
 
 /// Encapsulates all the state of an Atlas Account, and methods that operation on that state
 
@@ -95,10 +101,10 @@ public:
     const CharacterMap& getCharacters();
 
     /**
-    Update the charcter list (based on changes to play). The intention here is
+    Update the character list (based on changes to play). The intention here is
     that clients will call this method for some kind of'choose character' interface
     or menu, and wait for the GotAllCharacters signal before displaying the list.
-    Alternatively, you can display the UI immediatley, and add character entries
+    Alternatively, you can display the UI immediately, and add character entries
     based on the GotCharacterInfo signal, which will be emitted once for each character.
     */
     Result refreshCharacterInfo();
@@ -118,10 +124,19 @@ public:
     //void createCharacter();
 
     ///  returns true if the game has defined a character creation dialog
-    bool canCreateCharacter() {return false;}
+    bool canCreateCharacter();
 
-    const ActiveCharacterMap& getActiveCharacters() const
-    { return m_activeCharacters; }
+    /**
+     * @brief Gets a list of active characters, i.e. entities on the server which the account can control.
+     * @returns A list of active characters on the server which the account can control.
+     */
+    const ActiveCharacterMap& getActiveCharacters() const;
+
+    /**
+     * @brief Gets the available spawn points from where the client can create new characters.
+     * @returns A store of available spawn points.
+     */
+    const SpawnPointMap& getSpawnPoints() const;
 
     /**
     Request de-activation of a character. The 'AvatarDeactivated' signal will
@@ -130,23 +145,16 @@ public:
     Result deactivateCharacter(Avatar* av);
 
     /// returns the account ID if logged in
-    const std::string& getId() const
-    {
-        return m_accountId;
-    }
+    const std::string& getId() const;
 
     /** Return the username of this account. */
-    const std::string& getUsername() const
-    { return m_username; }
+    const std::string& getUsername() const;
 
     /// Access the underlying Connection for this account
-    Connection* getConnection() const
-    {
-        return m_con;
-    }
+    Connection* getConnection() const;
 
 // signals
-    /// emitted when a character has been retrived from the server
+    /// emitted when a character has been retrieved from the server
     sigc::signal<void, const Atlas::Objects::Entity::RootEntity&> GotCharacterInfo;
 
     /// emitted when the entire character list had been updated
@@ -164,7 +172,7 @@ public:
 
     /// Emitted when a logout completes
     /** Depending on whether the logout completed with a positive server
-    acknowledgement or just timedout, the argument will be either true
+    acknowledgment or just timed out, the argument will be either true
     (success, clean logout) or false (failure, timeout or other problem)
     */
     sigc::signal<void, bool> LogoutComplete;
@@ -177,7 +185,7 @@ public:
 
     /**
     Emitted when creating or taking a character fails for some reason.
-    String argument is the error messgae from the server.
+    String argument is the error message from the server.
     */
     sigc::signal<void, const std::string &> AvatarFailure;
 
@@ -245,7 +253,40 @@ protected:
 
     ActiveCharacterMap m_activeCharacters;
     std::auto_ptr<Timeout> m_timeout;
+
+    SpawnPointMap m_spawnPoints;
 };
+
+inline bool Account::canCreateCharacter()
+{
+    return false;
+}
+
+inline const ActiveCharacterMap& Account::getActiveCharacters() const
+{
+    return m_activeCharacters;
+}
+
+inline const std::string& Account::getId() const
+{
+    return m_accountId;
+}
+
+inline const std::string& Account::getUsername() const
+{
+    return m_username;
+}
+
+inline Connection* Account::getConnection() const
+{
+    return m_con;
+}
+
+inline const SpawnPointMap& Account::getSpawnPoints() const
+{
+    return m_spawnPoints;
+}
+
 
 } // of namespace Eris
 
