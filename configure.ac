@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT([eris], [1.3.14], [alriddoch@googlemail.com])
+AC_INIT([eris], [1.3.15], [alriddoch@googlemail.com])
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
