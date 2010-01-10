@@ -39,7 +39,9 @@ liberis_1_3_la_SOURCES = \
 	TimedEventService.cpp \
 	Alarm.cpp \
 	Task.cpp \
-	TerrainMod.cpp
+	TerrainMod.cpp \
+	SpawnPoint.cpp \
+	CharacterType.cpp
 
 liberisdir = $(includedir)/Eris-1.3/Eris
 
@@ -81,4 +83,6 @@ liberis_HEADERS = \
 	Alarm.h \
 	Task.h \
 	TerrainMod.h \
-	TerrainMod_impl.h
+	TerrainMod_impl.h \
+	SpawnPoint.h \
+	CharacterType.h
