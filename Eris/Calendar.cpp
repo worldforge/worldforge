@@ -8,6 +8,7 @@
 #include <Eris/View.h>
 #include <Eris/Entity.h>
 #include <Eris/Log.h>
+#include "iround.h"
 
 using namespace Atlas::Message;
 
@@ -76,7 +77,7 @@ DateTime Calendar::now() const
     // we don't have valid calendar data yet
     if (m_daysPerMonth == 0) return n;
 
-    n.m_seconds = lrintf(m_avatar->getWorldTime());
+    n.m_seconds = I_ROUND(m_avatar->getWorldTime());
 
     n.m_minutes = n.m_seconds / m_secondsPerMinute;
     n.m_seconds -= (n.m_minutes * m_secondsPerMinute);

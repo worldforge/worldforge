@@ -26,6 +26,8 @@
 #include <cassert>
 #include <algorithm>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 // #define ATLAS_LOG 1
 
 using namespace Atlas::Objects::Operation;

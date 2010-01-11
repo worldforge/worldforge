@@ -21,6 +21,8 @@
 #include <algorithm>
 #include <cassert>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using Atlas::Objects::Root;
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Entity::RootEntity;

@@ -43,9 +43,15 @@ dnl Make sure we've got sensible versions of the sources (eg to get snprintf)
 dnl AC_DEFINE(_XOPEN_SOURCE, 500, [This is XOpen source])
 dnl AC_DEFINE(_ISOC99_SOURCE,1, [This is C99 source])
 
+AC_LANG_PUSH(C++)
+
+dnl Check for float to int converters
+
+AC_CHECK_FUNCS([lrintf rintf rint])
+AC_CHECK_FUNCS([fabsf])
+
 PKG_PROG_PKG_CONFIG
 
-AC_LANG_PUSH(C++)
 
 PKG_CHECK_MODULES(SIGC, sigc++-2.0 != 2.0.8,
     [

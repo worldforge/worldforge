@@ -20,6 +20,8 @@
 #include <cstdio>
 #include <cstring>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 #ifdef __WIN32__
 
 #ifndef snprintf

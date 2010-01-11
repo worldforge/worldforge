@@ -24,6 +24,14 @@
 #include <cassert>
 #include <cstdio>
 
+#ifdef __WIN32__
+
+#ifndef snprintf
+#pragma warning(disable: 4996)
+#define snprintf _snprintf
+#endif
+
+#endif // __WIN32__
 namespace Eris {
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    

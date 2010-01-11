@@ -18,6 +18,8 @@
 #include <Eris/Avatar.h>
 #include <wfmath/atlasconv.h>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using std::endl;
 using std::cout;
 

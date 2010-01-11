@@ -19,6 +19,8 @@
 #include <Atlas/Objects/Entity.h>
 #include <wfmath/timestamp.h>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using std::cout;
 using std::endl;
 

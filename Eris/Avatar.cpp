@@ -22,6 +22,8 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Anonymous.h>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::Anonymous;

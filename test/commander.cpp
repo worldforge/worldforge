@@ -16,6 +16,8 @@
 
 #include <cstdio>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using Atlas::Objects::Root;
 using Atlas::Objects::smart_dynamic_cast;
 using namespace Atlas::Objects::Operation;

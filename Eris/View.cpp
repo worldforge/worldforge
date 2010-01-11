@@ -16,6 +16,8 @@
 #include <Atlas/Objects/Entity.h>
 #include <Atlas/Objects/Operation.h>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;

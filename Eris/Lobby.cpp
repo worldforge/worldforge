@@ -18,6 +18,8 @@
 #include <algorithm> 
 #include <cassert>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 typedef Atlas::Objects::Entity::Account AtlasAccount; 
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;

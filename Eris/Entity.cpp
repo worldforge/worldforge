@@ -23,6 +23,8 @@
 #include <cmath>
 #include <cassert>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
@@ -154,7 +156,7 @@ void Entity::fillAttributesFromType(Entity::AttrMap& attributes, TypeInfo* typeI
 {
     attributes.insert(typeInfo->getAttributes().begin(), typeInfo->getAttributes().end());
     ///Make sure to fill from the closest attributes first, as insert won't replace an existing value
-    for (TypeInfoSet::iterator I = typeInfo->getParents().begin(); I != typeInfo->getParents().end(); ++I) {
+    for (TypeInfoSet::const_iterator I = typeInfo->getParents().begin(); I != typeInfo->getParents().end(); ++I) {
         fillAttributesFromType(attributes, *I);
     }
 }
@@ -265,7 +267,7 @@ void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAt
     
     Atlas::Message::MapType attrs;
     obj->addToMessage(attrs);
-    Atlas::Message::MapType::iterator A;
+    Atlas::Message::MapType::const_iterator A;
     
     ///Fill with the default values from the type info
     if (includeTypeInfoAttributes && m_type) {
@@ -280,7 +282,7 @@ void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAt
     
     for (A = attrs.begin(); A != attrs.end(); ++A) {
         // see if the value in the sight matches the exsiting value
-        AttrMap::iterator I = m_attrs.find(A->first);
+        AttrMap::const_iterator I = m_attrs.find(A->first);
         if ((I != m_attrs.end()) && (I->second == A->second)) continue;
 
         setAttr(A->first, A->second);
@@ -374,7 +376,7 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     
     ///Check whether the attribute already has been added to the instance attributes.
     const Element* typeElement(0);
-    AttrMap::iterator A = m_attrs.find(attr);
+    AttrMap::const_iterator A = m_attrs.find(attr);
     if (A == m_attrs.end() && m_type) {
         ///If the attribute hasn't been defined for this instance, see if there's a typeinfo default one
         typeElement = m_type->getAttribute(attr);
@@ -384,7 +386,7 @@ void Entity::setAttr(const std::string &attr, const Element &val)
     const Element* newElement(0);
     ///There was no preexisting attribute either in this instance or in the TypeInfo, just insert it.
     if (A == m_attrs.end() && typeElement == 0) {
-        std::pair<AttrMap::iterator, bool> I = m_attrs.insert(AttrMap::value_type(attr, val));
+        std::pair<AttrMap::const_iterator, bool> I = m_attrs.insert(AttrMap::value_type(attr, val));
         newElement = &(I.first->second);
     } else {
         ///Create an instance specific attribute
@@ -555,9 +557,9 @@ void Entity::updateTasks(const Element& e)
     TaskArray previousTasks(m_tasks);
     m_tasks.clear();
     
-    for (unsigned int t=0; t<taskList.size(); ++t)
+    for (unsigned int i=0; i<taskList.size(); ++i)
     {
-        const MapType& tkmap(taskList[t].asMap());
+        const MapType& tkmap(taskList[i].asMap());
         MapType::const_iterator it = tkmap.find("name");
         if (it == tkmap.end())
         {
@@ -566,19 +568,19 @@ void Entity::updateTasks(const Element& e)
         }
         
         int index = findTaskByName(previousTasks, it->second.asString());
-        Task *t;
+        Task *task;
         
         if (index < 0)
         {   // not found, create a new one
-            t = new Task(this, it->second.asString());
-            TaskAdded.emit(t);
+            task = new Task(this, it->second.asString());
+            TaskAdded.emit(task);
         } else {
-            t = previousTasks[index];
+            task = previousTasks[index];
             previousTasks[index] = NULL;
         }
         
-        m_tasks.push_back(t);
-        t->updateFromAtlas(tkmap);
+        m_tasks.push_back(task);
+        task->updateFromAtlas(tkmap);
     } // of Atlas-specified tasks iteration
     
     for (unsigned int d=0; d<previousTasks.size(); ++d)

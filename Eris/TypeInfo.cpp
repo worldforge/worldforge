@@ -13,6 +13,8 @@
 
 #include <cassert>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using Atlas::Objects::Root;
 using namespace Atlas::Objects::Operation;
 
@@ -174,7 +176,7 @@ void TypeInfo::addAncestor(TypeInfoPtr tp)
     m_ancestors.insert(parentAncestors.begin(), parentAncestors.end());
 	
     // tell all our childen!
-    for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C) {
+    for (TypeInfoSet::const_iterator C=m_children.begin(); C!=m_children.end();++C) {
         (*C)->addAncestor(tp);
     }
 }
@@ -222,7 +224,7 @@ const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attribu
         return &(A->second);
     } else {
         ///it wasn't locally defined check with the parents
-        for (TypeInfoSet::iterator I = getParents().begin(); I != getParents().end(); ++I) {
+        for (TypeInfoSet::const_iterator I = getParents().begin(); I != getParents().end(); ++I) {
             const Atlas::Message::Element* element((*I)->getAttribute(attributeName));
             if (element) {
                 return element;
@@ -248,8 +250,8 @@ void TypeInfo::onAttributeChanges(const std::string& attributeName, const Atlas:
 {
     AttributeChanges.emit(attributeName, element);
     ///Now go through all children, and only make them emit the event if they themselves doesn't have an attribute by this name (which thus overrides this).
-    for (TypeInfoSet::iterator I = getChildren().begin(); I != getChildren().end(); ++I) {
-        Atlas::Message::MapType::iterator J = (*I)->m_attributes.find(attributeName);
+    for (TypeInfoSet::const_iterator I = getChildren().begin(); I != getChildren().end(); ++I) {
+        Atlas::Message::MapType::const_iterator J = (*I)->m_attributes.find(attributeName);
         if (J == (*I)->m_attributes.end()) {
             (*I)->onAttributeChanges(attributeName, element);
         }
@@ -261,7 +263,7 @@ void TypeInfo::validateBind()
     if (m_bound) return;
 	
     // check all our parents
-    for (TypeInfoSet::iterator P=m_parents.begin(); P!=m_parents.end();++P) {
+    for (TypeInfoSet::const_iterator P=m_parents.begin(); P!=m_parents.end();++P) {
         if (!(*P)->isBound()) return;
 	}
     
@@ -270,7 +272,7 @@ void TypeInfo::validateBind()
     Bound.emit(this);
     m_typeService->BoundType.emit(this);
     
-    for (TypeInfoSet::iterator C=m_children.begin(); C!=m_children.end();++C) {
+    for (TypeInfoSet::const_iterator C=m_children.begin(); C!=m_children.end();++C) {
         (*C)->validateBind();
     }
 }

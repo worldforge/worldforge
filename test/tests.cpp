@@ -38,6 +38,8 @@
 #include <sys/socket.h>
 #include <wfmath/atlasconv.h>
 
+#pragma warning(disable: 4068)  //unknown pragma
+
 using namespace Eris;
 using std::endl;
 using std::cout;

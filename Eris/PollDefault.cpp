@@ -53,8 +53,8 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 	FD_ZERO(&writing);
 	got_data = false;
 
-#ifndef _MSC_VER
-	for(_iter I = str.begin(); I != str.end(); ++I) {
+#ifndef _NOT_MSC_VER
+	for(PollDefault::MapType::const_iterator I = str.begin(); I != str.end(); ++I) {
 #else
 //MSVC stupidity fix
 	std::map<const basic_socket_stream*, Check> *str2 = const_cast<std::map<const basic_socket_stream*, Check>* >(&str);
