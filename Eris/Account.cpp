@@ -410,6 +410,7 @@ void Account::loginComplete(const AtlasAccount &p)
 void Account::updateFromObject(const AtlasAccount &p)
 {
     m_characterIds = StringSet(p->getCharacters().begin(), p->getCharacters().end());
+    m_parents = p->getParents();
 
     if(p->hasAttr("character_types") == true)
     {
