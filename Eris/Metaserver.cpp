@@ -11,6 +11,7 @@
 #include <Eris/Poll.h>
 #include <Eris/Log.h>
 #include <Eris/DeleteLater.h>
+#include "Exceptions.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -156,9 +157,10 @@ const ServerInfo& Meta::getInfoForServer(unsigned int index) const
     if (index >= m_gameServers.size()) {
         error() << "passed out-of-range index " << index <<
             " to getInfoForServer";
+        throw BaseException("Out of bounds exception when getting server info.");
+    } else {
+        return m_gameServers[index];
     }
-    
-    return m_gameServers[index];
 }
                 
 unsigned int Meta::getGameServerCount() const
@@ -267,7 +269,10 @@ void Meta::deleteQuery(MetaQuery* query)
 
 void Meta::recv()
 {
-    assert(_bytesToRecv);
+    if (_bytesToRecv == 0) {
+        error() << "No bytes to receive when calling recv().";
+        return;
+    }
 	
 	do {
 		int d = m_stream->get();
@@ -312,7 +317,10 @@ void Meta::recvCmd(uint32_t op)
 
 void Meta::processCmd()
 {
-    assert(m_status == GETTING_LIST);
+    if (m_status != GETTING_LIST) {
+        error() << "Command received when not expecting any. It will be ignored. The command was: " << _gotCmd;
+        return;
+    }
 
     switch (_gotCmd)
     {
@@ -332,6 +340,11 @@ void Meta::processCmd()
     } break;
 	
     case LIST_RESP:	{
+        if (!m_gameServers.empty()) {
+            warning() << "Incorrectly got duplicate metaserver list response. "
+                    "This is unexpected.";
+            return;
+        }
         //uint32_t _totalServers, _packed;
         _dataPtr = unpack_uint32(_totalServers, _data);
         unpack_uint32(_packed, _dataPtr);
@@ -340,11 +353,17 @@ void Meta::processCmd()
         // allow progress bars to setup, etc, etc
         CompletedServerList.emit(_totalServers);
         
-        assert(m_gameServers.empty());
+        m_gameServers.clear();
+        m_pendingQueries.clear();
         m_gameServers.reserve(_totalServers);
     } break;
 	
     case LIST_RESP2: {
+        if (!m_gameServers.empty()) {
+            warning() << "Incorrectly got duplicate metaserver list response. "
+                    "This is unexpected.";
+            return;
+        }
         _dataPtr = _data;
         while (_packed--)
         {
@@ -359,7 +378,7 @@ void Meta::processCmd()
                     (ip & 0xFF000000) >> 24
             );
             
-            // FIXME  - decide whther a reverse name lookup is necessary here or not
+            // FIXME  - decide whether a reverse name lookup is necessary here or not
             m_gameServers.push_back(ServerInfo(buf));
             // is always querying a good idea?
             internalQuery(m_gameServers.size() - 1);
@@ -378,7 +397,9 @@ void Meta::processCmd()
     } break;
 		
     default:
-        doFailure("Unknown Meta server command");
+        std::stringstream ss;
+        ss << "Unknown Meta server command: " << _gotCmd;
+        doFailure(ss.str());
     }
 }
 
@@ -491,14 +512,17 @@ void Meta::objectArrived(const Root& obj)
         return;
     }
     
-    assert((*Q)->getServerIndex() < m_gameServers.size());
-    ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
-	
-    sv.processServer(svr);
-    sv.setPing((*Q)->getElapsed());
-	
-    // emit the signal
-    ReceivedServerInfo.emit(sv);
+    if ((*Q)->getServerIndex() >= m_gameServers.size()) {
+        error() << "Got server info with out of bounds index.";
+    } else {
+        ServerInfo& sv = m_gameServers[(*Q)->getServerIndex()];
+
+        sv.processServer(svr);
+        sv.setPing((*Q)->getElapsed());
+
+        // emit the signal
+        ReceivedServerInfo.emit(sv);
+    }
 }
 
 void Meta::doFailure(const std::string &msg)
