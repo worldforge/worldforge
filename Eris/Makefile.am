@@ -41,7 +41,8 @@ liberis_1_3_la_SOURCES = \
 	Task.cpp \
 	TerrainMod.cpp \
 	SpawnPoint.cpp \
-	CharacterType.cpp
+	CharacterType.cpp \
+	ViewEntity.cpp
 
 liberisdir = $(includedir)/Eris-1.3/Eris
 
@@ -85,4 +86,5 @@ liberis_HEADERS = \
 	TerrainMod.h \
 	TerrainMod_impl.h \
 	SpawnPoint.h \
-	CharacterType.h
+	CharacterType.h \
+	ViewEntity.h

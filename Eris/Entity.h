@@ -59,7 +59,7 @@ class Entity : virtual public sigc::trackable
 public:	
     typedef std::map<std::string, Atlas::Message::Element> AttrMap;
     
-    explicit Entity(const std::string& id, TypeInfo* ty, View* vw);
+    explicit Entity(const std::string& id, TypeInfo* ty);
     virtual ~Entity();
 
     /**
@@ -141,10 +141,10 @@ public:
     TypeInfo* getType() const;
     
     /**
-     * @brief Gets the view to which this entity belongs.
-     * @return The view to which this entity belongs.
+     * @brief Gets the view to which this entity belongs, if any.
+     * @return The view to which this entity belongs, or null if this entity isn't connected to any view.
      */
-    View* getView() const;
+    virtual View* getView() const = 0;
     
     /**
      * @brief The containing entity, or null if this is a top-level visible entity.
@@ -382,14 +382,10 @@ protected:
     virtual void onChildRemoved(Entity* child);
 
     friend class IGRouter;
-    friend class View;
     friend class EntityRouter;
+    friend class View;
     friend class Task;
-    
-    /** update the entity's location based on Atlas data. This is used by
-    the MOVE handler to update the location information. */
-    void setLocationFromAtlas(const std::string& locId);
-      
+
     /**
     Fully initialise all entity state based on a RootEntity, including
     location and contents.
@@ -445,6 +441,10 @@ protected:
     void beginUpdate();
     void addToUpdate(const std::string& attr);
     void endUpdate();
+
+    /** update the entity's location based on Atlas data. This is used by
+    the MOVE handler to update the location information. */
+    void setLocationFromAtlas(const std::string& locId);
     
     /** setLocation is the core of the entity hierarchy maintenance logic.
     We make setting location the 'fixup' action; addChild / removeChild are
@@ -488,6 +488,31 @@ protected:
     
     void createAlarmExpired();
     
+    /**
+     * @brief Gets the typeservice used throughout the Eris system.
+     * @returns A type service instance.
+     */
+    virtual TypeService* getTypeService() const = 0;
+
+    /**
+     * @brief Removes the entity from any movement prediction service.
+     * This is called when movement has stopped.
+     */
+    virtual void removeFromMovementPrediction() = 0;
+
+    /**
+     * @brief Adds the entity to any movement prediction service.
+     * This is called when movement has started.
+     */
+    virtual void addToMovementPredition() = 0;
+
+    /**
+     * @brief Gets an entity with the supplied id from the system.
+     * @param id The id of the entity to get.
+     */
+    virtual Entity* getEntity(const std::string& id) = 0;
+
+
     AttrMap m_attrs;
     
     TypeInfo* m_type;
@@ -500,7 +525,6 @@ protected:
     std::string m_name;		///< a human readable name
     float m_stamp;		///< last modification time (in seconds) 
     std::string m_description;
-    EntityRouter* m_router;
     bool m_visible;
     bool m_limbo;   ///< waiting for parent bind
     
@@ -528,9 +552,7 @@ protected:
         
     typedef std::map<std::string, AttrChangedSignal> ObserverMap;
     ObserverMap m_observers;
-        
-    View* m_view;   ///< the View which owns this Entity
-    
+
     /** This flag should be set when the server notifies that this entity
     has a bounding box. If this flag is not true, the contents of the
     BBox attribute are undefined.  */
@@ -572,11 +594,6 @@ inline float Entity::getStamp() const
 inline TypeInfo* Entity::getType() const
 {
     return m_type;
-}
-
-inline View* Entity::getView() const
-{
-    return m_view;
 }
 
 /** the containing entity, or null if this is a top-level visible entity. */

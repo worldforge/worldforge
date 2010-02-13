@@ -6,8 +6,6 @@
 #include <Eris/Connection.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/LogStream.h>
-#include <Eris/EntityRouter.h>
-#include <Eris/View.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Avatar.h>
 #include <Eris/Alarm.h>
@@ -39,7 +37,7 @@ using WFMath::TimeDiff;
 
 namespace Eris {
 
-Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
+Entity::Entity(const std::string& id, TypeInfo* ty) :
     m_type(ty),
     m_location(NULL),
     m_id(id),
@@ -47,7 +45,6 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
     m_visible(false),
     m_limbo(false),
     m_updateLevel(0),
-    m_view(vw),
     m_hasBBox(false),
     m_moving(false),
     m_recentlyCreated(false),
@@ -56,8 +53,6 @@ Entity::Entity(const std::string& id, TypeInfo* ty, View* vw) :
     assert(m_id.size() > 0);
     m_orientation.identity();
     
-    m_router = new EntityRouter(this);
-    m_view->getConnection()->registerRouterForFrom(m_router, m_id);
     
     if (m_type) {
         m_type->AttributeChanges.connect(sigc::mem_fun(this, &Entity::typeInfo_AttributeChanges));
@@ -72,7 +67,9 @@ Entity::~Entity()
 void Entity::shutdown()
 {
     BeingDeleted.emit();
-    if (m_moving) m_view->removeFromPrediction(this);
+    if (m_moving) {
+    	removeFromMovementPrediction();
+    }
     
     while (!m_contents.empty()) {
       Entity *e = m_contents.back();
@@ -81,9 +78,6 @@ void Entity::shutdown()
     }
     setLocation(NULL);
     
-    m_view->getConnection()->unregisterRouterForFrom(m_router, m_id);
-    m_view->entityDeleted(this); // remove ourselves from the View's content map
-    delete m_router;
 
     m_initialised = false;
 }
@@ -235,7 +229,7 @@ TypeInfoArray Entity::getUseOperations() const
     const ListType& opsl(it->second.asList());
     TypeInfoArray useOps;
     useOps.reserve(opsl.size());
-    TypeService* ts = m_view->getAvatar()->getConnection()->getTypeService();
+    TypeService* ts = getTypeService();
     
     for (ListType::const_iterator i=opsl.begin(); i!=opsl.end(); ++i)
     {
@@ -311,7 +305,6 @@ void Entity::onTalk(const Atlas::Objects::Operation::RootOperation& talk)
 
     Say.emit(talkArgs.front());
     Noise.emit(talk);
-    m_view->getAvatar()->Hear.emit(this, talk);
 }
 
 void Entity::onLocationChanged(Entity* oldLoc)
@@ -332,7 +325,6 @@ void Entity::onAction(const Atlas::Objects::Operation::RootOperation& arg)
 void Entity::onSoundAction(const Atlas::Objects::Operation::RootOperation& op)
 {
     Noise.emit(op);
-    m_view->getAvatar()->Hear.emit(this, op);
 }
 
 void Entity::onImaginary(const Atlas::Objects::Root& arg)
@@ -346,12 +338,14 @@ void Entity::setMoving(bool inMotion)
 {
     assert(m_moving != inMotion);
     
-    if (m_moving) m_view->removeFromPrediction(this);
+    if (m_moving) {
+    	removeFromMovementPrediction();
+    }
     m_moving = inMotion;
     if (m_moving) {
         m_predicted.position = m_position;
         m_predicted.velocity = m_velocity;
-        m_view->addToPrediction(this);
+        addToMovementPredition();
     }
     
     Moving.emit(inMotion);
@@ -607,25 +601,26 @@ void Entity::removeTask(Task* t)
 
 #pragma mark -
 
-void Entity::setLocationFromAtlas(const std::string& locId)
-{
-    if (locId.empty()) return;
-    
-    Entity* newLocation = m_view->getEntity(locId);
-    if (!newLocation)
-    {
-        m_view->getEntityFromServer(locId);
-        
-        m_limbo = true;
-        setVisible(false); // fire disappearance, VisChanged if necessary
-        
-        if (m_location) removeFromLocation();
-        m_location = NULL;
-        assert(m_visible == false);
-        return;
-    }
-    
-    setLocation(newLocation);
+void Entity::setLocationFromAtlas(const std::string& locId) {
+	if (locId.empty()) {
+		return;
+	}
+
+	Entity* newLocation = getEntity(locId);
+	if (!newLocation) {
+
+		m_limbo = true;
+		setVisible(false); // fire disappearance, VisChanged if necessary
+
+		if (m_location) {
+			removeFromLocation();
+		}
+		m_location = NULL;
+		assert(m_visible == false);
+		return;
+	}
+
+	setLocation(newLocation);
 }
 
 void Entity::setLocation(Entity* newLocation)
@@ -634,7 +629,9 @@ void Entity::setLocation(Entity* newLocation)
         
 // do the actual member updating
     bool wasVisible = isVisible();
-    if (m_location) removeFromLocation();
+    if (m_location) {
+    	removeFromLocation();
+    }
         
     Entity* oldLocation = m_location;
     m_location = newLocation;
@@ -644,7 +641,9 @@ void Entity::setLocation(Entity* newLocation)
 // fire VisChanged and Appearance/Disappearance signals
     updateCalculatedVisibility(wasVisible);
     
-    if (m_location) addToLocation();    
+    if (m_location) {
+    	addToLocation();
+    }
 }
 
 void Entity::addToLocation()
@@ -685,13 +684,9 @@ void Entity::setContentsFromAtlas(const StringList& contents)
             assert(child->getLocation() == this);
             oldContents.erase(J);
         } else {
-            child = m_view->getEntity(*I);
+            child = getEntity(*I);
             if (!child) {
-                // we don't have the entity at all, so request it and skip
-                // processing it here; everything will come right when it
-                // arrives.
-                m_view->getEntityFromServer(*I);
-                continue;
+            	continue;
             }
             
             if (child->m_limbo) {
@@ -785,7 +780,6 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     Appearances top-down, but Disappearances bottom-up. */
     
     if (nowVisible) {
-        m_view->setEntityVisible(this, true);
         onVisibilityChanged(true);
     }
     
@@ -799,7 +793,6 @@ void Entity::updateCalculatedVisibility(bool wasVisible)
     }
     
     if (wasVisible) {
-        m_view->setEntityVisible(this, false);
         onVisibilityChanged(false);
     }
 }

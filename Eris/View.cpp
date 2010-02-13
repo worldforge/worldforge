@@ -3,7 +3,7 @@
 #endif
 
 #include <Eris/View.h>
-#include <Eris/Entity.h>
+#include <Eris/ViewEntity.h>
 #include <Eris/LogStream.h>
 #include <Eris/Connection.h>
 #include <Eris/Exceptions.h>
@@ -336,7 +336,7 @@ Entity* View::createEntity(const RootEntity& gent)
         }
     }
     
-    return new Eris::Entity(gent->getId(), type, this);
+    return new ViewEntity(gent->getId(), type, this);
 }
 
 void View::unseen(const std::string& eid)

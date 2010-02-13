@@ -21,7 +21,7 @@
 
 #include <Eris/Connection.h>
 #include <Eris/Account.h>
-#include <Eris/Entity.h>
+#include <Eris/ViewEntity.h>
 #include <Eris/View.h>
 #include <Eris/Log.h>
 #include <Eris/TerrainMod.h>
@@ -72,10 +72,10 @@ class TestAvatar : public Eris::Avatar {
     }
 };
 
-class TestEntity : public Eris::Entity {
+class TestEntity : public Eris::ViewEntity {
   public:
     TestEntity(const std::string& id, Eris::TypeInfo* ty, Eris::View* vw) :
-               Eris::Entity(id, ty, vw) { }
+               Eris::ViewEntity(id, ty, vw) { }
 
     void setup_setLocation(Eris::Entity * e) {
         setLocation(e);

@@ -21,6 +21,7 @@ namespace Eris
 {
 
 class Avatar;
+class ViewEntity;
 class Entity;
 class Connection;
 class Task;
@@ -102,7 +103,7 @@ public:
 protected:
     // the router passes various relevant things to us directly
     friend class IGRouter;
-    friend class Entity;
+    friend class ViewEntity;
     friend class Avatar;
     friend class Task;
     
