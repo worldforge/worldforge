@@ -29,7 +29,7 @@ Task::~Task()
 {
     m_progressRate = -1.0;
     // force it to be un-registered
-    m_owner->getView()->taskRateChanged(this);
+    ProgressRateChanged.emit();
 }
 
 bool Task::isComplete() const
@@ -50,7 +50,7 @@ void Task::updateFromAtlas(const AtlasMapType& d)
     if (it != d.end())
     {
         m_progressRate = it->second.asFloat();
-        m_owner->getView()->taskRateChanged(this);
+        ProgressRateChanged.emit();
     }
 }
 
@@ -63,7 +63,7 @@ void Task::progressChanged()
         
         // remove from progression updating
         m_progressRate = -1;
-        m_owner->getView()->taskRateChanged(this);
+        ProgressRateChanged.emit();
     }
 }
 

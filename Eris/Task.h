@@ -28,19 +28,21 @@ public:
     virtual ~Task();
     
     /**
+     * @brief Gets the name of the task.
+     * @return The name of the task.
     */
-    const std::string& name() const
-    { return m_name; }
+    const std::string& name() const;
     
     /**
-    Return the current progress of the task. Value will always be in the
-    range [0..1]
-    */
-    double progress() const
-    { return m_progress; }
+     * @brief Return the current progress of the task. Value will always be in the
+     * range [0..1]
+     */
+    double progress() const;
     
     /**
-    */
+     * @brief Returns true if the task has completed.
+     * @returns True if the task has completed.
+     */
     bool isComplete() const;
     
     sigc::signal<void> Completed;
@@ -48,6 +50,8 @@ public:
     sigc::signal<void> Cancelled;
     
     sigc::signal<void> Progressed;
+
+    sigc::signal<void> ProgressRateChanged;
 
 private:
     void progressChanged();
@@ -74,6 +78,17 @@ private:
     /// progress per second, or 0.0 if progress is non-linear
     double m_progressRate; 
 };
+
+inline const std::string& Task::name() const
+{
+	return m_name;
+}
+
+inline double Task::progress() const
+{
+	return m_progress;
+}
+
 
 }
 

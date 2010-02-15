@@ -4,6 +4,9 @@
 #include "EntityRouter.h"
 #include "View.h"
 #include "Avatar.h"
+#include "Task.h"
+
+#include <sigc++/bind.h>
 
 
 
@@ -66,6 +69,16 @@ Entity* ViewEntity::getEntity(const std::string& id) {
 	return child;
 }
 
+void ViewEntity::onTaskAdded(Task* task)
+{
+	task->ProgressRateChanged.connect(sigc::bind(sigc::mem_fun(*this, &ViewEntity::task_ProgressRateChanged), task));
+	Entity::onTaskAdded(task);
+}
+
+void ViewEntity::task_ProgressRateChanged(Task* task)
+{
+	m_view->taskRateChanged(task);
+}
 
 
 }

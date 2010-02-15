@@ -141,12 +141,6 @@ public:
     TypeInfo* getType() const;
     
     /**
-     * @brief Gets the view to which this entity belongs, if any.
-     * @return The view to which this entity belongs, or null if this entity isn't connected to any view.
-     */
-    virtual View* getView() const = 0;
-    
-    /**
      * @brief The containing entity, or null if this is a top-level visible entity.
      * @return The containing entity, or null.
      */
@@ -380,6 +374,12 @@ protected:
     emits the Childremoved signal.
     */
     virtual void onChildRemoved(Entity* child);
+
+    /**
+     * @brief Over-rideable hook for when tasks are added.
+     * @param task The new task.
+     */
+    virtual void onTaskAdded(Task* task);
 
     friend class IGRouter;
     friend class View;

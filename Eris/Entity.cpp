@@ -361,6 +361,12 @@ void Entity::onChildRemoved(Entity* child)
     ChildRemoved(child);
 }
 
+void Entity::onTaskAdded(Task* task)
+{
+	TaskAdded(task);
+}
+
+
 #pragma mark -
 
 void Entity::setAttr(const std::string &attr, const Element &val)
