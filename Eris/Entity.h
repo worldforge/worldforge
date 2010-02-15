@@ -114,7 +114,7 @@ public:
      */
     sigc::connection observe(const std::string& attr, const AttrChangedSlot& aslot);
 
-// accesors
+// accessors
     /**
      * @brief Retrieve the unique entity ID.
      * @return The unique id of the entity.
@@ -382,7 +382,6 @@ protected:
     virtual void onChildRemoved(Entity* child);
 
     friend class IGRouter;
-    friend class EntityRouter;
     friend class View;
     friend class Task;
 

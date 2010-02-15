@@ -4,7 +4,7 @@
 
 #include <Eris/EntityRouter.h>
 #include <Eris/LogStream.h>
-#include <Eris/Entity.h>
+#include <Eris/ViewEntity.h>
 #include <Eris/TypeService.h>
 #include <Eris/Avatar.h>
 #include <Eris/TypeInfo.h>
@@ -21,7 +21,7 @@ using Atlas::Objects::smart_dynamic_cast;
 
 namespace Eris {
 
-EntityRouter::EntityRouter(Entity* ent) :
+EntityRouter::EntityRouter(ViewEntity* ent) :
     m_entity(ent)
 {
     assert(ent);

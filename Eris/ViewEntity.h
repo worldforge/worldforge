@@ -6,7 +6,15 @@
 namespace Eris {
 
 class ViewEntity : public Entity {
+friend class EntityRouter;
 public:
+
+	/**
+	 * @brief Ctor.
+	 * @param id The id of the entity.
+	 * @param ty Type info for the entity.
+	 * @param view The view to which the entity belongs.
+	 */
 	ViewEntity(const std::string& id, TypeInfo* ty, View* view);
 
 	virtual ~ViewEntity();

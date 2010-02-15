@@ -3,13 +3,13 @@
 namespace Eris
 {
 
-class Entity;
+class ViewEntity;
 class TypeService;
 
 class EntityRouter : public Router
 {
 public:
-    EntityRouter(Entity* ent);
+    EntityRouter(ViewEntity* ent);
     virtual ~EntityRouter();
     
 protected:
@@ -20,7 +20,7 @@ private:
     
     TypeService* typeService();
     
-    Entity* m_entity;
+    ViewEntity* m_entity;
 };
 
 }
