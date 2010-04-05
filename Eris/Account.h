@@ -244,7 +244,7 @@ protected:
     } Status;
 
     void internalDeactivateCharacter(Avatar* av);
-    void updateFromObject(const Atlas::Objects::Entity::Account &p);
+    virtual void updateFromObject(const Atlas::Objects::Entity::Account &p);
 
     Connection* m_con;  ///< underlying connection instance
     Status m_status;    ///< what the Player is currently doing
@@ -263,6 +263,10 @@ protected:
     ActiveCharacterMap m_activeCharacters;
     std::auto_ptr<Timeout> m_timeout;
 
+    /**
+     * @brief A map of available spawn points.
+     * These are points from which a new avatar can be created.
+     */
     SpawnPointMap m_spawnPoints;
 };
 
