@@ -15,6 +15,10 @@
 #include <set>
 #include <map>
 
+namespace WFMath {
+class MTRand;
+}
+
 namespace Mercator {
 
 class Terrain;
@@ -197,7 +201,7 @@ class Segment {
     void fill2d(const BasePoint& p1, const BasePoint& p2, 
                 const BasePoint& p3, const BasePoint& p4);
 
-    float qRMD(float nn, float fn, float ff, float nf, 
+    float qRMD(WFMath::MTRand& rng, float nn, float fn, float ff, float nf,
                float roughness, float falloff, int depth) const;
 
     void applyMod(TerrainMod *t);

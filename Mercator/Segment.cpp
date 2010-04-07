@@ -292,27 +292,24 @@ void Segment::populateSurfaces()
     }
 }
 
-// the random number generator
-static WFMath::MTRand rng;
 
 // generate a rand num between -0.5...0.5
-inline float randHalf()
+inline float randHalf(WFMath::MTRand& rng)
 {
     //return (float) rand() / RAND_MAX - 0.5f;
-    double r=rng();
-    return r - 0.5;
+    return rng() - 0.5;
 }
 
 
 /// \brief quasi-Random Midpoint Displacement (qRMD) algorithm.
-float Segment::qRMD(float nn, float fn, float ff, float nf,
+float Segment::qRMD(WFMath::MTRand& rng, float nn, float fn, float ff, float nf,
                     float roughness, float falloff, int depth) const
 {
     float max = std::max(std::max(nn, fn), std::max(nf, ff)),
           min = std::min(std::min(nn, fn), std::min(nf, ff)),
           heightDifference = max - min;
  
-    return ((nn+fn+ff+nf)/4.f) + randHalf() * roughness * heightDifference / (1.f+::pow(depth,falloff));
+    return ((nn+fn+ff+nf)/4.f) + randHalf(rng) * roughness * heightDifference / (1.f+::pow(depth,falloff));
 }
 
 /// \brief Check a value against m_min and m_max and set one of them
@@ -348,7 +345,7 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
     // tiles
     //srand((l.seed() * 1000 + h.seed()));
     WFMath::MTRand::uint32 seed[2]={ l.seed(), h.seed() };
-    rng.seed(seed, 2);
+    WFMath::MTRand rng(seed, 2);
 
     // stride is used to step across the array in a deterministic fashion
     // effectively we do the 1/2  point, then the 1/4 points, then the 1/8th
@@ -372,7 +369,7 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
                 hd+=0.05f * roughness;       
             }
           
-            array[i] = ((hh+lh)/2.f) + randHalf() * roughness  * hd / (1.f+::pow(depth,BasePoint::FALLOFF));
+            array[i] = ((hh+lh)/2.f) + randHalf(rng) * roughness  * hd / (1.f+::pow(depth,BasePoint::FALLOFF));
         }
         stride >>= 1;
         depth++;
@@ -432,7 +429,7 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
     // it was seeded once for each edge, now once for the tile.
     //srand(p1.seed()*20 + p2.seed()*15 + p3.seed()*10 + p4.seed()*5);
     WFMath::MTRand::uint32 seed[4]={ p1.seed(), p2.seed(), p3.seed(), p4.seed() };
-    rng.seed(seed, 4);
+    WFMath::MTRand rng(seed, 4);
 
     QuadInterp qi(m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
 
@@ -444,7 +441,7 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
 
     //float roughness = (p1.roughness+p2.roughness+p3.roughness+p4.roughness)/(4.0f);
     float roughness = qi.calc(stride, stride);
-    m_points[stride*m_size + stride] = qRMD( m_points[0 * m_size + stride],
+    m_points[stride*m_size + stride] = qRMD(rng, m_points[0 * m_size + stride],
                                         m_points[stride*m_size + 0],
                                         m_points[stride*m_size + m_res],
                                         m_points[m_res*m_size + stride],
@@ -467,7 +464,7 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
       for (int i=stride;i<m_res;i+=stride*2) {
           for (int j=stride;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
-              m_points[j*m_size + i] = qRMD(m_points[(i-stride) + (j+stride) * (m_size)],
+              m_points[j*m_size + i] = qRMD(rng, m_points[(i-stride) + (j+stride) * (m_size)],
                                        m_points[(i+stride) + (j-stride) * (m_size)],
                                        m_points[(i+stride) + (j+stride) * (m_size)],
                                        m_points[(i-stride) + (j-stride) * (m_size)],
@@ -484,7 +481,7 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
       for (int i=stride*2;i<m_res;i+=stride*2) {
           for (int j=stride;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
-              m_points[j*m_size + i] = qRMD(m_points[(i-stride) + (j) * (m_size)],
+              m_points[j*m_size + i] = qRMD(rng, m_points[(i-stride) + (j) * (m_size)],
                                        m_points[(i+stride) + (j) * (m_size)],
                                        m_points[(i) + (j+stride) * (m_size)],
                                        m_points[(i) + (j-stride) * (m_size)], 
@@ -496,7 +493,7 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
       for (int i=stride;i<m_res;i+=stride*2) {
           for (int j=stride*2;j<m_res;j+=stride*2) {
               roughness=qi.calc(i,j);
-              m_points[j*m_size + i] = qRMD(m_points[(i-stride) + (j) * (m_size)],
+              m_points[j*m_size + i] = qRMD(rng, m_points[(i-stride) + (j) * (m_size)],
                                        m_points[(i+stride) + (j) * (m_size)],
                                        m_points[(i) + (j+stride) * (m_size)],
                                        m_points[(i) + (j-stride) * (m_size)],
