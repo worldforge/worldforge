@@ -14,7 +14,7 @@ dnl Automake setup
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2])
 
 dnl versioning info for libtool
-ERIS_CURRENT=15
+ERIS_CURRENT=16
 ERIS_REVISION=0
 ERIS_AGE=0
 
