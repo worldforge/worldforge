@@ -87,4 +87,5 @@ liberis_HEADERS = \
 	TerrainMod_impl.h \
 	SpawnPoint.h \
 	CharacterType.h \
-	ViewEntity.h
+	ViewEntity.h \
+	iround.h
