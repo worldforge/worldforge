@@ -50,7 +50,7 @@ public:
     */
     Account(Connection *con);
 
-     ~Account();
+    virtual ~Account();
 
     /// Login to the server using user-supplied account information
     /** This is the basic way of logging into an existing account. Server-side
