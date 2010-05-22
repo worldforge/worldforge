@@ -559,7 +559,7 @@ void Account::avatarResponse(const RootOperation& op)
             return;
         }
 
-        Avatar* av = new Avatar(this, ent->getId());
+        Avatar* av = new Avatar(*this, ent->getId());
         AvatarSuccess.emit(av);
         m_status = Account::LOGGED_IN;
 

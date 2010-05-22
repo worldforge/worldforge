@@ -34,7 +34,7 @@ using Atlas::Objects::smart_dynamic_cast;
 namespace Eris
 {
 
-Avatar::Avatar(Account* pl, const std::string& entId) :
+Avatar::Avatar(Account& pl, const std::string& entId) :
     m_account(pl),
     m_entityId(entId),
     m_entity(NULL),
@@ -53,7 +53,7 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
 
 Avatar::~Avatar()
 {
-    m_account->internalDeactivateCharacter(this);
+    m_account.internalDeactivateCharacter(this);
 
     delete m_router;
     delete m_view;
@@ -373,7 +373,7 @@ void Avatar::onCharacterWield(const Atlas::Message::Element& val)
 
 Connection* Avatar::getConnection() const
 {
-    return m_account->getConnection();
+    return m_account.getConnection();
 }
 
 double Avatar::getWorldTime()
@@ -417,7 +417,7 @@ void Avatar::logoutResponse(const RootOperation& op)
         return;
     }
 
-    m_account->AvatarDeactivated.emit(this);
+    m_account.AvatarDeactivated.emit(this);
     deleteLater(this);
 }
 

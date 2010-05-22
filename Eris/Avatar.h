@@ -171,7 +171,7 @@ protected:
     /** Create a new Avatar object.
     @param pl The player that owns the Avatar
     */
-    Avatar(Account* pl, const std::string& entId);
+    Avatar(Account& pl, const std::string& entId);
 
     friend class AccountRouter;
     friend class IGRouter;
@@ -190,7 +190,7 @@ protected:
 
     void logoutResponse(const Atlas::Objects::Operation::RootOperation&);
 
-    Account* m_account;
+    Account& m_account;
 
     std::string m_entityId;
     EntityPtr m_entity;
