@@ -39,7 +39,8 @@ Avatar::Avatar(Account* pl, const std::string& entId) :
     m_entityId(entId),
     m_entity(NULL),
     m_stampAtLastOp(TimeStamp::now()),
-    m_lastOpTime(0.0)
+    m_lastOpTime(0.0),
+    m_isAdmin(false)
 {
     m_view = new View(this);
     m_entityAppearanceCon = m_view->Appearance.connect(sigc::mem_fun(this, &Avatar::onEntityAppear));
@@ -233,6 +234,37 @@ void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
     getConnection()->send(moveOp);
 }
 
+void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
+        const WFMath::Quaternion& orientation)
+{
+    Anonymous what;
+    what->setLoc(container->getId());
+    if (pos.isValid()) {
+        what->setPosAsList(Atlas::Message::Element(pos.toAtlas()).asList());
+    } else {
+        what->setAttr("pos", WFMath::Point<3>::ZERO().toAtlas());
+    }
+    if (orientation.isValid()) {
+        what->setAttr("orientation", orientation.toAtlas());
+    }
+
+    what->setId(entity->getId());
+
+    Move moveOp;
+    moveOp->setFrom(m_entityId);
+    moveOp->setArgs1(what);
+
+    //if the avatar is an admin, we will set the TO property
+    //this will bypass all of the server's filtering, allowing us to place any
+    //entity, unrelated to if it's too heavy or belong to someone else
+    if (getIsAdmin()) {
+        moveOp->setTo(entity->getId());
+    }
+
+    getConnection()->send(moveOp);
+
+}
+
 void Avatar::wield(Entity * entity)
 {
     if(entity->getLocation() != m_entity)
@@ -387,6 +419,16 @@ void Avatar::logoutResponse(const RootOperation& op)
 
     m_account->AvatarDeactivated.emit(this);
     deleteLater(this);
+}
+
+void Avatar::setIsAdmin(bool isAdmin)
+{
+    m_isAdmin = isAdmin;
+}
+
+bool Avatar::getIsAdmin()
+{
+    return m_isAdmin;
 }
 
 

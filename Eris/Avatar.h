@@ -24,7 +24,7 @@ class IGRouter;
 class View;
 class Connection;
 
-/** The players avatar representation. **/
+/** The player's avatar representation. **/
 class Avatar : virtual public sigc::trackable
 {
 public:
@@ -82,8 +82,23 @@ public:
     void moveInDirection(const WFMath::Vector<3>&, const WFMath::Quaternion&);
 
     /// Place an entity inside another one
-    void place(Entity*, Entity* container, const WFMath::Point<3>& pos
+    void place(Entity* entity, Entity* container, const WFMath::Point<3>& pos
         = WFMath::Point<3>(0, 0, 0));
+
+    /**
+     * @brief Place an entity inside another one.
+     *
+     * @note Use this method both when you want to move an entity from one
+     * container to another, or just want to update the position or
+     * orientation of an entity without changing its container.
+     *
+     * @param entity The entity to place.
+     * @param container The container for the entity.
+     * @param pos The position of the entity within the container.
+     * @param orientation The orientation of the entity.
+     */
+    void place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
+            const WFMath::Quaternion& orientation);
 
     /// Wield an entity which is inside the Avatar's inventory
     void wield(Entity * entity);
@@ -113,6 +128,30 @@ public:
     void useStop();
 
     void deactivate();
+
+    /**
+     * @brief Sets whether the current avatar is an admin character.
+     *
+     * As an "admin" character the avatar has greater ability to alter the state of
+     * the server. This is often done by sending Atlas ops to the entity itself, thus
+     * bypassing the normal routing rules on the server.
+     *
+     * It's up to the client to determine which avatars are admin, and set this flag
+     * as soon as possible after the Avatar has been created.
+     */
+    void setIsAdmin(bool isAdmin);
+
+    /**
+     * @brief Gets whether the current avatar is an admin character.
+     *
+     * As an "admin" character the avatar has greater ability to alter the state of
+     * the server. This is often done by sending Atlas ops to the entity itself, thus
+     * bypassing the normal routing rules on the server.
+     *
+     * It's up to the client to determine which avatars are admin, and call setIsAdmin
+     * as soon as possible after the Avatar has been created.
+     */
+    bool getIsAdmin();
 
     /**
     Emitted when the character entity of this Avatar is valid (and presumably,
@@ -151,7 +190,6 @@ protected:
     attribute set. We use this to synchronize the local world time up. */
     void updateWorldTime(double t);
 
-
 protected:
     void onEntityAppear(Entity* ent);
     void onCharacterChildAdded(Entity* child);
@@ -176,6 +214,8 @@ protected:
     EntityRef m_wielded;
 
     sigc::connection m_entityAppearanceCon;
+
+    bool m_isAdmin;
 };
 
 } // of namespace Eris
