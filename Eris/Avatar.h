@@ -31,29 +31,19 @@ public:
     virtual ~Avatar();
 
     /// Get the Entity id of this Avatar
-    const std::string & getId() const
-    { return m_entityId; }
+    const std::string & getId() const;
 
     /// Get the Entity this Avatar refers to
-    EntityPtr getEntity() const
-    {
-        return m_entity;
-    }
+    EntityPtr getEntity() const;
 
-    View* getView() const
-    {
-        return m_view;
-    }
+    View* getView() const;
 
     Connection* getConnection() const;
 
     /** get the current local approximation of world time. */
     double getWorldTime();
 
-    const EntityRef& getWielded() const
-    {
-        return m_wielded;
-    }
+    const EntityRef& getWielded() const;
 
     /// Drop an object in the Avatar's inventory at the given location
     void drop(Entity*, const WFMath::Point<3>& pos, const std::string& loc);
@@ -218,6 +208,25 @@ protected:
     bool m_isAdmin;
 };
 
+inline const std::string & Avatar::getId() const
+{
+    return m_entityId;
+}
+
+inline EntityPtr Avatar::getEntity() const
+{
+    return m_entity;
+}
+
+inline View* Avatar::getView() const
+{
+    return m_view;
+}
+
+inline const EntityRef& Avatar::getWielded() const
+{
+    return m_wielded;
+}
 } // of namespace Eris
 
 #endif
