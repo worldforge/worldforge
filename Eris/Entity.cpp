@@ -573,7 +573,7 @@ void Entity::updateTasks(const Element& e)
         if (index < 0)
         {   // not found, create a new one
             task = new Task(this, it->second.asString());
-            TaskAdded.emit(task);
+            onTaskAdded(task);
         } else {
             task = previousTasks[index];
             previousTasks[index] = NULL;
