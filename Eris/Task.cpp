@@ -46,7 +46,7 @@ void Task::updateFromAtlas(const AtlasMapType& d)
         progressChanged();
     }
     
-    it = d.find("progress_rate");
+    it = d.find("rate");
     if (it != d.end())
     {
         m_progressRate = it->second.asFloat();
