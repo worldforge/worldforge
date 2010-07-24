@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 #pragma warning(disable: 4068)  //unknown pragma
 
@@ -51,6 +52,9 @@ public:
         // logout
         if (op->getClassNo() == LOGOUT_NO) {
             debug() << "Account received forced logout from server";
+            const std::vector<Root>& args = op->getArgs();
+            Root & arg = args.back();
+
             m_account->internalLogout(false);
             return HANDLED;
         }
