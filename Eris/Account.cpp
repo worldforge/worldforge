@@ -53,7 +53,12 @@ public:
         if (op->getClassNo() == LOGOUT_NO) {
             debug() << "Account received forced logout from server";
             const std::vector<Root>& args = op->getArgs();
-            Root & arg = args.back();
+            if(args.size() == 2) {
+                // Teleport logout op
+                Root & arg = args.back();
+            } else {
+                // Regular force logout op
+            }
 
             m_account->internalLogout(false);
             return HANDLED;
