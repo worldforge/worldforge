@@ -25,6 +25,7 @@
 #pragma warning(disable: 4068)  //unknown pragma
 
 using Atlas::Objects::Root;
+using Atlas::Message::Element;
 using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Entity::Anonymous;
@@ -53,11 +54,45 @@ public:
         if (op->getClassNo() == LOGOUT_NO) {
             debug() << "Account received forced logout from server";
             const std::vector<Root>& args = op->getArgs();
+            if(args.empty()) {
+                debug() << "Empty argument list\n" << std::flush; 
+                return IGNORED;
+            }
             if(args.size() == 2) {
                 // Teleport logout op
-                Root & arg = args.back();
+                const Root & arg = args.back();
+                Element tp_host_attr;
+                Element tp_port_attr;
+                Element pkey_attr;
+                Element pentity_id_attr;
+                std::string teleport_host;
+                int teleport_port;
+                std::string possess_key;
+                std::string possess_entity_id;
+                if(arg->copyAttr("teleport_host", tp_host_attr) != 0 || !tp_host_attr.isString()) {
+                    debug() << "No teleport host specified" << std::endl << std::flush;
+                    return IGNORED;
+                } else if (arg->copyAttr("teleport_port", tp_port_attr) != 0 || !tp_port_attr.isInt()) {
+                    debug() << "No teleport port specified" << std::endl << std::flush;
+                    return IGNORED;
+                } else if (arg->copyAttr("possess_key", pkey_attr) != 0 || !pkey_attr.isString()) {
+                    debug() << "No possess key specified" << std::endl << std::flush;
+                    return IGNORED;
+                } else if (arg->copyAttr("possess_entity_id", pentity_id_attr) != 0 || !pentity_id_attr.isString()) {
+                    debug() << "No entity ID specified" << std::endl << std::flush;
+                    return IGNORED;
+                }
+                teleport_host = tp_host_attr.String();
+                teleport_port = tp_port_attr.Int();
+                possess_key = pkey_attr.String();
+                possess_entity_id = pentity_id_attr.String();
+                debug() << "Host: " << teleport_host << ", Port: " 
+                            << teleport_port << ", " << "Key: " 
+                            << possess_key << ", " << "ID: " 
+                            << possess_entity_id << std::endl << std::flush;
             } else {
                 // Regular force logout op
+                debug() << "Non-teleport logout" << std::endl << std::flush;
             }
 
             m_account->internalLogout(false);
