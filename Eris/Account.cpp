@@ -54,10 +54,7 @@ public:
         if (op->getClassNo() == LOGOUT_NO) {
             debug() << "Account received forced logout from server";
             const std::vector<Root>& args = op->getArgs();
-            if(args.empty()) {
-                debug() << "Empty argument list\n" << std::flush; 
-                return IGNORED;
-            }
+
             if(args.size() == 2) {
                 // Teleport logout op
                 const Root & arg = args.back();
