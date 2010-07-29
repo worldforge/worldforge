@@ -87,12 +87,16 @@ public:
                             << teleport_port << ", " << "Key: " 
                             << possess_key << ", " << "ID: " 
                             << possess_entity_id << std::endl << std::flush;
+                // Do a normal logout
+                m_account->internalLogout(false);
+                // Now do a transfer request
+                m_account->transferRequested(teleport_host, teleport_port, possess_key, possess_entity_id);
             } else {
                 // Regular force logout op
                 debug() << "Non-teleport logout" << std::endl << std::flush;
+                m_account->internalLogout(false);
             }
 
-            m_account->internalLogout(false);
             return HANDLED;
         }
 
@@ -446,6 +450,11 @@ void Account::loginComplete(const AtlasAccount &p)
 
     m_con->Disconnecting.connect(sigc::mem_fun(this, &Account::netDisconnecting));
     m_timeout.reset();
+}
+
+void Account::transferRequested(const std::string &host, int port, const std::string &key, const std::string &id)
+{
+    TransferRequested.emit(host, port, key, id);
 }
 
 void Account::updateFromObject(const AtlasAccount &p)
