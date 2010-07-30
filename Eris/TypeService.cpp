@@ -31,29 +31,6 @@ TypeService::TypeService(Connection *con) :
     m_inited(false)
 {
     defineBuiltin("root", NULL);
- /*   
-    defineBuiltin("root_operation", m_types["root"]);
-    defineBuiltin("action", m_types["root_operation"]);
-    defineBuiltin("get", m_types["action"]);
-    defineBuiltin("set", m_types["action"]);
-    defineBuiltin("perceive", m_types["get"]);
-    defineBuiltin("look", m_types["perceive"]);
-    defineBuiltin("login", m_types["get"]);
-    
-    defineBuiltin("info", m_types["root_operation"]);
-    defineBuiltin("error", m_types["info"]);
-    defineBuiltin("create", m_types["action"]);
-    defineBuiltin("communicate", m_types["create"]);
-    defineBuiltin("talk", m_types["communicate"]);
-    
-    defineBuiltin("perception", m_types["info"]);
-    defineBuiltin("sight", m_types["perception"]);
-    
-    defineBuiltin("root_entity", m_types["root"]);
-    defineBuiltin("admin_entity", m_types["root_entity"]);
-    defineBuiltin("account", m_types["admin_entity"]);
-    defineBuiltin("game_entity", m_types["root_entity"]);
-    */
 }
 
 TypeService::~TypeService()
@@ -68,7 +45,7 @@ void TypeService::init()
     assert(!m_inited);
     m_inited = true;
 	
-    // every type already in the map delayed it's sendInfoRequest becuase we weren't inited;
+    // every type already in the map delayed it's sendInfoRequest because we weren't inited;
     // go through and fix them now. This allows static construction (or early construction) of
     // things like ClassDispatchers in a moderately controlled fashion.
     for (TypeInfoMap::iterator T=m_types.begin(); T!=m_types.end(); ++T) {
@@ -90,7 +67,7 @@ TypeInfoPtr TypeService::getTypeByName(const std::string &id)
     if (T != m_types.end()) return T->second;
        
 // not found, do some work
-    /// @todo Verify the id is not in the authorative invalid ID list
+    /// @todo Verify the id is not in the authoritative invalid ID list
     TypeInfoPtr node = new TypeInfo(id, this);
     m_types[id] = node;
     
@@ -140,7 +117,7 @@ void TypeService::recvTypeInfo(const Root &atype)
 {
     TypeInfoMap::iterator T = m_types.find(atype->getId());
     if (T == m_types.end()) {
-        error() << "recived type object with unknown ID " << atype->getId();
+        error() << "received type object with unknown ID " << atype->getId();
         return;
     }
 	
