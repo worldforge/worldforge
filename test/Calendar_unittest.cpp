@@ -35,7 +35,7 @@
 class TestAvatar : public Eris::Avatar {
   public:
     TestAvatar(Eris::Account * ac, const std::string & ent_id) :
-               Eris::Avatar(ac, ent_id) { }
+               Eris::Avatar(*ac, ent_id) { }
 
 };
 
