@@ -58,6 +58,9 @@ TypeService::TypeService(Connection *con) :
 
 TypeService::~TypeService()
 {
+    for (TypeInfoMap::const_iterator I = m_types.begin(); I != m_types.end(); ++I) {
+        delete I->second;
+    }
 }
 
 void TypeService::init()
