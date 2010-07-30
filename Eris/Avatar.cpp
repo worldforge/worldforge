@@ -219,21 +219,6 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel, const WFMath::Quatern
     getConnection()->send(moveOp);
 }
 
-void Avatar::place(Entity* e, Entity* container, const WFMath::Point<3>& pos)
-{
-    Anonymous what;
-    what->setLoc(container->getId());
-    what->setAttr("pos", pos.toAtlas());
-   // what->setVelocityAsList( .... zero ... );
-    what->setId(e->getId());
-
-    Move moveOp;
-    moveOp->setFrom(m_entityId);
-    moveOp->setArgs1(what);
-
-    getConnection()->send(moveOp);
-}
-
 void Avatar::place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
         const WFMath::Quaternion& orientation)
 {

@@ -71,10 +71,6 @@ public:
     /// Set the character's velocity and orientation
     void moveInDirection(const WFMath::Vector<3>&, const WFMath::Quaternion&);
 
-    /// Place an entity inside another one
-    void place(Entity* entity, Entity* container, const WFMath::Point<3>& pos
-        = WFMath::Point<3>(0, 0, 0));
-
     /**
      * @brief Place an entity inside another one.
      *
@@ -85,10 +81,10 @@ public:
      * @param entity The entity to place.
      * @param container The container for the entity.
      * @param pos The position of the entity within the container.
-     * @param orientation The orientation of the entity.
+     * @param orientation An optional orientation of the entity.
      */
     void place(Entity* entity, Entity* container, const WFMath::Point<3>& pos,
-            const WFMath::Quaternion& orientation);
+            const WFMath::Quaternion& orientation = WFMath::Quaternion());
 
     /// Wield an entity which is inside the Avatar's inventory
     void wield(Entity * entity);
