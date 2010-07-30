@@ -2,6 +2,7 @@
 #define ERIS_PLAYER_H
 
 #include <Eris/Types.h>
+#include <Eris/Transfer.h>
 
 #include <Atlas/Objects/ObjectsFwd.h>
 
@@ -209,8 +210,7 @@ public:
     should use the hostname, port number, possess key and entity ID to claim
     the character on a remote host
     */
-    sigc::signal<void, const std::string &, int, const std::string &, 
-                        const std::string &> TransferRequested;
+    sigc::signal<void, const TransferInfo &> TransferRequested;
 protected:
     friend class AccountRouter;
     friend class Avatar; // so avatar can call deactivateCharacter
@@ -234,7 +234,8 @@ protected:
     void logoutResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarLogoutResponse(const Atlas::Objects::Operation::RootOperation& op);
-    void transferRequested(const std::string &host, int port, const std::string &key, const std::string &id);
+
+    virtual void onTransferRequested(const TransferInfo &transfer);
 
     void handleLogoutTimeout();
 //  void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);

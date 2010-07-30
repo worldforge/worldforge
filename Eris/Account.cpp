@@ -90,7 +90,8 @@ public:
                 // Do a normal logout
                 m_account->internalLogout(false);
                 // Now do a transfer request
-                m_account->transferRequested(teleport_host, teleport_port, possess_key, possess_entity_id);
+                TransferInfo transfer(teleport_host, teleport_port, possess_key, possess_entity_id);
+                m_account->onTransferRequested(transfer);
             } else {
                 // Regular force logout op
                 debug() << "Non-teleport logout" << std::endl << std::flush;
@@ -452,9 +453,9 @@ void Account::loginComplete(const AtlasAccount &p)
     m_timeout.reset();
 }
 
-void Account::transferRequested(const std::string &host, int port, const std::string &key, const std::string &id)
+void Account::onTransferRequested(const TransferInfo &transfer)
 {
-    TransferRequested.emit(host, port, key, id);
+    TransferRequested.emit(transfer);
 }
 
 void Account::updateFromObject(const AtlasAccount &p)
