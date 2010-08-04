@@ -110,6 +110,13 @@ public:
     */
     Result refreshCharacterInfo();
 
+    /// Transfer all characters to this account and then do all steps in takeCharacter()
+    /**
+    @param id The id of the game entity to transfer and activate
+    @param key The possess_key to authenticate the game entity as ours
+    */
+    Result transferCharacter(const std::string &id, const std::string &key);
+
     /// Enter the game using an existing character
     /**
     @param id The id of the game entity to activate; this must be owned by the account.
@@ -234,6 +241,7 @@ protected:
     void logoutResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarLogoutResponse(const Atlas::Objects::Operation::RootOperation& op);
+    void transferResponse(const Atlas::Objects::Operation::RootOperation& op);
 
     virtual void onTransferRequested(const TransferInfo &transfer);
 

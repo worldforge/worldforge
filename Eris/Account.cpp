@@ -323,6 +323,40 @@ void Account::createCharacterHandler(long serialno)
 }
 */
 
+Result Account::transferCharacter(const std::string &id, const std::string &key)
+{
+    if (!m_con->isConnected()) return NOT_CONNECTED;
+    if (m_status != LOGGED_IN) {
+        if ((m_status == CREATING_CHAR) || (m_status == TAKING_CHAR)) {
+            error() << "duplicate char creation / take";
+            return DUPLICATE_CHAR_ACTIVE;
+        } else {
+            error() << "called createCharacter on unconnected Account, ignoring";
+            return NOT_LOGGED_IN;
+        }
+    }
+
+    Anonymous what;
+    what->setId(id);
+
+    Anonymous transfer;
+    transfer->setAttr("possess_key", key);
+
+    std::vector<Root> look_args;
+    look_args.push_back(what);
+    look_args.push_back(transfer);
+
+    Look l;
+    l->setFrom(id);
+    l->setArgs(look_args);
+    l->setSerialno(getNewSerialno());
+    m_con->send(l);
+
+    m_con->getResponder()->await(l->getSerialno(), this, &Account::avatarResponse);
+    m_status = TAKING_CHAR;
+    return NO_ERR;
+}
+
 Result Account::takeCharacter(const std::string &id)
 {
     if (m_characterIds.count(id) == 0) {
