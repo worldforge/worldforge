@@ -323,7 +323,7 @@ void Account::createCharacterHandler(long serialno)
 }
 */
 
-Result Account::transferCharacter(const std::string &id, const std::string &key)
+Result Account::takeTransferredCharacter(const std::string &id, const std::string &key)
 {
     if (!m_con->isConnected()) return NOT_CONNECTED;
     if (m_status != LOGGED_IN) {

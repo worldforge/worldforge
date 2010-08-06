@@ -115,7 +115,7 @@ public:
     @param id The id of the game entity to transfer and activate
     @param key The possess_key to authenticate the game entity as ours
     */
-    Result transferCharacter(const std::string &id, const std::string &key);
+    Result takeTransferredCharacter(const std::string &id, const std::string &key);
 
     /// Enter the game using an existing character
     /**
