@@ -45,7 +45,7 @@ liberis_1_3_la_SOURCES = \
 	CharacterType.cpp \
 	ViewEntity.cpp \
 	iround.h \
-	Transfer.cpp
+	TransferInfo.cpp
 
 liberis_1_3_la_LIBADD = $(ERIS_DEPS)
 
@@ -94,4 +94,4 @@ liberis_HEADERS = \
 	CharacterType.h \
 	ViewEntity.h \
 	iround.h \
-	Transfer.h
+	TransferInfo.h

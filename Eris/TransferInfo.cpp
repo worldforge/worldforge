@@ -1,4 +1,7 @@
-#include <Eris/Transfer.h>
+#include "TransferInfo.h"
+
+namespace Eris
+{
 
 TransferInfo::TransferInfo(const std::string &host, int port, 
                             const std::string &key, const std::string &id)
@@ -29,3 +32,4 @@ const std::string & TransferInfo::getPossessEntityId()
     return m_possess_entity_id;
 }
 
+} // namespace Eris

@@ -2,7 +2,8 @@
 #define ERIS_PLAYER_H
 
 #include <Eris/Types.h>
-#include <Eris/Transfer.h>
+
+#include "TransferInfo.h"
 
 #include <Atlas/Objects/ObjectsFwd.h>
 
