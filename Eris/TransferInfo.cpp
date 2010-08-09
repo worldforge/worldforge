@@ -12,22 +12,22 @@ TransferInfo::TransferInfo(const std::string &host, int port,
 {
 }
 
-const std::string & TransferInfo::getHost()
+const std::string & TransferInfo::getHost() const
 {
     return m_host;
 }
 
-int TransferInfo::getPort()
+int TransferInfo::getPort() const
 {
     return m_port;
 }
 
-const std::string & TransferInfo::getPossessKey()
+const std::string & TransferInfo::getPossessKey() const
 {
     return m_possess_key;
 }
 
-const std::string & TransferInfo::getPossessEntityId()
+const std::string & TransferInfo::getPossessEntityId() const
 {
     return m_possess_entity_id;
 }

@@ -29,25 +29,25 @@ public:
      * @brief Get the hostname of the transfer destination server
      * @return The hostname of the transfer destination
      */
-    const std::string & getHost();
+    const std::string & getHost() const;
     
     /**
      * @brief Get the connection port of the transfer destination server
      * @return The connection port of the transfer destination server
      */
-    int getPort();
+    int getPort() const;
 
     /**
      * @brief Get the one-time generated possess key (used for claiming ownership)
      * @return The possess key to claim ownership of a transferred character
      */
-    const std::string & getPossessKey();
+    const std::string & getPossessKey() const;
 
     /**
      * @brief Get the entity ID of the transferred character on the destination server
      * @return The entity ID of the transferred character on the destination server
      */
-    const std::string & getPossessEntityId();
+    const std::string & getPossessEntityId() const;
 
 private:
     std::string m_host;     ///< The transfer destination servers hostname
