@@ -17,7 +17,7 @@ class TransferInfo
 {
 public:
     /**
-     * @brief Constructor for TransferInfo objects
+     * @brief Ctor
      * @param host The transfer destination servers hostname
      * @param port The transfer destination servers port
      * @param key Randomized key used to claim ownership over transferred character
