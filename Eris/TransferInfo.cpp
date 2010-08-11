@@ -32,4 +32,4 @@ const std::string & TransferInfo::getPossessEntityId() const
     return m_possess_entity_id;
 }
 
-} // namespace Eris
+}

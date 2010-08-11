@@ -55,8 +55,8 @@ private:
     std::string m_possess_key;  ///< A randomized one-time key to claim ownership over a transferred character
     std::string m_possess_entity_id;    ///< The entity ID of the trasnferred character on the destination server
 
-}; // class TransferInfo
+};
 
-} // namespace Eris
+}
 
 #endif
