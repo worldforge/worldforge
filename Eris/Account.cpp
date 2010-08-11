@@ -83,9 +83,9 @@ public:
                 teleport_port = tp_port_attr.Int();
                 possess_key = pkey_attr.String();
                 possess_entity_id = pentity_id_attr.String();
-                debug() << "Host: " << teleport_host << ", Port: " 
-                            << teleport_port << ", " << "Key: " 
-                            << possess_key << ", " << "ID: " 
+                debug() << "Host: " << teleport_host << ", Port: "
+                            << teleport_port << ", " << "Key: "
+                            << possess_key << ", " << "ID: "
                             << possess_entity_id << std::endl << std::flush;
                 // Do a normal logout
                 m_account->internalLogout(false);
