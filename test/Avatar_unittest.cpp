@@ -161,7 +161,7 @@ int main()
 
         ea->setup_setEntity(char_ent);
 
-        ea->drop(inv_ent, WFMath::Point<3>(0,0,0), "3");
+        ea->drop(inv_ent, WFMath::Point<3>(0,0,0), WFMath::Quaternion(), "3");
     }
     
     // Test drop() of something in inventory by position
@@ -178,7 +178,24 @@ int main()
         ea->setup_setEntity(char_ent);
         inv_ent->setup_setLocation(char_ent);
 
-        ea->drop(inv_ent, WFMath::Point<3>(0,0,0), "3");
+        ea->drop(inv_ent, WFMath::Point<3>(0,0,0), WFMath::Quaternion(), "3");
+    }
+
+    // Test drop() of something in inventory by position and orientation
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
+
+        ea->setup_setEntity(char_ent);
+        inv_ent->setup_setLocation(char_ent);
+
+        ea->drop(inv_ent, WFMath::Point<3>(0,0,0), WFMath::Quaternion(1, 90), "3");
     }
     
     // Test drop() of something in inventory by offset
@@ -199,7 +216,26 @@ int main()
 
         ea->drop(inv_ent, WFMath::Vector<3>(0,0,0));
     }
-    
+
+    // Test drop() of something in inventory by offset and orientation
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
+
+        char_ent->setup_setLocation(wrld_ent);
+        ea->setup_setEntity(char_ent);
+        inv_ent->setup_setLocation(char_ent);
+
+        ea->drop(inv_ent, WFMath::Vector<3>(0,0,0), WFMath::Quaternion(1, 90));
+    }
+
     // Test take() of something
     {
         Eris::Connection * con = new TestConnection("name", "localhost",

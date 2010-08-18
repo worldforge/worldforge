@@ -45,10 +45,24 @@ public:
 
     const EntityRef& getWielded() const;
 
-    /// Drop an object in the Avatar's inventory at the given location
-    void drop(Entity*, const WFMath::Point<3>& pos, const std::string& loc);
-    /// Drop an object in the Avatar's inventory at the Avatar's feet
-    void drop(Entity*, const WFMath::Vector<3>& offset = WFMath::Vector<3>(0, 0, 0));
+    /**
+     * @brief Drop an entity in the Avatar's inventory at the given location.
+     * @param entity The entity to drop.
+     * @param pos The position within the location to place the entity at (if possible by the server).
+     * @param orientation The orientation of the new entity. This will only be used if the quaternion sent is valid.
+     * @param loc The new location, as an entity id.
+     */
+    void drop(Entity* entity, const WFMath::Point<3>& pos,
+            const WFMath::Quaternion& orientation, const std::string& loc);
+
+    /**
+     * @brief Drop an entity in the Avatar's inventory at the Avatar's feet (or actually in the parent entity of the Avatar).
+     * @param entity The entity to drop.
+     * @param pos The position within the location to place the entity at (if possible by the server).
+     * @param orientation The orientation of the new entity. This will only be used if the quaternion sent is valid.
+     */
+    void drop(Entity* entity, const WFMath::Vector<3>& offset = WFMath::Vector<3>(0, 0, 0),
+            const WFMath::Quaternion& orientation = WFMath::Quaternion());
 
     /// Move an entity into the Avatar's inventory
     void take(Entity*);

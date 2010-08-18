@@ -73,7 +73,7 @@ void Avatar::deactivate()
 
 #pragma mark -
 
-void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc)
+void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const WFMath::Quaternion& orientation, const std::string& loc)
 {
     if(e->getLocation() != m_entity)
     {
@@ -89,15 +89,18 @@ void Avatar::drop(Entity* e, const WFMath::Point<3>& pos, const std::string& loc
     what->setLoc(loc);
     Atlas::Message::Element apos(pos.toAtlas());
     what->setPosAsList(apos.asList());
+    if (orientation.isValid()) {
+        what->setAttr("orientation", orientation.toAtlas());
+    }
     what->setId(e->getId());
     moveOp->setArgs1(what);
 
     getConnection()->send(moveOp);
 }
 
-void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset)
+void Avatar::drop(Entity* e, const WFMath::Vector<3>& offset, const WFMath::Quaternion& orientation)
 {
-    drop(e, m_entity->getPosition() + offset, m_entity->getLocation()->getId());
+    drop(e, m_entity->getPosition() + offset, orientation, m_entity->getLocation()->getId());
 }
 
 void Avatar::take(Entity* e)
