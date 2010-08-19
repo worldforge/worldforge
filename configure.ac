@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT([mercator], [0.2.7], [alriddoch@googlemail.com])
+AC_INIT([mercator], [0.2.8], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -13,7 +13,7 @@ dnl Initialise automake
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
 dnl versioning info for libtool
-MERCATOR_CURRENT=6
+MERCATOR_CURRENT=7
 MERCATOR_REVISION=0
 MERCATOR_AGE=0
 MERCATOR_VERSION_INFO=$MERCATOR_CURRENT:$MERCATOR_REVISION:$MERCATOR_AGE
