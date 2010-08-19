@@ -1,3 +1,17 @@
+2010-08-19  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Buffer.h, Mercator/DepthShader.cpp,
+	  Mercator/GrassShader.cpp, Mercator/ShaderFactory.cpp,
+	  Mercator/ThresholdShader.cpp, Mercator/TileShader.cpp:
+	  Remove <cassert> from the library headers.
+
+	* Mercator/Segment.cpp, Mercator/Segment.h,
+	  Mercator/Terrain.cpp, Mercator/Terrain.h: Modify the interface
+	  to refer to Areas and Shaders as const where appropriate.
+
+	* Mercator/TerrainMod.cpp, Mercator/TerrainMod,h: Remove a large
+	  inline function.
+
 2009-02-25  Al Riddoch  <alriddoch@googlemail.com>
 
 	* tests/testTerrain.cpp: Add required cstdlib include to get rand().
