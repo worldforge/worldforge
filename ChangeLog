@@ -1,5 +1,11 @@
 2010-08-19  Al Riddoch  <alriddoch@googlemail.com>
 
+	* NEWS: Update news.
+
+	* Release 0.2.8, interface version 7
+
+2010-08-19  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Mercator/Buffer.h, Mercator/DepthShader.cpp,
 	  Mercator/GrassShader.cpp, Mercator/ShaderFactory.cpp,
 	  Mercator/ThresholdShader.cpp, Mercator/TileShader.cpp:
