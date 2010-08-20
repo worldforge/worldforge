@@ -78,7 +78,7 @@ public:
                     gotArgs = false;
                 } else if (arg->copyAttr("possess_entity_id", pentity_id_attr) != 0 || !pentity_id_attr.isString()) {
                     debug() << "No entity ID specified. Doing normal logout." << std::endl << std::flush;
-                    gotArgs == false;
+                    gotArgs = false;
                 }
 
                 // Extract argument data only if we succeed in extracting them all
