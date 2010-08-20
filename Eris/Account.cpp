@@ -349,17 +349,11 @@ Result Account::takeTransferredCharacter(const std::string &id, const std::strin
 
     Anonymous what;
     what->setId(id);
-
-    Anonymous transfer;
-    transfer->setAttr("possess_key", key);
-
-    std::vector<Root> look_args;
-    look_args.push_back(what);
-    look_args.push_back(transfer);
+    what->setAttr("possess_key", key);
 
     Look l;
     l->setFrom(getId());
-    l->setArgs(look_args);
+    l->setArgs1(what);
     l->setSerialno(getNewSerialno());
     m_con->send(l);
 
