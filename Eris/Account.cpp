@@ -358,7 +358,7 @@ Result Account::takeTransferredCharacter(const std::string &id, const std::strin
     look_args.push_back(transfer);
 
     Look l;
-    l->setFrom(id);
+    l->setFrom(getId());
     l->setArgs(look_args);
     l->setSerialno(getNewSerialno());
     m_con->send(l);
