@@ -290,7 +290,7 @@ Router::RouterResult Lobby::recvTalk(const Talk& tk)
     
     const std::vector<Root>& args = tk->getArgs();
     if (args.empty() || !args.front()->hasAttr("say")) {
-        error() << "recieved sound(talk) with no / bad args";
+        error() << "received sound(talk) with no / bad args";
         return HANDLED;
     }
 
@@ -333,7 +333,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
 {
     const std::vector<Root>& args = im->getArgs();
     if (args.empty() || !args.front()->hasAttr("description")) {
-        warning() << "recieved sight(imaginary) with no/bad args: " << im;
+        warning() << "received sight(imaginary) with no/bad args: " << im;
         return HANDLED;
     }
         
@@ -366,7 +366,7 @@ Router::RouterResult Lobby::recvImaginary(const Imaginary& im)
         } else
             error() << "lobby got sight(imaginary) with unknown loc: " << loc;
     } else
-        warning() << "recieved imaginary with no loc set:" << im;
+        warning() << "received imaginary with no loc set:" << im;
         
     return HANDLED;
 }
@@ -392,7 +392,7 @@ void Lobby::recvDisappearance(const Atlas::Objects::Root& obj)
 void Lobby::processRoomCreate(const Atlas::Objects::Operation::Create &cr,
 	const Atlas::Objects::Entity::RootEntity &ent)
 {
-    log(LOG_DEBUG, "recieved sight of room creation");
+    log(LOG_DEBUG, "received sight of room creation");
 	
     PendingCreateMap::iterator P = _pendingCreate.find(cr.getSerialno());
     if (P != _pendingCreate.end()) {

@@ -91,7 +91,7 @@ public:
     Update the information stored about the current server.
     While the refresh is taking place, the current info is still available,
     but with it's status set to QUERYING. The signal GotServerInfo will be
-    emitted once the new data is recieved.
+    emitted once the new data is received.
     */
     void refreshServerInfo();
 

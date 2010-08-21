@@ -101,7 +101,7 @@ public:
     bool hasAttr(const std::string &p) const;
 
     /**
-     * @brief A slot which can be used for recieving attribute update signals.
+     * @brief A slot which can be used for receiving attribute update signals.
      */
     typedef sigc::slot<void, const Atlas::Message::Element&> AttrChangedSlot;
 

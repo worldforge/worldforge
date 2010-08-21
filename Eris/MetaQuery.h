@@ -14,7 +14,7 @@ class Meta;
 
 /** MetaQuery is a temporary connection used to retrieve information
 about a game server. It issues an anoymous GET operation, and expects
-to recieve an INFO operation containing a 'server' entity in response. This
+to receive an INFO operation containing a 'server' entity in response. This
 entity contains attributes such as the ruleset, uptime, number of connectec
 players and so on. In addition, MetaQuery tracks the time the server
 takes to response, and this estimates the server's ping. This time also

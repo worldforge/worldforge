@@ -280,7 +280,7 @@ void View::create(const RootEntity& gent)
 
     InitialSightEntity.emit(ent);
     
-    // depends on relative order that sight(create) and appear are recieved in
+    // depends on relative order that sight(create) and appear are received in
     if (alreadyAppeared)
     {
         ent->setVisible(true);

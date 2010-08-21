@@ -14,7 +14,7 @@ typedef enum {
     LOG_ERROR = 0,  ///< serious failure indications
     LOG_WARNING,    ///< something is amiss, but probably okay to continue
     LOG_NOTICE,     ///< general information
-    LOG_VERBOSE,    ///< <i>lots</i> of information, about every recieved operation, for example
+    LOG_VERBOSE,    ///< <i>lots</i> of information, about every received operation, for example
     LOG_DEBUG       ///< excessive amounts of stuff
 } LogLevel;
 

@@ -27,7 +27,7 @@ class Connection;
 class Task;
 
 /** View encapsulates the set of entities currently visible to an Avatar,
- as well as those that have recently been seen. It recieves visibility-affecting
+ as well as those that have recently been seen. It receives visibility-affecting
  ops from the IGRouter, and uses them to update its state and emit signals.
  */
 class View : public sigc::trackable
@@ -78,10 +78,10 @@ public:
     is emitted once the entity has been fully bound into the View */
     sigc::signal<void, Entity*> EntitySeen;
 
-    /** emitted when a SIGHT(CREATE) op is recieved for an entity */
+    /** emitted when a SIGHT(CREATE) op is received for an entity */
     sigc::signal<void, Entity*> EntityCreated;
     
-    /** emitted when a SIGHT(DELETE) op is recieved for an entity */
+    /** emitted when a SIGHT(DELETE) op is received for an entity */
     sigc::signal<void, Entity*> EntityDeleted;
     
     sigc::signal<void, Entity*> Appearance;

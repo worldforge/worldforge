@@ -52,7 +52,7 @@ Controller::Controller(const char* pipe) :
 
 void Controller::objectArrived(const Atlas::Objects::Root&)
 {
-    cout << "controller recieved op!" << endl;
+    cout << "controller received op!" << endl;
 }
 
 void Controller::send(const Atlas::Objects::Root &obj)

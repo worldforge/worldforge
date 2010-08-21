@@ -25,7 +25,7 @@ public:
     virtual Entity* instantiate(const Atlas::Objects::Entity::RootEntity &ge, TypeInfo* type, View* v) = 0;
     
     /** retrieve this factory's priority level; higher priority factories
-    get first chance to process a recieved Atlas entity. The default implementation
+    get first chance to process a received Atlas entity. The default implementation
     returns one. */
     virtual int priority();
 };

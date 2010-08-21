@@ -50,7 +50,7 @@ public:
     {
         // logout
         if (op->getClassNo() == LOGOUT_NO) {
-            debug() << "Account reciev forced logout from server";
+            debug() << "Account received forced logout from server";
             m_account->internalLogout(false);
             return HANDLED;
         }

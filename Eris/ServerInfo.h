@@ -83,7 +83,7 @@ protected:
     /// construct with the host IP only; other values will be set to defaults
     ServerInfo(const std::string &host);
     
-    /** called by Meta when info is recieved from the server, sets
+    /** called by Meta when info is received from the server, sets
     status to valid. */
     void processServer(const Atlas::Objects::Entity::RootEntity &svr);
 

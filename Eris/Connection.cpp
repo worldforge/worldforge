@@ -113,7 +113,7 @@ void Connection::gotData(PollData &data)
 
     BaseConnection::recv();
 
-// now dispatch recieved ops
+// now dispatch received ops
     while (!m_opDeque.empty()) {
         RootOperation op = m_opDeque.front();
         m_opDeque.pop_front();
@@ -247,7 +247,7 @@ void Connection::objectArrived(const Root& obj)
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    std::cout << "recieved:" << debugStream.str() << std::endl;
+    std::cout << "received:" << debugStream.str() << std::endl;
 #endif
     RootOperation op = smart_dynamic_cast<RootOperation>(obj);
     if (op.isValid()) {

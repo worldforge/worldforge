@@ -138,7 +138,7 @@ void ClientConnection::objectArrived(const Root& obj)
     debugEncoder.streamObjectsMessage(obj);
     debugStream << std::flush;
 
-    std::cout << "recieved:" << debugStream.str() << std::endl;
+    std::cout << "received:" << debugStream.str() << std::endl;
   */
     m_objDeque.push_back(obj);
 }
