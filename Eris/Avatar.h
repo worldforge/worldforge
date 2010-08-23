@@ -23,6 +23,7 @@ class Account;
 class IGRouter;
 class View;
 class Connection;
+class TransferInfo;
 
 /** The player's avatar representation. **/
 class Avatar : virtual public sigc::trackable
@@ -199,6 +200,20 @@ protected:
     void onWieldedChanged();
 
     void logoutResponse(const Atlas::Objects::Operation::RootOperation&);
+
+    /**
+     * @brief Called when a logout of the avatar has been requested by the
+     *  server.
+     */
+    void logoutRequested();
+
+    /**
+     * @brief Called when a logout and server transfer of the avatar has been
+     *  requested by the server.
+     * @param transferInfo The transfer info which contains information about
+     *  the server to transfer to.
+     */
+    void logoutRequested(const TransferInfo& transferInfo);
 
     Account& m_account;
 

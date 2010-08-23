@@ -409,6 +409,16 @@ void Avatar::logoutResponse(const RootOperation& op)
     deleteLater(this);
 }
 
+void Avatar::logoutRequested()
+{
+    m_account.avatarLogoutRequested(this);
+}
+
+void Avatar::logoutRequested(const TransferInfo& transferInfo)
+{
+    m_account.avatarLogoutRequested(this, transferInfo);
+}
+
 void Avatar::setIsAdmin(bool isAdmin)
 {
     m_isAdmin = isAdmin;

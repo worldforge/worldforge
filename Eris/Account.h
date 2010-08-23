@@ -170,6 +170,31 @@ public:
     /// Access the underlying Connection for this account
     Connection* getConnection() const;
 
+    /**
+     * @brief Called when a logout of the avatar has been requested by the
+     *  server due to a server transfer being requested.
+     *
+     * @note The avatar instance will be deleted by this method.
+     *
+     * @param avatar The avatar which is being logged out. This instance will
+     *  be destroyed once this method is done.
+     * @param transferInfo The transfer information instance containing all
+     *  information needed for the server transfer.
+     */
+    void avatarLogoutRequested(Avatar* avatar, const TransferInfo &transfer);
+
+    /**
+     * @brief Called when a logout of the avatar has been requested by the
+     *  server.
+     *
+     * @note The avatar instance will be deleted by this method.
+     *
+     * @param avatar The avatar which is being logged out. This instance will
+     *  be destroyed once this method is done.
+     */
+    void avatarLogoutRequested(Avatar* avatar);
+
+
 // signals
     /// emitted when a character has been retrieved from the server
     sigc::signal<void, const Atlas::Objects::Entity::RootEntity&> GotCharacterInfo;

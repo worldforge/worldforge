@@ -12,6 +12,7 @@
 #include <Eris/TypeInfo.h>
 #include <Eris/TypeBoundRedispatch.h>
 #include <Eris/Operations.h>
+#include "TransferInfo.h"
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/Entity.h>
@@ -22,6 +23,7 @@ using namespace Atlas::Objects::Operation;
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::smart_dynamic_cast;
+using Atlas::Message::Element;
 
 namespace Eris {
 
@@ -92,6 +94,76 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     if (op->getClassNo() == UNSEEN_NO)
     {
         m_view->unseen(args.front()->getId());
+        return HANDLED;
+    }
+
+    // logout
+    if (op->getClassNo() == LOGOUT_NO) {
+        debug() << "Avatar received forced logout from server";
+        const std::vector<Root>& args = op->getArgs();
+
+        if(args.size() == 2) {
+            bool gotArgs = true;
+            // Teleport logout op
+            const Root & arg = args.back();
+            Element tp_host_attr;
+            Element tp_port_attr;
+            Element pkey_attr;
+            Element pentity_id_attr;
+            std::string teleport_host;
+            int teleport_port;
+            std::string possess_key;
+            std::string possess_entity_id;
+            if(arg->copyAttr("teleport_host", tp_host_attr) != 0
+                    || !tp_host_attr.isString()) {
+                debug() << "No teleport host specified. Doing normal logout."
+                        << std::endl << std::flush;
+                gotArgs = false;
+            } else if (arg->copyAttr("teleport_port", tp_port_attr) != 0
+                    || !tp_port_attr.isInt()) {
+                debug() << "No teleport port specified. Doing normal logout."
+                        << std::endl << std::flush;
+                gotArgs = false;
+            } else if (arg->copyAttr("possess_key", pkey_attr) != 0
+                    || !pkey_attr.isString()) {
+                debug() << "No possess key specified. Doing normal logout."
+                        << std::endl << std::flush;
+                gotArgs = false;
+            } else if (arg->copyAttr("possess_entity_id", pentity_id_attr) != 0
+                    || !pentity_id_attr.isString()) {
+                debug() << "No entity ID specified. Doing normal logout."
+                        << std::endl << std::flush;
+                gotArgs = false;
+            }
+
+            // Extract argument data only if we succeed in extracting them all
+            if (gotArgs) {
+                teleport_host = tp_host_attr.String();
+                teleport_port = tp_port_attr.Int();
+                possess_key = pkey_attr.String();
+                possess_entity_id = pentity_id_attr.String();
+                debug() << "Server transfer data: Host: " << teleport_host << ", Port: "
+                << teleport_port << ", " << "Key: "
+                << possess_key << ", " << "ID: "
+                << possess_entity_id << std::endl << std::flush;
+            }
+
+
+            // Request transfer if all the arguments were extracted nicely
+            if (gotArgs) {
+                // Now do a transfer request
+                TransferInfo transfer(teleport_host, teleport_port, possess_key
+                        , possess_entity_id);
+                m_avatar->logoutRequested(transfer);
+            } else {
+                m_avatar->logoutRequested();
+            }
+
+        } else {
+            // Regular force logout op
+            m_avatar->logoutRequested();
+        }
+
         return HANDLED;
     }
     
