@@ -172,19 +172,6 @@ public:
 
     /**
      * @brief Called when a logout of the avatar has been requested by the
-     *  server due to a server transfer being requested.
-     *
-     * @note The avatar instance will be deleted by this method.
-     *
-     * @param avatar The avatar which is being logged out. This instance will
-     *  be destroyed once this method is done.
-     * @param transferInfo The transfer information instance containing all
-     *  information needed for the server transfer.
-     */
-    void avatarLogoutRequested(Avatar* avatar, const TransferInfo &transfer);
-
-    /**
-     * @brief Called when a logout of the avatar has been requested by the
      *  server.
      *
      * @note The avatar instance will be deleted by this method.
@@ -238,12 +225,6 @@ public:
     */
     sigc::signal<void, Avatar*> AvatarDeactivated;
 
-    /**
-    Emitted when a character transfer authentication is requested. Clients
-    should use the hostname, port number, possess key and entity ID to claim
-    the character on a remote host
-    */
-    sigc::signal<void, const TransferInfo &> TransferRequested;
 protected:
     friend class AccountRouter;
     friend class Avatar; // so avatar can call deactivateCharacter
@@ -267,9 +248,6 @@ protected:
     void logoutResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarResponse(const Atlas::Objects::Operation::RootOperation& op);
     void avatarLogoutResponse(const Atlas::Objects::Operation::RootOperation& op);
-    void transferResponse(const Atlas::Objects::Operation::RootOperation& op);
-
-    virtual void onTransferRequested(const TransferInfo &transfer);
 
     void handleLogoutTimeout();
 //  void recvRemoteLogout(const Atlas::Objects::Operation::Logout &lo);

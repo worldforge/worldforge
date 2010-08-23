@@ -359,6 +359,11 @@ void Avatar::onCharacterWield(const Atlas::Message::Element& val)
     m_wielded = EntityRef(m_view, val.asString());
 }
 
+void Avatar::onTransferRequested(const TransferInfo &transfer)
+{
+    TransferRequested.emit(transfer);
+}
+
 Connection* Avatar::getConnection() const
 {
     return m_account.getConnection();
@@ -416,7 +421,8 @@ void Avatar::logoutRequested()
 
 void Avatar::logoutRequested(const TransferInfo& transferInfo)
 {
-    m_account.avatarLogoutRequested(this, transferInfo);
+    onTransferRequested(transferInfo);
+    m_account.avatarLogoutRequested(this);
 }
 
 void Avatar::setIsAdmin(bool isAdmin)

@@ -437,21 +437,10 @@ void Account::loginComplete(const AtlasAccount &p)
     m_timeout.reset();
 }
 
-void Account::onTransferRequested(const TransferInfo &transfer)
-{
-    TransferRequested.emit(transfer);
-}
-
 void Account::avatarLogoutRequested(Avatar* avatar)
 {
     AvatarDeactivated.emit(avatar);
     delete avatar;
-}
-
-void Account::avatarLogoutRequested(Avatar* avatar, const TransferInfo &transfer)
-{
-    avatarLogoutRequested(avatar);
-    onTransferRequested(transfer);
 }
 
 void Account::updateFromObject(const AtlasAccount &p)
