@@ -14,8 +14,11 @@ check_PROGRAMS = Entity_unittest Account_unittest Alarm_unittest \
                  ServerInfo_unittest Task_unittest TimedEventService_unittest \
                  Timeout_unittest TypeBoundRedispatch_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
-                 UIFactory_unittest View_unittest testEris TerrainMod_unittest
+                 UIFactory_unittest View_unittest TerrainMod_unittest
 TESTS = $(check_PROGRAMS)
+RECHECK_LOGS = testEris.log
+
+EXTRA_PROGRAMS = testEris
 
 testEris_SOURCES = tests.cpp \
     stubServer.h stubServer.cpp \
@@ -46,7 +49,10 @@ Connection_unittest_SOURCES = Connection_unittest.cpp
 DeleteLater_unittest_SOURCES = DeleteLater_unittest.cpp
 EntityRef_unittest_SOURCES = EntityRef_unittest.cpp
 EntityRouter_unittest_SOURCES = EntityRouter_unittest.cpp
+
 Entity_unittest_SOURCES = Entity_unittest.cpp
+Entity_unittest_LDADD = $(top_builddir)/Eris/Entity.lo
+
 Exceptions_unittest_SOURCES = Exceptions_unittest.cpp
 Factory_unittest_SOURCES = Factory_unittest.cpp
 IGRouter_unittest_SOURCES = IGRouter_unittest.cpp
