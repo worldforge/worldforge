@@ -11,7 +11,7 @@ AC_CANONICAL_HOST
 
 dnl Automake setup
 
-AM_INIT_AUTOMAKE([nostdinc dist-bzip2])
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2 color-tests parallel-tests])
 
 dnl versioning info for libtool
 ERIS_CURRENT=16
