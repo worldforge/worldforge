@@ -49,7 +49,8 @@ const uint32_t CKEEP_ALIVE = 2,
 	CLIENTSHAKE = 5,
 	LIST_REQ = 7,
 	LIST_RESP = 8,
-	PROTO_ERANGE = 9;
+	PROTO_ERANGE = 9,
+	LAST = 10;
 
 // special  command value to track LIST_RESP processing
 const uint32_t LIST_RESP2 = 999;		
@@ -341,9 +342,7 @@ void Meta::processCmd()
 	
     case LIST_RESP:	{
         if (!m_gameServers.empty()) {
-            warning() << "Incorrectly got duplicate metaserver list response. "
-                    "This is unexpected.";
-            return;
+            warning() << "Got additional metaserver list response.";
         }
         //uint32_t _totalServers, _packed;
         _dataPtr = unpack_uint32(_totalServers, _data);
@@ -351,18 +350,21 @@ void Meta::processCmd()
         setupRecvData(_packed, LIST_RESP2);
 		
         // allow progress bars to setup, etc, etc
+        // FIXME Don't emit this here. We don't have the list yet.
         CompletedServerList.emit(_totalServers);
         
-        m_gameServers.clear();
-        m_pendingQueries.clear();
-        m_gameServers.reserve(_totalServers);
+        // If this is the first response, allocate the space
+        if (m_gameServers.empty()) {
+            m_gameServers.clear();
+            m_pendingQueries.clear();
+            m_gameServers.reserve(_totalServers);
+        }
     } break;
 	
     case LIST_RESP2: {
         if (!m_gameServers.empty()) {
             warning() << "Incorrectly got duplicate metaserver list response. "
                     "This is unexpected.";
-            return;
         }
         _dataPtr = _data;
         while (_packed--)
