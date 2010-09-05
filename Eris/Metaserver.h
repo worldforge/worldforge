@@ -196,8 +196,8 @@ private:
 	char _data[DATA_BUFFER_SIZE];
 	char* _dataPtr;	///< The current insert/extract pointer in the buffer
 
-	unsigned int _bytesToRecv, ///< The number of bytes to read before processing / dispatch
-		_totalServers,		///< Total number of servers the Meta knows of
+	std::streamsize _bytesToRecv; ///< The number of bytes to read before processing / dispatch
+	unsigned int _totalServers,		///< Total number of servers the Meta knows of
 		_packed;		///< The servers in the curent LIST_RESP
 		
 	bool _recvCmd; 		///< true if the next block is a new command

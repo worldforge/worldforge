@@ -17,6 +17,8 @@
 #include <Atlas/Objects/RootEntity.h>
 #include <sigc++/slot.h>
 
+#include <algorithm>
+
 #include <cassert>
 #include <cstdio>
 #include <cstring>
@@ -275,11 +277,20 @@ void Meta::recv()
         return;
     }
 	
-	do {
-		int d = m_stream->get();
-		*(_dataPtr++) = static_cast<char>(d);
-		_bytesToRecv--;
-	} while (m_stream->rdbuf()->in_avail() && _bytesToRecv);
+    m_stream->peek();
+    std::streambuf * iobuf = m_stream->rdbuf();
+    std::streamsize len = std::min(_bytesToRecv, iobuf->in_avail());
+    std::cout << len << ":" << _bytesToRecv << ":" << iobuf->in_avail() << std::endl << std::flush;
+    if (len > 0) {
+    	iobuf->sgetn(_data, len);
+    	_bytesToRecv -= len;
+    	_dataPtr += len;
+    }
+//	do {
+//		int d = m_stream->get();
+//		*(_dataPtr++) = static_cast<char>(d);
+//		_bytesToRecv--;
+//	} while (iobuf->in_avail() && _bytesToRecv);
 	
     if (_bytesToRecv > 0) return; // can't do anything till we get more data
     
@@ -341,11 +352,18 @@ void Meta::processCmd()
     } break;
 	
     case LIST_RESP:	{
-        if (!m_gameServers.empty()) {
-            warning() << "Got additional metaserver list response.";
-        }
         //uint32_t _totalServers, _packed;
-        _dataPtr = unpack_uint32(_totalServers, _data);
+        uint32_t total_servers;
+        _dataPtr = unpack_uint32(total_servers, _data);
+        if (!m_gameServers.empty()) {
+        	if (total_servers != _totalServers) {
+                warning() << "Server total in new packet has changed. " << total_servers << ":" << _totalServers;
+        	} else {
+                warning() << "Server total in new packet is fine. " << total_servers << ":" << _totalServers;
+        	}
+        } else {
+        	_totalServers = total_servers;
+        }
         unpack_uint32(_packed, _dataPtr);
         // FIXME This assumes that the data received so far is all the servers, which
         // in the case of fragmented server list it is not. Currently this code is generally
@@ -369,8 +387,7 @@ void Meta::processCmd()
 	
     case LIST_RESP2: {
         if (!m_gameServers.empty()) {
-            warning() << "Incorrectly got duplicate metaserver list response. "
-                    "This is unexpected.";
+            warning() << "Unpacking additional server list. ";
         }
         _dataPtr = _data;
         while (_packed--)
