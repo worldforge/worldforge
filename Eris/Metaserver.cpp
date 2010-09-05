@@ -280,9 +280,8 @@ void Meta::recv()
     m_stream->peek();
     std::streambuf * iobuf = m_stream->rdbuf();
     std::streamsize len = std::min(_bytesToRecv, iobuf->in_avail());
-    std::cout << len << ":" << _bytesToRecv << ":" << iobuf->in_avail() << std::endl << std::flush;
     if (len > 0) {
-    	iobuf->sgetn(_data, len);
+    	iobuf->sgetn(_dataPtr, len);
     	_bytesToRecv -= len;
     	_dataPtr += len;
     }
@@ -358,8 +357,6 @@ void Meta::processCmd()
         if (!m_gameServers.empty()) {
         	if (total_servers != _totalServers) {
                 warning() << "Server total in new packet has changed. " << total_servers << ":" << _totalServers;
-        	} else {
-                warning() << "Server total in new packet is fine. " << total_servers << ":" << _totalServers;
         	}
         } else {
         	_totalServers = total_servers;
@@ -373,12 +370,12 @@ void Meta::processCmd()
         // data one byte at a time is less efficient than it might be.
         setupRecvData(_packed, LIST_RESP2);
 		
-        // allow progress bars to setup, etc, etc
-        // FIXME Don't emit this here. We don't have the list yet.
-        CompletedServerList.emit(_totalServers);
-        
         // If this is the first response, allocate the space
         if (m_gameServers.empty()) {
+            // allow progress bars to setup, etc, etc
+            // FIXME Don't emit this here. We don't have the list yet.
+            CompletedServerList.emit(_totalServers);
+
             m_gameServers.clear();
             m_pendingQueries.clear();
             m_gameServers.reserve(_totalServers);
@@ -386,9 +383,6 @@ void Meta::processCmd()
     } break;
 	
     case LIST_RESP2: {
-        if (!m_gameServers.empty()) {
-            warning() << "Unpacking additional server list. ";
-        }
         _dataPtr = _data;
         while (_packed--)
         {
