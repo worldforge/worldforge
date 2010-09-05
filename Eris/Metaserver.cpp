@@ -347,6 +347,12 @@ void Meta::processCmd()
         //uint32_t _totalServers, _packed;
         _dataPtr = unpack_uint32(_totalServers, _data);
         unpack_uint32(_packed, _dataPtr);
+        // FIXME This assumes that the data received so far is all the servers, which
+        // in the case of fragmented server list it is not. Currently this code is generally
+        // of the size of packet receieved. As there should only ever be one packet incoming
+        // we should be able to make assumptions based on the amount of data in the buffer.
+        // The buffer should also contain a complete packet if it contains any, so retrieving
+        // data one byte at a time is less efficient than it might be.
         setupRecvData(_packed, LIST_RESP2);
 		
         // allow progress bars to setup, etc, etc
