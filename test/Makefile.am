@@ -60,7 +60,10 @@ Lobby_unittest_SOURCES = Lobby_unittest.cpp
 LogStream_unittest_SOURCES = LogStream_unittest.cpp
 Log_unittest_SOURCES = Log_unittest.cpp
 MetaQuery_unittest_SOURCES = MetaQuery_unittest.cpp
+
 Metaserver_unittest_SOURCES = Metaserver_unittest.cpp
+Metaserver_unittest_LDADD = ${top_builddir}/Eris/Metaserver.lo
+
 Operations_unittest_SOURCES = Operations_unittest.cpp
 Person_unittest_SOURCES = Person_unittest.cpp
 PollDefault_unittest_SOURCES = PollDefault_unittest.cpp
