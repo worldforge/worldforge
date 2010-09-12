@@ -65,6 +65,9 @@ class Segment {
     
     /// Areas which intersect this segment
     Areastore m_areas;
+
+    /// \brief List of TerrainMod objects that are applied to this Segment.
+    ModList m_modList;
   public:
     explicit Segment(int x, int y, unsigned int resolution);
     ~Segment();
@@ -190,6 +193,9 @@ class Segment {
     /// \brief Accessor for multimap of Area objects.
     const Areastore& getAreas() const
     { return m_areas; }
+
+    const ModList& getMods() const
+    { return m_modList; }
     
     void addArea(const Area* a);
     void removeArea(const Area* a);
@@ -207,9 +213,6 @@ class Segment {
     void applyMod(TerrainMod *t);
 
     void invalidateSurfaces();
-
-    /// \brief List of TerrainMod objects that are applied to this Segment.
-    ModList m_modList;
 
 };
 
