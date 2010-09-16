@@ -17,6 +17,25 @@ namespace Mercator {
 class TerrainMod
 {
 public:
+    class Context {
+      public:
+        Context();
+
+        virtual ~Context();
+
+        const std::string & id() { return m_id; }
+
+        void setId(const std::string &);
+      protected:
+        std::string m_id;
+    };
+
+    Context * context() { return m_context; }
+
+    void setContext(Context *);
+
+    TerrainMod();
+
     virtual ~TerrainMod();
 
     /// \brief Apply this modifier on a terrain segment
@@ -30,6 +49,8 @@ public:
 
     /// \brief Create a copy of this modifier.
     virtual TerrainMod *clone() const = 0;
+  protected:
+    Context * m_context;
 };
 
 /// \brief Terrain modifier which is defined by a shape variable.

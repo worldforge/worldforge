@@ -6,8 +6,31 @@
 
 namespace Mercator {
 
+TerrainMod::Context::Context()
+{
+}
+
+TerrainMod::Context::~Context()
+{
+}
+
+void TerrainMod::Context::setId(const std::string& id)
+{
+    m_id = id;
+}
+
+TerrainMod::TerrainMod() : m_context(0)
+{
+}
+
 TerrainMod::~TerrainMod()
 {
+    delete m_context;
+}
+
+void TerrainMod::setContext(TerrainMod::Context * c)
+{
+    m_context = c;
 }
 
 template class LevelTerrainMod<WFMath::Ball<2> >;

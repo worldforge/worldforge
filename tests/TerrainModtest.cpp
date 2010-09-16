@@ -8,6 +8,22 @@
 
 #include <iostream>
 
+int terrain_mod_context_test(Mercator::Terrain & terrain)
+{
+    const WFMath::Ball<2> circ2(WFMath::Point<2>(0.0,0.0), 12.0);
+    Mercator::LevelTerrainMod<WFMath::Ball<2> > mod2(10.0f, circ2);
+    Mercator::TerrainMod * mp = terrain.addMod(mod2);
+
+    mp->setContext(new Mercator::TerrainMod::Context);
+    mp->context()->setId("foo");
+
+    terrain.removeMod(mp);
+
+    delete mp;
+
+    return 0;
+}
+
 int main()
 {
     Mercator::Terrain terrain(Mercator::Terrain::SHADED);
@@ -56,5 +72,5 @@ int main()
 
     segment->populate();
 
-    return 0;
+    return terrain_mod_context_test(terrain);
 }
