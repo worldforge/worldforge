@@ -330,7 +330,7 @@ Segment * Terrain::getSegment(int x, int y) const
 /// for storing the TerrainMod objects, so the apropriate Segment objects
 /// are found and the TerrainMode is passed to each in turn.
 /// @param t reference to the TerrainMod object to be applied.
-TerrainMod * Terrain::addMod(const TerrainMod &t)
+void Terrain::addMod(TerrainMod * mod)
 {
 
     //work out which segments are overlapped by thus mod
@@ -338,7 +338,7 @@ TerrainMod * Terrain::addMod(const TerrainMod &t)
     //segments share edges. this ensures a mod along an edge
     //will affect both segments.
 
-    Rect mod_box = t.bbox();
+    Rect mod_box = mod->bbox();
 
     int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
@@ -354,8 +354,6 @@ TerrainMod * Terrain::addMod(const TerrainMod &t)
               << std::endl << std::flush;
 #endif // 0
 
-    TerrainMod * mod = t.clone();
-
     m_mods.insert(TerrainModstore::value_type(mod, mod_box));
 
     for (int i=lx;i<hx;++i) {
@@ -366,8 +364,6 @@ TerrainMod * Terrain::addMod(const TerrainMod &t)
             }
         } // of y loop
     } // of x loop
-
-    return mod;
 }
 
 void Terrain::updateMod(TerrainMod * mod)

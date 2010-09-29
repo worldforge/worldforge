@@ -145,7 +145,7 @@ class Terrain {
     void addShader(const Shader * t, int id);
     void removeShader(const Shader * t, int id);
     
-    TerrainMod * addMod(const TerrainMod &t);
+    void addMod(TerrainMod * t);
     void updateMod(TerrainMod * mod);
     void removeMod(TerrainMod * mod);
     
