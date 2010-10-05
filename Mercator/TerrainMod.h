@@ -30,7 +30,7 @@ public:
         std::string m_id;
     };
 
-    Context * context() { return m_context; }
+    Context * context() const { return m_context; }
 
     void setContext(Context *);
 
