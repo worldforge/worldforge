@@ -345,15 +345,6 @@ void Terrain::addMod(const TerrainMod * mod)
     int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
     int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
 
-#if 0
-    std::cout << "box: " << mod_box << std::endl
-              << "lx: " << lx
-              << "ly: " << ly
-              << "hx: " << hx
-              << "hy: " << hy
-              << std::endl << std::flush;
-#endif // 0
-
     m_mods.insert(TerrainModstore::value_type(mod, mod_box));
 
     for (int i=lx;i<hx;++i) {
