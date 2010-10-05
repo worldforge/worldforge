@@ -24,7 +24,7 @@ namespace Mercator {
 class Terrain;
 class Surface;
 class TerrainMod;
-typedef std::set<TerrainMod *> ModList;
+typedef std::set<const TerrainMod *> ModList;
 class Area;
 
 // This class will need to be reference counted if we want the code to
@@ -186,7 +186,7 @@ class Segment {
     /// \brief The 3d box covered by this segment
     WFMath::AxisBox<3> getBox() const;
 
-    void addMod(TerrainMod *t);
+    void addMod(const TerrainMod *t);
     void removeMod(TerrainMod *t);
     void clearMods();
     
@@ -210,7 +210,7 @@ class Segment {
     float qRMD(WFMath::MTRand& rng, float nn, float fn, float ff, float nf,
                float roughness, float falloff, int depth) const;
 
-    void applyMod(TerrainMod *t);
+    void applyMod(const TerrainMod *t);
 
     void invalidateSurfaces();
 

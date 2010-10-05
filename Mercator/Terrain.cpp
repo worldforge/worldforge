@@ -330,7 +330,7 @@ Segment * Terrain::getSegment(int x, int y) const
 /// for storing the TerrainMod objects, so the apropriate Segment objects
 /// are found and the TerrainMode is passed to each in turn.
 /// @param t reference to the TerrainMod object to be applied.
-void Terrain::addMod(TerrainMod * mod)
+void Terrain::addMod(const TerrainMod * mod)
 {
 
     //work out which segments are overlapped by thus mod

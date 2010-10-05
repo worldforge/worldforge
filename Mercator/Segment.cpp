@@ -597,7 +597,7 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
 ///
 /// Called from Terrain::addMod(). If this point data is already valid,
 /// the modification will be applied directly.
-void Segment::addMod(TerrainMod *t) 
+void Segment::addMod(const TerrainMod *t) 
 {
     m_modList.insert(t);
     if (isValid()) {
@@ -631,7 +631,7 @@ void Segment::clearMods()
 ///
 /// Usually called from Segment::populate(). It is not normally necessary to
 /// call this function from the application.
-void Segment::applyMod(TerrainMod *t) 
+void Segment::applyMod(const TerrainMod *t) 
 {
     int lx,hx,ly,hy;
     WFMath::AxisBox<2> bbox=t->bbox();

@@ -53,7 +53,7 @@ class Terrain {
     typedef std::map<const Area *, Rect> Areastore;
 
     /// \brief STL map to store height modifiers.
-    typedef std::map<TerrainMod *, Rect> TerrainModstore;
+    typedef std::map<const TerrainMod *, Rect> TerrainModstore;
 
     /// \brief value provided for no flags set.
     static const unsigned int DEFAULT = 0x0000;
@@ -145,7 +145,7 @@ class Terrain {
     void addShader(const Shader * t, int id);
     void removeShader(const Shader * t, int id);
     
-    void addMod(TerrainMod * t);
+    void addMod(const TerrainMod * t);
     void updateMod(TerrainMod * mod);
     void removeMod(TerrainMod * mod);
     
