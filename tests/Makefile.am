@@ -2,7 +2,8 @@ TESTS = mercatortest Terraintest Shadertest TerrainModtest Intersecttest \
         testPhys timeSeg Planttest Foresttest testQRNG Areatest \
         TileShadertest ShaderFactorytest testWFMath Buffertest \
         Segmenttest AreaShadertest BasePointtest DepthShadertest \
-        FillShadertest GrassShadertest ThresholdShadertest Matrixtest
+        FillShadertest GrassShadertest ThresholdShadertest Matrixtest \
+        TerrainaddAreatest
 
 INCLUDES = -I$(top_srcdir)
 
@@ -57,3 +58,6 @@ GrassShadertest_SOURCES = GrassShadertest.cpp
 ThresholdShadertest_SOURCES = ThresholdShadertest.cpp
 
 Matrixtest_SOURCES = Matrixtest.cpp
+
+TerrainaddAreatest_SOURCES = TerrainaddAreatest.cpp
+TerrainaddAreatest_LDADD = $(top_builddir)/Mercator/Terrain.lo
