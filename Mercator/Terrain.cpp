@@ -465,10 +465,11 @@ void Terrain::addArea(const Area * area)
             Shaderstore::const_iterator I = m_shaders.begin();
             Shaderstore::const_iterator Iend = m_shaders.end();
             for (; I != Iend; ++I) {
-                if (sss.count(I->first)) {
+                Segment::Surfacestore::const_iterator J = sss.find(I->first);
+                if (J != sss.end()) {
                     // segment already has a surface for this shader, mark it
                     // for re-generation
-                    sss[I->first]->invalidate();
+                    J->second->invalidate();
                     continue;
                 }
                 
