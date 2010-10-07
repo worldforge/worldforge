@@ -13,7 +13,9 @@
 
 // This is a relatively specific tests which ensures Terrain::addArea
 // behaves as defined with respect to invalidating surfaces, to verify
-// a refactoring.
+// a refactoring. Previous cases where std::map::count() was used followed
+// by [] are inefficient, and I wanted to verify consistent bahviour before
+// checking to use std::map::find()
 
 class TestShader : public Mercator::Shader {
   public:
