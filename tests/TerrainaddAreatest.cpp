@@ -82,6 +82,29 @@ int main()
     // We assert this to ensure that the buffer has been de-allocated
     // by a call to Surface::invalidate caused by adding the Area.
     assert(!sfce->isValid());
+
+    // force the surface to re-allocate
+    sfce->allocate();
+    assert(sfce->isValid());
+
+    // Modify the areas shape
+    p.addCorner(p.numCorners(), WFMath::Point<2>(-9, 12));
+    a1->setShape(p);
+
+    // and cause an area update
+    t.updateArea(a1);
+
+    // Check the surface has been invalidated again
+    assert(!sfce->isValid());
+
+    // force the surface to re-allocate
+    sfce->allocate();
+    assert(sfce->isValid());
+
+    t.removeArea(a1);
+
+    // Check the surface has been invalidated again
+    assert(!sfce->isValid());
 }
 
 // stubs
