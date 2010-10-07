@@ -524,10 +524,11 @@ void Terrain::updateArea(const Area * area)
             Shaderstore::const_iterator I = m_shaders.begin();
             Shaderstore::const_iterator Iend = m_shaders.end();
             for (; I != Iend; ++I) {
-                if (sss.count(I->first)) {
+                Segment::Surfacestore::const_iterator J = sss.find(I->first);
+                if (J != sss.end()) {
                     // segment already has a surface for this shader, mark it
                     // for re-generation
-                    sss[I->first]->invalidate();
+                    J->second->invalidate();
                     continue;
                 }
             }
@@ -594,19 +595,18 @@ void Terrain::removeArea(const Area * area)
             Shaderstore::const_iterator I = m_shaders.begin();
             Shaderstore::const_iterator Iend = m_shaders.end();
             for (; I != Iend; ++I) {
-                if (sss.count(I->first)) {
+                Segment::Surfacestore::iterator J = sss.find(I->first);
+                if (J != sss.end()) {
                     // segment already has a surface for this shader, mark it
                     // for re-generation
-                    Segment::Surfacestore::iterator II = sss.find(I->first);
-                    assert (II != sss.end());
-                    Surface *surface = II->second;
+                    Surface *surface = J->second;
                     surface->invalidate(); 
 
                     // If the shader no longer intersects, then remove it
                     // e.g. due to all areas for this shader being removed, 
                     // then we need to remove the surface.
                     if (I->second->checkIntersect(*s) == false) {
-                      sss.erase(II);
+                      sss.erase(J);
                       delete surface;
                     }
                 }
