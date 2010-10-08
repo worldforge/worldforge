@@ -133,7 +133,6 @@ int main(int argc, char* argv[])
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
     assert(a1->checkIntersects(*seg));
-    
 
     WFMath::Polygon<2> clipped = a1->clipToSegment(*seg);
     assert(clipped.isValid());
@@ -158,8 +157,16 @@ int main(int argc, char* argv[])
     assert(seg->getAreas().size() == 0);
     assert(seg->getAreas().count(1) == 0);
     assert(a1->checkIntersects(*seg) == false);
+
+    static const unsigned int seg_size = Mercator::defaultResolution;
     
-    // FIXME Modify the area.
+    p.clear();
+    p.addCorner(p.numCorners(), Point2(3 + seg_size, 4));
+    p.addCorner(p.numCorners(), Point2(10 + seg_size, 10));
+    p.addCorner(p.numCorners(), Point2(-1 + seg_size, 18));
+    p.addCorner(p.numCorners(), Point2(-8 + seg_size, 11));
+    
+    a1->setShape(p);
 
     terrain.updateArea(a1);
 
