@@ -508,11 +508,12 @@ void Terrain::updateArea(const Area * area)
             if (!s) {
                 continue;
             }
+
+            s->removeArea(area);
             
             if (!area->checkIntersects(*s)) {
                 // If the mod was in this area, need to remove it, but we
                 // have no way to be sure whether it was.
-                s->removeArea(area);
                 continue;
             }
             
