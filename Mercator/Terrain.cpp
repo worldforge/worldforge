@@ -511,11 +511,11 @@ void Terrain::updateArea(const Area * area)
 
             s->removeArea(area);
             
-            if (!area->checkIntersects(*s)) {
-                // If the mod was in this area, need to remove it, but we
-                // have no way to be sure whether it was.
-                continue;
-            }
+            // If the mod was in this area, need to remove it, but we
+            // have no way to be sure whether it was.
+            // if (!area->checkIntersects(*s)) {
+                // continue;
+            // }
             
             // FIXME Check here whether the segment already has it?
 
