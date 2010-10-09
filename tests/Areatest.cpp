@@ -91,7 +91,9 @@ int main(int argc, char* argv[])
     
     a1->setShape(p);
     
-    Mercator::Terrain terrain(Mercator::Terrain::SHADED, 8);
+    static const unsigned int seg_size = 8;
+    
+    Mercator::Terrain terrain(Mercator::Terrain::SHADED, seg_size);
 
     Mercator::AreaShader* ashade = new Mercator::AreaShader(1);
     terrain.addShader(ashade, 0);
@@ -158,8 +160,6 @@ int main(int argc, char* argv[])
     assert(seg->getAreas().count(1) == 0);
     assert(a1->checkIntersects(*seg) == false);
 
-    static const unsigned int seg_size = Mercator::defaultResolution;
-    
     p.clear();
     p.addCorner(p.numCorners(), Point2(3 + seg_size, 4));
     p.addCorner(p.numCorners(), Point2(10 + seg_size, 10));
@@ -171,6 +171,39 @@ int main(int argc, char* argv[])
     terrain.updateArea(a1);
 
     // FIXME Check the right changes have been made.
+    seg = terrain.getSegment(0,0);
+    assert(seg->getAreas().size() == 1);
+    assert(seg->getAreas().count(1) == 1);
+    assert(a1->checkIntersects(*seg));
+    
+    seg = terrain.getSegment(1,0);
+    assert(seg->getAreas().size() == 1);
+    assert(seg->getAreas().count(1) == 1);
+    assert(a1->checkIntersects(*seg));
+
+    clipped = a1->clipToSegment(*seg);
+    assert(clipped.isValid());
+    
+    seg = terrain.getSegment(-1,0);
+    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().count(1) == 0);
+    assert(a1->checkIntersects(*seg) == false);
+    
+    seg = terrain.getSegment(0,1);
+    assert(seg->getAreas().size() == 1);
+    assert(seg->getAreas().count(1) == 1);
+    assert(a1->checkIntersects(*seg));
+    
+    clipped = a1->clipToSegment(*seg);
+    assert(clipped.isValid());
+
+    seg = terrain.getSegment(2,0);
+    assert(seg->getAreas().size() == 1);
+    assert(seg->getAreas().count(1) == 1);
+    assert(a1->checkIntersects(*seg));
+
+    clipped = a1->clipToSegment(*seg);
+    assert(clipped.isValid());
 
     terrain.removeArea(a1);
 
