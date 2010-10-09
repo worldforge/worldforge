@@ -170,7 +170,6 @@ int main(int argc, char* argv[])
 
     terrain.updateArea(a1);
 
-    // FIXME Check the right changes have been made.
     seg = terrain.getSegment(0,0);
     assert(seg->getAreas().size() == 1);
     assert(seg->getAreas().count(1) == 1);
