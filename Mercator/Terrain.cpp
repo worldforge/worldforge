@@ -19,6 +19,8 @@
 
 #include <iostream>
 
+#include <cstdio>
+
 namespace Mercator {
 
 const float Terrain::defaultLevel = 8;
@@ -491,6 +493,8 @@ void Terrain::updateArea(const Area * area)
         return;
     }
 
+    std::set<Segment*> removed, added, updated;
+
     const Rect & old_box = I->second;
 
     int lx=I_ROUND(floor((old_box.lowCorner()[0] - 1) / m_res));
@@ -505,31 +509,8 @@ void Terrain::updateArea(const Area * area)
                 continue;
             }
 
-            s->removeArea(area);
-            
-            // If the mod was in this area, need to remove it, but we
-            // have no way to be sure whether it was.
-            // if (!area->checkIntersects(*s)) {
-                // continue;
-            // }
-            
-            // FIXME Check here whether the segment already has it?
+            removed.insert(s);
 
-            // Do we really need to do this? It looks like Segment::removeArea
-            // already invalidates all surfaces.
-            Segment::Surfacestore& sss(s->getSurfaces());
-            Shaderstore::const_iterator I = m_shaders.begin();
-            Shaderstore::const_iterator Iend = m_shaders.end();
-            for (; I != Iend; ++I) {
-                Segment::Surfacestore::const_iterator J = sss.find(I->first);
-                if (J != sss.end()) {
-                    // segment already has a surface for this shader, mark it
-                    // for re-generation
-                    J->second->invalidate();
-                    continue;
-                }
-            }
-    
         } // of y loop
     } // of x loop
 
@@ -544,14 +525,46 @@ void Terrain::updateArea(const Area * area)
             if (!s) {
                 continue;
             }
+
+            std::set<Segment*>::iterator J = removed.find(s);
+            if (J == removed.end()) {
+                added.insert(s);
+            } else {
+                updated.insert(s);
+                removed.erase(J);
+            }
             
-            area->addToSegment(*s);
-    
+            
             // It looks like Segment::removeArea already invalidates all
             // surfaces, but Terrain::addArea above does stuff to surfaces.
         } // of y loop
     } // of x loop
 
+    std::set<Segment*>::iterator J = removed.begin();
+    std::set<Segment*>::iterator Jend = removed.end();
+    for (; J != Jend; ++J) {
+        printf("removed %d,%d,\n", (*J)->getXRef(), (*J)->getYRef());
+
+        (*J)->removeArea(area);
+    }
+
+    J = added.begin();
+    Jend = added.end();
+    for (; J != Jend; ++J) {
+        printf("added %d,%d,\n", (*J)->getXRef(), (*J)->getYRef());
+        area->addToSegment(**J);
+    }
+
+    J = updated.begin();
+    Jend = updated.end();
+    for (; J != Jend; ++J) {
+        printf("updated %d,%d,\n", (*J)->getXRef(), (*J)->getYRef());
+        // FIXME Get it to update. Invalidate perhaps?
+        area->updateToSegment(**J);
+        // (*J)->updateArea(area);
+    }
+
+    // FIXME Don't re-insert, we have an iterator!
     m_areas.insert(Areastore::value_type(area, area->bbox()));
     // FIXME Do it first.
 }

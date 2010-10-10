@@ -135,8 +135,14 @@ int Segment::addArea(const Area *)
     return 0;
 }
 
+void Segment::updateArea(const Area *)
+{
+    invalidateSurfaces();
+}
+
 int Segment::removeArea(const Area *)
 {
+    invalidateSurfaces();
     return 0;
 }
 
@@ -172,6 +178,15 @@ WFMath::AxisBox<2> Segment::getRect() const
     WFMath::Point<2> lp(m_xRef, m_yRef), 
         hp(lp.x() + m_res, lp.y() + m_res);
     return WFMath::AxisBox<2>(lp, hp);
+}
+
+void Segment::invalidateSurfaces()
+{
+    Segment::Surfacestore::const_iterator I = m_surfaces.begin();
+    Segment::Surfacestore::const_iterator Iend = m_surfaces.end();
+    for(; I != Iend; ++I) {
+        I->second->invalidate();
+    }
 }
 
 Shader::Shader(bool color, bool alpha) : m_color(color), m_alpha(alpha)
