@@ -79,6 +79,31 @@ void testAreaShader()
     writePGMForSurface("test2.pgm", seg->getSize(), seg->getSurfaces()[0]);
 }
 
+static const unsigned int seg_size = 8;
+    
+void testAddToSegment()
+{
+    Mercator::Area* a1 = new Mercator::Area(1, false);
+    
+    WFMath::Polygon<2> p;
+    p.addCorner(p.numCorners(), Point2(1, 1));
+    p.addCorner(p.numCorners(), Point2(6, 1));
+    p.addCorner(p.numCorners(), Point2(6, 6));
+    p.addCorner(p.numCorners(), Point2(1, 6));
+    
+    a1->setShape(p);
+    
+    Mercator::Segment * seg1 = new Mercator::Segment(0,0,seg_size);
+
+    int success = a1->addToSegment(*seg1);
+    assert(success == 0);
+
+    Mercator::Segment * seg2 = new Mercator::Segment(1 * seg_size,0,seg_size);
+
+    success = a1->addToSegment(*seg2);
+    assert(success != 0);
+}
+
 int main(int argc, char* argv[])
 {
     Mercator::Area* a1 = new Mercator::Area(1, false);
@@ -90,8 +115,6 @@ int main(int argc, char* argv[])
     p.addCorner(p.numCorners(), Point2(-8, 11));
     
     a1->setShape(p);
-    
-    static const unsigned int seg_size = 8;
     
     Mercator::Terrain terrain(Mercator::Terrain::SHADED, seg_size);
 
@@ -223,6 +246,8 @@ int main(int argc, char* argv[])
     assert(seg->getAreas().count(1) == 0);
 
     testAreaShader();
+
+    testAddToSegment();
     
     return EXIT_SUCCESS;
 }

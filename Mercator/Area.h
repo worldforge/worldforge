@@ -66,6 +66,8 @@ public:
     {
         return m_shape;
     }
+
+    int addToSegment(Segment &) const;
     
     /**
     Test if a segment intersects this area
