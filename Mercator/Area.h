@@ -68,6 +68,7 @@ public:
     }
 
     int addToSegment(Segment &) const;
+    void updateToSegment(Segment &) const;
     
     /**
     Test if a segment intersects this area

@@ -245,6 +245,16 @@ int Area::addToSegment(Segment & s) const
     return s.addArea(this);
 }
 
+void Area::updateToSegment(Segment & s) const
+{
+    if (!checkIntersects(s)) {
+        s.removeArea(this);
+        return;
+    }
+    // FIXME There is a chance it doesn't have it yet.
+    s.updateArea(this);
+}
+
 WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const
 {
     // box reject
