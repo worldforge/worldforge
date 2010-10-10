@@ -662,9 +662,16 @@ int Segment::addArea(const Area* ar)
     return 0;
 }
 
-void Segment::updateArea(const Area* ar)
+void Segment::updateArea(const Area* area)
 {
-    invalidateSurfaces();
+    Areastore::iterator I = m_areas.lower_bound(area->getLayer());
+    Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
+    for (; I != Iend; ++I) {
+        if (I->second == area) {
+            invalidateSurfaces();
+            return;
+        }
+    }
 }
 
 /// \brief Remove an area from those that affect this segment.
