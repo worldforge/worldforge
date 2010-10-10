@@ -272,9 +272,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 Areastore::iterator I = m_areas.begin();
                 Areastore::iterator Iend = m_areas.end();
                 for (; I != Iend; ++I) {
-                    if (I->first->checkIntersects(*s)) {
-                        s->addArea(I->first);
-                    }
+                    I->first->addToSegment(*s);
                 }
 
                 TerrainModstore::iterator J = m_mods.begin();
