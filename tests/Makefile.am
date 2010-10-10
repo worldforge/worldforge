@@ -60,4 +60,5 @@ ThresholdShadertest_SOURCES = ThresholdShadertest.cpp
 Matrixtest_SOURCES = Matrixtest.cpp
 
 TerrainaddAreatest_SOURCES = TerrainaddAreatest.cpp
-TerrainaddAreatest_LDADD = $(top_builddir)/Mercator/Terrain.lo
+TerrainaddAreatest_LDADD = $(top_builddir)/Mercator/Terrain.lo \
+                           $(top_builddir)/Mercator/Area.lo

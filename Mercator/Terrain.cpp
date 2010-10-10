@@ -453,11 +453,9 @@ void Terrain::addArea(const Area * area)
                 continue;
             }
             
-            if (!area->checkIntersects(*s)) {
+            if (area->addToSegment(*s) != 0) {
                 continue;
             }
-
-            s->addArea(area);
             
             // Do we really need to do this? It looks like Segment::addArea
             // already invalidates all surfaces.
@@ -549,13 +547,7 @@ void Terrain::updateArea(const Area * area)
                 continue;
             }
             
-            if (!area->checkIntersects(*s)) {
-                continue;
-            }
-
-            // FIXME Check here whether the segment already has it?
-            
-            s->addArea(area);
+            area->addToSegment(*s);
     
             // It looks like Segment::removeArea already invalidates all
             // surfaces, but Terrain::addArea above does stuff to surfaces.

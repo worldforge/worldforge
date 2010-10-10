@@ -167,6 +167,13 @@ void Segment::getHeightAndNormal(float, float,
 {
 }
 
+WFMath::AxisBox<2> Segment::getRect() const
+{
+    WFMath::Point<2> lp(m_xRef, m_yRef), 
+        hp(lp.x() + m_res, lp.y() + m_res);
+    return WFMath::AxisBox<2>(lp, hp);
+}
+
 Shader::Shader(bool color, bool alpha) : m_color(color), m_alpha(alpha)
 {
 }
@@ -178,22 +185,6 @@ Shader::~Shader()
 Surface * Shader::newSurface(const Segment &) const
 {
     return 0;
-}
-
-Area::Area(int, bool)
-{
-}
-
-bool Area::checkIntersects(const Mercator::Segment &) const
-{
-    return true;
-}
-
-void Area::setShape(const WFMath::Polygon<2>& p)
-{
-    assert(p.isValid());
-    m_shape = p;
-    m_box = p.boundingBox();
 }
 
 Surface::Surface(const Segment & seg, const Shader & sh, bool color, bool alpha)
