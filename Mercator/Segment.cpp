@@ -666,7 +666,6 @@ int Segment::removeArea(const Area* area)
 {
     Areastore::iterator I = m_areas.lower_bound(area->getLayer());
     Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
-    // FIXME are we allowed to call erase while iterating?
     for (; I != Iend; ++I) {
         if (I->second == area) {
             m_areas.erase(I);
