@@ -198,6 +198,7 @@ class Segment {
     { return m_modList; }
     
     int addArea(const Area* a);
+    void updateArea(const Area* a);
     int removeArea(const Area* a);
   private:
     void checkMaxMin(float h);

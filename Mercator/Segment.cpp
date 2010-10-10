@@ -662,6 +662,11 @@ int Segment::addArea(const Area* ar)
     return 0;
 }
 
+void Segment::updateArea(const Area* ar)
+{
+    invalidateSurfaces();
+}
+
 /// \brief Remove an area from those that affect this segment.
 int Segment::removeArea(const Area* area)
 {
