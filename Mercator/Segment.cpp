@@ -653,25 +653,30 @@ void Segment::applyMod(const TerrainMod *t)
 /// Call from Terrain when an Area is added which is found to intersect this
 /// segment.
 /// @param ar the area to be added.
-void Segment::addArea(const Area* ar)
+/// @return zero if the area was added, non-zero otherwise
+int Segment::addArea(const Area* ar)
 {
     m_areas.insert(Areastore::value_type(ar->getLayer(), ar));
     invalidateSurfaces();
+    return 0;
 }
 
 /// \brief Remove an area from those that affect this segment.
-void Segment::removeArea(const Area* area)
+int Segment::removeArea(const Area* area)
 {
     Areastore::iterator I = m_areas.lower_bound(area->getLayer());
     Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
+    // FIXME are we allowed to call erase while iterating?
     while (I != Iend) {
         Areastore::iterator II = I;
         ++I;
         if (II->second == area) {
             m_areas.erase(II);
+            invalidateSurfaces();
+            return 0;
         }
     }
-    invalidateSurfaces();
+    return -1;
 }
 
 WFMath::AxisBox<2> Segment::getRect() const

@@ -197,8 +197,8 @@ class Segment {
     const ModList& getMods() const
     { return m_modList; }
     
-    void addArea(const Area* a);
-    void removeArea(const Area* a);
+    int addArea(const Area* a);
+    int removeArea(const Area* a);
   private:
     void checkMaxMin(float h);
 

@@ -130,12 +130,14 @@ void Segment::populateSurfaces()
 {
 }
 
-void Segment::addArea(const Area *)
+int Segment::addArea(const Area *)
 {
+    return 0;
 }
 
-void Segment::removeArea(const Area *)
+int Segment::removeArea(const Area *)
 {
+    return 0;
 }
 
 void Segment::addMod(const TerrainMod *)
