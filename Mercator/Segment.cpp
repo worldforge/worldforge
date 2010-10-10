@@ -657,6 +657,7 @@ void Segment::applyMod(const TerrainMod *t)
 int Segment::addArea(const Area* ar)
 {
     m_areas.insert(Areastore::value_type(ar->getLayer(), ar));
+    // FIXME it should be possible to do something a little more fine grained
     invalidateSurfaces();
     return 0;
 }
@@ -669,6 +670,8 @@ int Segment::removeArea(const Area* area)
     for (; I != Iend; ++I) {
         if (I->second == area) {
             m_areas.erase(I);
+            // FIXME it should be possible to do something a little more fines
+            // grained
             invalidateSurfaces();
             return 0;
         }
