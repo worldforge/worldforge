@@ -45,6 +45,7 @@ Buffertest_SOURCES = Buffertest.cpp
 Buffertest_LDADD = $(top_builddir)/Mercator/Buffer.lo
 
 Segmenttest_SOURCES = Segmenttest.cpp
+Segmenttest_LDADD = $(top_builddir)/Mercator/Segment.lo
 
 AreaShadertest_SOURCES = AreaShadertest.cpp
 
