@@ -28,6 +28,7 @@ testPhys_SOURCES = testPhys.cpp
 timeSeg_SOURCES = timeSeg.cpp util_timer.h util_timer.cpp
 
 Planttest_SOURCES = Planttest.cpp
+Planttest_LDADD = $(top_builddir)/Mercator/Plant.lo
 
 Foresttest_SOURCES = Foresttest.cpp
 
