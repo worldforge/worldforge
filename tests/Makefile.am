@@ -11,6 +11,8 @@ LDADD = $(top_builddir)/Mercator/libmercator-0.2.la
 
 DISTCLEANFILES = test1.pgm test2.pgm
 
+RECHECK_LOGS =
+
 check_PROGRAMS = $(TESTS)
 
 mercatortest_SOURCES = main.cpp
