@@ -42,12 +42,14 @@ ShaderFactorytest_SOURCES = ShaderFactorytest.cpp
 testWFMath_SOURCES = testWFMath.cpp
 
 Buffertest_SOURCES = Buffertest.cpp
+Buffertest_LDADD = $(top_builddir)/Mercator/Buffer.lo
 
 Segmenttest_SOURCES = Segmenttest.cpp
 
 AreaShadertest_SOURCES = AreaShadertest.cpp
 
 BasePointtest_SOURCES = BasePointtest.cpp
+BasePointtest_LDADD = $(top_builddir)/Mercator/BasePoint.lo
 
 DepthShadertest_SOURCES = DepthShadertest.cpp
 
@@ -58,6 +60,7 @@ GrassShadertest_SOURCES = GrassShadertest.cpp
 ThresholdShadertest_SOURCES = ThresholdShadertest.cpp
 
 Matrixtest_SOURCES = Matrixtest.cpp
+Matrixtest_LDADD = $(top_builddir)/Mercator/Matrix.lo
 
 TerrainaddAreatest_SOURCES = TerrainaddAreatest.cpp
 TerrainaddAreatest_LDADD = $(top_builddir)/Mercator/Terrain.lo \

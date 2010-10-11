@@ -12,3 +12,25 @@ int main()
 
     return 0;
 }
+
+// stubs
+
+namespace Mercator {
+
+Segment::Segment(int x, int y, unsigned int resolution) :
+                 m_res(resolution),
+                 m_size(m_res+1),
+                 m_xRef(x),
+                 m_yRef(y)
+{
+}
+
+Segment::~Segment()
+{
+}
+
+const float BasePoint::HEIGHT = 8.0;
+const float BasePoint::ROUGHNESS = 1.25;
+const float BasePoint::FALLOFF = 0.25;
+
+}
