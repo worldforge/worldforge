@@ -135,9 +135,10 @@ int Segment::addArea(const Area *)
     return 0;
 }
 
-void Segment::updateArea(const Area *)
+int Segment::updateArea(const Area *)
 {
     invalidateSurfaces();
+    return 0;
 }
 
 int Segment::removeArea(const Area *)
