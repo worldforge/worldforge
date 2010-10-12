@@ -252,7 +252,9 @@ void Area::updateToSegment(Segment & s) const
         return;
     }
     // FIXME There is a chance it doesn't have it yet.
-    s.updateArea(this);
+    if (s.updateArea(this) != 0) {
+        s.addArea(this);
+    }
 }
 
 WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const
