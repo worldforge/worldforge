@@ -26,6 +26,7 @@ stamp-h1
 server/buildid.cpp
 tests/mercatortest
 tests/*test
+tests/*.log
 tests/timeSeg
 tests/testPhys
 tests/testQRNG
