@@ -93,17 +93,19 @@ void Terrain::removeShader(const Shader * t, int id)
     m_shaders.erase(m_shaders.find(id));
 
     // Delete all surfaces for this shader
-    for (Segmentstore::iterator I = m_segments.begin();
-         I!=m_segments.end(); ++I) {
-        for (Segmentcolumn::iterator J = I->second.begin();
-             J != I->second.end(); ++J) {
+    Segmentstore::const_iterator I = m_segments.begin();
+    Segmentstore::const_iterator Iend = m_segments.end();
+    for (; I != Iend; ++I) {
+        Segmentcolumn::const_iterator J = I->second.begin();
+        Segmentcolumn::const_iterator Jend = I->second.end();
+        for (; J != Jend; ++J) {
             Segment *seg=J->second;
 
             Segment::Surfacestore & sss = seg->getSurfaces();
-            Segment::Surfacestore::iterator I = sss.find(id);
-            if (I != sss.end()) {
-                delete I->second;
-                sss.erase(I);
+            Segment::Surfacestore::iterator K = sss.find(id);
+            if (K != sss.end()) {
+                delete K->second;
+                sss.erase(K);
             }
         }
     }
