@@ -43,11 +43,13 @@ Terrain::Terrain(unsigned int options, unsigned int resolution) : m_options(opti
 /// Probably need to be fixed.
 Terrain::~Terrain()
 {
-    for (Segmentstore::iterator I = m_segments.begin(); 
-         I!=m_segments.end(); ++I) {
-        for (Segmentcolumn::iterator J = I->second.begin(); 
-             J != I->second.end(); ++J) {
-            Segment *s=J->second;
+    Segmentstore::const_iterator I = m_segments.begin(); 
+    Segmentstore::const_iterator Iend = m_segments.end();
+    for (; I != Iend; ++I) {
+        Segmentcolumn::const_iterator J = I->second.begin(); 
+        Segmentcolumn::const_iterator Jend = I->second.end(); 
+        for (; J != Jend; ++J) {
+            Segment * s = J->second;
             if (s) delete s;
         }
     }
@@ -65,10 +67,12 @@ void Terrain::addShader(const Shader * t, int id)
     
     m_shaders[id] = t;
     
-    for (Segmentstore::iterator I = m_segments.begin(); 
-         I!=m_segments.end(); ++I) {
-        for (Segmentcolumn::iterator J = I->second.begin(); 
-             J != I->second.end(); ++J) {
+    Segmentstore::const_iterator I = m_segments.begin(); 
+    Segmentstore::const_iterator Iend = m_segments.end(); 
+    for (; I != Iend; ++I) {
+        Segmentcolumn::const_iterator J = I->second.begin(); 
+        Segmentcolumn::const_iterator Jend = I->second.end(); 
+        for (; J != Jend; ++J) {
             Segment *seg=J->second;
             if (!t->checkIntersect(*seg)) {
                 continue;
