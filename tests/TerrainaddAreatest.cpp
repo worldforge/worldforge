@@ -38,7 +38,7 @@ int main()
 
     // Create a test area with a shape which intersects
     // the Segment at 0,0
-    Mercator::Area* a1 = new Mercator::Area(1, false);
+    Mercator::Area* a1 = new Mercator::Area(0, false);
     
     WFMath::Polygon<2> p;
     p.addCorner(p.numCorners(), WFMath::Point<2>(3, 4));
