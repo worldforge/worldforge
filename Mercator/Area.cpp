@@ -219,7 +219,8 @@ WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, Cli
 
 Area::Area(int layer, bool hole) :
     m_layer(layer),
-    m_hole(hole)
+    m_hole(hole),
+    m_shader(0)
 {
 }
 
@@ -228,6 +229,11 @@ void Area::setShape(const WFMath::Polygon<2>& p)
     assert(p.isValid());
     m_shape = p;
     m_box = p.boundingBox();
+}
+
+void Area::setShader(const Shader * shader) const
+{
+    m_shader = shader;
 }
 
 bool Area::contains(double x, double y) const

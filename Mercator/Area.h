@@ -12,6 +12,7 @@ namespace Mercator
 {
 
 class Segment;
+class Shader;
 
 /// \brief Region of terrain surface which is modified.
 ///
@@ -40,6 +41,8 @@ public:
     /// Set the geometric shape of this area.
     void setShape(const WFMath::Polygon<2>& p);
 
+    void setShader(const Shader * shader) const;
+
     /// Determine if a point is contained by the shape of this area.
     bool contains(double x, double y) const;
 
@@ -65,6 +68,11 @@ public:
     const WFMath::Polygon<2> & shape() const
     {
         return m_shape;
+    }
+
+    const Shader * getShader() const
+    {
+        return m_shader;
     }
 
     int addToSegment(Segment &) const;
@@ -93,6 +101,8 @@ private:
     WFMath::Polygon<2> m_shape;
     /// The bounding box of the geometric shape.
     WFMath::AxisBox<2> m_box;
+    /// Shader that shades this area
+    mutable const Shader * m_shader;
 };
 
 }
