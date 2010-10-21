@@ -445,6 +445,14 @@ void Terrain::removeMod(TerrainMod * mod)
 /// to the surface.
 void Terrain::addArea(const Area * area)
 {
+    int layer = area->getLayer();
+
+    Shaderstore::const_iterator I = m_shaders.find(layer);
+    if (I != m_shaders.end()) {
+        area->setShader(I->second);
+    }
+    
+
     m_areas.insert(Areastore::value_type(area, area->bbox()));
 
     int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
@@ -471,31 +479,29 @@ void Terrain::addArea(const Area * area)
             // have to create the surface. It should not be necessary to call
             // the shader, as we don't care if it intersects. If there is
             // an area on the layer, then it is affected.
+
             Segment::Surfacestore& sss(s->getSurfaces());
-            Shaderstore::const_iterator I = m_shaders.begin();
-            Shaderstore::const_iterator Iend = m_shaders.end();
-            for (; I != Iend; ++I) {
-                Segment::Surfacestore::const_iterator J = sss.find(I->first);
-                if (J != sss.end()) {
-                    // segment already has a surface for this shader, mark it
-                    // for re-generation
-                    J->second->invalidate();
-                    continue;
-                }
-                
-                // Once we are only processing the correct layer, this
-                // test becomes entirely wrong. In the case of non-AreaShader
-                // layers, this gives the wrong answer, and in the case
-                // of AreaShader always returns true. Once we arrive here
-                // we know that the area affects this Segment. This call
-                // serves no purpose.
-                if (!I->second->checkIntersect(*s)) {
-                    continue;
-                }
-        
-                sss[I->first] = I->second->newSurface(*s);
+
+            // If this segment has not been shaded at all yet, we have nothing
+            // to do. A surface will be created for this area later when the
+            // whole segment is done.
+            if (sss.empty()) {
+                continue;
             }
-    
+
+            Segment::Surfacestore::const_iterator J = sss.find(area->getLayer());
+            if (J != sss.end()) {
+                // segment already has a surface for this shader, mark it
+                // for re-generation
+                J->second->invalidate();
+                continue;
+            }
+
+            if (area->getShader() == 0) {
+                continue;
+            }
+            
+            sss[area->getLayer()] = area->getShader()->newSurface(*s);
         } // of y loop
     } // of x loop
 
