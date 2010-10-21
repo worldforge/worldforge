@@ -33,7 +33,6 @@ void Surface::populate()
         allocate();
     }
 
-    assert(m_shader.checkIntersect(m_segment));
     m_shader.shade(*this);
 }
 
