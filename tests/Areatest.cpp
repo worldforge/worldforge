@@ -3,6 +3,7 @@
 #include <Mercator/Segment.h>
 #include <Mercator/Surface.h>
 #include <Mercator/AreaShader.h>
+#include <Mercator/FillShader.h>
 
 #include <cstdlib>
 #include <cassert>
@@ -54,8 +55,12 @@ void testAreaShader()
     
     Mercator::Terrain terrain(Mercator::Terrain::SHADED, 16);
     
+    Mercator::Shader * base_shader =
+          new Mercator::FillShader(Mercator::Shader::Parameters());
+    terrain.addShader(base_shader, 0);
+
     Mercator::AreaShader* ashade = new Mercator::AreaShader(1);
-    terrain.addShader(ashade, 0);
+    terrain.addShader(ashade, 1);
     
     terrain.setBasePoint(0, 0, -1);
     terrain.setBasePoint(0, 1, 8);
@@ -71,12 +76,12 @@ void testAreaShader()
     assert(a1->checkIntersects(*seg));
     
     seg->populateSurfaces();
-    writePGMForSurface("test1.pgm", seg->getSize(), seg->getSurfaces()[0]);
+    writePGMForSurface("test1.pgm", seg->getSize(), seg->getSurfaces()[1]);
     
     
     seg = terrain.getSegment(1,0);    
     seg->populateSurfaces();
-    writePGMForSurface("test2.pgm", seg->getSize(), seg->getSurfaces()[0]);
+    writePGMForSurface("test2.pgm", seg->getSize(), seg->getSurfaces()[1]);
 }
 
 static const unsigned int seg_size = 8;
