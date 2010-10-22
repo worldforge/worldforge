@@ -365,7 +365,7 @@ void Terrain::addMod(const TerrainMod * mod)
 
 void Terrain::updateMod(TerrainMod * mod)
 {
-    TerrainModstore::const_iterator I = m_mods.find(mod);
+    TerrainModstore::iterator I = m_mods.find(mod);
 
     if (I == m_mods.end()) {
         return;
@@ -403,7 +403,7 @@ void Terrain::updateMod(TerrainMod * mod)
         } // of y loop
     } // of x loop
 
-    m_mods.insert(TerrainModstore::value_type(mod, mod_box));
+    m_mods.insert(I, TerrainModstore::value_type(mod, mod_box));
     // FIXME FIX it.
 }
 
