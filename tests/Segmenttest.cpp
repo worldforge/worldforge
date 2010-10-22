@@ -34,6 +34,7 @@ int main()
 
 // stubs
 
+#include <Mercator/Shader.h>
 #include <Mercator/Surface.h>
 
 namespace Mercator {
@@ -44,6 +45,11 @@ const float BasePoint::FALLOFF = 0.25;
 
 void Surface::populate()
 {
+}
+
+Surface * Shader::newSurface(const Segment & segment) const
+{
+    return 0;
 }
 
 }

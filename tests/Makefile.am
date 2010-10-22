@@ -68,4 +68,5 @@ Matrixtest_LDADD = $(top_builddir)/Mercator/Matrix.lo
 
 TerrainaddAreatest_SOURCES = TerrainaddAreatest.cpp
 TerrainaddAreatest_LDADD = $(top_builddir)/Mercator/Terrain.lo \
+                           $(top_builddir)/Mercator/Segment.lo \
                            $(top_builddir)/Mercator/Area.lo

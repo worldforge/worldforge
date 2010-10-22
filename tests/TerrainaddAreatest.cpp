@@ -117,79 +117,6 @@ int main()
 
 namespace Mercator {
 
-Segment::Segment(int x, int y, unsigned int r) : m_res(r), m_size(r + 1),
-                                                 m_xRef(x), m_yRef(y)
-{
-}
-
-Segment::~Segment()
-{
-}
-
-void Segment::populateSurfaces()
-{
-}
-
-int Segment::addArea(const Area *)
-{
-    return 0;
-}
-
-int Segment::updateArea(const Area *)
-{
-    invalidateSurfaces();
-    return 0;
-}
-
-int Segment::removeArea(const Area *)
-{
-    invalidateSurfaces();
-    return 0;
-}
-
-void Segment::addMod(const TerrainMod *)
-{
-}
-
-void Segment::removeMod(TerrainMod *)
-{
-}
-
-void Segment::invalidate(bool)
-{
-}
-
-bool Segment::clipToSegment(const WFMath::AxisBox<2> &,
-                            int &,
-                            int &,
-                            int &,
-                            int &) const
-{
-    return true;
-}
-
-void Segment::getHeightAndNormal(float, float,
-                                 float &,
-                                 WFMath::Vector<3> &) const
-{
-}
-
-WFMath::AxisBox<2> Segment::getRect() const
-{
-    WFMath::Point<2> lp(m_xRef, m_yRef), 
-        hp(lp.x() + m_res, lp.y() + m_res);
-    return WFMath::AxisBox<2>(lp, hp);
-}
-
-void Segment::invalidateSurfaces()
-{
-    Segment::Surfacestore::const_iterator I = m_surfaces.begin();
-    Segment::Surfacestore::const_iterator Iend = m_surfaces.end();
-    for(; I != Iend; ++I) {
-        I->second->invalidate();
-    }
-}
-
 Shader::Shader(bool color, bool alpha) : m_color(color), m_alpha(alpha)
 {
 }
@@ -209,6 +136,10 @@ Surface::Surface(const Segment & seg, const Shader & sh, bool color, bool alpha)
 }
 
 Surface::~Surface()
+{
+}
+
+void Surface::populate()
 {
 }
 
