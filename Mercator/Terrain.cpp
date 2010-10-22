@@ -522,10 +522,6 @@ void Terrain::updateArea(const Area * area)
                 updated.insert(s);
                 removed.erase(J);
             }
-            
-            
-            // It looks like Segment::removeArea already invalidates all
-            // surfaces, but Terrain::addArea above does stuff to surfaces.
         } // of y loop
     } // of x loop
 
@@ -534,7 +530,7 @@ void Terrain::updateArea(const Area * area)
     for (; J != Jend; ++J) {
         printf("removed %d,%d,\n", (*J)->getXRef(), (*J)->getYRef());
 
-        (*J)->removeArea(area);
+        area->removeFromSegment(**J);
     }
 
     J = added.begin();
@@ -582,7 +578,7 @@ void Terrain::removeArea(const Area * area)
                 continue;
             }
 
-            s->removeArea(area);
+            area->removeFromSegment(*s);
     
         } // of y loop
     } // of x loop
