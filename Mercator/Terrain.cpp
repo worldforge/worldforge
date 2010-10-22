@@ -583,20 +583,6 @@ void Terrain::removeArea(const Area * area)
             }
 
             s->removeArea(area);
-
-            // TODO(alriddoch,2010-10-22):
-            // Copy the code from AreaShader::checkIntersects
-            // into Area::removeFromSegment or something, and then
-            // work out what to do to determine what type of surface
-            // we are dealing with.
-            Segment::Surfacestore& sss(s->getSurfaces());
-
-            Segment::Surfacestore::const_iterator J = sss.find(area->getLayer());
-            if (J != sss.end()) {
-                // segment already has a surface for this shader, mark it
-                // for re-generation
-                J->second->invalidate();
-            }
     
         } // of y loop
     } // of x loop

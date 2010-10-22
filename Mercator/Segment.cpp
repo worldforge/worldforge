@@ -704,6 +704,20 @@ int Segment::removeArea(const Area* area)
     for (; I != Iend; ++I) {
         if (I->second == area) {
             m_areas.erase(I);
+
+            // TODO(alriddoch,2010-10-22):
+            // Copy the code from AreaShader::checkIntersects
+            // into Area::removeFromSegment or something, and then
+            // work out what to do to determine what type of surface
+            // we are dealing with.
+
+            Segment::Surfacestore::const_iterator J = m_surfaces.find(area->getLayer());
+            if (J != m_surfaces.end()) {
+                // segment already has a surface for this shader, mark it
+                // for re-generation
+                J->second->invalidate();
+            }
+
             return 0;
         }
     }
