@@ -14,6 +14,7 @@
 #include <Mercator/Surface.h>
 #include <Mercator/BasePoint.h>
 #include <Mercator/Area.h>
+#include <Mercator/Shader.h>
 
 #include <wfmath/MersenneTwister.h>
 
@@ -657,6 +658,28 @@ void Segment::applyMod(const TerrainMod *t)
 int Segment::addArea(const Area* ar)
 {
     m_areas.insert(Areastore::value_type(ar->getLayer(), ar));
+
+    // If this segment has not been shaded at all yet, we have nothing
+    // to do. A surface will be created for this area later when the
+    // whole segment is done.
+    if (m_surfaces.empty()) {
+        return 0;
+    }
+
+    Segment::Surfacestore::const_iterator J = m_surfaces.find(ar->getLayer());
+    if (J != m_surfaces.end()) {
+        // segment already has a surface for this shader, mark it
+        // for re-generation
+        J->second->invalidate();
+        return 0;
+    }
+
+    if (ar->getShader() == 0) {
+        return 0;
+    }
+    
+    m_surfaces[ar->getLayer()] = ar->getShader()->newSurface(*this);
+
     return 0;
 }
 

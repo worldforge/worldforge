@@ -467,34 +467,7 @@ void Terrain::addArea(const Area * area)
                 continue;
             }
             
-            if (area->addToSegment(*s) != 0) {
-                continue;
-            }
-            
-            // TODO(alriddoch,2010-10-22): Do from Area::addToSegment.
-
-            Segment::Surfacestore& sss(s->getSurfaces());
-
-            // If this segment has not been shaded at all yet, we have nothing
-            // to do. A surface will be created for this area later when the
-            // whole segment is done.
-            if (sss.empty()) {
-                continue;
-            }
-
-            Segment::Surfacestore::const_iterator J = sss.find(area->getLayer());
-            if (J != sss.end()) {
-                // segment already has a surface for this shader, mark it
-                // for re-generation
-                J->second->invalidate();
-                continue;
-            }
-
-            if (area->getShader() == 0) {
-                continue;
-            }
-            
-            sss[area->getLayer()] = area->getShader()->newSurface(*s);
+            area->addToSegment(*s);
         } // of y loop
     } // of x loop
 
