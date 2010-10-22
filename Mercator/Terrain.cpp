@@ -476,7 +476,7 @@ void Terrain::addArea(const Area * area)
 /// \brief Apply changes to an area modifier to the terrain.
 void Terrain::updateArea(const Area * area)
 {
-    Areastore::const_iterator I = m_areas.find(area);
+    Areastore::iterator I = m_areas.find(area);
 
     if (I == m_areas.end()) {
         return;
@@ -554,7 +554,7 @@ void Terrain::updateArea(const Area * area)
     }
 
     // FIXME Don't re-insert, we have an iterator!
-    m_areas.insert(Areastore::value_type(area, area->bbox()));
+    m_areas.insert(I, Areastore::value_type(area, area->bbox()));
     // FIXME Do it first.
 }
 
