@@ -471,14 +471,7 @@ void Terrain::addArea(const Area * area)
                 continue;
             }
             
-            // TODO(alriddoch,2010-10-19): We only need to do part of this
-            // as the area only applies to the layer it is configured for.
-            // Generally it should invalidate that surface, which it can
-            // do from Area::addToSegment. The complexity comes where
-            // we add an area to a layer for the first time. Here we probably
-            // have to create the surface. It should not be necessary to call
-            // the shader, as we don't care if it intersects. If there is
-            // an area on the layer, then it is affected.
+            // TODO(alriddoch,2010-10-22): Do from Area::addToSegment.
 
             Segment::Surfacestore& sss(s->getSurfaces());
 
@@ -618,33 +611,18 @@ void Terrain::removeArea(const Area * area)
 
             s->removeArea(area);
 
-            Segment::Surfacestore& sss = s->getSurfaces();
-            Shaderstore::const_iterator I = m_shaders.begin();
-            Shaderstore::const_iterator Iend = m_shaders.end();
-            for (; I != Iend; ++I) {
-                Segment::Surfacestore::iterator J = sss.find(I->first);
-                if (J != sss.end()) {
-                    // segment already has a surface for this shader, mark it
-                    // for re-generation
-                    Surface *surface = J->second;
-                    surface->invalidate(); 
+            // TODO(alriddoch,2010-10-22):
+            // Copy the code from AreaShader::checkIntersects
+            // into Area::removeFromSegment or something, and then
+            // work out what to do to determine what type of surface
+            // we are dealing with.
+            Segment::Surfacestore& sss(s->getSurfaces());
 
-                    // If the shader no longer intersects, then remove it
-                    // e.g. due to all areas for this shader being removed, 
-                    // then we need to remove the surface.
-                    // TODO(alriddoch,2010-10-19): This is a useful test,
-                    // but all it actually needs to do is determine if other
-                    // areas exist, which can be done without reference
-                    // to the shader, except where this surface is not just
-                    // areas. Copy the code from AreaShader::checkIntersects
-                    // into Area::removeFromSegment or something, and then
-                    // work out what to do to determine what type of surface
-                    // we are dealing with.
-                    if (I->second->checkIntersect(*s) == false) {
-                      sss.erase(J);
-                      delete surface;
-                    }
-                }
+            Segment::Surfacestore::const_iterator J = sss.find(area->getLayer());
+            if (J != sss.end()) {
+                // segment already has a surface for this shader, mark it
+                // for re-generation
+                J->second->invalidate();
             }
     
         } // of y loop
