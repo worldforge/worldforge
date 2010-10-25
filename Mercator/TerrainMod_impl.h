@@ -9,17 +9,17 @@
 
 namespace Mercator {
 
+template <typename Shape>
+ShapeTerrainMod<Shape>::ShapeTerrainMod(const Shape &s) : m_shape(s)
+{
+    m_box = m_shape.boundingBox();
+}
+
+
 template <typename Shape> ShapeTerrainMod<Shape>::~ShapeTerrainMod()
 {
 }
     
-template <typename Shape>
-WFMath::AxisBox<2> ShapeTerrainMod<Shape>::bbox() const
-{
-    return m_shape.boundingBox();
-}
-
-
 template <typename Shape> LevelTerrainMod<Shape>::~LevelTerrainMod()
 {
 }

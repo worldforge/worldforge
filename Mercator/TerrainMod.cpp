@@ -66,7 +66,7 @@ template class LevelTerrainMod<WFMath::RotBox<2> >;
 CraterTerrainMod::CraterTerrainMod(const WFMath::Ball<3> &s) : m_shape(s)
 {
     WFMath::AxisBox<3> bb=m_shape.boundingBox();
-    ab = WFMath::AxisBox<2> (
+    m_box = WFMath::AxisBox<2> (
                 WFMath::Point<2>(bb.lowerBound(0), bb.lowerBound(1)),
                 WFMath::Point<2>(bb.upperBound(0), bb.upperBound(1))
            );
@@ -76,11 +76,6 @@ CraterTerrainMod::~CraterTerrainMod()
 {
 }
     
-WFMath::AxisBox<2> CraterTerrainMod::bbox() const
-{
-    return ab;
-}
-
 void CraterTerrainMod::apply(float &point, int x, int y) const
 {
     if (Contains(m_shape,WFMath::Point<3>(x,y,point),true)) {

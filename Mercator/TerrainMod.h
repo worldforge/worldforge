@@ -36,6 +36,12 @@ public:
 
     void setContext(Context *);
 
+    /// Accessor for the bounding box of the geometric shape.
+    const WFMath::AxisBox<2> & bbox() const
+    {
+        return m_box;
+    }
+
     TerrainMod();
 
     virtual ~TerrainMod();
@@ -50,13 +56,13 @@ public:
     /// Output is placed into point.
     virtual void apply(float &point, int x, int y) const = 0;
 
-    /// \brief Get the boundingbox of the modifier.
-    virtual WFMath::AxisBox<2> bbox() const = 0;
-
     /// \brief Create a copy of this modifier.
     virtual TerrainMod *clone() const = 0;
   protected:
     Context * m_context;
+    /// The bounding box of the geometric shape.
+    WFMath::AxisBox<2> m_box;
+
 };
 
 /// \brief Terrain modifier which is defined by a shape variable.
@@ -70,10 +76,8 @@ public:
     /// \brief Constructor
     ///
     /// @param s shape of the modifier.
-    ShapeTerrainMod(const Shape &s) : m_shape(s) {}
+    ShapeTerrainMod(const Shape &s);
     virtual ~ShapeTerrainMod(); // {}
-
-    virtual WFMath::AxisBox<2> bbox() const; // { return m_shape.boundingBox(); }
 
 protected:
     /// \brief Shape of the modifier.
@@ -189,7 +193,6 @@ public:
 
     virtual ~CraterTerrainMod(); // {}
 
-    virtual WFMath::AxisBox<2> bbox() const;
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
@@ -199,8 +202,6 @@ private:
 
     /// \brief Sphere that defines the shape of the crater.
     WFMath::Ball<3> m_shape;
-    /// \brief Box containing this modification.
-    WFMath::AxisBox<2> ab;
 
 };
 
