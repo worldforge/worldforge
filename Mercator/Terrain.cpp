@@ -409,23 +409,14 @@ void Terrain::updateMod(TerrainMod * mod)
 
 void Terrain::removeMod(TerrainMod * mod)
 {
+    m_mods.erase(mod);
+
     WFMath::AxisBox<2> mod_box = mod->bbox();
 
     int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
     int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
     int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
-
-#if 0
-    std::cout << "box: " << mod_box << std::endl
-              << "lx: " << lx
-              << "ly: " << ly
-              << "hx: " << hx
-              << "hy: " << hy
-              << std::endl << std::flush;
-#endif // 0
-
-    m_mods.erase(mod);
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
