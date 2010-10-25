@@ -186,8 +186,9 @@ class Segment {
     /// \brief The 3d box covered by this segment
     WFMath::AxisBox<3> getBox() const;
 
-    void addMod(const TerrainMod *t);
-    void removeMod(TerrainMod *t);
+    int addMod(const TerrainMod *t);
+    int updateMod(const TerrainMod *t);
+    int removeMod(const TerrainMod *t);
     void clearMods();
     
     /// \brief Accessor for multimap of Area objects.

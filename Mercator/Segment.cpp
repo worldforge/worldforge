@@ -598,21 +598,43 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
 ///
 /// Called from Terrain::addMod(). If this point data is already valid,
 /// the modification will be applied directly.
-void Segment::addMod(const TerrainMod *t) 
+int Segment::addMod(const TerrainMod *t) 
 {
     m_modList.insert(t);
     if (isValid()) {
         applyMod(t);
     }
+    return 0;
 }
+
+/// \brief Update a TerrainMod in this Segment.
+///
+/// Called from Terrain::removeMod().
+int Segment::updateMod(const TerrainMod * tm)
+{
+    // FIXME Are we really removing it?
+    ModList::const_iterator I = m_modList.find(tm);
+    if (I != m_modList.end()) {
+        invalidate();
+        return 0;
+    }
+    return -1;
+}
+
 
 /// \brief Remove a TerrainMod from this Segment.
 ///
 /// Called from Terrain::removeMod().
-void Segment::removeMod(TerrainMod * tm)
+int Segment::removeMod(const TerrainMod * tm)
 {
-    m_modList.erase(tm);
-    invalidate();
+    // FIXME Are we really removing it?
+    ModList::iterator I = m_modList.find(tm);
+    if (I != m_modList.end()) {
+        m_modList.erase(I);
+        invalidate();
+        return 0;
+    }
+    return -1;
 }
 
 /// \brief Delete all the modifications applied to this Segment.
