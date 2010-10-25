@@ -9,6 +9,7 @@ libmercator_0_2_la_SOURCES = \
 	Mercator.cpp \
 	Matrix.cpp \
 	Terrain.cpp \
+	Effector.cpp \
 	TerrainMod.cpp \
 	BasePoint.cpp \
 	Buffer.cpp \
@@ -33,6 +34,7 @@ libmercator_HEADERS = \
 	Mercator.h \
 	Matrix.h \
 	Terrain.h \
+	Effector.h \
 	TerrainMod.h \
 	TerrainMod_impl.h \
 	BasePoint.h \

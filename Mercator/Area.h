@@ -5,6 +5,8 @@
 #ifndef MERCATOR_AREA_H
 #define MERCATOR_AREA_H
 
+#include <Mercator/Effector.h>
+
 #include <wfmath/axisbox.h>
 #include <wfmath/polygon.h>
 
@@ -23,7 +25,7 @@ class Shader;
 /// snow intersects with the area, but the lower grass area will be
 /// overriden. In order to get the best effect it is important to
 /// select the layer carefully.
-class Area
+class Area : public Effector
 {
 public:
     /// \brief Constructor
@@ -58,12 +60,6 @@ public:
         return m_hole;
     }
     
-    /// Accessor for the bounding box of the geometric shape.
-    const WFMath::AxisBox<2> & bbox() const
-    {
-        return m_box;
-    }
-
     /// Accessor for the geometric shape.
     const WFMath::Polygon<2> & shape() const
     {
@@ -100,8 +96,6 @@ private:
     bool m_hole;
     /// The geometric shape.
     WFMath::Polygon<2> m_shape;
-    /// The bounding box of the geometric shape.
-    WFMath::AxisBox<2> m_box;
     /// Shader that shades this area
     mutable const Shader * m_shader;
 };

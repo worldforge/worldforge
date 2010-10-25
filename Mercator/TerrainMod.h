@@ -5,6 +5,8 @@
 #ifndef MERCATOR_TERRAIN_MOD_H
 #define MERCATOR_TERRAIN_MOD_H
 
+#include <Mercator/Effector.h>
+
 #include <wfmath/intersect.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
@@ -16,7 +18,7 @@ class Segment;
 /// \brief Base class for modifiers to the procedurally generated terrain.
 ///
 /// Anything that modifies the terrain implements this interface.
-class TerrainMod
+class TerrainMod : public Effector
 {
 public:
     class Context {
@@ -36,12 +38,6 @@ public:
 
     void setContext(Context *);
 
-    /// Accessor for the bounding box of the geometric shape.
-    const WFMath::AxisBox<2> & bbox() const
-    {
-        return m_box;
-    }
-
     TerrainMod();
 
     virtual ~TerrainMod();
@@ -60,8 +56,6 @@ public:
     virtual TerrainMod *clone() const = 0;
   protected:
     Context * m_context;
-    /// The bounding box of the geometric shape.
-    WFMath::AxisBox<2> m_box;
 
 };
 
