@@ -41,10 +41,6 @@ class Effector
 
     /// The bounding box of the geometric shape.
     WFMath::AxisBox<2> m_box;
-  private:
-    // Copy constructor and assingment are private to provent slicing
-    Effector(const Effector &);
-    const Effector & operator=(const Effector &);
     
 };
 
