@@ -72,6 +72,12 @@ int main()
 
     segment->populate();
 
+    assert(segment->isValid());
+
+    terrain.updateMod(mp3);
+
+    assert(!segment->isValid());
+
     terrain.removeMod(mp1);
 
     delete mp1;
