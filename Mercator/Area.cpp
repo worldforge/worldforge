@@ -265,7 +265,9 @@ void Area::updateToSegment(Segment & s) const
 
 void Area::removeFromSegment(Segment & s) const
 {
-    s.removeArea(this);
+    if (checkIntersects(s)) {
+        s.removeArea(this);
+    }
 }
 
 WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const

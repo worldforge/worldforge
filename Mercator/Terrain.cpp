@@ -565,10 +565,6 @@ void Terrain::removeArea(const Area * area)
                 continue;
             }
             
-            if (!area->checkIntersects(*s)) {
-                continue;
-            }
-
             area->removeFromSegment(*s);
     
         } // of y loop
