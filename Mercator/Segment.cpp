@@ -601,9 +601,7 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
 int Segment::addMod(const TerrainMod *t) 
 {
     m_modList.insert(t);
-    if (isValid()) {
-        applyMod(t);
-    }
+    invalidate();
     return 0;
 }
 
