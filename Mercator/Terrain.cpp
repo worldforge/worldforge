@@ -346,18 +346,18 @@ void Terrain::addMod(const TerrainMod * mod)
 
     Rect mod_box = mod->bbox();
 
+    m_mods.insert(TerrainModstore::value_type(mod, mod_box));
+
     int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
     int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
     int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
 
-    m_mods.insert(TerrainModstore::value_type(mod, mod_box));
-
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
             if (s) {
-                s->addMod(mod);
+                mod->addToSegment(*s);
             }
         } // of y loop
     } // of x loop
@@ -382,7 +382,7 @@ void Terrain::updateMod(TerrainMod * mod)
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
             if (s) {
-                s->removeMod(mod);
+                mod->removeFromSegment(*s);
             }
         } // of y loop
     } // of x loop
@@ -398,7 +398,7 @@ void Terrain::updateMod(TerrainMod * mod)
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
             if (s) {
-                s->addMod(mod);
+                mod->addToSegment(*s);
             }
         } // of y loop
     } // of x loop
@@ -422,7 +422,7 @@ void Terrain::removeMod(TerrainMod * mod)
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
             if (s) {
-                s->removeMod(mod);
+                mod->removeFromSegment(*s);
             }
         } // of y loop
     } // of x loop

@@ -114,6 +114,7 @@ int main()
 #include <Mercator/Area.h>
 #include <Mercator/Buffer_impl.h>
 #include <Mercator/Shader.h>
+#include <Mercator/TerrainMod.h>
 
 namespace Mercator {
 
@@ -140,6 +141,15 @@ Surface::~Surface()
 }
 
 void Surface::populate()
+{
+}
+
+int TerrainMod::addToSegment(Segment & s) const
+{
+    return -1;
+}
+
+void TerrainMod::removeFromSegment(Segment & s) const
 {
 }
 
