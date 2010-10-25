@@ -11,6 +11,8 @@
 
 namespace Mercator {
 
+class Segment;
+
 /// \brief Base class for modifiers to the procedurally generated terrain.
 ///
 /// Anything that modifies the terrain implements this interface.
@@ -37,6 +39,10 @@ public:
     TerrainMod();
 
     virtual ~TerrainMod();
+
+    int addToSegment(Segment &) const;
+    void updateToSegment(Segment &) const;
+    void removeFromSegment(Segment &) const;
 
     /// \brief Apply this modifier on a terrain segment
     ///

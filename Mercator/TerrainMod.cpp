@@ -4,6 +4,8 @@
 
 #include <Mercator/TerrainMod_impl.h>
 
+#include <Mercator/Segment.h>
+
 namespace Mercator {
 
 TerrainMod::Context::Context()
@@ -26,6 +28,31 @@ TerrainMod::TerrainMod() : m_context(0)
 TerrainMod::~TerrainMod()
 {
     delete m_context;
+}
+
+int TerrainMod::addToSegment(Segment & s) const
+{
+    // if (!checkIntersects(s)) {
+        // return -1;
+    // }
+    return s.addMod(this);
+}
+
+void TerrainMod::updateToSegment(Segment & s) const
+{
+    // if (!checkIntersects(s)) {
+        // s.removeMod(this);
+        // return;
+    // }
+    // FIXME There is a chance it doesn't have it yet.
+    if (s.updateMod(this) != 0) {
+        s.addMod(this);
+    }
+}
+
+void TerrainMod::removeFromSegment(Segment & s) const
+{
+    s.removeMod(this);
 }
 
 void TerrainMod::setContext(TerrainMod::Context * c)
