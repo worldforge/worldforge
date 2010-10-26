@@ -358,7 +358,7 @@ void Terrain::addMod(const TerrainMod * mod)
     } // of x loop
 }
 
-void Terrain::updateMod(TerrainMod * mod)
+void Terrain::updateMod(const TerrainMod * mod)
 {
     TerrainModstore::iterator I = m_mods.find(mod);
 
@@ -402,7 +402,7 @@ void Terrain::updateMod(TerrainMod * mod)
     // FIXME FIX it.
 }
 
-void Terrain::removeMod(TerrainMod * mod)
+void Terrain::removeMod(const TerrainMod * mod)
 {
     m_mods.erase(mod);
 
