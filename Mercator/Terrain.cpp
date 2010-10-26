@@ -290,7 +290,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                     mod_box.shift(WFMath::Vector<2>(-i * m_res, -j * m_res));
                     int tmp;
                     if (s->clipToSegment(mod_box, tmp, tmp, tmp, tmp)) {
-                        s->addMod(J->first);
+                        J->first->addToSegment(*s);
                     }
                 }
 

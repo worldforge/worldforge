@@ -22,6 +22,7 @@ class Segment;
 class Shader;
 class TerrainMod;
 class Area;
+class Effector;
 
 /// \brief Class storing centrally all data about an instance of some terrain.
 ///
@@ -50,10 +51,10 @@ class Terrain {
     typedef std::map<int, const Shader *> Shaderstore;
 
     /// \brief STL map to store area modifiers.
-    typedef std::map<const Area *, Rect> Areastore;
+    typedef std::map<const Effector *, Rect> Areastore;
 
     /// \brief STL map to store height modifiers.
-    typedef std::map<const TerrainMod *, Rect> TerrainModstore;
+    typedef std::map<const Effector *, Rect> TerrainModstore;
 
     /// \brief value provided for no flags set.
     static const unsigned int DEFAULT = 0x0000;
