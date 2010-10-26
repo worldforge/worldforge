@@ -327,6 +327,11 @@ Segment * Terrain::getSegment(int x, int y) const
 /// \brief Add an effector to the terrain
 void Terrain::addEffector(const Effector * eff)
 {
+    //work out which segments are overlapped by this effector
+    //note that the bbox is expanded by one grid unit because
+    //segments share edges. this ensures a mod along an edge
+    //will affect both segments.
+
     int lx=I_ROUND(floor((eff->bbox().lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((eff->bbox().lowCorner()[1] - 1) / m_res));
     int hx=I_ROUND(ceil((eff->bbox().highCorner()[0] + 1) / m_res));
@@ -342,6 +347,28 @@ void Terrain::addEffector(const Effector * eff)
     } // of x loop
 }
 
+/// \brief Remove an effector from the terrain
+void Terrain::removeEffector(const Effector * eff)
+{
+    const Rect & mod_box = eff->bbox();
+
+    int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (s) {
+                eff->removeFromSegment(*s);
+            }
+        } // of y loop
+    } // of x loop
+
+   
+}
+
 
 /// \brief Add a modifier to the terrain.
 ///
@@ -352,11 +379,6 @@ void Terrain::addEffector(const Effector * eff)
 /// @param t reference to the TerrainMod object to be applied.
 void Terrain::addMod(const TerrainMod * mod)
 {
-
-    //work out which segments are overlapped by thus mod
-    //note that the bbox is expanded by one grid unit because
-    //segments share edges. this ensures a mod along an edge
-    //will affect both segments.
 
     const Rect & mod_box = mod->bbox();
 
@@ -413,23 +435,7 @@ void Terrain::removeMod(const TerrainMod * mod)
 {
     m_mods.erase(mod);
 
-    const Rect & mod_box = mod->bbox();
-
-    int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (s) {
-                mod->removeFromSegment(*s);
-            }
-        } // of y loop
-    } // of x loop
-
-   
+    removeEffector(mod);
 }
 
 /// \brief Add an area modifier to the terrain.
@@ -448,22 +454,7 @@ void Terrain::addArea(const Area * area)
 
     m_areas.insert(Areastore::value_type(area, area->bbox()));
 
-    int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
-            
-            area->addToSegment(*s);
-        } // of y loop
-    } // of x loop
-
+    addEffector(area);
 }
 
 /// \brief Apply changes to an area modifier to the terrain.
@@ -555,22 +546,7 @@ void Terrain::removeArea(const Area * area)
 {
     m_areas.erase(area);
 
-    int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
-            
-            area->removeFromSegment(*s);
-    
-        } // of y loop
-    } // of x loop
+    removeEffector(area);
 }
 
 } // namespace Mercator
