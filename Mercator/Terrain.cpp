@@ -286,12 +286,7 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 TerrainModstore::iterator J = m_mods.begin();
                 TerrainModstore::iterator Jend = m_mods.end();
                 for (; J != Jend; ++J) {
-                    Rect mod_box = J->second;
-                    mod_box.shift(WFMath::Vector<2>(-i * m_res, -j * m_res));
-                    int tmp;
-                    if (s->clipToSegment(mod_box, tmp, tmp, tmp, tmp)) {
-                        J->first->addToSegment(*s);
-                    }
+                    J->first->addToSegment(*s);
                 }
 
                 // apply shaders last, after all other data is in place
