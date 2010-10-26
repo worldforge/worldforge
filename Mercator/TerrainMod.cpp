@@ -63,7 +63,10 @@ void TerrainMod::setContext(TerrainMod::Context * c)
 template class LevelTerrainMod<WFMath::Ball<2> >;
 template class LevelTerrainMod<WFMath::RotBox<2> >;
 
-CraterTerrainMod::CraterTerrainMod(const WFMath::Ball<3> &s) : m_shape(s)
+CraterTerrainMod::CraterTerrainMod(const WFMath::Ball<3> &s) :
+      m_shape(s),
+      m_intersectShape(WFMath::Point<2>(s.center()[0], s.center()[1]),
+                       s.radius())
 {
     WFMath::AxisBox<3> bb=m_shape.boundingBox();
     m_box = WFMath::AxisBox<2> (
@@ -78,8 +81,8 @@ CraterTerrainMod::~CraterTerrainMod()
 
 bool CraterTerrainMod::checkIntersects(const Segment& s) const
 {
-    return WFMath::Intersect(m_shape, s.getRect(), false) ||
-        WFMath::Contains(s.getRect(), m_shape.getCorner(0), false);
+    return WFMath::Intersect(m_intersectShape, s.getRect(), false) ||
+        WFMath::Contains(s.getRect(), m_shape.center(), false);
 }
     
 void CraterTerrainMod::apply(float &point, int x, int y) const

@@ -201,6 +201,8 @@ private:
     /// \brief Sphere that defines the shape of the crater.
     WFMath::Ball<3> m_shape;
 
+    /// \brief Circle that defines the shape for intersection with checks with terrain
+    WFMath::Ball<2> m_intersectShape;
 };
 
 } //namespace Mercator
