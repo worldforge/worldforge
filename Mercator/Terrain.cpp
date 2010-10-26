@@ -339,7 +339,7 @@ void Terrain::addMod(const TerrainMod * mod)
     //segments share edges. this ensures a mod along an edge
     //will affect both segments.
 
-    Rect mod_box = mod->bbox();
+    const Rect & mod_box = mod->bbox();
 
     m_mods.insert(TerrainModstore::value_type(mod, mod_box));
 
@@ -382,7 +382,7 @@ void Terrain::updateMod(TerrainMod * mod)
         } // of y loop
     } // of x loop
 
-    Rect mod_box = mod->bbox();
+    const Rect & mod_box = mod->bbox();
 
     lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
     ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
@@ -406,7 +406,7 @@ void Terrain::removeMod(TerrainMod * mod)
 {
     m_mods.erase(mod);
 
-    WFMath::AxisBox<2> mod_box = mod->bbox();
+    const Rect & mod_box = mod->bbox();
 
     int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
