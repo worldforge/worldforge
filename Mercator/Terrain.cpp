@@ -324,6 +324,25 @@ Segment * Terrain::getSegment(int x, int y) const
     return J->second;
 }
 
+/// \brief Add an effector to the terrain
+void Terrain::addEffector(const Effector * eff)
+{
+    int lx=I_ROUND(floor((eff->bbox().lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((eff->bbox().lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((eff->bbox().highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((eff->bbox().highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (s) {
+                eff->addToSegment(*s);
+            }
+        } // of y loop
+    } // of x loop
+}
+
+
 /// \brief Add a modifier to the terrain.
 ///
 /// Add a new TerrainMod object to the terrain, which defines a modification
@@ -343,19 +362,7 @@ void Terrain::addMod(const TerrainMod * mod)
 
     m_mods.insert(TerrainModstore::value_type(mod, mod_box));
 
-    int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (s) {
-                mod->addToSegment(*s);
-            }
-        } // of y loop
-    } // of x loop
+    addEffector(mod);
 }
 
 void Terrain::updateMod(const TerrainMod * mod)
