@@ -75,6 +75,12 @@ CraterTerrainMod::CraterTerrainMod(const WFMath::Ball<3> &s) : m_shape(s)
 CraterTerrainMod::~CraterTerrainMod()
 {
 }
+
+bool CraterTerrainMod::checkIntersects(const Segment& s) const
+{
+    return WFMath::Intersect(m_shape, s.getRect(), false) ||
+        WFMath::Contains(s.getRect(), m_shape.getCorner(0), false);
+}
     
 void CraterTerrainMod::apply(float &point, int x, int y) const
 {

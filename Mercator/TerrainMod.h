@@ -73,6 +73,8 @@ public:
     ShapeTerrainMod(const Shape &s);
     virtual ~ShapeTerrainMod(); // {}
 
+    virtual bool checkIntersects(const Segment& s) const;
+
 protected:
     /// \brief Shape of the modifier.
     Shape m_shape;
@@ -186,6 +188,8 @@ public:
     CraterTerrainMod(const WFMath::Ball<3> &s);
 
     virtual ~CraterTerrainMod(); // {}
+
+    virtual bool checkIntersects(const Segment& s) const;
 
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;

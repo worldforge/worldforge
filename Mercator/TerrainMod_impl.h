@@ -7,6 +7,8 @@
 
 #include <Mercator/TerrainMod.h>
 
+#include <Mercator/Segment.h>
+
 namespace Mercator {
 
 template <typename Shape>
@@ -18,6 +20,13 @@ ShapeTerrainMod<Shape>::ShapeTerrainMod(const Shape &s) : m_shape(s)
 
 template <typename Shape> ShapeTerrainMod<Shape>::~ShapeTerrainMod()
 {
+}
+
+template <typename Shape>
+bool ShapeTerrainMod<Shape>::checkIntersects(const Segment& s) const
+{
+    return WFMath::Intersect(m_shape, s.getRect(), false) ||
+        WFMath::Contains(s.getRect(), m_shape.getCorner(0), false);
 }
     
 template <typename Shape> LevelTerrainMod<Shape>::~LevelTerrainMod()
