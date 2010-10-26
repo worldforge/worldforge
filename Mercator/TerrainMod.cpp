@@ -32,18 +32,18 @@ TerrainMod::~TerrainMod()
 
 int TerrainMod::addToSegment(Segment & s) const
 {
-    // if (!checkIntersects(s)) {
-        // return -1;
-    // }
+    if (!checkIntersects(s)) {
+        return -1;
+    }
     return s.addMod(this);
 }
 
 void TerrainMod::updateToSegment(Segment & s) const
 {
-    // if (!checkIntersects(s)) {
-        // s.removeMod(this);
-        // return;
-    // }
+    if (!checkIntersects(s)) {
+        s.removeMod(this);
+        return;
+    }
     // FIXME There is a chance it doesn't have it yet.
     if (s.updateMod(this) != 0) {
         s.addMod(this);
