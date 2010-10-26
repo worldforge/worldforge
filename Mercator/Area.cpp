@@ -257,7 +257,6 @@ void Area::updateToSegment(Segment & s) const
         s.removeArea(this);
         return;
     }
-    // FIXME There is a chance it doesn't have it yet.
     if (s.updateArea(this) != 0) {
         s.addArea(this);
     }

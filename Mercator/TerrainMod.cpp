@@ -44,7 +44,6 @@ void TerrainMod::updateToSegment(Segment & s) const
         s.removeMod(this);
         return;
     }
-    // FIXME There is a chance it doesn't have it yet.
     if (s.updateMod(this) != 0) {
         s.addMod(this);
     }

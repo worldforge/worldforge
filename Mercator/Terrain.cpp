@@ -501,9 +501,7 @@ void Terrain::updateArea(const Area * area)
 
     updateEffector(area, old_box);
 
-    // FIXME Don't re-insert, we have an iterator!
     m_areas.insert(I, Areastore::value_type(area, area->bbox()));
-    // FIXME Do it first.
 }
 
 /// \brief Remove an area modifier from the terrain.
