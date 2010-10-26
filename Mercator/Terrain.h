@@ -85,7 +85,7 @@ class Terrain {
     void shadeSurfaces(Segment &);
 
     void addEffector(const Effector * t);
-    void updateEffector(const Effector * mod);
+    void updateEffector(const Effector * mod, const Rect & old_box);
     void removeEffector(const Effector * mod);
     
     /// \brief Determine whether this terrain object has shading enabled.

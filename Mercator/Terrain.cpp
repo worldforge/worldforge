@@ -347,6 +347,70 @@ void Terrain::addEffector(const Effector * eff)
     } // of x loop
 }
 
+void Terrain::updateEffector(const Effector * eff, const Rect & old_box)
+{
+
+    std::set<Segment*> removed, added, updated;
+
+    int lx=I_ROUND(floor((old_box.lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((old_box.lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((old_box.highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((old_box.highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (!s) {
+                continue;
+            }
+
+            removed.insert(s);
+
+        } // of y loop
+    } // of x loop
+
+    lx=I_ROUND(floor((eff->bbox().lowCorner()[0] - 1) / m_res));
+    ly=I_ROUND(floor((eff->bbox().lowCorner()[1] - 1) / m_res));
+    hx=I_ROUND(ceil((eff->bbox().highCorner()[0] + 1) / m_res));
+    hy=I_ROUND(ceil((eff->bbox().highCorner()[1] + 1) / m_res));
+
+    for (int i=lx;i<hx;++i) {
+        for (int j=ly;j<hy;++j) {
+            Segment *s=getSegment(i,j);
+            if (!s) {
+                continue;
+            }
+
+            std::set<Segment*>::iterator J = removed.find(s);
+            if (J == removed.end()) {
+                added.insert(s);
+            } else {
+                updated.insert(s);
+                removed.erase(J);
+            }
+        } // of y loop
+    } // of x loop
+
+    std::set<Segment*>::iterator J = removed.begin();
+    std::set<Segment*>::iterator Jend = removed.end();
+    for (; J != Jend; ++J) {
+        eff->removeFromSegment(**J);
+    }
+
+    J = added.begin();
+    Jend = added.end();
+    for (; J != Jend; ++J) {
+        eff->addToSegment(**J);
+    }
+
+    J = updated.begin();
+    Jend = updated.end();
+    for (; J != Jend; ++J) {
+        eff->updateToSegment(**J);
+    }
+
+}
+
 /// \brief Remove an effector from the terrain
 void Terrain::removeEffector(const Effector * eff)
 {
@@ -365,10 +429,7 @@ void Terrain::removeEffector(const Effector * eff)
             }
         } // of y loop
     } // of x loop
-
-   
 }
-
 
 /// \brief Add a modifier to the terrain.
 ///
@@ -397,38 +458,9 @@ void Terrain::updateMod(const TerrainMod * mod)
 
     const Rect & old_box = I->second;
 
-    int lx=I_ROUND(floor((old_box.lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((old_box.lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((old_box.highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((old_box.highCorner()[1] + 1) / m_res));
+    updateEffector(mod, old_box);
 
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (s) {
-                mod->removeFromSegment(*s);
-            }
-        } // of y loop
-    } // of x loop
-
-    const Rect & mod_box = mod->bbox();
-
-    lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
-    ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
-    hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
-    hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (s) {
-                mod->addToSegment(*s);
-            }
-        } // of y loop
-    } // of x loop
-
-    m_mods.insert(I, TerrainModstore::value_type(mod, mod_box));
-    // FIXME FIX it.
+    m_mods.insert(I, TerrainModstore::value_type(mod, mod->bbox()));
 }
 
 void Terrain::removeMod(const TerrainMod * mod)
@@ -465,73 +497,9 @@ void Terrain::updateArea(const Area * area)
     if (I == m_areas.end()) {
         return;
     }
-
-    std::set<Segment*> removed, added, updated;
-
     const Rect & old_box = I->second;
 
-    int lx=I_ROUND(floor((old_box.lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((old_box.lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((old_box.highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((old_box.highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
-
-            removed.insert(s);
-
-        } // of y loop
-    } // of x loop
-
-    lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
-    ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
-    hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
-    hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
-
-            std::set<Segment*>::iterator J = removed.find(s);
-            if (J == removed.end()) {
-                added.insert(s);
-            } else {
-                updated.insert(s);
-                removed.erase(J);
-            }
-        } // of y loop
-    } // of x loop
-
-    std::set<Segment*>::iterator J = removed.begin();
-    std::set<Segment*>::iterator Jend = removed.end();
-    for (; J != Jend; ++J) {
-        printf("removed %d,%d,\n", (*J)->getXRef(), (*J)->getYRef());
-
-        area->removeFromSegment(**J);
-    }
-
-    J = added.begin();
-    Jend = added.end();
-    for (; J != Jend; ++J) {
-        printf("added %d,%d,\n", (*J)->getXRef(), (*J)->getYRef());
-        area->addToSegment(**J);
-    }
-
-    J = updated.begin();
-    Jend = updated.end();
-    for (; J != Jend; ++J) {
-        printf("updated %d,%d,\n", (*J)->getXRef(), (*J)->getYRef());
-        // FIXME Get it to update. Invalidate perhaps?
-        area->updateToSegment(**J);
-        // (*J)->updateArea(area);
-    }
+    updateEffector(area, old_box);
 
     // FIXME Don't re-insert, we have an iterator!
     m_areas.insert(I, Areastore::value_type(area, area->bbox()));
