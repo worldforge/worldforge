@@ -326,6 +326,8 @@ void Terrain::addEffector(const Effector * eff)
     //segments share edges. this ensures a mod along an edge
     //will affect both segments.
 
+    m_effectors.insert(Effectorstore::value_type(eff, eff->bbox()));
+
     int lx=I_ROUND(floor((eff->bbox().lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((eff->bbox().lowCorner()[1] - 1) / m_res));
     int hx=I_ROUND(ceil((eff->bbox().highCorner()[0] + 1) / m_res));
@@ -341,8 +343,16 @@ void Terrain::addEffector(const Effector * eff)
     } // of x loop
 }
 
-void Terrain::updateEffector(const Effector * eff, const Rect & old_box)
+void Terrain::updateEffector(const Effector * eff, const Rect & )
 {
+    Effectorstore::iterator I = m_effectors.find(eff);
+
+    if (I == m_effectors.end()) {
+        return;
+    }
+
+    const Rect & old_box = I->second;
+
 
     std::set<Segment*> removed, added, updated;
 
@@ -403,17 +413,20 @@ void Terrain::updateEffector(const Effector * eff, const Rect & old_box)
         eff->updateToSegment(**J);
     }
 
+    m_effectors.insert(I, Effectorstore::value_type(eff, eff->bbox()));
 }
 
 /// \brief Remove an effector from the terrain
 void Terrain::removeEffector(const Effector * eff)
 {
-    const Rect & mod_box = eff->bbox();
+    m_effectors.erase(eff);
 
-    int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
+    const Rect & eff_box = eff->bbox();
+
+    int lx=I_ROUND(floor((eff_box.lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((eff_box.lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((eff_box.highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((eff_box.highCorner()[1] + 1) / m_res));
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
@@ -434,33 +447,16 @@ void Terrain::removeEffector(const Effector * eff)
 /// @param t reference to the TerrainMod object to be applied.
 void Terrain::addMod(const TerrainMod * mod)
 {
-
-    const Rect & mod_box = mod->bbox();
-
-    m_effectors.insert(Effectorstore::value_type(mod, mod_box));
-
     addEffector(mod);
 }
 
 void Terrain::updateMod(const TerrainMod * mod)
 {
-    Effectorstore::iterator I = m_effectors.find(mod);
-
-    if (I == m_effectors.end()) {
-        return;
-    }
-
-    const Rect & old_box = I->second;
-
-    updateEffector(mod, old_box);
-
-    m_effectors.insert(I, Effectorstore::value_type(mod, mod->bbox()));
+    updateEffector(mod, Rect());
 }
 
 void Terrain::removeMod(const TerrainMod * mod)
 {
-    m_effectors.erase(mod);
-
     removeEffector(mod);
 }
 
@@ -477,25 +473,13 @@ void Terrain::addArea(const Area * area)
         area->setShader(I->second);
     }
     
-
-    m_effectors.insert(Effectorstore::value_type(area, area->bbox()));
-
     addEffector(area);
 }
 
 /// \brief Apply changes to an area modifier to the terrain.
 void Terrain::updateArea(const Area * area)
 {
-    Effectorstore::iterator I = m_effectors.find(area);
-
-    if (I == m_effectors.end()) {
-        return;
-    }
-    const Rect & old_box = I->second;
-
-    updateEffector(area, old_box);
-
-    m_effectors.insert(I, Effectorstore::value_type(area, area->bbox()));
+    updateEffector(area, Rect());
 }
 
 /// \brief Remove an area modifier from the terrain.
@@ -504,8 +488,6 @@ void Terrain::updateArea(const Area * area)
 /// affected terrain surfaces as invalid.
 void Terrain::removeArea(const Area * area)
 {
-    m_effectors.erase(area);
-
     removeEffector(area);
 }
 
