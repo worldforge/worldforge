@@ -50,11 +50,8 @@ class Terrain {
     /// \brief STL map to store sparse array of Shader pointers.
     typedef std::map<int, const Shader *> Shaderstore;
 
-    /// \brief STL map to store area modifiers.
-    typedef std::map<const Effector *, Rect> Areastore;
-
-    /// \brief STL map to store height modifiers.
-    typedef std::map<const Effector *, Rect> TerrainModstore;
+    /// \brief STL map to store terrain effectors.
+    typedef std::map<const Effector *, Rect> Effectorstore;
 
     /// \brief value provided for no flags set.
     static const unsigned int DEFAULT = 0x0000;
@@ -75,11 +72,8 @@ class Terrain {
     /// \brief List of shaders to be applied to terrain.
     Shaderstore m_shaders;
   
-    /// \brief List of areas modifiers to be applied to the terrain.
-    Areastore m_areas;
-
-    /// \brief List of height modifiers to be applied to the terrain.
-    TerrainModstore m_mods;
+    /// \brief List of effectors be applied to the terrain.
+    Effectorstore m_effectors;
   
     void addSurfaces(Segment &);
     void shadeSurfaces(Segment &);

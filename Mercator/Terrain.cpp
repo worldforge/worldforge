@@ -277,16 +277,10 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 }
                 s->setMinMax(min, max);
                 
-                Areastore::iterator I = m_areas.begin();
-                Areastore::iterator Iend = m_areas.end();
+                Effectorstore::iterator I = m_effectors.begin();
+                Effectorstore::iterator Iend = m_effectors.end();
                 for (; I != Iend; ++I) {
                     I->first->addToSegment(*s);
-                }
-
-                TerrainModstore::iterator J = m_mods.begin();
-                TerrainModstore::iterator Jend = m_mods.end();
-                for (; J != Jend; ++J) {
-                    J->first->addToSegment(*s);
                 }
 
                 // apply shaders last, after all other data is in place
@@ -443,16 +437,16 @@ void Terrain::addMod(const TerrainMod * mod)
 
     const Rect & mod_box = mod->bbox();
 
-    m_mods.insert(TerrainModstore::value_type(mod, mod_box));
+    m_effectors.insert(Effectorstore::value_type(mod, mod_box));
 
     addEffector(mod);
 }
 
 void Terrain::updateMod(const TerrainMod * mod)
 {
-    TerrainModstore::iterator I = m_mods.find(mod);
+    Effectorstore::iterator I = m_effectors.find(mod);
 
-    if (I == m_mods.end()) {
+    if (I == m_effectors.end()) {
         return;
     }
 
@@ -460,12 +454,12 @@ void Terrain::updateMod(const TerrainMod * mod)
 
     updateEffector(mod, old_box);
 
-    m_mods.insert(I, TerrainModstore::value_type(mod, mod->bbox()));
+    m_effectors.insert(I, Effectorstore::value_type(mod, mod->bbox()));
 }
 
 void Terrain::removeMod(const TerrainMod * mod)
 {
-    m_mods.erase(mod);
+    m_effectors.erase(mod);
 
     removeEffector(mod);
 }
@@ -484,7 +478,7 @@ void Terrain::addArea(const Area * area)
     }
     
 
-    m_areas.insert(Areastore::value_type(area, area->bbox()));
+    m_effectors.insert(Effectorstore::value_type(area, area->bbox()));
 
     addEffector(area);
 }
@@ -492,16 +486,16 @@ void Terrain::addArea(const Area * area)
 /// \brief Apply changes to an area modifier to the terrain.
 void Terrain::updateArea(const Area * area)
 {
-    Areastore::iterator I = m_areas.find(area);
+    Effectorstore::iterator I = m_effectors.find(area);
 
-    if (I == m_areas.end()) {
+    if (I == m_effectors.end()) {
         return;
     }
     const Rect & old_box = I->second;
 
     updateEffector(area, old_box);
 
-    m_areas.insert(I, Areastore::value_type(area, area->bbox()));
+    m_effectors.insert(I, Effectorstore::value_type(area, area->bbox()));
 }
 
 /// \brief Remove an area modifier from the terrain.
@@ -510,7 +504,7 @@ void Terrain::updateArea(const Area * area)
 /// affected terrain surfaces as invalid.
 void Terrain::removeArea(const Area * area)
 {
-    m_areas.erase(area);
+    m_effectors.erase(area);
 
     removeEffector(area);
 }
