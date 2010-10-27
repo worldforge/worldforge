@@ -25,12 +25,13 @@ void Effector::setContext(Effector::Context * c)
     m_context = c;
 }
 
-Effector::Effector()
+Effector::Effector() : m_context(0)
 {
 }
 
 Effector::~Effector()
 {
+    delete m_context;
 }
 
 } // of namespace
