@@ -7,6 +7,24 @@
 namespace Mercator
 {
 
+Effector::Context::Context()
+{
+}
+
+Effector::Context::~Context()
+{
+}
+
+void Effector::Context::setId(const std::string& id)
+{
+    m_id = id;
+}
+
+void Effector::setContext(Effector::Context * c)
+{
+    m_context = c;
+}
+
 Effector::Effector()
 {
 }

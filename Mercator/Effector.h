@@ -23,6 +23,23 @@ class Shader;
 class Effector
 {
   public:
+    class Context {
+      public:
+        Context();
+
+        virtual ~Context();
+
+        const std::string & id() { return m_id; }
+
+        void setId(const std::string &);
+      protected:
+        std::string m_id;
+    };
+
+    Context * context() const { return m_context; }
+
+    void setContext(Context *);
+
     /// Accessor for the bounding box of the geometric shape.
     const WFMath::AxisBox<2> & bbox() const
     {
@@ -44,6 +61,8 @@ class Effector
     /// The bounding box of the geometric shape.
     WFMath::AxisBox<2> m_box;
     
+    /// The application context of this effector
+    Context * m_context;
 };
 
 }
