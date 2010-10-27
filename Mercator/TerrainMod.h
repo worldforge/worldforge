@@ -21,8 +21,6 @@ class Segment;
 class TerrainMod : public Effector
 {
 public:
-    typedef Effector::Context Context;
-
     TerrainMod();
 
     virtual ~TerrainMod();
