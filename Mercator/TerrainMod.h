@@ -55,6 +55,7 @@ public:
 
     virtual bool checkIntersects(const Segment& s) const;
 
+    void setShape(const Shape & s);
 protected:
     /// \brief Shape of the modifier.
     Shape m_shape;
@@ -80,6 +81,7 @@ public:
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
+    void setShape(float level, const Shape & s);
 private:
     /// \brief Copy constructor.
     LevelTerrainMod(LevelTerrainMod&); // {}
@@ -110,6 +112,7 @@ public:
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
+    void setShape(float dist, const Shape & s);
 private:
     /// \brief Copy constructor.
     AdjustTerrainMod(AdjustTerrainMod&) {}
@@ -142,6 +145,7 @@ public:
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
+    void setShape(float level, float dx, float dy, const Shape & s);
 private:
     /// \brief Copy constructor.
     SlopeTerrainMod(SlopeTerrainMod&) {}
@@ -174,6 +178,7 @@ public:
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
+    void setShape(const WFMath::Ball<3> & s);
 private:
     /// \brief Copy constructor.
     CraterTerrainMod(CraterTerrainMod&) {}

@@ -82,4 +82,17 @@ TerrainMod * CraterTerrainMod::clone() const
     return new CraterTerrainMod(m_shape);
 }
 
+void CraterTerrainMod::setShape(const WFMath::Ball<3> & s)
+{
+    
+    WFMath::AxisBox<3> bb=m_shape.boundingBox();
+    m_box = WFMath::AxisBox<2> (
+                WFMath::Point<2>(bb.lowerBound(0), bb.lowerBound(1)),
+                WFMath::Point<2>(bb.upperBound(0), bb.upperBound(1))
+           );
+    m_intersectShape = WFMath::Ball<2>(WFMath::Point<2>(s.center()[0],
+                                                        s.center()[1]),
+                                       s.radius());
+}
+
 } // namespace Mercator

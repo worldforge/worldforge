@@ -29,6 +29,13 @@ bool ShapeTerrainMod<Shape>::checkIntersects(const Segment& s) const
         WFMath::Contains(s.getRect(), m_shape.getCorner(0), false);
 }
     
+template <typename Shape>
+void ShapeTerrainMod<Shape>::setShape(const Shape & s)
+{
+    m_shape = s;
+    m_box = m_shape.boundingBox();
+}
+
 template <typename Shape> LevelTerrainMod<Shape>::~LevelTerrainMod()
 {
 }
@@ -45,6 +52,13 @@ template <typename Shape>
 TerrainMod * LevelTerrainMod<Shape>::clone() const
 {
     return new LevelTerrainMod<Shape>(m_level, this->m_shape);
+}
+
+template <typename Shape>
+void LevelTerrainMod<Shape>::setShape(float level, const Shape & s)
+{
+    ShapeTerrainMod<Shape>::setShape(s);
+    m_level = level;
 }
 
 template <typename Shape> AdjustTerrainMod<Shape>::~AdjustTerrainMod()
@@ -65,6 +79,13 @@ TerrainMod * AdjustTerrainMod<Shape>::clone() const
     return new AdjustTerrainMod<Shape>(m_dist, this->m_shape);
 }
 
+template <typename Shape>
+void AdjustTerrainMod<Shape>::setShape(float dist, const Shape & s)
+{
+    ShapeTerrainMod<Shape>::setShape(s);
+    m_dist = dist;
+}
+
 template <typename Shape> SlopeTerrainMod<Shape>::~SlopeTerrainMod()
 {
 }
@@ -83,7 +104,16 @@ TerrainMod * SlopeTerrainMod<Shape>::clone() const
 {
     return new SlopeTerrainMod<Shape>(m_level, m_dx, m_dy, this->m_shape);
 }
-    
+
+template <typename Shape>
+void SlopeTerrainMod<Shape>::setShape(float level, float dx, float dy, const Shape & s)
+{
+    ShapeTerrainMod<Shape>::setShape(s);
+    m_level = level;
+    m_dx = dx;
+    m_dy = dy;
+}
+
 } //namespace Mercator
 
 #endif // MERCATOR_TERRAIN_MOD_IMPL_H
