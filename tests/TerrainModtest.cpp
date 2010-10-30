@@ -11,7 +11,7 @@
 int terrain_mod_context_test(Mercator::Terrain & terrain)
 {
     const WFMath::Ball<2> circ2(WFMath::Point<2>(0.0,0.0), 12.0);
-    Mercator::TerrainMod * mp = new Mercator::LevelTerrainMod<WFMath::Ball<2> >(10.0f, circ2);
+    Mercator::TerrainMod * mp = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
     terrain.addMod(mp);
 
     mp->setContext(new Mercator::TerrainMod::Context);
@@ -39,13 +39,13 @@ int main()
     terrain.setBasePoint(2, 2, 14.7);
 
     const WFMath::Ball<2> circ2(WFMath::Point<2>(0.0,0.0), 12.0);
-    Mercator::TerrainMod * mp1 = new Mercator::LevelTerrainMod<WFMath::Ball<2> >(10.0f, circ2);
+    Mercator::TerrainMod * mp1 = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
     terrain.addMod(mp1);
 
     const WFMath::RotBox<2> rot(WFMath::Point<2>(-80.,-130.) ,
                                 WFMath::Vector<2>(150.0,120.0),
                                 WFMath::RotMatrix<2>().rotation(WFMath::Pi/4));
-    Mercator::TerrainMod * mp2 = new Mercator::LevelTerrainMod<WFMath::RotBox<2> >(10.0f, rot);
+    Mercator::TerrainMod * mp2 = new Mercator::LevelTerrainMod<WFMath::RotBox>(10.0f, rot);
     terrain.addMod(mp2);
 
     const WFMath::Ball<3> ball(WFMath::Point<3>(80, 80, 0), 10);
