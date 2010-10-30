@@ -10,11 +10,11 @@
 namespace Mercator {
 
 /// \brief Interface for shader factory objects.
-class iShaderFactory {
+class ShaderKit {
   protected:
-    explicit iShaderFactory();
+    explicit ShaderKit();
   public:
-    virtual ~iShaderFactory();
+    virtual ~ShaderKit();
 
     /// \brief Create a new Shader instance
     ///
@@ -24,7 +24,7 @@ class iShaderFactory {
 
 /// \brief Factory template used to create ordinary shader objects.
 template <class T>
-class ShaderFactory : public iShaderFactory {
+class ShaderFactory : public ShaderKit {
   public:
     ShaderFactory();
     ~ShaderFactory();
@@ -39,7 +39,7 @@ class ShaderFactory : public iShaderFactory {
 class ShaderFactories {
   private:
     /// \brief STL map of shader factory pointers.
-    typedef std::map<std::string, iShaderFactory *> FactoryMap;
+    typedef std::map<std::string, ShaderKit *> FactoryMap;
 
     /// \brief Map of shader factory pointers keyed on type string.
     FactoryMap m_factories;

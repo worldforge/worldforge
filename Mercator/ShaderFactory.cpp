@@ -13,11 +13,11 @@
 
 namespace Mercator {
 
-iShaderFactory::iShaderFactory()
+ShaderKit::ShaderKit()
 {
 }
 
-iShaderFactory::~iShaderFactory()
+ShaderKit::~ShaderKit()
 {
 }
 
