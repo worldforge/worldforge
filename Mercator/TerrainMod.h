@@ -148,7 +148,7 @@ public:
     void setShape(float level, float dx, float dy, const Shape<2> & s);
 private:
     /// \brief Copy constructor.
-    SlopeTerrainMod(SlopeTerrainMod&) {}
+    SlopeTerrainMod(SlopeTerrainMod&); // {}
 
 protected:
     /// \brief The height of the centre point.
