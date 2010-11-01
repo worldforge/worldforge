@@ -8,7 +8,6 @@
 #include <Mercator/Effector.h>
 
 #include <wfmath/intersect.h>
-#include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 
 namespace Mercator {
