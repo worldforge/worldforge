@@ -52,56 +52,38 @@ template class SlopeTerrainMod<WFMath::Ball >;
 template class SlopeTerrainMod<WFMath::Polygon >;
 template class SlopeTerrainMod<WFMath::RotBox >;
 
-CraterTerrainMod::CraterTerrainMod(const WFMath::Ball<3> &s) :
-      m_shape(s),
-      m_intersectShape(WFMath::Point<2>(s.center()[0], s.center()[1]),
-                       s.radius())
+CraterTerrainMod::CraterTerrainMod(float level, const WFMath::Ball<2> &s) :
+      ShapeTerrainMod<WFMath::Ball>(s),
+      m_level(level)
 {
-    WFMath::AxisBox<3> bb=m_shape.boundingBox();
-    m_box = WFMath::AxisBox<2> (
-                WFMath::Point<2>(bb.lowerBound(0), bb.lowerBound(1)),
-                WFMath::Point<2>(bb.upperBound(0), bb.upperBound(1))
-           );
 }
 
 CraterTerrainMod::~CraterTerrainMod()
 {
 }
 
-bool CraterTerrainMod::checkIntersects(const Segment& s) const
-{
-    return WFMath::Intersect(m_intersectShape, s.getRect(), false) ||
-        WFMath::Contains(s.getRect(), m_shape.center(), false);
-}
-    
 void CraterTerrainMod::apply(float &point, int x, int y) const
 {
-    if (Contains(m_shape,WFMath::Point<3>(x,y,point),true)) {
-        float d = m_shape.radius() * m_shape.radius() -
-                  (m_shape.getCenter()[0] - x) * (m_shape.getCenter()[0] - x) -
-                  (m_shape.getCenter()[1] - y) * (m_shape.getCenter()[1] - y); 
-
-        if (d >= 0.0)
-            point = m_shape.getCenter()[2] - sqrt(d);
-    }
+    // FIXME Write an implementation here
+    // if (Contains(m_shape,WFMath::Point<3>(x,y,point),true)) {
+        // float d = m_shape.radius() * m_shape.radius() -
+                  // (m_shape.getCenter()[0] - x) * (m_shape.getCenter()[0] - x) -
+                  // (m_shape.getCenter()[1] - y) * (m_shape.getCenter()[1] - y); 
+// 
+        // if (d >= 0.0)
+            // point = m_shape.getCenter()[2] - sqrt(d);
+    // }
 }
     
 TerrainMod * CraterTerrainMod::clone() const
 {
-    return new CraterTerrainMod(m_shape);
+    return new CraterTerrainMod(m_level, this->m_shape);
 }
 
-void CraterTerrainMod::setShape(const WFMath::Ball<3> & s)
+void CraterTerrainMod::setShape(float level, const WFMath::Ball<2> & s)
 {
-    
-    WFMath::AxisBox<3> bb=m_shape.boundingBox();
-    m_box = WFMath::AxisBox<2> (
-                WFMath::Point<2>(bb.lowerBound(0), bb.lowerBound(1)),
-                WFMath::Point<2>(bb.upperBound(0), bb.upperBound(1))
-           );
-    m_intersectShape = WFMath::Ball<2>(WFMath::Point<2>(s.center()[0],
-                                                        s.center()[1]),
-                                       s.radius());
+    ShapeTerrainMod<WFMath::Ball>::setShape(s);
+    m_level = level;
 }
 
 } // namespace Mercator

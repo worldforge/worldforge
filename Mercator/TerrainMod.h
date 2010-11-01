@@ -162,31 +162,27 @@ protected:
 ///
 /// This modifier creates an area where a sphere shaped volume has been
 /// subtracted from the terrain surface to create a spherical crater.
-class CraterTerrainMod : public TerrainMod
+class CraterTerrainMod : public ShapeTerrainMod<WFMath::Ball>
 {
 public:
     /// \brief Constructor
     ///
     /// @param s Sphere that defines the shape of the crater.
-    CraterTerrainMod(const WFMath::Ball<3> &s);
+    CraterTerrainMod(float level, const WFMath::Ball<2> &s);
 
-    virtual ~CraterTerrainMod(); // {}
-
-    virtual bool checkIntersects(const Segment& s) const;
+    virtual ~CraterTerrainMod();
 
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
-    void setShape(const WFMath::Ball<3> & s);
+    void setShape(float level, const WFMath::Ball<2> & s);
 private:
     /// \brief Copy constructor.
-    CraterTerrainMod(CraterTerrainMod&) {}
+    CraterTerrainMod(CraterTerrainMod&); // {}
 
-    /// \brief Sphere that defines the shape of the crater.
-    WFMath::Ball<3> m_shape;
-
-    /// \brief Circle that defines the shape for intersection with checks with terrain
-    WFMath::Ball<2> m_intersectShape;
+protected:
+    /// \brief The height level of the crater center
+    float m_level;
 };
 
 } //namespace Mercator
