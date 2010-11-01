@@ -115,7 +115,7 @@ public:
     void setShape(float dist, const Shape<2> & s);
 private:
     /// \brief Copy constructor.
-    AdjustTerrainMod(AdjustTerrainMod&) {}
+    AdjustTerrainMod(AdjustTerrainMod&); // {}
 
 protected:
     /// \brief Adjustment to the height of all points affected.
