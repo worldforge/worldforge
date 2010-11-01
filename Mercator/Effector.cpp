@@ -31,6 +31,10 @@ Effector::Effector() : m_context(0)
 
 Effector::~Effector()
 {
+    // FIXME Need to ensure this pointer is not copied in the
+    // copy constructor. Either ban copying, or write copy
+    // constructor and assignment operator that zero this
+    // pointer.
     delete m_context;
 }
 
