@@ -41,7 +41,16 @@ void TerrainMod::removeFromSegment(Segment & s) const
 }
 
 template class LevelTerrainMod<WFMath::Ball >;
+template class LevelTerrainMod<WFMath::Polygon >;
 template class LevelTerrainMod<WFMath::RotBox >;
+
+template class AdjustTerrainMod<WFMath::Ball >;
+template class AdjustTerrainMod<WFMath::Polygon >;
+template class AdjustTerrainMod<WFMath::RotBox >;
+
+template class SlopeTerrainMod<WFMath::Ball >;
+template class SlopeTerrainMod<WFMath::Polygon >;
+template class SlopeTerrainMod<WFMath::RotBox >;
 
 CraterTerrainMod::CraterTerrainMod(const WFMath::Ball<3> &s) :
       m_shape(s),
