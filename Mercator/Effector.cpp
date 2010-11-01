@@ -29,12 +29,22 @@ Effector::Effector() : m_context(0)
 {
 }
 
+// Ensure that m_context is not copied only one object can own the context
+Effector::Effector(const Effector & o) : m_box(o.m_box), m_context(0)
+{
+}
+
+// Ensure that m_context is not copied only one object can own the context
+Effector & Effector::operator=(const Effector & rhs)
+{
+    m_box = rhs.m_box;
+    delete m_context;
+    m_context = 0;
+    return *this;
+}
+
 Effector::~Effector()
 {
-    // FIXME Need to ensure this pointer is not copied in the
-    // copy constructor. Either ban copying, or write copy
-    // constructor and assignment operator that zero this
-    // pointer.
     delete m_context;
 }
 

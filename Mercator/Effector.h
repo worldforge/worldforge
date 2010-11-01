@@ -58,6 +58,12 @@ class Effector
     /// \brief Constructor
     Effector();
 
+    /// \brief Copy constructor
+    Effector(const Effector &);
+
+    /// \brief Assignment
+    Effector & operator=(const Effector &);
+
     /// The bounding box of the geometric shape.
     WFMath::AxisBox<2> m_box;
     
