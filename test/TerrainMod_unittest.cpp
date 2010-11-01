@@ -146,6 +146,7 @@ int main()
         
         Atlas::Message::MapType shapeBall;
         shapeBall["radius"] = 15;
+        shapeBall["position"] = Atlas::Message::ListType(2, 0.);
         shapeBall["type"] = "ball";
         shapes["ball"] = shapeBall;
         
