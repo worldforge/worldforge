@@ -144,11 +144,11 @@ int main()
         slopeMods["1"] = slopeMod1;
         
         
-        Atlas::Message::MapType shapeBall;
-        shapeBall["radius"] = 15;
-        shapeBall["position"] = Atlas::Message::ListType(2, 0.);
-        shapeBall["type"] = "ball";
-        shapes["ball"] = shapeBall;
+        Atlas::Message::MapType shapeCircle;
+        shapeCircle["radius"] = 15;
+        shapeCircle["position"] = Atlas::Message::ListType(2, 0.);
+        shapeCircle["type"] = "ball";
+        shapes["ball"] = shapeCircle;
         
         Atlas::Message::MapType shapePolygon;
         Atlas::Message::ListType points;
@@ -237,6 +237,11 @@ int main()
                 }
             }
         }
+        
+        Atlas::Message::MapType shapeBall;
+        shapeBall["radius"] = 15;
+        shapeBall["position"] = Atlas::Message::ListType(3, 0.);
+        shapeBall["type"] = "ball";
         
         //test crater mod
         {
