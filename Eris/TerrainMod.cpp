@@ -79,39 +79,31 @@ WFMath::Point<3> InnerTerrainMod::parsePosition(const Atlas::Message::MapType& m
 
 InnerTerrainModCrater::InnerTerrainModCrater(TerrainMod& terrainMod)
 : InnerTerrainMod(terrainMod, "cratermod")
-, mModifier(0)
+, mModifier_impl(0)
 {
 }
 
 InnerTerrainModCrater::~InnerTerrainModCrater()
 {
-    delete mModifier;
+    delete mModifier_impl;
 }
 
 Mercator::TerrainMod* InnerTerrainModCrater::getModifier()
 {
-    return mModifier;
+    return mModifier_impl->getModifier();
 }
 
 
 bool InnerTerrainModCrater::parseAtlasData(const Atlas::Message::MapType& modElement)
 {
-
+    WFMath::Point<3> pos = parsePosition(modElement);
     const Atlas::Message::Element* shapeMap(0);
     const std::string& shapeType = parseShape(modElement, &shapeMap);
     if (shapeMap) {
         if (shapeType == "ball") {
-            WFMath::Point<3> pos = parsePosition(modElement);
-
-            WFMath::Ball<3> shape;
-            try {
-                shape.fromAtlas(*shapeMap);
-                shape.shift(WFMath::Vector<3>(pos.x(), pos.y(), pos.z()));
-                mModifier = new Mercator::CraterTerrainMod(shape);
-                return true;
-            } catch (const Atlas::Message::WrongTypeException& ex) {
-                ///Just fall through
-            }
+            InnerTerrainModCrater_impl<WFMath::Ball>* modifierImpl = new InnerTerrainModCrater_impl<WFMath::Ball>();
+            mModifier_impl = modifierImpl;
+            return modifierImpl->createInstance(*shapeMap, pos, mTerrainMod.getEntity()->getOrientation(), pos.z());
         }
     }
     error() << "Crater terrain mod defined with incorrect shape";

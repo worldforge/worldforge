@@ -246,7 +246,7 @@ int main()
         //test crater mod
         {
             Atlas::Message::MapType modElement = craterMod1;
-            modElement["shape"] = shapeBall;
+            modElement["shape"] = shapeCircle;
             TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
             mod_ent->setup_setAttr("terrainmod", modElement);
             
