@@ -25,7 +25,6 @@
 
 #include <Eris/Log.h>
 #include <Mercator/TerrainMod.h>
-#include <Mercator/TerrainMod_impl.h>
 #include <wfmath/ball.h>
 #include <wfmath/polygon.h>
 
