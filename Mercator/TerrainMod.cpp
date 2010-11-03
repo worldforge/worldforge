@@ -52,38 +52,8 @@ template class SlopeTerrainMod<WFMath::Ball >;
 template class SlopeTerrainMod<WFMath::Polygon >;
 template class SlopeTerrainMod<WFMath::RotBox >;
 
-CraterTerrainMod::CraterTerrainMod(float level, const WFMath::Ball<2> &s) :
-      ShapeTerrainMod<WFMath::Ball>(s),
-      m_level(level)
-{
-}
-
-CraterTerrainMod::~CraterTerrainMod()
-{
-}
-
-void CraterTerrainMod::apply(float &point, int x, int y) const
-{
-    // FIXME Write an implementation here
-    // if (Contains(m_shape,WFMath::Point<3>(x,y,point),true)) {
-        // float d = m_shape.radius() * m_shape.radius() -
-                  // (m_shape.getCenter()[0] - x) * (m_shape.getCenter()[0] - x) -
-                  // (m_shape.getCenter()[1] - y) * (m_shape.getCenter()[1] - y); 
-// 
-        // if (d >= 0.0)
-            // point = m_shape.getCenter()[2] - sqrt(d);
-    // }
-}
-    
-TerrainMod * CraterTerrainMod::clone() const
-{
-    return new CraterTerrainMod(m_level, this->m_shape);
-}
-
-void CraterTerrainMod::setShape(float level, const WFMath::Ball<2> & s)
-{
-    ShapeTerrainMod<WFMath::Ball>::setShape(s);
-    m_level = level;
-}
+template class CraterTerrainMod<WFMath::Ball >;
+template class CraterTerrainMod<WFMath::Polygon >;
+template class CraterTerrainMod<WFMath::RotBox >;
 
 } // namespace Mercator

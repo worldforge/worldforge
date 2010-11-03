@@ -114,6 +114,33 @@ void SlopeTerrainMod<Shape>::setShape(float level, float dx, float dy, const Sha
     m_dy = dy;
 }
 
+
+template <template <int> class Shape> CraterTerrainMod<Shape>::~CraterTerrainMod()
+{
+}
+    
+template <template <int> class Shape>
+void CraterTerrainMod<Shape>::apply(float &point, int x, int y) const
+{
+    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
+        point += m_level;
+    }
+}
+    
+template <template <int> class Shape>
+TerrainMod * CraterTerrainMod<Shape>::clone() const
+{
+    return new CraterTerrainMod<Shape>(m_level, this->m_shape);
+}
+
+template <template <int> class Shape>
+void CraterTerrainMod<Shape>::setShape(float level, const Shape<2> & s)
+{
+    ShapeTerrainMod<Shape>::setShape(s);
+    m_level = level;
+}
+
+
 } //namespace Mercator
 
 #endif // MERCATOR_TERRAIN_MOD_IMPL_H

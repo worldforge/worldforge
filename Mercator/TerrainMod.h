@@ -162,20 +162,22 @@ protected:
 ///
 /// This modifier creates an area where a sphere shaped volume has been
 /// subtracted from the terrain surface to create a spherical crater.
-class CraterTerrainMod : public ShapeTerrainMod<WFMath::Ball>
+template <template <int> class Shape>
+class CraterTerrainMod : public ShapeTerrainMod<Shape>
 {
 public:
     /// \brief Constructor
     ///
     /// @param s Sphere that defines the shape of the crater.
-    CraterTerrainMod(float level, const WFMath::Ball<2> &s);
+    CraterTerrainMod(float level, const Shape<2> &s)
+        : ShapeTerrainMod<Shape>(s), m_level(level) {}
 
     virtual ~CraterTerrainMod();
 
     virtual void apply(float &point, int x, int y) const;
     virtual TerrainMod *clone() const;
 
-    void setShape(float level, const WFMath::Ball<2> & s);
+    void setShape(float level, const Shape<2> & s);
 private:
     /// \brief Copy constructor.
     CraterTerrainMod(CraterTerrainMod&); // {}

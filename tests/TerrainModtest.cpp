@@ -49,7 +49,7 @@ int main()
     terrain.addMod(mp2);
 
     const WFMath::Ball<2> ball(WFMath::Point<2>(80, 80), 10);
-    Mercator::TerrainMod * mp3 = new Mercator::CraterTerrainMod(-5.f, ball);
+    Mercator::TerrainMod * mp3 = new Mercator::CraterTerrainMod<WFMath::Ball>(-5.f, ball);
     terrain.addMod(mp3);
 
     Mercator::Segment * segment = terrain.getSegment(0, 0);
