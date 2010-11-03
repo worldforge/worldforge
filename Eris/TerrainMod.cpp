@@ -268,17 +268,17 @@ bool InnerTerrainModAdjust::parseAtlasData(const WFMath::Point<3> & pos, const W
 
 const std::string& InnerTerrainMod::parseShape(const MapType& modElement, const Element** shapeMap)
 {
-    MapType::const_iterator shape_I = modElement.find("shape");
-    if (shape_I != modElement.end()) {
-        const Element& shapeElement = shape_I->second;
+    MapType::const_iterator I = modElement.find("shape");
+    if (I != modElement.end()) {
+        const Element& shapeElement = I->second;
         if (shapeElement.isMap()) {
             const MapType& localShapeMap = shapeElement.asMap();
             *shapeMap = &shapeElement;
 
             // Get shape's type
-            MapType::const_iterator type_I = localShapeMap.find("type");
-            if (type_I != localShapeMap.end()) {
-                const Element& shapeTypeElem(type_I->second);
+            MapType::const_iterator J = localShapeMap.find("type");
+            if (J != localShapeMap.end()) {
+                const Element& shapeTypeElem(J->second);
                 if (shapeTypeElem.isString()) {
                     const std::string& shapeType = shapeTypeElem.asString();
                     return shapeType;
