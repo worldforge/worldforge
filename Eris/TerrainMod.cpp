@@ -124,13 +124,13 @@ Mercator::TerrainMod* InnerTerrainModCrater::getModifier()
 bool InnerTerrainModCrater::parseAtlasData(const WFMath::Point<3> & p, const WFMath::Quaternion & orientation, const MapType& modElement)
 {
     WFMath::Point<3> pos = parsePosition(p, modElement);
-    const Element* shapeMap(0);
-    const std::string& shapeType = parseShape(modElement, &shapeMap);
-    if (shapeMap) {
+    Element shapeMap;
+    const std::string& shapeType = parseShape(modElement, shapeMap);
+    if (!shapeMap.isNone()) {
         if (shapeType == "ball") {
             InnerTerrainModCrater_impl<WFMath::Ball>* modifierImpl = new InnerTerrainModCrater_impl<WFMath::Ball>();
             mModifier_impl = modifierImpl;
-            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z());
+            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z());
         }
     }
     error() << "Crater terrain mod defined with incorrect shape";
@@ -171,21 +171,21 @@ bool InnerTerrainModSlope::parseAtlasData(const WFMath::Point<3> & p, const WFMa
                     const float dx = slopes[0].asNum();
                     const float dy = slopes[1].asNum();
                     WFMath::Point<3> pos = parsePosition(p, modElement);
-                    const Element* shapeMap(0);
-                    const std::string& shapeType = parseShape(modElement, &shapeMap);
-                    if (shapeMap) {
+                    Element shapeMap;
+                    const std::string& shapeType = parseShape(modElement, shapeMap);
+                    if (!shapeMap.isNone()) {
                         if (shapeType == "ball") {
                             InnerTerrainModSlope_impl<WFMath::Ball>* modifierImpl = new InnerTerrainModSlope_impl<WFMath::Ball>();
                             mModifier_impl = modifierImpl;
-                            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z(), dx, dy);
+                            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z(), dx, dy);
                         } else if (shapeType == "rotbox") {
                             InnerTerrainModSlope_impl<WFMath::RotBox>* modifierImpl = new InnerTerrainModSlope_impl<WFMath::RotBox>();
                             mModifier_impl = modifierImpl;
-                            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z(), dx, dy);
+                            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z(), dx, dy);
                         } else if (shapeType == "polygon") {
                             InnerTerrainModSlope_impl<WFMath::Polygon>* modifierImpl = new InnerTerrainModSlope_impl<WFMath::Polygon>();
                             mModifier_impl = modifierImpl;
-                            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z(), dx, dy);
+                            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z(), dx, dy);
                         }
                     }
                 }
@@ -220,21 +220,21 @@ bool InnerTerrainModLevel::parseAtlasData(const WFMath::Point<3> & p, const WFMa
 {
     WFMath::Point<3> pos = parsePosition(p, modElement);
     // Get level
-    const Element* shapeMap(0);
-    const std::string& shapeType = parseShape(modElement, &shapeMap);
-    if (shapeMap) {
+    Element shapeMap;
+    const std::string& shapeType = parseShape(modElement, shapeMap);
+    if (!shapeMap.isNone()) {
         if (shapeType == "ball") {
             InnerTerrainModLevel_impl<WFMath::Ball>* modifierImpl = new InnerTerrainModLevel_impl<WFMath::Ball>();
             mModifier_impl = modifierImpl;
-            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z());
+            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z());
         } else if (shapeType == "rotbox") {
             InnerTerrainModLevel_impl<WFMath::RotBox>* modifierImpl = new InnerTerrainModLevel_impl<WFMath::RotBox>();
             mModifier_impl = modifierImpl;
-            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z());
+            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z());
         } else if (shapeType == "polygon") {
             InnerTerrainModLevel_impl<WFMath::Polygon>* modifierImpl = new InnerTerrainModLevel_impl<WFMath::Polygon>();
             mModifier_impl = modifierImpl;
-            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z());
+            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z());
         }
     }
     error() << "Level terrain mod defined with incorrect shape";
@@ -264,21 +264,21 @@ Mercator::TerrainMod* InnerTerrainModAdjust::getModifier()
 bool InnerTerrainModAdjust::parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const MapType& modElement)
 {
 
-    const Element* shapeMap(0);
-    const std::string& shapeType = parseShape(modElement, &shapeMap);
-    if (shapeMap) {
+    Element shapeMap;
+    const std::string& shapeType = parseShape(modElement, shapeMap);
+    if (!shapeMap.isNone()) {
         if (shapeType == "ball") {
             InnerTerrainModAdjust_impl<WFMath::Ball>* modifierImpl = new InnerTerrainModAdjust_impl<WFMath::Ball>();
             mModifier_impl = modifierImpl;
-            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z());
+            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z());
         } else if (shapeType == "rotbox") {
             InnerTerrainModAdjust_impl<WFMath::RotBox>* modifierImpl = new InnerTerrainModAdjust_impl<WFMath::RotBox>();
             mModifier_impl = modifierImpl;
-            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z());
+            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z());
         } else if (shapeType == "polygon") {
             InnerTerrainModAdjust_impl<WFMath::Polygon>* modifierImpl = new InnerTerrainModAdjust_impl<WFMath::Polygon>();
             mModifier_impl = modifierImpl;
-            return modifierImpl->createInstance(*shapeMap, pos, orientation, pos.z());
+            return modifierImpl->createInstance(shapeMap, pos, orientation, pos.z());
         }
     }
     error() << "Adjust terrain mod defined with incorrect shape";
@@ -292,14 +292,14 @@ bool InnerTerrainModAdjust::parseAtlasData(const WFMath::Point<3> & pos, const W
  * @param shapeMap A shape data is found, and it's in the map form, it will be put here.
  * @return The name of the shape, or an empty string if no valid data could be found.
  */
-const std::string& InnerTerrainMod::parseShape(const MapType& modElement, const Element** shapeMap)
+const std::string& InnerTerrainMod::parseShape(const MapType& modElement, Element& shapeMap)
 {
     MapType::const_iterator I = modElement.find("shape");
     if (I != modElement.end()) {
         const Element& shapeElement = I->second;
         if (shapeElement.isMap()) {
             const MapType& localShapeMap = shapeElement.asMap();
-            *shapeMap = &shapeElement;
+            shapeMap = localShapeMap;
 
             // Get shape's type
             MapType::const_iterator J = localShapeMap.find("type");

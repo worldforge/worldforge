@@ -79,7 +79,7 @@ protected:
     */
     std::string mTypeName;
     
-    const std::string& parseShape(const Atlas::Message::MapType& modElement, const Atlas::Message::Element** shapeMap);
+    const std::string& parseShape(const Atlas::Message::MapType& modElement, Atlas::Message::Element& shapeMap);
     
     WFMath::Point<3> parsePosition(const WFMath::Point<3> & pos, const Atlas::Message::MapType& modElement);
 };
