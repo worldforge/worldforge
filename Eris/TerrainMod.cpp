@@ -39,8 +39,7 @@
 namespace Eris
 {
 
-InnerTerrainMod::InnerTerrainMod(TerrainMod& terrainMod, const std::string& typemod)
-: mTerrainMod(terrainMod)
+InnerTerrainMod::InnerTerrainMod(const std::string& typemod)
 {
 }
 
@@ -77,8 +76,8 @@ WFMath::Point<3> InnerTerrainMod::parsePosition(const WFMath::Point<3> & p, cons
     return pos;
 }
 
-InnerTerrainModCrater::InnerTerrainModCrater(TerrainMod& terrainMod)
-: InnerTerrainMod(terrainMod, "cratermod")
+InnerTerrainModCrater::InnerTerrainModCrater()
+: InnerTerrainMod("cratermod")
 , mModifier_impl(0)
 {
 }
@@ -111,8 +110,8 @@ bool InnerTerrainModCrater::parseAtlasData(const WFMath::Point<3> & p, const WFM
 }
 
 
-InnerTerrainModSlope::InnerTerrainModSlope(TerrainMod& terrainMod)
-: InnerTerrainMod(terrainMod, "slopemod")
+InnerTerrainModSlope::InnerTerrainModSlope()
+: InnerTerrainMod("slopemod")
 , mModifier_impl(0)
 {
 }
@@ -168,8 +167,8 @@ bool InnerTerrainModSlope::parseAtlasData(const WFMath::Point<3> & p, const WFMa
 }
 
 
-InnerTerrainModLevel::InnerTerrainModLevel(TerrainMod& terrainMod)
-: InnerTerrainMod(terrainMod, "levelmod")
+InnerTerrainModLevel::InnerTerrainModLevel()
+: InnerTerrainMod("levelmod")
 , mModifier_impl(0)
 {
 }
@@ -209,8 +208,8 @@ bool InnerTerrainModLevel::parseAtlasData(const WFMath::Point<3> & p, const WFMa
     return false;
 }
 
-InnerTerrainModAdjust::InnerTerrainModAdjust(TerrainMod& terrainMod)
-: InnerTerrainMod(terrainMod, "adjustmod")
+InnerTerrainModAdjust::InnerTerrainModAdjust()
+: InnerTerrainMod("adjustmod")
 , mModifier_impl(0)
 {
 }
@@ -336,13 +335,13 @@ bool TerrainMod::parseMod()
             const std::string& modType = modTypeElem.asString();
 
             if (modType == "slopemod") {
-                mInnerMod = new InnerTerrainModSlope(*this);
+                mInnerMod = new InnerTerrainModSlope();
             } else if (modType == "levelmod") {
-                mInnerMod = new InnerTerrainModLevel(*this);
+                mInnerMod = new InnerTerrainModLevel();
             } else if (modType == "adjustmod") {
-                mInnerMod = new InnerTerrainModAdjust(*this);
+                mInnerMod = new InnerTerrainModAdjust();
             } else  if (modType == "cratermod") {
-                mInnerMod = new InnerTerrainModCrater(*this);
+                mInnerMod = new InnerTerrainModCrater();
             } else {
                 error() << "'" << modType << "' isn't a recognized terrain mod type.";
            }
