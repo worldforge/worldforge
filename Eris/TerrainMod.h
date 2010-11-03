@@ -36,7 +36,6 @@
 namespace Mercator
 {
     class TerrainMod;
-    class CraterTerrainMod;
 }
 
 namespace Eris
@@ -115,10 +114,6 @@ protected:
     * @return The position of the mod, where the height has been adjusted.
     */
     WFMath::Point<3> parsePosition(const WFMath::Point<3> & pos, const Atlas::Message::MapType& modElement);
-
-// 	template <typename InnerTerrainMod_implType>
-// 	InnerTerrainMod_implType* createInnerTerrainMod_impInstance(const Atlas::Message::MapType& modElement);
-
 };
 
 
