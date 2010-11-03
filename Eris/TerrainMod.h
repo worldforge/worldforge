@@ -74,7 +74,7 @@ public:
     * @param modElement The Atlas element describing the terrainmod. This should in most instances correspond directly to the "terrainmod" element found in the root atlas attribute map.
     * @return If the parsing was successful, true will be returned, and a new Mercator::TerrainMod will have been created, else false.
     */
-    virtual bool parseAtlasData(const Atlas::Message::MapType& modElement) = 0;
+    virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement) = 0;
     
     /**
     * @brief Accessor for the Mercator::TerrainMod created and held by this instance.
@@ -121,7 +121,7 @@ protected:
     * @param modElement The top mod element.
     * @return The position of the mod, where the height has been adjusted.
     */
-    WFMath::Point<3> parsePosition(const Atlas::Message::MapType& modElement);
+    WFMath::Point<3> parsePosition(const WFMath::Point<3> & pos, const Atlas::Message::MapType& modElement);
 
 // 	template <typename InnerTerrainMod_implType>
 // 	InnerTerrainMod_implType* createInnerTerrainMod_impInstance(const Atlas::Message::MapType& modElement);
@@ -152,7 +152,7 @@ public:
     /**
     * @copydoc InnerTerrainMod::parseAtlasData()
     */
-    virtual bool parseAtlasData(const Atlas::Message::MapType& modElement);
+    virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement);
     
     /**
     * @copydoc InnerTerrainMod::getModifier()
@@ -193,7 +193,7 @@ public:
     /**
     * @copydoc InnerTerrainMod::parseAtlasData()
     */
-    virtual bool parseAtlasData(const Atlas::Message::MapType& modElement);
+    virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement);
     
     /**
     * @copydoc InnerTerrainMod::getModifier()
@@ -232,7 +232,7 @@ public:
     /**
     * @copydoc InnerTerrainMod::parseAtlasData()
     */
-    virtual bool parseAtlasData(const Atlas::Message::MapType& modElement);
+    virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement);
     
     /**
     * @copydoc InnerTerrainMod::getModifier()
@@ -273,7 +273,7 @@ public:
     /**
     * @copydoc InnerTerrainMod::parseAtlasData()
     */
-    virtual bool parseAtlasData(const Atlas::Message::MapType& modElement);
+    virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement);
     
     /**
     * @copydoc InnerTerrainMod::getModifier()
