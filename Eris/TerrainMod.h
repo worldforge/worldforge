@@ -112,9 +112,6 @@ public:
      */
     virtual ~InnerTerrainModSlope();
     
-    /**
-     * @copydoc InnerTerrainMod::parseAtlasData()
-     */
     virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement);
 };
 
@@ -140,9 +137,6 @@ public:
      */
     virtual ~InnerTerrainModCrater();
     
-    /**
-     * @copydoc InnerTerrainMod::parseAtlasData()
-     */
     virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement);
 };
 
@@ -167,9 +161,6 @@ public:
      */
     virtual ~InnerTerrainModLevel();
     
-    /**
-     * @copydoc InnerTerrainMod::parseAtlasData()
-     */
     virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement);
 };
 
@@ -194,9 +185,6 @@ public:
      */
     virtual ~InnerTerrainModAdjust();
     
-    /**
-     * @copydoc InnerTerrainMod::parseAtlasData()
-     */
     virtual bool parseAtlasData(const WFMath::Point<3> & pos, const WFMath::Quaternion & orientation, const Atlas::Message::MapType& modElement);
 };
 
