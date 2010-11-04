@@ -20,14 +20,15 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.//
 //
-#ifndef EMBEROGRE_TERRAINTERRAINMOD_IMPL_H
-#define EMBEROGRE_TERRAINTERRAINMOD_IMPL_H
+#ifndef WORLDFORGE_TERRAIN_MOD_IMPL_H
+#define WORLDFORGE_TERRAIN_MOD_IMPL_H
 
 #include <Eris/Log.h>
+
 #include <Mercator/TerrainMod.h>
+
 #include <wfmath/ball.h>
 #include <wfmath/polygon.h>
-
 
 namespace Eris
 {
