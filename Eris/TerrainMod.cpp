@@ -211,6 +211,10 @@ bool InnerTerrainModCrater::parseAtlasData(const WFMath::Point<3> & pos, const W
 {
     Element shapeMap;
     ShapeT shapeType = parseShape(modElement, shapeMap);
+    if (shapeType == SHAPE_UNKNOWN) {
+        warning() << "Crater terrain mod defined with unknwon shape";
+        return false;
+    }
     if (!shapeMap.isNone()) {
         float level = parsePosition(pos, modElement);
         if (shapeType == SHAPE_BALL) {
@@ -231,6 +235,10 @@ bool InnerTerrainModSlope::parseAtlasData(const WFMath::Point<3> & pos, const WF
 {
     Element shapeMap;
     ShapeT shapeType = parseShape(modElement, shapeMap);
+    if (shapeType == SHAPE_UNKNOWN) {
+        warning() << "Crater terrain mod defined with unknwon shape";
+        return false;
+    }
     if (!shapeMap.isNone()) {
         // Get slopes
         MapType::const_iterator I = modElement.find("slopes");
@@ -269,6 +277,10 @@ bool InnerTerrainModLevel::parseAtlasData(const WFMath::Point<3> & pos, const WF
 {
     Element shapeMap;
     ShapeT shapeType = parseShape(modElement, shapeMap);
+    if (shapeType == SHAPE_UNKNOWN) {
+        warning() << "Crater terrain mod defined with unknwon shape";
+        return false;
+    }
     if (!shapeMap.isNone()) {
         float level = parsePosition(pos, modElement);
         if (shapeType == SHAPE_BALL) {
@@ -293,6 +305,10 @@ bool InnerTerrainModAdjust::parseAtlasData(const WFMath::Point<3> & pos, const W
 
     Element shapeMap;
     ShapeT shapeType = parseShape(modElement, shapeMap);
+    if (shapeType == SHAPE_UNKNOWN) {
+        warning() << "Crater terrain mod defined with unknwon shape";
+        return false;
+    }
     if (!shapeMap.isNone()) {
         if (shapeType == SHAPE_BALL) {
             return createInstance<WFMath::Ball, Mercator::AdjustTerrainMod>(shapeMap, pos, orientation, pos.z());
