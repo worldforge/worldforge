@@ -30,6 +30,8 @@
 #ifndef ERIS_TERRAINMOD_H
 #define ERIS_TERRAINMOD_H
 
+#include <Eris/TerrainMod_impl.h>
+
 #include <sigc++/signal.h>
 #include <Eris/Entity.h>
 
@@ -38,8 +40,6 @@ namespace Mercator {
 }
 
 namespace Eris {
-
-class InnerTerrainMod_impl;
 
 /**
 @author Erik Hjortsberg <erik.hjortsberg@iteam.se>
@@ -93,7 +93,7 @@ protected:
      * This is separate from this class because of the heavy use of templated shapes.
      * The ownership is ours, so it will be destroyed when this instance is destroyed.
      */
-    InnerTerrainMod_impl* m_impl;
+    InnerTerrainMod_impl m_impl;
 };
 
 
