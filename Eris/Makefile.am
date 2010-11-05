@@ -84,7 +84,6 @@ liberis_HEADERS = \
 	Alarm.h \
 	Task.h \
 	TerrainMod.h \
-	TerrainMod_impl.h \
 	SpawnPoint.h \
 	CharacterType.h \
 	ViewEntity.h \
