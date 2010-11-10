@@ -104,7 +104,7 @@ protected:
     bool createInstance(const Atlas::Message::Element& shapeElement,
                         const WFMath::Point<3>& pos,
                         const WFMath::Quaternion& orientation,
-                        float,
+                        const Atlas::Message::MapType &,
                         float,
                         float);
 
@@ -113,7 +113,7 @@ protected:
     bool createInstance(const Atlas::Message::Element& shapeElement,
                         const WFMath::Point<3>& pos,
                         const WFMath::Quaternion& orientation,
-                        float);
+                        const Atlas::Message::MapType &);
 
     Mercator::TerrainMod * m_mod;
 };
