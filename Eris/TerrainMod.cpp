@@ -168,7 +168,7 @@ float InnerTerrainMod::parsePosition(const WFMath::Point<3> & pos, const MapType
  * created.
  */
 template<template <int> class Shape>
-bool InnerTerrainMod::parseShapeAtlasData(const Atlas::Message::Element& shapeElement,
+bool InnerTerrainMod::parseShapeAtlasData(const Element& shapeElement,
                                           const WFMath::Point<3>& pos,
                                           const WFMath::Quaternion& orientation,
                                           Shape <2> & shape)
@@ -207,7 +207,7 @@ bool InnerTerrainMod::parseShapeAtlasData(const Atlas::Message::Element& shapeEl
 template <template <int> class Shape,
           template <template <int> class Shape> class Mod>
 bool InnerTerrainMod::createInstance(
-      const Atlas::Message::Element& shapeElement,
+      const Element& shapeElement,
       const WFMath::Point<3>& pos,
       const WFMath::Quaternion& orientation,
       const MapType& modElement,
@@ -252,7 +252,7 @@ bool InnerTerrainMod::createInstance(
 template <template <int> class Shape,
           template <template <int> class S> class Mod>
 bool InnerTerrainMod::createInstance(
-      const Atlas::Message::Element& shapeElement,
+      const Element& shapeElement,
       const WFMath::Point<3>& pos,
       const WFMath::Quaternion& orientation,
       const MapType& modElement)
@@ -329,33 +329,23 @@ bool TerrainMod::parseMod()
         return false;
     }
 
-    const Atlas::Message::Element& modifier(mEntity->valueOfAttr("terrainmod"));
+    const Element& modifier(mEntity->valueOfAttr("terrainmod"));
 
     if (!modifier.isMap()) {
         error() << "Terrain modifier is not a map";
         return false;
     }
-    const Atlas::Message::MapType & modMap = modifier.asMap();
+    const MapType & modMap = modifier.asMap();
 
 
     // Get modifier type
-    Atlas::Message::MapType::const_iterator I = modMap.find("type");
+    MapType::const_iterator I = modMap.find("type");
     if (I != modMap.end()) {
-        const Atlas::Message::Element& modTypeElem(I->second);
+        const Element& modTypeElem(I->second);
         if (modTypeElem.isString()) {
             const std::string& modType = modTypeElem.asString();
 
-            if (modType == "slopemod") {
-                mInnerMod = new InnerTerrainModSlope();
-            } else if (modType == "levelmod") {
-                mInnerMod = new InnerTerrainModLevel();
-            } else if (modType == "adjustmod") {
-                mInnerMod = new InnerTerrainModAdjust();
-            } else  if (modType == "cratermod") {
-                mInnerMod = new InnerTerrainModCrater();
-            } else {
-                error() << "'" << modType << "' isn't a recognized terrain mod type.";
-           }
+            mInnerMod = new InnerTerrainMod(modType);
         } else {
             error() << "Mod type must be a string value.";
         }
@@ -392,7 +382,7 @@ void TerrainMod::reparseMod()
     delete oldMod;
 }
 
-void TerrainMod::attributeChanged(const Atlas::Message::Element& attributeValue)
+void TerrainMod::attributeChanged(const Element& attributeValue)
 {
     reparseMod();
 }
