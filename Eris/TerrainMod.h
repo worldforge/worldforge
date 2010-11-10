@@ -86,10 +86,10 @@ public:
      */
     Mercator::TerrainMod* getModifier();
 
-protected:
-
     InnerTerrainMod(const std::string& typemod);
     
+protected:
+
     /**
      * @brief The type of mod this instance handles.
      * @see getTypename()
