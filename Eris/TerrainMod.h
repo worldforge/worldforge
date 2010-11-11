@@ -87,6 +87,12 @@ protected:
      */
     std::string mTypeName;
 
+    /**
+     * @brief The shape of mod this instance handles.
+     * @see getTypename()
+     */
+    std::string mShapeName;
+
     static float parsePosition(const WFMath::Point<3> & pos, const Atlas::Message::MapType& modElement);
 
     template <template <int> class Shape>

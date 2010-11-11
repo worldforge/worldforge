@@ -100,7 +100,6 @@ bool InnerTerrainMod::parseData(const WFMath::Point<3> & pos,
         return false;
     }
     const std::string& modType = I->second.String();
-    mTypeName = modType;
 
     I = modElement.find("shape");
     if (I == modElement.end() || !I->second.isMap()) {
@@ -114,6 +113,15 @@ bool InnerTerrainMod::parseData(const WFMath::Point<3> & pos,
         return false;
     }
     const std::string& shapeType = I->second.String();
+    if (m_mod != 0) {
+        assert(!mTypeName.empty());
+        assert(!mShapeName.empty());
+        if (mTypeName != modType || mShapeName != shapeType) {
+            m_mod = 0;
+        }
+    }
+    mTypeName = modType;
+    mShapeName = shapeType;
     if (shapeType == "ball") {
         WFMath::Ball<2> shape;
         return parseStuff(pos, orientation, modElement, shape, shapeMap);
