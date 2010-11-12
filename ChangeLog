@@ -1,3 +1,12 @@
+2010-11-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Mercator/Segment.h: Add an accessor so the mods stored in a segment
+	  are accessible for testing.
+
+	* Mercator/TerrainMod.cpp, Mercator/TerrainMod.h: Add support for
+	  storing context data from the application in each terrain mod
+	  object.
+
 2010-08-19  Al Riddoch  <alriddoch@googlemail.com>
 
 	* NEWS: Update news.
