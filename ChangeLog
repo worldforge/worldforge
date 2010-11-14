@@ -1,3 +1,9 @@
+2010-08-14  Al Riddoch  <alriddoch@googlemail.com>
+
+	* NEWS: Update news.
+
+	* Release 0.2.9, interface version 8
+
 2010-11-12  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Mercator/Segment.h: Add an accessor so the mods stored in a segment
