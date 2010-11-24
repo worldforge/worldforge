@@ -72,9 +72,9 @@ AC_SUBST(SYSTEM_LIBS)
 AC_SUBST(WFMATH_LIB_SUFFIX)
 AC_SUBST(WFMATH_LIBS)
 
-AC_CONFIG_FILES([Makefile 
-	wfmath/Makefile 
-	atlas/Makefile 
+AC_CONFIG_FILES([Makefile
+	wfmath/Makefile
+	atlas/Makefile
 	doc/Makefile
 	doc/Doxyfile
 	wfmath.spec
