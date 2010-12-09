@@ -1,6 +1,6 @@
 dnl Initialise autoconf
 
-AC_INIT([mercator], [0.2.8], [alriddoch@googlemail.com])
+AC_INIT([mercator], [0.3.0], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([Mercator/Mercator.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -13,12 +13,12 @@ dnl Initialise automake
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news color-tests parallel-tests])
 
 dnl versioning info for libtool
-MERCATOR_CURRENT=7
+MERCATOR_CURRENT=1
 MERCATOR_REVISION=0
 MERCATOR_AGE=0
 MERCATOR_VERSION_INFO=$MERCATOR_CURRENT:$MERCATOR_REVISION:$MERCATOR_AGE
 
-MERCATOR_LIB_SUFFIX="-0.2"
+MERCATOR_LIB_SUFFIX="-0.3"
 MERCATOR_LIBS="-lmercator$MERCATOR_LIB_SUFFIX"
 MERCATOR_REQUIRES=""
 
@@ -88,6 +88,6 @@ AC_CONFIG_FILES([
 	tests/Makefile
 	mercator.spec
 	mingw32-mercator.spec
-	mercator-0.2.pc
+	mercator-0.3.pc
 ])
 AC_OUTPUT
