@@ -343,12 +343,12 @@ void Terrain::addEffector(const Effector * eff)
     } // of x loop
 }
 
-void Terrain::updateEffector(const Effector * eff)
+Terrain::Rect Terrain::updateEffector(const Effector * eff)
 {
     Effectorstore::iterator I = m_effectors.find(eff);
 
     if (I == m_effectors.end()) {
-        return;
+        return Rect();
     }
 
     const Rect & old_box = I->second;
@@ -414,6 +414,7 @@ void Terrain::updateEffector(const Effector * eff)
     }
 
     m_effectors.insert(I, Effectorstore::value_type(eff, eff->bbox()));
+    return old_box;
 }
 
 /// \brief Remove an effector from the terrain
@@ -450,9 +451,9 @@ void Terrain::addMod(const TerrainMod * mod)
     addEffector(mod);
 }
 
-void Terrain::updateMod(const TerrainMod * mod)
+Terrain::Rect Terrain::updateMod(const TerrainMod * mod)
 {
-    updateEffector(mod);
+    return updateEffector(mod);
 }
 
 void Terrain::removeMod(const TerrainMod * mod)
@@ -477,9 +478,9 @@ void Terrain::addArea(const Area * area)
 }
 
 /// \brief Apply changes to an area modifier to the terrain.
-void Terrain::updateArea(const Area * area)
+Terrain::Rect Terrain::updateArea(const Area * area)
 {
-    updateEffector(area);
+    return updateEffector(area);
 }
 
 /// \brief Remove an area modifier from the terrain.

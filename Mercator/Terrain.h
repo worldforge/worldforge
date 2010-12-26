@@ -78,9 +78,16 @@ class Terrain {
     void addSurfaces(Segment &);
     void shadeSurfaces(Segment &);
 
-    void addEffector(const Effector * t);
-    void updateEffector(const Effector * mod);
-    void removeEffector(const Effector * mod);
+    void addEffector(const Effector * effector);
+
+    /// \brief Updates the terrain affected by an Effector.
+    ///
+    /// Call this when an already added terrain effector has changed.
+    ///
+    /// @param effector The terrain effector which has changed.
+    /// @return The area affected by the terrain effector before it was updated.
+    Rect updateEffector(const Effector * effector);
+    void removeEffector(const Effector * effector);
     
     /// \brief Determine whether this terrain object has shading enabled.
     ///
@@ -144,12 +151,26 @@ class Terrain {
     void addShader(const Shader * t, int id);
     void removeShader(const Shader * t, int id);
     
-    void addMod(const TerrainMod * t);
-    void updateMod(const TerrainMod * mod);
+    void addMod(const TerrainMod * mod);
+
+    /// \brief Updates the terrain affected by a mod.
+    ///
+    /// Call this when an already added terrain mod has changed.
+    ///
+    /// @param mod The terrain mod which has changed.
+    /// @return The area affected by the terrain mod before it was updated.
+    Rect updateMod(const TerrainMod * mod);
     void removeMod(const TerrainMod * mod);
     
     void addArea(const Area* a);
-    void updateArea(const Area* a);
+
+    /// \brief Updates the terrain affected by an area.
+    ///
+    /// Call this when an already added terrain area has changed.
+    ///
+    /// @param a The terrain area which has changed.
+    /// @return The area affected by the terrain area before it was updated.
+    Rect updateArea(const Area* a);
     void removeArea(const Area* a);
 };
 
