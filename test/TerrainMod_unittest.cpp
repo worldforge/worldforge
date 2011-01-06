@@ -168,7 +168,7 @@ int main()
             TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
             mod_ent->setup_setAttr("terrainmod", emptyElement);
             
-            Eris::TerrainMod mod(mod_ent);
+            Eris::TerrainModObserver mod(mod_ent);
             assert(!mod.init());
             
         }
@@ -179,7 +179,7 @@ int main()
             TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
             mod_ent->setup_setAttr("terrainmod", modElement);
             
-            Eris::TerrainMod mod(mod_ent);
+            Eris::TerrainModObserver mod(mod_ent);
             assert(!mod.init());
             
         }       
@@ -193,7 +193,7 @@ int main()
                 TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
                 mod_ent->setup_setAttr("terrainmod", modElement);
                 
-                Eris::TerrainMod mod(mod_ent);
+                Eris::TerrainModObserver mod(mod_ent);
                 if (J->first == "empty") {
                     assert(!mod.init());
                 } else {
@@ -211,7 +211,7 @@ int main()
                 TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
                 mod_ent->setup_setAttr("terrainmod", modElement);
                 
-                Eris::TerrainMod mod(mod_ent);
+                Eris::TerrainModObserver mod(mod_ent);
                 if (J->first == "empty") {
                     assert(!mod.init());
                 } else {
@@ -229,7 +229,7 @@ int main()
                 TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
                 mod_ent->setup_setAttr("terrainmod", modElement);
                 
-                Eris::TerrainMod mod(mod_ent);
+                Eris::TerrainModObserver mod(mod_ent);
                 if (J->first == "empty") {
                     assert(!mod.init());
                 } else {
@@ -250,7 +250,7 @@ int main()
             TestEntity* mod_ent = new TestEntity("2", 0, ea.getView());
             mod_ent->setup_setAttr("terrainmod", modElement);
             
-            Eris::TerrainMod mod(mod_ent);
+            Eris::TerrainModObserver mod(mod_ent);
             assert(mod.init());
             
         }

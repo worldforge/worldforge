@@ -110,19 +110,19 @@ This class is mainly responsible for parsing atlas data and create or update an 
 The actual application of the Mercator::TerrainMod to the terrain and the subsequent update of the rendering display (i.e. the Ogre terrain) is handled mainly by TerrainGenerator, which reacts to the events emitted by this class whenever a terrain mod changes or is moved.
 After you've created an instance of this you must call the init() method.
 */
-class TerrainMod
+class TerrainModObserver
 {
 public:
     /**
     * @brief Ctor.
     * @param entity The entity to which this mod belongs.
     */
-    TerrainMod(Entity* entity);
+    TerrainModObserver(Entity* entity);
 
     /**
     * @brief Dtor.
     */
-    virtual ~TerrainMod();
+    virtual ~TerrainModObserver();
     
     /**
      * @brief Sets up the observation of the entity, and parses the mod info, creating the initial mod instance.
@@ -223,7 +223,7 @@ protected:
     TerrainModTranslator* mInnerMod;
 };
 
-Mercator::TerrainMod* TerrainMod::getMod() const
+Mercator::TerrainMod* TerrainModObserver::getMod() const
 {
     if (mInnerMod) {
         return mInnerMod->getModifier();

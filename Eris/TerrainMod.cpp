@@ -293,18 +293,18 @@ bool TerrainModTranslator::createInstance(
     return true;
 }
 
-TerrainMod::TerrainMod(Entity* entity)
+TerrainModObserver::TerrainModObserver(Entity* entity)
 : mEntity(entity)
 , mInnerMod(0)
 {
 }
 
 
-TerrainMod::~TerrainMod()
+TerrainModObserver::~TerrainModObserver()
 {
 }
 
-bool TerrainMod::init(bool alwaysObserve)
+bool TerrainModObserver::init(bool alwaysObserve)
 {
     bool successfulParsing = parseMod();
     if (successfulParsing || alwaysObserve) {
@@ -313,7 +313,7 @@ bool TerrainMod::init(bool alwaysObserve)
     return successfulParsing;
 }
 
-bool TerrainMod::parseMod()
+bool TerrainModObserver::parseMod()
 {
     if (!mEntity->hasAttr("terrainmod")) {
         ///Don't log anything since it's expected that instances of this can be attached to entities where not terrainmod is present.
@@ -342,7 +342,7 @@ bool TerrainMod::parseMod()
     return false;
 }
 
-void TerrainMod::reparseMod()
+void TerrainModObserver::reparseMod()
 {
     TerrainModTranslator* oldMod = mInnerMod;
     mInnerMod = 0;
@@ -359,44 +359,44 @@ void TerrainMod::reparseMod()
     delete oldMod;
 }
 
-void TerrainMod::attributeChanged(const Element& attributeValue)
+void TerrainModObserver::attributeChanged(const Element& attributeValue)
 {
     reparseMod();
 }
 
-void TerrainMod::entity_Moved()
+void TerrainModObserver::entity_Moved()
 {
     reparseMod();
 }
 
-void TerrainMod::entity_Deleted()
+void TerrainModObserver::entity_Deleted()
 {
     onModDeleted();
     delete mInnerMod;
 }
 
-void TerrainMod::observeEntity()
+void TerrainModObserver::observeEntity()
 {
     mAttrChangedSlot.disconnect();
     if (mEntity) {
-        mAttrChangedSlot = sigc::mem_fun(*this, &TerrainMod::attributeChanged);
+        mAttrChangedSlot = sigc::mem_fun(*this, &TerrainModObserver::attributeChanged);
         mEntity->observe("terrainmod", mAttrChangedSlot);
-        mEntity->Moved.connect(sigc::mem_fun(*this, &TerrainMod::entity_Moved));
-        mEntity->BeingDeleted.connect(sigc::mem_fun(*this, &TerrainMod::entity_Deleted));
+        mEntity->Moved.connect(sigc::mem_fun(*this, &TerrainModObserver::entity_Moved));
+        mEntity->BeingDeleted.connect(sigc::mem_fun(*this, &TerrainModObserver::entity_Deleted));
     }
 }
 
-Entity* TerrainMod::getEntity() const
+Entity* TerrainModObserver::getEntity() const
 {
     return mEntity;
 }
 
-void TerrainMod::onModDeleted()
+void TerrainModObserver::onModDeleted()
 {
     ModDeleted.emit();
 }
 
-void TerrainMod::onModChanged()
+void TerrainModObserver::onModChanged()
 {
     ModChanged.emit();
 }
