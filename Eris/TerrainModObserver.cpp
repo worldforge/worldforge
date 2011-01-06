@@ -26,7 +26,7 @@
 #endif
 
 #include <Eris/TerrainModObserver.h>
-#include <Eris/TerrainMod.h>
+#include <Eris/TerrainModTranslator.h>
 
 #include <Mercator/TerrainMod.h>
 #include <Eris/Log.h>

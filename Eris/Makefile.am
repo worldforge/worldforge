@@ -39,7 +39,7 @@ liberis_1_3_la_SOURCES = \
 	TimedEventService.cpp \
 	Alarm.cpp \
 	Task.cpp \
-	TerrainMod.cpp \
+	TerrainModTranslator.cpp \
 	TerrainModObserver.cpp \
 	SpawnPoint.cpp \
 	CharacterType.cpp \
@@ -84,7 +84,7 @@ liberis_HEADERS = \
 	TimedEventService.h \
 	Alarm.h \
 	Task.h \
-	TerrainMod.h \
+	TerrainModTranslator.h \
 	TerrainModObserver.h \
 	SpawnPoint.h \
 	CharacterType.h \
