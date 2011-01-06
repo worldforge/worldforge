@@ -14,6 +14,7 @@
 #include <Mercator/Surface.h>
 #include <Mercator/BasePoint.h>
 #include <Mercator/Area.h>
+#include <Mercator/Shader.h>
 
 #include <wfmath/MersenneTwister.h>
 
@@ -597,21 +598,41 @@ bool Segment::clipToSegment(const WFMath::AxisBox<2> &bbox,
 ///
 /// Called from Terrain::addMod(). If this point data is already valid,
 /// the modification will be applied directly.
-void Segment::addMod(TerrainMod *t) 
+int Segment::addMod(const TerrainMod *t) 
 {
     m_modList.insert(t);
-    if (isValid()) {
-        applyMod(t);
-    }
+    invalidate();
+    return 0;
 }
+
+/// \brief Update a TerrainMod in this Segment.
+///
+/// Called from Terrain::removeMod().
+int Segment::updateMod(const TerrainMod * tm)
+{
+    // FIXME Are we really removing it?
+    ModList::const_iterator I = m_modList.find(tm);
+    if (I != m_modList.end()) {
+        invalidate();
+        return 0;
+    }
+    return -1;
+}
+
 
 /// \brief Remove a TerrainMod from this Segment.
 ///
 /// Called from Terrain::removeMod().
-void Segment::removeMod(TerrainMod * tm)
+int Segment::removeMod(const TerrainMod * tm)
 {
-    m_modList.erase(tm);
-    invalidate();
+    // FIXME Are we really removing it?
+    ModList::iterator I = m_modList.find(tm);
+    if (I != m_modList.end()) {
+        m_modList.erase(I);
+        invalidate();
+        return 0;
+    }
+    return -1;
 }
 
 /// \brief Delete all the modifications applied to this Segment.
@@ -631,7 +652,7 @@ void Segment::clearMods()
 ///
 /// Usually called from Segment::populate(). It is not normally necessary to
 /// call this function from the application.
-void Segment::applyMod(TerrainMod *t) 
+void Segment::applyMod(const TerrainMod *t) 
 {
     int lx,hx,ly,hy;
     WFMath::AxisBox<2> bbox=t->bbox();
@@ -653,25 +674,74 @@ void Segment::applyMod(TerrainMod *t)
 /// Call from Terrain when an Area is added which is found to intersect this
 /// segment.
 /// @param ar the area to be added.
-void Segment::addArea(const Area* ar)
+/// @return zero if the area was added, non-zero otherwise
+int Segment::addArea(const Area* ar)
 {
     m_areas.insert(Areastore::value_type(ar->getLayer(), ar));
-    invalidateSurfaces();
+
+    // If this segment has not been shaded at all yet, we have nothing
+    // to do. A surface will be created for this area later when the
+    // whole segment is done.
+    if (m_surfaces.empty()) {
+        return 0;
+    }
+
+    Segment::Surfacestore::const_iterator J = m_surfaces.find(ar->getLayer());
+    if (J != m_surfaces.end()) {
+        // segment already has a surface for this shader, mark it
+        // for re-generation
+        J->second->invalidate();
+        return 0;
+    }
+
+    if (ar->getShader() == 0) {
+        return 0;
+    }
+    
+    m_surfaces[ar->getLayer()] = ar->getShader()->newSurface(*this);
+
+    return 0;
 }
 
-/// \brief Remove an area from those that affect this segment.
-void Segment::removeArea(const Area* area)
+int Segment::updateArea(const Area* area)
 {
     Areastore::iterator I = m_areas.lower_bound(area->getLayer());
     Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
-    while (I != Iend) {
-        Areastore::iterator II = I;
-        ++I;
-        if (II->second == area) {
-            m_areas.erase(II);
+    for (; I != Iend; ++I) {
+        if (I->second == area) {
+            invalidateSurfaces();
+            return 0;
         }
     }
-    invalidateSurfaces();
+    return -1;
+}
+
+/// \brief Remove an area from those that affect this segment.
+int Segment::removeArea(const Area* area)
+{
+    Areastore::iterator I = m_areas.lower_bound(area->getLayer());
+    Areastore::iterator Iend = m_areas.upper_bound(area->getLayer());
+    for (; I != Iend; ++I) {
+        if (I->second == area) {
+            m_areas.erase(I);
+
+            // TODO(alriddoch,2010-10-22):
+            // Copy the code from AreaShader::checkIntersects
+            // into Area::removeFromSegment or something, and then
+            // work out what to do to determine what type of surface
+            // we are dealing with.
+
+            Segment::Surfacestore::const_iterator J = m_surfaces.find(area->getLayer());
+            if (J != m_surfaces.end()) {
+                // segment already has a surface for this shader, mark it
+                // for re-generation
+                J->second->invalidate();
+            }
+
+            return 0;
+        }
+    }
+    return -1;
 }
 
 WFMath::AxisBox<2> Segment::getRect() const

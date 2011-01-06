@@ -19,6 +19,8 @@
 
 #include <iostream>
 
+#include <cstdio>
+
 namespace Mercator {
 
 const float Terrain::defaultLevel = 8;
@@ -41,11 +43,13 @@ Terrain::Terrain(unsigned int options, unsigned int resolution) : m_options(opti
 /// Probably need to be fixed.
 Terrain::~Terrain()
 {
-    for (Segmentstore::iterator I = m_segments.begin(); 
-         I!=m_segments.end(); ++I) {
-        for (Segmentcolumn::iterator J = I->second.begin(); 
-             J != I->second.end(); ++J) {
-            Segment *s=J->second;
+    Segmentstore::const_iterator I = m_segments.begin(); 
+    Segmentstore::const_iterator Iend = m_segments.end();
+    for (; I != Iend; ++I) {
+        Segmentcolumn::const_iterator J = I->second.begin(); 
+        Segmentcolumn::const_iterator Jend = I->second.end(); 
+        for (; J != Jend; ++J) {
+            Segment * s = J->second;
             if (s) delete s;
         }
     }
@@ -63,10 +67,12 @@ void Terrain::addShader(const Shader * t, int id)
     
     m_shaders[id] = t;
     
-    for (Segmentstore::iterator I = m_segments.begin(); 
-         I!=m_segments.end(); ++I) {
-        for (Segmentcolumn::iterator J = I->second.begin(); 
-             J != I->second.end(); ++J) {
+    Segmentstore::const_iterator I = m_segments.begin(); 
+    Segmentstore::const_iterator Iend = m_segments.end(); 
+    for (; I != Iend; ++I) {
+        Segmentcolumn::const_iterator J = I->second.begin(); 
+        Segmentcolumn::const_iterator Jend = I->second.end(); 
+        for (; J != Jend; ++J) {
             Segment *seg=J->second;
             if (!t->checkIntersect(*seg)) {
                 continue;
@@ -87,17 +93,19 @@ void Terrain::removeShader(const Shader * t, int id)
     m_shaders.erase(m_shaders.find(id));
 
     // Delete all surfaces for this shader
-    for (Segmentstore::iterator I = m_segments.begin();
-         I!=m_segments.end(); ++I) {
-        for (Segmentcolumn::iterator J = I->second.begin();
-             J != I->second.end(); ++J) {
+    Segmentstore::const_iterator I = m_segments.begin();
+    Segmentstore::const_iterator Iend = m_segments.end();
+    for (; I != Iend; ++I) {
+        Segmentcolumn::const_iterator J = I->second.begin();
+        Segmentcolumn::const_iterator Jend = I->second.end();
+        for (; J != Jend; ++J) {
             Segment *seg=J->second;
 
             Segment::Surfacestore & sss = seg->getSurfaces();
-            Segment::Surfacestore::iterator I = sss.find(id);
-            if (I != sss.end()) {
-                delete I->second;
-                sss.erase(I);
+            Segment::Surfacestore::iterator K = sss.find(id);
+            if (K != sss.end()) {
+                delete K->second;
+                sss.erase(K);
             }
         }
     }
@@ -269,23 +277,10 @@ void Terrain::setBasePoint(int x, int y, const BasePoint& z)
                 }
                 s->setMinMax(min, max);
                 
-                Areastore::iterator I = m_areas.begin();
-                Areastore::iterator Iend = m_areas.end();
+                Effectorstore::iterator I = m_effectors.begin();
+                Effectorstore::iterator Iend = m_effectors.end();
                 for (; I != Iend; ++I) {
-                    if (I->first->checkIntersects(*s)) {
-                        s->addArea(I->first);
-                    }
-                }
-
-                TerrainModstore::iterator J = m_mods.begin();
-                TerrainModstore::iterator Jend = m_mods.end();
-                for (; J != Jend; ++J) {
-                    Rect mod_box = J->second;
-                    mod_box.shift(WFMath::Vector<2>(-i * m_res, -j * m_res));
-                    int tmp;
-                    if (s->clipToSegment(mod_box, tmp, tmp, tmp, tmp)) {
-                        s->addMod(J->first);
-                    }
+                    I->first->addToSegment(*s);
                 }
 
                 // apply shaders last, after all other data is in place
@@ -323,62 +318,43 @@ Segment * Terrain::getSegment(int x, int y) const
     return J->second;
 }
 
-/// \brief Add a modifier to the terrain.
-///
-/// Add a new TerrainMod object to the terrain, which defines a modification
-/// to the terrain heightfield or surface data. The segments are responsible
-/// for storing the TerrainMod objects, so the apropriate Segment objects
-/// are found and the TerrainMode is passed to each in turn.
-/// @param t reference to the TerrainMod object to be applied.
-TerrainMod * Terrain::addMod(const TerrainMod &t)
+/// \brief Add an effector to the terrain
+void Terrain::addEffector(const Effector * eff)
 {
-
-    //work out which segments are overlapped by thus mod
+    //work out which segments are overlapped by this effector
     //note that the bbox is expanded by one grid unit because
     //segments share edges. this ensures a mod along an edge
     //will affect both segments.
 
-    Rect mod_box = t.bbox();
+    m_effectors.insert(Effectorstore::value_type(eff, eff->bbox()));
 
-    int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
-
-#if 0
-    std::cout << "box: " << mod_box << std::endl
-              << "lx: " << lx
-              << "ly: " << ly
-              << "hx: " << hx
-              << "hy: " << hy
-              << std::endl << std::flush;
-#endif // 0
-
-    TerrainMod * mod = t.clone();
-
-    m_mods.insert(TerrainModstore::value_type(mod, mod_box));
+    int lx=I_ROUND(floor((eff->bbox().lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((eff->bbox().lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((eff->bbox().highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((eff->bbox().highCorner()[1] + 1) / m_res));
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
             if (s) {
-                s->addMod(mod);
+                eff->addToSegment(*s);
             }
         } // of y loop
     } // of x loop
-
-    return mod;
 }
 
-void Terrain::updateMod(TerrainMod * mod)
+Terrain::Rect Terrain::updateEffector(const Effector * eff)
 {
-    TerrainModstore::const_iterator I = m_mods.find(mod);
+    Effectorstore::iterator I = m_effectors.find(eff);
 
-    if (I == m_mods.end()) {
-        return;
+    if (I == m_effectors.end()) {
+        return Rect();
     }
 
     const Rect & old_box = I->second;
+
+
+    std::set<Segment*> removed, added, updated;
 
     int lx=I_ROUND(floor((old_box.lowCorner()[0] - 1) / m_res));
     int ly=I_ROUND(floor((old_box.lowCorner()[1] - 1) / m_res));
@@ -388,62 +364,101 @@ void Terrain::updateMod(TerrainMod * mod)
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
-            if (s) {
-                s->removeMod(mod);
+            if (!s) {
+                continue;
             }
+
+            removed.insert(s);
+
         } // of y loop
     } // of x loop
 
-    Rect mod_box = mod->bbox();
-
-    lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
-    ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
-    hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
-    hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
+    lx=I_ROUND(floor((eff->bbox().lowCorner()[0] - 1) / m_res));
+    ly=I_ROUND(floor((eff->bbox().lowCorner()[1] - 1) / m_res));
+    hx=I_ROUND(ceil((eff->bbox().highCorner()[0] + 1) / m_res));
+    hy=I_ROUND(ceil((eff->bbox().highCorner()[1] + 1) / m_res));
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
-            if (s) {
-                s->addMod(mod);
+            if (!s) {
+                continue;
+            }
+
+            std::set<Segment*>::iterator J = removed.find(s);
+            if (J == removed.end()) {
+                added.insert(s);
+            } else {
+                updated.insert(s);
+                removed.erase(J);
             }
         } // of y loop
     } // of x loop
 
-    m_mods.insert(TerrainModstore::value_type(mod, mod_box));
-    // FIXME FIX it.
+    std::set<Segment*>::iterator J = removed.begin();
+    std::set<Segment*>::iterator Jend = removed.end();
+    for (; J != Jend; ++J) {
+        eff->removeFromSegment(**J);
+    }
+
+    J = added.begin();
+    Jend = added.end();
+    for (; J != Jend; ++J) {
+        eff->addToSegment(**J);
+    }
+
+    J = updated.begin();
+    Jend = updated.end();
+    for (; J != Jend; ++J) {
+        eff->updateToSegment(**J);
+    }
+
+    m_effectors.insert(I, Effectorstore::value_type(eff, eff->bbox()));
+    return old_box;
 }
 
-void Terrain::removeMod(TerrainMod * mod)
+/// \brief Remove an effector from the terrain
+void Terrain::removeEffector(const Effector * eff)
 {
-    WFMath::AxisBox<2> mod_box = mod->bbox();
+    m_effectors.erase(eff);
 
-    int lx=I_ROUND(floor((mod_box.lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((mod_box.lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((mod_box.highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((mod_box.highCorner()[1] + 1) / m_res));
+    const Rect & eff_box = eff->bbox();
 
-#if 0
-    std::cout << "box: " << mod_box << std::endl
-              << "lx: " << lx
-              << "ly: " << ly
-              << "hx: " << hx
-              << "hy: " << hy
-              << std::endl << std::flush;
-#endif // 0
-
-    m_mods.erase(mod);
+    int lx=I_ROUND(floor((eff_box.lowCorner()[0] - 1) / m_res));
+    int ly=I_ROUND(floor((eff_box.lowCorner()[1] - 1) / m_res));
+    int hx=I_ROUND(ceil((eff_box.highCorner()[0] + 1) / m_res));
+    int hy=I_ROUND(ceil((eff_box.highCorner()[1] + 1) / m_res));
 
     for (int i=lx;i<hx;++i) {
         for (int j=ly;j<hy;++j) {
             Segment *s=getSegment(i,j);
             if (s) {
-                s->removeMod(mod);
+                eff->removeFromSegment(*s);
             }
         } // of y loop
     } // of x loop
+}
 
-   
+/// \brief Add a modifier to the terrain.
+///
+/// Add a new TerrainMod object to the terrain, which defines a modification
+/// to the terrain heightfield or surface data. The segments are responsible
+/// for storing the TerrainMod objects, so the apropriate Segment objects
+/// are found and the TerrainMode is passed to each in turn.
+/// @param t reference to the TerrainMod object to be applied.
+void Terrain::addMod(const TerrainMod * mod)
+{
+    addEffector(mod);
+}
+
+Terrain::Rect Terrain::updateMod(const TerrainMod * mod)
+{
+    return updateEffector(mod);
+}
+
+void Terrain::removeMod(const TerrainMod * mod)
+{
+    removeEffector(mod);
 }
 
 /// \brief Add an area modifier to the terrain.
@@ -452,128 +467,20 @@ void Terrain::removeMod(TerrainMod * mod)
 /// to the surface.
 void Terrain::addArea(const Area * area)
 {
-    m_areas.insert(Areastore::value_type(area, area->bbox()));
+    int layer = area->getLayer();
 
-    int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
-            
-            if (!area->checkIntersects(*s)) {
-                continue;
-            }
-
-            s->addArea(area);
-            
-            // Do we really need to do this? It looks like Segment::addArea
-            // already invalidates all surfaces.
-            Segment::Surfacestore& sss(s->getSurfaces());
-            Shaderstore::const_iterator I = m_shaders.begin();
-            Shaderstore::const_iterator Iend = m_shaders.end();
-            for (; I != Iend; ++I) {
-                if (sss.count(I->first)) {
-                    // segment already has a surface for this shader, mark it
-                    // for re-generation
-                    sss[I->first]->invalidate();
-                    continue;
-                }
-                
-                // shader doesn't touch this segment, skip
-                if (!I->second->checkIntersect(*s)) {
-                    continue;
-                }
-        
-                sss[I->first] = I->second->newSurface(*s);
-            }
+    Shaderstore::const_iterator I = m_shaders.find(layer);
+    if (I != m_shaders.end()) {
+        area->setShader(I->second);
+    }
     
-        } // of y loop
-    } // of x loop
-
+    addEffector(area);
 }
 
 /// \brief Apply changes to an area modifier to the terrain.
-void Terrain::updateArea(const Area * area)
+Terrain::Rect Terrain::updateArea(const Area * area)
 {
-    Areastore::const_iterator I = m_areas.find(area);
-
-    if (I == m_areas.end()) {
-        return;
-    }
-
-    const Rect & old_box = I->second;
-
-    int lx=I_ROUND(floor((old_box.lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((old_box.lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((old_box.highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((old_box.highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
-            
-            if (!area->checkIntersects(*s)) {
-                // If the mod was in this area, need to remove it, but we
-                // have no way to be sure whether it was.
-                s->removeArea(area);
-                continue;
-            }
-            
-            // FIXME Check here whether the segment already has it?
-
-            // Do we really need to do this? It looks like Segment::removeArea
-            // already invalidates all surfaces.
-            Segment::Surfacestore& sss(s->getSurfaces());
-            Shaderstore::const_iterator I = m_shaders.begin();
-            Shaderstore::const_iterator Iend = m_shaders.end();
-            for (; I != Iend; ++I) {
-                if (sss.count(I->first)) {
-                    // segment already has a surface for this shader, mark it
-                    // for re-generation
-                    sss[I->first]->invalidate();
-                    continue;
-                }
-            }
-    
-        } // of y loop
-    } // of x loop
-
-    lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
-    ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
-    hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
-    hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
-            
-            if (!area->checkIntersects(*s)) {
-                continue;
-            }
-
-            // FIXME Check here whether the segment already has it?
-            
-            s->addArea(area);
-    
-            // It looks like Segment::removeArea already invalidates all
-            // surfaces, but Terrain::addArea above does stuff to surfaces.
-        } // of y loop
-    } // of x loop
-
-    m_areas.insert(Areastore::value_type(area, area->bbox()));
-    // FIXME Do it first.
+    return updateEffector(area);
 }
 
 /// \brief Remove an area modifier from the terrain.
@@ -582,50 +489,7 @@ void Terrain::updateArea(const Area * area)
 /// affected terrain surfaces as invalid.
 void Terrain::removeArea(const Area * area)
 {
-    m_areas.erase(area);
-
-    int lx=I_ROUND(floor((area->bbox().lowCorner()[0] - 1) / m_res));
-    int ly=I_ROUND(floor((area->bbox().lowCorner()[1] - 1) / m_res));
-    int hx=I_ROUND(ceil((area->bbox().highCorner()[0] + 1) / m_res));
-    int hy=I_ROUND(ceil((area->bbox().highCorner()[1] + 1) / m_res));
-
-    for (int i=lx;i<hx;++i) {
-        for (int j=ly;j<hy;++j) {
-            Segment *s=getSegment(i,j);
-            if (!s) {
-                continue;
-            }
-            
-            if (!area->checkIntersects(*s)) {
-                continue;
-            }
-
-            s->removeArea(area);
-
-            Segment::Surfacestore& sss = s->getSurfaces();
-            Shaderstore::const_iterator I = m_shaders.begin();
-            Shaderstore::const_iterator Iend = m_shaders.end();
-            for (; I != Iend; ++I) {
-                if (sss.count(I->first)) {
-                    // segment already has a surface for this shader, mark it
-                    // for re-generation
-                    Segment::Surfacestore::iterator II = sss.find(I->first);
-                    assert (II != sss.end());
-                    Surface *surface = II->second;
-                    surface->invalidate(); 
-
-                    // If the shader no longer intersects, then remove it
-                    // e.g. due to all areas for this shader being removed, 
-                    // then we need to remove the surface.
-                    if (I->second->checkIntersect(*s) == false) {
-                      sss.erase(II);
-                      delete surface;
-                    }
-                }
-            }
-    
-        } // of y loop
-    } // of x loop
+    removeEffector(area);
 }
 
 } // namespace Mercator

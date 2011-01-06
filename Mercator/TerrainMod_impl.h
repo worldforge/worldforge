@@ -7,24 +7,40 @@
 
 #include <Mercator/TerrainMod.h>
 
+#include <Mercator/Segment.h>
+
 namespace Mercator {
 
-template <typename Shape> ShapeTerrainMod<Shape>::~ShapeTerrainMod()
+template <template <int> class Shape>
+ShapeTerrainMod<Shape>::ShapeTerrainMod(const Shape<2> &s) : m_shape(s)
 {
-}
-    
-template <typename Shape>
-WFMath::AxisBox<2> ShapeTerrainMod<Shape>::bbox() const
-{
-    return m_shape.boundingBox();
+    m_box = m_shape.boundingBox();
 }
 
 
-template <typename Shape> LevelTerrainMod<Shape>::~LevelTerrainMod()
+template <template <int> class Shape> ShapeTerrainMod<Shape>::~ShapeTerrainMod()
+{
+}
+
+template <template <int> class Shape>
+bool ShapeTerrainMod<Shape>::checkIntersects(const Segment& s) const
+{
+    return WFMath::Intersect(m_shape, s.getRect(), false) ||
+        WFMath::Contains(s.getRect(), m_shape.getCorner(0), false);
+}
+    
+template <template <int> class Shape>
+void ShapeTerrainMod<Shape>::setShape(const Shape<2> & s)
+{
+    m_shape = s;
+    m_box = m_shape.boundingBox();
+}
+
+template <template <int> class Shape> LevelTerrainMod<Shape>::~LevelTerrainMod()
 {
 }
     
-template <typename Shape>
+template <template <int> class Shape>
 void LevelTerrainMod<Shape>::apply(float &point, int x, int y) const
 {
     if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
@@ -32,17 +48,24 @@ void LevelTerrainMod<Shape>::apply(float &point, int x, int y) const
     }
 }
 
-template <typename Shape>
+template <template <int> class Shape>
 TerrainMod * LevelTerrainMod<Shape>::clone() const
 {
     return new LevelTerrainMod<Shape>(m_level, this->m_shape);
 }
 
-template <typename Shape> AdjustTerrainMod<Shape>::~AdjustTerrainMod()
+template <template <int> class Shape>
+void LevelTerrainMod<Shape>::setShape(float level, const Shape<2> & s)
+{
+    ShapeTerrainMod<Shape>::setShape(s);
+    m_level = level;
+}
+
+template <template <int> class Shape> AdjustTerrainMod<Shape>::~AdjustTerrainMod()
 {
 }
     
-template <typename Shape>
+template <template <int> class Shape>
 void AdjustTerrainMod<Shape>::apply(float &point, int x, int y) const
 {
     if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
@@ -50,17 +73,24 @@ void AdjustTerrainMod<Shape>::apply(float &point, int x, int y) const
     }
 }
     
-template <typename Shape>
+template <template <int> class Shape>
 TerrainMod * AdjustTerrainMod<Shape>::clone() const
 {
     return new AdjustTerrainMod<Shape>(m_dist, this->m_shape);
 }
 
-template <typename Shape> SlopeTerrainMod<Shape>::~SlopeTerrainMod()
+template <template <int> class Shape>
+void AdjustTerrainMod<Shape>::setShape(float dist, const Shape<2> & s)
+{
+    ShapeTerrainMod<Shape>::setShape(s);
+    m_dist = dist;
+}
+
+template <template <int> class Shape> SlopeTerrainMod<Shape>::~SlopeTerrainMod()
 {
 }
     
-template <typename Shape>
+template <template <int> class Shape>
 void SlopeTerrainMod<Shape>::apply(float &point, int x, int y) const
 {
     if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
@@ -69,12 +99,48 @@ void SlopeTerrainMod<Shape>::apply(float &point, int x, int y) const
     }
 }
     
-template <typename Shape>
+template <template <int> class Shape>
 TerrainMod * SlopeTerrainMod<Shape>::clone() const
 {
     return new SlopeTerrainMod<Shape>(m_level, m_dx, m_dy, this->m_shape);
 }
+
+template <template <int> class Shape>
+void SlopeTerrainMod<Shape>::setShape(float level, float dx, float dy, const Shape<2> & s)
+{
+    ShapeTerrainMod<Shape>::setShape(s);
+    m_level = level;
+    m_dx = dx;
+    m_dy = dy;
+}
+
+
+template <template <int> class Shape> CraterTerrainMod<Shape>::~CraterTerrainMod()
+{
+}
     
+template <template <int> class Shape>
+void CraterTerrainMod<Shape>::apply(float &point, int x, int y) const
+{
+    if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
+        point += m_level;
+    }
+}
+    
+template <template <int> class Shape>
+TerrainMod * CraterTerrainMod<Shape>::clone() const
+{
+    return new CraterTerrainMod<Shape>(m_level, this->m_shape);
+}
+
+template <template <int> class Shape>
+void CraterTerrainMod<Shape>::setShape(float level, const Shape<2> & s)
+{
+    ShapeTerrainMod<Shape>::setShape(s);
+    m_level = level;
+}
+
+
 } //namespace Mercator
 
 #endif // MERCATOR_TERRAIN_MOD_IMPL_H

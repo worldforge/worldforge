@@ -11,8 +11,8 @@
 int terrain_mod_context_test(Mercator::Terrain & terrain)
 {
     const WFMath::Ball<2> circ2(WFMath::Point<2>(0.0,0.0), 12.0);
-    Mercator::LevelTerrainMod<WFMath::Ball<2> > mod2(10.0f, circ2);
-    Mercator::TerrainMod * mp = terrain.addMod(mod2);
+    Mercator::TerrainMod * mp = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
+    terrain.addMod(mp);
 
     mp->setContext(new Mercator::TerrainMod::Context);
     mp->context()->setId("foo");
@@ -39,18 +39,18 @@ int main()
     terrain.setBasePoint(2, 2, 14.7);
 
     const WFMath::Ball<2> circ2(WFMath::Point<2>(0.0,0.0), 12.0);
-    Mercator::LevelTerrainMod<WFMath::Ball<2> > mod2(10.0f, circ2);
-    terrain.addMod(mod2);
+    Mercator::TerrainMod * mp1 = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
+    terrain.addMod(mp1);
 
     const WFMath::RotBox<2> rot(WFMath::Point<2>(-80.,-130.) ,
                                 WFMath::Vector<2>(150.0,120.0),
                                 WFMath::RotMatrix<2>().rotation(WFMath::Pi/4));
-    Mercator::LevelTerrainMod<WFMath::RotBox<2> > mod3(10.0f, rot);
-    terrain.addMod(mod3);
+    Mercator::TerrainMod * mp2 = new Mercator::LevelTerrainMod<WFMath::RotBox>(10.0f, rot);
+    terrain.addMod(mp2);
 
-    const WFMath::Ball<3> ball(WFMath::Point<3>(80, 80, 0), 10);
-    Mercator::CraterTerrainMod mod4(ball);
-    terrain.addMod(mod4);
+    const WFMath::Ball<2> ball(WFMath::Point<2>(80, 80), 10);
+    Mercator::TerrainMod * mp3 = new Mercator::CraterTerrainMod<WFMath::Ball>(-5.f, ball);
+    terrain.addMod(mp3);
 
     Mercator::Segment * segment = terrain.getSegment(0, 0);
 
@@ -71,6 +71,24 @@ int main()
     }
 
     segment->populate();
+
+    assert(segment->isValid());
+
+    terrain.updateMod(mp3);
+
+    assert(!segment->isValid());
+
+    terrain.removeMod(mp1);
+
+    delete mp1;
+
+    terrain.removeMod(mp2);
+
+    delete mp2;
+
+    terrain.removeMod(mp3);
+
+    delete mp3;
 
     return terrain_mod_context_test(terrain);
 }

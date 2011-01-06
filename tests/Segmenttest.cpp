@@ -31,3 +31,25 @@ int main()
 
     return 0;
 }
+
+// stubs
+
+#include <Mercator/Shader.h>
+#include <Mercator/Surface.h>
+
+namespace Mercator {
+
+const float BasePoint::HEIGHT = 8.0;
+const float BasePoint::ROUGHNESS = 1.25;
+const float BasePoint::FALLOFF = 0.25;
+
+void Surface::populate()
+{
+}
+
+Surface * Shader::newSurface(const Segment & segment) const
+{
+    return 0;
+}
+
+}

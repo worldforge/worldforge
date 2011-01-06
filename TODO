@@ -1,3 +1,5 @@
+Why are HEIGHT, ROUGHNESS and FALLOFF referenced outside Basepoint?
+
 Consider if Segment::m_xRef could become a float and multiply by m_res on
 initialisation, as it is always used this way.
 

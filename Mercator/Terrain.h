@@ -22,6 +22,7 @@ class Segment;
 class Shader;
 class TerrainMod;
 class Area;
+class Effector;
 
 /// \brief Class storing centrally all data about an instance of some terrain.
 ///
@@ -49,11 +50,8 @@ class Terrain {
     /// \brief STL map to store sparse array of Shader pointers.
     typedef std::map<int, const Shader *> Shaderstore;
 
-    /// \brief STL map to store area modifiers.
-    typedef std::map<const Area *, Rect> Areastore;
-
-    /// \brief STL map to store height modifiers.
-    typedef std::map<TerrainMod *, Rect> TerrainModstore;
+    /// \brief STL map to store terrain effectors.
+    typedef std::map<const Effector *, Rect> Effectorstore;
 
     /// \brief value provided for no flags set.
     static const unsigned int DEFAULT = 0x0000;
@@ -74,15 +72,23 @@ class Terrain {
     /// \brief List of shaders to be applied to terrain.
     Shaderstore m_shaders;
   
-    /// \brief List of areas modifiers to be applied to the terrain.
-    Areastore m_areas;
-
-    /// \brief List of height modifiers to be applied to the terrain.
-    TerrainModstore m_mods;
+    /// \brief List of effectors be applied to the terrain.
+    Effectorstore m_effectors;
   
     void addSurfaces(Segment &);
     void shadeSurfaces(Segment &);
 
+    void addEffector(const Effector * effector);
+
+    /// \brief Updates the terrain affected by an Effector.
+    ///
+    /// Call this when an already added terrain effector has changed.
+    ///
+    /// @param effector The terrain effector which has changed.
+    /// @return The area affected by the terrain effector before it was updated.
+    Rect updateEffector(const Effector * effector);
+    void removeEffector(const Effector * effector);
+    
     /// \brief Determine whether this terrain object has shading enabled.
     ///
     /// @return true if shading is enabled, false otherwise.
@@ -145,12 +151,26 @@ class Terrain {
     void addShader(const Shader * t, int id);
     void removeShader(const Shader * t, int id);
     
-    TerrainMod * addMod(const TerrainMod &t);
-    void updateMod(TerrainMod * mod);
-    void removeMod(TerrainMod * mod);
+    void addMod(const TerrainMod * mod);
+
+    /// \brief Updates the terrain affected by a mod.
+    ///
+    /// Call this when an already added terrain mod has changed.
+    ///
+    /// @param mod The terrain mod which has changed.
+    /// @return The area affected by the terrain mod before it was updated.
+    Rect updateMod(const TerrainMod * mod);
+    void removeMod(const TerrainMod * mod);
     
     void addArea(const Area* a);
-    void updateArea(const Area* a);
+
+    /// \brief Updates the terrain affected by an area.
+    ///
+    /// Call this when an already added terrain area has changed.
+    ///
+    /// @param a The terrain area which has changed.
+    /// @return The area affected by the terrain area before it was updated.
+    Rect updateArea(const Area* a);
     void removeArea(const Area* a);
 };
 

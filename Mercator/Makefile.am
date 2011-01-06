@@ -1,14 +1,15 @@
 INCLUDES = -I$(top_builddir) -I$(top_srcdir)
 
-lib_LTLIBRARIES = libmercator-0.2.la
+lib_LTLIBRARIES = libmercator-0.3.la
 
-libmercator_0_2_la_LDFLAGS = -version-info @MERCATOR_VERSION_INFO@
+libmercator_0_3_la_LDFLAGS = -version-info @MERCATOR_VERSION_INFO@
 
-libmercator_0_2_la_SOURCES = \
+libmercator_0_3_la_SOURCES = \
 	iround.h \
 	Mercator.cpp \
 	Matrix.cpp \
 	Terrain.cpp \
+	Effector.cpp \
 	TerrainMod.cpp \
 	BasePoint.cpp \
 	Buffer.cpp \
@@ -27,12 +28,13 @@ libmercator_0_2_la_SOURCES = \
 	Area.cpp \
 	AreaShader.cpp
 
-libmercatordir = $(includedir)/Mercator-0.2/Mercator
+libmercatordir = $(includedir)/Mercator-0.3/Mercator
 
 libmercator_HEADERS = \
 	Mercator.h \
 	Matrix.h \
 	Terrain.h \
+	Effector.h \
 	TerrainMod.h \
 	TerrainMod_impl.h \
 	BasePoint.h \

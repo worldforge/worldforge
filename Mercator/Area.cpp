@@ -219,7 +219,8 @@ WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, Cli
 
 Area::Area(int layer, bool hole) :
     m_layer(layer),
-    m_hole(hole)
+    m_hole(hole),
+    m_shader(0)
 {
 }
 
@@ -230,11 +231,42 @@ void Area::setShape(const WFMath::Polygon<2>& p)
     m_box = p.boundingBox();
 }
 
+void Area::setShader(const Shader * shader) const
+{
+    m_shader = shader;
+}
+
 bool Area::contains(double x, double y) const
 {
     if (!WFMath::Contains(m_box, Point2(x,y), false)) return false;
     
     return WFMath::Contains(m_shape, Point2(x,y), false);
+}
+
+int Area::addToSegment(Segment & s) const
+{
+    if (!checkIntersects(s)) {
+        return -1;
+    }
+    return s.addArea(this);
+}
+
+void Area::updateToSegment(Segment & s) const
+{
+    if (!checkIntersects(s)) {
+        s.removeArea(this);
+        return;
+    }
+    if (s.updateArea(this) != 0) {
+        s.addArea(this);
+    }
+}
+
+void Area::removeFromSegment(Segment & s) const
+{
+    if (checkIntersects(s)) {
+        s.removeArea(this);
+    }
 }
 
 WFMath::Polygon<2> Area::clipToSegment(const Segment& s) const
