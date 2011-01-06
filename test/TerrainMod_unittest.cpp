@@ -24,7 +24,7 @@
 #include <Eris/ViewEntity.h>
 #include <Eris/View.h>
 #include <Eris/Log.h>
-#include <Eris/TerrainMod.h>
+#include <Eris/TerrainModObserver.h>
 #include <Eris/Exceptions.h>
 
 #include <Atlas/Objects/Anonymous.h>
