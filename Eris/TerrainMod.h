@@ -44,10 +44,10 @@ namespace Eris {
 @brief Base class for all terrain mod specific classes.This is not meant to be used directly by anything else than the TerrainMod class.
 The TerrainMod class in itself doesn't hold the actual reference to the terrain mod, and doesn't handle the final parsing of Atlas data. This is instead handled by the different subclasses of this class. Since the different kinds of terrain mods found in Mercator behave differently depending on their type and the kind of shape used, we need to separate the code for handling them into different classes.
 */
-class InnerTerrainMod
+class TerrainModTranslator
 {
 public:
-    virtual ~InnerTerrainMod();
+    virtual ~TerrainModTranslator();
     
 protected:
     template <template <int> class Shape>
@@ -71,7 +71,7 @@ public:
      */
     Mercator::TerrainMod* getModifier();
 
-    InnerTerrainMod();
+    TerrainModTranslator();
     
 protected:
 
@@ -220,7 +220,7 @@ protected:
     * @brief The inner terrain mod instance which holds the actual Mercator::TerrainMod instance and handles the parsing of it.
     * In order to be able to better support different types of mods the actual instance will be any of the subclasses of InnerTerrainMod, depending on the type of the mod.
     */
-    InnerTerrainMod* mInnerMod;
+    TerrainModTranslator* mInnerMod;
 };
 
 Mercator::TerrainMod* TerrainMod::getMod() const
