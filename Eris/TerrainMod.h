@@ -30,8 +30,9 @@
 #ifndef ERIS_TERRAINMOD_H
 #define ERIS_TERRAINMOD_H
 
-#include <sigc++/signal.h>
-#include <Eris/Entity.h>
+#include <Atlas/Message/Element.h>
+
+#include <wfmath/point.h>
 
 namespace Mercator {
     class TerrainMod;
