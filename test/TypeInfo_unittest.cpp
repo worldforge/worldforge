@@ -23,7 +23,6 @@
 #include <Eris/ViewEntity.h>
 #include <Eris/View.h>
 #include <Eris/Log.h>
-#include <Eris/TerrainMod.h>
 #include <Eris/Exceptions.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/TypeService.h>
