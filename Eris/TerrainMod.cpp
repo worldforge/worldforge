@@ -26,11 +26,9 @@
 #endif
 
 #include <Eris/TerrainMod.h>
-
-#include <Mercator/TerrainMod.h>
 #include <Eris/Log.h>
 
-#include <Atlas/Message/Element.h>
+#include <Mercator/TerrainMod.h>
 
 #include <wfmath/atlasconv.h>
 

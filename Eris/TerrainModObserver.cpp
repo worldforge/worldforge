@@ -31,10 +31,6 @@
 #include <Mercator/TerrainMod.h>
 #include <Eris/Log.h>
 
-#include <Atlas/Message/Element.h>
-
-#include <wfmath/atlasconv.h>
-
 #include <cassert>
 
 using Atlas::Message::Element;
