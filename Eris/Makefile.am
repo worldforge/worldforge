@@ -40,6 +40,7 @@ liberis_1_3_la_SOURCES = \
 	Alarm.cpp \
 	Task.cpp \
 	TerrainMod.cpp \
+	TerrainModObserver.cpp \
 	SpawnPoint.cpp \
 	CharacterType.cpp \
 	ViewEntity.cpp
@@ -84,6 +85,7 @@ liberis_HEADERS = \
 	Alarm.h \
 	Task.h \
 	TerrainMod.h \
+	TerrainModObserver.h \
 	SpawnPoint.h \
 	CharacterType.h \
 	ViewEntity.h \
