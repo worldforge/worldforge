@@ -144,7 +144,9 @@ AxisBox<dim> BoundingBox(const container<AxisBox<dim>, std::allocator<AxisBox<di
 
   typename container<AxisBox<dim>, std::allocator<AxisBox<dim> > >::const_iterator i = c.begin(), end = c.end();
 
-  assert(i != end);
+  if(i == end) {
+    return AxisBox<dim>();
+  }
 
   Point<dim> low = i->lowCorner(), high = i->highCorner();
   bool low_valid = low.isValid(), high_valid = high.isValid();
@@ -170,7 +172,9 @@ AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> >
 {
   typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(), end = c.end();
 
-  assert(i != end);
+  if(i == end) {
+    return AxisBox<dim>();
+  }
 
   Point<dim> low = *i, high = *i;
   bool valid = i->isValid();
