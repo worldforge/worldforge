@@ -61,6 +61,39 @@ void test_polygon(const Polygon<dim>& p)
   Intersect(p, r, false);
 }
 
+/**
+ * Test intersection between a square polygon and axis boxes at each of its four sides.
+ */
+void test_intersect()
+{
+
+  Polygon<2> p;
+
+  p.addCorner(0, Point<2>(0, 0));
+  p.addCorner(0, Point<2>(4, 0));
+  p.addCorner(0, Point<2>(4, -4));
+  p.addCorner(0, Point<2>(0, -4));
+  p.isValid();
+
+  AxisBox<2> a1(Point<2>(-1, -1), Point<2>(1, -3));
+  std::cout << "Testing intersection of " << p << " and " << a1 << std::endl;
+  assert(WFMath::Intersect(p, a1, false));
+
+  AxisBox<2> a2(Point<2>(1, -5), Point<2>(2, -3));
+  std::cout << "Testing intersection of " << p << " and " << a2 << std::endl;
+  assert(WFMath::Intersect(p, a2, false));
+
+  AxisBox<2> a3(Point<2>(5, -1), Point<2>(3, -3));
+  std::cout << "Testing intersection of " << p << " and " << a3 << std::endl;
+  assert(WFMath::Intersect(p, a3, false));
+
+  AxisBox<2> a4(Point<2>(1, 1), Point<2>(2, -1));
+  std::cout << "Testing intersection of " << p << " and " << a4 << std::endl;
+  assert(WFMath::Intersect(p, a4, false));
+
+
+}
+
 int main()
 {
   bool succ;
@@ -86,6 +119,8 @@ int main()
   assert(succ);
 
   test_polygon(p3);
+
+  test_intersect();
 
   return 0;
 }
