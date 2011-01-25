@@ -682,7 +682,7 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const AxisBox<2>& b, bool proper)
          ((*j)[0] <= b.m_high[0] && b.m_high[0] < (*i)[0]));
 
     CoordType xdiff = ((*j)[0] - (*i)[0]);
-    CoordType ydiff = ((*j)[0] - (*i)[0]);
+    CoordType ydiff = ((*j)[1] - (*i)[1]);
 
     if(low_vertically_between) { // Check for edge intersect
       CoordType x_intersect = (*i)[0] + (b.m_low[1] - (*i)[1])
