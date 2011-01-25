@@ -1063,7 +1063,7 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const RotBox<2>& r, bool proper)
          ((ends[1])[0] <= m_high[0] && m_high[0] < (ends[0])[0]));
 
     CoordType xdiff = (ends[1])[0] - (ends[0])[0];
-    CoordType ydiff = (ends[1])[0] - (ends[0])[0];
+    CoordType ydiff = (ends[1])[1] - (ends[0])[1];
 
     if(low_vertically_between) { // Check for edge intersect
       CoordType x_intersect = (ends[0])[0] + (m_low[1] - (ends[0])[1])
