@@ -142,6 +142,22 @@ void test_contains()
   assert(WFMath::Contains(p, a4, false));
 
 
+  RotBox<2> r1(Point<2>(0.1, -3.9), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r1 << std::endl;
+  assert(WFMath::Contains(p, r1, false));
+
+  RotBox<2> r2(Point<2>(3.8, -3.9), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r2 << std::endl;
+  assert(WFMath::Contains(p, r2, false));
+
+  RotBox<2> r3(Point<2>(0.1, -0.2), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r3 << std::endl;
+  assert(WFMath::Contains(p, r3, false));
+
+  RotBox<2> r4(Point<2>(3.8, -0.2), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r4 << std::endl;
+  assert(WFMath::Contains(p, r4, false));
+
 }
 
 int main()
