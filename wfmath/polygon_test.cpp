@@ -92,6 +92,23 @@ void test_intersect()
   assert(WFMath::Intersect(p, a4, false));
 
 
+  RotBox<2> r1(Point<2>(-1, -1), Vector<2>(2, -2), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r1 << std::endl;
+  assert(WFMath::Intersect(p, r1, false));
+
+  RotBox<2> r2(Point<2>(1, -5), Vector<2>(1, 2), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r2 << std::endl;
+  assert(WFMath::Intersect(p, r2, false));
+
+  RotBox<2> r3(Point<2>(5, -1), Vector<2>(-2, -2), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r3 << std::endl;
+  assert(WFMath::Intersect(p, r3, false));
+
+  RotBox<2> r4(Point<2>(1, 1), Vector<2>(1, -2), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r4 << std::endl;
+  assert(WFMath::Intersect(p, r4, false));
+
+
 }
 
 /**
