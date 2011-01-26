@@ -351,7 +351,7 @@ Terrain::Rect Terrain::updateEffector(const Effector * eff)
         return Rect();
     }
 
-    const Rect & old_box = I->second;
+    const Rect old_box = I->second;
 
 
     std::set<Segment*> removed, added, updated;
@@ -413,7 +413,7 @@ Terrain::Rect Terrain::updateEffector(const Effector * eff)
         eff->updateToSegment(**J);
     }
 
-    m_effectors.insert(I, Effectorstore::value_type(eff, eff->bbox()));
+    I->second = eff->bbox();
     return old_box;
 }
 
