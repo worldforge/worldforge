@@ -160,9 +160,9 @@ int main(int argc, char* argv[])
     assert(a1->checkIntersects(*seg));
     
     seg = terrain.getSegment(1,0);
-    assert(seg->getAreas().size() == 1);
-    assert(seg->getAreas().count(1) == 1);
-    assert(a1->checkIntersects(*seg));
+    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().count(1) == 0);
+    assert(a1->checkIntersects(*seg) == false);
 
     WFMath::Polygon<2> clipped = a1->clipToSegment(*seg);
     assert(clipped.isValid());
@@ -225,9 +225,9 @@ int main(int argc, char* argv[])
     assert(clipped.isValid());
 
     seg = terrain.getSegment(2,0);
-    assert(seg->getAreas().size() == 1);
-    assert(seg->getAreas().count(1) == 1);
-    assert(a1->checkIntersects(*seg));
+    assert(seg->getAreas().size() == 0);
+    assert(seg->getAreas().count(1) == 0);
+    assert(a1->checkIntersects(*seg) == false);
 
     clipped = a1->clipToSegment(*seg);
     assert(clipped.isValid());
