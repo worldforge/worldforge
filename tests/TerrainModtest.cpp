@@ -49,7 +49,7 @@ int main()
     terrain.addMod(mp2);
 
     const WFMath::Ball<2> ball(WFMath::Point<2>(80, 80), 10);
-    Mercator::TerrainMod * mp3 = new Mercator::CraterTerrainMod<WFMath::Ball>(-5.f, ball);
+    Mercator::CraterTerrainMod<WFMath::Ball> * mp3 = new Mercator::CraterTerrainMod<WFMath::Ball>(-5.f, ball);
     terrain.addMod(mp3);
 
     Mercator::Segment * segment = terrain.getSegment(0, 0);
@@ -77,6 +77,16 @@ int main()
     terrain.updateMod(mp3);
 
     assert(!segment->isValid());
+
+    //Check that the stored bbox is correctly updated when calling updateMod().
+    WFMath::AxisBox<2> mp3_rect1 = mp3->bbox();
+    mp3->setShape(-5.f, WFMath::Ball<2>(WFMath::Point<2>(-80, 80), 10));
+    WFMath::AxisBox<2> mp3_rect2 = terrain.updateMod(mp3);
+    assert(mp3_rect1 == mp3_rect2);
+    WFMath::AxisBox<2> mp3_rect3 = mp3->bbox();
+    mp3->setShape(-5.f, WFMath::Ball<2>(WFMath::Point<2>(-80, -80), 10));
+    WFMath::AxisBox<2> mp3_rect4 = terrain.updateMod(mp3);
+    assert(mp3_rect3 == mp3_rect4);
 
     terrain.removeMod(mp1);
 
