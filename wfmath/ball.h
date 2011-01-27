@@ -72,7 +72,7 @@ class Ball
   Ball() {}
   /// construct a ball with the given center and radius
   Ball(const Point<dim>& center, CoordType radius)
-  : m_center(center), m_radius(radius) {assert(radius >= 0);}
+  : m_center(center), m_radius(radius) { if (radius < 0) m_center.setValid(false); }
   /// construct a copy of a ball
   Ball(const Ball& b) : m_center(b.m_center), m_radius(b.m_radius) {}
   /// Construct a ball from an object passed by Atlas
