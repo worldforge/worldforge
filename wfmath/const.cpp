@@ -83,8 +83,6 @@ double WFMath::_ScaleEpsilon(double x1, double x2, double epsilon)
     // Hack to get around nonstandard std:: namespacing in MSVC
     using namespace std;
 
-    assert(epsilon > 0.);
-
     // Get the exponent of the smaller of the two numbers (using the
     // smaller of the two gives us a tighter epsilon value).
     int exponent;
