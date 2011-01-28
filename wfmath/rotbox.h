@@ -68,7 +68,7 @@ class RotBox
   RotBox(const RotBox& b) : m_corner0(b.m_corner0), m_size(b.m_size),
     m_orient(b.m_orient) {}
   /// Construct a rotbox from an object passed by Atlas
-  explicit RotBox(const AtlasInType& a) {fromAtlas(a);}
+  explicit RotBox(const AtlasInType& a);
 
   ~RotBox() {}
 
@@ -126,12 +126,9 @@ class RotBox
   {m_orient = Prod(m_orient, m); m_corner0.rotate(m, p); return *this;}
 
   // 3D rotation functions
-  RotBox<3>& rotateCorner(const Quaternion& q, int corner)
-  {rotatePoint(q, getCorner(corner)); return *this;}
-  RotBox<3>& rotateCenter(const Quaternion& q)
-  {rotatePoint(q, getCenter()); return *this;}
-  RotBox<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
-  {m_orient = m_orient.rotate(q); m_corner0.rotate(q, p); return *this;}
+  RotBox& rotateCorner(const Quaternion& q, int corner);
+  RotBox& rotateCenter(const Quaternion& q);
+  RotBox& rotatePoint(const Quaternion& q, const Point<dim>& p);
 
   // Intersection functions
 
@@ -166,12 +163,8 @@ class RotBox
     coords.m_orient * m_orient);}
 
   // 3D only
-  RotBox<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return RotBox<3>(m_corner0.toParentCoords(origin, rotation), m_size,
-    m_orient.rotate(rotation));}
-  RotBox<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return RotBox<3>(m_corner0.toLocalCoords(origin, rotation), m_size,
-    m_orient.rotate(rotation.inverse()));}
+  RotBox toParentCoords(const Point<dim>& origin, const Quaternion& rotation) const;
+  RotBox toLocalCoords(const Point<dim>& origin, const Quaternion& rotation) const;
 
   friend bool Intersect<dim>(const RotBox& r, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const RotBox& r, bool proper);
@@ -203,7 +196,5 @@ class RotBox
 };
 
 } // namespace WFMath
-
-#include <wfmath/rotbox_funcs.h>
 
 #endif  // WFMATH_ROT_BOX_H
