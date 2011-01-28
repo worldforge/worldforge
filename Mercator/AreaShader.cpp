@@ -12,6 +12,7 @@
 #include "Mercator/Segment.h"
 #include "Mercator/Surface.h"
 
+#include <list>
 #include <set>
 #include <iostream>
 #include <algorithm>
