@@ -259,13 +259,13 @@ public:
   _Poly2Orient toParentCoords(const Point<dim>& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
   {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
-    p.m_axes[0] *= rotation; p.m_axes[1] *= rotation; return p;}
+    p.m_axes[0].rotate(rotation); p.m_axes[1].rotate(rotation); return p;}
   _Poly2Orient toParentCoords(const AxisBox<dim>& coords) const
   {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords); return p;}
   _Poly2Orient toParentCoords(const RotBox<dim>& coords) const
   {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords);
-    p.m_axes[0] *= coords.orientation();
-    p.m_axes[1] *= coords.orientation(); return p;}
+    p.m_axes[0].rotate(coords.orientation());
+    p.m_axes[1].rotate(coords.orientation()); return p;}
 
   // toLocal is just like toParent, expect we reverse the order of
   // translation and rotation and use the opposite sense of the rotation
@@ -452,7 +452,5 @@ public:
 };
 
 } // namespace WFMath
-
-#include <wfmath/polygon_funcs.h>
 
 #endif  // WFMATH_POLYGON_H

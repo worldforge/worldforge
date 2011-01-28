@@ -67,4 +67,9 @@ template<> RotBox<3> RotBox<3>::toLocalCoords(const Point<3>& origin,
 template class RotBox<2>;
 template class RotBox<3>;
 
+template Point<2> Point<2>::toLocalCoords(RotBox<2> const&) const;
+template Point<3> Point<3>::toLocalCoords(RotBox<3> const&) const;
+template Point<2> Point<2>::toParentCoords(RotBox<2> const&) const;
+template Point<3> Point<3>::toParentCoords(RotBox<3> const&) const;
+
 }

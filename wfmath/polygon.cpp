@@ -27,7 +27,7 @@
 #include "vector.h"
 #include "point.h"
 #include "axisbox.h"
-#include "polygon.h"
+#include "polygon_funcs.h"
 
 using namespace WFMath;
 
@@ -181,4 +181,14 @@ Polygon<2> Polygon<2>::toLocalCoords(const RotBox<2>& coords) const
   for(unsigned i = 0; i < m_points.size(); ++i)
     out.m_points[i] = m_points[i].toLocalCoords(coords);
   return out;
+}
+
+namespace WFMath {
+
+template class Polygon<3>;
+
+template Point<3> _Poly2Orient<3>::convert(const Point<2>& p) const;
+template _Poly2Orient<3>& _Poly2Orient<3>::operator=(_Poly2Orient<3> const&);
+template void _Poly2Orient<3>::rotate(RotMatrix<3> const&, Point<3> const&);
+
 }
