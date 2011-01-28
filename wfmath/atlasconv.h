@@ -394,6 +394,11 @@ inline AtlasOutType RotBox<dim>::toAtlas() const
   return map;
 }
 
+template<const int dim>
+inline RotBox<dim>::RotBox(const AtlasInType& a) {
+  fromAtlas(a);
+}
+
 } // namespace WFMath
 
 #endif // WFMATH_ATLAS_CONV_H
