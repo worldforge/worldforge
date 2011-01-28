@@ -145,7 +145,7 @@ class Quaternion
 
   // documented elsewhere
   template<const int dim>
-  friend Vector<3>& Vector<dim>::rotate(const Quaternion& q);
+  friend Vector<dim>& Vector<dim>::rotate(const Quaternion& q);
   template<const int dim>
   friend RotMatrix<3>& RotMatrix<dim>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip);
