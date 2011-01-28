@@ -104,7 +104,9 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<
 
   typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(),
 						end = c.end();
-  assert(i != end);
+  if (i == end) {
+    return Ball<dim>();
+  }
 
   CoordType min[dim], max[dim];
   typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator min_p[dim], max_p[dim];
