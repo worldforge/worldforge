@@ -76,9 +76,7 @@ class Ball
   /// construct a copy of a ball
   Ball(const Ball& b) : m_center(b.m_center), m_radius(b.m_radius) {}
   /// Construct a ball from an object passed by Atlas
-  explicit Ball(const AtlasInType& a)
-  : m_center(Point<dim>::ZERO()), m_radius(0)
-  {fromAtlas(a);}
+  explicit Ball(const AtlasInType& a);
 
   ~Ball() {}
 
@@ -131,10 +129,9 @@ class Ball
   {m_center.rotate(m, p); return *this;}
 
   // 3D rotation function
-  Ball<3>& rotateCorner(const Quaternion&, int corner) {abort(); return *this;}
-  Ball<3>& rotateCenter(const Quaternion&) {return *this;}
-  Ball<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
-  {m_center.rotate(q, p); return *this;}
+  Ball& rotateCorner(const Quaternion&, int corner);
+  Ball& rotateCenter(const Quaternion&);
+  Ball& rotatePoint(const Quaternion& q, const Point<dim>& p);
 
   // Intersection functions
 
@@ -163,10 +160,8 @@ class Ball
         {return Ball(m_center.toLocalCoords(coords), m_radius);}
 
   // 3D only
-  Ball<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return Ball<3>(m_center.toParentCoords(origin, rotation), m_radius);}
-  Ball<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return Ball<3>(m_center.toLocalCoords(origin, rotation), m_radius);}
+  Ball toParentCoords(const Point<dim>& origin, const Quaternion& rotation) const;
+  Ball toLocalCoords(const Point<dim>& origin, const Quaternion& rotation) const;
 
   friend bool Intersect<dim>(const Ball& b, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const Ball& b, bool proper);
@@ -196,7 +191,5 @@ class Ball
 };
 
 } // namespace WFMath
-
-#include <wfmath/ball_funcs.h>
 
 #endif  // WFMATH_BALL_H

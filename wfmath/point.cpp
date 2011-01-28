@@ -27,6 +27,7 @@
 #include "basis.h"
 #include "point_funcs.h"
 #include "axisbox_funcs.h"
+#include "ball_funcs.h"
 #include "quaternion.h"
 
 #include <vector>

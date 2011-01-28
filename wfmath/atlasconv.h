@@ -306,6 +306,13 @@ inline AtlasOutType Ball<dim>::toAtlas() const
   return map;
 }
 
+template<const int dim>
+inline Ball<dim>::Ball(const AtlasInType& a) : m_center(Point<dim>::ZERO()),
+                                               m_radius(0)
+{
+  fromAtlas(a);
+}
+
 inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 {
   const _AtlasMessageType& message(a);

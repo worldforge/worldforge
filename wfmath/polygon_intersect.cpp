@@ -29,7 +29,7 @@
 #include "vector.h"
 #include "point.h"
 #include "axisbox.h"
-#include "ball.h"
+#include "ball_funcs.h"
 #include "segment.h"
 #include "rotbox.h"
 #include "polygon.h"
