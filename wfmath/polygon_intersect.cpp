@@ -29,12 +29,14 @@
 #include "vector.h"
 #include "point.h"
 #include "axisbox.h"
-#include "ball_funcs.h"
+#include "ball.h"
 #include "segment.h"
 #include "rotbox.h"
 #include "polygon.h"
 #include "polygon_intersect.h"
 #include "intersect.h"
+
+#include <list>
 
 using namespace WFMath;
 
