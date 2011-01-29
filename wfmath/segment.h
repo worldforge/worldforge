@@ -34,9 +34,9 @@
 #include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
-namespace WFMath {
+#include <cassert>
 
-template<const int dim> class Segment;
+namespace WFMath {
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Segment<dim>& s);
