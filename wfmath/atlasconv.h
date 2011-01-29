@@ -31,8 +31,6 @@
 #ifndef WFMATH_ATLAS_CONV_H
 #define WFMATH_ATLAS_CONV_H
 
-#include <stdexcept>
-#include <wfmath/const.h>
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
 #include <wfmath/quaternion.h>
