@@ -32,11 +32,6 @@
 
 namespace WFMath {
 
-template<const int dim> class Vector;
-class Quaternion;
-
-template<const int dim> class RotMatrix;
-
 /// returns m1 * m2
 template<const int dim> // m1 * m2
 RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);

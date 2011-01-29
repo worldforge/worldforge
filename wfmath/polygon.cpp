@@ -23,10 +23,6 @@
 // Author: Ron Steinke
 // Created: 2002-1-4
 
-#include "const.h"
-#include "vector.h"
-#include "point.h"
-#include "axisbox.h"
 #include "polygon_funcs.h"
 
 using namespace WFMath;

@@ -27,7 +27,6 @@
 #ifndef WFMATH_POLYGON_INTERSECT_H
 #define WFMATH_POLYGON_INTERSECT_H
 
-#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>

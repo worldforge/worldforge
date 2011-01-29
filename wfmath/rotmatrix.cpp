@@ -23,9 +23,7 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#include "const.h"
 #include "rotmatrix.h"
-#include "vector.h"
 #include "quaternion.h"
 
 using namespace WFMath;
