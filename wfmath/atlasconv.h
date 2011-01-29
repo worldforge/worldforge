@@ -39,6 +39,8 @@
 #include <wfmath/ball.h>
 #include <wfmath/rotbox.h>
 
+#include <cmath>
+
 namespace WFMath {
 
 #ifdef ATLAS_MESSAGE_ELEMENT_H

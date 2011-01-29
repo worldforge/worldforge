@@ -37,6 +37,8 @@
 
 #include <vector>
 
+#include <cassert>
+
 namespace WFMath {
 
 template<const int dim> class Polygon;

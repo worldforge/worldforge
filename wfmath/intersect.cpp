@@ -25,6 +25,8 @@
 
 #include "intersect.h"
 
+#include <cmath>
+
 using namespace WFMath;
 
 // force a bunch of instantiations

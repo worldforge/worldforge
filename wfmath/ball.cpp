@@ -30,6 +30,7 @@
 #include "ball_funcs.h"
 
 #include <vector>
+#include <cmath>
 
 using namespace WFMath;
 

@@ -29,6 +29,8 @@
 
 #include "rotbox_funcs.h"
 
+#include <cmath>
+
 using namespace WFMath;
 
 namespace WFMath {

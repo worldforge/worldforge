@@ -32,6 +32,8 @@
 #include <wfmath/ball.h>
 #include <wfmath/polygon.h>
 
+#include <cmath>
+
 namespace WFMath {
 
 template<const int dim>

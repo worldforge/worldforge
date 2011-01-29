@@ -33,6 +33,8 @@
 #include <wfmath/ball.h>
 #include <wfmath/rotbox.h>
 
+#include <cassert>
+
 namespace WFMath {
 
 template<const int dim>

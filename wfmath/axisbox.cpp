@@ -28,6 +28,8 @@
 
 #include <vector>
 
+#include <cmath>
+
 namespace WFMath {
 
 template class AxisBox<3>;
