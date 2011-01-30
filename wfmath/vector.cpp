@@ -27,7 +27,6 @@
 // and Vector3D classes from stage/math, written by Bryce W.
 // Harrington, Kosh, and Jari Sundell (Rakshasa).
 
-#include "const.h"
 #include "basis.h"
 #include "vector_funcs.h"
 #include "point.h"
