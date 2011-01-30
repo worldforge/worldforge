@@ -23,8 +23,10 @@
 // Author: Alistair Riddoch
 // Created: 2009-01-12
 
-#include "axisbox.h"
 #include "axisbox_funcs.h"
+
+#include "rotmatrix.h"
+#include "vector.h"
 
 #include <vector>
 

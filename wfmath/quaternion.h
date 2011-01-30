@@ -26,7 +26,6 @@
 #ifndef WFMATH_QUATERNION_H
 #define WFMATH_QUATERNION_H
 
-#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
 

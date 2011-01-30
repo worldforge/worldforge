@@ -26,12 +26,12 @@
 #ifndef WFMATH_ROT_BOX_FUNCS_H
 #define WFMATH_ROT_BOX_FUNCS_H
 
-#include <wfmath/const.h>
+#include <wfmath/rotbox.h>
+
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
-#include <wfmath/rotbox.h>
 
 #include <cassert>
 

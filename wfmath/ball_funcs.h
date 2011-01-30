@@ -26,10 +26,9 @@
 #ifndef WFMATH_BALL_FUNCS_H
 #define WFMATH_BALL_FUNCS_H
 
-#include <wfmath/const.h>
-#include <wfmath/point.h>
-#include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
+
+#include <wfmath/axisbox.h>
 #include <wfmath/miniball.h>
 
 #include <cassert>

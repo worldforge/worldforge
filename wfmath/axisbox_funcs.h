@@ -29,8 +29,9 @@
 #ifndef WFMATH_AXIS_BOX_FUNCS_H
 #define WFMATH_AXIS_BOX_FUNCS_H
 
-#include <wfmath/point.h>
 #include <wfmath/axisbox.h>
+
+#include <wfmath/point.h>
 #include <wfmath/ball.h>
 
 namespace WFMath {

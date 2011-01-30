@@ -26,7 +26,6 @@
 #ifndef WFMATH_RANDGEN_H
 #define WFMATH_RANDGEN_H
 
-#include <wfmath/const.h>
 #include <wfmath/MersenneTwister.h>
 
 namespace WFMath {

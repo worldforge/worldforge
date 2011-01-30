@@ -26,10 +26,9 @@
 #ifndef WFMATH_SHUFFLE_H
 #define WFMATH_SHUFFLE_H
 
-#include <vector>
-
-#include <wfmath/const.h>
 #include <wfmath/MersenneTwister.h>
+
+#include <vector>
 
 namespace WFMath {
 

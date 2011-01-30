@@ -23,8 +23,9 @@
 
 // Author: Ron Steinke
 
-#include "basis.h"
 #include "point_funcs.h"
+
+#include "basis.h"
 #include "quaternion.h"
 
 #include <vector>

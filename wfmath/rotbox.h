@@ -26,18 +26,11 @@
 #ifndef WFMATH_ROT_BOX_H
 #define WFMATH_ROT_BOX_H
 
-#include <wfmath/const.h>
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
 #include <wfmath/rotmatrix.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
-#include <wfmath/quaternion.h>
 
 namespace WFMath {
-
-template<const int dim> class RotBox;
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r);

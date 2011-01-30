@@ -28,7 +28,6 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
-#include <wfmath/quaternion.h>
 #include <wfmath/point.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>

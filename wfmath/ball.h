@@ -26,11 +26,7 @@
 #ifndef WFMATH_BALL_H
 #define WFMATH_BALL_H
 
-#include <wfmath/const.h>
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/rotbox.h>
 #include <wfmath/intersect_decls.h>
 
 #include <cstdlib> // for abort()

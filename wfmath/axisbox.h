@@ -29,7 +29,6 @@
 #ifndef WFMATH_AXIS_BOX_H
 #define WFMATH_AXIS_BOX_H
 
-#include <wfmath/const.h>
 #include <wfmath/intersect_decls.h>
 
 #include <iosfwd>

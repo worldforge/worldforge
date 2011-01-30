@@ -26,8 +26,6 @@
 #ifndef WFMATH_SEGMENT_FUNCS_H
 #define WFMATH_SEGMENT_FUNCS_H
 
-#include <wfmath/const.h>
-#include <wfmath/point.h>
 #include <wfmath/segment.h>
 
 namespace WFMath {

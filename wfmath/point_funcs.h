@@ -27,9 +27,11 @@
 #ifndef WFMATH_POINT_FUNCS_H
 #define WFMATH_POINT_FUNCS_H
 
-#include <wfmath/const.h>
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
+
+#include <wfmath/vector.h>
+
+#include <cmath>
 
 #include <cassert>
 

@@ -23,9 +23,10 @@
 // Author: Ron Steinke
 // Created: 2002-2-20
 
+#include "polygon_intersect.h"
+
 #include "segment.h"
 #include "rotbox.h"
-#include "polygon_intersect.h"
 
 #include <algorithm>
 #include <list>

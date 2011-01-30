@@ -29,6 +29,7 @@
 
 #include "ball_funcs.h"
 #include "miniball_funcs.h"
+#include "vector.h"
 
 #include <vector>
 #include <cmath>

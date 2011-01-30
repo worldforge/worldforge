@@ -26,13 +26,12 @@
 #ifndef WFMATH_POLYGON_H
 #define WFMATH_POLYGON_H
 
-#include <wfmath/const.h>
+#include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/rotmatrix.h>
-#include <wfmath/axisbox.h>
+#include <wfmath/quaternion.h>
 #include <wfmath/rotbox.h>
-#include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
 #include <vector>

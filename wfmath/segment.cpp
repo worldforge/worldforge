@@ -29,6 +29,10 @@
 
 #include "segment_funcs.h"
 
+#include "axisbox.h"
+#include "ball.h"
+#include "vector.h"
+
 #include <cmath>
 
 using namespace WFMath;
