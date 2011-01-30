@@ -28,6 +28,7 @@
 // Harrington, Kosh, and Jari Sundell (Rakshasa).
 
 #include "ball_funcs.h"
+#include "miniball_funcs.h"
 
 #include <vector>
 #include <cmath>
