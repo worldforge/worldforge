@@ -61,6 +61,105 @@ void test_polygon(const Polygon<dim>& p)
   Intersect(p, r, false);
 }
 
+/**
+ * Test intersection between a square polygon and axis boxes at each of its four sides.
+ */
+void test_intersect()
+{
+
+  Polygon<2> p;
+
+  p.addCorner(0, Point<2>(0, 0));
+  p.addCorner(0, Point<2>(4, 0));
+  p.addCorner(0, Point<2>(4, -4));
+  p.addCorner(0, Point<2>(0, -4));
+  p.isValid();
+
+  AxisBox<2> a1(Point<2>(-1, -1), Point<2>(1, -3));
+  std::cout << "Testing intersection of " << p << " and " << a1 << std::endl;
+  assert(WFMath::Intersect(p, a1, false));
+
+  AxisBox<2> a2(Point<2>(1, -5), Point<2>(2, -3));
+  std::cout << "Testing intersection of " << p << " and " << a2 << std::endl;
+  assert(WFMath::Intersect(p, a2, false));
+
+  AxisBox<2> a3(Point<2>(5, -1), Point<2>(3, -3));
+  std::cout << "Testing intersection of " << p << " and " << a3 << std::endl;
+  assert(WFMath::Intersect(p, a3, false));
+
+  AxisBox<2> a4(Point<2>(1, 1), Point<2>(2, -1));
+  std::cout << "Testing intersection of " << p << " and " << a4 << std::endl;
+  assert(WFMath::Intersect(p, a4, false));
+
+
+  RotBox<2> r1(Point<2>(-1, -1), Vector<2>(2, -2), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r1 << std::endl;
+  assert(WFMath::Intersect(p, r1, false));
+
+  RotBox<2> r2(Point<2>(1, -5), Vector<2>(1, 2), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r2 << std::endl;
+  assert(WFMath::Intersect(p, r2, false));
+
+  RotBox<2> r3(Point<2>(5, -1), Vector<2>(-2, -2), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r3 << std::endl;
+  assert(WFMath::Intersect(p, r3, false));
+
+  RotBox<2> r4(Point<2>(1, 1), Vector<2>(1, -2), RotMatrix<2>().identity());
+  std::cout << "Testing intersection of " << p << " and " << r4 << std::endl;
+  assert(WFMath::Intersect(p, r4, false));
+
+
+}
+
+/**
+ * Test contains between a square polygon and axis boxes at each of its four sides.
+ */
+void test_contains()
+{
+
+  Polygon<2> p;
+
+  p.addCorner(0, Point<2>(0, 0));
+  p.addCorner(0, Point<2>(4, 0));
+  p.addCorner(0, Point<2>(4, -4));
+  p.addCorner(0, Point<2>(0, -4));
+  p.isValid();
+
+  AxisBox<2> a1(Point<2>(0.1, -3.9), Point<2>(0.2, -3.8));
+  std::cout << "Testing " << p << " contains " << a1 << std::endl;
+  assert(WFMath::Contains(p, a1, false));
+
+  AxisBox<2> a2(Point<2>(3.8, -3.9), Point<2>(3.9, -3.8));
+  std::cout << "Testing " << p << " contains " << a2 << std::endl;
+  assert(WFMath::Contains(p, a2, false));
+
+  AxisBox<2> a3(Point<2>(0.1, -0.2), Point<2>(0.2, -0.1));
+  std::cout << "Testing " << p << " contains " << a3 << std::endl;
+  assert(WFMath::Contains(p, a3, false));
+
+  AxisBox<2> a4(Point<2>(3.8, -0.2), Point<2>(3.9, -0.1));
+  std::cout << "Testing " << p << " contains " << a4 << std::endl;
+  assert(WFMath::Contains(p, a4, false));
+
+
+  RotBox<2> r1(Point<2>(0.1, -3.9), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  std::cout << "Testing " << p << " contains " << r1 << std::endl;
+  assert(WFMath::Contains(p, r1, false));
+
+  RotBox<2> r2(Point<2>(3.8, -3.9), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  std::cout << "Testing " << p << " contains " << r2 << std::endl;
+  assert(WFMath::Contains(p, r2, false));
+
+  RotBox<2> r3(Point<2>(0.1, -0.2), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  std::cout << "Testing " << p << " contains " << r3 << std::endl;
+  assert(WFMath::Contains(p, r3, false));
+
+  RotBox<2> r4(Point<2>(3.8, -0.2), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  std::cout << "Testing " << p << " contains " << r4 << std::endl;
+  assert(WFMath::Contains(p, r4, false));
+
+}
+
 int main()
 {
   bool succ;
@@ -86,6 +185,10 @@ int main()
   assert(succ);
 
   test_polygon(p3);
+
+  test_intersect();
+
+  test_contains();
 
   return 0;
 }

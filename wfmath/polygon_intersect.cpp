@@ -611,7 +611,7 @@ bool WFMath::Intersect<2>(const Polygon<2>& p, const AxisBox<2>& b, bool proper)
          ((*j)[0] <= b.m_high[0] && b.m_high[0] < (*i)[0]));
 
     CoordType xdiff = ((*j)[0] - (*i)[0]);
-    CoordType ydiff = ((*j)[0] - (*i)[0]);
+    CoordType ydiff = ((*j)[1] - (*i)[1]);
 
     if(low_vertically_between) { // Check for edge intersect
       CoordType x_intersect = (*i)[0] + (b.m_low[1] - (*i)[1])
@@ -682,7 +682,7 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const AxisBox<2>& b, bool proper)
          ((*j)[0] <= b.m_high[0] && b.m_high[0] < (*i)[0]));
 
     CoordType xdiff = ((*j)[0] - (*i)[0]);
-    CoordType ydiff = ((*j)[0] - (*i)[0]);
+    CoordType ydiff = ((*j)[1] - (*i)[1]);
 
     if(low_vertically_between) { // Check for edge intersect
       CoordType x_intersect = (*i)[0] + (b.m_low[1] - (*i)[1])
@@ -968,7 +968,7 @@ bool WFMath::Intersect<2>(const Polygon<2>& p, const RotBox<2>& r, bool proper)
          ((ends[1])[0] <= m_high[0] && m_high[0] < (ends[0])[0]));
 
     CoordType xdiff = (ends[1])[0] - (ends[0])[0];
-    CoordType ydiff = (ends[1])[0] - (ends[0])[0];
+    CoordType ydiff = (ends[1])[1] - (ends[0])[1];
 
     if(low_vertically_between) { // Check for edge intersect
       CoordType x_intersect = (ends[0])[0] + (m_low[1] - (ends[0])[1])
@@ -1063,7 +1063,7 @@ bool WFMath::Contains<2>(const Polygon<2>& p, const RotBox<2>& r, bool proper)
          ((ends[1])[0] <= m_high[0] && m_high[0] < (ends[0])[0]));
 
     CoordType xdiff = (ends[1])[0] - (ends[0])[0];
-    CoordType ydiff = (ends[1])[0] - (ends[0])[0];
+    CoordType ydiff = (ends[1])[1] - (ends[0])[1];
 
     if(low_vertically_between) { // Check for edge intersect
       CoordType x_intersect = (ends[0])[0] + (m_low[1] - (ends[0])[1])

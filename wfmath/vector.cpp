@@ -252,6 +252,7 @@ template Vector<2>& operator*=(Vector<2>& v1, CoordType d);
 template Vector<3>& operator/=(Vector<3>& v1, CoordType d);
 template Vector<2>& operator/=(Vector<2>& v1, CoordType d);
 
+template CoordType Dot<3>(const Vector<3> &, const Vector<3> &);
 template CoordType Dot<2>(const Vector<2> &, const Vector<2> &);
 template CoordType Angle<3>(const Vector<3> &, const Vector<3> &);
 
@@ -261,6 +262,7 @@ template Vector<3> operator*<3>(CoordType, const Vector<3> &);
 template Vector<2> operator*<2>(CoordType, const Vector<2> &);
 template Vector<3> operator*<3>(const Vector<3> &, CoordType);
 template Vector<2> operator*<2>(const Vector<2> &, CoordType);
+template Vector<3> operator/<3>(const Vector<3> &, CoordType);
 template Vector<2> operator/<2>(const Vector<2> &, CoordType);
 
 template Vector<3> operator+<3>(const Vector<3> &, const Vector<3> &);
