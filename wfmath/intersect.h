@@ -36,6 +36,8 @@
 namespace WFMath {
 
 // Get the reversed order intersect functions (is this safe? FIXME)
+// No it's not. In the case of an unknown intersection we end up in
+// a stack crash loop.
 
 template<class S1, class S2>
 inline bool Intersect(const S1& s1, const S2& s2, bool proper)
