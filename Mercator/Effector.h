@@ -8,6 +8,8 @@
 #include <wfmath/axisbox.h>
 #include <wfmath/polygon.h>
 
+#include <string>
+
 namespace Mercator
 {
 
