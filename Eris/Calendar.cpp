@@ -10,6 +10,8 @@
 #include <Eris/Log.h>
 #include "iround.h"
 
+#include <cmath>
+
 using namespace Atlas::Message;
 
 namespace Eris

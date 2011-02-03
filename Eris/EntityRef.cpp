@@ -9,6 +9,8 @@
 
 #include <sigc++/slot.h>
 
+#include <cassert>
+
 namespace Eris
 {
 
