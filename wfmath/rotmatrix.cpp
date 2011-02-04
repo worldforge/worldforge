@@ -418,4 +418,7 @@ template Vector<3> ProdInv<3>(Vector<3> const&, RotMatrix<3> const&);
 template Vector<3> Prod<3>(Vector<3> const&, RotMatrix<3> const&);
 template Vector<2> Prod<2>(Vector<2> const&, RotMatrix<2> const&);
 
+template RotMatrix<3> Prod<3>(RotMatrix<3> const&, RotMatrix<3> const&);
+template RotMatrix<2> Prod<2>(RotMatrix<2> const&, RotMatrix<2> const&);
+
 }
