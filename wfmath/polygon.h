@@ -36,8 +36,6 @@
 
 #include <vector>
 
-#include <cassert>
-
 namespace WFMath {
 
 template<const int dim> class Polygon;
@@ -81,8 +79,7 @@ class Polygon<2>
   // Descriptive characteristics
 
   int numCorners() const {return m_points.size();}
-  Point<2> getCorner(int i) const
-  {assert(i >= 0 && ((unsigned int) i) < m_points.size()); return m_points[i];}
+  Point<2> getCorner(int i) const {return m_points[i];}
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Point<2> getCenter() const {return Barycenter(m_points);}
 #endif
@@ -341,8 +338,7 @@ public:
   // Descriptive characteristics
 
   int numCorners() const {return m_poly.numCorners();}
-  Point<dim> getCorner(int i) const
-  {assert(i >= 0 && i < m_poly.numCorners()); return m_orient.convert(m_poly[i]);}
+  Point<dim> getCorner(int i) const {return m_orient.convert(m_poly[i]);}
   Point<dim> getCenter() const {return m_orient.convert(m_poly.getCenter());}
 
   // The failure of the following functions does not invalidate the
