@@ -11,6 +11,8 @@
 
 #include <wfmath/point.h>
 
+#include <cassert>
+
 // This is a relatively specific tests which ensures Terrain::addArea
 // behaves as defined with respect to invalidating surfaces, to verify
 // a refactoring. Previous cases where std::map::count() was used followed

@@ -7,6 +7,8 @@
 #include <Mercator/AreaShader.h>
 #include <Mercator/Segment.h>
 
+#include <cassert>
+
 typedef WFMath::Point<2> Point2;
 
 void testAreaShader()
