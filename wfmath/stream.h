@@ -39,6 +39,8 @@
 #include <iostream>
 #include <list> // For Polygon<>::operator>>()
 
+#include <cassert>
+
 namespace WFMath {
 
 // sstream vs. strstream compatibility wrapper

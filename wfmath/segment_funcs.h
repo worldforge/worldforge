@@ -28,6 +28,8 @@
 
 #include <wfmath/segment.h>
 
+#include <cassert>
+
 namespace WFMath {
 
 template<const int dim>

@@ -35,6 +35,8 @@
 
 #include <cmath>
 
+#include <cassert>
+
 // FIXME Work is needed on this code. At very least the following notes
 // from the original author apply:
 // "The Intersect() and Contains() functions involving WFMath::Polygon<>"

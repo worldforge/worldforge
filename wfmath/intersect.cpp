@@ -27,6 +27,8 @@
 
 #include <cmath>
 
+#include <cassert>
+
 using namespace WFMath;
 
 // force a bunch of instantiations
