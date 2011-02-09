@@ -9,6 +9,8 @@
 #include <iostream>
 #include <cmath>
 
+#include <cassert>
+
 namespace Mercator
 {
 

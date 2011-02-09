@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+#include <cassert>
+
 int terrain_mod_context_test(Mercator::Terrain & terrain)
 {
     const WFMath::Ball<2> circ2(WFMath::Point<2>(0.0,0.0), 12.0);
