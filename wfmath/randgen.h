@@ -42,7 +42,7 @@ inline void SeedRand(unsigned int val) {MTRand::instance.seed(val);}
 /// Get a random number between 0 and 1
 inline double DRand() {return MTRand::instance.rand();}
 /// Get a random integer ranging from 0 to (val passed) - 1
-inline unsigned int IRand(unsigned int val) {assert(val); return MTRand::instance.randInt(val - 1);}
+inline unsigned int IRand(unsigned int val) {return MTRand::instance.randInt(val - 1);}
 
 #endif
 
