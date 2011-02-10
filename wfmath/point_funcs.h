@@ -189,13 +189,15 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
   typename container2<CoordType, std::allocator<CoordType> >::const_iterator w_i = weights.begin(),
 						 w_end = weights.end();
 
-  assert("nonempty list of points" && c_i != c_end);
-  assert("nonempty list of weights" && w_i != w_end);
+  Point<dim> out;
+
+  if (c_i == c_end || w_i == w_end) {
+    return out;
+  }
 
   bool valid = c_i->isValid();
 
   CoordType tot_weight = *w_i, max_weight = fabs(*w_i);
-  Point<dim> out;
   for(int j = 0; j < dim; ++j) {
     out[j] = (*c_i)[j] * *w_i;
   }
