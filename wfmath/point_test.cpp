@@ -58,10 +58,11 @@ void test_point(const Point<dim>& p)
   clist.push_back(5);
   assert(p == Barycenter(pvec, clist));
 
+  // Barycenter fails if sum of weights is 0
   pvec.push_back(p);
   assert(Barycenter(pvec).isValid());
   clist.push_back(-5);
-  assert(Barycenter(pvec, clist).isValid());
+  assert(!Barycenter(pvec, clist).isValid());
 
   assert(p == p + (p - p));
 
