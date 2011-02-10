@@ -49,7 +49,7 @@ void test_point(const Point<dim>& p)
   std::vector<Point<dim> > pvec;
   std::list<CoordType> clist;
 
-  // assert(!Barycenter(pvec).isValid());
+  assert(!Barycenter(pvec).isValid());
 
   assert(!Barycenter(pvec, clist).isValid());
 

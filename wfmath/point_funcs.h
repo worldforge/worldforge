@@ -233,7 +233,9 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
 
   typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(), end = c.end();
 
-  assert("nonempty list of points" && i != end);
+  if (i == end) {
+    return Point<dim>();
+  }
 
   Point<dim> out = *i;
   int num_points = 1;
