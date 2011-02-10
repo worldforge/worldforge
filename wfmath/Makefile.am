@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_builddir) -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 
 EXTRA_DIST = bc_sloppy_mag_3
 
