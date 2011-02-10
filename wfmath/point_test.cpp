@@ -47,9 +47,14 @@ void test_point(const Point<dim>& p)
   test_shape(p);
 
   std::vector<Point<dim> > pvec;
+  std::list<CoordType> clist;
+
+  // assert(!Barycenter(pvec).isValid());
+
+  assert(!Barycenter(pvec, clist).isValid());
+
   pvec.push_back(p);
   assert(p == Barycenter(pvec));
-  std::list<CoordType> clist;
   clist.push_back(5);
   assert(p == Barycenter(pvec, clist));
 
