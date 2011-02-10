@@ -33,8 +33,6 @@
 
 #include <cmath>
 
-#include <cassert>
-
 namespace WFMath {
 
 template<const int dim>
@@ -214,8 +212,9 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
   }
 
   // Make sure the weights don't add up to zero
-  assert("sum of weights must be nonzero" && max_weight > 0
-         && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
+  if (max_weight <= 0 || fabs(tot_weight) <= max_weight * WFMATH_EPSILON) {
+    return out;
+  }
 
   for(int j = 0; j < dim; ++j) {
     out[j] /= tot_weight;
