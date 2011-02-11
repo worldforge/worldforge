@@ -27,13 +27,15 @@
 #ifndef WFMATH_POLYGON_INTERSECT_H
 #define WFMATH_POLYGON_INTERSECT_H
 
-#include <wfmath/const.h>
-#include <wfmath/vector.h>
-#include <wfmath/point.h>
 #include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
 #include <wfmath/polygon.h>
 #include <wfmath/intersect.h>
+#include <wfmath/error.h>
+
+#include <cmath>
+
+#include <cassert>
 
 // FIXME Work is needed on this code. At very least the following notes
 // from the original author apply:

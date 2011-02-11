@@ -26,17 +26,10 @@
 #ifndef WFMATH_SEGMENT_H
 #define WFMATH_SEGMENT_H
 
-#include <wfmath/const.h>
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/rotbox.h>
-#include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
 namespace WFMath {
-
-template<const int dim> class Segment;
 
 template<const int dim>
 std::ostream& operator<<(std::ostream& os, const Segment<dim>& s);
@@ -48,7 +41,7 @@ std::istream& operator>>(std::istream& is, Segment<dim>& s);
  * This class implements the full shape interface, as described in
  * the fake class Shape.
  **/
-template<const int dim>
+template<const int dim = 3>
 class Segment
 {
  public:
@@ -77,7 +70,7 @@ class Segment
   // Descriptive characteristics
 
   int numCorners() const {return 2;}
-  Point<dim> getCorner(int i) const {assert(i == 0 || i == 1); return i ? m_p2 : m_p1;}
+  Point<dim> getCorner(int i) const {return i ? m_p2 : m_p1;}
   Point<dim> getCenter() const {return Midpoint(m_p1, m_p2);}
 
   /// get one end of the segment
@@ -100,11 +93,9 @@ class Segment
 	{m_p1.rotate(m, p); m_p2.rotate(m, p); return *this;}
 
   // 3D rotation functions
-  Segment<3>& rotateCorner(const Quaternion& q, int corner);
-  Segment<3>& rotateCenter(const Quaternion& q)
-	{rotatePoint(q, getCenter()); return *this;}
-  Segment<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
-	{m_p1.rotate(q, p); m_p2.rotate(q, p); return *this;}
+  Segment& rotateCorner(const Quaternion& q, int corner);
+  Segment& rotateCenter(const Quaternion& q);
+  Segment& rotatePoint(const Quaternion& q, const Point<dim>& p);
 
   // Intersection functions
 
@@ -137,12 +128,10 @@ class Segment
         {return Segment(m_p1.toLocalCoords(coords), m_p2.toLocalCoords(coords));}
 
   // 3D only
-  Segment<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return Segment<3>(m_p1.toParentCoords(origin, rotation),
-		m_p2.toParentCoords(origin, rotation));}
-  Segment<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return Segment<3>(m_p1.toLocalCoords(origin, rotation),
-		m_p2.toLocalCoords(origin, rotation));}
+  Segment toParentCoords(const Point<dim>& origin,
+                         const Quaternion& rotation) const;
+  Segment toLocalCoords(const Point<dim>& origin,
+                        const Quaternion& rotation) const;
 
   friend bool Intersect<dim>(const Segment& s, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const Segment& s, bool proper);
@@ -170,7 +159,5 @@ class Segment
 };
 
 } // namespace WFMath
-
-#include <wfmath/segment_funcs.h>
 
 #endif  // WFMATH_SEGMENT_H

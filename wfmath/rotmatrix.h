@@ -32,11 +32,6 @@
 
 namespace WFMath {
 
-template<const int dim> class Vector;
-class Quaternion;
-
-template<const int dim> class RotMatrix;
-
 /// returns m1 * m2
 template<const int dim> // m1 * m2
 RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
@@ -88,7 +83,7 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
  * This class implements the 'generic' subset of the interface in
  * the fake class Shape.
  **/
-template<const int dim>
+template<const int dim = 3>
 class RotMatrix {
  public:
   ///
@@ -214,26 +209,25 @@ class RotMatrix {
    * Quaternion::fromRotMatrix() as not_flip to
    * recover the full RotMatrix
    **/
-  RotMatrix(const Quaternion& q, const bool not_flip = true)
-	{fromQuaternion(q, not_flip);}
+  RotMatrix(const Quaternion& q, const bool not_flip = true);
 
   /// 2D only: Construct a RotMatrix from an angle theta
-  RotMatrix<2>& rotation(CoordType theta)
+  RotMatrix& rotation(CoordType theta)
 	{return rotation(0, 1, theta);}
 
   /// 3D only: set a RotMatrix to a rotation about the x axis by angle theta
-  RotMatrix<3>& rotationX(CoordType theta) {return rotation(1, 2, theta);}
+  RotMatrix& rotationX(CoordType theta) {return rotation(1, 2, theta);}
   /// 3D only: set a RotMatrix to a rotation about the y axis by angle theta
-  RotMatrix<3>& rotationY(CoordType theta) {return rotation(2, 0, theta);}
+  RotMatrix& rotationY(CoordType theta) {return rotation(2, 0, theta);}
   /// 3D only: set a RotMatrix to a rotation about the z axis by angle theta
-  RotMatrix<3>& rotationZ(CoordType theta) {return rotation(0, 1, theta);}
+  RotMatrix& rotationZ(CoordType theta) {return rotation(0, 1, theta);}
   /// 3D only: set a RotMatrix to a rotation about the axis given by the Vector
-  RotMatrix<3>& rotation(const Vector<3>& axis, CoordType theta);
+  RotMatrix& rotation(const Vector<dim>& axis, CoordType theta);
   /// 3D only: set a RotMatrix to a rotation about the axis given by the Vector
   /**
    * the rotation angle is taken from the Vector's magnitude
    **/
-  RotMatrix<3>& rotation(const Vector<3>& axis); // angle taken from magnitude of axis
+  RotMatrix& rotation(const Vector<dim>& axis); // angle taken from magnitude of axis
 
   /// 3D only: set a RotMatrix from a Quaternion
   /**
@@ -242,10 +236,10 @@ class RotMatrix {
    * Quaternion::fromRotMatrix() as not_flip to
    * recover the full RotMatrix
    **/
-  RotMatrix<3>& fromQuaternion(const Quaternion& q, const bool not_flip = true);
+  RotMatrix& fromQuaternion(const Quaternion& q, const bool not_flip = true);
 
   /// rotate the matrix using the quaternion
-  RotMatrix<3>& rotate(const Quaternion&);
+  RotMatrix& rotate(const Quaternion&);
 
   /// set a RotMatrix to a mirror perpendicular to the x axis
   RotMatrix& mirrorX()	{return mirror(0);}
@@ -266,7 +260,5 @@ class RotMatrix {
 };
 
 } // namespace WFMath
-
-#include <wfmath/rotmatrix_funcs.h>
 
 #endif // WFMATH_ROTMATRIX_H

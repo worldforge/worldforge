@@ -1,6 +1,7 @@
-#include "int_to_string.h"
-#include <climits>
 #include "const.h"
+#include "int_to_string.h"
+
+#include <climits>
 
 // This takes a pointer pointing to the character after the end of
 // a buffer, prints the number into the tail of the buffer,

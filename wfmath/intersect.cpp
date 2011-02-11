@@ -23,8 +23,11 @@
 
 // Author: Ron Steinke
 
-#include "const.h"
 #include "intersect.h"
+
+#include <cmath>
+
+#include <cassert>
 
 using namespace WFMath;
 

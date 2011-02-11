@@ -26,8 +26,9 @@
 #ifndef WFMATH_ROTMATRIX_FUNCS_H
 #define WFMATH_ROTMATRIX_FUNCS_H
 
-#include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
+
+#include <wfmath/vector.h>
 #include <wfmath/error.h>
 #include <wfmath/const.h>
 

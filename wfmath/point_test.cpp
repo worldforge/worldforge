@@ -23,9 +23,6 @@
 // Author: Ron Steinke
 // Created: 2001-12-12
 
-#include <vector>
-#include <list>
-
 #include "const.h"
 #include "vector.h"
 #include "point.h"
@@ -35,6 +32,9 @@
 
 #include "general_test.h"
 #include "shape_test.h"
+
+#include <vector>
+#include <list>
 
 using namespace WFMath;
 
@@ -47,11 +47,22 @@ void test_point(const Point<dim>& p)
   test_shape(p);
 
   std::vector<Point<dim> > pvec;
+  std::list<CoordType> clist;
+
+  assert(!Barycenter(pvec).isValid());
+
+  assert(!Barycenter(pvec, clist).isValid());
+
   pvec.push_back(p);
   assert(p == Barycenter(pvec));
-  std::list<CoordType> clist;
   clist.push_back(5);
   assert(p == Barycenter(pvec, clist));
+
+  // Barycenter fails if sum of weights is 0
+  pvec.push_back(p);
+  assert(Barycenter(pvec).isValid());
+  clist.push_back(-5);
+  assert(!Barycenter(pvec, clist).isValid());
 
   assert(p == p + (p - p));
 

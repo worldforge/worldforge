@@ -23,9 +23,7 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
-#include "const.h"
-#include "rotmatrix.h"
-#include "vector.h"
+#include "rotmatrix_funcs.h"
 #include "quaternion.h"
 
 using namespace WFMath;
@@ -389,4 +387,38 @@ bool WFMath::_MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
   }
 
   return true;
+}
+
+namespace WFMath {
+
+template <>
+RotMatrix<3>::RotMatrix(const Quaternion& q, const bool not_flip)
+{
+  fromQuaternion(q, not_flip);
+}
+
+template class RotMatrix<2>;
+template class RotMatrix<3>;
+
+template RotMatrix<2> operator*<2>(RotMatrix<2> const&, RotMatrix<2> const&);
+template RotMatrix<3> operator*<3>(RotMatrix<3> const&, RotMatrix<3> const&);
+
+template RotMatrix<2> ProdInv<2>(RotMatrix<2> const&, RotMatrix<2> const&);
+template RotMatrix<3> ProdInv<3>(RotMatrix<3> const&, RotMatrix<3> const&);
+
+template Vector<2> operator*<2>(Vector<2> const&, RotMatrix<2> const&);
+template Vector<3> operator*<3>(Vector<3> const&, RotMatrix<3> const&);
+
+template Vector<2> operator*<2>(RotMatrix<2> const&, Vector<2> const&);
+template Vector<3> operator*<3>(RotMatrix<3> const&, Vector<3> const&);
+
+template Vector<2> ProdInv<2>(Vector<2> const&, RotMatrix<2> const&);
+template Vector<3> ProdInv<3>(Vector<3> const&, RotMatrix<3> const&);
+
+template Vector<3> Prod<3>(Vector<3> const&, RotMatrix<3> const&);
+template Vector<2> Prod<2>(Vector<2> const&, RotMatrix<2> const&);
+
+template RotMatrix<3> Prod<3>(RotMatrix<3> const&, RotMatrix<3> const&);
+template RotMatrix<2> Prod<2>(RotMatrix<2> const&, RotMatrix<2> const&);
+
 }

@@ -26,13 +26,12 @@
 #ifndef WFMATH_POLYGON_H
 #define WFMATH_POLYGON_H
 
-#include <wfmath/const.h>
+#include <wfmath/axisbox.h>
+#include <wfmath/ball.h>
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/rotmatrix.h>
-#include <wfmath/axisbox.h>
+#include <wfmath/quaternion.h>
 #include <wfmath/rotbox.h>
-#include <wfmath/ball.h>
 #include <wfmath/intersect_decls.h>
 
 #include <vector>
@@ -80,8 +79,7 @@ class Polygon<2>
   // Descriptive characteristics
 
   int numCorners() const {return m_points.size();}
-  Point<2> getCorner(int i) const
-  {assert(i >= 0 && ((unsigned int) i) < m_points.size()); return m_points[i];}
+  Point<2> getCorner(int i) const {return m_points[i];}
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Point<2> getCenter() const {return Barycenter(m_points);}
 #endif
@@ -259,13 +257,13 @@ public:
   _Poly2Orient toParentCoords(const Point<dim>& origin,
       const RotMatrix<dim>& rotation = RotMatrix<dim>().identity()) const
   {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(origin, rotation);
-    p.m_axes[0] *= rotation; p.m_axes[1] *= rotation; return p;}
+    p.m_axes[0].rotate(rotation); p.m_axes[1].rotate(rotation); return p;}
   _Poly2Orient toParentCoords(const AxisBox<dim>& coords) const
   {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords); return p;}
   _Poly2Orient toParentCoords(const RotBox<dim>& coords) const
   {_Poly2Orient p(*this); p.m_origin = m_origin.toParentCoords(coords);
-    p.m_axes[0] *= coords.orientation();
-    p.m_axes[1] *= coords.orientation(); return p;}
+    p.m_axes[0].rotate(coords.orientation());
+    p.m_axes[1].rotate(coords.orientation()); return p;}
 
   // toLocal is just like toParent, expect we reverse the order of
   // translation and rotation and use the opposite sense of the rotation
@@ -315,7 +313,7 @@ private:
 };
 
 /// A polygon, all of whose points lie in a plane, embedded in dim dimensions
-template<const int dim>
+template<const int dim = 3>
 class Polygon
 {
 public:
@@ -340,8 +338,7 @@ public:
   // Descriptive characteristics
 
   int numCorners() const {return m_poly.numCorners();}
-  Point<dim> getCorner(int i) const
-  {assert(i >= 0 && i < m_poly.numCorners()); return m_orient.convert(m_poly[i]);}
+  Point<dim> getCorner(int i) const {return m_orient.convert(m_poly[i]);}
   Point<dim> getCenter() const {return m_orient.convert(m_poly.getCenter());}
 
   // The failure of the following functions does not invalidate the
@@ -452,7 +449,5 @@ public:
 };
 
 } // namespace WFMath
-
-#include <wfmath/polygon_funcs.h>
 
 #endif  // WFMATH_POLYGON_H

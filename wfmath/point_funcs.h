@@ -27,11 +27,11 @@
 #ifndef WFMATH_POINT_FUNCS_H
 #define WFMATH_POINT_FUNCS_H
 
-#include <wfmath/const.h>
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
 
-#include <cassert>
+#include <wfmath/vector.h>
+
+#include <cmath>
 
 namespace WFMath {
 
@@ -187,13 +187,15 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
   typename container2<CoordType, std::allocator<CoordType> >::const_iterator w_i = weights.begin(),
 						 w_end = weights.end();
 
-  assert("nonempty list of points" && c_i != c_end);
-  assert("nonempty list of weights" && w_i != w_end);
+  Point<dim> out;
+
+  if (c_i == c_end || w_i == w_end) {
+    return out;
+  }
 
   bool valid = c_i->isValid();
 
   CoordType tot_weight = *w_i, max_weight = fabs(*w_i);
-  Point<dim> out;
   for(int j = 0; j < dim; ++j) {
     out[j] = (*c_i)[j] * *w_i;
   }
@@ -210,8 +212,9 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
   }
 
   // Make sure the weights don't add up to zero
-  assert("sum of weights must be nonzero" && max_weight > 0
-         && fabs(tot_weight) > max_weight * WFMATH_EPSILON);
+  if (max_weight <= 0 || fabs(tot_weight) <= max_weight * WFMATH_EPSILON) {
+    return out;
+  }
 
   for(int j = 0; j < dim; ++j) {
     out[j] /= tot_weight;
@@ -229,7 +232,9 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
 
   typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(), end = c.end();
 
-  assert("nonempty list of points" && i != end);
+  if (i == end) {
+    return Point<dim>();
+  }
 
   Point<dim> out = *i;
   int num_points = 1;

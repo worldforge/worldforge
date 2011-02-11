@@ -113,7 +113,7 @@ std::istream& operator>>(std::istream& is, Vector<dim>& v);
  * This class implements the 'generic' subset of the interface in
  * the fake class Shape.
  **/
-template<const int dim>
+template<const int dim = 3>
 class Vector {
  friend class ZeroPrimitive<Vector<dim> >;
  public:
@@ -289,19 +289,19 @@ class Vector {
   Vector(CoordType x, CoordType y, CoordType z);
 
   /// 2D only: rotate a vector by an angle theta
-  Vector<2>& rotate(CoordType theta);
+  Vector& rotate(CoordType theta);
 
   /// 3D only: rotate a vector about the x axis by an angle theta
-  Vector<3>& rotateX(CoordType theta);
+  Vector& rotateX(CoordType theta);
   /// 3D only: rotate a vector about the y axis by an angle theta
-  Vector<3>& rotateY(CoordType theta);
+  Vector& rotateY(CoordType theta);
   /// 3D only: rotate a vector about the z axis by an angle theta
-  Vector<3>& rotateZ(CoordType theta);
+  Vector& rotateZ(CoordType theta);
 
   /// 3D only: rotate a vector about the i'th axis by an angle theta
-  Vector<3>& rotate(const Vector<3>& axis, CoordType theta);
+  Vector& rotate(const Vector& axis, CoordType theta);
   /// 3D only: rotate a vector using a Quaternion
-  Vector<3>& rotate(const Quaternion& q);
+  Vector& rotate(const Quaternion& q);
 
   // Label the first three components of the vector as (x,y,z) for
   // 2D/3D convienience
@@ -327,16 +327,16 @@ class Vector {
   Vector& mirrorZ()	{return mirror(2);}
 
   /// 2D only: construct a vector from polar coordinates
-  Vector<2>& polar(CoordType r, CoordType theta);
+  Vector& polar(CoordType r, CoordType theta);
   /// 2D only: convert a vector to polar coordinates
   void asPolar(CoordType& r, CoordType& theta) const;
 
   /// 3D only: construct a vector from polar coordinates
-  Vector<3>& polar(CoordType r, CoordType theta, CoordType z);
+  Vector& polar(CoordType r, CoordType theta, CoordType z);
   /// 3D only: convert a vector to polar coordinates
   void asPolar(CoordType& r, CoordType& theta, CoordType& z) const;
   /// 3D only: construct a vector from shperical coordinates
-  Vector<3>& spherical(CoordType r, CoordType theta, CoordType phi);
+  Vector& spherical(CoordType r, CoordType theta, CoordType phi);
   /// 3D only: convert a vector to shperical coordinates
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 

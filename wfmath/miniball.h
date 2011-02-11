@@ -139,6 +139,4 @@ namespace WFMath { namespace _miniball {
     
 }} // namespace WFMath::_miniball   
 
-#include <wfmath/miniball_funcs.h>
-
 #endif // WFMATH_MINIBALL_H

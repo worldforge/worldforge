@@ -6,7 +6,7 @@ AM_CXXFLAGS = -O2 -Wall @ATLAS_0_6_CFLAGS@
 
 if HAVE_ATLAS_0_6
 
-INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/wfmath
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/wfmath
 
 ATLAS_0_6_TESTS = atlas_0_6_test
 

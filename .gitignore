@@ -24,3 +24,5 @@ wfmath.spec
 *.la
 *.o
 *_test
+*_test.log
+test-suite.log

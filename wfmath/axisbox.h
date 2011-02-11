@@ -29,10 +29,8 @@
 #ifndef WFMATH_AXIS_BOX_H
 #define WFMATH_AXIS_BOX_H
 
-#include <wfmath/const.h>
 #include <wfmath/intersect_decls.h>
 
-#include <memory>
 #include <iosfwd>
 
 namespace WFMath {
@@ -62,7 +60,7 @@ AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> >
  * This class implements the full shape interface, as described in
  * the fake class Shape, with the exception of the rotation functions.
  **/
-template<const int dim>
+template<const int dim = 3>
 class AxisBox
 {
  public:

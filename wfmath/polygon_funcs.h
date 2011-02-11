@@ -26,12 +26,15 @@
 #ifndef WFMATH_POLYGON_FUNCS_H
 #define WFMATH_POLYGON_FUNCS_H
 
-#include <wfmath/const.h>
+#include <wfmath/polygon.h>
+
 #include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
-#include <wfmath/polygon.h>
+
+#include <cmath>
+
+#include <cassert>
 
 namespace WFMath {
 
@@ -150,11 +153,11 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
       continue;
     const Point<2> &p = poly[i];
     CoordType x = fabs(p[0]), y = fabs(p[1]), max = (x > y) ? x : y;
-    if(i = 0 || max < size)
+    if(i == 0 || max < size)
       size = max;
   }
   int exponent;
-  (void) frexp(size, exponent);
+  (void) frexp(size, &exponent);
   epsilon = ldexp(WFMATH_EPSILON, exponent);
 
   i = 0;

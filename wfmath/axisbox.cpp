@@ -23,10 +23,14 @@
 // Author: Alistair Riddoch
 // Created: 2009-01-12
 
-#include "axisbox.h"
 #include "axisbox_funcs.h"
 
+#include "rotmatrix.h"
+#include "vector.h"
+
 #include <vector>
+
+#include <cmath>
 
 namespace WFMath {
 
@@ -43,5 +47,8 @@ template AxisBox<3> BoundingBox<3, std::vector>(const std::vector<AxisBox<3>, st
 template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<AxisBox<2>, std::allocator<AxisBox<2> > > &);
 
 template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<Point<2>, std::allocator<Point<2> > >&);
+
+template AxisBox<2> Point<2>::boundingBox() const;
+template AxisBox<3> Point<3>::boundingBox() const;
 
 }

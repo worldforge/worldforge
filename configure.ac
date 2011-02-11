@@ -10,7 +10,7 @@ AC_CANONICAL_HOST
 
 dnl Automake setup
 
-AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news color-tests parallel-tests])
 
 dnl versioning info for libtool
 WFMATH_CURRENT=4

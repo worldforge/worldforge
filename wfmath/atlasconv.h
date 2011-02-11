@@ -31,8 +31,6 @@
 #ifndef WFMATH_ATLAS_CONV_H
 #define WFMATH_ATLAS_CONV_H
 
-#include <stdexcept>
-#include <wfmath/const.h>
 #include <wfmath/point.h>
 #include <wfmath/vector.h>
 #include <wfmath/quaternion.h>
@@ -40,6 +38,8 @@
 #include <wfmath/polygon.h>
 #include <wfmath/ball.h>
 #include <wfmath/rotbox.h>
+
+#include <cmath>
 
 namespace WFMath {
 
@@ -306,6 +306,13 @@ inline AtlasOutType Ball<dim>::toAtlas() const
   return map;
 }
 
+template<const int dim>
+inline Ball<dim>::Ball(const AtlasInType& a) : m_center(Point<dim>::ZERO()),
+                                               m_radius(0)
+{
+  fromAtlas(a);
+}
+
 inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 {
   const _AtlasMessageType& message(a);
@@ -385,6 +392,11 @@ inline AtlasOutType RotBox<dim>::toAtlas() const
   map.insert(Atlas::Message::MapType::value_type("size", m_size.toAtlas()));
   //TODO: also add the rotmatrix
   return map;
+}
+
+template<const int dim>
+inline RotBox<dim>::RotBox(const AtlasInType& a) {
+  fromAtlas(a);
 }
 
 } // namespace WFMath

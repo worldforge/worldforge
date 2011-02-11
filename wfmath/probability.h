@@ -28,8 +28,6 @@
 #ifndef WFMATH_PROBABILTIY_H
 #define WFMATH_PROBABILTIY_H
 
-#include <wfmath/const.h>
-
 namespace WFMath {
 
 /// Gives the conditional probability of the Gaussian distribution at position val

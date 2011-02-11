@@ -32,12 +32,14 @@
 
 #include "const.h"
 #include "vector.h"
-#include "rotmatrix.h"
+#include "rotmatrix_funcs.h"
 #include "quaternion.h"
 #include "stream.h"
 #include <vector>
 
 #include "general_test.h"
+
+#include <cmath>
 
 using namespace WFMath;
 

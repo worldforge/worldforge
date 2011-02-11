@@ -25,6 +25,8 @@
 
 #include <wfmath/probability.h>
 
+#include <wfmath/const.h>
+
 #include <cmath>
 
 #include <cassert>

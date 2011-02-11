@@ -45,6 +45,8 @@
 #include "general_test.h"
 #include "shape_test.h"
 
+#include <cmath>
+
 using namespace WFMath;
 
 template<const int dim>

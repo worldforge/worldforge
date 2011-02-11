@@ -26,14 +26,8 @@
 #ifndef WFMATH_BALL_H
 #define WFMATH_BALL_H
 
-#include <wfmath/const.h>
-#include <wfmath/vector.h>
 #include <wfmath/point.h>
-#include <wfmath/axisbox.h>
-#include <wfmath/rotbox.h>
 #include <wfmath/intersect_decls.h>
-
-#include <cstdlib> // for abort()
 
 namespace WFMath {
 
@@ -64,7 +58,7 @@ std::istream& operator>>(std::istream& is, Ball<dim>& m);
  * helps that a Ball<n> corresponds to an n-ball, while a Sphere<n>
  * would correspond to an (n-1)-sphere.
  **/
-template<const int dim>
+template<const int dim = 3>
 class Ball
 {
  public:
@@ -72,13 +66,11 @@ class Ball
   Ball() {}
   /// construct a ball with the given center and radius
   Ball(const Point<dim>& center, CoordType radius)
-  : m_center(center), m_radius(radius) {assert(radius >= 0);}
+  : m_center(center), m_radius(radius) { if (radius < 0) m_center.setValid(false); }
   /// construct a copy of a ball
   Ball(const Ball& b) : m_center(b.m_center), m_radius(b.m_radius) {}
   /// Construct a ball from an object passed by Atlas
-  explicit Ball(const AtlasInType& a)
-  : m_center(Point<dim>::ZERO()), m_radius(0)
-  {fromAtlas(a);}
+  explicit Ball(const AtlasInType& a);
 
   ~Ball() {}
 
@@ -107,7 +99,7 @@ class Ball
   // that finds the number of corners with numCorners(), and does something
   // with each corner with getCorner(). No idea how useful that is, but
   // it's not a particularly complicated function to write.
-  Point<dim> getCorner(int i) const {abort(); return m_center;}
+  Point<dim> getCorner(int i) const {return m_center;}
   Point<dim> getCenter() const {return m_center;}
 
   /// get the center of the ball
@@ -122,19 +114,18 @@ class Ball
   // Movement functions
 
   Ball& shift(const Vector<dim>& v) {m_center += v; return *this;}
-  Ball& moveCornerTo(const Point<dim>& p, int corner) {abort(); return *this;}
+  Ball& moveCornerTo(const Point<dim>& p, int corner) {return *this;}
   Ball& moveCenterTo(const Point<dim>& p) {m_center = p; return *this;}
 
-  Ball& rotateCorner(const RotMatrix<dim>& m, int corner) {abort(); return *this;}
+  Ball& rotateCorner(const RotMatrix<dim>& m, int corner) {return *this;}
   Ball& rotateCenter(const RotMatrix<dim>& m) {return *this;}
   Ball& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
   {m_center.rotate(m, p); return *this;}
 
   // 3D rotation function
-  Ball<3>& rotateCorner(const Quaternion&, int corner) {abort(); return *this;}
-  Ball<3>& rotateCenter(const Quaternion&) {return *this;}
-  Ball<3>& rotatePoint(const Quaternion& q, const Point<3>& p)
-  {m_center.rotate(q, p); return *this;}
+  Ball& rotateCorner(const Quaternion&, int corner);
+  Ball& rotateCenter(const Quaternion&);
+  Ball& rotatePoint(const Quaternion& q, const Point<dim>& p);
 
   // Intersection functions
 
@@ -163,10 +154,8 @@ class Ball
         {return Ball(m_center.toLocalCoords(coords), m_radius);}
 
   // 3D only
-  Ball<3> toParentCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return Ball<3>(m_center.toParentCoords(origin, rotation), m_radius);}
-  Ball<3> toLocalCoords(const Point<3>& origin, const Quaternion& rotation) const
-        {return Ball<3>(m_center.toLocalCoords(origin, rotation), m_radius);}
+  Ball toParentCoords(const Point<dim>& origin, const Quaternion& rotation) const;
+  Ball toLocalCoords(const Point<dim>& origin, const Quaternion& rotation) const;
 
   friend bool Intersect<dim>(const Ball& b, const Point<dim>& p, bool proper);
   friend bool Contains<dim>(const Point<dim>& p, const Ball& b, bool proper);
@@ -196,7 +185,5 @@ class Ball
 };
 
 } // namespace WFMath
-
-#include <wfmath/ball_funcs.h>
 
 #endif  // WFMATH_BALL_H

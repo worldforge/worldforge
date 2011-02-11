@@ -1,7 +1,7 @@
-// randgen.h (random number functions)
+// vector_test.cpp (Vector<> test functions)
 //
 //  The WorldForge Project
-//  Copyright (C) 2002  The WorldForge Project
+//  Copyright (C) 2001  The WorldForge Project
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,32 +20,31 @@
 //  For information about WorldForge and its authors, please contact
 //  the Worldforge Web Site at http://www.worldforge.org.
 
-// Author: Ron Steinke
-// Created: 2002-5-23
+// Author: Alistair Riddoch
+// Created: 2011-01-26
 
-#ifndef WFMATH_RANDGEN_H
-#define WFMATH_RANDGEN_H
-
-#include <wfmath/MersenneTwister.h>
-
-namespace WFMath {
-
-// backwards compatibility functions
-
-#ifdef WFMATH_USE_OLD_RAND
-
-/// Seed WFMath's random number generators.
-/**
- * The random number generators use a static instance of MTRand.
- **/
-inline void SeedRand(unsigned int val) {MTRand::instance.seed(val);}
-/// Get a random number between 0 and 1
-inline double DRand() {return MTRand::instance.rand();}
-/// Get a random integer ranging from 0 to (val passed) - 1
-inline unsigned int IRand(unsigned int val) {return MTRand::instance.randInt(val - 1);}
-
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
 #endif
 
-} // namespace WFMath
+#include "ball.h"
 
-#endif  // WFMATH_RANDGEN_H
+#include <cassert>
+
+using namespace WFMath;
+
+int main()
+{
+  Ball<2> b1(Point<2>(0,0), 1);
+
+  assert(b1.isValid());
+
+  Ball<2> b2(Point<2>(0,0), -1);
+
+  assert(!b2.isValid());
+
+  return 0;
+}

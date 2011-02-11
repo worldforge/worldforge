@@ -91,7 +91,7 @@ std::istream& operator>>(std::istream& is, Point<dim>& m);
  * This class implements the full shape interface, as described in
  * the fake class Shape.
  **/
-template<const int dim>
+template<const int dim = 3>
 class Point
 {
  friend class ZeroPrimitive<Point<dim> >;
@@ -167,11 +167,11 @@ class Point
   Point& rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   // 3D rotation functions
-  Point<3>& rotate(const Quaternion& q, const Point<3>& p);
+  Point& rotate(const Quaternion& q, const Point& p);
   Point& rotateCorner(const Quaternion& q, int corner)
   { return *this;}
   Point& rotateCenter(const Quaternion& q) {return *this;}
-  Point<3>& rotatePoint(const Quaternion& q, const Point<3>& p);
+  Point& rotatePoint(const Quaternion& q, const Point& p);
 
   // The implementations of these lie in axisbox_funcs.h and
   // ball_funcs.h, to reduce include dependencies
@@ -246,16 +246,16 @@ class Point
   CoordType& z()	{return m_elem[2];}
 
   /// 2D only: construct a vector from polar coordinates
-  Point<2>& polar(CoordType r, CoordType theta);
+  Point& polar(CoordType r, CoordType theta);
   /// 2D only: convert a vector to polar coordinates
   void asPolar(CoordType& r, CoordType& theta) const;
 
   /// 3D only: construct a vector from polar coordinates
-  Point<3>& polar(CoordType r, CoordType theta, CoordType z);
+  Point& polar(CoordType r, CoordType theta, CoordType z);
   /// 3D only: convert a vector to polar coordinates
   void asPolar(CoordType& r, CoordType& theta, CoordType& z) const;
   /// 3D only: construct a vector from spherical coordinates
-  Point<3>& spherical(CoordType r, CoordType theta, CoordType phi);
+  Point& spherical(CoordType r, CoordType theta, CoordType phi);
   /// 3D only: convert a vector to spherical coordinates
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 

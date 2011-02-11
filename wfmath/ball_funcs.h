@@ -26,11 +26,12 @@
 #ifndef WFMATH_BALL_FUNCS_H
 #define WFMATH_BALL_FUNCS_H
 
-#include <wfmath/const.h>
-#include <wfmath/point.h>
-#include <wfmath/axisbox.h>
 #include <wfmath/ball.h>
+
+#include <wfmath/axisbox.h>
 #include <wfmath/miniball.h>
+
+#include <cassert>
 
 namespace WFMath {
 
@@ -104,7 +105,9 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<
 
   typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(),
 						end = c.end();
-  assert(i != end);
+  if (i == end) {
+    return Ball<dim>();
+  }
 
   CoordType min[dim], max[dim];
   typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator min_p[dim], max_p[dim];

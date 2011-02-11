@@ -26,7 +26,6 @@
 #ifndef WFMATH_QUATERNION_H
 #define WFMATH_QUATERNION_H
 
-#include <wfmath/const.h>
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
 
@@ -145,10 +144,10 @@ class Quaternion
 
   // documented elsewhere
   template<const int dim>
-  friend Vector<3>& Vector<dim>::rotate(const Quaternion& q);
+  friend Vector<dim>& Vector<dim>::rotate(const Quaternion& q);
   template<const int dim>
-  friend RotMatrix<3>& RotMatrix<dim>::fromQuaternion(const Quaternion& q,
-						      const bool not_flip);
+  friend RotMatrix<dim>& RotMatrix<dim>::fromQuaternion(const Quaternion& q,
+						        const bool not_flip);
 
   /// returns the scalar (w) part of the Quaternion
   CoordType scalar() const		{return m_w;}

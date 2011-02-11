@@ -23,10 +23,9 @@
 
 // Author: Ron Steinke
 
-#include "const.h"
-#include "basis.h"
 #include "point_funcs.h"
-#include "axisbox_funcs.h"
+
+#include "basis.h"
 #include "quaternion.h"
 
 #include <vector>

@@ -29,7 +29,12 @@
 // and here <http://www.cs.berkeley.edu/~laura/cs184/quat/quaternion.html>.
 
 #include "quaternion.h"
+#include "error.h"
 #include "rotmatrix.h"
+
+#include <cmath>
+
+#include <cassert>
 
 using namespace WFMath;
 

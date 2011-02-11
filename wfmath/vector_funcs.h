@@ -32,7 +32,6 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
-#include <wfmath/const.h>
 
 #include <cmath>
 
@@ -484,8 +483,6 @@ template<> Vector<2>::Vector(CoordType x, CoordType y) : m_valid(true)
 	{m_elem[0] = x; m_elem[1] = y;}
 template<> Vector<3>::Vector(CoordType x, CoordType y, CoordType z) : m_valid(true)
 	{m_elem[0] = x; m_elem[1] = y; m_elem[2] = z;}
-
-// Don't need asserts here, they're taken care of in the general function
 
 template<> Vector<2>& Vector<2>::rotate(CoordType theta)
 	{return rotate(0, 1, theta);}
