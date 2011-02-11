@@ -42,7 +42,7 @@ std::istream& operator>>(std::istream& is, RotBox<dim>& r);
  * This class implements the full shape interface, as described in
  * the fake class Shape.
  **/
-template<const int dim>
+template<const int dim = 3>
 class RotBox
 {
  public:

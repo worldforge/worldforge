@@ -313,7 +313,7 @@ private:
 };
 
 /// A polygon, all of whose points lie in a plane, embedded in dim dimensions
-template<const int dim>
+template<const int dim = 3>
 class Polygon
 {
 public:

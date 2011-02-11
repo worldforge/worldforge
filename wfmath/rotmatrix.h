@@ -83,7 +83,7 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
  * This class implements the 'generic' subset of the interface in
  * the fake class Shape.
  **/
-template<const int dim>
+template<const int dim = 3>
 class RotMatrix {
  public:
   ///

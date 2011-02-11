@@ -58,7 +58,7 @@ std::istream& operator>>(std::istream& is, Ball<dim>& m);
  * helps that a Ball<n> corresponds to an n-ball, while a Sphere<n>
  * would correspond to an (n-1)-sphere.
  **/
-template<const int dim>
+template<const int dim = 3>
 class Ball
 {
  public:

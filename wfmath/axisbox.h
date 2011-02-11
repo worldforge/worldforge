@@ -60,7 +60,7 @@ AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> >
  * This class implements the full shape interface, as described in
  * the fake class Shape, with the exception of the rotation functions.
  **/
-template<const int dim>
+template<const int dim = 3>
 class AxisBox
 {
  public:
