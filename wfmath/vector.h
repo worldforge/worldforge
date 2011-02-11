@@ -113,7 +113,7 @@ std::istream& operator>>(std::istream& is, Vector<dim>& v);
  * This class implements the 'generic' subset of the interface in
  * the fake class Shape.
  **/
-template<const int dim>
+template<const int dim = 3>
 class Vector {
  friend class ZeroPrimitive<Vector<dim> >;
  public:

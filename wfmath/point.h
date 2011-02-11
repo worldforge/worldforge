@@ -91,7 +91,7 @@ std::istream& operator>>(std::istream& is, Point<dim>& m);
  * This class implements the full shape interface, as described in
  * the fake class Shape.
  **/
-template<const int dim>
+template<const int dim = 3>
 class Point
 {
  friend class ZeroPrimitive<Point<dim> >;
