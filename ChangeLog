@@ -1,3 +1,13 @@
+2011-02-12  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Inline all Atlas related methods in atlasconv.h to avoid linking
+	  issues. Explicitly instantiate all templates and avoid including
+	  headers full of big functions in client apps. Make all public
+	  templates default to 3 dimensions. Clean out assertions
+	  which might cause runtime crashes, or lead to instability in
+	  non-debug builds. Fix a number of bugs with intersection and
+	  barycenter functions.
+
 2009-12-29  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Release 0.3.10
