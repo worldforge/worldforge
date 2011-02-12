@@ -1,5 +1,9 @@
 2011-02-12  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Release 0.3.11, interface version 5
+
+2011-02-12  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Inline all Atlas related methods in atlasconv.h to avoid linking
 	  issues. Explicitly instantiate all templates and avoid including
 	  headers full of big functions in client apps. Make all public
