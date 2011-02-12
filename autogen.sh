@@ -74,7 +74,7 @@ autoconf
 
 
 if test "x$NOCONFIGURE" = "x" ; then
-    conf_flags="--enable-compile-warnings --enable-debug" #--enable-iso-c
+    conf_flags="--enable-debug" #--enable-iso-c
     echo Running ./configure $conf_flags "$@" ...
     ./configure $conf_flags "$@" && echo Now type \`make\' to compile Eris
 fi
