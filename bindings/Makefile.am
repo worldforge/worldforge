@@ -6,7 +6,7 @@ SUBDIRS = polls
 
 all: perl-all
 
-clean: perl-clean
+clean-local: perl-clean
 
 check: perl-check
 

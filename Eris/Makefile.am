@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_builddir) -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 
 lib_LTLIBRARIES = liberis-1.3.la
 
