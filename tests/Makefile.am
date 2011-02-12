@@ -5,7 +5,7 @@ TESTS = mercatortest Terraintest Shadertest TerrainModtest Intersecttest \
         FillShadertest GrassShadertest ThresholdShadertest Matrixtest \
         TerrainaddAreatest
 
-INCLUDES = -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)
 
 LDADD = $(top_builddir)/Mercator/libmercator-0.3.la
 
