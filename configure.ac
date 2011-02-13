@@ -26,8 +26,8 @@ AC_SUBST(MERCATOR_VERSION_INFO)
 
 dnl Test for GNU libtool
 
-AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
+LT_INIT([disable-static])
+
 AC_PROG_CXX
 
 AC_ARG_ENABLE(debug,
