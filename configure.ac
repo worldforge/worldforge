@@ -150,6 +150,7 @@ bindings/perl/compile_flags.pl
 test/Makefile
 eris.dox
 eris.spec
+mingw32-eris.spec
 eris-1.3.pc
 ])
 AC_OUTPUT
