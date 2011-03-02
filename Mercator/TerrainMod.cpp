@@ -8,7 +8,7 @@
 
 namespace Mercator {
 
-TerrainMod::TerrainMod()
+TerrainMod::TerrainMod() : m_function(set)
 {
 }
 

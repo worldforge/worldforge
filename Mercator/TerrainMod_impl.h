@@ -44,7 +44,7 @@ template <template <int> class Shape>
 void LevelTerrainMod<Shape>::apply(float &point, int x, int y) const
 {
     if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
-        point = m_level;
+        point = this->m_function(point, m_level);
     }
 }
 
@@ -94,8 +94,9 @@ template <template <int> class Shape>
 void SlopeTerrainMod<Shape>::apply(float &point, int x, int y) const
 {
     if (Contains(this->m_shape,WFMath::Point<2>(x,y),true)) {
-        point = m_level + (this->m_shape.getCenter()[0] - x) * m_dx 
-                        + (this->m_shape.getCenter()[1] - y) * m_dy;
+        float level = m_level + (this->m_shape.getCenter()[0] - x) * m_dx 
+                              + (this->m_shape.getCenter()[1] - y) * m_dy;
+        point = this->m_function(point, level);
     }
 }
     

@@ -19,6 +19,8 @@ class Segment;
 /// Anything that modifies the terrain implements this interface.
 class TerrainMod : public Effector
 {
+protected:
+    function m_function;
 public:
     TerrainMod();
 
@@ -27,6 +29,10 @@ public:
     int addToSegment(Segment &) const;
     void updateToSegment(Segment &) const;
     void removeFromSegment(Segment &) const;
+
+    void setFunction(function f) {
+        m_function = f;
+    }
 
     /// \brief Apply this modifier on a terrain segment
     ///
