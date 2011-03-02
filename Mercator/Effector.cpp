@@ -48,4 +48,29 @@ Effector::~Effector()
     delete m_context;
 }
 
+float set(float orig, float mod)
+{
+    return mod;
+}
+
+float max(float orig, float mod)
+{
+    return std::max(orig, mod);
+}
+
+float min(float orig, float mod)
+{
+    return std::min(orig, mod);
+}
+
+float sum(float orig, float mod)
+{
+    return orig + mod;
+}
+
+float dif(float orig, float mod)
+{
+    return orig - mod;
+}
+
 } // of namespace

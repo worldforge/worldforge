@@ -73,6 +73,14 @@ class Effector
     Context * m_context;
 };
 
+typedef float (*function)(float, float);
+
+float set(float, float);
+float max(float, float);
+float min(float, float);
+float sum(float, float);
+float dif(float, float);
+
 }
 
 #endif // of MERCATOR_EFFECTOR_H
