@@ -40,6 +40,10 @@ void TerrainMod::removeFromSegment(Segment & s) const
     s.removeMod(this);
 }
 
+template class ShapeTerrainMod<WFMath::Ball >;
+template class ShapeTerrainMod<WFMath::Polygon >;
+template class ShapeTerrainMod<WFMath::RotBox >;
+
 template class LevelTerrainMod<WFMath::Ball >;
 template class LevelTerrainMod<WFMath::Polygon >;
 template class LevelTerrainMod<WFMath::RotBox >;
