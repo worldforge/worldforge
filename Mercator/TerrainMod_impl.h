@@ -49,12 +49,6 @@ void LevelTerrainMod<Shape>::apply(float &point, int x, int y) const
 }
 
 template <template <int> class Shape>
-TerrainMod * LevelTerrainMod<Shape>::clone() const
-{
-    return new LevelTerrainMod<Shape>(m_level, this->m_shape);
-}
-
-template <template <int> class Shape>
 void LevelTerrainMod<Shape>::setShape(float level, const Shape<2> & s)
 {
     ShapeTerrainMod<Shape>::setShape(s);
@@ -73,12 +67,6 @@ void AdjustTerrainMod<Shape>::apply(float &point, int x, int y) const
     }
 }
     
-template <template <int> class Shape>
-TerrainMod * AdjustTerrainMod<Shape>::clone() const
-{
-    return new AdjustTerrainMod<Shape>(m_dist, this->m_shape);
-}
-
 template <template <int> class Shape>
 void AdjustTerrainMod<Shape>::setShape(float dist, const Shape<2> & s)
 {
@@ -99,12 +87,6 @@ void SlopeTerrainMod<Shape>::apply(float &point, int x, int y) const
     }
 }
     
-template <template <int> class Shape>
-TerrainMod * SlopeTerrainMod<Shape>::clone() const
-{
-    return new SlopeTerrainMod<Shape>(m_level, m_dx, m_dy, this->m_shape);
-}
-
 template <template <int> class Shape>
 void SlopeTerrainMod<Shape>::setShape(float level, float dx, float dy, const Shape<2> & s)
 {
@@ -127,12 +109,6 @@ void CraterTerrainMod<Shape>::apply(float &point, int x, int y) const
     }
 }
     
-template <template <int> class Shape>
-TerrainMod * CraterTerrainMod<Shape>::clone() const
-{
-    return new CraterTerrainMod<Shape>(m_level, this->m_shape);
-}
-
 template <template <int> class Shape>
 void CraterTerrainMod<Shape>::setShape(float level, const Shape<2> & s)
 {
