@@ -39,9 +39,6 @@ public:
     /// The segment is at x,y in local coordinates.
     /// Output is placed into point.
     virtual void apply(float &point, int x, int y) const = 0;
-
-    /// \brief Create a copy of this modifier.
-    virtual TerrainMod *clone() const = 0;
 };
 
 /// \brief Terrain modifier which is defined by a shape variable.
@@ -84,7 +81,6 @@ public:
     virtual ~LevelTerrainMod();
 
     virtual void apply(float &point, int x, int y) const;
-    virtual TerrainMod *clone() const;
 
     void setShape(float level, const Shape<2> & s);
 private:
@@ -115,7 +111,6 @@ public:
     virtual ~AdjustTerrainMod();
 
     virtual void apply(float &point, int x, int y) const;
-    virtual TerrainMod *clone() const;
 
     void setShape(float dist, const Shape<2> & s);
 private:
@@ -148,7 +143,6 @@ public:
     virtual ~SlopeTerrainMod();
 
     virtual void apply(float &point, int x, int y) const;
-    virtual TerrainMod *clone() const;
 
     void setShape(float level, float dx, float dy, const Shape<2> & s);
 private:
@@ -181,7 +175,6 @@ public:
     virtual ~CraterTerrainMod();
 
     virtual void apply(float &point, int x, int y) const;
-    virtual TerrainMod *clone() const;
 
     void setShape(float level, const Shape<2> & s);
 private:
