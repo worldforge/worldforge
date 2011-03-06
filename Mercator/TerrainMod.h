@@ -20,7 +20,7 @@ class Segment;
 class TerrainMod : public Effector
 {
 protected:
-    function m_function;
+    effector_func m_function;
 public:
     TerrainMod();
 
@@ -30,7 +30,7 @@ public:
     void updateToSegment(Segment &) const;
     void removeFromSegment(Segment &) const;
 
-    void setFunction(function f) {
+    void setFunction(effector_func f) {
         m_function = f;
     }
 

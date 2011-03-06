@@ -48,26 +48,31 @@ Effector::~Effector()
     delete m_context;
 }
 
+/// \brief Set the height point to the mod value
 float set(float orig, float mod)
 {
     return mod;
 }
 
+/// \brief Set the height point to the greater of existing and mod value
 float max(float orig, float mod)
 {
     return std::max(orig, mod);
 }
 
+/// \brief Set the height point to the lesser of existing and mod value
 float min(float orig, float mod)
 {
     return std::min(orig, mod);
 }
 
+/// \brief Set the height point to the sum of existing and mod value
 float sum(float orig, float mod)
 {
     return orig + mod;
 }
 
+/// \brief Set the height point to the difference of existing and mod value
 float dif(float orig, float mod)
 {
     return orig - mod;

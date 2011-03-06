@@ -73,7 +73,8 @@ class Effector
     Context * m_context;
 };
 
-typedef float (*function)(float, float);
+/// \brief Function used to apply an effector to an existing height point
+typedef float (*effector_func)(float height, float mod);
 
 float set(float, float);
 float max(float, float);
