@@ -20,6 +20,12 @@ class Segment;
 class TerrainMod : public Effector
 {
 protected:
+    /// \brief Function used to apply this mod to existing points
+    ///
+    /// This makes the basic mods much more powerful without the need for
+    /// extra classes. It completely obsoletes AdjustTerrainMod, which is
+    /// now the same as LevelTerrainMod with this function changed from
+    /// set() to sum()
     effector_func m_function;
 public:
     TerrainMod();
@@ -30,6 +36,7 @@ public:
     void updateToSegment(Segment &) const;
     void removeFromSegment(Segment &) const;
 
+    /// \brief Change the function used to apply this mod to existing points
     void setFunction(effector_func f) {
         m_function = f;
     }
