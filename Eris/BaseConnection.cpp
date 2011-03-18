@@ -182,8 +182,15 @@ void BaseConnection::recv()
 void BaseConnection::nonblockingConnect()
 {
     assert(_stream);
-    if (!_stream->isReady())
+    if (!_stream->isReady()) {
+        if (_stream->connect_pending()) {
+            debug() << "Stream not yet ready" << std::endl;
+        } else {
+            handleFailure("Failed to connect to " + _host);
+            hardDisconnect(false);
+        }
         return;
+    }
 
     if(!_stream->is_open()) {
         handleFailure("Failed to connect to " + _host);
