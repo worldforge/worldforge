@@ -1,6 +1,6 @@
 AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 
-noinst_PROGRAMS  = metaquery
+noinst_PROGRAMS  = metaquery eris-connect
 
 check_PROGRAMS = Entity_unittest Account_unittest Alarm_unittest \
                  Avatar_unittest BaseConnection_unittest Calendar_unittest \
@@ -39,6 +39,8 @@ testEris_SOURCES = tests.cpp \
 LDADD = $(top_builddir)/Eris/liberis-1.3.la
 
 metaquery_SOURCES = metaQuery.cpp
+
+eris_connect_SOURCES = connect.cpp
 
 Account_unittest_SOURCES = Account_unittest.cpp SignalFlagger.h
 Alarm_unittest_SOURCES = Alarm_unittest.cpp SignalFlagger.h
