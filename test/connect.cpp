@@ -47,7 +47,7 @@ static void onConnected()
 
 static void onConnectionFail(const std::string& errMsg)
 {
-    std::cout << "failed to connect to server" << std::endl;
+    std::cout << "failed to connect to server: " << errMsg << std::endl;
     done = true;
 }
 
