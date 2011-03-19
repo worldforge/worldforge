@@ -96,11 +96,13 @@ int main(int argc, char ** argv)
     c->Connected.connect(sigc::ptr_fun(onConnected));
     c->Failure.connect(sigc::ptr_fun(onConnectionFail));
 
+    std::cout << "Calling connect" << std::endl;
     c->connect();
 
     while (!done) {
-        Eris::PollDefault::poll();
-        usleep(10000);
+        std::cout << "Calling poll" << std::endl;
+        Eris::PollDefault::poll(100);
+        std::cout << "Called poll" << std::endl;
     }
 
     return 0;
