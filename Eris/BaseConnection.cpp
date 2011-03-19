@@ -87,7 +87,7 @@ int BaseConnection::connect(const std::string &host, short port)
 
     if (_stream->connect_pending()) {
         setStatus(CONNECTING);
-        Poll::instance().addStream(_stream, Poll::WRITE);
+        Poll::instance().addStream(_stream, Poll::WRITE|Poll::EXCEPT);
     } else {
         setStatus(NEGOTIATE);
         Poll::instance().addStream(_stream, Poll::READ);

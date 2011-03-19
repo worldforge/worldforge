@@ -23,11 +23,12 @@ public:
 	Poll() {}
 	virtual ~Poll() {}
 
-	enum Check {
+	static const int
 		READ = 1,
 		WRITE = 2,
-		MASK = READ | WRITE
-	};
+		EXCEPT = 4,
+		MASK = READ | WRITE | EXCEPT;
+	typedef int Check;
 
 	virtual void addStream(const basic_socket_stream*, Check = READ) = 0;
 	virtual void changeStream(const basic_socket_stream*, Check) = 0;

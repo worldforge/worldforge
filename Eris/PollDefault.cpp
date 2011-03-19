@@ -38,7 +38,7 @@ public:
 	virtual bool isReady(const basic_socket_stream*);
 private:
 	typedef PollDefault::MapType::const_iterator _iter;
-	fd_set reading, writing;
+	fd_set reading, writing, exceptions;
 	SOCKET_TYPE maxfd;
 };
 
@@ -51,6 +51,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 {
 	FD_ZERO(&reading);
 	FD_ZERO(&writing);
+	FD_ZERO(&exceptions);
 	got_data = false;
 
 #ifndef _NOT_MSC_VER
@@ -68,6 +69,8 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 			FD_SET(fd, &reading);
 		if(I->second & Poll::WRITE)
 			FD_SET(fd, &writing);
+		if(I->second & Poll::EXCEPT)
+			FD_SET(fd, &exceptions);
 		if(fd > maxfd)
 			maxfd = fd;
 	}
@@ -75,7 +78,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 	if (!got_data) return;
 
 	struct timeval timeout = {msec_timeout / 1000, (msec_timeout % 1000) * 1000};
-	int retval = select(maxfd+1, &reading, &writing, NULL, &timeout);
+	int retval = select(maxfd+1, &reading, &writing, &exceptions, &timeout);
 	if (retval < 0) {
         warning() << "select() returned error: " << retval;
         got_data = false;
@@ -89,7 +92,9 @@ bool PollDataDefault::isReady(const basic_socket_stream* str)
 	SOCKET_TYPE fd = str->getSocket();
 
 	return (fd != INVALID_SOCKET) && (fd <= maxfd)
-		&& (FD_ISSET(fd, &reading) || FD_ISSET(fd, &writing));
+		&& (FD_ISSET(fd, &reading) ||
+                    FD_ISSET(fd, &writing) ||
+                    FD_ISSET(fd, &exceptions));
 }
 
 void PollDefault::doPoll(unsigned long timeout)
