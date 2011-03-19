@@ -35,6 +35,7 @@
 #include <cmath>
 
 #include <cassert>
+#include <limits>
 
 namespace WFMath {
 
@@ -143,7 +144,8 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
   // Check that we still span both axes
 
   bool still_valid[2] = {false,}, got_ratio = false;
-  CoordType ratio, size;
+  CoordType ratio = std::numeric_limits<CoordType>::max();
+  CoordType size = std::numeric_limits<CoordType>::max();
   double epsilon;
   int i, end = poly.numCorners();
 
