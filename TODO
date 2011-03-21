@@ -1,3 +1,7 @@
+alriddoch's quick list:
+
+  PollData::isReady() can take basic_socket rather that be locked to stream
+
 Eris TODO
 
 Optimisations
