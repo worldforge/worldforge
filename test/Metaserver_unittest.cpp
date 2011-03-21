@@ -18,9 +18,119 @@
 // $Id$
 
 #include <Eris/Metaserver.h>
+#include <Eris/Poll.h>
+
+#include <sigc++/functors/ptr_fun.h>
+
+#include <iostream>
+
+#include <cassert>
+
+using Eris::Meta;
+
+static const std::string TEST_METASERVER("127.0.0.1");
+static const std::string TEST_INVALID_IP("327.0.0.1");
+
+static bool test_failure_flag;
+
+static void test_fail(const std::string & msg)
+{
+    std::cerr << "Got failure: " << msg << std::endl;
+    test_failure_flag = true;
+}
+
+class TestPollData : public Eris::PollData
+{
+  public:
+    bool ready_called;
+    bool ready_result;
+
+    TestPollData() : ready_called(false), ready_result(true) { }
+
+    virtual bool isReady(const basic_socket_stream *) {
+        ready_called = true;
+        return ready_result;
+    }
+};
 
 int main()
 {
+    {
+        Meta * m = new Meta(TEST_METASERVER, 20);
+
+        assert(m->getGameServerCount() == 0);
+
+        delete m;
+    }
+
+    // Test refreshing with normal configuration
+    {
+        Meta * m = new Meta(TEST_METASERVER, 20);
+
+        test_failure_flag = false;
+
+        m->Failure.connect(sigc::ptr_fun(&test_fail));
+        m->refresh();
+
+        assert(!test_failure_flag);
+        assert(m->getStatus() == Meta::GETTING_LIST);
+
+        delete m;
+    }
+
+    // Test refreshing with non-parsable IP fails
+    {
+        Meta * m = new Meta(TEST_INVALID_IP, 20);
+
+        test_failure_flag = false;
+
+        m->Failure.connect(sigc::ptr_fun(&test_fail));
+        m->refresh();
+
+        assert(test_failure_flag);
+        assert(m->getStatus() == Meta::INVALID);
+
+        delete m;
+    }
+
+    // Test refreshing with normal configuration, refreshing twice
+    {
+        Meta * m = new Meta(TEST_METASERVER, 20);
+
+        test_failure_flag = false;
+
+        m->Failure.connect(sigc::ptr_fun(&test_fail));
+        m->refresh();
+
+        assert(!test_failure_flag);
+        assert(m->getStatus() == Meta::GETTING_LIST);
+
+        m->refresh();
+
+        assert(!test_failure_flag);
+        assert(m->getStatus() == Meta::GETTING_LIST);
+
+        delete m;
+    }
+
+    // Test hitting poll does nothing before refresh
+    {
+        Meta * m = new Meta(TEST_METASERVER, 20);
+
+        test_failure_flag = false;
+
+        TestPollData test_data;
+        assert(!test_data.ready_called);
+
+        Eris::Poll::instance().Ready.emit(test_data);
+
+        assert(!test_failure_flag);
+        assert(!test_data.ready_called);
+        assert(m->getStatus() == Meta::INVALID);
+
+        delete m;
+    }
+
     return 0;
 }
 
