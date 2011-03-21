@@ -65,6 +65,14 @@ class Meta : virtual public sigc::trackable,
 		public Atlas::Objects::ObjectsDecoder
 {
 public:
+    typedef enum
+    {
+        INVALID = 0,	///< The server list is not valid
+        VALID,		///< The list is valid and completed
+        GETTING_LIST,   ///< Retrieving the list of game servers from the metaserver
+        QUERYING	///< Querying game servers for information
+    } MetaStatus;
+
     /** Create a Metaserver object, which manages all interaction with the
     metaserver itself, and querying active game servers. Clients might create
     this object when showing a 'server list' dialog, and use the signals
@@ -105,6 +113,10 @@ public:
     */
     void cancel();
 
+// accessors
+   MetaStatus getStatus() const {
+       return m_status;
+   }
 // signals
 	
     /// Emitted when information about a server is received
@@ -166,14 +178,6 @@ private:
         
     const std::string m_clientName;	///< the name to use when negotiating
     
-    typedef enum
-    {
-        INVALID = 0,	///< The server list is not valid
-        VALID,		///< The list is valid and completed
-        GETTING_LIST,   ///< Retrieving the list of game servers from the metaserver
-        QUERYING	///< Querying game servers for information
-    } MetaStatus;
-
     MetaStatus m_status;
     /// the metaserver query, eg metaserver.worldforge.org
     const std::string m_metaHost;       
