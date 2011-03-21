@@ -14,7 +14,8 @@ check_PROGRAMS = Entity_unittest Account_unittest Alarm_unittest \
                  ServerInfo_unittest Task_unittest TimedEventService_unittest \
                  Timeout_unittest TypeBoundRedispatch_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
-                 UIFactory_unittest View_unittest TerrainMod_unittest
+                 UIFactory_unittest View_unittest TerrainMod_unittest \
+                 Metaserver_integrationtest
 TESTS = $(check_PROGRAMS)
 RECHECK_LOGS = testEris.log
 
@@ -85,3 +86,9 @@ Types_unittest_SOURCES = Types_unittest.cpp
 UIFactory_unittest_SOURCES = UIFactory_unittest.cpp
 View_unittest_SOURCES = View_unittest.cpp
 TerrainMod_unittest_SOURCES = TerrainMod_unittest.cpp
+
+Metaserver_integrationtest_SOURCES = Metaserver_integrationtest.cpp
+Metaserver_integrationtest_LDADD = \
+    ${top_builddir}/Eris/Metaserver.lo \
+    ${top_builddir}/Eris/MetaQuery.lo
+
