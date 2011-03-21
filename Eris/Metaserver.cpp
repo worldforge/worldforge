@@ -291,7 +291,10 @@ void Meta::recv()
 //		_bytesToRecv--;
 //	} while (iobuf->in_avail() && _bytesToRecv);
 	
-    if (_bytesToRecv > 0) return; // can't do anything till we get more data
+    if (_bytesToRecv > 0) {
+        error() << "Fragment data received by Meta::recv";
+        return; // can't do anything till we get more data
+    }
     
     if (_recvCmd) {
         uint32_t op;
