@@ -114,9 +114,9 @@ public:
     void cancel();
 
 // accessors
-   MetaStatus getStatus() const {
-       return m_status;
-   }
+    MetaStatus getStatus() const {
+        return m_status;
+    }
 // signals
 	
     /// Emitted when information about a server is received
