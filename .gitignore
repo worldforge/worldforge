@@ -25,6 +25,8 @@ ltmain.sh
 mingw32-eris.spec
 missing
 stamp-h1
+test/*_integrationtest
+test/*_integrationtest.log
 test/*_unittest
 test/*_unittest.log
 test/eris-connect
