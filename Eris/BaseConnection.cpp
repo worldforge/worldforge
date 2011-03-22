@@ -85,15 +85,17 @@ int BaseConnection::connect(const std::string &host, short port)
     _port = port;
     
     // start timeout
-    _timeout = new Timeout(CONNECT_TIMEOUT);
-    _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onConnectTimeout));
     
     _stream = new tcp_socket_stream(host, port, true);
 
     if (_stream->connect_pending()) {
+        _timeout = new Timeout(CONNECT_TIMEOUT);
+        _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onConnectTimeout));
         setStatus(CONNECTING);
         Poll::instance().addStream(_stream, Poll::WRITE|Poll::EXCEPT);
     } else {
+        _timeout = new Timeout(NEGOTIATE_TIMEOUT);
+        _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onNegotiateTimeout));
         setStatus(NEGOTIATE);
         Poll::instance().addStream(_stream, Poll::READ);
     }
