@@ -33,6 +33,7 @@
 
 #endif // __WIN32__
 
+static const int CONNECT_TIMEOUT = 5 * 1000;
 static const int NEGOTIATE_TIMEOUT = 5 * 1000;
 
 namespace Eris {
@@ -84,7 +85,7 @@ int BaseConnection::connect(const std::string &host, short port)
     _port = port;
     
     // start timeout
-    _timeout = new Timeout(2 * 1000);
+    _timeout = new Timeout(CONNECT_TIMEOUT);
     _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onConnectTimeout));
     
     _stream = new tcp_socket_stream(host, port, true);
