@@ -35,7 +35,7 @@ class PollDataDefault : public PollData
 public:
 	PollDataDefault(const PollDefault::MapType&, bool&, unsigned long);
 
-	virtual bool isReady(const basic_socket_stream*);
+	virtual bool isReady(const basic_socket*);
 private:
 	typedef PollDefault::MapType::const_iterator _iter;
 	fd_set reading, writing, exceptions;
@@ -87,7 +87,7 @@ PollDataDefault::PollDataDefault(const PollDefault::MapType& str,
 	got_data = (retval != 0);
 }
 
-bool PollDataDefault::isReady(const basic_socket_stream* str)
+bool PollDataDefault::isReady(const basic_socket* str)
 {
 	SOCKET_TYPE fd = str->getSocket();
 

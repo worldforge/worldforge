@@ -4,6 +4,7 @@
 #include <sigc++/signal.h>
 
 // Forward declaration from skstream
+class basic_socket;
 class basic_socket_stream;
 
 namespace Eris {
@@ -14,7 +15,7 @@ public:
 	PollData() {}
 	virtual ~PollData() {}
 
-	virtual bool isReady(const basic_socket_stream*) = 0;
+	virtual bool isReady(const basic_socket*) = 0;
 };
 
 class Poll
