@@ -32,7 +32,11 @@
 #endif
 
 #endif // __WIN32__
+
+static const int NEGOTIATE_TIMEOUT = 5 * 1000;
+
 namespace Eris {
+
     
 ////////////////////////////////////////////////////////////////////////////////////////////////////////    
     
@@ -203,7 +207,7 @@ void BaseConnection::nonblockingConnect()
     // negotiation timeout
     assert(_timeout);
     delete _timeout;
-    _timeout = new Timeout(5000);
+    _timeout = new Timeout(NEGOTIATE_TIMEOUT);
     _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onNegotiateTimeout));
 
     _sc = new Atlas::Net::StreamConnect(_clientName, *_stream);
