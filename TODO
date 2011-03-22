@@ -6,6 +6,8 @@ alriddoch's quick list:
 
   timeout is connected to the wrong thing if nonblocking connect connects immediately
 
+  try abolishing concept of max inflight, and instead have a limit of how many to kick off per tick
+
 Eris TODO
 
 Optimisations
