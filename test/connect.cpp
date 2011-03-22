@@ -19,6 +19,8 @@
 #include <Eris/Log.h>
 #include <Eris/PollDefault.h>
 
+#include <sigc++/adaptors/bind.h>
+
 #include <iostream>
 
 #include <cstdlib>
@@ -26,11 +28,12 @@
 
 #include <getopt.h>
 
+int connection_count = 0;
 bool done = false;
 
 static void usage(const char * prgname)
 {
-    std::cout << "usage: " << prgname << " [-n] host [port]"
+    std::cout << "usage: " << prgname << " [-p port ] [-nv] host [port]"
               << std::endl << std::flush;
 }
 
@@ -39,25 +42,30 @@ static void erisLog(Eris::LogLevel level, const std::string & msg)
     std::cout << "LOG: " << msg << std::endl << std::flush;
 }
 
-static void onConnected()
+static void onConnected(Eris::Connection * c)
 {
     std::cout << "connected to server" << std::endl;
-    done = true;
+    if (--connection_count == 0) {
+        done = true;
+    }
 }
 
 static void onConnectionFail(const std::string& errMsg)
 {
     std::cout << "failed to connect to server: " << errMsg << std::endl;
-    done = true;
+    if (--connection_count == 0) {
+        done = true;
+    }
 }
 
 int main(int argc, char ** argv)
 {
     bool option_verbose = false;
     bool option_nonblock = false;
+    int option_port = 6767;
 
     while (1) {
-        int c = getopt(argc, argv, "nv");
+        int c = getopt(argc, argv, "np:v");
         if (c == -1) {
             break;
         } else if (c == '?') {
@@ -67,6 +75,8 @@ int main(int argc, char ** argv)
             option_verbose = true;
         } else if (c == 'n') {
             option_nonblock = true;
+        } else if (c == 'p') {
+            option_port = strtol(optarg, 0, 10);
         }
     }
 
@@ -77,27 +87,27 @@ int main(int argc, char ** argv)
 
     int arg_left = argc - optind;
 
-    if (arg_left < 1 || arg_left > 2) {
+    if (arg_left < 1) {
         usage(argv[0]);
         return 1;
-    }
-
-    int port = 6767;
-
-    if (arg_left == 2) {
-        port = strtol(argv[optind + 1], 0, 10);
     }
 
     Eris::Logged.connect(sigc::ptr_fun(erisLog));
     Eris::setLogLevel(Eris::LOG_DEBUG);
 
-    Eris::Connection * c = new Eris::Connection("test", argv[optind], port, false);
+    for (int i = optind; i < argc; ++i) {
+        Eris::Connection * c = new Eris::Connection("test",
+                                                    argv[i],
+                                                    option_port,
+                                                    false);
 
-    c->Connected.connect(sigc::ptr_fun(onConnected));
-    c->Failure.connect(sigc::ptr_fun(onConnectionFail));
+        c->Connected.connect(sigc::bind(sigc::ptr_fun(onConnected), c));
+        c->Failure.connect(sigc::ptr_fun(onConnectionFail));
 
-    std::cout << "Calling connect" << std::endl;
-    c->connect();
+        std::cout << "Calling connect" << std::endl;
+        c->connect();
+        ++connection_count;
+    }
 
     while (!done) {
         std::cout << "Calling poll" << std::endl;
