@@ -2,6 +2,8 @@ alriddoch's quick list:
 
   PollData::isReady() can take basic_socket rather that be locked to stream
 
+  ::connect Timeout should probably not take into account the DNS resolve time
+
 Eris TODO
 
 Optimisations
