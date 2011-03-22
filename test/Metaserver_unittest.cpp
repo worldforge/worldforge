@@ -131,6 +131,27 @@ int main()
         delete m;
     }
 
+#if 0
+    // Test poll works
+    {
+        Meta * m = new Meta(TEST_METASERVER, 20);
+
+        test_failure_flag = false;
+
+        TestPollData test_data;
+        assert(!test_data.ready_called);
+
+        m->refresh();
+        Eris::Poll::instance().Ready.emit(test_data);
+
+        assert(!test_failure_flag);
+        assert(test_data.ready_called);
+        assert(m->getStatus() == Meta::INVALID);
+
+        delete m;
+    }
+#endif
+
     return 0;
 }
 
