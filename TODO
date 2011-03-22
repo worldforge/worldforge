@@ -4,6 +4,8 @@ alriddoch's quick list:
 
   ::connect Timeout should probably not take into account the DNS resolve time
 
+  timeout is connected to the wrong thing if nonblocking connect connects immediately
+
 Eris TODO
 
 Optimisations
