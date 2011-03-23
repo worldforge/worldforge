@@ -1,7 +1,5 @@
 alriddoch's quick list:
 
-  PollData::isReady() can take basic_socket rather that be locked to stream
-
   try abolishing concept of max inflight, and instead have a limit of how many to kick off per tick
 
 Eris TODO
