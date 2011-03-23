@@ -151,7 +151,7 @@ void PollDefault::poll(unsigned long timeout)
   }
 }
 
-void PollDefault::addStream(const basic_socket_stream* str, Check c)
+void PollDefault::addStream(const basic_socket* str, Check c)
 {
     assert(c && Poll::MASK);
 
@@ -159,7 +159,7 @@ void PollDefault::addStream(const basic_socket_stream* str, Check c)
 	throw Eris::InvalidOperation("Duplicate streams in PollDefault"); 
 }
 
-void PollDefault::changeStream(const basic_socket_stream* str, Check c)
+void PollDefault::changeStream(const basic_socket* str, Check c)
 {
     assert(c && Poll::MASK);
 
@@ -171,7 +171,7 @@ void PollDefault::changeStream(const basic_socket_stream* str, Check c)
     i->second = c;
 }
 
-void PollDefault::removeStream(const basic_socket_stream* str)
+void PollDefault::removeStream(const basic_socket* str)
 {
     if(_streams.erase(str) == 0)
 	throw Eris::InvalidOperation("Can't find stream in PollDefault");

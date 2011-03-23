@@ -16,13 +16,13 @@ public:
 //	PollDefault(const sigc::slot<bool> &s) : _prePoll(s) {}
 	virtual ~PollDefault() {}
 
-	virtual void addStream(const basic_socket_stream*, Check);
-	virtual void changeStream(const basic_socket_stream*, Check);
-	virtual void removeStream(const basic_socket_stream*);
+	virtual void addStream(const basic_socket*, Check);
+	virtual void changeStream(const basic_socket*, Check);
+	virtual void removeStream(const basic_socket*);
 
 	static void poll(unsigned long timeout = 0);
 
-	typedef std::map<const basic_socket_stream*,Check> MapType;
+	typedef std::map<const basic_socket*,Check> MapType;
 private:
 	MapType _streams;
 	typedef MapType::iterator _iter;

@@ -5,7 +5,6 @@
 
 // Forward declaration from skstream
 class basic_socket;
-class basic_socket_stream;
 
 namespace Eris {
 
@@ -31,9 +30,9 @@ public:
 		MASK = READ | WRITE | EXCEPT;
 	typedef int Check;
 
-	virtual void addStream(const basic_socket_stream*, Check = READ) = 0;
-	virtual void changeStream(const basic_socket_stream*, Check) = 0;
-	virtual void removeStream(const basic_socket_stream*) = 0;
+	virtual void addStream(const basic_socket*, Check = READ) = 0;
+	virtual void changeStream(const basic_socket*, Check) = 0;
+	virtual void removeStream(const basic_socket*) = 0;
 
 	static Poll& instance();
 	static void setInstance(Poll*);
