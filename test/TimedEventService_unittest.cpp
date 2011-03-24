@@ -73,6 +73,32 @@ int main()
         Eris::TimedEventService::del();
     }
 
+    {
+        TestSignalTracker tst;
+
+        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
+
+        ted->Idle.connect(sigc::mem_fun(tst, &TestSignalTracker::call));
+
+        ted->tick();
+        assert(!tst.called());
+
+        Eris::TimedEventService::del();
+    }
+
+    {
+        TestSignalTracker tst;
+
+        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
+
+        ted->Idle.connect(sigc::mem_fun(tst, &TestSignalTracker::call));
+
+        ted->tick(true);
+        assert(tst.called());
+
+        Eris::TimedEventService::del();
+    }
+
     return 0;
 }
 
