@@ -400,7 +400,7 @@ void Meta::processCmd()
         } else {
             // allow progress bars to setup, etc, etc
             CompletedServerList.emit(_totalServers);
-            m_status = VALID;
+            m_status = QUERYING;
             // all done, clean up
             disconnect();
         }
