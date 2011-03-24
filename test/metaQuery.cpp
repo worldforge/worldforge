@@ -247,7 +247,7 @@ int main(int argc, char* argv[])
     
     while (!queryDone && !failure)
     {
-        Eris::PollDefault::poll(10);
+        Eris::PollDefault::poll(100);
     }
     
     if (failure) {
