@@ -1,5 +1,5 @@
 // Eris Online RPG Protocol Library
-// Copyright (C) 2007 Alistair Riddoch
+// Copyright (C) 2011 Alistair Riddoch
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
