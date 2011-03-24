@@ -21,3 +21,9 @@ int main()
 {
     return 0;
 }
+
+// stubs
+
+#include <Eris/Poll.h>
+
+bool Eris::Poll::new_timeout_ = false;

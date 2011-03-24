@@ -77,7 +77,10 @@ Room_unittest_SOURCES = Room_unittest.cpp
 Router_unittest_SOURCES = Router_unittest.cpp
 ServerInfo_unittest_SOURCES = ServerInfo_unittest.cpp
 Task_unittest_SOURCES = Task_unittest.cpp
+
 TimedEventService_unittest_SOURCES = TimedEventService_unittest.cpp
+TimedEventService_unittest_LDADD = ${top_builddir}/Eris/TimedEventService.lo
+
 Timeout_unittest_SOURCES = Timeout_unittest.cpp
 TypeBoundRedispatch_unittest_SOURCES = TypeBoundRedispatch_unittest.cpp
 TypeInfo_unittest_SOURCES = TypeInfo_unittest.cpp
