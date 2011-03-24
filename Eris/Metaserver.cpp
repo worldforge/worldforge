@@ -495,7 +495,8 @@ void Meta::internalQuery(unsigned int index)
     
     ServerInfo& sv = m_gameServers[index];
     MetaQuery *q =  new MetaQuery(this, sv.getHostname(), index);
-    if (q->getStatus() != BaseConnection::CONNECTING) {
+    if (q->getStatus() != BaseConnection::CONNECTING &&
+        q->getStatus() != BaseConnection::NEGOTIATE) {
         // indicates a failure occurred, so we'll kill it now and say no more
         delete q;
         sv.m_status = ServerInfo::INVALID;
