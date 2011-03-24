@@ -93,11 +93,15 @@ int BaseConnection::connect(const std::string &host, short port)
         _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onConnectTimeout));
         setStatus(CONNECTING);
         Poll::instance().addStream(_stream, Poll::WRITE|Poll::EXCEPT);
-    } else {
+    } else if (_stream->is_open()) {
         _timeout = new Timeout(NEGOTIATE_TIMEOUT);
         _timeout->Expired.connect(sigc::mem_fun(this, &BaseConnection::onNegotiateTimeout));
         setStatus(NEGOTIATE);
         Poll::instance().addStream(_stream, Poll::READ);
+    } else {
+        setStatus(DISCONNECTED);
+        delete _stream;
+        _stream = 0;
     }
 
     return 0;
