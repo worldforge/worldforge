@@ -145,6 +145,7 @@ protected:
     void doFailure(const std::string &msg);
     void queryFailure(MetaQuery *q, const std::string& msg);
 
+    void query();
     void queryTimeout(MetaQuery *q);
     void metaTimeout();
     

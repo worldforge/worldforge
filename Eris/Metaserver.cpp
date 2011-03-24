@@ -66,6 +66,7 @@ Meta::Meta(const std::string& metaServer, unsigned int maxQueries) :
     m_stream(NULL)
 {
     Poll::instance().Ready.connect(sigc::mem_fun(this, &Meta::gotData));
+    TimedEventService::instance()->Idle.connect(sigc::mem_fun(this, &Meta::query));
 }
 
 Meta::~Meta()
@@ -570,6 +571,11 @@ void Meta::queryFailure(MetaQuery *q, const std::string &msg)
     // be very frequent.
     m_gameServers[q->getServerIndex()].m_status = ServerInfo::INVALID;
     q->setComplete();
+}
+
+void Meta::query()
+{
+    // debug() << "Query" << std::endl << std::flush;
 }
 
 void Meta::queryTimeout(MetaQuery *q)
