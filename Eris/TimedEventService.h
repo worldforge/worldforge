@@ -3,6 +3,8 @@
 
 #include <wfmath/timestamp.h>
 
+#include <sigc++/signal.h>
+
 #include <set>
 
 namespace Eris
@@ -53,7 +55,7 @@ public:
     @brief Tick all the timed events registered with the service instance.
     @ret The period in milliseconds until the next event is due
     */
-    unsigned long tick();
+    unsigned long tick(bool idle = false);
 
     /**
     */
@@ -62,6 +64,11 @@ public:
     /**
     */
     void unregisterEvent(TimedEvent* te);
+
+    /**
+    @brief Signal emitted when tick is idle
+    */
+    sigc::signal<void> Idle;
 private:
     TimedEventService();
     

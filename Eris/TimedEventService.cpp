@@ -36,11 +36,15 @@ void TimedEventService::del()
     }
 }
 
-unsigned long TimedEventService::tick()
+unsigned long TimedEventService::tick(bool idle)
 {
     TimeStamp n(TimeStamp::now());
     TimedEventsByDue::iterator it = m_events.begin();
     
+    if (idle) {
+        Idle.emit();
+    }
+
     unsigned long waitMsecs = 0xffff; // arbitrary big number
     while (it != m_events.end())
     {

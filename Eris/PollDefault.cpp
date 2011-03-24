@@ -138,7 +138,7 @@ void PollDefault::poll(unsigned long timeout)
     }
 
     inst.doPoll(timeout);
-    TimedEventService::instance()->tick();
+    TimedEventService::instance()->tick(true);
     execDeleteLaters();
 
     // We're done, turn off the reentrancy prevention flag
