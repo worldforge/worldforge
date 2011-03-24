@@ -131,6 +131,22 @@ void Timeout::cancel()
 {
 }
 
+TimedEventService* TimedEventService::static_instance = NULL;
+
+TimedEventService::TimedEventService()
+{
+}
+
+TimedEventService* TimedEventService::instance()
+{
+    if (!static_instance)
+    {
+        static_instance = new TimedEventService;
+    }
+    
+    return static_instance;
+}
+
 BaseException::~BaseException() throw()
 {
 }
