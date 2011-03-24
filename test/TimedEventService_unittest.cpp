@@ -19,7 +19,21 @@
 
 #include <Eris/TimedEventService.h>
 
+#include <sigc++/functors/mem_fun.h>
+
 #include <cassert>
+
+class TestSignalTracker 
+{
+  protected:
+    bool m_called;
+  public:
+    TestSignalTracker() : m_called(false) { }
+
+    bool called() const { return m_called; }
+
+    void call() { m_called = true; }
+};
 
 int main()
 {
@@ -27,6 +41,34 @@ int main()
         Eris::TimedEventService * ted = Eris::TimedEventService::instance();
 
         assert(ted != 0);
+
+        Eris::TimedEventService::del();
+    }
+
+    {
+        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
+
+        assert(ted != 0);
+        ted->Idle.emit();
+
+        Eris::TimedEventService::del();
+    }
+
+    {
+        TestSignalTracker tst;
+        assert(!tst.called());
+
+        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
+        assert(ted != 0);
+
+        ted->Idle.emit();
+        assert(!tst.called());
+
+        ted->Idle.connect(sigc::mem_fun(tst, &TestSignalTracker::call));
+        assert(!tst.called());
+
+        ted->Idle.emit();
+        assert(tst.called());
 
         Eris::TimedEventService::del();
     }
