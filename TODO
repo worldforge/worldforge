@@ -2,6 +2,8 @@ alriddoch's quick list:
 
   try abolishing concept of max inflight, and instead have a limit of how many to kick off per tick
 
+  BaseConnection::connect might fail, in which case it makes a bad assumption.
+
 Eris TODO
 
 Optimisations
