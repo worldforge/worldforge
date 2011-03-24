@@ -47,7 +47,7 @@ class TestPollData : public Eris::PollData
 
     TestPollData() : ready_called(false), ready_result(true) { }
 
-    virtual bool isReady(const basic_socket_stream *) {
+    virtual bool isReady(const basic_socket *) {
         ready_called = true;
         return ready_result;
     }
@@ -251,15 +251,15 @@ Eris::Poll& Eris::Poll::instance()
   return *_inst;
 }
 
-void PollDefault::addStream(const basic_socket_stream* str, Check c)
+void PollDefault::addStream(const basic_socket* str, Check c)
 {
 }
 
-void PollDefault::changeStream(const basic_socket_stream* str, Check c)
+void PollDefault::changeStream(const basic_socket* str, Check c)
 {
 }
 
-void PollDefault::removeStream(const basic_socket_stream* str)
+void PollDefault::removeStream(const basic_socket* str)
 {
 }
 

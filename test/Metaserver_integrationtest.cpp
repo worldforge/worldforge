@@ -84,15 +84,15 @@ Eris::Poll& Eris::Poll::instance()
   return *_inst;
 }
 
-void PollDefault::addStream(const basic_socket_stream* str, Check c)
+void PollDefault::addStream(const basic_socket* str, Check c)
 {
 }
 
-void PollDefault::changeStream(const basic_socket_stream* str, Check c)
+void PollDefault::changeStream(const basic_socket* str, Check c)
 {
 }
 
-void PollDefault::removeStream(const basic_socket_stream* str)
+void PollDefault::removeStream(const basic_socket* str)
 {
 }
 

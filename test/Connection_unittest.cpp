@@ -43,7 +43,7 @@ class TestConnection : public Eris::Connection {
 };
 
 class TestPollData : public Eris::PollData {
-    virtual bool isReady(const basic_socket_stream*) { return false; }
+    virtual bool isReady(const basic_socket*) { return false; }
 };
 
 int main()
