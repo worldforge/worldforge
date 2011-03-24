@@ -27,6 +27,8 @@ int main()
         Eris::TimedEventService * ted = Eris::TimedEventService::instance();
 
         assert(ted != 0);
+
+        Eris::TimedEventService::del();
     }
 
     return 0;
