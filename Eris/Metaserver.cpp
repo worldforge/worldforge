@@ -254,14 +254,6 @@ void Meta::deleteQuery(MetaQuery* query)
     m_activeQueries.erase(query);
     deleteLater(query);
     
-    // start a new query if there's more to go
-    if (!m_pendingQueries.empty())
-    {
-        assert(m_activeQueries.size() < m_maxActiveQueries);
-        internalQuery(m_pendingQueries.front());
-        m_pendingQueries.pop_front();
-    }
-        
     if (m_activeQueries.empty())
     {
         assert(m_pendingQueries.empty());
@@ -489,22 +481,7 @@ void Meta::internalQuery(unsigned int index)
 {
     assert(index < m_gameServers.size());
     
-    if (m_activeQueries.size() >= m_maxActiveQueries) {
-        m_pendingQueries.push_back(index);
-        return; // will get pushed through in other ways
-    } 
-    
-    ServerInfo& sv = m_gameServers[index];
-    MetaQuery *q =  new MetaQuery(this, sv.getHostname(), index);
-    if (q->getStatus() != BaseConnection::CONNECTING &&
-        q->getStatus() != BaseConnection::NEGOTIATE) {
-        // indicates a failure occurred, so we'll kill it now and say no more
-        delete q;
-        sv.m_status = ServerInfo::INVALID;
-    } else {
-        m_activeQueries.insert(q);
-        sv.m_status = ServerInfo::QUERYING;
-    }
+    m_pendingQueries.push_back(index);
 }
 
 void Meta::objectArrived(const Root& obj)
@@ -575,7 +552,27 @@ void Meta::queryFailure(MetaQuery *q, const std::string &msg)
 
 void Meta::query()
 {
-    // debug() << "Query" << std::endl << std::flush;
+    // debug() << "Query" << m_pendingQueries.size() << std::endl << std::flush;
+
+    if (m_pendingQueries.empty())
+    {
+        return;
+    }
+
+    int index = m_pendingQueries.front();
+    m_pendingQueries.pop_front();
+
+    ServerInfo& sv = m_gameServers[index];
+    MetaQuery *q =  new MetaQuery(this, sv.getHostname(), index);
+    if (q->getStatus() != BaseConnection::CONNECTING &&
+        q->getStatus() != BaseConnection::NEGOTIATE) {
+        // indicates a failure occurred, so we'll kill it now and say no more
+        delete q;
+        sv.m_status = ServerInfo::INVALID;
+    } else {
+        m_activeQueries.insert(q);
+        sv.m_status = ServerInfo::QUERYING;
+    }
 }
 
 void Meta::queryTimeout(MetaQuery *q)
