@@ -27,6 +27,15 @@ TimedEventService* TimedEventService::instance()
     return static_instance;
 }
 
+void TimedEventService::del()
+{
+    if (static_instance)
+    {
+        delete static_instance;
+        static_instance = 0;
+    }
+}
+
 unsigned long TimedEventService::tick()
 {
     TimeStamp n(TimeStamp::now());

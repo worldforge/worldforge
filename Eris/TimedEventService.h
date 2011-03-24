@@ -47,6 +47,8 @@ public:
 
     static TimedEventService* instance();
 
+    static void del();
+
     /**
     @brief Tick all the timed events registered with the service instance.
     @ret The period in milliseconds until the next event is due
