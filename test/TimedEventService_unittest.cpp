@@ -17,8 +17,18 @@
 
 // $Id$
 
+#include <Eris/TimedEventService.h>
+
+#include <cassert>
+
 int main()
 {
+    {
+        Eris::TimedEventService * ted = Eris::TimedEventService::instance();
+
+        assert(ted != 0);
+    }
+
     return 0;
 }
 
