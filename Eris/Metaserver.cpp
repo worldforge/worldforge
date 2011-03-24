@@ -396,7 +396,7 @@ void Meta::processCmd()
             // FIXME  - decide whether a reverse name lookup is necessary here or not
             m_gameServers.push_back(ServerInfo(buf));
             // is always querying a good idea?
-            internalQuery(m_gameServers.size() - 1);
+            m_pendingQueries.push_back(m_gameServers.size() - 1);
         }
 			
         if (m_gameServers.size() < _totalServers)
@@ -481,7 +481,17 @@ void Meta::internalQuery(unsigned int index)
 {
     assert(index < m_gameServers.size());
     
-    m_pendingQueries.push_back(index);
+    ServerInfo& sv = m_gameServers[index];
+    MetaQuery *q =  new MetaQuery(this, sv.getHostname(), index);
+    if (q->getStatus() != BaseConnection::CONNECTING &&
+        q->getStatus() != BaseConnection::NEGOTIATE) {
+        // indicates a failure occurred, so we'll kill it now and say no more
+        delete q;
+        sv.m_status = ServerInfo::INVALID;
+    } else {
+        m_activeQueries.insert(q);
+        sv.m_status = ServerInfo::QUERYING;
+    }
 }
 
 void Meta::objectArrived(const Root& obj)
@@ -562,17 +572,8 @@ void Meta::query()
     int index = m_pendingQueries.front();
     m_pendingQueries.pop_front();
 
-    ServerInfo& sv = m_gameServers[index];
-    MetaQuery *q =  new MetaQuery(this, sv.getHostname(), index);
-    if (q->getStatus() != BaseConnection::CONNECTING &&
-        q->getStatus() != BaseConnection::NEGOTIATE) {
-        // indicates a failure occurred, so we'll kill it now and say no more
-        delete q;
-        sv.m_status = ServerInfo::INVALID;
-    } else {
-        m_activeQueries.insert(q);
-        sv.m_status = ServerInfo::QUERYING;
-    }
+    internalQuery(index);
+
 }
 
 void Meta::queryTimeout(MetaQuery *q)
