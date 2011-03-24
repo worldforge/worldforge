@@ -372,7 +372,6 @@ void Meta::processCmd()
             // FIXME Don't emit this here. We don't have the list yet.
             CompletedServerList.emit(_totalServers);
 
-            m_gameServers.clear();
             assert(m_nextQuery == 0);
             m_gameServers.reserve(_totalServers);
         }
