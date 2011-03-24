@@ -368,9 +368,6 @@ void Meta::processCmd()
 		
         // If this is the first response, allocate the space
         if (m_gameServers.empty()) {
-            // allow progress bars to setup, etc, etc
-            // FIXME Don't emit this here. We don't have the list yet.
-            CompletedServerList.emit(_totalServers);
 
             assert(m_nextQuery == 0);
             m_gameServers.reserve(_totalServers);
@@ -401,6 +398,8 @@ void Meta::processCmd()
             // request some more
             listReq(m_gameServers.size());
         } else {
+            // allow progress bars to setup, etc, etc
+            CompletedServerList.emit(_totalServers);
             m_status = VALID;
             // all done, clean up
             disconnect();
