@@ -63,6 +63,7 @@ Meta::Meta(const std::string& metaServer, unsigned int maxQueries) :
     m_status(INVALID),
     m_metaHost(metaServer),
     m_maxActiveQueries(maxQueries),
+    m_nextQuery(0),
     m_stream(NULL)
 {
     Poll::instance().Ready.connect(sigc::mem_fun(this, &Meta::gotData));
@@ -84,10 +85,8 @@ void Meta::queryServer(const std::string &ip)
 {
     m_status = QUERYING;
     
-    if (m_activeQueries.size() >= m_maxActiveQueries)
+    if (m_activeQueries.size() < m_maxActiveQueries)
     {
-        m_pendingQueries.push_back(ip);
-    } else {
         MetaQuery *q =  new MetaQuery(this, ip);
         if (q->isComplete())
         {
@@ -138,7 +137,6 @@ void Meta::refresh()
 
 void Meta::cancel()
 {
-    m_pendingQueries.clear();
     for (QuerySet::iterator Q=m_activeQueries.begin(); Q!=m_activeQueries.end();++Q)
         delete *Q;
     m_activeQueries.clear();
@@ -154,6 +152,7 @@ void Meta::cancel()
         m_status = INVALID;
         m_gameServers.clear();
     }
+    m_nextQuery = m_gameServers.size();
 }
 
 const ServerInfo& Meta::getInfoForServer(unsigned int index) const
@@ -256,7 +255,7 @@ void Meta::deleteQuery(MetaQuery* query)
     
     if (m_activeQueries.empty())
     {
-        assert(m_pendingQueries.empty());
+        assert(m_nextQuery == m_gameServers.size());
         m_status = VALID;
         // we're all done, emit the signal
         AllQueriesDone.emit();
@@ -373,7 +372,7 @@ void Meta::processCmd()
             CompletedServerList.emit(_totalServers);
 
             m_gameServers.clear();
-            m_pendingQueries.clear();
+            assert(m_nextQuery == 0);
             m_gameServers.reserve(_totalServers);
         }
     } break;
@@ -395,8 +394,6 @@ void Meta::processCmd()
             
             // FIXME  - decide whether a reverse name lookup is necessary here or not
             m_gameServers.push_back(ServerInfo(buf));
-            // is always querying a good idea?
-            m_pendingQueries.push_back(m_gameServers.size() - 1);
         }
 			
         if (m_gameServers.size() < _totalServers)
@@ -562,18 +559,14 @@ void Meta::queryFailure(MetaQuery *q, const std::string &msg)
 
 void Meta::query()
 {
-    // debug() << "Query" << m_pendingQueries.size() << std::endl << std::flush;
 
-    if (m_pendingQueries.empty())
+    if (m_nextQuery >= m_gameServers.size())
     {
+        assert(m_nextQuery == m_gameServers.size());
         return;
     }
 
-    int index = m_pendingQueries.front();
-    m_pendingQueries.pop_front();
-
-    internalQuery(index);
-
+    internalQuery(m_nextQuery++);
 }
 
 void Meta::queryTimeout(MetaQuery *q)

@@ -186,10 +186,8 @@ private:
     typedef std::set<MetaQuery*> QuerySet;
     QuerySet m_activeQueries;
                 
-    /// queries we will execute when active slots become free
-    typedef std::list<int> IntList;
-    IntList m_pendingQueries;
     unsigned int m_maxActiveQueries;
+    unsigned int m_nextQuery;
 
     typedef std::vector<ServerInfo> ServerInfoArray;
     ServerInfoArray m_gameServers,
