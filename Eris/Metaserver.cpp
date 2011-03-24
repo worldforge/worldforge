@@ -132,6 +132,7 @@ void Meta::refresh()
     }
 
     m_gameServers.clear();
+    m_nextQuery = 0;
     connect();
 }
 
