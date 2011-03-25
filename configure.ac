@@ -50,6 +50,21 @@ dnl Check for float to int converters
 AC_CHECK_FUNCS([lrintf rintf rint])
 AC_CHECK_FUNCS([fabsf])
 
+AC_MSG_CHECKING(for mingw32)
+AC_TRY_COMPILE(,[
+#ifdef __MINGW32__
+#error MingW32 detected, adding -lws2_32 and -lwsock32 to LIBS
+#endif
+],[
+    AC_MSG_RESULT(no)
+    have_winsock='no'
+],[
+    AC_MSG_RESULT(yes)
+    have_winsock='yes'
+])
+AM_CONDITIONAL(HAVE_WINSOCK, test "x$have_winsock" = "xyes")
+
+
 PKG_PROG_PKG_CONFIG
 
 
@@ -146,6 +161,7 @@ Eris/Makefile
 bindings/Makefile
 bindings/polls/Makefile
 bindings/polls/glib/Makefile
+bindings/polls/winsock/Makefile
 bindings/perl/compile_flags.pl
 test/Makefile
 eris.dox

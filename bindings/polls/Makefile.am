@@ -1,1 +1,1 @@
-SUBDIRS = glib
+SUBDIRS = glib winsock
