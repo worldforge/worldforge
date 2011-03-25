@@ -254,9 +254,8 @@ void Meta::deleteQuery(MetaQuery* query)
     m_activeQueries.erase(query);
     deleteLater(query);
     
-    if (m_activeQueries.empty())
+    if (m_activeQueries.empty() && m_nextQuery == m_gameServers.size())
     {
-        assert(m_nextQuery == m_gameServers.size());
         m_status = VALID;
         // we're all done, emit the signal
         AllQueriesDone.emit();
