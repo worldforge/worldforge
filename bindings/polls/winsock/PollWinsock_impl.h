@@ -29,13 +29,13 @@ void PollWinsock::poll(unsigned long timeout)
 {
 }
 
-void PollWinsock::doPoll(unsigned log timeout)
+void PollWinsock::doPoll(unsigned long timeout)
 {
 }
 
 PollDataWinsock::PollDataWinsock(const PollWinsock::MapType&,
                                  bool&,
-                                 unsigned log)
+                                 unsigned long)
 {
 }
 
