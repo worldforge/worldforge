@@ -1,4 +1,4 @@
-AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir) -I$(top_srcdir)/bindings/polls
 
 noinst_PROGRAMS  = metaquery eris-connect
 
@@ -15,7 +15,7 @@ check_PROGRAMS = Entity_unittest Account_unittest Alarm_unittest \
                  Timeout_unittest TypeBoundRedispatch_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
                  UIFactory_unittest View_unittest TerrainMod_unittest \
-                 Metaserver_integrationtest
+                 Metaserver_integrationtest PollWinsock_unittest
 TESTS = $(check_PROGRAMS)
 RECHECK_LOGS = testEris.log
 
@@ -95,3 +95,5 @@ Metaserver_integrationtest_LDADD = \
     ${top_builddir}/Eris/Metaserver.lo \
     ${top_builddir}/Eris/MetaQuery.lo
 
+PollWinsock_unittest_SOURCES = PollWinsock_unittest.cpp
+PollWinsock_unittest_LDADD =
