@@ -28,12 +28,12 @@ AC_ARG_ENABLE(debug,
     [  --enable-debug          enable debug information [default=no]],
     [
         if test "$enableval" = "yes"; then
-            CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi -DDEBUG"
+            CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -DDEBUG"
         else
-            CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi -DNDEBUG"
+            CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -DNDEBUG"
         fi
     ],[
-        CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -ansi -DNDEBUG"
+        CXXFLAGS="$CXXFLAGS -Wall -Wno-unknown-pragmas -DNDEBUG"
     ]
 )
 
