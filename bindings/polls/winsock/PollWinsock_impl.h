@@ -5,6 +5,44 @@
 
 namespace Eris {
 
+PollWinsock::PollWinsock()
+{
+}
+
+PollWinsock::~PollWinsock()
+{
+}
+
+void PollWinsock::addStream(const basic_socket*, Check)
+{
+}
+
+void PollWinsock::changeStream(const basic_socket*, Check)
+{
+}
+
+void PollWinsock::removeStream(const basic_socket*)
+{
+}
+
+void PollWinsock::poll(unsigned long timeout)
+{
+}
+
+void PollWinsock::doPoll(unsigned log timeout)
+{
+}
+
+PollDataWinsock::PollDataWinsock(const PollWinsock::MapType&,
+                                 bool&,
+                                 unsigned log)
+{
+}
+
+bool PollDataWinsock::isReady(const basic_socket*)
+{
+}
+
 } // namespace Eris
 
 #if 0

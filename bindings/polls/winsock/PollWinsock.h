@@ -12,8 +12,8 @@ namespace Eris {
 class PollWinsock : public Poll, virtual public sigc::trackable
 {
 public:
-	PollWinsock() {}
-	virtual ~PollWinsock() {}
+	PollWinsock();
+	virtual ~PollWinsock();
 
 	virtual void addStream(const basic_socket*, Check);
 	virtual void changeStream(const basic_socket*, Check);
@@ -37,8 +37,6 @@ public:
         virtual bool isReady(const basic_socket*);
 private:
         typedef PollWinsock::MapType::const_iterator _iter;
-        fd_set reading, writing, exceptions;
-        SOCKET_TYPE maxfd;
 };
 
 } // namespace Eris

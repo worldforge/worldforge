@@ -18,7 +18,7 @@
 // $Id$
 
 #if _WIN32
-#include <winsock/PollWinsock.h>
+#include <winsock/PollWinsock_impl.h>
 #endif
 
 int main()
