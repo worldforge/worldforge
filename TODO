@@ -2,6 +2,7 @@ alriddoch's quick list:
 
   try abolishing concept of max inflight, and instead have a limit of how many to kick off per tick
 
+  See dbus/dbus-sysdeps-win.c for good windows poll stuff, but not that when using select it always uses exception set.
 Eris TODO
 
 Optimisations
