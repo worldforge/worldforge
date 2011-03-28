@@ -557,6 +557,10 @@ void Meta::queryFailure(MetaQuery *q, const std::string &msg)
 
 void Meta::query()
 {
+    if (m_activeQueries.size() >= m_maxActiveQueries)
+    {
+        return;
+    }
 
     if (m_nextQuery >= m_gameServers.size())
     {
