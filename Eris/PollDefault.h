@@ -16,6 +16,9 @@ public:
 //	PollDefault(const sigc::slot<bool> &s) : _prePoll(s) {}
 	virtual ~PollDefault() {}
 
+	virtual int maxStreams() const;
+	virtual int maxConnectingStreams() const;
+
 	virtual void addStream(const basic_socket*, Check);
 	virtual void changeStream(const basic_socket*, Check);
 	virtual void removeStream(const basic_socket*);

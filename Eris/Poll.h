@@ -30,6 +30,9 @@ public:
 		MASK = READ | WRITE | EXCEPT;
 	typedef int Check;
 
+	virtual int maxStreams() const = 0;
+	virtual int maxConnectingStreams() const = 0;
+
 	virtual void addStream(const basic_socket*, Check = READ) = 0;
 	virtual void changeStream(const basic_socket*, Check) = 0;
 	virtual void removeStream(const basic_socket*) = 0;

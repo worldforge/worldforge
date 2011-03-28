@@ -151,6 +151,19 @@ void PollDefault::poll(unsigned long timeout)
   }
 }
 
+int PollDefault::maxStreams() const
+{
+    return FD_SETSIZE;
+}
+
+int PollDefault::maxConnectingStreams() const
+{
+#ifdef __WIN32__
+#else // __WIN32__
+    return maxStreams();
+#endif // __WIN32__
+}
+
 void PollDefault::addStream(const basic_socket* str, Check c)
 {
     assert(c && Poll::MASK);
