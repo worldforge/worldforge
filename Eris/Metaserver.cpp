@@ -72,7 +72,6 @@ Meta::Meta(const std::string& metaServer, unsigned int maxQueries) :
     int max_half_open = Poll::instance().maxConnectingStreams();
     if (m_maxActiveQueries > (max_half_open - 2)) {
         m_maxActiveQueries = max_half_open - 2;
-        debug() << "Truncating to " << m_maxActiveQueries << std::endl;
     }
 }
 

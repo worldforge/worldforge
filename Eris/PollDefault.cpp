@@ -169,7 +169,6 @@ int PollDefault::maxConnectingStreams() const
     GetVersionEx(&osvi);
 
     if (osvi.dwMajorVersion <= 5 && osvi.dwMajorVersion <= 5) {
-        std::cout << "Fucking XP" << std::endl;
         return 6;
     } else {
         return maxStreams();
