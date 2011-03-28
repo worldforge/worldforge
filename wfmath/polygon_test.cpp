@@ -23,6 +23,13 @@
 // Author: Ron Steinke
 // Created: 2002-1-20
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include "const.h"
 #include "vector.h"
 #include "rotmatrix.h"
