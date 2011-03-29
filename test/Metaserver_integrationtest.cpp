@@ -84,6 +84,18 @@ Eris::Poll& Eris::Poll::instance()
   return *_inst;
 }
 
+int PollDefault::maxStreams() const
+{
+    // Low number for testing
+    return 8;
+}
+
+int PollDefault::maxConnectingStreams() const
+{
+    // Low number for testing
+    return 8;
+}
+
 void PollDefault::addStream(const basic_socket* str, Check c)
 {
 }
