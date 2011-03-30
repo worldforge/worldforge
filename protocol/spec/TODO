@@ -1,3 +1,9 @@
+Outline of changes in the next version:
+  int becomes 64bit
+  times change from float to int, and specced in milliseconds
+  merge SECONDS and STAMP
+  abolish STAMP_CONTAINS and FUTURE_SECONDS
+
 - dialog media info (steal ideas from UIML or base it on it):
   http://victor.worldforge.org:8080/rt/Ticket/Display.html?id=317
 - binary2
