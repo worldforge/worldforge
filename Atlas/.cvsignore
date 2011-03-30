@@ -1,8 +1,0 @@
-Makefile
-Makefile.in
-config.h
-stamp-h
-.deps
-.libs
-*.lo
-*.la
