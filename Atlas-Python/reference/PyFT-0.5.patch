@@ -1,0 +1,27 @@
+diff -ur --new-file PyFT-0.5.orig/src/Makefile PyFT-0.5/src/Makefile
+--- PyFT-0.5.orig/src/Makefile	Thu Jan  1 02:00:00 1970
++++ PyFT-0.5/src/Makefile	Mon Sep 23 20:03:12 2002
+@@ -0,0 +1,2 @@
++all: freetype_wrap.c
++	gcc -O2 -fPIC -shared -I/usr/include/python2.2 -I/usr/include/freetype1/freetype -o freetypecmodule.so freetype_wrap.c -lttf
+diff -ur --new-file PyFT-0.5.orig/src/freetype_wrap.c PyFT-0.5/src/freetype_wrap.c
+--- PyFT-0.5.orig/src/freetype_wrap.c	Sun Sep 12 23:34:56 1999
++++ PyFT-0.5/src/freetype_wrap.c	Wed Oct  2 10:09:52 2002
+@@ -1048,7 +1048,7 @@
+ 		                 PyObject *inputString) {
+     PyObject *retTuple;
+     PyObject *tmp;
+-    char *string;
++    unsigned char *string;
+     int length;
+     int i;
+ 
+@@ -1073,7 +1073,7 @@
+   PyObject *PyTT_Char_Index( TT_CharMap charMap,
+ 			     PyObject *inputChar) {
+     PyObject *retInt;
+-    char *string;
++    unsigned char *string;
+     
+     if (!PyString_Check(inputChar) || PyObject_Length(inputChar) != 1) {
+       PyErr_SetString(PyExc_ValueError, "char expected");

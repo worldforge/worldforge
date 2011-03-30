@@ -1,0 +1,72 @@
+ATLAS class and type definitions for meadow.atlas -*-Python-*-
+IWILL Bach_beta2
+
+[
+#class and type definitions for meadow.atlas
+#class definitions:
+    {
+        id:"meadow_game_entity",
+        parents:["game_entity"],
+        specification:"meadow_example",
+    },
+
+    {
+        id:"point_data",
+        parents:["meadow_game_entity"],
+        description:"point data for various objects",
+        p:[]
+    },
+    {
+        id:"routes",
+        parents:["meadow_game_entity"],
+        description:"routes: water and roads, etc..."
+    },
+    {
+        id:"borders",
+        parents:["meadow_game_entity"],
+        description:"borders like national border, fence, etc..."
+    },
+
+    
+    {
+        id:"open_areas",
+        parents:["meadow_game_entity"],
+        description:"various open areas: fields, lakes, etc..."
+    },
+    {
+        id:"field",
+        parents:["open_areas"],
+        description:"fields like meadows"
+    },
+    {
+        id:"lake",
+        parents:["open_areas"],
+        description:"water body objects"
+    },
+    {
+        id:"fence",
+        parents:["borders"],
+        description:"border around fields or similar things"
+    },
+    {
+        id:"road",
+        parents:["routes"],
+        description:"paths/roads"
+    },
+    {
+        id:"bridge",
+        parents:["routes"],
+        description:"bridge over something, can be point object"
+    },
+    {
+        id:"stream",
+        parents:["routes"],
+        description:"watery routes"
+    },
+    {
+        id:"sign",
+        parents:["meadow_game_entity"],
+        description:"Sign with some text or image",
+        text:""
+    }
+]

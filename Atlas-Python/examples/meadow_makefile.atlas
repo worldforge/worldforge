@@ -1,0 +1,22 @@
+ATLAS simple field map makefile file -*-Python-*-
+IWILL Bach_beta2
+
+[ #note this will change, probably a lot...
+	{
+		world_sources: ["file:../../../protocols/atlas/spec/atlas.atlas",
+                                "file:meadow_class.atlas",
+                                "file:meadow.atlas"],
+                media_sources: ["file:meadow_media.atlas",
+                                "file:../../../protocols/atlas/spec/atlas.atlas"]
+        },
+        {
+                id:"other_sources",
+                parents:["uri_list"],
+                summary:"list other sources for where to fetch rest of hierarchy"
+        },
+        {
+                id:"media_sources",
+                parents:["uri_list"],
+                summary:"list of recommended media info sources"
+        }
+]

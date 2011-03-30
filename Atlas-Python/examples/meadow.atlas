@@ -1,0 +1,239 @@
+ATLAS simple field map example file -*-Python-*-
+IWILL Bach_beta2
+
+[
+        {
+                id:"world0",
+                objtype:"object",
+                parents:["world"],
+                contains:["meadow1"],
+                detailed_contents:1,
+                summary:"Meadow example world",
+                description:"meadow with 2 ponds and brook connecting them
+meadow is split into 2 parts by path going between ponds
+and over brook using bridge"
+        },
+        {
+                id:"1",
+                objtype:"object",
+                parents:["point_data"], 
+                detailed_contents:1,
+               #some points listed, these are refered later by polylines and triangles
+                p:[[20.0, 20.0, 0.0], #0 index enumerated in comment to 
+                   [80.0, 20.0, 0.0], #1 make reading easier for humans
+                   [80.0, 70.0, 0.0], #2
+                   [20.0, 70.0, 0.0], #3
+
+                   [30.0, 40.0, 0.0], #4
+                   [40.0, 30.0, 0.0], #5
+                   [50.0, 40.0, 0.0], #6
+                   [40.0, 50.0, 0.0], #7
+
+                   [0.0, 0.0, 0.0], #8 points 8-12 are at 
+                   [10.0, 0.0, 0.0], #9 different coordinate syste
+                   [15.0, 20.0, 0.0], #10
+                   [5.0, 30.0, 0.0], #11
+                   [0.0, 10.0, 0.0], #12
+
+                   [55.0, 15.0, 0.0], #13
+                   [55.0, 75.0, 0.0], #14
+
+                   [53.0, 43.0, 0.0], #15: not used anymore, using bridge1_3.pos instead
+
+                   [60.0, 30.0, 0.0], #16
+                   [70.0, 30.0, 0.0], #17
+                   [75.0, 50.0, 0.0], #18
+                   [65.0, 60.0, 0.0], #19
+                   [60.0, 40.0, 0.0]  #20
+                ]
+        },
+        {
+                id:"meadow1",
+                objtype:"object",
+                parents:["field"],
+                contains:["left_meadow", "right_meadow", "path1", "brook1"],
+                loc:"world0",
+                detailed_contents:1,
+                glue:[],
+                #triangle mess
+                area:[["1.p.0", "1.p.1", "1.p.2"],
+                      ["1.p.0", "1.p.2", "1.p.3"]]
+        },
+        {
+                id:"left_meadow",
+                objtype:"object",
+                parents:["field"],
+                loc:"meadow1",
+                contains:["fence1", "pond1", "detailed_left_meadow"],
+                detailed_contents:1,
+                glue:["path1", "fence1"],
+                area:[["1.p.0", "1.p.3", "1.p.13"],
+                      ["1.p.3", "1.p.13", "1.p.14"]]
+        },
+        {
+                id:"right_meadow",
+                objtype:"object",
+                parents:["field"],
+                loc:"meadow1",
+                contains:["fence2", "pond2", "detailed_right_meadow"],
+                detailed_contents:1,
+                glue:["path1", "fence2"],
+                area:[["1.p.1", "1.p.2", "1.p.13"],
+                      ["1.p.2", "1.p.13", "1.p.14"]]
+        },
+        {
+                id:"fence1",
+                objtype:"object",
+                parents:["fence"],
+                loc:"left_meadow",
+                glue:["path1", "left_meadow"],
+                polyline:["1.p.13", "1.p.0", "1.p.3", "1.p.14"]
+        },
+        {
+                id:"fence2",
+                objtype:"object",
+                parents:["fence"],
+                loc:"right_meadow",
+                glue:["path1", "right_meadow"],
+                polyline:["1.p.13", "1.p.1", "1.p.2", "1.p.14"]
+        },
+        {
+                id:"path1",
+                objtype:"object",
+                parents:["road"], #or could be "path" also inherited from road (or other way around?)
+                loc:"meadow1",
+                contains:["path1_1", "bridge1_3", "path1_2"],
+                detailed_contents:1,
+                glue:["fence1", "fence2", "left_meadow", "right_meadow"],
+                polyline:["1.p.13", "1.p.14"]
+        },
+        {
+                id:"path1_1",
+                objtype:"object",
+                parents:["road"],
+                loc:"path1",
+                glue:["bridge1_3", "detailed_left_meadow", "detailed_right_meadow"],
+                polyline:["1.p.14", "bridge1_3.pos"]
+        },
+        {
+                id:"path1_2",
+                objtype:"object",
+                parents:["road"],
+                loc:"path1",
+                glue:["bridge1_3", "detailed_left_meadow", "detailed_right_meadow"],
+                polyline:["bridge1_3.pos", "1.p.13"]
+        },
+        {
+                id:"bridge1_3",
+                objtype:"object",
+                parents:["bridge"], #inherited from road
+                loc:"path1",
+                glue:["path1_1", "path1_2", "brook1_1", "brook1_2", "detailed_left_meadow", "detailed_right_meadow"],
+                pos:[53.0, 43.0, 0.0]
+        },
+        {
+                id:"pond1",
+                objtype:"object",
+                parents:["lake"], #or could be "pond" also (inherited from lake or some generic water body object)
+                loc:"left_meadow",
+                glue:["brook1", "detailed_left_meadow"],
+                area:[["1.p.4", "1.p.5", "1.p.6"],
+                      ["1.p.4", "1.p.6", "1.p.7"]]
+        },
+        {
+                id:"pond2",
+                objtype:"object",
+                parents:["lake"],
+                loc:"right_meadow",
+                pos:[60.0, 30.0, 0.0],
+                glue:["pond2_brook1_glue", "pond2_glue_meadow"],
+                area:[["1.p.8", "1.p.9", "1.p.10"],
+                      ["1.p.8", "1.p.10", "1.p.12"],
+                      ["1.p.12", "1.p.10", "1.p.11"]]
+        },
+        {
+                id:"brook1",
+                objtype:"object",
+                parents:["stream"],
+                loc:"meadow1",
+                contains:["brook1_1", "brook1_2"],
+                detailed_contents:1,
+                glue:["pond1", "pond2_brook1_glue"],
+                polyline:["1.p.6", "1.p.20"]
+        },
+        {
+                id:"brook1_1",
+                objtype:"object",
+                parents:["stream"],
+                loc:"brook1",
+                glue:["bridge1_3"],
+                polyline:["1.p.6", "bridge1_3.pos"]
+        },
+        {
+                id:"brook1_2",
+                objtype:"object",
+                parents:["stream"],
+                loc:"brook1",
+                glue:["bridge1_3"],
+                polyline:["bridge1_3.pos", "1.p.20"]
+        },
+        {
+                id:"detailed_left_meadow",
+                objtype:"object",
+                parents:["field"],
+                loc:"left_meadow",
+                contains:["sign1"],
+                glue:["path1_1", "bridge1_3", "path1_2", "pond1"],
+                area:[["1.p.0", "1.p.3", "1.p.4"],
+                      ["1.p.3", "1.p.4", "1.p.7"],
+                      ["1.p.3", "1.p.14", "1.p.7"],
+                      ["1.p.6", "1.p.14", "1.p.7"],
+                      ["1.p.6", "1.p.14", "bridge1_3.pos"],
+                      ["1.p.6", "1.p.13", "bridge1_3.pos"],
+                      ["1.p.6", "1.p.13", "1.p.5"],
+                      ["1.p.0", "1.p.13", "1.p.5"],
+                      ["1.p.0", "1.p.4", "1.p.5"]]
+        },
+        {
+                id:"detailed_right_meadow",
+                objtype:"object",
+                parents:["field"],
+                loc:"right_meadow",
+                glue:["path1_1", "bridge1_3", "path1_2", "pond2_glue_meadow"],
+                area:[["1.p.13", "bridge1_3.pos", "1.p.20"],
+                      ["1.p.14", "bridge1_3.pos", "1.p.20"],
+                      ["1.p.14", "1.p.19", "1.p.20"],
+                      ["1.p.14", "1.p.19", "1.p.2"],
+                      ["1.p.18", "1.p.19", "1.p.2"],
+                      ["1.p.18", "1.p.1", "1.p.2"],
+                      ["1.p.18", "1.p.1", "1.p.17"],
+                      ["1.p.16", "1.p.1", "1.p.17"],
+                      ["1.p.16", "1.p.1", "1.p.13"],
+                      ["1.p.16", "1.p.20", "1.p.13"]]
+        },
+        {
+                id:"sign1",
+                objtype:"object",
+                parents:["sign"],
+                loc:"detailed_left_meadow",
+                pos:[25.0, 60.0, 0.0],
+                text:"Alphabet in Finnish: Ääkköset"
+        },
+        {
+                id:"pond2_brook1_glue",
+                objtype:"object",
+                parents:["glue_entity"],
+                glue_ids:[["pond2.area.1.2", "brook1.polyline.1"]]
+        },
+        {
+                id:"pond2_glue_meadow",
+                objtype:"object",
+                parents:["glue_entity"],
+                glue_ids:[["pond2.area.0.0", "detailed_right_meadow.area.7.0"],
+                          ["pond2.area.0.1", "detailed_right_meadow.area.6.2"],
+                          ["pond2.area.0.2", "detailed_right_meadow.area.4.0"],
+                          ["pond2.area.1.2", "detailed_right_meadow.area.0.2"],
+                          ["pond2.area.2.2", "detailed_right_meadow.area.2.1"]
+                          ]
+        }
+]

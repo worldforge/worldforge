@@ -1,0 +1,302 @@
+ATLAS 2D top down media info definitions for meadow.atlas -*-Python-*-
+IWILL Bach_beta2
+
+[
+#2D top down media info definitions for meadow.atlas
+    ############################################################
+    {
+        id:"root_media_info",
+        parents:["root_entity"],
+        description:"Root media info"
+        #add attributes as needed ***
+    },
+    
+    
+    ############################################################
+    #author info class
+    {
+        id:"author_info",
+        parents:["root_media_info"],
+        description:"Info about author"
+        #add attributes as needed ***
+    },
+
+    ############################################################
+    #author info object
+    {
+        id:"pato",
+        parents:["author_info"],
+        #fill attributes: name, description ***
+        #add attributes as needed ***
+    },
+    
+    ############################################################
+    #art info class
+    {
+        id:"art_info",
+        parents:["root_media_info"],
+        objtype:"class",
+        author:"",
+        data_uri:""
+        #additional attributes: add here as needed ***
+    },
+
+    ############################################################
+    #art attributes, add here as needed ***
+    {
+        id:"author",
+        parents:["id"],
+        objtype:"type",
+        description:"Id of author object"
+    },
+    {
+        id:"data_uri",
+        parents:["uri"],
+        objtype:"type",
+        description:"URI of file/place containing data of art"
+    },
+    
+    ############################################################
+    #art info object
+    {
+        id:"right_meadow_png",
+        parents:["art_info"],
+        objtype:"object",
+        author:"pato", #should this be list? or I guess author object itself then is 'abstract' name for group of authors... ***
+        data_uri:"file:../examples/right_meadow.png" #better name for attribute? ***
+        #how it was made== description? ***
+        #additional attributes: add here as needed ***
+    },
+    
+    ############################################################
+    #class definitions
+    {
+        id:"media_info_2D",
+        parents:["root_media_info"],
+        objtype:"class",
+        description:"generic parent class for all 2D top down media info objects",
+        filter:{}
+    },
+    {
+        id:"polyline_media_2D",
+        parents:["media_info_2D"],
+        line_width:4,
+        rgb_color:[0.0, 0.0, 0.0],
+        description:"media info for polyline objects"
+    },
+    {
+        id:"area_media_2D",
+        parents:["media_info_2D"],
+        rgb_color:[0.0, 0.0, 0.0],
+        description:"media info for area objects"
+    },
+    {
+        id:"texture_area_media_2D",
+        parents:["area_media_2D"],
+        texture_coordinates:[[0.0, 0.0, 0.0], [1.0, 1.0, 0.0]],
+        texture_source:"",
+        description:"texture media info for area objects"
+    },
+    {
+        id:"text_media_2D"
+        parents:["media_info_2D"],
+        rgb_color:[0.0, 0.0, 0.0],
+        description:"media info for text objects"
+    },
+    ############################################################
+    #type (attribute) definitions
+    {
+        id:"rgb_color",
+        parents:["float_list_length"],
+        list_length:3,
+        objtype:"type",
+        description:"RGB color in range of 0.0 to 1.0"
+    },
+    {
+        id:"corner_coordinate",
+        parents:["float_list_length"],
+        list_length:2,
+        objtype:"type",
+        description:"texture coordinates"
+    },
+    {
+        id:"texture_coordinates",
+        parents:["list"],
+        list_length:2,
+        element_type:"corner_coordinate",
+        objtype:"type",
+        description:"texture coordinates"
+    },
+    {
+        id:"texture_source",
+        parents:["id"],
+        objtype:"type",
+        description:"id of art info object"
+    },
+    {
+        id:"line_width",
+        parents:["int"],
+        objtype:"type",
+        description:"width of line (pixels)"
+    },
+
+    ############################################################
+    #actual media info objects
+    {
+        id:"road_2D",
+        parents:["polyline_media_2D"],
+        objtype:"object",
+        rgb_color:[0.5, 0.3, 0.0]
+    },
+    {
+        id:"stream_2D",
+        parents:["polyline_media_2D"],
+        objtype:"object",
+        rgb_color:[0.0, 0.0, 1.0]
+    },
+    {
+        id:"fence_2D",
+        parents:["polyline_media_2D"],
+        objtype:"object",
+        rgb_color:[1.0, 0.0, 0.0]
+    },
+    {
+        id:"field_2D",
+        parents:["area_media_2D"],
+        objtype:"object",
+        rgb_color:[1.0, 1.0, 0.0]
+    },
+    {
+        id:"lake_2D",
+        parents:["area_media_2D"],
+        objtype:"object",
+        rgb_color:[0.0, 0.0, 1.0]
+    },
+    {
+        id:"sign_2D",
+        parents:["text_media_2D"],
+        objtype:"object"
+        rgb_color:[1.0, 0.0, 0.0]
+    },
+    {
+        id:"pond2_2D",
+        parents:["area_media_2D"],
+        objtype:"object",
+        rgb_color:[0.0, 1.0, 1.0]
+    },
+    {
+        id:"right_meadow_2D",
+        parents:["texture_area_media_2D"],
+        objtype:"object",
+        #texture_coordinates:[[5.5, 1.5, 0.0], [8.0, 7.5, 0.0]],
+        #texture_coordinates:[[5.5, 1.8, 0.0], [11.5, 7.8, 0.0]],
+        texture_coordinates:[[53.0, 15.0, 0.0], [113.0, 78.0, 0.0]],
+        texture_source:"right_meadow_png"
+    },
+
+
+    ############################################################
+    #class definitions for common media info objects
+    {
+        id:"media_info",
+        parents:["root_media_info"],
+        objtype:"class",
+        description:"generic parent class for all media info objects"
+        media_groups:{
+            media_2D:[],
+        },
+        filter:{
+            id:""
+        }
+    },
+
+    ############################################################
+    #type (attribute) definitions
+    {
+        id:"media_groups",
+        parents:["map"],
+        objtype:"type",
+        description:"media ids listed for each media group"
+    },
+    {
+        id:"media_2D",
+        parents:["id_list"],
+        objtype:"type",
+        description:"media ids listed for this 2D top down media"
+    },
+    {
+        id:"filter",
+        parents:["map"],
+        objtype:"type",
+        description:"attributes used for finding/filtering media for certain object"
+    },
+    
+    ############################################################
+    #common media info objects
+    #first media info by class
+    {
+        id:"game_entity_m0",
+        objtype:"object",
+        summary:"dummy media info object for those object that don't have any"
+        parents:["media_info"],
+        media_groups:{},
+        filter:{id:"game_entity"}
+    },
+    {
+        id:"road_m1",
+        objtype:"object",
+        parents:["media_info"],
+        media_groups:{media_2D:["road_2D"]},
+        filter:{id:"road"}
+    },
+    {
+        id:"stream_m2",
+        objtype:"object",
+        parents:["media_info"],
+        media_groups:{media_2D:["stream_2D"]},
+        filter:{id:"stream"}
+    },
+    {
+        id:"fence_m3",
+        objtype:"object",
+        parents:["media_info"],
+        media_groups:{media_2D:["fence_2D"]},
+        filter:{id:"fence"}
+    },
+    {
+        id:"field_m4",
+        objtype:"object",
+        parents:["media_info"],
+        media_groups:{media_2D:["field_2D"]},
+        filter:{id:"field"}
+    },
+    {
+        id:"lake_m5",
+        objtype:"object",
+        parents:["media_info"],
+        media_groups:{media_2D:["lake_2D"]},
+        filter:{id:"lake"}
+    },
+    {
+        id:"sign_m6",
+        objtype:"object",
+        parents:["media_info"],
+        media_groups:{media_2D:["sign_2D"]},
+        filter:{id:"sign"}
+    },
+    #then media info for specific objects
+    {
+        id:"pond2_m6",
+        objtype:"object",
+        parents:["media_info"],
+        media_groups:{media_2D:["pond2_2D"]},
+        filter:{id:"pond2"}
+    },
+    {
+        id:"right_meadow_m7",
+        objtype:"object",
+        parents:["media_info"],
+        media_groups:{media_2D:["right_meadow_2D"]},
+        filter:{id:"detailed_right_meadow"}
+    }
+]

@@ -1,0 +1,25 @@
+container diagram for meadow.atlas:
+in reality middle level could be left out I guess
+
+meadow1 -> left_meadow ----> fence1
+        |                 |
+        |                 +> pond1
+        |                 |
+        |                 +> detailed_left_meadow
+        |                 
+        +> right_meadow ---> fence2
+        |                 |
+        |                 +> pond2
+        |                 |
+        |                 +> detailed_right_meadow
+        |
+        +> path1 ----------> path1_1
+        |                 |
+        |                 +> bridge1_3
+        |                 |
+        |                 +> path1_2
+        |
+        +> brook1 ---------> brook1_1
+                          |
+                          +> brook1_2
+

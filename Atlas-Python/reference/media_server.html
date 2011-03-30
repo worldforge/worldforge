@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Simple media server using Atlas-Python</title>
+  </head>
+
+  <body>
+    <h1>Simple media server using Atlas-Python</h1>
+
+<h2>Media description file</h2>
+First you need to write/generate media description objects.
+<p>
+In this demo though only few very basic Atlas objects included in
+media.bach because media format is not yet defined.
+Sample Atlas object: 
+<pre>
+{
+	id: "elf",
+	parents: ["humanoid"],
+	specification: "atlas_game_rpg",
+	interface: "game_interface",
+	description: "Image of ordinary elf like you would expect
+them, real media info object will include pointers to various
+media info objects for each type of media available for this
+class instead of direct link to image",
+        image_url: "http://foo.game.org/elf.png"
+}
+</pre>
+<p>
+For simple example media file see forge/libs/Atlas-Python/media.bach
+<p>
+For encoding of it see <a href="http://www.worldforge.org/website/protocols/tutorial">
+http://www.worldforge.org/website/protocols/tutorial</a>
+
+<h2>Server code</h2>
+
+Server code consist of 3 parts:
+Actual server class, client class and main part.
+
+<h3>Server class</h3>
+
+Here we override only setup method: It loads media description objects
+from file and displays count of them.
+<pre>
+class MediaServer(server.SocketServer):
+    def setup(self):
+        self.objects = files.read_file("media.bach")
+        print len(self.objects), "objects loaded"
+</pre>
+
+<h3>Client class</h3>
+
+    Instance of this class created for each connection. It responds
+    only to "get" -operation. First we read id from operation
+    arguments.  Then we get requested object from object dictionary
+    loaded into server.  If object exist, send it as argument inside
+    info operation. If it doesn't exist, send error operation
+    including original operation.  Python-Atlas handles cases where no
+    argument is given for get operation or if no id attribute exists
+    there (it catches exceptions and forwards traceback to client).
+<pre>
+
+class MediaClient(server.TcpClient):
+    def get_op(self, op):
+        id = op.args[0].id
+        obj = self.server.objects.get(id)
+        if obj:
+            self.reply_operation(op, atlas.Operation("info", obj))
+        else:
+            self.send_error(op, "no object with id " + id)
+</pre>
+
+<h3>Main part</h3>
+
+Here we create server instance giving it MediaClient as argument to
+use when creating new connections and then go to processing loop:
+<pre>
+    s = MediaServer("Simple media server", server.args2address(sys.argv), MediaClient)
+    s.loop()
+</pre>
+
+<p>
+For whole example code see forge/libs/Atlas-Python/media_server.py
+<p>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Thu Jul 26 19:15:49 EEST 2001 -->
+<!-- hhmts start -->
+Last modified: Thu Jul 26 20:10:59 EEST 2001
+<!-- hhmts end -->
+  </body>
+</html>

@@ -1,0 +1,53 @@
+ATLAS test file
+IWILL XML
+
+<atlas>
+	<map>
+		<float name="fl">-42.8</float>
+		<string name="hello">Hello world!</string>
+		<int name="i">3</int>
+	</map>
+	<map>
+		<string name="description">Humans have two foots</string>
+		<string name="id">human</string>
+		<string name="objtype">class</string>
+		<list name="parents"><string>living</string></list>
+	</map>
+	<map>
+		<string name="id">12</string>
+		<string name="objtype">object</string>
+		<list name="parents"><string>human</string></list>
+		<list name="pos"><float>4.5</float><float>6.5</float><float>-1.0</float></list>
+	</map>
+	<map>
+		<list name="args">
+			<map>
+				<string name="id">12</string>
+				<string name="objtype">object</string>
+				<list name="parents"><string>human</string></list>
+				<list name="pos"><float>4.5</float><float>6.5</float><float>-1.0</float></list>
+			</map>
+		</list>
+		<string name="objtype">op</string>
+		<list name="parents"><string>move</string></list>
+	</map>
+	<map>
+		<list name="args">
+			<map>
+				<list name="args">
+					<map>
+						<string name="id">12</string>
+						<string name="objtype">object</string>
+						<list name="parents"><string>human</string></list>
+						<list name="pos"><float>4.5</float><float>6.5</float><float>-1.0</float></list>
+					</map>
+				</list>
+				<string name="objtype">op</string>
+				<list name="parents"><string>move</string></list>
+			</map>
+		</list>
+		<string name="from">12</string>
+		<string name="objtype">op</string>
+		<list name="parents"><string>sight</string></list>
+	</map>
+</atlas>

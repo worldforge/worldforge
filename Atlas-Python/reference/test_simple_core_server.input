@@ -1,0 +1,36 @@
+paste this upon connection (remember to include empty line):
+--------------------
+ATLAS telnet client
+ICAN Bach_beta2
+
+[
+--------------------
+
+Paste/type this to create object:
+--------------------
+{parents:["create"], objtype:"op", arg:{parents:["warrior"], name:"Joe"}}
+--------------------
+Or this:
+--------------------
+{parents:["create"], objtype:"op", arg:{parents:["warrior"], id:"Joe"}}
+--------------------
+
+Paste/type this to get object:
+--------------------
+{parents:["get"], objtype:"op", arg:{id:"a0"}}
+--------------------
+
+Paste/type this to set attributes in existing object:
+--------------------
+{parents:["set"], arg:{id:"a0", name:"Michael", height:1.8}, objtype:"op"}
+--------------------
+
+Paste/type this to delete existing object:
+--------------------
+{parents:["delete"],arg:{id:"a0"}, objtype:"op"}
+--------------------
+
+Talk:
+--------------------
+{parents:["talk"], objtype:"op", from:"Joe", arg:{say:"Hello from telnet atlas client!"}}
+--------------------

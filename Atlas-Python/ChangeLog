@@ -1,0 +1,490 @@
+2002-11-19  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* atlas/util/texturemodule.c, Makefile: take sample of big texture
+
+	* atlas/geomap/dxf2atlas.py: crude conversion of dxf to atlas
+	((poly)lines, text, visible attributes, blocks (expanded instead
+	of properly making them class (or something like that))
+
+	* reference/map_canvas.py: quick and dirty support for atlas
+	makefiles (attributes will quite likely change in future)
+
+	* reference/map_canvas.py: simple support for zooming with mouse and keyboard
+
+	* reference/map_canvas.py: move translation matrix to where
+	objects reside so get more accurate rendering
+
+	* reference/map_canvas.py: added big texture (C software module) support
+
+	* atlas/util/minmax.py: added various new methods
+
+	* atlas/media/info.py: add scoring to lookup: when several match
+	by id: see which one has more matching attributes with object
+
+	* atlas/media/info.py: don't overwrite media info with other objects
+
+2002-10-03  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* reference/PyFT-0.5.patch: patch needed against PyFT-0.5
+
+	* reference/map_canvas.py: use display list to draw unchanged map,
+	add support for text, mipmappping
+
+	* reference/blackboard.py: set self._changed flag whenever
+	attribute or subattribute is changed
+
+	* examples/meadow{,_class}.atlas: added sign (no 3D things, just text)
+
+	* examples/meadow.atlas: changed coordinates to be more realistic
+	in meters
+
+2002-09-21  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* atlas/transport/file.py: added check_negotiation_ok: raises
+	IOError when negotiation not ok
+
+2002-09-20  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* tests/test_glue.py: some cleanup of code
+
+	* atlas/util/minmax.py: utility minmax classes
+	
+	* tests/test_glue.py: test that example meadow.atlas map is glued properly
+
+	* tests/test_atlas.py: little tweak for changes in python2.2
+
+	* t.py renamed as gen_simple_core.py
+
+	* reference/map_canvas.py: use calculated limits of map
+
+	* examples/meadow_class.atlas: neighbour definition removed
+
+	* examples/meadow.atlas: objects now glued into eacah other properly
+
+	* atlas/geomap/__init__.py: _pos, _polyline, _area and _volume
+	hold absolute positions and without underscore contain relative
+	coordinates; also calculate limits of map
+
+2002-08-08  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* tests/test_atlas.py: few more tests
+
+	* reference/simple_core_server.py: server object now contains only
+	world objects if available
+
+	* reference/map_canvas.py: make top level object heuristics better
+
+	* reference/blackboard.py: resolve "media_roots" -attribute and
+	ask about children and make app object available to command line
+
+	* examples/meadow_media.atlas: add default media entry
+
+	* examples/meadow.atlas: add world object
+
+	* atlas/media/info.py: resolve "media_groups" -attributes and make
+	lookup more resilient
+
+	* atlas/analyse.py: look also inside instance attributes as long
+	as they don't have id attribute
+
+2002-08-07  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* atlas/__init__.py, tests/test_atlas.py: Mithro noticed that when
+	parents contains class as contents instead of class instance
+	__getattr__ doesn't work. Changes and test cases partially based
+	on patch he supplied. Also remove "_" from attribute name only if
+	it doesn't end with "__".
+
+2002-07-26  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* atlas/transport/TCP/relay_server.py, utils/relay_server.py,
+	utils/relay_0_2_to_0_3.py: relay server and translating relay
+	server between 0.2.X and 0.3 atlas spec
+
+2002-07-24  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* atlas/codecs/packed.py: newlines and other similar stuff now
+	gets 0 prefixed and thus are correctly encoded as length 2 hex
+	number
+
+	* logging enabled for simple_world_server.py
+
+	* reference/simple_{core,world}_server.py: alias login_op = create_op,
+	look_op = get_op (with s/info/sight/)
+
+	* reference/simple_world_server.py: simple_core_server.py + simple
+	talk
+
+	* reference/blackboard.py: add command line support to send
+	arbitary operation;
+	add premade talk(nick,text) function to send talk operation;
+	print sound operations to console
+
+2002-07-23  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* utils/irc_atlas_gateway.py: partially port from cyphesis one,
+	but this one is simpler
+
+	* reference/test_simple_core_server.input: edit existing and add more examples
+
+	* reference/simple_core_server.py: url for simple_core.atlas
+	(generator script has too much depencies currently)
+
+	* examples/chat_server.py: args[0] -> arg;
+	allow user settable "from" in talk operations (mainly because of
+	irc<->atlas gateway)
+
+	* atlas/__init__.py: change Operation argument name id->parents0
+
+2002-07-23  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* tests/test.packed: test file for Packed codec
+
+	* tests/test_codecs.py: test Packed also and add top level
+	try/except to print codec_id in case of exception
+
+	* atlas/codecs/packed.py: ported to new stream vs single mode framework;
+	encodes/decodes also list objects at top level (not really needed,
+	but .. other codecs support it ;-)
+
+	* atlas/codecs/parse_xml.py: AtlasParser now inherits from BaseDecoder
+
+	* atlas/codecs/gen_xml.py: Encoder now inherits from BaseEncoder
+
+	* atlas/codecs/bach.py: Encoder now inherits from BaseEncoder;
+	BachParser now inherits from BaseDecoder
+
+	* atlas/codecs/__init__.py: Packed codec enabled (and entry point changed)
+
+2002-07-23  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* reference/test_simple_core_server.input: telnet client example
+	updated a little
+
+	* reference/simple_core_server.py: update contains attribute as
+	objects are created/deleted;
+	log create/set/delete operations;
+	support saving of word after each modify operation (disabled by
+	default: use database in future or consider it just "not needed
+	feature" for atlas only implementation)
+
+	* reference/media_server.py: by default loads "simple_core.atlas",
+	going to be changed back later
+
+	* reference/map_client.py: add triggers and don't anymore load
+	things from file ;-) (instead create empty geomap/media info
+	containers)
+
+	* reference/map_canvas.py: add create/set/delete triggers: call
+	geomap/info object containers as needed;
+	update to support pointers in addition to strings
+
+	* reference/blackboard.py: shared object can now dynamically
+	reparent itself;
+	load local_code.py into intepreter;
+	resolve attributes;
+	add trigger support;
+	update contains attribute upon deletion;
+	fixed bugs
+
+	* examples/meadow_media.atlas: root_media_info -object and made
+	all info classes to inherit from it;
+	modified a little for detailed meadow objects
+	
+	* examples/meadow.atlas: added detailed meadow objects and some points
+
+	* atlas/transport/TCP/server.py: print peer info, going to be
+	moved into attributes/log
+
+	* atlas/media/info.py: create/set/delete objects
+
+	* atlas/geomap/__init__.py: convert atlas.Object into MapObject as needed;
+	resolve attributes;
+	create/set/delete objects
+
+	* atlas/codecs/bach.py: show character number also at error
+
+	* atlas/codecs/__init__.py: temporarily disable Packed codec
+	(until it works with rewritten framework)
+
+	* atlas/analyse.py: Link: 2 way pointer class, Resolver: resolve
+	pointers by given attribute: keep list of objects needed and
+	pointers in need of resolving;
+	also update contains attribute for other object when new object
+	seen as needed
+
+	* atlas/__init__.py: resolve_pointer* added: find actual objects
+	from foo.bar.0 -string
+
+	* atlas/__init__.py: add user defined convert object pointer to
+	string in addition to existing "from", "to", etc.. (used when
+	encoding objects to encode pointers as strings)
+	
+2002-07-02  Aloril  <aloril@iki.fi>
+
+	* moved loop method into Loop class and made server, clients inherit from it
+
+	* hello_world_{client,server}.py added
+
+2002-06-07  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* examples/meadow_media.atlas, atlas/media/info.py: moved
+	filtering into subattribute
+	(media_info_obj.id -> media_info_obj.filter.id)
+
+	* map_client.py, map_canvas.py, blackboard.py: start of work of
+	making client that displays maps and has blackboard.py features
+
+2002-05-29  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* map_canvas.py: art object support
+	
+	* meadow_media.atlas: added art/author class/types/objects
+
+	* map_canvas.py: analyse consistency (no geometry related checks,
+	only type/parents/etc..)
+	
+	* geomap/__init__.py: skip definitions and objects without geometry
+	
+	* atlas/__init__.py, atlas/analyse.py: support to reanalyse stuff
+	
+	* meadow_media.atlas: class/type definitions added
+
+	* meadow_class.atlas: class definitions for meadow.atlas
+	
+2002-05-28  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* *.al -> *.atlas
+	
+	* analyse.py: analyse/fill various things for atlas spec source files
+	
+	* map_canvas.py, meadow_media.al: simple support for background bitmaps (texture)
+
+2002-05-20  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* transport/file.py: implemented write_file and added translate functions
+
+	* map_canvas.py: added draw_triangle_outline option and disabled it by default
+
+	* media/info.py: lookup media by id/parents and needed media type recursively
+
+2002-05-18  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* meadow_media.al: simple first take on 2D top down media info file for meadow.al
+	
+	* meadow.bach -> meadow.al as suggested by Mike
+
+	* map_object.py -> atlas/geomap/object.py
+
+	* geomap.py -> atlas/geomap/__init__.py
+
+	* map_object.py, geomap.py: put some things into separate class
+
+	* map_canvas.py: filled draw (+ soon to be removed color hacks)
+
+	* setup.py: added atlas.transport.TCP and some other changes
+
+2002-05-17  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* meadow.bach: added more objects: path, brook and meadows
+
+2002-05-04  Michael Koch <konqueror@gmx.de>
+
+	* setup.py: added for clean installs
+
+2002-05-04  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* bridge.py: now supplies default ignore handlers for methods
+	bridge user doesn't care about
+
+	* files.py -> file.py: uses now bridge and made read_file to be
+	raw read and read_and_analyse resolves parent/children relations
+
+2002-05-03  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+	
+	* bridge.py: added setup() (starts negotiation, otherwise would be
+	started when somebody tries to send something)
+	
+	* */server.py, */connection.py, TCP/client.py: using bridge
+	instead of negotiation+codec combination (mostly deleting lines)
+
+	* atlas/transport/bridge.py: combines negotiation and codecs
+
+	* tests/test_bridge.py, test_server.py: more tests
+
+2002-04-22  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* reference/map_canvas.py: simple crude map canvas class, will be
+	rewritten/reorganized
+
+	* Bach_beta2 is now default codec
+
+	* atlas/transport/TCP/connection.py: no special code for XML codec
+
+2002-04-20  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* Bach and XML codecs now have 2 modes: blob mode (good for
+	encoding/decoding strings) and stream mode (good for files,
+	TCP/IP, etc..), negotiation puts codecs into stream mode by
+	default
+
+2002-04-19  Aloril  <aloril@iki.fi>
+
+	* simple_core_server.py: implements
+	cvs.worldforge.org:/forge/protocols/atlas/spec/simple_core.html
+	
+	* blackboard.py: simple coders blackboard: shared objects (can be
+	used with simple_core_server.py)
+
+2002-04-19  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* reorganization of Atlas-Python: directory structure partially
+	based on suggestion by Mithro
+
+2001-09-04  Aloril  <aloril@iki.fi>
+
+	* very small start on binary2 codec work
+
+	* chat_server.py: s/name/id/ and removed setup() (not needed)
+
+	* chat_server.html: documentation for chat_server.py
+
+2001-08-02  Aloril  <aloril@iki.fi>
+
+	* inheritance_client.py: a little bit cleaner/elegant code 
+
+	* inheritance_client.py: fetch whole hierarchy from server starting from "root"
+
+	* server.py: bugfix when client connects too early: don't remove it twice
+
+2001-07-26  Aloril  <aloril@iki.fi>
+
+
+	* added media_server.html
+
+	* bach.py: fixed newline handling after last entry in dictionary
+	and added linecounts (does not include negotiation part...)
+
+	* added media.bach
+
+	* BaseConnection.send_operation now ignores missing bridge (maybe should not?)
+
+	* added long integer support to XML codec and types
+
+2001-07-17  Aloril  <aloril@iki.fi>
+
+	* server.py: made more robust
+
+2001-07-13  Aloril  <aloril@iki.fi>
+
+	* files.py: fixed bg in reading bigger files and added read_file_as_list
+
+	* added default error_op into connection.py to prevent error loops
+	between client and server (when neither has handler for error
+	operation: they override this of course if want error operation
+	handler)
+
+2001-07-12  Aloril  <aloril@iki.fi>
+
+	* added async sending of data for server.py
+
+	* added BaseConnection.connection_ok to connection.py
+
+2001-07-07  Aloril  <aloril@iki.fi>
+
+	* added debug.py, client.py and connection.py, moved stuff from
+	server.py to connection.py
+
+2001-07-05  Aloril  <aloril@iki.fi>
+
+	* added server.py, files.py and example servers: simple
+	media_server.py and simple chat_server.py
+
+2001-04-06  Aloril  <aloril@iki.fi>
+
+	* added Bach_beta, Packed, XML2_test and Binary1_beta codecs
+	* added tests for Bach and Binary1
+	* modified various others related pieces
+	* added test_size.py for testing msg sizes by various codecs
+
+2001-01-04  Aloril  <aloril@iki.fi>
+
+	* added codec.py, bridge.py and now XNegotiate use list of codecs
+	from codec.py when none given in argument. Also added getBridge
+	method to negotiation object. Bridge object has encode and decode
+	methods.
+
+2000-11-11  Aloril  <aloril@iki.fi>
+
+	* made test_xml.py to use negotiation when reading from *.xml
+ 	files (and added negotiation lines to those files)
+
+	* negotiation.py: implemented client side negotiation also
+
+2000-11-06  Aloril  <aloril@iki.fi>
+
+	* put test material into their own files
+
+	* negotiation.py from server side should work, client side
+ 	probably not
+
+2000-07-11  Aloril  <aloril@iki.fi>
+
+	* gen_xml.py:list2xml now use xml encoding also when element is
+ 	list
+
+	* gen_xml.py:to_string now encodes '&<>' characters in correct order
+
+2000-06-28  Aloril  <aloril@iki.fi>
+
+	* added is_plain(name, value) function and
+	is_plain_attribute(self, name) method
+
+	* items() now tries to retain original order (by default
+ 	original_order=1) and also lists all inherited attributes also if
+ 	all=1 argument is given (by default all=0)
+
+2000-06-27  Aloril  <aloril@iki.fi>
+
+	* atlas_types.py: added TupleType as "list"
+
+	* xml encoding now encodes "<>&" -character properly
+
+	* items() now returns now items in plain format by default
+
+	* moved parse_def.py from protocols/atlas/spec directory
+
+	* moved functions by kosh from old libAtlasPy
+
+2000-06-26  Aloril  <aloril@iki.fi>
+
+	* added atlas_types.py: converts python type values into atlas type strings
+	
+	* added get_plain_attribute -method and added convert2plain_flag=1
+ 	to get_X_attributes methods
+
+	* obj.parents can be either list of strings or list of actual
+ 	parents objects
+
+	* get_X_attributes return now by default always list of strings
+
+	* get_plain_attribute -"-"
+
+	* obj.parents or getattr(obj,"parents") returns either list of
+ 	strings or list of objects depending whether parent lookup has yet
+ 	been performed (can be done in masse by using:
+ 	find_parents_children_objects(objects), where objects is
+ 	dictionary of all objects)
+
+	* added Operation factory function
+
+2000-06-27  Aloril  <aloril@iki.fi>
+
+	* added XML parser
+
+2000-06-21  Aloril  <aloril@iki.fi>
+
+	* Added beginning of rewrite of Atlas in Python
+	(usable for pure Python clients and 'bootstrapping' Atlas-C++)
+
+

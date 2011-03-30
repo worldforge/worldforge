@@ -1,0 +1,5 @@
+*.pyc
+*.log
+simple_core.atlas
+simple_core_log.atlas
+simple_core_save*.atlas

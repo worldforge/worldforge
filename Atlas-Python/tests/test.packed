@@ -1,0 +1,8 @@
+ATLAS server
+IWILL Packed
+
+[#fl=-42.8$hello=Hello world!@i=3]
+[$description=Humans have two foots$id=human$objtype=class(parents=$living)]
+[$id=12$objtype=object(parents=$human)(pos=#4.5#6.5#-1.0)]
+[(args=[$id=12$objtype=object(parents=$human)(pos=#4.5#6.5#-1.0)])$objtype=op(parents=$move)]
+[(args=[(args=[$id=12$objtype=object(parents=$human)(pos=#4.5#6.5#-1.0)])$objtype=op(parents=$move)])$from=12$objtype=op(parents=$sight)]

@@ -1,0 +1,72 @@
+ATLAS simple media example file
+IWILL Bach_beta2
+
+[
+	{
+		id: "root",
+		parents: [],
+		children: ["root_entity"],
+		stamp: 0.0,
+		stamp_inherit: 0.0,
+		objtype: "meta",
+		interface: "base_interface",
+		name: "",
+		description: "All objects inherit from this.",
+		long_description: "You can browse all definitions starting from here and 
+	descending into childrens.",
+		specification: "atlas"
+	},
+	{
+		id: "root_entity",
+		parents: ["root"],
+		children: ["admin_entity", "game_entity"],
+		objtype: "class",
+		description: "Starting point for entity hierarchy",
+		long_description: "Later in hierarchy tree objtype changes to 'object' when actual game objects are made.",
+		loc: "",
+		pos: [0.0, 0.0, 0.0],
+		velocity: [0.0, 0.0, 0.0],
+		contains: [],
+		stamp_contains: 0.0
+	},
+	{
+		id: "admin_entity",
+		parents: ["root_entity"],
+		children: ["account", "game"],
+		description: "All classes and objects used for adminitrativive purposes"
+	},
+	{
+		id: "account",
+		parents: ["admin_entity"],
+		children: ["player", "admin"],
+		description: "Base class for accounts",
+		password: ""
+	},
+	{
+		id: "player",
+		parents: ["account"],
+		children: [],
+		description: "Player accounts",
+		characters: []
+	},
+	{
+		id: "admin",
+		parents: ["account"],
+		children: [],
+		description: "Privileged accounts"
+	},
+	{
+		id: "game_entity",
+		parents: ["root_entity"],
+		children: [],
+		specification: "atlas_game",
+		interface: "game_interface",
+		description: "All In Game classes and objects"
+	},
+	{
+		id: "game",
+		parents: ["admin_entity"],
+		children: [],
+		description: "Games this server hosts"
+	}
+]

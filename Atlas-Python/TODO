@@ -1,0 +1,13 @@
+- add debug transports/relays
+- make world_client: map_client + chat panel
+- stream vs once codec: binary* remain
+- packed, bach and XML special characters encoding testing and 8 bit
+  character testing, etc..
+
+DONE:
+- irc gateway
+- maybe simple map editing (at source code/command line level)
+- map viewing
+- transport testing
+- add bridge as true thing
+- test Atlas-Python with both python versions: 1.5.2 and 2.1.1

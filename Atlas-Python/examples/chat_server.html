@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Simple chat server using Atlas-Python</title>
+  </head>
+
+  <body>
+    <h1>Simple chat server using Atlas-Python</h1>
+
+<h2>What it does</h2>
+
+It accepts login and create operations and records id given by client.
+Then everything user talks is broadcast to every client.
+
+<h2>Code</h2>
+
+<h3>Server class</h3>
+
+Keeps track of currently connected clients and sends to all clients
+requested talk operation inside sound operation.
+<p>
+"send_all" -method sends to all clients that have already logged in
+requested talk operation as sound perception.
+<p>
+"has_account" -method is used to check whether there already exists
+client with given id.
+
+<pre>
+class ChatServer(server.SocketServer):
+    def send_all(self, op):
+        for client in self.clients:
+            if hasattr(client, "id"):
+                client.send_operation(atlas.Operation("sound",
+                                                      op,
+                                                      from_ = op.from_,
+                                                      to = client.id))
+    def has_account(self, id):
+        for client in self.clients:
+            if hasattr(client, "id") and client.id == id:
+                return 1
+        return 0
+</pre>
+
+<h3>Client class</h3>
+
+Handles login/create operations and sets id to requested account id.
+If client with requested id already exists, sends error operation.
+<p>
+Talk operations are simply forwarded to server part to be broadcasted
+to every client. If client is not logged in, then talk operation is
+discarded.
+
+<pre>
+class ChatClient(server.TcpClient):
+    def login_op(self, op):
+        account = op.args[0].id
+        if self.server.has_account(account):
+            self.send_error(op, "somebody already in with that id")
+        else:
+            self.id = account
+            ent = atlas.Object(parents=["player"], id=account)
+            self.reply_operation(op, atlas.Operation("info",
+                                                     ent,
+                                                     to=account))
+
+    create_op = login_op
+
+    def talk_op(self, op):
+        if hasattr(self, "id"):
+            op.from_ = self.id
+            self.server.send_all(op)
+</pre>
+
+<h3>Main part</h3>
+
+Here we create server instance giving it ChatClient as argument to
+use when creating new connections and then go into processing loop:
+<pre>
+    s = ChatServer("Simple OOG chat server", server.args2address(sys.argv), ChatClient)
+    s.loop()
+</pre>
+
+<p>
+For whole example code see forge/libs/Atlas-Python/chat_server.py
+<p>
+
+<h2>Example telnet sessions</h2>
+
+To test chat_server.py from telnet, paste these into telnet sessions:
+<p>
+Session1:
+<pre>
+ATLAS telnet client
+ICAN Bach_beta
+
+{parents:["login"], args:[{id:"al"}], id:"0", objtype:"op"}
+{parents:["talk"], args:[{say:"Hello world!"}], from:"al", objtype:"op"}
+</pre>
+
+Session2:
+<pre>
+ATLAS telnet client
+ICAN Bach_beta
+
+{parents:["login"], args:[{id:"la"}], id:"0", objtype:"op"}
+{parents:["talk"], args:[{say:"!dlrow olleH"}], from:"la", objtype:"op"}
+</pre>
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Fri Aug 31 18:20:15 EEST 2001 -->
+<!-- hhmts start -->
+Last modified: Thu Sep  6 07:00:23 EEST 2001
+<!-- hhmts end -->
+  </body>
+</html>
