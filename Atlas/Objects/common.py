@@ -12,7 +12,7 @@ try:
 except ImportError:
     import cmp
     filecmp = cmp.cmp
-sys.path.append("../../../Atlas-Python")
+sys.path.append("../../Atlas-Python")
 from atlas import *
 from atlas.codecs import *
 
