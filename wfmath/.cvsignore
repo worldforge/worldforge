@@ -1,8 +1,0 @@
-*.lo
-*.la
-*.loT
-.deps
-.libs
-Makefile
-Makefile.in
-*_test
