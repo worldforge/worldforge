@@ -1,0 +1,25 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"root_interface"
+    parents:["root"]
+    objtype:"meta"
+    description:"starting point for interface browsing, not used otherwise"
+    operations:[]
+
+:map:
+    id:"base_interface"
+    parents:["root_interface"]
+    objtype:"interface"
+    description:"raw interface"
+    long_description:"""admin can use this interface for setting
+    abstract hierarchy and actual game objects too"""
+    operations:["create", "delete", "set", "get"]
+
+:map:
+    id:"game_interface"
+    parents:["root_interface"]
+    specification:"atlas_game"
+    objtype:"interface"
+    description:"""client interface for controlling character etc.."""
+    operations:["create","combine","divide","communicate","move","perceive","talk","look","listen","sniff","touch"]
+

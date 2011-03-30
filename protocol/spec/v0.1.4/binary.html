@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Binary Atlas</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" link="#990000" vlink="#660000" text="#000000">
+    <h2>Binary Atlas</h2>
+
+    Example of compression:
+
+    <PRE>
+a)
+&lt;op&gt;&lt;to&gt;A&lt;/to&gt;&lt;time s="9823989"/&gt;&lt;id&gt;move&lt;/id&gt;
+  &lt;ent&gt;&lt;id&gt;foo&lt;/id&gt;
+    &lt;loc&gt;&lt;id&gt;house_123&lt;/id&gt;&lt;coords&gt;12,4,2.9&lt;/coords&gt;&lt;/loc&gt;&lt;/ent&gt;&lt;/op&gt;
+
+b)
+&lt;op&gt;&lt;to&gt;A&lt;/to&gt;&lt;time s=<font color="#FF0000">"9823989.5"</font>/&gt;&lt;id&gt;move&lt;/id&gt;
+  &lt;ent&gt;&lt;id&gt;<font color="#FF0000">bar</font>&lt;/id&gt;
+    &lt;loc&gt;&lt;id&gt;house_123&lt;/id&gt;&lt;coords&gt;12,<font color="#FF0000">5.5</font>,2.9&lt;/coords&gt;&lt;/loc&gt;&lt;/ent&gt;&lt;/op&gt;
+
+c)
+&lt;op&gt;<font color="#FF0000">&lt;from&gt;bar&lt;/from&gt;</font>&lt;to&gt;A&lt;/to&gt;&lt;time s="9823989.5"/&gt;&lt;id&gt;<font color="#FF0000">talk</font>&lt;/id&gt;
+  &lt;ent&gt;<font color="#FF0000">&lt;attr name="say"&gt;Hi A&lt;/attr&gt;</font>&lt;/ent&gt;&lt;/op&gt;
+
+    </PRE>
+<PRE></pre>
+    Binary compressed version might be something like this:
+    <p>
+      1) First byte is bitmask about what has remained same<br>
+      2-3) id: String: width byte and actual bytes<br>
+      4) time: double (or maybe char that gives difference to previous time)<br>
+      5) op id: enum (short int at most)
+    <p>
+      move:<br>
+      6) place id: see 2) (we are assuming ent here)<br>
+      7-9) coords: see 3) (again assuming everything fits with standard move)
+    <p>
+      talk:<br>
+      6) what has been said
+    <p>
+      If we have move or talk that differs from above format: specify all
+      tags.
+    <p>
+      We send only changed parts, so lots of moves is only stream of
+      ids of moving characters and their new coords. In addition of
+      sending only differences compress resulting stream with some
+      traditional compression algorithm.
+<pre></PRE>
+<PRE>
+   1)       2)  3) 4)        5)   6)  7) 8)  9)
+a: 00000000     A  9823989   move foo 12 4   2.9
+b: 11010101        9823989.5      bar    5.5
+c: 01100000 bar              talk "Hi A"
+</PRE>
+
+    Of course actual protocol will differ from above, but basic idea
+    should be similar...
+    <p>
+      Somewhat related link:
+      <a href="http://ccwf.cc.utexas.edu/~zvonler/dxpc/">Differential X Protocol Compressor</a>
+
+
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Wed Jun  2 11:14:04 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Wed Jun 30 09:43:46 EEST 1999
+<!-- hhmts end -->
+  </body>
+</html>

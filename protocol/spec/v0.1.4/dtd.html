@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Atlas document type definition (DTD)</title>
+  </head>
+
+  <body>
+    <h2>Atlas document type definition (DTD)</h2>
+
+    I would like to get corrections for likely errors (mail to
+    <a href="mailto:scripting@worldforge.org">scripting@</a> or
+    <a href="mailto:aloril@iki.fi">Aloril</a>).
+
+    <PRE>
+
+&lt;!-- Models --&gt;
+
+&lt;!ELEMENT % arg "id | ent"&gt;
+&lt;!ELEMENT % idtype "#PCDATA"&gt;
+&lt;!ELEMENT % idlist "id*"&gt;
+&lt;!ELEMENT % coordtype "coords | vector | forcevector"&gt;
+&lt;!ELEMENT % rotationtype "rotation | relrotation | torquerotation"&gt;
+&lt;!ELEMENT % Xlist "intlist | floatlist | stringlist | rangelist"&gt;
+&lt;!ELEMENT % datatype "int | float | string | list | range | 
+                      id | attr | ent | delete | %Xlist;"&gt;
+
+&lt;!-- Tags --&gt;
+
+&lt;!ELEMENT atlas     (msg*)&gt;
+&lt;!ATTLIST atlas   version  CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT msg    (op*)&gt;
+&lt;!ATTLIST msg     no       CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT op    (from?,to?,time?,id,arg*)&gt;
+&lt;!ATTLIST op      no       CDATA #IMPLIED
+                  refno    CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT from %idtype;&gt;
+
+&lt;!ELEMENT to %idtype;&gt;
+
+&lt;!ELEMENT time (#PCDATA)&gt;
+&lt;!ATTLIST time    s        CDATA #IMPLIED
+                  sadd     CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT id %idtype;&gt;
+
+&lt;!ELEMENT ent (id?,type?,instance?,loc?,contains?,stamp?,attr*)&gt;
+
+&lt;!ELEMENT type %idlist;&gt;
+
+&lt;!ELEMENT instance %idlist;&gt;
+
+&lt;!ELEMENT loc (id?,(%coordtype;)?,(%rotationtype;)?&gt;
+
+&lt;!ELEMENT contains %idlist;&gt;
+
+&lt;!ELEMENT stamp (#PCDATA)&gt;
+
+&lt;!ELEMENT attr (#PCDATA | (%datatype;)*&gt;
+&lt;!ATTLIST attr    name     CDATA #IMPLIED
+                  type     CDATA %datatype; 'string'&gt;
+
+&lt;!ELEMENT coords         (#PCDATA)&gt;
+&lt;!ELEMENT vector         (#PCDATA)&gt;
+&lt;!ELEMENT forcevector    (#PCDATA)&gt;
+&lt;!ELEMENT rotation       (#PCDATA)&gt;
+&lt;!ELEMENT relrotation    (#PCDATA)&gt;
+&lt;!ELEMENT torquerotation (#PCDATA)&gt;
+&lt;!ELEMENT int            (#PCDATA)&gt;
+&lt;!ELEMENT float          (#PCDATA)&gt;
+&lt;!ELEMENT string         (#PCDATA)&gt;
+&lt;!ELEMENT list           (#PCDATA)&gt;
+&lt;!ELEMENT range          (#PCDATA)&gt;
+&lt;!ELEMENT delete         (#PCDATA)&gt;
+&lt;!ELEMENT intlist        (#PCDATA)&gt;
+&lt;!ELEMENT floatlist      (#PCDATA)&gt;
+&lt;!ELEMENT stringlist     (#PCDATA)&gt;
+&lt;!ELEMENT rangelist      (#PCDATA)&gt;
+
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Jul  5 17:25:13 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Mon Jul  5 18:35:11 EEST 1999
+<!-- hhmts end -->
+  </body>
+</html>

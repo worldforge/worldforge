@@ -1,0 +1,41 @@
+Aloril, ZW, and myself had a descussion the other evening about
+negotiating an atlas connection.
+
+I have an object oriented code base that lets me enforce some specific
+layers to the protocol.  I believe what needs negotiated is the
+serialization method (examples: XML, BIN-1, PACKED-ASCII), any filters
+(examples: GZCompress, ROT13, RC5-48, HUFFMAN), and the filter order. 
+Filters allow compresion, encryption, or any other operation on the raw
+data stream.
+
+I believe that data shouldn't even get to the atlas serialization layer
+until the connection is negotiated.  I propose a very simple negotiation
+method for now, unrelated to any of the serialization methods.
+
+I think the most easily parsable messages are plaintext, and that they
+can be ended with a double return like http headers.
+
+When a client connects, the server should send a response.  Something
+like :
+BOB-SERVER 1.0
+
+Very simple. The client should then send a list of what it can do:
+CLIENT 4.5
+ICAN COMPRESS 1.0.0
+ICAN ROT-13 1.0.0
+ICAN X-CRY 3.4.0
+ICAN XML 2.2.0
+ICAN JBIN 0.1.0
+
+The server throws out every one it doesn't understand, and decides what
+the client should do.  The order is such that the first thing listed is
+the first thing done when sending data.
+IWILL XML 2.2.0
+IWILL COMPRESS 1.0.0
+
+After the double return, both sides start the data stream.
+As a note, any unregistered filters/serializers should start with X-. 
+Somewhere we will need a list of registered serializers, filters, and
+maintainers.
+
+Jamie

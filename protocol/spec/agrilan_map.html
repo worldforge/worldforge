@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+
+<html>
+  <head>
+    <title>Very coarse Agrilan map example</title>
+  </head>
+
+  <body>
+    <h1>Very coarse Agrilan map example</h1>
+
+    <h2>Example tree</h2>
+
+    <ul>
+      <li><a href="#agrilan">agrilan</a>: <font color="green">This is whole agrilan map: at coords only hight is guessed
+                   and because this is toplevel now, there is no ref attribute 
+                   in location</font>
+    </ul>
+
+
+    <a name="agrilan"><h2>agrilan</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">agrilan</font> Id of object
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['area']</font> List of objects this inherits attributes from.
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> List of objects that inherit from this object.
+      <li><b><a href="type.html#specification">specification</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">example</font> What specification this object is part of?
+      <li><b><a href="type.html#description">description</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+This is whole agrilan map: at coords only hight is guessed
+                   and because this is toplevel now, there is no ref attribute 
+                   in location<br>
+</font> This gives short description of object.
+      <li><b><a href="type.html#long_description">long_description</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+Hand made example map based on 
+           http://www.worldforge.org/images/maps/map_agrilan_4_us.jpg
+           No media id's here though, except few example...
+
+           First ascii map:
+origin: -80,-40
+<PRE>
+HHLHRPAP
+HLLRRRPA
+HHLHHRPA
+PPPPPRPA 
+PPPPPPRA
+FFFPPAAA
+</PRE>
+Legend:<br>
+H=Hilly<br>
+L=Lake<br>
+R=River<br>
+A=roAd<br>
+P=Plains<br>
+F=Forest<br>
+                <br>
+</font> This gives long description of object.
+      <li><b><a href="type.html#pos">pos</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 300.0]</font> Position coordinates, usually world is 3D
+      <li><b><a href="type.html#contains">contains</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['agrilan_lands', 'agrilan_waters']</font> List of objects that use this object as reference system (usually same as what this object contains).
+      <li><b><a href="type.html#media">media</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">refer to media entity that refers to http://www.worldforge.org/images/maps/map_agrilan_4_us.jpg</font> media id reference
+      <li><b><a href="type.html#interface">interface</a> (inherited from game_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">game_interface</font> What kind of operations are legal for this object.
+      <li><b><a href="type.html#loc">loc</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Reference object for coordinates (location).
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Name of object.
+      <li><b><a href="type.html#objtype">objtype</a> (inherited from root_entity) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">class</font> What kind of object this is.
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Last time this object was modified.
+      <li><b><a href="type.html#stamp_contains">stamp_contains</a> (inherited from root_entity) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Last time any object that uses this as reference recursively has been modified
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Last time any object that inherits from this has been modified
+      <li><b><a href="type.html#velocity">velocity</a> (inherited from root_entity) (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[0.0, 0.0, 0.0]</font> Velocity object is moving, usually world is 3D
+      <li><b><a href="type.html#specification_file">specification_file</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">Object(filename = 'agrilan_map.def', attribute_order = ['id', 'parents', 'children', 'specification', 'description', 'long_description', 'pos', 'contains', 'media'], lineno = 2)</font> various info about object and its specification file
+    </ul>
+    XML version:<br>
+    <PRE>
+&lt;map>
+	&lt;string name="id">agrilan&lt;/string>
+	&lt;list name="parents">&lt;string>area&lt;/string>&lt;/list>
+	&lt;list name="children">&lt;/list>
+	&lt;string name="specification">example&lt;/string>
+	&lt;string name="description">This is whole agrilan map: at coords only hight is guessed
+                   and because this is toplevel now, there is no ref attribute 
+                   in location&lt;/string>
+	&lt;string name="long_description">Hand made example map based on 
+           http://www.worldforge.org/images/maps/map_agrilan_4_us.jpg
+           No media id's here though, except few example...
+
+           First ascii map:
+origin: -80,-40
+&amp;lt;PRE&amp;gt;
+HHLHRPAP
+HLLRRRPA
+HHLHHRPA
+PPPPPRPA 
+PPPPPPRA
+FFFPPAAA
+&amp;lt;/PRE&amp;gt;
+Legend:&amp;lt;br&amp;gt;
+H=Hilly&amp;lt;br&amp;gt;
+L=Lake&amp;lt;br&amp;gt;
+R=River&amp;lt;br&amp;gt;
+A=roAd&amp;lt;br&amp;gt;
+P=Plains&amp;lt;br&amp;gt;
+F=Forest&amp;lt;br&amp;gt;
+                &lt;/string>
+	&lt;list name="pos">&lt;float>0.0&lt;/float>&lt;float>0.0&lt;/float>&lt;float>300.0&lt;/float>&lt;/list>
+	&lt;list name="contains">&lt;string>agrilan_lands&lt;/string>&lt;string>agrilan_waters&lt;/string>&lt;/list>
+	&lt;string name="media">refer to media entity that refers to http://www.worldforge.org/images/maps/map_agrilan_4_us.jpg&lt;/string>
+	&lt;map name="specification_file">
+		&lt;list name="attribute_order">&lt;string>id&lt;/string>&lt;string>parents&lt;/string>&lt;string>children&lt;/string>&lt;string>specification&lt;/string>&lt;string>description&lt;/string>&lt;string>long_description&lt;/string>&lt;string>pos&lt;/string>&lt;string>contains&lt;/string>&lt;string>media&lt;/string>&lt;/list>
+		&lt;string name="filename">agrilan_map.def&lt;/string>
+		&lt;int name="lineno">2&lt;/int>
+	&lt;/map>
+&lt;/map>
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Feb  9 07:30:00 EET 1999  -->
+<!-- hhmts start  -->
+Last modified: Wed Feb  9 07:39:12 EET 2000
+<!-- hhmts end  -->
+  </body>
+</html>

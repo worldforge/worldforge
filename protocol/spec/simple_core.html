@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Simple Core Atlas</title>
+  </head>
+
+  <body>
+    <h1>Simple Core Atlas</h1>
+
+    <h2>Syntax</h2>
+
+    Expressing an Atlas object in the common Bach encoding form:
+    <pre>
+{
+   parents: ["info"], 
+   objtype:"op",
+   arg: {
+     name: "Joe", 
+     pos: [4.5, 6.7, 2.3], 
+     meaning_of_life: 42
+   }
+}
+    </pre>
+
+    In above example "parents" is list attribute containing one string value "info".
+    <br> Arg is mapping attribute containing 3 attributes:<br>
+    "name" is string attribute with value "Joe",<br>
+    "pos" is list attribute with 3 float values [4.5, 6.7, 2.3]<br>
+    and "meaning_of_life" is integer attribute with value 42.
+    <p>
+      Above example also "specifies" Bach encoding for most
+      purposes. List is enclosed with [], mapping is enclosed with
+      {} and string is enclosed with "".
+
+      <h2>Core operations</h2>
+
+    Operation consist of operation name as value to "parents"
+    attribute and argument to it as value to "arg"
+    attribute. "parents" is used as attribute name because full Atlas
+    implements inheritance. See tree creation example later for entity
+    example.
+    <p>
+      Operation example:
+    <pre>
+{
+    parents: ["operation_name"],
+    objtype:"op",
+    arg: <b>some object here</b>
+}
+    </pre>
+
+    Object given in argument can be either some other operation or
+    entity. Entity example:
+    <pre>
+{
+    id: "tree23",
+    objtype:"obj",
+    parents: ["tree"],
+    pos: [1.2, 5.6, 1.0]
+}
+    </pre>
+
+    Id of entity is "tree23", class of entity is "tree" and position is [1.2,
+    5.6, 1.0] = [x,y,z]
+
+
+    <h3>Get operation</h3>
+
+    To fetch some object from server, use get operation and give it id of object as argument.
+
+    Example:
+    <pre>
+{
+    parents: ["get"],
+    objtype:"op",
+    arg: {id: "tree34"}
+}
+    </pre>
+    For example of what server returns see <a href="#info">Info operation</a>.
+
+    <h3>Set operation</h3>
+
+    To set values in object use set operation and into arg put id of
+    object and new values for attributes.
+
+    Example:
+    <pre>
+{
+    parents: ["set"],
+    objtype:"op",
+    arg: {id: "joe56", name: "Michael"}
+}
+    </pre>
+
+
+    <h3>Create operation</h3>
+
+    To create new object use create operation and into arg put
+    object. Usually server assigns id, but if it's dumb server you
+    need to give id also.
+
+    Example:
+    <pre>
+{
+    parents: ["create"],
+    objtype:"op",
+    arg: {parents:["tree"], pos: [1.2, 5.6, 1.0]}
+}
+    </pre>
+
+
+    <h3>Delete operation</h3>
+
+    To delete object in server, use delete operation and give id of
+    object being deleted as argument.
+
+    Example:
+    <pre>
+{
+    parents: ["delete"],
+    objtype:"op",
+    arg: {id: "tree34"}
+}
+    </pre>
+
+
+    <a name="info">
+    <h3>Info operation</h3>
+
+    Info operation is returned by server either as reply to get
+    operation or informing you that somebody (might be you) made
+    changes in server.
+    <p>
+    Reply to "get" operation example:
+<pre>
+{
+    parents: ["info"],
+    objtype:"op",
+    arg: {id: "tree34", parents:["tree"], pos: [1.2, 5.6, 1.0]}
+}
+</pre>
+
+    Reply to "set" operation example:
+<pre>
+{
+    parents: ["info"],
+    objtype:"op",
+    arg: {
+        parents: ["set"],
+        objtype:"op",
+        arg: {id: "joe56", name: "Michael"}
+    }
+}
+</pre>
+
+    Reply to "create" operation example:
+<pre>
+{
+    parents: ["info"],
+    objtype:"op",
+    arg: {
+        parents: ["create"], 
+        objtype:"op",
+        arg: {id: "tree34", parents:["tree"], pos: [1.2, 5.6, 1.0]}
+    }
+}
+</pre>
+
+    Reply to "delete" operation example:
+<pre>
+{
+    parents: ["info"],
+    objtype:"op",
+    arg: {
+        parents: ["delete"], 
+        objtype:"op",
+        arg: {id: "tree34"}
+    }
+}
+</pre>
+
+
+    <hr>
+    Thanks for feedback goes to Lee, Elefth, Cyanide, Phil, Demitar,
+    Kosh, Novalis, James, Malcolm, Bryce, UncleFluffy and ZephyrAlfredo.
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Thu Jan 31 07:30:14 EET 2002 -->
+<!-- hhmts start -->
+Last modified: Wed Nov  6 14:03:04 EET 2002
+<!-- hhmts end -->
+  </body>
+</html>

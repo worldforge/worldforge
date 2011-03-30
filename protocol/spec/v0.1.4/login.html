@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Out of game (OG) Atlas</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" link="#990000" vlink="#660000" text="#000000">
+    <h2>Out of game (OG) Atlas</h2>
+
+    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=1>
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#intro"><b>Intro</b></a></td>
+        <td>How does OG Atlas compares to IG Atlas?</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#connect"><b>Connection and disconnection</b></a></td>
+        <td>Initializing and closing connection</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#login"><b></b></a></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#browsing"><b>Browsing server</b></a></td>
+        <td>What games there are?</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#player"><b>Creating player account and login</b></a></td>
+        <td>How player is authorized to play</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#character"><b>Creating character and using it</b></a></td>
+        <td>Player and non player characters: characters controlled
+          outside server</td>
+      </tr>
+
+    </TABLE>
+    
+    <h3><a name="intro">Intro</a></h3>
+
+    Server is just some kind of meta world with meta characters (player
+    accounts) and 'gateways' to real worlds. So it's handled in many ways
+    similar than actual world.
+    <p>
+      Server differentiates messages meant to meta world from messages 
+      meant to actual game from id: messages from player id or if id
+      is not specified are meant to meta world. Messages from
+      character id are for actual game world.
+    <p>
+    <hr>
+
+    <h3><a name="connect">Connection and disconnection</a></h3>
+    
+    When you connect, standard xml starting tags and opening atlas tag
+    with version attribute.
+    <p>
+    Example:
+    <PRE>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;!DOCTYPE atlas protocol "atlas.dtd"&gt;
+&lt;atlas version="0.2"&gt;
+    </PRE>
+    In future there will be additional tags for setting binary and/or
+    compression flags.
+    <p>
+    When you disconnect, send closing atlas tag.
+    <p>
+    Example:
+    <PRE>
+&lt;/atlas&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="browsing">Browsing server</a></h3>
+
+    First send blank get operation to server:
+
+    <PRE>
+&lt;op&gt;
+  &lt;id&gt;get&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    In the answer server tells what it contains:
+    <PRE>
+&lt;ent&gt;
+  &lt;id&gt;game.worldforge.org:&lt;/id&gt;
+  &lt;contains&gt;
+    &lt;id&gt;settings&lt;/id&gt;
+    &lt;id&gt;games&lt;/id&gt;
+    &lt;id&gt;players&lt;/id&gt;
+  &lt;/contains&gt;
+&lt;/ent&gt;
+    </PRE>
+
+    Then request info about games (you can go directly to this step
+    too):
+
+    <PRE>
+&lt;op&gt;
+  &lt;id&gt;get&lt;/id&gt;
+  &lt;id&gt;games&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    Server tells what games it contains:
+
+    <PRE>
+&lt;ent&gt;
+  &lt;id&gt;games&lt;/id&gt;
+  &lt;contains&gt;
+    &lt;id&gt;Medieval fantasy game&lt;/id&gt;
+    &lt;id&gt;Warcraft clone&lt;/id&gt;
+  &lt;/contains&gt;
+&lt;/ent&gt;
+    </PRE>
+
+    Further request might require that you are logged in. Especially
+    getting list of players likely requires account with 'admin'
+    privileges. Creating characters too likely requires player
+    account.
+    <p>
+    <hr>
+
+    <h3><a name="player">Creating player account and login</a></h3>
+
+    If you don't have account, you need to create one. If you already
+    have account, then creating new one might be against server
+    policy. So usually there should only be one player account per
+    real human.
+    <p>
+      Creating account (this is likely to change somewhat, one
+      modification might be to require mail address where password is
+      then sent):
+    <PRE>
+&lt;op no="2"&gt;
+  &lt;id&gt;create&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;attr name="name"&gt;JoeBlatz&lt;/attr&gt;
+    &lt;attr name="passwd"&gt;Rqv67.%&lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    In response server sends 'info' or 'error' operation back (with
+    includes player account id (might be same as account name). refno
+    -attribute helps you to spot right answer.
+    <p>
+    If you already have account then you log in using it:
+    <PRE>
+&lt;op&gt;
+  &lt;id&gt;login&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;id&gt;JoeBlatz&lt;/id&gt;
+    &lt;attr name="password"&gt;Rqv67.%&lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="character">Creating character and using it</a></h3>
+
+    Usually new accounts might be allowed to create only one character
+    (part of time it might be controlled by player and other time it
+    might be controlled by AI script). Trusted accounts might be
+    allowed to create several characters (usually controlled by NPC AI
+    script).
+    <p>
+      Creating character:
+    <PRE>
+&lt;op no="3"&gt;
+  &lt;from&gt;JoeBlatz&lt;/id&gt;
+  &lt;id&gt;create&lt;/id&gt;
+  &lt;ent&gt;
+    &lt;type&gt;evoker&lt;/type&gt;
+    &lt;attr name="name"&gt;Evoker the magnificent&lt;/attr&gt;
+    &lt;attr name="INT"&gt;15&lt;/attr&gt;
+  &lt;/ent&gt;
+&lt;/op&gt;
+    </PRE>
+
+    Server sends back character entity with id and additional
+    attributes like location, etc... or error message telling what is
+    wrong (like too big value for some attribute). Server might
+    assign other values for attributes than client has
+    specified. refno -attribute helps you to spot right answer.
+    <p>
+      If you have already created character then you just continue
+      playing where you left. In both cases it might be goo idea to
+      use look operation without arguments as starting point:
+    <PRE>
+&lt;op&gt;
+  &lt;from&gt;character_id_23&lt;from&gt;
+  &lt;id&gt;look&lt;/id&gt;
+&lt;/op&gt;
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Jul  5 16:03:19 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Mon Jul  5 17:24:06 EEST 1999
+<!-- hhmts end -->
+  </body>
+</html>

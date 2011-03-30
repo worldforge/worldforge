@@ -1,0 +1,719 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"root_type"
+    parents:["root"]
+    objtype:"meta"
+    description:"Type hierarchy starts from here."
+
+:map:
+    id:"string"
+    parents:["root_type"]
+    objtype:"data_type"
+    description:"UTF-8 encoded string."
+    long_description:"Any character is allowed, including 8 bit control characters and '\\0', C equivalent: {int len; char *data;}, C++: string"
+
+:map:
+    id:"int"
+    parents:["root_type"]
+    objtype:"data_type"
+    description:"Integer."
+    long_description:"C equivalent: 32bit int"
+
+:map:
+    id:"float"
+    parents:["root_type"]
+    objtype:"data_type"
+    description:"Floating point number."
+    long_description:"C equivalent roughly: double"
+
+:map:
+    id:"uri"
+    parents:["string"]
+    objtype:"type"
+    description:"URI (URL) of object"
+    long_description:"""C equivalent roughly: for storing id name: char *, as pointer: void *<br>
+URI is Uniform Resource Locator.
+For more about URI see 
+<a href="http://www.ics.uci.edu/pub/ietf/uri/">http://www.ics.uci.edu/pub/ietf/uri/</a>"""
+
+#more about ID when discussing about MIM (Media Independant Map) -format
+## <Jamie> But do they all have object IDs, and how do we keep them seperate from the world ids?
+## <aloril> and client can load tgz file too of course..
+## <aloril> ahh... namespace question...
+## <aloril> well that is problem: current atlas has server specific flat id space for *everything*
+## <Jamie> Yes, and do operations share namespace with objects, and can we overload operations?
+## <aloril> (attribute names, operations, classes, object ids, type, etc...)
+## <Jamie> Can we overload operations?  I think so, looking at the specs
+## <aloril> hmm... would that be inheritance?
+## <aloril> ie client doesn't know what it's and uses parent definition instead
+## <kosh> sorry afk walking someone through installing windows 98
+## <Jamie> I am not sure.. But if I pass it a list/int or 3 ints seperatly a move might be able to understand both... location=(1,2,3) or x=1,y=2,z=3...
+## <aloril> about how to keep MIM id's separate from world ids... server specific thing, could for example add 'M' to start...
+## <aloril> ahh... that... hmm.. probably better have only one format when transmitting..
+## <Jamie> Well, I see the world made up as alot of MIM maps all connected, so ids between maps need to be kept seperate as well.  Why not anything with MIM_ in the xml spec or some other special code in other specs to identify it?
+## <kosh> everyone has to feel sorry for me since I am walking someone through isntalling windows 98
+## <kosh> :)
+## <aloril> jamie, server can freely use whatever id scheme it wants...
+## <aloril> thats why they are strings ;-)
+## <Jamie> True
+## <aloril> for example: "M_area1_123"
+## <Jamie> But protocols can drop the strings and use anything it wants, as long as it keeps a conversion list local.
+## <aloril> client of course can keeps it's own id system and translate between strings and ints ..
+## * aloril nods
+## <aloril> server ha total freedom in ids, client's must translate..
+## <Jamie> So if I map "Mim_area1_123" to 1233455 the protocol only needs to handle int's, and it can make up anything on the client side.
+## <aloril> ie this is case where we sacrifice some 0.01% of client CPU for server ;-)
+## <Jamie> *nods*
+## <Drew> kosh, how can someone not be able to do it alone?
+## <kosh> you would be amazed
+## <aloril> or was it 0.1% don't remember offhand but it was really small amount...
+## <Jamie> Not a large one.
+## <aloril> only restriction is that you can't use '/' character and similar characters that are used in URI for other purposes
+## <aloril> much more time goes for marshalling all tags but still probably <1%
+## <aloril> (assuming binary here)
+## <kosh> drew after walking a newbie through windows over the phone I saw all the points they got hung up one windows is not easy to install
+## <Drew> kosh, oh? Such as? (I'm not defending Win, just curious since I think it's so easy)
+## <kosh> I thought it was easy also but things like installing drivers she got hung up on
+## <kosh> or how to just start
+## <Drew> Ah, I see.
+## <kosh> we had to change her BIOS to support CD rom booting to continue
+## <kosh> another example was when installing on some menus she asked me what the question meant since she did not understand
+## <Drew> Hmm.
+## * Drew points kosh to #lounge...
+## * Drew knows that he might be too busy.
+## <aloril> hmm... mail.worldforge.org seems down...
+## <aloril> if we used ints:
+## <aloril> Integer: 1100K/s
+## <aloril> String: 350K/s
+## <aloril> client needs to still do map (or hash lookup) above is STL map
+## <aloril> Lets assume 10B/msg.
+## <aloril> Lets assume about 8KB/s or 800msg/s in bandwidth.
+## <aloril> Integer: 0.07% of CPU.
+## <aloril> String:  0.2% of CPU.
+## <aloril> Result:  0.13% difference
+## <aloril> whole message is at scripting@ archives
+## <aloril> 19 May 1999 11:50:34 +0300
+## <aloril> Subject: Re: [Worldforge-Scripting]  Re: Atlas: Id
+## <aloril> with test program too... it uses STL map (hmm... is map implemented using hash or ?)
+
+:map:
+    id:"string_list"
+    parents:["list"]
+    objtype:"type"
+    element_type:"string"
+    description:"List of strings"
+
+:map:
+    id:"int_list"
+    parents:["list"]
+    objtype:"type"
+    element_type:"int"
+    description:"List of integers"
+    long_description:"C equivalent: int []"
+
+:map:
+    id:"float_list"
+    parents:["list"]
+    objtype:"type"
+    element_type:"float"
+    description:"List of floats"
+    long_description:"C equivalent: double []"
+
+:map:
+    id:"uri_list"
+    parents:["string_list"]
+    element_type:"uri"
+    description:"URI list"
+    long_description:"C equivalent: char *[], void *[]"
+
+:map:
+    id:"list"
+    parents:["root_type"]
+    objtype:"data_type"
+    description:"List of objects"
+    long_description:"C equivalent: void *[]"
+    added_attributes:[]
+
+:map:
+    id:"map"
+    name:"mapping"
+    parents:["root_type"]
+    objtype:"data_type"
+    description:"Mapping between string key and value object"
+    long_description:"C equivalent: struct map {char *;void *}; map*"
+    added_attributes:[]
+
+:map:
+    id:"int_list_length"
+    parents:["int_list"]
+    objtype:"meta"
+    list_length:0
+    description:"List of ints with constant length"
+    long_description:"Inherit required object from this and set length attribute to suitable value."
+
+:map:
+    id:"float_list_length"
+    parents:["float_list"]
+    objtype:"meta"
+    list_length:0
+    description:"List of floats with constant length"
+    long_description:"Inherit required object from this and set length attribute to suitable value."
+
+:map:
+    id:"pos"
+    name:"position"
+    parents:["float_list_length"]
+    objtype:"type"
+    list_length:3
+    description:"Position coordinates, usually world is 3D"
+
+:map:
+    id:"velocity"
+    parents:["float_list_length"]
+    objtype:"type"
+    list_length:3
+    description:"Velocity object is moving, usually world is 3D"
+
+:map:
+    id:"list_length"
+    parents:["int"]
+    objtype:"type"
+    description:"Length for lists"
+
+:map:
+    id:"element_type"
+    parents:["id"]
+    description:"Element type for typed lists/mappings"
+
+:map:
+    id:"id"
+    parents:["uri"]
+    description:"Id of object"
+    long_description:"C equivalent roughly: for storing id name: char *, as pointer: void *"
+
+:map:
+    id:"id_list"
+    parents:["uri_list"]
+    description:"List of ids"
+
+:map:
+    id:"parents"
+    parents:["id_list"]
+    description:"List of objects this inherits attributes from."
+
+:map:
+    id:"children"
+    parents:["id_list"]
+    description:"List of objects that inherit from this object."
+
+:map:
+    id:"contains"
+    parents:["id_list"]
+    description:"List of objects that use this object as reference system (usually same as what this object contains)."
+
+:map:
+    id:"added_attributes"
+    parents:["contains"]
+    description:"List of attributes that has been added to this object"
+
+:map:
+    id:"characters"
+    parents:["contains"]
+    description:"List of characters account can control"
+
+:map:
+    id:"args"
+    parents:["list"]
+    objtype:"type"
+    description:"List of arguments this operation has"
+
+:map:
+    id:"operations"
+    parents:["id_list"]
+    description:"List of alloved operations"
+    long_description:"Content ids can be either another interface or operation ids or both."
+
+:map:
+    id:"stamp"
+    parents:["float"]
+    objtype:"type"
+    description:"Last time this object was modified."
+    long_description:"""Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid."""
+
+:map:
+    id:"stamp_inherit"
+    parents:["stamp"]
+    objtype:"type"
+    description:"Last time any object that inherits from this has been modified"
+    long_description:"Value should be reflect when something was changed in some object that inherits from this."
+## <aloril> get:
+## <aloril>   id:root
+## <bryce> ok aloril
+## <aloril>   stamp_inherit:100.0
+## <aloril> and server then tells: what of root leaf objets have changed objects somewhere in tree
+## <aloril> and then client asks again objects it's interested, etc...
+## <aloril> so it needs to make as many trips as tree is deep (nope it of course sends several "get" operations for each depth as needed)
+
+:map:
+    id:"stamp_contains"
+    parents:["stamp"]
+    objtype:"type"
+    description:"Last time any object that uses this as reference recursively has been modified"
+    long_description:"Value should be reflect when something was changed in some object that is contained by this object."
+
+## <aloril> oh yes... now I remember why I made them different:
+## <aloril> they don't set contains list to certain value, they only tell about special dynamic field...
+## <aloril> another option instead of stamp_instance would be "contains_changed" and "instance_changed"
+## <aloril> and when you request it with certain stamp it would list all things that have changed:
+## <aloril> if contains -attribute itself has changed: it would present with new list
+## <Jamie> Well, how does the server know to send a list of contents_changed or instances_changed instead of the object it's self?
+## <aloril> if only contained objects have changed (but no additions/deletions): then list only contains_changed
+## <Jamie> Oh, so it returns all all the time.
+## <aloril> yes.. if it has changed..
+## <aloril> example:
+## <aloril> table position changed:
+## <Jamie> I understand
+## <aloril>   stamp update: send only position
+## * aloril typing for docs
+## <aloril> if cup added and pos changed
+## <Jamie> *nods*
+## <aloril> send position, contains and contains_changed
+## <aloril> if cup position changed: send only contains_changed
+## <ZW> query -- if you are in a room/container and another actor moves an object, isnt that event propogated to all actors in the container so they can update state immedaitly ??
+## * aloril is going to commit discussion results as comments to def files (and later add them proper)
+## <aloril> ZW: yes
+## <aloril> contains_changed is when you reloginm awake, etc... or something stroll in to view
+## <ZW> then why would I ever need to scan for changed objects if I already have the current state ??
+## <aloril> (contains_changed then is used to see what it wears now)
+## <aloril> ZW: then you don't... but normal clients will frequently encounter situation when they don't have current state
+## <ZW> k... so you are saying that if I go offline for several hours I remember the last state and lony need to get the changes when I log back in rather than all the info for the current container ???
+## <Jamie> ZW: When you log in and want to know what basic things have changed... for example an "account" might have an extra field
+## <aloril> ZW: this same method works for updating operation, class, etc.. defitions, only then it's instance_changed
+## * aloril nods to ZW
+## <ZW> understand it at that level... was tryuing to understand in game context
+## * ZW doesnt quite agree, thinks that is caching too much of the game state at the client
+## <anubis> hmm, but the server won't know what has changed between the clients disconnect/reconnect since an ai script has been keeping up the slack. so does the server have to store all evens since forever to know what to update from when?
+## <aloril> ZW: they don't need to cache... if they don't want it ;-)
+## <anubis> seems like client should just request full dump and then can optimize if it has stored info
+## <aloril> anubis, nope client stores it's latest stamp, server can always send more than needed
+## <ZW> Anubis -- nope -- just sends current state on connect for whats "in view" of the actor
+## <aloril> for example if clients latest status was: "50.0"
+## <anubis> aloril: but then server has to know diff between every stamp and current
+## <anubis> zw; that's what I was thinking
+## <aloril> hmm...
+## <aloril> for example if clients latest status was: "150.0"
+## <aloril> servers current state is 200.0 and latest 'saved' state is 100.0
+## <aloril> then server sends changes since 100.0
+## <aloril> if no saved state: send everything...
+## <ZW> Tacendia even goes so far as to send locations of trees/rocks.buildings/etc for the display redering... someone may have chopped down a tree :)))
+## <aloril> of course server could do this: save stamp for each attribute and/or stamp for object
+## <Jamie> Er.. Traverse the tree, looking for stamps newer than what the client has, and send them all
+## <aloril> jamie, ohh.. thats short and good explanation
+## <anubis> aloril: but in most instances of long disconnects, why bother traversing the tree?  wouldn't that be less effient than just a full dump?
+## <ZW> jamie -- on a huge world with 100,000 + objects and actors -- that could take a while :)))
+## <aloril> anubis, it's full dump in 10-40 iterations
+## <anubis> if stamp is < a certain window, do incremental
+## <anubis> if stamp > window, full dump
+## * aloril nods to anubis
+## <aloril> server implementation specific how to do it
+## <Jamie> ZW: My point:  Don't send all the actors/objects, just entities with children.  These are the basic structures and a very small set
+## <anubis> my guess is that window is going to be a matter of minutes, but you're right...its implementation specific
+## <ZW> just asking why I care anything about stuff outside my view -- when I walk into a new area I get the updates wether or not I've cached data
+## <aloril> no need to even have stamp, but .. probably useful optimization ;-)
+## <kosh> you should not ever been sent anything outside your view
+## <kosh> that would allow someone to cheat too easily
+## * aloril nods to kosh
+## <aloril> ZW: it's client specific decision...
+## <aloril> ZW: if client is sophisticated: cache as much as possible
+## * ZW agrees with kosh, wonders why optimizing what even in an outdoor scene is gonna be a relitivly small dataset to synchronize
+## <aloril> ZW: if client is simple, get everything every time (using stamp 0.0)
+## <anubis> stamp is probably needed for debugging/optimization, but might be ignorable for running world
+## <aloril> ZW: it's not actually small optimization, example:
+## <ZW> Aloril --- my idea of usig a cut-down server for the client would give you the sophisticated caching you need.. but dont see cause to abuse it
+## <aloril> ZW: you revolve: things appear and disappear in rapif succession
+## <aloril> ZW: of course server can do: you see to all directions ;-)
+## <aloril> s/rapif/rapid/
+## <ZW> aloril -- you are standing in place or revolving or whatever -- averything within a certain radius was sent to you the moment you entered that radius
+## <ZW> now you can revolve without any updates or field of view concerns
+## * aloril nods to ZW: again implementation specific
+## <ZW> s/you entered/the object entered/
+## <aloril> if you don't make things disappear when revolving, you don't need to make them appear either..
+## <anubis> ZW: the server should only send the update when you are facing the right way and its w/in the radius
+## <anubis> client can store info and keep displaying it, but things may jump when player turns a given direfinds things moved
+## <ZW> but thats not taking advantage of client caching in an obvious case where fast change of view is possible
+## <ZW> i.e. rotating in place
+## <anubis> direfinds/direction and finds
+## <anubis> ZW: it is, but the client won't get an update it shouldn't
+## <anubis> the client can assume things are static
+## <anubis> and that will almost always be correct
+## <anubis> but if I shoot an arrow at your back, you shouldn't see it
+## <ZW> then when I start rotating I have to wait on server latency before I see the theif creeping up behind me ???
+## <anubis> there are the two cases :)
+## <cyanide> well if something ought to stop you rotating...
+## <anubis> pick your balance point
+## <ZW> anubis -- the client may not display it, but needs to be aware of it
+## *** BS_AWAY is now known as Bloodspor
+## <aloril> ZW: note that we assume hacked clients..
+## * Bloodspor goes to work on the waterfall again
+## <anubis> ZW: but the client isn't a fixed thing.  we can't prevent a 'hacked' client from displaying that
+## <aloril> hi bloodspor
+## <Drew> What about the overhead client? The player will only what's in front of him?
+## <Bloodspor> heya aloril
+## <anubis> so it ought to be controlled server side
+## <aloril> drew: client specific decision: it might grey things for example
+## <anubis> drew: I would again say you get updates from field of characters view, the rest is cached
+## <aloril> that are outside view
+## <anubis> and not updated untill in characters field of view again
+## <ZW> not having source code never stopped people from hacking diablo -- hacking is a price you pay for publishing a game
+## <anubis> ZW: yes, hacking will happen
+## <anubis> so prevent cheating by not giving away privledged info
+## <aloril> ZW: yes... thats why we design things with assumption of hacked client ;-)
+## <cyanide> the client knows as much as the player should, is the general rule
+## <ZW> and reduce playability by introducing server latency in every movement the player makes... I'll risk the hackers
+## <aloril> ZW: client can always assume things: more client knows about server, more accurately it can simulate things
+## <Jamie> No... I am making my client have a local cache, and update as soon as it is asked.  The confirmation comes from teh server.  This is just like quake works.
+## <anubis> ZW: you can't avoid the latency.  That thief won't see you turn until your client sends the info, the server processes it, and broadcasts it
+## <aloril> ZW: have you read http://unreal.epicgames.com/Network.htm ?
+## <ZW> anubis --- I understand that -- but if I turn and he doent pop up in my field of view until  have turned past him.. thats BAD
+## <anubis> ZW: yes.  latency sucks one way or the other.  various implementations can deal with that different ways.  But I see your point
+## <aloril> ZW: thats why operations have time field: you send both appear and disappear with slightly different time attribute at the same time
+## <aloril> so yes... client might make some things seem like they appeared in greyed area ;-)
+## <ZW> but the client still doesnt have the info to display the theif until I have roated another 5/10/15 degrees/whatever amount server latency translates into).. so I turn around... there is nothing behind me -- then POOF -- there is a thief !!! (where the hell did HE come from ???)
+## <aloril> IRC==insta raw atlas docs ;-)
+## <anubis> ZW: if the client tells the server you faced the right way at the right time, it will send a thief update
+## <anubis> you may be overrotated a bit, but you'll suddenly see the thief
+## <ZW> sure -- 500-1500 milliseconds after I am facing that way !!!
+## <aloril> ZW: yes.. that sucks but can be little mitigated by client<->client communication
+## <ZW> (0.5-1.5 secs)
+## <aloril> (assuming far clients, or maybe by using proxy)
+## <anubis> ZW: turn slower ;)
+## <aloril> ZW: same with if you drop vase and somebody with really nice connection graps it before it breaks..
+## <anubis> remember also your field of view is probably 180 degrees
+## <aloril> ZW: clients with nice simulated physics will see it get fixed ;-)
+## <ZW> sory -- I refuse to even allow the possibility in any game world I design --- but the server core will handle your way or my way just as easily -- have a blast :)))
+## <Drew> I guess for that matter you could just spin around all the time and see all around you.
+## <aloril> ZW: note that usully however things work like excepted and with proxies even more... but that is price we pay for having 'hack proof' clients
+## * anubis adds a dizziness attribute
+## <ZW> Aloril -- how can physics fix a lack of info for physics code to operate on without the client display running lag-time *2 behind game clock ??
+## <aloril> ZW: server doesn't fix anything, client fixes failed predictions
+## <aloril> ZW: if you couldn't do something because lag: though luck...
+## <ZW> by poofing up the thief after I have turned and seen an empty street
+## <aloril> ZW: from server viewpoint you haven't turned away from thief yet..
+## *** scromp (^bnaylor@haybaler.sackheads.org) has joined #forge
+## <brenda> hi scromp
+## <aloril> wb scromp
+## <ZW> the only fix is that I hit the key to turn and I dont turn until server sez I have -- introducing a lagtime*2 response delay to any action
+## <anubis> hi scromp
+## <anubis> ZW: the trick is that you have to think you could be the thief, or the victim.  Try to balance the game for both.
+## <ZW> or have the data there and forget the hackers
+## <aloril> ZW: ahh.. but how often character revole continuoysly? hmm.. quick look has same effect though
+## <ZW> initiative plays a factor -- the thief has the advantage because he started the attack before you noticed he was there and turned
+## <aloril> ZW: here is solution: privileged proxy near client
+## <aloril> with small lag
+## <anubis> aloril: interesting idea
+## <aloril> ZW: yes.. you can send data and hope people don't use hacked client
+## <ZW> aloril --- while I have an idea for using multicast pipes between distributed nodes of a game world server -- I'm not sure how well that idea will work yet
+## <aloril> but... better assume other way...
+## <ZW> (software multicast routers to provide linkage between widely seperated clusters of servers processing the same game world)
+## <ZW> a proxy as you suggest could be a node in such a network
+## <aloril> yes... actually you could even kind of run your trusted client in proxy...
+## <aloril> all transparent to actual client and server
+## <ZW> if the client has data storage and access systems equivalent to a server -- which is what I'm intending
+## * ZW wonders what al would think of light-weight encryption to protect the data ??
+## <anubis> ZW: the encryption won't make a difference
+## <ZW> not make it imposibile to hack.. but harder
+## <aloril> ZW: 'just' additional encoding ;-)
+## <ZW> true -- OSS strikes again !!
+## <anubis> the client has to be able to decrypt the info
+## <aloril> ZW: ahh you mean at client?
+## <anubis> there was some talk of a checksum or something to give to certified clients
+## <ZW> data is stored encrypted and only decrypted when accessed -- prolly too much overhead
+## <aloril> ZW: and easily work around..
+## <ZW> yes since source is available
+## <aloril> ZW: note that even hardware based DVD got hacked ;-)
+## * ZW scraps that idea
+## <ZW> welp -- different methodologies are why I want the servers the way I do :))) no reason cant have it both ways in different game worlds :))
+## * aloril nods
+
+
+:map:
+    id:"objtype"
+    name:"object type"
+    parents:["string"]
+    objtype:"type"
+    description:"What kind of object this is."
+    long_description:"""Examples of values: "op", "class", "type"."""
+## <Jamie> What is the abstract_type field for?
+## <aloril> it's replacement for "op", "class", "typedef", etc.. tags
+## <cyanide> for extension of the protocol?
+## <aloril> ie we are likely going to have 'human' XML encoding that uses those as tags some way
+## <aloril> cyanide, yes and making things simple at encoding level
+
+:map:
+    id:"interface"
+    parents:["id"]
+    description:"What kind of operations are legal for this object."
+
+:map:
+    id:"specification"
+    parents:["string"]
+    objtype:"type"
+    description:"What specification this object is part of?"
+
+:map:
+    id:"name"
+    parents:["string"]
+    objtype:"type"
+    description:"Name of object."
+
+:map:
+    id:"message"
+    parents:["string"]
+    objtype:"type"
+    description:"Some message (for example error message)"
+
+:map:
+    id:"say"
+    parents:["message"]
+    description:"What something has said."
+
+:map:
+    id:"html"
+    parents:["string"]
+    objtype:"type"
+    description:"String that is actually html."
+
+:map:
+    id:"username"
+    parents:["string"]
+    objtype:"type"
+    description:"Username for account usually"
+
+:map:
+    id:"password"
+    parents:["string"]
+    objtype:"type"
+    description:"Password for account usually"
+
+:map:
+    id:"description"
+    parents:["html"]
+    description:"This gives short description of object."
+
+:map:
+    id:"args_description"
+    parents:["description"]
+    description:"This gives description about arguments."
+
+:map:
+    id:"long_description"
+    parents:["description"]
+    description:"This gives long description of object."
+
+:map:
+    id:"loc"
+    name:"location"
+    parents:["id"]
+    objtype:"type"
+    description:"Reference object for coordinates (location)."
+
+:map:
+    id:"serialno"
+    parents:["int"]
+    objtype:"type"
+    description:"Serial number."
+
+:map:
+    id:"refno"
+    parents:["serialno"]
+    description:"Reference to serial number."
+
+:map:
+    id:"from"
+    parents:["id"]
+    description:"Source of message/operation."
+
+:map:
+    id:"to"
+    parents:["id"]
+    description:"Target of message/operation."
+    long_description:"""When client sends operation to it's character
+    in server, then you can omit this because server can assume
+    character can only control directly it's body."""
+
+:map:
+    id:"seconds"
+    parents:["float"]
+    objtype:"type"
+    description:"Time in seconds"
+
+:map:
+    id:"future_seconds"
+    parents:["seconds"]
+    description:"Time in seconds to add current time"
+
+:map:
+    id:"time_string"
+    parents:["string"]
+    objtype:"type"
+    description:"Time in string format: YYYY-MM-DD HH:MM:SS.ss"
+    long_description:"There can be variation in length of different fields if using some weird calendar"
+
+:map:
+    id:"example"
+    parents:["list"]
+    objtype:"type"
+    description:"Gives some examples usage"
+
+#attributes for map
+:map:
+    id:"width"
+    parents:["float"]
+    objtype:"type"
+    description:"width of something"
+
+:map:
+    id:"grid_data"
+    parents:["list"]
+    objtype:"type"
+    description:"grid data"
+
+:map:
+    id:"grid_size"
+    parents:["int_list_length"]
+    objtype:"type"
+    list_length:2
+    description:"size of grid area: width and height (and for space depth too) in grid units"
+
+:map:
+    id:"cell_size"
+    parents:["float_list_length"]
+    objtype:"type"
+    list_length:2
+    description:"cell size of grid area"
+
+:map:
+    id:"height"
+    parents:["float"]
+    objtype:"type"
+    description:"height of something"
+
+:map:
+    id:"line_data"
+    parents:["list"]
+    objtype:"type"
+    description:"line object"
+
+:map:
+    id:"media"
+    parents:["uri"]
+    description:"media id reference"
+
+#attributes for debugging
+:map:
+    id:"specification_file"
+    parents:["map"]
+    objtype:"type"
+    description:"various info about object and its specification file"
+
+:map:
+    id:"filename"
+    parents:["uri"]
+    description:"name of file (example: where object was specified)"
+
+:map:
+    id:"lineno"
+    parents:["serialno"]
+    description:"linenumber where something is"
+
+:map:
+    id:"attribute_order"
+    parents:["uri_list"]
+    description:"order attributes was specified"
+
+#attributes for examples
+:map:
+    id:"e_int"
+    parents:["int"]
+    objtype:"type"
+    description:"Root type for all int type example attributes"
+
+:map:
+    id:"e_float"
+    parents:["float"]
+    objtype:"type"
+    description:"Root type for all float type example attributes"
+
+:map:
+    id:"e_string"
+    parents:["string"]
+    objtype:"type"
+    description:"Root type for all string type example attributes"
+
+:map:
+    id:"e_uri"
+    parents:["uri"]
+    description:"Root type for all uri type example attributes"
+
+:map:
+    id:"e_list"
+    parents:["list"]
+    objtype:"type"
+    description:"Root type for all list type example attributes"
+
+
+:map:
+    id:"e_HP"
+    parents:["e_int"]
+
+:map:
+    id:"e_height"
+    parents:["e_float"]
+
+:map:
+    id:"e_width"
+    parents:["e_float"]
+
+:map:
+    id:"e_msg"
+    parents:["e_string"]
+
+:map:
+    id:"e_polygon"
+    parents:["e_list"]
+
+:map:
+    id:"e_attack"
+    parents:["e_int"]
+
+:map:
+    id:"e_amount"
+    parents:["e_int"]
+
+:map:
+    id:"e_smell"
+    parents:["e_string"]
+
+:map:
+    id:"e_surface_type"
+    parents:["e_string"]
+
+:map:
+    id:"e_bar"
+    parents:["e_string"]
+
+:map:
+    id:"e_sex"
+    parents:["e_string"]
+
+:map:
+    id:"e_drunkness"
+    parents:["e_float"]
+
+:map:
+    id:"e_status"
+    parents:["e_float"]
+

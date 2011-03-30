@@ -1,0 +1,542 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"agrilan"
+    parents:["area"]
+    specification:"example"
+    description:"""This is whole agrilan map: at coords only hight is guessed
+                   and because this is toplevel now, there is no ref attribute 
+                   in location"""
+    long_description:"""Hand made example map based on 
+           http://www.worldforge.org/images/maps/map_agrilan_4_us.jpg
+           No media id's here though, except few example...
+
+           First ascii map:
+origin: -80,-40
+<PRE>
+HHLHRPAP
+HLLRRRPA
+HHLHHRPA
+PPPPPRPA 
+PPPPPPRA
+FFFPPAAA
+</PRE>
+Legend:<br>
+H=Hilly<br>
+L=Lake<br>
+R=River<br>
+A=roAd<br>
+P=Plains<br>
+F=Forest<br>
+                """
+    pos:[0.0,0.0,300.0]
+    contains:["agrilan_lands", "agrilan_waters"]
+    media:"refer to media entity that refers to http://www.worldforge.org/images/maps/map_agrilan_4_us.jpg"
+
+:map:
+    id:"hilly"
+    specification:"example"
+    name:"Hilly part around Eluryh lake"
+    description:"""Defining hilly type first 
+                   (here could be for example movement_speed 
+                    attribute too for example)"""
+    parents:["2D_grid"]
+    media:"""media id for generic hilly type"""
+    cell_size:[40.0, 40.0]
+
+:map:
+    id:"hilly1"
+    description:"""Specific hilly instances: note missing place
+                   where there is lake"""
+    parents:["hilly"]
+    loc:"agrilan_lands"
+    pos:[-80.0, -40.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    grid_size:[2, 3]
+    grid_data:
+        :list:
+            :map:
+                height:10.0
+                media:"special media id for this tile (not shown for all)"
+            :map:
+                height:5.0
+            :map:
+                height:4.0
+        :list:
+            :map:
+                height:3.0
+            :map:
+            :map:
+                height:2.0
+
+:map:
+    id:"hilly2"
+    parents:["hilly"]
+    description:""
+    loc:"agrilan_lands"
+    pos:[40.0, -40.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    grid_size:[1, 1]
+    grid_data:
+        :list:
+            :map:
+                height:10.0
+
+:map:
+    id:"hilly3"
+    parents:["hilly"]
+    description:""
+    loc:"agrilan_lands"
+    pos:[40.0, 40.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    grid_size:[2, 1]
+    grid_data:
+        :list:
+            :map:
+                height:10.0
+        :list:
+            :map:
+                height:10.0
+
+:map:
+    id:"plain"
+    specification:"example"
+    name:"Plains"
+    description:"""Defining plain type"""
+    parents:["2D_grid"]
+    media:"""media id for generic plain type"""
+    cell_size:[40.0, 40.0]
+
+:map:
+    id:"plain1"
+    parents:["plain"]
+    description:"""Specific plains"""
+    loc:"agrilan_lands"
+    pos:[-80.0, 80.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    grid_size:[6, 3]
+    grid_data:
+        :list:
+            :map:
+                height:2.0
+            :map:
+                height:2.2
+            :map:
+        :list:
+            :map:
+                height:1.8
+            :map:
+                height:2.0
+            :map:
+        :list:
+            :map:
+                height:1.6
+            :map:
+                height:1.8
+            :map:
+        :list:
+            :map:
+                height:1.4
+            :map:
+                height:1.6
+            :map:
+                height:1.6
+        :list:
+            :map:
+                height:1.2
+            :map:
+                height:1.4
+            :map:
+                height:1.4
+        :list:
+            :map:
+            :map:
+                height:1.2
+            :map:
+
+:map:
+    id:"plain2"
+    parents:["plain"]
+    description:""
+    loc:"agrilan_lands"
+    pos:[120.0, 80.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    grid_size:[1, 1]
+    grid_data:
+        :list:
+            :map:
+                height:1.3
+
+:map:
+    id:"plain3"
+    parents:["plain"]
+    description:""
+    loc:"agrilan_lands"
+    pos:[200.0, 80.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    grid_size:[1, 1]
+    grid_data:
+        :list:
+            :map:
+                height:1.3
+
+:map:
+    id:"plain4"
+    parents:["plain"]
+    description:""
+    loc:"agrilan_lands"
+    pos:[160.0, 80.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    grid_size:[1, 4]
+    grid_data:
+        :list:
+            :map:
+                height:1.25
+        :list:
+            :map:
+                height:1.20
+        :list:
+            :map:
+                height:1.15
+        :list:
+            :map:
+                height:1.1
+
+:map:
+    id:"lake"
+    specification:"example"
+    name:"Lake"
+    description:"""Defining lake type"""
+    parents:["2D_grid"]
+    media:"""media id for generic lake type"""
+    cell_size:[40.0, 40.0]
+
+:map:
+    id:"lake1"
+    name:"Eluryh"
+    description:"""One lake"""
+    parents:["lake"]
+    loc:"agrilan_waters"
+    pos:[-80.0, 80.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    grid_size:[2, 3]
+    grid_data:
+        :list:
+            :map:
+            :map:
+                height:1.15
+            :map:
+        :list:
+            :map:
+                height:1.15
+            :map:
+                height:1.15
+            :map:
+                height:1.15
+
+:map:
+    id:"river"
+    specification:"example"
+    name:"River"
+    description:"""Defining river type"""
+    parents:["2D_grid","line"]
+    media:"""media id for generic river type"""
+    cell_size:[40.0, 40.0]
+
+:map:
+    id:"river1"
+    name:"Hardonar river"
+    description:"""Few rivers"""
+    parents:["river"]
+    loc:"agrilan_waters"
+    pos:[80.0, -40.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    width:25.0
+    line_data:
+        :list:[100.0, -40.0, 1.1]
+        :list:[140.0, 20.0, 1.08]
+        :list:[140.0, 100.0, 1.05]
+        :list:[160.0, 140.0, 1.03]
+        :list:[160.0, 200.0, 1.00]
+    grid_size:[3, 6]
+    grid_data:
+        :list:
+            :map:
+                height:1.09
+            :map:
+            :map:
+            :map:
+            :map:
+            :map:
+            :map:
+        :list:
+            :map:
+            :map:
+                height:1.08
+            :map:
+                height:1.07
+            :map:
+                height:1.06
+            :map:
+                height:1.05
+            :map:
+            :map:
+        :list:
+            :map:
+            :map:
+            :map:
+            :map:
+            :map:
+            :map:
+                height:1.03
+            :map:
+                height:1.01
+
+:map:
+    id:"river2"
+    parents:["river"]
+    description:"""connects to lake"""
+    loc:"agrilan_waters"
+    pos:[40.0, 0.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    width:5.0
+    line_data:
+        :list:[140.0, 20.0, 1.08]
+        :list:[40.0, 20.0, 1.15]
+    grid_size:[2, 1]
+    grid_data:
+        :list:
+            :map:
+                height:1.13
+        :list:
+            :map:
+                height:1.10
+
+:map:
+    id:"agrilan_waters"
+    specification:"example"
+    description:"All Agrilan waters container"
+    parents:["area"]
+    loc:"agrilan"
+    pos:[0.0,0.0,0.0]
+    contains:["lake1", "river1", "river2"]
+
+:map:
+    id:"road_block"
+    specification:"example"
+    name:"Road block"
+    description:"""Defining road types"""
+    parents:["2D_grid","line"]
+    media:"""media id for generic road type"""
+    cell_size:[40.0, 40.0]
+    width:5.0
+
+:map:
+    id:"bridge"
+    name:"Bridge"
+    description:"""Defining bridge type"""
+    parents:["road_block"]
+    media:"""media id for generic bridge type"""
+    cell_size:[40.0, 40.0]
+
+:map:
+    id:"road"
+    specification:"example"
+    name:"Road"
+    description::"Collection of road blocks"
+    parents:["line"]
+    media:"""media id for generic road type"""
+
+:map:
+    id:"road1"
+    description:"""Actual road"""
+    parents:["road_block"]
+    loc:"murray_r1"
+    pos:[160.0, -40.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    line_data:
+        :list:[180.0, -40.0, 1.4]
+        :list:[220.0, 0.0, 1.4]
+    grid_size:[1, 1]
+    grid_data:
+        :list:
+            :map:
+                height:1.4
+
+:map:
+    id:"road2"
+    description:"""Actual road"""
+    parents:["road_block"]
+    loc:"murray_r1"
+    pos:[200.0, 0.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    line_data:
+        :list:[220.0, 0.0, 1.4]
+        :list:[220.0, 180.0, 1.3]
+    grid_size:[1, 5]
+    grid_data:
+        :list:
+            :map:
+                height:1.38
+        :list:
+            :map:
+                height:1.36
+        :list:
+            :map:
+                height:1.34
+        :list:
+            :map:
+                height:1.32
+        :list:
+            :map:
+                height:1.30
+
+:map:
+    id:"bridge1"
+    description:"""Actual bridge"""
+    parents:["bridge"]
+    name:"Murray bridge"
+    loc:"murray_r1"
+    pos:[160.0, 160.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    line_data:
+        :list:[220.0, 180.0, 1.3]
+        :list:[140.0, 180.0, 1.3]
+    grid_size:[1, 1]
+    grid_data:
+        :list:
+            :map:
+                height:2.0
+
+:map:
+    id:"road3"
+    description:"""Actual road"""
+    parents:["road_block"]
+    loc:"murray_r1"
+    pos:[120.0, 160.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    line_data:
+        :list:[140.0, 180.0, 1.3]
+        :list:[100.0, 180.0, 1.2]
+    grid_size:[1, 1]
+    grid_data:
+        :list:
+            :map:
+                height:1.3
+    name:"Murdar road"
+
+:map:
+    id:"murray_r1"
+    name:"Murray Road"
+    description:"""This brings all roads blocks together 
+                   (line data more generic than on lower levels)"""
+    parents:["road"]
+    loc:"agrilan_lands"
+    pos:[0.0, 0.0, 0.0]
+    media:"""media id for whole area (text media may want to use it or 
+             overview 2D media too)"""
+    contains:["road1","road2","bridge1","road3"]
+    line_data:
+        :list:[180.0, -40.0, 1.4]
+        :list:[220.0, 180.0, 1.3]
+        :list:[100.0, 180.0, 1.2]
+
+:map:
+    id:"agrilan_lands"
+    specification:"example"
+    description:"All agrilan lands"
+    parents:["area"]
+    pos:[0.0,0.0,0.0]
+    contains:["hilly1", "hilly2", "hilly3", "plain1", "plain2", "plain3", "plain4", "murray_r1"]
+
+## Subject: Inheritance and dual nature objects
+
+## (Using '.def format')
+## (note area is very coarse and small in this example ;-)
+
+## Dual inheritance in *one* combined object:
+## ==========================================
+
+## Inheritance:
+## ------------
+##   parent: ["2D_grid", "line"]
+
+## Common fields:
+## --------------
+##   id: "road1"
+##   name: "Murray Road"
+##   description: "Road from Summerset to Agrilan"
+##   media: "media id for this road"
+##   loc: "agrilan"
+##   pos: [160.0, -40.0, 0.0]
+
+## Fields inherited from "line":
+## -----------------------------
+##   width: 5.0
+##   line_data:
+##     :list: [180.0, -40.0, 1.4]
+##     :list: [220.0, 0.0, 1.4]
+
+## Fields inherited from "2D_grid":
+## --------------------------------
+##   cell_size: [40.0, 40.0]
+##   grid_size: [1, 1]
+##   grid_data:
+##     :list:
+##        :map:
+##          height: 1.4
+
+
+## Having *several* objects for each different 'faces' of object:
+## ==============================================================
+
+## Road object:
+## ------------
+##   parent: ["road"]
+##   id: "road1"
+##   name: "Murray Road"
+##   description: "Road from Summerset to Agrilan"
+##   media: "media id for this road"
+##   loc: "agrilan"
+##   pos: [160.0, -40.0, 0.0]
+##   isa:
+##     line: "line1"
+##     2D_grid: "grid1"
+
+## Line object:
+## ------------
+##   parent: ["line"]
+##   id: "line1"
+##   width: 5.0
+##   line_data:
+##     :list: [180.0, -40.0, 1.4]
+##     :list: [220.0, 0.0, 1.4]
+
+## 2D_grid object:
+## ---------------
+##   parent: ["2D_grid"]
+##   id: "grid1"
+##   cell_size: [40.0, 40.0]
+##   grid_size: [1, 1]
+##   grid_data:
+##     :list:
+##        :map:
+##          height: 1.4
+
+##### addition
+## Hmm... maybe road as line would be parent container to road area
+## segments and thus it would be different from either of above options.
+

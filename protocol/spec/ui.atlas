@@ -1,0 +1,64 @@
+ATLAS janus object definition file (modeline for XEmacs: -*-Python-*-)
+IWILL Bach_beta2
+
+[
+## janus attributes, read in first
+{
+## Possible values are 'shown', 'hidden', and 'console'. 'console' indicates
+## an element in the game console instead of in a dialog, and can only
+## be set by inheriting from a parent with display_status of 'console'.
+## Also, 'console' archetypes cannot be packed into frames to create
+## new archetypes
+    id:"display_status",
+    parents:["string"],
+    objtype:"type",
+    summary:"whether or not the entity is currently displayed"
+},
+{
+    id:"valign",
+    parents:["string"],
+    objtype:"type",
+    summary:"vertical alignment of children in this frame"
+},
+{
+    id:"halign",
+    parents:["string"],
+    objtype:"type",
+    summary:"horizontal alignment of children in this frame"
+},
+{
+    id:"rel_pos",
+    parents:["string"],
+    objtype:"type",
+    summary:"relative position of successive children in this frame"
+},
+{
+    id:"target",
+    parents:["list"],
+    objtype:"type",
+    element_type:"string",
+    summary:"List of entities to watch for attribute changes"
+},
+## basic UI types
+{
+    id:"u_i_entity",
+    parents:["admin_entity"],
+    summary:"The root entity for UI elements. UI entities are (mostly) owned by the client instead of the server",
+    display_status:"hidden"
+},
+{
+    id:"frame",
+    parents:["u_i_entity"],
+    summary:"bear's widget packing frame class, see http://code-bear.dyndns.org/~bear/janus.html",
+    valign:"center",
+    halign:"left",
+    rel_pos:"below"
+## Child widgets are specified using the 'contains' attribute
+},
+{
+    id:"slot",
+    parents:["u_i_entity"],
+    summary:"A base class for entities which respond to changes in an entity's argument map",
+    target:[]
+}
+]

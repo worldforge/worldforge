@@ -1,0 +1,452 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Atlas tags</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" link="#990000" vlink="#660000" text="#000000">
+    <h2>Atlas protocol proposal</h2>
+
+    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=1>
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#atlas_tag"><b>Connection (&lt;atlas&gt;)</b></a></td>
+        <td>One login session</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#msg_tag"><b>Transfer unit (&lt;msg&gt;)</b></a></td>
+        <td>Delimits blocks transferred</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#op_tag"><b>Operation (&lt;op&gt;)</b></a></td>
+        <td>One action or info</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#id_tag"><b>Id (&lt;id&gt;)</b></a></td>
+        <td>Identifier</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#route_tag"><b>Routing (&lt;from&gt;, &lt;to&gt;)</b></a></td>
+        <td>Who sent, who received operation</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#time_tag"><b>Time (&lt;time&gt;)</b></a></td>
+        <td>Time of operation</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#ent_tag"><b>Entity (&lt;ent&gt;)</b></a></td>
+        <td>Id and attributes for operation, object or type entity</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#type_tag"><b>Type (&lt;type&gt;)</b></a></td>
+        <td>Parent type (attributes inherited from)</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#instance_tag"><b>Instance (&lt;instance&gt;)</b></a></td>
+        <td>Entities that inherit attributes from this entity</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#loc_tag"><b>Location (&lt;loc&gt;)</b></a></td>
+        <td>Location of entity</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#contains_tag"><b>Contains (&lt;contains&gt;)</b></a></td>
+        <td>Objects that use this entity as reference system</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#stamp_tag"><b>Stamp (&lt;stamp&gt;)</b></a></td>
+        <td>Stamp (when object changed or something similar)</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#attr_tag"><b>Attribute (&lt;attr&gt;)</b></a></td>
+        <td>Name and value for attribute</td>
+      </tr>
+
+    </table>
+
+    <h3><a name="atlas_tag">Connection</a></h3>
+
+    Connection: Login, play session, logout<br>
+    Version tag contains Atlas protocol version this uses.<br>
+    &lt;atlas&gt; surrounds whole connection and it could be saved to
+    file as a XML document.
+    <p>
+    Connection consist of transfer units.
+    <p>
+    Example:
+    <PRE>
+      &lt;atlas version="0.2"&gt;
+        &lt;msg/&gt;
+        &lt;msg/&gt;
+        &lt;msg/&gt;
+      &lt;/atlas&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="msg_tag">Transfer unit</a></h3>
+
+    Transfer unit: 0 or more operations. This is transferred as one
+    block and then interpreted by Atlas library. It's surrounded by
+    &lt;msg&gt; -tag and thus can be interpreted as XML document too.
+    <p>
+    Each msg might contain serial number. Communication library will
+    use it to request retransmission of msg if needed. Retransmission
+    is requested when gap in serial number or missing msg is detected.
+    <p>
+    Example:
+    <PRE>
+      &lt;msg no="1"&gt;
+        &lt;op/&gt;
+        &lt;op/&gt;
+      &lt;/msg&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="op_tag">Operation</a></h3>
+    Operation consist of id tag and arguments for operation.<br>
+    It can include optional from,to and time tags.<br>
+    It can include optional no and refno attributes.
+    <p>
+    Example (body of character '123' hit you and now you have 40 HP):
+    <PRE>
+       &lt;op no="200"&gt;
+         &lt;from&gt;123&lt;/from&gt;
+         &lt;to&gt;777&lt;/to&gt;
+         &lt;time s="16874695545.78"&gt;542-12-30 17:44:01.78&lt;/time&gt;
+         &lt;id&gt;change&lt;/id&gt;
+         &lt;ent&gt;
+           &lt;id&gt;777&lt;/id&gt;
+           &lt;attr name="HP" type="int"&gt;40&lt;/attr&gt;
+         &lt;/ent&gt;
+       &lt;/op&gt;
+    </PRE>
+    Note that mind of character '123' likely sent something like:
+    "swing this sword that way".
+    <p>
+    <b>no and refno -attributes:</b>
+    <p>
+    Client can set this to some number (likely serial no starting from
+    1) and when server answers it might include in answer refid
+    attribute to tell with operation it's answering.
+    <p>
+    Example:
+    <PRE>
+      &lt;op no="100"&gt;
+        &lt;id&gt;move&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;9899&lt;/id&gt;
+          &lt;loc&gt;&lt;id&gt;11&lt;/id&gt;&lt;coords&gt;12.3,3,0&lt;/coords&gt;&lt;/loc&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+    Answer from server (character is somewhat drunken):
+    <PRE>
+      &lt;op no="1234" refno="100"&gt;
+        &lt;id&gt;sight&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;9899&lt;/id&gt;
+          &lt;loc&gt;&lt;id&gt;11&lt;/id&gt;&lt;coords&gt;12.2,3.2,-0.1&lt;/coords&gt;&lt;/loc&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="id_tag">Id</a></h3>
+
+    Complete format for id tag is:<br>
+    host_name:id_string#sub_id#sub_sub_id<br>
+    There could be 'any' amount of sub ids.<br>
+    host_name part is optional if it's server where connection has been made.
+    <p>
+    Id strings cannot contain ':' or '#' characters.
+    <p>
+    Examples:
+    <PRE>
+       &lt;id&gt;magicworld.org:funny_ape_123#arm#thumb&lt;/id&gt;
+       &lt;id&gt;magicworld.org:98123#8#1&lt;/id&gt;
+       &lt;id&gt;98123#8#1&lt;/id&gt;
+       Inside '98123' entity description: &lt;id&gt;#8#1&lt;/id&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="route_tag">Routing</a></h3>
+
+    From tag tells where operation originates.<br>
+    To tag tells target for operation.<br>
+    These tag have same content as <a href="#id_tag">id tag</a>.
+    <p>
+      
+    <hr>
+
+    <h3><a name="time_tag">Time</a></h3>
+
+    Time tag tells when operation happened.<br>
+    It has s attribute that tells in seconds current time.<br>
+    It might have sadd attribute that tells how much in the future
+    operation should happen.
+    <p>
+      Content tells current time using format <em>similar</em> to ISO
+      format: YYYY-MM-DD hh:mm:ss (why not exactly same: because
+      calendar might be totally different).
+    <p>
+      Example (unusual year and month):
+    <PRE>
+      &lt;time s=372225899200.7&gt;12007-103-05 47:05:45.7&lt;/time&gt;
+    </PRE>
+
+    If server omits content, then client can assume our real world
+    calendar.
+    <p>
+      Example:
+    <PRE>
+      &lt;time s=62034870000.45/&gt;
+    </PRE>
+
+    sadd attribute: client (and maybe server too) can specify
+    operation time into future.
+    <p>
+      Example: move sword here, then move it there after 0.X seconds,
+      then move it here after 0.X+0.Y seconds etc... (time fields here)
+    <p>
+      XML Example:
+    <PRE>
+      &lt;op&gt;
+        &lt;time sadd="0.1"/&gt;
+        &lt;id&gt;move&lt;id&gt;
+        &lt;id&gt;sword_88&lt;/id&gt;
+        &lt;loc&gt;&lt;id&gt;joe_123&lt;/id&gt;&lt;vector&gt;0.5,0,0&lt;/vector&gt;&lt;/loc&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="ent_tag">Entity</a></h3>
+
+    Entity can be description for operation, object or type
+    description. It can include id, type, instance, loc, contains,
+    stamp and attr tags.
+
+    Example:
+    <PRE>
+      &lt;ent&gt;
+         &lt;id&gt;Brian_789&lt;/id&gt;
+         &lt;type&gt;human&lt;/type&gt;
+         &lt;contains&gt;
+           &lt;id&gt;backpack_322&lt;/id&gt;
+           &lt;id&gt;sword_1322&lt;/id&gt;
+         &lt;/contains&gt;
+         &lt;loc&gt;
+           &lt;id&gt;house_879&lt;/id&gt;
+           &lt;coords&gt;12.4,7.4,3.5&lt;/coords&gt;
+         &lt;/loc&gt;
+         &lt;stamp&gt;122143.5&lt;/stamp&gt;
+         &lt;attr name="HP" type="int"&gt;40&lt;/attr&gt;
+      &lt;/ent&gt;
+    </PRE>
+
+    <h4>Id</h4>
+    Id describes entity uniquely or if id is not given then entity
+    is temporary.
+    <p>
+    Temporary entity means that you can't refer to it in the future
+    or in the other words it's 'available' only inside &lt;op&gt; tag.
+
+    Example:
+    <PRE>
+      &lt;op&gt;
+        &lt;id&gt;talk&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;attr name="say"&gt;What has happened there?&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="type_tag">Type</a></h4>
+
+    Parent type: Entity inherits attributes from parent type. It can
+    then override them, remove them or add new attributes.
+    There might be more than one parent type (multiple inheritance).
+    <p>
+    Example:
+    <PRE>
+       &lt;type&gt;human&lt;/type&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="instance_tag">Instance</a></h4>
+
+    Lists all entities that have this as parent type.
+
+    <p>
+    <hr>
+
+    <h4><a name="loc_tag">Location</a></h4>
+
+    Location of entity.
+    Id tag contains id for entity that acts as reference for
+    location. This entity is not necessary inside or on top of
+    reference object.
+    <p>
+    Coords tag contains coordinates (usually x,y or x,y,z)
+    <p>
+    Instead of 'coords' it might be 'vector': then coordinates are
+    relative to op receiver.
+    <p>
+    Example:
+    <PRE>
+       &lt;loc&gt;
+         &lt;id&gt;house_879&lt;/id&gt;
+         &lt;coords&gt;12.4,7.4,3.5&lt;/coords&gt;
+       &lt;/loc&gt;
+    </PRE>
+    
+    More about <a href="move.html">movement here</a>.
+
+    <p>
+    <hr>
+
+    <h4><a name="contains_tag">Contains</a></h4>
+
+    Lists things that use this entity as reference system. List may
+    not be complete (you don't notice/see everything; for admin client 
+    it might still be complete)
+    <p>
+    Example:
+    <PRE>
+       &lt;contains&gt;
+         &lt;id&gt;backpack_322&lt;/id&gt;
+         &lt;id&gt;sword_1322&lt;/id&gt;
+       &lt;/contains&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="stamp_tag">Stamp</a></h4>
+    
+    In sight operations you usually receive list of entities
+    containing id and stamp. You can them compare stamp with your
+    stamp from local cache and then requery about that object if they
+    differ (it has changed clothing, for example)
+    <p>
+    Example:
+    <PRE>
+      &lt;contains&gt;
+        &lt;ent&gt;&lt;id&gt;path1&lt;/id&gt;&lt;stamp&gt;989.24&lt;/stamp&gt;&lt;/ent&gt;
+        &lt;ent&gt;&lt;id&gt;tree1&lt;/id&gt;&lt;stamp&gt;1989.24&lt;/stamp&gt;&lt;/ent&gt;
+        &lt;ent&gt;&lt;id&gt;Joe123&lt;/id&gt;&lt;stamp&gt;3011.43&lt;/stamp&gt;&lt;/ent&gt;
+      &lt;/contains&gt;
+    </PRE>
+
+    When querying include stamp from cache, so server can send only
+    changed parts, exmpale:
+
+    <PRE>
+      &lt;op&gt;&lt;id&gt;look&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;Joe123&lt;/id&gt;
+          &lt;stamp&gt;2811.99&lt;/stamp&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    Example answer from server:
+
+    <PRE>
+      &lt;op&gt;&lt;id&gt;sight&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;Joe123&lt;/id&gt;
+          &lt;stamp&gt;3011.43&lt;/stamp&gt;
+          &lt;contains&gt;&lt;id&gt;shield847&lt;/id&gt;&lt;/contains&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h4><a name="attr_tag">Attribute</a></h4>
+
+    This is generic method for describing entity attributes.
+    It has optional 'name' -attribute for naming entity attributes.
+    <p>
+    It has optional 'type' -attribute for giving type of entity
+    attribute. If type is not given, then it's assumed to be same type 
+    as attribute with same name in parent entity type. If it's not
+    given anywhere in entity type hierarchy, then it's assumed to be string.
+    <p>
+    Valid types: int, float, string, list, range, id, attr, ent, delete, Xlist<br>
+    <em>list, range, Xlist, attr, ent, delete types will likely change
+    after discussion at scripting@worldforge.org!</em>
+    <p>
+    int: integer (likely 32 bit signed int, though it might be 64 bit too)<br>
+    float: floating point number (likely float or double)<br>
+    string: arbitrary string (should not contain \0)<br>
+    list: contains list of arbitrary types;
+      surround each element with type tag: 
+    <PRE>
+      &lt;int&gt;187&lt;/int&gt;
+      &lt;float&gt;-87.09&lt;/float&gt;
+      &lt;list/&gt;
+      &lt;attr name="height" type="float"&gt;2.56&lt;/attr&gt;
+    </PRE>
+    range: start-end<br>
+    id: see id tag<br>
+    attr: sub attribute<br>
+    ent: attribute list<br>
+    delete: parent type entity has this attribute, but this doesn't<br>
+    Xlist: list of one type: intlist, floatlist, stringlist or rangelist<br>
+    <p>
+    Example:
+    <PRE>
+       &lt;attr name="HP" type="int"&gt;40&lt;/attr&gt;
+    </PRE>
+    <p>
+    There should be root type entity for all objects that defines
+    types for common attributes.
+    <p>
+    Example:
+    <PRE>
+      &lt;ent&gt;
+        &lt;attr name="name" type="string"&gt;Give entity some name!&lt;/&gt;
+        &lt;attr name="health" type="float"&gt;1.0&lt;/&gt;
+      &lt;/ent&gt;
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Tue May 25 08:18:19 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Mon Jul  5 17:52:57 EEST 1999
+<!-- hhmts end -->
+  </body>
+</html>

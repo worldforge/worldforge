@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Operation</title>
+  </head>
+  <body>
+    <h1>Operations</h1>
+
+    There are two different type of operations:
+    Basic level (create,delete,set,get,info) and game specific
+    operations (summon,forge, etc...)
+    <p>
+      Server should send info operations in both format. Clients can
+      always interpret info about create,etc.. operations and if they
+      know more complex ones they can play suitable animation or NPC
+      can remember somebody stealing etc...
+    <p>
+      When client wants to do something or get info about something,
+      it sends some operation derived from action. Server usually
+      replies with some operation derived from info, which might embed 
+      original action.
+    <p>
+      <b>Example:</b><br>
+      client: forge("jewel_sword","jewels","iron")<br>
+      server: sight(forge("jewel_sword","jewels","iron")<br>
+      server: info(create("jewel_sword",length=1.2, etc...))<br>
+      server: info(set("iron",amount=current-something))<br>
+      server: info(destroy("jewels"))
+    <p>
+      When sending operations use parent:"move" instead of id:"move"<br>
+      Reason: so we can distinguish between operation and object that
+      tells what operation is about and all operations when used are
+      temporary objects anyway (maybe "magical_crunchy_voice_stepping" is not ;-)
+
+    <h2>Operation tree</h2>
+
+<objindex id="root_operation">
+
+<objtree id="root_operation">
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Nov  1 10:57:27 EET 1999 -->
+<!-- hhmts start -->
+Last modified: Fri Dec 10 19:38:56 EET 1999
+<!-- hhmts end -->
+  </body>
+</html>

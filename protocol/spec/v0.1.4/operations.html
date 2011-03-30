@@ -1,0 +1,889 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Basic operator hierarchy</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" link="#990000" vlink="#660000" text="#000000">
+    <h2>Basic operator hierarchy</h2>
+
+    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=1>
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#introduction"><b>Introduction</b></a></td>
+        <td>About goal for operator hierarchy</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#browsing"><b>Browsing hierarchy</b></a></td>
+        <td>How to find operations server supports</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#op"><b>op</b></a></td>
+        <td>Base operator for all operators</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#action"><b>action</b></a></td>
+        <td>Base operator for operations that might have effects</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#create"><b>create</b></a></td>
+        <td>Create new things from nothing.</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#combine"><b>combine</b></a></td>
+        <td>Combine existing objects into new objects</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#divide"><b>divide</b></a></td>
+        <td>Divide existing object into pieces</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#spell"><b>spell</b></a></td>
+        <td>Optional tag</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#communicate"><b>communicate</b></a></td>
+        <td>Base operator for all kind of communication</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#talk"><b>talk</b></a></td>
+        <td>Talking</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#set"><b>set</b></a></td>
+        <td>Sets all attributes for existing entity</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#change"><b>change</b></a></td>
+        <td>Change existing attributes and/or create new attributes</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#move"><b>move</b></a></td>
+        <td>Change position</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#attack"><b>attack</b></a></td>
+        <td>Generic attack operation</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#use"><b>use</b></a></td>
+        <td>Use something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#skill"><b>skill</b></a></td>
+        <td>Use some skill</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#get"><b>get</b></a></td>
+        <td>Generic operation for getting info about things</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#perceive"><b>perceive</b></a></td>
+        <td>Generic base operation for perceiving things by eyes, ears, etc...</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#look"><b>look</b></a></td>
+        <td>Looking at something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#listen"><b>listen</b></a></td>
+        <td>Listen something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#sniff"><b>sniff</b></a></td>
+        <td>Sniff something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#touch"><b>touch</b></a></td>
+        <td>Touch something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#login"><b>login</b></a></td>
+        <td>Logging into server</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#delete"><b>delete</b></a></td>
+        <td>Delete something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#info"><b>info</b></a></td>
+        <td>Info about something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#perception"><b>perception</b></a></td>
+        <td>Character perceives something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#sight"><b>sight</b></a></td>
+        <td>Character sees something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#appear"><b>appear</b></a></td>
+        <td>Something appears</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#disappear"><b>disappear</b></a></td>
+        <td>Something disappears</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#sound"><b>sound</b></a></td>
+        <td>Character hears something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#smell"><b>smell</b></a></td>
+        <td>Character hears something</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#sense"><b>sense</b></a></td>
+        <td>Character senses something (with fingers usually)</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#imaginary"><b>imaginary</b></a></td>
+        <td>Placeholder for perceptions of unimplemented actions</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#error"><b>error</b></a></td>
+        <td>Something went wrong</td>
+      </tr>
+
+    </table>
+
+    <h3><a name="introduction">Introduction</a></h3>
+
+    Goal is to achieve generality and specificity at the same time. If
+    client doesn't understand some operation it can lookup at
+    operation hierarchy for more generic format and use that. It might 
+    lose some useful info but it doesn't usually lose all.
+    For examples see <a href="http://www.worldforge.org/website/news/newsletters/issues/may99/report2.html">article for CB#3</a>.
+
+    <p>
+    <hr>
+
+    <h3><a name="op">op</a></h3>
+
+    Base operator for all operators.
+    No parameters. Useful starting point for browsing operator
+    hierarchy.
+
+    <p>
+    <hr>
+
+    <h3><a name="action">action</a></h3>
+
+    Derived from <a href="#op">op</a>.
+    <p>
+    Base operator for operations that might have effects.
+
+      <p>
+    <hr>
+
+    <h3><a name="create">create</a></h3>
+
+    Derived from <a href="#action">action</a>.
+    <p>
+    Create new things from nothing using this operator. Map editor is
+    main user for this.
+    <p>
+    Parameters: entity describing object that is being created.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;create&lt;/id&gt;
+        &lt;from&gt;map-editor&lt;/from&gt;
+        &lt;ent&gt;
+          &lt;attr name="name"&gt;Axe&lt;/attr&gt;
+          &lt;attr name="attack" type="int"&gt;3&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="combine">combine</a></h3>
+
+    Derived from <a href="#create">create</a>.
+    <p>
+    Combine existing objects into new objects. This is how normal
+    characters create objects.
+    <p>
+    Parameters: entity describing object that is being created and
+    list of entities that are used as raw material.
+    <p>
+    <PRE>
+      &lt;op&gt;&lt;id&gt;combine&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;type&gt;&lt;id&gt;axe&lt;/id&gt;&lt;/type&gt;
+          &lt;attr name="name"&gt;Bjorn's axe&lt;/attr&gt;
+        &lt;/ent&gt;
+        &lt;id&gt;Wood_8898&lt;/id&gt;
+        &lt;id&gt;Iron_6578&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+    
+    <hr>
+
+    <h3><a name="divide">divide</a></h3>
+
+    Derived from <a href="#create">create</a>.
+    <p>
+    Divide existing object into pieces. One of the pieces might be
+    original object modified.
+    <p>
+    Parameters: id of original object and entities describing pieces.
+    <p>
+    <PRE>
+      &lt;op&gt;&lt;id&gt;divide&lt;/id&gt;
+        &lt;id&gt;money12345&lt;/&gt;
+        &lt;ent&gt;
+          &lt;id href="money12345"/&gt;
+          &lt;attr name="amount" type="int"&gt;10&lt;/attr&gt;
+        &lt;/ent&gt;
+        &lt;ent&gt;
+          &lt;attr name="amount" type="int"&gt;110&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+    
+    <hr>
+
+    <h3><a name="spell">spell</a></h3>
+
+    Optional operation, derived from <a href="#combine">combine</a>.
+
+    <p>
+    <hr>
+
+    <h3><a name="communicate">communicate</a></h3>
+
+    Derived from <a href="#create">create</a>.
+    Base operator for all kind of communication.
+    <p>
+    Parameters: communication entity.
+    <p>
+    Example: see <a href="#talk">talk</a>
+
+      <p>
+    <hr>
+
+    <h3><a name="talk">talk</a></h3>
+
+    Derived from <a href="#communicate">communicate</a>.
+    <p>
+    Parameters: sentence(s) entity.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;
+        &lt;id&gt;talk&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;attr name="say"&gt;What has happened there?&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+    Talking out of game is same, except you use player id instead of character id.
+
+    <p>
+    <hr>
+
+    <h3><a name="set">set</a></h3>
+
+    Derived from <a href="#action">action</a>.
+    <p>
+    Sets all attributes for existing entity.
+    <p>
+    Parameters: entity with id and new attributes.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;set&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;9899&lt;/id&gt;
+          &lt;attr name="HP" type="int"&gt;50&lt;/attr&gt;
+          &lt;attr name="height" type="float"&gt;1.8&lt;/attr&gt;
+          &lt;attr name="width" type="float"&gt;0.3&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="change">change</a></h3>
+
+    Derived from <a href="#set">set</a>.
+    <p>
+    Change existing attributes and/or create new
+    attributes. Difference with set is that anything previously
+    defined attribute not touched here remain intact.
+    <p>
+    Parameters: entity with id and changed/new attributes.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;change&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;9899&lt;/id&gt;
+          &lt;attr name="HP" type="int"&gt;30&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="move">move</a></h3>
+
+    Derived from <a href="#change">change</a>.
+    <p>
+    Change position.
+    <p>
+    Parameters: entity with id and new position.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;move&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;9899&lt;/id&gt;
+          &lt;loc&gt;&lt;id&gt;11&lt;/id&gt;&lt;coords&gt;12.3,3,0&lt;/coords&gt;&lt;/loc&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    More about <a href="move.html">movement here</a>.
+
+    <p>
+    <hr>
+
+    <h3><a name="attack">attack</a></h3>
+
+    <em>Maybe move_attack instead of attack? Or maybe let attack
+    derive from change and let move_attack derive from attack and move?</em>
+    <p>
+    Derived from <a href="#move">move</a>.
+    <p>
+    Generic attack operation. Base operation for game specific attack
+    operations (like swing, etc...). 
+    <p>
+    Parameters: entity with id, new position and maybe some other attributes.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;attack&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;Sword_99&lt;/id&gt;
+          &lt;loc&gt;&lt;id&gt;Opponent_11&lt;/id&gt;&lt;coords&gt;0.2,0.2,1.5&lt;/coords&gt;&lt;/loc&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="use">use</a></h3>
+
+    <em>Needs more thinking!</em>
+    Derived from <a href="#change">change</a>.
+    <p>
+    Use something (tool, skill etc..)
+    <p>
+    Parameters: id for entity to be used.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;use&lt;/id&gt;
+        &lt;id&gt;magic_wand_24&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="skill">skill</a></h3>
+
+    <em>Needs more thinking!</em>
+    Derived from <a href="#use">use</a>.
+    <p>
+    Use some skill.
+    <p>
+    Parameters: id of skill and optionally target id's.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;skill&lt;/id&gt;
+        &lt;id&gt;woodworking&lt;/id&gt;
+        &lt;id&gt;target_wood_24903&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="get">get</a></h3>
+
+    Derived from <a href="#action">action</a>.
+    <p>
+    Generic operation for getting info about things.
+    <p>
+    Parameters: id of target entity.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;get&lt;/id&gt;
+        &lt;id&gt;elf_type_id_45&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <b><a name="browsing">Browsing operator hierarchy example:</a></b>
+    <p>
+    First start from operator hierarchy root (see <a href="#op">op</a>):
+    <PRE>
+      &lt;op&gt;
+        &lt;id&gt;get&lt;/id&gt;
+        &lt;id&gt;op&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+    Answer might be:
+    <PRE>
+      &lt;op&gt;
+        &lt;id&gt;info&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;op&lt;/id&gt;
+          &lt;instance&gt;
+            &lt;id&gt;action&lt;/id&gt;
+            &lt;id&gt;info&lt;/id&gt;
+          &lt;/instance&gt;
+          &lt;attr name="description"&gt;Base operator for all operators&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+    Then you can ask about action and info:
+    <PRE>
+      &lt;op&gt;
+        &lt;id&gt;get&lt;/id&gt;
+        &lt;id&gt;action&lt;/id&gt;
+      &lt;/op&gt;
+      &lt;op&gt;
+        &lt;id&gt;get&lt;/id&gt;
+        &lt;id&gt;info&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+    Etc...
+
+    <p>
+    <hr>
+
+    <h3><a name="perceive">perceive</a></h3>
+
+    Derived from <a href="#get">get</a>.
+    <p>
+    Generic base operation for perceiving things by eyes, ears, etc...
+    <p>
+    Parameters: id of target entity.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;perceive&lt;/id&gt;
+        &lt;id&gt;elf_3545&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="look">look</a></h3>
+
+    Derived from <a href="#perceive">perceive</a>.
+    <p>
+    Looking at something.
+    <p>
+    Parameters: id of target entity (optional).
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;look&lt;/id&gt;
+        &lt;id&gt;elf_3545&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="listen">listen</a></h3>
+
+    Derived from <a href="#perceive">perceive</a>.
+    <p>
+    Listen (something).
+    <p>
+    Parameters: id of target entity (optional).
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;listen&lt;/id&gt;
+        &lt;id&gt;elf_3545&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="sniff">sniff</a></h3>
+
+    Derived from <a href="#perceive">perceive</a>.
+    <p>
+    Sniff something.
+    <p>
+    Parameters: id of target entity (optional).
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;sniff&lt;/id&gt;
+        &lt;id&gt;flower_3545&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="touch">touch</a></h3>
+
+    Derived from <a href="#perceive">perceive</a>.
+    <p>
+    Touch something.
+    <p>
+    Parameters: id of target entity.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;touch&lt;/id&gt;
+        &lt;id&gt;cloth_3545&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="login">login</a></h3>
+
+    Derived from <a href="#get">get</a>.
+    <p>
+    Operation for logging into server.
+    <p>
+    Parameters: entity with player name and password attribute.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;login&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;JoeBlatz&lt;/id&gt;
+          &lt;attr name="password"&gt;Rqv67.%&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="delete">delete</a></h3>
+
+    Derived from <a href="#action">action</a>.
+    <p>
+    Delete something.
+    <p>
+    Parameters: id of entity to be deleted.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;delete&lt;/id&gt;
+        &lt;id&gt;foo_bar_344&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="info">info</a></h3>
+
+    Derived from <a href="#op">op</a>.
+    <p>
+    Info about something.
+    <p>
+    Parameters: info entity.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;info&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;attr name="msg"&gt;Here is some info&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="perception">perception</a></h3>
+
+    Derived from <a href="#info">info</a>.
+    <p>
+    Character perceives something.
+    <p>
+    Parameters: perceived thing. Base operator for all kind of
+    perceptions.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;perception&lt;/id&gt;
+        &lt;id&gt;tree_8374&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="sight">sight</a></h3>
+
+    Derived from <a href="#perception">perception</a>.
+    <p>
+    Character sees something.
+    <p>
+    Parameters: object or event character sees.
+    <p>
+    Common example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;sight&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;grass1&lt;/id&gt;
+          &lt;stamp&gt;989.24&lt;/stamp&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+    Reply for looking at 'grass1':
+    <PRE>
+      &lt;op&gt;&lt;id&gt;sight&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;grass1&lt;/id&gt;
+          &lt;type&gt;&lt;id&gt;terrain&lt;/id&gt;&lt;/type&gt;
+          &lt;contains&gt;
+            &lt;id&gt;path1&lt;/id&gt;
+            &lt;id&gt;tree1&lt;/id&gt;
+          &lt;/contains&gt;
+          &lt;attr name="description"&gt;Grass plains&lt;/attr&gt;
+          &lt;attr name="polygon" type="coords"&gt;
+            &lt;coords&gt;0,0&lt;/coords&gt;&lt;coords&gt;10,0&lt;/coords&gt;&lt;coords&gt;10,10&lt;/coords&gt;
+            &lt;coords&gt;0,10&lt;/coords&gt;&lt;coords&gt;0,0&lt;/coords&gt;
+          &lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+    Event example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;sight&lt;/id&gt;
+        &lt;op&gt;&lt;id&gt;move&lt;/id&gt;
+          &lt;ent&gt;
+            &lt;id&gt;orc_23498&lt;/id&gt;
+            &lt;loc&gt;&lt;id&gt;grass1&lt;/id&gt;&lt;coords&gt;0.5,3.0,0.0&lt;/coords&gt;&lt;/loc&gt;
+          &lt;/ent&gt;
+        &lt;/op&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="appear">appear</a></h3>
+
+    Derived from <a href="#sight">sight</a>.
+    <p>
+    Character sees something appearing: it literally appears or has
+    it come in visible range.
+    <p>
+    Parameters: object or event character sees.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;appear&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;grass1&lt;/id&gt;
+          &lt;stamp&gt;989.24&lt;/stamp&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="disappear">disappear</a></h3>
+
+    Derived from <a href="#sight">sight</a>.
+    <p>
+    Character sees something disappearing: it literally disappears or
+    has it gone too far to be visible.
+    <p>
+    Parameters: object or event character sees.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;disappear&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;grass1&lt;/id&gt;
+          &lt;stamp&gt;989.24&lt;/stamp&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="sound">sound</a></h3>
+
+    Derived from <a href="#perception">perception</a>.
+    <p>
+    Character hears something.
+    <p>
+    Parameters: thing character heard.
+    <p>
+    Example (every operation might have from, to and time tags, not
+    only this operation):
+    <PRE>
+      &lt;op&gt;&lt;id&gt;sound&lt;/id&gt;
+        &lt;from&gt;sentry_34&lt;/from&gt;
+        &lt;ent&gt;
+          &lt;attr name="say"&gt;What has happened there?&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="smell">smell</a></h3>
+
+    Derived from <a href="#perception">perception</a>.
+    <p>
+    Character smells something.
+    <p>
+    Parameters: thing character smells.
+    <p>
+    Example (every operation might have from, to and time tags, not
+    only this operation):
+    <PRE>
+      &lt;op&gt;&lt;id&gt;sound&lt;/id&gt;
+        &lt;from&gt;flower_34&lt;/from&gt;
+        &lt;ent&gt;
+          &lt;attr name="smell"&gt;sweet&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="sense">sense</a></h3>
+
+    Derived from <a href="#perception">perception</a>.
+    <p>
+    Character senses something (with fingers usually).
+    <p>
+    Parameters: thing character senses.
+    <PRE>
+      &lt;op&gt;&lt;id&gt;sound&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;id&gt;cloth_34&lt;/id&gt;
+          &lt;attr name="surface type"&gt;rough&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="imaginary">imaginary</a></h3>
+
+    Derived from <a href="#perception">perception</a>.
+    <p>
+    When something is not yet implemented in server, then character
+    can pretend to do something ;-)
+    <p>
+    Parameters: event that is supposed to happen.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;imaginary&lt;/id&gt;
+        &lt;id&gt;some_unimplemented_action&lt;/id&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="error">error</a></h3>
+
+    Derived from <a href="#info">info</a>.
+    <p>
+    Something went wrong.
+    <p>
+    Parameters: entity describing what went wrong.
+    <p>
+    Example:
+    <PRE>
+      &lt;op&gt;&lt;id&gt;error&lt;/id&gt;
+        &lt;ent&gt;
+          &lt;attr name="op" type="id"&gt;foo&lt;/attr&gt;
+          &lt;attr name="msg"&gt;Unknown operation&lt;/attr&gt;
+        &lt;/ent&gt;
+      &lt;/op&gt;
+    </PRE>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Tue Jun  1 12:26:50 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Mon Jul  5 16:53:08 EEST 1999
+<!-- hhmts end -->
+  </body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>RFC: Atlas specification v0.3.0-working</title>
+  </head>
+
+  <body>
+    <h1>RFC: Atlas specification v0.3.0-working</h1>
+
+    <a href="credits.html"><h2>Credits</h2></a>
+
+    <a href="revision_history.html"><h2>Revision history</h2></a>
+
+    <h2>Requirements document</h2>
+
+    <a href="requirements.html">revision #8</a>
+
+    <h2>Basic semantics</h2>
+    
+    Everything in Atlas is expressed as object. Object has optional
+    name and nonoptional type and value.
+
+    <h3>Object definition</h3>
+
+    Object consist of :
+    <ul>
+      <li><b>name:</b> optional string (should probably be something all
+        programming languages can deal with and be URI compatible)
+        Each named object is called attribute.
+      <li><b><a href="type.html">physical type</a>: value</b>
+    </ul>
+
+    If object looks like:
+    <ul>
+        object name:character, value:list:
+        <ul>
+          <li>object name:HP, value:int:10
+          <li>object name:location, value:list:
+            <ul>
+              <li>object name:parent, value:id:""
+              <li>object name:coords, value:floatlist:1.0,2.0,-3.5
+            </ul>
+        </ul>
+    </ul>
+    
+    C equivalent could be something like this:<br>
+    <ul>
+        <pre>
+struct character {
+  int HP;
+  struct location_st {
+    void *parent;
+    double coords[3];
+  } location;
+} foo_character = {10,{NULL,{1.0,2.0,-3.5}}};
+        </pre>
+    </ul>
+
+    Syntax that is used here for objects with predefined attributes:
+    <ul>
+        character:
+        <ul>
+          <li>HP:10
+          <li>location:
+            <ul>
+              <li>parent:""
+              <li>coords:1.0,2.0,-3.5
+            </ul>
+        </ul>
+    </ul>
+
+    So "object name:" and "value:" parts are stripped away. Thus<br>
+    <b>object name:, value:int:10</b><br>
+    after stripping looks like:<br>
+    <b>:10</b>
+
+    <h3>Object tree</h3>
+
+    Objects in tree branches inherit attributes from their parents. 
+    Note that what following defines is default and implementations
+    can change values or add new attributes as needed. However if you
+    change too much existing ones entities, then new clients might
+    become confused.
+
+    <ul>
+        <li><a href="root.html">root</a>: you can browse whole object tree starting here
+        <ul>
+          <li><a href="entity.html">root_entity</a> : abstract class hierarchy and real objects
+          <li><a href="map.html">geometry</a> : map definition
+          <li><a href="operation.html">root_operation</a> : operations you
+            can do.
+          <li><a href="type.html">root_type</a> : Physical and abstract types.
+          <li><a href="interface.html">root_interface</a> : defines interfaces
+        </ul>
+    </ul>
+
+    <a href="negotiation.html"><h2>Codec negotiation (achat)</h2></a>
+
+    <a href="bach_syntax.html"><h2>Bach Syntax</h2></a>
+
+    <a href="xml_syntax.html"><h2>XML Syntax</h2></a>
+
+    <a href="packed_syntax.html"><h2>Packed Syntax</h2></a>
+
+    <a href="binary1_beta.html"><h2>Binary1 beta2 Syntax</h2></a>
+
+    Binary2 to be written.
+
+    <h2>Links that are linked from operation page</h2>
+
+    <a href="move.html">More about movement</a><br>
+    <a href="login.html">More about OOG Atlas</a>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Fri Oct 29 18:06:25 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Tue Jul  2 09:09:03 EEST 2002
+<!-- hhmts end -->
+  </body>
+</html>

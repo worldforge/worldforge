@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Out of game (OG) Atlas</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" link="#990000" vlink="#660000" text="#000000">
+    <h2>Out of game (OG) Atlas</h2>
+
+    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=1>
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#intro"><b>Intro</b></a></td>
+        <td>How does OG Atlas compares to IG Atlas?</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#connect"><b>Connection and disconnection</b></a></td>
+        <td>Initializing and closing connection</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#login"><b></b></a></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#browsing"><b>Browsing server</b></a></td>
+        <td>What games there are?</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#player"><b>Creating player account and login</b></a></td>
+        <td>How player is authorized to play</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#character"><b>Creating character and using it</b></a></td>
+        <td>Player and non player characters: characters controlled
+          outside server</td>
+      </tr>
+
+    </TABLE>
+    
+    <h3><a name="intro">Intro</a></h3>
+
+    Server is just some kind of meta world with meta characters (player
+    accounts) and 'gateways' to real worlds. So it's handled in many ways
+    similar than actual world.
+    <p>
+      Server differentiates messages meant to meta world from messages 
+      meant to actual game from id: messages from player id or if id
+      is not specified are meant to meta world. Messages from
+      character id are for actual game world.
+    <p>
+    <hr>
+
+    <h3><a name="connect">Connection and disconnection</a></h3>
+    
+    When you connect, standard xml starting tags and opening atlas tag
+    with version attribute.
+    <p>
+    Binary note: in binary this is more or less different! (Either
+    binary="yes" or completely different)
+    <p>
+    Example:
+    <PRE>
+&lt;?xml version="1.0" encoding="UTF-8" standalone="yes"?&gt;
+&lt;!DOCTYPE atlas protocol "atlas.dtd"&gt;
+&lt;atlas version="0.2"&gt;
+    </PRE>
+    In future there will be additional tags for setting binary and/or
+    compression flags.
+    <p>
+    When you disconnect, send closing atlas tag.
+    <p>
+    Binary note: in binary this is more or less different! And
+      participants needs to handle gracefully abrupt disconnection too
+      (somebody unplugged connection).
+    <p>
+    Example:
+    <PRE>
+&lt;/atlas&gt;
+    </PRE>
+
+    <hr>
+
+    <h3><a name="browsing">Browsing server</a></h3>
+
+    You can get list of games by sending this to server:
+
+    <ul>
+      <li>:
+        <ul>
+          <li>id:"get"
+          <li>object:
+            <ul>
+              <li>id:"games"
+            </ul>
+        </ul>
+    </ul>
+
+    Server tells what games it contains:
+
+    <ul>
+      <li>:
+        <ul>
+          <li>id:"games"
+          <li>contains:
+            <ul>
+              <li>id:"Medieval fantasy game"
+              <li>id:"Warcraft clone
+            </ul>
+        </ul>
+    </ul>
+
+    Further request might require that you are logged in. Especially
+    getting list of players likely requires account with 'admin'
+    privileges. Creating characters too likely requires player
+    account.
+    <p>
+    <hr>
+
+    <h3><a name="player">Creating player account and login</a></h3>
+
+    If you don't have account, you need to create one. If you already
+    have account, then creating new one might be against server
+    policy. So usually there should only be one player account per
+    real human.
+    <p>
+      Creating account (this is likely to change somewhat, one
+      modification might be to require mail address where password is
+      then sent):
+
+    <ul>
+      <li>:
+        <ul>
+          <li>id:"create"
+          <li>:
+            <ul>
+              <li>name:"JoeBlatz"
+              <li>password:"Rqv67.%"
+            </ul>
+        </ul>
+    </ul>
+
+    In response server sends 'info' or 'error' operation back (with
+    includes player account id (might be same as account name). refno
+    -attribute helps you to spot right answer.
+    <p>
+    If you already have account then you log in using it:
+    <ul>
+      <li>:
+        <ul>
+          <li>id:"login"
+          <li>:
+            <ul>
+              <li>name:"JoeBlatz"
+              <li>password:"Rqv67.%"
+            </ul>
+        </ul>
+    </ul>
+
+    <hr>
+
+    <h3><a name="character">Creating character and using it</a></h3>
+
+    Usually new accounts might be allowed to create only one character
+    (part of time it might be controlled by player and other time it
+    might be controlled by AI script). Trusted accounts might be
+    allowed to create several characters (usually controlled by NPC AI
+    script).
+    <p>
+      Creating character:
+      
+    <ul>
+      <li>:
+        <ul>
+          <li>no:3
+          <li>from:"JoeBlatz"
+          <li>id:"create"
+          <li>:
+            <ul>
+              <li>type:"evoker"
+              <li>name:"Evoker the magnificent"
+              <li>INT:15
+            </ul>
+        </ul>
+    </ul>
+
+    Server sends back character entity with id and additional
+    attributes like location, etc... or error message telling what is
+    wrong (like too big value for some attribute). Server might
+    assign other values for attributes than client has
+    specified. refno -attribute helps you to spot right answer.
+    <p>
+      If you have already created character then you just continue
+      playing where you left. In both cases it might be goo idea to
+      use look operation without arguments as starting point:
+
+    <ul>
+      <li>:
+        <ul>
+          <li>from:"character_id_23"
+            <li>id:"look"
+        </ul>
+    </ul>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Jul  5 16:03:19 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Fri Dec 10 16:57:00 EET 1999
+<!-- hhmts end -->
+  </body>
+</html>

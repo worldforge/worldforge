@@ -1,0 +1,371 @@
+2005-08-21  Al Riddoch  <alriddoch@zepler.org>
+
+	* operation.def: Add an Affect abstract op definition, used as a
+	  base class for high level ops which modify their target.
+
+	* atlas.xml: Generated spec updated for above changes.
+
+2005-05-28  Al Riddoch  <alriddoch@zepler.org>
+
+	* operation.def: Remove some single quotes from comments, as they
+	  mess up syntax highlighting. Add Use and Wield operation definitions.
+
+	* atlas.xml: Generated new spec with the above definition changes.
+
+2004-04-29  Al Riddoch  <alriddoch@zepler.org>
+
+	* entity.def: Put username and characters attributes on account.
+
+2003-05-30  Aloril  <aloril@iki.fi>
+
+	* entity.atlas: autonomous_entity by Al Riddoch
+
+2002-10-03  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* simple_core.html: added attribute objtype:"op" to operations
+
+2002-10-03  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* type.atlas: text attribute added
+
+	* added TODO: things to do listed in priority order
+
+2002-09-20  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* entity.atlas, type.atlas: glue_entity and glue_ids: used in
+	cases implicit glueing by listing object ids doesn't work
+
+2002-08-07  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* entity.atlas, type.atlas: removed "game" object and added "world" object
+
+	* *.atlas: name->name, description->summary (usually about 1
+	line), long_description->description: few lines to few pages;
+	suggestion for new attribute names by markt at #lounge
+
+2002-07-08  Aloril  <aloril@iki.fi>
+
+	* bach_syntax.html: mentioned stream start/end
+
+2002-07-06  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* entity.atlas: server class added
+
+2002-06-25  Aloril  <aloril@iki.fi>
+
+	* bach_syntax.html: description of Bach codec
+
+2002-05-31  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* operation.atlas, type.atlas: args->arg and related changes
+	
+	* gen_html.py: generated html now uses Bach codec instead of XML:
+	much easier to read
+
+2002-05-29  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* entity.atlas, type.atlas: added geometry attributes
+
+2002-05-28  AIR-IX SUUNNITTELU/Ahiplan Oy  <aloril@iki.fi>
+
+	* converted most .def files to .atlas files (bach encoding)
+
+	* gen_atlas.py: generate atlas.atlas from *.atlas files
+
+2002-02-08  Aloril  <aloril@iki.fi>
+
+	* added id_path.html, credits.html, revision_history.html
+
+	* added simple_core.html: simple get/set/create/delete/info
+	operations defined, kinda like short Atlas tutorial
+
+2001-09-01  Aloril  <aloril@iki.fi>
+
+	* binary1_beta.html: added unknown length lists/strings/maps and
+	changed identity into binary1_beta2
+
+2000-11-15  Aloril  <aloril@iki.fi>
+
+	* added some docs and bug fix
+
+	* parent for imaginary changed from perception to action
+
+2000-08-12  Aloril  <aloril@iki.fi>
+
+	* v0.2.4 released
+
+2000-08-02  Aloril  <aloril@iki.fi>
+
+	* packed_index.html by Mike added to index.html and some other small changes
+
+2000-07-11  Aloril  <aloril@iki.fi>
+
+	* gen_html.py: example attribute 'outputs' value directly, not as string
+
+	* parse_def.py didn't parse correctly ":list:[0.0,0.0,0.0]" -lines
+
+2000-06-28  Aloril  <aloril@iki.fi>
+
+	* all attributes included (uups) and mapping attribute types now
+ 	are shown properly also
+
+	* regenerated with attributes listed in original order
+
+2000-06-27  Aloril  <aloril@iki.fi>
+
+	* moved parse_def.py into libs/Atlas-Python
+
+	* fixed some things that new stricter parse_def.py notices
+
+	* added some attributes for debugging purposes
+
+	* rewrited ParseDef.py into parse_def.py (old one will remain as
+ 	long as gen_cc.py uses it)
+
+2000-06-26  Aloril  <aloril@iki.fi>
+
+	* specification strings: s/-/_/
+	
+	* changes to gen_html.py to use modified atlas.py
+
+2000-06-24  Aloril  <aloril@iki.fi>
+
+	* removed old gen_xml.py (new one is at libs/Atlas-Python)
+
+2000-06-23  Aloril  <aloril@iki.fi>
+
+	* added element_type and made some renamings for XX_list_lengths:
+ 	for C/C++ optimization purposes
+
+	* grid_data type changed: map->list
+	
+	* gen_html.py rewritten using new forge/libs/Atlas-Python
+	(more clear now)
+
+2000-06-21  Aloril  <aloril@iki.fi>
+
+	* added "ignore unknown commands" at negotiation requirement
+	
+	* one bugfix to old gen_xml.py: forgot to remove "<obj>" -tag from
+ 	spec generator (it was removed from libAtlasPy)
+
+2000-06-16  Aloril  <aloril@iki.fi>
+
+	* attribute renamings:
+	s/parent/parents/
+	s/instance/children/
+
+2000-06-08  Aloril  <aloril@iki.fi>
+
+	* added negotiation docs (including list of official codecs)
+
+2000-05-23  Aloril  <aloril@iki.fi>
+
+	* updated index.html and s/map/mapping/ in documentation (no
+ 	change in encoding)
+
+2000-05-04  Aloril  <aloril@iki.fi>
+
+	* abstract_type -> objtype
+	
+	* loc.ref -> loc
+	
+	* loc.coords -> pos
+	
+	* loc.velocity -> velocity
+	
+	* time.seconds -> seconds
+	
+	* time.future_seconds -> future_seconds
+	
+	* time.time_string -> time_string
+
+	* objtype: "operation" -> "op"
+	
+	* objtype: "operation_definition" -> "op_definition"
+
+2000-02-19  Aloril  <aloril@iki.fi>
+
+	* move.html updated and added new sections to it
+
+2000-02-09  Aloril  <aloril@iki.fi>
+
+	* map completed and it's now made part of "example" specification
+ 	and is at agrilan_map.def file
+
+2000-02-07  Aloril  <aloril@iki.fi>
+
+	* basic encoding types removed
+
+	* map.def, map_in.html and map.html added
+
+1999-12-10  Aloril  <aloril@iki.fi>
+
+	* v0.2.3 released
+
+	* xml_syntax.html updated to reflect changes
+	
+	* *.py: takes into account map -addition and gen_xml.py generates
+ 	new syntax
+
+	* *.def: splitted obj_list to list and map and removed obj
+ 	physical type
+
+1999-12-08  Aloril  <aloril@iki.fi>
+
+	* added game_interface
+
+	* added movement example
+
+	* added look conversation examples
+
+1999-12-06  Aloril  <aloril@iki.fi>
+
+	* Actual operation instances should have this attribute defined:
+	abstract_type="operation": examples changed to reflect change
+
+	* root_operation.abstract_type changed to "operation_definition"
+	and thus every other operation definition inherits that too
+
+1999-12-04  Aloril  <aloril@iki.fi>
+
+	* added conversation example to login.example and more IRC logs as
+ 	.def file comments
+
+	* some IRC logs added: those need to be trimmed 'compressed' into
+ 	actual docs
+
+1999-12-02  Aloril  <aloril@iki.fi>
+
+	* v0.2.2 released
+
+	* added stamp_inherit and stamp_contains
+
+	* operation.def: all operations have now some example(s)
+
+1999-12-01  Aloril  <aloril@iki.fi>
+
+	* more examples added to operation* files
+
+1999-11-29  Aloril  <aloril@iki.fi>
+
+	* ParseDef.py: need both "id" and "parent" attribute before adds
+	"instance" attribute
+
+	* type.def: attributes that examples need added
+
+	* operation.def: added some examples
+
+	* gen_xml.py: modified output to less verbose whitespace
+
+	* gen_html.py: example attribute supported
+
+	* ParseDef.py: multiline """ string added
+
+1999-11-26  Aloril  <aloril@iki.fi>
+
+	* v0.2.1 released
+
+	* Credits fixed
+
+1999-11-25  Aloril  <aloril@iki.fi>
+
+	* some small changes in type.def
+
+	* xml_syntax.html: s/id/uri/ 
+
+1999-11-24  Aloril  <aloril@iki.fi>
+
+	* changed args attribute to inherit from obj_list
+
+1999-11-23  Aloril  <aloril@iki.fi>
+
+	* changed id date_type to uri and made id to inherit from it, same
+ 	for id_list: -> uri_list
+
+1999-11-20  Aloril  <aloril@iki.fi>
+
+	* added XML version of all objects
+
+1999-11-15  Aloril  <aloril@iki.fi>
+
+	* operation_in.html: added short blurb about how operations are used
+
+	* index.html: added links to {move,login}.html
+
+	* type.def: changed log,time inheritance back to obj_list
+
+	* type.def: renamed attributes to added_attributes and changed loc,time inheritance
+
+	* type.def: renamed contains for attribute list to attributes
+
+	* operation.def: renamed parameter_description to args_description, added args
+
+1999-11-13  Aloril  <aloril@iki.fi>
+
+	* changed some operation names per Zachariah Baum suggestions and changed credits
+
+	* added specification attribute
+
+	* rest of operation.html translated to operation.def
+
+	* operation.def: part of it written
+
+1999-11-09  Aloril  <aloril@iki.fi>
+
+	* interface.def, entity.def: old *.html info moved here
+
+	* type.def: old type.html info moved here
+
+	* gen_html.py: objindex and objtree tags added
+
+	* *.py: now shows inheritance too
+
+1999-11-08  Aloril  <aloril@iki.fi>
+
+	* added gen_html.py, type_in.html and modified others somewhat
+
+	* added *.def, ParseDef.py and some modifications to xml_syntax.html
+
+1999-11-06  Aloril  <aloril@iki.fi>
+
+	* changes in xml_syntax.html 
+
+1999-11-05  Aloril  <aloril@iki.fi>
+
+	* list->obj_list and id_list DTD changed
+
+	* changed physical_type to data_type
+
+	* xml_syntax.html: DTD defined
+
+	* type.html added
+
+1999-11-04  Aloril  <aloril@iki.fi>
+
+	* miscellanous edits
+
+	* requirements.html added
+
+1999-11-03  Aloril  <aloril@iki.fi>
+
+	* move.html: copied from old
+
+	* operation.html: copied descriptions from v0.1.4
+
+	* xml_syntax.html added
+
+	* operation.html: added more stuff
+
+1999-11-01  Aloril  <aloril@iki.fi>
+
+	* operation.html: added more stuff
+
+	* added base_action -interface
+
+	* added C comparison
+
+	* binary topic added and C example added
+
+	* Seed for v0.2.0
+

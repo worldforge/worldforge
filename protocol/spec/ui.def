@@ -1,0 +1,52 @@
+#Modeline for XEmacs: -*-Python-*-
+
+:map:
+    id:"display_status"
+    parents:["string"]
+    objtype:"type"
+    description:"whether or not the entity is currently displayed"
+
+:map:
+    id:"valign"
+    parents:["string"]
+    objtype:"type"
+    description:"vertical alignment of children in this frame"
+
+:map:
+    id:"halign"
+    parents:["string"]
+    objtype:"type"
+    description:"horizontal alignment of children in this frame"
+
+:map:
+    id:"rel_pos"
+    parents:["string"]
+    objtype:"type"
+    description:"relative position of successive children in this frame"
+
+:map:
+    id:"target"
+    parents:["list"]
+    objtype:"type"
+    element_type:"string"
+    description:"List of entities to watch for attribute changes"
+
+:map:
+    id:"u_i_entity"
+    parents:["admin_entity"]
+    description:"The root entity for UI elements. UI entities are (mostly) owned by the client instead of the server"
+    display_status:"hidden"
+
+:map:
+    id:"frame"
+    parents:["u_i_entity"]
+    description:"bear's widget packing frame class, see http://code-bear.dyndns.org/~bear/janus.html"
+    valign:"center"
+    halign:"left"
+    rel_pos:"below"
+
+:map:
+    id:"slot"
+    parents:["u_i_entity"]
+    description:"A base class for entities which respond to changes in an entity's argument map"
+    target:[]

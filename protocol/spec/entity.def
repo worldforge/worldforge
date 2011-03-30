@@ -1,0 +1,147 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"root_entity"
+    parents:["root"]
+    objtype:"class"
+    description:"Starting point for entity hierarchy"
+    long_description:"Later in hierarchy tree objtype changes to 'object' when actual game objects are made."
+    loc:""
+    pos:[0.0,0.0,0.0]
+    velocity:[0.0,0.0,0.0]
+    contains:[]
+    stamp_contains:0.0
+
+## <aloril> hi jamie!
+## <Jamie> Hello!
+## <aloril> about differences between WDS and atlas operations:
+## <aloril> is wds like: move(x,y,z) ?
+## <Jamie> wds doesn't care.  It is only the center two levels of communication
+## <aloril> (atlas is like: move({id:"qw12",coords:{1,2,3}})
+## <aloril> wds actually: move(id,x,y,z) ?
+## <Jamie> Well, wds is almost move(id:"qw12",int:1,int:2,int:3)
+## <Jamie> As types are passed with each variable
+## <aloril> ahh... but order of argument is important?
+## <Jamie> It depends on the link layer and the api.  If the link layer sinks them up then it is, but that is transparent.  The api has two ways to do an action, one way is not order sensitive the other is, but the order can be defined by the code
+## <Jamie> I use varargs, for example, to do something like send_command(player,"move",1,2,3) in my code.  It sees player as who to send it to, move as the command, and what to do.  The order here is dependant on definition order, but it makes the code much cleaner
+## <aloril> yes... but adding something like accel (float_list), etc... becomes harder ?
+## *** Lachlann has quit (xchat exiting..)
+## <aloril> how would you do this forge("jewel_sword","jevels","iron") ...
+## <aloril> <op command="forge">
+## <aloril>   <ent type="jewel_sword">
+## <aloril>     <id>jsword_123</id>
+## <aloril>     <length>1.2</length>
+## <aloril>   </ent>
+## <aloril>   <ent>
+## <Jamie> I'm not sure if I understand... I have two other calling convetions as well.  send_command_args as (player,commands, arglist) where arglist is a linked list of types, names, and values, and also send_command_f(player,"move id x y z",player,1,2,3)
+## <aloril>     <id>jevels123</id>
+## <aloril>   </ent>
+## <aloril>   <ent>
+## <aloril>     <id>iron_213</id>
+## <aloril>   </ent>
+## <aloril> </op>
+## <Jamie> This is just in my source... How it is sent is similer, it just serializes it
+## <aloril> hmm... s/<id>jsword_123</id>/<name>Nice jeweled sword</name>/
+## <aloril> hmm... well what did you mean by your operation criticism in ML ?
+## <aloril> in atlas v0.2.1 every argument when *sending* is entitity or operation (no ids or floatlist or ...)
+## <Jamie> It depends on how Atlas is used.  From the documentation there is nothing that states that it is compleatly operation based, meaning it can be compleatly coded with functions and callbacks
+## <Jamie> Ahh, but what entities?
+## <Jamie> I only have class definitions and operations being able to be sent, no real world objects can be there outside of an operation
+## <aloril> entity is just 'map' between attributes names and their values
+## <aloril> entity is not real world object, but it can describe one or part of it
+## <Jamie> So, that sword in your inventory is put there by an operation, or the the one defining the sack it's in, not by it's self
+## <jack> Bah. 
+## <aloril> you define new location for sword:
+## <jack> Apartment hunting sucks :(
+## <pug> Try trapping. Or poaching
+## <Jamie> But to define the sword it's self... it's creation
+## <aloril> put(ent(id:sword_42, loc:{ref:sack_24}))
+## <aloril> no it's not creation, only changing loc attribute
+## <aloril> 'id' is not changed
+## <Jamie> No, I mean the whole process... so it is created first, then put in the sack?
+## <aloril> hmm.. it's not created if world already has it..
+## <aloril> above put assumes sword_42 and sack_24 already exist
+## <Jamie> So how is it defined to the client in the first place?
+## <aloril> set(ent(id:sword_42,length:1.2,type:jeweled_sword))
+## <aloril> entity is just a way to encapsulate all object related attributes to one place
+## <Jamie> So the first time an attribute is set on an object it is created?
+## <aloril> ahh.. hmm..
+## <aloril> how does server now whether client has purged it's cache?
+## <aloril> so "set" is equivalent of "creation" if client doesn't already have it or had purged it's cache
+## <aloril> create would be used when it's created in server side.. hmm.. you do bring point.. hmm...
+## <Jamie> And client requests a compleate description of the object if it recieves a "Set" and does not have it local?
+## <aloril> yes
+## <aloril> or if stamp is outdated
+## <Jamie> What stamps does the client compair to see if it is outdated?  The set will always come with a new stamp no matter what
+## <aloril> well if client hasn't cleared cache, then it can compare new sight and what it has cached
+## <aloril> (example when it awakes)
+## <aloril> example: makes easy to see that only thing changes is new cup in board is only change in house
+## <aloril> example: sight(ent(id:board_12,stamp:123.0)) and client has it with stamp:100.0
+## <Jamie> Yes, but on a set, does every set also update the stamp on an object?
+## <aloril> then it can get(ent(id:board_12,stamp:100.0)) and server can only send what has changed between (or everything)
+## <aloril> yes if set contains stamp attribute
+## *** Chord has quit (Ping timeout)
+## <Jamie> Well, every time an object changes it's stamp would change also
+## <aloril> it should....otherwise stamp is useless
+## * aloril nods
+## <aloril> if you wan't to support it ;-)
+## <Jamie> So a set has a manditory "stamp" that is required
+## <aloril> well if server doesn't use stamping then just assume it 0.0...
+## <Jamie> *nods*
+## <aloril> but practically speaking it's manditory...
+## <aloril> ie client newer set stamp except for it's own objects
+## <Jamie> *nods*
+## <aloril> (for example some client setting that server might be interested or if it happens to be another server)
+
+:map:
+    id:"admin_entity"
+    parents:["root_entity"]
+    description:"All classes and objects used for adminitrativive purposes"
+
+:map:
+    id:"account"
+    parents:["admin_entity"]
+    description:"Base class for accounts"
+    username:""
+    password:""
+    characters:[]
+
+:map:
+    id:"player"
+    parents:["account"]
+    description:"Player accounts"
+
+:map:
+    id:"admin"
+    parents:["account"]
+    description:"Privileged accounts"
+
+:map:
+    id:"game"
+    parents:["admin_entity"]
+    description:"Games this server hosts"
+
+:map:
+    id:"game_entity"
+    parents:["root_entity"]
+    specification:"atlas_game"
+    interface:"game_interface"
+    description:"All In Game classes and objects"
+
+#About MIM (Media Independant Map) -format
+## <aloril> jamie, MIM will be added after documentation update to game_entity tree something like this:
+## <aloril> object type 0==point_object (means we use only xyz (and rotation, etc...) for specifying it
+## <aloril> object type 1==area_object
+## <aloril> and probably something like line_object ... (even when they are polygons..., but are semantically just line with certain width)
+## <aloril> and then add those abstract and actual definitions there somewhere...
+## *** pug has quit (Leaving)
+## <aloril> id doesn't change actual MIM but adds more semantic information and changes syntax
+## <Jamie> Humn
+## <aloril> ie all tags are changes to parent:["original tag maybe changed"]
+## <aloril> and of course ramp, etc.. are done like this:
+## <aloril> ramp: inherit from area_object, in add attribute: "slope"
+## ***Drew (drewnumber@user-2ivfjv8.dialup.mindspring.com) has joined #forge
+## <brenda> hi Drew
+## <Jamie> I think mim files should be "cached" as well. In fact, the client should be able to download a media set from a web server and install it before they even play, this is to have all of the graphics and a snapshot of the maps so their first login won't be slow from all the media downloads
+## <aloril> so very dump client would just display it as flat area... yeah it would be funny.. but... it demonstrates how to add things without breaking too much ;-)
+## <Jamie> *nods*
+## <aloril> jamie, yes.. they are just normal objects and easily cacheacable(sp?)

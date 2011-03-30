@@ -1,0 +1,6 @@
+Making 'hardcopy':
+
+pdflatex semantic_maps.tex
+
+Type above twice to produce index also correctly.
+(only needed twice at first time and when new sections addded)

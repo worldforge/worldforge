@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Codec negotiation</title>
+  </head>
+
+  <body>
+    <h1>Codec negotiation</h1>
+
+    All commands are delimited with newline ("\n").
+    <ul>
+      <li>First both client and server sends arbitary greeting string
+        starting with "ATLAS" like, "ATLAS server libAtlasPy\n".
+      <li>If first 5 letters are not "ATLAS", then reply with
+      "Huh?\n\n" and close connection
+
+      <li>Then client sends list of codecs it supports prefixed with
+      "ICAN ", official ones for are:
+        <ul>
+          <li>XML
+          <li>Packed
+        </ul>
+
+        Unofficial ones should be prefixed with "X-".<br>
+        After it has sent list, it sends empty line "\n".
+      <li>Then server sends codec it will use, example: "IWILL XML\n\n"
+        Or if none found, then it can optionally send list of codecs
+        it supports using "ICAN foo\n" format.
+
+      <li>After server has selected codec both can start streaming
+        actual Atlas operations.
+    </ul>
+
+    Amount of things sent at one time should not change logic: other
+    side can send one or many lines in one chunk. 
+    <p>
+      Server might also be non responding variety: Example when you
+      area reading from local file (file=server, program reading from
+      file=client). In this case server sends whole negotiation and
+      following data in arbitrary chunks (including line breaks, etc..)
+      depending how you read things from file.
+    <p>
+    All unknown commands should be ignored.
+    <p>
+    Example:
+    <pre>
+Server: "ATLAS server libAtlasPy\n"
+Client: "ATLAS client UClient\nICAN Packed\nICAN XML\n\n"
+Server: "IWILL XML\n\n"
+    </pre>
+
+    Example when saving to file:
+    <pre>
+    "ATLAS mapeditor foo 0.3.4\nIWILL XML\n\n"
+    &lt;atlas&gt;
+        ..... here actual objects....
+    &lt;/atlas&gt;
+    </pre>
+
+    <p>
+      For original proposal see <a href="ACHAT.txt">mail by Jamie.</a>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Thu Jun  8 14:31:15 EEST 2000 -->
+<!-- hhmts start -->
+Last modified: Mon Jan 15 07:25:33 EET 2001
+<!-- hhmts end -->
+  </body>
+</html>

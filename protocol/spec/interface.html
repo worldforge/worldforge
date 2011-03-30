@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+
+<html>
+  <head>
+    <title>Interfaces</title>
+  </head>
+
+  <body>
+    <h1>Interfaces</h1>
+
+    <ul>
+      <li><a href="#root_interface">root_interface</a>: -"-
+        <ul>
+          <li><a href="#base_interface">base_interface</a>: admin can use this interface for setting,
+    abstract hierarchy and actual game objects too
+          <li><a href="#game_interface">game_interface</a>: -"-
+        </ul>
+    </ul>
+
+    <a name="root_interface"><h2>root_interface</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['base_interface', 'game_interface']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+You can browse all definitions starting from here and 
+descending into childrens.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">root_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">meta</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#operations">operations</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> Content ids can be either another interface or operation ids or both.
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+starting point for interface browsing, not used otherwise<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: ["base_interface", "game_interface"],
+	id: "root_interface",
+	objtype: "meta",
+	operations: [],
+	parents: ["root"],
+	summary: "starting point for interface browsing, not used otherwise"
+}
+
+    </PRE>    <a name="base_interface"><h2>base_interface</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+admin can use this interface for setting,
+    abstract hierarchy and actual game objects too<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">interface</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#operations">operations</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['create', 'delete', 'set', 'get']</font> Content ids can be either another interface or operation ids or both.
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root_interface']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#specification">specification</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+raw interface<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: [],
+	description: "admin can use this interface for setting,
+    abstract hierarchy and actual game objects too",
+	id: "base_interface",
+	objtype: "interface",
+	operations: ["create", "delete", "set", "get"],
+	parents: ["root_interface"],
+	summary: "raw interface"
+}
+
+    </PRE>    <a name="game_interface"><h2>game_interface</h2></a>
+    Attribute list:
+    <ul>
+      <li><b><a href="type.html#children">children</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">[]</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#description">description</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+You can browse all definitions starting from here and 
+descending into childrens.<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#id">id</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">game_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#interface">interface</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">base_interface</font> C equivalent roughly: for storing id name: char *, as pointer: void *
+      <li><b><a href="type.html#name">name</a> (inherited from root) (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"></font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#objtype">objtype</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">interface</font> Examples of values: "op", "class", "type".
+      <li><b><a href="type.html#operations">operations</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['create', 'combine', 'divide', 'communicate', 'move', 'perceive', 'talk', 'look', 'listen', 'sniff', 'touch']</font> Content ids can be either another interface or operation ids or both.
+      <li><b><a href="type.html#parents">parents</a> (encoding:<a href="type.html#list">list</a>):</b> Value: <font color="green">['root_interface']</font> C equivalent: char *[], void *[]
+      <li><b><a href="type.html#specification">specification</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green">atlas_game</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+      <li><b><a href="type.html#stamp">stamp</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was
+    changed in this object. Any scheme is ok as long as newer numbers
+    are bigger than older stamps. For example, seconds since Jan 1st,
+    1970 or total game cycles would both be valid.
+      <li><b><a href="type.html#stamp_inherit">stamp_inherit</a> (inherited from root) (encoding:<a href="type.html#float">float</a>):</b> Value: <font color="green">0.0</font> Value should be reflect when something was changed in some object that inherits from this.
+      <li><b><a href="type.html#summary">summary</a> (encoding:<a href="type.html#string">string</a>):</b> Value: <font color="green"><br>
+client interface for controlling character etc..<br>
+</font> Any character is allowed, including 8 bit control characters and '\0', C equivalent: {int len; char *data;}, C++: string
+    </ul>
+    Bach version:<br>
+    <PRE>
+{
+	children: [],
+	id: "game_interface",
+	objtype: "interface",
+	operations: ["create", "combine", "divide", "communicate", "move", "perceive", "talk", "look", "listen", "sniff", "touch"],
+	parents: ["root_interface"],
+	specification: "atlas_game",
+	summary: "client interface for controlling character etc.."
+}
+
+    </PRE>
+
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Nov  1 17:22:49 EET 1999  -->
+<!-- hhmts start  -->
+Last modified: Tue Nov  9 17:37:55 EET 1999
+<!-- hhmts end  -->
+  </body>
+</html>

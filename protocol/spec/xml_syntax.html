@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>XML Syntax</title>
+  </head>
+
+  <body>
+    <h1>XML Syntax</h1>
+
+    <h2>DTD</h2>
+    <pre>
+
+&lt;!-- Tags --&gt;
+
+&lt;!ELEMENT atlas       (map*)&gt;
+&lt;!ATTLIST atlas       version  CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT string     (#PCDATA)&gt;
+&lt;!ATTLIST string     name  CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT int     (#PCDATA)&gt;
+&lt;!ATTLIST int     name  CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT float     (#PCDATA)&gt;
+&lt;!ATTLIST float     name  CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT list     (string|int|float|list|map)*&gt;
+&lt;!ATTLIST list     name  CDATA #IMPLIED&gt;
+
+&lt;!ELEMENT map     (string|int|float|list|map)*&gt;
+&lt;!ATTLIST map     name  CDATA #IMPLIED&gt;
+
+    </pre>
+
+    <h2>Examples</h2>
+    <pre>
+&lt;int name="foo"&gt;4&lt;/int&gt;
+
+&lt;map name="loc"&gt;
+  &lt;string name="ref"&gt;42&lt;/string&gt;
+  &lt;list name="coords"&gt;&lt;float&gt;1.2&lt;/float&gt;&lt;float&gt;-3.5&lt;/float&gt;&lt;float&gt;0.0&lt;/float&gt;&lt;list&gt;
+&lt;/map&gt;
+
+&lt;map&gt;
+  &lt;string name="id"&gt;dragon_123&lt;/string&gt;
+  &lt;string name="name"&gt;Dragon the magnificent&lt;/string&gt;
+&lt;/map&gt;
+
+&lt;list name="args"&gt;
+  &lt;map&gt;
+    &lt;string name="message"&gt;Hello!&lt;/string&gt;
+  &lt;/map&gt;
+  &lt;map&gt;
+    &lt;string name="id"&gt;elf_123&lt;/string&gt;
+  &lt;/map&gt;
+&lt;/list&gt;
+    </pre>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Wed Nov  3 13:24:10 EET 1999 -->
+<!-- hhmts start -->
+Last modified: Wed May 17 09:36:02 EEST 2000
+<!-- hhmts end -->
+  </body>
+</html>

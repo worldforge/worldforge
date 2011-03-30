@@ -1,0 +1,178 @@
+<HTML> 
+  <HEAD> 
+    <META NAME="GENERATOR" CONTENT="Notepad">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1"> 
+    <TITLE>HTML documentation - Atlas binary1_beta2 codec specification</TITLE> 
+  </HEAD> 
+  <BODY> 
+  <P><A NAME="pagetop"></A>
+  </P>
+  <TABLE COLS="3" WIDTH="100%"> 
+    <TR>
+      <TD WIDTH="40"></TD>
+      <TD WIDTH="40"></TD>
+      <TD></TD>
+    </TR> 
+    <TR>
+      <TD COLSPAN="3"> 
+        <H3 ALIGN="CENTER"><B>Atlas binary1_beta2 codec specification</B></H3> 
+        <P> The Atlas binary1_beta2 codec is a binary codec for the Atlas protocol.  
+            It defines type flags and specific binary encoding methods for each supported type.
+            This particular version includes all basic Atlas primitives, but does not provide
+            support for advanced features such as sized numeric types, user defined types, arrays, tunneling self
+            encoded byte streams, or secondary transport layer connections such as UDP.
+        </P>
+      </TD>
+    </TR>
+    <TR></TR>
+    <TR>
+      <TD COLSPAN="3">
+        <P><B>
+        A.  Atlas types
+        </B></P>
+      </TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD COLSPAN="2">
+        <P>
+        Atlas types are encoded as integers.  Bit 6 is not anymore
+        reserved for possible future use as an array type flag. Array
+        types will be defined by user in binary2. The current type
+        values and descriptions are as follows:
+        </P>
+      </TD>
+    </TR>
+    <TR></TR>
+    <TR>
+      <TD></TD>
+      <TD>
+        Value
+      </TD>
+      <TD>
+        Description
+      </TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>0</TD>
+      <TD>Possible future flag for user defined types</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>1</TD>
+      <TD>Positive Integer</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>2</TD>
+      <TD>Negative Integer</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>3</TD>
+      <TD>Floating point encoded as two integers a and b where value = a * 2^b</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>4</TD>
+      <TD>Floating point encoded as two integers a and b where value = a * 2^-b</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>5</TD>
+      <TD>Floating point encoded as two integers a and b where value = -a * 2^b</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>6</TD>
+      <TD>Floating point encoded as two integers a and b where value = -a * 2^-b</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>7</TD>
+      <TD>Special floating point values encoded as an integer where 0 = NaN, 1 = +Inf, 2 = -Inf</TD>
+    </TR> 
+    <TR>
+      <TD></TD>
+      <TD>8</TD>
+      <TD>String with fixed length</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>9</TD>
+      <TD>List with fixed length</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>10</TD>
+      <TD>Map with fixed length</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>11</TD>
+      <TD>String with unknown length</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>12</TD>
+      <TD>List with unknown length</TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD>13</TD>
+      <TD>Map with unknown length</TD>
+    </TR>
+    <TR></TR>
+    <TR>
+      <TD COLSPAN="3">
+        <P><B>
+        B.  Specific Encodings
+        </B></P>
+      </TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD COLSPAN="2">
+        <P>
+          Most Atlas primitives are encoded as 'type' followed by 'value'.  
+          The Atlas 'type' is encoded as a positive integer.  
+          Specific encoding methods are as follows:
+        </P>
+      </TD>
+    </TR>
+    <TR>
+      <TD></TD>
+      <TD COLSPAN="2">
+        <OL TYPE="1">
+          <LI> Integer encoding - bit 7 is used as a flag to indicate the presence of additional bytes,
+               Thus each byte represents a magnitude of 0-127 and each subsequent byte position has a
+               multiplier of 128 * the previous byte position's multiplier.  Of course the first byte
+               has a multiplier of 0.  This allows for integers of any size.
+          </LI>
+          <LI> Normal Floats are encoded as mantissa exponent pairs with both the mantissa and exponent represented
+               as integers.  Special floats have a single integer value, 0 = NaN, 
+               1 = +Infinity, 2 = -Infinity.
+          </LI>
+          <LI> Strings are encoded as a length integer followed by a sequence of length bytes </LI>
+          <LI> Lists are encoded as a size integer followed by size * ( type, value ) pairs </LI>
+          <LI> Maps are encoded as a size integer followed by size * (type, name, value ) triplets where
+               name is encoded as a string value. </LI>
+          <LI> Unknown length strings/lists/maps are encoded just like normal, 
+                except that after this sequence follows either another unknown length sequence or 
+                known length sequence (fixed length string/list/map). 
+                String/list/map started with unknown length type 
+                always end with fixed length sequence of same type. </LI>
+        </OL>
+      </TD>
+    </TR>
+  </TABLE> <BR><BR>
+          <hr>
+            Credits for Binary1_beta by using cvs log message:
+<pre>
+date: 2001/03/01 00:35:32;  author: blprice;  state: Exp;
+binary1_beta.html added to forge/protocols/atlas/spec - based on irc discussion with Aloril
+</pre>
+	 <DIV ALIGN="center"><A HREF="#pagetop">To Top</A> <BR></DIV> 
+  </BODY>
+</HTML>

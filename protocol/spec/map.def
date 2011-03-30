@@ -1,0 +1,107 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"geometry"
+    parents:["game_entity"]
+    description:"Base for all geometry related map elements"
+
+:map:
+    id:"area"
+    parents:["geometry"]
+    description:"Some kind 2D area"
+
+:map:
+    id:"line"
+    parents:["geometry"]
+    description:"Some kind line"
+    width:0.0
+    line_data:
+    example:
+        :map:
+            id:"123"
+            parents:["line"]
+            width:0.1
+            line_data:
+                :list:[0.0,0.0,0.0]
+                :list:[1.0,0.0,0.0]
+                :list:[1.0,1.0,0.0]
+
+:map:
+    id:"2D_grid"
+    parents:["area"]
+    name:"some area"
+    description:"""Basically container for "Terrain Exception Data in AMIS"."""
+    cell_size:[1.0,1.0]
+    grid_size:[1,1]
+    grid_data:
+    example:
+        :string:"Example usage: see agrilan_map.*"
+
+
+#Intro:
+#------
+#
+#This is somewhat different to http://www.iplay.net/worldforge/amis.htm
+#because it's intended to go over wire too with already existing Atlas
+#operations and there are other reasons too.
+#
+#I have read above docs, discussed at IRC and read editor meeting log
+#at http://www.worldforge.org/website/media/meetings/editor-20000229.html
+#(and somewhat based on MIM too) and here is my initial proposal:
+#
+#Goal is to be able to send map in small parts and have more semantic
+#info too than maps usually have.
+#
+#See ftp://ftp.worldforge.org/worldforge/users/aloril/atlas/devel/map.html
+#for a *very* coarse Agrilan map example.
+#
+#Example:
+#In map editor road could be defined as line with width and once user
+#draws 'road line':
+#Map editor creates all tiles and area objects and line objects.
+#Or in short: save both result and creation parameters.
+#
+#Why dual area/line nature and all info about types?
+#----------------------------------------------------
+#
+#1) When next editor loads map, editor still knows it's line too and
+#not only area (vector vs pixel pushing). Road could be build templates
+#and those templates too would be transmitted. So instead of editing
+#result, you can change original parameters map was created with and
+#edit at same level than original editor did.
+#
+#2) Roads having line information is useful for AI path finding
+#
+#2) Useful for client side scripting (move my character from here to there)
+#
+#4) Useful for text clients creating description
+#
+#
+#Why containers?
+#---------------
+#
+#1) Can have different coordinate system for each container if needed
+#  a) only need to change container position and all things that use it 
+#     as reference system change too (ship/character moving)
+#  b) Can have one generic floating point system and still full
+#     accuracy at detailed levels (example one system for galaxies and
+#     start from 0.0,0.0,0.0 for planets)
+#
+#2) Need to transmit only things client see and only need one mechanism 
+#for all of it.
+#
+#3) Can have different data at different zoom levels
+#  a) for things that are far away send container info, but not what
+#     they contain at bottom level
+#     (like looking from mountain to far away lands or standing near
+#      *big* cliff)
+#  b) you can view overview map for travel etc.. purposes
+#  c) can make big/generic changes more easily
+#
+#4) Way to logically/geographically group things.
+#
+#
+#Hmm.. event (=logical in AMIS) containers are missing still in
+#example: either make some existing containers as event containers or
+#add new container that are only event containers and have no other
+#function at same time (some bigger container then would contain them
+#separately)

@@ -1,0 +1,850 @@
+#Modeline for XEmacs: -*-Python-*-
+:map:
+    id:"root_operation"
+    parents:["root"]
+    objtype:"op_definition"
+    serialno:0
+    refno:0
+    description:"Base operation for all operators"
+    long_description:"""This is base operation for all other
+    operations and defines basic attributes. You can use this as
+    starting point for browsing whole operation hiearchy. refno refers
+    to operation this is reply for. In examples all attributes that
+    are just as examples (and thus world specific) are started with 'e_'."""
+    from:""
+    to:""
+    seconds:0.0
+    future_seconds:0.0
+    time_string:""
+    args:[]
+
+:map:
+    id:"action"
+    parents:["root_operation"]
+    description:"This is base operator for operations that might have effects."
+
+:map:
+    id:"info"
+    parents:["root_operation"]
+    description:"This is base operator for operations that tell you info about objects or events."
+    example:
+        :map:
+            objtype:"op"
+            parents:["info"]
+            args:
+                :map:
+                    e_msg:"Here is some info"
+
+:map:
+    id:"create"
+    parents:["action"]
+    description:"Create new things from nothing using this operator."
+    long_description:"Map editor is main user for this in client side. Server uses this inside \"info\" operation to tell client about new things."
+    args_description:"entity describing object that is being created"
+    example:
+        :string:"Creating axe instance"
+        :map:
+            objtype:"op"
+            parents:["create"]
+            from:"map-editor"
+            args:
+                :map:
+                    parents:["axe"]
+                    name:"Ordinary axe"
+                    e_attack:3
+
+:map:
+    id:"delete"
+    parents:["action"]
+    description:"Delete something."
+    args_description:"id of entity to be deleted"
+    example:
+        :map:
+            objtype:"op"
+            parents:["delete"]
+            args:
+                :map:
+                    id:"foo_bar_344"
+
+:map:
+    id:"set"
+    parents:["action"]
+    description:"Sets attributes for existing entity."
+    example:
+        :string:"This one sets HP=50, height=1.8, width=0.3 for object \"9899\""
+        :map:
+            objtype:"op"
+            parents:["set"]
+            args:
+                :map:
+                    id:"9899"
+                    e_HP:50
+                    e_height:1.8
+                    e_width:0.3
+
+:map:
+    id:"affect"
+    parents:["set"]
+
+:map:
+    id:"get"
+    parents:["action"]
+    description:"Generic operation for getting info about things."
+    args_description:"id of target entity"
+    example:
+        :map:
+            objtype:"op"
+            parents:["get"]
+            args:
+                :map:
+                    id:"elf_type_id_45"
+        :string:"""<h4>Browsing operator hierarchy example:</h4>
+<p>
+First start from operator hierarchy root (root_operation):"""
+        :map:
+            objtype:"op"
+            parents:["get"]
+            args:
+                :map:
+                    id:"root_operation"
+        :string:"Answer might be:"
+        :map:
+            objtype:"op"
+            parents:["info"]
+            args:
+                :map:
+                    id:"root_operation"
+                    children:["action","info"]
+                    description:"Base operator for all operatios"
+        :string:"Then you can ask about action and info:"
+        :map:
+            objtype:"op"
+            parents:["get"]
+            args:
+                :map:
+                    id:"action"
+        :map:
+            objtype:"op"
+            parents:["get"]
+            args:
+                :map:
+                    id:"info"
+        :string:"Etc..."
+
+:map:
+    id:"perception"
+    parents:["info"]
+    specification:"atlas_game"
+    description:"Character perceives something."
+    long_description:"Base operator for all kind of perceptions"
+    args_description:"perceived thing"
+    example:
+        :string:"""Usually derived operations are used, general notes
+                   on perceptions and actions:
+                   <ul>
+                   <li><b>action.from:</b> who made character to do something
+                   (talk for example); usually character itself, but
+                   not always, examples: 
+                   <ul>
+                     <li>atlas_irc_gateway does puppet characters it
+                         has created for each nick from irc side
+                     <li>admin teaches NPCs by making them to talk
+                         itself
+                     <li>possession by spell
+                   </ul>
+                   
+                   <li><b>action.to:</b> same as character always
+
+                   <li><b>perception.from:</b> who produced this perception:
+                   always character itself (for example sound of talk)
+                   (well... unless you are made to hallusinate ;-)
+
+                   <li><b>perception.to:</b> you (unless you are
+                   server, then it's target to receive perception)
+                   </ul>
+
+                   <b>conclusion:</b> should use perception.from instead of
+                   inner action.from to decide who produced result
+                   <br>
+                   See <a href="#sound">sound</a> and 
+                       <a href="#sight">sight</a>
+                   for actual examples
+                """ # """ (for xemacs python mode)
+        :map:
+            objtype:"op"
+            parents:["perception"]
+            args:
+                :map:
+                    id:"tree_8374"
+
+:map:
+    id:"error"
+    parents:["info"]
+    description:"Something went wrong"
+    args_description:"""objects describing what went wrong<br>
+First argument is error entity which describes error.
+Second argument is operation which is wrong (not given if not relevant)."""
+    example:
+        :string:"Client sent \"foo\" -operation which server rejects"
+        :map:
+            objtype:"op"
+            parents:["error"]
+            refno:123
+            args:
+                :map:
+                    message:"Uknown operation foo"
+                :map:
+                    objtype:"op"
+                    parents:["foo"]
+                    serialno:123
+                    args:
+                        :map:
+                            e_bar:"do some foo thing by using bar"
+
+:map:
+    id:"combine"
+    parents:["create"]
+    specification:"atlas_game"
+    description:"Combine existing objects into new objects."
+    long_description:"This is how normal characters create objects."
+    args_description:"first argument is entity describing object that is being created and rest argument(s) are entities that are used as raw material."
+    example:
+        :string:"Creating axe from wood and iron"
+        :map:
+            objtype:"op"
+            parents:["combine"]
+            args:
+                :map:
+                    parents:["axe"]
+                    name:"Bjorn's axe"
+                :map:
+                    id:"Wood_8898"
+                :map:
+                    id:"Iron_6578"
+
+:map:
+    id:"divide"
+    parents:["create"]
+    specification:"atlas_game"
+    description:"Divide existing object into pieces."
+    long_description:"One of the pieces might be original object modified."
+    args_description:"id of original object and entities describing pieces."
+    example:
+        :string:"taking money from pile"
+        :map:
+            objtype:"op"
+            parents:["divide"]
+            args:
+                :map:
+                    id:"money12345"
+                :map:
+                    id:"money12345"
+                    e_amount:10
+                :map:
+                    e_amount:110
+
+:map:
+    id:"communicate"
+    parents:["create"]
+    specification:"atlas_game"
+    description:"Base operator for all kind of communication."
+    args_description:"communication entity"
+    example:
+        :string:"see talk"
+
+:map:
+    id:"move"
+    parents:["set"]
+    specification:"atlas_game"
+    description:"Change position"
+    long_description:"More about <a href=\"move.html\">movement here</a>"
+    args_description:"entity with id and new position"
+    example:
+        :string:"""Movement conversation example:"""
+        :map:
+            objtype:"op"
+            parents:["move"]
+            serialno:123
+            from:"9899"
+            args:
+                :map:
+                    id:"9899"
+                    loc:"11"
+                    pos:[12.3,3.0,0.0]
+        :string:"""Reply from server"""
+        :map:
+            objtype:"op"
+            parents:["info","sight"]
+            serialno:1231
+            refno:123
+            from:"9899"
+            to:"9899"
+            seconds:19036033149.3
+            time_string:"0612-01-05 10:59:09.3"
+            args:
+                :map:
+                    objtype:"op"
+                    parents:["set","move"]
+                    serialno:1230
+                    refno:123
+                    from:"9899"
+                    seconds:19036033149.3
+                    time_string:"0612-01-05 10:59:09.3"
+                    args:
+                        :map:
+                            id:"9899"
+                            loc:"11"
+                            pos:[12.3,3.0,0.0]
+
+:map:
+    id:"perceive"
+    parents:["get"]
+    specification:"atlas_game"
+    description:"Generic base operation for perceiving things by eyes, ears, etc..."
+    args_description:"object to be perceived"
+    example:
+        :map:
+            objtype:"op"
+            parents:["perceive"]
+            args:
+                :map:
+                    id:"elf_3545"
+
+:map:
+    id:"login"
+    parents:["get"]
+    description:"Operation for logging into server"
+    long_description:"For more about <a href=\"login.html\">out of game atlas here</a>"
+    args_description:"entity with player name and password attribute"
+    example:
+        :map:
+            objtype:"op"
+            parents:["login"]
+            args:
+                :map:
+                    id:"JoeBlatz"
+                    password:"Rqv67.%"
+        :string:"""Conversation examples:<br> When you connect to
+        server you either need to have account already or make
+        one. Here is "start by creating account" -example:"""
+        :map:
+            objtype:"op"
+            parents:["create"]
+            serialno:1
+            args:
+                :map:
+                    id:"player74"
+                    parents:["player"]
+                    password:"player_password"
+        :string:"""What if you already had account by that name? Then
+        reply from server could be something like this (1 argument:
+        message, 2 argument: original operation):"""
+        :map:
+            objtype:"op"
+            parents:["error"]
+            serialno:4
+            refno:1
+            seconds:19036033149.3
+            time_string:"0612-01-05 10:59:09.3"
+            args:
+                :map:
+                    message:"Account id already exist"
+                :map:
+                    objtype:"op"
+                    parents:["create"]
+                    serialno:1
+                    args:
+                        :map:
+                            id:"player74"
+                            parents:["player"]
+                            password:"player_password"
+        :string:"""For more about error operation see 
+        <a href="#error">error operation definition</a>.
+        <br><br>
+        If account login went OK them you might receive something
+        like:""" #""" duh XEmacs Python mode needs this 
+        :map:
+            objtype:"op"
+            parents:["info"]
+            serialno:2
+            refno:1
+            seconds:19036033149.3
+            time_string:"0612-01-05 10:59:09.3"
+            args:
+                :map:
+                    id:"player74"
+                    parents:["player"]
+                    password:"player_password"
+                    characters:["Bjorn_1"]
+        :string:"""If you do not have character, then you need to
+        create one. Creating character is similar to how you create
+        account."""
+        :map:
+            objtype:"op"
+            parents:["create"]
+            serialno:2
+            args:
+                :map:
+                    parents:["farmer"]
+                    name:"Nisuf"
+                    description:"ordinary farmer"
+                    e_sex:"male"
+        :string:"""Result of character creation is same as with account
+        creation, only resulting object differs."""
+
+:map:
+    id:"logout"
+    parents:["login"]
+    description:"Operation for logging out"
+    args_description:"entity with player name"
+    example:
+        :map:
+            objtype:"op"
+            parents:["logout"]
+            args:
+                :map:
+                    id:"JoeBlatz"
+        :string:"""Most useful with server<->server communication
+        telling that certain connection is not anymore pertinent"""
+
+:map:
+    id:"sight"
+    parents:["perception"]
+    description:"Character sees something"
+    args_description:"object or event character sees"
+    example:
+        :string:"""See <a href="#perception">perception</a> operation too<br>
+                Common example:""" #""" (for xeamcs python mode)
+        :map:
+            objtype:"op"
+            parents:["sight"]
+            args:
+                :map:
+                    id:"grass1"
+                    stamp:989.24
+        :string:"Reply for looking at 'grass1':"
+        :map:
+            objtype:"op"
+            parents:["sight"]
+            args:
+                :map:
+                    id:"grass1"
+                    parents:["terrain"]
+                    contains:["path1","tree1"]
+                    description:"Grass plains"
+                    e_polygon:
+                        :list:[0.0,0.0]
+                        :list:[10.0,0.0]
+                        :list:[10.0,0.0]
+                        :list:[0.0,10.0]
+                        :list:[0.0,0.0]
+        :string:"Event example:"
+        :map:
+            objtype:"op"
+            parents:["sight"]
+            args:
+                :map:
+                    objtype:"op"
+                    parents:["move"]
+                    args:
+                        :map:
+                            id:"orc_23498"
+                            loc:"grass1"
+                            pos:[0.5,3.0,0.0]
+
+:map:
+    id:"sound"
+    parents:["perception"]
+    description:"Character hears something"
+    args_description:"thing character heard"
+    example:
+        :string:"""See <a href="#perception">perception</a> operation too<br>
+                   Example (every operation might have from, 
+to and time tags, not only this operation):""" #""" (for xeamcs python mode)
+        :map:
+            objtype:"op"
+            parents:["sound"]
+            from:"sentry_34"
+            args:
+                :map:
+                    objtype:"op"
+                    parents:["talk"]
+                    args:
+                        :map:
+                            say:"What has happened there?"
+## *** Topic for#coders ismake NPCs pass out by giving them enough vodka
+## <aloril> saw topic? ;-)
+## <wavey> heheh
+## <aloril> added drunkness into cyphesis in morning
+## <aloril> actually it holds for PCs too... ;-)
+## <wavey> i find that I have to remove drunkenness from my code, rather than add it ;)
+## * aloril rofl
+## * wavey chuckles
+## <wavey> damn, i need adsl :?
+## <wavey> :/ even
+## <wavey> doesn't arrive in UK till next spring :/
+## <aloril> hmm... actually need drunkness code for NPC version of http://www.ionet.net/~timtroyr/funhouse/beer.html
+## <wavey> yeah :)
+## <aloril> <ent><attr name="say">99 bottles of beer on the wall</attr><attr name="tone">singing</attr></ent>
+## <wavey> how do you see 'tone' being used?
+## <aloril> tone="talking" or tone="signing"
+## <aloril> hmm.. maybe better name?
+## <aloril> talktype?
+## <wavey> well..
+## <wavey> the name is one thing..
+## <wavey> but i mean more..
+## <wavey> how will clients use it?
+## <aloril> ohh... enough advanced client would use sound card to either talk or sing ...
+## <aloril> less advanced maybe different kind of bubles or different colors in speech window
+## <wavey> i see
+## <wavey> cool
+## <aloril> and text clients of course: Foo says "llll"
+## <wavey> lets think about the name..
+## <aloril> or Foo sings "llll"
+## <wavey> vocalisation?
+## <wavey> naw
+## <aloril> imagine above NPC demo with suitable graphic and suitable sound synthesis ...
+## <wavey> yup
+## <aloril> and in the end of course if any is walking: go to shop and buy more...,
+## <aloril> yup... sure slashdot headlines...
+## <aloril> especially is NPC script is relatively short so that it can be published at above link too...
+## <aloril> fun fun ....
+## <wavey> perhaps 'utterance' is better than 'tone'..
+## <wavey> probably a better word out there too
+## <wavey> or even 'vocal'
+## <wavey> i think i like 'vocal'
+## <wavey> summaries speech or singing
+## <wavey> or whispering
+## <wavey> or shouting
+## <aloril> hmm.. what would be value for drunk people?
+## <wavey> slurrs :)
+## <wavey> or 'drunkenly' :)
+## <aloril> okay, it's vocal then...
+## <wavey> coolio
+## <aloril> what about "say"? is that ok or is there better version?
+## <wavey> tone is purely musical..
+## <wavey> 'speech'?
+## <aloril> ok...
+## <wavey> but 'say' describes it fine :)
+## <aloril> hmm... say might be more generic?
+## <aloril> think about spell intonation...
+## <aloril> well then there is of course non speech sounds too...
+## <aloril> hmm.. maybe screaming is say
+## <aloril> but what about clapping?
+## <aloril> or farting ;-)
+## <aloril> or whistling
+## <aloril> or crunch voice coming when somebody tries to surprise you from behind
+## <wavey> those are actions
+## <aloril> <op><id>sound</id><ent><attr name=".... ></op>
+## <aloril> so is talking...
+## <aloril> but they produce sound you can hear...
+## <wavey> well
+## <wavey> i was wondering about that
+## <wavey> the beer example you started with
+## <aloril> for example if you make sword:
+## <aloril> action would be create sword
+## <wavey> had entity with attr or say and tone
+## <aloril> and it would produce sight and sound operations(/events)
+## <wavey> the tone should be an attr of say (or vocal)
+## <aloril> well there is sound entity which can have as many attributes as needed...
+## <wavey> sure
+## <wavey> that should be an attr of the entitie's vocal attr.
+## <wavey> if you get my meaning.
+## <aloril> question is what those attributes should be...
+## <aloril> ie think about what C structure would capture all sounds...
+## <wavey> ok, clear this up
+## <wavey> can an entity's attributes have attributes themselves?
+## <aloril> entity attributer can be subentity..
+## <wavey> ok cool
+## <aloril> just like structure in C can contain another structure..
+## <wavey> so 'fart' should be an action of an entity
+## <wavey> along with 'say'
+## <aloril> just doesn't make sense for something to be string and structure at the same time ;-)
+## <wavey> and 'sing' should be an attribute of the 'say' attribute
+## <wavey> s/say/vocal
+## <aloril> do you have forge cvs on your disk?
+## <wavey> nope :/
+## <wavey> wanna describe vocalisation once more?
+## <aloril> see: http://www.worldforge.org/website/protocols/proposals/operations.html#sight
+## <aloril> and http://www.worldforge.org/website/protocols/proposals/operations.html#sound
+## <wavey> man singing = entity with attr of 'vocal=singing'
+## <aloril> especially for example move crunch would be like that example in the end of sight
+## <aloril> probably fart too...
+## <wavey> what is 'move crunch'?
+## <aloril> voice stepping on some crunchy
+## <aloril> voice that is generated by stepping on some crunchy
+## <aloril> obviously fart would produce smell perception too 
+## <wavey> crunchy == something that crunches, like a cardboard box
+## <wavey> when you compress it
+## <aloril> yup
+## <aloril> (in above discussion)
+## <wavey> so what do you mean by 'voice'?
+## <aloril> sound
+## <wavey> ok :)
+## <aloril> s/voice/sound/ ;-)
+## <wavey> <aloril> voice stepping on some crunchy
+## <wavey> ^ possibly the most confusing thing i've ever read on irc ;)
+## * aloril rofl
+## <wavey> in fact
+## *** wavey has changed the topic to: <aloril> voice stepping on some crunchy
+## <aloril> voice moving and producing sound ;-)
+## <aloril> perfectly valid thing: it's magical voice
+## <aloril> ;-)
+## * aloril wondering how that would be represented in atlas
+## *** aloril has changed the topic to: <aloril> voice stepping on some crunchy <aloril> it's magical voice
+## <wavey> i'm still utterly without understanding :)
+## <aloril> it's voice with mass ;-)
+## <wavey> ok
+## <wavey> start again
+## ***Mike (~mikeday@203.42.255.220) has joined #coders
+## <aloril> hi mike
+## <Mike> hello
+## <wavey> hiya mike
+## <wavey> tell aloril to stop hurting my head
+## * Mike grins
+## <aloril> drunkness part for http://www.ionet.net/~timtroyr/funhouse/beer.html added to cyphesis
+## <aloril> (actually it's vodka, but that's just detail ;-)
+## <aloril> why did I add it?
+## <aloril> * kosh gives aloril more vodka to improve his coding
+## <aloril> * aloril has been giving vodka to pet NPC ;-)
+## <aloril> <aloril> duh now it passed out..
+## <aloril> <kosh> really?
+## <aloril> <kosh> you have drinking working in cyphesis?
+## *** aloril has changed the topic to: voice stepping on something crunchy generates voice which steps ...
+## <wavey> mike!
+## <wavey> tell him!
+## <wavey> surely it's illegal to be this strange?
+## <Mike> voice. stepping. on something, crunchy.
+## * Mike boggles
+## * aloril is laughing uncontrollably
+## <wavey> aloril is talking uncontrollably
+## <wavey> shoot him in the lungs
+## <wavey> quick
+## <aloril> hey now real, guestion: how topic is expressed in atlas?
+## <wavey> before he says anything else
+## <wavey> <ent><attr name="topic"><attr value="* aloril needs help"></ent>
+## <aloril> <op><id>sound</id>
+## <aloril>   <op><id>move</id>
+## <aloril>     <ent>
+## <aloril>       <type><id>voice</id></type>
+## <aloril>       <attr name="say">crunch</attr>
+## <aloril>       <attr name="vocal">crunch</attr></ent>
+## <aloril>       <loc><id>crunchy_item</id><coords>0,0,0.1</coords></loc>
+## <aloril>   </ent>
+## <aloril>   </op>
+## <aloril> </op>
+
+:map:
+    id:"smell"
+    parents:["perception"]
+    description:"Character smells something"
+    args_description:"thing character smells"
+    example:
+        :string:"""Example (every operation might have from, 
+to and time tags, not only this operation):"""
+        :map:
+            objtype:"op"
+            parents:["smell"]
+            from:"flower_34"
+            args:
+                :map:
+                    e_smell:"sweet"
+
+:map:
+    id:"feel"
+    parents:["perception"]
+    description:"Character feels something (with fingers usually)"
+    args_description:"thing character touches"
+    example:
+        :map:
+            objtype:"op"
+            parents:["feel"]
+            args:
+                :map:
+                    id:"cloth_34"
+                    e_surface_type:"rough"
+
+:map:
+    id:"imaginary"
+    parents:["action"]
+    description:"When something is not yet implemented in server, then character can pretend to do something ;-)"
+    args_description:"event that is supposed to happen"
+    example:
+        :map:
+            objtype:"op"
+            parents:["imaginary"]
+            args:
+                :map:
+                    id:"some_unimplemented_action"
+
+:map:
+    id:"talk"
+    parents:["communicate"]
+    description:"used for talking"
+    long_description:"need to relook at that 'Magic voice that steps on something crunchy and makes magic voice which...' -IRC log"
+    args_description:"sentence(s) entity"
+    example:
+        :map:
+            objtype:"op"
+            parents:["talk"]
+            args:
+                :map:
+                    say:"What has happened there?"
+        :string:"""Talking out of game is same, 
+except you use player id instead of character id."""
+
+
+:map:
+    id:"look"
+    parents:["perceive"]
+    description:"Looking at something"
+    args_description:"target entity"
+    example:
+        :map:
+            objtype:"op"
+            parents:["look"]
+            args:
+                :map:
+                    id:"elf_3545"
+        :string:"""Conversation examples:<br> When you connect to
+        server you need to look to see things. Server sends all new
+        things that appear and all changes that you see (like
+        movement). But it is clients responsibility to make first
+        update of what it sees. Reason is that only client knows what
+        it has cached.
+
+        <p>First look can have empty argument list: then server sends
+        appropriate top level object for current scheme."""
+        :map:
+            objtype:"op"
+            parents:["look"]
+            serialno:5
+            from:"Bjorn_10"
+            args:
+        :string:"Server reply:"
+        :map:
+            objtype:"op"
+            parents:["set","sight"]
+            serialno:100
+            refno:5
+            from:"Bjorn_10"
+            to:"Bjorn_10"
+            seconds:19035667864.4
+            time_string:"0612-01-01 05:31:04.4"
+            args:
+                :map:
+                    id:"world_0"
+                    parents:["world"]
+                    contains:["tavern_2","market_3","home_4","axe_5","Nisuf_6","Miyora_7","home_8","smithy_9","Bjorn_10"]
+                    stamp:19035660000.0
+                    pos:[0.0,0.0,0.0]
+        :string:"""Client looks at contains attribute of above object
+        and then looks for those objects in turn:"""
+        :map:
+            objtype:"op"
+            parents:["look"]
+            serialno:6
+            from:"Bjorn_10"
+            args:
+                :map:
+                    id:"Nisuf_6"
+        :string:"And then server tells you more about it:"
+        :map:
+            objtype:"op"
+            parents:["set","sight"]
+            serialno:105
+            refno:6
+            from:"Nisuf_6"
+            to:"Bjorn_10"
+            seconds:19035667864.4
+            time_string:"0612-01-01 05:31:04.4"
+            args:
+                :map:
+                    id:"Nisuf_6"
+                    parents:["farmer"]
+                    e_drunkness:0.0
+                    stamp:19035650000.0
+                    loc:"world_0"
+                    pos:[20.0,50.0,300.0]
+                    description:"ordinary farmer"
+                    name:"Nisuf"
+                    e_status:1.0
+
+:map:
+    id:"listen"
+    parents:["perceive"]
+    description:"Listen (something)"
+    args_description:"target entity"
+    example:
+        :map:
+            objtype:"op"
+            parents:["listen"]
+            args:
+                :map:
+                    id:"elf_3545"
+
+:map:
+    id:"sniff"
+    parents:["perceive"]
+    description:"Sniff something"
+    args_description:"target entity"
+    example:
+        :map:
+            objtype:"op"
+            parents:["sniff"]
+            args:
+                :map:
+                    id:"flower_3545"
+
+:map:
+    id:"touch"
+    parents:["perceive"]
+    description:"Touch something"
+    args_description:"target entity"
+    example:
+        :map:
+            objtype:"op"
+            parents:["touch"]
+            args:
+                :map:
+                    id:"cloth_3545"
+
+:map:
+    id:"appearance"
+    parents:["sight"]
+    description:"Character sees something appearing: it literally appears or has it come in visible range"
+    args_description:"object or event character sees"
+    example:
+        :map:
+            objtype:"op"
+            parents:["appearance"]
+            args:
+                :map:
+                    id:"grass1"
+                    stamp:989.24
+
+:map:
+    id:"disappearance"
+    parents:["sight"]
+    description:"Character sees something disappearing: it literally disappears or has it gone too far to be visible"
+    args_description:"object or event character sees"
+    example:
+        :map:
+            objtype:"op"
+            parents:["disappearance"]
+            args:
+                :map:
+                    id:"grass1"
+                    stamp:989.24
+
+:map:
+    id:"wield"
+    parents:["set"]
+    description:"Attach a tool to the character entity at a pre-defined location so that the character can use it."
+    args_description:"Tool or item to be wielded"
+
+:map:
+    id:"use"
+    parents:["action"]
+    description:"Use a currently wielded tool."
+    args_description:"Target tool is used on, or operation chosen from those available for this tool, with target given as its argument."

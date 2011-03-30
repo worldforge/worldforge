@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Revision History</title>
+  </head>
+
+  <body>
+    <h1>Revision History</h1>
+
+    <h2>Whats new in v0.3.0</h2>
+
+    <ul>
+        <li>2002-02-08: Id path with help from UncleFluffy, bear, adam, malcolm and eleft
+        <li>2002-02-XX: Cartography (and/or geometry): Major input from James and Anubis pointed out things.
+        <li>2001-03-01 - 2001-09-01: Binary1_beta2 codec (written mostly by blprice)
+        <li>2001-XX-XX: unfinished semantic_maps whitepaper with editing help from Grimicus.
+        <li>2001-XX-XX: Mike Day: various things
+    </ul>
+    <p>
+
+    <h2>Whats new in v0.2.4</h2>
+
+    Removed typed lists and uri as encoding types. They are now
+    abstract types. Map is called mapping to differentiate between
+    geographical maps and object encoding key&lt-&gt;value mappings.
+    Some simple beginnings of map definition is added.
+    XML syntax is changed and Packed encoding is added.
+    ACHAT encoding negotiation is added.
+    <p>
+    Flattened structures and renamed some attributes and values:
+    <pre>
+abstract_type -&gt; objtype
+loc.ref -&gt; loc
+loc.coords -&gt; pos
+loc.velocity -&gt; velocity
+time.seconds -&gt; seconds
+time.future_seconds -&gt; future_seconds
+time.time_string -&gt; time_string
+parent-&gt;parents
+instance-&gt;children
+
+objtype values changed:
+"operation" -&gt; "op"
+"operation_definition" -&gt; "op_definition"
+    </pre>
+
+    <h2>Whats new in v0.2.3</h2>
+
+    Old obj_list type was splitted to list and map types. XML syntax
+    has changed to be easier to read and still keeping type info
+    intact. These changes were suggested by John Barret.
+    <p>
+    Conversation examples added for <a href="operation.html#login">login</a>, <a href="operation.html#look">look</a> and <a href="operation.html#move">move</a> -operations.
+    "game_interface" -object added. "abstract_type" -attribute for
+    operations and their instances was changed.
+    <p>
+      <a href="ftp://ftp.worldforge.org/worldforge/users/aloril/atlas/cyphesis_atlas_XML_0_2_3.log">Here</a> 
+
+      is example log with cyphesis_server.py and ObserverClient.py . 
+      Note that it does have Cyphesis specific additions and probably
+      still has some bugs in compliance.
+    </p>
+
+    <h2>Whats new in v0.2.2</h2>
+
+    example, stamp_inherit and stamp_contains attributes added and
+    basic examples to operations done
+    <p>
+      <a href="ftp://ftp.worldforge.org/worldforge/users/aloril/atlas/cyphesis_atlas_XML_0_2_2.log">Here</a> 
+
+      is example log with cyphesis_server.py and ObserverClient.py . 
+      Note that it does have Cyphesis specific additions and probably
+      still has some bugs in compliance.
+    </p>
+
+    <h2>Whats new in v0.2.1</h2>
+
+    Some fixes and id physical_type has been renamed to uri. XML
+    float_list and int_list syntax has been changed to more natural
+    XML (and somewhat easier to parse using XML library)
+
+    <h2>Whats new in v0.2.0</h2>
+
+    v0.2.0 is basically combination of v0.1.4 and Wds by Jamie and
+    Mike's &lt;obj&gt; syntax
+
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Fri Feb  8 08:33:16 EET 2002 -->
+<!-- hhmts start -->
+Last modified: Fri Feb  8 09:07:19 EET 2002
+<!-- hhmts end -->
+  </body>
+</html>

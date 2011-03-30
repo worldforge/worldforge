@@ -1,0 +1,827 @@
+%\documentclass{article}
+\documentclass{report}
+\title{Atlas Semantic GeoMaps}
+\author{Aloril}
+\date{2002-02-21}
+\usepackage{atlas}
+\def\OOG{OOG}
+\def\smile{;-)}
+
+\begin{document}
+   \maketitle
+   \tableofcontents
+
+   \newpage
+
+   \section{Thanks}
+   
+   Some editing and comments by \contrib{Dan Tomalesky}{Grimicus}{grim@xynesis.com}
+   and by \contrib{Bryce Harrington}{bryce}{bryce@neptune.net}
+   Bryce also has written ``Discussion with bryce about containers'' -section\\
+
+   Comments and suggestions for this whitepaper by (in order of time):\\
+   \contrib{Thierry Mallard}{shaman}{thierry@mallard.com}
+   \contrib{Adam Wendt}{adam}{billyjoeray@netzero.net}
+   \contrib{Sami M\"akel\"a}{smkl}{sajuma@utu.fi}
+   \contrib{James Best}{jamie}{jbest@magnacom.net}
+   \contrib{Anubis}{anubis}{anubis@worldforge.org}
+   \contrib{Rakshasa}{rakshasa}{rakshasa@start.no}
+   \contrib{Miguel Guzmán}{Aglanor}{aglanor@teleline.es}
+   \contrib{Christian Reitwiesser}{KCN}{christian@reitwiessner.de}
+   \contrib{James Turner}{James}{jmtn@blueyonder.co.uk}
+   \contrib{Sal Ferro}{Sal}{sferro@wojo.com}
+   \contrib{Jonathan Giszczak}{Dragon Master}{dragonm@assault.nexuslabs.com}
+   \contrib{}{tbp}{tbp@tbp.dyndns.org}
+   \contrib{Mike Taylor}{bear}{bear@code-bear.dyndns.org}
+   \contrib{Malcolm Walker}{malcolm}{malcolm@worldforge.org}
+   \contrib{Jorrit Tyberghein}{Jorrit}{Jorrit.Tyberghein@uz.kuleuven.ac.be}
+\\
+
+   Ideas are based on countless other people commenting at mail and
+   IRC.
+
+   Discussion logs:\\
+   \link{http://http://brenda.worldforge.org:8080/logs/info.php3?file=forge200012300743.irc}\\
+   \link{http://http://brenda.worldforge.org:8080/logs/info.php3?file=forge200012301148.irc}\\
+   \link{http://http://brenda.worldforge.org:8080/logs/info.php3?file=forge200012301607.irc}\\
+   \link{http://http://brenda.worldforge.org:8080/logs/info.php3?file=forge200101040947.irc}\\
+   \link{http://http://brenda.worldforge.org:8080/logs/info.php3?file=forge200101111430.irc}\\
+   \link{http://http://brenda.worldforge.org:8080/logs/info.php3?file=forge200101201220.irc}\\
+   \link{http://brenda.worldforge.org:8080/logs/info.php?file=coders200201311235.irc}\\
+   \link{http://brenda.worldforge.org:8080/logs/info.php?file=forge200202061527.irc}\\
+   \link{http://brenda.worldforge.org:8080/logs/info.php?file=coders200202181345.irc}\\
+   \link{http://brenda.worldforge.org:8080/logs/info.php?file=coders200202200025.irc}\\
+   Comments by mail:\\
+   \link{http://mail.worldforge.org/archive/protocols/2000-December/000110.html}
+
+%   Home of this whitepaper:\\
+%   \link{http://www.worldforge.net/aloril/atlas/whitepapers/semantic_maps.pdf}
+
+   \newpage
+
+   \section{Introduction}
+   
+   \subsection{Atlas}
+   
+   Atlas is the standard worldforge protocol for client/server interaction. For more
+   about Atlas see \link{http://www.worldforge.org/dev/eng/protocols/}.
+   
+   In order to avoid confusing the concepts of a geographical map and how Atlas currently 
+   defines a map, this paper will call the former {\em GeoMaps}.
+   The purpose of paper is to raise discussion about what should be in the
+   Atlas specification about geomaps and how it will relate to media.
+
+   \subsection{Semantic GeoMaps}
+   
+   Semantic geomaps contain the information needed by a world server
+   to model a game or other worlds. It provides a comprehensive
+   listing of what objects are located in a given portion of the
+   world, attributes of those objects, and their positions. Those
+   attributes should give meaning to their objects. For example, a
+   road object is used instead of line object ~(can this be
+   elaborated?  is a road object a line object with special attributes
+   or just a change of attribute?). Clients use an object class and
+   its attributes to find the appropriate graphical media. Different
+   clients will use different media (2D, 3D, text, aural, etc.) to
+   represent the same object. This effectively separates the data,
+   semantic geomaps, from the representation the client assigns it.
+
+   In this way, Atlas semantic geomaps resemble object-oriented
+   GIS\footnote{Geographic Information System
+     \link{http://www.usgs.gov/research/gis/title.html}} systems (such
+   as Smallworld or LAMPS) rather than the more traditional vector
+   oriented GIS systems, such as MapInfo and ArcView. An Atlas geomap's primary
+   difference from OO GIS is that it defines a certain standard set of object
+   types and attributes, whereas in OOGIS, objects are constantly redefined from 
+   geomap to geomap.  This is much like how in C++ anyone can create a class,
+   but STL defines a standard set of classes for everyone to use, rather than
+   creating their own personalized versions.  In addition, Atlas defines a 
+   default set of values for the standard attributes for each type.  This 
+   further allows a consistant way of defining GeoMaps.
+   
+   AI in NPCs and user scripts can use semantic information defined in these
+   objects to follow a road or to decide how to react to other objects. 
+   Also, they enable smarter tools than pure geographic info would
+   allow.  Some example tools might:  find the shortest route between two
+   places, select all roads, water, mountains, etc\ldots, 
+   or apply erosion to river drainage basins.
+   From an interface point of view, a two-dimensional, isometric client might 
+   represent the game world's geomaps as a set of tiles laid out in a grid, 
+   with animated sprites moving around on top, whereas the three-dimensional
+   client might use a collection of textured meshes to describe the
+   same geomaps.  A text client might provide only descriptions of the 
+   entities in the game, in a MUD\footnote{MultiUser Dungeon 
+   \link{http://www.mudconnect.com/mudfaq/mudfaq-p1.html}} style of layout. These 
+   examples are not the limits.  A client could have multiple types 
+   of media to display a specific geomap.
+
+   Beyond this separation of media and object, identification--a trait of 
+   semantic geomaps that distinguishes them from ordinary geomaps--allows 
+   an object to contain more than just position and related geographical 
+   information. ~(decide whether to make this example of attribute or what...)
+
+   \section{Object model overview}
+
+   Here we will attempt to explain the format for Atlas Objects.  There are five 
+   basic types of attributes that an atlas object can have:
+   \begin{description}
+   \item[Integer] A number without decimal precision
+   \item[Double] A number with decimal precision
+   \item[String] A ordered collection of characters.  
+   \item[List] An ordered collection of any altas type defined here. Members of  
+               a list are not necessarily indexed, but can be.  This index is 
+               typically an integer.
+   \item[Map] An unordered collection of atlas types defined here, where each 
+              member of the collection is indexed by a string (called a {\em key})
+   \end{description}
+   Altas objects are made up in various combinations of the above types.  The 
+   following examples will further explain how Atlas defines objects and their
+   classes.
+
+   \subsection{Oak object example}
+
+   This example shows a typical use of an Atlas Object.
+   %using oak tree in 2 places
+   \def\OakTree{
+     \begin{Amap}
+       \Attr{id}{``oak1234''}
+       \Attr{name}{``The Giant Oldie''}
+       \Attr{objtype}{``obj''}
+       \Attr{parents}{(``oak'')}
+       \Apos{12.5}{100.5}{0.5}
+       \Avelocity{0.0}{0.0}{0.0}
+       \Attr{loc}{``forest123''}
+       \Attr{contains}{(``human234'')}
+     \end{Amap}}
+   \begin{Aobjectfigure}
+     \OakTree
+     \caption{Oak object example}
+   \end{Aobjectfigure}
+   \\
+   Here's an explanation of the above attributes:
+   \begin{description}
+   \item[Id] -- The unique identifier for the object.
+   \item[Name] -- The name of object. The name doesn't need to be unique
+               in the world.
+   \item[Objtype] -- The kind of Atlas object.
+                  An ``obj'' is an instance of its parent(see below).
+                  These types can specify ``in game'' or ``out of game'' objects.
+                  Ex. Character object(in) v. Player object(out)
+                  Other possible Objtype values are ``op'', ``class'', or
+                  ``op\_definition''.  ``op'' is the same as ``obj'' except
+                  that it pertains to an operation instance as opposed to object 
+                  instance.  ``class'' and ``op\_definition'' will be explained
+                  below.
+   \item[Parents] -- The inheritence structure of the object.
+                  Objects inherit attributes from a parent class. Classes may
+                  inherit attributes from one or many parent classes. In the case
+                  of an instance object, its parent is its class object's id 
+                  (``oak'' in this example).
+   \item[Pos] -- The position of object in relation to its container
+              Usually the position is given as list of x, y and z.
+              Direction of x, y and z are mathematical ones: x is from
+              left to right or west to east, y is south to north and z is
+              from down to up.
+              \footnote{Worlds with more than three dimensions are possible,
+              but are rare. Also, some games servers might want to use 
+              different method to specify position.  For example sim games set
+              in the Earth/Moon space, where the position is specified by six
+              parameters, may want to use different way to specify position.
+              In this case server should by default use the $pos$ attribute.
+              If the client supports an alternative system, then the server
+              can use that instead: for example $orbit\_pos$.}
+   \item[Velocity] -- The velocity vector of object in relation to
+                   the container.
+                   \footnote{An object's pos and velocity should be in reference
+                   to their container.}
+   \item[Loc] -- The id of the object that contains this object. The object's container.
+   \item[Contains] -- An id list specifying which objects are contained by this one.
+   \end{description}
+   
+   \subsection{Oak class definition example}
+
+   This is the definition of the oak class that the above object is an instance of:
+   \label{example:oakclass}
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``oak''}
+       \Attr{name}{``Quercus''}
+       \Attr{objtype}{``class''}
+       \Attr{parents}{(``tree'')}
+     \end{Amap}
+     \caption{Oak class definition example}
+   \end{Aobjectfigure}
+   
+   There are no new attributes in the oak class definition example
+   compared to oak trees instances in the world.  Despite this, The descriptions of
+   each are some what different:
+   \begin{description}
+   \item[Id] is the unique class name.
+   \item[Name] This field is typically just a placeholder without real significance 
+               to the class.  In this case, the Latin name is used. Usually, it is
+               identical to id attribute. It was made intentionally different
+               here to show it is possible \smile.
+   \item[Objtype] The value ``class'' specifies a new object type. These objects
+                  are out of game.  The purpose of these definitions is to provide
+                  the layout of the class for any instances, and also to store default
+                  values for the object type.  A benefit of this might be to allow the
+                  server to pass any new definitions to the client via atlas. 
+                  (if that functionality is implemented). ``op\_definition'' 
+                  defines a new operation type.  It is basically the class definition 
+                  for operations--much like ``class''.
+   \item[Parents] All superclasses of this class definition are placed in this list.
+   \end{description}
+   
+   \section{Containers}
+   %\begin{enumerate}
+   Containers are the organization of objects in geomaps.  Each geomap has two
+   attributes, {\em loc} and {\em contains}, that are used to designate 
+   containment. Containers provide many convenient benefits.
+
+   %\item Can have different coordinate system for each container if
+   %  needed.
+   %  \begin{itemize}
+   %  \item Only need to change the container position and all things
+   %    that use it as a reference system change too (for example
+   %    ship/character moving).
+   %  \item Can have one generic floating point system and still have
+   %    full accuracy at detailed levels. For example one system for
+   %    the galaxies and start from 0.0,0.0,0.0 for the planets.
+   %  \end{itemize}
+   Since a container is independent from any other, each may have its own 
+   coordinate system to designate the position of objects within it.  This 
+   allows the ability to change the container's position without
+   actually having to modify the position of those objects contained
+   within it.
+   Second, the coordinate system can be one generic floating point system, 
+   while still providing accurate positioning at detailed levels.  Though each container 
+   uses the same system, the depth of containment would specify the actual scale
+   between two containers.  See the examples later for further explanation. 
+   ~(I assume this is further explained in examples below)
+   
+   %\item Need to transmit only things client see and only need one
+   %  mechanism for all of it.
+   %  \begin{itemize}
+   %    \item Don't need to show what the box contains.
+   %    \item No need to show what a neighbor forest contains.
+   %    \item Also solar system movements or the planet characters are
+   %      playing on don't need to be visible to characters that are
+   %      living it in medieval world.
+   %    \end{itemize}
+   %\item Can have different data at different zoom levels.
+   %  \begin{itemize}
+   %  \item For things that are far away send container info, but not
+   %    what they contain at bottom level (like looking from a mountain
+   %    to far away lands or standing near {\em big} a cliff).
+   %  \item You can view overview the geomap for travel etc.. purposes
+   %  \item Can make big/generic changes more easily.
+   %  \end{itemize}
+   Another benefit of containers is scope.  With certain actions, such as sight
+   or collision detection(CD), containers provide a way to limit which objects
+   need to interact.  For example, there is no need to display what items a box
+   might contain or to show objects in a neighboring forest. Scope also can limit
+   the detail of information in the same way.  For instance, someone standing on 
+   a mountain looking out would see other mountains, forests, and perhaps cities, 
+   but would not know what was contained within them.
+
+   %\item It is a way to group things logically/geographically. This is
+   %  handy if one wishes to distribute sections of the world onto
+   %  different game servers and/or assemble a realm from ``canned''
+   %  realms.
+   Lastly, containers provide a way to logically group objects.  This
+   can be a useful
+   way to define sections of a game world, so in can be distributed to several game 
+   servers, or they could be ``canned'' into a packaged realm.
+
+   %\end{enumerate}
+
+   \subsection{Container examples}
+   
+   Only attributes related to ``containership'' are included. Note
+   that orientation is not included in these examples\ldots yet.
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``galaxy1''}
+       \Attr{name}{Milkway}
+       \Attr{contains}{(``ss2'', ``ss3'', ``ss4)}
+     \end{Amap}
+
+     \begin{Amap}
+       \Attr{id}{``ss2''}
+       \Attr{name}{``Solar system''}
+       \Attr{loc}{``galaxy1''}
+       \Apos{\bn{2.6}{20}}{\bn{-1.5}{19}}{\bn{1.5}{19}}
+       \Attr{contains}{(``venus5'', ``earth6'', ``mars7'', ``jupiter8'')}
+     \end{Amap}
+
+     \begin{Amap}
+       \Attr{id}{``earth6''}
+       \Attr{name}{``Planet Earth''}
+       \Attr{loc}{``ss2''}
+       \Apos{\bn{1.5}{11}}{0.0}{0.0}
+       \Attr{contains}{(``dural9'', ``trans10'')}
+     \end{Amap}
+
+     \begin{Amap}
+       \Attr{id}{``dural9''}
+       \Attr{name}{``Dural world''}
+       \Attr{loc}{``earth6''}
+       \Apos{\bn{5.0}{3}}{\bn{4.5}{6}}{\bn{4.5}{6}}
+       \Attr{contains}{(``cambria11'', ``moraf12'')}
+     \end{Amap}
+
+     \begin{Amap}
+       \Attr{id}{``cambria11''}
+       \Attr{name}{``Cambria''}
+       \Attr{loc}{``dural9''}
+       \Apos{\bn{8.0}{4}}{\bn{-1.6}{4}}{200.0}
+       \Attr{contains}{(``agrilan13'', ``summerset14'')}
+     \end{Amap}
+
+     \caption{Containers examples, part 1}
+   \end{Aobjectfigure}
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``agrilan13''}
+       \Attr{name}{``Agrilan''}
+       \Attr{loc}{``cambria11''}
+       \Apos{\bn{-3.2}{4}}{\bn{2.0}{4}}{100.0}
+       \Attr{contains}{(``forest123'', ``marketplace321'')}
+     \end{Amap}
+
+     \begin{Amap}
+       \Attr{id}{``forest123''}
+       \Attr{name}{`Haretone forest''}
+       \Attr{loc}{``agrilan13''}
+       \Apos{-100.0}{-200.0}{10.0}
+       \Attr{contains}{(``oak1234'', ``34555'', ``34556'', ``34557'')}
+     \end{Amap}
+
+     \OakTree
+
+     \begin{Amap}
+       \Attr{id}{``human234''}
+       \Attr{name}{``Twaine Danylsen Junior''}
+       \Apos{10.0}{3.5}{30.0}
+       \Attr{loc}{``oak1234''}
+       \Attr{contains}{(``backpack6788'')}
+     \end{Amap}
+
+     \begin{Amap}
+       \Attr{id}{``backpack6788''}
+       \Apos{0.0}{0.1}{1.0}
+       \Attr{loc}{``human234''}
+       \Attr{contains}{(``apple11111'')}
+     \end{Amap}
+
+     \begin{Amap}
+       \Attr{id}{``apple11111''}
+       \Attr{loc}{``backpack6788''}
+     \end{Amap}
+
+     \caption{Containers examples, part 2}
+   \end{Aobjectfigure}
+   
+   \begin{itemize}
+   \item The galaxy inherits default $pos=\floatthree{0.0}{0.0}{0.0}$
+     from ``game\_entity'' class definition.
+   \item Before space travel is implemented, server will omit $loc$
+     and $pos$ attributes from ``dural9'' object and thus `pretend'
+     it's topmost level object for clients. 
+   \item When looking from far away at the Earth, the $contains$ attribute
+     will be shown as empty and only filled when the spaceship is
+     near enough to see ``dural9''. Similarly if Shewla Danylsen is
+     too far from ``oak123'' tree, she won't see her son. Also unless
+     ``backpack6788'' is open, the backpack's content is not visible.
+   \item Note that ``apple11111'' does not have $pos$ attribute. It's
+     position inside ``backpack6788'' is undetermined.
+   \item In the example,  ``backpack6788'' is defined using numerical
+     coordinates. Another possibility might be to set it's $loc$
+     attribute to ``human234\#back''. Another possibility might be to
+     use something like $symbolic\_pos$ with ``back'' as value.
+   \end{itemize}
+
+   \newpage
+
+   \subsection{Example on how to calculate ``absolute'' position}
+   
+   This example uses python syntax.
+
+   \begin{verbatim}
+def get_xyz(self):
+    """get location: if relative to location (container),
+       add our position to actual container location"""
+    if self.loc:
+        return self.loc.get_xyz() + self.pos
+    else:
+        return self.pos
+   \end{verbatim}
+   
+   Your actual implementation can certainly optimize beyond the above
+   code. It can, for example, also store an $absolutePosition$
+   attribute. You'd calculate that for every object and when the object
+   moves, update both $pos$ and $absolutePosition$ attributes. When
+   object changes containers, you'd calculate it's new $absolutePosition$
+   using the formula $loc.absolutePosition + pos$.
+
+   \subsection{Alternative: containers as separate objects}
+   
+   $loc$, $pos$ and $contains$ attributes could be made into separate
+   objects. This object would also have separate class hierarchy.
+   
+
+   Discussion with bryce about containers:
+
+   ``In the real world, every item contained within another item has a
+   specific position and identity.  However, in some situations it is
+   immaterial where the item is, exactly, and in others we don't care
+   too much about the specificality of the item.  Knowing that we don't
+   care, we can then throw that information away and compress our data
+   down by a great deal.  
+
+   For example, consider a bag full of apples, pears, and bananas.
+   Certainly in real life, each of these items has a specific position
+   within the bag, however within a game server if we had to go to the 
+   work of calculating exact positions of each piece of fruit, taking
+   into account physical shape, smooshiness, etc. it'd be a waste of
+   cycles.  Instead, all we really, truly need to know is that within
+   the bag there are 4 apples, 2 pears, and 7 bananas.  We don't care
+   about the position.  This not only saves us the processing work of
+   positioning the items, but also allows us to skip keeping track of
+   the positions of the items.
+
+   Alternatively, consider an orchard's 300m x 300m field of apple
+   trees.  The field consists of rows 3 meters apart, with each tree
+   within a row spaced 3 meter apart.  In a generic container, we'd need
+   to describe the area by sending data on 10,000 entities to the
+   client, but because every tree is identical, and because they're
+   spaced in a deterministic grid, this is extremely wasteful.  Instead,
+   what we want to do is tell the client, ``Put 10,000 Apple Trees in a
+   grid according to this formula...''  
+
+   As you can surmise, there are probably other different styles of
+   containers beyond 'bags' and 'fields', so we generalize the notion of
+   a ``container'', separately from an ``entity''.  An entity could
+   contain other entities in different ways, depending on how we want to
+   store things within it.  For example, consider if we cut down all the
+   apple trees and pile them up in a jumble along with bits of broken
+   stone and some dead bodies.  In this case we may want to treat the
+   field just like a bag - a random collection of specific items.  On
+   the other hand, if we cleared the field and two groups of brigands
+   faced off across it, engaged in battle, we'd suddenly care about both
+   the exact positions and exact natures of everything on the field.
+
+   Thus, we want to allow a given entity to be able to change its type
+   of container, as needed.  This is modelled by saying that ``an entity
+   has a container'' instead of ``entity is a container''.   
+
+   Here are some kinds of containers:
+
+   Map - Items have a specific identity and a specific position.
+
+   Pile - Items do not have specific positions and are assumed to be
+   randomly distributed within the container.  The quantity of items of
+   each specific type is given.
+
+   List - Items are ordered and have a specific identity, but are not
+   geospacially positioned.  This can be thought of as a queue or
+   stack.  
+
+   Set - Rather than using 3D coordinates, this uses abstract named
+   ``locations'' within the container.  For example, within a spacecraft
+   we could identify crew positions as ``Pilot'', ``Gunner 1'', ``Gunner
+   2'', ``Engineer'', etc.  In such circumstances it is assumed that the
+   ``role'' is much more important for the game to know than the
+   coordinate location.  In a ship-to-ship space combat game,
+   coordinates within a ship may be irrelevant (unless it's being
+   boarded) than it is to know who's in which chair.   In a roleplaying
+   game, this style of container would be used for a character's
+   possessions - he'd have named locations ``neck'', ``torso'', ``left
+   foot'', and ``top of head''.  An article of clothing (or weapon or
+   armor) could be placed in each of these named locations.
+
+
+   In container info inside object model above might be modeled by
+   having special object and/or special attributes.
+
+   \newpage
+
+   \section{Cartography/Geometry at different zoom levels}
+   
+   \begin{itemize}
+   \item Object can be a point. Usually characters, trees, etc\ldots
+     are like this.
+   \item Object can be a line. Usually roads, fences, etc\ldots are
+     like this.
+   \item Object can be an area. Usually fields, forests, etc\ldots are
+     like this.
+   \item Object can be a volume. Usually caves, houses, etc\ldots
+     are like this.
+   \end{itemize}
+   
+   One object can be different kind of geometry type at different zoom
+   levels. For example you are far away from some star. You see a star
+   as point object. When you get near the star you see it as volume
+   object. Then get even nearer and see river as line object in planet
+   that orbits the star. You ascend toward the river. You see the big
+   river as an area object. You dive into it and see it as volume
+   object. \footnote{If server is using 2 coordinates and client is
+     using 3 coordinates, then client should add/remove element
+     as needed: $Server:(x,y)$ becomes $Client:(x,y,0.0)$,
+     $Client:(x,y,z)$ becomes $Server:(x,y)$.  Similarly also if
+     server has 4 or more coordinates and client is using 3
+     coordinates, client should add/remove elements as needed.}
+   
+   More detailed object(s) should be referred in $contains$ attribute.
+
+   \subsection{Point (0D) objects}
+   
+   This and following cartography subsections are based largely on
+   discussion with James Turner, Anubis, DragonM, tbp, bear, malcolm
+   and Jorrit (in order of time).
+
+   Point objects have only position.
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``human234''}
+       \Attr{name}{``Twaine Danylsen Junior''}
+       \Apos{10.0}{3.5}{30.0}
+       \Attr{loc}{``oak1234''}
+       \Attr{contains}{(``backpack6788'')}
+     \end{Amap}
+     \caption{Human point object}
+   \end{Aobjectfigure}
+   
+   Also there can be ``point data'' objects which have coordinates for
+   many positions. These objects are referred by line, area and volume
+   objects. \footnote{Using $p$ in point data objects instead of
+     $points$ because it will be referred more than any other
+     attribute: in binary2 encoding length doesn't matter but for
+     every other encoding it does matter.}
+
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``center1''}
+       \Attr{p}{$((10.0, 2.0, 2.0), (5.0, -1.0, 1.0), (0.0, 0.0, 0.0))$}
+     \end{Amap}
+     \begin{Amap}
+       \Attr{id}{``outline1''}
+       \Attr{p}{$((10.0, 2.5, 2.0), (10.0, 1.5, 2.0),$}
+       \Attr{}{$\ (7.0, -0.7, 1.6), (5.0, -1.5, 1.0), (5.0, -0.5, 1.0))$}
+     \end{Amap}
+     \begin{Amap}
+       \Attr{id}{``bottom1''}
+       \Attr{p}{$((10.0, 2.0, 1.8), (5.0, -1.0, 0.8))$}
+     \end{Amap}
+     \caption{Point data objects for river, all points could be in one
+       object if wanted}
+   \end{Aobjectfigure}
+   
+   \subsection{Line (1D) objects}
+   
+   Line objects refer to point objects in polyline attribute. Format
+   is $object\_id.attribute\_name.index$. Even if polyline is made
+   loopy, it does not cover area: center is empty unless there is area
+   object.
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``river9''}
+       \Attr{parents}{(``river'')}
+       \Attr{polyline}{(``center1.p.0'', ``center1.p.1'',
+         ``center1.p.2'')}
+       \Attr{contains}{(``river\_area4'')}
+     \end{Amap}
+     \caption{Line object (river): points attribute could be included
+       here also, reference then would be ``river9.points.0'', \ldots}
+   \end{Aobjectfigure}
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``r5''}
+       \Attr{parents}{(``rope'')}
+       \Attr{polyline}{(``joe123.pos'', ``mic8.pos'')}
+     \end{Amap}
+     \caption{Rope: Joe is holding other end and Michael is holding
+       other end}
+   \end{Aobjectfigure}
+   
+
+   \newpage
+
+   \subsection{Area (2D) objects}
+   
+   Area objects are triangles meshes. They refer to point objects in
+   area attribute. Each triangle is defined by 3 ids to points. Every
+   triangle should share at least one edge with another triangle and
+   you can get into any triangle from any other triangle by traveling
+   from triangle to another. If you need areas that consists of
+   separate pieces, make higher level object and ``contain'' area
+   objects in it for that. \footnote{Even if area is made loopy so it
+     seems like it covers volume, it doesn't: there is no inside and
+     outside and both sides are empty unless there is real volume
+     object.}
+
+   \begin{verbatim}
+until figure is made, here is ascii version...
+        ____
+       /    0
+      /  ___1
+     4 _2
+     3/
+
+   \end{verbatim}
+%0-> 1,2,4 b0,b1
+%1-> 0,2 b0
+%2-> 0,1,3,4 b0,b1
+%3-> 2,4 b1
+%4-> 0,2,3 b0,b1
+%b0-> 0,1,2,4 b1
+%b1-> 0,2,3,4 b0
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``river\_area4''}
+       \Attr{parents}{(``river\_area'')}
+       \Attr{area}{((``outline1.p.0'', ``outline1.p.1'', ``outline1.p.2''),}
+       \Attr{}{(``outline1.p.2'', ``outline1.p.3'', ``outline1.p.4''),}
+       \Attr{}{(``outline1.p.0'', ``outline1.p.2'', ``outline1.p.4''))}
+       \Attr{contains}{(``river\_volume10'')}
+     \end{Amap}
+     \caption{River area object}
+   \end{Aobjectfigure}
+
+   \newpage
+   
+   Area objects can also have holes in them. Holes are define by
+   missing triangles inside area. \footnote{In binary2 river and lake
+     example objects can be encoded as series of int16 numbers or even
+     as series of int8 numbers}
+
+   \begin{verbatim}
+until figure is made, here is ascii version...
+ 0    1
+   45 
+   67
+ 2    3
+   \end{verbatim}
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``lake\_area5''}
+       \Attr{parents}{(``lake\_area'')}
+       \Attr{area}{((``pd.p.0'', ``pd.p.1'', ``pd.p.4''),}
+       \Attr{}{(``pd.p.1'', ``pd.p.5'', ``pd.p.4''),}
+       \Attr{}{(``pd.p.1'', ``pd.p.3'', ``pd.p.5''),}
+       \Attr{}{(``pd.p.3'', ``pd.p.7'', ``pd.p.5''),}
+       \Attr{}{(``pd.p.3'', ``pd.p.6'', ``pd.p.7''),}
+       \Attr{}{(``pd.p.3'', ``pd.p.2'', ``pd.p.6''),}
+       \Attr{}{(``pd.p.0'', ``pd.p.6'', ``pd.p.2''),}
+       \Attr{}{(``pd.p.0'', ``pd.p.4'', ``pd.p.6''))}
+       \Attr{contains}{(``river\_volume14'')}
+     \end{Amap}
+     \caption{River area object with island ``holes''}
+   \end{Aobjectfigure}
+   
+   Also could make holes by using ``negative'' area: island is
+   contained by lake and removes water from it's area.
+
+   \subsection{Volume (3D) objects}
+   
+   Volume objects consist of one or more tetrahedrons. They refer to
+   point objects in volume attribute. Each tetrahedrons is defined by
+   4 ids to points. Every tetrahedrons should share at least one face
+   with another tetrahedrons and you can get into any tetrahedrons
+   from any other tetrahedrons by traveling from tetrahedrons to
+   another. If you need volumes that consists of separate pieces, make
+   higher level object and ``contain'' volume objects in it for that.
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``river\_volume10''}
+       \Attr{parents}{(``river\_volume'')}
+       \Attr{volume}{((``outline1.p.0'', ``outline1.p.1'', ``bottom1.p.0'', ``outline1.p.2''),}
+       \Attr{}{(``outline1.p.2'', ``outline1.p.3'', ``bottom1.p.1'', ``outline1.p.4''),}
+       \Attr{}{(``outline1.p.0'', ``outline1.p.2'', ``bottom1.p.1'', ``outline1.p.4''),}
+       \Attr{}{(``outline1.p.2'', ``bottom1.p.0'', ``bottom1.p.1'', ``outline1.p.4''),}
+       \Attr{}{(``outline1.p.0'', ``bottom1.p.0'', ``bottom1.p.1'', ``outline1.p.2''))}
+     \end{Amap}
+     \caption{Volume river object: surface and bottom}
+   \end{Aobjectfigure}
+   
+   Volume objects can have 1 or more holes or empty spaces by missing
+   tetrahedrons somewhere. Alternatively they can contain ``negative
+   space'': for example mountain contains cave or house contains room.
+
+   \subsection{Higher (4D or more) dimensional objects}
+
+   Higher dimensional object is defined using collection of primitive
+   objects which are defined using N+1 points and with N+1 N-1
+   dimensional limiting objects similarly than 2D and 3D is done.
+
+   \subsection{Connecting neighbour objects}
+   
+   For topological consistency neigbour objects should be connected to
+   each other via common points/lines/triangles meshes/etc... More
+   about this later.
+
+   \section{Hyperlinks}
+   
+   URI (ids in Atlas) consists of form: atlas://server.org/acorn/root\\
+   Protocol is ``atlas://''.\\
+   Server is ``server.org''.\\
+   World id is ``acorn''.\\
+   Root object (=id) is ``root''.
+   
+   Maybe ``world id'' and ``id'' part should be separated by something
+   different than just '/'?
+
+   \section{Media}
+   
+   Media is completely separate. Objects in world server don't know
+   anything about media objects. World server only gives list of
+   recommended media server(s) but client can override selection.
+
+   So how does client know which media to use for objects?
+   
+   It uses object id, parents and other attributes to lookup for it at
+   media server. First client searches using object id, then using
+   parents ids, then grandparents ids, etc.. until it finds match.
+   Searches are cached on client and probably makes good sense to
+   cache list of ids media server offers.
+
+   \subsection{Example lookup}
+
+   Client sees character named ``Halek''.
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``ch98''}
+       \Attr{name}{``Halek''}
+       \Attr{parents}{(``elf'')}
+     \end{Amap}
+     \begin{Amap}
+       \Attr{id}{``elf''}
+       \Attr{parents}{(``humanoid'')}
+     \end{Amap}
+     \caption{``Halek'' character and ``elf'' definition}
+   \end{Aobjectfigure}
+   
+   First client queries media server for info about ``ch98''. If no
+   info about that exist, then it queries about ``elf''. If still no
+   info, then for ``humanoid''. Client can fetch all info objects from
+   media server beforehand, so querying in practice can be just cache
+   lookup. Lets assume client finds media info object for ``elf''.
+
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``elf''}
+       \Attr{parents}{(``humanoid'')}
+       \Attr{media\_groups}{(``media\_2D\_iso'', ``media\_3D'', ``media\_text'')}
+       \Attr{media\_2D\_iso}{(``elf\_2D\_iso\_male'', ``elf\_2D\_iso\_female'')}
+       \Attr{media\_3D}{(``elf\_3D\_male'', ``elf\_3D\_female'')}
+       \Attr{media\_text}{(``elf\_text\_male'')}
+     \end{Amap}
+
+     \begin{Amap}
+       \Attr{id}{``elf''}
+       \Attr{parents}{(``humanoid'')}
+       \Attr{media\_groups}{
+         \begin{Amap}
+           \Attr{media\_2D\_iso}{(``elf\_2D\_iso\_male'', ``elf\_2D\_iso\_female'')}
+           \Attr{media\_3D}{(``elf\_3D\_male'', ``elf\_3D\_female'')}
+           \Attr{media\_text}{(``elf\_text\_male'')}
+         \end{Amap}
+         }
+     \end{Amap}
+     \caption{Top level media info object for ``elf'': 2 alternative versions}
+   \end{Aobjectfigure}
+   
+   \begin{Aobjectfigure}
+     \begin{Amap}
+       \Attr{id}{``elf\_3D\_female''}
+       \Attr{parents}{(``elf\_3D\_humanoid'')}
+       \Attr{sex}{``female''}
+       \Attr{media\_url}{``http://purple.worldforge.org/wf/cvs/media-3d/character/elf\_female.3ds''}
+     \end{Amap}
+     \caption{Media info object for 3D female elf}
+   \end{Aobjectfigure}
+
+   \newpage
+
+   \subsection{Filtering}
+   
+   Media info objects can contain also other attributes to use for
+   filtering than ids. For example there might be different media
+   available for different sized objects.
+
+   
+
+%   \subsection{2D/3D/text, etc\ldots media}
+
+%   \section{MIM and Semantic GeoMaps}
+
+\end{document}

@@ -1,0 +1,318 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Movement</title>
+  </head>
+
+  <body bgcolor="#FFFFFF" link="#990000" vlink="#660000" text="#000000">
+    <h2>Movement</h2>
+
+    <TABLE BORDER=0 CELLSPACING=5 CELLPADDING=1>
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#containers"><b>Containers and coordinates</b></a></td>
+        <td>What they are and how to interpret them</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#types"><b>Movement types</b></a></td>
+        <td>Relative, absolute, etc..</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#loc"><b>Location tag</b></a></td>
+        <td>What location tag contains</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#absolute"><b>Containers and 'absolute' movement</b></a></td>
+        <td>You are on ship that moves at sea</td>
+      </tr>
+
+      <tr>
+        <td bgcolor = "lightblue" align = "right" valign = "top">
+          <a href="#relative"><b>Containers and relative movement</b></a></td>
+        <td>You are on ship that moves at sea</td>
+      </tr>
+
+    </TABLE>
+
+    <h3><a name="containers">Containers and coordinates</a></h3>
+
+    To specify location of object you need to have reference
+    (container) object and position in relation to reference object.
+    Object also lists all objects that use it as reference coordinate
+    system.
+
+    <p>
+
+      Attributes:<br>
+
+    <ul>
+      <li>loc: id of object that this object is using as reference
+        coordinate system (top level world/universe object specifies this
+        as empty)<br>
+        <strong>Note</strong> that this is different than physical
+        containership: it is usually same as physical container, but
+        <strong>not</strong> necessarily
+      <li>pos: position in relation to reference object (or absolute
+        position for top level object)
+      <li>velocity: velocity of object in relation to reference object
+        (or absolute for velocity for top level object)
+      <li>contains: objects that use this as reference system (things
+        that don't contain anything have this as empty)
+    </ul>
+
+    To calculate absolute coordinates you do this:
+<PRE>
+def get_absolute_position(self):
+    if not self.ref: return self.pos
+    return self.pos + self.ref.get_absolute_position()
+</PRE>
+
+    As you can see from above code assumption is logically 'tree' like
+    container structure.
+    <p>
+    If world designer wants to use only one coordinate system and
+    still have containers: Specify pos as 0,0,0 for all objects except 
+    bottom level ones.
+
+    <h3><a name="types">Movement types</a></h3>
+
+    <table>
+      <tr>
+        <td><b></b></td>
+        <td><b>Movement type</b></td>
+        <td><b>Server</b></td>
+        <td><b>Client</b></td>
+        <td><b>tags</b></td>
+      </tr>
+      <tr>
+        <td><b>a)</b></td>
+        <td>Relative coordinates</td>
+        <td>Nethack and many MUDs</td>
+        <td>Simple client</td>
+        <td>vector, relrotation</td>
+      </tr>
+      <tr>
+        <td><b>b)</b></td>
+        <td>Force vector</td>
+        <td>QUADAS, Cyphesis in future</td>
+        <td>Normal client</td>
+        <td>forcevector, torquerotation</td>
+      </tr>
+      <tr>
+        <td><b>c)</b></td>
+        <td>Force vector/limb</td>
+        <td>Some future world with VR</td>
+        <td>VR client with suit</td>
+        <td>forcevector, torquerotation</td>
+      </tr>
+      <tr>
+        <td><b>d)</b></td>
+        <td>Absolute coordinates</td>
+        <td>Cyphesis currently</td>
+        <td>Map editor</td>
+        <td>pos, rotation</td>
+      </tr>
+    </table>
+    <p>
+      <strong>Note that all positions are specified in
+      relation to containers: absolute==absolute in relation to
+      container, relative==relative to current location</strong>
+    <p>
+    If you have better suggestions for tag names, mail to 
+    <a href="mailto:protocols@worldforge.org">protocols@</a>.
+    <p>
+    <b>Server  should always support less accurate movement:</b>
+    <p>
+    <table>
+      <tr><td>Advanced server:</td><td>a,b,c</td></tr>
+      <tr><td>Less advanced server:</td><td>a,b</td></tr>
+      <tr><td>Simple server:</td><td>a</td></tr>
+    </table>
+    <p>
+    Same for client.
+    Client tries most advanced method of moving and if it gets illegal
+    event back then it falls back to less advanced method.
+    <p>
+    Server implementation could be something like this:
+    server:b, client:a
+    Create appropriate force vector for requested move difference and use
+    it as if that was requested.
+    <p>
+    When 'force' -tag is used by client, then likely server sends
+    movement sights using 'vector' -tag.
+    <p>
+    <b>Why?</b>
+    <p>
+    It would be nice if server would work with less advanced clients and
+    vice versa. We can't immediately implement some very detailed
+    moving. It's just that when client uses less accurate 'movement type'
+    then (s)he cannot control her/his character as accurately.  For some
+    programs it doesn't make even sense to do it initially (like some
+    existing program).
+
+    <h3><a name="loc">Location tag</a></h3>
+    
+    <em>This section needs rewrite</em>
+    <p>
+    This is current/new location for entity.
+    It contains id, position and optionally orientation.
+    <p>
+    Id: Entity that acts as reference for location.
+    <p>
+    Either pos, vector or forcevector is used for position. Units
+    are in meters unless something different has been decided between
+    server and client.
+    <p>
+    Pos: absolute coordinates in relation to reference entity.
+    Example (x,y,z):
+    <ul>
+      <li>pos:12.4,23.2,-0.5
+    </ul>
+    <p>
+    Vector: relative to receiving character. Example:
+    <ul>
+       <li>vector:12.4,23.2,-0.5
+    </ul>
+    <p>
+    Forcevector: Force relative to receiving character. Default unit
+    is newton. Example:
+    <ul>
+       <li>forcevector:12.4,23.2,-0.5
+    </ul>
+    <p>
+    Either rotation, relrotation or torquerotation is used for
+    rotation. Units are in radians unless something different has been
+    decided between server and client.
+    <p>
+    Rotation: Absolute rotation in relation to reference
+    entity. Example (x,y,z -axis):
+    <ul>
+       <li>rotation:0.1,-0.2,2.0
+    </ul>
+    <p>
+    Relrotation: Relative rotation in relation to receiving character. Example:
+    <ul>
+       <li>relrotation:0.1,-0.2,2.0
+    </ul>
+    <p>
+    Forcerotation: Relative torque in relation to receiving
+    character. Default unit is newton meter. Example:
+    <ul>
+       <li>torquerotation:0.1,-0.2,2.0
+    </ul>
+    <p>
+
+    <h3><a name="absolute">Containers and absolute movement</a></h3>
+    
+    You are on ship that moves at sea.
+    <p>
+    You move (no need to specify ship, reference container not changed):
+    <ul>
+      <li>id:"you_123"
+      <li>pos:10.5, 5.0, 4.0
+    </ul>
+
+    Ship moves (again container doesn't change):
+    <ul>
+      <li>id:"ship_12"
+      <li>pos:30000.0, 300000.0, 0.0
+    </ul>
+
+    Sea moves:
+    <ul>
+      <li>id:"sea_1"
+      <li>pos:0.0, 0.0, 1.0
+    </ul>
+
+    Somebody else moves on same ship (just like your movement):
+    <ul>
+      <li>id:"somebody_else_1234"
+      <li>pos:12.0, 4.0, 4.0
+    </ul>
+
+    Another ship moves (just like ship movement):
+    <ul>
+      <li>id:"ship2_33"
+      <li>pos:30010.0, 300020.0, 0.0
+    </ul>
+
+    You jump to another ship:
+    <ul>
+      <li>id:"you_123"
+      <li>loc:"ship2_33"
+      <li>pos:4.0, 5.0, 3.0
+    </ul>
+
+    You jump to sea:
+    <ul>
+      <li>id:"you_123"
+      <li>loc:"sea_1"
+      <li>pos:30020.0, 300020.0, 0.0
+    </ul>
+
+    <h3><a name="relative">Containers and relative movement</a></h3>
+
+    "vector" attribute might change to "add_pos" attribute.<br>
+    (relative movement not used yet in any Atlas server)
+    <p>
+    You are on ship that moves at sea.
+    <p>
+    You move: ship has moved in relation to you:
+    <ul>
+      <li>id:"you_123"
+      <li>loc:"ship_12"
+      <li>vector:-4.5, 2.0, 0.0
+    </ul>
+
+    Ship moves: sea has moved in relation to ship:
+    <ul>
+      <li>id:"ship_12"
+      <li>loc:"sea_1"
+      <li>vector:0.1, 5.0, 0.0
+    </ul>
+
+    Sea moves: you don't notice.
+    <p>
+    Somebody else moves on same ship: somebody has moved in relation
+    to you:
+    <ul>
+      <li>id:"somebody_else_1234"
+      <li>loc:"ship_12"
+      <li>vector:-0.5, 2.0, 0.0
+    </ul>
+
+    Another ship moves: ship2 has moved in relation to your ship:
+    <ul>
+      <li>id:"ship2_33"
+      <li>loc:"sea_1"
+      <li>vector:-3.1,1.2, 0.0
+    </ul>
+
+    You jump to another ship:
+    <ul>
+      <li>id:"you_123"
+      <li>loc:"ship2_33"
+      <li>vector:1.0, 5.0, -1.0
+    </ul>
+
+    You jump to sea:
+    <ul>
+      <li>id:"you_123"
+      <li>loc:"sea_1"
+      <li>vector:0.0, 1.0, -4.0
+    </ul>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Mon Jun  7 15:45:46 EEST 1999 -->
+<!-- hhmts start -->
+Last modified: Thu May  4 07:55:41 EEST 2000
+<!-- hhmts end -->
+  </body>
+</html>

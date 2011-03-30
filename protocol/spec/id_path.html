@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>Id path</title>
+  </head>
+
+  <body>
+    <h1>Id path</h1>
+
+    Full id looks like <b><code>atlas://servername.org/id_of_object.attribute.subattribute</code></b> .
+    <p>
+      Examples:
+      <h2>Creating</h2>
+    Creating object with
+    <pre>{parents:["create"], objtype:"op", arg:{id:"a", b:{r:2, c:{d:54}}}}</pre> 
+    results at object:
+    <pre>{id:"a", b:{r:2, c:{d:54}}}</pre>
+    
+    <h2>Refering</h2>
+
+    When leaving <b><code>atlas://servername.org</code></b> out content is accessed
+    following way:<br>
+    <b><code>a</code></b> refers to whole object.<br>
+    <b><code>a.b</code></b> refers to <code>{r:2, c:{d:54}}</code>.<br>
+    <b><code>a.b.r</code></b> refers to number <code>2</code>.<br>
+    <b><code>a.b.c</code></b> refers to <code>{d:54}</code>.<br>
+    <b><code>a.b.c.d</code></b> refers to number <code>54</code>.
+    <p>    
+
+    Id type attributes in one object can refer to anything in any
+    other object, even across servers if supported by server. Also can
+    refer to list elements by using zero based index as 'attribute
+    name'. For example if we have following objects:
+
+<pre>{id:"data45", points:[ [x0,y0,z0], [x1,y1,z1], [x2,y2,z2]}
+{id:"road45", parents:["road", polyline:["data45.points.1", "atlas://server2.org/78.points.100"]}</pre>
+    then <b><code>data45.points.1</code></b> refers to
+      <code>[x1,y1,z1]</code> element in
+      <b></code>data45.points</code></b> object.<br>
+    <b><code>atlas://server2.org/78.points.100</b></code> refers to
+    point in <code>server2.org</code>. Seems that
+    <code>server2.org</code> is also using integer ids for objects.
+
+    <h2>Setting</h2>
+
+      In operation argument if <code>id</code> refers to a sub-attribute,
+      then rest of argument applies to that particular sub-attribute
+      content. For example after applying operation
+    <pre>{parents:["set"], objtype:"op", arg:{id:"a.b", r:42}</pre>
+    to earlier object it looks like object:
+    <pre>{id:"a", b:{r:42, c:{d:54}}}</pre>
+    
+    Example2: after applying
+    <pre>{parents:["set"], objtype:"op", arg:{id:"a", b:{r:42}}</pre>
+    operation object looks like
+    <pre>{id:"a", b:{r:42}}</pre>
+
+    <h2>Deleting</h2>
+
+      Delete operation deletes given object or sub-attribute given in
+      <code>id</code> -attribute. For example after
+    <pre>{parents:["delete"], objtype:"op", arg:{id:"a.b.r"}}</pre>
+    operation object looks like
+    <pre>{id:"a", b:{c:{}}}</pre>
+
+    <hr>
+    <address><a href="mailto:aloril@iki.fi">Aloril</a></address>
+<!-- Created: Fri Feb  8 06:45:31 EET 2002 -->
+<!-- hhmts start -->
+Last modified: Fri Feb  8 08:50:54 EET 2002
+<!-- hhmts end -->
+  </body>
+</html>

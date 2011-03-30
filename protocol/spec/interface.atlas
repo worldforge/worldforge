@@ -1,0 +1,29 @@
+ATLAS interface definition file (modeline for XEmacs: -*-Python-*-)
+IWILL Bach_beta2
+
+[
+{
+    id:"root_interface",
+    parents:["root"],
+    objtype:"meta",
+    summary:"starting point for interface browsing, not used otherwise",
+    operations:[]
+},
+{
+    id:"base_interface",
+    parents:["root_interface"],
+    objtype:"interface",
+    summary:"raw interface",
+    description:"admin can use this interface for setting,
+    abstract hierarchy and actual game objects too",
+    operations:["create", "delete", "set", "get"]
+},
+{
+    id:"game_interface",
+    parents:["root_interface"],
+    specification:"atlas_game",
+    objtype:"interface",
+    summary:"client interface for controlling character etc..",
+    operations:["create","combine","divide","communicate","move","perceive","talk","look","listen","sniff","touch"]
+}
+]

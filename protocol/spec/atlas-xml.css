@@ -1,0 +1,109 @@
+/* CSS stylesheet
+ * Put this at the top of an atlas xml file to use this stylesheet:
+ * <?xml version="1.0"?>
+ * <?xml-stylesheet href="atlas-xml.css" type="text/css"?>
+ */
+
+atlas:before {
+  color: black;
+  content: "ATLAS bach output";
+  font-size: 14pt;
+}
+
+atlas {
+  display: block;
+  color: black;
+  margin: 0.5em;
+  background-color: white;
+  font-size: 12pt;
+  font-family: helvetica;
+}
+
+map:before {
+  content: "{";
+}
+
+map {
+  display: block;
+  margin: 0.5em;
+}
+
+map:after {
+  content: "}";
+}
+
+map > int:before {
+  content: attr(name) ": ";
+  margin: 0.5em;
+}
+
+map > int {
+  display: block;
+  margin: 0.5em;
+}
+
+map > float:before {
+  content: attr(name) ": ";
+  margin: 0.5em;
+}
+
+map > float {
+  display: block;
+  margin: 0.5em;
+}
+
+float:after {
+  content: "f";
+}
+
+map > string:before {
+  content: attr(name) ": \"";
+}
+
+map > string {
+  display: block;
+  margin: 0.5em;
+}
+
+map > list:before {
+  content: attr(name) ": [";
+}
+
+map > list {
+  display: block;
+  margin: 0.5em;
+}
+
+list:after {
+  content: "]";
+}
+
+list > int {
+  margin: 0.5em;
+}
+
+list > float {
+  margin: 0.5em;
+}
+
+string:after {
+  content: "\"";
+}
+
+list > string:before {
+  content: "\"";
+}
+
+list > string {
+  margin: 0.5em;
+}
+
+list > list:before {
+  content: "[";
+  margin: 0.5em;
+}
+
+list > list {
+  display: block;
+  margin: 0.5em;
+}

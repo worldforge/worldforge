@@ -1,0 +1,6 @@
+- dialog media info (steal ideas from UIML or base it on it):
+  http://victor.worldforge.org:8080/rt/Ticket/Display.html?id=317
+- binary2
+- sprites.xml -> media info
+- specify operations and their args semantically much more than currently is done:
+  especially movement modes
