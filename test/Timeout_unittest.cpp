@@ -17,7 +17,103 @@
 
 // $Id$
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
+#include <Eris/Timeout.h>
+
+#include <sigc++/trackable.h>
+#include <sigc++/functors/mem_fun.h>
+
+#include <cassert>
+
+class TestTimeout : public Eris::Timeout
+{
+  public:
+    TestTimeout(unsigned long milli) : Eris::Timeout(milli) { }
+
+    bool test_fired() const { return _fired; }
+};
+
+class SignalChecker : public sigc::trackable
+{
+  private:
+    bool m_fired;
+  public:
+    SignalChecker() : m_fired(false) { }
+    void emit() { m_fired = true; }
+    bool fired() const { return m_fired; }
+};
+
 int main()
 {
+    {
+        Eris::Timeout * to = new Eris::Timeout(1);
+
+        delete to;
+    }
+
+    {
+        TestTimeout * to = new TestTimeout(1);
+
+        assert(!to->test_fired());
+
+        delete to;
+    }
+
+    {
+        TestTimeout * to = new TestTimeout(1);
+        assert(!to->test_fired());
+
+        SignalChecker sc;
+        assert(!sc.fired());
+        to->Expired.connect(sigc::mem_fun(&sc, &SignalChecker::emit));
+
+        to->expired();
+
+        assert(to->test_fired());
+        assert(sc.fired());
+
+        delete to;
+    }
+
     return 0;
 }
+
+// stubs
+
+#include <Eris/TimedEventService.h>
+
+namespace Eris {
+
+TimedEventService* TimedEventService::static_instance = NULL;
+
+TimedEventService::TimedEventService()
+{
+}
+
+TimedEventService* TimedEventService::instance()
+{
+    if (!static_instance)
+    {
+        static_instance = new TimedEventService;
+    }
+    
+    return static_instance;
+}
+
+void TimedEventService::registerEvent(TimedEvent* te)
+{
+    assert(te);
+}
+
+void TimedEventService::unregisterEvent(TimedEvent* te)
+{
+    assert(te);    
+}
+
+} // namespace Eris

@@ -82,6 +82,9 @@ TimedEventService_unittest_SOURCES = TimedEventService_unittest.cpp
 TimedEventService_unittest_LDADD = ${top_builddir}/Eris/TimedEventService.lo
 
 Timeout_unittest_SOURCES = Timeout_unittest.cpp
+Timeout_unittest_LDADD = \
+    ${top_builddir}/Eris/Timeout.lo
+
 TypeBoundRedispatch_unittest_SOURCES = TypeBoundRedispatch_unittest.cpp
 TypeInfo_unittest_SOURCES = TypeInfo_unittest.cpp
 TypeService_unittest_SOURCES = TypeService_unittest.cpp
