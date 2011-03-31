@@ -54,7 +54,9 @@ EntityRef_unittest_SOURCES = EntityRef_unittest.cpp
 EntityRouter_unittest_SOURCES = EntityRouter_unittest.cpp
 
 Entity_unittest_SOURCES = Entity_unittest.cpp
-Entity_unittest_LDADD = $(top_builddir)/Eris/Entity.lo
+Entity_unittest_LDADD = \
+    $(top_builddir)/Eris/Entity.lo \
+    $(ERIS_DEPS)
 
 Exceptions_unittest_SOURCES = Exceptions_unittest.cpp
 Factory_unittest_SOURCES = Factory_unittest.cpp
@@ -65,7 +67,9 @@ Log_unittest_SOURCES = Log_unittest.cpp
 MetaQuery_unittest_SOURCES = MetaQuery_unittest.cpp
 
 Metaserver_unittest_SOURCES = Metaserver_unittest.cpp
-Metaserver_unittest_LDADD = ${top_builddir}/Eris/Metaserver.lo
+Metaserver_unittest_LDADD = \
+    ${top_builddir}/Eris/Metaserver.lo \
+    $(ERIS_DEPS)
 
 Operations_unittest_SOURCES = Operations_unittest.cpp
 Person_unittest_SOURCES = Person_unittest.cpp
@@ -79,11 +83,14 @@ ServerInfo_unittest_SOURCES = ServerInfo_unittest.cpp
 Task_unittest_SOURCES = Task_unittest.cpp
 
 TimedEventService_unittest_SOURCES = TimedEventService_unittest.cpp
-TimedEventService_unittest_LDADD = ${top_builddir}/Eris/TimedEventService.lo
+TimedEventService_unittest_LDADD = \
+    ${top_builddir}/Eris/TimedEventService.lo \
+    $(ERIS_DEPS)
 
 Timeout_unittest_SOURCES = Timeout_unittest.cpp
 Timeout_unittest_LDADD = \
-    ${top_builddir}/Eris/Timeout.lo
+    ${top_builddir}/Eris/Timeout.lo \
+    $(ERIS_DEPS)
 
 TypeBoundRedispatch_unittest_SOURCES = TypeBoundRedispatch_unittest.cpp
 TypeInfo_unittest_SOURCES = TypeInfo_unittest.cpp
@@ -96,7 +103,7 @@ TerrainMod_unittest_SOURCES = TerrainMod_unittest.cpp
 Metaserver_integrationtest_SOURCES = Metaserver_integrationtest.cpp
 Metaserver_integrationtest_LDADD = \
     ${top_builddir}/Eris/Metaserver.lo \
-    ${top_builddir}/Eris/MetaQuery.lo
+    ${top_builddir}/Eris/MetaQuery.lo $(ERIS_DEPS)
 
 PollWinsock_unittest_SOURCES = PollWinsock_unittest.cpp
 PollWinsock_unittest_LDADD =

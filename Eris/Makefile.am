@@ -45,6 +45,8 @@ liberis_1_3_la_SOURCES = \
 	CharacterType.cpp \
 	ViewEntity.cpp
 
+liberis_1_3_la_LIBADD = $(ERIS_DEPS)
+
 liberisdir = $(includedir)/Eris-1.3/Eris
 
 liberis_HEADERS = \
