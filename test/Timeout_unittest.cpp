@@ -49,6 +49,8 @@ class SignalChecker : public sigc::trackable
     bool fired() const { return m_fired; }
 };
 
+long stub_tv_sec, stub_tv_usec;
+
 int main()
 {
     {
@@ -117,3 +119,73 @@ void TimedEventService::unregisterEvent(TimedEvent* te)
 }
 
 } // namespace Eris
+
+namespace WFMath {
+
+TimeDiff::TimeDiff(long msec) : 
+    m_isvalid(true),
+    m_sec(msec / 1000),
+    m_usec(msec % 1000)
+{
+}
+
+TimeStamp::TimeStamp(long sec, long usec, bool isvalid)
+{
+  _val.tv_sec = sec;
+  _val.tv_usec = usec;
+  _isvalid = isvalid;
+  
+}
+
+TimeStamp TimeStamp::now()
+{
+    TimeStamp ret;
+
+    ret._val.tv_sec = stub_tv_sec;
+    ret._val.tv_usec = stub_tv_usec;
+                                  
+    ret._isvalid = true;
+    return ret;
+}
+
+TimeStamp operator+(const TimeStamp &a, const TimeDiff &d)
+{
+  return TimeStamp(a._val.tv_sec + d.m_sec, a._val.tv_usec + d.m_usec,
+        a._isvalid && d.m_isvalid);
+}
+
+bool operator<(const TimeStamp &a, const TimeStamp &b)
+{
+        if (a._val.tv_sec == b._val.tv_sec)
+                return (a._val.tv_usec < b._val.tv_usec);
+        else
+                return a._val.tv_sec < b._val.tv_sec;
+}
+
+static const long Million = 1000000;
+
+template<class T1, class T2>
+static void regularize(T1 &sec, T2 &usec)
+{
+  if(usec >= Million) {
+    usec -= Million;
+    ++sec;
+  }
+  else if(usec < 0) {
+    usec += Million;
+    --sec;
+  }
+}
+
+TimeStamp& operator+=(TimeStamp &a, const TimeDiff &d)
+{
+  a._val.tv_sec += d.m_sec;
+  a._val.tv_usec += d.m_usec;
+  a._isvalid = a._isvalid && d.m_isvalid;
+
+    if (a._isvalid)
+        regularize(a._val.tv_sec, a._val.tv_usec);
+  return a;
+}
+
+} // namespace WFMath
