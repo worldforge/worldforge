@@ -9,6 +9,12 @@
 #error iround.h must be included after config.h
 #endif
 
+#ifdef HAVE_LLRINT
+    #define L_ROUND(_x) (::llrint(_x)) 
+#else
+    #define L_ROUND(_x) ((long long)(_x)) 
+#endif
+
 #ifdef HAVE_LRINTF
     #define I_ROUND(_x) (::lrintf(_x)) 
 #elif defined(HAVE_RINTF)
