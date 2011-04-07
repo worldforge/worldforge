@@ -43,7 +43,8 @@ liberis_1_3_la_SOURCES = \
 	TerrainModObserver.cpp \
 	SpawnPoint.cpp \
 	CharacterType.cpp \
-	ViewEntity.cpp
+	ViewEntity.cpp \
+	iround.h
 
 liberis_1_3_la_LIBADD = $(ERIS_DEPS)
 
@@ -90,5 +91,4 @@ liberis_HEADERS = \
 	TerrainModObserver.h \
 	SpawnPoint.h \
 	CharacterType.h \
-	ViewEntity.h \
-	iround.h
+	ViewEntity.h
