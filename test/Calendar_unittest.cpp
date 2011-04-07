@@ -227,7 +227,7 @@ int main()
 
         ec.test_setSaneDefault();
 
-        stub_worldtime = std::numeric_limits<unsigned int>::max() + 1;
+        stub_worldtime = std::numeric_limits<unsigned int>::max() + 1LL;
 
         Eris::DateTime dt = ec.now();
 
