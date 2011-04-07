@@ -227,9 +227,11 @@ int main()
 
         ec.test_setSaneDefault();
 
-        stub_worldtime = std::numeric_limits<unsigned int>::max() + 1LL;
+        stub_worldtime = std::numeric_limits<unsigned int>::max() + 10LL;
 
         Eris::DateTime dt = ec.now();
+
+        // std::cout << dt.year() << ":" << dt.month() << ":" << dt.dayOfMonth() << ":" << dt.hours() << ":" << dt.minutes() << ":" << dt.seconds() << std::endl;
 
         assert(dt.year() > 0);
     }
