@@ -12,6 +12,8 @@
 
 #include <cmath>
 
+#include <iostream>
+
 using namespace Atlas::Message;
 
 namespace Eris
@@ -79,22 +81,24 @@ DateTime Calendar::now() const
     // we don't have valid calendar data yet
     if (m_daysPerMonth == 0) return n;
 
-    n.m_seconds = I_ROUND(m_avatar->getWorldTime());
+    long long world_time = L_ROUND(m_avatar->getWorldTime());
 
-    n.m_minutes = n.m_seconds / m_secondsPerMinute;
-    n.m_seconds -= (n.m_minutes * m_secondsPerMinute);
+    n.m_seconds = world_time % m_secondsPerMinute;
+    world_time /= m_secondsPerMinute;
 
-    n.m_hours = n.m_minutes / m_minutesPerHour;
-    n.m_minutes -= (n.m_hours * m_minutesPerHour);
+    n.m_minutes = world_time % m_minutesPerHour;
+    world_time /= m_minutesPerHour;
 
-    n.m_dayOfMonth = n.m_hours / m_hoursPerDay;
-    n.m_hours -= (n.m_dayOfMonth * m_hoursPerDay);
+    n.m_hours = world_time % m_hoursPerDay;
+    world_time /= m_hoursPerDay;
 
-    n.m_month = n.m_dayOfMonth / m_daysPerMonth;
-    n.m_dayOfMonth -= (n.m_month * m_daysPerMonth);
+    n.m_dayOfMonth = world_time % m_daysPerMonth;
+    world_time /= m_daysPerMonth;
 
-    n.m_year = n.m_month / m_monthsPerYear;
-    n.m_month -= (n.m_year * m_monthsPerYear);
+    n.m_month = world_time % m_monthsPerYear;
+    world_time /= m_monthsPerYear;
+
+    n.m_year = world_time;
 
     n.m_valid = true;
     return n;
