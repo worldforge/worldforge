@@ -17,6 +17,13 @@
 
 // $Id$
 
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 #include <Eris/BaseConnection.h>
 #include <Eris/Exceptions.h>
 #include <Eris/Log.h>

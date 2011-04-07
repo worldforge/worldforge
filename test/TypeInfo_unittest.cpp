@@ -16,6 +16,13 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 // $Id$
+
+#ifdef NDEBUG
+#undef NDEBUG
+#endif
+#ifndef DEBUG
+#define DEBUG
+#endif
 #include <Eris/Avatar.h>
 
 #include <Eris/Connection.h>
