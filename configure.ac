@@ -48,7 +48,7 @@ AC_LANG_PUSH(C++)
 
 dnl Check for float to int converters
 
-AC_CHECK_FUNCS([lrintf rintf rint])
+AC_CHECK_FUNCS([llrint lrintf rintf rint])
 AC_CHECK_FUNCS([fabsf])
 
 AC_MSG_CHECKING(for mingw32)
