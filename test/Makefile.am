@@ -47,7 +47,13 @@ Account_unittest_SOURCES = Account_unittest.cpp SignalFlagger.h
 Alarm_unittest_SOURCES = Alarm_unittest.cpp SignalFlagger.h
 Avatar_unittest_SOURCES = Avatar_unittest.cpp SignalFlagger.h
 BaseConnection_unittest_SOURCES = BaseConnection_unittest.cpp SignalFlagger.h
+
 Calendar_unittest_SOURCES = Calendar_unittest.cpp
+Calendar_unittest_LDADD = \
+    $(top_builddir)/Eris/Calendar.lo \
+    $(top_builddir)/Eris/Exceptions.lo \
+    $(ERIS_DEPS)
+
 Connection_unittest_SOURCES = Connection_unittest.cpp
 DeleteLater_unittest_SOURCES = DeleteLater_unittest.cpp
 EntityRef_unittest_SOURCES = EntityRef_unittest.cpp

@@ -144,12 +144,8 @@ int main()
 
     // Test constructor
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
-
-        Eris::Account * acc = new Eris::Account(con);
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
         Eris::Calendar ec(ea);
     }
 
@@ -158,12 +154,8 @@ int main()
 
     // Test topLevelEntityChanged()
     {
-        Eris::Connection * con = new TestConnection("name", "localhost",
-                                                    6767, true);
-
-        Eris::Account * acc = new Eris::Account(con);
         std::string fake_char_id("1");
-        Eris::Avatar * ea = new TestAvatar(acc, fake_char_id);
+        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
 
         TestCalendar ec(ea);
 
@@ -171,4 +163,63 @@ int main()
     }
 
     return 0;
+}
+
+// stubs
+
+#include <Eris/Entity.h>
+
+namespace Eris {
+
+sigc::signal<void, LogLevel, const std::string&> Logged;
+
+void setLogLevel(LogLevel lvl)
+{
+}
+
+Avatar::Avatar(Account& pl, const std::string& entId) :
+    m_account(pl),
+    m_entityId(entId),
+    m_entity(NULL),
+    m_stampAtLastOp(WFMath::TimeStamp::now()),
+    m_lastOpTime(0.0),
+    m_isAdmin(false)
+{
+    m_view = new View(this);
+}
+
+Avatar::~Avatar()
+{
+}
+
+double Avatar::getWorldTime()
+{
+    return 0.;
+}
+
+View::View(Avatar* av) :
+    m_owner(av),
+    m_topLevel(NULL),
+    m_maxPendingCount(10)
+{
+    
+}
+
+View::~View()
+{
+}
+
+bool Entity::hasAttr(const std::string&) const
+{
+    return false;
+}
+
+const Atlas::Message::Element& Entity::valueOfAttr(const std::string& attr) const
+{
+}
+
+sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
+{
+}
+
 }
