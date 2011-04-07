@@ -36,6 +36,7 @@
 #include <Atlas/Objects/Anonymous.h>
 
 #include <iostream>
+#include <limits>
 
 #include <cassert>
 
@@ -49,6 +50,16 @@ class TestAvatar : public Eris::Avatar {
 class TestCalendar : public Eris::Calendar {
   public:
     TestCalendar(Eris::Avatar * av) : Eris::Calendar(av) { }
+
+    void test_setSaneDefault() {
+        Atlas::Message::MapType data;
+        data["months_per_year"] = 12;
+        data["days_per_month"] = 28;
+        data["hours_per_day"] = 24;
+        data["minutes_per_hour"] = 60;
+        data["seconds_per_minute"] = 60;
+        initFromCalendarAttr(data);
+    }
 
     void test_topLevelEntityChanged() {
         topLevelEntityChanged();
@@ -72,6 +83,7 @@ static void writeLog(Eris::LogLevel, const std::string & msg)
     std::cerr << msg << std::endl << std::flush;
 }
 
+static double stub_worldtime = 0.;
 int main()
 {
     Eris::Logged.connect(sigc::ptr_fun(writeLog));
@@ -162,6 +174,67 @@ int main()
         ec.test_topLevelEntityChanged();
     }
 
+    /// Test overflow of 32bit seconds
+
+    // Test calendar process time at the origin of time
+    {
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+
+        TestCalendar ec(ea);
+
+        ec.test_setSaneDefault();
+
+        stub_worldtime = 0;
+
+        Eris::DateTime dt = ec.now();
+
+        assert(dt.year() == 0);
+        assert(dt.month() == 0);
+        assert(dt.dayOfMonth() == 0);
+        assert(dt.hours() == 0);
+        assert(dt.minutes() == 0);
+        assert(dt.seconds() == 0);
+    }
+
+    // Test calendar process time at the origin of time plus some time
+    {
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+
+        TestCalendar ec(ea);
+
+        ec.test_setSaneDefault();
+
+        stub_worldtime = 1 * 12 * 28 * 24 * 60 * 60;
+
+        Eris::DateTime dt = ec.now();
+
+        assert(dt.year() == 1);
+        assert(dt.month() == 0);
+        assert(dt.dayOfMonth() == 0);
+        assert(dt.hours() == 0);
+        assert(dt.minutes() == 0);
+        assert(dt.seconds() == 0);
+    }
+
+    // Test calendar process time at the limit of an unsigned 32bit int seconds
+    {
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+
+        TestCalendar ec(ea);
+
+        ec.test_setSaneDefault();
+
+        stub_worldtime = std::numeric_limits<unsigned int>::max() + 1;
+
+        Eris::DateTime dt = ec.now();
+
+        assert(dt.year() > 0);
+    }
+
+
     return 0;
 }
 
@@ -194,7 +267,7 @@ Avatar::~Avatar()
 
 double Avatar::getWorldTime()
 {
-    return 0.;
+    return stub_worldtime;
 }
 
 View::View(Avatar* av) :
@@ -216,6 +289,8 @@ bool Entity::hasAttr(const std::string&) const
 
 const Atlas::Message::Element& Entity::valueOfAttr(const std::string& attr) const
 {
+    static Atlas::Message::Element res;
+    return res;
 }
 
 sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
