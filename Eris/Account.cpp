@@ -418,11 +418,20 @@ void Account::loginResponse(const RootOperation& op)
 
 void Account::loginComplete(const AtlasAccount &p)
 {
-    if (m_status != LOGGING_IN)
+    if (m_status != LOGGING_IN) {
         error() << "got loginComplete, but not currently logging in!";
+    }
 
-    if (p->getUsername()  != m_username)
-        error() << "missing or incorrect username on login INFO";
+    if (!p.isValid()) {
+        error() << "no account in response.";
+        return;
+    }
+
+    //The user name being different should not be a fatal thing.
+    if (p->getUsername() != m_username) {
+        warning() << "received username does not match existing";
+        m_username = p->getUsername();
+    }
 
     m_status = LOGGED_IN;
     m_accountId = p->getId();
