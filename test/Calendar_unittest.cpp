@@ -47,17 +47,23 @@ class TestAvatar : public Eris::Avatar {
 
 };
 
+static const int MPY = 12;
+static const int DPM = 28;
+static const int HPD = 24;
+static const int MPH = 60;
+static const int SPM = 60;
+
 class TestCalendar : public Eris::Calendar {
   public:
     TestCalendar(Eris::Avatar * av) : Eris::Calendar(av) { }
 
     void test_setSaneDefault() {
         Atlas::Message::MapType data;
-        data["months_per_year"] = 12;
-        data["days_per_month"] = 28;
-        data["hours_per_day"] = 24;
-        data["minutes_per_hour"] = 60;
-        data["seconds_per_minute"] = 60;
+        data["months_per_year"] = MPY;
+        data["days_per_month"] = DPM;
+        data["hours_per_day"] = HPD;
+        data["minutes_per_hour"] = MPH;
+        data["seconds_per_minute"] = SPM;
         initFromCalendarAttr(data);
     }
 
@@ -206,11 +212,22 @@ int main()
 
         ec.test_setSaneDefault();
 
-        stub_worldtime = 1 * 12 * 28 * 24 * 60 * 60;
+        stub_worldtime = 1LL * MPY * DPM * HPD * MPH * SPM;
 
         Eris::DateTime dt = ec.now();
 
         assert(dt.year() == 1);
+        assert(dt.month() == 0);
+        assert(dt.dayOfMonth() == 0);
+        assert(dt.hours() == 0);
+        assert(dt.minutes() == 0);
+        assert(dt.seconds() == 0);
+
+        stub_worldtime = 1000LL * MPY * DPM * HPD * MPH * SPM;
+
+        dt = ec.now();
+
+        assert(dt.year() == 1000);
         assert(dt.month() == 0);
         assert(dt.dayOfMonth() == 0);
         assert(dt.hours() == 0);
