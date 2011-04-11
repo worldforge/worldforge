@@ -31,9 +31,9 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 std::ostream& operator<<(std::ostream& os, const Segment<dim>& s);
-template<const int dim>
+template<int dim>
 std::istream& operator>>(std::istream& is, Segment<dim>& s);
 
 /// A line segment embedded in dim dimensions
@@ -41,7 +41,7 @@ std::istream& operator>>(std::istream& is, Segment<dim>& s);
  * This class implements the full shape interface, as described in
  * the fake class Shape.
  **/
-template<const int dim = 3>
+template<int dim = 3>
 class Segment
 {
  public:

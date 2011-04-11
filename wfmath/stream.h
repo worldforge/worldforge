@@ -116,14 +116,14 @@ void _ReadCoordList(std::istream& is, CoordType* d, const int num);
 void _WriteCoordList(std::ostream& os, const CoordType* d, const int num);
 CoordType _GetEpsilon(std::istream& is);
 
-template<const int dim>
+template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const Vector<dim>& v)
 {
   _WriteCoordList(os, v.m_elem, dim);
   return os;
 }
 
-template<const int dim>
+template<int dim>
 inline std::istream& operator>>(std::istream& is, Vector<dim>& v)
 {
   _ReadCoordList(is, v.m_elem, dim);
@@ -131,7 +131,7 @@ inline std::istream& operator>>(std::istream& is, Vector<dim>& v)
   return is;
 }
 
-template<const int dim>
+template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
 {
   os << '(';
@@ -144,7 +144,7 @@ inline std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m)
   return os;
 }
 
-template<const int dim>
+template<int dim>
 inline std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
 {
   CoordType d[dim*dim];
@@ -168,14 +168,14 @@ inline std::istream& operator>>(std::istream& is, RotMatrix<dim>& m)
   return is;
 }
 
-template<const int dim>
+template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const Point<dim>& p)
 {
   _WriteCoordList(os, p.m_elem, dim);
   return os;
 }
 
-template<const int dim>
+template<int dim>
 inline std::istream& operator>>(std::istream& is, Point<dim>& p)
 {
   _ReadCoordList(is, p.m_elem, dim);
@@ -183,13 +183,13 @@ inline std::istream& operator>>(std::istream& is, Point<dim>& p)
   return is;
 }
 
-template<const int dim>
+template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& a)
 {
   return os << "AxisBox: m_low = " << a.m_low << ", m_high = " << a.m_high;
 }
 
-template<const int dim>
+template<int dim>
 inline std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
 {
   char next;
@@ -209,14 +209,14 @@ inline std::istream& operator>>(std::istream& is, AxisBox<dim>& a)
   return is;
 }
 
-template<const int dim>
+template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const Ball<dim>& b)
 {
   return os << "Ball: m_center = " << b.m_center <<
 	  + ", m_radius = " << b.m_radius;
 }
 
-template<const int dim>
+template<int dim>
 inline std::istream& operator>>(std::istream& is, Ball<dim>& b)
 {
   char next;
@@ -236,13 +236,13 @@ inline std::istream& operator>>(std::istream& is, Ball<dim>& b)
   return is;
 }
 
-template<const int dim>
+template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const Segment<dim>& s)
 {
   return os << "Segment: m_p1 = " << s.m_p1 << ", m_p2 = " << s.m_p2;
 }
 
-template<const int dim>
+template<int dim>
 inline std::istream& operator>>(std::istream& is, Segment<dim>& s)
 {
   char next;
@@ -262,7 +262,7 @@ inline std::istream& operator>>(std::istream& is, Segment<dim>& s)
   return is;
 }
 
-template<const int dim>
+template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r)
 {
   return os << "RotBox: m_corner0 = " << r.m_corner0
@@ -270,7 +270,7 @@ inline std::ostream& operator<<(std::ostream& os, const RotBox<dim>& r)
 	 << ", m_orient = " << r.m_orient;
 }
 
-template<const int dim>
+template<int dim>
 inline std::istream& operator>>(std::istream& is, RotBox<dim>& r)
 {
   char next;
@@ -299,7 +299,7 @@ inline std::istream& operator>>(std::istream& is, RotBox<dim>& r)
 template<> std::ostream& operator<<(std::ostream& os, const Polygon<2>& r);
 template<> std::istream& operator>>(std::istream& is, Polygon<2>& r);
 
-template<const int dim>
+template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
 {
   int size = r.m_poly.numCorners();
@@ -319,13 +319,13 @@ inline std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
 
 // Can't stick this in operator>>(std::istream&, Polygon<>&), because
 // we use it as a template argument for list<>. Why isn't that allowed?
-template<const int dim> struct _PolyReader
+template<int dim> struct _PolyReader
 {
   Point<dim> pd;
   Point<2> p2;
 };
 
-template<const int dim>
+template<int dim>
 std::istream& operator>>(std::istream& is, Polygon<dim>& r)
 {
   char next;

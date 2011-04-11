@@ -37,75 +37,75 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 Vector<dim>& operator+=(Vector<dim>& v1, const Vector<dim>& v2);
-template<const int dim>
+template<int dim>
 Vector<dim>& operator-=(Vector<dim>& v1, const Vector<dim>& v2);
-template<const int dim>
+template<int dim>
 Vector<dim>& operator*=(Vector<dim>& v, CoordType d);
-template<const int dim>
+template<int dim>
 Vector<dim>& operator/=(Vector<dim>& v, CoordType d);
 
-template<const int dim>
+template<int dim>
 Vector<dim> operator+(const Vector<dim>& v1, const Vector<dim>& v2);
-template<const int dim>
+template<int dim>
 Vector<dim> operator-(const Vector<dim>& v1, const Vector<dim>& v2);
-template<const int dim>
+template<int dim>
 Vector<dim> operator-(const Vector<dim>& v); // Unary minus
-template<const int dim>
+template<int dim>
 Vector<dim> operator*(CoordType d, const Vector<dim>& v);
-template<const int dim>
+template<int dim>
 Vector<dim> operator*(const Vector<dim>& v, CoordType d);
-template<const int dim>
+template<int dim>
 Vector<dim> operator/(const Vector<dim>& v, CoordType d);
 
-template<const int dim>
+template<int dim>
 CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2);
 
-template<const int dim>
+template<int dim>
 CoordType Angle(const Vector<dim>& v, const Vector<dim>& u);
 
 // The following are defined in rotmatrix_funcs.h
 /// returns m * v
-template<const int dim> // m * v
+template<int dim> // m * v
 Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v);
 /// returns m^-1 * v
-template<const int dim> // m^-1 * v
+template<int dim> // m^-1 * v
 Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v);
 /// returns v * m
 /**
  * This is the function to use to rotate a Vector v using a Matrix m
  **/
-template<const int dim> // v * m
+template<int dim> // v * m
 Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m);
 /// return v * m^-1
-template<const int dim> // v * m^-1
+template<int dim> // v * m^-1
 Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m);
 
 ///
-template<const int dim>
+template<int dim>
 Vector<dim> operator*(const RotMatrix<dim>& m, const Vector<dim>& v);
 ///
-template<const int dim>
+template<int dim>
 Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m);
 
-template<const int dim>
+template<int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
-template<const int dim>
+template<int dim>
 Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v);
-template<const int dim>
+template<int dim>
 Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v);
-template<const int dim>
+template<int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
 
-template<const int dim>
+template<int dim>
 Point<dim>& operator+=(Point<dim>& p, const Vector<dim>& v);
-template<const int dim>
+template<int dim>
 Point<dim>& operator-=(Point<dim>& p, const Vector<dim>& v);
 
-template<const int dim>
+template<int dim>
 std::ostream& operator<<(std::ostream& os, const Vector<dim>& v);
-template<const int dim>
+template<int dim>
 std::istream& operator>>(std::istream& is, Vector<dim>& v);
 
 /// A dim dimensional vector
@@ -113,7 +113,7 @@ std::istream& operator>>(std::istream& is, Vector<dim>& v);
  * This class implements the 'generic' subset of the interface in
  * the fake class Shape.
  **/
-template<const int dim = 3>
+template<int dim = 3>
 class Vector {
  friend class ZeroPrimitive<Vector<dim> >;
  public:
@@ -362,18 +362,18 @@ Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
  * vectors, same_dir is set to true if they point the same
  * direction, and false if they point opposite directions
  **/
-template<const int dim>
+template<int dim>
 bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2, bool& same_dir);
 
 /// Check if two vectors are parallel
 /**
  * Convienience wrapper if you don't care about same_dir
  **/
-template<const int dim>
+template<int dim>
 bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2);
 
 /// Check if two vectors are perpendicular
-template<const int dim>
+template<int dim>
 bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2);
 
 } // namespace WFMath

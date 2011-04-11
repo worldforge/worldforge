@@ -41,7 +41,7 @@
 
 using namespace WFMath;
 
-template<const int dim>
+template<int dim>
 void test_vector(const Vector<dim>& v)
 {
   std::cout << "Testing vector: " << v << std::endl;

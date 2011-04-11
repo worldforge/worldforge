@@ -49,7 +49,7 @@
 
 using namespace WFMath;
 
-template<const int dim>
+template<int dim>
 void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 {
   CoordType sqr_dist = SquaredDistance(p1, p2);

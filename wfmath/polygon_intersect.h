@@ -44,7 +44,7 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 inline Vector<dim> _Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2) const
 {
   assert(m_origin.isValid()); // Check for empty polygon before calling this
@@ -59,7 +59,7 @@ inline Vector<dim> _Poly2Orient<dim>::offset(const Point<dim>& pd, Point<2>& p2)
   return out;
 }
 
-template<const int dim>
+template<int dim>
 inline bool _Poly2Orient<dim>::checkContained(const Point<dim>& pd, Point<2> & p2) const
 {
   Vector<dim> off = offset(pd, p2);
@@ -75,7 +75,7 @@ template<>
 bool _Poly2Orient<3>::checkIntersectPlane(const AxisBox<3>& b, Point<2>& p2,
 					  bool proper) const;
 
-template<const int dim>
+template<int dim>
 bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2,
 				       bool proper) const
 {
@@ -143,7 +143,7 @@ bool _Poly2Orient<dim>::checkIntersect(const AxisBox<dim>& b, Point<2>& p2,
     return false;
 }
 
-template<const int dim>
+template<int dim>
 int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
 	        _Poly2OrientIntersectData &data)
 {
@@ -349,7 +349,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
   }
 }
 
-template<const int dim>
+template<int dim>
 inline bool Intersect(const Polygon<dim>& r, const Point<dim>& p, bool proper)
 {
   Point<2> p2;
@@ -358,7 +358,7 @@ inline bool Intersect(const Polygon<dim>& r, const Point<dim>& p, bool proper)
 	 && Intersect(r.m_poly, p2, proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const Point<dim>& p, const Polygon<dim>& r, bool proper)
 {
   if(r.m_poly.numCorners() == 0)
@@ -376,7 +376,7 @@ inline bool Contains(const Point<dim>& p, const Polygon<dim>& r, bool proper)
   return r.m_orient.checkContained(p, p2) && p2 == r.m_poly[0];
 }
 
-template<const int dim>
+template<int dim>
 bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper)
 {
   int corners = p.m_poly.numCorners();
@@ -403,7 +403,7 @@ bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper)
   return Contains(p, p2, proper);
 }
 
-template<const int dim>
+template<int dim>
 bool _PolyContainsBox(const _Poly2Orient<dim> &orient, const Polygon<2> &poly,
 		  const Point<dim> &corner, const Vector<dim> &size, bool proper)
 {
@@ -460,13 +460,13 @@ bool _PolyContainsBox(const _Poly2Orient<dim> &orient, const Polygon<2> &poly,
   return Contains(poly, box, proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper)
 {
   return _PolyContainsBox(p.m_orient, p.m_poly, b.m_low, b.m_high - b.m_low, proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const AxisBox<dim>& b, const Polygon<dim>& p, bool proper)
 {
   for(int i = 0; i < p.m_poly.numCorners(); ++i)
@@ -476,7 +476,7 @@ inline bool Contains(const AxisBox<dim>& b, const Polygon<dim>& p, bool proper)
   return true;
 }
 
-template<const int dim>
+template<int dim>
 inline bool Intersect(const Polygon<dim>& p, const Ball<dim>& b, bool proper)
 {
   if(p.m_poly.numCorners() == 0)
@@ -493,7 +493,7 @@ inline bool Intersect(const Polygon<dim>& p, const Ball<dim>& b, bool proper)
   return Intersect(p.m_poly, Ball<2>(c2, sqrt(dist)), proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const Polygon<dim>& p, const Ball<dim>& b, bool proper)
 {
   if(p.m_poly.numCorners() == 0)
@@ -510,7 +510,7 @@ inline bool Contains(const Polygon<dim>& p, const Ball<dim>& b, bool proper)
   return Contains(p.m_poly, c2, proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const Ball<dim>& b, const Polygon<dim>& p, bool proper)
 {
   if(p.m_poly.numCorners() == 0)
@@ -531,7 +531,7 @@ inline bool Contains(const Ball<dim>& b, const Polygon<dim>& p, bool proper)
   return true;
 }
 
-template<const int dim>
+template<int dim>
 bool Intersect(const Polygon<dim>& p, const Segment<dim>& s, bool proper)
 {
   if(p.m_poly.numCorners() == 0)
@@ -560,7 +560,7 @@ bool Intersect(const Polygon<dim>& p, const Segment<dim>& s, bool proper)
   return Intersect(p.m_poly, p_intersect, proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const Polygon<dim>& p, const Segment<dim>& s, bool proper)
 {
   if(p.m_poly.numCorners() == 0)
@@ -576,7 +576,7 @@ inline bool Contains(const Polygon<dim>& p, const Segment<dim>& s, bool proper)
   return Contains(p.m_poly, s2, proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const Segment<dim>& s, const Polygon<dim>& p, bool proper)
 {
   if(p.m_poly.numCorners() == 0)
@@ -595,7 +595,7 @@ inline bool Contains(const Segment<dim>& s, const Polygon<dim>& p, bool proper)
   return Contains(s2, p.m_poly, proper);
 }
 
-template<const int dim>
+template<int dim>
 bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
 {
   int corners = p.m_poly.numCorners();
@@ -628,7 +628,7 @@ bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
   return Contains(p, p2, proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
 {
   _Poly2Orient<dim> orient(p.m_orient);
@@ -637,7 +637,7 @@ inline bool Contains(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
   return _PolyContainsBox(orient, p.m_poly, r.m_corner0, r.m_size, proper);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const RotBox<dim>& r, const Polygon<dim>& p, bool proper)
 {
   if(p.m_poly.numCorners() == 0)
@@ -659,7 +659,7 @@ bool _PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2,
 			const int intersect_dim,
 			const _Poly2OrientIntersectData &data, bool proper);
 
-template<const int dim>
+template<int dim>
 inline bool Intersect(const Polygon<dim>& p1, const Polygon<dim>& p2, bool proper)
 {
   _Poly2OrientIntersectData data;
@@ -673,7 +673,7 @@ bool _PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
 		       const int intersect_dim,
 		       const _Poly2OrientIntersectData &data, bool proper);
 
-template<const int dim>
+template<int dim>
 inline bool Contains(const Polygon<dim>& outer, const Polygon<dim>& inner, bool proper)
 {
   if(outer.m_poly.numCorners() == 0)

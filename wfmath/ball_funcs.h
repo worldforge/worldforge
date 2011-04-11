@@ -35,14 +35,14 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 inline bool Ball<dim>::isEqualTo(const Ball<dim>& b, double epsilon) const
 {
   return Equal(m_center, b.m_center, epsilon)
       && Equal(m_radius, b.m_radius, epsilon);
 }
 
-template<const int dim>
+template<int dim>
 AxisBox<dim> Ball<dim>::boundingBox() const
 {
   Point<dim> p_low, p_high;
@@ -61,7 +61,7 @@ AxisBox<dim> Ball<dim>::boundingBox() const
 }
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
   _miniball::Miniball<dim> m;
@@ -96,7 +96,7 @@ Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> >
   return Ball<dim>(center, sqrt(m.squared_radius()));
 }
 
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
   // This is based on the algorithm given by Jack Ritter
@@ -174,13 +174,13 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<
 // These two are here, instead of defined in the class, to
 // avoid include order problems
 
-template<const int dim>
+template<int dim>
 inline Ball<dim> Point<dim>::boundingSphere() const
 {
   return Ball<dim>(*this, 0);
 }
 
-template<const int dim>
+template<int dim>
 inline Ball<dim> Point<dim>::boundingSphereSloppy() const
 {
   return Ball<dim>(*this, 0);

@@ -52,14 +52,14 @@ namespace WFMath {
 class AtlasInType;
 class AtlasOutType;
 
-template<const int dim> class AxisBox;
-template<const int dim> class Ball;
-template<const int dim> class Point;
-template<const int dim> class Polygon;
-template<const int dim> class RotBox;
-template<const int dim> class RotMatrix;
-template<const int dim> class Segment;
-template<const int dim> class Vector;
+template<int dim> class AxisBox;
+template<int dim> class Ball;
+template<int dim> class Point;
+template<int dim> class Polygon;
+template<int dim> class RotBox;
+template<int dim> class RotMatrix;
+template<int dim> class Segment;
+template<int dim> class Vector;
 class Quaternion;
 
 // Constants

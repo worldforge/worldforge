@@ -36,14 +36,14 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 inline bool AxisBox<dim>::isEqualTo(const AxisBox<dim>& b, double epsilon) const
 {
   return Equal(m_low, b.m_low, epsilon)
        && Equal(m_high, b.m_high, epsilon);
 }
 
-template<const int dim>
+template<int dim>
 bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out)
 {
   for(int i = 0; i < dim; ++i) {
@@ -59,7 +59,7 @@ bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& 
   return true;
 }
 
-template<const int dim>
+template<int dim>
 AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2)
 {
   AxisBox<dim> out;
@@ -75,7 +75,7 @@ AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2)
   return out;
 }
 
-template<const int dim>
+template<int dim>
 AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p2,
 				       bool ordered)
 {
@@ -102,7 +102,7 @@ AxisBox<dim>& AxisBox<dim>::setCorners(const Point<dim>& p1, const Point<dim>& p
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 Point<dim> AxisBox<dim>::getCorner(int i) const
 {
   if(i < 1)
@@ -120,13 +120,13 @@ Point<dim> AxisBox<dim>::getCorner(int i) const
   return out;
 }
 
-template<const int dim>
+template<int dim>
 inline Ball<dim> AxisBox<dim>::boundingSphere() const
 {
   return Ball<dim>(getCenter(), Distance(m_low, m_high) / 2);
 }
 
-template<const int dim>
+template<int dim>
 inline Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
 {
   return Ball<dim>(getCenter(), SloppyDistance(m_low, m_high) / 2);
@@ -134,7 +134,7 @@ inline Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
 
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 AxisBox<dim> BoundingBox(const container<AxisBox<dim>, std::allocator<AxisBox<dim> > >& c)
 {
   // FIXME become friend
@@ -164,7 +164,7 @@ AxisBox<dim> BoundingBox(const container<AxisBox<dim>, std::allocator<AxisBox<di
   return AxisBox<dim>(low, high, true);
 }
 
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
   typename container<Point<dim>, std::allocator<Point<dim> > >::const_iterator i = c.begin(), end = c.end();
@@ -194,19 +194,19 @@ AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> >
 // This is here, instead of defined in the class, to
 // avoid include order problems
 
-template<const int dim>
+template<int dim>
 inline AxisBox<dim> Point<dim>::boundingBox() const
 {
   return AxisBox<dim>(*this, *this, true);
 }
 
-template<const int dim>
+template<int dim>
 Point<dim> Point<dim>::toParentCoords(const AxisBox<dim>& coords) const
 {
   return coords.lowCorner() + (*this - Point().setToOrigin());
 }
 
-template<const int dim>
+template<int dim>
 Point<dim> Point<dim>::toLocalCoords(const AxisBox<dim>& coords) const
 {
   return Point().setToOrigin() + (*this - coords.lowCorner());

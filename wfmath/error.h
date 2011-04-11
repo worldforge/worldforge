@@ -33,7 +33,7 @@
 namespace WFMath {
 
 /// An error thrown by certain functions when passed parallel vectors.
-template<const int dim>
+template<int dim>
 struct ColinearVectors : virtual public std::exception {
   ColinearVectors(const Vector<dim>& v1_in, const Vector<dim>& v2_in)
     : v1(v1_in), v2(v2_in) {}
