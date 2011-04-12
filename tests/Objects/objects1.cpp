@@ -14,7 +14,7 @@ using Atlas::Objects::objectDefinitions;
 int main(int argc, char** argv)
 {
     try {
-	Atlas::Objects::loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
+	Atlas::Objects::loadDefaults("../../protocol/spec/atlas.xml");
     } catch(Atlas::Objects::DefaultLoadingException e) {
 	std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
