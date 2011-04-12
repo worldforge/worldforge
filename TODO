@@ -26,10 +26,6 @@ copyAttr returns 0 if attribute is hard coded, but not set.
 
 Cut down inlining from Codecs/Utility.h as functions are too large.
 
-Create an equivalent for Anonymous which inherits from RootOperation.
-Can be used in objectFactory when there is no factory, but objtype is op.
-This may also solve the messy problem with custom op types.
-
 I am pretty sure vector is better than list for lots of things.
 
 Add template member to Objects for list types, so that value can be queried
