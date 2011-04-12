@@ -12,7 +12,7 @@
 
 namespace Eris {
 ViewEntity::ViewEntity(const std::string& id, TypeInfo* ty, View* view) :
-	Entity::Entity(id, ty), m_view(view) {
+	Entity(id, ty), m_view(view) {
 	m_router = new EntityRouter(this);
 	m_view->getConnection()->registerRouterForFrom(m_router, id);
 
