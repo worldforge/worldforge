@@ -26,8 +26,7 @@ namespace Atlas { namespace Codecs {
 inline const std::string charToHex(char c)
 {
     char hex[3];
-#ifdef __MINGW32__
-    // Perhaps this should #ifdef _WIN32 instead?    
+#ifdef _WIN32
     _snprintf(hex, 3, "%x", c);
 #else
     snprintf(hex, 3, "%x", c);
