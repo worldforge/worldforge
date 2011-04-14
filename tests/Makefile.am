@@ -3,7 +3,7 @@ TESTS = mercatortest Terraintest Shadertest TerrainModtest Intersecttest \
         TileShadertest ShaderFactorytest testWFMath Buffertest \
         Segmenttest AreaShadertest BasePointtest DepthShadertest \
         FillShadertest GrassShadertest ThresholdShadertest Matrixtest \
-        TerrainaddAreatest
+        TerrainaddAreatest Segmentperf
 
 AM_CPPFLAGS = -I$(top_srcdir)
 
@@ -70,3 +70,7 @@ TerrainaddAreatest_SOURCES = TerrainaddAreatest.cpp
 TerrainaddAreatest_LDADD = $(top_builddir)/Mercator/Terrain.lo \
                            $(top_builddir)/Mercator/Segment.lo \
                            $(top_builddir)/Mercator/Area.lo
+
+Segmentperf_SOURCES = Segmentperf.cpp
+Segmentperf_LDADD = $(top_builddir)/Mercator/Segment.lo
+
