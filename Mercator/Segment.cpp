@@ -304,7 +304,7 @@ inline float randHalf(WFMath::MTRand& rng)
 
 /// \brief quasi-Random Midpoint Displacement (qRMD) algorithm.
 float Segment::qRMD(WFMath::MTRand& rng, float nn, float fn, float ff, float nf,
-                    float roughness, float falloff, int depth) const
+                    float roughness, float falloff, float depth) const
 {
     float max = std::max(std::max(nn, fn), std::max(nf, ff)),
           min = std::min(std::min(nn, fn), std::min(nf, ff)),
@@ -356,7 +356,7 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
 
     // depth is used to indicate what level we are on. the displacement is
     // reduced each time we traverse the array.
-    int depth=1;
+    float depth=1;
  
     while (stride) {
         for (int i=stride;i<m_res;i+=stride*2) {
@@ -435,7 +435,7 @@ void Segment::fill2d(const BasePoint& p1, const BasePoint& p2,
     QuadInterp qi(m_res, p1.roughness(), p2.roughness(), p3.roughness(), p4.roughness());
 
     float f = BasePoint::FALLOFF;
-    int depth=0;
+    float depth=0;
     
     // center of m_points is done separately
     int stride = m_res/2;

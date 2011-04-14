@@ -210,7 +210,7 @@ class Segment {
                 const BasePoint& p3, const BasePoint& p4);
 
     float qRMD(WFMath::MTRand& rng, float nn, float fn, float ff, float nf,
-               float roughness, float falloff, int depth) const;
+               float roughness, float falloff, float depth) const;
 
     void applyMod(const TerrainMod *t);
 
