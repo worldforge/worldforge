@@ -171,7 +171,7 @@ void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
     // middle of sample rows - we do this by offseting by 1/2 a row height
     // if you don't do this, you'll find alternating rows are over/under
     // sampled, producing a charming striped effect.
-    double y = floor(active.front().start().y()) + ROW_HEIGHT * 0.5;
+    double y = F_FLOOR(active.front().start().y()) + ROW_HEIGHT * 0.5;
     
     for (; !pending.empty() || !active.empty();  y += ROW_HEIGHT)
     {
