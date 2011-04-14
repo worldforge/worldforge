@@ -531,8 +531,8 @@ void Segment::getHeightAndNormal(float x, float y, float& h,
     assert(y >= 0.0f);
     
     // get index of the actual tile in the segment
-    int tile_x = (int)floor(x);
-    int tile_y = (int)floor(y);
+    int tile_x = (int)F_FLOOR(x);
+    int tile_y = (int)F_FLOOR(y);
 
     // work out the offset into that tile
     float off_x = x - tile_x;
