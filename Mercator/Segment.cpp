@@ -310,7 +310,7 @@ float Segment::qRMD(WFMath::MTRand& rng, float nn, float fn, float ff, float nf,
           min = std::min(std::min(nn, fn), std::min(nf, ff)),
           heightDifference = max - min;
  
-    return ((nn+fn+ff+nf)/4.f) + randHalf(rng) * roughness * heightDifference / (1.f+::powf(depth,falloff));
+    return ((nn+fn+ff+nf)/4.f) + randHalf(rng) * roughness * heightDifference / (1.f+F_POW(depth,falloff));
 }
 
 /// \brief Check a value against m_min and m_max and set one of them
@@ -370,7 +370,7 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
                 hd+=0.05f * roughness;       
             }
           
-            array[i] = ((hh+lh)/2.f) + randHalf(rng) * roughness  * hd / (1.f+::powf(depth,BasePoint::FALLOFF));
+            array[i] = ((hh+lh)/2.f) + randHalf(rng) * roughness  * hd / (1.f+F_POW(depth,BasePoint::FALLOFF));
         }
         stride >>= 1;
         depth++;
