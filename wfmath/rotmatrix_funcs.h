@@ -38,7 +38,7 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
 	: m_flip(m.m_flip), m_valid(m.m_valid), m_age(1)
 {
@@ -47,7 +47,7 @@ inline RotMatrix<dim>::RotMatrix(const RotMatrix<dim>& m)
       m_elem[i][j] = m.m_elem[i][j];
 }
 
-template<const int dim>
+template<int dim>
 inline RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
 {
   for(int i = 0; i < dim; ++i)
@@ -61,7 +61,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) const
 {
   // Since the sum of the squares of the elements in any row or column add
@@ -85,7 +85,7 @@ inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) c
   return true;
 }
 
-template<const int dim> // m1 * m2
+template<int dim> // m1 * m2
 inline RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   RotMatrix<dim> out;
@@ -107,7 +107,7 @@ inline RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
   return out;
 }
 
-template<const int dim> // m1 * m2^-1
+template<int dim> // m1 * m2^-1
 inline RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   RotMatrix<dim> out;
@@ -129,7 +129,7 @@ inline RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2
   return out;
 }
 
-template<const int dim> // m1^-1 * m2
+template<int dim> // m1^-1 * m2
 inline RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   RotMatrix<dim> out;
@@ -151,7 +151,7 @@ inline RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2
   return out;
 }
 
-template<const int dim> // m1^-1 * m2^-1
+template<int dim> // m1^-1 * m2^-1
 inline RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   RotMatrix<dim> out;
@@ -173,7 +173,7 @@ inline RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>&
   return out;
 }
 
-template<const int dim> // m * v
+template<int dim> // m * v
 inline Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v)
 {
   Vector<dim> out;
@@ -190,7 +190,7 @@ inline Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v)
   return out;
 }
 
-template<const int dim> // m^-1 * v
+template<int dim> // m^-1 * v
 inline Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v)
 {
   Vector<dim> out;
@@ -207,37 +207,37 @@ inline Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v)
   return out;
 }
 
-template<const int dim> // v * m
+template<int dim> // v * m
 inline Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m)
 {
   return InvProd(m, v); // Since transpose() and inverse() are the same
 }
 
-template<const int dim> // v * m^-1
+template<int dim> // v * m^-1
 inline Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m)
 {
   return Prod(m, v); // Since transpose() and inverse() are the same
 }
 
-template<const int dim>
+template<int dim>
 inline RotMatrix<dim> operator*(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2)
 {
   return Prod(m1, m2);
 }
 
-template<const int dim>
+template<int dim>
 inline Vector<dim> operator*(const RotMatrix<dim>& m, const Vector<dim>& v)
 {
   return Prod(m, v);
 }
 
-template<const int dim>
+template<int dim>
 inline Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m)
 {
   return InvProd(m, v); // Since transpose() and inverse() are the same
 }
 
-template<const int dim>
+template<int dim>
 inline bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], double precision)
 {
   // Scratch space for the backend
@@ -250,7 +250,7 @@ inline bool RotMatrix<dim>::setVals(const CoordType vals[dim][dim], double preci
   return _setVals(scratch_vals, precision);
 }
 
-template<const int dim>
+template<int dim>
 inline bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], double precision)
 {
   // Scratch space for the backend
@@ -265,7 +265,7 @@ inline bool RotMatrix<dim>::setVals(const CoordType vals[dim*dim], double precis
 bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 			CoordType* buf1, CoordType* buf2, double precision);
 
-template<const int dim>
+template<int dim>
 inline bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
 {
   // Cheaper to allocate space on the stack here than with
@@ -289,7 +289,7 @@ inline bool RotMatrix<dim>::_setVals(CoordType *vals, double precision)
   return true;
 }
 
-template<const int dim>
+template<int dim>
 inline Vector<dim> RotMatrix<dim>::row(const int i) const
 {
   Vector<dim> out;
@@ -302,7 +302,7 @@ inline Vector<dim> RotMatrix<dim>::row(const int i) const
   return out;
 }
 
-template<const int dim>
+template<int dim>
 inline Vector<dim> RotMatrix<dim>::column(const int i) const
 {
   Vector<dim> out;
@@ -315,7 +315,7 @@ inline Vector<dim> RotMatrix<dim>::column(const int i) const
   return out;
 }
 
-template<const int dim>
+template<int dim>
 inline RotMatrix<dim> RotMatrix<dim>::inverse() const
 {
   RotMatrix<dim> m;
@@ -331,7 +331,7 @@ inline RotMatrix<dim> RotMatrix<dim>::inverse() const
   return m;
 }
 
-template<const int dim>
+template<int dim>
 inline RotMatrix<dim>& RotMatrix<dim>::identity()
 {
   for(int i = 0; i < dim; ++i)
@@ -345,7 +345,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::identity()
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 inline CoordType RotMatrix<dim>::trace() const
 {
   CoordType out = 0;
@@ -356,7 +356,7 @@ inline CoordType RotMatrix<dim>::trace() const
   return out;
 }
 
-template<const int dim>
+template<int dim>
 RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
 					  CoordType theta)
 {
@@ -390,7 +390,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
 					  const Vector<dim>& v2,
 					  CoordType theta)
@@ -434,7 +434,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
 					 const Vector<dim>& to)
 {
@@ -536,7 +536,7 @@ inline RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 
 template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion&);
 
-template<const int dim>
+template<int dim>
 inline RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
 {
   assert(i >= 0 && i < dim);
@@ -549,7 +549,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::mirror(const int i)
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 inline RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
 {
   // Get a flip by subtracting twice the projection operator in the
@@ -578,7 +578,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::mirror	(const Vector<dim>& v)
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 inline RotMatrix<dim>& RotMatrix<dim>::mirror()
 {
   for(int i = 0; i < dim; ++i)
@@ -595,7 +595,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::mirror()
 
 bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out);
 
-template<const int dim>
+template<int dim>
 inline void RotMatrix<dim>::normalize()
 {
   // average the matrix with it's inverse transpose,

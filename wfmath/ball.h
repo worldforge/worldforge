@@ -31,20 +31,20 @@
 
 namespace WFMath {
 
-template<const int dim> class Ball;
+template<int dim> class Ball;
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// get the minimal bounding sphere for a set of points
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 /// get a bounding sphere for a set of points
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 #endif
 
-template<const int dim>
+template<int dim>
 std::ostream& operator<<(std::ostream& os, const Ball<dim>& m);
-template<const int dim>
+template<int dim>
 std::istream& operator>>(std::istream& is, Ball<dim>& m);
 
 /// A dim dimensional ball
@@ -58,7 +58,7 @@ std::istream& operator>>(std::istream& is, Ball<dim>& m);
  * helps that a Ball<n> corresponds to an n-ball, while a Sphere<n>
  * would correspond to an (n-1)-sphere.
  **/
-template<const int dim = 3>
+template<int dim = 3>
 class Ball
 {
  public:

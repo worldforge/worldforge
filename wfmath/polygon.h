@@ -38,11 +38,11 @@
 
 namespace WFMath {
 
-template<const int dim> class Polygon;
+template<int dim> class Polygon;
 
-template<const int dim>
+template<int dim>
 std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r);
-template<const int dim>
+template<int dim>
 std::istream& operator>>(std::istream& is, Polygon<dim>& r);
 
 /// The 2D specialization of the Polygon<> template
@@ -203,7 +203,7 @@ private:
   CoordType m_scale;
 };
 
-template<const int dim> class _Poly2Orient;
+template<int dim> class _Poly2Orient;
 
 struct _Poly2OrientIntersectData {
   int dim;
@@ -216,12 +216,12 @@ struct _Poly2OrientIntersectData {
 // dimension of the intersection space, the rest of the arguments
 // are various information returned depending on the dimension of
 // the intersection
-template<const int dim>
+template<int dim>
 int  _Intersect(const _Poly2Orient<dim> &, const _Poly2Orient<dim> &,
     _Poly2OrientIntersectData &);
 
 // Keep track of the orientation of a 2D polygon in dim dimensions
-template<const int dim>
+template<int dim>
 class _Poly2Orient
 {
 public:
@@ -313,7 +313,7 @@ private:
 };
 
 /// A polygon, all of whose points lie in a plane, embedded in dim dimensions
-template<const int dim = 3>
+template<int dim = 3>
 class Polygon
 {
 public:

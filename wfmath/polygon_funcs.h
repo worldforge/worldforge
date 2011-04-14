@@ -39,7 +39,7 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 inline _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& a)
 {
   m_origin = a.m_origin;
@@ -50,7 +50,7 @@ inline _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& 
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
 {
   // The same polygon can be expressed in different ways in the interal
@@ -67,7 +67,7 @@ inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
   return true;
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim> _Poly2Orient<dim>::convert(const Point<2>& p) const
 {
   assert(m_origin.isValid());
@@ -86,7 +86,7 @@ inline Point<dim> _Poly2Orient<dim>::convert(const Point<2>& p) const
   return out;
 }
 
-template<const int dim>
+template<int dim>
 bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, double epsilon)
 {
   p2[0] = p2[1] = 0; // initialize
@@ -126,7 +126,7 @@ bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, double epsilo
   }
 }
 
-template<const int dim>
+template<int dim>
 _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
 {
   if(poly.numCorners() <= ((skip == 0) ? 1 : 0)) { // No corners left
@@ -254,7 +254,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
   return _Poly2Reorient(_WFMATH_POLY2REORIENT_SCALE1_CLEAR2, norm);
 }
 
-template<const int dim>
+template<int dim>
 inline void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>& p)
 {
   m_origin.rotate(m, p);
@@ -263,7 +263,7 @@ inline void _Poly2Orient<dim>::rotate(const RotMatrix<dim>& m, const Point<dim>&
     m_axes[j] = Prod(m_axes[j], m);
 }
 
-template<const int dim>
+template<int dim>
 void _Poly2Orient<dim>::rotate2(const RotMatrix<dim>& m, const Point<2>& p)
 {
   assert(m_origin.isValid());
@@ -318,7 +318,7 @@ inline void _Poly2Orient<3>::rotate2(const Quaternion& q, const Point<2>& p)
   m_origin += shift - shift.rotate(q);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
 {
   Point<2> p2;
@@ -328,7 +328,7 @@ inline bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
   return succ;
 }
 
-template<const int dim>
+template<int dim>
 inline void Polygon<dim>::removeCorner(int i)
 {
   m_poly.removeCorner(i);
@@ -336,7 +336,7 @@ inline void Polygon<dim>::removeCorner(int i)
   r.reorient(m_poly);
 }
 
-template<const int dim>
+template<int dim>
 inline bool Polygon<dim>::moveCorner(int i, const Point<dim>& p, double epsilon)
 {
   _Poly2Orient<dim> try_orient = m_orient;
@@ -353,7 +353,7 @@ inline bool Polygon<dim>::moveCorner(int i, const Point<dim>& p, double epsilon)
   return true;
 }
 
-template<const int dim>
+template<int dim>
 AxisBox<dim> Polygon<dim>::boundingBox() const
 {
   assert(m_poly.numCorners() > 0);
@@ -378,7 +378,7 @@ AxisBox<dim> Polygon<dim>::boundingBox() const
   return AxisBox<dim>(min, max, true);
 }
 
-template<const int dim>
+template<int dim>
 inline Ball<dim> Polygon<dim>::boundingSphere() const
 {
   Ball<2> b = m_poly.boundingSphere();
@@ -386,7 +386,7 @@ inline Ball<dim> Polygon<dim>::boundingSphere() const
   return Ball<dim>(m_orient.convert(b.center()), b.radius());
 }
 
-template<const int dim>
+template<int dim>
 inline Ball<dim> Polygon<dim>::boundingSphereSloppy() const
 {
   Ball<2> b = m_poly.boundingSphereSloppy();

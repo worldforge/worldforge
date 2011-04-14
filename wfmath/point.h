@@ -34,32 +34,32 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 Point<dim>& operator+=(Point<dim>& p, const Vector<dim>& v);
-template<const int dim>
+template<int dim>
 Point<dim>& operator-=(Point<dim>& p, const Vector<dim>& v);
 
-template<const int dim>
+template<int dim>
 Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2);
-template<const int dim>
+template<int dim>
 Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v);
-template<const int dim>
+template<int dim>
 Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c);
-template<const int dim>
+template<int dim>
 Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v);
 
-template<const int dim>
+template<int dim>
 CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2);
-template<const int dim>
+template<int dim>
 CoordType Distance(const Point<dim>& p1, const Point<dim>& p2)
   {return sqrt(SquaredDistance(p1, p2));}
-template<const int dim>
+template<int dim>
 CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
   {return (p1 - p2).sloppyMag();}
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// Find the center of a set of points, all weighted equally
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 /// Find the center of a set of points with the given weights
 /**
@@ -68,20 +68,20 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
  * which is used, if there are more weights than points), must not
  * sum to zero.
  **/
-template<const int dim, template<class, class> class container,
+template<int dim, template<class, class> class container,
       template<class, class> class container2>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c,
           const container2<CoordType, std::allocator<CoordType> >& weights);
 #endif
 
 // This is used a couple of places in the library
-template<const int dim>
+template<int dim>
 Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2,
         CoordType dist = 0.5);
 
-template<const int dim>
+template<int dim>
 std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
-template<const int dim>
+template<int dim>
 std::istream& operator>>(std::istream& is, Point<dim>& m);
 
 
@@ -91,7 +91,7 @@ std::istream& operator>>(std::istream& is, Point<dim>& m);
  * This class implements the full shape interface, as described in
  * the fake class Shape.
  **/
-template<const int dim = 3>
+template<int dim = 3>
 class Point
 {
  friend class ZeroPrimitive<Point<dim> >;

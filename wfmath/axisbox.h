@@ -35,23 +35,23 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 bool Intersection(const AxisBox<dim>& a1, const AxisBox<dim>& a2, AxisBox<dim>& out);
-template<const int dim>
+template<int dim>
 AxisBox<dim> Union(const AxisBox<dim>& a1, const AxisBox<dim>& a2);
 
-template<const int dim>
+template<int dim>
 std::ostream& operator<<(std::ostream& os, const AxisBox<dim>& m);
-template<const int dim>
+template<int dim>
 std::istream& operator>>(std::istream& is, AxisBox<dim>& m);
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// Get the axis-aligned bounding box for a set of boxes
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 AxisBox<dim> BoundingBox(const container<AxisBox<dim>, std::allocator<AxisBox<dim> > >& c);
 
 /// Get the axis-aligned bounding box for a set of points
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 #endif
 
@@ -60,7 +60,7 @@ AxisBox<dim> BoundingBox(const container<Point<dim>, std::allocator<Point<dim> >
  * This class implements the full shape interface, as described in
  * the fake class Shape, with the exception of the rotation functions.
  **/
-template<const int dim = 3>
+template<int dim = 3>
 class AxisBox
 {
  public:

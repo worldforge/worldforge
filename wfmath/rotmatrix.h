@@ -33,38 +33,38 @@
 namespace WFMath {
 
 /// returns m1 * m2
-template<const int dim> // m1 * m2
+template<int dim> // m1 * m2
 RotMatrix<dim> Prod(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
 /// returns m1 * m2^-1
-template<const int dim> // m1 * m2^-1
+template<int dim> // m1 * m2^-1
 RotMatrix<dim> ProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
 /// returns m1^-1 * m2
-template<const int dim> // m1^-1 * m2
+template<int dim> // m1^-1 * m2
 RotMatrix<dim> InvProd(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
 /// returns m1^-1 * m2^-1
-template<const int dim> // m1^-1 * m2^-1
+template<int dim> // m1^-1 * m2^-1
 RotMatrix<dim> InvProdInv(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
 
-template<const int dim> // m * v
+template<int dim> // m * v
 Vector<dim> Prod(const RotMatrix<dim>& m, const Vector<dim>& v);
-template<const int dim> // m^-1 * v
+template<int dim> // m^-1 * v
 Vector<dim> InvProd(const RotMatrix<dim>& m, const Vector<dim>& v);
-template<const int dim> // v * m
+template<int dim> // v * m
 Vector<dim> Prod(const Vector<dim>& v, const RotMatrix<dim>& m);
-template<const int dim> // v * m^-1
+template<int dim> // v * m^-1
 Vector<dim> ProdInv(const Vector<dim>& v, const RotMatrix<dim>& m);
 
 /// returns m1 * m2
-template<const int dim>
+template<int dim>
 RotMatrix<dim> operator*(const RotMatrix<dim>& m1, const RotMatrix<dim>& m2);
-template<const int dim>
+template<int dim>
 Vector<dim> operator*(const RotMatrix<dim>& m, const Vector<dim>& v);
-template<const int dim>
+template<int dim>
 Vector<dim> operator*(const Vector<dim>& v, const RotMatrix<dim>& m);
 
-template<const int dim>
+template<int dim>
 std::ostream& operator<<(std::ostream& os, const RotMatrix<dim>& m);
-template<const int dim>
+template<int dim>
 std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
 
 /// A dim dimensional rotation matrix. Technically, a member of the group O(dim).
@@ -83,7 +83,7 @@ std::istream& operator>>(std::istream& is, RotMatrix<dim>& m);
  * This class implements the 'generic' subset of the interface in
  * the fake class Shape.
  **/
-template<const int dim = 3>
+template<int dim = 3>
 class RotMatrix {
  public:
   ///

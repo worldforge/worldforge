@@ -37,7 +37,7 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
 {
   m_corner0 = a.m_corner0;
@@ -47,7 +47,7 @@ inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
 {
   return Equal(m_corner0, b.m_corner0, epsilon)
@@ -55,7 +55,7 @@ inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
       && Equal(m_orient, b.m_orient, epsilon);
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim> RotBox<dim>::getCorner(int i) const
 {
   assert(i >= 0 && i < (1 << dim));
@@ -73,7 +73,7 @@ inline Point<dim> RotBox<dim>::getCorner(int i) const
   return m_corner0 + Prod(dist, m_orient);
 }
 
-template<const int dim>
+template<int dim>
 AxisBox<dim> RotBox<dim>::boundingBox() const
 {
   Point<dim> min = m_corner0, max = m_corner0;
@@ -117,13 +117,13 @@ AxisBox<dim> RotBox<dim>::boundingBox() const
 // This is here, instead of defined in the class, to
 // avoid include order problems
 
-template<const int dim>
+template<int dim>
 Point<dim> Point<dim>::toParentCoords(const RotBox<dim>& coords) const
 {
   return coords.corner0() + (*this - Point().setToOrigin()) * coords.orientation();
 }
 
-template<const int dim>
+template<int dim>
 Point<dim> Point<dim>::toLocalCoords(const RotBox<dim>& coords) const
 {
   return Point().setToOrigin() + coords.orientation() * (*this - coords.corner0());

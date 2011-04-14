@@ -37,7 +37,7 @@
 
 namespace WFMath {
 
-template<const int dim, template<const int> class Shape>
+template<int dim, template<int> class Shape>
 void test_shape_no_rotate(const Shape<dim>& s)
 {
   Shape<dim> s2 = s;
@@ -69,7 +69,7 @@ void test_shape_no_rotate(const Shape<dim>& s)
   assert(Contains(ball2, ball1, false));
 }
 
-template<const int dim, template<const int> class Shape>
+template<int dim, template<int> class Shape>
 void test_shape(const Shape<dim>& s)
 {
   test_shape_no_rotate(s);

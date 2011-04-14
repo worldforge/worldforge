@@ -44,7 +44,7 @@
 
 using namespace WFMath;
 
-template<const int dim>
+template<int dim>
 void test_polygon(const Polygon<dim>& p)
 {
   std::cout << "Testing " << p << std::endl;

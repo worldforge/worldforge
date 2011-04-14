@@ -128,20 +128,20 @@ inline void _ArrayFromAtlas(CoordType* array, unsigned len, const AtlasInType& a
     array[i] = _asNum(list[i]);
 }
 
-template<const int dim>
+template<int dim>
 inline Vector<dim>::Vector(const AtlasInType& a)
 {
   fromAtlas(a);
 }
 
-template<const int dim>
+template<int dim>
 inline void Vector<dim>::fromAtlas(const AtlasInType& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
   m_valid = true;
 }
 
-template<const int dim>
+template<int dim>
 inline AtlasOutType Vector<dim>::toAtlas() const
 {
   return _ArrayToAtlas(m_elem, dim);
@@ -191,32 +191,32 @@ inline AtlasOutType Quaternion::toAtlas() const
   return a;
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim>::Point(const AtlasInType& a)
 {
   fromAtlas(a);
 }
 
-template<const int dim>
+template<int dim>
 inline void Point<dim>::fromAtlas(const AtlasInType& a)
 {
   _ArrayFromAtlas(m_elem, dim, a);
   m_valid = true;
 }
 
-template<const int dim>
+template<int dim>
 inline AtlasOutType Point<dim>::toAtlas() const
 {
   return _ArrayToAtlas(m_elem, dim);
 }
 
-template<const int dim>
+template<int dim>
 inline AxisBox<dim>::AxisBox(const AtlasInType& a)
 {
   fromAtlas(a);
 }
 
-template<const int dim>
+template<int dim>
 inline void AxisBox<dim>::fromAtlas(const AtlasInType& a)
 {
   if(!a.IsList())
@@ -250,7 +250,7 @@ inline void AxisBox<dim>::fromAtlas(const AtlasInType& a)
   }
 }
 
-template<const int dim>
+template<int dim>
 inline AtlasOutType AxisBox<dim>::toAtlas() const
 {
   int i;
@@ -273,7 +273,7 @@ inline AtlasOutType AxisBox<dim>::toAtlas() const
   return a;
 }
 
-template<const int dim>
+template<int dim>
 inline void Ball<dim>::fromAtlas(const AtlasInType& a)
 {
   const _AtlasMessageType& message(a);
@@ -297,7 +297,7 @@ inline void Ball<dim>::fromAtlas(const AtlasInType& a)
   }
 }
 
-template<const int dim>
+template<int dim>
 inline AtlasOutType Ball<dim>::toAtlas() const
 {
   Atlas::Message::MapType map;
@@ -306,7 +306,7 @@ inline AtlasOutType Ball<dim>::toAtlas() const
   return map;
 }
 
-template<const int dim>
+template<int dim>
 inline Ball<dim>::Ball(const AtlasInType& a) : m_center(Point<dim>::ZERO()),
                                                m_radius(0)
 {
@@ -356,7 +356,7 @@ inline AtlasOutType Polygon<2>::toAtlas() const
 }
 
 
-template<const int dim>
+template<int dim>
 inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
 {
   const _AtlasMessageType& message(a);
@@ -384,7 +384,7 @@ inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
   throw _AtlasBadParse();
 }
 
-template<const int dim>
+template<int dim>
 inline AtlasOutType RotBox<dim>::toAtlas() const
 {
   Atlas::Message::MapType map;
@@ -394,7 +394,7 @@ inline AtlasOutType RotBox<dim>::toAtlas() const
   return map;
 }
 
-template<const int dim>
+template<int dim>
 inline RotBox<dim>::RotBox(const AtlasInType& a) {
   fromAtlas(a);
 }

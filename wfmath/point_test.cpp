@@ -45,7 +45,7 @@
 
 using namespace WFMath;
 
-template<const int dim>
+template<int dim>
 void test_point(const Point<dim>& p)
 {
   std::cout << "Testing point: " << p << std::endl;

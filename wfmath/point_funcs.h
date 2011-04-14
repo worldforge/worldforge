@@ -35,7 +35,7 @@
 
 namespace WFMath {
 
-template<const int dim>
+template<int dim>
 inline Point<dim>::Point(const Point<dim>& p) : m_valid(p.m_valid)
 {
   for(int i = 0; i < dim; ++i) {
@@ -43,7 +43,7 @@ inline Point<dim>::Point(const Point<dim>& p) : m_valid(p.m_valid)
   }
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim>::Point(const Vector<dim>& v) : m_valid(v.isValid())
 {
   for(int i = 0; i < dim; ++i) {
@@ -51,7 +51,7 @@ inline Point<dim>::Point(const Vector<dim>& v) : m_valid(v.isValid())
   }
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim>& Point<dim>::setToOrigin()
 {
   for(int i = 0; i < dim; ++i) {
@@ -63,7 +63,7 @@ inline Point<dim>& Point<dim>::setToOrigin()
   return *this;
 }
 
-template<const int dim>
+template<int dim>
 inline bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
 {
   CoordType delta = (CoordType) _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
@@ -77,7 +77,7 @@ inline bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
   return true;
 }
 
-template<const int dim>
+template<int dim>
 inline Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
 {
   Vector<dim> out;
@@ -91,7 +91,7 @@ inline Vector<dim> operator-(const Point<dim>& c1, const Point<dim>& c2)
   return out;
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
 {
     for(int i = 0; i < dim; ++i) {
@@ -103,7 +103,7 @@ inline Point<dim>& operator+=(Point<dim>& p, const Vector<dim> &rhs)
     return p;
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
 {
   Point<dim> out(c);
@@ -113,7 +113,7 @@ inline Point<dim> operator+(const Point<dim>& c, const Vector<dim>& v)
   return out;
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
 {
   Point<dim> out(c);
@@ -123,7 +123,7 @@ inline Point<dim> operator+(const Vector<dim>& v, const Point<dim>& c)
   return out;
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
 {
     for(int i = 0; i < dim; ++i) {
@@ -135,7 +135,7 @@ inline Point<dim>& operator-=(Point<dim>& p, const Vector<dim> &rhs)
     return p;
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
 {
   Point<dim> out(c);
@@ -145,7 +145,7 @@ inline Point<dim> operator-(const Point<dim>& c, const Vector<dim>& v)
   return out;
 }
 
-template<const int dim>
+template<int dim>
 inline Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
 {
     // Compare pointer addresses
@@ -162,7 +162,7 @@ inline Point<dim>& Point<dim>::operator=(const Point<dim>& rhs)
     return *this;
 }
 
-template<const int dim>
+template<int dim>
 inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
 {
   CoordType ans = 0;
@@ -176,7 +176,7 @@ inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
 }
 
 #ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
-template<const int dim, template<class, class> class container,
+template<int dim, template<class, class> class container,
 			template<class, class> class container2>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c,
 		      const container2<CoordType, std::allocator<CoordType> >& weights)
@@ -225,7 +225,7 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
   return out;
 }
 
-template<const int dim, template<class, class> class container>
+template<int dim, template<class, class> class container>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
   // FIXME become friend
@@ -259,7 +259,7 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
 }
 #endif
 
-template<const int dim>
+template<int dim>
 inline Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)
 {
   Point<dim> out;

@@ -33,7 +33,7 @@
     #error "You are using an older version of MSVC++ with extremely poor"
     #error "template support. Please use at least version 7.0, where the"
     #error "template support is merely bad, or try a different compiler."
-  #else
+  #elif _MSC_VER < 1500
     // The name of this one is somewhat misleading. The problem is,
     // while you can _define_ specializations of template functions,
     // you can't _declare_ them.
@@ -52,14 +52,14 @@ namespace WFMath {
 class AtlasInType;
 class AtlasOutType;
 
-template<const int dim> class AxisBox;
-template<const int dim> class Ball;
-template<const int dim> class Point;
-template<const int dim> class Polygon;
-template<const int dim> class RotBox;
-template<const int dim> class RotMatrix;
-template<const int dim> class Segment;
-template<const int dim> class Vector;
+template<int dim> class AxisBox;
+template<int dim> class Ball;
+template<int dim> class Point;
+template<int dim> class Polygon;
+template<int dim> class RotBox;
+template<int dim> class RotMatrix;
+template<int dim> class Segment;
+template<int dim> class Vector;
 class Quaternion;
 
 // Constants
