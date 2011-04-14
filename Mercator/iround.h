@@ -25,4 +25,16 @@
     #define F_ABS(_x) (::fabs(_x))
 #endif
 
+#ifdef HAVE_POWF
+    #define F_POW(_x, _y) (::powf(_x, _y))
+#else
+    #define F_POW(_x, _y) (::pow(_x, _y))
+#endif
+
+#ifdef HAVE_FLOORF
+    #define F_FLOOR(_x) (::floorf(_x))
+#else
+    #define F_FLOOR(_x) (::floor(_x))
+#endif
+
 #endif // MERCATOR_IROUND_H
