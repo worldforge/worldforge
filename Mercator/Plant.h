@@ -8,6 +8,8 @@
 #include <wfmath/point.h>
 #include <wfmath/quaternion.h>
 
+#include <string>
+
 namespace Mercator {
 
 /// \brief This is the simple class for representing instances of vegetation.
