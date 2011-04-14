@@ -11,13 +11,15 @@
 
 #include <cassert>
 
+using WFMath::CoordType;
+
 namespace Mercator
 {
 
 typedef WFMath::Point<2> Point2;
 typedef WFMath::Vector<2> Vector2;
 
-bool isZero(double d)
+static bool isZero(CoordType d)
 {
     return (fabs(d) < WFMATH_EPSILON);
 }
@@ -29,7 +31,7 @@ public:
     /// Constructor
     ///
     /// @param t top of y range
-    TopClip(double t) : topY(t) { }
+    TopClip(CoordType t) : topY(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -47,20 +49,20 @@ public:
     /// @return a point where the line cross this clip.
     Point2 clip(const Point2& u, const Point2& v) const
     {
-        double dy = v.y() - u.y();
-        double dx = v.x() - u.x();
+        CoordType dy = v.y() - u.y();
+        CoordType dx = v.x() - u.x();
         
         // shouldn't every happen - if dy iz zero, the line is horizontal,
         // so either both points should be inside, or both points should be
         // outside. In either case, we should not call clip()
         assert(!isZero(dy));
         
-        double t = (topY - u.y()) / dy;
+        CoordType t = (topY - u.y()) / dy;
         return Point2(u.x() + t * dx, topY);
     }
 private:
     /// \brief Top of y range.
-    double topY;
+    CoordType topY;
 };
 
 /// \brief Helper to clip points to a given range.
@@ -70,7 +72,7 @@ public:
     /// Constructor
     ///
     /// @param t bottom of y range
-    BottomClip(double t) : bottomY(t) { }
+    BottomClip(CoordType t) : bottomY(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -88,16 +90,16 @@ public:
     /// @return a point where the line cross this clip.
     Point2 clip(const Point2& u, const Point2& v) const
     {
-        double dy = v.y() - u.y();
-        double dx = v.x() - u.x();
+        CoordType dy = v.y() - u.y();
+        CoordType dx = v.x() - u.x();
         assert(!isZero(dy));
         
-        double t = (u.y() - bottomY) / -dy;
+        CoordType t = (u.y() - bottomY) / -dy;
         return Point2(u.x() + t * dx, bottomY);
     }
 private:
     /// \brief Bottom of y range.
-    double bottomY;
+    CoordType bottomY;
 };
 
 /// \brief Helper to clip points to a given range.
@@ -107,7 +109,7 @@ public:
     /// Constructor
     ///
     /// @param t left of x range.
-    LeftClip(double t) : leftX(t) { }
+    LeftClip(CoordType t) : leftX(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -125,18 +127,18 @@ public:
     /// @return a point where the line cross this clip.
     Point2 clip(const Point2& u, const Point2& v) const
     {
-        double dy = v.y() - u.y();
-        double dx = v.x() - u.x();
+        CoordType dy = v.y() - u.y();
+        CoordType dx = v.x() - u.x();
         
         // shouldn't every happen
         assert(!isZero(dx));
         
-        double t = (leftX - u.x()) / dx;
+        CoordType t = (leftX - u.x()) / dx;
         return Point2(leftX, u.y() + t * dy);
     }
 private:
     /// \brief Left of x range.
-    double leftX;
+    CoordType leftX;
 };
 
 /// \brief Helper to clip points to a given range.
@@ -146,7 +148,7 @@ public:
     /// Constructor
     ///
     /// @param t right of x range.
-    RightClip(double t) : rightX(t) { }
+    RightClip(CoordType t) : rightX(t) { }
     
     /// \brief Check a point is outside this clip.
     ///
@@ -164,18 +166,18 @@ public:
     /// @return a point where the line cross this clip.
     Point2 clip(const Point2& u, const Point2& v) const
     {
-        double dy = v.y() - u.y();
-        double dx = v.x() - u.x();
+        CoordType dy = v.y() - u.y();
+        CoordType dx = v.x() - u.x();
         
         // shouldn't every happen
         assert(!isZero(dx));
         
-        double t = (u.x() - rightX) / -dx;
+        CoordType t = (u.x() - rightX) / -dx;
         return Point2(rightX, u.y() + t * dy);
     }
 private:
     /// \brief Right of x range.
-    double rightX;
+    CoordType rightX;
 };
 
 template <class Clip>
@@ -239,7 +241,7 @@ void Area::setShader(const Shader * shader) const
     m_shader = shader;
 }
 
-bool Area::contains(double x, double y) const
+bool Area::contains(CoordType x, CoordType y) const
 {
     if (!WFMath::Contains(m_box, Point2(x,y), false)) return false;
     
