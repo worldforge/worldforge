@@ -53,7 +53,7 @@ AC_LANG(C++)
 dnl Check for float to int converters
 
 AC_CHECK_FUNCS([lrintf rintf rint])
-AC_CHECK_FUNCS([fabsf])
+AC_CHECK_FUNCS([fabsf powf floorf])
 
 PKG_PROG_PKG_CONFIG
 
