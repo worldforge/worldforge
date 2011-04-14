@@ -19,11 +19,11 @@ depcomp
 install-sh
 libtool
 ltmain.sh
-mercator-0.2.pc
+mercator-0.3.pc
 mercator.spec
+mingw32-mercator.spec
 missing
 stamp-h1
-server/buildid.cpp
 tests/mercatortest
 tests/*test
 tests/*.log
