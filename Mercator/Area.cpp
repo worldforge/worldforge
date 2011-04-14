@@ -2,6 +2,12 @@
 // the GNU General Public License (See COPYING for details).
 // Copyright (C) 2005 Alistair Riddoch
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include "iround.h"
+
 #include <Mercator/Area.h>
 #include "Mercator/Segment.h"
 
@@ -21,7 +27,7 @@ typedef WFMath::Vector<2> Vector2;
 
 static bool isZero(CoordType d)
 {
-    return (fabs(d) < WFMATH_EPSILON);
+    return (F_ABS(d) < WFMATH_EPSILON);
 }
 
 /// \brief Helper to clip points to a given range.
