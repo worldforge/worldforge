@@ -63,6 +63,20 @@ public:
     Qt */
     int getFileDescriptor();
     
+    /**
+     * Gets the host of the connection.
+     *
+     * @return The host of the connection.
+     */
+    const std::string& getHost() const;
+
+    /**
+     * Gets the port of the connection.
+     *
+     * @return The port of the connection.
+     */
+    short getPort() const;
+
     /// sent on successful negotiation of a game server connection
     sigc::signal<void> Connected;
     

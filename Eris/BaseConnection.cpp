@@ -288,4 +288,14 @@ int BaseConnection::getFileDescriptor()
     return _stream->getSocket();
 }
 
+const std::string& BaseConnection::getHost() const
+{
+    return _host;
+}
+
+short BaseConnection::getPort() const
+{
+    return _port;
+}
+
 } // of namespace
