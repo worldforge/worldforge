@@ -81,7 +81,7 @@ void WFMath::_IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
  ist.precision(precision);
  b.read(ist);
 }
-
+namespace WFMath {
 // force a bunch of instantiations
 
 template std::ostream& operator<< <3>(std::ostream& os, const Vector<3>& r);
@@ -154,7 +154,7 @@ CoordType WFMath::_GetEpsilon(std::istream& is)
 
 // This is the only way I could get the operator<<() and operator>>()
 // templates to recognize the declarations in the headers
-namespace WFMath {
+
 #ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
