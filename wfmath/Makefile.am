@@ -2,6 +2,8 @@ AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 
 EXTRA_DIST = bc_sloppy_mag_3
 
+RECHECK_LOGS =
+
 headerdir = $(includedir)/wfmath-0.3/wfmath
 header_HEADERS = error.h const.h int_to_string.h \
 	probability.h timestamp.h \
