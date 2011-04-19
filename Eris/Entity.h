@@ -251,19 +251,17 @@ public:
     sigc::signal<void, Entity*> ChildRemoved;
     
     /// Signal that the entity's container changed
-    /** emitted when our location changes. First argument is the entity,
-    second is the old location. The new location can be found via getLocation.
+    /** emitted when our location changes. First argument is the old location.
+    The new location can be found via getLocation.
     Note either the old or new location might be NULL.
     */
     sigc::signal<void, Entity*> LocationChanged;
 
-    /** Emitted when one or more attributes change. The arguments are the
-    Entity which changed, and a set of attribute IDs which were modified. */
+    /** Emitted when one or more attributes change. The arguments is a set
+    of attribute IDs which were modified. */
     sigc::signal<void, const StringSet&> Changed;
 
-    /** Emitted when then entity's position, orientation or velocity change.
-    Argument is the entity that moved, so you can bind the same slot to
-    multiple entities if desired. */
+    /** Emitted when then entity's position, orientation or velocity change.*/
     sigc::signal<void> Moved;
 
     /** Emitted when an entity starts or stops moving (as determined by the
@@ -284,7 +282,7 @@ public:
     sigc::signal< void, const Atlas::Objects::Root & > Say;
 	
     /**
-    Emitted when this entity emits an imgainary operation (also known as
+    Emitted when this entity emits an imaginary operation (also known as
     an emote. This is used for debugging, but not much else. 
     */
     sigc::signal<void, const std::string&> Emote;
@@ -302,7 +300,11 @@ public:
     distance to the entity and so on.
     */
     sigc::signal<void, const Atlas::Objects::Root&> Noise;
-    
+
+    /**
+    Emitted when the visibility of the entity changes. Often this happens
+    because it has moved in or out of the sight range of the avatar.
+    */
     sigc::signal<void, bool> VisibilityChanged;
     
     /**
@@ -312,7 +314,13 @@ public:
     */
     sigc::signal<void> BeingDeleted;
     
+    /**
+    Emitted when a task has been added to the entity. Argument is the task.
+    */
     sigc::signal<void, Task*> TaskAdded;
+    /**
+    Emitted when a task has been removed from the entity. Argument is the task.
+    */
     sigc::signal<void, Task*> TaskRemoved;
 protected:	        
     /** over-rideable initialisation helper. When subclassing, if you
