@@ -49,7 +49,7 @@ AC_MSG_NOTICE([Ignore the Atlas checks, they're just used for building test code
 
 AC_LANG(C++)
 
-AC_CHECK_FUNCS([fabsf])
+AC_CHECK_FUNCS([fabsf frexpf sqrtf atan2f])
 
 PKG_PROG_PKG_CONFIG
 
