@@ -23,8 +23,13 @@
 // Author: Ron Steinke
 // Created: 2001-12-7
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "rotmatrix_funcs.h"
 #include "quaternion.h"
+#include "floatmath.h"
 
 using namespace WFMath;
 
@@ -111,7 +116,7 @@ void WFMath::_NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis,
   int main_comp = -1;
 
   for(int i = 0; i < 3; ++i) {
-    CoordType val = (CoordType) fabs(axis[i]);
+    CoordType val = F_ABS(axis[i]);
     if(val > max) {
       max = val;
       main_comp = i;
@@ -157,7 +162,7 @@ void WFMath::_NCFS_RotMatrix3_rotation(RotMatrix<3>& m, const Vector<3>& axis)
   }
 
   for(int i = 0; i < 3; ++i) {
-    CoordType val = (CoordType) fabs(axis[i]);
+    CoordType val = F_ABS(axis[i]);
     if(val > max) {
       max = val;
       main_comp = i;
@@ -205,7 +210,7 @@ bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 
         if(i == j) // Subtract identity matrix
           --ans;
-        ans = (CoordType) fabs(ans);
+        ans = F_ABS(ans);
         if(ans >= try_prec)
           try_prec = ans;
       }
