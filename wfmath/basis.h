@@ -27,6 +27,7 @@
 #define WFMATH_BASIS_H
 
 #include <wfmath/const.h>
+#include <wfmath/floatmath.h>
 
 #include <cmath>
 
@@ -46,8 +47,8 @@ inline void _CartToPolar(const CoordType *in, CoordType *out)
 // Expects (r, theta) for polar, (x, y) for cart
 inline void _PolarToCart(const CoordType *in, CoordType *out)
 {
-  out[0] = in[0] * (CoordType) cos(in[1]);
-  out[1] = in[0] * (CoordType) sin(in[1]);
+  out[0] = in[0] * F_COS(in[1]);
+  out[1] = in[0] * F_SIN(in[1]);
 }
 
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
@@ -61,11 +62,11 @@ inline void _CartToSpherical(const CoordType *in, CoordType *out)
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
 inline void _SphericalToCart(const CoordType *in, CoordType *out)
 {
-  CoordType stheta = (CoordType) sin(in[1]);
+  CoordType stheta = F_SIN(in[1]);
 
-  out[0] = in[0] * stheta * (CoordType) cos(in[2]);
-  out[1] = in[0] * stheta * (CoordType) sin(in[2]);
-  out[2] = in[0] * (CoordType) cos(in[1]);
+  out[0] = in[0] * stheta * F_COS(in[2]);
+  out[1] = in[0] * stheta * F_SIN(in[2]);
+  out[2] = in[0] * F_COS(in[1]);
 }
 
 } // namespace WFMath
