@@ -1,0 +1,156 @@
+## Process this file with autoconf to produce a configure script.
+AC_INIT(metaserver-ng, 0.0.1, sryan@evercrack.com)
+
+AC_CONFIG_SRCDIR(src)
+AC_CONFIG_MACRO_DIR([m4])
+
+# Detect the canonical host and target build environment.
+AC_CANONICAL_SYSTEM
+
+AM_INIT_AUTOMAKE([tar-ustar nostdinc dist-bzip2 color-tests parallel-tests])
+AM_CONFIG_HEADER(src/config.h)
+
+AC_PREREQ(2.50)
+AC_COPYRIGHT([This script is under the GPL and is owned by the people in AUTHORS])
+
+AC_DISABLE_SHARED
+
+# Checks for Programs
+AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_LIBTOOL
+
+# set default lang
+AC_LANG([C++])
+AC_REQUIRE_CPP
+
+# Check for C libraries:
+AC_LANG_PUSH([C])
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(stdlib.h)
+AC_CHECK_HEADERS(math.h)
+dnl Test for <math.h> header file
+AC_CHECK_HEADERS([signal.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_INLINE
+AC_STRUCT_TM
+
+
+# Checks for library functions.
+AC_FUNC_ERROR_AT_LINE
+AC_FUNC_MALLOC
+AC_FUNC_VPRINTF
+AC_CHECK_FUNCS([memset select])
+
+# end C check block
+AC_LANG_POP([C])
+
+
+# check sighandler_t in C++
+AC_CHECK_TYPES([sighandler_t],[],[],[
+#ifdef HAVE_SIGNAL_H
+# include <signal.h>
+#endif])
+
+dnl Check for boost asio header
+AC_CHECK_HEADERS([boost/asio.hpp])
+
+# check for boost_system
+AC_CHECK_LIB(boost_system, main, , [
+	AC_MSG_ERROR("Linking against boost::system library failed.")
+])
+
+# check for sigc++ separately from the WF checks
+PKG_CHECK_MODULES(SIG, [sigc++-2.0 >= 2.0],
+  [
+      CXXFLAGS="$CXXFLAGS $SIG_CFLAGS"
+      LIBS="$LIBS $SIG_LIBS"
+  ],
+  [
+      AC_MSG_ERROR([Couldn't find SIGC++2.0])
+  ])
+
+# Cppunit check
+ 
+AC_ARG_ENABLE(cppunit,[  --enable-cppunit     enables cppunit tests [default=yes]],
+[ 
+   if test x$enableval = xno; then 
+		ac_use_cppunit="no"	
+   else 
+		ac_use_cppunit="yes"
+   fi
+], [ac_use_cppunit="yes"])
+
+found_cppunit=no
+
+if test "$ac_use_cppunit" = "yes"; then
+	AM_PATH_CPPUNIT(1.8.0, [
+	  AC_MSG_RESULT([
+		*** Found CppUnit
+		*** Setting up make check to run tests...])
+			CXXFLAGS="$CXXFLAGS -DUSE_CPP_UNIT"
+			LIBS="$LIBS $CPPUNIT_LIBS"
+			found_cppunit=yes
+		], 
+	  AC_MSG_RESULT([
+		*** Unable to find a recent enough CppUnit
+		*** Will not run unit testing!!
+		*** 
+		*** To get CppUnit see http://cppunit.sourceforge.net
+		]))
+fi
+
+AM_CONDITIONAL(USE_CPPUNIT, [test x$found_cppunit = xyes])
+
+
+# debugging option
+AC_ARG_ENABLE(debug,[  --enable-debug     creates debugging code [default=no]],
+[ 
+   if test x$enableval = xno; then 
+		ac_use_debug_code="no"	
+   else 
+		ac_use_debug_code="yes"
+   fi
+], [ac_use_debug_code="no"])
+
+if test "$ac_use_debug_code" = "yes"; then
+      CFLAGS="$CFLAGS -DDEBUG"
+      CXXFLAGS="$CXXFLAGS -DDEBUG"
+else
+      CFLAGS="$CFLAGS -DNDEBUG"
+      CXXFLAGS="$CXXFLAGS -DNDEBUG"
+fi
+
+# gprof debugging option
+AC_ARG_ENABLE(gprof,[  --enable-gprof     Add flags for gprof [default=no]],
+[
+   if test x$enableval = xno; then 
+		ac_use_gprof_code="no"	
+   else 
+		ac_use_gprof_code="yes"
+   fi
+], [ac_use_gprof_code="no"])
+
+if test "$ac_use_gprof_code" = "yes"; then
+      CFLAGS="$CFLAGS -pg -g"
+      CXXFLAGS="$CXXFLAGS -pg -g"
+fi
+
+AC_MSG_RESULT([
+
+		**************************************
+		* Tests Passed, Creating Makefiles.
+		**************************************
+
+	])
+
+AC_CONFIG_FILES([Makefile
+		 src/Makefile
+])
+
+AC_OUTPUT
+

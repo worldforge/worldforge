@@ -1,4 +1,3 @@
-
 #include <ctime>
 #include <iostream>
 #include <string>
@@ -9,6 +8,12 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 
+#ifndef __METASERVER_HPP__
+
+#define __METASERVER_HPP__
+
+#define METASERVER_DEFAULT_PORT 12345
+
 using boost::asio::ip::tcp;
 using boost::asio::ip::udp;
 
@@ -17,8 +22,9 @@ class MetaServer
    public:
 	MetaServer();
 	~MetaServer();
-	void run();
    private:
-	std::map<std::string,std::string> mServerList;
+	std::map<std::string,std::string> server_list_;
 
 };
+
+#endif
