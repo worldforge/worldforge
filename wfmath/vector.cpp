@@ -27,6 +27,10 @@
 // and Vector3D classes from stage/math, written by Bryce W.
 // Harrington, Kosh, and Jari Sundell (Rakshasa).
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "vector_funcs.h"
 #include "basis.h"
 #include "point.h"
