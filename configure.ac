@@ -45,7 +45,7 @@ SYSTEM_LIBS="-lm"
 WFMATH_LIB_SUFFIX="-0.3"
 WFMATH_LIBS="-lwfmath$WFMATH_LIB_SUFFIX"
 
-AC_MSG_NOTICE([Ignore the Atlas checks, they're just used for building test code])
+AC_MSG_NOTICE([Ignore the Atlas checks, they are just used for building test code])
 
 AC_LANG(C++)
 
