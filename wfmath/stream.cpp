@@ -23,9 +23,14 @@
 // Author: Ron Steinke
 // Created: 2001-12-13
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "stream.h"
 #include "quaternion.h"
 #include "MersenneTwister.h"
+#include "floatmath.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -222,7 +227,7 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
 
   CoordType norm = q.m_w * q.m_w + q.m_vec.sqrMag();
 
-  norm = (CoordType) sqrt(norm);
+  norm =  F_SQRT(norm);
   q.m_w /= norm;
   q.m_vec /= norm;
   q.m_valid = true;
