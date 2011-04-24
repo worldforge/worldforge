@@ -366,7 +366,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
   double str_eps = 1;
   while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
     str_eps /= 10;
-  double epsilon = FloatMax(str_eps, WFMATH_EPSILON);
+  double epsilon = DoubleMax(str_eps, WFMATH_EPSILON);
 
   r.m_orient = _Poly2Orient<dim>();
 
