@@ -28,9 +28,14 @@
 // found here <http://www.cs.ualberta.ca/~andreas/math/matrfaq_latest.html>
 // and here <http://www.cs.berkeley.edu/~laura/cs184/quat/quaternion.html>.
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "quaternion.h"
 #include "error.h"
 #include "rotmatrix.h"
+#include "floatmath.h"
 
 #include <cmath>
 
@@ -190,10 +195,10 @@ Quaternion& Quaternion::rotation(int axis, CoordType angle)
 
   CoordType half_angle = angle / 2;
 
-  m_w = (CoordType) cos(half_angle);
+  m_w = F_COS(half_angle);
   for(int i = 0; i < 3; ++i)
     // Note sin() only called once
-    m_vec[i] = (i == axis) ? (CoordType) sin(half_angle) : 0;
+    m_vec[i] = (i == axis) ? F_SIN(half_angle) : 0;
   m_vec.setValid();
 
   m_valid = true;
@@ -212,8 +217,8 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, CoordType angle)
     return *this;
   }
 
-  m_w = (CoordType) cos(half_angle);
-  m_vec = axis * (CoordType) (sin(half_angle) / axis_mag);
+  m_w = F_COS(half_angle);
+  m_vec = axis * (F_SIN(half_angle) / axis_mag);
 
   m_valid = axis.isValid();
   m_age = 1;
@@ -231,8 +236,8 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis)
     return *this;
   }
 
-  m_w = (CoordType) cos(half_angle);
-  m_vec = axis * (CoordType) (sin(half_angle) / axis_mag);
+  m_w = F_COS(half_angle);
+  m_vec = axis * (F_SIN(half_angle) / axis_mag);
 
   m_valid = axis.isValid();
   m_age = 1;
