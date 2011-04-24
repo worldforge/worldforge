@@ -15,6 +15,7 @@ doc/Doxyfile
 install-sh
 libtool
 ltmain.sh
+mingw32-wfmath.spec
 missing
 stamp-h1
 wfmath-0.3.pc
