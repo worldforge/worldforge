@@ -97,7 +97,7 @@ Vector<3>& WFMath::_NCFS_Vector3_rotate(Vector<3>& v, const Vector<3>& axis,
   Vector<3> perp_part = v - axis * Dot(v, axis) / axis_sqr_mag;
   Vector<3> rot90 = Cross(axis, perp_part) / (CoordType) sqrt(axis_sqr_mag);
 
-  v += perp_part * ((CoordType) cos(theta) - 1) + rot90 * (CoordType) sin(theta);
+  v += perp_part * (F_COS(theta) - 1) + rot90 * F_SIN(theta);
 
   return v;
 }
