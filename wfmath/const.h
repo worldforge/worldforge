@@ -124,6 +124,13 @@ inline CoordType FloatMin(CoordType a, CoordType b)
 inline CoordType FloatClamp(CoordType val, CoordType min, CoordType max)
 	{return (min >= val) ? min : (max <= val ? max : val);}
 
+inline double DoubleMax(double a, double b)
+	{return (a > b) ? a : b;}
+inline double DoubleMin(double a, double b)
+	{return (a < b) ? a : b;}
+inline double DoubleClamp(double val, double min, double max)
+	{return (min >= val) ? min : (max <= val ? max : val);}
+
 } // namespace WFMath
 
 #endif // WFMATH_CONST_H
