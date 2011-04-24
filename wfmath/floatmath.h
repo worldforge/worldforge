@@ -15,6 +15,12 @@
     #define F_ABS(_x) ((float)::fabs(_x))
 #endif
 
+#ifdef HAVE_SQRTF
+    #define F_SQRT(_x) (::sqrtf(_x))
+#else
+    #define F_SQRT(_x) ((float)::sqrt(_x))
+#endif
+
 #ifdef HAVE_SINF
     #define F_SIN(_x) (::sinf(_x))
 #else
