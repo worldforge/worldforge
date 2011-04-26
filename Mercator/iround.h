@@ -37,4 +37,10 @@
     #define F_FLOOR(_x) (::floor(_x))
 #endif
 
+#ifdef HAVE_CEILF
+    #define F_CEIL(_x) (::ceilf(_x))
+#else
+    #define F_CEIL(_x) (::ceil(_x))
+#endif
+
 #endif // MERCATOR_IROUND_H
