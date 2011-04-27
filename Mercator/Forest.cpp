@@ -42,9 +42,9 @@ void Forest::setArea(Area* area)
     m_area = area;
 }
 
-static const float plant_chance = 0.04;
-static const float plant_min_height = 5;
-static const float plant_height_range = 20;
+static const float plant_chance = 0.04f;
+static const float plant_min_height = 5.f;
+static const float plant_height_range = 20.f;
 
 
 /// \brief This function uses a pseudo-random technique to populate the
