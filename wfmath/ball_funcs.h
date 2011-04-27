@@ -60,7 +60,6 @@ AxisBox<dim> Ball<dim>::boundingBox() const
   return AxisBox<dim>(p_low, p_high, true);
 }
 
-#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 template<int dim, template<class, class> class container>
 Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> > >& c)
 {
@@ -169,7 +168,6 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<
 
   return Ball<2>(center, dist);
 }
-#endif
 
 // These two are here, instead of defined in the class, to
 // avoid include order problems

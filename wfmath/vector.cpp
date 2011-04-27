@@ -38,11 +38,7 @@
 
 using namespace WFMath;
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> CoordType WFMath::Vector<2>::sloppyMag() const
-#else
-CoordType WFMath::_NCFS_Vector2_sloppyMag(CoordType *m_elem)
-#endif
 {
   CoordType ax = F_ABS(m_elem[0]),
             ay = F_ABS(m_elem[1]);
@@ -58,11 +54,7 @@ CoordType WFMath::_NCFS_Vector2_sloppyMag(CoordType *m_elem)
     return 0;
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> CoordType WFMath::Vector<3>::sloppyMag() const
-#else
-CoordType WFMath::_NCFS_Vector3_sloppyMag(CoordType *m_elem)
-#endif
 {
   CoordType ax = F_ABS(m_elem[0]),
             ay = F_ABS(m_elem[1]),
@@ -83,15 +75,9 @@ CoordType WFMath::_NCFS_Vector3_sloppyMag(CoordType *m_elem)
     return 0;
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> WFMath::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta)
 {
   Vector<3> &v = *this;
-#else
-Vector<3>& WFMath::_NCFS_Vector3_rotate(Vector<3>& v, const Vector<3>& axis,
-					CoordType theta)
-{
-#endif
   CoordType axis_sqr_mag = axis.sqrMag();
 
   assert(axis_sqr_mag != 0);
@@ -104,14 +90,9 @@ Vector<3>& WFMath::_NCFS_Vector3_rotate(Vector<3>& v, const Vector<3>& axis,
   return v;
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> Vector<3>& Vector<3>::rotate(const Quaternion& q)
 {
   Vector<3> &v = *this;
-#else
-Vector<3>& WFMath::_NCFS_Vector3_rotate(Vector<3>& v, const Quaternion& q)
-{
-#endif
   // FIXME get friend stuff working
 
   CoordType w = q.scalar();
@@ -148,27 +129,17 @@ Vector<3> WFMath::Cross(const Vector<3>& v1, const Vector<3>& v2)
   return ans;
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Vector<2>& WFMath::Vector<2>::polar(CoordType r, CoordType theta)
-#else
-void WFMath::_NCFS_Vector2_polar(CoordType *m_elem, CoordType r, CoordType theta)
-#endif
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   m_valid = true;
   return *this;
-#endif
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 void WFMath::Vector<2>::asPolar(CoordType& r, CoordType& theta) const
-#else
-void WFMath::_NCFS_Vector2_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta)
-#endif
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -176,30 +147,18 @@ void WFMath::_NCFS_Vector2_asPolar(CoordType *m_elem, CoordType& r, CoordType& t
   theta = d[1];
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Vector<3>& WFMath::Vector<3>::polar(CoordType r, CoordType theta, CoordType z)
-#else
-void WFMath::_NCFS_Vector3_polar(CoordType *m_elem, CoordType r, CoordType theta,
-				 CoordType z)
-#endif
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
   m_elem[2] = z;
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   m_valid = true;
   return *this;
-#endif
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 void WFMath::Vector<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
-#else
-void WFMath::_NCFS_Vector3_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta,
-				 CoordType& z)
-#endif
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -208,30 +167,18 @@ void WFMath::_NCFS_Vector3_asPolar(CoordType *m_elem, CoordType& r, CoordType& t
   z = m_elem[2];
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Vector<3>& WFMath::Vector<3>::spherical(CoordType r, CoordType theta, CoordType phi)
-#else
-void WFMath::_NCFS_Vector3_spherical(CoordType *m_elem, CoordType r, CoordType theta,
-				     CoordType phi)
-#endif
 {
   CoordType d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   m_valid = true;
   return *this;
-#endif
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 void WFMath::Vector<3>::asSpherical(CoordType& r, CoordType& theta,
 				      CoordType& phi) const
-#else
-void WFMath::_NCFS_Vector3_asSpherical(CoordType *m_elem, CoordType& r,
-				       CoordType& theta, CoordType& phi)
-#endif
 {
   CoordType d[3];
   _CartToSpherical(m_elem, d);

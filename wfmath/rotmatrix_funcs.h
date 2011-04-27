@@ -496,43 +496,11 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
   return *this;
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
 						 CoordType theta);
 template<> RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis);
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip);
-#else
-void _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis, CoordType theta);
-void _NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis);
-void _NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& q,
-				     const bool not_flip, CoordType m_elem[3][3],
-				     bool& m_flip);
-
-template<>
-inline RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis, CoordType theta)
-{
-  _NCFS_RotMatrix3_rotation(*this, axis, theta);
-  return *this;
-}
-
-template<>
-inline RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis)
-{
-  _NCFS_RotMatrix3_rotation(*this, axis);
-  return *this;
-}
-
-template<>
-inline RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
-						  const bool not_flip)
-{
-  _NCFS_RotMatrix3_fromQuaternion(*this, q, not_flip, m_elem, m_flip);
-  m_valid = true;
-  return *this;
-}
-
-#endif
 
 template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion&);
 

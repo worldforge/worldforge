@@ -35,14 +35,8 @@ using namespace WFMath;
 
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> RotMatrix<3>& RotMatrix<3>::fromQuaternion(const Quaternion& q,
 						      const bool not_flip)
-#else
-void WFMath::_NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& q,
-					     const bool not_flip,
-					     CoordType m_elem[3][3], bool& m_flip)
-#endif
 {
   CoordType xx, yy, zz, xy, xz, yz;
   const Vector<3> &vref = q.vector();
@@ -69,16 +63,11 @@ void WFMath::_NCFS_RotMatrix3_fromQuaternion(RotMatrix<3>& m, const Quaternion& 
 
   m_flip = !not_flip;
   m_age = q.age();
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   if(!not_flip)
     *this = Prod(*this, RotMatrix<3>().mirror(0));
 
   m_valid = true;
   return *this;
-#else
-  if(!not_flip)
-    m = Prod(m, RotMatrix<3>().mirror(0));
-#endif
 }
 
 template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion& q)
@@ -103,14 +92,9 @@ template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion& q)
   return *this;
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
 					      CoordType theta)
-#else
-void WFMath::_NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis,
-					CoordType theta)
-#endif
 {
   CoordType max = 0;
   int main_comp = -1;
@@ -134,31 +118,18 @@ void WFMath::_NCFS_RotMatrix3_rotation (RotMatrix<3>& m, const Vector<3>& axis,
   v1 = Cross(axis, tmp); // 3D specific part
   v2 = Cross(axis, v1);
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   return rotation(v1, v2, theta);
-#else
-  m.rotation(v1, v2, theta);
-#endif
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
-#else
-void WFMath::_NCFS_RotMatrix3_rotation(RotMatrix<3>& m, const Vector<3>& axis)
-#endif
 {
   CoordType max = 0;
   int main_comp = -1;
   CoordType angle = axis.mag();
 
   if(angle == 0) {
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
     return identity();
-#else
-    m.identity();
-    return;
-#endif
   }
 
   for(int i = 0; i < 3; ++i) {
@@ -180,11 +151,7 @@ void WFMath::_NCFS_RotMatrix3_rotation(RotMatrix<3>& m, const Vector<3>& axis)
   v1 = Cross(axis, tmp); // 3D specific part
   v2 = Cross(axis, v1);
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   return rotation(v1, v2, angle);
-#else
-  m.rotation(v1, v2, angle);
-#endif
 }
 
 bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,

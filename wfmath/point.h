@@ -57,7 +57,6 @@ template<int dim>
 CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
   {return (p1 - p2).sloppyMag();}
 
-#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// Find the center of a set of points, all weighted equally
 template<int dim, template<class, class> class container>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c);
@@ -72,7 +71,6 @@ template<int dim, template<class, class> class container,
       template<class, class> class container2>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c,
           const container2<CoordType, std::allocator<CoordType> >& weights);
-#endif
 
 // This is used a couple of places in the library
 template<int dim>

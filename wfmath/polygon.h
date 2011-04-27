@@ -56,10 +56,10 @@ class Polygon<2>
   explicit Polygon(const AtlasInType& a) {fromAtlas(a);}
 
   ~Polygon() {}
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
+
   friend std::ostream& operator<< <2>(std::ostream& os, const Polygon& p);
   friend std::istream& operator>> <2>(std::istream& is, Polygon& p);
-#endif
+
   
   /// Create an Atlas object from the box
   AtlasOutType toAtlas() const;
@@ -80,9 +80,7 @@ class Polygon<2>
 
   int numCorners() const {return m_points.size();}
   Point<2> getCorner(int i) const {return m_points[i];}
-#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Point<2> getCenter() const {return Barycenter(m_points);}
-#endif
 
   // For a Polygon<2>, addCorner() and moveCorner() always succeed.
   // The return values are present for the sake of a unified template
@@ -112,26 +110,20 @@ class Polygon<2>
   Polygon& shift(const Vector<2>& v);
   Polygon& moveCornerTo(const Point<2>& p, int corner)
   {return shift(p - getCorner(corner));}
-#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Polygon& moveCenterTo(const Point<2>& p)
   {return shift(p - getCenter());}
-#endif
 
   Polygon& rotateCorner(const RotMatrix<2>& m, int corner)
   {rotatePoint(m, getCorner(corner)); return *this;}
-#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   Polygon& rotateCenter(const RotMatrix<2>& m)
   {rotatePoint(m, getCenter()); return *this;}
-#endif
   Polygon& rotatePoint(const RotMatrix<2>& m, const Point<2>& p);
 
   // Intersection functions
 
-#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
   AxisBox<2> boundingBox() const {return BoundingBox(m_points);}
   Ball<2> boundingSphere() const {return BoundingSphere(m_points);}
   Ball<2> boundingSphereSloppy() const {return BoundingSphereSloppy(m_points);}
-#endif
 
   Polygon toParentCoords(const Point<2>& origin,
       const RotMatrix<2>& rotation = RotMatrix<2>().identity()) const;
