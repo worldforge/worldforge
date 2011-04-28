@@ -91,14 +91,9 @@ template<> WFMath::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType
 
 template<> Vector<3>& Vector<3>::rotate(const Quaternion& q)
 {
-  // FIXME get friend stuff working
-
-  CoordType w = q.scalar();
-  const Vector<3>& vec = q.vector();
-
-  *this = (2 * w * w - 1) * *this +
-          2 * vec * Dot(vec, *this) +
-          2 * w * Cross(vec, *this);
+  *this = (2 * q.m_w * q.m_w - 1) * *this +
+          2 * q.m_vec * Dot(q.m_vec, *this) +
+          2 * q.m_w * Cross(q.m_vec, *this);
 
   return *this;
 }
