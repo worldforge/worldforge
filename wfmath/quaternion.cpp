@@ -46,7 +46,7 @@ using namespace WFMath;
 Quaternion::Quaternion (CoordType w_in, CoordType x_in, CoordType y_in, CoordType z_in)
 	: m_valid(true), m_age(1)
 {
-  CoordType norm = F_SQRT(w_in*w_in + x_in*x_in + y_in*y_in + z_in*z_in);
+  CoordType norm = std::sqrt(w_in*w_in + x_in*x_in + y_in*y_in + z_in*z_in);
 
   m_w = w_in / norm;
   m_vec[0] = x_in / norm;
@@ -136,7 +136,7 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
 
   // check the diagonal
   if (tr > 0.0) {
-    s = F_SQRT(tr + 1.0f);
+    s = std::sqrt(tr + 1.0f);
     m_w = (s / 2.0f);
     s = (0.5f / s);
 
@@ -152,7 +152,7 @@ bool Quaternion::fromRotMatrix(const RotMatrix<3>& m)
 
     int j = nxt[i], k = nxt[j];
 
-    s = F_SQRT (1.0f + m_ref.elem(i, i) - m_ref.elem(j, j) - m_ref.elem(k, k));
+    s = std::sqrt (1.0f + m_ref.elem(i, i) - m_ref.elem(j, j) - m_ref.elem(k, k));
     m_vec[i] = -(s * 0.5f);
 
     assert("sqrt() returns positive" && s > 0.0);
@@ -247,7 +247,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis)
 
 Quaternion& Quaternion::rotation(const Vector<3>& from, const Vector<3>& to)
 {
-  CoordType mag_prod = F_SQRT(from.sqrMag() * to.sqrMag());
+  CoordType mag_prod = std::sqrt(from.sqrMag() * to.sqrMag());
   CoordType ctheta_plus_1 = Dot(from, to) / mag_prod + 1;
 
   if (mag_prod < WFMATH_EPSILON) {
@@ -260,7 +260,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& from, const Vector<3>& to)
     throw ColinearVectors<3>(from, to);
 
   // cosine of half the angle
-  m_w = F_SQRT(ctheta_plus_1 / 2.f);
+  m_w = std::sqrt(ctheta_plus_1 / 2.f);
 
   // vector in direction of axis, magnitude of cross product is proportional to
   // the sin of the angle, divide to make the magnitude the sin of half the angle,

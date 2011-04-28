@@ -226,7 +226,7 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
 
   CoordType norm = q.m_w * q.m_w + q.m_vec.sqrMag();
 
-  norm =  F_SQRT(norm);
+  norm =  std::sqrt(norm);
   q.m_w /= norm;
   q.m_vec /= norm;
   q.m_valid = true;
