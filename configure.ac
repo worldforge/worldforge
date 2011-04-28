@@ -51,6 +51,26 @@ AC_LANG(C++)
 
 AC_CHECK_FUNCS([fabsf frexpf sqrtf atan2f sinf cosf])
 
+AC_MSG_CHECKING([whether std::fabs works])
+AC_COMPILE_IFELSE(
+[
+    AC_LANG_PROGRAM(
+    [[
+        #include <cmath>
+    ]],
+    [[
+        std::fabs(0.5f);
+        fabs(0.5f);
+       weowefwe w;
+    ]])
+],
+[
+    AC_MSG_RESULT([yes])
+],
+[
+    AC_MSG_RESULT([no])
+])
+
 PKG_PROG_PKG_CONFIG
 
 PKG_CHECK_MODULES(ATLAS_0_6, atlascpp-0.6 >= 0.6.0, 

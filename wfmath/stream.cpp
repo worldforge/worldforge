@@ -116,7 +116,7 @@ template std::istream& operator>> <2>(std::istream& is, RotBox<2>& r);
 template std::ostream& operator<< <3>(std::ostream& os, const Polygon<3>& r);
 template std::istream& operator>> <3>(std::istream& is, Polygon<3>& r);
 
-void WFMath::_WriteCoordList(std::ostream& os, const CoordType* d, const int num)
+void _WriteCoordList(std::ostream& os, const CoordType* d, const int num)
 {
   os << '(';
 
@@ -124,7 +124,7 @@ void WFMath::_WriteCoordList(std::ostream& os, const CoordType* d, const int num
     os << d[i] << (i < (num - 1) ? ',' : ')');
 }
 
-void WFMath::_ReadCoordList(std::istream& is, CoordType* d, const int num)
+void _ReadCoordList(std::istream& is, CoordType* d, const int num)
 {
   char next;
 
@@ -141,7 +141,7 @@ void WFMath::_ReadCoordList(std::istream& is, CoordType* d, const int num)
   }
 }
 
-CoordType WFMath::_GetEpsilon(std::istream& is)
+CoordType _GetEpsilon(std::istream& is)
 {
   int str_prec = is.precision();
   CoordType str_eps = 1;
