@@ -33,6 +33,8 @@
 #include <wfmath/segment.h>
 #include <wfmath/rotbox.h>
 
+#include <cmath>
+
 namespace WFMath {
 
 // Get the reversed order intersect functions (is this safe? FIXME)
@@ -145,8 +147,8 @@ inline bool Contains(const Ball<dim>& b, const AxisBox<dim>& a, bool proper)
   CoordType sqr_dist = 0;
 
   for(int i = 0; i < dim; ++i) {
-    CoordType furthest = FloatMax(fabs(b.m_center[i] - a.m_low[i]),
-			       fabs(b.m_center[i] - a.m_high[i]));
+    CoordType furthest = FloatMax(std::fabs(b.m_center[i] - a.m_low[i]),
+                                  std::fabs(b.m_center[i] - a.m_high[i]));
     sqr_dist += furthest * furthest;
   }
 

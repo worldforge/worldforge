@@ -217,10 +217,10 @@ CoordType Angle(const Vector<dim>& v, const Vector<dim>& u)
   // Adding numbers with large magnitude differences can cause
   // a loss of precision, but Dot() checks for this now
 
-  CoordType dp = FloatClamp(Dot(u, v) / sqrt(u.sqrMag() * v.sqrMag()),
+  CoordType dp = FloatClamp(Dot(u, v) / std::sqrt(u.sqrMag() * v.sqrMag()),
 			 -1.0, 1.0);
 
-  CoordType angle = acos(dp);
+  CoordType angle = std::acos(dp);
  
   return angle;
 }

@@ -303,7 +303,7 @@ int  _Intersect(const _Poly2Orient<dim> &o1, const _Poly2Orient<dim> &o2,
         - data.p2[0] * o2.m_axes[0] - data.p2[1] * o2.m_axes[1])
         return -1;
 
-      basis1 /= sqrt(sqrmag1);
+      basis1 /= std::sqrt(sqrmag1);
 
       data.v1[0] = Dot(o1.m_axes[0], basis1);
       data.v1[1] = Dot(o1.m_axes[1], basis1);
@@ -490,7 +490,7 @@ inline bool Intersect(const Polygon<dim>& p, const Ball<dim>& b, bool proper)
   if(_Less(dist, 0, proper))
     return false;
 
-  return Intersect(p.m_poly, Ball<2>(c2, sqrt(dist)), proper);
+  return Intersect(p.m_poly, Ball<2>(c2, std::sqrt(dist)), proper);
 }
 
 template<int dim>

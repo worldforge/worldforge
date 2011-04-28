@@ -93,7 +93,7 @@ Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> >
 
   center.setValid(valid);
 
-  return Ball<dim>(center, sqrt(m.squared_radius()));
+  return Ball<dim>(center, std::sqrt(m.squared_radius()));
 }
 
 template<int dim, template<class, class> class container>

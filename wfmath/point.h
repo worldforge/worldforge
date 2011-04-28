@@ -32,6 +32,8 @@
 #include <memory>
 #include <iosfwd>
 
+#include <cmath>
+
 namespace WFMath {
 
 template<int dim>
@@ -52,7 +54,7 @@ template<int dim>
 CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2);
 template<int dim>
 CoordType Distance(const Point<dim>& p1, const Point<dim>& p2)
-  {return sqrt(SquaredDistance(p1, p2));}
+  {return std::sqrt(SquaredDistance(p1, p2));}
 template<int dim>
 CoordType SloppyDistance(const Point<dim>& p1, const Point<dim>& p2)
   {return (p1 - p2).sloppyMag();}

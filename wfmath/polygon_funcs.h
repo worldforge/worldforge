@@ -154,7 +154,9 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
     if(i == skip)
       continue;
     const Point<2> &p = poly[i];
-    CoordType x = fabs(p[0]), y = fabs(p[1]), max = (x > y) ? x : y;
+    CoordType x = std::fabs(p[0]),
+              y = std::fabs(p[1]),
+              max = (x > y) ? x : y;
     if(i == 0 || max < size)
       size = max;
   }
