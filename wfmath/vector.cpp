@@ -77,30 +77,30 @@ template<> CoordType WFMath::Vector<3>::sloppyMag() const
 
 template<> WFMath::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType theta)
 {
-  Vector<3> &v = *this;
   CoordType axis_sqr_mag = axis.sqrMag();
 
   assert(axis_sqr_mag != 0);
 
-  Vector<3> perp_part = v - axis * Dot(v, axis) / axis_sqr_mag;
+  Vector<3> perp_part = *this - axis * Dot(*this, axis) / axis_sqr_mag;
   Vector<3> rot90 = Cross(axis, perp_part) / std::sqrt(axis_sqr_mag);
 
-  v += perp_part * (std::cos(theta) - 1) + rot90 * std::sin(theta);
+  *this += perp_part * (std::cos(theta) - 1) + rot90 * std::sin(theta);
 
-  return v;
+  return *this;
 }
 
 template<> Vector<3>& Vector<3>::rotate(const Quaternion& q)
 {
-  Vector<3> &v = *this;
   // FIXME get friend stuff working
 
   CoordType w = q.scalar();
   const Vector<3>& vec = q.vector();
 
-  v = (2 * w * w - 1) * v + 2 * vec * Dot(vec, v) + 2 * w * Cross(vec, v);
+  *this = (2 * w * w - 1) * *this +
+          2 * vec * Dot(vec, *this) +
+          2 * w * Cross(vec, *this);
 
-  return v;
+  return *this;
 }
 
 CoordType WFMath::Cross(const Vector<2>& v1, const Vector<2>& v2)
