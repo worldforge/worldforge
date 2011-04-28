@@ -85,7 +85,7 @@ template<> WFMath::Vector<3>& Vector<3>::rotate(const Vector<3>& axis, CoordType
   Vector<3> perp_part = v - axis * Dot(v, axis) / axis_sqr_mag;
   Vector<3> rot90 = Cross(axis, perp_part) / F_SQRT(axis_sqr_mag);
 
-  v += perp_part * (F_COS(theta) - 1) + rot90 * std::sin(theta);
+  v += perp_part * (std::cos(theta) - 1) + rot90 * std::sin(theta);
 
   return v;
 }
