@@ -155,8 +155,6 @@ CoordType _GetEpsilon(std::istream& is)
 // This is the only way I could get the operator<<() and operator>>()
 // templates to recognize the declarations in the headers
 
-namespace WFMath {
-
 template<>
 std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
 {
