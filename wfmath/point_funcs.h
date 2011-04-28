@@ -175,7 +175,6 @@ inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
   return (fabs(ans) >= _ScaleEpsilon(p1.m_elem, p2.m_elem, dim)) ? ans : 0;
 }
 
-#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 template<int dim, template<class, class> class container,
 			template<class, class> class container2>
 Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >& c,
@@ -257,7 +256,6 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
 
   return out;
 }
-#endif
 
 template<int dim>
 inline Point<dim> Midpoint(const Point<dim>& p1, const Point<dim>& p2, CoordType dist)
@@ -287,7 +285,6 @@ template<> Point<3>::Point(CoordType x, CoordType y, CoordType z) : m_valid(true
   m_elem[2] = z;
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<> Point<2>& Point<2>::polar(CoordType r, CoordType theta);
 template<> void Point<2>::asPolar(CoordType& r, CoordType& theta) const;
 
@@ -299,61 +296,6 @@ template<> Point<3>& Point<3>::spherical(CoordType r, CoordType theta,
 					 CoordType phi);
 template<> void Point<3>::asSpherical(CoordType& r, CoordType& theta,
 				      CoordType& phi) const;
-#else
-void _NCFS_Point2_polar(CoordType *m_elem, CoordType r, CoordType theta);
-void _NCFS_Point2_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta);
-
-void _NCFS_Point3_polar(CoordType *m_elem, CoordType r, CoordType theta,
-			CoordType z);
-void _NCFS_Point3_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta,
-			  CoordType& z);
-void _NCFS_Point3_spherical(CoordType *m_elem, CoordType r, CoordType theta,
-			    CoordType phi);
-void _NCFS_Point3_asSpherical(CoordType *m_elem, CoordType& r, CoordType& theta,
-			      CoordType& phi);
-
-template<>
-inline Point<2>& Point<2>::polar(CoordType r, CoordType theta)
-{
-  _NCFS_Point2_polar((CoordType*) m_elem, r, theta);
-  m_valid = true;
-  return *this;
-}
-
-template<>
-inline void Point<2>::asPolar(CoordType& r, CoordType& theta) const
-{
-  _NCFS_Point2_asPolar((CoordType*) m_elem, r, theta);
-}
-
-template<>
-inline Point<3>& Point<3>::polar(CoordType r, CoordType theta, CoordType z)
-{
-  _NCFS_Point3_polar((CoordType*) m_elem, r, theta, z);
-  m_valid = true;
-  return *this;
-}
-
-template<>
-inline void Point<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
-{
-  _NCFS_Point3_asPolar((CoordType*) m_elem, r, theta, z);
-}
-
-template<>
-inline Point<3>& Point<3>::spherical(CoordType r, CoordType theta, CoordType phi)
-{
-  _NCFS_Point3_spherical((CoordType*) m_elem, r, theta, phi);
-  m_valid = true;
-  return *this;
-}
-
-template<>
-inline void Point<3>::asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const
-{
-  _NCFS_Point3_asSpherical((CoordType*) m_elem, r, theta, phi);
-}
-#endif
 
 } // namespace WFMath
 

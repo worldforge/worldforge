@@ -37,27 +37,17 @@
 
 using namespace WFMath;
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<2>& WFMath::Point<2>::polar(CoordType r, CoordType theta)
-#else
-void WFMath::_NCFS_Point2_polar(CoordType *m_elem, CoordType r, CoordType theta)
-#endif
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   m_valid = true;
   return *this;
-#endif
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 void WFMath::Point<2>::asPolar(CoordType& r, CoordType& theta) const
-#else
-void WFMath::_NCFS_Point2_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta)
-#endif
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -65,30 +55,18 @@ void WFMath::_NCFS_Point2_asPolar(CoordType *m_elem, CoordType& r, CoordType& th
   theta = d[1];
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<3>& WFMath::Point<3>::polar(CoordType r, CoordType theta, CoordType z)
-#else
-void WFMath::_NCFS_Point3_polar(CoordType *m_elem, CoordType r, CoordType theta,
-				CoordType z)
-#endif
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
   m_elem[2] = z;
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   m_valid = true;
   return *this;
-#endif
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 void WFMath::Point<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
-#else
-void WFMath::_NCFS_Point3_asPolar(CoordType *m_elem, CoordType& r, CoordType& theta,
-				  CoordType& z)
-#endif
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -97,30 +75,18 @@ void WFMath::_NCFS_Point3_asPolar(CoordType *m_elem, CoordType& r, CoordType& th
   z = m_elem[2];
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<3>& WFMath::Point<3>::spherical(CoordType r, CoordType theta, CoordType phi)
-#else
-void WFMath::_NCFS_Point3_spherical(CoordType *m_elem, CoordType r, CoordType theta,
-				    CoordType phi)
-#endif
 {
   CoordType d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
   m_valid = true;
   return *this;
-#endif
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 void WFMath::Point<3>::asSpherical(CoordType& r, CoordType& theta,
 				   CoordType& phi) const
-#else
-void WFMath::_NCFS_Point3_asSpherical(CoordType *m_elem, CoordType& r,
-				      CoordType& theta, CoordType& phi)
-#endif
 {
   CoordType d[3];
   _CartToSpherical(m_elem, d);
@@ -131,46 +97,28 @@ void WFMath::_NCFS_Point3_asSpherical(CoordType *m_elem, CoordType& r,
 
 namespace WFMath {
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<3>& Point<3>::rotate(const Quaternion& q, const Point<3>& p)
-#else
-Point<3>& _NCFS_Point3_rotate(Quaternion& q, const Point<3>& p)
-#endif
 {
   return (*this = p + (*this - p).rotate(q));
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<3>& Point<3>::rotatePoint(const Quaternion& q, const Point<3>& p)
-#else
-Point<3>& _NCFS_Point3_rotatePoint(Quaternion& q, const Point<3>& p)
-#endif
 {
   return rotate(q, p);
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<3> Point<3>::toLocalCoords(const Point<3>& origin,
                                  const Quaternion& rotation) const
-#else
-Point<3> _NCFS_Point3_toLocalCoords(const Point<3>& origin
-                                    const Quaternion& rotation)
-#endif
 {
   return Point().setToOrigin() + (*this - origin).rotate(rotation.inverse());
 }
 
-#ifndef WFMATH_NO_CLASS_FUNCTION_SPECIALIZATION
 template<>
 Point<3> Point<3>::toParentCoords(const Point<3>& origin,
                                  const Quaternion& rotation) const
-#else
-Point<3> _NCFS_Point3_toParentCoords(const Point<3>& origin
-                                     const Quaternion& rotation)
-#endif
 {
   return origin + (*this - Point().setToOrigin()).rotate(rotation);
 }

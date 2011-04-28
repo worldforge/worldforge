@@ -33,14 +33,12 @@ namespace WFMath {
 
 template<int dim> class Ball;
 
-#ifndef WFMATH_NO_TEMPLATES_AS_TEMPLATE_PARAMETERS
 /// get the minimal bounding sphere for a set of points
 template<int dim, template<class, class> class container>
 Ball<dim> BoundingSphere(const container<Point<dim>, std::allocator<Point<dim> > >& c);
 /// get a bounding sphere for a set of points
 template<int dim, template<class, class> class container>
 Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<dim> > >& c);
-#endif
 
 template<int dim>
 std::ostream& operator<<(std::ostream& os, const Ball<dim>& m);
