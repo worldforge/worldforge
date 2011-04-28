@@ -40,8 +40,8 @@ using namespace WFMath;
 
 template<> CoordType WFMath::Vector<2>::sloppyMag() const
 {
-  CoordType ax = F_ABS(m_elem[0]),
-            ay = F_ABS(m_elem[1]);
+  CoordType ax = std::fabs(m_elem[0]),
+            ay = std::fabs(m_elem[1]);
   const CoordType p = (CoordType) Sqrt2 - 1;
 
   // Don't need float add, all terms > 0
@@ -56,9 +56,9 @@ template<> CoordType WFMath::Vector<2>::sloppyMag() const
 
 template<> CoordType WFMath::Vector<3>::sloppyMag() const
 {
-  CoordType ax = F_ABS(m_elem[0]),
-            ay = F_ABS(m_elem[1]),
-            az = F_ABS(m_elem[2]);
+  CoordType ax = std::fabs(m_elem[0]),
+            ay = std::fabs(m_elem[1]),
+            az = std::fabs(m_elem[2]);
   const CoordType p = (CoordType) Sqrt2 - 1;
   const CoordType q = (CoordType) Sqrt3 + 1 - 2 * (CoordType) Sqrt2;
 

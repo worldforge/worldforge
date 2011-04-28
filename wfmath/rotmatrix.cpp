@@ -100,7 +100,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
   int main_comp = -1;
 
   for(int i = 0; i < 3; ++i) {
-    CoordType val = F_ABS(axis[i]);
+    CoordType val = std::fabs(axis[i]);
     if(val > max) {
       max = val;
       main_comp = i;
@@ -133,7 +133,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
   }
 
   for(int i = 0; i < 3; ++i) {
-    CoordType val = F_ABS(axis[i]);
+    CoordType val = std::fabs(axis[i]);
     if(val > max) {
       max = val;
       main_comp = i;
@@ -177,7 +177,7 @@ bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 
         if(i == j) // Subtract identity matrix
           --ans;
-        ans = F_ABS(ans);
+        ans = std::fabs(ans);
         if(ans >= try_prec)
           try_prec = ans;
       }
