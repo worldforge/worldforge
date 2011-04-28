@@ -362,7 +362,7 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const int i, const int j,
 {
   assert(i >= 0 && i < dim && j >= 0 && j < dim && i != j);
 
-  CoordType ctheta = cos(theta), stheta = sin(theta);
+  CoordType ctheta = std::cos(theta), stheta = std::sin(theta);
 
   for(int k = 0; k < dim; ++k) {
     for(int l = 0; l < dim; ++l) {
@@ -447,14 +447,14 @@ RotMatrix<dim>& RotMatrix<dim>::rotation(const Vector<dim>& from,
   assert("need nonzero length vector" && toSqrMag > 0);
   CoordType dot = Dot(from, to);
   CoordType sqrmagprod = fromSqrMag * toSqrMag;
-  CoordType magprod = sqrt(sqrmagprod);
+  CoordType magprod = std::sqrt(sqrmagprod);
   CoordType ctheta_plus_1 = dot / magprod + 1;
 
   if(ctheta_plus_1 < WFMATH_EPSILON) {
     // 180 degree rotation, rotation plane indeterminate
     if(dim == 2) { // special case, only one rotation plane possible
       m_elem[0][0] = m_elem[1][1] = ctheta_plus_1 - 1;
-      CoordType sin_theta = sqrt(2 * ctheta_plus_1); // to leading order
+      CoordType sin_theta = std::sqrt(2 * ctheta_plus_1); // to leading order
       bool direction = ((to[0] * from[1] - to[1] * from[0]) >= 0);
       m_elem[0][1] = direction ?  sin_theta : -sin_theta;
       m_elem[1][0] = -m_elem[0][1];
