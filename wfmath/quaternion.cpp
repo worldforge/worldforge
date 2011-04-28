@@ -198,7 +198,7 @@ Quaternion& Quaternion::rotation(int axis, CoordType angle)
   m_w = F_COS(half_angle);
   for(int i = 0; i < 3; ++i)
     // Note sin() only called once
-    m_vec[i] = (i == axis) ? F_SIN(half_angle) : 0;
+    m_vec[i] = (i == axis) ? std::sin(half_angle) : 0;
   m_vec.setValid();
 
   m_valid = true;
@@ -218,7 +218,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis, CoordType angle)
   }
 
   m_w = F_COS(half_angle);
-  m_vec = axis * (F_SIN(half_angle) / axis_mag);
+  m_vec = axis * (std::sin(half_angle) / axis_mag);
 
   m_valid = axis.isValid();
   m_age = 1;
@@ -237,7 +237,7 @@ Quaternion& Quaternion::rotation(const Vector<3>& axis)
   }
 
   m_w = F_COS(half_angle);
-  m_vec = axis * (F_SIN(half_angle) / axis_mag);
+  m_vec = axis * (std::sin(half_angle) / axis_mag);
 
   m_valid = axis.isValid();
   m_age = 1;

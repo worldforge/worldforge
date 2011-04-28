@@ -48,7 +48,7 @@ inline void _CartToPolar(const CoordType *in, CoordType *out)
 inline void _PolarToCart(const CoordType *in, CoordType *out)
 {
   out[0] = in[0] * F_COS(in[1]);
-  out[1] = in[0] * F_SIN(in[1]);
+  out[1] = in[0] * std::sin(in[1]);
 }
 
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
@@ -62,10 +62,10 @@ inline void _CartToSpherical(const CoordType *in, CoordType *out)
 // Expects (r, theta, phi) for spherical, (x, y, z) for cart
 inline void _SphericalToCart(const CoordType *in, CoordType *out)
 {
-  CoordType stheta = F_SIN(in[1]);
+  CoordType stheta = std::sin(in[1]);
 
   out[0] = in[0] * stheta * F_COS(in[2]);
-  out[1] = in[0] * stheta * F_SIN(in[2]);
+  out[1] = in[0] * stheta * std::sin(in[2]);
   out[2] = in[0] * F_COS(in[1]);
 }
 
