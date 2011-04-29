@@ -118,30 +118,30 @@ void GrassShader::shade(Surface & s) const
 
     for (unsigned int i = 1; i < res; ++i) {
         float height = seg.get(i, 0);
-        float avgSlope = (F_ABS(seg.get(i - 1, 0) - height) +
-                          F_ABS(seg.get(i + 1, 0) - height)) / 2.f;
+        float avgSlope = (std::fabs(seg.get(i - 1, 0) - height) +
+                          std::fabs(seg.get(i + 1, 0) - height)) / 2.f;
         s(i, 0, chanAlpha) = slopeToAlpha(height, avgSlope);
 
         height = seg.get(i, res);
-        avgSlope = (F_ABS(seg.get(i - 1, res) - height) +
-                    F_ABS(seg.get(i + 1, res) - height)) / 2.f;
+        avgSlope = (std::fabs(seg.get(i - 1, res) - height) +
+                    std::fabs(seg.get(i + 1, res) - height)) / 2.f;
         s(i, res, chanAlpha) = slopeToAlpha(height, avgSlope);
 
         height = seg.get(0, i);
-        avgSlope = (F_ABS(seg.get(0, i - 1) - height) +
-                    F_ABS(seg.get(0, i + 1) - height)) / 2.f;
+        avgSlope = (std::fabs(seg.get(0, i - 1) - height) +
+                    std::fabs(seg.get(0, i + 1) - height)) / 2.f;
         s(0, i, chanAlpha) = slopeToAlpha(height, avgSlope);
 
         height = seg.get(res, i);
-        avgSlope = (F_ABS(seg.get(res, i - 1) - height) +
-                    F_ABS(seg.get(res, i + 1) - height)) / 2.f;
+        avgSlope = (std::fabs(seg.get(res, i - 1) - height) +
+                    std::fabs(seg.get(res, i + 1) - height)) / 2.f;
         s(res, i, chanAlpha) = slopeToAlpha(height, avgSlope);
         for (unsigned int j = 1; j < res; ++j) {
             height = seg.get(i, j);
-            avgSlope = (F_ABS(seg.get(i + 1, j    ) - height) +
-                        F_ABS(seg.get(i    , j + 1) - height) +
-                        F_ABS(seg.get(i - 1, j    ) - height) +
-                        F_ABS(seg.get(i    , j - 1) - height)) / 4.f;
+            avgSlope = (std::fabs(seg.get(i + 1, j    ) - height) +
+                        std::fabs(seg.get(i    , j + 1) - height) +
+                        std::fabs(seg.get(i - 1, j    ) - height) +
+                        std::fabs(seg.get(i    , j - 1) - height)) / 4.f;
             s(i, j, chanAlpha) = slopeToAlpha(height, avgSlope);
         }
     }
