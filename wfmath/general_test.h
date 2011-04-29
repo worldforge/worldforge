@@ -57,7 +57,7 @@ void test_general(const C& c)
   }
 
   // We lose precision in string conversion
-  assert(Equal(c3, c, FloatMax(WFMATH_EPSILON, 1e-5)));
+  assert(Equal(c3, c, DoubleMax(WFMATH_EPSILON, 1e-5)));
 }
 
 } // namespace WFMath
