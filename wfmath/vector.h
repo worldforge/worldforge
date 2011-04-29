@@ -35,6 +35,8 @@
 
 #include <iosfwd>
 
+#include <cmath>
+
 namespace WFMath {
 
 template<int dim>
@@ -211,7 +213,7 @@ class Vector {
   /// The squared magnitude of a vector
   CoordType sqrMag() const;
   /// The magnitude of a vector
-  CoordType mag() const		{return (CoordType) sqrt(sqrMag());}
+  CoordType mag() const		{return std::sqrt(sqrMag());}
   /// Normalize a vector
   Vector& normalize(CoordType norm = 1.0)
   {CoordType themag = mag(); return (*this *= norm / themag);}
