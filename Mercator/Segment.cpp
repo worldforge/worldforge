@@ -362,7 +362,7 @@ void Segment::fill1d(const BasePoint& l, const BasePoint &h,
         for (int i=stride;i<m_res;i+=stride*2) {
             float hh = array[i-stride];
             float lh = array[i+stride];
-            float hd = F_ABS(hh-lh);
+            float hd = std::fabs(hh-lh);
             float roughness = li.calc(i);
 
             //eliminate the problem where hd is nearly zero, leaving a flat section.

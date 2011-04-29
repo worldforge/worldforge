@@ -27,7 +27,7 @@ typedef WFMath::Vector<2> Vector2;
 
 static bool isZero(CoordType d)
 {
-    return (F_ABS(d) < WFMATH_EPSILON);
+    return (std::fabs(d) < WFMATH_EPSILON);
 }
 
 /// \brief Helper to clip points to a given range.
