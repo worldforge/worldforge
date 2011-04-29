@@ -336,7 +336,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::identity()
 {
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      m_elem[i][j] = (CoordType) ((i == j) ? 1 : 0);
+      m_elem[i][j] = ((i == j) ? 1.0f : 0.0f);
 
   m_flip = false;
   m_valid = true;
@@ -416,8 +416,9 @@ RotMatrix<dim>& RotMatrix<dim>::rotation (const Vector<dim>& v1,
   // + Dot(vperp, vin) * (a similar term). From this, we find
   // the matrix components.
 
-  CoordType mag_prod = (CoordType) sqrt(v1_sqr_mag * vperp_sqr_mag);
-  CoordType ctheta = (CoordType) cos(theta), stheta = (CoordType) sin(theta);
+  CoordType mag_prod = std::sqrt(v1_sqr_mag * vperp_sqr_mag);
+  CoordType ctheta = std::cos(theta),
+            stheta = std::sin(theta);
 
   identity(); // Initialize to identity matrix
 
@@ -574,7 +575,7 @@ inline void RotMatrix<dim>::normalize()
   for(int i = 0; i < dim; ++i) {
     for(int j = 0; j < dim; ++j) {
       buf1[j*dim + i] = m_elem[i][j];
-      buf2[j*dim + i] = (CoordType)((i == j) ? 1 : 0);
+      buf2[j*dim + i] = ((i == j) ? 1.f : 0.f);
     }
   }
 
