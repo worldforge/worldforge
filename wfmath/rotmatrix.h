@@ -141,7 +141,7 @@ class RotMatrix {
   /**
    * Since the matrix is orthogonal, the determinant is always either 1 or -1.
    **/
-  CoordType determinant() const {return (CoordType) (m_flip ? -1 : 1);}
+  CoordType determinant() const {return (m_flip ? -1.f : 1.f);}
   /// Get the inverse of the matrix
   /**
    * Since the matrix is orthogonal, the inverse is equal to the transpose.
