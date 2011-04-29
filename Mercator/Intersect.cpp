@@ -16,13 +16,13 @@ namespace Mercator {
 //respectively if d is integral
 static inline float gridceil(float d) 
 {
-    float c = F_CEIL(d);
+    float c = std::ceil(d);
     return (c==d) ? c+1.0f : c;
 }
 
 static inline float gridfloor(float d) 
 {
-    float c = F_FLOOR(d);
+    float c = std::floor(d);
     return (c==d) ? c-1.0f : c;
 }
 
@@ -275,8 +275,8 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
         }
 
         //FIXME these gets could be optimized a bit
-        float x= (dir[0] > 0) ? F_FLOOR(last[0]) : F_FLOOR(next[0]);
-        float y= (dir[1] > 0) ? F_FLOOR(last[1]) : F_FLOOR(next[1]);
+        float x= (dir[0] > 0) ? std::floor(last[0]) : std::floor(next[0]);
+        float y= (dir[1] > 0) ? std::floor(last[1]) : std::floor(next[1]);
         h1 = t.get(x, y);
         h2 = t.get(x, y+1);
         h3 = t.get(x+1, y+1);
