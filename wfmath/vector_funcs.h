@@ -231,7 +231,8 @@ Vector<dim>& Vector<dim>::rotate(int axis1, int axis2, CoordType theta)
   assert(axis1 >= 0 && axis2 >= 0 && axis1 < dim && axis2 < dim && axis1 != axis2);
 
   CoordType tmp1 = m_elem[axis1], tmp2 = m_elem[axis2];
-  CoordType stheta = (CoordType) sin(theta), ctheta = (CoordType) cos(theta);
+  CoordType stheta = std::sin(theta),
+            ctheta = std::cos(theta);
 
   m_elem[axis1] = tmp1 * ctheta - tmp2 * stheta;
   m_elem[axis2] = tmp2 * ctheta + tmp1 * stheta;
