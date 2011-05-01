@@ -390,7 +390,7 @@ template<> CoordType Vector<2>::sloppyMag() const;
 template<> CoordType Vector<3>::sloppyMag() const;
 
 template<> CoordType Vector<1>::sloppyMag() const
-	{return (CoordType) fabs(m_elem[0]);}
+	{return std::fabs(m_elem[0]);}
 
 template<> Vector<2>::Vector(CoordType x, CoordType y) : m_valid(true)
 	{m_elem[0] = x; m_elem[1] = y;}
