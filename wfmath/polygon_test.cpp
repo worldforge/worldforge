@@ -132,36 +132,36 @@ void test_contains()
   p.addCorner(0, Point<2>(0, -4));
   p.isValid();
 
-  AxisBox<2> a1(Point<2>(0.1, -3.9), Point<2>(0.2, -3.8));
+  AxisBox<2> a1(Point<2>(0.1f, -3.9f), Point<2>(0.2f, -3.8f));
   std::cout << "Testing " << p << " contains " << a1 << std::endl;
   assert(WFMath::Contains(p, a1, false));
 
-  AxisBox<2> a2(Point<2>(3.8, -3.9), Point<2>(3.9, -3.8));
+  AxisBox<2> a2(Point<2>(3.8f, -3.9f), Point<2>(3.9f, -3.8f));
   std::cout << "Testing " << p << " contains " << a2 << std::endl;
   assert(WFMath::Contains(p, a2, false));
 
-  AxisBox<2> a3(Point<2>(0.1, -0.2), Point<2>(0.2, -0.1));
+  AxisBox<2> a3(Point<2>(0.1f, -0.2f), Point<2>(0.2f, -0.1f));
   std::cout << "Testing " << p << " contains " << a3 << std::endl;
   assert(WFMath::Contains(p, a3, false));
 
-  AxisBox<2> a4(Point<2>(3.8, -0.2), Point<2>(3.9, -0.1));
+  AxisBox<2> a4(Point<2>(3.8f, -0.2f), Point<2>(3.9f, -0.1f));
   std::cout << "Testing " << p << " contains " << a4 << std::endl;
   assert(WFMath::Contains(p, a4, false));
 
 
-  RotBox<2> r1(Point<2>(0.1, -3.9), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  RotBox<2> r1(Point<2>(0.1f, -3.9f), Vector<2>(0.1f, 0.1f), RotMatrix<2>().identity());
   std::cout << "Testing " << p << " contains " << r1 << std::endl;
   assert(WFMath::Contains(p, r1, false));
 
-  RotBox<2> r2(Point<2>(3.8, -3.9), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  RotBox<2> r2(Point<2>(3.8f, -3.9f), Vector<2>(0.1f, 0.1f), RotMatrix<2>().identity());
   std::cout << "Testing " << p << " contains " << r2 << std::endl;
   assert(WFMath::Contains(p, r2, false));
 
-  RotBox<2> r3(Point<2>(0.1, -0.2), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  RotBox<2> r3(Point<2>(0.1f, -0.2f), Vector<2>(0.1f, 0.1f), RotMatrix<2>().identity());
   std::cout << "Testing " << p << " contains " << r3 << std::endl;
   assert(WFMath::Contains(p, r3, false));
 
-  RotBox<2> r4(Point<2>(3.8, -0.2), Vector<2>(0.1, 0.1), RotMatrix<2>().identity());
+  RotBox<2> r4(Point<2>(3.8f, -0.2f), Vector<2>(0.1f, 0.1f), RotMatrix<2>().identity());
   std::cout << "Testing " << p << " contains " << r4 << std::endl;
   assert(WFMath::Contains(p, r4, false));
 
@@ -186,9 +186,9 @@ int main()
 
   succ = p3.addCorner(0, Point<3>(1, -1, 5));
   assert(succ);
-  succ = p3.addCorner(0, Point<3>(2, -1, sqrt(3.0/2)));
+  succ = p3.addCorner(0, Point<3>(2, -1, std::sqrt(3.0f/2)));
   assert(succ);
-  succ = p3.addCorner(0, Point<3>(1, -3, 2.0/3));
+  succ = p3.addCorner(0, Point<3>(1, -3, 2.0f/3));
   assert(succ);
 
   test_polygon(p3);
