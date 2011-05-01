@@ -75,7 +75,7 @@ void test_quaternion(const Quaternion& q)
 
   assert(q2 == Quaternion().identity());
 
-  Quaternion q3(0, 5.0/12);
+  Quaternion q3(0, 5.0f/12);
 
   RotMatrix<3> m(q);
 
@@ -129,7 +129,7 @@ void test_quaternion(const Quaternion& q)
 
 int main()
 {
-  Quaternion q(Vector<3>(1, 3, -sqrt(0.7)), .3);
+  Quaternion q(Vector<3>(1, 3, -std::sqrt(0.7f)), .3f);
 
   test_quaternion(q);
 
