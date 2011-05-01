@@ -113,7 +113,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
 
   int new_comp = main_comp ? main_comp - 1 : 2; // Not parallel to axis
   for(int i = 0; i < 3; ++i)
-    tmp[i] = (CoordType) ((i == new_comp) ? 1 : 0);
+    tmp[i] = ((i == new_comp) ? 1.f : 0.f);
 
   v1 = Cross(axis, tmp); // 3D specific part
   v2 = Cross(axis, v1);
@@ -146,7 +146,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
 
   int new_comp = main_comp ? main_comp - 1 : 2; // Not parallel to axis
   for(int i = 0; i < 3; ++i)
-    tmp[i] = (CoordType) ((i == new_comp) ? 1 : 0);
+    tmp[i] = ((i == new_comp) ? 1.f : 0.f);
 
   v1 = Cross(axis, tmp); // 3D specific part
   v2 = Cross(axis, v1);
@@ -217,7 +217,7 @@ bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
     for(int i = 0; i < size; ++i) {
       for(int j = 0; j < size; ++j) {
         buf1[i*size+j] = vals[j*size+i];
-        buf2[i*size+j] = (CoordType) ((i == j) ? 1 : 0);
+        buf2[i*size+j] = ((i == j) ? 1.f : 0.f);
       }
     }
 
