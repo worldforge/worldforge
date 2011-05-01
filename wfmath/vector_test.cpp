@@ -50,7 +50,7 @@ void test_vector(const Vector<dim>& v)
 
   CoordType sqr_mag = v.sqrMag();
 
-  assert(Equal((CoordType) sqrt(sqr_mag), v.mag()));
+  assert(Equal(std::sqrt(sqr_mag), v.mag()));
 
   assert(Equal(sqr_mag, Dot(v, v)));
 
@@ -84,11 +84,11 @@ void test_vector(const Vector<dim>& v)
   v2 *= 2; // operator*=()
 
   for(int i = 0; i < dim; ++i)
-    assert(Equal(v2[i], (CoordType) 1.0));
+    assert(Equal(v2[i], 1.0f));
 
   // operator+(), operator-(), operator*() (pre and post), operator/()
   CoordType check = Dot((v1 + v2) * 5 - v2 / 4, 2 * v2);
-  assert(Equal((CoordType) (10.0 + dim * 38.0 / 4.0), check));
+  assert(Equal((10.0f + dim * 38.0f / 4.0f), check));
 
   Vector<dim> v3 = v;
   v3 += v;
