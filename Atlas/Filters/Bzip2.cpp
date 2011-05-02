@@ -56,16 +56,17 @@ std::string Bzip2::encode(const std::string& data)
 
     do 
     {       
-	outgoing.next_out = buf;
-	outgoing.avail_out = sizeof(buf);
-	  
-	status = BZ2_bzCompress(&outgoing, BZ_FLUSH);
-	  
-	ASSERT(status == BZ_OK); // not sure about this - it may be
-                             // status != BZ_SEQUENCE_ERROR
-	  
-	out_string.append((char*)buf, sizeof(buf) - outgoing.avail_out);	
-	  
+        outgoing.next_out = buf;
+        outgoing.avail_out = sizeof(buf);
+  
+        status = BZ2_bzCompress(&outgoing, BZ_FLUSH);
+  
+        ASSERT(status != BZ_SEQUENCE_ERROR);
+
+        if (status != BZ_SEQUENCE_ERROR) {
+            out_string.append((char*)buf, sizeof(buf) - outgoing.avail_out);
+        }
+        // FIXME do something else in case of error?
     } while (outgoing.avail_out == 0);
     
     return out_string;
@@ -81,17 +82,19 @@ std::string Bzip2::decode(const std::string& data)
     incoming.next_in = (char*)data.data();
     incoming.avail_in = data.size();
 
-    do 
+    do
     {
-	incoming.next_out = buf;
-	incoming.avail_out = sizeof(buf);
-	  
-	status = BZ2_bzDecompress(&incoming);
-	  
-	ASSERT(status == BZ_OK);
-    
-	out_string.append((char*)buf, sizeof(buf) - incoming.avail_out);
-	  
+        incoming.next_out = buf;
+        incoming.avail_out = sizeof(buf);
+
+        status = BZ2_bzDecompress(&incoming);
+
+        ASSERT(status == BZ_OK);
+
+        if (status != BZ_SEQUENCE_ERROR) {
+            out_string.append((char*)buf, sizeof(buf) - incoming.avail_out);
+        }
+
     } while(incoming.avail_out == 0);
 
     return out_string;
