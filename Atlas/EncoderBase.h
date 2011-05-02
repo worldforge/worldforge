@@ -33,7 +33,7 @@ public:
     /// You will need to implement this in subclasses
     EncoderBase(Atlas::Bridge & b) : m_b(b) { }
 
-    ~EncoderBase() { }
+    virtual ~EncoderBase() { }
     
     void streamBegin() { m_b.streamBegin(); }
     void streamMessage() { m_b.streamMessage(); }
