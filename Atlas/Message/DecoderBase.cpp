@@ -18,7 +18,7 @@ static const bool debug_flag = false;
 
 namespace Atlas { namespace Message {
 
-DecoderBase::DecoderBase()
+DecoderBase::DecoderBase() : m_state(), m_maps(), m_lists(), m_names()
 {
 }
 
