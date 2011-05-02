@@ -28,6 +28,9 @@ ways such as compressing and then encrypting.
 
 class Filter
 {
+    private:
+    Filter(const Filter &); // unimplemented
+    Filter & operator=(const Filter &); // unimplemented
     public:
    
     Filter(Filter* = 0);
