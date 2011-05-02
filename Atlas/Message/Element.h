@@ -466,7 +466,7 @@ protected:
     class DataType
     {
     public:
-        DataType() : _refcount(1) {}
+        DataType() : _refcount(1), _data(0) {}
         DataType(const C& c) : _refcount(1), _data(c) {}
 
         DataType& operator=(const C& c) {_data = c; return *this;}
