@@ -43,8 +43,11 @@
 
 using namespace WFMath;
 
-Quaternion::Quaternion (CoordType w_in, CoordType x_in, CoordType y_in, CoordType z_in)
-	: m_valid(true), m_age(1)
+Quaternion::Quaternion (CoordType w_in,
+                        CoordType x_in,
+                        CoordType y_in,
+                        CoordType z_in)
+	: m_w(0), m_vec(), m_valid(true), m_age(1)
 {
   CoordType norm = std::sqrt(w_in*w_in + x_in*x_in + y_in*y_in + z_in*z_in);
 
