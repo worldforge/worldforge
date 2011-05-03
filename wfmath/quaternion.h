@@ -40,26 +40,35 @@ class Quaternion
 {
  public:
   /// Construct a Quatertion
-  Quaternion () : m_valid(false) {}
+  Quaternion () : m_w(0), m_vec(), m_valid(false), m_age(0) {}
   /// Construct a Quaternion from (w, x, y, z) components
   /**
    * This normalizes the components so the sum of their squares is one.
    **/
   Quaternion (CoordType w_in, CoordType x_in, CoordType y_in, CoordType z_in);
   /// Construct a Quaternion giving a rotation around axis by angle
-  Quaternion (int axis, CoordType angle) {rotation(axis, angle);}
+  Quaternion (int axis, CoordType angle) : m_w(0), m_vec(), m_valid(false),
+                                           m_age(0)
+    {rotation(axis, angle);}
   /// Construct a Quaternion giving a rotation around the Vector axis by angle
-  Quaternion (const Vector<3>& axis, CoordType angle) {rotation(axis, angle);}
+  Quaternion (const Vector<3>& axis, CoordType angle) : m_w(0), m_vec(),
+                                                        m_valid(false),
+                                                        m_age(0)
+    {rotation(axis, angle);}
   /// Construct a Quaternion giving a rotation around the Vector axis
   /**
    * The angle of rotating is equal to the magnitude of the Vector
    **/
-  explicit Quaternion (const Vector<3>& axis) {rotation(axis);} // angle == axis.mag()
+  explicit Quaternion (const Vector<3>& axis) : m_w(0), m_vec(),
+                                                m_valid(false), m_age(0)
+    {rotation(axis);} // angle == axis.mag()
   /// Construct a copy of a Quaternion
   Quaternion (const Quaternion& p) : m_w(p.m_w), m_vec(p.m_vec),
 				     m_valid(p.m_valid), m_age(p.m_age) {}
   /// Construct a Quaternion from an Atlas::Message::Object
-  explicit Quaternion (const AtlasInType& a) {fromAtlas(a);}
+  explicit Quaternion (const AtlasInType& a) : m_w(0), m_vec(),
+                                               m_valid(false), m_age(0)
+    {fromAtlas(a);}
 
   ~Quaternion() {}
 
@@ -160,7 +169,7 @@ class Quaternion
   unsigned age() const {return m_age;}
 
  private:
-  Quaternion(bool valid) : m_valid(valid), m_age(1) {}
+  Quaternion(bool valid) : m_w(0), m_vec(), m_valid(valid), m_age(1) {}
   void checkNormalization() {if(m_age >= WFMATH_MAX_NORM_AGE && m_valid) normalize();}
   CoordType m_w;
   Vector<3> m_vec;
