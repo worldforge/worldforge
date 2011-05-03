@@ -364,7 +364,9 @@ bool WFMath::_MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
 namespace WFMath {
 
 template <>
-RotMatrix<3>::RotMatrix(const Quaternion& q, const bool not_flip)
+RotMatrix<3>::RotMatrix(const Quaternion& q,
+                        const bool not_flip) : m_flip(false), m_valid(false),
+                                               m_age(0)
 {
   fromQuaternion(q, not_flip);
 }

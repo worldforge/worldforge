@@ -50,10 +50,10 @@ template<>
 class Polygon<2>
 {
  public:
-  Polygon() {}
+  Polygon() : m_points() {}
   Polygon(const Polygon& p) : m_points(p.m_points) {}
   /// Construct a polygon from an object passed by Atlas
-  explicit Polygon(const AtlasInType& a) {fromAtlas(a);}
+  explicit Polygon(const AtlasInType& a) : m_points() {fromAtlas(a);}
 
   ~Polygon() {}
 
@@ -217,8 +217,8 @@ template<int dim>
 class _Poly2Orient
 {
 public:
-  _Poly2Orient() {}
-  _Poly2Orient(const _Poly2Orient& p)	{operator=(p);}
+  _Poly2Orient() : m_origin() {}
+  _Poly2Orient(const _Poly2Orient& p) : m_origin() {operator=(p);}
   ~_Poly2Orient() {}
 
   _Poly2Orient& operator=(const _Poly2Orient& p);
@@ -309,7 +309,7 @@ template<int dim = 3>
 class Polygon
 {
 public:
-  Polygon() {}
+  Polygon() : m_orient(), m_poly() {}
   Polygon(const Polygon& p) : m_orient(p.m_orient), m_poly(p.m_poly) {}
 
   ~Polygon() {}

@@ -46,7 +46,7 @@ class Segment
 {
  public:
   /// construct an uninitialized segment
-  Segment() {}
+  Segment() :m_p1(), m_p2() {}
   /// construct a segment with endpoints p1 and p2
   Segment(const Point<dim>& p1, const Point<dim>& p2) : m_p1(p1), m_p2(p2) {}
   /// construct a copy of a segment

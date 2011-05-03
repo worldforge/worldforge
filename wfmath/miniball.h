@@ -71,7 +71,7 @@ namespace WFMath { namespace _miniball {
     
         public:
             // construction
-            Miniball() {}
+            Miniball() : L(), B(), support_end() {}
             void        check_in (const Point& p);
             void        build (bool pivoting = true);
     

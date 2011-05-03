@@ -140,13 +140,13 @@ protected:
 };
 
 
-inline MTRand::MTRand( const uint32& oneSeed )
+inline MTRand::MTRand( const uint32& oneSeed ) : pNext(0), left(0)
 	{ seed(oneSeed); }
 
-inline MTRand::MTRand( uint32 *const bigSeed, const uint32 seedLength )
+inline MTRand::MTRand( uint32 *const bigSeed, const uint32 seedLength ) : pNext(0), left(0)
 	{ seed(bigSeed,seedLength); }
 
-inline MTRand::MTRand()
+inline MTRand::MTRand() : pNext(0), left(0)
 	{ seed(); }
 
 inline double MTRand::rand()

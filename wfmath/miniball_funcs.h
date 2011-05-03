@@ -264,7 +264,7 @@ namespace WFMath { namespace _miniball {
    
    
    template <int d>
-   Basis<d>::Basis ()
+   Basis<d>::Basis () : m(0), s(0), current_c(0), current_sqr_r(-1.)
    {
        reset();
    }

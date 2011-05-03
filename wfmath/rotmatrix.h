@@ -87,7 +87,7 @@ template<int dim = 3>
 class RotMatrix {
  public:
   ///
-  RotMatrix() : m_valid(false) {}
+  RotMatrix() : m_flip(false), m_valid(false), m_age(0) {}
   ///
   RotMatrix(const RotMatrix& m);
 

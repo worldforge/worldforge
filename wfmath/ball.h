@@ -61,7 +61,7 @@ class Ball
 {
  public:
   /// construct an uninitialized ball
-  Ball() {}
+  Ball() : m_center(), m_radius(0.f) {}
   /// construct a ball with the given center and radius
   Ball(const Point<dim>& center, CoordType radius)
   : m_center(center), m_radius(radius) { if (radius < 0) m_center.setValid(false); }

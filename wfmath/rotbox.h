@@ -47,7 +47,7 @@ class RotBox
 {
  public:
   /// construct an uninitialized box
-  RotBox() {}
+  RotBox() : m_corner0(), m_size(), m_orient() {}
   /// construct a box from the given parameters
   /**
    * p gives corner 0 of the box, size gives the offset from corner

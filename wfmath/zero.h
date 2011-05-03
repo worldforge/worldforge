@@ -39,7 +39,7 @@ public:
 An instance of Shape with zero values will be created at construction time.
 @param dim The dimensions of the shape.
 */
-ZeroPrimitive(int dim)
+ZeroPrimitive(int dim) : m_shape()
 {
   for (int i = 0; i < dim; ++i) {
     m_shape.m_elem[i] = 0;

@@ -63,9 +63,10 @@ class AxisBox
 {
  public:
   /// Construct an uninitialized box
-  AxisBox() {}
+  AxisBox() : m_low(), m_high() {}
   /// Construct a box with opposite corners p1 and p2
-  AxisBox(const Point<dim>& p1, const Point<dim>& p2, bool ordered = false)
+  AxisBox(const Point<dim>& p1, const Point<dim>& p2, bool ordered = false) :
+    m_low(), m_high()
     {setCorners(p1, p2, ordered);}
   /// Construct a copy of a box
   AxisBox(const AxisBox& a) : m_low(a.m_low), m_high(a.m_high) {}
