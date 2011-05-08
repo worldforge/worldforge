@@ -1,5 +1,6 @@
 #include "MetaServer.hpp"
 #include "MetaServerHandlerTCP.hpp"
+#include "MetaServerHandlerUDP.hpp"
 
 MetaServer::MetaServer()
 {
@@ -19,7 +20,8 @@ int main(int argc, char** argv)
 {
 	std::cout << "Start" << std::endl;
 	boost::asio::io_service io_service;
-	MetaServerHandlerTCP tcp(io_service, "localhost", 6666 );
+	MetaServerHandlerTCP tcp(io_service, "192.168.1.200", 8453);
+	MetaServerHandlerUDP udp(io_service, "192.168.1.200", 8453);
 
 	MetaServer ms();
 

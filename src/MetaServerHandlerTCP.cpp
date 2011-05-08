@@ -48,13 +48,12 @@ MetaServerHandlerTCP::handle_accept(tcp_connection::pointer new_connection,
 	std::cout << "handle_accept" << std::endl;
 	if(!error)
 	{
-		std::cout << "use connection object to read packet" << std::endl;
-		std::cout << "read buffer from socket" << std::endl;
-		std::cout << "construct data model ... maybe json object or parse for validity" << std::endl;
-		std::cout << "protocol analysis" << std::endl;
-		std::cout << "send request to metaserver object, record response" << std::endl;
-		std::cout << "construct response, send to async write";
-		std::cout << "loop back to start accept" << std::endl;
+		std::cout << "TCP-1 : read off packet" << std::endl;
+		std::cout << "TCP-2 : analyse packet" << std::endl;
+		std::cout << "TCP-3 : make call to ms object" << std::endl;
+		std::cout << "TCP-4 : get response from ms and construct packet" << std::endl;
+		std::cout << "TCP-5 : send async response" << std::endl;
+		std::cout << "TCP-6 : loop back to start accept" << std::endl;
 
 		start_accept();
 	} else {
