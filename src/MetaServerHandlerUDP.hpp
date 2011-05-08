@@ -18,7 +18,7 @@ private:
 
 	boost::asio::ip::udp::socket socket_;
 	boost::asio::ip::udp::endpoint remote_endpoint_;
-	boost::array<char, 1> recv_buffer_;
+	boost::array<char, 512> recv_buffer_;
 
 	const std::string address_;
 	const unsigned int port_;
