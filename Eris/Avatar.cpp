@@ -194,7 +194,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
             // rotate in the plane first
             q.rotation(2, atan2(vel[1], vel[0]));
             // then get the angle away from the plane
-            q = WFMath::Quaternion(1, -asin(vel[2] / sqrt(plane_sqr_mag))) * q;
+            q = WFMath::Quaternion(1, -std::asin(vel[2] / std::sqrt(plane_sqr_mag))) * q;
         }
 
         arg->setAttr("orientation", q.toAtlas());
