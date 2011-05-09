@@ -69,7 +69,7 @@ Meta::Meta(const std::string& metaServer, unsigned int maxQueries) :
     Poll::instance().Ready.connect(sigc::mem_fun(this, &Meta::gotData));
     TimedEventService::instance()->Idle.connect(sigc::mem_fun(this, &Meta::query));
 
-    int max_half_open = Poll::instance().maxConnectingStreams();
+    unsigned int max_half_open = Poll::instance().maxConnectingStreams();
     if (m_maxActiveQueries > (max_half_open - 2)) {
         m_maxActiveQueries = max_half_open - 2;
     }
