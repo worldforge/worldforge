@@ -57,6 +57,8 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		     memcpy( (void *)&rawType, rawTypeBytes , sizeof(rawType) );
 		int packetType = htonl(rawType);
 
+		std::cout << "      : packet type1 " << htonl(rawType) << std::endl;
+		std::cout << "      : packet type2 " << ntohl(rawType) << std::endl;
 		std::cout << "      : packet type " << packetType << std::endl;
 		std::cout << "UDP-3 : make call to ms object" << std::endl;
 		std::cout << "UDP-4 : get response from ms" << std::endl;
