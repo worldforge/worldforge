@@ -192,7 +192,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
             q.rotation(1, vel[2] > 0 ? -WFMath::Pi/2 : WFMath::Pi/2);
         } else {
             // rotate in the plane first
-            q.rotation(2, atan2(vel[1], vel[0]));
+            q.rotation(2, std::atan2(vel[1], vel[0]));
             // then get the angle away from the plane
             q = WFMath::Quaternion(1, -std::asin(vel[2] / std::sqrt(plane_sqr_mag))) * q;
         }
