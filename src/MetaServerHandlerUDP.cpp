@@ -32,17 +32,32 @@ MetaServerHandlerUDP::start_receive()
 
 void
 MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
-									 std::size_t bytes_transferred)
+									 std::size_t bytes_recvd)
 {
 	std::cout << "handle_receive" << std::endl;
 	if(!error || error == boost::asio::error::message_size )
 	{
-		std::cout << "UDP-1 : read off packet [" << bytes_transferred << "]" << std::endl;
-		std::cout << "UDP-2 : analyse packet" << std::endl;
-		std::cout << "      : bytes [ " << bytes_transferred << " ]" << std::endl;
-		std::cout << "      : from  [ " << remote_endpoint_.address().to_string() << " ]" << std::endl;
-		std::cout << "      : buffer[ " << recv_buffer_ << " ]" << std::endl;
 
+		std::cout << "UDP-1 : read off packet [" << bytes_recvd << "]" << std::endl;
+		std::cout << "UDP-2 : analyse packet" << std::endl;
+		std::cout << "      : bytes [ " << bytes_recvd << " ]" << std::endl;
+		std::cout << "      : from  [ " << remote_endpoint_.address().to_string() << " ]" << std::endl;
+		std::cout << "      : sizeof int " << sizeof(int) << std::endl;
+
+		/**
+		 *  First 4 bytes are the packet type aka a int
+		 */
+		char rawTypeBytes[4];
+		     rawTypeBytes[0] = recv_buffer_.at(0);
+		     rawTypeBytes[1] = recv_buffer_.at(1);
+		     rawTypeBytes[2] = recv_buffer_.at(2);
+		     rawTypeBytes[3] = recv_buffer_.at(3);
+
+		int rawType = 0;
+		     memcpy( (void *)&rawType, rawTypeBytes , sizeof(rawType) );
+		int packetType = htonl(rawType);
+
+		std::cout << "      : packet type " << packetType << std::endl;
 		std::cout << "UDP-3 : make call to ms object" << std::endl;
 		std::cout << "UDP-4 : get response from ms" << std::endl;
 		std::cout << "UDP-5 : construct client response packet" << std::endl;
