@@ -20,7 +20,7 @@ MetaServer::tick(const boost::system::error_code& error)
 {
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 	std::cout << "tick(" << now << ")" << std::endl;
-    ticker_->expires_from_now(boost::posix_time::milliseconds(500));
+    ticker_->expires_from_now(boost::posix_time::milliseconds(250));
     ticker_->async_wait(boost::bind(&MetaServer::tick, this, boost::asio::placeholders::error));
 }
 
