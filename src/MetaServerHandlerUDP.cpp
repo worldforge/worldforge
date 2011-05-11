@@ -1,9 +1,11 @@
 #include "MetaServerHandlerUDP.hpp"
 
-MetaServerHandlerUDP::MetaServerHandlerUDP(boost::asio::io_service& ios,
+MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
+					  boost::asio::io_service& ios,
 		              const std::string& address,
 		              const unsigned int port )
-   : address_(address),
+   : ms_ref_(ms),
+	 address_(address),
      port_(port),
      socket_(ios, udp::endpoint(udp::v6(),port))
 {
@@ -42,24 +44,18 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		std::cout << "UDP-2 : analyse packet" << std::endl;
 		std::cout << "      : bytes [ " << bytes_recvd << " ]" << std::endl;
 		std::cout << "      : from  [ " << remote_endpoint_.address().to_string() << " ]" << std::endl;
+		std::cout << "      : port  [ " << remote_endpoint_.port() << " ]" << std::endl;
 		std::cout << "      : sizeof int " << sizeof(int) << std::endl;
 
 		/**
-		 *  First 4 bytes are the packet type aka a int
+		 *  Ship off data to metaserver to process
 		 */
-		char rawTypeBytes[4];
-		     rawTypeBytes[0] = recv_buffer_.at(0);
-		     rawTypeBytes[1] = recv_buffer_.at(1);
-		     rawTypeBytes[2] = recv_buffer_.at(2);
-		     rawTypeBytes[3] = recv_buffer_.at(3);
+		unsigned int packetType = MetaServerHandler::parsePacketType(recv_buffer_);
 
-		int rawType = 0;
-		     memcpy( (void *)&rawType, rawTypeBytes , sizeof(rawType) );
-		int packetType = htonl(rawType);
 
-		std::cout << "      : packet type1 " << htonl(rawType) << std::endl;
-		std::cout << "      : packet type2 " << ntohl(rawType) << std::endl;
-		std::cout << "      : packet type " << packetType << std::endl;
+		//std::cout << "      : packet type1 " << htonl(rawType) << std::endl;
+		//std::cout << "      : packet type2 " << ntohl(rawType) << std::endl;
+		//std::cout << "      : packet type " << packetType << std::endl;
 		std::cout << "UDP-3 : make call to ms object" << std::endl;
 		std::cout << "UDP-4 : get response from ms" << std::endl;
 		std::cout << "UDP-5 : construct client response packet" << std::endl;

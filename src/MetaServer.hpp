@@ -10,6 +10,8 @@
 #include <boost/asio.hpp>
 #include <boost/foreach.hpp>
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #ifndef __METASERVER_HPP__
 
 #define __METASERVER_HPP__
@@ -23,10 +25,13 @@ using boost::asio::ip::udp;
 class MetaServer
 {
    public:
-	MetaServer();
+	MetaServer(boost::asio::io_service& ios);
 	~MetaServer();
+	void tick(const boost::system::error_code& error);
+
    private:
 	std::map<std::string,std::string> server_list_;
+	boost::asio::deadline_timer* ticker_;
 
 };
 

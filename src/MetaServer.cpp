@@ -2,9 +2,12 @@
 #include "MetaServerHandlerTCP.hpp"
 #include "MetaServerHandlerUDP.hpp"
 
-MetaServer::MetaServer()
+MetaServer::MetaServer(boost::asio::io_service& ios)
 {
 	server_list_.clear();
+	ticker_ = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+	ticker_->async_wait(boost::bind(&MetaServer::tick, this, boost::asio::placeholders::error));
+
 }
 
 MetaServer::~MetaServer()
@@ -12,6 +15,14 @@ MetaServer::~MetaServer()
 	std::cout << "dtor" << std::endl;
 }
 
+void
+MetaServer::tick(const boost::system::error_code& error)
+{
+	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+	std::cout << "tick(" << now << ")" << std::endl;
+    ticker_->expires_from_now(boost::posix_time::milliseconds(500));
+    ticker_->async_wait(boost::bind(&MetaServer::tick, this, boost::asio::placeholders::error));
+}
 
 /*
 	Entry point
@@ -20,10 +31,12 @@ int main(int argc, char** argv)
 {
 	std::cout << "Start" << std::endl;
 	boost::asio::io_service io_service;
-	MetaServerHandlerTCP tcp(io_service, "192.168.1.200", 8453);
-	MetaServerHandlerUDP udp(io_service, "192.168.1.200", 8453);
 
-	MetaServer ms();
+	MetaServer ms(io_service);
+
+	MetaServerHandlerTCP tcp(ms, io_service, "192.168.1.200", 8453);
+	MetaServerHandlerUDP udp(ms, io_service, "192.168.1.200", 8453);
+
 
 	try
 	{

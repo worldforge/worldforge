@@ -1,9 +1,10 @@
 #include "MetaServerHandlerTCP.hpp"
 
-MetaServerHandlerTCP::MetaServerHandlerTCP(boost::asio::io_service& ios,
+MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_service& ios,
 		              const std::string& address,
 		              const unsigned int port )
-   : address_(address),
+   : ms_ref_(ms),
+     address_(address),
      port_(port),
      acceptor_(ios, tcp::endpoint(tcp::v6(),port))
 {

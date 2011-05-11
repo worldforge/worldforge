@@ -1,4 +1,5 @@
 #include "MetaServer.hpp"
+#include "MetaServerHandler.hpp"
 
 /**
 	@author Sean Ryan <sryan@evercrack.com>
@@ -44,12 +45,12 @@ private:
 	@author Sean Ryan <sryan@evercrack.com>
 	@brief The handler that takes care of incomming connections
 */
-class MetaServerHandlerTCP
+class MetaServerHandlerTCP : public MetaServerHandler
 {
 
 public:
 
-	MetaServerHandlerTCP(boost::asio::io_service& ios, const std::string& address, const unsigned int port);
+	MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_service& ios, const std::string& address, const unsigned int port);
 	~MetaServerHandlerTCP();
 	void start_accept();
 	void handle_accept(tcp_connection::pointer new_connection,
@@ -59,6 +60,7 @@ private:
 
 	boost::asio::ip::tcp::acceptor acceptor_;
 	boost::asio::ip::tcp::endpoint endpoint_;
+	MetaServer ms_ref_;
 	const std::string address_;
 	const unsigned int port_;
 
