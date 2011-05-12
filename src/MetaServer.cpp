@@ -3,8 +3,9 @@
 #include "MetaServerHandlerUDP.hpp"
 
 MetaServer::MetaServer(boost::asio::io_service& ios)
+	: tick_delay_milliseconds_(200)
 {
-	server_list_.clear();
+	ms_data_.clear();
 	ticker_ = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	ticker_->async_wait(boost::bind(&MetaServer::tick, this, boost::asio::placeholders::error));
 
@@ -20,7 +21,7 @@ MetaServer::tick(const boost::system::error_code& error)
 {
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 	std::cout << "tick(" << now << ")" << std::endl;
-    ticker_->expires_from_now(boost::posix_time::milliseconds(250));
+    ticker_->expires_from_now(boost::posix_time::milliseconds(tick_delay_milliseconds_));
     ticker_->async_wait(boost::bind(&MetaServer::tick, this, boost::asio::placeholders::error));
 }
 
