@@ -15,12 +15,13 @@ public:
 	~MetaServerHandlerUDP();
 	void start_receive();
 	void handle_receive(const boost::system::error_code& error, std::size_t);
+	void handle_send(boost::array<char, MAX_PACKET_BYTES> buf, const boost::system::error_code& error, std::size_t);
 
 private:
 
 	boost::asio::ip::udp::socket socket_;
 	boost::asio::ip::udp::endpoint remote_endpoint_;
-	boost::array<unsigned char, MAX_PACKET_BYTES> recv_buffer_;
+	boost::array<char, MAX_PACKET_BYTES> recv_buffer_;
 
 	const std::string address_;
 	const unsigned int port_;
