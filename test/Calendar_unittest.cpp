@@ -289,6 +289,10 @@ double Avatar::getWorldTime()
     return stub_worldtime;
 }
 
+void Avatar::onTransferRequested(const TransferInfo &transfer) {
+
+}
+
 View::View(Avatar* av) :
     m_owner(av),
     m_topLevel(NULL),
