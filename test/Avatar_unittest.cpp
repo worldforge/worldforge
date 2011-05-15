@@ -95,6 +95,16 @@ class TestAvatar : public Eris::Avatar {
     void test_logoutResponse(const Atlas::Objects::Operation::RootOperation & op) {
         logoutResponse(op);
     }
+
+    void test_logoutRequested()
+    {
+        logoutRequested();
+    }
+
+    void test_logoutRequested(const Eris::TransferInfo& info)
+    {
+        logoutRequested(info);
+    }
 };
 
 class TestEntity : public Eris::ViewEntity {
@@ -824,5 +834,47 @@ int main()
         assert(avatarDeactivated.flagged());
     }
 
+    // Test logoutRequested() without any transfer info
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        TestAccount * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        acc->setup_insertActiveCharacters(ea);
+
+        SignalFlagger avatarTransferRequested;
+        SignalFlagger avatarDeactivated;
+
+        acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
+        ea->TransferRequested.connect(sigc::hide(sigc::mem_fun(avatarTransferRequested, &SignalFlagger::set)));
+
+        ea->test_logoutRequested();
+
+        assert(!avatarTransferRequested.flagged() && avatarDeactivated.flagged());
+    }
+
+    // Test logoutRequested() with a transfer info
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        TestAccount * acc = new TestAccount(con);
+        std::string fake_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_id);
+        acc->setup_insertActiveCharacters(ea);
+
+        SignalFlagger avatarTransferRequested;
+        SignalFlagger avatarDeactivated;
+
+        acc->AvatarDeactivated.connect(sigc::hide(sigc::mem_fun(avatarDeactivated, &SignalFlagger::set)));
+        ea->TransferRequested.connect(sigc::hide(sigc::mem_fun(avatarTransferRequested, &SignalFlagger::set)));
+
+        Eris::TransferInfo transfer("localhost", 6768, "key", "id");
+        ea->test_logoutRequested(transfer);
+
+        assert(avatarTransferRequested.flagged() && avatarDeactivated.flagged());
+    }
     return 0;
 }
