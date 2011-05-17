@@ -9,8 +9,6 @@
 #ifndef METASERVERHANDLER_HPP_
 #define METASERVERHANDLER_HPP_
 
-#define MAX_PACKET_BYTES 1024
-
 class MetaServerHandler
 {
 public:

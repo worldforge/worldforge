@@ -64,6 +64,11 @@ AC_CHECK_LIB(boost_system, main, , [
 	AC_MSG_ERROR("Linking against boost::system library failed.")
 ])
 
+AC_CHECK_LIB(boost_date_time, main, , [
+	AC_MSG_ERROR("Linking against boost::date_time library failed.")
+])
+
+
 # check for sigc++ separately from the WF checks
 PKG_CHECK_MODULES(SIG, [sigc++-2.0 >= 2.0],
   [

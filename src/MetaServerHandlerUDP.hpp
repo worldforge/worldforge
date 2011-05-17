@@ -15,6 +15,7 @@ public:
 	~MetaServerHandlerUDP();
 	void start_receive();
 	void handle_receive(const boost::system::error_code& error, std::size_t);
+	void handle_send(boost::array<unsigned char, MAX_PACKET_BYTES> buf, const boost::system::error_code& error, std::size_t);
 
 private:
 
