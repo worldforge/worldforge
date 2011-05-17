@@ -8,4 +8,9 @@ void testDeleteWielded(Controller& ctl);
 
 void testHear(Controller& ctl);
 
+void testLogoutRequest(Controller& ctl);
+void testTransferRequest(Controller& ctl);
+void testTransferRequestWithInvalidOp(Controller& ctl);
+
+
 #endif

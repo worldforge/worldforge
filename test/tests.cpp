@@ -643,7 +643,11 @@ int runTests(Controller& ctl)
         testHear(ctl);
         testTasks(ctl);
         
+
         testSimpleCalendar(ctl);
+        testLogoutRequest(ctl);
+        testTransferRequest(ctl);
+        testTransferRequestWithInvalidOp(ctl);
     }
     catch (TestFailure& tfexp)
     {
