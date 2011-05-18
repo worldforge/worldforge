@@ -30,6 +30,7 @@
  *		2) MS responds with a NMT_HANDSHAKE, contains a random number, creates a record
  *		3) Server responds with NMT_SERVERSHAKE, contains same random number
  *
+ *
  */
 #ifndef METASERVERPROTOCOL_HPP_
 #define METASERVERPROTOCOL_HPP_

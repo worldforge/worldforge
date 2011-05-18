@@ -67,6 +67,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 	            boost::asio::placeholders::error,
 	            boost::asio::placeholders::bytes_transferred)); */
 
+
 		/**
 		 *	Back to async read
 		 */

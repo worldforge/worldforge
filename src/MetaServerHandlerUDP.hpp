@@ -4,6 +4,7 @@
 /**
 	@author Sean Ryan <sryan@evercrack.com>
 	@brief The handler that takes care of incoming connections
+
 */
 
 class MetaServerHandlerUDP : public MetaServerHandler
