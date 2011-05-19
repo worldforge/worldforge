@@ -23,6 +23,9 @@ public:
 	std::string getAddress();
 	void setAddress(std::string address);
 
+	unsigned int getPort();
+	void setPort(unsigned int p);
+
 	void addPacketData(unsigned int i);
 
 	unsigned int getSize();
@@ -37,6 +40,7 @@ private:
 
 	NetMsgType m_packetType;
 	std::string m_Address;
+	unsigned int m_Port;
 	std::size_t m_Bytes;
 	char * m_currentPtr;
 	boost::array<char,MAX_PACKET_BYTES> m_packetPayload;

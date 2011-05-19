@@ -3,7 +3,7 @@
 MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_service& ios,
 		              const std::string& address,
 		              const unsigned int port )
-   : ms_ref_(ms),
+   : m_msRef(ms),
      address_(address),
      port_(port),
      acceptor_(ios, tcp::endpoint(tcp::v6(),port))

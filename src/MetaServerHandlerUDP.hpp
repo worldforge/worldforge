@@ -20,12 +20,14 @@ public:
 
 private:
 
-	boost::asio::ip::udp::socket socket_;
-	boost::asio::ip::udp::endpoint remote_endpoint_;
-	boost::array<char, MAX_PACKET_BYTES> recv_buffer_;
+	boost::asio::ip::udp::socket m_Socket;
+	boost::asio::ip::udp::endpoint m_remoteEndpoint;
+	boost::array<char, MAX_PACKET_BYTES> m_recvBuffer;
 
-	const std::string address_;
-	const unsigned int port_;
-	MetaServer ms_ref_;
+	const std::string m_Address;
+	const unsigned int m_Port;
+	MetaServer& m_msRef;
+
+
 
 };

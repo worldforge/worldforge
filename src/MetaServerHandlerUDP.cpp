@@ -4,10 +4,10 @@ MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
 					  boost::asio::io_service& ios,
 		              const std::string& address,
 		              const unsigned int port )
-   : ms_ref_(ms),
-	 address_(address),
-     port_(port),
-     socket_(ios, udp::endpoint(udp::v6(),port))
+   : m_msRef(ms),
+	 m_Address(address),
+     m_Port(port),
+     m_Socket(ios, udp::endpoint(udp::v6(),port))
 {
 	start_receive();
 }
@@ -21,8 +21,8 @@ void
 MetaServerHandlerUDP::start_receive()
 {
 
-    socket_.async_receive_from(
-    		boost::asio::buffer(recv_buffer_), remote_endpoint_,
+    m_Socket.async_receive_from(
+    		boost::asio::buffer(m_recvBuffer), m_remoteEndpoint,
     		boost::bind(&MetaServerHandlerUDP::handle_receive, this,
     		boost::asio::placeholders::error,
     		boost::asio::placeholders::bytes_transferred)
@@ -37,35 +37,34 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 	if(!error || error == boost::asio::error::message_size )
 	{
 
-		std::cout << "UDP-1 : read off packet [" << bytes_recvd << "]" << std::endl;
-		std::cout << "UDP-2 : analyse packet" << std::endl;
-		std::cout << "      : bytes [ " << bytes_recvd << " ]" << std::endl;
-		std::cout << "      : bytes [ " << recv_buffer_.size() << " ]" << std::endl;
-		std::cout << "      : from  [ " << remote_endpoint_.address().to_string() << " ]" << std::endl;
-		std::cout << "      : port  [ " << remote_endpoint_.port() << " ]" << std::endl;
-		std::cout << "      : sizeof int " << sizeof(int) << std::endl;
+		std::cout << "UDP : Incoming packet  [" << bytes_recvd << "]" << std::endl;
+		std::cout << "      : from  [ " << m_remoteEndpoint.address().to_string() << " ]" << std::endl;
+		std::cout << "      : port  [ " << m_remoteEndpoint.port() << " ]" << std::endl;
+
 
 		/**
 		 *  Standard network pump, receive data, evaluate, send response
 		 */
-		MetaServerPacket msp( recv_buffer_, bytes_recvd );
-		msp.setAddress(remote_endpoint_.address().to_string());
+		MetaServerPacket msp( m_recvBuffer , bytes_recvd );
+		msp.setAddress(m_remoteEndpoint.address().to_string());
+		msp.setPort(m_remoteEndpoint.port());
 
-		/**
-		 * Create empty packet and buffer
-		 */
 		boost::array<char, MAX_PACKET_BYTES> send_buffer;
 		MetaServerPacket rsp( send_buffer );
 
-		ms_ref_.processMetaserverPacket(msp,rsp);
+		/**
+		 * The original packet object is recycled into the response
+		 */
+		m_msRef.processMetaserverPacket(msp,rsp);
+		std::cout << "      : rsp size  [ " << rsp.getSize() << " ]" << std::endl;
 
 		/**
 		 * Send back response
 		 */
-	      /*socket_.async_send_to(boost::asio::buffer(send_buffer), remote_endpoint_,
+	      m_Socket.async_send_to(boost::asio::buffer(send_buffer,rsp.getSize()), m_remoteEndpoint,
 	          boost::bind(&MetaServerHandlerUDP::handle_send, this, send_buffer,
 	            boost::asio::placeholders::error,
-	            boost::asio::placeholders::bytes_transferred)); */
+	            boost::asio::placeholders::bytes_transferred));
 
 
 		/**

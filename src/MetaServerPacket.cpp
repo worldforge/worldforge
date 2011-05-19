@@ -11,7 +11,8 @@
 MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
 		: m_packetPayload(pl),
 		  m_Bytes(bytes),
-		  m_packetType(NMT_NULL)
+		  m_packetType(NMT_NULL),
+		  m_Port(0)
 {
 		/**
 		 * @note exception risk in ctor ... re-think
@@ -46,6 +47,7 @@ MetaServerPacket::setPacketType(NetMsgType nmt)
 	 * @note Should never be called on a packet you want to get data from, and
 	 * is essentially a "reset everything"
 	 */
+	//m_packetPayload.assign('\0');
 	m_currentPtr = m_packetPayload.data();
 	m_Bytes = 0;
 
@@ -71,6 +73,18 @@ MetaServerPacket::setAddress(std::string address)
 	m_Address = address;
 }
 
+unsigned int
+MetaServerPacket::getPort()
+{
+	return m_Port;
+}
+
+void
+MetaServerPacket::setPort(unsigned int p)
+{
+	m_Port = p;
+}
+
 void
 MetaServerPacket::addPacketData(unsigned int i)
 {
@@ -81,7 +95,7 @@ MetaServerPacket::addPacketData(unsigned int i)
 unsigned int
 MetaServerPacket::getSize()
 {
-	return( m_Bytes );
+	return m_Bytes;
 }
 
 /**
@@ -105,7 +119,9 @@ MetaServerPacket::pack_uint32(uint32_t data, char *buffer)
 
     memcpy(buffer, &netorder, sizeof(uint32_t));
 
+    //std::cout << "pack_uint32()->m_Bytes-BEFORE: " << m_Bytes << std::endl;
     m_Bytes += sizeof(uint32_t);
+    //std::cout << "pack_uint32()->m_Bytes-AFTER : " << m_Bytes << std::endl;
 
     return buffer+sizeof(uint32_t);
 }

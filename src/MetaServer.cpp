@@ -31,10 +31,9 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	 * * possibly add a time of last update and do a delta and sleep less if we're running behind
 	 */
 
-	std::cout << "EXPIRY DUMP:" << std::endl;
-	// this doesn't work !!!!!!!!
-	dumpHandshake();
-	std::cout << "EXPIRY DUMP:" << std::endl;
+	//std::cout << "EXPIRY DUMP:" << std::endl;
+	//dumpHandshake();
+	//std::cout << "EXPIRY DUMP:" << std::endl;
 
 
     expiry_timer_->expires_from_now(boost::posix_time::milliseconds(expiry_timer_delay_milliseconds_));
@@ -75,13 +74,11 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 
 /**
  * @param in incoming metaserver packet
- * @param out outgoing metaserver packet
  *
  * 	NMT_SERVERKEEPALIVE		indicates a keep alive for a server, also serves as a "registration"
- * 		Type Size: 4 bytes
- * 		Value: 1 ( 00 00 00 01 )
- * 		Payload Size: 0
  * 	Response Packet Type: NMT_HANDSHAKE
+ * 	- pack packet type
+ * 	- pack random number
  */
 void
 MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
@@ -89,6 +86,7 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 
 	unsigned int handshake = rand();
 	std::string a = in.getAddress();
+
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 
 	std::map<std::string,std::string> tmp_;
@@ -100,7 +98,6 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 
 	std::cout << "handshake value: " << i << std::endl;
 
-	// construct response
 	out.setPacketType(NMT_HANDSHAKE);
 	out.addPacketData(handshake);
 
@@ -110,9 +107,6 @@ int
 MetaServer::addHandshake(unsigned int hs, std::map<std::string,std::string> attr )
 {
 	handshake_queue_[hs] = attr;
-	std::cout << "HANDSHAKE DUMP:" << std::endl;
-	dumpHandshake();
-	std::cout << "HANDSHAKE DUMP:" << std::endl;
 	return handshake_queue_.size();
 }
 

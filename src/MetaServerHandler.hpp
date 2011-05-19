@@ -9,15 +9,14 @@
 #ifndef METASERVERHANDLER_HPP_
 #define METASERVERHANDLER_HPP_
 
-class MetaServerHandler
+class MetaServerHandler : boost::noncopyable
 {
 public:
-	virtual ~MetaServerHandler() {}
+	~MetaServerHandler() {}
+	MetaServerHandler() {}
 
-	static unsigned int parsePacketType( boost::array<unsigned char, MAX_PACKET_BYTES> & byte_array );
+protected:
 
-private:
-	int i;
 
 };
 

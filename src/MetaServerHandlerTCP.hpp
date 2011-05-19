@@ -43,7 +43,7 @@ private:
 
 /**
 	@author Sean Ryan <sryan@evercrack.com>
-	@brief The handler that takes care of incomming connections
+	@brief The handler that takes care of incoming connections
 */
 class MetaServerHandlerTCP : public MetaServerHandler
 {
@@ -60,7 +60,7 @@ private:
 
 	boost::asio::ip::tcp::acceptor acceptor_;
 	boost::asio::ip::tcp::endpoint endpoint_;
-	MetaServer ms_ref_;
+	MetaServer& m_msRef;
 	const std::string address_;
 	const unsigned int port_;
 
