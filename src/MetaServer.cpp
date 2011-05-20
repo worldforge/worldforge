@@ -31,11 +31,6 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	 * * possibly add a time of last update and do a delta and sleep less if we're running behind
 	 */
 
-	//std::cout << "EXPIRY DUMP:" << std::endl;
-	//dumpHandshake();
-	//std::cout << "EXPIRY DUMP:" << std::endl;
-
-
     expiry_timer_->expires_from_now(boost::posix_time::milliseconds(expiry_timer_delay_milliseconds_));
     expiry_timer_->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
 }
@@ -70,8 +65,6 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	default:
 		std::cout << "Packet type [" << msp.getPacketType() << "] not supported" << std::endl;
 	}
-
-
 
 }
 
@@ -133,30 +126,3 @@ MetaServer::dumpHandshake()
     }
 }
 
-/*
-	Entry point
-
-int main(int argc, char** argv)
-{
-	std::cout << "Start" << std::endl;
-	boost::asio::io_service io_service;
-
-	MetaServer ms(io_service);
-
-	MetaServerHandlerTCP tcp(ms, io_service, "192.168.1.200", 8453);
-	MetaServerHandlerUDP udp(ms, io_service, "192.168.1.200", 8453);
-
-
-	try
-	{
-		std::cout << "do stuff" << std::endl;
-		io_service.run();
-	}
-	catch (std::exception& e)
-	{
-		std::cerr << "Exception: " << e.what() << std::endl;
-	}
-	std::cout << "End" << std::endl;
-	return 0;
-}
-*/
