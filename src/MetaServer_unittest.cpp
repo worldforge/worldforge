@@ -15,16 +15,29 @@ int main()
 
 // MetaServer won't currently link to this file as it contains the main function
 
-std::string MetaServerPacket::getAddress()
+std::string
+MetaServerPacket::getAddress()
 {
     return "";
 }
 
-void MetaServerPacket::setPacketType(unsigned int)
+unsigned int
+MetaServerPacket::getPacketType()
 {
 }
 
-void MetaServerPacket::addPacketData(unsigned int)
+void
+MetaServerPacket::setPacketType(unsigned int)
+{
+}
+
+void
+MetaServerPacket::addPacketData(unsigned int)
+{
+}
+
+void
+MetaServerPacket::dumpBuffer()
 {
 }
 

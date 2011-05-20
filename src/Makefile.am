@@ -8,14 +8,14 @@ metaserver_ng_LDFLAGS = -Wl
 
 noinst_HEADERS = MetaServer.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp TestServer.hpp
 
-TESTS = MetaServerPacket_unittest
+TESTS = \
+    MetaServerPacket_unittest \
+    MetaServer_unittest
 
 check_PROGRAMS = $(TESTS)
 
-EXTRA_PROGRAMS = MetaServer_unittest
-
 MetaServer_unittest_SOURCES = MetaServer_unittest.cpp
-MetaServer_unittest_LDADD = MetaServer.o
+MetaServer_unittest_LDADD = MetaServer.o $(CPPUNIT_LIBS)
 
 MetaServerPacket_unittest_SOURCES = MetaServerPacket_unittest.cpp
-MetaServerPacket_unittest_LDADD = MetaServerPacket.o
+MetaServerPacket_unittest_LDADD = MetaServerPacket.o $(CPPUNIT_LIBS)
