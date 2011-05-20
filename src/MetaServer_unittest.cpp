@@ -5,26 +5,76 @@
 #include "MetaServerHandlerUDP.hpp"
 #include "MetaServerPacket.hpp"
 
+#include <cppunit/TestCase.h>
+#include <cppunit/TestRunner.h>
+#include <cppunit/TextTestRunner.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <cassert>
+
+class MetaServer_unittest : public CppUnit::TestCase
+{
+    CPPUNIT_TEST_SUITE(MetaServer_unittest);
+    CPPUNIT_TEST(testConstructor);
+    CPPUNIT_TEST_SUITE_END();
+  public:
+    MetaServer_unittest() { }
+
+    void testConstructor() {
+        boost::asio::io_service io_service;
+
+        MetaServer * ms = new MetaServer(io_service);
+        CPPUNIT_ASSERT(ms);
+        delete ms;
+    }
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(MetaServer_unittest);
+
 
 int main()
 {
+    CppUnit::TextTestRunner runner;
+    CppUnit::Test* tp =
+            CppUnit::TestFactoryRegistry::getRegistry().makeTest();
+
+    runner.addTest(tp);
+
+    if (runner.run()) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 
 // stubs
 
 // MetaServer won't currently link to this file as it contains the main function
 
-std::string MetaServerPacket::getAddress()
+std::string
+MetaServerPacket::getAddress()
 {
     return "";
 }
 
-void MetaServerPacket::setPacketType(unsigned int)
+unsigned int
+MetaServerPacket::getPacketType()
 {
 }
 
-void MetaServerPacket::addPacketData(unsigned int)
+void
+MetaServerPacket::setPacketType(unsigned int)
+{
+}
+
+void
+MetaServerPacket::addPacketData(unsigned int)
+{
+}
+
+void
+MetaServerPacket::dumpBuffer()
 {
 }
 
