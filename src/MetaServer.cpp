@@ -70,6 +70,9 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	default:
 		std::cout << "Packet type [" << msp.getPacketType() << "] not supported" << std::endl;
 	}
+
+
+
 }
 
 /**
@@ -85,6 +88,7 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 {
 
 	unsigned int handshake = rand();
+
 	std::string a = in.getAddress();
 
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
@@ -96,10 +100,9 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 
 	int i = addHandshake(handshake,tmp_);
 
-	std::cout << "handshake value: " << i << std::endl;
-
 	out.setPacketType(NMT_HANDSHAKE);
 	out.addPacketData(handshake);
+	out.dumpBuffer();
 
 }
 
@@ -132,7 +135,7 @@ MetaServer::dumpHandshake()
 
 /*
 	Entry point
-*/
+
 int main(int argc, char** argv)
 {
 	std::cout << "Start" << std::endl;
@@ -156,3 +159,4 @@ int main(int argc, char** argv)
 	std::cout << "End" << std::endl;
 	return 0;
 }
+*/

@@ -17,7 +17,8 @@ MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std:
 		/**
 		 * @note exception risk in ctor ... re-think
 		 */
-		m_currentPtr = m_packetPayload.data();
+		m_readPtr = m_packetPayload.data();
+		m_writePtr = m_packetPayload.c_array();
 		parsePacketType();
 }
 
@@ -47,16 +48,12 @@ MetaServerPacket::setPacketType(NetMsgType nmt)
 	 * @note Should never be called on a packet you want to get data from, and
 	 * is essentially a "reset everything"
 	 */
-	//m_packetPayload.assign('\0');
-	m_currentPtr = m_packetPayload.data();
+	m_packetPayload.assign(0);
+	m_readPtr = m_packetPayload.data();
+	m_writePtr = m_packetPayload.c_array();
 	m_Bytes = 0;
 
-	/*
-	 * Grab read/write pointer for update
-	 */
-	char * ptr = m_packetPayload.c_array();
-
-	m_currentPtr = pack_uint32(m_packetType,ptr);
+	pack_uint32(m_packetType);
 
 }
 
@@ -86,16 +83,36 @@ MetaServerPacket::setPort(unsigned int p)
 }
 
 void
-MetaServerPacket::addPacketData(unsigned int i)
+MetaServerPacket::addPacketData(uint32_t i)
 {
-	char * ptr = m_packetPayload.c_array();
-	m_currentPtr = pack_uint32(i,ptr);
+	/**
+	 * Need to get the read/write accessor and increment by current size
+	 */
+	m_writePtr = pack_uint32(i);
+
 }
 
 unsigned int
 MetaServerPacket::getSize()
 {
 	return m_Bytes;
+}
+
+uint32_t
+MetaServerPacket::getIntData()
+{
+	uint32_t foo = 99;
+	m_readPtr = unpack_uint32(&foo);
+	return foo;
+}
+
+void
+MetaServerPacket::dumpBuffer()
+{
+	for ( int i = 0; i< m_Bytes; ++i )
+	{
+		std::cout << "      : Payload-" << i << " [" << m_packetPayload.at(i) << "]" << std::endl;
+	}
 }
 
 /**
@@ -107,32 +124,40 @@ void
 MetaServerPacket::parsePacketType()
 {
 	if ( m_Bytes > 0 )
-		m_currentPtr = unpack_uint32(&m_packetType,m_currentPtr);
+	{
+		m_packetType = getIntData();
+	}
 }
 
+/**
+ *
+ * Not sure if read only accessor is same address space or not
+ *
+ * @param data - src int
+ * @param buffer - dest pointer
+ * @return
+ */
 char*
-MetaServerPacket::pack_uint32(uint32_t data, char *buffer)
+MetaServerPacket::pack_uint32(uint32_t data)
 {
     uint32_t netorder;
 
     netorder = htonl(data);
 
-    memcpy(buffer, &netorder, sizeof(uint32_t));
+    memcpy(m_writePtr, &netorder, sizeof(uint32_t));
 
-    //std::cout << "pack_uint32()->m_Bytes-BEFORE: " << m_Bytes << std::endl;
     m_Bytes += sizeof(uint32_t);
-    //std::cout << "pack_uint32()->m_Bytes-AFTER : " << m_Bytes << std::endl;
 
-    return buffer+sizeof(uint32_t);
+    return m_writePtr+sizeof(uint32_t);
 }
 
 char*
-MetaServerPacket::unpack_uint32(uint32_t *dest, char *buffer)
+MetaServerPacket::unpack_uint32(uint32_t *dest)
 {
     uint32_t netorder;
 
-    memcpy(&netorder, buffer, sizeof(uint32_t));
+    memcpy(&netorder, m_readPtr, sizeof(uint32_t));
     *dest = ntohl(netorder);
-    return buffer+sizeof(uint32_t);
+    return m_readPtr+sizeof(uint32_t);
 
 }

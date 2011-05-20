@@ -49,20 +49,49 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		msp.setAddress(m_remoteEndpoint.address().to_string());
 		msp.setPort(m_remoteEndpoint.port());
 
+		std::cout << "      : type  [ " << msp.getPacketType() << " ]" << std::endl;
+
+
 		boost::array<char, MAX_PACKET_BYTES> send_buffer;
+		boost::array<char, MAX_PACKET_BYTES> bs;
+
+		/**
+		 *   1) stupid thing ... this is what the damn memcpy should be doing
+		 *   2) instead of directly writing back the packet push onto an outbound queue
+		 *   3) change / create one of the timers to process the outbound queue
+		 *      - have an interval to set for the next timer time, if busy you want to
+		 *      have a faster timer
+		 */
+		bs[0] = 0;
+		bs[1] = 0;
+		bs[2] = 0;
+		bs[3] = 3;
+		bs[4] = 0;
+		bs[5] = 0;
+		bs[6] = 0;
+		bs[7] = 7;
+
 		MetaServerPacket rsp( send_buffer );
 
 		/**
 		 * The original packet object is recycled into the response
 		 */
 		m_msRef.processMetaserverPacket(msp,rsp);
+
+		for ( int i = 0; i<rsp.getSize(); ++i )
+		{
+			std::cout << "      : buffer val-" << i << " [" << send_buffer.at(i) << "]" << std::endl;
+		}
+
 		std::cout << "      : rsp size  [ " << rsp.getSize() << " ]" << std::endl;
+		std::cout << "      : rsp type  [ " << rsp.getPacketType() << " ]" << std::endl;
+		std::cout << "      : rsp parse random  [ " << rsp.getIntData() << " ]" << std::endl;
 
 		/**
 		 * Send back response
 		 */
-	      m_Socket.async_send_to(boost::asio::buffer(send_buffer,rsp.getSize()), m_remoteEndpoint,
-	          boost::bind(&MetaServerHandlerUDP::handle_send, this, send_buffer,
+	      m_Socket.async_send_to(boost::asio::buffer(bs,rsp.getSize()), m_remoteEndpoint,
+	          boost::bind(&MetaServerHandlerUDP::handle_send, this, bs,
 	            boost::asio::placeholders::error,
 	            boost::asio::placeholders::bytes_transferred));
 

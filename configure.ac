@@ -69,48 +69,7 @@ AC_CHECK_LIB(boost_date_time, main, , [
 ])
 
 
-# check for sigc++ separately from the WF checks
-PKG_CHECK_MODULES(SIG, [sigc++-2.0 >= 2.0],
-  [
-      CXXFLAGS="$CXXFLAGS $SIG_CFLAGS"
-      LIBS="$LIBS $SIG_LIBS"
-  ],
-  [
-      AC_MSG_ERROR([Couldn't find SIGC++2.0])
-  ])
-
-# Cppunit check
- 
-AC_ARG_ENABLE(cppunit,[  --enable-cppunit     enables cppunit tests [default=yes]],
-[ 
-   if test x$enableval = xno; then 
-		ac_use_cppunit="no"	
-   else 
-		ac_use_cppunit="yes"
-   fi
-], [ac_use_cppunit="yes"])
-
-found_cppunit=no
-
-if test "$ac_use_cppunit" = "yes"; then
-	AM_PATH_CPPUNIT(1.8.0, [
-	  AC_MSG_RESULT([
-		*** Found CppUnit
-		*** Setting up make check to run tests...])
-			CXXFLAGS="$CXXFLAGS -DUSE_CPP_UNIT"
-			LIBS="$LIBS $CPPUNIT_LIBS"
-			found_cppunit=yes
-		], 
-	  AC_MSG_RESULT([
-		*** Unable to find a recent enough CppUnit
-		*** Will not run unit testing!!
-		*** 
-		*** To get CppUnit see http://cppunit.sourceforge.net
-		]))
-fi
-
-AM_CONDITIONAL(USE_CPPUNIT, [test x$found_cppunit = xyes])
-
+PKG_CHECK_MODULES( CPPUNIT, cppunit >= 1.12.0 )
 
 # debugging option
 AC_ARG_ENABLE(debug,[  --enable-debug     creates debugging code [default=no]],
@@ -144,14 +103,6 @@ if test "$ac_use_gprof_code" = "yes"; then
       CFLAGS="$CFLAGS -pg -g"
       CXXFLAGS="$CXXFLAGS -pg -g"
 fi
-
-AC_MSG_RESULT([
-
-		**************************************
-		* Tests Passed, Creating Makefiles.
-		**************************************
-
-	])
 
 AC_CONFIG_FILES([Makefile
 		 src/Makefile

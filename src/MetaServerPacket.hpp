@@ -26,15 +26,19 @@ public:
 	unsigned int getPort();
 	void setPort(unsigned int p);
 
-	void addPacketData(unsigned int i);
+	void addPacketData(uint32_t i);
 
 	unsigned int getSize();
+
+	uint32_t getIntData();
+
+	void dumpBuffer();
 
 private:
 
 	void parsePacketType();
-	char *pack_uint32(uint32_t data, char *buffer);
-	char *unpack_uint32(uint32_t *dest, char *buffer);
+	char *pack_uint32(uint32_t data);
+	char *unpack_uint32(uint32_t *dest);
 
 
 
@@ -42,7 +46,9 @@ private:
 	std::string m_Address;
 	unsigned int m_Port;
 	std::size_t m_Bytes;
-	char * m_currentPtr;
+	char * m_writePtr;
+	char * m_readPtr;
+	bool m_Finalized;
 	boost::array<char,MAX_PACKET_BYTES> m_packetPayload;
 
 };
