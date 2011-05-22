@@ -61,6 +61,7 @@ MetaServerPacket::getAddress()
 unsigned int
 MetaServerPacket::getPacketType()
 {
+	return 0;
 }
 
 void

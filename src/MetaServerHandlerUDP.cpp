@@ -7,8 +7,13 @@ MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
    : m_msRef(ms),
 	 m_Address(address),
      m_Port(port),
-     m_Socket(ios, udp::endpoint(udp::v6(),port))
+     m_Socket(ios, udp::endpoint(udp::v6(),port)),
+     m_outboundTick(0),
+     m_outboundMaxInterval(100)
 {
+	m_outboundTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+	m_outboundTimer->async_wait(boost::bind(&MetaServerHandlerUDP::process_outbound, this, boost::asio::placeholders::error));
+
 	start_receive();
 }
 
@@ -50,51 +55,37 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		msp.setPort(m_remoteEndpoint.port());
 
 		std::cout << "      : type  [ " << msp.getPacketType() << " ]" << std::endl;
+		std::cout << "      : size  [ " << msp.getSize() << " ]" << std::endl;
+		std::cout << "      : dump: " << msp.getIntData() << std::endl;
 
+		std::cout << "-----------------------------------------------" << std::endl;
 
 		boost::array<char, MAX_PACKET_BYTES> send_buffer;
-		boost::array<char, MAX_PACKET_BYTES> bs;
-
-		/**
-		 *   1) stupid thing ... this is what the damn memcpy should be doing
-		 *   2) instead of directly writing back the packet push onto an outbound queue
-		 *   3) change / create one of the timers to process the outbound queue
-		 *      - have an interval to set for the next timer time, if busy you want to
-		 *      have a faster timer
-		 */
-		bs[0] = 0;
-		bs[1] = 0;
-		bs[2] = 0;
-		bs[3] = 3;
-		bs[4] = 0;
-		bs[5] = 0;
-		bs[6] = 0;
-		bs[7] = 7;
 
 		MetaServerPacket rsp( send_buffer );
 
 		/**
-		 * The original packet object is recycled into the response
+		 * The logic for what happens is inside the metaserver class
 		 */
 		m_msRef.processMetaserverPacket(msp,rsp);
 
-		for ( int i = 0; i<rsp.getSize(); ++i )
-		{
-			std::cout << "      : buffer val-" << i << " [" << send_buffer.at(i) << "]" << std::endl;
-		}
+		std::cout << "UDP : Outgoing packet  [" << rsp.getSize() << "]" << std::endl;
+		std::cout << "      : to  [ " << m_remoteEndpoint.address().to_string() << " ]" << std::endl;
+		std::cout << "      : port  [ " << m_remoteEndpoint.port() << " ]" << std::endl;
+		std::cout << "      : type  [ " << rsp.getPacketType() << " ]" << std::endl;
+		std::cout << "      : size  [ " << rsp.getSize() << " ]" << std::endl;
+		std::cout << "      : dump: " << rsp.getIntData() << std::endl;
 
-		std::cout << "      : rsp size  [ " << rsp.getSize() << " ]" << std::endl;
-		std::cout << "      : rsp type  [ " << rsp.getPacketType() << " ]" << std::endl;
-		std::cout << "      : rsp parse random  [ " << rsp.getIntData() << " ]" << std::endl;
+		std::cout << "===============================================" << std::endl;
+
 
 		/**
 		 * Send back response
 		 */
-	      m_Socket.async_send_to(boost::asio::buffer(bs,rsp.getSize()), m_remoteEndpoint,
-	          boost::bind(&MetaServerHandlerUDP::handle_send, this, bs,
+	      m_Socket.async_send_to(boost::asio::buffer(send_buffer.data(),rsp.getSize()), m_remoteEndpoint,
+	          boost::bind(&MetaServerHandlerUDP::handle_send, this, send_buffer,
 	            boost::asio::placeholders::error,
 	            boost::asio::placeholders::bytes_transferred));
-
 
 		/**
 		 *	Back to async read
@@ -108,7 +99,43 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 }
 
 void
-MetaServerHandlerUDP::handle_send(boost::array<char, MAX_PACKET_BYTES> buf, const boost::system::error_code& error, std::size_t bytes_sent)
+MetaServerHandlerUDP::handle_send(NetMsgType nmt, const boost::system::error_code& error, std::size_t bytes_sent)
 {
 	std::cout << "UDP: sent bytes : " << bytes_sent << std::endl;
 }
+
+/**
+ * This is is the handler for when we process packets and queue up responses for
+ * times of higher load, or in the case of a list where we want to queue up multiple
+ * response packets for a given incoming packet.
+ *
+ * note: this may not be required, as we're using async transmission
+ * @param error
+ */
+void
+MetaServerHandlerUDP::process_outbound(const boost::system::error_code& error)
+{
+	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+	boost::posix_time::time_duration duration( now.time_of_day() );
+	unsigned long tick = duration.total_milliseconds();
+	unsigned int delay = m_outboundMaxInterval;
+
+	/*
+	 *  Process the outbound response packets
+	 */
+
+	/*
+	 *  Adjust timer for next loop
+	 */
+
+	if( (tick - m_outboundTick) < m_outboundMaxInterval )
+	{
+		delay = tick - m_outboundTick;
+	}
+
+	m_outboundTimer->expires_from_now(boost::posix_time::milliseconds(delay));
+    m_outboundTimer->async_wait(boost::bind(&MetaServerHandlerUDP::process_outbound, this, boost::asio::placeholders::error));
+}
+
+
+

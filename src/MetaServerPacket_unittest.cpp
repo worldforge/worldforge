@@ -21,6 +21,9 @@ class MetaServerPacket_unittest : public CppUnit::TestCase
     CPPUNIT_TEST(testConstructor_zeroSize);
     CPPUNIT_TEST(testConstructor_nonzeroSize);
     CPPUNIT_TEST(testConstructor_negativeSize);
+    CPPUNIT_TEST(test_setPacketType_returnmatch);
+    CPPUNIT_TEST(test_getPacketType_constructor);
+    CPPUNIT_TEST(test_getPacketType_setPacketType);
 
     CPPUNIT_TEST_SUITE_END();
   public:
@@ -75,6 +78,66 @@ class MetaServerPacket_unittest : public CppUnit::TestCase
     	MetaServerPacket * msp = new MetaServerPacket(test_buffer, 3);
     	unsigned int s = msp->getSize();
     	CPPUNIT_ASSERT_ASSERTION_FAIL( CPPUNIT_ASSERT( s == 1 ) );
+    	delete msp;
+    }
+
+    /*
+     * Data Integrity Test
+     */
+    void test_getPacketType_constructor() {
+       	boost::array<char, TEST_MAX_BYTES> test_buffer;
+       	NetMsgType nmt;
+
+       	// this sets the first 4 bytes to 1 ... which
+       	// is equal to NMT_SERVERKEEPALIVE
+        test_buffer[0] = 0;
+        test_buffer[1] = 0;
+        test_buffer[2] = 0;
+        test_buffer[3] = 1;
+
+        MetaServerPacket * msp = new MetaServerPacket(test_buffer, 4);
+
+        nmt = msp->getPacketType();
+
+        CPPUNIT_ASSERT( nmt == NMT_SERVERKEEPALIVE );
+        delete msp;
+    }
+
+    /*
+     * Tests that getPacketType returns the correct type when
+     * set via setPacketType
+     */
+    void test_getPacketType_setPacketType() {
+
+    	std::cerr << std::endl << "test_getPacketType_setPacketType(): start" << std::endl;
+       	boost::array<char, TEST_MAX_BYTES> test_buffer;
+       	NetMsgType nmt;
+
+        MetaServerPacket * msp = new MetaServerPacket(test_buffer);
+
+        msp->setPacketType(NMT_SERVERKEEPALIVE);
+
+        nmt = msp->getPacketType();
+
+        CPPUNIT_ASSERT( nmt == NMT_SERVERKEEPALIVE );
+        delete msp;
+
+        std::cerr << std::endl << "test_getPacketType_setPacketType(): end" << std::endl;
+    }
+
+
+    void test_setPacketType_returnmatch() {
+    	boost::array<char, TEST_MAX_BYTES> test_buffer;
+    	NetMsgType nmt;
+
+    	MetaServerPacket * msp = new MetaServerPacket(test_buffer);
+
+    	msp->setPacketType(NMT_NULL);
+
+    	nmt = msp->getPacketType();
+
+    	CPPUNIT_ASSERT( nmt == NMT_NULL );
+
     	delete msp;
     }
 

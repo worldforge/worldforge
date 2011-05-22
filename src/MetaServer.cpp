@@ -93,9 +93,11 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 
 	int i = addHandshake(handshake,tmp_);
 
+	std::cout << "handshake: " << handshake << std::endl;
+
 	out.setPacketType(NMT_HANDSHAKE);
 	out.addPacketData(handshake);
-	out.dumpBuffer();
+	//out.dumpBuffer();
 
 }
 
