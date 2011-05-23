@@ -3,6 +3,9 @@
 *.lo
 *.la
 *.o
+*.gcda
+*.gcov
+*.gcno
 Makefile
 Makefile.in
 aclocal.m4
