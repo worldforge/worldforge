@@ -45,6 +45,11 @@ metaquery_SOURCES = metaQuery.cpp
 eris_connect_SOURCES = connect.cpp
 
 Account_unittest_SOURCES = Account_unittest.cpp
+Account_unittest_LDADD = \
+    $(top_builddir)/Eris/Account.lo \
+    $(top_builddir)/Eris/Exceptions.lo \
+    $(ERIS_DEPS)
+
 Alarm_unittest_SOURCES = Alarm_unittest.cpp SignalFlagger.h
 Avatar_unittest_SOURCES = Avatar_unittest.cpp SignalFlagger.h
 BaseConnection_unittest_SOURCES = BaseConnection_unittest.cpp SignalFlagger.h
