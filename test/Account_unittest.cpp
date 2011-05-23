@@ -25,9 +25,34 @@
 #endif
 
 #include <Eris/Account.h>
+#include <Eris/Connection.h>
+#include <Eris/Exceptions.h>
 
 int main()
 {
+    // Constructor with bad args throws
+    {
+        try {
+            new Eris::Account(0);
+            return 1;
+        }
+        catch (Eris::InvalidOperation io) {
+        }
+    }
+
+    // Constructor
+    {
+        Eris::Connection * c = new Eris::Connection("", "", 0, false);
+        new Eris::Account(c);
+    }
+
+    // Destructor
+    {
+        Eris::Connection * c = new Eris::Connection("", "", 0, false);
+        Eris::Account * ac = new Eris::Account(c);
+        delete ac;
+    }
+
     return 0;
 }
 
@@ -35,13 +60,14 @@ int main()
 
 #include <Eris/Avatar.h>
 #include <Eris/CharacterType.h>
-#include <Eris/Connection.h>
 #include <Eris/DeleteLater.h>
 #include <Eris/Log.h>
 #include <Eris/Response.h>
 #include <Eris/Router.h>
 #include <Eris/SpawnPoint.h>
 #include <Eris/Timeout.h>
+
+#include <Atlas/Objects/RootOperation.h>
 
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Operation::RootOperation;
@@ -106,6 +132,58 @@ void Avatar::onTransferRequested(const TransferInfo &transfer)
 {
 }
 
+BaseConnection::BaseConnection(const std::string &cnm, 
+    const std::string &id,
+    Atlas::Bridge *br)
+{
+}
+
+BaseConnection::~BaseConnection()
+{
+}
+
+int BaseConnection::connect(const std::string &host, short port)
+{
+    return 0;
+}
+
+void BaseConnection::setStatus(Status sc)
+{
+}
+
+void BaseConnection::onConnect()
+{
+}
+
+Connection::Connection(const std::string &cnm, const std::string& host, short port, bool dbg) :
+    BaseConnection(cnm, "game_", this), _port(port)
+{
+}
+
+Connection::~Connection()
+{
+}
+
+void Connection::setStatus(Status ns)
+{
+}
+
+void Connection::handleFailure(const std::string &msg)
+{
+}
+
+void Connection::handleTimeout(const std::string& msg)
+{
+}
+
+void Connection::objectArrived(const Root& obj)
+{
+}
+
+void Connection::onConnect()
+{
+}
+
 void Connection::setDefaultRouter(Router* router)
 {
 }
@@ -130,6 +208,10 @@ void Connection::unlock()
 {
 }
 
+void Connection::send(const Atlas::Objects::Root &obj)
+{
+}
+
 CharacterType::CharacterType(const std::string& name,
                              const std::string& description)
 : m_name(name), m_description(description)
@@ -141,6 +223,10 @@ CharacterType::~CharacterType()
 }
 
 void ResponseTracker::await(int serialno, ResponseBase* resp)
+{
+}
+
+ServerInfo::ServerInfo()
 {
 }
 
