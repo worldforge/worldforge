@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <string>
 #include <map>
+#include <queue>
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>

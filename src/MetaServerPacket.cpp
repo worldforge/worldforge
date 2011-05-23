@@ -16,13 +16,20 @@ MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std:
 		  m_Address("")
 
 {
-		/**
-		 * @note exception risk in ctor ... re-think
-		 */
 		m_readPtr  = m_packetPayload.data();
-		m_headPtr  = m_readPtr;
+		m_headPtr  = m_packetPayload.data();
 		m_writePtr = m_packetPayload.c_array();
-		parsePacketType();
+
+		if ( bytes > 0 )
+		{
+			// if we have data ... parse out type
+			parsePacketType();
+		}
+		else
+		{
+			// otherwise assume a construction and zero it out
+			m_packetPayload.assign(0);
+		}
 }
 
 MetaServerPacket::~MetaServerPacket()
@@ -49,7 +56,7 @@ MetaServerPacket::setPacketType(NetMsgType nmt)
 	m_Bytes = 0;
 
 	// write must occur prior to read
-	m_writePtr = pack_uint32(nmt);
+	m_writePtr = pack_uint32(nmt, m_writePtr);
 	parsePacketType();
 
 }
@@ -79,19 +86,20 @@ MetaServerPacket::setPort(unsigned int p)
 	m_Port = p;
 }
 
-void
+unsigned int
 MetaServerPacket::addPacketData(uint32_t i)
 {
-	m_writePtr = pack_uint32(i);
+	unsigned int ret_off = m_writePtr - m_headPtr;
+	m_writePtr = pack_uint32(i,m_writePtr);
+	return ret_off;
 }
 
-void
+unsigned int
 MetaServerPacket::addPacketData(std::string s)
 {
-	/**
-	 * TODO: add bounds checking
-	 */
-	m_writePtr = pack_string( s.data(), s.length() );
+	unsigned int ret_off = m_writePtr - m_headPtr;
+	m_writePtr = pack_string( s , m_writePtr );
+	return ret_off;
 }
 
 unsigned int
@@ -101,22 +109,24 @@ MetaServerPacket::getSize()
 }
 
 std::string
-MetaServerPacket::getPacketMessage()
+MetaServerPacket::getPacketMessage(unsigned int offset)
 {
 	std::string foo = "";
-	unsigned int msgSize = (m_readPtr-m_headPtr);
 
-	if ( msgSize > 0 ) {
-		m_readPtr = unpack_string(&foo, msgSize );
-	}
+	m_readPtr = m_headPtr + offset;
+	m_readPtr = unpack_string(&foo, m_readPtr, (m_Bytes - offset) );
+
 	return foo;
 }
 
 uint32_t
-MetaServerPacket::getIntData()
+MetaServerPacket::getIntData(unsigned int offset)
 {
 	uint32_t foo = 99;
-	m_readPtr = unpack_uint32(&foo);
+
+	m_readPtr = m_headPtr + offset;
+	m_readPtr = unpack_uint32(&foo, m_readPtr );
+
 	return foo;
 }
 
@@ -137,8 +147,9 @@ MetaServerPacket::parsePacketType()
 	if ( m_Bytes > 0 )
 	{
 		m_readPtr = m_packetPayload.data();
-		m_packetType = getIntData();
+		m_packetType = getIntData(0);
 	}
+
 }
 
 /**
@@ -150,42 +161,47 @@ MetaServerPacket::parsePacketType()
  * @return
  */
 char*
-MetaServerPacket::pack_uint32(uint32_t data)
+MetaServerPacket::pack_uint32(uint32_t data, char *buffer)
 {
     uint32_t netorder;
 
     netorder = htonl(data);
-    memcpy(m_writePtr, &netorder, sizeof(uint32_t));
+
+    memcpy(buffer, &netorder, sizeof(uint32_t));
     m_Bytes += sizeof(uint32_t);
 
-    return m_writePtr+sizeof(uint32_t);
+    return buffer+sizeof(uint32_t);
+
 }
 
+
 char*
-MetaServerPacket::unpack_uint32(uint32_t *dest)
+MetaServerPacket::unpack_uint32(uint32_t *dest, char *buffer)
 {
     uint32_t netorder;
 
-    memcpy(&netorder, m_readPtr, sizeof(uint32_t));
+    memcpy(&netorder, buffer, sizeof(uint32_t));
     *dest = ntohl(netorder);
-    return m_readPtr+sizeof(uint32_t);
+    return buffer+sizeof(uint32_t);
 
 }
 
+
 char*
-MetaServerPacket::pack_string( const char * str, unsigned int length )
+MetaServerPacket::pack_string( std::string str, char *buffer )
 {
-	memcpy(m_writePtr, str, length );
-	m_Bytes += length;
-	return m_writePtr+length;
+	unsigned int ss = str.size();
+	memcpy(buffer, str.data() , ss );
+	m_Bytes += ss;
+	return buffer+ss;
 }
 
 char *
-MetaServerPacket::unpack_string(std::string *dest, unsigned int length )
+MetaServerPacket::unpack_string(std::string *dest, char* buffer, unsigned int length )
 {
-	std::string s(m_readPtr,length);
+	std::string s(buffer,length);
 	*dest = s;
-	return m_readPtr+length;
+	return buffer+length;
 }
 
 

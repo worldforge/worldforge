@@ -56,13 +56,18 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 
 		std::cout << "      : type  [ " << msp.getPacketType() << " ]" << std::endl;
 		std::cout << "      : size  [ " << msp.getSize() << " ]" << std::endl;
-		std::cout << "      : dump: " << msp.getIntData() << std::endl;
+		std::cout << "      : dump-0: " << msp.getIntData(0) << std::endl;
+		std::cout << "      : dump-4: " << msp.getIntData(4) << std::endl;
+		for (int i=0; i<bytes_recvd; ++i)
+		{
+			std::cout << "      : recv-" << i << " : " << m_recvBuffer.at(i) << std::endl;
+		}
 
 		std::cout << "-----------------------------------------------" << std::endl;
 
 		boost::array<char, MAX_PACKET_BYTES> send_buffer;
-
 		MetaServerPacket rsp( send_buffer );
+		MetaServerPacket test_packet(send_buffer, rsp.getSize() );
 
 		/**
 		 * The logic for what happens is inside the metaserver class
@@ -74,18 +79,41 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		std::cout << "      : port  [ " << m_remoteEndpoint.port() << " ]" << std::endl;
 		std::cout << "      : type  [ " << rsp.getPacketType() << " ]" << std::endl;
 		std::cout << "      : size  [ " << rsp.getSize() << " ]" << std::endl;
-		std::cout << "      : dump: " << rsp.getIntData() << std::endl;
+		std::cout << "      : dump: " << rsp.getIntData(0) << std::endl;
+		std::cout << "      : dump: " << rsp.getIntData(4) << std::endl;
 
-		std::cout << "===============================================" << std::endl;
+		std::cout << "-----------------------------------------------" << std::endl;
+
 
 
 		/**
 		 * Send back response
 		 */
-	      m_Socket.async_send_to(boost::asio::buffer(send_buffer.data(),rsp.getSize()), m_remoteEndpoint,
-	          boost::bind(&MetaServerHandlerUDP::handle_send, this, send_buffer,
+
+		if ( rsp.getSize() > 0 )
+		{
+		  std::cout << "      : test_packet size : " << test_packet.getSize() << std::endl;
+		  std::cout << "      : test_packet type : " << test_packet.getPacketType() << std::endl;
+		  std::cout << "      : test_packet dump-0 : " << test_packet.getIntData(0) << std::endl;
+		  std::cout << "      : test_packet dump-4 : " << test_packet.getIntData(4) << std::endl;
+
+		  boost::array<char, MAX_PACKET_BYTES> b;
+
+		  b.at(0) = 0;
+		  b.at(1) = 0;
+		  b.at(2) = 0;
+		  b.at(3) = 3;
+		  b.at(4) = 0;
+		  b.at(5) = 0;
+		  b.at(6) = 0;
+		  b.at(7) = 99;
+
+
+	      m_Socket.async_send_to(boost::asio::buffer(send_buffer,rsp.getSize()), m_remoteEndpoint,
+	          boost::bind(&MetaServerHandlerUDP::handle_send, this, rsp,
 	            boost::asio::placeholders::error,
 	            boost::asio::placeholders::bytes_transferred));
+		}
 
 		/**
 		 *	Back to async read
@@ -99,9 +127,21 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 }
 
 void
-MetaServerHandlerUDP::handle_send(NetMsgType nmt, const boost::system::error_code& error, std::size_t bytes_sent)
+MetaServerHandlerUDP::handle_send(MetaServerPacket& p, const boost::system::error_code& error, std::size_t bytes_sent)
 {
+	std::cout << "UDP: sent type  : " << p.getPacketType() << std::endl;
 	std::cout << "UDP: sent bytes : " << bytes_sent << std::endl;
+
+	switch(p.getPacketType())
+	{
+	case NMT_HANDSHAKE:
+		std::cout << "UDP: data-0: " << p.getIntData(0) << std::endl;
+		std::cout << "UDP: data-4: " << p.getIntData(4) << std::endl;
+		break;
+	default:
+		std::cout << "OOPS!: Should never send an unknown packet type!" << std::endl;
+	}
+	std::cout << "===============================================" << std::endl;
 }
 
 /**

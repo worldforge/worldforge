@@ -28,21 +28,21 @@ public:
 
 	unsigned int getSize();
 
-	void addPacketData(uint32_t i);
-	void addPacketData(std::string s);
+	unsigned int addPacketData(uint32_t i);
+	unsigned int addPacketData(std::string s);
 
-	std::string getPacketMessage();
-	uint32_t getIntData();
+	std::string getPacketMessage(unsigned int offset);
+	uint32_t getIntData(unsigned int offset);
 
 	void dumpBuffer();
 
 private:
 
 	void parsePacketType();
-	char *pack_uint32(uint32_t data);
-	char *unpack_uint32(uint32_t *dest);
-	char *pack_string(const char * str, unsigned int length );
-	char *unpack_string(std::string *dest, unsigned int length );
+	char *pack_uint32(uint32_t data, char* buffer );
+	char *unpack_uint32(uint32_t *dest, char* buffer );
+	char *pack_string(std::string str, char *buffer );
+	char *unpack_string(std::string *dest, char* buffer, unsigned int length );
 
 	NetMsgType m_packetType;
 	std::string m_Address;

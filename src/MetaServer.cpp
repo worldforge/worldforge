@@ -80,7 +80,8 @@ void
 MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 {
 
-	unsigned int handshake = rand();
+	//unsigned int handshake = rand();
+	unsigned int handshake = 99;
 
 	std::string a = in.getAddress();
 
@@ -91,9 +92,9 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 	tmp_["ip"] = in.getAddress();
 	tmp_["expiry"] = boost::posix_time::to_simple_string(now);
 
-	int i = addHandshake(handshake,tmp_);
+	uint32_t i = addHandshake(handshake,tmp_);
 
-	std::cout << "handshake: " << handshake << std::endl;
+	std::cout << "handshake(" << i << ") : " << handshake << std::endl;
 
 	out.setPacketType(NMT_HANDSHAKE);
 	out.addPacketData(handshake);

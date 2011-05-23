@@ -69,8 +69,8 @@ MetaServerPacket::setPacketType(unsigned int)
 {
 }
 
-void
-MetaServerPacket::addPacketData(unsigned int)
+unsigned int
+MetaServerPacket::addPacketData(uint32_t)
 {
 }
 
@@ -84,5 +84,9 @@ MetaServerHandlerUDP::~MetaServerHandlerUDP()
 }
 
 MetaServerHandlerTCP::~MetaServerHandlerTCP()
+{
+}
+
+MetaServerPacket::~MetaServerPacket()
 {
 }

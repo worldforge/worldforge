@@ -24,6 +24,7 @@ class MetaServerPacket_unittest : public CppUnit::TestCase
     CPPUNIT_TEST(test_setPacketType_returnmatch);
     CPPUNIT_TEST(test_getPacketType_constructor);
     CPPUNIT_TEST(test_getPacketType_setPacketType);
+    CPPUNIT_TEST(test_getIntData_constructor);
 
     CPPUNIT_TEST_SUITE_END();
   public:
@@ -141,6 +142,67 @@ class MetaServerPacket_unittest : public CppUnit::TestCase
     	delete msp;
     }
 
+    void test_getIntData_constructor() {
+
+        std::cout << std::endl << "test_getIntData_constructor: start" << std::endl;
+    	boost::array<char, TEST_MAX_BYTES> test_buffer;
+
+    	NetMsgType nmt,nmt2;
+    	uint32_t data;
+
+    	char * p = test_buffer.c_array();
+
+    	// artificially fill buffer with a handshake packet
+    	test_pack_uint32(NMT_HANDSHAKE,p);
+    	p+=4;
+    	test_pack_uint32(123456,p);
+
+    	MetaServerPacket * msp = new MetaServerPacket(test_buffer,8);
+    	MetaServerPacket * rsp = new MetaServerPacket(test_buffer,8);
+
+    	nmt = msp->getPacketType();
+    	nmt2 = msp->getIntData(0); // same as getPacketType by parsing
+    	data = msp->getIntData(4);
+
+        std::cout << std::endl << "msp-type: nmt : " << msp->getPacketType() << std::endl;
+        std::cout << std::endl << "msp-data-0: data : " << msp->getIntData(0) << std::endl;
+        std::cout << std::endl << "msp-data-4: data : " << msp->getIntData(4) << std::endl;
+
+        std::cout << std::endl << "rsp-type: nmt : " << rsp->getPacketType() << std::endl;
+        std::cout << std::endl << "rsp-data-0: data : " << rsp->getIntData(0) << std::endl;
+        std::cout << std::endl << "rsp-data-4: data : " << rsp->getIntData(4) << std::endl;
+
+    	CPPUNIT_ASSERT( nmt == NMT_HANDSHAKE );
+    	CPPUNIT_ASSERT( nmt2 == NMT_HANDSHAKE );
+    	CPPUNIT_ASSERT( data == 123456 );
+    	CPPUNIT_ASSERT ( msp->getPacketType() == rsp->getPacketType() );
+    	CPPUNIT_ASSERT ( msp->getIntData(0) == rsp->getIntData(0) );
+    	CPPUNIT_ASSERT ( msp->getIntData(4) == rsp->getIntData(4) );
+
+    	delete msp;
+    	delete rsp;
+        std::cout << std::endl << "test_getIntData_constructor: end" << std::endl;
+
+    }
+
+    void
+    test_pack_uint32(uint32_t data, char *dest)
+    {
+        uint32_t netorder;
+
+        netorder = htonl(data);
+        memcpy(dest, &netorder, sizeof(uint32_t));
+    }
+
+    void
+    test_unpack_uint32(uint32_t *dest, char* src)
+    {
+        uint32_t netorder;
+
+        memcpy(&netorder, src, sizeof(uint32_t));
+        *dest = ntohl(netorder);
+
+    }
 
 };
 
@@ -160,7 +222,5 @@ int main()
         return 1;
     }
 }
-
-// stubs
 
 // MetaServerPacket appears to be standalone and not require stubs
