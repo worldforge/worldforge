@@ -15,7 +15,8 @@ check_PROGRAMS = Entity_unittest Account_unittest Alarm_unittest \
                  Timeout_unittest TypeBoundRedispatch_unittest \
                  TypeInfo_unittest TypeService_unittest Types_unittest \
                  UIFactory_unittest View_unittest TerrainMod_unittest \
-                 Metaserver_integrationtest PollWinsock_unittest
+                 Metaserver_integrationtest PollWinsock_unittest \
+                 Account_integrationtest
 TESTS = $(check_PROGRAMS)
 RECHECK_LOGS = testEris.log
 
@@ -43,7 +44,7 @@ metaquery_SOURCES = metaQuery.cpp
 
 eris_connect_SOURCES = connect.cpp
 
-Account_unittest_SOURCES = Account_unittest.cpp SignalFlagger.h
+Account_unittest_SOURCES = Account_unittest.cpp
 Alarm_unittest_SOURCES = Alarm_unittest.cpp SignalFlagger.h
 Avatar_unittest_SOURCES = Avatar_unittest.cpp SignalFlagger.h
 BaseConnection_unittest_SOURCES = BaseConnection_unittest.cpp SignalFlagger.h
@@ -112,3 +113,5 @@ Metaserver_integrationtest_LDADD = \
 
 PollWinsock_unittest_SOURCES = PollWinsock_unittest.cpp
 PollWinsock_unittest_LDADD =
+
+Account_integrationtest_SOURCES = Account_integrationtest.cpp SignalFlagger.h
