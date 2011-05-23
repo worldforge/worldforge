@@ -41,7 +41,7 @@ public:
     /**
      * @brief Dtor.
      */
-    virtual ~SpawnPoint();
+    ~SpawnPoint();
 
     /**
      * @brief Gets a list of available character types for this spawn point.
