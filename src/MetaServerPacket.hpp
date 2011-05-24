@@ -14,6 +14,7 @@ class MetaServerPacket
 {
 
 public:
+	MetaServerPacket();
 	MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
 	~MetaServerPacket();
 
@@ -34,6 +35,8 @@ public:
 	std::string getPacketMessage(unsigned int offset);
 	uint32_t getIntData(unsigned int offset);
 
+	boost::array<char,MAX_PACKET_BYTES>& getBuffer();
+
 	void dumpBuffer();
 
 private:
@@ -51,7 +54,7 @@ private:
 	char * m_headPtr;
 	char * m_writePtr;
 	char * m_readPtr;
-	boost::array<char,MAX_PACKET_BYTES> m_packetPayload;
+	boost::array<char,MAX_PACKET_BYTES>& m_packetPayload;
 
 };
 

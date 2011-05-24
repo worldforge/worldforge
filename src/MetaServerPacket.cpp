@@ -8,6 +8,18 @@
 #include "MetaServer.hpp"
 #include "MetaServerPacket.hpp"
 
+MetaServerPacket::MetaServerPacket()
+		: m_packetPayload( *new boost::array<char,MAX_PACKET_BYTES>() ),
+		  m_Bytes(0),
+		  m_packetType(NMT_NULL),
+		  m_Port(0),
+		  m_Address("")
+{
+	// in a default situation, we have no buffer passed in so we internally create one
+	//boost::array<char,MAX_PACKET_BYTES> *buf = new boost::array<char,MAX_PACKET_BYTES>();
+	//MetaServerPacket(buf);
+}
+
 MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )
 		: m_packetPayload(pl),
 		  m_Bytes(bytes),
@@ -129,6 +141,13 @@ MetaServerPacket::getIntData(unsigned int offset)
 
 	return foo;
 }
+
+boost::array<char,MAX_PACKET_BYTES>&
+MetaServerPacket::getBuffer()
+{
+	return m_packetPayload;
+}
+
 
 void
 MetaServerPacket::dumpBuffer()

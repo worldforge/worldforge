@@ -25,7 +25,6 @@ int main(int argc, char** argv)
 
 	try
 	{
-		std::cout << "do stuff" << std::endl;
 		io_service.run();
 	}
 	catch (std::exception& e)

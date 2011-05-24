@@ -35,7 +35,9 @@ class MetaServer
 	void update_timer(const boost::system::error_code& error);
 	void processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp);
 	void processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out);
+	void processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out);
 	int addHandshake(unsigned int hs, std::map<std::string,std::string> attr);
+	void removeHandshake(unsigned int hs);
 	void dumpHandshake();
 
 
@@ -51,7 +53,8 @@ class MetaServer
 	 *  }
 	 */
 	std::map<std::string, std::map<std::string,std::string> > ms_data_;
-	std::map<unsigned int,std::map<std::string,std::string> > handshake_queue_;
+	std::map<unsigned int,std::map<std::string,std::string> > m_handshakeQueue;
+	unsigned int m_handshakeExpirySeconds;
 	boost::asio::deadline_timer* expiry_timer_;
 	boost::asio::deadline_timer* update_timer_;
 	unsigned int expiry_timer_delay_milliseconds_;

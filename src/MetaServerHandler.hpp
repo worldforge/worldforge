@@ -12,8 +12,8 @@
 class MetaServerHandler : boost::noncopyable
 {
 public:
-	~MetaServerHandler() {}
-	MetaServerHandler() {}
+	~MetaServerHandler();
+	MetaServerHandler();
 
 protected:
 
