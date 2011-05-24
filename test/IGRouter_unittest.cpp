@@ -24,28 +24,99 @@
 #define DEBUG
 #endif
 
+#include <Eris/Account.h>
+#include <Eris/Avatar.h>
+#include <Eris/Connection.h>
 #include <Eris/IGRouter.h>
+
+#include <Atlas/Objects/Operation.h>
+#include <Atlas/Objects/RootEntity.h>
+
+using Atlas::Objects::Root;
+using Atlas::Objects::Entity::RootEntity;
+using Atlas::Objects::Operation::RootOperation;
+
+class TestAvatar : public Eris::Avatar
+{
+  public:
+    TestAvatar() :
+          Eris::Avatar(*new Eris::Account(new Eris::Connection("", "", 0, false)), "") { }
+};
+
+class TestIGRouter : public Eris::IGRouter
+{
+  public:
+    TestIGRouter(Eris::Avatar * av) : Eris::IGRouter(av) { }
+
+    RouterResult test_handleOperation(const RootOperation& op) {
+        return this->handleOperation(op);
+    }
+};
 
 int main()
 {
+    {
+        TestAvatar * av = new TestAvatar();
+        new Eris::IGRouter(av);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        Eris::IGRouter * ir = new Eris::IGRouter(av);
+        delete ir;
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        RootOperation op;
+        ir->test_handleOperation(op);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        RootOperation op;
+        op->setSeconds(0);
+        ir->test_handleOperation(op);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Sight op;
+        op->setArgs1(Root());
+        ir->test_handleOperation(op);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Sight op;
+        op->setArgs1(RootEntity());
+        ir->test_handleOperation(op);
+    }
+
     return 0;
 }
 
 // stubs
 
 #include <Eris/Avatar.h>
+#include <Eris/CharacterType.h>
 #include <Eris/Connection.h>
 #include <Eris/Entity.h>
 #include <Eris/Log.h>
+#include <Eris/SpawnPoint.h>
 #include <Eris/TransferInfo.h>
 #include <Eris/TypeInfo.h>
 #include <Eris/TypeBoundRedispatch.h>
 #include <Eris/TypeService.h>
 #include <Eris/View.h>
-
-using Atlas::Objects::Root;
-using Atlas::Objects::Entity::RootEntity;
-using Atlas::Objects::Operation::RootOperation;
 
 namespace Atlas { namespace Objects { namespace Operation {
 
@@ -55,9 +126,41 @@ int UNSEEN_NO = -1;
 
 namespace Eris {
 
+Account::Account(Connection *con) :
+    m_con(con),
+    m_status(DISCONNECTED),
+    m_doingCharacterRefresh(false)
+{
+}
+
+Account::~Account()
+{
+}
+
+void Account::updateFromObject(const Atlas::Objects::Entity::Account &p)
+{
+}
+
+Avatar::Avatar(Account& pl, const std::string& entId) :
+    m_account(pl),
+    m_entityId(entId),
+    m_entity(NULL),
+    m_lastOpTime(0.0),
+    m_isAdmin(false)
+{
+}
+
+Avatar::~Avatar()
+{
+}
+
+void Avatar::onTransferRequested(const TransferInfo &transfer)
+{
+}
+
 Connection* Avatar::getConnection() const
 {
-    return 0;
+    return m_account.getConnection();
 }
 
 void Avatar::logoutRequested()
@@ -69,6 +172,80 @@ void Avatar::logoutRequested(const TransferInfo& transferInfo)
 }
 
 void Avatar::updateWorldTime(double seconds)
+{
+}
+
+BaseConnection::BaseConnection(const std::string &cnm, 
+    const std::string &id,
+    Atlas::Bridge *br) :
+    _encode(NULL),
+    _sc(NULL),
+    m_codec(NULL),
+    _status(DISCONNECTED),
+    _id(id),
+    _stream(NULL),
+    _clientName(cnm),
+    _bridge(br),
+    _timeout(NULL),
+    _host(""),
+    _port(0)
+{
+}
+
+BaseConnection::~BaseConnection()
+{
+}
+
+int BaseConnection::connect(const std::string &host, short port)
+{
+    return 0;
+}
+
+void BaseConnection::onConnect()
+{
+}
+
+void BaseConnection::setStatus(Status sc)
+{
+}
+
+Connection::Connection(const std::string &cnm, const std::string& host, short port, bool dbg) :
+    BaseConnection(cnm, "game_", this),
+    _host(host),
+    _port(port),
+    m_typeService(new TypeService(this)),
+    m_defaultRouter(NULL),
+    m_lock(0),
+    m_info(host),
+    m_responder(0)
+{
+}
+
+Connection::~Connection()
+{
+}
+
+void Connection::objectArrived(const Root& obj)
+{
+}
+
+void Connection::send(const Atlas::Objects::Root &obj)
+{
+}
+
+void Connection::setStatus(Status ns)
+{
+}
+
+void Connection::handleFailure(const std::string &msg)
+{
+}
+
+void Connection::handleTimeout(const std::string& msg)
+{
+}
+
+void Connection::onConnect()
 {
 }
 
@@ -84,9 +261,19 @@ void Entity::setFromRoot(const Root& obj, bool allowMove, bool includeTypeInfoAt
 {       
 }
 
+TypeService::TypeService(Connection *con) : 
+    m_con(con),
+    m_inited(false)
+{
+}
+
+TypeService::~TypeService()
+{
+}
+
 TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 {
-    return 0;
+    return new TypeInfo("18fda62d-7bc1-48cc-84ee-1b249a591ef6", this);
 }
 
 TypeInfoPtr TypeService::getTypeByName(const std::string &id)
@@ -137,9 +324,23 @@ TransferInfo::TransferInfo(const std::string &host, int port,
 {
 }
 
+TypeInfo::TypeInfo(const std::string &id, TypeService *ts) :
+    m_bound(false),
+    m_name(id),
+    m_atlasClassNo(0),
+    m_moveCount(0),
+    m_typeService(ts)
+{
+}
+
 bool TypeInfo::isA(TypeInfoPtr tp)
 {
     return false;
+}
+
+void TypeInfo::onAttributeChanges(const std::string& attributeName,
+                                  const Atlas::Message::Element& element)
+{
 }
 
 TypeBoundRedispatch::TypeBoundRedispatch(Connection* con, 
@@ -147,6 +348,16 @@ TypeBoundRedispatch::TypeBoundRedispatch(Connection* con,
         TypeInfo* unbound) :
     Redispatch(con, obj),
     m_con(con)
+{
+}
+
+ServerInfo::ServerInfo(const std::string &host) :
+    m_status(INVALID),
+    _host(host)
+{
+}
+
+SpawnPoint::~SpawnPoint()
 {
 }
 
