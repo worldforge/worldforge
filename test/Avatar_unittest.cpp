@@ -427,6 +427,65 @@ int main()
         ea->place(inv_ent, wrld_ent, WFMath::Point<3>(1,2,3));
     }
     
+    // Test place() of something as admin
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(wrld_ent);
+
+        ea->setIsAdmin(true);
+        ea->place(inv_ent, wrld_ent, WFMath::Point<3>(1,2,3));
+    }
+    
+    // Test place() of something with no pos
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(wrld_ent);
+
+        ea->place(inv_ent, wrld_ent, WFMath::Point<3>());
+    }
+    
+    // Test place() of something with orientation
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        TestEntity * wrld_ent = new TestEntity("0", 0, ea->getView());
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+        TestEntity * inv_ent = new TestEntity("2", 0, ea->getView());
+
+        ea->setup_setEntity(char_ent);
+        char_ent->setup_setLocation(wrld_ent);
+        inv_ent->setup_setLocation(wrld_ent);
+
+        ea->place(inv_ent, wrld_ent, WFMath::Point<3>(),
+                  WFMath::Quaternion(1.f, 0.f, 0.f, 0.f));
+    }
+    
     // Test wield() of something not in inventory
     {
         Eris::Connection * con = new TestConnection("name", "localhost",
