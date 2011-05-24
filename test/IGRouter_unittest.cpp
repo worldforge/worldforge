@@ -171,6 +171,151 @@ int main()
         assert(r == Eris::Router::HANDLED);
     }
 
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        op->setArgs1(Root());
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        op->modifyArgs().push_back(Root());
+        op->modifyArgs().push_back(Root());
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        arg2->setAttr("teleport_host", 1);
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+        arg2->setAttr("teleport_port", "");
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+        arg2->setAttr("teleport_port", 0xebc);
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+        arg2->setAttr("teleport_port", 0xebc);
+        arg2->setAttr("possess_key", 0x139);
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+        arg2->setAttr("teleport_port", 0xebc);
+        arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+        arg2->setAttr("teleport_port", 0xebc);
+        arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
+        arg2->setAttr("possess_entity_id", 0xa56);
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+        arg2->setAttr("teleport_port", 0xebc);
+        arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
+        arg2->setAttr("possess_entity_id", "1dab48d5-8784-4cfb-b1a2-e801fa99fc3a");
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
     return 0;
 }
 
