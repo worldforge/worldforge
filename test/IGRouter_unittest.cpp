@@ -28,6 +28,7 @@
 #include <Eris/Avatar.h>
 #include <Eris/Connection.h>
 #include <Eris/IGRouter.h>
+#include <Eris/Operations.h>
 
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
@@ -35,6 +36,8 @@
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Operation::RootOperation;
+
+static bool stub_type_bound = false;
 
 class TestAvatar : public Eris::Avatar
 {
@@ -71,7 +74,8 @@ int main()
         TestIGRouter * ir = new TestIGRouter(av);
 
         RootOperation op;
-        ir->test_handleOperation(op);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::IGNORED);
     }
 
     {
@@ -80,16 +84,19 @@ int main()
 
         RootOperation op;
         op->setSeconds(0);
-        ir->test_handleOperation(op);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::IGNORED);
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
 
+        // FIXME no args causes crash
         Atlas::Objects::Operation::Sight op;
         op->setArgs1(Root());
-        ir->test_handleOperation(op);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::IGNORED);
     }
 
     {
@@ -98,7 +105,70 @@ int main()
 
         Atlas::Objects::Operation::Sight op;
         op->setArgs1(RootEntity());
-        ir->test_handleOperation(op);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::WILL_REDISPATCH);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        stub_type_bound = true;
+
+        Atlas::Objects::Operation::Sight op;
+        op->setArgs1(RootEntity());
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+
+        stub_type_bound = false;
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Sight op;
+        op->setArgs1(RootOperation());
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::WILL_REDISPATCH);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Appearance op;
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Disappearance op;
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        // FIXME no args causes crash
+        Atlas::Objects::Operation::Unseen op;
+        op->setArgs1(Root());
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        Atlas::Objects::Operation::Logout op;
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
     }
 
     return 0;
@@ -273,12 +343,21 @@ TypeService::~TypeService()
 
 TypeInfoPtr TypeService::getTypeForAtlas(const Root &obj)
 {
-    return new TypeInfo("18fda62d-7bc1-48cc-84ee-1b249a591ef6", this);
+    Eris::TypeInfo * ti = new TypeInfo("18fda62d-7bc1-48cc-84ee-1b249a591ef6", this);
+    if (stub_type_bound) {
+        ti->validateBind();
+    }
+    return ti;
 }
 
 TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 {
     return 0;
+}
+
+void TypeInfo::validateBind()
+{
+    m_bound = true;
 }
 
 void View::create(const RootEntity& gent)
