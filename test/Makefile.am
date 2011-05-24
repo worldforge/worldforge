@@ -72,7 +72,12 @@ Entity_unittest_LDADD = \
 
 Exceptions_unittest_SOURCES = Exceptions_unittest.cpp
 Factory_unittest_SOURCES = Factory_unittest.cpp
+
 IGRouter_unittest_SOURCES = IGRouter_unittest.cpp
+IGRouter_unittest_LDADD = \
+    $(top_builddir)/Eris/IGRouter.lo \
+    $(ERIS_DEPS)
+
 Lobby_unittest_SOURCES = Lobby_unittest.cpp
 LogStream_unittest_SOURCES = LogStream_unittest.cpp
 Log_unittest_SOURCES = Log_unittest.cpp
