@@ -79,11 +79,19 @@ MetaServerPacket::dumpBuffer()
 {
 }
 
-MetaServerHandlerUDP::~MetaServerHandlerUDP()
+unsigned int
+MetaServerPacket::addPacketData(std::string s)
+{
+
+}
+
+uint32_t
+MetaServerPacket::getIntData(unsigned int)
 {
 }
 
-MetaServerHandlerTCP::~MetaServerHandlerTCP()
+unsigned int
+MetaServerPacket::getPort()
 {
 }
 
