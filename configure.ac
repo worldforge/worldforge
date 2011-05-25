@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT([eris], [1.3.18], [alriddoch@googlemail.com])
+AC_INIT([eris], [1.3.19], [alriddoch@googlemail.com])
 AC_PREREQ(2.5)
 AC_CONFIG_SRCDIR([Eris/Entity.cpp])
 AC_CONFIG_HEADERS([config.h])
@@ -14,7 +14,7 @@ dnl Automake setup
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2 color-tests parallel-tests])
 
 dnl versioning info for libtool
-ERIS_CURRENT=18
+ERIS_CURRENT=19
 ERIS_REVISION=0
 ERIS_AGE=0
 
