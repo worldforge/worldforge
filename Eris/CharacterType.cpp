@@ -30,10 +30,6 @@ CharacterType::CharacterType(const std::string& name, const std::string& descrip
 {
 }
 
-CharacterType::~CharacterType()
-{
-}
-
 const std::string& CharacterType::getName() const
         {
     return m_name;

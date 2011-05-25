@@ -218,10 +218,6 @@ CharacterType::CharacterType(const std::string& name,
 {
 }
 
-CharacterType::~CharacterType()
-{
-}
-
 void ResponseTracker::await(int serialno, ResponseBase* resp)
 {
 }

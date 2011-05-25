@@ -23,11 +23,6 @@ public:
     CharacterType(const std::string& name, const std::string& description);
 
     /**
-     * @brief Dtor.
-     */
-    virtual ~CharacterType();
-
-    /**
      * @brief Accessor for the name of the character type.
      * @returns The name of the character type.
      */
