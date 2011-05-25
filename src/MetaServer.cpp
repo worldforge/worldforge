@@ -3,15 +3,17 @@
 #include "MetaServerHandlerUDP.hpp"
 
 MetaServer::MetaServer(boost::asio::io_service& ios)
-	: expiry_timer_delay_milliseconds_(1500),
-	  update_timer_delay_milliseconds_(4000),
-	  m_handshakeExpirySeconds(30)
+	: m_expiryDelayMilliseconds(1500),
+	  m_updateDelayMilliseconds(4000),
+	  m_handshakeExpirySeconds(30),
+	  m_sessionExpirySeconds(300)
 {
-	ms_data_.clear();
-	expiry_timer_ = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
-	expiry_timer_->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
-	update_timer_ = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
-	update_timer_->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
+	m_serverData.clear();
+	m_clientData.clear();
+	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
+	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
+	m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
 
 	srand( (unsigned)time(0));
 
@@ -25,22 +27,20 @@ MetaServer::~MetaServer()
 void
 MetaServer::expiry_timer(const boost::system::error_code& error)
 {
-	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+	boost::posix_time::ptime now = getNow();
+	boost::posix_time::ptime etime;
+	std::map<std::string,std::string>::iterator attr_iter;
 
 	/**
 	 * Go over handshake queue ... expire any that are older than m_handshakeExpirySeconds
 	 */
     std::map<unsigned int,std::map<std::string,std::string> >::iterator itr;
-    std::map<std::string,std::string>::iterator iitr;
-
-    //std::cout << "HSQ: " << m_handshakeQueue.size() << std::endl;
-
     for( itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end(); itr++)
     {
 
     	unsigned int key = itr->first;
-    	boost::posix_time::ptime etime( boost::posix_time::from_iso_string(itr->second["expiry"]) +
-    									 boost::posix_time::seconds(m_handshakeExpirySeconds));
+    	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
+    			 boost::posix_time::seconds(m_handshakeExpirySeconds);
 
     	if ( now > etime )
     	{
@@ -50,21 +50,55 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 
     }
 
-    expiry_timer_->expires_from_now(boost::posix_time::milliseconds(expiry_timer_delay_milliseconds_));
-    expiry_timer_->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
+    /**
+     * Sweep for server sessions ... expire any that are older than m_sessionExpirySeconds
+     */
+
+    std::map<std::string,std::map<std::string,std::string> >::iterator itr2;
+    for ( itr2 = m_serverData.begin(); itr2 != m_serverData.end(); itr2++ )
+    {
+    	std::string s = itr2->first;
+
+    	etime =  boost::posix_time::from_iso_string(itr2->second["expiry"]) +
+    			 boost::posix_time::seconds(m_sessionExpirySeconds);
+
+    	if ( now > etime )
+    	{
+    		std::cout << "     EXPIRE server session - " << s << std::endl;
+    		removeServerSession(s);
+    	}
+
+    }
+
+    std::cout << "=============== Sessions [" << m_serverData.size() << "]======================" << std::endl;
+    for ( itr2 = m_serverData.begin(); itr2 != m_serverData.end(); itr2++ )
+    {
+    	std::cout << "=====> Server Session [ " << itr2->first << "]" << std::endl;
+    	for ( attr_iter = itr2->second.begin(); attr_iter != itr2->second.end() ; attr_iter++ )
+    	{
+    		std::cout << "==========> [" << attr_iter->first << "][" << attr_iter->second << "]" << std::endl;
+    	}
+    }
+    std::cout << "=============================================" << std::endl;
+
+    /**
+     * Set the next timer trigger
+     */
+    m_expiryTimer->expires_from_now(boost::posix_time::milliseconds(m_expiryDelayMilliseconds));
+    m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
 }
 
 void
 MetaServer::update_timer(const boost::system::error_code& error)
 {
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	//std::cout << "update_timer_(" << now << ")" << std::endl;
+	//std::cout << "m_updateTimer(" << now << ")" << std::endl;
 	/**
 	 * do update tasks
 	 * possibly add a time of last update and do a delta and sleep less if we're running behind
 	 */
-    update_timer_->expires_from_now(boost::posix_time::milliseconds(update_timer_delay_milliseconds_));
-    update_timer_->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
+    m_updateTimer->expires_from_now(boost::posix_time::milliseconds(m_updateDelayMilliseconds));
+    m_updateTimer->async_wait(boost::bind(&MetaServer::update_timer, this, boost::asio::placeholders::error));
 }
 
 
@@ -108,15 +142,12 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 
 	//boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 	//boost::posix_time::time_duration duration( now.time_of_day() );
-
-	//unsigned int tick = duration.total_milliseconds();
-
-	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+	//unsigned int tick = duration.total_milliseconds()
 
 	std::map<std::string,std::string> tmp_;
 
 	tmp_["ip"] = in.getAddress();
-	tmp_["expiry"] = boost::posix_time::to_iso_string(now);
+	tmp_["expiry"] = boost::posix_time::to_iso_string( getNow() );
 
 	uint32_t i = addHandshake(handshake,tmp_);
 
@@ -124,17 +155,40 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 
 	out.setPacketType(NMT_HANDSHAKE);
 	out.addPacketData(handshake);
-	//out.dumpBuffer();
 
 }
 
+/**
+ * NMT_SERVERSHAKE - last part of the 3-way server handshake
+ * Response: None
+ * @param in
+ * @param out
+ */
 void
 MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddress();
 	std::cout << "SERVERSHAKE : " << shake << std::endl;
-	removeHandshake(shake);
+
+	/**
+	 * If a handshake exists, we can know the following:
+	 * 1) the client is valid
+	 * 2) they have a non-expired handshake
+	 *
+	 * What we do then is to:
+	 * 1) register a server session
+	 * 2) de-register the handshake ( maybe we just let it expire ? )
+	 */
+	if( m_handshakeQueue.find(shake) != m_handshakeQueue.end() )
+	{
+		std::stringstream ss;
+		ss << in.getPort();
+
+		addServerSession(ip);
+		addServerAttribute(ip,"port", ss.str() );
+	}
+
 }
 
 int
@@ -149,6 +203,53 @@ MetaServer::removeHandshake(unsigned int hs)
 {
 	std::cout << "removeHandshake : " << hs << std::endl;
 	m_handshakeQueue.erase(hs);
+}
+
+void
+MetaServer::addServerAttribute(std::string sessionid, std::string name, std::string value )
+{
+	/**
+	 *  check if session exists
+	 *  check if attr exists
+	 *  	if yes, update
+	 *  	if no, insert
+	 */
+	m_serverData[sessionid][name] = value;
+}
+
+void
+MetaServer::removeServerAttribute(std::string sessionid, std::string name )
+{
+	/**
+	 * 	Some attributes are protected
+	 * 	ip
+	 * 	port
+	 * 	expiry
+	 */
+	if ( m_serverData.find(sessionid) != m_serverData.end() )
+	{
+		if ( name != "ip" && name != "expiry" && name != "port" )
+		{
+			m_serverData[sessionid].erase(name);
+		}
+
+	}
+}
+
+void
+MetaServer::addServerSession(std::string ip)
+{
+	std::map<std::string,std::string> attrs;
+
+	addServerAttribute(ip,"ip",ip);
+	addServerAttribute(ip,"expiry", boost::posix_time::to_iso_string( getNow() ) );
+
+}
+
+void
+MetaServer::removeServerSession(std::string sessionid)
+{
+	m_serverData.erase(sessionid);
 }
 
 void
@@ -170,4 +271,12 @@ MetaServer::dumpHandshake()
 
     }
 }
+
+boost::posix_time::ptime
+MetaServer::getNow()
+{
+	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
+	return now;
+}
+
 

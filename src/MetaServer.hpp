@@ -2,6 +2,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <sstream>
 #include <map>
 #include <queue>
 #include <boost/array.hpp>
@@ -38,7 +39,12 @@ class MetaServer
 	void processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out);
 	int addHandshake(unsigned int hs, std::map<std::string,std::string> attr);
 	void removeHandshake(unsigned int hs);
+	void addServerAttribute(std::string sessionid, std::string name, std::string value );
+	void removeServerAttribute(std::string sessionid, std::string name );
+	void addServerSession(std::string sessionid);
+	void removeServerSession(std::string sessionid);
 	void dumpHandshake();
+	boost::posix_time::ptime getNow();
 
 
    private:
@@ -52,13 +58,15 @@ class MetaServer
 	 *  	"attribute2" => "value2"
 	 *  }
 	 */
-	std::map<std::string, std::map<std::string,std::string> > ms_data_;
+	std::map<std::string, std::map<std::string,std::string> > m_serverData;
+	std::map<std::string, std::map<std::string,std::string> > m_clientData;
 	std::map<unsigned int,std::map<std::string,std::string> > m_handshakeQueue;
 	unsigned int m_handshakeExpirySeconds;
-	boost::asio::deadline_timer* expiry_timer_;
-	boost::asio::deadline_timer* update_timer_;
-	unsigned int expiry_timer_delay_milliseconds_;
-	unsigned int update_timer_delay_milliseconds_;
+	boost::asio::deadline_timer* m_expiryTimer;
+	boost::asio::deadline_timer* m_updateTimer;
+	unsigned int m_expiryDelayMilliseconds;
+	unsigned int m_updateDelayMilliseconds;
+	unsigned int m_sessionExpirySeconds;
 
 
 };
