@@ -96,6 +96,10 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     
     if (op->getClassNo() == UNSEEN_NO)
     {
+        if (args.empty()) {
+            warning() << "Avatar received unseen with ampty args";
+            return IGNORED;
+        }
         m_view->unseen(args.front()->getId());
         return HANDLED;
     }
