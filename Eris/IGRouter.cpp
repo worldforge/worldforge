@@ -52,7 +52,10 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
     const std::vector<Root>& args = op->getArgs();
 
     if (op->getClassNo() == SIGHT_NO) {
-        assert(!args.empty());
+        if (args.empty()) {
+            warning() << "Avatar received sight with ampty args";
+            return IGNORED;
+        }
         if (args.front()->instanceOf(ROOT_OPERATION_NO)) return handleSightOp(op);
         
         // initial sight of entities

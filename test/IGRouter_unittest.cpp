@@ -92,7 +92,15 @@ int main()
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
 
-        // FIXME no args causes crash
+        Atlas::Objects::Operation::Sight op;
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::IGNORED);
+    }
+
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
         Atlas::Objects::Operation::Sight op;
         op->setArgs1(Root());
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
