@@ -29,9 +29,10 @@ MetaServerPacket::MetaServerPacket()
 		  m_Port(0),
 		  m_Address("")
 {
-	// in a default situation, we have no buffer passed in so we internally create one
-	//boost::array<char,MAX_PACKET_BYTES> *buf = new boost::array<char,MAX_PACKET_BYTES>();
-	//MetaServerPacket(buf);
+	m_readPtr  = m_packetPayload.data();
+	m_headPtr  = m_packetPayload.data();
+	m_writePtr = m_packetPayload.c_array();
+	m_packetPayload.assign(0);
 }
 
 MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes )

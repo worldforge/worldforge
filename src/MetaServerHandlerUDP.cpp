@@ -90,6 +90,7 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 
 		if ( rsp.getSize() > 0 && rsp.getPacketType() != NMT_NULL )
 		{
+		  std::cout << "UDP: Outgoing Packet [" << rsp.getAddress() << "][" << rsp.getPacketType() << "][" << rsp.getSize() << "]" << std::endl;
 	      m_Socket.async_send_to(boost::asio::buffer(rsp.getBuffer(),rsp.getSize()), m_remoteEndpoint,
 	          boost::bind(&MetaServerHandlerUDP::handle_send, this, rsp,
 	            boost::asio::placeholders::error,
@@ -111,7 +112,7 @@ void
 MetaServerHandlerUDP::handle_send(MetaServerPacket& p, const boost::system::error_code& error, std::size_t bytes_sent)
 {
 	// include counters and stuff
-	std::cout << "UDP: Outgoing Packet [" << p.getAddress() << "][" << p.getPacketType() << "][" << bytes_sent << "]" << std::endl;
+	//std::cout << "UDP: Outgoing Packet [" << p.getAddress() << "][" << p.getPacketType() << "][" << bytes_sent << "]" << std::endl;
 }
 
 /**

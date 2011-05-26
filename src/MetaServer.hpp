@@ -55,16 +55,28 @@ class MetaServer
 	~MetaServer();
 	void expiry_timer(const boost::system::error_code& error);
 	void update_timer(const boost::system::error_code& error);
+
 	void processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp);
 	void processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out);
 	void processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out);
 	void processTERMINATE(MetaServerPacket& in, MetaServerPacket& out);
-	int addHandshake(unsigned int hs, std::map<std::string,std::string> attr);
+	void processCLIENTKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out);
+	void processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out);
+
+	uint32_t addHandshake();
 	void removeHandshake(unsigned int hs);
+
 	void addServerAttribute(std::string sessionid, std::string name, std::string value );
 	void removeServerAttribute(std::string sessionid, std::string name );
+	void addClientAttribute(std::string sessionid, std::string name, std::string value );
+	void removeClientAttribute(std::string sessionid, std::string name );
+
+
 	void addServerSession(std::string sessionid);
 	void removeServerSession(std::string sessionid);
+	void addClientSession(std::string sessionid);
+	void removeClientSession(std::string sessionid);
+
 	void dumpHandshake();
 	boost::posix_time::ptime getNow();
 
@@ -89,6 +101,7 @@ class MetaServer
 	unsigned int m_expiryDelayMilliseconds;
 	unsigned int m_updateDelayMilliseconds;
 	unsigned int m_sessionExpirySeconds;
+	unsigned int m_clientExpirySeconds;
 
 
 };

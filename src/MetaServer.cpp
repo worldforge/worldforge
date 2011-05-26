@@ -27,7 +27,8 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	: m_expiryDelayMilliseconds(1500),
 	  m_updateDelayMilliseconds(4000),
 	  m_handshakeExpirySeconds(30),
-	  m_sessionExpirySeconds(300)
+	  m_sessionExpirySeconds(300),
+	  m_clientExpirySeconds(300)
 {
 	m_serverData.clear();
 	m_clientData.clear();
@@ -92,7 +93,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
     }
 
 
-    std::cout << "=============== Sessions [" << m_serverData.size() << "]======================" << std::endl;
+    //std::cout << "=============== Sessions [" << m_serverData.size() << "]======================" << std::endl;
     /**
     for ( itr2 = m_serverData.begin(); itr2 != m_serverData.end(); itr2++ )
     {
@@ -145,6 +146,12 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	case NMT_TERMINATE:
 		processTERMINATE(msp,rsp);
 		break;
+	case NMT_CLIENTKEEPALIVE:
+		processCLIENTKEEPALIVE(msp,rsp);
+		break;
+	case NMT_CLIENTSHAKE:
+		processCLIENTSHAKE(msp,rsp);
+		break;
 	default:
 		std::cout << "Packet type [" << msp.getPacketType() << "] not supported" << std::endl;
 	}
@@ -163,26 +170,15 @@ void
 MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 {
 
-	unsigned int handshake = rand();
+	uint32_t i = addHandshake();
 
-	std::string a = in.getAddress();
-
-	//boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	//boost::posix_time::time_duration duration( now.time_of_day() );
-	//unsigned int tick = duration.total_milliseconds()
-
-	std::map<std::string,std::string> tmp_;
-
-	tmp_["ip"] = in.getAddress();
-	tmp_["expiry"] = boost::posix_time::to_iso_string( getNow() );
-
-	uint32_t i = addHandshake(handshake,tmp_);
-
-	std::cout << "handshake(" << i << ") : " << handshake << std::endl;
-
-	out.setPacketType(NMT_HANDSHAKE);
-	out.addPacketData(handshake);
-
+	if ( i > 0 )
+	{
+		std::cout << "processSERVERKEEPALIVE(" << i << ") : " << std::endl;
+		out.setPacketType(NMT_HANDSHAKE);
+		out.addPacketData(i);
+		out.setAddress( in.getAddress() );
+	}
 }
 
 /**
@@ -229,12 +225,59 @@ MetaServer::processTERMINATE(MetaServerPacket& in, MetaServerPacket& out)
 
 }
 
-
-int
-MetaServer::addHandshake(unsigned int hs, std::map<std::string,std::string> attr )
+void
+MetaServer::processCLIENTKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 {
-	m_handshakeQueue[hs] = attr;
-	return m_handshakeQueue.size();
+
+	uint32_t i = addHandshake();
+
+	if ( i > 0 )
+	{
+		std::cout << "processCLIENTKEEPALIVE(" << i << ") : " << std::endl;
+		out.setPacketType(NMT_HANDSHAKE);
+		out.addPacketData(i);
+		out.setAddress( in.getAddress() );
+	}
+
+}
+
+void
+MetaServer::processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out)
+{
+	unsigned int shake = in.getIntData(4);
+	std::string ip = in.getAddress();
+	std::cout << "CLIENTSHAKE : " << shake << std::endl;
+
+	if( m_handshakeQueue.find(shake) != m_handshakeQueue.end() )
+	{
+		std::stringstream ss;
+		ss << in.getPort();
+
+		addClientSession(ip);
+		addClientAttribute(ip,"port", ss.str() );
+	}
+
+}
+
+
+uint32_t
+MetaServer::addHandshake()
+{
+	// generate random #, will not be 0 ( i hope )
+	unsigned int handshake = rand();
+	unsigned int ret = 0;
+
+	// set expiry in data structure
+	m_handshakeQueue[handshake]["expiry"] = boost::posix_time::to_iso_string( getNow() );
+
+	// if we find said element again, return handshake, otherwise 0
+	if ( m_handshakeQueue[handshake].find("expiry") != m_handshakeQueue[handshake].end() )
+	{
+		std::cout << "addHandshake(" << handshake << ") : " << std::endl;
+		ret = handshake;
+	}
+
+	return ret;
 }
 
 void
@@ -279,6 +322,38 @@ MetaServer::removeServerAttribute(std::string sessionid, std::string name )
 }
 
 void
+MetaServer::addClientAttribute(std::string sessionid, std::string name, std::string value )
+{
+	/**
+	 *  check if session exists
+	 *  check if attr exists
+	 *  	if yes, update
+	 *  	if no, insert
+	 */
+	m_clientData[sessionid][name] = value;
+}
+
+void
+MetaServer::removeClientAttribute(std::string sessionid, std::string name )
+{
+	/**
+	 * 	Some attributes are protected
+	 * 	ip
+	 * 	port
+	 * 	expiry
+	 */
+	if ( m_clientData.find(sessionid) != m_clientData.end() )
+	{
+		if ( name != "ip" && name != "expiry" && name != "port" )
+		{
+			m_clientData[sessionid].erase(name);
+		}
+
+	}
+}
+
+
+void
 MetaServer::addServerSession(std::string ip)
 {
 	addServerAttribute(ip,"ip",ip);
@@ -289,10 +364,26 @@ MetaServer::addServerSession(std::string ip)
 void
 MetaServer::removeServerSession(std::string sessionid)
 {
-	unsigned int res = m_serverData.erase(sessionid);
-	if( res == 1 )
+	if(  m_serverData.erase(sessionid) == 1 )
 	{
 		std::cout << "server session erased " << sessionid << std::endl;
+	}
+}
+
+void
+MetaServer::addClientSession(std::string ip)
+{
+	addClientAttribute(ip,"ip",ip);
+	addClientAttribute(ip,"expiry", boost::posix_time::to_iso_string( getNow() ) );
+
+}
+
+void
+MetaServer::removeClientSession(std::string sessionid)
+{
+	if( m_clientData.erase(sessionid) == 1 )
+	{
+		std::cout << "client session erased " << sessionid << std::endl;
 	}
 }
 
