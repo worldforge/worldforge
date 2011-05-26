@@ -414,6 +414,32 @@ int main()
         assert(!logoutRequested.flagged());
     }
 
+    {
+        TestAvatar * av = new TestAvatar();
+        TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+
+        Atlas::Objects::Operation::Logout op;
+        Root arg1;
+        Root arg2;
+        Root arg3;
+        arg2->setAttr("teleport_host", "ec66b165-9814-44d4-8326-ba9f31ce3224");
+        arg2->setAttr("teleport_port", 0xebc);
+        arg2->setAttr("possess_key", "2f281182-f285-48d7-812a-4f706954aa56");
+        arg2->setAttr("possess_entity_id", "1dab48d5-8784-4cfb-b1a2-e801fa99fc3a");
+        op->modifyArgs().push_back(arg1);
+        op->modifyArgs().push_back(arg2);
+        op->modifyArgs().push_back(arg3);
+        Eris::Router::RouterResult r = ir->test_handleOperation(op);
+        assert(r == Eris::Router::HANDLED);
+        assert(transferRequested.flagged());
+        assert(!logoutRequested.flagged());
+    }
+
     return 0;
 }
 
