@@ -74,7 +74,7 @@ Entity_unittest_LDADD = \
 Exceptions_unittest_SOURCES = Exceptions_unittest.cpp
 Factory_unittest_SOURCES = Factory_unittest.cpp
 
-IGRouter_unittest_SOURCES = IGRouter_unittest.cpp
+IGRouter_unittest_SOURCES = IGRouter_unittest.cpp SignalFlagger.h
 IGRouter_unittest_LDADD = \
     $(top_builddir)/Eris/IGRouter.lo \
     $(ERIS_DEPS)

@@ -33,11 +33,16 @@
 #include <Atlas/Objects/Operation.h>
 #include <Atlas/Objects/RootEntity.h>
 
+#include "SignalFlagger.h"
+
 using Atlas::Objects::Root;
 using Atlas::Objects::Entity::RootEntity;
 using Atlas::Objects::Operation::RootOperation;
 
 static bool stub_type_bound = false;
+
+static sigc::signal<void> _test_avatar_logoutRequested;
+static sigc::signal<void> _test_avatar_logoutWithTransferRequested;
 
 class TestAvatar : public Eris::Avatar
 {
@@ -182,35 +187,61 @@ int main()
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
 
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
+
         Atlas::Objects::Operation::Logout op;
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         op->setArgs1(Root());
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         op->modifyArgs().push_back(Root());
         op->modifyArgs().push_back(Root());
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         Root arg1;
@@ -220,11 +251,18 @@ int main()
         op->modifyArgs().push_back(arg2);
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
-    }
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
+   }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         Root arg1;
@@ -234,11 +272,18 @@ int main()
         op->modifyArgs().push_back(arg2);
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         Root arg1;
@@ -249,11 +294,18 @@ int main()
         op->modifyArgs().push_back(arg2);
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         Root arg1;
@@ -264,11 +316,18 @@ int main()
         op->modifyArgs().push_back(arg2);
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         Root arg1;
@@ -280,11 +339,18 @@ int main()
         op->modifyArgs().push_back(arg2);
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         Root arg1;
@@ -296,11 +362,18 @@ int main()
         op->modifyArgs().push_back(arg2);
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         Root arg1;
@@ -313,11 +386,18 @@ int main()
         op->modifyArgs().push_back(arg2);
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(!transferRequested.flagged());
+        assert(logoutRequested.flagged());
     }
 
     {
         TestAvatar * av = new TestAvatar();
         TestIGRouter * ir = new TestIGRouter(av);
+
+        SignalFlagger transferRequested;
+        SignalFlagger logoutRequested;
+        _test_avatar_logoutWithTransferRequested.connect(sigc::mem_fun(transferRequested, &SignalFlagger::set));
+        _test_avatar_logoutRequested.connect(sigc::mem_fun(logoutRequested, &SignalFlagger::set));
 
         Atlas::Objects::Operation::Logout op;
         Root arg1;
@@ -330,6 +410,8 @@ int main()
         op->modifyArgs().push_back(arg2);
         Eris::Router::RouterResult r = ir->test_handleOperation(op);
         assert(r == Eris::Router::HANDLED);
+        assert(transferRequested.flagged());
+        assert(!logoutRequested.flagged());
     }
 
     return 0;
@@ -396,10 +478,12 @@ Connection* Avatar::getConnection() const
 
 void Avatar::logoutRequested()
 {
+    _test_avatar_logoutRequested();
 }
 
 void Avatar::logoutRequested(const TransferInfo& transferInfo)
 {
+    _test_avatar_logoutWithTransferRequested();
 }
 
 void Avatar::updateWorldTime(double seconds)
