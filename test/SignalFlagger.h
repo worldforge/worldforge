@@ -20,7 +20,9 @@
 #ifndef ERIS_TEST_SIGNAL_FLAGGER_H
 #define ERIS_TEST_SIGNAL_FLAGGER_H
 
-class SignalFlagger {
+#include <sigc++/trackable.h>
+
+class SignalFlagger : public sigc::trackable {
   protected:
     bool m_emitted;
 
