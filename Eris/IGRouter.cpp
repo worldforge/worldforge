@@ -117,10 +117,6 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
             Element tp_port_attr;
             Element pkey_attr;
             Element pentity_id_attr;
-            std::string teleport_host;
-            int teleport_port;
-            std::string possess_key;
-            std::string possess_entity_id;
             if(arg->copyAttr("teleport_host", tp_host_attr) != 0
                     || !tp_host_attr.isString()) {
                 debug() << "No teleport host specified. Doing normal logout."
@@ -143,21 +139,17 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
                 gotArgs = false;
             }
 
-            // Extract argument data only if we succeed in extracting them all
+            // Extract argument data and request transfer only if we
+            // succeed in extracting them all
             if (gotArgs) {
-                teleport_host = tp_host_attr.String();
-                teleport_port = tp_port_attr.Int();
-                possess_key = pkey_attr.String();
-                possess_entity_id = pentity_id_attr.String();
-                debug() << "Server transfer data: Host: " << teleport_host << ", Port: "
-                << teleport_port << ", " << "Key: "
-                << possess_key << ", " << "ID: "
-                << possess_entity_id << std::endl << std::flush;
-            }
-
-
-            // Request transfer if all the arguments were extracted nicely
-            if (gotArgs) {
+                std::string teleport_host = tp_host_attr.String();
+                int teleport_port = tp_port_attr.Int();
+                std::string possess_key = pkey_attr.String();
+                std::string possess_entity_id = pentity_id_attr.String();
+                debug() << "Server transfer data: Host: " << teleport_host
+                    << ", Port: " << teleport_port << ", "
+                    << "Key: " << possess_key << ", "
+                    << "ID: " << possess_entity_id << std::endl << std::flush;
                 // Now do a transfer request
                 TransferInfo transfer(teleport_host, teleport_port, possess_key
                         , possess_entity_id);
