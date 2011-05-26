@@ -109,10 +109,10 @@ Router::RouterResult IGRouter::handleOperation(const RootOperation& op)
         debug() << "Avatar received forced logout from server";
         const std::vector<Root>& args = op->getArgs();
 
-        if(args.size() == 2) {
+        if(args.size() >= 2) {
             bool gotArgs = true;
-            // Teleport logout op
-            const Root & arg = args.back();
+            // Teleport logout op. The second attribute is the payload for the teleport host data.
+            const Root & arg = args[1];
             Element tp_host_attr;
             Element tp_port_attr;
             Element pkey_attr;
