@@ -1,3 +1,24 @@
+/**
+ Worldforge Next Generation MetaServer
+
+ Copyright (C) 2011 Sean Ryan <sryan@evercrack.com>
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+ */
+
 #include <ctime>
 #include <iostream>
 #include <iomanip>
@@ -37,6 +58,7 @@ class MetaServer
 	void processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp);
 	void processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out);
 	void processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out);
+	void processTERMINATE(MetaServerPacket& in, MetaServerPacket& out);
 	int addHandshake(unsigned int hs, std::map<std::string,std::string> attr);
 	void removeHandshake(unsigned int hs);
 	void addServerAttribute(std::string sessionid, std::string name, std::string value );
@@ -49,7 +71,7 @@ class MetaServer
 
    private:
 	/**
-	 *  Example Data Structure ( ms_data_ )
+	 *  Example Data Structure ( m_serverData )
 	 *  "192.168.1.200" => {
 	 *  	"serverVersion" => "0.5.20",
 	 *  	"serverType" => "cyphesis",

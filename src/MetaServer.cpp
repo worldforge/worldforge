@@ -1,3 +1,24 @@
+/**
+ Worldforge Next Generation MetaServer
+
+ Copyright (C) 2011 Sean Ryan <sryan@evercrack.com>
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+ */
+
 #include "MetaServer.hpp"
 #include "MetaServerHandlerTCP.hpp"
 #include "MetaServerHandlerUDP.hpp"
@@ -70,7 +91,9 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 
     }
 
+
     std::cout << "=============== Sessions [" << m_serverData.size() << "]======================" << std::endl;
+    /**
     for ( itr2 = m_serverData.begin(); itr2 != m_serverData.end(); itr2++ )
     {
     	std::cout << "=====> Server Session [ " << itr2->first << "]" << std::endl;
@@ -81,6 +104,7 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
     }
     std::cout << "=============================================" << std::endl;
 
+	*/
     /**
      * Set the next timer trigger
      */
@@ -117,6 +141,9 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		break;
 	case NMT_SERVERSHAKE:
 		processSERVERSHAKE(msp,rsp);
+		break;
+	case NMT_TERMINATE:
+		processTERMINATE(msp,rsp);
 		break;
 	default:
 		std::cout << "Packet type [" << msp.getPacketType() << "] not supported" << std::endl;
@@ -191,6 +218,18 @@ MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 
 }
 
+void
+MetaServer::processTERMINATE(MetaServerPacket& in, MetaServerPacket& out)
+{
+	if( m_serverData.find( in.getAddress() ) != m_serverData.end() )
+	{
+		std::cout << "terminate session " << in.getAddress() << std::endl;
+		removeServerSession(in.getAddress());
+	}
+
+}
+
+
 int
 MetaServer::addHandshake(unsigned int hs, std::map<std::string,std::string> attr )
 {
@@ -201,8 +240,11 @@ MetaServer::addHandshake(unsigned int hs, std::map<std::string,std::string> attr
 void
 MetaServer::removeHandshake(unsigned int hs)
 {
-	std::cout << "removeHandshake : " << hs << std::endl;
-	m_handshakeQueue.erase(hs);
+	unsigned int res = m_handshakeQueue.erase(hs);
+	if ( res == 1 )
+	{
+		std::cout << "removeHandshake : " << hs << std::endl;
+	}
 }
 
 void
@@ -239,8 +281,6 @@ MetaServer::removeServerAttribute(std::string sessionid, std::string name )
 void
 MetaServer::addServerSession(std::string ip)
 {
-	std::map<std::string,std::string> attrs;
-
 	addServerAttribute(ip,"ip",ip);
 	addServerAttribute(ip,"expiry", boost::posix_time::to_iso_string( getNow() ) );
 
@@ -249,7 +289,11 @@ MetaServer::addServerSession(std::string ip)
 void
 MetaServer::removeServerSession(std::string sessionid)
 {
-	m_serverData.erase(sessionid);
+	unsigned int res = m_serverData.erase(sessionid);
+	if( res == 1 )
+	{
+		std::cout << "server session erased " << sessionid << std::endl;
+	}
 }
 
 void

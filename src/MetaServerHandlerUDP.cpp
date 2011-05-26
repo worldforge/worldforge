@@ -1,3 +1,24 @@
+/**
+ Worldforge Next Generation MetaServer
+
+ Copyright (C) 2011 Sean Ryan <sryan@evercrack.com>
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+ */
+
 #include "MetaServerHandlerUDP.hpp"
 
 MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
@@ -42,17 +63,14 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 	if(!error || error == boost::asio::error::message_size )
 	{
 
-		std::cout << "UDP : Incoming packet  [" << bytes_recvd << "]" << std::endl;
-		std::cout << "      : from  [ " << m_remoteEndpoint.address().to_string() << " ]" << std::endl;
-		std::cout << "      : port  [ " << m_remoteEndpoint.port() << " ]" << std::endl;
-
-
 		/**
 		 *  Create a MSP from the incoming buffer and add in some useful information
 		 */
 		MetaServerPacket msp( m_recvBuffer , bytes_recvd );
 		msp.setAddress(m_remoteEndpoint.address().to_string());
 		msp.setPort(m_remoteEndpoint.port());
+
+		std::cout << "UDP: Incoming Packet [" << msp.getAddress() << "][" << msp.getPacketType() << "][" << bytes_recvd << "]" << std::endl;
 
 		/**
 		 *  Define an empty MSP ( the buffer is internally created )
@@ -93,7 +111,7 @@ void
 MetaServerHandlerUDP::handle_send(MetaServerPacket& p, const boost::system::error_code& error, std::size_t bytes_sent)
 {
 	// include counters and stuff
-	std::cout << "UDP: Outgoing Packet [" << p.getPacketType() << "][" << bytes_sent << "]" << std::endl;
+	std::cout << "UDP: Outgoing Packet [" << p.getAddress() << "][" << p.getPacketType() << "][" << bytes_sent << "]" << std::endl;
 }
 
 /**
