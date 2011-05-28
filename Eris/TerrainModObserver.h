@@ -71,10 +71,10 @@ public:
     virtual bool init(bool alwaysObserve = false);
 
     /**
-    *    @brief Used to retrieve a pointer to this modifier
+    * @brief Used to retrieve a pointer to this modifier
     * @returns a pointer to this modifier
     */
-    inline Mercator::TerrainMod* getMod() const;
+    Mercator::TerrainMod* getMod() const;
 
     
     /**
