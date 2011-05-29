@@ -68,10 +68,27 @@ int main()
 
 // stubs
 
-// MetaServer won't currently link to this file as it contains the main function
+void
+MetaServerPacket::setAddress(boost::asio::ip::address a)
+{
+
+}
+
+boost::asio::ip::address
+MetaServerPacket::getAddress()
+{
+	boost::asio::ip::address a;
+	return a;
+}
+
+uint32_t
+MetaServerPacket::getAddressInt()
+{
+	return 0;
+}
 
 std::string
-MetaServerPacket::getAddress()
+MetaServerPacket::getAddressStr()
 {
     return "";
 }
