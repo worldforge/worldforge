@@ -26,6 +26,7 @@
 #include <sstream>
 #include <map>
 #include <queue>
+#include <algorithm>
 #include <boost/array.hpp>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -62,6 +63,7 @@ class MetaServer
 	void processTERMINATE(MetaServerPacket& in, MetaServerPacket& out);
 	void processCLIENTKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out);
 	void processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out);
+	void processLISTREQ(MetaServerPacket& in, MetaServerPacket& out);
 
 	uint32_t addHandshake();
 	void removeHandshake(unsigned int hs);
@@ -93,6 +95,7 @@ class MetaServer
 	 *  }
 	 */
 	std::map<std::string, std::map<std::string,std::string> > m_serverData;
+	std::list<std::string> m_serverDataList;
 	std::map<std::string, std::map<std::string,std::string> > m_clientData;
 	std::map<unsigned int,std::map<std::string,std::string> > m_handshakeQueue;
 	unsigned int m_handshakeExpirySeconds;

@@ -25,6 +25,7 @@
 #define METASERVERPACKET_HPP_
 
 #define MAX_PACKET_BYTES 1024
+#define MAX_UDP_OUT_BYTES 570
 
 class MetaServerPacket
 {
@@ -37,8 +38,10 @@ public:
 	NetMsgType getPacketType();
 	void setPacketType(NetMsgType nmt);
 
-	std::string getAddress();
-	void setAddress(std::string address);
+	std::string getAddressStr();
+	boost::uint32_t getAddressInt();
+	boost::asio::ip::address getAddress();
+	void setAddress(boost::asio::ip::address address);
 
 	unsigned int getPort();
 	void setPort(unsigned int p);
@@ -50,6 +53,8 @@ public:
 
 	std::string getPacketMessage(unsigned int offset);
 	uint32_t getIntData(unsigned int offset);
+
+	boost::uint32_t	IpAsciiToNet(const char *buffer);
 
 	boost::array<char,MAX_PACKET_BYTES>& getBuffer();
 
@@ -64,7 +69,9 @@ private:
 	char *unpack_string(std::string *dest, char* buffer, unsigned int length );
 
 	NetMsgType m_packetType;
-	std::string m_Address;
+	boost::asio::ip::address m_Address;
+	boost::uint32_t m_AddressInt;
+	std::string m_AddressStr;
 	unsigned int m_Port;
 	std::size_t m_Bytes;
 	char * m_headPtr;

@@ -23,7 +23,7 @@
 
 MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
 					  boost::asio::io_service& ios,
-		              const std::string& address,
+		              const std::string address,
 		              const unsigned int port )
    : m_msRef(ms),
 	 m_Address(address),
@@ -67,10 +67,17 @@ MetaServerHandlerUDP::handle_receive(const boost::system::error_code& error,
 		 *  Create a MSP from the incoming buffer and add in some useful information
 		 */
 		MetaServerPacket msp( m_recvBuffer , bytes_recvd );
-		msp.setAddress(m_remoteEndpoint.address().to_string());
+
+		msp.setAddress(m_remoteEndpoint.address());
 		msp.setPort(m_remoteEndpoint.port());
 
+
 		std::cout << "UDP: Incoming Packet [" << msp.getAddress() << "][" << msp.getPacketType() << "][" << bytes_recvd << "]" << std::endl;
+
+		// ip to dec
+		//127.0.1.1 = 2130706689
+		//https://github.com/maidsafe/MaidSafe-DHT/blob/master/src/maidsafe/dht/transport/utils.cc
+		//boost::asio::detail::socket_addr_type::sockaddr().sockaddr::sa_
 
 		/**
 		 *  Define an empty MSP ( the buffer is internally created )

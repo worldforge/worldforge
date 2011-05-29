@@ -32,6 +32,7 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 {
 	m_serverData.clear();
 	m_clientData.clear();
+	m_serverDataList.clear();
 	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
 	m_updateTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
@@ -92,9 +93,27 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 
     }
 
+    /**
+     * Sweep the ordered list we dish out in a listresp
+     */
+    std::list<std::string>::iterator list_itr;
+    for ( list_itr = m_serverDataList.begin(); list_itr != m_serverDataList.end(); list_itr++ )
+    {
+    	std::cout << "          m_serverDataList : " << *list_itr << std::endl;
+    	/*
+    	 * If find that one of the listresp items does NOT exist in the
+    	 * main data structure, we want to purge it
+    	 */
+    	if ( m_serverData.find( *list_itr ) == m_serverData.end() )
+    	{
+    		std::cout << "removing stale listresp ref: " << *list_itr << std::endl;
+    		m_serverDataList.remove( *list_itr );
+    	}
+    }
+
 
     //std::cout << "=============== Sessions [" << m_serverData.size() << "]======================" << std::endl;
-    /**
+
     for ( itr2 = m_serverData.begin(); itr2 != m_serverData.end(); itr2++ )
     {
     	std::cout << "=====> Server Session [ " << itr2->first << "]" << std::endl;
@@ -103,9 +122,10 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
     		std::cout << "==========> [" << attr_iter->first << "][" << attr_iter->second << "]" << std::endl;
     	}
     }
-    std::cout << "=============================================" << std::endl;
 
-	*/
+    //std::cout << "=============================================" << std::endl;
+
+
     /**
      * Set the next timer trigger
      */
@@ -152,6 +172,9 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	case NMT_CLIENTSHAKE:
 		processCLIENTSHAKE(msp,rsp);
 		break;
+	case NMT_LISTREQ:
+		processLISTREQ(msp,rsp);
+		break;
 	default:
 		std::cout << "Packet type [" << msp.getPacketType() << "] not supported" << std::endl;
 	}
@@ -191,7 +214,7 @@ void
 MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int shake = in.getIntData(4);
-	std::string ip = in.getAddress();
+	std::string ip = in.getAddressStr();
 	std::cout << "SERVERSHAKE : " << shake << std::endl;
 
 	/**
@@ -210,6 +233,12 @@ MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 
 		addServerSession(ip);
 		addServerAttribute(ip,"port", ss.str() );
+
+		// clear stream first
+		ss.str("");
+		ss << in.getAddressInt();
+
+		addServerAttribute(ip,"ip_int", ss.str() );
 	}
 
 }
@@ -217,10 +246,10 @@ MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 void
 MetaServer::processTERMINATE(MetaServerPacket& in, MetaServerPacket& out)
 {
-	if( m_serverData.find( in.getAddress() ) != m_serverData.end() )
+	if( m_serverData.find( in.getAddressStr() ) != m_serverData.end() )
 	{
-		std::cout << "terminate session " << in.getAddress() << std::endl;
-		removeServerSession(in.getAddress());
+		std::cout << "terminate session " << in.getAddressStr() << std::endl;
+		removeServerSession(in.getAddressStr());
 	}
 
 }
@@ -245,7 +274,7 @@ void
 MetaServer::processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int shake = in.getIntData(4);
-	std::string ip = in.getAddress();
+	std::string ip = in.getAddressStr();
 	std::cout << "CLIENTSHAKE : " << shake << std::endl;
 
 	if( m_handshakeQueue.find(shake) != m_handshakeQueue.end() )
@@ -255,6 +284,113 @@ MetaServer::processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 
 		addClientSession(ip);
 		addClientAttribute(ip,"port", ss.str() );
+	}
+
+}
+
+/**
+ * NMT_LISTREQ:
+ * 		4 bytes type
+ * 		4 bytes start index
+ *
+ * Response:
+ *
+ * NMT_LISTRESP
+ *
+ * 		4 bytes type
+ * 		4 bytes total servers in list
+ * 		4 bytes servers in this packet ( triggering client to have another REQ with total-servers offset )
+ * 		4 bytes per server in this packet
+ *
+ */
+void
+MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
+{
+	uint32_t server_index = in.getIntData(4);
+	uint32_t total = m_serverDataList.size();
+	uint32_t packed_max = total;
+	uint32_t packed = 0;
+	std::list<uint32_t> resp_list;
+
+	/*
+	 * If we are unable to pack the entire list into 1 packet
+	 */
+	if ( (total*sizeof(uint32_t) - (server_index*sizeof(uint32_t)) ) > (MAX_UDP_OUT_BYTES-4-4-4) )
+	{
+		/*
+		 * We want it to round ... just like the price is right, the goal is not to go over
+		 */
+		packed_max = (MAX_UDP_OUT_BYTES-4-4-4) / sizeof(uint32_t);
+	}
+
+
+    std::list<std::string>::iterator list_itr = m_serverDataList.begin();
+
+    /**
+     * HACK ALERT : I have to re-think this ... i need the random iterator of a vector
+     * but also the unique() of a list ... what I really want to do is:
+     * list_itr = m_serverDataList.begin() + server_index in order to offset the starting
+     * location by the index without losing the list functionality.
+     */
+    for ( int i = 0; i < server_index; i++ )
+    {
+    	++list_itr;
+    }
+
+    for ( ; list_itr != m_serverDataList.end(); list_itr++ )
+    {
+    	/*
+    	 * Defensive to make sure we're not going to exceed our max
+    	 */
+    	if ( packed >= packed_max )
+    		break;
+
+    	/*
+    	 * Defensive to make sure that the item in the list is
+    	 * actually a valid data item we can send ( orthogonal processes
+    	 * such as expiry could invalidate at any time ).
+    	 *
+    	 * Thus we can iterate over as much of the server list as we need to
+    	 * and dead items won't count, only those added to the response packet.
+    	 */
+    	if ( m_serverData.find( *list_itr ) != m_serverData.end() )
+    	{
+    		/*
+    		 * Note: see if there is a way to do this without atoi
+    		 */
+    		resp_list.push_back( atoi(m_serverData[*list_itr]["ip_int"].c_str() ) );
+    		++packed;
+    	}
+
+    }
+
+    std::cout << "Size1 : " << resp_list.size() << std::endl;
+    if ( packed != resp_list.size() )
+    {
+    	std::cout << "Packed [" << packed << "] Response [" << resp_list.size() << "] MISMATCH" << std::endl;
+    }
+
+	out.setAddress( in.getAddress() );
+	out.setPacketType(NMT_LISTRESP);
+
+	if ( resp_list.size() > 0 )
+	{
+		out.addPacketData( m_serverDataList.size() );
+		out.addPacketData( (uint32_t)resp_list.size() );
+		while ( ! resp_list.empty() )
+		{
+			//std::cout << "ADDING RESP :" << resp_list.front() << std::endl;
+			out.addPacketData(resp_list.front());
+			resp_list.pop_front();
+		}
+	}
+	else
+	{
+		/*
+		 *  For the record, I think this is a stupid protocol construct
+		 */
+		out.addPacketData( 0 );
+		out.addPacketData( 0 );
 	}
 
 }
@@ -356,7 +492,25 @@ MetaServer::removeClientAttribute(std::string sessionid, std::string name )
 void
 MetaServer::addServerSession(std::string ip)
 {
-	addServerAttribute(ip,"ip",ip);
+	/*
+	 *  If the server session does not exist, create it, and add+uniq the listresp
+	 */
+	if ( m_serverData.find(ip) == m_serverData.end() )
+	{
+		addServerAttribute(ip,"ip",ip);
+		m_serverDataList.push_back(ip);
+
+		/*
+		 *  This is a precautionary action in case there is a slip in logic
+		 *  that allows any dups.
+		 */
+		m_serverDataList.unique();
+	}
+
+	/*
+	 *  If a new structure, this will create the expiry, if existing it will just
+	 *  refresh the timeout
+	 */
 	addServerAttribute(ip,"expiry", boost::posix_time::to_iso_string( getNow() ) );
 
 }
@@ -364,6 +518,7 @@ MetaServer::addServerSession(std::string ip)
 void
 MetaServer::removeServerSession(std::string sessionid)
 {
+	m_serverDataList.remove(sessionid);
 	if(  m_serverData.erase(sessionid) == 1 )
 	{
 		std::cout << "server session erased " << sessionid << std::endl;

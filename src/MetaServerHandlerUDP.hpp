@@ -33,7 +33,7 @@ class MetaServerHandlerUDP : public MetaServerHandler
 
 public:
 
-	MetaServerHandlerUDP(MetaServer& ms, boost::asio::io_service& ios, const std::string& address, const unsigned int port);
+	MetaServerHandlerUDP(MetaServer& ms, boost::asio::io_service& ios, const std::string address, const unsigned int port);
 	~MetaServerHandlerUDP();
 	void start_receive();
 	void handle_receive(const boost::system::error_code& error, std::size_t);
