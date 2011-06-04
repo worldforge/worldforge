@@ -16,7 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-AC_INIT(metaserver-ng, 0.0.1, sryan@evercrack.com)
+AC_INIT(metaserver-ng, 0.0.2, sryan@evercrack.com)
 
 AC_CONFIG_SRCDIR(src)
 AC_CONFIG_MACRO_DIR([m4])
