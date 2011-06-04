@@ -2,7 +2,10 @@ INCLUDES = -I$(top_srcdir)/src
 SUBDIRS = src 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST = autogen.sh generate-ChangeLog.sh
+EXTRA_DIST = autogen.sh
+
+docdir = $(distdir)/doc
+dist_doc_DATA = README COPYING AUTHORS NEWS
 
 docs:
 	@echo "running doxygen..."

@@ -59,3 +59,8 @@ src/stamp-h1
 *.log
 *.mp4
 *.kdevelop
+# doxygen generated file
+*.dox
+# unit test progs
+src/*_unittest
+

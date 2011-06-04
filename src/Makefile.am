@@ -6,8 +6,6 @@ metaserver_ng_SOURCES = main.cpp MetaServer.cpp MetaServerHandler.cpp MetaServer
 
 metaserver_ng_LDFLAGS = -Wl
 
-noinst_HEADERS = MetaServer.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp TestServer.hpp
-
 TESTS = \
     MetaServerPacket_unittest \
     MetaServer_unittest

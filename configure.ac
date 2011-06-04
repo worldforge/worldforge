@@ -123,6 +123,7 @@ fi
 
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
+		 metaserver-ng.dox
 ])
 
 AC_OUTPUT
