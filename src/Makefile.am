@@ -4,6 +4,8 @@ bin_PROGRAMS = metaserver-ng
 
 metaserver_ng_SOURCES = main.cpp MetaServer.cpp MetaServerHandler.cpp MetaServerHandlerTCP.cpp MetaServerHandlerUDP.cpp MetaServerPacket.cpp
 
+noinst_HEADERS = MetaServerHandler.hpp MetaServerHandlerTCP.hpp MetaServerHandlerUDP.hpp MetaServer.hpp MetaServerPacket.hpp MetaServerProtocol.hpp TestServer.hpp
+
 metaserver_ng_LDFLAGS = -Wl
 
 TESTS = \
