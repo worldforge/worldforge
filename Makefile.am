@@ -2,7 +2,7 @@ INCLUDES = -I$(top_srcdir)/src
 SUBDIRS = src 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST = autogen.sh
+EXTRA_DIST = autogen.sh metaserver-ng.conf
 
 docdir = $(distdir)/doc
 dist_doc_DATA = README COPYING AUTHORS NEWS

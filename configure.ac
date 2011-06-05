@@ -85,6 +85,10 @@ AC_CHECK_LIB(boost_date_time, main, , [
 	AC_MSG_ERROR("Linking against boost::date_time library failed.")
 ])
 
+AC_CHECK_LIB(boost_program_options, main, , [
+	AC_MSG_ERROR("Linking against boost::program_options library failed.")
+])
+
 
 PKG_CHECK_MODULES( CPPUNIT, cppunit >= 1.12.0 )
 

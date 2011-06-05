@@ -28,7 +28,8 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_updateDelayMilliseconds(4000),
 	  m_handshakeExpirySeconds(30),
 	  m_sessionExpirySeconds(300),
-	  m_clientExpirySeconds(300)
+	  m_clientExpirySeconds(300),
+	  m_Config( * new boost::program_options::variables_map() )
 {
 	m_serverData.clear();
 	m_clientData.clear();
@@ -540,6 +541,19 @@ MetaServer::removeClientSession(std::string sessionid)
 	{
 		std::cout << "client session erased " << sessionid << std::endl;
 	}
+}
+
+void
+MetaServer::registerConfig( boost::program_options::variables_map & vm )
+{
+	m_Config = vm;
+
+	if( m_Config.count("performance.server_session_expiry_seconds") )
+		m_sessionExpirySeconds = m_Config["performance.server_session_expiry_seconds"].as<int>();
+
+	if( m_Config.count("performance.client_session_expiry_seconds") )
+		m_sessionExpirySeconds = m_Config["performance.client_session_expiry_seconds"].as<int>();
+
 }
 
 void
