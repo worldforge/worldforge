@@ -23,25 +23,61 @@
  * Assumptions:
  *		1) Any errors, or misbehaviour of any kind will be ignored / dropped
  *
- * 	NMT_NULL	Indicates that no response needs to be sent back
+ * 	NMT_NULL
+ * 		Description: empty packet
  * 		Type Size: 4 bytes
  * 		Value: 0
  * 		Payload Size: 0
  *
- * 	NMT_SERVERKEEPALIVE		indicates a keep alive for a server, also serves as a "registration"
+ * 	NMT_SERVERKEEPALIVE
+ * 		Description: A game server keep-alive packet, part 1 of a 3-packet handshake
  * 		Type Size: 4 bytes
  * 		Value: 1 ( 00 00 00 01 )
  * 		Payload Size: 0
  *
- * 	NMT_HANDSHAKE			Auth request
+ * 	NMT_HANDSHAKE
+ * 		Description: The metaserver response to a SERVERKEEPALIVE or CLIENTKEEPALIVE, part 2 of 3-packet handshake
+ * 		             Contains a random number.
  * 		Type Size: 4 bytes
  * 		Value: 3 ( 00 00 00 03 )
  * 		Payload Size: 4 bytes ( a random int )
  *
- * 	NMT_SERVERSHAKE			Auth response
+ * 	NMT_SERVERSHAKE
+ * 		Description: The game server response to a HANDSHAKE, part 3 of 3-packet handshake.
+ * 					 Triggers a new game server sesssion to be created, or updated.
  * 		Type Size: 4 bytes
  * 		Value: 4 ( 00 00 00 04 )
  * 		Payload Size: 4 bytes ( random int )
+ *
+ * 	NMT_CLIENTKEEPALIVE
+ * 		Description: The game client keep-alive packet, part 1 of 3-packet handshake
+ *		Type Size: 4 bytes
+ *		Value: 2 ( 00 00 00 02 )
+ *		Payload Size: 0
+ *
+ *	NMT_CLIENTSHAKE
+ *		Description: The game client response to a HANDSHAKE, part 3 of a 3-packet handshake
+ *		Type Size: 4 bytes
+ *		Value: 5 ( 00 00 00 05 )
+ * 		Payload Size: 4 bytes ( random int )
+ *
+ * 	NMT_LISTREQ
+ * 		Description: A client request to give a list of servers
+ * 		Type Size: 4 bytes
+ * 		Value: 7 ( 00 00 00 07 )
+ * 		Payload Size: 4 bytes ( int of the offset )
+ *
+ * 	NMT_LISTRESP
+ * 		Description: The metaserver response with the values of IPs.
+ * 		Type Size: 4 bytes
+ * 		Value: 8 ( 00 00 00 08 )
+ * 		Payload Size: Variable
+ * 			4 bytes - int total servers sent
+ * 			4 bytes - int packed servers sent
+ * 			4 bytes - a 4 byte block representing EACH IP of the servers.  So if packed was set to 6,
+ * 			          this block would be 24 bytes long.
+ *
+ *Example Use Cases:
  *
  *	Use Case 1: Server Registration or Keep-alive.  Only servers with sessions can perform additional
  *	            requests, such as attribute registration/removal.
