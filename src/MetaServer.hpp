@@ -38,6 +38,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
 
@@ -103,7 +104,6 @@ class MetaServer
 	std::list<std::string> m_serverDataList;
 	std::map<std::string, std::map<std::string,std::string> > m_clientData;
 	std::map<unsigned int,std::map<std::string,std::string> > m_handshakeQueue;
-	boost::program_options::variables_map& m_Config;
 	unsigned int m_handshakeExpirySeconds;
 	boost::asio::deadline_timer* m_expiryTimer;
 	boost::asio::deadline_timer* m_updateTimer;
@@ -111,6 +111,10 @@ class MetaServer
 	unsigned int m_updateDelayMilliseconds;
 	unsigned int m_sessionExpirySeconds;
 	unsigned int m_clientExpirySeconds;
+	unsigned int m_maxServerSessions;
+	unsigned int m_maxClientSessions;
+	bool m_keepServerStats;
+	bool m_keepClientStats;
 
 
 };

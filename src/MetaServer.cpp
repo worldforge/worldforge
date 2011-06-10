@@ -29,7 +29,10 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_handshakeExpirySeconds(30),
 	  m_sessionExpirySeconds(300),
 	  m_clientExpirySeconds(300),
-	  m_Config( * new boost::program_options::variables_map() )
+	  m_keepServerStats(false),
+	  m_keepClientStats(false),
+	  m_maxServerSessions(1024),
+	  m_maxClientSessions(4096)
 {
 	m_serverData.clear();
 	m_clientData.clear();
@@ -374,6 +377,11 @@ MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
 	out.setAddress( in.getAddress() );
 	out.setPacketType(NMT_LISTRESP);
 
+	/**
+	 * If the list is empty, just send a 0,0 to indicate completion.
+	 * NOTE: I think this logic is a bug in the protocol, as the
+	 * 		original MS code looks as if this was just not working correctly.
+	 */
 	if ( resp_list.size() > 0 )
 	{
 		out.addPacketData( m_serverDataList.size() );
@@ -546,13 +554,68 @@ MetaServer::removeClientSession(std::string sessionid)
 void
 MetaServer::registerConfig( boost::program_options::variables_map & vm )
 {
-	m_Config = vm;
 
-	if( m_Config.count("performance.server_session_expiry_seconds") )
-		m_sessionExpirySeconds = m_Config["performance.server_session_expiry_seconds"].as<int>();
+	/*
+	 * Print out the startup values
+	 */
+	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
+	{
+		if ( it->second.value().type() == typeid(int) )
+		{
+			std::cout << "  " << it->first <<  "=" << it->second.as<int>() << std::endl;
+		}
+		else if (it->second.value().type() == typeid(std::string) )
+		{
+			std::cout << "  " << it->first <<  "=" << it->second.as<std::string>() << std::endl;
+		}
+	}
 
-	if( m_Config.count("performance.client_session_expiry_seconds") )
-		m_sessionExpirySeconds = m_Config["performance.client_session_expiry_seconds"].as<int>();
+	/*
+	 * All configuration items passed in must be converted to local type
+	 * member variables, or are ignored.  We do not want to reference a
+	 * variable_map during operation as a bad_cast exception could cause
+	 * server failure during the run loop.
+	 */
+	if( vm.count("performance.server_session_expiry_seconds") )
+		m_sessionExpirySeconds = vm["performance.server_session_expiry_seconds"].as<int>();
+
+	if( vm.count("performance.client_session_expiry_seconds") )
+		m_clientExpirySeconds = vm["performance.client_session_expiry_seconds"].as<int>();
+
+	if ( vm.count("performance.max_client_sessions") )
+		m_maxClientSessions = vm["performance.max_client_sessions"].as<int>();
+
+	if ( vm.count("performance.max_server_sessions") )
+		m_maxServerSessions = vm["performance.max_server_sessions"].as<int>();
+
+
+	if( vm.count("server.keep_client_stats") )
+	{
+		std::string s = vm["server.keep_client_stats"].as<std::string>();
+		if ( boost::iequals(s,"true") )
+		{
+			m_keepClientStats = true;
+		}
+		else if ( boost::iequals(s,"false") )
+		{
+			m_keepClientStats = false;
+		}
+
+	}
+
+	if( vm.count("server.keep_server_stats") )
+	{
+		std::string s = vm["server.keep_server_stats"].as<std::string>();
+		if ( boost::iequals(s,"true") )
+		{
+			m_keepServerStats = true;
+		}
+		else if ( boost::iequals(s,"false") )
+		{
+			m_keepServerStats = false;
+		}
+
+	}
 
 }
 

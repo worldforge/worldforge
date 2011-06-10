@@ -51,7 +51,8 @@ int main(int argc, char** argv)
 		( "help,h", "Display help message" )
 		( "server.port,p", boost::program_options::value<int>(), "Server bind port. \nDefault:8543" )
 		( "server.ip", boost::program_options::value<std::string>(), "Server bind IP. \nDefault:0.0.0.0" )
-		( "server.stats", boost::program_options::value<std::string>(), "Keep internals stats [true|false].  This can affect performance.\nDefault: false" )
+		( "server.keep_client_stats", boost::program_options::value<std::string>(), "Keep internals stats [true|false].  This can affect performance.\nDefault: false" )
+		( "server.keep_server_stats", boost::program_options::value<std::string>(), "Keep internals stats [true|false].  This can affect performance.\nDefault: false" )
 		( "security.auth_scheme", boost::program_options::value<std::string>(), "What method of authentication to use [none|server|delegate|both].\nDefault: none" )
 		( "performance.max_server_sessions", boost::program_options::value<int>(), "Max number of server sessions [1-32768].\nDefault: 1024" )
 		( "performance.max_client_sessions", boost::program_options::value<int>(), "Max number of client sessions [1-32768].\nDefault: 4096")
@@ -63,8 +64,6 @@ int main(int argc, char** argv)
 	 * Create our metaserver
 	 */
 	MetaServer ms(io_service);
-
-
 
 	try
 	{
@@ -89,28 +88,6 @@ int main(int argc, char** argv)
 			return 1;
 		}
 
-		ms.registerConfig(vm);
-
-		/**
-		 *  This is crazy stuff to deal with the boost::any casting mojo that comes
-		 *  from the variable_map inheritance.  This should only be relevant for
-		 *  fully iterating the list, as when requesting a specific value, you would
-		 *  always know what type you need.  The other option is to just have it all
-		 *  as std::string and atoi when a number is needed ... but that rather
-		 *  negates the entire purpose of having a type safe class like boost::any.
-		 */
-		for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
-		{
-			if ( it->second.value().type() == typeid(int) )
-			{
-				std::cout << "  " << it->first <<  "=" << it->second.as<int>() << std::endl;
-			}
-			else if (it->second.value().type() == typeid(std::string) )
-			{
-				std::cout << "  " << it->first <<  "=" << it->second.as<std::string>() << std::endl;
-			}
-		}
-
 		/**
 		 * The only real options that we need to process outside of the
 		 * metaesrver as it affects the handlers
@@ -120,6 +97,11 @@ int main(int argc, char** argv)
 
 		if ( vm.count("server.ip") )
 			ip=vm["server.ip"].as<std::string>();
+
+		/**
+		 * Register the configuration.
+		 */
+		ms.registerConfig(vm);
 
 		/**
 		 * Define Handlers
