@@ -79,6 +79,7 @@ private:
 	char * m_readPtr;
 	boost::array<char,MAX_PACKET_BYTES>& m_packetPayload;
 
+
 };
 
 

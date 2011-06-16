@@ -36,7 +36,6 @@ public:
 
   static pointer create(boost::asio::io_service& ios)
   {
-	std::cout << "static tcp_connection::create" << std::endl;
     return pointer(new tcp_connection(ios));
   }
 
@@ -54,7 +53,7 @@ private:
   tcp_connection(boost::asio::io_service& ios)
       : socket_(ios)
     {
-	  std::cout << "private tcp_connection()" << std::endl;
+
     }
 
   tcp::socket socket_;
@@ -77,6 +76,8 @@ public:
 	void handle_accept(tcp_connection::pointer new_connection,
 					   const boost::system::error_code& error);
 
+	friend class tcp_connection;
+
 private:
 
 	boost::asio::ip::tcp::acceptor acceptor_;
@@ -84,6 +85,7 @@ private:
 	MetaServer& m_msRef;
 	const std::string address_;
 	const unsigned int port_;
+	log4cpp::Category& logger;
 
 
 

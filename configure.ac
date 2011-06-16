@@ -90,6 +90,12 @@ AC_CHECK_LIB(boost_program_options, main, , [
 ])
 
 
+# check for LOG4CPP
+AC_CHECK_HEADER([log4cpp/Category.hh])
+AC_CHECK_LIB(log4cpp, main, , [
+	AC_MSG_ERROR("Linking against log4cpp library failed.")
+])
+
 PKG_CHECK_MODULES( CPPUNIT, cppunit >= 1.12.0 )
 
 # debugging option

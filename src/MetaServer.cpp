@@ -32,7 +32,12 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_keepServerStats(false),
 	  m_keepClientStats(false),
 	  m_maxServerSessions(1024),
-	  m_maxClientSessions(4096)
+	  m_maxClientSessions(4096),
+	  m_isDaemon(false),
+	  m_Logfile(""),
+	  m_Logger( log4cpp::Category::getInstance("metaserver-ng") ),
+	  m_logServerSessions(false),
+	  m_logClientSessions(false)
 {
 	m_serverData.clear();
 	m_clientData.clear();
@@ -44,11 +49,21 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 
 	srand( (unsigned)time(0));
 
+	/**
+	 * NOTE: Since the configuration file parsing comes after the instance is created,
+	 * we need to create the logging ( ala console ) by default, and then if
+	 * the configuration is loaded, and it contains a log file, we re-initialise the
+	 * logger to log to a file.  This is double initialisation, however I don't
+	 * see a way around it without having a mandatory log file.
+	 */
+	//initLogger();
+
 }
 
 MetaServer::~MetaServer()
 {
-	std::cout << "dtor" << std::endl;
+	m_Logger.info("Shutting down logging");
+	log4cpp::Category::shutdown();
 }
 
 void
@@ -59,20 +74,38 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::map<std::string,std::string>::iterator attr_iter;
 
 	/**
+	 * Output tick
+	 */
+	//m_Logger.debugStream() << "EXPIRY TIMER: " << now ;
+
+	/**
 	 * Go over handshake queue ... expire any that are older than m_handshakeExpirySeconds
 	 */
     std::map<unsigned int,std::map<std::string,std::string> >::iterator itr;
-    for( itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end(); itr++)
+    for( itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end(); )
     {
-
     	unsigned int key = itr->first;
     	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
     			 boost::posix_time::seconds(m_handshakeExpirySeconds);
 
+    	/**
+    	 * We need to make a copy of the iterator if we modify the
+    	 * underlying container because the iterator becomes invalid
+    	 */
     	if ( now > etime )
     	{
-    		std::cout << "     EXPIRE handshake - " << key << std::endl;
+    		std::map<unsigned int,std::map<std::string,std::string> >::iterator itr_copy = itr;
+    		++itr_copy;
+    		m_Logger.infoStream() << "EXPIRY TIMER: expire handshake - " << key;
     		removeHandshake(key);
+    		itr = itr_copy;
+    	}
+    	else
+    	{
+    		/**
+    		 * We are not modifying, just increment normally.
+    		 */
+    		++itr;
     	}
 
     }
@@ -91,44 +124,41 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 
     	if ( now > etime )
     	{
-    		std::cout << "     EXPIRE server session - " << s << std::endl;
+    		m_Logger.debugStream() << "EXPIRY TIMER: expire server session - " << s;
     		removeServerSession(s);
     	}
-
     }
 
     /**
      * Sweep the ordered list we dish out in a listresp
      */
     std::list<std::string>::iterator list_itr;
-    for ( list_itr = m_serverDataList.begin(); list_itr != m_serverDataList.end(); list_itr++ )
+    for ( list_itr = m_serverDataList.begin(); list_itr != m_serverDataList.end(); ++list_itr )
     {
-    	std::cout << "          m_serverDataList : " << *list_itr << std::endl;
+    	m_Logger.debugStream() << "EXPIRY TIMER: check m_serverDataList : " << *list_itr;
     	/*
     	 * If find that one of the listresp items does NOT exist in the
     	 * main data structure, we want to purge it
     	 */
     	if ( m_serverData.find( *list_itr ) == m_serverData.end() )
     	{
-    		std::cout << "removing stale listresp ref: " << *list_itr << std::endl;
+    		m_Logger.debugStream() << "EXPIRY TIMER: removing stale listresp ref: " << *list_itr;
     		m_serverDataList.remove( *list_itr );
     	}
     }
 
-
-    //std::cout << "=============== Sessions [" << m_serverData.size() << "]======================" << std::endl;
-
+    /**
+     * Display Server Sessions and Attributes
+     */
+    if ( m_logServerSessions )
     for ( itr2 = m_serverData.begin(); itr2 != m_serverData.end(); itr2++ )
     {
-    	std::cout << "=====> Server Session [ " << itr2->first << "]" << std::endl;
+    	m_Logger.debug(" Server Session [%s]", itr2->first.c_str() );
     	for ( attr_iter = itr2->second.begin(); attr_iter != itr2->second.end() ; attr_iter++ )
     	{
-    		std::cout << "==========> [" << attr_iter->first << "][" << attr_iter->second << "]" << std::endl;
+    		m_Logger.debug("    [%s][%s]", attr_iter->first.c_str(), attr_iter->second.c_str());
     	}
     }
-
-    //std::cout << "=============================================" << std::endl;
-
 
     /**
      * Set the next timer trigger
@@ -141,7 +171,7 @@ void
 MetaServer::update_timer(const boost::system::error_code& error)
 {
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	//std::cout << "m_updateTimer(" << now << ")" << std::endl;
+
 	/**
 	 * do update tasks
 	 * possibly add a time of last update and do a delta and sleep less if we're running behind
@@ -180,7 +210,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		processLISTREQ(msp,rsp);
 		break;
 	default:
-		std::cout << "Packet type [" << msp.getPacketType() << "] not supported" << std::endl;
+		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
 	}
 
 }
@@ -201,7 +231,7 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 
 	if ( i > 0 )
 	{
-		std::cout << "processSERVERKEEPALIVE(" << i << ") : " << std::endl;
+		m_Logger.debug("processSERVERKEEPALIVE(%u)", i);
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
 		out.setAddress( in.getAddress() );
@@ -219,7 +249,7 @@ MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
-	std::cout << "SERVERSHAKE : " << shake << std::endl;
+	m_Logger.debug("processSERVERSHAKE(%u)", shake);
 
 	/**
 	 * If a handshake exists, we can know the following:
@@ -252,7 +282,7 @@ MetaServer::processTERMINATE(MetaServerPacket& in, MetaServerPacket& out)
 {
 	if( m_serverData.find( in.getAddressStr() ) != m_serverData.end() )
 	{
-		std::cout << "terminate session " << in.getAddressStr() << std::endl;
+		m_Logger.debug("processTERMINATE(%s)", in.getAddressStr().c_str() );
 		removeServerSession(in.getAddressStr());
 	}
 
@@ -266,7 +296,7 @@ MetaServer::processCLIENTKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 
 	if ( i > 0 )
 	{
-		std::cout << "processCLIENTKEEPALIVE(" << i << ") : " << std::endl;
+		m_Logger.debug("processCLIENTKEEPALIVE(%u)", i);
 		out.setPacketType(NMT_HANDSHAKE);
 		out.addPacketData(i);
 		out.setAddress( in.getAddress() );
@@ -279,7 +309,7 @@ MetaServer::processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
-	std::cout << "CLIENTSHAKE : " << shake << std::endl;
+	m_Logger.debug("processCLIENTSHAKE(%u)", shake );
 
 	if( m_handshakeQueue.find(shake) != m_handshakeQueue.end() )
 	{
@@ -368,10 +398,9 @@ MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
 
     }
 
-    std::cout << "Size1 : " << resp_list.size() << std::endl;
     if ( packed != resp_list.size() )
     {
-    	std::cout << "Packed [" << packed << "] Response [" << resp_list.size() << "] MISMATCH" << std::endl;
+    	m_Logger.warn("Packed (%u) vs Response(%u) MISMATCH!", packed, resp_list.size() );
     }
 
 	out.setAddress( in.getAddress() );
@@ -388,7 +417,7 @@ MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
 		out.addPacketData( (uint32_t)resp_list.size() );
 		while ( ! resp_list.empty() )
 		{
-			//std::cout << "ADDING RESP :" << resp_list.front() << std::endl;
+			m_Logger.debug("processLISTRESP(%s) - Adding", resp_list.front() );
 			out.addPacketData(resp_list.front());
 			resp_list.pop_front();
 		}
@@ -398,6 +427,7 @@ MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
 		/*
 		 *  For the record, I think this is a stupid protocol construct
 		 */
+		m_Logger.debug("processLISTRESP(0,0) - Empty");
 		out.addPacketData( 0 );
 		out.addPacketData( 0 );
 	}
@@ -418,7 +448,7 @@ MetaServer::addHandshake()
 	// if we find said element again, return handshake, otherwise 0
 	if ( m_handshakeQueue[handshake].find("expiry") != m_handshakeQueue[handshake].end() )
 	{
-		std::cout << "addHandshake(" << handshake << ") : " << std::endl;
+		m_Logger.debug("addHandshake(%u)", handshake );
 		ret = handshake;
 	}
 
@@ -428,10 +458,11 @@ MetaServer::addHandshake()
 void
 MetaServer::removeHandshake(unsigned int hs)
 {
+	m_Logger.debug("removeHandshake(%u), %d", hs, m_handshakeQueue.size() );
 	unsigned int res = m_handshakeQueue.erase(hs);
 	if ( res == 1 )
 	{
-		std::cout << "removeHandshake : " << hs << std::endl;
+		m_Logger.debug("removeHandshake(%u), %d", hs, m_handshakeQueue.size() );
 	}
 }
 
@@ -514,6 +545,7 @@ MetaServer::addServerSession(std::string ip)
 		 *  that allows any dups.
 		 */
 		m_serverDataList.unique();
+		m_Logger.info("Adding Server Session");
 	}
 
 	/*
@@ -530,7 +562,7 @@ MetaServer::removeServerSession(std::string sessionid)
 	m_serverDataList.remove(sessionid);
 	if(  m_serverData.erase(sessionid) == 1 )
 	{
-		std::cout << "server session erased " << sessionid << std::endl;
+		m_Logger.debug("removeServerSession(%s)", sessionid.c_str() );
 	}
 }
 
@@ -547,28 +579,13 @@ MetaServer::removeClientSession(std::string sessionid)
 {
 	if( m_clientData.erase(sessionid) == 1 )
 	{
-		std::cout << "client session erased " << sessionid << std::endl;
+		m_Logger.debug("removeClientSession(%s)", sessionid.c_str() );
 	}
 }
 
 void
 MetaServer::registerConfig( boost::program_options::variables_map & vm )
 {
-
-	/*
-	 * Print out the startup values
-	 */
-	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
-	{
-		if ( it->second.value().type() == typeid(int) )
-		{
-			std::cout << "  " << it->first <<  "=" << it->second.as<int>() << std::endl;
-		}
-		else if (it->second.value().type() == typeid(std::string) )
-		{
-			std::cout << "  " << it->first <<  "=" << it->second.as<std::string>() << std::endl;
-		}
-	}
 
 	/*
 	 * All configuration items passed in must be converted to local type
@@ -589,9 +606,9 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 		m_maxServerSessions = vm["performance.max_server_sessions"].as<int>();
 
 
-	if( vm.count("server.keep_client_stats") )
+	if( vm.count("server.client_stats") )
 	{
-		std::string s = vm["server.keep_client_stats"].as<std::string>();
+		std::string s = vm["server.client_stats"].as<std::string>();
 		if ( boost::iequals(s,"true") )
 		{
 			m_keepClientStats = true;
@@ -603,9 +620,9 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 
 	}
 
-	if( vm.count("server.keep_server_stats") )
+	if( vm.count("server.server_stats") )
 	{
-		std::string s = vm["server.keep_server_stats"].as<std::string>();
+		std::string s = vm["server.server_stats"].as<std::string>();
 		if ( boost::iequals(s,"true") )
 		{
 			m_keepServerStats = true;
@@ -617,6 +634,129 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 
 	}
 
+	if( vm.count("server.daemon") )
+	{
+		std::string s = vm["server.daemon"].as<std::string>();
+		if ( boost::iequals(s,"true") )
+		{
+			m_isDaemon = true;
+		}
+		else if ( boost::iequals(s,"false") )
+		{
+			m_isDaemon = false;
+		}
+
+	}
+
+	if( vm.count("logging.server_sessions") )
+	{
+		std::string s = vm["logging.server_sessions"].as<std::string>();
+		if ( boost::iequals(s,"true") )
+		{
+			m_logServerSessions = true;
+		}
+		else if ( boost::iequals(s,"false") )
+		{
+			m_logServerSessions = false;
+		}
+
+	}
+
+	if( vm.count("logging.client_sessions") )
+	{
+		std::string s = vm["logging.client_sessions"].as<std::string>();
+		if ( boost::iequals(s,"true") )
+		{
+			m_logClientSessions = true;
+		}
+		else if ( boost::iequals(s,"false") )
+		{
+			m_logClientSessions = false;
+		}
+
+	}
+
+
+	if( vm.count("server.logfile") )
+	{
+		m_Logfile = vm["server.logfile"].as<std::string>();
+
+		/**
+		 * I tried to use boost::filesystem here, but it is so very stupid
+		 * that I have opted for the more brittle way, because at least it works.
+		 *
+		 * TODO: add ifdef WIN32 here if/when metserver needs to run on windows
+		 */
+		if ( m_Logfile.substr(0,2) == "~/")
+		{
+			m_Logfile.replace(0,1, std::getenv("HOME") );
+		}
+
+	}
+
+	/**
+	 * Initialize the logger to appropriately
+	 */
+	initLogger();
+
+	/**
+	 * Print out the startup values
+	 */
+	m_Logger.info("WorldForge MetaServer Runtime Configuration");
+	for (boost::program_options::variables_map::iterator it=vm.begin(); it!=vm.end(); ++it )
+	{
+		if ( it->second.value().type() == typeid(int) )
+		{
+			m_Logger.info( "%s = %u", it->first.c_str(), it->second.as<int>());
+		}
+		else if (it->second.value().type() == typeid(std::string) )
+		{
+			m_Logger.info( "%s = %s", it->first.c_str(), it->second.as<std::string>().c_str() );
+		}
+	}
+}
+
+void
+MetaServer::initLogger()
+{
+	/*
+	if ( m_LogAppender )
+	m_LogAppender->close
+		delete m_LogAppender;
+
+	if ( m_LoggerLayout )
+		delete m_LoggerLayout;
+		*/
+
+	m_Logger.setAdditivity(false);
+	m_LoggerLayout = new log4cpp::BasicLayout();
+
+	/**
+	 * If a logfile is specified, use it, otherwise stdout.
+	 * TODO: change this ... it leaks
+	 */
+	if ( !m_Logfile.empty() )
+	{
+		m_LogAppender = new log4cpp::FileAppender("FileAppender", m_Logfile.c_str() );
+	}
+	else
+	{
+		m_LogAppender = new log4cpp::OstreamAppender("OstreamAppender", &std::cout);
+	}
+
+	m_LogAppender->setLayout(m_LoggerLayout);
+	m_Logger.setAppender(m_LogAppender);
+	m_Logger.setPriority(log4cpp::Priority::DEBUG);
+	m_Logger.info("MetaServer logging initialised [%s][%s]", m_LogAppender->getName().c_str(), m_Logfile.c_str() );
+	std::cout << "MetaServer logging initialised [" << m_LogAppender->getName() << "]["
+              <<  m_Logfile << "]" << std::endl;
+
+}
+
+log4cpp::Category&
+MetaServer::getLogger()
+{
+	return m_Logger;
 }
 
 void

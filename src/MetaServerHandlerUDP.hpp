@@ -55,6 +55,7 @@ private:
 	const std::string m_Address;
 	const unsigned int m_Port;
 	MetaServer& m_msRef;
+	log4cpp::Category& logger;
 
 
 

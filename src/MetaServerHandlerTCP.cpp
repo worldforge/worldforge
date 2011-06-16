@@ -27,10 +27,11 @@ MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_servi
    : m_msRef(ms),
      address_(address),
      port_(port),
-     acceptor_(ios, tcp::endpoint(tcp::v6(),port))
+     acceptor_(ios, tcp::endpoint(tcp::v6(),port)),
+     logger(ms.getLogger())
 {
 
-	std::cout << "tcp handler ctor: " << std::endl;
+	logger.info("MetaServerHandlerTCP(%s,%u) Startup", address.c_str(), port );
 
 	acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
 	//acceptor_.set_option(boost::asio::ip::v6_only(false));
@@ -44,19 +45,17 @@ MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_servi
 
 MetaServerHandlerTCP::~MetaServerHandlerTCP()
 {
-	std::cout << "meta tcp handler dtor" << std::endl;
+	logger.info("MetaServerHandlerTCP(%s,%u) Shutdown", address_.c_str(), port_ );
 }
 
 void
 MetaServerHandlerTCP::start_accept()
 {
-	std::cout << "start_accept" << std::endl;
 
 	tcp_connection::pointer new_connection =
 			tcp_connection::create(acceptor_.io_service());
 
-	std::cout << "new connection " << std::endl;
-	//std::cout << "new connection: " << new_connection->socket().remote_endpoint().address().to_string() << std::endl;
+	//logger.debugStream() << "New TCP Connection: " << new_connection->socket().remote_endpoint().address().to_string();
 
 	acceptor_.async_accept(new_connection->socket(),
 			boost::bind(&MetaServerHandlerTCP::handle_accept, this, new_connection,
@@ -67,19 +66,19 @@ void
 MetaServerHandlerTCP::handle_accept(tcp_connection::pointer new_connection,
 				      const boost::system::error_code& error)
 {
-	std::cout << "handle_accept" << std::endl;
+
 	if(!error)
 	{
-		std::cout << "TCP-1 : read off packet" << std::endl;
-		std::cout << "TCP-2 : analyse packet" << std::endl;
-		std::cout << "TCP-3 : make call to ms object" << std::endl;
-		std::cout << "TCP-4 : get response from ms and construct packet" << std::endl;
-		std::cout << "TCP-5 : send async response" << std::endl;
-		std::cout << "TCP-6 : loop back to start accept" << std::endl;
+		logger.debug("TCP-1 : read off packet");
+		logger.debug("TCP-2 : analyse packet");
+		logger.debug("TCP-3 : make call to ms object");
+		logger.debug("TCP-4 : get response from ms and construct packet");
+		logger.debug("TCP-5 : send async response");
+		logger.debug("TCP-6 : loop back to start accept");
 
 		start_accept();
 	} else {
-		std::cerr << "ERROR:" << error.message() << std::endl;
+		logger.errorStream() << "ERROR:" << error.message();
 	}
 
 }

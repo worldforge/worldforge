@@ -20,6 +20,8 @@
  */
 
 #include <ctime>
+#include <cstdlib>
+#include <cstdio>
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -40,6 +42,10 @@
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
+#include <log4cpp/Category.hh>
+#include <log4cpp/FileAppender.hh>
+#include <log4cpp/OstreamAppender.hh>
+#include <log4cpp/SimpleLayout.hh>
 
 
 #include "MetaServerPacket.hpp"
@@ -84,10 +90,12 @@ class MetaServer
 	void removeClientSession(std::string sessionid);
 
 	void registerConfig( boost::program_options::variables_map & vm );
+	void initLogger();
+
+	log4cpp::Category& getLogger();
 
 	void dumpHandshake();
 	boost::posix_time::ptime getNow();
-
 
    private:
 	/**
@@ -99,9 +107,14 @@ class MetaServer
 	 *  	"attribute1" => "value1",
 	 *  	"attribute2" => "value2"
 	 *  }
+	 *
+	 *  m_serverDataList contains an ordered representation of
+	 *  m_serverData keys so that multiple LISTREQ requests can be
+	 *  done and avoid duplicate servers packet responses.
 	 */
 	std::map<std::string, std::map<std::string,std::string> > m_serverData;
 	std::list<std::string> m_serverDataList;
+
 	std::map<std::string, std::map<std::string,std::string> > m_clientData;
 	std::map<unsigned int,std::map<std::string,std::string> > m_handshakeQueue;
 	unsigned int m_handshakeExpirySeconds;
@@ -115,7 +128,13 @@ class MetaServer
 	unsigned int m_maxClientSessions;
 	bool m_keepServerStats;
 	bool m_keepClientStats;
-
+	bool m_logServerSessions;
+	bool m_logClientSessions;
+	bool m_isDaemon;
+	std::string m_Logfile;
+	log4cpp::Category& m_Logger;
+	log4cpp::Appender* m_LogAppender;
+	log4cpp::Layout* m_LoggerLayout;
 
 };
 

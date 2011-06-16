@@ -144,8 +144,9 @@ MetaServerPacket::setAddress(boost::asio::ip::address address)
 		m_AddressInt = IpAsciiToNet( m_AddressStr.data() );
 	}
 
-	std::cout << "Address String : " << m_Address.to_string() << std::endl;
-	std::cout << "Address Int    : " << m_AddressInt << std::endl;
+
+	//std::cout << "Address String : " << m_Address.to_string() << std::endl;
+	//std::cout << "Address Int    : " << m_AddressInt << std::endl;
 
 }
 
