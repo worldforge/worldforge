@@ -28,7 +28,7 @@ MetaServerPacket::MetaServerPacket()
 		  m_packetType(NMT_NULL),
 		  m_Port(0),
 		  m_AddressInt(0),
-		  m_AddressStr("")
+		  m_needFree(true)
 {
 	m_readPtr  = m_packetPayload.data();
 	m_headPtr  = m_packetPayload.data();
@@ -42,8 +42,7 @@ MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std:
 		  m_packetType(NMT_NULL),
 		  m_Port(0),
 		  m_AddressInt(0),
-		  m_AddressStr("")
-
+		  m_needFree(false)
 {
 		m_readPtr  = m_packetPayload.data();
 		m_headPtr  = m_packetPayload.data();
@@ -63,7 +62,8 @@ MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std:
 
 MetaServerPacket::~MetaServerPacket()
 {
-
+	if( m_needFree )
+		delete[] &m_packetPayload;
 }
 
 NetMsgType
@@ -140,7 +140,7 @@ MetaServerPacket::setAddress(boost::asio::ip::address address)
 		std::string s = address.to_string();
 
 		m_Address = address;
-		m_AddressStr = s.substr( s.find_last_of(':') + 1 );
+		m_AddressStr = s.substr(s.find_last_of(':') + 1) ;
 		m_AddressInt = IpAsciiToNet( m_AddressStr.data() );
 	}
 
