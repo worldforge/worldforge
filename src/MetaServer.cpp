@@ -786,4 +786,9 @@ MetaServer::getNow()
 	return now;
 }
 
+bool
+MetaServer::isDaemon()
+{
+	return m_isDaemon;
+}
 

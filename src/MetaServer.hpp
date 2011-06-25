@@ -97,6 +97,8 @@ class MetaServer
 	void dumpHandshake();
 	boost::posix_time::ptime getNow();
 
+	bool isDaemon();
+
    private:
 	/**
 	 *  Example Data Structure ( m_serverData )

@@ -22,6 +22,7 @@
 #include "MetaServer.hpp"
 #include "MetaServerHandlerTCP.hpp"
 #include "MetaServerHandlerUDP.hpp"
+#include <unistd.h> /* daemon() */
 
 /*
 	Entry point
@@ -106,6 +107,12 @@ int main(int argc, char** argv)
 		 * Register the configuration.
 		 */
 		ms.registerConfig(vm);
+
+		if ( ms.isDaemon() )
+		{
+			ms.getLogger().info("Running as a daemon");
+			daemon(0,0);
+		}
 
 		/**
 		 * Define Handlers
