@@ -62,8 +62,7 @@ MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std:
 
 MetaServerPacket::~MetaServerPacket()
 {
-	if( m_needFree )
-		delete[] &m_packetPayload;
+	// delete [] m_packetPayload causes a core
 }
 
 NetMsgType
