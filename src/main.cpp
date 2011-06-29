@@ -108,6 +108,9 @@ int main(int argc, char** argv)
 		 */
 		ms.registerConfig(vm);
 
+		/**
+		 * Go daemon if needed
+		 */
 		if ( ms.isDaemon() )
 		{
 			ms.getLogger().info("Running as a daemon");

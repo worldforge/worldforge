@@ -161,6 +161,19 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
     }
 
     /**
+     * Display Server Sessions and Attributes
+     */
+    if ( m_logClientSessions )
+    for ( itr2 = m_clientData.begin(); itr2 != m_clientData.end(); itr2++ )
+    {
+    	m_Logger.debug(" Client Session [%s]", itr2->first.c_str() );
+    	for ( attr_iter = itr2->second.begin(); attr_iter != itr2->second.end() ; attr_iter++ )
+    	{
+    		m_Logger.debug("    [%s][%s]", attr_iter->first.c_str(), attr_iter->second.c_str());
+    	}
+    }
+
+    /**
      * Set the next timer trigger
      */
     m_expiryTimer->expires_from_now(boost::posix_time::milliseconds(m_expiryDelayMilliseconds));
@@ -208,6 +221,12 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		break;
 	case NMT_LISTREQ:
 		processLISTREQ(msp,rsp);
+		break;
+	case NMT_SERVERATTR:
+		processSERVERATTR(msp,rsp);
+		break;
+	case NMT_CLIENTATTR:
+		processCLIENTATTR(msp,rsp);
 		break;
 	default:
 		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
@@ -434,6 +453,35 @@ MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
 
 }
 
+void
+MetaServer::processSERVERATTR(MetaServerPacket& in, MetaServerPacket& out)
+{
+	unsigned int name_length = in.getIntData(4);
+	unsigned int value_length = in.getIntData(8);
+	std::string msg = in.getPacketMessage(12);
+	std::string name = msg.substr(0,name_length);
+	std::string value = msg.substr(name_length);
+	std::string ip = in.getAddressStr();
+	m_Logger.debug("processSERVERATTR(%s,%s)", name.c_str(), value.c_str() );
+	addServerAttribute(ip,name,value);
+
+	out.setPacketType(NMT_NULL);
+}
+
+void
+MetaServer::processCLIENTATTR(MetaServerPacket& in, MetaServerPacket& out)
+{
+	unsigned int name_length = in.getIntData(4);
+	unsigned int value_length = in.getIntData(8);
+	std::string msg = in.getPacketMessage(12);
+	std::string name = msg.substr(0,name_length);
+	std::string value = msg.substr(name_length);
+	std::string ip = in.getAddressStr();
+	m_Logger.debug("processCLIENTATTR(%s,%s)", name.c_str(), value.c_str() );
+	addClientAttribute(ip,name,value);
+
+	out.setPacketType(NMT_NULL);
+}
 
 uint32_t
 MetaServer::addHandshake()

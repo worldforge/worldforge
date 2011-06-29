@@ -55,6 +55,7 @@ public:
 	uint32_t getIntData(unsigned int offset);
 
 	boost::uint32_t	IpAsciiToNet(const char *buffer);
+	std::string IpNetToAscii(boost::uint32_t address);
 
 	boost::array<char,MAX_PACKET_BYTES>& getBuffer();
 

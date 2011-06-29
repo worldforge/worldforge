@@ -257,10 +257,25 @@ MetaServerPacket::IpAsciiToNet(const char *buffer) {
 */
 
 
-void IpNetToAscii(boost::uint32_t address, char *ip_buffer) {
+std::string
+MetaServerPacket::IpNetToAscii(boost::uint32_t address) {
   const int sizer = 15;
-    snprintf(ip_buffer, sizer, "%u.%u.%u.%u", (address>>24)&0xFF,
+  char ip_buffer[20];
+
+   /**
+    *  This is the "correct way" of doing things
+
+   snprintf(ip_buffer, sizer, "%u.%u.%u.%u", (address>>24)&0xFF,
         (address>>16)&0xFF, (address>>8)&0xFF, (address>>0)&0xFF);
+	*/
+
+   /**
+    *  This is the old ms way ...
+    */
+   snprintf(ip_buffer, sizer, "%u.%u.%u.%u", (address>>0)&0xFF,
+       (address>>8)&0xFF, (address>>16)&0xFF, (address>>24)&0xFF);
+
+   return ( std::string(ip_buffer));
 }
 
 

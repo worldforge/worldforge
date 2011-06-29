@@ -74,6 +74,8 @@ class MetaServer
 	void processCLIENTKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out);
 	void processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out);
 	void processLISTREQ(MetaServerPacket& in, MetaServerPacket& out);
+	void processSERVERATTR(MetaServerPacket& in, MetaServerPacket& out);
+	void processCLIENTATTR(MetaServerPacket& in, MetaServerPacket& out);
 
 	uint32_t addHandshake();
 	void removeHandshake(unsigned int hs);
