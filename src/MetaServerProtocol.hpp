@@ -119,9 +119,8 @@ static const NetMsgType NMT_SERVERATTR = 11;
 static const NetMsgType NMT_CLIENTATTR = 12;
 static const NetMsgType NMT_CLIENTFILTER = 13;
 static const NetMsgType NMT_ATTRRESP = 14;
-static const NetMsgType NMT_SERVERATTRCLEAR = 15;
-static const NetMsgType NMT_CLIENTATTRCLEAR = 16;
-static const NetMsgType NMT_CLIENTFILTERCLEAR = 17;
+static const NetMsgType NMT_SERVERCLEAR = 15;
+static const NetMsgType NMT_CLIENTCLEAR = 16;
 
 
 #endif /* METASERVERPROTOCOL_HPP_ */

@@ -76,6 +76,7 @@ class MetaServer
 	void processLISTREQ(MetaServerPacket& in, MetaServerPacket& out);
 	void processSERVERATTR(MetaServerPacket& in, MetaServerPacket& out);
 	void processCLIENTATTR(MetaServerPacket& in, MetaServerPacket& out);
+	void processCLIENTFILTER(MetaServerPacket& in, MetaServerPacket& out);
 
 	uint32_t addHandshake();
 	void removeHandshake(unsigned int hs);
@@ -84,6 +85,9 @@ class MetaServer
 	void removeServerAttribute(std::string sessionid, std::string name );
 	void addClientAttribute(std::string sessionid, std::string name, std::string value );
 	void removeClientAttribute(std::string sessionid, std::string name );
+	void addClientFilter(std::string sessionid, std::string name, std::string value );
+	void removeClientFilter(std::string sessionid, std::string name );
+	void clearClientFilter(std::string sessionid);
 
 
 	void addServerSession(std::string sessionid);
@@ -118,8 +122,9 @@ class MetaServer
 	 */
 	std::map<std::string, std::map<std::string,std::string> > m_serverData;
 	std::list<std::string> m_serverDataList;
-
 	std::map<std::string, std::map<std::string,std::string> > m_clientData;
+	std::map<std::string, std::map<std::string,std::string> > m_clientFilterData;
+
 	std::map<unsigned int,std::map<std::string,std::string> > m_handshakeQueue;
 	unsigned int m_handshakeExpirySeconds;
 	boost::asio::deadline_timer* m_expiryTimer;

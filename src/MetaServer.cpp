@@ -27,7 +27,7 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	: m_expiryDelayMilliseconds(1500),
 	  m_updateDelayMilliseconds(4000),
 	  m_handshakeExpirySeconds(30),
-	  m_sessionExpirySeconds(300),
+	  m_sessionExpirySeconds(3600),
 	  m_clientExpirySeconds(300),
 	  m_keepServerStats(false),
 	  m_keepClientStats(false),
@@ -41,6 +41,7 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 {
 	m_serverData.clear();
 	m_clientData.clear();
+	m_clientFilterData.clear();
 	m_serverDataList.clear();
 	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
@@ -147,6 +148,58 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
     	}
     }
 
+
+    /**
+     *  Remove client sessions that are expired
+     */
+    for ( itr2 = m_clientData.begin(); itr2 != m_clientData.end(); itr2++ )
+    {
+    	std::string s = itr2->first;
+
+    	etime =  boost::posix_time::from_iso_string(itr2->second["expiry"]) +
+    			 boost::posix_time::seconds(m_clientExpirySeconds);
+
+    	if ( now > etime )
+    	{
+    		m_Logger.debugStream() << "EXPIRY TIMER: expire client session - " << s;
+    		removeClientSession(s);
+    	}
+    }
+
+
+    /**
+     * Remove client filters if there is no longer a client session.
+     */
+    for ( itr2 = m_clientFilterData.begin(); itr2 != m_clientFilterData.end(); ++itr2 )
+    {
+    	std::string s = itr2->first;
+
+    	/*
+    	 *  If we have a filter session that does not have a client session
+    	 *  we need to remove it
+    	 */
+    	if( m_clientData.find( s ) == m_clientData.end() )
+    	{
+    		m_Logger.debugStream() << "EXPIRY TIMER: removing stale filter - " << s;
+    		clearClientFilter(s);
+    	}
+    }
+
+    for ( list_itr = m_serverDataList.begin(); list_itr != m_serverDataList.end(); ++list_itr )
+    {
+    	m_Logger.debugStream() << "EXPIRY TIMER: check m_serverDataList : " << *list_itr;
+    	/*
+    	 * If find that one of the listresp items does NOT exist in the
+    	 * main data structure, we want to purge it
+    	 */
+    	if ( m_serverData.find( *list_itr ) == m_serverData.end() )
+    	{
+    		m_Logger.debugStream() << "EXPIRY TIMER: removing stale listresp ref: " << *list_itr;
+    		m_serverDataList.remove( *list_itr );
+    	}
+    }
+
+
     /**
      * Display Server Sessions and Attributes
      */
@@ -228,6 +281,9 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 	case NMT_CLIENTATTR:
 		processCLIENTATTR(msp,rsp);
 		break;
+	case NMT_CLIENTFILTER:
+		processCLIENTFILTER(msp,rsp);
+		break;
 	default:
 		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
 	}
@@ -299,9 +355,19 @@ MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 void
 MetaServer::processTERMINATE(MetaServerPacket& in, MetaServerPacket& out)
 {
-	if( m_serverData.find( in.getAddressStr() ) != m_serverData.end() )
+
+	/**
+	 *  For backwards compat, we make a regular "TERM" packet end a server session
+	 *  and a TERM packet with any additional data sent signifies a client session.
+	 */
+	if ( in.getSize() > (sizeof(uint32_t)) )
 	{
-		m_Logger.debug("processTERMINATE(%s)", in.getAddressStr().c_str() );
+		m_Logger.debug("processTERMINATE-client(%s)", in.getAddressStr().c_str() );
+		removeClientSession(in.getAddressStr());
+	}
+	else
+	{
+		m_Logger.debug("processTERMINATE-server(%s)", in.getAddressStr().c_str() );
 		removeServerSession(in.getAddressStr());
 	}
 
@@ -436,7 +502,7 @@ MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
 		out.addPacketData( (uint32_t)resp_list.size() );
 		while ( ! resp_list.empty() )
 		{
-			m_Logger.debug("processLISTRESP(%s) - Adding", resp_list.front() );
+			m_Logger.debug("processLISTRESP(%d) - Adding", resp_list.front() );
 			out.addPacketData(resp_list.front());
 			resp_list.pop_front();
 		}
@@ -482,6 +548,22 @@ MetaServer::processCLIENTATTR(MetaServerPacket& in, MetaServerPacket& out)
 
 	out.setPacketType(NMT_NULL);
 }
+
+void
+MetaServer::processCLIENTFILTER(MetaServerPacket& in, MetaServerPacket& out)
+{
+	unsigned int name_length = in.getIntData(4);
+	unsigned int value_length = in.getIntData(8);
+	std::string msg = in.getPacketMessage(12);
+	std::string name = msg.substr(0,name_length);
+	std::string value = msg.substr(name_length);
+	std::string ip = in.getAddressStr();
+	m_Logger.debug("processCLIENTFILTER(%s,%s)", name.c_str(), value.c_str() );
+	addClientFilter(ip,name,value);
+
+	out.setPacketType(NMT_NULL);
+}
+
 
 uint32_t
 MetaServer::addHandshake()
@@ -576,6 +658,30 @@ MetaServer::removeClientAttribute(std::string sessionid, std::string name )
 	}
 }
 
+void
+MetaServer::addClientFilter(std::string sessionid, std::string name, std::string value )
+{
+	m_clientFilterData[sessionid][name] = value;
+}
+
+void
+MetaServer::removeClientFilter(std::string sessionid, std::string name )
+{
+	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() )
+	{
+		m_clientFilterData[sessionid].erase(name);
+	}
+}
+
+void
+MetaServer::clearClientFilter(std::string sessionid)
+{
+	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() )
+	{
+		m_clientFilterData.erase(sessionid);
+	}
+}
+
 
 void
 MetaServer::addServerSession(std::string ip)
@@ -628,6 +734,7 @@ MetaServer::removeClientSession(std::string sessionid)
 	if( m_clientData.erase(sessionid) == 1 )
 	{
 		m_Logger.debug("removeClientSession(%s)", sessionid.c_str() );
+		clearClientFilter(sessionid);
 	}
 }
 

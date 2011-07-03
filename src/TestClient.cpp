@@ -194,7 +194,7 @@ int main(int argc, char** argv)
 					std::cout << " register: " << n << std::endl;
 					std::cout << "    value: " << v << std::endl;
 					MetaServerPacket a;
-					a.setPacketType(NMT_CLIENTATTR);
+					a.setPacketType(NMT_CLIENTFILTER);
 					a.addPacketData(n.length());
 					a.addPacketData(v.length());
 					a.addPacketData(n);
@@ -262,6 +262,7 @@ int main(int argc, char** argv)
 		std::cout << "Sending Terminate: " << std::endl;
 		MetaServerPacket term;
 		term.setPacketType(NMT_TERMINATE);
+		term.addPacketData(0); // increase size of term packet to indicate client
 		term.setAddress( sender_endpoint.address() );
 		term.setPort( sender_endpoint.port() );
 		s.send_to(boost::asio::buffer(term.getBuffer(), term.getSize()), *iterator );
