@@ -25,7 +25,7 @@
 
 #include "polygon_funcs.h"
 
-using namespace WFMath;
+namespace WFMath {
 
 void _Poly2Reorient::reorient(Polygon<2>& poly, int skip) const
 {
@@ -178,8 +178,6 @@ Polygon<2> Polygon<2>::toLocalCoords(const RotBox<2>& coords) const
     out.m_points[i] = m_points[i].toLocalCoords(coords);
   return out;
 }
-
-namespace WFMath {
 
 template class Polygon<3>;
 template class _Poly2Orient<3>;
