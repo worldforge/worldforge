@@ -1,88 +1,49 @@
- Quick Start
- -----------
- - build
- - install
- - essential config items
- - starting/stopping
- 
+ MetaServer Overview
+ -------------------
+ The MetaServer Next Generation is a generic lobby type server.  The main services that it provides are:
+ 1. Maintain a list of currently available servers, and their details.
+ 2. Provide mechanism for servers to update, and clients to query this
+    information.
+ 3. Provide delegate authentication, if requested by the connecting server.
+ 4. 
  
  MetaServer Configuration
  ------------------------
- TODO
- 
- 
- MetaServer Protocol Description
- --------------------------------
- 
- * 	NMT_NULL
- * 		Description: empty packet
- * 		Type Size: 4 bytes
- * 		Value: 0
- * 		Payload Size: 0
- *
- * 	NMT_SERVERKEEPALIVE
- * 		Description: A game server keep-alive packet, part 1 of a 3-packet handshake
- * 		Type Size: 4 bytes
- * 		Value: 1 ( 00 00 00 01 )
- * 		Payload Size: 0
- *
- * 	NMT_HANDSHAKE
- * 		Description: The metaserver response to a SERVERKEEPALIVE or CLIENTKEEPALIVE, part 2 of 3-packet handshake
- * 		             Contains a random number.
- * 		Type Size: 4 bytes
- * 		Value: 3 ( 00 00 00 03 )
- * 		Payload Size: 4 bytes ( a random int )
- *
- * 	NMT_SERVERSHAKE
- * 		Description: The game server response to a HANDSHAKE, part 3 of 3-packet handshake.
- * 					 Triggers a new game server sesssion to be created, or updated.
- * 		Type Size: 4 bytes
- * 		Value: 4 ( 00 00 00 04 )
- * 		Payload Size: 4 bytes ( random int )
- *
- * 	NMT_CLIENTKEEPALIVE
- * 		Description: The game client keep-alive packet, part 1 of 3-packet handshake
- *		Type Size: 4 bytes
- *		Value: 2 ( 00 00 00 02 )
- *		Payload Size: 0
- *
- *	NMT_CLIENTSHAKE
- *		Description: The game client response to a HANDSHAKE, part 3 of a 3-packet handshake
- *		Type Size: 4 bytes
- *		Value: 5 ( 00 00 00 05 )
- * 		Payload Size: 4 bytes ( random int )
- *
- * 	NMT_LISTREQ
- * 		Description: A client request to give a list of servers
- * 		Type Size: 4 bytes
- * 		Value: 7 ( 00 00 00 07 )
- * 		Payload Size: 4 bytes ( int of the offset )
- *
- * 	NMT_LISTRESP
- * 		Description: The metaserver response with the values of IPs.
- * 		Type Size: 4 bytes
- * 		Value: 8 ( 00 00 00 08 )
- * 		Payload Size: Variable
- * 			4 bytes - int total servers sent
- * 			4 bytes - int packed servers sent
- * 			4 bytes - a 4 byte block representing EACH IP of the servers.  So if packed was set to 6,
- * 			          this block would be 24 bytes long.
- *
- *Example Use Cases:
- *
- *	Use Case 1: Server Registration or Keep-alive.  Only servers with sessions can perform additional
- *	            requests, such as attribute registration/removal.
- *		1) Game Server sends a NMT_SERVERKEEPALIVE
- *		2) MS responds with a NMT_HANDSHAKE, contains a random number, creates a handshake
- *		3) Game Server responds with NMT_SERVERSHAKE, contains same random number AND handshake exists,
- *		   creates session ( if session exists, expiry time is adjusted )
- *
- *	Use Case 2: Game Server Shutdown / Quit
- *		1) Game Server sends a NMT_TERMINATE, if session exists, it is removed.
- *
- *	Use Case 3: Client Registration or Keep-alive.  Only clients with sessions can perform additional
- *				requests, such as LIST, FILTER, etc.
- *		1) Game Client sends a NMT_CLIENTKEEPALIVE
- *		2) MS responds with a NMT_HANDSHAKE, contains random number, creates a handshake
- *		3) Game Client responds with NMT_CLIENTSHAKE, contains same random number AND handshake exists,
- *		   creates a client session ( if session exists, expiry time is adjusted ).
+ [sections] - high level organisation of configuration options
+ key=value  - specific option
+
+ Unknown options in the configuration file are ignored, and 
+ incorrectly formatted values raise a fatal exception on startup.
+
+ In the case of a mismatch, the metaserver-ng.conf file contains
+ the authoratative list of default values, and running the metaserver
+ with the "--help" option will display the authoratative list of 
+ accepted options.
+
+ The majority of options are self explanitory.  Some options will be
+ given a description as the purpose may be unclear.
+ [server] 	
+ 	port=8453	
+	ip=0.0.0.0
+	daemon=true
+	logfile=~/.metaserver-ng/metaserver-ng.log
+	client_stats=true
+	server_stats=true
+
+ [logging]
+	loglevel=INFO
+	server_sessions=true
+	client_sessions=true
+
+ [security]
+	auth_scheme=none
+
+ [performance]
+	max_server_sessions=1000
+	max_client_sessions=4000
+	server_session_expiry_seconds=300
+	client_session_expiry_seconds=300
+
+ MetaServer Protocol
+ -------------------
+ Refer to PROTOCOL document.
