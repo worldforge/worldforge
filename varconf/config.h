@@ -43,7 +43,7 @@ typedef std::map< std::string, std::map< std::string, Variable > > conf_map;
 typedef std::map< char, std::pair<std::string, bool> > parameter_map;
 typedef std::map< std::string, Variable > sec_map;
 
-class Config : virtual public sigc::trackable {
+class Config : virtual protected sigc::trackable {
 public:
   // Allows use as a singleton, if desired.
   static Config* inst();
@@ -114,6 +114,9 @@ public:
   // If key isn't null, clean() section and key and set variable.
   void setItem(const std::string & section, const std::string & key,
                const Variable & item, Scope scope = INSTANCE); 
+
+  // Accessor for the contained sections.
+  const conf_map& getSections() const;
  
   sigc::signal<void> sig;
   sigc::signal<void, const char*> sige;

@@ -325,6 +325,12 @@ Variable Config::getItem(const std::string & section, const std::string & key) c
   return Variable();
 }
 
+const conf_map& Config::getSections() const
+{
+	return m_conf;
+}
+
+
 void Config::parseStream(std::istream & in, Scope scope) throw (ParseError)
 {
   char c; 
