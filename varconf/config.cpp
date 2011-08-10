@@ -148,7 +148,7 @@ bool operator ==(const Config & one, const Config & two)
   }
 }
 
-void Config::clean(std::string & str) const
+void Config::clean(std::string & str)
 {
   ctype_t c;
 

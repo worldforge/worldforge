@@ -62,7 +62,7 @@ public:
 
   // Converts all nonalphanumeric characters in str except ``-'' and ``_'' to
   // ``_''; converts caps in str to lower-case.
-  void clean(std::string & str) const;
+  static void clean(std::string & str);
 
   // Returns true if specified key exists under specified section.
   bool find(const std::string & section, const std::string & key = "") const;
