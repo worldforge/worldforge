@@ -318,6 +318,7 @@ const Atlas::Message::Element& Entity::valueOfAttr(const std::string& attr) cons
 
 sigc::connection Entity::observe(const std::string& attr, const AttrChangedSlot& slot)
 {
+    return m_observers[attr].connect(slot);
 }
 
 }
