@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to generate configure
 
 dnl Autoconf Initialization
-AC_INIT([varconf], [0.6.6], [alriddoch@googlemail.com])
+AC_INIT([varconf], [0.6.7], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([varconf/variable.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -14,7 +14,7 @@ dnl Information
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news])
 
 dnl versioning info for libtool
-VARCONF_CURRENT=6
+VARCONF_CURRENT=7
 VARCONF_REVISION=0
 VARCONF_AGE=0
 VARCONF_REQUIRES=""
