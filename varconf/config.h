@@ -39,9 +39,9 @@
 
 namespace varconf {
 
-typedef std::map< std::string, std::map< std::string, Variable > > conf_map;
-typedef std::map< char, std::pair<std::string, bool> > parameter_map;
 typedef std::map< std::string, Variable > sec_map;
+typedef std::map< std::string, sec_map> conf_map;
+typedef std::map< char, std::pair<std::string, bool> > parameter_map;
 
 class Config : virtual protected sigc::trackable {
 public:
