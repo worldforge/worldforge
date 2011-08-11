@@ -25,10 +25,12 @@ namespace Mercator
 typedef WFMath::Point<2> Point2;
 typedef WFMath::Vector<2> Vector2;
 
+#ifndef NDEBUG
 static bool isZero(CoordType d)
 {
     return (std::fabs(d) < WFMATH_EPSILON);
 }
+#endif
 
 /// \brief Helper to clip points to a given range.
 class TopClip
