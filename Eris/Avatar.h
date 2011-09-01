@@ -15,6 +15,8 @@
 #include <sigc++/signal.h>
 #include <sigc++/connection.h>
 
+#include <vector>
+
 namespace Eris
 {
 
@@ -73,6 +75,11 @@ public:
 
     /// Say something (in-game)
     void say(const std::string&);
+
+    /// Say something (in-game), addressing one or many entities
+    /// @param message The message, i.e. what is being said.
+    /// @param entities A list of entities being addressed.
+    void sayTo(const std::string& message, const std::vector<const Entity*>& entities);
 
     /// Emote something (in-game)
     void emote(const std::string&);

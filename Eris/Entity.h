@@ -278,6 +278,10 @@ public:
 	 * - Attrubute "responses" which is a list of strings. When conversing
 	 *   with NPCs this list is used to give the client a clue about
 	 *   possible answers the NPCs understand.
+	 * - Attribute "address" which is optional, and is a list of strings,
+	 *   which are entity id values specifying those entities that were
+	 *   addressed. Note that all entities, even those not addressed, can
+	 *   still receive such Say operations.
 	 **/
     sigc::signal< void, const Atlas::Objects::Root & > Say;
 	

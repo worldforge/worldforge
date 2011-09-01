@@ -144,6 +144,24 @@ void Avatar::say(const std::string& msg)
     getConnection()->send(t);
 }
 
+void Avatar::sayTo(const std::string& message, const std::vector<const Entity*>& entities)
+{
+    Talk t;
+
+    Anonymous what;
+    what->setAttr("say", message);
+    Atlas::Message::ListType addressList;
+    for (std::vector<const Entity*>::const_iterator I = entities.begin(); I != entities.end(); ++I) {
+        addressList.push_back((*I)->getId());
+    }
+    what->setAttr("address", addressList);
+    t->setArgs1(what);
+    t->setFrom(m_entityId);
+
+    getConnection()->send(t);
+}
+
+
 void Avatar::emote(const std::string &em)
 {
     Imaginary im;

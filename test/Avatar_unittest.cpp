@@ -306,7 +306,58 @@ int main()
         ea->say("Hello world");
     }
     
-    // Test say() of a message
+    // Test sayTo() of a message, with one addressed
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+        std::vector<std::string> entityIds;
+        entityIds.push_back("2");
+
+        ea->setup_setEntity(char_ent);
+
+        ea->sayTo("Hello world", entityIds);
+    }
+
+    // Test sayTo() of a message, with two addressed
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+        std::vector<std::string> entityIds;
+        entityIds.push_back("2");
+        entityIds.push_back("3");
+
+        ea->setup_setEntity(char_ent);
+
+        ea->sayTo("Hello world", entityIds);
+    }
+
+    // Test sayTo() of a message, with none addressed (still valid)
+    {
+        Eris::Connection * con = new TestConnection("name", "localhost",
+                                                    6767, true);
+
+        Eris::Account * acc = new TestAccount(con);
+        std::string fake_char_id("1");
+        TestAvatar * ea = new TestAvatar(acc, fake_char_id);
+        TestEntity * char_ent = new TestEntity(fake_char_id, 0, ea->getView());
+        std::vector<std::string> entityIds;
+
+        ea->setup_setEntity(char_ent);
+
+        ea->sayTo("Hello world", entityIds);
+    }
+
+    // Test emote() of a message
     {
         Eris::Connection * con = new TestConnection("name", "localhost",
                                                     6767, true);
