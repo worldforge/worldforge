@@ -1,4 +1,3 @@
-# serial 1 (pkg-config-0.24)
 # Configure paths for GLIB
 # Owen Taylor     97-11-3
 
