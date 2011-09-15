@@ -73,6 +73,11 @@ const Atlas::Message::Element* TypeInfo::getAttribute(const std::string& attribu
     return 0;
 }
 
+void TypeInfo::onAttributeChanges(const std::string&,
+                                  const Atlas::Message::Element& )
+{
+}
+
 TypeInfoPtr TypeService::getTypeByName(const std::string &id)
 {
     return 0;
