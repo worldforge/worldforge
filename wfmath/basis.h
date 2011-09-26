@@ -27,7 +27,6 @@
 #define WFMATH_BASIS_H
 
 #include <wfmath/const.h>
-#include <wfmath/floatmath.h>
 
 #include <cmath>
 

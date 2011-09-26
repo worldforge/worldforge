@@ -29,7 +29,6 @@
 
 #include "rotmatrix_funcs.h"
 #include "quaternion.h"
-#include "floatmath.h"
 
 using namespace WFMath;
 

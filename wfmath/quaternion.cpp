@@ -35,7 +35,6 @@
 #include "quaternion.h"
 #include "error.h"
 #include "rotmatrix.h"
-#include "floatmath.h"
 
 #include <cmath>
 
