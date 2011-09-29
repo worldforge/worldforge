@@ -2,9 +2,11 @@
 
 check_PROGRAMS = conftest
 
+TESTS = $(check_PROGRAMS)
+
 EXTRA_DIST = conf.cfg 
 
-INCLUDES = -I$(top_srcdir)
+INCLUDES = -I$(top_srcdir) -DSRCDIR=\"$(srcdir)\"
 LDADD = $(top_builddir)/varconf/libvarconf-1.0.la
 
 conftest_SOURCES = conftest.cpp

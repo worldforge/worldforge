@@ -32,7 +32,7 @@ int main( int argc, char ** argv)
 
   config.getCmdline( argc, argv);
   config.getEnv( "TEST_");
-  config.readFromFile( "conf.cfg");
+  assert(config.readFromFile( std::string(SRCDIR) + "/conf.cfg"));
   config.setItem( "tcp", "port", 6700, varconf::GLOBAL);
   config.setItem( "tcp", "v6port", 6700, varconf::USER);
   config.setItem( "console", "colours", "plenty", varconf::INSTANCE);
