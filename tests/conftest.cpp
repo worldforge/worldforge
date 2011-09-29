@@ -38,7 +38,11 @@ int main( int argc, char ** argv)
   config.setItem( "console", "colours", "plenty", varconf::INSTANCE);
   config.setItem( "console", "speed", "fast", varconf::USER);
 
+  assert(config.find("tcp", "port"));
+  assert(config.find("console", "enabled"));
   assert(config.getItem("tcp", "port")->scope() == varconf::GLOBAL);
+  //Default scope for read files are USER
+  assert(config.getItem("console", "enabled")->scope() == varconf::USER);
 
   std::cout << "\nEnter sample configuration data to test parseStream() method.\n";
 
