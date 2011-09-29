@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include <cassert>
 
@@ -46,13 +47,19 @@ int main( int argc, char ** argv)
 
   std::cout << "\nEnter sample configuration data to test parseStream() method.\n";
 
+  std::stringstream ss;
+  ss << "[general]"<< std::endl;
+  ss << "setting = true";
+
   try {
-    config.parseStream( std::cin, varconf::USER);
+    config.parseStream( ss, varconf::USER);
   }
   catch ( varconf::ParseError p) {
-    std::cout << "\nError while parsing from standard input stream.\n";
+    std::cout << "\nError while parsing from input stream.\n";
     std::cout << p;
   }
+
+  assert(config.find("general", "setting"));
 
   config.writeToFile( "conf2.cfg");
   
