@@ -431,6 +431,11 @@ void Config::parseStream(std::istream & in, Scope scope) throw (ParseError)
             value = "";
             state = S_QUOTED_VALUE;
             break;
+          case C_EOL:
+            value = "";
+            state = S_EXPECT_NAME;
+            setItem(section, name, value, scope);
+            break;
           case C_SPACE:
             break;
           default:
