@@ -513,6 +513,8 @@ void Config::parseStream(std::istream & in, Scope scope) throw (ParseError)
 
   if (state == S_VALUE) {
     setItem(section, name, value, scope);
+  } else if (state == S_EXPECT_VALUE) {
+    setItem(section, name, "", scope);
   }
 }
 
