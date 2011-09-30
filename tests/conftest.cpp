@@ -49,7 +49,8 @@ int main( int argc, char ** argv)
 
   std::stringstream ss;
   ss << "[general]"<< std::endl;
-  ss << "setting = true";
+  ss << "setting = true"<< std::endl;
+  ss << "emptyrightbeforeeof = ";
 
   try {
     config.parseStream( ss, varconf::USER);
@@ -60,6 +61,7 @@ int main( int argc, char ** argv)
   }
 
   assert(config.find("general", "setting"));
+  assert(config.find("general", "emptyrightbeforeeof"));
 
   config.writeToFile( "conf2.cfg");
   
