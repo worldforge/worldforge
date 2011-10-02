@@ -6,6 +6,7 @@
 
 #include <Atlas/Objects/Decoder.h>
 #include <Atlas/Objects/ObjectsFwd.h>
+#include <Atlas/Objects/RootOperation.h>
 
 #include <deque>
 #include <map>
