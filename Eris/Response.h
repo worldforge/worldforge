@@ -59,6 +59,9 @@ private:
 class ResponseTracker
 {
 public:
+
+    ~ResponseTracker();
+
     void await(int serialno, ResponseBase*);
     
     template <class T>

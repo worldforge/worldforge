@@ -11,6 +11,14 @@ ResponseBase::~ResponseBase()
 {
 }
 
+ResponseTracker::~ResponseTracker()
+{
+    //clean up any lingering responses
+    for (RefnoResponseMap::iterator it = m_pending.begin(); it != m_pending.end(); ++it) {
+        delete it->second;
+    }
+}
+
 void ResponseTracker::await(int serialno, ResponseBase* resp)
 {
     assert(m_pending.count(serialno) == 0);
