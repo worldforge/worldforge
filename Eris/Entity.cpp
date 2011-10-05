@@ -67,6 +67,13 @@ Entity::~Entity()
 void Entity::shutdown()
 {
     BeingDeleted.emit();
+
+    //Delete any lingering tasks.
+    for (TaskArray::const_iterator it = m_tasks.begin(); it != m_tasks.end(); ++it) {
+        TaskRemoved(*it);
+        delete *it;
+    }
+
     if (m_moving) {
     	removeFromMovementPrediction();
     }
