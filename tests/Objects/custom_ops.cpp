@@ -33,26 +33,17 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == WIELD_NO) current_class = -1; SetData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static WieldData *alloc();
-    virtual void free();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static ::Atlas::Objects::Allocator<WieldData> allocator;
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual WieldData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static WieldData *getDefaultObjectInstance();
 private:
-    static WieldData *defaults_WieldData;
-    static WieldData *begin_WieldData;
+    static void fillDefaultObjectInstance(WieldData& data, std::map<std::string, int>& attr_data);
 };
+
+
+::Atlas::Objects::Allocator<WieldData> WieldData::allocator;
 
 WieldData::~WieldData()
 {
@@ -60,7 +51,7 @@ WieldData::~WieldData()
 
 WieldData * WieldData::copy() const
 {
-    WieldData * copied = WieldData::alloc();
+    WieldData * copied = WieldData::allocator.alloc();
     *copied = *this;
     return copied;
 }
@@ -71,49 +62,17 @@ bool WieldData::instanceOf(int classNo) const
     return SetData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-WieldData *WieldData::defaults_WieldData = 0;
-WieldData *WieldData::begin_WieldData = 0;
-
-WieldData *WieldData::alloc()
+void WieldData::fillDefaultObjectInstance(WieldData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_WieldData) {
-        WieldData *res = begin_WieldData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_WieldData = (WieldData *)begin_WieldData->m_next;
-        return res;
-    }
-    return new WieldData(WieldData::getDefaultObjectInstance());
+    data.attr_objtype = "op";
+    data.attr_serialno = 0;
+    data.attr_refno = 0;
+    data.attr_seconds = 0.0;
+    data.attr_future_seconds = 0.0;
+    data.attr_stamp = 0.0;
+    data.attr_parents = std::list<std::string>(1, "wield");
 }
 
-void WieldData::free()
-{
-    m_next = begin_WieldData;
-    begin_WieldData = this;
-}
-
-
-WieldData *WieldData::getDefaultObjectInstance()
-{
-    if (defaults_WieldData == 0) {
-        defaults_WieldData = new WieldData;
-        defaults_WieldData->attr_objtype = "op";
-        defaults_WieldData->attr_serialno = 0;
-        defaults_WieldData->attr_refno = 0;
-        defaults_WieldData->attr_seconds = 0.0;
-        defaults_WieldData->attr_future_seconds = 0.0;
-        defaults_WieldData->attr_stamp = 0.0;
-        defaults_WieldData->attr_parents = std::list<std::string>(1, "wield");
-    }
-    return defaults_WieldData;
-}
-
-WieldData *WieldData::getDefaultObject()
-{
-    return WieldData::getDefaultObjectInstance();
-}
 
 int main(int argc, char ** argv)
 {

@@ -11,13 +11,22 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+Allocator<LogoutData> LogoutData::allocator;
+        
+
+
+void LogoutData::free()
+{
+    allocator.free(this);
+}
+
 LogoutData::~LogoutData()
 {
 }
 
 LogoutData * LogoutData::copy() const
 {
-    LogoutData * copied = LogoutData::alloc();
+    LogoutData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -29,49 +38,25 @@ bool LogoutData::instanceOf(int classNo) const
     return LoginData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-LogoutData *LogoutData::defaults_LogoutData = 0;
-LogoutData *LogoutData::begin_LogoutData = 0;
-
-LogoutData *LogoutData::alloc()
+void LogoutData::fillDefaultObjectInstance(LogoutData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_LogoutData) {
-        LogoutData *res = begin_LogoutData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_LogoutData = (LogoutData *)begin_LogoutData->m_next;
-        return res;
-    }
-    return new LogoutData(LogoutData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "logout");
+    LoginData::allocator.getDefaultObjectInstance();
 }
 
-void LogoutData::free()
-{
-    m_next = begin_LogoutData;
-    begin_LogoutData = this;
-}
+Allocator<ImaginaryData> ImaginaryData::allocator;
+        
 
 
-LogoutData *LogoutData::getDefaultObjectInstance()
+void ImaginaryData::free()
 {
-    if (defaults_LogoutData == 0) {
-        defaults_LogoutData = new LogoutData;
-        defaults_LogoutData->attr_objtype = "op";
-        defaults_LogoutData->attr_serialno = 0;
-        defaults_LogoutData->attr_refno = 0;
-        defaults_LogoutData->attr_seconds = 0.0;
-        defaults_LogoutData->attr_future_seconds = 0.0;
-        defaults_LogoutData->attr_stamp = 0.0;
-        defaults_LogoutData->attr_parents = std::list<std::string>(1, "logout");
-        LoginData::getDefaultObjectInstance();
-    }
-    return defaults_LogoutData;
-}
-
-LogoutData *LogoutData::getDefaultObject()
-{
-    return LogoutData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 ImaginaryData::~ImaginaryData()
@@ -80,7 +65,7 @@ ImaginaryData::~ImaginaryData()
 
 ImaginaryData * ImaginaryData::copy() const
 {
-    ImaginaryData * copied = ImaginaryData::alloc();
+    ImaginaryData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -92,49 +77,25 @@ bool ImaginaryData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-ImaginaryData *ImaginaryData::defaults_ImaginaryData = 0;
-ImaginaryData *ImaginaryData::begin_ImaginaryData = 0;
-
-ImaginaryData *ImaginaryData::alloc()
+void ImaginaryData::fillDefaultObjectInstance(ImaginaryData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_ImaginaryData) {
-        ImaginaryData *res = begin_ImaginaryData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_ImaginaryData = (ImaginaryData *)begin_ImaginaryData->m_next;
-        return res;
-    }
-    return new ImaginaryData(ImaginaryData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "imaginary");
+    ActionData::allocator.getDefaultObjectInstance();
 }
 
-void ImaginaryData::free()
-{
-    m_next = begin_ImaginaryData;
-    begin_ImaginaryData = this;
-}
+Allocator<UseData> UseData::allocator;
+        
 
 
-ImaginaryData *ImaginaryData::getDefaultObjectInstance()
+void UseData::free()
 {
-    if (defaults_ImaginaryData == 0) {
-        defaults_ImaginaryData = new ImaginaryData;
-        defaults_ImaginaryData->attr_objtype = "op";
-        defaults_ImaginaryData->attr_serialno = 0;
-        defaults_ImaginaryData->attr_refno = 0;
-        defaults_ImaginaryData->attr_seconds = 0.0;
-        defaults_ImaginaryData->attr_future_seconds = 0.0;
-        defaults_ImaginaryData->attr_stamp = 0.0;
-        defaults_ImaginaryData->attr_parents = std::list<std::string>(1, "imaginary");
-        ActionData::getDefaultObjectInstance();
-    }
-    return defaults_ImaginaryData;
-}
-
-ImaginaryData *ImaginaryData::getDefaultObject()
-{
-    return ImaginaryData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 UseData::~UseData()
@@ -143,7 +104,7 @@ UseData::~UseData()
 
 UseData * UseData::copy() const
 {
-    UseData * copied = UseData::alloc();
+    UseData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -155,49 +116,25 @@ bool UseData::instanceOf(int classNo) const
     return ActionData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-UseData *UseData::defaults_UseData = 0;
-UseData *UseData::begin_UseData = 0;
-
-UseData *UseData::alloc()
+void UseData::fillDefaultObjectInstance(UseData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_UseData) {
-        UseData *res = begin_UseData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_UseData = (UseData *)begin_UseData->m_next;
-        return res;
-    }
-    return new UseData(UseData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "use");
+    ActionData::allocator.getDefaultObjectInstance();
 }
 
-void UseData::free()
-{
-    m_next = begin_UseData;
-    begin_UseData = this;
-}
+Allocator<InfoData> InfoData::allocator;
+        
 
 
-UseData *UseData::getDefaultObjectInstance()
+void InfoData::free()
 {
-    if (defaults_UseData == 0) {
-        defaults_UseData = new UseData;
-        defaults_UseData->attr_objtype = "op";
-        defaults_UseData->attr_serialno = 0;
-        defaults_UseData->attr_refno = 0;
-        defaults_UseData->attr_seconds = 0.0;
-        defaults_UseData->attr_future_seconds = 0.0;
-        defaults_UseData->attr_stamp = 0.0;
-        defaults_UseData->attr_parents = std::list<std::string>(1, "use");
-        ActionData::getDefaultObjectInstance();
-    }
-    return defaults_UseData;
-}
-
-UseData *UseData::getDefaultObject()
-{
-    return UseData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 InfoData::~InfoData()
@@ -206,7 +143,7 @@ InfoData::~InfoData()
 
 InfoData * InfoData::copy() const
 {
-    InfoData * copied = InfoData::alloc();
+    InfoData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -218,49 +155,25 @@ bool InfoData::instanceOf(int classNo) const
     return RootOperationData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-InfoData *InfoData::defaults_InfoData = 0;
-InfoData *InfoData::begin_InfoData = 0;
-
-InfoData *InfoData::alloc()
+void InfoData::fillDefaultObjectInstance(InfoData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_InfoData) {
-        InfoData *res = begin_InfoData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_InfoData = (InfoData *)begin_InfoData->m_next;
-        return res;
-    }
-    return new InfoData(InfoData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "info");
+    RootOperationData::allocator.getDefaultObjectInstance();
 }
 
-void InfoData::free()
-{
-    m_next = begin_InfoData;
-    begin_InfoData = this;
-}
+Allocator<PerceptionData> PerceptionData::allocator;
+        
 
 
-InfoData *InfoData::getDefaultObjectInstance()
+void PerceptionData::free()
 {
-    if (defaults_InfoData == 0) {
-        defaults_InfoData = new InfoData;
-        defaults_InfoData->attr_objtype = "op";
-        defaults_InfoData->attr_serialno = 0;
-        defaults_InfoData->attr_refno = 0;
-        defaults_InfoData->attr_seconds = 0.0;
-        defaults_InfoData->attr_future_seconds = 0.0;
-        defaults_InfoData->attr_stamp = 0.0;
-        defaults_InfoData->attr_parents = std::list<std::string>(1, "info");
-        RootOperationData::getDefaultObjectInstance();
-    }
-    return defaults_InfoData;
-}
-
-InfoData *InfoData::getDefaultObject()
-{
-    return InfoData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 PerceptionData::~PerceptionData()
@@ -269,7 +182,7 @@ PerceptionData::~PerceptionData()
 
 PerceptionData * PerceptionData::copy() const
 {
-    PerceptionData * copied = PerceptionData::alloc();
+    PerceptionData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -281,49 +194,25 @@ bool PerceptionData::instanceOf(int classNo) const
     return InfoData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-PerceptionData *PerceptionData::defaults_PerceptionData = 0;
-PerceptionData *PerceptionData::begin_PerceptionData = 0;
-
-PerceptionData *PerceptionData::alloc()
+void PerceptionData::fillDefaultObjectInstance(PerceptionData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_PerceptionData) {
-        PerceptionData *res = begin_PerceptionData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_PerceptionData = (PerceptionData *)begin_PerceptionData->m_next;
-        return res;
-    }
-    return new PerceptionData(PerceptionData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "perception");
+    InfoData::allocator.getDefaultObjectInstance();
 }
 
-void PerceptionData::free()
-{
-    m_next = begin_PerceptionData;
-    begin_PerceptionData = this;
-}
+Allocator<SightData> SightData::allocator;
+        
 
 
-PerceptionData *PerceptionData::getDefaultObjectInstance()
+void SightData::free()
 {
-    if (defaults_PerceptionData == 0) {
-        defaults_PerceptionData = new PerceptionData;
-        defaults_PerceptionData->attr_objtype = "op";
-        defaults_PerceptionData->attr_serialno = 0;
-        defaults_PerceptionData->attr_refno = 0;
-        defaults_PerceptionData->attr_seconds = 0.0;
-        defaults_PerceptionData->attr_future_seconds = 0.0;
-        defaults_PerceptionData->attr_stamp = 0.0;
-        defaults_PerceptionData->attr_parents = std::list<std::string>(1, "perception");
-        InfoData::getDefaultObjectInstance();
-    }
-    return defaults_PerceptionData;
-}
-
-PerceptionData *PerceptionData::getDefaultObject()
-{
-    return PerceptionData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 SightData::~SightData()
@@ -332,7 +221,7 @@ SightData::~SightData()
 
 SightData * SightData::copy() const
 {
-    SightData * copied = SightData::alloc();
+    SightData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -344,49 +233,16 @@ bool SightData::instanceOf(int classNo) const
     return PerceptionData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-SightData *SightData::defaults_SightData = 0;
-SightData *SightData::begin_SightData = 0;
-
-SightData *SightData::alloc()
+void SightData::fillDefaultObjectInstance(SightData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_SightData) {
-        SightData *res = begin_SightData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_SightData = (SightData *)begin_SightData->m_next;
-        return res;
-    }
-    return new SightData(SightData::getDefaultObjectInstance());
-}
-
-void SightData::free()
-{
-    m_next = begin_SightData;
-    begin_SightData = this;
-}
-
-
-SightData *SightData::getDefaultObjectInstance()
-{
-    if (defaults_SightData == 0) {
-        defaults_SightData = new SightData;
-        defaults_SightData->attr_objtype = "op";
-        defaults_SightData->attr_serialno = 0;
-        defaults_SightData->attr_refno = 0;
-        defaults_SightData->attr_seconds = 0.0;
-        defaults_SightData->attr_future_seconds = 0.0;
-        defaults_SightData->attr_stamp = 0.0;
-        defaults_SightData->attr_parents = std::list<std::string>(1, "sight");
-        PerceptionData::getDefaultObjectInstance();
-    }
-    return defaults_SightData;
-}
-
-SightData *SightData::getDefaultObject()
-{
-    return SightData::getDefaultObjectInstance();
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "sight");
+    PerceptionData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

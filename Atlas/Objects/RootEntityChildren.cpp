@@ -11,13 +11,22 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Entity { 
 
+Allocator<AdminEntityData> AdminEntityData::allocator;
+        
+
+
+void AdminEntityData::free()
+{
+    allocator.free(this);
+}
+
 AdminEntityData::~AdminEntityData()
 {
 }
 
 AdminEntityData * AdminEntityData::copy() const
 {
-    AdminEntityData * copied = AdminEntityData::alloc();
+    AdminEntityData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -29,54 +38,21 @@ bool AdminEntityData::instanceOf(int classNo) const
     return RootEntityData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-AdminEntityData *AdminEntityData::defaults_AdminEntityData = 0;
-AdminEntityData *AdminEntityData::begin_AdminEntityData = 0;
-
-AdminEntityData *AdminEntityData::alloc()
+void AdminEntityData::fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_AdminEntityData) {
-        AdminEntityData *res = begin_AdminEntityData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_AdminEntityData = (AdminEntityData *)begin_AdminEntityData->m_next;
-        return res;
-    }
-    return new AdminEntityData(AdminEntityData::getDefaultObjectInstance());
-}
-
-void AdminEntityData::free()
-{
-    m_next = begin_AdminEntityData;
-    begin_AdminEntityData = this;
-}
-
-
-AdminEntityData *AdminEntityData::getDefaultObjectInstance()
-{
-    if (defaults_AdminEntityData == 0) {
-        defaults_AdminEntityData = new AdminEntityData;
-        defaults_AdminEntityData->attr_objtype = "obj";
-        defaults_AdminEntityData->attr_pos.clear();
-        defaults_AdminEntityData->attr_pos.push_back(0.0);
-        defaults_AdminEntityData->attr_pos.push_back(0.0);
-        defaults_AdminEntityData->attr_pos.push_back(0.0);
-        defaults_AdminEntityData->attr_velocity.clear();
-        defaults_AdminEntityData->attr_velocity.push_back(0.0);
-        defaults_AdminEntityData->attr_velocity.push_back(0.0);
-        defaults_AdminEntityData->attr_velocity.push_back(0.0);
-        defaults_AdminEntityData->attr_stamp_contains = 0.0;
-        defaults_AdminEntityData->attr_stamp = 0.0;
-        defaults_AdminEntityData->attr_parents = std::list<std::string>(1, "admin_entity");
-        RootEntityData::getDefaultObjectInstance();
-    }
-    return defaults_AdminEntityData;
-}
-
-AdminEntityData *AdminEntityData::getDefaultObject()
-{
-    return AdminEntityData::getDefaultObjectInstance();
+        data.attr_objtype = "obj";
+        data.attr_pos.clear();
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_stamp_contains = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "admin_entity");
+    RootEntityData::allocator.getDefaultObjectInstance();
 }
 
 const std::string USERNAME_ATTR = "username";
@@ -85,7 +61,7 @@ const std::string CHARACTERS_ATTR = "characters";
 
 int AccountData::getAttrClass(const std::string& name) const
 {
-    if (attr_flags_AccountData->find(name) != attr_flags_AccountData->end()) {
+    if (allocator.attr_flags_Data.find(name) != allocator.attr_flags_Data.end()) {
         return ACCOUNT_NO;
     }
     return AdminEntityData::getAttrClass(name);
@@ -93,8 +69,8 @@ int AccountData::getAttrClass(const std::string& name) const
 
 int AccountData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = attr_flags_AccountData->find(name);
-    if (I != attr_flags_AccountData->end()) {
+    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
     return AdminEntityData::getAttrFlag(name);
@@ -209,13 +185,22 @@ void AccountData::iterate(int& current_class, std::string& attr) const
     }
 }
 
+Allocator<AccountData> AccountData::allocator;
+        
+
+
+void AccountData::free()
+{
+    allocator.free(this);
+}
+
 AccountData::~AccountData()
 {
 }
 
 AccountData * AccountData::copy() const
 {
-    AccountData * copied = AccountData::alloc();
+    AccountData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -227,59 +212,33 @@ bool AccountData::instanceOf(int classNo) const
     return AdminEntityData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-AccountData *AccountData::defaults_AccountData = 0;
-AccountData *AccountData::begin_AccountData = 0;
-
-AccountData *AccountData::alloc()
+void AccountData::fillDefaultObjectInstance(AccountData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_AccountData) {
-        AccountData *res = begin_AccountData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_AccountData = (AccountData *)begin_AccountData->m_next;
-        return res;
-    }
-    return new AccountData(AccountData::getDefaultObjectInstance());
+        data.attr_objtype = "obj";
+        data.attr_pos.clear();
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_stamp_contains = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "account");
+    attr_data[USERNAME_ATTR] = USERNAME_FLAG;
+    attr_data[PASSWORD_ATTR] = PASSWORD_FLAG;
+    attr_data[CHARACTERS_ATTR] = CHARACTERS_FLAG;
+    AdminEntityData::allocator.getDefaultObjectInstance();
 }
 
-void AccountData::free()
-{
-    m_next = begin_AccountData;
-    begin_AccountData = this;
-}
+Allocator<PlayerData> PlayerData::allocator;
+        
 
-std::map<std::string, int> * AccountData::attr_flags_AccountData = 0;
 
-AccountData *AccountData::getDefaultObjectInstance()
+void PlayerData::free()
 {
-    if (defaults_AccountData == 0) {
-        defaults_AccountData = new AccountData;
-        defaults_AccountData->attr_objtype = "obj";
-        defaults_AccountData->attr_pos.clear();
-        defaults_AccountData->attr_pos.push_back(0.0);
-        defaults_AccountData->attr_pos.push_back(0.0);
-        defaults_AccountData->attr_pos.push_back(0.0);
-        defaults_AccountData->attr_velocity.clear();
-        defaults_AccountData->attr_velocity.push_back(0.0);
-        defaults_AccountData->attr_velocity.push_back(0.0);
-        defaults_AccountData->attr_velocity.push_back(0.0);
-        defaults_AccountData->attr_stamp_contains = 0.0;
-        defaults_AccountData->attr_stamp = 0.0;
-        defaults_AccountData->attr_parents = std::list<std::string>(1, "account");
-        attr_flags_AccountData = new std::map<std::string, int>;
-        (*attr_flags_AccountData)[USERNAME_ATTR] = USERNAME_FLAG;
-        (*attr_flags_AccountData)[PASSWORD_ATTR] = PASSWORD_FLAG;
-        (*attr_flags_AccountData)[CHARACTERS_ATTR] = CHARACTERS_FLAG;
-        AdminEntityData::getDefaultObjectInstance();
-    }
-    return defaults_AccountData;
-}
-
-AccountData *AccountData::getDefaultObject()
-{
-    return AccountData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 PlayerData::~PlayerData()
@@ -288,7 +247,7 @@ PlayerData::~PlayerData()
 
 PlayerData * PlayerData::copy() const
 {
-    PlayerData * copied = PlayerData::alloc();
+    PlayerData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -300,54 +259,30 @@ bool PlayerData::instanceOf(int classNo) const
     return AccountData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-PlayerData *PlayerData::defaults_PlayerData = 0;
-PlayerData *PlayerData::begin_PlayerData = 0;
-
-PlayerData *PlayerData::alloc()
+void PlayerData::fillDefaultObjectInstance(PlayerData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_PlayerData) {
-        PlayerData *res = begin_PlayerData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_PlayerData = (PlayerData *)begin_PlayerData->m_next;
-        return res;
-    }
-    return new PlayerData(PlayerData::getDefaultObjectInstance());
+        data.attr_objtype = "obj";
+        data.attr_pos.clear();
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_stamp_contains = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "player");
+    AccountData::allocator.getDefaultObjectInstance();
 }
 
-void PlayerData::free()
-{
-    m_next = begin_PlayerData;
-    begin_PlayerData = this;
-}
+Allocator<AdminData> AdminData::allocator;
+        
 
 
-PlayerData *PlayerData::getDefaultObjectInstance()
+void AdminData::free()
 {
-    if (defaults_PlayerData == 0) {
-        defaults_PlayerData = new PlayerData;
-        defaults_PlayerData->attr_objtype = "obj";
-        defaults_PlayerData->attr_pos.clear();
-        defaults_PlayerData->attr_pos.push_back(0.0);
-        defaults_PlayerData->attr_pos.push_back(0.0);
-        defaults_PlayerData->attr_pos.push_back(0.0);
-        defaults_PlayerData->attr_velocity.clear();
-        defaults_PlayerData->attr_velocity.push_back(0.0);
-        defaults_PlayerData->attr_velocity.push_back(0.0);
-        defaults_PlayerData->attr_velocity.push_back(0.0);
-        defaults_PlayerData->attr_stamp_contains = 0.0;
-        defaults_PlayerData->attr_stamp = 0.0;
-        defaults_PlayerData->attr_parents = std::list<std::string>(1, "player");
-        AccountData::getDefaultObjectInstance();
-    }
-    return defaults_PlayerData;
-}
-
-PlayerData *PlayerData::getDefaultObject()
-{
-    return PlayerData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 AdminData::~AdminData()
@@ -356,7 +291,7 @@ AdminData::~AdminData()
 
 AdminData * AdminData::copy() const
 {
-    AdminData * copied = AdminData::alloc();
+    AdminData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -368,54 +303,30 @@ bool AdminData::instanceOf(int classNo) const
     return AccountData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-AdminData *AdminData::defaults_AdminData = 0;
-AdminData *AdminData::begin_AdminData = 0;
-
-AdminData *AdminData::alloc()
+void AdminData::fillDefaultObjectInstance(AdminData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_AdminData) {
-        AdminData *res = begin_AdminData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_AdminData = (AdminData *)begin_AdminData->m_next;
-        return res;
-    }
-    return new AdminData(AdminData::getDefaultObjectInstance());
+        data.attr_objtype = "obj";
+        data.attr_pos.clear();
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_stamp_contains = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "admin");
+    AccountData::allocator.getDefaultObjectInstance();
 }
 
-void AdminData::free()
-{
-    m_next = begin_AdminData;
-    begin_AdminData = this;
-}
+Allocator<GameData> GameData::allocator;
+        
 
 
-AdminData *AdminData::getDefaultObjectInstance()
+void GameData::free()
 {
-    if (defaults_AdminData == 0) {
-        defaults_AdminData = new AdminData;
-        defaults_AdminData->attr_objtype = "obj";
-        defaults_AdminData->attr_pos.clear();
-        defaults_AdminData->attr_pos.push_back(0.0);
-        defaults_AdminData->attr_pos.push_back(0.0);
-        defaults_AdminData->attr_pos.push_back(0.0);
-        defaults_AdminData->attr_velocity.clear();
-        defaults_AdminData->attr_velocity.push_back(0.0);
-        defaults_AdminData->attr_velocity.push_back(0.0);
-        defaults_AdminData->attr_velocity.push_back(0.0);
-        defaults_AdminData->attr_stamp_contains = 0.0;
-        defaults_AdminData->attr_stamp = 0.0;
-        defaults_AdminData->attr_parents = std::list<std::string>(1, "admin");
-        AccountData::getDefaultObjectInstance();
-    }
-    return defaults_AdminData;
-}
-
-AdminData *AdminData::getDefaultObject()
-{
-    return AdminData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 GameData::~GameData()
@@ -424,7 +335,7 @@ GameData::~GameData()
 
 GameData * GameData::copy() const
 {
-    GameData * copied = GameData::alloc();
+    GameData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -436,54 +347,30 @@ bool GameData::instanceOf(int classNo) const
     return AdminEntityData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-GameData *GameData::defaults_GameData = 0;
-GameData *GameData::begin_GameData = 0;
-
-GameData *GameData::alloc()
+void GameData::fillDefaultObjectInstance(GameData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_GameData) {
-        GameData *res = begin_GameData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_GameData = (GameData *)begin_GameData->m_next;
-        return res;
-    }
-    return new GameData(GameData::getDefaultObjectInstance());
+        data.attr_objtype = "obj";
+        data.attr_pos.clear();
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_stamp_contains = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "game");
+    AdminEntityData::allocator.getDefaultObjectInstance();
 }
 
-void GameData::free()
-{
-    m_next = begin_GameData;
-    begin_GameData = this;
-}
+Allocator<GameEntityData> GameEntityData::allocator;
+        
 
 
-GameData *GameData::getDefaultObjectInstance()
+void GameEntityData::free()
 {
-    if (defaults_GameData == 0) {
-        defaults_GameData = new GameData;
-        defaults_GameData->attr_objtype = "obj";
-        defaults_GameData->attr_pos.clear();
-        defaults_GameData->attr_pos.push_back(0.0);
-        defaults_GameData->attr_pos.push_back(0.0);
-        defaults_GameData->attr_pos.push_back(0.0);
-        defaults_GameData->attr_velocity.clear();
-        defaults_GameData->attr_velocity.push_back(0.0);
-        defaults_GameData->attr_velocity.push_back(0.0);
-        defaults_GameData->attr_velocity.push_back(0.0);
-        defaults_GameData->attr_stamp_contains = 0.0;
-        defaults_GameData->attr_stamp = 0.0;
-        defaults_GameData->attr_parents = std::list<std::string>(1, "game");
-        AdminEntityData::getDefaultObjectInstance();
-    }
-    return defaults_GameData;
-}
-
-GameData *GameData::getDefaultObject()
-{
-    return GameData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 GameEntityData::~GameEntityData()
@@ -492,7 +379,7 @@ GameEntityData::~GameEntityData()
 
 GameEntityData * GameEntityData::copy() const
 {
-    GameEntityData * copied = GameEntityData::alloc();
+    GameEntityData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -504,54 +391,21 @@ bool GameEntityData::instanceOf(int classNo) const
     return RootEntityData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-GameEntityData *GameEntityData::defaults_GameEntityData = 0;
-GameEntityData *GameEntityData::begin_GameEntityData = 0;
-
-GameEntityData *GameEntityData::alloc()
+void GameEntityData::fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_GameEntityData) {
-        GameEntityData *res = begin_GameEntityData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_GameEntityData = (GameEntityData *)begin_GameEntityData->m_next;
-        return res;
-    }
-    return new GameEntityData(GameEntityData::getDefaultObjectInstance());
-}
-
-void GameEntityData::free()
-{
-    m_next = begin_GameEntityData;
-    begin_GameEntityData = this;
-}
-
-
-GameEntityData *GameEntityData::getDefaultObjectInstance()
-{
-    if (defaults_GameEntityData == 0) {
-        defaults_GameEntityData = new GameEntityData;
-        defaults_GameEntityData->attr_objtype = "obj";
-        defaults_GameEntityData->attr_pos.clear();
-        defaults_GameEntityData->attr_pos.push_back(0.0);
-        defaults_GameEntityData->attr_pos.push_back(0.0);
-        defaults_GameEntityData->attr_pos.push_back(0.0);
-        defaults_GameEntityData->attr_velocity.clear();
-        defaults_GameEntityData->attr_velocity.push_back(0.0);
-        defaults_GameEntityData->attr_velocity.push_back(0.0);
-        defaults_GameEntityData->attr_velocity.push_back(0.0);
-        defaults_GameEntityData->attr_stamp_contains = 0.0;
-        defaults_GameEntityData->attr_stamp = 0.0;
-        defaults_GameEntityData->attr_parents = std::list<std::string>(1, "game_entity");
-        RootEntityData::getDefaultObjectInstance();
-    }
-    return defaults_GameEntityData;
-}
-
-GameEntityData *GameEntityData::getDefaultObject()
-{
-    return GameEntityData::getDefaultObjectInstance();
+        data.attr_objtype = "obj";
+        data.attr_pos.clear();
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_stamp_contains = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "game_entity");
+    RootEntityData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Entity

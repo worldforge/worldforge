@@ -19,7 +19,7 @@ const std::string NAME_ATTR = "name";
 
 int RootData::getAttrClass(const std::string& name) const
 {
-    if (attr_flags_RootData->find(name) != attr_flags_RootData->end()) {
+    if (allocator.attr_flags_Data.find(name) != allocator.attr_flags_Data.end()) {
         return ROOT_NO;
     }
     return BaseObjectData::getAttrClass(name);
@@ -27,8 +27,8 @@ int RootData::getAttrClass(const std::string& name) const
 
 int RootData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = attr_flags_RootData->find(name);
-    if (I != attr_flags_RootData->end()) {
+    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
     return BaseObjectData::getAttrFlag(name);
@@ -173,13 +173,22 @@ void RootData::iterate(int& current_class, std::string& attr) const
     }
 }
 
+Allocator<RootData> RootData::allocator;
+        
+
+
+void RootData::free()
+{
+    allocator.free(this);
+}
+
 RootData::~RootData()
 {
 }
 
 RootData * RootData::copy() const
 {
-    RootData * copied = RootData::alloc();
+    RootData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -191,51 +200,16 @@ bool RootData::instanceOf(int classNo) const
     return BaseObjectData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-RootData *RootData::defaults_RootData = 0;
-RootData *RootData::begin_RootData = 0;
-
-RootData *RootData::alloc()
+void RootData::fillDefaultObjectInstance(RootData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_RootData) {
-        RootData *res = begin_RootData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_RootData = (RootData *)begin_RootData->m_next;
-        return res;
-    }
-    return new RootData(RootData::getDefaultObjectInstance());
-}
-
-void RootData::free()
-{
-    m_next = begin_RootData;
-    begin_RootData = this;
-}
-
-std::map<std::string, int> * RootData::attr_flags_RootData = 0;
-
-RootData *RootData::getDefaultObjectInstance()
-{
-    if (defaults_RootData == 0) {
-        defaults_RootData = new RootData;
-        defaults_RootData->attr_stamp = 0.0;
-        defaults_RootData->attr_objtype = "obj";
-        defaults_RootData->attr_parents = std::list<std::string>(1, "root");
-        attr_flags_RootData = new std::map<std::string, int>;
-        (*attr_flags_RootData)[ID_ATTR] = ID_FLAG;
-        (*attr_flags_RootData)[PARENTS_ATTR] = PARENTS_FLAG;
-        (*attr_flags_RootData)[STAMP_ATTR] = STAMP_FLAG;
-        (*attr_flags_RootData)[OBJTYPE_ATTR] = OBJTYPE_FLAG;
-        (*attr_flags_RootData)[NAME_ATTR] = NAME_FLAG;
-    }
-    return defaults_RootData;
-}
-
-RootData *RootData::getDefaultObject()
-{
-    return RootData::getDefaultObjectInstance();
+        data.attr_stamp = 0.0;
+        data.attr_objtype = "obj";
+        data.attr_parents = std::list<std::string>(1, "root");
+    attr_data[ID_ATTR] = ID_FLAG;
+    attr_data[PARENTS_ATTR] = PARENTS_FLAG;
+    attr_data[STAMP_ATTR] = STAMP_FLAG;
+    attr_data[OBJTYPE_ATTR] = OBJTYPE_FLAG;
+    attr_data[NAME_ATTR] = NAME_FLAG;
 }
 
 } } // namespace Atlas::Objects

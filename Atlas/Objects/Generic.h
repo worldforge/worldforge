@@ -61,25 +61,15 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == GENERIC_NO) current_class = -1; RootOperationData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static GenericData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<GenericData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual GenericData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static GenericData *getDefaultObjectInstance();
-private:
-    static GenericData *defaults_GenericData;
-    static GenericData *begin_GenericData;
+    static void fillDefaultObjectInstance(GenericData& data, std::map<std::string, int>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Operation

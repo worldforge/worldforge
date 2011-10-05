@@ -162,8 +162,7 @@ void LoadDefaultsDecoder::fillDefaults()
 void loadDefaults(const std::string& filename)
 {
      LoadDefaultsDecoder load_defaults(filename);
-     Entity::Anonymous e;
-     e = e->getDefaultObject();
+     Entity::Anonymous e = Entity::AnonymousData::allocator.getDefaultObjectInstance();
      std::vector<double> coords(3, 0.0);
      e->setPos(coords);
      e->setVelocity(coords);

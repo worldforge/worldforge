@@ -21,7 +21,7 @@ const std::string ARGS_ATTR = "args";
 
 int RootOperationData::getAttrClass(const std::string& name) const
 {
-    if (attr_flags_RootOperationData->find(name) != attr_flags_RootOperationData->end()) {
+    if (allocator.attr_flags_Data.find(name) != allocator.attr_flags_Data.end()) {
         return ROOT_OPERATION_NO;
     }
     return RootData::getAttrClass(name);
@@ -29,8 +29,8 @@ int RootOperationData::getAttrClass(const std::string& name) const
 
 int RootOperationData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = attr_flags_RootOperationData->find(name);
-    if (I != attr_flags_RootOperationData->end()) {
+    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
     return RootData::getAttrFlag(name);
@@ -203,13 +203,22 @@ void RootOperationData::iterate(int& current_class, std::string& attr) const
     }
 }
 
+Allocator<RootOperationData> RootOperationData::allocator;
+        
+
+
+void RootOperationData::free()
+{
+    allocator.free(this);
+}
+
 RootOperationData::~RootOperationData()
 {
 }
 
 RootOperationData * RootOperationData::copy() const
 {
-    RootOperationData * copied = RootOperationData::alloc();
+    RootOperationData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -221,58 +230,23 @@ bool RootOperationData::instanceOf(int classNo) const
     return RootData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-RootOperationData *RootOperationData::defaults_RootOperationData = 0;
-RootOperationData *RootOperationData::begin_RootOperationData = 0;
-
-RootOperationData *RootOperationData::alloc()
+void RootOperationData::fillDefaultObjectInstance(RootOperationData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_RootOperationData) {
-        RootOperationData *res = begin_RootOperationData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_RootOperationData = (RootOperationData *)begin_RootOperationData->m_next;
-        return res;
-    }
-    return new RootOperationData(RootOperationData::getDefaultObjectInstance());
-}
-
-void RootOperationData::free()
-{
-    m_next = begin_RootOperationData;
-    begin_RootOperationData = this;
-}
-
-std::map<std::string, int> * RootOperationData::attr_flags_RootOperationData = 0;
-
-RootOperationData *RootOperationData::getDefaultObjectInstance()
-{
-    if (defaults_RootOperationData == 0) {
-        defaults_RootOperationData = new RootOperationData;
-        defaults_RootOperationData->attr_objtype = "op";
-        defaults_RootOperationData->attr_serialno = 0;
-        defaults_RootOperationData->attr_refno = 0;
-        defaults_RootOperationData->attr_seconds = 0.0;
-        defaults_RootOperationData->attr_future_seconds = 0.0;
-        defaults_RootOperationData->attr_stamp = 0.0;
-        defaults_RootOperationData->attr_parents = std::list<std::string>(1, "root_operation");
-        attr_flags_RootOperationData = new std::map<std::string, int>;
-        (*attr_flags_RootOperationData)[SERIALNO_ATTR] = SERIALNO_FLAG;
-        (*attr_flags_RootOperationData)[REFNO_ATTR] = REFNO_FLAG;
-        (*attr_flags_RootOperationData)[FROM_ATTR] = FROM_FLAG;
-        (*attr_flags_RootOperationData)[TO_ATTR] = TO_FLAG;
-        (*attr_flags_RootOperationData)[SECONDS_ATTR] = SECONDS_FLAG;
-        (*attr_flags_RootOperationData)[FUTURE_SECONDS_ATTR] = FUTURE_SECONDS_FLAG;
-        (*attr_flags_RootOperationData)[ARGS_ATTR] = ARGS_FLAG;
-        RootData::getDefaultObjectInstance();
-    }
-    return defaults_RootOperationData;
-}
-
-RootOperationData *RootOperationData::getDefaultObject()
-{
-    return RootOperationData::getDefaultObjectInstance();
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "root_operation");
+    attr_data[SERIALNO_ATTR] = SERIALNO_FLAG;
+    attr_data[REFNO_ATTR] = REFNO_FLAG;
+    attr_data[FROM_ATTR] = FROM_FLAG;
+    attr_data[TO_ATTR] = TO_FLAG;
+    attr_data[SECONDS_ATTR] = SECONDS_FLAG;
+    attr_data[FUTURE_SECONDS_ATTR] = FUTURE_SECONDS_FLAG;
+    attr_data[ARGS_ATTR] = ARGS_FLAG;
+    RootData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

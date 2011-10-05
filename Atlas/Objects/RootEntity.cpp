@@ -19,7 +19,7 @@ const std::string STAMP_CONTAINS_ATTR = "stamp_contains";
 
 int RootEntityData::getAttrClass(const std::string& name) const
 {
-    if (attr_flags_RootEntityData->find(name) != attr_flags_RootEntityData->end()) {
+    if (allocator.attr_flags_Data.find(name) != allocator.attr_flags_Data.end()) {
         return ROOT_ENTITY_NO;
     }
     return RootData::getAttrClass(name);
@@ -27,8 +27,8 @@ int RootEntityData::getAttrClass(const std::string& name) const
 
 int RootEntityData::getAttrFlag(const std::string& name) const
 {
-    std::map<std::string, int>::const_iterator I = attr_flags_RootEntityData->find(name);
-    if (I != attr_flags_RootEntityData->end()) {
+    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
     return RootData::getAttrFlag(name);
@@ -183,13 +183,22 @@ void RootEntityData::iterate(int& current_class, std::string& attr) const
     }
 }
 
+Allocator<RootEntityData> RootEntityData::allocator;
+        
+
+
+void RootEntityData::free()
+{
+    allocator.free(this);
+}
+
 RootEntityData::~RootEntityData()
 {
 }
 
 RootEntityData * RootEntityData::copy() const
 {
-    RootEntityData * copied = RootEntityData::alloc();
+    RootEntityData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -201,61 +210,26 @@ bool RootEntityData::instanceOf(int classNo) const
     return RootData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-RootEntityData *RootEntityData::defaults_RootEntityData = 0;
-RootEntityData *RootEntityData::begin_RootEntityData = 0;
-
-RootEntityData *RootEntityData::alloc()
+void RootEntityData::fillDefaultObjectInstance(RootEntityData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_RootEntityData) {
-        RootEntityData *res = begin_RootEntityData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_RootEntityData = (RootEntityData *)begin_RootEntityData->m_next;
-        return res;
-    }
-    return new RootEntityData(RootEntityData::getDefaultObjectInstance());
-}
-
-void RootEntityData::free()
-{
-    m_next = begin_RootEntityData;
-    begin_RootEntityData = this;
-}
-
-std::map<std::string, int> * RootEntityData::attr_flags_RootEntityData = 0;
-
-RootEntityData *RootEntityData::getDefaultObjectInstance()
-{
-    if (defaults_RootEntityData == 0) {
-        defaults_RootEntityData = new RootEntityData;
-        defaults_RootEntityData->attr_objtype = "obj";
-        defaults_RootEntityData->attr_pos.clear();
-        defaults_RootEntityData->attr_pos.push_back(0.0);
-        defaults_RootEntityData->attr_pos.push_back(0.0);
-        defaults_RootEntityData->attr_pos.push_back(0.0);
-        defaults_RootEntityData->attr_velocity.clear();
-        defaults_RootEntityData->attr_velocity.push_back(0.0);
-        defaults_RootEntityData->attr_velocity.push_back(0.0);
-        defaults_RootEntityData->attr_velocity.push_back(0.0);
-        defaults_RootEntityData->attr_stamp_contains = 0.0;
-        defaults_RootEntityData->attr_stamp = 0.0;
-        defaults_RootEntityData->attr_parents = std::list<std::string>(1, "root_entity");
-        attr_flags_RootEntityData = new std::map<std::string, int>;
-        (*attr_flags_RootEntityData)[LOC_ATTR] = LOC_FLAG;
-        (*attr_flags_RootEntityData)[POS_ATTR] = POS_FLAG;
-        (*attr_flags_RootEntityData)[VELOCITY_ATTR] = VELOCITY_FLAG;
-        (*attr_flags_RootEntityData)[CONTAINS_ATTR] = CONTAINS_FLAG;
-        (*attr_flags_RootEntityData)[STAMP_CONTAINS_ATTR] = STAMP_CONTAINS_FLAG;
-        RootData::getDefaultObjectInstance();
-    }
-    return defaults_RootEntityData;
-}
-
-RootEntityData *RootEntityData::getDefaultObject()
-{
-    return RootEntityData::getDefaultObjectInstance();
+        data.attr_objtype = "obj";
+        data.attr_pos.clear();
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_stamp_contains = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "root_entity");
+    attr_data[LOC_ATTR] = LOC_FLAG;
+    attr_data[POS_ATTR] = POS_FLAG;
+    attr_data[VELOCITY_ATTR] = VELOCITY_FLAG;
+    attr_data[CONTAINS_ATTR] = CONTAINS_FLAG;
+    attr_data[STAMP_CONTAINS_ATTR] = STAMP_CONTAINS_FLAG;
+    RootData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Entity

@@ -28,7 +28,7 @@ class SmartPtr
     typedef typename T::iterator iterator;
     typedef typename T::const_iterator const_iterator;
 
-    SmartPtr() : ptr(T::alloc()) { 
+    SmartPtr() : ptr(T::allocator.alloc()) {
     }
     SmartPtr(const SmartPtr<T>& a) : ptr(a.get()) {
         incRef();
@@ -85,10 +85,10 @@ class SmartPtr
     }
     SmartPtr<T> getDefaultObject() const
     {
-        return SmartPtr(ptr->getDefaultObject());
+        return SmartPtr(T::allocator.getDefaultObjectInstance());
     }
     // If you want to make these protected, please ensure that the
-    // detructor is made virtual to ensure your new class bahaves
+    // destructor is made virtual to ensure your new class bahaves
     // correctly.
   private:
     void decRef() const {

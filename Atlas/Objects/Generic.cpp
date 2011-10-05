@@ -11,6 +11,15 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+Allocator<GenericData> GenericData::allocator;
+        
+
+
+void GenericData::free()
+{
+    allocator.free(this);
+}
+
 GenericData::~GenericData()
 {
 }
@@ -23,7 +32,7 @@ void GenericData::setType(const std::string & name, int no)
 
 GenericData * GenericData::copy() const
 {
-    GenericData * copied = GenericData::alloc();
+    GenericData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -35,48 +44,15 @@ bool GenericData::instanceOf(int classNo) const
     return RootOperationData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-GenericData *GenericData::defaults_GenericData = 0;
-GenericData *GenericData::begin_GenericData = 0;
-
-GenericData *GenericData::alloc()
+void GenericData::fillDefaultObjectInstance(GenericData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_GenericData) {
-        GenericData *res = begin_GenericData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_GenericData = (GenericData *)begin_GenericData->m_next;
-        return res;
-    }
-    return new GenericData(GenericData::getDefaultObjectInstance());
-}
-
-void GenericData::free()
-{
-    m_next = begin_GenericData;
-    begin_GenericData = this;
-}
-
-
-GenericData *GenericData::getDefaultObjectInstance()
-{
-    if (defaults_GenericData == 0) {
-        defaults_GenericData = new GenericData;
-        defaults_GenericData->attr_objtype = "op";
-        defaults_GenericData->attr_serialno = 0;
-        defaults_GenericData->attr_refno = 0;
-        defaults_GenericData->attr_seconds = 0.0;
-        defaults_GenericData->attr_future_seconds = 0.0;
-        defaults_GenericData->attr_stamp = 0.0;
-        RootOperationData::getDefaultObjectInstance();
-    }
-    return defaults_GenericData;
-}
-
-GenericData *GenericData::getDefaultObject()
-{
-    return GenericData::getDefaultObjectInstance();
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+    RootOperationData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

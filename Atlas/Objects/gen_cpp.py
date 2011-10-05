@@ -199,9 +199,8 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
 
     def static_attr_flag_inserts(self, obj, static_attrs):
         classname = classize(obj.id, data=1)
-        self.write("        attr_flags_%s = new std::map<std::string, int>;\n" % (classname))
         for attr in static_attrs:
-            self.write("        (*attr_flags_%s)[%s] = %s;\n" % (classname, attr.attr_name, attr.flag_name)) #"for xamacs syntax highlighting
+            self.write("    attr_data[%s] = %s;\n" % (attr.attr_name, attr.flag_name)) #"for xamacs syntax highlighting
 
     def attribute_names_im(self, obj, statics):
         for attr in statics:
@@ -218,10 +217,10 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         # for attr in statics:
         #     self.write('    if (name == "%s")' % attr.name)
         #     self.write(' return %s;\n' % serialno_name)
-        self.write("""    if (attr_flags_%s->find(name) != attr_flags_%s->end()) {
+        self.write("""    if (allocator.attr_flags_Data.find(name) != allocator.attr_flags_Data.end()) {
         return %s;
     }
-""" % (classname, classname, serialno_name))
+""" % (serialno_name))
         parent = self.get_cpp_parent(obj)
         self.write("    return %s::getAttrClass(name);\n" % parent)
         self.write("}\n\n")
@@ -231,11 +230,11 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
         self.write("int %s::getAttrFlag(const std::string& name) const\n"
                         % classname)
         self.write("{\n")
-        self.write("""    std::map<std::string, int>::const_iterator I = attr_flags_%s->find(name);
-    if (I != attr_flags_%s->end()) {
+        self.write("""    std::map<std::string, int>::const_iterator I = allocator.attr_flags_Data.find(name);
+    if (I != allocator.attr_flags_Data.end()) {
         return I->second;
     }
-""" % (classname, classname))
+""")
         parent = self.get_cpp_parent(obj)
         self.write("    return %s::getAttrFlag(name);\n" % parent)
         self.write("}\n\n")
@@ -355,50 +354,24 @@ class GenerateCC(GenerateObjectFactory, GenerateDecoder, GenerateDispatcher, Gen
     def freelist_if(self, name_addition=""):
         classname = self.classname + name_addition
         self.write("""
-    //freelist related things
 public:
-    static %(classname)s *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<%(classname)s> allocator;
+
+private:
     virtual void free();
 
-    /// \\brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual %(classname)s *getDefaultObject();
-
-    /// \\brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static %(classname)s *getDefaultObjectInstance();
-private:
-    static %(classname)s *defaults_%(classname)s;
-    static %(classname)s *begin_%(classname)s;
+    static void fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, int>& attr_data);
 """ % vars()) #"for xemacs syntax highlighting
-    def freelist_im(self, name_addition=""):
-        classname = self.classname + name_addition
-        self.write("""
-//freelist related methods specific to this class
-%(classname)s *%(classname)s::defaults_%(classname)s = 0;
-%(classname)s *%(classname)s::begin_%(classname)s = 0;
 
-%(classname)s *%(classname)s::alloc()
-{
-    if(begin_%(classname)s) {
-        %(classname)s *res = begin_%(classname)s;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_%(classname)s = (%(classname)s *)begin_%(classname)s->m_next;
-        return res;
-    }
-    return new %(classname)s(%(classname)s::getDefaultObjectInstance());
-}
+    def free_im(self, obj):
+        classname = self.classname
+        self.write("""
 
 void %(classname)s::free()
 {
-    m_next = begin_%(classname)s;
-    begin_%(classname)s = this;
+    allocator.free(this);
 }
 
 """ % vars()) #"for xemacs syntax highlighting
@@ -406,24 +379,15 @@ void %(classname)s::free()
     def default_object_im(self, obj, default_attrs, static_attrs):
         classname = self.classname
         self.write("""
-%(classname)s *%(classname)s::getDefaultObjectInstance()
+void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std::string, int>& attr_data)
 {
-    if (defaults_%(classname)s == 0) {
-        defaults_%(classname)s = new %(classname)s;
 """ % vars()) #"for xemacs syntax highlighting
         self.static_default_assigns(obj, default_attrs)
         if len(static_attrs) > 0:
             self.static_attr_flag_inserts(obj, static_attrs)
         if len(obj.parents) > 0:
-            self.write("        %s::getDefaultObjectInstance();\n" % (classize(obj.parents[0], data=1)))
-        self.write("""    }
-    return defaults_%(classname)s;
-}
-
-%(classname)s *%(classname)s::getDefaultObject()
-{
-    return %(classname)s::getDefaultObjectInstance();
-}
+            self.write("    %s::allocator.getDefaultObjectInstance();\n" % (classize(obj.parents[0], data=1)))
+        self.write("""}
 
 """ % vars()) #"for xemacs syntax highlighting
 
@@ -433,6 +397,12 @@ void %(classname)s::free()
 {
 }
 
+""" % vars()) #"for xemacs syntax highlighting
+
+    def allocator_im(self, obj):
+        classname = self.classname
+        self.write("""Allocator<%(classname)s> %(classname)s::allocator;
+        
 """ % vars()) #"for xemacs syntax highlighting
 
     def settype_im(self, obj):
@@ -447,13 +417,13 @@ void %(classname)s::free()
     def copy_im(self, obj):
         self.write("""%s * %s::copy() const
 {
-    %s * copied = %s::alloc();
+    %s * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
 }
 
-""" % (self.classname, self.classname, self.classname, self.classname))
+""" % (self.classname, self.classname, self.classname))
     def instanceof_im(self, obj):
         classname_base = self.get_cpp_parent(obj)
         classname = self.classname
@@ -651,12 +621,8 @@ void %(classname)s::free()
             self.write(";\n")
 
         self.freelist_if()
-        if len(static_attrs) > 0:
-            self.write("""
-    static std::map<std::string, int> * attr_flags_%s;
-""" % (self.classname)) #"for xemacs syntax highlighting
         self.write("};\n\n")
-
+        
         #inst# self.instance_if(obj)
 
         if len(static_attrs) > 0:
@@ -708,15 +674,13 @@ void %(classname)s::free()
             #self.asobject_im(obj, static_attrs)
             self.addtoobject_im(obj, static_attrs)
             self.iterate_im(obj, static_attrs)
+        self.allocator_im(obj)
+        self.free_im(obj)
         self.destructor_im(obj)
         if obj.id in ['anonymous', 'generic']:
             self.settype_im(obj)
         self.copy_im(obj)
         self.instanceof_im(obj)
-        self.freelist_im()
-        if len(static_attrs) > 0:
-            self.write("std::map<std::string, int> * %s::attr_flags_%s = 0;\n"
-                       % (self.classname, self.classname))
         self.default_object_im(obj, default_attrs, static_attrs)
 
         #inst# self.instance_im()
@@ -743,6 +707,7 @@ public:
         class_serial_no = class_serial_no + 1
         self.freelist_if("Instance")
         self.write("};\n\n")
+        self.free_im()
 
     def instance_im(self):
         self.freelist_im("Instance")

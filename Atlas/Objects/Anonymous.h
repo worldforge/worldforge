@@ -53,25 +53,15 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == ANONYMOUS_NO) current_class = -1; RootEntityData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static AnonymousData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<AnonymousData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual AnonymousData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static AnonymousData *getDefaultObjectInstance();
-private:
-    static AnonymousData *defaults_AnonymousData;
-    static AnonymousData *begin_AnonymousData;
+    static void fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, int>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Entity

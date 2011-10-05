@@ -11,6 +11,15 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Entity { 
 
+Allocator<AnonymousData> AnonymousData::allocator;
+        
+
+
+void AnonymousData::free()
+{
+    allocator.free(this);
+}
+
 AnonymousData::~AnonymousData()
 {
 }
@@ -23,7 +32,7 @@ void AnonymousData::setType(const std::string & name, int no)
 
 AnonymousData * AnonymousData::copy() const
 {
-    AnonymousData * copied = AnonymousData::alloc();
+    AnonymousData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -35,52 +44,19 @@ bool AnonymousData::instanceOf(int classNo) const
     return RootEntityData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-AnonymousData *AnonymousData::defaults_AnonymousData = 0;
-AnonymousData *AnonymousData::begin_AnonymousData = 0;
-
-AnonymousData *AnonymousData::alloc()
+void AnonymousData::fillDefaultObjectInstance(AnonymousData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_AnonymousData) {
-        AnonymousData *res = begin_AnonymousData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_AnonymousData = (AnonymousData *)begin_AnonymousData->m_next;
-        return res;
-    }
-    return new AnonymousData(AnonymousData::getDefaultObjectInstance());
-}
-
-void AnonymousData::free()
-{
-    m_next = begin_AnonymousData;
-    begin_AnonymousData = this;
-}
-
-
-AnonymousData *AnonymousData::getDefaultObjectInstance()
-{
-    if (defaults_AnonymousData == 0) {
-        defaults_AnonymousData = new AnonymousData;
-        defaults_AnonymousData->attr_pos.clear();
-        defaults_AnonymousData->attr_pos.push_back(0.0);
-        defaults_AnonymousData->attr_pos.push_back(0.0);
-        defaults_AnonymousData->attr_pos.push_back(0.0);
-        defaults_AnonymousData->attr_velocity.clear();
-        defaults_AnonymousData->attr_velocity.push_back(0.0);
-        defaults_AnonymousData->attr_velocity.push_back(0.0);
-        defaults_AnonymousData->attr_velocity.push_back(0.0);
-        defaults_AnonymousData->attr_stamp_contains = 0.0;
-        defaults_AnonymousData->attr_stamp = 0.0;
-        RootEntityData::getDefaultObjectInstance();
-    }
-    return defaults_AnonymousData;
-}
-
-AnonymousData *AnonymousData::getDefaultObject()
-{
-    return AnonymousData::getDefaultObjectInstance();
+        data.attr_pos.clear();
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_pos.push_back(0.0);
+        data.attr_velocity.clear();
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_velocity.push_back(0.0);
+        data.attr_stamp_contains = 0.0;
+        data.attr_stamp = 0.0;
+    RootEntityData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Entity

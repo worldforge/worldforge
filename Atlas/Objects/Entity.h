@@ -51,25 +51,15 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == ADMIN_ENTITY_NO) current_class = -1; RootEntityData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static AdminEntityData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<AdminEntityData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual AdminEntityData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static AdminEntityData *getDefaultObjectInstance();
-private:
-    static AdminEntityData *defaults_AdminEntityData;
-    static AdminEntityData *begin_AdminEntityData;
+    static void fillDefaultObjectInstance(AdminEntityData& data, std::map<std::string, int>& attr_data);
 };
 
 
@@ -174,27 +164,15 @@ protected:
 
     virtual void iterate(int& current_class, std::string& attr) const;
 
-    //freelist related things
 public:
-    static AccountData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<AccountData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual AccountData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static AccountData *getDefaultObjectInstance();
-private:
-    static AccountData *defaults_AccountData;
-    static AccountData *begin_AccountData;
-
-    static std::map<std::string, int> * attr_flags_AccountData;
+    static void fillDefaultObjectInstance(AccountData& data, std::map<std::string, int>& attr_data);
 };
 
 //
@@ -360,25 +338,15 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == PLAYER_NO) current_class = -1; AccountData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static PlayerData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<PlayerData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual PlayerData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static PlayerData *getDefaultObjectInstance();
-private:
-    static PlayerData *defaults_PlayerData;
-    static PlayerData *begin_PlayerData;
+    static void fillDefaultObjectInstance(PlayerData& data, std::map<std::string, int>& attr_data);
 };
 
 
@@ -420,25 +388,15 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == ADMIN_NO) current_class = -1; AccountData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static AdminData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<AdminData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual AdminData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static AdminData *getDefaultObjectInstance();
-private:
-    static AdminData *defaults_AdminData;
-    static AdminData *begin_AdminData;
+    static void fillDefaultObjectInstance(AdminData& data, std::map<std::string, int>& attr_data);
 };
 
 
@@ -480,25 +438,15 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == GAME_NO) current_class = -1; AdminEntityData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static GameData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<GameData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual GameData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static GameData *getDefaultObjectInstance();
-private:
-    static GameData *defaults_GameData;
-    static GameData *begin_GameData;
+    static void fillDefaultObjectInstance(GameData& data, std::map<std::string, int>& attr_data);
 };
 
 
@@ -540,25 +488,15 @@ public:
     virtual void iterate(int& current_class, std::string& attr) const
         {if(current_class == GAME_ENTITY_NO) current_class = -1; RootEntityData::iterate(current_class, attr);}
 
-    //freelist related things
 public:
-    static GameEntityData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<GameEntityData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual GameEntityData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static GameEntityData *getDefaultObjectInstance();
-private:
-    static GameEntityData *defaults_GameEntityData;
-    static GameEntityData *begin_GameEntityData;
+    static void fillDefaultObjectInstance(GameEntityData& data, std::map<std::string, int>& attr_data);
 };
 
 } } } // namespace Atlas::Objects::Entity

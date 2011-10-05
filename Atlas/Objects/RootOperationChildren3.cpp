@@ -11,13 +11,22 @@ using Atlas::Message::MapType;
 
 namespace Atlas { namespace Objects { namespace Operation { 
 
+Allocator<PerceiveData> PerceiveData::allocator;
+        
+
+
+void PerceiveData::free()
+{
+    allocator.free(this);
+}
+
 PerceiveData::~PerceiveData()
 {
 }
 
 PerceiveData * PerceiveData::copy() const
 {
-    PerceiveData * copied = PerceiveData::alloc();
+    PerceiveData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -29,49 +38,25 @@ bool PerceiveData::instanceOf(int classNo) const
     return GetData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-PerceiveData *PerceiveData::defaults_PerceiveData = 0;
-PerceiveData *PerceiveData::begin_PerceiveData = 0;
-
-PerceiveData *PerceiveData::alloc()
+void PerceiveData::fillDefaultObjectInstance(PerceiveData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_PerceiveData) {
-        PerceiveData *res = begin_PerceiveData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_PerceiveData = (PerceiveData *)begin_PerceiveData->m_next;
-        return res;
-    }
-    return new PerceiveData(PerceiveData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "perceive");
+    GetData::allocator.getDefaultObjectInstance();
 }
 
-void PerceiveData::free()
-{
-    m_next = begin_PerceiveData;
-    begin_PerceiveData = this;
-}
+Allocator<LookData> LookData::allocator;
+        
 
 
-PerceiveData *PerceiveData::getDefaultObjectInstance()
+void LookData::free()
 {
-    if (defaults_PerceiveData == 0) {
-        defaults_PerceiveData = new PerceiveData;
-        defaults_PerceiveData->attr_objtype = "op";
-        defaults_PerceiveData->attr_serialno = 0;
-        defaults_PerceiveData->attr_refno = 0;
-        defaults_PerceiveData->attr_seconds = 0.0;
-        defaults_PerceiveData->attr_future_seconds = 0.0;
-        defaults_PerceiveData->attr_stamp = 0.0;
-        defaults_PerceiveData->attr_parents = std::list<std::string>(1, "perceive");
-        GetData::getDefaultObjectInstance();
-    }
-    return defaults_PerceiveData;
-}
-
-PerceiveData *PerceiveData::getDefaultObject()
-{
-    return PerceiveData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 LookData::~LookData()
@@ -80,7 +65,7 @@ LookData::~LookData()
 
 LookData * LookData::copy() const
 {
-    LookData * copied = LookData::alloc();
+    LookData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -92,49 +77,25 @@ bool LookData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-LookData *LookData::defaults_LookData = 0;
-LookData *LookData::begin_LookData = 0;
-
-LookData *LookData::alloc()
+void LookData::fillDefaultObjectInstance(LookData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_LookData) {
-        LookData *res = begin_LookData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_LookData = (LookData *)begin_LookData->m_next;
-        return res;
-    }
-    return new LookData(LookData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "look");
+    PerceiveData::allocator.getDefaultObjectInstance();
 }
 
-void LookData::free()
-{
-    m_next = begin_LookData;
-    begin_LookData = this;
-}
+Allocator<ListenData> ListenData::allocator;
+        
 
 
-LookData *LookData::getDefaultObjectInstance()
+void ListenData::free()
 {
-    if (defaults_LookData == 0) {
-        defaults_LookData = new LookData;
-        defaults_LookData->attr_objtype = "op";
-        defaults_LookData->attr_serialno = 0;
-        defaults_LookData->attr_refno = 0;
-        defaults_LookData->attr_seconds = 0.0;
-        defaults_LookData->attr_future_seconds = 0.0;
-        defaults_LookData->attr_stamp = 0.0;
-        defaults_LookData->attr_parents = std::list<std::string>(1, "look");
-        PerceiveData::getDefaultObjectInstance();
-    }
-    return defaults_LookData;
-}
-
-LookData *LookData::getDefaultObject()
-{
-    return LookData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 ListenData::~ListenData()
@@ -143,7 +104,7 @@ ListenData::~ListenData()
 
 ListenData * ListenData::copy() const
 {
-    ListenData * copied = ListenData::alloc();
+    ListenData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -155,49 +116,25 @@ bool ListenData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-ListenData *ListenData::defaults_ListenData = 0;
-ListenData *ListenData::begin_ListenData = 0;
-
-ListenData *ListenData::alloc()
+void ListenData::fillDefaultObjectInstance(ListenData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_ListenData) {
-        ListenData *res = begin_ListenData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_ListenData = (ListenData *)begin_ListenData->m_next;
-        return res;
-    }
-    return new ListenData(ListenData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "listen");
+    PerceiveData::allocator.getDefaultObjectInstance();
 }
 
-void ListenData::free()
-{
-    m_next = begin_ListenData;
-    begin_ListenData = this;
-}
+Allocator<SniffData> SniffData::allocator;
+        
 
 
-ListenData *ListenData::getDefaultObjectInstance()
+void SniffData::free()
 {
-    if (defaults_ListenData == 0) {
-        defaults_ListenData = new ListenData;
-        defaults_ListenData->attr_objtype = "op";
-        defaults_ListenData->attr_serialno = 0;
-        defaults_ListenData->attr_refno = 0;
-        defaults_ListenData->attr_seconds = 0.0;
-        defaults_ListenData->attr_future_seconds = 0.0;
-        defaults_ListenData->attr_stamp = 0.0;
-        defaults_ListenData->attr_parents = std::list<std::string>(1, "listen");
-        PerceiveData::getDefaultObjectInstance();
-    }
-    return defaults_ListenData;
-}
-
-ListenData *ListenData::getDefaultObject()
-{
-    return ListenData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 SniffData::~SniffData()
@@ -206,7 +143,7 @@ SniffData::~SniffData()
 
 SniffData * SniffData::copy() const
 {
-    SniffData * copied = SniffData::alloc();
+    SniffData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -218,49 +155,25 @@ bool SniffData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-SniffData *SniffData::defaults_SniffData = 0;
-SniffData *SniffData::begin_SniffData = 0;
-
-SniffData *SniffData::alloc()
+void SniffData::fillDefaultObjectInstance(SniffData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_SniffData) {
-        SniffData *res = begin_SniffData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_SniffData = (SniffData *)begin_SniffData->m_next;
-        return res;
-    }
-    return new SniffData(SniffData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "sniff");
+    PerceiveData::allocator.getDefaultObjectInstance();
 }
 
-void SniffData::free()
-{
-    m_next = begin_SniffData;
-    begin_SniffData = this;
-}
+Allocator<TouchData> TouchData::allocator;
+        
 
 
-SniffData *SniffData::getDefaultObjectInstance()
+void TouchData::free()
 {
-    if (defaults_SniffData == 0) {
-        defaults_SniffData = new SniffData;
-        defaults_SniffData->attr_objtype = "op";
-        defaults_SniffData->attr_serialno = 0;
-        defaults_SniffData->attr_refno = 0;
-        defaults_SniffData->attr_seconds = 0.0;
-        defaults_SniffData->attr_future_seconds = 0.0;
-        defaults_SniffData->attr_stamp = 0.0;
-        defaults_SniffData->attr_parents = std::list<std::string>(1, "sniff");
-        PerceiveData::getDefaultObjectInstance();
-    }
-    return defaults_SniffData;
-}
-
-SniffData *SniffData::getDefaultObject()
-{
-    return SniffData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 TouchData::~TouchData()
@@ -269,7 +182,7 @@ TouchData::~TouchData()
 
 TouchData * TouchData::copy() const
 {
-    TouchData * copied = TouchData::alloc();
+    TouchData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -281,49 +194,25 @@ bool TouchData::instanceOf(int classNo) const
     return PerceiveData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-TouchData *TouchData::defaults_TouchData = 0;
-TouchData *TouchData::begin_TouchData = 0;
-
-TouchData *TouchData::alloc()
+void TouchData::fillDefaultObjectInstance(TouchData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_TouchData) {
-        TouchData *res = begin_TouchData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_TouchData = (TouchData *)begin_TouchData->m_next;
-        return res;
-    }
-    return new TouchData(TouchData::getDefaultObjectInstance());
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "touch");
+    PerceiveData::allocator.getDefaultObjectInstance();
 }
 
-void TouchData::free()
-{
-    m_next = begin_TouchData;
-    begin_TouchData = this;
-}
+Allocator<LoginData> LoginData::allocator;
+        
 
 
-TouchData *TouchData::getDefaultObjectInstance()
+void LoginData::free()
 {
-    if (defaults_TouchData == 0) {
-        defaults_TouchData = new TouchData;
-        defaults_TouchData->attr_objtype = "op";
-        defaults_TouchData->attr_serialno = 0;
-        defaults_TouchData->attr_refno = 0;
-        defaults_TouchData->attr_seconds = 0.0;
-        defaults_TouchData->attr_future_seconds = 0.0;
-        defaults_TouchData->attr_stamp = 0.0;
-        defaults_TouchData->attr_parents = std::list<std::string>(1, "touch");
-        PerceiveData::getDefaultObjectInstance();
-    }
-    return defaults_TouchData;
-}
-
-TouchData *TouchData::getDefaultObject()
-{
-    return TouchData::getDefaultObjectInstance();
+    allocator.free(this);
 }
 
 LoginData::~LoginData()
@@ -332,7 +221,7 @@ LoginData::~LoginData()
 
 LoginData * LoginData::copy() const
 {
-    LoginData * copied = LoginData::alloc();
+    LoginData * copied = allocator.alloc();
     *copied = *this;
     copied->m_refCount = 0;
     return copied;
@@ -344,49 +233,16 @@ bool LoginData::instanceOf(int classNo) const
     return GetData::instanceOf(classNo);
 }
 
-//freelist related methods specific to this class
-LoginData *LoginData::defaults_LoginData = 0;
-LoginData *LoginData::begin_LoginData = 0;
-
-LoginData *LoginData::alloc()
+void LoginData::fillDefaultObjectInstance(LoginData& data, std::map<std::string, int>& attr_data)
 {
-    if(begin_LoginData) {
-        LoginData *res = begin_LoginData;
-        assert( res->m_refCount == 0 );
-        res->m_attrFlags = 0;
-        res->m_attributes.clear();
-        begin_LoginData = (LoginData *)begin_LoginData->m_next;
-        return res;
-    }
-    return new LoginData(LoginData::getDefaultObjectInstance());
-}
-
-void LoginData::free()
-{
-    m_next = begin_LoginData;
-    begin_LoginData = this;
-}
-
-
-LoginData *LoginData::getDefaultObjectInstance()
-{
-    if (defaults_LoginData == 0) {
-        defaults_LoginData = new LoginData;
-        defaults_LoginData->attr_objtype = "op";
-        defaults_LoginData->attr_serialno = 0;
-        defaults_LoginData->attr_refno = 0;
-        defaults_LoginData->attr_seconds = 0.0;
-        defaults_LoginData->attr_future_seconds = 0.0;
-        defaults_LoginData->attr_stamp = 0.0;
-        defaults_LoginData->attr_parents = std::list<std::string>(1, "login");
-        GetData::getDefaultObjectInstance();
-    }
-    return defaults_LoginData;
-}
-
-LoginData *LoginData::getDefaultObject()
-{
-    return LoginData::getDefaultObjectInstance();
+        data.attr_objtype = "op";
+        data.attr_serialno = 0;
+        data.attr_refno = 0;
+        data.attr_seconds = 0.0;
+        data.attr_future_seconds = 0.0;
+        data.attr_stamp = 0.0;
+        data.attr_parents = std::list<std::string>(1, "login");
+    GetData::allocator.getDefaultObjectInstance();
 }
 
 } } } // namespace Atlas::Objects::Operation

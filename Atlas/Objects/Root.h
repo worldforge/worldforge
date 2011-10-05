@@ -142,27 +142,15 @@ protected:
 
     virtual void iterate(int& current_class, std::string& attr) const;
 
-    //freelist related things
 public:
-    static RootData *alloc();
+    template <typename>
+    friend class ::Atlas::Objects::Allocator;
+    static Allocator<RootData> allocator;
+
+private:
     virtual void free();
 
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of the same class as this object.
-    ///
-    /// @return a pointer to the default object.
-    virtual RootData *getDefaultObject();
-
-    /// \brief Get the reference object that contains the default values for
-    /// attributes of instances of this class.
-    ///
-    /// @return a pointer to the default object.
-    static RootData *getDefaultObjectInstance();
-private:
-    static RootData *defaults_RootData;
-    static RootData *begin_RootData;
-
-    static std::map<std::string, int> * attr_flags_RootData;
+    static void fillDefaultObjectInstance(RootData& data, std::map<std::string, int>& attr_data);
 };
 
 //

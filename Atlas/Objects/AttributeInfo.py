@@ -207,7 +207,7 @@ class AttributeInfo:
         
 
     def default_assign(self, classname):
-        var = 'defaults_%s->attr_%s' % (classname, self.name)
+        var = 'data.attr_%s' % (self.name)
         if self.type == "int" or self.type == "float":
             return '        %s = %s;\n' \
                     % (var, self.value)
