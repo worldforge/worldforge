@@ -84,6 +84,10 @@ ResponseBase::~ResponseBase()
 {
 }
 
+ResponseTracker::~ResponseTracker()
+{
+}
+
 BaseDeleteLater::~BaseDeleteLater()
 {
 }
