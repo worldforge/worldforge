@@ -20,6 +20,7 @@
 #include <sstream>
 #include <cassert>
 #include <vector>
+#include <cstdlib>
 
 #if USE_XML
 #define USE_FILE 0
@@ -118,7 +119,14 @@ void testXML()
     TestDecoder bridge;
 #if USE_FILE
     fstream stream;
-    stream.open("../../../../protocols/atlas/spec/atlas.xml", std::ios::in);
+    std::string atlas_xml_path;
+    char * srcdir_env = getenv("srcdir");
+    if (srcdir_env != 0) {
+        atlas_xml_path = srcdir_env;
+        atlas_xml_path += "/";
+    }
+    atlas_xml_path += "../../protocol/spec/atlas.xml";
+    stream.open(atlas_xml_path, std::ios::in);
     assert(!!stream);
 #else
     std::stringstream stream;
@@ -429,8 +437,15 @@ void test()
 
 int main()
 {
+    std::string atlas_xml_path;
+    char * srcdir_env = getenv("srcdir");
+    if (srcdir_env != 0) {
+        atlas_xml_path = srcdir_env;
+        atlas_xml_path += "/";
+    }
+    atlas_xml_path += "../../protocol/spec/atlas.xml";
     try {
-	Atlas::Objects::loadDefaults("../../../../protocols/atlas/spec/atlas.xml");
+        Atlas::Objects::loadDefaults(atlas_xml_path);
     } catch(Atlas::Objects::DefaultLoadingException e) {
         std::cout << "DefaultLoadingException: "
              << e.getDescription() << std::endl;
