@@ -396,7 +396,7 @@ void test()
         else check_float_list3(ent_velocity, 0.0, y2, 0.0);
 
         DEBUG_PRINT(std::cout<<"base?"<<std::endl);
-        RootEntity base_entity = human.getDefaultObject();
+        RootEntity base_entity = Atlas::Objects::Entity::RootEntityData::allocator.getDefaultObjectInstance();
         std::vector<double> &base = base_entity->modifyVelocity();
         base[1] = y2;
         check_float_list3(base_entity->getVelocityAsList(), 0.0, y2, 0.0);

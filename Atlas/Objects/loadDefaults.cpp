@@ -132,7 +132,7 @@ void LoadDefaultsDecoder::fillDefaults()
         //get atlas.xml object
         const Element & melem = getMessageElement(*I);
         //get class instances
-        Root obj = Factories::instance()->createObject(*I).getDefaultObject();
+        Root obj = Factories::instance()->getDefaultInstance(*I);
         //Root obj_inst = objectInstanceFactory.createObject(*I).getDefaultObject();
         //add attributes recursively
         std::set<std::string> used_attributes;

@@ -83,10 +83,6 @@ class SmartPtr
         ret.decRef();
         return ret;
     }
-    SmartPtr<T> getDefaultObject() const
-    {
-        return SmartPtr(T::allocator.getDefaultObjectInstance());
-    }
     // If you want to make these protected, please ensure that the
     // destructor is made virtual to ensure your new class bahaves
     // correctly.
