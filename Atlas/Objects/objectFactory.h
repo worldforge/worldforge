@@ -33,15 +33,22 @@ class NoSuchFactoryException : public Atlas::Exception
 template <class T>
 static SmartPtr<RootData> factory(const std::string &, int)
 {
-    SmartPtr<T> obj;
-    return obj;
+    return SmartPtr<T>();
 }
+
+template <class T>
+static SmartPtr<RootData> defaultInstance(const std::string &, int)
+{
+    return T::allocator.getDefaultObjectInstance();
+}
+
 
 SmartPtr<RootData> generic_factory(const std::string & name, int no);
 SmartPtr<RootData> anonymous_factory(const std::string & name, int no);
 
 typedef Root (*FactoryMethod)(const std::string &, int);
-typedef std::map<const std::string, std::pair<FactoryMethod, int> > FactoryMap;
+typedef Root (*DefaultInstanceMethod)(const std::string &, int);
+typedef std::map<const std::string, std::pair<std::pair<FactoryMethod, DefaultInstanceMethod>, int> > FactoryMap;
 
 class Factories 
 {
@@ -54,17 +61,45 @@ public:
     bool hasFactory(const std::string& name);
     Root createObject(const std::string& name);
     Root createObject(const Atlas::Message::MapType & msg);
+    Root getDefaultInstance(const std::string& name);
     std::list<std::string> getKeys();
-    int addFactory(const std::string& name, FactoryMethod method);
+    int addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod);
 
     static Factories * instance();
 private:
     FactoryMap m_factories;
 
-    void addFactory(const std::string& name, FactoryMethod method, int classno);
+    /**
+     * Adds a new factory.
+     * @param name The class name attached to the factory.
+     * @param method The method used for creating new objects.
+     * @param defaultInstanceMethod The method used for accessing the
+     *          default instance.
+     * @param classno The class number.
+     */
+    void addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod, int classno);
+
+    /**
+     * Adds a new factory using a type.
+     *
+     * This is a utility version of the more extensive addFactory method which
+     * will access T::allocator to get the methods needed.
+     *
+     * @param name The class name attached to the factory.
+     * @param classno The class number.
+     */
+    template <typename T>
+    void addFactory(const std::string& name, int classno);
 };
     
 extern std::map<const std::string, Root> objectDefinitions;
+
+
+template <typename T>
+void Factories::addFactory(const std::string& name, int classno)
+{
+    addFactory(name, &factory<T>, &defaultInstance<T>, classno);
+}
 
 } } // namespace Atlas::Objects
 

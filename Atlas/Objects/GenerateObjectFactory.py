@@ -65,7 +65,7 @@ AddFactories::AddFactories()
             idc = classize(id)
             idu = string.upper(id)
             self.write("""
-    objectFactory->addFactory("%(id)s", &factory<%(namespace)s%(idc)sData>, %(namespace)s%(idu)s_NO);
+    objectFactory->addFactory<%(namespace)s%(idc)sData>("%(id)s", %(namespace)s%(idu)s_NO);
 """ % vars()) #"for xemacs syntax highlighting
         self.write("""}
 
@@ -89,7 +89,7 @@ Root Factories::createObject(const std::string& name)
     if (I == m_factories.end()) {
         return Root(0);
     } else {
-        return (*I).second.first(name, (*I).second.second);
+        return (*I).second.first.first(name, (*I).second.second);
     }
 }
     
@@ -113,7 +113,7 @@ Root Factories::createObject(const MapType & msg_map)
                     // objtype and parent ok, try to create it:
                     FactoryMap::const_iterator I = m_factories.find(parent);
                     if (I != m_factories.end()) {
-                        obj = I->second.first(parent, I->second.second);
+                        obj = I->second.first.first(parent, I->second.second);
                     } else {
                         if (objtype == "op") {
                             obj = Atlas::Objects::Operation::Generic();
@@ -137,6 +137,17 @@ Root Factories::createObject(const MapType & msg_map)
     return obj;
 }
 
+Root Factories::getDefaultInstance(const std::string& name)
+{
+    FactoryMap::const_iterator I = m_factories.find(name);
+    if (I == m_factories.end()) {
+        //perhaps throw something instead?
+        return Root(0);
+    } else {
+        return (*I).second.first.second(name, (*I).second.second);
+    }
+}
+
 std::list<std::string> Factories::getKeys()
 {
     std::list<std::string> keys;
@@ -147,15 +158,15 @@ std::list<std::string> Factories::getKeys()
     return keys;
 }
     
-void Factories::addFactory(const std::string& name, FactoryMethod method, int classno)
+void Factories::addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod, int classno)
 {
-    m_factories[name] = std::make_pair(method, classno);
+    m_factories[name] = std::make_pair(std::make_pair(method, defaultInstanceMethod), classno);
 }
 
-int Factories::addFactory(const std::string& name, FactoryMethod method)
+int Factories::addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod)
 {
     int classno = ++enumMax;
-    m_factories[name] = std::make_pair(method, classno);
+    m_factories[name] = std::make_pair(std::make_pair(method, defaultInstanceMethod), classno);
     return classno;
 }
 
