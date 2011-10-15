@@ -34,3 +34,11 @@ tests/Objects/objects1
 tests/Objects/objects2
 tests/Objects/objects_fwd
 tools/atlas_convert
+#ignore all temporary files
+*~
+#ignore Eclipse settings
+.settings
+.pydevproject
+.project
+.cproject
+.autotools
