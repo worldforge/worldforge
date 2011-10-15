@@ -192,6 +192,7 @@ void testXML()
     //[$from=bar(args=[$id=foo])][$id=foo]
     //<atlas><map><std::string name="from">bar</std::string><list name="args"><map><std::string name="id">foo</std::string></map></list></map><map><std::string name="id">foo</std::string></map></atlas>
 #endif
+    delete codec;
 }
 
 
