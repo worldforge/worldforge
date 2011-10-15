@@ -52,8 +52,7 @@ void
 MetaServerHandlerTCP::start_accept()
 {
 
-	tcp_connection::pointer new_connection =
-			tcp_connection::create(acceptor_.io_service());
+	tcp_connection::pointer new_connection = tcp_connection::create(acceptor_.get_io_service());
 
 	//logger.debugStream() << "New TCP Connection: " << new_connection->socket().remote_endpoint().address().to_string();
 
