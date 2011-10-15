@@ -161,13 +161,11 @@ int Factories::addFactory(const std::string& name, FactoryMethod method)
 
 Factories * Factories::instance()
 {
-    if (m_instance == 0) {
-        m_instance = new Factories;
-    }
-    return m_instance;
+    static Factories instance;
+
+    return &instance;
 }
 
-Factories * Factories::m_instance = 0;
 """) #"for xemacs syntax highlighting
             
         self.ns_close(self.base_list)

@@ -60,7 +60,6 @@ public:
     static Factories * instance();
 private:
     FactoryMap m_factories;
-    static Factories * m_instance;
 
     void addFactory(const std::string& name, FactoryMethod method, int classno);
 };
