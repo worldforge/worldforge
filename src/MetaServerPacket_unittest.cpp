@@ -25,6 +25,7 @@
 
 #include <cppunit/TestCase.h>
 #include <cppunit/TestRunner.h>
+#include <cppunit/TextOutputter.h>
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -33,7 +34,7 @@
 
 static const int TEST_MAX_BYTES = 1024;
 
-class MetaServerPacket_unittest : public CppUnit::TestCase
+class MetaServerPacket_unittest : public CppUnit::TestFixture
 {
     CPPUNIT_TEST_SUITE(MetaServerPacket_unittest);
     CPPUNIT_TEST(testConstructor);
@@ -44,10 +45,17 @@ class MetaServerPacket_unittest : public CppUnit::TestCase
     CPPUNIT_TEST(test_getPacketType_constructor);
     CPPUNIT_TEST(test_getPacketType_setPacketType);
     CPPUNIT_TEST(test_getIntData_constructor);
+    CPPUNIT_TEST(test_IpAsciiToNet_returnmatch);
+    CPPUNIT_TEST(test_setAddress_getAddress);
+    CPPUNIT_TEST(test_getAddressStr_return);
+    CPPUNIT_TEST(test_getAddressInt_return);
 
     CPPUNIT_TEST_SUITE_END();
   public:
     MetaServerPacket_unittest() { }
+
+    void setUp() {}
+    void tearDown() {}
 
     void testConstructor() {
         boost::array<char, TEST_MAX_BYTES> test_buffer;
@@ -202,6 +210,72 @@ class MetaServerPacket_unittest : public CppUnit::TestCase
     	delete rsp;
         std::cout << std::endl << "test_getIntData_constructor: end" << std::endl;
 
+    }
+
+    /*
+     *  Make sure that the string address going in, comes back as the correct
+     *  decimal value.
+     *  127.0.2.1
+     *
+     * String value	1.2.0.127
+     * Binary	00000001 . 00000010 . 00000000 . 01111111
+   	 * Integer	16908415
+     */
+    void test_IpAsciiToNet_returnmatch()
+    {
+    	boost::uint32_t r;
+    	MetaServerPacket * msp = new MetaServerPacket();
+
+    	r = msp->IpAsciiToNet("127.0.2.1");
+    	delete msp;
+
+    	CPPUNIT_ASSERT( r == 16908415 );
+
+    }
+
+    /*
+     *  Set the address and insure round trip
+     */
+    void test_setAddress_getAddress()
+    {
+    	boost::asio::ip::address a = boost::asio::ip::address::from_string("127.0.2.1");
+
+    	MetaServerPacket * msp = new MetaServerPacket();
+
+    	msp->setAddress( a );
+
+    	CPPUNIT_ASSERT( a == msp->getAddress() );
+
+    	delete msp;
+    }
+
+    /*
+     * Set address and insure that the round trip string
+     * matches
+     */
+    void test_getAddressStr_return()
+    {
+
+    	MetaServerPacket * msp = new MetaServerPacket();
+
+    	msp->setAddress( boost::asio::ip::address::from_string("127.0.2.1") );
+
+    	CPPUNIT_ASSERT( msp->getAddressStr() == "127.0.2.1" );
+
+    	delete msp;
+    }
+
+    /*
+     * Set address and insure that the round trip
+     * int value matches
+     */
+    void test_getAddressInt_return()
+    {
+    	MetaServerPacket * msp = new MetaServerPacket();
+
+    	msp->setAddress( boost::asio::ip::address::from_string("127.0.2.1") );
+
+    	CPPUNIT_ASSERT( msp->getAddressInt() == 16908415 );
     }
 
     void

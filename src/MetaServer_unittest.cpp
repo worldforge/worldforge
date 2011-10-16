@@ -125,6 +125,16 @@ MetaServerPacket::getIntData(unsigned int)
 {
 }
 
+std::string
+MetaServerPacket::getPacketMessage(unsigned int offset)
+{
+}
+
+unsigned int
+MetaServerPacket::getSize()
+{
+}
+
 unsigned int
 MetaServerPacket::getPort()
 {
