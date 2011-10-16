@@ -27,7 +27,6 @@
 #define WFMATH_POINT_H
 
 #include <wfmath/const.h>
-#include <wfmath/zero.h>
 
 #include <memory>
 #include <iosfwd>
@@ -84,7 +83,8 @@ std::ostream& operator<<(std::ostream& os, const Point<dim>& m);
 template<int dim>
 std::istream& operator>>(std::istream& is, Point<dim>& m);
 
-
+template<typename Shape>
+class ZeroPrimitive;
 
 /// A dim dimensional point
 /**

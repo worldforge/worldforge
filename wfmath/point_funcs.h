@@ -30,6 +30,7 @@
 #include <wfmath/point.h>
 
 #include <wfmath/vector.h>
+#include <wfmath/zero.h>
 
 #include <cmath>
 

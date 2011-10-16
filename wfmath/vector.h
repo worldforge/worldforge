@@ -31,7 +31,6 @@
 #define WFMATH_VECTOR_H
 
 #include <wfmath/const.h>
-#include <wfmath/zero.h>
 
 #include <iosfwd>
 
@@ -109,6 +108,9 @@ template<int dim>
 std::ostream& operator<<(std::ostream& os, const Vector<dim>& v);
 template<int dim>
 std::istream& operator>>(std::istream& is, Vector<dim>& v);
+
+template<typename Shape>
+class ZeroPrimitive;
 
 /// A dim dimensional vector
 /**

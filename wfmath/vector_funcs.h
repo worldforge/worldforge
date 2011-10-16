@@ -32,6 +32,7 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
+#include <wfmath/zero.h>
 
 #include <cmath>
 
