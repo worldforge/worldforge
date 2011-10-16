@@ -56,6 +56,14 @@ Vector<dim>::Vector(const Point<dim>& p) : m_valid(p.isValid())
 }
 
 template<int dim>
+const Vector<dim>& Vector<dim>::ZERO()
+{
+  static ZeroPrimitive<Vector<dim> > zeroVector(dim);
+  return zeroVector.getShape();
+}
+
+
+template<int dim>
 Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 {
   m_valid = v.m_valid;

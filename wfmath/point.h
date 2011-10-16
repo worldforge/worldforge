@@ -108,11 +108,7 @@ class Point
   /**
    * @brief Provides a global instance preset to zero.
    */
-  static const Point<dim>& ZERO()
-  {
-    static ZeroPrimitive<Point<dim> > zeroPoint(dim);
-    return zeroPoint.getShape();
-  }
+  static const Point<dim>& ZERO();
 
   friend std::ostream& operator<< <dim>(std::ostream& os, const Point& p);
   friend std::istream& operator>> <dim>(std::istream& is, Point& p);

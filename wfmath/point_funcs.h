@@ -52,6 +52,14 @@ inline Point<dim>::Point(const Vector<dim>& v) : m_valid(v.isValid())
 }
 
 template<int dim>
+const Point<dim>& Point<dim>::ZERO()
+{
+  static ZeroPrimitive<Point<dim> > zeroPoint(dim);
+  return zeroPoint.getShape();
+}
+
+
+template<int dim>
 inline Point<dim>& Point<dim>::setToOrigin()
 {
   for(int i = 0; i < dim; ++i) {

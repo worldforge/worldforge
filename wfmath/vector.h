@@ -131,11 +131,7 @@ class Vector {
   /**
    * @brief Provides a global instance preset to zero.
    */
-  static const Vector<dim>& ZERO()
-  {
-    static ZeroPrimitive<Vector<dim> > zeroVector(dim);
-    return zeroVector.getShape();
-  }
+  static const Vector<dim>& ZERO();
   
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);
