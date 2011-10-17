@@ -32,6 +32,7 @@
 
 #include <wfmath/vector.h>
 #include <wfmath/rotmatrix.h>
+#include <wfmath/zero.h>
 
 #include <cmath>
 
@@ -54,6 +55,14 @@ Vector<dim>::Vector(const Point<dim>& p) : m_valid(p.isValid())
     m_elem[i] = p.elements()[i];
   }
 }
+
+template<int dim>
+const Vector<dim>& Vector<dim>::ZERO()
+{
+  static ZeroPrimitive<Vector<dim> > zeroVector(dim);
+  return zeroVector.getShape();
+}
+
 
 template<int dim>
 Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)

@@ -31,7 +31,6 @@
 #define WFMATH_VECTOR_H
 
 #include <wfmath/const.h>
-#include <wfmath/zero.h>
 
 #include <iosfwd>
 
@@ -110,6 +109,9 @@ std::ostream& operator<<(std::ostream& os, const Vector<dim>& v);
 template<int dim>
 std::istream& operator>>(std::istream& is, Vector<dim>& v);
 
+template<typename Shape>
+class ZeroPrimitive;
+
 /// A dim dimensional vector
 /**
  * This class implements the 'generic' subset of the interface in
@@ -131,11 +133,7 @@ class Vector {
   /**
    * @brief Provides a global instance preset to zero.
    */
-  static const Vector<dim>& ZERO()
-  {
-    static ZeroPrimitive<Vector<dim> > zeroVector(dim);
-    return zeroVector.getShape();
-  }
+  static const Vector<dim>& ZERO();
   
   friend std::ostream& operator<< <dim>(std::ostream& os, const Vector& v);
   friend std::istream& operator>> <dim>(std::istream& is, Vector& v);

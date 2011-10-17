@@ -30,6 +30,7 @@
 #include <wfmath/point.h>
 
 #include <wfmath/vector.h>
+#include <wfmath/zero.h>
 
 #include <cmath>
 
@@ -50,6 +51,14 @@ inline Point<dim>::Point(const Vector<dim>& v) : m_valid(v.isValid())
     m_elem[i] = v.elements()[i];
   }
 }
+
+template<int dim>
+const Point<dim>& Point<dim>::ZERO()
+{
+  static ZeroPrimitive<Point<dim> > zeroPoint(dim);
+  return zeroPoint.getShape();
+}
+
 
 template<int dim>
 inline Point<dim>& Point<dim>::setToOrigin()
