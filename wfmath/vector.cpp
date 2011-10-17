@@ -39,7 +39,7 @@
 namespace WFMath {
 
 
-template<> CoordType WFMath::Vector<2>::sloppyMag() const
+template<> CoordType Vector<2>::sloppyMag() const
 {
   CoordType ax = std::fabs(m_elem[0]),
             ay = std::fabs(m_elem[1]);
