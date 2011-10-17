@@ -28,6 +28,7 @@
 #endif
 
 #include "point_funcs.h"
+#include "axisbox_funcs.h"
 
 #include "basis.h"
 #include "quaternion.h"
@@ -35,10 +36,10 @@
 #include <vector>
 #include <list>
 
-using namespace WFMath;
+namespace WFMath {
 
 template<>
-Point<2>& WFMath::Point<2>::polar(CoordType r, CoordType theta)
+Point<2>& Point<2>::polar(CoordType r, CoordType theta)
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
@@ -47,7 +48,7 @@ Point<2>& WFMath::Point<2>::polar(CoordType r, CoordType theta)
 }
 
 template<>
-void WFMath::Point<2>::asPolar(CoordType& r, CoordType& theta) const
+void Point<2>::asPolar(CoordType& r, CoordType& theta) const
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -56,7 +57,7 @@ void WFMath::Point<2>::asPolar(CoordType& r, CoordType& theta) const
 }
 
 template<>
-Point<3>& WFMath::Point<3>::polar(CoordType r, CoordType theta, CoordType z)
+Point<3>& Point<3>::polar(CoordType r, CoordType theta, CoordType z)
 {
   CoordType d[2] = {r, theta};
   _PolarToCart(d, m_elem);
@@ -66,7 +67,7 @@ Point<3>& WFMath::Point<3>::polar(CoordType r, CoordType theta, CoordType z)
 }
 
 template<>
-void WFMath::Point<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
+void Point<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) const
 {
   CoordType d[2];
   _CartToPolar(m_elem, d);
@@ -76,7 +77,7 @@ void WFMath::Point<3>::asPolar(CoordType& r, CoordType& theta, CoordType& z) con
 }
 
 template<>
-Point<3>& WFMath::Point<3>::spherical(CoordType r, CoordType theta, CoordType phi)
+Point<3>& Point<3>::spherical(CoordType r, CoordType theta, CoordType phi)
 {
   CoordType d[3] = {r, theta, phi};
   _SphericalToCart(d, m_elem);
@@ -85,7 +86,7 @@ Point<3>& WFMath::Point<3>::spherical(CoordType r, CoordType theta, CoordType ph
 }
 
 template<>
-void WFMath::Point<3>::asSpherical(CoordType& r, CoordType& theta,
+void Point<3>::asSpherical(CoordType& r, CoordType& theta,
 				   CoordType& phi) const
 {
   CoordType d[3];
@@ -94,8 +95,6 @@ void WFMath::Point<3>::asSpherical(CoordType& r, CoordType& theta,
   theta = d[1];
   phi = d[2];
 }
-
-namespace WFMath {
 
 template<>
 Point<3>& Point<3>::rotate(const Quaternion& q, const Point<3>& p)

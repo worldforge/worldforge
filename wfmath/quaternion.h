@@ -151,13 +151,6 @@ class Quaternion
   /// sets the Quaternion to rotate 'from' to be parallel to 'to'
   Quaternion& rotation(const Vector<3>& from, const Vector<3>& to);
 
-  // documented elsewhere
-  template<int dim>
-  friend Vector<dim>& Vector<dim>::rotate(const Quaternion& q);
-  template<int dim>
-  friend RotMatrix<dim>& RotMatrix<dim>::fromQuaternion(const Quaternion& q,
-						        const bool not_flip);
-
   /// returns the scalar (w) part of the Quaternion
   CoordType scalar() const		{return m_w;}
   /// returns the Vector (x, y, z) part of the quaternion
