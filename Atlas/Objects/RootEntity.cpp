@@ -192,6 +192,13 @@ void RootEntityData::free()
     allocator.free(this);
 }
 
+
+
+void RootEntityData::reset()
+{
+    RootData::reset();
+}
+
 RootEntityData::~RootEntityData()
 {
 }

@@ -20,6 +20,13 @@ void AppearanceData::free()
     allocator.free(this);
 }
 
+
+
+void AppearanceData::reset()
+{
+    SightData::reset();
+}
+
 AppearanceData::~AppearanceData()
 {
 }
@@ -57,6 +64,13 @@ Allocator<DisappearanceData> DisappearanceData::allocator;
 void DisappearanceData::free()
 {
     allocator.free(this);
+}
+
+
+
+void DisappearanceData::reset()
+{
+    SightData::reset();
 }
 
 DisappearanceData::~DisappearanceData()
@@ -98,6 +112,13 @@ void SoundData::free()
     allocator.free(this);
 }
 
+
+
+void SoundData::reset()
+{
+    PerceptionData::reset();
+}
+
 SoundData::~SoundData()
 {
 }
@@ -135,6 +156,13 @@ Allocator<SmellData> SmellData::allocator;
 void SmellData::free()
 {
     allocator.free(this);
+}
+
+
+
+void SmellData::reset()
+{
+    PerceptionData::reset();
 }
 
 SmellData::~SmellData()
@@ -176,6 +204,13 @@ void FeelData::free()
     allocator.free(this);
 }
 
+
+
+void FeelData::reset()
+{
+    PerceptionData::reset();
+}
+
 FeelData::~FeelData()
 {
 }
@@ -213,6 +248,13 @@ Allocator<ErrorData> ErrorData::allocator;
 void ErrorData::free()
 {
     allocator.free(this);
+}
+
+
+
+void ErrorData::reset()
+{
+    InfoData::reset();
 }
 
 ErrorData::~ErrorData()

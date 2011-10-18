@@ -20,6 +20,13 @@ void DeleteData::free()
     allocator.free(this);
 }
 
+
+
+void DeleteData::reset()
+{
+    ActionData::reset();
+}
+
 DeleteData::~DeleteData()
 {
 }
@@ -57,6 +64,13 @@ Allocator<SetData> SetData::allocator;
 void SetData::free()
 {
     allocator.free(this);
+}
+
+
+
+void SetData::reset()
+{
+    ActionData::reset();
 }
 
 SetData::~SetData()
@@ -98,6 +112,13 @@ void AffectData::free()
     allocator.free(this);
 }
 
+
+
+void AffectData::reset()
+{
+    SetData::reset();
+}
+
 AffectData::~AffectData()
 {
 }
@@ -135,6 +156,13 @@ Allocator<MoveData> MoveData::allocator;
 void MoveData::free()
 {
     allocator.free(this);
+}
+
+
+
+void MoveData::reset()
+{
+    SetData::reset();
 }
 
 MoveData::~MoveData()
@@ -176,6 +204,13 @@ void WieldData::free()
     allocator.free(this);
 }
 
+
+
+void WieldData::reset()
+{
+    SetData::reset();
+}
+
 WieldData::~WieldData()
 {
 }
@@ -213,6 +248,13 @@ Allocator<GetData> GetData::allocator;
 void GetData::free()
 {
     allocator.free(this);
+}
+
+
+
+void GetData::reset()
+{
+    ActionData::reset();
 }
 
 GetData::~GetData()

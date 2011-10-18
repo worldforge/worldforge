@@ -182,6 +182,12 @@ void RootData::free()
     allocator.free(this);
 }
 
+
+
+void RootData::reset()
+{
+}
+
 RootData::~RootData()
 {
 }

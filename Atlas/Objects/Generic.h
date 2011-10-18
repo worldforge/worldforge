@@ -66,6 +66,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<GenericData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 

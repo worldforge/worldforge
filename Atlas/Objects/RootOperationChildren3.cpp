@@ -20,6 +20,13 @@ void PerceiveData::free()
     allocator.free(this);
 }
 
+
+
+void PerceiveData::reset()
+{
+    GetData::reset();
+}
+
 PerceiveData::~PerceiveData()
 {
 }
@@ -57,6 +64,13 @@ Allocator<LookData> LookData::allocator;
 void LookData::free()
 {
     allocator.free(this);
+}
+
+
+
+void LookData::reset()
+{
+    PerceiveData::reset();
 }
 
 LookData::~LookData()
@@ -98,6 +112,13 @@ void ListenData::free()
     allocator.free(this);
 }
 
+
+
+void ListenData::reset()
+{
+    PerceiveData::reset();
+}
+
 ListenData::~ListenData()
 {
 }
@@ -135,6 +156,13 @@ Allocator<SniffData> SniffData::allocator;
 void SniffData::free()
 {
     allocator.free(this);
+}
+
+
+
+void SniffData::reset()
+{
+    PerceiveData::reset();
 }
 
 SniffData::~SniffData()
@@ -176,6 +204,13 @@ void TouchData::free()
     allocator.free(this);
 }
 
+
+
+void TouchData::reset()
+{
+    PerceiveData::reset();
+}
+
 TouchData::~TouchData()
 {
 }
@@ -213,6 +248,13 @@ Allocator<LoginData> LoginData::allocator;
 void LoginData::free()
 {
     allocator.free(this);
+}
+
+
+
+void LoginData::reset()
+{
+    GetData::reset();
 }
 
 LoginData::~LoginData()

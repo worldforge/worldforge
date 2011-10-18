@@ -64,6 +64,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<ActionData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -113,6 +117,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<CreateData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -164,6 +172,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<CombineData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -213,6 +225,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<DivideData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -264,6 +280,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<CommunicateData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -313,6 +333,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<TalkData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -372,6 +396,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<DeleteData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -429,6 +457,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<SetData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -488,6 +520,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<AffectData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -537,6 +573,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<MoveData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -596,6 +636,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<WieldData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -653,6 +697,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<GetData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -712,6 +760,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<PerceiveData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -769,6 +821,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<LookData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -828,6 +884,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<ListenData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -885,6 +945,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<SniffData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -944,6 +1008,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<TouchData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -994,6 +1062,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<LoginData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -1043,6 +1115,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<LogoutData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -1102,6 +1178,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<ImaginaryData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -1159,6 +1239,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<UseData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -1218,6 +1302,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<InfoData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -1267,6 +1355,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<PerceptionData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -1318,6 +1410,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<SightData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -1367,6 +1463,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<AppearanceData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -1418,6 +1518,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<DisappearanceData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -1467,6 +1571,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<SoundData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -1518,6 +1626,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<SmellData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -1567,6 +1679,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<FeelData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -1625,6 +1741,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<ErrorData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();

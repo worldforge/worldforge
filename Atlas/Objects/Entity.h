@@ -56,6 +56,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<AdminEntityData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -168,6 +172,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<AccountData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -343,6 +351,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<PlayerData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -392,6 +404,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<AdminData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();
@@ -443,6 +459,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<GameData> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -492,6 +512,10 @@ public:
     template <typename>
     friend class ::Atlas::Objects::Allocator;
     static Allocator<GameEntityData> allocator;
+
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
 
 private:
     virtual void free();

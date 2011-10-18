@@ -20,6 +20,13 @@ void ActionData::free()
     allocator.free(this);
 }
 
+
+
+void ActionData::reset()
+{
+    RootOperationData::reset();
+}
+
 ActionData::~ActionData()
 {
 }
@@ -57,6 +64,13 @@ Allocator<CreateData> CreateData::allocator;
 void CreateData::free()
 {
     allocator.free(this);
+}
+
+
+
+void CreateData::reset()
+{
+    ActionData::reset();
 }
 
 CreateData::~CreateData()
@@ -98,6 +112,13 @@ void CombineData::free()
     allocator.free(this);
 }
 
+
+
+void CombineData::reset()
+{
+    CreateData::reset();
+}
+
 CombineData::~CombineData()
 {
 }
@@ -135,6 +156,13 @@ Allocator<DivideData> DivideData::allocator;
 void DivideData::free()
 {
     allocator.free(this);
+}
+
+
+
+void DivideData::reset()
+{
+    CreateData::reset();
 }
 
 DivideData::~DivideData()
@@ -176,6 +204,13 @@ void CommunicateData::free()
     allocator.free(this);
 }
 
+
+
+void CommunicateData::reset()
+{
+    CreateData::reset();
+}
+
 CommunicateData::~CommunicateData()
 {
 }
@@ -213,6 +248,13 @@ Allocator<TalkData> TalkData::allocator;
 void TalkData::free()
 {
     allocator.free(this);
+}
+
+
+
+void TalkData::reset()
+{
+    CommunicateData::reset();
 }
 
 TalkData::~TalkData()

@@ -359,6 +359,10 @@ public:
     friend class ::Atlas::Objects::Allocator;
     static Allocator<%(classname)s> allocator;
 
+protected:
+    ///Resets the object as it's returned to the pool.
+    virtual void reset();
+
 private:
     virtual void free();
 
@@ -376,6 +380,26 @@ void %(classname)s::free()
 
 """ % vars()) #"for xemacs syntax highlighting
 
+    def reset_im(self, obj, static_attrs):
+        classname = self.classname
+        self.write("""
+
+void %(classname)s::reset()
+{
+""" % vars())
+        #Clear any collection of Root objects, so they are returned
+        #to the pool.
+        for attr in static_attrs:
+            if attr.type == "RootList":
+                self.write("""    attr_%s.clear();
+""" % (attr.name))
+        for parent in obj.parents:
+            self.write("""    %s::reset();
+""" % (classize(parent, data=1)))            
+        self.write("""}
+
+""") #"for xemacs syntax highlighting
+        
     def default_object_im(self, obj, default_attrs, static_attrs):
         classname = self.classname
         self.write("""
@@ -676,6 +700,7 @@ void %(classname)s::fillDefaultObjectInstance(%(classname)s& data, std::map<std:
             self.iterate_im(obj, static_attrs)
         self.allocator_im(obj)
         self.free_im(obj)
+        self.reset_im(obj, static_attrs)
         self.destructor_im(obj)
         if obj.id in ['anonymous', 'generic']:
             self.settype_im(obj)
@@ -708,6 +733,7 @@ public:
         self.freelist_if("Instance")
         self.write("};\n\n")
         self.free_im()
+
 
     def instance_im(self):
         self.freelist_im("Instance")

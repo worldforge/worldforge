@@ -20,6 +20,13 @@ void LogoutData::free()
     allocator.free(this);
 }
 
+
+
+void LogoutData::reset()
+{
+    LoginData::reset();
+}
+
 LogoutData::~LogoutData()
 {
 }
@@ -57,6 +64,13 @@ Allocator<ImaginaryData> ImaginaryData::allocator;
 void ImaginaryData::free()
 {
     allocator.free(this);
+}
+
+
+
+void ImaginaryData::reset()
+{
+    ActionData::reset();
 }
 
 ImaginaryData::~ImaginaryData()
@@ -98,6 +112,13 @@ void UseData::free()
     allocator.free(this);
 }
 
+
+
+void UseData::reset()
+{
+    ActionData::reset();
+}
+
 UseData::~UseData()
 {
 }
@@ -135,6 +156,13 @@ Allocator<InfoData> InfoData::allocator;
 void InfoData::free()
 {
     allocator.free(this);
+}
+
+
+
+void InfoData::reset()
+{
+    RootOperationData::reset();
 }
 
 InfoData::~InfoData()
@@ -176,6 +204,13 @@ void PerceptionData::free()
     allocator.free(this);
 }
 
+
+
+void PerceptionData::reset()
+{
+    InfoData::reset();
+}
+
 PerceptionData::~PerceptionData()
 {
 }
@@ -213,6 +248,13 @@ Allocator<SightData> SightData::allocator;
 void SightData::free()
 {
     allocator.free(this);
+}
+
+
+
+void SightData::reset()
+{
+    PerceptionData::reset();
 }
 
 SightData::~SightData()

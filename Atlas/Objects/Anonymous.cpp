@@ -20,6 +20,13 @@ void AnonymousData::free()
     allocator.free(this);
 }
 
+
+
+void AnonymousData::reset()
+{
+    RootEntityData::reset();
+}
+
 AnonymousData::~AnonymousData()
 {
 }

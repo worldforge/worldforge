@@ -20,6 +20,13 @@ void AdminEntityData::free()
     allocator.free(this);
 }
 
+
+
+void AdminEntityData::reset()
+{
+    RootEntityData::reset();
+}
+
 AdminEntityData::~AdminEntityData()
 {
 }
@@ -194,6 +201,13 @@ void AccountData::free()
     allocator.free(this);
 }
 
+
+
+void AccountData::reset()
+{
+    AdminEntityData::reset();
+}
+
 AccountData::~AccountData()
 {
 }
@@ -241,6 +255,13 @@ void PlayerData::free()
     allocator.free(this);
 }
 
+
+
+void PlayerData::reset()
+{
+    AccountData::reset();
+}
+
 PlayerData::~PlayerData()
 {
 }
@@ -283,6 +304,13 @@ Allocator<AdminData> AdminData::allocator;
 void AdminData::free()
 {
     allocator.free(this);
+}
+
+
+
+void AdminData::reset()
+{
+    AccountData::reset();
 }
 
 AdminData::~AdminData()
@@ -329,6 +357,13 @@ void GameData::free()
     allocator.free(this);
 }
 
+
+
+void GameData::reset()
+{
+    AdminEntityData::reset();
+}
+
 GameData::~GameData()
 {
 }
@@ -371,6 +406,13 @@ Allocator<GameEntityData> GameEntityData::allocator;
 void GameEntityData::free()
 {
     allocator.free(this);
+}
+
+
+
+void GameEntityData::reset()
+{
+    RootEntityData::reset();
 }
 
 GameEntityData::~GameEntityData()

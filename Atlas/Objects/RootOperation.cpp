@@ -212,6 +212,14 @@ void RootOperationData::free()
     allocator.free(this);
 }
 
+
+
+void RootOperationData::reset()
+{
+    attr_args.clear();
+    RootData::reset();
+}
+
 RootOperationData::~RootOperationData()
 {
 }

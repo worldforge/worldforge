@@ -20,6 +20,13 @@ void GenericData::free()
     allocator.free(this);
 }
 
+
+
+void GenericData::reset()
+{
+    RootOperationData::reset();
+}
+
 GenericData::~GenericData()
 {
 }
