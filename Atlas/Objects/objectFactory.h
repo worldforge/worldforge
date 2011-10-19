@@ -48,7 +48,29 @@ SmartPtr<RootData> anonymous_factory(const std::string & name, int no);
 
 typedef Root (*FactoryMethod)(const std::string &, int);
 typedef Root (*DefaultInstanceMethod)(const std::string &, int);
-typedef std::map<const std::string, std::pair<std::pair<FactoryMethod, DefaultInstanceMethod>, int> > FactoryMap;
+
+/**
+ * Holds methods for creating new instances and accessing the default instance.
+ */
+struct Factory
+{
+public:
+    /**
+     * Method for creating a new instance.
+     */
+    FactoryMethod factory_method;
+
+    /**
+     * Method for accessing the default instance.
+     */
+    DefaultInstanceMethod default_instance_method;
+
+    /**
+     * The class number for the objects created by this factory.
+     */
+    int classno;
+};
+typedef std::map<const std::string, Factory > FactoryMap;
 
 class Factories 
 {

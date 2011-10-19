@@ -151,7 +151,7 @@ Root Factories::createObject(const std::string& name)
     if (I == m_factories.end()) {
         return Root(0);
     } else {
-        return (*I).second.first.first(name, (*I).second.second);
+        return (*I).second.factory_method(name, (*I).second.classno);
     }
 }
     
@@ -175,7 +175,7 @@ Root Factories::createObject(const MapType & msg_map)
                     // objtype and parent ok, try to create it:
                     FactoryMap::const_iterator I = m_factories.find(parent);
                     if (I != m_factories.end()) {
-                        obj = I->second.first.first(parent, I->second.second);
+                        obj = I->second.factory_method(parent, I->second.classno);
                     } else {
                         if (objtype == "op") {
                             obj = Atlas::Objects::Operation::Generic();
@@ -206,7 +206,7 @@ Root Factories::getDefaultInstance(const std::string& name)
         //perhaps throw something instead?
         return Root(0);
     } else {
-        return (*I).second.first.second(name, (*I).second.second);
+        return (*I).second.default_instance_method(name, (*I).second.classno);
     }
 }
 
@@ -222,13 +222,21 @@ std::list<std::string> Factories::getKeys()
     
 void Factories::addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod, int classno)
 {
-    m_factories[name] = std::make_pair(std::make_pair(method, defaultInstanceMethod), classno);
+    Factory factory;
+    factory.classno = classno;
+    factory.default_instance_method = defaultInstanceMethod;
+    factory.factory_method = method;
+    m_factories[name] = factory;
 }
 
 int Factories::addFactory(const std::string& name, FactoryMethod method, DefaultInstanceMethod defaultInstanceMethod)
 {
     int classno = ++enumMax;
-    m_factories[name] = std::make_pair(std::make_pair(method, defaultInstanceMethod), classno);
+    Factory factory;
+    factory.classno = classno;
+    factory.default_instance_method = defaultInstanceMethod;
+    factory.factory_method = method;
+    m_factories[name] = factory;
     return classno;
 }
 
