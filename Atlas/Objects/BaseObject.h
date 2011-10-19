@@ -137,7 +137,7 @@ Allocator<T>::~Allocator() {
 }
 
 template <typename T>
-T *Allocator<T>::getDefaultObjectInstance()
+inline T *Allocator<T>::getDefaultObjectInstance()
 {
     if (m_defaults_Data == 0) {
         m_defaults_Data = new T;
@@ -147,7 +147,7 @@ T *Allocator<T>::getDefaultObjectInstance()
 }
 
 template <typename T>
-T *Allocator<T>::alloc()
+inline T *Allocator<T>::alloc()
 {
     if (m_begin_Data) {
         T *res = m_begin_Data;
@@ -161,7 +161,7 @@ T *Allocator<T>::alloc()
 }
 
 template <typename T>
-void Allocator<T>::free(T *instance)
+inline void Allocator<T>::free(T *instance)
 {
     instance->reset();
     instance->m_next = m_begin_Data;
