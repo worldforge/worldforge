@@ -48,7 +48,4 @@ template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<AxisBox<2>, st
 
 template AxisBox<2> BoundingBox<2, std::vector>(const std::vector<Point<2>, std::allocator<Point<2> > >&);
 
-template AxisBox<2> Point<2>::boundingBox() const;
-template AxisBox<3> Point<3>::boundingBox() const;
-
 }
