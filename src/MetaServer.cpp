@@ -286,6 +286,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		break;
 	default:
 		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
+		break;
 	}
 
 }

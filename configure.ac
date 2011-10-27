@@ -27,7 +27,7 @@ AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE([tar-ustar nostdinc dist-bzip2 color-tests parallel-tests])
 AM_CONFIG_HEADER(src/config.h)
 
-AC_PREREQ(2.50)
+AC_PREREQ(2.62)
 AC_COPYRIGHT([This script is under the GPL and is owned by the people in AUTHORS])
 
 AC_DISABLE_SHARED

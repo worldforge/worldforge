@@ -2,6 +2,7 @@
  Worldforge Next Generation MetaServer
 
  Copyright (C) 2011 Alistair Riddoch <alriddoch@googlemail.com>
+ 	 	 	 	 	Sean Ryan <sryan@evercrack.com>
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -107,6 +108,7 @@ MetaServerPacket::setPacketType(unsigned int)
 unsigned int
 MetaServerPacket::addPacketData(uint32_t)
 {
+	return 1;
 }
 
 void
@@ -117,27 +119,31 @@ MetaServerPacket::dumpBuffer()
 unsigned int
 MetaServerPacket::addPacketData(std::string s)
 {
-
+	return 1;
 }
 
 uint32_t
 MetaServerPacket::getIntData(unsigned int)
 {
+	return 1;
 }
 
 std::string
 MetaServerPacket::getPacketMessage(unsigned int offset)
 {
+	return "";
 }
 
 unsigned int
 MetaServerPacket::getSize()
 {
+	return 1;
 }
 
 unsigned int
 MetaServerPacket::getPort()
 {
+	return 1;
 }
 
 MetaServerPacket::~MetaServerPacket()
