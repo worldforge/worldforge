@@ -269,6 +269,12 @@ void setLogLevel(LogLevel lvl)
 {
 }
 
+void doLog(LogLevel lvl, const std::string& msg)
+{
+    std::cerr << msg << std::endl << std::flush;
+}
+
+
 Avatar::Avatar(Account& pl, const std::string& entId) :
     m_account(pl),
     m_entityId(entId),

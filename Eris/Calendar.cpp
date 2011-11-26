@@ -48,8 +48,16 @@ void Calendar::topLevelEntityChanged()
 
 void Calendar::calendarAttrChanged(const Element& value)
 {
-    if (!value.isMap()) throw InvalidAtlas("malformed calendar data", value);
-    initFromCalendarAttr(value.Map());
+    //Reset the calendar first; if this is zero the dates will be invalid.
+    m_daysPerMonth = 0;
+
+    if (value.isMap()) {
+        try {
+            initFromCalendarAttr(value.Map());
+        } catch (const InvalidAtlas& e) {
+            warning() << "Error when parsing calendar attribute. " << e.what();
+        }
+    }
 }
 
 void Calendar::initFromCalendarAttr(const MapType& cal)
