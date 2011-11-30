@@ -65,6 +65,9 @@ public:
     unsigned int minutesPerHour() const { return m_minutesPerHour; }
     unsigned int hoursPerDay() const { return m_hoursPerDay; }
 
+    ///Emitted when the calendar is updated.
+    sigc::signal<void> Updated;
+
 protected:
     void topLevelEntityChanged();
     void calendarAttrChanged(const Atlas::Message::Element& value);

@@ -81,6 +81,8 @@ void Calendar::initFromCalendarAttr(const MapType& cal)
     it = cal.find("seconds_per_minute");
     if (it == cal.end()) throw InvalidAtlas("malformed calendar data", cal);
     m_secondsPerMinute = it->second.asInt();
+
+    Updated.emit();
 }
 
 DateTime Calendar::now() const
