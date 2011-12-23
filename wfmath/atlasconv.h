@@ -343,13 +343,13 @@ inline void Polygon<2>::fromAtlas(const AtlasInType& a)
     const Atlas::Message::MapType& shapeElement(message.asMap());
     Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
     if ((it != shapeElement.end()) && it->second.isList()) {
-      _CornersFromAtlas<Polygon, 2>(*this, it->second);
+      _CornersFromAtlas(*this, it->second);
       if (numCorners() > 2) {
         return;
       }
     }
   } else if (message.isList()) {
-    _CornersFromAtlas<Polygon, 2>(*this, message);
+    _CornersFromAtlas(*this, message);
   }
   throw _AtlasBadParse();
 }
