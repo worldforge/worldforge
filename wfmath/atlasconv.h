@@ -350,6 +350,9 @@ inline void Polygon<2>::fromAtlas(const AtlasInType& a)
     }
   } else if (message.isList()) {
     _CornersFromAtlas(*this, message);
+    if (numCorners() > 2) {
+      return;
+    }
   }
   throw _AtlasBadParse();
 }
