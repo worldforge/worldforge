@@ -313,6 +313,29 @@ inline Ball<dim>::Ball(const AtlasInType& a) : m_center(Point<dim>::ZERO()),
   fromAtlas(a);
 }
 
+template<template <int> class ShapeT, int dim>
+inline void _CornersFromAtlas(ShapeT<dim> & shape,
+                              const _AtlasMessageType& message)
+{
+  if (message.isList()) {
+    const Atlas::Message::ListType& pointsData(message.asList());
+    
+    for (size_t p = 0; p < pointsData.size(); ++p) {
+      if (!pointsData[p].isList()) {
+        continue;
+      }
+      
+      const Atlas::Message::ListType& point(pointsData[p].asList());
+      if ((point.size() < dim) || !point[0].isNum() || !point[1].isNum()) {
+        continue;
+      }
+      
+      WFMath::Point<dim> wpt(point[0].asNum(), point[1].asNum());
+      shape.addCorner(shape.numCorners(), wpt);
+    }
+  }
+}
+
 inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 {
   const _AtlasMessageType& message(a);
@@ -320,25 +343,13 @@ inline void Polygon<2>::fromAtlas(const AtlasInType& a)
     const Atlas::Message::MapType& shapeElement(message.asMap());
     Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
     if ((it != shapeElement.end()) && it->second.isList()) {
-      const Atlas::Message::ListType& pointsData(it->second.asList());
-      
-      for (size_t p = 0; p < pointsData.size(); ++p) {
-        if (!pointsData[p].isList()) {
-          continue;
-        }
-        
-        const Atlas::Message::ListType& point(pointsData[p].asList());
-        if ((point.size() < 2) || !point[0].isNum() || !point[1].isNum()) {
-          continue;
-        }
-        
-        WFMath::Point<2> wpt(point[0].asNum(), point[1].asNum());
-        addCorner(numCorners(), wpt);
-      }
+      _CornersFromAtlas<Polygon, 2>(*this, it->second);
       if (numCorners() > 2) {
         return;
       }
     }
+  } else if (message.isList()) {
+    _CornersFromAtlas<Polygon, 2>(*this, message);
   }
   throw _AtlasBadParse();
 }
