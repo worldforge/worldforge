@@ -54,24 +54,8 @@ typedef Atlas::Message::MapType _AtlasMapType;
 inline bool _isNum(const _AtlasMessageType& a) {return a.isNum();}
 inline _AtlasFloatType _asNum(const _AtlasMessageType& a) {return a.asNum();}
 
-#elif defined(ATLAS_MESSAGE_OBJECT_H)
-
-struct _AtlasBadParse : public Atlas::Message::WrongTypeException,
-            virtual public std::exception
-{
-  virtual ~_AtlasBadParse() throw() {}
-};
-
-typedef Atlas::Message::Object _AtlasMessageType;
-typedef Atlas::Message::Object::FloatType _AtlasFloatType;
-typedef Atlas::Message::Object::ListType _AtlasListType;
-typedef Atlas::Message::Object::MapType _AtlasMapType;
-
-inline bool _isNum(const _AtlasMessageType& a) {return a.IsNum();}
-inline _AtlasMessageType::FloatType _asNum(const _AtlasMessageType& a) {return a.AsNum();}
-
 #else
-#error "You must include Atlas/Message/Element.h or Atlas/Message/Object.h before wfmath/atlasconv.h"
+#error "You must include Atlas/Message/Element.h before wfmath/atlasconv.h"
 #endif
 
 class AtlasInType
@@ -81,13 +65,8 @@ class AtlasInType
   // allow nice conversions when necessary
   template<class C> AtlasInType(C c) : m_obj(c), m_val(m_obj) {}
   operator const _AtlasMessageType&() const {return m_val;}
-#ifdef ATLAS_MESSAGE_ELEMENT_H
   bool IsList() const {return m_val.isList();}
   const _AtlasListType& AsList() const {return m_val.asList();}
-#else // ATLAS_MESSAGE_OBJECT_H
-  bool IsList() const {return m_val.IsList();}
-  const _AtlasListType& AsList() const {return m_val.AsList();}
-#endif
  private:
   _AtlasMessageType m_obj;
   const _AtlasMessageType& m_val;
