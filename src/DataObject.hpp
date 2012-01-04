@@ -26,6 +26,7 @@
 #include <map>
 #include <queue>
 #include <list>
+#include <algorithm>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
@@ -39,6 +40,8 @@ public:
 
 	uint32_t addHandshake( unsigned int def_hs=0 );
 	uint32_t removeHandshake( unsigned int hs );
+	bool handshakeExists( unsigned int hs );
+	std::vector<unsigned int> expireHandshakes( unsigned int expiry=0 );
 
 	bool addServerAttribute(std::string sessionid, std::string name, std::string value );
 	void removeServerAttribute(std::string sessionid, std::string name );
@@ -57,6 +60,7 @@ public:
 	bool addServerSession(std::string sessionid);
 	void removeServerSession(std::string sessionid);
 	bool serverSessionExists(std::string sessionid);
+	std::list<std::string> getServerSessionList(uint32_t start_idx, uint32_t max_items );
 	std::map<std::string,std::string> getServerSession( std::string sessionid );
 
 	bool addClientSession(std::string sessionid);
@@ -86,6 +90,17 @@ private:
 	 *  m_serverData keys so that multiple LISTREQ requests can be
 	 *  done and avoid duplicate servers packet responses.
 	 */
+
+	template<class T>
+	bool keyExists( std::map<T, std::map< std::string, std::string> >& mapRef, T key )
+	{
+		if ( mapRef.find(key) != mapRef.end() )
+		{
+			return true;
+		}
+
+		return false;
+	}
 	std::map<std::string, std::map<std::string,std::string> > m_serverData;
 	std::list<std::string> m_serverDataList;
 

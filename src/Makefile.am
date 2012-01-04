@@ -18,7 +18,7 @@ TESTS = \
 check_PROGRAMS = $(TESTS)
 
 MetaServer_unittest_SOURCES = MetaServer_unittest.cpp
-MetaServer_unittest_LDADD = MetaServer.o $(CPPUNIT_LIBS)
+MetaServer_unittest_LDADD = MetaServer.o DataObject.o $(CPPUNIT_LIBS)
 
 MetaServerPacket_unittest_SOURCES = MetaServerPacket_unittest.cpp
 MetaServerPacket_unittest_LDADD = MetaServerPacket.o $(CPPUNIT_LIBS)

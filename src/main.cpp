@@ -120,7 +120,7 @@ int main(int argc, char** argv)
 		/**
 		 * Define Handlers
 		 */
-		MetaServerHandlerTCP tcp(ms, io_service, ip, port);
+		//MetaServerHandlerTCP tcp(ms, io_service, ip, port);
 		MetaServerHandlerUDP udp(ms, io_service, ip, port);
 
 		/**

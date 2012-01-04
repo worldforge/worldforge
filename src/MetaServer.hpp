@@ -49,6 +49,8 @@
 
 
 #include "MetaServerPacket.hpp"
+#include "DataObject.hpp"
+
 
 #ifndef __METASERVER_HPP__
 
@@ -78,54 +80,16 @@ class MetaServer
 	void processCLIENTATTR(MetaServerPacket& in, MetaServerPacket& out);
 	void processCLIENTFILTER(MetaServerPacket& in, MetaServerPacket& out);
 
-	uint32_t addHandshake();
-	void removeHandshake(unsigned int hs);
-
-	void addServerAttribute(std::string sessionid, std::string name, std::string value );
-	void removeServerAttribute(std::string sessionid, std::string name );
-	void addClientAttribute(std::string sessionid, std::string name, std::string value );
-	void removeClientAttribute(std::string sessionid, std::string name );
-	void addClientFilter(std::string sessionid, std::string name, std::string value );
-	void removeClientFilter(std::string sessionid, std::string name );
-	void clearClientFilter(std::string sessionid);
-
-
-	void addServerSession(std::string sessionid);
-	void removeServerSession(std::string sessionid);
-	void addClientSession(std::string sessionid);
-	void removeClientSession(std::string sessionid);
-
 	void registerConfig( boost::program_options::variables_map & vm );
 	void initLogger();
 
 	log4cpp::Category& getLogger();
 
-	void dumpHandshake();
-	boost::posix_time::ptime getNow();
-
 	bool isDaemon();
 
    private:
-	/**
-	 *  Example Data Structure ( m_serverData )
-	 *  "192.168.1.200" => {
-	 *  	"serverVersion" => "0.5.20",
-	 *  	"serverType" => "cyphesis",
-	 *  	"serverUsers" => "100",
-	 *  	"attribute1" => "value1",
-	 *  	"attribute2" => "value2"
-	 *  }
-	 *
-	 *  m_serverDataList contains an ordered representation of
-	 *  m_serverData keys so that multiple LISTREQ requests can be
-	 *  done and avoid duplicate servers packet responses.
-	 */
-	std::map<std::string, std::map<std::string,std::string> > m_serverData;
-	std::list<std::string> m_serverDataList;
-	std::map<std::string, std::map<std::string,std::string> > m_clientData;
-	std::map<std::string, std::map<std::string,std::string> > m_clientFilterData;
 
-	std::map<unsigned int,std::map<std::string,std::string> > m_handshakeQueue;
+	DataObject msdo;
 	unsigned int m_handshakeExpirySeconds;
 	boost::asio::deadline_timer* m_expiryTimer;
 	boost::asio::deadline_timer* m_updateTimer;

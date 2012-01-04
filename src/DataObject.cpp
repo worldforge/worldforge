@@ -19,6 +19,15 @@
 
  */
 
+// TODO: instead of serverExists and clientExists as separate, change to:
+/*
+ * bool keyExists(map, key)
+ * and then
+ * clientExists(key)
+ * {
+ * 	keyExists(clientMap, key)
+ * }
+ */
 #include "DataObject.hpp"
 
 DataObject::DataObject()
@@ -141,7 +150,7 @@ DataObject::addClientFilter(std::string sessionid,std::string name, std::string 
 	 */
 	if ( sessionid.size() > 0 && sessionid != "" && name.size() > 0 && name != "" )
 	{
-		if ( m_clientData.find(sessionid) != m_clientData.end() )
+		if ( keyExists<std::string>(m_clientData, sessionid) )
 		{
 			/**
 			 * This serves as both a create and update.  In order to prevent DOS
@@ -162,8 +171,8 @@ DataObject::getClientFilter(std::string sessionid )
 	std::map<std::string,std::string> empty;
 	empty.clear();
 
-	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() &&
-		 m_clientData.find(sessionid) != m_clientData.end() )
+	if ( keyExists<std::string>(m_clientFilterData, sessionid ) &&
+		 keyExists<std::string>(m_clientData, sessionid ) )
 	{
 		return m_clientFilterData[sessionid];
 	}
@@ -173,6 +182,7 @@ DataObject::getClientFilter(std::string sessionid )
 std::string
 DataObject::getClientFilter( std::string sessionid, std::string key )
 {
+
 
 	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() &&
 		 m_clientFilterData[sessionid].find(key) != m_clientFilterData[sessionid].end() &&
@@ -201,14 +211,15 @@ DataObject::addServerSession(std::string sessionid)
 	/*
 	 *  If the server session does not exist, create it, and add+uniq the listresp
 	 */
-	if ( m_serverData.find(sessionid) == m_serverData.end() )
+	if ( ! keyExists<std::string>(m_serverData, sessionid) )
 	{
 		addServerAttribute(sessionid,"ip",sessionid);
 		m_serverDataList.push_back(sessionid);
 
 		/*
-		 *  This is a precautionary action in case there is a slip in logic
-		 *  that allows any dups.
+		 *  This is a precautionnary action in case there is a slip in logic
+		 *  that allows any duplicates.  Having duplicates will mean extra
+		 *  LISPRESP responses for the same server entry, and is sub optimal
 		 */
 		m_serverDataList.unique();
 		ret = true;
@@ -237,21 +248,14 @@ DataObject::removeServerSession(std::string sessionid)
 bool
 DataObject::serverSessionExists(std::string sessionid)
 {
-	if ( m_serverData.find(sessionid) != m_serverData.end() )
-	{
-		return true;
-	}
-	return false;
+	return keyExists<std::string>( m_serverData, sessionid );
 }
 
 std::map<std::string,std::string>
 DataObject::getServerSession( std::string sessionid )
 {
-	if ( m_serverData.find(sessionid) != m_serverData.end() )
-	{
-		// we found it
+	if ( keyExists<std::string>(m_serverData, sessionid ))
 		return m_serverData[sessionid];
-	}
 
 	std::map<std::string, std::string> empty;
 	empty.clear();
@@ -264,7 +268,7 @@ bool DataObject::addClientSession(std::string sessionid)
 	/*
 	 *  If the client session does not exist, create it, and add+uniq the listresp
 	 */
-	if ( m_clientData.find(sessionid) == m_clientData.end() )
+	if ( ! keyExists<std::string>( m_clientData, sessionid ) )
 	{
 		addClientAttribute(sessionid,"ip",sessionid);
 		ret = true;
@@ -290,21 +294,50 @@ void DataObject::removeClientSession(std::string sessionid)
 
 bool DataObject::clientSessionExists(std::string sessionid)
 {
-	if ( m_clientData.find(sessionid) != m_clientData.end() )
-	{
-		return true;
-	}
-	return false;
+	return keyExists<std::string>( m_clientData, sessionid );
+}
+
+std::list<std::string> DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
+{
+	std::list<std::string> ss_slice;
+	std::list<std::string>::iterator ss_itr = m_serverDataList.begin();
+
+	ss_slice.clear();
+
+	/*
+	 * HACK ALERT : I have to re-think this ... i need the random iterator of a vector
+	 * but also the unique() of a list ... what I really want to do is:
+	 * list_itr = m_serverDataList.begin() + server_index in order to offset the starting
+	 * location by the index without losing the list functionality.
+	 */
+	 for ( int i = 0; i < start_idx; i++ )
+	 {
+	    	++ss_itr;
+	 }
+
+	 for ( ; ss_itr != m_serverDataList.end() ; ss_itr++ )
+	 {
+
+		 /*
+		  * Early bail out
+		  */
+		 if ( ss_slice.size() >= max_items )
+			 break;
+
+	     ss_slice.push_back(*ss_itr);
+	 }
+
+	 ss_slice.unique();
+	 return ss_slice;
 }
 
 std::map<std::string,std::string>
 DataObject::getClientSession( std::string sessionid )
 {
-	if ( m_clientData.find(sessionid) != m_clientData.end() )
-	{
-		// we found it
+	if ( keyExists<std::string>( m_clientData, sessionid ) )
 		return m_clientData[sessionid];
-	}
+
+	// @TODO: there has to be a way to do this without polluting the stack
 	std::map<std::string, std::string> empty;
 	empty.clear();
 	return empty;
@@ -327,7 +360,7 @@ DataObject::addHandshake(unsigned int def_hs )
 		handshake = rand();
 	}
 
-	// set expiry in data structure
+	// set expiry in data structure, if it exists already it is updated
 	m_handshakeQueue[handshake]["expiry"] = boost::posix_time::to_iso_string( getNow() );
 
 	// if we find said element again, return handshake, otherwise 0
@@ -337,7 +370,6 @@ DataObject::addHandshake(unsigned int def_hs )
 	}
 
 	return ret;
-
 
 }
 
@@ -353,6 +385,61 @@ DataObject::removeHandshake( unsigned int hs )
 		return hs;
 	}
 	return 0;
+}
+
+bool
+DataObject::handshakeExists( unsigned int hs )
+{
+	return keyExists<unsigned int>( m_handshakeQueue, hs );
+}
+std::vector<unsigned int>
+DataObject::expireHandshakes( unsigned int expiry )
+{
+	/**
+	 * Go over handshake queue ... expire any that are older than m_handshakeExpirySeconds
+	 */
+	std::vector<unsigned int> removedHS;
+	removedHS.empty();
+
+	boost::posix_time::ptime now = this->getNow();
+	boost::posix_time::ptime etime;
+
+	/*
+	 * Option 1: etime = 0.  The end time becomes now + 0, thus guaranteed expiry.m_handshakeExpirySeconds
+	 * Option 2: etime = expiry(sec). End time becomes now + expiry.
+	 *           a) expiry>0 : all entries that are older that m_handshakeExpirySeconds are removed
+	 *           b) expiry<0 : immediate expiry by making the etime less than now.
+	 */
+    std::map<unsigned int,std::map<std::string,std::string> >::iterator itr;
+    for( itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end(); )
+    {
+    	unsigned int key = itr->first;
+
+    	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
+    			 boost::posix_time::seconds(expiry);
+
+    	/**
+    	 * We need to make a copy of the iterator if we modify the
+    	 * underlying container because the iterator becomes invalid
+    	 */
+    	if ( now > etime )
+    	{
+    		std::map<unsigned int,std::map<std::string,std::string> >::iterator itr_copy = itr;
+    		++itr_copy;
+    		removeHandshake(key);
+    		itr = itr_copy;
+    		removedHS.push_back(key);
+    	}
+    	else
+    	{
+    		/**
+    		 * We are not modifying, just increment normally.
+    		 */
+    		++itr;
+    	}
+
+    }
+    return removedHS;
 }
 
 uint32_t

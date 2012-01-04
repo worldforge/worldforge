@@ -160,6 +160,12 @@ public:
     	// add our test handshake
     	CPPUNIT_ASSERT( msdo->addHandshake(123456) == 123456 );
 
+    	// does it exist
+    	CPPUNIT_ASSERT( msdo->handshakeExists(123456) == true );
+
+    	// negative exist
+    	CPPUNIT_ASSERT( msdo->handshakeExists(111) == false );
+
     	// remove it
     	CPPUNIT_ASSERT( msdo->removeHandshake(123456) == 123456 );
 
