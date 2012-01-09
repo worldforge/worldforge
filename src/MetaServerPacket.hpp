@@ -43,6 +43,9 @@ public:
 	boost::asio::ip::address getAddress();
 	void setAddress(boost::asio::ip::address address);
 
+	void setSequence(unsigned long long seq = 0);
+	unsigned long long getSequence();
+
 	unsigned int getPort();
 	void setPort(unsigned int p);
 
@@ -60,6 +63,11 @@ public:
 	boost::array<char,MAX_PACKET_BYTES>& getBuffer();
 
 	void dumpBuffer();
+
+	/*
+	 * Stream Overload
+	 */
+	friend std::ostream & operator<<(std::ostream &os, MetaServerPacket &mp);
 
 private:
 
@@ -80,9 +88,13 @@ private:
 	char * m_readPtr;
 	boost::array<char,MAX_PACKET_BYTES>& m_packetPayload;
 	bool m_needFree;
-
+	unsigned long long m_Sequence;
 
 };
 
+/*
+ *
+ */
+std::ostream & operator<<(std::ostream &os, MetaServerPacket &mp);
 
 #endif /* METASERVERPACKET_HPP_ */

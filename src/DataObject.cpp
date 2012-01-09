@@ -284,20 +284,40 @@ bool DataObject::addClientSession(std::string sessionid)
 }
 
 
-void DataObject::removeClientSession(std::string sessionid)
+void
+DataObject::removeClientSession(std::string sessionid)
 {
+	m_clientFilterData.erase(sessionid);
 	if(  m_clientData.erase(sessionid) == 1 )
 	{
 		// logging if any
 	}
 }
 
-bool DataObject::clientSessionExists(std::string sessionid)
+bool
+DataObject::clientSessionExists(std::string sessionid)
 {
 	return keyExists<std::string>( m_clientData, sessionid );
 }
 
-std::list<std::string> DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
+std::list<std::string>
+DataObject::getClientSessionList()
+{
+	std::list<std::string> cslist;
+	cslist.clear();
+
+	std::map<std::string, std::map<std::string,std::string> >::iterator it;
+
+	for ( it = m_clientData.begin(); it != m_clientData.end(); it++ )
+	{
+		cslist.push_back( it->first );
+	}
+
+	return cslist;
+}
+
+std::list<std::string>
+DataObject::getServerSessionList(uint32_t start_idx, uint32_t max_items )
 {
 	std::list<std::string> ss_slice;
 	std::list<std::string>::iterator ss_itr = m_serverDataList.begin();
@@ -331,6 +351,58 @@ std::list<std::string> DataObject::getServerSessionList(uint32_t start_idx, uint
 	 return ss_slice;
 }
 
+/*
+ * TODO: this is a copy of expireHandshakes ... refactor same as keyExists<T>(blah)
+ */
+std::vector<std::string>
+DataObject::expireServerSessions( unsigned int expiry )
+{
+	std::vector<std::string> expiredSS;
+	expiredSS.clear();
+
+	boost::posix_time::ptime now = this->getNow();
+	boost::posix_time::ptime etime;
+
+	/*
+	 * Option 1: etime = 0.  The end time becomes now + 0, thus guaranteed expiry.
+	 * Option 2: etime = expiry(sec). End time becomes now + expiry.
+	 *           a) expiry>0 : all entries that are older that m_handshakeExpirySeconds are removed
+	 *           b) expiry<=0 : immediate expiry by making the etime less than now.
+	 */
+    std::map<std::string,std::map<std::string,std::string> >::iterator itr;
+    for( itr = m_serverData.begin(); itr != m_serverData.end(); )
+    {
+    	std::string key = itr->first;
+
+    	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
+    			 boost::posix_time::seconds(expiry);
+
+    	/**
+    	 * We need to make a copy of the iterator if we modify the
+    	 * underlying container because the iterator becomes invalid
+    	 */
+    	if ( now > etime )
+    	{
+    		std::map<std::string,std::map<std::string,std::string> >::iterator itr_copy = itr;
+    		++itr_copy;
+    		removeServerSession(key);
+    		itr = itr_copy;
+    		expiredSS.push_back(key);
+    	}
+    	else
+    	{
+    		/**
+    		 * We are not modifying, just increment normally.
+    		 */
+    		++itr;
+    	}
+
+    }
+    return expiredSS;
+
+
+}
+
 std::map<std::string,std::string>
 DataObject::getClientSession( std::string sessionid )
 {
@@ -341,6 +413,54 @@ DataObject::getClientSession( std::string sessionid )
 	std::map<std::string, std::string> empty;
 	empty.clear();
 	return empty;
+}
+
+std::vector<std::string>
+DataObject::expireClientSessions( unsigned int expiry )
+{
+	std::vector<std::string> expiredCS;
+	expiredCS.clear();
+
+	boost::posix_time::ptime now = this->getNow();
+	boost::posix_time::ptime etime;
+
+	/*
+	 * Option 1: etime = 0.  The end time becomes now + 0, thus guaranteed expiry.
+	 * Option 2: etime = expiry(sec). End time becomes now + expiry.
+	 *           a) expiry>0 : all entries that are older that m_handshakeExpirySeconds are removed
+	 *           b) expiry<=0 : immediate expiry by making the etime less than now.
+	 */
+    std::map<std::string,std::map<std::string,std::string> >::iterator itr;
+    for( itr = m_clientData.begin(); itr != m_clientData.end(); )
+    {
+    	std::string key = itr->first;
+
+    	etime =  boost::posix_time::from_iso_string(itr->second["expiry"]) +
+    			 boost::posix_time::seconds(expiry);
+
+    	/**
+    	 * We need to make a copy of the iterator if we modify the
+    	 * underlying container because the iterator becomes invalid
+    	 */
+    	if ( now > etime )
+    	{
+    		std::map<std::string,std::map<std::string,std::string> >::iterator itr_copy = itr;
+    		++itr_copy;
+    		removeClientSession(key);
+    		itr = itr_copy;
+    		expiredCS.push_back(key);
+    	}
+    	else
+    	{
+    		/**
+    		 * We are not modifying, just increment normally.
+    		 */
+    		++itr;
+    	}
+
+    }
+    return expiredCS;
+
 }
 
 
@@ -408,7 +528,7 @@ DataObject::expireHandshakes( unsigned int expiry )
 	 * Option 1: etime = 0.  The end time becomes now + 0, thus guaranteed expiry.m_handshakeExpirySeconds
 	 * Option 2: etime = expiry(sec). End time becomes now + expiry.
 	 *           a) expiry>0 : all entries that are older that m_handshakeExpirySeconds are removed
-	 *           b) expiry<0 : immediate expiry by making the etime less than now.
+	 *           b) expiry<=0 : immediate expiry by making the etime less than now.
 	 */
     std::map<unsigned int,std::map<std::string,std::string> >::iterator itr;
     for( itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end(); )

@@ -28,7 +28,8 @@ MetaServerPacket::MetaServerPacket()
 		  m_packetType(NMT_NULL),
 		  m_Port(0),
 		  m_AddressInt(0),
-		  m_needFree(true)
+		  m_needFree(true),
+		  m_Sequence(0)
 {
 	m_readPtr  = m_packetPayload.data();
 	m_headPtr  = m_packetPayload.data();
@@ -42,7 +43,8 @@ MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std:
 		  m_packetType(NMT_NULL),
 		  m_Port(0),
 		  m_AddressInt(0),
-		  m_needFree(false)
+		  m_needFree(false),
+		  m_Sequence(0)
 {
 		m_readPtr  = m_packetPayload.data();
 		m_headPtr  = m_packetPayload.data();
@@ -285,11 +287,67 @@ MetaServerPacket::getBuffer()
 	return m_packetPayload;
 }
 
+unsigned long long
+MetaServerPacket::getSequence()
+{
+	return m_Sequence;
+}
+
+void
+MetaServerPacket::setSequence(unsigned long long seq )
+{
+	m_Sequence = seq;
+}
 
 void
 MetaServerPacket::dumpBuffer()
 {
 
+}
+
+
+/**
+ *  Stream Insertion Operator
+ *  Purpose: mostly for binary packet logging ... but in theory should work for textual
+ *           output of the packet
+ *  Note: I don't like it ... but i can't see a good way to do logging any other way as the
+ *        MetaServerPacket is agnostic to format ( meaning packet type and meaning are
+ *        interpreted in the MetaServer class ... and MSP is essentially a fancy raw buffer ).
+ */
+std::ostream& operator<<(std::ostream &os, MetaServerPacket &mp)
+{
+	/*
+	 * Output Format:
+	 * 		packetSequence:bufferSize:buffer
+	 *
+	 * 		TODO: saved packets contain no timing.  Should save 0 for first packet, and then like sequence
+	 * 		tag every packet with a detal ms, saving to file.  This way on replay we can replay with the exact
+	 * 		timing as the debug packet file.
+	 *
+	 * When Reading back the packet, sequence of read is:
+	 *      - read packet sequence
+	 *      - read buffer size
+	 *      - read buffer
+	 *      - create msp(buffer,size) [ this triggers a parsePacket, which is critical ]
+	 *      - set dest address
+	 *      - set dest port
+	 *      - packet can now be sent.
+	 */
+	//       (unsigned long long) (std::size_t)  (boost::array<char,MAX_PACKET_BYTES>)
+//	std::cout << "streamdebug: " << mp.getSequence() << std::endl;
+//	std::cout << "streamdebug2: " << mp.getSize() << std::endl;
+	os << mp.getSequence() << mp.getSize();
+
+	/*
+	 * TODO: think about this.  We can populate the FULL buffer, even though only
+	 * a small portion of that will be used in any given packet ( this hugely increases
+	 * the size of packet logging .. by like a factor of 100 ), however this provides the
+	 * most precise state for a given time.  My feeling is that packet logging is a debug
+	 * feature and not meant for everyday use, so I chose to write the full buffer over writing
+	 * only the consumed portion
+	 */
+	os.write((char *)mp.getBuffer().c_array(), sizeof(char)*MAX_PACKET_BYTES);
+	return os;
 }
 
 /**

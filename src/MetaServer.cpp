@@ -29,6 +29,7 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_handshakeExpirySeconds(30),
 	  m_sessionExpirySeconds(3600),
 	  m_clientExpirySeconds(300),
+	  m_packetLoggingFlushSeconds(10),
 	  m_keepServerStats(false),
 	  m_keepClientStats(false),
 	  m_maxServerSessions(1024),
@@ -37,7 +38,10 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 	  m_Logfile(""),
 	  m_Logger( log4cpp::Category::getInstance("metaserver-ng") ),
 	  m_logServerSessions(false),
-	  m_logClientSessions(false)
+	  m_logClientSessions(false),
+	  m_logPackets(false),
+	  m_PacketLogfile(""),
+	  m_PacketSequence(0)
 {
 	m_expiryTimer = new boost::asio::deadline_timer(ios, boost::posix_time::seconds(1));
 	m_expiryTimer->async_wait(boost::bind(&MetaServer::expiry_timer, this, boost::asio::placeholders::error));
@@ -68,123 +72,99 @@ MetaServer::expiry_timer(const boost::system::error_code& error)
 	std::vector<unsigned int> expiredHS = msdo.expireHandshakes(m_handshakeExpirySeconds);
 	if ( expiredHS.size() > 0 )
 	{
-		logger.
+		m_Logger.debugStream() << "Expiry Handshakes: " << expiredHS.size();
 	}
 
     /*
      * Sweep for server sessions ... expire any that are older than m_sessionExpirySeconds
      */
-
-//    std::map<std::string,std::map<std::string,std::string> >::iterator itr2;
-//    for ( itr2 = m_serverData.begin(); itr2 != m_serverData.end(); itr2++ )
-//    {
-//    	std::string s = itr2->first;
-//
-//    	etime =  boost::posix_time::from_iso_string(itr2->second["expiry"]) +
-//    			 boost::posix_time::seconds(m_sessionExpirySeconds);
-//
-//    	if ( now > etime )
-//    	{
-//    		m_Logger.debugStream() << "EXPIRY TIMER: expire server session - " << s;
-//    		removeServerSession(s);
-//    	}
-//    }
-
-    /**
-     * Sweep the ordered list we dish out in a listresp
-     */
-//    std::list<std::string>::iterator list_itr;
-//    for ( list_itr = m_serverDataList.begin(); list_itr != m_serverDataList.end(); ++list_itr )
-//    {
-//    	m_Logger.debugStream() << "EXPIRY TIMER: check m_serverDataList : " << *list_itr;
-//    	/*
-//    	 * If find that one of the listresp items does NOT exist in the
-//    	 * main data structure, we want to purge it
-//    	 */
-//    	if ( m_serverData.find( *list_itr ) == m_serverData.end() )
-//    	{
-//    		m_Logger.debugStream() << "EXPIRY TIMER: removing stale listresp ref: " << *list_itr;
-//    		m_serverDataList.remove( *list_itr );
-//    	}
-//    }
-
+	std::vector<std::string> expiredSS = msdo.expireServerSessions(m_sessionExpirySeconds);
+	if ( expiredSS.size() > 0 )
+	{
+		m_Logger.debugStream() << "Expiry ServerSessions: " << expiredSS.size();
+	}
 
     /**
      *  Remove client sessions that are expired
      */
-//    for ( itr2 = m_clientData.begin(); itr2 != m_clientData.end(); itr2++ )
-//    {
-//    	std::string s = itr2->first;
-//
-//    	etime =  boost::posix_time::from_iso_string(itr2->second["expiry"]) +
-//    			 boost::posix_time::seconds(m_clientExpirySeconds);
-//
-//    	if ( now > etime )
-//    	{
-//    		m_Logger.debugStream() << "EXPIRY TIMER: expire client session - " << s;
-//    		removeClientSession(s);
-//    	}
-//    }
+	std::vector<std::string> expiredCS = msdo.expireClientSessions(m_clientExpirySeconds);
+	if ( expiredCS.size() > 0 )
+	{
+		m_Logger.debugStream() << "Expiry ClientSessions: " << expiredCS.size();
+	}
 
 
     /**
      * Remove client filters if there is no longer a client session.
+     * NOTE: this happens now in msdo->removeClientSession
      */
-//    for ( itr2 = m_clientFilterData.begin(); itr2 != m_clientFilterData.end(); ++itr2 )
-//    {
-//    	std::string s = itr2->first;
-//
-//    	/*
-//    	 *  If we have a filter session that does not have a client session
-//    	 *  we need to remove it
-//    	 */
-//    	if( m_clientData.find( s ) == m_clientData.end() )
-//    	{
-//    		m_Logger.debugStream() << "EXPIRY TIMER: removing stale filter - " << s;
-//    		clearClientFilter(s);
-//    	}
-//    }
-//
-//    for ( list_itr = m_serverDataList.begin(); list_itr != m_serverDataList.end(); ++list_itr )
-//    {
-//    	m_Logger.debugStream() << "EXPIRY TIMER: check m_serverDataList : " << *list_itr;
-//    	/*
-//    	 * If find that one of the listresp items does NOT exist in the
-//    	 * main data structure, we want to purge it
-//    	 */
-//    	if ( m_serverData.find( *list_itr ) == m_serverData.end() )
-//    	{
-//    		m_Logger.debugStream() << "EXPIRY TIMER: removing stale listresp ref: " << *list_itr;
-//    		m_serverDataList.remove( *list_itr );
-//    	}
-//    }
-//
 
-    /**
+	/**
      * Display Server Sessions and Attributes
      */
-//    if ( m_logServerSessions )
-//    for ( itr2 = m_serverData.begin(); itr2 != m_serverData.end(); itr2++ )
-//    {
-//    	m_Logger.debug(" Server Session [%s]", itr2->first.c_str() );
-//    	for ( attr_iter = itr2->second.begin(); attr_iter != itr2->second.end() ; attr_iter++ )
-//    	{
-//    		m_Logger.debug("    [%s][%s]", attr_iter->first.c_str(), attr_iter->second.c_str());
-//    	}
-//    }
+	std::map< std::string, std::map<std::string,std::string> > itr_outer;
+	std::map<std::string, std::string>::iterator itr_inner;
+	if ( m_logServerSessions )
+	{
+		/*
+		 * NOTE: maybe make getServerSessionList return an iterator instead so we don't have copy overhead ?
+		 */
+		std::list<std::string> slist = msdo.getServerSessionList(0,msdo.getServerSessionCount());
+		while ( ! slist.empty() )
+		{
+			std::string key = slist.front(); slist.pop_front();
 
-    /**
-     * Display Server Sessions and Attributes
-     */
-//    if ( m_logClientSessions )
-//    for ( itr2 = m_clientData.begin(); itr2 != m_clientData.end(); itr2++ )
-//    {
-//    	m_Logger.debug(" Client Session [%s]", itr2->first.c_str() );
-//    	for ( attr_iter = itr2->second.begin(); attr_iter != itr2->second.end() ; attr_iter++ )
-//    	{
-//    		m_Logger.debug("    [%s][%s]", attr_iter->first.c_str(), attr_iter->second.c_str());
-//    	}
-//    }
+			std::map<std::string,std::string> item = msdo.getServerSession(key);
+			m_Logger.debugStream() << " Server Session: " << key;
+			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
+			{
+				m_Logger.debugStream() << "    " << itr_inner->first << " == " << itr_inner->second;
+			}
+		}
+
+
+	}
+
+	/**
+	 * Display Client Sessions and Attributes
+	 */
+	if ( m_logClientSessions )
+	{
+		/*
+		 * NOTE: maybe make getServerSessionList return an iterator instead so we don't have copy overhead ?
+		 */
+		std::list<std::string> slist = msdo.getClientSessionList();
+		while ( ! slist.empty() )
+		{
+			std::string key = slist.front(); slist.pop_front();
+			std::map<std::string,std::string> item = msdo.getClientSession(key);
+			m_Logger.debugStream() << " Client Session: " << key;
+			for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
+			{
+				m_Logger.debugStream() << "    " << itr_inner->first << " == " << itr_inner->second;
+			}
+			item = msdo.getClientFilter(key);
+			if ( item.size() > 0 )
+			{
+				m_Logger.debugStream() << "    Filters:";
+				for( itr_inner = item.begin(); itr_inner != item.end(); itr_inner++ )
+				{
+					m_Logger.debugStream() << "        " << itr_inner->first << " == " << itr_inner->second;
+				}
+			}
+
+
+		}
+	}
+
+	/*
+	 * Flush the packet logger
+	 */
+	if ( m_logPackets )
+	{
+		m_PacketLogger->flush(m_packetLoggingFlushSeconds);
+	}
+
 
     /**
      * Set the next timer trigger
@@ -215,38 +195,81 @@ MetaServer::update_timer(const boost::system::error_code& error)
 void
 MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp)
 {
+
+	/*
+	 * Packet sequence is mostly about serialization and replay
+	 * This pretty much guarantees in a debug situation, ms will need
+	 * a restart after about 4.3 billion packets ... give or take.
+	 */
+	++m_PacketSequence;
+	msp.setSequence(m_PacketSequence);
+
 	switch(msp.getPacketType())
 	{
 	case NMT_SERVERKEEPALIVE:
 		processSERVERKEEPALIVE(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_SERVERSHAKE:
 		processSERVERSHAKE(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_TERMINATE:
 		processTERMINATE(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_CLIENTKEEPALIVE:
 		processCLIENTKEEPALIVE(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_CLIENTSHAKE:
 		processCLIENTSHAKE(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_LISTREQ:
 		processLISTREQ(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_SERVERATTR:
 		processSERVERATTR(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_CLIENTATTR:
 		processCLIENTATTR(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_CLIENTFILTER:
 		processCLIENTFILTER(msp,rsp);
+		++m_PacketSequence;
+		rsp.setSequence(m_PacketSequence);
 		break;
 	default:
 		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
 		break;
+	}
+
+	/*
+	 * Packet Logging
+	 */
+	if ( m_logPackets )
+	{
+		// always log the incoming packets, even if they are bad ( as a bad incoming packet could be the cause
+		// of an issue )
+		m_PacketLogger->LogPacket(msp);
+
+		// we don't want to log if:
+		// 1) sequence is 0 : this means the sequence is not set ... this means something has gone astray elsewhere
+		// 2) packet type is NULL : these responses are never sent to the client
+		if ( rsp.getSequence() != 0 && rsp.getPacketType() != NMT_NULL )
+			m_PacketLogger->LogPacket(rsp);
 	}
 
 }
@@ -519,180 +542,6 @@ MetaServer::processCLIENTFILTER(MetaServerPacket& in, MetaServerPacket& out)
 	out.setPacketType(NMT_NULL);
 }
 
-
-//uint32_t
-//MetaServer::addHandshake()
-//{
-//	// generate random #, will not be 0 ( i hope )
-//	unsigned int handshake = rand();
-//	unsigned int ret = 0;
-//
-//	// set expiry in data structure
-//	m_handshakeQueue[handshake]["expiry"] = boost::posix_time::to_iso_string( getNow() );
-//
-//	// if we find said element again, return handshake, otherwise 0
-//	if ( m_handshakeQueue[handshake].find("expiry") != m_handshakeQueue[handshake].end() )
-//	{
-//		m_Logger.debug("addHandshake(%u)", handshake );
-//		ret = handshake;
-//	}
-//
-//	return ret;
-//}
-
-//void
-//MetaServer::removeHandshake(unsigned int hs)
-//{
-//	m_Logger.debug("removeHandshake(%u), %d", hs, m_handshakeQueue.size() );
-//	unsigned int res = m_handshakeQueue.erase(hs);
-//	if ( res == 1 )
-//	{
-//		m_Logger.debug("removeHandshake(%u), %d", hs, m_handshakeQueue.size() );
-//	}
-//}
-
-//void
-//MetaServer::addServerAttribute(std::string sessionid, std::string name, std::string value )
-//{
-//	/**
-//	 *  check if session exists
-//	 *  check if attr exists
-//	 *  	if yes, update
-//	 *  	if no, insert
-//	 */
-//	m_serverData[sessionid][name] = value;
-//}
-
-//void
-//MetaServer::removeServerAttribute(std::string sessionid, std::string name )
-//{
-//	/**
-//	 * 	Some attributes are protected
-//	 * 	ip
-//	 * 	port
-//	 * 	expiry
-//	 */
-//	if ( m_serverData.find(sessionid) != m_serverData.end() )
-//	{
-//		if ( name != "ip" && name != "expiry" && name != "port" )
-//		{
-//			m_serverData[sessionid].erase(name);
-//		}
-//
-//	}
-//}
-
-//void
-//MetaServer::addClientAttribute(std::string sessionid, std::string name, std::string value )
-//{
-//	/**
-//	 *  check if session exists
-//	 *  check if attr exists
-//	 *  	if yes, update
-//	 *  	if no, insert
-//	 */
-//	m_clientData[sessionid][name] = value;
-//}
-
-//void
-//MetaServer::removeClientAttribute(std::string sessionid, std::string name )
-//{
-//	/**
-//	 * 	Some attributes are protected
-//	 * 	ip
-//	 * 	port
-//	 * 	expiry
-//	 */
-//	if ( m_clientData.find(sessionid) != m_clientData.end() )
-//	{
-//		if ( name != "ip" && name != "expiry" && name != "port" )
-//		{
-//			m_clientData[sessionid].erase(name);
-//		}
-//
-//	}
-//}
-//
-//void
-//MetaServer::addClientFilter(std::string sessionid, std::string name, std::string value )
-//{
-//	m_clientFilterData[sessionid][name] = value;
-//}
-//
-//void
-//MetaServer::removeClientFilter(std::string sessionid, std::string name )
-//{
-//	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() )
-//	{
-//		m_clientFilterData[sessionid].erase(name);
-//	}
-//}
-//
-//void
-//MetaServer::clearClientFilter(std::string sessionid)
-//{
-//	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() )
-//	{
-//		m_clientFilterData.erase(sessionid);
-//	}
-//}
-//
-//
-//void
-//MetaServer::addServerSession(std::string ip)
-//{
-//	/*
-//	 *  If the server session does not exist, create it, and add+uniq the listresp
-//	 */
-//	if ( m_serverData.find(ip) == m_serverData.end() )
-//	{
-//		addServerAttribute(ip,"ip",ip);
-//		m_serverDataList.push_back(ip);
-//
-//		/*
-//		 *  This is a precautionary action in case there is a slip in logic
-//		 *  that allows any dups.
-//		 */
-//		m_serverDataList.unique();
-//		m_Logger.info("Adding Server Session");
-//	}
-//
-//	/*
-//	 *  If a new structure, this will create the expiry, if existing it will just
-//	 *  refresh the timeout
-//	 */
-//	addServerAttribute(ip,"expiry", boost::posix_time::to_iso_string( getNow() ) );
-//
-//}
-
-//void
-//MetaServer::removeServerSession(std::string sessionid)
-//{
-//	m_serverDataList.remove(sessionid);
-//	if(  m_serverData.erase(sessionid) == 1 )
-//	{
-//		m_Logger.debug("removeServerSession(%s)", sessionid.c_str() );
-//	}
-//}
-//
-//void
-//MetaServer::addClientSession(std::string ip)
-//{
-//	addClientAttribute(ip,"ip",ip);
-//	addClientAttribute(ip,"expiry", boost::posix_time::to_iso_string( getNow() ) );
-//
-//}
-//
-//void
-//MetaServer::removeClientSession(std::string sessionid)
-//{
-//	if( m_clientData.erase(sessionid) == 1 )
-//	{
-//		m_Logger.debug("removeClientSession(%s)", sessionid.c_str() );
-//		clearClientFilter(sessionid);
-//	}
-//}
-
 void
 MetaServer::registerConfig( boost::program_options::variables_map & vm )
 {
@@ -786,6 +635,42 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 
 	}
 
+	if ( vm.count("logging.packet_logging") )
+	{
+		std::string s = vm["logging.packet_logging"].as<std::string>();
+		if ( boost::iequals(s,"true") )
+		{
+			m_logPackets = true;
+		}
+		else if ( boost::iequals(s,"false") )
+		{
+			m_logPackets = false;
+		}
+
+	}
+
+	if( vm.count("logging.packet_logfile") )
+	{
+		m_PacketLogfile = vm["logging.packet_logfile"].as<std::string>();
+
+		/*
+		 *  Set a hard default if it's not specified
+		 */
+		if( m_PacketLogfile.length() == 0 )
+		{
+			m_PacketLogfile = "~/.metaserver-ng/packetdefault.bin";
+		}
+
+		if ( m_PacketLogfile.substr(0,1) == "~")
+		{
+			m_PacketLogfile.replace(0,1, std::getenv("HOME") );
+		}
+
+	}
+
+	if ( vm.count("logging.packet_logging_flush_seconds"))
+		m_packetLoggingFlushSeconds = vm["logging.packet_logging_flush_seconds"].as<unsigned int>();
+
 
 	if( vm.count("server.logfile") )
 	{
@@ -797,7 +682,7 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 		 *
 		 * TODO: add ifdef WIN32 here if/when metserver needs to run on windows
 		 */
-		if ( m_Logfile.substr(0,2) == "~/")
+		if ( m_Logfile.substr(0,1) == "~")
 		{
 			m_Logfile.replace(0,1, std::getenv("HOME") );
 		}
@@ -805,9 +690,17 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	}
 
 	/**
-	 * Initialize the logger to appropriately
+	 * Initialise the logger to appropriately
 	 */
 	initLogger();
+
+	/**
+	 * Initialise the packet logger
+	 */
+	if ( m_logPackets )
+	{
+		m_PacketLogger = new PacketLogger(m_PacketLogfile);
+	}
 
 	/**
 	 * Print out the startup values
@@ -868,33 +761,6 @@ MetaServer::getLogger()
 {
 	return m_Logger;
 }
-
-//void
-//MetaServer::dumpHandshake()
-//{
-//    std::map<unsigned int, std::map<std::string,std::string> >::iterator itr;
-//    std::map<std::string,std::string>::iterator iitr;
-//
-//    std::cout << "m_handshakeQueue.size() : " << m_handshakeQueue.size() << std::endl;
-//
-//    for( itr = m_handshakeQueue.begin(); itr != m_handshakeQueue.end(); itr++)
-//    {
-//
-//        std::cout << itr->first << std::endl;
-//        for ( iitr = itr->second.begin() ; iitr != itr->second.end(); iitr++)
-//        {
-//           std::cout << "\t" << iitr->first << "\t\t\t" << iitr->second << std::endl;
-//        }
-//
-//    }
-//}
-
-//boost::posix_time::ptime
-//MetaServer::getNow()
-//{
-//	boost::posix_time::ptime now = boost::posix_time::microsec_clock::local_time();
-//	return now;
-//}
 
 bool
 MetaServer::isDaemon()

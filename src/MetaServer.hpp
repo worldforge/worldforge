@@ -50,6 +50,7 @@
 
 #include "MetaServerPacket.hpp"
 #include "DataObject.hpp"
+#include "PacketLogger.hpp"
 
 
 #ifndef __METASERVER_HPP__
@@ -97,14 +98,19 @@ class MetaServer
 	unsigned int m_updateDelayMilliseconds;
 	unsigned int m_sessionExpirySeconds;
 	unsigned int m_clientExpirySeconds;
+	unsigned int m_packetLoggingFlushSeconds;
 	unsigned int m_maxServerSessions;
 	unsigned int m_maxClientSessions;
 	bool m_keepServerStats;
 	bool m_keepClientStats;
 	bool m_logServerSessions;
 	bool m_logClientSessions;
+	bool m_logPackets;
 	bool m_isDaemon;
+	unsigned long long m_PacketSequence;
+	PacketLogger* m_PacketLogger;
 	std::string m_Logfile;
+	std::string m_PacketLogfile;
 	log4cpp::Category& m_Logger;
 	log4cpp::Appender* m_LogAppender;
 	log4cpp::Layout* m_LoggerLayout;

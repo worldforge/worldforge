@@ -62,11 +62,14 @@ public:
 	bool serverSessionExists(std::string sessionid);
 	std::list<std::string> getServerSessionList(uint32_t start_idx, uint32_t max_items );
 	std::map<std::string,std::string> getServerSession( std::string sessionid );
+	std::vector<std::string> expireServerSessions( unsigned int expiry=0 );
 
 	bool addClientSession(std::string sessionid);
 	void removeClientSession(std::string sessionid);
 	bool clientSessionExists(std::string sessionid);
+	std::list<std::string> getClientSessionList();
 	std::map<std::string,std::string> getClientSession( std::string sessionid );
+	std::vector<std::string> expireClientSessions( unsigned int expiry=0 );
 
 	uint32_t getHandshakeCount();
 	uint32_t getServerSessionCount();
