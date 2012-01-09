@@ -1,11 +1,66 @@
+ Introduction
+ ------------
+
+ Welcome to the WorldForge Next Generation MetaServer!
+
+ The new MetaServer aims to have the following goals:
+
+ 1) Maintain backwards compatibility with the existing WorldForge MetaServer protocol/libraries
+ 2) Provide additional features beyond the current MetaServer capabilities
+ 3) Provide a robust framework that would facilitate future development
+ 4) Serve as a evaluation of multiple boost libraries for inclusion into the WorldForge codebase ( most specifically targetted was boost::asio ).
+
+ Code: https://github.com/worldforge/metaserver-ng 
+ Bugs / Features : https://launchpad.net/metaserver-ng
+
+ This is as always, a work-in-progress.  If you have questions / comments / suggestions, please feel free to contact any of the WorldForge folks as detailed on http://worldforge.org
+
+
+ Installation
+ ------------
+
+ The usual:
+	- checkout from github
+	- autogen.sh && configure && make && make install
+
  MetaServer Overview
  -------------------
- The MetaServer Next Generation is a generic lobby type server.  The main services that it provides are:
- 1. Maintain a list of currently available servers, and their details.
- 2. Provide mechanism for servers to update, and clients to query this
+
+ The MetaServer Next Generation is a generic lobby type server.  
+ The main services that it provides are:
+
+ 1. Maintain a list of currently available servers, and their 
+    corresponding attributes
+
+ 2. Maintain a list of currently connected clients, and their 
+    corresponding attributes
+
+ 3. Provide mechanism for servers to update, and clients to query this
     information.
- 3. Provide delegate authentication, if requested by the connecting server.
- 4. 
+
+ 4. Provide delegated authentication, if requested by the connecting server.
+
+ Feature Roadmap
+ ---------------
+
+ Features / Fixes can be brought up as either blueprints ( new features ), 
+ or bugs ( abhorrent behaviour ) at https://launchpad.net/metaserver-ng
+
+ The current list of planned features ( in no specific order ):
+	- binary packet logging
+	- replay binary packet log
+	- delegate authentication
+	- encryption of comms
+	- context sensitive listreq ( in laymen terms, the client can set a filter once
+      on any server attribute, and all list requests are constrained by those filters )
+	- client to client game selection
+	- automatic client:server matching
+	- webui/utility to modify runtime configuration
+	- scoreboard session list
+	- admin interface to query/effect data:
+		- kill a session
+		- create a session
+		- query session list
  
  MetaServer Configuration
  ------------------------
@@ -22,28 +77,41 @@
 
  The majority of options are self explanitory.  Some options will be
  given a description as the purpose may be unclear.
- [server] 	
- 	port=8453	
-	ip=0.0.0.0
-	daemon=true
-	logfile=~/.metaserver-ng/metaserver-ng.log
-	client_stats=true
-	server_stats=true
 
+ [server]
+ port=8453
+ ip=0.0.0.0
+ daemon=true
+ logfile=~/.metaserver-ng/metaserver-ng.log
+ client_stats=true
+ server_stats=true
+ 
  [logging]
-	loglevel=INFO
-	server_sessions=true
-	client_sessions=true
-
+ loglevel=INFO
+ server_sessions=true
+ client_sessions=true
+ packet_logging=false
+ packet_logfile=~/.metaserver-ng/packetlog.bin
+ packet_logging_flush_seconds=10
+ 
  [security]
-	auth_scheme=none
-
+ auth_scheme=none
+ 
  [performance]
-	max_server_sessions=1000
-	max_client_sessions=4000
-	server_session_expiry_seconds=300
-	client_session_expiry_seconds=300
-
+ max_server_sessions=1000
+ max_client_sessions=4000
+ server_session_expiry_seconds=300
+ client_session_expiry_seconds=300
+ 	
  MetaServer Protocol
  -------------------
  Refer to PROTOCOL document.
+
+ Contributors
+ ------------
+
+ All contributors will be listed in the AUTHORS file.
+
+
+
+-- Sean Ryan <sryan@evercrack.com>
