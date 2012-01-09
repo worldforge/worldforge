@@ -146,6 +146,23 @@ MetaServerPacket::getPort()
 	return 1;
 }
 
+unsigned long long
+MetaServerPacket::getSequence()
+{
+	return 1;
+}
+
+void
+MetaServerPacket::setSequence(unsigned long long seq)
+{
+
+}
+
 MetaServerPacket::~MetaServerPacket()
 {
+}
+
+std::ostream& operator<<(std::ostream &os, MetaServerPacket &mp)
+{
+	return os << mp.getSequence();
 }
