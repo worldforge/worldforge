@@ -19,7 +19,13 @@
 
  */
 
+#include "MetaServerPacket.hpp"
 #include "MetaServerHandlerUDP.hpp"
+#include "MetaServer.hpp"
+
+#include <boost/bind.hpp>
+
+
 
 MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
 					  boost::asio::io_service& ios,

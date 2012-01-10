@@ -99,6 +99,8 @@
 #ifndef METASERVERPROTOCOL_HPP_
 #define METASERVERPROTOCOL_HPP_
 
+#include <stdint.h> // uint32_t
+
 typedef uint32_t NetMsgType;
 
 static const NetMsgType NMT_NULL = 0;

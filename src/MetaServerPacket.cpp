@@ -19,7 +19,7 @@
 
  */
 
-#include "MetaServer.hpp"
+//#include "MetaServer.hpp"
 #include "MetaServerPacket.hpp"
 
 MetaServerPacket::MetaServerPacket()

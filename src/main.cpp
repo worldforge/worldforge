@@ -19,10 +19,13 @@
 
  */
 
+#include "MetaServerProtocol.hpp"
 #include "MetaServer.hpp"
 #include "MetaServerHandlerTCP.hpp"
 #include "MetaServerHandlerUDP.hpp"
+
 #include <unistd.h> /* daemon() */
+
 
 /*
 	Entry point

@@ -19,43 +19,49 @@
 
  */
 
-#include <ctime>
-#include <cstdlib>
-#include <cstdio>
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <typeinfo>
-#include <map>
-#include <queue>
-#include <algorithm>
-#include <boost/array.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/asio.hpp>
-#include <boost/foreach.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/date_time/gregorian/gregorian_types.hpp>
-#include <boost/algorithm/string.hpp>
+//#include <ctime>
+//#include <cstdlib>
+//#include <cstdio>
+//#include <iostream>
+//#include <iomanip>
+//#include <string>
+//#include <sstream>
+//#include <fstream>
+//#include <typeinfo>
+//#include <map>
+//#include <queue>
+//#include <algorithm>
+//#include <boost/array.hpp>
+//#include <boost/bind.hpp>
+//#include <boost/shared_ptr.hpp>
+//#include <boost/enable_shared_from_this.hpp>
+//#include <boost/asio.hpp>
+//#include <boost/foreach.hpp>
+//#include <boost/date_time/posix_time/posix_time.hpp>
+//#include <boost/date_time/posix_time/posix_time_types.hpp>
+//#include <boost/date_time/gregorian/gregorian_types.hpp>
+//#include <boost/algorithm/string.hpp>
+//#include <boost/program_options.hpp>
+//#include <log4cpp/Category.hh>
+//#include <log4cpp/FileAppender.hh>
+//#include <log4cpp/OstreamAppender.hh>
+//#include <log4cpp/SimpleLayout.hh>
+#ifndef __METASERVER_HPP__
+#define __METASERVER_HPP__
+
+#include "MetaServerPacket.hpp"
+#include "DataObject.hpp"
+#include "PacketLogger.hpp"
+
 #include <boost/program_options.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
 #include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/SimpleLayout.hh>
 
 
-#include "MetaServerPacket.hpp"
-#include "DataObject.hpp"
-#include "PacketLogger.hpp"
-
-
-#ifndef __METASERVER_HPP__
-
-#define __METASERVER_HPP__
 
 #define foreach         		BOOST_FOREACH
 
@@ -101,6 +107,7 @@ class MetaServer
 	unsigned int m_packetLoggingFlushSeconds;
 	unsigned int m_maxServerSessions;
 	unsigned int m_maxClientSessions;
+	boost::posix_time::ptime m_startTime;
 	bool m_keepServerStats;
 	bool m_keepClientStats;
 	bool m_logServerSessions;

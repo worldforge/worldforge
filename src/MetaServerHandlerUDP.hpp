@@ -19,14 +19,17 @@
 
  */
 
-#include "MetaServer.hpp"
+//#include "MetaServer.hpp"
 #include "MetaServerHandler.hpp"
+#include "MetaServerPacket.hpp"
 
-/**
-	@author Sean Ryan <sryan@evercrack.com>
-	@brief The handler that takes care of incoming connections
+#include <boost/asio.hpp>
+#include <queue>
+#include <log4cpp/Category.hh>
 
-*/
+class MetaServer;
+
+using namespace boost::asio::ip;
 
 class MetaServerHandlerUDP : public MetaServerHandler
 {

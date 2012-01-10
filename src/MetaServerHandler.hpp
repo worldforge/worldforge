@@ -19,7 +19,8 @@
 
  */
 
-#include "MetaServer.hpp"
+//#include "MetaServer.hpp"
+#include <boost/noncopyable.hpp>
 
 #ifndef METASERVERHANDLER_HPP_
 #define METASERVERHANDLER_HPP_

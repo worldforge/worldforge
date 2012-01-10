@@ -21,6 +21,8 @@
 
 #include "MetaServerHandlerTCP.hpp"
 
+#include <boost/bind.hpp>
+
 MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_service& ios,
 		              const std::string& address,
 		              const unsigned int port )
