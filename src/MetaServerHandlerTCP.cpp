@@ -20,6 +20,7 @@
  */
 
 #include "MetaServerHandlerTCP.hpp"
+#include "MetaServer.hpp"
 
 #include <boost/bind.hpp>
 
@@ -29,7 +30,7 @@ MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_servi
    : m_msRef(ms),
      address_(address),
      port_(port),
-     acceptor_(ios, tcp::endpoint(tcp::v6(),port)),
+     acceptor_(ios, boost::asio::ip::tcp::endpoint(tcp::v6(),port)),
      logger(ms.getLogger())
 {
 

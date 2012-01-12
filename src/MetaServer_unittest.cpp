@@ -20,10 +20,17 @@
 
  */
 
-#include "MetaServerHandlerTCP.hpp"
-#include "MetaServerHandlerUDP.hpp"
-#include "MetaServerPacket.hpp"
+//#include "MetaServerHandlerTCP.hpp"
+//#include "MetaServerHandlerUDP.hpp"
 
+/*
+ * Local Includes
+ */
+#include "MetaServer.hpp"
+
+/*
+ * System Includes
+ */
 #include <cppunit/TestCase.h>
 #include <cppunit/TestRunner.h>
 #include <cppunit/TextTestRunner.h>

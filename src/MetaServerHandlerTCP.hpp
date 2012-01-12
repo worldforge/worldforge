@@ -19,8 +19,27 @@
 
  */
 
-#include "MetaServer.hpp"
+/*
+ * Local Includes
+ */
 #include "MetaServerHandler.hpp"
+
+/*
+ * System Includes
+ */
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/asio.hpp>
+#include <log4cpp/Category.hh>
+#include <log4cpp/FileAppender.hh>
+#include <log4cpp/OstreamAppender.hh>
+#include <log4cpp/SimpleLayout.hh>
+
+/*
+ * Forward Declarations
+ */
+class MetaServer;
+
+
 
 /**
 	@author Sean Ryan <sryan@evercrack.com>
@@ -39,7 +58,7 @@ public:
     return pointer(new tcp_connection(ios));
   }
 
-  tcp::socket& socket()
+  boost::asio::ip::tcp::socket& socket()
   {
     return socket_;
   }
@@ -56,7 +75,7 @@ private:
 
     }
 
-  tcp::socket socket_;
+  boost::asio::ip::tcp::socket socket_;
   std::string message_;
 
 };
