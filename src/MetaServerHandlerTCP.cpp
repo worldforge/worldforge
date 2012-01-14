@@ -29,6 +29,7 @@
  * System Includes
  */
 #include <boost/bind.hpp>
+#include <boost/asio/placeholders.hpp>
 
 
 MetaServerHandlerTCP::MetaServerHandlerTCP(MetaServer& ms, boost::asio::io_service& ios,

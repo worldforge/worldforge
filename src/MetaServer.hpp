@@ -34,6 +34,8 @@
  */
 #include <boost/program_options.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/asio/io_service.hpp>
+#include <boost/asio/deadline_timer.hpp>
 
 #include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>

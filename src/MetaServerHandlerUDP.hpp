@@ -30,6 +30,7 @@
  */
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/udp.hpp>
+#include <boost/asio/deadline_timer.hpp>
 #include <log4cpp/Category.hh>
 
 /*

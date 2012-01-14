@@ -20,6 +20,7 @@
  */
 
 #include "MetaServer.hpp"
+#include <boost/asio/ip/udp.hpp>
 typedef std::vector <std::string> attribute_list;
 
 int main(int argc, char** argv)

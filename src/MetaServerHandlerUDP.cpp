@@ -30,6 +30,7 @@
  * System Includes
  */
 #include <boost/bind.hpp>
+#include <boost/asio/placeholders.hpp>
 
 MetaServerHandlerUDP::MetaServerHandlerUDP(MetaServer& ms,
 					  boost::asio::io_service& ios,

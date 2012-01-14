@@ -47,9 +47,15 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     CPPUNIT_TEST(test_getPacketType_setPacketType);
     CPPUNIT_TEST(test_getIntData_constructor);
     CPPUNIT_TEST(test_IpAsciiToNet_returnmatch);
+    CPPUNIT_TEST(test_IpNetToAscii);
     CPPUNIT_TEST(test_setAddress_getAddress);
     CPPUNIT_TEST(test_getAddressStr_return);
     CPPUNIT_TEST(test_getAddressInt_return);
+    CPPUNIT_TEST(test_addPacketData);
+    CPPUNIT_TEST(test_getPacketMessage);
+    CPPUNIT_TEST(test_setPort_getPort);
+    CPPUNIT_TEST(test_getSize);
+    CPPUNIT_TEST(test_setSequence_getSequence);
 
     CPPUNIT_TEST_SUITE_END();
   public:
@@ -138,7 +144,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
      */
     void test_getPacketType_setPacketType() {
 
-    	std::cerr << std::endl << "test_getPacketType_setPacketType(): start" << std::endl;
+//    	std::cerr << std::endl << "test_getPacketType_setPacketType(): start" << std::endl;
        	boost::array<char, TEST_MAX_BYTES> test_buffer;
        	NetMsgType nmt;
 
@@ -151,7 +157,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
         CPPUNIT_ASSERT( nmt == NMT_SERVERKEEPALIVE );
         delete msp;
 
-        std::cerr << std::endl << "test_getPacketType_setPacketType(): end" << std::endl;
+//        std::cerr << std::endl << "test_getPacketType_setPacketType(): end" << std::endl;
     }
 
 
@@ -172,7 +178,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     void test_getIntData_constructor() {
 
-        std::cout << std::endl << "test_getIntData_constructor: start" << std::endl;
+//        std::cout << std::endl << "test_getIntData_constructor: start" << std::endl;
     	boost::array<char, TEST_MAX_BYTES> test_buffer;
 
     	NetMsgType nmt,nmt2;
@@ -192,13 +198,13 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     	nmt2 = msp->getIntData(0); // same as getPacketType by parsing
     	data = msp->getIntData(4);
 
-        std::cout << std::endl << "msp-type: nmt : " << msp->getPacketType() << std::endl;
-        std::cout << std::endl << "msp-data-0: data : " << msp->getIntData(0) << std::endl;
-        std::cout << std::endl << "msp-data-4: data : " << msp->getIntData(4) << std::endl;
-
-        std::cout << std::endl << "rsp-type: nmt : " << rsp->getPacketType() << std::endl;
-        std::cout << std::endl << "rsp-data-0: data : " << rsp->getIntData(0) << std::endl;
-        std::cout << std::endl << "rsp-data-4: data : " << rsp->getIntData(4) << std::endl;
+//        std::cout << std::endl << "msp-type: nmt : " << msp->getPacketType() << std::endl;
+//        std::cout << std::endl << "msp-data-0: data : " << msp->getIntData(0) << std::endl;
+//        std::cout << std::endl << "msp-data-4: data : " << msp->getIntData(4) << std::endl;
+//
+//        std::cout << std::endl << "rsp-type: nmt : " << rsp->getPacketType() << std::endl;
+//        std::cout << std::endl << "rsp-data-0: data : " << rsp->getIntData(0) << std::endl;
+//        std::cout << std::endl << "rsp-data-4: data : " << rsp->getIntData(4) << std::endl;
 
     	CPPUNIT_ASSERT( nmt == NMT_HANDSHAKE );
     	CPPUNIT_ASSERT( nmt2 == NMT_HANDSHAKE );
@@ -209,7 +215,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	delete msp;
     	delete rsp;
-        std::cout << std::endl << "test_getIntData_constructor: end" << std::endl;
+//        std::cout << std::endl << "test_getIntData_constructor: end" << std::endl;
 
     }
 
@@ -232,6 +238,20 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	CPPUNIT_ASSERT( r == 16908415 );
 
+    }
+
+    /*
+     * The reverse of test_IpAsciiToNet_returnmatch
+     */
+    void test_IpNetToAscii()
+    {
+    	std::string r;
+    	MetaServerPacket * msp = new MetaServerPacket();
+
+    	r = msp->IpNetToAscii(16908415);
+    	delete msp;
+
+    	CPPUNIT_ASSERT( r == "127.0.2.1");
     }
 
     /*
@@ -277,6 +297,79 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     	msp->setAddress( boost::asio::ip::address::from_string("127.0.2.1") );
 
     	CPPUNIT_ASSERT( msp->getAddressInt() == 16908415 );
+    }
+
+    /*
+     * Make sure packet data that is added comes back
+     */
+    void test_addPacketData()
+    {
+
+    	MetaServerPacket * msp = new MetaServerPacket();
+
+    	/*
+    	 * New packet is offset 0
+    	 */
+    	msp->addPacketData(123456);
+    	boost::uint32_t ret = msp->getIntData(0);
+
+    	delete msp;
+
+    	CPPUNIT_ASSERT( ret = 123456 );
+
+    }
+
+    /*
+     *  Deliberately adding a non-NMT ( uint32_t ) to first byte and
+     */
+    void test_getPacketMessage()
+    {
+    	MetaServerPacket * msp = new MetaServerPacket();
+
+    	/*
+    	 * New packet is offset 0
+    	 */
+    	msp->addPacketData("foobar");
+
+    	std::string s = msp->getPacketMessage(0);
+
+    	delete msp;
+
+    	CPPUNIT_ASSERT( s == "foobar" );
+
+    }
+
+    void test_setPort_getPort()
+    {
+    	MetaServerPacket* msp = new MetaServerPacket();
+
+    	msp->setPort(12345);
+    	unsigned int r = msp->getPort();
+
+    	CPPUNIT_ASSERT( r == 12345 );
+    }
+
+    void test_getSize()
+    {
+
+    	MetaServerPacket* msp = new MetaServerPacket();
+
+    	// should be 4 bytes
+    	msp->setPacketType(NMT_SERVERKEEPALIVE);
+    	unsigned int r = msp->getSize();
+
+    	CPPUNIT_ASSERT( r == 4 );
+    }
+
+    void test_setSequence_getSequence()
+    {
+    	MetaServerPacket* msp = new MetaServerPacket();
+
+    	// should be 4 bytes
+    	msp->setSequence(12345);
+    	unsigned long long r = msp->getSequence();
+
+    	CPPUNIT_ASSERT( r == 12345 );
     }
 
     void
