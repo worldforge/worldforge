@@ -13,7 +13,10 @@ metaserver_ng_LDFLAGS = -Wl
 TESTS = \
     MetaServerPacket_unittest \
     MetaServer_unittest \
-    DataObject_unittest
+    DataObject_unittest \
+	MetaServerHandlerTCP_unittest \
+	MetaServerHandlerUDP_unittest \
+	PacketLogger_unittest
 
 check_PROGRAMS = $(TESTS)
 
@@ -25,3 +28,13 @@ MetaServerPacket_unittest_LDADD = MetaServerPacket.o $(CPPUNIT_LIBS)
 
 DataObject_unittest_SOURCES = DataObject_unittest.cpp
 DataObject_unittest_LDADD = DataObject.o $(CPPUNIT_LIBS)
+
+MetaServerHandlerTCP_unittest_SOURCES = MetaServerHandlerTCP_unittest.cpp
+MetaServerHandlerTCP_unittest_LDADD = $(CPPUNIT_LIBS)
+
+MetaServerHandlerUDP_unittest_SOURCES = MetaServerHandlerUDP_unittest.cpp
+MetaServerHandlerUDP_unittest_LDADD = $(CPPUNIT_LIBS)
+
+PacketLogger_unittest_SOURCES = PacketLogger_unittest.cpp
+PacketLogger_unittest_LDADD = $(CPPUNIT_LIBS)
+
