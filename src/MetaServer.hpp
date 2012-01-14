@@ -19,40 +19,19 @@
 
  */
 
-//#include <ctime>
-//#include <cstdlib>
-//#include <cstdio>
-//#include <iostream>
-//#include <iomanip>
-//#include <string>
-//#include <sstream>
-//#include <fstream>
-//#include <typeinfo>
-//#include <map>
-//#include <queue>
-//#include <algorithm>
-//#include <boost/array.hpp>
-//#include <boost/bind.hpp>
-//#include <boost/shared_ptr.hpp>
-//#include <boost/enable_shared_from_this.hpp>
-//#include <boost/asio.hpp>
-//#include <boost/foreach.hpp>
-//#include <boost/date_time/posix_time/posix_time.hpp>
-//#include <boost/date_time/posix_time/posix_time_types.hpp>
-//#include <boost/date_time/gregorian/gregorian_types.hpp>
-//#include <boost/algorithm/string.hpp>
-//#include <boost/program_options.hpp>
-//#include <log4cpp/Category.hh>
-//#include <log4cpp/FileAppender.hh>
-//#include <log4cpp/OstreamAppender.hh>
-//#include <log4cpp/SimpleLayout.hh>
-#ifndef __METASERVER_HPP__
-#define __METASERVER_HPP__
+#ifndef METASERVER_HPP__
+#define METASERVER_HPP__
 
+
+/*
+ * Local Includes
+ */
 #include "MetaServerPacket.hpp"
 #include "DataObject.hpp"
-#include "PacketLogger.hpp"
 
+/*
+ * System Includes
+ */
 #include <boost/program_options.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
@@ -61,12 +40,15 @@
 #include <log4cpp/OstreamAppender.hh>
 #include <log4cpp/SimpleLayout.hh>
 
-
+/*
+ * Forward Declarations
+ */
+class PacketLogger;
 
 #define foreach         		BOOST_FOREACH
 
-using boost::asio::ip::tcp;
-using boost::asio::ip::udp;
+//using boost::asio::ip::tcp;
+//using boost::asio::ip::udp;
 
 class MetaServer
 {

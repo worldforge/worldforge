@@ -22,14 +22,18 @@
 #ifndef DATAOBJECT_HPP_
 #define DATAOBJECT_HPP_
 
+/*
+ * Local Includes
+ */
+
+/*
+ * System Includes
+ */
 #include <string>
 #include <map>
 #include <list>
 #include <vector>
-//#include <algorithm>
 #include <boost/date_time/posix_time/posix_time.hpp>
-//#include <boost/date_time/posix_time/posix_time_types.hpp>
-//#include <boost/date_time/gregorian/gregorian_types.hpp>
 
 class DataObject
 {

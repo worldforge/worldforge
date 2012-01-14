@@ -19,38 +19,20 @@
 
  */
 
+/*
+ * Local Includes
+ */
 #include "MetaServer.hpp"
 #include "MetaServerPacket.hpp"
 #include "MetaServerHandlerTCP.hpp"
 #include "MetaServerHandlerUDP.hpp"
+#include "PacketLogger.hpp"
 
-//#include <ctime>
-//#include <cstdlib>
-//#include <cstdio>
-//#include <iostream>
-//#include <iomanip>
-//#include <string>
-//#include <sstream>
-//#include <fstream>
-//#include <typeinfo>
-//#include <map>
-//#include <queue>
-//#include <algorithm>
-//#include <boost/array.hpp>
+/*
+ * System Includes
+ */
 #include <boost/bind.hpp>
-//#include <boost/shared_ptr.hpp>
-//#include <boost/enable_shared_from_this.hpp>
-//#include <boost/asio.hpp>
-//#include <boost/foreach.hpp>
-//#include <boost/date_time/posix_time/posix_time.hpp>
-//#include <boost/date_time/posix_time/posix_time_types.hpp>
-//#include <boost/date_time/gregorian/gregorian_types.hpp>
 #include <boost/algorithm/string.hpp>
-//#include <boost/program_options.hpp>
-//#include <log4cpp/Category.hh>
-//#include <log4cpp/FileAppender.hh>
-//#include <log4cpp/OstreamAppender.hh>
-//#include <log4cpp/SimpleLayout.hh>
 
 
 MetaServer::MetaServer(boost::asio::io_service& ios)

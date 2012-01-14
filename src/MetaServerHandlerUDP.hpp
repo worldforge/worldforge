@@ -19,17 +19,24 @@
 
  */
 
-//#include "MetaServer.hpp"
+/*
+ * Local Includes
+ */
 #include "MetaServerHandler.hpp"
 #include "MetaServerPacket.hpp"
 
-#include <boost/asio.hpp>
-#include <queue>
+/*
+ * System Includes
+ */
+#include <boost/asio/io_service.hpp>
+#include <boost/asio/ip/udp.hpp>
 #include <log4cpp/Category.hh>
 
+/*
+ * Forward Declarations
+ */
 class MetaServer;
-
-using namespace boost::asio::ip;
+class MetaServerPacket;
 
 class MetaServerHandlerUDP : public MetaServerHandler
 {
@@ -51,7 +58,6 @@ private:
 	boost::array<char, MAX_PACKET_BYTES> m_recvBuffer;
 
 	boost::asio::deadline_timer* m_outboundTimer;
-	std::queue<MetaServerPacket> m_outboundQueue;
 	unsigned int m_outboundMaxInterval;
 	unsigned long m_outboundTick;
 

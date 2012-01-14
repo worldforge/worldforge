@@ -28,7 +28,10 @@
  * System Includes
  */
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/asio/io_service.hpp>
+#include <boost/asio/ip/tcp.hpp>
+
 #include <log4cpp/Category.hh>
 #include <log4cpp/FileAppender.hh>
 #include <log4cpp/OstreamAppender.hh>
@@ -40,11 +43,6 @@
 class MetaServer;
 
 
-
-/**
-	@author Sean Ryan <sryan@evercrack.com>
-	@brief  stolen shamelessly from the boost tutorials
-*/
 class tcp_connection
   : public boost::enable_shared_from_this<tcp_connection>
 {
@@ -80,10 +78,7 @@ private:
 
 };
 
-/**
-	@author Sean Ryan <sryan@evercrack.com>
-	@brief The handler that takes care of incoming connections
-*/
+
 class MetaServerHandlerTCP : public MetaServerHandler
 {
 
