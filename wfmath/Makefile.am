@@ -25,8 +25,7 @@ lib_LTLIBRARIES = libwfmath-0.3.la
 libwfmath_0_3_la_SOURCES = basis.h const.cpp stream.cpp int_to_string.cpp \
 	probability.cpp timestamp.cpp randgen.cpp rotmatrix.cpp vector.cpp \
 	point.cpp quaternion.cpp polygon.cpp intersect.cpp \
-	axisbox.cpp polygon_intersect.cpp ball.cpp rotbox.cpp segment.cpp \
-	floatmath.h
+	axisbox.cpp polygon_intersect.cpp ball.cpp rotbox.cpp segment.cpp
 libwfmath_0_3_la_LDFLAGS = -lm -version-info @WFMATH_VERSION_INFO@
 
 check_PROGRAMS = vector_test rotmatrix_test point_test \
