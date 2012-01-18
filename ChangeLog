@@ -1,3 +1,11 @@
+2012-01-18  Al Riddoch  <alriddoch@googlemail.com>
+
+	* Fix a number of portability bugs. Make a bunch of performance
+	  improvements, mostly be avoiding converting between double and float.
+	  Switch to using standard C++ library for math functions, as the way
+	  templates work makes getting the right float type way more efficient.
+	  Fix some bad namespacing which broke on some compilers.
+
 2011-02-12  Al Riddoch  <alriddoch@googlemail.com>
 
 	* Release 0.3.11, interface version 5
