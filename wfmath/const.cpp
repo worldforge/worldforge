@@ -71,11 +71,7 @@ bool WFMath::Equal(float x1, float x2, double epsilon)
     // If the difference between the numbers is smaller than the
     // scaled epsilon we'll consider the numbers to be equal.
 
-#ifdef HAVE_FABSF
-    return fabsf(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
-#else // HAVE_FABSF
     return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
-#endif // HAVE_FABSF
 }
 
 double WFMath::_ScaleEpsilon(double x1, double x2, double epsilon)
