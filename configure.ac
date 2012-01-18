@@ -49,8 +49,6 @@ AC_MSG_NOTICE([Ignore the Atlas checks, they are just used for building test cod
 
 AC_LANG(C++)
 
-AC_CHECK_FUNCS([fabsf frexpf sqrtf atan2f sinf cosf])
-
 AC_MSG_CHECKING([whether std::fabs works])
 AC_COMPILE_IFELSE(
 [
@@ -60,8 +58,6 @@ AC_COMPILE_IFELSE(
     ]],
     [[
         std::fabs(0.5f);
-        fabs(0.5f);
-       weowefwe w;
     ]])
 ],
 [
