@@ -48,34 +48,40 @@ public:
 	MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
 	~MetaServerPacket();
 
-	NetMsgType getPacketType();
+	NetMsgType getPacketType() { return m_packetType; }
 	void setPacketType(NetMsgType nmt);
 
-	std::string getAddressStr();
-	boost::uint32_t getAddressInt();
-	boost::asio::ip::address getAddress();
+	std::string getAddressStr() { return m_AddressStr; }
+	boost::uint32_t getAddressInt() { return m_AddressInt; }
+	boost::asio::ip::address getAddress() { return m_Address; }
 	void setAddress(boost::asio::ip::address address);
 
-	void setSequence(unsigned long long seq = 0);
-	unsigned long long getSequence();
+	void setSequence(unsigned long long seq = 0) { m_Sequence = seq; }
+	unsigned long long getSequence() { return m_Sequence; }
 
-	unsigned int getPort();
-	void setPort(unsigned int p);
+	unsigned int getPort() { return m_Port; }
+	void setPort(unsigned int p) { m_Port = p; }
 
-	unsigned int getSize();
+	unsigned int getSize() { return m_Bytes; }
 
 	unsigned int addPacketData(uint32_t i);
 	unsigned int addPacketData(std::string s);
 
 	std::string getPacketMessage(unsigned int offset);
-	uint32_t getIntData(unsigned int offset);
+	uint32_t getIntData(unsigned int offset)
+	{
+		uint32_t foo = 99;
+
+		m_readPtr = m_headPtr + offset;
+		m_readPtr = unpack_uint32(&foo, m_readPtr );
+
+		return foo;
+	}
 
 	boost::uint32_t	IpAsciiToNet(const char *buffer);
 	std::string IpNetToAscii(boost::uint32_t address);
 
-	boost::array<char,MAX_PACKET_BYTES>& getBuffer();
-
-	void dumpBuffer();
+	boost::array<char,MAX_PACKET_BYTES>& getBuffer() { return m_packetPayload; }
 
 	/*
 	 * Stream Overload

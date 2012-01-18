@@ -44,12 +44,23 @@ class PacketLogger_unittest : public CppUnit::TestCase
   public:
     PacketLogger_unittest() { }
 
-    void setUp() {}
-    void tearDown() {}
+    PacketLogger* p;
+    std::string fn;
+
+    void setUp()
+    {
+    	fn = "/tmp/pllist";
+		p = new PacketLogger(fn);
+    }
+
+    void tearDown()
+    {
+    	delete p;
+    }
 
     void testConstructor()
     {
-    	CPPUNIT_FAIL("NOT IMPLEMENTED");
+    	CPPUNIT_ASSERT(p);
     }
 };
 

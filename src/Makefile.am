@@ -30,11 +30,11 @@ DataObject_unittest_SOURCES = DataObject_unittest.cpp
 DataObject_unittest_LDADD = DataObject.o $(CPPUNIT_LIBS)
 
 MetaServerHandlerTCP_unittest_SOURCES = MetaServerHandlerTCP_unittest.cpp
-MetaServerHandlerTCP_unittest_LDADD = $(CPPUNIT_LIBS)
+MetaServerHandlerTCP_unittest_LDADD = MetaServerHandlerTCP.o $(CPPUNIT_LIBS)
 
 MetaServerHandlerUDP_unittest_SOURCES = MetaServerHandlerUDP_unittest.cpp
-MetaServerHandlerUDP_unittest_LDADD = $(CPPUNIT_LIBS)
+MetaServerHandlerUDP_unittest_LDADD = MetaServerHandlerUDP.o MetaServerPacket.o $(CPPUNIT_LIBS)
 
 PacketLogger_unittest_SOURCES = PacketLogger_unittest.cpp
-PacketLogger_unittest_LDADD = $(CPPUNIT_LIBS)
+PacketLogger_unittest_LDADD = PacketLogger.o MetaServerPacket.o $(CPPUNIT_LIBS)
 

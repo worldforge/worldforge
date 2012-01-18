@@ -19,7 +19,7 @@
 
  */
 
-//#include "MetaServer.hpp"
+
 #include "MetaServerPacket.hpp"
 
 MetaServerPacket::MetaServerPacket()
@@ -67,11 +67,11 @@ MetaServerPacket::~MetaServerPacket()
 	// delete [] m_packetPayload causes a core
 }
 
-NetMsgType
-MetaServerPacket::getPacketType()
-{
-	return m_packetType;
-}
+//NetMsgType
+//MetaServerPacket::getPacketType()
+//{
+//	return m_packetType;
+//}
 
 void
 MetaServerPacket::setPacketType(NetMsgType nmt)
@@ -92,23 +92,23 @@ MetaServerPacket::setPacketType(NetMsgType nmt)
 }
 
 
-std::string
-MetaServerPacket::getAddressStr()
-{
-	return m_AddressStr;
-}
+//std::string
+//MetaServerPacket::getAddressStr()
+//{
+//	return m_AddressStr;
+//}
 
-boost::uint32_t
-MetaServerPacket::getAddressInt()
-{
-	return m_AddressInt;
-}
+//boost::uint32_t
+//MetaServerPacket::getAddressInt()
+//{
+//	return m_AddressInt;
+//}
 
-boost::asio::ip::address
-MetaServerPacket::getAddress()
-{
-	return m_Address;
-}
+//boost::asio::ip::address
+//MetaServerPacket::getAddress()
+//{
+//	return m_Address;
+//}
 
 void
 MetaServerPacket::setAddress(boost::asio::ip::address address)
@@ -151,17 +151,17 @@ MetaServerPacket::setAddress(boost::asio::ip::address address)
 
 }
 
-unsigned int
-MetaServerPacket::getPort()
-{
-	return m_Port;
-}
+//unsigned int
+//MetaServerPacket::getPort()
+//{
+//	return m_Port;
+//}
 
-void
-MetaServerPacket::setPort(unsigned int p)
-{
-	m_Port = p;
-}
+//void
+//MetaServerPacket::setPort(unsigned int p)
+//{
+//	m_Port = p;
+//}
 
 unsigned int
 MetaServerPacket::addPacketData(uint32_t i)
@@ -179,11 +179,11 @@ MetaServerPacket::addPacketData(std::string s)
 	return ret_off;
 }
 
-unsigned int
-MetaServerPacket::getSize()
-{
-	return m_Bytes;
-}
+//unsigned int
+//MetaServerPacket::getSize()
+//{
+//	return m_Bytes;
+//}
 
 std::string
 MetaServerPacket::getPacketMessage(unsigned int offset)
@@ -196,16 +196,16 @@ MetaServerPacket::getPacketMessage(unsigned int offset)
 	return foo;
 }
 
-uint32_t
-MetaServerPacket::getIntData(unsigned int offset)
-{
-	uint32_t foo = 99;
-
-	m_readPtr = m_headPtr + offset;
-	m_readPtr = unpack_uint32(&foo, m_readPtr );
-
-	return foo;
-}
+//uint32_t
+//MetaServerPacket::getIntData(unsigned int offset)
+//{
+//	uint32_t foo = 99;
+//
+//	m_readPtr = m_headPtr + offset;
+//	m_readPtr = unpack_uint32(&foo, m_readPtr );
+//
+//	return foo;
+//}
 
 /*
  * This is the original metaserver way
@@ -281,30 +281,23 @@ MetaServerPacket::IpNetToAscii(boost::uint32_t address) {
 }
 
 
-boost::array<char,MAX_PACKET_BYTES>&
-MetaServerPacket::getBuffer()
-{
-	return m_packetPayload;
-}
+//boost::array<char,MAX_PACKET_BYTES>&
+//MetaServerPacket::getBuffer()
+//{
+//	return m_packetPayload;
+//}
 
-unsigned long long
-MetaServerPacket::getSequence()
-{
-	return m_Sequence;
-}
+//unsigned long long
+//MetaServerPacket::getSequence()
+//{
+//	return m_Sequence;
+//}
 
-void
-MetaServerPacket::setSequence(unsigned long long seq )
-{
-	m_Sequence = seq;
-}
-
-void
-MetaServerPacket::dumpBuffer()
-{
-
-}
-
+//void
+//MetaServerPacket::setSequence(unsigned long long seq )
+//{
+//	m_Sequence = seq;
+//}
 
 /**
  *  Stream Insertion Operator
@@ -334,8 +327,6 @@ std::ostream& operator<<(std::ostream &os, MetaServerPacket &mp)
 	 *      - packet can now be sent.
 	 */
 	//       (unsigned long long) (std::size_t)  (boost::array<char,MAX_PACKET_BYTES>)
-//	std::cout << "streamdebug: " << mp.getSequence() << std::endl;
-//	std::cout << "streamdebug2: " << mp.getSize() << std::endl;
 	os << mp.getSequence() << mp.getSize();
 
 	/*
@@ -416,5 +407,3 @@ MetaServerPacket::unpack_string(std::string *dest, char* buffer, unsigned int le
 	*dest = s;
 	return buffer+length;
 }
-
-

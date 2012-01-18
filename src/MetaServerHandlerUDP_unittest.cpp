@@ -24,6 +24,8 @@
  * Local Includes
  */
 #include "MetaServerHandlerUDP.hpp"
+#include "MetaServer.hpp"; // I tried to get away with just forward declarations but this didn't work
+
 
 /*
  * System Includes
@@ -33,6 +35,11 @@
 #include <cppunit/TextTestRunner.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+
+/*
+ * Forward Declarations
+ */
+
 
 #include <cassert>
 
@@ -44,12 +51,28 @@ class MetaServerHandlerUDP_unittest : public CppUnit::TestCase
   public:
     MetaServerHandlerUDP_unittest() { }
 
-    void setUp() {}
-    void tearDown() {}
+    boost::asio::io_service io;
+    std::string host ;
+    MetaServer* ms;
+    MetaServerHandlerUDP* ms_udp;
+
+    void setUp()
+    {
+    	host = "127.0.0.1";
+    	ms = new MetaServer(io);
+    	ms_udp = new MetaServerHandlerUDP(*ms, io, host, 50000 );
+    }
+
+
+    void tearDown()
+    {
+    	delete ms;
+    	delete ms_udp;
+    }
 
     void testConstructor()
     {
-    	CPPUNIT_FAIL("NOT IMPLEMENTED");
+    	CPPUNIT_ASSERT(ms_udp);
     }
 };
 
@@ -74,4 +97,60 @@ int main()
 /*
  * Mock Stubs
  */
+MetaServer::MetaServer(boost::asio::io_service& io)
+: m_expiryDelayMilliseconds(1500),
+  m_updateDelayMilliseconds(4000),
+  m_handshakeExpirySeconds(30),
+  m_sessionExpirySeconds(3600),
+  m_clientExpirySeconds(300),
+  m_packetLoggingFlushSeconds(10),
+  m_keepServerStats(false),
+  m_keepClientStats(false),
+  m_maxServerSessions(1024),
+  m_maxClientSessions(4096),
+  m_isDaemon(false),
+  m_Logfile(""),
+  m_Logger( log4cpp::Category::getInstance("MetaServerHandlerUDP_unittest") ),
+  m_logServerSessions(false),
+  m_logClientSessions(false),
+  m_logPackets(false),
+  m_PacketLogfile(""),
+  m_PacketSequence(0),
+  m_startTime(boost::posix_time::microsec_clock::local_time())
+{
+}
+MetaServer::~MetaServer() {}
+
+void MetaServer::processMetaserverPacket(MetaServerPacket&, MetaServerPacket&)
+{
+
+}
+
+log4cpp::Category& MetaServer::getLogger()
+{
+	return m_Logger;
+}
+
+
+DataObject::DataObject()
+{
+
+}
+
+DataObject::~DataObject()
+{
+
+}
+
+MetaServerHandler::MetaServerHandler()
+{
+
+}
+
+MetaServerHandler::~MetaServerHandler()
+{
+
+}
+
+
 

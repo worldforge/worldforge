@@ -71,37 +71,13 @@ int main()
     }
 }
 
-// stubs
-
+/*
+ * Method Stubs
+ */
 void
 MetaServerPacket::setAddress(boost::asio::ip::address a)
 {
 
-}
-
-boost::asio::ip::address
-MetaServerPacket::getAddress()
-{
-	boost::asio::ip::address a;
-	return a;
-}
-
-uint32_t
-MetaServerPacket::getAddressInt()
-{
-	return 0;
-}
-
-std::string
-MetaServerPacket::getAddressStr()
-{
-    return "";
-}
-
-unsigned int
-MetaServerPacket::getPacketType()
-{
-	return 0;
 }
 
 void
@@ -115,19 +91,8 @@ MetaServerPacket::addPacketData(uint32_t)
 	return 1;
 }
 
-void
-MetaServerPacket::dumpBuffer()
-{
-}
-
 unsigned int
 MetaServerPacket::addPacketData(std::string s)
-{
-	return 1;
-}
-
-uint32_t
-MetaServerPacket::getIntData(unsigned int)
 {
 	return 1;
 }
@@ -138,30 +103,6 @@ MetaServerPacket::getPacketMessage(unsigned int offset)
 	return "";
 }
 
-unsigned int
-MetaServerPacket::getSize()
-{
-	return 1;
-}
-
-unsigned int
-MetaServerPacket::getPort()
-{
-	return 1;
-}
-
-unsigned long long
-MetaServerPacket::getSequence()
-{
-	return 1;
-}
-
-void
-MetaServerPacket::setSequence(unsigned long long seq)
-{
-
-}
-
 MetaServerPacket::~MetaServerPacket()
 {
 }
@@ -169,4 +110,15 @@ MetaServerPacket::~MetaServerPacket()
 std::ostream& operator<<(std::ostream &os, MetaServerPacket &mp)
 {
 	return os << mp.getSequence();
+}
+
+char*
+MetaServerPacket::unpack_uint32(uint32_t *dest, char *buffer)
+{
+    uint32_t netorder;
+
+    memcpy(&netorder, buffer, sizeof(uint32_t));
+    *dest = ntohl(netorder);
+    return buffer+sizeof(uint32_t);
+
 }

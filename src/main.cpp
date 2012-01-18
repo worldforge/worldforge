@@ -137,10 +137,34 @@ int main(int argc, char** argv)
 		/**
 		 * This is the async loop
 		 */
-		io_service.run();
+		for(;;)
+		{
+			try
+			{
+				/*
+				 * We run and complete normally
+				 */
+				io_service.run();
+				break;
+			}
+			catch(std::exception ex)
+			{
+				/*
+				 * This will catch exceptions inside the io_service loop/handler.
+				 *
+				 * If we have a handler exception this should account as a reasonable
+				 * effort to resume operation despite the error
+				 */
+				std::cerr << "IOService Loop Exception:" << ex.what() << std::endl;
+			}
+		}
+
 	}
 	catch (std::exception& e)
 	{
+		/*
+		 * This will catch exceptions during the startup etc
+		 */
 		std::cerr << "Exception: " << e.what() << std::endl;
 	}
 	std::cout << "All Done!" << std::endl;
