@@ -1,6 +1,6 @@
 dnl Autoconf setup
 
-AC_INIT([wfmath], [0.3.11], [alriddoch@googlemail.com])
+AC_INIT([wfmath], [0.3.12], [alriddoch@googlemail.com])
 AC_CONFIG_SRCDIR([wfmath/const.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -13,7 +13,7 @@ dnl Automake setup
 AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news color-tests parallel-tests])
 
 dnl versioning info for libtool
-WFMATH_CURRENT=5
+WFMATH_CURRENT=6
 WFMATH_REVISION=0
 WFMATH_AGE=0
 WFMATH_VERSION_INFO=$WFMATH_CURRENT:$WFMATH_REVISION:$WFMATH_AGE

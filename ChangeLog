@@ -1,5 +1,9 @@
 2012-01-18  Al Riddoch  <alriddoch@googlemail.com>
 
+	* Release 0.3.12, interface version 6
+
+2012-01-18  Al Riddoch  <alriddoch@googlemail.com>
+
 	* Fix a number of portability bugs. Make a bunch of performance
 	  improvements, mostly be avoiding converting between double and float.
 	  Switch to using standard C++ library for math functions, as the way
