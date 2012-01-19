@@ -47,11 +47,6 @@
  */
 class PacketLogger;
 
-#define foreach         		BOOST_FOREACH
-
-//using boost::asio::ip::tcp;
-//using boost::asio::ip::udp;
-
 class MetaServer
 {
    public:
@@ -61,15 +56,15 @@ class MetaServer
 	void update_timer(const boost::system::error_code& error);
 
 	void processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp);
-	void processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out);
-	void processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out);
-	void processTERMINATE(MetaServerPacket& in, MetaServerPacket& out);
-	void processCLIENTKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out);
-	void processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out);
-	void processLISTREQ(MetaServerPacket& in, MetaServerPacket& out);
-	void processSERVERATTR(MetaServerPacket& in, MetaServerPacket& out);
-	void processCLIENTATTR(MetaServerPacket& in, MetaServerPacket& out);
-	void processCLIENTFILTER(MetaServerPacket& in, MetaServerPacket& out);
+	void processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out);
+	void processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out);
+	void processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out);
+	void processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out);
+	void processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out);
+	void processLISTREQ(const MetaServerPacket& in, MetaServerPacket& out);
+	void processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out);
+	void processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out);
+	void processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& out);
 
 	void registerConfig( boost::program_options::variables_map & vm );
 	void initLogger();

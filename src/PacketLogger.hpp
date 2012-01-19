@@ -22,35 +22,29 @@
 #ifndef PACKETLOGGER_HPP_
 #define PACKETLOGGER_HPP_
 
+/*
+ * Local Includes
+ */
+#include "MetaServerPacket.hpp"
+#include "DataObject.hpp"
+#include "PacketLogger.hpp"
 
-
-//#include <ctime>
-//#include <cstdlib>
-//#include <cstdio>
+/*
+ * System Includes
+ */
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <sstream>
 #include <fstream>
-//#include <typeinfo>
 #include <map>
 #include <queue>
 #include <algorithm>
-//#include <boost/array.hpp>
-//#include <boost/bind.hpp>
-//#include <boost/shared_ptr.hpp>
-//#include <boost/enable_shared_from_this.hpp>
+
 #include <boost/asio.hpp>
-//#include <boost/foreach.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
-//#include <boost/algorithm/string.hpp>
-//#include <boost/program_options.hpp>
-
-#include "MetaServerPacket.hpp"
-#include "DataObject.hpp"
-#include "PacketLogger.hpp"
 
 class PacketLogger
 {

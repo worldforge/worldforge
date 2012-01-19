@@ -296,7 +296,7 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
  * 	- pack random number
  */
 void
-MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processSERVERKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out)
 {
 
 	uint32_t i = msdo.addHandshake();
@@ -317,7 +317,7 @@ MetaServer::processSERVERKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
  * @param out
  */
 void
-MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processSERVERSHAKE(const MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
@@ -350,7 +350,7 @@ MetaServer::processSERVERSHAKE(MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::processTERMINATE(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processTERMINATE(const MetaServerPacket& in, MetaServerPacket& out)
 {
 
 	/**
@@ -371,7 +371,7 @@ MetaServer::processTERMINATE(MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::processCLIENTKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processCLIENTKEEPALIVE(const MetaServerPacket& in, MetaServerPacket& out)
 {
 
 	uint32_t i = msdo.addHandshake();
@@ -387,7 +387,7 @@ MetaServer::processCLIENTKEEPALIVE(MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processCLIENTSHAKE(const MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int shake = in.getIntData(4);
 	std::string ip = in.getAddressStr();
@@ -420,7 +420,7 @@ MetaServer::processCLIENTSHAKE(MetaServerPacket& in, MetaServerPacket& out)
  *
  */
 void
-MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processLISTREQ( const MetaServerPacket& in, MetaServerPacket& out)
 {
 	uint32_t server_index = in.getIntData(4);
 	uint32_t total = msdo.getServerSessionCount();
@@ -511,7 +511,7 @@ MetaServer::processLISTREQ(MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::processSERVERATTR(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processSERVERATTR(const MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int name_length = in.getIntData(4);
 	unsigned int value_length = in.getIntData(8);
@@ -526,7 +526,7 @@ MetaServer::processSERVERATTR(MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::processCLIENTATTR(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processCLIENTATTR(const MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int name_length = in.getIntData(4);
 	unsigned int value_length = in.getIntData(8);
@@ -541,7 +541,7 @@ MetaServer::processCLIENTATTR(MetaServerPacket& in, MetaServerPacket& out)
 }
 
 void
-MetaServer::processCLIENTFILTER(MetaServerPacket& in, MetaServerPacket& out)
+MetaServer::processCLIENTFILTER(const MetaServerPacket& in, MetaServerPacket& out)
 {
 	unsigned int name_length = in.getIntData(4);
 	unsigned int value_length = in.getIntData(8);

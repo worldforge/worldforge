@@ -75,30 +75,30 @@ int main()
  * Method Stubs
  */
 void
-MetaServerPacket::setAddress(boost::asio::ip::address a)
+MetaServerPacket::setAddress(const boost::asio::ip::address& a)
 {
 
 }
 
 void
-MetaServerPacket::setPacketType(unsigned int)
+MetaServerPacket::setPacketType(const NetMsgType& nmt)
 {
 }
 
 unsigned int
-MetaServerPacket::addPacketData(uint32_t)
+MetaServerPacket::addPacketData(boost::uint32_t d)
 {
 	return 1;
 }
 
 unsigned int
-MetaServerPacket::addPacketData(std::string s)
+MetaServerPacket::addPacketData(const std::string& s)
 {
 	return 1;
 }
 
 std::string
-MetaServerPacket::getPacketMessage(unsigned int offset)
+MetaServerPacket::getPacketMessage(unsigned int offset) const
 {
 	return "";
 }
@@ -107,13 +107,13 @@ MetaServerPacket::~MetaServerPacket()
 {
 }
 
-std::ostream& operator<<(std::ostream &os, MetaServerPacket &mp)
+std::ostream& operator<<(std::ostream &os, const MetaServerPacket &mp)
 {
 	return os << mp.getSequence();
 }
 
 char*
-MetaServerPacket::unpack_uint32(uint32_t *dest, char *buffer)
+MetaServerPacket::unpack_uint32(uint32_t *dest, char *buffer) const
 {
     uint32_t netorder;
 

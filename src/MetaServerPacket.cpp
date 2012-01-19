@@ -67,14 +67,8 @@ MetaServerPacket::~MetaServerPacket()
 	// delete [] m_packetPayload causes a core
 }
 
-//NetMsgType
-//MetaServerPacket::getPacketType()
-//{
-//	return m_packetType;
-//}
-
 void
-MetaServerPacket::setPacketType(NetMsgType nmt)
+MetaServerPacket::setPacketType(const NetMsgType& nmt)
 {
 
 	/**
@@ -91,27 +85,8 @@ MetaServerPacket::setPacketType(NetMsgType nmt)
 
 }
 
-
-//std::string
-//MetaServerPacket::getAddressStr()
-//{
-//	return m_AddressStr;
-//}
-
-//boost::uint32_t
-//MetaServerPacket::getAddressInt()
-//{
-//	return m_AddressInt;
-//}
-
-//boost::asio::ip::address
-//MetaServerPacket::getAddress()
-//{
-//	return m_Address;
-//}
-
 void
-MetaServerPacket::setAddress(boost::asio::ip::address address)
+MetaServerPacket::setAddress(const boost::asio::ip::address& address)
 {
 
 	/*
@@ -145,26 +120,10 @@ MetaServerPacket::setAddress(boost::asio::ip::address address)
 		m_AddressInt = IpAsciiToNet( m_AddressStr.data() );
 	}
 
-
-	//std::cout << "Address String : " << m_Address.to_string() << std::endl;
-	//std::cout << "Address Int    : " << m_AddressInt << std::endl;
-
 }
 
-//unsigned int
-//MetaServerPacket::getPort()
-//{
-//	return m_Port;
-//}
-
-//void
-//MetaServerPacket::setPort(unsigned int p)
-//{
-//	m_Port = p;
-//}
-
 unsigned int
-MetaServerPacket::addPacketData(uint32_t i)
+MetaServerPacket::addPacketData(boost::uint32_t i)
 {
 	unsigned int ret_off = m_writePtr - m_headPtr;
 	m_writePtr = pack_uint32(i,m_writePtr);
@@ -172,40 +131,21 @@ MetaServerPacket::addPacketData(uint32_t i)
 }
 
 unsigned int
-MetaServerPacket::addPacketData(std::string s)
+MetaServerPacket::addPacketData(const std::string& s)
 {
 	unsigned int ret_off = m_writePtr - m_headPtr;
 	m_writePtr = pack_string( s , m_writePtr );
 	return ret_off;
 }
 
-//unsigned int
-//MetaServerPacket::getSize()
-//{
-//	return m_Bytes;
-//}
-
 std::string
-MetaServerPacket::getPacketMessage(unsigned int offset)
+MetaServerPacket::getPacketMessage(unsigned int offset) const
 {
 	std::string foo = "";
-
-	m_readPtr = m_headPtr + offset;
-	m_readPtr = unpack_string(&foo, m_readPtr, (m_Bytes - offset) );
-
+	unpack_string(&foo, m_headPtr + offset , (m_Bytes - offset) );
 	return foo;
 }
 
-//uint32_t
-//MetaServerPacket::getIntData(unsigned int offset)
-//{
-//	uint32_t foo = 99;
-//
-//	m_readPtr = m_headPtr + offset;
-//	m_readPtr = unpack_uint32(&foo, m_readPtr );
-//
-//	return foo;
-//}
 
 /*
  * This is the original metaserver way
@@ -281,24 +221,6 @@ MetaServerPacket::IpNetToAscii(boost::uint32_t address) {
 }
 
 
-//boost::array<char,MAX_PACKET_BYTES>&
-//MetaServerPacket::getBuffer()
-//{
-//	return m_packetPayload;
-//}
-
-//unsigned long long
-//MetaServerPacket::getSequence()
-//{
-//	return m_Sequence;
-//}
-
-//void
-//MetaServerPacket::setSequence(unsigned long long seq )
-//{
-//	m_Sequence = seq;
-//}
-
 /**
  *  Stream Insertion Operator
  *  Purpose: mostly for binary packet logging ... but in theory should work for textual
@@ -307,7 +229,7 @@ MetaServerPacket::IpNetToAscii(boost::uint32_t address) {
  *        MetaServerPacket is agnostic to format ( meaning packet type and meaning are
  *        interpreted in the MetaServer class ... and MSP is essentially a fancy raw buffer ).
  */
-std::ostream& operator<<(std::ostream &os, MetaServerPacket &mp)
+std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp)
 {
 	/*
 	 * Output Format:
@@ -337,7 +259,7 @@ std::ostream& operator<<(std::ostream &os, MetaServerPacket &mp)
 	 * feature and not meant for everyday use, so I chose to write the full buffer over writing
 	 * only the consumed portion
 	 */
-	os.write((char *)mp.getBuffer().c_array(), sizeof(char)*MAX_PACKET_BYTES);
+	os.write( (char *)mp.getBuffer().c_array(), sizeof(char)*MAX_PACKET_BYTES );
 	return os;
 }
 
@@ -380,7 +302,7 @@ MetaServerPacket::pack_uint32(uint32_t data, char *buffer)
 }
 
 char*
-MetaServerPacket::unpack_uint32(uint32_t *dest, char *buffer)
+MetaServerPacket::unpack_uint32(uint32_t *dest, char *buffer) const
 {
     uint32_t netorder;
 
@@ -401,7 +323,7 @@ MetaServerPacket::pack_string( std::string str, char *buffer )
 }
 
 char *
-MetaServerPacket::unpack_string(std::string *dest, char* buffer, unsigned int length )
+MetaServerPacket::unpack_string(std::string *dest, char* buffer, unsigned int length ) const
 {
 	std::string s(buffer,length);
 	*dest = s;

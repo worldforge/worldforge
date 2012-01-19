@@ -49,31 +49,30 @@ public:
 	~MetaServerPacket();
 
 	NetMsgType getPacketType() { return m_packetType; }
-	void setPacketType(NetMsgType nmt);
+	void setPacketType(const NetMsgType& nmt);
 
-	std::string getAddressStr() { return m_AddressStr; }
-	boost::uint32_t getAddressInt() { return m_AddressInt; }
-	boost::asio::ip::address getAddress() { return m_Address; }
-	void setAddress(boost::asio::ip::address address);
+	std::string getAddressStr() const { return m_AddressStr; }
+	boost::uint32_t getAddressInt() const { return m_AddressInt; }
+	boost::asio::ip::address getAddress() const { return m_Address; }
+	void setAddress(const boost::asio::ip::address& address);
 
 	void setSequence(unsigned long long seq = 0) { m_Sequence = seq; }
-	unsigned long long getSequence() { return m_Sequence; }
+	unsigned long long getSequence() const { return m_Sequence; }
 
-	unsigned int getPort() { return m_Port; }
+	unsigned int getPort() const { return m_Port; }
 	void setPort(unsigned int p) { m_Port = p; }
 
-	unsigned int getSize() { return m_Bytes; }
+	unsigned int getSize() const { return m_Bytes; }
 
-	unsigned int addPacketData(uint32_t i);
-	unsigned int addPacketData(std::string s);
+	unsigned int addPacketData(boost::uint32_t i);
+	unsigned int addPacketData(const std::string& s);
 
-	std::string getPacketMessage(unsigned int offset);
-	uint32_t getIntData(unsigned int offset)
+	std::string getPacketMessage(unsigned int offset) const;
+	uint32_t getIntData(unsigned int offset) const
 	{
 		uint32_t foo = 99;
 
-		m_readPtr = m_headPtr + offset;
-		m_readPtr = unpack_uint32(&foo, m_readPtr );
+		unpack_uint32(&foo, m_readPtr + offset );
 
 		return foo;
 	}
@@ -81,20 +80,20 @@ public:
 	boost::uint32_t	IpAsciiToNet(const char *buffer);
 	std::string IpNetToAscii(boost::uint32_t address);
 
-	boost::array<char,MAX_PACKET_BYTES>& getBuffer() { return m_packetPayload; }
+	boost::array<char,MAX_PACKET_BYTES>& getBuffer() const { return m_packetPayload; }
 
 	/*
 	 * Stream Overload
 	 */
-	friend std::ostream & operator<<(std::ostream &os, MetaServerPacket &mp);
+	friend std::ostream & operator<<( std::ostream &os, const MetaServerPacket &mp);
 
 private:
 
 	void parsePacketType();
 	char *pack_uint32(uint32_t data, char* buffer );
-	char *unpack_uint32(uint32_t *dest, char* buffer );
+	char *unpack_uint32(uint32_t *dest, char* buffer ) const;
 	char *pack_string(std::string str, char *buffer );
-	char *unpack_string(std::string *dest, char* buffer, unsigned int length );
+	char *unpack_string(std::string *dest, char* buffer, unsigned int length ) const;
 
 	NetMsgType m_packetType;
 	boost::asio::ip::address m_Address;
