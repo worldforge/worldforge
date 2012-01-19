@@ -113,6 +113,6 @@ private:
 /*
  *
  */
-std::ostream & operator<<(std::ostream &os, MetaServerPacket &mp);
+std::ostream & operator<<(std::ostream &os, const MetaServerPacket &mp);
 
 #endif /* METASERVERPACKET_HPP_ */
