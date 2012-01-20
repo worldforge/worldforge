@@ -1,7 +1,7 @@
 /**
  Worldforge Next Generation MetaServer
 
- Copyright (C) 2011 Sean Ryan <sryan@evercrack.com>
+ Copyright (C) 2012 Sean Ryan <sryan@evercrack.com>
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 
  */
 
-#ifndef PACKETLOGGER_HPP_
-#define PACKETLOGGER_HPP_
+#ifndef PACKETREADER_HPP_
+#define PACKETREADER_HPP_
 
 /*
  * Local Includes
@@ -45,24 +45,34 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
 
-class PacketLogger
+class PacketReader
 {
 
 public:
 
-	PacketLogger();
-	PacketLogger(const std::string& file);
-	~PacketLogger();
+	PacketReader() : m_Append(false) {}
+	~PacketReader() {}
 
-	void LogPacket(const MetaServerPacket& msp);
+    void setAppend(const bool mode ) { m_Append = mode; };
+    bool getAppend() const { return m_Append; }
 
-	void flush(unsigned int exp);
+	unsigned int parseBinaryFile(const std::string& file);
+
+	bool hasPacket() { return !m_Plist.empty(); }
+
+	unsigned int packetCount() { return m_Plist.size(); }
+
+	/*
+	 * Can't const because it modifies member vars
+	 */
+	MetaServerPacket& pop();
+	void push(const MetaServerPacket& msp) { m_Plist.push_back(msp); }
 
 private:
-	std::ofstream m_Write;
+	bool m_Append;
+	std::ifstream m_Read;
 	std::list<MetaServerPacket> m_Plist;
 	std::string m_File;
-	boost::posix_time::ptime m_lastRefresh;
 
 };
 
