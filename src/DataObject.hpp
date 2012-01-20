@@ -47,32 +47,32 @@ public:
 	bool handshakeExists( unsigned int hs );
 	std::vector<unsigned int> expireHandshakes( unsigned int expiry=0 );
 
-	bool addServerAttribute(std::string sessionid, std::string name, std::string value );
-	void removeServerAttribute(std::string sessionid, std::string name );
-	std::string getServerAttribute(std::string sessionid, std::string key );
+	bool addServerAttribute(const std::string& sessionid, const std::string& name, const std::string& value );
+	void removeServerAttribute(const std::string& sessionid, const std::string& name );
+	std::string getServerAttribute(const std::string& sessionid, const std::string& key );
 
-	bool addClientAttribute(std::string sessionid, std::string name, std::string value );
-	void removeClientAttribute(std::string sessionid, std::string name );
-	std::string getClientAttribute(std::string sessionid, std::string key );
+	bool addClientAttribute( const std::string& sessionid, const std::string& name, const std::string& value );
+	void removeClientAttribute( const std::string& sessionid, const std::string& name );
+	std::string getClientAttribute( const std::string& sessionid, const std::string& key );
 
-	bool addClientFilter(std::string sessionid, std::string name, std::string value );
-	void removeClientFilter(std::string sessionid, std::string name );
-	std::map<std::string,std::string> getClientFilter(std::string sessionid);
-	std::string getClientFilter(std::string sessionid, std::string key );
-	void clearClientFilter(std::string sessionid);
+	bool addClientFilter( const std::string& sessionid, const std::string& name, const std::string& value );
+	void removeClientFilter( const std::string& sessionid, const std::string& name );
+	std::map<std::string,std::string> getClientFilter( const std::string& sessionid );
+	std::string getClientFilter( const std::string& sessionid, const std::string& key );
+	void clearClientFilter(const std::string& sessionid );
 
-	bool addServerSession(std::string sessionid);
-	void removeServerSession(std::string sessionid);
-	bool serverSessionExists(std::string sessionid);
+	bool addServerSession( const std::string& sessionid );
+	void removeServerSession( const std::string& sessionid );
+	bool serverSessionExists( const std::string& sessionid );
 	std::list<std::string> getServerSessionList(uint32_t start_idx, uint32_t max_items );
-	std::map<std::string,std::string> getServerSession( std::string sessionid );
+	std::map<std::string,std::string> getServerSession( const std::string& sessionid );
 	std::vector<std::string> expireServerSessions( unsigned int expiry=0 );
 
-	bool addClientSession(std::string sessionid);
-	void removeClientSession(std::string sessionid);
-	bool clientSessionExists(std::string sessionid);
+	bool addClientSession( const std::string& sessionid );
+	void removeClientSession( const std::string& sessionid );
+	bool clientSessionExists( const std::string& sessionid );
 	std::list<std::string> getClientSessionList();
-	std::map<std::string,std::string> getClientSession( std::string sessionid );
+	std::map<std::string,std::string> getClientSession( const std::string& sessionid );
 	std::vector<std::string> expireClientSessions( unsigned int expiry=0 );
 
 	uint32_t getHandshakeCount();

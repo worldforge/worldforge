@@ -48,16 +48,19 @@ public:
 	MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 );
 	~MetaServerPacket();
 
-	NetMsgType getPacketType() { return m_packetType; }
+	const NetMsgType getPacketType() const { return m_packetType; }
 	void setPacketType(const NetMsgType& nmt);
 
-	std::string getAddressStr() const { return m_AddressStr; }
-	boost::uint32_t getAddressInt() const { return m_AddressInt; }
-	boost::asio::ip::address getAddress() const { return m_Address; }
+	const std::string getAddressStr() const { return m_AddressStr; }
+	const boost::uint32_t getAddressInt() const { return m_AddressInt; }
+	const boost::asio::ip::address getAddress() const { return m_Address; }
 	void setAddress(const boost::asio::ip::address& address);
 
-	void setSequence(unsigned long long seq = 0) { m_Sequence = seq; }
+	void setSequence(const unsigned long long seq = 0) { m_Sequence = seq; }
 	unsigned long long getSequence() const { return m_Sequence; }
+
+	void setTimeOffset(const unsigned long long to = 0 ) { m_TimeOffset = to; }
+	unsigned long long getTimeOffset() const { return m_TimeOffset; }
 
 	unsigned int getPort() const { return m_Port; }
 	void setPort(unsigned int p) { m_Port = p; }
@@ -67,7 +70,7 @@ public:
 	unsigned int addPacketData(boost::uint32_t i);
 	unsigned int addPacketData(const std::string& s);
 
-	std::string getPacketMessage(unsigned int offset) const;
+	const std::string getPacketMessage(unsigned int offset) const;
 	uint32_t getIntData(unsigned int offset) const
 	{
 		uint32_t foo = 99;
@@ -107,6 +110,7 @@ private:
 	boost::array<char,MAX_PACKET_BYTES>& m_packetPayload;
 	bool m_needFree;
 	unsigned long long m_Sequence;
+	unsigned long long m_TimeOffset;
 
 };
 

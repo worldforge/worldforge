@@ -29,7 +29,8 @@ MetaServerPacket::MetaServerPacket()
 		  m_Port(0),
 		  m_AddressInt(0),
 		  m_needFree(true),
-		  m_Sequence(0)
+		  m_Sequence(0),
+		  m_TimeOffset(0)
 {
 	m_readPtr  = m_packetPayload.data();
 	m_headPtr  = m_packetPayload.data();
@@ -44,7 +45,8 @@ MetaServerPacket::MetaServerPacket(boost::array<char,MAX_PACKET_BYTES>& pl, std:
 		  m_Port(0),
 		  m_AddressInt(0),
 		  m_needFree(false),
-		  m_Sequence(0)
+		  m_Sequence(0),
+		  m_TimeOffset(0)
 {
 		m_readPtr  = m_packetPayload.data();
 		m_headPtr  = m_packetPayload.data();
@@ -138,7 +140,7 @@ MetaServerPacket::addPacketData(const std::string& s)
 	return ret_off;
 }
 
-std::string
+const std::string
 MetaServerPacket::getPacketMessage(unsigned int offset) const
 {
 	std::string foo = "";
@@ -247,8 +249,13 @@ std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp)
 	 *      - set dest address
 	 *      - set dest port
 	 *      - packet can now be sent.
+	 *
+	 *		     sequence             offset              size             raw_buffer
+	 *       (unsigned long long) (unsigned long long) (std::size_t)  (boost::array<char,MAX_PACKET_BYTES>)
+	 *
+	 *		NOTE: size refers to the number of bytes received ( m_Bytes )
 	 */
-	//       (unsigned long long) (std::size_t)  (boost::array<char,MAX_PACKET_BYTES>)
+
 	os << mp.getSequence() << mp.getSize();
 
 	/*

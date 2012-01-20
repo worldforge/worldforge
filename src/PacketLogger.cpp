@@ -24,28 +24,23 @@
 
 PacketLogger::PacketLogger()
 {
-	if ( ! m_File.length() > 0 )
-		m_File = "/tmp/packetlog.bin";
-
-	m_Write.open(m_File.c_str(),std::ios::ios_base::binary);
-
 }
 
-PacketLogger::PacketLogger(std::string file)
+PacketLogger::PacketLogger(const std::string& file)
 {
 	m_File = file;
-	PacketLogger();
 	m_lastRefresh = boost::posix_time::microsec_clock::local_time();
-	m_Write.open(m_File.c_str(), std::ios::out | std::ios::trunc | std::ios::binary );
+	m_Write.open(m_File.c_str(), std::ios::out | std::ios::trunc | std::ios::binary );;
 }
 
 PacketLogger::~PacketLogger()
 {
+	flush(0);
 	m_Write.close();
 }
 
 void
-PacketLogger::LogPacket(MetaServerPacket msp)
+PacketLogger::LogPacket(const MetaServerPacket& msp)
 {
 	//std::cout << "AcceptPacket: " << msp.getSequence() << std::endl;
 	m_Plist.push_back(msp);

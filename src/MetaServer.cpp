@@ -67,6 +67,9 @@ MetaServer::MetaServer(boost::asio::io_service& ios)
 
 MetaServer::~MetaServer()
 {
+	if ( m_logPackets )
+		m_PacketLogger->flush(0);
+
 	m_Logger.info("Shutting down logging");
 	log4cpp::Category::shutdown();
 }
@@ -210,64 +213,65 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 {
 
 	/*
-	 * Packet sequence is mostly about serialization and replay
-	 * This pretty much guarantees in a debug situation, ms will need
-	 * a restart after about 4.3 billion packets ... give or take.
+	 * Packet Sequence: store this so that we can replay the packets in the
+	 *                  same order after the fact
+	 * Time Offset: time in milliseconds relative to the "start time".  The start time
+	 *              is defined as the first packet to be processed.  I chose this because
+	 *              it will be possible to replay the packets in the correct order, at
+	 *              exactly the same rate, relative to the start of the first packet
 	 */
+	if ( m_PacketSequence == 0 )
+		m_startTime = boost::posix_time::microsec_clock::local_time();
+
 	++m_PacketSequence;
 	msp.setSequence(m_PacketSequence);
+	msp.setTimeOffset( getDeltaMillis() );
 
 	switch(msp.getPacketType())
 	{
 	case NMT_SERVERKEEPALIVE:
 		processSERVERKEEPALIVE(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_SERVERSHAKE:
 		processSERVERSHAKE(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_TERMINATE:
 		processTERMINATE(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_CLIENTKEEPALIVE:
 		processCLIENTKEEPALIVE(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_CLIENTSHAKE:
 		processCLIENTSHAKE(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_LISTREQ:
 		processLISTREQ(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_SERVERATTR:
 		processSERVERATTR(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_CLIENTATTR:
 		processCLIENTATTR(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	case NMT_CLIENTFILTER:
 		processCLIENTFILTER(msp,rsp);
-		++m_PacketSequence;
-		rsp.setSequence(m_PacketSequence);
 		break;
 	default:
+		/*
+		 * NOTE: Unknown packets generate no response ( NMT_NULL ), and are not sent.
+		 *       This way we nullify the effect on the sequence
+		 */
+		--m_PacketSequence;
 		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
 		break;
 	}
+
+	/*
+	 * Flag response packets sequence and offset tagging
+	 */
+	++m_PacketSequence;
+	rsp.setSequence(m_PacketSequence);
+	rsp.setTimeOffset( getDeltaMillis() );
 
 	/*
 	 * Packet Logging
@@ -665,7 +669,7 @@ MetaServer::registerConfig( boost::program_options::variables_map & vm )
 	if( vm.count("logging.packet_logfile") )
 	{
 		m_PacketLogfile = vm["logging.packet_logfile"].as<std::string>();
-
+std::cout << "logging.packet_logfile: " << m_PacketLogfile << std::endl;
 		/*
 		 *  Set a hard default if it's not specified
 		 */
@@ -767,6 +771,15 @@ MetaServer::initLogger()
 	std::cout << "MetaServer logging initialised [" << m_LogAppender->getName() << "]["
               <<  m_Logfile << "]" << std::endl;
 
+}
+
+unsigned long long
+MetaServer::getDeltaMillis()
+{
+    boost::posix_time::ptime ntime = msdo.getNow();
+    boost::posix_time::time_duration dur = ntime - m_startTime;
+    m_Logger.infoStream() << dur.total_milliseconds();
+    return dur.total_milliseconds();
 }
 
 log4cpp::Category&

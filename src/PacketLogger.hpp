@@ -52,10 +52,10 @@ class PacketLogger
 public:
 
 	PacketLogger();
-	PacketLogger(std::string file);
+	PacketLogger(const std::string& file);
 	~PacketLogger();
 
-	void LogPacket(MetaServerPacket msp);
+	void LogPacket(const MetaServerPacket& msp);
 
 	void flush(unsigned int exp);
 

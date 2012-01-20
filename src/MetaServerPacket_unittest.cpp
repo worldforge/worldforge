@@ -56,6 +56,7 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     CPPUNIT_TEST(test_setPort_getPort);
     CPPUNIT_TEST(test_getSize);
     CPPUNIT_TEST(test_setSequence_getSequence);
+    CPPUNIT_TEST(test_setTimeOffset_getTimeOffset);
 
     CPPUNIT_TEST_SUITE_END();
   public:
@@ -297,6 +298,8 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     	msp->setAddress( boost::asio::ip::address::from_string("127.0.2.1") );
 
     	CPPUNIT_ASSERT( msp->getAddressInt() == 16908415 );
+
+    	delete msp;
     }
 
     /*
@@ -346,6 +349,8 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     	msp->setPort(12345);
     	unsigned int r = msp->getPort();
 
+    	delete msp;
+
     	CPPUNIT_ASSERT( r == 12345 );
     }
 
@@ -354,9 +359,10 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
 
     	MetaServerPacket* msp = new MetaServerPacket();
 
-    	// should be 4 bytes
     	msp->setPacketType(NMT_SERVERKEEPALIVE);
     	unsigned int r = msp->getSize();
+
+    	delete msp;
 
     	CPPUNIT_ASSERT( r == 4 );
     }
@@ -365,11 +371,25 @@ class MetaServerPacket_unittest : public CppUnit::TestFixture
     {
     	MetaServerPacket* msp = new MetaServerPacket();
 
-    	// should be 4 bytes
     	msp->setSequence(12345);
     	unsigned long long r = msp->getSequence();
 
+    	delete msp;
+
     	CPPUNIT_ASSERT( r == 12345 );
+    }
+
+    void test_setTimeOffset_getTimeOffset()
+    {
+    	MetaServerPacket* msp = new MetaServerPacket();
+
+    	msp->setTimeOffset(12345);
+    	unsigned long long r = msp->getTimeOffset();
+
+    	delete msp;
+
+    	CPPUNIT_ASSERT( r == 12345 );
+
     }
 
     void

@@ -69,6 +69,8 @@ class MetaServer
 	void registerConfig( boost::program_options::variables_map & vm );
 	void initLogger();
 
+	unsigned long long getDeltaMillis();
+
 	log4cpp::Category& getLogger();
 
 	bool isDaemon();

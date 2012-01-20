@@ -49,7 +49,7 @@ DataObject::~DataObject()
 }
 
 bool
-DataObject::addServerAttribute(std::string sessionid, std::string name, std::string value )
+DataObject::addServerAttribute(const std::string& sessionid, const std::string& name, const std::string& value )
 {
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
@@ -63,7 +63,7 @@ DataObject::addServerAttribute(std::string sessionid, std::string name, std::str
 }
 
 void
-DataObject::removeServerAttribute(std::string sessionid, std::string name )
+DataObject::removeServerAttribute(const std::string& sessionid, const std::string& name )
 {
 	/**
 	 * 	Some attributes are protected and must not be removed ... as they are
@@ -83,7 +83,7 @@ DataObject::removeServerAttribute(std::string sessionid, std::string name )
 }
 
 std::string
-DataObject::getServerAttribute(std::string sessionid, std::string key )
+DataObject::getServerAttribute( const std::string& sessionid, const std::string& key )
 {
 	if ( m_serverData.find(sessionid) != m_serverData.end() )
 	{
@@ -96,7 +96,7 @@ DataObject::getServerAttribute(std::string sessionid, std::string key )
 }
 
 bool
-DataObject::addClientAttribute(std::string sessionid, std::string name, std::string value )
+DataObject::addClientAttribute( const std::string& sessionid, const std::string& name, const std::string& value )
 {
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
@@ -110,7 +110,7 @@ DataObject::addClientAttribute(std::string sessionid, std::string name, std::str
 }
 
 void
-DataObject::removeClientAttribute(std::string sessionid, std::string name )
+DataObject::removeClientAttribute( const std::string& sessionid, const std::string& name )
 {
 	/**
 	 * 	Some attributes are protected and must not be removed ... as they are
@@ -130,7 +130,7 @@ DataObject::removeClientAttribute(std::string sessionid, std::string name )
 }
 
 std::string
-DataObject::getClientAttribute(std::string sessionid, std::string key )
+DataObject::getClientAttribute( const std::string& sessionid, const std::string& key )
 {
 	if ( m_clientData.find(sessionid) != m_clientData.end() )
 	{
@@ -143,7 +143,7 @@ DataObject::getClientAttribute(std::string sessionid, std::string key )
 }
 
 bool
-DataObject::addClientFilter(std::string sessionid,std::string name, std::string value )
+DataObject::addClientFilter( const std::string& sessionid, const std::string& name, const std::string& value )
 {
 	/**
 	 * Can not have empty values for required keys, value *can* be an empty string
@@ -166,7 +166,7 @@ DataObject::addClientFilter(std::string sessionid,std::string name, std::string 
 }
 
 std::map< std::string, std::string >
-DataObject::getClientFilter(std::string sessionid )
+DataObject::getClientFilter( const std::string& sessionid )
 {
 	std::map<std::string,std::string> empty;
 	empty.clear();
@@ -180,7 +180,7 @@ DataObject::getClientFilter(std::string sessionid )
 }
 
 std::string
-DataObject::getClientFilter( std::string sessionid, std::string key )
+DataObject::getClientFilter( const std::string& sessionid, const std::string& key )
 {
 
 
@@ -195,7 +195,7 @@ DataObject::getClientFilter( std::string sessionid, std::string key )
 }
 
 void
-DataObject::removeClientFilter(std::string sessionid,std::string name )
+DataObject::removeClientFilter( const std::string& sessionid, const std::string& name )
 {
 	if ( m_clientFilterData.find(sessionid) != m_clientFilterData.end() )
 	{
@@ -204,7 +204,7 @@ DataObject::removeClientFilter(std::string sessionid,std::string name )
 }
 
 bool
-DataObject::addServerSession(std::string sessionid)
+DataObject::addServerSession( const std::string& sessionid )
 {
 
 	bool ret = false;
@@ -236,7 +236,7 @@ DataObject::addServerSession(std::string sessionid)
 }
 
 void
-DataObject::removeServerSession(std::string sessionid)
+DataObject::removeServerSession( const std::string& sessionid )
 {
 	m_serverDataList.remove(sessionid);
 	if(  m_serverData.erase(sessionid) == 1 )
@@ -246,13 +246,13 @@ DataObject::removeServerSession(std::string sessionid)
 }
 
 bool
-DataObject::serverSessionExists(std::string sessionid)
+DataObject::serverSessionExists( const std::string& sessionid )
 {
 	return keyExists<std::string>( m_serverData, sessionid );
 }
 
 std::map<std::string,std::string>
-DataObject::getServerSession( std::string sessionid )
+DataObject::getServerSession( const std::string& sessionid )
 {
 	if ( keyExists<std::string>(m_serverData, sessionid ))
 		return m_serverData[sessionid];
@@ -262,7 +262,7 @@ DataObject::getServerSession( std::string sessionid )
 	return empty;
 }
 
-bool DataObject::addClientSession(std::string sessionid)
+bool DataObject::addClientSession( const std::string& sessionid )
 {
 	bool ret = false;
 	/*
@@ -285,7 +285,7 @@ bool DataObject::addClientSession(std::string sessionid)
 
 
 void
-DataObject::removeClientSession(std::string sessionid)
+DataObject::removeClientSession( const std::string& sessionid )
 {
 	m_clientFilterData.erase(sessionid);
 	if(  m_clientData.erase(sessionid) == 1 )
@@ -295,7 +295,7 @@ DataObject::removeClientSession(std::string sessionid)
 }
 
 bool
-DataObject::clientSessionExists(std::string sessionid)
+DataObject::clientSessionExists( const std::string& sessionid )
 {
 	return keyExists<std::string>( m_clientData, sessionid );
 }
@@ -404,7 +404,7 @@ DataObject::expireServerSessions( unsigned int expiry )
 }
 
 std::map<std::string,std::string>
-DataObject::getClientSession( std::string sessionid )
+DataObject::getClientSession( const std::string& sessionid )
 {
 	if ( keyExists<std::string>( m_clientData, sessionid ) )
 		return m_clientData[sessionid];

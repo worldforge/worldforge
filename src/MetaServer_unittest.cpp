@@ -97,7 +97,7 @@ MetaServerPacket::addPacketData(const std::string& s)
 	return 1;
 }
 
-std::string
+const std::string
 MetaServerPacket::getPacketMessage(unsigned int offset) const
 {
 	return "";
