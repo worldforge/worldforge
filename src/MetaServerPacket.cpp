@@ -255,8 +255,15 @@ std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp)
 	 *
 	 *		NOTE: size refers to the number of bytes received ( m_Bytes )
 	 */
+     unsigned long long s = mp.getSequence();
+	 os.write( (char *)&s, sizeof(unsigned long long) );
 
-	os << mp.getSequence() << mp.getSize();
+	 unsigned long long o = mp.getTimeOffset();
+	 os.write( (char *)&o, sizeof(unsigned long long) );
+
+	 std::size_t t = mp.getSize();
+	 os.write( (char *)&t, sizeof(std::size_t) );
+
 
 	/*
 	 * TODO: think about this.  We can populate the FULL buffer, even though only
@@ -269,6 +276,38 @@ std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp)
 	os.write( (char *)mp.getBuffer().c_array(), sizeof(char)*MAX_PACKET_BYTES );
 	return os;
 }
+
+std::istream & operator>>( std::istream& is, MetaServerPacket &mp )
+{
+	/*
+	 * Read sequence
+	 */
+	unsigned long long seq;
+	unsigned long long off;
+	std::size_t size;
+	boost::array<char,MAX_PACKET_BYTES> buf;
+
+	is.read( (char *)&seq, sizeof(unsigned long long) );
+//	is.seekg( is.tellg() + (long long)(sizeof(unsigned long long)) );
+
+	is.read( (char *)&off, sizeof(unsigned long long) );
+//	is.seekg( is.tellg() + (long long)(sizeof(unsigned long long)) );
+
+	is.read( (char *)&size, sizeof(std::size_t) );
+//	is.seekg( is.tellg() + (long long)(sizeof(std::size_t)) );
+
+	is.read( (char *)buf.c_array(), sizeof(char)*MAX_PACKET_BYTES );
+//	is.seekg( is.tellg() +  (long long)sizeof(char)*MAX_PACKET_BYTES );
+
+
+	mp.setBuffer(buf,size);
+	mp.setSequence(seq);
+	mp.setTimeOffset(off);
+
+	return is;
+
+}
+
 
 /**
  * Pulls out the first byte of a packet, which universally indicates the packet type.

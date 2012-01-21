@@ -72,7 +72,6 @@ private:
 	bool m_Append;
 	std::ifstream m_Read;
 	std::list<MetaServerPacket> m_Plist;
-	std::string m_File;
 
 };
 

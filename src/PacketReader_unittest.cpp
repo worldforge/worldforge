@@ -117,7 +117,25 @@ class PacketReader_unittest : public CppUnit::TestCase
     	mp2->setTimeOffset(2);
 
     	/*
-    	 * Valid some expected preconditions
+    	 * NOTE NOTE: this will 100% cause a failure ... this is broken =)
+    	 * ./metaserver-ng --server.daemon=false --logging.packet_logging=true --logging.packet_logfile=/tmp/footest.bin
+    	 * then on separate terminal:
+    	 * ./testserver
+    	 *
+    	 * Just CTRL-C the metaserver when done.  This produces the packet file for the
+    	 * parseBinaryFile test here ( this is just stuck here for now ).
+    	 *
+    	 * Once I can get a round trip on packets, we can remove this test, or make it
+    	 * differently
+    	 *
+    	 * I'm not sure whether it's a read / write issue.
+    	 */
+    	unsigned int r = p->parseBinaryFile("/tmp/footest.bin");
+//    	unsigned int r = 10;
+    	std::cout << std::endl << "Packets Parsed: " << r << std::endl;
+
+    	/*
+    	 * Validate some expected preconditions
     	 */
     	CPPUNIT_ASSERT( p->hasPacket() == false );
     	CPPUNIT_ASSERT( p->packetCount() == 0 );

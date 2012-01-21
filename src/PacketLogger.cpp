@@ -60,7 +60,7 @@ PacketLogger::flush(unsigned int exp)
 		while( ! m_Plist.empty() )
 		{
 			m_Write << m_Plist.front() << std::endl;
-			//std::cout << "DEBUG-sequence: " << m_Plist.front().getSequence() << std::endl;
+			std::cout << "DEBUG-sequence: " << m_Plist.front().getSequence() << std::endl;
 			m_Plist.pop_front();
 		}
 	}

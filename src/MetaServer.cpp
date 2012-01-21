@@ -257,10 +257,6 @@ MetaServer::processMetaserverPacket(MetaServerPacket& msp, MetaServerPacket& rsp
 		processCLIENTFILTER(msp,rsp);
 		break;
 	default:
-		/*
-		 * NOTE: Unknown packets generate no response ( NMT_NULL ), and are not sent.
-		 *       This way we nullify the effect on the sequence
-		 */
 		--m_PacketSequence;
 		m_Logger.debug("Packet Type [%u] not supported.", msp.getPacketType());
 		break;
@@ -778,7 +774,6 @@ MetaServer::getDeltaMillis()
 {
     boost::posix_time::ptime ntime = msdo.getNow();
     boost::posix_time::time_duration dur = ntime - m_startTime;
-    m_Logger.infoStream() << dur.total_milliseconds();
     return dur.total_milliseconds();
 }
 

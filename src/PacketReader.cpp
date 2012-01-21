@@ -25,7 +25,36 @@
 unsigned int
 PacketReader::parseBinaryFile( const std::string& file )
 {
+	/*
+	 * If we're not appending, we want to clobber the main list
+	 */
+	if ( ! m_Append )
+		m_Plist.clear();
 
+	/*
+	 * TODO: try/catch ... catch returns 0.
+	 */
+	m_Read.open(file.c_str(), std::ios::in | std::ios::binary );
+
+	/*
+	 * Process
+	 */
+	MetaServerPacket pp;
+	while ( ! m_Read.eof() )
+	{
+		std::cout << "." << std::endl;
+		m_Read >> pp;
+		std::cout << std::endl << "-------------" << std::endl;
+		std::cout << "PP-seq:" << pp.getSequence() << std::endl;
+		std::cout << "PP-size:" << pp.getSize() << std::endl;
+		std::cout << "PP-tim:" << pp.getTimeOffset() << std::endl;
+		std::cout << "-------------" << std::endl;
+		m_Plist.push_back(pp);
+
+	}
+	m_Read.close();
+
+	return m_Plist.size();
 }
 
 MetaServerPacket&

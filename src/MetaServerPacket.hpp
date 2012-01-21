@@ -65,7 +65,7 @@ public:
 	unsigned int getPort() const { return m_Port; }
 	void setPort(unsigned int p) { m_Port = p; }
 
-	unsigned int getSize() const { return m_Bytes; }
+	std::size_t getSize() const { return m_Bytes; }
 
 	unsigned int addPacketData(boost::uint32_t i);
 	unsigned int addPacketData(const std::string& s);
@@ -84,11 +84,17 @@ public:
 	std::string IpNetToAscii(boost::uint32_t address);
 
 	boost::array<char,MAX_PACKET_BYTES>& getBuffer() const { return m_packetPayload; }
+	void setBuffer( boost::array<char,MAX_PACKET_BYTES>& pl, std::size_t bytes = 0 )
+	{
+		m_packetPayload = pl;
+		m_Bytes = bytes;
+	}
 
 	/*
-	 * Stream Overload
+	 * Stream Overloads
 	 */
-	friend std::ostream & operator<<( std::ostream &os, const MetaServerPacket &mp);
+	friend std::ostream & operator<<( std::ostream& os, const MetaServerPacket &mp);
+	friend std::istream & operator>>( std::istream& is, MetaServerPacket &mp );
 
 private:
 
