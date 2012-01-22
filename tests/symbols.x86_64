@@ -1,0 +1,263 @@
+__bss_start
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::Compare
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::Concat
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::Equal
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::Greater
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::GreaterEq
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::Item
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::Less
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::LessEq
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::NotEq
+construction vtable for varconf::dynvar::Base-in-varconf::dynvar::Ternary
+construction vtable for varconf::dynvar::Compare-in-varconf::dynvar::Equal
+construction vtable for varconf::dynvar::Compare-in-varconf::dynvar::Greater
+construction vtable for varconf::dynvar::Compare-in-varconf::dynvar::GreaterEq
+construction vtable for varconf::dynvar::Compare-in-varconf::dynvar::Less
+construction vtable for varconf::dynvar::Compare-in-varconf::dynvar::LessEq
+construction vtable for varconf::dynvar::Compare-in-varconf::dynvar::NotEq
+construction vtable for varconf::VarBase-in-varconf::dynvar::Base
+construction vtable for varconf::VarBase-in-varconf::dynvar::Compare
+construction vtable for varconf::VarBase-in-varconf::dynvar::Concat
+construction vtable for varconf::VarBase-in-varconf::dynvar::Equal
+construction vtable for varconf::VarBase-in-varconf::dynvar::Greater
+construction vtable for varconf::VarBase-in-varconf::dynvar::GreaterEq
+construction vtable for varconf::VarBase-in-varconf::dynvar::Item
+construction vtable for varconf::VarBase-in-varconf::dynvar::Less
+construction vtable for varconf::VarBase-in-varconf::dynvar::LessEq
+construction vtable for varconf::VarBase-in-varconf::dynvar::NotEq
+construction vtable for varconf::VarBase-in-varconf::dynvar::Ternary
+construction vtable for varconf::VarBase-in-varconf::VarArray
+_edata
+_end
+_fini
+_init
+sigc::internal::signal_emit1<void, char const*, sigc::nil>::emit(sigc::internal::signal_impl*, char const* const&)
+sigc::internal::signal_exec::~signal_exec()
+sigc::internal::temp_slot_list::~temp_slot_list()
+std::_Rb_tree<char, std::pair<char const, std::pair<std::string, bool> >, std::_Select1st<std::pair<char const, std::pair<std::string, bool> > >, std::less<char>, std::allocator<std::pair<char const, std::pair<std::string, bool> > > >::_M_copy(std::_Rb_tree_node<std::pair<char const, std::pair<std::string, bool> > > const*, std::_Rb_tree_node<std::pair<char const, std::pair<std::string, bool> > >*)
+std::_Rb_tree<char, std::pair<char const, std::pair<std::string, bool> >, std::_Select1st<std::pair<char const, std::pair<std::string, bool> > >, std::less<char>, std::allocator<std::pair<char const, std::pair<std::string, bool> > > >::_M_erase(std::_Rb_tree_node<std::pair<char const, std::pair<std::string, bool> > >*)
+std::_Rb_tree<char, std::pair<char const, std::pair<std::string, bool> >, std::_Select1st<std::pair<char const, std::pair<std::string, bool> > >, std::less<char>, std::allocator<std::pair<char const, std::pair<std::string, bool> > > >::_M_insert_(std::_Rb_tree_node_base const*, std::_Rb_tree_node_base const*, std::pair<char const, std::pair<std::string, bool> > const&)
+std::_Rb_tree<char, std::pair<char const, std::pair<std::string, bool> >, std::_Select1st<std::pair<char const, std::pair<std::string, bool> > >, std::less<char>, std::allocator<std::pair<char const, std::pair<std::string, bool> > > >::_M_insert_unique(std::pair<char const, std::pair<std::string, bool> > const&)
+std::_Rb_tree<char, std::pair<char const, std::pair<std::string, bool> >, std::_Select1st<std::pair<char const, std::pair<std::string, bool> > >, std::less<char>, std::allocator<std::pair<char const, std::pair<std::string, bool> > > >::_M_insert_unique_(std::_Rb_tree_const_iterator<std::pair<char const, std::pair<std::string, bool> > >, std::pair<char const, std::pair<std::string, bool> > const&)
+std::_Rb_tree<char, std::pair<char const, std::pair<std::string, bool> >, std::_Select1st<std::pair<char const, std::pair<std::string, bool> > >, std::less<char>, std::allocator<std::pair<char const, std::pair<std::string, bool> > > >::operator=(std::_Rb_tree<char, std::pair<char const, std::pair<std::string, bool> >, std::_Select1st<std::pair<char const, std::pair<std::string, bool> > >, std::less<char>, std::allocator<std::pair<char const, std::pair<std::string, bool> > > > const&)
+std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > >::equal_range(std::string const&)
+std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > >::_M_copy(std::_Rb_tree_node<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > const*, std::_Rb_tree_node<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >*)
+std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > >::_M_erase_aux(std::_Rb_tree_const_iterator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::_Rb_tree_const_iterator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >)
+std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > >::_M_erase(std::_Rb_tree_node<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >*)
+std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > >::_M_insert_(std::_Rb_tree_node_base const*, std::_Rb_tree_node_base const*, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > const&)
+std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > >::_M_insert_unique(std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > const&)
+std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > >::_M_insert_unique_(std::_Rb_tree_const_iterator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > const&)
+std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > >::operator=(std::_Rb_tree<std::string, std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > >, std::_Select1st<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > >, std::less<std::string>, std::allocator<std::pair<std::string const, std::map<std::string, varconf::Variable, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > > > > > const&)
+std::_Rb_tree<std::string, std::pair<std::string const, varconf::Variable>, std::_Select1st<std::pair<std::string const, varconf::Variable> >, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > >::equal_range(std::string const&)
+std::_Rb_tree<std::string, std::pair<std::string const, varconf::Variable>, std::_Select1st<std::pair<std::string const, varconf::Variable> >, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > >::_M_copy(std::_Rb_tree_node<std::pair<std::string const, varconf::Variable> > const*, std::_Rb_tree_node<std::pair<std::string const, varconf::Variable> >*)
+std::_Rb_tree<std::string, std::pair<std::string const, varconf::Variable>, std::_Select1st<std::pair<std::string const, varconf::Variable> >, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > >::_M_erase_aux(std::_Rb_tree_const_iterator<std::pair<std::string const, varconf::Variable> >, std::_Rb_tree_const_iterator<std::pair<std::string const, varconf::Variable> >)
+std::_Rb_tree<std::string, std::pair<std::string const, varconf::Variable>, std::_Select1st<std::pair<std::string const, varconf::Variable> >, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > >::_M_erase(std::_Rb_tree_node<std::pair<std::string const, varconf::Variable> >*)
+std::_Rb_tree<std::string, std::pair<std::string const, varconf::Variable>, std::_Select1st<std::pair<std::string const, varconf::Variable> >, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > >::_M_insert_(std::_Rb_tree_node_base const*, std::_Rb_tree_node_base const*, std::pair<std::string const, varconf::Variable> const&)
+std::_Rb_tree<std::string, std::pair<std::string const, varconf::Variable>, std::_Select1st<std::pair<std::string const, varconf::Variable> >, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > >::_M_insert_unique(std::pair<std::string const, varconf::Variable> const&)
+std::_Rb_tree<std::string, std::pair<std::string const, varconf::Variable>, std::_Select1st<std::pair<std::string const, varconf::Variable> >, std::less<std::string>, std::allocator<std::pair<std::string const, varconf::Variable> > >::_M_insert_unique_(std::_Rb_tree_const_iterator<std::pair<std::string const, varconf::Variable> >, std::pair<std::string const, varconf::Variable> const&)
+std::vector<varconf::Variable, std::allocator<varconf::Variable> >::_M_fill_insert(__gnu_cxx::__normal_iterator<varconf::Variable*, std::vector<varconf::Variable, std::allocator<varconf::Variable> > >, unsigned long, varconf::Variable const&)
+typeinfo for sigc::trackable
+typeinfo for std::_Vector_base<varconf::Variable, std::allocator<varconf::Variable> >
+typeinfo for std::vector<varconf::Variable, std::allocator<varconf::Variable> >
+typeinfo for varconf::Config
+typeinfo for varconf::dynvar::Base
+typeinfo for varconf::dynvar::Compare
+typeinfo for varconf::dynvar::Concat
+typeinfo for varconf::dynvar::Equal
+typeinfo for varconf::dynvar::Greater
+typeinfo for varconf::dynvar::GreaterEq
+typeinfo for varconf::dynvar::Item
+typeinfo for varconf::dynvar::Less
+typeinfo for varconf::dynvar::LessEq
+typeinfo for varconf::dynvar::NotEq
+typeinfo for varconf::dynvar::Ternary
+typeinfo for varconf::ParseError
+typeinfo for varconf::VarArray
+typeinfo for varconf::VarBase
+typeinfo for varconf::Variable
+typeinfo for varconf::VarPtr
+typeinfo name for sigc::trackable
+typeinfo name for std::_Vector_base<varconf::Variable, std::allocator<varconf::Variable> >
+typeinfo name for std::vector<varconf::Variable, std::allocator<varconf::Variable> >
+typeinfo name for varconf::Config
+typeinfo name for varconf::dynvar::Base
+typeinfo name for varconf::dynvar::Compare
+typeinfo name for varconf::dynvar::Concat
+typeinfo name for varconf::dynvar::Equal
+typeinfo name for varconf::dynvar::Greater
+typeinfo name for varconf::dynvar::GreaterEq
+typeinfo name for varconf::dynvar::Item
+typeinfo name for varconf::dynvar::Less
+typeinfo name for varconf::dynvar::LessEq
+typeinfo name for varconf::dynvar::NotEq
+typeinfo name for varconf::dynvar::Ternary
+typeinfo name for varconf::ParseError
+typeinfo name for varconf::VarArray
+typeinfo name for varconf::VarBase
+typeinfo name for varconf::Variable
+typeinfo name for varconf::VarPtr
+varconf::Config::clean(std::string&)
+varconf::Config::~Config()
+varconf::Config::Config(varconf::Config const&)
+varconf::Config::erase(std::string const&, std::string const&)
+varconf::Config::findItem(std::string const&, std::string const&) const
+varconf::Config::findSection(std::string const&) const
+varconf::Config::find(std::string const&, std::string const&) const
+varconf::Config::getCmdline(int, char**, varconf::Scope)
+varconf::Config::getEnv(std::string const&, varconf::Scope)
+varconf::Config::getItem(std::string const&, std::string const&) const
+varconf::Config::getSections() const
+varconf::Config::getSection(std::string const&)
+varconf::Config::inst()
+varconf::Config::m_instance
+varconf::Config::parseStream(std::istream&, varconf::Scope)
+varconf::Config::readFromFile(std::string const&, varconf::Scope)
+varconf::Config::setItem(std::string const&, std::string const&, varconf::Variable const&, varconf::Scope)
+varconf::Config::setParameterLookup(char, std::string const&, bool)
+varconf::Config::writeToFile(std::string const&, varconf::Scope) const
+varconf::Config::writeToStream(std::ostream&, varconf::Scope) const
+varconf::dynvar::Base::~Base()
+varconf::dynvar::Base::call_set_val()
+varconf::dynvar::Base::is_bool()
+varconf::dynvar::Base::is_double()
+varconf::dynvar::Base::is_int()
+varconf::dynvar::Base::is_string()
+varconf::dynvar::Base::operator bool()
+varconf::dynvar::Base::operator double()
+varconf::dynvar::Base::operator int()
+varconf::dynvar::Base::operator std::string()
+varconf::dynvar::Base::operator=(varconf::dynvar::Base const&)
+varconf::dynvar::Compare::~Compare()
+varconf::dynvar::Compare::operator=(varconf::dynvar::Compare const&)
+varconf::dynvar::Compare::set_val()
+varconf::dynvar::Concat::~Concat()
+varconf::dynvar::Concat::operator=(varconf::dynvar::Concat const&)
+varconf::dynvar::Concat::set_val()
+varconf::dynvar::Equal::bool_cmp(bool, bool)
+varconf::dynvar::Equal::double_cmp(double, double)
+varconf::dynvar::Equal::~Equal()
+varconf::dynvar::Equal::int_cmp(int, int)
+varconf::dynvar::Equal::string_cmp(std::string const&, std::string const&)
+varconf::dynvar::Greater::bool_cmp(bool, bool)
+varconf::dynvar::Greater::double_cmp(double, double)
+varconf::dynvar::GreaterEq::bool_cmp(bool, bool)
+varconf::dynvar::GreaterEq::double_cmp(double, double)
+varconf::dynvar::GreaterEq::~GreaterEq()
+varconf::dynvar::GreaterEq::int_cmp(int, int)
+varconf::dynvar::GreaterEq::string_cmp(std::string const&, std::string const&)
+varconf::dynvar::Greater::~Greater()
+varconf::dynvar::Greater::int_cmp(int, int)
+varconf::dynvar::Greater::string_cmp(std::string const&, std::string const&)
+varconf::dynvar::Item::assign(varconf::Variable const&, varconf::Scope)
+varconf::dynvar::Item::~Item()
+varconf::dynvar::Item::operator=(varconf::dynvar::Item const&)
+varconf::dynvar::Item::set_val()
+varconf::dynvar::Less::bool_cmp(bool, bool)
+varconf::dynvar::Less::double_cmp(double, double)
+varconf::dynvar::LessEq::bool_cmp(bool, bool)
+varconf::dynvar::LessEq::double_cmp(double, double)
+varconf::dynvar::LessEq::int_cmp(int, int)
+varconf::dynvar::LessEq::~LessEq()
+varconf::dynvar::LessEq::string_cmp(std::string const&, std::string const&)
+varconf::dynvar::Less::int_cmp(int, int)
+varconf::dynvar::Less::~Less()
+varconf::dynvar::Less::string_cmp(std::string const&, std::string const&)
+varconf::dynvar::NotEq::bool_cmp(bool, bool)
+varconf::dynvar::NotEq::double_cmp(double, double)
+varconf::dynvar::NotEq::int_cmp(int, int)
+varconf::dynvar::NotEq::~NotEq()
+varconf::dynvar::NotEq::string_cmp(std::string const&, std::string const&)
+varconf::dynvar::operator<<(std::ostream&, varconf::dynvar::Base&)
+varconf::dynvar::operator==(varconf::dynvar::Base&, varconf::dynvar::Base&)
+varconf::dynvar::operator==(varconf::dynvar::Base&, varconf::VarBase const&)
+varconf::dynvar::operator==(varconf::VarBase const&, varconf::dynvar::Base&)
+varconf::dynvar::Ternary::operator=(varconf::dynvar::Ternary const&)
+varconf::dynvar::Ternary::set_val()
+varconf::dynvar::Ternary::~Ternary()
+varconf::operator>>(std::istream&, varconf::Config&)
+varconf::operator<<(std::ostream&, varconf::Config&)
+varconf::operator<<(std::ostream&, varconf::ParseError const&)
+varconf::operator<<(std::ostream&, varconf::VarArray const&)
+varconf::operator<<(std::ostream&, varconf::VarBase const&)
+varconf::operator==(varconf::Config const&, varconf::Config const&)
+varconf::operator==(varconf::VarArray const&, varconf::VarArray const&)
+varconf::operator==(varconf::VarBase const&, varconf::VarBase const&)
+varconf::ParseError::operator std::string()
+varconf::ParseError::~ParseError()
+varconf::ParseError::ParseError(std::string const&, int, int)
+varconf::ParseError::ParseError(varconf::ParseError const&)
+varconf::VarArray::is_bool() const
+varconf::VarArray::is_double() const
+varconf::VarArray::is_int() const
+varconf::VarArray::is_string() const
+varconf::VarArray::operator bool() const
+varconf::VarArray::operator double() const
+varconf::VarArray::operator int() const
+varconf::VarArray::operator std::string() const
+varconf::VarArray::~VarArray()
+varconf::VarBase::is_bool() const
+varconf::VarBase::is_double() const
+varconf::VarBase::is_int() const
+varconf::VarBase::is_string() const
+varconf::VarBase::operator=(bool)
+varconf::VarBase::operator bool() const
+varconf::VarBase::operator=(char const*)
+varconf::VarBase::operator=(double)
+varconf::VarBase::operator double() const
+varconf::VarBase::operator=(int)
+varconf::VarBase::operator int() const
+varconf::VarBase::operator=(std::string const&)
+varconf::VarBase::operator std::string() const
+varconf::VarBase::operator=(varconf::VarBase const&)
+varconf::VarBase::~VarBase()
+varconf::VarBase::VarBase()
+varconf::VarBase::VarBase(bool)
+varconf::VarBase::VarBase(char const*)
+varconf::VarBase::VarBase(double)
+varconf::VarBase::VarBase(int)
+varconf::VarBase::VarBase(std::string const&)
+varconf::VarBase::VarBase(varconf::VarBase const&)
+varconf::VarBox::unref()
+varconf::Variable::operator=(bool)
+varconf::Variable::operator=(char const*)
+varconf::Variable::operator=(double)
+varconf::Variable::operator=(int)
+varconf::Variable::operator[](int)
+varconf::Variable::operator=(std::string const&)
+varconf::Variable::operator=(std::vector<varconf::Variable, std::allocator<varconf::Variable> > const&)
+varconf::Variable::operator=(varconf::VarBase*)
+varconf::Variable::operator=(varconf::Variable const&)
+varconf::Variable::~Variable()
+varconf::Variable::Variable(int, varconf::Variable const&)
+varconf::Variable::Variable(std::vector<varconf::Variable, std::allocator<varconf::Variable> > const&)
+varconf::Variable::Variable(varconf::Variable const&)
+vtable for varconf::Config
+vtable for varconf::dynvar::Base
+vtable for varconf::dynvar::Compare
+vtable for varconf::dynvar::Concat
+vtable for varconf::dynvar::Equal
+vtable for varconf::dynvar::Greater
+vtable for varconf::dynvar::GreaterEq
+vtable for varconf::dynvar::Item
+vtable for varconf::dynvar::Less
+vtable for varconf::dynvar::LessEq
+vtable for varconf::dynvar::NotEq
+vtable for varconf::dynvar::Ternary
+vtable for varconf::ParseError
+vtable for varconf::VarArray
+vtable for varconf::VarBase
+vtable for varconf::Variable
+VTT for varconf::Config
+VTT for varconf::dynvar::Base
+VTT for varconf::dynvar::Compare
+VTT for varconf::dynvar::Concat
+VTT for varconf::dynvar::Equal
+VTT for varconf::dynvar::Greater
+VTT for varconf::dynvar::GreaterEq
+VTT for varconf::dynvar::Item
+VTT for varconf::dynvar::Less
+VTT for varconf::dynvar::LessEq
+VTT for varconf::dynvar::NotEq
+VTT for varconf::dynvar::Ternary
+VTT for varconf::VarArray
+VTT for varconf::VarBase
