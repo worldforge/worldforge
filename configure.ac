@@ -34,17 +34,12 @@ dnl Test for C++ Language
 dnl Test for C++ Compiler
 AC_PROG_CXX
 
+debug_flags="-DNDEBUG"
 AC_ARG_ENABLE(debug,
-    [  --enable-debug          enable debug information [default=no]],
-    [
-        if test "$enableval" = "yes"; then
-            CXXFLAGS="$CXXFLAGS -Wall -DDEBUG"
-        else
-            CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
-        fi
-    ],[
-        CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
-    ]
+    [AS_HELP_STRING([--enable-debug],
+                    [enable debug information [default=no]])],
+    [AS_IF([test "x$enable_debug" = xyes],
+           [debug_flags="-DDEBUG"])]
 )
 
 AC_LANG(C++)
@@ -67,6 +62,7 @@ AC_SUBST(VARCONF_REQUIRES)
 AC_SUBST(VARCONF_VERSION_INFO)
 AC_SUBST(VARCONF_LIB_SUFFIX)
 AC_SUBST(MIN_SIGC_VERSION)
+AC_SUBST(AM_CXXFLAGS, "-Wall -Wextra -pedantic $debug_flags")
 
 dnl Generate files                         
 AC_CONFIG_FILES([
