@@ -54,7 +54,7 @@ public:
   // passed Config object.
   Config(const Config & conf);
 
-  virtual ~Config() {if(m_instance == this) m_instance = 0;}
+  virtual ~Config();
 
   friend std::ostream & operator <<(std::ostream & out, Config & conf);
   friend std::istream & operator >>(std::istream & in, Config & conf);

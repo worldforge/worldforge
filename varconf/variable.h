@@ -202,6 +202,7 @@ public:
   VarArray(const int n, const Variable& v = Variable())
         : VarBase(), VarList(n, v) {}
   VarArray(const VarList& v) : VarBase(), VarList(v) {}
+  ~VarArray();
 
   friend std::ostream& operator<<(std::ostream& out, const VarArray& v);
   friend bool operator ==(const VarBase& one, const VarArray& two) {return false;}
