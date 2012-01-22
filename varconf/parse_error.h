@@ -27,12 +27,13 @@
 #ifndef VARCONF_PARSEERROR_H
 #define VARCONF_PARSEERROR_H
 
+#include <varconf/varconf_defs.h>
 #include <iostream>
 #include <string>
 
 namespace varconf {
 
-class ParseError {
+class VARCONF_API ParseError {
 public:
   ParseError() {}
   ParseError(const ParseError& p);
@@ -48,6 +49,8 @@ private:
   std::string m_exp;
   int m_line, m_col;
 };
+
+VARCONF_API std::ostream& operator<<(std::ostream& os, const ParseError& p);
 
 } // namespace varconf
 

@@ -27,6 +27,7 @@
 #ifndef VARCONF_CONFIG_H
 #define VARCONF_CONFIG_H
 
+#include <varconf/varconf_defs.h>
 #include <varconf/parse_error.h>
 #include <varconf/variable.h>
 
@@ -43,7 +44,7 @@ typedef std::map< std::string, Variable > sec_map;
 typedef std::map< std::string, sec_map> conf_map;
 typedef std::map< char, std::pair<std::string, bool> > parameter_map;
 
-class Config : virtual protected sigc::trackable {
+class VARCONF_API Config : virtual protected sigc::trackable {
 public:
   // Allows use as a singleton, if desired.
   static Config* inst();
@@ -130,6 +131,11 @@ private:
   conf_map m_conf;
   parameter_map m_par_lookup;
 };
+
+
+VARCONF_API std::ostream & operator <<(std::ostream & out, Config & conf);
+VARCONF_API std::istream & operator >>(std::istream & in, Config & conf);
+VARCONF_API bool operator ==(const Config & one, const Config & two);
 
 } // namespace varconf
 
