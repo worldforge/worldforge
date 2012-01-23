@@ -353,6 +353,9 @@ Variable& Variable::operator[](const int i)
 }
 
 
+VarArray::~VarArray()
+{ }
+
 std::ostream& operator<<( std::ostream& out, const VarArray& v)
 {
   out << "(";

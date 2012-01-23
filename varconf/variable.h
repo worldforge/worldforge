@@ -27,6 +27,8 @@
 #ifndef VARCONF_VARIABLE_H
 #define VARCONF_VARIABLE_H
 
+#include "varconf/varconf_defs.h"
+
 #include <sigc++/trackable.h>
 
 #include <string>
@@ -40,7 +42,7 @@ typedef enum { GLOBAL           = 0x1 << 0,
                INSTANCE         = 0x1 << 2
 } Scope;
 
-class VarBase : virtual public sigc::trackable {
+class VARCONF_API VarBase : virtual public sigc::trackable {
 public:
   VarBase();
   VarBase(const VarBase& c);
@@ -92,6 +94,9 @@ protected:
   Scope m_scope;
 };
 
+VARCONF_API std::ostream& operator<<(std::ostream& out, const VarBase& v);
+VARCONF_API bool operator ==(const VarBase& one, const VarBase& two);
+
 // The next two classes manage a reference count to
 // a pointer to class VarBase.
 
@@ -114,7 +119,7 @@ class VarBox
   unsigned long m_ref;
 };
 
-class VarPtr
+class VARCONF_API VarPtr
 {
  public:
   VarPtr(VarBase *vb) : m_box(new VarBox(vb)) {}
@@ -142,7 +147,7 @@ class VarPtr
 class Variable;
 typedef std::vector<Variable> VarList;
 
-class Variable : public VarPtr {
+class VARCONF_API Variable : public VarPtr {
 public:
   Variable()                      : VarPtr(new VarBase())  {}
   Variable(const Variable& c);
@@ -195,13 +200,14 @@ public:
   bool is_array() const         {return array() != 0;}
 };
 
-class VarArray : public VarBase, public VarList {
+class VARCONF_API VarArray : public VarBase, public VarList {
 public:
   VarArray() : VarBase(), VarList() {}
   VarArray(const VarArray& v) : VarBase(), VarList(v) {}
   VarArray(const int n, const Variable& v = Variable())
         : VarBase(), VarList(n, v) {}
   VarArray(const VarList& v) : VarBase(), VarList(v) {}
+  ~VarArray();
 
   friend std::ostream& operator<<(std::ostream& out, const VarArray& v);
   friend bool operator ==(const VarBase& one, const VarArray& two) {return false;}

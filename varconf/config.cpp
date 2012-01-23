@@ -113,6 +113,12 @@ Config::Config(const Config & conf)
   m_par_lookup = conf.m_par_lookup;
 }
 
+Config::~Config()
+{
+  if (m_instance == this)
+    m_instance = NULL;
+}
+
 std::ostream & operator <<(std::ostream & out, Config & conf)
 {
   if (!conf.writeToStream(out, USER)) {

@@ -34,20 +34,25 @@ dnl Test for C++ Language
 dnl Test for C++ Compiler
 AC_PROG_CXX
 
+debug_flags="-DNDEBUG"
 AC_ARG_ENABLE(debug,
-    [  --enable-debug          enable debug information [default=no]],
-    [
-        if test "$enableval" = "yes"; then
-            CXXFLAGS="$CXXFLAGS -Wall -DDEBUG"
-        else
-            CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
-        fi
-    ],[
-        CXXFLAGS="$CXXFLAGS -Wall -DNDEBUG"
-    ]
+    [AS_HELP_STRING([--enable-debug],
+                    [enable debug information [default=no]])],
+    [AS_IF([test "x$enable_debug" = xyes],
+           [debug_flags="-DDEBUG"])]
 )
 
 AC_LANG(C++)
+
+supports_visibility=no
+AC_MSG_CHECKING([whether hidden visibility is supported])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
+  void __attribute__((visibility ("hidden"))) bar (void) {}])],
+  [supports_visibility=yes])
+AC_MSG_RESULT([$supports_visibility])
+AS_IF([test "x$supports_visibility" = xyes],
+      [visibility_flags="-fvisibility=hidden -fvisibility-inlines-hidden"])
+
 
 dnl Test for libsigc++
 PKG_CHECK_MODULES(SIGC, sigc++-2.0 >= $MIN_SIGC_VERSION,
@@ -67,6 +72,8 @@ AC_SUBST(VARCONF_REQUIRES)
 AC_SUBST(VARCONF_VERSION_INFO)
 AC_SUBST(VARCONF_LIB_SUFFIX)
 AC_SUBST(MIN_SIGC_VERSION)
+AC_SUBST(AM_CXXFLAGS,
+         "-Wall $debug_flags -DBUILDING_VARCONF_DSO $visibility_flags")
 
 dnl Generate files                         
 AC_CONFIG_FILES([
