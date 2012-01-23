@@ -24,5 +24,6 @@ symbol-check:
 	echo "symbol check passed" || \
 	echo "*** symbols have changed"
 
+nodist_symbol_check_SOURCES =
 .PHONY: symbol-check
 
