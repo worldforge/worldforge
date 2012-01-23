@@ -51,7 +51,7 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([
   [supports_visibility=yes])
 AC_MSG_RESULT([$supports_visibility])
 AS_IF([test "x$supports_visibility" = xyes],
-      [visibility_flags=-fvisibility=hidden])
+      [visibility_flags="-fvisibility=hidden -fvisibility-inlines-hidden"])
 
 
 dnl Test for libsigc++
@@ -73,7 +73,7 @@ AC_SUBST(VARCONF_VERSION_INFO)
 AC_SUBST(VARCONF_LIB_SUFFIX)
 AC_SUBST(MIN_SIGC_VERSION)
 AC_SUBST(AM_CXXFLAGS,
-         "-Wall -Wextra -pedantic $debug_flags -DBUILDING_VARCONF_DSO $visibility_flags")
+         "-Wall $debug_flags -DBUILDING_VARCONF_DSO $visibility_flags")
 
 dnl Generate files                         
 AC_CONFIG_FILES([
