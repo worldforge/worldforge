@@ -1,4 +1,4 @@
-// vector.cpp (Vector<> implementation)
+// rotbox.cpp (RotBox<> implementation)
 //
 //  The WorldForge Project
 //  Copyright (C) 2011  The WorldForge Project
