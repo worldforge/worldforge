@@ -18,6 +18,7 @@ header_HEADERS = error.h const.h int_to_string.h \
 	segment.h segment_funcs.h \
 	rotbox.h rotbox_funcs.h \
 	polygon.h polygon_funcs.h polygon_intersect.h \
+	line.h line_funcs.h \
 	intersect_decls.h intersect.h \
 	wfmath.h stream.h atlasconv.h zero.h
 
@@ -25,7 +26,8 @@ lib_LTLIBRARIES = libwfmath-0.3.la
 libwfmath_0_3_la_SOURCES = basis.h const.cpp stream.cpp int_to_string.cpp \
 	probability.cpp timestamp.cpp randgen.cpp rotmatrix.cpp vector.cpp \
 	point.cpp quaternion.cpp polygon.cpp intersect.cpp \
-	axisbox.cpp polygon_intersect.cpp ball.cpp rotbox.cpp segment.cpp
+	axisbox.cpp polygon_intersect.cpp ball.cpp rotbox.cpp segment.cpp \
+	line.cpp
 libwfmath_0_3_la_LDFLAGS = -lm -version-info @WFMATH_VERSION_INFO@
 
 check_PROGRAMS = vector_test rotmatrix_test point_test \
