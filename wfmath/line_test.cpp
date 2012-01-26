@@ -93,6 +93,10 @@ int main()
   line2_3 = line2_1;
   assert(line2_3 == line2_1);
 
+  assert(Equal(line2_1.boundingBox(),
+               WFMath::AxisBox<2>(WFMath::Point<2>(0, -4),
+                                  WFMath::Point<2>(4, 0))));
+
   Line<3> line3;
 
   test_line(line3);
