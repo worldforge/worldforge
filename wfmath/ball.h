@@ -97,7 +97,7 @@ class Ball
   // that finds the number of corners with numCorners(), and does something
   // with each corner with getCorner(). No idea how useful that is, but
   // it's not a particularly complicated function to write.
-  Point<dim> getCorner(int i) const {return m_center;}
+  Point<dim> getCorner(int) const {return m_center;}
   Point<dim> getCenter() const {return m_center;}
 
   /// get the center of the ball
@@ -112,11 +112,11 @@ class Ball
   // Movement functions
 
   Ball& shift(const Vector<dim>& v) {m_center += v; return *this;}
-  Ball& moveCornerTo(const Point<dim>& p, int corner) {return *this;}
+  Ball& moveCornerTo(const Point<dim>&, int) {return *this;}
   Ball& moveCenterTo(const Point<dim>& p) {m_center = p; return *this;}
 
-  Ball& rotateCorner(const RotMatrix<dim>& m, int corner) {return *this;}
-  Ball& rotateCenter(const RotMatrix<dim>& m) {return *this;}
+  Ball& rotateCorner(const RotMatrix<dim>&, int) {return *this;}
+  Ball& rotateCenter(const RotMatrix<dim>&) {return *this;}
   Ball& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
   {m_center.rotate(m, p); return *this;}
 
