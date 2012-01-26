@@ -149,24 +149,24 @@ class Point
   // Functions so that Point<> has the generic shape interface
 
   int numCorners() const {return 1;}
-  Point<dim> getCorner(int i) const { return *this;}
+  Point<dim> getCorner(int) const { return *this;}
   Point<dim> getCenter() const {return *this;}
 
   Point shift(const Vector<dim>& v) {return *this += v;}
-  Point moveCornerTo(const Point& p, int corner)
+  Point moveCornerTo(const Point& p, int)
   {return operator=(p);}
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
-  Point& rotateCorner(const RotMatrix<dim>& m, int corner)
+  Point& rotateCorner(const RotMatrix<dim>&, int)
   {return *this;}
-  Point& rotateCenter(const RotMatrix<dim>& m) {return *this;}
+  Point& rotateCenter(const RotMatrix<dim>&) {return *this;}
   Point& rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   // 3D rotation functions
   Point& rotate(const Quaternion& q, const Point& p);
-  Point& rotateCorner(const Quaternion& q, int corner)
+  Point& rotateCorner(const Quaternion&, int)
   { return *this;}
-  Point& rotateCenter(const Quaternion& q) {return *this;}
+  Point& rotateCenter(const Quaternion&) {return *this;}
   Point& rotatePoint(const Quaternion& q, const Point& p);
 
   // The implementations of these lie in axisbox_funcs.h and
