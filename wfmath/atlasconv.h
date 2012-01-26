@@ -38,6 +38,7 @@
 #include <wfmath/polygon.h>
 #include <wfmath/ball.h>
 #include <wfmath/rotbox.h>
+#include <wfmath/line.h>
 
 #include <cmath>
 
@@ -304,6 +305,8 @@ inline void _CornersFromAtlas(ShapeT<dim> & shape,
         continue;
       }
       
+      // FIXME this is hardcoded 2D, despite the function claiming to 
+      // be n-dim
       const Atlas::Message::ListType& point(pointsData[p].asList());
       if ((point.size() < dim) || !point[0].isNum() || !point[1].isNum()) {
         continue;
@@ -348,6 +351,45 @@ inline AtlasOutType Polygon<2>::toAtlas() const
   return map;
 }
 
+template<int dim>
+inline void Line<dim>::fromAtlas(const AtlasInType& a)
+{
+  const _AtlasMessageType& message(a);
+  if (message.isMap()) {
+    const Atlas::Message::MapType& shapeElement(message.asMap());
+    Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
+    if ((it != shapeElement.end()) && it->second.isList()) {
+      _CornersFromAtlas(*this, it->second);
+      if (numCorners() > 1) {
+        return;
+      }
+    }
+  } else if (message.isList()) {
+    _CornersFromAtlas(*this, message);
+    if (numCorners() > 1) {
+      return;
+    }
+  }
+  throw _AtlasBadParse();
+}
+
+template<int dim>
+inline AtlasOutType Line<dim>::toAtlas() const
+{
+  Atlas::Message::ListType points;
+  for (const_iterator I = m_points.begin(); I != m_points.end(); ++I) 
+  {
+    points.push_back(I->toAtlas());
+  }
+  Atlas::Message::MapType map;
+  map.insert(Atlas::Message::MapType::value_type("points", points));
+  return map;
+}
+
+template<int dim>
+inline Line<dim>::Line(const AtlasInType& a) {
+  fromAtlas(a);
+}
 
 template<int dim>
 inline void RotBox<dim>::fromAtlas(const AtlasInType& a)

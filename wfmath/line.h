@@ -52,7 +52,14 @@ class Line
   ///
   Line(const Line<dim>& s) {}
   ///
+  explicit Line(const AtlasInType& a);
+  ///
   ~Line() {}
+
+  /// Create an Atlas object from the line
+  AtlasOutType toAtlas() const;
+  /// Set the line's value to that given by an Atlas object
+  void fromAtlas(const AtlasInType& a);
 
   ///
   Line& operator=(const Line& a);
@@ -80,6 +87,13 @@ class Line
   Point<dim> getCorner(int i) const {return m_points[i];}
   /// shape: return the position of the center of the shape
   Point<dim> getCenter() const {return Barycenter(m_points);}
+
+  // Add before i'th corner, zero is beginning, numCorners() is end
+  bool addCorner(int i, const Point<dim>& p, double epsilon = WFMATH_EPSILON)
+  {m_points.insert(m_points.begin() + i, p); return true;}
+
+  // Remove the i'th corner
+  void removeCorner(int i) {m_points.erase(m_points.begin() + i);}
 
   // Movement functions
 
