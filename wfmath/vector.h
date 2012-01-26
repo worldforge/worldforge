@@ -240,7 +240,7 @@ class Vector {
   // Can't seem to implement these as constants, implementing
   // inline lookup functions instead.
   /// The maximum ratio of the return value of sloppyMag() to the true magnitude
-  static const CoordType sloppyMagMax();
+  static CoordType sloppyMagMax();
   /// The square root of sloppyMagMax()
   /**
    * This is provided for people who want to obtain maximum accuracy from
@@ -248,7 +248,7 @@ class Vector {
    * The result sloppyMag()/sloppyMagMaxSqrt() will be within sloppyMagMaxSqrt()
    * of the true magnitude.
    **/
-  static const CoordType sloppyMagMaxSqrt();
+  static CoordType sloppyMagMaxSqrt();
 
   /// Rotate the vector in the (axis1, axis2) plane by the angle theta
   Vector& rotate(int axis1, int axis2, CoordType theta);

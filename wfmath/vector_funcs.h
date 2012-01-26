@@ -335,37 +335,37 @@ bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 }
 
 template<>
-const CoordType Vector<1>::sloppyMagMax()
+CoordType Vector<1>::sloppyMagMax()
 {
   return (CoordType) 1;
 }
 
 template<>
-const CoordType Vector<2>::sloppyMagMax()
+CoordType Vector<2>::sloppyMagMax()
 {
   return (CoordType) 1.082392200292393968799446410733;
 }
 
 template<>
-const CoordType Vector<3>::sloppyMagMax()
+CoordType Vector<3>::sloppyMagMax()
 {
   return (CoordType) 1.145934719303161490541433900265;
 }
 
 template<>
-const CoordType Vector<1>::sloppyMagMaxSqrt()
+CoordType Vector<1>::sloppyMagMaxSqrt()
 {
   return (CoordType) 1;
 }
 
 template<>
-const CoordType Vector<2>::sloppyMagMaxSqrt()
+CoordType Vector<2>::sloppyMagMaxSqrt()
 {
   return (CoordType) 1.040380795811030899095785063701;
 }
 
 template<>
-const CoordType Vector<3>::sloppyMagMaxSqrt()
+CoordType Vector<3>::sloppyMagMaxSqrt()
 {
   return (CoordType) 1.070483404496847625250328653179;
 }
