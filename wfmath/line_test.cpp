@@ -62,26 +62,36 @@ void test_line(const Line<dim>& p)
 int main()
 {
   Line<2> line2_1;
+  assert(!line2_1.isValid());
   line2_1.addCorner(0, Point<2>(0, 0));
   line2_1.addCorner(0, Point<2>(4, 0));
   line2_1.addCorner(0, Point<2>(4, -4));
   line2_1.addCorner(0, Point<2>(0, -4));
-  line2_1.isValid();
-
+  assert(line2_1.isValid());
 
   test_line(line2_1);
 
   assert(line2_1 == line2_1);
 
   Line<2> line2_2;
+  assert(!line2_2.isValid());
   line2_2.addCorner(0, Point<2>(0, 0));
   line2_2.addCorner(0, Point<2>(4, -4));
   line2_2.addCorner(0, Point<2>(4, 0));
   line2_2.addCorner(0, Point<2>(0, -4));
-  line2_2.isValid();
+  assert(line2_2.isValid());
 
   assert(line2_1 != line2_2);
 
+  line2_2 = line2_1;
+
+  assert(line2_1 == line2_2);
+
+  Line<2> line2_3;
+  assert(!line2_3.isValid());
+  assert(line2_3 != line2_1);
+  line2_3 = line2_1;
+  assert(line2_3 == line2_1);
 
   Line<3> line3;
 
