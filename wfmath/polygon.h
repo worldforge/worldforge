@@ -87,14 +87,14 @@ class Polygon<2>
   // interface, and the epsilon argument is ignored
 
   // Add before i'th corner, zero is beginning, numCorners() is end
-  bool addCorner(int i, const Point<2>& p, double epsilon = WFMATH_EPSILON)
+  bool addCorner(int i, const Point<2>& p, double = WFMATH_EPSILON)
   {m_points.insert(m_points.begin() + i, p); return true;}
 
   // Remove the i'th corner
   void removeCorner(int i) {m_points.erase(m_points.begin() + i);}
 
   // Move the i'th corner to p
-  bool moveCorner(int i, const Point<2>& p, double epsilon = WFMATH_EPSILON)
+  bool moveCorner(int i, const Point<2>& p, double = WFMATH_EPSILON)
   {m_points[i] = p; return true;}
 
   // Remove all points
