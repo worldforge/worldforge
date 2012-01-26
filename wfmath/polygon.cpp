@@ -27,22 +27,22 @@
 
 namespace WFMath {
 
-void _Poly2Reorient::reorient(Polygon<2>& poly, int skip) const
+void _Poly2Reorient::reorient(Polygon<2>& poly, size_t skip) const
 {
-  int end = poly.numCorners();
+  size_t end = poly.numCorners();
 
   switch(m_type) {
     case _WFMATH_POLY2REORIENT_NONE:
       return;
     case _WFMATH_POLY2REORIENT_CLEAR_AXIS2:
-      for(int i = 0; i != end; ++i) {
+      for(size_t i = 0; i != end; ++i) {
         if(i == skip)
           continue;
         (poly[i])[1] = 0;
       }
       return;
     case _WFMATH_POLY2REORIENT_CLEAR_BOTH_AXES:
-      for(int i = 0; i != end; ++i) {
+      for(size_t i = 0; i != end; ++i) {
         if(i == skip)
           continue;
         (poly[i])[0] = 0;
@@ -50,7 +50,7 @@ void _Poly2Reorient::reorient(Polygon<2>& poly, int skip) const
       }
       return;
     case _WFMATH_POLY2REORIENT_MOVE_AXIS2_TO_AXIS1:
-      for(int i = 0; i != end; ++i) {
+      for(size_t i = 0; i != end; ++i) {
         if(i == skip)
            continue;
         (poly[i])[0] = (poly[i])[1];
@@ -58,7 +58,7 @@ void _Poly2Reorient::reorient(Polygon<2>& poly, int skip) const
       }
       return;
     case _WFMATH_POLY2REORIENT_SCALE1_CLEAR2:
-      for(int i = 0; i != end; ++i) {
+      for(size_t i = 0; i != end; ++i) {
         if(i == skip)
           continue;
         (poly[i])[0] *= m_scale;

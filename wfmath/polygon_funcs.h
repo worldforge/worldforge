@@ -56,11 +56,11 @@ inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
   // The same polygon can be expressed in different ways in the interal
   // format, so we have to call getCorner();
 
-  int size = m_poly.numCorners();
+  size_t size = m_poly.numCorners();
   if(size != p.m_poly.numCorners())
     return false;
 
-  for(int i = 0; i < size; ++i)
+  for(size_t i = 0; i < size; ++i)
     if(!Equal(getCorner(i), p.getCorner(i), epsilon))
       return false;
 
@@ -127,7 +127,7 @@ bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, double epsilo
 }
 
 template<int dim>
-_Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
+_Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
 {
   if(poly.numCorners() <= ((skip == 0) ? 1 : 0)) { // No corners left
     m_origin.setValid(false);
@@ -147,7 +147,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, int skip)
   CoordType ratio = std::numeric_limits<CoordType>::max();
   CoordType size = std::numeric_limits<CoordType>::max();
   double epsilon;
-  int i, end = poly.numCorners();
+  size_t i, end = poly.numCorners();
 
   // scale epsilon
   for(i = 0; i < end; ++i) {
@@ -363,7 +363,7 @@ AxisBox<dim> Polygon<dim>::boundingBox() const
   Point<dim> min = m_orient.convert(m_poly[0]), max = min;
   bool valid = min.isValid();
 
-  for(int i = 1; i != m_poly.numCorners(); ++i) {
+  for(size_t i = 1; i != m_poly.numCorners(); ++i) {
     Point<dim> p = m_orient.convert(m_poly[i]);
     valid = valid && p.isValid();
     for(int j = 0; j < dim; ++j) {

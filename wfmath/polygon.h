@@ -35,6 +35,7 @@
 #include <wfmath/intersect_decls.h>
 
 #include <vector>
+#include <limits>
 
 namespace WFMath {
 
@@ -188,7 +189,7 @@ public:
   : m_type(type), m_scale(scale) {}
   ~_Poly2Reorient() {}
 
-  void reorient(Polygon<2>& poly, int skip = -1) const;
+  void reorient(Polygon<2>& poly, size_t skip = std::numeric_limits<size_t>::max()) const;
 
 private:
   _Poly2ReorientType m_type;
@@ -234,7 +235,7 @@ public:
   // Reduce the basis to the minimum necessary to span the points in
   // poly (with the exception of skip). Returns _Poly2Reorient, which needs
   // to be used to reorient the points to match the new basis.
-  _Poly2Reorient reduce(const Polygon<2>& poly, int skip = -1);
+  _Poly2Reorient reduce(const Polygon<2>& poly, size_t skip = std::numeric_limits<size_t>::max());
 
   void shift(const Vector<dim>& v) {if(m_origin.isValid()) m_origin += v;}
   void rotate(const RotMatrix<dim>& m, const Point<dim>& p);
