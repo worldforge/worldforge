@@ -39,7 +39,7 @@ inline bool Line<dim>::isEqualTo(const Line<dim> & l, double epsilon) const
   }
 
   for (size_type i = 0; i < size; ++i) {
-    if (!Equal(m_points[size], l.m_points[size], epsilon)) {
+    if (!Equal(m_points[i], l.m_points[i], epsilon)) {
       return false;
     }
   }
