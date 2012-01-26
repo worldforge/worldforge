@@ -1,5 +1,7 @@
 EXTRA_DIST = atlas_0_6_test.cpp
 
+RECHECK_LOGS =
+
 # have to include both here to get it to build, but we're including
 # distinct headers so we're okay
 AM_CXXFLAGS = -O2 -Wall @ATLAS_0_6_CFLAGS@
