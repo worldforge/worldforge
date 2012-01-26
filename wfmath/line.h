@@ -82,14 +82,14 @@ class Line
   /**
    * For many shape classes, this is a fixed constant
    **/
-  int numCorners() const {return m_points.size();}
+  size_t numCorners() const {return m_points.size();}
   /// shape: return the position of the i'th corner, where 0 <= i < numCorners()
-  Point<dim> getCorner(int i) const {return m_points[i];}
+  Point<dim> getCorner(size_t i) const {return m_points[i];}
   /// shape: return the position of the center of the shape
   Point<dim> getCenter() const {return Barycenter(m_points);}
 
   // Add before i'th corner, zero is beginning, numCorners() is end
-  bool addCorner(int i, const Point<dim>& p, double epsilon = WFMATH_EPSILON)
+  bool addCorner(int i, const Point<dim>& p, double = WFMATH_EPSILON)
   {m_points.insert(m_points.begin() + i, p); return true;}
 
   // Remove the i'th corner
@@ -103,7 +103,7 @@ class Line
   /**
    * The corner in question is getCorner(corner).
    **/
-  Line& moveCornerTo(const Point<dim>& p, int corner)
+  Line& moveCornerTo(const Point<dim>& p, size_t corner)
 	{return shift(p - getCorner(corner));}
   /// shape: move the shape, moving the center to the Point p
   /**
@@ -117,7 +117,7 @@ class Line
   /**
    * The corner in question is getCorner(corner).
    **/
-  Line& rotateCorner(const RotMatrix<dim>& m, int corner)
+  Line& rotateCorner(const RotMatrix<dim>& m, size_t corner)
 	{return rotatePoint(m, getCorner(corner));}
   /// shape: rotate the shape while holding the center fixed
   /**
