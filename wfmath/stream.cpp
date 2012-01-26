@@ -48,7 +48,7 @@ using namespace WFMath;
 #endif
 
 std::string WFMath::_IOWrapper::ToStringImpl(const _IOWrapper::BaseWrite& b,
-					     int precision)
+					     std::streamsize precision)
 {
 #ifdef HAVE_SSTREAM
   std::ostringstream ost;
@@ -69,7 +69,7 @@ std::string WFMath::_IOWrapper::ToStringImpl(const _IOWrapper::BaseWrite& b,
 }
 
 void WFMath::_IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
-					const std::string& s, int precision)
+					const std::string& s, std::streamsize precision)
 {
 #ifdef HAVE_SSTREAM
   std::istringstream ist(s);

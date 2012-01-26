@@ -87,8 +87,8 @@ namespace _IOWrapper {
     const C &m_data;
   };
 
-  std::string ToStringImpl(const BaseWrite& b, int precision);
-  void FromStringImpl(BaseRead& b, const std::string& s, int precision);
+  std::string ToStringImpl(const BaseWrite& b, std::streamsize precision);
+  void FromStringImpl(BaseRead& b, const std::string& s, std::streamsize precision);
 }
 
 /// Output a WFMath type as a string
@@ -96,9 +96,9 @@ namespace _IOWrapper {
  * This uses operator<<() in its backend.
  **/
 template<class C>
-inline std::string ToString(const C& c, unsigned int precision = 6)
+inline std::string ToString(const C& c, std::streamsize precision = 6)
 {
-  return _IOWrapper::ToStringImpl(_IOWrapper::ImplWrite<C>(c), 6);
+  return _IOWrapper::ToStringImpl(_IOWrapper::ImplWrite<C>(c), precision);
 }
 
 /// Parse a WFMath type from a string
@@ -106,7 +106,7 @@ inline std::string ToString(const C& c, unsigned int precision = 6)
  * This uses operator>>() in its backend.
  **/
 template<class C>
-inline void FromString(C& c, const std::string& s, unsigned int precision = 6)
+inline void FromString(C& c, const std::string& s, std::streamsize = 6)
 {
   _IOWrapper::ImplRead<C> i(c);
   _IOWrapper::FromStringImpl(i, s, 6);
@@ -362,7 +362,7 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
   typename std::list<_PolyReader<dim> >::iterator i, end = read_list.end();
   bool succ;
 
-  int str_prec = is.precision();
+  std::streamsize str_prec = is.precision();
   double str_eps = 1;
   while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
     str_eps /= 10;
