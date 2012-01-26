@@ -134,7 +134,7 @@ static void _LinePolyGetBounds(const Polygon<2> &poly, CoordType &low, CoordType
 {
 	low = high = poly[0][0];
 
-        for(int i = 0; i < poly.numCorners(); ++i) {
+        for(size_t i = 0; i < poly.numCorners(); ++i) {
           CoordType val = poly[i][0];
           if(val < low)
             low = val;
@@ -167,7 +167,7 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
   // Stuff for when multiple sequential corners lie on the line
   std::list<LinePointData> line_point_data;
 
-  for(int i = 0; i < poly.numCorners(); ++i) {
+  for(size_t i = 0; i < poly.numCorners(); ++i) {
     Point<2> p_i =  poly.getCorner(i);
     Vector<2> v_i = p_i - p;
 
@@ -177,7 +177,7 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
       Point<2> p_j;
       Vector<2> v_j;
       CoordType proj_j, low_proj = proj, high_proj = proj;
-      int j;
+      size_t j;
       for(j = i + 1; j != i; j == poly.numCorners() - 1 ? j = 0 : ++j) {
         p_j = poly.getCorner(j);
 	v_j = p_j - p;
@@ -467,7 +467,7 @@ bool WFMath::_PolyPolyIntersect(const Polygon<2> &poly1, const Polygon<2> &poly2
       {
         Polygon<2> tmp_poly(poly2);
 
-        for(int i = 0; i < tmp_poly.numCorners(); ++i) {
+        for(size_t i = 0; i < tmp_poly.numCorners(); ++i) {
           Point<2> &p = tmp_poly[i];
           Point<2> shift_p = p + data.off;
 
@@ -522,7 +522,7 @@ bool WFMath::_PolyPolyContains(const Polygon<2> &outer, const Polygon<2> &inner,
       {
         Polygon<2> tmp_poly(inner);
 
-        for(int i = 0; i < tmp_poly.numCorners(); ++i) {
+        for(size_t i = 0; i < tmp_poly.numCorners(); ++i) {
           Point<2> &p = tmp_poly[i];
           Point<2> shift_p = p + data.off;
 

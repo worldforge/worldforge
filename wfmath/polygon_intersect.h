@@ -367,7 +367,7 @@ inline bool Contains(const Point<dim>& p, const Polygon<dim>& r, bool proper)
   if(proper)
     return false;
 
-  for(int i = 1; i < r.m_poly.numCorners(); ++i)
+  for(size_t i = 1; i < r.m_poly.numCorners(); ++i)
     if(r.m_poly[i] != r.m_poly[0])
       return false;
 
@@ -379,7 +379,7 @@ inline bool Contains(const Point<dim>& p, const Polygon<dim>& r, bool proper)
 template<int dim>
 bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper)
 {
-  int corners = p.m_poly.numCorners();
+  size_t corners = p.m_poly.numCorners();
 
   if(corners == 0)
     return false;
@@ -393,7 +393,7 @@ bool Intersect(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper)
   s.endpoint(0) = p.m_orient.convert(p.m_poly.getCorner(corners-1));
   int next_end = 1;
 
-  for(int i = 0; i < corners; ++i) {
+  for(size_t i = 0; i < corners; ++i) {
     s.endpoint(next_end) = p.m_orient.convert(p.m_poly.getCorner(i));
     if(Intersect(b, s, proper))
       return true;
@@ -469,7 +469,7 @@ inline bool Contains(const Polygon<dim>& p, const AxisBox<dim>& b, bool proper)
 template<int dim>
 inline bool Contains(const AxisBox<dim>& b, const Polygon<dim>& p, bool proper)
 {
-  for(int i = 0; i < p.m_poly.numCorners(); ++i)
+  for(size_t i = 0; i < p.m_poly.numCorners(); ++i)
     if(!Contains(b, p.getCorner(i), proper))
       return false;
 
@@ -524,7 +524,7 @@ inline bool Contains(const Ball<dim>& b, const Polygon<dim>& p, bool proper)
   if(_Less(dist, 0, proper))
     return false;
 
-  for(int i = 0; i != p.m_poly.numCorners(); ++i)
+  for(size_t i = 0; i != p.m_poly.numCorners(); ++i)
     if(_Less(dist, SquaredDistance(c2, p.m_poly[i]), proper))
       return false;
 
@@ -598,7 +598,7 @@ inline bool Contains(const Segment<dim>& s, const Polygon<dim>& p, bool proper)
 template<int dim>
 bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
 {
-  int corners = p.m_poly.numCorners();
+  size_t corners = p.m_poly.numCorners();
 
   if(corners == 0)
     return false;
@@ -618,7 +618,7 @@ bool Intersect(const Polygon<dim>& p, const RotBox<dim>& r, bool proper)
   s.endpoint(0) = orient.convert(p.m_poly.getCorner(corners-1));
   int next_end = 1;
 
-  for(int i = 0; i < corners; ++i) {
+  for(size_t i = 0; i < corners; ++i) {
     s.endpoint(next_end) = orient.convert(p.m_poly.getCorner(i));
     if(Intersect(b, s, proper))
       return true;
@@ -648,7 +648,7 @@ inline bool Contains(const RotBox<dim>& r, const Polygon<dim>& p, bool proper)
   _Poly2Orient<dim> orient(p.m_orient);
   orient.rotate(r.m_orient.inverse(), r.m_corner0);
 
-  for(int i = 0; i < p.m_poly.numCorners(); ++i)
+  for(size_t i = 0; i < p.m_poly.numCorners(); ++i)
     if(!Contains(b, orient.convert(p.m_poly[i]), proper))
       return false;
 
