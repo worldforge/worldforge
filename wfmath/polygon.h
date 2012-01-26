@@ -103,7 +103,7 @@ class Polygon<2>
   const Point<2>& operator[](int i) const {return m_points[i];}
   Point<2>& operator[](int i)		  {return m_points[i];}
 
-  void resize(unsigned int size) {m_points.resize(size);}
+  void resize(std::vector<Point<2> >::size_type size) {m_points.resize(size);}
 
   // Movement functions
 
