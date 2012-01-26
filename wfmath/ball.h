@@ -97,7 +97,7 @@ class Ball
   // that finds the number of corners with numCorners(), and does something
   // with each corner with getCorner(). No idea how useful that is, but
   // it's not a particularly complicated function to write.
-  Point<dim> getCorner(int) const {return m_center;}
+  Point<dim> getCorner(size_t) const {return m_center;}
   Point<dim> getCenter() const {return m_center;}
 
   /// get the center of the ball

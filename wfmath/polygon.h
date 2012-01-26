@@ -79,7 +79,7 @@ class Polygon<2>
   // Descriptive characteristics
 
   size_t numCorners() const {return m_points.size();}
-  Point<2> getCorner(int i) const {return m_points[i];}
+  Point<2> getCorner(size_t i) const {return m_points[i];}
   Point<2> getCenter() const {return Barycenter(m_points);}
 
   // For a Polygon<2>, addCorner() and moveCorner() always succeed.
@@ -100,8 +100,8 @@ class Polygon<2>
   // Remove all points
   void clear()	{m_points.clear();}
 
-  const Point<2>& operator[](int i) const {return m_points[i];}
-  Point<2>& operator[](int i)		  {return m_points[i];}
+  const Point<2>& operator[](size_t i) const {return m_points[i];}
+  Point<2>& operator[](size_t i)		  {return m_points[i];}
 
   void resize(std::vector<Point<2> >::size_type size) {m_points.resize(size);}
 
@@ -330,7 +330,7 @@ public:
   // Descriptive characteristics
 
   size_t numCorners() const {return m_poly.numCorners();}
-  Point<dim> getCorner(int i) const {return m_orient.convert(m_poly[i]);}
+  Point<dim> getCorner(size_t i) const {return m_orient.convert(m_poly[i]);}
   Point<dim> getCenter() const {return m_orient.convert(m_poly.getCenter());}
 
   // The failure of the following functions does not invalidate the

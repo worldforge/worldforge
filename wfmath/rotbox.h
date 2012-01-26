@@ -86,7 +86,7 @@ class RotBox
   // Descriptive characteristics
 
   size_t numCorners() const {return 1 << dim;}
-  Point<dim> getCorner(int i) const;
+  Point<dim> getCorner(size_t i) const;
   Point<dim> getCenter() const {return m_corner0 + Prod(m_size / 2, m_orient);}
 
   /// returns the base corner of the box

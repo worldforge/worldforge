@@ -56,7 +56,7 @@ inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
 }
 
 template<int dim>
-inline Point<dim> RotBox<dim>::getCorner(int i) const
+inline Point<dim> RotBox<dim>::getCorner(size_t i) const
 {
   assert(i >= 0 && i < (1 << dim));
 

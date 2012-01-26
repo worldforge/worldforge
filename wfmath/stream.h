@@ -302,7 +302,7 @@ template<> std::istream& operator>>(std::istream& is, Polygon<2>& r);
 template<int dim>
 inline std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
 {
-  int size = r.m_poly.numCorners();
+  size_t size = r.m_poly.numCorners();
 
   if(size == 0) {
     os << "<empty>";
@@ -311,7 +311,7 @@ inline std::ostream& operator<<(std::ostream& os, const Polygon<dim>& r)
 
   os << "Polygon: (";
 
-  for(int i = 0; i < size; ++i)
+  for(size_t i = 0; i < size; ++i)
     os << r.getCorner(i) << (i < (dim - 1) ? ',' : ')');
 
   return os;
