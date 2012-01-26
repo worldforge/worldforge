@@ -34,6 +34,7 @@
 #include <wfmath/segment.h>
 #include <wfmath/rotbox.h>
 #include <wfmath/polygon.h>
+#include <wfmath/line.h>
 #include <wfmath/error.h>
 #include <string>
 #include <iostream>
@@ -441,6 +442,24 @@ std::istream& operator>>(std::istream& is, Polygon<dim>& r)
     r.m_poly[pnum] = i->p2;
 
   return is;
+}
+
+template<int dim>
+inline std::ostream& operator<<(std::ostream& os, const Line<dim>& r)
+{
+  int size = r.numCorners();
+
+  if(size == 0) {
+    os << "<empty>";
+    return os;
+  }
+
+  os << "Line: (";
+
+  for(int i = 0; i < size; ++i)
+    os << r.getCorner(i) << (i < (dim - 1) ? ',' : ')');
+
+  return os;
 }
 
 } // namespace WFMath
