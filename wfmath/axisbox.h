@@ -121,7 +121,7 @@ class AxisBox
 
   AxisBox& shift(const Vector<dim>& v)
   {m_low += v; m_high += v; return *this;}
-  AxisBox& moveCornerTo(const Point<dim>& p, int corner)
+  AxisBox& moveCornerTo(const Point<dim>& p, size_t corner)
   {return shift(p - getCorner(corner));}
   AxisBox& moveCenterTo(const Point<dim>& p)
   {return shift(p - getCenter());}

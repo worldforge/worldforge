@@ -42,8 +42,7 @@ void test_shape_no_rotate(const Shape<dim>& s)
 {
   Shape<dim> s2 = s;
 
-  int corners = s2.numCorners();
-  assert(corners >= 0);
+  size_t corners = s2.numCorners();
 
   Point<dim> p = s2.getCenter();
   Vector<dim> v;
@@ -52,7 +51,7 @@ void test_shape_no_rotate(const Shape<dim>& s)
   v[0] = 1;
   s2.shift(v);
 
-  for(int i = 0; i < corners; ++i) {
+  for(size_t i = 0; i < corners; ++i) {
     s2.moveCornerTo(p, i);
     p = s2.getCorner(i);
   }
@@ -77,14 +76,14 @@ void test_shape(const Shape<dim>& s)
   Shape<dim> s2 = s;
   RotMatrix<dim> m;
   Point<dim> p;
-  int corners = s2.numCorners();
+  size_t corners = s2.numCorners();
 
   if(dim >= 2)
     m.rotation(0, 1, Pi / 6);
   else
     m.identity();
 
-  for(int i = 0; i < corners; ++i) {
+  for(size_t i = 0; i < corners; ++i) {
     s2.rotateCorner(m, i);
     p = s2.getCorner(i);
   }

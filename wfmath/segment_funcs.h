@@ -40,7 +40,7 @@ inline bool Segment<dim>::isEqualTo(const Segment<dim>& s, double epsilon) const
 }
 
 template<int dim>
-inline Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
+inline Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, size_t corner)
 {
   assert(corner == 0 || corner == 1);
 
@@ -59,7 +59,7 @@ inline Segment<dim>& Segment<dim>::moveCornerTo(const Point<dim>& p, int corner)
 }
 
 template<int dim>
-inline Segment<dim>& Segment<dim>::rotateCorner(const RotMatrix<dim>& m, int corner)
+inline Segment<dim>& Segment<dim>::rotateCorner(const RotMatrix<dim>& m, size_t corner)
 {
   assert(corner == 0 || corner == 1);
 
@@ -72,7 +72,7 @@ inline Segment<dim>& Segment<dim>::rotateCorner(const RotMatrix<dim>& m, int cor
 }
 
 template<>
-inline Segment<3>& Segment<3>::rotateCorner(const Quaternion& q, int corner)
+inline Segment<3>& Segment<3>::rotateCorner(const Quaternion& q, size_t corner)
 {
   assert(corner == 0 || corner == 1);
 

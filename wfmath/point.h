@@ -153,18 +153,18 @@ class Point
   Point<dim> getCenter() const {return *this;}
 
   Point shift(const Vector<dim>& v) {return *this += v;}
-  Point moveCornerTo(const Point& p, int)
+  Point moveCornerTo(const Point& p, size_t)
   {return operator=(p);}
   Point moveCenterTo(const Point& p) {return operator=(p);}
 
-  Point& rotateCorner(const RotMatrix<dim>&, int)
+  Point& rotateCorner(const RotMatrix<dim>&, size_t)
   {return *this;}
   Point& rotateCenter(const RotMatrix<dim>&) {return *this;}
   Point& rotatePoint(const RotMatrix<dim>& m, const Point& p) {return rotate(m, p);}
 
   // 3D rotation functions
   Point& rotate(const Quaternion& q, const Point& p);
-  Point& rotateCorner(const Quaternion&, int)
+  Point& rotateCorner(const Quaternion&, size_t)
   { return *this;}
   Point& rotateCenter(const Quaternion&) {return *this;}
   Point& rotatePoint(const Quaternion& q, const Point& p);

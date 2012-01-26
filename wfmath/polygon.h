@@ -109,12 +109,12 @@ class Polygon<2>
   // Movement functions
 
   Polygon& shift(const Vector<2>& v);
-  Polygon& moveCornerTo(const Point<2>& p, int corner)
+  Polygon& moveCornerTo(const Point<2>& p, size_t corner)
   {return shift(p - getCorner(corner));}
   Polygon& moveCenterTo(const Point<2>& p)
   {return shift(p - getCenter());}
 
-  Polygon& rotateCorner(const RotMatrix<2>& m, int corner)
+  Polygon& rotateCorner(const RotMatrix<2>& m, size_t corner)
   {rotatePoint(m, getCorner(corner)); return *this;}
   Polygon& rotateCenter(const RotMatrix<2>& m)
   {rotatePoint(m, getCenter()); return *this;}
@@ -357,12 +357,12 @@ public:
 
   Polygon& shift(const Vector<dim>& v)
   {m_orient.shift(v); return *this;}
-  Polygon& moveCornerTo(const Point<dim>& p, int corner)
+  Polygon& moveCornerTo(const Point<dim>& p, size_t corner)
   {return shift(p - getCorner(corner));}
   Polygon& moveCenterTo(const Point<dim>& p)
   {return shift(p - getCenter());}
 
-  Polygon& rotateCorner(const RotMatrix<dim>& m, int corner)
+  Polygon& rotateCorner(const RotMatrix<dim>& m, size_t corner)
   {m_orient.rotate2(m, m_poly[corner]); return *this;}
   Polygon& rotateCenter(const RotMatrix<dim>& m)
   {if(m_poly.numCorners() > 0)
@@ -372,7 +372,7 @@ public:
   {m_orient.rotate(m, p); return *this;}
 
   // 3D rotation functions
-  Polygon<3>& rotateCorner(const Quaternion& q, int corner)
+  Polygon<3>& rotateCorner(const Quaternion& q, size_t corner)
   {m_orient.rotate2(q, m_poly[corner]); return *this;}
   Polygon<3>& rotateCenter(const Quaternion& q)
   {if(m_poly.numCorners() > 0)

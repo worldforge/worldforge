@@ -42,7 +42,7 @@ template<> RotBox<3>& RotBox<3>::rotatePoint(const Quaternion& q, const Point<3>
   m_orient = m_orient.rotate(q); m_corner0.rotate(q, p); return *this;
 }
 
-template<> RotBox<3>& RotBox<3>::rotateCorner(const Quaternion& q, int corner)
+template<> RotBox<3>& RotBox<3>::rotateCorner(const Quaternion& q, size_t corner)
 {
   rotatePoint(q, getCorner(corner)); return *this;
 }

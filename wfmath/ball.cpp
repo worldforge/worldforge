@@ -38,7 +38,7 @@ using namespace WFMath;
 
 namespace WFMath {
 
-template<> Ball<3>& Ball<3>::rotateCorner(const Quaternion&, int)
+template<> Ball<3>& Ball<3>::rotateCorner(const Quaternion&, size_t)
 {
   return *this;
 }

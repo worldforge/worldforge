@@ -82,18 +82,18 @@ class Segment
 
   Segment& shift(const Vector<dim>& v)
 	{m_p1 += v; m_p2 += v; return *this;}
-  Segment& moveCornerTo(const Point<dim>& p, int corner);
+  Segment& moveCornerTo(const Point<dim>& p, size_t corner);
   Segment& moveCenterTo(const Point<dim>& p)
 	{return shift(p - getCenter());}
 
-  Segment& rotateCorner(const RotMatrix<dim>& m, int corner);
+  Segment& rotateCorner(const RotMatrix<dim>& m, size_t corner);
   Segment& rotateCenter(const RotMatrix<dim>& m)
 	{rotatePoint(m, getCenter()); return *this;}
   Segment<dim>& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
 	{m_p1.rotate(m, p); m_p2.rotate(m, p); return *this;}
 
   // 3D rotation functions
-  Segment& rotateCorner(const Quaternion& q, int corner);
+  Segment& rotateCorner(const Quaternion& q, size_t corner);
   Segment& rotateCenter(const Quaternion& q);
   Segment& rotatePoint(const Quaternion& q, const Point<dim>& p);
 

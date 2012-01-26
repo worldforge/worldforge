@@ -112,16 +112,16 @@ class Ball
   // Movement functions
 
   Ball& shift(const Vector<dim>& v) {m_center += v; return *this;}
-  Ball& moveCornerTo(const Point<dim>&, int) {return *this;}
+  Ball& moveCornerTo(const Point<dim>&, size_t) {return *this;}
   Ball& moveCenterTo(const Point<dim>& p) {m_center = p; return *this;}
 
-  Ball& rotateCorner(const RotMatrix<dim>&, int) {return *this;}
+  Ball& rotateCorner(const RotMatrix<dim>&, size_t) {return *this;}
   Ball& rotateCenter(const RotMatrix<dim>&) {return *this;}
   Ball& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p)
   {m_center.rotate(m, p); return *this;}
 
   // 3D rotation function
-  Ball& rotateCorner(const Quaternion&, int corner);
+  Ball& rotateCorner(const Quaternion&, size_t corner);
   Ball& rotateCenter(const Quaternion&);
   Ball& rotatePoint(const Quaternion& q, const Point<dim>& p);
 

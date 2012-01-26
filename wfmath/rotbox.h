@@ -106,12 +106,12 @@ class RotBox
 
   RotBox& shift(const Vector<dim>& v)
   {m_corner0 += v; return *this;}
-  RotBox& moveCornerTo(const Point<dim>& p, int corner)
+  RotBox& moveCornerTo(const Point<dim>& p, size_t corner)
   {return shift(p - getCorner(corner));}
   RotBox& moveCenterTo(const Point<dim>& p)
   {return shift(p - getCenter());}
 
-  RotBox& rotateCorner(const RotMatrix<dim>& m, int corner)
+  RotBox& rotateCorner(const RotMatrix<dim>& m, size_t corner)
   {rotatePoint(m, getCorner(corner)); return *this;}
   RotBox& rotateCenter(const RotMatrix<dim>& m)
   {rotatePoint(m, getCenter()); return *this;}
@@ -119,7 +119,7 @@ class RotBox
   {m_orient = Prod(m_orient, m); m_corner0.rotate(m, p); return *this;}
 
   // 3D rotation functions
-  RotBox& rotateCorner(const Quaternion& q, int corner);
+  RotBox& rotateCorner(const Quaternion& q, size_t corner);
   RotBox& rotateCenter(const Quaternion& q);
   RotBox& rotatePoint(const Quaternion& q, const Point<dim>& p);
 
