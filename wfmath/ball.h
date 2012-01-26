@@ -92,7 +92,7 @@ class Ball
 
   // Descriptive characteristics
 
-  int numCorners() const {return 0;}
+  size_t numCorners() const {return 0;}
   // This next function exists so that Ball can be used by code
   // that finds the number of corners with numCorners(), and does something
   // with each corner with getCorner(). No idea how useful that is, but

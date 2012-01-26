@@ -148,7 +148,7 @@ class Point
 
   // Functions so that Point<> has the generic shape interface
 
-  int numCorners() const {return 1;}
+  size_t numCorners() const {return 1;}
   Point<dim> getCorner(int) const { return *this;}
   Point<dim> getCenter() const {return *this;}
 

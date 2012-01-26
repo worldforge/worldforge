@@ -69,7 +69,7 @@ class Segment
 
   // Descriptive characteristics
 
-  int numCorners() const {return 2;}
+  size_t numCorners() const {return 2;}
   Point<dim> getCorner(int i) const {return i ? m_p2 : m_p1;}
   Point<dim> getCenter() const {return Midpoint(m_p1, m_p2);}
 

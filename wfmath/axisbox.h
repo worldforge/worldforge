@@ -92,7 +92,7 @@ class AxisBox
 
   // Descriptive characteristics
 
-  int numCorners() const {return 1 << dim;}
+  size_t numCorners() const {return 1 << dim;}
   Point<dim> getCorner(int i) const;
   Point<dim> getCenter() const {return Midpoint(m_low, m_high);}
 

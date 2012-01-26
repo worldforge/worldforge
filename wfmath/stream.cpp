@@ -142,7 +142,7 @@ void _ReadCoordList(std::istream& is, CoordType* d, const int num)
 
 CoordType _GetEpsilon(std::istream& is)
 {
-  int str_prec = is.precision();
+  std::streamsize str_prec = is.precision();
   CoordType str_eps = 1;
   while(--str_prec > 0) // Precision of 6 gives epsilon = 1e-5
     str_eps /= 10;
@@ -157,7 +157,7 @@ CoordType _GetEpsilon(std::istream& is)
 template<>
 std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
 {
-  int size = r.m_points.size();
+  size_t size = r.m_points.size();
 
   if(size == 0) {
     os << "<empty>";
@@ -166,7 +166,7 @@ std::ostream& operator<<(std::ostream& os, const Polygon<2>& r)
 
   os << "Polygon: (";
 
-  for(int i = 0; i < size; ++i) {
+  for(size_t i = 0; i < size; ++i) {
     os << r.m_points[i] << (i < (size - 1) ? ',' : ')');
   }
 
