@@ -40,7 +40,7 @@
 
 #include <cassert>
 
-using namespace WFMath;
+namespace WFMath {
 
 Quaternion::Quaternion (CoordType w_in,
                         CoordType x_in,
@@ -285,4 +285,6 @@ void Quaternion::normalize()
   m_w /= norm;
   m_vec /= norm;
   m_age = 1;
+}
+
 }

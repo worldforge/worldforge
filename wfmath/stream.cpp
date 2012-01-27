@@ -37,8 +37,6 @@
 #define HAVE_SSTREAM
 #endif
 
-using namespace WFMath;
-
 #ifdef HAVE_SSTREAM
 #include <sstream>
 #elif defined(HAVE_STRSTREAM)
@@ -47,7 +45,9 @@ using namespace WFMath;
 #error "Neither sstream or strstream is present, configure should have failed"
 #endif
 
-std::string WFMath::_IOWrapper::ToStringImpl(const _IOWrapper::BaseWrite& b,
+namespace WFMath {
+
+std::string _IOWrapper::ToStringImpl(const _IOWrapper::BaseWrite& b,
 					     std::streamsize precision)
 {
 #ifdef HAVE_SSTREAM
@@ -68,7 +68,7 @@ std::string WFMath::_IOWrapper::ToStringImpl(const _IOWrapper::BaseWrite& b,
 #endif
 }
 
-void WFMath::_IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
+void _IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
 					const std::string& s, std::streamsize precision)
 {
 #ifdef HAVE_SSTREAM
@@ -80,7 +80,7 @@ void WFMath::_IOWrapper::FromStringImpl(_IOWrapper::BaseRead& b,
  ist.precision(precision);
  b.read(ist);
 }
-namespace WFMath {
+
 // force a bunch of instantiations
 
 template std::ostream& operator<< <3>(std::ostream& os, const Vector<3>& r);

@@ -31,7 +31,7 @@
 
 #include <cassert>
 
-using namespace WFMath;
+namespace WFMath {
 
 static double LogPoisson(double mean, unsigned int step);
 static double IncompleteGamma(double a, double z);
@@ -41,7 +41,7 @@ static double IncompleteGammaComplementNoPrefactor(double a, double z);
 // Making this an int makes LogFactorial faster
 static const unsigned int GammaCutoff = 10;
 
-double WFMath::GaussianConditional(double mean, double stddev, double val)
+double GaussianConditional(double mean, double stddev, double val)
 {
   assert(stddev != 0);
 
@@ -64,7 +64,7 @@ double WFMath::GaussianConditional(double mean, double stddev, double val)
 	 * IncompleteGammaComplementNoPrefactor(0.5, diffsqr_over_two));
 }
 
-double WFMath::Gaussian(double mean, double stddev, double val)
+double Gaussian(double mean, double stddev, double val)
 {
   assert(stddev != 0);
 
@@ -73,7 +73,7 @@ double WFMath::Gaussian(double mean, double stddev, double val)
   return exp(-(diff * diff) / 2) / (fabs(stddev) * (SqrtPi * Sqrt2));
 }
 
-double WFMath::PoissonConditional(double mean, unsigned int step)
+double PoissonConditional(double mean, unsigned int step)
 {
   assert(mean >= 0);
 
@@ -89,7 +89,7 @@ double WFMath::PoissonConditional(double mean, unsigned int step)
   return 1.0 / IncompleteGammaNoPrefactor(step, mean);
 }
 
-double WFMath::Poisson(double mean, unsigned int step)
+double Poisson(double mean, unsigned int step)
 {
   assert(mean >= 0);
 
@@ -119,7 +119,7 @@ static double LogPoisson(double mean, unsigned int step)
   return ans;
 }
 
-double WFMath::Factorial(unsigned int n)
+double Factorial(unsigned int n)
 {
   if(n == 0 || n == 1)
     return 1;
@@ -134,7 +134,7 @@ double WFMath::Factorial(unsigned int n)
     return exp(LogGamma(n + 1));
 }
 
-double WFMath::LogFactorial(unsigned int n)
+double LogFactorial(unsigned int n)
 {
   if(n == 0 || n == 1)
     return 0; // ln(0!) = ln(1!) = ln(1) = 0
@@ -149,7 +149,7 @@ double WFMath::LogFactorial(unsigned int n)
     return LogGamma(n + 1);
 }
 
-double WFMath::Gamma(double z)
+double Gamma(double z)
 {
   if(z >= 0.5)
     return exp(LogGamma(z));
@@ -157,7 +157,7 @@ double WFMath::Gamma(double z)
     return Pi * exp(-LogGamma(1 - z)) / sin(Pi * z);
 }
 
-double WFMath::LogGamma(double z)
+double LogGamma(double z)
 {
   /* This will return nan or something when z is a non-positive
    * integer (from trying to take log(0)), but that's what
@@ -321,4 +321,6 @@ static double IncompleteGammaComplementNoPrefactor(double a, double z)
     b_last /= b_next;
     b_next = 1;
   }
+}
+
 }

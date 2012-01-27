@@ -33,8 +33,6 @@
 
 #include <cmath>
 
-using namespace WFMath;
-
 namespace WFMath {
 
 template<> RotBox<3>& RotBox<3>::rotatePoint(const Quaternion& q, const Point<3>& p)

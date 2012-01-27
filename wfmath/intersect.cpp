@@ -29,7 +29,7 @@
 
 #include <cassert>
 
-using namespace WFMath;
+namespace WFMath {
 
 // force a bunch of instantiations
 
@@ -182,7 +182,7 @@ template bool Contains<3>(const RotBox<3>&, const RotBox<3>&, bool);
 // this line separates b from B(a), and they do not intersect. QED.
 
 template<>
-bool WFMath::Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper)
+bool Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper)
 {
   const AxisBox<2> b2 = r.boundingBox();
   if(!Intersect(b2, b, proper))
@@ -227,7 +227,7 @@ bool WFMath::Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper)
 // 1996
 
 template<>
-bool WFMath::Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper)
+bool Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper)
 {
   // Checking intersection of each with the bounding box of
   // the other in the coordinate system of the first will take care
@@ -360,4 +360,6 @@ bool WFMath::Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper)
   }
 
   return true;
+}
+
 }

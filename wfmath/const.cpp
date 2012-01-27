@@ -50,9 +50,9 @@
 //
 //---------------------------------------------------------------
 
-using namespace WFMath;
+namespace WFMath {
 
-bool WFMath::Equal(double x1, double x2, double epsilon)
+bool Equal(double x1, double x2, double epsilon)
 {
     // Hack to get around nonstandard std:: namespacing in MSVC
     using namespace std;
@@ -63,7 +63,7 @@ bool WFMath::Equal(double x1, double x2, double epsilon)
     return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
 }
 
-bool WFMath::Equal(float x1, float x2, double epsilon)
+bool Equal(float x1, float x2, double epsilon)
 {
     // Hack to get around nonstandard std:: namespacing in MSVC
     using namespace std;
@@ -74,7 +74,7 @@ bool WFMath::Equal(float x1, float x2, double epsilon)
     return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
 }
 
-double WFMath::_ScaleEpsilon(double x1, double x2, double epsilon)
+double _ScaleEpsilon(double x1, double x2, double epsilon)
 {
     // Hack to get around nonstandard std:: namespacing in MSVC
     using namespace std;
@@ -88,7 +88,7 @@ double WFMath::_ScaleEpsilon(double x1, double x2, double epsilon)
     return ldexp(epsilon, exponent);
 }
 
-double WFMath::_ScaleEpsilon(const CoordType* x1, const CoordType* x2,
+double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
                              int length, double epsilon)
 {
   assert(length > 0);
@@ -104,4 +104,6 @@ double WFMath::_ScaleEpsilon(const CoordType* x1, const CoordType* x2,
   }
 
   return _ScaleEpsilon(max1, max2, epsilon);
+}
+
 }

@@ -30,7 +30,7 @@
 #include "rotmatrix_funcs.h"
 #include "quaternion.h"
 
-using namespace WFMath;
+namespace WFMath {
 
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
 
@@ -92,7 +92,7 @@ template<> RotMatrix<3>& RotMatrix<3>::rotate(const Quaternion& q)
 }
 
 template<>
-RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
+RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis,
 					      CoordType theta)
 {
   CoordType max = 0;
@@ -121,7 +121,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis,
 }
 
 template<>
-RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
+RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis)
 {
   CoordType max = 0;
   int main_comp = -1;
@@ -153,7 +153,7 @@ RotMatrix<3>& WFMath::RotMatrix<3>::rotation (const Vector<3>& axis)
   return rotation(v1, v2, angle);
 }
 
-bool WFMath::_MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
+bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 				CoordType* buf1, CoordType* buf2, double precision)
 {
   precision = fabs(precision);
@@ -294,7 +294,7 @@ static CoordType _MatrixDeterminantImpl(const int size, CoordType* m)
   return out;
 }
 
-bool WFMath::_MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
+bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
 {
   // Invert using row operations. First, make m upper triangular,
   // with 1's on the diagonal
@@ -359,8 +359,6 @@ bool WFMath::_MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
 
   return true;
 }
-
-namespace WFMath {
 
 template <>
 RotMatrix<3>::RotMatrix(const Quaternion& q,

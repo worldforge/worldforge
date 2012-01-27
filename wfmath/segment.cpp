@@ -35,8 +35,6 @@
 
 #include <cmath>
 
-using namespace WFMath;
-
 namespace WFMath {
 
 template<> Segment<3>& Segment<3>::rotatePoint(const Quaternion& q,
