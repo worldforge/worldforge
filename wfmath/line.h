@@ -132,22 +132,9 @@ class Line
    **/
   Line& rotatePoint(const RotMatrix<dim>& m, const Point<dim>& p);
 
-  // Intersection functions
-
-  /// shape: return the minimal axis-aligned bounding box
-  AxisBox<dim> boundingBox() const;
-  /// shape: return the minimal bounding sphere
-  Ball<dim> boundingSphere() const;
-  /// shape: return an approximate bounding sphere, guaranteed
-  /// to contain the minimal bounding sphere
-  /**
-   * boundingSphereSloppy() uses
-   * SloppyDistance() instead of Distance() to calculate it's
-   * radius, except in cases like Point<> and Ball<> where it
-   * would be silly. Thus, the result of boundingSphereSloppy()
-   * is guaranteed to contain the result of boundingSphere().
-   **/
-  Ball<dim> boundingSphereSloppy() const;
+  AxisBox<dim> boundingBox() const {return BoundingBox(m_points);}
+  Ball<dim> boundingSphere() const {return BoundingSphere(m_points);}
+  Ball<dim> boundingSphereSloppy() const {return BoundingSphereSloppy(m_points);}
 
  private:
   std::vector<Point<dim> > m_points;

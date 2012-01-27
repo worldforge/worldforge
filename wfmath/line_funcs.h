@@ -75,29 +75,6 @@ inline Line<dim>& Line<dim>::rotatePoint(const RotMatrix<dim>& m,
   return *this;
 }
 
-template<int dim>
-AxisBox<dim> Line<dim>::boundingBox() const
-{
-  Point<dim> min = getCenter(), max = min;
-  bool valid = min.isValid();
-
-  for(size_t i = 1; i != m_points.size(); ++i) {
-    const Point<dim> & p = m_points[i];
-    valid = valid && p.isValid();
-    for(int j = 0; j < dim; ++j) {
-      if(p[j] < min[j])
-        min[j] = p[j];
-      if(p[j] > max[j])
-        max[j] = p[j];
-    }
-  }
-
-  min.setValid(valid);
-  max.setValid(valid);
-
-  return AxisBox<dim>(min, max, true);
-}
-
 } // namespace WFMath
 
 #endif  // WFMATH_LINE_FUNCS_H
