@@ -166,7 +166,7 @@ Ball<dim> BoundingSphereSloppy(const container<Point<dim>, std::allocator<Point<
 
   center.setValid(valid);
 
-  return Ball<2>(center, dist);
+  return Ball<dim>(center, dist);
 }
 
 // These two are here, instead of defined in the class, to
