@@ -43,7 +43,6 @@
 #include <wfmath/polygon.h>
 // Shape intersection functions
 #include <wfmath/intersect.h>
-#include <wfmath/polygon_intersect.h>
 // Probability and statistics
 #include <wfmath/probability.h>
 #include <wfmath/timestamp.h>
