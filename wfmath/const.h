@@ -89,8 +89,8 @@ typedef float CoordType;
 
 double _ScaleEpsilon(double x1, double x2, double epsilon);
 float _ScaleEpsilon(float x1, float x2, float epsilon);
-double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
-		     int length, CoordType epsilon = WFMATH_EPSILON);
+CoordType _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
+		        int length, CoordType epsilon = WFMATH_EPSILON);
 
 /// Test for equality up to precision epsilon
 /**

@@ -102,8 +102,8 @@ float _ScaleEpsilon(float x1, float x2, float epsilon)
     return ldexp(epsilon, exponent);
 }
 
-double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
-                     int length, CoordType epsilon)
+CoordType _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
+                        int length, CoordType epsilon)
 {
   assert(length > 0);
 
