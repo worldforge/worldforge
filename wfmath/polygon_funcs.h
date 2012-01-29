@@ -51,7 +51,7 @@ inline _Poly2Orient<dim>& _Poly2Orient<dim>::operator=(const _Poly2Orient<dim>& 
 }
 
 template<int dim>
-inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, double epsilon) const
+inline bool Polygon<dim>::isEqualTo(const Polygon<dim>& p, CoordType epsilon) const
 {
   // The same polygon can be expressed in different ways in the interal
   // format, so we have to call getCorner();
@@ -87,7 +87,7 @@ inline Point<dim> _Poly2Orient<dim>::convert(const Point<2>& p) const
 }
 
 template<int dim>
-bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, double epsilon)
+bool _Poly2Orient<dim>::expand(const Point<dim>& pd, Point<2>& p2, CoordType epsilon)
 {
   p2[0] = p2[1] = 0; // initialize
   p2.setValid();
@@ -146,7 +146,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
   bool still_valid[2] = {false,}, got_ratio = false;
   CoordType ratio = std::numeric_limits<CoordType>::max();
   CoordType size = std::numeric_limits<CoordType>::max();
-  double epsilon;
+  CoordType epsilon;
   size_t i, end = poly.numCorners();
 
   // scale epsilon
@@ -161,8 +161,8 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
       size = max;
   }
   int exponent;
-  (void) frexp(size, &exponent);
-  epsilon = ldexp(WFMATH_EPSILON, exponent);
+  (void) std::frexp(size, &exponent);
+  epsilon = std::ldexp(WFMATH_EPSILON, exponent);
 
   i = 0;
   if(skip == 0)
@@ -321,7 +321,7 @@ inline void _Poly2Orient<3>::rotate2(const Quaternion& q, const Point<2>& p)
 }
 
 template<int dim>
-inline bool Polygon<dim>::addCorner(int i, const Point<dim>& p, double epsilon)
+inline bool Polygon<dim>::addCorner(int i, const Point<dim>& p, CoordType epsilon)
 {
   Point<2> p2;
   bool succ = m_orient.expand(p, p2, epsilon);
@@ -339,7 +339,7 @@ inline void Polygon<dim>::removeCorner(int i)
 }
 
 template<int dim>
-inline bool Polygon<dim>::moveCorner(int i, const Point<dim>& p, double epsilon)
+inline bool Polygon<dim>::moveCorner(int i, const Point<dim>& p, CoordType epsilon)
 {
   _Poly2Orient<dim> try_orient = m_orient;
   _Poly2Reorient r = try_orient.reduce(m_poly, i);

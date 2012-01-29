@@ -240,7 +240,7 @@ std::istream& operator>>(std::istream& is, Quaternion& q)
 std::ostream& operator<<( std::ostream& os, const MTRand& mtrand )
 {
 	register const MTRand::uint32 *s = mtrand.state;
-	register int i = mtrand.N;
+	register int i = MTRand::N;
 	for( ; i--; os << *s++ << "\t" ) {}
 	return os << mtrand.left;
 }
@@ -249,10 +249,10 @@ std::ostream& operator<<( std::ostream& os, const MTRand& mtrand )
 std::istream& operator>>( std::istream& is, MTRand& mtrand )
 {
 	register MTRand::uint32 *s = mtrand.state;
-	register int i = mtrand.N;
+	register int i = MTRand::N;
 	for( ; i--; is >> *s++ ) {}
 	is >> mtrand.left;
-	mtrand.pNext = &mtrand.state[mtrand.N-mtrand.left];
+	mtrand.pNext = &mtrand.state[MTRand::N-mtrand.left];
 	return is;
 }
 

@@ -88,8 +88,9 @@ typedef float CoordType;
 // Basic comparisons
 
 double _ScaleEpsilon(double x1, double x2, double epsilon);
+float _ScaleEpsilon(float x1, float x2, float epsilon);
 double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
-		     int length, double epsilon = WFMATH_EPSILON);
+		     int length, CoordType epsilon = WFMATH_EPSILON);
 
 /// Test for equality up to precision epsilon
 /**
@@ -100,12 +101,12 @@ double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
  * compare equal, but Equal(0.00010000, 0.00010002, 1.0e-3) will.
  **/
 template<class C>
-inline bool Equal(const C& c1, const C& c2, double epsilon = WFMATH_EPSILON)
+inline bool Equal(const C& c1, const C& c2, CoordType epsilon = WFMATH_EPSILON)
 	{return c1.isEqualTo(c2, epsilon);}
 
 bool Equal(double x1, double x2, double epsilon = WFMATH_EPSILON);
 // Avoid template and expensive casts from float to doubles.
-bool Equal(float x1, float x2, double epsilon = WFMATH_EPSILON);
+bool Equal(float x1, float x2, float epsilon = WFMATH_EPSILON);
 
 // These let us avoid including <algorithm> for the sake of
 // std::max() and std::min().

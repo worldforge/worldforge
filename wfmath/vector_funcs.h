@@ -77,7 +77,7 @@ Vector<dim>& Vector<dim>::operator=(const Vector<dim>& v)
 }
 
 template<int dim>
-bool Vector<dim>::isEqualTo(const Vector<dim>& v, double epsilon) const
+bool Vector<dim>::isEqualTo(const Vector<dim>& v, CoordType epsilon) const
 {
   double delta = _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);
 

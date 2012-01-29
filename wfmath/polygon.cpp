@@ -72,7 +72,7 @@ void _Poly2Reorient::reorient(Polygon<2>& poly, size_t skip) const
 }
 
 //template<>
-bool Polygon<2>::isEqualTo(const Polygon<2>& p, double epsilon) const
+bool Polygon<2>::isEqualTo(const Polygon<2>& p, CoordType epsilon) const
 {
   if(m_points.size() != p.m_points.size())
     return false;

@@ -145,7 +145,7 @@ class Vector {
 
   Vector& operator=(const Vector& v);
 
-  bool isEqualTo(const Vector& v, double epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Vector& v, CoordType epsilon = WFMATH_EPSILON) const;
   bool operator==(const Vector& v) const {return isEqualTo(v);}
   bool operator!=(const Vector& v) const {return !isEqualTo(v);}
 
@@ -341,7 +341,7 @@ class Vector {
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
   // FIXME make Cross() a friend function, and make this private
-  double _scaleEpsilon(const Vector& v, double epsilon = WFMATH_EPSILON) const
+  double _scaleEpsilon(const Vector& v, CoordType epsilon = WFMATH_EPSILON) const
   {return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
 
   const CoordType* elements() const {return m_elem;}

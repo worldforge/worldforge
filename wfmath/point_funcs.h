@@ -73,7 +73,7 @@ inline Point<dim>& Point<dim>::setToOrigin()
 }
 
 template<int dim>
-inline bool Point<dim>::isEqualTo(const Point<dim> &p, double epsilon) const
+inline bool Point<dim>::isEqualTo(const Point<dim> &p, CoordType epsilon) const
 {
   CoordType delta = (CoordType) _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
 

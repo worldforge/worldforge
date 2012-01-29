@@ -62,7 +62,7 @@ inline RotMatrix<dim>& RotMatrix<dim>::operator=(const RotMatrix<dim>& m)
 }
 
 template<int dim>
-inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, double epsilon) const
+inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, CoordType epsilon) const
 {
   // Since the sum of the squares of the elements in any row or column add
   // up to 1, all the elements lie between -1 and 1, and each row has

@@ -61,26 +61,26 @@ Quaternion::Quaternion (CoordType w_in,
 // correspond to the same rotation matrix. We consider the form
 // of the quaternion with w > 0 canonical.
 
-bool Quaternion::isEqualTo(const Quaternion &q, double epsilon) const
+bool Quaternion::isEqualTo(const Quaternion &q, float epsilon) const
 {
   // Since the sum of squares is 1, the magnitude of the largest
   // element must be between 1 and 0.5, so we don't need to scale epsilon.
 
   assert(epsilon > 0);
 
-  if(fabs(m_w - q.m_w) <= epsilon) {
+  if(std::fabs(m_w - q.m_w) <= epsilon) {
     int i;
     for(i = 0; i < 3; ++i)
-      if(fabs(m_vec[i] - q.m_vec[i]) > epsilon)
+      if(std::fabs(m_vec[i] - q.m_vec[i]) > epsilon)
         break; // try again with swapped signs
     if(i == 3) // got through the loop
       return true;
   }
 
   // This makes q == -q true
-  if(fabs(m_w + q.m_w) <= epsilon) {
+  if(std::fabs(m_w + q.m_w) <= epsilon) {
     for(int i = 0; i < 3; ++i)
-      if(fabs(m_vec[i] + q.m_vec[i]) > epsilon)
+      if(std::fabs(m_vec[i] + q.m_vec[i]) > epsilon)
         return false;
     return true;
   }

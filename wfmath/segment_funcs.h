@@ -33,7 +33,7 @@
 namespace WFMath {
 
 template<int dim>
-inline bool Segment<dim>::isEqualTo(const Segment<dim>& s, double epsilon) const
+inline bool Segment<dim>::isEqualTo(const Segment<dim>& s, CoordType epsilon) const
 {
   return Equal(m_p1, s.m_p1, epsilon)
       && Equal(m_p2, s.m_p2, epsilon);

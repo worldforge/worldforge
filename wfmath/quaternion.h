@@ -85,7 +85,7 @@ class Quaternion
 
   // This regards q and -1*q as equal, since they give the
   // same RotMatrix<3>
-  bool isEqualTo(const Quaternion &q, double epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Quaternion &q, CoordType epsilon = WFMATH_EPSILON) const;
 
   bool operator== (const Quaternion& rhs) const	{return isEqualTo(rhs);}
   bool operator!= (const Quaternion& rhs) const	{return !isEqualTo(rhs);}

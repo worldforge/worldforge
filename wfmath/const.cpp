@@ -63,7 +63,7 @@ bool Equal(double x1, double x2, double epsilon)
     return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
 }
 
-bool Equal(float x1, float x2, double epsilon)
+bool Equal(float x1, float x2, float epsilon)
 {
     // Hack to get around nonstandard std:: namespacing in MSVC
     using namespace std;
@@ -88,15 +88,29 @@ double _ScaleEpsilon(double x1, double x2, double epsilon)
     return ldexp(epsilon, exponent);
 }
 
+float _ScaleEpsilon(float x1, float x2, float epsilon)
+{
+    // Hack to get around nonstandard std:: namespacing in MSVC
+    using namespace std;
+
+    // Get the exponent of the smaller of the two numbers (using the
+    // smaller of the two gives us a tighter epsilon value).
+    int exponent;
+    (void) frexp(fabs(x1) < fabs(x2) ? x1 : x2, &exponent);   
+
+    // Scale epsilon by the exponent.
+    return ldexp(epsilon, exponent);
+}
+
 double _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
-                             int length, double epsilon)
+                     int length, CoordType epsilon)
 {
   assert(length > 0);
 
-  double max1 = 0, max2 = 0;
+  float max1 = 0, max2 = 0;
 
   for(int i = 0; i < length; ++i) {
-    double val1 = fabs(x1[i]), val2 = fabs(x2[i]);
+    float val1 = std::fabs(x1[i]), val2 = std::fabs(x2[i]);
     if(val1 > max1)
       max1 = val1;
     if(val2 > max2)

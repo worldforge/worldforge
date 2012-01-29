@@ -70,7 +70,7 @@ class Polygon<2>
   Polygon& operator=(const Polygon& p)
   {m_points = p.m_points; return *this;}
 
-  bool isEqualTo(const Polygon& p, double epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Polygon& p, CoordType epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const Polygon& p) const	{return isEqualTo(p);}
   bool operator!=(const Polygon& p) const	{return !isEqualTo(p);}
@@ -230,7 +230,7 @@ public:
   // Try to convert a point from dim dimensions into 2D, expanding the
   // basis if necessary. Returns true on success. On failure, the
   // basis is unchanged.
-  bool expand(const Point<dim>& pd, Point<2>& p2, double epsilon = WFMATH_EPSILON);
+  bool expand(const Point<dim>& pd, Point<2>& p2, CoordType epsilon = WFMATH_EPSILON);
 
   // Reduce the basis to the minimum necessary to span the points in
   // poly (with the exception of skip). Returns _Poly2Reorient, which needs
@@ -321,7 +321,7 @@ public:
   Polygon& operator=(const Polygon& p)
   {m_orient = p.m_orient; m_poly = p.m_poly; return *this;}
 
-  bool isEqualTo(const Polygon& p2, double epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Polygon& p2, CoordType epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const Polygon& p) const	{return isEqualTo(p);}
   bool operator!=(const Polygon& p) const	{return !isEqualTo(p);}
@@ -339,7 +339,7 @@ public:
 
   // Add before i'th corner, zero is beginning, numCorners() is end
   // Only succeeds if p lies in a plane with all current points
-  bool addCorner(int i, const Point<dim>& p, double epsilon = WFMATH_EPSILON);
+  bool addCorner(int i, const Point<dim>& p, CoordType epsilon = WFMATH_EPSILON);
 
   // Remove the i'th corner
   void removeCorner(int i);
@@ -348,7 +348,7 @@ public:
   // lies in the same plane as all the other points. Note that,
   // under certain circumstances, this plane may not contain the
   // original location of the point.
-  bool moveCorner(int i, const Point<dim>& p, double epsilon = WFMATH_EPSILON);
+  bool moveCorner(int i, const Point<dim>& p, CoordType epsilon = WFMATH_EPSILON);
 
   // Remove all points
   void clear()	{m_poly.clear(); m_orient = _Poly2Orient<dim>();}

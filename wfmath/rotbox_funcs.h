@@ -48,7 +48,7 @@ inline RotBox<dim>& RotBox<dim>::operator=(const RotBox<dim>& a)
 }
 
 template<int dim>
-inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, double epsilon) const
+inline bool RotBox<dim>::isEqualTo(const RotBox<dim>& b, CoordType epsilon) const
 {
   return Equal(m_corner0, b.m_corner0, epsilon)
       && Equal(m_size, b.m_size, epsilon)

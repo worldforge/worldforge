@@ -60,7 +60,7 @@ class Segment
   Segment& operator=(const Segment& s)
 	{m_p1 = s.m_p1; m_p2 = s.m_p2; return *this;}
 
-  bool isEqualTo(const Segment& s, double epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const Segment& s, CoordType epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const Segment& b) const	{return isEqualTo(b);}
   bool operator!=(const Segment& b) const	{return !isEqualTo(b);}

@@ -98,7 +98,7 @@ class RotMatrix {
   // No operator=(CoordType d[dim][dim]), since it can fail.
   // Use setVals() instead.
 
-  bool isEqualTo(const RotMatrix& m, double epsilon = WFMATH_EPSILON) const;
+  bool isEqualTo(const RotMatrix& m, CoordType epsilon = WFMATH_EPSILON) const;
 
   bool operator==(const RotMatrix& m) const {return isEqualTo(m);}
   bool operator!=(const RotMatrix& m) const {return !isEqualTo(m);}
