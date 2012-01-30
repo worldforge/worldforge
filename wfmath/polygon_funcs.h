@@ -321,7 +321,7 @@ inline void _Poly2Orient<3>::rotate2(const Quaternion& q, const Point<2>& p)
 }
 
 template<int dim>
-inline bool Polygon<dim>::addCorner(int i, const Point<dim>& p, CoordType epsilon)
+inline bool Polygon<dim>::addCorner(size_t i, const Point<dim>& p, CoordType epsilon)
 {
   Point<2> p2;
   bool succ = m_orient.expand(p, p2, epsilon);
@@ -331,7 +331,7 @@ inline bool Polygon<dim>::addCorner(int i, const Point<dim>& p, CoordType epsilo
 }
 
 template<int dim>
-inline void Polygon<dim>::removeCorner(int i)
+inline void Polygon<dim>::removeCorner(size_t i)
 {
   m_poly.removeCorner(i);
   _Poly2Reorient r = m_orient.reduce(m_poly);
@@ -339,7 +339,7 @@ inline void Polygon<dim>::removeCorner(int i)
 }
 
 template<int dim>
-inline bool Polygon<dim>::moveCorner(int i, const Point<dim>& p, CoordType epsilon)
+inline bool Polygon<dim>::moveCorner(size_t i, const Point<dim>& p, CoordType epsilon)
 {
   _Poly2Orient<dim> try_orient = m_orient;
   _Poly2Reorient r = try_orient.reduce(m_poly, i);

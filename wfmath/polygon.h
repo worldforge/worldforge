@@ -88,14 +88,14 @@ class Polygon<2>
   // interface, and the epsilon argument is ignored
 
   // Add before i'th corner, zero is beginning, numCorners() is end
-  bool addCorner(int i, const Point<2>& p, double = WFMATH_EPSILON)
+  bool addCorner(size_t i, const Point<2>& p, double = WFMATH_EPSILON)
   {m_points.insert(m_points.begin() + i, p); return true;}
 
   // Remove the i'th corner
-  void removeCorner(int i) {m_points.erase(m_points.begin() + i);}
+  void removeCorner(size_t i) {m_points.erase(m_points.begin() + i);}
 
   // Move the i'th corner to p
-  bool moveCorner(int i, const Point<2>& p, double = WFMATH_EPSILON)
+  bool moveCorner(size_t i, const Point<2>& p, double = WFMATH_EPSILON)
   {m_points[i] = p; return true;}
 
   // Remove all points
@@ -339,16 +339,16 @@ public:
 
   // Add before i'th corner, zero is beginning, numCorners() is end
   // Only succeeds if p lies in a plane with all current points
-  bool addCorner(int i, const Point<dim>& p, CoordType epsilon = WFMATH_EPSILON);
+  bool addCorner(size_t i, const Point<dim>& p, CoordType epsilon = WFMATH_EPSILON);
 
   // Remove the i'th corner
-  void removeCorner(int i);
+  void removeCorner(size_t i);
 
   // Move the i'th corner to p, only succeeds if new location
   // lies in the same plane as all the other points. Note that,
   // under certain circumstances, this plane may not contain the
   // original location of the point.
-  bool moveCorner(int i, const Point<dim>& p, CoordType epsilon = WFMATH_EPSILON);
+  bool moveCorner(size_t i, const Point<dim>& p, CoordType epsilon = WFMATH_EPSILON);
 
   // Remove all points
   void clear()	{m_poly.clear(); m_orient = _Poly2Orient<dim>();}
