@@ -50,7 +50,7 @@ class Line
   ///
   Line() {}
   ///
-  Line(const Line<dim>& s) {}
+  Line(const Line<dim>& l) : m_points(l.m_points) {}
   ///
   explicit Line(const AtlasInType& a);
   ///
@@ -65,7 +65,7 @@ class Line
   Line& operator=(const Line& a);
 
   /// generic: check if two classes are equal, up to a given tolerance
-  bool isEqualTo(const Line& s, double tolerance = WFMATH_EPSILON) const;
+  bool isEqualTo(const Line& s, float epsilon = WFMATH_EPSILON) const;
   /// generic: check if two classes are equal, up to tolerance WFMATH_EPSILON
   bool operator==(const Line& s) const	{return isEqualTo(s);}
   /// generic: check if two classes are not equal, up to tolerance WFMATH_EPSILON
@@ -89,11 +89,11 @@ class Line
   Point<dim> getCenter() const {return Barycenter(m_points);}
 
   // Add before i'th corner, zero is beginning, numCorners() is end
-  bool addCorner(int i, const Point<dim>& p, double = WFMATH_EPSILON)
+  bool addCorner(size_t i, const Point<dim>& p, float = WFMATH_EPSILON)
   {m_points.insert(m_points.begin() + i, p); return true;}
 
   // Remove the i'th corner
-  void removeCorner(int i) {m_points.erase(m_points.begin() + i);}
+  void removeCorner(size_t i) {m_points.erase(m_points.begin() + i);}
 
   // Movement functions
 

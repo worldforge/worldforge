@@ -38,7 +38,7 @@ inline Line<dim>& Line<dim>::operator=(const Line& rhs)
 }
 
 template<int dim>
-inline bool Line<dim>::isEqualTo(const Line<dim> & l, double epsilon) const
+inline bool Line<dim>::isEqualTo(const Line<dim> & l, float epsilon) const
 {
   size_type size = m_points.size();
   if (size != l.m_points.size()) {
