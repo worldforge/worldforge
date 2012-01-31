@@ -69,6 +69,12 @@ template Ball<2> BoundingSphere<2, std::vector>(std::vector<Point<2>,
 template Ball<2> BoundingSphereSloppy<2, std::vector>(std::vector<Point<2>,
                                                       std::allocator<Point<2> > > const&);
 
+template Ball<3> BoundingSphere<3, std::vector>(std::vector<Point<3>,
+                                                std::allocator<Point<3> > > const&);
+
+template Ball<3> BoundingSphereSloppy<3, std::vector>(std::vector<Point<3>,
+                                                      std::allocator<Point<3> > > const&);
+
 template Ball<2> Point<2>::boundingSphere() const;
 template Ball<2> Point<2>::boundingSphereSloppy() const;
 
