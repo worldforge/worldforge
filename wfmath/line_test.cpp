@@ -81,10 +81,13 @@ int main()
   line2_2.addCorner(0, Point<2>(0, -4));
   assert(line2_2.isValid());
 
+  // Check in-equality
   assert(line2_1 != line2_2);
 
+  // Check assignment
   line2_2 = line2_1;
 
+  // Check equality
   assert(line2_1 == line2_2);
 
   Line<2> line2_3;
@@ -93,9 +96,14 @@ int main()
   line2_3 = line2_1;
   assert(line2_3 == line2_1);
 
+  // Check bounding box calculation
   assert(Equal(line2_1.boundingBox(),
                WFMath::AxisBox<2>(WFMath::Point<2>(0, -4),
                                   WFMath::Point<2>(4, 0))));
+
+  Line<2> line2_4(line2_1);
+
+  assert(line2_1 == line2_4);
 
   Line<3> line3;
 
