@@ -25,6 +25,7 @@
  */
 #include "PacketReader.hpp"
 
+
 /*
  * System Includes
  */
@@ -110,29 +111,12 @@ class PacketReader_unittest : public CppUnit::TestCase
     	mp1->setSequence(1);
     	mp1->setTimeOffset(1);
 
+
     	MetaServerPacket* mp2 = new MetaServerPacket();
     	mp2->setPacketType(NMT_SERVERSHAKE);
     	mp2->addPacketData(12345);
     	mp2->setSequence(2);
     	mp2->setTimeOffset(2);
-
-    	/*
-    	 * NOTE NOTE: this will 100% cause a failure ... this is broken =)
-    	 * ./metaserver-ng --server.daemon=false --logging.packet_logging=true --logging.packet_logfile=/tmp/footest.bin
-    	 * then on separate terminal:
-    	 * ./testserver
-    	 *
-    	 * Just CTRL-C the metaserver when done.  This produces the packet file for the
-    	 * parseBinaryFile test here ( this is just stuck here for now ).
-    	 *
-    	 * Once I can get a round trip on packets, we can remove this test, or make it
-    	 * differently
-    	 *
-    	 * I'm not sure whether it's a read / write issue.
-    	 */
-    	unsigned int r = p->parseBinaryFile("/tmp/footest.bin");
-//    	unsigned int r = 10;
-    	std::cout << std::endl << "Packets Parsed: " << r << std::endl;
 
     	/*
     	 * Validate some expected preconditions
@@ -141,35 +125,26 @@ class PacketReader_unittest : public CppUnit::TestCase
     	CPPUNIT_ASSERT( p->packetCount() == 0 );
 
     	/*
-    	 * Make changes and validate
+    	 * Push Some Items on
     	 */
     	p->push(*mp1);
     	CPPUNIT_ASSERT( p->hasPacket() == true );
     	CPPUNIT_ASSERT( p->packetCount() == 1 );
+
     	p->push(*mp2);
     	CPPUNIT_ASSERT( p->packetCount() == 2 );
 
     	/*
-    	 * Pop it off and validate
+    	 * Take some items off
     	 */
-    	MetaServerPacket mp3 = p->pop();
+    	MetaServerPacket ret = p->pop();
+    	CPPUNIT_ASSERT( ret.getSequence() == 1 );
     	CPPUNIT_ASSERT( p->packetCount() == 1 );
 
-    	MetaServerPacket mp4 = p->pop();
-    	CPPUNIT_ASSERT( p->packetCount() == 0 );
+    	MetaServerPacket ret2 = p->pop();
+    	CPPUNIT_ASSERT( ret2.getSequence() == 2 );
     	CPPUNIT_ASSERT( p->hasPacket() == false );
-
-    	/*
-    	 * Make sure we got back what we put in
-    	 */
-    	CPPUNIT_ASSERT( mp1->getPacketType() == NMT_SERVERKEEPALIVE );
-    	CPPUNIT_ASSERT( mp1->getSequence() == 1 );
-    	CPPUNIT_ASSERT( mp1->getTimeOffset() == 1 );
-
-    	CPPUNIT_ASSERT( mp2->getPacketType() == NMT_SERVERSHAKE );
-    	CPPUNIT_ASSERT( mp2->getSequence() == 2 );
-    	CPPUNIT_ASSERT( mp2->getTimeOffset() == 2 );
-    	CPPUNIT_ASSERT( mp2->getIntData(4) == 12345 );
+    	CPPUNIT_ASSERT( p->packetCount() == 0 );
 
     	delete mp1;
     	delete mp2;
@@ -198,4 +173,24 @@ int main()
 /*
  * Mock Stubs
  */
+MetaServerPacket::~MetaServerPacket() {}
+MetaServerPacket::MetaServerPacket() :
+  m_packetPayload( *new boost::array<char,MAX_PACKET_BYTES>() ),
+  m_Bytes(0),
+  m_packetType(NMT_NULL),
+  m_Port(0),
+  m_AddressInt(0),
+  m_needFree(true),
+  m_Sequence(0),
+  m_TimeOffset(0)
+{}
+void MetaServerPacket::setPacketType(unsigned int const&) {}
+unsigned int MetaServerPacket::addPacketData(boost::uint32_t i) { return 4; }
+
+std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp) { return os; }
+std::istream & operator>>( std::istream& is, MetaServerPacket &mp ) { return is; }
+
+
+
+
 

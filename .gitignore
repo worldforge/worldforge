@@ -63,6 +63,7 @@ src/stamp-h1
 *.dox
 # unit test progs
 src/*_unittest
+src/*_integration
 src/testserver
 src/testclient
 

@@ -55,6 +55,7 @@ class PacketLogger_unittest : public CppUnit::TestCase
 
     void tearDown()
     {
+    	p->close();
     	delete p;
     }
 
@@ -85,4 +86,7 @@ int main()
 /*
  * Mock Stubs
  */
+MetaServerPacket::~MetaServerPacket() {}
+std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp) { return os; }
+
 

@@ -227,22 +227,22 @@ MetaServerPacket::IpNetToAscii(boost::uint32_t address) {
  *  Stream Insertion Operator
  *  Purpose: mostly for binary packet logging ... but in theory should work for textual
  *           output of the packet
- *  Note: I don't like it ... but i can't see a good way to do logging any other way as the
- *        MetaServerPacket is agnostic to format ( meaning packet type and meaning are
- *        interpreted in the MetaServer class ... and MSP is essentially a fancy raw buffer ).
  */
 std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp)
 {
 	/*
 	 * Output Format:
-	 * 		packetSequence:bufferSize:buffer
 	 *
-	 * 		TODO: saved packets contain no timing.  Should save 0 for first packet, and then like sequence
-	 * 		tag every packet with a detal ms, saving to file.  This way on replay we can replay with the exact
-	 * 		timing as the debug packet file.
+	 * Sequence:TimeOffset:Bytes of Data:Full RawBuffer
+	 *
+	 * NOTE: It is tempting to write more information, but this is not required.
+	 * 	Packet Type: not required as it is parsed from the RawBuffer
+	 * 	IP Address(s): not required, because they can't be used anyway.  Any replay
+	 * 	               will contain the current IP address pairs.
 	 *
 	 * When Reading back the packet, sequence of read is:
 	 *      - read packet sequence
+	 *      - read time offset
 	 *      - read buffer size
 	 *      - read buffer
 	 *      - create msp(buffer,size) [ this triggers a parsePacket, which is critical ]
@@ -255,50 +255,61 @@ std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp)
 	 *
 	 *		NOTE: size refers to the number of bytes received ( m_Bytes )
 	 */
+
+	 /*
+	  * Sequence
+	  */
      unsigned long long s = mp.getSequence();
-	 os.write( (char *)&s, sizeof(unsigned long long) );
+	 os.write( (char*)&s, sizeof(unsigned long long) );
 
+	 /*
+	  * Time Offset
+	  */
 	 unsigned long long o = mp.getTimeOffset();
-	 os.write( (char *)&o, sizeof(unsigned long long) );
+	 os.write( (char *)&o , sizeof(unsigned long long) );
 
+	 /*
+	  * Size of RECV buffer
+	  */
 	 std::size_t t = mp.getSize();
 	 os.write( (char *)&t, sizeof(std::size_t) );
 
 
 	/*
-	 * TODO: think about this.  We can populate the FULL buffer, even though only
-	 * a small portion of that will be used in any given packet ( this hugely increases
-	 * the size of packet logging .. by like a factor of 100 ), however this provides the
-	 * most precise state for a given time.  My feeling is that packet logging is a debug
-	 * feature and not meant for everyday use, so I chose to write the full buffer over writing
-	 * only the consumed portion
+	 * Write the full MAX_PACKET_BYTES buffer size
 	 */
-	os.write( (char *)mp.getBuffer().c_array(), sizeof(char)*MAX_PACKET_BYTES );
+	os.write( mp.getBuffer().c_array(), sizeof(char)*(MAX_PACKET_BYTES) );
 	return os;
 }
 
 std::istream & operator>>( std::istream& is, MetaServerPacket &mp )
 {
-	/*
-	 * Read sequence
-	 */
+
 	unsigned long long seq;
 	unsigned long long off;
 	std::size_t size;
 	boost::array<char,MAX_PACKET_BYTES> buf;
 
+	/*
+	 * Sequence
+	 * Note: Read pointers are advanced automatically by is.read()
+	 */
 	is.read( (char *)&seq, sizeof(unsigned long long) );
-//	is.seekg( is.tellg() + (long long)(sizeof(unsigned long long)) );
 
+	/*
+	 * Time Offset
+	 */
 	is.read( (char *)&off, sizeof(unsigned long long) );
-//	is.seekg( is.tellg() + (long long)(sizeof(unsigned long long)) );
 
+	/*
+	 * Size
+	 */
 	is.read( (char *)&size, sizeof(std::size_t) );
-//	is.seekg( is.tellg() + (long long)(sizeof(std::size_t)) );
 
-	is.read( (char *)buf.c_array(), sizeof(char)*MAX_PACKET_BYTES );
-//	is.seekg( is.tellg() +  (long long)sizeof(char)*MAX_PACKET_BYTES );
-
+	/*
+	 * Raw Buffer
+	 */
+	is.read( buf.c_array(), sizeof(char)*(MAX_PACKET_BYTES) );
 
 	mp.setBuffer(buf,size);
 	mp.setSequence(seq);

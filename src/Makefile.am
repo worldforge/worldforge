@@ -17,7 +17,8 @@ TESTS = \
 	MetaServerHandlerTCP_unittest \
 	MetaServerHandlerUDP_unittest \
 	PacketLogger_unittest \
-	PacketReader_unittest
+	PacketReader_unittest \
+	PacketLogging_integration 
 
 check_PROGRAMS = $(TESTS)
 
@@ -37,7 +38,10 @@ MetaServerHandlerUDP_unittest_SOURCES = MetaServerHandlerUDP_unittest.cpp
 MetaServerHandlerUDP_unittest_LDADD = MetaServerHandlerUDP.o MetaServerPacket.o $(CPPUNIT_LIBS)
 
 PacketLogger_unittest_SOURCES = PacketLogger_unittest.cpp
-PacketLogger_unittest_LDADD = PacketLogger.o MetaServerPacket.o $(CPPUNIT_LIBS)
+PacketLogger_unittest_LDADD = PacketLogger.o $(CPPUNIT_LIBS)
 
 PacketReader_unittest_SOURCES = PacketReader_unittest.cpp
-PacketReader_unittest_LDADD = PacketReader.o MetaServerPacket.o $(CPPUNIT_LIBS)
+PacketReader_unittest_LDADD = PacketReader.o $(CPPUNIT_LIBS)
+
+PacketLogging_integration_SOURCES = PacketLogging_integration.cpp
+PacketLogging_integration_LDADD = PacketReader.o PacketLogger.o MetaServerPacket.o $(CPPUNIT_LIBS)

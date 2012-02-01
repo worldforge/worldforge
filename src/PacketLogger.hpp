@@ -56,7 +56,20 @@ public:
 
 	void LogPacket(const MetaServerPacket& msp);
 
+	const std::string& getFile() const { return m_File; }
+	void setFile(std::string file) { m_File = file; }
+
+	unsigned int getCount() { return m_Plist.size(); }
 	void flush(unsigned int exp);
+	void close()
+	{
+			m_Write.close();
+	}
+
+	void open()
+	{
+		m_Write.open(m_File.c_str(), std::ios::out | std::ios::trunc | std::ios::binary );
+	}
 
 private:
 	std::ofstream m_Write;

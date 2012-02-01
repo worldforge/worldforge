@@ -58,14 +58,14 @@ public:
 
 	unsigned int parseBinaryFile(const std::string& file);
 
-	bool hasPacket() { return !m_Plist.empty(); }
+	bool hasPacket() const { return !m_Plist.empty(); }
 
-	unsigned int packetCount() { return m_Plist.size(); }
+	unsigned int packetCount() const { return m_Plist.size(); }
 
 	/*
 	 * Can't const because it modifies member vars
 	 */
-	MetaServerPacket& pop();
+	MetaServerPacket pop();
 	void push(const MetaServerPacket& msp) { m_Plist.push_back(msp); }
 
 private:
@@ -75,4 +75,4 @@ private:
 
 };
 
-#endif /* PACKETLOGGER_HPP_ */
+#endif /* PACKETREADER_HPP_ */
