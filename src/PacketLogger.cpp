@@ -30,8 +30,7 @@ PacketLogger::PacketLogger(const std::string& file)
 {
 	m_File = file;
 	m_lastRefresh = boost::posix_time::microsec_clock::local_time();
-//	std::cout << "Opening file : " << file << std::endl;
-	m_Write.open(m_File.c_str(), std::ios::out | std::ios::trunc | std::ios::binary );
+	open();
 }
 
 PacketLogger::~PacketLogger()
@@ -58,14 +57,12 @@ PacketLogger::flush(unsigned int exp)
 	 */
 	if ( now > etime )
 	{
-//		std::cout << "W";
 		while( ! m_Plist.empty() )
 		{
 			m_Write << m_Plist.front();
-//			std::cout << "w";
-			std::cout << "DEBUG-sequence: " << m_Plist.front().getSequence() << std::endl;
 			m_Plist.pop_front();
 		}
+
 	}
 	m_Write.flush();
 }

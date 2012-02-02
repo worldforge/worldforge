@@ -131,6 +131,21 @@ if test "$ac_use_gprof_code" = "yes"; then
       CXXFLAGS="$CXXFLAGS -pg -g"
 fi
 
+# gprof debugging option
+AC_ARG_ENABLE(effc,[  --enable-effc++     Add warning flags for eff++ [default=no]],
+[
+   if test x$enableval = xno; then 
+		ac_use_effc_code="no"	
+   else 
+		ac_use_effc_code="yes"
+   fi
+], [ac_use_effc_code="no"])
+
+if test "$ac_use_effc_code" = "yes"; then
+	  # c++ only option
+      CXXFLAGS="$CXXFLAGS -Weffc++"
+fi
+
 AC_CONFIG_FILES([Makefile
 		 src/Makefile
 		 metaserver-ng.dox

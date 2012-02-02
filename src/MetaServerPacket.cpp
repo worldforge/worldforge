@@ -148,7 +148,6 @@ MetaServerPacket::getPacketMessage(unsigned int offset) const
 	return foo;
 }
 
-
 /*
  * This is the original metaserver way
  * This ... is stupid IMO, metaserver expects from
@@ -314,6 +313,7 @@ std::istream & operator>>( std::istream& is, MetaServerPacket &mp )
 	mp.setBuffer(buf,size);
 	mp.setSequence(seq);
 	mp.setTimeOffset(off);
+	mp.parsePacketType();
 
 	return is;
 

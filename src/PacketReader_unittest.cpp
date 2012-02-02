@@ -186,6 +186,7 @@ MetaServerPacket::MetaServerPacket() :
 {}
 void MetaServerPacket::setPacketType(unsigned int const&) {}
 unsigned int MetaServerPacket::addPacketData(boost::uint32_t i) { return 4; }
+void MetaServerPacket::parsePacketType() {}
 
 std::ostream& operator<<( std::ostream &os, const MetaServerPacket &mp) { return os; }
 std::istream & operator>>( std::istream& is, MetaServerPacket &mp ) { return is; }

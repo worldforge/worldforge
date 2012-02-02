@@ -74,9 +74,11 @@ public:
 	uint32_t getIntData(unsigned int offset) const
 	{
 		uint32_t foo = 99;
-
+//std::cout << "getIntData-1: " << foo << std::endl;
+		printf("getIntData-1: %u\n", foo );
 		unpack_uint32(&foo, m_readPtr + offset );
-
+		printf("getIntData-2: %u\n", foo );
+//std::cout << "getIntData-2: " << foo << std::endl;
 		return foo;
 	}
 
@@ -96,9 +98,12 @@ public:
 	friend std::ostream & operator<<( std::ostream& os, const MetaServerPacket &mp);
 	friend std::istream & operator>>( std::istream& is, MetaServerPacket &mp );
 
+	void parsePacketType();
+
+
 private:
 
-	void parsePacketType();
+
 	char *pack_uint32(uint32_t data, char* buffer );
 	char *unpack_uint32(uint32_t *dest, char* buffer ) const;
 	char *pack_string(std::string str, char *buffer );
