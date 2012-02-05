@@ -57,14 +57,16 @@ static void regularize(T1 &sec, T2 &usec)
   }
 }
 
-WFMath::TimeDiff::TimeDiff(long sec, long usec, bool is_valid) : m_isvalid(is_valid),
+namespace WFMath {
+
+TimeDiff::TimeDiff(long sec, long usec, bool is_valid) : m_isvalid(is_valid),
   m_sec(sec), m_usec(usec)
 {
     if (m_isvalid)
         regularize(m_sec, m_usec);
 }
 
-WFMath::TimeDiff::TimeDiff(long msec) : 
+TimeDiff::TimeDiff(long msec) : 
     m_isvalid(true),
     m_sec(msec / 1000),
     m_usec(msec % 1000)
@@ -76,12 +78,12 @@ WFMath::TimeDiff::TimeDiff(long msec) :
   }
 }
 
-long WFMath::TimeDiff::milliseconds() const
+long TimeDiff::milliseconds() const
 {
   return m_sec * 1000 + m_usec / 1000;
 }
 
-WFMath::TimeDiff& WFMath::operator+=(TimeDiff &val, const TimeDiff &d)
+TimeDiff& operator+=(TimeDiff &val, const TimeDiff &d)
 {
   val.m_sec += d.m_sec;
   val.m_usec += d.m_usec;
@@ -93,7 +95,7 @@ WFMath::TimeDiff& WFMath::operator+=(TimeDiff &val, const TimeDiff &d)
   return val;
 }
 
-WFMath::TimeDiff& WFMath::operator-=(TimeDiff &val, const TimeDiff &d)
+TimeDiff& operator-=(TimeDiff &val, const TimeDiff &d)
 {
   val.m_sec -= d.m_sec;
   val.m_usec -= d.m_usec;
@@ -105,27 +107,27 @@ WFMath::TimeDiff& WFMath::operator-=(TimeDiff &val, const TimeDiff &d)
   return val;
 }
 
-WFMath::TimeDiff WFMath::operator+(const TimeDiff &a, const TimeDiff &b)
+TimeDiff operator+(const TimeDiff &a, const TimeDiff &b)
 {
   return TimeDiff(a.m_sec + b.m_sec, a.m_usec + b.m_usec, a.m_isvalid && b.m_isvalid);
 }
 
-WFMath::TimeDiff WFMath::operator-(const TimeDiff &a, const TimeDiff &b)
+TimeDiff operator-(const TimeDiff &a, const TimeDiff &b)
 {
   return TimeDiff(a.m_sec - b.m_sec, a.m_usec - b.m_usec, a.m_isvalid && b.m_isvalid);
 }
 
-bool WFMath::operator<(const TimeDiff &a, const TimeDiff &b)
+bool operator<(const TimeDiff &a, const TimeDiff &b)
 {
   return (a.m_sec < b.m_sec) || ((a.m_sec == b.m_sec) && (a.m_usec < b.m_usec));
 }
 
-bool WFMath::operator==(const TimeDiff &a, const TimeDiff &b)
+bool operator==(const TimeDiff &a, const TimeDiff &b)
 {
   return (a.m_sec == b.m_sec) && (a.m_usec == b.m_usec);
 }
 
-WFMath::TimeStamp WFMath::TimeStamp::now()
+TimeStamp TimeStamp::now()
 {
     TimeStamp ret;
 #ifndef __WIN32__
@@ -149,7 +151,7 @@ WFMath::TimeStamp WFMath::TimeStamp::now()
     return ret;
 }
 
-WFMath::TimeStamp WFMath::TimeStamp::epochStart()
+TimeStamp TimeStamp::epochStart()
 {
   TimeStamp ret;
 
@@ -160,7 +162,7 @@ WFMath::TimeStamp WFMath::TimeStamp::epochStart()
   return ret;
 }
 
-WFMath::TimeStamp::TimeStamp(long sec, long usec, bool isvalid)
+TimeStamp::TimeStamp(long sec, long usec, bool isvalid)
 {
   _val.tv_sec = sec;
   _val.tv_usec = usec;
@@ -170,7 +172,7 @@ WFMath::TimeStamp::TimeStamp(long sec, long usec, bool isvalid)
     regularize(_val.tv_sec, _val.tv_usec);
 }
 
-bool WFMath::operator<(const TimeStamp &a, const TimeStamp &b)
+bool operator<(const TimeStamp &a, const TimeStamp &b)
 {
 	if (a._val.tv_sec == b._val.tv_sec)
 		return (a._val.tv_usec < b._val.tv_usec);
@@ -178,13 +180,13 @@ bool WFMath::operator<(const TimeStamp &a, const TimeStamp &b)
 		return a._val.tv_sec < b._val.tv_sec;
 }
 
-bool WFMath::operator==(const TimeStamp &a, const TimeStamp &b)
+bool operator==(const TimeStamp &a, const TimeStamp &b)
 {
 	return (a._val.tv_sec == b._val.tv_sec)
 		&& (a._val.tv_usec == b._val.tv_usec);
 }
 
-WFMath::TimeStamp& WFMath::operator+=(TimeStamp &a, const TimeDiff &d)
+TimeStamp& operator+=(TimeStamp &a, const TimeDiff &d)
 {
   a._val.tv_sec += d.m_sec;
   a._val.tv_usec += d.m_usec;
@@ -195,7 +197,7 @@ WFMath::TimeStamp& WFMath::operator+=(TimeStamp &a, const TimeDiff &d)
   return a;
 }
 
-WFMath::TimeStamp& WFMath::operator-=(TimeStamp &a, const TimeDiff &d)
+TimeStamp& operator-=(TimeStamp &a, const TimeDiff &d)
 {
   a._val.tv_sec -= d.m_sec;
   a._val.tv_usec -= d.m_usec;
@@ -206,20 +208,22 @@ WFMath::TimeStamp& WFMath::operator-=(TimeStamp &a, const TimeDiff &d)
   return a;
 }
 
-WFMath::TimeStamp WFMath::operator+(const TimeStamp &a, const TimeDiff &d)
+TimeStamp operator+(const TimeStamp &a, const TimeDiff &d)
 {
   return TimeStamp(a._val.tv_sec + d.m_sec, a._val.tv_usec + d.m_usec,
 	a._isvalid && d.m_isvalid);
 }
 
-WFMath::TimeStamp WFMath::operator-(const TimeStamp &a, const TimeDiff &d)
+TimeStamp operator-(const TimeStamp &a, const TimeDiff &d)
 {
   return TimeStamp(a._val.tv_sec - d.m_sec, a._val.tv_usec - d.m_usec,
 	a._isvalid && d.m_isvalid);
 }
 
-WFMath::TimeDiff WFMath::operator-(const TimeStamp &a, const TimeStamp &b)
+TimeDiff operator-(const TimeStamp &a, const TimeStamp &b)
 {
   return TimeDiff(a._val.tv_sec - b._val.tv_sec,
     a._val.tv_usec - b._val.tv_usec, a._isvalid && b._isvalid);
+}
+
 }
