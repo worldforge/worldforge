@@ -40,7 +40,7 @@
 	#include "config.h"
 #endif
 
-const long Million = 1000000;
+static const long Million = 1000000;
 
 // apparently, some architectures use int instead of long
 // in struct timeval
