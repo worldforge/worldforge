@@ -92,9 +92,9 @@ class Shape
   /**
    * For many shape classes, this is a fixed constant
    **/
-  int numCorners() const; // The number of corners, returns zero for Ball<>
+  size_t numCorners() const; // The number of corners, returns zero for Ball<>
   /// shape: return the position of the i'th corner, where 0 <= i < numCorners()
-  Point<dim> getCorner(int i) const; // Must have i >= 0 && i < numCorners()
+  Point<dim> getCorner(size_t i) const; // Must have i >= 0 && i < numCorners()
   /// shape: return the position of the center of the shape
   Point<dim> getCenter() const; // Returns the barycenter of the object
 
@@ -106,7 +106,7 @@ class Shape
   /**
    * The corner in question is getCorner(corner).
    **/
-  Shape& moveCornerTo(const Point<dim>& p, int corner)
+  Shape& moveCornerTo(const Point<dim>& p, size_t corner)
 	{return shift(p - getCorner(corner));}
   /// shape: move the shape, moving the center to the Point p
   /**
@@ -120,7 +120,7 @@ class Shape
   /**
    * The corner in question is getCorner(corner).
    **/
-  Shape& rotateCorner(const RotMatrix<dim>& m, int corner)
+  Shape& rotateCorner(const RotMatrix<dim>& m, size_t corner)
 	{return rotatePoint(m, getCorner(corner));}
   /// shape: rotate the shape while holding the center fixed
   /**
