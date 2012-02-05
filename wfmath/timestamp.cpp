@@ -162,11 +162,12 @@ TimeStamp TimeStamp::epochStart()
   return ret;
 }
 
-TimeStamp::TimeStamp(long sec, long usec, bool isvalid)
+// FIXME C++0x supports initialising _val this way
+// _val({sec, usec}),
+TimeStamp::TimeStamp(long sec, long usec, bool isvalid) : _isvalid(isvalid)
 {
   _val.tv_sec = sec;
   _val.tv_usec = usec;
-  _isvalid = isvalid;
   
   if (_isvalid)
     regularize(_val.tv_sec, _val.tv_usec);
