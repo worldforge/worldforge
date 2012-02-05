@@ -48,7 +48,7 @@ class Line
 {
  public:
   ///
-  Line() {}
+  Line() : m_points() {}
   ///
   Line(const Line<dim>& l) : m_points(l.m_points) {}
   ///
