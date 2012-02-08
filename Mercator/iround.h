@@ -5,7 +5,7 @@
 #ifndef MERCATOR_IROUND_H
 #define MERCATOR_IROUND_H
 
-#ifndef PACKAGE
+#ifndef PACKAGE_NAME
 #error iround.h must be included after config.h
 #endif
 
