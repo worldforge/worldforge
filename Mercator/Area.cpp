@@ -6,8 +6,6 @@
 #include "config.h"
 #endif
 
-#include "iround.h"
-
 #include <Mercator/Area.h>
 #include "Mercator/Segment.h"
 
