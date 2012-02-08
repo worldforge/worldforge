@@ -10,7 +10,8 @@ AC_CANONICAL_HOST
 
 dnl Initialise automake
 
-AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news color-tests parallel-tests no-define])
+AM_INIT_AUTOMAKE([nostdinc dist-bzip2 check-news color-tests parallel-tests no-define silent-rules])
+AM_SILENT_RULES([yes])
 
 dnl versioning info for libtool
 MERCATOR_CURRENT=1
