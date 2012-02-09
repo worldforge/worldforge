@@ -43,7 +43,7 @@ void atlas_test(const C& c)
 
 int main()
 {
-  Point<3> p(1, 0, Sqrt2);
+  Point<3> p(1, 0, numeric_constants<CoordType>::sqrt2());
   atlas_test(p);
 
   Vector<3> v(1, -1, 4);
