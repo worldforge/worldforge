@@ -52,7 +52,7 @@ double GaussianConditional(double mean, double stddev, double val)
   /* Make sure round off error in Sqrt3 doesn't hit
    * assert() in IncompleteGammaComplementNoPrefactor()
    */
-  if(diffnorm < Sqrt3 + 10 * DBL_EPSILON) {
+  if(diffnorm < numeric_constants<double>::sqrt3() + 10 * DBL_EPSILON) {
     double erfc_norm = IncompleteGammaComplement(0.5, diffsqr_over_two);
 
     double normalization = (diffnorm > 0) ? (erfc_norm / 2) : (1 - erfc_norm / 2);
@@ -70,7 +70,9 @@ double Gaussian(double mean, double stddev, double val)
 
   double diff = (mean - val) / stddev;
 
-  return exp(-(diff * diff) / 2) / (fabs(stddev) * (SqrtPi * Sqrt2));
+  return std::exp(-(diff * diff) / 2) / (std::fabs(stddev) *
+         (numeric_constants<double>::sqrt_pi() *
+          numeric_constants<double>::sqrt2()));
 }
 
 double PoissonConditional(double mean, unsigned int step)
@@ -152,9 +154,11 @@ double LogFactorial(unsigned int n)
 double Gamma(double z)
 {
   if(z >= 0.5)
-    return exp(LogGamma(z));
+    return std::exp(LogGamma(z));
   else
-    return Pi * exp(-LogGamma(1 - z)) / sin(Pi * z);
+    return numeric_constants<double>::pi() *
+           std::exp(-LogGamma(1 - z)) /
+           std::sin(numeric_constants<double>::pi() * z);
 }
 
 double LogGamma(double z)
@@ -164,10 +168,12 @@ double LogGamma(double z)
    * should happen anyway.
    */
   if(z < 0.5)
-    return LogPi - LogGamma(1 - z) - log(fabs(sin(Pi * z)));
+    return numeric_constants<double>::log_pi() -
+           LogGamma(1 - z) -
+           std::log(std::fabs(std::sin(numeric_constants<double>::pi() * z)));
 
   if(z == 0.5) // special case for Gaussian
-    return LogPi / 2;
+    return numeric_constants<double>::log_pi() / 2;
 
   if(z == 1 || z == 2) // 0! and 1!
     return 0;
@@ -186,7 +192,9 @@ double LogGamma(double z)
   // Stirling approximation (see Gradshteyn + Ryzhik, Table of Integrals,
   // Series, and Products, fifth edition, formula 8.344 for a specific formula)
 
-  double ans = (z - 0.5) * log(z) - log_shift - z + (LogPi + Log2) / 2;
+  double ans = (z - 0.5) * std::log(z) - log_shift - z +
+               (numeric_constants<double>::log_pi() +
+                numeric_constants<double>::log2()) / 2;
 
   // coeffs[i] is the 2*(i+1)th Bernoulli number, divided by (2i + 1)*(2i + 2)
   const double coeffs[] = 	{1.0/12.0,		-1.0/360.0,
