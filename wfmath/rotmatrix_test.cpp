@@ -111,8 +111,9 @@ int main()
   RotMatrix<2> m2;
   RotMatrix<3> m3;
 
-  m2.rotation(Pi / 6);
-  m3.rotation(Vector<3>(1, 0, Sqrt2), Pi / 5);
+  m2.rotation(numeric_constants<CoordType>::pi() / 6);
+  m3.rotation(Vector<3>(1, 0, numeric_constants<CoordType>::sqrt2()),
+              numeric_constants<CoordType>::pi() / 5);
 
   test_rotmatrix(m2);
   test_rotmatrix(m3);
