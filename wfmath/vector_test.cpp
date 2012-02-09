@@ -67,7 +67,7 @@ void test_vector(const Vector<dim>& v)
 
   for(int j = 0; j < dim; ++j) {
     for(int i = 0; i < steps; ++i) {
-      vcopy.rotate(v1, v2, 2 * numeric_constants<CoordType>::pi / steps);
+      vcopy.rotate(v1, v2, 2 * numeric_constants<CoordType>::pi() / steps);
 //      std::cout << vcopy << std::endl;
       assert(Equal(sqr_mag, vcopy.sqrMag()));
     }
@@ -78,7 +78,7 @@ void test_vector(const Vector<dim>& v)
     v2 -= v1 / 2; // operator-=(), operator/()
 
     int k = (j < dim - 1) ? j + 1 : 0;
-    v1.rotate(j, k, numeric_constants<CoordType>::pi / 2);
+    v1.rotate(j, k, numeric_constants<CoordType>::pi() / 2);
   }
 
   v2 *= 2; // operator*=()
@@ -110,7 +110,7 @@ void test_vector(const Vector<dim>& v)
 int main()
 {
   Vector<2> v2(1, -1);
-  Vector<3> v3(1, -1, numeric_constants<CoordType>::sqrt2);
+  Vector<3> v3(1, -1, numeric_constants<CoordType>::sqrt2());
 
   test_vector(v2);
   test_vector(v3);
@@ -127,7 +127,7 @@ int main()
   v3.sloppyNorm(1);
 
   assert((Vector<3>(1, 0, 0).rotate(Cross(Vector<3>(1, 0, 0), Vector<3>(0, 1, 0)),
-	 numeric_constants<CoordType>::pi / 2) - Vector<3>(0, 1, 0)).sqrMag()
+	 numeric_constants<CoordType>::pi() / 2) - Vector<3>(0, 1, 0)).sqrMag()
 	 < WFMATH_EPSILON * WFMATH_EPSILON); 
 
   // Need 2D+3D stuff

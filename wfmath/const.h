@@ -73,23 +73,23 @@ const double Log2	= 0.69314718055994530941723212145817656807550013436025;
 template<typename FloatType>
 struct numeric_constants
 {
-  static const FloatType pi;
-  static const FloatType sqrt_pi;
-  static const FloatType log_pi;
-  static const FloatType sqrt2;
-  static const FloatType sqrt3;
-  static const FloatType log2;
+  static FloatType pi();
+  static FloatType sqrt_pi();
+  static FloatType log_pi();
+  static FloatType sqrt2();
+  static FloatType sqrt3();
+  static FloatType log2();
 };
 
 template<>
 struct numeric_constants<float>
 {
-  static const float pi = 3.14159265358979323846264338327950288419716939937508F;
-  static const float sqrt_pi = 1.77245385090551602729816748334114518279754945612237F;
-  static const float log_pi = 1.14472988584940017414342735135305871164729481291530F;
-  static const float sqrt2 = 1.41421356237309504880168872420969807856967187537693F;
-  static const float sqrt3 = 1.73205080756887729352744634150587236694280525381037F;
-  static const float log2 = 0.69314718055994530941723212145817656807550013436025F;
+  static float pi() { return 3.14159265358979323846264338327950288419716939937508F;}
+  static float sqrt_pi() { return 1.77245385090551602729816748334114518279754945612237F;}
+  static float log_pi() { return 1.14472988584940017414342735135305871164729481291530F;}
+  static float sqrt2() { return 1.41421356237309504880168872420969807856967187537693F;}
+  static float sqrt3() { return 1.73205080756887729352744634150587236694280525381037F;}
+  static float log2() { return 0.69314718055994530941723212145817656807550013436025F;}
 };
 
 /// Determines how close to machine precision the library tries to come.

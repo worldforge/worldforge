@@ -79,7 +79,7 @@ void test_shape(const Shape<dim>& s)
   size_t corners = s2.numCorners();
 
   if(dim >= 2)
-    m.rotation(0, 1, numeric_constants<CoordType>::pi / 6);
+    m.rotation(0, 1, numeric_constants<CoordType>::pi() / 6);
   else
     m.identity();
 
