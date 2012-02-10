@@ -130,11 +130,6 @@ typedef float CoordType;
 /// This is the attempted precision of the library.
 #define WFMATH_EPSILON		(WFMATH_PRECISION_FUDGE_FACTOR * FLT_EPSILON)
 
-/// Max value of CoordType
-#define WFMATH_MAX		FLT_MAX
-/// Min value of CoordType
-#define WFMATH_MIN		FLT_MIN
-
 // Basic comparisons
 
 double _ScaleEpsilon(double x1, double x2, double epsilon);

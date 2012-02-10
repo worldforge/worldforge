@@ -34,6 +34,8 @@
 #include <wfmath/rotmatrix.h>
 #include <wfmath/zero.h>
 
+#include <limits>
+
 #include <cmath>
 
 #include <cassert>
@@ -203,7 +205,7 @@ Vector<dim>& Vector<dim>::sloppyNorm(CoordType norm)
 {
   CoordType mag = sloppyMag();
 
-  assert("need nonzero length vector" && mag > norm / WFMATH_MAX);
+  assert("need nonzero length vector" && mag > norm / std::numeric_limits<CoordType>::max());
 
   return (*this *= norm / mag);
 }
