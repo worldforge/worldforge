@@ -41,7 +41,7 @@
 using namespace WFMath;
 
 const double fudge = 3000;
-const double use_epsilon = fudge * DBL_EPSILON;
+const double use_epsilon = fudge * std::numeric_limits<double>::epsilon();
 
 void test_probability(double mean, double std_dev, double step)
 {
@@ -62,13 +62,13 @@ void test_probability(double mean, double std_dev, double step)
       double cond_conj = GaussianConditional(mean, std_dev, mean - step * num_step);
 //      std::cout << "cond_conj = " << cond_conj << std::endl;
 
-      if(val > fudge * DBL_MIN) {
+      if(val > fudge * std::numeric_limits<double>::min()) {
         if(cond_conj != 0) {
 //          double first_frac = val / cond, second_frac = val / cond_conj;
 //          double sum = first_frac + second_frac;
 //          std::cout << first_frac << ',' << second_frac << ',' << sum - 1 << std::endl;
 //          assert(Equal(sum, 1, use_epsilon));
-//          while(!Equal(sum, 1, my_fudge * DBL_EPSILON))
+//          while(!Equal(sum, 1, my_fudge * std::numeric_limits<double>::epsilon()))
 //            my_fudge *= 1.1;
         }
 
@@ -96,9 +96,9 @@ void test_probability(double mean, double std_dev, double step)
       poisson_sum += val;
       assert(poisson_sum <= 1 + use_epsilon);
 
-      if(val > fudge * DBL_MIN && past_poisson_peak)
+      if(val > fudge * std::numeric_limits<double>::min() && past_poisson_peak)
         poisson_done = true;
-      else if(val > DBL_EPSILON)
+      else if(val > std::numeric_limits<double>::epsilon())
         past_poisson_peak = true;
     }
   }

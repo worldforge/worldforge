@@ -128,7 +128,10 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
   assert(Contains(seg, seg, false));
   assert(!Contains(seg, seg, true));
 
-  RotBox<dim> rbox(p1, p2 - p1, RotMatrix<dim>().rotation(0, 1, Pi / 6));
+  RotBox<dim> rbox(
+      p1,
+      p2 - p1,
+      RotMatrix<dim>().rotation(0, 1, numeric_constants<CoordType>::pi() / 6));
 
   std::cout << "Testing " << rbox << std::endl;
 
@@ -170,8 +173,10 @@ void test_shape(const Point<dim>& p1, const Point<dim>& p2)
 
 int main()
 {
-  test_shape(Point<2>(1, -1), Point<2>().setToOrigin());
-  test_shape(Point<3>(1, -1, Sqrt2), Point<3>().setToOrigin());
+  test_shape(Point<2>(1, -1),
+             Point<2>().setToOrigin());
+  test_shape(Point<3>(1, -1, numeric_constants<CoordType>::sqrt2()),
+             Point<3>().setToOrigin());
 
   return 0;
 }

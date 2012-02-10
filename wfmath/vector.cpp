@@ -43,7 +43,7 @@ template<> CoordType Vector<2>::sloppyMag() const
 {
   CoordType ax = std::fabs(m_elem[0]),
             ay = std::fabs(m_elem[1]);
-  const CoordType p = (CoordType) Sqrt2 - 1;
+  const CoordType p = numeric_constants<CoordType>::sqrt2() - 1;
 
   // Don't need float add, all terms > 0
 
@@ -60,8 +60,8 @@ template<> CoordType Vector<3>::sloppyMag() const
   CoordType ax = std::fabs(m_elem[0]),
             ay = std::fabs(m_elem[1]),
             az = std::fabs(m_elem[2]);
-  const CoordType p = (CoordType) Sqrt2 - 1;
-  const CoordType q = (CoordType) Sqrt3 + 1 - 2 * (CoordType) Sqrt2;
+  const CoordType p = numeric_constants<CoordType>::sqrt2() - 1;
+  const CoordType q = numeric_constants<CoordType>::sqrt3() + 1 - 2 * numeric_constants<CoordType>::sqrt2();
 
   // Don't need FloatAdd, only term < 0 is q, it's very small,
   // and amin1 * amin2 / amax < amax.

@@ -79,7 +79,7 @@ void test_point(const Point<dim>& p)
 int main()
 {
   test_point(Point<2>(1, -1));
-  test_point(Point<3>(1, -1, Sqrt2));
+  test_point(Point<3>(1, -1, numeric_constants<CoordType>::sqrt2()));
 
   Point<2> zero2 = Point<2>::ZERO();
   assert(zero2.x() == 0 && zero2.y() == 0);

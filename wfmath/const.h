@@ -26,7 +26,7 @@
 #ifndef WFMATH_CONST_H
 #define WFMATH_CONST_H
 
-#include <cfloat>
+#include <limits>
 
 #ifdef _MSC_VER
   #if _MSC_VER < 1500
@@ -57,18 +57,68 @@ class Quaternion;
 
 // Constants
 
-/// The constant pi
-const double Pi		= 3.14159265358979323846264338327950288419716939937508;
-/// The square root of pi
-const double SqrtPi	= 1.77245385090551602729816748334114518279754945612237;
-/// The natural logarithm of pi
-const double LogPi	= 1.14472988584940017414342735135305871164729481291530;
-/// The square root of 2
-const double Sqrt2	= 1.41421356237309504880168872420969807856967187537693;
-/// The square root of 3
-const double Sqrt3	= 1.73205080756887729352744634150587236694280525381037;
-/// The natural logarithm of 2
-const double Log2	= 0.69314718055994530941723212145817656807550013436025;
+template<typename FloatType>
+struct numeric_constants
+{
+  /// The constant pi
+  static FloatType pi();
+  /// The square root of pi
+  static FloatType sqrt_pi();
+  /// The natural logarithm of pi
+  static FloatType log_pi();
+  /// The square root of 2
+  static FloatType sqrt2();
+  /// The square root of 3
+  static FloatType sqrt3();
+  /// The natural logarithm of 2
+  static FloatType log2();
+};
+
+template<>
+struct numeric_constants<float>
+{
+  static float pi() {
+    return 3.14159265358979323846264338327950288419716939937508F;
+  }
+  static float sqrt_pi() {
+    return 1.77245385090551602729816748334114518279754945612237F;
+  }
+  static float log_pi() {
+    return 1.14472988584940017414342735135305871164729481291530F;
+  }
+  static float sqrt2() {
+    return 1.41421356237309504880168872420969807856967187537693F;
+  }
+  static float sqrt3() {
+    return 1.73205080756887729352744634150587236694280525381037F;
+  }
+  static float log2() {
+    return 0.69314718055994530941723212145817656807550013436025F;
+  }
+};
+
+template<>
+struct numeric_constants<double>
+{
+  static double pi() {
+    return 3.14159265358979323846264338327950288419716939937508;
+  }
+  static double sqrt_pi() {
+    return 1.77245385090551602729816748334114518279754945612237;
+  }
+  static double log_pi() {
+    return 1.14472988584940017414342735135305871164729481291530;
+  }
+  static double sqrt2() {
+    return 1.41421356237309504880168872420969807856967187537693;
+  }
+  static double sqrt3() {
+    return 1.73205080756887729352744634150587236694280525381037;
+  }
+  static double log2() {
+    return 0.69314718055994530941723212145817656807550013436025;
+  }
+};
 
 /// Determines how close to machine precision the library tries to come.
 #define WFMATH_PRECISION_FUDGE_FACTOR 30
@@ -78,12 +128,7 @@ const double Log2	= 0.69314718055994530941723212145817656807550013436025;
 /// Basic floating point type
 typedef float CoordType;
 /// This is the attempted precision of the library.
-#define WFMATH_EPSILON		(WFMATH_PRECISION_FUDGE_FACTOR * FLT_EPSILON)
-
-/// Max value of CoordType
-#define WFMATH_MAX		FLT_MAX
-/// Min value of CoordType
-#define WFMATH_MIN		FLT_MIN
+#define WFMATH_EPSILON	(WFMATH_PRECISION_FUDGE_FACTOR * std::numeric_limits<WFMath::CoordType>::epsilon())
 
 // Basic comparisons
 

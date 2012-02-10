@@ -30,6 +30,8 @@
 #include "rotmatrix_funcs.h"
 #include "quaternion.h"
 
+#include <limits>
+
 namespace WFMath {
 
 static CoordType _MatrixDeterminantImpl(const int size, CoordType* m);
@@ -260,9 +262,9 @@ static CoordType _MatrixDeterminantImpl(const int size, CoordType* m)
     CoordType minval = 0;
     for(int j = 0; j < size; ++j)
       minval += m[j*size+i] * m[j*size+i];
-    minval /= WFMATH_MAX;
-    if(minval < WFMATH_MIN)
-      minval = WFMATH_MIN;
+    minval /= std::numeric_limits<CoordType>::max();
+    if(minval < std::numeric_limits<CoordType>::min())
+      minval = std::numeric_limits<CoordType>::min();
     if(m[i*size+i] * m[i*size+i] < minval) { // Find a row with nonzero element
       int j;
       for(j = i + 1; j < size; ++j)
@@ -305,9 +307,9 @@ bool _MatrixInverseImpl(const int size, CoordType* in, CoordType* out)
     CoordType minval = 0;
     for(int j = 0; j < size; ++j)
       minval += in[j*size+i] * in[j*size+i];
-    minval /= WFMATH_MAX;
-    if(minval < WFMATH_MIN)
-      minval = WFMATH_MIN;
+    minval /= std::numeric_limits<CoordType>::max();
+    if(minval < std::numeric_limits<CoordType>::min())
+      minval = std::numeric_limits<CoordType>::min();
     if(in[i*size+i] * in[i*size+i] < minval) { // Find a nonzero element
       int j;
       for(j = i + 1;  j < size; ++j)
