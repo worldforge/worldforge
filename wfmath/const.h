@@ -26,7 +26,7 @@
 #ifndef WFMATH_CONST_H
 #define WFMATH_CONST_H
 
-#include <cfloat>
+#include <limits>
 
 #ifdef _MSC_VER
   #if _MSC_VER < 1500
@@ -128,7 +128,7 @@ struct numeric_constants<double>
 /// Basic floating point type
 typedef float CoordType;
 /// This is the attempted precision of the library.
-#define WFMATH_EPSILON		(WFMATH_PRECISION_FUDGE_FACTOR * FLT_EPSILON)
+#define WFMATH_EPSILON	(WFMATH_PRECISION_FUDGE_FACTOR * std::numeric_limits<WFMath::CoordType>::epsilon())
 
 // Basic comparisons
 

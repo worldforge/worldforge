@@ -52,7 +52,8 @@ double GaussianConditional(double mean, double stddev, double val)
   /* Make sure round off error in Sqrt3 doesn't hit
    * assert() in IncompleteGammaComplementNoPrefactor()
    */
-  if(diffnorm < numeric_constants<double>::sqrt3() + 10 * DBL_EPSILON) {
+  if(diffnorm < numeric_constants<double>::sqrt3() +
+                10 * std::numeric_limits<double>::epsilon()) {
     double erfc_norm = IncompleteGammaComplement(0.5, diffsqr_over_two);
 
     double normalization = (diffnorm > 0) ? (erfc_norm / 2) : (1 - erfc_norm / 2);
@@ -60,7 +61,7 @@ double GaussianConditional(double mean, double stddev, double val)
     return Gaussian(mean, stddev, val) / normalization;
   }
 
-  return 2.0 / (fabs(diff)
+  return 2.0 / (std::fabs(diff)
 	 * IncompleteGammaComplementNoPrefactor(0.5, diffsqr_over_two));
 }
 
@@ -83,7 +84,7 @@ double PoissonConditional(double mean, unsigned int step)
     return (step == 0) ? 1 : 0;
 
   if(step == 0)
-    return exp(-mean);
+    return std::exp(-mean);
 
   if(mean > step + 1)
     return Poisson(mean, step) / IncompleteGamma(step, mean);
@@ -98,7 +99,7 @@ double Poisson(double mean, unsigned int step)
   if(mean == 0) // Funky limit, but allow it
     return (step == 0) ? 1 : 0;
 
-  return exp(LogPoisson(mean, step));
+  return std::exp(LogPoisson(mean, step));
 }
 
 static double LogPoisson(double mean, unsigned int step)
@@ -108,7 +109,7 @@ static double LogPoisson(double mean, unsigned int step)
   if(step == 0)
     return -mean;
 
-  double first = step * log(mean);
+  double first = step * std::log(mean);
   double second = mean +  LogFactorial(step);
 
   assert("LogFactorial() always returns positive" && second > 0);
@@ -133,7 +134,7 @@ double Factorial(unsigned int n)
     return ans;
   }
   else
-    return exp(LogGamma(n + 1));
+    return std::exp(LogGamma(n + 1));
 }
 
 double LogFactorial(unsigned int n)
@@ -145,7 +146,7 @@ double LogFactorial(unsigned int n)
     double ans = n;
     while(--n > 1) // Don't need to multiply by 1
       ans *= n;
-    return log(ans);
+    return std::log(ans);
   }
   else
     return LogGamma(n + 1);
@@ -184,7 +185,7 @@ double LogGamma(double z)
     double shift = 1;
     while(z < GammaCutoff)
       shift *= z++;
-    log_shift = log(fabs(shift));
+    log_shift = std::log(std::fabs(shift));
   }
   else
     log_shift = 0;
@@ -205,13 +206,13 @@ double LogGamma(double z)
 
   double z_power = 1/z;
   double z_to_minus_two = z_power * z_power;
-  double small_enough = fabs(ans) * DBL_EPSILON;
+  double small_enough = std::fabs(ans) * std::numeric_limits<double>::epsilon();
   int i;
 
   for(i = 0; i < num_coeffs; ++i) {
     double next_term = coeffs[i] * z_power;
     ans += next_term;
-    if(fabs(next_term) < small_enough)
+    if(std::fabs(next_term) < small_enough)
       break;
     z_power *= z_to_minus_two;
   }
@@ -235,7 +236,7 @@ static double IncompleteGamma(double a, double z)
   if(z > a + 1)
     return 1 - IncompleteGammaComplement(a, z);
 
-  double prefactor = exp(a * (log(z) + 1) - z - LogGamma(a));
+  double prefactor = std::exp(a * (std::log(z) + 1) - z - LogGamma(a));
 
   return IncompleteGammaNoPrefactor(a, z) * prefactor;
 }
@@ -250,7 +251,7 @@ static double IncompleteGammaNoPrefactor(double a, double z)
   double dividend = a;
 
   double ans = term;
-  while(fabs(term / ans) > DBL_EPSILON) {
+  while(std::fabs(term / ans) > std::numeric_limits<double>::epsilon()) {
     term *= z / ++dividend;
     ans += term;
   }
@@ -270,7 +271,7 @@ static double IncompleteGammaComplement(double a, double z)
   if(z < a + 1)
     return 1 - IncompleteGamma(a, z);
 
-  double prefactor = exp(a * log(z) - z - LogGamma(a));
+  double prefactor = std::exp(a * std::log(z) - z - LogGamma(a));
 
   return IncompleteGammaComplementNoPrefactor(a, z) * prefactor;
 }
@@ -286,7 +287,9 @@ static double IncompleteGammaComplementNoPrefactor(double a, double z)
   double b_contrib = z + 1 - a;
   double a_last, b_last, a_next, b_next;
   int term = 1;
-  bool last_zero, next_zero = (fabs(b_contrib) <= DBL_MIN * fudge);
+  bool last_zero,
+       next_zero = (std::fabs(b_contrib) <= std::numeric_limits<double>::min()
+                                            * fudge);
 
   if(next_zero) {
     a_last = 0;
@@ -315,14 +318,18 @@ static double IncompleteGammaComplementNoPrefactor(double a, double z)
     b_last = b_tmp;
 
     last_zero = next_zero;
-    next_zero = (fabs(b_next) <= fabs(a_next) * (DBL_MIN * fudge));
+    next_zero = (std::fabs(b_next) <=
+                 std::fabs(a_next) * (std::numeric_limits<double>::min() *
+                                      fudge));
 
     if(next_zero)
       continue; // b_next is about zero
 
     a_next /= b_next;
 
-    if(!last_zero && fabs(a_next - a_last) < fabs(a_last) * DBL_EPSILON)
+    if(!last_zero &&
+       std::fabs(a_next - a_last) < std::fabs(a_last) *
+                                    std::numeric_limits<double>::epsilon())
       return a_next; // Can't compare if b_last was zero
 
     a_last /= b_next;
