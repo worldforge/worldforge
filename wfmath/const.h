@@ -57,27 +57,20 @@ class Quaternion;
 
 // Constants
 
-/// The constant pi
-const double Pi		= 3.14159265358979323846264338327950288419716939937508;
-/// The square root of pi
-const double SqrtPi	= 1.77245385090551602729816748334114518279754945612237;
-/// The natural logarithm of pi
-const double LogPi	= 1.14472988584940017414342735135305871164729481291530;
-/// The square root of 2
-const double Sqrt2	= 1.41421356237309504880168872420969807856967187537693;
-/// The square root of 3
-const double Sqrt3	= 1.73205080756887729352744634150587236694280525381037;
-/// The natural logarithm of 2
-const double Log2	= 0.69314718055994530941723212145817656807550013436025;
-
 template<typename FloatType>
 struct numeric_constants
 {
+  /// The constant pi
   static FloatType pi();
+  /// The square root of pi
   static FloatType sqrt_pi();
+  /// The natural logarithm of pi
   static FloatType log_pi();
+  /// The square root of 2
   static FloatType sqrt2();
+  /// The square root of 3
   static FloatType sqrt3();
+  /// The natural logarithm of 2
   static FloatType log2();
 };
 
