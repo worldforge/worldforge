@@ -24,6 +24,8 @@
 #define DEBUG
 #endif
 
+#include "SignalFlagger.h"
+
 #include <Eris/Calendar.h>
 
 #include <Eris/Connection.h>
@@ -64,6 +66,11 @@ class TestCalendar : public Eris::Calendar {
         data["hours_per_day"] = HPD;
         data["minutes_per_hour"] = MPH;
         data["seconds_per_minute"] = SPM;
+        initFromCalendarAttr(data);
+    }
+
+    void test_setInvalidDefault() {
+        Atlas::Message::MapType data;
         initFromCalendarAttr(data);
     }
 
@@ -253,6 +260,21 @@ int main()
         assert(dt.year() > 0);
     }
 
+    // Test event emitted
+    {
+        SignalFlagger flagger;
+        std::string fake_char_id("1");
+        Eris::Avatar * ea = new TestAvatar(0, fake_char_id);
+
+        TestCalendar ec(ea);
+        ec.Updated.connect(sigc::mem_fun(flagger,
+                &SignalFlagger::set));
+
+        ec.test_setSaneDefault();
+
+        assert(flagger.flagged());
+    }
+
 
     return 0;
 }
@@ -268,6 +290,12 @@ sigc::signal<void, LogLevel, const std::string&> Logged;
 void setLogLevel(LogLevel lvl)
 {
 }
+
+void doLog(LogLevel lvl, const std::string& msg)
+{
+    std::cerr << msg << std::endl << std::flush;
+}
+
 
 Avatar::Avatar(Account& pl, const std::string& entId) :
     m_account(pl),
