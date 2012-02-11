@@ -54,52 +54,40 @@ namespace WFMath {
 
 bool Equal(double x1, double x2, double epsilon)
 {
-    // Hack to get around nonstandard std:: namespacing in MSVC
-    using namespace std;
-
     // If the difference between the numbers is smaller than the
     // scaled epsilon we'll consider the numbers to be equal.
 
-    return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
+    return std::fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
 }
 
 bool Equal(float x1, float x2, float epsilon)
 {
-    // Hack to get around nonstandard std:: namespacing in MSVC
-    using namespace std;
-
     // If the difference between the numbers is smaller than the
     // scaled epsilon we'll consider the numbers to be equal.
 
-    return fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
+    return std::fabs(x1 - x2) <= _ScaleEpsilon(x1, x2, epsilon);
 }
 
 double _ScaleEpsilon(double x1, double x2, double epsilon)
 {
-    // Hack to get around nonstandard std:: namespacing in MSVC
-    using namespace std;
-
     // Get the exponent of the smaller of the two numbers (using the
     // smaller of the two gives us a tighter epsilon value).
     int exponent;
-    (void) frexp(fabs(x1) < fabs(x2) ? x1 : x2, &exponent);   
+    (void) std::frexp(std::fabs(x1) < std::fabs(x2) ? x1 : x2, &exponent);   
 
     // Scale epsilon by the exponent.
-    return ldexp(epsilon, exponent);
+    return std::ldexp(epsilon, exponent);
 }
 
 float _ScaleEpsilon(float x1, float x2, float epsilon)
 {
-    // Hack to get around nonstandard std:: namespacing in MSVC
-    using namespace std;
-
     // Get the exponent of the smaller of the two numbers (using the
     // smaller of the two gives us a tighter epsilon value).
     int exponent;
-    (void) frexp(fabs(x1) < fabs(x2) ? x1 : x2, &exponent);   
+    (void) std::frexp(std::fabs(x1) < std::fabs(x2) ? x1 : x2, &exponent);   
 
     // Scale epsilon by the exponent.
-    return ldexp(epsilon, exponent);
+    return std::ldexp(epsilon, exponent);
 }
 
 CoordType _ScaleEpsilon(const CoordType* x1, const CoordType* x2,
