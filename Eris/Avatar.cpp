@@ -207,7 +207,7 @@ void Avatar::moveInDirection(const WFMath::Vector<3>& vel)
         WFMath::CoordType plane_sqr_mag = sqr_mag - z_squared;
         if(plane_sqr_mag < WFMATH_EPSILON * z_squared) {
             // it's on the z axis
-            q.rotation(1, vel[2] > 0 ? -WFMath::Pi/2 : WFMath::Pi/2);
+            q.rotation(1, vel[2] > 0 ? -WFMath::numeric_constants<WFMath::CoordType>::pi()/2 : WFMath::numeric_constants<WFMath::CoordType>::pi()/2);
         } else {
             // rotate in the plane first
             q.rotation(2, std::atan2(vel[1], vel[0]));
