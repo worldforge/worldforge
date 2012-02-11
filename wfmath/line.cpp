@@ -25,8 +25,6 @@
 
 #include "line_funcs.h"
 
-using namespace WFMath;
-
 namespace WFMath {
 
 template class Line<2>;
