@@ -108,7 +108,7 @@ void Forest::populate()
                 plant.setDisplacement(WFMath::Point<2>(
                     (rng() - 0.5f) * species.m_deviation,
                     (rng() - 0.5f) * species.m_deviation));
-                plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * WFMath::Pi));
+                plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * WFMath::numeric_constants<WFMath::CoordType>::pi()));
                 ParameterDict::const_iterator J = species.m_parameters.begin();
                 ParameterDict::const_iterator Jend = species.m_parameters.end();
                 for (; J != Jend; ++J) {

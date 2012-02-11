@@ -44,9 +44,10 @@ int main()
     Mercator::TerrainMod * mp1 = new Mercator::LevelTerrainMod<WFMath::Ball>(10.0f, circ2);
     terrain.addMod(mp1);
 
-    const WFMath::RotBox<2> rot(WFMath::Point<2>(-80.,-130.) ,
-                                WFMath::Vector<2>(150.0,120.0),
-                                WFMath::RotMatrix<2>().rotation(WFMath::Pi/4));
+    const WFMath::RotBox<2> rot(
+          WFMath::Point<2>(-80.,-130.) ,
+          WFMath::Vector<2>(150.0,120.0),
+          WFMath::RotMatrix<2>().rotation(WFMath::numeric_constants<WFMath::CoordType>::pi()/4));
     Mercator::TerrainMod * mp2 = new Mercator::LevelTerrainMod<WFMath::RotBox>(10.0f, rot);
     terrain.addMod(mp2);
 
