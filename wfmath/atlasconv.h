@@ -44,49 +44,40 @@
 
 namespace WFMath {
 
-#ifdef ATLAS_MESSAGE_ELEMENT_H
-
-typedef Atlas::Message::WrongTypeException _AtlasBadParse;
-typedef Atlas::Message::Element _AtlasMessageType;
-typedef Atlas::Message::FloatType _AtlasFloatType;
-typedef Atlas::Message::ListType _AtlasListType;
-typedef Atlas::Message::MapType _AtlasMapType;
-
-inline bool _isNum(const _AtlasMessageType& a) {return a.isNum();}
-inline _AtlasFloatType _asNum(const _AtlasMessageType& a) {return a.asNum();}
-
-#else
+#ifndef ATLAS_MESSAGE_ELEMENT_H
 #error "You must include Atlas/Message/Element.h before wfmath/atlasconv.h"
 #endif
+
+typedef Atlas::Message::WrongTypeException _AtlasBadParse;
 
 class AtlasInType
 {
  public:
-  AtlasInType(const _AtlasMessageType& val) : m_val(val) {}
+  AtlasInType(const Atlas::Message::Element& val) : m_val(val) {}
   // allow nice conversions when necessary
   template<class C> AtlasInType(C c) : m_obj(c), m_val(m_obj) {}
-  operator const _AtlasMessageType&() const {return m_val;}
+  operator const Atlas::Message::Element&() const {return m_val;}
   bool IsList() const {return m_val.isList();}
-  const _AtlasListType& AsList() const {return m_val.asList();}
+  const Atlas::Message::ListType& AsList() const {return m_val.asList();}
  private:
-  _AtlasMessageType m_obj;
-  const _AtlasMessageType& m_val;
+  Atlas::Message::Element m_obj;
+  const Atlas::Message::Element& m_val;
 };
 
 class AtlasOutType
 {
  public:
-  AtlasOutType(const _AtlasListType& l) : m_val(l) {}
-  AtlasOutType(const _AtlasMapType& l) : m_val(l) {}
-  operator _AtlasMessageType&() {return m_val;}
-  operator const _AtlasMessageType&() const {return m_val;}
+  AtlasOutType(const Atlas::Message::ListType& l) : m_val(l) {}
+  AtlasOutType(const Atlas::Message::MapType& l) : m_val(l) {}
+  operator Atlas::Message::Element&() {return m_val;}
+  operator const Atlas::Message::Element&() const {return m_val;}
  private:
-  _AtlasMessageType m_val;
+  Atlas::Message::Element m_val;
 };
 
 inline AtlasOutType _ArrayToAtlas(const CoordType* array, unsigned len)
 {
-  _AtlasListType a(len);
+  Atlas::Message::ListType a(len);
 
   for(unsigned i = 0; i < len; ++i)
     a[i] = array[i];
@@ -99,13 +90,13 @@ inline void _ArrayFromAtlas(CoordType* array, unsigned len, const AtlasInType& a
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  const _AtlasListType& list(a.AsList());
+  const Atlas::Message::ListType& list(a.AsList());
 
   if(list.size() != (unsigned int) len)
     throw _AtlasBadParse();
 
   for(unsigned i = 0; i < len; ++i)
-    array[i] = _asNum(list[i]);
+    array[i] = list[i].asNum();
 }
 
 template<int dim>
@@ -133,16 +124,16 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
     throw _AtlasBadParse();
 
 
-  const _AtlasListType& list(a.AsList());
+  const Atlas::Message::ListType& list(a.AsList());
 
   if(list.size() != 4)
     throw _AtlasBadParse();
 
 
   for(int i = 0; i < 3; ++i)
-    m_vec[i] = _asNum(list[i]);
+    m_vec[i] = list[i].asNum();
 
-  m_w = _asNum(list[3]);
+  m_w = list[3].asNum();
 
   CoordType norm = std::sqrt(m_w * m_w + m_vec.sqrMag());
 
@@ -162,7 +153,7 @@ inline void Quaternion::fromAtlas(const AtlasInType& a)
 
 inline AtlasOutType Quaternion::toAtlas() const
 {
-  _AtlasListType a(4);
+  Atlas::Message::ListType a(4);
 
   for(int i = 0; i < 3; ++i)
     a[i] = m_vec[i];
@@ -202,7 +193,7 @@ inline void AxisBox<dim>::fromAtlas(const AtlasInType& a)
   if(!a.IsList())
     throw _AtlasBadParse();
 
-  const _AtlasListType& list(a.AsList());
+  const Atlas::Message::ListType& list(a.AsList());
 
   switch(list.size()) {
     case dim:
@@ -211,8 +202,8 @@ inline void AxisBox<dim>::fromAtlas(const AtlasInType& a)
       break;
     case (2 * dim):
       for(int i = 0; i < dim; ++i) {
-        m_low[i] = _asNum(list[i]);
-        m_high[i] = _asNum(list[i+dim]);
+        m_low[i] = list[i].asNum();
+        m_high[i] = list[i+dim].asNum();
       }
       m_low.setValid();
       m_high.setValid();
@@ -244,7 +235,7 @@ inline AtlasOutType AxisBox<dim>::toAtlas() const
 
   // Do case '2 * dim' above
 
-  _AtlasListType a(2*dim);
+  Atlas::Message::ListType a(2*dim);
   for(i = 0; i < dim; ++i) {
     a[i] = m_low[i];
     a[dim+i] = m_high[i];
@@ -256,7 +247,7 @@ inline AtlasOutType AxisBox<dim>::toAtlas() const
 template<int dim>
 inline void Ball<dim>::fromAtlas(const AtlasInType& a)
 {
-  const _AtlasMessageType& message(a);
+  const Atlas::Message::Element& message(a);
   if (message.isMap()) {
     const Atlas::Message::MapType& shapeElement(message.asMap());
     // Get sphere's radius
@@ -281,7 +272,7 @@ template<int dim>
 inline AtlasOutType Ball<dim>::toAtlas() const
 {
   Atlas::Message::MapType map;
-  map.insert(Atlas::Message::MapType::value_type("radius", _AtlasFloatType(m_radius)));
+  map.insert(Atlas::Message::MapType::value_type("radius", m_radius));
   map.insert(Atlas::Message::MapType::value_type("position", m_center.toAtlas()));
   return map;
 }
@@ -295,7 +286,7 @@ inline Ball<dim>::Ball(const AtlasInType& a) : m_center(Point<dim>::ZERO()),
 
 template<template <int> class ShapeT, int dim>
 inline void _CornersFromAtlas(ShapeT<dim> & shape,
-                              const _AtlasMessageType& message)
+                              const Atlas::Message::Element& message)
 {
   if (message.isList()) {
     const Atlas::Message::ListType& pointsData(message.asList());
@@ -320,7 +311,7 @@ inline void _CornersFromAtlas(ShapeT<dim> & shape,
 
 inline void Polygon<2>::fromAtlas(const AtlasInType& a)
 {
-  const _AtlasMessageType& message(a);
+  const Atlas::Message::Element& message(a);
   if (message.isMap()) {
     const Atlas::Message::MapType& shapeElement(message.asMap());
     Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
@@ -354,7 +345,7 @@ inline AtlasOutType Polygon<2>::toAtlas() const
 template<int dim>
 inline void Line<dim>::fromAtlas(const AtlasInType& a)
 {
-  const _AtlasMessageType& message(a);
+  const Atlas::Message::Element& message(a);
   if (message.isMap()) {
     const Atlas::Message::MapType& shapeElement(message.asMap());
     Atlas::Message::MapType::const_iterator it = shapeElement.find("points");
@@ -394,7 +385,7 @@ inline Line<dim>::Line(const AtlasInType& a) {
 template<int dim>
 inline void RotBox<dim>::fromAtlas(const AtlasInType& a)
 {
-  const _AtlasMessageType& message(a);
+  const Atlas::Message::Element& message(a);
   if (message.isMap()) {
     const Atlas::Message::MapType& shapeElement(message.asMap());
     // Get rotbox's position
