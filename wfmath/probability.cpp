@@ -98,9 +98,11 @@ FloatT PoissonConditional(FloatT mean, unsigned int step)
     return std::exp(-mean);
 
   if(mean > step + 1)
-    return Poisson(mean, step) / IncompleteGamma<FloatT>(step, mean);
+    return Poisson(mean, step) /
+           IncompleteGamma(static_cast<FloatT>(step), mean);
 
-  return 1.0 / IncompleteGammaNoPrefactor<FloatT>(step, mean);
+  static const FloatT one = 1.0;
+  return one / IncompleteGammaNoPrefactor(static_cast<FloatT>(step), mean);
 }
 
 template<typename FloatT>
@@ -122,7 +124,7 @@ static FloatT LogPoisson(FloatT mean, unsigned int step)
   if(step == 0)
     return -mean;
 
-  FloatT first = step * std::log(mean);
+  FloatT first = static_cast<FloatT>(step) * std::log(mean);
   FloatT second = mean +  LogFactorial<FloatT>(step);
 
   assert("LogFactorial() always returns positive" && second > 0);
@@ -142,13 +144,13 @@ FloatT Factorial(unsigned int n)
     return 1;
 
   if(n < GammaCutoff) {
-    FloatT ans = n;
+    FloatT ans = static_cast<FloatT>(n);
     while(--n > 1) // Don't need to multiply by 1
-      ans *= n;
+      ans *= static_cast<FloatT>(n);
     return ans;
   }
   else
-    return std::exp(LogGamma<FloatT>(n + 1));
+    return std::exp(LogGamma(static_cast<FloatT>(n + 1)));
 }
 
 template<typename FloatT>
@@ -158,13 +160,13 @@ FloatT LogFactorial(unsigned int n)
     return 0; // ln(0!) = ln(1!) = ln(1) = 0
 
   if(n < GammaCutoff) {
-    FloatT ans = n;
+    FloatT ans = static_cast<FloatT>(n);
     while(--n > 1) // Don't need to multiply by 1
-      ans *= n;
+      ans *= static_cast<FloatT>(n);
     return std::log(ans);
   }
   else
-    return LogGamma<FloatT>(n + 1);
+    return LogGamma(static_cast<FloatT>(n + 1));
 }
 
 template<typename FloatT>
