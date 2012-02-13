@@ -70,6 +70,11 @@ int main()
   line.addCorner(1, WFMath::Point<2>(10, 0));
   atlas_test(line);
   
+  Line<3> line2;
+  line2.addCorner(0, WFMath::Point<3>(0, 0, 0));
+  line2.addCorner(1, WFMath::Point<3>(10, 0, 5));
+  atlas_test(line2);
+  
   RotBox<2> rotbox(Point<2>(1, 2), Vector<2>(10, 20), RotMatrix<2>().identity());
   atlas_test(rotbox);
 

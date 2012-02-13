@@ -284,6 +284,32 @@ inline Ball<dim>::Ball(const AtlasInType& a) : m_center(Point<dim>::ZERO()),
   fromAtlas(a);
 }
 
+inline bool _ListNumCheck(const Atlas::Message::ListType & list, int dim)
+{
+  for(size_t i = 0; i < dim; ++i) {
+    if (!list[i].isNum()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+template<template <int> class ShapeT>
+inline void _AddCorner(ShapeT<3> & shape,
+                       const Atlas::Message::ListType & point)
+{
+  WFMath::Point<3> wpt(point[0].asNum(), point[1].asNum(), point[2].asNum());
+  shape.addCorner(shape.numCorners(), wpt);
+}
+
+template<template <int> class ShapeT>
+inline void _AddCorner(ShapeT<2> & shape,
+                       const Atlas::Message::ListType & point)
+{
+  WFMath::Point<2> wpt(point[0].asNum(), point[1].asNum());
+  shape.addCorner(shape.numCorners(), wpt);
+}
+
 template<template <int> class ShapeT, int dim>
 inline void _CornersFromAtlas(ShapeT<dim> & shape,
                               const Atlas::Message::Element& message)
@@ -296,15 +322,12 @@ inline void _CornersFromAtlas(ShapeT<dim> & shape,
         continue;
       }
       
-      // FIXME this is hardcoded 2D, despite the function claiming to 
-      // be n-dim
       const Atlas::Message::ListType& point(pointsData[p].asList());
-      if ((point.size() < dim) || !point[0].isNum() || !point[1].isNum()) {
+      if ((point.size() < dim) || !_ListNumCheck(point, dim)) {
         continue;
       }
       
-      WFMath::Point<dim> wpt(point[0].asNum(), point[1].asNum());
-      shape.addCorner(shape.numCorners(), wpt);
+      _AddCorner(shape, point);
     }
   }
 }
