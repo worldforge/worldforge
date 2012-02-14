@@ -32,15 +32,17 @@
 	#include "config.h"
 #endif
 
-WFMath::MTRand WFMath::MTRand::instance;
+namespace WFMath {
 
-static WFMath::MTRand::uint32 hash( time_t t, clock_t c )
+MTRand MTRand::instance;
+
+static MTRand::uint32 hash( time_t t, clock_t c )
 {
 	// Get a uint32 from t and c
 	// Better than uint32(x) in case x is floating point in [0,1]
 	// Based on code by Lawrence Kirby (fred@genesis.demon.co.uk)
 
-        typedef WFMath::MTRand::uint32 uint32;
+        typedef MTRand::uint32 uint32;
 
 	// guarantee time-based seeds will change
 	static uint32 differ = 0;
@@ -62,7 +64,7 @@ static WFMath::MTRand::uint32 hash( time_t t, clock_t c )
 	return ( h1 + differ++ ) ^ h2;
 }
 
-void WFMath::MTRand::seed()
+void MTRand::seed()
 {
 	// Seed the generator with an array from /dev/urandom if available
 	// Otherwise use a hash of time() and clock() values
@@ -85,3 +87,4 @@ void WFMath::MTRand::seed()
 	seed( hash( time(NULL), clock() ) );
 }
 
+}
