@@ -27,4 +27,5 @@ wfmath.spec
 *.o
 *_test
 *_test.log
+.*.swp
 test-suite.log
