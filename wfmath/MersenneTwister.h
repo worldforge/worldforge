@@ -98,6 +98,10 @@ public:
 	// reading 624 consecutive values.
 	
 	// Access to 32-bit random numbers
+	template<typename FloatT>
+	FloatT rand();                          // real number in [0,1]
+	float randf();                          // real number in [0,1]
+	float randf( const float& n );          // real number in [0,n]
 	double rand();                          // real number in [0,1]
 	double rand( const double& n );         // real number in [0,n]
 	double randExc();                       // real number in [0,1)
@@ -148,6 +152,20 @@ inline MTRand::MTRand( uint32 *const bigSeed, const uint32 seedLength ) : pNext(
 
 inline MTRand::MTRand() : pNext(0), left(0)
 	{ seed(); }
+
+template<>
+inline float MTRand::rand<float>()
+	{ return float(randInt()) * (1.0f/4294967295.0f); }
+
+template<>
+inline double MTRand::rand<double>()
+	{ return double(randInt()) * (1.0/4294967295.0); }
+
+inline float MTRand::randf()
+	{ return float(randInt()) * (1.0f/4294967295.0f); }
+
+inline float MTRand::randf( const float& n )
+	{ return randf() * n; }
 
 inline double MTRand::rand()
 	{ return double(randInt()) * (1.0/4294967295.0); }
