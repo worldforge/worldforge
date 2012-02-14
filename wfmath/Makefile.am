@@ -33,7 +33,7 @@ libwfmath_0_3_la_LDFLAGS = -lm -version-info @WFMATH_VERSION_INFO@
 check_PROGRAMS = vector_test rotmatrix_test point_test \
 	quaternion_test shape_test polygon_test probability_test \
 	const_test intstring_test \
-	time_test ball_test line_test
+	time_test ball_test line_test randgen_test
 TESTS = $(check_PROGRAMS)
 
 vector_test_SOURCES = vector_test.cpp general_test.h
@@ -83,3 +83,7 @@ ball_test_LDADD = libwfmath-0.3.la
 line_test_SOURCES = line_test.cpp
 line_test_LDFLAGS = -lm
 line_test_LDADD = libwfmath-0.3.la
+
+randgen_test_SOURCES = randgen_test.cpp
+randgen_test_LDFLAGS = -lm
+randgen_test_LDADD = libwfmath-0.3.la
