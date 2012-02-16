@@ -402,13 +402,6 @@ inline bool Contains(const Point<dim>& p, const RotBox<dim>& r, bool proper)
 template<int dim>
 bool Intersect(const RotBox<dim>& r, const AxisBox<dim>& b, bool proper);
 
-// FIXME only have two special cases implemented
-
-template<>
-bool Intersect<2>(const RotBox<2>& r, const AxisBox<2>& b, bool proper);
-template<>
-bool Intersect<3>(const RotBox<3>& r, const AxisBox<3>& b, bool proper);
-
 template<int dim>
 inline bool Contains(const RotBox<dim>& r, const AxisBox<dim>& b, bool proper)
 {

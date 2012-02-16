@@ -120,9 +120,6 @@ template bool Intersect<AxisBox<2>,RotBox<2> >(const AxisBox<2>&, const RotBox<2
 template bool Intersect<AxisBox<3>,RotBox<3> >(const AxisBox<3>&, const RotBox<3>&, bool);
 template bool Contains<2>(const AxisBox<2>&, const RotBox<2>&, bool);
 template bool Contains<3>(const AxisBox<3>&, const RotBox<3>&, bool);
-// don't need these two declared, they're already specializations
-//template bool Intersect<2>(const RotBox<2>&, const AxisBox<2>&, bool);
-//template bool Intersect<3>(const RotBox<3>&, const AxisBox<3>&, bool);
 template bool Contains<2>(const RotBox<2>&, const AxisBox<2>&, bool);
 template bool Contains<3>(const RotBox<3>&, const AxisBox<3>&, bool);
 
