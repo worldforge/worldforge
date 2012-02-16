@@ -136,8 +136,6 @@ inline Ball<dim> AxisBox<dim>::boundingSphereSloppy() const
 template<int dim, template<class, class> class container>
 AxisBox<dim> BoundingBox(const container<AxisBox<dim>, std::allocator<AxisBox<dim> > >& c)
 {
-  // FIXME become friend
-
   typename container<AxisBox<dim>, std::allocator<AxisBox<dim> > >::const_iterator i = c.begin(), end = c.end();
 
   if(i == end) {
