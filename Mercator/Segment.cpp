@@ -298,7 +298,7 @@ void Segment::populateSurfaces()
 inline float randHalf(WFMath::MTRand& rng)
 {
     //return (float) rand() / RAND_MAX - 0.5f;
-    return rng() - 0.5;
+    return rng.rand<float>() - 0.5f;
 }
 
 
