@@ -15,28 +15,26 @@ namespace Eris
 {
 
 ServerInfo::ServerInfo() :
-    m_status(INVALID)
+    m_status(INVALID),
+    _name("-"),
+    _ruleset("-"),
+    _clients(0),
+    _ping(-1),
+    _entities(0),
+    _uptime(0)
 {
-    _ping = -1;
-    _name = "-";
-    _ruleset = "-";
-    _server = "";
-    _clients = 0;
-    _uptime = 0;
-    _entities = 0;
 }
 
 ServerInfo::ServerInfo(const std::string &host) :
     m_status(INVALID),
-    _host(host)
+    _host(host),
+    _name("-"),
+    _ruleset("-"),
+    _clients(0),
+    _ping(-1),
+    _entities(0),
+    _uptime(0)
 {
-    _ping = -1;
-    _name = "-";
-    _ruleset = "-";
-    _server = "";
-    _clients = 0;
-    _uptime = 0;
-    _entities = 0;
 }
 	
 void ServerInfo::processServer(const RootEntity &svr)
