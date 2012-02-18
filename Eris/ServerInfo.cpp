@@ -23,6 +23,7 @@ ServerInfo::ServerInfo() :
     _server = "";
     _clients = 0;
     _uptime = 0;
+    _entities = 0;
 }
 
 ServerInfo::ServerInfo(const std::string &host) :
@@ -35,6 +36,7 @@ ServerInfo::ServerInfo(const std::string &host) :
     _server = "";
     _clients = 0;
     _uptime = 0;
+    _entities = 0;
 }
 	
 void ServerInfo::processServer(const RootEntity &svr)
@@ -45,6 +47,9 @@ void ServerInfo::processServer(const RootEntity &svr)
     _clients = svr->getAttr("clients").asInt();
     _server = svr->getAttr("server").asString();
     _uptime = svr->getAttr("uptime").asFloat();
+    if (svr->hasAttr("entities")) {
+        _entities = svr->getAttr("entities").asInt();
+    }
     
     if (svr->hasAttr("version")) {
         m_version = svr->getAttr("version").asString();

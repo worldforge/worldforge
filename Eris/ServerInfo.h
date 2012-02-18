@@ -75,6 +75,10 @@ public:
     /// the server's uptime in seconds
     double getUptime() const
     { return _uptime; }
+
+    /// the number of entities on the server
+    long getEntities() const
+    { return _entities; }
 	
 protected:
     friend class Meta;
@@ -101,6 +105,7 @@ private:
     
     int _clients;		///< Number of clients connected to the server
     int _ping;			///< Estimated round-trip-time (ping) in milliseconds
+    long _entities;      ///< Number of entities on the server.
     
     double _uptime;		///< Server uptime in seconds
     
