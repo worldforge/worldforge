@@ -220,7 +220,7 @@ Point<dim> Barycenter(const container<Point<dim>, std::allocator<Point<dim> > >&
   }
 
   // Make sure the weights don't add up to zero
-  if (max_weight <= 0 || fabs(tot_weight) <= max_weight * WFMATH_EPSILON) {
+  if (max_weight <= 0 || std::fabs(tot_weight) <= max_weight * WFMATH_EPSILON) {
     return out;
   }
 
