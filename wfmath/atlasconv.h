@@ -286,7 +286,7 @@ inline Ball<dim>::Ball(const AtlasInType& a) : m_center(Point<dim>::ZERO()),
 
 inline bool _ListNumCheck(const Atlas::Message::ListType & list, int dim)
 {
-  for(size_t i = 0; i < dim; ++i) {
+  for(int i = 0; i < dim; ++i) {
     if (!list[i].isNum()) {
       return false;
     }
