@@ -203,6 +203,9 @@ class Vector {
   /// Shift a point by a vector, in the opposite direction
   friend Point<dim>& operator-=<dim>(Point<dim>& p, const Vector& rhs);
 
+  friend CoordType Cross(const Vector<2>& v1, const Vector<2>& v2);
+  friend Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2);
+
   /// The dot product of two vectors
   friend CoordType Dot<dim>(const Vector& v1, const Vector& v2);
   /// The angle between two vectors
@@ -340,13 +343,12 @@ class Vector {
   /// 3D only: convert a vector to shperical coordinates
   void asSpherical(CoordType& r, CoordType& theta, CoordType& phi) const;
 
-  // FIXME make Cross() a friend function, and make this private
-  double _scaleEpsilon(const Vector& v, CoordType epsilon = WFMATH_EPSILON) const
-  {return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
-
   const CoordType* elements() const {return m_elem;}
 
  private:
+  double _scaleEpsilon(const Vector& v, CoordType epsilon = WFMATH_EPSILON) const
+  {return _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);}
+
   CoordType m_elem[dim];
   bool m_valid;
 };
