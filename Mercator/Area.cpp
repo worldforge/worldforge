@@ -186,6 +186,7 @@ private:
     CoordType rightX;
 };
 
+// FIXME Why pass Clip by value?
 template <class Clip>
 WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, Clip clipper)
 {
