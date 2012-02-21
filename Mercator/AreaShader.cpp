@@ -107,7 +107,7 @@ private:
     double m_y;
 };
 
-void contribute(Surface& s, unsigned int x, unsigned int y, double amount)
+static void contribute(Surface& s, unsigned int x, unsigned int y, double amount)
 {    
     unsigned int sz = s.getSize() - 1;
     if ((x == 0) || (x == sz))
@@ -119,7 +119,7 @@ void contribute(Surface& s, unsigned int x, unsigned int y, double amount)
     s(x, y, 0) = std::min( static_cast<ColorT>(I_ROUND(amount * 255)) + s(x,y,0), 255);
 }
 
-void span(Surface& s, double y, double xStart, double xEnd)
+static void span(Surface& s, double y, double xStart, double xEnd)
 {
     assert(xStart <= xEnd); 
 
@@ -142,7 +142,7 @@ void span(Surface& s, double y, double xStart, double xEnd)
     }
 }
 
-void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
+static void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
 {
     if (!inPoly.isValid()) return;
     
