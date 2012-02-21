@@ -26,7 +26,7 @@ namespace Mercator
 typedef WFMath::Point<2> Point2;
 typedef WFMath::Vector<2> Vector2;
 
-const double ROW_HEIGHT = 1 / 4.0; // 4x over-sample
+const WFMath::CoordType ROW_HEIGHT = 1 / 4.0f; // 4x over-sample
 
 /// \brief The edge of an area.
 class Edge
@@ -64,9 +64,9 @@ public:
     /// Calculate the x coordinate on the edge line where the y coordinate
     /// is the value specified.
     /// @param y the y coordinate where the calculation is required.
-    double xValueAtY(double y) const
+    WFMath::CoordType xValueAtY(WFMath::CoordType y) const
     {
-        double x = m_start.x() + ((y - m_start.y()) * m_inverseGradient);
+        WFMath::CoordType x = m_start.x() + ((y - m_start.y()) * m_inverseGradient);
      //   std::cout << "edge (" << m_start << ", " << m_start + m_seg << ") at y=" << y << " has x=" << x << std::endl; 
         return x;
     }
@@ -85,7 +85,7 @@ private:
     /// The vector describing the edge from its start.
     Vector2 m_seg;
     /// The inverse of the gradient of the line.
-    double m_inverseGradient;
+    WFMath::CoordType m_inverseGradient;
 };
 
 /// \brief The edge of an area parallel to the x axis.
@@ -95,7 +95,7 @@ public:
     /// Constructor
     ///
     /// @param y coordinate on the y axis of the edge.
-    EdgeAtY(double y) : m_y(y) {}
+    EdgeAtY(WFMath::CoordType y) : m_y(y) {}
     
     /// Determine which edge crosses this edge at a lower x coordinate.
     bool operator()(const Edge& u, const Edge& v) const
@@ -104,10 +104,12 @@ public:
     }
 private:
     /// The coordinate on the y axis of the edge.
-    double m_y;
+    WFMath::CoordType m_y;
 };
 
-void contribute(Surface& s, unsigned int x, unsigned int y, double amount)
+static void contribute(Surface& s,
+                       unsigned int x, unsigned int y,
+                       WFMath::CoordType amount)
 {    
     unsigned int sz = s.getSize() - 1;
     if ((x == 0) || (x == sz))
@@ -116,10 +118,13 @@ void contribute(Surface& s, unsigned int x, unsigned int y, double amount)
     if ((y == 0) || (y == sz))
         amount *= 2;
         
-    s(x, y, 0) = std::min( static_cast<ColorT>(I_ROUND(amount * 255)) + s(x,y,0), 255);
+    s(x, y, 0) = std::min(static_cast<ColorT>(I_ROUND(amount * 255)) + s(x,y,0), 255);
 }
 
-void span(Surface& s, double y, double xStart, double xEnd)
+static void span(Surface& s,
+                 WFMath::CoordType y,
+                 WFMath::CoordType xStart,
+                 WFMath::CoordType xEnd)
 {
     assert(xStart <= xEnd); 
 
@@ -133,16 +138,16 @@ void span(Surface& s, double y, double xStart, double xEnd)
     if (ixStart == ixEnd) {
         contribute(s, ixStart, row, ROW_HEIGHT * (xEnd - xStart));
     } else {
-        contribute(s, ixStart, row, ROW_HEIGHT * (ixStart - xStart + 0.5));
+        contribute(s, ixStart, row, ROW_HEIGHT * (ixStart - xStart + 0.5f));
         
         for (unsigned int i=ixStart+1; i < ixEnd; ++i)
             contribute(s, i, row, ROW_HEIGHT);
         
-        contribute(s, ixEnd, row, ROW_HEIGHT * (xEnd - ixEnd + 0.5));
+        contribute(s, ixEnd, row, ROW_HEIGHT * (xEnd - ixEnd + 0.5f));
     }
 }
 
-void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
+static void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
 {
     if (!inPoly.isValid()) return;
     
@@ -150,7 +155,7 @@ void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
     std::vector<Edge> active;
 
     Point2 lastPt = inPoly.getCorner(inPoly.numCorners() - 1);
-    for (int p=0; p < inPoly.numCorners(); ++p) {
+    for (std::size_t p=0; p < inPoly.numCorners(); ++p) {
         Point2 curPt = inPoly.getCorner(p);
         
         // skip horizontal edges
@@ -171,7 +176,7 @@ void scanConvert(const WFMath::Polygon<2>& inPoly, Surface& sf)
     // middle of sample rows - we do this by offseting by 1/2 a row height
     // if you don't do this, you'll find alternating rows are over/under
     // sampled, producing a charming striped effect.
-    double y = std::floor(active.front().start().y()) + ROW_HEIGHT * 0.5;
+    WFMath::CoordType y = std::floor(active.front().start().y()) + ROW_HEIGHT * 0.5f;
     
     for (; !pending.empty() || !active.empty();  y += ROW_HEIGHT)
     {

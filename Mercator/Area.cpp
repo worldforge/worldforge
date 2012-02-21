@@ -193,13 +193,13 @@ WFMath::Polygon<2> sutherlandHodgmanKernel(const WFMath::Polygon<2>& inpoly, Cli
     WFMath::Polygon<2> outpoly;
     
     if (!inpoly.isValid()) return inpoly;
-    int points = inpoly.numCorners();
+    std::size_t points = inpoly.numCorners();
     if (points < 3) return outpoly; // i.e an invalid result
     
     Point2 lastPt = inpoly.getCorner(points - 1);
     bool lastInside = clipper.inside(lastPt);
     
-    for (int p=0; p < points; ++p) {
+    for (std::size_t p = 0; p < points; ++p) {
     
         Point2 curPt = inpoly.getCorner(p);
         bool inside = clipper.inside(curPt);

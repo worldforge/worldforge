@@ -106,13 +106,13 @@ void Forest::populate()
                 Plant & plant = m_plants[i][j];
                 // plant.setHeight(rng() * plant_height_range + plant_min_height);
                 plant.setDisplacement(WFMath::Point<2>(
-                    (rng() - 0.5f) * species.m_deviation,
-                    (rng() - 0.5f) * species.m_deviation));
-                plant.setOrientation(WFMath::Quaternion(2, rng() * 2 * WFMath::numeric_constants<WFMath::CoordType>::pi()));
+                    (rng.rand<WFMath::CoordType>() - 0.5f) * species.m_deviation,
+                    (rng.rand<WFMath::CoordType>() - 0.5f) * species.m_deviation));
+                plant.setOrientation(WFMath::Quaternion(2, rng.rand<WFMath::CoordType>() * 2 * WFMath::numeric_constants<WFMath::CoordType>::pi()));
                 ParameterDict::const_iterator J = species.m_parameters.begin();
                 ParameterDict::const_iterator Jend = species.m_parameters.end();
                 for (; J != Jend; ++J) {
-                    plant.setParameter(J->first, rng() * J->second.range + J->second.min);
+                    plant.setParameter(J->first, rng.rand<WFMath::CoordType>() * J->second.range + J->second.min);
                 }
                 break;
             }
