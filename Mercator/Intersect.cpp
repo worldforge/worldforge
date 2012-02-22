@@ -28,14 +28,15 @@ static inline float gridfloor(float d)
 bool Intersect(const Terrain &t, const WFMath::AxisBox<3> &bbox)
 {
     float max, min=bbox.lowCorner()[2];
-    int res = t.getResolution();
+    const int res = t.getResolution();
+    const float spacing = t.getSpacing();
 
     //determine which segments are involved
     //usually will just be one
-    int xlow  = (int) floor(bbox.lowCorner()[0] / res);
-    int xhigh = (int) gridceil(bbox.highCorner()[0] / res);
-    int ylow  = (int) floor(bbox.lowCorner()[1] / res);
-    int yhigh = (int) gridceil(bbox.highCorner()[1] / res);
+    int xlow  = (int) floor(bbox.lowCorner()[0] / spacing);
+    int xhigh = (int) gridceil(bbox.highCorner()[0] / spacing);
+    int ylow  = (int) floor(bbox.lowCorner()[1] / spacing);
+    int yhigh = (int) gridceil(bbox.highCorner()[1] / spacing);
 
     //loop across all tiles covered by this bbox
     for (int x = xlow; x < xhigh; x++) {
@@ -54,16 +55,16 @@ bool Intersect(const Terrain &t, const WFMath::AxisBox<3> &bbox)
 		//now check each tile point covered by the entity bbox
                 
                 //clip the points to be tested against the bbox
-                int min_x = (int) floor(bbox.lowCorner()[0] - (x * res));
+                int min_x = (int) floor(bbox.lowCorner()[0] - (x * spacing));
                 if (min_x < 0) min_x = 0;
 
-                int max_x = (int) gridceil(bbox.highCorner()[0] - (x * res));
+                int max_x = (int) gridceil(bbox.highCorner()[0] - (x * spacing));
                 if (max_x > res) min_x = res;
                 
-                int min_y = (int) floor(bbox.lowCorner()[1] - (y * res));
+                int min_y = (int) floor(bbox.lowCorner()[1] - (y * spacing));
                 if (min_y < 0) min_y = 0;
 
-                int max_y = (int) gridceil(bbox.highCorner()[1] - (y * res));
+                int max_y = (int) gridceil(bbox.highCorner()[1] - (y * spacing));
                 if (max_y > res) min_y = res;
 
                 //loop over each point and see if it is greater than the minimum
