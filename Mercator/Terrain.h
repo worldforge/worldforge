@@ -130,7 +130,7 @@ class Terrain {
     Segment * getSegment(int x, int y) const;
 
     /// \brief Accessor for base point resolution.
-    const int getResolution() const {
+    int getResolution() const {
         return m_res;
     }
 
