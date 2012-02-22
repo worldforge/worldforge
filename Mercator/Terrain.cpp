@@ -32,7 +32,8 @@ const float Terrain::defaultLevel = 8;
 /// - SHADED is set if shaders are going to be used on this terrain.
 /// @param resolution the spacing between adjacent base points. Defaults to 64.
 Terrain::Terrain(unsigned int options, unsigned int resolution) : m_options(options),
-                                                                  m_res(resolution)
+                                                                  m_res(resolution),
+                                                                  m_spacing(resolution)
 {
 
 }

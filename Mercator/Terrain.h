@@ -64,6 +64,8 @@ class Terrain {
     const unsigned int m_options;
     /// \brief BasePoint resolution, or distance between adjacent points.
     const int m_res;
+    /// \brief BasePoints spacing, same as m_res in float form for efficiency
+    const float m_spacing;
 
     /// \brief 2D spatial container with all BasePoints.
     Pointstore m_basePoints;
@@ -120,8 +122,8 @@ class Terrain {
     /// @return zero if no segment is defined at that location, or a pointer
     /// to a Segment otherwise.
     Segment * getSegment(float x, float y) const {
-        int ix = (int)floor(x / m_res);
-        int iy = (int)floor(y / m_res);
+        int ix = (int)floor(x / m_spacing);
+        int iy = (int)floor(y / m_spacing);
         return getSegment(ix, iy);
     }
 
@@ -130,6 +132,11 @@ class Terrain {
     /// \brief Accessor for base point resolution.
     const int getResolution() const {
         return m_res;
+    }
+
+    /// \brief Accessor for base point spacing.
+    float getSpacing() const {
+        return m_spacing;
     }
 
     /// \brief Accessor for 2D sparse array of Segment pointers.
