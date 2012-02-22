@@ -32,23 +32,24 @@ namespace Mercator {
 class LinInterp {
   private:
     /// The length of the line.
-    int m_size;
+    float m_size;
     /// Flag indicating that both points have the same value.
     bool noCalc;
   public:
     /// Values at the two ends.
     float ep1, ep2;
     /// \brief Determine the interpolated value along the line.
-    inline float calc(int loc) 
+    inline float calc(float loc) 
     {
-        return ((noCalc) ? ep1 : ((m_size-loc) * ep1 + loc * ep2));
+        return ((noCalc) ? ep1 :
+                ((m_size-loc) * ep1 + loc * ep2));
     }
     /// \brief Constructor
     ///
     /// @param size length of the line.
     /// @param l value at one end of the line.
     /// @param h value at one end of the line.
-    LinInterp(int size,float l, float h) : m_size(size), noCalc(false), 
+    LinInterp(float size,float l, float h) : m_size(size), noCalc(false), 
               ep1(l/size), ep2(h/size) 
     {
         if (l==h) {
@@ -67,18 +68,18 @@ class LinInterp {
 class QuadInterp {
   private:
     /// The length of one side of the square quad.
-    int m_size;
+    float m_size;
     /// Flag indicating that all points have the same value.
     bool noCalc;
   public:
     /// Values at the four corners.
     float ep1, ep2, ep3, ep4;
     /// \brief Determine the interpolated value within the quad.
-    inline float calc(int locX, int locY) 
+    inline float calc(float locX, float locY) 
     {
         return  ((noCalc) ? ep1 :
-                (( ep1*(m_size-locX) + ep2 * locX) * (m_size-locY) +
-                ( ep4*(m_size-locX) + ep3 * locX) * (locY) ) / m_size );
+                 (( ep1*(m_size-locX) + ep2 * locX) * (m_size-locY) +
+                 ( ep4*(m_size-locX) + ep3 * locX) * (locY) ) / m_size );
     }
     /// \brief Constructor
     ///
@@ -87,7 +88,7 @@ class QuadInterp {
     /// @param e2 value at one corner of the square quad.
     /// @param e3 value at one corner of the square quad.
     /// @param e4 value at one corner of the square quad.
-    QuadInterp(int size,float e1, float e2, float e3, float e4)
+    QuadInterp(float size,float e1, float e2, float e3, float e4)
         : m_size(size), noCalc(false),
           ep1(e1/size), ep2(e2/size), ep3(e3/size), ep4(e4/size) 
     {
