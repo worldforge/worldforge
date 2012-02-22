@@ -85,18 +85,22 @@ bool Intersect(const Terrain &t, const WFMath::AxisBox<3> &bbox)
     return false;
 }
 
-bool Intersect(const Terrain &t, const WFMath::Point<3> &pt) 
-{
-    return HOT(t, pt) <= 0.0;
-}
-
-float HOT(const Terrain &t, const WFMath::Point<3> &pt) 
+static float HOT(const Terrain &t, const WFMath::Point<3> &pt, float & h) 
 {
     WFMath::Vector<3> normal; 
     float terrHeight;
-    t.getHeightAndNormal(pt[0], pt[1], terrHeight, normal);
+    if (!t.getHeightAndNormal(pt[0], pt[1], terrHeight, normal)) {
+        return false;
+    }
 
-    return (pt[2] - terrHeight);
+    h = (pt[2] - terrHeight);
+    return true;
+}
+
+bool Intersect(const Terrain &t, const WFMath::Point<3> &pt) 
+{
+    float h;
+    return HOT(t, pt, h) && h <= 0.0;
 }
 
 //helper function for ray terrain intersection
@@ -220,7 +224,8 @@ bool Intersect(const Terrain &t, const WFMath::Point<3> &sPt, const WFMath::Vect
 
 
     // check if startpoint is below ground
-    if (HOT(t, sPt) < 0.0) return true;
+    float hot;
+    if (HOT(t, sPt, hot) && hot < 0.0) return true;
     
     float paraX=0.0, paraY=0.0; //used to store the parametric gap between grid crossings 
     float pX, pY; //the accumulators for the parametrics as we traverse the ray
