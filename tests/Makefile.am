@@ -24,6 +24,16 @@ Shadertest_SOURCES = Shadertest.cpp
 TerrainModtest_SOURCES = TerrainModtest.cpp
 
 Intersecttest_SOURCES = Intersecttest.cpp
+Intersecttest_LDADD = \
+    $(top_builddir)/Mercator/Area.lo \
+    $(top_builddir)/Mercator/BasePoint.lo \
+    $(top_builddir)/Mercator/Buffer.lo \
+    $(top_builddir)/Mercator/Effector.lo \
+    $(top_builddir)/Mercator/Intersect.lo \
+    $(top_builddir)/Mercator/Segment.lo \
+    $(top_builddir)/Mercator/Shader.lo \
+    $(top_builddir)/Mercator/Surface.lo \
+    $(top_builddir)/Mercator/Terrain.lo
 
 testPhys_SOURCES = testPhys.cpp
 
