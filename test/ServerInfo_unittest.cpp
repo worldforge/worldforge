@@ -24,7 +24,49 @@
 #define DEBUG
 #endif
 
+#include "Eris/ServerInfo.h"
+#include "ElementExerciser.h"
+#include <Atlas/Objects/RootEntity.h>
+#include <sigc++/slot.h>
+
+namespace Eris
+{
+
+class TestServerInfo: public ServerInfo
+{
+public:
+    void injectAtlas(const Atlas::Objects::Entity::RootEntity& svr)
+    {
+        processServer(svr);
+    }
+};
+}
+
 int main()
 {
+
+    //ctor
+    new Eris::ServerInfo();
+
+    {
+        //ctor and dtor
+        Eris::ServerInfo();
+    }
+
+    Eris::TestServerInfo info;
+
+    sigc::slot<void, const Atlas::Objects::Entity::RootEntity&> slot(
+            sigc::mem_fun(info, &Eris::TestServerInfo::injectAtlas));
+    ElementExerciser<Atlas::Objects::Entity::RootEntity> exerciser(slot);
+    exerciser.addParam("ruleset", ElementParam("mason"));
+    exerciser.addParam("clients", ElementParam(2));
+    exerciser.addParam("server", ElementParam("localhost"));
+    exerciser.addParam("uptime", ElementParam(1000.0f));
+    exerciser.addParam("entities", ElementParam(200));
+    exerciser.addParam("version", ElementParam("1.0"));
+    exerciser.addParam("builddate", ElementParam("2000-01-01"));
+
+    exerciser.exercise();
+
     return 0;
 }
