@@ -74,7 +74,7 @@ inline bool RotMatrix<dim>::isEqualTo(const RotMatrix<dim>& m, CoordType epsilon
 
   for(int i = 0; i < dim; ++i)
     for(int j = 0; j < dim; ++j)
-      if(fabs(m_elem[i][j] - m.m_elem[i][j]) > epsilon)
+      if(std::fabs(m_elem[i][j] - m.m_elem[i][j]) > epsilon)
         return false;
 
   // Don't need to test m_flip, it's determined by the values of m_elem.

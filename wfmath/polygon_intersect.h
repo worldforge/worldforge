@@ -414,7 +414,7 @@ bool _PolyContainsBox(const _Poly2Orient<dim> &orient, const Polygon<2> &poly,
       continue;
     if(num_dim == 2)
       return false;
-    if(nonzero_dim == -1 || fabs(size[nonzero_dim]) < fabs(size[i]))
+    if(nonzero_dim == -1 || std::fabs(size[nonzero_dim]) < std::fabs(size[i]))
       nonzero_dim = i;
     ++num_dim;
   }

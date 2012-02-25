@@ -84,7 +84,7 @@ bool Vector<dim>::isEqualTo(const Vector<dim>& v, CoordType epsilon) const
   double delta = _ScaleEpsilon(m_elem, v.m_elem, dim, epsilon);
 
   for(int i = 0; i < dim; ++i) {
-    if(fabs(m_elem[i] - v.m_elem[i]) > delta) {
+    if(std::fabs(m_elem[i] - v.m_elem[i]) > delta) {
       return false;
     }
   }
@@ -279,7 +279,7 @@ CoordType Dot(const Vector<dim>& v1, const Vector<dim>& v2)
     ans += v1.m_elem[i] * v2.m_elem[i];
   }
 
-  return (fabs(ans) >= delta) ? ans : 0;
+  return (std::fabs(ans) >= delta) ? ans : 0;
 }
 
 template<int dim>
@@ -316,10 +316,10 @@ bool Parallel(const Vector<dim>& v1, const Vector<dim>& v2)
 template<int dim>
 bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 {
-  double max1 = 0, max2 = 0;
+  CoordType max1 = 0, max2 = 0;
 
   for(int i = 0; i < dim; ++i) {
-    double val1 = fabs(v1[i]), val2 = fabs(v2[i]);
+    CoordType val1 = std::fabs(v1[i]), val2 = std::fabs(v2[i]);
     if(val1 > max1) {
       max1 = val1;
     }
@@ -330,10 +330,10 @@ bool Perpendicular(const Vector<dim>& v1, const Vector<dim>& v2)
 
   // Need to scale by both, since Dot(v1, v2) goes like the product of the magnitudes
   int exp1, exp2;
-  (void) frexp(max1, &exp1);
-  (void) frexp(max2, &exp2);
+  (void) std::frexp(max1, &exp1);
+  (void) std::frexp(max2, &exp2);
 
-  return fabs(Dot(v1, v2)) < ldexp(WFMATH_EPSILON, exp1 + exp2);
+  return std::fabs(Dot(v1, v2)) < std::ldexp(WFMATH_EPSILON, exp1 + exp2);
 }
 
 template<>

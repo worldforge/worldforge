@@ -119,7 +119,7 @@ Vector<3> Cross(const Vector<3>& v1, const Vector<3>& v2)
   double delta = v1._scaleEpsilon(v2);
 
   for(int i = 0; i < 3; ++i)
-    if(fabs(ans[i]) < delta)
+    if(std::fabs(ans[i]) < delta)
       ans[i] = 0;
 
   return ans;

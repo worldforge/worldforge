@@ -181,7 +181,7 @@ _Poly2Reorient _Poly2Orient<dim>::reduce(const Polygon<2>& poly, size_t skip)
     if(!m_axes[1].isValid()) // We span 1D
       return _WFMATH_POLY2REORIENT_NONE;
     for(int j = 0; j < 2; ++j) {
-      if(fabs(diff[j]) < epsilon) {
+      if(std::fabs(diff[j]) < epsilon) {
         assert(diff[j ? 0 : 1] >= epsilon); // because diff != 0
         if(still_valid[j ? 0 : 1] || got_ratio) // We span a 2D space
           return _WFMATH_POLY2REORIENT_NONE;

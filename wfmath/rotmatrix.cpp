@@ -158,7 +158,7 @@ RotMatrix<3>& RotMatrix<3>::rotation (const Vector<3>& axis)
 bool _MatrixSetValsImpl(const int size, CoordType* vals, bool& flip,
 				CoordType* buf1, CoordType* buf2, double precision)
 {
-  precision = fabs(precision);
+  precision = std::fabs(precision);
 
   if(precision >= .9) // Can get an infinite loop for precision == 1
     return false;

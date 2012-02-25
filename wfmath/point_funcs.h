@@ -78,7 +78,7 @@ inline bool Point<dim>::isEqualTo(const Point<dim> &p, CoordType epsilon) const
   CoordType delta = _ScaleEpsilon(m_elem, p.m_elem, dim, epsilon);
 
   for(int i = 0; i < dim; ++i) {
-    if(fabs(m_elem[i] - p.m_elem[i]) > delta) {
+    if(std::fabs(m_elem[i] - p.m_elem[i]) > delta) {
       return false;
     }
   }
@@ -181,7 +181,7 @@ inline CoordType SquaredDistance(const Point<dim>& p1, const Point<dim>& p2)
     ans += diff * diff;
   }
 
-  return (fabs(ans) >= _ScaleEpsilon(p1.m_elem, p2.m_elem, dim)) ? ans : 0;
+  return (std::fabs(ans) >= _ScaleEpsilon(p1.m_elem, p2.m_elem, dim)) ? ans : 0;
 }
 
 template<int dim, template<class, class> class container,
