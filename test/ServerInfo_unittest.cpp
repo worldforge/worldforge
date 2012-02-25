@@ -48,6 +48,21 @@ void testServerInfo(const Atlas::Objects::Entity::RootEntity& svr)
     serverInfo.injectAtlas(svr);
 }
 
+void testServerInfoCorrect(const Atlas::Objects::Entity::RootEntity& svr)
+{
+    Eris::TestServerInfo serverInfo;
+    serverInfo.injectAtlas(svr);
+
+    assert(serverInfo.getRuleset() == "mason");
+    assert(serverInfo.getServername() == "a server");
+    assert(serverInfo.getNumClients() == 2);
+    assert(serverInfo.getServer() == "localhost");
+    assert(serverInfo.getUptime() == 1000.0f);
+    assert(serverInfo.getEntities() == 200);
+    assert(serverInfo.getVersion() == "1.0");
+    assert(serverInfo.getBuildDate() == "2000-01-01");
+}
+
 int main()
 {
 
@@ -61,9 +76,7 @@ int main()
 
     Eris::TestServerInfo info;
 
-    sigc::slot<void, const Atlas::Objects::Entity::RootEntity&> slot(
-            sigc::ptr_fun(&testServerInfo));
-    ElementExerciser<Atlas::Objects::Entity::RootEntity> exerciser(slot);
+    ElementExerciser<Atlas::Objects::Entity::RootEntity> exerciser;
     exerciser.addParam("ruleset", ElementParam("mason"));
     exerciser.addParam("name", ElementParam("a server", false));
     exerciser.addParam("clients", ElementParam(2));
@@ -73,7 +86,11 @@ int main()
     exerciser.addParam("version", ElementParam("1.0"));
     exerciser.addParam("builddate", ElementParam("2000-01-01"));
 
-    exerciser.exercise();
+    sigc::slot<void, const Atlas::Objects::Entity::RootEntity&> slot(
+            sigc::ptr_fun(&testServerInfo));
+    sigc::slot<void, const Atlas::Objects::Entity::RootEntity&> correctSlot(
+            sigc::ptr_fun(&testServerInfoCorrect));
+    exerciser.exercise(slot, correctSlot);
 
     return 0;
 }

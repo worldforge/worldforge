@@ -51,8 +51,6 @@ private:
 
     std::map<std::string, ElementParam> mElementParams;
 
-    sigc::slot<void, const EntityType&> mExerciseSlot;
-
     void fillParam(EntityType& entity, const std::string& paramName,
             Atlas::Message::Element::Type paramType)
     {
@@ -85,22 +83,21 @@ private:
     void fillCorrectParam(EntityType& entity, const std::string& paramName)
     {
         const ElementParam& param = mElementParams.find(paramName)->second;
-        fillParam(entity, paramName, param.getType());
+        entity->setAttr(paramName, param.defaultElement);
     }
 
     void fillAllCorrectParams(EntityType& entity)
     {
         for (std::map<std::string, ElementParam>::const_iterator I =
                 mElementParams.begin(); I != mElementParams.end(); ++I) {
-            fillParam(entity, I->first, I->second.getType());
+            entity->setAttr(I->first, I->second.defaultElement);
         }
 
     }
 
 public:
 
-    ElementExerciser(sigc::slot<void, const EntityType&> exerciseSlot) :
-            mExerciseSlot(exerciseSlot)
+    ElementExerciser()
     {
     }
 
@@ -109,7 +106,8 @@ public:
         mElementParams.insert(std::make_pair(paramName, param));
     }
 
-    void exercise()
+    void exercise(sigc::slot<void, const EntityType&> exerciseSlot,
+            sigc::slot<void, const EntityType&> correctSlot)
     {
         static Atlas::Message::Element::Type types[] = {
                 Atlas::Message::Element::TYPE_FLOAT,
@@ -120,17 +118,15 @@ public:
                 Atlas::Message::Element::TYPE_PTR,
                 Atlas::Message::Element::TYPE_STRING };
 
-        mExerciseSlot(EntityType());
-
         //First test by submitting correct data.
         {
             EntityType entity;
             fillAllCorrectParams(entity);
-            mExerciseSlot(entity);
+            correctSlot(entity);
         }
 
         //Then test by submitting an empty element.
-        mExerciseSlot(EntityType());
+        exerciseSlot(EntityType());
 
         //Then try to send incorrect data. We'll go through all params, and for
         //each params we'll try to send an instance of each message type.
@@ -144,7 +140,7 @@ public:
                     EntityType entity;
                     fillAllCorrectParams(entity);
                     fillParam(entity, I->first, type);
-                    mExerciseSlot(entity);
+                    exerciseSlot(entity);
                 }
             }
         }
