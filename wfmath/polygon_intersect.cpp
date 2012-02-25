@@ -157,7 +157,7 @@ static bool _GetCrossings(const Polygon<2> &poly, const Point<2> &p,
 			  const Vector<2> &v, std::vector<CoordType> &cross,
 			  bool proper)
 {
-  assert(((unsigned int) poly.numCorners()) == cross.size()); // Already allocated
+  assert(poly.numCorners() == cross.size()); // Already allocated
   assert(Equal(v.sqrMag(), 1));
 
   // The sign of the cross product changes when you cross the line
