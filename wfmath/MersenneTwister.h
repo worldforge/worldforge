@@ -197,7 +197,7 @@ inline double MTRand::randNorm( const double& mean, const double& variance )
 	// mean and variance by Box-Muller method
 	double r = sqrt( -2.0 * log( 1.0-randDblExc()) ) * variance;
 	double phi = 2.0 * 3.14159265358979323846264338328 * randExc();
-	return mean + r * cos(phi);
+	return mean + r * std::cos(phi);
 }
 
 inline MTRand::uint32 MTRand::randInt()
