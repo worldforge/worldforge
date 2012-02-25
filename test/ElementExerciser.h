@@ -129,7 +129,7 @@ public:
             mExerciseSlot(entity);
         }
 
-        //Then test by submitting an emtpy element.
+        //Then test by submitting an empty element.
         mExerciseSlot(EntityType());
 
         //Then try to send incorrect data. We'll go through all params, and for

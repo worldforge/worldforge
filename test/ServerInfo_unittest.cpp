@@ -42,6 +42,12 @@ public:
 };
 }
 
+void testServerInfo(const Atlas::Objects::Entity::RootEntity& svr)
+{
+    Eris::TestServerInfo serverInfo;
+    serverInfo.injectAtlas(svr);
+}
+
 int main()
 {
 
@@ -56,7 +62,7 @@ int main()
     Eris::TestServerInfo info;
 
     sigc::slot<void, const Atlas::Objects::Entity::RootEntity&> slot(
-            sigc::mem_fun(info, &Eris::TestServerInfo::injectAtlas));
+            sigc::ptr_fun(&testServerInfo));
     ElementExerciser<Atlas::Objects::Entity::RootEntity> exerciser(slot);
     exerciser.addParam("ruleset", ElementParam("mason"));
     exerciser.addParam("name", ElementParam("a server", false));
